@@ -184,10 +184,12 @@ PAL = {
     "pearl":   ("#0e353c", "#36686a", "#a6c4b6", "#f4f2e2"),
     "dawn":    ("#13505a", "#4f8a82", "#d6d3b2", "#fff1c8"),
     "dawnhi":  ("#1a5e66", "#6aa298", "#e8dfba", "#fff6d8"),
+    # under the end card the sea sky settles back to a deeper teal so the date and place read clearly
+    "endcard": ("#0c414a", "#2a6866", "#6fa293", "#f1e2b8"),
 }
 _pal_keys = [
     (0.0, "seamist"), (10.0, "seamist"), (CALL, "mist"), (ENC_FORM - 1.0, "mist"), (ENC_FORM + 3.0, "pearl"),
-    (ENC_ARRIVE - 1.0, "pearl"), (GLORY + 6.0, "dawn"), (TITLE_HIT - 4.0, "dawnhi"), (TOTAL, "dawnhi"),
+    (ENC_ARRIVE - 1.0, "pearl"), (GLORY + 6.0, "dawn"), (TITLE_HIT - 4.0, "dawnhi"), (TITLE_HIT + 2.0, "endcard"), (TOTAL, "endcard"),
 ]
 SKY_TOP = Track([(t, lin(PAL[p][0])) for t, p in _pal_keys])
 SKY_MID = Track([(t, lin(PAL[p][1])) for t, p in _pal_keys])
@@ -196,9 +198,9 @@ GLOW = Track([(t, lin(PAL[p][3])) for t, p in _pal_keys])
 
 # the pale sun waits below the sea horizon, then breaks through the mist
 SUN_INT = Track([(0, 0.10), (20, 0.16), (GLORY - 1, 0.22), (GLORY + 2, 0.55), (GLORY + 7, 0.85), (TITLE_HIT - 4, 1.0),
-                 (TITLE_HIT + 1, 1.08), (TOTAL, 1.05)])
-SUN_Y = Track([(0, HORIZON - 0.05), (GLORY - 1, HORIZON - 0.05), (GLORY + 8, HORIZON + 0.01), (TITLE_HIT + 1, HORIZON + 0.05),
-               (TOTAL, HORIZON + 0.06)])
+                 (TITLE_HIT + 2, 0.6), (TOTAL, 0.58)])
+SUN_Y = Track([(0, HORIZON - 0.05), (GLORY - 1, HORIZON - 0.05), (GLORY + 8, HORIZON + 0.01), (TITLE_HIT - 2, HORIZON + 0.04),
+               (TITLE_HIT + 3, HORIZON + 0.015), (TOTAL, HORIZON + 0.015)])
 SUN_SIZE = Track([(0, 0.10), (GLORY, 0.10), (GLORY + 10, 0.115), (TOTAL, 0.12)])
 STARS = Track([(0, 0.0), (0.2, 0.0), (2.0, 0.35), (GLORY - 3, 0.3), (GLORY + 4, 0.08), (TOTAL, 0.04)])
 MILKY = Track([(0, 0.0), (TOTAL, 0.0)])
@@ -219,7 +221,7 @@ ZOOM = Track([(0, 1.0), (ENC_FORM, 0.99), (GLORY, 0.985), (TOTAL, 0.965)])
 EXPOSURE = Track([(0, 1.0), (TOTAL, 1.0)])
 FADE = Track([(0, 0.0), (0.8, 1.0), (59.0, 1.0), (TOTAL, 0.0)])
 # soft shafts of light through the mist, never the full fan of rays (that belongs to songs 01, 06 and 11)
-RAYS = Track([(0, 0.0), (GLORY - 1, 0.0), (GLORY + 4, 0.35), (TITLE_HIT - 6, 0.45), (TITLE_HIT + 1, 0.4), (TOTAL, 0.38)])
+RAYS = Track([(0, 0.0), (GLORY - 1, 0.0), (GLORY + 4, 0.35), (TITLE_HIT - 6, 0.45), (TITLE_HIT + 2, 0.22), (TOTAL, 0.2)])
 # the mist parts behind the mountains: the glory that waits for us
 PART = Track([(0, 0.0), (GLORY - 1, 0.0), (GLORY + 3, 1.0), (TITLE_HIT - 6, 1.0), (TITLE_HIT - 1, 0.5), (TOTAL, 0.4)])
 
