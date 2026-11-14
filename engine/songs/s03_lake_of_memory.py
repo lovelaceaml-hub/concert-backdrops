@@ -203,7 +203,7 @@ EXPOSURE = Track([(0, 1.0), (TOTAL, 1.0)])
 FADE = Track([(0, 0.0), (1.0, 1.0), (59.0, 1.0), (TOTAL - 0.05, 0.0)])
 RAYS = Track([(0, 0.0), (TOTAL, 0.0)])
 PART = Track([(0, 0.0), (TOTAL, 0.0)])
-TEXT_SHADOW = Track([(0, 1.1), (44.0, 1.2), (48.0, 1.6), (TOTAL, 1.6)])   # deeper behind the end card at dawn
+TEXT_SHADOW = Track([(0, 1.1), (44.0, 1.2), (48.0, 1.3), (TOTAL, 1.3)])   # deeper behind the end card at dawn
 
 # A. the five painted scenes; each crossfade sits on a musical step, the lake of each one shimmers
 SCENES = [
@@ -219,8 +219,8 @@ SCENES = [
          transition="ripple", ripple_from=(0.5, 0.25), zoom=(1.04, 1.10), pan=((0.0, -0.02), (0.0, 0.0)),
          water=True, water_line=0.34, gain=Track([(0, 1.0), (40.0, 0.90), (46.0, 0.90), (48.0, 1.0)])),
     dict(image="assets/plates/s03/rose_dawn.jpg", t0=47.0, t1=61.0, fade_in=2.5, fade_out=0.0,
-         transition="dissolve", zoom=(1.10, 1.03), water=True, water_line=0.255,
-         gain=Track([(0, 1.0), (48.0, 0.95), (50.5, 0.70), (TOTAL, 0.70)])),
+         transition="fade", zoom=(1.10, 1.03), water=True, water_line=0.255,
+         gain=Track([(0, 1.0), (48.0, 0.92), (50.5, 0.64), (TOTAL, 0.64)])),
 ]
 
 # Scene 4: the upper sky breaks into glass after the prayer and drifts back together into the mended moon
