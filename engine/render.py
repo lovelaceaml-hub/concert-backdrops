@@ -29,6 +29,26 @@ def smoothstep(a, b, x):
     return u * u * (3 - 2 * u)
 
 
+CALM_Y = 0.335   # top of the lower third (fraction from the bottom), kept calm for the performers
+
+
+def _val(name, t, default):
+    v = getattr(S, name, None)
+    if v is None:
+        return default
+    return v(t) if callable(v) else v
+
+
+def words_arrive(m):
+    """When an expression's words reach their light: the first relight after they leave, else the star time."""
+    a = m.get("arrive", None)
+    if a is None:
+        return m["star"]
+    times = sorted(a) if isinstance(a, (list, tuple)) else [a]
+    later = [x for x in times if x >= m["hold"]]
+    return later[0] if later else times[-1]
+
+
 class Renderer:
     def __init__(self, w=S.W, h=S.H):
         self.w, self.h = w, h
@@ -49,11 +69,12 @@ class Renderer:
         self.p_credit = prog(G.QUAD_VS, G.CREDIT_FS); self.v_credit = qvao(self.p_credit)
         self.p_blur = prog(G.QUAD_VS, G.BLUR_FS); self.v_blur = qvao(self.p_blur)
         self.p_comp = prog(G.QUAD_VS, G.COMP_FS); self.v_comp = qvao(self.p_comp)
+        self.p_prot = prog(G.QUAD_VS, G.PROTECT_FS); self.v_prot = qvao(self.p_prot)
         self.p_star = prog(G.STAR_VS, G.STAR_FS)
         self.p_mote = prog(G.MOTE_VS, G.MOTE_FS)
         self.p_petal = prog(G.PETAL_VS, G.PETAL_FS)
         self.p_textp = prog(G.TEXTP_VS, G.TEXTP_FS)
-        for p in (self.p_sky, self.p_text, self.p_lights, self.p_blur, self.p_credit):
+        for p in (self.p_sky, self.p_text, self.p_lights, self.p_blur, self.p_credit, self.p_prot):
             setu(p, uFlip=1.0)
         setu(self.p_comp, uFlip=-1.0)   # the last pass is drawn upside down so rows read top to bottom
 
@@ -117,6 +138,37 @@ class Renderer:
         self.up = upgrade.Upgrade(self)   # scenes, people of light, effect layers, fragment styles (all optional)
 
     # ------------------------------------------------------------------
+    def text_plan(self, t):
+        """The text on screen at t, as two slots (texture, form params, bounds, shade strength).
+        A: an expression or the closing title. B: the end card lines, else a lyric fragment (any style)."""
+        blank = (self.t_blank, (0.0, 3.0, -1.0, 0.0), (0.0, 1.0), 0.0)
+        A, B = blank, blank
+        for wd in self.words:
+            m = wd["meta"]
+            arrive = words_arrive(m)
+            if not (m["form"] <= t < arrive + 0.2):
+                continue
+            form_t, fly_t = t - m["form"], t - m["hold"]
+            shade = smoothstep(0.0, S.FORM_DUR * 0.8, form_t) * (1.0 - smoothstep(0.0, 1.6, fly_t))
+            A = (wd["tex"], (form_t, S.FORM_DUR, fly_t, 1.0), wd["bounds"], shade)
+        tg = S.TAGLINE
+        if t >= tg["t0"]:
+            B = (self.tag["tex"], ((t - tg["t0"]) + 1.35, (tg["t1"] - tg["t0"]), -1.0, 0.92), self.tag["bounds"],
+                 smoothstep(tg["t0"] - 0.3, tg["t1"], t))
+            return A, B
+        for fr in self.frags:
+            m = fr["meta"]
+            if m.get("style", "sparks") != "sparks" or not (m["t0"] <= t < m["out"] + 1.6):
+                continue
+            dur = max(m["t1"] - m["t0"], 0.5)
+            fly = (t - m["out"]) if t > m["out"] else -1.0
+            shade = smoothstep(0.0, 0.45 * dur, t - m["t0"]) * (1.0 - smoothstep(0.0, 1.4, fly) if fly > 0 else 1.0)
+            return A, (fr["tex"], ((t - m["t0"]) + 1.35, dur, fly, m.get("alpha", 0.95)), fr["bounds"], shade)
+        ts = self.up.text_shadow(t)
+        if ts is not None:
+            B = ts
+        return A, B
+
     def frame(self, t, index=0):
         ctx, w, h, px = self.ctx, self.w, self.h, self.px
         P = S.params(self.song, t)
@@ -148,12 +200,13 @@ class Renderer:
         self.f_L.clear(0.0, 0.0, 0.0, 1.0)
         ctx.enable(BL)
         ctx.blend_func = (ONE, ONE)
+        calm0 = float(_val("BOTTOM_CALM", t, 0.0))   # Astra round 1, finding 12: a calm lower third
         setu(self.p_star, uT=t, uStars=P["stars"], uHi=P["hi"], uPx=px)
         self.v_star.render(moderngl.POINTS)
         setu(self.p_mote, uT=t, uAmount=min(P["motes"], 1.0), uPx=px, uSizeMin=2.4, uSizeMax=24.0, uPeriod=30.0,
              uY0=getattr(S, "MOTE_Y", (-0.05, 1.05))[0], uY1=getattr(S, "MOTE_Y", (-0.05, 1.05))[1], uSway=0.012,
              uBright=0.62 + 0.30 * P["env"], uColA=L(cols("MOTE_COLORS", ("#ffe2a8", "#ff9f8a"))[0]),
-             uColB=L(cols("MOTE_COLORS", ("#ffe2a8", "#ff9f8a"))[1]))
+             uColB=L(cols("MOTE_COLORS", ("#ffe2a8", "#ff9f8a"))[1]), uCalm=calm0, uCalmY=CALM_Y)
         self.v_mote.render(moderngl.POINTS)
         if P["lanterns"] > 0.001:
             setu(self.p_mote, uT=t, uAmount=P["lanterns"], uPx=px, uSizeMin=13.0, uSizeMax=44.0, uPeriod=40.0,
@@ -162,17 +215,31 @@ class Renderer:
             self.v_lant.render(moderngl.POINTS)
         if P["petals"] > 0.001:
             setu(self.p_petal, uT=t, uAmount=P["petals"], uPx=px, uColA=L(cols("PETAL_COLORS", ("#ff7fa2", "#ffd2c2"))[0]) * 0.95,
-                 uColB=L(cols("PETAL_COLORS", ("#ff7fa2", "#ffd2c2"))[1]) * 0.62)
+                 uColB=L(cols("PETAL_COLORS", ("#ff7fa2", "#ffd2c2"))[1]) * 0.62, uCalm=calm0, uCalmY=CALM_Y)
             self.v_petal.render(moderngl.POINTS)
         self.up.draw_effects(t, P)
         self.up.draw_figures(t)
 
+        # which text is on screen: A is an expression or the closing title, B the end card lines or a fragment
+        (texA, txA, bndA, shadeA), (texB, txB, bndB, shadeB) = self.text_plan(t)
+        credit, c0 = S.credit_state(t, self.credit_bbox)
+
+        # protect the text (Astra round 1, finding 3): dim every light drawn so far (motes, petals, snow, beams,
+        # nets, figures) behind the words, so no spark or ray crosses a letter; the words are drawn after this
+        prot = float(min(max(_val("TEXT_PROTECT", t, 1.0), 0.0), 1.0))
+        if prot > 0.0 and (shadeA > 0.0 or shadeB > 0.0 or credit[3] > 0.001):
+            ctx.blend_func = (moderngl.ZERO, moderngl.SRC_COLOR)
+            texA.use(location=0); texB.use(location=1); self.t_credit.use(location=2)
+            setu(self.p_prot, uTexA=0, uTexB=1, uTexC=2, uShade=(float(shadeA), float(shadeB)), uK=0.94 * prot,
+                 uCredit=tuple(float(v) for v in credit), uC0=c0)
+            self.v_prot.render(moderngl.TRIANGLE_STRIP)
+            ctx.blend_func = (ONE, ONE)
+
         # words: particles, then the solid letters
-        texA, shadeA = self.t_blank, 0.0
-        txA, bndA, txB, bndB = (0.0, 3.0, -1.0, 0.0), (0.0, 1.0), (0.0, 3.0, -1.0, 0.0), (0.0, 1.0)
+        calm = float(_val("BOTTOM_CALM", t, 0.0))
         for i, wd in enumerate(self.words):
             m = wd["meta"]
-            arrive = m.get("arrive", m["star"])   # when the words reach their light (a relit star arrives later)
+            arrive = words_arrive(m)   # when the words reach their light (a relit star arrives later)
             if not (m["form"] <= t < arrive + 0.2):
                 continue
             form_t = t - m["form"]
@@ -180,24 +247,19 @@ class Renderer:
             fly_dur = max(arrive - m["hold"], 1.0)
             star = S.STAR_POS[i] if i < 9 else (0.5, 0.9)
             setu(self.p_textp, uT=t, uFormT=form_t, uFormDur=S.FORM_DUR, uFlyT=fly_t, uFlyDur=fly_dur, uPx=px,
-                 uPulse=P["pulse"], uStar=star, uColA=L("#fff0cc") * 1.0, uColB=L("#ffb070") * 1.15)
+                 uPulse=P["pulse"], uStar=star, uColA=L("#fff0cc") * 1.0, uColB=L("#ffb070") * 1.15,
+                 uCalm=calm, uCalmY=CALM_Y)
             wd["vao"].render(moderngl.POINTS)
             wd["tex"].use(location=0)
             setu(self.p_text, uTex=0, uFormT=form_t, uFormDur=S.FORM_DUR, uFlyT=fly_t, uAspect=asp, uAlpha=1.0,
                  uPulse=P["pulse"], uBounds=wd["bounds"], uCol=L("#fff5df"), uGlowCol=L("#ffc48c"))
             self.v_text.render(moderngl.TRIANGLE_STRIP)
-            texA = wd["tex"]
-            txA, bndA = (form_t, S.FORM_DUR, fly_t, 1.0), wd["bounds"]
-            shadeA = smoothstep(0.6, S.FORM_DUR + 0.6, form_t) * (1.0 - smoothstep(0.0, 1.6, fly_t))
-        texB, shadeB = self.t_blank, 0.0
         tg = S.TAGLINE
         if t >= tg["t0"]:
             self.tag["tex"].use(location=0)
             setu(self.p_text, uTex=0, uFormT=(t - tg["t0"]) + 1.35, uFormDur=(tg["t1"] - tg["t0"]), uFlyT=-1.0,
                  uAspect=asp, uAlpha=0.92, uPulse=0.0, uBounds=self.tag["bounds"], uCol=L("#fff1d6"), uGlowCol=L("#ffc48c"))
             self.v_text.render(moderngl.TRIANGLE_STRIP)
-            texB, shadeB = self.tag["tex"], smoothstep(tg["t0"], tg["t1"] + 1.0, t)
-            txB, bndB = ((t - tg["t0"]) + 1.35, (tg["t1"] - tg["t0"]), -1.0, 0.92), self.tag["bounds"]
 
         # short lyric fragments: form, hold, then dissolve
         for fr in self.frags:
@@ -213,13 +275,8 @@ class Renderer:
                  uCol=L("#fff1d6"), uGlowCol=L(m.get("glow", "#ffc48c")))
             self.v_text.render(moderngl.TRIANGLE_STRIP)
         self.up.draw_frags(t)
-        if shadeB <= 0.0:
-            ts = self.up.text_shadow(t)
-            if ts is not None:
-                texB, txB, bndB, shadeB = ts
 
         # song title and concert title: a card at the start, then small in the corner
-        credit, c0 = S.credit_state(t, self.credit_bbox)
         if credit[3] > 0.001:
             self.t_credit.use(location=0)
             setu(self.p_credit, uTex=0, uCredit=tuple(float(v) for v in credit), uC0=c0,
@@ -232,6 +289,8 @@ class Renderer:
             self.f_L.scissor = (0, int(h * 0.73), w, h - int(h * 0.73))
             self.p_lights["uStarPos"].value = [tuple(p) for p in S.STAR_POS]
             self.p_lights["uStarI"].value = [(float(s[0]), float(s[1])) for s in st]
+            if "uStarR" in self.p_lights:
+                self.p_lights["uStarR"].value = [float(s[2]) if len(s) > 2 else 0.0 for s in st]
             self.p_lights["uLink"].value = [float(v) for v in P["link"]]
             setu(self.p_lights, uT=t, uAspect=asp, uHi=P["hi"], uColA=L("#fff3d6"), uColB=L("#ffc2a4"), uMode=0)
             self.v_lights.render(moderngl.TRIANGLE_STRIP)
@@ -285,7 +344,8 @@ class Renderer:
              uTxA=txA, uBndA=bndA, uTxB=txB, uBndB=bndB, uZoom=P["zoom"],
              uTextC=9, uCredit=tuple(float(v) for v in credit), uC0=c0, uHi=P["hi"], uEnv=P["env"],
              uSunInt=P["sun_int"], uMtn=mtn, uSkyHor=P["sky_hor"], uGlow=P["glow"], uTrailCol=L("#ffd396"),
-             uSun=(0.5, P["sun_y"]), uShade=(float(shadeA), float(shadeB)), uNRings=len(rings), uNWaves=len(waves))
+             uSun=(0.5, P["sun_y"]), uShade=(float(shadeA), float(shadeB)), uNRings=len(rings), uNWaves=len(waves),
+             uCalm=calm0, uCalmY=CALM_Y)
         self.up.comp_uniforms(self.p_comp, t, P)
         self.v_comp.render(moderngl.TRIANGLE_STRIP)
         return self.f_out.read(components=3)

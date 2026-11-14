@@ -53,7 +53,7 @@ void main(){
   float sparkle = exp(-max(since,0.0)*2.2)*landed;
   float tw = 0.65+0.35*sin(uT*(1.8+3.2*aSeed.y)+aSeed.z*50.0);
   float alpha = smoothstep(0.0,0.10,s)*(0.30+0.70*s);
-  alpha *= mix(1.0, 0.24*tw, landed) + 0.9*sparkle + 0.40*arc;
+  alpha *= mix(1.0, 0.36*tw, landed) + 0.9*sparkle + 0.40*arc;
   float size = (1.1 + 2.5*aSeed.w*aSeed.w*aSeed.w)*uSize + 2.2*sparkle + 2.0*(1.0-s) + 1.2*arc;
   float hot = sparkle + arc*0.6;
   // dissolve
@@ -113,7 +113,7 @@ void main(){
   // inner light that flows slowly upward through the body
   float flow = fbm3(vec2(vL.x*7.0, vL.y*5.0 - uT*0.22)) ;
   float shine = 0.55 + 0.9*flow*flow;
-  vec3 c = uLine*tx.r*0.85 + uBody*tx.g*uGlass*shine + uHalo*tx.b*0.30;
+  vec3 c = uLine*tx.r*1.05 + uBody*tx.g*uGlass*shine + uHalo*tx.b*0.40;
   o = vec4(c*uAlpha, 1.0);
 }
 """
@@ -123,6 +123,7 @@ SNOW_VS = """
 #version 330
 in vec4 aSeed;
 uniform float uT, uAmount, uPx, uWind, uSpeed;
+uniform float uCalm, uCalmY;
 out float vA; out float vSoft;
 void main(){
   float depth = aSeed.x;                       // 0 far and small, 1 near and large
@@ -134,6 +135,7 @@ void main(){
   float on = step(aSeed.w, uAmount);
   float tw = 0.80+0.20*sin(uT*(1.5+2.0*aSeed.y)+aSeed.z*60.0);
   vA = on*tw*mix(0.30, 0.70, depth)*smoothstep(0.0,0.04,ph);
+  vA *= 1.0-uCalm*0.75*(1.0-smoothstep(uCalmY-0.07, uCalmY+0.05, y));   // calm lower third: fewer flakes there
   vSoft = depth;
   gl_Position = vec4(vec2(x,y)*2.0-1.0, 0.0, 1.0);
   gl_PointSize = mix(1.4, 7.5, pow(depth, 2.6))*uPx;
@@ -226,7 +228,8 @@ void main(){
   vec2 q = (p-b); q.y *= 3.6;
   float pool = exp(-length(q)/(uW.y*1.4));
   float fadeEnds = smoothstep(0.0, 0.10, tt)*0.6+0.4;
-  vec3 c = uCol*(inside*(core*rays*0.45*fadeEnds + halo*0.10) + dust*2.2*inside + src + pool*0.55);
+  // a gentle column (demo check 2026-11-14: it was too strong): soft core, light rays, a quiet pool
+  vec3 c = uCol*(inside*(core*rays*0.26*fadeEnds + halo*0.06) + dust*1.6*inside + src*0.6 + pool*0.32);
   o = vec4(c*uAmt, 1.0);
 }
 """

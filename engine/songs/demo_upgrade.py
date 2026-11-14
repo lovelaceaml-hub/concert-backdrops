@@ -132,30 +132,17 @@ class Song:
 
 # ----------------------------------------------------------------- timeline
 
-class Track:
-    def __init__(self, keys):
-        self.t = np.array([k[0] for k in keys], dtype=np.float64)
-        self.v = np.array([np.atleast_1d(np.asarray(k[1], dtype=np.float64)) for k in keys])
-
-    def __call__(self, t):
-        if t <= self.t[0]:
-            v = self.v[0]
-        elif t >= self.t[-1]:
-            v = self.v[-1]
-        else:
-            i = int(np.searchsorted(self.t, t, side="right")) - 1
-            u = (t - self.t[i]) / (self.t[i + 1] - self.t[i])
-            u = u * u * (3 - 2 * u)
-            v = self.v[i] * (1 - u) + self.v[i + 1] * u
-        return float(v[0]) if v.shape[0] == 1 else v
-
+from track import Track   # the shared Track refuses keys that are not strictly increasing  # noqa: E402
 
 
 # ----------------------------------------------------------------- the demo minute
 # The clip is the song 04 promo (voice from about 5 s, first chorus at 49 s).
 NINTH = 1e9
-TITLE_HIT = 51.0
+TITLE_HIT = 52.2
 SKYLINE_LANTERN = 0.0     # the plates have their own mountains, so the light along the drawn skyline is hidden
+BOTTOM_CALM = 1.0         # calm lower third (on by default for song files with SCENES or FIGURES; shown here)
+TEXT_PROTECT = 1.0        # dim every light behind the words (the default)
+RINGS_AT_START = {6: 2}   # Encouragement starts with two thin rings carried over from earlier songs
 
 # Procedural sky and lake: only seen for a moment before the first plate (and anywhere no plate is shown)
 PAL = {
@@ -199,16 +186,16 @@ SCENES = [
          gain=Track([(0, 1.0), (30.0, 0.92), (37.0, 0.84), (46.0, 0.84), (49.0, 1.0)])),
     dict(image="assets/plates/demo/golden_morning.jpg", t0=46.0, t1=61.0, fade_in=3.0, fade_out=0.0,
          transition="ripple", ripple_from=(0.5, 0.30), zoom=(1.12, 1.05), water=True, water_line=0.46,
-         water_bottom=0.20, gain=Track([(0, 1.0), (49.0, 0.95), (52.0, 0.78), (TOTAL, 0.78)])),
+         water_bottom=0.20, gain=Track([(0, 1.0), (49.0, 0.92), (52.0, 0.72), (TOTAL, 0.72)])),
 ]
 
 # B. two pairs of people of light (the shared figure library in assets/figures/)
 FIGURES = [
     dict(poses=["assets/figures/apology_a.png", "assets/figures/apology_b.png", "assets/figures/apology_c.png"],
-         t0=4.0, t1=19.0, pose_times=[8.5, 13.0], x=0.5, y=0.24, height=0.33, to_star=2, color="#ffc78f"),
+         t0=4.0, t1=19.5, pose_times=[8.5, 13.0], x=0.5, y=0.20, height=0.40, to_star=2, color="#ffc78f"),
     dict(poses=["assets/figures/inclusiveness_a.png", "assets/figures/inclusiveness_b.png",
                 "assets/figures/inclusiveness_c.png"],
-         t0=31.0, t1=45.0, pose_times=[35.0, 39.0], x=0.5, y=0.24, height=0.33, to_star=3, color="#ffb7cf"),
+         t0=32.0, t1=46.5, pose_times=[35.5, 39.5], x=0.5, y=0.20, height=0.40, to_star=3, color="#ffb7cf"),
 ]
 
 # C. effect layers
@@ -217,20 +204,20 @@ SNOW_WIND = 0.4
 ICE = Track([(0, 1.0), (28, 1.0), (44, 0.0)])          # the lake is frozen, then thaws with glowing edges
 ICE_LINE = Track([(0, 0.28), (26.0, 0.28), (28.0, 0.36), (TOTAL, 0.36)])
 ICE_FRAME = Track([(0, 0.45), (24, 0.45), (32, 0.0)])  # frost in the corners of the frame
-SHARDS = Track([(0, 0.0), (17.5, 0.0), (20.5, 1.0), (26.0, 1.0), (31.0, 0.0)])
+SHARDS = Track([(0, 0.0), (20.5, 0.0), (23.0, 1.0), (26.5, 1.0), (31.0, 0.0)])   # after Apology's words have left
 SHARDS_MEND = Track([(0, 0.0), (28.0, 0.0), (31.0, 0.75), (40.0, 0.5), (45.0, 0.0)])
 SHARDS_Y = 0.52
-BEAM = Track([(0, 0.0), (31.0, 0.0), (34.0, 0.85), (44.0, 0.85), (48.0, 0.0)])
+BEAM = Track([(0, 0.0), (31.0, 0.0), (34.0, 0.50), (44.0, 0.50), (48.0, 0.0)])
 BEAM_FROM = (0.5, 1.02)
-BEAM_TO = (0.5, 0.26)
-BEAM_WIDTH = (0.018, 0.10)
+BEAM_TO = (0.5, 0.22)
+BEAM_WIDTH = (0.014, 0.085)
 GOLDEN_FIELD = Track([(0, 0.0), (47.0, 0.0), (51.0, 0.8), (TOTAL, 0.8)])
 FIELD_LINE = 0.22
 NET = Track([(0, 0.0), (49.0, 0.0), (57.0, 1.0), (TOTAL, 1.0)])
 NET_ORIGIN = (0.5, 0.86)
 NET_Y0 = 0.50
 NET_SCALE = 5.5
-NET_BRIGHT = Track([(0, 0.0), (49.0, 0.55), (TOTAL, 0.55)])
+NET_BRIGHT = Track([(0, 0.0), (49.0, 0.40), (TOTAL, 0.40)])
 TEXT_SHADOW = Track([(0, 1.0), (26.0, 1.0), (30.0, 1.6), (TOTAL, 1.7)])   # stronger shadow behind words on the bright dawn plates
 
 # Nine lights on an arch over the stage, one for each expression
@@ -246,14 +233,14 @@ PHRASES = [
     dict(label="Greeting", lines=["“How are you?”"], size=176, **OFF),
     dict(label="Gratitude", lines=["“Thank you. It’s all thanks to you.", "You’ve worked hard.”"], size=118, **OFF),
     dict(label="Apology", lines=["“I’m sorry.", "It must have been hard on you.”"], size=96, y=0.30,
-         form=11.5, hold=19.5, star=22.0),
+         form=10.0, hold=20.0, star=22.5),
     dict(label="Inclusiveness", lines=["“It’s okay. I understand.”"], size=112, y=0.29,
-         form=38.5, hold=45.5, star=48.0),
+         form=37.9, hold=47.0, star=48.6),
     dict(label="Concession", lines=["“Please, after you.”"], size=164, **OFF),
     dict(label="Respect", lines=["“I’d love to hear more", "about your thoughts.”"], size=128, **OFF),
     dict(label="Encouragement", lines=["“I’ll pray (or root) for you.", "Everything will go well.”"], size=118, **LIT),
     dict(label="Consideration", lines=["“Can I give you a hand", "with anything?”"], size=128, **OFF),
-    dict(label="Compliment", lines=["“You’re amazing.", "You’re doing great!”"], size=140, **LIT),
+    dict(label="Compliment", lines=["“You’re amazing.", "You’re doing great!”"], size=140, arrive=50.0, **LIT),
 ]
 FORM_DUR = 3.0
 TITLE = dict(label="Healing Concert", lines=["The Words of Mother’s Love"], size=150,
@@ -263,11 +250,13 @@ TITLE = dict(label="Healing Concert", lines=["The Words of Mother’s Love"], si
 FRAGMENTS = [
     dict(text="the pain you held inside", t0=22.5, t1=26.5, out=30.0, dy=0.0, size=88, glow="#bcd6ff",
          style="reflection", line=0.29),
-    dict(text="truly humbled", t0=31.0, t1=33.8, out=37.2, dy=0.02, size=96, style="engrave"),
+    dict(text="truly humbled", t0=30.5, t1=33.3, out=35.8, dy=0.02, size=96, style="engrave"),
 ]
 
-TAGLINE = dict(text="Sunday, December 6 · 4:30 PM\nThe World Mission Society Church of God · 6720 W Sahara Ave, Las Vegas",
-               t0=53.0, t1=56.0)
+# the three-line end card (PHASE2.md item 7)
+TAGLINE = dict(text="Where a mother’s love reaches, peace settles.\nSunday, December 6 · 4:30 PM\n"
+                    "The World Mission Society Church of God · 6720 W Sahara Ave, Las Vegas",
+               t0=53.6, t1=56.2)
 
 CREDIT = dict(song="Engine Upgrade Demo", concert="The Words of Mother’s Love Healing Concert",
               t_in=0.3, t_full=1.3, t_move=3.4, t_rest=5.4, scale=0.34, alpha_rest=0.58,

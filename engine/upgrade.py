@@ -343,7 +343,7 @@ class Upgrade:
             fd["texs"][st["b"]].use(location=1)
             setu(self.p_figt, uTexA=0, uTexB=1, uMix=float(mu), uAlpha=float(formed * gone * dip * glow), uT=t,
                  uGlass=float(m.get("glass", 1.0)), uRect=st["rect"], uFlip=1.0 if m.get("flip") else 0.0,
-                 uLine=S.lin("#ffe9c4") * 0.42 + c * 0.45, uBody=c * 0.30, uHalo=c * 0.24)
+                 uLine=S.lin("#ffe9c4") * 0.50 + c * 0.55, uBody=c * 0.36, uHalo=c * 0.28)
             self.v_figt.render(moderngl.TRIANGLE_STRIP)
             # the sparks
             setu(self.p_figp, uT=t, uPx=self.px, uRect=st["rect"], uFlip=1.0 if m.get("flip") else 0.0,
@@ -359,7 +359,8 @@ class Upgrade:
             a = val("SNOW", t, 0.0) or 0.0
             if a > 0.001:
                 setu(self.p_snow, uT=t, uAmount=float(a), uPx=self.px, uWind=float(val("SNOW_WIND", t, 0.35)),
-                     uSpeed=float(val("SNOW_SPEED", t, 1.0)), uCol=col(val("SNOW_COLOR", t), "#eef4ff") * 0.95)
+                     uSpeed=float(val("SNOW_SPEED", t, 1.0)), uCol=col(val("SNOW_COLOR", t), "#eef4ff") * 0.95,
+                     uCalm=float(val("BOTTOM_CALM", t, 0.0) or 0.0), uCalmY=0.335)
                 self.v_snow.render(moderngl.POINTS)
         if self.has_beam:
             a = val("BEAM", t, 0.0) or 0.0

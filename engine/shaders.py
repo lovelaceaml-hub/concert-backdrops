@@ -117,7 +117,9 @@ MOTE_VS = """
 #version 330
 in vec4 aSeed;
 uniform float uT, uAmount, uPx, uSizeMin, uSizeMax, uPeriod, uY0, uY1, uSway, uBright;
+uniform float uCalm, uCalmY;
 out float vA; out float vK; out float vSoft;
+float calmK(float y){ return 1.0-uCalm*(1.0-smoothstep(uCalmY-0.07, uCalmY+0.05, y)); }
 void main(){
   float per = uPeriod*(0.7+0.8*aSeed.x);
   float ph = fract(uT/per + aSeed.y*7.31);
@@ -129,7 +131,7 @@ void main(){
   float s = aSeed.x*aSeed.y; s = fract(s*91.7);
   float sz = mix(uSizeMin, uSizeMax, s*s*s);
   vSoft = s;
-  vA = uBright*on*life*tw*mix(1.0, 0.22, s*s);
+  vA = uBright*on*life*tw*mix(1.0, 0.22, s*s)*calmK(y);
   vK = aSeed.y;
   gl_Position = vec4(vec2(x,y)*2.0-1.0,0.0,1.0);
   gl_PointSize = sz*uPx;
@@ -149,14 +151,16 @@ PETAL_VS = """
 #version 330
 in vec4 aSeed;
 uniform float uT, uAmount, uPx;
+uniform float uCalm, uCalmY;
 out float vA; out float vRot; out float vFlip; out float vK;
+float calmK(float y){ return 1.0-uCalm*(1.0-smoothstep(uCalmY-0.07, uCalmY+0.05, y)); }
 void main(){
   float per = 15.0+12.0*aSeed.x;
   float ph = fract(uT/per + aSeed.y*5.77);
   float y = 1.06 - ph*1.02;
   float x = fract(aSeed.z + 0.22*ph + 0.035*sin(uT*0.5+aSeed.w*30.0) + 0.02*sin(uT*1.1+aSeed.x*17.0));
   float on = smoothstep(uAmount, uAmount-0.1, aSeed.w*0.999);
-  vA = on*smoothstep(0.0,0.08,ph)*smoothstep(1.0,0.75,ph);
+  vA = on*smoothstep(0.0,0.08,ph)*smoothstep(1.0,0.75,ph)*calmK(y);
   vRot = uT*(0.5+1.4*aSeed.y)*(aSeed.x>0.5?1.0:-1.0) + aSeed.z*6.283;
   vFlip = 0.25+0.75*abs(cos(uT*(0.9+1.3*aSeed.z)+aSeed.w*9.0));
   vK = aSeed.x;
@@ -187,6 +191,7 @@ TEXTP_VS = """
 in vec3 aTarget; in vec4 aSeed;
 uniform float uT, uFormT, uFormDur, uFlyT, uFlyDur, uPx, uPulse;
 uniform vec2 uStar;
+uniform float uCalm, uCalmY;
 out float vA; out float vK;
 const float TAU = 1.35;
 void main(){
@@ -196,6 +201,8 @@ void main(){
   float s = clamp((uFormT-dep)/TAU, 0.0, 1.0);
   float e = 1.0-pow(1.0-s,3.0);
   vec2 start = vec2(tg.x+(aSeed.y-0.5)*0.55, -0.06+0.24*aSeed.z*aSeed.z);
+  // with a calm lower third the sparks come out of the air just above it, not up from the stage
+  start.y = mix(start.y, uCalmY+0.02+0.12*aSeed.z*aSeed.z, uCalm);
   vec2 pos = mix(start, tg, e);
   float arc = sin(e*3.14159);
   pos += arc*vec2((aSeed.w-0.5)*0.17, (aSeed.x-0.5)*0.05);
@@ -278,9 +285,10 @@ LIGHTS_FS = """
 in vec2 vUV; out vec4 o;
 uniform float uT, uAspect, uHi;
 uniform vec2 uStarPos[9]; uniform vec2 uStarI[9]; uniform float uLink[8];
+uniform float uStarR[9];   // thin rings that stay round a light, one per relight (fractional while one settles)
 uniform vec3 uColA, uColB;
 uniform int uMode; uniform vec2 uLantern; uniform float uLanternI;
-vec3 flare(vec2 uv, vec2 c, float I, float age, float seed){
+vec3 flare(vec2 uv, vec2 c, float I, float age, float seed, float nr){
   vec2 d = (uv-c)*vec2(uAspect,1.0);
   float r = length(d);
   float core = exp(-r*r/(0.0030*0.0030));
@@ -296,13 +304,22 @@ vec3 flare(vec2 uv, vec2 c, float I, float age, float seed){
     float ring = exp(-pow((r-age*0.16)/0.005,2.0))*exp(-age*1.6);
     outc += col*ring*0.9;
   }
+  // the history of the light: one thin, faint ring for every time it was lit again
+  for(int k=0;k<6;k++){
+    float on = clamp(nr-float(k), 0.0, 1.0);
+    if(on<=0.0) break;
+    float rad = 0.021+0.0062*float(k);
+    float th = exp(-pow((r-rad)/0.00085,2.0));
+    float sh = 0.80+0.20*sin(ang*3.0+uT*0.4+seed+float(k));
+    outc += col*th*on*sh*0.55*min(I+0.25, 1.0);
+  }
   return outc;
 }
 void main(){
   vec3 c = vec3(0.0);
   if(uMode==0){
     for(int i=0;i<9;i++){
-      if(uStarI[i].x>0.001) c += flare(vUV, uStarPos[i], uStarI[i].x, uStarI[i].y, float(i)*1.7+0.6);
+      if(uStarI[i].x>0.001) c += flare(vUV, uStarPos[i], uStarI[i].x, uStarI[i].y, float(i)*1.7+0.6, uStarR[i]);
     }
     for(int i=0;i<8;i++){
       float g = uLink[i];
@@ -345,6 +362,24 @@ void main(){
 }
 """
 
+# ------------------------------------------------------------------ text protection (Astra round 1, finding 3)
+# Drawn into the light buffer with blend (ZERO, SRC_COLOR) after the decorative light and before the words:
+# it multiplies motes, petals, snow, beams, nets and figures by (1 - field) behind every piece of text.
+PROTECT_FS = """
+#version 330
+in vec2 vUV; out vec4 o;
+uniform sampler2D uTexA, uTexB, uTexC;
+uniform vec2 uShade; uniform float uK;
+uniform vec4 uCredit; uniform vec2 uC0;
+void main(){
+  float m = max(texture(uTexA, vUV).b*uShade.x, texture(uTexB, vUV).b*uShade.y);
+  vec2 cuv = (vUV-uCredit.xy)/uCredit.z + uC0;
+  if(cuv.x>0.0 && cuv.x<1.0 && cuv.y>0.0 && cuv.y<1.0) m = max(m, texture(uTexC, cuv).b*uCredit.w);
+  m = smoothstep(0.0, 0.75, m);
+  o = vec4(vec3(1.0-uK*m), 1.0);
+}
+"""
+
 # ------------------------------------------------------------------ composite
 COMP_FS = "#version 330\n" + NOISE + """
 in vec2 vUV; out vec4 o;
@@ -366,6 +401,8 @@ uniform vec4 uShards; uniform vec3 uShardCol;
 uniform vec4 uIce; uniform vec3 uIceCol, uThawCol;
 uniform vec4 uField; uniform vec3 uFieldCol;
 uniform float uShadeK;
+uniform float uCalm, uCalmY;   // calm lower third: rings, glitter, reflections and thaw edges fade there
+float calmK(float y){ return 1.0-uCalm*(1.0-smoothstep(uCalmY-0.07, uCalmY+0.05, y)); }
 vec2 hash22(vec2 p){ vec3 p3 = fract(vec3(p.xyx)*vec3(0.1031,0.1030,0.0973));
   p3 += dot(p3, p3.yzx+33.33); return fract((p3.xx+p3.yz)*p3.zy); }
 float voro(vec2 x, out vec2 cell, out vec2 toC){
@@ -447,12 +484,13 @@ vec3 procedural(vec2 sv){
     col *= mix(0.82, 0.30, pow(d,0.75));
     // reflected lights
     float rf = (1.0-d)*(1.0-d);
-    col += (texture(uB2, ruv).rgb*0.16 + texture(uB3, ruv).rgb*0.26 + texture(uB4, ruv).rgb*0.30)*rf;
+    float ck = calmK(sv.y);
+    col += (texture(uB2, ruv).rgb*0.16 + texture(uB3, ruv).rgb*0.26 + texture(uB4, ruv).rgb*0.30)*rf*mix(0.25, 1.0, ck);
     // glitter under the low sun
     float sx = (uv.x-uSun.x)*uAspect;
     float path = exp(-sx*sx/(0.004+0.09*d*d));
     float gl = pow(vnoise(vec2(uv.x*uAspect*260.0, uv.y*900.0+uT*2.6)), 7.0);
-    col += uGlow*uSunInt*path*(0.10+2.6*gl)*(0.5+0.8*uHi)*smoothstep(0.0,0.05,d)*0.55;
+    col += uGlow*uSunInt*path*(0.10+2.6*gl*ck)*(0.5+0.8*uHi)*smoothstep(0.0,0.05,d)*0.55;
     // each note is a ring on the water
     for(int i=0;i<uNRings;i++){
       vec4 rg = uRings[i];
@@ -460,7 +498,7 @@ vec3 procedural(vec2 sv){
       float rr = length(q);
       float rad = 0.012+rg.z*0.055;
       float ring = exp(-pow((rr-rad)/0.0035,2.0)) + 0.5*exp(-pow((rr-rad*0.55)/0.0035,2.0));
-      col += (uGlow*0.6+hz*0.8)*ring*rg.w*exp(-rg.z*1.25)*0.40*smoothstep(0.0,0.12,rg.z);
+      col += (uGlow*0.6+hz*0.8)*ring*rg.w*exp(-rg.z*1.25)*0.40*smoothstep(0.0,0.12,rg.z)*ck;
     }
     col = mix(col, hz*0.9, exp(-d*42.0)*0.55);
   }
@@ -480,7 +518,7 @@ vec3 plateColor(sampler2D tx, vec2 sv, vec4 view, vec4 wat){
     puv += vec2(wob, wob*0.3);
     float wls = 0.5+(wl-view.y)*view.z;              // the water line on screen
     vec2 ruv = vec2(sv.x+wob*view.z, 2.0*wls-sv.y);
-    float rf = (1.0-d)*(1.0-d);
+    float rf = (1.0-d)*(1.0-d)*mix(0.25, 1.0, calmK(sv.y));
     extra += (textureLod(uB2, ruv, 0.0).rgb*0.16 + textureLod(uB3, ruv, 0.0).rgb*0.26 + textureLod(uB4, ruv, 0.0).rgb*0.30)*rf*wat.z;
   }
   puv = clamp(puv, vec2(0.001), vec2(0.999));
@@ -492,7 +530,7 @@ vec3 plateColor(sampler2D tx, vec2 sv, vec4 view, vec4 wat){
   lin += max(pow(halo, vec3(2.2))-0.22, 0.0)*0.40*view.w;   // soft halation round the bright parts
   if(water>0.5){
     float gl = pow(vnoise(vec2(puv.x*uAspect*170.0+uT*0.15, puv.y*900.0+uT*1.6)), 16.0);
-    lin += vec3(1.0,0.93,0.8)*gl*smoothstep(0.50,0.95,l)*1.6*wat.z*(0.3+d);
+    lin += vec3(1.0,0.93,0.8)*gl*smoothstep(0.50,0.95,l)*1.6*wat.z*(0.3+d)*mix(0.3, 1.0, calmK(sv.y));
   }
   return lin+extra;
 }
@@ -556,19 +594,19 @@ void main(){
   }
   vec3 col = background(bsv);
   if(shA>0.0){
-    float gw = 0.022*uShards.x;
-    float gap = (1.0-smoothstep(gw*0.5, gw, shE))*shLow;
-    float rim = exp(-max(shE-gw,0.0)/0.012)*shA;
+    float gw = 0.0075*uShards.x;
+    float gap = (1.0-smoothstep(gw*0.4, gw, shE))*shLow;
+    float rim = exp(-max(shE-gw,0.0)/0.0045)*shA;
     vec2 cell2, toC2;
     voro(vec2(sv.x*uAspect, sv.y)*uShards.z, cell2, toC2);
     float facing = 0.5+0.5*dot(normalize(-toC2+1e-5), normalize(vec2(-0.6,0.8)));
     col *= mix(1.0, 0.80+0.45*shH, shA);
     col += uGlow*0.06*shA*smoothstep(0.6,1.0,shH);
-    col = mix(col, col*0.30, gap);
-    col += (uGlow*0.40 + vec3(0.55,0.65,0.90)*0.20)*rim*(0.25+0.75*facing)*(1.0-gap);
+    col = mix(col, col*0.45, gap);
+    col += (uGlow*0.30 + vec3(0.55,0.65,0.90)*0.14)*rim*(0.25+0.75*facing)*(1.0-gap);
   }
   if(uShards.y>0.001){
-    float seam = exp(-shE/0.0035)*1.1 + exp(-shE/0.018)*0.10;
+    float seam = exp(-shE/0.0018)*1.0 + exp(-shE/0.010)*0.08;
     float glint = pow(vnoise(vec2(sv.x*uAspect, sv.y)*uShards.z*18.0+vec2(uT*0.6,0.0)), 8.0);
     col += uShardCol*uShards.y*shLow*seam*(0.55+4.0*glint);
   }
@@ -591,7 +629,7 @@ void main(){
     float sxx = (sv.x-uSun.x)*uAspect;
     iceC += uGlow*uSunInt*exp(-sxx*sxx/(0.01+0.05*d*d))*0.10*(0.5+frost);
     col = mix(col, iceC, iceM*uIce.z);
-    col += uThawCol*rimT*0.9;
+    col += uThawCol*rimT*0.9*mix(0.3, 1.0, calmK(sv.y));
   }
   if(uIce.w>0.001){
     vec2 q = (sv-0.5)*vec2(uAspect,1.0);
@@ -641,6 +679,11 @@ void main(){
   uv = sv;
   float sh = max(texture(uTextA, uv).b*uShade.x, texture(uTextB, uv).b*uShade.y);
   col *= 1.0-min(0.56*uShadeK*sh, 0.92);
+  // bright scenery (a dawn sky, a sunlit lake) is brought down to a fixed level behind the text, so white words
+  // always stand on a calm, darker field (Astra round 1, finding 3)
+  float lumB = dot(col, vec3(0.2126,0.7152,0.0722));
+  float capB = 0.050/max(uShadeK, 0.5);
+  col *= mix(1.0, min(capB/max(lumB,1e-5), 1.0), smoothstep(0.0, 0.85, sh)*0.92);
   float tight = max(wordMask(uTextA, uv, uTxA, uBndA), wordMask(uTextB, uv, uTxB, uBndB));
   col *= 1.0-min(0.50*uShadeK*tight, 0.92);
   vec2 cuv = (uv-uCredit.xy)/uCredit.z + uC0;

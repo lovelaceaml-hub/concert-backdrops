@@ -15,6 +15,21 @@ F_TAG = os.path.join(FONTS, "cormorant-garamond-latin-600-italic.ttf")
 W, H = S.W, S.H
 Y_CENTER = 0.392 * H     # centre of the words, measured from the top
 MAX_W = 1580
+END_TITLE_Y = 0.315      # centre of the title on a three-line end card (the lines sit under it, above the lower third)
+
+
+def shield(img, reach=1.0, gain=1.6):
+    """A wide, soft field round the letters (0..1, top row first), used to dim the scene and the light behind
+    the text (Astra round 1, finding 3). It fills the space between lines and reaches about 70 px out."""
+    from scipy import ndimage as ndi
+    a = np.asarray(img).astype(np.float32) / 255.0
+    h, w = a.shape
+    small = a[: h - h % 4, : w - w % 4].reshape(h // 4, 4, w // 4, 4).max(axis=(1, 3))
+    small = ndi.maximum_filter(small, size=int(round(7 * reach)) | 1)
+    small = ndi.gaussian_filter(small, 9.0 * reach)
+    small = np.clip(small * gain, 0.0, 1.0)
+    big = Image.fromarray((small * 255).astype(np.uint8)).resize((w, h), Image.BILINEAR)
+    return np.asarray(big)
 
 
 def _fit(lines, path, size):
@@ -59,8 +74,7 @@ def render(label, lines, size, font_path=F_PHRASE, label_alpha=232, y_center=Non
     sharp = np.maximum(np.asarray(phrase), np.asarray(lab))
     both = Image.fromarray(sharp)
     glow = np.asarray(both.filter(ImageFilter.GaussianBlur(9)))
-    back = both.filter(ImageFilter.MaxFilter(9)).filter(ImageFilter.GaussianBlur(46))
-    back = np.clip(np.asarray(back).astype(np.float32) * 2.4, 0, 255).astype(np.uint8)
+    back = shield(both)
     tex = np.dstack([sharp, glow, back])[::-1].copy()
     # particle targets from the expression itself (not the label)
     a = np.asarray(phrase).astype(np.float64)
@@ -78,20 +92,35 @@ def render(label, lines, size, font_path=F_PHRASE, label_alpha=232, y_center=Non
     return tex, np.hstack([targets, seeds]), (x0 / W, x1 / W)
 
 
-def render_tagline(text):
-    """Closing line(s) under the title. A newline starts a second line; long lines shrink to the safe width."""
+def render_tagline(text, title_y=None):
+    """Closing lines under the title. A newline starts another line; long lines shrink to the safe width.
+
+    One or two lines: the original layout. Three or more lines (the phase 2 end card, PHASE2.md item 7): the first
+    line (the peace tagline) is larger, the date and the place smaller beneath it, all above the lower third.
+    """
     lines = text.split("\n")
-    f, size = _fit(lines, F_TAG, 68)
     img = Image.new("L", (W, H), 0)
     d = ImageDraw.Draw(img)
-    y = Y_CENTER + 158
-    for k, line in enumerate(lines):
-        d.text((W / 2.0, y + k * size * 1.25), line, font=f, fill=250, anchor="ms")
-    wl = max(f.getlength(l) for l in lines)
+    if len(lines) < 3:
+        f, size = _fit(lines, F_TAG, 68)
+        y = Y_CENTER + 158
+        for k, line in enumerate(lines):
+            d.text((W / 2.0, y + k * size * 1.25), line, font=f, fill=250, anchor="ms")
+        wl = max(f.getlength(l) for l in lines)
+    else:
+        ty = (title_y if title_y is not None else END_TITLE_Y) * H
+        f1, s1 = _fit(lines[:1], F_TAG, 64)
+        f2, s2 = _fit(lines[1:], F_TAG, 48)
+        y = ty + 81 + 82                       # under the title block (title size 150)
+        d.text((W / 2.0, y), lines[0], font=f1, fill=252, anchor="ms")
+        y += s1 * 0.55 + s2 * 1.05
+        for line in lines[1:]:
+            d.text((W / 2.0, y), line, font=f2, fill=238, anchor="ms")
+            y += s2 * 1.25
+        wl = max([f1.getlength(lines[0])] + [f2.getlength(l) for l in lines[1:]])
     sharp = np.asarray(img)
     glow = np.asarray(img.filter(ImageFilter.GaussianBlur(6)))
-    back = img.filter(ImageFilter.MaxFilter(7)).filter(ImageFilter.GaussianBlur(36))
-    back = np.clip(np.asarray(back).astype(np.float32) * 2.2, 0, 255).astype(np.uint8)
+    back = shield(img)
     return np.dstack([sharp, glow, back])[::-1].copy(), ((W / 2 - wl / 2) / W, (W / 2 + wl / 2) / W)
 
 
@@ -105,8 +134,7 @@ def render_fragment(text, dy=0.0, size=74):
     wl = f.getlength(text)
     sharp = np.asarray(img)
     glow = np.asarray(img.filter(ImageFilter.GaussianBlur(6)))
-    back = img.filter(ImageFilter.MaxFilter(7)).filter(ImageFilter.GaussianBlur(36))
-    back = np.clip(np.asarray(back).astype(np.float32) * 2.2, 0, 255).astype(np.uint8)
+    back = shield(img, reach=0.8)
     return np.dstack([sharp, glow, back])[::-1].copy(), ((W / 2 - wl / 2) / W, (W / 2 + wl / 2) / W)
 
 
@@ -123,9 +151,15 @@ def render_credit(song_title, concert_title):
     ys, xs = np.nonzero(sharp > 8)
     bbox = (xs.min() / W, (xs.max() + 1) / W, 1.0 - (ys.max() + 1) / H, 1.0 - ys.min() / H)
     glow = np.asarray(img.filter(ImageFilter.GaussianBlur(9)))
-    back = img.filter(ImageFilter.MaxFilter(9)).filter(ImageFilter.GaussianBlur(40))
-    back = np.clip(np.asarray(back).astype(np.float32) * 2.2, 0, 255).astype(np.uint8)
+    back = shield(img)
     return np.dstack([sharp, glow, back])[::-1].copy(), bbox
+
+
+def title_y():
+    """Centre of the closing title (fraction from the top): TITLE y= if set; raised for a three-line end card."""
+    if "y" in S.TITLE:
+        return S.TITLE["y"]
+    return END_TITLE_Y if len(S.TAGLINE["text"].split("\n")) >= 3 else None
 
 
 def build_all():
@@ -133,9 +167,10 @@ def build_all():
     for p in S.PHRASES:
         tex, pts, b = render(p["label"], p["lines"], p["size"], y_center=p.get("y"))   # optional y: centre, from the top
         out.append(dict(tex=tex, pts=pts, bounds=b))
-    tex, pts, b = render(S.TITLE["label"], S.TITLE["lines"], S.TITLE["size"], font_path=F_TITLE)
+    ty = title_y()
+    tex, pts, b = render(S.TITLE["label"], S.TITLE["lines"], S.TITLE["size"], font_path=F_TITLE, y_center=ty)
     title = dict(tex=tex, pts=pts, bounds=b)
-    ttex, tb = render_tagline(S.TAGLINE["text"])
+    ttex, tb = render_tagline(S.TAGLINE["text"], ty)
     frags = []
     for fr in getattr(S, "FRAGMENTS", []):
         ftex, fb = render_fragment(fr["text"], fr.get("dy", 0.0), fr.get("size", 74))

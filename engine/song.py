@@ -14,10 +14,16 @@ if _HERE not in sys.path:
     sys.path.insert(0, _HERE)
 
 import arch as _arch  # noqa: E402
+import track as _track  # noqa: E402
 
 SONG_NAME = os.environ.get("SONG", "s03_original")
 _m = importlib.import_module("songs." + SONG_NAME)
+_track.check_song(_m)   # Astra round 1, finding 8: refuse Track keys that are not strictly increasing
 _m.star_state, _m.link_state = _arch.make(_m)   # params() in the song file looks these up at call time
 if not hasattr(_m, "FRAGMENTS"):
     _m.FRAGMENTS = []
+if not hasattr(_m, "BOTTOM_CALM"):
+    # Astra round 1, finding 12: calm lower third. On for song files that use the new scenes or people of
+    # light (every phase 2 promo); older files keep their look unless they set BOTTOM_CALM themselves.
+    _m.BOTTOM_CALM = 1.0 if (getattr(_m, "SCENES", None) or getattr(_m, "FIGURES", None)) else 0.0
 globals().update({k: v for k, v in vars(_m).items() if not k.startswith("__")})

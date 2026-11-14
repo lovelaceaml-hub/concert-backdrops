@@ -128,6 +128,24 @@ jobs:
           echo "final $fd s, audio streams $na"
           python3 -c "import sys; sys.exit(0 if abs($fd-$want)<0.15 and $na==1 else 1)" || { echo "final check failed"; exit 1; }
           cp silent.mp4 "$OUTNAME (silent).mp4"
+      - name: Share copy (1280x720, under 25 MB, for phones and messages)
+        run: |
+          mkdir -p share
+          fd=$(ffprobe -v error -show_entries format=duration -of csv=p=0 "$OUTNAME.mp4")
+          # video bitrate that fits 24 MB with 160 kb/s audio, at most 2600 kb/s
+          vb=$(python3 -c "print(int(min(2600, 24e6*8/1000/$fd - 160)))")
+          echo "duration $fd s, video bitrate ${vb}k"
+          ffmpeg -v error -y -i "$OUTNAME.mp4" -vf "scale=1280:720:flags=lanczos" -c:v libx264 -preset slow \
+            -crf 21 -maxrate "${vb}k" -bufsize "$(( vb * 2 ))k" -pix_fmt yuv420p -g 60 \
+            -color_primaries bt709 -color_trc bt709 -colorspace bt709 \
+            -c:a aac -b:a 160k -movflags +faststart "share/$OUTNAME (share).mp4"
+          size=$(stat -c %s "share/$OUTNAME (share).mp4")
+          sd=$(ffprobe -v error -show_entries format=duration -of csv=p=0 "share/$OUTNAME (share).mp4")
+          wh=$(ffprobe -v error -select_streams v:0 -show_entries stream=width,height -of csv=p=0 "share/$OUTNAME (share).mp4")
+          echo "share copy: $size bytes, $sd s, $wh"
+          [[ "$wh" == "1280,720" ]] || { echo "share copy is $wh, expected 1280,720"; exit 1; }
+          (( size < 25000000 )) || { echo "share copy is $size bytes, over 25 MB"; exit 1; }
+          python3 -c "import sys; sys.exit(0 if abs($sd-$fd)<0.2 else 1)" || { echo "share copy length check failed"; exit 1; }
       - name: Frame sheets for checking the video without downloading it
         continue-on-error: true
         run: |
@@ -149,4 +167,9 @@ jobs:
         with:
           name: ${{ inputs.name }}
           path: "${{ inputs.name }}*.mp4"
+          retention-days: 30
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ${{ inputs.name }} (share)
+          path: "share/${{ inputs.name }} (share).mp4"
           retention-days: 30
