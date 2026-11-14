@@ -213,15 +213,17 @@ MOTE_COLORS = ("#f4efb0", "#fff4d6")
 MOTE_Y = (-0.05, 1.05)
 TEXT_SHADOW = Track([(0, 1.6), (TOTAL, 1.7)])   # bright spring plates: a deeper veil behind every word
 
-# A. Scenes: the song's three painted plates (assets/plates/s05/), four scenes.
+# A. Scenes: the song's three painted plates (assets/plates/s05/), four scenes. The two "_stage" plates are the
+# painted originals with the band behind the arch of lights dimmed (so the stars read over the blossom crown) and
+# the painted reflections below the shore line darkened (calm lower third).
 SCENES = [
     # 1. the young blossom tree on the shore: two pray for the sister
-    dict(image="assets/plates/s05/p1_young_tree.jpg", t0=0.0, t1=15.55, fade_in=0.8, fade_out=1.6,
-         zoom=(1.10, 1.04), pan=((0.02, 0.0), (0.0, 0.0)), water=True, water_line=0.35, calm_gain=0.15,
+    dict(image="assets/plates/s05/p1_young_tree_stage.jpg", t0=0.0, t1=15.55, fade_in=0.8, fade_out=1.6,
+         zoom=(1.10, 1.04), pan=((0.02, 0.0), (0.0, 0.0)), water=True, water_line=0.35, calm_gain=0.4,
          gain=Track([(0, 0.95), (2.6, 0.8), (15.55, 0.8)])),
     # 2. the listening shore with its resting stone: the brother stops and listens
-    dict(image="assets/plates/s05/p2b_listening_shore.jpg", t0=13.95, t1=28.45, fade_in=1.6, fade_out=1.6,
-         transition="fade", zoom=(1.04, 1.11), pan=((0.0, 0.0), (0.015, 0.0)), water=True, water_line=0.38, calm_gain=0.25,
+    dict(image="assets/plates/s05/p2b_listening_shore_stage.jpg", t0=13.95, t1=28.45, fade_in=1.6, fade_out=1.6,
+         transition="fade", zoom=(1.04, 1.11), pan=((0.0, 0.0), (0.015, 0.0)), water=True, water_line=0.38, calm_gain=0.4,
          gain=0.8),
     # 3. the open spring lake: a wide view across the water to the snowy peaks and the blossoming far shore
     # (the left part of the first listening-shore painting; its resting stone stays out of frame)
@@ -229,20 +231,20 @@ SCENES = [
          transition="ripple", ripple_from=(0.42, 0.36), zoom=(1.50, 1.46), pan=((-0.15, -0.06), (-0.155, -0.06)),
          water=True, water_line=0.33, calm_gain=0.25, gain=0.8),
     # 4. the tree of blessing again, closer, as the sun breaks through above it; it stays for the end card
-    dict(image="assets/plates/s05/p1_young_tree.jpg", t0=39.75, t1=61.0, fade_in=1.6, fade_out=0.0,
-         transition="bloom", flash=0.45, zoom=(1.24, 1.12), pan=((-0.08, 0.02), (-0.05, 0.0)), water=True,
-         water_line=0.35, calm_gain=0.15,
+    dict(image="assets/plates/s05/p1_young_tree_stage.jpg", t0=39.75, t1=61.0, fade_in=1.6, fade_out=0.0,
+         transition="bloom", flash=0.25, zoom=(1.24, 1.12), pan=((-0.08, 0.02), (-0.05, 0.0)), water=True,
+         water_line=0.35, calm_gain=0.4,
          gain=Track([(0, 0.8), (42.0, 0.8), (44.0, 0.88), (46.5, 0.88), (49.0, 0.72), (TOTAL, 0.72)])),
 ]
 
 # B. People of light (shared library, assets/figures/): no acting pairs under the words (round 3 direction)
-# One brief appearance only, always in motion: on the far shore at the right, well clear of the words, a pair
-# of light carrying a load together gathers out of the air while walking slowly to the right, then drifts up
+# One brief appearance only, always in motion: on the far shore at the right, well clear of the words, a small
+# pair of light carrying a load together walks to the right along the shore, then rises from it and dissolves
 # into light (about 5 s on screen, never still, never under the words).
 FIGURES = [
-    dict(poses=["assets/figures/consideration_b.png"], t0=32.6, t1=34.6, gather=2.0, dissolve=3.0,
-         leave="drift", x=(0.80, 0.865), move=(32.6, 37.6), ease="linear", bob=1.0,
-         y=0.35, height=0.20, color="#ffc8d4", glow=0.8),
+    dict(poses=["assets/figures/consideration_b.png"], t0=32.4, t1=36.4, gather=1.2, dissolve=2.0,
+         leave="drift", x=(0.72, 0.92), move=(32.4, 37.4), ease="linear", bob=1.0,
+         y=Track([(32.4, 0.345), (35.4, 0.345), (38.4, 0.47)]), height=0.11, color="#ffc8d4", glow=0.85),
 ]
 
 
@@ -251,8 +253,8 @@ FIGURES = [
 # blossom petals form the blessing.
 BEAM_FROM = (0.08, 1.04)
 BEAM_TO = (0.25, 0.42)
-BEAM_WIDTH = (0.03, 0.11)
-BEAM = Track([(0, 0.0), (SUNRISE, 0.0), (44.0, 0.8), (46.0, 0.6), (47.6, 0.0), (TOTAL, 0.0)])
+BEAM_WIDTH = (0.05, 0.17)
+BEAM = Track([(0, 0.0), (SUNRISE, 0.0), (43.0, 1.1), (46.0, 1.1), (47.6, 0.0), (TOTAL, 0.0)])
 BEAM_COLOR = "#fff0c8"
 
 # Nine lights on an arch over the stage, one for each expression
@@ -288,7 +290,8 @@ TITLE = dict(label="Healing Concert", lines=["The Words of Mother’s Love"], si
              hold=1e9, star=1e9)
 # D. The song's blessing, formed of blossom petals as the sun breaks through, then blown away by the wind
 FRAGMENTS = [
-    dict(text="God bless you!", t0=FRAG_T0, t1=FRAG_T0 + 2.7, out=FRAG_T0 + 5.7, dy=0.03, size=140,
+    dict(text="      God bless you!",   # leading spaces: centred a little right of the tree and its beam
+         t0=FRAG_T0, t1=FRAG_T0 + 2.7, out=FRAG_T0 + 5.7, dy=0.03, size=140,
          glow="#ffb070", style="petals", colors=("#ffa9bf", "#fff0e2")),
 ]
 
@@ -319,7 +322,7 @@ def credit_state(t, bbox):
     tx = c["margin_x"] + c["scale"] * (x1 - x0) / 2.0
     ty = 1.0 - c["margin_top"] - c["scale"] * (y1 - y0) / 2.0
     cx, cy = cx0 * (1 - m) + tx * m, cy0 * (1 - m) + ty * m
-    alpha = a_in * (1.0 + (c["alpha_rest"] - 1.0) * m)
+    alpha = a_in * (1.0 + (c["alpha_rest"] - 1.0) * m) * (1.0 - ss(49.0, 50.0, t))   # gone before the end card
     return (cx, cy, scale, alpha), (cx0, cy0)
 
 
