@@ -342,11 +342,11 @@ def plate_wilderness(living):
         lay = gold * (core * (0.95 - 0.35 * d))[..., None]
         lay = glow_layer(lay, 4, 0.6)
         lay = glow_layer(lay, 18, 0.35)
-        lay *= (1 - 0.75 * np.clip((0.33 - V) / 0.33, 0, 1) ** 0.7)[..., None]
+        lay *= (1 - 0.88 * np.clip((0.36 - V) / 0.26, 0, 1) ** 0.6)[..., None]
         img = img * (1 - m[..., None]) + (ground * (1 - core[..., None] * 0.6) + lay) * m[..., None]
         # green gold shoots: small bright points along the veins
         rng = np.random.default_rng(71)
-        ys, xs = np.nonzero((crack > 0.6) & (V > 0.12))
+        ys, xs = np.nonzero((crack > 0.6) & (V > 0.30))
         pick = rng.choice(len(ys), size=min(900, len(ys)), replace=False)
         sh = np.zeros((H, W, 3))
         sh[ys[pick], xs[pick]] = hexc("#d8f07a") * 1.6
@@ -394,7 +394,7 @@ def plate_blossom():
                 trees.append((sx[k] + side * (0.03 + 0.06 * t[k]) + rng.normal(0, 0.01), sv[k], t[k]))
     trees.sort(key=lambda q: -q[1])
     for tx, tv, tk in trees:
-        if tv < 0.08:
+        if tv < 0.16:
             continue
         r = (0.010 + 0.040 * tk) * W
         cx, cy = tx * W, (1 - tv) * H - r * 1.2
@@ -416,7 +416,7 @@ def plate_blossom():
     haze = np.exp(-((V - 0.47) / 0.10) ** 2)
     img = img * (1 - 0.25 * haze[..., None]) + hexc("#ffd8a0") * (0.25 * haze)[..., None]
     img = dust(img, 500, 54, "#ffe0a0", (0.0, 1.0, 0.35, 0.95))
-    img = calm_bottom(img, 0.30, 0.55)
+    img = calm_bottom(img, 0.33, 0.72)
     img = vignette(img, 0.30)
     save(img, "blossom.jpg")
 
