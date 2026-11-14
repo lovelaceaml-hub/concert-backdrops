@@ -84,7 +84,7 @@ if __name__ == "__main__":
     save(np.maximum(b_l, a_r), "s06_concession_2.png")
     # both mirrored: the elder has walked past to the left, bowing; the one who yielded, a step further aside,
     # turns with the open arm to see them on their way
-    save(np.maximum(place(b_r[:, ::-1], 250), place(b_l[:, ::-1], 700)), "s06_concession_3.png")
+    save(np.maximum(place(b_r[:, ::-1], 360), place(b_l[:, ::-1], 800)), "s06_concession_3.png")
 
     ea, eb, ac = load("encouragement_a"), load("encouragement_b"), load("apology_c")
     save(ea, "s06_inclusiveness_1.png")
