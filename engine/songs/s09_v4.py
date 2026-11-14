@@ -110,12 +110,12 @@ class Song:
         crag = sum(a * (1.0 - np.abs(2.0 * lattice(fr, 20 + k) - 1.0))
                    for k, (a, fr) in enumerate(((0.5, 16), (0.25, 35), (0.125, 78), (0.0625, 170), (0.03, 380))))
         inside = (st >= 0) & (st <= MUSIC_END)
-        hgt = 0.016 + 0.060 * v + 0.030 * mid * (0.35 + v) + (0.008 + 0.016 * v) * (crag - 0.5)
-        edge = 0.014 + 0.008 * (crag - 0.5)
+        hgt = 0.010 + 0.034 * v + 0.018 * mid * (0.35 + v) + (0.005 + 0.010 * v) * (crag - 0.5)
+        edge = 0.009 + 0.005 * (crag - 0.5)
         sh = np.clip(np.minimum(xs - 0.0, 1.0 - xs) / RIDGE_X0, 0.0, 1.0)
         sh = sh * sh * (3 - 2 * sh)
         self.ridge = np.where(inside, hgt, edge) * (0.5 + 0.5 * sh)
-        self.ridge = np.maximum(self.ridge, 0.005).astype("f4")
+        self.ridge = np.maximum(self.ridge, 0.004).astype("f4")
         # water rings: one per clear note onset, placed by a hash of its index
         ons = d["onsets"]
         strength = np.interp(ons, t, on)
@@ -184,9 +184,9 @@ PAL = {
     "seamist": ("#020c10", "#06191d", "#1d3d3e", "#9fc8b8"),   # 1 night shore in sea mist
     "calling": ("#03121a", "#0a2730", "#2f5853", "#e8d9a8"),   # 2 the calling: warmer mist, lamp light
     "mirror":  ("#020a12", "#061a24", "#2b5658", "#d8eadc"),   # 3 clear stars, pearl glow on the horizon
-    "glory":   ("#06242c", "#124048", "#a8b896", "#fff0c4"),   # 4 dawn: the mist parts, pale gold sun
+    "glory":   ("#05222c", "#163f4a", "#d2c89c", "#fff0c4"),   # 4 dawn: the mist parts, pale gold sun
     "morning": ("#082c36", "#1a4e56", "#9cc4b4", "#fff4d8"),   # 5 morning sea under the net of light
-    "dusk":    ("#030d16", "#0a2230", "#2c4e56", "#f2c890"),   # 6 teal dusk, one warm star
+    "dusk":    ("#020a14", "#071c2a", "#1f4250", "#ecc28c"),   # 6 teal dusk, one warm star
 }
 _pal_keys = [
     (0.0, "seamist"), (CALL - 1.0, "seamist"), (CALL + 3.0, "calling"), (STILL_IN - 1.0, "calling"),
@@ -200,7 +200,7 @@ GLOW = Track([(t, lin(PAL[p][3])) for t, p in _pal_keys])
 
 # the sun waits below the sea, glows at the calling, rises for the glory, then sinks to one warm star at dusk
 SUN_INT = Track([(0, 0.06), (CALL, 0.08), (CALL + 3, 0.22), (STILL_IN, 0.18), (GLORY, 0.16), (GLORY + 4, 0.70),
-                 (GLORY + 8, 0.95), (NET_CAST + 3, 0.95), (DUSK + 1, 0.60), (TITLE_HIT, 0.32), (TOTAL, 0.30)])
+                 (GLORY + 8, 0.95), (NET_CAST + 3, 0.95), (DUSK + 1, 0.55), (TITLE_HIT, 0.24), (TOTAL, 0.22)])
 SUN_Y = Track([(0, 0.30), (GLORY, 0.32), (GLORY + 7.0, 0.50), (NET_CAST + 3, 0.53), (DUSK + 1, 0.50),
                (TITLE_HIT + 1.0, 0.425), (TOTAL, 0.42)])
 SUN_SIZE = Track([(0, 0.08), (GLORY, 0.09), (GLORY + 8, 0.11), (DUSK, 0.11), (TITLE_HIT + 1.0, 0.045),
@@ -239,9 +239,9 @@ PART = Track([(0, 0.0), (GLORY, 0.0), (GLORY + 3.5, 1.0), (DUSK, 1.0), (TITLE_HI
 BEAM = Track([(0, 0.0), (CALL + 0.5, 0.0), (CALL + 3.0, 0.55), (STILL_IN - 0.5, 0.55), (STILL_IN + 2.0, 0.0),
               (GLORY + 2.0, 0.0), (GLORY + 5.0, 0.85), (NET_CAST + 2, 0.85), (DUSK + 1.5, 0.0), (TOTAL, 0.0)])
 BEAM_FROM = (0.5, HORIZON + 0.002)
-BEAM_TO = (0.5, 0.36)
-BEAM_WIDTH = Track([(0, (0.004, 0.05)), (STILL_IN + 2.0, (0.004, 0.05)), (GLORY + 2.0, (0.012, 0.11)),
-                    (TOTAL, (0.012, 0.11))])
+BEAM_TO = (0.5, 0.25)
+BEAM_WIDTH = Track([(0, (0.004, 0.07)), (STILL_IN + 2.0, (0.004, 0.07)), (GLORY + 2.0, (0.012, 0.13)),
+                    (TOTAL, (0.012, 0.13))])
 BEAM_COLOR = Track([(0, lin("#d8ecff")), (STILL_IN + 2.0, lin("#d8ecff")),
                     (GLORY + 2.0, lin("#ffe2a8")), (TOTAL, lin("#ffe2a8"))])
 
@@ -250,9 +250,9 @@ BEAM_COLOR = Track([(0, lin("#d8ecff")), (STILL_IN + 2.0, lin("#d8ecff")),
 NET = Track([(0, 0.0), (NET_CAST, 0.0), (NET_CAST + 2.2, 1.0), (TOTAL, 1.0)])
 NET_ORIGIN = (0.5, 0.53)
 NET_Y0 = 0.44
-NET_SCALE = 6.5
-NET_BRIGHT = Track([(0, 0.0), (NET_CAST, 0.0), (NET_CAST + 0.6, 0.9), (TITLE_HIT - FORM_DUR - 0.5, 0.9),
-                    (TITLE_HIT - 1.0, 0.07), (TOTAL, 0.07)])
+NET_SCALE = 5.0
+NET_BRIGHT = Track([(0, 0.0), (NET_CAST, 0.0), (NET_CAST + 0.6, 0.7), (TITLE_HIT - FORM_DUR - 0.5, 0.7),
+                    (TITLE_HIT - 1.0, 0.035), (TOTAL, 0.035)])
 NET_COLOR = "#ffe1a6"
 NET_PULSE = "#fff6e2"
 # a very soft bloom when the Encouragement reaches star 7
@@ -282,7 +282,7 @@ PHRASES = [
 
 # End card of the promo (three lines)
 TITLE = dict(label="Healing Concert", lines=["The Words of Mother’s Love"], size=150, form=TITLE_HIT - FORM_DUR,
-             hold=1e9, star=1e9)
+             hold=1e9, star=1e9, y=0.29)
 TAGLINE = dict(text="Where a mother’s love reaches, peace settles.\nSunday, December 6 · 4:30 PM\n"
                     "The World Mission Society Church of God · 6720 W Sahara Ave, Las Vegas",
                t0=TITLE_HIT + 0.6, t1=TITLE_HIT + 2.8)
@@ -317,8 +317,8 @@ def credit_state(t, bbox):
     tx = c["margin_x"] + c["scale"] * (x1 - x0) / 2.0
     ty = 1.0 - c["margin_top"] - c["scale"] * (y1 - y0) / 2.0
     cx, cy = cx0 * (1 - m) + tx * m, cy0 * (1 - m) + ty * m
-    # the corner credit steps back before the end card
-    alpha = a_in * (1.0 + (c["alpha_rest"] - 1.0) * m) * (1.0 - ss(TITLE_HIT - 4.0, TITLE_HIT - 2.0, t))
+    # the corner credit steps back before the net of light spreads over the sky (the end card carries the title)
+    alpha = a_in * (1.0 + (c["alpha_rest"] - 1.0) * m) * (1.0 - ss(NET_CAST - 1.8, NET_CAST, t))
     return (cx, cy, scale, alpha), (cx0, cy0)
 
 
