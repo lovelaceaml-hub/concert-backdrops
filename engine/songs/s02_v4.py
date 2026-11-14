@@ -147,6 +147,8 @@ TITLE_HIT = 51.0       # end card (title from 48, three lines fully formed about
 # Nothing dark behind any text (direction round 4): no veil, no halo, no band. Legibility comes from the glow and
 # a naturally deep sky where the words stand.
 TEXT_SHADOW = 0.0
+# the traveler's light on the skyline dims under the end card so nothing bright sits just below its lines
+SKYLINE_LANTERN = Track([(0, 1.0), (47.0, 1.0), (51.0, 0.3), (TOTAL, 0.3)])
 
 # Sky palettes (top, middle, horizon, glow of the low sun)
 PAL = {
@@ -172,7 +174,7 @@ STARS = Track([(0, 0.25), (6, 0.70), (12, 0.80), (16, 0.85), (28, 0.80), (32, 1.
 MILKY = Track([(0, 0.0), (TOTAL, 0.0)])            # the Milky Way is song 01's
 CLOUDS = Track([(0, 0.30), (8, 0.45), (13, 0.40), (18, 0.15), (28, 0.10), (31, 0.0), (40, 0.0), (46, 0.30),
                 (TOTAL, 0.30)])
-AURORA = Track([(0, 0.0), (14, 0.0), (19, 0.20), (27, 0.22), (31, 0.08), (36, 0.04), (42, 0.0), (TOTAL, 0.0)])
+AURORA = Track([(0, 0.0), (14, 0.0), (19, 0.17), (27, 0.19), (31, 0.08), (36, 0.04), (42, 0.0), (TOTAL, 0.0)])
 RAIN = Track([(0, 0.0), (TOTAL, 0.0)])            # no rain in this song
 MOTES = Track([(0, 0.05), (8, 0.12), (16, 0.14), (28, 0.12), (32, 0.18), (39, 0.18), (44, 0.10), (TOTAL, 0.08)])
 LANTERNS = Track([(0, 0.0), (TOTAL, 0.0)])        # lanterns belong to songs 03 and 07
