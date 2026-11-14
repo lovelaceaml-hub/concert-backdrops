@@ -168,9 +168,10 @@ TITLE_HIT = 51.1                    # title forms from 48.1; end card complete 5
 GRAIN = (47.3, 0.72, 0.14)          # the last grain reaches the lake: time, x, y
 
 TEXT_SHADOW = 0.0         # round 4: nothing dark behind any text; the sky behind the words is kept deep instead
+TEXT_PROTECT = 0.0        # no dimmed patch in the dust behind the words either
 SKYLINE_LANTERN = 1.0     # the original look: a small light travels along the mountain line
 # a calm lower third; a little lighter in the field and wilderness scenes, where no expression is on screen
-BOTTOM_CALM = Track([(0, 0.55), (8.0, 0.55), (10.5, 1.0), (33.3, 1.0), (35.0, 0.5), (41.5, 0.5), (44.0, 0.6),
+BOTTOM_CALM = Track([(0, 0.55), (8.0, 0.55), (10.5, 1.0), (33.3, 1.0), (35.0, 0.65), (41.5, 0.65), (44.0, 0.6),
                      (TOTAL, 0.6)])
 # Rings carried from earlier songs: Apology (index 2) relit once in song 04; Encouragement (index 6) relit in
 # songs 02, 03 and 05.
@@ -193,9 +194,9 @@ SKY_MID = Track([(t, lin(PAL[p][1])) for t, p in _pal_keys])
 SKY_HOR = Track([(t, lin(PAL[p][2])) for t, p in _pal_keys])
 GLOW = Track([(t, lin(PAL[p][3])) for t, p in _pal_keys])
 SUN_INT = Track([(0, 1.0), (7, 0.9), (11, 0.75), (19.5, 0.7), (23.5, 0.5), (32, 0.45), (34.5, 0.32), (38, 0.32),
-                 (41.5, 0.65), (46, 0.8), (49, 0.7), (53, 0.45), (TOTAL, 0.4)])
+                 (41.5, 0.65), (46, 0.8), (49, 0.7), (53, 0.38), (TOTAL, 0.34)])
 SUN_Y = Track([(0, 0.325), (7, 0.318), (11, 0.292), (19.5, 0.284), (23.5, 0.245), (33, 0.24), (40, 0.245),
-               (46, 0.275), (49, 0.28), (54, 0.262), (TOTAL, 0.258)])
+               (46, 0.275), (49, 0.28), (54, 0.252), (TOTAL, 0.246)])
 SUN_SIZE = Track([(0, 0.12), (TOTAL, 0.125)])
 STARS = Track([(0, 0.12), (8, 0.18), (20, 0.24), (24, 0.36), (32, 0.4), (35, 0.2), (40, 0.12), (TOTAL, 0.14)])
 MILKY = Track([(0, 0.0), (TOTAL, 0.0)])
@@ -284,7 +285,7 @@ TAGLINE = dict(text="Where a mother’s love reaches, peace settles.\nSunday, De
 # Opening title card that then rests, small, in the top left corner
 CREDIT = dict(song="Heavenly Mother Tells Us to Be Grains", concert="The Words of Mother’s Love Healing Concert",
               t_in=0.2, t_full=1.2, t_move=3.6, t_rest=5.6, scale=0.34, alpha_rest=0.58,
-              margin_x=0.030, margin_top=0.048)
+              margin_x=0.030, margin_top=0.048, t_out=(46.0, 47.6))   # leaves before the brighter end sky
 
 
 def credit_state(t, bbox):
@@ -303,7 +304,7 @@ def credit_state(t, bbox):
     tx = c["margin_x"] + c["scale"] * (x1 - x0) / 2.0
     ty = 1.0 - c["margin_top"] - c["scale"] * (y1 - y0) / 2.0
     cx, cy = cx0 * (1 - m) + tx * m, cy0 * (1 - m) + ty * m
-    alpha = a_in * (1.0 + (c["alpha_rest"] - 1.0) * m)
+    alpha = a_in * (1.0 + (c["alpha_rest"] - 1.0) * m) * (1.0 - ss(c["t_out"][0], c["t_out"][1], t))
     return (cx, cy, scale, alpha), (cx0, cy0)
 
 
