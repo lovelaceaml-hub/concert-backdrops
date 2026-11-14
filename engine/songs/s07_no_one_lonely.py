@@ -141,14 +141,14 @@ from track import Track   # the shared Track refuses keys that are not strictly 
 # the care line about 41 to 53, verse 2 begins at 56.
 # Reading time contract (PHASE2.md item 4): formation takes 3.75 s, then at least 6 s solid, a 1.6 s dissolve
 # and a clean 0.5 s gap before the next text.
-G_FORM, G_HOLD = 27.5, 37.3            # Greeting: solid 31.25 to 37.3 (6.05 s); dissolve ends 38.9
-C_FORM, C_HOLD = 39.4, 49.2            # Consideration: solid 43.15 to 49.2 (6.05 s); dissolve ends 50.8
+G_FORM, G_HOLD = 26.0, 35.8            # Greeting: solid 29.75 to 35.8 (6.05 s); dissolve ends 37.4
+C_FORM, C_HOLD = 37.9, 47.7            # Consideration: solid 41.65 to 47.7 (6.05 s); dissolve ends 49.3
 NINTH = 1e9                            # no whole-arch glow in this promo
-TITLE_HIT = 54.3                       # title starts forming at 51.3
+TITLE_HIT = 52.8                       # title starts forming at 49.8; the end card is whole from about 56.2
 SKYLINE_LANTERN = 0.0                  # every scene is a painted plate with its own mountains
 BOTTOM_CALM = 1.0
 TEXT_PROTECT = 1.0
-TEXT_SHADOW = Track([(0, 1.2), (36.0, 1.2), (39.0, 1.6), (TOTAL, 1.7)])   # stronger on the bright village and gate
+TEXT_SHADOW = Track([(0, 0.9), (12.5, 0.9), (14.0, 1.2), (35.0, 1.2), (37.0, 1.6), (TOTAL, 1.7)])   # stronger on the bright village and gate
 
 # Star history (CONTINUITY-BOARD.md): rings earned before song 07. Apology relit in song 04, Inclusiveness relit
 # in song 06, Encouragement relit in songs 02, 03 and 05.
@@ -195,68 +195,86 @@ P = "assets/plates/s07/"
 F = "assets/song_figures/s07/"
 L = "assets/figures/"
 
-# A. Five scenes (design section 16), each a different place on the long path home
+# A. Five scenes (design section 16), each a different place on the long path home. The plates' lower thirds are
+# calmed in the files themselves (darker, half the colour, reflections smeared; assets/plates/s07/calm_plate.py).
+VILLAGE_ZOOM = 1.08
 SCENES = [
     # 1. The lone light at blue dusk: the long shore path, the bench under the lamp post
-    dict(image=P + "path_at_dusk.jpg", t0=0.0, t1=13.5, fade_in=1.0, fade_out=2.5,
-         zoom=(1.10, 1.03), pan=((0.0, 0.0), (0.0, 0.0)), water=True, water_line=0.40),
-    # 2. Mother's wish lights the way: the horizon star and the line of lights along the shore (bloom)
-    dict(image=P + "the_lit_path.jpg", t0=11.0, t1=26.5, fade_in=2.5, fade_out=2.5, transition="bloom",
-         flash=0.8, zoom=(1.02, 1.08), water=True, water_line=0.45),
+    dict(image=P + "path_at_dusk.jpg", t0=0.0, t1=14.5, fade_in=1.0, fade_out=2.0,
+         zoom=(1.03, 1.0), water=True, water_line=0.40),
+    # 2. Mother's wish lights the way: close on the line of lights running from Her star along the shore (bloom)
+    dict(image=P + "the_lit_path.jpg", t0=12.5, t1=25.5, fade_in=2.0, fade_out=2.5, transition="bloom",
+         flash=0.5, zoom=(1.38, 1.44), pan=((-0.14, 0.0), (-0.14, 0.0)), water=True, water_line=0.45),
     # 3. "How are you?": the bench by the shore (the camera pushes in)
-    dict(image=P + "bench_by_the_shore.jpg", t0=24.0, t1=40.0, fade_in=2.5, fade_out=2.0, transition="push",
-         zoom=(1.12, 1.08), water=True, water_line=0.21,
-         gain=Track([(0, 1.0), (27.0, 1.0), (30.0, 0.86), (37.5, 0.86), (40.0, 1.0)])),
-    # 4. The helping hand and the lantern procession: the village path (a ripple of stillness across the lake)
-    dict(image=P + "village_path.jpg", t0=38.0, t1=52.0, fade_in=2.0, fade_out=2.0, transition="ripple",
-         ripple_from=(0.45, 0.28), zoom=(1.10, 1.16), pan=((0.0, 0.03), (0.0, 0.05)), water=True, water_line=0.27,
-         gain=Track([(0, 0.9), (40.0, 0.78), (49.0, 0.78), (52.0, 0.9)])),
+    dict(image=P + "bench_by_the_shore.jpg", t0=23.0, t1=38.0, fade_in=2.5, fade_out=2.0, transition="push",
+         zoom=(1.10, 1.08), water=True, water_line=0.21,
+         gain=Track([(0, 1.0), (26.0, 1.0), (29.0, 0.88), (36.0, 0.88), (38.0, 1.0)])),
+    # 4. The helping hand: the village path, its windows dark, a ripple of stillness across the lake; then
+    # "answered from the windows" (this song's own effect): the windows light up one by one, from the near house
+    # to the far end of the village, as the kindness spreads (assets/plates/s07/windows.py)
+    dict(image=P + "village_w0.jpg", t0=36.0, t1=42.5, fade_in=2.0, fade_out=1.2, transition="ripple",
+         ripple_from=(0.70, 0.30), zoom=VILLAGE_ZOOM, water=True, water_line=0.27, gain=0.9),
+    dict(image=P + "village_w1.jpg", t0=41.3, t1=44.5, fade_in=1.2, fade_out=1.2, zoom=VILLAGE_ZOOM,
+         water=True, water_line=0.27, gain=0.9),
+    dict(image=P + "village_w2.jpg", t0=43.3, t1=46.5, fade_in=1.2, fade_out=1.2, zoom=VILLAGE_ZOOM,
+         water=True, water_line=0.27, gain=0.9),
+    dict(image=P + "village_w3.jpg", t0=45.3, t1=48.5, fade_in=1.2, fade_out=1.2, zoom=VILLAGE_ZOOM,
+         water=True, water_line=0.27, gain=0.9),
+    dict(image=P + "village_path.jpg", t0=47.3, t1=52.5, fade_in=1.2, fade_out=2.0, zoom=VILLAGE_ZOOM,
+         water=True, water_line=0.27, gain=0.9),
     # 5. Toward home: the lantern path up to the gate of light in the clouds
-    dict(image=P + "gate_of_home.jpg", t0=50.0, t1=61.0, fade_in=2.0, fade_out=0.0, transition="dissolve",
-         zoom=(1.04, 1.10), pan=((0.0, 0.0), (0.0, 0.0)), water=True, water_line=0.21,
-         gain=Track([(0, 1.0), (52.0, 0.92), (55.0, 0.74), (TOTAL, 0.74)])),
+    dict(image=P + "gate_of_home.jpg", t0=50.5, t1=61.0, fade_in=2.0, fade_out=0.0, transition="fade",
+         zoom=(1.04, 1.08), water=True, water_line=0.21,
+         gain=Track([(0, 0.92), (52.0, 0.86), (54.0, 0.74), (TOTAL, 0.74)])),
 ]
 
-# B. People of light. The traveler and Heavenly Mother (seen only from behind, robed, a lamp raised) are this
-# song's own figures; the helper's Greeting and Consideration come from the shared library.
+# B. People of light. The traveler, Heavenly Mother (seen only from behind, robed, a lamp raised) and the lantern
+# pair are this song's own figures; the helper comes from the shared Greeting pose (only the helper, so the one
+# greeted is the traveler on the bench) and Consideration is the shared pair.
 FIGURES = [
-    # scene 1: the elderly traveler walks the path with a heavy bundle and sits down on the bench
-    dict(poses=[F + "s07_traveler_walk.png", F + "s07_traveler_seated.png"], t0=1.0, t1=11.5, pose_times=[7.5],
-         morph=2.2, x=0.30, y=0.40, height=0.27, color="#ffcf9a", to=(0.10, 0.47), dissolve=3.0),
+    # scene 1: the elderly traveler walks the shore path toward the bench with her heavy bundle and stick ...
+    dict(poses=[F + "s07_traveler_walk.png"], t0=0.8, t1=5.4, x=0.40, y=0.45, height=0.22, flip=True,
+         color="#ffcf9a", to=(0.235, 0.52), dissolve=2.0),
+    # ... and sits down alone on the bench under the lamp
+    dict(poses=[F + "s07_traveler_seated.png"], t0=5.0, t1=11.5, gather=2.5, x=0.235, y=0.455, height=0.18,
+         color="#ffd2a0", to=(0.14, 0.50), dissolve=2.5),
     # scene 2: the lone light on the far bench, found by the path of light from Mother's star
-    dict(poses=[F + "s07_traveler_seated.png"], t0=13.0, t1=24.0, x=0.115, y=0.44, height=0.15,
-         color="#ffd2a0", glow=1.2, to=(0.33, 0.36), dissolve=2.6),
-    # scene 3: still alone on the bench, until the helper comes
-    dict(poses=[F + "s07_traveler_seated.png"], t0=23.5, t1=27.0, x=0.33, y=0.25, height=0.30,
-         color="#ffd2a0", to=(0.58, 0.40), dissolve=2.0, gather=2.0),
-    # Greeting: the helper walks up and greets the lonely one, who places their hands in the offered hands
-    dict(poses=[L + "greeting_a.png", L + "greeting_b.png"], t0=25.0, t1=36.8, pose_times=[31.0],
-         x=0.50, y=0.20, height=0.40, to_star=0, color="#ffd59a"),
+    dict(poses=[F + "s07_traveler_seated.png"], t0=13.5, t1=23.5, gather=2.5, x=0.14, y=0.44, height=0.17,
+         color="#ffd2a0", glow=1.2, to=(0.29, 0.40), dissolve=2.4),
+    # scene 3: still alone on the bench through the Greeting ...
+    dict(poses=[F + "s07_traveler_seated.png"], t0=23.5, t1=35.3, gather=2.5, x=0.29, y=0.28, height=0.28,
+         color="#ffd2a0", to_star=0),
+    # ... the helper walks up, waves, and holds out both hands to her: "How are you?"
+    dict(poses=[F + "s07_helper_greet_a.png", F + "s07_helper_greet_b.png"], t0=25.0, t1=35.3,
+         pose_times=[30.0], x=0.47, y=0.28, height=0.36, flip=True, to_star=0, color="#ffd59a"),
     # Consideration: the helper offers a hand with the heavy bundle, and they carry it together
-    dict(poses=[L + "consideration_a.png", L + "consideration_b.png"], t0=38.2, t1=48.7, pose_times=[43.5],
-         x=0.50, y=0.20, height=0.40, to_star=7, color="#ffc98a"),
-    # scene 5: Heavenly Mother, seen only from behind, lamp held high, leads the way up the path, and Her light
-    # goes on to the gate of home
-    dict(poses=[F + "s07_mother_lamp_behind.png"], t0=49.5, t1=55.5, x=0.20, y=0.20, height=0.34,
-         color="#fff0d2", glow=1.1, to=(0.76, 0.80), dissolve=3.5),
+    dict(poses=[L + "consideration_a.png", L + "consideration_b.png"], t0=36.8, t1=C_HOLD - 0.5, pose_times=[42.0],
+         x=0.42, y=0.28, height=0.34, to_star=7, color="#ffc98a"),
+    # the lantern procession: the front pair of lantern-bearers walks up the village path
+    dict(poses=[F + "s07_lantern_pair.png"], t0=44.0, t1=51.0, x=0.77, y=0.37, height=0.21,
+         color="#ffd27a", glow=1.1, leave="drift", dissolve=3.0),
+    # scene 5: Heavenly Mother, seen only from behind, lamp held high, leads the way home up the path (below the
+    # end card; She stays to the end)
+    dict(poses=[F + "s07_mother_lamp_behind.png"], t0=52.0, t1=70.0, x=0.17, y=0.12, height=0.25,
+         color="#fff0d2", glow=1.1),
 ]
 
 # C. Signature effects. The lone light found: a path of light from the horizon star along the shore to the bench
-# (scene 2). The gate of light: a gentle beam from the gate down onto the lantern path (scene 5).
-BEAM = Track([(0, 0.0), (15.5, 0.0), (19.0, 0.55), (23.0, 0.55), (25.5, 0.0), (51.5, 0.0), (54.0, 0.40),
-              (TOTAL, 0.40)])
+# (scene 2). The gate of light: a gentle beam from the gate down onto the upper path, right of the end card.
+BEAM = Track([(0, 0.0), (15.5, 0.0), (19.0, 0.70), (23.0, 0.70), (25.0, 0.0), (52.5, 0.0), (54.5, 0.25),
+              (TOTAL, 0.25)])
 
 
 def BEAM_FROM(t):
-    return (0.53, 0.55) if t < 40.0 else (0.76, 0.84)
+    return (0.74, 0.556) if t < 40.0 else (0.79, 0.85)
 
 
 def BEAM_TO(t):
-    return (0.12, 0.46) if t < 40.0 else (0.36, 0.30)
+    return (0.16, 0.46) if t < 40.0 else (0.75, 0.62)
 
 
 def BEAM_WIDTH(t):
-    return (0.012, 0.03) if t < 40.0 else (0.03, 0.07)
+    return (0.03, 0.05) if t < 40.0 else (0.02, 0.04)
 
 
 BEAM_COLOR = "#ffd9a8"
@@ -292,9 +310,9 @@ TITLE = dict(label="Healing Concert", lines=["The Words of Mother’s Love"], si
 # D. Short lyric fragments: Mother's wish written by a pen of light, and the refrain rising out of the lake;
 # never on screen together with an expression
 FRAGMENTS = [
-    dict(text="“on the path to heaven”", t0=4.5, t1=7.5, out=11.5, dy=0.10, size=84, glow="#ffe4c0", style="write"),
-    dict(text="our Mother’s earnest wish", t0=14.5, t1=18.5, out=23.5, dy=0.04, size=78, glow="#ffd6b8",
-         style="reflection", line=0.45),
+    dict(text="“on the path to heaven”", t0=4.2, t1=7.2, out=10.2, dy=0.10, size=84, glow="#ffe4c0", style="write"),
+    dict(text="our Mother’s earnest wish", t0=15.5, t1=19.5, out=23.0, dy=0.04, size=78, glow="#ffd6b8",
+         style="reflection", line=0.55),
 ]
 
 # the three-line end card (PHASE2.md item 7)
@@ -330,9 +348,9 @@ def credit_state(t, bbox):
 
 # Waves of light when a light is lit, and the peace ring: a wave of stillness across the lake after each of
 # Mother's words (unrest to stillness)
-WAVES = [(PHRASES[0]["star"], STAR_POS[0][0], STAR_POS[0][1], 0.9),
+WAVES = [(PHRASES[0]["star"], STAR_POS[0][0], STAR_POS[0][1], 0.5),
          (PHRASES[7]["arrive"], STAR_POS[7][0], STAR_POS[7][1], 0.6),
-         (G_HOLD + 2.6, 0.5, 0.40, 0.8), (C_HOLD + 2.6, 0.5, 0.40, 0.8),
+         (G_HOLD + 2.6, 0.5, 0.40, 0.8), (C_HOLD + 1.8, 0.5, 0.30, 0.6),
          (TITLE_HIT, 0.5, 0.62, 1.1)]
 
 
