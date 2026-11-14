@@ -24,7 +24,7 @@ MUSIC_END = 59.5
 SONG_END = 60.0
 TOTAL = 60.0
 NFRAMES = int(round(TOTAL * FPS))
-HORIZON = 0.30
+HORIZON = 0.33         # a little more lake, so the great lamp's road of light runs down the centre
 RIDGE_X0, RIDGE_W = 0.035, 0.93
 
 
@@ -74,11 +74,11 @@ class Track:
 # ----------------------------------------------------------------- the minute, scene by scene
 # 0 to 6     title card over the restless night; one small warm star on the horizon
 # 6 to 16    the lamp is lifted: the horizon star rises and brightens, a road of gold on the water,
-#            Her mantle of light (soft gold and rose aurora) unfolds along the horizon
+#            its deep gold glow spreads along the horizon
 # 16 to 47   Mother's words go out: Greeting, Consideration, Encouragement, each about 9 to 10 seconds;
-#            rescued lights rise as lanterns
+#            rescued lights rise as quiet motes of gold
 # 47 to 50   the other six lights flare in turn and the whole arch glows (closing gift of the nine words)
-# 48 to 60   end card and concert details over the dawn; calm hold, fade at the very end
+# 48 to 60   end card and concert details under the lamp, still before dawn; calm hold, fade at the very end
 LAMP = 6.0
 WORDS1 = 16.5
 WORDS2 = 26.5
@@ -118,8 +118,10 @@ class Song:
         # the mountain skyline, shaped by the story curve (the same method as a measured song)
         xs = np.linspace(0.0, 1.0, 2048)
         st = (xs - RIDGE_X0) / RIDGE_W * MUSIC_END
-        base = np.interp(st, ft, _gauss(n_f, 2.3 * FPS))
-        mid = np.interp(st, ft, _gauss(n_f, 1.0 * FPS)) - base
+        # still, centred framing: a symmetrical far range, highest at the sides, with a low saddle at the centre
+        # where the great lamp rests (no recording, so it is not drawn from loudness)
+        base = 0.30 + 0.42 * np.abs(2.0 * xs - 1.0) ** 1.3
+        mid = np.zeros_like(xs)
         v = np.clip((base - 0.22) / 0.56, 0.0, 1.0) ** 1.4
 
         def lattice(freq, seed):
@@ -149,7 +151,7 @@ class Song:
         self.ring_t = np.array([k[0] for k in keep])
 
     def lantern(self, t):
-        x = RIDGE_X0 + RIDGE_W * min(max(t / MUSIC_END, 0.0), 1.0)
+        x = 0.5   # the carried light rests at the centre: it is the great lamp itself
         y = HORIZON + float(np.interp(x, np.linspace(0, 1, 2048), self.ridge))
         return x, y
 
@@ -164,42 +166,41 @@ class Song:
         return out
 
 
-# Palettes (top of sky, middle, horizon, glow of the low sun): deep night, the lamp's gold, pre-dawn rose, dawn
+# Look for song 10 (DESIGN-SYSTEM.md section 6): pre-dawn under a great lamp. Midnight blue and deep gold, one strong
+# golden light at the centre of the horizon, quiet stars, still and centred. No aurora, rain, petals, lanterns or
+# clouds to speak of: those belong to other songs.
 PAL = {
-    "night":   ("#02030b", "#0b1026", "#1a2346", "#ffc46b"),
-    "lamp":    ("#03050f", "#0e1530", "#3a2f4e", "#ffd9a0"),
-    "predawn": ("#070b26", "#2b2356", "#a05d6c", "#ffb48c"),
-    "rose":    ("#0d173e", "#4a3576", "#f2a08a", "#ffd08c"),
-    "dawn":    ("#12245a", "#6c4a88", "#f5a070", "#ffe3a3"),
-    "morning": ("#15295f", "#7d5086", "#f6b07e", "#ffe8bc"),
+    "midnight": ("#010208", "#060d26", "#121d40", "#ffb347"),
+    "lamp":     ("#01030b", "#08112e", "#1f2a4e", "#ffbf4f"),
+    "gold":     ("#020514", "#0b1638", "#3a3448", "#ffc657"),
+    "predawn":  ("#03071a", "#0f1b44", "#5c4238", "#ffcd63"),
 }
 _pal_keys = [
-    (0.0, "night"), (5.0, "night"), (12.0, "lamp"), (20.0, "lamp"), (30.0, "predawn"), (40.0, "rose"),
-    (49.0, "dawn"), (56.0, "morning"), (TOTAL, "morning"),
+    (0.0, "midnight"), (6.0, "midnight"), (16.0, "lamp"), (32.0, "gold"), (48.0, "predawn"), (TOTAL, "predawn"),
 ]
 SKY_TOP = Track([(t, lin(PAL[p][0])) for t, p in _pal_keys])
 SKY_MID = Track([(t, lin(PAL[p][1])) for t, p in _pal_keys])
 SKY_HOR = Track([(t, lin(PAL[p][2])) for t, p in _pal_keys])
 GLOW = Track([(t, lin(PAL[p][3])) for t, p in _pal_keys])
 
-# The sun is the horizon star: small and low, then lifted as Mother's lamp
-SUN_INT = Track([(0, 0.12), (LAMP, 0.16), (12, 0.55), (16, 0.80), (30, 0.88), (46, 0.98), (50, 1.06), (56, 1.02), (TOTAL, 1.0)])
-SUN_Y = Track([(0, 0.25), (LAMP, 0.25), (16, 0.29), (30, 0.31), (46, 0.34), (52, 0.37), (TOTAL, 0.38)])
-SUN_SIZE = Track([(0, 0.085), (LAMP, 0.09), (16, 0.11), (46, 0.12), (52, 0.135), (TOTAL, 0.135)])
-STARS = Track([(0, 0.0), (0.2, 0.0), (2.5, 0.95), (12, 1.0), (24, 0.7), (40, 0.35), (50, 0.18), (TOTAL, 0.15)])
-MILKY = Track([(0, 0.0), (3, 0.35), (8, 0.3), (12, 0.0), (TOTAL, 0.0)])
-CLOUDS = Track([(0, 0.55), (10, 0.6), (18, 0.4), (34, 0.3), (50, 0.35), (TOTAL, 0.35)])
-AURORA = Track([(0, 0.0), (9, 0.0), (14, 0.30), (20, 0.40), (34, 0.36), (46, 0.40), (50, 0.44), (56, 0.36), (TOTAL, 0.34)])
+# The sun is Mother's great lamp, always at the centre of the horizon: a small warm star, then lifted and strong
+SUN_INT = Track([(0, 0.18), (LAMP, 0.22), (12, 0.80), (16, 1.10), (30, 1.20), (46, 1.30), (50, 1.42), (56, 1.32), (TOTAL, 1.28)])
+SUN_Y = Track([(0, 0.325), (LAMP, 0.325), (16, 0.338), (46, 0.345), (TOTAL, 0.348)])
+SUN_SIZE = Track([(0, 0.07), (LAMP, 0.075), (16, 0.13), (46, 0.15), (52, 0.16), (TOTAL, 0.16)])
+STARS = Track([(0, 0.0), (0.2, 0.0), (2.5, 0.75), (16, 0.7), (46, 0.6), (TOTAL, 0.55)])
+MILKY = Track([(0, 0.0), (TOTAL, 0.0)])
+CLOUDS = Track([(0, 0.12), (TOTAL, 0.12)])
+AURORA = Track([(0, 0.0), (TOTAL, 0.0)])
 RAIN = Track([(0, 0.0), (TOTAL, 0.0)])
-MOTES = Track([(0, 0.04), (3, 0.14), (12, 0.25), (24, 0.40), (46, 0.6), (50, 0.72), (56, 0.55), (TOTAL, 0.5)])
-LANTERNS = Track([(0, 0.0), (18, 0.0), (22, 0.6), (30, 0.9), (46, 1.0), (52, 0.45), (58, 0.2), (TOTAL, 0.2)])
+MOTES = Track([(0, 0.03), (3, 0.08), (16, 0.14), (30, 0.20), (46, 0.28), (50, 0.34), (TOTAL, 0.26)])
+LANTERNS = Track([(0, 0.0), (TOTAL, 0.0)])
 PETALS = Track([(0, 0.0), (TOTAL, 0.0)])
-TRAIL = Track([(0, 0.0), (1.2, 0.45), (16, 0.65), (46, 0.9), (52, 1.0), (TOTAL, 0.9)])
-ZOOM = Track([(0, 1.0), (16, 0.99), (46, 0.972), (TOTAL, 0.955)])
+TRAIL = Track([(0, 0.0), (TOTAL, 0.0)])
+ZOOM = Track([(0, 1.0), (TOTAL, 1.0)])           # still camera
 EXPOSURE = Track([(0, 1.0), (TOTAL, 1.0)])
 FADE = Track([(0, 0.0), (1.0, 1.0), (57.0, 1.0), (59.8, 0.0)])
-RAYS = Track([(0, 0.0), (10, 0.0), (16, 0.35), (30, 0.45), (46, 0.52), (50, 0.62), (56, 0.55), (TOTAL, 0.52)])
-PART = Track([(0, 0.0), (12, 0.0), (17, 0.8), (24, 0.8), (30, 0.3), (TOTAL, 0.3)])
+RAYS = Track([(0, 0.0), (10, 0.0), (16, 0.18), (46, 0.26), (50, 0.34), (TOTAL, 0.28)])
+PART = Track([(0, 0.0), (TOTAL, 0.0)])
 
 STAR_POS = []
 for i in range(9):
