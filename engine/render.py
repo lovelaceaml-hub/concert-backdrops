@@ -105,6 +105,7 @@ class Renderer:
             vao = ctx.vertex_array(self.p_textp, [(ctx.buffer(d["pts"].tobytes()), "3f 4f", "aTarget", "aSeed")])
             self.words.append(dict(meta=meta, tex=ttex(d["tex"]), vao=vao, n=d["pts"].shape[0], bounds=d["bounds"]))
         self.tag = dict(tex=ttex(tag["tex"]), bounds=tag["bounds"])
+        self.frags = [dict(tex=ttex(f["tex"]), bounds=f["bounds"], meta=f["meta"]) for f in tag["frags"]]
         ctex, self.credit_bbox = T.render_credit(S.CREDIT["song"], S.CREDIT["concert"])
         self.t_credit = ctx.texture((S.W, S.H), 3, data=ctex.tobytes(), dtype="f1")
         self.t_credit.build_mipmaps()
@@ -180,6 +181,18 @@ class Renderer:
             self.v_text.render(moderngl.TRIANGLE_STRIP)
             texB, shadeB = self.tag["tex"], smoothstep(tg["t0"], tg["t1"] + 1.0, t)
             txB, bndB = ((t - tg["t0"]) + 1.35, (tg["t1"] - tg["t0"]), -1.0, 0.92), self.tag["bounds"]
+
+        # short lyric fragments: form, hold, then dissolve
+        for fr in self.frags:
+            m = fr["meta"]
+            if not (m["t0"] <= t < m["out"] + 1.6):
+                continue
+            fly = (t - m["out"]) if t > m["out"] else -1.0
+            fr["tex"].use(location=0)
+            setu(self.p_text, uTex=0, uFormT=(t - m["t0"]) + 1.35, uFormDur=max(m["t1"] - m["t0"], 0.5), uFlyT=fly,
+                 uAspect=asp, uAlpha=m.get("alpha", 0.95), uPulse=0.0, uBounds=fr["bounds"],
+                 uCol=L("#fff1d6"), uGlowCol=L(m.get("glow", "#ffc48c")))
+            self.v_text.render(moderngl.TRIANGLE_STRIP)
 
         # song title and concert title: a card at the start, then small in the corner
         credit, c0 = S.credit_state(t, self.credit_bbox)

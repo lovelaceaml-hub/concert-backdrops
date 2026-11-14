@@ -1,0 +1,108 @@
+name: Render
+
+# Manual only. Renders still frames or a video for one song in the cloud (no graphics card needed).
+on:
+  workflow_dispatch:
+    inputs:
+      song:
+        description: "Song file in engine/songs, without .py (for example s05_god_bless_you)"
+        required: true
+        default: s03_original
+      audio:
+        description: "Audio file in the repo that the video follows (for example audio/promo/s05.mp3)"
+        required: true
+        default: audio/promo/s03.mp3
+      mode:
+        description: "stills or video"
+        required: true
+        default: stills
+      stills:
+        description: "Seconds to render as still frames (stills mode)"
+        required: false
+        default: "2,8,15,25,35,45,55"
+      name:
+        description: "Name for the output files"
+        required: true
+        default: test
+
+env:
+  SONG: ${{ inputs.song }}
+  LIBGL_ALWAYS_SOFTWARE: "1"
+  PARTS: "4"
+
+jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    outputs:
+      frames: ${{ steps.n.outputs.frames }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.11" }
+      - run: pip install numpy
+      - id: n
+        run: echo "frames=$(cd engine && python -c 'import song; print(song.NFRAMES)')" >> "$GITHUB_OUTPUT"
+
+  render:
+    needs: prepare
+    runs-on: ubuntu-latest
+    timeout-minutes: 300
+    strategy:
+      fail-fast: true
+      matrix:
+        part: ${{ inputs.mode == 'video' && fromJSON('[0,1,2,3]') || fromJSON('[0]') }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.11" }
+      - name: System packages (software graphics, ffmpeg)
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq libegl1 libgles2 libgl1-mesa-dri libegl-mesa0 ffmpeg >/dev/null
+      - name: Python packages
+        run: pip install -q numpy scipy librosa moderngl pillow fonttools brotli soundfile
+      - name: Fonts
+        run: |
+          mkdir -p /tmp/fs && cd /tmp/fs && npm pack -q @fontsource/cormorant-garamond @fontsource/jost >/dev/null
+          for f in *.tgz; do d="${f%.tgz}"; mkdir -p "$d"; tar xzf "$f" -C "$d"; done
+          cd "$GITHUB_WORKSPACE" && python tools/setup_fonts.py /tmp/fs fonts
+      - name: Measure the music
+        run: |
+          mkdir -p "work/$SONG"
+          ffmpeg -v error -y -i "${{ inputs.audio }}" -ac 1 -ar 22050 "work/$SONG/audio.wav"
+          python engine/analyze.py "work/$SONG/audio.wav" "work/$SONG/features.npz" | head -40
+      - name: Stills
+        if: inputs.mode == 'stills'
+        run: cd engine && python render.py --stills "${{ inputs.stills }}" --outdir "../out/${{ inputs.name }}-stills"
+      - name: Video part
+        if: inputs.mode == 'video'
+        run: |
+          N=${{ needs.prepare.outputs.frames }}; P=${{ matrix.part }}
+          A=$(( N * P / PARTS )); B=$(( N * (P + 1) / PARTS ))
+          mkdir -p out && cd engine && python render.py --range $A $B --out "../out/part$P.mp4" --crf 16
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ${{ inputs.mode == 'video' && format('part{0}', matrix.part) || format('{0}-stills', inputs.name) }}
+          path: out/
+          retention-days: 14
+
+  finish:
+    if: inputs.mode == 'video'
+    needs: render
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg >/dev/null
+      - uses: actions/download-artifact@v4
+        with: { path: parts, pattern: "part*", merge-multiple: true }
+      - name: Join the parts and add the music
+        run: |
+          ls -la parts
+          for i in 0 1 2 3; do echo "file '$PWD/parts/part$i.mp4'"; done > list.txt
+          ffmpeg -v error -y -f concat -safe 0 -i list.txt -c copy silent.mp4
+          ffmpeg -v error -y -i silent.mp4 -i "${{ inputs.audio }}" -map 0:v -map 1:a -c:v copy -c:a aac -b:a 256k -shortest -movflags +faststart "${{ inputs.name }}.mp4"
+          cp silent.mp4 "${{ inputs.name }} (silent).mp4"
+          ffprobe -v error -show_entries format=duration -of csv=p=0 "${{ inputs.name }}.mp4"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ${{ inputs.name }}
+          path: "${{ inputs.name }}*.mp4"
+          retention-days: 30
