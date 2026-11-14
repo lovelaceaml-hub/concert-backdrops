@@ -302,6 +302,8 @@ def main():
             print(f"frame {i} ({i - f0}/{f1 - f0})  {el:.0f}s  {(el / max(i - f0, 1)):.2f}s/frame", flush=True)
     ff.stdin.close()
     ff.wait()
+    if ff.returncode != 0:
+        sys.exit(f"ffmpeg failed with code {ff.returncode}")
     print("done", a.out, f"{time.time() - t0:.0f}s", flush=True)
 
 

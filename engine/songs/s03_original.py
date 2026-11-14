@@ -11,7 +11,7 @@ import numpy as np
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(os.path.dirname(HERE))   # repository root (this file is engine/songs/)
-SONG_ID = os.path.splitext(os.path.basename(__file__))[0]
+SONG_ID = os.environ.get("SONG", os.path.splitext(os.path.basename(__file__))[0])
 FEATURES = os.environ.get("FEATURES", os.path.join(ROOT, "work", SONG_ID, "features.npz"))
 
 FPS = 30
