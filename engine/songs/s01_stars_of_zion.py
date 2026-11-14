@@ -190,6 +190,13 @@ AURORA = Track([(0, 0.0), (TOTAL, 0.0)])   # no aurora in song 01 (it belongs to
 RAIN = Track([(0, 0.0), (TOTAL, 0.0)])
 MOTES = Track([(0, 0.10), (4, 0.25), (9, 0.55), (15, 0.40), (21, 0.60), (32, 0.55), (41, 0.70), (50, 0.60), (TOTAL, 0.45)])
 LANTERNS = Track([(0, 0.0), (TOTAL, 0.0)])
+# the motes fall gently like a snow of stars (the stars coming down to the shore), silver at night, gold at sunrise
+MOTE_Y = (1.05, 0.18)
+
+
+def MOTE_COLORS(t):
+    return ("#e8ecff", "#c8b8ff") if t < 17.0 else ("#ffe6b0", "#ffc890")
+
 PETALS = Track([(0, 0.0), (TOTAL, 0.0)])
 TRAIL = Track([(0, 0.0), (1.2, 0.55), (9, 0.8), (21, 0.95), (41, 1.05), (TOTAL, 1.0)])
 ZOOM = Track([(0, 1.0), (21, 0.992), (41, 0.982), (TOTAL, 0.975)])   # stays wide
