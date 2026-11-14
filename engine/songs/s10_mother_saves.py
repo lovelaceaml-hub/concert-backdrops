@@ -315,7 +315,7 @@ PHRASES = [
          form=_OFF, hold=_OFF, star=LIT),
     dict(label="Encouragement", lines=["“I’ll pray (or root) for you.", "Everything will go well.”"], size=96, y=0.31,
          form=E_FORM, hold=E_FORM + HOLD, arrive=E_FORM + HOLD + 1.1, star=LIT),
-    dict(label="Consideration", lines=["“Can I give you a hand", "with anything?”"], size=100, y=0.31,
+    dict(label="Consideration", lines=["“Can I give you a hand", "with anything?”"], size=94, y=0.295,
          form=C_FORM, hold=C_FORM + HOLD, arrive=C_FORM + HOLD + 1.1, star=LIT),
     dict(label="Compliment", lines=["“You’re amazing.", "You’re doing great!”"], size=140,
          form=_OFF, hold=_OFF, star=LIT),
