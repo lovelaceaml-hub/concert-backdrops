@@ -232,6 +232,9 @@ FORM_DUR = 3.0
 # A light already lit in an earlier song: star=-100.0. Not lit yet in the concert: form=hold=star=1e9.
 # A light lit earlier and spoken again in this song: star=-100.0 plus form, hold and arrive (when the words reach it).
 TITLE = dict(label="Beginning of Peace", lines=["The Words of Mother’s Love"], size=150, form=TITLE_HIT - FORM_DUR, hold=1e9, star=1e9)
+# Optional color settings (each a pair of hex colors, or a function of time returning a pair):
+# PETAL_COLORS (default pink petals), MOTE_COLORS (warm floating motes), LANTERN_COLORS, AURORA_WARM, AURORA_COOL.
+# MOTE_Y = (start, end) height of the motes' drift; (1.05, -0.05) makes them fall like snow.
 # Short lyric fragments shown on screen: text, t0 (starts forming), t1 (fully formed), out (dissolves), dy (height
 # offset from the expression line, fraction of the screen height, + is up), size (font px)
 FRAGMENTS = []
