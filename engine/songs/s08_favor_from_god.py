@@ -8,7 +8,7 @@ The minute of the 2:38 sung guide recording from 1:01.5 to 2:01.5 (audio/promo/s
   3. heaven opens: a column of gold pours down; a congregation gives thanks and the Gratitude lights star 2,
      the last dark star, so the arch of nine is complete and Mother's warm answer flows back over everyone;
   4. the velvet path home: Heavenly Mother, only from behind, opens her arms at the horizon;
-  5. the seven-branched lampstand under the embroidered veil, with the three-line end card.
+  5. the seven-branched lampstand under the embroidered veil (reframed low), with the three-line end card.
 Design: project-docs/designs/08 Out of Heaven, Favor From God.md.
 
 Song features and the visual timeline for the backdrop.
@@ -144,15 +144,17 @@ class Song:
 
 from track import Track   # the shared Track refuses keys that are not strictly increasing  # noqa: E402
 
-# Landmarks in the promo minute (seconds from the start of the clip; guide recording time minus 61.5)
-COMP_FORM = 9.5        # "a swan on a lake" line: the Compliment words form as the praise is given
-COMP_HOLD = 19.5       # fully formed from about 13.25 to 19.5 (6.25 s solid)
-COMP_ARRIVE = 21.5     # the words reach star 9, which shines again (flare and a fresh ring)
-GRAT_FORM = 30.2       # "praise and thanksgiving": the Gratitude
-GRAT_HOLD = 40.0       # fully formed from about 33.95 to 40.0 (6.05 s solid)
-GRAT_STAR = 42.0       # star 2 lit for the first time: all nine lights are lit, the arch is complete
+# Landmarks in the promo minute (seconds from the start of the clip; guide recording time minus 61.5).
+# Reading contract: formation about 3.75 s, at least 6 s solid, dissolve about 1.6 s, then 0.5 s clear; every
+# fragment starts at least 2 s after the wave of light that comes before it (attacker review round 2).
+COMP_FORM = 7.6        # the Compliment words form as the praise is given
+COMP_HOLD = 17.4       # fully formed from about 11.35 to 17.4 (6.05 s solid)
+COMP_ARRIVE = 19.2     # the words reach star 9, which shines again (flare and a fresh ring)
+GRAT_FORM = 28.9       # "praise and thanksgiving": the Gratitude
+GRAT_HOLD = 38.7       # fully formed from about 32.65 to 38.7 (6.05 s solid)
+GRAT_STAR = 40.5       # star 2 lit for the first time: all nine lights are lit, the arch is complete
 NINTH = GRAT_STAR
-TITLE_HIT = 53.3       # end card (title forms from 50.3, after the last fragment has gone at 49.8)
+TITLE_HIT = 53.1       # end card (title forms from 50.1, after the last fragment has gone at 49.6)
 
 SKYLINE_LANTERN = 0.0  # the plates have their own mountains
 BOTTOM_CALM = 1.0      # calm lower third for the performers
@@ -170,7 +172,7 @@ PAL = {
     "festival": ("#100424", "#40104e", "#7e2252", "#ffccb8"),
 }
 _pal_keys = [(0.0, "royal"), (19.0, "royal"), (22.0, "crimson"), (28.0, "crimson"), (31.0, "gold"),
-             (40.0, "gold"), (43.0, "velvet"), (47.0, "velvet"), (50.0, "festival"), (TOTAL, "festival")]
+             (39.0, "gold"), (42.0, "velvet"), (49.0, "velvet"), (52.0, "festival"), (TOTAL, "festival")]
 SKY_TOP = Track([(t, lin(PAL[p][0])) for t, p in _pal_keys])
 SKY_MID = Track([(t, lin(PAL[p][1])) for t, p in _pal_keys])
 SKY_HOR = Track([(t, lin(PAL[p][2])) for t, p in _pal_keys])
@@ -183,15 +185,15 @@ MILKY = Track([(0, 0.0), (TOTAL, 0.0)])
 CLOUDS = Track([(0, 0.0), (TOTAL, 0.0)])
 AURORA = Track([(0, 0.0), (TOTAL, 0.0)])      # the plates carry the gold embroidered aurora
 RAIN = Track([(0, 0.0), (TOTAL, 0.0)])
-# festival sparkle: gold motes, richest when heaven opens, quiet for Mother's arms
-MOTES = Track([(0, 0.06), (2, 0.20), (19, 0.24), (24, 0.30), (30, 0.36), (40, 0.36), (43, 0.14), (48, 0.14),
-               (52, 0.26), (TOTAL, 0.24)])
+# festival sparkle: gold motes, calm after the Compliment, richest when heaven opens, quiet for Mother's arms
+MOTES = Track([(0, 0.06), (2, 0.20), (17, 0.22), (20, 0.12), (28, 0.12), (30.5, 0.30), (38.5, 0.30), (41, 0.12),
+               (49, 0.12), (53, 0.18), (TOTAL, 0.18)])
 LANTERNS = Track([(0, 0.0), (TOTAL, 0.0)])
 PETALS = Track([(0, 0.0), (TOTAL, 0.0)])
 TRAIL = Track([(0, 0.0), (TOTAL, 0.0)])
 ZOOM = Track([(0, 1.0), (TOTAL, 1.0)])
 EXPOSURE = Track([(0, 1.0), (TOTAL, 1.0)])
-FADE = Track([(0, 0.0), (1.0, 1.0), (TOTAL - 0.8, 1.0), (TOTAL - 0.05, 0.0)])
+FADE = Track([(0, 0.0), (1.0, 1.0), (TOTAL - 0.55, 1.0), (TOTAL - 0.05, 0.0)])
 RAYS = Track([(0, 0.0), (TOTAL, 0.0)])
 PART = Track([(0, 0.0), (TOTAL, 0.0)])
 AURORA_WARM = ("#ffd77a", "#e0607a")
@@ -199,66 +201,67 @@ AURORA_COOL = ("#c0406a", "#8a4ad0")
 
 
 def MOTE_COLORS(t):
-    return ("#ffe08a", "#ffb07a") if t < 42.0 or t > 49.0 else ("#e8d4ff", "#ffd8a8")
+    return ("#ffe08a", "#ffb07a") if t < 40.0 or t > 50.0 else ("#e8d4ff", "#ffd8a8")
 
 
-# Five painted scenes (assets/plates/s08/), each changing on a musical breath with a different transition.
+# Five painted scenes (assets/plates/s08/), each changing on a musical breath. Painted water in the lower third
+# is kept quiet (low water_strength, gain lowered under the performers).
 SCENES = [
     # 1. royal lake with the glowing olive tree: slow push in to a wide symmetrical frame
-    dict(image="assets/plates/s08/royal_lake_olive.jpg", t0=0.0, t1=22.5, fade_in=1.0, fade_out=3.0,
-         zoom=(1.10, 1.03), pan=((0.0, 0.015), (0.0, 0.0)), water=True, water_line=0.40, water_strength=0.7,
-         gain=Track([(0, 1.0), (8.0, 1.0), (11.0, 0.80), (19.5, 0.80), (22.5, 0.9)])),
-    # 2. festival lake under crimson and gold embroidered aurora: a ring of warm light runs across the water
-    dict(image="assets/plates/s08/festival_embroidered_aurora.jpg", t0=19.5, t1=31.0, fade_in=3.0, fade_out=3.0,
-         transition="ripple", ripple_from=(0.5, 0.40), zoom=(1.04, 1.10), water=True, water_line=0.426,
-         water_strength=0.7, gain=Track([(0, 0.9), (21.0, 0.86), (28.0, 0.86), (31.0, 0.9)])),
-    # 3. heaven opens: clouds parted, a column of gold pouring onto the lake (soft fade)
-    dict(image="assets/plates/s08/heaven_opens.jpg", t0=28.0, t1=44.0, fade_in=3.0, fade_out=3.5,
-         transition="fade", zoom=(1.03, 1.08), water=True, water_line=0.296, water_strength=0.6,
-         gain=Track([(0, 0.85), (30.0, 0.85), (32.5, 0.70), (40.0, 0.70), (42.0, 0.50), (44.0, 0.45)])),
-    # 4. the velvet path home: deep purple night, a narrow path of light to the horizon (organic dissolve)
-    dict(image="assets/plates/s08/velvet_path_home.jpg", t0=40.0, t1=51.3, fade_in=3.0, fade_out=2.5,
-         transition="dissolve", zoom=(1.03, 1.09), water=True, water_line=0.426, water_strength=0.6),
-    # 5. the seven-branched lampstand under the embroidered veil (the camera moves forward into it)
-    dict(image="assets/plates/s08/lampstand_veil.jpg", t0=48.8, t1=61.0, fade_in=2.5, fade_out=0.0,
-         transition="push", zoom=(1.12, 1.04), water=True, water_line=0.24, water_strength=0.5,
-         gain=Track([(0, 1.0), (50.0, 0.9), (52.0, 0.66), (TOTAL, 0.66)])),
+    dict(image="assets/plates/s08/royal_lake_olive.jpg", t0=0.0, t1=21.2, fade_in=1.0, fade_out=2.0,
+         zoom=(1.10, 1.03), pan=((0.0, 0.015), (0.0, 0.0)), water=True, water_line=0.40, water_strength=0.4,
+         gain=Track([(0, 1.0), (6.0, 1.0), (9.0, 0.80), (TOTAL, 0.80)])),
+    # 2. festival lake under crimson and gold embroidered aurora: a ring of warm light runs across the water once
+    #    the Compliment's words have reached their star; calmer than the first scene (low gain, slow zoom)
+    dict(image="assets/plates/s08/festival_embroidered_aurora.jpg", t0=19.2, t1=31.0, fade_in=2.0, fade_out=2.5,
+         transition="ripple", ripple_from=(0.5, 0.40), zoom=(1.03, 1.06), water=True, water_line=0.426,
+         water_strength=0.4, gain=Track([(0, 0.75), (21.0, 0.70), (TOTAL, 0.70)])),
+    # 3. heaven opens: clouds parted, a column of gold pouring onto the lake (after the fragment has gone)
+    dict(image="assets/plates/s08/heaven_opens.jpg", t0=28.5, t1=41.5, fade_in=2.5, fade_out=2.5,
+         zoom=(1.03, 1.07), water=True, water_line=0.296, water_strength=0.4,
+         gain=Track([(0, 0.85), (29.5, 0.85), (31.0, 0.70), (38.7, 0.70), (TOTAL, 0.55)])),
+    # 4. the velvet path home: deep purple night, a narrow path of light to the horizon (a plain soft fade)
+    dict(image="assets/plates/s08/velvet_path_home.jpg", t0=39.0, t1=52.1, fade_in=2.5, fade_out=2.5,
+         zoom=(1.03, 1.08), water=True, water_line=0.426, water_strength=0.4),
+    # 5. the seven-branched lampstand under the embroidered veil, reframed (lampstand_veil_low.jpg: the veil's top
+    #    band stretched so the whole lampstand sits below the end card, candle tops at about 0.58 from the top)
+    dict(image="assets/plates/s08/lampstand_veil_low.jpg", t0=49.6, t1=61.0, fade_in=2.5, fade_out=0.0,
+         zoom=(1.04, 1.0), water=True, water_line=0.04, water_strength=0.3,
+         gain=Track([(0, 0.95), (51.0, 0.85), (53.0, 0.72), (TOTAL, 0.72)])),
 ]
 
 F = "assets/figures/"
 SF = "assets/song_figures/s08/"
 FIGURES = [
     # the swan of light resting on the royal lake (signature effect), right of centre
-    dict(poses=[SF + "swan_glide.png"], t0=0.8, t1=18.0, x=0.74, y=0.25, height=0.20, color="#f1e8ff",
+    dict(poses=[SF + "swan_glide.png"], t0=0.8, t1=16.5, x=0.74, y=0.25, height=0.20, color="#f1e8ff",
          glow=0.9, particles=6000, leave="drift"),
     # Compliment: one finishes a task with a basket, the other claps; then a hand on the shoulder in praise
-    dict(poses=[F + "compliment_a.png", F + "compliment_b.png"], t0=3.0, t1=19.0, pose_times=[9.0],
+    dict(poses=[F + "compliment_a.png", F + "compliment_b.png"], t0=2.0, t1=16.9, pose_times=[6.6],
          x=0.48, y=0.22, height=0.38, to_star=8, color="#d9c2ff"),
-    # the bridegroom and bride bow to each other with dignity (no embrace)
-    dict(poses=[SF + "couple_bow.png"], t0=19.8, t1=29.6, x=0.5, y=0.25, height=0.36, color="#fff0d8",
-         particles=10000, leave="drift"),
+    # the bridegroom and bride, small and far out on the aurora lake, bow to each other (no embrace)
+    dict(poses=[SF + "couple_bow.png"], t0=19.4, t1=27.6, x=0.5, y=0.33, height=0.22, color="#fff0d8",
+         particles=8000, leave="drift"),
     # Gratitude: the main pair bows, hand on heart, then offers a small gift of thanks
-    dict(poses=[F + "gratitude_a.png", F + "gratitude_b.png"], t0=28.6, t1=39.7, pose_times=[33.5],
+    dict(poses=[F + "gratitude_a.png", F + "gratitude_b.png"], t0=28.4, t1=38.2, pose_times=[32.3],
          x=0.5, y=0.20, height=0.38, to_star=1, color="#ffd890"),
     # the congregation on both shores bows toward the light
-    dict(poses=[F + "gratitude_a.png"], t0=29.4, t1=40.0, x=0.17, y=0.24, height=0.22, color="#ffcf8a",
+    dict(poses=[F + "gratitude_a.png"], t0=28.8, t1=38.4, x=0.17, y=0.24, height=0.22, color="#ffcf8a",
          glow=0.8, particles=5000, to_star=1),
-    dict(poses=[F + "gratitude_a.png"], t0=29.8, t1=40.0, x=0.83, y=0.24, height=0.22, color="#ffcf8a",
+    dict(poses=[F + "gratitude_a.png"], t0=29.2, t1=38.4, x=0.83, y=0.24, height=0.22, color="#ffcf8a",
          glow=0.8, particles=5000, flip=True, to_star=1),
     # Heavenly Mother, only from behind, arms opening at the horizon, then gone back into the horizon light
-    dict(poses=[SF + "mother_back_arms_open.png"], t0=41.2, t1=47.0, dissolve=2.5, x=0.5, y=0.36, height=0.32,
+    dict(poses=[SF + "mother_back_arms_open.png"], t0=40.0, t1=46.0, dissolve=2.5, x=0.5, y=0.36, height=0.32,
          color="#ffe6c8", glow=0.9, particles=9000, to=(0.5, 0.43)),
 ]
 
-# Heaven's column of gold during the thanksgiving, with rising gold dust (gentle; the plate carries the column)
-BEAM = Track([(0, 0.0), (29.0, 0.0), (31.0, 0.32), (39.5, 0.32), (42.5, 0.0)])
+# Heaven's column of gold during the thanksgiving, with rising gold dust (only after the fragment has gone)
+BEAM = Track([(0, 0.0), (28.5, 0.0), (30.5, 0.30), (38.5, 0.30), (41.0, 0.0)])
 BEAM_FROM = (0.5, 1.02)
 BEAM_TO = (0.5, 0.30)
 BEAM_WIDTH = (0.02, 0.07)
 BEAM_COLOR = "#ffd88a"
-# Mother's warm answer flowing back down when star 2 completes the arch
-FLASH = Track([(0, 0.0), (41.7, 0.0), (42.2, 0.10), (43.5, 0.0)])
-TEXT_SHADOW = Track([(0, 1.2), (28.0, 1.2), (31.0, 1.6), (41.0, 1.6), (43.0, 1.3), (49.0, 1.3), (51.0, 1.7),
+TEXT_SHADOW = Track([(0, 1.2), (28.5, 1.2), (30.5, 1.6), (40.5, 1.6), (42.0, 1.3), (50.0, 1.3), (52.0, 1.7),
                      (TOTAL, 1.7)])
 
 # Nine lights on an arch over the stage, one for each expression
@@ -287,26 +290,28 @@ PHRASES = [
          form=COMP_FORM, hold=COMP_HOLD, star=-100.0, arrive=COMP_ARRIVE),
 ]
 FORM_DUR = 3.0
-# End card
-TITLE = dict(label="Healing Concert", lines=["The Words of Mother’s Love"], size=150, form=TITLE_HIT - FORM_DUR,
-             hold=1e9, star=1e9)
-# Short lyric fragments (never on screen with an expression; each at least 3 s solid, 0.5 s clear after a dissolve)
+# End card, raised a little (y 0.265) so the whole lampstand stays clear beneath the tagline
+TITLE = dict(label="Healing Concert", lines=["The Words of Mother’s Love"], size=150, y=0.265,
+             form=TITLE_HIT - FORM_DUR, hold=1e9, star=1e9)
+# Short lyric fragments (never on screen with an expression; each at least 3 s solid, 0.5 s clear after a dissolve,
+# 2 s after a wave of light)
 FRAGMENTS = [
-    # two streams meeting: written by a pen of light, like a thread of embroidery, above the bowing pair
-    dict(text="bridegroom and bride", t0=22.2, t1=25.0, out=28.0, dy=0.10, size=84, glow="#fff0d2", style="write"),
+    # written by a pen of light, like a thread of embroidery, above the small bowing pair
+    dict(text="bridegroom and bride", t0=21.3, t1=23.8, out=26.8, dy=0.10, size=84, glow="#fff0d2", style="write"),
     # soft words of light above Mother's open arms
-    dict(text="into our Mother’s arms", t0=42.6, t1=45.1, out=48.2, dy=0.13, size=84, glow="#e2c4ff"),
+    dict(text="into our Mother’s arms", t0=42.5, t1=45.0, out=48.0, dy=0.13, size=84, glow="#e2c4ff"),
 ]
 
-# the three-line end card (PHASE2.md item 7)
+# the three-line end card (PHASE2.md item 7); no wave of light at the title, so the tagline forms on a calm scene
 TAGLINE = dict(text="Where a mother’s love reaches, peace settles.\nSunday, December 6 · 4:30 PM\n"
                     "The World Mission Society Church of God · 6720 W Sahara Ave, Las Vegas",
-               t0=TITLE_HIT + 0.9, t1=TITLE_HIT + 3.3)
+               t0=TITLE_HIT + 0.2, t1=TITLE_HIT + 2.4)
 
-# Opening title card that then rests, small, in the top left corner
+# Opening title card that then rests, small, in the top left corner; it fades away from 40 to 45 s so star 2
+# lights in the clear and the end card stands alone
 CREDIT = dict(song="Out of Heaven, Favor From God", concert="The Words of Mother’s Love Healing Concert",
               t_in=0.3, t_full=1.4, t_move=5.4, t_rest=7.4, scale=0.34, alpha_rest=0.58,
-              margin_x=0.030, margin_top=0.048)
+              margin_x=0.030, margin_top=0.048, t_gone0=40.0, t_gone1=45.0)
 
 
 def credit_state(t, bbox):
@@ -325,15 +330,14 @@ def credit_state(t, bbox):
     tx = c["margin_x"] + c["scale"] * (x1 - x0) / 2.0
     ty = 1.0 - c["margin_top"] - c["scale"] * (y1 - y0) / 2.0
     cx, cy = cx0 * (1 - m) + tx * m, cy0 * (1 - m) + ty * m
-    alpha = a_in * (1.0 + (c["alpha_rest"] - 1.0) * m)
+    alpha = a_in * (1.0 + (c["alpha_rest"] - 1.0) * m) * (1.0 - ss(c["t_gone0"], c["t_gone1"], t))
     return (cx, cy, scale, alpha), (cx0, cy0)
 
 
-# Waves of light that cross the sky when a light is lit or shines again (time, x, y, strength)
+# Waves of light that cross the sky when a light is lit or shines again (time, x, y, strength); gentle
 WAVES = [
-    (COMP_ARRIVE, STAR_POS[8][0], STAR_POS[8][1], 0.7),   # star 9 shines again
-    (GRAT_STAR, STAR_POS[1][0], STAR_POS[1][1], 1.2),     # star 2 lit: the arch is complete
-    (TITLE_HIT, 0.5, 0.62, 1.1),
+    (COMP_ARRIVE, STAR_POS[8][0], STAR_POS[8][1], 0.35),   # star 9 shines again
+    (GRAT_STAR, STAR_POS[1][0], STAR_POS[1][1], 0.35),     # star 2 lit: the arch is complete
 ]
 
 
