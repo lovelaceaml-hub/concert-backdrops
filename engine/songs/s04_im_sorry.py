@@ -198,16 +198,17 @@ PETAL_COLORS = ("#ff9fb2", "#ffe0d2")
 # A. scenes. Scene changes are plain fades that run only in the gaps between texts.
 SCENES = [
     dict(image="assets/plates/s04/frozen_lake_wide.jpg", t0=1.5, t1=18.4, fade_in=2.0, fade_out=2.0,
-         zoom=(1.04, 1.10), water=True, water_line=0.56, water_strength=0.45,
+         zoom=(1.04, 1.10), water=True, water_line=0.56, water_strength=0.45, calm_gain=0.8,
          gain=Track([(0, 1.0), (4.5, 0.82), (16.6, 0.82), (18.4, 1.0)])),
     dict(image="assets/plates/s04/reflection_close.jpg", t0=16.4, t1=29.2, fade_in=2.0, fade_out=2.0,
          zoom=(1.50, 1.56), pan=((0.06, -0.17), (0.04, -0.17)), water=True, water_line=0.98,
-         water_strength=0.55, gain=Track([(0, 1.0), (18.4, 0.90), (27.0, 0.90), (29.2, 1.0)])),
+         water_strength=0.55, calm_gain=0.8, gain=Track([(0, 1.0), (18.4, 0.90), (27.0, 0.90), (29.2, 1.0)])),
     dict(image="assets/plates/s04/ice_path.jpg", t0=27.2, t1=48.0, fade_in=2.0, fade_out=2.0,
          zoom=(1.15, 1.12), pan=((0.06, 0.0), (0.055, 0.0)), water=True, water_line=0.55, water_strength=0.35,
+         calm_gain=0.8,
          gain=Track([(0, 1.0), (29.2, 0.84), (46.0, 0.84), (48.0, 1.0)])),
     dict(image="assets/plates/s04/thaw_morning.jpg", t0=46.0, t1=61.0, fade_in=2.0, fade_out=0.0,
-         zoom=(1.10, 1.05), water=True, water_line=0.445, water_strength=0.45,
+         zoom=(1.10, 1.05), water=True, water_line=0.445, water_strength=0.45, calm_gain=0.8,
          gain=Track([(0, 0.95), (48.0, 0.78), (TOTAL, 0.78)])),
 ]
 
