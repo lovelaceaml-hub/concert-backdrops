@@ -181,8 +181,8 @@ ZOOM = Track([(0, 1.0), (TOTAL, 1.0)])         # the plates carry the camera mov
 EXPOSURE = Track([(0, 1.0), (44, 1.0), (51, 0.88), (TOTAL, 0.86)])   # calmer light behind the end card
 FADE = Track([(0, 0.0), (1.2, 1.0), (58.6, 1.0), (59.9, 0.0)])
 # the stars come down: silver motes falling slowly through the night, turning gold at sunrise
-MOTES = Track([(0, 0.20), (4, 0.30), (9, 0.55), (15, 0.35), (21, 0.45), (30, 0.30), (36, 0.18), (50, 0.18),
-               (TOTAL, 0.25)])
+MOTES = Track([(0, 0.14), (4, 0.20), (9, 0.30), (15, 0.20), (21, 0.26), (30, 0.20), (36, 0.14), (50, 0.14),
+               (TOTAL, 0.18)])
 MOTE_Y = (1.05, 0.18)
 
 
@@ -215,12 +215,12 @@ SCENES = [
          transition="bloom", flash=0.85, zoom=(1.02, 1.10), pan=((0.0, -0.01), (0.0, 0.0)), water=True,
          water_line=0.22, water_strength=0.8,
          gain=Track([(0, 1.0), (23.0, 1.0), (24.5, 0.78), (29.5, 0.78), (31.5, 0.95), (TOTAL, 0.95)])),
-    dict(image="assets/plates/s01/s01_morning_beams.jpg", t0=30.5, t1=50.5, fade_in=3.5, fade_out=3.5,
+    dict(image="assets/plates/s01/s01_morning_beams.jpg", t0=30.5, t1=51.3, fade_in=3.5, fade_out=3.5,
          transition="push", zoom=(1.10, 1.17), pan=((0.035, 0.0), (0.05, 0.0)), water=True, water_line=0.19,
          water_strength=0.7,
-         gain=Track([(0, 1.0), (34.0, 0.95), (37.0, 0.74), (47.5, 0.74), (TOTAL, 0.8)])),
-    dict(image="assets/plates/s01/s01_heavenly_city.jpg", t0=47.0, t1=61.0, fade_in=3.5, fade_out=0.0,
-         transition="ripple", ripple_from=(0.5, 0.21), zoom=(1.06, 1.0), water=True, water_line=0.21,
+         gain=Track([(0, 1.0), (31.5, 1.0), (34.0, 0.78), (37.0, 0.72), (47.5, 0.72), (TOTAL, 0.8)])),
+    dict(image="assets/plates/s01/s01_heavenly_city.jpg", t0=48.3, t1=61.0, fade_in=3.0, fade_out=0.0,
+         transition="dissolve", zoom=(1.06, 1.0), water=True, water_line=0.21,
          water_strength=0.6, water_bottom=0.20,
          gain=Track([(0, 0.95), (49.0, 0.9), (51.5, 0.76), (TOTAL, 0.76)])),
 ]
@@ -236,9 +236,9 @@ FIGURES = [
          t0=31.5, t1=ENC_HOLD - 0.5, pose_times=[35.5, 41.0], x=0.5, y=0.21, height=0.37, to_star=6,
          color=_ENC_C, glow=1.05),
     dict(poses=["assets/song_figures/s01/s01_torchbearer_a.png"], t0=33.0, t1=ENC_HOLD - 0.3,
-         x=0.21, y=0.21, height=0.31, to_star=6, color="#ffd796", glow=0.9, particles=7000),
+         x=0.21, y=0.21, height=0.32, to_star=6, color="#ffd796", glow=0.9, particles=7000),
     dict(poses=["assets/song_figures/s01/s01_torchbearer_b.png"], t0=34.0, t1=ENC_HOLD - 0.1,
-         x=0.79, y=0.21, height=0.33, to_star=6, color="#ffd796", glow=0.9, particles=7000, flip=True),
+         x=0.79, y=0.21, height=0.38, to_star=6, color="#ffd796", glow=0.9, particles=7000, flip=True),
 ]
 
 # C. Effect layers: a sunbeam falls on the kneeling young man before the words form (it is gone before they
