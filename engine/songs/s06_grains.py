@@ -172,7 +172,7 @@ PAL = {
     "water":     ("#081436", "#2c3a6a", "#a8786a", "#ffd27a"),
     "fragrance": ("#0f1a48", "#5a3f7e", "#f4b6a6", "#ffd6c0"),
     "rise":      ("#152b68", "#93578a", "#ffb873", "#ffecc4"),
-    "glory":     ("#1d3a7a", "#b07a9a", "#ffd08c", "#fff4dc"),
+    "glory":     ("#142a62", "#7a4f86", "#f0a06e", "#ffe2b4"),
 }
 _pal_keys = [
     (0.0, "dawn1"), (3.0, "dawn1"), (7.0, "dusk"), (10.0, "night"), (17.0, "night"), (19.0, "hush"), (27.0, "hush"),
@@ -183,8 +183,8 @@ SKY_MID = Track([(t, lin(PAL[p][1])) for t, p in _pal_keys])
 SKY_HOR = Track([(t, lin(PAL[p][2])) for t, p in _pal_keys])
 GLOW = Track([(t, lin(PAL[p][3])) for t, p in _pal_keys])
 
-SUN_INT = Track([(0, 0.90), (3, 0.80), (8, 0.35), (17, 0.30), (19, 0.22), (27, 0.25), (30, 0.60), (36, 0.80), (42, 0.95),
-                 (50, 1.25), (PEAK_END, 1.35), (TOTAL, 1.20)])
+SUN_INT = Track([(0, 0.90), (3, 0.80), (8, 0.35), (17, 0.30), (19, 0.22), (27, 0.25), (30, 0.60), (36, 0.80), (42, 0.90),
+                 (50, 1.00), (PEAK_END, 1.10), (TOTAL, 1.00)])
 SUN_Y = Track([(0, 0.31), (6, 0.27), (17, 0.26), (28, 0.27), (42, 0.32), (PEAK_END, 0.40), (TOTAL, 0.41)])
 SUN_SIZE = Track([(0, 0.115), (8, 0.10), (28, 0.10), (42, 0.12), (PEAK_END, 0.135), (TOTAL, 0.135)])
 STARS = Track([(0, 0.4), (5, 0.6), (9, 1.0), (27, 1.0), (32, 0.6), (42, 0.3), (52, 0.15), (TOTAL, 0.15)])
@@ -194,13 +194,13 @@ AURORA = Track([(0, 0.35), (6, 0.15), (10, 0.10), (18, 0.18), (27, 0.20), (32, 0
 RAIN = Track([(0, 0.0), (28, 0.0), (29.5, 0.35), (33.5, 0.35), (35.5, 0.0), (TOTAL, 0.0)])
 MOTES = Track([(0, 0.5), (6, 0.3), (10, 0.2), (18, 0.12), (27, 0.15), (30, 0.35), (36, 0.5), (45, 0.7), (PEAK_END, 0.85), (TOTAL, 0.7)])
 LANTERNS = Track([(0, 0.8), (4, 0.6), (8, 0.0), (41, 0.0), (45, 0.9), (PEAK_END, 1.0), (TOTAL, 0.9)])
-PETALS = Track([(0, 0.0), (35, 0.0), (37, 0.45), (41, 0.6), (50, 0.8), (TOTAL, 0.7)])
+PETALS = Track([(0, 0.0), (35, 0.0), (37, 0.45), (41, 0.55), (50, 0.6), (TOTAL, 0.5)])
 TRAIL = Track([(0, 0.8), (8, 0.5), (28, 0.5), (42, 0.9), (TOTAL, 1.0)])
 ZOOM = Track([(0, 0.99), (17, 0.985), (27, 0.97), (42, 0.975), (TOTAL, 0.955)])
-EXPOSURE = Track([(0, 1.0), (18, 0.92), (27, 0.92), (30, 1.0), (TOTAL, 1.0)])
+EXPOSURE = Track([(0, 1.0), (18, 0.92), (27, 0.92), (30, 1.0), (46, 1.0), (52, 0.88), (TOTAL, 0.88)])
 FADE = Track([(0, 0.0), (0.8, 1.0), (58.6, 1.0), (TOTAL, 0.0)])
-RAYS = Track([(0, 0.4), (6, 0.1), (10, 0.0), (28, 0.0), (32, 0.3), (42, 0.6), (52, 0.85), (TOTAL, 0.8)])
-PART = Track([(0, 0.25), (40, 0.25), (44, 1.0), (52, 1.0), (TOTAL, 0.5)])
+RAYS = Track([(0, 0.4), (6, 0.1), (10, 0.0), (28, 0.0), (32, 0.3), (42, 0.5), (52, 0.55), (TOTAL, 0.5)])
+PART = Track([(0, 0.25), (40, 0.25), (44, 0.6), (52, 0.6), (TOTAL, 0.4)])
 
 # Nine lights on an arch over the stage, one for each expression
 STAR_POS = []
@@ -219,7 +219,7 @@ PHRASES = [
     dict(label="Apology", lines=["“I’m sorry.", "It must have been hard on you.”"], size=124, form=OFF, hold=OFF, star=-100.0),
     dict(label="Inclusiveness", lines=["“It’s okay. I understand.”"], size=150, form=18.0, hold=27.0, star=-100.0,
          arrive=28.5),
-    dict(label="Concession", lines=["“Please, after you.”"], size=164, form=7.8, hold=15.8, star=17.3),
+    dict(label="Concession", lines=["“Please, after you.”"], size=164, form=8.8, hold=15.8, star=17.3),
     dict(label="Respect", lines=["“I’d love to hear more", "about your thoughts.”"], size=128, form=OFF, hold=OFF, star=-100.0),
     dict(label="Encouragement", lines=["“I’ll pray (or root) for you.", "Everything will go well.”"], size=118,
          form=OFF, hold=OFF, star=-100.0),
@@ -303,8 +303,9 @@ def link_state(t):
     """How far the line of light has grown between light i and light i+1 (0..1)."""
     out = []
     for i in range(8):
-        t1 = PHRASES[i + 1]["star"]
-        # the line starts growing as the next light gathers and completes when it is lit
+        # a line joins two lights only once both are lit (Greeting and Gratitude are still dark in this song)
+        t1 = max(PHRASES[i]["star"], PHRASES[i + 1]["star"])
+        # the line starts growing as the later light gathers and completes when it is lit
         g = min(max((t - (t1 - 1.2)) / 1.4, 0.0), 1.0)
         out.append(g * g * (3 - 2 * g))
     return out
