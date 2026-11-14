@@ -1,9 +1,15 @@
-"""Song 08, Out of Heaven, Favor From God: 1 minute promo ("The Embroidered Sky").
+"""Song 08, Out of Heaven, Favor From God: 1 minute promo v2 ("The Embroidered Sky"), five painted scenes.
 
-The minute of the 2:38 sung guide recording from 1:01.5 to 2:01.5 (audio/promo/s08.mp3): the princess line,
-the Compliment (star 9 shines again), the bridegroom and bride, the Gratitude (star 2 lit for the first time,
-so the arch of nine lights is complete), the pure soul coming home, and the lampstand giving light to the world.
-Design: Designs/08 Out of Heaven, Favor From God - Video Design (Google Doc) in the shared Drive folder.
+The minute of the 2:38 sung guide recording from 1:01.5 to 2:01.5 (audio/promo/s08.mp3), rebuilt for phase 2
+(project-docs/PHASE2.md; design section 12 "Promo v2: scenes"):
+  1. the royal lake with the olive tree: a swan of light rests on the water; a pair of people of light act out
+     the Compliment (one finishes a task, the other praises the effort); star 9 shines again;
+  2. the festival lake under crimson and gold embroidered aurora: the bridegroom and bride bow to each other;
+  3. heaven opens: a column of gold pours down; a congregation gives thanks and the Gratitude lights star 2,
+     the last dark star, so the arch of nine is complete and Mother's warm answer flows back over everyone;
+  4. the velvet path home: Heavenly Mother, only from behind, opens her arms at the horizon;
+  5. the seven-branched lampstand under the embroidered veil, with the three-line end card.
+Design: project-docs/designs/08 Out of Heaven, Favor From God.md.
 
 Song features and the visual timeline for the backdrop.
 
@@ -136,88 +142,124 @@ class Song:
 
 # ----------------------------------------------------------------- timeline
 
-class Track:
-    def __init__(self, keys):
-        self.t = np.array([k[0] for k in keys], dtype=np.float64)
-        self.v = np.array([np.atleast_1d(np.asarray(k[1], dtype=np.float64)) for k in keys])
-
-    def __call__(self, t):
-        if t <= self.t[0]:
-            v = self.v[0]
-        elif t >= self.t[-1]:
-            v = self.v[-1]
-        else:
-            i = int(np.searchsorted(self.t, t, side="right")) - 1
-            u = (t - self.t[i]) / (self.t[i + 1] - self.t[i])
-            u = u * u * (3 - 2 * u)
-            v = self.v[i] * (1 - u) + self.v[i + 1] * u
-        return float(v[0]) if v.shape[0] == 1 else v
-
+from track import Track   # the shared Track refuses keys that are not strictly increasing  # noqa: E402
 
 # Landmarks in the promo minute (seconds from the start of the clip; guide recording time minus 61.5)
-SISTER = 1.5          # "like a princess" line
-COMPLIMENT = 10.0     # "swan on a lake" line: the Compliment
-WEDDING = 19.0        # "bridegroom and bride meet"
-THANKS = 28.0         # "praise and thanksgiving": the Gratitude
-SOUL = 37.0           # "pure soul, come back"
-LAMP = 46.0           # "lampstand and olive oil"
-NINTH = 37.0          # star 2 arrives: all nine lights are lit, the whole arch glows from here
-TITLE_HIT = 50.5      # end card
+COMP_FORM = 9.5        # "a swan on a lake" line: the Compliment words form as the praise is given
+COMP_HOLD = 19.5       # fully formed from about 13.25 to 19.5 (6.25 s solid)
+COMP_ARRIVE = 21.5     # the words reach star 9, which shines again (flare and a fresh ring)
+GRAT_FORM = 30.2       # "praise and thanksgiving": the Gratitude
+GRAT_HOLD = 40.0       # fully formed from about 33.95 to 40.0 (6.05 s solid)
+GRAT_STAR = 42.0       # star 2 lit for the first time: all nine lights are lit, the arch is complete
+NINTH = GRAT_STAR
+TITLE_HIT = 53.1       # end card (title forms from 50.1, after the last fragment has gone at 49.6)
 
-# Scene palettes (top of sky, middle, horizon, glow of the low light).
-# Look for song 08 (DESIGN-SYSTEM.md section 6): a royal festival night in deep royal purple, crimson and gold,
-# gold aurora like embroidery, rays and sparkle, grand and symmetrical framing.
+SKYLINE_LANTERN = 0.0  # the plates have their own mountains
+BOTTOM_CALM = 1.0      # calm lower third for the performers
+# Star history before this minute (DESIGN-SYSTEM.md): rings carried from relights in songs 02 to 07.
+# star 3 (Apology) relit in 04; star 4 (Inclusiveness) relit in 06; star 7 (Encouragement) relit in 02, 03, 05;
+# star 8 (Consideration) relit in 07. Star 9 (Compliment) has no relight before this song.
+RINGS_AT_START = {2: 1, 3: 1, 6: 3, 7: 1}
+
+# Procedural sky (only seen where no plate covers): royal purple, crimson and gold.
 PAL = {
     "royal":    ("#07020f", "#1c0833", "#3d1250", "#e8b860"),
-    "royallav": ("#080314", "#251045", "#4e2468", "#e2c4ff"),
     "crimson":  ("#0c0214", "#3a0c42", "#7a1840", "#ffc4b4"),
     "gold":     ("#14051f", "#4a0f48", "#8a2452", "#ffd8b0"),
     "velvet":   ("#05010c", "#160626", "#3a0f3e", "#e0a860"),
     "festival": ("#100424", "#40104e", "#7e2252", "#ffccb8"),
-    "rosegold": ("#1a0a30", "#4f1a58", "#a8445e", "#ffd2b0"),
 }
-_pal_keys = [
-    (0.0, "royal"), (8.0, "royal"), (11.5, "royallav"), (18.5, "royallav"), (22.0, "crimson"), (27.0, "crimson"),
-    (31.0, "gold"), (37.0, "gold"), (40.5, "velvet"), (45.5, "velvet"), (50.0, "festival"), (54.0, "festival"),
-    (59.0, "rosegold"), (TOTAL, "rosegold"),
-]
+_pal_keys = [(0.0, "royal"), (19.0, "royal"), (22.0, "crimson"), (28.0, "crimson"), (31.0, "gold"),
+             (40.0, "gold"), (43.0, "velvet"), (47.0, "velvet"), (50.0, "festival"), (TOTAL, "festival")]
 SKY_TOP = Track([(t, lin(PAL[p][0])) for t, p in _pal_keys])
 SKY_MID = Track([(t, lin(PAL[p][1])) for t, p in _pal_keys])
 SKY_HOR = Track([(t, lin(PAL[p][2])) for t, p in _pal_keys])
 GLOW = Track([(t, lin(PAL[p][3])) for t, p in _pal_keys])
-
-# the warm star at the center of the horizon (symmetrical framing): Mother's answering light at the thanksgiving
-SUN_INT = Track([(0, 0.35), (9, 0.40), (14, 0.45), (19, 0.50), (27, 0.65), (31, 0.82), (36, 0.88), (40, 0.45),
-                 (45, 0.42), (50, 0.70), (56, 0.75), (TOTAL, 0.72)])
-SUN_Y = Track([(0, 0.27), (19, 0.28), (31, 0.34), (37, 0.35), (41, 0.28), (46, 0.28), (54, 0.32), (TOTAL, 0.33)])
-SUN_SIZE = Track([(0, 0.09), (31, 0.11), (37, 0.112), (41, 0.095), (54, 0.105), (TOTAL, 0.105)])
-STARS = Track([(0, 0.0), (0.2, 0.0), (2.0, 0.75), (18, 0.7), (28, 0.35), (36, 0.25), (40, 0.7), (46, 0.7),
-               (52, 0.4), (TOTAL, 0.35)])
+SUN_INT = Track([(0, 0.30), (TOTAL, 0.30)])
+SUN_Y = Track([(0, 0.40), (TOTAL, 0.40)])
+SUN_SIZE = Track([(0, 0.09), (TOTAL, 0.09)])
+STARS = Track([(0, 0.0), (TOTAL, 0.0)])
 MILKY = Track([(0, 0.0), (TOTAL, 0.0)])
-CLOUDS = Track([(0, 0.10), (19, 0.15), (28, 0.30), (37, 0.30), (41, 0.12), (50, 0.2), (TOTAL, 0.2)])
-# gold aurora like embroidery across the whole night
-AURORA = Track([(0, 0.0), (1.5, 0.14), (9, 0.16), (12, 0.22), (18, 0.24), (22, 0.18), (29, 0.26), (36, 0.30),
-                (40, 0.16), (46, 0.16), (52, 0.26), (TOTAL, 0.24)])
+CLOUDS = Track([(0, 0.0), (TOTAL, 0.0)])
+AURORA = Track([(0, 0.0), (TOTAL, 0.0)])      # the plates carry the gold embroidered aurora
 RAIN = Track([(0, 0.0), (TOTAL, 0.0)])
-# festival sparkle
-MOTES = Track([(0, 0.08), (2, 0.32), (10, 0.36), (19, 0.48), (28, 0.6), (33, 0.8), (37, 0.78), (40, 0.32),
-               (46, 0.4), (52, 0.7), (TOTAL, 0.6)])
+# festival sparkle: gold motes, richest when heaven opens, quiet for Mother's arms
+MOTES = Track([(0, 0.06), (2, 0.20), (19, 0.24), (24, 0.30), (30, 0.36), (40, 0.36), (43, 0.14), (48, 0.14),
+               (52, 0.26), (TOTAL, 0.24)])
 LANTERNS = Track([(0, 0.0), (TOTAL, 0.0)])
 PETALS = Track([(0, 0.0), (TOTAL, 0.0)])
-TRAIL = Track([(0, 0.0), (1.2, 0.6), (19, 0.8), (31, 1.1), (37, 1.1), (40, 0.6), (50, 1.0), (TOTAL, 1.0)])
-ZOOM = Track([(0, 1.0), (19, 0.99), (37, 0.975), (46, 0.97), (TOTAL, 0.96)])
+TRAIL = Track([(0, 0.0), (TOTAL, 0.0)])
+ZOOM = Track([(0, 1.0), (TOTAL, 1.0)])
 EXPOSURE = Track([(0, 1.0), (TOTAL, 1.0)])
-FADE = Track([(0, 0.0), (1.0, 1.0), (TOTAL - 1.5, 1.0), (TOTAL - 0.2, 0.0)])
-# royal rays from the center star; heaven's light pours through the parted clouds at the thanksgiving
-RAYS = Track([(0, 0.0), (2, 0.20), (12, 0.25), (20, 0.35), (30, 0.80), (36, 0.95), (40, 0.30), (48, 0.35),
-              (53, 0.70), (TOTAL, 0.65)])
-PART = Track([(0, 0.0), (28, 0.0), (32, 1.0), (38, 1.0), (42, 0.3), (TOTAL, 0.3)])
-
-# Royal colors: gold embroidery aurora (warm pair) with a crimson and purple thread (cool pair, used with MILKY,
-# which stays 0 here), and gold and rose-gold festival sparkle
+FADE = Track([(0, 0.0), (1.0, 1.0), (TOTAL - 0.8, 1.0), (TOTAL - 0.05, 0.0)])
+RAYS = Track([(0, 0.0), (TOTAL, 0.0)])
+PART = Track([(0, 0.0), (TOTAL, 0.0)])
 AURORA_WARM = ("#ffd77a", "#e0607a")
 AURORA_COOL = ("#c0406a", "#8a4ad0")
-MOTE_COLORS = ("#ffe08a", "#ffb07a")
+
+
+def MOTE_COLORS(t):
+    return ("#ffe08a", "#ffb07a") if t < 42.0 or t > 49.0 else ("#e8d4ff", "#ffd8a8")
+
+
+# Five painted scenes (assets/plates/s08/), each changing on a musical breath with a different transition.
+SCENES = [
+    # 1. royal lake with the glowing olive tree: slow push in to a wide symmetrical frame
+    dict(image="assets/plates/s08/royal_lake_olive.jpg", t0=0.0, t1=22.5, fade_in=1.0, fade_out=3.0,
+         zoom=(1.10, 1.03), pan=((0.0, 0.015), (0.0, 0.0)), water=True, water_line=0.40, water_strength=0.7,
+         gain=Track([(0, 1.0), (8.0, 1.0), (11.0, 0.80), (19.5, 0.80), (22.5, 0.9)])),
+    # 2. festival lake under crimson and gold embroidered aurora: a ring of warm light runs across the water
+    dict(image="assets/plates/s08/festival_embroidered_aurora.jpg", t0=19.5, t1=31.0, fade_in=3.0, fade_out=3.0,
+         transition="ripple", ripple_from=(0.5, 0.40), zoom=(1.04, 1.10), water=True, water_line=0.426,
+         water_strength=0.7, gain=Track([(0, 0.9), (21.0, 0.86), (28.0, 0.86), (31.0, 0.9)])),
+    # 3. heaven opens: clouds parted, a column of gold pouring onto the lake (light bloom)
+    dict(image="assets/plates/s08/heaven_opens.jpg", t0=28.0, t1=44.0, fade_in=3.0, fade_out=3.5,
+         transition="bloom", flash=0.6, zoom=(1.03, 1.08), water=True, water_line=0.296, water_strength=0.6,
+         gain=Track([(0, 1.0), (30.0, 0.95), (32.5, 0.70), (40.5, 0.70), (44.0, 0.8)])),
+    # 4. the velvet path home: deep purple night, a narrow path of light to the horizon (organic dissolve)
+    dict(image="assets/plates/s08/velvet_path_home.jpg", t0=40.5, t1=50.5, fade_in=3.5, fade_out=3.0,
+         transition="dissolve", zoom=(1.03, 1.09), water=True, water_line=0.426, water_strength=0.6),
+    # 5. the seven-branched lampstand under the embroidered veil (the camera moves forward into it)
+    dict(image="assets/plates/s08/lampstand_veil.jpg", t0=47.5, t1=61.0, fade_in=3.0, fade_out=0.0,
+         transition="push", zoom=(1.12, 1.04), water=True, water_line=0.24, water_strength=0.5,
+         gain=Track([(0, 1.0), (49.0, 0.95), (51.5, 0.66), (TOTAL, 0.66)])),
+]
+
+F = "assets/figures/"
+SF = "assets/song_figures/s08/"
+FIGURES = [
+    # the swan of light resting on the royal lake (signature effect), right of centre
+    dict(poses=[SF + "swan_glide.png"], t0=0.8, t1=18.0, x=0.80, y=0.255, height=0.15, color="#f1e8ff",
+         glow=0.9, particles=6000, leave="drift"),
+    # Compliment: one finishes a task with a basket, the other claps; then a hand on the shoulder in praise
+    dict(poses=[F + "compliment_a.png", F + "compliment_b.png"], t0=3.0, t1=19.0, pose_times=[9.0],
+         x=0.48, y=0.22, height=0.38, to_star=8, color="#d9c2ff"),
+    # the bridegroom and bride bow to each other with dignity (no embrace)
+    dict(poses=[SF + "couple_bow.png"], t0=19.8, t1=29.6, x=0.5, y=0.25, height=0.36, color="#fff0d8",
+         particles=10000, leave="drift"),
+    # Gratitude: the main pair bows, hand on heart, then offers a small gift of thanks
+    dict(poses=[F + "gratitude_a.png", F + "gratitude_b.png"], t0=28.6, t1=39.7, pose_times=[33.5],
+         x=0.5, y=0.20, height=0.38, to_star=1, color="#ffd890"),
+    # the congregation on both shores bows toward the light
+    dict(poses=[F + "gratitude_a.png"], t0=29.4, t1=40.0, x=0.17, y=0.24, height=0.22, color="#ffcf8a",
+         glow=0.8, particles=5000, to_star=1),
+    dict(poses=[F + "gratitude_a.png"], t0=29.8, t1=40.0, x=0.83, y=0.24, height=0.22, color="#ffcf8a",
+         glow=0.8, particles=5000, flip=True, to_star=1),
+    # Heavenly Mother, only from behind, arms opening at the horizon, then gone back into the horizon light
+    dict(poses=[SF + "mother_back_arms_open.png"], t0=41.2, t1=48.0, x=0.5, y=0.36, height=0.30,
+         color="#ffe6c8", glow=0.9, particles=9000, to=(0.5, 0.43)),
+]
+
+# Heaven's column of gold during the thanksgiving, with rising gold dust (gentle; the plate carries the column)
+BEAM = Track([(0, 0.0), (29.0, 0.0), (31.0, 0.32), (39.5, 0.32), (42.5, 0.0)])
+BEAM_FROM = (0.5, 1.02)
+BEAM_TO = (0.5, 0.30)
+BEAM_WIDTH = (0.02, 0.07)
+BEAM_COLOR = "#ffd88a"
+# Mother's warm answer flowing back down when star 2 completes the arch
+FLASH = Track([(0, 0.0), (41.7, 0.0), (42.4, 0.30), (44.3, 0.0)])
+TEXT_SHADOW = Track([(0, 1.2), (28.0, 1.2), (31.0, 1.6), (41.0, 1.6), (43.0, 1.3), (49.0, 1.3), (51.0, 1.7),
+                     (TOTAL, 1.7)])
 
 # Nine lights on an arch over the stage, one for each expression
 STAR_POS = []
@@ -226,41 +268,43 @@ for i in range(9):
     y = 0.895 - 0.085 * ((x - 0.5) / 0.38) ** 2
     STAR_POS.append((x, y))
 
-LIT, NOT_YET = -100.0, 1e9
+OFF = dict(form=1e9, hold=1e9, star=1e9)
+LIT = dict(form=1e9, hold=1e9, star=-100.0)
 PHRASES = [
-    # label, lines, max font px, form start, hold end, star time (campaign order, full wording)
-    dict(label="Greeting", lines=["\u201cHow are you?\u201d"], size=176, form=NOT_YET, hold=NOT_YET, star=LIT),
+    dict(label="Greeting", lines=["“How are you?”"], size=176, **LIT),
     # Gratitude: lit for the first time in the concert, the last of the nine
-    dict(label="Gratitude", lines=["\u201cThank you. It\u2019s all thanks to you.", "You\u2019ve worked hard.\u201d"], size=118,
-         form=THANKS, hold=THANKS + 6.6, star=THANKS + 9.0),
-    dict(label="Apology", lines=["\u201cI\u2019m sorry.", "It must have been hard on you.\u201d"], size=124, form=NOT_YET, hold=NOT_YET, star=LIT),
-    dict(label="Inclusiveness", lines=["\u201cIt\u2019s okay. I understand.\u201d"], size=150, form=NOT_YET, hold=NOT_YET, star=LIT),
-    dict(label="Concession", lines=["\u201cPlease, after you.\u201d"], size=164, form=NOT_YET, hold=NOT_YET, star=LIT),
-    dict(label="Respect", lines=["\u201cI\u2019d love to hear more", "about your thoughts.\u201d"], size=128, form=NOT_YET, hold=NOT_YET, star=LIT),
-    dict(label="Encouragement", lines=["\u201cI\u2019ll pray (or root) for you.", "Everything will go well.\u201d"], size=118, form=NOT_YET, hold=NOT_YET, star=LIT),
-    dict(label="Consideration", lines=["\u201cCan I give you a hand", "with anything?\u201d"], size=128, form=NOT_YET, hold=NOT_YET, star=LIT),
+    dict(label="Gratitude", lines=["“Thank you. It’s all thanks to you.", "You’ve worked hard.”"],
+         size=96, y=0.30, form=GRAT_FORM, hold=GRAT_HOLD, star=GRAT_STAR),
+    dict(label="Apology", lines=["“I’m sorry.", "It must have been hard on you.”"], size=124, **LIT),
+    dict(label="Inclusiveness", lines=["“It’s okay. I understand.”"], size=150, **LIT),
+    dict(label="Concession", lines=["“Please, after you.”"], size=164, **LIT),
+    dict(label="Respect", lines=["“I’d love to hear more", "about your thoughts.”"], size=128, **LIT),
+    dict(label="Encouragement", lines=["“I’ll pray (or root) for you.", "Everything will go well.”"],
+         size=118, **LIT),
+    dict(label="Consideration", lines=["“Can I give you a hand", "with anything?”"], size=128, **LIT),
     # Compliment: first lit in song 01, spoken again here (flare and a new ring when the words arrive)
-    dict(label="Compliment", lines=["\u201cYou\u2019re amazing.", "You\u2019re doing great!\u201d"], size=140,
-         form=COMPLIMENT, hold=COMPLIMENT + 6.6, star=LIT, arrive=COMPLIMENT + 9.0),
+    dict(label="Compliment", lines=["“You’re amazing.", "You’re doing great!”"], size=104, y=0.30,
+         form=COMP_FORM, hold=COMP_HOLD, star=-100.0, arrive=COMP_ARRIVE),
 ]
 FORM_DUR = 3.0
-# PHRASES keys: label, lines, size, form (words start forming), hold (words start flying), star (the light is lit).
-# A light already lit in an earlier song: star=-100.0. Not lit yet in the concert: form=hold=star=1e9.
-# A light lit earlier and spoken again in this song: star=-100.0 plus form, hold and arrive (when the words reach it).
 # End card
-TITLE = dict(label="Healing Concert", lines=["The Words of Mother\u2019s Love"], size=150, form=TITLE_HIT - FORM_DUR,
+TITLE = dict(label="Healing Concert", lines=["The Words of Mother’s Love"], size=150, form=TITLE_HIT - FORM_DUR,
              hold=1e9, star=1e9)
-# Short lyric fragments (never on screen with an expression): text, t0, t1, out, dy, size
+# Short lyric fragments (never on screen with an expression; each at least 3 s solid, 0.5 s clear after a dissolve)
 FRAGMENTS = [
-    dict(text="bridegroom and bride", t0=20.0, t1=21.8, out=25.6, dy=0.0, size=78, glow="#fff0d2"),
-    dict(text="into our Mother\u2019s arms", t0=39.2, t1=41.0, out=44.8, dy=0.0, size=74, glow="#e2c4ff"),
+    # two streams meeting: written by a pen of light, like a thread of embroidery, above the bowing pair
+    dict(text="bridegroom and bride", t0=22.2, t1=25.0, out=28.0, dy=0.10, size=84, glow="#fff0d2", style="write"),
+    # soft words of light above Mother's open arms
+    dict(text="into our Mother’s arms", t0=42.1, t1=44.6, out=48.0, dy=0.13, size=84, glow="#e2c4ff"),
 ]
 
-TAGLINE = dict(text="Sunday, December 6 \u00b7 4:30 PM\nThe World Mission Society Church of God \u00b7 6720 W Sahara Ave, Las Vegas",
-               t0=53.2, t1=56.2)
+# the three-line end card (PHASE2.md item 7)
+TAGLINE = dict(text="Where a mother’s love reaches, peace settles.\nSunday, December 6 · 4:30 PM\n"
+                    "The World Mission Society Church of God · 6720 W Sahara Ave, Las Vegas",
+               t0=TITLE_HIT + 0.9, t1=TITLE_HIT + 3.3)
 
 # Opening title card that then rests, small, in the top left corner
-CREDIT = dict(song="Out of Heaven, Favor From God", concert="The Words of Mother\u2019s Love Healing Concert",
+CREDIT = dict(song="Out of Heaven, Favor From God", concert="The Words of Mother’s Love Healing Concert",
               t_in=0.3, t_full=1.4, t_move=5.4, t_rest=7.4, scale=0.34, alpha_rest=0.58,
               margin_x=0.030, margin_top=0.048)
 
@@ -287,45 +331,10 @@ def credit_state(t, bbox):
 
 # Waves of light that cross the sky when a light is lit or shines again (time, x, y, strength)
 WAVES = [
-    (COMPLIMENT + 9.0, STAR_POS[8][0], STAR_POS[8][1], 0.7),   # star 9 shines again
-    (THANKS + 9.0, STAR_POS[1][0], STAR_POS[1][1], 1.2),       # star 2 lit: the arch is complete
+    (COMP_ARRIVE, STAR_POS[8][0], STAR_POS[8][1], 0.7),   # star 9 shines again
+    (GRAT_STAR, STAR_POS[1][0], STAR_POS[1][1], 1.2),     # star 2 lit: the arch is complete
     (TITLE_HIT, 0.5, 0.62, 1.1),
 ]
-
-
-def star_state(t):
-    """Brightness and time since lighting for each of the nine lights."""
-    out = []
-    for i, p in enumerate(PHRASES):
-        age = t - p["star"]
-        if age < -0.2:
-            out.append((0.0, -1.0))
-            continue
-        gather = min(max((age + 0.2) / 0.2, 0.0), 1.0)
-        base = 0.55 * gather
-        flash = np.exp(-max(age, 0.0) * 1.1) * 1.3 if age >= 0 else 0.0
-        if "arrive" in p and t >= p["arrive"]:
-            # a light that was lit in an earlier song shines again: a softer flare
-            flash += np.exp(-(t - p["arrive"]) * 1.1) * 0.9
-        fin = 0.0
-        if t > NINTH:
-            fin = 0.35 * min((t - NINTH) / 2.0, 1.0)
-        if t > TITLE_HIT:
-            fin += 0.35 * np.exp(-(t - TITLE_HIT) * 0.25) + 0.15
-        out.append((base + flash + fin, max(age, 0.0)))
-    return out
-
-
-def link_state(t):
-    """How far the line of light has grown between light i and light i+1 (0..1)."""
-    out = []
-    for i in range(8):
-        # a line appears only once both of its lights are lit (star 2 is dark until the thanksgiving)
-        t1 = max(PHRASES[i]["star"], PHRASES[i + 1]["star"])
-        # the line starts growing as the next light gathers and completes when it is lit
-        g = min(max((t - (t1 - 1.2)) / 1.4, 0.0), 1.0)
-        out.append(g * g * (3 - 2 * g))
-    return out
 
 
 def params(song, t):
@@ -352,11 +361,3 @@ def params(song, t):
         lantern=(lsx, lsy), prog=lx, rings=song.rings_at(t), waves=waves,
         star=star_state(t), link=link_state(t),
     )
-
-
-if __name__ == "__main__":
-    s = Song()
-    print("frames", NFRAMES, "rings", len(s.rings))
-    for tt in (0, 5, 12, 22, 32, 38, 42, 50, 57):
-        p = params(s, tt)
-        print(tt, {k: (round(v, 2) if isinstance(v, float) else None) for k, v in p.items() if isinstance(v, float)})
