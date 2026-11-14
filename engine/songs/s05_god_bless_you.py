@@ -7,7 +7,7 @@ Design: project-docs/designs/05 God Bless You!.md (and its Google Doc, section 1
 Four scenes: (1) the young blossom tree on the shore, where two pray for the sister (Encouragement, relit);
 (2) the listening shore with its resting stone, where the brother stops and listens (Respect, first lit; a
 provisional exception awaiting Anthony, not an exact lyric match); (3) the open spring lake, wide to the far shore,
-where a path of light crosses the water as two go to help (Consideration, lit in the brother verse, relit);
+where two carry a heavy load together (Consideration, lit in the brother verse, relit);
 (4) the tree of blessing again, closer, as the afternoon sun breaks through above it and "God bless you!" forms
 of blossom petals, ending on the three-line concert card.
 Line times inside the minute are estimates from loudness (the sung guide alignment is still to do).
@@ -156,10 +156,10 @@ from track import Track   # the shared Track refuses keys that are not strictly 
 ENC_FORM = 3.5         # Encouragement: the prayer for her (lit in song 01, shines again)
 RESPECT_FORM = 15.6    # Respect: the brother stops and listens to his sister's tender voice (first lit)
 CONS_FORM = 27.7       # Consideration: how can I help my sister (lit in the brother verse, shines again)
-FRAG_T0 = 40.2         # "God bless you!" in blossom petals, as the sun begins to break through
+FRAG_T0 = 41.5         # "God bless you!" in blossom petals, as the sun begins to break through
 SUNRISE = 44.0         # the climax: the afternoon sun breaks through the haze above the tree
 NINTH = 1e9            # no whole-arch glow in this song
-TITLE_HIT = 52.2       # end card
+TITLE_HIT = 52.5       # end card
 SKYLINE_LANTERN = 0.0  # no small light travelling along the drawn skyline
 BOTTOM_CALM = 1.0      # calm lower third for the performers
 TEXT_PROTECT = 1.0
@@ -219,11 +219,11 @@ SCENES = [
          gain=0.8),
     # 3. the open spring lake: a wide view across the water to the snowy peaks and the blossoming far shore
     # (the left part of the first listening-shore painting; its resting stone stays out of frame)
-    dict(image="assets/plates/s05/p2_listening_shore.jpg", t0=26.0, t1=40.1, fade_in=3.0, fade_out=1.8,
+    dict(image="assets/plates/s05/p2_listening_shore.jpg", t0=26.0, t1=41.4, fade_in=3.0, fade_out=1.8,
          transition="ripple", ripple_from=(0.42, 0.22), zoom=(1.50, 1.46), pan=((-0.15, 0.0), (-0.155, 0.0)),
          water=True, water_line=0.33, gain=0.8),
     # 4. the tree of blessing again, closer, as the sun breaks through above it; it stays for the end card
-    dict(image="assets/plates/s05/p1_young_tree.jpg", t0=38.3, t1=61.0, fade_in=1.8, fade_out=0.0,
+    dict(image="assets/plates/s05/p1_young_tree.jpg", t0=39.6, t1=61.0, fade_in=1.8, fade_out=0.0,
          transition="bloom", flash=0.8, zoom=(1.24, 1.12), pan=((-0.08, 0.02), (-0.05, 0.0)), water=True,
          water_line=0.35,
          gain=Track([(0, 0.8), (44.0, 0.8), (46.5, 0.92), (48.5, 0.92), (50.5, 0.72), (TOTAL, 0.72)])),
@@ -244,22 +244,12 @@ FIGURES = [
 ]
 
 
-# C. Signature effects. The path of everyday kindness: a road of light crosses the lake from the helpers toward
-# the far shore (scene 3). Then the afternoon sun breaks through the haze above the tree of blessing (scene 4).
-def BEAM_FROM(t):
-    return (0.30, 0.19) if t < 38.5 else (0.08, 1.04)
-
-
-def BEAM_TO(t):
-    return (0.86, 0.255) if t < 38.5 else (0.25, 0.42)
-
-
-def BEAM_WIDTH(t):
-    return (0.07, 0.015) if t < 38.5 else (0.03, 0.11)
-
-
-BEAM = Track([(0, 0.0), (28.0, 0.0), (31.0, 0.6), (36.5, 0.6), (38.3, 0.0), (43.8, 0.0), (46.3, 0.8),
-              (49.0, 0.6), (51.0, 0.15), (TOTAL, 0.15)])
+# C. Signature effects: the tree of blessing (scenes 1 and 4), and at the climax the afternoon sun breaking
+# through the haze above it (a column of light onto the tree, then a soft flash); blossom petals form the blessing.
+BEAM_FROM = (0.08, 1.04)
+BEAM_TO = (0.25, 0.42)
+BEAM_WIDTH = (0.03, 0.11)
+BEAM = Track([(0, 0.0), (43.8, 0.0), (46.3, 0.8), (49.0, 0.6), (51.0, 0.15), (TOTAL, 0.15)])
 BEAM_COLOR = "#fff0c8"
 FLASH = Track([(0, 0.0), (47.3, 0.0), (48.0, 0.45), (49.8, 0.0), (TOTAL, 0.0)])
 
@@ -296,7 +286,7 @@ TITLE = dict(label="Healing Concert", lines=["The Words of Mother’s Love"], si
              hold=1e9, star=1e9)
 # D. The song's blessing, formed of blossom petals as the sun breaks through, then blown away by the wind
 FRAGMENTS = [
-    dict(text="God bless you!", t0=FRAG_T0, t1=FRAG_T0 + 3.5, out=FRAG_T0 + 7.0, dy=0.03, size=140,
+    dict(text="God bless you!", t0=FRAG_T0, t1=FRAG_T0 + 3.0, out=FRAG_T0 + 6.0, dy=0.03, size=140,
          glow="#ffb070", style="petals", colors=("#ffa9bf", "#fff0e2")),
 ]
 
