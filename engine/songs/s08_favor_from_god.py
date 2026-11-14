@@ -152,7 +152,7 @@ GRAT_FORM = 30.2       # "praise and thanksgiving": the Gratitude
 GRAT_HOLD = 40.0       # fully formed from about 33.95 to 40.0 (6.05 s solid)
 GRAT_STAR = 42.0       # star 2 lit for the first time: all nine lights are lit, the arch is complete
 NINTH = GRAT_STAR
-TITLE_HIT = 53.1       # end card (title forms from 50.1, after the last fragment has gone at 49.6)
+TITLE_HIT = 53.3       # end card (title forms from 50.3, after the last fragment has gone at 49.8)
 
 SKYLINE_LANTERN = 0.0  # the plates have their own mountains
 BOTTOM_CALM = 1.0      # calm lower third for the performers
@@ -214,10 +214,10 @@ SCENES = [
          water_strength=0.7, gain=Track([(0, 0.9), (21.0, 0.86), (28.0, 0.86), (31.0, 0.9)])),
     # 3. heaven opens: clouds parted, a column of gold pouring onto the lake (light bloom)
     dict(image="assets/plates/s08/heaven_opens.jpg", t0=28.0, t1=44.0, fade_in=3.0, fade_out=3.5,
-         transition="bloom", flash=0.6, zoom=(1.03, 1.08), water=True, water_line=0.296, water_strength=0.6,
-         gain=Track([(0, 1.0), (30.0, 0.95), (32.5, 0.70), (40.5, 0.70), (44.0, 0.8)])),
+         transition="bloom", flash=0.22, zoom=(1.03, 1.08), water=True, water_line=0.296, water_strength=0.6,
+         gain=Track([(0, 0.85), (30.0, 0.85), (32.5, 0.70), (40.0, 0.70), (42.0, 0.50), (44.0, 0.45)])),
     # 4. the velvet path home: deep purple night, a narrow path of light to the horizon (organic dissolve)
-    dict(image="assets/plates/s08/velvet_path_home.jpg", t0=40.5, t1=50.5, fade_in=3.5, fade_out=3.0,
+    dict(image="assets/plates/s08/velvet_path_home.jpg", t0=40.0, t1=50.5, fade_in=3.0, fade_out=3.0,
          transition="dissolve", zoom=(1.03, 1.09), water=True, water_line=0.426, water_strength=0.6),
     # 5. the seven-branched lampstand under the embroidered veil (the camera moves forward into it)
     dict(image="assets/plates/s08/lampstand_veil.jpg", t0=47.5, t1=61.0, fade_in=3.0, fade_out=0.0,
@@ -229,7 +229,7 @@ F = "assets/figures/"
 SF = "assets/song_figures/s08/"
 FIGURES = [
     # the swan of light resting on the royal lake (signature effect), right of centre
-    dict(poses=[SF + "swan_glide.png"], t0=0.8, t1=18.0, x=0.80, y=0.255, height=0.15, color="#f1e8ff",
+    dict(poses=[SF + "swan_glide.png"], t0=0.8, t1=18.0, x=0.74, y=0.25, height=0.20, color="#f1e8ff",
          glow=0.9, particles=6000, leave="drift"),
     # Compliment: one finishes a task with a basket, the other claps; then a hand on the shoulder in praise
     dict(poses=[F + "compliment_a.png", F + "compliment_b.png"], t0=3.0, t1=19.0, pose_times=[9.0],
@@ -246,7 +246,7 @@ FIGURES = [
     dict(poses=[F + "gratitude_a.png"], t0=29.8, t1=40.0, x=0.83, y=0.24, height=0.22, color="#ffcf8a",
          glow=0.8, particles=5000, flip=True, to_star=1),
     # Heavenly Mother, only from behind, arms opening at the horizon, then gone back into the horizon light
-    dict(poses=[SF + "mother_back_arms_open.png"], t0=41.2, t1=48.0, x=0.5, y=0.36, height=0.30,
+    dict(poses=[SF + "mother_back_arms_open.png"], t0=41.2, t1=47.0, dissolve=2.5, x=0.5, y=0.36, height=0.32,
          color="#ffe6c8", glow=0.9, particles=9000, to=(0.5, 0.43)),
 ]
 
@@ -257,7 +257,7 @@ BEAM_TO = (0.5, 0.30)
 BEAM_WIDTH = (0.02, 0.07)
 BEAM_COLOR = "#ffd88a"
 # Mother's warm answer flowing back down when star 2 completes the arch
-FLASH = Track([(0, 0.0), (41.7, 0.0), (42.4, 0.30), (44.3, 0.0)])
+FLASH = Track([(0, 0.0), (41.7, 0.0), (42.2, 0.10), (43.5, 0.0)])
 TEXT_SHADOW = Track([(0, 1.2), (28.0, 1.2), (31.0, 1.6), (41.0, 1.6), (43.0, 1.3), (49.0, 1.3), (51.0, 1.7),
                      (TOTAL, 1.7)])
 
@@ -295,7 +295,7 @@ FRAGMENTS = [
     # two streams meeting: written by a pen of light, like a thread of embroidery, above the bowing pair
     dict(text="bridegroom and bride", t0=22.2, t1=25.0, out=28.0, dy=0.10, size=84, glow="#fff0d2", style="write"),
     # soft words of light above Mother's open arms
-    dict(text="into our Mother’s arms", t0=42.1, t1=44.6, out=48.0, dy=0.13, size=84, glow="#e2c4ff"),
+    dict(text="into our Mother’s arms", t0=42.6, t1=45.1, out=48.2, dy=0.13, size=84, glow="#e2c4ff"),
 ]
 
 # the three-line end card (PHASE2.md item 7)
