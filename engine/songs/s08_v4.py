@@ -157,6 +157,7 @@ TITLE_HIT = 53.1       # end card (title forms from 50.1)
 # Original look (Anthony, round 4): the engine's own luminous world, no painted plates, nothing dark behind any
 # text. Legibility comes from the glow and from keeping the sky behind the words deep.
 TEXT_SHADOW = 0.0
+TEXT_PROTECT = 0.0   # no dimming pass behind the words either (coordinator tip from song 05)
 BOTTOM_CALM = 1.0
 # Star history before this minute (DESIGN-SYSTEM.md): rings carried from relights in songs 02 to 07.
 # star 3 (Apology) relit in 04; star 4 (Inclusiveness) relit in 06; star 7 (Encouragement) relit in 02, 03, 05;
@@ -175,10 +176,10 @@ RINGS_AT_START = {2: 1, 3: 1, 6: 3, 7: 1}
 PAL = {
     "royal":    ("#030109", "#110626", "#34124a", "#e8b860"),
     "crimson":  ("#060112", "#2a0832", "#6a1640", "#ffc4b4"),
-    "gold":     ("#07021a", "#2e0c3c", "#7a2a4c", "#ffd49a"),
+    "gold":     ("#05011a", "#240a36", "#5e2244", "#ffd49a"),
     "heaven":   ("#05011a", "#2a0c40", "#7c3052", "#ffe2a8"),
     "velvet":   ("#020007", "#0c0318", "#261034", "#e0a860"),
-    "dawn":     ("#080320", "#2c1046", "#9a4462", "#ffd8a8"),
+    "dawn":     ("#060218", "#220c3c", "#6c2c50", "#ffd8a8"),
 }
 _pal_keys = [(0.0, "royal"), (18.5, "royal"), (21.5, "crimson"), (27.5, "crimson"), (31.0, "gold"),
              (38.0, "gold"), (40.5, "heaven"), (42.0, "heaven"), (44.5, "velvet"), (49.0, "velvet"),
@@ -188,15 +189,15 @@ SKY_MID = Track([(t, lin(PAL[p][1])) for t, p in _pal_keys])
 SKY_HOR = Track([(t, lin(PAL[p][2])) for t, p in _pal_keys])
 GLOW = Track([(t, lin(PAL[p][3])) for t, p in _pal_keys])
 
-SUN_INT = Track([(0, 0.22), (18, 0.30), (22, 0.40), (28, 0.40), (32, 0.55), (38.5, 0.55), (40.5, 0.68),
-                 (42.5, 0.55), (45, 0.18), (49, 0.20), (53, 0.55), (TOTAL, 0.62)])
+SUN_INT = Track([(0, 0.22), (18, 0.30), (22, 0.40), (28, 0.40), (32, 0.42), (38.5, 0.45), (40.5, 0.68),
+                 (42.5, 0.55), (45, 0.18), (49, 0.20), (53, 0.40), (TOTAL, 0.42)])
 SUN_Y = Track([(0, 0.26), (18, 0.27), (28, 0.28), (38.5, 0.31), (41, 0.33), (44.5, 0.25), (49, 0.25),
                (53, 0.29), (TOTAL, 0.305)])
 SUN_SIZE = Track([(0, 0.09), (38, 0.10), (41, 0.12), (45, 0.09), (TOTAL, 0.11)])
 STARS = Track([(0, 0.0), (0.2, 0.0), (2.5, 0.95), (18, 0.95), (22, 0.55), (28, 0.5), (32, 0.22), (40, 0.18),
                (44.5, 0.95), (49, 0.95), (53, 0.45), (TOTAL, 0.38)])
 MILKY = Track([(0, 0.0), (TOTAL, 0.0)])       # the Milky Way belongs to another song
-CLOUDS = Track([(0, 0.08), (27.5, 0.08), (31.5, 0.70), (38.5, 0.65), (40.5, 0.40), (43.5, 0.20), (45, 0.0), (TOTAL, 0.0)])
+CLOUDS = Track([(0, 0.08), (27.5, 0.08), (31.5, 0.50), (38.5, 0.50), (40.5, 0.40), (43.5, 0.20), (45, 0.0), (TOTAL, 0.0)])
 # heaven opens: the clouds part in the centre lane (behind the Gratitude words the sky stays clear and deep)
 PART = Track([(0, 0.0), (28.5, 0.0), (31.5, 0.7), (38.5, 0.85), (40.5, 1.0), (43.5, 1.0), (45, 0.0), (TOTAL, 0.0)])
 # the embroidered veil: crimson and gold aurora (strong for the festival, quiet under the end card)
@@ -215,8 +216,8 @@ TRAIL = Track([(0, 0.0), (1.2, 0.45), (TOTAL, 0.5)])
 ZOOM = Track([(0, 1.0), (18.5, 0.985), (22, 1.0), (40, 0.975), (44, 0.965), (49.5, 0.955), (TOTAL, 0.945)])
 EXPOSURE = Track([(0, 1.0), (TOTAL, 1.0)])
 FADE = Track([(0, 0.0), (1.0, 1.0), (TOTAL - 0.55, 1.0), (TOTAL - 0.05, 0.0)])
-RAYS = Track([(0, 0.0), (28.5, 0.0), (32, 0.25), (38.5, 0.32), (40.5, 0.55), (42.5, 0.45), (44.5, 0.0), (50, 0.0),
-              (54, 0.22), (TOTAL, 0.25)])
+RAYS = Track([(0, 0.0), (28.5, 0.0), (32, 0.16), (38.5, 0.20), (40.5, 0.55), (42.5, 0.45), (44.5, 0.0), (50, 0.0),
+              (54, 0.12), (TOTAL, 0.14)])
 
 
 def MOTE_COLORS(t):
@@ -256,7 +257,7 @@ PHRASES = [
     dict(label="Greeting", lines=["“How are you?”"], size=176, **LIT),
     # Gratitude: lit for the first time in the concert, the last of the nine
     dict(label="Gratitude", lines=["“Thank you. It’s all thanks to you.", "You’ve worked hard.”"],
-         size=118, form=GRAT_FORM, hold=GRAT_HOLD, star=GRAT_STAR),
+         size=118, y=0.35, form=GRAT_FORM, hold=GRAT_HOLD, star=GRAT_STAR),
     dict(label="Apology", lines=["“I’m sorry.", "It must have been hard on you.”"], size=124, **LIT),
     dict(label="Inclusiveness", lines=["“It’s okay. I understand.”"], size=150, **LIT),
     dict(label="Concession", lines=["“Please, after you.”"], size=164, **LIT),
@@ -265,7 +266,7 @@ PHRASES = [
          size=118, **LIT),
     dict(label="Consideration", lines=["“Can I give you a hand", "with anything?”"], size=128, **LIT),
     # Compliment: first lit in song 01, spoken again here (flare and a new ring when the words arrive)
-    dict(label="Compliment", lines=["“You’re amazing.", "You’re doing great!”"], size=140,
+    dict(label="Compliment", lines=["“You’re amazing.", "You’re doing great!”"], size=140, y=0.35,
          form=COMP_FORM, hold=COMP_HOLD, star=-100.0, arrive=COMP_ARRIVE),
 ]
 FORM_DUR = 3.0
@@ -284,11 +285,11 @@ TAGLINE = dict(text="Where a mother’s love reaches, peace settles.\nSunday, De
                     "The World Mission Society Church of God · 6720 W Sahara Ave, Las Vegas",
                t0=TITLE_HIT + 0.2, t1=TITLE_HIT + 2.4)
 
-# Opening title card that then rests, small, in the top left corner; it fades away from 36 to 40 s so star 2
-# lights in the clear and the end card stands alone
+# Opening title card that then rests, small, in the top left corner; it fades away from 16.5 to 19 s, before the
+# aurora and the brighter skies (the engine darkens a little around the credit even with TEXT_SHADOW 0)
 CREDIT = dict(song="Out of Heaven, Favor From God", concert="The Words of Mother’s Love Healing Concert",
               t_in=0.3, t_full=1.4, t_move=5.4, t_rest=7.4, scale=0.34, alpha_rest=0.58,
-              margin_x=0.030, margin_top=0.048, t_gone0=36.0, t_gone1=40.0)
+              margin_x=0.030, margin_top=0.048, t_gone0=16.5, t_gone1=19.0)
 
 
 def credit_state(t, bbox):
