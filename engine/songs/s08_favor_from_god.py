@@ -213,6 +213,12 @@ RAYS = Track([(0, 0.0), (2, 0.20), (12, 0.25), (20, 0.35), (30, 0.80), (36, 0.95
               (53, 0.70), (TOTAL, 0.65)])
 PART = Track([(0, 0.0), (28, 0.0), (32, 1.0), (38, 1.0), (42, 0.3), (TOTAL, 0.3)])
 
+# Royal colors: gold embroidery aurora (warm pair) with a crimson and purple thread (cool pair, used with MILKY,
+# which stays 0 here), and gold and rose-gold festival sparkle
+AURORA_WARM = ("#ffcf6a", "#ff9a5a")
+AURORA_COOL = ("#c0406a", "#8a4ad0")
+MOTE_COLORS = ("#ffe08a", "#ffb07a")
+
 # Nine lights on an arch over the stage, one for each expression
 STAR_POS = []
 for i in range(9):
