@@ -192,7 +192,7 @@ TRAIL = Track([(0, 0.0), (1.2, 0.45), (46, 0.6), (52, 0.9), (TOTAL, 0.8)])
 ZOOM = Track([(0, 1.0), (49, 0.975), (TOTAL, 0.962)])
 EXPOSURE = Track([(0, 1.0), (TOTAL, 1.0)])
 FADE = Track([(0, 0.0), (1.0, 1.0), (TOTAL - 2.6, 1.0), (TOTAL - 0.2, 0.0)])
-RAYS = Track([(0, 0.0), (40, 0.0), (46, 0.18), (50, 0.62), (56, 0.75), (TOTAL, 0.7)])
+RAYS = Track([(0, 0.0), (40, 0.0), (46, 0.15), (50, 0.48), (56, 0.55), (TOTAL, 0.5)])
 PART = Track([(0, 0.0), (TOTAL, 0.0)])
 
 # ice crystals glitter cold and pearly, then warm to apricot when the thaw comes
@@ -231,9 +231,9 @@ TITLE = dict(label="Healing Concert", lines=["The Words of Mother’s Love"], si
              form=TITLE_HIT - FORM_DUR, hold=1e9, star=1e9)
 # Short lyric fragments from the design (never on screen with the expression). Times are estimates in verse 1.
 FRAGMENTS = [
-    dict(text="the pain you held inside", t0=20.0, t1=22.5, out=27.5, dy=0.0, size=74, glow="#bcd6ff"),
-    dict(text="truly humbled", t0=31.5, t1=34.0, out=38.5, dy=0.0, size=80),
-    dict(text="opened her heart", t0=41.0, t1=43.5, out=47.5, dy=0.0, size=80, glow="#ffb48c"),
+    dict(text="the pain you held inside", t0=20.0, t1=22.5, out=27.5, dy=0.0, size=88, glow="#bcd6ff"),
+    dict(text="truly humbled", t0=31.5, t1=34.0, out=38.5, dy=0.0, size=92),
+    dict(text="opened her heart", t0=41.0, t1=43.5, out=47.5, dy=0.0, size=92, glow="#ffb48c"),
 ]
 
 TAGLINE = dict(text="Sunday, December 6 · 4:30 PM\nThe World Mission Society Church of God · 6720 W Sahara Ave, Las Vegas",
