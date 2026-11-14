@@ -79,12 +79,15 @@ def render(label, lines, size, font_path=F_PHRASE, label_alpha=232):
 
 
 def render_tagline(text):
-    f = ImageFont.truetype(F_TAG, 68)
+    """Closing line(s) under the title. A newline starts a second line; long lines shrink to the safe width."""
+    lines = text.split("\n")
+    f, size = _fit(lines, F_TAG, 68)
     img = Image.new("L", (W, H), 0)
     d = ImageDraw.Draw(img)
     y = Y_CENTER + 158
-    d.text((W / 2.0, y), text, font=f, fill=250, anchor="ms")
-    wl = f.getlength(text)
+    for k, line in enumerate(lines):
+        d.text((W / 2.0, y + k * size * 1.25), line, font=f, fill=250, anchor="ms")
+    wl = max(f.getlength(l) for l in lines)
     sharp = np.asarray(img)
     glow = np.asarray(img.filter(ImageFilter.GaussianBlur(6)))
     back = img.filter(ImageFilter.MaxFilter(7)).filter(ImageFilter.GaussianBlur(36))
