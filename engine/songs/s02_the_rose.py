@@ -31,7 +31,7 @@ MUSIC_END = 59.5       # the drawn timeline (no music yet)
 SONG_END = 60.0
 TOTAL = 60.0           # promo length
 NFRAMES = int(round(TOTAL * FPS))
-HORIZON = 0.30         # water line, as a fraction of the height from the bottom
+HORIZON = 0.36         # water line, as a fraction of the height from the bottom ("horizon mid", the 02 look)
 
 RIDGE_X0, RIDGE_W = 0.035, 0.93
 
@@ -154,51 +154,73 @@ NINTH = 1e9            # the whole arch does not glow at the end of this song
 # star_state and link_state below are replaced by engine/arch.py when the engine loads this file
 TITLE_HIT = 51.6       # end card
 
-# Scene palettes (top of sky, middle, horizon, glow of the low home star / sun)
+# Scene palettes (top of sky, middle, horizon, glow of the low home star / sun).
+# The 02 look (DESIGN-SYSTEM.md section 6): deep winter night with snowfall, a pale pink spring dawn at the end;
+# silver blue, white, blush pink; close and quiet framing.
 PAL = {
-    "home":    ("#02030b", "#080d2a", "#141a3a", "#ffc98a"),
-    "cold":    ("#010208", "#050a1e", "#0e1a33", "#9fb8ff"),
-    "deep":    ("#010106", "#03071a", "#080c1a", "#8ea4ff"),
-    "violet":  ("#030419", "#110e36", "#262050", "#b293e7"),
-    "predawn": ("#080d2c", "#33265c", "#a85f6e", "#ffb48c"),
-    "dawn":    ("#0f1b46", "#553b7c", "#e9836f", "#ffd08c"),
-    "rise":    ("#12265c", "#7c4c84", "#f4b6a0", "#ffe2ac"),
-    "risepk":  ("#152b68", "#93578a", "#ffd3b0", "#ffecc4"),
+    "morning": ("#22508c", "#9584a8", "#ffd09a", "#fff4d8"),   # song 01's closing frame (agreed hand-off)
+    "dusk":    ("#101a33", "#3c4566", "#8a8fae", "#d9c9d6"),
+    "winter":  ("#0b1424", "#1d2c45", "#5a6f8f", "#cfe0ff"),
+    "deep":    ("#05080f", "#0e1828", "#2e3e58", "#b9cbe8"),
+    "violet":  ("#0a0c1e", "#22204a", "#5b5a8c", "#b293e7"),
+    "pearl":   ("#1c2640", "#5c6684", "#c9b9c8", "#f3e4ea"),
+    "blush":   ("#3a4a6e", "#a9a9c8", "#f6d6dc", "#ffe9ee"),
+    "blushpk": ("#4a5c84", "#c2bcd6", "#fbe2e2", "#fff4f2"),
 }
 _pal_keys = [
-    (0.0, "home"), (6.0, "home"), (12.0, "cold"), (16.0, "deep"), (21.0, "deep"), (26.0, "violet"),
-    (32.0, "violet"), (36.0, "deep"), (39.0, "deep"), (42.0, "predawn"), (46.0, "dawn"), (50.0, "rise"),
-    (TOTAL, "rise"),
+    (0.0, "morning"), (1.5, "morning"), (5.0, "dusk"), (9.0, "winter"), (16.0, "deep"), (21.0, "deep"),
+    (26.0, "violet"), (32.0, "violet"), (36.0, "deep"), (39.0, "deep"), (42.0, "pearl"), (46.0, "blush"),
+    (52.0, "blushpk"), (TOTAL, "blushpk"),
 ]
 SKY_TOP = Track([(t, lin(PAL[p][0])) for t, p in _pal_keys])
 SKY_MID = Track([(t, lin(PAL[p][1])) for t, p in _pal_keys])
 SKY_HOR = Track([(t, lin(PAL[p][2])) for t, p in _pal_keys])
 GLOW = Track([(t, lin(PAL[p][3])) for t, p in _pal_keys])
 
-SUN_INT = Track([(0, 0.24), (6, 0.24), (STAR_SINKS, 0.14), (14, 0.05), (SEED_WAKES - 2, 0.05), (SEED_WAKES, 0.12),
-                 (42, 0.32), (DAWN, 0.60), (48, 0.85), (51, 0.95), (54, 0.75), (TOTAL, 0.70)])
-SUN_Y = Track([(0, 0.27), (6, 0.27), (12, 0.21), (SEED_WAKES - 2, 0.21), (41, 0.25), (46, 0.32), (53, 0.39),
-               (TOTAL, 0.41)])
-SUN_SIZE = Track([(0, 0.09), (12, 0.07), (SEED_WAKES, 0.075), (48, 0.12), (TOTAL, 0.13)])
-STARS = Track([(0, 0.0), (0.2, 0.0), (2.0, 0.9), (10, 1.0), (36, 1.0), (42, 0.6), (48, 0.25), (TOTAL, 0.15)])
-MILKY = Track([(0, 0.15), (8, 0.55), (14, 1.0), (34, 1.0), (40, 0.3), (44, 0.0), (TOTAL, 0.0)])
-CLOUDS = Track([(0, 0.15), (14, 0.08), (36, 0.12), (DAWN, 0.45), (TOTAL, 0.55)])
-# the trio's three ribbons of light: dim in the lonely night, gathering as they come, strong while they speak
-AURORA = Track([(0, 0.0), (4, 0.08), (10, 0.18), (15, 0.10), (19, 0.32), (ENC_FORM + 2, 0.55), (ENC_HOLD, 0.60),
-                (ENC_ARRIVE + 1, 0.40), (40, 0.22), (46, 0.32), (TOTAL, 0.28)])
-RAIN = Track([(0, 0.0), (TOTAL, 0.0)])
-MOTES = Track([(0, 0.05), (3, 0.12), (12, 0.07), (20, 0.15), (30, 0.25), (36, 0.18), (DAWN, 0.30), (52, 0.35),
-               (TOTAL, 0.30)])
-# the choir's small lights rising from the water around the lonely one
-LANTERNS = Track([(0, 0.0), (15.5, 0.0), (19.5, 0.22), (ENC_HOLD, 0.32), (36, 0.15), (41, 0.0), (TOTAL, 0.0)])
-# the rose: its petals in the dawn
-PETALS = Track([(0, 0.0), (43.0, 0.0), (46.0, 0.30), (49.0, 0.60), (52, 0.50), (TOTAL, 0.40)])
-TRAIL = Track([(0, 0.0), (1.2, 0.35), (14, 0.25), (30, 0.55), (48, 0.9), (TOTAL, 0.8)])
-ZOOM = Track([(0, 1.0), (20, 0.988), (ENC_HOLD, 0.976), (TOTAL, 0.952)])
-EXPOSURE = Track([(0, 1.0), (51, 1.0), (54, 0.86), (TOTAL, 0.86)])
+SUN_INT = Track([(0, 0.90), (1.5, 0.85), (5.0, 0.35), (STAR_SINKS, 0.14), (14, 0.05), (SEED_WAKES - 2, 0.05),
+                 (SEED_WAKES, 0.12), (42, 0.30), (DAWN, 0.50), (48, 0.70), (51, 0.78), (54, 0.62), (TOTAL, 0.58)])
+SUN_Y = Track([(0, 0.41), (1.5, 0.40), (6, 0.30), (12, 0.25), (SEED_WAKES - 2, 0.25), (41, 0.29), (46, 0.36),
+               (53, 0.43), (TOTAL, 0.45)])
+SUN_SIZE = Track([(0, 0.13), (6, 0.08), (12, 0.07), (SEED_WAKES, 0.075), (48, 0.11), (TOTAL, 0.12)])
+STARS = Track([(0, 0.0), (3, 0.15), (8, 0.55), (14, 0.45), (36, 0.45), (42, 0.25), (48, 0.08), (TOTAL, 0.05)])
+MILKY = Track([(0, 0.0), (TOTAL, 0.0)])          # no Milky Way: that belongs to song 01
+# snow clouds over the winter night, thinning at dawn
+CLOUDS = Track([(0, 0.25), (8, 0.55), (16, 0.70), (36, 0.65), (DAWN, 0.40), (TOTAL, 0.30)])
+# the trio's ribbons: only a faint veil while they speak (aurora is song 03's and 08's texture)
+AURORA = Track([(0, 0.0), (19, 0.0), (ENC_FORM + 2, 0.14), (ENC_HOLD, 0.16), (ENC_ARRIVE + 2, 0.05), (40, 0.0),
+                (TOTAL, 0.0)])
+RAIN = Track([(0, 0.0), (TOTAL, 0.0)])            # no rain in this song
+# faint frost glints in the air
+MOTES = Track([(0, 0.06), (8, 0.08), (20, 0.10), (30, 0.14), (36, 0.10), (DAWN, 0.16), (52, 0.20), (TOTAL, 0.18)])
+LANTERNS = Track([(0, 0.0), (TOTAL, 0.0)])        # lanterns belong to songs 03 and 07
+# falling snow through the night (white), easing while Encouragement speaks, then the rose's blush petals at dawn
+PETALS = Track([(0, 0.0), (5.0, 0.0), (8.0, 0.35), (13.0, 0.60), (19.0, 0.55), (ENC_FORM, 0.22), (ENC_HOLD, 0.20),
+                (36, 0.40), (40, 0.30), (43.0, 0.15), (46.0, 0.35), (49.0, 0.45), (52, 0.35), (TOTAL, 0.30)])
+TRAIL = Track([(0, 0.0), (1.2, 0.30), (14, 0.22), (30, 0.45), (48, 0.6), (TOTAL, 0.55)])
+# close and quiet framing, moving slowly closer
+ZOOM = Track([(0, 0.93), (20, 0.91), (ENC_HOLD, 0.895), (TOTAL, 0.875)])
+EXPOSURE = Track([(0, 1.0), (51, 1.0), (54, 0.90), (TOTAL, 0.90)])
 FADE = Track([(0, 0.0), (1.0, 1.0), (58.6, 1.0), (TOTAL, 0.0)])
-RAYS = Track([(0, 0.0), (41, 0.0), (DAWN, 0.25), (48, 0.55), (51, 0.60), (54, 0.40), (TOTAL, 0.35)])
-PART = Track([(0, 0.0), (DAWN - 1, 0.0), (47, 0.8), (52, 0.6), (56, 0.3), (TOTAL, 0.3)])
+RAYS = Track([(0, 0.0), (41, 0.0), (DAWN, 0.15), (48, 0.30), (51, 0.32), (54, 0.22), (TOTAL, 0.20)])
+PART = Track([(0, 0.0), (DAWN - 1, 0.0), (47, 0.5), (52, 0.4), (56, 0.2), (TOTAL, 0.2)])
+
+
+def _mix_hex(a, b, u):
+    ca = [int(a[k:k + 2], 16) for k in (1, 3, 5)]
+    cb = [int(b[k:k + 2], 16) for k in (1, 3, 5)]
+    return "#" + "".join(f"{int(round(x * (1 - u) + y * u)):02x}" for x, y in zip(ca, cb))
+
+
+def PETAL_COLORS(t):
+    """Snow (white and silver blue) through the night; the rose's blush petals at dawn. Used by the engine when it
+    supports song colors for petals; otherwise the engine's own petal colors apply."""
+    u = min(max((t - 42.0) / 4.0, 0.0), 1.0)
+    u = u * u * (3 - 2 * u)
+    return _mix_hex("#ffffff", "#f6b3c4", u), _mix_hex("#d6e4ff", "#fff1f3", u)
+
+
+MOTE_COLORS = ("#f4f8ff", "#cfe0ff")              # frost glints, white and silver blue
+MOTE_Y = (1.05, -0.05)                            # motes fall slowly, like the finest snow
 
 # Nine lights on an arch over the stage, one for each expression
 STAR_POS = []
@@ -227,9 +249,9 @@ TITLE = dict(label="Healing Concert", lines=["The Words of Mother’s Love"], si
              hold=1e9, star=1e9)
 # Short lyric fragments (a few words each; the song is copyrighted). Never on screen with the expression.
 FRAGMENTS = [
-    dict(text="too lonely", t0=9.0, t1=11.0, out=14.0, dy=0.04, size=84, glow="#9fb8ff"),
+    dict(text="too lonely", t0=9.0, t1=11.0, out=14.0, dy=0.04, size=84, glow="#cfe0ff"),
     dict(text="the seed", t0=37.5, t1=39.5, out=42.5, dy=-0.02, size=84, glow="#ffb347"),
-    dict(text="becomes the rose", t0=44.0, t1=45.5, out=47.0, dy=0.02, size=88, glow="#f7a889"),
+    dict(text="becomes the rose", t0=44.0, t1=45.5, out=47.0, dy=0.02, size=88, glow="#f6b3c4"),
 ]
 
 TAGLINE = dict(text="Sunday, December 6 · 4:30 PM\nThe World Mission Society Church of God · 6720 W Sahara Ave, Las Vegas",
