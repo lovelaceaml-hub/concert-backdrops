@@ -11,15 +11,19 @@ of the night to the first morning of the concert. Four scenes, clearly different
 1 the stars come down (0 to 12 s): navy night, the Milky Way, falling stars streaking down toward the lake, a
   soft flash on the loudest moment (9 s); wide.
 2 dew of the dawn (12 to 21 s): the violet blue hour, the Milky Way fades, silver dew drifting down, the camera
-  pushes in close over the water; "dew of the dawn" is written by a pen of light.
-3 Arise (21 to 33 s): the camera pulls back as the sun breaks the ridge, rose and gold horizon, sunrise rays;
-  "Arise" lies in the lake as a reflection, then rises out of the water.
-4 the morning of hope (33 to 60 s): a clear sapphire morning, golden horizon, a slanting column of morning light
-  on the lake at the right; ENCOURAGEMENT forms and flies into star 7 (lit for the first time in the concert),
-  then the three-line end card while the camera keeps pushing in slowly.
+  tilts down and pushes in close over the water; "dew of the dawn" is written by a pen of light.
+3 Arise (21 to 33 s): the camera pulls back level as the sun breaks the ridge, rose and gold horizon, a fan of
+  sunrise rays; "Arise" lies in the lake as a reflection, then rises out of the water.
+4 the morning of hope (33 to 60 s): the camera tilts up to a wide sapphire morning sky over a golden horizon, a
+  slanting column of morning light on the lake at the right; ENCOURAGEMENT forms and flies into star 7 (lit for
+  the first time in the concert); then the sun settles into a soft glow behind the ridge under the three-line
+  end card while the camera keeps pushing in slowly.
+Engine patches (this file only, applied when it loads): no dark veil or credit halo behind text, falling stars in
+place of the sky's rain layer, and a moving water line for the camera tilt (HORIZON_T).
 Live the song is a 3:08 brass version with no singing.
 """
 import os
+import sys
 import numpy as np
 
 import shaders as _G   # engine/ is on the path (song.py); patched below, for this song only
@@ -175,9 +179,9 @@ _FALLING = """  // falling stars (song 01)
       if(ph<life && hash11(cyc*5.31+fi*2.9)<0.85){
         float s = ph/life;
         float hx = hash11(cyc*4.13+fi*11.7), hy = hash11(cyc*9.71+fi*3.3);
-        float sd = hash11(cyc*2.77+fi*5.5)<0.5 ? -1.0 : 1.0;
+        float sd = hash11(cyc*2.77+fi*5.5)<0.5 ? -1.0 : 1.0;   // left or right of the words, falling outward
         vec2 dir = normalize(vec2(sd*(0.55+0.5*hash11(cyc*6.1+fi)), -1.0));
-        vec2 p0 = vec2((0.10+0.80*hx)*uAspect, 0.70+0.26*hy);
+        vec2 p0 = vec2((0.5+sd*(0.21+0.25*hx))*uAspect, 0.70+0.26*hy);
         vec2 head = p0 + dir*(0.26+0.12*hash11(cyc*8.3+fi*1.7))*s;
         float len = 0.12*smoothstep(0.0, 0.35, s);
         vec2 rel = pa-head;
@@ -223,7 +227,7 @@ PAL = {
     "predawn":  ("#08103a", "#272465", "#b0607a", "#ffb890"),
     "sunrise":  ("#0b1848", "#2e2d6c", "#f08a68", "#ffd08c"),
     "morning":  ("#0c1d52", "#26377a", "#f4a870", "#ffe2b0"),
-    "hope":     ("#0b1b4e", "#233474", "#f2b27c", "#ffe8c0"),
+    "hope":     ("#0a1a4c", "#213272", "#d99a78", "#ffd8b0"),
 }
 _pal_keys = [(0.0, "night"), (11.0, "night"), (15.0, "bluehour"), (19.0, "bluehour"), (21.5, "predawn"),
              (24.5, "sunrise"), (31.0, "sunrise"), (35.0, "morning"), (46.0, "morning"), (51.0, "hope"),
@@ -233,10 +237,17 @@ SKY_MID = Track([(t, lin(PAL[p][1])) for t, p in _pal_keys])
 SKY_HOR = Track([(t, lin(PAL[p][2])) for t, p in _pal_keys])
 GLOW = Track([(t, lin(PAL[p][3])) for t, p in _pal_keys])
 
-# the sun stays low, on the skyline: its light fills the horizon, never the sky where the words stand
+# Camera tilt (the water line moves; params() below applies it every frame): a big sky at night, tilted down
+# close over the water in the blue hour, level for the sunrise, a wider sky again for the morning and end card.
+HORIZON_T = Track([(0, 0.21), (10.5, 0.21), (15.0, 0.33), (19.5, 0.33), (22.0, 0.24), (32.0, 0.24),
+                   (36.0, 0.20), (TOTAL, 0.20)])
+
+# the sun stays low, on the skyline: its light fills the horizon, never the sky where the words stand; behind the
+# end card it settles into a soft glow behind the ridge so the date and place lines stand on deep sky
 SUN_INT = Track([(0, 0.12), (11, 0.15), (15, 0.30), (19.5, 0.50), (21.5, 0.75), (24.5, 1.05), (31, 1.10),
-                 (35, 0.95), (46, 0.95), (51, 1.0), (TOTAL, 1.0)])
-SUN_Y = Track([(0, 0.215), (19, 0.215), (21.5, 0.235), (28, 0.265), (33, 0.28), (46, 0.30), (TOTAL, 0.315)])
+                 (35, 0.85), (46, 0.85), (51, 0.55), (TOTAL, 0.55)])
+SUN_Y = Track([(0, 0.205), (10.5, 0.205), (15, 0.325), (19.5, 0.325), (22, 0.235), (28, 0.265), (32, 0.275),
+               (36, 0.235), (46, 0.25), (51, 0.215), (TOTAL, 0.215)])
 SUN_SIZE = Track([(0, 0.10), (21, 0.10), (30, 0.12), (TOTAL, 0.13)])
 STARS = Track([(0, 0.0), (0.2, 0.0), (2.5, 1.0), (12, 1.0), (18, 0.6), (24, 0.32), (34, 0.16), (TOTAL, 0.12)])
 MILKY = Track([(0, 0.0), (3, 1.0), (11, 1.0), (17, 0.3), (21, 0.0), (TOTAL, 0.0)])
@@ -247,10 +258,10 @@ RAIN = Track([(0, 0.0), (2.0, 0.0), (3.5, 0.7), (8.4, 0.85), (9.4, 1.0), (11.5, 
 LANTERNS = Track([(0, 0.0), (TOTAL, 0.0)])
 PETALS = Track([(0, 0.0), (TOTAL, 0.0)])
 TRAIL = Track([(0, 0.0), (1.2, 0.55), (21, 0.8), (40, 1.0), (TOTAL, 0.9)])   # the morning star along the skyline
-RAYS = Track([(0, 0.0), (20, 0.0), (23.5, 0.6), (31, 0.75), (35, 0.55), (46, 0.6), (52, 0.5), (TOTAL, 0.5)])
+RAYS = Track([(0, 0.0), (20, 0.0), (23.5, 0.6), (31, 0.7), (35, 0.32), (46, 0.32), (51, 0.15), (TOTAL, 0.15)])
 PART = Track([(0, 0.0), (TOTAL, 0.0)])
 # framing: wide night; close over the water in the blue hour; pulled back for the sunrise; a slow push to the end
-ZOOM = Track([(0, 1.0), (11, 0.985), (15.5, 0.90), (20, 0.89), (24, 1.0), (33, 0.995), (46, 0.965),
+ZOOM = Track([(0, 1.0), (10.5, 0.985), (15.5, 0.82), (20, 0.80), (24, 1.0), (33, 0.995), (46, 0.965),
               (TOTAL, 0.935)])
 EXPOSURE = Track([(0, 1.0), (47, 1.0), (51, 0.95), (TOTAL, 0.95)])
 FADE = Track([(0, 0.0), (1.2, 1.0), (58.6, 1.0), (59.9, 0.0)])
@@ -277,7 +288,7 @@ BEAM_FROM = (0.99, 1.02)
 BEAM_TO = (0.84, 0.25)
 BEAM_WIDTH = (0.02, 0.07)
 BEAM_COLOR = "#ffe6b0"
-FLASH = Track([(0, 0.0), (8.4, 0.0), (9.0, 0.20), (10.6, 0.0), (46.2, 0.0), (46.6, 0.10), (48.0, 0.0),
+FLASH = Track([(0, 0.0), (8.4, 0.0), (9.0, 0.07), (10.6, 0.0), (46.2, 0.0), (46.6, 0.05), (48.0, 0.0),
                (TOTAL, 0.0)])
 
 # Nine lights on an arch over the stage, one for each expression (campaign order, left to right)
@@ -306,7 +317,17 @@ PHRASES = [
 ]
 FORM_DUR = 3.0
 TITLE = dict(label="Healing Concert", lines=["The Words of Mother’s Love"], size=150, form=TITLE_HIT - FORM_DUR,
-             hold=1e9, star=1e9)
+             hold=1e9, star=1e9, y=0.285)
+
+
+def _apply_horizon(t):
+    """Moves the water line for the camera tilt (HORIZON_T): here and in the engine's song module."""
+    global HORIZON
+    hz = float(HORIZON_T(t))
+    HORIZON = hz
+    sm = sys.modules.get("song")
+    if sm is not None and hasattr(sm, "HORIZON"):
+        sm.HORIZON = hz
 
 # Short lyric fragments (never on screen together with an expression)
 FRAGMENTS = [
@@ -351,6 +372,7 @@ WAVES = [(ENC_STAR, STAR_POS[6][0], STAR_POS[6][1], 1.1), (TITLE_HIT, 0.5, 0.80,
 
 
 def params(song, t):
+    _apply_horizon(t)
     f = min(int(round(t * FPS)), NFRAMES - 1)
     env, envs, hi, pulse = song.env[f], song.env_slow[f], song.hi[f], song.pulse[f]
     if t > MUSIC_END - 1.0:
