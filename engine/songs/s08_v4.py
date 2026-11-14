@@ -196,7 +196,7 @@ SUN_SIZE = Track([(0, 0.09), (38, 0.10), (41, 0.12), (45, 0.09), (TOTAL, 0.11)])
 STARS = Track([(0, 0.0), (0.2, 0.0), (2.5, 0.95), (18, 0.95), (22, 0.55), (28, 0.5), (32, 0.22), (40, 0.18),
                (44.5, 0.95), (49, 0.95), (53, 0.45), (TOTAL, 0.38)])
 MILKY = Track([(0, 0.0), (TOTAL, 0.0)])       # the Milky Way belongs to another song
-CLOUDS = Track([(0, 0.08), (27.5, 0.08), (31.5, 0.70), (39, 0.70), (43.5, 0.25), (45, 0.0), (TOTAL, 0.0)])
+CLOUDS = Track([(0, 0.08), (27.5, 0.08), (31.5, 0.70), (38.5, 0.65), (40.5, 0.40), (43.5, 0.20), (45, 0.0), (TOTAL, 0.0)])
 # heaven opens: the clouds part in the centre lane (behind the Gratitude words the sky stays clear and deep)
 PART = Track([(0, 0.0), (28.5, 0.0), (31.5, 0.7), (38.5, 0.85), (40.5, 1.0), (43.5, 1.0), (45, 0.0), (TOTAL, 0.0)])
 # the embroidered veil: crimson and gold aurora (strong for the festival, quiet under the end card)
@@ -239,7 +239,7 @@ FIGURES = [
          ease="linear", flip=True, y=0.275, height=0.15, color="#f1e8ff", glow=0.9, particles=6000, leave="drift"),
     # the seven-branched lampstand of light rises out of the lake under the velvet night (an object, not a
     # person), its sparks flowing back into the horizon light before the end card
-    dict(poses=[SF + "lampstand.png"], t0=43.0, t1=47.0, gather=2.6, dissolve=2.4, x=0.5, y=(0.29, 0.335),
+    dict(poses=[SF + "lampstand.png"], t0=43.0, t1=47.0, gather=2.6, dissolve=2.4, x=0.5, y=(0.285, 0.315),
          height=(0.30, 0.31), move=(43.0, 47.5), ease="out", color="#ffd890", glow=1.0, particles=9000,
          to=(0.5, HORIZON + 0.01)),
 ]
@@ -314,7 +314,7 @@ def credit_state(t, bbox):
 # Waves of light that cross the sky when a light is lit or shines again (time, x, y, strength)
 WAVES = [
     (COMP_ARRIVE, STAR_POS[8][0], STAR_POS[8][1], 0.35),   # star 9 shines again
-    (GRAT_STAR, STAR_POS[1][0], STAR_POS[1][1], 0.70),     # star 2 lit: the arch is complete
+    (GRAT_STAR, STAR_POS[1][0], STAR_POS[1][1], 0.45),     # star 2 lit: the arch is complete
 ]
 
 
