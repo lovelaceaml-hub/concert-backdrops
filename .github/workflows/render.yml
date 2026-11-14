@@ -1,6 +1,7 @@
 name: Render
 
 # Manual only. Renders still frames or a video for one song in the cloud (no graphics card needed).
+# Inputs are passed through environment variables and checked before use (Astra round 0, finding 13).
 on:
   workflow_dispatch:
     inputs:
@@ -11,7 +12,7 @@ on:
       audio:
         description: "Audio file in the repo that the video follows (for example audio/promo/s05.mp3)"
         required: true
-        default: audio/promo/s03.mp3
+        default: audio/test/s03-newsong-first-60s.mp3
       mode:
         description: "stills or video"
         required: true
@@ -27,6 +28,11 @@ on:
 
 env:
   SONG: ${{ inputs.song }}
+  AUDIO: ${{ inputs.audio }}
+  MODE: ${{ inputs.mode }}
+  STILLS: ${{ inputs.stills }}
+  OUTNAME: ${{ inputs.name }}
+  FEATURES: ${{ github.workspace }}/work/${{ inputs.song }}/features.npz
   LIBGL_ALWAYS_SOFTWARE: "1"
   PARTS: "4"
 
@@ -37,9 +43,17 @@ jobs:
       frames: ${{ steps.n.outputs.frames }}
     steps:
       - uses: actions/checkout@v4
+      - name: Check inputs
+        run: |
+          [[ "$SONG" =~ ^[a-z0-9_]+$ ]] || { echo "bad song name"; exit 1; }
+          [[ -f "engine/songs/$SONG.py" ]] || { echo "no such song file"; exit 1; }
+          [[ "$AUDIO" =~ ^audio/[A-Za-z0-9_./-]+\.mp3$ && "$AUDIO" != *..* && -f "$AUDIO" ]] || { echo "bad audio path"; exit 1; }
+          [[ "$MODE" == stills || "$MODE" == video ]] || { echo "bad mode"; exit 1; }
+          [[ "$STILLS" =~ ^[0-9.,]*$ ]] || { echo "bad stills list"; exit 1; }
+          [[ "$OUTNAME" =~ ^[A-Za-z0-9\ _.,!\'-]+$ ]] || { echo "bad output name"; exit 1; }
       - uses: actions/setup-python@v5
         with: { python-version: "3.11" }
-      - run: pip install numpy
+      - run: pip install -q numpy
       - id: n
         run: echo "frames=$(cd engine && python -c 'import song; print(song.NFRAMES)')" >> "$GITHUB_OUTPUT"
 
@@ -67,17 +81,21 @@ jobs:
       - name: Measure the music
         run: |
           mkdir -p "work/$SONG"
-          ffmpeg -v error -y -i "${{ inputs.audio }}" -ac 1 -ar 22050 "work/$SONG/audio.wav"
+          ffmpeg -v error -y -i "$AUDIO" -ac 1 -ar 22050 "work/$SONG/audio.wav"
           python engine/analyze.py "work/$SONG/audio.wav" "work/$SONG/features.npz" | head -40
       - name: Stills
         if: inputs.mode == 'stills'
-        run: cd engine && python render.py --stills "${{ inputs.stills }}" --outdir "../out/${{ inputs.name }}-stills"
+        run: cd engine && python render.py --stills "$STILLS" --outdir "../out/${OUTNAME}-stills"
       - name: Video part
         if: inputs.mode == 'video'
+        env:
+          FRAMES: ${{ needs.prepare.outputs.frames }}
+          PART: ${{ matrix.part }}
         run: |
-          N=${{ needs.prepare.outputs.frames }}; P=${{ matrix.part }}
-          A=$(( N * P / PARTS )); B=$(( N * (P + 1) / PARTS ))
-          mkdir -p out && cd engine && python render.py --range $A $B --out "../out/part$P.mp4" --crf 16
+          A=$(( FRAMES * PART / PARTS )); B=$(( FRAMES * (PART + 1) / PARTS ))
+          mkdir -p out && cd engine && python render.py --range "$A" "$B" --out "../out/part$PART.mp4" --crf 16
+          n=$(ffprobe -v error -count_frames -select_streams v:0 -show_entries stream=nb_read_frames -of csv=p=0 "../out/part$PART.mp4")
+          [[ "$n" == "$(( B - A ))" ]] || { echo "part $PART has $n frames, expected $(( B - A ))"; exit 1; }
       - uses: actions/upload-artifact@v4
         with:
           name: ${{ inputs.mode == 'video' && format('part{0}', matrix.part) || format('{0}-stills', inputs.name) }}
@@ -86,21 +104,30 @@ jobs:
 
   finish:
     if: inputs.mode == 'video'
-    needs: render
+    needs: [prepare, render]
     runs-on: ubuntu-latest
+    env:
+      FRAMES: ${{ needs.prepare.outputs.frames }}
     steps:
       - uses: actions/checkout@v4
       - run: sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg >/dev/null
       - uses: actions/download-artifact@v4
         with: { path: parts, pattern: "part*", merge-multiple: true }
-      - name: Join the parts and add the music
+      - name: Join the parts, add the music, check the result
         run: |
-          ls -la parts
           for i in 0 1 2 3; do echo "file '$PWD/parts/part$i.mp4'"; done > list.txt
           ffmpeg -v error -y -f concat -safe 0 -i list.txt -c copy silent.mp4
-          ffmpeg -v error -y -i silent.mp4 -i "${{ inputs.audio }}" -map 0:v -map 1:a -c:v copy -c:a aac -b:a 256k -shortest -movflags +faststart "${{ inputs.name }}.mp4"
-          cp silent.mp4 "${{ inputs.name }} (silent).mp4"
-          ffprobe -v error -show_entries format=duration -of csv=p=0 "${{ inputs.name }}.mp4"
+          vd=$(ffprobe -v error -show_entries format=duration -of csv=p=0 silent.mp4)
+          ad=$(ffprobe -v error -show_entries format=duration -of csv=p=0 "$AUDIO")
+          want=$(python3 -c "print($FRAMES/30)")
+          echo "video $vd s, audio $ad s, expected $want s"
+          python3 -c "import sys; v,a,w=$vd,$ad,$want; sys.exit(0 if abs(v-w)<0.1 and a>=w-0.15 else 1)" || { echo "length check failed"; exit 1; }
+          ffmpeg -v error -y -i silent.mp4 -i "$AUDIO" -map 0:v -map 1:a -c:v copy -c:a aac -b:a 256k -shortest -movflags +faststart "$OUTNAME.mp4"
+          fd=$(ffprobe -v error -show_entries format=duration -of csv=p=0 "$OUTNAME.mp4")
+          na=$(ffprobe -v error -select_streams a -show_entries stream=index -of csv=p=0 "$OUTNAME.mp4" | wc -l)
+          echo "final $fd s, audio streams $na"
+          python3 -c "import sys; sys.exit(0 if abs($fd-$want)<0.15 and $na==1 else 1)" || { echo "final check failed"; exit 1; }
+          cp silent.mp4 "$OUTNAME (silent).mp4"
       - uses: actions/upload-artifact@v4
         with:
           name: ${{ inputs.name }}
