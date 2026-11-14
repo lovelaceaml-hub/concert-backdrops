@@ -1,8 +1,12 @@
-"""Song 01, All You Stars of Zion: the 1 minute promo (design "From Starlight to Sunrise").
+"""Song 01, All You Stars of Zion: the 1 minute promo, version 2 (design "From Starlight to Sunrise").
 
 The minute is 3:01 to 4:01 of the studio recording: the final chorus, from the last stars of the night to the
-first sunrise of the concert. The morning star flares, "dew of the dawn" and "Arise" appear as short fragments,
-the sun rises, and Encouragement is lit for the first time in the concert (Compliment was lit earlier in the song).
+first sunrise of the concert. Four painted scenes: the stars come down over the night lake (the morning star
+flares on the loudest moment); "dew of the dawn" written in light across a dawn web in the violet blue hour;
+"Arise" rising out of the lake as the sun breaks the ridge; Encouragement acted out by people of light on the
+golden morning shore beside the tree of light, with two torch bearers raising their torches toward the one who
+kneels, then star 7 lit for the first time in the concert (Compliment, star 9, was lit earlier in the song);
+the end card over the same morning shore as the camera keeps pushing in.
 Audio: audio/promo/s01.mp3 (60 s clip). Live the song is a 3:08 brass version with no singing.
 """
 import os
@@ -131,22 +135,7 @@ class Song:
 
 # ----------------------------------------------------------------- timeline
 
-class Track:
-    def __init__(self, keys):
-        self.t = np.array([k[0] for k in keys], dtype=np.float64)
-        self.v = np.array([np.atleast_1d(np.asarray(k[1], dtype=np.float64)) for k in keys])
-
-    def __call__(self, t):
-        if t <= self.t[0]:
-            v = self.v[0]
-        elif t >= self.t[-1]:
-            v = self.v[-1]
-        else:
-            i = int(np.searchsorted(self.t, t, side="right")) - 1
-            u = (t - self.t[i]) / (self.t[i + 1] - self.t[i])
-            u = u * u * (3 - 2 * u)
-            v = self.v[i] * (1 - u) + self.v[i + 1] * u
-        return float(v[0]) if v.shape[0] == 1 else v
+from track import Track   # the shared Track refuses keys that are not strictly increasing  # noqa: E402
 
 
 # Landmarks in the promo minute (seconds of the clip; add 181 for the recording). Measured loudness:
@@ -157,40 +146,43 @@ SUNRISE = 21.0
 BEAMS = 32.0
 PLATEAU = 41.0
 NINTH = 1e9            # the whole arch does not glow in song 01
-TITLE_HIT = 53.5       # end card
+TITLE_HIT = 50.5       # end card (title forms from 47.5, tagline solid from 52.9)
+ENC_FORM = 35.0        # Encouragement words start forming (solid from about 38.75)
+ENC_HOLD = 45.0        # Encouragement words start flying to star 7 (6.25 s solid)
+ENC_STAR = 46.4        # star 7 (Encouragement) lit for the first time in the concert
+SKYLINE_LANTERN = 0.0  # every scene is a painted plate with its own mountains
+BOTTOM_CALM = 1.0      # calm lower third for the performers (Astra round 1, finding 12)
 
-# Scene palettes (top of sky, middle, horizon, glow of the low sun): the last of the night to the first morning
+# Procedural sky: only shows where a plate is not fully in (the first second); kept in song 01's colours
 PAL = {
     "lastnight": ("#03071c", "#0b1440", "#2a2a62", "#a69ad0"),
-    "blush":     ("#050b26", "#1a1d55", "#5a3f86", "#d8a6c8"),
     "dawn":      ("#0a1848", "#3a3274", "#c4787a", "#ffc890"),
-    "rise":      ("#10285e", "#5e4c80", "#f29a62", "#ffdca0"),
-    "gold":      ("#16336c", "#7e6680", "#fdb46c", "#ffe6b2"),
     "morning":   ("#173a74", "#8c7282", "#ffc47c", "#ffeacc"),
 }
-_pal_keys = [
-    (0.0, "lastnight"), (4.0, "lastnight"), (10.0, "blush"), (17.0, "dawn"), (22.0, "rise"), (33.0, "gold"),
-    (44.0, "gold"), (52.0, "morning"), (TOTAL, "morning"),
-]
+_pal_keys = [(0.0, "lastnight"), (12.0, "lastnight"), (22.0, "dawn"), (40.0, "morning"), (TOTAL, "morning")]
 SKY_TOP = Track([(t, lin(PAL[p][0])) for t, p in _pal_keys])
 SKY_MID = Track([(t, lin(PAL[p][1])) for t, p in _pal_keys])
 SKY_HOR = Track([(t, lin(PAL[p][2])) for t, p in _pal_keys])
 GLOW = Track([(t, lin(PAL[p][3])) for t, p in _pal_keys])
-
-# the sun: below the mountains until "Arise", then rising behind the word
-SUN_INT = Track([(0, 0.30), (4, 0.38), (9, 0.62), (14, 0.55), (19, 0.75), (21, 0.95), (26, 1.10), (32, 1.05),
-                 (41, 1.05), (50, 0.95), (TOTAL, 0.85)])
-SUN_Y = Track([(0, 0.24), (12, 0.25), (19, 0.27), (21, 0.29), (26, 0.32), (33, 0.355), (45, 0.39), (TOTAL, 0.41)])
-SUN_SIZE = Track([(0, 0.10), (21, 0.11), (33, 0.125), (TOTAL, 0.13)])
-# the last stars: the morning star moment at the peak, then the stars fade into day
-STARS = Track([(0, 0.0), (0.2, 0.0), (1.8, 1.0), (9, 1.0), (14, 0.8), (21, 0.40), (30, 0.14), (TOTAL, 0.10)])
-MILKY = Track([(0, 0.0), (1.5, 0.85), (9, 0.80), (15, 0.35), (21, 0.0), (TOTAL, 0.0)])
-CLOUDS = Track([(0, 0.0), (14, 0.0), (22, 0.10), (40, 0.12), (TOTAL, 0.10)])   # a clear sky
-AURORA = Track([(0, 0.0), (TOTAL, 0.0)])   # no aurora in song 01 (it belongs to songs 03 and 08)
+SUN_INT = Track([(0, 0.0), (TOTAL, 0.0)])      # each plate paints its own sun
+SUN_Y = Track([(0, 0.24), (TOTAL, 0.41)])
+SUN_SIZE = Track([(0, 0.10), (TOTAL, 0.13)])
+STARS = Track([(0, 0.0), (TOTAL, 0.0)])        # the night plate carries the stars and the Milky Way
+MILKY = Track([(0, 0.0), (TOTAL, 0.0)])
+CLOUDS = Track([(0, 0.0), (TOTAL, 0.0)])       # a clear sky
+AURORA = Track([(0, 0.0), (TOTAL, 0.0)])       # no aurora in song 01 (it belongs to songs 03 and 08)
 RAIN = Track([(0, 0.0), (TOTAL, 0.0)])
-MOTES = Track([(0, 0.10), (4, 0.25), (9, 0.55), (15, 0.40), (21, 0.60), (32, 0.55), (41, 0.70), (50, 0.60), (TOTAL, 0.45)])
 LANTERNS = Track([(0, 0.0), (TOTAL, 0.0)])
-# the motes fall gently like a snow of stars (the stars coming down to the shore), silver at night, gold at sunrise
+PETALS = Track([(0, 0.0), (TOTAL, 0.0)])
+TRAIL = Track([(0, 0.0), (TOTAL, 0.0)])
+RAYS = Track([(0, 0.0), (TOTAL, 0.0)])         # the sunrise plates paint their own rays
+PART = Track([(0, 0.0), (TOTAL, 0.0)])
+ZOOM = Track([(0, 1.0), (TOTAL, 1.0)])         # the plates carry the camera moves
+EXPOSURE = Track([(0, 1.0), (44, 1.0), (51, 0.88), (TOTAL, 0.86)])   # calmer light behind the end card
+FADE = Track([(0, 0.0), (1.2, 1.0), (58.6, 1.0), (59.9, 0.0)])
+# the stars come down: silver motes falling slowly through the night, turning gold at sunrise
+MOTES = Track([(0, 0.10), (4, 0.12), (9, 0.14), (15, 0.12), (21, 0.13), (30, 0.12), (36, 0.10), (50, 0.10),
+               (TOTAL, 0.12)])
 MOTE_Y = (1.05, 0.18)
 
 
@@ -201,17 +193,72 @@ def _mix_hex(a, b, u):
 
 
 def MOTE_COLORS(t):
-    u = min(max((t - 12.0) / 10.0, 0.0), 1.0)
+    u = min(max((t - 14.0) / 9.0, 0.0), 1.0)
     u = u * u * (3 - 2 * u)
     return (_mix_hex("#e8ecff", "#ffe6b0", u), _mix_hex("#c8b8ff", "#ffc890", u))
 
-PETALS = Track([(0, 0.0), (TOTAL, 0.0)])
-TRAIL = Track([(0, 0.0), (1.2, 0.55), (9, 0.8), (21, 0.95), (41, 1.05), (TOTAL, 1.0)])
-ZOOM = Track([(0, 1.0), (21, 0.992), (41, 0.982), (TOTAL, 0.975)])   # stays wide
-EXPOSURE = Track([(0, 1.0), (40, 1.0), (50, 0.86), (TOTAL, 0.84)])   # calmer light behind the end card
-FADE = Track([(0, 0.0), (1.2, 1.0), (58.6, 1.0), (59.9, 0.0)])
-RAYS = Track([(0, 0.0), (19, 0.0), (22, 0.35), (28, 0.50), (32, 0.60), (41, 0.50), (50, 0.40), (TOTAL, 0.35)])
-PART = Track([(0, 0.0), (TOTAL, 0.0)])
+
+# A. Four scenes (painted plates, assets/plates/s01/), from the last stars of the night to the first morning.
+# 1 the stars come down: navy night, Milky Way arching over the lake, falling stars, the morning star on the horizon
+# 2 dew of the dawn: close on the shore in the violet blue hour, silk threads of a dawn web, the lake blurred
+# 3 Arise: the sun breaking over the ridge, rays filling the sky, a golden road on the water
+# 4 Encouragement and the end card: the golden morning shore, sunbeams through the haze, the tree of light;
+#   the camera keeps pushing in and drifting right to the end, so the tree slides toward the edge behind the card.
+# The heavenly city plate (s01_heavenly_city.jpg) is not used: Astra round 2 found its centred sun and reflection
+# column repeated the Arise scene, and the city sat behind the end card.
+SCENES = [
+    dict(image="assets/plates/s01/s01_night_lake.jpg", t0=0.0, t1=14.5, fade_in=1.0, fade_out=3.5,
+         zoom=(1.03, 1.11), pan=((0.0, 0.0), (0.0, 0.012)), water=True, water_line=0.24, water_strength=0.7,
+         gain=Track([(0, 1.0), (2.0, 0.82), (7.0, 0.82), (9.0, 1.05), (11.0, 1.0), (TOTAL, 1.0)])),
+    dict(image="assets/plates/s01/s01_dawn_web.jpg", t0=11.0, t1=24.0, fade_in=3.5, fade_out=3.0,
+         transition="fade", zoom=(1.10, 1.02), pan=((-0.02, 0.0), (0.0, 0.0)), water=True, water_line=0.32,
+         water_strength=0.5, gain=Track([(0, 0.95), (13.0, 0.85), (19.5, 0.85), (21.0, 1.0), (TOTAL, 1.0)])),
+    dict(image="assets/plates/s01/s01_sunrise.jpg", t0=21.0, t1=34.0, fade_in=3.0, fade_out=3.5,
+         transition="bloom", flash=0.4, zoom=(1.02, 1.10), pan=((0.0, -0.01), (0.0, 0.0)), water=True,
+         water_line=0.22, water_strength=0.8,
+         gain=Track([(0, 1.0), (22.0, 1.0), (24.0, 0.78), (30.5, 0.78), (32.0, 0.95), (TOTAL, 0.95)])),
+    dict(image="assets/plates/s01/s01_morning_beams.jpg", t0=30.5, t1=61.0, fade_in=3.5, fade_out=0.0,
+         transition="push", zoom=(1.10, 1.24), pan=((0.035, 0.0), (0.09, 0.0)), water=True, water_line=0.19,
+         water_strength=0.5,
+         gain=Track([(0, 1.0), (31.5, 1.0), (33.5, 0.78), (35.5, 0.70), (44.0, 0.70), (47.0, 0.64),
+                     (TOTAL, 0.62)])),
+]
+
+# B. People of light. Encouragement acted out in full on the morning shore (the shared library): the young man
+# kneels exhausted and his friend prays over him; she rests a hand on his back and cheers him on as he begins to
+# rise; they stand and lift their joined hands (both moves finish before the words are fully formed). Two torch
+# bearers (song 01's special figures) stand on the shore and raise their torches toward him, each flame a small
+# bright light of its own; at the end every flame and figure lifts as sparks into the new violet light.
+_ENC_C = "#e2d2ff"
+_FEET = 0.24
+_TB_A = dict(x=0.30, h=0.30)          # torch low, flame tip at (0.3005, 0.430), clear of the tree
+_TB_B = dict(x=0.79, h=0.36)          # torch raised (mirrored), flame tip at (0.8096, 0.569)
+_FLAME = dict(poses=["assets/song_figures/s01/s01_torch_flame.png"], height=0.05, color="#ffb45a", glow=1.7,
+              glass=1.4, sparks=1.3, particles=1800, to_star=6)
+FIGURES = [
+    dict(poses=["assets/figures/encouragement_a.png", "assets/figures/encouragement_b.png",
+                "assets/figures/encouragement_c.png"],
+         t0=30.5, t1=ENC_HOLD - 0.5, pose_times=[33.8, 37.4], morph=1.3, x=0.5, y=_FEET, height=0.35,
+         to_star=6, color=_ENC_C, glow=1.05),
+    dict(poses=["assets/song_figures/s01/s01_torchbearer_a.png"], t0=31.5, t1=ENC_HOLD - 0.3,
+         x=_TB_A["x"], y=_FEET, height=_TB_A["h"], to_star=6, color="#ffd796", glow=0.9, particles=7000),
+    dict(poses=["assets/song_figures/s01/s01_torchbearer_b.png"], t0=32.5, t1=ENC_HOLD - 0.1,
+         x=_TB_B["x"], y=_FEET, height=_TB_B["h"], to_star=6, color="#ffd796", glow=0.9, particles=7000,
+         flip=True),
+    dict(_FLAME, t0=33.0, t1=ENC_HOLD - 0.2, x=0.3005, y=0.430 - 0.014),
+    dict(_FLAME, t0=34.0, t1=ENC_HOLD, x=0.8096, y=0.569 - 0.014),
+]
+
+# C. Effect layers: a sunbeam falls on the kneeling young man while the words begin to form (it is gone before
+# they are solid), and soft flashes on the morning star (the loudest moment) and on the new star.
+BEAM = Track([(0, 0.0), (32.2, 0.0), (33.6, 0.5), (35.0, 0.5), (37.2, 0.0), (TOTAL, 0.0)])
+BEAM_FROM = (0.60, 1.02)
+BEAM_TO = (0.52, 0.25)
+BEAM_WIDTH = (0.02, 0.09)
+BEAM_COLOR = "#ffe6b0"
+FLASH = Track([(0, 0.0), (8.4, 0.0), (9.0, 0.22), (10.6, 0.0), (46.2, 0.0), (46.6, 0.14), (48.0, 0.0),
+               (TOTAL, 0.0)])
+TEXT_SHADOW = Track([(0, 1.0), (19.0, 1.0), (22.0, 1.2), (TOTAL, 1.25)])   # deeper veil on the bright plates
 
 # Nine lights on an arch over the stage, one for each expression (campaign order, left to right)
 STAR_POS = []
@@ -230,25 +277,32 @@ PHRASES = [
     dict(label="Concession", lines=["“Please, after you.”"], size=164, **_NOT_YET),
     dict(label="Respect", lines=["“I’d love to hear more", "about your thoughts.”"], size=128, **_NOT_YET),
     # lit for the first time in the concert, on the final "Now let us arise" (the full plateau)
-    dict(label="Encouragement", lines=["“I’ll pray (or root) for you.", "Everything will go well.”"], size=118,
-         form=39.5, hold=48.5, star=50.0),
+    dict(label="Encouragement", lines=["“I’ll pray (or root) for you.", "Everything will go well.”"], size=100,
+         y=0.30, form=ENC_FORM, hold=ENC_HOLD, star=ENC_STAR),
     dict(label="Consideration", lines=["“Can I give you a hand", "with anything?”"], size=128, **_NOT_YET),
     # lit earlier in this song (verse 1, "faithful and beautiful work"), already shining in this minute
-    dict(label="Compliment", lines=["“You’re amazing.", "You’re doing great!”"], size=140, form=1e9, hold=1e9, star=-100.0),
+    dict(label="Compliment", lines=["“You’re amazing.", "You’re doing great!”"], size=140, form=1e9, hold=1e9,
+         star=-100.0),
 ]
 FORM_DUR = 3.0
 # PHRASES keys: label, lines, size, form (words start forming), hold (words start flying), star (the light is lit).
 # A light already lit before this minute: star=-100.0. Not lit yet in the concert: form=hold=star=1e9.
 TITLE = dict(label="Healing Concert", lines=["The Words of Mother’s Love"], size=150, form=TITLE_HIT - FORM_DUR,
              hold=1e9, star=1e9)
-# Short lyric fragments (never on screen together with an expression)
+
+# D. Short lyric fragments (never on screen together with an expression), each in its own way:
+# "dew of the dawn" is written by a pen of light, like the first light running along the dawn web's threads;
+# "Arise" first lies in the lake as a golden reflection, then rises out of the water as the sun breaks the ridge.
 FRAGMENTS = [
-    dict(text="dew of the dawn", t0=10.0, t1=11.8, out=17.0, dy=0.0, size=84),
-    dict(text="Arise", t0=21.0, t1=22.6, out=29.5, dy=0.0, size=150),
+    dict(text="dew of the dawn", t0=13.5, t1=16.3, out=19.8, dy=0.0, size=92, glow="#d8c8ff", style="write"),
+    dict(text="Arise", t0=22.5, t1=26.5, out=30.5, dy=0.0, size=170, glow="#ffd9a0", style="reflection",
+         line=0.22),
 ]
 
-TAGLINE = dict(text="Sunday, December 6 · 4:30 PM\nThe World Mission Society Church of God · 6720 W Sahara Ave, Las Vegas",
-               t0=54.6, t1=56.6)
+# the three-line end card (PHASE2.md item 7)
+TAGLINE = dict(text="Where a mother’s love reaches, peace settles.\nSunday, December 6 · 4:30 PM\n"
+                    "The World Mission Society Church of God · 6720 W Sahara Ave, Las Vegas",
+               t0=TITLE_HIT + 0.6, t1=TITLE_HIT + 2.4)
 
 # Opening title card that then rests, small, in the top left corner
 CREDIT = dict(song="All You Stars of Zion", concert="The Words of Mother’s Love Healing Concert",
@@ -277,42 +331,7 @@ def credit_state(t, bbox):
 
 
 # Waves of light that cross the sky when a light is lit (time, x, y, strength)
-WAVES = [(p["star"], STAR_POS[i][0], STAR_POS[i][1], s) for i, (p, s) in enumerate(
-    zip(PHRASES, [0.35, 0.3, 0.3, 1.0, 0.45, 0.5, 0.35, 0.4, 1.1]))]
-WAVES.append((TITLE_HIT, 0.5, 0.62, 1.3))
-
-
-def star_state(t):
-    """Brightness and time since lighting for each of the nine lights."""
-    out = []
-    for i, p in enumerate(PHRASES):
-        age = t - p["star"]
-        if age < -0.2:
-            out.append((0.0, -1.0))
-            continue
-        gather = min(max((age + 0.2) / 0.2, 0.0), 1.0)
-        base = 0.55 * gather
-        flash = np.exp(-max(age, 0.0) * 1.1) * 1.3 if age >= 0 else 0.0
-        if "arrive" in p and t >= p["arrive"]:
-            # a light that was lit in an earlier song shines again: a softer flare
-            flash += np.exp(-(t - p["arrive"]) * 1.1) * 0.9
-        fin = 0.0
-        if t > NINTH:
-            fin = 0.35 * min((t - NINTH) / 2.0, 1.0)
-        if t > TITLE_HIT:
-            fin += 0.35 * np.exp(-(t - TITLE_HIT) * 0.25) + 0.15
-        out.append((base + flash + fin, max(age, 0.0)))
-    return out
-
-
-def link_state(t):
-    """Lines of light only join two neighbouring lights that are both lit (song 01 lights 9 and 7, not neighbours)."""
-    out = []
-    for i in range(8):
-        t0, t1 = PHRASES[i]["star"], PHRASES[i + 1]["star"]
-        g = min(max((t - (max(t0, t1) - 1.2)) / 1.4, 0.0), 1.0)
-        out.append(g * g * (3 - 2 * g))
-    return out
+WAVES = [(ENC_STAR, STAR_POS[6][0], STAR_POS[6][1], 1.1), (TITLE_HIT, 0.5, 0.80, 0.35)]   # a soft wave high in the sky only
 
 
 def params(song, t):
@@ -344,12 +363,3 @@ def params(song, t):
 if __name__ == "__main__":
     s = Song()
     print("frames", NFRAMES, "rings", len(s.rings))
-    d = np.load(FEATURES)
-    t = d["times"]
-    db = _db(d["rms"])
-    for a, b in ((56.5, 59.0), (173.5, 176.0), (246.5, 249.0)):
-        m = (t >= a) & (t <= b)
-        print("fine rms", a, b, " ".join(f"{x:.0f}" for x in db[m][::4]))
-    for tt in (0, 5, 30, 60, 112, 140, 200, 230, 260):
-        p = params(s, tt)
-        print(tt, {k: (round(v, 2) if isinstance(v, float) else None) for k, v in p.items() if isinstance(v, float)})
