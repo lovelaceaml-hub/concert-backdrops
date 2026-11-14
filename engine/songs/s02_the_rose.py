@@ -8,15 +8,17 @@ Four scenes, each with its own camera and main object:
   0 to 13   1 FIRST SNOW: a wide night lake, the home star low between the mountains, snow begins and thickens
             as the camera slowly closes in; fragment "too lonely"
   10.5 to 30 2 THE CANDLE FIELD: violet light pours onto the snowbound lake and small lights glow all over it;
-            for about 5 seconds the women of light relight the kneeling traveler's lantern and the traveler
-            rises with them, and they all go up as light; then the full Encouragement words form over the
-            violet light and fly into star 7
-  27.5 to 42 3 THE SEED UNDER THE SNOW: a high ceiling of snow and ice, the dark soil, the seed with gold roots;
+            for about 4 seconds, small and far back on the left, the women of light and the traveler walk
+            across the snowfield and rise as light; then the full Encouragement words form over the violet
+            light and fly into star 7
+  27.5 to 42 3 THE SEED UNDER THE SNOW: a high ceiling of packed snow, the dark soil, the seed with gold roots;
             a violet thread of light falls to it; fragment "the seed" is written in light
   39.7 to 60 4 THE ROSE: a low close shot on the near shore, the rose of light at dawn; petals fall;
-            fragment "becomes the rose" settles in petals; the three-line end card on the same close shore
+            fragment "becomes the rose" settles in petals; the camera stops at 50 and the picture sinks down
+            and left so the bloom sits below and left of the end card's title; the three-line end card
 Signature effects: falling snow in depth (SNOW), the seed under the snow (plate and BEAM), the rose and its
-petals (plates, PETALS, the petals fragment). The freeze and thaw belong to song 04, so this file uses no ICE.
+petals (plates, PETALS, the petals fragment). Ice, freeze and thaw belong to song 04, so this file uses no ICE
+and its plates show snow, not ice.
 
 There is no music, so this file does not read the recording's measurements. The workflow's audio file is a
 silent placeholder (visual only, no music yet).
@@ -65,8 +67,8 @@ def _ar(x, attack, release):
 # The drawn "music": how strongly the light breathes through the minute (0 to 1)
 BREATH = Track([(0, 0.30), (6, 0.28), (12, 0.18), (16, 0.22), (21, 0.40), (26, 0.52), (29, 0.50), (33, 0.34),
                 (38, 0.40), (44, 0.58), (50, 0.70), (56, 0.62), (TOTAL, 0.55)])
-# Piano notes drawn as rings on the water: on the open lake at the start and again after the thaw; none while
-# the lake is frozen (the design's winter)
+# Piano notes drawn as rings on the water: on the open lake at the start and again at dawn; none in the
+# deep winter (the design's winter)
 RING_SPANS = [(1.5, 8.5, 2.1), (47.0, 59.0, 1.5)]
 
 
@@ -134,7 +136,7 @@ class Song:
 
 # ----------------------------------------------------------------- the minute (seconds into the promo)
 RING_SPANS = []        # no drawn piano rings: every scene is a painted plate with its own water
-FIG_IN = 10.9          # one brief appearance: the trio and the traveler, about 5.5 seconds, walking the whole time
+FIG_IN = 11.8          # one brief appearance, after the violet plate is up: about 4 seconds, moving the whole time
 ENC_FORM = 16.4        # the words start forming once the people have gone up as light (fully formed about 20.15)
 ENC_HOLD = 26.3        # the words begin to fly (6.15 seconds fully formed and solid)
 ENC_ARRIVE = 28.8      # they reach star 7: a flare and one new thin ring
@@ -183,32 +185,40 @@ AURORA_COOL = ("#c9d8ff", "#e4d8ff")
 # Each scene has its own camera and main object:
 #   1 wide night lake, first snow, the home star low between the mountains; the camera slowly closes in
 #     as the night deepens (0 to 13)
-#   2 the violet light on the ice and the field of candle lights: the trio passes briefly as light (10.5 to 30)
-#   3 under the snow: high ice ceiling, the seed and its gold roots in the soil (27.5 to 42)
-#   4 low close shot on the near shore: the rose of light, then the end card beside it (39.7 to 60)
+#   2 the violet light on the snowfield and its candle lights: the trio passes briefly as light (10.5 to 30)
+#   3 under the snow: high snow ceiling, the seed and its gold roots in the soil (27.5 to 42)
+#   4 low close shot on the near shore: the rose of light, then the end card beside it (39.7 to 60); the zoom
+#     stops at 50 and from 50 to 53 the picture sinks down and left so the bloom clears the title block
 # The plates were touched up for song 02 (plates_fix notes in project-docs/status/02.md): the star band of
-# a_first_snow (a Milky Way look, song 01's) taken down to plain night sky, the bottom candles of c_violet_ice
-# dimmed so the lower third stays calm, the light column and pool of c_violet_ice darkened behind the people and the
-# candles at its bottom edge calmed, the ice ceiling of d_seed darkened near the arch, the ice floes of
-# e_thaw_rose painted out (round 4: the last ones melted) and its sky near the arch calmed; the rose picture is
+# a_first_snow (a Milky Way look, song 01's) taken down to plain night sky, the bottom candles of c_violet_field
+# dimmed so the lower third stays calm, its light column and glowing pool darkened behind the people, the snow
+# ceiling of d_seed darkened near the arch, the floating floes of e_rose_shore painted out (round 4: the last
+# ones melted; song 04 owns ice) and its sky near the arch calmed; the rose picture is
 # moved about 0.065 right and 0.14 down inside the frame (gaps filled with mirrored sky and shore) so the rose
 # clears the corner title.
 P = "assets/plates/s02/"
+ROSE_GAIN = Track([(0, 0.85), (41.0, 0.85), (42.0, 0.78), (47.0, 0.78), (49.0, 0.86), (51.0, 0.68), (TOTAL, 0.68)])
+ROSE_END_PAN = (0.03, 0.054)       # view moves right and up in the picture: the rose sinks down and left
 SCENES = [
     dict(image=P + "a_first_snow.jpg", t0=0.0, t1=13.0, fade_in=1.0, fade_out=2.5,
          zoom=(1.0, 1.10), pan=((0.0, 0.0), (0.0, 0.015)), water=True, water_line=0.36,
          gain=Track([(0, 1.0), (9.0, 1.0), (14.0, 0.85), (TOTAL, 0.85)])),
-    dict(image=P + "c_violet_ice.jpg", t0=10.5, t1=30.0, fade_in=2.5, fade_out=2.5, transition="fade",
+    dict(image=P + "c_violet_field.jpg", t0=10.5, t1=30.0, fade_in=2.5, fade_out=2.5, transition="fade",
          zoom=(1.10, 1.14), pan=((0.0, 0.04), (0.0, 0.05)),     # framed up: fewer candles at the bottom edge
          gain=Track([(0, 0.72), (27.0, 0.72), (30.0, 0.85)])),
     dict(image=P + "d_seed.jpg", t0=27.5, t1=42.2, fade_in=2.5, fade_out=2.5, transition="fade",
          zoom=(1.02, 1.12), pan=((0.0, 0.0), (0.0, 0.01)),
          gain=Track([(0, 1.0), (30.5, 1.0), (32.0, 0.82), (TOTAL, 0.82)])),
-    # the rose shore holds to the end: the end card stands on the close dawn shore beside the rose
-    dict(image=P + "e_thaw_rose.jpg", t0=39.7, t1=61.0, fade_in=2.5, fade_out=0.0, transition="fade",
-         zoom=(1.06, 1.12), pan=((0.0, 0.0), (0.0, 0.0)),   # the plate itself is shifted down and right
-         gain=Track([(0, 0.85), (41.0, 0.85), (42.0, 0.78), (47.0, 0.78), (49.0, 0.86), (51.0, 0.68),
-                     (TOTAL, 0.68)])),
+    # the rose shore holds to the end: the end card stands on the close dawn shore beside the rose. Three
+    # pieces of one camera move that meet exactly (same view at each joint, no fade): a slow push in to 50,
+    # then from 50 to 53 the picture sinks down and left (pan is limited to 0.5 - 0.5/zoom = 0.054 at zoom
+    # 1.12), then it holds still under the end card.
+    dict(image=P + "e_rose_shore.jpg", t0=39.7, t1=50.0, fade_in=2.5, fade_out=0.0, transition="fade",
+         zoom=(1.06, 1.12), pan=((0.0, 0.0), (0.0, 0.0)), gain=ROSE_GAIN),
+    dict(image=P + "e_rose_shore.jpg", t0=50.0, t1=53.0, fade_in=0.0, fade_out=0.0, transition="fade",
+         zoom=(1.12, 1.12), pan=((0.0, 0.0), ROSE_END_PAN), gain=ROSE_GAIN),
+    dict(image=P + "e_rose_shore.jpg", t0=53.0, t1=61.0, fade_in=0.0, fade_out=0.0, transition="fade",
+         zoom=(1.12, 1.12), pan=(ROSE_END_PAN, ROSE_END_PAN), gain=ROSE_GAIN),
 ]
 
 # ----------------------------------------------------------------- effect layers
@@ -218,7 +228,7 @@ SNOW = Track([(0, 0.0), (2.0, 0.0), (5.0, 0.22), (10.0, 0.45), (14.0, 0.45), (16
 SNOW_SPEED = Track([(0, 1.0), (14.0, 1.0), (16.5, 0.35), (TOTAL, 0.35)])
 SNOW_WIND = Track([(0, 0.30), (10.0, 0.50), (14.0, 0.50), (16.5, 0.12), (TOTAL, 0.12)])
 SNOW_COLOR = "#eef4ff"
-# The word reaches down: a violet thread of light falls through the ice to the seed
+# The word reaches down: a violet thread of light falls through the snow to the seed
 BEAM = Track([(0, 0.0), (28.9, 0.0), (29.6, 0.40), (30.8, 0.36), (31.6, 0.0), (TOTAL, 0.0)])
 BEAM_FROM = (0.5, 1.02)
 BEAM_TO = (0.5, 0.52)
@@ -238,15 +248,16 @@ for i in range(9):
 # rises with them (pose 3), and at once they all go up as light. About 5 seconds, in motion the whole time,
 # gone before the Encouragement words form; the words, the violet light and the star carry the expression.
 SF = "assets/song_figures/s02/"
-# Round 4: the group walks slowly left across the ice, away from the bright violet column, the whole time
-# (engine figure motion, UPGRADE-HOWTO section G); a short quick pose change so they never blur into one blob;
-# a softer glow so they read as people on the violet. trio_3_rise has the raised lantern masked out (it read as
-# a fifth head).
+# Polish pass: the group is secondary, small and far back on the snowfield (feet near the horizon), well left
+# of the violet column, and travels a long way: x 0.45 to 0.15 in 4.4 seconds while rising off the ground as
+# it dissolves (engine figure motion, UPGRADE-HOWTO section G). Pose 3 (the traveler standing with them; its
+# raised lantern masked out, it read as a fifth head) is whole for under a second before the dissolve.
 FIGURES = [
     dict(poses=[SF + "trio_2_encourage.png", SF + "trio_3_rise.png"],
-         t0=FIG_IN, t1=14.4, gather=1.5, pose_times=[12.9], morph=0.8, dissolve=2.0, leave="drift",
-         x=(0.42, 0.27), move=(FIG_IN, 16.4), ease="linear", bob=0.6,
-         y=0.34, height=0.30, color="#ffd9a8", glow=0.7),   # pale gold, walking left of the violet column
+         t0=FIG_IN, t1=14.0, gather=1.0, pose_times=[13.0], morph=0.6, dissolve=2.2, leave="drift",
+         x=(0.45, 0.15), move=(FIG_IN, 16.2), ease="linear", bob=1.0,
+         y=Track([(0.0, 0.43), (FIG_IN, 0.43), (13.6, 0.44), (16.2, 0.52), (TOTAL, 0.52)]),
+         height=0.19, color="#ffd9a8", glow=0.5),   # pale gold, small, never the brightest thing on screen
 ]
 
 OFF = dict(form=1e9, hold=1e9, star=1e9)
