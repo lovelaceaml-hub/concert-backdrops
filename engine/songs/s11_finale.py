@@ -1,21 +1,27 @@
-"""Song 11, Almighty God Who Knows the Future (the finale): the 1 minute promo.
+"""Song 11, Almighty God Who Knows the Future (the finale): the 1 minute promo, version 2 (five scenes).
 
-Design: Designs/11 Almighty God Who Knows the Future - Video Design (Google Doc, version 3), "The Gate of Mother's Love".
-This minute is the heart of the finale: the morning hush after verse 1, Heavenly Mother telling her children to
-trust Father and march ahead (Encouragement shines again in its light), the second lift as all nations run to Zion,
-and the full arch of nine lights glowing as the glory of the finale. Promo audio: audio/promo/s11.mp3.
+Design: project-docs/designs/11 Almighty God Who Knows the Future.md, section 13 "Promo v2: scenes"
+("The Gate of Mother's Love"). Promo audio: audio/promo/s11.mp3 (1:59 to 2:59 of the studio recording).
 
-Song features and the visual timeline for the backdrop.
-
-Everything the renderer needs is a pure function of time, so any frame can be
-rendered on its own (which lets several workers render in parallel).
+Five painted scenes (assets/plates/s11/) with people of light (assets/song_figures/s11/):
+1 the promise: a faint silver city drawn above the mountain before it is built (0 to 11.5 s);
+2 Mother's road: Heavenly Mother, seen only from behind, with her children on the near shore; at her words to trust
+  Father and march ahead she raises her arm toward the city and all step out; Encouragement in full, then its light
+  (8.5 to 26 s);
+3 all nations streaming in: the city filled with gold, rivers of nine colors, the peoples of every land walking in
+  from both sides (23 to 43 s);
+4 the gate and the sun: the second lift blooms into the open gate with the sun inside it and a beam down the
+  mountain; "Joy of salvation endures forever" rises out of the water (40.5 to 50.5 s);
+5 peace settled: the calm golden lake with nine small glows under the nine lights, and the end card (48 to 60 s).
+Signature effects done for real: the promised city filling with gold (scenes 1 to 3), the nations streaming in
+(scene 3), the sun through the gate (scene 4).
 """
 import os
 import numpy as np
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(os.path.dirname(HERE))   # repository root (this file is engine/songs/)
-SONG_ID = os.path.splitext(os.path.basename(__file__))[0]
+SONG_ID = os.environ.get("SONG", os.path.splitext(os.path.basename(__file__))[0])
 FEATURES = os.environ.get("FEATURES", os.path.join(ROOT, "work", SONG_ID, "features.npz"))
 
 FPS = 30
@@ -136,22 +142,7 @@ class Song:
 
 # ----------------------------------------------------------------- timeline
 
-class Track:
-    def __init__(self, keys):
-        self.t = np.array([k[0] for k in keys], dtype=np.float64)
-        self.v = np.array([np.atleast_1d(np.asarray(k[1], dtype=np.float64)) for k in keys])
-
-    def __call__(self, t):
-        if t <= self.t[0]:
-            v = self.v[0]
-        elif t >= self.t[-1]:
-            v = self.v[-1]
-        else:
-            i = int(np.searchsorted(self.t, t, side="right")) - 1
-            u = (t - self.t[i]) / (self.t[i + 1] - self.t[i])
-            u = u * u * (3 - 2 * u)
-            v = self.v[i] * (1 - u) + self.v[i + 1] * u
-        return float(v[0]) if v.shape[0] == 1 else v
+from track import Track   # the shared Track refuses keys that are not strictly increasing  # noqa: E402
 
 
 # ---------------------------------------------------------------- promo timeline
@@ -165,13 +156,25 @@ KINGS = 150.6 - CLIP_START       # all kings worship and run to the Church of Go
 LIFT = 160.5 - CLIP_START        # the second lift (measured step up in loudness)
 JOY = 162.1 - CLIP_START         # joy of salvation
 FOREVER = 165.5 - CLIP_START     # endures forever
-TITLE_HIT = 52.4                 # end card
+TITLE_HIT = 53.0                 # end card
 NINTH = LIFT                     # the whole arch glows from the second lift on: the finale's glory
-ENC_FORM = MARCH + 0.6
+
+# Reading-time contract (PHASE2.md item 4): formation takes about 3.75 s, so hold >= form + 9.75.
+ENC_FORM = MARCH + 0.6           # 11.5: the words form as her arm rises toward the city
+ENC_HOLD = ENC_FORM + 9.9        # 21.4: fully formed and solid from about 15.25 to 21.4 (6.15 s)
+ENC_ARRIVE = ENC_HOLD + 1.6      # 23.0: the words reach light 7 (flare and a fresh ring)
+# The one fragment: 41.8 to 44.6 rising out of the water, solid 44.6 to 47.6 (3.0 s), gone by about 49.4,
+# so the end card (forming from 50.0) starts after a clean gap (Astra round 1, finding 9).
+FRAG_T0, FRAG_T1, FRAG_OUT = LIFT + 0.3, LIFT + 3.1, LIFT + 6.1
+
+SKYLINE_LANTERN = 0.0            # all plates: hide the light that travels along the drawn skyline
+BOTTOM_CALM = 1.0                # calm lower third (PHASE2.md item 6)
+# Rings each light already earned before this minute: light 7 in songs 02, 03, 05 (twice) and 09; light 3 in 04;
+# light 4 in 06; light 8 in 07; light 9 in 08; light 2 at this song's thanks to Father (1:51). Index 0 is light 1.
+RINGS_AT_START = {1: 1, 2: 1, 3: 1, 6: 5, 7: 1, 8: 1}
 
 # Song 11 look (DESIGN-SYSTEM.md section 6): a radiant full sunrise, the brightest scene of the night. White gold,
 # sky blue and all nine colors; full rays; a clear sky; the complete arch; grand framing with a high horizon.
-# Not first light (song 01) and not a blossom afternoon (song 05): a blazing white-gold sun on a wide golden lake.
 NINE = ["#FF977C", "#FFD05F", "#FFAD69", "#F582AF", "#82B0ED", "#CE927E", "#B293E7", "#EF7A96", "#BE9CEB"]
 
 
@@ -182,51 +185,91 @@ def _nine_pair(rate, offset):
     return f
 
 
-# Scene palettes (top of sky, middle, horizon, glow of the sun)
+# Procedural sky and lake (only seen where no plate covers the frame; kept in the song 11 look)
 PAL = {
-    "clear":   ("#0d3880", "#2c69b9", "#f5c07c", "#ffe8c2"),   # clear morning, the sun just risen
-    "mother":  ("#0e3a84", "#306ebe", "#f7c686", "#ffebc6"),   # Mother speaks: the same clear blue, warmer horizon
-    "radiant": ("#104490", "#3878c8", "#fad096", "#ffefd2"),   # the road of light, full rays
-    "glory":   ("#124c9a", "#3f82d0", "#fcd9a4", "#fff3da"),   # second lift: full daylight glory, white gold
-    "endcard": ("#0f4290", "#336fbe", "#e7ad6c", "#ffe2b8"),   # under the end card: deeper gold so the date reads
+    "clear": ("#0d3880", "#2c69b9", "#f5c07c", "#ffe8c2"),
+    "glory": ("#124c9a", "#3f82d0", "#fcd9a4", "#fff3da"),
 }
-_pal_keys = [
-    (0.0, "clear"), (MOTHER + 3.0, "clear"), (MARCH, "mother"), (MARCH + 9.0, "radiant"), (KINGS, "radiant"),
-    (LIFT, "glory"), (TITLE_HIT - 1.0, "glory"), (TITLE_HIT + 2.5, "endcard"), (TOTAL, "endcard"),
-]
+_pal_keys = [(0.0, "clear"), (LIFT, "glory"), (TOTAL, "glory")]
 SKY_TOP = Track([(t, lin(PAL[p][0])) for t, p in _pal_keys])
 SKY_MID = Track([(t, lin(PAL[p][1])) for t, p in _pal_keys])
 SKY_HOR = Track([(t, lin(PAL[p][2])) for t, p in _pal_keys])
 GLOW = Track([(t, lin(PAL[p][3])) for t, p in _pal_keys])
-
-# a big white-gold sun that climbs clear of the mountains; softened while words are on screen so they stay readable
-SUN_INT = Track([(0, 0.80), (MARCH, 0.82), (MARCH + 4, 0.82), (ENC_OUT := MARCH + 11.0, 0.88), (HOPE + 2, 1.05),
-                 (KINGS, 1.15), (LIFT, 1.20), (JOY - 1.0, 0.88), (FOREVER + 3, 0.88), (TITLE_HIT - 2, 0.80), (TOTAL, 0.78)])
-SUN_Y = Track([(0, 0.375), (MARCH, 0.39), (HOPE, 0.42), (KINGS, 0.44), (LIFT, 0.465), (TITLE_HIT, 0.48), (TOTAL, 0.49)])
-SUN_SIZE = Track([(0, 0.14), (LIFT, 0.16), (TOTAL, 0.17)])
+SUN_INT = Track([(0, 0.80), (TOTAL, 0.80)])
+SUN_Y = Track([(0, 0.40), (TOTAL, 0.47)])
+SUN_SIZE = Track([(0, 0.14), (TOTAL, 0.16)])
 STARS = Track([(0, 0.0), (TOTAL, 0.0)])
 MILKY = Track([(0, 0.0), (TOTAL, 0.0)])
-CLOUDS = Track([(0, 0.14), (TOTAL, 0.10)])                       # a clear sky
-# a soft veil of all nine colors high in the sky
-AURORA = Track([(0, 0.10), (MARCH, 0.14), (MARCH + 4, 0.24), (HOPE, 0.20), (LIFT, 0.30), (TITLE_HIT, 0.26), (TOTAL, 0.24)])
+CLOUDS = Track([(0, 0.10), (TOTAL, 0.10)])
+AURORA = Track([(0, 0.0), (TOTAL, 0.0)])
 AURORA_WARM = _nine_pair(0.18, 0)
 RAIN = Track([(0, 0.0), (TOTAL, 0.0)])
-MOTES = Track([(0, 0.30), (MARCH, 0.40), (HOPE, 0.55), (KINGS, 0.70), (LIFT, 0.85), (TITLE_HIT, 0.60), (TOTAL, 0.55)])
-MOTE_COLORS = ("#fff6e2", "#ffe2a0")                            # white gold
-# lights in all nine colors rising from the land: the peoples of every nation streaming toward Zion
-LANTERNS = Track([(0, 0.0), (HOPE, 0.0), (HOPE + 4, 0.45), (KINGS, 0.75), (LIFT, 0.95), (LIFT + 6, 0.80),
-                  (TITLE_HIT, 0.35), (TOTAL, 0.25)])
-LANTERN_COLORS = _nine_pair(0.5, 2)
 PETALS = Track([(0, 0.0), (TOTAL, 0.0)])
-TRAIL = Track([(0, 0.0), (1.2, 0.5), (MARCH, 0.7), (LIFT, 1.0), (TOTAL, 0.9)])
-ZOOM = Track([(0, 1.0), (MARCH, 0.99), (LIFT, 0.968), (TOTAL, 0.952)])
-EXPOSURE = Track([(0, 0.95), (MARCH, 0.95), (MARCH + 1.0, 0.92), (ENC_OUT, 0.92), (ENC_OUT + 3, 1.0), (LIFT, 1.0),
-                  (JOY - 1.0, 0.90), (TOTAL, 0.88)])
-FADE = Track([(0, 0.0), (1.0, 1.0), (TOTAL - 1.6, 1.0), (TOTAL - 0.2, 0.0)])
-# full rays, eased back while words are on screen
-RAYS = Track([(0, 0.30), (MARCH - 0.5, 0.35), (MARCH + 1.0, 0.22), (ENC_OUT, 0.22), (ENC_OUT + 3, 0.75), (KINGS, 0.90),
-              (LIFT, 0.95), (JOY - 1.0, 0.25), (FOREVER + 3, 0.25), (TITLE_HIT - 3.4, 0.22), (TOTAL, 0.22)])
 PART = Track([(0, 0.0), (TOTAL, 0.0)])
+TRAIL = Track([(0, 0.0), (TOTAL, 0.0)])
+ZOOM = Track([(0, 1.0), (TOTAL, 1.0)])
+EXPOSURE = Track([(0, 1.0), (TOTAL, 1.0)])
+RAYS = Track([(0, 0.0), (TOTAL, 0.0)])
+FADE = Track([(0, 0.0), (1.0, 1.0), (TOTAL - 1.0, 1.0), (TOTAL - 0.1, 0.0)])
+# white-gold motes in the air, quieter while words are on screen
+MOTES = Track([(0, 0.30), (ENC_FORM, 0.30), (ENC_FORM + 2, 0.18), (ENC_ARRIVE, 0.18), (ENC_ARRIVE + 2, 0.55),
+               (LIFT - 1, 0.70), (LIFT + 1, 0.30), (TITLE_HIT - 2, 0.30), (TOTAL, 0.25)])
+MOTE_COLORS = ("#fff6e2", "#ffe2a0")
+# lights in all nine colors rising from the rivers: the words practiced on the way as the nations stream in
+LANTERNS = Track([(0, 0.0), (24.0, 0.0), (29.0, 0.70), (KINGS, 0.85), (LIFT - 1.5, 0.85), (LIFT + 0.3, 0.10),
+                  (LIFT + 2.0, 0.0), (TOTAL, 0.0)])
+LANTERN_COLORS = _nine_pair(0.5, 2)
+# deeper veil behind the words on these very bright plates
+TEXT_SHADOW = Track([(0, 1.5), (TOTAL, 1.5)])
+
+# A. five painted scenes (assets/plates/s11/); each crossfade starts the next plate at this t1 - fade_out
+_P = "assets/plates/s11/"
+SCENES = [
+    # 1 the promise: faint silver city lines above the mountain, faint riverbeds; slow push toward the mountain
+    dict(image=_P + "s11_promise.jpg", t0=0.0, t1=11.5, fade_in=0.4, fade_out=3.0,
+         zoom=(1.03, 1.10), pan=((0.0, 0.0), (0.0, 0.01)), water=True, water_line=0.477,
+         gain=Track([(0, 0.88), (6.5, 0.88), (8.5, 1.0), (TOTAL, 1.0)])),
+    # 2 Mother's road: on her first words a soft bloom of light, the violet-gold road across the water
+    dict(image=_P + "s11_road.jpg", t0=8.5, t1=26.0, fade_in=3.0, fade_out=3.0, transition="bloom", flash=0.55,
+         zoom=(1.04, 1.12), water=True, water_line=0.47,
+         gain=Track([(0, 1.0), (11.0, 1.0), (13.5, 0.82), (ENC_HOLD, 0.82), (ENC_ARRIVE + 1, 1.0), (TOTAL, 1.0)])),
+    # 3 all nations streaming in: the camera follows the road (push) into the city filled with gold
+    dict(image=_P + "s11_nations.jpg", t0=23.0, t1=43.0, fade_in=3.0, fade_out=2.5, transition="push",
+         zoom=(1.12, 1.04), water=True, water_line=0.37),
+    # 4 the gate and the sun: the second lift blooms into the open gate
+    dict(image=_P + "s11_gate.jpg", t0=40.5, t1=50.5, fade_in=2.0, fade_out=2.5, transition="bloom", flash=0.9,
+         zoom=(1.10, 1.04), water=True, water_line=0.175, water_strength=0.6,
+         gain=Track([(0, 1.0), (LIFT, 1.0), (LIFT + 1.5, 0.74), (FRAG_OUT + 1.0, 0.74), (50.5, 0.85)])),
+    # 5 peace settled: wide and calm, nine small glows on the lake under the nine lights; the end card
+    dict(image=_P + "s11_rest.jpg", t0=48.0, t1=61.0, fade_in=2.5, fade_out=0.0, transition="dissolve",
+         zoom=(1.10, 1.02), water=True, water_line=0.378, water_strength=0.7,
+         gain=Track([(0, 1.0), (50.5, 0.95), (TITLE_HIT - 0.5, 0.74), (TOTAL, 0.74)])),
+]
+
+# B. people of light
+_F = "assets/song_figures/s11/"
+FIGURES = [
+    # Heavenly Mother, seen only from behind, robed and veiled, with a child holding her robe, a young woman and an
+    # elder with a staff; at her words to trust Father and march ahead she raises her arm toward the city and all
+    # step out together. Then the sparks fly to light 7 with the words.
+    dict(poses=[_F + "s11_mother_children_a.png", _F + "s11_mother_children_b.png"],
+         t0=7.6, t1=ENC_HOLD - 0.5, pose_times=[MARCH], morph=2.0, x=0.28, y=0.18, height=0.40,
+         to_star=6, color="#dccbff"),
+    # the peoples of every land walking in along the two rivers of light, toward the gate
+    dict(poses=[_F + "s11_crowd.png"], t0=24.5, t1=39.0, x=0.21, y=0.22, height=0.26, to=(0.5, 0.66),
+         color="#ffe2b0", particles=9000, dissolve=3.0),
+    dict(poses=[_F + "s11_crowd.png"], t0=25.5, t1=39.5, x=0.79, y=0.22, height=0.26, to=(0.5, 0.66),
+         color="#ffd6c8", particles=9000, dissolve=3.0, flip=True),
+    dict(poses=[_F + "s11_crowd.png"], t0=28.5, t1=40.0, x=0.5, y=0.33, height=0.15, to=(0.5, 0.66),
+         color="#fff0c8", particles=6000, dissolve=2.5, sparks=0.8),
+]
+
+# C. the sun through the gate: a beam of light from the open gate down the mountain (scene 4)
+BEAM = Track([(0, 0.0), (LIFT + 0.5, 0.0), (LIFT + 2.5, 0.55), (FRAG_OUT, 0.55), (50.0, 0.0), (TOTAL, 0.0)])
+BEAM_FROM = (0.5, 0.60)
+BEAM_TO = (0.5, 0.34)
+BEAM_WIDTH = (0.02, 0.075)
+BEAM_COLOR = "#fff0c4"
 
 # Nine lights on an arch over the stage, one for each expression
 STAR_POS = []
@@ -237,7 +280,6 @@ for i in range(9):
 
 LIT = dict(form=1e9, hold=1e9, star=-100.0)     # lit in an earlier song (all nine are lit before the finale)
 PHRASES = [
-    # label, lines, max font px, form start, hold end, star time
     dict(label="Greeting", lines=["“How are you?”"], size=176, **LIT),
     dict(label="Gratitude", lines=["“Thank you. It’s all thanks to you.", "You’ve worked hard.”"], size=118, **LIT),
     dict(label="Apology", lines=["“I’m sorry.", "It must have been hard on you.”"], size=124, **LIT),
@@ -245,25 +287,25 @@ PHRASES = [
     dict(label="Concession", lines=["“Please, after you.”"], size=164, **LIT),
     dict(label="Respect", lines=["“I’d love to hear more", "about your thoughts.”"], size=128, **LIT),
     # Encouragement shines again: Heavenly Mother tells her children to trust Father and march ahead
-    dict(label="Encouragement", lines=["“I’ll pray (or root) for you.", "Everything will go well.”"], size=118,
-         form=ENC_FORM, hold=ENC_FORM + 9.0, star=-100.0, arrive=ENC_FORM + 11.0),
+    dict(label="Encouragement", lines=["“I’ll pray (or root) for you.", "Everything will go well.”"], size=96, y=0.30,
+         form=ENC_FORM, hold=ENC_HOLD, star=-100.0, arrive=ENC_ARRIVE),
     dict(label="Consideration", lines=["“Can I give you a hand", "with anything?”"], size=128, **LIT),
     dict(label="Compliment", lines=["“You’re amazing.", "You’re doing great!”"], size=140, **LIT),
 ]
 FORM_DUR = 3.0
-# PHRASES keys: label, lines, size, form (words start forming), hold (words start flying), star (the light is lit).
-# A light already lit in an earlier song: star=-100.0. Not lit yet in the concert: form=hold=star=1e9.
-# A light lit earlier and spoken again in this song: star=-100.0 plus form, hold and arrive (when the words reach it).
-# End card of the promo
 TITLE = dict(label="Healing Concert", lines=["The Words of Mother’s Love"], size=150, form=TITLE_HIT - FORM_DUR,
              hold=1e9, star=1e9)
-# Short lyric fragments (design fragment 3 in its two stages): text, t0, t1, out, dy, size
+
+# D. design fragment 3 in one piece: it rises out of the water like spray from a wave of praise at the second lift
 FRAGMENTS = [
-    dict(text="Joy of salvation", t0=JOY - 0.3, t1=JOY + 1.2, out=FOREVER - 0.6, dy=0.0, size=150, alpha=1.0, glow="#ffb46a"),
-    dict(text="endures forever", t0=FOREVER + 0.2, t1=FOREVER + 1.4, out=TITLE_HIT - 3.4, dy=0.0, size=150, alpha=1.0, glow="#ffb46a"),
+    dict(text="Joy of salvation endures forever", t0=FRAG_T0, t1=FRAG_T1, out=FRAG_OUT, dy=0.11, size=96,
+         glow="#ffcf7a", style="reflection", line=0.30),
 ]
 
-TAGLINE = dict(text="Sunday, December 6 · 4:30 PM\nThe World Mission Society Church of God · 6720 W Sahara Ave, Las Vegas", t0=TITLE_HIT + 1.5, t1=TITLE_HIT + 4.0)
+# the three-line end card (PHASE2.md item 7)
+TAGLINE = dict(text="Where a mother’s love reaches, peace settles.\nSunday, December 6 · 4:30 PM\n"
+                    "The World Mission Society Church of God · 6720 W Sahara Ave, Las Vegas",
+               t0=TITLE_HIT + 1.4, t1=TITLE_HIT + 3.8)
 
 # Opening title card that then rests, small, in the top left corner
 CREDIT = dict(song="Almighty God Who Knows the Future", concert="The Words of Mother’s Love Healing Concert",
@@ -291,47 +333,11 @@ def credit_state(t, bbox):
     return (cx, cy, scale, alpha), (cx0, cy0)
 
 
-# Waves of light that cross the sky when a light is lit (time, x, y, strength)
-WAVES = [(p["star"], STAR_POS[i][0], STAR_POS[i][1], s) for i, (p, s) in enumerate(
-    zip(PHRASES, [0.35, 0.3, 0.3, 1.0, 0.45, 0.5, 0.35, 0.4, 1.1]))]
-WAVES.append((TITLE_HIT, 0.5, 0.62, 1.3))
-# Encouragement reaching its light again, and the whole arch answering the second lift
-WAVES.append((PHRASES[6]["arrive"], STAR_POS[6][0], STAR_POS[6][1], 0.7))
-WAVES.append((LIFT, 0.5, 0.86, 0.9))
-
-
-def star_state(t):
-    """Brightness and time since lighting for each of the nine lights."""
-    out = []
-    for i, p in enumerate(PHRASES):
-        age = t - p["star"]
-        if age < -0.2:
-            out.append((0.0, -1.0))
-            continue
-        gather = min(max((age + 0.2) / 0.2, 0.0), 1.0)
-        base = 0.55 * gather
-        flash = np.exp(-max(age, 0.0) * 1.1) * 1.3 if age >= 0 else 0.0
-        if "arrive" in p and t >= p["arrive"]:
-            # a light that was lit in an earlier song shines again: a softer flare
-            flash += np.exp(-(t - p["arrive"]) * 1.1) * 0.9
-        fin = 0.0
-        if t > NINTH:
-            fin = 0.35 * min((t - NINTH) / 2.0, 1.0)
-        if t > TITLE_HIT:
-            fin += 0.35 * np.exp(-(t - TITLE_HIT) * 0.25) + 0.15
-        out.append((base + flash + fin, max(age, 0.0)))
-    return out
-
-
-def link_state(t):
-    """How far the line of light has grown between light i and light i+1 (0..1)."""
-    out = []
-    for i in range(8):
-        t1 = PHRASES[i + 1]["star"]
-        # the line starts growing as the next light gathers and completes when it is lit
-        g = min(max((t - (t1 - 1.2)) / 1.4, 0.0), 1.0)
-        out.append(g * g * (3 - 2 * g))
-    return out
+# Waves of light across the sky: Encouragement reaching its light again, the whole arch answering the second lift,
+# and the end card
+WAVES = [(ENC_ARRIVE, STAR_POS[6][0], STAR_POS[6][1], 0.7),
+         (LIFT, 0.5, 0.86, 0.9),
+         (TITLE_HIT, 0.5, 0.62, 1.1)]
 
 
 def params(song, t):
@@ -358,11 +364,3 @@ def params(song, t):
         lantern=(lsx, lsy), prog=lx, rings=song.rings_at(t), waves=waves,
         star=star_state(t), link=link_state(t),
     )
-
-
-if __name__ == "__main__":
-    s = Song()
-    print("frames", NFRAMES, "rings", len(s.rings))
-    for tt in (0, 5, 12, 20, 30, 42, 50, 57):
-        p = params(s, tt)
-        print(tt, {k: (round(v, 2) if isinstance(v, float) else None) for k, v in p.items() if isinstance(v, float)})
