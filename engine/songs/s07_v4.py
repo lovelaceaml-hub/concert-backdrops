@@ -199,8 +199,8 @@ SUN_SIZE = Track([(0, 0.09), (13.0, 0.10), (20.0, 0.125), (28.0, 0.08), (48.0, 0
 STARS = Track([(0, 0.0), (0.5, 0.0), (5.0, 0.25), (12.0, 0.45), (20.0, 0.55), (27.0, 0.95), (37.0, 1.0),
                (44.0, 0.85), (52.0, 0.75), (TOTAL, 0.75)])
 MILKY = Track([(0, 0.0), (TOTAL, 0.0)])
-# soft mist: dusk haze, thinning at night, a little again by the gate
-CLOUDS = Track([(0, 0.45), (12.0, 0.40), (20.0, 0.25), (28.0, 0.12), (40.0, 0.18), (52.0, 0.30), (TOTAL, 0.30)])
+# soft mist: dusk haze that clears as night falls (lit night clouds left patchy shapes near the words in stills r2)
+CLOUDS = Track([(0, 0.45), (12.0, 0.40), (20.0, 0.22), (26.0, 0.0), (TOTAL, 0.0)])
 AURORA = Track([(0, 0.0), (TOTAL, 0.0)])
 RAIN = Track([(0, 0.0), (TOTAL, 0.0)])
 MOTES = Track([(0, 0.05), (10.0, 0.08), (16.0, 0.20), (24.0, 0.22), (28.0, 0.12), (38.0, 0.16), (44.0, 0.34),
@@ -327,7 +327,7 @@ def credit_state(t, bbox):
 # on to it (PROG above), stretch by stretch, to the far end.
 WAVES = [(PHRASES[0]["star"], STAR_POS[0][0], STAR_POS[0][1], 0.18),
          (PHRASES[7]["arrive"], STAR_POS[7][0], STAR_POS[7][1], 0.6),
-         (TITLE_HIT, 0.5, 0.62, 0.9)]
+         (TITLE_HIT, 0.5, 0.62, 0.3)]   # soft: a strong bloom behind the card brightens the sky under it
 
 
 def _windows(t, song):
