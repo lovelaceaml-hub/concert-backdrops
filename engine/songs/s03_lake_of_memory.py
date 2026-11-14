@@ -138,21 +138,22 @@ class Song:
 
 from track import Track   # the shared Track refuses keys that are not strictly increasing  # noqa: E402
 
-# Promo v2 (PHASE2.md, design section 17), built from the engine's own layers (the painted plates and the
-# special figures planned for this song exist only on Anthony's Mac, so every scene here is procedural).
-# Five scenes, each with its own dominant object:
-#   1  0 to 9    The storm stands still: the last rain falling through a sky of rising gold lanterns.
-#   2  9 to 24   Her warm hands: wide violet aurora curtains, the camera drawing in, "Her warm hands" rising
-#                out of the lake (reflection style).
-#   3  24 to 40  Her prayer: a single column of light from the sky into the still lake; people of light act out
-#                ENCOURAGEMENT (pray over, cheer and lift, rise together), small pairs echo it on both shores;
-#                the full words for about 7 seconds solid, then they fly to light 7 (flare and a new ring).
-#   4  40 to 50  The seed of courage and the mended sky: the night sky breaks into glass, the column narrows
-#                into a falling seed, the pieces drift back together and gold seams shine where they meet;
-#                "courage to go on" written by a pen of light.
-#   5  50 to 60  The rose dawn: the sun breaks through, rose petals, end card.
-# Signature effects: the last rain into lanterns, the aurora of Her warm hands, the shattered and mended sky
-# with gold seams, the rose petals of the dawn.
+# Promo v2 (PHASE2.md, design section 17): five painted scenes (assets/plates/s03/), people of light, effect layers.
+#   1  0 to 10    The storm stands still (frozen_rain_lanterns): raindrops hang in the air, turning from cold blue
+#                 glass into gold lanterns from the left. A child of light sits on the near shore, knees drawn up;
+#                 at 7 s the child dissolves and its sparks fly to the middle of the sky, where Her hands appear.
+#   2  8 to 23    Her warm hands (aurora_hands_night): violet aurora over a mirror lake, sky lanterns rising.
+#                 Mother's hands of light (sleeves only) gather out of the air, open and cupped; "Her warm hands"
+#                 rises out of the lake above them; at 18.6 the hands close into prayer, then drift up as light.
+#   3  20 to 41   Her prayer (prayer_mirror): one column of light from the horizon into the sky, the lake a mirror.
+#                 People of light act out ENCOURAGEMENT (one prays over a kneeling friend, then rests a hand on
+#                 their back and cheers them on); two small pairs echo it on the far shores. The full words hold
+#                 about 7 s, then fly to light 7 (flare and a new ring).
+#   4  39 to 50   The mended moon (mended_moon_predawn): the upper sky breaks into glass and drifts back
+#                 together into a great moon held by gold seams; gold rings spread on the lake. The child stands
+#                 up, seen from behind, and "courage to go on" is written by a pen of light.
+#   5  47 to 60   The rose dawn (rose_dawn): the sun over the mountains, a faint city of light in the clouds,
+#                 the mended moon, rose petals; the end card.
 
 # Landmarks in the promo clip (seconds into the clip; studio time minus 194 s). Section steps are measured
 # from the studio recording's loudness; line times are estimates.
@@ -161,72 +162,71 @@ PRAYER = 28.0        # 3:42 "Putting Her hands together" (measured step up)
 CRESC = 38.0         # 3:52 crescendo, "sowed courage to go on"
 SUNRISE = 50.0       # 4:04 chorus 2 arrives (measured)
 NINTH = 1e9          # the whole arch does not glow in this song
-TITLE_HIT = 52.4     # end card
+TITLE_HIT = 51.0     # end card
 
 ENC_FORM, ENC_HOLD = 27.0, 37.8   # Encouragement: formed by 30.75, solid until 37.8 (about 7 seconds)
 ENC_ARRIVE = 40.3                 # its words reach light 7
 
 BOTTOM_CALM = 1.0         # calm lower third (the default for files with FIGURES; stated here)
+SKYLINE_LANTERN = 0.0     # the plates have their own mountains: no light travelling along the drawn skyline
 RINGS_AT_START = {6: 1}   # light 7 earned one ring when song 02 spoke the Encouragement again
 
-# Scene palettes (top of sky, middle, horizon, glow of the low sun)
-# Look (DESIGN-SYSTEM.md section 6, row 03): indigo night of memory, rain, then a rose dawn.
+# Procedural sky and lake: only seen through the soft edges of the plates. Look (DESIGN-SYSTEM.md section 6,
+# row 03): indigo night of memory, rain, then a rose dawn.
 PAL = {
     "storm":   ("#020313", "#0a0d32", "#1d2156", "#9a9cf0"),
-    "indigo":  ("#03041a", "#0e1240", "#262a66", "#a8a8ff"),
     "aurora":  ("#050622", "#1a1a52", "#45397a", "#d0a8ff"),
-    "prayer":  ("#06061e", "#1c1848", "#5a3f78", "#e4b4ff"),
-    "glass":   ("#070820", "#211b4a", "#7a4a62", "#ffb4a0"),
     "predawn": ("#0b0e30", "#382b5a", "#c4727a", "#ffc0a4"),
     "dawn":    ("#141c4c", "#584276", "#ec8c8a", "#ffd2a4"),
-    "rise":    ("#18265c", "#744e7a", "#f39e88", "#ffdca8"),
-    "risepk":  ("#1c2c66", "#845a7c", "#f8ae8c", "#ffe8b4"),
 }
-_pal_keys = [
-    (0.0, "storm"), (5.0, "storm"), (10.0, "indigo"), (16.0, "aurora"), (23.0, "aurora"), (27.0, "prayer"),
-    (38.0, "prayer"), (42.0, "glass"), (47.0, "predawn"), (SUNRISE, "dawn"), (54.0, "rise"), (58.0, "risepk"),
-    (TOTAL, "risepk"),
-]
+_pal_keys = [(0.0, "storm"), (8.0, "storm"), (16.0, "aurora"), (38.0, "aurora"), (45.0, "predawn"),
+             (SUNRISE, "dawn"), (TOTAL, "dawn")]
 SKY_TOP = Track([(t, lin(PAL[p][0])) for t, p in _pal_keys])
 SKY_MID = Track([(t, lin(PAL[p][1])) for t, p in _pal_keys])
 SKY_HOR = Track([(t, lin(PAL[p][2])) for t, p in _pal_keys])
 GLOW = Track([(t, lin(PAL[p][3])) for t, p in _pal_keys])
 
-SUN_INT = Track([(0, 0.06), (27, 0.12), (40, 0.22), (46, 0.50), (SUNRISE, 1.0), (52.0, 0.9), (55, 0.70),
-                 (TOTAL, 0.68)])
-SUN_Y = Track([(0, 0.25), (CRESC, 0.26), (SUNRISE, 0.31), (TOTAL, 0.33)])
-SUN_SIZE = Track([(0, 0.10), (SUNRISE, 0.115), (TOTAL, 0.125)])
-STARS = Track([(0, 0.0), (0.4, 0.0), (5.0, 0.4), (10.0, 1.0), (27, 0.95), (44, 0.6), (SUNRISE, 0.3), (TOTAL, 0.15)])
-MILKY = Track([(0, 0.0), (8.0, 0.0), (14.0, 0.45), (24, 0.35), (40, 0.1), (SUNRISE, 0.0), (TOTAL, 0.0)])
-CLOUDS = Track([(0, 0.75), (6.0, 0.6), (12.0, 0.25), (38, 0.2), (SUNRISE, 0.45), (TOTAL, 0.65)])
-AURORA = Track([(0, 0.04), (6.0, 0.15), (11.0, 0.60), (15.0, 0.88), (22.0, 0.85), (26.0, 0.42), (38.0, 0.36),
-                (44.0, 0.18), (SUNRISE, 0.12), (TOTAL, 0.10)])
-RAIN = Track([(0, 0.75), (3.5, 0.65), (7.0, 0.15), (9.0, 0.0), (TOTAL, 0.0)])   # the last of the storm's rain
-MOTES = Track([(0, 0.15), (PRAYER, 0.24), (44, 0.4), (SUNRISE, 0.6), (TOTAL, 0.5)])
-LANTERNS = Track([(0, 0.35), (3.0, 1.0), (14.0, 1.0), (20.0, 0.45), (26.0, 0.0), (TOTAL, 0.0)])
-PETALS = Track([(0, 0.0), (49.0, 0.0), (51.5, 0.45), (53.5, 0.25), (TOTAL, 0.25)])   # few petals behind the end card
-TRAIL = Track([(0, 0.0), (1.2, 0.5), (PRAYER, 0.6), (SUNRISE, 0.95), (TOTAL, 0.9)])
-# the camera: still in the storm, drawing in toward the aurora and the prayer, opening wide again for the dawn
-ZOOM = Track([(0, 1.0), (8.0, 1.0), (24.0, 0.94), (38.0, 0.93), (46.0, 0.985), (SUNRISE, 0.99), (TOTAL, 0.97)])
+SUN_INT = Track([(0, 0.05), (40, 0.10), (49.4, 0.30), (TOTAL, 0.30)])   # the plates carry their own sun
+SUN_Y = Track([(0, 0.25), (TOTAL, 0.30)])
+SUN_SIZE = Track([(0, 0.10), (TOTAL, 0.11)])
+STARS = Track([(0, 0.0), (TOTAL, 0.0)])
+MILKY = Track([(0, 0.0), (TOTAL, 0.0)])
+CLOUDS = Track([(0, 0.0), (TOTAL, 0.0)])
+AURORA = Track([(0, 0.0), (TOTAL, 0.0)])
+RAIN = Track([(0, 0.45), (3.5, 0.40), (6.5, 0.08), (8.0, 0.0), (TOTAL, 0.0)])   # the last real rain stops
+MOTES = Track([(0, 0.10), (PRAYER, 0.18), (44, 0.28), (SUNRISE, 0.34), (TOTAL, 0.30)])
+LANTERNS = Track([(0, 0.25), (4.0, 0.7), (14.0, 0.7), (19.0, 0.0), (TOTAL, 0.0)])
+PETALS = Track([(0, 0.0), (48.0, 0.0), (50.0, 0.35), (52.0, 0.2), (TOTAL, 0.2)])   # few petals behind the end card
+TRAIL = Track([(0, 0.0), (TOTAL, 0.0)])
+ZOOM = Track([(0, 1.0), (TOTAL, 1.0)])   # the plates move the camera themselves
 EXPOSURE = Track([(0, 1.0), (TOTAL, 1.0)])
-FADE = Track([(0, 0.0), (1.0, 1.0), (TOTAL - 1.6, 1.0), (TOTAL - 0.1, 0.0)])
-RAYS = Track([(0, 0.0), (47, 0.0), (SUNRISE, 0.5), (51.5, 0.45), (53.0, 0.22), (TOTAL, 0.2)])   # soft behind the end card
-PART = Track([(0, 0.0), (48, 0.0), (52, 1.0), (56, 1.0), (TOTAL, 0.6)])
-TEXT_SHADOW = Track([(0, 1.0), (47.0, 1.0), (51.0, 1.5), (TOTAL, 1.6)])   # deeper behind the end card at dawn
+FADE = Track([(0, 0.0), (1.0, 1.0), (59.0, 1.0), (TOTAL - 0.05, 0.0)])
+RAYS = Track([(0, 0.0), (TOTAL, 0.0)])
+PART = Track([(0, 0.0), (TOTAL, 0.0)])
+TEXT_SHADOW = Track([(0, 1.1), (44.0, 1.2), (48.0, 1.6), (TOTAL, 1.6)])   # deeper behind the end card at dawn
 
-# Scene 3 and 4: the column of Her prayer, which narrows into the falling seed of courage
-BEAM = Track([(0, 0.0), (24.0, 0.0), (27.0, 0.38), (37.0, 0.32), (39.2, 0.50), (41.5, 0.55), (43.5, 0.0),
-              (TOTAL, 0.0)])
-BEAM_FROM = (0.5, 1.02)
-BEAM_TO = (0.5, 0.31)
-BEAM_WIDTH = Track([(0, (0.05, 0.10)), (39.0, (0.05, 0.10)), (41.5, (0.008, 0.03)), (TOTAL, (0.008, 0.03))])
-BEAM_COLOR = Track([(0, lin("#d8c0ff")), (36.0, lin("#e4c4ff")), (40.5, lin("#ffe2a8")), (TOTAL, lin("#ffe2a8"))])
-# Scene 4: the night sky breaks into glass after the prayer, drifts back together, and gold seams mend it
-SHARDS = Track([(0, 0.0), (39.6, 0.0), (41.0, 1.0), (42.6, 1.0), (45.6, 0.0), (TOTAL, 0.0)])
-SHARDS_MEND = Track([(0, 0.0), (43.6, 0.0), (46.2, 0.85), (49.0, 0.6), (52.0, 0.15), (TOTAL, 0.1)])
-SHARDS_Y = 0.68          # only the upper sky breaks, above the words (legibility)
+# A. the five painted scenes; each crossfade sits on a musical step, the lake of each one shimmers
+SCENES = [
+    dict(image="assets/plates/s03/frozen_rain_lanterns.jpg", t0=0.0, t1=10.5, fade_in=1.0, fade_out=2.5,
+         zoom=(1.12, 1.05), pan=((-0.02, 0.0), (0.0, 0.0)), water=True, water_line=0.25, gain=0.95),
+    dict(image="assets/plates/s03/aurora_hands_night.jpg", t0=8.0, t1=23.5, fade_in=2.5, fade_out=3.0,
+         transition="dissolve", zoom=(1.03, 1.14), pan=((0.0, 0.0), (0.0, 0.02)), water=True, water_line=0.31,
+         gain=Track([(0, 1.0), (10.0, 0.88), (17.5, 0.88), (20.0, 1.0)])),
+    dict(image="assets/plates/s03/prayer_mirror.jpg", t0=20.5, t1=41.5, fade_in=3.0, fade_out=2.5,
+         transition="bloom", flash=0.35, zoom=(1.14, 1.04), water=True, water_line=0.305,
+         gain=Track([(0, 1.0), (25.0, 1.0), (27.0, 0.85), (38.0, 0.85), (40.0, 1.0)])),
+    dict(image="assets/plates/s03/mended_moon_predawn.jpg", t0=39.0, t1=49.5, fade_in=2.5, fade_out=2.5,
+         transition="ripple", ripple_from=(0.5, 0.25), zoom=(1.04, 1.10), pan=((0.0, -0.02), (0.0, 0.0)),
+         water=True, water_line=0.34, gain=Track([(0, 1.0), (40.0, 0.90), (46.0, 0.90), (48.0, 1.0)])),
+    dict(image="assets/plates/s03/rose_dawn.jpg", t0=47.0, t1=61.0, fade_in=2.5, fade_out=0.0,
+         transition="dissolve", zoom=(1.10, 1.03), water=True, water_line=0.255,
+         gain=Track([(0, 1.0), (48.0, 0.95), (50.5, 0.70), (TOTAL, 0.70)])),
+]
+
+# Scene 4: the upper sky breaks into glass after the prayer and drifts back together into the mended moon
+SHARDS = Track([(0, 0.0), (39.8, 0.0), (41.0, 1.0), (42.2, 1.0), (44.6, 0.0), (TOTAL, 0.0)])
+SHARDS_Y = 0.62           # only above the words
 SHARDS_COLOR = "#ffd27a"
-FLASH = Track([(0, 0.0), (46.0, 0.0), (46.6, 0.35), (47.8, 0.0), (TOTAL, 0.0)])   # the mending is finished
 
 # Nine lights on an arch over the stage, one for each expression
 STAR_POS = []
@@ -254,29 +254,45 @@ FORM_DUR = 3.0
 TITLE = dict(label="Healing Concert", lines=["The Words of Mother’s Love"], size=150, form=TITLE_HIT - FORM_DUR,
              hold=1e9, star=1e9)
 
-# People of light (shared library, assets/figures/): Encouragement acted out at center while the words form,
-# and echoed by two small pairs of everyday life on the far shores (the mirror of the lake).
-_ENC = ["assets/figures/encouragement_a.png", "assets/figures/encouragement_b.png", "assets/figures/encouragement_c.png"]
+# B. people of light. Song figures (assets/song_figures/s03/, outline art made from the phase 1 pictures in Drive
+# Assets/s03) and the shared library's Encouragement poses. No pose changes while words are on screen.
+_F = "assets/figures/"
+_SF = "assets/song_figures/s03/"
+_ENC = [_F + "encouragement_a.png", _F + "encouragement_b.png", _F + "encouragement_c.png"]
 FIGURES = [
-    dict(poses=_ENC, t0=20.6, t1=ENC_HOLD - 0.5, pose_times=[29.4, 33.4], x=0.5, y=0.20, height=0.40,
-         to_star=6, color="#ffd2a0"),
-    dict(poses=_ENC[1:], t0=28.6, t1=ENC_HOLD - 0.9, pose_times=[33.0], x=0.15, y=0.305, height=0.13,
-         to_star=6, color="#ffc8b4", glow=0.8, particles=5000),
-    dict(poses=_ENC[:2], t0=29.2, t1=ENC_HOLD - 0.7, pose_times=[32.2], x=0.85, y=0.305, height=0.13,
-         to_star=6, color="#ffc8b4", glow=0.8, particles=5000, flip=True),
+    # the child sits alone in the storm; its light is carried up to where Her hands appear
+    dict(poses=[_SF + "child_sitting.png"], t0=0.8, t1=7.0, x=0.20, y=0.25, height=0.20, dissolve=3.0,
+         to=(0.5, 0.45), color="#ffd8b0", glow=0.9, particles=7000),
+    # Mother's hands (sleeves only): open and cupped, then closed in prayer, then rising as light
+    dict(poses=[_SF + "mother_hands_cupped.png", _SF + "mother_hands_praying.png"], t0=8.6, t1=21.4,
+         pose_times=[18.6], x=0.5, y=0.30, height=0.36, dissolve=2.2, leave="drift", color="#ffc9b8",
+         glow=1.0, particles=12000),
+    # ENCOURAGEMENT acted out: pray over the exhausted friend, then a hand on the back and a cheer
+    dict(poses=_ENC[:2], t0=22.6, gather=2.4, t1=ENC_HOLD - 0.5, pose_times=[25.0], x=0.5, y=0.20,
+         height=0.40, to_star=6, color="#ffd2a0"),
+    # everyday echoes on the far shores (one pose each, staggered)
+    dict(poses=[_ENC[2]], t0=24.2, t1=ENC_HOLD - 1.2, x=0.14, y=0.305, height=0.13, to_star=6,
+         color="#ffc8b4", glow=0.8, particles=5000),
+    dict(poses=[_ENC[1]], t0=25.4, t1=ENC_HOLD - 0.8, x=0.86, y=0.305, height=0.13, to_star=6,
+         color="#ffc8b4", glow=0.8, particles=5000, flip=True),
+    # the child stands up after the prayer, seen from behind, facing the mended moon
+    dict(poses=[_SF + "child_standing.png"], t0=41.4, gather=2.6, t1=46.4, x=0.22, y=0.22, height=0.30,
+         dissolve=3.0, leave="drift", color="#ffd8b0", glow=0.95, particles=8000),
 ]
 
 # Short lyric fragments (never on screen with an expression). Times are estimates from the studio recording.
 FRAGMENTS = [
-    dict(text="Her warm hands", t0=10.0, t1=14.0, out=18.0, dy=0.0, size=88, glow="#ffb468",
-         style="reflection", line=0.30),
-    dict(text="courage to go on", t0=40.8, t1=43.6, out=46.6, dy=0.0, size=84, glow="#ffc070", style="write"),
+    # rises out of the lake (short time in the water), then rests above Her hands
+    dict(text="Her warm hands", t0=11.2, t1=13.8, out=17.2, dy=0.09, size=88, glow="#ffb468",
+         style="reflection", line=0.31),
+    # below the moon, beside the standing child
+    dict(text="courage to go on", t0=40.2, t1=42.8, out=45.8, dy=-0.12, size=84, glow="#ffc070", style="write"),
 ]
 
 # the three-line end card (PHASE2.md item 7)
 TAGLINE = dict(text="Where a mother’s love reaches, peace settles.\nSunday, December 6 · 4:30 PM\n"
                     "The World Mission Society Church of God · 6720 W Sahara Ave, Las Vegas",
-               t0=TITLE_HIT + 1.4, t1=TITLE_HIT + 4.0)
+               t0=TITLE_HIT + 1.2, t1=TITLE_HIT + 3.4)
 
 # Colors for this song's look: indigo and violet aurora warming to rose and gold, rose petals with gold edges
 AURORA_COOL = ("#6f7cff", "#a58cff")
@@ -285,10 +301,10 @@ PETAL_COLORS = ("#ff8fae", "#ffd6b0")
 LANTERN_COLORS = ("#ffc070", "#ff9a5a")
 MOTE_COLORS = ("#ffe0a8", "#ffa8b8")
 
-# Opening title card that then rests, small, in the top left corner
+# Opening title card that then rests, small, in the top left corner, and fades before the end card
 CREDIT = dict(song="I Reminisce About Your Love", concert="The Words of Mother’s Love Healing Concert",
               t_in=0.3, t_full=1.5, t_move=4.4, t_rest=6.4, scale=0.34, alpha_rest=0.58,
-              margin_x=0.030, margin_top=0.048)
+              margin_x=0.030, margin_top=0.048, t_out=(49.0, 50.6))
 
 
 def credit_state(t, bbox):
@@ -307,12 +323,12 @@ def credit_state(t, bbox):
     tx = c["margin_x"] + c["scale"] * (x1 - x0) / 2.0
     ty = 1.0 - c["margin_top"] - c["scale"] * (y1 - y0) / 2.0
     cx, cy = cx0 * (1 - m) + tx * m, cy0 * (1 - m) + ty * m
-    alpha = a_in * (1.0 + (c["alpha_rest"] - 1.0) * m)
+    alpha = a_in * (1.0 + (c["alpha_rest"] - 1.0) * m) * (1.0 - ss(c["t_out"][0], c["t_out"][1], t))
     return (cx, cy, scale, alpha), (cx0, cy0)
 
 
 # Waves of light that cross the sky (time, x, y, strength): Encouragement reaching its light, and the end card
-WAVES = [(ENC_ARRIVE, STAR_POS[6][0], STAR_POS[6][1], 0.6), (TITLE_HIT, 0.5, 0.62, 1.3)]
+WAVES = [(ENC_ARRIVE, STAR_POS[6][0], STAR_POS[6][1], 0.6), (TITLE_HIT, 0.5, 0.62, 1.0)]
 
 
 def params(song, t):
