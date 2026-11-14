@@ -19,7 +19,7 @@ MUSIC_END = 59.5       # last sounding moment of the promo clip
 SONG_END = 60.0        # length of the promo clip
 TOTAL = 60.0           # promo length
 NFRAMES = int(round(TOTAL * FPS))
-HORIZON = 0.30         # water line, as a fraction of the height from the bottom
+HORIZON = 0.36         # water line: a higher horizon gives the long, deep view down the path home
 
 RIDGE_X0, RIDGE_W = 0.035, 0.93
 
@@ -159,18 +159,19 @@ CARE = 41.0
 NINTH = 1e9            # no whole-arch glow in this promo
 TITLE_HIT = 54.0
 
+# Look (DESIGN-SYSTEM.md section 6, song 07): blue dusk on a long path home. Twilight blue sky, a coral horizon,
+# lantern gold lights, the first stars coming out one by one, soft mist, and a slow push forward (deep perspective).
 # Scene palettes (top of sky, middle, horizon, glow of the horizon star)
 PAL = {
-    "night":  ("#02030b", "#070c26", "#161f4a", "#8ea4ff"),
-    "indigo": ("#02030d", "#0a0f30", "#1c2452", "#9aa8ff"),
-    "listen": ("#03051a", "#111640", "#2c2c62", "#c8b4ff"),
-    "coral":  ("#060a26", "#2a1f52", "#8a4c62", "#ff9f86"),
-    "rose":   ("#071030", "#35255e", "#a85a76", "#ffb0a0"),
-    "gold":   ("#0c1a44", "#4a3a78", "#d9876f", "#ffd49c"),
+    "evening": ("#14244c", "#3a4c80", "#d8946e", "#ffc48e"),   # last warmth of song 06's evening
+    "twilight": ("#0d1b42", "#26407a", "#b98089", "#ffb79c"),
+    "listen":  ("#0a1739", "#20386f", "#a87c99", "#ffd9bc"),   # the world listens to Mother's wish
+    "coral":   ("#10214c", "#2f4d8a", "#e98a76", "#ffa98e"),
+    "home":    ("#13275a", "#365894", "#f19a72", "#ffcf8a"),   # lantern gold at the horizon
 }
 _pal_keys = [
-    (0.0, "night"), (4.0, "indigo"), (7.0, "listen"), (13.0, "listen"), (17.0, "indigo"), (27.0, "indigo"),
-    (33.0, "coral"), (40.0, "coral"), (46.0, "rose"), (52.0, "gold"), (TOTAL, "gold"),
+    (0.0, "evening"), (6.0, "twilight"), (8.0, "listen"), (13.0, "listen"), (17.0, "twilight"), (27.0, "twilight"),
+    (33.0, "coral"), (44.0, "coral"), (52.0, "home"), (TOTAL, "home"),
 ]
 SKY_TOP = Track([(t, lin(PAL[p][0])) for t, p in _pal_keys])
 SKY_MID = Track([(t, lin(PAL[p][1])) for t, p in _pal_keys])
@@ -178,26 +179,33 @@ SKY_HOR = Track([(t, lin(PAL[p][2])) for t, p in _pal_keys])
 GLOW = Track([(t, lin(PAL[p][3])) for t, p in _pal_keys])
 
 # the horizon star is Heavenly Mother's presence: it brightens while Her wish is on screen (the world listens)
-SUN_INT = Track([(0, 0.10), (4, 0.16), (7, 0.40), (12.5, 0.40), (17, 0.24), (27, 0.26), (33, 0.62), (40, 0.70),
-                 (46, 0.88), (52, 1.02), (TOTAL, 1.05)])
-SUN_Y = Track([(0, 0.25), (27, 0.26), (52, 0.31), (TOTAL, 0.32)])
-SUN_SIZE = Track([(0, 0.10), (33, 0.11), (52, 0.125), (TOTAL, 0.125)])
-STARS = Track([(0, 0.0), (0.2, 0.0), (2.5, 0.95), (27, 1.0), (40, 0.8), (52, 0.55), (TOTAL, 0.5)])
-MILKY = Track([(0, 0.0), (5, 0.55), (27, 0.5), (40, 0.25), (52, 0.1), (TOTAL, 0.1)])
-CLOUDS = Track([(0, 0.12), (27, 0.2), (46, 0.35), (TOTAL, 0.4)])
-AURORA = Track([(0, 0.0), (28, 0.0), (36, 0.18), (46, 0.28), (TOTAL, 0.3)])
+SUN_INT = Track([(0, 0.45), (6, 0.30), (8, 0.55), (12.5, 0.55), (17, 0.32), (27, 0.34), (33, 0.55), (44, 0.62),
+                 (52, 0.80), (TOTAL, 0.82)])
+SUN_Y = Track([(0, 0.335), (27, 0.33), (52, 0.345), (TOTAL, 0.35)])
+SUN_SIZE = Track([(0, 0.11), (33, 0.11), (52, 0.12), (TOTAL, 0.12)])
+# first stars: few at dusk, more and more come out as the minute goes on
+STARS = Track([(0, 0.0), (1.0, 0.12), (10, 0.30), (27, 0.50), (40, 0.70), (52, 0.85), (TOTAL, 0.9)])
+MILKY = Track([(0, 0.0), (TOTAL, 0.0)])
+# soft mist low over the water and the far shore
+CLOUDS = Track([(0, 0.45), (13, 0.55), (27, 0.40), (44, 0.30), (TOTAL, 0.28)])
+AURORA = Track([(0, 0.0), (TOTAL, 0.0)])
 RAIN = Track([(0, 0.0), (TOTAL, 0.0)])
-MOTES = Track([(0, 0.03), (2, 0.10), (7, 0.05), (13, 0.05), (20, 0.18), (29, 0.30), (38, 0.55), (50, 0.65), (TOTAL, 0.55)])
-# lanterns light while Mother's wish lights the way, then village lights gather as the family forms
-LANTERNS = Track([(0, 0.0), (5.0, 0.0), (8.0, 0.85), (13, 0.85), (18, 0.35), (28, 0.2), (40, 0.25), (50, 0.6), (TOTAL, 0.6)])
+MOTES = Track([(0, 0.05), (2, 0.10), (7, 0.05), (13, 0.05), (20, 0.14), (29, 0.25), (38, 0.40), (50, 0.45), (TOTAL, 0.40)])
+# lanterns are this song's light: they rise while Mother's wish lights the way, then gather as the family forms
+LANTERNS = Track([(0, 0.25), (5.0, 0.30), (8.0, 1.0), (13, 1.0), (18, 0.45), (28, 0.35), (40, 0.45), (50, 0.85), (TOTAL, 0.85)])
 PETALS = Track([(0, 0.0), (TOTAL, 0.0)])
 # the lone walker is the lantern crossing the skyline; its trail warms once it is greeted
 TRAIL = Track([(0, 0.0), (1.2, 0.35), (27, 0.40), (38, 0.85), (50, 1.0), (TOTAL, 0.95)])
-ZOOM = Track([(0, 1.0), (27, 0.992), (50, 0.978), (TOTAL, 0.972)])
+# deep perspective: a slow, steady push forward down the long path home
+ZOOM = Track([(0, 1.0), (TOTAL, 0.93)])
 EXPOSURE = Track([(0, 1.0), (TOTAL, 1.0)])
 FADE = Track([(0, 0.0), (1.2, 1.0), (58.6, 1.0), (59.9, 0.0)])
-RAYS = Track([(0, 0.0), (44, 0.0), (52, 0.32), (TOTAL, 0.38)])
+RAYS = Track([(0, 0.0), (TOTAL, 0.0)])
 PART = Track([(0, 0.0), (TOTAL, 0.0)])
+LANTERN_COLORS = ("#ffd27a", "#ffb04f")      # lantern gold
+MOTE_COLORS = ("#ffe6b0", "#ff9d86")         # gold and coral sparks
+AURORA_WARM = ("#ff9a86", "#ffc88a")
+AURORA_COOL = ("#7fa8ff", "#9fb8ff")
 
 # Nine lights on an arch over the stage, one for each expression
 STAR_POS = []
@@ -237,7 +245,7 @@ FRAGMENTS = [
     dict(text="our Mother’s earnest wish", t0=16.0, t1=18.0, out=24.5, dy=0.04, size=74),
 ]
 
-TAGLINE = dict(text="Sunday, December 6 · 4:30 PM · 6720 W Sahara Ave, Las Vegas", t0=55.5, t1=57.5)
+TAGLINE = dict(text="Sunday, December 6 · 4:30 PM\nThe World Mission Society Church of God · 6720 W Sahara Ave, Las Vegas", t0=55.0, t1=57.0)
 
 # Opening title card that then rests, small, in the top left corner
 CREDIT = dict(song="May No One Ever Feel Lonely", concert="The Words of Mother’s Love Healing Concert",
