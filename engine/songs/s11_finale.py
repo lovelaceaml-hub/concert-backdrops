@@ -188,10 +188,11 @@ PAL = {
     "mother":  ("#0e3a84", "#306ebe", "#f7c686", "#ffebc6"),   # Mother speaks: the same clear blue, warmer horizon
     "radiant": ("#104490", "#3878c8", "#fad096", "#ffefd2"),   # the road of light, full rays
     "glory":   ("#124c9a", "#3f82d0", "#fcd9a4", "#fff3da"),   # second lift: full daylight glory, white gold
+    "endcard": ("#0f4290", "#336fbe", "#e7ad6c", "#ffe2b8"),   # under the end card: deeper gold so the date reads
 }
 _pal_keys = [
     (0.0, "clear"), (MOTHER + 3.0, "clear"), (MARCH, "mother"), (MARCH + 9.0, "radiant"), (KINGS, "radiant"),
-    (LIFT, "glory"), (TOTAL, "glory"),
+    (LIFT, "glory"), (TITLE_HIT - 1.0, "glory"), (TITLE_HIT + 2.5, "endcard"), (TOTAL, "endcard"),
 ]
 SKY_TOP = Track([(t, lin(PAL[p][0])) for t, p in _pal_keys])
 SKY_MID = Track([(t, lin(PAL[p][1])) for t, p in _pal_keys])
