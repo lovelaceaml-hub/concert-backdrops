@@ -212,17 +212,17 @@ SCENES = [
     dict(image="assets/plates/s08/festival_embroidered_aurora.jpg", t0=19.5, t1=31.0, fade_in=3.0, fade_out=3.0,
          transition="ripple", ripple_from=(0.5, 0.40), zoom=(1.04, 1.10), water=True, water_line=0.426,
          water_strength=0.7, gain=Track([(0, 0.9), (21.0, 0.86), (28.0, 0.86), (31.0, 0.9)])),
-    # 3. heaven opens: clouds parted, a column of gold pouring onto the lake (light bloom)
+    # 3. heaven opens: clouds parted, a column of gold pouring onto the lake (soft fade)
     dict(image="assets/plates/s08/heaven_opens.jpg", t0=28.0, t1=44.0, fade_in=3.0, fade_out=3.5,
-         transition="bloom", flash=0.22, zoom=(1.03, 1.08), water=True, water_line=0.296, water_strength=0.6,
+         transition="fade", zoom=(1.03, 1.08), water=True, water_line=0.296, water_strength=0.6,
          gain=Track([(0, 0.85), (30.0, 0.85), (32.5, 0.70), (40.0, 0.70), (42.0, 0.50), (44.0, 0.45)])),
     # 4. the velvet path home: deep purple night, a narrow path of light to the horizon (organic dissolve)
-    dict(image="assets/plates/s08/velvet_path_home.jpg", t0=40.0, t1=50.5, fade_in=3.0, fade_out=3.0,
+    dict(image="assets/plates/s08/velvet_path_home.jpg", t0=40.0, t1=51.3, fade_in=3.0, fade_out=2.5,
          transition="dissolve", zoom=(1.03, 1.09), water=True, water_line=0.426, water_strength=0.6),
     # 5. the seven-branched lampstand under the embroidered veil (the camera moves forward into it)
-    dict(image="assets/plates/s08/lampstand_veil.jpg", t0=47.5, t1=61.0, fade_in=3.0, fade_out=0.0,
+    dict(image="assets/plates/s08/lampstand_veil.jpg", t0=48.8, t1=61.0, fade_in=2.5, fade_out=0.0,
          transition="push", zoom=(1.12, 1.04), water=True, water_line=0.24, water_strength=0.5,
-         gain=Track([(0, 1.0), (49.0, 0.95), (51.5, 0.66), (TOTAL, 0.66)])),
+         gain=Track([(0, 1.0), (50.0, 0.9), (52.0, 0.66), (TOTAL, 0.66)])),
 ]
 
 F = "assets/figures/"
