@@ -217,21 +217,21 @@ TEXT_SHADOW = Track([(0, 1.6), (TOTAL, 1.7)])   # bright spring plates: a deeper
 SCENES = [
     # 1. the young blossom tree on the shore: two pray for the sister
     dict(image="assets/plates/s05/p1_young_tree.jpg", t0=0.0, t1=15.55, fade_in=0.8, fade_out=1.6,
-         zoom=(1.10, 1.04), pan=((0.02, 0.0), (0.0, 0.0)), water=True, water_line=0.35, calm_gain=0.22,
+         zoom=(1.10, 1.04), pan=((0.02, 0.0), (0.0, 0.0)), water=True, water_line=0.35, calm_gain=0.15,
          gain=Track([(0, 0.95), (2.6, 0.8), (15.55, 0.8)])),
     # 2. the listening shore with its resting stone: the brother stops and listens
     dict(image="assets/plates/s05/p2b_listening_shore.jpg", t0=13.95, t1=28.45, fade_in=1.6, fade_out=1.6,
-         transition="fade", zoom=(1.04, 1.11), pan=((0.0, 0.0), (0.015, 0.0)), water=True, water_line=0.38, calm_gain=0.3,
+         transition="fade", zoom=(1.04, 1.11), pan=((0.0, 0.0), (0.015, 0.0)), water=True, water_line=0.38, calm_gain=0.25,
          gain=0.8),
     # 3. the open spring lake: a wide view across the water to the snowy peaks and the blossoming far shore
     # (the left part of the first listening-shore painting; its resting stone stays out of frame)
     dict(image="assets/plates/s05/p2_listening_shore.jpg", t0=26.85, t1=41.35, fade_in=1.6, fade_out=1.6,
          transition="ripple", ripple_from=(0.42, 0.36), zoom=(1.50, 1.46), pan=((-0.15, -0.06), (-0.155, -0.06)),
-         water=True, water_line=0.33, calm_gain=0.3, gain=0.8),
+         water=True, water_line=0.33, calm_gain=0.25, gain=0.8),
     # 4. the tree of blessing again, closer, as the sun breaks through above it; it stays for the end card
     dict(image="assets/plates/s05/p1_young_tree.jpg", t0=39.75, t1=61.0, fade_in=1.6, fade_out=0.0,
          transition="bloom", flash=0.45, zoom=(1.24, 1.12), pan=((-0.08, 0.02), (-0.05, 0.0)), water=True,
-         water_line=0.35, calm_gain=0.22,
+         water_line=0.35, calm_gain=0.15,
          gain=Track([(0, 0.8), (42.0, 0.8), (44.0, 0.88), (46.5, 0.88), (49.0, 0.72), (TOTAL, 0.72)])),
 ]
 
