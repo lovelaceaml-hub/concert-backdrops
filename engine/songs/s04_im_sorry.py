@@ -1,11 +1,11 @@
 """Song 04, I'm Sorry, Please Forgive Me: the 1 minute promo, v2 (0:26 to 1:26 of the studio recording).
 
 Design: "The Thaw" (project-docs/designs/04 I'm Sorry, Please Forgive Me.md, section "Promo v2: scenes").
-A frozen pale winter morning. Two sisters of light act out the apology said first (full words; star 3 flares and
-gains a thin ring); in a close view of the mirrored ice the pain held inside rises out of the reflection; a path of
-footprints of light runs from the low sun across the ice to the sister who walks over, kneels and holds her
-sister's hand, truly humbled; they embrace and the heart opens; at the first chorus the lake has thawed into
-apricot light with a thin gold path ending in one small warm light at centre, and the three-line end card.
+A clip of the full backdrop: a frozen pale winter morning where the apology is said first (full words; star 3
+flares and gains a thin ring); in a close view of the mirrored ice the pain held inside rises out of the reflection;
+a path of footprints of light runs from the low sun across the ice, and for a few seconds a sister of light walks
+out on it, truly humbled, the heart opening; at the first chorus the lake thaws into apricot light with a thin gold
+path ending in one small warm light, and the three-line end card. People of light appear once, briefly and moving.
 """
 import os
 import numpy as np
@@ -147,14 +147,14 @@ TITLE_HIT = 49.9      # end card
 # The scenes (promo v2), the phase 1 plates painted for this song (assets/plates/s04/, sun softened behind the
 # words and the lower third calmed), each a different framing. Scene changes happen only in gaps between texts.
 #  1   0 to 2.5   song 03's closing lake (engine world) drains to ice blue; frost spreads over the water
-#  2   1.5 to 18  frozen_lake_wide: a wide frozen lake, low cold sun in haze; the apology said first
+#  2   1.5 to 18  frozen_lake_wide: a wide frozen lake, low cold sun in haze; the apology's words alone
 #  3  16.4 to 29  reflection_close: a low, very close view where the mirrored ice fills the frame (no mountains);
 #                 "the pain you held inside" appears in the reflection, then rises
 #  4  27 to 49    ice_path: a long view down the ice to the low sun, framed off centre; a path of footprints of
-#                 light runs from the sun across the ice to the sisters: one walks across, kneels and holds her
-#                 sister's hand ("truly humbled"); they embrace ("opened her heart"); the ice holds until they leave
+#                 light runs from the sun across the ice; a sister of light walks out on it for a few seconds
+#                 ("truly humbled"), then "opened her heart"; the ice holds whole until the thaw
 #  5  47 to 60    thaw_morning (graded to apricot and peach): the ice thaws on the first chorus; a thin gold path on
-#                 the water, off the sun's reflection, ends in one small warm light where the sisters' light came
+#                 the water, off the sun's reflection, ends in one small warm light where the sister's light came
 #                 down; the three-line end card
 SKYLINE_LANTERN = 0.0     # no travelling light on the drawn skyline (the plates have their own mountains)
 BOTTOM_CALM = 1.0
@@ -213,23 +213,17 @@ SCENES = [
          gain=Track([(0, 0.95), (49.0, 0.80), (TOTAL, 0.80)])),
 ]
 
-# B. people of light: two sisters
+# B. people of light (Anthony, round 3: rare and always moving, never posing under the words). One brief
+# appearance: a sister of light walks out onto the ice toward her sister, for about four seconds, and her light
+# flies down to the water where the small warm light will shine at the end.
 FIGURES = [
-    # the apology said first: one stands withdrawn, the other steps forward first and offers her hand; they take hands.
-    # Both moves finish before the words are fully formed, so the figures stand still through the reading time.
-    dict(poses=["assets/figures/apology_a.png", "assets/figures/apology_b.png", "assets/figures/apology_c.png"],
-         t0=2.4, t1=14.5, pose_times=[5.4, 6.9], morph=1.5, x=0.5, y=0.21, height=0.38, to_star=2, color="#ffbf8a"),
-    # going first in humility (this song's own poses): she walks across the ice, kneels and holds her sister's hand;
-    # then they embrace. Their light comes down as one small warm light at the centre of the lake.
-    dict(poses=["assets/song_figures/s04/s04_walk.png", "assets/song_figures/s04/s04_kneel_pair.png",
-                "assets/figures/inclusiveness_c.png"],
-         t0=27.6, t1=43.4, pose_times=[30.6, 38.0], x=0.62, y=0.21, height=0.38, to=(0.35, 0.215),
-         color="#ffb7a8"),
+    dict(poses=["assets/song_figures/s04/s04_walk.png"], t0=30.0, t1=34.4, gather=1.5, dissolve=3.0,
+         x=0.60, y=0.21, height=0.36, to=(0.35, 0.215), color="#ffb7a8"),
 ]
 
 # C. signature effects: the ice and its thaw, frost over the frame, the path of footprints of light across the ice
 # the ice stays whole (no thaw edges) through the first three scenes; it is only made fainter over the close
-# reflection; it starts to thaw in glowing pools as the sisters embrace, and melts away on the first chorus
+# reflection; it thaws in glowing pools and melts away on the first chorus
 ICE = Track([(0, 0.0), (0.6, 0.0), (3.0, 1.0), (46.5, 1.0), (49.5, 0.40), (53.5, 0.0)])
 ICE_LINE = Track([(0, 0.40), (1.5, 0.40), (3.5, 0.56), (16.4, 0.56), (18.4, 0.98), (27.2, 0.98), (29.2, 0.55),
                   (46.0, 0.55), (48.0, 0.445), (TOTAL, 0.445)])
@@ -239,16 +233,16 @@ ICE_FRAME = Track([(0, 0.0), (1.0, 0.0), (4.0, 0.35), (27.0, 0.35), (31.0, 0.12)
 
 
 def _beam(t):
-    # ice path: footprints of light from the low sun across the ice to the sisters; thaw: a thin gold path that
+    # ice path: footprints of light from the low sun across the ice toward the walking sister; thaw: a thin gold path that
     # ends in one small warm light at centre
     if t < 47.0:
-        return 0.0 if t < 31.0 else min((t - 31.0) / 2.5, 1.0) * 0.55 * (1.0 - min(max((t - 44.0) / 2.5, 0.0), 1.0))
+        return 0.0 if t < 29.5 else min((t - 29.5) / 2.5, 1.0) * 0.55 * (1.0 - min(max((t - 43.0) / 3.0, 0.0), 1.0))
     return 1.0 * min(max((t - 49.0) / 3.0, 0.0), 1.0)
 
 
 BEAM = _beam
 BEAM_FROM = lambda t: (0.44, 0.59) if t < 47.0 else (0.43, 0.425)   # noqa: E731
-BEAM_TO = lambda t: (0.58, 0.215) if t < 47.0 else (0.35, 0.215)     # noqa: E731
+BEAM_TO = lambda t: (0.60, 0.215) if t < 47.0 else (0.35, 0.215)     # noqa: E731
 BEAM_WIDTH = lambda t: (0.010, 0.07) if t < 47.0 else (0.004, 0.12)   # noqa: E731
 BEAM_COLOR = "#ffd2a0"
 FLASH = Track([(0, 0.0), (48.6, 0.0), (49.3, 0.16), (50.8, 0.0)])
