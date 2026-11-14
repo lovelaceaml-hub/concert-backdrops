@@ -155,9 +155,9 @@ NINTH = 1e9            # the whole arch does not glow as one in this song
 # (hold >= form + 9.75), then dissolve over about 1.6 s; the next text starts at least 0.5 s after that.
 C_FORM, C_HOLD = 8.0, 17.9          # Concession: solid 11.75 to 17.9 (6.15 s)
 I_FORM, I_HOLD = 20.0, 29.8         # Inclusiveness: starts 0.5 s after Concession's dissolve ends (19.5)
-F1 = (33.0, 36.0, 39.0)             # "waters this wilderness": after the ripple's ring has passed the words
-F2 = (41.1, 43.6, 46.6)             # "the fragrance of Her love": solid 43.6 to 46.6
-TITLE_HIT = 51.7                    # title forms from 48.7 (0.5 s after the last fragment has left)
+F1 = (33.4, 36.4, 39.4)             # "waters this wilderness": after the ripple's ring has passed the words
+F2 = (41.5, 44.0, 47.0)             # "the fragrance of Her love": solid 44.0 to 47.0
+TITLE_HIT = 52.1                    # title forms from 49.1 (0.5 s after the last fragment has left)
 
 SKYLINE_LANTERN = 0.0     # the scenes have their own land; the small light along the drawn skyline is hidden
 BOTTOM_CALM = 1.0         # calm lower third (Astra round 1, finding 12)
@@ -209,15 +209,15 @@ SCENES = [
     dict(image=P + "shore_dark.jpg", t0=18.0, t1=25.6, fade_in=2.4, fade_out=2.0, transition="dissolve",
          zoom=(1.08, 1.05), water=True, water_line=0.505, water_bottom=0.21, water_strength=0.7),
     # the same shore with the lantern relit, as the older one lifts the young one up
-    dict(image=P + "shore_lit.jpg", t0=23.6, t1=31.8, fade_in=2.0, fade_out=2.4, transition="fade",
+    dict(image=P + "shore_lit.jpg", t0=23.6, t1=32.6, fade_in=2.0, fade_out=1.2, transition="fade",
          zoom=(1.05, 1.02), water=True, water_line=0.505, water_bottom=0.21, water_strength=0.7),
     # 4. the cracked wilderness at dusky gold ...
-    dict(image=P + "wilderness_dry.jpg", t0=29.4, t1=34.8, fade_in=2.4, fade_out=3.0, transition="dissolve",
+    dict(image=P + "wilderness_dry.jpg", t0=31.4, t1=34.6, fade_in=1.2, fade_out=2.0, transition="fade",
          zoom=(1.02, 1.06)),
     # ... which the living gold water fills, spreading out from where the light pours in
-    dict(image=P + "wilderness_gold.jpg", t0=31.8, t1=40.8, fade_in=3.0, fade_out=2.4, transition="ripple",
+    dict(image=P + "wilderness_gold.jpg", t0=32.6, t1=40.8, fade_in=2.0, fade_out=2.4, transition="ripple",
          ripple_from=(0.5, 0.40), zoom=(1.06, 1.09),
-         gain=Track([(0, 1.0), (31.8, 0.9), (40.8, 0.9)])),
+         gain=Track([(0, 1.0), (32.6, 0.9), (40.8, 0.9)])),
     # 5. the healed land: blossom trees along golden streams, wheat bending in the wind
     dict(image=P + "blossom.jpg", t0=38.4, t1=48.4, fade_in=2.4, fade_out=3.0, transition="dissolve",
          zoom=(1.03, 1.09), pan=((0.0, 0.0), (0.015, 0.01)),
@@ -245,7 +245,7 @@ FIELD_LINE = Track([(0, 0.40), (5.2, 0.40), (45.0, 0.34), (TOTAL, 0.34)])
 FIELD_COLOR = "#ffc35a"
 FIELD_SPEED = 1.2
 # living water: a column of light pours from heaven into the cracked land, and the gold spreads from there
-BEAM = Track([(0, 0.0), (30.6, 0.0), (32.4, 0.42), (37.4, 0.42), (39.6, 0.0), (TOTAL, 0.0)])
+BEAM = Track([(0, 0.0), (31.4, 0.0), (32.8, 0.42), (37.4, 0.42), (39.6, 0.0), (TOTAL, 0.0)])
 BEAM_FROM = (0.5, 1.02)
 BEAM_TO = (0.5, 0.40)
 BEAM_WIDTH = (0.012, 0.06)
@@ -284,7 +284,7 @@ TITLE = dict(label="Healing Concert", lines=["The Words of Mother’s Love"], si
 # D. two short lyric fragments, never on screen together with an expression
 FRAGMENTS = [
     dict(text="waters this wilderness", t0=F1[0], t1=F1[1], out=F1[2], dy=0.0, size=84, glow="#ffd27a",
-         style="write"),
+         style="engrave"),   # carved in gold like the channels the living water fills
     dict(text="the fragrance of Her love", t0=F2[0], t1=F2[1], out=F2[2], dy=0.0, size=84, glow="#f4c6a6"),
 ]
 
