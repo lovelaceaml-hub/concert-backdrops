@@ -6,15 +6,17 @@ measured, so the silent audio file the workflow needs plays no part in the pictu
 
 Design: "The Lamp on the Shore" (project-docs/designs/10 Our Mother Saves the World.md, "Promo v2: scenes").
 The warm star that rests on the horizon in every song is lifted as Mother's great lamp, and its light is Her words:
-gold threads run out from it across the dark world to cold, lonely lights, and where they arrive, people of light
-act out the words and the night grows still and warm. Six scenes, each one of Anthony's painted plates (Assets/s10):
-  1  the restless night (0 to 7 s): a small warm star alone on the horizon, cold blue lights, uneasy water; title
-  2  the great lamp is lifted (4.5 to 20.5 s): Heavenly Mother, from behind and fully robed, at the lamp; one thread
-     of light runs from the lamp to a pair of people of light: Greeting
-  3  Her words go out (18 to 33 s): gold threads from the lantern on the water; a thread reaches a pair: Consideration
-  4  circles of peace (30.5 to 46.5 s): still mirror circles where the words arrived: Encouragement at the centre
-  5  peace across the world (44 to 52.4 s): the night Earth laced with gold paths, the whole arch glows
-  6  night of peace (49.8 to 60 s): the home lake a perfect mirror, the lamp set back down; end card
+gold threads run out from it across the dark world to cold, lonely lights, and where they arrive the night grows
+still and warm. A clip of the real backdrop (Anthony, round 3): the words, the threads, the circles of peace and the
+Earth carry the expressions; the only person of light is one brief, moving moment of Heavenly Mother from behind.
+Six scenes, each one of Anthony's painted plates (Assets/s10):
+  1  the restless night (0 to 6 s): a small warm star alone on the horizon, cold blue lights, uneasy water; title
+  2  the great lamp is lifted (4.8 to 19.2 s): Heavenly Mother gathers out of the light below the lamp and streams up
+     into it; one thread of light runs from the lamp across the water: Greeting
+  3  Her words go out (18 to 31.7 s): gold threads from the lantern on the water; one thread brightens: Consideration
+  4  circles of peace (30.5 to 45.2 s): still mirror circles where the words arrived: Encouragement
+  5  peace across the world (44 to 48.8 s): the night Earth laced with gold paths, the whole arch glows
+  6  night of peace (47.6 to 60 s): the home lake a perfect mirror, the lamp set back down; end card
 All nine lights are already lit (star history, DESIGN-SYSTEM.md 12a). The three expressions are ILLUSTRATIVE
 placements, pending the lyrics (Astra round 1, finding 14). No lyric fragments: the lyrics are not available.
 """
@@ -240,34 +242,23 @@ SCENES = [
 ]
 
 # ----------------------------------------------------------------- B. people of light
-# Heavenly Mother, seen only from behind and fully robed, standing just below the great lamp so it shines above
-# Her head; when Her first word has gone out, Her sparks return into the lamp. The three pairs act at different
-# places: centre-left, right, centre.
+# Anthony, round 3: people of light are rare and always moving, never standing under the words. The only figure is
+# one brief moment: Heavenly Mother, seen only from behind and fully robed, gathers out of the light just below the
+# great lamp (about 4.9 to 7.4 s), and almost at once Her sparks stream up into the lamp (7.6 to 10.6 s): Her light
+# becomes the lamp whose threads carry the words. The three expressions are carried by the words, the threads,
+# the circles of peace and the Earth, with the star relights.
 FIGURES = [
-    dict(poses=["assets/figures/s10_mother_lamp_a.png"], t0=4.8, t1=16.0, x=0.5, y=0.255, height=0.22,
-         to=(0.5, 0.495), color="#ffbf5e", glow=0.45, glass=0.35, sparks=0.75),
-    # Greeting: the left person walks up and waves; the lonely one places their hands in the offered hands
-    dict(poses=["assets/figures/greeting_a.png", "assets/figures/greeting_b.png"],
-         t0=G_FORM - 2.3, t1=G_FORM + HOLD - 0.5, pose_times=[G_FORM + 3.2], x=0.25, y=0.23, height=0.36,
-         to_star=0, color="#ffbfa6", glass=1.3),
-    # Consideration: one bends under a heavy bundle; the other comes with open hands and they carry it together
-    dict(poses=["assets/figures/consideration_a.png", "assets/figures/consideration_b.png"],
-         t0=C_FORM - 2.4, t1=C_FORM + HOLD - 0.5, pose_times=[C_FORM + 3.4], x=0.74, y=0.23, height=0.36,
-         to_star=7, color="#f8b3c2", glass=1.3),
-    # Encouragement: one kneels, exhausted, the other prays over them; a hand on the back; both rise in hope
-    dict(poses=["assets/figures/encouragement_a.png", "assets/figures/encouragement_b.png",
-                "assets/figures/encouragement_c.png"],
-         t0=E_FORM - 2.4, t1=E_FORM + HOLD - 0.5, pose_times=[E_FORM + 2.8, E_FORM + 6.2], x=0.5, y=0.23,
-         height=0.36, to_star=6, color="#d3c0f4", glass=1.3),
+    dict(poses=["assets/figures/s10_mother_lamp_a.png"], t0=4.9, t1=7.6, gather=2.5, dissolve=3.0,
+         x=0.5, y=0.255, height=0.22, to=(0.5, 0.495), color="#ffbf5e", glow=0.45, glass=0.35, sparks=0.75),
 ]
 
 # ----------------------------------------------------------------- C. signature effects
-# The great lamp and its threads: as each act begins, one thread of light runs from the lamp to that pair (a narrow
-# BEAM path with a small pool where it lands), then fades when the words rise
-_THREADS = [  # (start, end, from (the lamp in that plate), to (the pair))
-    (G_FORM - 1.3, G_FORM + HOLD - 0.3, (0.5, 0.495), (0.33, 0.40)),
-    (C_FORM - 0.9, C_FORM + HOLD - 0.3, (0.5, 0.50), (0.66, 0.40)),
-    (E_FORM - 0.9, E_FORM + HOLD - 0.3, (0.5, 0.605), (0.5, 0.47)),
+# The great lamp and its threads: as each word comes, one thread of light runs from the lamp out across the water
+# to one cold light (a narrow BEAM path with a small pool where it lands), then fades as the words rise
+_THREADS = [  # (start, end, from (the lamp in that plate), to (a light on the water))
+    (G_FORM - 1.3, G_FORM + HOLD - 0.3, (0.5, 0.495), (0.27, 0.40)),
+    (C_FORM - 0.9, C_FORM + HOLD - 0.3, (0.5, 0.50), (0.74, 0.39)),
+    (E_FORM - 0.9, E_FORM + HOLD - 0.3, (0.5, 0.605), (0.30, 0.42)),
 ]
 BEAM = Track([(0, 0.0)] + [k for a, b, _, _ in _THREADS
                            for k in ((a, 0.0), (a + 1.5, 0.55), (b - 1.0, 0.55), (b, 0.0))] + [(TOTAL, 0.0)])
