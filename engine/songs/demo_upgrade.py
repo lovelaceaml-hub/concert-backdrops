@@ -193,11 +193,11 @@ def MOTE_COLORS(t):
 # A. three painted scenes (assets/plates/demo/), each moving slowly; the lake in each one shimmers
 SCENES = [
     dict(image="assets/plates/demo/winter_lake.jpg", t0=0.0, t1=28.0, fade_in=1.0, fade_out=3.5,
-         zoom=(1.12, 1.04), pan=((0.0, 0.02), (0.0, 0.0)), water=True, water_line=0.36),
+         zoom=(1.12, 1.04), pan=((0.0, 0.02), (0.0, 0.0)), water=True, water_line=0.30),
     dict(image="assets/plates/demo/thaw_dawn.jpg", t0=24.5, t1=49.0, fade_in=3.5, fade_out=3.0,
-         transition="dissolve", zoom=(1.04, 1.13), pan=((0.0, 0.0), (0.0, 0.015)), water=True, water_line=0.36),
+         transition="dissolve", zoom=(1.04, 1.13), pan=((0.0, 0.0), (0.0, 0.015)), water=True, water_line=0.37),
     dict(image="assets/plates/demo/golden_morning.jpg", t0=46.0, t1=61.0, fade_in=3.0, fade_out=0.0,
-         transition="ripple", ripple_from=(0.5, 0.30), zoom=(1.12, 1.05), water=True, water_line=0.36),
+         transition="ripple", ripple_from=(0.5, 0.30), zoom=(1.12, 1.05), water=True, water_line=0.46),
 ]
 
 # B. two pairs of people of light (the shared figure library in assets/figures/)
@@ -213,7 +213,7 @@ FIGURES = [
 SNOW = Track([(0, 0.55), (20, 0.6), (27, 0.2), (30, 0.0)])
 SNOW_WIND = 0.4
 ICE = Track([(0, 1.0), (28, 1.0), (44, 0.0)])          # the lake is frozen, then thaws with glowing edges
-ICE_LINE = 0.30
+ICE_LINE = Track([(0, 0.28), (26.0, 0.28), (28.0, 0.36), (TOTAL, 0.36)])
 ICE_FRAME = Track([(0, 0.55), (24, 0.55), (32, 0.0)])  # frost in the corners of the frame
 SHARDS = Track([(0, 0.0), (17.5, 0.0), (20.5, 1.0), (26.0, 1.0), (31.0, 0.0)])
 SHARDS_MEND = Track([(0, 0.0), (28.0, 0.0), (31.0, 1.0), (40.0, 0.8), (45.0, 0.0)])
