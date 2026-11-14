@@ -25,7 +25,7 @@ MUSIC_END = 59.5       # last sounding moment of the promo clip
 SONG_END = 60.0        # length of the promo clip
 TOTAL = 60.0           # promo length
 NFRAMES = int(round(TOTAL * FPS))
-HORIZON = 0.30         # water line, as a fraction of the height from the bottom
+HORIZON = 0.31         # water line, as a fraction of the height from the bottom
 
 RIDGE_X0, RIDGE_W = 0.035, 0.93
 
@@ -164,49 +164,53 @@ LAMP = 46.0           # "lampstand and olive oil"
 NINTH = 37.0          # star 2 arrives: all nine lights are lit, the whole arch glows from here
 TITLE_HIT = 50.5      # end card
 
-# Scene palettes (top of sky, middle, horizon, glow of the low light)
+# Scene palettes (top of sky, middle, horizon, glow of the low light).
+# Look for song 08 (DESIGN-SYSTEM.md section 6): a royal festival night in deep royal purple, crimson and gold,
+# gold aurora like embroidery, rays and sparkle, grand and symmetrical framing.
 PAL = {
-    "moon":     ("#02040f", "#0b1530", "#1e2c58", "#c8d4ff"),
-    "lavender": ("#050620", "#1f1a48", "#4a3b78", "#d6bfff"),
-    "wedding":  ("#07102e", "#3a3160", "#a87a78", "#fff0d2"),
-    "gold":     ("#0b1236", "#4a3a5e", "#cf8a4a", "#ffd58a"),
-    "tender":   ("#020611", "#08183c", "#1c3a66", "#a8c6ff"),
-    "lamp":     ("#0a0f2c", "#3a2c4e", "#c47a46", "#ffb64a"),
-    "dawn":     ("#101c48", "#5c3f7c", "#ec8c6e", "#ffd9a0"),
+    "royal":    ("#07020f", "#1c0833", "#3d1250", "#e8b860"),
+    "royallav": ("#080314", "#251045", "#4e2468", "#e2c4ff"),
+    "crimson":  ("#0c0214", "#3a0c3c", "#8a1e3c", "#ffcf7a"),
+    "gold":     ("#120520", "#4a1440", "#c0543a", "#ffd56a"),
+    "velvet":   ("#05010c", "#160626", "#3a0f3e", "#e0a860"),
+    "festival": ("#0e0420", "#3b0f48", "#a8304a", "#ffd27a"),
+    "rosegold": ("#1a0a30", "#5a1f55", "#d8705a", "#ffd9a0"),
 }
 _pal_keys = [
-    (0.0, "moon"), (8.0, "moon"), (11.5, "lavender"), (18.5, "lavender"), (22.0, "wedding"), (27.0, "wedding"),
-    (31.0, "gold"), (37.0, "gold"), (40.5, "tender"), (45.5, "tender"), (50.0, "lamp"), (54.0, "lamp"),
-    (59.0, "dawn"), (TOTAL, "dawn"),
+    (0.0, "royal"), (8.0, "royal"), (11.5, "royallav"), (18.5, "royallav"), (22.0, "crimson"), (27.0, "crimson"),
+    (31.0, "gold"), (37.0, "gold"), (40.5, "velvet"), (45.5, "velvet"), (50.0, "festival"), (54.0, "festival"),
+    (59.0, "rosegold"), (TOTAL, "rosegold"),
 ]
 SKY_TOP = Track([(t, lin(PAL[p][0])) for t, p in _pal_keys])
 SKY_MID = Track([(t, lin(PAL[p][1])) for t, p in _pal_keys])
 SKY_HOR = Track([(t, lin(PAL[p][2])) for t, p in _pal_keys])
 GLOW = Track([(t, lin(PAL[p][3])) for t, p in _pal_keys])
 
-# the warm star on the horizon: quiet in the moonlight, Mother's answering light at the thanksgiving
-SUN_INT = Track([(0, 0.22), (9, 0.30), (14, 0.42), (19, 0.55), (27, 0.85), (31, 1.20), (36, 1.30), (40, 0.45),
-                 (45, 0.40), (50, 0.95), (56, 1.05), (TOTAL, 1.0)])
-SUN_Y = Track([(0, 0.25), (19, 0.27), (31, 0.33), (37, 0.34), (41, 0.26), (46, 0.26), (54, 0.31), (TOTAL, 0.32)])
-SUN_SIZE = Track([(0, 0.09), (31, 0.125), (37, 0.13), (41, 0.10), (54, 0.12), (TOTAL, 0.12)])
-STARS = Track([(0, 0.0), (0.2, 0.0), (2.0, 0.95), (18, 0.9), (28, 0.45), (36, 0.25), (40, 0.95), (46, 1.0),
-               (52, 0.55), (TOTAL, 0.45)])
-MILKY = Track([(0, 0.0), (3, 0.45), (18, 0.4), (24, 0.1), (36, 0.0), (39, 0.6), (46, 0.7), (51, 0.15), (TOTAL, 0.1)])
-CLOUDS = Track([(0, 0.18), (19, 0.25), (28, 0.45), (37, 0.40), (41, 0.20), (50, 0.35), (TOTAL, 0.35)])
-AURORA = Track([(0, 0.0), (9, 0.0), (12, 0.20), (18, 0.22), (22, 0.10), (29, 0.18), (36, 0.30), (40, 0.05),
-                (TOTAL, 0.05)])
+# the warm star at the center of the horizon (symmetrical framing): Mother's answering light at the thanksgiving
+SUN_INT = Track([(0, 0.40), (9, 0.45), (14, 0.55), (19, 0.70), (27, 0.95), (31, 1.25), (36, 1.35), (40, 0.60),
+                 (45, 0.55), (50, 1.05), (56, 1.15), (TOTAL, 1.1)])
+SUN_Y = Track([(0, 0.27), (19, 0.28), (31, 0.34), (37, 0.35), (41, 0.28), (46, 0.28), (54, 0.32), (TOTAL, 0.33)])
+SUN_SIZE = Track([(0, 0.10), (31, 0.13), (37, 0.135), (41, 0.105), (54, 0.125), (TOTAL, 0.125)])
+STARS = Track([(0, 0.0), (0.2, 0.0), (2.0, 0.75), (18, 0.7), (28, 0.35), (36, 0.25), (40, 0.7), (46, 0.7),
+               (52, 0.4), (TOTAL, 0.35)])
+MILKY = Track([(0, 0.0), (TOTAL, 0.0)])
+CLOUDS = Track([(0, 0.10), (19, 0.15), (28, 0.30), (37, 0.30), (41, 0.12), (50, 0.2), (TOTAL, 0.2)])
+# gold aurora like embroidery across the whole night
+AURORA = Track([(0, 0.0), (1.5, 0.30), (9, 0.35), (12, 0.45), (18, 0.48), (22, 0.40), (29, 0.55), (36, 0.65),
+                (40, 0.35), (46, 0.35), (52, 0.60), (TOTAL, 0.55)])
 RAIN = Track([(0, 0.0), (TOTAL, 0.0)])
-MOTES = Track([(0, 0.05), (2, 0.18), (10, 0.25), (19, 0.45), (28, 0.65), (33, 1.0), (37, 0.95), (40, 0.25),
-               (46, 0.3), (52, 0.7), (TOTAL, 0.55)])
-# the lamps of the world: lights rising when the lampstand gives light
-LANTERNS = Track([(0, 0.0), (47, 0.0), (51, 0.9), (57, 1.0), (TOTAL, 0.85)])
+# festival sparkle
+MOTES = Track([(0, 0.10), (2, 0.45), (10, 0.50), (19, 0.70), (28, 0.85), (33, 1.15), (37, 1.1), (40, 0.45),
+               (46, 0.55), (52, 1.0), (TOTAL, 0.85)])
+LANTERNS = Track([(0, 0.0), (TOTAL, 0.0)])
 PETALS = Track([(0, 0.0), (TOTAL, 0.0)])
-TRAIL = Track([(0, 0.0), (1.2, 0.5), (19, 0.7), (31, 1.0), (37, 1.0), (40, 0.5), (50, 0.9), (TOTAL, 0.9)])
-ZOOM = Track([(0, 1.0), (19, 0.99), (37, 0.975), (46, 0.97), (TOTAL, 0.955)])
+TRAIL = Track([(0, 0.0), (1.2, 0.6), (19, 0.8), (31, 1.1), (37, 1.1), (40, 0.6), (50, 1.0), (TOTAL, 1.0)])
+ZOOM = Track([(0, 1.0), (19, 0.99), (37, 0.975), (46, 0.97), (TOTAL, 0.96)])
 EXPOSURE = Track([(0, 1.0), (TOTAL, 1.0)])
 FADE = Track([(0, 0.0), (1.0, 1.0), (TOTAL - 1.5, 1.0), (TOTAL - 0.2, 0.0)])
-# heaven's light pouring through: the cloud lane opens at the thanksgiving
-RAYS = Track([(0, 0.0), (20, 0.0), (24, 0.25), (30, 0.7), (36, 0.85), (40, 0.1), (48, 0.1), (53, 0.45), (TOTAL, 0.4)])
+# royal rays from the center star; heaven's light pours through the parted clouds at the thanksgiving
+RAYS = Track([(0, 0.0), (2, 0.20), (12, 0.25), (20, 0.35), (30, 0.80), (36, 0.95), (40, 0.30), (48, 0.35),
+              (53, 0.70), (TOTAL, 0.65)])
 PART = Track([(0, 0.0), (28, 0.0), (32, 1.0), (38, 1.0), (42, 0.3), (TOTAL, 0.3)])
 
 # Nine lights on an arch over the stage, one for each expression
