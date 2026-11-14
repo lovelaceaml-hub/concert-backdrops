@@ -5,12 +5,12 @@ deep winter night with snowfall, a pale pink spring dawn; silver blue, white, bl
 Painted plates from Assets/s02 (assets/plates/s02/) and the song's own people of light (assets/song_figures/s02/).
 
 Four scenes, each with its own camera and main object:
-  0 to 14.5 1 FIRST SNOW: a wide night lake, the home star low between the mountains, snow begins and thickens
+  0 to 13   1 FIRST SNOW: a wide night lake, the home star low between the mountains, snow begins and thickens
             as the camera slowly closes in; fragment "too lonely"
-  12 to 30  2 THE CANDLE FIELD: violet light pours onto the snowbound lake and small lights glow all over it;
-            three women of light come to the kneeling traveler and act out Encouragement (they gather round,
-            one relights the traveler's lantern from her own flame, one wraps her scarf round the traveler, one
-            prays; then the traveler stands with them, lantern raised). The full words form and fly into star 7
+  10.5 to 30 2 THE CANDLE FIELD: violet light pours onto the snowbound lake and small lights glow all over it;
+            for about 5 seconds the women of light relight the kneeling traveler's lantern and the traveler
+            rises with them, and they all go up as light; then the full Encouragement words form over the
+            violet light and fly into star 7
   27.5 to 42 3 THE SEED UNDER THE SNOW: a high ceiling of snow and ice, the dark soil, the seed with gold roots;
             a violet thread of light falls to it; fragment "the seed" is written in light
   39.7 to 60 4 THE ROSE: a low close shot on the near shore, the rose of light at dawn; petals fall;
@@ -134,10 +134,10 @@ class Song:
 
 # ----------------------------------------------------------------- the minute (seconds into the promo)
 RING_SPANS = []        # no drawn piano rings: every scene is a painted plate with its own water
-FIG_IN = 12.5          # the three women and the traveler gather (Encouragement acted out)
-ENC_FORM = 15.6        # the words start forming as the women kneel and pray (fully formed at about 19.35)
-ENC_HOLD = 26.0        # the words begin to fly (6.65 seconds fully formed and solid)
-ENC_ARRIVE = 28.5      # they reach star 7: a flare and one new thin ring
+FIG_IN = 11.0          # one brief appearance: the trio and the traveler, about 5 seconds, always moving
+ENC_FORM = 16.4        # the words start forming once the people have gone up as light (fully formed about 20.15)
+ENC_HOLD = 26.3        # the words begin to fly (6.15 seconds fully formed and solid)
+ENC_ARRIVE = 28.8      # they reach star 7: a flare and one new thin ring
 NINTH = 1e9            # the whole arch does not glow at the end of this song
 TITLE_HIT = 52.6       # end card
 SKYLINE_LANTERN = 0.0  # all plates: no light along the drawn skyline
@@ -182,8 +182,8 @@ AURORA_COOL = ("#c9d8ff", "#e4d8ff")
 # ----------------------------------------------------------------- scenes (painted plates, assets/plates/s02/)
 # Each scene has its own camera and main object:
 #   1 wide night lake, first snow, the home star low between the mountains; the camera slowly closes in
-#     as the night deepens (0 to 14.5)
-#   2 the violet light on the ice and the field of candle lights: the trio comes (12 to 30)
+#     as the night deepens (0 to 13)
+#   2 the violet light on the ice and the field of candle lights: the trio passes briefly as light (10.5 to 30)
 #   3 under the snow: high ice ceiling, the seed and its gold roots in the soil (27.5 to 42)
 #   4 low close shot on the near shore: the rose of light, then the end card beside it (39.7 to 60)
 # The plates were touched up for song 02 (plates_fix notes in project-docs/status/02.md): the top left star
@@ -192,10 +192,10 @@ AURORA_COOL = ("#c9d8ff", "#e4d8ff")
 # e_thaw_rose painted out and its sky near the arch calmed.
 P = "assets/plates/s02/"
 SCENES = [
-    dict(image=P + "a_first_snow.jpg", t0=0.0, t1=14.5, fade_in=1.0, fade_out=2.5,
+    dict(image=P + "a_first_snow.jpg", t0=0.0, t1=13.0, fade_in=1.0, fade_out=2.5,
          zoom=(1.0, 1.10), pan=((0.0, 0.0), (0.0, 0.015)), water=True, water_line=0.36,
          gain=Track([(0, 1.0), (9.0, 1.0), (14.0, 0.85), (TOTAL, 0.85)])),
-    dict(image=P + "c_violet_ice.jpg", t0=12.0, t1=30.0, fade_in=2.5, fade_out=2.5, transition="fade",
+    dict(image=P + "c_violet_ice.jpg", t0=10.5, t1=30.0, fade_in=2.5, fade_out=2.5, transition="fade",
          zoom=(1.10, 1.14), pan=((0.0, 0.04), (0.0, 0.05)),     # framed up: fewer candles at the bottom edge
          gain=Track([(0, 0.72), (27.0, 0.72), (30.0, 0.85)])),
     dict(image=P + "d_seed.jpg", t0=27.5, t1=42.2, fade_in=2.5, fade_out=2.5, transition="fade",
@@ -216,7 +216,7 @@ SNOW_SPEED = Track([(0, 1.0), (14.0, 1.0), (16.5, 0.35), (TOTAL, 0.35)])
 SNOW_WIND = Track([(0, 0.30), (10.0, 0.50), (14.0, 0.50), (16.5, 0.12), (TOTAL, 0.12)])
 SNOW_COLOR = "#eef4ff"
 # The word reaches down: a violet thread of light falls through the ice to the seed
-BEAM = Track([(0, 0.0), (28.6, 0.0), (29.4, 0.40), (30.8, 0.36), (31.6, 0.0), (TOTAL, 0.0)])
+BEAM = Track([(0, 0.0), (28.9, 0.0), (29.6, 0.40), (30.8, 0.36), (31.6, 0.0), (TOTAL, 0.0)])
 BEAM_FROM = (0.5, 1.02)
 BEAM_TO = (0.5, 0.52)
 BEAM_WIDTH = (0.006, 0.03)
@@ -229,15 +229,16 @@ for i in range(9):
     STAR_POS.append((x, y))
 
 # ----------------------------------------------------------------- people of light
-# Song 02's own figures (assets/song_figures/s02/, from Assets/s02/figures, turned into outline art):
-# 1 the three women gather round the kneeling traveler, hands on the shoulders; 2 one kneels and lights the
-# traveler's lantern from her own small flame, one wraps her scarf round the traveler's shoulders, one prays;
-# 3 the traveler stands with them, lantern raised.
+# Anthony's round 3 direction: people are rare and always moving, never posing under the words.
+# One brief appearance of song 02's own figures (assets/song_figures/s02/, outline art from Assets/s02/figures):
+# out of the light the women gather round the kneeling traveler and relight the lantern (pose 2), the traveler
+# rises with them (pose 3), and at once they all go up as light. About 5 seconds, in motion the whole time,
+# gone before the Encouragement words form; the words, the violet light and the star carry the expression.
 SF = "assets/song_figures/s02/"
 FIGURES = [
-    dict(poses=[SF + "trio_1_arrival.png", SF + "trio_2_encourage.png", SF + "trio_3_rise.png"],
-         t0=FIG_IN, t1=ENC_HOLD - 0.5, pose_times=[16.6, 22.4], morph=0.6, x=0.40, y=0.34, height=0.32,
-         to_star=6, color="#ffd9a8", glow=0.9),   # pale gold, beside the violet column, so they stand out
+    dict(poses=[SF + "trio_2_encourage.png", SF + "trio_3_rise.png"],
+         t0=FIG_IN, t1=13.9, gather=2.0, pose_times=[12.6], morph=1.3, dissolve=2.2, leave="drift",
+         x=0.40, y=0.34, height=0.32, color="#ffd9a8", glow=0.9),   # pale gold, beside the violet column
 ]
 
 OFF = dict(form=1e9, hold=1e9, star=1e9)
