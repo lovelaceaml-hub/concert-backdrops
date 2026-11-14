@@ -141,12 +141,13 @@ from track import Track   # the shared Track refuses keys that are not strictly 
 # Promo v2, round 3 (Anthony: a clip of the real backdrop, people of light rare and always moving).
 # Five painted scenes (assets/plates/s03/), the song's own effects, the words:
 #   1  0 to 10    The storm stands still (frozen_rain_lanterns): raindrops hang in the air, gold on the left and
-#                 cold blue glass on the right. A child of light gathers on the shore for a moment (2 to 4.6) and
-#                 its light flies up to the middle of the sky.
+#                 cold blue glass on the right. A child of light glides up and right along the shore while it
+#                 gathers (2.0 to 3.8) and its light flies at once up to the middle of the sky.
 #   2  8 to 23    Her warm hands (aurora_hands_night): violet aurora, sky lanterns, mirror lake. "Her warm hands"
 #                 rises out of the lake; then Mother's cupped hands of light (with sleeves) gather under the
 #                 words, lift gently and drift away as light (12.9 to 18.2).
-#   3  20 to 41   Her prayer (prayer_mirror): one column of light from the horizon into the sky, a mirror lake.
+#   3  20 to 41   Her prayer (prayer_mirror, regraded darker and cooler, aurora only a faint band, closer view):
+#                 one column of light from the horizon into the sky, a mirror lake.
 #                 No people: the column, the light and the full words carry ENCOURAGEMENT (about 7 s solid),
 #                 then the words fly to light 7 (flare and a new ring).
 #   4  39 to 50   The mended moon (mended_moon_predawn): the upper sky breaks into glass and drifts back
@@ -209,18 +210,18 @@ SCENES = [
          zoom=(1.12, 1.05), pan=((-0.02, 0.0), (0.0, 0.0)), water=True, water_line=0.25, gain=0.95,
          water_strength=0.5, calm_gain=0.25),
     dict(image="assets/plates/s03/aurora_hands_night.jpg", t0=8.0, t1=23.5, fade_in=2.5, fade_out=3.0,
-         transition="dissolve", zoom=(1.03, 1.14), pan=((0.0, 0.0), (0.0, 0.02)), water=True, water_line=0.31,
+         transition="fade", zoom=(1.03, 1.14), pan=((0.0, 0.0), (0.0, 0.02)), water=True, water_line=0.31,
          water_strength=0.5, calm_gain=0.4,
          gain=Track([(0, 1.0), (10.0, 0.88), (17.5, 0.88), (20.0, 1.0)])),
     dict(image="assets/plates/s03/prayer_mirror.jpg", t0=20.5, t1=41.5, fade_in=3.0, fade_out=2.5,
-         transition="bloom", flash=0.15, zoom=(1.14, 1.04), water=True, water_line=0.305, water_strength=0.5,
+         transition="bloom", flash=0.15, zoom=(1.20, 1.12), water=True, water_line=0.29, water_strength=0.5,
          calm_gain=0.4,
          gain=Track([(0, 1.0), (25.0, 1.0), (27.0, 0.85), (38.0, 0.85), (40.0, 1.0)])),
     dict(image="assets/plates/s03/mended_moon_predawn.jpg", t0=39.0, t1=49.5, fade_in=2.5, fade_out=2.5,
          transition="fade", zoom=(1.04, 1.10), pan=((0.0, -0.02), (0.0, 0.0)),
          water=True, water_line=0.34, water_strength=0.5, calm_gain=0.25, gain=Track([(0, 1.0), (40.0, 0.90), (46.0, 0.90), (48.0, 1.0)])),
     dict(image="assets/plates/s03/rose_dawn.jpg", t0=47.0, t1=61.0, fade_in=2.5, fade_out=0.0,
-         transition="fade", zoom=(1.10, 1.03), water=True, water_line=0.255, water_strength=0.5, calm_gain=0.4,
+         transition="fade", zoom=(1.10, 1.03), water=True, water_line=0.255, water_strength=0.5, calm_gain=0.25,
          gain=Track([(0, 1.0), (48.0, 0.92), (50.5, 0.64), (TOTAL, 0.64)])),
 ]
 
@@ -260,21 +261,21 @@ TITLE = dict(label="Healing Concert", lines=["The Words of Mother’s Love"], si
 _SF = "assets/song_figures/s03/"
 FIGURES = [
     # the child huddled in the storm: gathers, and at once its light flies up to where Her hands will appear
-    dict(poses=[_SF + "child_sitting.png"], t0=2.0, gather=2.0, t1=4.6, x=(0.19, 0.22), y=(0.25, 0.27),
-         move=(2.0, 4.6), height=0.20, dissolve=3.0, to=(0.5, 0.45), color="#ffd8b0", glow=0.9, particles=7000),
+    dict(poses=[_SF + "child_sitting.png"], t0=2.0, gather=1.6, t1=3.8, x=(0.15, 0.27), y=(0.22, 0.32),
+         move=(2.0, 3.8), height=0.20, dissolve=3.0, to=(0.5, 0.45), color="#ffd8b0", glow=0.9, particles=7000),
     # Mother's hands (cupped, with sleeves that fade into the sky): one pose only, they gather under the resting
     # words once "Her warm hands" has risen, lift gently and drift away as light (about 5 s on screen)
-    dict(poses=[_SF + "mother_hands_cupped.png"], t0=12.9, gather=1.4, t1=16.4, x=0.5, y=(0.37, 0.42),
-         move=(12.9, 18.2), height=(0.27, 0.25), dissolve=1.8, leave="drift", color="#ffc9b8",
+    dict(poses=[_SF + "mother_hands_cupped.png"], t0=12.9, gather=1.4, t1=16.4, x=(0.55, 0.57), y=(0.40, 0.46),
+         move=(12.9, 18.2), height=(0.20, 0.19), dissolve=1.8, leave="drift", color="#dcdcff",
          glow=0.6, particles=8000),
 ]
 
 # Short lyric fragments (never on screen with an expression). Times are estimates from the studio recording.
 FRAGMENTS = [
-    # rises out of the lake (short time in the water), then rests above Her hands
+    # rises out of the lake (short time in the water), then rests; Mother's hands gather below it after it rises
     dict(text="Her warm hands", t0=10.4, t1=13.0, out=16.0, dy=0.11, size=88, glow="#ffb468",
          style="reflection", line=0.31),
-    # below the moon, beside the standing child
+    # below the mended moon
     dict(text="courage to go on", t0=40.2, t1=42.8, out=45.8, dy=-0.12, size=84, glow="#ffc070", style="write"),
 ]
 
