@@ -36,13 +36,13 @@ def _tracked(draw, xy_center, text, font, tracking, fill):
     return total
 
 
-def render(label, lines, size, font_path=F_PHRASE, label_alpha=232):
+def render(label, lines, size, font_path=F_PHRASE, label_alpha=232, y_center=None):
     """Returns (rgb texture uint8 HxWx3 bottom-up, particle targets Nx3, bounds)."""
     font, size = _fit(lines, font_path, size)
     asc, desc = font.getmetrics()
     line_h = int(size * 1.08)
     block_h = line_h * len(lines)
-    top = Y_CENTER - block_h / 2.0
+    top = (Y_CENTER if y_center is None else y_center * H) - block_h / 2.0
     phrase = Image.new("L", (W, H), 0)
     d = ImageDraw.Draw(phrase)
     x0, x1 = W, 0
@@ -131,7 +131,7 @@ def render_credit(song_title, concert_title):
 def build_all():
     out = []
     for p in S.PHRASES:
-        tex, pts, b = render(p["label"], p["lines"], p["size"])
+        tex, pts, b = render(p["label"], p["lines"], p["size"], y_center=p.get("y"))   # optional y: centre, from the top
         out.append(dict(tex=tex, pts=pts, bounds=b))
     tex, pts, b = render(S.TITLE["label"], S.TITLE["lines"], S.TITLE["size"], font_path=F_TITLE)
     title = dict(tex=tex, pts=pts, bounds=b)

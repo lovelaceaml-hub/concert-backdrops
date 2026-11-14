@@ -113,6 +113,8 @@ class Renderer:
         self.t_credit.repeat_x = self.t_credit.repeat_y = False
         self.t_blank = ctx.texture((4, 4), 3, data=bytes(48), dtype="f1")
         ctx.enable(moderngl.PROGRAM_POINT_SIZE)
+        import upgrade
+        self.up = upgrade.Upgrade(self)   # scenes, people of light, effect layers, fragment styles (all optional)
 
     # ------------------------------------------------------------------
     def frame(self, t, index=0):
@@ -162,6 +164,8 @@ class Renderer:
             setu(self.p_petal, uT=t, uAmount=P["petals"], uPx=px, uColA=L(cols("PETAL_COLORS", ("#ff7fa2", "#ffd2c2"))[0]) * 0.95,
                  uColB=L(cols("PETAL_COLORS", ("#ff7fa2", "#ffd2c2"))[1]) * 0.62)
             self.v_petal.render(moderngl.POINTS)
+        self.up.draw_effects(t, P)
+        self.up.draw_figures(t)
 
         # words: particles, then the solid letters
         texA, shadeA = self.t_blank, 0.0
@@ -198,6 +202,8 @@ class Renderer:
         # short lyric fragments: form, hold, then dissolve
         for fr in self.frags:
             m = fr["meta"]
+            if m.get("style", "sparks") != "sparks":
+                continue   # drawn by the upgrade layers below
             if not (m["t0"] <= t < m["out"] + 1.6):
                 continue
             fly = (t - m["out"]) if t > m["out"] else -1.0
@@ -206,6 +212,11 @@ class Renderer:
                  uAspect=asp, uAlpha=m.get("alpha", 0.95), uPulse=0.0, uBounds=fr["bounds"],
                  uCol=L("#fff1d6"), uGlowCol=L(m.get("glow", "#ffc48c")))
             self.v_text.render(moderngl.TRIANGLE_STRIP)
+        self.up.draw_frags(t)
+        if shadeB <= 0.0:
+            ts = self.up.text_shadow(t)
+            if ts is not None:
+                texB, txB, bndB, shadeB = ts
 
         # song title and concert title: a card at the start, then small in the corner
         credit, c0 = S.credit_state(t, self.credit_bbox)
@@ -226,7 +237,9 @@ class Renderer:
             self.v_lights.render(moderngl.TRIANGLE_STRIP)
         # the lantern that crosses the skyline with the music
         lx, ly = P["lantern"]
-        li = smoothstep(0.15, 1.2, t) * (0.80 + 0.45 * P["env"])
+        sl = getattr(S, "SKYLINE_LANTERN", 1.0)   # optional: 0 hides the light that travels along the skyline
+        sl = sl(t) if callable(sl) else sl
+        li = smoothstep(0.15, 1.2, t) * (0.80 + 0.45 * P["env"]) * sl
         x0, x1 = max(int((lx - 0.07) * w), 0), min(int((lx + 0.07) * w), w)
         y0, y1 = max(int((ly - 0.11) * h), 0), min(int((ly + 0.11) * h), h)
         self.f_L.scissor = (x0, y0, max(x1 - x0, 1), max(y1 - y0, 1))
@@ -273,6 +286,7 @@ class Renderer:
              uTextC=9, uCredit=tuple(float(v) for v in credit), uC0=c0, uHi=P["hi"], uEnv=P["env"],
              uSunInt=P["sun_int"], uMtn=mtn, uSkyHor=P["sky_hor"], uGlow=P["glow"], uTrailCol=L("#ffd396"),
              uSun=(0.5, P["sun_y"]), uShade=(float(shadeA), float(shadeB)), uNRings=len(rings), uNWaves=len(waves))
+        self.up.comp_uniforms(self.p_comp, t, P)
         self.v_comp.render(moderngl.TRIANGLE_STRIP)
         return self.f_out.read(components=3)
 

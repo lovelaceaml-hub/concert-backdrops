@@ -358,6 +358,34 @@ uniform vec2 uBndA, uBndB; uniform float uZoom;
 uniform sampler2D uTextC; uniform vec4 uCredit; uniform vec2 uC0;
 uniform int uNRings; uniform vec4 uRings[16];
 uniform int uNWaves; uniform vec4 uWaves[4];
+// upgrade layers (all zero, and so switched off, unless a song asks for them)
+uniform int uPlN; uniform sampler2D uPlA, uPlB;
+uniform vec4 uPlAView, uPlBView, uPlAWat, uPlBWat, uPlATr, uPlBTr;
+uniform float uPlAAlpha, uPlBAlpha, uFlash;
+uniform vec4 uShards; uniform vec3 uShardCol;
+uniform vec4 uIce; uniform vec3 uIceCol, uThawCol;
+uniform vec4 uField; uniform vec3 uFieldCol;
+vec2 hash22(vec2 p){ vec3 p3 = fract(vec3(p.xyx)*vec3(0.1031,0.1030,0.0973));
+  p3 += dot(p3, p3.yzx+33.33); return fract((p3.xx+p3.yz)*p3.zy); }
+float voro(vec2 x, out vec2 cell, out vec2 toC){
+  vec2 n = floor(x), f = fract(x); vec2 mg = vec2(0.0), mr = vec2(0.0); float md = 8.0;
+  for(int j=-1;j<=1;j++) for(int i=-1;i<=1;i++){
+    vec2 g = vec2(float(i),float(j)); vec2 r = g+hash22(n+g)-f; float d = dot(r,r);
+    if(d<md){ md = d; mr = r; mg = g; }
+  }
+  md = 8.0;
+  for(int j=-2;j<=2;j++) for(int i=-2;i<=2;i++){
+    vec2 g = mg+vec2(float(i),float(j)); vec2 r = g+hash22(n+g)-f;
+    if(dot(mr-r,mr-r)>0.00001) md = min(md, dot(0.5*(mr+r), normalize(r-mr)));
+  }
+  cell = n+mg; toC = mr;
+  return md;
+}
+vec3 invTone(vec3 y){
+  y = clamp(y, 0.0, 0.975);
+  vec3 a = 2.43*y-2.51, b = 0.59*y-0.03, c = 0.14*y;
+  return (-b - sqrt(max(b*b-4.0*a*c, 0.0)))/(2.0*a);
+}
 float ridged1(float x, float seed){
   float sum=0.0, a=0.5, f=1.0;
   for(int i=0;i<5;i++){
@@ -403,8 +431,7 @@ float wordMask(sampler2D tx, vec2 uv, vec4 p, vec2 bnd){
   float dis = 1.0-smoothstep(0.0, 1.0, (p.z-er*0.9)/0.8);
   return texture(tx, uv).g*rev*dis*p.w;
 }
-void main(){
-  vec2 sv = vUV;
+vec3 procedural(vec2 sv){
   vec2 uv = vec2((sv.x-0.5)*uZoom+0.5, (sv.y-uHorizon)*uZoom+uHorizon);
   vec3 col;
   vec3 hz = texture(uSky, vec2(uv.x, uHorizon+0.012)).rgb;
@@ -436,6 +463,158 @@ void main(){
     }
     col = mix(col, hz*0.9, exp(-d*42.0)*0.55);
   }
+  return col;
+}
+// ---- scene plates: a painted picture that slowly moves, with an optional shimmering lake
+vec3 plateColor(sampler2D tx, vec2 sv, vec4 view, vec4 wat){
+  vec2 puv = view.xy + (sv-0.5)/view.z;
+  float wl = wat.y;
+  vec3 extra = vec3(0.0);
+  float water = (wat.x>0.5 && puv.y<wl) ? 1.0 : 0.0;
+  float d = clamp((wl-puv.y)/max(wl,0.05), 0.0, 1.0);
+  if(water>0.5){
+    float wob = (vnoise(vec2(puv.x*uAspect*30.0, puv.y*260.0-uT*0.9))-0.5)*0.008*(0.25+d)*wat.z
+              + sin(puv.y*300.0+uT*1.3)*0.0008*wat.z;
+    puv += vec2(wob, wob*0.3);
+    float wls = 0.5+(wl-view.y)*view.z;              // the water line on screen
+    vec2 ruv = vec2(sv.x+wob*view.z, 2.0*wls-sv.y);
+    float rf = (1.0-d)*(1.0-d);
+    extra += (textureLod(uB2, ruv, 0.0).rgb*0.16 + textureLod(uB3, ruv, 0.0).rgb*0.26 + textureLod(uB4, ruv, 0.0).rgb*0.30)*rf*wat.z;
+  }
+  puv = clamp(puv, vec2(0.001), vec2(0.999));
+  vec3 s = textureLod(tx, puv, 0.0).rgb;
+  vec3 halo = textureLod(tx, puv, 5.5).rgb;
+  float l = dot(s, vec3(0.2126,0.7152,0.0722));
+  s = mix(vec3(l), s, 0.86);                          // the engine's colour lift is added back later
+  vec3 lin = invTone(pow(s, vec3(2.2)))*view.w;
+  lin += max(pow(halo, vec3(2.2))-0.22, 0.0)*0.40*view.w;   // soft halation round the bright parts
+  if(water>0.5){
+    float gl = pow(vnoise(vec2(puv.x*uAspect*420.0, puv.y*1300.0+uT*2.4)), 9.0);
+    lin += vec3(1.0,0.93,0.8)*gl*smoothstep(0.20,0.75,l)*2.4*wat.z*(0.4+d);
+  }
+  return lin+extra;
+}
+float trMask(vec4 tr, vec2 sv, out float edge){
+  int m = int(tr.x+0.5); float p = tr.y; edge = 0.0;
+  if(m==1){       // dissolve with a glowing edge
+    float n = fbm(sv*vec2(uAspect,1.0)*2.6+3.7);
+    float f = p*1.3-0.15;
+    edge = exp(-pow((f-n)/0.03,2.0))*step(0.001,p)*step(p,0.999);
+    return smoothstep(n-0.04, n+0.04, f);
+  }
+  if(m==3){       // a ripple that spreads from a point
+    float r = length((sv-tr.zw)*vec2(uAspect,1.0));
+    float f = p*2.3;
+    edge = exp(-pow((r-f)/0.025,2.0))*(1.0-p);
+    return smoothstep(f, f-0.18, r);
+  }
+  if(m==2) return smoothstep(0.30, 0.70, p);   // bloom: the change hides inside a flash of light
+  return p*p*(3.0-2.0*p);                       // fade and push
+}
+vec3 applyPlate(vec3 col, sampler2D tx, vec2 sv, vec4 view, vec4 wat, vec4 tr, float alpha){
+  float edge;
+  float m = trMask(tr, sv, edge);
+  vec2 s2 = sv;
+  if(int(tr.x+0.5)==3){
+    vec2 q = (sv-tr.zw)*vec2(uAspect,1.0); float r = length(q); float f = tr.y*2.3;
+    s2 += (q/max(r,1e-4))/vec2(uAspect,1.0)*0.012*sin((r-f)*90.0)*exp(-pow((r-f)/0.07,2.0))*(1.0-tr.y);
+  }
+  col = mix(col, plateColor(tx, s2, view, wat), m*alpha);
+  col += uGlow*edge*alpha*0.9;
+  return col;
+}
+vec3 background(vec2 sv){
+  vec3 col = procedural(sv);
+  if(uPlN>0) col = applyPlate(col, uPlA, sv, uPlAView, uPlAWat, uPlATr, uPlAAlpha);
+  if(uPlN>1) col = applyPlate(col, uPlB, sv, uPlBView, uPlBWat, uPlBTr, uPlBAlpha);
+  return col;
+}
+void main(){
+  vec2 sv = vUV;
+  // ---- shards: the sky breaks into floating pieces of glass (and can be mended with gold)
+  vec2 bsv = sv;
+  float shA = 0.0, shE = 1.0, shH = 0.0, shLow = 0.0;
+  if(uShards.x>0.001 || uShards.y>0.001){
+    vec2 q = vec2(sv.x*uAspect, sv.y)*uShards.z;
+    vec2 cell, toC;
+    shE = voro(q, cell, toC);
+    shH = hash21(cell*1.31+0.7);
+    shLow = smoothstep(uShards.w, uShards.w+0.10, sv.y);
+    shA = uShards.x*shLow;
+    if(shA>0.0){
+      vec2 h2 = hash22(cell*2.17+1.3);
+      float ang = ((shH-0.5)*0.32 + 0.05*sin(uT*0.45+h2.x*6.28))*shA;
+      vec2 rel = -toC;
+      float cs = cos(ang), sn = sin(ang);
+      vec2 rr = vec2(cs*rel.x-sn*rel.y, sn*rel.x+cs*rel.y);
+      vec2 drift = ((h2-0.5)*vec2(0.55,0.40) + 0.10*vec2(sin(uT*0.31+h2.y*9.0), cos(uT*0.27+h2.x*9.0)))*shA;
+      vec2 qq = cell+hash22(cell)+rr+drift;
+      bsv = vec2(qq.x/uAspect, qq.y)/uShards.z;
+    }
+  }
+  vec3 col = background(bsv);
+  if(shA>0.0){
+    float gw = 0.07*shA;
+    float gap = 1.0-smoothstep(gw*0.55, gw, shE);
+    float rim = exp(-max(shE-gw,0.0)/0.03)*shA;
+    col *= mix(1.0, 0.86+0.32*shH, shA);
+    col = mix(col, col*0.10+uShardCol*0.02, gap);
+    col += (uGlow*0.30 + vec3(0.35,0.45,0.70)*0.12)*rim*(1.0-gap);
+  }
+  if(uShards.y>0.001){
+    float seam = exp(-shE/0.010)*1.3 + exp(-shE/0.06)*0.22;
+    float glint = pow(vnoise(vec2(sv.x*uAspect, sv.y)*uShards.z*24.0+uT*0.8), 6.0);
+    col += uShardCol*uShards.y*shLow*seam*(0.8+2.5*glint);
+  }
+  // ---- ice over the lake, which can thaw
+  if(uIce.x>0.001 && sv.y<uIce.y){
+    float d = (uIce.y-sv.y)/uIce.y;
+    float z = 1.0/(d+0.07);
+    vec2 g = vec2((sv.x-0.5)*uAspect*z, z)*1.3;
+    vec2 cc, tc;
+    float e1 = voro(g, cc, tc);
+    float e2 = voro(g*2.6+vec2(3.1,7.7), cc, tc);
+    float crack = exp(-e1/0.018)*0.8 + exp(-e2/0.012)*0.4;
+    float frost = fbm(g*2.3)*0.65 + fbm(g*8.0+5.0)*0.35;
+    float melt = fbm(g*0.55+vec2(9.0,2.0));
+    float th = mix(0.95, -0.05, uIce.x);
+    float near = smoothstep(0.0, 0.015, d);
+    float iceM = smoothstep(th-0.025, th+0.025, melt)*near;
+    float rimT = exp(-pow((melt-th)/0.018, 2.0))*step(0.02, 1.0-uIce.x)*near;
+    vec3 iceC = col*0.42 + uIceCol*(0.05 + 0.22*frost*frost) + uIceCol*crack*0.24*(1.0-0.5*d);
+    float sxx = (sv.x-uSun.x)*uAspect;
+    iceC += uGlow*uSunInt*exp(-sxx*sxx/(0.01+0.05*d*d))*0.10*(0.5+frost);
+    col = mix(col, iceC, iceM*uIce.z);
+    col += uThawCol*rimT*0.9;
+  }
+  if(uIce.w>0.001){
+    vec2 q = (sv-0.5)*vec2(uAspect,1.0);
+    float r = length(q)/length(vec2(uAspect*0.5,0.5));
+    float fr = smoothstep(0.62, 1.0, r+0.22*(fbm(sv*vec2(uAspect,1.0)*6.0)-0.5));
+    vec2 cc, tc;
+    float fe = voro(sv*vec2(uAspect,1.0)*16.0, cc, tc);
+    col = mix(col, col*0.55 + uIceCol*(0.12+0.35*exp(-fe/0.04)), fr*uIce.w);
+  }
+  // ---- a golden field of light grain across the lower land
+  if(uField.x>0.001 && sv.y<uField.y){
+    float d = (uField.y-sv.y)/uField.y;
+    float z = 1.0/(d+0.04);
+    vec2 g = vec2((sv.x-0.5)*uAspect*z, z);
+    float wave = 0.5+0.5*sin(g.y*1.1 - uT*uField.z + g.x*0.35 + 1.6*fbm3(g*0.3+uT*0.05));
+    wave = pow(wave, 3.0);
+    float bend = wave*0.004*d;
+    float k = mix(900.0, 150.0, d);
+    float st = vnoise(vec2((sv.x+bend)*uAspect*k, sv.y*k*0.06));
+    st = smoothstep(0.42, 0.92, st);
+    float heads = pow(vnoise(vec2((sv.x+bend)*uAspect*k*0.55, sv.y*k*0.5+3.0)), 6.0);
+    vec3 fc = uFieldCol*(0.06 + 0.42*st*(0.35+wave) + 2.0*heads*(0.3+wave));
+    float cover = uField.x*smoothstep(0.0, 0.03, d);
+    fc *= 1.0-0.55*smoothstep(0.55, 1.0, d);          // the bottom stays calm for the performers
+    col = mix(col, col*0.28+fc, cover);
+    col += uFieldCol*0.10*exp(-d*14.0)*uField.x;       // light haze along the far edge of the field
+  }
+  col += uGlow*uFlash*(0.55+0.45*exp(-length((sv-vec2(0.5,0.55))*vec2(uAspect,1.0))*1.6));
+  vec2 uv = vec2((sv.x-0.5)*uZoom+0.5, (sv.y-uHorizon)*uZoom+uHorizon);
   // waves of light when a light is lit
   for(int i=0;i<uNWaves;i++){
     vec4 w = uWaves[i];

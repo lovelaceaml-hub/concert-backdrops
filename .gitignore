@@ -13,3 +13,5 @@ fonts/
 __pycache__/
 .DS_Store
 !audio/**/*.mp3
+!assets/**/*.png
+!assets/**/*.jpg
