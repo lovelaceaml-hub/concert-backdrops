@@ -163,9 +163,9 @@ PAL = {
     "winter":  ("#0b1424", "#1d2c45", "#5a6f8f", "#cfe0ff"),
     "deep":    ("#05080f", "#0e1828", "#2e3e58", "#b9cbe8"),
     "violet":  ("#0a0c1e", "#22204a", "#5b5a8c", "#b293e7"),
-    "pearl":   ("#1c2640", "#5c6684", "#c9b9c8", "#f3e4ea"),
-    "blush":   ("#3a4a6e", "#a9a9c8", "#f6d6dc", "#ffe9ee"),
-    "blushpk": ("#4a5c84", "#c2bcd6", "#fbe2e2", "#fff4f2"),
+    "pearl":   ("#172038", "#4a5274", "#b49cb2", "#f0dbe4"),
+    "blush":   ("#212c4c", "#5f6488", "#d9a7b6", "#ffe1e8"),
+    "blushpk": ("#26325a", "#6a6d94", "#e2b3c0", "#ffe9ee"),
 }
 _pal_keys = [
     (0.0, "morning"), (1.5, "morning"), (5.0, "dusk"), (9.0, "winter"), (16.0, "deep"), (21.0, "deep"),
@@ -178,7 +178,7 @@ SKY_HOR = Track([(t, lin(PAL[p][2])) for t, p in _pal_keys])
 GLOW = Track([(t, lin(PAL[p][3])) for t, p in _pal_keys])
 
 SUN_INT = Track([(0, 0.90), (1.5, 0.85), (5.0, 0.35), (STAR_SINKS, 0.14), (14, 0.05), (SEED_WAKES - 2, 0.05),
-                 (SEED_WAKES, 0.12), (42, 0.30), (DAWN, 0.50), (48, 0.70), (51, 0.78), (54, 0.62), (TOTAL, 0.58)])
+                 (SEED_WAKES, 0.12), (42, 0.25), (DAWN, 0.40), (48, 0.55), (51, 0.60), (54, 0.45), (TOTAL, 0.42)])
 SUN_Y = Track([(0, 0.41), (1.5, 0.40), (6, 0.30), (12, 0.25), (SEED_WAKES - 2, 0.25), (41, 0.29), (46, 0.36),
                (53, 0.43), (TOTAL, 0.45)])
 SUN_SIZE = Track([(0, 0.13), (6, 0.08), (12, 0.07), (SEED_WAKES, 0.075), (48, 0.11), (TOTAL, 0.12)])
@@ -194,14 +194,14 @@ RAIN = Track([(0, 0.0), (TOTAL, 0.0)])            # no rain in this song
 MOTES = Track([(0, 0.06), (8, 0.08), (20, 0.10), (30, 0.14), (36, 0.10), (DAWN, 0.16), (52, 0.20), (TOTAL, 0.18)])
 LANTERNS = Track([(0, 0.0), (TOTAL, 0.0)])        # lanterns belong to songs 03 and 07
 # falling snow through the night (white), easing while Encouragement speaks, then the rose's blush petals at dawn
-PETALS = Track([(0, 0.0), (5.0, 0.0), (8.0, 0.35), (13.0, 0.60), (19.0, 0.55), (ENC_FORM, 0.22), (ENC_HOLD, 0.20),
-                (36, 0.40), (40, 0.30), (43.0, 0.15), (46.0, 0.35), (49.0, 0.45), (52, 0.35), (TOTAL, 0.30)])
+PETALS = Track([(0, 0.0), (5.0, 0.0), (8.0, 0.18), (13.0, 0.32), (19.0, 0.30), (ENC_FORM, 0.12), (ENC_HOLD, 0.12),
+                (36, 0.22), (40, 0.18), (43.0, 0.10), (46.0, 0.22), (49.0, 0.28), (52, 0.20), (TOTAL, 0.18)])
 TRAIL = Track([(0, 0.0), (1.2, 0.30), (14, 0.22), (30, 0.45), (48, 0.6), (TOTAL, 0.55)])
 # close and quiet framing, moving slowly closer
 ZOOM = Track([(0, 0.93), (20, 0.91), (ENC_HOLD, 0.895), (TOTAL, 0.875)])
-EXPOSURE = Track([(0, 1.0), (51, 1.0), (54, 0.90), (TOTAL, 0.90)])
+EXPOSURE = Track([(0, 1.0), (DAWN, 1.0), (48, 0.92), (54, 0.84), (TOTAL, 0.84)])
 FADE = Track([(0, 0.0), (1.0, 1.0), (58.6, 1.0), (TOTAL, 0.0)])
-RAYS = Track([(0, 0.0), (41, 0.0), (DAWN, 0.15), (48, 0.30), (51, 0.32), (54, 0.22), (TOTAL, 0.20)])
+RAYS = Track([(0, 0.0), (41, 0.0), (DAWN, 0.12), (48, 0.24), (51, 0.24), (54, 0.15), (TOTAL, 0.14)])
 PART = Track([(0, 0.0), (DAWN - 1, 0.0), (47, 0.5), (52, 0.4), (56, 0.2), (TOTAL, 0.2)])
 
 
