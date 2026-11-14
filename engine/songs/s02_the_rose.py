@@ -158,7 +158,7 @@ TITLE_HIT = 51.6       # end card
 # The 02 look (DESIGN-SYSTEM.md section 6): deep winter night with snowfall, a pale pink spring dawn at the end;
 # silver blue, white, blush pink; close and quiet framing.
 PAL = {
-    "morning": ("#22508c", "#9584a8", "#ffd09a", "#fff4d8"),   # song 01's closing frame (agreed hand-off)
+    "morning": ("#173a74", "#8c7282", "#ffc47c", "#ffeacc"),   # song 01's closing frame (agreed hand-off)
     "dusk":    ("#101a33", "#3c4566", "#8a8fae", "#d9c9d6"),
     "winter":  ("#0b1424", "#1d2c45", "#5a6f8f", "#cfe0ff"),
     "deep":    ("#05080f", "#0e1828", "#2e3e58", "#b9cbe8"),
