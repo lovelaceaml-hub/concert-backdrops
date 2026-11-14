@@ -227,7 +227,7 @@ SCENES = [
     # 3 Her words go out: gold threads from the lantern to the lights on the water; Consideration
     dict(image=_P + "threads.jpg", t0=18.0, t1=31.7, fade_in=1.2, fade_out=1.2, transition="fade",
          zoom=1.2, pan=((0.0, 0.085), (0.0, 0.085)), water=True, water_line=0.52, water_strength=0.45,
-         gain=0.85, calm_gain=0.12),
+         gain=0.85, calm_gain=0.6),   # threads.jpg also re-calmed with the strong setting
     # 4 circles of peace: wherever a word reached, the water settles into a still mirror; Encouragement
     dict(image=_P + "circles_of_peace.jpg", t0=30.5, t1=45.2, fade_in=1.2, fade_out=1.2, transition="fade", calm_gain=0.85,
          zoom=(1.0, 1.04), water=True, water_line=0.61, water_strength=0.15,

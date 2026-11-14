@@ -3,6 +3,7 @@ the performers). Below 40 percent of the height from the bottom the picture is d
 15 percent and below, and highlights there are compressed (no bright glints), so the stage stays quiet.
 With "strong" (used for great_lamp, whose reflection road runs to the bottom edge) the road is faded much further
 below a third of the height: to 30 percent, with a lower knee.
+threads.jpg was also run once more with "strong" on its calmed copy (round 4 review: its lower third was busy).
 
 The originals are in Anthony's Drive folder (Assets/s10/s10_plate1 to s10_plate6). Run once on the originals:
 python3 assets/plates/s10/calm_lower_third.py <in.jpg> <out.jpg> [strong]
