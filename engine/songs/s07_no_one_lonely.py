@@ -167,11 +167,12 @@ PAL = {
     "twilight": ("#0d1b42", "#26407a", "#b98089", "#ffb79c"),
     "listen":  ("#0a1739", "#20386f", "#a87c99", "#ffd9bc"),   # the world listens to Mother's wish
     "coral":   ("#10214c", "#2f4d8a", "#e98a76", "#ffa98e"),
-    "home":    ("#13275a", "#365894", "#f19a72", "#ffcf8a"),   # lantern gold at the horizon
+    "home":    ("#0f2152", "#2c4a88", "#d98478", "#ffbf96"),   # coral dusk, lantern gold kept to the lanterns
+    "card":    ("#0c1a45", "#223c74", "#a77584", "#ffb69a"),   # dimmer behind the end card so it reads
 }
 _pal_keys = [
     (0.0, "evening"), (6.0, "twilight"), (8.0, "listen"), (13.0, "listen"), (17.0, "twilight"), (27.0, "twilight"),
-    (33.0, "coral"), (44.0, "coral"), (52.0, "home"), (TOTAL, "home"),
+    (33.0, "coral"), (44.0, "coral"), (50.0, "home"), (54.0, "card"), (TOTAL, "card"),
 ]
 SKY_TOP = Track([(t, lin(PAL[p][0])) for t, p in _pal_keys])
 SKY_MID = Track([(t, lin(PAL[p][1])) for t, p in _pal_keys])
@@ -180,14 +181,14 @@ GLOW = Track([(t, lin(PAL[p][3])) for t, p in _pal_keys])
 
 # the horizon star is Heavenly Mother's presence: it brightens while Her wish is on screen (the world listens)
 SUN_INT = Track([(0, 0.45), (6, 0.30), (8, 0.55), (12.5, 0.55), (17, 0.32), (27, 0.34), (33, 0.55), (44, 0.62),
-                 (52, 0.80), (TOTAL, 0.82)])
+                 (50, 0.66), (54, 0.38), (TOTAL, 0.36)])
 SUN_Y = Track([(0, 0.335), (27, 0.33), (52, 0.345), (TOTAL, 0.35)])
 SUN_SIZE = Track([(0, 0.11), (33, 0.11), (52, 0.12), (TOTAL, 0.12)])
 # first stars: few at dusk, more and more come out as the minute goes on
 STARS = Track([(0, 0.0), (1.0, 0.12), (10, 0.30), (27, 0.50), (40, 0.70), (52, 0.85), (TOTAL, 0.9)])
 MILKY = Track([(0, 0.0), (TOTAL, 0.0)])
 # soft mist low over the water and the far shore
-CLOUDS = Track([(0, 0.45), (13, 0.55), (27, 0.40), (44, 0.30), (TOTAL, 0.28)])
+CLOUDS = Track([(0, 0.45), (13, 0.55), (27, 0.40), (44, 0.30), (54, 0.20), (TOTAL, 0.20)])
 AURORA = Track([(0, 0.0), (TOTAL, 0.0)])
 RAIN = Track([(0, 0.0), (TOTAL, 0.0)])
 MOTES = Track([(0, 0.05), (2, 0.10), (7, 0.05), (13, 0.05), (20, 0.14), (29, 0.25), (38, 0.40), (50, 0.45), (TOTAL, 0.40)])
