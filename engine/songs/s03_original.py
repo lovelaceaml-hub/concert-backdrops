@@ -228,6 +228,9 @@ PHRASES = [
     dict(label="Compliment", lines=["“You’re amazing.", "You’re doing great!”"], size=140, form=180.4, hold=189.4, star=NINTH),
 ]
 FORM_DUR = 3.0
+# PHRASES keys: label, lines, size, form (words start forming), hold (words start flying), star (the light is lit).
+# A light already lit in an earlier song: star=-100.0. Not lit yet in the concert: form=hold=star=1e9.
+# A light lit earlier and spoken again in this song: star=-100.0 plus form, hold and arrive (when the words reach it).
 TITLE = dict(label="Beginning of Peace", lines=["The Words of Mother’s Love"], size=150, form=TITLE_HIT - FORM_DUR, hold=1e9, star=1e9)
 # Short lyric fragments shown on screen: text, t0 (starts forming), t1 (fully formed), out (dissolves), dy (height
 # offset from the expression line, fraction of the screen height, + is up), size (font px)
@@ -278,6 +281,9 @@ def star_state(t):
         gather = min(max((age + 0.2) / 0.2, 0.0), 1.0)
         base = 0.55 * gather
         flash = np.exp(-max(age, 0.0) * 1.1) * 1.3 if age >= 0 else 0.0
+        if "arrive" in p and t >= p["arrive"]:
+            # a light that was lit in an earlier song shines again: a softer flare
+            flash += np.exp(-(t - p["arrive"]) * 1.1) * 0.9
         fin = 0.0
         if t > NINTH:
             fin = 0.35 * min((t - NINTH) / 2.0, 1.0)
