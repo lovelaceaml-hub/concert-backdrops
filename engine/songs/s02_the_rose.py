@@ -134,7 +134,7 @@ class Song:
 
 # ----------------------------------------------------------------- the minute (seconds into the promo)
 RING_SPANS = []        # no drawn piano rings: every scene is a painted plate with its own water
-FIG_IN = 11.0          # one brief appearance: the trio and the traveler, about 5 seconds, always moving
+FIG_IN = 10.9          # one brief appearance: the trio and the traveler, about 5.5 seconds, walking the whole time
 ENC_FORM = 16.4        # the words start forming once the people have gone up as light (fully formed about 20.15)
 ENC_HOLD = 26.3        # the words begin to fly (6.15 seconds fully formed and solid)
 ENC_ARRIVE = 28.8      # they reach star 7: a flare and one new thin ring
@@ -186,10 +186,13 @@ AURORA_COOL = ("#c9d8ff", "#e4d8ff")
 #   2 the violet light on the ice and the field of candle lights: the trio passes briefly as light (10.5 to 30)
 #   3 under the snow: high ice ceiling, the seed and its gold roots in the soil (27.5 to 42)
 #   4 low close shot on the near shore: the rose of light, then the end card beside it (39.7 to 60)
-# The plates were touched up for song 02 (plates_fix notes in project-docs/status/02.md): the top left star
-# band of a_first_snow dimmed, the light column and pool of c_violet_ice darkened behind the people and the
+# The plates were touched up for song 02 (plates_fix notes in project-docs/status/02.md): the star band of
+# a_first_snow (a Milky Way look, song 01's) taken down to plain night sky, the bottom candles of c_violet_ice
+# dimmed so the lower third stays calm, the light column and pool of c_violet_ice darkened behind the people and the
 # candles at its bottom edge calmed, the ice ceiling of d_seed darkened near the arch, the ice floes of
-# e_thaw_rose painted out and its sky near the arch calmed.
+# e_thaw_rose painted out (round 4: the last ones melted) and its sky near the arch calmed; the rose picture is
+# moved about 0.065 right and 0.14 down inside the frame (gaps filled with mirrored sky and shore) so the rose
+# clears the corner title.
 P = "assets/plates/s02/"
 SCENES = [
     dict(image=P + "a_first_snow.jpg", t0=0.0, t1=13.0, fade_in=1.0, fade_out=2.5,
@@ -235,10 +238,15 @@ for i in range(9):
 # rises with them (pose 3), and at once they all go up as light. About 5 seconds, in motion the whole time,
 # gone before the Encouragement words form; the words, the violet light and the star carry the expression.
 SF = "assets/song_figures/s02/"
+# Round 4: the group walks slowly left across the ice, away from the bright violet column, the whole time
+# (engine figure motion, UPGRADE-HOWTO section G); a short quick pose change so they never blur into one blob;
+# a softer glow so they read as people on the violet. trio_3_rise has the raised lantern masked out (it read as
+# a fifth head).
 FIGURES = [
     dict(poses=[SF + "trio_2_encourage.png", SF + "trio_3_rise.png"],
-         t0=FIG_IN, t1=13.9, gather=2.0, pose_times=[12.6], morph=1.3, dissolve=2.2, leave="drift",
-         x=0.40, y=0.34, height=0.32, color="#ffd9a8", glow=0.9),   # pale gold, beside the violet column
+         t0=FIG_IN, t1=14.4, gather=1.5, pose_times=[12.9], morph=0.8, dissolve=2.0, leave="drift",
+         x=(0.42, 0.27), move=(FIG_IN, 16.4), ease="linear", bob=0.6,
+         y=0.34, height=0.30, color="#ffd9a8", glow=0.7),   # pale gold, walking left of the violet column
 ]
 
 OFF = dict(form=1e9, hold=1e9, star=1e9)
