@@ -176,7 +176,7 @@ PAL = {
     "royal":    ("#030109", "#110626", "#34124a", "#e8b860"),
     "crimson":  ("#060112", "#2a0832", "#6a1640", "#ffc4b4"),
     "gold":     ("#07021a", "#2e0c3c", "#7a2a4c", "#ffd49a"),
-    "heaven":   ("#0a0420", "#36104a", "#8c3a58", "#ffe2a8"),
+    "heaven":   ("#05011a", "#2a0c40", "#7c3052", "#ffe2a8"),
     "velvet":   ("#020007", "#0c0318", "#261034", "#e0a860"),
     "dawn":     ("#080320", "#2c1046", "#9a4462", "#ffd8a8"),
 }
@@ -188,20 +188,20 @@ SKY_MID = Track([(t, lin(PAL[p][1])) for t, p in _pal_keys])
 SKY_HOR = Track([(t, lin(PAL[p][2])) for t, p in _pal_keys])
 GLOW = Track([(t, lin(PAL[p][3])) for t, p in _pal_keys])
 
-SUN_INT = Track([(0, 0.22), (18, 0.30), (22, 0.40), (28, 0.40), (32, 0.55), (38.5, 0.62), (40.5, 0.95),
-                 (42.5, 0.70), (45, 0.18), (49, 0.20), (53, 0.55), (TOTAL, 0.62)])
+SUN_INT = Track([(0, 0.22), (18, 0.30), (22, 0.40), (28, 0.40), (32, 0.55), (38.5, 0.55), (40.5, 0.68),
+                 (42.5, 0.55), (45, 0.18), (49, 0.20), (53, 0.55), (TOTAL, 0.62)])
 SUN_Y = Track([(0, 0.26), (18, 0.27), (28, 0.28), (38.5, 0.31), (41, 0.33), (44.5, 0.25), (49, 0.25),
                (53, 0.29), (TOTAL, 0.305)])
 SUN_SIZE = Track([(0, 0.09), (38, 0.10), (41, 0.12), (45, 0.09), (TOTAL, 0.11)])
 STARS = Track([(0, 0.0), (0.2, 0.0), (2.5, 0.95), (18, 0.95), (22, 0.55), (28, 0.5), (32, 0.22), (40, 0.18),
                (44.5, 0.95), (49, 0.95), (53, 0.45), (TOTAL, 0.38)])
 MILKY = Track([(0, 0.0), (TOTAL, 0.0)])       # the Milky Way belongs to another song
-CLOUDS = Track([(0, 0.08), (27.5, 0.08), (31.5, 0.75), (40, 0.80), (43.5, 0.25), (45, 0.0), (TOTAL, 0.0)])
+CLOUDS = Track([(0, 0.08), (27.5, 0.08), (31.5, 0.70), (39, 0.70), (43.5, 0.25), (45, 0.0), (TOTAL, 0.0)])
 # heaven opens: the clouds part in the centre lane (behind the Gratitude words the sky stays clear and deep)
 PART = Track([(0, 0.0), (28.5, 0.0), (31.5, 0.7), (38.5, 0.85), (40.5, 1.0), (43.5, 1.0), (45, 0.0), (TOTAL, 0.0)])
 # the embroidered veil: crimson and gold aurora (strong for the festival, quiet under the end card)
-AURORA = Track([(0, 0.0), (18.5, 0.0), (21.5, 0.62), (27.0, 0.62), (30.0, 0.12), (40.0, 0.10), (43.0, 0.0),
-                (49.0, 0.0), (53.0, 0.30), (TOTAL, 0.32)])
+AURORA = Track([(0, 0.0), (18.5, 0.0), (21.5, 0.42), (27.0, 0.42), (30.0, 0.12), (40.0, 0.10), (43.0, 0.0),
+                (49.0, 0.0), (53.0, 0.16), (TOTAL, 0.18)])
 AURORA_WARM = ("#ffd77a", "#e0607a")
 AURORA_COOL = ("#c0406a", "#8a4ad0")
 RAIN = Track([(0, 0.0), (TOTAL, 0.0)])
@@ -210,14 +210,13 @@ MOTES = Track([(0, 0.04), (2, 0.20), (18, 0.24), (21.5, 0.40), (27.5, 0.40), (31
                (41.5, 0.55), (44.5, 0.18), (49, 0.18), (53, 0.30), (TOTAL, 0.30)])
 LANTERNS = Track([(0, 0.0), (TOTAL, 0.0)])
 PETALS = Track([(0, 0.0), (TOTAL, 0.0)])
-TRAIL = Track([(0, 0.0), (1.2, 0.55), (TOTAL, 0.8)])
+TRAIL = Track([(0, 0.0), (1.2, 0.45), (TOTAL, 0.5)])
 # framing: a slow push in through the night, a step back for the festival and heaven, close for the lampstand
 ZOOM = Track([(0, 1.0), (18.5, 0.985), (22, 1.0), (40, 0.975), (44, 0.965), (49.5, 0.955), (TOTAL, 0.945)])
 EXPOSURE = Track([(0, 1.0), (TOTAL, 1.0)])
 FADE = Track([(0, 0.0), (1.0, 1.0), (TOTAL - 0.55, 1.0), (TOTAL - 0.05, 0.0)])
-RAYS = Track([(0, 0.0), (28.5, 0.0), (32, 0.35), (38.5, 0.45), (40.5, 0.9), (42.5, 0.6), (44.5, 0.0), (50, 0.0),
-              (54, 0.35), (TOTAL, 0.4)])
-FLASH = Track([(0, 0.0), (39.9, 0.0), (40.6, 0.16), (42.0, 0.0), (TOTAL, 0.0)])
+RAYS = Track([(0, 0.0), (28.5, 0.0), (32, 0.25), (38.5, 0.32), (40.5, 0.55), (42.5, 0.45), (44.5, 0.0), (50, 0.0),
+              (54, 0.22), (TOTAL, 0.25)])
 
 
 def MOTE_COLORS(t):
@@ -226,10 +225,10 @@ def MOTE_COLORS(t):
 
 # Heaven opens: a column of gold pours down as star 2 lights (after the Gratitude words have flown, gone before
 # the fragment forms)
-BEAM = Track([(0, 0.0), (39.4, 0.0), (40.5, 0.55), (41.4, 0.50), (42.6, 0.0), (TOTAL, 0.0)])
+BEAM = Track([(0, 0.0), (39.4, 0.0), (40.5, 0.40), (41.6, 0.36), (42.8, 0.0), (TOTAL, 0.0)])
 BEAM_FROM = (0.5, 1.02)
 BEAM_TO = (0.5, HORIZON + 0.005)
-BEAM_WIDTH = (0.02, 0.07)
+BEAM_WIDTH = (0.015, 0.05)
 BEAM_COLOR = "#ffd88a"
 
 SF = "assets/song_figures/s08/"
@@ -275,9 +274,9 @@ TITLE = dict(label="Healing Concert", lines=["The Words of Mother’s Love"], si
 # Short lyric fragments (never on screen with an expression; each about 3 s solid)
 FRAGMENTS = [
     # written by a pen of light, like a thread of embroidery, under the festival aurora
-    dict(text="bridegroom and bride", t0=21.3, t1=23.8, out=26.8, dy=0.06, size=96, glow="#fff0d2", style="write"),
+    dict(text="bridegroom and bride", t0=21.3, t1=23.8, out=26.8, dy=-0.03, size=96, glow="#fff0d2", style="write"),
     # soft words of light above the lampstand
-    dict(text="into our Mother’s arms", t0=43.2, t1=45.6, out=48.4, dy=0.17, size=84, glow="#ffe2b8"),
+    dict(text="into our Mother’s arms", t0=43.2, t1=45.6, out=48.4, dy=0.12, size=84, glow="#ffe2b8"),
 ]
 
 # the three-line end card (PHASE2.md item 7)
