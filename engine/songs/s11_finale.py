@@ -173,8 +173,8 @@ PAL = {
     "hush":    ("#0d1d48", "#34497e", "#b98d93", "#ffd6b0"),   # pale morning hush after verse 1
     "mother":  ("#0f1f4e", "#433f80", "#d79390", "#ffd8b4"),   # a violet hint as Mother speaks
     "road":    ("#122556", "#5b4c88", "#ec9f86", "#ffe0b6"),   # the road of light, rose on the horizon
-    "rise":    ("#14295e", "#77568a", "#f6ad7c", "#ffe8bf"),   # nations running in, morning gold
-    "glory":   ("#173068", "#8e6390", "#ffbb78", "#fff0cc"),   # the second lift, full morning glory
+    "rise":    ("#122658", "#634c86", "#f0a47c", "#ffe2bc"),   # nations running in, morning gold
+    "glory":   ("#132a60", "#6c4d86", "#f4a874", "#ffe6c0"),   # the second lift, full morning glory
 }
 _pal_keys = [
     (0.0, "hush"), (MOTHER + 3.0, "hush"), (MARCH, "mother"), (MARCH + 9.0, "road"), (KINGS, "road"),
@@ -185,8 +185,8 @@ SKY_MID = Track([(t, lin(PAL[p][1])) for t, p in _pal_keys])
 SKY_HOR = Track([(t, lin(PAL[p][2])) for t, p in _pal_keys])
 GLOW = Track([(t, lin(PAL[p][3])) for t, p in _pal_keys])
 
-SUN_INT = Track([(0, 0.45), (MARCH, 0.62), (MARCH + 4, 0.80), (HOPE, 0.88), (KINGS, 0.95), (LIFT, 1.12), (LIFT + 4, 1.30),
-                 (TITLE_HIT, 1.25), (TOTAL, 1.15)])
+SUN_INT = Track([(0, 0.45), (MARCH, 0.62), (MARCH + 4, 0.80), (HOPE, 0.86), (KINGS, 0.90), (LIFT, 1.00), (LIFT + 4, 1.06),
+                 (TITLE_HIT - 4, 1.0), (TITLE_HIT, 0.90), (TOTAL, 0.86)])
 SUN_Y = Track([(0, 0.27), (MARCH, 0.28), (HOPE, 0.31), (KINGS, 0.335), (LIFT, 0.36), (TITLE_HIT, 0.40), (TOTAL, 0.41)])
 SUN_SIZE = Track([(0, 0.10), (LIFT, 0.12), (TOTAL, 0.135)])
 STARS = Track([(0, 0.0), (0.2, 0.0), (2.0, 0.45), (MARCH, 0.35), (KINGS, 0.18), (LIFT, 0.10), (TOTAL, 0.10)])
@@ -195,8 +195,8 @@ CLOUDS = Track([(0, 0.40), (MARCH, 0.55), (KINGS, 0.70), (LIFT, 0.80), (TOTAL, 0
 AURORA = Track([(0, 0.06), (MARCH - 1, 0.10), (MARCH + 3, 0.34), (MARCH + 10, 0.30), (HOPE + 4, 0.18), (LIFT, 0.40),
                 (LIFT + 6, 0.46), (TOTAL, 0.38)])
 RAIN = Track([(0, 0.0), (TOTAL, 0.0)])
-MOTES = Track([(0, 0.10), (2, 0.18), (MARCH, 0.30), (HOPE, 0.42), (KINGS, 0.55), (LIFT, 0.80), (LIFT + 6, 0.95),
-               (TITLE_HIT, 0.75), (TOTAL, 0.60)])
+MOTES = Track([(0, 0.10), (2, 0.18), (MARCH, 0.30), (HOPE, 0.42), (KINGS, 0.55), (LIFT, 0.75), (LIFT + 6, 0.80),
+               (TITLE_HIT, 0.55), (TOTAL, 0.45)])
 # warm lights rising from the land: the peoples of every nation streaming toward Zion
 LANTERNS = Track([(0, 0.0), (HOPE + 2, 0.0), (KINGS, 0.55), (LIFT, 0.85), (LIFT + 6, 0.70), (TITLE_HIT, 0.30), (TOTAL, 0.2)])
 PETALS = Track([(0, 0.0), (TOTAL, 0.0)])
@@ -204,8 +204,8 @@ TRAIL = Track([(0, 0.0), (1.2, 0.5), (MARCH, 0.7), (LIFT, 1.0), (TOTAL, 0.9)])
 ZOOM = Track([(0, 1.0), (MARCH, 0.99), (LIFT, 0.972), (TOTAL, 0.958)])
 EXPOSURE = Track([(0, 1.0), (TOTAL, 1.0)])
 FADE = Track([(0, 0.0), (1.0, 1.0), (TOTAL - 1.6, 1.0), (TOTAL - 0.2, 0.0)])
-RAYS = Track([(0, 0.0), (MARCH, 0.10), (MARCH + 3, 0.35), (HOPE, 0.40), (KINGS, 0.50), (LIFT, 0.80), (LIFT + 5, 0.95),
-              (TITLE_HIT, 0.85), (TOTAL, 0.80)])
+RAYS = Track([(0, 0.0), (MARCH, 0.10), (MARCH + 3, 0.30), (HOPE, 0.38), (KINGS, 0.45), (LIFT, 0.55), (LIFT + 5, 0.55),
+              (TITLE_HIT - 3, 0.45), (TITLE_HIT, 0.35), (TOTAL, 0.32)])
 # Mother's words open a road of light through the clouds toward the sun
 PART = Track([(0, 0.0), (MARCH, 0.0), (MARCH + 3.5, 1.0), (HOPE + 8, 1.0), (LIFT, 0.7), (TOTAL, 0.6)])
 
@@ -241,8 +241,8 @@ TITLE = dict(label="Healing Concert", lines=["The Words of Mother’s Love"], si
              hold=1e9, star=1e9)
 # Short lyric fragments (design fragment 3 in its two stages): text, t0, t1, out, dy, size
 FRAGMENTS = [
-    dict(text="Joy of salvation", t0=JOY - 0.3, t1=JOY + 1.2, out=FOREVER - 0.6, dy=0.0, size=128, glow="#ffcf8a"),
-    dict(text="endures forever", t0=FOREVER + 0.2, t1=FOREVER + 1.4, out=TITLE_HIT - 3.4, dy=0.0, size=128, glow="#ffcf8a"),
+    dict(text="Joy of salvation", t0=JOY - 0.3, t1=JOY + 1.2, out=FOREVER - 0.6, dy=0.0, size=150, alpha=1.0, glow="#ffb46a"),
+    dict(text="endures forever", t0=FOREVER + 0.2, t1=FOREVER + 1.4, out=TITLE_HIT - 3.4, dy=0.0, size=150, alpha=1.0, glow="#ffb46a"),
 ]
 
 TAGLINE = dict(text="Sunday, December 6 · 4:30 PM · 6720 W Sahara Ave, Las Vegas", t0=TITLE_HIT + 1.5, t1=TITLE_HIT + 4.0)
