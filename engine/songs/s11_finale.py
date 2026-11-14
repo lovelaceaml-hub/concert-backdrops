@@ -3,18 +3,20 @@
 Design: project-docs/designs/11 Almighty God Who Knows the Future.md, section 13 "Promo v2: scenes"
 ("The Gate of Mother's Love"). Promo audio: audio/promo/s11.mp3 (1:59 to 2:59 of the studio recording).
 
-Five painted scenes (assets/plates/s11/) with people of light (assets/song_figures/s11/):
+A clip of the real finale backdrop (Anthony, round 3: people rare and always moving). Five painted scenes
+(assets/plates/s11/):
 1 the promise: a faint silver city drawn above the mountain before it is built (0 to 11.5 s);
-2 Mother's road: Heavenly Mother, seen only from behind, with her children on the near shore; at her words to trust
-  Father and march ahead she raises her arm toward the city and all step out; Encouragement in full, then its light
-  (8.5 to 26 s);
-3 all nations streaming in: the city filled with gold, rivers of nine colors, the peoples of every land walking in
-  from both sides (23 to 43 s);
-4 the gate and the sun: the second lift blooms into the open gate with the sun inside it and the light pouring
-  down the mountain; "Joy of salvation endures forever" rises out of the water (40.5 to 50.5 s);
-5 peace settled: the calm golden lake with nine small glows under the nine lights, and the end card (48 to 60 s).
-Signature effects done for real: the promised city filling with gold (scenes 1 to 3), the nations streaming in
-(scene 3), the sun through the gate (scene 4).
+2 Mother's road: the violet-gold road of light across the lake to the city; at Mother's words to trust Father and
+  march ahead, Encouragement forms in full and flies to its light; then, in one brief moving appearance, Heavenly
+  Mother (only from behind) with her children steps out onto the road and walks away along it, dissolving into
+  sparks that run ahead toward the city (8.5 to 28.5 s);
+3 all nations streaming in: the city filled with gold, two rivers of nine colours, lights in all nine colours
+  rising from them (25.5 to 43 s);
+4 the gate and the sun: the second lift blooms into the open gate with the sun inside it; "Joy of salvation endures
+  forever" is engraved high above the gate (40.5 to 51.5 s);
+5 peace settled: a low view from the water's edge, the nine glows on the calm lake; the end card (from 49.5 s).
+Signature effects: the promised city filling with gold (scenes 1 to 3), the nations streaming in (scene 3, rivers
+and rising lights), the sun through the gate (scene 4).
 """
 import os
 import numpy as np
@@ -231,14 +233,13 @@ SCENES = [
          zoom=(1.03, 1.10), pan=((0.0, 0.0), (0.0, 0.01)), water=True, water_line=0.477,
          gain=Track([(0, 0.88), (6.5, 0.88), (8.5, 1.0), (TOTAL, 1.0)])),
     # 2 Mother's road: on her first words a soft bloom of light, the violet-gold road across the water
-    dict(image=_P + "s11_road.jpg", t0=8.5, t1=26.0, fade_in=3.0, fade_out=3.0, transition="bloom", flash=0.35,
-         zoom=(1.04, 1.12), water=True, water_line=0.47,
-         # people of light are added light, so the bright morning is calmed while they stand on the shore
-         gain=Track([(0, 0.62), (10.5, 0.55), (ENC_HOLD, 0.55), (ENC_ARRIVE + 1.5, 0.85), (TOTAL, 0.85)])),
+    dict(image=_P + "s11_road.jpg", t0=8.5, t1=28.5, fade_in=3.0, fade_out=3.0, transition="bloom", flash=0.35,
+         zoom=(1.04, 1.14), water=True, water_line=0.47,
+         # calmed under the words, and while Mother and the children walk out onto the road
+         gain=Track([(0, 0.85), (10.5, 0.85), (12.0, 0.68), (TOTAL, 0.68)])),
     # 3 all nations streaming in: the camera follows the road (push) into the city filled with gold
-    dict(image=_P + "s11_nations.jpg", t0=23.0, t1=43.0, fade_in=3.0, fade_out=2.5, transition="push",
-         zoom=(1.12, 1.04), water=True, water_line=0.37,
-         gain=Track([(0, 0.85), (25.5, 0.58), (39.5, 0.58), (LIFT, 0.9), (TOTAL, 0.9)])),
+    dict(image=_P + "s11_nations.jpg", t0=25.5, t1=43.0, fade_in=3.0, fade_out=2.5, transition="push",
+         zoom=(1.12, 1.04), water=True, water_line=0.37, gain=0.85),
     # 4 the gate and the sun: the second lift blooms into the open gate
     dict(image=_P + "s11_gate.jpg", t0=40.5, t1=51.5, fade_in=2.0, fade_out=2.0, transition="bloom", flash=0.9,
          zoom=(1.10, 1.04), water=True, water_line=0.175, water_strength=0.6,
@@ -265,27 +266,16 @@ class _Moving(dict):
 
 
 FIGURES = [
-    # Heavenly Mother, seen only from behind, robed and veiled, with a child holding her robe, a young woman and an
-    # elder with a staff; at her words to trust Father and march ahead she raises her arm toward the city and all
-    # step out together, walking right and up onto the road of light. Then the sparks fly to light 7 with the words.
+    # Anthony, round 3: people are rare and always moving. One brief appearance, after Encouragement's words have
+    # flown to their light: Heavenly Mother, seen only from behind, with a child, a young woman and an elder, steps
+    # out onto the road of light (her arm raised toward the city) and walks away along it, growing smaller, then the
+    # walkers dissolve into sparks that run ahead along the road toward the city (design section 13).
     _Moving(poses=[_F + "s11_mother_children_a.png", _F + "s11_mother_children_b.png"],
-            t0=7.6, t1=ENC_HOLD - 0.5, pose_times=[MARCH], morph=2.0,
-            x=Track([(0, 0.28), (15.0, 0.28), (21.0, 0.37), (TOTAL, 0.37)]),
-            y=Track([(0, 0.18), (15.0, 0.18), (21.0, 0.215), (TOTAL, 0.215)]),
-            height=Track([(0, 0.40), (15.0, 0.40), (21.0, 0.375), (TOTAL, 0.375)]),
-            to_star=6, color="#cdb6ff", glass=1.0),
-    # the peoples of every land streaming in along the two rivers of light toward the gate: two different groups,
-    # walking inward and a little up the river bands, at different heights and times
-    _Moving(poses=[_F + "s11_crowd_left.png"], t0=24.5, t1=39.0,
-            x=Track([(0, 0.13), (24.5, 0.13), (39.0, 0.26), (TOTAL, 0.26)]),
-            y=Track([(0, 0.235), (24.5, 0.235), (39.0, 0.265), (TOTAL, 0.265)]),
-            height=Track([(0, 0.30), (24.5, 0.30), (39.0, 0.27), (TOTAL, 0.27)]),
-            to=(0.5, 0.66), color="#ffd58a", particles=11000, dissolve=3.0, glass=1.1),
-    _Moving(poses=[_F + "s11_crowd_right.png"], t0=26.5, t1=39.8,
-            x=Track([(0, 0.88), (26.5, 0.88), (39.8, 0.75), (TOTAL, 0.75)]),
-            y=Track([(0, 0.25), (26.5, 0.25), (39.8, 0.28), (TOTAL, 0.28)]),
-            height=Track([(0, 0.33), (26.5, 0.33), (39.8, 0.30), (TOTAL, 0.30)]),
-            to=(0.5, 0.66), color="#ffc0d8", particles=11000, dissolve=3.0, glass=1.1),
+            t0=21.6, t1=25.6, pose_times=[22.4], morph=1.4, gather=1.2, dissolve=2.4,
+            x=Track([(0, 0.27), (21.6, 0.27), (26.5, 0.44), (TOTAL, 0.44)]),
+            y=Track([(0, 0.19), (21.6, 0.19), (26.5, 0.30), (TOTAL, 0.30)]),
+            height=Track([(0, 0.38), (21.6, 0.38), (26.5, 0.22), (TOTAL, 0.22)]),
+            to=(0.5, 0.50), color="#cdb6ff", glass=1.0),
 ]
 
 # C. the sun through the gate is painted into plate 4 and revealed by the bloom of light at the second lift
