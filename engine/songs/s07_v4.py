@@ -166,7 +166,11 @@ NINTH = 1e9                            # no whole-arch glow in this promo
 TITLE_HIT = 52.8                       # title forms from 49.8; the whole end card from about 55.4
 BOTTOM_CALM = 1.0                      # calm lower third for the performers
 TEXT_SHADOW = 0.0                      # round 4: nothing dark behind any text; legibility from glow and deep sky
-TEXT_PROTECT = 1.0                     # only dims the floating lights (motes, lanterns, beam) behind letters
+# TEXT_PROTECT dims the floating lights (motes, lanterns, beam, star glow) behind letters before the glow is
+# blurred. At full strength it cut a dark trail through the glow where words fly up to their light (stills r3,
+# 38.5 s), so it is moderate while words are held and low while they fly to the arch.
+TEXT_PROTECT = Track([(0, 0.6), (35.6, 0.6), (36.2, 0.15), (39.6, 0.15), (40.4, 0.6), (47.5, 0.6), (48.1, 0.15),
+                      (50.4, 0.15), (51.2, 0.6), (TOTAL, 0.6)])
 
 # Star history (CONTINUITY-BOARD.md): rings earned before song 07. Apology relit in song 04, Inclusiveness relit
 # in song 06, Encouragement relit in songs 02, 03 and 05. Song 07 lights 1 (first time) and relights 8.
