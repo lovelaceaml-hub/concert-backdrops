@@ -25,7 +25,7 @@ MUSIC_END = 59.5       # last sounding moment of the promo clip
 SONG_END = 60.0        # length of the promo clip
 TOTAL = 60.0           # promo length
 NFRAMES = int(round(TOTAL * FPS))
-HORIZON = 0.30         # water line, as a fraction of the height from the bottom
+HORIZON = 0.38         # water line, high: grand framing with a wide golden lake (song 11 look)
 
 RIDGE_X0, RIDGE_W = 0.035, 0.93
 
@@ -167,47 +167,64 @@ JOY = 162.1 - CLIP_START         # joy of salvation
 FOREVER = 165.5 - CLIP_START     # endures forever
 TITLE_HIT = 52.4                 # end card
 NINTH = LIFT                     # the whole arch glows from the second lift on: the finale's glory
+ENC_FORM = MARCH + 0.6
 
-# Scene palettes (top of sky, middle, horizon, glow of the low sun)
+# Song 11 look (DESIGN-SYSTEM.md section 6): a radiant full sunrise, the brightest scene of the night. White gold,
+# sky blue and all nine colors; full rays; a clear sky; the complete arch; grand framing with a high horizon.
+# Not first light (song 01) and not a blossom afternoon (song 05): a blazing white-gold sun on a wide golden lake.
+NINE = ["#FF977C", "#FFD05F", "#FFAD69", "#F582AF", "#82B0ED", "#CE927E", "#B293E7", "#EF7A96", "#BE9CEB"]
+
+
+def _nine_pair(rate, offset):
+    def f(t):
+        k = int(t * rate + offset) % 9
+        return (NINE[k], NINE[(k + 4) % 9])
+    return f
+
+
+# Scene palettes (top of sky, middle, horizon, glow of the sun)
 PAL = {
-    "hush":    ("#0d1d48", "#34497e", "#b98d93", "#ffd6b0"),   # pale morning hush after verse 1
-    "mother":  ("#0f1f4e", "#433f80", "#d79390", "#ffd8b4"),   # a violet hint as Mother speaks
-    "road":    ("#122556", "#5b4c88", "#ec9f86", "#ffe0b6"),   # the road of light, rose on the horizon
-    "rise":    ("#122658", "#634c86", "#f0a47c", "#ffe2bc"),   # nations running in, morning gold
-    "glory":   ("#132a60", "#6c4d86", "#f4a874", "#ffe6c0"),   # the second lift, full morning glory
+    "clear":   ("#123f86", "#3f7fc8", "#ffd6a2", "#fff1d6"),   # clear morning, the sun just risen
+    "mother":  ("#143f88", "#4682cb", "#ffd9ad", "#fff3dc"),   # Mother speaks: the same clear blue, warmer horizon
+    "radiant": ("#164a98", "#4f90d6", "#ffe2b6", "#fff6e6"),   # the road of light, full rays
+    "glory":   ("#1a56a8", "#5a9ade", "#ffecc8", "#fffaf0"),   # second lift: full daylight glory, white gold
 }
 _pal_keys = [
-    (0.0, "hush"), (MOTHER + 3.0, "hush"), (MARCH, "mother"), (MARCH + 9.0, "road"), (KINGS, "road"),
-    (LIFT, "rise"), (LIFT + 5.0, "glory"), (TOTAL, "glory"),
+    (0.0, "clear"), (MOTHER + 3.0, "clear"), (MARCH, "mother"), (MARCH + 9.0, "radiant"), (KINGS, "radiant"),
+    (LIFT, "glory"), (TOTAL, "glory"),
 ]
 SKY_TOP = Track([(t, lin(PAL[p][0])) for t, p in _pal_keys])
 SKY_MID = Track([(t, lin(PAL[p][1])) for t, p in _pal_keys])
 SKY_HOR = Track([(t, lin(PAL[p][2])) for t, p in _pal_keys])
 GLOW = Track([(t, lin(PAL[p][3])) for t, p in _pal_keys])
 
-SUN_INT = Track([(0, 0.45), (MARCH, 0.62), (MARCH + 4, 0.80), (HOPE, 0.86), (KINGS, 0.90), (LIFT, 1.00), (LIFT + 4, 1.06),
-                 (TITLE_HIT - 4, 1.0), (TITLE_HIT, 0.90), (TOTAL, 0.86)])
-SUN_Y = Track([(0, 0.27), (MARCH, 0.28), (HOPE, 0.31), (KINGS, 0.335), (LIFT, 0.36), (TITLE_HIT, 0.40), (TOTAL, 0.41)])
-SUN_SIZE = Track([(0, 0.10), (LIFT, 0.12), (TOTAL, 0.135)])
-STARS = Track([(0, 0.0), (0.2, 0.0), (2.0, 0.45), (MARCH, 0.35), (KINGS, 0.18), (LIFT, 0.10), (TOTAL, 0.10)])
+# a big white-gold sun that climbs clear of the mountains; softened while words are on screen so they stay readable
+SUN_INT = Track([(0, 0.95), (MARCH, 1.00), (MARCH + 4, 1.05), (ENC_OUT := MARCH + 11.0, 1.10), (HOPE + 2, 1.30),
+                 (KINGS, 1.40), (LIFT, 1.45), (JOY - 1.0, 1.15), (FOREVER + 3, 1.15), (TITLE_HIT - 2, 1.05), (TOTAL, 1.0)])
+SUN_Y = Track([(0, 0.405), (MARCH, 0.42), (HOPE, 0.45), (KINGS, 0.47), (LIFT, 0.50), (TITLE_HIT, 0.53), (TOTAL, 0.54)])
+SUN_SIZE = Track([(0, 0.14), (LIFT, 0.16), (TOTAL, 0.17)])
+STARS = Track([(0, 0.0), (TOTAL, 0.0)])
 MILKY = Track([(0, 0.0), (TOTAL, 0.0)])
-CLOUDS = Track([(0, 0.40), (MARCH, 0.55), (KINGS, 0.70), (LIFT, 0.80), (TOTAL, 0.75)])
-AURORA = Track([(0, 0.06), (MARCH - 1, 0.10), (MARCH + 3, 0.34), (MARCH + 10, 0.30), (HOPE + 4, 0.18), (LIFT, 0.40),
-                (LIFT + 6, 0.46), (TOTAL, 0.38)])
+CLOUDS = Track([(0, 0.14), (TOTAL, 0.10)])                       # a clear sky
+# a soft veil of all nine colors high in the sky
+AURORA = Track([(0, 0.10), (MARCH, 0.14), (MARCH + 4, 0.24), (HOPE, 0.20), (LIFT, 0.30), (TITLE_HIT, 0.26), (TOTAL, 0.24)])
+AURORA_WARM = _nine_pair(0.18, 0)
 RAIN = Track([(0, 0.0), (TOTAL, 0.0)])
-MOTES = Track([(0, 0.10), (2, 0.18), (MARCH, 0.30), (HOPE, 0.42), (KINGS, 0.55), (LIFT, 0.75), (LIFT + 6, 0.80),
-               (TITLE_HIT, 0.55), (TOTAL, 0.45)])
-# warm lights rising from the land: the peoples of every nation streaming toward Zion
-LANTERNS = Track([(0, 0.0), (HOPE + 2, 0.0), (KINGS, 0.55), (LIFT, 0.85), (LIFT + 6, 0.70), (TITLE_HIT, 0.30), (TOTAL, 0.2)])
+MOTES = Track([(0, 0.30), (MARCH, 0.40), (HOPE, 0.55), (KINGS, 0.70), (LIFT, 0.85), (TITLE_HIT, 0.60), (TOTAL, 0.55)])
+MOTE_COLORS = ("#fff6e2", "#ffe2a0")                            # white gold
+# lights in all nine colors rising from the land: the peoples of every nation streaming toward Zion
+LANTERNS = Track([(0, 0.0), (HOPE, 0.0), (HOPE + 4, 0.45), (KINGS, 0.75), (LIFT, 0.95), (LIFT + 6, 0.80),
+                  (TITLE_HIT, 0.35), (TOTAL, 0.25)])
+LANTERN_COLORS = _nine_pair(0.5, 2)
 PETALS = Track([(0, 0.0), (TOTAL, 0.0)])
 TRAIL = Track([(0, 0.0), (1.2, 0.5), (MARCH, 0.7), (LIFT, 1.0), (TOTAL, 0.9)])
-ZOOM = Track([(0, 1.0), (MARCH, 0.99), (LIFT, 0.972), (TOTAL, 0.958)])
+ZOOM = Track([(0, 1.0), (MARCH, 0.99), (LIFT, 0.968), (TOTAL, 0.952)])
 EXPOSURE = Track([(0, 1.0), (TOTAL, 1.0)])
 FADE = Track([(0, 0.0), (1.0, 1.0), (TOTAL - 1.6, 1.0), (TOTAL - 0.2, 0.0)])
-RAYS = Track([(0, 0.0), (MARCH, 0.10), (MARCH + 3, 0.30), (HOPE, 0.38), (KINGS, 0.45), (LIFT, 0.55), (LIFT + 5, 0.55),
-              (TITLE_HIT - 3, 0.45), (TITLE_HIT, 0.35), (TOTAL, 0.32)])
-# Mother's words open a road of light through the clouds toward the sun
-PART = Track([(0, 0.0), (MARCH, 0.0), (MARCH + 3.5, 1.0), (HOPE + 8, 1.0), (LIFT, 0.7), (TOTAL, 0.6)])
+# full rays, eased back while words are on screen
+RAYS = Track([(0, 0.35), (MARCH - 0.5, 0.40), (MARCH + 1.0, 0.30), (ENC_OUT, 0.32), (ENC_OUT + 3, 0.80), (KINGS, 0.95),
+              (LIFT, 1.0), (JOY - 1.0, 0.50), (FOREVER + 3, 0.50), (TITLE_HIT - 3.4, 0.40), (TOTAL, 0.38)])
+PART = Track([(0, 0.0), (TOTAL, 0.0)])
 
 # Nine lights on an arch over the stage, one for each expression
 STAR_POS = []
@@ -216,7 +233,6 @@ for i in range(9):
     y = 0.895 - 0.085 * ((x - 0.5) / 0.38) ** 2
     STAR_POS.append((x, y))
 
-ENC_FORM = MARCH + 0.6
 LIT = dict(form=1e9, hold=1e9, star=-100.0)     # lit in an earlier song (all nine are lit before the finale)
 PHRASES = [
     # label, lines, max font px, form start, hold end, star time
@@ -245,7 +261,7 @@ FRAGMENTS = [
     dict(text="endures forever", t0=FOREVER + 0.2, t1=FOREVER + 1.4, out=TITLE_HIT - 3.4, dy=0.0, size=150, alpha=1.0, glow="#ffb46a"),
 ]
 
-TAGLINE = dict(text="Sunday, December 6 · 4:30 PM · 6720 W Sahara Ave, Las Vegas", t0=TITLE_HIT + 1.5, t1=TITLE_HIT + 4.0)
+TAGLINE = dict(text="Sunday, December 6 · 4:30 PM\nThe World Mission Society Church of God · 6720 W Sahara Ave, Las Vegas", t0=TITLE_HIT + 1.5, t1=TITLE_HIT + 4.0)
 
 # Opening title card that then rests, small, in the top left corner
 CREDIT = dict(song="Almighty God Who Knows the Future", concert="The Words of Mother’s Love Healing Concert",
