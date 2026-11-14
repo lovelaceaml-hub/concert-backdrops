@@ -156,11 +156,12 @@ class Renderer:
         txA, bndA, txB, bndB = (0.0, 3.0, -1.0, 0.0), (0.0, 1.0), (0.0, 3.0, -1.0, 0.0), (0.0, 1.0)
         for i, wd in enumerate(self.words):
             m = wd["meta"]
-            if not (m["form"] <= t < m["star"] + 0.2):
+            arrive = m.get("arrive", m["star"])   # when the words reach their light (a relit star arrives later)
+            if not (m["form"] <= t < arrive + 0.2):
                 continue
             form_t = t - m["form"]
             fly_t = t - m["hold"]
-            fly_dur = max(m["star"] - m["hold"], 1.0)
+            fly_dur = max(arrive - m["hold"], 1.0)
             star = S.STAR_POS[i] if i < 9 else (0.5, 0.9)
             setu(self.p_textp, uT=t, uFormT=form_t, uFormDur=S.FORM_DUR, uFlyT=fly_t, uFlyDur=fly_dur, uPx=px,
                  uPulse=P["pulse"], uStar=star, uColA=L("#fff0cc") * 1.0, uColB=L("#ffb070") * 1.15)
