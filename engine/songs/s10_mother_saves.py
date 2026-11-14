@@ -236,7 +236,8 @@ PHRASES = [
 TITLE = dict(label="Healing Concert", lines=["The Words of Mother’s Love"], size=150,
              form=TITLE_HIT - FORM_DUR, hold=1e9, star=1e9)
 FRAGMENTS = []   # no lyrics yet
-TAGLINE = dict(text="Sunday, December 6 · 4:30 PM · 6720 W Sahara Ave, Las Vegas", t0=52.5, t1=56.0)
+TAGLINE = dict(text="Sunday, December 6 · 4:30 PM\nThe World Mission Society Church of God · 6720 W Sahara Ave, Las Vegas",
+               t0=52.5, t1=56.0)
 
 CREDIT = dict(song="Our Mother Saves the World", concert="The Words of Mother’s Love Healing Concert",
               t_in=0.3, t_full=1.5, t_move=4.6, t_rest=6.6, scale=0.34, alpha_rest=0.58,
@@ -268,34 +269,7 @@ WAVES = [(p["arrive"], STAR_POS[i][0], STAR_POS[i][1], 0.45 if p["form"] < _OFF 
 WAVES.append((TITLE_HIT, 0.5, 0.62, 1.2))
 
 
-def star_state(t):
-    out = []
-    for i, p in enumerate(PHRASES):
-        age = t - p["star"]
-        if age < -0.2:
-            out.append((0.0, -1.0))
-            continue
-        gather = min(max((age + 0.2) / 0.2, 0.0), 1.0)
-        base = 0.55 * gather
-        flash = np.exp(-max(age, 0.0) * 1.1) * 1.3 if age >= 0 else 0.0
-        if "arrive" in p and t >= p["arrive"]:
-            flash += np.exp(-(t - p["arrive"]) * 1.1) * 0.9
-        fin = 0.0
-        if t > NINTH:
-            fin = 0.35 * min((t - NINTH) / 2.0, 1.0)
-        if t > TITLE_HIT:
-            fin += 0.35 * np.exp(-(t - TITLE_HIT) * 0.25) + 0.15
-        out.append((base + flash + fin, max(age, 0.0)))
-    return out
-
-
-def link_state(t):
-    out = []
-    for i in range(8):
-        t1 = PHRASES[i + 1]["star"]
-        g = min(max((t - (t1 - 1.2)) / 1.4, 0.0), 1.0)
-        out.append(g * g * (3 - 2 * g))
-    return out
+# star_state and link_state come from engine/arch.py (installed by song.py), the same for every song.
 
 
 def params(song, t):
