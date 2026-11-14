@@ -2,10 +2,11 @@
 
 Current status, decisions and next steps live in the project's home folder on Google Drive: "Concert Backdrops - Songs", file VIDEO-HANDOFF.md (status) and DESIGN-SYSTEM.md (rules and decisions waiting for Anthony). Read those first.
 
-## State of this repo (2026-11-13)
-- Started from the first cloud session's engine (commit f292678 is identical to the zip "Concert Backdrops - engine and how to continue (2026-11-13).zip"). Since then: any song can be drawn (engine/songs/, chosen by SONG), lyric fragments, relit lights, a shared arch (engine/arch.py), safe features for silent clips, encoder and length checks, and the cloud Render workflow. See git log.
-- engine/songs/s03_original.py still renders song 3's first version: all nine expressions in sequence, timed to the 4:11 recording (SONG_END 250.7, TOTAL 330.0), with a fade at the end.
-- Not yet built: the 11 new song designs (Drive, Designs/), song-specific scenes, an endless closing hold, live section cues, timing to the live lengths.
+## State of this repo (2026-11-13, evening)
+- engine/songs/ holds a 60 second promo file for each of the 11 songs (s01_stars_of_zion.py to s11_finale.py), plus s03_original.py (the first full song 03 video) and t_short_test.py (an 8 second pipeline test). audio/promo/ holds each promo's 60 second clip (02 and 10 are silence: no recording yet).
+- All 11 promos were rendered with the Render workflow, checked (60 s, 1920x1080, sound) and saved in the Drive folder's Videos/.
+- Engine features: any song (engine/songs/, SONG setting), lyric fragments, relit lights, the shared arch (engine/arch.py), per-song colors (PETAL_COLORS, MOTE_COLORS, LANTERN_COLORS, AURORA_WARM, AURORA_COOL, MOTE_Y), safe silent clips, encoder and full-length checks.
+- Not built yet: the people of light acting out the expressions, each song's signature effects, full-length concert videos timed to the live versions, an endless closing hold and live section cues.
 
 ## How to render (cloud only)
 - Each song has its own file in engine/songs/ (copy s03_original.py to start). Choose it with the SONG environment variable.
