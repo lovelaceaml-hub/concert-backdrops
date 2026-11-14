@@ -147,6 +147,11 @@ TITLE_HIT = 51.0       # end card (title from 48, three lines fully formed about
 # Nothing dark behind any text (direction round 4): no veil, no halo, no band. Legibility comes from the glow and
 # a naturally deep sky where the words stand.
 TEXT_SHADOW = 0.0
+# and no light is cut out around the words either (snow and petals may pass behind them, as in the original)
+TEXT_PROTECT = 0.0
+# The engine still darkens bright sky behind text above a fixed level and always darkens a little round the corner
+# credit. So the sky under every line is kept below that level (deep dawn, low sun), and the corner credit fades
+# out before the end card.
 # the traveler's light on the skyline dims under the end card so nothing bright sits just below its lines
 SKYLINE_LANTERN = Track([(0, 1.0), (47.0, 1.0), (51.0, 0.3), (TOTAL, 0.3)])
 
@@ -157,7 +162,7 @@ PAL = {
     "violet": ("#070818", "#141434", "#3e3a68", "#d9c8ff"),   # the aurora veil night
     "deep":   ("#020410", "#070e26", "#1a2848", "#a9c4ff"),   # the clearest, coldest hour
     "pearl":  ("#0b122c", "#20264c", "#5e5478", "#ffe6ee"),   # first pearl light
-    "blush":  ("#0d1432", "#262a52", "#74546e", "#ffd6e0"),   # pale pink spring dawn, kept deep behind words
+    "blush":  ("#0d1432", "#24284e", "#62485e", "#ffd6e0"),   # pale pink spring dawn, kept deep behind words
 }
 _pal_keys = [(0.0, "dusk"), (3.0, "dusk"), (10.0, "snow"), (14.0, "snow"), (19.0, "violet"), (28.0, "violet"),
              (32.0, "deep"), (39.0, "deep"), (44.0, "pearl"), (49.0, "blush"), (TOTAL, "blush")]
@@ -166,8 +171,8 @@ SKY_MID = Track([(t, lin(PAL[p][1])) for t, p in _pal_keys])
 SKY_HOR = Track([(t, lin(PAL[p][2])) for t, p in _pal_keys])
 GLOW = Track([(t, lin(PAL[p][3])) for t, p in _pal_keys])
 
-SUN_INT = Track([(0, 0.55), (4, 0.40), (10, 0.06), (14, 0.0), (38, 0.0), (44, 0.24), (50, 0.36), (TOTAL, 0.38)])
-SUN_Y = Track([(0, 0.35), (10, 0.30), (14, 0.28), (38, 0.28), (50, 0.345), (TOTAL, 0.35)])
+SUN_INT = Track([(0, 0.55), (4, 0.40), (10, 0.06), (14, 0.0), (38, 0.0), (44, 0.16), (50, 0.20), (TOTAL, 0.20)])
+SUN_Y = Track([(0, 0.35), (10, 0.30), (14, 0.28), (38, 0.28), (50, 0.33), (TOTAL, 0.335)])
 SUN_SIZE = Track([(0, 0.09), (TOTAL, 0.09)])
 STARS = Track([(0, 0.25), (6, 0.70), (12, 0.80), (16, 0.85), (28, 0.80), (32, 1.0), (39, 1.0), (45, 0.45),
                (50, 0.22), (TOTAL, 0.18)])
@@ -183,7 +188,7 @@ TRAIL = Track([(0, 0.22), (14, 0.28), (30, 0.30), (44, 0.30), (49, 0.18), (TOTAL
 ZOOM = Track([(0, 0.95), (14, 0.93), (28, 0.905), (34, 0.880), (40, 0.875), (50, 0.915), (TOTAL, 0.925)])
 EXPOSURE = Track([(0, 1.0), (TOTAL, 1.0)])
 FADE = Track([(0, 0.0), (1.0, 1.0), (59.4, 1.0), (TOTAL, 0.0)])
-RAYS = Track([(0, 0.0), (43.0, 0.0), (50.0, 0.30), (TOTAL, 0.30)])
+RAYS = Track([(0, 0.0), (43.0, 0.0), (50.0, 0.22), (TOTAL, 0.22)])
 PART = Track([(0, 0.0), (TOTAL, 0.0)])
 
 PETAL_COLORS = ("#f6b3c4", "#fff1f3")             # the rose's petals: blush and pearl
@@ -262,7 +267,7 @@ TAGLINE = dict(text="Where a mother’s love reaches, peace settles.\nSunday, De
 # Opening title card that then rests, small, in the top left corner
 CREDIT = dict(song="The Rose", concert="The Words of Mother’s Love Healing Concert",
               t_in=0.3, t_full=1.4, t_move=3.6, t_rest=5.4, scale=0.34, alpha_rest=0.58,
-              margin_x=0.030, margin_top=0.048)
+              margin_x=0.030, margin_top=0.048, t_out0=45.5, t_out1=47.8)
 
 
 def credit_state(t, bbox):
@@ -281,7 +286,7 @@ def credit_state(t, bbox):
     tx = c["margin_x"] + c["scale"] * (x1 - x0) / 2.0
     ty = 1.0 - c["margin_top"] - c["scale"] * (y1 - y0) / 2.0
     cx, cy = cx0 * (1 - m) + tx * m, cy0 * (1 - m) + ty * m
-    alpha = a_in * (1.0 + (c["alpha_rest"] - 1.0) * m)
+    alpha = a_in * (1.0 + (c["alpha_rest"] - 1.0) * m) * (1.0 - ss(c["t_out0"], c["t_out1"], t))
     return (cx, cy, scale, alpha), (cx0, cy0)
 
 
