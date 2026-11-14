@@ -1,0 +1,14 @@
+work/
+frames/
+out/
+fonts/
+*.mp3
+*.m4a
+*.wav
+*.mp4
+*.mov
+*.png
+*.jpg
+*.npz
+__pycache__/
+.DS_Store

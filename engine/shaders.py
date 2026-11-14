@@ -1,0 +1,478 @@
+"""GLSL programs for the backdrop renderer."""
+
+NOISE = """
+float hash11(float p){ p = fract(p*0.1031); p *= p+33.33; p *= p+p; return fract(p); }
+float hash21(vec2 p){ vec3 p3 = fract(vec3(p.xyx)*0.1031); p3 += dot(p3, p3.yzx+33.33); return fract((p3.x+p3.y)*p3.z); }
+float vnoise(vec2 p){ vec2 i=floor(p), f=fract(p); vec2 u=f*f*(3.0-2.0*f);
+  return mix(mix(hash21(i),hash21(i+vec2(1.0,0.0)),u.x), mix(hash21(i+vec2(0.0,1.0)),hash21(i+vec2(1.0,1.0)),u.x), u.y); }
+float fbm(vec2 p){ float a=0.5, s=0.0; mat2 m=mat2(1.6,1.2,-1.2,1.6);
+  for(int i=0;i<5;i++){ s+=a*vnoise(p); p=m*p; a*=0.5; } return s; }
+float fbm3(vec2 p){ float a=0.5, s=0.0; mat2 m=mat2(1.6,1.2,-1.2,1.6);
+  for(int i=0;i<3;i++){ s+=a*vnoise(p); p=m*p; a*=0.5; } return s; }
+"""
+
+QUAD_VS = """
+#version 330
+in vec2 aPos;
+out vec2 vUV;
+uniform float uFlip;
+void main(){ vUV = aPos*0.5+0.5; gl_Position = vec4(aPos.x, aPos.y*uFlip, 0.0, 1.0); }
+"""
+
+# ------------------------------------------------------------------ sky
+SKY_FS = "#version 330\n" + NOISE + """
+in vec2 vUV; out vec4 o;
+uniform float uT, uAspect, uHorizon;
+uniform vec3 uSkyTop, uSkyMid, uSkyHor, uGlow, uAurA, uAurB;
+uniform vec2 uSun; uniform float uSunInt, uSunSize;
+uniform float uClouds, uAurora, uRain, uMilky, uEnv, uRays, uPart;
+void main(){
+  vec2 uv = vUV;
+  float h = clamp((uv.y-uHorizon)/(1.0-uHorizon), 0.0, 1.0);
+  vec3 c = mix(uSkyHor, uSkyMid, smoothstep(0.0,0.42,h));
+  c = mix(c, uSkyTop, smoothstep(0.26,0.95,h));
+  vec2 d = (uv-uSun)*vec2(uAspect,1.0);
+  float r = length(d);
+  float g = exp(-r*r/(uSunSize*uSunSize)) + 0.27*exp(-r/(uSunSize*2.3));
+  c += uGlow*uSunInt*g*0.9;
+  c += uGlow*uSunInt*0.20*exp(-h*7.5);
+  if(uRays>0.001){
+    float ang = atan(d.y, d.x);
+    float rays = vnoise(vec2(ang*8.0, uT*0.045))*vnoise(vec2(ang*21.0+4.0, uT*0.07+2.0));
+    c += uGlow*uSunInt*uRays*rays*exp(-r*2.2)*0.55*smoothstep(0.0,0.14,r);
+  }
+  // milky band of faint light for the night scenes
+  if(uMilky>0.001){
+    float band = exp(-pow((uv.y-(0.98-0.30*uv.x))/0.15, 2.0));
+    float mw = fbm(vec2(uv.x*uAspect*3.4+3.0, uv.y*3.4)+7.0);
+    c += uMilky*vec3(0.30,0.38,0.70)*band*(0.18+1.1*mw*mw)*0.16;
+  }
+  // clouds: shade a little, catch the light a lot near the sun
+  vec2 q = vec2(uv.x*uAspect*1.25 + uT*0.006, uv.y*3.3);
+  vec2 w = vec2(fbm3(q*1.3+vec2(0.0,uT*0.011)), fbm3(q*1.3+vec2(5.2,1.3)));
+  float n = fbm(q*1.7 + 1.5*w + vec2(uT*0.012,0.0));
+  float dens = smoothstep(0.50,0.86,n)*uClouds*(0.30+0.70*exp(-pow((h-0.24)/0.27,2.0)));
+  float lane = exp(-pow((uv.x-0.5)*uAspect/0.30,2.0));
+  dens *= 1.0-0.85*uPart*lane;
+  c += uGlow*uSunInt*uPart*lane*0.10*exp(-h*1.8);
+  vec3 lit = mix(uSkyHor*1.5+uGlow*0.12, uGlow*1.5, exp(-r*2.4)*clamp(uSunInt,0.0,1.6)/1.6);
+  c = mix(c, c*0.74 + lit*0.42, dens);
+  // ribbons of light that move with the music
+  if(uAurora>0.001){
+    vec2 pa = vec2(uv.x*uAspect, uv.y);
+    float amp = 0.35+uEnv;
+    vec3 au = vec3(0.0);
+    for(int i=0;i<3;i++){
+      float fi = float(i);
+      float x = pa.x + fi*0.37;
+      float y0 = 0.715 + 0.062*fi + 0.050*sin(x*1.25+uT*0.13+fi*2.1) + amp*0.034*sin(x*3.3-uT*0.31+fi*4.7) + 0.011*sin(x*8.0+uT*0.6+fi);
+      float dd = pa.y-y0;
+      float body = exp(-max(dd,0.0)*(6.5+2.0*fi))*smoothstep(-0.03,0.0,dd);
+      float stri = 0.45+0.55*vnoise(vec2(x*40.0+fi*17.0, uT*0.33+fi));
+      float fold = 0.55+0.45*sin(x*4.6+uT*0.27+fi*3.0);
+      au += mix(uAurA,uAurB,0.5+0.5*sin(x*2.0+fi*1.9+uT*0.1))*body*stri*fold;
+    }
+    c += au*uAurora*(0.50+0.75*uEnv);
+  }
+  // a quiet rain of light
+  if(uRain>0.001){
+    float colx = (uv.x+uv.y*0.035)*uAspect*250.0;
+    float ci = floor(colx); float fx = fract(colx);
+    float hc = hash11(ci*1.37+2.0);
+    float sp = 0.16+0.22*hash11(ci*7.7+1.0);
+    float ph = fract(uv.y*(1.6+1.2*hash11(ci*3.1)) + uT*sp + hc*10.0);
+    float head = pow(1.0-ph, 16.0);
+    float xp = smoothstep(1.0,0.0,abs(fx-0.5)*4.2);
+    c += uRain*vec3(0.78,0.84,1.0)*step(0.62,hc)*(0.3+0.7*hash11(ci*9.3))*head*xp*0.50*smoothstep(0.0,0.08,h);
+  }
+  o = vec4(c,1.0);
+}
+"""
+
+# ------------------------------------------------------------------ points
+STAR_VS = """
+#version 330
+in vec2 aPos; in vec2 aSeed;
+uniform float uT, uStars, uHi, uPx;
+out float vA; out float vK;
+void main(){
+  float tw = 0.62+0.38*sin(uT*(0.7+2.6*aSeed.x)+aSeed.y*60.0);
+  float sp = pow(0.5+0.5*sin(uT*(1.5+4.0*aSeed.y)+aSeed.x*90.0), 6.0)*uHi;
+  float b = aSeed.x*aSeed.x*aSeed.x;
+  vA = uStars*(0.16+0.84*b)*(tw+1.2*sp)*smoothstep(0.44,0.62,aPos.y);
+  vK = aSeed.y;
+  gl_Position = vec4(aPos*2.0-1.0,0.0,1.0);
+  gl_PointSize = (1.7+4.2*b)*uPx;
+}
+"""
+STAR_FS = """
+#version 330
+in float vA; in float vK; out vec4 o;
+void main(){ vec2 p=gl_PointCoord*2.0-1.0; float r2=dot(p,p); if(r2>1.0) discard;
+  vec3 c = mix(vec3(0.72,0.82,1.0), vec3(1.0,0.90,0.78), vK);
+  o = vec4(c*exp(-r2*4.0)*vA,1.0); }
+"""
+
+MOTE_VS = """
+#version 330
+in vec4 aSeed;
+uniform float uT, uAmount, uPx, uSizeMin, uSizeMax, uPeriod, uY0, uY1, uSway, uBright;
+out float vA; out float vK; out float vSoft;
+void main(){
+  float per = uPeriod*(0.7+0.8*aSeed.x);
+  float ph = fract(uT/per + aSeed.y*7.31);
+  float y = mix(uY0, uY1, ph) + 0.02*sin(uT*0.31+aSeed.z*40.0);
+  float x = aSeed.z + uSway*(sin(uT*0.23+aSeed.w*30.0)+0.5*sin(uT*0.61+aSeed.x*50.0)) + (aSeed.x-0.5)*0.05*ph;
+  float life = sin(3.14159*ph);
+  float tw = 0.7+0.3*sin(uT*(1.0+2.5*aSeed.w)+aSeed.y*40.0);
+  float on = smoothstep(uAmount, uAmount-0.08, aSeed.w*0.999);
+  float s = aSeed.x*aSeed.y; s = fract(s*91.7);
+  float sz = mix(uSizeMin, uSizeMax, s*s*s);
+  vSoft = s;
+  vA = uBright*on*life*tw*mix(1.0, 0.22, s*s);
+  vK = aSeed.y;
+  gl_Position = vec4(vec2(x,y)*2.0-1.0,0.0,1.0);
+  gl_PointSize = sz*uPx;
+}
+"""
+MOTE_FS = """
+#version 330
+in float vA; in float vK; in float vSoft; out vec4 o;
+uniform vec3 uColA, uColB;
+void main(){ vec2 p=gl_PointCoord*2.0-1.0; float r2=dot(p,p); if(r2>1.0) discard;
+  float core = exp(-r2*mix(5.0,1.6,vSoft));
+  float disc = smoothstep(1.0,0.75,r2)*0.35*vSoft;
+  o = vec4(mix(uColA,uColB,vK)*(core+disc)*vA,1.0); }
+"""
+
+PETAL_VS = """
+#version 330
+in vec4 aSeed;
+uniform float uT, uAmount, uPx;
+out float vA; out float vRot; out float vFlip; out float vK;
+void main(){
+  float per = 15.0+12.0*aSeed.x;
+  float ph = fract(uT/per + aSeed.y*5.77);
+  float y = 1.06 - ph*1.02;
+  float x = fract(aSeed.z + 0.22*ph + 0.035*sin(uT*0.5+aSeed.w*30.0) + 0.02*sin(uT*1.1+aSeed.x*17.0));
+  float on = smoothstep(uAmount, uAmount-0.1, aSeed.w*0.999);
+  vA = on*smoothstep(0.0,0.08,ph)*smoothstep(1.0,0.75,ph);
+  vRot = uT*(0.5+1.4*aSeed.y)*(aSeed.x>0.5?1.0:-1.0) + aSeed.z*6.283;
+  vFlip = 0.25+0.75*abs(cos(uT*(0.9+1.3*aSeed.z)+aSeed.w*9.0));
+  vK = aSeed.x;
+  gl_Position = vec4(vec2(x,y)*2.0-1.0,0.0,1.0);
+  gl_PointSize = (20.0+34.0*aSeed.y*aSeed.y)*uPx;
+}
+"""
+PETAL_FS = """
+#version 330
+in float vA; in float vRot; in float vFlip; in float vK; out vec4 o;
+uniform vec3 uColA, uColB;
+void main(){
+  vec2 p = gl_PointCoord*2.0-1.0;
+  float c=cos(vRot), s=sin(vRot);
+  p = vec2(c*p.x-s*p.y, s*p.x+c*p.y);
+  p.x /= vFlip;
+  // a petal: rounded at one end, pointed at the other
+  float w = 0.46*sqrt(max(0.0,1.0-p.y*p.y))*(1.0-0.35*p.y);
+  float a = smoothstep(w, w-0.14, abs(p.x))*smoothstep(0.98,0.80,abs(p.y));
+  float vein = 0.75+0.25*smoothstep(0.0,0.3,abs(p.x));
+  vec3 col = mix(uColA,uColB,vK)*(0.55+0.45*(p.y*0.5+0.5));
+  o = vec4(col*a*vein*vA,1.0);
+}
+"""
+
+TEXTP_VS = """
+#version 330
+in vec3 aTarget; in vec4 aSeed;
+uniform float uT, uFormT, uFormDur, uFlyT, uFlyDur, uPx, uPulse;
+uniform vec2 uStar;
+out float vA; out float vK;
+const float TAU = 1.35;
+void main(){
+  vec2 tg = aTarget.xy;
+  float od = clamp(aTarget.z*0.84 + aSeed.x*0.16, 0.0, 1.0);
+  float dep = od*(uFormDur-TAU);
+  float s = clamp((uFormT-dep)/TAU, 0.0, 1.0);
+  float e = 1.0-pow(1.0-s,3.0);
+  vec2 start = vec2(tg.x+(aSeed.y-0.5)*0.55, -0.06+0.24*aSeed.z*aSeed.z);
+  vec2 pos = mix(start, tg, e);
+  float arc = sin(e*3.14159);
+  pos += arc*vec2((aSeed.w-0.5)*0.17, (aSeed.x-0.5)*0.05);
+  float landed = step(1.0, s);
+  float since = uFormT-(dep+TAU);
+  float alpha = (0.22+0.78*s)*smoothstep(0.0,0.06,s);
+  float sparkle = exp(-max(since,0.0)*2.4)*landed;
+  float hold = mix(1.0, 0.085, smoothstep(0.0,1.3,since));
+  alpha *= hold + 1.0*sparkle;
+  float tw = 0.70+0.30*sin(uT*(2.0+3.0*aSeed.y)+aSeed.z*50.0);
+  alpha *= mix(1.0, tw*(1.0+0.5*uPulse), landed);
+  pos += landed*0.0008*vec2(sin(uT*1.3+aSeed.x*40.0), cos(uT*1.1+aSeed.y*40.0));
+  float size = 2.4 + 4.6*aSeed.w*aSeed.w*aSeed.w + 3.0*sparkle + 2.4*(1.0-s);
+  if(uFlyT>0.0){
+    float rel = aSeed.z*0.8;
+    float f = clamp((uFlyT-rel)/(uFlyDur-0.95), 0.0, 1.0);
+    float lift = smoothstep(0.0,0.2,f);
+    if(aSeed.w<0.42){
+      float fe = f*f*(3.0-2.0*f);
+      vec2 mid = mix(tg,uStar,0.45)+vec2((aSeed.x-0.5)*0.24, 0.02+0.10*aSeed.y);
+      vec2 a = mix(tg,mid,fe), b = mix(mid,uStar,fe);
+      pos = mix(a,b,fe);
+      alpha = mix(0.085,1.0,lift)*(1.0-smoothstep(0.94,1.0,f));
+      size = mix(size, 4.0, fe);
+    } else {
+      pos = tg + vec2((aSeed.x-0.5)*0.08*f + 0.008*sin(uT*2.0+aSeed.y*30.0)*f, (0.04+0.24*aSeed.y)*f*f);
+      alpha = mix(0.085,0.85,lift)*(1.0-f);
+    }
+  }
+  vA = alpha; vK = aSeed.y;
+  gl_Position = vec4(pos*2.0-1.0,0.0,1.0);
+  gl_PointSize = size*uPx;
+}
+"""
+TEXTP_FS = """
+#version 330
+in float vA; in float vK; out vec4 o;
+uniform vec3 uColA, uColB;
+void main(){ vec2 p=gl_PointCoord*2.0-1.0; float r2=dot(p,p); if(r2>1.0) discard;
+  o = vec4(mix(uColA,uColB,vK)*exp(-r2*3.6)*vA,1.0); }
+"""
+
+# ------------------------------------------------------------------ solid words
+TEXT_FS = "#version 330\n" + NOISE + """
+in vec2 vUV; out vec4 o;
+uniform sampler2D uTex;
+uniform float uFormT, uFormDur, uFlyT, uAspect, uAlpha, uPulse;
+uniform vec2 uBounds; uniform vec3 uCol, uGlowCol;
+const float TAU = 1.35;
+void main(){
+  vec3 tx = texture(uTex, vUV).rgb;
+  float od = clamp((vUV.x-uBounds.x)/(uBounds.y-uBounds.x), 0.0, 1.0);
+  float arrive = od*(uFormDur-TAU)+TAU;
+  float rev = smoothstep(-0.25, 0.75, uFormT-arrive);
+  float er = vnoise(vUV*vec2(uAspect,1.0)*70.0);
+  float dis = 1.0-smoothstep(0.0, 1.0, (uFlyT-er*0.9)/0.8);
+  float a = rev*dis*uAlpha;
+  vec3 c = uCol*tx.r*0.92 + uGlowCol*tx.g*(0.15+0.06*uPulse);
+  o = vec4(c*a,1.0);
+}
+"""
+
+# ------------------------------------------------------------------ title block (card, then corner)
+CREDIT_FS = """
+#version 330
+in vec2 vUV; out vec4 o;
+uniform sampler2D uTex; uniform vec4 uCredit; uniform vec2 uC0;
+uniform vec3 uCol, uGlowCol;
+void main(){
+  vec2 tuv = (vUV-uCredit.xy)/uCredit.z + uC0;
+  if(tuv.x<0.0||tuv.x>1.0||tuv.y<0.0||tuv.y>1.0){ o = vec4(0.0); return; }
+  vec3 tx = texture(uTex, tuv).rgb;
+  o = vec4((uCol*tx.r*0.95 + uGlowCol*tx.g*0.13)*uCredit.w, 1.0);
+}
+"""
+
+# ------------------------------------------------------------------ the nine lights
+LIGHTS_FS = """
+#version 330
+in vec2 vUV; out vec4 o;
+uniform float uT, uAspect, uHi;
+uniform vec2 uStarPos[9]; uniform vec2 uStarI[9]; uniform float uLink[8];
+uniform vec3 uColA, uColB;
+uniform int uMode; uniform vec2 uLantern; uniform float uLanternI;
+vec3 flare(vec2 uv, vec2 c, float I, float age, float seed){
+  vec2 d = (uv-c)*vec2(uAspect,1.0);
+  float r = length(d);
+  float core = exp(-r*r/(0.0030*0.0030));
+  float glow = exp(-r/0.011)*0.55 + exp(-r/0.040)*0.13;
+  float ang = atan(d.y,d.x);
+  float rp = 0.0165*(0.50+0.50*pow(abs(cos(2.5*ang+seed+uT*0.05)),0.8));
+  float petal = smoothstep(rp, rp*0.25, r)*0.42;
+  float cross = exp(-abs(d.x)/0.0011)*exp(-abs(d.y)/0.034) + exp(-abs(d.y)/0.0011)*exp(-abs(d.x)/0.056);
+  float tw = 0.86+0.14*sin(uT*(1.3+seed*0.4)+seed*5.0)+0.25*uHi*sin(uT*7.0+seed*9.0);
+  vec3 col = mix(uColA,uColB,0.5+0.5*sin(seed*2.3));
+  vec3 outc = col*I*tw*(core*2.2+glow+petal+cross*0.5);
+  if(age>=0.0 && age<3.0){
+    float ring = exp(-pow((r-age*0.16)/0.005,2.0))*exp(-age*1.6);
+    outc += col*ring*0.9;
+  }
+  return outc;
+}
+void main(){
+  vec3 c = vec3(0.0);
+  if(uMode==0){
+    for(int i=0;i<9;i++){
+      if(uStarI[i].x>0.001) c += flare(vUV, uStarPos[i], uStarI[i].x, uStarI[i].y, float(i)*1.7+0.6);
+    }
+    for(int i=0;i<8;i++){
+      float g = uLink[i];
+      if(g>0.001){
+        vec2 a = uStarPos[i]*vec2(uAspect,1.0), b = uStarPos[i+1]*vec2(uAspect,1.0);
+        vec2 p = vUV*vec2(uAspect,1.0);
+        vec2 ab = b-a; float tt = clamp(dot(p-a,ab)/dot(ab,ab), 0.0, 1.0);
+        float dist = length(p-(a+ab*tt));
+        float vis = smoothstep(g+0.02, g-0.02, tt);
+        float shimmer = 0.75+0.25*sin(tt*30.0-uT*2.2+float(i));
+        float ends = smoothstep(0.0,0.08,tt)*smoothstep(1.0,0.92,tt);
+        c += mix(uColA,uColB,0.5)*vis*ends*shimmer*(exp(-dist/0.0013)*0.50+exp(-dist/0.007)*0.10);
+      }
+    }
+    c *= smoothstep(0.735,0.78,vUV.y);
+  } else {
+    vec2 d = (vUV-uLantern)*vec2(uAspect,1.0);
+    float r = length(d);
+    float core = exp(-r*r/(0.0034*0.0034))*2.4;
+    float glow = exp(-r/0.010)*0.6 + exp(-r/0.034)*0.16;
+    float cross = exp(-abs(d.y)/0.0012)*exp(-abs(d.x)/0.06)*0.6 + exp(-abs(d.x)/0.0012)*exp(-abs(d.y)/0.03)*0.4;
+    c = uColA*uLanternI*(core+glow+cross)*smoothstep(0.095,0.045,r);
+  }
+  o = vec4(c,1.0);
+}
+"""
+
+# ------------------------------------------------------------------ blur
+BLUR_FS = """
+#version 330
+in vec2 vUV; out vec4 o;
+uniform sampler2D uTex; uniform vec2 uDir;
+void main(){
+  vec3 c = texture(uTex, vUV).rgb*0.2270270270;
+  c += texture(uTex, vUV+uDir*1.3846153846).rgb*0.3162162162;
+  c += texture(uTex, vUV-uDir*1.3846153846).rgb*0.3162162162;
+  c += texture(uTex, vUV+uDir*3.2307692308).rgb*0.0702702703;
+  c += texture(uTex, vUV-uDir*3.2307692308).rgb*0.0702702703;
+  o = vec4(c,1.0);
+}
+"""
+
+# ------------------------------------------------------------------ composite
+COMP_FS = "#version 330\n" + NOISE + """
+in vec2 vUV; out vec4 o;
+uniform sampler2D uSky, uL, uB1, uB2, uB3, uB4, uRidge, uTextA, uTextB;
+uniform float uT, uAspect, uHorizon, uProg, uTrail, uExposure, uFade, uFrame, uBloom, uHi, uEnv, uSunInt;
+uniform vec3 uMtn, uSkyHor, uGlow, uTrailCol;
+uniform vec2 uSun;
+uniform vec2 uShade;   // strength of the soft shadow behind text A and B
+uniform vec4 uTxA, uTxB;   // form time, form duration, fly time, alpha
+uniform vec2 uBndA, uBndB; uniform float uZoom;
+uniform sampler2D uTextC; uniform vec4 uCredit; uniform vec2 uC0;
+uniform int uNRings; uniform vec4 uRings[16];
+uniform int uNWaves; uniform vec4 uWaves[4];
+float ridged1(float x, float seed){
+  float sum=0.0, a=0.5, f=1.0;
+  for(int i=0;i<5;i++){
+    float n = vnoise(vec2(x*f+seed*(1.0+float(i)), seed*3.1+float(i)*7.0));
+    sum += a*(1.0-abs(2.0*n-1.0)); a*=0.5; f*=2.13;
+  }
+  return sum;
+}
+vec3 scene(vec2 uv){
+  vec3 c = texture(uSky, uv).rgb;
+  vec3 hz = texture(uSky, vec2(uv.x, uHorizon+0.012)).rgb;
+  float aa = 0.0010;
+  float hh = max(uv.y-uHorizon, 0.0);
+  // the far range: the loudness of the whole song, left to right
+  float ry = uHorizon + texture(uRidge, vec2(uv.x,0.5)).r;
+  float m1 = smoothstep(ry+aa, ry-aa, uv.y);
+  float lit = smoothstep(uProg+0.003, uProg-0.014, uv.x);
+  float depth = clamp(hh/0.17, 0.0, 1.0);
+  vec3 far = mix(uMtn*1.5, hz, 0.74-0.30*depth);
+  far += uTrailCol*uTrail*lit*0.030*depth;
+  c = mix(c, far, m1);
+  float dr = uv.y-ry;
+  float rim = exp(-abs(dr)*900.0)*0.85 + exp(-max(dr,0.0)*95.0)*0.13*step(0.0,dr);
+  c += uTrailCol*uTrail*lit*rim;
+  c += uTrailCol*0.03*exp(-abs(dr)*900.0)*(1.0-lit);
+  // mist, then two nearer ranges
+  c = mix(c, hz*1.04, exp(-hh/0.030)*0.30);
+  float y2 = uHorizon + 0.010 + 0.105*pow(ridged1(uv.x*2.1, 11.0), 1.7);
+  float m2 = smoothstep(y2+aa, y2-aa, uv.y);
+  float d2 = clamp((y2-uv.y)/0.07, 0.0, 1.0);
+  c = mix(c, mix(uMtn*0.85, hz, 0.20+0.22*d2), m2);
+  c = mix(c, hz*1.02, exp(-hh/0.016)*0.26);
+  float y3 = uHorizon + 0.003 + 0.070*pow(ridged1(uv.x*3.3+5.0, 3.7), 2.0) + 0.0022*vnoise(vec2(uv.x*520.0,1.0));
+  float m3 = smoothstep(y3+aa, y3-aa, uv.y);
+  c = mix(c, mix(uMtn*0.30, hz, 0.05), m3);
+  return c;
+}
+float wordMask(sampler2D tx, vec2 uv, vec4 p, vec2 bnd){
+  float od = clamp((uv.x-bnd.x)/(bnd.y-bnd.x), 0.0, 1.0);
+  float arrive = od*(p.y-1.35)+1.35;
+  float rev = smoothstep(-0.25, 0.75, p.x-arrive);
+  float er = vnoise(uv*vec2(uAspect,1.0)*70.0);
+  float dis = 1.0-smoothstep(0.0, 1.0, (p.z-er*0.9)/0.8);
+  return texture(tx, uv).g*rev*dis*p.w;
+}
+void main(){
+  vec2 sv = vUV;
+  vec2 uv = vec2((sv.x-0.5)*uZoom+0.5, (sv.y-uHorizon)*uZoom+uHorizon);
+  vec3 col;
+  vec3 hz = texture(uSky, vec2(uv.x, uHorizon+0.012)).rgb;
+  if(uv.y>=uHorizon){
+    col = scene(uv);
+  } else {
+    float d = (uHorizon-uv.y)/uHorizon;
+    float wob = (vnoise(vec2(uv.x*uAspect*24.0, uv.y*210.0-uT*0.85))-0.5)*0.011*(0.22+d)
+              + sin(uv.y*240.0+uT*1.2)*0.0010;
+    vec2 ruv = vec2(uv.x+wob, uHorizon+(uHorizon-uv.y)*1.22+wob*0.4);
+    col = scene(ruv);
+    col *= mix(0.82, 0.30, pow(d,0.75));
+    // reflected lights
+    float rf = (1.0-d)*(1.0-d);
+    col += (texture(uB2, ruv).rgb*0.16 + texture(uB3, ruv).rgb*0.26 + texture(uB4, ruv).rgb*0.30)*rf;
+    // glitter under the low sun
+    float sx = (uv.x-uSun.x)*uAspect;
+    float path = exp(-sx*sx/(0.004+0.09*d*d));
+    float gl = pow(vnoise(vec2(uv.x*uAspect*260.0, uv.y*900.0+uT*2.6)), 7.0);
+    col += uGlow*uSunInt*path*(0.10+2.6*gl)*(0.5+0.8*uHi)*smoothstep(0.0,0.05,d)*0.55;
+    // each note is a ring on the water
+    for(int i=0;i<uNRings;i++){
+      vec4 rg = uRings[i];
+      vec2 q = vec2((uv.x-rg.x)*uAspect, (uv.y-rg.y)*3.6);
+      float rr = length(q);
+      float rad = 0.012+rg.z*0.055;
+      float ring = exp(-pow((rr-rad)/0.0035,2.0)) + 0.5*exp(-pow((rr-rad*0.55)/0.0035,2.0));
+      col += (uGlow*0.6+hz*0.8)*ring*rg.w*exp(-rg.z*1.25)*0.40*smoothstep(0.0,0.12,rg.z);
+    }
+    col = mix(col, hz*0.9, exp(-d*42.0)*0.55);
+  }
+  // waves of light when a light is lit
+  for(int i=0;i<uNWaves;i++){
+    vec4 w = uWaves[i];
+    vec2 q = (uv-w.yz)*vec2(uAspect,1.0);
+    float rr = length(q);
+    float front = exp(-pow((rr-w.x*0.42)/0.09,2.0))*exp(-w.x*0.75);
+    float bloom = exp(-rr*rr/0.10)*exp(-w.x*1.3);
+    col += uGlow*w.w*(front*0.50+bloom*0.30);
+  }
+  // soft shadows so the words stay readable against bright skies
+  uv = sv;
+  float sh = max(texture(uTextA, uv).b*uShade.x, texture(uTextB, uv).b*uShade.y);
+  col *= 1.0-0.56*sh;
+  float tight = max(wordMask(uTextA, uv, uTxA, uBndA), wordMask(uTextB, uv, uTxB, uBndB));
+  col *= 1.0-0.50*tight;
+  vec2 cuv = (uv-uCredit.xy)/uCredit.z + uC0;
+  if(cuv.x>0.0 && cuv.x<1.0 && cuv.y>0.0 && cuv.y<1.0){
+    vec3 ct = texture(uTextC, cuv).rgb;
+    col *= 1.0-(ct.g*0.50+ct.b*0.34)*uCredit.w;
+  }
+  vec3 L = texture(uL, uv).rgb;
+  vec3 bl = texture(uB1,uv).rgb*0.34 + texture(uB2,uv).rgb*0.28 + texture(uB3,uv).rgb*0.24 + texture(uB4,uv).rgb*0.22;
+  col += L + bl*uBloom;
+  // lens: vignette, exposure, filmic curve
+  vec2 vq = (uv-0.5)*vec2(1.15,1.0);
+  col *= mix(1.0, 0.62, smoothstep(0.30,1.0,length(vq)*1.35));
+  col *= uExposure*uFade;
+  col = (col*(2.51*col+0.03))/(col*(2.43*col+0.59)+0.14);
+  col = pow(clamp(col,0.0,1.0), vec3(1.0/2.2));
+  float luma = dot(col, vec3(0.2126,0.7152,0.0722));
+  col = clamp(mix(vec3(luma), col, 1.18), 0.0, 1.0);
+  col = mix(col, col*col*(3.0-2.0*col), 0.24);
+  // fine grain keeps the dark gradients smooth on a big screen
+  vec2 px = gl_FragCoord.xy;
+  float n1 = hash21(px+vec2(uFrame*1.37, uFrame*0.73));
+  float n2 = hash21(px.yx+vec2(uFrame*2.11+17.0, 5.0));
+  col += (n1+n2-1.0)*(1.15/255.0);
+  o = vec4(col,1.0);
+}
+"""
