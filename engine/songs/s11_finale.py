@@ -169,10 +169,10 @@ FRAG_T0, FRAG_T1, FRAG_OUT = LIFT, LIFT + 2.5, LIFT + 6.0
 
 SKYLINE_LANTERN = 0.0            # all plates: hide the light that travels along the drawn skyline
 BOTTOM_CALM = 1.0                # calm lower third (PHASE2.md item 6)
-# Rings each light already earned before this minute (DESIGN-SYSTEM.md 12a star history): light 7 in songs 02, 03,
-# 05 and 09; light 3 in 04; light 4 in 06; light 8 in 07; light 9 in 08; light 2 at this song's thanks to Father
-# (1:51). Index 0 is light 1.
-RINGS_AT_START = {1: 1, 2: 1, 3: 1, 6: 4, 7: 1, 8: 1}
+# Rings each light carries into this minute (0-based: 0 Greeting ... 8 Compliment): exactly song 10's closing
+# counts [1, 0, 1, 1, 0, 0, 5, 2, 1], plus one ring on light 2 Gratitude from this song's own relight at the thanks
+# to Father (1:51), which comes before the promo minute (1:59).
+RINGS_AT_START = {0: 1, 1: 1, 2: 1, 3: 1, 6: 5, 7: 2, 8: 1}
 
 # Song 11 look (DESIGN-SYSTEM.md section 6): a radiant full sunrise, the brightest scene of the night. White gold,
 # sky blue and all nine colors; full rays; a clear sky; the complete arch; grand framing with a high horizon.
