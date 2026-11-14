@@ -10,8 +10,8 @@ ice and frost, the path of light, motes, the arch). Song 04 owns the freeze and 
 Scenes (seconds into the promo; changes run in gaps between texts):
  1  0 to 17     frost before dawn: a deep blue night over the lake, the last stars, frost creeping in from the
                 corners and the lake freezing over; the title card; the Apology, said first, alone
- 2  17 to 29    the mirror in the ice: the camera comes low and close over the ice, a darker blue, the ice
-                clear enough to show the mirror; "the pain you held inside" rises out of the reflection
+ 2  17 to 29    the mirror in the ice: the camera comes low and close over the ice under a violet night full
+                of stars, the ice clear enough to show the mirror, frost thick at the edges of the frame; "the pain you held inside" rises out of the reflection
  3  29 to 46    cold winter morning: the sky opens to steel blue with a pale ice horizon, a low cold sun in
                 haze; a path of footprints of light runs from the sun across the ice; a sister of light walks it
                 (once, about 4 s, always moving); "truly humbled", then "opened her heart"
@@ -169,10 +169,10 @@ TEXT_SHADOW = 0.0
 # Scene palettes (top of sky, middle, horizon, glow of the low sun)
 PAL = {
     "frostnight": ("#02061a", "#081634", "#22406a", "#9cc4ff"),
-    "mirror":     ("#02051a", "#07132e", "#1d3558", "#a9c8ff"),
+    "mirror":     ("#05041c", "#130f38", "#33295e", "#c6b4ff"),
     "coldmorn":   ("#040c28", "#10264c", "#6f8fb4", "#dfeaff"),
     "warming":    ("#060d2c", "#1a2652", "#a88a98", "#ffd8b8"),
-    "apricot":    ("#081136", "#2a2a5c", "#e9986e", "#ffcf98"),
+    "apricot":    ("#070f30", "#1d2150", "#8e6070", "#ffc890"),
 }
 _pal_keys = [(0.0, "frostnight"), (16.5, "frostnight"), (19.5, "mirror"), (27.5, "mirror"), (31.0, "coldmorn"),
              (40.0, "coldmorn"), (45.5, "warming"), (49.0, "apricot"), (TOTAL, "apricot")]
@@ -181,15 +181,17 @@ SKY_MID = Track([(t, lin(PAL[p][1])) for t, p in _pal_keys])
 SKY_HOR = Track([(t, lin(PAL[p][2])) for t, p in _pal_keys])
 GLOW = Track([(t, lin(PAL[p][3])) for t, p in _pal_keys])
 
-SUN_INT = Track([(0, 0.14), (16.5, 0.18), (19.5, 0.12), (27.5, 0.14), (31.0, 0.42), (40.0, 0.52), (46.0, 0.66),
-                 (49.5, 0.95), (TOTAL, 0.95)])
-SUN_Y = Track([(0, 0.395), (16.5, 0.40), (31.0, 0.425), (46.0, 0.435), (52.0, 0.45), (TOTAL, 0.455)])
-SUN_SIZE = Track([(0, 0.09), (27.5, 0.09), (31.0, 0.12), (49.0, 0.13), (TOTAL, 0.13)])
-STARS = Track([(0, 0.0), (0.3, 0.0), (2.5, 0.85), (16.5, 0.7), (19.5, 0.8), (27.5, 0.7), (32.0, 0.12),
+SUN_INT = Track([(0, 0.14), (16.5, 0.18), (19.5, 0.06), (27.0, 0.08), (31.0, 0.42), (40.0, 0.50), (46.0, 0.52),
+                 (49.5, 0.60), (TOTAL, 0.58)])
+# the warm sun stays low, at the ridge, so the sky behind the end card stays deep
+SUN_Y = Track([(0, 0.395), (16.5, 0.40), (19.5, 0.385), (27.0, 0.39), (31.0, 0.425), (44.0, 0.43), (49.0, 0.415),
+               (TOTAL, 0.415)])
+SUN_SIZE = Track([(0, 0.09), (27.5, 0.09), (31.0, 0.12), (44.0, 0.12), (49.0, 0.10), (TOTAL, 0.10)])
+STARS = Track([(0, 0.0), (0.3, 0.0), (2.5, 0.85), (16.5, 0.7), (19.5, 1.0), (27.0, 0.9), (32.0, 0.12),
                (46.0, 0.05), (TOTAL, 0.05)])
 MILKY = Track([(0, 0.0), (TOTAL, 0.0)])
-CLOUDS = Track([(0, 0.12), (16.5, 0.15), (19.5, 0.22), (27.5, 0.25), (31.0, 0.45), (46.0, 0.45), (52.0, 0.35),
-                (TOTAL, 0.35)])   # haze in the cold morning
+CLOUDS = Track([(0, 0.12), (16.5, 0.15), (19.5, 0.05), (27.0, 0.06), (31.0, 0.45), (46.0, 0.45), (52.0, 0.30),
+                (TOTAL, 0.30)])   # haze in the cold morning
 AURORA = Track([(0, 0.0), (TOTAL, 0.0)])     # aurora belongs to song 03
 RAIN = Track([(0, 0.0), (TOTAL, 0.0)])
 MOTES = Track([(0, 0.06), (3, 0.16), (17, 0.20), (29, 0.18), (46, 0.22), (50, 0.34), (TOTAL, 0.30)])
@@ -198,11 +200,14 @@ PETALS = Track([(0, 0.0), (TOTAL, 0.0)])     # no petals (songs 02 and 03)
 TRAIL = Track([(0, 0.0), (1.2, 0.45), (TOTAL, 0.55)])
 # framing: wide night, then low and close over the mirror ice, back out to the long morning view, and the
 # slightest push into the thaw
-ZOOM = Track([(0, 1.0), (16.5, 0.985), (19.8, 0.80), (27.0, 0.78), (30.5, 1.0), (46.0, 0.985), (TOTAL, 0.955)])
+ZOOM = Track([(0, 1.0), (16.5, 0.985), (19.8, 0.62), (26.5, 0.60), (30.5, 1.0), (46.0, 0.985), (TOTAL, 0.955)])
 EXPOSURE = Track([(0, 1.0), (TOTAL, 1.0)])
 FADE = Track([(0, 0.0), (1.0, 1.0), (TOTAL - 1.4, 1.0), (TOTAL - 0.1, 0.0)])
-RAYS = Track([(0, 0.0), (47.0, 0.0), (51.0, 0.30), (TOTAL, 0.30)])   # warm rays only once it thaws
-PART = Track([(0, 0.0), (47.5, 0.0), (51.0, 0.8), (TOTAL, 0.8)])     # the haze parts round the warm sun
+RAYS = Track([(0, 0.0), (47.0, 0.0), (51.0, 0.14), (TOTAL, 0.14)])   # gentle warm rays only once it thaws
+PART = Track([(0, 0.0), (47.5, 0.0), (51.0, 0.5), (TOTAL, 0.5)])     # the haze parts round the warm sun
+# the light that travels the skyline (original style) rests while words stand near its path
+SKYLINE_LANTERN = Track([(0, 1.0), (18.0, 1.0), (19.0, 0.0), (26.0, 0.0), (27.5, 1.0), (47.0, 1.0), (49.0, 0.3),
+                         (TOTAL, 0.3)])
 
 
 # frost glitter, cold and pearly; apricot once the thaw comes
@@ -214,10 +219,11 @@ def MOTE_COLORS(t):
 # clearer over the close mirror, and thaws in glowing pools on the first chorus
 ICE = Track([(0, 0.0), (0.8, 0.0), (5.0, 1.0), (47.5, 1.0), (50.5, 0.40), (55.0, 0.0)])
 ICE_LINE = HORIZON
-ICE_OPACITY = Track([(0, 0.85), (16.5, 0.85), (19.8, 0.42), (27.0, 0.42), (30.5, 0.85), (TOTAL, 0.85)])
+ICE_OPACITY = Track([(0, 0.85), (16.5, 0.85), (19.8, 0.25), (26.5, 0.25), (30.5, 0.85), (TOTAL, 0.85)])
 ICE_COLOR = "#cfe2ff"
 THAW_COLOR = "#e8a476"
-ICE_FRAME = Track([(0, 0.0), (1.0, 0.0), (6.0, 0.32), (27.0, 0.32), (31.0, 0.12), (44.0, 0.08), (48.0, 0.0)])
+ICE_FRAME = Track([(0, 0.0), (1.0, 0.0), (6.0, 0.32), (17.0, 0.32), (20.0, 0.45), (26.5, 0.45), (31.0, 0.12),
+                   (44.0, 0.08), (48.0, 0.0)])
 
 # B. one person of light, once (Anthony, round 4: optional, rare, always moving, small, never under words):
 # in the gap between the reflection fragment and "truly humbled", a sister of light gathers far out on the
@@ -242,8 +248,8 @@ def _beam(t):
     if t < 46.0:
         if t < 27.4:
             return 0.0
-        return min((t - 27.4) / 2.0, 1.0) * 0.50 * (1.0 - min(max((t - 32.0) / 3.0, 0.0), 1.0))
-    return 0.8 * min(max((t - 50.0) / 3.0, 0.0), 1.0)
+        return min((t - 27.4) / 2.0, 1.0) * 0.65 * (1.0 - min(max((t - 32.0) / 3.0, 0.0), 1.0))
+    return 0.6 * min(max((t - 50.0) / 3.0, 0.0), 1.0)
 
 
 BEAM = _beam
@@ -278,7 +284,7 @@ PHRASES = [
     dict(label="Compliment", lines=["“You’re amazing.", "You’re doing great!”"], size=140, **LIT),
 ]
 FORM_DUR = 3.0
-TITLE = dict(label="Healing Concert", lines=["The Words of Mother’s Love"], size=150,
+TITLE = dict(label="Healing Concert", lines=["The Words of Mother’s Love"], size=150, y=0.29,
              form=TITLE_HIT - FORM_DUR, hold=1e9, star=1e9)
 # Short lyric fragments (never on screen with the expression). Times are estimates in verse 1.
 FRAGMENTS = [
