@@ -185,11 +185,11 @@ MILKY = Track([(0, 0.0), (TOTAL, 0.0)])
 CLOUDS = Track([(0, 0.6), (TOTAL, 0.6)])
 AURORA = Track([(0, 0.0), (TOTAL, 0.0)])
 RAIN = Track([(0, 0.0), (TOTAL, 0.0)])
-MOTES = Track([(0, 0.6), (6, 0.35), (18, 0.25), (31, 0.25), (34, 0.45), (40, 0.55), (48, 0.55), (TOTAL, 0.5)])
+MOTES = Track([(0, 0.6), (6, 0.35), (18, 0.25), (31, 0.25), (34, 0.45), (40, 0.55), (46, 0.5), (50, 0.25), (TOTAL, 0.25)])
 LANTERNS = Track([(0, 0.0), (46.0, 0.0), (49.0, 1.0), (TOTAL, 1.0)])   # lanterns lift at the end
 PETALS = Track([(0, 0.0), (TOTAL, 0.0)])
 MOTE_COLORS = ("#ffd27a", "#ff9a3c")     # golden dust, wheat gold to deep orange
-LANTERN_COLORS = ("#ffb04a", "#e8692a")
+LANTERN_COLORS = ("#ffd27a", "#ffa040")   # bright paper lanterns, set apart from the dimmer dust at the end
 TRAIL = Track([(0, 0.0), (TOTAL, 0.0)])
 ZOOM = Track([(0, 0.98), (TOTAL, 0.96)])
 EXPOSURE = Track([(0, 1.0), (45.0, 1.0), (50.0, 0.88), (TOTAL, 0.88)])
@@ -203,7 +203,7 @@ PART = Track([(0, 0.5), (TOTAL, 0.5)])
 P = "assets/plates/s06/"
 SCENES = [
     # 2. the narrow shore path: still water on the left, tall glowing wheat on the right (Concession)
-    dict(image=P + "path.jpg", t0=5.0, t1=20.6, fade_in=2.4, fade_out=1.8, transition="bloom", flash=0.4,
+    dict(image=P + "path.jpg", t0=5.0, t1=20.6, fade_in=2.4, fade_out=1.8, transition="bloom", flash=0.25,
          zoom=(1.10, 1.02), pan=((0.02, 0.0), (0.0, 0.0)),
          gain=Track([(0, 1.0), (7.5, 1.0), (10.0, 0.85), (19.0, 0.85), (20.6, 1.0)])),
     # 3. the water's edge at rose ember dusk, the family's lantern floating dark (Inclusiveness)
@@ -250,8 +250,8 @@ FIGURES = [
 
 # C. signature effects
 # the golden field of light: an ocean of wheat in scene 1, waves of grain again at the edge of heaven
-GOLDEN_FIELD = Track([(0, 0.95), (5.0, 0.95), (7.4, 0.0), (45.6, 0.0), (49.0, 0.8), (PEAK_END, 0.85), (TOTAL, 0.8)])
-FIELD_LINE = Track([(0, 0.40), (7.4, 0.40), (45.6, 0.36), (TOTAL, 0.36)])
+GOLDEN_FIELD = Track([(0, 0.95), (5.0, 0.95), (6.4, 0.0), (45.6, 0.0), (49.0, 0.8), (PEAK_END, 0.85), (TOTAL, 0.8)])
+FIELD_LINE = Track([(0, 0.40), (6.4, 0.40), (45.6, 0.36), (TOTAL, 0.36)])
 FIELD_COLOR = "#ffc35a"
 FIELD_SPEED = 1.2
 # living water: a column of light pours from heaven into the cracked land, right of the words, and the gold
