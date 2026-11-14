@@ -229,17 +229,26 @@ SCENES = [
          gain=Track([(0, 0.92), (52.0, 0.86), (54.0, 0.74), (TOTAL, 0.74)])),
 ]
 
-# B. People of light (round 3, Anthony: people rare and always moving, never the focus). Only two brief
-# appearances, each almost all gathering and flowing light: the traveler on the path at dusk, and Heavenly Mother,
-# seen only from behind with her lamp raised, going on ahead along the path home. The expressions are carried by the
-# words, the path of light, the windows answering and the star relights.
+# B. People of light (round 3, Anthony: people rare and always moving, never the focus, never under the words).
+# Three brief walking moments of a few seconds each, now that figures can really move (engine section G): the
+# elderly traveler walking the shore path toward the bench at dusk, the two lantern-bearers walking up the village
+# path after the windows have answered, and Heavenly Mother, seen only from behind with her lamp raised, walking on
+# ahead up the path home. The expressions are carried by the words, the path of light, the windows answering and the
+# star relights.
 FIGURES = [
-    # scene 1: the elderly traveler appears on the shore path and her light flows on into the lamp by the bench
-    dict(poses=[F + "s07_traveler_walk.png"], t0=5.0, t1=7.8, gather=2.5, x=0.40, y=0.45, height=0.22, flip=True,
-         color="#ffcf9a", to=(0.235, 0.56), dissolve=2.5),
-    # scene 5: Heavenly Mother from behind leads the way; her light flows on along the lantern path, below the card
-    dict(poses=[F + "s07_mother_lamp_behind.png"], t0=52.0, t1=55.0, gather=2.5, x=0.17, y=0.12, height=0.25,
-         color="#fff0d2", glow=1.1, to=(0.46, 0.20), dissolve=3.0),
+    # scene 1: the elderly traveler walks left along the shore path toward the bench; her light flows into its lamp
+    dict(poses=[F + "s07_traveler_walk.png"], t0=4.6, t1=9.0, gather=1.3, x=(0.47, 0.33), move=(4.6, 9.0),
+         ease="linear", bob=1.0, y=0.45, height=0.22, flip=True,
+         color="#ffcf9a", to=(0.235, 0.56), dissolve=2.0),
+    # scene 4: the lantern-bearers walk up the village path to the right, away from the lit windows (after the
+    # Consideration words have gone solid and before the title forms above them)
+    dict(poses=[F + "s07_lantern_pair.png"], t0=47.4, t1=50.6, gather=1.2, x=(0.66, 0.80), y=(0.33, 0.38),
+         height=(0.21, 0.18), move=(47.4, 50.6), ease="linear", bob=1.0,
+         color="#ffd27a", glow=1.1, leave="drift", dissolve=1.8),
+    # scene 5: Heavenly Mother from behind walks on ahead up the lantern path, below the card; her light flows on
+    dict(poses=[F + "s07_mother_lamp_behind.png"], t0=52.0, t1=55.6, gather=1.5, x=(0.13, 0.22), y=(0.10, 0.15),
+         height=(0.25, 0.21), move=(52.0, 55.6), ease="linear", bob=1.0,
+         color="#fff0d2", glow=1.1, to=(0.46, 0.20), dissolve=2.5),
 ]
 
 # C. Signature effects. The lone light found: a path of light from the horizon star along the shore to the bench
@@ -333,7 +342,7 @@ def credit_state(t, bbox):
 # Mother's words (unrest to stillness)
 WAVES = [(PHRASES[0]["star"], STAR_POS[0][0], STAR_POS[0][1], 0.5),
          (PHRASES[7]["arrive"], STAR_POS[7][0], STAR_POS[7][1], 0.6),
-         (G_HOLD + 2.6, 0.5, 0.45, 0.5),
+         (G_HOLD + 2.6, 0.5, 0.40, 0.3),
          (TITLE_HIT, 0.5, 0.62, 1.1)]
 
 
