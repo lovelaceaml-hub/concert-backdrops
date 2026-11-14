@@ -142,7 +142,7 @@ from track import Track   # the shared Track refuses keys that are not strictly 
 VOICE_IN = 5.0        # "I'm sorry" (verse 1, line 1) begins, about 0:31
 CHORUS1 = 49.0        # first chorus, 1:15
 NINTH = 1e9           # the whole arch does not glow at the end of this promo
-TITLE_HIT = 50.3      # end card
+TITLE_HIT = 49.9      # end card
 
 # The scenes (promo v2), the phase 1 plates painted for this song (assets/plates/s04/, sun softened behind the
 # words and the lower third calmed), each a different framing. Scene changes happen only in gaps between texts.
@@ -150,11 +150,12 @@ TITLE_HIT = 50.3      # end card
 #  2   1.5 to 18  frozen_lake_wide: a wide frozen lake, low cold sun in haze; the apology said first
 #  3  16.4 to 29  reflection_close: a low, very close view where the mirrored ice fills the frame (no mountains);
 #                 "the pain you held inside" appears in the reflection, then rises
-#  4  27 to 48    ice_path: a long view down the ice to the low sun, framed off centre; a path of footprints of
+#  4  27 to 49    ice_path: a long view down the ice to the low sun, framed off centre; a path of footprints of
 #                 light runs from the sun across the ice to the sisters: one walks across, kneels and holds her
-#                 sister's hand ("truly humbled"); they embrace ("opened her heart"); the ice thaws in glowing pools
-#  5  46 to 60    thaw_morning: the thawed lake in warm apricot light, a thin gold path across the water ending in
-#                 one small warm light at centre where the sisters' light came down; the three-line end card
+#                 sister's hand ("truly humbled"); they embrace ("opened her heart"); the ice holds until they leave
+#  5  47 to 60    thaw_morning (graded to apricot and peach): the ice thaws on the first chorus; a thin gold path on
+#                 the water, off the sun's reflection, ends in one small warm light where the sisters' light came
+#                 down; the three-line end card
 SKYLINE_LANTERN = 0.0     # no travelling light on the drawn skyline (the plates have their own mountains)
 BOTTOM_CALM = 1.0
 RINGS_AT_START = {6: 2}   # Encouragement was relit in songs 02 and 03; Apology (03) and Compliment (01) have no rings yet
@@ -183,7 +184,7 @@ PETALS = Track([(0, 0.0), (TOTAL, 0.0)])   # no falling petals (they belong to s
 TRAIL = Track([(0, 0.0), (TOTAL, 0.0)])
 ZOOM = Track([(0, 1.0), (TOTAL, 1.0)])
 EXPOSURE = Track([(0, 1.0), (TOTAL, 1.0)])
-FADE = Track([(0, 0.0), (1.0, 1.0), (TOTAL - 1.8, 1.0), (TOTAL - 0.2, 0.0)])
+FADE = Track([(0, 0.0), (1.0, 1.0), (TOTAL - 1.4, 1.0), (TOTAL - 0.1, 0.0)])
 RAYS = Track([(0, 0.0), (TOTAL, 0.0)])     # the plates carry their own light; nothing crosses the end card
 PART = Track([(0, 0.0), (TOTAL, 0.0)])
 
@@ -203,13 +204,13 @@ SCENES = [
     dict(image="assets/plates/s04/reflection_close.jpg", t0=16.4, t1=29.2, fade_in=2.0, fade_out=2.0,
          zoom=(1.50, 1.56), pan=((0.06, -0.17), (0.04, -0.17)), water=True, water_line=0.98,
          water_strength=0.55, calm_gain=0.8, gain=Track([(0, 1.0), (18.4, 0.90), (27.0, 0.90), (29.2, 1.0)])),
-    dict(image="assets/plates/s04/ice_path.jpg", t0=27.2, t1=48.0, fade_in=2.0, fade_out=2.0,
+    dict(image="assets/plates/s04/ice_path.jpg", t0=27.2, t1=49.0, fade_in=2.0, fade_out=2.0,
          zoom=(1.15, 1.12), pan=((0.06, 0.0), (0.055, 0.0)), water=True, water_line=0.55, water_strength=0.35,
          calm_gain=0.8,
-         gain=Track([(0, 1.0), (29.2, 0.84), (46.0, 0.84), (48.0, 1.0)])),
-    dict(image="assets/plates/s04/thaw_morning.jpg", t0=46.0, t1=61.0, fade_in=2.0, fade_out=0.0,
+         gain=Track([(0, 1.0), (29.2, 0.84), (47.0, 0.84), (49.0, 1.0)])),
+    dict(image="assets/plates/s04/thaw_morning.jpg", t0=47.0, t1=61.0, fade_in=2.0, fade_out=0.0,
          zoom=(1.10, 1.05), water=True, water_line=0.445, water_strength=0.45, calm_gain=0.8,
-         gain=Track([(0, 0.95), (48.0, 0.78), (TOTAL, 0.78)])),
+         gain=Track([(0, 0.95), (49.0, 0.80), (TOTAL, 0.80)])),
 ]
 
 # B. people of light: two sisters
@@ -222,17 +223,18 @@ FIGURES = [
     # then they embrace. Their light comes down as one small warm light at the centre of the lake.
     dict(poses=["assets/song_figures/s04/s04_walk.png", "assets/song_figures/s04/s04_kneel_pair.png",
                 "assets/figures/inclusiveness_c.png"],
-         t0=27.6, t1=43.4, pose_times=[30.6, 38.0], x=0.62, y=0.21, height=0.38, to=(0.5, 0.27),
+         t0=27.6, t1=43.4, pose_times=[30.6, 38.0], x=0.62, y=0.21, height=0.38, to=(0.42, 0.22),
          color="#ffb7a8"),
 ]
 
 # C. signature effects: the ice and its thaw, frost over the frame, the path of footprints of light across the ice
 # the ice stays whole (no thaw edges) through the first three scenes; it is only made fainter over the close
 # reflection; it starts to thaw in glowing pools as the sisters embrace, and melts away on the first chorus
-ICE = Track([(0, 0.0), (0.6, 0.0), (3.0, 1.0), (39.0, 1.0), (45.0, 0.45), (48.0, 0.30), (53.0, 0.0)])
+ICE = Track([(0, 0.0), (0.6, 0.0), (3.0, 1.0), (46.5, 1.0), (49.5, 0.40), (53.5, 0.0)])
 ICE_LINE = Track([(0, 0.40), (1.5, 0.40), (3.5, 0.56), (16.4, 0.56), (18.4, 0.98), (27.2, 0.98), (29.2, 0.55),
                   (46.0, 0.55), (48.0, 0.445), (TOTAL, 0.445)])
-ICE_OPACITY = Track([(0, 0.80), (16.4, 0.80), (18.4, 0.30), (27.2, 0.30), (29.2, 0.80), (TOTAL, 0.80)])
+ICE_OPACITY = Track([(0, 0.80), (16.4, 0.80), (18.4, 0.15), (27.2, 0.15), (29.2, 0.80), (46.5, 0.80),
+                     (49.0, 0.45), (TOTAL, 0.45)])
 ICE_FRAME = Track([(0, 0.0), (1.0, 0.0), (4.0, 0.35), (27.0, 0.35), (31.0, 0.12), (44.0, 0.08), (48.0, 0.0)])
 
 
@@ -241,13 +243,13 @@ def _beam(t):
     # ends in one small warm light at centre
     if t < 47.0:
         return 0.0 if t < 31.0 else min((t - 31.0) / 2.5, 1.0) * 0.55 * (1.0 - min(max((t - 44.0) / 2.5, 0.0), 1.0))
-    return 0.75 * min(max((t - 48.0) / 3.0, 0.0), 1.0)
+    return 0.80 * min(max((t - 49.0) / 3.0, 0.0), 1.0)
 
 
 BEAM = _beam
-BEAM_FROM = lambda t: (0.44, 0.59) if t < 47.0 else (0.49, 0.665)   # noqa: E731
-BEAM_TO = lambda t: (0.58, 0.215) if t < 47.0 else (0.50, 0.27)     # noqa: E731
-BEAM_WIDTH = lambda t: (0.010, 0.07) if t < 47.0 else (0.008, 0.06)   # noqa: E731
+BEAM_FROM = lambda t: (0.44, 0.59) if t < 47.0 else (0.455, 0.43)   # noqa: E731
+BEAM_TO = lambda t: (0.58, 0.215) if t < 47.0 else (0.42, 0.23)     # noqa: E731
+BEAM_WIDTH = lambda t: (0.010, 0.07) if t < 47.0 else (0.004, 0.09)   # noqa: E731
 BEAM_COLOR = "#ffd2a0"
 FLASH = Track([(0, 0.0), (48.6, 0.0), (49.3, 0.16), (50.8, 0.0)])
 TEXT_SHADOW = Track([(0, 1.3), (TOTAL, 1.5)])
@@ -283,14 +285,14 @@ TITLE = dict(label="Healing Concert", lines=["The Words of Mother’s Love"], si
 FRAGMENTS = [
     dict(text="the pain you held inside", t0=18.6, t1=22.3, out=25.4, dy=0.0, size=88, glow="#bcd6ff",
          style="reflection", line=0.52),
-    dict(text="truly humbled", t0=31.6, t1=34.4, out=37.5, dy=0.06, size=96, style="write", glow="#ffc48c"),
-    dict(text="opened her heart", t0=39.6, t1=42.1, out=45.2, dy=0.06, size=96, glow="#ff9fb8"),
+    dict(text="truly humbled", t0=31.3, t1=34.1, out=37.1, dy=0.06, size=96, style="write", glow="#ffc48c"),
+    dict(text="opened her heart", t0=39.2, t1=41.7, out=44.8, dy=0.06, size=96, glow="#ff9fb8"),
 ]
 
 # the three-line end card (PHASE2.md item 7)
 TAGLINE = dict(text="Where a mother’s love reaches, peace settles.\nSunday, December 6 · 4:30 PM\n"
                     "The World Mission Society Church of God · 6720 W Sahara Ave, Las Vegas",
-               t0=TITLE_HIT + 1.3, t1=TITLE_HIT + 3.8)
+               t0=TITLE_HIT + 0.8, t1=TITLE_HIT + 3.3)
 
 # Opening title card that then rests, small, in the top left corner
 CREDIT = dict(song="I’m Sorry, Please Forgive Me", concert="The Words of Mother’s Love Healing Concert",
@@ -319,7 +321,7 @@ def credit_state(t, bbox):
 
 
 # Waves of light that cross the sky: Apology's light flares again, then the end card
-WAVES = [(PHRASES[2]["arrive"], STAR_POS[2][0], STAR_POS[2][1], 0.7), (TITLE_HIT, 0.5, 0.62, 1.2)]
+WAVES = [(PHRASES[2]["arrive"], STAR_POS[2][0], STAR_POS[2][1], 0.35), (TITLE_HIT, 0.5, 0.62, 1.2)]
 
 
 def params(song, t):
