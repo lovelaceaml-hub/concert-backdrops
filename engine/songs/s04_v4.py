@@ -172,7 +172,7 @@ PAL = {
     "mirror":     ("#05041c", "#130f38", "#33295e", "#c6b4ff"),
     "coldmorn":   ("#040c28", "#10264c", "#6f8fb4", "#dfeaff"),
     "warming":    ("#060d2c", "#1a2652", "#a88a98", "#ffd8b8"),
-    "apricot":    ("#070f30", "#1d2150", "#8e6070", "#ffc890"),
+    "apricot":    ("#070f30", "#1d2150", "#9a6a56", "#ffc488"),
 }
 _pal_keys = [(0.0, "frostnight"), (16.5, "frostnight"), (19.5, "mirror"), (27.5, "mirror"), (31.0, "coldmorn"),
              (40.0, "coldmorn"), (45.5, "warming"), (49.0, "apricot"), (TOTAL, "apricot")]
