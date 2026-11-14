@@ -4,12 +4,15 @@ Look: a spring afternoon full of blessing (DESIGN-SYSTEM.md section 6). Timed to
 2:26 to 3:26 of the ver.3 recording: the sister verse, from the prayer for her to the final climax.
 Design: project-docs/designs/05 God Bless You!.md (and its Google Doc, section 14 "Promo v2: scenes").
 
-Four scenes: (1) the young blossom tree on the shore, where two pray for the sister (Encouragement, relit);
-(2) the listening shore with its resting stone, where the brother stops and listens (Respect, first lit; a
-provisional exception awaiting Anthony, not an exact lyric match); (3) the open spring lake, wide to the far shore,
-where two carry a heavy load together (Consideration, lit in the brother verse, relit);
-(4) the tree of blessing again, closer, as the afternoon sun breaks through above it and "God bless you!" forms
-of blossom petals, ending on the three-line concert card.
+Round 3 direction (Anthony): the promo is a clip of the real backdrop, not a film of people acting. The words,
+the tree of blessing, the petals and the light carry each expression; people of light appear once, briefly and
+in motion, off to the side.
+Four scenes: (1) the young blossom tree on the shore (Encouragement, relit); (2) the listening shore with its
+resting stone (Respect, first lit; a provisional exception awaiting Anthony, not an exact lyric match); (3) the
+open spring lake, wide to the far shore (Consideration, lit in the brother verse, relit), where a pair of light
+carrying a load together gathers on the far shore and drifts up into light; (4) the tree of blessing again,
+closer, as the afternoon sun breaks through above it and "God bless you!" forms of blossom petals, ending on the
+three-line concert card.
 Line times inside the minute are estimates from loudness (the sung guide alignment is still to do).
 
 Song features and the visual timeline for the backdrop.
@@ -214,39 +217,31 @@ TEXT_SHADOW = Track([(0, 1.6), (TOTAL, 1.7)])   # bright spring plates: a deeper
 SCENES = [
     # 1. the young blossom tree on the shore: two pray for the sister
     dict(image="assets/plates/s05/p1_young_tree.jpg", t0=0.0, t1=15.55, fade_in=0.8, fade_out=1.6,
-         zoom=(1.10, 1.04), pan=((0.02, 0.0), (0.0, 0.0)), water=True, water_line=0.35,
+         zoom=(1.10, 1.04), pan=((0.02, 0.0), (0.0, 0.0)), water=True, water_line=0.35, calm_gain=0.42,
          gain=Track([(0, 0.95), (2.6, 0.8), (15.55, 0.8)])),
     # 2. the listening shore with its resting stone: the brother stops and listens
     dict(image="assets/plates/s05/p2b_listening_shore.jpg", t0=13.95, t1=28.45, fade_in=1.6, fade_out=1.6,
-         transition="fade", zoom=(1.04, 1.11), pan=((0.0, 0.0), (0.015, 0.0)), water=True, water_line=0.38,
+         transition="fade", zoom=(1.04, 1.11), pan=((0.0, 0.0), (0.015, 0.0)), water=True, water_line=0.38, calm_gain=0.45,
          gain=0.8),
     # 3. the open spring lake: a wide view across the water to the snowy peaks and the blossoming far shore
     # (the left part of the first listening-shore painting; its resting stone stays out of frame)
     dict(image="assets/plates/s05/p2_listening_shore.jpg", t0=26.85, t1=41.35, fade_in=1.6, fade_out=1.6,
          transition="ripple", ripple_from=(0.42, 0.36), zoom=(1.50, 1.46), pan=((-0.15, -0.06), (-0.155, -0.06)),
-         water=True, water_line=0.33, gain=0.8),
+         water=True, water_line=0.33, calm_gain=0.45, gain=0.8),
     # 4. the tree of blessing again, closer, as the sun breaks through above it; it stays for the end card
     dict(image="assets/plates/s05/p1_young_tree.jpg", t0=39.75, t1=61.0, fade_in=1.6, fade_out=0.0,
          transition="bloom", flash=0.8, zoom=(1.24, 1.12), pan=((-0.08, 0.02), (-0.05, 0.0)), water=True,
-         water_line=0.35,
+         water_line=0.35, calm_gain=0.42,
          gain=Track([(0, 0.8), (42.0, 0.8), (44.0, 0.88), (46.5, 0.88), (49.0, 0.72), (TOTAL, 0.72)])),
 ]
 
 # B. People of light (shared library, assets/figures/): every expression shown is acted out
+# One brief appearance only (round 3 direction), always in motion: on the far shore at the right, well clear
+# of the words, a pair of light carrying a load together gathers out of the air and at once drifts up into
+# light (about 5 s on screen, never still, never under the words).
 FIGURES = [
-    # Encouragement: one kneels, exhausted, while the other prays over them, lifts them, and both stand in hope
-    dict(poses=["assets/figures/encouragement_a.png", "assets/figures/encouragement_b.png",
-                "assets/figures/encouragement_c.png"],
-         t0=0.2, t1=ENC_FORM + READ - 0.5, pose_times=[2.9, 4.4], gather=2.5, morph=1.4, x=0.47, y=0.34, height=0.30,
-         to_star=6, color="#d2bdf5"),
-    # Respect: the sister speaks; the brother leans in to listen, then lays a hand on his heart and nods
-    dict(poses=["assets/figures/respect_a.png", "assets/figures/respect_b.png"],
-         t0=13.9, t1=RESPECT_FORM + READ - 0.5, pose_times=[17.2], x=0.60, y=0.34, height=0.30, to_star=5,
-         color="#f0c2b2"),
-    # Consideration: one bends under a heavy bundle; the other comes with open hands and they carry it together
-    dict(poses=["assets/figures/consideration_a.png", "assets/figures/consideration_b.png"],
-         t0=26.0, t1=CONS_FORM + READ - 0.5, pose_times=[29.4], x=0.42, y=0.34, height=0.30, to_star=7,
-         color="#ffb8c8"),
+    dict(poses=["assets/figures/consideration_b.png"], t0=32.6, t1=34.6, gather=2.0, dissolve=3.0,
+         leave="drift", x=0.85, y=0.35, height=0.20, color="#ffc8d4", glow=0.8),
 ]
 
 
