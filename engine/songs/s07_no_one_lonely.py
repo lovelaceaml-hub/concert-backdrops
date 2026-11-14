@@ -196,35 +196,36 @@ F = "assets/song_figures/s07/"
 L = "assets/figures/"
 
 # A. Five scenes (design section 16), each a different place on the long path home. The plates' lower thirds are
-# calmed in the files themselves (darker, half the colour, reflections smeared; assets/plates/s07/calm_plate.py).
+# calmed in the files themselves (darker, half the colour, reflections smeared; assets/plates/s07/calm_plate.py),
+# so the engine's own lower-third darkening (calm_gain) is kept light.
 VILLAGE_ZOOM = 1.08
 SCENES = [
     # 1. The lone light at blue dusk: the long shore path, the bench under the lamp post
     dict(image=P + "path_at_dusk.jpg", t0=0.0, t1=14.5, fade_in=1.0, fade_out=2.0,
-         zoom=(1.03, 1.0), water=True, water_line=0.40),
+         zoom=(1.03, 1.0), calm_gain=0.85, water=True, water_line=0.40),
     # 2. Mother's wish lights the way: close on the line of lights running from Her star along the shore (bloom)
     dict(image=P + "the_lit_path.jpg", t0=12.5, t1=25.5, fade_in=2.0, fade_out=2.5, transition="bloom",
-         flash=0.5, zoom=(1.38, 1.44), pan=((-0.14, 0.0), (-0.14, 0.0)), water=True, water_line=0.45),
+         flash=0.3, zoom=(1.38, 1.44), pan=((-0.14, 0.0), (-0.14, 0.0)), calm_gain=0.85, water=True, water_line=0.45),
     # 3. "How are you?": the bench by the shore (the camera pushes in)
     dict(image=P + "bench_by_the_shore.jpg", t0=23.0, t1=38.0, fade_in=2.5, fade_out=2.0, transition="push",
-         zoom=(1.10, 1.08), water=True, water_line=0.21,
+         zoom=(1.10, 1.08), calm_gain=0.85, water=True, water_line=0.21,
          gain=Track([(0, 1.0), (26.0, 1.0), (29.0, 0.88), (36.0, 0.88), (38.0, 1.0)])),
     # 4. The helping hand: the village path, its windows dark, a ripple of stillness across the lake; then
     # "answered from the windows" (this song's own effect): the windows light up one by one, from the near house
     # to the far end of the village, as the kindness spreads (assets/plates/s07/windows.py)
     dict(image=P + "village_w0.jpg", t0=36.0, t1=42.5, fade_in=2.0, fade_out=1.2, transition="ripple",
-         ripple_from=(0.70, 0.30), zoom=VILLAGE_ZOOM, water=True, water_line=0.27, gain=0.9),
+         ripple_from=(0.70, 0.30), zoom=VILLAGE_ZOOM, calm_gain=0.85, water=True, water_line=0.27, gain=0.9),
     dict(image=P + "village_w1.jpg", t0=41.3, t1=44.5, fade_in=1.2, fade_out=1.2, zoom=VILLAGE_ZOOM,
-         water=True, water_line=0.27, gain=0.9),
+         calm_gain=0.85, water=True, water_line=0.27, gain=0.9),
     dict(image=P + "village_w2.jpg", t0=43.3, t1=46.5, fade_in=1.2, fade_out=1.2, zoom=VILLAGE_ZOOM,
-         water=True, water_line=0.27, gain=0.9),
+         calm_gain=0.85, water=True, water_line=0.27, gain=0.9),
     dict(image=P + "village_w3.jpg", t0=45.3, t1=48.5, fade_in=1.2, fade_out=1.2, zoom=VILLAGE_ZOOM,
-         water=True, water_line=0.27, gain=0.9),
+         calm_gain=0.85, water=True, water_line=0.27, gain=0.9),
     dict(image=P + "village_path.jpg", t0=47.3, t1=52.5, fade_in=1.2, fade_out=2.0, zoom=VILLAGE_ZOOM,
-         water=True, water_line=0.27, gain=0.9),
+         calm_gain=0.85, water=True, water_line=0.27, gain=0.9),
     # 5. Toward home: the lantern path up to the gate of light in the clouds
     dict(image=P + "gate_of_home.jpg", t0=50.5, t1=61.0, fade_in=2.0, fade_out=0.0, transition="fade",
-         zoom=(1.04, 1.08), water=True, water_line=0.21,
+         zoom=(1.04, 1.08), calm_gain=0.85, water=True, water_line=0.21,
          gain=Track([(0, 0.92), (52.0, 0.86), (54.0, 0.74), (TOTAL, 0.74)])),
 ]
 
@@ -350,7 +351,7 @@ def credit_state(t, bbox):
 # Mother's words (unrest to stillness)
 WAVES = [(PHRASES[0]["star"], STAR_POS[0][0], STAR_POS[0][1], 0.5),
          (PHRASES[7]["arrive"], STAR_POS[7][0], STAR_POS[7][1], 0.6),
-         (G_HOLD + 2.6, 0.5, 0.40, 0.8), (C_HOLD + 1.8, 0.5, 0.30, 0.6),
+         (G_HOLD + 2.6, 0.5, 0.45, 0.5),
          (TITLE_HIT, 0.5, 0.62, 1.1)]
 
 
