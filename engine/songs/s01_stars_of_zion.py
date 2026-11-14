@@ -1,12 +1,12 @@
 """Song 01, All You Stars of Zion: the 1 minute promo, version 2 (design "From Starlight to Sunrise").
 
 The minute is 3:01 to 4:01 of the studio recording: the final chorus, from the last stars of the night to the
-first sunrise of the concert. Five painted scenes: the stars come down over the night lake (the morning star
+first sunrise of the concert. Four painted scenes: the stars come down over the night lake (the morning star
 flares on the loudest moment); "dew of the dawn" written in light across a dawn web in the violet blue hour;
 "Arise" rising out of the lake as the sun breaks the ridge; Encouragement acted out by people of light on the
 golden morning shore beside the tree of light, with two torch bearers raising their torches toward the one who
 kneels, then star 7 lit for the first time in the concert (Compliment, star 9, was lit earlier in the song);
-the end card over the clear morning with the faint heavenly city of light beyond the mountains.
+the end card over the same morning shore as the camera keeps pushing in.
 Audio: audio/promo/s01.mp3 (60 s clip). Live the song is a 3:08 brass version with no singing.
 """
 import os
@@ -146,10 +146,10 @@ SUNRISE = 21.0
 BEAMS = 32.0
 PLATEAU = 41.0
 NINTH = 1e9            # the whole arch does not glow in song 01
-TITLE_HIT = 52.0       # end card
-ENC_FORM = 36.5        # Encouragement words start forming (solid from about 40.25)
-ENC_HOLD = 46.5        # Encouragement words start flying to star 7 (6.25 s solid)
-ENC_STAR = 47.9        # star 7 (Encouragement) lit for the first time in the concert
+TITLE_HIT = 50.5       # end card (title forms from 47.5, tagline solid from 52.9)
+ENC_FORM = 35.0        # Encouragement words start forming (solid from about 38.75)
+ENC_HOLD = 45.0        # Encouragement words start flying to star 7 (6.25 s solid)
+ENC_STAR = 46.4        # star 7 (Encouragement) lit for the first time in the concert
 SKYLINE_LANTERN = 0.0  # every scene is a painted plate with its own mountains
 BOTTOM_CALM = 1.0      # calm lower third for the performers (Astra round 1, finding 12)
 
@@ -181,8 +181,8 @@ ZOOM = Track([(0, 1.0), (TOTAL, 1.0)])         # the plates carry the camera mov
 EXPOSURE = Track([(0, 1.0), (44, 1.0), (51, 0.88), (TOTAL, 0.86)])   # calmer light behind the end card
 FADE = Track([(0, 0.0), (1.2, 1.0), (58.6, 1.0), (59.9, 0.0)])
 # the stars come down: silver motes falling slowly through the night, turning gold at sunrise
-MOTES = Track([(0, 0.14), (4, 0.20), (9, 0.30), (15, 0.20), (21, 0.26), (30, 0.20), (36, 0.14), (50, 0.14),
-               (TOTAL, 0.18)])
+MOTES = Track([(0, 0.10), (4, 0.12), (9, 0.14), (15, 0.12), (21, 0.13), (30, 0.12), (36, 0.10), (50, 0.10),
+               (TOTAL, 0.12)])
 MOTE_Y = (1.05, 0.18)
 
 
@@ -198,59 +198,67 @@ def MOTE_COLORS(t):
     return (_mix_hex("#e8ecff", "#ffe6b0", u), _mix_hex("#c8b8ff", "#ffc890", u))
 
 
-# A. Five scenes (painted plates, assets/plates/s01/), from the last stars of the night to the first morning.
+# A. Four scenes (painted plates, assets/plates/s01/), from the last stars of the night to the first morning.
 # 1 the stars come down: navy night, Milky Way arching over the lake, falling stars, the morning star on the horizon
 # 2 dew of the dawn: close on the shore in the violet blue hour, silk threads of a dawn web, the lake blurred
 # 3 Arise: the sun breaking over the ridge, rays filling the sky, a golden road on the water
-# 4 Encouragement: the golden morning shore, sunbeams through the haze, the tree of light at the left edge
-# 5 the morning of hope: clear gold morning, the faint heavenly city of light above the mountains, the end card
+# 4 Encouragement and the end card: the golden morning shore, sunbeams through the haze, the tree of light;
+#   the camera keeps pushing in and drifting right to the end, so the tree slides toward the edge behind the card.
+# The heavenly city plate (s01_heavenly_city.jpg) is not used: Astra round 2 found its centred sun and reflection
+# column repeated the Arise scene, and the city sat behind the end card.
 SCENES = [
     dict(image="assets/plates/s01/s01_night_lake.jpg", t0=0.0, t1=14.5, fade_in=1.0, fade_out=3.5,
          zoom=(1.03, 1.11), pan=((0.0, 0.0), (0.0, 0.012)), water=True, water_line=0.24, water_strength=0.7,
          gain=Track([(0, 1.0), (2.0, 0.82), (7.0, 0.82), (9.0, 1.05), (11.0, 1.0), (TOTAL, 1.0)])),
     dict(image="assets/plates/s01/s01_dawn_web.jpg", t0=11.0, t1=24.0, fade_in=3.5, fade_out=3.0,
-         transition="dissolve", zoom=(1.10, 1.02), pan=((-0.02, 0.0), (0.0, 0.0)), water=True, water_line=0.32,
-         water_strength=0.5, gain=Track([(0, 0.95), (12.0, 0.85), (18.5, 0.85), (20.5, 1.0), (TOTAL, 1.0)])),
+         transition="fade", zoom=(1.10, 1.02), pan=((-0.02, 0.0), (0.0, 0.0)), water=True, water_line=0.32,
+         water_strength=0.5, gain=Track([(0, 0.95), (13.0, 0.85), (19.5, 0.85), (21.0, 1.0), (TOTAL, 1.0)])),
     dict(image="assets/plates/s01/s01_sunrise.jpg", t0=21.0, t1=34.0, fade_in=3.0, fade_out=3.5,
-         transition="bloom", flash=0.85, zoom=(1.02, 1.10), pan=((0.0, -0.01), (0.0, 0.0)), water=True,
+         transition="bloom", flash=0.4, zoom=(1.02, 1.10), pan=((0.0, -0.01), (0.0, 0.0)), water=True,
          water_line=0.22, water_strength=0.8,
-         gain=Track([(0, 1.0), (23.0, 1.0), (24.5, 0.78), (29.5, 0.78), (31.5, 0.95), (TOTAL, 0.95)])),
-    dict(image="assets/plates/s01/s01_morning_beams.jpg", t0=30.5, t1=51.3, fade_in=3.5, fade_out=3.5,
-         transition="push", zoom=(1.10, 1.17), pan=((0.035, 0.0), (0.05, 0.0)), water=True, water_line=0.19,
-         water_strength=0.7,
-         gain=Track([(0, 1.0), (31.5, 1.0), (34.0, 0.78), (37.0, 0.72), (47.5, 0.72), (TOTAL, 0.8)])),
-    dict(image="assets/plates/s01/s01_heavenly_city.jpg", t0=48.3, t1=61.0, fade_in=3.0, fade_out=0.0,
-         transition="fade", zoom=(1.06, 1.0), water=True, water_line=0.21,
-         water_strength=0.6, water_bottom=0.20,
-         gain=Track([(0, 0.95), (49.0, 0.9), (51.5, 0.76), (TOTAL, 0.76)])),
+         gain=Track([(0, 1.0), (22.0, 1.0), (24.0, 0.78), (30.5, 0.78), (32.0, 0.95), (TOTAL, 0.95)])),
+    dict(image="assets/plates/s01/s01_morning_beams.jpg", t0=30.5, t1=61.0, fade_in=3.5, fade_out=0.0,
+         transition="push", zoom=(1.10, 1.24), pan=((0.035, 0.0), (0.09, 0.0)), water=True, water_line=0.19,
+         water_strength=0.5,
+         gain=Track([(0, 1.0), (31.5, 1.0), (33.5, 0.78), (35.5, 0.70), (44.0, 0.70), (47.0, 0.64),
+                     (TOTAL, 0.62)])),
 ]
 
 # B. People of light. Encouragement acted out in full on the morning shore (the shared library): the young man
 # kneels exhausted and his friend prays over him; she rests a hand on his back and cheers him on as he begins to
-# rise; they stand and lift their joined hands. Two torch bearers (song 01's special figures) stand on the shore
-# and raise their torches toward him; at the end every flame lifts as sparks into the new violet light.
+# rise; they stand and lift their joined hands (both moves finish before the words are fully formed). Two torch
+# bearers (song 01's special figures) stand on the shore and raise their torches toward him, each flame a small
+# bright light of its own; at the end every flame and figure lifts as sparks into the new violet light.
 _ENC_C = "#e2d2ff"
+_FEET = 0.24
+_TB_A = dict(x=0.21, h=0.30)          # torch low, flame tip at (0.2105, 0.430) of the screen
+_TB_B = dict(x=0.79, h=0.36)          # torch raised (mirrored), flame tip at (0.8096, 0.569)
+_FLAME = dict(poses=["assets/song_figures/s01/s01_torch_flame.png"], height=0.05, color="#ffb45a", glow=1.7,
+              glass=1.4, sparks=1.3, particles=1800, to_star=6)
 FIGURES = [
     dict(poses=["assets/figures/encouragement_a.png", "assets/figures/encouragement_b.png",
                 "assets/figures/encouragement_c.png"],
-         t0=31.5, t1=ENC_HOLD - 0.5, pose_times=[35.5, 41.0], x=0.5, y=0.21, height=0.37, to_star=6,
-         color=_ENC_C, glow=1.05),
-    dict(poses=["assets/song_figures/s01/s01_torchbearer_a.png"], t0=33.0, t1=ENC_HOLD - 0.3,
-         x=0.21, y=0.21, height=0.32, to_star=6, color="#ffd796", glow=0.9, particles=7000),
-    dict(poses=["assets/song_figures/s01/s01_torchbearer_b.png"], t0=34.0, t1=ENC_HOLD - 0.1,
-         x=0.79, y=0.21, height=0.38, to_star=6, color="#ffd796", glow=0.9, particles=7000, flip=True),
+         t0=30.5, t1=ENC_HOLD - 0.5, pose_times=[33.8, 37.4], morph=1.3, x=0.5, y=_FEET, height=0.35,
+         to_star=6, color=_ENC_C, glow=1.05),
+    dict(poses=["assets/song_figures/s01/s01_torchbearer_a.png"], t0=31.5, t1=ENC_HOLD - 0.3,
+         x=_TB_A["x"], y=_FEET, height=_TB_A["h"], to_star=6, color="#ffd796", glow=0.9, particles=7000),
+    dict(poses=["assets/song_figures/s01/s01_torchbearer_b.png"], t0=32.5, t1=ENC_HOLD - 0.1,
+         x=_TB_B["x"], y=_FEET, height=_TB_B["h"], to_star=6, color="#ffd796", glow=0.9, particles=7000,
+         flip=True),
+    dict(_FLAME, t0=33.0, t1=ENC_HOLD - 0.2, x=0.2105, y=0.430 - 0.014),
+    dict(_FLAME, t0=34.0, t1=ENC_HOLD, x=0.8096, y=0.569 - 0.014),
 ]
 
-# C. Effect layers: a sunbeam falls on the kneeling young man before the words form (it is gone before they
-# are solid), and soft flashes on the morning star (the loudest moment) and on the new star.
-BEAM = Track([(0, 0.0), (32.5, 0.0), (34.5, 0.55), (36.0, 0.55), (38.5, 0.0), (TOTAL, 0.0)])
+# C. Effect layers: a sunbeam falls on the kneeling young man while the words begin to form (it is gone before
+# they are solid), and soft flashes on the morning star (the loudest moment) and on the new star.
+BEAM = Track([(0, 0.0), (32.2, 0.0), (33.6, 0.5), (35.0, 0.5), (37.2, 0.0), (TOTAL, 0.0)])
 BEAM_FROM = (0.60, 1.02)
-BEAM_TO = (0.52, 0.22)
+BEAM_TO = (0.52, 0.25)
 BEAM_WIDTH = (0.02, 0.09)
 BEAM_COLOR = "#ffe6b0"
-FLASH = Track([(0, 0.0), (8.4, 0.0), (9.0, 0.22), (10.6, 0.0), (47.7, 0.0), (48.1, 0.16), (49.5, 0.0),
+FLASH = Track([(0, 0.0), (8.4, 0.0), (9.0, 0.22), (10.6, 0.0), (46.2, 0.0), (46.6, 0.14), (48.0, 0.0),
                (TOTAL, 0.0)])
-TEXT_SHADOW = Track([(0, 1.0), (19.0, 1.0), (22.0, 1.6), (TOTAL, 1.7)])   # deeper veil on the bright dawn plates
+TEXT_SHADOW = Track([(0, 1.0), (19.0, 1.0), (22.0, 1.2), (TOTAL, 1.25)])   # deeper veil on the bright plates
 
 # Nine lights on an arch over the stage, one for each expression (campaign order, left to right)
 STAR_POS = []
@@ -286,15 +294,15 @@ TITLE = dict(label="Healing Concert", lines=["The Words of Mother’s Love"], si
 # "dew of the dawn" is written by a pen of light, like the first light running along the dawn web's threads;
 # "Arise" first lies in the lake as a golden reflection, then rises out of the water as the sun breaks the ridge.
 FRAGMENTS = [
-    dict(text="dew of the dawn", t0=11.6, t1=14.6, out=18.6, dy=0.0, size=92, glow="#d8c8ff", style="write"),
-    dict(text="Arise", t0=21.0, t1=25.0, out=29.6, dy=0.0, size=170, glow="#ffd9a0", style="reflection",
+    dict(text="dew of the dawn", t0=13.5, t1=16.3, out=19.8, dy=0.0, size=92, glow="#d8c8ff", style="write"),
+    dict(text="Arise", t0=22.5, t1=26.5, out=30.5, dy=0.0, size=170, glow="#ffd9a0", style="reflection",
          line=0.22),
 ]
 
 # the three-line end card (PHASE2.md item 7)
 TAGLINE = dict(text="Where a mother’s love reaches, peace settles.\nSunday, December 6 · 4:30 PM\n"
                     "The World Mission Society Church of God · 6720 W Sahara Ave, Las Vegas",
-               t0=TITLE_HIT + 1.4, t1=TITLE_HIT + 4.0)
+               t0=TITLE_HIT + 0.6, t1=TITLE_HIT + 2.4)
 
 # Opening title card that then rests, small, in the top left corner
 CREDIT = dict(song="All You Stars of Zion", concert="The Words of Mother’s Love Healing Concert",
@@ -323,7 +331,7 @@ def credit_state(t, bbox):
 
 
 # Waves of light that cross the sky when a light is lit (time, x, y, strength)
-WAVES = [(ENC_STAR, STAR_POS[6][0], STAR_POS[6][1], 1.1), (TITLE_HIT, 0.5, 0.62, 1.2)]
+WAVES = [(ENC_STAR, STAR_POS[6][0], STAR_POS[6][1], 1.1), (TITLE_HIT, 0.5, 0.80, 0.35)]   # a soft wave high in the sky only
 
 
 def params(song, t):
