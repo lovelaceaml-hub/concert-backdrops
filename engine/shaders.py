@@ -371,8 +371,25 @@ in vec2 vUV; out vec4 o;
 uniform sampler2D uTexA, uTexB, uTexC;
 uniform vec2 uShade; uniform float uK;
 uniform vec4 uCredit; uniform vec2 uC0;
+uniform vec4 uTxA, uTxB; uniform vec2 uBndA, uBndB, uOffA, uOffB;
+
+// The veil and the shadow behind a text slot follow the letters themselves (attack round 2): per pixel, they
+// appear as the letters arrive left to right, leave as the letters dissolve, scale with the letters' opacity
+// (p.w), and move with them (off: where the letters are drawn now, e.g. a reflection still rising).
+float veilVis(vec2 uv, vec4 p, vec2 bnd){
+  float od = clamp((uv.x-bnd.x)/(bnd.y-bnd.x), 0.0, 1.0);
+  float arrive = od*(p.y-1.35)+1.35;
+  float rev = smoothstep(-0.30, 0.55, p.x-arrive);
+  float dis = p.z>0.0 ? 1.0-smoothstep(0.05, 1.45, p.z) : 1.0;
+  return rev*dis*clamp(p.w, 0.0, 1.0);
+}
+float veilAt(sampler2D tx, vec2 uv, vec4 p, vec2 bnd, vec2 off){
+  vec2 q = uv+off;
+  if(q.y<0.0 || q.y>1.0) return 0.0;
+  return texture(tx, q).b*veilVis(q, p, bnd);
+}
 void main(){
-  float m = max(texture(uTexA, vUV).b*uShade.x, texture(uTexB, vUV).b*uShade.y);
+  float m = max(veilAt(uTexA, vUV, uTxA, uBndA, uOffA)*uShade.x, veilAt(uTexB, vUV, uTxB, uBndB, uOffB)*uShade.y);
   vec2 cuv = (vUV-uCredit.xy)/uCredit.z + uC0;
   if(cuv.x>0.0 && cuv.x<1.0 && cuv.y>0.0 && cuv.y<1.0) m = max(m, texture(uTexC, cuv).b*uCredit.w);
   m = smoothstep(0.0, 0.75, m);
@@ -390,6 +407,7 @@ uniform vec2 uSun;
 uniform vec2 uShade;   // strength of the soft shadow behind text A and B
 uniform vec4 uTxA, uTxB;   // form time, form duration, fly time, alpha
 uniform vec2 uBndA, uBndB; uniform float uZoom;
+uniform vec2 uOffA, uOffB;   // where slot A and B's letters are drawn now, relative to their texture (rising text)
 uniform sampler2D uTextC; uniform vec4 uCredit; uniform vec2 uC0;
 uniform int uNRings; uniform vec4 uRings[16];
 uniform int uNWaves; uniform vec4 uWaves[4];
@@ -397,6 +415,7 @@ uniform int uNWaves; uniform vec4 uWaves[4];
 uniform int uPlN; uniform sampler2D uPlA, uPlB;
 uniform vec4 uPlAView, uPlBView, uPlAWat, uPlBWat, uPlATr, uPlBTr;
 uniform float uPlAAlpha, uPlBAlpha, uFlash;
+uniform float uPlACalm, uPlBCalm;   // plate gain at the very bottom under BOTTOM_CALM (ramps to 1 at 0.30 height)
 uniform vec4 uShards; uniform vec3 uShardCol;
 uniform vec4 uIce; uniform vec3 uIceCol, uThawCol;
 uniform vec4 uField; uniform vec3 uFieldCol;
@@ -461,13 +480,42 @@ vec3 scene(vec2 uv){
   c = mix(c, mix(uMtn*0.30, hz, 0.05), m3);
   return c;
 }
-float wordMask(sampler2D tx, vec2 uv, vec4 p, vec2 bnd){
+
+// The veil and the shadow behind a text slot follow the letters themselves (attack round 2): per pixel, they
+// appear as the letters arrive left to right, leave as the letters dissolve, scale with the letters' opacity
+// (p.w), and move with them (off: where the letters are drawn now, e.g. a reflection still rising).
+float veilVis(vec2 uv, vec4 p, vec2 bnd){
+  float od = clamp((uv.x-bnd.x)/(bnd.y-bnd.x), 0.0, 1.0);
+  float arrive = od*(p.y-1.35)+1.35;
+  float rev = smoothstep(-0.30, 0.55, p.x-arrive);
+  float dis = p.z>0.0 ? 1.0-smoothstep(0.05, 1.45, p.z) : 1.0;
+  return rev*dis*clamp(p.w, 0.0, 1.0);
+}
+float veilAt(sampler2D tx, vec2 uv, vec4 p, vec2 bnd, vec2 off){
+  vec2 q = uv+off;
+  if(q.y<0.0 || q.y>1.0) return 0.0;
+  return texture(tx, q).b*veilVis(q, p, bnd);
+}
+float wordMask(sampler2D tx, vec2 uv, vec4 p, vec2 bnd, vec2 off){
+  uv += off;
+  if(uv.y<0.0 || uv.y>1.0) return 0.0;
   float od = clamp((uv.x-bnd.x)/(bnd.y-bnd.x), 0.0, 1.0);
   float arrive = od*(p.y-1.35)+1.35;
   float rev = smoothstep(-0.25, 0.75, p.x-arrive);
   float er = vnoise(uv*vec2(uAspect,1.0)*70.0);
   float dis = 1.0-smoothstep(0.0, 1.0, (p.z-er*0.9)/0.8);
   return texture(tx, uv).g*rev*dis*p.w;
+}
+// where any text (expression, title, end card, fragment, credit) lies: reflections and light waves skip it
+float creditField(vec2 q){
+  vec2 cuv = (q-uCredit.xy)/uCredit.z + uC0;
+  if(cuv.x<=0.0 || cuv.x>=1.0 || cuv.y<=0.0 || cuv.y>=1.0) return 0.0;
+  return texture(uTextC, cuv).b*min(uCredit.w*1.7, 1.0);
+}
+float textField(vec2 q){
+  if(q.y<0.0 || q.y>1.0) return 0.0;
+  float m = max(texture(uTextA, q).b*uShade.x, texture(uTextB, q).b*uShade.y);
+  return smoothstep(0.0, 0.6, max(m, creditField(q)));
 }
 vec3 procedural(vec2 sv){
   vec2 uv = vec2((sv.x-0.5)*uZoom+0.5, (sv.y-uHorizon)*uZoom+uHorizon);
@@ -485,7 +533,8 @@ vec3 procedural(vec2 sv){
     // reflected lights
     float rf = (1.0-d)*(1.0-d);
     float ck = calmK(sv.y);
-    col += (texture(uB2, ruv).rgb*0.16 + texture(uB3, ruv).rgb*0.26 + texture(uB4, ruv).rgb*0.30)*rf*mix(0.25, 1.0, ck);
+    col += (texture(uB2, ruv).rgb*0.16 + texture(uB3, ruv).rgb*0.26 + texture(uB4, ruv).rgb*0.30)*rf*mix(0.25, 1.0, ck)
+           *(1.0-textField(ruv));   // words are not mirrored in the lake
     // glitter under the low sun
     float sx = (uv.x-uSun.x)*uAspect;
     float path = exp(-sx*sx/(0.004+0.09*d*d));
@@ -505,7 +554,7 @@ vec3 procedural(vec2 sv){
   return col;
 }
 // ---- scene plates: a painted picture that slowly moves, with an optional shimmering lake
-vec3 plateColor(sampler2D tx, vec2 sv, vec4 view, vec4 wat){
+vec3 plateColor(sampler2D tx, vec2 sv, vec4 view, vec4 wat, float calmG){
   vec2 puv = view.xy + (sv-0.5)/view.z;
   float wl = wat.y;
   vec3 extra = vec3(0.0);
@@ -519,6 +568,7 @@ vec3 plateColor(sampler2D tx, vec2 sv, vec4 view, vec4 wat){
     float wls = 0.5+(wl-view.y)*view.z;              // the water line on screen
     vec2 ruv = vec2(sv.x+wob*view.z, 2.0*wls-sv.y);
     float rf = (1.0-d)*(1.0-d)*mix(0.25, 1.0, calmK(sv.y));
+    rf *= 1.0-textField(ruv);                           // words are not mirrored in the lake
     extra += (textureLod(uB2, ruv, 0.0).rgb*0.16 + textureLod(uB3, ruv, 0.0).rgb*0.26 + textureLod(uB4, ruv, 0.0).rgb*0.30)*rf*wat.z;
   }
   puv = clamp(puv, vec2(0.001), vec2(0.999));
@@ -532,14 +582,17 @@ vec3 plateColor(sampler2D tx, vec2 sv, vec4 view, vec4 wat){
     float gl = pow(vnoise(vec2(puv.x*uAspect*170.0+uT*0.15, puv.y*900.0+uT*1.6)), 16.0);
     lin += vec3(1.0,0.93,0.8)*gl*smoothstep(0.50,0.95,l)*1.6*wat.z*(0.3+d)*mix(0.3, 1.0, calmK(sv.y));
   }
+  // BOTTOM_CALM: the plate's own bright reflections in the lower third come down too (gain calmG at the bottom)
+  lin *= mix(1.0, mix(calmG, 1.0, smoothstep(0.0, 0.30, sv.y)), uCalm);
   return lin+extra;
 }
+vec3 toneF(vec3 x){ x = max(x, 0.0); return (x*(2.51*x+0.03))/(x*(2.43*x+0.59)+0.14); }
 float trMask(vec4 tr, vec2 sv, out float edge){
   int m = int(tr.x+0.5); float p = tr.y; edge = 0.0;
   if(m==1){       // dissolve with a glowing edge
     float n = fbm(sv*vec2(uAspect,1.0)*2.6+3.7);
     float f = p*1.3-0.15;
-    edge = exp(-pow((f-n)/0.007,2.0))*step(0.001,p)*step(p,0.999)*0.45;
+    edge = exp(-pow((f-n)/0.004,2.0))*step(0.001,p)*step(p,0.999)*tr.z;
     return smoothstep(n-0.04, n+0.04, f);
   }
   if(m==3){       // a ripple that spreads from a point
@@ -551,7 +604,7 @@ float trMask(vec4 tr, vec2 sv, out float edge){
   if(m==2) return smoothstep(0.30, 0.70, p);   // bloom: the change hides inside a flash of light
   return p*p*(3.0-2.0*p);                       // fade and push
 }
-vec3 applyPlate(vec3 col, sampler2D tx, vec2 sv, vec4 view, vec4 wat, vec4 tr, float alpha){
+vec3 applyPlate(vec3 col, sampler2D tx, vec2 sv, vec4 view, vec4 wat, vec4 tr, float alpha, float calmG){
   float edge;
   float m = trMask(tr, sv, edge);
   vec2 s2 = sv;
@@ -559,14 +612,17 @@ vec3 applyPlate(vec3 col, sampler2D tx, vec2 sv, vec4 view, vec4 wat, vec4 tr, f
     vec2 q = (sv-tr.zw)*vec2(uAspect,1.0); float r = length(q); float f = tr.y*2.3;
     s2 += (q/max(r,1e-4))/vec2(uAspect,1.0)*0.012*sin((r-f)*90.0)*exp(-pow((r-f)/0.07,2.0))*(1.0-tr.y);
   }
-  col = mix(col, plateColor(tx, s2, view, wat), m*alpha);
+  float a = clamp(m*alpha, 0.0, 1.0);
+  vec3 pc = plateColor(tx, s2, view, wat, calmG);
+  if(a>=0.999) col = pc;
+  else if(a>0.001) col = invTone(mix(toneF(col), toneF(pc), a));   // blend as seen, not in light units
   col += uGlow*edge*alpha*0.9;
   return col;
 }
 vec3 background(vec2 sv){
   vec3 col = procedural(sv);
-  if(uPlN>0) col = applyPlate(col, uPlA, sv, uPlAView, uPlAWat, uPlATr, uPlAAlpha);
-  if(uPlN>1) col = applyPlate(col, uPlB, sv, uPlBView, uPlBWat, uPlBTr, uPlBAlpha);
+  if(uPlN>0) col = applyPlate(col, uPlA, sv, uPlAView, uPlAWat, uPlATr, uPlAAlpha, uPlACalm);
+  if(uPlN>1) col = applyPlate(col, uPlB, sv, uPlBView, uPlBWat, uPlBTr, uPlBAlpha, uPlBCalm);
   return col;
 }
 void main(){
@@ -674,11 +730,11 @@ void main(){
     float rr = length(q);
     float front = exp(-pow((rr-w.x*0.42)/0.09,2.0))*exp(-w.x*0.75);
     float bloom = exp(-rr*rr/0.10)*exp(-w.x*1.3);
-    col += uGlow*w.w*(front*0.50+bloom*0.30);
+    col += uGlow*w.w*(front*0.50+bloom*0.30)*calmK(sv.y)*(1.0-textField(sv));
   }
   // soft shadows so the words stay readable against bright skies
   uv = sv;
-  float sh = max(texture(uTextA, uv).b*uShade.x, texture(uTextB, uv).b*uShade.y);
+  float sh = max(veilAt(uTextA, uv, uTxA, uBndA, uOffA)*uShade.x, veilAt(uTextB, uv, uTxB, uBndB, uOffB)*uShade.y);
   vec2 cuv = (uv-uCredit.xy)/uCredit.z + uC0;
   vec3 ct = vec3(0.0);
   if(cuv.x>0.0 && cuv.x<1.0 && cuv.y>0.0 && cuv.y<1.0) ct = texture(uTextC, cuv).rgb;
@@ -694,7 +750,7 @@ void main(){
   col *= sc;
   float lumD = dot(col, vec3(0.2126,0.7152,0.0722));
   col = mix(col, vec3(lumD)*vec3(1.08,0.96,0.88), vk*min((1.0-sc)*2.2, 1.0)*0.85);
-  float tight = max(wordMask(uTextA, uv, uTxA, uBndA), wordMask(uTextB, uv, uTxB, uBndB));
+  float tight = max(wordMask(uTextA, uv, uTxA, uBndA, uOffA), wordMask(uTextB, uv, uTxB, uBndB, uOffB));
   col *= 1.0-min(0.50*uShadeK*tight, 0.92);
   col *= 1.0-(ct.g*0.50+ct.b*0.34)*uCredit.w;
   vec3 L = texture(uL, uv).rgb;
