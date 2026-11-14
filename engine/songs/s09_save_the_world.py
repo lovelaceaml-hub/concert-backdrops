@@ -7,16 +7,14 @@ Live the song is a piano solo, so the words on screen carry what the audience wi
 Design: "09 Let's Save the World - Video Design" (Google Doc) in the project's Drive folder.
 All nine lights are already lit when song 09 begins; here 7 Encouragement shines again (flare and one new ring).
 
-Promo v2 (PHASE2.md, design section 15 "Promo v2: scenes"). The painted plates and the three special figures made
-for this song in phase 1 never reached the repository, so the scenes are built from the engine's own sky and sea,
-with the camera height (the horizon) and framing changed per scene, and people of light: two lamp-bearing saints
-made for this song from shared library poses (assets/song_figures/s09/) and the shared Encouragement pair.
-1 low, close shore in night sea mist: two saints walk carrying clay lamps (0 to 8.5 s);
-2 the saints lift their lamps high together (8.5 to 14 s);
-3 the Encouragement acted out on the shore, the sea perfectly still (14 to 32 s);
-4 dawn: the mist parts, the sun disc rises and a glittering path of gold lies on the water (33 to 44 s);
-5 high, wide view of the morning sea: a saint lifts a lamp and a net of light spreads from it over the sky,
-  then the end card (44 to 60 s).
+Promo v2 (PHASE2.md, design section 15 "Promo v2: scenes"), round 3: Anthony's five painted plates
+(assets/plates/s09/) and three special figures (assets/song_figures/s09/), with the shared Encouragement pair.
+1 the saints' shore in sea mist: two saints of light walk the shore path carrying clay lamps (0 to 10 s);
+2 the shore before dawn: the saints lift their lamps high together (8.5 to 15 s);
+3 the encounter shore: the Encouragement acted out on the flat rock ledge, the sea a still mirror (13.5 to 34 s);
+4 the glory: the mist parts, a column of light and a path of gold on the sea (32 to 44 s);
+5 the boats at morning: a fisherman of light in the near boat casts the net and the net of light spreads over the
+  sky, then the end card (41.5 to 60 s).
 """
 import os
 import numpy as np
@@ -33,7 +31,7 @@ MUSIC_END = 59.5       # last sounding moment of the promo clip
 SONG_END = 60.0        # length of the promo clip
 TOTAL = 60.0           # promo length
 NFRAMES = int(round(TOTAL * FPS))
-HORIZON = 0.40         # water line: horizon mid, a wide sea (song 09 look, DESIGN-SYSTEM.md section 6)
+HORIZON = 0.43         # water line: horizon mid, a wide sea (song 09 look, DESIGN-SYSTEM.md section 6)
 
 RIDGE_X0, RIDGE_W = 0.035, 0.93
 
@@ -146,7 +144,6 @@ class Song:
 
 # ----------------------------------------------------------------- timeline
 
-import sys  # noqa: E402
 from track import Track   # the shared Track refuses keys that are not strictly increasing  # noqa: E402
 
 # Landmarks inside the promo minute (seconds; promo time = recording time minus CLIP_START).
@@ -163,8 +160,8 @@ ENC_RISE = 23.2        # both stand and lift their joined hands (pose change don
 ENC_HOLD = 30.0        # the words start to fly (6.2 s fully formed and solid)
 ENC_ARRIVE = 32.0      # the words reach star 7, which shines again and gains a thin ring
 GLORY = 33.5           # verse 2 line 4 (3:08): dawn begins after the arrival, the mist parts
-COMPARE = 34.5         # fragment "cannot even compare" (verse 2 line 4)
-NET_CAST = 44.4        # the saint lifts the lamp and the net of light spreads from it (verse 2 line 5, 3:20 to 3:23)
+COMPARE = 33.0         # fragment "cannot even compare" (verse 2 line 4)
+NET_CAST = 42.4        # the fisherman casts the net and the net of light spreads from it (verse 2 line 5)
 NINTH = 1e9            # no whole-arch glow in this song
 TITLE_HIT = 50.0       # end card as verse 2 line 5 builds to the chorus
 FORM_DUR = 3.0
@@ -175,13 +172,7 @@ STILL = [(ENC_ACT, ENC_ARRIVE + 0.5)]
 # 4 Inclusiveness relit in 06, 7 Encouragement relit in 02, 03 and 05, 8 Consideration relit in 07,
 # 9 Compliment relit in 08.
 RINGS_AT_START = {2: 1, 3: 1, 6: 3, 7: 1, 8: 1}
-SKYLINE_LANTERN = 0.0  # no light travelling along the skyline: the lamps are carried by the saints
-
-# Camera height per scene: the horizon moves (a slow tilt between scenes), so each scene has its own framing.
-# Scene 1 and 2 low and close on the shore, scene 3 the shore line the pair stands on, scene 4 mid,
-# scene 5 high and wide over the morning sea, then the camera tilts up to the sky for the end card.
-HORIZON_T = Track([(0, 0.33), (12.5, 0.33), (14.5, 0.345), (32.5, 0.345), (35.5, 0.42), (41.0, 0.42),
-                   (44.0, 0.52), (47.5, 0.52), (51.0, 0.36), (TOTAL, 0.36)])
+SKYLINE_LANTERN = 0.0  # no light travelling along the skyline: the plates have their own hills
 
 # Song 09 look (DESIGN-SYSTEM.md section 6): a misty sea dawn at Galilee. Teal, sea green, pearl and pale gold;
 # morning mist and low cloud, glittering water. No violet sky, aurora, petals or rain.
@@ -222,8 +213,7 @@ LANTERNS = Track([(0, 0.0), (TOTAL, 0.0)])   # the lamps are carried by the sain
 LANTERN_COLORS = ("#ffe6a8", "#f3c77c")
 PETALS = Track([(0, 0.0), (TOTAL, 0.0)])
 TRAIL = Track([(0, 0.0), (TOTAL, 0.0)])
-ZOOM = Track([(0, 1.12), (CALL, 1.13), (12.5, 1.20), (15.5, 1.05), (ENC_ARRIVE, 1.05), (36.0, 1.0), (43.0, 1.02),
-              (47.0, 0.94), (TOTAL, 0.93)])
+ZOOM = Track([(0, 1.0), (TOTAL, 1.0)])
 EXPOSURE = Track([(0, 1.0), (TOTAL, 1.0)])
 FADE = Track([(0, 0.0), (0.8, 1.0), (59.0, 1.0), (TOTAL, 0.0)])
 # soft shafts of light through the mist only (the full fan of rays belongs to songs 01, 06 and 11)
@@ -231,43 +221,59 @@ RAYS = Track([(0, 0.0), (GLORY, 0.0), (GLORY + 4, 0.10), (TITLE_HIT - 2, 0.08), 
 # the mist parts behind the hills, after the Encouragement has arrived
 PART = Track([(0, 0.0), (GLORY, 0.0), (GLORY + 3.5, 1.0), (TITLE_HIT - 4, 1.0), (TITLE_HIT, 0.6), (TOTAL, 0.5)])
 
-# the calling light: a glittering path of gold lying on the water from the sun toward the shore, ending well
-# below the words (it is a low, wide wedge on the sea, not a column through the sky)
-BEAM = Track([(0, 0.0), (GLORY + 0.5, 0.0), (GLORY + 3.5, 1.0), (40.5, 1.0), (42.5, 0.0), (TOTAL, 0.0)])
-BEAM_FROM = (0.5, 0.418)
-BEAM_TO = (0.5, 0.345)
-BEAM_WIDTH = (0.010, 0.16)
-BEAM_COLOR = "#ffe6a8"
-# the net of light spreads from the lamp the saint lifts in scene 5, over the sky above the sea
-NET = Track([(0, 0.0), (NET_CAST + 0.4, 0.0), (TITLE_HIT + 1.0, 1.0), (TOTAL, 1.0)])
-NET_ORIGIN = (0.342, 0.611)    # the flame of the lifted lamp (figure x 0.30, feet 0.36, height 0.26)
-NET_Y0 = 0.50
+BEAM = Track([(0, 0.0), (TOTAL, 0.0)])   # the glory plate paints its own column and path of gold
+
+# the net of light, cast by the fisherman: it spreads from his net over the sky, at strength for about 5 s before
+# the title forms, then settles faintly behind the end card
+NET = Track([(0, 0.0), (NET_CAST, 0.0), (NET_CAST + 4.5, 1.0), (TOTAL, 1.0)])
+NET_ORIGIN = (0.404, 0.757)    # the fisherman's net (figure x 0.40, feet 0.49, height 0.34)
+NET_Y0 = 0.56
 NET_SCALE = 6.0
-NET_BRIGHT = Track([(0, 0.0), (NET_CAST + 0.4, 0.8), (TITLE_HIT - 3.0, 0.8), (TITLE_HIT - 1.5, 0.08), (TOTAL, 0.08)])
+NET_BRIGHT = Track([(0, 0.0), (NET_CAST, 0.0), (NET_CAST + 0.6, 0.85), (TITLE_HIT - 3.0, 0.85), (TITLE_HIT - 1.5, 0.08),
+                    (TOTAL, 0.08)])
 NET_COLOR = "#ffe1a6"
 NET_PULSE = "#fff6e2"
 # a very soft bloom from star 7 when the Encouragement arrives
 FLASH = Track([(0, 0.0), (ENC_ARRIVE - 0.1, 0.0), (ENC_ARRIVE + 0.9, 0.07), (ENC_ARRIVE + 2.4, 0.0), (TOTAL, 0.0)])
 TEXT_SHADOW = Track([(0, 1.1), (GLORY, 1.1), (GLORY + 3, 1.5), (TOTAL, 1.6)])
 
-# People of light. Saints: song 09's own poses (assets/song_figures/s09/, made from shared library poses with a
-# clay oil lamp drawn in): carrying the lamp, then lifting it high. Encouragement: the shared library pair.
-SAINT = ["assets/song_figures/s09/s09_saint_lamp.png", "assets/song_figures/s09/s09_saint_lamp_raised.png"]
+# A. Anthony's painted plates (assets/plates/s09/), each with a slow push; water_line is where the sea meets the
+# shore (fraction of the picture from its bottom). Gain is lowered under long text on the bright plates.
+PL = "assets/plates/s09/"
+SCENES = [
+    dict(image=PL + "s09_1_saints_shore_mist.jpg", t0=0.0, t1=11.0, fade_in=1.0, fade_out=2.5,
+         zoom=(1.10, 1.04), pan=((0.0, 0.0), (0.01, 0.0)), water=True, water_line=0.43),
+    dict(image=PL + "s09_2_shore_before_dawn.jpg", t0=8.5, t1=16.0, fade_in=2.5, fade_out=2.5,
+         transition="dissolve", zoom=(1.04, 1.10), water=True, water_line=0.42),
+    dict(image=PL + "s09_3_encounter_shore.jpg", t0=13.5, t1=35.0, fade_in=2.5, fade_out=2.5,
+         transition="dissolve", zoom=(1.06, 1.02), water=True, water_line=0.50, water_strength=0.4,
+         gain=Track([(0, 1.0), (ENC_FORM - 1.0, 1.0), (ENC_FORM + 1.0, 0.82), (ENC_ARRIVE, 0.82), (34.0, 1.0)])),
+    dict(image=PL + "s09_4_glory.jpg", t0=32.5, t1=44.0, fade_in=2.5, fade_out=2.5,
+         transition="dissolve", zoom=(1.02, 1.10), water=True, water_line=0.26,
+         gain=Track([(0, 1.0), (COMPARE - 0.5, 1.0), (COMPARE + 1.0, 0.72), (COMPARE + 6.5, 0.72), (42.0, 0.95)])),
+    dict(image=PL + "s09_5_boats_morning.jpg", t0=41.5, t1=61.0, fade_in=2.5, fade_out=0.0,
+         transition="dissolve", zoom=(1.08, 1.02), water=True, water_line=0.54,
+         gain=Track([(0, 1.0), (TITLE_HIT - 3.5, 1.0), (TITLE_HIT - 1.0, 0.72), (TOTAL, 0.72)])),
+]
+
+# B. People of light. Saints and fisherman: Anthony's special figures (assets/song_figures/s09/, prepared with
+# tools/prepare_figure.py --keep-lines). Encouragement: the shared library pair.
+WALK = "assets/song_figures/s09/s09_saint_walking_lamp.png"
+LIFT = "assets/song_figures/s09/s09_saint_lifting_lamp.png"
 FIGURES = [
-    # scenes 1 and 2: two saints walk along the shore with their lamps, then lift them together; they fade upward
-    dict(poses=SAINT, t0=4.4, t1=12.0, pose_times=[CALL], morph=1.2, x=0.35, y=0.335, height=0.24,
-         dissolve=2.4, leave="drift", color="#ffd99a", glass=1.2),
-    dict(poses=SAINT, t0=5.0, t1=12.3, pose_times=[CALL + 0.6], morph=1.2, x=0.63, y=0.36, height=0.205,
-         dissolve=2.4, leave="drift", color="#ffd99a", glass=1.2),
-    # scene 3: the Encouragement acted out on the shore line; pose changes are quick and finish before the words
-    # are solid, then the sparks fly into star 7
+    # scenes 1 and 2: two saints walk the shore path with their lamps, then lift them together and rise as light
+    dict(poses=[WALK, LIFT], t0=4.4, t1=12.4, pose_times=[CALL], morph=1.2, x=0.30, y=0.36, height=0.27,
+         dissolve=2.2, leave="drift", color="#ffd99a"),
+    dict(poses=[WALK, LIFT], t0=5.0, t1=12.7, pose_times=[CALL + 0.6], morph=1.2, x=0.46, y=0.405, height=0.22,
+         dissolve=2.2, leave="drift", color="#ffd99a"),
+    # scene 3: the Encouragement on the rock ledge; pose changes are quick and finish before the words are solid
     dict(poses=["assets/figures/encouragement_a.png", "assets/figures/encouragement_b.png",
                 "assets/figures/encouragement_c.png"],
-         t0=ENC_ACT, t1=ENC_HOLD - 0.5, pose_times=[ENC_TOUCH, ENC_RISE], morph=0.4, x=0.5, y=0.36, height=0.25,
+         t0=ENC_ACT, t1=ENC_HOLD - 0.5, pose_times=[ENC_TOUCH, ENC_RISE], morph=0.4, x=0.30, y=0.455, height=0.20,
          to_star=6, color="#f3e2c4"),
-    # scene 5: a saint on the morning sea lifts the lamp; the net of light spreads from its flame
-    dict(poses=SAINT, t0=42.8, t1=47.0, pose_times=[NET_CAST - 0.6], morph=0.8, gather=1.6, x=0.30, y=0.36,
-         height=0.26, dissolve=1.6, leave="drift", color="#ffd99a", glass=1.2),
+    # scene 5: the fisherman in the near boat casts the net; the net of light spreads from it
+    dict(poses=["assets/song_figures/s09/s09_fisherman_casting_net.png"], t0=41.2, t1=46.3, gather=1.5,
+         x=0.40, y=0.49, height=0.34, dissolve=1.5, leave="drift", color="#ffd99a"),
 ]
 
 # Nine lights on an arch over the stage, one for each expression
@@ -287,7 +293,7 @@ PHRASES = [
     dict(label="Respect", lines=["“I’d love to hear more", "about your thoughts.”"], size=128, **LIT),
     # Encouragement at verse 2 line 3; star 7 shines again
     dict(label="Encouragement", lines=["“I’ll pray (or root) for you.", "Everything will go well.”"], size=92,
-         y=0.29, form=ENC_FORM, hold=ENC_HOLD, star=-100.0, arrive=ENC_ARRIVE),
+         y=0.27, form=ENC_FORM, hold=ENC_HOLD, star=-100.0, arrive=ENC_ARRIVE),
     dict(label="Consideration", lines=["“Can I give you a hand", "with anything?”"], size=128, **LIT),
     dict(label="Compliment", lines=["“You’re amazing.", "You’re doing great!”"], size=140, **LIT),
 ]
@@ -341,12 +347,6 @@ WAVES = [
 
 
 def params(song, t):
-    global HORIZON
-    # the engine reads the horizon from the song module each frame (render.py calls params first)
-    HORIZON = float(HORIZON_T(t))
-    eng = sys.modules.get("song")
-    if eng is not None:
-        eng.HORIZON = HORIZON
     f = min(int(round(t * FPS)), NFRAMES - 1)
     env, envs, hi, pulse = song.env[f], song.env_slow[f], song.hi[f], song.pulse[f]
     if t > MUSIC_END - 1.0:
