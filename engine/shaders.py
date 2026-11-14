@@ -686,14 +686,14 @@ void main(){
   // bright scenery (a dawn sky, a sunlit lake) is brought down to a fixed level behind all text, so white words
   // always stand on a calm, darker veil (Astra round 1, finding 3). The veil also loses most of its colour, so
   // a dimmed sun turns a quiet warm grey instead of olive or brown.
-  float shAll = max(sh, ct.b*uCredit.w);
+  float shAll = max(sh, ct.b*min(uCredit.w*1.7, 1.0));
   float lumB = dot(col, vec3(0.2126,0.7152,0.0722));
   float capB = 0.065/max(uShadeK, 0.5);
   float vk = smoothstep(0.0, 0.85, shAll);
   float sc = mix(1.0, min(capB/max(lumB,1e-5), 1.0), vk*0.92);
   col *= sc;
   float lumD = dot(col, vec3(0.2126,0.7152,0.0722));
-  col = mix(col, vec3(lumD)*vec3(1.06,0.97,0.90), vk*(1.0-sc)*0.75);
+  col = mix(col, vec3(lumD)*vec3(1.08,0.96,0.88), vk*min((1.0-sc)*2.2, 1.0)*0.85);
   float tight = max(wordMask(uTextA, uv, uTxA, uBndA), wordMask(uTextB, uv, uTxB, uBndB));
   col *= 1.0-min(0.50*uShadeK*tight, 0.92);
   col *= 1.0-(ct.g*0.50+ct.b*0.34)*uCredit.w;

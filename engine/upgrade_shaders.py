@@ -288,7 +288,7 @@ void main(){
                 + sin(vUV.y*260.0+uLocal*2.4)*0.0016;
       vec2 ruv = vec2(vUV.x+wob, 2.0*uHz - vUV.y + drop);
       vec3 rt = texture(uTex, ruv).rgb;
-      float ra = fr*(1.0-0.65*rise)*exp(-d*3.0);
+      float ra = fr*(1.0-0.97*rise)*exp(-d*3.0);   // the mirror image leaves the lake as the words rise
       c += (uCol*rt.r*0.55 + uGlowCol*rt.g*0.45)*ra*0.85;
     }
   } else if(uMode==3){

@@ -195,7 +195,7 @@ FIGURES = [
          t0=4.0, t1=19.5, pose_times=[8.5, 13.0], x=0.5, y=0.20, height=0.40, to_star=2, color="#ffc78f"),
     dict(poses=["assets/figures/inclusiveness_a.png", "assets/figures/inclusiveness_b.png",
                 "assets/figures/inclusiveness_c.png"],
-         t0=32.0, t1=46.5, pose_times=[35.5, 39.5], x=0.5, y=0.20, height=0.40, to_star=3, color="#ffb7cf"),
+         t0=32.0, t1=47.2, pose_times=[35.5, 39.5], x=0.5, y=0.20, height=0.40, to_star=3, color="#ffb7cf"),
 ]
 
 # C. effect layers
@@ -235,7 +235,7 @@ PHRASES = [
     dict(label="Apology", lines=["“I’m sorry.", "It must have been hard on you.”"], size=96, y=0.30,
          form=10.0, hold=20.0, star=22.5),
     dict(label="Inclusiveness", lines=["“It’s okay. I understand.”"], size=112, y=0.29,
-         form=37.9, hold=47.0, star=48.6),
+         form=37.9, hold=47.7, star=48.9),
     dict(label="Concession", lines=["“Please, after you.”"], size=164, **OFF),
     dict(label="Respect", lines=["“I’d love to hear more", "about your thoughts.”"], size=128, **OFF),
     dict(label="Encouragement", lines=["“I’ll pray (or root) for you.", "Everything will go well.”"], size=118, **LIT),

@@ -149,7 +149,8 @@ class Renderer:
             if not (m["form"] <= t < arrive + 0.2):
                 continue
             form_t, fly_t = t - m["form"], t - m["hold"]
-            shade = smoothstep(0.0, S.FORM_DUR * 0.8, form_t) * (1.0 - smoothstep(0.0, 1.6, fly_t))
+            # the veil stays until the letters have dissolved (about 1.7 s after hold)
+            shade = smoothstep(0.0, S.FORM_DUR * 0.8, form_t) * (1.0 - smoothstep(0.9, 2.1, fly_t))
             A = (wd["tex"], (form_t, S.FORM_DUR, fly_t, 1.0), wd["bounds"], shade)
         tg = S.TAGLINE
         if t >= tg["t0"]:
