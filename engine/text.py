@@ -92,6 +92,21 @@ def render_tagline(text):
     return np.dstack([sharp, glow, back])[::-1].copy(), ((W / 2 - wl / 2) / W, (W / 2 + wl / 2) / W)
 
 
+def render_fragment(text, dy=0.0, size=74):
+    """A short lyric fragment in the light italic serif, centred, dy (fraction of height) above the expression line."""
+    f = ImageFont.truetype(F_TAG, int(size))
+    img = Image.new("L", (W, H), 0)
+    d = ImageDraw.Draw(img)
+    y = Y_CENTER - dy * H
+    d.text((W / 2.0, y), text, font=f, fill=250, anchor="ms")
+    wl = f.getlength(text)
+    sharp = np.asarray(img)
+    glow = np.asarray(img.filter(ImageFilter.GaussianBlur(6)))
+    back = img.filter(ImageFilter.MaxFilter(7)).filter(ImageFilter.GaussianBlur(36))
+    back = np.clip(np.asarray(back).astype(np.float32) * 2.2, 0, 255).astype(np.uint8)
+    return np.dstack([sharp, glow, back])[::-1].copy(), ((W / 2 - wl / 2) / W, (W / 2 + wl / 2) / W)
+
+
 def render_credit(song_title, concert_title):
     """Song title with the concert title beneath it, centred where the expressions appear."""
     fs, _ = _fit([song_title], F_TITLE, 128)
@@ -118,7 +133,11 @@ def build_all():
     tex, pts, b = render(S.TITLE["label"], S.TITLE["lines"], S.TITLE["size"], font_path=F_TITLE)
     title = dict(tex=tex, pts=pts, bounds=b)
     ttex, tb = render_tagline(S.TAGLINE["text"])
-    return out, title, dict(tex=ttex, bounds=tb)
+    frags = []
+    for fr in getattr(S, "FRAGMENTS", []):
+        ftex, fb = render_fragment(fr["text"], fr.get("dy", 0.0), fr.get("size", 74))
+        frags.append(dict(tex=ftex, bounds=fb, meta=fr))
+    return out, title, dict(tex=ttex, bounds=tb, frags=frags)
 
 
 if __name__ == "__main__":

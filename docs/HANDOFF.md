@@ -7,6 +7,11 @@ Current status, decisions and next steps live in the project's home folder on Go
 - It renders song 3's first version: all nine expressions in sequence, timed to the 4:11 recording (SONG_END 250.7, TOTAL 330.0), with a fade at the end.
 - Not yet built: the 11 new song designs (Drive, Designs/), song-specific scenes, an endless closing hold, live section cues, timing to the live lengths.
 
+## How to render (cloud only)
+- Each song has its own file in engine/songs/ (copy s03_original.py to start). Choose it with the SONG environment variable.
+- Short lyric fragments go in FRAGMENTS in the song file (text, t0, t1, out, dy, size).
+- Render with the GitHub Actions workflow "Render" (manual): gh workflow run render.yml -f song=<file> -f audio=<path> -f mode=stills|video -f name=<name>. Stills first, then video. The video job splits the frames over 4 cloud machines, joins them and adds the music. Results are workflow artifacts (gh run download).
+
 ## Rules
-- Never commit songs, lyrics, videos, frames or any personal data. Media stays in the Drive folder.
+- Never commit full songs, lyrics, videos, frames or any personal data. Media stays in the Drive folder. Exception: short audio clips in audio/ (for example the 60 second promo clips) that cloud renders need; this repo is private.
 - Rendering only in the cloud. No em dash or en dash anywhere.
