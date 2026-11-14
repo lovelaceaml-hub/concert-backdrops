@@ -220,12 +220,12 @@ PETALS = Track([(0, 0.0), (TOTAL, 0.0)])
 TRAIL = Track([(0, 0.0), (1.2, 0.30), (GLORY - 3, 0.40), (GLORY + 5, 0.75), (TOTAL, 0.75)])
 # camera: wide on the misty shore, a slow push toward the lamps as they call, a still frame for the pair,
 # a push toward the light, then wide and high over the morning sea for the net
-ZOOM = Track([(0, 1.0), (CALL, 1.01), (ENC_ACT - 1, 1.10), (ENC_ACT + 2, 1.04), (ENC_ARRIVE, 1.04),
+ZOOM = Track([(0, 1.0), (CALL, 1.01), (ENC_ACT - 1, 1.16), (ENC_ACT + 2, 1.04), (ENC_ARRIVE, 1.04),
               (NET_CAST - 2, 1.12), (NET_CAST + 4, 0.97), (TOTAL, 0.96)])
 EXPOSURE = Track([(0, 1.0), (TOTAL, 1.0)])
 FADE = Track([(0, 0.0), (0.8, 1.0), (59.0, 1.0), (TOTAL, 0.0)])
 # soft shafts of light through the mist, never the full fan of rays (that belongs to songs 01, 06 and 11)
-RAYS = Track([(0, 0.0), (GLORY - 1, 0.0), (GLORY + 4, 0.30), (NET_CAST, 0.35), (TITLE_HIT - 2, 0.25), (TOTAL, 0.18)])
+RAYS = Track([(0, 0.0), (GLORY - 1, 0.0), (GLORY + 4, 0.14), (NET_CAST, 0.16), (TITLE_HIT - 2, 0.12), (TOTAL, 0.10)])
 # the mist parts behind the mountains: the glory that waits for us
 PART = Track([(0, 0.0), (GLORY - 1, 0.0), (GLORY + 3, 1.0), (TITLE_HIT - 4, 1.0), (TITLE_HIT, 0.6), (TOTAL, 0.5)])
 
@@ -240,7 +240,7 @@ NET = Track([(0, 0.0), (NET_CAST, 0.0), (NET_CAST + 7.0, 1.0), (TOTAL, 1.0)])
 NET_ORIGIN = (0.5, 0.42)
 NET_Y0 = 0.42
 NET_SCALE = 6.0
-NET_BRIGHT = Track([(0, 0.0), (NET_CAST, 0.75), (TITLE_HIT - 3, 0.75), (TITLE_HIT, 0.32), (TOTAL, 0.32)])
+NET_BRIGHT = Track([(0, 0.0), (NET_CAST, 0.75), (TITLE_HIT - 3, 0.75), (TITLE_HIT, 0.22), (TOTAL, 0.22)])
 NET_COLOR = "#ffe1a6"
 NET_PULSE = "#fff6e2"
 # a soft bloom from star 7 when the Encouragement arrives
