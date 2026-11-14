@@ -161,9 +161,9 @@ TITLE_HIT = 51.0      # end card
 # Look for song 04 (DESIGN-SYSTEM.md section 6): a frozen pale winter morning that thaws into apricot warmth.
 # Ice blue, pearl and apricot; a low cold sun in haze, then warm rays; horizon high so more of the lake shows.
 PAL = {
-    "frost":   ("#5d7898", "#a9bfd6", "#dfe7ee", "#eef4ff"),
-    "frost2":  ("#5a7697", "#b0c3d8", "#e9e6e4", "#f6efe8"),
-    "melt":    ("#56739a", "#bcbfd2", "#f0d9c8", "#ffe2c6"),
+    "frost":   ("#3f5d82", "#7f9bbc", "#cbd8e4", "#eef4ff"),
+    "frost2":  ("#3e5c82", "#859fbe", "#d8d8dc", "#f6efe8"),
+    "melt":    ("#3d5b84", "#9aa3c0", "#ead2c2", "#ffe2c6"),
     "apricot": ("#4d6e9c", "#c8aab0", "#ffc08e", "#ffd6a2"),
     "warm":    ("#4a6c9c", "#d2aea8", "#ffc994", "#ffe2b4"),
 }
@@ -182,7 +182,7 @@ SUN_Y = Track([(0, 0.445), (36, 0.455), (50, 0.49), (TOTAL, 0.51)])
 SUN_SIZE = Track([(0, 0.15), (46, 0.13), (52, 0.12), (TOTAL, 0.12)])
 STARS = Track([(0, 0.0), (TOTAL, 0.0)])
 MILKY = Track([(0, 0.0), (TOTAL, 0.0)])
-CLOUDS = Track([(0, 0.95), (30, 0.9), (46, 0.7), (52, 0.45), (TOTAL, 0.4)])   # morning haze that thins
+CLOUDS = Track([(0, 0.62), (30, 0.6), (46, 0.5), (52, 0.38), (TOTAL, 0.34)])   # morning haze that thins
 AURORA = Track([(0, 0.0), (TOTAL, 0.0)])
 RAIN = Track([(0, 0.0), (TOTAL, 0.0)])
 MOTES = Track([(0, 0.10), (6, 0.16), (30, 0.18), (46, 0.26), (52, 0.42), (TOTAL, 0.36)])  # frost glitter, then warm motes
