@@ -175,6 +175,8 @@ RINGS_AT_START = {2: 1, 3: 1, 6: 3, 7: 1, 8: 1}
 # and from a naturally deep sky behind the words.
 TEXT_SHADOW = 0.0
 BOTTOM_CALM = 1.0      # calm lower third for the performers
+# lights behind the end card are only softened, not cleared, so no empty starless field forms round the words
+TEXT_PROTECT = Track([(0, 1.0), (TITLE_HIT - FORM_DUR - 1.0, 1.0), (TITLE_HIT - FORM_DUR, 0.4), (TOTAL, 0.4)])
 # the lamp that walks the far shore in the night mist, then rises with the others at the calling
 SKYLINE_LANTERN = Track([(0, 0.0), (1.0, 0.0), (2.5, 1.0), (CALL, 1.0), (CALL + 2.5, 0.0), (TOTAL, 0.0)])
 
@@ -215,7 +217,7 @@ CLOUDS = Track([(0, 0.95), (CALL, 0.90), (CALL + 4, 0.65), (STILL_IN + 2, 0.30),
 AURORA = Track([(0, 0.0), (TOTAL, 0.0)])
 RAIN = Track([(0, 0.0), (TOTAL, 0.0)])
 MOTES = Track([(0, 0.10), (CALL, 0.16), (STILL_IN + 2, 0.08), (GLORY, 0.10), (GLORY + 4, 0.30), (NET_CAST, 0.34),
-               (TITLE_HIT, 0.16), (TOTAL, 0.14)])
+               (TITLE_HIT - FORM_DUR, 0.08), (TOTAL, 0.07)])
 MOTE_COLORS = ("#eef6ec", "#bfe3d6")   # pearl motes
 # the lamps of the saints: a few on the shore in the mist, then many rise together at the calling
 LANTERNS = Track([(0, 0.0), (1.5, 0.0), (4.0, 0.16), (CALL, 0.20), (CALL + 2.5, 0.85), (STILL_IN - 1.0, 0.75),
@@ -252,7 +254,7 @@ NET_ORIGIN = (0.5, 0.53)
 NET_Y0 = 0.44
 NET_SCALE = 5.0
 NET_BRIGHT = Track([(0, 0.0), (NET_CAST, 0.0), (NET_CAST + 0.6, 0.7), (TITLE_HIT - FORM_DUR - 0.5, 0.7),
-                    (TITLE_HIT - 1.0, 0.035), (TOTAL, 0.035)])
+                    (TITLE_HIT - 1.0, 0.025), (TOTAL, 0.025)])
 NET_COLOR = "#ffe1a6"
 NET_PULSE = "#fff6e2"
 # a very soft bloom when the Encouragement reaches star 7
