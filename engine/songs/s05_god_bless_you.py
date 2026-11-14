@@ -187,8 +187,8 @@ SKY_MID = Track([(t, lin(PAL[p][1])) for t, p in _pal_keys])
 SKY_HOR = Track([(t, lin(PAL[p][2])) for t, p in _pal_keys])
 GLOW = Track([(t, lin(PAL[p][3])) for t, p in _pal_keys])
 
-SUN_INT = Track([(0, 0.30), (14, 0.42), (26, 0.58), (38, 0.78), (43, 0.85), (46, 1.18), (52, 1.32), (TOTAL, 1.22)])
-SUN_Y = Track([(0, 0.255), (26, 0.27), (40, 0.29), (48, 0.36), (56, 0.40), (TOTAL, 0.41)])
+SUN_INT = Track([(0, 0.30), (14, 0.42), (26, 0.58), (38, 0.78), (43, 0.85), (46, 1.0), (50, 1.15), (53, 1.0), (TOTAL, 0.92)])
+SUN_Y = Track([(0, 0.255), (26, 0.27), (40, 0.29), (48, 0.325), (TOTAL, 0.335)])
 SUN_SIZE = Track([(0, 0.105), (40, 0.115), (50, 0.13), (TOTAL, 0.13)])
 STARS = Track([(0, 0.0), (0.2, 0.0), (2.0, 0.75), (16, 0.65), (30, 0.42), (44, 0.2), (52, 0.12), (TOTAL, 0.12)])
 MILKY = Track([(0, 0.0), (TOTAL, 0.0)])
@@ -202,7 +202,7 @@ TRAIL = Track([(0, 0.0), (1.2, 0.5), (26, 0.6), (44, 1.0), (TOTAL, 0.95)])
 ZOOM = Track([(0, 1.0), (27, 0.99), (44, 0.975), (TOTAL, 0.955)])
 EXPOSURE = Track([(0, 1.0), (TOTAL, 1.0)])
 FADE = Track([(0, 0.0), (0.8, 1.0), (59.0, 1.0), (TOTAL, 0.0)])
-RAYS = Track([(0, 0.0), (20, 0.0), (32, 0.2), (42, 0.35), (46, 0.85), (54, 0.75), (TOTAL, 0.7)])
+RAYS = Track([(0, 0.0), (20, 0.0), (32, 0.2), (42, 0.35), (44.5, 0.45), (49.5, 0.85), (53, 0.6), (TOTAL, 0.5)])
 PART = Track([(0, 0.0), (TOTAL, 0.0)])
 
 # Nine lights on an arch over the stage, one for each expression
@@ -243,9 +243,9 @@ TITLE = dict(label="Healing Concert", lines=["The Words of Mother’s Love"], si
 # Short lyric fragments: text, t0 (starts forming), t1 (fully formed), out (dissolves), dy, size
 FRAGMENTS = [
     # Heavenly Mother is asked for beautiful fruit: the words open as dawn warms the water
-    dict(text="beautiful fruit", t0=CONS_FORM + 11.0, t1=CONS_FORM + 12.6, out=CONS_FORM + 15.6, dy=0.0, size=80),
+    dict(text="beautiful fruit", t0=CONS_FORM + 11.0, t1=CONS_FORM + 12.6, out=CONS_FORM + 15.6, dy=0.0, size=128, glow="#ffb070"),
     # the sun breaks: the song's blessing turned to everyone in the hall
-    dict(text="God bless you!", t0=SUNRISE + 0.6, t1=SUNRISE + 2.0, out=SUNRISE + 4.8, dy=0.0, size=92),
+    dict(text="God bless you!", t0=SUNRISE + 0.6, t1=SUNRISE + 2.0, out=SUNRISE + 4.8, dy=0.0, size=150, glow="#ffb070"),
 ]
 
 TAGLINE = dict(text="Sunday, December 6 · 4:30 PM · 6720 W Sahara Ave, Las Vegas", t0=TITLE_HIT + 1.5, t1=TITLE_HIT + 4.0)
