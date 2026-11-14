@@ -54,6 +54,30 @@ def _path(p):
     return p if os.path.isabs(p) else os.path.join(S.ROOT, p)
 
 
+# ---------------------------------------------------------------- moving figures (round 3)
+EASES = {
+    "smooth": lambda u: u * u * (3 - 2 * u),
+    "linear": lambda u: u,
+    "in": lambda u: u * u,
+    "out": lambda u: 1 - (1 - u) * (1 - u),
+}
+
+
+def fig_value(m, key, default, t):
+    """A figure's x, y or height at time t. The setting may be a number (still), a Track or any function of time,
+    or a pair (start, end) eased over the figure's `move` window (default: from t0 to t1) with `ease`
+    ("smooth", "linear", "in", "out")."""
+    v = m.get(key, default)
+    if callable(v):
+        return float(v(t))
+    if isinstance(v, (tuple, list)) and len(v) == 2:
+        a, b = m.get("move", (m["t0"], m["t1"]))
+        u = min(max((t - a) / max(b - a, 1e-3), 0.0), 1.0)
+        u = EASES.get(m.get("ease", "smooth"), EASES["smooth"])(u)
+        return float(v[0]) + (float(v[1]) - float(v[0])) * u
+    return float(v)
+
+
 # ---------------------------------------------------------------- matching sparks between poses
 def match_points(A, B):
     """Reorders B so B[i] is near A[i] in the same part of the body (recursive halving along the longer side)."""
@@ -316,9 +340,18 @@ class Upgrade:
             if u >= 1.0:
                 a = b = cur
                 u = 0.0
-        hgt = m.get("height", 0.34) * (1.0 + 0.006 * math.sin(t * 1.1 + m.get("x", 0.5) * 9.0))
+        x, y = fig_value(m, "x", 0.5, t), fig_value(m, "y", 0.18, t)
+        hgt = fig_value(m, "height", 0.34, t) * (1.0 + 0.006 * math.sin(t * 1.1 + x * 9.0))
         wid = hgt * fd["aspect"] / S.ASPECT
-        x, y = m.get("x", 0.5), m.get("y", 0.18)
+        bob = float(m.get("bob", 0.0))
+        if bob > 0.0:
+            # a gentle walking bob: a small lift per step, only while the figure is actually moving across
+            dt = 0.05
+            vx = (fig_value(m, "x", 0.5, t + dt) - fig_value(m, "x", 0.5, t - dt)) / (2 * dt)
+            speed = min(abs(vx) / 0.02, 1.0)          # full bob at 0.02 screen widths per second or faster
+            step = 0.10 * hgt                          # screen widths per step
+            y += bob * 0.010 * hgt * speed * abs(math.sin(math.pi * x / max(step, 1e-3)))
+            hgt *= 1.0 + bob * 0.004 * speed * math.sin(2 * math.pi * x / max(step, 1e-3))
         rect = (x - wid / 2.0, y, wid, hgt)
         if "to_star" in m:
             to = S.STAR_POS[m["to_star"]]
