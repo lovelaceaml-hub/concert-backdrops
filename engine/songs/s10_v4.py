@@ -18,15 +18,16 @@ Six scenes, told by sky, light, time and objects:
      strong and golden; Greeting
   3  threads of light (19.5 to 32 s): gold threads spread knot by knot from the lamp across the low sky, pulses of
      light running along them toward the cold lights; Consideration
-  4  circles of peace (31.5 to 44 s): the threads settle, the sky deepens to violet indigo, the stars come out, and
-     slow gold circles of peace open one by one where Her words arrived; Encouragement
-  5  peace across the world (44 to 49 s): the threads reach the whole sky (the lamp's light laced over all the
-     world), a rose gold pre-dawn glow, the whole arch glows; no words
+  4  circles of peace (31.5 to 44 s): the threads fade, the lamp grows quiet, the sky deepens to violet indigo full
+     of stars, and slow clear circles of peace open one after another on the far still water; Encouragement
+  5  peace across the world (44 to 49 s): wide circles of gold light spread from the lamp across the whole sky and
+     the threads, now a wide lace, reach every part of the world; rose gold pre-dawn glow, the whole arch glows;
+     no words
   6  night of peace (48.5 to 60 s): the threads gone, the lamp set back down to a calm warm light, the lake a mirror,
      steady stars; end card
 Signature moments of this song: the great lamp lifted (sun plus rising column), Her words as threads of light
-(NET from the lamp), the circles of peace (slow gold rings of light), peace across the whole world (the net over
-the whole sky).
+(NET from the lamp), the circles of peace (rings on the far water), peace across the whole world (wide waves of
+light and the net over the whole sky).
 
 Star history (DESIGN-SYSTEM.md 12a): all nine lights were lit in earlier songs. Greeting, Consideration and
 Encouragement are spoken again here (illustrative placements, pending the lyrics) and each relights its light once.
@@ -179,6 +180,11 @@ class Song:
         for k, (et, s) in enumerate(_EVENTS):
             r = np.random.default_rng(1000 + k).random(2)
             keep.append((float(et), 0.10 + 0.80 * r[0], HORIZON * (0.72 + 0.25 * r[1]), float(min(s, 1.2))))
+        # circles of peace (scene 4): slow, clear circles open one after another on the far, still water
+        for k in range(12):
+            r = np.random.default_rng(2000 + k).random(2)
+            keep.append((33.0 + 0.9 * k, 0.12 + 0.76 * r[0], HORIZON * (0.905 + 0.075 * r[1]), 2.0))
+        keep.sort()
         self.rings = keep
         self.ring_t = np.array([k[0] for k in keep])
 
@@ -200,7 +206,8 @@ class Song:
 
 # ----------------------------------------------------------------- look: six skies
 SKYLINE_LANTERN = 0.0      # the sun is the lamp; no second light travelling on the ridge
-BOTTOM_CALM = 1.0
+# the far water just under the horizon is let through a little while the circles of peace open (scene 4)
+BOTTOM_CALM = Track([(0, 1.0), (32.0, 1.0), (34.0, 0.55), (43.5, 0.55), (46.0, 1.0), (TOTAL, 1.0)])
 RINGS_AT_START = [0, 0, 1, 1, 0, 0, 4, 1, 1]
 
 PAL = {
@@ -221,11 +228,12 @@ SKY_HOR = Track([(t, lin(PAL[p][2])) for t, p in _pal_keys])
 GLOW = Track([(t, lin(PAL[p][3])) for t, p in _pal_keys])
 
 # The sun is Mother's great lamp at the centre of the horizon: a small warm star, lifted and strong, set back down
-SUN_INT = Track([(0, 0.16), (5.0, 0.20), (9.0, 0.75), (13.0, 1.00), (31.5, 1.05), (43.5, 0.95), (46.5, 1.25),
-                 (49.0, 1.10), (53.0, 0.70), (TOTAL, 0.66)])
+SUN_INT = Track([(0, 0.16), (5.0, 0.20), (9.0, 0.66), (13.0, 0.88), (31.0, 0.90), (35.5, 0.55), (43.5, 0.55),
+                 (46.5, 1.05), (49.0, 0.95), (53.0, 0.66), (TOTAL, 0.62)])
 SUN_Y = Track([(0, 0.325), (5.0, 0.325), (13.0, 0.338), (46.5, 0.342), (53.0, 0.33), (TOTAL, 0.33)])
-SUN_SIZE = Track([(0, 0.065), (5.0, 0.068), (13.0, 0.105), (43.5, 0.11), (46.5, 0.125), (53.0, 0.085), (TOTAL, 0.085)])
-STARS = Track([(0, 0.0), (0.2, 0.0), (2.5, 0.45), (12.0, 0.50), (31.5, 0.55), (36.0, 0.95), (43.5, 0.95),
+SUN_SIZE = Track([(0, 0.065), (5.0, 0.068), (13.0, 0.105), (31.0, 0.105), (35.5, 0.08), (43.5, 0.08), (46.5, 0.12),
+                  (53.0, 0.085), (TOTAL, 0.085)])
+STARS = Track([(0, 0.0), (0.2, 0.0), (2.5, 0.45), (12.0, 0.50), (31.5, 0.55), (36.0, 1.05), (43.5, 1.05),
                (47.0, 0.55), (52.0, 0.80), (TOTAL, 0.80)])
 MILKY = Track([(0, 0.0), (TOTAL, 0.0)])
 CLOUDS = Track([(0, 0.32), (6.0, 0.32), (12.0, 0.04), (TOTAL, 0.04)])
@@ -241,7 +249,7 @@ ZOOM = Track([(0, 1.0), (19.5, 1.0), (26.0, 1.03), (31.5, 1.03), (38.0, 0.985), 
               (TOTAL, 1.0)])
 EXPOSURE = Track([(0, 1.0), (TOTAL, 1.0)])
 FADE = Track([(0, 0.0), (1.0, 1.0), (59.0, 1.0), (59.95, 0.0)])
-RAYS = Track([(0, 0.0), (6.0, 0.0), (12.0, 0.16), (31.5, 0.16), (36.0, 0.08), (43.5, 0.08), (46.5, 0.30),
+RAYS = Track([(0, 0.0), (6.0, 0.0), (12.0, 0.16), (31.5, 0.16), (36.0, 0.03), (43.5, 0.03), (46.5, 0.26),
               (49.0, 0.22), (53.0, 0.10), (TOTAL, 0.10)])
 PART = Track([(0, 0.0), (TOTAL, 0.0)])
 
@@ -262,20 +270,23 @@ BEAM_TO = (0.5, 0.345)
 BEAM_WIDTH = (0.012, 0.034)
 BEAM_COLOR = "#ffd98a"
 
-# 2. Her words as threads of light: a web of gold threads spreads knot by knot from the lamp over the low sky (kept
-#    below the words), then (5) reaches the whole world, then is gathered back before the end card
-NET = Track([(0, 0.0), (19.0, 0.0), (24.5, 0.072), (43.5, 0.075), (47.4, 1.0), (49.4, 1.0), (49.5, 0.0),
-             (TOTAL, 0.0)])
-NET_BRIGHT = Track([(0, 1.0), (31.0, 1.0), (34.5, 0.38), (43.5, 0.38), (45.5, 0.85), (47.4, 0.85), (49.3, 0.0),
+# 2. Her words as threads of light: a fine crown of gold threads spreads knot by knot out of the lamp over the low
+#    sky (kept below the words) while Consideration is spoken; it fades as the circles of peace open
+# 3. Circles of peace: slow, clear circles open one after another on the far, still water (see Song.rings) under a
+#    violet sky full of stars, the lamp quiet
+# 4. Peace across the world (no words, 44 to 49 s): wide circles of gold light spread out from the lamp across the
+#    whole sky and the threads, now a wide lace, reach every part of the world; all gathered back before the card
+NET = Track([(0, 0.0), (19.0, 0.0), (25.0, 0.06), (34.0, 0.062), (40.0, 0.0), (44.2, 0.0), (47.6, 1.0),
+             (49.4, 1.0), (49.5, 0.0), (TOTAL, 0.0)])
+NET_BRIGHT = Track([(0, 1.3), (31.0, 1.3), (35.0, 0.0), (44.2, 0.0), (45.4, 0.42), (47.6, 0.42), (49.3, 0.0),
                     (TOTAL, 0.0)])
+NET_SCALE = Track([(0, 16.0), (40.0, 16.0), (40.5, 7.0), (TOTAL, 7.0)])   # changes only while nothing shows
 NET_ORIGIN = (0.5, 0.345)
 NET_Y0 = 0.33
-NET_SCALE = 8.0
 NET_COLOR = "#ffcf7a"
 NET_PULSE = "#fff1d2"
 
-# 3. Circles of peace: slow gold circles of light open over the lake where the words arrived (at most four at once)
-_CIRCLES = [(33.0, 0.30, 0.38, 0.40), (35.6, 0.70, 0.37, 0.40), (38.2, 0.42, 0.40, 0.36), (40.8, 0.60, 0.39, 0.36)]
+_CIRCLES = [(44.3, 0.50, 0.36, 1.0), (45.0, 0.27, 0.40, 0.8), (45.6, 0.73, 0.40, 0.8), (46.1, 0.50, 0.44, 0.7)]
 
 # ----------------------------------------------------------------- the arch and the words
 STAR_POS = []
@@ -342,12 +353,9 @@ def credit_state(t, bbox):
     return (cx, cy, scale, alpha), (cx0, cy0)
 
 
-# Waves of light: the circles of peace, and a small one where each spoken word reaches its light
-WAVES = sorted(_CIRCLES + [
-    (PHRASES[0]["arrive"], STAR_POS[0][0], STAR_POS[0][1], 0.22),
-    (PHRASES[7]["arrive"], STAR_POS[7][0], STAR_POS[7][1], 0.22),
-    (PHRASES[6]["arrive"], STAR_POS[6][0], STAR_POS[6][1], 0.22),
-])
+# Waves of light only while no words are on screen (the engine cuts a wave out round letters, which would read as
+# a dark patch): the wide circles of peace across the world. The relit lights show their flare and ring instead.
+WAVES = list(_CIRCLES)
 
 
 # star_state and link_state come from engine/arch.py (installed by song.py), the same for every song.
