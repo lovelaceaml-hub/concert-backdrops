@@ -179,9 +179,9 @@ SKYLINE_LANTERN = 0.0  # no light travelling along the skyline: the lamps are ca
 
 # Camera height per scene: the horizon moves (a slow tilt between scenes), so each scene has its own framing.
 # Scene 1 and 2 low and close on the shore, scene 3 the shore line the pair stands on, scene 4 mid,
-# scene 5 high and wide over the morning sea.
-HORIZON_T = Track([(0, 0.33), (12.5, 0.33), (14.5, 0.345), (32.5, 0.345), (35.5, 0.42), (42.0, 0.42),
-                   (45.5, 0.52), (TOTAL, 0.52)])
+# scene 5 high and wide over the morning sea, then the camera tilts up to the sky for the end card.
+HORIZON_T = Track([(0, 0.33), (12.5, 0.33), (14.5, 0.345), (32.5, 0.345), (35.5, 0.42), (41.0, 0.42),
+                   (44.0, 0.52), (47.5, 0.52), (51.0, 0.36), (TOTAL, 0.36)])
 
 # Song 09 look (DESIGN-SYSTEM.md section 6): a misty sea dawn at Galilee. Teal, sea green, pearl and pale gold;
 # morning mist and low cloud, glittering water. No violet sky, aurora, petals or rain.
@@ -206,7 +206,8 @@ GLOW = Track([(t, lin(PAL[p][3])) for t, p in _pal_keys])
 # the pale sun waits below the sea horizon, then rises as a disc for the dawn (absolute heights: the horizon moves)
 SUN_INT = Track([(0, 0.08), (CALL, 0.10), (CALL + 4, 0.18), (ENC_ACT, 0.14), (GLORY, 0.18), (GLORY + 3, 0.55),
                  (GLORY + 7, 0.85), (NET_CAST + 2, 0.9), (TITLE_HIT, 0.72), (TITLE_HIT + 3, 0.55), (TOTAL, 0.55)])
-SUN_Y = Track([(0, 0.28), (GLORY, 0.30), (GLORY + 6.5, 0.455), (42.0, 0.46), (46.0, 0.565), (TOTAL, 0.56)])
+SUN_Y = Track([(0, 0.28), (GLORY, 0.30), (GLORY + 6.5, 0.47), (41.0, 0.47), (44.0, 0.565), (47.5, 0.57), (51.0, 0.40),
+               (TOTAL, 0.40)])
 SUN_SIZE = Track([(0, 0.10), (GLORY, 0.10), (GLORY + 8, 0.12), (TOTAL, 0.12)])
 STARS = Track([(0, 0.0), (0.2, 0.0), (2.0, 0.35), (ENC_ACT, 0.28), (GLORY + 4, 0.06), (TOTAL, 0.03)])
 MILKY = Track([(0, 0.0), (TOTAL, 0.0)])
@@ -232,14 +233,14 @@ PART = Track([(0, 0.0), (GLORY, 0.0), (GLORY + 3.5, 1.0), (TITLE_HIT - 4, 1.0), 
 
 # the calling light: a glittering path of gold lying on the water from the sun toward the shore, ending well
 # below the words (it is a low, wide wedge on the sea, not a column through the sky)
-BEAM = Track([(0, 0.0), (GLORY + 0.5, 0.0), (GLORY + 3.5, 0.6), (41.5, 0.6), (43.5, 0.0), (TOTAL, 0.0)])
-BEAM_FROM = (0.5, 0.416)
+BEAM = Track([(0, 0.0), (GLORY + 0.5, 0.0), (GLORY + 3.5, 1.0), (40.5, 1.0), (42.5, 0.0), (TOTAL, 0.0)])
+BEAM_FROM = (0.5, 0.418)
 BEAM_TO = (0.5, 0.345)
-BEAM_WIDTH = (0.006, 0.12)
+BEAM_WIDTH = (0.010, 0.16)
 BEAM_COLOR = "#ffe6a8"
 # the net of light spreads from the lamp the saint lifts in scene 5, over the sky above the sea
 NET = Track([(0, 0.0), (NET_CAST + 0.4, 0.0), (TITLE_HIT + 1.0, 1.0), (TOTAL, 1.0)])
-NET_ORIGIN = (0.536, 0.612)    # the flame of the lifted lamp (figure x 0.5, feet 0.40, height 0.22)
+NET_ORIGIN = (0.342, 0.611)    # the flame of the lifted lamp (figure x 0.30, feet 0.36, height 0.26)
 NET_Y0 = 0.50
 NET_SCALE = 6.0
 NET_BRIGHT = Track([(0, 0.0), (NET_CAST + 0.4, 0.8), (TITLE_HIT - 3.0, 0.8), (TITLE_HIT - 1.5, 0.08), (TOTAL, 0.08)])
@@ -254,19 +255,19 @@ TEXT_SHADOW = Track([(0, 1.1), (GLORY, 1.1), (GLORY + 3, 1.5), (TOTAL, 1.6)])
 SAINT = ["assets/song_figures/s09/s09_saint_lamp.png", "assets/song_figures/s09/s09_saint_lamp_raised.png"]
 FIGURES = [
     # scenes 1 and 2: two saints walk along the shore with their lamps, then lift them together; they fade upward
-    dict(poses=SAINT, t0=3.0, t1=12.0, pose_times=[CALL], morph=1.2, x=0.35, y=0.335, height=0.24,
+    dict(poses=SAINT, t0=4.4, t1=12.0, pose_times=[CALL], morph=1.2, x=0.35, y=0.335, height=0.24,
          dissolve=2.4, leave="drift", color="#ffd99a", glass=1.2),
-    dict(poses=SAINT, t0=3.6, t1=12.3, pose_times=[CALL + 0.6], morph=1.2, x=0.63, y=0.36, height=0.205,
+    dict(poses=SAINT, t0=5.0, t1=12.3, pose_times=[CALL + 0.6], morph=1.2, x=0.63, y=0.36, height=0.205,
          dissolve=2.4, leave="drift", color="#ffd99a", glass=1.2),
     # scene 3: the Encouragement acted out on the shore line; pose changes are quick and finish before the words
     # are solid, then the sparks fly into star 7
     dict(poses=["assets/figures/encouragement_a.png", "assets/figures/encouragement_b.png",
                 "assets/figures/encouragement_c.png"],
-         t0=ENC_ACT, t1=ENC_HOLD - 0.5, pose_times=[ENC_TOUCH, ENC_RISE], morph=0.4, x=0.5, y=0.36, height=0.27,
+         t0=ENC_ACT, t1=ENC_HOLD - 0.5, pose_times=[ENC_TOUCH, ENC_RISE], morph=0.4, x=0.5, y=0.36, height=0.25,
          to_star=6, color="#f3e2c4"),
     # scene 5: a saint on the morning sea lifts the lamp; the net of light spreads from its flame
-    dict(poses=SAINT, t0=42.8, t1=47.2, pose_times=[NET_CAST - 0.6], morph=0.8, gather=1.6, x=0.5, y=0.40,
-         height=0.22, dissolve=1.8, leave="drift", color="#ffd99a", glass=1.2),
+    dict(poses=SAINT, t0=42.8, t1=47.0, pose_times=[NET_CAST - 0.6], morph=0.8, gather=1.6, x=0.30, y=0.36,
+         height=0.26, dissolve=1.6, leave="drift", color="#ffd99a", glass=1.2),
 ]
 
 # Nine lights on an arch over the stage, one for each expression
@@ -286,7 +287,7 @@ PHRASES = [
     dict(label="Respect", lines=["“I’d love to hear more", "about your thoughts.”"], size=128, **LIT),
     # Encouragement at verse 2 line 3; star 7 shines again
     dict(label="Encouragement", lines=["“I’ll pray (or root) for you.", "Everything will go well.”"], size=92,
-         y=0.265, form=ENC_FORM, hold=ENC_HOLD, star=-100.0, arrive=ENC_ARRIVE),
+         y=0.29, form=ENC_FORM, hold=ENC_HOLD, star=-100.0, arrive=ENC_ARRIVE),
     dict(label="Consideration", lines=["“Can I give you a hand", "with anything?”"], size=128, **LIT),
     dict(label="Compliment", lines=["“You’re amazing.", "You’re doing great!”"], size=140, **LIT),
 ]
