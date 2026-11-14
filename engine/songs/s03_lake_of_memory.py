@@ -184,8 +184,8 @@ SKY_MID = Track([(t, lin(PAL[p][1])) for t, p in _pal_keys])
 SKY_HOR = Track([(t, lin(PAL[p][2])) for t, p in _pal_keys])
 GLOW = Track([(t, lin(PAL[p][3])) for t, p in _pal_keys])
 
-SUN_INT = Track([(0, 0.10), (27, 0.18), (CRESC, 0.30), (46, 0.55), (SUNRISE, 1.0), (55, 1.15), (TOTAL, 1.1)])
-SUN_Y = Track([(0, 0.25), (CRESC, 0.26), (SUNRISE, 0.31), (TOTAL, 0.36)])
+SUN_INT = Track([(0, 0.10), (27, 0.18), (CRESC, 0.30), (46, 0.55), (SUNRISE, 1.0), (53, 1.05), (56, 0.80), (TOTAL, 0.75)])
+SUN_Y = Track([(0, 0.25), (CRESC, 0.26), (SUNRISE, 0.31), (TOTAL, 0.33)])
 SUN_SIZE = Track([(0, 0.10), (SUNRISE, 0.115), (TOTAL, 0.125)])
 STARS = Track([(0, 0.0), (0.4, 0.0), (2.5, 1.0), (27, 0.95), (44, 0.6), (SUNRISE, 0.3), (TOTAL, 0.15)])
 MILKY = Track([(0, 0.0), (2.5, 0.7), (27, 0.55), (44, 0.15), (SUNRISE, 0.0), (TOTAL, 0.0)])
@@ -200,7 +200,7 @@ TRAIL = Track([(0, 0.0), (1.2, 0.5), (PRAYER, 0.6), (SUNRISE, 0.95), (TOTAL, 0.9
 ZOOM = Track([(0, 1.0), (PRAYER, 0.99), (SUNRISE, 0.98), (TOTAL, 0.965)])
 EXPOSURE = Track([(0, 1.0), (TOTAL, 1.0)])
 FADE = Track([(0, 0.0), (1.0, 1.0), (TOTAL - 1.6, 1.0), (TOTAL - 0.1, 0.0)])
-RAYS = Track([(0, 0.0), (46, 0.0), (SUNRISE, 0.5), (55, 0.75), (TOTAL, 0.7)])
+RAYS = Track([(0, 0.0), (46, 0.0), (SUNRISE, 0.5), (53, 0.65), (56, 0.35), (TOTAL, 0.3)])   # softer behind the end card
 PART = Track([(0, 0.0), (48, 0.0), (52, 1.0), (56, 1.0), (TOTAL, 0.6)])
 
 # Nine lights on an arch over the stage, one for each expression
