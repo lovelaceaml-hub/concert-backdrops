@@ -357,7 +357,7 @@ def credit_state(t, bbox):
     cx, cy = cx0 * (1 - m) + tx * m, cy0 * (1 - m) + ty * m
     # the corner credit leaves before the arch glows and the end card comes (nothing crosses it)
     alpha = a_in * (1.0 + (c["alpha_rest"] - 1.0) * m) * (1.0 - ss(c["t_gone0"], c["t_gone1"], t))
-    alpha *= 1.0 - 0.8 * (4.0 * m * (1.0 - m))   # dim while it crosses the arch line on its way to the corner
+    alpha *= 1.0 - 0.95 * min(1.0, 12.0 * m * (1.0 - m))   # nearly out while it crosses the arch line on its way
     return (cx, cy, scale, alpha), (cx0, cy0)
 
 
