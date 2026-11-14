@@ -3,8 +3,8 @@
 Current status, decisions and next steps live in the project's home folder on Google Drive: "Concert Backdrops - Songs", file VIDEO-HANDOFF.md (status) and DESIGN-SYSTEM.md (rules and decisions waiting for Anthony). Read those first.
 
 ## State of this repo (2026-11-13)
-- Engine code exactly as the first cloud session left it (verified identical to the zip "Concert Backdrops - engine and how to continue (2026-11-13).zip").
-- It renders song 3's first version: all nine expressions in sequence, timed to the 4:11 recording (SONG_END 250.7, TOTAL 330.0), with a fade at the end.
+- Started from the first cloud session's engine (commit f292678 is identical to the zip "Concert Backdrops - engine and how to continue (2026-11-13).zip"). Since then: any song can be drawn (engine/songs/, chosen by SONG), lyric fragments, relit lights, a shared arch (engine/arch.py), safe features for silent clips, encoder and length checks, and the cloud Render workflow. See git log.
+- engine/songs/s03_original.py still renders song 3's first version: all nine expressions in sequence, timed to the 4:11 recording (SONG_END 250.7, TOTAL 330.0), with a fade at the end.
 - Not yet built: the 11 new song designs (Drive, Designs/), song-specific scenes, an endless closing hold, live section cues, timing to the live lengths.
 
 ## How to render (cloud only)
