@@ -501,7 +501,7 @@ float trMask(vec4 tr, vec2 sv, out float edge){
   if(m==1){       // dissolve with a glowing edge
     float n = fbm(sv*vec2(uAspect,1.0)*2.6+3.7);
     float f = p*1.3-0.15;
-    edge = exp(-pow((f-n)/0.03,2.0))*step(0.001,p)*step(p,0.999);
+    edge = exp(-pow((f-n)/0.007,2.0))*step(0.001,p)*step(p,0.999)*0.45;
     return smoothstep(n-0.04, n+0.04, f);
   }
   if(m==3){       // a ripple that spreads from a point

@@ -446,5 +446,9 @@ class Upgrade:
                 continue
             loc, dur, out = tm
             shade = ss(0.0, 0.45 * dur, loc) * (1.0 - ss(0.0, 1.4, out) if out > 0 else 1.0)
-            return f["tex"], (99.0, 1.0, out if out > 0 else -1.0, 0.85), f["bounds"], shade
+            if f["style"] in (1, 4):   # written or engraved: the shadow follows the pen, left to right
+                params = (loc * 1.04 + 1.35, dur + 1.35, out if out > 0 else -1.0, 0.85)
+            else:
+                params = (99.0, 1.0, out if out > 0 else -1.0, 0.85)
+            return f["tex"], params, f["bounds"], shade
         return None

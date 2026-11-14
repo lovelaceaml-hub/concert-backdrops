@@ -338,7 +338,7 @@ void main(){
     vec2 start = tg + vec2((aSeed.x-0.5)*0.22 + 0.10, 0.30 + 0.35*aSeed.y);
     pos = mix(start, tg, e) + (1.0-e)*vec2(0.025*sin(uT*1.4+aSeed.w*20.0), 0.0);
     a = smoothstep(0.0, 0.12, s)*(0.55 + 0.30*aSeed.w);
-    size = 8.0 + 9.0*aSeed.w*aSeed.w;
+    size = 11.0 + 12.0*aSeed.w*aSeed.w;
     vRot = uT*(0.6+1.2*aSeed.y)*(1.0-e)*(aSeed.x>0.5?1.0:-1.0) + aSeed.z*6.283;
     vFlip = mix(0.25+0.75*abs(cos(uT*(0.9+1.2*aSeed.z)+aSeed.w*9.0)), 0.85, e);
     if(uOut>0.0){
