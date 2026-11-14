@@ -174,11 +174,11 @@ STILL = [(ENC_FORM - 0.5, 16.0), (RESPECT_FORM - 0.5, 27.0)]
 # warm haze, open and airy framing. The first daytime scene of the concert. The upper sky stays a clear
 # spring blue so the warm white words read against it; cream and green gold haze sit at the horizon.
 PAL = {
-    "haze":    ("#2f5f9c", "#7fa6cf", "#e7dcb4", "#fff0c8"),   # soft hazy afternoon
-    "bright":  ("#2b63a8", "#86b3da", "#efe4bc", "#fff4d0"),   # clear bright spring afternoon
-    "blossom": ("#2c66ac", "#93b9db", "#f2dcc0", "#fff1d8"),   # rose tint of blossoms in the haze
-    "bless":   ("#3069b0", "#a3c3df", "#f6e6bf", "#fff8dc"),   # the sun breaks through: full blessing light
-    "golden":  ("#2e5f9e", "#a9bfd6", "#f4d9a6", "#ffe9b8"),   # warm late afternoon, handed to song 06
+    "haze":    ("#2a5a98", "#5f8cc2", "#e2dfb0", "#fff0c8"),   # soft hazy afternoon
+    "bright":  ("#2860a6", "#6496cb", "#e8e2b4", "#fff4d0"),   # clear bright spring afternoon
+    "blossom": ("#2a63ab", "#6a9acd", "#efd9bf", "#fff1d8"),   # rose tint of blossoms in the haze
+    "bless":   ("#2d66ae", "#78a5d3", "#f3e3bb", "#fff8dc"),   # the sun breaks through: full blessing light
+    "golden":  ("#2b5a98", "#8fa8c8", "#efd3a0", "#ffe9b8"),   # warm late afternoon, handed to song 06
 }
 _pal_keys = [
     (0.0, "haze"), (10.0, "haze"), (22.0, "bright"), (34.0, "blossom"), (44.0, "bless"),
@@ -190,9 +190,9 @@ SKY_HOR = Track([(t, lin(PAL[p][2])) for t, p in _pal_keys])
 GLOW = Track([(t, lin(PAL[p][3])) for t, p in _pal_keys])
 
 # a soft afternoon sun high behind the haze, breaking through at the climax, settling lower and warmer at the end
-SUN_INT = Track([(0, 0.55), (14, 0.62), (26, 0.72), (38, 0.80), (43, 0.85), (46, 1.05), (51, 1.12), (54, 0.98), (TOTAL, 0.9)])
-SUN_Y = Track([(0, 0.47), (40, 0.47), (48, 0.45), (TOTAL, 0.42)])
-SUN_SIZE = Track([(0, 0.15), (40, 0.15), (48, 0.17), (TOTAL, 0.165)])
+SUN_INT = Track([(0, 0.45), (14, 0.5), (26, 0.55), (38, 0.62), (43, 0.66), (46, 0.85), (51, 0.9), (54, 0.72), (TOTAL, 0.66)])
+SUN_Y = Track([(0, 0.37), (40, 0.37), (48, 0.36), (TOTAL, 0.34)])
+SUN_SIZE = Track([(0, 0.12), (40, 0.12), (48, 0.135), (TOTAL, 0.13)])
 STARS = Track([(0, 0.0), (TOTAL, 0.0)])
 MILKY = Track([(0, 0.0), (TOTAL, 0.0)])
 CLOUDS = Track([(0, 0.55), (24, 0.5), (44, 0.38), (TOTAL, 0.45)])
@@ -205,7 +205,7 @@ TRAIL = Track([(0, 0.0), (1.2, 0.4), (26, 0.5), (44, 0.8), (TOTAL, 0.75)])
 ZOOM = Track([(0, 1.0), (27, 0.995), (44, 0.985), (TOTAL, 0.97)])
 EXPOSURE = Track([(0, 1.0), (TOTAL, 1.0)])
 FADE = Track([(0, 0.0), (0.8, 1.0), (59.0, 1.0), (TOTAL, 0.0)])
-RAYS = Track([(0, 0.25), (20, 0.3), (32, 0.4), (42, 0.5), (44.5, 0.6), (49.5, 0.9), (53, 0.65), (TOTAL, 0.55)])
+RAYS = Track([(0, 0.15), (20, 0.2), (32, 0.3), (42, 0.35), (44.5, 0.45), (49.5, 0.7), (53, 0.45), (TOTAL, 0.4)])
 PART = Track([(0, 0.0), (TOTAL, 0.0)])
 # spring colors: soft rose and cream blossom petals, green gold pollen of light drifting gently upward
 PETAL_COLORS = ("#ffa9bf", "#fff0e2")
