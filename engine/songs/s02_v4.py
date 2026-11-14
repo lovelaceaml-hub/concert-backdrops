@@ -111,14 +111,15 @@ class Song:
         prof = np.clip(prof, 0.0, 1.0)
         crag = sum(a * (1.0 - np.abs(2.0 * lattice(fr, 40 + k) - 1.0))
                    for k, (a, fr) in enumerate(((0.5, 16), (0.25, 35), (0.125, 78), (0.0625, 170), (0.03, 380))))
-        hgt = 0.020 + 0.115 * prof + (0.012 + 0.030 * prof) * (crag - 0.5)
+        hgt = 0.014 + 0.046 * prof + (0.010 + 0.020 * prof) * (crag - 0.5)   # low and calm: the words stay on open sky
         sh = np.clip(np.minimum(xs, 1.0 - xs) / RIDGE_X0, 0.0, 1.0)
         sh = sh * sh * (3 - 2 * sh)
         self.ridge = np.maximum(hgt * (0.5 + 0.5 * sh), 0.006).astype("f4")
 
     def lantern(self, t):
-        # the lonely traveler's light, crossing the long road of the skyline through the minute
-        x = RIDGE_X0 + RIDGE_W * min(max(t / MUSIC_END, 0.0), 1.0)
+        # the lonely traveler's light, crossing the long road of the skyline through the minute; it stops short of
+        # the rose's shore on the right
+        x = RIDGE_X0 + 0.70 * min(max(t / MUSIC_END, 0.0), 1.0)
         y = HORIZON + float(np.interp(x, np.linspace(0, 1, 2048), self.ridge))
         return x, y
 
@@ -153,8 +154,8 @@ PAL = {
     "snow":   ("#060c1c", "#101c36", "#3a4c6e", "#cfe0ff"),   # silver-blue winter night
     "violet": ("#070818", "#141434", "#3e3a68", "#d9c8ff"),   # the aurora veil night
     "deep":   ("#020410", "#070e26", "#1a2848", "#a9c4ff"),   # the clearest, coldest hour
-    "pearl":  ("#0c1430", "#232a52", "#6e6488", "#ffe6ee"),   # first pearl light
-    "blush":  ("#0f1736", "#2a2e58", "#946a82", "#ffd6e0"),   # pale pink spring dawn, kept deep behind words
+    "pearl":  ("#0b122c", "#20264c", "#5e5478", "#ffe6ee"),   # first pearl light
+    "blush":  ("#0d1432", "#262a52", "#74546e", "#ffd6e0"),   # pale pink spring dawn, kept deep behind words
 }
 _pal_keys = [(0.0, "dusk"), (3.0, "dusk"), (10.0, "snow"), (14.0, "snow"), (19.0, "violet"), (28.0, "violet"),
              (32.0, "deep"), (39.0, "deep"), (44.0, "pearl"), (49.0, "blush"), (TOTAL, "blush")]
@@ -163,7 +164,7 @@ SKY_MID = Track([(t, lin(PAL[p][1])) for t, p in _pal_keys])
 SKY_HOR = Track([(t, lin(PAL[p][2])) for t, p in _pal_keys])
 GLOW = Track([(t, lin(PAL[p][3])) for t, p in _pal_keys])
 
-SUN_INT = Track([(0, 0.55), (4, 0.40), (10, 0.06), (14, 0.0), (38, 0.0), (44, 0.30), (50, 0.50), (TOTAL, 0.52)])
+SUN_INT = Track([(0, 0.55), (4, 0.40), (10, 0.06), (14, 0.0), (38, 0.0), (44, 0.24), (50, 0.36), (TOTAL, 0.38)])
 SUN_Y = Track([(0, 0.35), (10, 0.30), (14, 0.28), (38, 0.28), (50, 0.345), (TOTAL, 0.35)])
 SUN_SIZE = Track([(0, 0.09), (TOTAL, 0.09)])
 STARS = Track([(0, 0.25), (6, 0.70), (12, 0.80), (16, 0.85), (28, 0.80), (32, 1.0), (39, 1.0), (45, 0.45),
@@ -171,13 +172,13 @@ STARS = Track([(0, 0.25), (6, 0.70), (12, 0.80), (16, 0.85), (28, 0.80), (32, 1.
 MILKY = Track([(0, 0.0), (TOTAL, 0.0)])            # the Milky Way is song 01's
 CLOUDS = Track([(0, 0.30), (8, 0.45), (13, 0.40), (18, 0.15), (28, 0.10), (31, 0.0), (40, 0.0), (46, 0.30),
                 (TOTAL, 0.30)])
-AURORA = Track([(0, 0.0), (14, 0.0), (19, 0.30), (27, 0.34), (31, 0.10), (36, 0.06), (42, 0.0), (TOTAL, 0.0)])
+AURORA = Track([(0, 0.0), (14, 0.0), (19, 0.20), (27, 0.22), (31, 0.08), (36, 0.04), (42, 0.0), (TOTAL, 0.0)])
 RAIN = Track([(0, 0.0), (TOTAL, 0.0)])            # no rain in this song
 MOTES = Track([(0, 0.05), (8, 0.12), (16, 0.14), (28, 0.12), (32, 0.18), (39, 0.18), (44, 0.10), (TOTAL, 0.08)])
 LANTERNS = Track([(0, 0.0), (TOTAL, 0.0)])        # lanterns belong to songs 03 and 07
 PETALS = Track([(0, 0.0), (40.0, 0.0), (44.0, 0.20), (49.0, 0.24), (54.0, 0.16), (TOTAL, 0.14)])
-TRAIL = Track([(0, 0.35), (14, 0.45), (30, 0.50), (44, 0.65), (TOTAL, 0.70)])
-ZOOM = Track([(0, 0.95), (14, 0.93), (28, 0.905), (34, 0.880), (40, 0.875), (50, 0.89), (TOTAL, 0.895)])
+TRAIL = Track([(0, 0.22), (14, 0.28), (30, 0.30), (44, 0.30), (49, 0.18), (TOTAL, 0.16)])
+ZOOM = Track([(0, 0.95), (14, 0.93), (28, 0.905), (34, 0.880), (40, 0.875), (50, 0.915), (TOTAL, 0.925)])
 EXPOSURE = Track([(0, 1.0), (TOTAL, 1.0)])
 FADE = Track([(0, 0.0), (1.0, 1.0), (59.4, 1.0), (TOTAL, 0.0)])
 RAYS = Track([(0, 0.0), (43.0, 0.0), (50.0, 0.30), (TOTAL, 0.30)])
@@ -205,7 +206,7 @@ for i in range(9):
     STAR_POS.append((x, y))
 
 # The word reaches down: a thin thread of light falls from star 7 to the near shore, where the seed gathers
-ROSE_X, ROSE_FEET = 0.855, 0.285
+ROSE_X, ROSE_FEET = 0.885, 0.285
 BEAM = Track([(0, 0.0), (29.6, 0.0), (30.8, 0.42), (34.5, 0.36), (37.5, 0.0), (TOTAL, 0.0)])
 BEAM_FROM = (STAR_POS[6][0], STAR_POS[6][1] - 0.02)
 BEAM_TO = (ROSE_X, ROSE_FEET + 0.03)
@@ -222,7 +223,7 @@ FIGURES = [
                 "assets/song_figures/s02/rose_bloom.png"],
          t0=SEED_T, t1=58.0, gather=2.6, pose_times=[BUD_T, BLOOM_T], morph=2.2, dissolve=2.0, leave="drift",
          x=ROSE_X, y=Track([(0.0, ROSE_FEET), (BUD_T, ROSE_FEET), (47.0, ROSE_FEET + 0.02), (TOTAL, ROSE_FEET + 0.025)]),
-         height=0.30, color="#ffc8d6", glow=0.75, glass=0.8, sparks=0.8, particles=7000),
+         height=0.27, color="#ffc8d6", glow=0.75, glass=0.8, sparks=0.8, particles=7000),
 ]
 
 OFF = dict(form=1e9, hold=1e9, star=1e9)
@@ -242,7 +243,7 @@ PHRASES = [
 ]
 FORM_DUR = 3.0
 TITLE = dict(label="Healing Concert", lines=["The Words of Mother’s Love"], size=150, form=TITLE_HIT - FORM_DUR,
-             hold=1e9, star=1e9)
+             hold=1e9, star=1e9, y=0.27)   # a little higher than the default 0.315: all three lines stay on open sky
 # Short lyric fragments (a few words each). Never on screen with the expression or the end card.
 FRAGMENTS = [
     dict(text="too lonely", t0=6.0, t1=9.8, out=12.4, dy=0.0, size=96, glow="#cfe0ff", style="reflection"),
