@@ -231,7 +231,7 @@ SCENES = [
 # bright light of its own; at the end every flame and figure lifts as sparks into the new violet light.
 _ENC_C = "#e2d2ff"
 _FEET = 0.24
-_TB_A = dict(x=0.21, h=0.30)          # torch low, flame tip at (0.2105, 0.430) of the screen
+_TB_A = dict(x=0.30, h=0.30)          # torch low, flame tip at (0.3005, 0.430), clear of the tree
 _TB_B = dict(x=0.79, h=0.36)          # torch raised (mirrored), flame tip at (0.8096, 0.569)
 _FLAME = dict(poses=["assets/song_figures/s01/s01_torch_flame.png"], height=0.05, color="#ffb45a", glow=1.7,
               glass=1.4, sparks=1.3, particles=1800, to_star=6)
@@ -245,7 +245,7 @@ FIGURES = [
     dict(poses=["assets/song_figures/s01/s01_torchbearer_b.png"], t0=32.5, t1=ENC_HOLD - 0.1,
          x=_TB_B["x"], y=_FEET, height=_TB_B["h"], to_star=6, color="#ffd796", glow=0.9, particles=7000,
          flip=True),
-    dict(_FLAME, t0=33.0, t1=ENC_HOLD - 0.2, x=0.2105, y=0.430 - 0.014),
+    dict(_FLAME, t0=33.0, t1=ENC_HOLD - 0.2, x=0.3005, y=0.430 - 0.014),
     dict(_FLAME, t0=34.0, t1=ENC_HOLD, x=0.8096, y=0.569 - 0.014),
 ]
 
