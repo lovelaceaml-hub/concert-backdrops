@@ -255,7 +255,7 @@ BEAM = _beam
 # gold path runs back toward the horizon and ends on the water, below the end card's last line
 BEAM_FROM = lambda t: (0.44, 0.59) if t < 47.0 else (0.42, 0.20)          # noqa: E731
 BEAM_TO = lambda t: (_walk_x(t), 0.215) if t < 47.0 else (0.445, 0.37)    # noqa: E731
-BEAM_WIDTH = lambda t: (0.010, 0.07) if t < 47.0 else (0.016, 0.004)      # noqa: E731
+BEAM_WIDTH = lambda t: (0.010, 0.07) if t < 47.0 else (0.022, 0.004)      # noqa: E731
 BEAM_COLOR = "#ffd2a0"
 FLASH = Track([(0, 0.0), (48.6, 0.0), (49.3, 0.16), (50.8, 0.0)])
 TEXT_SHADOW = Track([(0, 1.3), (TOTAL, 1.5)])
