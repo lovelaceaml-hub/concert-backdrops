@@ -11,10 +11,10 @@ Promo v2 (PHASE2.md, design section 15 "Promo v2: scenes"), round 3: Anthony's f
 (assets/plates/s09/) and three special figures (assets/song_figures/s09/); people appear rarely and always moving.
 1 the saints' shore in sea mist: two saints of light walk along the shore path with clay lamps (0 to 10 s);
 2 the shore before dawn: the saints lift their lamps and rise away as light (8.5 to 15 s);
-3 the encounter shore: the Encouragement in full over the still mirror sea, then into star 7 (13.5 to 35 s);
-4 the glory: the mist parts, a column of light and a path of gold on the sea (32.5 to 41.4 s);
+3 the encounter shore: the Encouragement in full over the still mirror sea, then into star 7 (13.5 to 34.6 s);
+4 the glory: the mist parts, a column of light and a path of gold on the sea (32.8 to 41.4 s);
 5 the boats at morning: a fisherman of light in the near boat casts the net and the net of light spreads over the
-  sky, then the end card (39.2 to 60 s).
+  sky, then the end card (39.6 to 60 s).
 """
 import os
 import numpy as np
@@ -243,13 +243,13 @@ SCENES = [
          zoom=(1.10, 1.04), pan=((0.0, 0.0), (0.01, 0.0)), water=True, water_line=0.43),
     dict(image=PL + "s09_2_shore_before_dawn.jpg", t0=8.5, t1=16.0, fade_in=2.5, fade_out=2.5,
          transition="fade", zoom=(1.04, 1.10), water=True, water_line=0.42),
-    dict(image=PL + "s09_3_encounter_shore.jpg", t0=13.5, t1=35.0, fade_in=2.5, fade_out=2.5,
+    dict(image=PL + "s09_3_encounter_shore.jpg", t0=13.5, t1=34.6, fade_in=2.5, fade_out=1.8,
          transition="fade", zoom=(1.06, 1.02), water=True, water_line=0.50, water_strength=0.4,
          gain=Track([(0, 1.0), (ENC_FORM - 1.0, 1.0), (ENC_FORM + 1.0, 0.82), (ENC_ARRIVE, 0.82), (34.0, 1.0)])),
-    dict(image=PL + "s09_4_glory.jpg", t0=32.5, t1=41.4, fade_in=2.5, fade_out=2.5,
+    dict(image=PL + "s09_4_glory.jpg", t0=32.8, t1=41.4, fade_in=1.8, fade_out=1.8,
          transition="fade", zoom=(1.02, 1.10), water=True, water_line=0.26, calm_gain=0.4,
          gain=Track([(0, 0.88), (COMPARE - 0.5, 0.88), (COMPARE + 1.0, 0.70), (COMPARE + 6.5, 0.70), (42.0, 0.88)])),
-    dict(image=PL + "s09_5_boats_morning.jpg", t0=39.2, t1=61.0, fade_in=2.2, fade_out=0.0,
+    dict(image=PL + "s09_5_boats_morning.jpg", t0=39.6, t1=61.0, fade_in=1.8, fade_out=0.0,
          transition="fade", zoom=(1.08, 1.02), water=True, water_line=0.54, calm_gain=0.4,
          gain=Track([(0, 1.0), (TITLE_HIT - 3.5, 1.0), (TITLE_HIT - 1.0, 0.72), (TOTAL, 0.72)])),
 ]
