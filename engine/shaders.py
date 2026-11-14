@@ -476,6 +476,7 @@ vec3 plateColor(sampler2D tx, vec2 sv, vec4 view, vec4 wat){
   if(water>0.5){
     float wob = (vnoise(vec2(puv.x*uAspect*30.0, puv.y*260.0-uT*0.9))-0.5)*0.008*(0.25+d)*wat.z
               + sin(puv.y*300.0+uT*1.3)*0.0008*wat.z;
+    wob *= smoothstep(wat.w, wat.w+0.06, puv.y);       // calm again at the bottom of the water band
     puv += vec2(wob, wob*0.3);
     float wls = 0.5+(wl-view.y)*view.z;              // the water line on screen
     vec2 ruv = vec2(sv.x+wob*view.z, 2.0*wls-sv.y);
@@ -555,8 +556,8 @@ void main(){
   }
   vec3 col = background(bsv);
   if(shA>0.0){
-    float gw = 0.022*shA;
-    float gap = 1.0-smoothstep(gw*0.5, gw, shE);
+    float gw = 0.022*uShards.x;
+    float gap = (1.0-smoothstep(gw*0.5, gw, shE))*shLow;
     float rim = exp(-max(shE-gw,0.0)/0.012)*shA;
     vec2 cell2, toC2;
     voro(vec2(sv.x*uAspect, sv.y)*uShards.z, cell2, toC2);

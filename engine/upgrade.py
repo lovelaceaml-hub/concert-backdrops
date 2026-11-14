@@ -445,6 +445,6 @@ class Upgrade:
             if tm is None:
                 continue
             loc, dur, out = tm
-            shade = ss(0.2 * dur, dur, loc) * (1.0 - ss(0.0, 1.4, out) if out > 0 else 1.0)
+            shade = ss(0.0, 0.45 * dur, loc) * (1.0 - ss(0.0, 1.4, out) if out > 0 else 1.0)
             return f["tex"], (99.0, 1.0, out if out > 0 else -1.0, 0.85), f["bounds"], shade
         return None

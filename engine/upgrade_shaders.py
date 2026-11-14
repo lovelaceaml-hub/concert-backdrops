@@ -325,8 +325,8 @@ void main(){
         float s = min(since, 1.4);
         vec2 v = vec2((aSeed.x-0.5)*0.34, 0.10+0.30*aSeed.y);
         pos += v*s - vec2(0.0, 0.42*s*s);
-        a = 1.3*exp(-since*3.0);
-        size = 1.5 + 3.0*aSeed.z;
+        a = 1.6*exp(-since*2.6);
+        size = 2.2 + 4.0*aSeed.z;
         vHot = 1.0;
       }
     }
