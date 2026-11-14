@@ -254,12 +254,13 @@ BEAM_TO = (0.5, 0.345)
 BEAM_WIDTH = (0.012, 0.075)
 BEAM_COLOR = "#ffd98a"
 # Gold threads of Her words: spreading from the lamp further after each word arrives
-NET = Track([(0, 0.0), (10.5, 0.0), (13.5, 0.30), (23.6, 0.38), (26.0, 0.58), (35.7, 0.64), (38.0, 0.84),
-             (46.5, 0.92), (TOTAL, 0.92)])
+# (the spread is a radius of about 1.9 x 1.12 x NET screen heights round the lamp: 0.17 reaches the people of light)
+NET = Track([(0, 0.0), (10.5, 0.0), (14.0, 0.15), (22.0, 0.17), (25.0, 0.20), (34.0, 0.21), (37.0, 0.24),
+             (46.5, 0.26), (TOTAL, 0.26)])
 NET_ORIGIN = (0.5, 0.345)
 NET_Y0 = 0.345
 NET_SCALE = 6.0
-NET_BRIGHT = Track([(0, 0.0), (10.5, 0.0), (12.0, 0.55), (46.2, 0.55), (48.4, 0.0), (TOTAL, 0.0)])
+NET_BRIGHT = Track([(0, 0.0), (10.5, 0.0), (12.0, 0.50), (46.2, 0.50), (48.4, 0.0), (TOTAL, 0.0)])
 NET_COLOR = "#ffd38a"
 NET_PULSE = "#fff2d6"
 # deeper calm behind the words over the bright Earth plate and the end card
@@ -332,7 +333,7 @@ def credit_state(t, bbox):
 
 # Waves of light across the sky: one where each spoken word reaches its light, softer ones in the sweep, one for
 # the end card
-WAVES = sorted([(p["arrive"], STAR_POS[i][0], STAR_POS[i][1], 0.45 if p["form"] < _OFF else 0.28)
+WAVES = sorted([(p["arrive"], STAR_POS[i][0], STAR_POS[i][1], 0.45 if p["form"] < _OFF else 0.16)
                 for i, p in enumerate(PHRASES)])
 WAVES.append((TITLE_HIT, 0.5, 0.62, 1.2))
 
