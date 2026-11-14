@@ -198,7 +198,8 @@ AURORA_COOL = ("#c9d8ff", "#e4d8ff")
 # clears the corner title.
 P = "assets/plates/s02/"
 ROSE_GAIN = Track([(0, 0.85), (41.0, 0.85), (42.0, 0.78), (47.0, 0.78), (49.0, 0.86), (51.0, 0.68), (TOTAL, 0.68)])
-ROSE_END_PAN = (0.03, 0.054)       # view moves right and up in the picture: the rose sinks down and left
+ROSE_MID_PAN = (0.0, -0.069)       # at 50: the view looks low in the picture (the rose high, clear of the corner)
+ROSE_END_PAN = (0.05, 0.069)       # from 53: view at the top right of the picture, the rose low on the left
 SCENES = [
     dict(image=P + "a_first_snow.jpg", t0=0.0, t1=13.0, fade_in=1.0, fade_out=2.5,
          zoom=(1.0, 1.10), pan=((0.0, 0.0), (0.0, 0.015)), water=True, water_line=0.36,
@@ -210,15 +211,16 @@ SCENES = [
          zoom=(1.02, 1.12), pan=((0.0, 0.0), (0.0, 0.01)),
          gain=Track([(0, 1.0), (30.5, 1.0), (32.0, 0.82), (TOTAL, 0.82)])),
     # the rose shore holds to the end: the end card stands on the close dawn shore beside the rose. Three
-    # pieces of one camera move that meet exactly (same view at each joint, no fade): a slow push in to 50,
-    # then from 50 to 53 the picture sinks down and left (pan is limited to 0.5 - 0.5/zoom = 0.054 at zoom
-    # 1.12), then it holds still under the end card.
+    # pieces of one camera move that meet exactly (same view at each joint, no fade): a slow push in to 50
+    # while looking low in the picture (the plate is padded with soft sky at the top for this), then from 50
+    # to 53 the view sweeps to the top right of the picture so the rose sinks down and left under the end
+    # card's title (pan is limited to 0.5 - 0.5/zoom = 0.069 at zoom 1.16), then it holds still.
     dict(image=P + "e_rose_shore.jpg", t0=39.7, t1=50.0, fade_in=2.5, fade_out=0.0, transition="fade",
-         zoom=(1.06, 1.12), pan=((0.0, 0.0), (0.0, 0.0)), gain=ROSE_GAIN),
+         zoom=(1.06, 1.16), pan=((0.0, -0.028), ROSE_MID_PAN), gain=ROSE_GAIN),
     dict(image=P + "e_rose_shore.jpg", t0=50.0, t1=53.0, fade_in=0.0, fade_out=0.0, transition="fade",
-         zoom=(1.12, 1.12), pan=((0.0, 0.0), ROSE_END_PAN), gain=ROSE_GAIN),
+         zoom=(1.16, 1.16), pan=(ROSE_MID_PAN, ROSE_END_PAN), gain=ROSE_GAIN),
     dict(image=P + "e_rose_shore.jpg", t0=53.0, t1=61.0, fade_in=0.0, fade_out=0.0, transition="fade",
-         zoom=(1.12, 1.12), pan=(ROSE_END_PAN, ROSE_END_PAN), gain=ROSE_GAIN),
+         zoom=(1.16, 1.16), pan=(ROSE_END_PAN, ROSE_END_PAN), gain=ROSE_GAIN),
 ]
 
 # ----------------------------------------------------------------- effect layers
@@ -250,11 +252,12 @@ for i in range(9):
 SF = "assets/song_figures/s02/"
 # Polish pass: the group is secondary, small and far back on the snowfield (feet near the horizon), well left
 # of the violet column, and travels a long way: x 0.45 to 0.15 in 4.4 seconds while rising off the ground as
-# it dissolves (engine figure motion, UPGRADE-HOWTO section G). Pose 3 (the traveler standing with them; its
-# raised lantern masked out, it read as a fifth head) is whole for under a second before the dissolve.
+# it dissolves (engine figure motion, UPGRADE-HOWTO section G). One pose only, the women walking with the
+# traveler (trio_3_rise, its raised lantern masked out; it read as a fifth head): a pose change at this size
+# showed as a bright blob of sparks, so the group gathers already walking and dissolves straight out of it.
 FIGURES = [
-    dict(poses=[SF + "trio_2_encourage.png", SF + "trio_3_rise.png"],
-         t0=FIG_IN, t1=14.0, gather=1.0, pose_times=[13.0], morph=0.6, dissolve=2.2, leave="drift",
+    dict(poses=[SF + "trio_3_rise.png"],
+         t0=FIG_IN, t1=14.0, gather=1.0, dissolve=2.2, leave="drift",
          x=(0.45, 0.15), move=(FIG_IN, 16.2), ease="linear", bob=1.0,
          y=Track([(0.0, 0.43), (FIG_IN, 0.43), (13.6, 0.44), (16.2, 0.52), (TOTAL, 0.52)]),
          height=0.19, color="#ffd9a8", glow=0.5),   # pale gold, small, never the brightest thing on screen
