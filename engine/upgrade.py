@@ -164,7 +164,9 @@ class Upgrade:
         cy = 0.5 + pan[0][1] + (pan[1][1] - pan[0][1]) * u
         half = 0.5 / zz
         cx, cy = min(max(cx, half), 1 - half), min(max(cy, half), 1 - half)
-        return (cx, cy, zz, float(sc.get("gain", 1.0)))
+        g = sc.get("gain", 1.0)
+        g = g(t) if callable(g) else g
+        return (cx, cy, zz, float(g))
 
     def plate_state(self, t):
         act = []
@@ -197,7 +199,8 @@ class Upgrade:
             wl = sc.get("water_line", S.HORIZON)
             rc = sc.get("ripple_from", (0.5, S.HORIZON * 0.6))
             slots.append(dict(tex=self.ptex[sc["image"]], view=view,
-                              wat=(1.0 if sc.get("water") else 0.0, float(wl), float(sc.get("water_strength", 1.0)), 0.0),
+                              wat=(1.0 if sc.get("water") else 0.0, float(wl), float(sc.get("water_strength", 1.0)),
+                                   float(sc.get("water_bottom", 0.0))),
                               tr=(float(mode), float(a["pin"]), float(rc[0]), float(rc[1])),
                               alpha=float(sc.get("opacity", 1.0)) * pout))
         return slots, flash
@@ -205,7 +208,8 @@ class Upgrade:
     def comp_uniforms(self, prog, t, P):
         """Sets the composite pass's upgrade uniforms (plates, shards, ice, field, flash)."""
         slots, flash = self.plate_state(t) if self.scenes else ([], 0.0)
-        kw = dict(uPlN=len(slots), uFlash=float(flash + (val("FLASH", t, 0.0) or 0.0)))
+        kw = dict(uPlN=len(slots), uFlash=float(flash + (val("FLASH", t, 0.0) or 0.0)),
+                  uShadeK=float(val("TEXT_SHADOW", t, 1.0)))
         for k, sl in enumerate(slots):
             key = "A" if k == 0 else "B"
             sl["tex"].use(location=10 + k)
@@ -239,7 +243,7 @@ class Upgrade:
                         (grays[0].shape[1], grays[0].shape[0]), Image.LANCZOS)).astype(np.float32) / 255.0
                 grays.append(g)
             H0, W0 = grays[0].shape
-            n = int(fg.get("particles", 12000))
+            n = int(fg.get("particles", 9000))
             rng = np.random.default_rng(1234 + fi)
             pts, texs = [], []
             th = 640
@@ -339,14 +343,14 @@ class Upgrade:
             fd["texs"][st["b"]].use(location=1)
             setu(self.p_figt, uTexA=0, uTexB=1, uMix=float(mu), uAlpha=float(formed * gone * dip * glow), uT=t,
                  uGlass=float(m.get("glass", 1.0)), uRect=st["rect"], uFlip=1.0 if m.get("flip") else 0.0,
-                 uLine=S.lin("#fff1d8") * 0.55 + c * 0.25, uBody=c * 0.30, uHalo=c * 0.22)
+                 uLine=S.lin("#ffe9c4") * 0.42 + c * 0.45, uBody=c * 0.30, uHalo=c * 0.24)
             self.v_figt.render(moderngl.TRIANGLE_STRIP)
             # the sparks
             setu(self.p_figp, uT=t, uPx=self.px, uRect=st["rect"], uFlip=1.0 if m.get("flip") else 0.0,
                  uPoseA=st["a"], uPoseB=st["b"], uMorph=float(st["u"]), uGather=float(st["gather"]),
                  uGatherDur=float(st["gdur"]), uDiss=float(st["diss"]), uDissDur=float(st["ddur"]),
                  uTo=tuple(float(v) for v in st["to"]), uMode=st["mode"], uBright=glow * float(m.get("sparks", 1.0)),
-                 uSize=float(m.get("spark_size", 1.0)), uColA=S.lin("#fff3dc"), uColB=c * 1.1)
+                 uSize=float(m.get("spark_size", 1.0)), uColA=S.lin("#ffe8c0"), uColB=c * 1.2)
             fd["vao"].render(moderngl.POINTS)
 
     # ------------------------------------------------------------ C. effect layers drawn as light

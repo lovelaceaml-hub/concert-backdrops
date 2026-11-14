@@ -365,6 +365,7 @@ uniform float uPlAAlpha, uPlBAlpha, uFlash;
 uniform vec4 uShards; uniform vec3 uShardCol;
 uniform vec4 uIce; uniform vec3 uIceCol, uThawCol;
 uniform vec4 uField; uniform vec3 uFieldCol;
+uniform float uShadeK;
 vec2 hash22(vec2 p){ vec3 p3 = fract(vec3(p.xyx)*vec3(0.1031,0.1030,0.0973));
   p3 += dot(p3, p3.yzx+33.33); return fract((p3.xx+p3.yz)*p3.zy); }
 float voro(vec2 x, out vec2 cell, out vec2 toC){
@@ -470,7 +471,7 @@ vec3 plateColor(sampler2D tx, vec2 sv, vec4 view, vec4 wat){
   vec2 puv = view.xy + (sv-0.5)/view.z;
   float wl = wat.y;
   vec3 extra = vec3(0.0);
-  float water = (wat.x>0.5 && puv.y<wl) ? 1.0 : 0.0;
+  float water = (wat.x>0.5 && puv.y<wl && puv.y>wat.w) ? 1.0 : 0.0;
   float d = clamp((wl-puv.y)/max(wl,0.05), 0.0, 1.0);
   if(water>0.5){
     float wob = (vnoise(vec2(puv.x*uAspect*30.0, puv.y*260.0-uT*0.9))-0.5)*0.008*(0.25+d)*wat.z
@@ -489,8 +490,8 @@ vec3 plateColor(sampler2D tx, vec2 sv, vec4 view, vec4 wat){
   vec3 lin = invTone(pow(s, vec3(2.2)))*view.w;
   lin += max(pow(halo, vec3(2.2))-0.22, 0.0)*0.40*view.w;   // soft halation round the bright parts
   if(water>0.5){
-    float gl = pow(vnoise(vec2(puv.x*uAspect*420.0, puv.y*1300.0+uT*2.4)), 9.0);
-    lin += vec3(1.0,0.93,0.8)*gl*smoothstep(0.20,0.75,l)*2.4*wat.z*(0.4+d);
+    float gl = pow(vnoise(vec2(puv.x*uAspect*170.0+uT*0.15, puv.y*900.0+uT*1.6)), 16.0);
+    lin += vec3(1.0,0.93,0.8)*gl*smoothstep(0.50,0.95,l)*1.6*wat.z*(0.3+d);
   }
   return lin+extra;
 }
@@ -505,7 +506,7 @@ float trMask(vec4 tr, vec2 sv, out float edge){
   if(m==3){       // a ripple that spreads from a point
     float r = length((sv-tr.zw)*vec2(uAspect,1.0));
     float f = p*2.3;
-    edge = exp(-pow((r-f)/0.025,2.0))*(1.0-p);
+    edge = exp(-pow((r-f)/0.010,2.0))*(1.0-p)*0.45;
     return smoothstep(f, f-0.18, r);
   }
   if(m==2) return smoothstep(0.30, 0.70, p);   // bloom: the change hides inside a flash of light
@@ -539,32 +540,36 @@ void main(){
     vec2 cell, toC;
     shE = voro(q, cell, toC);
     shH = hash21(cell*1.31+0.7);
-    shLow = smoothstep(uShards.w, uShards.w+0.10, sv.y);
+    shLow = smoothstep(uShards.w, uShards.w+0.16, sv.y);
     shA = uShards.x*shLow;
     if(shA>0.0){
       vec2 h2 = hash22(cell*2.17+1.3);
-      float ang = ((shH-0.5)*0.32 + 0.05*sin(uT*0.45+h2.x*6.28))*shA;
+      float ang = ((shH-0.5)*0.50 + 0.07*sin(uT*0.45+h2.x*6.28))*shA;
       vec2 rel = -toC;
       float cs = cos(ang), sn = sin(ang);
       vec2 rr = vec2(cs*rel.x-sn*rel.y, sn*rel.x+cs*rel.y);
-      vec2 drift = ((h2-0.5)*vec2(0.55,0.40) + 0.10*vec2(sin(uT*0.31+h2.y*9.0), cos(uT*0.27+h2.x*9.0)))*shA;
+      vec2 drift = ((h2-0.5)*vec2(0.80,0.55) + 0.14*vec2(sin(uT*0.31+h2.y*9.0), cos(uT*0.27+h2.x*9.0)))*shA;
       vec2 qq = cell+hash22(cell)+rr+drift;
       bsv = vec2(qq.x/uAspect, qq.y)/uShards.z;
     }
   }
   vec3 col = background(bsv);
   if(shA>0.0){
-    float gw = 0.07*shA;
-    float gap = 1.0-smoothstep(gw*0.55, gw, shE);
-    float rim = exp(-max(shE-gw,0.0)/0.03)*shA;
-    col *= mix(1.0, 0.86+0.32*shH, shA);
-    col = mix(col, col*0.10+uShardCol*0.02, gap);
-    col += (uGlow*0.30 + vec3(0.35,0.45,0.70)*0.12)*rim*(1.0-gap);
+    float gw = 0.022*shA;
+    float gap = 1.0-smoothstep(gw*0.5, gw, shE);
+    float rim = exp(-max(shE-gw,0.0)/0.012)*shA;
+    vec2 cell2, toC2;
+    voro(vec2(sv.x*uAspect, sv.y)*uShards.z, cell2, toC2);
+    float facing = 0.5+0.5*dot(normalize(-toC2+1e-5), normalize(vec2(-0.6,0.8)));
+    col *= mix(1.0, 0.80+0.45*shH, shA);
+    col += uGlow*0.06*shA*smoothstep(0.6,1.0,shH);
+    col = mix(col, col*0.30, gap);
+    col += (uGlow*0.40 + vec3(0.55,0.65,0.90)*0.20)*rim*(0.25+0.75*facing)*(1.0-gap);
   }
   if(uShards.y>0.001){
-    float seam = exp(-shE/0.010)*1.3 + exp(-shE/0.06)*0.22;
-    float glint = pow(vnoise(vec2(sv.x*uAspect, sv.y)*uShards.z*24.0+uT*0.8), 6.0);
-    col += uShardCol*uShards.y*shLow*seam*(0.8+2.5*glint);
+    float seam = exp(-shE/0.0035)*1.1 + exp(-shE/0.018)*0.10;
+    float glint = pow(vnoise(vec2(sv.x*uAspect, sv.y)*uShards.z*18.0+vec2(uT*0.6,0.0)), 8.0);
+    col += uShardCol*uShards.y*shLow*seam*(0.55+4.0*glint);
   }
   // ---- ice over the lake, which can thaw
   if(uIce.x>0.001 && sv.y<uIce.y){
@@ -574,7 +579,7 @@ void main(){
     vec2 cc, tc;
     float e1 = voro(g, cc, tc);
     float e2 = voro(g*2.6+vec2(3.1,7.7), cc, tc);
-    float crack = exp(-e1/0.018)*0.8 + exp(-e2/0.012)*0.4;
+    float crack = (exp(-e1/0.010)*0.55 + exp(-e2/0.006)*0.25)*(0.25+0.75*smoothstep(0.35,0.75,vnoise(g*2.2+7.0)));
     float frost = fbm(g*2.3)*0.65 + fbm(g*8.0+5.0)*0.35;
     float melt = fbm(g*0.55+vec2(9.0,2.0));
     float th = mix(0.95, -0.05, uIce.x);
@@ -591,27 +596,34 @@ void main(){
     vec2 q = (sv-0.5)*vec2(uAspect,1.0);
     float r = length(q)/length(vec2(uAspect*0.5,0.5));
     float fr = smoothstep(0.62, 1.0, r+0.22*(fbm(sv*vec2(uAspect,1.0)*6.0)-0.5));
-    vec2 cc, tc;
-    float fe = voro(sv*vec2(uAspect,1.0)*16.0, cc, tc);
-    col = mix(col, col*0.55 + uIceCol*(0.12+0.35*exp(-fe/0.04)), fr*uIce.w);
+    vec2 fq = sv*vec2(uAspect,1.0);
+    float fea = fbm(fq*9.0+vec2(fbm3(fq*3.0)*2.0, 0.0));
+    float crys = smoothstep(0.50, 0.85, fea) + 0.6*pow(vnoise(fq*140.0), 10.0);
+    col = mix(col, col*0.70 + uIceCol*(0.06+0.30*crys), fr*uIce.w);
   }
-  // ---- a golden field of light grain across the lower land
+  // ---- a golden field of light grain across the lower land: rows of glowing grain heads in perspective
   if(uField.x>0.001 && sv.y<uField.y){
-    float d = (uField.y-sv.y)/uField.y;
-    float z = 1.0/(d+0.04);
-    vec2 g = vec2((sv.x-0.5)*uAspect*z, z);
-    float wave = 0.5+0.5*sin(g.y*1.1 - uT*uField.z + g.x*0.35 + 1.6*fbm3(g*0.3+uT*0.05));
-    wave = pow(wave, 3.0);
-    float bend = wave*0.004*d;
-    float k = mix(900.0, 150.0, d);
-    float st = vnoise(vec2((sv.x+bend)*uAspect*k, sv.y*k*0.06));
-    st = smoothstep(0.42, 0.92, st);
-    float heads = pow(vnoise(vec2((sv.x+bend)*uAspect*k*0.55, sv.y*k*0.5+3.0)), 6.0);
-    vec3 fc = uFieldCol*(0.06 + 0.42*st*(0.35+wave) + 2.0*heads*(0.3+wave));
-    float cover = uField.x*smoothstep(0.0, 0.03, d);
-    fc *= 1.0-0.55*smoothstep(0.55, 1.0, d);          // the bottom stays calm for the performers
-    col = mix(col, col*0.28+fc, cover);
-    col += uFieldCol*0.10*exp(-d*14.0)*uField.x;       // light haze along the far edge of the field
+    float d = (uField.y-sv.y)/uField.y;               // 0 at the far edge, 1 at the bottom of the screen
+    float z = 1.0/(d+0.05);
+    float wave = 0.5+0.5*sin(z*0.9 - uT*uField.z + sv.x*uAspect*2.2 + 1.4*fbm3(vec2(sv.x*3.0, z*0.2)+uT*0.04));
+    wave = wave*wave*wave;
+    float row = z*7.0;
+    float rid = floor(row), rf = fract(row);
+    float sway = (wave-0.3)*0.22 + 0.06*sin(uT*1.3+rid);
+    float cx = sv.x*uAspect*36.0*z/7.0*3.0 + rid*0.37;
+    float cid = floor(cx);
+    float fx = fract(cx)-0.5 - sway*(1.0-rf);
+    float h = hash21(vec2(cid, rid));
+    float on = step(0.25, h);
+    float head = exp(-fx*fx/0.035 - pow(rf-0.30,2.0)/0.050)*on;
+    float stalk = exp(-fx*fx/0.0025)*smoothstep(0.30,0.95,rf)*on*0.35;
+    float far = smoothstep(0.0, 0.25, d);
+    vec3 fc = uFieldCol*((0.10+0.90*wave)*(head*(0.6+0.8*h)) + stalk*0.4)*far;
+    fc += uFieldCol*(0.05+0.10*wave)*(1.0-far*0.5);   // a soft golden ground under the grain
+    float cover = uField.x*smoothstep(0.0, 0.02, d);
+    fc *= 1.0-0.50*smoothstep(0.55, 1.0, d);          // the bottom stays calmer for the performers
+    col = mix(col, col*0.30+fc, cover);
+    col += uFieldCol*0.12*exp(-d*12.0)*uField.x;       // light haze along the far edge of the field
   }
   col += uGlow*uFlash*(0.55+0.45*exp(-length((sv-vec2(0.5,0.55))*vec2(uAspect,1.0))*1.6));
   vec2 uv = vec2((sv.x-0.5)*uZoom+0.5, (sv.y-uHorizon)*uZoom+uHorizon);
@@ -627,9 +639,9 @@ void main(){
   // soft shadows so the words stay readable against bright skies
   uv = sv;
   float sh = max(texture(uTextA, uv).b*uShade.x, texture(uTextB, uv).b*uShade.y);
-  col *= 1.0-0.56*sh;
+  col *= 1.0-min(0.56*uShadeK*sh, 0.92);
   float tight = max(wordMask(uTextA, uv, uTxA, uBndA), wordMask(uTextB, uv, uTxB, uBndB));
-  col *= 1.0-0.50*tight;
+  col *= 1.0-min(0.50*uShadeK*tight, 0.92);
   vec2 cuv = (uv-uCredit.xy)/uCredit.z + uC0;
   if(cuv.x>0.0 && cuv.x<1.0 && cuv.y>0.0 && cuv.y<1.0){
     vec3 ct = texture(uTextC, cuv).rgb;

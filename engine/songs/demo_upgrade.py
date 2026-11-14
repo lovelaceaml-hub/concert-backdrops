@@ -197,7 +197,8 @@ SCENES = [
     dict(image="assets/plates/demo/thaw_dawn.jpg", t0=24.5, t1=49.0, fade_in=3.5, fade_out=3.0,
          transition="dissolve", zoom=(1.04, 1.13), pan=((0.0, 0.0), (0.0, 0.015)), water=True, water_line=0.37),
     dict(image="assets/plates/demo/golden_morning.jpg", t0=46.0, t1=61.0, fade_in=3.0, fade_out=0.0,
-         transition="ripple", ripple_from=(0.5, 0.30), zoom=(1.12, 1.05), water=True, water_line=0.46),
+         transition="ripple", ripple_from=(0.5, 0.30), zoom=(1.12, 1.05), water=True, water_line=0.46,
+         water_bottom=0.20, gain=Track([(0, 1.0), (49.0, 0.95), (52.0, 0.78), (TOTAL, 0.78)])),
 ]
 
 # B. two pairs of people of light (the shared figure library in assets/figures/)
@@ -210,13 +211,13 @@ FIGURES = [
 ]
 
 # C. effect layers
-SNOW = Track([(0, 0.55), (20, 0.6), (27, 0.2), (30, 0.0)])
+SNOW = Track([(0, 0.40), (20, 0.45), (27, 0.15), (30, 0.0)])
 SNOW_WIND = 0.4
 ICE = Track([(0, 1.0), (28, 1.0), (44, 0.0)])          # the lake is frozen, then thaws with glowing edges
 ICE_LINE = Track([(0, 0.28), (26.0, 0.28), (28.0, 0.36), (TOTAL, 0.36)])
-ICE_FRAME = Track([(0, 0.55), (24, 0.55), (32, 0.0)])  # frost in the corners of the frame
+ICE_FRAME = Track([(0, 0.45), (24, 0.45), (32, 0.0)])  # frost in the corners of the frame
 SHARDS = Track([(0, 0.0), (17.5, 0.0), (20.5, 1.0), (26.0, 1.0), (31.0, 0.0)])
-SHARDS_MEND = Track([(0, 0.0), (28.0, 0.0), (31.0, 1.0), (40.0, 0.8), (45.0, 0.0)])
+SHARDS_MEND = Track([(0, 0.0), (28.0, 0.0), (31.0, 0.75), (40.0, 0.5), (45.0, 0.0)])
 SHARDS_Y = 0.52
 BEAM = Track([(0, 0.0), (31.0, 0.0), (34.0, 0.85), (44.0, 0.85), (48.0, 0.0)])
 BEAM_FROM = (0.5, 1.02)
@@ -227,7 +228,9 @@ FIELD_LINE = 0.22
 NET = Track([(0, 0.0), (49.0, 0.0), (57.0, 1.0), (TOTAL, 1.0)])
 NET_ORIGIN = (0.5, 0.86)
 NET_Y0 = 0.50
-NET_BRIGHT = Track([(0, 0.0), (49.0, 0.7), (TOTAL, 0.7)])
+NET_SCALE = 5.5
+NET_BRIGHT = Track([(0, 0.0), (49.0, 0.55), (TOTAL, 0.55)])
+TEXT_SHADOW = Track([(0, 1.0), (26.0, 1.0), (30.0, 1.6), (TOTAL, 1.7)])   # stronger shadow behind words on the bright dawn plates
 
 # Nine lights on an arch over the stage, one for each expression
 STAR_POS = []
@@ -258,7 +261,7 @@ TITLE = dict(label="Healing Concert", lines=["The Words of Mother’s Love"], si
 # D. lyric fragments in two of the new styles (and the classic one)
 FRAGMENTS = [
     dict(text="the pain you held inside", t0=22.5, t1=26.5, out=30.0, dy=0.0, size=88, glow="#bcd6ff",
-         style="reflection"),
+         style="reflection", line=0.29),
     dict(text="truly humbled", t0=31.0, t1=33.8, out=37.2, dy=0.02, size=96, style="engrave"),
 ]
 

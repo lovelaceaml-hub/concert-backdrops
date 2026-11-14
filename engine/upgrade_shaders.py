@@ -53,8 +53,8 @@ void main(){
   float sparkle = exp(-max(since,0.0)*2.2)*landed;
   float tw = 0.65+0.35*sin(uT*(1.8+3.2*aSeed.y)+aSeed.z*50.0);
   float alpha = smoothstep(0.0,0.10,s)*(0.30+0.70*s);
-  alpha *= mix(1.0, 0.42*tw, landed) + 0.9*sparkle + 0.45*arc;
-  float size = (1.3 + 3.2*aSeed.w*aSeed.w*aSeed.w)*uSize + 2.2*sparkle + 2.0*(1.0-s) + 1.2*arc;
+  alpha *= mix(1.0, 0.24*tw, landed) + 0.9*sparkle + 0.40*arc;
+  float size = (1.1 + 2.5*aSeed.w*aSeed.w*aSeed.w)*uSize + 2.2*sparkle + 2.0*(1.0-s) + 1.2*arc;
   float hot = sparkle + arc*0.6;
   // dissolve
   if(uDiss>0.0){
@@ -133,10 +133,10 @@ void main(){
   float x = fract(aSeed.z + uWind*uT*sp*0.6 + sway);
   float on = step(aSeed.w, uAmount);
   float tw = 0.80+0.20*sin(uT*(1.5+2.0*aSeed.y)+aSeed.z*60.0);
-  vA = on*tw*mix(0.38, 0.85, depth)*smoothstep(0.0,0.04,ph);
+  vA = on*tw*mix(0.30, 0.70, depth)*smoothstep(0.0,0.04,ph);
   vSoft = depth;
   gl_Position = vec4(vec2(x,y)*2.0-1.0, 0.0, 1.0);
-  gl_PointSize = mix(1.6, 11.0, pow(depth, 2.4))*uPx;
+  gl_PointSize = mix(1.4, 7.5, pow(depth, 2.6))*uPx;
 }
 """
 SNOW_FS = """
@@ -189,8 +189,8 @@ void main(){
       vec2 pt = s0+ab*tt + nrm*0.10*sin(3.14159*tt)*(hk-0.5);
       float d = length(p-pt)/uScale;
       float sh = 0.75+0.25*sin(tt*18.0-uT*2.0+hk*20.0);
-      lines += sh*exp(-d/0.0011);
-      glow += exp(-d/0.006);
+      lines += sh*exp(-d/0.0008);
+      glow += exp(-d/0.005)*0.6;
       float pl = fract(uT*0.35+hk*7.0);
       pulses += exp(-pow((tt-pl)/0.035,2.0))*step(pl,grow)*exp(-d/0.0018);
     }
@@ -265,7 +265,7 @@ void main(){
       float lit = clamp(dot(n, normalize(vec3(-0.5,0.6,0.62))), 0.0, 1.0);
       float spec = pow(lit, 18.0);
       float heat = exp(-max(p-od,0.0)*uDur*1.4);
-      vec3 gold = mix(vec3(0.42,0.20,0.04), vec3(1.0,0.78,0.36), lit) + vec3(1.0,0.95,0.8)*spec*1.2;
+      vec3 gold = (mix(vec3(0.55,0.24,0.03), vec3(1.25,0.82,0.30), lit) + vec3(1.0,0.92,0.7)*spec*1.6)*1.35;
       gold = mix(gold, uHot*1.6, heat*0.75);
       float sheen = 0.85+0.3*smoothstep(0.92,1.0,sin(vUV.x*6.0-uLocal*0.9));
       c = (gold*tx.r*sheen + uGlowCol*tx.g*0.18)*rev + uHot*(tx.g*1.8+tx.r)*nib;
