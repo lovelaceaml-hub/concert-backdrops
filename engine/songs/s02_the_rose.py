@@ -5,9 +5,9 @@ deep winter night with snowfall, a pale pink spring dawn; silver blue, white, bl
 Painted plates from Assets/s02 (assets/plates/s02/) and the song's own people of light (assets/song_figures/s02/).
 
 Five scenes, each with its own camera and main object:
-  0 to 17   1 FIRST SNOW: a wide night lake, the home star low between the mountains, snow begins and thickens
+  0 to 14.5 1 FIRST SNOW: a wide night lake, the home star low between the mountains, snow begins and thickens
             as the camera slowly closes in; fragment "too lonely"
-  14 to 30  2 THE CANDLE FIELD: violet light pours onto the snowbound lake and small lights glow all over it;
+  12 to 30  2 THE CANDLE FIELD: violet light pours onto the snowbound lake and small lights glow all over it;
             three women of light come to the kneeling traveler and act out Encouragement (they gather round,
             one relights the traveler's lantern from her own flame, one wraps her scarf round the traveler, one
             prays; then the traveler stands with them, lantern raised). The full words form and fly into star 7
@@ -163,7 +163,7 @@ MILKY = Track([(0, 0.0), (TOTAL, 0.0)])
 CLOUDS = Track([(0, 0.0), (TOTAL, 0.0)])
 AURORA = Track([(0, 0.0), (TOTAL, 0.0)])
 RAIN = Track([(0, 0.0), (TOTAL, 0.0)])            # no rain in this song
-MOTES = Track([(0, 0.04), (20, 0.06), (30, 0.10), (38, 0.06), (44, 0.12), (52, 0.16), (TOTAL, 0.14)])
+MOTES = Track([(0, 0.04), (20, 0.06), (27.0, 0.06), (29.0, 0.0), (38.0, 0.0), (44, 0.12), (52, 0.16), (TOTAL, 0.14)])
 LANTERNS = Track([(0, 0.0), (TOTAL, 0.0)])        # lanterns belong to songs 03 and 07
 # the rose's blush petals only at dawn
 PETALS = Track([(0, 0.0), (40.0, 0.0), (43.0, 0.12), (47.0, 0.18), (52, 0.14), (TOTAL, 0.12)])
@@ -183,27 +183,26 @@ AURORA_COOL = ("#c9d8ff", "#e4d8ff")
 # ----------------------------------------------------------------- scenes (painted plates, assets/plates/s02/)
 # Each scene has its own camera and main object:
 #   1 wide night lake, first snow, the home star low between the mountains; the camera slowly closes in
-#     as the night deepens (0 to 17)
-#   2 the violet light on the ice and the field of candle lights: the trio comes (14 to 30)
+#     as the night deepens (0 to 14.5)
+#   2 the violet light on the ice and the field of candle lights: the trio comes (12 to 30)
 #   3 under the snow: high ice ceiling, the seed and its gold roots in the soil (27.5 to 40)
 #   4 low close shot on the near shore: the rose of light (37 to 51)
 #   5 spring dawn, closer on the near shore where the rose stands, for the end card (47.5 to 60)
 P = "assets/plates/s02/"
 SCENES = [
-    dict(image=P + "a_first_snow.jpg", t0=0.0, t1=17.0, fade_in=1.0, fade_out=2.5,
+    dict(image=P + "a_first_snow.jpg", t0=0.0, t1=14.5, fade_in=1.0, fade_out=2.5,
          zoom=(1.0, 1.10), pan=((0.0, 0.0), (0.0, 0.015)), water=True, water_line=0.36,
          gain=Track([(0, 1.0), (9.0, 1.0), (14.0, 0.85), (TOTAL, 0.85)])),
-    dict(image=P + "c_violet_ice.jpg", t0=14.5, t1=30.0, fade_in=2.5, fade_out=2.5, transition="bloom",
-         flash=0.5, zoom=(1.04, 1.10), pan=((0.0, 0.0), (0.0, 0.015)),
-         gain=Track([(0, 0.85), (15.5, 0.85), (18.0, 0.70), (27.0, 0.70), (30.0, 0.85)])),
+    dict(image=P + "c_violet_ice.jpg", t0=12.0, t1=30.0, fade_in=2.5, fade_out=2.5, transition="dissolve",
+         zoom=(1.04, 1.10), pan=((0.0, 0.0), (0.0, 0.015)),
+         gain=Track([(0, 0.62), (27.0, 0.62), (30.0, 0.85)])),
     dict(image=P + "d_seed.jpg", t0=27.5, t1=40.0, fade_in=2.5, fade_out=2.5, transition="dissolve",
          zoom=(1.02, 1.12), pan=((0.0, 0.0), (0.0, 0.01)),
          gain=Track([(0, 1.0), (31.0, 1.0), (32.5, 0.82), (38.0, 0.82), (40.0, 1.0)])),
     dict(image=P + "e_thaw_rose.jpg", t0=37.5, t1=50.5, fade_in=2.5, fade_out=3.0, transition="ripple",
-         ripple_from=(0.15, 0.45), zoom=(1.10, 1.04), pan=((-0.03, 0.0), (-0.01, 0.0)), water=True,
-         water_line=0.50, gain=Track([(0, 0.9), (39.5, 0.9), (41.0, 0.78), (46.5, 0.78), (50.5, 0.9)])),
+         ripple_from=(0.15, 0.45), zoom=(1.10, 1.04), pan=((-0.03, 0.0), (-0.01, 0.0)), gain=Track([(0, 0.9), (39.5, 0.9), (41.0, 0.78), (46.5, 0.78), (50.5, 0.9)])),
     dict(image=P + "f_spring_dawn.jpg", t0=47.5, t1=61.0, fade_in=3.0, fade_out=0.0, transition="dissolve",
-         zoom=(1.22, 1.18), pan=((-0.10, -0.04), (-0.11, -0.05)), water=True, water_line=0.33,
+         zoom=(1.40, 1.36), pan=((-0.22, -0.12), (-0.23, -0.13)),
          gain=Track([(0, 0.85), (49.0, 0.85), (51.0, 0.66), (TOTAL, 0.66)])),
 ]
 
@@ -236,7 +235,7 @@ SF = "assets/song_figures/s02/"
 FIGURES = [
     dict(poses=[SF + "trio_1_arrival.png", SF + "trio_2_encourage.png", SF + "trio_3_rise.png"],
          t0=FIG_IN, t1=ENC_HOLD - 0.5, pose_times=[16.6, 22.4], morph=0.6, x=0.5, y=0.34, height=0.32,
-         to_star=6, color="#e2d2ff"),
+         to_star=6, color="#e2d2ff", glow=1.25),
 ]
 
 OFF = dict(form=1e9, hold=1e9, star=1e9)
