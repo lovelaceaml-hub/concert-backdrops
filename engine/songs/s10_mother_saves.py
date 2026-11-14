@@ -223,11 +223,11 @@ SCENES = [
     # 2 the great lamp is lifted: Heavenly Mother (from behind) at the lamp; Greeting
     dict(image=_P + "great_lamp.jpg", t0=4.8, t1=19.2, fade_in=1.2, fade_out=1.2, transition="fade", calm_gain=0.85,
          zoom=(1.0, 1.04), water=True, water_line=0.495, water_strength=0.7,
-         gain=Track([(0, 1.0), (7.5, 1.0), (9.0, 0.80), (TOTAL, 0.80)])),
+         gain=Track([(0, 0.82), (6.0, 0.72), (9.5, 0.72), (11.0, 0.80), (TOTAL, 0.80)])),
     # 3 Her words go out: gold threads from the lantern to the lights on the water; Consideration
-    dict(image=_P + "threads.jpg", t0=18.0, t1=31.7, fade_in=1.2, fade_out=1.2, transition="fade", calm_gain=0.85,
+    dict(image=_P + "threads.jpg", t0=18.0, t1=31.7, fade_in=1.2, fade_out=1.2, transition="fade",
          zoom=1.2, pan=((0.0, 0.085), (0.0, 0.085)), water=True, water_line=0.52, water_strength=0.45,
-         gain=0.85),
+         gain=0.85, calm_gain=0.40),
     # 4 circles of peace: wherever a word reached, the water settles into a still mirror; Encouragement
     dict(image=_P + "circles_of_peace.jpg", t0=30.5, t1=45.2, fade_in=1.2, fade_out=1.2, transition="fade", calm_gain=0.85,
          zoom=(1.0, 1.04), water=True, water_line=0.61, water_strength=0.15,
@@ -244,15 +244,17 @@ SCENES = [
 # ----------------------------------------------------------------- B. people of light
 # Anthony, round 3: people of light are rare and always moving, never standing under the words. The only figure is
 # one brief moment: Heavenly Mother, seen only from behind and fully robed, gathers out of the light just below the
-# great lamp while rising toward it (about 4.9 to 8.2 s), and then Her sparks stream up into the lamp (8.2 to 10.8 s):
+# great lamp while rising toward it (about 4.9 to 7.6 s), and then Her sparks stream up into the lamp (7.6 to 10.0 s):
 # Her light becomes the lamp whose threads carry the words. The three expressions are carried by the words, the threads,
 # the circles of peace and the Earth, with the star relights.
-# Round 4: She rises as She gathers (feet 0.215 to 0.262, eased out), lifting the lamp's light above Her head, and
-# Her fill is kept dim and golden (fewer sparks, faint glass) so She reads as a robed figure, not a white pillar.
+# Round 4: She keeps moving the whole time She is seen: from just left of the lamp's road She glides in and rises
+# 0.13 of the frame toward the lamp (4.9 to 10.0 s, ease in and out), and She starts to dissolve at 7.6 s while
+# still rising, Her sparks streaming up into the lamp. Her body is kept dim and golden (faint glass) so She reads
+# as a robed figure, not a white pillar; the sparks are brighter so the stream into the lamp is seen.
 FIGURES = [
-    dict(poses=["assets/figures/s10_mother_lamp_a.png"], t0=4.9, t1=8.2, gather=2.2, dissolve=2.6,
-         x=0.5, y=(0.215, 0.262), height=(0.20, 0.22), move=(4.9, 8.2), ease="out",
-         to=(0.5, 0.495), color="#ffb347", glow=0.32, glass=0.16, sparks=0.38),
+    dict(poses=["assets/figures/s10_mother_lamp_a.png"], t0=4.9, t1=7.6, gather=1.8, dissolve=2.4,
+         x=(0.405, 0.47), y=(0.15, 0.28), height=(0.20, 0.215), move=(4.9, 10.0), ease="smooth",
+         to=(0.5, 0.495), color="#ffb347", glow=0.32, glass=0.14, sparks=1.6),
 ]
 
 # ----------------------------------------------------------------- C. signature effects
@@ -263,8 +265,9 @@ _THREADS = [  # (start, end, from (the lamp in that plate), to (a light on the w
     (C_FORM - 0.9, C_FORM + HOLD - 0.3, (0.5, 0.468), (0.74, 0.37)),
     (E_FORM - 0.9, E_FORM + HOLD - 0.3, (0.5, 0.605), (0.30, 0.42)),
 ]
-BEAM = Track([(0, 0.0)] + [k for a, b, _, _ in _THREADS
-                           for k in ((a, 0.0), (a + 1.5, 0.55), (b - 1.0, 0.55), (b, 0.0))] + [(TOTAL, 0.0)])
+_PEAK = [0.38, 0.55, 0.55]   # the Greeting thread lies over the bright lamp road: softer, so it is not a scratch
+BEAM = Track([(0, 0.0)] + [k for (a, b, _, _), pk in zip(_THREADS, _PEAK)
+                           for k in ((a, 0.0), (a + 1.5, pk), (b - 1.0, pk), (b, 0.0))] + [(TOTAL, 0.0)])
 
 
 def _thread(t):
@@ -321,13 +324,13 @@ PHRASES = [
          form=_OFF, hold=_OFF, star=LIT),
 ]
 
-# End card (PHASE2.md item 7: three lines), the tagline solid from 54.8 to 59.0
+# End card (PHASE2.md item 7: three lines), the tagline solid from 54.5 to 59.0
 TITLE = dict(label="Healing Concert", lines=["The Words of Mother’s Love"], size=150,
              form=TITLE_HIT - FORM_DUR, hold=1e9, star=1e9)
 FRAGMENTS = []   # no lyrics yet
 TAGLINE = dict(text="Where a mother’s love reaches, peace settles.\nSunday, December 6 · 4:30 PM\n"
                     "The World Mission Society Church of God · 6720 W Sahara Ave, Las Vegas",
-               t0=53.4, t1=55.0)
+               t0=52.9, t1=54.5)
 
 CREDIT = dict(song="Our Mother Saves the World", concert="The Words of Mother’s Love Healing Concert",
               t_in=0.3, t_full=1.5, t_move=4.4, t_rest=6.4, scale=0.34, alpha_rest=0.58,
