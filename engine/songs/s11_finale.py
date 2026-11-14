@@ -243,26 +243,18 @@ SCENES = [
     # 4 the gate and the sun: the second lift blooms into the open gate
     dict(image=_P + "s11_gate.jpg", t0=40.5, t1=51.5, fade_in=2.0, fade_out=2.0, transition="bloom", flash=0.9,
          zoom=(1.10, 1.04), water=True, water_line=0.175, water_strength=0.6,
-         gain=Track([(0, 1.0), (LIFT, 1.0), (LIFT + 1.2, 0.60), (FRAG_OUT + 1.2, 0.60), (51.5, 0.75)])),
+         # lowered further under the engraved fragment so the gold letters stand out from the gold gate
+         gain=Track([(0, 1.0), (LIFT, 1.0), (LIFT + 1.2, 0.48), (FRAG_OUT + 1.2, 0.48), (51.5, 0.70)])),
     # 5 peace settled: a low view from the water's edge, the nine glows large on the calm lake, the city cut by the
-    # top of the frame (a different composition from scene 3); a soft bloom after the fragment has gone; end card
-    dict(image=_P + "s11_rest.jpg", t0=49.5, t1=61.0, fade_in=2.0, fade_out=0.0, transition="bloom", flash=0.3,
+    # top of the frame (a different composition from scene 3); a plain fade after the fragment has gone (no wash of
+    # light or dissolve edge under the forming title); end card
+    dict(image=_P + "s11_rest.jpg", t0=49.5, t1=61.0, fade_in=2.0, fade_out=0.0, transition="fade",
          zoom=(1.62, 1.55), pan=((0.0, -0.065), (0.0, -0.06)), water=True, water_line=0.378, water_strength=0.7,
          gain=Track([(0, 0.9), (TITLE_HIT - 1.5, 0.62), (TOTAL, 0.62)])),
 ]
 
 # B. people of light
 _F = "assets/song_figures/s11/"
-_NOW = [0.0]     # the frame time, set by params() before the engine draws the figures
-
-
-class _Moving(dict):
-    """A figure whose x, y and height may be Tracks: the engine reads them with .get() each frame, so the people
-    walk (the engine itself takes plain numbers only)."""
-
-    def get(self, k, default=None):
-        v = dict.get(self, k, default)
-        return v(_NOW[0]) if isinstance(v, Track) else v
 
 
 FIGURES = [
@@ -270,12 +262,12 @@ FIGURES = [
     # flown to their light: Heavenly Mother, seen only from behind, with a child, a young woman and an elder, steps
     # out onto the road of light (her arm raised toward the city) and walks away along it, growing smaller, then the
     # walkers dissolve into sparks that run ahead along the road toward the city (design section 13).
-    _Moving(poses=[_F + "s11_mother_children_a.png", _F + "s11_mother_children_b.png"],
+    dict(poses=[_F + "s11_mother_children_a.png", _F + "s11_mother_children_b.png"],
             t0=21.6, t1=25.6, pose_times=[22.4], morph=1.4, gather=1.2, dissolve=2.4,
             x=Track([(0, 0.27), (21.6, 0.27), (26.5, 0.44), (TOTAL, 0.44)]),
             y=Track([(0, 0.19), (21.6, 0.19), (26.5, 0.30), (TOTAL, 0.30)]),
             height=Track([(0, 0.38), (21.6, 0.38), (26.5, 0.22), (TOTAL, 0.22)]),
-            to=(0.5, 0.50), color="#cdb6ff", glass=1.0),
+            bob=1.0, to=(0.5, 0.50), color="#cdb6ff", glass=1.0),
 ]
 
 # C. the sun through the gate is painted into plate 4 and revealed by the bloom of light at the second lift
@@ -308,7 +300,7 @@ TITLE = dict(label="Healing Concert", lines=["The Words of Mother’s Love"], si
 # D. design fragment 3 in one piece, engraved in gold at the second lift, high above the gate so the sun inside it
 # stays clear
 FRAGMENTS = [
-    dict(text="Joy of salvation endures forever", t0=FRAG_T0, t1=FRAG_T1, out=FRAG_OUT, dy=0.175, size=92,
+    dict(text="Joy of salvation endures forever", t0=FRAG_T0, t1=FRAG_T1, out=FRAG_OUT, dy=0.175, size=100,
          glow="#ffcf7a", style="engrave"),
 ]
 
@@ -351,7 +343,6 @@ WAVES = [(ENC_ARRIVE, STAR_POS[6][0], STAR_POS[6][1], 0.7),
 
 
 def params(song, t):
-    _NOW[0] = t
     f = min(int(round(t * FPS)), NFRAMES - 1)
     env, envs, hi, pulse = song.env[f], song.env_slow[f], song.hi[f], song.pulse[f]
     if t > MUSIC_END - 1.0:
