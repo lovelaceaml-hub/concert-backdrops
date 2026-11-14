@@ -229,7 +229,7 @@ SCENES = [
     # (the left part of the first listening-shore painting; its resting stone stays out of frame)
     dict(image="assets/plates/s05/p2_listening_shore.jpg", t0=26.85, t1=41.35, fade_in=1.6, fade_out=1.6,
          transition="ripple", ripple_from=(0.42, 0.36), zoom=(1.50, 1.46), pan=((-0.15, -0.06), (-0.155, -0.06)),
-         water=True, water_line=0.33, calm_gain=0.25, gain=0.8),
+         water=True, water_line=0.33, calm_gain=0.12, gain=0.8),
     # 4. the tree of blessing again, closer, as the sun breaks through above it; it stays for the end card
     dict(image="assets/plates/s05/p1_young_tree_stage.jpg", t0=39.75, t1=61.0, fade_in=1.6, fade_out=0.0,
          transition="bloom", flash=0.25, zoom=(1.24, 1.12), pan=((-0.08, 0.02), (-0.05, 0.0)), water=True,
@@ -242,9 +242,9 @@ SCENES = [
 # pair of light carrying a load together walks to the right along the shore, then rises from it and dissolves
 # into light (about 5 s on screen, never still, never under the words).
 FIGURES = [
-    dict(poses=["assets/figures/consideration_b.png"], t0=32.4, t1=36.4, gather=1.2, dissolve=2.0,
+    dict(poses=["assets/figures/consideration_b.png"], t0=32.4, t1=36.6, gather=1.2, dissolve=2.0,
          leave="drift", x=(0.72, 0.92), move=(32.4, 37.4), ease="linear", bob=1.0,
-         y=Track([(32.4, 0.345), (35.4, 0.345), (38.4, 0.47)]), height=0.11, color="#ffc8d4", glow=0.85),
+         y=Track([(32.4, 0.345), (34.8, 0.345), (37.4, 0.50), (38.6, 0.56)]), height=0.11, color="#ffc8d4", glow=0.85),
 ]
 
 
