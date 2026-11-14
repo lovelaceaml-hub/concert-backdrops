@@ -1,4 +1,19 @@
-# Engine upgrade: status and handoff (engine builder session)
+# Engine upgrade: status and handoff
+
+## 2026-11-14: round 2 engine fixes (branch engine-fix-r2)
+- Fixed the shared faults from the round 2 attack reviews: per-pixel text veil tied to the letters (no ghost before, no smudge after, no dark copy of a rising reflection); faint dissolve edge (`edge_glow`); plate lower-third darkening under BOTTOM_CALM (`calm_gain`); prepare_figure.py removes only thin floor lines (`--keep-lines`); tone-space plate crossfades (no hard sun blob); no text mirrored in the lake; light waves kept off the lower third and the text. Details: engine/UPGRADE-HOWTO.md section F.
+- Proof stills: demo run 43566317460 ("Engine fix r2 demo-stills", 10 stills) and fragment styles run 43566319715 ("Engine fix r2 styles-stills", write and petals), all looked at full size.
+
+## 2026-11-14: finished in the cloud (step 1 of CLOUD-RUN.md)
+- Branch `engine-scenes-figures` merged into main through pull request 15 (REST merge by the cloud engine helper).
+- Checked the old demo's frame sheets (run 43553805648, artifact "Engine Upgrade Demo frames"): words washed out on the bright sunrise, shard lines too thick, light column too strong, figures too small and faint, white thaw blobs and ripple rows in the lower third, end card pale. All fixed.
+- Astra round 1 shared fixes done: text protection behind all text and the HEALING label (finding 3: the label texture itself is clean; the slash came from particles crossing it, now dimmed behind every text); strict Track keys (8, engine/track.py; songs 09 and 11 are refused until their owners order their keys); arch lines only after both lights are visible (10); a thin persistent ring per relight plus RINGS_AT_START (11); BOTTOM_CALM, on by default for song files with SCENES or FIGURES (12); the three-line end card (PHASE2.md item 7). How to use each: engine/UPGRADE-HOWTO.md section E.
+- Render workflow: the video finish job now also uploads a share copy, artifact "<name> (share)", 1280x720, under 25 MB (the job fails if larger).
+- Cloud checks: stills runs 43560466045, 43561408883, 43561723662 (every still looked at full size); final demo video run 43561725740 with artifacts "Engine Upgrade Demo v2" (full video and silent copy), "Engine Upgrade Demo v2 frames" (4 sheets, looked at) and "Engine Upgrade Demo v2 (share)".
+- Left open (small): with BOTTOM_CALM a plate's lake still reflects bright words faintly (25 percent) near the bottom edge; a song can lower `water_strength` if it shows. The demo's thawing ice still shows soft warm thaw edges in the lower third for a few seconds (about 33 to 37 s); a song using ICE can thaw faster or keep `ICE_LINE` lower.
+- Share copy check from the final run's log: 20,931,498 bytes, 60.0 s, 1280x720. Full video: 60.0 s, one audio stream.
+
+## Earlier log (2026-11-13, engine builder session on the Mac)
 
 Updated 2026-11-13, stopped on the coordinator's instruction (Anthony: "This is loading my laptop too much. All of this needs to be run in the cloud"). The work continues in a cloud session that starts from the GitHub repo.
 

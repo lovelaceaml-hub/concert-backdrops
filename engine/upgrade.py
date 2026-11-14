@@ -201,8 +201,11 @@ class Upgrade:
             slots.append(dict(tex=self.ptex[sc["image"]], view=view,
                               wat=(1.0 if sc.get("water") else 0.0, float(wl), float(sc.get("water_strength", 1.0)),
                                    float(sc.get("water_bottom", 0.0))),
-                              tr=(float(mode), float(a["pin"]), float(rc[0]), float(rc[1])),
-                              alpha=float(sc.get("opacity", 1.0)) * pout))
+                              # dissolve: tr.z is the strength of its glowing edge (attack round 2: faint by default)
+                              tr=(float(mode), float(a["pin"]),
+                                  float(sc.get("edge_glow", 0.06)) if mode == 1 else float(rc[0]), float(rc[1])),
+                              alpha=float(sc.get("opacity", 1.0)) * pout,
+                              calm=float(sc.get("calm_gain", 0.55))))
         return slots, flash
 
     def comp_uniforms(self, prog, t, P):
@@ -214,7 +217,7 @@ class Upgrade:
             key = "A" if k == 0 else "B"
             sl["tex"].use(location=10 + k)
             kw.update({f"uPl{key}": 10 + k, f"uPl{key}View": sl["view"], f"uPl{key}Wat": sl["wat"],
-                       f"uPl{key}Tr": sl["tr"], f"uPl{key}Alpha": sl["alpha"]})
+                       f"uPl{key}Tr": sl["tr"], f"uPl{key}Alpha": sl["alpha"], f"uPl{key}Calm": sl["calm"]})
         sh, mend = val("SHARDS", t, 0.0) or 0.0, val("SHARDS_MEND", t, 0.0) or 0.0
         kw["uShards"] = (float(sh), float(mend), float(val("SHARDS_SCALE", t, 4.2)),
                          float(val("SHARDS_Y", t, S.HORIZON + 0.015)))
@@ -446,18 +449,18 @@ class Upgrade:
             if tm is None:
                 continue
             loc, dur, out = tm
-            # the shade follows the words onto the screen: a reflection only once it rises out of the water,
-            # petals only once they settle, so no dark patch waits where nothing is written yet
-            if f["style"] == 2:
-                shade = ss(0.35 * dur, 0.95 * dur, loc)
-            elif f["style"] == 3:
-                shade = ss(0.45 * dur, 1.0 * dur, loc)
-            else:
-                shade = ss(0.0, 0.45 * dur, loc)
-            shade *= (1.0 - ss(0.0, 1.4, out)) if out > 0 else 1.0
-            if f["style"] in (1, 4):   # written or engraved: the shadow follows the pen, left to right
-                params = (loc * 1.04 + 1.35, dur + 1.35, out if out > 0 else -1.0, 0.85)
-            else:
-                params = (99.0, 1.0, out if out > 0 else -1.0, 0.85)
-            return f["tex"], params, f["bounds"], shade
+            fly = out if out > 0 else -1.0
+            off = (0.0, 0.0)
+            # the veil follows each style's letters (attack round 2): the shaders reveal it per pixel from these
+            if f["style"] in (1, 4):   # written or engraved: left to right with the pen
+                params = (loc * 1.04 + 1.35, dur + 1.35, fly, 0.85)
+            elif f["style"] == 2:      # reflection: only as the words rise, and where they are now
+                u = loc / max(dur, 0.1)
+                rise = ss(0.30, 1.0, u)
+                drop = (1.0 - rise) * (f["bot"] - float(f["meta"].get("line", S.HORIZON)) + 0.03)
+                params = (99.0, 1.0, fly, 0.85 * ss(0.15, 0.9, rise) * ss(0.0, 0.5, loc))
+                off = (0.0, float(drop))
+            else:                      # petals: as the petals settle into letters
+                params = (99.0, 1.0, fly, 0.85 * ss(0.55, 1.0, loc / max(dur, 0.1)))
+            return f["tex"], params, f["bounds"], 1.0, off
         return None
