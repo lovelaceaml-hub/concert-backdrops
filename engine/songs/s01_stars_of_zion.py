@@ -95,7 +95,7 @@ class Song:
         crag = sum(a * (1.0 - np.abs(2.0 * lattice(fr, 20 + k) - 1.0))
                    for k, (a, fr) in enumerate(((0.5, 16), (0.25, 35), (0.125, 78), (0.0625, 170), (0.03, 380))))
         inside = (st >= 0) & (st <= MUSIC_END)
-        hgt = 0.020 + 0.150 * v + 0.075 * mid * (0.35 + v) + (0.012 + 0.034 * v) * (crag - 0.5)
+        hgt = 0.020 + 0.080 * v + 0.070 * mid * (0.35 + v) + (0.020 + 0.055 * v) * (crag - 0.5)   # lower: this clip is loud throughout
         edge = 0.018 + 0.012 * (crag - 0.5)
         sh = np.clip(np.minimum(xs - 0.0, 1.0 - xs) / RIDGE_X0, 0.0, 1.0)
         sh = sh * sh * (3 - 2 * sh)
@@ -165,8 +165,8 @@ PAL = {
     "blush":     ("#071030", "#2a2a62", "#8c5a78", "#ffb092"),
     "dawn":      ("#0e1c4c", "#4c3d7e", "#d98274", "#ffcf96"),
     "rise":      ("#14306a", "#6e5a92", "#f5a070", "#ffe0a8"),
-    "gold":      ("#1d3f7c", "#8a6f9e", "#ffbf7e", "#fff0c8"),
-    "morning":   ("#22508c", "#9584a8", "#ffd09a", "#fff4d8"),
+    "gold":      ("#1a3a76", "#7a6498", "#fbb57c", "#ffeac0"),
+    "morning":   ("#1a3c78", "#6f5f96", "#f2b585", "#ffe6bc"),
 }
 _pal_keys = [
     (0.0, "lastnight"), (4.0, "lastnight"), (10.0, "blush"), (17.0, "dawn"), (22.0, "rise"), (33.0, "gold"),
@@ -178,8 +178,8 @@ SKY_HOR = Track([(t, lin(PAL[p][2])) for t, p in _pal_keys])
 GLOW = Track([(t, lin(PAL[p][3])) for t, p in _pal_keys])
 
 # the sun: below the mountains until "Arise", then rising behind the word
-SUN_INT = Track([(0, 0.30), (4, 0.38), (9, 0.62), (14, 0.55), (19, 0.75), (21, 0.95), (26, 1.20), (32, 1.15),
-                 (41, 1.25), (50, 1.40), (TOTAL, 1.30)])
+SUN_INT = Track([(0, 0.30), (4, 0.38), (9, 0.62), (14, 0.55), (19, 0.75), (21, 0.95), (26, 1.10), (32, 1.05),
+                 (41, 1.05), (50, 0.95), (TOTAL, 0.85)])
 SUN_Y = Track([(0, 0.24), (12, 0.25), (19, 0.27), (21, 0.29), (26, 0.32), (33, 0.355), (45, 0.39), (TOTAL, 0.41)])
 SUN_SIZE = Track([(0, 0.10), (21, 0.11), (33, 0.125), (TOTAL, 0.13)])
 # the last stars: the morning star moment at the peak, then the stars fade into day
@@ -188,14 +188,14 @@ MILKY = Track([(0, 0.0), (1.5, 0.30), (8, 0.25), (14, 0.0), (TOTAL, 0.0)])
 CLOUDS = Track([(0, 0.25), (12, 0.45), (21, 0.55), (40, 0.6), (TOTAL, 0.55)])
 AURORA = Track([(0, 0.06), (8, 0.18), (10, 0.30), (20, 0.22), (32, 0.30), (41, 0.40), (50, 0.38), (TOTAL, 0.30)])
 RAIN = Track([(0, 0.0), (TOTAL, 0.0)])
-MOTES = Track([(0, 0.10), (4, 0.25), (9, 0.55), (15, 0.40), (21, 0.60), (32, 0.55), (41, 0.80), (50, 0.95), (TOTAL, 0.70)])
+MOTES = Track([(0, 0.10), (4, 0.25), (9, 0.55), (15, 0.40), (21, 0.60), (32, 0.55), (41, 0.70), (50, 0.60), (TOTAL, 0.45)])
 LANTERNS = Track([(0, 0.0), (TOTAL, 0.0)])
 PETALS = Track([(0, 0.0), (TOTAL, 0.0)])
 TRAIL = Track([(0, 0.0), (1.2, 0.55), (9, 0.8), (21, 0.95), (41, 1.05), (TOTAL, 1.0)])
 ZOOM = Track([(0, 1.0), (21, 0.985), (41, 0.968), (TOTAL, 0.955)])
-EXPOSURE = Track([(0, 1.0), (TOTAL, 1.0)])
+EXPOSURE = Track([(0, 1.0), (40, 1.0), (50, 0.86), (TOTAL, 0.84)])   # calmer light behind the end card
 FADE = Track([(0, 0.0), (1.2, 1.0), (58.6, 1.0), (59.9, 0.0)])
-RAYS = Track([(0, 0.0), (19, 0.0), (22, 0.35), (28, 0.55), (32, 0.75), (41, 0.70), (50, 0.85), (TOTAL, 0.75)])
+RAYS = Track([(0, 0.0), (19, 0.0), (22, 0.35), (28, 0.50), (32, 0.60), (41, 0.50), (50, 0.40), (TOTAL, 0.35)])
 PART = Track([(0, 0.0), (20, 0.0), (23, 1.0), (30, 1.0), (36, 0.3), (TOTAL, 0.3)])
 
 # Nine lights on an arch over the stage, one for each expression (campaign order, left to right)
