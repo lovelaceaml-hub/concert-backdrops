@@ -4,11 +4,11 @@ verse 1 through the end of the song). Concession is lit for the first time (a pr
 awaiting Anthony's decision, not an exact lyric match) and Inclusiveness shines again.
 
 Six scenes: the harvest field (the engine's own lake and golden field), the narrow shore path ("Please, after you."),
-the water's edge with the family's lantern ("It's okay. I understand."), the cracked wilderness that living gold
+the water's edge at ember dusk ("It's okay. I understand."), the cracked wilderness that living gold
 water fills, the healed land in blossom, and the edge of heaven (lake, golden field, rays and rising lanterns) with
 the end card. The plates in assets/plates/s06/ are Anthony's paintings (Drive folder Assets/s06); the two figures
 in assets/song_figures/s06/ are his special figures turned into line art. People of light are rare and always
-moving (round 3 direction): two brief appearances, never under the words.
+moving (round 3 direction): one brief appearance, never under the words.
 
 Song features and the visual timeline for the backdrop.
 
@@ -157,7 +157,7 @@ NINTH = 1e9            # the whole arch does not glow as one in this song
 # (hold >= form + 9.75), then dissolve over about 1.6 s; the next text starts at least 0.5 s after that.
 C_FORM, C_HOLD = 10.0, 19.8         # Concession: solid 13.75 to 19.8 (6.05 s); dissolved by 21.4
 I_FORM, I_HOLD = 21.9, 31.7         # Inclusiveness: solid 25.65 to 31.7 (6.05 s); dissolved by 33.3
-F1 = (35.2, 37.4, 39.9)             # "waters this wilderness": starts once the relit star's ring has passed
+F1 = (35.6, 37.6, 39.9)             # "waters this wilderness": starts once the relit star's ring has passed
 F2 = (42.0, 44.5, 47.5)             # "the fragrance of Her love": solid 44.5 to 47.5
 TITLE_HIT = 52.6                    # title forms from 49.6 (0.5 s after the last fragment has left)
 
@@ -208,19 +208,20 @@ SCENES = [
     dict(image=P + "field.jpg", t0=0.0, t1=7.4, fade_in=0.0, fade_out=2.4, zoom=(1.06, 1.10),
          water=True, water_line=0.375, water_strength=0.5, gain=0.85, calm_gain=0.35),
     # 2. the narrow shore path between the still water and tall glowing wheat (Concession)
-    dict(image=P + "path.jpg", t0=5.0, t1=20.6, fade_in=2.4, fade_out=1.8, transition="bloom", flash=0.25,
+    dict(image=P + "path.jpg", t0=5.0, t1=21.4, fade_in=2.4, fade_out=1.6, transition="bloom", flash=0.25,
          zoom=(1.08, 1.02), pan=((0.01, 0.0), (0.0, 0.0)),
-         gain=Track([(0, 1.0), (7.0, 1.0), (9.0, 0.85), (19.0, 0.85), (20.6, 1.0)])),
-    # 3. the water's edge at rose ember dusk, wheat close at the left (Inclusiveness)
-    dict(image=P + "shore.jpg", t0=18.8, t1=33.0, fade_in=1.8, fade_out=1.0, transition="fade",
+         gain=Track([(0, 1.0), (7.0, 1.0), (9.0, 0.85), (19.8, 0.85), (21.4, 1.0)])),
+    # 3. the water's edge at rose ember dusk, wheat close at the left (Inclusiveness); comes in once the Concession
+    # words dissolve and stays until the Inclusiveness words have gone
+    dict(image=P + "shore.jpg", t0=19.8, t1=34.1, fade_in=1.6, fade_out=0.8, transition="fade",
          zoom=(1.04, 1.08), water=True, water_line=0.35, water_strength=0.4, calm_gain=0.4),
     # 4. the cracked wilderness, dry and dusty ...
-    dict(image=P + "wilderness_dry.jpg", t0=32.0, t1=35.0, fade_in=1.0, fade_out=2.0, transition="fade",
+    dict(image=P + "wilderness_dry.jpg", t0=33.3, t1=36.2, fade_in=0.8, fade_out=1.0, transition="fade",
          zoom=(1.02, 1.04), water=True, water_line=0.333, water_strength=0.4, calm_gain=0.35),
     # ... which the living gold water fills, spreading out from where it meets the lake, with green shoots
-    dict(image=P + "wilderness.jpg", t0=33.0, t1=43.5, fade_in=2.0, fade_out=2.0, transition="ripple",
+    dict(image=P + "wilderness.jpg", t0=34.1, t1=43.5, fade_in=1.8, fade_out=2.0, transition="ripple",
          ripple_from=(0.62, 0.34), zoom=(1.04, 1.09), water=True, water_line=0.333, water_strength=0.4, calm_gain=0.35,
-         gain=Track([(0, 1.0), (33.0, 0.9), (43.5, 0.9)])),
+         gain=Track([(0, 1.0), (34.1, 0.9), (43.5, 0.9)])),
     # 5. the fragrance: the healed land, wheat bending in the wind, white blossoms along a golden stream
     dict(image=P + "blossom.jpg", t0=41.5, t1=48.6, fade_in=2.0, fade_out=3.0, transition="fade",
          zoom=(1.03, 1.08), water=True, water_line=0.34, water_strength=0.4, calm_gain=0.35,
@@ -232,24 +233,20 @@ SCENES = [
 ]
 
 # B. people of light (round 3 direction from Anthony: people rare and always moving, never posing under the words).
-# Two brief appearances, both Anthony's special figures (prepared with tools/prepare_figure.py, then turned into
-# line art by assets/song_figures/s06/line_figure.py). They move with the engine's moving figures (UPGRADE-HOWTO G).
+# One brief appearance, Anthony's special figure (prepared with tools/prepare_figure.py, then turned into line art by
+# assets/song_figures/s06/line_figure.py), moved with the engine's moving figures (UPGRADE-HOWTO G). Inclusiveness
+# has no people: the relit lantern of light, the star and the words carry it (final review, round 3).
 F = "assets/song_figures/s06/"
 FIGURES = [
-    # on the narrow path, before the words: the one with the sheaf steps aside as the elder with the basket passes,
-    # both gliding down the path toward us, then drifting up as light
-    dict(poses=[F + "s06_concession_step_aside.png"], t0=6.4, t1=8.4, gather=1.2, dissolve=1.6, leave="drift",
-         x=(0.72, 0.63), y=(0.30, 0.25), height=(0.30, 0.37), move=(6.4, 10.0), ease="linear", bob=1.0,
-         color="#cfe0ff", glow=0.9),
-    # at the water's edge, beside the forming words: the older one places the relit lantern in the young one's
-    # hands; the two rise a little and drift to the right as they turn to light
-    dict(poses=[F + "s06_inclusiveness_lantern.png"], t0=21.0, t1=23.8, gather=1.2, dissolve=1.6, leave="drift",
-         x=(0.09, 0.13), y=(0.24, 0.31), height=0.27, move=(21.0, 25.4), ease="linear",
-         color="#ffc4a8", glow=0.9),
+    # far along the path, before the words: the one with the sheaf steps aside as the elder with the basket passes;
+    # small and soft, the pair walks along the top of the wheat toward the far end of the path and dissolves as it goes
+    dict(poses=[F + "s06_concession_step_aside.png"], t0=6.4, t1=8.4, gather=1.0, dissolve=1.4, leave="drift",
+         x=(0.84, 0.58), y=(0.36, 0.40), height=(0.21, 0.18), move=(6.4, 9.8), ease="linear", bob=1.0,
+         color="#cfe0ff", glow=0.5),
 ]
 
 # C. signature effects: the golden fields of light and the living water are in the paintings (scenes 1, 4 and 6;
-# the dry land turns to living gold with a ripple); the relit lantern is carried by the people of light.
+# the dry land turns to living gold with a ripple); the relit lantern is the star of Inclusiveness shining again.
 TEXT_SHADOW = Track([(0, 1.5), (TOTAL, 1.5)])   # bright painted skies behind the words
 
 # Nine lights on an arch over the stage, one for each expression
@@ -321,8 +318,8 @@ def credit_state(t, bbox):
 
 # Waves of light that cross the sky when a light is lit or shines again (time, x, y, strength)
 WAVES = [(PHRASES[4]["star"], STAR_POS[4][0], STAR_POS[4][1], 0.4),
-         (PHRASES[3]["arrive"], STAR_POS[3][0], STAR_POS[3][1], 0.45),
-         (TITLE_HIT, 0.5, 0.62, 1.2)]
+         (PHRASES[3]["arrive"], STAR_POS[3][0], STAR_POS[3][1], 0.25),   # gentle: it passes near the corner credit
+         (TITLE_HIT, 0.5, 0.62, 0.6)]                                      # no haze under the end card title
 
 
 def params(song, t):
