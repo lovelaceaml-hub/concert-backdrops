@@ -145,9 +145,9 @@ THAW = 39.0            # scene 4: the thaw and the rose
 SPRING = 50.0          # scene 5: spring dawn and the end card
 NINTH = 1e9            # the whole arch does not glow at the end of this song
 TITLE_HIT = 53.8       # end card
-SKYLINE_LANTERN = 1.0  # the lonely traveler's small light crossing the long road of the skyline
+SKYLINE_LANTERN = 0.0  # no light along the drawn skyline (its glowing trail read as a crack in the sky)
 TEXT_PROTECT = 1.0
-TEXT_SHADOW = Track([(0, 1.1), (THAW, 1.1), (44.0, 1.45), (TOTAL, 1.6)])   # deeper calm behind words at dawn
+TEXT_SHADOW = Track([(0, 1.1), (THAW, 1.1), (41.0, 1.9), (48.5, 1.9), (51.0, 1.6), (TOTAL, 1.6)])   # deeper calm behind words at dawn
 
 # Scene palettes (top of sky, middle, horizon, glow of the low home star / seed / sun).
 PAL = {
@@ -157,7 +157,7 @@ PAL = {
     "deep":    ("#05080f", "#0e1828", "#2e3e58", "#b9cbe8"),
     "violet":  ("#0a0c1e", "#22204a", "#4e4c7c", "#c7b0f0"),
     "seed":    ("#03050b", "#0a1020", "#1b2440", "#ffc98a"),   # the seed glows gold under the ice
-    "pearl":   ("#172038", "#4a5274", "#b49cb2", "#f0dbe4"),
+    "pearl":   ("#131a30", "#3c4364", "#9a879f", "#f0dbe4"),
     "blush":   ("#212c4c", "#5f6488", "#d9a7b6", "#ffe1e8"),
     "blushpk": ("#26325a", "#6a6d94", "#e2b3c0", "#ffe9ee"),
 }
@@ -191,7 +191,7 @@ MOTES = Track([(0, 0.05), (8, 0.06), (20, 0.08), (30, 0.10), (37, 0.08), (44, 0.
 LANTERNS = Track([(0, 0.0), (TOTAL, 0.0)])        # lanterns belong to songs 03 and 07
 # the rose's blush petals only at dawn (the snow is the SNOW layer now)
 PETALS = Track([(0, 0.0), (40.0, 0.0), (43.0, 0.16), (47.0, 0.24), (52, 0.18), (TOTAL, 0.14)])
-TRAIL = Track([(0, 0.0), (1.2, 0.30), (14, 0.22), (30, 0.45), (48, 0.6), (TOTAL, 0.55)])
+TRAIL = Track([(0, 0.0), (TOTAL, 0.0)])            # no skyline trail
 # framing: wide over open water, closer in the long night, closest on the seed, opening wide again at dawn
 ZOOM = Track([(0, 0.98), (8.0, 0.95), (14.0, 0.90), (26.0, 0.88), (30.0, 0.80), (37.0, 0.77), (43.0, 0.90),
               (50.0, 0.97), (TOTAL, 0.95)])
@@ -218,7 +218,8 @@ ICE = Track([(0, 0.0), (FREEZE, 0.0), (15.0, 1.0), (THAW, 1.0), (48.0, 0.0), (TO
 ICE_LINE = HORIZON
 ICE_OPACITY = 0.88
 ICE_COLOR = "#d4e2ff"
-THAW_COLOR = "#ffc2cf"                            # 02's dawn is pearl and blush, not gold
+# the ice's moving edge: frost white while it freezes, blush while it thaws (02's dawn is pearl and blush)
+THAW_COLOR = Track([(0, lin("#e6efff")), (THAW, lin("#e6efff")), (40.5, lin("#ffc2cf")), (TOTAL, lin("#ffc2cf"))])
 ICE_FRAME = Track([(0, 0.0), (10.0, 0.0), (15.0, 0.38), (27.0, 0.38), (33.0, 0.22), (THAW, 0.22), (44.0, 0.0),
                    (TOTAL, 0.0)])
 # The word reaches down: a violet thread of light from star 7 to the seed under the ice
@@ -265,7 +266,8 @@ TITLE = dict(label="Healing Concert", lines=["The Words of Mother’s Love"], si
 FRAGMENTS = [
     dict(text="too lonely", t0=5.8, t1=9.6, out=12.6, dy=0.03, size=84, glow="#cfe0ff", style="reflection"),
     dict(text="the seed", t0=32.6, t1=35.4, out=38.6, dy=0.0, size=88, glow="#ffc98a", style="write"),
-    dict(text="becomes the rose", t0=41.4, t1=44.6, out=47.8, dy=0.02, size=88, style="petals"),
+    dict(text="becomes the rose", t0=41.4, t1=44.6, out=47.8, dy=0.02, size=100, style="petals",
+         colors=("#e98aa3", "#ffd3dd")),
 ]
 
 # the three-line end card (PHASE2.md item 7)
