@@ -237,13 +237,16 @@ SF = "assets/song_figures/s08/"
 # People of light are rare and always moving (Anthony, round 3): two brief appearances of this song's own figures,
 # never under the words. The expressions are carried by the words, heaven opening, the lampstand and the arch.
 FIGURES = [
-    # the swan of light gathers on the royal lake and drifts away upward as light (about 1 to 7 s)
-    dict(poses=[SF + "swan_glide.png"], t0=1.0, t1=4.6, gather=2.2, dissolve=2.6, x=0.74, y=0.25, height=0.20,
-         color="#f1e8ff", glow=0.9, particles=6000, leave="drift"),
+    # the swan of light gathers on the royal lake, glides toward the centre the whole time it is seen and drifts
+    # away upward as light (about 1 to 7 s)
+    dict(poses=[SF + "swan_glide.png"], t0=1.0, t1=4.6, gather=2.2, dissolve=2.6, x=(0.80, 0.64), move=(1.0, 7.2),
+         ease="linear", y=0.25, height=0.20, color="#f1e8ff", glow=0.9, particles=6000, leave="drift"),
     # Heavenly Mother, only from behind, arms opening at the horizon, then her light flows back into the horizon
-    # (about 41 to 46 s)
-    dict(poses=[SF + "mother_back_arms_open.png"], t0=41.0, t1=43.6, gather=2.0, dissolve=2.6, x=0.5, y=0.36,
-         height=0.32, color="#ffe6c8", glow=0.9, particles=9000, to=(0.5, 0.43)),
+    # (about 41 to 46 s);
+    # she moves slowly away from us toward the horizon light the whole time (a little higher and smaller)
+    dict(poses=[SF + "mother_back_arms_open.png"], t0=41.0, t1=43.6, gather=2.0, dissolve=2.6, x=0.5,
+         y=(0.34, 0.38), height=(0.34, 0.29), move=(41.0, 46.2), ease="linear", color="#ffe6c8", glow=0.9,
+         particles=9000, to=(0.5, 0.43)),
 ]
 
 # Heaven's column of gold during the thanksgiving, with rising gold dust (only after the fragment has gone)
