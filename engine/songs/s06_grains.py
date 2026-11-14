@@ -22,7 +22,7 @@ MUSIC_END = 59.5       # last sounding moment of the promo clip
 SONG_END = 60.0        # length of the promo clip
 TOTAL = 60.0           # promo length
 NFRAMES = int(round(TOTAL * FPS))
-HORIZON = 0.30         # water line, as a fraction of the height from the bottom
+HORIZON = 0.24         # water line, low: song 06 is framed wide with a big harvest sky
 
 RIDGE_X0, RIDGE_W = 0.035, 0.93
 
@@ -163,44 +163,43 @@ PEAK_END = 57.0        # loudest point of the song (guide 119 to 120.5)
 NINTH = 1e9            # the whole arch does not glow as one in this song
 TITLE_HIT = 50.0
 
-# Scene palettes (top of sky, middle, horizon, glow of the horizon star)
+# Scene palettes (top of sky, middle, horizon, glow of the low sun). Song 06's own look (DESIGN-SYSTEM.md section 6):
+# a harvest evening, amber, wheat gold and deep orange, golden dust, a long low sun and rays; never true night.
 PAL = {
-    "dawn1":     ("#0f1b46", "#553b7c", "#e9a06f", "#ffd08c"),
-    "dusk":      ("#050820", "#2a2a55", "#5e4a78", "#ffb48c"),
-    "night":     ("#02030b", "#0b1026", "#2a2448", "#ffc890"),
-    "hush":      ("#020309", "#0a0d22", "#3a2440", "#ff9fbf"),
-    "water":     ("#081436", "#2c3a6a", "#a8786a", "#ffd27a"),
-    "fragrance": ("#0f1a48", "#5a3f7e", "#f4b6a6", "#ffd6c0"),
-    "rise":      ("#152b68", "#93578a", "#ffb873", "#ffecc4"),
-    "glory":     ("#142a62", "#7a4f86", "#f0a06e", "#ffe2b4"),
+    "gold":      ("#3b2340", "#b8642e", "#f4b24e", "#ffd88a"),
+    "amber":     ("#2c1a36", "#94492c", "#e88a3a", "#ffc070"),
+    "ember":     ("#140a14", "#4a1e1a", "#b4502a", "#ff9a5a"),
+    "hushember": ("#0e070e", "#36161a", "#8e3a2a", "#ff8a7a"),
+    "water":     ("#24183a", "#7a3e30", "#d8803e", "#ffc878"),
+    "glory":     ("#33204a", "#a8562e", "#f6a843", "#ffe0a0"),
 }
 _pal_keys = [
-    (0.0, "dawn1"), (3.0, "dawn1"), (7.0, "dusk"), (10.0, "night"), (17.0, "night"), (19.0, "hush"), (27.0, "hush"),
-    (30.0, "water"), (35.0, "water"), (38.0, "fragrance"), (42.0, "rise"), (52.0, "glory"), (TOTAL, "glory"),
+    (0.0, "gold"), (3.0, "amber"), (8.0, "ember"), (17.0, "ember"), (19.5, "hushember"), (27.0, "hushember"),
+    (30.0, "water"), (36.0, "amber"), (42.0, "gold"), (52.0, "glory"), (TOTAL, "glory"),
 ]
 SKY_TOP = Track([(t, lin(PAL[p][0])) for t, p in _pal_keys])
 SKY_MID = Track([(t, lin(PAL[p][1])) for t, p in _pal_keys])
 SKY_HOR = Track([(t, lin(PAL[p][2])) for t, p in _pal_keys])
 GLOW = Track([(t, lin(PAL[p][3])) for t, p in _pal_keys])
 
-SUN_INT = Track([(0, 0.90), (3, 0.80), (8, 0.35), (17, 0.30), (19, 0.22), (27, 0.25), (30, 0.60), (36, 0.80), (42, 0.90),
-                 (50, 1.00), (PEAK_END, 1.10), (TOTAL, 1.00)])
-SUN_Y = Track([(0, 0.31), (6, 0.27), (17, 0.26), (28, 0.27), (42, 0.32), (PEAK_END, 0.40), (TOTAL, 0.41)])
-SUN_SIZE = Track([(0, 0.115), (8, 0.10), (28, 0.10), (42, 0.12), (PEAK_END, 0.135), (TOTAL, 0.135)])
-STARS = Track([(0, 0.4), (5, 0.6), (9, 1.0), (27, 1.0), (32, 0.6), (42, 0.3), (52, 0.15), (TOTAL, 0.15)])
-MILKY = Track([(0, 0.0), (5, 0.2), (10, 0.7), (27, 0.7), (32, 0.2), (40, 0.0), (TOTAL, 0.0)])
-CLOUDS = Track([(0, 0.6), (8, 0.3), (27, 0.3), (32, 0.55), (45, 0.75), (TOTAL, 0.7)])
-AURORA = Track([(0, 0.35), (6, 0.15), (10, 0.10), (18, 0.18), (27, 0.20), (32, 0.30), (45, 0.45), (PEAK_END, 0.55), (TOTAL, 0.5)])
-RAIN = Track([(0, 0.0), (28, 0.0), (29.5, 0.35), (33.5, 0.35), (35.5, 0.0), (TOTAL, 0.0)])
-MOTES = Track([(0, 0.5), (6, 0.3), (10, 0.2), (18, 0.12), (27, 0.15), (30, 0.35), (36, 0.5), (45, 0.7), (PEAK_END, 0.85), (TOTAL, 0.7)])
-LANTERNS = Track([(0, 0.8), (4, 0.6), (8, 0.0), (41, 0.0), (45, 0.9), (PEAK_END, 1.0), (TOTAL, 0.9)])
-PETALS = Track([(0, 0.0), (35, 0.0), (37, 0.45), (41, 0.55), (50, 0.6), (TOTAL, 0.5)])
+SUN_INT = Track([(0, 1.00), (8, 0.55), (17, 0.50), (20, 0.35), (27, 0.40), (32, 0.75), (42, 1.00), (PEAK_END, 1.15),
+                 (TOTAL, 1.05)])
+SUN_Y = Track([(0, 0.30), (8, 0.255), (27, 0.25), (40, 0.285), (PEAK_END, 0.31), (TOTAL, 0.31)])
+SUN_SIZE = Track([(0, 0.13), (TOTAL, 0.14)])
+STARS = Track([(0, 0.0), (8, 0.15), (27, 0.25), (32, 0.05), (TOTAL, 0.0)])
+MILKY = Track([(0, 0.0), (TOTAL, 0.0)])
+CLOUDS = Track([(0, 0.65), (8, 0.5), (27, 0.45), (35, 0.6), (TOTAL, 0.7)])
+AURORA = Track([(0, 0.0), (TOTAL, 0.0)])
+RAIN = Track([(0, 0.0), (TOTAL, 0.0)])
+MOTES = Track([(0, 0.8), (8, 0.5), (18, 0.3), (27, 0.35), (30, 0.7), (40, 0.9), (PEAK_END, 1.0), (TOTAL, 0.9)])  # golden dust
+LANTERNS = Track([(0, 0.4), (5, 0.2), (9, 0.0), (42, 0.0), (46, 0.5), (PEAK_END, 0.6), (TOTAL, 0.5)])
+PETALS = Track([(0, 0.0), (TOTAL, 0.0)])
 TRAIL = Track([(0, 0.8), (8, 0.5), (28, 0.5), (42, 0.9), (TOTAL, 1.0)])
-ZOOM = Track([(0, 0.99), (17, 0.985), (27, 0.97), (42, 0.975), (TOTAL, 0.955)])
-EXPOSURE = Track([(0, 1.0), (18, 0.92), (27, 0.92), (30, 1.0), (46, 1.0), (52, 0.88), (TOTAL, 0.88)])
+ZOOM = Track([(0, 0.98), (17, 0.975), (27, 0.965), (42, 0.975), (TOTAL, 0.96)])
+EXPOSURE = Track([(0, 1.0), (18, 0.93), (27, 0.93), (30, 1.0), (48, 1.0), (52, 0.9), (TOTAL, 0.9)])
 FADE = Track([(0, 0.0), (0.8, 1.0), (58.6, 1.0), (TOTAL, 0.0)])
-RAYS = Track([(0, 0.4), (6, 0.1), (10, 0.0), (28, 0.0), (32, 0.3), (42, 0.5), (52, 0.55), (TOTAL, 0.5)])
-PART = Track([(0, 0.25), (40, 0.25), (44, 0.6), (52, 0.6), (TOTAL, 0.4)])
+RAYS = Track([(0, 0.7), (6, 0.4), (10, 0.15), (28, 0.15), (32, 0.5), (42, 0.8), (52, 0.75), (TOTAL, 0.7)])
+PART = Track([(0, 0.5), (TOTAL, 0.5)])
 
 # Nine lights on an arch over the stage, one for each expression
 STAR_POS = []
