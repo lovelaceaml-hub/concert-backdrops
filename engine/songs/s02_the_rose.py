@@ -151,7 +151,7 @@ ENC_ARRIVE = 33.5      # they reach star 7: a brief flare and one new thin ring
 SEED_WAKES = 38.0
 DAWN = 44.0
 NINTH = 1e9            # the whole arch does not glow at the end of this song
-TITLE_HIT = 53.0       # end card
+TITLE_HIT = 51.6       # end card
 
 # Scene palettes (top of sky, middle, horizon, glow of the low home star / sun)
 PAL = {
@@ -228,10 +228,10 @@ TITLE = dict(label="Healing Concert", lines=["The Words of Mother’s Love"], si
 FRAGMENTS = [
     dict(text="too lonely", t0=9.0, t1=11.0, out=14.0, dy=0.04, size=84, glow="#9fb8ff"),
     dict(text="the seed", t0=37.5, t1=39.5, out=42.5, dy=-0.02, size=84, glow="#ffb347"),
-    dict(text="becomes the rose", t0=44.5, t1=46.5, out=48.6, dy=0.02, size=88, glow="#f7a889"),
+    dict(text="becomes the rose", t0=44.0, t1=45.5, out=47.0, dy=0.02, size=88, glow="#f7a889"),
 ]
 
-TAGLINE = dict(text="Sunday, December 6 · 4:30 PM · 6720 W Sahara Ave, Las Vegas", t0=55.0, t1=57.5)
+TAGLINE = dict(text="Sunday, December 6 · 4:30 PM · 6720 W Sahara Ave, Las Vegas", t0=53.0, t1=55.0)
 
 # Opening title card that then rests, small, in the top left corner
 CREDIT = dict(song="The Rose", concert="The Words of Mother’s Love Healing Concert",
