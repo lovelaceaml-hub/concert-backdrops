@@ -167,7 +167,7 @@ PAL = {
 _pal_keys = [
     (0.0, "home"), (6.0, "home"), (12.0, "cold"), (16.0, "deep"), (21.0, "deep"), (26.0, "violet"),
     (32.0, "violet"), (36.0, "deep"), (39.0, "deep"), (42.0, "predawn"), (46.0, "dawn"), (50.0, "rise"),
-    (56.0, "risepk"), (TOTAL, "risepk"),
+    (TOTAL, "rise"),
 ]
 SKY_TOP = Track([(t, lin(PAL[p][0])) for t, p in _pal_keys])
 SKY_MID = Track([(t, lin(PAL[p][1])) for t, p in _pal_keys])
@@ -175,7 +175,7 @@ SKY_HOR = Track([(t, lin(PAL[p][2])) for t, p in _pal_keys])
 GLOW = Track([(t, lin(PAL[p][3])) for t, p in _pal_keys])
 
 SUN_INT = Track([(0, 0.24), (6, 0.24), (STAR_SINKS, 0.14), (14, 0.05), (SEED_WAKES - 2, 0.05), (SEED_WAKES, 0.12),
-                 (42, 0.35), (DAWN, 0.70), (48, 1.00), (53, 1.18), (TOTAL, 1.12)])
+                 (42, 0.32), (DAWN, 0.60), (48, 0.85), (51, 0.95), (54, 0.75), (TOTAL, 0.70)])
 SUN_Y = Track([(0, 0.27), (6, 0.27), (12, 0.21), (SEED_WAKES - 2, 0.21), (41, 0.25), (46, 0.32), (53, 0.39),
                (TOTAL, 0.41)])
 SUN_SIZE = Track([(0, 0.09), (12, 0.07), (SEED_WAKES, 0.075), (48, 0.12), (TOTAL, 0.13)])
@@ -186,18 +186,18 @@ CLOUDS = Track([(0, 0.15), (14, 0.08), (36, 0.12), (DAWN, 0.45), (TOTAL, 0.55)])
 AURORA = Track([(0, 0.0), (4, 0.08), (10, 0.18), (15, 0.10), (19, 0.32), (ENC_FORM + 2, 0.55), (ENC_HOLD, 0.60),
                 (ENC_ARRIVE + 1, 0.40), (40, 0.22), (46, 0.32), (TOTAL, 0.28)])
 RAIN = Track([(0, 0.0), (TOTAL, 0.0)])
-MOTES = Track([(0, 0.05), (3, 0.14), (12, 0.08), (20, 0.22), (30, 0.42), (36, 0.28), (DAWN, 0.55), (52, 0.78),
-               (TOTAL, 0.6)])
+MOTES = Track([(0, 0.05), (3, 0.12), (12, 0.07), (20, 0.15), (30, 0.25), (36, 0.18), (DAWN, 0.30), (52, 0.35),
+               (TOTAL, 0.30)])
 # the choir's small lights rising from the water around the lonely one
-LANTERNS = Track([(0, 0.0), (15.5, 0.0), (19.5, 0.30), (ENC_HOLD, 0.50), (36, 0.25), (41, 0.0), (TOTAL, 0.0)])
+LANTERNS = Track([(0, 0.0), (15.5, 0.0), (19.5, 0.22), (ENC_HOLD, 0.32), (36, 0.15), (41, 0.0), (TOTAL, 0.0)])
 # the rose: its petals in the dawn
-PETALS = Track([(0, 0.0), (43.0, 0.0), (46.0, 0.45), (49.0, 1.0), (56, 1.0), (TOTAL, 0.85)])
+PETALS = Track([(0, 0.0), (43.0, 0.0), (46.0, 0.30), (49.0, 0.60), (52, 0.50), (TOTAL, 0.40)])
 TRAIL = Track([(0, 0.0), (1.2, 0.35), (14, 0.25), (30, 0.55), (48, 0.9), (TOTAL, 0.8)])
 ZOOM = Track([(0, 1.0), (20, 0.988), (ENC_HOLD, 0.976), (TOTAL, 0.952)])
-EXPOSURE = Track([(0, 1.0), (TOTAL, 1.0)])
+EXPOSURE = Track([(0, 1.0), (51, 1.0), (54, 0.86), (TOTAL, 0.86)])
 FADE = Track([(0, 0.0), (1.0, 1.0), (58.6, 1.0), (TOTAL, 0.0)])
-RAYS = Track([(0, 0.0), (41, 0.0), (DAWN, 0.30), (48, 0.70), (56, 0.80), (TOTAL, 0.72)])
-PART = Track([(0, 0.0), (DAWN - 1, 0.0), (47, 1.0), (52, 1.0), (56, 0.3), (TOTAL, 0.3)])
+RAYS = Track([(0, 0.0), (41, 0.0), (DAWN, 0.25), (48, 0.55), (51, 0.60), (54, 0.40), (TOTAL, 0.35)])
+PART = Track([(0, 0.0), (DAWN - 1, 0.0), (47, 0.8), (52, 0.6), (56, 0.3), (TOTAL, 0.3)])
 
 # Nine lights on an arch over the stage, one for each expression
 STAR_POS = []
