@@ -1,7 +1,8 @@
 """Song 09, Let's Save the World (songbook 335): the 1 minute promo, "The Shore of Calling".
 
-Timed to audio/promo/s09.mp3, a 60 second cut of the 4:34 sung recording (start given by CLIP_START below):
-the second verse, where the early church saints call out to us, the Encouragement, and the light of glory.
+Timed to audio/promo/s09.mp3, a 60 second cut of the 4:34 recording (start given by CLIP_START below). A cloud
+vocal separation found no singing in that recording: it is instrumental, close to the live piano solo. The part used is
+the melody of the second verse, where the early church saints call out to us, the Encouragement, and the light of glory.
 Live the song is a piano solo, so the words on screen carry what the audience will not hear sung.
 Design: "09 Let's Save the World - Video Design" (Google Doc) in the project's Drive folder.
 All nine lights are already lit when song 09 begins; here 7 Encouragement shines again (flare and one new ring).
@@ -156,8 +157,8 @@ class Track:
 
 # Landmarks inside the promo minute (seconds; promo time = recording time minus CLIP_START).
 CLIP_START = 136.0     # the clip is 2:16 to 3:16 of the 4:34 recording (verse 2)
-# Measured on the recording: verse 2 enters about 2:16 after the quiet interlude, breaths near 2:32, 2:51 and 3:03,
-# the chorus starts just after this minute (3:21). Line times inside the minute are estimates from those breaths.
+# Measured on the recording (instrumental, no singing): verse 2's melody enters about 2:16 after the quiet interlude, breaths near 2:32, 2:51 and 3:03,
+# the chorus starts just after this minute (3:21). Line times are estimates of where each line's melody falls.
 SAINTS = 0.0           # the early church saints walk with their lamps through the windy night
 HONOR = 6.5            # "hardships as honor" (end of the first line of verse 2)
 CALL = 16.0            # their souls call out to us: the lamps brighten together
@@ -247,7 +248,7 @@ FRAGMENTS = [
     # the forge: hardship glowing into honor (warm orange glow)
     dict(text="hardships as honor", t0=HONOR, t1=HONOR + 2.0, out=HONOR + 6.5, dy=0.0, size=78, glow="#ff8a4a"),
     # over the opened light of glory (white gold glow)
-    dict(text="the day of glory", t0=DAY, t1=DAY + 2.0, out=DAY + 6.5, dy=0.0, size=78, glow="#ffe2a8"),
+    dict(text="the day of glory", t0=DAY, t1=DAY + 2.0, out=DAY + 6.5, dy=0.0, size=86, glow="#ffcf8a", alpha=1.0),
 ]
 
 TAGLINE = dict(text="Sunday, December 6 \u00b7 4:30 PM \u00b7 6720 W Sahara Ave, Las Vegas", t0=TITLE_HIT + 2.5,
