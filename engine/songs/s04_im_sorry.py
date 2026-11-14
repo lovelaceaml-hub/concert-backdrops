@@ -216,7 +216,7 @@ FIGURES = [
     # the apology said first: one stands withdrawn, the other steps forward first and offers her hand; they take hands.
     # Both moves finish before the words are fully formed, so the figures stand still through the reading time.
     dict(poses=["assets/figures/apology_a.png", "assets/figures/apology_b.png", "assets/figures/apology_c.png"],
-         t0=0.8, t1=14.5, pose_times=[3.9, 6.0], x=0.5, y=0.21, height=0.38, to_star=2, color="#ffbf8a"),
+         t0=2.4, t1=14.5, pose_times=[5.4, 6.9], morph=1.5, x=0.5, y=0.21, height=0.38, to_star=2, color="#ffbf8a"),
     # going first in humility (this song's own poses): she walks across the ice, kneels and holds her sister's hand;
     # then they embrace. Their light comes down as one small warm light at the centre of the lake.
     dict(poses=["assets/song_figures/s04/s04_walk.png", "assets/song_figures/s04/s04_kneel_pair.png",
@@ -226,11 +226,12 @@ FIGURES = [
 ]
 
 # C. signature effects: the ice and its thaw, frost over the frame, the path of footprints of light across the ice
-ICE = Track([(0, 0.0), (0.6, 0.0), (3.0, 1.0), (16.4, 1.0), (18.4, 0.35), (27.2, 0.35), (29.2, 0.9), (39.0, 0.9),
-             (45.0, 0.45), (48.0, 0.30), (53.0, 0.0)])
+# the ice stays whole (no thaw edges) through the first three scenes; it is only made fainter over the close
+# reflection; it starts to thaw in glowing pools as the sisters embrace, and melts away on the first chorus
+ICE = Track([(0, 0.0), (0.6, 0.0), (3.0, 1.0), (39.0, 1.0), (45.0, 0.45), (48.0, 0.30), (53.0, 0.0)])
 ICE_LINE = Track([(0, 0.40), (1.5, 0.40), (3.5, 0.56), (16.4, 0.56), (18.4, 0.98), (27.2, 0.98), (29.2, 0.55),
                   (46.0, 0.55), (48.0, 0.445), (TOTAL, 0.445)])
-ICE_OPACITY = 0.80
+ICE_OPACITY = Track([(0, 0.80), (16.4, 0.80), (18.4, 0.30), (27.2, 0.30), (29.2, 0.80), (TOTAL, 0.80)])
 ICE_FRAME = Track([(0, 0.0), (1.0, 0.0), (4.0, 0.35), (27.0, 0.35), (31.0, 0.12), (44.0, 0.08), (48.0, 0.0)])
 
 
@@ -239,13 +240,13 @@ def _beam(t):
     # ends in one small warm light at centre
     if t < 47.0:
         return 0.0 if t < 31.0 else min((t - 31.0) / 2.5, 1.0) * 0.55 * (1.0 - min(max((t - 44.0) / 2.5, 0.0), 1.0))
-    return 0.45 * min(max((t - 48.0) / 3.0, 0.0), 1.0)
+    return 0.75 * min(max((t - 48.0) / 3.0, 0.0), 1.0)
 
 
 BEAM = _beam
 BEAM_FROM = lambda t: (0.44, 0.59) if t < 47.0 else (0.49, 0.665)   # noqa: E731
 BEAM_TO = lambda t: (0.58, 0.215) if t < 47.0 else (0.50, 0.27)     # noqa: E731
-BEAM_WIDTH = lambda t: (0.010, 0.07) if t < 47.0 else (0.006, 0.035)   # noqa: E731
+BEAM_WIDTH = lambda t: (0.010, 0.07) if t < 47.0 else (0.008, 0.06)   # noqa: E731
 BEAM_COLOR = "#ffd2a0"
 FLASH = Track([(0, 0.0), (48.6, 0.0), (49.3, 0.16), (50.8, 0.0)])
 TEXT_SHADOW = Track([(0, 1.3), (TOTAL, 1.5)])
