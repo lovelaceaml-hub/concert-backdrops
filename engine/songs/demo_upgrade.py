@@ -192,10 +192,12 @@ SCENES = [
 # B. two pairs of people of light (the shared figure library in assets/figures/)
 FIGURES = [
     dict(poses=["assets/figures/apology_a.png", "assets/figures/apology_b.png", "assets/figures/apology_c.png"],
-         t0=4.0, t1=19.5, pose_times=[8.5, 13.0], x=0.5, y=0.20, height=0.40, to_star=2, color="#ffc78f"),
+         t0=4.0, t1=19.5, pose_times=[8.5, 13.0], x=(0.30, 0.5), move=(4.0, 11.0), bob=1.0,   # walks in
+         y=0.20, height=0.40, to_star=2, color="#ffc78f"),
     dict(poses=["assets/figures/inclusiveness_a.png", "assets/figures/inclusiveness_b.png",
                 "assets/figures/inclusiveness_c.png"],
-         t0=32.0, t1=47.2, pose_times=[35.5, 39.5], x=0.5, y=0.20, height=0.40, to_star=3, color="#ffb7cf"),
+         t0=32.0, t1=47.2, pose_times=[35.5, 39.5], x=0.5, y=Track([(32.0, 0.12), (37.0, 0.20)]),   # rises
+         height=Track([(32.0, 0.34), (37.0, 0.40)]), to_star=3, color="#ffb7cf"),
 ]
 
 # C. effect layers
