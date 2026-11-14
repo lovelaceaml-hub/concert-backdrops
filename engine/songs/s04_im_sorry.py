@@ -202,7 +202,7 @@ SCENES = [
          zoom=(1.04, 1.10), water=True, water_line=0.56, water_strength=0.45, calm_gain=0.8,
          gain=Track([(0, 1.0), (4.5, 0.82), (16.6, 0.82), (18.4, 1.0)])),
     dict(image="assets/plates/s04/reflection_close.jpg", t0=16.4, t1=29.2, fade_in=2.0, fade_out=2.0,
-         zoom=(1.50, 1.56), pan=((0.06, -0.10), (0.04, -0.10)), water=True, water_line=0.98,
+         zoom=(1.86, 1.92), pan=((0.06, -0.25), (0.04, -0.25)), water=True, water_line=0.98,
          water_strength=0.55, calm_gain=0.8, gain=Track([(0, 1.0), (18.4, 0.90), (27.0, 0.90), (29.2, 1.0)])),
     dict(image="assets/plates/s04/ice_path.jpg", t0=27.2, t1=49.0, fade_in=2.0, fade_out=2.0,
          zoom=(1.15, 1.12), pan=((0.06, 0.0), (0.055, 0.0)), water=True, water_line=0.55, water_strength=0.35,
@@ -330,6 +330,12 @@ def credit_state(t, bbox):
 WAVES = [(TITLE_HIT, 0.5, 0.62, 1.2)]   # no sky wave for Apology's relight (it crossed the corner credit); its thin ring stays
 
 
+def _no_burst(stars):
+    # Apology's relight keeps its flare and the thin ring that settles and stays, but not the wide expanding ring:
+    # from light 3 it ran through the corner credit (review, round 3). Shared arch code is untouched.
+    return [(s[0], -1.0, s[2]) if i == 2 else s for i, s in enumerate(stars)]
+
+
 def params(song, t):
     f = min(int(round(t * FPS)), NFRAMES - 1)
     env, envs, hi, pulse = song.env[f], song.env_slow[f], song.hi[f], song.pulse[f]
@@ -352,5 +358,5 @@ def params(song, t):
         motes=MOTES(t) * (0.75 + 0.5 * envs), lanterns=LANTERNS(t), petals=PETALS(t),
         trail=TRAIL(t), exposure=EXPOSURE(t), fade=FADE(t), rays=RAYS(t), part=PART(t), zoom=ZOOM(t),
         lantern=(lsx, lsy), prog=lx, rings=song.rings_at(t), waves=waves,
-        star=star_state(t), link=link_state(t),
+        star=_no_burst(star_state(t)), link=link_state(t),
     )
