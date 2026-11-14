@@ -219,11 +219,11 @@ SCENES = [
          water_strength=0.4, gain=Track([(0, 0.65), (21.0, 0.60), (TOTAL, 0.60)])),
     # 3. heaven opens: clouds parted, a column of gold pouring onto the lake (after the fragment has gone);
     #    heaven_opens_calm.jpg darkens the painted column's reflection in the centre of the lower third
-    dict(image="assets/plates/s08/heaven_opens_calm.jpg", t0=28.5, t1=40.2, fade_in=2.5, fade_out=2.0,
+    dict(image="assets/plates/s08/heaven_opens_calm.jpg", t0=28.5, t1=39.5, fade_in=2.5, fade_out=1.8,
          zoom=(1.03, 1.07), water=True, water_line=0.296, water_strength=0.3, calm_gain=0.40,
          gain=Track([(0, 0.65), (38.7, 0.65), (TOTAL, 0.55)])),
     # 4. the velvet path home: deep purple night, a narrow path of light to the horizon (a plain soft fade)
-    dict(image="assets/plates/s08/velvet_path_home.jpg", t0=38.5, t1=51.1, fade_in=2.0, fade_out=1.5,
+    dict(image="assets/plates/s08/velvet_path_home.jpg", t0=37.9, t1=51.1, fade_in=1.6, fade_out=1.5,
          zoom=(1.03, 1.08), water=True, water_line=0.426, water_strength=0.4),
     # 5. the seven-branched lampstand under the embroidered veil, reframed (lampstand_veil_low.jpg: the veil's top
     #    band stretched so the whole lampstand sits below the end card, candle tops at about 0.58 from the top;
@@ -246,12 +246,12 @@ FIGURES = [
     # she walks away from us toward the horizon light the whole time: her feet rise to the horizon and she grows
     # much smaller (head and feet both travel about 20 to 25 px per second at 720p, never still)
     dict(poses=[SF + "mother_back_arms_open.png"], t0=41.0, t1=43.6, gather=2.0, dissolve=2.6, x=0.5,
-         y=(0.26, 0.41), height=(0.40, 0.12), move=(41.0, 45.4), ease="linear", color="#ffe6c8", glow=0.9,
+         y=(0.24, 0.42), height=(0.42, 0.10), move=(41.0, 45.0), ease="linear", color="#ffe6c8", glow=0.9,
          particles=9000, to=(0.5, 0.43)),
 ]
 
 # Heaven's column of gold during the thanksgiving, with rising gold dust (only after the fragment has gone)
-BEAM = Track([(0, 0.0), (28.5, 0.0), (30.5, 0.22), (37.6, 0.22), (39.6, 0.0)])
+BEAM = Track([(0, 0.0), (28.5, 0.0), (30.5, 0.22), (37.0, 0.22), (39.0, 0.0)])
 BEAM_FROM = (0.5, 1.02)
 BEAM_TO = (0.5, 0.30)
 BEAM_WIDTH = (0.02, 0.07)
