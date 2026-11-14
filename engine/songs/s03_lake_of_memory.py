@@ -204,7 +204,7 @@ AURORA = Track([(0, 0.04), (6.0, 0.15), (11.0, 0.60), (15.0, 0.88), (22.0, 0.85)
 RAIN = Track([(0, 0.75), (3.5, 0.65), (7.0, 0.15), (9.0, 0.0), (TOTAL, 0.0)])   # the last of the storm's rain
 MOTES = Track([(0, 0.15), (PRAYER, 0.24), (44, 0.4), (SUNRISE, 0.6), (TOTAL, 0.5)])
 LANTERNS = Track([(0, 0.35), (3.0, 1.0), (14.0, 1.0), (20.0, 0.45), (26.0, 0.0), (TOTAL, 0.0)])
-PETALS = Track([(0, 0.0), (49.0, 0.0), (52.0, 0.55), (56, 0.8), (TOTAL, 0.7)])
+PETALS = Track([(0, 0.0), (49.0, 0.0), (51.5, 0.45), (53.5, 0.25), (TOTAL, 0.25)])   # few petals behind the end card
 TRAIL = Track([(0, 0.0), (1.2, 0.5), (PRAYER, 0.6), (SUNRISE, 0.95), (TOTAL, 0.9)])
 # the camera: still in the storm, drawing in toward the aurora and the prayer, opening wide again for the dawn
 ZOOM = Track([(0, 1.0), (8.0, 1.0), (24.0, 0.94), (38.0, 0.93), (46.0, 0.985), (SUNRISE, 0.99), (TOTAL, 0.97)])
@@ -224,7 +224,7 @@ BEAM_COLOR = Track([(0, lin("#d8c0ff")), (36.0, lin("#e4c4ff")), (40.5, lin("#ff
 # Scene 4: the night sky breaks into glass after the prayer, drifts back together, and gold seams mend it
 SHARDS = Track([(0, 0.0), (39.6, 0.0), (41.0, 1.0), (42.6, 1.0), (45.6, 0.0), (TOTAL, 0.0)])
 SHARDS_MEND = Track([(0, 0.0), (43.6, 0.0), (46.2, 0.85), (49.0, 0.6), (52.0, 0.15), (TOTAL, 0.1)])
-SHARDS_Y = 0.42
+SHARDS_Y = 0.68          # only the upper sky breaks, above the words (legibility)
 SHARDS_COLOR = "#ffd27a"
 FLASH = Track([(0, 0.0), (46.0, 0.0), (46.6, 0.35), (47.8, 0.0), (TOTAL, 0.0)])   # the mending is finished
 
