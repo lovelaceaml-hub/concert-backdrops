@@ -204,7 +204,9 @@ def MOTE_COLORS(t):
 # 3 Arise: the sun breaking over the ridge, rays filling the sky, a golden road on the water
 # 4 Encouragement and the end card: the golden morning shore, sunbeams through the haze, the tree of light;
 #   the camera keeps pushing in and drifting right to the end, so the tree slides off the left edge and its
-#   strands stay clear of the end card title (round 3 review: they crowded the first letters).
+#   strands stay clear of the end card title (round 3 review: they crowded the first letters). It also tilts
+#   down a little (more lake), so the painted sun sits in the gap between the title and the tagline on the end
+#   card instead of under the tagline's veil (where it showed as a dull grey disc).
 # The heavenly city plate (s01_heavenly_city.jpg) is not used: Astra round 2 found its centred sun and reflection
 # column repeated the Arise scene, and the city sat behind the end card.
 SCENES = [
@@ -219,7 +221,7 @@ SCENES = [
          water_line=0.22, water_strength=0.8,
          gain=Track([(0, 1.0), (22.0, 1.0), (24.0, 0.78), (30.5, 0.78), (32.0, 0.95), (TOTAL, 0.95)])),
     dict(image="assets/plates/s01/s01_morning_beams.jpg", t0=30.5, t1=61.0, fade_in=3.5, fade_out=0.0,
-         transition="push", zoom=(1.16, 1.48), pan=((0.05, 0.0), (0.22, 0.0)), water=True, water_line=0.19,
+         transition="push", zoom=(1.16, 1.48), pan=((0.05, 0.0), (0.22, -0.10)), water=True, water_line=0.19,
          water_strength=0.5,
          gain=Track([(0, 1.0), (31.5, 1.0), (33.5, 0.78), (35.5, 0.70), (44.0, 0.70), (47.0, 0.64),
                      (TOTAL, 0.62)])),
@@ -227,24 +229,24 @@ SCENES = [
 
 # B. People of light: rare and always moving (Anthony, round 3). One brief appearance only, off to the side of
 # the morning shore and before the words: a young torch bearer gathers out of the light of the sunbeam already
-# walking along the shore toward the sunrise, lifts his torch high as he goes, rises a little off the ground and
+# walking briskly along the shore toward the sunrise, lifts his torch high as he goes, rises off the ground and
 # drifts upward into the morning as sparks (about 6.5 s, moving the whole time, never standing still). Nobody
 # stands under the Encouragement words: they are carried by the words, the light and the new star.
 FIG_T0, FIG_T1 = 30.8, 34.9
 FIGURES = [
     dict(poses=["assets/song_figures/s01/s01_torchbearer_low.png", "assets/song_figures/s01/s01_torchbearer_raise.png"],
          t0=FIG_T0, t1=FIG_T1, gather=2.0, pose_times=[32.6], morph=1.8, dissolve=2.4, leave="drift",
-         x=(0.88, 0.73), move=(FIG_T0, FIG_T1 + 1.6), ease="linear", bob=1.0,
-         y=Track([(FIG_T0, 0.24), (32.8, 0.24), (FIG_T1 + 1.6, 0.30)]), height=0.36,
+         x=(0.90, 0.62), move=(FIG_T0, FIG_T1 + 1.6), ease="linear", bob=3.5,
+         y=Track([(FIG_T0, 0.24), (31.8, 0.24), (FIG_T1 + 1.6, 0.34)]), height=0.36,
          color="#ffd796", glow=1.0, particles=8000),
 ]
 
 # C. Effect layers: a sunbeam falls on the torch bearer and follows him along the shore (it is gone before the
 # words are solid),
 # and soft flashes on the morning star (the loudest moment) and on the new star.
-BEAM = Track([(0, 0.0), (30.8, 0.0), (32.4, 0.5), (34.6, 0.5), (36.8, 0.0), (TOTAL, 0.0)])
-BEAM_FROM = Track([(FIG_T0, np.array([0.94, 1.02])), (FIG_T1 + 1.6, np.array([0.84, 1.02]))])
-BEAM_TO = Track([(FIG_T0, np.array([0.88, 0.25])), (FIG_T1 + 1.6, np.array([0.73, 0.30]))])
+BEAM = Track([(0, 0.0), (30.8, 0.0), (32.4, 0.3), (34.6, 0.3), (36.8, 0.0), (TOTAL, 0.0)])   # soft: he stays secondary
+BEAM_FROM = Track([(FIG_T0, np.array([0.96, 1.02])), (FIG_T1 + 1.6, np.array([0.76, 1.02]))])
+BEAM_TO = Track([(FIG_T0, np.array([0.90, 0.25])), (FIG_T1 + 1.6, np.array([0.62, 0.34]))])
 BEAM_WIDTH = (0.02, 0.09)
 BEAM_COLOR = "#ffe6b0"
 FLASH = Track([(0, 0.0), (8.4, 0.0), (9.0, 0.22), (10.6, 0.0), (46.2, 0.0), (46.6, 0.14), (48.0, 0.0),
