@@ -214,12 +214,20 @@ SCENES = [
 ]
 
 # B. people of light (Anthony, round 3: rare and always moving, never posing under the words). One brief
-# appearance: a sister of light walks out onto the ice toward her sister, for about four seconds, and her light
-# flies down to the water where the small warm light will shine at the end.
+# appearance: a sister of light gathers on the footprint path and walks across the ice toward her sister (the
+# engine's figure motion, a gentle step bob), about five seconds, then her light flies down to the water where the
+# small warm light will shine at the end.
+WALK_T = (29.8, 35.2)
+WALK_X = (0.53, 0.72)
 FIGURES = [
-    dict(poses=["assets/song_figures/s04/s04_walk.png"], t0=30.0, t1=34.4, gather=1.5, dissolve=3.0,
-         x=0.60, y=0.21, height=0.36, to=(0.35, 0.215), color="#ffb7a8"),
+    dict(poses=["assets/song_figures/s04/s04_walk.png"], t0=WALK_T[0], t1=WALK_T[1], gather=1.2, dissolve=2.4,
+         x=WALK_X, move=WALK_T, ease="linear", bob=1.0, y=0.21, height=0.36, to=(0.42, 0.20), color="#ffb7a8"),
 ]
+
+
+def _walk_x(t):
+    return float(np.interp(t, WALK_T, WALK_X))
+
 
 # C. signature effects: the ice and its thaw, frost over the frame, the path of footprints of light across the ice
 # the ice stays whole (no thaw edges) through the first three scenes; it is only made fainter over the close
@@ -229,6 +237,7 @@ ICE_LINE = Track([(0, 0.40), (1.5, 0.40), (3.5, 0.56), (16.4, 0.56), (18.4, 0.98
                   (46.0, 0.55), (48.0, 0.445), (TOTAL, 0.445)])
 ICE_OPACITY = Track([(0, 0.80), (16.4, 0.80), (18.4, 0.15), (27.2, 0.15), (29.2, 0.80), (46.5, 0.80),
                      (49.0, 0.45), (TOTAL, 0.45)])
+THAW_COLOR = "#c89070"   # softer thaw rims (the shader keeps them at 0.3 of this in the calm bottom third)
 ICE_FRAME = Track([(0, 0.0), (1.0, 0.0), (4.0, 0.35), (27.0, 0.35), (31.0, 0.12), (44.0, 0.08), (48.0, 0.0)])
 
 
@@ -241,9 +250,12 @@ def _beam(t):
 
 
 BEAM = _beam
-BEAM_FROM = lambda t: (0.44, 0.59) if t < 47.0 else (0.43, 0.425)   # noqa: E731
-BEAM_TO = lambda t: (0.60, 0.215) if t < 47.0 else (0.35, 0.215)     # noqa: E731
-BEAM_WIDTH = lambda t: (0.010, 0.07) if t < 47.0 else (0.004, 0.12)   # noqa: E731
+# ice path: from the low sun to the walking sister's feet; thaw: the small warm light sits low in the water at
+# x 0.42, left of the sun's reflection (x about 0.485), with its own round halo (the beam's source glow); its thin
+# gold path runs back toward the horizon and ends on the water, below the end card's last line
+BEAM_FROM = lambda t: (0.44, 0.59) if t < 47.0 else (0.42, 0.20)          # noqa: E731
+BEAM_TO = lambda t: (_walk_x(t), 0.215) if t < 47.0 else (0.445, 0.37)    # noqa: E731
+BEAM_WIDTH = lambda t: (0.010, 0.07) if t < 47.0 else (0.016, 0.004)      # noqa: E731
 BEAM_COLOR = "#ffd2a0"
 FLASH = Track([(0, 0.0), (48.6, 0.0), (49.3, 0.16), (50.8, 0.0)])
 TEXT_SHADOW = Track([(0, 1.3), (TOTAL, 1.5)])
