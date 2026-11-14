@@ -226,7 +226,7 @@ SCENES = [
          gain=Track([(0, 1.0), (7.5, 1.0), (9.0, 0.80), (TOTAL, 0.80)])),
     # 3 Her words go out: gold threads from the lantern to the lights on the water; Consideration
     dict(image=_P + "threads.jpg", t0=18.0, t1=31.7, fade_in=1.2, fade_out=1.2, transition="fade", calm_gain=0.85,
-         zoom=1.12, pan=((0.0, 0.06), (0.0, 0.06)), water=True, water_line=0.52, water_strength=0.45,
+         zoom=1.2, pan=((0.0, 0.085), (0.0, 0.085)), water=True, water_line=0.52, water_strength=0.45,
          gain=0.85),
     # 4 circles of peace: wherever a word reached, the water settles into a still mirror; Encouragement
     dict(image=_P + "circles_of_peace.jpg", t0=30.5, t1=45.2, fade_in=1.2, fade_out=1.2, transition="fade", calm_gain=0.85,
@@ -244,12 +244,15 @@ SCENES = [
 # ----------------------------------------------------------------- B. people of light
 # Anthony, round 3: people of light are rare and always moving, never standing under the words. The only figure is
 # one brief moment: Heavenly Mother, seen only from behind and fully robed, gathers out of the light just below the
-# great lamp (about 4.9 to 7.4 s), and almost at once Her sparks stream up into the lamp (7.6 to 10.6 s): Her light
-# becomes the lamp whose threads carry the words. The three expressions are carried by the words, the threads,
+# great lamp while rising toward it (about 4.9 to 8.2 s), and then Her sparks stream up into the lamp (8.2 to 10.8 s):
+# Her light becomes the lamp whose threads carry the words. The three expressions are carried by the words, the threads,
 # the circles of peace and the Earth, with the star relights.
+# Round 4: She rises as She gathers (feet 0.215 to 0.262, eased out), lifting the lamp's light above Her head, and
+# Her fill is kept dim and golden (fewer sparks, faint glass) so She reads as a robed figure, not a white pillar.
 FIGURES = [
-    dict(poses=["assets/figures/s10_mother_lamp_a.png"], t0=4.9, t1=7.6, gather=2.5, dissolve=3.0,
-         x=0.5, y=0.255, height=0.22, to=(0.5, 0.495), color="#ffbf5e", glow=0.45, glass=0.35, sparks=0.75),
+    dict(poses=["assets/figures/s10_mother_lamp_a.png"], t0=4.9, t1=8.2, gather=2.2, dissolve=2.6,
+         x=0.5, y=(0.215, 0.262), height=(0.20, 0.22), move=(4.9, 8.2), ease="out",
+         to=(0.5, 0.495), color="#ffb347", glow=0.32, glass=0.16, sparks=0.38),
 ]
 
 # ----------------------------------------------------------------- C. signature effects
@@ -257,7 +260,7 @@ FIGURES = [
 # to one cold light (a narrow BEAM path with a small pool where it lands), then fades as the words rise
 _THREADS = [  # (start, end, from (the lamp in that plate), to (a light on the water))
     (G_FORM - 1.3, G_FORM + HOLD - 0.3, (0.5, 0.495), (0.27, 0.40)),
-    (C_FORM - 0.9, C_FORM + HOLD - 0.3, (0.5, 0.50), (0.74, 0.39)),
+    (C_FORM - 0.9, C_FORM + HOLD - 0.3, (0.5, 0.468), (0.74, 0.37)),
     (E_FORM - 0.9, E_FORM + HOLD - 0.3, (0.5, 0.605), (0.30, 0.42)),
 ]
 BEAM = Track([(0, 0.0)] + [k for a, b, _, _ in _THREADS
