@@ -7,14 +7,14 @@ measured, so the silent audio file the workflow needs plays no part in the pictu
 Design: "The Lamp on the Shore" (project-docs/designs/10 Our Mother Saves the World.md, "Promo v2: scenes").
 The warm star that rests on the horizon in every song is lifted as Mother's great lamp, and its light is Her words:
 gold threads run out from it across the dark world to cold, lonely lights, and where they arrive, people of light
-act out the words and the night grows still and warm. Five scenes:
-  1  the restless night (0 to 6.5 s): a small warm star alone on the horizon, cold grey lights drifting
-  2  the great lamp is lifted (6.5 to 12 s): the star grows into the great lamp under a column of light
-  3  Her words reach the cold lights (12 to 47 s): gold threads (NET) from the lamp; Greeting on the wide water road,
-     then a closer view for Consideration and Encouragement; after each, the scene grows stiller and warmer
-  4  peace across the world (47 to 52 s): the curve of the night Earth laced with gold paths (painted plate),
-     the other six lights flare in turn and the whole arch glows
-  5  night of peace (51 to 60 s): back on the home lake, calm, the lamp set back down, end card
+act out the words and the night grows still and warm. Six scenes, each one of Anthony's painted plates (Assets/s10):
+  1  the restless night (0 to 7 s): a small warm star alone on the horizon, cold blue lights, uneasy water; title
+  2  the great lamp is lifted (4.5 to 20.5 s): Heavenly Mother, from behind and fully robed, at the lamp; one thread
+     of light runs from the lamp to a pair of people of light: Greeting
+  3  Her words go out (18 to 33 s): gold threads from the lantern on the water; a thread reaches a pair: Consideration
+  4  circles of peace (30.5 to 46.5 s): still mirror circles where the words arrived: Encouragement at the centre
+  5  peace across the world (44 to 52.4 s): the night Earth laced with gold paths, the whole arch glows
+  6  night of peace (49.8 to 60 s): the home lake a perfect mirror, the lamp set back down; end card
 All nine lights are already lit (star history, DESIGN-SYSTEM.md 12a). The three expressions are ILLUSTRATIVE
 placements, pending the lyrics (Astra round 1, finding 14). No lyric fragments: the lyrics are not available.
 """
@@ -73,29 +73,24 @@ def _gauss(x, sigma_frames):
 # ----------------------------------------------------------------- the minute (reading-time contract, PHASE2.md 4)
 # Formation takes about 3.75 s from form; hold = form + 10.0 gives 6.25 s fully formed; the dissolve takes 1.6 s
 # and the next words start at least 0.5 s after it ends.
-LAMP = 6.5             # scene 2: the lamp is lifted
-G_FORM = 12.5          # Greeting           (dissolve ends 24.1)
-C_FORM = 24.6          # Consideration      (dissolve ends 36.2)
-E_FORM = 36.7          # Encouragement      (dissolve ends 48.3)
+G_FORM = 8.3           # Greeting, on the great lamp scene      (dissolve ends 19.9)
+C_FORM = 20.4          # Consideration, on the threads scene   (dissolve ends 32.0)
+E_FORM = 32.5          # Encouragement, on the circles of peace (dissolve ends 44.1)
 HOLD = 10.0
-EARTH = 48.0           # scene 4: peace across the world (after the words of 36.7 have dissolved at 48.3)
-SWEEP = 48.6           # the other six lights flare in turn
-NINTH = 50.0
-TITLE_HIT = 52.4       # end card (title forms from 49.4, 1.1 s after Encouragement has gone)
-HOME = 51.0            # scene 5: the night of peace shows through as the Earth plate fades out
+EARTH = 44.0           # scene 5: peace across the world, 4.5 s clear of words before the end card forms
+NINTH = 46.0           # the whole arch glows (a flare without new rings)
+TITLE_HIT = 51.6       # end card: the title forms from 48.6
+HOME = 49.8            # scene 6: the night of peace ripples in under the forming title
 
 # Calm story curve that stands in for loudness (no recording yet)
-_STORY = Track([(0, 0.30), (LAMP, 0.33), (12, 0.44), (30, 0.50), (46, 0.60), (50, 0.68), (56, 0.58), (TOTAL, 0.52)])
+_STORY = Track([(0, 0.30), (6, 0.33), (12, 0.44), (30, 0.50), (44, 0.60), (48, 0.66), (56, 0.58), (TOTAL, 0.52)])
 
-# Moments that land like notes: restless ripples that thin out as each word arrives, then the sweep and the card
-_EVENTS = ([(0.8 + 0.75 * k, 0.45) for k in range(15)]
-           + [(12.4 + 1.3 * k, 0.40) for k in range(9)]
-           + [(24.6 + 2.1 * k, 0.35) for k in range(5)]
-           + [(37.0 + 3.4 * k, 0.30) for k in range(3)]
+# Moments that land like notes: restless ripples that thin out as each word arrives, then the card
+_EVENTS = ([(0.8 + 0.75 * k, 0.45) for k in range(9)]
            + [(G_FORM + HOLD + 1.1, 1.0), (C_FORM + HOLD + 1.1, 1.0), (E_FORM + HOLD + 1.1, 1.0)]
-           + [(SWEEP + 0.3 * k, 0.8) for k in range(6)]
            + [(TITLE_HIT, 1.1)])
 _EVENTS.sort()
+
 
 
 class Song:
@@ -166,51 +161,47 @@ class Song:
 # ----------------------------------------------------------------- look
 # Song 10 (DESIGN-SYSTEM.md section 6): pre-dawn under a great lamp. Midnight blue and deep gold, one strong golden
 # light at the centre of the horizon, quiet stars, still and centred. No aurora, rain, petals or lanterns.
-SKYLINE_LANTERN = 0.0   # the lamp itself is the one light on the horizon
+
+# ----------------------------------------------------------------- look
+# Song 10 (DESIGN-SYSTEM.md section 6): pre-dawn under a great lamp. Midnight blue and deep gold, one strong golden
+# light at the centre of the horizon, quiet stars, still and centred. No aurora, rain, petals or lanterns.
+# Every second is a painted plate (assets/plates/s10/), so the engine's own sky and lake only show under them.
+SKYLINE_LANTERN = 0.0
 BOTTOM_CALM = 1.0
-RINGS_AT_START = [0, 0, 1, 1, 0, 0, 4, 1, 1]   # relights earned in songs 02 to 09 (DESIGN-SYSTEM.md 12a)
+# relights earned in songs 02 to 09 (DESIGN-SYSTEM.md 12a). At the end of this minute (after Greeting, Consideration
+# and Encouragement are relit once each) the counts are [1, 0, 1, 1, 0, 0, 5, 2, 1].
+RINGS_AT_START = [0, 0, 1, 1, 0, 0, 4, 1, 1]
 
 PAL = {
-    "restless": ("#010207", "#050a20", "#101935", "#ffb347"),
-    "lamp":     ("#01030b", "#08112e", "#1f2a4e", "#ffbf4f"),
-    "gold":     ("#020514", "#0b1638", "#38334a", "#ffc657"),
-    "warm":     ("#030618", "#0e1a42", "#4a3c42", "#ffcd63"),
-    "peace":    ("#020414", "#0a1238", "#1d2350", "#ffe3a3"),
+    "night": ("#010207", "#050a20", "#101935", "#ffb347"),
+    "peace": ("#020414", "#0a1238", "#1d2350", "#ffe3a3"),
 }
-_pal_keys = [(0.0, "restless"), (LAMP, "restless"), (12.0, "lamp"), (24.0, "gold"), (36.0, "warm"),
-             (47.0, "warm"), (52.0, "peace"), (TOTAL, "peace")]
+_pal_keys = [(0.0, "night"), (44.0, "night"), (52.0, "peace"), (TOTAL, "peace")]
 SKY_TOP = Track([(t, lin(PAL[p][0])) for t, p in _pal_keys])
 SKY_MID = Track([(t, lin(PAL[p][1])) for t, p in _pal_keys])
 SKY_HOR = Track([(t, lin(PAL[p][2])) for t, p in _pal_keys])
 GLOW = Track([(t, lin(PAL[p][3])) for t, p in _pal_keys])
-
-# The sun is Mother's great lamp, always at the centre of the horizon: small and alone, lifted and strong while
-# Her words go out, then set back down with a faint warm glow for the night of peace
-SUN_INT = Track([(0, 0.16), (LAMP, 0.20), (9.5, 0.95), (12, 1.05), (24, 1.12), (36, 1.22), (47, 1.30),
-                 (50.5, 0.95), (54, 0.62), (TOTAL, 0.58)])
-SUN_Y = Track([(0, 0.325), (LAMP, 0.325), (10.5, 0.345), (47, 0.345), (52, 0.330), (TOTAL, 0.330)])
-SUN_SIZE = Track([(0, 0.065), (LAMP, 0.07), (11, 0.13), (47, 0.15), (52, 0.10), (TOTAL, 0.10)])
-STARS = Track([(0, 0.0), (0.2, 0.0), (2.5, 0.55), (12, 0.55), (46, 0.5), (51, 0.85), (TOTAL, 0.85)])
+SUN_INT = Track([(0, 0.2), (TOTAL, 0.2)])
+SUN_Y = Track([(0, 0.33), (TOTAL, 0.33)])
+SUN_SIZE = Track([(0, 0.07), (TOTAL, 0.07)])
+STARS = Track([(0, 0.0), (0.2, 0.0), (2.5, 0.30), (TOTAL, 0.30)])
 MILKY = Track([(0, 0.0), (TOTAL, 0.0)])
-CLOUDS = Track([(0, 0.22), (LAMP, 0.22), (14, 0.10), (36, 0.05), (TOTAL, 0.0)])
+CLOUDS = Track([(0, 0.0), (TOTAL, 0.0)])
 AURORA = Track([(0, 0.0), (TOTAL, 0.0)])
 RAIN = Track([(0, 0.0), (TOTAL, 0.0)])
-MOTES = Track([(0, 0.10), (3, 0.16), (12, 0.14), (24, 0.18), (36, 0.22), (47, 0.28), (52, 0.18), (TOTAL, 0.14)])
+MOTES = Track([(0, 0.10), (3, 0.14), (20, 0.16), (32, 0.18), (44, 0.24), (52, 0.16), (TOTAL, 0.12)])
 LANTERNS = Track([(0, 0.0), (TOTAL, 0.0)])
 PETALS = Track([(0, 0.0), (TOTAL, 0.0)])
 TRAIL = Track([(0, 0.0), (TOTAL, 0.0)])
-# still camera; one slow settle closer between Greeting and Consideration (a medium shot for the two closer acts),
-# back to the wide home view under the Earth plate
-ZOOM = Track([(0, 1.0), (22.9, 1.0), (24.5, 1.14), (46.9, 1.14), (49.5, 1.0), (TOTAL, 1.0)])
+ZOOM = Track([(0, 1.0), (TOTAL, 1.0)])
 EXPOSURE = Track([(0, 1.0), (TOTAL, 1.0)])
-FADE = Track([(0, 0.0), (1.0, 1.0), (57.6, 1.0), (59.8, 0.0)])
-RAYS = Track([(0, 0.0), (LAMP, 0.0), (9.5, 0.30), (12, 0.20), (46, 0.26), (50.5, 0.12), (TOTAL, 0.08)])
+FADE = Track([(0, 0.0), (1.0, 1.0), (59.0, 1.0), (59.95, 0.0)])
+RAYS = Track([(0, 0.0), (TOTAL, 0.0)])
 PART = Track([(0, 0.0), (TOTAL, 0.0)])
 
-
-# The lights on the water: cold slate at first (people who are tired, hurt or alone), warming to gold as each of
-# Her words arrives (the unrest becoming warmth)
-_WARM = Track([(0, 0.0), (12, 0.0), (23.6, 0.30), (35.7, 0.62), (47.8, 1.0), (TOTAL, 1.0)])
+# The drifting lights: cold slate at first (people who are tired, hurt or alone), warming to gold as each of Her
+# words arrives (the unrest becoming warmth)
+_WARM = Track([(0, 0.0), (8.0, 0.0), (19.4, 0.35), (31.5, 0.70), (43.6, 1.0), (TOTAL, 1.0)])
 
 
 def MOTE_COLORS(t):
@@ -218,54 +209,87 @@ def MOTE_COLORS(t):
     return (_mix_hex("#a7b6cc", "#ffe2a8", k), _mix_hex("#5a6a80", "#ffb066", k))
 
 
-# ----------------------------------------------------------------- A. scenes
-# Scenes 1, 2, 3 and 5 are the engine's own lake, lamp and sky (no painted plates exist for this song in the
-# repository); scene 4 is a plate painted from code: assets/plates/s10/make_plates.py
+# ----------------------------------------------------------------- A. six scenes (Anthony's plates from Assets/s10,
+# the lower third calmed by assets/plates/s10/calm_lower_third.py)
+_P = "assets/plates/s10/"
 SCENES = [
-    # it comes in only after Encouragement's words have gone (no glowing edge across letters)
-    dict(image="assets/plates/s10/earth_web.jpg", t0=EARTH, t1=HOME + 3.8, fade_in=1.6, fade_out=3.0,
-         transition="fade", zoom=(1.0, 1.06), pan=((0.0, 0.0), (0.0, 0.01)), water=False,
-         gain=Track([(0, 1.0), (48.6, 1.0), (50.0, 0.85), (TOTAL, 0.85)])),
+    # 1 the restless night: one small warm star alone on the horizon, cold blue lights, the water uneasy
+    dict(image=_P + "restless_night.jpg", t0=0.0, t1=7.0, fade_in=1.0, fade_out=2.5, zoom=(1.07, 1.03),
+         water=True, water_line=0.415, water_strength=1.9),
+    # 2 the great lamp is lifted: Heavenly Mother (from behind) at the lamp; Greeting
+    dict(image=_P + "great_lamp.jpg", t0=4.5, t1=20.5, fade_in=2.5, fade_out=2.5, transition="bloom", flash=0.45,
+         zoom=(1.0, 1.04), water=True, water_line=0.495, water_strength=0.7,
+         gain=Track([(0, 1.0), (7.5, 1.0), (9.0, 0.80), (TOTAL, 0.80)])),
+    # 3 Her words go out: gold threads from the lantern to the lights on the water; Consideration
+    dict(image=_P + "threads.jpg", t0=18.0, t1=33.0, fade_in=2.5, fade_out=2.5, transition="ripple",
+         ripple_from=(0.5, 0.555), zoom=(1.04, 1.0), water=True, water_line=0.575, water_strength=0.45,
+         gain=0.85),
+    # 4 circles of peace: wherever a word reached, the water settles into a still mirror; Encouragement
+    dict(image=_P + "circles_of_peace.jpg", t0=30.5, t1=46.5, fade_in=2.5, fade_out=2.5, transition="ripple",
+         ripple_from=(0.5, 0.62), zoom=(1.0, 1.04), water=True, water_line=0.61, water_strength=0.15,
+         gain=0.85),
+    # 5 peace across the world: the night Earth laced with gold paths, the arch glows (no words for 4.5 s)
+    dict(image=_P + "earth_web.jpg", t0=EARTH, t1=52.4, fade_in=2.5, fade_out=2.6, transition="bloom", flash=0.35,
+         zoom=(1.0, 1.05), water=False, gain=Track([(0, 1.0), (48.0, 1.0), (49.5, 0.65), (TOTAL, 0.65)])),
+    # 6 night of peace: the home lake a perfect mirror, the lamp set back down; end card
+    dict(image=_P + "mirror_night.jpg", t0=HOME, t1=61.0, fade_in=2.6, fade_out=0.0, transition="ripple",
+         ripple_from=(0.5, 0.46), zoom=(1.03, 1.0), water=True, water_line=0.46, water_strength=0.12,
+         gain=0.85),
 ]
 
-# ----------------------------------------------------------------- B. people of light (shared library)
-# Each pair stands to one side of the lamp, so the lamp's light reaches them along a thread; feet at 0.23,
-# words above them at 0.29 to 0.30 (the bottom third stays calm water).
+# ----------------------------------------------------------------- B. people of light
+# Heavenly Mother, seen only from behind and fully robed, holding the lamp low at the centre of the great lamp's
+# light; when Her first word has gone out, Her sparks return into the lamp. The three pairs act at different places:
+# centre-left, right, centre.
 FIGURES = [
+    dict(poses=["assets/figures/s10_mother_lamp_a.png"], t0=4.8, t1=16.0, x=0.5, y=0.35, height=0.24,
+         to=(0.5, 0.495), color="#ffd796", glass=1.2),
     # Greeting: the left person walks up and waves; the lonely one places their hands in the offered hands
     dict(poses=["assets/figures/greeting_a.png", "assets/figures/greeting_b.png"],
-         t0=G_FORM - 2.6, t1=G_FORM + HOLD - 0.5, pose_times=[G_FORM + 3.2], x=0.29, y=0.23, height=0.36,
-         to_star=0, color="#ffbfa6"),
+         t0=G_FORM - 2.3, t1=G_FORM + HOLD - 0.5, pose_times=[G_FORM + 3.2], x=0.25, y=0.23, height=0.36,
+         to_star=0, color="#ffbfa6", glass=1.3),
     # Consideration: one bends under a heavy bundle; the other comes with open hands and they carry it together
     dict(poses=["assets/figures/consideration_a.png", "assets/figures/consideration_b.png"],
-         t0=C_FORM - 2.4, t1=C_FORM + HOLD - 0.5, pose_times=[C_FORM + 3.4], x=0.71, y=0.23, height=0.36,
-         to_star=7, color="#f8b3c2"),
+         t0=C_FORM - 2.4, t1=C_FORM + HOLD - 0.5, pose_times=[C_FORM + 3.4], x=0.74, y=0.23, height=0.36,
+         to_star=7, color="#f8b3c2", glass=1.3),
     # Encouragement: one kneels, exhausted, the other prays over them; a hand on the back; both rise in hope
     dict(poses=["assets/figures/encouragement_a.png", "assets/figures/encouragement_b.png",
                 "assets/figures/encouragement_c.png"],
-         t0=E_FORM - 2.4, t1=E_FORM + HOLD - 0.5, pose_times=[E_FORM + 2.8, E_FORM + 6.2], x=0.29, y=0.23,
-         height=0.36, to_star=6, color="#d3c0f4"),
+         t0=E_FORM - 2.4, t1=E_FORM + HOLD - 0.5, pose_times=[E_FORM + 2.8, E_FORM + 6.2], x=0.5, y=0.23,
+         height=0.36, to_star=6, color="#d3c0f4", glass=1.3),
 ]
 
 # ----------------------------------------------------------------- C. signature effects
-# The great lamp: a column of light settles on the horizon star as it is lifted (gone before any words form)
-BEAM = Track([(0, 0.0), (LAMP, 0.0), (9.0, 0.70), (10.6, 0.55), (12.2, 0.0), (TOTAL, 0.0)])
-BEAM_FROM = (0.5, 1.02)
-BEAM_TO = (0.5, 0.345)
-BEAM_WIDTH = (0.012, 0.075)
+# The great lamp and its threads: as each act begins, one thread of light runs from the lamp to that pair (a narrow
+# BEAM path with a small pool where it lands), then fades when the words rise
+_THREADS = [  # (start, end, from (the lamp in that plate), to (the pair))
+    (G_FORM - 1.3, G_FORM + HOLD - 0.3, (0.5, 0.495), (0.33, 0.40)),
+    (C_FORM - 0.9, C_FORM + HOLD - 0.3, (0.5, 0.555), (0.66, 0.40)),
+    (E_FORM - 0.9, E_FORM + HOLD - 0.3, (0.5, 0.605), (0.5, 0.47)),
+]
+BEAM = Track([(0, 0.0)] + [k for a, b, _, _ in _THREADS
+                           for k in ((a, 0.0), (a + 1.5, 0.55), (b - 1.0, 0.55), (b, 0.0))] + [(TOTAL, 0.0)])
+
+
+def _thread(t):
+    for a, b, f, to in _THREADS:
+        if t < b + 0.6:
+            return f, to
+    return _THREADS[-1][2], _THREADS[-1][3]
+
+
+def BEAM_FROM(t):
+    return _thread(t)[0]
+
+
+def BEAM_TO(t):
+    return _thread(t)[1]
+
+
+BEAM_WIDTH = (0.003, 0.008)
 BEAM_COLOR = "#ffd98a"
-# Gold threads of Her words: spreading from the lamp further after each word arrives
-# (the spread is a radius of about 1.9 x 1.12 x NET screen heights round the lamp: 0.17 reaches the people of light)
-NET = Track([(0, 0.0), (10.5, 0.0), (14.0, 0.15), (22.0, 0.17), (25.0, 0.20), (34.0, 0.21), (37.0, 0.24),
-             (46.5, 0.26), (TOTAL, 0.26)])
-NET_ORIGIN = (0.5, 0.345)
-NET_Y0 = 0.345
-NET_SCALE = 6.0
-NET_BRIGHT = Track([(0, 0.0), (10.5, 0.0), (12.0, 0.50), (46.2, 0.50), (48.4, 0.0), (TOTAL, 0.0)])
-NET_COLOR = "#ffd38a"
-NET_PULSE = "#fff2d6"
 # deeper calm behind the words over the bright Earth plate and the end card
-TEXT_SHADOW = Track([(0, 1.0), (46.5, 1.0), (49.0, 1.5), (TOTAL, 1.4)])
+TEXT_SHADOW = Track([(0, 1.0), (44.0, 1.0), (48.0, 1.45), (TOTAL, 1.4)])
 
 # ----------------------------------------------------------------- the arch and the words
 STAR_POS = []
@@ -278,39 +302,40 @@ FORM_DUR = 3.0
 _OFF = 1e9
 LIT = -100.0
 # All nine were lit in earlier songs (star=-100). Greeting, Consideration and Encouragement are spoken again here
-# (illustrative placements, pending the lyrics); the other six flare in turn in the sweep (arrive only, no words).
+# (illustrative placements, pending the lyrics) and each relights its star once (arrive: a flare and one ring).
+# The other six only glow with the whole arch from NINTH (no relight, no new ring).
 PHRASES = [
-    dict(label="Greeting", lines=["“How are you?”"], size=112, y=0.29,
+    dict(label="Greeting", lines=["“How are you?”"], size=112, y=0.30,
          form=G_FORM, hold=G_FORM + HOLD, arrive=G_FORM + HOLD + 1.1, star=LIT),
     dict(label="Gratitude", lines=["“Thank you. It’s all thanks to you.", "You’ve worked hard.”"], size=118,
-         form=_OFF, hold=_OFF, arrive=SWEEP + 0.0, star=LIT),
+         form=_OFF, hold=_OFF, star=LIT),
     dict(label="Apology", lines=["“I’m sorry.", "It must have been hard on you.”"], size=124,
-         form=_OFF, hold=_OFF, arrive=SWEEP + 0.3, star=LIT),
+         form=_OFF, hold=_OFF, star=LIT),
     dict(label="Inclusiveness", lines=["“It’s okay. I understand.”"], size=150,
-         form=_OFF, hold=_OFF, arrive=SWEEP + 0.6, star=LIT),
+         form=_OFF, hold=_OFF, star=LIT),
     dict(label="Concession", lines=["“Please, after you.”"], size=164,
-         form=_OFF, hold=_OFF, arrive=SWEEP + 0.9, star=LIT),
+         form=_OFF, hold=_OFF, star=LIT),
     dict(label="Respect", lines=["“I’d love to hear more", "about your thoughts.”"], size=128,
-         form=_OFF, hold=_OFF, arrive=SWEEP + 1.2, star=LIT),
-    dict(label="Encouragement", lines=["“I’ll pray (or root) for you.", "Everything will go well.”"], size=96, y=0.30,
+         form=_OFF, hold=_OFF, star=LIT),
+    dict(label="Encouragement", lines=["“I’ll pray (or root) for you.", "Everything will go well.”"], size=96, y=0.31,
          form=E_FORM, hold=E_FORM + HOLD, arrive=E_FORM + HOLD + 1.1, star=LIT),
-    dict(label="Consideration", lines=["“Can I give you a hand", "with anything?”"], size=100, y=0.30,
+    dict(label="Consideration", lines=["“Can I give you a hand", "with anything?”"], size=100, y=0.31,
          form=C_FORM, hold=C_FORM + HOLD, arrive=C_FORM + HOLD + 1.1, star=LIT),
     dict(label="Compliment", lines=["“You’re amazing.", "You’re doing great!”"], size=140,
-         form=_OFF, hold=_OFF, arrive=SWEEP + 1.5, star=LIT),
+         form=_OFF, hold=_OFF, star=LIT),
 ]
 
-# End card (PHASE2.md item 7: three lines)
+# End card (PHASE2.md item 7: three lines), the tagline solid from 54.8 to 59.0
 TITLE = dict(label="Healing Concert", lines=["The Words of Mother’s Love"], size=150,
              form=TITLE_HIT - FORM_DUR, hold=1e9, star=1e9)
 FRAGMENTS = []   # no lyrics yet
 TAGLINE = dict(text="Where a mother’s love reaches, peace settles.\nSunday, December 6 · 4:30 PM\n"
                     "The World Mission Society Church of God · 6720 W Sahara Ave, Las Vegas",
-               t0=TITLE_HIT + 1.4, t1=TITLE_HIT + 4.0)
+               t0=53.0, t1=54.8)
 
 CREDIT = dict(song="Our Mother Saves the World", concert="The Words of Mother’s Love Healing Concert",
               t_in=0.3, t_full=1.5, t_move=4.4, t_rest=6.4, scale=0.34, alpha_rest=0.58,
-              margin_x=0.030, margin_top=0.048)
+              margin_x=0.030, margin_top=0.048, t_gone0=46.5, t_gone1=47.8)
 
 
 def credit_state(t, bbox):
@@ -328,15 +353,16 @@ def credit_state(t, bbox):
     tx = c["margin_x"] + c["scale"] * (x1 - x0) / 2.0
     ty = 1.0 - c["margin_top"] - c["scale"] * (y1 - y0) / 2.0
     cx, cy = cx0 * (1 - m) + tx * m, cy0 * (1 - m) + ty * m
-    alpha = a_in * (1.0 + (c["alpha_rest"] - 1.0) * m)
+    # the corner credit leaves before the arch glows and the end card comes (nothing crosses it)
+    alpha = a_in * (1.0 + (c["alpha_rest"] - 1.0) * m) * (1.0 - ss(c["t_gone0"], c["t_gone1"], t))
     return (cx, cy, scale, alpha), (cx0, cy0)
 
 
-# Waves of light across the sky: one where each spoken word reaches its light, softer ones in the sweep, one for
-# the end card
-WAVES = sorted([(p["arrive"], STAR_POS[i][0], STAR_POS[i][1], 0.45 if p["form"] < _OFF else 0.16)
-                for i, p in enumerate(PHRASES)])
-WAVES.append((TITLE_HIT, 0.5, 0.62, 0.55))   # soft: a strong wave left a bright blob under the title
+# Small waves of light where a spoken word reaches its light (none for Greeting: its light is next to the corner
+# credit), and a soft one for the end card
+WAVES = [(PHRASES[7]["arrive"], STAR_POS[7][0], STAR_POS[7][1], 0.22),
+         (PHRASES[6]["arrive"], STAR_POS[6][0], STAR_POS[6][1], 0.22),
+         (TITLE_HIT, 0.5, 0.62, 0.35)]
 
 
 # star_state and link_state come from engine/arch.py (installed by song.py), the same for every song.
