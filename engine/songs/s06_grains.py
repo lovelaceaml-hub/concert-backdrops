@@ -6,7 +6,9 @@ awaiting Anthony's decision, not an exact lyric match) and Inclusiveness shines 
 Six scenes: the harvest field (the engine's own lake and golden field), the narrow shore path ("Please, after you."),
 the water's edge with the family's lantern ("It's okay. I understand."), the cracked wilderness that living gold
 water fills, the healed land in blossom, and the edge of heaven (lake, golden field, rays and rising lanterns) with
-the end card. The plates in assets/plates/s06/ are painted with code (paint_plates.py next to them).
+the end card. The plates in assets/plates/s06/ are Anthony's paintings (Drive folder Assets/s06); the two figures
+in assets/song_figures/s06/ are his special figures turned into line art. People of light are rare and always
+moving (round 3 direction): two brief appearances, never under the words.
 
 Song features and the visual timeline for the backdrop.
 
@@ -231,22 +233,19 @@ SCENES = [
 
 # B. people of light (round 3 direction from Anthony: people rare and always moving, never posing under the words).
 # Two brief appearances, both Anthony's special figures (prepared with tools/prepare_figure.py, then turned into
-# line art by assets/song_figures/s06/line_figure.py). Their place and size are moved every frame by params() below.
+# line art by assets/song_figures/s06/line_figure.py). They move with the engine's moving figures (UPGRADE-HOWTO G).
 F = "assets/song_figures/s06/"
 FIGURES = [
     # on the narrow path, before the words: the one with the sheaf steps aside as the elder with the basket passes,
     # both gliding down the path toward us, then drifting up as light
     dict(poses=[F + "s06_concession_step_aside.png"], t0=6.4, t1=8.4, gather=1.2, dissolve=1.6, leave="drift",
-         x=0.74, y=0.33, height=0.26, color="#cfe0ff", glow=0.9),
+         x=(0.72, 0.63), y=(0.30, 0.20), height=(0.30, 0.40), move=(6.4, 10.0), ease="linear",
+         color="#cfe0ff", glow=0.9),
     # at the water's edge, beside the forming words: the older one places the relit lantern in the young one's
-    # hands; the two rise a little as they turn to light
+    # hands; the two rise a little and drift to the right as they turn to light
     dict(poses=[F + "s06_inclusiveness_lantern.png"], t0=21.0, t1=23.8, gather=1.2, dissolve=1.6, leave="drift",
-         x=0.11, y=0.25, height=0.30, color="#ffc4a8", glow=0.9),
-]
-# motion of each appearance: (key times, x, y, height)
-FIG_MOVE = [
-    Track([(6.4, (0.72, 0.30, 0.30)), (10.0, (0.63, 0.20, 0.40))]),
-    Track([(21.0, (0.09, 0.24, 0.27)), (25.4, (0.13, 0.31, 0.27))]),
+         x=(0.09, 0.13), y=(0.24, 0.31), height=0.27, move=(21.0, 25.4), ease="linear",
+         color="#ffc4a8", glow=0.9),
 ]
 
 # C. signature effects: the golden fields of light and the living water are in the paintings (scenes 1, 4 and 6;
@@ -261,8 +260,8 @@ for i in range(9):
     STAR_POS.append((x, y))
 
 # Lit before song 06 (concert star history): 3 Apology, 4 Inclusiveness, 6 Respect, 7 Encouragement, 8 Consideration,
-# 9 Compliment. This song lights 5 Concession for the first time (guide about 70.8 s, promo 7.6 to 18.9; a
-# placement exception awaiting Anthony) and Inclusiveness shines again after "Pardon one another" (relit 32.3).
+# 9 Compliment. This song lights 5 Concession for the first time (guide about 70.8 s; words 10.0 to 21.4, star 21.3; a
+# placement exception awaiting Anthony) and Inclusiveness shines again after "Pardon one another" (relit 33.2).
 OFF = dict(form=1e9, hold=1e9, star=1e9)
 LIT = dict(form=1e9, hold=1e9, star=-100.0)
 PHRASES = [
@@ -327,8 +326,6 @@ WAVES = [(PHRASES[4]["star"], STAR_POS[4][0], STAR_POS[4][1], 0.4),
 
 
 def params(song, t):
-    for fg, mv in zip(FIGURES, FIG_MOVE):     # the people of light move while they are on screen
-        fg["x"], fg["y"], fg["height"] = (float(v) for v in mv(t))
     f = min(int(round(t * FPS)), NFRAMES - 1)
     env, envs, hi, pulse = song.env[f], song.env_slow[f], song.hi[f], song.pulse[f]
     if t > MUSIC_END - 1.0:
