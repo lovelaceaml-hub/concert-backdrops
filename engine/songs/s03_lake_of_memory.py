@@ -169,11 +169,11 @@ TITLE_HIT = 51.0     # end card
 PAL = {
     "indigo":  ("#03041a", "#0e1240", "#262a66", "#a8a8ff"),
     "aurora":  ("#050622", "#1a1a52", "#45397a", "#d0a8ff"),
-    "warm":    ("#07061f", "#28194c", "#74406c", "#ffa8b0"),
-    "predawn": ("#0a0b2c", "#382460", "#b0587a", "#ffb4ac"),
-    "dawn":    ("#121a4a", "#5a397c", "#e47a90", "#ffcaa4"),
-    "rise":    ("#16245c", "#784682", "#f2908f", "#ffd8aa"),
-    "risepk":  ("#1a2a66", "#8a5088", "#f6a291", "#ffe4b6"),
+    "warm":    ("#070820", "#211b4a", "#7a4a62", "#ffb4a0"),
+    "predawn": ("#0b0e30", "#382b5a", "#c4727a", "#ffc0a4"),
+    "dawn":    ("#141c4c", "#584276", "#ec8c8a", "#ffd2a4"),
+    "rise":    ("#18265c", "#744e7a", "#f39e88", "#ffdca8"),
+    "risepk":  ("#1c2c66", "#845a7c", "#f8ae8c", "#ffe8b4"),
 }
 _pal_keys = [
     (0.0, "indigo"), (6.0, "indigo"), (16.0, "aurora"), (27.0, "warm"), (38.0, "warm"), (45.0, "predawn"),
@@ -242,7 +242,7 @@ TAGLINE = dict(text="Sunday, December 6 · 4:30 PM\nThe World Mission Society Ch
 
 # Colors for this song's look: indigo and violet aurora warming to rose and gold, rose petals with gold edges
 AURORA_COOL = ("#6f7cff", "#a58cff")
-AURORA_WARM = ("#ff8fb0", "#ffc68a")
+AURORA_WARM = ("#ffa29a", "#ffcc8c")   # rose gold, kept apart from song 08's gold aurora and crimson
 PETAL_COLORS = ("#ff8fae", "#ffd6b0")
 LANTERN_COLORS = ("#ffc070", "#ff9a5a")
 MOTE_COLORS = ("#ffe0a8", "#ffa8b8")
