@@ -204,33 +204,34 @@ P = "assets/plates/s06/"
 SCENES = [
     # 1. the harvest field: an ocean of golden wheat of light round the mirror lake, the long low sun, lanterns
     dict(image=P + "field.jpg", t0=0.0, t1=7.4, fade_in=0.0, fade_out=2.4, zoom=(1.06, 1.10),
-         water=True, water_line=0.375, water_strength=0.5),
+         water=True, water_line=0.375, water_strength=0.5, gain=0.85, calm_gain=0.35),
     # 2. the narrow shore path between the still water and tall glowing wheat (Concession)
     dict(image=P + "path.jpg", t0=5.0, t1=20.6, fade_in=2.4, fade_out=1.8, transition="bloom", flash=0.25,
          zoom=(1.08, 1.02), pan=((0.01, 0.0), (0.0, 0.0)),
          gain=Track([(0, 1.0), (7.0, 1.0), (9.0, 0.85), (19.0, 0.85), (20.6, 1.0)])),
     # 3. the water's edge at rose ember dusk, wheat close at the left (Inclusiveness)
     dict(image=P + "shore.jpg", t0=18.8, t1=33.0, fade_in=1.8, fade_out=1.0, transition="fade",
-         zoom=(1.04, 1.08), water=True, water_line=0.35, water_strength=0.4),
+         zoom=(1.04, 1.08), water=True, water_line=0.35, water_strength=0.4, calm_gain=0.4),
     # 4. the cracked wilderness, dry and dusty ...
     dict(image=P + "wilderness_dry.jpg", t0=32.0, t1=35.0, fade_in=1.0, fade_out=2.0, transition="fade",
-         zoom=(1.02, 1.04), water=True, water_line=0.333, water_strength=0.4),
+         zoom=(1.02, 1.04), water=True, water_line=0.333, water_strength=0.4, calm_gain=0.35),
     # ... which the living gold water fills, spreading out from where it meets the lake, with green shoots
     dict(image=P + "wilderness.jpg", t0=33.0, t1=43.5, fade_in=2.0, fade_out=2.0, transition="ripple",
-         ripple_from=(0.62, 0.34), zoom=(1.04, 1.09), water=True, water_line=0.333, water_strength=0.4,
+         ripple_from=(0.62, 0.34), zoom=(1.04, 1.09), water=True, water_line=0.333, water_strength=0.4, calm_gain=0.35,
          gain=Track([(0, 1.0), (33.0, 0.9), (43.5, 0.9)])),
     # 5. the fragrance: the healed land, wheat bending in the wind, white blossoms along a golden stream
     dict(image=P + "blossom.jpg", t0=41.5, t1=48.6, fade_in=2.0, fade_out=3.0, transition="fade",
-         zoom=(1.03, 1.08), water=True, water_line=0.34, water_strength=0.4,
+         zoom=(1.03, 1.08), water=True, water_line=0.34, water_strength=0.4, calm_gain=0.35,
          gain=Track([(0, 0.9), (43.0, 0.85), (48.6, 0.85)])),
     # 6. the edge of heaven: the lake, the sea of wheat, a plain of lit homes, lanterns rising, the end card
     dict(image=P + "heaven.jpg", t0=45.6, t1=61.0, fade_in=3.0, fade_out=0.0, transition="fade",
-         zoom=(1.08, 1.02), water=True, water_line=0.39, water_strength=0.5,
-         gain=Track([(0, 0.95), (49.0, 0.95), (52.0, 0.8), (TOTAL, 0.8)])),
+         zoom=(1.08, 1.02), water=True, water_line=0.39, water_strength=0.5, calm_gain=0.35,
+         gain=Track([(0, 0.85), (49.0, 0.85), (52.0, 0.75), (TOTAL, 0.75)])),
 ]
 
-# B. people of light: Anthony's two special figures (assets/song_figures/s06/, prepared with tools/prepare_figure.py)
-# and song 06's own poses built from the shared library by make_poses.py.
+# B. people of light: Anthony's two special figures (assets/song_figures/s06/, prepared with tools/prepare_figure.py,
+# then turned into line art by line_figure.py so they do not glow as flat white shapes) and song 06's own poses
+# built from the shared library by make_poses.py.
 F = "assets/song_figures/s06/"
 FIGURES = [
     # Concession, "Please, after you.": they arrive at the same spot on the narrow path from opposite sides and stop
