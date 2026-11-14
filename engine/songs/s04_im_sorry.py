@@ -223,7 +223,7 @@ FIGURES = [
     # then they embrace. Their light comes down as one small warm light at the centre of the lake.
     dict(poses=["assets/song_figures/s04/s04_walk.png", "assets/song_figures/s04/s04_kneel_pair.png",
                 "assets/figures/inclusiveness_c.png"],
-         t0=27.6, t1=43.4, pose_times=[30.6, 38.0], x=0.62, y=0.21, height=0.38, to=(0.42, 0.22),
+         t0=27.6, t1=43.4, pose_times=[30.6, 38.0], x=0.62, y=0.21, height=0.38, to=(0.35, 0.215),
          color="#ffb7a8"),
 ]
 
@@ -243,13 +243,13 @@ def _beam(t):
     # ends in one small warm light at centre
     if t < 47.0:
         return 0.0 if t < 31.0 else min((t - 31.0) / 2.5, 1.0) * 0.55 * (1.0 - min(max((t - 44.0) / 2.5, 0.0), 1.0))
-    return 0.80 * min(max((t - 49.0) / 3.0, 0.0), 1.0)
+    return 1.0 * min(max((t - 49.0) / 3.0, 0.0), 1.0)
 
 
 BEAM = _beam
-BEAM_FROM = lambda t: (0.44, 0.59) if t < 47.0 else (0.455, 0.43)   # noqa: E731
-BEAM_TO = lambda t: (0.58, 0.215) if t < 47.0 else (0.42, 0.23)     # noqa: E731
-BEAM_WIDTH = lambda t: (0.010, 0.07) if t < 47.0 else (0.004, 0.09)   # noqa: E731
+BEAM_FROM = lambda t: (0.44, 0.59) if t < 47.0 else (0.43, 0.425)   # noqa: E731
+BEAM_TO = lambda t: (0.58, 0.215) if t < 47.0 else (0.35, 0.215)     # noqa: E731
+BEAM_WIDTH = lambda t: (0.010, 0.07) if t < 47.0 else (0.004, 0.12)   # noqa: E731
 BEAM_COLOR = "#ffd2a0"
 FLASH = Track([(0, 0.0), (48.6, 0.0), (49.3, 0.16), (50.8, 0.0)])
 TEXT_SHADOW = Track([(0, 1.3), (TOTAL, 1.5)])
