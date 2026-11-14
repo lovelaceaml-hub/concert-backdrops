@@ -129,12 +129,15 @@ jobs:
           python3 -c "import sys; sys.exit(0 if abs($fd-$want)<0.15 and $na==1 else 1)" || { echo "final check failed"; exit 1; }
           cp silent.mp4 "$OUTNAME (silent).mp4"
       - name: Frame sheets for checking the video without downloading it
+        continue-on-error: true
         run: |
           mkdir -p sheets
+          q=$(python3 -c "print(round($FRAMES/30/4, 3))")
+          r=$(python3 -c "print(round(8*30*4/$FRAMES, 5))")
           for k in 0 1 2 3; do
-            s=$(python3 -c "print($k*$FRAMES/30/4)")
-            ffmpeg -v error -y -ss "$s" -t "$(python3 -c "print($FRAMES/30/4)")" -i silent.mp4 \
-              -vf "fps=8/($FRAMES/30/4),scale=640:-2,tile=4x2" -frames:v 1 -q:v 4 "sheets/sheet$k.jpg"
+            s=$(python3 -c "print(round($k*$q, 3))")
+            ffmpeg -v error -y -ss "$s" -t "$q" -i silent.mp4 \
+              -vf "fps=$r,scale=640:-2,tile=4x2" -frames:v 1 -q:v 4 "sheets/sheet$k.jpg" || true
           done
           ls -la sheets
       - uses: actions/upload-artifact@v4
