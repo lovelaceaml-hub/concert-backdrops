@@ -164,17 +164,19 @@ NINTH = 1e9          # the whole arch does not glow in this song
 TITLE_HIT = 51.0     # end card
 
 # Scene palettes (top of sky, middle, horizon, glow of the low sun)
+# Look (DESIGN-SYSTEM.md section 6, row 03): indigo night of memory, rain, then a rose dawn.
+# Indigo, rose and warm gold; rain, lanterns, aurora, petals; framing low over the water.
 PAL = {
-    "storm":   ("#020511", "#081638", "#1a335c", "#9cc2ff"),
-    "aurora":  ("#040822", "#161d4c", "#3b3a6e", "#c7a8ff"),
-    "warm":    ("#050820", "#221a48", "#6e4263", "#ffa58c"),
-    "predawn": ("#080d2c", "#33265c", "#a85f6e", "#ffb48c"),
-    "dawn":    ("#0f1b46", "#553b7c", "#e9836f", "#ffd08c"),
-    "rise":    ("#12265c", "#7c4c84", "#f59a6c", "#ffe2ac"),
-    "risepk":  ("#152b68", "#93578a", "#ffb873", "#ffecc4"),
+    "indigo":  ("#03041a", "#0e1240", "#262a66", "#a8a8ff"),
+    "aurora":  ("#050622", "#1a1a52", "#45397a", "#d0a8ff"),
+    "warm":    ("#07061f", "#28194c", "#74406c", "#ffa8b0"),
+    "predawn": ("#0a0b2c", "#382460", "#b0587a", "#ffb4ac"),
+    "dawn":    ("#121a4a", "#5a397c", "#e47a90", "#ffcaa4"),
+    "rise":    ("#16245c", "#784682", "#f2908f", "#ffd8aa"),
+    "risepk":  ("#1a2a66", "#8a5088", "#f6a291", "#ffe4b6"),
 }
 _pal_keys = [
-    (0.0, "storm"), (6.0, "storm"), (16.0, "aurora"), (27.0, "warm"), (38.0, "warm"), (45.0, "predawn"),
+    (0.0, "indigo"), (6.0, "indigo"), (16.0, "aurora"), (27.0, "warm"), (38.0, "warm"), (45.0, "predawn"),
     (SUNRISE, "dawn"), (54.0, "rise"), (58.0, "risepk"), (TOTAL, "risepk"),
 ]
 SKY_TOP = Track([(t, lin(PAL[p][0])) for t, p in _pal_keys])
@@ -190,7 +192,7 @@ MILKY = Track([(0, 0.0), (2.5, 0.7), (27, 0.55), (44, 0.15), (SUNRISE, 0.0), (TO
 CLOUDS = Track([(0, 0.55), (16, 0.35), (38, 0.35), (SUNRISE, 0.5), (TOTAL, 0.75)])
 AURORA = Track([(0, 0.06), (HANDS, 0.12), (12, 0.45), (22, 0.62), (PRAYER, 0.72), (CRESC, 0.66), (46, 0.38),
                 (SUNRISE, 0.26), (TOTAL, 0.24)])
-RAIN = Track([(0, 0.0), (TOTAL, 0.0)])
+RAIN = Track([(0, 0.55), (3.0, 0.5), (6.5, 0.12), (9.0, 0.0), (TOTAL, 0.0)])   # the last of the storm's rain
 MOTES = Track([(0, 0.18), (PRAYER, 0.28), (44, 0.5), (SUNRISE, 0.75), (TOTAL, 0.6)])
 LANTERNS = Track([(0, 1.0), (16, 1.0), (PRAYER, 0.55), (CRESC, 0.15), (44, 0.0), (TOTAL, 0.0)])
 PETALS = Track([(0, 0.0), (48.5, 0.0), (52, 0.55), (56, 0.85), (TOTAL, 0.75)])
@@ -235,7 +237,15 @@ FRAGMENTS = [
     dict(text="courage to go on", t0=42.0, t1=44.0, out=47.2, dy=0.0, size=78),
 ]
 
-TAGLINE = dict(text="Sunday, December 6 · 4:30 PM · 6720 W Sahara Ave, Las Vegas", t0=53.5, t1=56.5)
+TAGLINE = dict(text="Sunday, December 6 · 4:30 PM\nThe World Mission Society Church of God · 6720 W Sahara Ave, Las Vegas",
+               t0=53.5, t1=56.5)
+
+# Colors for this song's look: indigo and violet aurora warming to rose and gold, rose petals with gold edges
+AURORA_COOL = ("#6f7cff", "#a58cff")
+AURORA_WARM = ("#ff8fb0", "#ffc68a")
+PETAL_COLORS = ("#ff8fae", "#ffd6b0")
+LANTERN_COLORS = ("#ffc070", "#ff9a5a")
+MOTE_COLORS = ("#ffe0a8", "#ffa8b8")
 
 # Opening title card that then rests, small, in the top left corner
 CREDIT = dict(song="I Reminisce About Your Love", concert="The Words of Mother’s Love Healing Concert",
