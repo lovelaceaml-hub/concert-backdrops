@@ -220,7 +220,7 @@ SCENES = [
          water_strength=0.7,
          gain=Track([(0, 1.0), (31.5, 1.0), (34.0, 0.78), (37.0, 0.72), (47.5, 0.72), (TOTAL, 0.8)])),
     dict(image="assets/plates/s01/s01_heavenly_city.jpg", t0=48.3, t1=61.0, fade_in=3.0, fade_out=0.0,
-         transition="dissolve", zoom=(1.06, 1.0), water=True, water_line=0.21,
+         transition="fade", zoom=(1.06, 1.0), water=True, water_line=0.21,
          water_strength=0.6, water_bottom=0.20,
          gain=Track([(0, 0.95), (49.0, 0.9), (51.5, 0.76), (TOTAL, 0.76)])),
 ]
