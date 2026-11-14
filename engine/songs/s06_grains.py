@@ -153,8 +153,8 @@ NINTH = 1e9            # the whole arch does not glow as one in this song
 
 # The reading-time contract (PHASE2.md item 4): words form over about 3.75 s, then stay solid at least 6 s
 # (hold >= form + 9.75), then dissolve over about 1.6 s; the next text starts at least 0.5 s after that.
-C_FORM, C_HOLD = 9.4, 19.2          # Concession: solid 13.15 to 19.2 (6.05 s); dissolved by 20.8
-I_FORM, I_HOLD = 21.3, 31.1         # Inclusiveness: solid 25.05 to 31.1 (6.05 s); dissolved by 32.7
+C_FORM, C_HOLD = 10.0, 19.8         # Concession: solid 13.75 to 19.8 (6.05 s); dissolved by 21.4
+I_FORM, I_HOLD = 21.9, 31.7         # Inclusiveness: solid 25.65 to 31.7 (6.05 s); dissolved by 33.3
 F1 = (33.9, 36.9, 39.9)             # "waters this wilderness": after the ripple's ring has passed the words
 F2 = (42.0, 44.5, 47.5)             # "the fragrance of Her love": solid 44.5 to 47.5
 TITLE_HIT = 52.6                    # title forms from 49.6 (0.5 s after the last fragment has left)
@@ -236,17 +236,17 @@ F = "assets/song_figures/s06/"
 FIGURES = [
     # on the narrow path, before the words: the one with the sheaf steps aside as the elder with the basket passes,
     # both gliding down the path toward us, then drifting up as light
-    dict(poses=[F + "s06_concession_step_aside.png"], t0=3.6, t1=8.0, gather=1.4, dissolve=1.8, leave="drift",
+    dict(poses=[F + "s06_concession_step_aside.png"], t0=6.4, t1=8.4, gather=1.2, dissolve=1.6, leave="drift",
          x=0.74, y=0.33, height=0.26, color="#cfe0ff", glow=0.9),
     # at the water's edge, beside the forming words: the older one places the relit lantern in the young one's
     # hands; the two rise a little as they turn to light
-    dict(poses=[F + "s06_inclusiveness_lantern.png"], t0=20.6, t1=23.6, gather=1.2, dissolve=1.6, leave="drift",
-         x=0.13, y=0.25, height=0.30, color="#ffc4a8", glow=0.9),
+    dict(poses=[F + "s06_inclusiveness_lantern.png"], t0=21.0, t1=23.8, gather=1.2, dissolve=1.6, leave="drift",
+         x=0.11, y=0.25, height=0.30, color="#ffc4a8", glow=0.9),
 ]
 # motion of each appearance: (key times, x, y, height)
 FIG_MOVE = [
-    Track([(3.6, (0.74, 0.33, 0.26)), (9.8, (0.64, 0.22, 0.38))]),
-    Track([(20.6, (0.11, 0.25, 0.30)), (25.2, (0.16, 0.30, 0.30))]),
+    Track([(6.4, (0.72, 0.30, 0.30)), (10.0, (0.63, 0.20, 0.40))]),
+    Track([(21.0, (0.09, 0.24, 0.27)), (25.4, (0.13, 0.31, 0.27))]),
 ]
 
 # C. signature effects: the golden fields of light and the living water are in the paintings (scenes 1, 4 and 6;
