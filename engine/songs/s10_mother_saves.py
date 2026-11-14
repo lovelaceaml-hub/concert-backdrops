@@ -132,12 +132,14 @@ class Song:
 
         crag = sum(a * (1.0 - np.abs(2.0 * lattice(fr, 20 + k) - 1.0))
                    for k, (a, fr) in enumerate(((0.5, 9), (0.25, 23), (0.125, 61), (0.0625, 150), (0.03, 340))))
-        inside = (st >= 0) & (st <= MUSIC_END)
         hgt = 0.030 + 0.120 * v + 0.07 * mid * (0.35 + v) + (0.014 + 0.034 * v) * (crag - 0.5)
         edge = 0.020 + 0.012 * (crag - 0.5)
+        # blend smoothly into the low edge over the first and last 5 seconds (no hard step at the ends)
+        taper = np.clip(np.minimum(st, MUSIC_END - st) / 5.0, 0.0, 1.0)
+        taper = taper * taper * (3 - 2 * taper)
         sh = np.clip(np.minimum(xs, 1.0 - xs) / RIDGE_X0, 0.0, 1.0)
         sh = sh * sh * (3 - 2 * sh)
-        self.ridge = np.maximum(np.where(inside, hgt, edge) * (0.5 + 0.5 * sh), 0.006).astype("f4")
+        self.ridge = np.maximum((edge + (hgt - edge) * taper) * (0.5 + 0.5 * sh), 0.006).astype("f4")
         # rings on the water: soft early ripples, a clear ring where each word lands
         keep = []
         for k, (et, s) in enumerate(_EVENTS):
@@ -181,22 +183,22 @@ SKY_HOR = Track([(t, lin(PAL[p][2])) for t, p in _pal_keys])
 GLOW = Track([(t, lin(PAL[p][3])) for t, p in _pal_keys])
 
 # The sun is the horizon star: small and low, then lifted as Mother's lamp
-SUN_INT = Track([(0, 0.12), (LAMP, 0.16), (12, 0.55), (16, 0.80), (30, 0.88), (46, 1.00), (50, 1.20), (56, 1.12), (TOTAL, 1.08)])
+SUN_INT = Track([(0, 0.12), (LAMP, 0.16), (12, 0.55), (16, 0.80), (30, 0.88), (46, 0.98), (50, 1.06), (56, 1.02), (TOTAL, 1.0)])
 SUN_Y = Track([(0, 0.25), (LAMP, 0.25), (16, 0.29), (30, 0.31), (46, 0.34), (52, 0.37), (TOTAL, 0.38)])
 SUN_SIZE = Track([(0, 0.085), (LAMP, 0.09), (16, 0.11), (46, 0.12), (52, 0.135), (TOTAL, 0.135)])
 STARS = Track([(0, 0.0), (0.2, 0.0), (2.5, 0.95), (12, 1.0), (24, 0.7), (40, 0.35), (50, 0.18), (TOTAL, 0.15)])
 MILKY = Track([(0, 0.0), (3, 0.35), (8, 0.3), (12, 0.0), (TOTAL, 0.0)])
 CLOUDS = Track([(0, 0.55), (10, 0.6), (18, 0.4), (34, 0.3), (50, 0.35), (TOTAL, 0.35)])
-AURORA = Track([(0, 0.0), (9, 0.0), (14, 0.30), (20, 0.40), (34, 0.36), (46, 0.48), (50, 0.56), (56, 0.40), (TOTAL, 0.36)])
+AURORA = Track([(0, 0.0), (9, 0.0), (14, 0.30), (20, 0.40), (34, 0.36), (46, 0.40), (50, 0.44), (56, 0.36), (TOTAL, 0.34)])
 RAIN = Track([(0, 0.0), (TOTAL, 0.0)])
-MOTES = Track([(0, 0.04), (3, 0.14), (12, 0.25), (24, 0.40), (46, 0.65), (50, 0.85), (56, 0.6), (TOTAL, 0.55)])
+MOTES = Track([(0, 0.04), (3, 0.14), (12, 0.25), (24, 0.40), (46, 0.6), (50, 0.72), (56, 0.55), (TOTAL, 0.5)])
 LANTERNS = Track([(0, 0.0), (18, 0.0), (22, 0.6), (30, 0.9), (46, 1.0), (52, 0.45), (58, 0.2), (TOTAL, 0.2)])
 PETALS = Track([(0, 0.0), (TOTAL, 0.0)])
 TRAIL = Track([(0, 0.0), (1.2, 0.45), (16, 0.65), (46, 0.9), (52, 1.0), (TOTAL, 0.9)])
 ZOOM = Track([(0, 1.0), (16, 0.99), (46, 0.972), (TOTAL, 0.955)])
 EXPOSURE = Track([(0, 1.0), (TOTAL, 1.0)])
 FADE = Track([(0, 0.0), (1.0, 1.0), (57.0, 1.0), (59.8, 0.0)])
-RAYS = Track([(0, 0.0), (10, 0.0), (16, 0.35), (30, 0.45), (46, 0.58), (50, 0.78), (56, 0.62), (TOTAL, 0.58)])
+RAYS = Track([(0, 0.0), (10, 0.0), (16, 0.35), (30, 0.45), (46, 0.52), (50, 0.62), (56, 0.55), (TOTAL, 0.52)])
 PART = Track([(0, 0.0), (12, 0.0), (17, 0.8), (24, 0.8), (30, 0.3), (TOTAL, 0.3)])
 
 STAR_POS = []
