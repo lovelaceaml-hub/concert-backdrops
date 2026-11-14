@@ -209,16 +209,16 @@ MOTES = Track([(0, 0.05), (10.0, 0.08), (16.0, 0.20), (24.0, 0.22), (28.0, 0.12)
 LANTERNS = Track([(0, 0.0), (40.5, 0.0), (44.0, 0.55), (48.0, 0.85), (53.0, 0.60), (TOTAL, 0.45)])
 PETALS = Track([(0, 0.0), (TOTAL, 0.0)])
 # the lit path: dark behind the lone light at first, then Mother's wish lights the whole line of hills ahead
-TRAIL = Track([(0, 0.0), (15.5, 0.0), (18.0, 0.85), (26.0, 0.80), (30.0, 0.55), (40.0, 0.60), (48.0, 0.90),
-               (TOTAL, 1.0)])
+TRAIL = Track([(0, 0.0), (15.5, 0.0), (18.0, 1.7), (26.0, 1.6), (30.0, 1.2), (40.0, 1.3), (47.0, 1.8),
+               (TOTAL, 1.8)])
 # framing: wide at dusk, a slow push toward Her star, close in the night of the Greeting, wide again over the
 # village, a gentle push home at the end
-ZOOM = Track([(0, 1.0), (12.0, 0.985), (24.0, 0.955), (27.5, 0.93), (36.5, 0.915), (40.5, 0.99), (48.0, 0.975),
-              (TOTAL, 0.95)])
+ZOOM = Track([(0, 1.0), (12.0, 0.985), (24.0, 0.955), (27.5, 0.93), (36.5, 0.915), (40.5, 0.99), (48.0, 0.985),
+              (TOTAL, 0.975)])
 EXPOSURE = Track([(0, 1.0), (TOTAL, 1.0)])
 FADE = Track([(0, 0.0), (1.2, 1.0), (59.2, 1.0), (59.95, 0.0)])
-RAYS = Track([(0, 0.0), (14.0, 0.0), (18.0, 0.55), (24.0, 0.45), (28.0, 0.0), (51.0, 0.0), (55.0, 0.35),
-              (TOTAL, 0.35)])
+RAYS = Track([(0, 0.0), (14.0, 0.0), (18.0, 0.55), (24.0, 0.45), (28.0, 0.0), (51.0, 0.0), (55.0, 0.18),
+              (TOTAL, 0.18)])
 PART = Track([(0, 0.0), (TOTAL, 0.0)])
 LANTERN_COLORS = ("#ffd27a", "#ffb04f")      # lantern gold
 MOTE_COLORS = ("#ffe6b0", "#ff9d86")         # gold and coral sparks
@@ -229,8 +229,13 @@ LANTERN_X = Track([(0, 0.10), (13.0, 0.20), (26.0, 0.32), (38.0, 0.48), (48.0, 0
                    (TOTAL, 0.90)])
 SKYLINE_LANTERN = Track([(0, 1.0), (13.0, 1.0), (18.0, 1.35), (TOTAL, 1.35)])
 # how far the path of light reaches along the hills: just behind the lone light, then (Mother's wish, 16 to 21.5)
-# all the way ahead to the far end
-PROG = Track([(0, 0.10), (16.0, 0.205), (21.5, 0.975), (TOTAL, 0.975)])
+# ahead to Her star at the centre; then (the windows answer, 41 to 47) on to the far end, one stretch at a time
+WINDOWS = [(41.2, 0.60), (42.4, 0.68), (43.6, 0.76), (44.8, 0.84), (46.0, 0.92)]
+_prog = [(0, 0.10), (16.0, 0.205), (21.5, 0.53)]
+for _tw, _x in WINDOWS:
+    _prog += [(_tw - 0.35, _prog[-1][1]), (_tw + 0.25, _x)]
+_prog += [(47.5, 0.975), (TOTAL, 0.975)]
+PROG = Track(_prog)
 
 # The gate of light: a column of light from above onto the lone light at the end of the path, right of the card
 BEAM = Track([(0, 0.0), (49.0, 0.0), (51.5, 0.55), (53.5, 0.55), (55.5, 0.24), (TOTAL, 0.24)])
@@ -238,7 +243,7 @@ GATE_X = 0.90   # right of the end card's widest line (0.17 to 0.83)
 
 
 def BEAM_FROM(t):
-    return (GATE_X + 0.04, 1.02)
+    return (GATE_X + 0.02, 0.80)
 
 
 def BEAM_TO(t):
@@ -246,7 +251,7 @@ def BEAM_TO(t):
     return (GATE_X, y + 0.004)
 
 
-BEAM_WIDTH = (0.012, 0.035)
+BEAM_WIDTH = (0.02, 0.04)
 BEAM_COLOR = "#ffdcaa"
 
 # Nine lights on an arch over the stage, one for each expression
@@ -275,8 +280,8 @@ PHRASES = [
     dict(label="Compliment", lines=["“You’re amazing.", "You’re doing great!”"], size=140, form=NOT_YET, hold=NOT_YET, star=LIT),
 ]
 FORM_DUR = 3.0
-# y=0.29 (engine default 0.315) lifts the whole end card a little, so its last line clears the lit hills
-TITLE = dict(label="Healing Concert", lines=["The Words of Mother’s Love"], size=150, y=0.29, form=TITLE_HIT - FORM_DUR,
+# y=0.272 (engine default 0.315) lifts the whole end card a little, so its last line clears the lit hills
+TITLE = dict(label="Healing Concert", lines=["The Words of Mother’s Love"], size=150, y=0.272, form=TITLE_HIT - FORM_DUR,
              hold=1e9, star=1e9)
 # Short lyric fragments: Mother's wish written by a pen of light, and the refrain rising out of the lake;
 # never on screen together with an expression
@@ -317,11 +322,10 @@ def credit_state(t, bbox):
     return (cx, cy, scale, alpha), (cx0, cy0)
 
 
-# Waves of light: star 1 lit, star 8 relit, the title. Signature "the windows answer one by one": small warm
-# lights wake one after another along the far hills, from the lone light outward to both ends of the village.
-WINDOWS = [(41.2, 0.40), (42.0, 0.58), (42.8, 0.30), (43.6, 0.70), (44.4, 0.20), (45.2, 0.80), (46.0, 0.12),
-           (46.8, 0.90)]
-WAVES = [(PHRASES[0]["star"], STAR_POS[0][0], STAR_POS[0][1], 0.5),
+# Waves of light: star 1 lit (soft: it sits beside the corner credit), star 8 relit, the title. Signature "the
+# windows answer one by one": at each WINDOWS time a warm light wakes on the far hills and the path of light runs
+# on to it (PROG above), stretch by stretch, to the far end.
+WAVES = [(PHRASES[0]["star"], STAR_POS[0][0], STAR_POS[0][1], 0.18),
          (PHRASES[7]["arrive"], STAR_POS[7][0], STAR_POS[7][1], 0.6),
          (TITLE_HIT, 0.5, 0.62, 0.9)]
 
@@ -331,7 +335,7 @@ def _windows(t, song):
     for tw, x in WINDOWS:
         if 0.0 <= t - tw < 3.1:   # at most 4 waves draw at once: keep each window short
             y = song.ridge_y(x) + 0.012
-            out.append((t - tw, x, y, 0.16))
+            out.append((t - tw, x, y, 0.32))
     return out
 
 
