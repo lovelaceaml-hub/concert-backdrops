@@ -157,7 +157,7 @@ NINTH = 1e9            # the whole arch does not glow as one in this song
 # (hold >= form + 9.75), then dissolve over about 1.6 s; the next text starts at least 0.5 s after that.
 C_FORM, C_HOLD = 10.0, 19.8         # Concession: solid 13.75 to 19.8 (6.05 s); dissolved by 21.4
 I_FORM, I_HOLD = 21.9, 31.7         # Inclusiveness: solid 25.65 to 31.7 (6.05 s); dissolved by 33.3
-F1 = (33.9, 36.9, 39.9)             # "waters this wilderness": after the ripple's ring has passed the words
+F1 = (35.2, 37.4, 39.9)             # "waters this wilderness": starts once the relit star's ring has passed
 F2 = (42.0, 44.5, 47.5)             # "the fragrance of Her love": solid 44.5 to 47.5
 TITLE_HIT = 52.6                    # title forms from 49.6 (0.5 s after the last fragment has left)
 
@@ -239,7 +239,7 @@ FIGURES = [
     # on the narrow path, before the words: the one with the sheaf steps aside as the elder with the basket passes,
     # both gliding down the path toward us, then drifting up as light
     dict(poses=[F + "s06_concession_step_aside.png"], t0=6.4, t1=8.4, gather=1.2, dissolve=1.6, leave="drift",
-         x=(0.72, 0.63), y=(0.30, 0.20), height=(0.30, 0.40), move=(6.4, 10.0), ease="linear",
+         x=(0.72, 0.63), y=(0.30, 0.25), height=(0.30, 0.37), move=(6.4, 10.0), ease="linear", bob=1.0,
          color="#cfe0ff", glow=0.9),
     # at the water's edge, beside the forming words: the older one places the relit lantern in the young one's
     # hands; the two rise a little and drift to the right as they turn to light
