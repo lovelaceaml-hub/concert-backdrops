@@ -227,7 +227,7 @@ SCENES = [
     # 3 Her words go out: gold threads from the lantern to the lights on the water; Consideration
     dict(image=_P + "threads.jpg", t0=18.0, t1=31.7, fade_in=1.2, fade_out=1.2, transition="fade",
          zoom=1.2, pan=((0.0, 0.085), (0.0, 0.085)), water=True, water_line=0.52, water_strength=0.45,
-         gain=0.85, calm_gain=0.40),
+         gain=0.85, calm_gain=0.12),
     # 4 circles of peace: wherever a word reached, the water settles into a still mirror; Encouragement
     dict(image=_P + "circles_of_peace.jpg", t0=30.5, t1=45.2, fade_in=1.2, fade_out=1.2, transition="fade", calm_gain=0.85,
          zoom=(1.0, 1.04), water=True, water_line=0.61, water_strength=0.15,
@@ -244,16 +244,16 @@ SCENES = [
 # ----------------------------------------------------------------- B. people of light
 # Anthony, round 3: people of light are rare and always moving, never standing under the words. The only figure is
 # one brief moment: Heavenly Mother, seen only from behind and fully robed, gathers out of the light just below the
-# great lamp while rising toward it (about 4.9 to 7.6 s), and then Her sparks stream up into the lamp (7.6 to 10.0 s):
+# great lamp while rising toward it (about 4.7 to 7.0 s), and then Her sparks stream up into the lamp (7.0 to 8.9 s):
 # Her light becomes the lamp whose threads carry the words. The three expressions are carried by the words, the threads,
 # the circles of peace and the Earth, with the star relights.
 # Round 4: She keeps moving the whole time She is seen: from just left of the lamp's road She glides in and rises
-# 0.13 of the frame toward the lamp (4.9 to 10.0 s, ease in and out), and She starts to dissolve at 7.6 s while
+# 0.16 of the frame toward the lamp (4.7 to 8.9 s, at an even pace), and She starts to dissolve at 7.0 s while
 # still rising, Her sparks streaming up into the lamp. Her body is kept dim and golden (faint glass) so She reads
 # as a robed figure, not a white pillar; the sparks are brighter so the stream into the lamp is seen.
 FIGURES = [
-    dict(poses=["assets/figures/s10_mother_lamp_a.png"], t0=4.9, t1=7.6, gather=1.8, dissolve=2.4,
-         x=(0.405, 0.47), y=(0.15, 0.28), height=(0.20, 0.215), move=(4.9, 10.0), ease="smooth",
+    dict(poses=["assets/figures/s10_mother_lamp_a.png"], t0=4.7, t1=7.0, gather=1.6, dissolve=1.9,
+         x=(0.40, 0.47), y=(0.13, 0.29), height=(0.20, 0.215), move=(4.7, 8.9), ease="linear",
          to=(0.5, 0.495), color="#ffb347", glow=0.32, glass=0.14, sparks=1.6),
 ]
 
