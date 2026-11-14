@@ -214,21 +214,21 @@ SCENES = [
          gain=Track([(0, 1.0), (6.0, 1.0), (9.0, 0.80), (TOTAL, 0.80)])),
     # 2. festival lake under crimson and gold embroidered aurora: a ring of warm light runs across the water once
     #    the Compliment's words have reached their star; calmer than the first scene (low gain, slow zoom)
-    dict(image="assets/plates/s08/festival_embroidered_aurora.jpg", t0=19.2, t1=31.0, fade_in=2.0, fade_out=2.5,
+    dict(image="assets/plates/s08/festival_embroidered_aurora.jpg", t0=19.7, t1=31.0, fade_in=1.6, fade_out=2.5,
          transition="ripple", ripple_from=(0.5, 0.40), zoom=(1.03, 1.06), water=True, water_line=0.426,
          water_strength=0.4, gain=Track([(0, 0.65), (21.0, 0.60), (TOTAL, 0.60)])),
     # 3. heaven opens: clouds parted, a column of gold pouring onto the lake (after the fragment has gone);
     #    heaven_opens_calm.jpg darkens the painted column's reflection in the centre of the lower third
-    dict(image="assets/plates/s08/heaven_opens_calm.jpg", t0=28.5, t1=41.5, fade_in=2.5, fade_out=2.5,
+    dict(image="assets/plates/s08/heaven_opens_calm.jpg", t0=28.5, t1=40.2, fade_in=2.5, fade_out=2.0,
          zoom=(1.03, 1.07), water=True, water_line=0.296, water_strength=0.3, calm_gain=0.40,
          gain=Track([(0, 0.65), (38.7, 0.65), (TOTAL, 0.55)])),
     # 4. the velvet path home: deep purple night, a narrow path of light to the horizon (a plain soft fade)
-    dict(image="assets/plates/s08/velvet_path_home.jpg", t0=39.0, t1=52.1, fade_in=2.5, fade_out=2.5,
+    dict(image="assets/plates/s08/velvet_path_home.jpg", t0=38.5, t1=51.1, fade_in=2.0, fade_out=1.5,
          zoom=(1.03, 1.08), water=True, water_line=0.426, water_strength=0.4),
     # 5. the seven-branched lampstand under the embroidered veil, reframed (lampstand_veil_low.jpg: the veil's top
     #    band stretched so the whole lampstand sits below the end card, candle tops at about 0.58 from the top;
     #    the veil is darkened, most behind the arch, and softened behind the end card, the lampstand untouched)
-    dict(image="assets/plates/s08/lampstand_veil_low.jpg", t0=49.6, t1=61.0, fade_in=2.5, fade_out=0.0,
+    dict(image="assets/plates/s08/lampstand_veil_low.jpg", t0=49.6, t1=61.0, fade_in=1.5, fade_out=0.0,
          zoom=(1.04, 1.0), water=True, water_line=0.04, water_strength=0.3,
          gain=0.62),
 ]
@@ -243,14 +243,15 @@ FIGURES = [
          ease="linear", y=0.25, height=0.20, color="#f1e8ff", glow=0.9, particles=6000, leave="drift"),
     # Heavenly Mother, only from behind, arms opening at the horizon, then her light flows back into the horizon
     # (about 41 to 46 s);
-    # she moves slowly away from us toward the horizon light the whole time (a little higher and smaller)
+    # she walks away from us toward the horizon light the whole time: her feet rise to the horizon and she grows
+    # much smaller (head and feet both travel about 20 to 25 px per second at 720p, never still)
     dict(poses=[SF + "mother_back_arms_open.png"], t0=41.0, t1=43.6, gather=2.0, dissolve=2.6, x=0.5,
-         y=(0.34, 0.38), height=(0.34, 0.29), move=(41.0, 46.2), ease="linear", color="#ffe6c8", glow=0.9,
+         y=(0.26, 0.41), height=(0.40, 0.12), move=(41.0, 45.4), ease="linear", color="#ffe6c8", glow=0.9,
          particles=9000, to=(0.5, 0.43)),
 ]
 
 # Heaven's column of gold during the thanksgiving, with rising gold dust (only after the fragment has gone)
-BEAM = Track([(0, 0.0), (28.5, 0.0), (30.5, 0.22), (38.5, 0.22), (41.0, 0.0)])
+BEAM = Track([(0, 0.0), (28.5, 0.0), (30.5, 0.22), (37.6, 0.22), (39.6, 0.0)])
 BEAM_FROM = (0.5, 1.02)
 BEAM_TO = (0.5, 0.30)
 BEAM_WIDTH = (0.02, 0.07)
