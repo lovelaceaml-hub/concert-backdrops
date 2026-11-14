@@ -40,25 +40,6 @@ HORIZON = 0.27         # water line: low, a wide harvest sky (song 06 framing)
 RIDGE_X0, RIDGE_W = 0.035, 0.93
 
 
-import numpy as np
-
-HERE = os.path.dirname(os.path.abspath(__file__))
-ROOT = os.path.dirname(os.path.dirname(HERE))   # repository root (this file is engine/songs/)
-SONG_ID = os.path.splitext(os.path.basename(__file__))[0]
-FEATURES = os.environ.get("FEATURES", os.path.join(ROOT, "work", SONG_ID, "features.npz"))
-
-FPS = 30
-W, H = 1920, 1080
-ASPECT = W / H
-MUSIC_END = 59.5       # last sounding moment of the promo clip
-SONG_END = 60.0        # length of the promo clip
-TOTAL = 60.0           # promo length
-NFRAMES = int(round(TOTAL * FPS))
-HORIZON = 0.27         # water line: a little lower than other songs, for an open, airy sky
-
-RIDGE_X0, RIDGE_W = 0.035, 0.93
-
-
 def lin(hexs):
     h = hexs.lstrip("#")
     c = np.array([int(h[i:i + 2], 16) for i in (0, 2, 4)], dtype=np.float64) / 255.0
@@ -144,8 +125,6 @@ class Song:
                 r = np.random.default_rng(1000 + k).random(2)
                 keep.append((float(ot), 0.06 + 0.88 * r[0], HORIZON * (0.12 + 0.70 * r[1] ** 1.3), float(min(s, 1.2))))
                 last = ot
-        # earnest prayer, careful listening and the offer of help: the lake falls still (no rings) under the words
-        keep = [k for k in keep if not any(a <= k[0] < b for a, b in STILL)]
         self.rings = keep
         self.ring_t = np.array([k[0] for k in keep])
 
@@ -165,13 +144,14 @@ class Song:
         # the last grain falls into the lake: three slow rings widen from where the shaft meets the water
         g0, gx, gy = GRAIN
         special = []
-        for j, (lag, s) in enumerate(((0.0, 1.6), (0.7, 1.1), (1.5, 0.8))):
+        for lag, s in ((0.0, 1.6), (0.7, 1.1), (1.5, 0.8)):
             age = t - g0 - lag
             if 0.0 <= age < 9.0:
                 special.append((gx, gy, age * 0.5, s))
         return (special + out)[:n]
 
 
+# ----------------------------------------------------------------- timeline
 
 
 from track import Track   # noqa: E402
