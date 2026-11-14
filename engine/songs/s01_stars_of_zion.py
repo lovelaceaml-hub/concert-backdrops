@@ -194,8 +194,16 @@ LANTERNS = Track([(0, 0.0), (TOTAL, 0.0)])
 MOTE_Y = (1.05, 0.18)
 
 
+def _mix_hex(a, b, u):
+    ca = [int(a[i:i + 2], 16) for i in (1, 3, 5)]
+    cb = [int(b[i:i + 2], 16) for i in (1, 3, 5)]
+    return "#" + "".join(f"{int(round(x + (y - x) * u)):02x}" for x, y in zip(ca, cb))
+
+
 def MOTE_COLORS(t):
-    return ("#e8ecff", "#c8b8ff") if t < 17.0 else ("#ffe6b0", "#ffc890")
+    u = min(max((t - 12.0) / 10.0, 0.0), 1.0)
+    u = u * u * (3 - 2 * u)
+    return (_mix_hex("#e8ecff", "#ffe6b0", u), _mix_hex("#c8b8ff", "#ffc890", u))
 
 PETALS = Track([(0, 0.0), (TOTAL, 0.0)])
 TRAIL = Track([(0, 0.0), (1.2, 0.55), (9, 0.8), (21, 0.95), (41, 1.05), (TOTAL, 1.0)])
