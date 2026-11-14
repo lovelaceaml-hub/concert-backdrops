@@ -1,5 +1,9 @@
 # Engine upgrade: status and handoff
 
+## 2026-11-14: round 2 engine fixes (branch engine-fix-r2)
+- Fixed the shared faults from the round 2 attack reviews: per-pixel text veil tied to the letters (no ghost before, no smudge after, no dark copy of a rising reflection); faint dissolve edge (`edge_glow`); plate lower-third darkening under BOTTOM_CALM (`calm_gain`); prepare_figure.py removes only thin floor lines (`--keep-lines`); tone-space plate crossfades (no hard sun blob); no text mirrored in the lake; light waves kept off the lower third and the text. Details: engine/UPGRADE-HOWTO.md section F.
+- Proof stills: demo run 43566317460 ("Engine fix r2 demo-stills", 10 stills) and fragment styles run 43566319715 ("Engine fix r2 styles-stills", write and petals), all looked at full size.
+
 ## 2026-11-14: finished in the cloud (step 1 of CLOUD-RUN.md)
 - Branch `engine-scenes-figures` merged into main through pull request 15 (REST merge by the cloud engine helper).
 - Checked the old demo's frame sheets (run 43553805648, artifact "Engine Upgrade Demo frames"): words washed out on the bright sunrise, shard lines too thick, light column too strong, figures too small and faint, white thaw blobs and ripple rows in the lower third, end card pale. All fixed.

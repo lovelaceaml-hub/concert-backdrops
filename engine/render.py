@@ -141,21 +141,20 @@ class Renderer:
     def text_plan(self, t):
         """The text on screen at t, as two slots (texture, form params, bounds, shade strength).
         A: an expression or the closing title. B: the end card lines, else a lyric fragment (any style)."""
-        blank = (self.t_blank, (0.0, 3.0, -1.0, 0.0), (0.0, 1.0), 0.0)
+        blank = (self.t_blank, (0.0, 3.0, -1.0, 0.0), (0.0, 1.0), 0.0, (0.0, 0.0))
         A, B = blank, blank
+        # the shade is only an on/off master: the shaders tie the veil per pixel to the letters themselves
         for wd in self.words:
             m = wd["meta"]
             arrive = words_arrive(m)
             if not (m["form"] <= t < arrive + 0.2):
                 continue
             form_t, fly_t = t - m["form"], t - m["hold"]
-            # the veil stays until the letters have dissolved (about 1.7 s after hold)
-            shade = smoothstep(0.0, S.FORM_DUR * 0.8, form_t) * (1.0 - smoothstep(0.9, 2.1, fly_t))
-            A = (wd["tex"], (form_t, S.FORM_DUR, fly_t, 1.0), wd["bounds"], shade)
+            A = (wd["tex"], (form_t, S.FORM_DUR, fly_t, 1.0), wd["bounds"], 1.0, (0.0, 0.0))
         tg = S.TAGLINE
         if t >= tg["t0"]:
             B = (self.tag["tex"], ((t - tg["t0"]) + 1.35, (tg["t1"] - tg["t0"]), -1.0, 0.92), self.tag["bounds"],
-                 smoothstep(tg["t0"] - 0.3, tg["t1"], t))
+                 1.0, (0.0, 0.0))
             return A, B
         for fr in self.frags:
             m = fr["meta"]
@@ -163,11 +162,10 @@ class Renderer:
                 continue
             dur = max(m["t1"] - m["t0"], 0.5)
             fly = (t - m["out"]) if t > m["out"] else -1.0
-            shade = smoothstep(0.0, 0.45 * dur, t - m["t0"]) * (1.0 - smoothstep(0.0, 1.4, fly) if fly > 0 else 1.0)
-            return A, (fr["tex"], ((t - m["t0"]) + 1.35, dur, fly, m.get("alpha", 0.95)), fr["bounds"], shade)
+            return A, (fr["tex"], ((t - m["t0"]) + 1.35, dur, fly, m.get("alpha", 0.95)), fr["bounds"], 1.0, (0.0, 0.0))
         ts = self.up.text_shadow(t)
         if ts is not None:
-            B = ts
+            B = tuple(ts) + ((0.0, 0.0),) if len(ts) == 4 else tuple(ts)
         return A, B
 
     def frame(self, t, index=0):
@@ -222,7 +220,7 @@ class Renderer:
         self.up.draw_figures(t)
 
         # which text is on screen: A is an expression or the closing title, B the end card lines or a fragment
-        (texA, txA, bndA, shadeA), (texB, txB, bndB, shadeB) = self.text_plan(t)
+        (texA, txA, bndA, shadeA, offA), (texB, txB, bndB, shadeB, offB) = self.text_plan(t)
         credit, c0 = S.credit_state(t, self.credit_bbox)
 
         # protect the text (Astra round 1, finding 3): dim every light drawn so far (motes, petals, snow, beams,
@@ -232,6 +230,8 @@ class Renderer:
             ctx.blend_func = (moderngl.ZERO, moderngl.SRC_COLOR)
             texA.use(location=0); texB.use(location=1); self.t_credit.use(location=2)
             setu(self.p_prot, uTexA=0, uTexB=1, uTexC=2, uShade=(float(shadeA), float(shadeB)), uK=0.94 * prot,
+                 uTxA=tuple(float(v) for v in txA), uTxB=tuple(float(v) for v in txB), uBndA=tuple(bndA),
+                 uBndB=tuple(bndB), uOffA=tuple(offA), uOffB=tuple(offB),
                  uCredit=tuple(float(v) for v in credit), uC0=c0)
             self.v_prot.render(moderngl.TRIANGLE_STRIP)
             ctx.blend_func = (ONE, ONE)
@@ -346,6 +346,7 @@ class Renderer:
              uTextC=9, uCredit=tuple(float(v) for v in credit), uC0=c0, uHi=P["hi"], uEnv=P["env"],
              uSunInt=P["sun_int"], uMtn=mtn, uSkyHor=P["sky_hor"], uGlow=P["glow"], uTrailCol=L("#ffd396"),
              uSun=(0.5, P["sun_y"]), uShade=(float(shadeA), float(shadeB)), uNRings=len(rings), uNWaves=len(waves),
+             uOffA=tuple(float(v) for v in offA), uOffB=tuple(float(v) for v in offB),
              uCalm=calm0, uCalmY=CALM_Y)
         self.up.comp_uniforms(self.p_comp, t, P)
         self.v_comp.render(moderngl.TRIANGLE_STRIP)
