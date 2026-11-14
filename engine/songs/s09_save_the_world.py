@@ -1,8 +1,8 @@
 """Song 09, Let's Save the World (songbook 335): the 1 minute promo, "The Shore of Calling".
 
-Timed to audio/promo/s09.mp3, a 60 second cut of the 4:34 recording (start given by CLIP_START below). A cloud
-vocal separation found no singing in that recording: it is instrumental, close to the live piano solo. The part used is
-the melody of the second verse, where the early church saints call out to us, the Encouragement, and the light of glory.
+Timed to audio/promo/s09.mp3, 2:35 to 3:35 of the 4:34 instrumental recording (the official instrumental track,
+close to the live piano solo). Line times come from the sung guide recording, matched in the cloud. The part used is
+the second verse, where the early church saints call out to us, the Encouragement, and the light of glory.
 Live the song is a piano solo, so the words on screen carry what the audience will not hear sung.
 Design: "09 Let's Save the World - Video Design" (Google Doc) in the project's Drive folder.
 All nine lights are already lit when song 09 begins; here 7 Encouragement shines again (flare and one new ring).
@@ -24,7 +24,7 @@ MUSIC_END = 59.5       # last sounding moment of the promo clip
 SONG_END = 60.0        # length of the promo clip
 TOTAL = 60.0           # promo length
 NFRAMES = int(round(TOTAL * FPS))
-HORIZON = 0.30         # water line, as a fraction of the height from the bottom
+HORIZON = 0.40         # water line: horizon mid, a wide sea (song 09 look, DESIGN-SYSTEM.md section 6)
 
 RIDGE_X0, RIDGE_W = 0.035, 0.93
 
@@ -156,62 +156,72 @@ class Track:
 
 
 # Landmarks inside the promo minute (seconds; promo time = recording time minus CLIP_START).
-CLIP_START = 136.0     # the clip is 2:16 to 3:16 of the 4:34 recording (verse 2)
-# Measured on the recording (instrumental, no singing): verse 2's melody enters about 2:16 after the quiet interlude, breaths near 2:32, 2:51 and 3:03,
-# the chorus starts just after this minute (3:21). Line times are estimates of where each line's melody falls.
-SAINTS = 0.0           # the early church saints walk with their lamps through the windy night
-HONOR = 6.5            # "hardships as honor" (end of the first line of verse 2)
-CALL = 16.0            # their souls call out to us: the lamps brighten together
-ENC_FORM = 22.0        # Encouragement at "Pain and sufferings are our destiny, but Heaven's glory waits for us"
-ENC_ARRIVE = 33.0      # the violet words rise into star 7, which shines again
-GLORY = 33.0           # the light of glory opens behind the mountains (present sufferings cannot compare)
-DAY = 41.0             # "the day of glory" (the last line before the chorus)
+CLIP_START = 155.0     # the clip is 2:35 to 3:35 of the 4:34 instrumental recording (verse 2)
+# Line times were measured in the cloud: the sung guide recording ("09 Let's Save the World (sung guide, for lyric
+# timing).mp3") was transcribed line by line and each line's music was matched to the instrumental (chroma match 0.79
+# to 0.85). In the instrumental, verse 2 runs: saints and "hardships as honor" about 2:30 to 2:42, martyrs whose souls
+# call out to us 2:42 to 2:55, "Pain and sufferings ... Heaven's glory waits for us" 2:55.5 to 3:08, "cannot even
+# compare" 3:08 to 3:20, "With joy ... the day of glory" 3:23 to 3:34, "Heavenly Mother is life" 3:34 (the climax).
+SAINTS = 0.0           # the saints walk with their lamps through the sea mist
+HONOR = 5.5            # "hardships as honor" (sung at the end of the first line, about 2:38 to 2:42)
+CALL = 8.0             # the martyrs' souls call out to us: the lamps brighten together (2:42 to 2:55)
+ENC_FORM = 20.5        # Encouragement at "Pain and sufferings are our destiny, but Heaven's glory waits for us" (2:55.5)
+ENC_ARRIVE = 31.5      # the words rise into star 7, which shines again
+GLORY = 33.0           # "All our present suff'rings cannot even compare to the glory" (3:08): the mist parts
+COMPARE = 36.0         # the fragment "cannot even compare"
 NINTH = 1e9            # no whole-arch glow in this song
-TITLE_HIT = 51.0       # end card
+TITLE_HIT = 50.0       # end card, as "With joy, let us work hard for the day of glory" builds to the climax
 # While the Encouragement is on screen the lake falls perfectly still: peace
 STILL = [(ENC_FORM - 0.5, ENC_ARRIVE)]
 
-# Scene palettes (top of sky, middle, horizon, glow of the low light): the ember night of the early church,
-# a violet hush for the Encouragement, then the light of glory and morning
+# Song 09 look (DESIGN-SYSTEM.md section 6): a misty sea dawn at Galilee. Teal, sea green, pearl and pale gold;
+# morning mist and low cloud, glittering water, horizon mid and a wide sea. No violet, aurora, petals or rain.
+# The saints walk through the grey-green sea mist before dawn; the Encouragement comes in a pearl hush;
+# then the mist parts and the pale gold sun breaks through: the glory that waits for us.
 PAL = {
-    "ember":   ("#06050d", "#1a1222", "#5c3322", "#ffaa62"),
-    "ember2":  ("#08060f", "#241629", "#7a4128", "#ffb870"),
-    "violet":  ("#0a0a22", "#2a1f4e", "#7a5a8e", "#d9c2ff"),
-    "glory":   ("#14204e", "#6a4c86", "#f0a070", "#fff0c8"),
-    "gloryhi": ("#1a2a62", "#8a6292", "#ffc488", "#fff6dc"),
-    "morning": ("#1a3268", "#86608e", "#f3b083", "#ffeac2"),
+    "seamist": ("#04141a", "#0b2e33", "#2f5a58", "#bfe0d0"),
+    "mist":    ("#08242b", "#184548", "#5d8a80", "#e1eedc"),
+    "pearl":   ("#0e353c", "#36686a", "#a6c4b6", "#f4f2e2"),
+    "dawn":    ("#13505a", "#4f8a82", "#d6d3b2", "#fff1c8"),
+    "dawnhi":  ("#1a5e66", "#6aa298", "#e8dfba", "#fff6d8"),
 }
 _pal_keys = [
-    (0.0, "ember"), (10.0, "ember"), (CALL, "ember2"), (ENC_FORM - 1.0, "ember2"), (ENC_FORM + 3.0, "violet"),
-    (ENC_ARRIVE - 1.0, "violet"), (GLORY + 5.0, "glory"), (DAY + 4.0, "gloryhi"), (TITLE_HIT + 3.0, "gloryhi"),
-    (TOTAL, "morning"),
+    (0.0, "seamist"), (10.0, "seamist"), (CALL, "mist"), (ENC_FORM - 1.0, "mist"), (ENC_FORM + 3.0, "pearl"),
+    (ENC_ARRIVE - 1.0, "pearl"), (GLORY + 6.0, "dawn"), (TITLE_HIT - 4.0, "dawnhi"), (TOTAL, "dawnhi"),
 ]
 SKY_TOP = Track([(t, lin(PAL[p][0])) for t, p in _pal_keys])
 SKY_MID = Track([(t, lin(PAL[p][1])) for t, p in _pal_keys])
 SKY_HOR = Track([(t, lin(PAL[p][2])) for t, p in _pal_keys])
 GLOW = Track([(t, lin(PAL[p][3])) for t, p in _pal_keys])
 
-SUN_INT = Track([(0, 0.12), (20, 0.18), (GLORY - 1, 0.22), (GLORY + 1, 0.6), (GLORY + 5, 1.0), (DAY + 5, 1.15),
-                 (TITLE_HIT + 1, 1.3), (TOTAL, 1.25)])
-SUN_Y = Track([(0, 0.24), (GLORY - 1, 0.24), (GLORY + 7, 0.30), (TITLE_HIT + 1, 0.37), (TOTAL, 0.39)])
-SUN_SIZE = Track([(0, 0.10), (GLORY, 0.10), (GLORY + 10, 0.12), (TOTAL, 0.13)])
-STARS = Track([(0, 0.0), (0.2, 0.0), (2.0, 0.85), (GLORY - 3, 0.85), (GLORY + 3, 0.4), (DAY + 5, 0.15), (TOTAL, 0.12)])
-MILKY = Track([(0, 0.3), (ENC_FORM - 4, 0.3), (ENC_FORM, 0.8), (ENC_ARRIVE - 1, 0.8), (GLORY + 5, 0.0), (TOTAL, 0.0)])
-CLOUDS = Track([(0, 0.55), (CALL, 0.45), (GLORY - 1, 0.4), (GLORY + 3, 0.25), (TOTAL, 0.35)])
-AURORA = Track([(0, 0.0), (ENC_FORM - 2, 0.0), (ENC_FORM + 2, 0.3), (ENC_ARRIVE - 1, 0.35), (GLORY + 5, 0.15), (TOTAL, 0.1)])
+# the pale sun waits below the sea horizon, then breaks through the mist
+SUN_INT = Track([(0, 0.10), (20, 0.16), (GLORY - 1, 0.22), (GLORY + 2, 0.55), (GLORY + 7, 0.85), (TITLE_HIT - 4, 1.0),
+                 (TITLE_HIT + 1, 1.08), (TOTAL, 1.05)])
+SUN_Y = Track([(0, HORIZON - 0.05), (GLORY - 1, HORIZON - 0.05), (GLORY + 8, HORIZON + 0.01), (TITLE_HIT + 1, HORIZON + 0.05),
+               (TOTAL, HORIZON + 0.06)])
+SUN_SIZE = Track([(0, 0.10), (GLORY, 0.10), (GLORY + 10, 0.115), (TOTAL, 0.12)])
+STARS = Track([(0, 0.0), (0.2, 0.0), (2.0, 0.35), (GLORY - 3, 0.3), (GLORY + 4, 0.08), (TOTAL, 0.04)])
+MILKY = Track([(0, 0.0), (TOTAL, 0.0)])
+# morning sea mist and low cloud, thick in the night of hardship, parting for the glory
+CLOUDS = Track([(0, 0.95), (CALL, 0.9), (GLORY - 1, 0.85), (GLORY + 4, 0.55), (TITLE_HIT - 6, 0.5), (TOTAL, 0.55)])
+AURORA = Track([(0, 0.0), (TOTAL, 0.0)])
 RAIN = Track([(0, 0.0), (TOTAL, 0.0)])
-MOTES = Track([(0, 0.12), (HONOR + 7, 0.3), (ENC_FORM - 2, 0.25), (GLORY, 0.6), (DAY + 1, 0.8), (TOTAL, 0.6)])
-# the saints' lamps: they brighten when the saints call out to us, then rise away into the light of glory
-LANTERNS = Track([(0, 0.0), (1.5, 0.55), (CALL - 4, 0.7), (CALL, 1.0), (GLORY - 1, 1.0), (GLORY + 7, 0.3), (DAY + 5, 0.0),
+# pearl motes drifting like spray over the sea
+MOTES = Track([(0, 0.15), (HONOR + 7, 0.28), (ENC_FORM - 2, 0.22), (GLORY, 0.45), (TITLE_HIT - 8, 0.6), (TOTAL, 0.5)])
+MOTE_COLORS = ("#eef6ec", "#bfe3d6")
+# the saints' lamps, pale gold in the mist: they brighten when the saints call out to us, then rise into the light
+LANTERNS = Track([(0, 0.0), (1.5, 0.45), (CALL - 4, 0.55), (CALL, 0.9), (GLORY - 1, 0.9), (GLORY + 7, 0.25), (TITLE_HIT - 6, 0.0),
                   (TOTAL, 0.0)])
+LANTERN_COLORS = ("#ffe6a8", "#f3c77c")
 PETALS = Track([(0, 0.0), (TOTAL, 0.0)])
-TRAIL = Track([(0, 0.0), (1.2, 0.45), (GLORY - 3, 0.55), (GLORY + 5, 0.9), (TOTAL, 0.95)])
-ZOOM = Track([(0, 1.0), (ENC_FORM, 0.99), (GLORY, 0.985), (TOTAL, 0.96)])
+TRAIL = Track([(0, 0.0), (1.2, 0.35), (GLORY - 3, 0.45), (GLORY + 5, 0.8), (TOTAL, 0.85)])
+ZOOM = Track([(0, 1.0), (ENC_FORM, 0.99), (GLORY, 0.985), (TOTAL, 0.965)])
 EXPOSURE = Track([(0, 1.0), (TOTAL, 1.0)])
 FADE = Track([(0, 0.0), (0.8, 1.0), (59.0, 1.0), (TOTAL, 0.0)])
-RAYS = Track([(0, 0.0), (GLORY - 1, 0.0), (GLORY + 3, 0.6), (DAY + 3, 0.85), (TITLE_HIT + 1, 0.75), (TOTAL, 0.7)])
-# the sky opens behind the mountains: the glory that waits for us
-PART = Track([(0, 0.0), (GLORY - 1, 0.0), (GLORY + 2, 1.0), (DAY + 3, 1.0), (TITLE_HIT - 1, 0.4), (TOTAL, 0.3)])
+# soft shafts of light through the mist, never the full fan of rays (that belongs to songs 01, 06 and 11)
+RAYS = Track([(0, 0.0), (GLORY - 1, 0.0), (GLORY + 4, 0.35), (TITLE_HIT - 6, 0.45), (TITLE_HIT + 1, 0.4), (TOTAL, 0.38)])
+# the mist parts behind the mountains: the glory that waits for us
+PART = Track([(0, 0.0), (GLORY - 1, 0.0), (GLORY + 3, 1.0), (TITLE_HIT - 6, 1.0), (TITLE_HIT - 1, 0.5), (TOTAL, 0.4)])
 
 # Nine lights on an arch over the stage, one for each expression
 STAR_POS = []
@@ -245,18 +255,19 @@ TITLE = dict(label="Healing Concert", lines=["The Words of Mother\u2019s Love"],
              hold=1e9, star=1e9)
 # Short lyric fragments: the words the audience will not hear sung at the piano solo. Never on screen with the expression.
 FRAGMENTS = [
-    # the forge: hardship glowing into honor (warm orange glow)
-    dict(text="hardships as honor", t0=HONOR, t1=HONOR + 2.0, out=HONOR + 6.5, dy=0.0, size=78, glow="#ff8a4a"),
-    # over the opened light of glory (white gold glow)
-    dict(text="the day of glory", t0=DAY, t1=DAY + 2.0, out=DAY + 6.5, dy=0.0, size=86, glow="#ffcf8a", alpha=1.0),
+    # hardship glowing into honor (warm gold glow in the grey mist)
+    dict(text="hardships as honor", t0=HONOR, t1=HONOR + 2.0, out=HONOR + 5.5, dy=0.0, size=80, glow="#f2b45e"),
+    # as the mist parts for the light of glory (pale gold glow)
+    dict(text="cannot even compare", t0=COMPARE, t1=COMPARE + 2.0, out=COMPARE + 7.0, dy=0.0, size=86, glow="#e9d79a", alpha=1.0),
 ]
 
-TAGLINE = dict(text="Sunday, December 6 \u00b7 4:30 PM \u00b7 6720 W Sahara Ave, Las Vegas", t0=TITLE_HIT + 2.5,
+TAGLINE = dict(text="Sunday, December 6 \u00b7 4:30 PM\nThe World Mission Society Church of God \u00b7 6720 W Sahara Ave, Las Vegas",
+               t0=TITLE_HIT + 2.5,
                t1=TITLE_HIT + 5.5)
 
 # Opening title card that then rests, small, in the top left corner
 CREDIT = dict(song="Let\u2019s Save the World", concert="The Words of Mother\u2019s Love Healing Concert",
-              t_in=0.3, t_full=1.3, t_move=4.2, t_rest=5.8, scale=0.34, alpha_rest=0.58,
+              t_in=0.3, t_full=1.2, t_move=3.6, t_rest=5.0, scale=0.34, alpha_rest=0.58,
               margin_x=0.030, margin_top=0.048)
 
 
