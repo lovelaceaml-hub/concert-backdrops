@@ -203,7 +203,7 @@ SCENES = [
          gain=Track([(0, 1.0), (30.5, 1.0), (32.0, 0.82), (TOTAL, 0.82)])),
     # the rose shore holds to the end: the end card stands on the close dawn shore beside the rose
     dict(image=P + "e_thaw_rose.jpg", t0=39.7, t1=61.0, fade_in=2.5, fade_out=0.0, transition="fade",
-         zoom=(1.10, 1.17), pan=((-0.05, 0.045), (-0.05, 0.045)),
+         zoom=(1.06, 1.12), pan=((0.0, 0.0), (0.0, 0.0)),   # the plate itself is shifted down and right
          gain=Track([(0, 0.85), (41.0, 0.85), (42.0, 0.78), (47.0, 0.78), (49.0, 0.86), (51.0, 0.68),
                      (TOTAL, 0.68)])),
 ]
