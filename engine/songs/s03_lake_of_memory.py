@@ -138,22 +138,20 @@ class Song:
 
 from track import Track   # the shared Track refuses keys that are not strictly increasing  # noqa: E402
 
-# Promo v2 (PHASE2.md, design section 17): five painted scenes (assets/plates/s03/), people of light, effect layers.
-#   1  0 to 10    The storm stands still (frozen_rain_lanterns): raindrops hang in the air, turning from cold blue
-#                 glass into gold lanterns from the left. A child of light sits on the near shore, knees drawn up;
-#                 at 7 s the child dissolves and its sparks fly to the middle of the sky, where Her hands appear.
-#   2  8 to 23    Her warm hands (aurora_hands_night): violet aurora over a mirror lake, sky lanterns rising.
-#                 Mother's hands of light (sleeves only) gather out of the air, open and cupped; "Her warm hands"
-#                 rises out of the lake above them; at 19.4 the hands close into prayer, then drift up as light.
-#   3  20 to 41   Her prayer (prayer_mirror): one column of light from the horizon into the sky, the lake a mirror.
-#                 People of light act out ENCOURAGEMENT (one prays over a kneeling friend, then rests a hand on
-#                 their back and cheers them on); two small pairs echo it on the far shores. The full words hold
-#                 about 7 s, then fly to light 7 (flare and a new ring).
+# Promo v2, round 3 (Anthony: a clip of the real backdrop, people of light rare and always moving).
+# Five painted scenes (assets/plates/s03/), the song's own effects, the words:
+#   1  0 to 10    The storm stands still (frozen_rain_lanterns): raindrops hang in the air, gold on the left and
+#                 cold blue glass on the right. A child of light gathers on the shore for a moment (2 to 4.6) and
+#                 its light flies up to the middle of the sky.
+#   2  8 to 23    Her warm hands (aurora_hands_night): violet aurora, sky lanterns, mirror lake. Mother's hands of
+#                 light (sleeves only) gather cupped, close into prayer and rise away as light (9.4 to 18.4);
+#                 "Her warm hands" rises out of the lake above them.
+#   3  20 to 41   Her prayer (prayer_mirror): one column of light from the horizon into the sky, a mirror lake.
+#                 No people: the column, the light and the full words carry ENCOURAGEMENT (about 7 s solid),
+#                 then the words fly to light 7 (flare and a new ring).
 #   4  39 to 50   The mended moon (mended_moon_predawn): the upper sky breaks into glass and drifts back
-#                 together into a great moon held by gold seams; gold rings spread on the lake. The child stands
-#                 up, seen from behind, and "courage to go on" is written by a pen of light.
-#   5  47 to 60   The rose dawn (rose_dawn): the sun over the mountains, a faint city of light in the clouds,
-#                 the mended moon, rose petals; the end card.
+#                 together over the moon held by gold seams; "courage to go on" written by a pen of light.
+#   5  47 to 60   The rose dawn (rose_dawn): sun, a faint city of light, the mended moon, rose petals, end card.
 
 # Landmarks in the promo clip (seconds into the clip; studio time minus 194 s). Section steps are measured
 # from the studio recording's loudness; line times are estimates.
@@ -247,8 +245,8 @@ PHRASES = [
     dict(label="Concession", lines=["“Please, after you.”"], size=164, **_OFF),
     dict(label="Respect", lines=["“I’d love to hear more", "about your thoughts.”"], size=128, **_OFF),
     # Her prayer: "Putting Her hands together, earnestly She prayed..." Lit in song 01, spoken again here.
-    dict(label="Encouragement", lines=["“I’ll pray (or root) for you.", "Everything will go well.”"], size=96,
-         y=0.30, form=ENC_FORM, hold=ENC_HOLD, star=-100.0, arrive=ENC_ARRIVE),
+    dict(label="Encouragement", lines=["“I’ll pray (or root) for you.", "Everything will go well.”"], size=118,
+         form=ENC_FORM, hold=ENC_HOLD, star=-100.0, arrive=ENC_ARRIVE),
     dict(label="Consideration", lines=["“Can I give you a hand", "with anything?”"], size=128, **_OFF),
     dict(label="Compliment", lines=["“You’re amazing.", "You’re doing great!”"], size=140, **_LIT),
 ]
@@ -256,36 +254,23 @@ FORM_DUR = 3.0
 TITLE = dict(label="Healing Concert", lines=["The Words of Mother’s Love"], size=150, form=TITLE_HIT - FORM_DUR,
              hold=1e9, star=1e9)
 
-# B. people of light. Song figures (assets/song_figures/s03/, outline art made from the phase 1 pictures in Drive
-# Assets/s03) and the shared library's Encouragement poses. No pose changes while words are on screen.
-_F = "assets/figures/"
+# B. people of light, rare and always moving (round 3): two brief appearances, never under the words. Song
+# figures in assets/song_figures/s03/ (outline art made from the phase 1 pictures in Drive Assets/s03).
 _SF = "assets/song_figures/s03/"
-_ENC = [_F + "encouragement_a.png", _F + "encouragement_b.png", _F + "encouragement_c.png"]
 FIGURES = [
-    # the child sits alone in the storm; its light is carried up to where Her hands appear
-    dict(poses=[_SF + "child_sitting.png"], t0=0.8, t1=7.0, x=0.20, y=0.25, height=0.20, dissolve=3.0,
+    # the child huddled in the storm: gathers, and at once its light flies up to where Her hands will appear
+    dict(poses=[_SF + "child_sitting.png"], t0=2.0, gather=2.0, t1=4.6, x=0.20, y=0.25, height=0.20, dissolve=3.0,
          to=(0.5, 0.45), color="#ffd8b0", glow=0.9, particles=7000),
-    # Mother's hands (sleeves only): open and cupped, then closed in prayer, then rising as light
-    dict(poses=[_SF + "mother_hands_cupped.png", _SF + "mother_hands_praying.png"], t0=8.6, t1=21.8,
-         pose_times=[19.4], x=0.5, y=0.33, height=0.36, dissolve=2.0, leave="drift", color="#ffc9b8",
+    # Mother's hands (sleeves only): gather open and cupped, close into prayer, then rise away as light
+    dict(poses=[_SF + "mother_hands_cupped.png", _SF + "mother_hands_praying.png"], t0=9.4, gather=2.4, t1=16.2,
+         pose_times=[13.2], x=0.5, y=0.33, height=0.36, dissolve=2.2, leave="drift", color="#ffc9b8",
          glow=1.0, particles=12000),
-    # ENCOURAGEMENT acted out: pray over the exhausted friend, then a hand on the back and a cheer
-    dict(poses=_ENC[:2], t0=22.6, gather=2.4, t1=ENC_HOLD - 0.5, pose_times=[25.0], x=0.5, y=0.20,
-         height=0.40, to_star=6, color="#ffd2a0"),
-    # everyday echoes on the far shores (one pose each, staggered)
-    dict(poses=[_ENC[2]], t0=24.2, t1=ENC_HOLD - 1.2, x=0.14, y=0.305, height=0.13, to_star=6,
-         color="#ffc8b4", glow=0.8, particles=5000),
-    dict(poses=[_ENC[1]], t0=25.4, t1=ENC_HOLD - 0.8, x=0.86, y=0.305, height=0.13, to_star=6,
-         color="#ffc8b4", glow=0.8, particles=5000, flip=True),
-    # the child stands up after the prayer, seen from behind, facing the mended moon
-    dict(poses=[_SF + "child_standing.png"], t0=41.4, gather=2.6, t1=46.4, x=0.22, y=0.22, height=0.30,
-         dissolve=3.0, leave="drift", color="#ffd8b0", glow=0.95, particles=8000),
 ]
 
 # Short lyric fragments (never on screen with an expression). Times are estimates from the studio recording.
 FRAGMENTS = [
     # rises out of the lake (short time in the water), then rests above Her hands
-    dict(text="Her warm hands", t0=11.2, t1=13.8, out=17.2, dy=0.11, size=88, glow="#ffb468",
+    dict(text="Her warm hands", t0=10.4, t1=13.0, out=16.0, dy=0.11, size=88, glow="#ffb468",
          style="reflection", line=0.31),
     # below the moon, beside the standing child
     dict(text="courage to go on", t0=40.2, t1=42.8, out=45.8, dy=-0.12, size=84, glow="#ffc070", style="write"),
