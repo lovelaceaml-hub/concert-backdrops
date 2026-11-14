@@ -153,11 +153,11 @@ NINTH = 1e9            # the whole arch does not glow as one in this song
 
 # The reading-time contract (PHASE2.md item 4): words form over about 3.75 s, then stay solid at least 6 s
 # (hold >= form + 9.75), then dissolve over about 1.6 s; the next text starts at least 0.5 s after that.
-C_FORM, C_HOLD = 8.0, 17.9          # Concession: solid 11.75 to 17.9 (6.15 s)
-I_FORM, I_HOLD = 20.0, 29.8         # Inclusiveness: starts 0.5 s after Concession's dissolve ends (19.5)
-F1 = (33.4, 36.4, 39.4)             # "waters this wilderness": after the ripple's ring has passed the words
-F2 = (41.5, 44.0, 47.0)             # "the fragrance of Her love": solid 44.0 to 47.0
-TITLE_HIT = 52.1                    # title forms from 49.1 (0.5 s after the last fragment has left)
+C_FORM, C_HOLD = 7.6, 17.4          # Concession: solid 11.35 to 17.4 (6.05 s); dissolved by 19.0
+I_FORM, I_HOLD = 21.0, 30.8         # Inclusiveness: after its people have gathered (20.9); solid 24.75 to 30.8
+F1 = (33.9, 36.9, 39.9)             # "waters this wilderness": after the ripple's ring has passed the words
+F2 = (42.0, 44.5, 47.5)             # "the fragrance of Her love": solid 44.5 to 47.5
+TITLE_HIT = 52.6                    # title forms from 49.6 (0.5 s after the last fragment has left)
 
 SKYLINE_LANTERN = 0.0     # the scenes have their own land; the small light along the drawn skyline is hidden
 BOTTOM_CALM = 1.0         # calm lower third (Astra round 1, finding 12)
@@ -186,7 +186,7 @@ CLOUDS = Track([(0, 0.6), (TOTAL, 0.6)])
 AURORA = Track([(0, 0.0), (TOTAL, 0.0)])
 RAIN = Track([(0, 0.0), (TOTAL, 0.0)])
 MOTES = Track([(0, 0.6), (6, 0.35), (18, 0.25), (31, 0.25), (34, 0.45), (40, 0.55), (48, 0.55), (TOTAL, 0.5)])
-LANTERNS = Track([(0, 0.0), (46.0, 0.0), (50.0, 0.45), (PEAK_END, 0.55), (TOTAL, 0.5)])   # lanterns lift at the end
+LANTERNS = Track([(0, 0.0), (46.0, 0.0), (49.0, 1.0), (TOTAL, 1.0)])   # lanterns lift at the end
 PETALS = Track([(0, 0.0), (TOTAL, 0.0)])
 MOTE_COLORS = ("#ffd27a", "#ff9a3c")     # golden dust, wheat gold to deep orange
 LANTERN_COLORS = ("#ffb04a", "#e8692a")
@@ -198,59 +198,70 @@ RAYS = Track([(0, 0.75), (4, 0.6), (44, 0.6), (49, 0.75), (TOTAL, 0.7)])
 PART = Track([(0, 0.5), (TOTAL, 0.5)])
 
 # A. six scenes. Plates in assets/plates/s06/ (painted with code, see paint_plates.py); scenes 1 and 6 are the
-# engine's own lake under the harvest sky with the golden field.
+# engine's own lake under the harvest sky with the golden field. Every change of scene starts only once the words
+# before it have gone, or is a plain fade (attack round 2).
 P = "assets/plates/s06/"
 SCENES = [
     # 2. the narrow shore path: still water on the left, tall glowing wheat on the right (Concession)
-    dict(image=P + "path.jpg", t0=2.6, t1=20.4, fade_in=2.6, fade_out=2.4, transition="bloom", flash=0.7,
+    dict(image=P + "path.jpg", t0=5.0, t1=20.6, fade_in=2.4, fade_out=1.8, transition="bloom", flash=0.4,
          zoom=(1.10, 1.02), pan=((0.02, 0.0), (0.0, 0.0)),
-         gain=Track([(0, 1.0), (7.5, 1.0), (10.0, 0.85), (19.0, 0.85), (20.4, 1.0)])),
+         gain=Track([(0, 1.0), (7.5, 1.0), (10.0, 0.85), (19.0, 0.85), (20.6, 1.0)])),
     # 3. the water's edge at rose ember dusk, the family's lantern floating dark (Inclusiveness)
-    dict(image=P + "shore_dark.jpg", t0=18.0, t1=25.6, fade_in=2.4, fade_out=2.0, transition="dissolve",
-         zoom=(1.08, 1.05), water=True, water_line=0.505, water_bottom=0.21, water_strength=0.7),
-    # the same shore with the lantern relit, as the older one lifts the young one up
-    dict(image=P + "shore_lit.jpg", t0=23.6, t1=32.6, fade_in=2.0, fade_out=1.2, transition="fade",
-         zoom=(1.05, 1.02), water=True, water_line=0.505, water_bottom=0.21, water_strength=0.7),
+    dict(image=P + "shore_dark.jpg", t0=18.8, t1=24.6, fade_in=1.8, fade_out=1.4, transition="fade",
+         zoom=(1.06, 1.04), water=True, water_line=0.505, water_bottom=0.21, water_strength=0.4),
+    # the older one has lifted the lantern out of the water, relit: its warm light now surrounds the two
+    dict(image=P + "shore_glow.jpg", t0=23.2, t1=33.0, fade_in=1.4, fade_out=1.0, transition="fade",
+         zoom=(1.04, 1.02), water=True, water_line=0.505, water_bottom=0.21, water_strength=0.4),
     # 4. the cracked wilderness at dusky gold ...
-    dict(image=P + "wilderness_dry.jpg", t0=31.4, t1=34.6, fade_in=1.2, fade_out=2.0, transition="fade",
-         zoom=(1.02, 1.06)),
+    dict(image=P + "wilderness_dry.jpg", t0=32.0, t1=35.0, fade_in=1.0, fade_out=2.0, transition="fade",
+         zoom=(1.02, 1.05)),
     # ... which the living gold water fills, spreading out from where the light pours in
-    dict(image=P + "wilderness_gold.jpg", t0=32.6, t1=40.8, fade_in=2.0, fade_out=2.4, transition="ripple",
-         ripple_from=(0.5, 0.40), zoom=(1.06, 1.09),
-         gain=Track([(0, 1.0), (32.6, 0.9), (40.8, 0.9)])),
-    # 5. the healed land: blossom trees along golden streams, wheat bending in the wind
-    dict(image=P + "blossom.jpg", t0=38.4, t1=48.4, fade_in=2.4, fade_out=3.0, transition="dissolve",
-         zoom=(1.03, 1.09), pan=((0.0, 0.0), (0.015, 0.01)),
-         gain=Track([(0, 0.95), (40.0, 0.85), (48.4, 0.85)])),
-    # 6. from 45.4 the plate gives way to the edge of heaven: the engine's lake, golden field, rays and lanterns
+    dict(image=P + "wilderness_gold.jpg", t0=33.0, t1=43.5, fade_in=2.0, fade_out=2.0, transition="ripple",
+         ripple_from=(0.78, 0.40), zoom=(1.05, 1.09),
+         gain=Track([(0, 1.0), (33.0, 0.9), (43.5, 0.9)])),
+    # 5. the healed land: blossom trees along golden streams, wheat bending in the wind (after the first fragment)
+    dict(image=P + "blossom.jpg", t0=41.5, t1=48.6, fade_in=2.0, fade_out=3.0, transition="fade",
+         zoom=(1.03, 1.08), pan=((0.0, 0.0), (0.015, 0.01)),
+         gain=Track([(0, 0.9), (43.0, 0.85), (48.6, 0.85)])),
+    # 6. from 45.6 the plate gives way to the edge of heaven: the engine's lake, golden field, rays and lanterns
 ]
 
-# B. people of light (the shared library in assets/figures/)
+# B. people of light. Song 06's own poses in assets/song_figures/s06/ (built from the shared library by
+# make_poses.py, so the acts differ from song 04's), plus a walking pair from the library at the end.
+F = "assets/song_figures/s06/"
 FIGURES = [
-    # Concession, "Please, after you.": both step toward the same spot on the narrow path and pause; then one
-    # steps aside with an open arm and the other walks ahead with a small grateful bow.
-    dict(poses=["assets/figures/concession_a.png", "assets/figures/concession_b.png"],
-         t0=4.0, t1=17.4, pose_times=[8.2], morph=2.2, dissolve=2.5, x=0.47, y=0.20, height=0.40, to_star=4, color="#cfe0ff"),
-    # Inclusiveness, "It's okay. I understand.": the one who did wrong kneels, sorry; the other reaches down,
-    # lifts them up by both hands, and they embrace (while the lantern on the water is relit).
-    dict(poses=["assets/figures/inclusiveness_a.png", "assets/figures/inclusiveness_b.png",
-                "assets/figures/inclusiveness_c.png"],
-         t0=19.8, t1=29.3, pose_times=[23.2, 26.4], x=0.40, y=0.21, height=0.40, to_star=3, color="#ffb7cf"),
+    # Concession, "Please, after you.": they arrive at the same spot on the narrow path from opposite sides and
+    # stop short; one steps aside with an open arm; the other walks past, bowing in thanks, and is seen off.
+    dict(poses=[F + "s06_concession_1.png", F + "s06_concession_2.png", F + "s06_concession_3.png"],
+         t0=4.6, t1=16.9, pose_times=[7.6, 11.6], morph=2.2, dissolve=2.0, x=0.47, y=0.24, height=0.40,
+         to_star=4, color="#cfe0ff"),
+    # Inclusiveness, "It's okay. I understand.": the young one (veiled, kneeling) dropped the family's lantern in
+    # the lake and kneels, sorry; the older one lays a hand on their back and lifts the lantern out, relit (the
+    # lantern leaves the water and its light surrounds them); standing, hands joined, the lantern is given back.
+    dict(poses=[F + "s06_inclusiveness_1.png", F + "s06_inclusiveness_2.png", F + "s06_inclusiveness_3.png"],
+         t0=18.9, t1=30.3, gather=2.0, dissolve=2.0, pose_times=[22.8, 26.4], x=0.40, y=0.24, height=0.40,
+         to_star=3, color="#ffc4a8"),
+    # the edge of heaven: two small pairs walking on the far shores, rising into sparks before the end card
+    dict(poses=["assets/figures/concession_a.png"], t0=45.4, t1=48.8, gather=2.0, dissolve=2.4, leave="drift",
+         x=0.17, y=0.35, height=0.17, color="#ffd9a0", glow=0.8),
+    dict(poses=["assets/figures/concession_a.png"], t0=45.8, t1=49.0, gather=2.0, dissolve=2.4, leave="drift",
+         x=0.83, y=0.35, height=0.17, color="#ffd9a0", glow=0.8, flip=True),
 ]
 
 # C. signature effects
 # the golden field of light: an ocean of wheat in scene 1, waves of grain again at the edge of heaven
-GOLDEN_FIELD = Track([(0, 0.85), (3.0, 0.85), (5.2, 0.0), (45.0, 0.0), (49.0, 0.5), (PEAK_END, 0.55), (TOTAL, 0.5)])
-FIELD_LINE = Track([(0, 0.40), (5.2, 0.40), (45.0, 0.34), (TOTAL, 0.34)])
+GOLDEN_FIELD = Track([(0, 0.95), (5.0, 0.95), (7.4, 0.0), (45.6, 0.0), (49.0, 0.8), (PEAK_END, 0.85), (TOTAL, 0.8)])
+FIELD_LINE = Track([(0, 0.40), (7.4, 0.40), (45.6, 0.36), (TOTAL, 0.36)])
 FIELD_COLOR = "#ffc35a"
 FIELD_SPEED = 1.2
-# living water: a column of light pours from heaven into the cracked land, and the gold spreads from there
-BEAM = Track([(0, 0.0), (31.4, 0.0), (32.8, 0.42), (37.4, 0.42), (39.6, 0.0), (TOTAL, 0.0)])
-BEAM_FROM = (0.5, 1.02)
-BEAM_TO = (0.5, 0.40)
-BEAM_WIDTH = (0.012, 0.06)
+# living water: a column of light pours from heaven into the cracked land, right of the words, and the gold
+# spreads out from where it lands
+BEAM = Track([(0, 0.0), (32.0, 0.0), (33.2, 0.42), (38.0, 0.42), (40.4, 0.0), (TOTAL, 0.0)])
+BEAM_FROM = (0.80, 1.02)
+BEAM_TO = (0.78, 0.40)
+BEAM_WIDTH = (0.012, 0.05)
 BEAM_COLOR = "#ffdc96"
-TEXT_SHADOW = Track([(0, 1.1), (30.0, 1.1), (33.0, 1.5), (47.0, 1.5), (50.0, 1.3), (TOTAL, 1.3)])
+TEXT_SHADOW = Track([(0, 1.1), (31.0, 1.1), (33.5, 1.5), (47.0, 1.5), (50.0, 1.3), (TOTAL, 1.3)])
 
 # Nine lights on an arch over the stage, one for each expression
 STAR_POS = []
@@ -260,8 +271,8 @@ for i in range(9):
     STAR_POS.append((x, y))
 
 # Lit before song 06 (concert star history): 3 Apology, 4 Inclusiveness, 6 Respect, 7 Encouragement, 8 Consideration,
-# 9 Compliment. This song lights 5 Concession for the first time (guide about 70.8 s, promo 8.0 to 19.4; a
-# placement exception awaiting Anthony) and Inclusiveness shines again at "Pardon one another" (relit 31.3).
+# 9 Compliment. This song lights 5 Concession for the first time (guide about 70.8 s, promo 7.6 to 18.9; a
+# placement exception awaiting Anthony) and Inclusiveness shines again after "Pardon one another" (relit 32.3).
 OFF = dict(form=1e9, hold=1e9, star=1e9)
 LIT = dict(form=1e9, hold=1e9, star=-100.0)
 PHRASES = [
@@ -320,7 +331,7 @@ def credit_state(t, bbox):
 
 
 # Waves of light that cross the sky when a light is lit or shines again (time, x, y, strength)
-WAVES = [(PHRASES[4]["star"], STAR_POS[4][0], STAR_POS[4][1], 1.0),
+WAVES = [(PHRASES[4]["star"], STAR_POS[4][0], STAR_POS[4][1], 0.4),
          (PHRASES[3]["arrive"], STAR_POS[3][0], STAR_POS[3][1], 0.45),
          (TITLE_HIT, 0.5, 0.62, 1.2)]
 

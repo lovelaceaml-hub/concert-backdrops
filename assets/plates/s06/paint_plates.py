@@ -6,7 +6,7 @@ No people, no text; the bottom third stays dark and calm for the performers.
   path.jpg            narrow shore path between still water and tall glowing wheat, ember dusk (Concession)
   shore_dark.jpg      the near shore, low and close, still water, rose ember dusk, dark wheat behind, the family's
                       lantern floating dark on the water (Inclusiveness)
-  shore_lit.jpg       the same shore with the lantern relit, its light and reflection on the still water
+  shore_glow.jpg      the same shore after the lantern has been lifted out, relit: its warm light around the two
   wilderness_dry.jpg  a cracked dry wilderness in dusky gold under the low sun
   wilderness_gold.jpg the same land with living gold water running in every crack, green gold shoots
   blossom.jpg         the healed land: blossom trees along golden streams, wheat bending in a warm haze
@@ -83,8 +83,9 @@ def sky(stops, sun, sun_col, sun_r=0.035, glow=0.55, rays=0.0, seed=1):
         a = np.interp((ang + np.pi) / (2 * np.pi), np.linspace(0, 1, 4096), n)
         ray = np.clip((a - 0.45) * 2.2, 0, 1) ** 1.5 * np.exp(-r / 0.9) * (r > sun_r)
         img += sc[None, None, :] * (rays * ray)[..., None]
-    disc = np.clip(1.0 - (r - sun_r) / 0.004, 0, 1) * (sun_r > 0)
-    img = img * (1 - disc[..., None]) + 1.4 * hexc("#fff4d6")[None, None, :] * disc[..., None]
+    disc = np.clip(0.5 - (r - sun_r) / 0.016, 0, 1) * (sun_r > 0)     # a soft edged disc
+    disc = disc * disc * (3 - 2 * disc)
+    img = img * (1 - disc[..., None]) + hexc("#fff0d0")[None, None, :] * disc[..., None]
     # thin warm clouds in bands
     cl = noise2(5, seed + 7, 5)
     band = np.exp(-((V - sun[1] - 0.10) / 0.12) ** 2)
@@ -210,7 +211,10 @@ def dust(img, n, seed, col="#ffd27a", region=(0, 1, 0.3, 1.0)):
 
 
 def save(img, name):
-    a = np.clip(img, 0, 1) ** (1 / 1.0)
+    # soft shoulder on the highlights: nothing clips, the brightest sun peaks at about 235 of 255
+    k, top = 0.62, 0.92
+    a = np.where(img > k, k + (img - k) / (1 + (img - k) / (top - k)), img)
+    a = np.clip(a, 0, 1)
     Image.fromarray((a * 255 + 0.5).astype(np.uint8)).save(os.path.join(OUT, name), quality=88, optimize=True)
     print("wrote", name, os.path.getsize(os.path.join(OUT, name)) // 1024, "KB")
 
@@ -285,7 +289,12 @@ def plate_shore(lit):
     cap = np.clip(1 - np.maximum(np.abs(X - lx) * ASP / (lw * 0.75), np.abs(V - (lv + lh / 2 + 0.004)) / 0.004) ** 6, 0, 1)
     handle = np.exp(-((np.hypot((X - lx) * ASP, (V - (lv + lh / 2 + 0.006)) * 1.0) - 0.009) / 0.0012) ** 2) * (V > lv + lh / 2 + 0.006)
     shape = np.clip(body + cap + handle, 0, 1)
-    if lit:
+    if lit == "glow":
+        shape = shape * 0
+        # the lantern has been lifted out of the water: its warm light now surrounds the two on the shore
+        halo = np.exp(-np.hypot((X - 0.32) * ASP, (V - 0.52) * 1.3) / 0.13)
+        img += hexc("#ffb070") * (0.30 * halo)[..., None]
+    elif lit:
         core = np.exp(-(((X - lx) * ASP / 0.012) ** 2 + ((V - lv) / 0.018) ** 2))
         img = img * (1 - shape[..., None]) + hexc("#ffd890") * (shape * (0.75 + 0.5 * core))[..., None]
         halo = np.exp(-np.hypot((X - lx) * ASP, V - lv) / 0.045)
@@ -300,7 +309,7 @@ def plate_shore(lit):
     img = dust(img, 220, 52, "#ffb0a0", (0.0, 1.0, 0.40, 0.9))
     img = calm_bottom(img, 0.24, 0.45)
     img = vignette(img, 0.40)
-    save(img, "shore_lit.jpg" if lit else "shore_dark.jpg")
+    save(img, {"glow": "shore_glow.jpg", True: "shore_lit.jpg", False: "shore_dark.jpg"}[lit])
 
 
 def _cracks(line, seed):
@@ -424,7 +433,7 @@ def plate_blossom():
 if __name__ == "__main__":
     plate_path()
     plate_shore(False)
-    plate_shore(True)
+    plate_shore("glow")
     plate_wilderness(False)
     plate_wilderness(True)
     plate_blossom()
