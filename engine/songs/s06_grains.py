@@ -238,7 +238,8 @@ FRAGMENTS = [
     dict(text="the fragrance of Her love", t0=36.0, t1=37.5, out=40.6, dy=0.0, size=74, glow="#f4b6a6"),
 ]
 
-TAGLINE = dict(text="Sunday, December 6 · 4:30 PM · 6720 W Sahara Ave, Las Vegas", t0=52.0, t1=55.0)
+TAGLINE = dict(text="Sunday, December 6 · 4:30 PM\nThe World Mission Society Church of God · 6720 W Sahara Ave, Las Vegas",
+               t0=52.0, t1=55.0)
 
 # Opening title card that then rests, small, in the top left corner
 CREDIT = dict(song="Heavenly Mother Tells Us to Be Grains", concert="The Words of Mother’s Love Healing Concert",
