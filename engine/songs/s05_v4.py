@@ -189,7 +189,7 @@ PAL = {
     "golden":  ("#122a60", "#28447a", "#7e5a4a", "#ffd8a0"),   # warm late afternoon, handed to song 06
 }
 _pal_keys = [(0.0, "apricot"), (6.0, "apricot"), (12.5, "haze"), (13.8, "haze"), (15.4, "rose"), (26.6, "rose"),
-             (28.3, "clear"), (38.5, "clear"), (41.5, "bless"), (48.5, "bless"), (51.5, "golden"), (TOTAL, "golden")]
+             (28.3, "clear"), (38.5, "clear"), (41.5, "bless"), (47.0, "bless"), (51.0, "golden"), (TOTAL, "golden")]
 SKY_TOP = Track([(t, lin(PAL[p][0])) for t, p in _pal_keys])
 SKY_MID = Track([(t, lin(PAL[p][1])) for t, p in _pal_keys])
 SKY_HOR = Track([(t, lin(PAL[p][2])) for t, p in _pal_keys])
@@ -197,7 +197,7 @@ GLOW = Track([(t, lin(PAL[p][3])) for t, p in _pal_keys])
 
 # The sun rests low in the haze over the water; at the climax it surges and breaks through
 SUN_INT = Track([(0, 0.45), (13.8, 0.42), (15.4, 0.32), (26.6, 0.32), (28.3, 0.42), (38.5, 0.42), (41.2, 0.30),
-                 (42.2, 0.95), (44.5, 1.05), (48.5, 0.80), (51.5, 0.22), (TOTAL, 0.22)])
+                 (42.2, 0.90), (44.5, 0.95), (47.5, 0.70), (51.0, 0.22), (TOTAL, 0.22)])
 SUN_Y = Track([(0, 0.285), (TOTAL, 0.28)])
 SUN_SIZE = Track([(0, 0.075), (41.0, 0.075), (43.5, 0.095), (48.5, 0.09), (51.5, 0.075), (TOTAL, 0.075)])
 STARS = Track([(0, 0.0), (TOTAL, 0.0)])
@@ -223,7 +223,7 @@ ZOOM = Track([(0, 1.0), (13.8, 1.0), (15.6, 1.09), (26.6, 1.11), (28.4, 1.0), (4
 EXPOSURE = Track([(0, 1.0), (TOTAL, 1.0)])
 FADE = Track([(0, 0.0), (0.8, 1.0), (59.7, 1.0), (TOTAL, 0.0)])
 RAYS = Track([(0, 0.25), (13.8, 0.25), (15.4, 0.05), (26.6, 0.05), (28.3, 0.55), (38.5, 0.55), (41.0, 0.2),
-              (42.5, 1.0), (47.5, 0.9), (51.5, 0.25), (TOTAL, 0.25)])
+              (42.5, 0.8), (47.5, 0.7), (51.5, 0.25), (TOTAL, 0.25)])
 FLASH = Track([(0, 0.0), (41.9, 0.0), (42.4, 0.22), (44.0, 0.0), (TOTAL, 0.0)])
 # spring colors: soft rose and cream blossom petals, green gold pollen of light drifting gently upward
 PETAL_COLORS = ("#ffa9bf", "#fff0e2")
@@ -313,7 +313,7 @@ def credit_state(t, bbox):
     tx = c["margin_x"] + c["scale"] * (x1 - x0) / 2.0
     ty = 1.0 - c["margin_top"] - c["scale"] * (y1 - y0) / 2.0
     cx, cy = cx0 * (1 - m) + tx * m, cy0 * (1 - m) + ty * m
-    alpha = a_in * (1.0 + (c["alpha_rest"] - 1.0) * m) * (1.0 - ss(49.0, 50.0, t))   # gone before the end card
+    alpha = a_in * (1.0 + (c["alpha_rest"] - 1.0) * m) * (1.0 - ss(39.6, 40.6, t))   # gone before the bright climax (no dark round it)
     return (cx, cy, scale, alpha), (cx0, cy0)
 
 
