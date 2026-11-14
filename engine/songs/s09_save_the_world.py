@@ -9,12 +9,12 @@ All nine lights are already lit when song 09 begins; here 7 Encouragement shines
 
 Promo v2 (PHASE2.md, design section 15 "Promo v2: scenes"), round 3: Anthony's five painted plates
 (assets/plates/s09/) and three special figures (assets/song_figures/s09/); people appear rarely and always moving.
-1 the saints' shore in sea mist: two saints of light gather on the shore path with clay lamps (0 to 10 s);
+1 the saints' shore in sea mist: two saints of light walk along the shore path with clay lamps (0 to 10 s);
 2 the shore before dawn: the saints lift their lamps and rise away as light (8.5 to 15 s);
-3 the encounter shore: the Encouragement in full over the still mirror sea, then into star 7 (13.5 to 34 s);
-4 the glory: the mist parts, a column of light and a path of gold on the sea (32 to 44 s);
+3 the encounter shore: the Encouragement in full over the still mirror sea, then into star 7 (13.5 to 35 s);
+4 the glory: the mist parts, a column of light and a path of gold on the sea (32.5 to 41.4 s);
 5 the boats at morning: a fisherman of light in the near boat casts the net and the net of light spreads over the
-  sky, then the end card (39.8 to 60 s).
+  sky, then the end card (38.9 to 60 s).
 """
 import os
 import numpy as np
@@ -159,9 +159,9 @@ ENC_HOLD = 30.0        # the words start to fly (6.2 s fully formed and solid)
 ENC_ARRIVE = 32.0      # the words reach star 7, which shines again and gains a thin ring
 GLORY = 33.5           # verse 2 line 4 (3:08): dawn begins after the arrival, the mist parts
 COMPARE = 33.0         # fragment "cannot even compare" (verse 2 line 4)
-NET_CAST = 43.4        # the fisherman casts the net and the net of light spreads from it (verse 2 line 5)
+NET_CAST = 42.6        # the fisherman casts the net and the net of light spreads from it (verse 2 line 5)
 NINTH = 1e9            # no whole-arch glow in this song
-TITLE_HIT = 50.0       # end card as verse 2 line 5 builds to the chorus
+TITLE_HIT = 51.5       # end card as verse 2 line 5 builds to the chorus (the net holds at strength before it)
 FORM_DUR = 3.0
 # While the Encouragement is on screen the sea falls perfectly still: peace
 STILL = [(ENC_ACT, ENC_ARRIVE + 0.5)]
@@ -195,7 +195,7 @@ GLOW = Track([(t, lin(PAL[p][3])) for t, p in _pal_keys])
 # the pale sun waits below the sea horizon, then rises as a disc for the dawn (absolute heights: the horizon moves)
 SUN_INT = Track([(0, 0.08), (CALL, 0.10), (CALL + 4, 0.18), (ENC_ACT, 0.14), (GLORY, 0.18), (GLORY + 3, 0.55),
                  (GLORY + 7, 0.85), (NET_CAST + 2, 0.9), (TITLE_HIT, 0.72), (TITLE_HIT + 3, 0.55), (TOTAL, 0.55)])
-SUN_Y = Track([(0, 0.28), (GLORY, 0.30), (GLORY + 6.5, 0.47), (41.0, 0.47), (44.0, 0.565), (47.5, 0.57), (51.0, 0.40),
+SUN_Y = Track([(0, 0.28), (GLORY, 0.30), (GLORY + 6.0, 0.47), (40.2, 0.47), (43.0, 0.565), (48.5, 0.57), (52.5, 0.40),
                (TOTAL, 0.40)])
 SUN_SIZE = Track([(0, 0.10), (GLORY, 0.10), (GLORY + 8, 0.12), (TOTAL, 0.12)])
 STARS = Track([(0, 0.0), (0.2, 0.0), (2.0, 0.35), (ENC_ACT, 0.28), (GLORY + 4, 0.06), (TOTAL, 0.03)])
@@ -221,13 +221,13 @@ PART = Track([(0, 0.0), (GLORY, 0.0), (GLORY + 3.5, 1.0), (TITLE_HIT - 4, 1.0), 
 
 BEAM = Track([(0, 0.0), (TOTAL, 0.0)])   # the glory plate paints its own column and path of gold
 
-# the net of light, cast by the fisherman: it spreads from his net over the sky, at strength for about 5 s before
-# the title forms, then settles faintly behind the end card
-NET = Track([(0, 0.0), (NET_CAST, 0.0), (NET_CAST + 4.5, 1.0), (TOTAL, 1.0)])
-NET_ORIGIN = (0.404, 0.757)    # the fisherman's net (figure x 0.40, feet 0.49, height 0.34)
+# the net of light, cast by the fisherman: it spreads from his net over the sky in 1.5 s, then stays fully spread and
+# at strength for 4.4 s (44.1 to 48.5) before the title starts to form, then settles faintly behind the end card
+NET = Track([(0, 0.0), (NET_CAST, 0.0), (NET_CAST + 1.5, 1.0), (TOTAL, 1.0)])
+NET_ORIGIN = (0.404, 0.757)    # the fisherman's net (figure x about 0.40, feet 0.49, height 0.34)
 NET_Y0 = 0.56
 NET_SCALE = 6.0
-NET_BRIGHT = Track([(0, 0.0), (NET_CAST, 0.0), (NET_CAST + 0.6, 0.85), (TITLE_HIT - 3.0, 0.85), (TITLE_HIT - 1.5, 0.08),
+NET_BRIGHT = Track([(0, 0.0), (NET_CAST, 0.0), (NET_CAST + 0.6, 0.85), (TITLE_HIT - FORM_DUR, 0.85), (TITLE_HIT - 1.5, 0.08),
                     (TOTAL, 0.08)])
 NET_COLOR = "#ffe1a6"
 NET_PULSE = "#fff6e2"
@@ -246,10 +246,10 @@ SCENES = [
     dict(image=PL + "s09_3_encounter_shore.jpg", t0=13.5, t1=35.0, fade_in=2.5, fade_out=2.5,
          transition="dissolve", edge_glow=0.0, zoom=(1.06, 1.02), water=True, water_line=0.50, water_strength=0.4,
          gain=Track([(0, 1.0), (ENC_FORM - 1.0, 1.0), (ENC_FORM + 1.0, 0.82), (ENC_ARRIVE, 0.82), (34.0, 1.0)])),
-    dict(image=PL + "s09_4_glory.jpg", t0=32.5, t1=42.3, fade_in=2.5, fade_out=2.5,
+    dict(image=PL + "s09_4_glory.jpg", t0=32.5, t1=41.4, fade_in=2.5, fade_out=2.5,
          transition="dissolve", edge_glow=0.0, zoom=(1.02, 1.10), water=True, water_line=0.26, calm_gain=0.4,
          gain=Track([(0, 0.88), (COMPARE - 0.5, 0.88), (COMPARE + 1.0, 0.70), (COMPARE + 6.5, 0.70), (42.0, 0.88)])),
-    dict(image=PL + "s09_5_boats_morning.jpg", t0=39.8, t1=61.0, fade_in=2.5, fade_out=0.0,
+    dict(image=PL + "s09_5_boats_morning.jpg", t0=38.9, t1=61.0, fade_in=2.5, fade_out=0.0,
          transition="dissolve", edge_glow=0.0, zoom=(1.08, 1.02), water=True, water_line=0.54, calm_gain=0.4,
          gain=Track([(0, 1.0), (TITLE_HIT - 3.5, 1.0), (TITLE_HIT - 1.0, 0.72), (TOTAL, 0.72)])),
 ]
@@ -261,15 +261,20 @@ WALK = "assets/song_figures/s09/s09_saint_walking_lamp.png"
 LIFT = "assets/song_figures/s09/s09_saint_lifting_lamp.png"
 FIGURES = [
     # Anthony, round 3: people rare and always moving. Two brief appearances only.
-    # 1 (about 5.5 to 11.5 s): two saints gather out of the mist on the shore path carrying their lamps, lift them at
-    #   verse 2 line 2 and at once rise and drift away as light; never holding a pose.
-    dict(poses=[WALK, LIFT], t0=5.5, t1=9.6, gather=1.6, pose_times=[CALL - 0.6], morph=1.2, x=0.30, y=0.36,
+    # 1 (about 4.8 to 11.5 s): two saints gather out of the mist while already walking right along the shore path
+    #   with their lamps (walking bob), lift them at verse 2 line 2 without stopping and at once rise and drift
+    #   away as light; never holding a pose.
+    dict(poses=[WALK, LIFT], t0=4.8, t1=9.6, gather=1.6, pose_times=[CALL - 0.6], morph=1.2,
+         x=(0.21, 0.33), y=(0.345, 0.365), move=(4.8, 9.6), ease="linear", bob=1.0,
          height=0.27, dissolve=2.2, leave="drift", color="#ffd99a"),
-    dict(poses=[WALK, LIFT], t0=5.9, t1=9.9, gather=1.6, pose_times=[CALL - 0.2], morph=1.2, x=0.46, y=0.405,
+    dict(poses=[WALK, LIFT], t0=5.2, t1=9.9, gather=1.6, pose_times=[CALL - 0.2], morph=1.2,
+         x=(0.38, 0.48), y=(0.395, 0.41), move=(5.2, 9.9), ease="linear", bob=1.0,
          height=0.22, dissolve=2.2, leave="drift", color="#ffd99a"),
-    # 2 (about 42.2 to 47 s): the fisherman in the near boat casts the net and dissolves into the net of light
-    dict(poses=["assets/song_figures/s09/s09_fisherman_casting_net.png"], t0=42.2, t1=45.4, gather=1.2,
-         x=0.40, y=0.49, height=0.34, dissolve=1.6, leave="drift", color="#ffd99a"),
+    # 2 (about 41.4 to 46 s): the fisherman gathers in the near boat, leans into the cast as the boat drifts, throws
+    #   the net and dissolves into the net of light
+    dict(poses=["assets/song_figures/s09/s09_fisherman_casting_net.png"], t0=41.4, t1=44.4, gather=1.2,
+         x=(0.392, 0.412), y=0.49, height=(0.335, 0.345), ease="linear", dissolve=1.6, leave="drift",
+         color="#ffd99a"),
 ]
 
 # Nine lights on an arch over the stage, one for each expression
@@ -299,7 +304,7 @@ TITLE = dict(label="Healing Concert", lines=["The Words of Mother’s Love"], si
              hold=1e9, star=1e9, y=0.275)
 TAGLINE = dict(text="Where a mother’s love reaches, peace settles.\nSunday, December 6 · 4:30 PM\n"
                     "The World Mission Society Church of God · 6720 W Sahara Ave, Las Vegas",
-               t0=TITLE_HIT + 1.4, t1=TITLE_HIT + 4.0)
+               t0=TITLE_HIT + 0.8, t1=TITLE_HIT + 3.0)
 
 # The only words from the song on screen: two short fragments, never with the expression.
 FRAGMENTS = [
