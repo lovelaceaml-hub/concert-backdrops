@@ -32,6 +32,7 @@ env:
   MODE: ${{ inputs.mode }}
   STILLS: ${{ inputs.stills }}
   OUTNAME: ${{ inputs.name }}
+  FEATURES: ${{ github.workspace }}/work/${{ inputs.song }}/features.npz
   LIBGL_ALWAYS_SOFTWARE: "1"
   PARTS: "4"
 
