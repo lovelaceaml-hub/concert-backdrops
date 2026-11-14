@@ -307,11 +307,11 @@ TAGLINE = dict(text="Where a mother’s love reaches, peace settles.\nSunday, De
                     "The World Mission Society Church of God · 6720 W Sahara Ave, Las Vegas",
                t0=TITLE_HIT + 0.2, t1=TITLE_HIT + 2.4)
 
-# Opening title card that then rests, small, in the top left corner; it fades away from 40 to 45 s so star 2
+# Opening title card that then rests, small, in the top left corner; it fades away from 36 to 40 s so star 2
 # lights in the clear and the end card stands alone
 CREDIT = dict(song="Out of Heaven, Favor From God", concert="The Words of Mother’s Love Healing Concert",
               t_in=0.3, t_full=1.4, t_move=5.4, t_rest=7.4, scale=0.34, alpha_rest=0.58,
-              margin_x=0.030, margin_top=0.048, t_gone0=40.0, t_gone1=45.0)
+              margin_x=0.030, margin_top=0.048, t_gone0=36.0, t_gone1=40.0)
 
 
 def credit_state(t, bbox):
