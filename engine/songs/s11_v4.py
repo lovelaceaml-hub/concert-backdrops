@@ -324,7 +324,9 @@ def credit_state(t, bbox):
     tx = c["margin_x"] + c["scale"] * (x1 - x0) / 2.0
     ty = 1.0 - c["margin_top"] - c["scale"] * (y1 - y0) / 2.0
     cx, cy = cx0 * (1 - m) + tx * m, cy0 * (1 - m) + ty * m
-    alpha = a_in * (1.0 + (c["alpha_rest"] - 1.0) * m) * (1.0 - ss(TITLE_HIT - 3.0, TITLE_HIT - 1.5, t))
+    # the corner credit leaves before the sunrise in the gate: the engine shades a little behind it, which would
+    # show as a darker patch on the brightest sky of the night
+    alpha = a_in * (1.0 + (c["alpha_rest"] - 1.0) * m) * (1.0 - ss(LIFT - 1.5, LIFT, t))
     return (cx, cy, scale, alpha), (cx0, cy0)
 
 
