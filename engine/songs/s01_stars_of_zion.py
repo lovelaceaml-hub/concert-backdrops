@@ -219,7 +219,7 @@ SCENES = [
          water_line=0.22, water_strength=0.8,
          gain=Track([(0, 1.0), (22.0, 1.0), (24.0, 0.78), (30.5, 0.78), (32.0, 0.95), (TOTAL, 0.95)])),
     dict(image="assets/plates/s01/s01_morning_beams.jpg", t0=30.5, t1=61.0, fade_in=3.5, fade_out=0.0,
-         transition="push", zoom=(1.10, 1.36), pan=((0.035, 0.0), (0.17, 0.0)), water=True, water_line=0.19,
+         transition="push", zoom=(1.16, 1.48), pan=((0.05, 0.0), (0.22, 0.0)), water=True, water_line=0.19,
          water_strength=0.5,
          gain=Track([(0, 1.0), (31.5, 1.0), (33.5, 0.78), (35.5, 0.70), (44.0, 0.70), (47.0, 0.64),
                      (TOTAL, 0.62)])),
@@ -298,7 +298,8 @@ PHRASES = [
 FORM_DUR = 3.0
 # PHRASES keys: label, lines, size, form (words start forming), hold (words start flying), star (the light is lit).
 # A light already lit before this minute: star=-100.0. Not lit yet in the concert: form=hold=star=1e9.
-TITLE = dict(label="Healing Concert", lines=["The Words of Mother’s Love"], size=150, form=TITLE_HIT - FORM_DUR,
+# size 132 (was 150): a little narrower, so its first letters keep clear of the tree's strands at the left
+TITLE = dict(label="Healing Concert", lines=["The Words of Mother’s Love"], size=132, form=TITLE_HIT - FORM_DUR,
              hold=1e9, star=1e9)
 
 # D. Short lyric fragments (never on screen together with an expression), each in its own way:
