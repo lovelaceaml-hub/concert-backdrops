@@ -232,7 +232,8 @@ FRAGMENTS = [
     dict(text="Arise", t0=21.0, t1=22.6, out=29.5, dy=0.0, size=150),
 ]
 
-TAGLINE = dict(text="Sunday, December 6 · 4:30 PM · 6720 W Sahara Ave, Las Vegas", t0=55.0, t1=57.0)
+TAGLINE = dict(text="Sunday, December 6 · 4:30 PM\nThe World Mission Society Church of God · 6720 W Sahara Ave, Las Vegas",
+               t0=54.6, t1=56.6)
 
 # Opening title card that then rests, small, in the top left corner
 CREDIT = dict(song="All You Stars of Zion", concert="The Words of Mother’s Love Healing Concert",
