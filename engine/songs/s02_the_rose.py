@@ -14,7 +14,7 @@ hands of light) need new engine work; they are not in this promo.
 
 There is no music, so this file does not read the recording's measurements: the gentle breathing of the light,
 the skyline and the "piano note" rings on the water are drawn from the timeline below. The workflow's audio file
-is a near silent placeholder.
+is a silent placeholder (visual only, no music yet).
 """
 import os
 import numpy as np
@@ -151,6 +151,7 @@ ENC_ARRIVE = 33.5      # they reach star 7: a brief flare and one new thin ring
 SEED_WAKES = 38.0
 DAWN = 44.0
 NINTH = 1e9            # the whole arch does not glow at the end of this song
+# star_state and link_state below are replaced by engine/arch.py when the engine loads this file
 TITLE_HIT = 51.6       # end card
 
 # Scene palettes (top of sky, middle, horizon, glow of the low home star / sun)
@@ -231,7 +232,8 @@ FRAGMENTS = [
     dict(text="becomes the rose", t0=44.0, t1=45.5, out=47.0, dy=0.02, size=88, glow="#f7a889"),
 ]
 
-TAGLINE = dict(text="Sunday, December 6 · 4:30 PM · 6720 W Sahara Ave, Las Vegas", t0=53.0, t1=55.0)
+TAGLINE = dict(text="Sunday, December 6 · 4:30 PM\nThe World Mission Society Church of God · 6720 W Sahara Ave, Las Vegas",
+               t0=53.0, t1=55.0)
 
 # Opening title card that then rests, small, in the top left corner
 CREDIT = dict(song="The Rose", concert="The Words of Mother’s Love Healing Concert",
