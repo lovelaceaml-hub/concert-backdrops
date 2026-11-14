@@ -3,6 +3,18 @@ warnings.filterwarnings("ignore")
 wav, out = sys.argv[1], sys.argv[2]
 y, sr = librosa.load(wav, sr=22050, mono=True)
 dur = len(y)/sr
+if float(np.max(np.abs(y))) < 1e-4:
+    # silent clip (visual-only promo): finite, nearly flat features so the engine never divides by zero
+    hop = 512
+    n = int(dur * sr / hop) + 1
+    times = np.arange(n) * hop / sr
+    rng = np.random.default_rng(3)
+    flat = lambda: 1e-6 * (1.0 + 0.05 * rng.random(n))
+    np.savez_compressed(out, times=times, rms=flat(), low=flat(), mid=flat(), high=flat(), air=flat(), cent=flat(),
+                        onset=1e-3 * (1.0 + rng.random(n)), beat_t=np.array([]), onsets=np.array([]),
+                        rh=flat(), rp=flat(), dur=dur, tempo=0.0)
+    print(f"silent clip, {dur:.2f}s: wrote flat features")
+    sys.exit(0)
 hop = 512
 S = np.abs(librosa.stft(y, n_fft=2048, hop_length=hop))
 freqs = librosa.fft_frequencies(sr=sr, n_fft=2048)
