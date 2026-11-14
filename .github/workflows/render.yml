@@ -128,6 +128,20 @@ jobs:
           echo "final $fd s, audio streams $na"
           python3 -c "import sys; sys.exit(0 if abs($fd-$want)<0.15 and $na==1 else 1)" || { echo "final check failed"; exit 1; }
           cp silent.mp4 "$OUTNAME (silent).mp4"
+      - name: Frame sheets for checking the video without downloading it
+        run: |
+          mkdir -p sheets
+          for k in 0 1 2 3; do
+            s=$(python3 -c "print($k*$FRAMES/30/4)")
+            ffmpeg -v error -y -ss "$s" -t "$(python3 -c "print($FRAMES/30/4)")" -i silent.mp4 \
+              -vf "fps=8/($FRAMES/30/4),scale=640:-2,tile=4x2" -frames:v 1 -q:v 4 "sheets/sheet$k.jpg"
+          done
+          ls -la sheets
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ${{ inputs.name }} frames
+          path: sheets/
+          retention-days: 30
       - uses: actions/upload-artifact@v4
         with:
           name: ${{ inputs.name }}
