@@ -247,7 +247,7 @@ TITLE = dict(label="Healing Concert", lines=["The Words of Mother\u2019s Love"],
 # Short lyric fragments (never on screen with an expression): text, t0, t1, out, dy, size
 FRAGMENTS = [
     dict(text="bridegroom and bride", t0=20.0, t1=21.8, out=25.6, dy=0.0, size=78, glow="#fff0d2"),
-    dict(text="into our Mother\u2019s arms", t0=39.2, t1=41.0, out=44.8, dy=0.0, size=74, glow="#a8c6ff"),
+    dict(text="into our Mother\u2019s arms", t0=39.2, t1=41.0, out=44.8, dy=0.0, size=74, glow="#e2c4ff"),
 ]
 
 TAGLINE = dict(text="Sunday, December 6 \u00b7 4:30 PM\nThe World Mission Society Church of God \u00b7 6720 W Sahara Ave, Las Vegas",
