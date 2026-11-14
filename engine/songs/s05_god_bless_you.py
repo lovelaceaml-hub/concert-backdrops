@@ -149,17 +149,20 @@ from track import Track   # the shared Track refuses keys that are not strictly 
 
 # Landmarks inside the promo minute (seconds; promo time = recording time minus 146).
 # Measured: breaths near 12 to 15 and 24 to 26, climax 44 to 58 (loudest of the song), fade from 58.
-# Estimated: the prayer for her about 0 to 12, her tender voice about 15 to 27, how can I help my sister
-# about 27 to 36, the line asking Heavenly Mother for beautiful fruit about 36 to 44, the last line 44 to 58.
-# Reading time contract (PHASE2.md item 4): formation takes about 3.75 s, so hold >= form + 9.75 gives
-# 6 s fully formed; each dissolve (about 1.6 s) ends at least 0.5 s before the next text starts.
-ENC_FORM = 3.5         # Encouragement: the prayer for her (lit in song 01, shines again)
-RESPECT_FORM = 15.6    # Respect: the brother stops and listens to his sister's tender voice (first lit)
-CONS_FORM = 27.7       # Consideration: how can I help my sister (lit in the brother verse, shines again)
-FRAG_T0 = 41.5         # "God bless you!" in blossom petals, as the sun begins to break through
-SUNRISE = 44.0         # the climax: the afternoon sun breaks through the haze above the tree
+# Estimated from loudness (sung guide alignment still to do): the prayer line about 0 to 12, the line Respect
+# is placed on about 15 to 27, the offer of help about 27 to 36, the request for fruit about 36 to 44, the last
+# line 44 to 58.
+# Reading time contract (PHASE2.md item 4): formation takes about 3.75 s, so hold = form + 9.75 gives 6 s fully
+# formed. Each dissolve (about 1.6 s) ends before the next text starts (0.5 s gap), and every scene transition
+# runs inside a gap with no text on screen. Pose changes finish before the words are fully formed.
+READ = 9.75            # form to hold
+ENC_FORM = 2.6         # Encouragement: the prayer for her (lit in song 01, shines again)
+RESPECT_FORM = 15.5    # Respect: the brother stops and listens to his sister (first lit; provisional exception)
+CONS_FORM = 28.4       # Consideration: the offer of help to her (lit in the brother verse, shines again)
+FRAG_T0 = 41.4         # "God bless you!" in blossom petals, as the sun begins to break through
+SUNRISE = 42.0         # the climax: the afternoon sun breaks through the haze above the tree
 NINTH = 1e9            # no whole-arch glow in this song
-TITLE_HIT = 52.5       # end card
+TITLE_HIT = 52.1       # end card: the tagline is fully formed at 55.1 and holds 4.6 s before the fade
 SKYLINE_LANTERN = 0.0  # no small light travelling along the drawn skyline
 BOTTOM_CALM = 1.0      # calm lower third for the performers
 TEXT_PROTECT = 1.0
@@ -167,7 +170,7 @@ TEXT_PROTECT = 1.0
 # Encouragement lit in 01, relit in 02, 03 and in this song's brother verse (three rings).
 RINGS_AT_START = {2: 1, 6: 3}
 # While prayer, listening and the offer of help are on screen the lake falls perfectly still
-STILL = [(ENC_FORM - 0.5, 14.0), (RESPECT_FORM - 0.5, 26.0), (CONS_FORM - 0.5, 38.0)]
+STILL = [(ENC_FORM - 0.5, ENC_FORM + 11.0), (RESPECT_FORM - 0.5, RESPECT_FORM + 11.0), (CONS_FORM - 0.5, CONS_FORM + 11.0)]
 
 # Procedural sky (seen in scene 3, the open lake). Song 05's look (DESIGN-SYSTEM.md section 6): a spring
 # afternoon full of blessing, fresh green gold, cream and soft rose, bright daylight, blossom petals, warm haze.
@@ -198,7 +201,7 @@ PETALS = Track([(0, 0.25), (26, 0.25), (34, 0.35), (44, 0.6), (49, 0.6), (53, 0.
 TRAIL = Track([(0, 0.0), (TOTAL, 0.0)])
 ZOOM = Track([(0, 1.0), (TOTAL, 1.0)])
 EXPOSURE = Track([(0, 1.0), (TOTAL, 1.0)])
-FADE = Track([(0, 0.0), (0.8, 1.0), (59.0, 1.0), (TOTAL, 0.0)])
+FADE = Track([(0, 0.0), (0.8, 1.0), (59.7, 1.0), (TOTAL, 0.0)])
 RAYS = Track([(0, 0.12), (TOTAL, 0.12)])
 PART = Track([(0, 0.0), (TOTAL, 0.0)])
 # spring colors: soft rose and cream blossom petals, green gold pollen of light drifting gently upward
@@ -210,23 +213,23 @@ TEXT_SHADOW = Track([(0, 1.6), (TOTAL, 1.7)])   # bright spring plates: a deeper
 # A. Scenes: the song's three painted plates (assets/plates/s05/), four scenes.
 SCENES = [
     # 1. the young blossom tree on the shore: two pray for the sister
-    dict(image="assets/plates/s05/p1_young_tree.jpg", t0=0.0, t1=16.5, fade_in=0.8, fade_out=3.0,
+    dict(image="assets/plates/s05/p1_young_tree.jpg", t0=0.0, t1=15.55, fade_in=0.8, fade_out=1.6,
          zoom=(1.10, 1.04), pan=((0.02, 0.0), (0.0, 0.0)), water=True, water_line=0.35,
-         gain=Track([(0, 0.95), (3.0, 0.8), (16.5, 0.8)])),
+         gain=Track([(0, 0.95), (2.6, 0.8), (15.55, 0.8)])),
     # 2. the listening shore with its resting stone: the brother stops and listens
-    dict(image="assets/plates/s05/p2b_listening_shore.jpg", t0=13.5, t1=29.0, fade_in=3.0, fade_out=3.0,
+    dict(image="assets/plates/s05/p2b_listening_shore.jpg", t0=13.95, t1=28.45, fade_in=1.6, fade_out=1.6,
          transition="fade", zoom=(1.04, 1.11), pan=((0.0, 0.0), (0.015, 0.0)), water=True, water_line=0.38,
          gain=0.8),
     # 3. the open spring lake: a wide view across the water to the snowy peaks and the blossoming far shore
     # (the left part of the first listening-shore painting; its resting stone stays out of frame)
-    dict(image="assets/plates/s05/p2_listening_shore.jpg", t0=26.0, t1=41.4, fade_in=3.0, fade_out=1.8,
-         transition="ripple", ripple_from=(0.42, 0.22), zoom=(1.50, 1.46), pan=((-0.15, 0.0), (-0.155, 0.0)),
+    dict(image="assets/plates/s05/p2_listening_shore.jpg", t0=26.85, t1=41.35, fade_in=1.6, fade_out=1.6,
+         transition="ripple", ripple_from=(0.42, 0.36), zoom=(1.50, 1.46), pan=((-0.15, 0.0), (-0.155, 0.0)),
          water=True, water_line=0.33, gain=0.8),
     # 4. the tree of blessing again, closer, as the sun breaks through above it; it stays for the end card
-    dict(image="assets/plates/s05/p1_young_tree.jpg", t0=39.6, t1=61.0, fade_in=1.8, fade_out=0.0,
+    dict(image="assets/plates/s05/p1_young_tree.jpg", t0=39.75, t1=61.0, fade_in=1.6, fade_out=0.0,
          transition="bloom", flash=0.8, zoom=(1.24, 1.12), pan=((-0.08, 0.02), (-0.05, 0.0)), water=True,
          water_line=0.35,
-         gain=Track([(0, 0.8), (44.0, 0.8), (46.5, 0.92), (48.5, 0.92), (50.5, 0.72), (TOTAL, 0.72)])),
+         gain=Track([(0, 0.8), (42.0, 0.8), (44.0, 0.88), (46.5, 0.88), (49.0, 0.72), (TOTAL, 0.72)])),
 ]
 
 # B. People of light (shared library, assets/figures/): every expression shown is acted out
@@ -234,24 +237,27 @@ FIGURES = [
     # Encouragement: one kneels, exhausted, while the other prays over them, lifts them, and both stand in hope
     dict(poses=["assets/figures/encouragement_a.png", "assets/figures/encouragement_b.png",
                 "assets/figures/encouragement_c.png"],
-         t0=0.3, t1=12.8, pose_times=[6.2, 9.6], x=0.47, y=0.20, height=0.40, to_star=6, color="#d2bdf5"),
+         t0=0.2, t1=ENC_FORM + READ - 0.5, pose_times=[2.9, 4.4], gather=2.5, morph=1.4, x=0.47, y=0.34, height=0.30,
+         to_star=6, color="#d2bdf5"),
     # Respect: the sister speaks; the brother leans in to listen, then lays a hand on his heart and nods
     dict(poses=["assets/figures/respect_a.png", "assets/figures/respect_b.png"],
-         t0=13.3, t1=24.9, pose_times=[20.5], x=0.60, y=0.20, height=0.40, to_star=5, color="#f0c2b2"),
+         t0=13.9, t1=RESPECT_FORM + READ - 0.5, pose_times=[17.2], x=0.60, y=0.34, height=0.30, to_star=5,
+         color="#f0c2b2"),
     # Consideration: one bends under a heavy bundle; the other comes with open hands and they carry it together
     dict(poses=["assets/figures/consideration_a.png", "assets/figures/consideration_b.png"],
-         t0=25.4, t1=37.0, pose_times=[32.0], x=0.42, y=0.20, height=0.40, to_star=7, color="#ffb8c8"),
+         t0=26.0, t1=CONS_FORM + READ - 0.5, pose_times=[29.4], x=0.42, y=0.34, height=0.30, to_star=7,
+         color="#ffb8c8"),
 ]
 
 
 # C. Signature effects: the tree of blessing (scenes 1 and 4), and at the climax the afternoon sun breaking
-# through the haze above it (a column of light onto the tree, then a soft flash); blossom petals form the blessing.
+# through the haze above it (a column of light onto the tree, left of the words, gone before the end card);
+# blossom petals form the blessing.
 BEAM_FROM = (0.08, 1.04)
 BEAM_TO = (0.25, 0.42)
 BEAM_WIDTH = (0.03, 0.11)
-BEAM = Track([(0, 0.0), (43.8, 0.0), (46.3, 0.8), (49.0, 0.6), (51.0, 0.15), (TOTAL, 0.15)])
+BEAM = Track([(0, 0.0), (SUNRISE, 0.0), (44.0, 0.8), (46.0, 0.6), (47.6, 0.0), (TOTAL, 0.0)])
 BEAM_COLOR = "#fff0c8"
-FLASH = Track([(0, 0.0), (47.3, 0.0), (48.0, 0.45), (49.8, 0.0), (TOTAL, 0.0)])
 
 # Nine lights on an arch over the stage, one for each expression
 STAR_POS = []
@@ -271,14 +277,14 @@ PHRASES = [
     dict(label="Inclusiveness", lines=["“It’s okay. I understand.”"], size=150, **LIT),
     dict(label="Concession", lines=["“Please, after you.”"], size=164, **OFF),
     # Respect, lit here for the first time: the brother stops and listens (provisional exception, see the doc)
-    dict(label="Respect", lines=["“I’d love to hear more", "about your thoughts.”"], size=100, y=0.30,
-         form=RESPECT_FORM, hold=RESPECT_FORM + 9.8, star=RESPECT_FORM + 11.0),
+    dict(label="Respect", lines=["“I’d love to hear more", "about your thoughts.”"], size=92, y=0.27,
+         form=RESPECT_FORM, hold=RESPECT_FORM + READ, star=RESPECT_FORM + READ + 1.2),
     # Encouragement: the prayer for her makes it shine again
-    dict(label="Encouragement", lines=["“I’ll pray (or root) for you.", "Everything will go well.”"], size=96,
-         y=0.30, form=ENC_FORM, hold=ENC_FORM + 9.8, star=-100.0, arrive=ENC_FORM + 11.0),
-    # Consideration: how can I help my sister; it shines again
-    dict(label="Consideration", lines=["“Can I give you a hand", "with anything?”"], size=100, y=0.30,
-         form=CONS_FORM, hold=CONS_FORM + 9.8, star=-100.0, arrive=CONS_FORM + 11.0),
+    dict(label="Encouragement", lines=["“I’ll pray (or root) for you.", "Everything will go well.”"], size=92,
+         y=0.27, form=ENC_FORM, hold=ENC_FORM + READ, star=-100.0, arrive=ENC_FORM + READ + 1.2),
+    # Consideration: the offer of help to her; it shines again
+    dict(label="Consideration", lines=["“Can I give you a hand", "with anything?”"], size=92, y=0.27,
+         form=CONS_FORM, hold=CONS_FORM + READ, star=-100.0, arrive=CONS_FORM + READ + 1.2),
     dict(label="Compliment", lines=["“You’re amazing.", "You’re doing great!”"], size=140, **LIT),
 ]
 FORM_DUR = 3.0
@@ -286,18 +292,18 @@ TITLE = dict(label="Healing Concert", lines=["The Words of Mother’s Love"], si
              hold=1e9, star=1e9)
 # D. The song's blessing, formed of blossom petals as the sun breaks through, then blown away by the wind
 FRAGMENTS = [
-    dict(text="God bless you!", t0=FRAG_T0, t1=FRAG_T0 + 3.0, out=FRAG_T0 + 6.0, dy=0.03, size=140,
+    dict(text="God bless you!", t0=FRAG_T0, t1=FRAG_T0 + 2.7, out=FRAG_T0 + 5.7, dy=0.03, size=140,
          glow="#ffb070", style="petals", colors=("#ffa9bf", "#fff0e2")),
 ]
 
 # The three-line end card (PHASE2.md item 7)
 TAGLINE = dict(text="Where a mother’s love reaches, peace settles.\nSunday, December 6 · 4:30 PM\n"
                     "The World Mission Society Church of God · 6720 W Sahara Ave, Las Vegas",
-               t0=TITLE_HIT + 1.4, t1=TITLE_HIT + 4.0)
+               t0=TITLE_HIT + 1.4, t1=TITLE_HIT + 3.0)
 
 # Opening title card that then rests, small, in the top left corner (moved away before the first words)
 CREDIT = dict(song="God Bless You!", concert="The Words of Mother’s Love Healing Concert",
-              t_in=0.2, t_full=0.9, t_move=1.8, t_rest=3.0, scale=0.34, alpha_rest=0.58,
+              t_in=0.2, t_full=0.8, t_move=1.4, t_rest=2.4, scale=0.34, alpha_rest=0.58,
               margin_x=0.030, margin_top=0.048)
 
 
@@ -323,10 +329,9 @@ def credit_state(t, bbox):
 
 # Waves of peace that cross the sky when a light is lit or shines again (time, x, y, strength):
 # after each practiced word the scene visibly settles from unrest into stillness and warmth
-WAVES = [(ENC_FORM + 11.0, STAR_POS[6][0], STAR_POS[6][1], 0.6),
-         (RESPECT_FORM + 11.0, STAR_POS[5][0], STAR_POS[5][1], 0.8),
-         (CONS_FORM + 11.0, STAR_POS[7][0], STAR_POS[7][1], 0.85),
-         (SUNRISE + 2.5, 0.27, 0.45, 0.9),
+WAVES = [(ENC_FORM + READ + 1.2, STAR_POS[6][0], STAR_POS[6][1], 0.6),
+         (RESPECT_FORM + READ + 1.2, STAR_POS[5][0], STAR_POS[5][1], 0.8),
+         (CONS_FORM + READ + 1.2, STAR_POS[7][0], STAR_POS[7][1], 0.85),
          (TITLE_HIT, 0.5, 0.62, 1.2)]
 
 
