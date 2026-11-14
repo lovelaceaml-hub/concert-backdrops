@@ -9,9 +9,9 @@ All nine lights are already lit when song 09 begins; here 7 Encouragement shines
 
 Promo v2 (PHASE2.md, design section 15 "Promo v2: scenes"), round 3: Anthony's five painted plates
 (assets/plates/s09/) and three special figures (assets/song_figures/s09/), with the shared Encouragement pair.
-1 the saints' shore in sea mist: two saints of light walk the shore path carrying clay lamps (0 to 10 s);
-2 the shore before dawn: the saints lift their lamps high together (8.5 to 15 s);
-3 the encounter shore: the Encouragement acted out on the flat rock ledge, the sea a still mirror (13.5 to 34 s);
+1 the saints' shore in sea mist: two saints of light gather on the shore path with clay lamps (0 to 10 s);
+2 the shore before dawn: the saints lift their lamps and rise away as light (8.5 to 15 s);
+3 the encounter shore: the Encouragement in full over the still mirror sea, then into star 7 (13.5 to 34 s);
 4 the glory: the mist parts, a column of light and a path of gold on the sea (32 to 44 s);
 5 the boats at morning: a fisherman of light in the near boat casts the net and the net of light spreads over the
   sky, then the end card (41.5 to 60 s).
@@ -153,10 +153,8 @@ CLIP_START = 155.0     # the clip is 2:35 to 3:35 of the 4:34 instrumental recor
 # line 5 3:23, chorus 3:34.
 HONOR = 5.0            # fragment "hardships as honor" (verse 2 line 1, end of the line, about 2:38 to 2:42)
 CALL = 8.5             # verse 2 line 2 (2:42): the saints lift their lamps together
-ENC_ACT = 14.6         # the Encouragement pair gathers on the shore: one kneels, worn out; the friend prays
-ENC_TOUCH = 19.0       # the friend rests a hand on their back and cheers them on
+ENC_ACT = 14.6         # the encounter shore settles: the sea falls still before the words
 ENC_FORM = 20.0        # ENCOURAGEMENT forms at verse 2 line 3 (2:55.5); solid from about 23.8
-ENC_RISE = 23.2        # both stand and lift their joined hands (pose change done before the words are solid)
 ENC_HOLD = 30.0        # the words start to fly (6.2 s fully formed and solid)
 ENC_ARRIVE = 32.0      # the words reach star 7, which shines again and gains a thin ring
 GLORY = 33.5           # verse 2 line 4 (3:08): dawn begins after the arrival, the mist parts
@@ -262,19 +260,16 @@ SCENES = [
 WALK = "assets/song_figures/s09/s09_saint_walking_lamp.png"
 LIFT = "assets/song_figures/s09/s09_saint_lifting_lamp.png"
 FIGURES = [
-    # scenes 1 and 2: two saints walk the shore path with their lamps, then lift them together and rise as light
-    dict(poses=[WALK, LIFT], t0=4.4, t1=12.4, pose_times=[CALL], morph=1.2, x=0.30, y=0.36, height=0.27,
-         dissolve=2.2, leave="drift", color="#ffd99a"),
-    dict(poses=[WALK, LIFT], t0=5.0, t1=12.7, pose_times=[CALL + 0.6], morph=1.2, x=0.46, y=0.405, height=0.22,
-         dissolve=2.2, leave="drift", color="#ffd99a"),
-    # scene 3: the Encouragement on the rock ledge; pose changes are quick and finish before the words are solid
-    dict(poses=["assets/figures/encouragement_a.png", "assets/figures/encouragement_b.png",
-                "assets/figures/encouragement_c.png"],
-         t0=ENC_ACT, t1=ENC_HOLD - 0.5, pose_times=[ENC_TOUCH, ENC_RISE], morph=0.4, x=0.30, y=0.455, height=0.20,
-         to_star=6, color="#f3e2c4"),
-    # scene 5: the fisherman in the near boat casts the net; the net of light spreads from it
-    dict(poses=["assets/song_figures/s09/s09_fisherman_casting_net.png"], t0=41.2, t1=46.3, gather=1.5,
-         x=0.40, y=0.49, height=0.34, dissolve=1.5, leave="drift", color="#ffd99a"),
+    # Anthony, round 3: people rare and always moving. Two brief appearances only.
+    # 1 (about 5.5 to 11.5 s): two saints gather out of the mist on the shore path carrying their lamps, lift them at
+    #   verse 2 line 2 and at once rise and drift away as light; never holding a pose.
+    dict(poses=[WALK, LIFT], t0=5.5, t1=9.6, gather=1.6, pose_times=[CALL - 0.6], morph=1.2, x=0.30, y=0.36,
+         height=0.27, dissolve=2.2, leave="drift", color="#ffd99a"),
+    dict(poses=[WALK, LIFT], t0=5.9, t1=9.9, gather=1.6, pose_times=[CALL - 0.2], morph=1.2, x=0.46, y=0.405,
+         height=0.22, dissolve=2.2, leave="drift", color="#ffd99a"),
+    # 2 (about 41.2 to 46.5 s): the fisherman in the near boat casts the net and dissolves into the net of light
+    dict(poses=["assets/song_figures/s09/s09_fisherman_casting_net.png"], t0=41.2, t1=44.8, gather=1.5,
+         x=0.40, y=0.49, height=0.34, dissolve=1.6, leave="drift", color="#ffd99a"),
 ]
 
 # Nine lights on an arch over the stage, one for each expression
@@ -293,8 +288,8 @@ PHRASES = [
     dict(label="Concession", lines=["“Please, after you.”"], size=164, **LIT),
     dict(label="Respect", lines=["“I’d love to hear more", "about your thoughts.”"], size=128, **LIT),
     # Encouragement at verse 2 line 3; star 7 shines again
-    dict(label="Encouragement", lines=["“I’ll pray (or root) for you.", "Everything will go well.”"], size=92,
-         y=0.27, form=ENC_FORM, hold=ENC_HOLD, star=-100.0, arrive=ENC_ARRIVE),
+    dict(label="Encouragement", lines=["“I’ll pray (or root) for you.", "Everything will go well.”"], size=112,
+         form=ENC_FORM, hold=ENC_HOLD, star=-100.0, arrive=ENC_ARRIVE),
     dict(label="Consideration", lines=["“Can I give you a hand", "with anything?”"], size=128, **LIT),
     dict(label="Compliment", lines=["“You’re amazing.", "You’re doing great!”"], size=140, **LIT),
 ]
