@@ -153,8 +153,8 @@ NINTH = 1e9            # the whole arch does not glow as one in this song
 
 # The reading-time contract (PHASE2.md item 4): words form over about 3.75 s, then stay solid at least 6 s
 # (hold >= form + 9.75), then dissolve over about 1.6 s; the next text starts at least 0.5 s after that.
-C_FORM, C_HOLD = 7.6, 17.4          # Concession: solid 11.35 to 17.4 (6.05 s); dissolved by 19.0
-I_FORM, I_HOLD = 21.0, 30.8         # Inclusiveness: after its people have gathered (20.9); solid 24.75 to 30.8
+C_FORM, C_HOLD = 9.4, 19.2          # Concession: solid 13.15 to 19.2 (6.05 s); dissolved by 20.8
+I_FORM, I_HOLD = 21.3, 31.1         # Inclusiveness: solid 25.05 to 31.1 (6.05 s); dissolved by 32.7
 F1 = (33.9, 36.9, 39.9)             # "waters this wilderness": after the ripple's ring has passed the words
 F2 = (42.0, 44.5, 47.5)             # "the fragrance of Her love": solid 44.5 to 47.5
 TITLE_HIT = 52.6                    # title forms from 49.6 (0.5 s after the last fragment has left)
@@ -229,28 +229,24 @@ SCENES = [
          gain=Track([(0, 0.85), (49.0, 0.85), (52.0, 0.75), (TOTAL, 0.75)])),
 ]
 
-# B. people of light: Anthony's two special figures (assets/song_figures/s06/, prepared with tools/prepare_figure.py,
-# then turned into line art by line_figure.py so they do not glow as flat white shapes) and song 06's own poses
-# built from the shared library by make_poses.py.
+# B. people of light (round 3 direction from Anthony: people rare and always moving, never posing under the words).
+# Two brief appearances, both Anthony's special figures (prepared with tools/prepare_figure.py, then turned into
+# line art by assets/song_figures/s06/line_figure.py). Their place and size are moved every frame by params() below.
 F = "assets/song_figures/s06/"
 FIGURES = [
-    # Concession, "Please, after you.": they arrive at the same spot on the narrow path from opposite sides and stop
-    # short; then the one carrying a sheaf steps aside with an open hand, and the elder with a basket passes,
-    # bowing in thanks (Anthony's figure).
-    dict(poses=[F + "s06_concession_1.png", F + "s06_concession_step_aside.png"],
-         t0=4.6, t1=16.9, pose_times=[7.6], morph=2.2, dissolve=2.0, x=0.66, y=0.24, height=0.40,
-         to_star=4, color="#cfe0ff"),
-    # Inclusiveness, "It's okay. I understand.": the young one dropped the family's lantern in the lake and kneels,
-    # sorry; the older one lays a hand on their back and lifts the lantern out, relit; then, kneeling at their
-    # level with a hand on their shoulder, places the lit lantern back in their hands (Anthony's figure).
-    dict(poses=[F + "s06_inclusiveness_1.png", F + "s06_inclusiveness_2.png", F + "s06_inclusiveness_lantern.png"],
-         t0=18.9, t1=30.3, gather=2.0, dissolve=2.0, pose_times=[22.8, 26.4], x=0.25, y=0.27, height=0.38,
-         to_star=3, color="#ffc4a8"),
-    # the edge of heaven: two small pairs walking on the far shores, rising into sparks before the end card
-    dict(poses=["assets/figures/concession_a.png"], t0=45.4, t1=48.8, gather=2.0, dissolve=2.4, leave="drift",
-         x=0.17, y=0.40, height=0.15, color="#ffd9a0", glow=0.8),
-    dict(poses=["assets/figures/concession_a.png"], t0=45.8, t1=49.0, gather=2.0, dissolve=2.4, leave="drift",
-         x=0.83, y=0.40, height=0.15, color="#ffd9a0", glow=0.8, flip=True),
+    # on the narrow path, before the words: the one with the sheaf steps aside as the elder with the basket passes,
+    # both gliding down the path toward us, then drifting up as light
+    dict(poses=[F + "s06_concession_step_aside.png"], t0=3.6, t1=8.0, gather=1.4, dissolve=1.8, leave="drift",
+         x=0.74, y=0.33, height=0.26, color="#cfe0ff", glow=0.9),
+    # at the water's edge, beside the forming words: the older one places the relit lantern in the young one's
+    # hands; the two rise a little as they turn to light
+    dict(poses=[F + "s06_inclusiveness_lantern.png"], t0=20.6, t1=23.6, gather=1.2, dissolve=1.6, leave="drift",
+         x=0.13, y=0.25, height=0.30, color="#ffc4a8", glow=0.9),
+]
+# motion of each appearance: (key times, x, y, height)
+FIG_MOVE = [
+    Track([(3.6, (0.74, 0.33, 0.26)), (9.8, (0.64, 0.22, 0.38))]),
+    Track([(20.6, (0.11, 0.25, 0.30)), (25.2, (0.16, 0.30, 0.30))]),
 ]
 
 # C. signature effects: the golden fields of light and the living water are in the paintings (scenes 1, 4 and 6;
@@ -331,6 +327,8 @@ WAVES = [(PHRASES[4]["star"], STAR_POS[4][0], STAR_POS[4][1], 0.4),
 
 
 def params(song, t):
+    for fg, mv in zip(FIGURES, FIG_MOVE):     # the people of light move while they are on screen
+        fg["x"], fg["y"], fg["height"] = (float(v) for v in mv(t))
     f = min(int(round(t * FPS)), NFRAMES - 1)
     env, envs, hi, pulse = song.env[f], song.env_slow[f], song.hi[f], song.pulse[f]
     if t > MUSIC_END - 1.0:
