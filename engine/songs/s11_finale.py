@@ -10,8 +10,8 @@ Five painted scenes (assets/plates/s11/) with people of light (assets/song_figur
   (8.5 to 26 s);
 3 all nations streaming in: the city filled with gold, rivers of nine colors, the peoples of every land walking in
   from both sides (23 to 43 s);
-4 the gate and the sun: the second lift blooms into the open gate with the sun inside it and a beam down the
-  mountain; "Joy of salvation endures forever" rises out of the water (40.5 to 50.5 s);
+4 the gate and the sun: the second lift blooms into the open gate with the sun inside it and the light pouring
+  down the mountain; "Joy of salvation endures forever" rises out of the water (40.5 to 50.5 s);
 5 peace settled: the calm golden lake with nine small glows under the nine lights, and the end card (48 to 60 s).
 Signature effects done for real: the promised city filling with gold (scenes 1 to 3), the nations streaming in
 (scene 3), the sun through the gate (scene 4).
@@ -230,12 +230,14 @@ SCENES = [
          zoom=(1.03, 1.10), pan=((0.0, 0.0), (0.0, 0.01)), water=True, water_line=0.477,
          gain=Track([(0, 0.88), (6.5, 0.88), (8.5, 1.0), (TOTAL, 1.0)])),
     # 2 Mother's road: on her first words a soft bloom of light, the violet-gold road across the water
-    dict(image=_P + "s11_road.jpg", t0=8.5, t1=26.0, fade_in=3.0, fade_out=3.0, transition="bloom", flash=0.55,
+    dict(image=_P + "s11_road.jpg", t0=8.5, t1=26.0, fade_in=3.0, fade_out=3.0, transition="bloom", flash=0.35,
          zoom=(1.04, 1.12), water=True, water_line=0.47,
-         gain=Track([(0, 1.0), (11.0, 1.0), (13.5, 0.82), (ENC_HOLD, 0.82), (ENC_ARRIVE + 1, 1.0), (TOTAL, 1.0)])),
+         # people of light are added light, so the bright morning is calmed while they stand on the shore
+         gain=Track([(0, 0.62), (10.5, 0.55), (ENC_HOLD, 0.55), (ENC_ARRIVE + 1.5, 0.85), (TOTAL, 0.85)])),
     # 3 all nations streaming in: the camera follows the road (push) into the city filled with gold
     dict(image=_P + "s11_nations.jpg", t0=23.0, t1=43.0, fade_in=3.0, fade_out=2.5, transition="push",
-         zoom=(1.12, 1.04), water=True, water_line=0.37),
+         zoom=(1.12, 1.04), water=True, water_line=0.37,
+         gain=Track([(0, 0.85), (25.5, 0.58), (39.5, 0.58), (LIFT, 0.9), (TOTAL, 0.9)])),
     # 4 the gate and the sun: the second lift blooms into the open gate
     dict(image=_P + "s11_gate.jpg", t0=40.5, t1=50.5, fade_in=2.0, fade_out=2.5, transition="bloom", flash=0.9,
          zoom=(1.10, 1.04), water=True, water_line=0.175, water_strength=0.6,
@@ -254,22 +256,15 @@ FIGURES = [
     # step out together. Then the sparks fly to light 7 with the words.
     dict(poses=[_F + "s11_mother_children_a.png", _F + "s11_mother_children_b.png"],
          t0=7.6, t1=ENC_HOLD - 0.5, pose_times=[MARCH], morph=2.0, x=0.28, y=0.18, height=0.40,
-         to_star=6, color="#dccbff"),
+         to_star=6, color="#cdb6ff", glass=1.3),
     # the peoples of every land walking in along the two rivers of light, toward the gate
-    dict(poses=[_F + "s11_crowd.png"], t0=24.5, t1=39.0, x=0.21, y=0.22, height=0.26, to=(0.5, 0.66),
-         color="#ffe2b0", particles=9000, dissolve=3.0),
-    dict(poses=[_F + "s11_crowd.png"], t0=25.5, t1=39.5, x=0.79, y=0.22, height=0.26, to=(0.5, 0.66),
-         color="#ffd6c8", particles=9000, dissolve=3.0, flip=True),
-    dict(poses=[_F + "s11_crowd.png"], t0=28.5, t1=40.0, x=0.5, y=0.33, height=0.15, to=(0.5, 0.66),
-         color="#fff0c8", particles=6000, dissolve=2.5, sparks=0.8),
+    dict(poses=[_F + "s11_crowd.png"], t0=24.5, t1=39.0, x=0.20, y=0.19, height=0.34, to=(0.5, 0.66),
+         color="#ffd58a", particles=11000, dissolve=3.0, glass=1.2),
+    dict(poses=[_F + "s11_crowd.png"], t0=25.5, t1=39.5, x=0.80, y=0.19, height=0.34, to=(0.5, 0.66),
+         color="#ffc0d8", particles=11000, dissolve=3.0, glass=1.2, flip=True),
 ]
 
-# C. the sun through the gate: a beam of light from the open gate down the mountain (scene 4)
-BEAM = Track([(0, 0.0), (LIFT + 0.5, 0.0), (LIFT + 2.5, 0.55), (FRAG_OUT, 0.55), (50.0, 0.0), (TOTAL, 0.0)])
-BEAM_FROM = (0.5, 0.60)
-BEAM_TO = (0.5, 0.34)
-BEAM_WIDTH = (0.02, 0.075)
-BEAM_COLOR = "#fff0c4"
+# C. the sun through the gate is painted into plate 4 and revealed by the bloom of light at the second lift
 
 # Nine lights on an arch over the stage, one for each expression
 STAR_POS = []
