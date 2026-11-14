@@ -170,11 +170,11 @@ TITLE_HIT = 50.5      # end card
 PAL = {
     "royal":    ("#07020f", "#1c0833", "#3d1250", "#e8b860"),
     "royallav": ("#080314", "#251045", "#4e2468", "#e2c4ff"),
-    "crimson":  ("#0c0214", "#3a0c3c", "#8a1e3c", "#ffcf7a"),
-    "gold":     ("#120520", "#4a1440", "#c0543a", "#ffd56a"),
+    "crimson":  ("#0c0214", "#3a0c42", "#7a1840", "#ffcf7a"),
+    "gold":     ("#14051f", "#4a0f48", "#9a2a50", "#ffd56a"),
     "velvet":   ("#05010c", "#160626", "#3a0f3e", "#e0a860"),
-    "festival": ("#0e0420", "#3b0f48", "#a8304a", "#ffd27a"),
-    "rosegold": ("#1a0a30", "#5a1f55", "#d8705a", "#ffd9a0"),
+    "festival": ("#100424", "#40104e", "#8c2550", "#ffd27a"),
+    "rosegold": ("#1a0a30", "#4f1a58", "#b84a64", "#ffd9a0"),
 }
 _pal_keys = [
     (0.0, "royal"), (8.0, "royal"), (11.5, "royallav"), (18.5, "royallav"), (22.0, "crimson"), (27.0, "crimson"),
@@ -187,8 +187,8 @@ SKY_HOR = Track([(t, lin(PAL[p][2])) for t, p in _pal_keys])
 GLOW = Track([(t, lin(PAL[p][3])) for t, p in _pal_keys])
 
 # the warm star at the center of the horizon (symmetrical framing): Mother's answering light at the thanksgiving
-SUN_INT = Track([(0, 0.40), (9, 0.45), (14, 0.55), (19, 0.70), (27, 0.95), (31, 1.25), (36, 1.35), (40, 0.60),
-                 (45, 0.55), (50, 1.05), (56, 1.15), (TOTAL, 1.1)])
+SUN_INT = Track([(0, 0.35), (9, 0.40), (14, 0.48), (19, 0.58), (27, 0.80), (31, 1.00), (36, 1.08), (40, 0.50),
+                 (45, 0.48), (50, 0.85), (56, 0.92), (TOTAL, 0.9)])
 SUN_Y = Track([(0, 0.27), (19, 0.28), (31, 0.34), (37, 0.35), (41, 0.28), (46, 0.28), (54, 0.32), (TOTAL, 0.33)])
 SUN_SIZE = Track([(0, 0.10), (31, 0.13), (37, 0.135), (41, 0.105), (54, 0.125), (TOTAL, 0.125)])
 STARS = Track([(0, 0.0), (0.2, 0.0), (2.0, 0.75), (18, 0.7), (28, 0.35), (36, 0.25), (40, 0.7), (46, 0.7),
@@ -196,12 +196,12 @@ STARS = Track([(0, 0.0), (0.2, 0.0), (2.0, 0.75), (18, 0.7), (28, 0.35), (36, 0.
 MILKY = Track([(0, 0.0), (TOTAL, 0.0)])
 CLOUDS = Track([(0, 0.10), (19, 0.15), (28, 0.30), (37, 0.30), (41, 0.12), (50, 0.2), (TOTAL, 0.2)])
 # gold aurora like embroidery across the whole night
-AURORA = Track([(0, 0.0), (1.5, 0.30), (9, 0.35), (12, 0.45), (18, 0.48), (22, 0.40), (29, 0.55), (36, 0.65),
-                (40, 0.35), (46, 0.35), (52, 0.60), (TOTAL, 0.55)])
+AURORA = Track([(0, 0.0), (1.5, 0.14), (9, 0.16), (12, 0.22), (18, 0.24), (22, 0.18), (29, 0.26), (36, 0.30),
+                (40, 0.16), (46, 0.16), (52, 0.26), (TOTAL, 0.24)])
 RAIN = Track([(0, 0.0), (TOTAL, 0.0)])
 # festival sparkle
-MOTES = Track([(0, 0.10), (2, 0.45), (10, 0.50), (19, 0.70), (28, 0.85), (33, 1.15), (37, 1.1), (40, 0.45),
-               (46, 0.55), (52, 1.0), (TOTAL, 0.85)])
+MOTES = Track([(0, 0.08), (2, 0.32), (10, 0.36), (19, 0.48), (28, 0.6), (33, 0.8), (37, 0.78), (40, 0.32),
+               (46, 0.4), (52, 0.7), (TOTAL, 0.6)])
 LANTERNS = Track([(0, 0.0), (TOTAL, 0.0)])
 PETALS = Track([(0, 0.0), (TOTAL, 0.0)])
 TRAIL = Track([(0, 0.0), (1.2, 0.6), (19, 0.8), (31, 1.1), (37, 1.1), (40, 0.6), (50, 1.0), (TOTAL, 1.0)])
@@ -215,7 +215,7 @@ PART = Track([(0, 0.0), (28, 0.0), (32, 1.0), (38, 1.0), (42, 0.3), (TOTAL, 0.3)
 
 # Royal colors: gold embroidery aurora (warm pair) with a crimson and purple thread (cool pair, used with MILKY,
 # which stays 0 here), and gold and rose-gold festival sparkle
-AURORA_WARM = ("#ffcf6a", "#ff9a5a")
+AURORA_WARM = ("#ffd77a", "#e0607a")
 AURORA_COOL = ("#c0406a", "#8a4ad0")
 MOTE_COLORS = ("#ffe08a", "#ffb07a")
 
