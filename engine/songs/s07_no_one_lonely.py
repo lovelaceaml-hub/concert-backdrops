@@ -210,11 +210,11 @@ SCENES = [
     dict(image=P + "bench_by_the_shore.jpg", t0=23.0, t1=38.0, fade_in=2.5, fade_out=2.0, transition="push",
          zoom=(1.10, 1.08), calm_gain=0.85, water=True, water_line=0.21,
          gain=Track([(0, 1.0), (26.0, 1.0), (29.0, 0.88), (36.0, 0.88), (38.0, 1.0)])),
-    # 4. The helping hand: the village path, its windows dark, a ripple of stillness across the lake; then
+    # 4. The helping hand: the village path, its windows dark (a soft fade in); then
     # "answered from the windows" (this song's own effect): the windows light up one by one, from the near house
     # to the far end of the village, as the kindness spreads (assets/plates/s07/windows.py)
-    dict(image=P + "village_w0.jpg", t0=36.0, t1=42.5, fade_in=2.0, fade_out=1.2, transition="ripple",
-         ripple_from=(0.70, 0.30), zoom=VILLAGE_ZOOM, calm_gain=0.85, water=True, water_line=0.27, gain=0.9),
+    dict(image=P + "village_w0.jpg", t0=36.0, t1=42.5, fade_in=2.0, fade_out=1.2, transition="fade",
+         zoom=VILLAGE_ZOOM, calm_gain=0.85, water=True, water_line=0.27, gain=0.9),
     dict(image=P + "village_w1.jpg", t0=41.3, t1=44.5, fade_in=1.2, fade_out=1.2, zoom=VILLAGE_ZOOM,
          calm_gain=0.85, water=True, water_line=0.27, gain=0.9),
     dict(image=P + "village_w2.jpg", t0=43.3, t1=46.5, fade_in=1.2, fade_out=1.2, zoom=VILLAGE_ZOOM,
@@ -229,35 +229,17 @@ SCENES = [
          gain=Track([(0, 0.92), (52.0, 0.86), (54.0, 0.74), (TOTAL, 0.74)])),
 ]
 
-# B. People of light. The traveler, Heavenly Mother (seen only from behind, robed, a lamp raised) and the lantern
-# pair are this song's own figures; the helper comes from the shared Greeting pose (only the helper, so the one
-# greeted is the traveler on the bench) and Consideration is the shared pair.
+# B. People of light (round 3, Anthony: people rare and always moving, never the focus). Only two brief
+# appearances, each almost all gathering and flowing light: the traveler on the path at dusk, and Heavenly Mother,
+# seen only from behind with her lamp raised, going on ahead along the path home. The expressions are carried by the
+# words, the path of light, the windows answering and the star relights.
 FIGURES = [
-    # scene 1: the elderly traveler walks the shore path toward the bench with her heavy bundle and stick ...
-    dict(poses=[F + "s07_traveler_walk.png"], t0=0.8, t1=5.4, x=0.40, y=0.45, height=0.22, flip=True,
-         color="#ffcf9a", to=(0.235, 0.52), dissolve=2.0),
-    # ... and sits down alone on the bench under the lamp
-    dict(poses=[F + "s07_traveler_seated.png"], t0=5.0, t1=11.5, gather=2.5, x=0.235, y=0.455, height=0.18,
-         color="#ffd2a0", to=(0.14, 0.50), dissolve=2.5),
-    # scene 2: the lone light on the far bench, found by the path of light from Mother's star
-    dict(poses=[F + "s07_traveler_seated.png"], t0=13.5, t1=23.5, gather=2.5, x=0.14, y=0.44, height=0.17,
-         color="#ffd2a0", glow=1.2, to=(0.29, 0.40), dissolve=2.4),
-    # scene 3: still alone on the bench through the Greeting ...
-    dict(poses=[F + "s07_traveler_seated.png"], t0=23.5, t1=35.3, gather=2.5, x=0.29, y=0.28, height=0.28,
-         color="#ffd2a0", to_star=0),
-    # ... the helper walks up, waves, and holds out both hands to her: "How are you?"
-    dict(poses=[F + "s07_helper_greet_a.png", F + "s07_helper_greet_b.png"], t0=25.0, t1=35.3,
-         pose_times=[30.0], x=0.47, y=0.28, height=0.36, flip=True, to_star=0, color="#ffd59a"),
-    # Consideration: the helper offers a hand with the heavy bundle, and they carry it together
-    dict(poses=[L + "consideration_a.png", L + "consideration_b.png"], t0=36.8, t1=C_HOLD - 0.5, pose_times=[42.0],
-         x=0.42, y=0.28, height=0.34, to_star=7, color="#ffc98a"),
-    # the lantern procession: the front pair of lantern-bearers walks up the village path
-    dict(poses=[F + "s07_lantern_pair.png"], t0=44.0, t1=51.0, x=0.77, y=0.37, height=0.21,
-         color="#ffd27a", glow=1.1, leave="drift", dissolve=3.0),
-    # scene 5: Heavenly Mother, seen only from behind, lamp held high, leads the way home up the path (below the
-    # end card; She stays to the end)
-    dict(poses=[F + "s07_mother_lamp_behind.png"], t0=52.0, t1=70.0, x=0.17, y=0.12, height=0.25,
-         color="#fff0d2", glow=1.1),
+    # scene 1: the elderly traveler appears on the shore path and her light flows on into the lamp by the bench
+    dict(poses=[F + "s07_traveler_walk.png"], t0=5.0, t1=7.8, gather=2.5, x=0.40, y=0.45, height=0.22, flip=True,
+         color="#ffcf9a", to=(0.235, 0.56), dissolve=2.5),
+    # scene 5: Heavenly Mother from behind leads the way; her light flows on along the lantern path, below the card
+    dict(poses=[F + "s07_mother_lamp_behind.png"], t0=52.0, t1=55.0, gather=2.5, x=0.17, y=0.12, height=0.25,
+         color="#fff0d2", glow=1.1, to=(0.46, 0.20), dissolve=3.0),
 ]
 
 # C. Signature effects. The lone light found: a path of light from the horizon star along the shore to the bench
