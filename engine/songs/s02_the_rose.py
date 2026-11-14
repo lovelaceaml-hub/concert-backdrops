@@ -221,6 +221,8 @@ def PETAL_COLORS(t):
 
 MOTE_COLORS = ("#f4f8ff", "#cfe0ff")              # frost glints, white and silver blue
 MOTE_Y = (1.05, -0.05)                            # motes fall slowly, like the finest snow
+AURORA_WARM = ("#c9d8ff", "#e4d8ff")              # the trio's faint veil: silver and pale violet, never gold
+AURORA_COOL = ("#c9d8ff", "#e4d8ff")
 
 # Nine lights on an arch over the stage, one for each expression
 STAR_POS = []
