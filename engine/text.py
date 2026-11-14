@@ -18,7 +18,7 @@ MAX_W = 1580
 END_TITLE_Y = 0.315      # centre of the title on a three-line end card (the lines sit under it, above the lower third)
 
 
-def shield(img, reach=1.0, gain=1.6):
+def shield(img, reach=1.25, gain=1.6):
     """A wide, soft field round the letters (0..1, top row first), used to dim the scene and the light behind
     the text (Astra round 1, finding 3). It fills the space between lines and reaches about 70 px out."""
     from scipy import ndimage as ndi
@@ -134,7 +134,7 @@ def render_fragment(text, dy=0.0, size=74):
     wl = f.getlength(text)
     sharp = np.asarray(img)
     glow = np.asarray(img.filter(ImageFilter.GaussianBlur(6)))
-    back = shield(img, reach=0.8)
+    back = shield(img, reach=1.0)
     return np.dstack([sharp, glow, back])[::-1].copy(), ((W / 2 - wl / 2) / W, (W / 2 + wl / 2) / W)
 
 

@@ -446,7 +446,15 @@ class Upgrade:
             if tm is None:
                 continue
             loc, dur, out = tm
-            shade = ss(0.0, 0.45 * dur, loc) * (1.0 - ss(0.0, 1.4, out) if out > 0 else 1.0)
+            # the shade follows the words onto the screen: a reflection only once it rises out of the water,
+            # petals only once they settle, so no dark patch waits where nothing is written yet
+            if f["style"] == 2:
+                shade = ss(0.35 * dur, 0.95 * dur, loc)
+            elif f["style"] == 3:
+                shade = ss(0.45 * dur, 1.0 * dur, loc)
+            else:
+                shade = ss(0.0, 0.45 * dur, loc)
+            shade *= (1.0 - ss(0.0, 1.4, out)) if out > 0 else 1.0
             if f["style"] in (1, 4):   # written or engraved: the shadow follows the pen, left to right
                 params = (loc * 1.04 + 1.35, dur + 1.35, out if out > 0 else -1.0, 0.85)
             else:

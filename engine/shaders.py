@@ -659,8 +659,9 @@ void main(){
     float far = smoothstep(0.0, 0.25, d);
     vec3 fc = uFieldCol*((0.10+0.90*wave)*(head*(0.6+0.8*h)) + stalk*0.4)*far;
     fc += uFieldCol*(0.05+0.10*wave)*(1.0-far*0.5);   // a soft golden ground under the grain
-    float cover = uField.x*smoothstep(0.0, 0.02, d);
+    float cover = uField.x*smoothstep(0.0, 0.12, d);
     fc *= 1.0-0.50*smoothstep(0.55, 1.0, d);          // the bottom stays calmer for the performers
+    fc = mix(fc, uFieldCol*0.06, (1.0-calmK(sv.y))*0.75);   // and calmer still with BOTTOM_CALM
     col = mix(col, col*0.30+fc, cover);
     col += uFieldCol*0.12*exp(-d*12.0)*uField.x;       // light haze along the far edge of the field
   }
@@ -678,19 +679,24 @@ void main(){
   // soft shadows so the words stay readable against bright skies
   uv = sv;
   float sh = max(texture(uTextA, uv).b*uShade.x, texture(uTextB, uv).b*uShade.y);
+  vec2 cuv = (uv-uCredit.xy)/uCredit.z + uC0;
+  vec3 ct = vec3(0.0);
+  if(cuv.x>0.0 && cuv.x<1.0 && cuv.y>0.0 && cuv.y<1.0) ct = texture(uTextC, cuv).rgb;
   col *= 1.0-min(0.56*uShadeK*sh, 0.92);
-  // bright scenery (a dawn sky, a sunlit lake) is brought down to a fixed level behind the text, so white words
-  // always stand on a calm, darker field (Astra round 1, finding 3)
+  // bright scenery (a dawn sky, a sunlit lake) is brought down to a fixed level behind all text, so white words
+  // always stand on a calm, darker veil (Astra round 1, finding 3). The veil also loses most of its colour, so
+  // a dimmed sun turns a quiet warm grey instead of olive or brown.
+  float shAll = max(sh, ct.b*uCredit.w);
   float lumB = dot(col, vec3(0.2126,0.7152,0.0722));
-  float capB = 0.050/max(uShadeK, 0.5);
-  col *= mix(1.0, min(capB/max(lumB,1e-5), 1.0), smoothstep(0.0, 0.85, sh)*0.92);
+  float capB = 0.065/max(uShadeK, 0.5);
+  float vk = smoothstep(0.0, 0.85, shAll);
+  float sc = mix(1.0, min(capB/max(lumB,1e-5), 1.0), vk*0.92);
+  col *= sc;
+  float lumD = dot(col, vec3(0.2126,0.7152,0.0722));
+  col = mix(col, vec3(lumD)*vec3(1.06,0.97,0.90), vk*(1.0-sc)*0.75);
   float tight = max(wordMask(uTextA, uv, uTxA, uBndA), wordMask(uTextB, uv, uTxB, uBndB));
   col *= 1.0-min(0.50*uShadeK*tight, 0.92);
-  vec2 cuv = (uv-uCredit.xy)/uCredit.z + uC0;
-  if(cuv.x>0.0 && cuv.x<1.0 && cuv.y>0.0 && cuv.y<1.0){
-    vec3 ct = texture(uTextC, cuv).rgb;
-    col *= 1.0-(ct.g*0.50+ct.b*0.34)*uCredit.w;
-  }
+  col *= 1.0-(ct.g*0.50+ct.b*0.34)*uCredit.w;
   vec3 L = texture(uL, uv).rgb;
   vec3 bl = texture(uB1,uv).rgb*0.34 + texture(uB2,uv).rgb*0.28 + texture(uB3,uv).rgb*0.24 + texture(uB4,uv).rgb*0.22;
   col += L + bl*uBloom;
