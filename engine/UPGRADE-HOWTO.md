@@ -134,6 +134,24 @@ TAGLINE = dict(text="Where a mother’s love reaches, peace settles.\nSunday, De
 - **Look changes** from the demo check: shard lines are thin glass edges now, the beam is a gentle column (raise `BEAM` above 0.5 only for a single big moment), and people of light are brighter. The demo uses figures at `height=0.40`, feet `y=0.20`, with two-line words at `y=0.30` (size 96) or one line at `y=0.29` (size 112).
 - **Reading time** (PHASE2.md item 4) is not enforced by the engine; plan it: formation takes about 3.75 seconds from `form`, so `hold` at least `form + 9.75` gives 6 seconds fully formed.
 
+## G. Moving figures (round 3, 2026-11-14)
+
+People of light are now rare and always moving (project-docs: DIRECTION-R3). A FIGURES entry's `x`, `y` and `height` can each be:
+
+- a number (still, as before),
+- a Track or any function of time, for example `x=Track([(20.0, 0.20), (25.0, 0.60)])`,
+- a pair `(start, end)`, eased over `move=(ta, tb)` (default: the figure's `t0` to `t1`) with `ease="smooth"` (default), `"linear"`, `"in"` or `"out"`.
+
+`bob=1.0` adds a gentle walking bob (a small lift per step, only while the figure moves sideways; 0, the default, is off). Use `flip=True` so the pose faces the way it walks. The sparks, the outline and the dissolve all move with the figure.
+
+```python
+FIGURES = [
+    dict(poses=["assets/song_figures/s04/traveler_a.png", "assets/song_figures/s04/traveler_b.png"],
+         t0=20.0, t1=25.5, pose_times=[22.5], x=(0.18, 0.42), ease="linear", bob=1.0,
+         y=0.22, height=0.30, leave="drift"),
+]
+```
+
 ## F. Fixes from the round 2 attack reviews (2026-11-14, branch engine-fix-r2)
 
 Nothing to change in a song file; all song files load as before. What changed, and the new optional settings:
