@@ -20,7 +20,7 @@ MUSIC_END = 59.3       # last sounding moment of the clip (final chord at 4:00 o
 SONG_END = 60.0        # length of the clip
 TOTAL = 60.0           # promo length
 NFRAMES = int(round(TOTAL * FPS))
-HORIZON = 0.30         # water line, as a fraction of the height from the bottom
+HORIZON = 0.24         # water line, fraction of the height from the bottom: low, for the big sky of song 01
 
 RIDGE_X0, RIDGE_W = 0.035, 0.93
 
@@ -161,12 +161,12 @@ TITLE_HIT = 53.5       # end card
 
 # Scene palettes (top of sky, middle, horizon, glow of the low sun): the last of the night to the first morning
 PAL = {
-    "lastnight": ("#040820", "#141a46", "#3c3466", "#c79ab0"),
-    "blush":     ("#071030", "#2a2a62", "#8c5a78", "#ffb092"),
-    "dawn":      ("#0e1c4c", "#4c3d7e", "#d98274", "#ffcf96"),
-    "rise":      ("#14306a", "#6e5a92", "#f5a070", "#ffe0a8"),
-    "gold":      ("#1a3a76", "#7a6498", "#fbb57c", "#ffeac0"),
-    "morning":   ("#1a3c78", "#6f5f96", "#f2b585", "#ffe6bc"),
+    "lastnight": ("#03071c", "#0b1440", "#2a2a62", "#a69ad0"),
+    "blush":     ("#050b26", "#1a1d55", "#5a3f86", "#d8a6c8"),
+    "dawn":      ("#0a1848", "#3a3274", "#c4787a", "#ffc890"),
+    "rise":      ("#10285e", "#5e4c80", "#f29a62", "#ffdca0"),
+    "gold":      ("#16336c", "#7e6680", "#fdb46c", "#ffe6b2"),
+    "morning":   ("#173a74", "#8c7282", "#ffc47c", "#ffeac4"),
 }
 _pal_keys = [
     (0.0, "lastnight"), (4.0, "lastnight"), (10.0, "blush"), (17.0, "dawn"), (22.0, "rise"), (33.0, "gold"),
@@ -183,20 +183,20 @@ SUN_INT = Track([(0, 0.30), (4, 0.38), (9, 0.62), (14, 0.55), (19, 0.75), (21, 0
 SUN_Y = Track([(0, 0.24), (12, 0.25), (19, 0.27), (21, 0.29), (26, 0.32), (33, 0.355), (45, 0.39), (TOTAL, 0.41)])
 SUN_SIZE = Track([(0, 0.10), (21, 0.11), (33, 0.125), (TOTAL, 0.13)])
 # the last stars: the morning star moment at the peak, then the stars fade into day
-STARS = Track([(0, 0.0), (0.2, 0.0), (1.8, 0.95), (6, 1.0), (9, 1.0), (13, 0.7), (21, 0.35), (30, 0.14), (TOTAL, 0.10)])
-MILKY = Track([(0, 0.0), (1.5, 0.30), (8, 0.25), (14, 0.0), (TOTAL, 0.0)])
-CLOUDS = Track([(0, 0.25), (12, 0.45), (21, 0.55), (40, 0.6), (TOTAL, 0.55)])
-AURORA = Track([(0, 0.06), (8, 0.18), (10, 0.30), (20, 0.22), (32, 0.30), (41, 0.40), (50, 0.38), (TOTAL, 0.30)])
+STARS = Track([(0, 0.0), (0.2, 0.0), (1.8, 1.0), (9, 1.0), (14, 0.8), (21, 0.40), (30, 0.14), (TOTAL, 0.10)])
+MILKY = Track([(0, 0.0), (1.5, 0.85), (9, 0.80), (15, 0.35), (21, 0.0), (TOTAL, 0.0)])
+CLOUDS = Track([(0, 0.0), (14, 0.0), (22, 0.10), (40, 0.12), (TOTAL, 0.10)])   # a clear sky
+AURORA = Track([(0, 0.0), (TOTAL, 0.0)])   # no aurora in song 01 (it belongs to songs 03 and 08)
 RAIN = Track([(0, 0.0), (TOTAL, 0.0)])
 MOTES = Track([(0, 0.10), (4, 0.25), (9, 0.55), (15, 0.40), (21, 0.60), (32, 0.55), (41, 0.70), (50, 0.60), (TOTAL, 0.45)])
 LANTERNS = Track([(0, 0.0), (TOTAL, 0.0)])
 PETALS = Track([(0, 0.0), (TOTAL, 0.0)])
 TRAIL = Track([(0, 0.0), (1.2, 0.55), (9, 0.8), (21, 0.95), (41, 1.05), (TOTAL, 1.0)])
-ZOOM = Track([(0, 1.0), (21, 0.985), (41, 0.968), (TOTAL, 0.955)])
+ZOOM = Track([(0, 1.0), (21, 0.992), (41, 0.982), (TOTAL, 0.975)])   # stays wide
 EXPOSURE = Track([(0, 1.0), (40, 1.0), (50, 0.86), (TOTAL, 0.84)])   # calmer light behind the end card
 FADE = Track([(0, 0.0), (1.2, 1.0), (58.6, 1.0), (59.9, 0.0)])
 RAYS = Track([(0, 0.0), (19, 0.0), (22, 0.35), (28, 0.50), (32, 0.60), (41, 0.50), (50, 0.40), (TOTAL, 0.35)])
-PART = Track([(0, 0.0), (20, 0.0), (23, 1.0), (30, 1.0), (36, 0.3), (TOTAL, 0.3)])
+PART = Track([(0, 0.0), (TOTAL, 0.0)])
 
 # Nine lights on an arch over the stage, one for each expression (campaign order, left to right)
 STAR_POS = []
