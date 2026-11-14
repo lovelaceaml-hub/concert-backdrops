@@ -78,11 +78,11 @@ G_FORM = 12.5          # Greeting           (dissolve ends 24.1)
 C_FORM = 24.6          # Consideration      (dissolve ends 36.2)
 E_FORM = 36.7          # Encouragement      (dissolve ends 48.3)
 HOLD = 10.0
-EARTH = 46.8           # scene 4: peace across the world
+EARTH = 48.0           # scene 4: peace across the world (after the words of 36.7 have dissolved at 48.3)
 SWEEP = 48.6           # the other six lights flare in turn
 NINTH = 50.0
 TITLE_HIT = 52.4       # end card (title forms from 49.4, 1.1 s after Encouragement has gone)
-HOME = 50.2            # scene 5: the night of peace shows through as the Earth plate fades out
+HOME = 51.0            # scene 5: the night of peace shows through as the Earth plate fades out
 
 # Calm story curve that stands in for loudness (no recording yet)
 _STORY = Track([(0, 0.30), (LAMP, 0.33), (12, 0.44), (30, 0.50), (46, 0.60), (50, 0.68), (56, 0.58), (TOTAL, 0.52)])
@@ -222,8 +222,9 @@ def MOTE_COLORS(t):
 # Scenes 1, 2, 3 and 5 are the engine's own lake, lamp and sky (no painted plates exist for this song in the
 # repository); scene 4 is a plate painted from code: assets/plates/s10/make_plates.py
 SCENES = [
-    dict(image="assets/plates/s10/earth_web.jpg", t0=EARTH, t1=HOME + 2.6, fade_in=2.2, fade_out=2.6,
-         transition="dissolve", zoom=(1.0, 1.06), pan=((0.0, 0.0), (0.0, 0.01)), water=False,
+    # it comes in only after Encouragement's words have gone (no glowing edge across letters)
+    dict(image="assets/plates/s10/earth_web.jpg", t0=EARTH, t1=HOME + 3.8, fade_in=1.6, fade_out=3.0,
+         transition="fade", zoom=(1.0, 1.06), pan=((0.0, 0.0), (0.0, 0.01)), water=False,
          gain=Track([(0, 1.0), (48.6, 1.0), (50.0, 0.85), (TOTAL, 0.85)])),
 ]
 
@@ -335,7 +336,7 @@ def credit_state(t, bbox):
 # the end card
 WAVES = sorted([(p["arrive"], STAR_POS[i][0], STAR_POS[i][1], 0.45 if p["form"] < _OFF else 0.16)
                 for i, p in enumerate(PHRASES)])
-WAVES.append((TITLE_HIT, 0.5, 0.62, 1.2))
+WAVES.append((TITLE_HIT, 0.5, 0.62, 0.55))   # soft: a strong wave left a bright blob under the title
 
 
 # star_state and link_state come from engine/arch.py (installed by song.py), the same for every song.
