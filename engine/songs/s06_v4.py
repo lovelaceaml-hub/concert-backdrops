@@ -170,7 +170,8 @@ GRAIN = (47.3, 0.72, 0.14)          # the last grain reaches the lake: time, x, 
 TEXT_SHADOW = 0.0         # round 4: nothing dark behind any text; the sky behind the words is kept deep instead
 SKYLINE_LANTERN = 1.0     # the original look: a small light travels along the mountain line
 # a calm lower third; a little lighter in the field and wilderness scenes, where no expression is on screen
-BOTTOM_CALM = Track([(0, 0.55), (8.0, 0.55), (10.5, 1.0), (33.3, 1.0), (35.0, 0.6), (TOTAL, 0.6)])
+BOTTOM_CALM = Track([(0, 0.55), (8.0, 0.55), (10.5, 1.0), (33.3, 1.0), (35.0, 0.35), (41.5, 0.35), (44.0, 0.6),
+                     (TOTAL, 0.6)])
 # Rings carried from earlier songs: Apology (index 2) relit once in song 04; Encouragement (index 6) relit in
 # songs 02, 03 and 05.
 RINGS_AT_START = {2: 1, 6: 3}
@@ -183,7 +184,7 @@ PAL = {
     "rose":    ("#060920", "#211838", "#8e4248", "#ff9468"),
     "dust":    ("#0e0a16", "#2a1a1c", "#8a5630", "#ffb868"),
     "breath":  ("#0c0820", "#38183a", "#c8704a", "#ffc888"),
-    "glory":   ("#0b0b26", "#341c3e", "#e09048", "#ffd898"),
+    "glory":   ("#090a24", "#2c1838", "#b87040", "#ffd090"),
 }
 _pal_keys = [(0.0, "harvest"), (6.0, "harvest"), (10.5, "ember"), (19.5, "ember"), (23.5, "rose"), (32.0, "rose"),
              (34.5, "dust"), (38.5, "dust"), (42.0, "breath"), (46.0, "breath"), (50.0, "glory"), (TOTAL, "glory")]
@@ -192,11 +193,11 @@ SKY_MID = Track([(t, lin(PAL[p][1])) for t, p in _pal_keys])
 SKY_HOR = Track([(t, lin(PAL[p][2])) for t, p in _pal_keys])
 GLOW = Track([(t, lin(PAL[p][3])) for t, p in _pal_keys])
 SUN_INT = Track([(0, 1.0), (7, 0.9), (11, 0.75), (19.5, 0.7), (23.5, 0.5), (32, 0.45), (34.5, 0.32), (38, 0.32),
-                 (41.5, 0.65), (46, 0.8), (52, 1.0), (TOTAL, 0.95)])
+                 (41.5, 0.65), (46, 0.8), (49, 0.75), (52, 0.62), (TOTAL, 0.6)])
 SUN_Y = Track([(0, 0.325), (7, 0.318), (11, 0.292), (19.5, 0.284), (23.5, 0.245), (33, 0.24), (40, 0.245),
-               (46, 0.275), (52, 0.31), (TOTAL, 0.315)])
+               (46, 0.275), (52, 0.29), (TOTAL, 0.292)])
 SUN_SIZE = Track([(0, 0.12), (TOTAL, 0.125)])
-STARS = Track([(0, 0.0), (20, 0.0), (24, 0.32), (32, 0.38), (35, 0.12), (40, 0.0), (TOTAL, 0.0)])
+STARS = Track([(0, 0.12), (8, 0.18), (20, 0.24), (24, 0.36), (32, 0.4), (35, 0.2), (40, 0.12), (TOTAL, 0.14)])
 MILKY = Track([(0, 0.0), (TOTAL, 0.0)])
 CLOUDS = Track([(0, 0.45), (8, 0.45), (12, 0.3), (20, 0.3), (24, 0.2), (32, 0.22), (34.5, 0.7), (39.5, 0.65),
                 (43, 0.45), (TOTAL, 0.4)])
@@ -209,16 +210,16 @@ LANTERNS = Track([(0, 0.0), (22.0, 0.0), (25.0, 0.22), (32.0, 0.22), (34.5, 0.0)
 PETALS = Track([(0, 0.0), (TOTAL, 0.0)])   # no petals: fragrance is golden dust and warm glow
 MOTE_COLORS = ("#ffd27a", "#ff9a3c")       # golden dust, wheat gold to deep orange
 LANTERN_COLORS = ("#ffd27a", "#ffa040")
-TRAIL = Track([(0, 0.4), (TOTAL, 0.6)])
+TRAIL = Track([(0, 0.2), (TOTAL, 0.25)])
 ZOOM = Track([(0, 0.985), (TOTAL, 0.955)])
 EXPOSURE = Track([(0, 1.0), (TOTAL, 1.0)])
 FADE = Track([(0, 0.0), (0.8, 1.0), (58.9, 1.0), (TOTAL, 0.0)])
-RAYS = Track([(0, 0.7), (8, 0.6), (10.5, 0.3), (19.5, 0.3), (23, 0.0), (40, 0.0), (43, 0.3), (48, 0.45),
-              (52, 0.65), (TOTAL, 0.6)])
+RAYS = Track([(0, 0.6), (8, 0.55), (10.5, 0.3), (19.5, 0.3), (23, 0.0), (40, 0.0), (43, 0.3), (47, 0.4),
+              (50, 0.25), (TOTAL, 0.25)])
 PART = Track([(0, 0.4), (38.5, 0.4), (41.5, 1.0), (47, 1.0), (50, 0.5), (TOTAL, 0.5)])
 
 # Signature 1: the golden field of light (this song's own effect), in front of the lake in scenes 1, 5 and 6
-GOLDEN_FIELD = Track([(0, 1.0), (7.0, 1.0), (10.5, 0.0), (40.5, 0.0), (44.0, 0.7), (48.0, 0.85), (TOTAL, 0.9)])
+GOLDEN_FIELD = Track([(0, 0.85), (7.0, 0.85), (10.5, 0.0), (40.5, 0.0), (44.0, 0.65), (48.0, 0.8), (TOTAL, 0.8)])
 FIELD_LINE = Track([(0, 0.17), (30.0, 0.17), (40.0, 0.2), (TOTAL, 0.2)])
 FIELD_COLOR = "#ffc35a"
 FIELD_SPEED = 0.9
@@ -226,15 +227,15 @@ FIELD_SPEED = 0.9
 # after Inclusiveness, then "thaws" into pools whose glowing edges are gold water spreading through the cracks.
 ICE = Track([(0, 0.0), (33.3, 0.0), (34.8, 1.0), (36.0, 1.0), (41.5, 0.0), (TOTAL, 0.0)])
 ICE_LINE = HORIZON
-ICE_COLOR = "#9a7048"
-THAW_COLOR = "#ffc24a"
-ICE_OPACITY = 0.95
+ICE_COLOR = "#c8915a"
+THAW_COLOR = "#ffcf5a"
+ICE_OPACITY = 1.0
 # The path of light on the water (Concession) and, at the end, the last grain falling into the lake (a thin shaft)
-BEAM = Track([(0, 0.0), (9.0, 0.0), (12.0, 0.4), (19.6, 0.4), (22.5, 0.0), (45.9, 0.0), (46.7, 0.55),
-              (47.7, 0.55), (48.8, 0.0), (TOTAL, 0.0)])
-BEAM_FROM = Track([(0, (0.5, 0.272)), (30.0, (0.5, 0.272)), (40.0, (GRAIN[1], 1.02)), (TOTAL, (GRAIN[1], 1.02))])
+BEAM = Track([(0, 0.0), (9.0, 0.0), (12.0, 0.4), (19.6, 0.4), (22.5, 0.0), (46.0, 0.0), (46.8, 0.45),
+              (47.6, 0.45), (48.8, 0.0), (TOTAL, 0.0)])
+BEAM_FROM = Track([(0, (0.5, 0.272)), (30.0, (0.5, 0.272)), (40.0, (GRAIN[1], 0.56)), (TOTAL, (GRAIN[1], 0.56))])
 BEAM_TO = Track([(0, (0.5, 0.08)), (30.0, (0.5, 0.08)), (40.0, GRAIN[1:]), (TOTAL, GRAIN[1:])])
-BEAM_WIDTH = Track([(0, (0.006, 0.10)), (30.0, (0.006, 0.10)), (40.0, (0.003, 0.018)), (TOTAL, (0.003, 0.018))])
+BEAM_WIDTH = Track([(0, (0.006, 0.10)), (30.0, (0.006, 0.10)), (40.0, (0.002, 0.014)), (TOTAL, (0.002, 0.014))])
 BEAM_COLOR = "#ffc070"
 # Signature 3: the relit lantern: Inclusiveness shines again (ring, flare and wave), with a few lanterns on the air.
 # Signature 4: the last grain: one slow widening ring where the shaft meets the lake (Song.rings_at).
@@ -308,8 +309,8 @@ def credit_state(t, bbox):
 
 # Waves of light that cross the sky when a light is lit or shines again (time, x, y, strength)
 WAVES = [(PHRASES[4]["star"], STAR_POS[4][0], STAR_POS[4][1], 0.5),
-         (PHRASES[3]["arrive"], STAR_POS[3][0], STAR_POS[3][1], 0.35),
-         (TITLE_HIT, 0.5, 0.62, 0.6)]
+         (PHRASES[3]["arrive"], STAR_POS[3][0], STAR_POS[3][1], 0.12)]   # gentle: it passes the corner credit
+# (no wave under the end card title: the sky behind it stays deep)
 
 
 def params(song, t):
