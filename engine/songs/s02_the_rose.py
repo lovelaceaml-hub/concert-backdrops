@@ -1,16 +1,23 @@
-"""Song 02, The Rose: 1 minute promo, visual only (no recording of the trio exists yet).
+"""Song 02, The Rose: 1 minute promo v2, visual only (no recording of the trio exists yet).
 
-Design: Google Doc "02 The Rose - Video Design" ("The Seed Under the Snow"). This promo is the heart of it in
-60 seconds, drawn with the engine's current effects:
-  0 to 7    home night lake, stars 9 and 7 already lit (from song 01), title card
-  7 to 16   the home star sinks low (becomes the seed), the coldest, loneliest night; fragment "too lonely"
-  16 to 22  the choir's small lights rise from the water, the trio's ribbons (aurora) gather
-  22 to 34  Encouragement, full wording, about 9 seconds with nothing else competing; its words fly up and
-            relight star 7 (a brief flare and one new thin ring)
-  36 to 50  the seed wakes ("the seed"), dawn rises, rays, the rose's petals ("becomes the rose")
-  50 to 60  end card: Healing Concert, The Words of Mother's Love, date and place
-The signature effects of the design (snow, the frozen lake, the descent under the snow, the rose itself, Mother's
-hands of light) need new engine work; they are not in this promo.
+Design: project-docs/designs/02 The Rose.md ("The Seed Under the Snow"), DESIGN-SYSTEM.md section 6 (the 02 look:
+deep winter night with snowfall, a pale pink spring dawn; silver blue, white, blush pink; close and quiet framing).
+No painted plates for song 02 are in the repository, so every scene is built from the engine's own layers.
+
+Five scenes, each with its own framing and dominant object:
+  0 to 9    1 FIRST SNOW: song 01's morning darkens into a winter night over open water (wide), the first snow
+            falls; fragment "too lonely" rises out of the water as a reflection
+  9 to 27   2 THE FROZEN LAKE AND THE LONG NIGHT: ice spreads over the lake, frost creeps in from the corners,
+            the blizzard thickens (closer). People of light act out Encouragement: one kneels exhausted, the
+            other prays over them, then cheers them up, and both stand with joined hands raised. The full words
+            form as she prays and fly into star 7 (it shines again: a flare and one new thin ring)
+  27 to 39  3 THE SEED UNDER THE SNOW: the snow stops, the darkest and closest frame; a violet thread of light
+            falls from star 7 to the seed glowing gold under the ice; fragment "the seed" is written in light
+  39 to 50  4 THE THAW AND THE ROSE: the ice thaws in pools with blush glowing edges, a pearl and blush dawn,
+            soft rays, rose petals fall; fragment "becomes the rose" settles in petals
+  50 to 60  5 SPRING DAWN: open water again, rings of piano notes, the three-line end card
+Signature effects: falling snow in depth (SNOW), the frozen lake and its thaw (ICE, ICE_FRAME), the violet
+thread of the words reaching the seed (BEAM), the rose's petals (PETALS and the petals fragment).
 
 There is no music, so this file does not read the recording's measurements: the gentle breathing of the light,
 the skyline and the "piano note" rings on the water are drawn from the timeline below. The workflow's audio file
@@ -35,6 +42,8 @@ HORIZON = 0.36         # water line, as a fraction of the height from the bottom
 
 RIDGE_X0, RIDGE_W = 0.035, 0.93
 
+from track import Track   # the shared Track refuses keys that are not strictly increasing  # noqa: E402
+
 
 def lin(hexs):
     h = hexs.lstrip("#")
@@ -55,30 +64,12 @@ def _ar(x, attack, release):
     return y
 
 
-class Track:
-    def __init__(self, keys):
-        self.t = np.array([k[0] for k in keys], dtype=np.float64)
-        self.v = np.array([np.atleast_1d(np.asarray(k[1], dtype=np.float64)) for k in keys])
-
-    def __call__(self, t):
-        if t <= self.t[0]:
-            v = self.v[0]
-        elif t >= self.t[-1]:
-            v = self.v[-1]
-        else:
-            i = int(np.searchsorted(self.t, t, side="right")) - 1
-            u = (t - self.t[i]) / (self.t[i + 1] - self.t[i])
-            u = u * u * (3 - 2 * u)
-            v = self.v[i] * (1 - u) + self.v[i + 1] * u
-        return float(v[0]) if v.shape[0] == 1 else v
-
-
 # The drawn "music": how strongly the light breathes through the minute (0 to 1)
-BREATH = Track([(0, 0.30), (6, 0.30), (12, 0.20), (18, 0.18), (22, 0.34), (27, 0.52), (31, 0.55), (34, 0.48),
-                (38, 0.34), (44, 0.58), (50, 0.74), (56, 0.62), (TOTAL, 0.55)])
+BREATH = Track([(0, 0.30), (6, 0.28), (12, 0.18), (16, 0.22), (21, 0.40), (26, 0.52), (29, 0.50), (33, 0.34),
+                (38, 0.40), (44, 0.58), (50, 0.70), (56, 0.62), (TOTAL, 0.55)])
 # Piano notes drawn as rings on the water: on the open lake at the start and again after the thaw; none while
 # the lake is frozen (the design's winter)
-RING_SPANS = [(1.5, 11.0, 2.1), (44.0, 59.0, 1.5)]
+RING_SPANS = [(1.5, 8.5, 2.1), (47.0, 59.0, 1.5)]
 
 
 class Song:
@@ -143,125 +134,148 @@ class Song:
         return out
 
 
-# Landmarks (seconds into the promo)
-STAR_SINKS = 9.0       # the home star goes down to the shore and becomes the seed
-ENC_FORM = 22.0        # Encouragement starts forming
-ENC_HOLD = 31.0        # its words begin to fly
-ENC_ARRIVE = 33.5      # they reach star 7: a brief flare and one new thin ring
-SEED_WAKES = 38.0
-DAWN = 44.0
+# ----------------------------------------------------------------- the minute (seconds into the promo)
+FREEZE = 9.0           # the ice starts to spread over the lake
+FIG_IN = 12.0          # the people of light gather (Encouragement acted out)
+ENC_FORM = 15.6        # the words start forming as she prays (fully formed at about 19.35)
+ENC_HOLD = 26.0        # the words begin to fly (6.65 seconds fully formed and solid)
+ENC_ARRIVE = 28.5      # they reach star 7: a flare and one new thin ring
+SEED = 29.0            # scene 3: the seed under the snow
+THAW = 39.0            # scene 4: the thaw and the rose
+SPRING = 50.0          # scene 5: spring dawn and the end card
 NINTH = 1e9            # the whole arch does not glow at the end of this song
-# star_state and link_state below are replaced by engine/arch.py when the engine loads this file
-TITLE_HIT = 51.6       # end card
+TITLE_HIT = 53.8       # end card
+SKYLINE_LANTERN = 1.0  # the lonely traveler's small light crossing the long road of the skyline
+TEXT_PROTECT = 1.0
+TEXT_SHADOW = Track([(0, 1.1), (THAW, 1.1), (44.0, 1.45), (TOTAL, 1.6)])   # deeper calm behind words at dawn
 
-# Scene palettes (top of sky, middle, horizon, glow of the low home star / sun).
-# The 02 look (DESIGN-SYSTEM.md section 6): deep winter night with snowfall, a pale pink spring dawn at the end;
-# silver blue, white, blush pink; close and quiet framing.
+# Scene palettes (top of sky, middle, horizon, glow of the low home star / seed / sun).
 PAL = {
     "morning": ("#173a74", "#8c7282", "#ffc47c", "#ffeacc"),   # song 01's closing frame (agreed hand-off)
     "dusk":    ("#101a33", "#3c4566", "#8a8fae", "#d9c9d6"),
     "winter":  ("#0b1424", "#1d2c45", "#5a6f8f", "#cfe0ff"),
     "deep":    ("#05080f", "#0e1828", "#2e3e58", "#b9cbe8"),
-    "violet":  ("#0a0c1e", "#22204a", "#5b5a8c", "#b293e7"),
+    "violet":  ("#0a0c1e", "#22204a", "#4e4c7c", "#c7b0f0"),
+    "seed":    ("#03050b", "#0a1020", "#1b2440", "#ffc98a"),   # the seed glows gold under the ice
     "pearl":   ("#172038", "#4a5274", "#b49cb2", "#f0dbe4"),
     "blush":   ("#212c4c", "#5f6488", "#d9a7b6", "#ffe1e8"),
     "blushpk": ("#26325a", "#6a6d94", "#e2b3c0", "#ffe9ee"),
 }
 _pal_keys = [
-    (0.0, "morning"), (1.5, "morning"), (5.0, "dusk"), (9.0, "winter"), (16.0, "deep"), (21.0, "deep"),
-    (26.0, "violet"), (32.0, "violet"), (36.0, "deep"), (39.0, "deep"), (42.0, "pearl"), (46.0, "blush"),
-    (52.0, "blushpk"), (TOTAL, "blushpk"),
+    (0.0, "morning"), (1.2, "morning"), (4.5, "dusk"), (8.0, "winter"), (13.0, "deep"), (17.0, "violet"),
+    (25.0, "violet"), (29.0, "seed"), (37.0, "seed"), (41.0, "pearl"), (46.0, "blush"), (52.0, "blushpk"),
+    (TOTAL, "blushpk"),
 ]
 SKY_TOP = Track([(t, lin(PAL[p][0])) for t, p in _pal_keys])
 SKY_MID = Track([(t, lin(PAL[p][1])) for t, p in _pal_keys])
 SKY_HOR = Track([(t, lin(PAL[p][2])) for t, p in _pal_keys])
 GLOW = Track([(t, lin(PAL[p][3])) for t, p in _pal_keys])
 
-SUN_INT = Track([(0, 0.90), (1.5, 0.85), (5.0, 0.35), (STAR_SINKS, 0.14), (14, 0.05), (SEED_WAKES - 2, 0.05),
-                 (SEED_WAKES, 0.12), (42, 0.25), (DAWN, 0.40), (48, 0.55), (51, 0.60), (54, 0.45), (TOTAL, 0.42)])
-SUN_Y = Track([(0, 0.41), (1.5, 0.40), (6, 0.30), (12, 0.25), (SEED_WAKES - 2, 0.25), (41, 0.29), (46, 0.36),
-               (53, 0.43), (TOTAL, 0.45)])
-SUN_SIZE = Track([(0, 0.13), (6, 0.08), (12, 0.07), (SEED_WAKES, 0.075), (48, 0.11), (TOTAL, 0.12)])
-STARS = Track([(0, 0.0), (3, 0.15), (8, 0.55), (14, 0.45), (36, 0.45), (42, 0.25), (48, 0.08), (TOTAL, 0.05)])
+# the home star sinks to the shore in the cold, rests as the seed (small, gold, at the waterline), then rises
+# as the dawn
+SUN_INT = Track([(0, 0.90), (1.2, 0.85), (4.5, 0.35), (FREEZE, 0.12), (14, 0.05), (ENC_ARRIVE, 0.05),
+                 (31.0, 0.35), (34.0, 0.55), (37.0, 0.50), (41.0, 0.32), (45.0, 0.42), (50, 0.55), (54, 0.45),
+                 (TOTAL, 0.42)])
+SUN_Y = Track([(0, 0.41), (1.2, 0.40), (6, 0.30), (12, 0.25), (27.0, 0.25), (30.0, 0.368), (37.0, 0.368),
+               (42.0, 0.30), (47, 0.36), (53, 0.43), (TOTAL, 0.45)])
+SUN_SIZE = Track([(0, 0.13), (6, 0.08), (12, 0.07), (27.0, 0.06), (31.0, 0.045), (37.0, 0.05), (42.0, 0.08),
+                  (48, 0.11), (TOTAL, 0.12)])
+STARS = Track([(0, 0.0), (3, 0.15), (8, 0.55), (14, 0.45), (27, 0.40), (31, 0.60), (38, 0.55), (43, 0.25),
+               (48, 0.08), (TOTAL, 0.05)])
 MILKY = Track([(0, 0.0), (TOTAL, 0.0)])          # no Milky Way: that belongs to song 01
-# snow clouds over the winter night, thinning at dawn
-CLOUDS = Track([(0, 0.25), (8, 0.55), (16, 0.70), (36, 0.65), (DAWN, 0.40), (TOTAL, 0.30)])
-# the trio's ribbons: only a faint veil while they speak (aurora is song 03's and 08's texture)
-AURORA = Track([(0, 0.0), (19, 0.0), (ENC_FORM + 2, 0.14), (ENC_HOLD, 0.16), (ENC_ARRIVE + 2, 0.05), (40, 0.0),
-                (TOTAL, 0.0)])
+CLOUDS = Track([(0, 0.25), (8, 0.55), (14, 0.70), (26, 0.65), (30, 0.25), (37, 0.20), (42, 0.40), (TOTAL, 0.30)])
+# the three voices: only a faint silver-violet veil while the Encouragement is acted
+AURORA = Track([(0, 0.0), (FIG_IN, 0.0), (17.0, 0.12), (ENC_HOLD, 0.14), (29.0, 0.03), (31.0, 0.0), (TOTAL, 0.0)])
 RAIN = Track([(0, 0.0), (TOTAL, 0.0)])            # no rain in this song
-# faint frost glints in the air
-MOTES = Track([(0, 0.06), (8, 0.08), (20, 0.10), (30, 0.14), (36, 0.10), (DAWN, 0.16), (52, 0.20), (TOTAL, 0.18)])
+MOTES = Track([(0, 0.05), (8, 0.06), (20, 0.08), (30, 0.10), (37, 0.08), (44, 0.16), (52, 0.20), (TOTAL, 0.18)])
 LANTERNS = Track([(0, 0.0), (TOTAL, 0.0)])        # lanterns belong to songs 03 and 07
-# falling snow through the night (white), easing while Encouragement speaks, then the rose's blush petals at dawn
-PETALS = Track([(0, 0.0), (5.0, 0.0), (8.0, 0.18), (13.0, 0.32), (19.0, 0.30), (ENC_FORM, 0.12), (ENC_HOLD, 0.12),
-                (36, 0.22), (40, 0.18), (43.0, 0.10), (46.0, 0.22), (49.0, 0.28), (52, 0.20), (TOTAL, 0.18)])
+# the rose's blush petals only at dawn (the snow is the SNOW layer now)
+PETALS = Track([(0, 0.0), (40.0, 0.0), (43.0, 0.16), (47.0, 0.24), (52, 0.18), (TOTAL, 0.14)])
 TRAIL = Track([(0, 0.0), (1.2, 0.30), (14, 0.22), (30, 0.45), (48, 0.6), (TOTAL, 0.55)])
-# close and quiet framing, moving slowly closer
-ZOOM = Track([(0, 0.93), (20, 0.91), (ENC_HOLD, 0.895), (TOTAL, 0.875)])
-EXPOSURE = Track([(0, 1.0), (DAWN, 1.0), (48, 0.92), (54, 0.84), (TOTAL, 0.84)])
-FADE = Track([(0, 0.0), (1.0, 1.0), (58.6, 1.0), (TOTAL, 0.0)])
-RAYS = Track([(0, 0.0), (41, 0.0), (DAWN, 0.12), (48, 0.24), (51, 0.24), (54, 0.15), (TOTAL, 0.14)])
-PART = Track([(0, 0.0), (DAWN - 1, 0.0), (47, 0.5), (52, 0.4), (56, 0.2), (TOTAL, 0.2)])
+# framing: wide over open water, closer in the long night, closest on the seed, opening wide again at dawn
+ZOOM = Track([(0, 0.98), (8.0, 0.95), (14.0, 0.90), (26.0, 0.88), (30.0, 0.80), (37.0, 0.77), (43.0, 0.90),
+              (50.0, 0.97), (TOTAL, 0.95)])
+EXPOSURE = Track([(0, 1.0), (44.0, 1.0), (48, 0.92), (54, 0.84), (TOTAL, 0.84)])
+FADE = Track([(0, 0.0), (1.0, 1.0), (58.8, 1.0), (TOTAL, 0.0)])
+RAYS = Track([(0, 0.0), (41, 0.0), (44.0, 0.12), (48, 0.22), (51, 0.22), (54, 0.14), (TOTAL, 0.13)])
+PART = Track([(0, 0.0), (43.0, 0.0), (47, 0.45), (52, 0.4), (56, 0.2), (TOTAL, 0.2)])
 
-
-def _mix_hex(a, b, u):
-    ca = [int(a[k:k + 2], 16) for k in (1, 3, 5)]
-    cb = [int(b[k:k + 2], 16) for k in (1, 3, 5)]
-    return "#" + "".join(f"{int(round(x * (1 - u) + y * u)):02x}" for x, y in zip(ca, cb))
-
-
-def PETAL_COLORS(t):
-    """Snow (white and silver blue) through the night; the rose's blush petals at dawn. Used by the engine when it
-    supports song colors for petals; otherwise the engine's own petal colors apply."""
-    u = min(max((t - 42.0) / 4.0, 0.0), 1.0)
-    u = u * u * (3 - 2 * u)
-    return _mix_hex("#ffffff", "#f6b3c4", u), _mix_hex("#d6e4ff", "#fff1f3", u)
-
-
+PETAL_COLORS = ("#f6b3c4", "#fff1f3")             # the rose's petals: blush and pearl
 MOTE_COLORS = ("#f4f8ff", "#cfe0ff")              # frost glints, white and silver blue
 MOTE_Y = (1.05, -0.05)                            # motes fall slowly, like the finest snow
 AURORA_WARM = ("#c9d8ff", "#e4d8ff")              # the trio's faint veil: silver and pale violet, never gold
 AURORA_COOL = ("#c9d8ff", "#e4d8ff")
 
-# Nine lights on an arch over the stage, one for each expression
+# ----------------------------------------------------------------- signature effects
+# Falling snow in depth: first flakes, the blizzard of the long night, a hover while the words speak, then gone
+SNOW = Track([(0, 0.0), (4.0, 0.0), (7.0, 0.22), (11.0, 0.55), (14.0, 0.60), (16.0, 0.30), (25.0, 0.28),
+              (28.0, 0.12), (30.5, 0.0), (TOTAL, 0.0)])
+SNOW_SPEED = Track([(0, 1.0), (14.0, 1.1), (16.5, 0.35), (25.0, 0.35), (28.0, 0.7), (TOTAL, 0.7)])
+SNOW_WIND = Track([(0, 0.30), (11.0, 0.55), (14.0, 0.55), (16.5, 0.12), (TOTAL, 0.12)])
+SNOW_COLOR = "#eef4ff"
+# The frozen lake: the ice spreads, holds through the night and the seed, then thaws in pools with blush edges
+ICE = Track([(0, 0.0), (FREEZE, 0.0), (15.0, 1.0), (THAW, 1.0), (48.0, 0.0), (TOTAL, 0.0)])
+ICE_LINE = HORIZON
+ICE_OPACITY = 0.88
+ICE_COLOR = "#d4e2ff"
+THAW_COLOR = "#ffc2cf"                            # 02's dawn is pearl and blush, not gold
+ICE_FRAME = Track([(0, 0.0), (10.0, 0.0), (15.0, 0.38), (27.0, 0.38), (33.0, 0.22), (THAW, 0.22), (44.0, 0.0),
+                   (TOTAL, 0.0)])
+# The word reaches down: a violet thread of light from star 7 to the seed under the ice
 STAR_POS = []
 for i in range(9):
     x = 0.12 + 0.095 * i
     y = 0.895 - 0.085 * ((x - 0.5) / 0.38) ** 2
     STAR_POS.append((x, y))
+BEAM = Track([(0, 0.0), (28.6, 0.0), (29.6, 0.48), (31.6, 0.45), (32.8, 0.0), (TOTAL, 0.0)])
+BEAM_FROM = (STAR_POS[6][0], STAR_POS[6][1])
+BEAM_TO = (0.5, HORIZON + 0.008)
+BEAM_WIDTH = (0.006, 0.035)
+BEAM_COLOR = "#c9a8ff"
 
-OFF = 1e9
+# ----------------------------------------------------------------- people of light
+# Encouragement acted out (shared library): a: one kneels exhausted, the other prays over them; b: a hand on
+# their back and the other raised in cheer, they begin to rise; c: both stand and lift their joined hands
+FIGURES = [
+    dict(poses=["assets/figures/encouragement_a.png", "assets/figures/encouragement_b.png",
+                "assets/figures/encouragement_c.png"],
+         t0=FIG_IN, t1=ENC_HOLD - 0.5, pose_times=[19.0, 22.6], x=0.5, y=0.20, height=0.40, to_star=6,
+         color="#d9c6ff"),
+]
+
+OFF = dict(form=1e9, hold=1e9, star=1e9)
+LIT = dict(form=1e9, hold=1e9, star=-100.0)
 PHRASES = [
     # campaign order; full wording. Star history: song 01 lit 9 and 7; song 02 speaks Encouragement again.
-    dict(label="Greeting", lines=["“How are you?”"], size=176, form=OFF, hold=OFF, star=OFF),
-    dict(label="Gratitude", lines=["“Thank you. It’s all thanks to you.", "You’ve worked hard.”"], size=118,
-         form=OFF, hold=OFF, star=OFF),
-    dict(label="Apology", lines=["“I’m sorry.", "It must have been hard on you.”"], size=124, form=OFF, hold=OFF, star=OFF),
-    dict(label="Inclusiveness", lines=["“It’s okay. I understand.”"], size=150, form=OFF, hold=OFF, star=OFF),
-    dict(label="Concession", lines=["“Please, after you.”"], size=164, form=OFF, hold=OFF, star=OFF),
-    dict(label="Respect", lines=["“I’d love to hear more", "about your thoughts.”"], size=128, form=OFF, hold=OFF, star=OFF),
-    dict(label="Encouragement", lines=["“I’ll pray (or root) for you.", "Everything will go well.”"], size=118,
+    dict(label="Greeting", lines=["“How are you?”"], size=176, **OFF),
+    dict(label="Gratitude", lines=["“Thank you. It’s all thanks to you.", "You’ve worked hard.”"], size=118, **OFF),
+    dict(label="Apology", lines=["“I’m sorry.", "It must have been hard on you.”"], size=124, **OFF),
+    dict(label="Inclusiveness", lines=["“It’s okay. I understand.”"], size=150, **OFF),
+    dict(label="Concession", lines=["“Please, after you.”"], size=164, **OFF),
+    dict(label="Respect", lines=["“I’d love to hear more", "about your thoughts.”"], size=128, **OFF),
+    dict(label="Encouragement", lines=["“I’ll pray (or root) for you.", "Everything will go well.”"], size=96, y=0.30,
          form=ENC_FORM, hold=ENC_HOLD, star=-100.0, arrive=ENC_ARRIVE),
-    dict(label="Consideration", lines=["“Can I give you a hand", "with anything?”"], size=128, form=OFF, hold=OFF, star=OFF),
-    dict(label="Compliment", lines=["“You’re amazing.", "You’re doing great!”"], size=140, form=OFF, hold=OFF, star=-100.0),
+    dict(label="Consideration", lines=["“Can I give you a hand", "with anything?”"], size=128, **OFF),
+    dict(label="Compliment", lines=["“You’re amazing.", "You’re doing great!”"], size=140, **LIT),
 ]
 FORM_DUR = 3.0
 TITLE = dict(label="Healing Concert", lines=["The Words of Mother’s Love"], size=150, form=TITLE_HIT - FORM_DUR,
              hold=1e9, star=1e9)
 # Short lyric fragments (a few words each; the song is copyrighted). Never on screen with the expression.
 FRAGMENTS = [
-    dict(text="too lonely", t0=9.0, t1=11.0, out=14.0, dy=0.04, size=84, glow="#cfe0ff"),
-    dict(text="the seed", t0=37.5, t1=39.5, out=42.5, dy=-0.02, size=84, glow="#ffb347"),
-    dict(text="becomes the rose", t0=44.0, t1=45.5, out=47.0, dy=0.02, size=88, glow="#f6b3c4"),
+    dict(text="too lonely", t0=5.8, t1=9.6, out=12.6, dy=0.03, size=84, glow="#cfe0ff", style="reflection"),
+    dict(text="the seed", t0=32.6, t1=35.4, out=38.6, dy=0.0, size=88, glow="#ffc98a", style="write"),
+    dict(text="becomes the rose", t0=41.4, t1=44.6, out=47.8, dy=0.02, size=88, style="petals"),
 ]
 
-TAGLINE = dict(text="Sunday, December 6 · 4:30 PM\nThe World Mission Society Church of God · 6720 W Sahara Ave, Las Vegas",
-               t0=53.0, t1=55.0)
+# the three-line end card (PHASE2.md item 7)
+TAGLINE = dict(text="Where a mother’s love reaches, peace settles.\nSunday, December 6 · 4:30 PM\n"
+                    "The World Mission Society Church of God · 6720 W Sahara Ave, Las Vegas",
+               t0=TITLE_HIT + 1.2, t1=TITLE_HIT + 3.2)
 
 # Opening title card that then rests, small, in the top left corner
 CREDIT = dict(song="The Rose", concert="The Words of Mother’s Love Healing Concert",
-              t_in=0.3, t_full=1.5, t_move=5.0, t_rest=7.0, scale=0.34, alpha_rest=0.58,
+              t_in=0.3, t_full=1.3, t_move=3.6, t_rest=5.4, scale=0.34, alpha_rest=0.58,
               margin_x=0.030, margin_top=0.048)
 
 
@@ -285,43 +299,11 @@ def credit_state(t, bbox):
     return (cx, cy, scale, alpha), (cx0, cy0)
 
 
-# Waves of light that cross the sky (time, x, y, strength): the one new thin ring when star 7 shines again,
-# and the end card
+# Waves of light that cross the sky (time, x, y, strength): star 7 shines again, and the end card
 WAVES = [(ENC_ARRIVE, STAR_POS[6][0], STAR_POS[6][1], 0.45), (TITLE_HIT, 0.5, 0.62, 1.1)]
 
 
-def star_state(t):
-    """Brightness and time since lighting for each of the nine lights."""
-    out = []
-    for i, p in enumerate(PHRASES):
-        age = t - p["star"]
-        if age < -0.2:
-            out.append((0.0, -1.0))
-            continue
-        gather = min(max((age + 0.2) / 0.2, 0.0), 1.0)
-        base = 0.55 * gather
-        flash = np.exp(-max(age, 0.0) * 1.1) * 1.3 if age >= 0 else 0.0
-        if "arrive" in p and t >= p["arrive"]:
-            # a light that was lit in an earlier song shines again: a softer flare
-            flash += np.exp(-(t - p["arrive"]) * 1.1) * 0.9
-        fin = 0.0
-        if t > TITLE_HIT:
-            fin += 0.25 * np.exp(-(t - TITLE_HIT) * 0.25) + 0.10
-        out.append((base + flash + fin, max(age, 0.0)))
-    return out
-
-
-def link_state(t):
-    """A line of light joins two neighbouring lights only when both are lit (here 7 and 9 are not neighbours)."""
-    out = []
-    for i in range(8):
-        t0, t1 = PHRASES[i]["star"], PHRASES[i + 1]["star"]
-        tl = max(t0, t1)
-        g = min(max((t - (tl - 1.2)) / 1.4, 0.0), 1.0)
-        out.append(g * g * (3 - 2 * g))
-    return out
-
-
+# star_state and link_state come from engine/arch.py (song.py installs them when the engine loads this file)
 def params(song, t):
     f = min(int(round(t * FPS)), NFRAMES - 1)
     env, envs, hi, pulse = song.env[f], song.env_slow[f], song.hi[f], song.pulse[f]
@@ -337,14 +319,5 @@ def params(song, t):
         motes=MOTES(t) * (0.75 + 0.5 * envs), lanterns=LANTERNS(t), petals=PETALS(t),
         trail=TRAIL(t), exposure=EXPOSURE(t), fade=FADE(t), rays=RAYS(t), part=PART(t), zoom=ZOOM(t),
         lantern=(lsx, lsy), prog=lx, rings=song.rings_at(t), waves=waves,
-        star=star_state(t), link=link_state(t),
+        star=star_state(t), link=link_state(t),  # noqa: F821 (installed by song.py)
     )
-
-
-if __name__ == "__main__":
-    s = Song()
-    print("frames", NFRAMES, "rings", len(s.rings))
-    for tt in (0, 5, 12, 25, 33.5, 40, 48, 55, 59.9):
-        p = params(s, tt)
-        print(tt, {k: (round(v, 2) if isinstance(v, float) else None) for k, v in p.items() if isinstance(v, float)},
-              [round(x[0], 2) for x in p["star"]])
