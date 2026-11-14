@@ -244,20 +244,21 @@ SCENES = [
     dict(image=PL + "s09_1_saints_shore_mist.jpg", t0=0.0, t1=11.0, fade_in=1.0, fade_out=2.5,
          zoom=(1.10, 1.04), pan=((0.0, 0.0), (0.01, 0.0)), water=True, water_line=0.43),
     dict(image=PL + "s09_2_shore_before_dawn.jpg", t0=8.5, t1=16.0, fade_in=2.5, fade_out=2.5,
-         transition="dissolve", zoom=(1.04, 1.10), water=True, water_line=0.42),
+         transition="dissolve", edge_glow=0.0, zoom=(1.04, 1.10), water=True, water_line=0.42),
     dict(image=PL + "s09_3_encounter_shore.jpg", t0=13.5, t1=35.0, fade_in=2.5, fade_out=2.5,
-         transition="dissolve", zoom=(1.06, 1.02), water=True, water_line=0.50, water_strength=0.4,
+         transition="dissolve", edge_glow=0.0, zoom=(1.06, 1.02), water=True, water_line=0.50, water_strength=0.4,
          gain=Track([(0, 1.0), (ENC_FORM - 1.0, 1.0), (ENC_FORM + 1.0, 0.82), (ENC_ARRIVE, 0.82), (34.0, 1.0)])),
     dict(image=PL + "s09_4_glory.jpg", t0=32.5, t1=44.0, fade_in=2.5, fade_out=2.5,
-         transition="dissolve", zoom=(1.02, 1.10), water=True, water_line=0.26,
-         gain=Track([(0, 1.0), (COMPARE - 0.5, 1.0), (COMPARE + 1.0, 0.72), (COMPARE + 6.5, 0.72), (42.0, 0.95)])),
+         transition="dissolve", edge_glow=0.0, zoom=(1.02, 1.10), water=True, water_line=0.26, calm_gain=0.4,
+         gain=Track([(0, 0.88), (COMPARE - 0.5, 0.88), (COMPARE + 1.0, 0.70), (COMPARE + 6.5, 0.70), (42.0, 0.88)])),
     dict(image=PL + "s09_5_boats_morning.jpg", t0=41.5, t1=61.0, fade_in=2.5, fade_out=0.0,
-         transition="dissolve", zoom=(1.08, 1.02), water=True, water_line=0.54,
+         transition="dissolve", edge_glow=0.0, zoom=(1.08, 1.02), water=True, water_line=0.54, calm_gain=0.4,
          gain=Track([(0, 1.0), (TITLE_HIT - 3.5, 1.0), (TITLE_HIT - 1.0, 0.72), (TOTAL, 0.72)])),
 ]
 
 # B. People of light. Saints and fisherman: Anthony's special figures (assets/song_figures/s09/, prepared with
-# tools/prepare_figure.py --keep-lines). Encouragement: the shared library pair.
+# tools/prepare_figure.py --keep-lines, then turned from filled white
+# silhouettes into line art with a faint fill so the sparks show the folds). Encouragement: the shared library pair.
 WALK = "assets/song_figures/s09/s09_saint_walking_lamp.png"
 LIFT = "assets/song_figures/s09/s09_saint_lifting_lamp.png"
 FIGURES = [
