@@ -156,8 +156,8 @@ BOTTOM_CALM = 1.0
 RINGS_AT_START = {6: 2}   # Encouragement was relit in songs 02 and 03; Apology (03) and Compliment (01) have no rings yet
 
 PAL = {
-    "frost":   ("#3f5d82", "#7f9bbc", "#cbd8e4", "#eef4ff"),
-    "frost2":  ("#3e5c82", "#859fbe", "#d8d8dc", "#f6efe8"),
+    "frost":   ("#5a789c", "#9db3cb", "#d6e0ea", "#eef4ff"),
+    "frost2":  ("#58779c", "#a3b6cc", "#dedcde", "#f6efe8"),
     "melt":    ("#3d5b84", "#9aa3c0", "#ead2c2", "#ffe2c6"),
     "apricot": ("#4d6e9c", "#c8aab0", "#ffc08e", "#ffd6a2"),
     "warm":    ("#4a6c9c", "#c9a6a8", "#f6bd92", "#ffdcb4"),
@@ -200,12 +200,12 @@ PETAL_COLORS = ("#ff9fb2", "#ffe0d2")
 
 # A. scenes: two plates (assets/plates/s04/), with the engine's own frozen lake before, between and after them
 SCENES = [
-    dict(image="assets/plates/s04/frozen_morning.jpg", t0=2.5, t1=20.0, fade_in=3.0, fade_out=3.0,
-         transition="dissolve", zoom=(1.03, 1.12), pan=((0.0, 0.0), (0.0, 0.015)), water=True, water_line=0.30,
-         water_strength=0.45, gain=Track([(0, 1.0), (5.0, 0.86), (17.0, 0.86), (20.0, 1.0)])),
+    dict(image="assets/plates/s04/frozen_morning.jpg", t0=2.0, t1=20.0, fade_in=3.0, fade_out=3.0,
+         transition="fade", zoom=(1.03, 1.12), pan=((0.0, 0.0), (0.0, 0.015)), water=True, water_line=0.30,
+         water_strength=0.45, gain=Track([(0, 1.0), (5.0, 0.80), (17.0, 0.80), (20.0, 1.0)])),
     dict(image="assets/plates/s04/thaw_haze.jpg", t0=27.0, t1=48.0, fade_in=3.0, fade_out=3.5,
          transition="dissolve", zoom=(1.13, 1.04), pan=((0.02, 0.0), (0.0, 0.0)), water=True, water_line=0.37,
-         gain=Track([(0, 0.92), (30.0, 0.80), (46.0, 0.80), (48.0, 0.9)])),
+         gain=Track([(0, 0.88), (30.0, 0.76), (46.0, 0.76), (48.0, 0.86)])),
 ]
 
 # B. people of light: two sisters (the shared figure library)
@@ -222,14 +222,14 @@ FIGURES = [
 
 # C. signature effects: the ice and its thaw, frost over the frame, the warm path of light across the ice
 ICE = Track([(0, 0.0), (0.8, 0.0), (4.0, 1.0), (30.0, 1.0), (34.0, 0.55), (44.0, 0.45), (47.0, 0.40), (53.0, 0.0)])
-ICE_LINE = Track([(0, 0.40), (2.5, 0.40), (5.5, 0.30), (17.0, 0.30), (20.0, 0.40), (27.0, 0.40), (30.0, 0.37),
+ICE_LINE = Track([(0, 0.40), (2.0, 0.40), (5.0, 0.30), (17.0, 0.30), (20.0, 0.40), (27.0, 0.40), (30.0, 0.37),
                   (TOTAL, 0.37)])
 ICE_OPACITY = 0.85
 ICE_FRAME = Track([(0, 0.0), (1.0, 0.0), (5.0, 0.42), (26.0, 0.42), (34.0, 0.15), (46.0, 0.10), (50.0, 0.0)])
-BEAM = Track([(0, 0.0), (30.0, 0.0), (33.0, 0.42), (40.0, 0.42), (43.0, 0.0)])
+BEAM = Track([(0, 0.0), (30.0, 0.0), (33.0, 0.62), (40.0, 0.62), (43.0, 0.0)])
 BEAM_FROM = (0.68, 0.66)
 BEAM_TO = (0.5, 0.24)
-BEAM_WIDTH = (0.010, 0.07)
+BEAM_WIDTH = (0.014, 0.10)
 BEAM_COLOR = "#ffd2a0"
 FLASH = Track([(0, 0.0), (48.4, 0.0), (49.2, 0.22), (51.0, 0.0)])
 TEXT_SHADOW = Track([(0, 1.2), (26.0, 1.2), (30.0, 1.6), (TOTAL, 1.6)])
