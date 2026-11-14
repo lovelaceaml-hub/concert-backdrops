@@ -210,24 +210,27 @@ SCENES = [
     # 1. royal lake with the glowing olive tree: slow push in to a wide symmetrical frame
     dict(image="assets/plates/s08/royal_lake_olive.jpg", t0=0.0, t1=21.2, fade_in=1.0, fade_out=2.0,
          zoom=(1.10, 1.03), pan=((0.0, 0.015), (0.0, 0.0)), water=True, water_line=0.40, water_strength=0.4,
+         calm_gain=0.45,
          gain=Track([(0, 1.0), (6.0, 1.0), (9.0, 0.80), (TOTAL, 0.80)])),
     # 2. festival lake under crimson and gold embroidered aurora: a ring of warm light runs across the water once
     #    the Compliment's words have reached their star; calmer than the first scene (low gain, slow zoom)
     dict(image="assets/plates/s08/festival_embroidered_aurora.jpg", t0=19.2, t1=31.0, fade_in=2.0, fade_out=2.5,
          transition="ripple", ripple_from=(0.5, 0.40), zoom=(1.03, 1.06), water=True, water_line=0.426,
-         water_strength=0.4, gain=Track([(0, 0.75), (21.0, 0.70), (TOTAL, 0.70)])),
-    # 3. heaven opens: clouds parted, a column of gold pouring onto the lake (after the fragment has gone)
-    dict(image="assets/plates/s08/heaven_opens.jpg", t0=28.5, t1=41.5, fade_in=2.5, fade_out=2.5,
-         zoom=(1.03, 1.07), water=True, water_line=0.296, water_strength=0.4,
-         gain=Track([(0, 0.85), (29.5, 0.85), (31.0, 0.70), (38.7, 0.70), (TOTAL, 0.55)])),
+         water_strength=0.4, gain=Track([(0, 0.65), (21.0, 0.60), (TOTAL, 0.60)])),
+    # 3. heaven opens: clouds parted, a column of gold pouring onto the lake (after the fragment has gone);
+    #    heaven_opens_calm.jpg darkens the painted column's reflection in the centre of the lower third
+    dict(image="assets/plates/s08/heaven_opens_calm.jpg", t0=28.5, t1=41.5, fade_in=2.5, fade_out=2.5,
+         zoom=(1.03, 1.07), water=True, water_line=0.296, water_strength=0.3, calm_gain=0.40,
+         gain=Track([(0, 0.65), (38.7, 0.65), (TOTAL, 0.55)])),
     # 4. the velvet path home: deep purple night, a narrow path of light to the horizon (a plain soft fade)
     dict(image="assets/plates/s08/velvet_path_home.jpg", t0=39.0, t1=52.1, fade_in=2.5, fade_out=2.5,
          zoom=(1.03, 1.08), water=True, water_line=0.426, water_strength=0.4),
     # 5. the seven-branched lampstand under the embroidered veil, reframed (lampstand_veil_low.jpg: the veil's top
-    #    band stretched so the whole lampstand sits below the end card, candle tops at about 0.58 from the top)
+    #    band stretched so the whole lampstand sits below the end card, candle tops at about 0.58 from the top;
+    #    the veil is darkened, most behind the arch, and softened behind the end card, the lampstand untouched)
     dict(image="assets/plates/s08/lampstand_veil_low.jpg", t0=49.6, t1=61.0, fade_in=2.5, fade_out=0.0,
          zoom=(1.04, 1.0), water=True, water_line=0.04, water_strength=0.3,
-         gain=Track([(0, 0.95), (51.0, 0.85), (53.0, 0.72), (TOTAL, 0.72)])),
+         gain=0.62),
 ]
 
 F = "assets/figures/"
@@ -256,13 +259,13 @@ FIGURES = [
 ]
 
 # Heaven's column of gold during the thanksgiving, with rising gold dust (only after the fragment has gone)
-BEAM = Track([(0, 0.0), (28.5, 0.0), (30.5, 0.30), (38.5, 0.30), (41.0, 0.0)])
+BEAM = Track([(0, 0.0), (28.5, 0.0), (30.5, 0.22), (38.5, 0.22), (41.0, 0.0)])
 BEAM_FROM = (0.5, 1.02)
 BEAM_TO = (0.5, 0.30)
 BEAM_WIDTH = (0.02, 0.07)
 BEAM_COLOR = "#ffd88a"
-TEXT_SHADOW = Track([(0, 1.2), (28.5, 1.2), (30.5, 1.6), (40.5, 1.6), (42.0, 1.3), (50.0, 1.3), (52.0, 1.7),
-                     (TOTAL, 1.7)])
+TEXT_SHADOW = Track([(0, 1.2), (28.5, 1.2), (30.5, 1.6), (40.5, 1.6), (42.0, 1.3), (49.5, 1.3), (50.5, 2.0),
+                     (TOTAL, 2.0)])
 
 # Nine lights on an arch over the stage, one for each expression
 STAR_POS = []
