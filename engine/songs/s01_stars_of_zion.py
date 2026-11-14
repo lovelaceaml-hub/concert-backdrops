@@ -1,12 +1,12 @@
-"""Song 01, All You Stars of Zion: the 1 minute promo, version 2 (design "From Starlight to Sunrise").
+"""Song 01, All You Stars of Zion: the 1 minute promo, version 3 (design "From Starlight to Sunrise").
 
-The minute is 3:01 to 4:01 of the studio recording: the final chorus, from the last stars of the night to the
-first sunrise of the concert. Four painted scenes: the stars come down over the night lake (the morning star
-flares on the loudest moment); "dew of the dawn" written in light across a dawn web in the violet blue hour;
-"Arise" rising out of the lake as the sun breaks the ridge; Encouragement acted out by people of light on the
-golden morning shore beside the tree of light, with two torch bearers raising their torches toward the one who
-kneels, then star 7 lit for the first time in the concert (Compliment, star 9, was lit earlier in the song);
-the end card over the same morning shore as the camera keeps pushing in.
+A clip of the real concert backdrop for this song: the minute 3:01 to 4:01 of the studio recording, the final
+chorus, from the last stars of the night to the first sunrise of the concert. Four painted scenes: the stars come
+down over the night lake (the morning star flares on the loudest moment); "dew of the dawn" written in light across
+a dawn web in the violet blue hour; "Arise" rising out of the lake as the sun breaks the ridge; the golden morning
+shore with the tree of light, where one young torch bearer briefly gathers out of a sunbeam, lifts his torch and
+drifts up as light, then ENCOURAGEMENT forms in full and lights star 7 for the first time in the concert
+(Compliment, star 9, was lit earlier in the song), and the end card follows over the same morning.
 Audio: audio/promo/s01.mp3 (60 s clip). Live the song is a 3:08 brass version with no singing.
 """
 import os
@@ -224,36 +224,21 @@ SCENES = [
                      (TOTAL, 0.62)])),
 ]
 
-# B. People of light. Encouragement acted out in full on the morning shore (the shared library): the young man
-# kneels exhausted and his friend prays over him; she rests a hand on his back and cheers him on as he begins to
-# rise; they stand and lift their joined hands (both moves finish before the words are fully formed). Two torch
-# bearers (song 01's special figures) stand on the shore and raise their torches toward him, each flame a small
-# bright light of its own; at the end every flame and figure lifts as sparks into the new violet light.
-_ENC_C = "#e2d2ff"
-_FEET = 0.24
-_TB_A = dict(x=0.30, h=0.30)          # torch low, flame tip at (0.3005, 0.430), clear of the tree
-_TB_B = dict(x=0.79, h=0.36)          # torch raised (mirrored), flame tip at (0.8096, 0.569)
-_FLAME = dict(poses=["assets/song_figures/s01/s01_torch_flame.png"], height=0.05, color="#ffb45a", glow=1.7,
-              glass=1.4, sparks=1.3, particles=1800, to_star=6)
+# B. People of light: rare and always moving (Anthony, round 3). One brief appearance only, off to the side of
+# the morning shore and before the words: a young torch bearer gathers out of the light of the sunbeam, lifts his
+# torch high toward the sunrise, and drifts upward into the morning as sparks (about 6.5 s, moving the whole
+# time). Nobody stands under the Encouragement words: they are carried by the words, the light and the new star.
 FIGURES = [
-    dict(poses=["assets/figures/encouragement_a.png", "assets/figures/encouragement_b.png",
-                "assets/figures/encouragement_c.png"],
-         t0=30.5, t1=ENC_HOLD - 0.5, pose_times=[33.8, 37.4], morph=1.3, x=0.5, y=_FEET, height=0.35,
-         to_star=6, color=_ENC_C, glow=1.05),
-    dict(poses=["assets/song_figures/s01/s01_torchbearer_a.png"], t0=31.5, t1=ENC_HOLD - 0.3,
-         x=_TB_A["x"], y=_FEET, height=_TB_A["h"], to_star=6, color="#ffd796", glow=0.9, particles=7000),
-    dict(poses=["assets/song_figures/s01/s01_torchbearer_b.png"], t0=32.5, t1=ENC_HOLD - 0.1,
-         x=_TB_B["x"], y=_FEET, height=_TB_B["h"], to_star=6, color="#ffd796", glow=0.9, particles=7000,
-         flip=True),
-    dict(_FLAME, t0=33.0, t1=ENC_HOLD - 0.2, x=0.3005, y=0.430 - 0.014),
-    dict(_FLAME, t0=34.0, t1=ENC_HOLD, x=0.8096, y=0.569 - 0.014),
+    dict(poses=["assets/song_figures/s01/s01_torchbearer_low.png", "assets/song_figures/s01/s01_torchbearer_raise.png"],
+         t0=30.8, t1=34.9, gather=2.0, pose_times=[32.6], morph=1.8, dissolve=2.4, leave="drift",
+         x=0.80, y=0.24, height=0.36, color="#ffd796", glow=1.0, particles=8000),
 ]
 
-# C. Effect layers: a sunbeam falls on the kneeling young man while the words begin to form (it is gone before
-# they are solid), and soft flashes on the morning star (the loudest moment) and on the new star.
-BEAM = Track([(0, 0.0), (32.2, 0.0), (33.6, 0.5), (35.0, 0.5), (37.2, 0.0), (TOTAL, 0.0)])
-BEAM_FROM = (0.60, 1.02)
-BEAM_TO = (0.52, 0.25)
+# C. Effect layers: a sunbeam falls on the torch bearer on the shore (it is gone before the words are solid),
+# and soft flashes on the morning star (the loudest moment) and on the new star.
+BEAM = Track([(0, 0.0), (30.8, 0.0), (32.4, 0.5), (34.6, 0.5), (36.8, 0.0), (TOTAL, 0.0)])
+BEAM_FROM = (0.88, 1.02)
+BEAM_TO = (0.80, 0.25)
 BEAM_WIDTH = (0.02, 0.09)
 BEAM_COLOR = "#ffe6b0"
 FLASH = Track([(0, 0.0), (8.4, 0.0), (9.0, 0.22), (10.6, 0.0), (46.2, 0.0), (46.6, 0.14), (48.0, 0.0),
