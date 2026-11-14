@@ -175,8 +175,9 @@ RINGS_AT_START = {2: 1, 3: 1, 6: 3, 7: 1, 8: 1}
 # and from a naturally deep sky behind the words.
 TEXT_SHADOW = 0.0
 BOTTOM_CALM = 1.0      # calm lower third for the performers
-# lights behind the end card are only softened, not cleared, so no empty starless field forms round the words
-TEXT_PROTECT = Track([(0, 1.0), (TITLE_HIT - FORM_DUR - 1.0, 1.0), (TITLE_HIT - FORM_DUR, 0.4), (TOTAL, 0.4)])
+# lights behind the words are cleared only while the rising lamps cross the first fragment; after that nothing is
+# cleared round any words (no empty or darker field), and motes and net are kept low under the end card instead
+TEXT_PROTECT = Track([(0, 1.0), (STILL_IN, 1.0), (STILL_IN + 1.0, 0.0), (TOTAL, 0.0)])
 # the lamp that walks the far shore in the night mist, then rises with the others at the calling
 SKYLINE_LANTERN = Track([(0, 0.0), (1.0, 0.0), (2.5, 1.0), (CALL, 1.0), (CALL + 2.5, 0.0), (TOTAL, 0.0)])
 
@@ -319,8 +320,9 @@ def credit_state(t, bbox):
     tx = c["margin_x"] + c["scale"] * (x1 - x0) / 2.0
     ty = 1.0 - c["margin_top"] - c["scale"] * (y1 - y0) / 2.0
     cx, cy = cx0 * (1 - m) + tx * m, cy0 * (1 - m) + ty * m
-    # the corner credit steps back before the net of light spreads over the sky (the end card carries the title)
-    alpha = a_in * (1.0 + (c["alpha_rest"] - 1.0) * m) * (1.0 - ss(NET_CAST - 1.8, NET_CAST, t))
+    # the corner credit steps back before the dawn brightens the sky (the engine always darkens a little round the
+    # credit, which must never show on a bright sky); the end card carries the title
+    alpha = a_in * (1.0 + (c["alpha_rest"] - 1.0) * m) * (1.0 - ss(GLORY - 1.5, GLORY + 0.5, t))
     return (cx, cy, scale, alpha), (cx0, cy0)
 
 
