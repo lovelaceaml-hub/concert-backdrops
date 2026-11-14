@@ -246,7 +246,8 @@ FRAGMENTS = [
     dict(text="into our Mother\u2019s arms", t0=39.2, t1=41.0, out=44.8, dy=0.0, size=74, glow="#a8c6ff"),
 ]
 
-TAGLINE = dict(text="Sunday, December 6 \u00b7 4:30 PM \u00b7 6720 W Sahara Ave, Las Vegas", t0=53.2, t1=56.2)
+TAGLINE = dict(text="Sunday, December 6 \u00b7 4:30 PM\nThe World Mission Society Church of God \u00b7 6720 W Sahara Ave, Las Vegas",
+               t0=53.2, t1=56.2)
 
 # Opening title card that then rests, small, in the top left corner
 CREDIT = dict(song="Out of Heaven, Favor From God", concert="The Words of Mother\u2019s Love Healing Concert",
