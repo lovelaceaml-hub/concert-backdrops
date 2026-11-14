@@ -166,7 +166,7 @@ PAL = {
     "dawn":      ("#0a1848", "#3a3274", "#c4787a", "#ffc890"),
     "rise":      ("#10285e", "#5e4c80", "#f29a62", "#ffdca0"),
     "gold":      ("#16336c", "#7e6680", "#fdb46c", "#ffe6b2"),
-    "morning":   ("#173a74", "#8c7282", "#ffc47c", "#ffeac4"),
+    "morning":   ("#173a74", "#8c7282", "#ffc47c", "#ffeacc"),
 }
 _pal_keys = [
     (0.0, "lastnight"), (4.0, "lastnight"), (10.0, "blush"), (17.0, "dawn"), (22.0, "rise"), (33.0, "gold"),
