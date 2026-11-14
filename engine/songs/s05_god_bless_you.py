@@ -207,6 +207,10 @@ EXPOSURE = Track([(0, 1.0), (TOTAL, 1.0)])
 FADE = Track([(0, 0.0), (0.8, 1.0), (59.0, 1.0), (TOTAL, 0.0)])
 RAYS = Track([(0, 0.25), (20, 0.3), (32, 0.4), (42, 0.5), (44.5, 0.6), (49.5, 0.9), (53, 0.65), (TOTAL, 0.55)])
 PART = Track([(0, 0.0), (TOTAL, 0.0)])
+# spring colors: soft rose and cream blossom petals, green gold pollen of light drifting gently upward
+PETAL_COLORS = ("#ffa9bf", "#fff0e2")
+MOTE_COLORS = ("#f4efb0", "#fff4d6")
+MOTE_Y = (-0.05, 1.05)
 
 # Nine lights on an arch over the stage, one for each expression
 STAR_POS = []
