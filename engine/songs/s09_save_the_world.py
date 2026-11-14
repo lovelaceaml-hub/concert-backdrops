@@ -8,7 +8,7 @@ Design: "09 Let's Save the World - Video Design" (Google Doc) in the project's D
 All nine lights are already lit when song 09 begins; here 7 Encouragement shines again (flare and one new ring).
 
 Promo v2 (PHASE2.md, design section 15 "Promo v2: scenes"), round 3: Anthony's five painted plates
-(assets/plates/s09/) and three special figures (assets/song_figures/s09/), with the shared Encouragement pair.
+(assets/plates/s09/) and three special figures (assets/song_figures/s09/); people appear rarely and always moving.
 1 the saints' shore in sea mist: two saints of light gather on the shore path with clay lamps (0 to 10 s);
 2 the shore before dawn: the saints lift their lamps and rise away as light (8.5 to 15 s);
 3 the encounter shore: the Encouragement in full over the still mirror sea, then into star 7 (13.5 to 34 s);
@@ -256,7 +256,7 @@ SCENES = [
 
 # B. People of light. Saints and fisherman: Anthony's special figures (assets/song_figures/s09/, prepared with
 # tools/prepare_figure.py --keep-lines, then turned from filled white
-# silhouettes into line art with a faint fill so the sparks show the folds). Encouragement: the shared library pair.
+# silhouettes into line art with a faint fill so the sparks show the folds).
 WALK = "assets/song_figures/s09/s09_saint_walking_lamp.png"
 LIFT = "assets/song_figures/s09/s09_saint_lifting_lamp.png"
 FIGURES = [
