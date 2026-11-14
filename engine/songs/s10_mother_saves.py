@@ -209,6 +209,7 @@ def MOTE_COLORS(t):
     return (_mix_hex("#a7b6cc", "#ffe2a8", k), _mix_hex("#5a6a80", "#ffb066", k))
 
 
+# Soft fades only: bloom and ripple changes washed the frame or drew a ring across the words (stills check).
 # ----------------------------------------------------------------- A. six scenes (Anthony's plates from Assets/s10,
 # the lower third calmed by assets/plates/s10/calm_lower_third.py)
 _P = "assets/plates/s10/"
@@ -217,23 +218,23 @@ SCENES = [
     dict(image=_P + "restless_night.jpg", t0=0.0, t1=7.0, fade_in=1.0, fade_out=2.5, zoom=(1.07, 1.03),
          water=True, water_line=0.415, water_strength=1.9),
     # 2 the great lamp is lifted: Heavenly Mother (from behind) at the lamp; Greeting
-    dict(image=_P + "great_lamp.jpg", t0=4.5, t1=20.5, fade_in=2.5, fade_out=2.5, transition="bloom", flash=0.45,
+    dict(image=_P + "great_lamp.jpg", t0=4.5, t1=20.5, fade_in=2.5, fade_out=2.5, transition="fade",
          zoom=(1.0, 1.04), water=True, water_line=0.495, water_strength=0.7,
          gain=Track([(0, 1.0), (7.5, 1.0), (9.0, 0.80), (TOTAL, 0.80)])),
     # 3 Her words go out: gold threads from the lantern to the lights on the water; Consideration
-    dict(image=_P + "threads.jpg", t0=18.0, t1=33.0, fade_in=2.5, fade_out=2.5, transition="ripple",
-         ripple_from=(0.5, 0.555), zoom=(1.04, 1.0), water=True, water_line=0.575, water_strength=0.45,
+    dict(image=_P + "threads.jpg", t0=18.0, t1=33.0, fade_in=2.5, fade_out=2.5, transition="fade",
+         zoom=(1.04, 1.0), water=True, water_line=0.575, water_strength=0.45,
          gain=0.85),
     # 4 circles of peace: wherever a word reached, the water settles into a still mirror; Encouragement
-    dict(image=_P + "circles_of_peace.jpg", t0=30.5, t1=46.5, fade_in=2.5, fade_out=2.5, transition="ripple",
-         ripple_from=(0.5, 0.62), zoom=(1.0, 1.04), water=True, water_line=0.61, water_strength=0.15,
+    dict(image=_P + "circles_of_peace.jpg", t0=30.5, t1=46.5, fade_in=2.5, fade_out=2.5, transition="fade",
+         zoom=(1.0, 1.04), water=True, water_line=0.61, water_strength=0.15,
          gain=0.85),
     # 5 peace across the world: the night Earth laced with gold paths, the arch glows (no words for 4.5 s)
-    dict(image=_P + "earth_web.jpg", t0=EARTH, t1=52.4, fade_in=2.5, fade_out=2.6, transition="bloom", flash=0.35,
+    dict(image=_P + "earth_web.jpg", t0=EARTH, t1=52.4, fade_in=2.5, fade_out=2.6, transition="fade",
          zoom=(1.0, 1.05), water=False, gain=Track([(0, 1.0), (48.0, 1.0), (49.5, 0.65), (TOTAL, 0.65)])),
     # 6 night of peace: the home lake a perfect mirror, the lamp set back down; end card
-    dict(image=_P + "mirror_night.jpg", t0=HOME, t1=61.0, fade_in=2.6, fade_out=0.0, transition="ripple",
-         ripple_from=(0.5, 0.46), zoom=(1.03, 1.0), water=True, water_line=0.46, water_strength=0.12,
+    dict(image=_P + "mirror_night.jpg", t0=HOME, t1=61.0, fade_in=2.6, fade_out=0.0, transition="fade",
+         zoom=(1.03, 1.0), water=True, water_line=0.46, water_strength=0.12,
          gain=0.85),
 ]
 
@@ -243,7 +244,7 @@ SCENES = [
 # centre-left, right, centre.
 FIGURES = [
     dict(poses=["assets/figures/s10_mother_lamp_a.png"], t0=4.8, t1=16.0, x=0.5, y=0.35, height=0.24,
-         to=(0.5, 0.495), color="#ffd796", glass=1.2),
+         to=(0.5, 0.495), color="#ffd796", glow=0.55, glass=0.5, sparks=0.8),
     # Greeting: the left person walks up and waves; the lonely one places their hands in the offered hands
     dict(poses=["assets/figures/greeting_a.png", "assets/figures/greeting_b.png"],
          t0=G_FORM - 2.3, t1=G_FORM + HOLD - 0.5, pose_times=[G_FORM + 3.2], x=0.25, y=0.23, height=0.36,
