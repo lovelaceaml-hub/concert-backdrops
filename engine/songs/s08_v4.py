@@ -128,6 +128,19 @@ class Song:
         y = HORIZON + float(np.interp(x, np.linspace(0, 1, 2048), self.ridge))
         return x, y
 
+    def rings_at(self, t, n=16, life=4.5):
+        i1 = int(np.searchsorted(self.ring_t, t, side="right"))
+        out = []
+        for k in range(i1 - 1, -1, -1):
+            age = t - self.rings[k][0]
+            if age > life or len(out) >= n:
+                break
+            out.append((self.rings[k][1], self.rings[k][2], age, self.rings[k][3]))
+        return out
+
+
+# ----------------------------------------------------------------- timeline
+
 from track import Track   # the shared Track refuses keys that are not strictly increasing  # noqa: E402
 
 # Landmarks in the promo minute (seconds from the start of the clip; guide recording time minus 61.5).
