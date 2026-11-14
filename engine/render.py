@@ -121,8 +121,16 @@ class Renderer:
         asp = S.ASPECT
         L = S.lin
         cool = S.MILKY(t)
-        aurA = L("#ff8fa8") * 0.72 * (1 - cool) + L("#86c8ff") * cool
-        aurB = L("#ffc88a") * 0.72 * (1 - cool) + L("#b39cff") * cool
+
+        def cols(name, default):
+            # a song may set NAME to a pair of colors, or to a function of time returning a pair
+            c = getattr(S, name, None)
+            c = c(t) if callable(c) else c
+            return c if c else default
+
+        aw, ac = cols("AURORA_WARM", ("#ff8fa8", "#ffc88a")), cols("AURORA_COOL", ("#86c8ff", "#b39cff"))
+        aurA = L(aw[0]) * 0.72 * (1 - cool) + L(ac[0]) * cool
+        aurB = L(aw[1]) * 0.72 * (1 - cool) + L(ac[1]) * cool
 
         # 1. sky (half size: it is all soft light)
         ctx.disable(BL)
@@ -141,14 +149,18 @@ class Renderer:
         setu(self.p_star, uT=t, uStars=P["stars"], uHi=P["hi"], uPx=px)
         self.v_star.render(moderngl.POINTS)
         setu(self.p_mote, uT=t, uAmount=min(P["motes"], 1.0), uPx=px, uSizeMin=2.4, uSizeMax=24.0, uPeriod=30.0,
-             uY0=-0.05, uY1=1.05, uSway=0.012, uBright=0.62 + 0.30 * P["env"], uColA=L("#ffe2a8"), uColB=L("#ff9f8a"))
+             uY0=getattr(S, "MOTE_Y", (-0.05, 1.05))[0], uY1=getattr(S, "MOTE_Y", (-0.05, 1.05))[1], uSway=0.012,
+             uBright=0.62 + 0.30 * P["env"], uColA=L(cols("MOTE_COLORS", ("#ffe2a8", "#ff9f8a"))[0]),
+             uColB=L(cols("MOTE_COLORS", ("#ffe2a8", "#ff9f8a"))[1]))
         self.v_mote.render(moderngl.POINTS)
         if P["lanterns"] > 0.001:
             setu(self.p_mote, uT=t, uAmount=P["lanterns"], uPx=px, uSizeMin=13.0, uSizeMax=44.0, uPeriod=40.0,
-                 uY0=0.24, uY1=1.08, uSway=0.016, uBright=1.25, uColA=L("#ffb45e"), uColB=L("#ff8a4c"))
+                 uY0=0.24, uY1=1.08, uSway=0.016, uBright=1.25,
+                 uColA=L(cols("LANTERN_COLORS", ("#ffb45e", "#ff8a4c"))[0]), uColB=L(cols("LANTERN_COLORS", ("#ffb45e", "#ff8a4c"))[1]))
             self.v_lant.render(moderngl.POINTS)
         if P["petals"] > 0.001:
-            setu(self.p_petal, uT=t, uAmount=P["petals"], uPx=px, uColA=L("#ff7fa2") * 0.95, uColB=L("#ffd2c2") * 0.62)
+            setu(self.p_petal, uT=t, uAmount=P["petals"], uPx=px, uColA=L(cols("PETAL_COLORS", ("#ff7fa2", "#ffd2c2"))[0]) * 0.95,
+                 uColB=L(cols("PETAL_COLORS", ("#ff7fa2", "#ffd2c2"))[1]) * 0.62)
             self.v_petal.render(moderngl.POINTS)
 
         # words: particles, then the solid letters
@@ -302,6 +314,8 @@ def main():
             print(f"frame {i} ({i - f0}/{f1 - f0})  {el:.0f}s  {(el / max(i - f0, 1)):.2f}s/frame", flush=True)
     ff.stdin.close()
     ff.wait()
+    if ff.returncode != 0:
+        sys.exit(f"ffmpeg failed with code {ff.returncode}")
     print("done", a.out, f"{time.time() - t0:.0f}s", flush=True)
 
 
