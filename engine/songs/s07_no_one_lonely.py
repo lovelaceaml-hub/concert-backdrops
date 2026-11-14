@@ -1,8 +1,11 @@
-"""Song 07, May No One Ever Feel Lonely: 1 minute promo (0:24 to 1:24 of the studio recording).
+"""Song 07, May No One Ever Feel Lonely: 1 minute promo v2 (0:24 to 1:24 of the studio recording).
 
-Design: "No Light Left Alone" (Designs/07 May No One Ever Feel Lonely - Video Design). Mother's wish lights the way,
-the lone walker is greeted ("How are you?", star 1, its first light in the concert) and helped ("Can I give you a
-hand with anything?", star 8, lit in song 05, spoken again), and peace settles over the lake.
+Design: "No Light Left Alone", section 16 "Promo v2: scenes". Five painted scenes along the long path home at blue
+dusk. An elderly traveler of light walks alone and sits on a bench; Mother's wish lights the way and a path of light
+from Her star finds the lone light; a helper greets the traveler ("How are you?", star 1, its first light in the
+concert) and offers a hand with the heavy bundle ("Can I give you a hand with anything?", star 8, lit in song 05,
+spoken again); the village carries its lanterns home and Heavenly Mother, seen only from behind with a lamp raised,
+leads the way up to the gate of light. Each time Her words are spoken, peace settles over the lake.
 """
 import os
 import numpy as np
@@ -130,83 +133,138 @@ class Song:
 
 # ----------------------------------------------------------------- timeline
 
-class Track:
-    def __init__(self, keys):
-        self.t = np.array([k[0] for k in keys], dtype=np.float64)
-        self.v = np.array([np.atleast_1d(np.asarray(k[1], dtype=np.float64)) for k in keys])
-
-    def __call__(self, t):
-        if t <= self.t[0]:
-            v = self.v[0]
-        elif t >= self.t[-1]:
-            v = self.v[-1]
-        else:
-            i = int(np.searchsorted(self.t, t, side="right")) - 1
-            u = (t - self.t[i]) / (self.t[i + 1] - self.t[i])
-            u = u * u * (3 - 2 * u)
-            v = self.v[i] * (1 - u) + self.v[i + 1] * u
-        return float(v[0]) if v.shape[0] == 1 else v
-
+from track import Track   # the shared Track refuses keys that are not strictly increasing  # noqa: E402
 
 # Promo landmarks (seconds into the 60 second clip, which starts at 0:24 of the studio recording).
-# Measured: band fills in before the clip, first big lift at 29.0 (0:53), short gap at 54.0 (1:18).
+# Measured: first big lift at 29.0 (0:53), short gap at 54.0 (1:18).
 # Estimated: Mother's first wish about 2 to 13, the earnest wish line about 14 to 28, the promise from 29,
 # the care line about 41 to 53, verse 2 begins at 56.
-WISH = 2.0
-REFRAIN = 14.0
-LIFT = 29.0
-CARE = 41.0
-NINTH = 1e9            # no whole-arch glow in this promo
-TITLE_HIT = 54.0
+# Reading time contract (PHASE2.md item 4): formation takes 3.75 s, then at least 6 s solid, a 1.6 s dissolve
+# and a clean 0.5 s gap before the next text.
+G_FORM, G_HOLD = 26.0, 35.8            # Greeting: solid 29.75 to 35.8 (6.05 s); dissolve ends 37.4
+C_FORM, C_HOLD = 37.9, 47.7            # Consideration: solid 41.65 to 47.7 (6.05 s); dissolve ends 49.3
+NINTH = 1e9                            # no whole-arch glow in this promo
+TITLE_HIT = 52.8                       # title starts forming at 49.8; the end card is whole from about 56.2
+SKYLINE_LANTERN = 0.0                  # every scene is a painted plate with its own mountains
+BOTTOM_CALM = 1.0
+TEXT_PROTECT = 1.0
+TEXT_SHADOW = Track([(0, 0.9), (12.5, 0.9), (14.0, 1.2), (35.0, 1.2), (37.0, 1.6), (TOTAL, 1.7)])   # stronger on the bright village and gate
+
+# Star history (CONTINUITY-BOARD.md): rings earned before song 07. Apology relit in song 04, Inclusiveness relit
+# in song 06, Encouragement relit in songs 02, 03 and 05.
+RINGS_AT_START = {2: 1, 3: 1, 6: 3}
 
 # Look (DESIGN-SYSTEM.md section 6, song 07): blue dusk on a long path home. Twilight blue sky, a coral horizon,
-# lantern gold lights, the first stars coming out one by one, soft mist, and a slow push forward (deep perspective).
-# Scene palettes (top of sky, middle, horizon, glow of the horizon star)
+# lantern gold lights, the first stars coming out one by one, soft mist. The plates carry the look; the procedural
+# sky shows only for the first moment of the fade in.
 PAL = {
-    "evening": ("#14244c", "#3a4c80", "#d8946e", "#ffc48e"),   # last warmth of song 06's evening
+    "evening": ("#14244c", "#3a4c80", "#d8946e", "#ffc48e"),
     "twilight": ("#0d1b42", "#26407a", "#b98089", "#ffb79c"),
-    "listen":  ("#0a1739", "#20386f", "#a87c99", "#ffd9bc"),   # the world listens to Mother's wish
-    "coral":   ("#10214c", "#2f4d8a", "#e98a76", "#ffa98e"),
-    "home":    ("#0f2152", "#2c4a88", "#d98478", "#ffbf96"),   # coral dusk, lantern gold kept to the lanterns
-    "card":    ("#0c1a45", "#223c74", "#a77584", "#ffb69a"),   # dimmer behind the end card so it reads
 }
-_pal_keys = [
-    (0.0, "evening"), (6.0, "twilight"), (8.0, "listen"), (13.0, "listen"), (17.0, "twilight"), (27.0, "twilight"),
-    (33.0, "coral"), (44.0, "coral"), (50.0, "home"), (54.0, "card"), (TOTAL, "card"),
-]
+_pal_keys = [(0.0, "evening"), (6.0, "twilight"), (TOTAL, "twilight")]
 SKY_TOP = Track([(t, lin(PAL[p][0])) for t, p in _pal_keys])
 SKY_MID = Track([(t, lin(PAL[p][1])) for t, p in _pal_keys])
 SKY_HOR = Track([(t, lin(PAL[p][2])) for t, p in _pal_keys])
 GLOW = Track([(t, lin(PAL[p][3])) for t, p in _pal_keys])
-
-# the horizon star is Heavenly Mother's presence: it brightens while Her wish is on screen (the world listens)
-SUN_INT = Track([(0, 0.45), (6, 0.30), (8, 0.55), (12.5, 0.55), (17, 0.32), (27, 0.34), (33, 0.55), (44, 0.62),
-                 (50, 0.66), (54, 0.38), (TOTAL, 0.36)])
-SUN_Y = Track([(0, 0.335), (27, 0.33), (52, 0.345), (TOTAL, 0.35)])
-SUN_SIZE = Track([(0, 0.11), (33, 0.11), (52, 0.12), (TOTAL, 0.12)])
-# first stars: few at dusk, more and more come out as the minute goes on
-STARS = Track([(0, 0.0), (1.0, 0.12), (10, 0.30), (27, 0.50), (40, 0.70), (52, 0.85), (TOTAL, 0.9)])
+SUN_INT = Track([(0, 0.0), (TOTAL, 0.0)])          # the plates have their own horizon star
+SUN_Y = Track([(0, 0.335), (TOTAL, 0.35)])
+SUN_SIZE = Track([(0, 0.11), (TOTAL, 0.12)])
+STARS = Track([(0, 0.0), (TOTAL, 0.0)])
 MILKY = Track([(0, 0.0), (TOTAL, 0.0)])
-# soft mist low over the water and the far shore
-CLOUDS = Track([(0, 0.45), (13, 0.55), (27, 0.40), (44, 0.30), (54, 0.20), (TOTAL, 0.20)])
+CLOUDS = Track([(0, 0.0), (TOTAL, 0.0)])
 AURORA = Track([(0, 0.0), (TOTAL, 0.0)])
 RAIN = Track([(0, 0.0), (TOTAL, 0.0)])
-MOTES = Track([(0, 0.05), (2, 0.10), (7, 0.05), (13, 0.05), (20, 0.14), (29, 0.25), (38, 0.40), (50, 0.45), (TOTAL, 0.40)])
-# lanterns are this song's light: they rise while Mother's wish lights the way, then gather as the family forms
-LANTERNS = Track([(0, 0.25), (5.0, 0.30), (8.0, 1.0), (13, 1.0), (18, 0.45), (28, 0.35), (40, 0.45), (50, 0.85), (TOTAL, 0.85)])
+MOTES = Track([(0, 0.05), (13, 0.08), (27, 0.16), (40, 0.26), (51, 0.32), (TOTAL, 0.28)])
+# lanterns are this song's light: they rise while Mother's wish lights the way, and the village carries them in
+# a procession home (signature effect: the lantern procession)
+LANTERNS = Track([(0, 0.20), (4.5, 0.30), (8.0, 0.75), (13, 0.75), (18, 0.40), (27, 0.25), (38, 0.30),
+                  (42, 0.85), (51, 1.0), (TOTAL, 0.90)])
 PETALS = Track([(0, 0.0), (TOTAL, 0.0)])
-# the lone walker is the lantern crossing the skyline; its trail warms once it is greeted
-TRAIL = Track([(0, 0.0), (1.2, 0.35), (27, 0.40), (38, 0.85), (50, 1.0), (TOTAL, 0.95)])
-# deep perspective: a slow, steady push forward down the long path home
-ZOOM = Track([(0, 1.0), (TOTAL, 0.93)])
+TRAIL = Track([(0, 0.0), (TOTAL, 0.0)])
+ZOOM = Track([(0, 1.0), (TOTAL, 1.0)])
 EXPOSURE = Track([(0, 1.0), (TOTAL, 1.0)])
-FADE = Track([(0, 0.0), (1.2, 1.0), (58.6, 1.0), (59.9, 0.0)])
+FADE = Track([(0, 0.0), (1.2, 1.0), (59.2, 1.0), (59.95, 0.0)])
 RAYS = Track([(0, 0.0), (TOTAL, 0.0)])
 PART = Track([(0, 0.0), (TOTAL, 0.0)])
 LANTERN_COLORS = ("#ffd27a", "#ffb04f")      # lantern gold
 MOTE_COLORS = ("#ffe6b0", "#ff9d86")         # gold and coral sparks
 AURORA_WARM = ("#ff9a86", "#ffc88a")
 AURORA_COOL = ("#7fa8ff", "#9fb8ff")
+
+P = "assets/plates/s07/"
+F = "assets/song_figures/s07/"
+L = "assets/figures/"
+
+# A. Five scenes (design section 16), each a different place on the long path home. The plates' lower thirds are
+# calmed in the files themselves (darker, half the colour, reflections smeared; assets/plates/s07/calm_plate.py),
+# so the engine's own lower-third darkening (calm_gain) is kept light.
+VILLAGE_ZOOM = 1.08
+SCENES = [
+    # 1. The lone light at blue dusk: the long shore path, the bench under the lamp post
+    dict(image=P + "path_at_dusk.jpg", t0=0.0, t1=14.5, fade_in=1.0, fade_out=2.0,
+         zoom=(1.03, 1.0), calm_gain=0.85, water=True, water_line=0.40),
+    # 2. Mother's wish lights the way: close on the line of lights running from Her star along the shore (bloom)
+    dict(image=P + "the_lit_path.jpg", t0=12.5, t1=25.5, fade_in=2.0, fade_out=2.5, transition="bloom",
+         flash=0.3, zoom=(1.38, 1.44), pan=((-0.14, 0.0), (-0.14, 0.0)), calm_gain=0.85, water=True, water_line=0.45),
+    # 3. "How are you?": the bench by the shore (the camera pushes in)
+    dict(image=P + "bench_by_the_shore.jpg", t0=23.0, t1=38.0, fade_in=2.5, fade_out=2.0, transition="push",
+         zoom=(1.10, 1.08), calm_gain=0.85, water=True, water_line=0.21,
+         gain=Track([(0, 1.0), (26.0, 1.0), (29.0, 0.88), (36.0, 0.88), (38.0, 1.0)])),
+    # 4. The helping hand: the village path, its windows dark (a soft fade in); then
+    # "answered from the windows" (this song's own effect): the windows light up one by one, from the near house
+    # to the far end of the village, as the kindness spreads (assets/plates/s07/windows.py)
+    dict(image=P + "village_w0.jpg", t0=36.0, t1=42.5, fade_in=2.0, fade_out=1.2, transition="fade",
+         zoom=VILLAGE_ZOOM, calm_gain=0.85, water=True, water_line=0.27, gain=0.9),
+    dict(image=P + "village_w1.jpg", t0=41.3, t1=44.5, fade_in=1.2, fade_out=1.2, zoom=VILLAGE_ZOOM,
+         calm_gain=0.85, water=True, water_line=0.27, gain=0.9),
+    dict(image=P + "village_w2.jpg", t0=43.3, t1=46.5, fade_in=1.2, fade_out=1.2, zoom=VILLAGE_ZOOM,
+         calm_gain=0.85, water=True, water_line=0.27, gain=0.9),
+    dict(image=P + "village_w3.jpg", t0=45.3, t1=48.5, fade_in=1.2, fade_out=1.2, zoom=VILLAGE_ZOOM,
+         calm_gain=0.85, water=True, water_line=0.27, gain=0.9),
+    dict(image=P + "village_path.jpg", t0=47.3, t1=52.5, fade_in=1.2, fade_out=2.0, zoom=VILLAGE_ZOOM,
+         calm_gain=0.85, water=True, water_line=0.27, gain=0.9),
+    # 5. Toward home: the lantern path up to the gate of light in the clouds
+    dict(image=P + "gate_of_home.jpg", t0=50.5, t1=61.0, fade_in=2.0, fade_out=0.0, transition="fade",
+         zoom=(1.04, 1.08), calm_gain=0.85, water=True, water_line=0.21,
+         gain=Track([(0, 0.92), (52.0, 0.86), (54.0, 0.74), (TOTAL, 0.74)])),
+]
+
+# B. People of light (round 3, Anthony: people rare and always moving, never the focus, never under the words).
+# Two brief walking moments, now that figures can really move (engine section G): the elderly traveler, small on
+# the shore path at dusk, walking toward the bench, and Heavenly Mother, seen only from behind with her lamp raised,
+# climbing the bottom of the lantern path home below the end card. The expressions are carried by the words, the
+# path of light, the windows answering and the star relights.
+FIGURES = [
+    # scene 1: the elderly traveler walks left along the shore path toward the bench; her light flows into its lamp
+    dict(poses=[F + "s07_traveler_walk.png"], t0=4.6, t1=9.0, gather=1.3, x=(0.47, 0.33), move=(4.6, 9.0),
+         ease="linear", bob=1.0, y=0.45, height=0.13, flip=True,
+         color="#ffcf9a", to=(0.235, 0.56), dissolve=2.0),
+    # scene 5: Heavenly Mother from behind climbs the bottom of the lantern path, getting smaller as she goes, and
+    # dissolves into light; her head stays at least 0.07 below the end card's last line (about 0.395)
+    dict(poses=[F + "s07_mother_lamp_behind.png"], t0=52.0, t1=55.6, gather=1.5, x=(0.15, 0.24), y=(0.18, 0.235),
+         height=(0.13, 0.095), move=(52.0, 55.6), ease="linear", bob=1.0,
+         color="#fff0d2", glow=1.1, leave="drift", dissolve=2.2),
+]
+
+# C. Signature effects. The lone light found: a path of light from the horizon star along the shore to the bench
+# (scene 2). The gate of light: a gentle beam from the gate down onto the upper path, right of the end card.
+BEAM = Track([(0, 0.0), (15.5, 0.0), (19.0, 0.70), (23.0, 0.70), (25.0, 0.0), (52.5, 0.0), (54.5, 0.25),
+              (TOTAL, 0.25)])
+
+
+def BEAM_FROM(t):
+    return (0.74, 0.556) if t < 40.0 else (0.79, 0.85)
+
+
+def BEAM_TO(t):
+    return (0.16, 0.46) if t < 40.0 else (0.75, 0.62)
+
+
+def BEAM_WIDTH(t):
+    return (0.03, 0.05) if t < 40.0 else (0.02, 0.04)
+
+
+BEAM_COLOR = "#ffd9a8"
 
 # Nine lights on an arch over the stage, one for each expression
 STAR_POS = []
@@ -219,7 +277,7 @@ LIT = -100.0
 NOT_YET = 1e9
 PHRASES = [
     # Greeting: lit for the first time in the concert, at the first big lift (the answer to Mother's wish)
-    dict(label="Greeting", lines=["“How are you?”"], size=176, form=28.0, hold=36.5, star=38.5),
+    dict(label="Greeting", lines=["“How are you?”"], size=124, y=0.29, form=G_FORM, hold=G_HOLD, star=G_HOLD + 2.0),
     dict(label="Gratitude", lines=["“Thank you. It’s all thanks to you.", "You’ve worked hard.”"], size=118,
          form=NOT_YET, hold=NOT_YET, star=NOT_YET),
     dict(label="Apology", lines=["“I’m sorry.", "It must have been hard on you.”"], size=124, form=NOT_YET, hold=NOT_YET, star=LIT),
@@ -229,28 +287,29 @@ PHRASES = [
     dict(label="Encouragement", lines=["“I’ll pray (or root) for you.", "Everything will go well.”"], size=118,
          form=NOT_YET, hold=NOT_YET, star=LIT),
     # Consideration: lit in song 05, spoken again here at the promise to care for brothers and sisters
-    dict(label="Consideration", lines=["“Can I give you a hand", "with anything?”"], size=128, form=40.5, hold=48.5,
-         star=LIT, arrive=50.5),
+    dict(label="Consideration", lines=["“Can I give you a hand", "with anything?”"], size=100, y=0.30,
+         form=C_FORM, hold=C_HOLD, star=LIT, arrive=C_HOLD + 2.0),
     dict(label="Compliment", lines=["“You’re amazing.", "You’re doing great!”"], size=140, form=NOT_YET, hold=NOT_YET, star=LIT),
 ]
 FORM_DUR = 3.0
-# PHRASES keys: label, lines, size, form (words start forming), hold (words start flying), star (the light is lit).
-# A light already lit in an earlier song: star=-100.0. Not lit yet in the concert: form=hold=star=1e9.
-# A light lit earlier and spoken again in this song: star=-100.0 plus form, hold and arrive (when the words reach it).
 TITLE = dict(label="Healing Concert", lines=["The Words of Mother’s Love"], size=150, form=TITLE_HIT - FORM_DUR,
              hold=1e9, star=1e9)
-# Short lyric fragments: Mother's wish (in Her quotation marks) and the refrain that answers it; never on screen
-# together with an expression
+# D. Short lyric fragments: Mother's wish written by a pen of light, and the refrain rising out of the lake;
+# never on screen together with an expression
 FRAGMENTS = [
-    dict(text="“on the path to heaven”", t0=5.0, t1=7.5, out=12.5, dy=0.10, size=84, glow="#ffe4c0"),
-    dict(text="our Mother’s earnest wish", t0=16.0, t1=18.0, out=24.5, dy=0.04, size=74),
+    dict(text="“on the path to heaven”", t0=4.2, t1=7.2, out=10.2, dy=0.10, size=84, glow="#ffe4c0", style="write"),
+    dict(text="our Mother’s earnest wish", t0=15.5, t1=19.5, out=23.0, dy=0.04, size=78, glow="#ffd6b8",
+         style="reflection", line=0.55),
 ]
 
-TAGLINE = dict(text="Sunday, December 6 · 4:30 PM\nThe World Mission Society Church of God · 6720 W Sahara Ave, Las Vegas", t0=55.0, t1=57.0)
+# the three-line end card (PHASE2.md item 7)
+TAGLINE = dict(text="Where a mother’s love reaches, peace settles.\nSunday, December 6 · 4:30 PM\n"
+                    "The World Mission Society Church of God · 6720 W Sahara Ave, Las Vegas",
+               t0=TITLE_HIT + 1.2, t1=TITLE_HIT + 3.4)
 
 # Opening title card that then rests, small, in the top left corner
 CREDIT = dict(song="May No One Ever Feel Lonely", concert="The Words of Mother’s Love Healing Concert",
-              t_in=0.3, t_full=1.5, t_move=4.0, t_rest=5.8, scale=0.34, alpha_rest=0.58,
+              t_in=0.3, t_full=1.5, t_move=3.4, t_rest=5.0, scale=0.34, alpha_rest=0.58,
               margin_x=0.030, margin_top=0.048)
 
 
@@ -274,47 +333,11 @@ def credit_state(t, bbox):
     return (cx, cy, scale, alpha), (cx0, cy0)
 
 
-# Waves of light that cross the sky when a light is lit (time, x, y, strength)
-WAVES = [(p["star"], STAR_POS[i][0], STAR_POS[i][1], s) for i, (p, s) in enumerate(
-    zip(PHRASES, [0.35, 0.3, 0.3, 1.0, 0.45, 0.5, 0.35, 0.4, 1.1]))]
-WAVES.append((TITLE_HIT, 0.5, 0.62, 1.3))
-# peace settles: a wave of stillness from the lake after each of Mother's words
-WAVES += [(39.5, 0.5, 0.34, 0.8), (50.5, STAR_POS[7][0], STAR_POS[7][1], 0.45), (51.0, 0.5, 0.34, 0.9)]
-
-
-def star_state(t):
-    """Brightness and time since lighting for each of the nine lights."""
-    out = []
-    for i, p in enumerate(PHRASES):
-        age = t - p["star"]
-        if age < -0.2:
-            out.append((0.0, -1.0))
-            continue
-        gather = min(max((age + 0.2) / 0.2, 0.0), 1.0)
-        base = 0.55 * gather
-        flash = np.exp(-max(age, 0.0) * 1.1) * 1.3 if age >= 0 else 0.0
-        if "arrive" in p and t >= p["arrive"]:
-            # a light that was lit in an earlier song shines again: a softer flare
-            flash += np.exp(-(t - p["arrive"]) * 1.1) * 0.9
-        fin = 0.0
-        if t > NINTH:
-            fin = 0.35 * min((t - NINTH) / 2.0, 1.0)
-        if t > TITLE_HIT:
-            fin += 0.35 * np.exp(-(t - TITLE_HIT) * 0.25) + 0.15
-        out.append((base + flash + fin, max(age, 0.0)))
-    return out
-
-
-def link_state(t):
-    """How far the line of light has grown between light i and light i+1 (0..1)."""
-    out = []
-    for i in range(8):
-        # a line joins two lights only once both are lit (star 2, Gratitude, is not lit yet in song 07)
-        t1 = max(PHRASES[i]["star"], PHRASES[i + 1]["star"])
-        # the line starts growing as the next light gathers and completes when it is lit
-        g = min(max((t - (t1 - 1.2)) / 1.4, 0.0), 1.0)
-        out.append(g * g * (3 - 2 * g))
-    return out
+# Waves of light when a light is lit (star 1, star 8) and when the title arrives. The extra centre wave after the
+# Greeting is gone (round 3): it bloomed as a bright haze over the village fade at about 38 s.
+WAVES = [(PHRASES[0]["star"], STAR_POS[0][0], STAR_POS[0][1], 0.5),
+         (PHRASES[7]["arrive"], STAR_POS[7][0], STAR_POS[7][1], 0.6),
+         (TITLE_HIT, 0.5, 0.62, 1.1)]
 
 
 def params(song, t):
@@ -341,11 +364,3 @@ def params(song, t):
         lantern=(lsx, lsy), prog=lx, rings=song.rings_at(t), waves=waves,
         star=star_state(t), link=link_state(t),
     )
-
-
-if __name__ == "__main__":
-    s = Song()
-    print("frames", NFRAMES, "rings", len(s.rings))
-    for tt in (0, 6, 10, 20, 32, 39, 45, 51, 56, 59):
-        p = params(s, tt)
-        print(tt, {k: (round(v, 2) if isinstance(v, float) else None) for k, v in p.items() if isinstance(v, float)})
