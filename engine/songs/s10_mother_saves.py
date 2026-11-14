@@ -77,10 +77,10 @@ G_FORM = 8.3           # Greeting, on the great lamp scene      (dissolve ends 1
 C_FORM = 20.4          # Consideration, on the threads scene   (dissolve ends 32.0)
 E_FORM = 32.5          # Encouragement, on the circles of peace (dissolve ends 44.1)
 HOLD = 10.0
-EARTH = 44.0           # scene 5: peace across the world, 4.5 s clear of words before the end card forms
+EARTH = 44.0           # scene 5: peace across the world, gone (48.8) before the end card forms (49.0)
 NINTH = 46.0           # the whole arch glows (a flare without new rings)
-TITLE_HIT = 51.6       # end card: the title forms from 48.6
-HOME = 49.8            # scene 6: the night of peace ripples in under the forming title
+TITLE_HIT = 52.0       # end card: the title forms from 49.0
+HOME = 47.6            # scene 6: the night of peace comes in as the Earth leaves
 
 # Calm story curve that stands in for loudness (no recording yet)
 _STORY = Track([(0, 0.30), (6, 0.33), (12, 0.44), (30, 0.50), (44, 0.60), (48, 0.66), (56, 0.58), (TOTAL, 0.52)])
@@ -216,36 +216,36 @@ def MOTE_COLORS(t):
 _P = "assets/plates/s10/"
 SCENES = [
     # 1 the restless night: one small warm star alone on the horizon, cold blue lights, the water uneasy
-    dict(image=_P + "restless_night.jpg", t0=0.0, t1=7.0, fade_in=1.0, fade_out=2.5, zoom=(1.07, 1.03), calm_gain=0.85,
+    dict(image=_P + "restless_night.jpg", t0=0.0, t1=6.0, fade_in=1.0, fade_out=1.2, zoom=(1.07, 1.03), calm_gain=0.85,
          water=True, water_line=0.415, water_strength=1.9),
     # 2 the great lamp is lifted: Heavenly Mother (from behind) at the lamp; Greeting
-    dict(image=_P + "great_lamp.jpg", t0=4.5, t1=20.5, fade_in=2.5, fade_out=2.5, transition="fade", calm_gain=0.85,
+    dict(image=_P + "great_lamp.jpg", t0=4.8, t1=19.2, fade_in=1.2, fade_out=1.2, transition="fade", calm_gain=0.85,
          zoom=(1.0, 1.04), water=True, water_line=0.495, water_strength=0.7,
          gain=Track([(0, 1.0), (7.5, 1.0), (9.0, 0.80), (TOTAL, 0.80)])),
     # 3 Her words go out: gold threads from the lantern to the lights on the water; Consideration
-    dict(image=_P + "threads.jpg", t0=18.0, t1=33.0, fade_in=2.5, fade_out=2.5, transition="fade", calm_gain=0.85,
-         zoom=(1.04, 1.0), water=True, water_line=0.575, water_strength=0.45,
+    dict(image=_P + "threads.jpg", t0=18.0, t1=31.7, fade_in=1.2, fade_out=1.2, transition="fade", calm_gain=0.85,
+         zoom=1.12, pan=((0.0, 0.06), (0.0, 0.06)), water=True, water_line=0.52, water_strength=0.45,
          gain=0.85),
     # 4 circles of peace: wherever a word reached, the water settles into a still mirror; Encouragement
-    dict(image=_P + "circles_of_peace.jpg", t0=30.5, t1=46.5, fade_in=2.5, fade_out=2.5, transition="fade", calm_gain=0.85,
+    dict(image=_P + "circles_of_peace.jpg", t0=30.5, t1=45.2, fade_in=1.2, fade_out=1.2, transition="fade", calm_gain=0.85,
          zoom=(1.0, 1.04), water=True, water_line=0.61, water_strength=0.15,
          gain=0.85),
     # 5 peace across the world: the night Earth laced with gold paths, the arch glows (no words for 4.5 s)
-    dict(image=_P + "earth_web.jpg", t0=EARTH, t1=52.4, fade_in=2.5, fade_out=2.6, transition="fade", calm_gain=0.85,
+    dict(image=_P + "earth_web.jpg", t0=EARTH, t1=48.8, fade_in=1.2, fade_out=1.2, transition="fade", calm_gain=0.85,
          zoom=(1.0, 1.05), water=False, gain=Track([(0, 1.0), (48.0, 1.0), (49.5, 0.65), (TOTAL, 0.65)])),
     # 6 night of peace: the home lake a perfect mirror, the lamp set back down; end card
-    dict(image=_P + "mirror_night.jpg", t0=HOME, t1=61.0, fade_in=2.6, fade_out=0.0, transition="fade", calm_gain=0.85,
+    dict(image=_P + "mirror_night.jpg", t0=HOME, t1=61.0, fade_in=1.2, fade_out=0.0, transition="fade", calm_gain=0.85,
          zoom=(1.03, 1.0), water=True, water_line=0.46, water_strength=0.12,
          gain=0.85),
 ]
 
 # ----------------------------------------------------------------- B. people of light
-# Heavenly Mother, seen only from behind and fully robed, holding the lamp low at the centre of the great lamp's
-# light; when Her first word has gone out, Her sparks return into the lamp. The three pairs act at different places:
-# centre-left, right, centre.
+# Heavenly Mother, seen only from behind and fully robed, standing just below the great lamp so it shines above
+# Her head; when Her first word has gone out, Her sparks return into the lamp. The three pairs act at different
+# places: centre-left, right, centre.
 FIGURES = [
-    dict(poses=["assets/figures/s10_mother_lamp_a.png"], t0=4.8, t1=16.0, x=0.5, y=0.35, height=0.24,
-         to=(0.5, 0.495), color="#ffd796", glow=0.55, glass=0.5, sparks=0.8),
+    dict(poses=["assets/figures/s10_mother_lamp_a.png"], t0=4.8, t1=16.0, x=0.5, y=0.255, height=0.22,
+         to=(0.5, 0.495), color="#ffbf5e", glow=0.45, glass=0.35, sparks=0.75),
     # Greeting: the left person walks up and waves; the lonely one places their hands in the offered hands
     dict(poses=["assets/figures/greeting_a.png", "assets/figures/greeting_b.png"],
          t0=G_FORM - 2.3, t1=G_FORM + HOLD - 0.5, pose_times=[G_FORM + 3.2], x=0.25, y=0.23, height=0.36,
@@ -266,7 +266,7 @@ FIGURES = [
 # BEAM path with a small pool where it lands), then fades when the words rise
 _THREADS = [  # (start, end, from (the lamp in that plate), to (the pair))
     (G_FORM - 1.3, G_FORM + HOLD - 0.3, (0.5, 0.495), (0.33, 0.40)),
-    (C_FORM - 0.9, C_FORM + HOLD - 0.3, (0.5, 0.555), (0.66, 0.40)),
+    (C_FORM - 0.9, C_FORM + HOLD - 0.3, (0.5, 0.50), (0.66, 0.40)),
     (E_FORM - 0.9, E_FORM + HOLD - 0.3, (0.5, 0.605), (0.5, 0.47)),
 ]
 BEAM = Track([(0, 0.0)] + [k for a, b, _, _ in _THREADS
@@ -333,11 +333,11 @@ TITLE = dict(label="Healing Concert", lines=["The Words of Mother’s Love"], si
 FRAGMENTS = []   # no lyrics yet
 TAGLINE = dict(text="Where a mother’s love reaches, peace settles.\nSunday, December 6 · 4:30 PM\n"
                     "The World Mission Society Church of God · 6720 W Sahara Ave, Las Vegas",
-               t0=53.0, t1=54.8)
+               t0=53.4, t1=55.0)
 
 CREDIT = dict(song="Our Mother Saves the World", concert="The Words of Mother’s Love Healing Concert",
               t_in=0.3, t_full=1.5, t_move=4.4, t_rest=6.4, scale=0.34, alpha_rest=0.58,
-              margin_x=0.030, margin_top=0.048, t_gone0=46.5, t_gone1=47.8)
+              margin_x=0.030, margin_top=0.048, t_gone0=17.6, t_gone1=19.0)
 
 
 def credit_state(t, bbox):
@@ -357,14 +357,15 @@ def credit_state(t, bbox):
     cx, cy = cx0 * (1 - m) + tx * m, cy0 * (1 - m) + ty * m
     # the corner credit leaves before the arch glows and the end card comes (nothing crosses it)
     alpha = a_in * (1.0 + (c["alpha_rest"] - 1.0) * m) * (1.0 - ss(c["t_gone0"], c["t_gone1"], t))
+    alpha *= 1.0 - 0.8 * (4.0 * m * (1.0 - m))   # dim while it crosses the arch line on its way to the corner
     return (cx, cy, scale, alpha), (cx0, cy0)
 
 
 # Small waves of light where a spoken word reaches its light (none for Greeting: its light is next to the corner
-# credit), and a soft one for the end card
+# credit), and none for the end card (it left a haze box under the title)
 WAVES = [(PHRASES[7]["arrive"], STAR_POS[7][0], STAR_POS[7][1], 0.22),
          (PHRASES[6]["arrive"], STAR_POS[6][0], STAR_POS[6][1], 0.22),
-         (TITLE_HIT, 0.5, 0.62, 0.35)]
+         ]
 
 
 # star_state and link_state come from engine/arch.py (installed by song.py), the same for every song.

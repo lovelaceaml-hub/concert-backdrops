@@ -16,10 +16,10 @@ def main(src, dst):
     g = np.asarray(Image.open(src).convert("L")).astype(np.float32) / 255.0
     mask = ndi.binary_fill_holes(ndi.gaussian_filter(g, 1.0) > 0.35)
     mask = ndi.binary_opening(mask, iterations=2)
-    edge = mask ^ ndi.binary_erosion(mask, iterations=2)
+    edge = mask ^ ndi.binary_erosion(mask, iterations=3)
     folds = np.clip((0.96 - g) * 6.0, 0.0, 1.0) * ndi.binary_erosion(mask, iterations=3)
     glow = np.clip((g - 0.15) * 1.5, 0, 1) * (~mask)          # the lamp's halo by the hands
-    art = np.maximum.reduce([edge.astype(np.float32), folds, 0.26 * mask.astype(np.float32), glow * 0.8])
+    art = np.maximum.reduce([edge.astype(np.float32), folds, 0.12 * mask.astype(np.float32), glow * 0.8])
     art = ndi.gaussian_filter(art, 0.6)
     ys, xs = np.nonzero(art > 0.05)
     art = art[ys.min():ys.max() + 1, xs.min():xs.max() + 1]
