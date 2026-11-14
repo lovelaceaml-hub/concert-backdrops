@@ -25,7 +25,7 @@ MUSIC_END = 59.5       # last sounding moment of the promo clip
 SONG_END = 60.0        # length of the promo clip
 TOTAL = 60.0           # promo length
 NFRAMES = int(round(TOTAL * FPS))
-HORIZON = 0.38         # water line, high: grand framing with a wide golden lake (song 11 look)
+HORIZON = 0.35         # water line, high: grand framing with a wide golden lake (song 11 look)
 
 RIDGE_X0, RIDGE_W = 0.035, 0.93
 
@@ -184,10 +184,10 @@ def _nine_pair(rate, offset):
 
 # Scene palettes (top of sky, middle, horizon, glow of the sun)
 PAL = {
-    "clear":   ("#123f86", "#3f7fc8", "#ffd6a2", "#fff1d6"),   # clear morning, the sun just risen
-    "mother":  ("#143f88", "#4682cb", "#ffd9ad", "#fff3dc"),   # Mother speaks: the same clear blue, warmer horizon
-    "radiant": ("#164a98", "#4f90d6", "#ffe2b6", "#fff6e6"),   # the road of light, full rays
-    "glory":   ("#1a56a8", "#5a9ade", "#ffecc8", "#fffaf0"),   # second lift: full daylight glory, white gold
+    "clear":   ("#0d3880", "#2c69b9", "#f5c07c", "#ffe8c2"),   # clear morning, the sun just risen
+    "mother":  ("#0e3a84", "#306ebe", "#f7c686", "#ffebc6"),   # Mother speaks: the same clear blue, warmer horizon
+    "radiant": ("#104490", "#3878c8", "#fad096", "#ffefd2"),   # the road of light, full rays
+    "glory":   ("#124c9a", "#3f82d0", "#fcd9a4", "#fff3da"),   # second lift: full daylight glory, white gold
 }
 _pal_keys = [
     (0.0, "clear"), (MOTHER + 3.0, "clear"), (MARCH, "mother"), (MARCH + 9.0, "radiant"), (KINGS, "radiant"),
@@ -199,9 +199,9 @@ SKY_HOR = Track([(t, lin(PAL[p][2])) for t, p in _pal_keys])
 GLOW = Track([(t, lin(PAL[p][3])) for t, p in _pal_keys])
 
 # a big white-gold sun that climbs clear of the mountains; softened while words are on screen so they stay readable
-SUN_INT = Track([(0, 0.95), (MARCH, 1.00), (MARCH + 4, 1.05), (ENC_OUT := MARCH + 11.0, 1.10), (HOPE + 2, 1.30),
-                 (KINGS, 1.40), (LIFT, 1.45), (JOY - 1.0, 1.15), (FOREVER + 3, 1.15), (TITLE_HIT - 2, 1.05), (TOTAL, 1.0)])
-SUN_Y = Track([(0, 0.405), (MARCH, 0.42), (HOPE, 0.45), (KINGS, 0.47), (LIFT, 0.50), (TITLE_HIT, 0.53), (TOTAL, 0.54)])
+SUN_INT = Track([(0, 0.80), (MARCH, 0.82), (MARCH + 4, 0.82), (ENC_OUT := MARCH + 11.0, 0.88), (HOPE + 2, 1.05),
+                 (KINGS, 1.15), (LIFT, 1.20), (JOY - 1.0, 0.88), (FOREVER + 3, 0.88), (TITLE_HIT - 2, 0.80), (TOTAL, 0.78)])
+SUN_Y = Track([(0, 0.375), (MARCH, 0.39), (HOPE, 0.42), (KINGS, 0.44), (LIFT, 0.465), (TITLE_HIT, 0.48), (TOTAL, 0.49)])
 SUN_SIZE = Track([(0, 0.14), (LIFT, 0.16), (TOTAL, 0.17)])
 STARS = Track([(0, 0.0), (TOTAL, 0.0)])
 MILKY = Track([(0, 0.0), (TOTAL, 0.0)])
@@ -219,11 +219,12 @@ LANTERN_COLORS = _nine_pair(0.5, 2)
 PETALS = Track([(0, 0.0), (TOTAL, 0.0)])
 TRAIL = Track([(0, 0.0), (1.2, 0.5), (MARCH, 0.7), (LIFT, 1.0), (TOTAL, 0.9)])
 ZOOM = Track([(0, 1.0), (MARCH, 0.99), (LIFT, 0.968), (TOTAL, 0.952)])
-EXPOSURE = Track([(0, 1.0), (TOTAL, 1.0)])
+EXPOSURE = Track([(0, 0.95), (MARCH, 0.95), (MARCH + 1.0, 0.92), (ENC_OUT, 0.92), (ENC_OUT + 3, 1.0), (LIFT, 1.0),
+                  (JOY - 1.0, 0.90), (TOTAL, 0.88)])
 FADE = Track([(0, 0.0), (1.0, 1.0), (TOTAL - 1.6, 1.0), (TOTAL - 0.2, 0.0)])
 # full rays, eased back while words are on screen
-RAYS = Track([(0, 0.35), (MARCH - 0.5, 0.40), (MARCH + 1.0, 0.30), (ENC_OUT, 0.32), (ENC_OUT + 3, 0.80), (KINGS, 0.95),
-              (LIFT, 1.0), (JOY - 1.0, 0.50), (FOREVER + 3, 0.50), (TITLE_HIT - 3.4, 0.40), (TOTAL, 0.38)])
+RAYS = Track([(0, 0.30), (MARCH - 0.5, 0.35), (MARCH + 1.0, 0.22), (ENC_OUT, 0.22), (ENC_OUT + 3, 0.75), (KINGS, 0.90),
+              (LIFT, 0.95), (JOY - 1.0, 0.25), (FOREVER + 3, 0.25), (TITLE_HIT - 3.4, 0.22), (TOTAL, 0.22)])
 PART = Track([(0, 0.0), (TOTAL, 0.0)])
 
 # Nine lights on an arch over the stage, one for each expression
