@@ -14,7 +14,7 @@ Promo v2 (PHASE2.md, design section 15 "Promo v2: scenes"), round 3: Anthony's f
 3 the encounter shore: the Encouragement in full over the still mirror sea, then into star 7 (13.5 to 34 s);
 4 the glory: the mist parts, a column of light and a path of gold on the sea (32 to 44 s);
 5 the boats at morning: a fisherman of light in the near boat casts the net and the net of light spreads over the
-  sky, then the end card (41.5 to 60 s).
+  sky, then the end card (39.8 to 60 s).
 """
 import os
 import numpy as np
@@ -159,7 +159,7 @@ ENC_HOLD = 30.0        # the words start to fly (6.2 s fully formed and solid)
 ENC_ARRIVE = 32.0      # the words reach star 7, which shines again and gains a thin ring
 GLORY = 33.5           # verse 2 line 4 (3:08): dawn begins after the arrival, the mist parts
 COMPARE = 33.0         # fragment "cannot even compare" (verse 2 line 4)
-NET_CAST = 42.4        # the fisherman casts the net and the net of light spreads from it (verse 2 line 5)
+NET_CAST = 43.4        # the fisherman casts the net and the net of light spreads from it (verse 2 line 5)
 NINTH = 1e9            # no whole-arch glow in this song
 TITLE_HIT = 50.0       # end card as verse 2 line 5 builds to the chorus
 FORM_DUR = 3.0
@@ -246,10 +246,10 @@ SCENES = [
     dict(image=PL + "s09_3_encounter_shore.jpg", t0=13.5, t1=35.0, fade_in=2.5, fade_out=2.5,
          transition="dissolve", edge_glow=0.0, zoom=(1.06, 1.02), water=True, water_line=0.50, water_strength=0.4,
          gain=Track([(0, 1.0), (ENC_FORM - 1.0, 1.0), (ENC_FORM + 1.0, 0.82), (ENC_ARRIVE, 0.82), (34.0, 1.0)])),
-    dict(image=PL + "s09_4_glory.jpg", t0=32.5, t1=44.0, fade_in=2.5, fade_out=2.5,
+    dict(image=PL + "s09_4_glory.jpg", t0=32.5, t1=42.3, fade_in=2.5, fade_out=2.5,
          transition="dissolve", edge_glow=0.0, zoom=(1.02, 1.10), water=True, water_line=0.26, calm_gain=0.4,
          gain=Track([(0, 0.88), (COMPARE - 0.5, 0.88), (COMPARE + 1.0, 0.70), (COMPARE + 6.5, 0.70), (42.0, 0.88)])),
-    dict(image=PL + "s09_5_boats_morning.jpg", t0=41.5, t1=61.0, fade_in=2.5, fade_out=0.0,
+    dict(image=PL + "s09_5_boats_morning.jpg", t0=39.8, t1=61.0, fade_in=2.5, fade_out=0.0,
          transition="dissolve", edge_glow=0.0, zoom=(1.08, 1.02), water=True, water_line=0.54, calm_gain=0.4,
          gain=Track([(0, 1.0), (TITLE_HIT - 3.5, 1.0), (TITLE_HIT - 1.0, 0.72), (TOTAL, 0.72)])),
 ]
@@ -267,8 +267,8 @@ FIGURES = [
          height=0.27, dissolve=2.2, leave="drift", color="#ffd99a"),
     dict(poses=[WALK, LIFT], t0=5.9, t1=9.9, gather=1.6, pose_times=[CALL - 0.2], morph=1.2, x=0.46, y=0.405,
          height=0.22, dissolve=2.2, leave="drift", color="#ffd99a"),
-    # 2 (about 41.2 to 46.5 s): the fisherman in the near boat casts the net and dissolves into the net of light
-    dict(poses=["assets/song_figures/s09/s09_fisherman_casting_net.png"], t0=41.2, t1=44.8, gather=1.5,
+    # 2 (about 42.2 to 47 s): the fisherman in the near boat casts the net and dissolves into the net of light
+    dict(poses=["assets/song_figures/s09/s09_fisherman_casting_net.png"], t0=42.2, t1=45.4, gather=1.2,
          x=0.40, y=0.49, height=0.34, dissolve=1.6, leave="drift", color="#ffd99a"),
 ]
 
