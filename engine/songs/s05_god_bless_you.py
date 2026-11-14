@@ -6,7 +6,7 @@ Design: project-docs/designs/05 God Bless You!.md (and its Google Doc, section 1
 
 Four scenes: (1) the young blossom tree on the shore, where two pray for the sister (Encouragement, relit);
 (2) the listening shore with its resting stone, where the brother stops and listens (Respect, first lit; a
-provisional exception awaiting Anthony, not an exact lyric match); (3) the open spring lake drawn by the engine,
+provisional exception awaiting Anthony, not an exact lyric match); (3) the open spring lake, wide to the far shore,
 where a path of light crosses the water as two go to help (Consideration, lit in the brother verse, relit);
 (4) the tree of blessing again, closer, as the afternoon sun breaks through above it and "God bless you!" forms
 of blossom petals, ending on the three-line concert card.
@@ -207,7 +207,7 @@ MOTE_COLORS = ("#f4efb0", "#fff4d6")
 MOTE_Y = (-0.05, 1.05)
 TEXT_SHADOW = Track([(0, 1.6), (TOTAL, 1.7)])   # bright spring plates: a deeper veil behind every word
 
-# A. Scenes: the song's two painted plates (assets/plates/s05/) and the engine's own open lake between them.
+# A. Scenes: the song's three painted plates (assets/plates/s05/), four scenes.
 SCENES = [
     # 1. the young blossom tree on the shore: two pray for the sister
     dict(image="assets/plates/s05/p1_young_tree.jpg", t0=0.0, t1=16.5, fade_in=0.8, fade_out=3.0,
@@ -215,9 +215,13 @@ SCENES = [
          gain=Track([(0, 0.95), (3.0, 0.8), (16.5, 0.8)])),
     # 2. the listening shore with its resting stone: the brother stops and listens
     dict(image="assets/plates/s05/p2b_listening_shore.jpg", t0=13.5, t1=29.0, fade_in=3.0, fade_out=3.0,
-         transition="dissolve", zoom=(1.04, 1.11), pan=((0.0, 0.0), (0.015, 0.0)), water=True, water_line=0.38,
+         transition="fade", zoom=(1.04, 1.11), pan=((0.0, 0.0), (0.015, 0.0)), water=True, water_line=0.38,
          gain=0.8),
-    # 3. (26 to 40) no plate: the engine's own open spring lake with a low horizon and the path of light
+    # 3. the open spring lake: a wide view across the water to the snowy peaks and the blossoming far shore
+    # (the left part of the first listening-shore painting; its resting stone stays out of frame)
+    dict(image="assets/plates/s05/p2_listening_shore.jpg", t0=26.0, t1=40.1, fade_in=3.0, fade_out=1.8,
+         transition="ripple", ripple_from=(0.42, 0.22), zoom=(1.50, 1.46), pan=((-0.15, 0.0), (-0.155, 0.0)),
+         water=True, water_line=0.33, gain=0.8),
     # 4. the tree of blessing again, closer, as the sun breaks through above it; it stays for the end card
     dict(image="assets/plates/s05/p1_young_tree.jpg", t0=38.3, t1=61.0, fade_in=1.8, fade_out=0.0,
          transition="bloom", flash=0.8, zoom=(1.24, 1.12), pan=((-0.08, 0.02), (-0.05, 0.0)), water=True,
@@ -243,21 +247,21 @@ FIGURES = [
 # C. Signature effects. The path of everyday kindness: a road of light crosses the lake from the helpers toward
 # the far shore (scene 3). Then the afternoon sun breaks through the haze above the tree of blessing (scene 4).
 def BEAM_FROM(t):
-    return (0.30, 0.20) if t < 38.5 else (0.10, 1.04)
+    return (0.30, 0.19) if t < 38.5 else (0.08, 1.04)
 
 
 def BEAM_TO(t):
-    return (0.80, 0.30) if t < 38.5 else (0.27, 0.40)
+    return (0.86, 0.255) if t < 38.5 else (0.25, 0.42)
 
 
 def BEAM_WIDTH(t):
-    return (0.045, 0.012) if t < 38.5 else (0.03, 0.10)
+    return (0.07, 0.015) if t < 38.5 else (0.03, 0.11)
 
 
-BEAM = Track([(0, 0.0), (27.0, 0.0), (30.5, 0.42), (36.5, 0.42), (38.3, 0.0), (43.8, 0.0), (46.5, 0.55),
-              (49.0, 0.45), (51.0, 0.12), (TOTAL, 0.12)])
+BEAM = Track([(0, 0.0), (28.0, 0.0), (31.0, 0.6), (36.5, 0.6), (38.3, 0.0), (43.8, 0.0), (46.3, 0.8),
+              (49.0, 0.6), (51.0, 0.15), (TOTAL, 0.15)])
 BEAM_COLOR = "#fff0c8"
-FLASH = Track([(0, 0.0), (47.2, 0.0), (47.9, 0.35), (49.5, 0.0), (TOTAL, 0.0)])
+FLASH = Track([(0, 0.0), (47.3, 0.0), (48.0, 0.45), (49.8, 0.0), (TOTAL, 0.0)])
 
 # Nine lights on an arch over the stage, one for each expression
 STAR_POS = []
