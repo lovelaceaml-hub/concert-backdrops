@@ -148,7 +148,7 @@ from track import Track   # the shared Track refuses keys that are not strictly 
 #   4  39 to 49   The mended sky: the sky above the words breaks into glass and drifts back together held by
 #                 gold seams, the horizon turns rose; "courage to go on" written by a pen of light.
 #   5  47 to 60   The rose dawn: the sun rises over the water with soft rays, rose petals, the camera wide again,
-#                 the closing title and the three-line end card (fully formed by about 55.5, held to 60).
+#                 the closing title and the three-line end card on a sky kept deep (sun low behind the hills) (fully formed by about 55.5, held to 60).
 
 # Landmarks in the promo clip (seconds into the clip; studio time minus 194 s), as in s03_lake_of_memory.py
 HANDS = 4.0          # 3:18 "I used to feel Her warm hands" (measured step up)
@@ -176,7 +176,7 @@ PAL = {
     "hands":   ("#04041a", "#151446", "#4a3474", "#ffb49a"),
     "prayer":  ("#01030d", "#050c2a", "#13244e", "#a8c4ff"),
     "predawn": ("#070a26", "#2a2152", "#9a5470", "#ffb894"),
-    "dawn":    ("#0d1640", "#46336e", "#d47a7c", "#ffd29c"),
+    "dawn":    ("#0b1238", "#382a60", "#b25e70", "#ffcc98"),
 }
 _pal_keys = [(0.0, "storm"), (7.0, "storm"), (13.0, "hands"), (20.5, "hands"), (25.5, "prayer"), (38.5, "prayer"),
              (44.5, "predawn"), (49.0, "predawn"), (53.0, "dawn"), (TOTAL, "dawn")]
@@ -187,9 +187,9 @@ GLOW = Track([(t, lin(PAL[p][3])) for t, p in _pal_keys])
 
 # the low light: hidden in the storm, a warm glow under the aurora, a cool moon at the prayer, then the sun
 SUN_INT = Track([(0, 0.06), (8, 0.10), (14, 0.30), (21, 0.30), (25, 0.42), (38, 0.46), (44, 0.40), (48, 0.55),
-                 (SUNRISE, 0.85), (54, 0.95), (TOTAL, 0.95)])
-SUN_Y = Track([(0, 0.25), (21, 0.26), (25, 0.33), (38, 0.345), (44, 0.29), (48, 0.27), (54, 0.325), (TOTAL, 0.335)])
-SUN_SIZE = Track([(0, 0.10), (25, 0.085), (38, 0.085), (46, 0.10), (54, 0.12), (TOTAL, 0.12)])
+                 (SUNRISE, 0.62), (54, 0.62), (TOTAL, 0.60)])
+SUN_Y = Track([(0, 0.25), (21, 0.26), (25, 0.33), (38, 0.345), (44, 0.29), (48, 0.27), (54, 0.30), (TOTAL, 0.305)])
+SUN_SIZE = Track([(0, 0.10), (25, 0.085), (38, 0.085), (46, 0.10), (54, 0.105), (TOTAL, 0.105)])
 STARS = Track([(0, 0.0), (0.2, 0.0), (2.5, 0.35), (8, 0.35), (13, 0.9), (24, 1.0), (38, 1.0), (45, 0.7),
                (50, 0.35), (54, 0.18), (TOTAL, 0.16)])
 MILKY = Track([(0, 0.0), (20, 0.0), (26, 0.95), (38, 0.9), (44, 0.2), (48, 0.0), (TOTAL, 0.0)])
@@ -199,14 +199,14 @@ AURORA = Track([(0, 0.0), (9, 0.0), (13, 0.42), (17, 0.58), (21, 0.42), (26, 0.1
 RAIN = Track([(0, 0.75), (4.5, 0.6), (7.5, 0.15), (9.0, 0.0), (TOTAL, 0.0)])
 MOTES = Track([(0, 0.06), (2, 0.14), (12, 0.30), (24, 0.24), (36, 0.30), (44, 0.42), (SUNRISE, 0.55), (54, 0.35),
                (TOTAL, 0.32)])
-LANTERNS = Track([(0, 0.0), (9.0, 0.0), (12.0, 0.85), (19.0, 0.85), (23.5, 0.0), (TOTAL, 0.0)])
+LANTERNS = Track([(0, 0.0), (9.0, 0.0), (12.0, 0.65), (19.0, 0.65), (23.5, 0.0), (TOTAL, 0.0)])
 PETALS = Track([(0, 0.0), (47.0, 0.0), (50.0, 0.55), (52.5, 0.25), (TOTAL, 0.2)])
 TRAIL = Track([(0, 0.0), (1.2, 0.55), (24, 0.6), (40, 0.8), (SUNRISE, 1.0), (TOTAL, 0.9)])
 # framing: low over the water, closer for the prayer, wide again at dawn
 ZOOM = Track([(0, 1.0), (8, 0.99), (22, 0.975), (28, 0.955), (38, 0.95), (46, 0.965), (54, 1.0), (TOTAL, 1.0)])
 EXPOSURE = Track([(0, 1.0), (TOTAL, 1.0)])
 FADE = Track([(0, 0.0), (1.0, 1.0), (59.0, 1.0), (TOTAL - 0.05, 0.0)])
-RAYS = Track([(0, 0.0), (48.0, 0.0), (51.0, 0.45), (55.0, 0.40), (TOTAL, 0.38)])
+RAYS = Track([(0, 0.0), (48.0, 0.0), (51.0, 0.34), (55.0, 0.28), (TOTAL, 0.26)])
 PART = Track([(0, 0.0), (TOTAL, 0.0)])
 
 # Scene 4: the upper sky breaks into glass after the prayer and drifts back together, mended with gold
