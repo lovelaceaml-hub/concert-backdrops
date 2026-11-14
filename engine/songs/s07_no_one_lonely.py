@@ -245,10 +245,10 @@ FIGURES = [
     dict(poses=[F + "s07_lantern_pair.png"], t0=47.4, t1=50.6, gather=1.2, x=(0.66, 0.80), y=(0.33, 0.38),
          height=(0.21, 0.18), move=(47.4, 50.6), ease="linear", bob=1.0,
          color="#ffd27a", glow=1.1, leave="drift", dissolve=1.8),
-    # scene 5: Heavenly Mother from behind walks on ahead up the lantern path, below the card; her light flows on
+    # scene 5: Heavenly Mother from behind walks on ahead up the lantern path, below the card, and dissolves into light as she goes
     dict(poses=[F + "s07_mother_lamp_behind.png"], t0=52.0, t1=55.6, gather=1.5, x=(0.13, 0.22), y=(0.10, 0.15),
          height=(0.25, 0.21), move=(52.0, 55.6), ease="linear", bob=1.0,
-         color="#fff0d2", glow=1.1, to=(0.46, 0.20), dissolve=2.5),
+         color="#fff0d2", glow=1.1, leave="drift", dissolve=2.2),
 ]
 
 # C. Signature effects. The lone light found: a path of light from the horizon star along the shore to the bench
@@ -338,11 +338,10 @@ def credit_state(t, bbox):
     return (cx, cy, scale, alpha), (cx0, cy0)
 
 
-# Waves of light when a light is lit, and the peace ring: a wave of stillness across the lake after each of
-# Mother's words (unrest to stillness)
+# Waves of light when a light is lit (star 1, star 8) and when the title arrives. The extra centre wave after the
+# Greeting is gone (round 3): it bloomed as a bright haze over the village fade at about 38 s.
 WAVES = [(PHRASES[0]["star"], STAR_POS[0][0], STAR_POS[0][1], 0.5),
          (PHRASES[7]["arrive"], STAR_POS[7][0], STAR_POS[7][1], 0.6),
-         (G_HOLD + 2.6, 0.5, 0.40, 0.3),
          (TITLE_HIT, 0.5, 0.62, 1.1)]
 
 
