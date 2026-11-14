@@ -246,7 +246,7 @@ SCENES = [
     # 5 peace settled: a low view from the water's edge, the nine glows large on the calm lake, the city cut by the
     # top of the frame (a different composition from scene 3); a soft bloom after the fragment has gone; end card
     dict(image=_P + "s11_rest.jpg", t0=49.5, t1=61.0, fade_in=2.0, fade_out=0.0, transition="bloom", flash=0.3,
-         zoom=(1.62, 1.55), pan=((0.0, -0.14), (0.0, -0.15)), water=True, water_line=0.378, water_strength=0.7,
+         zoom=(1.62, 1.55), pan=((0.0, -0.065), (0.0, -0.06)), water=True, water_line=0.378, water_strength=0.7,
          gain=Track([(0, 0.9), (TITLE_HIT - 1.5, 0.62), (TOTAL, 0.62)])),
 ]
 
