@@ -4,18 +4,17 @@ Design: project-docs/designs/02 The Rose.md ("The Seed Under the Snow"), DESIGN-
 deep winter night with snowfall, a pale pink spring dawn; silver blue, white, blush pink; close and quiet framing).
 Painted plates from Assets/s02 (assets/plates/s02/) and the song's own people of light (assets/song_figures/s02/).
 
-Five scenes, each with its own camera and main object:
+Four scenes, each with its own camera and main object:
   0 to 14.5 1 FIRST SNOW: a wide night lake, the home star low between the mountains, snow begins and thickens
             as the camera slowly closes in; fragment "too lonely"
   12 to 30  2 THE CANDLE FIELD: violet light pours onto the snowbound lake and small lights glow all over it;
             three women of light come to the kneeling traveler and act out Encouragement (they gather round,
             one relights the traveler's lantern from her own flame, one wraps her scarf round the traveler, one
             prays; then the traveler stands with them, lantern raised). The full words form and fly into star 7
-  27.5 to 40 3 THE SEED UNDER THE SNOW: a high ceiling of snow and ice, the dark soil, the seed with gold roots;
+  27.5 to 42 3 THE SEED UNDER THE SNOW: a high ceiling of snow and ice, the dark soil, the seed with gold roots;
             a violet thread of light falls to it; fragment "the seed" is written in light
-  37.5 to 51 4 THE ROSE: a low close shot on the near shore, the rose of light at dawn; petals fall;
-            fragment "becomes the rose" settles in petals
-  47.5 to 60 5 SPRING DAWN: closer on the near shore where the rose stands, the three-line end card
+  39.7 to 60 4 THE ROSE: a low close shot on the near shore, the rose of light at dawn; petals fall;
+            fragment "becomes the rose" settles in petals; the three-line end card on the same close shore
 Signature effects: falling snow in depth (SNOW), the seed under the snow (plate and BEAM), the rose and its
 petals (plates, PETALS, the petals fragment). The freeze and thaw belong to song 04, so this file uses no ICE.
 
@@ -140,10 +139,10 @@ ENC_FORM = 15.6        # the words start forming as the women kneel and pray (fu
 ENC_HOLD = 26.0        # the words begin to fly (6.65 seconds fully formed and solid)
 ENC_ARRIVE = 28.5      # they reach star 7: a flare and one new thin ring
 NINTH = 1e9            # the whole arch does not glow at the end of this song
-TITLE_HIT = 52.0       # end card
+TITLE_HIT = 52.6       # end card
 SKYLINE_LANTERN = 0.0  # all plates: no light along the drawn skyline
 TEXT_PROTECT = 1.0
-TEXT_SHADOW = Track([(0, 1.2), (38.0, 1.2), (40.0, 1.9), (TOTAL, 1.9)])   # deeper calm behind words on bright dawn
+TEXT_SHADOW = Track([(0, 1.2), (39.5, 1.2), (41.0, 1.9), (TOTAL, 1.9)])   # deeper calm behind words on bright dawn
 
 # Procedural sky and lake: only a fallback behind the plates (never seen on its own)
 PAL = {
@@ -185,25 +184,28 @@ AURORA_COOL = ("#c9d8ff", "#e4d8ff")
 #   1 wide night lake, first snow, the home star low between the mountains; the camera slowly closes in
 #     as the night deepens (0 to 14.5)
 #   2 the violet light on the ice and the field of candle lights: the trio comes (12 to 30)
-#   3 under the snow: high ice ceiling, the seed and its gold roots in the soil (27.5 to 40)
-#   4 low close shot on the near shore: the rose of light (37 to 51)
-#   5 spring dawn, closer on the near shore where the rose stands, for the end card (47.5 to 60)
+#   3 under the snow: high ice ceiling, the seed and its gold roots in the soil (27.5 to 42)
+#   4 low close shot on the near shore: the rose of light, then the end card beside it (39.7 to 60)
+# The plates were touched up for song 02 (plates_fix notes in project-docs/status/02.md): the top left star
+# band of a_first_snow dimmed, the light column and pool of c_violet_ice darkened behind the people and the
+# candles at its bottom edge calmed, the ice ceiling of d_seed darkened near the arch, the ice floes of
+# e_thaw_rose painted out and its sky near the arch calmed.
 P = "assets/plates/s02/"
 SCENES = [
     dict(image=P + "a_first_snow.jpg", t0=0.0, t1=14.5, fade_in=1.0, fade_out=2.5,
          zoom=(1.0, 1.10), pan=((0.0, 0.0), (0.0, 0.015)), water=True, water_line=0.36,
          gain=Track([(0, 1.0), (9.0, 1.0), (14.0, 0.85), (TOTAL, 0.85)])),
     dict(image=P + "c_violet_ice.jpg", t0=12.0, t1=30.0, fade_in=2.5, fade_out=2.5, transition="fade",
-         zoom=(1.04, 1.10), pan=((0.0, 0.0), (0.0, 0.015)),
-         gain=Track([(0, 0.62), (27.0, 0.62), (30.0, 0.85)])),
-    dict(image=P + "d_seed.jpg", t0=27.5, t1=40.0, fade_in=2.5, fade_out=2.5, transition="fade",
+         zoom=(1.10, 1.14), pan=((0.0, 0.04), (0.0, 0.05)),     # framed up: fewer candles at the bottom edge
+         gain=Track([(0, 0.72), (27.0, 0.72), (30.0, 0.85)])),
+    dict(image=P + "d_seed.jpg", t0=27.5, t1=42.2, fade_in=2.5, fade_out=2.5, transition="fade",
          zoom=(1.02, 1.12), pan=((0.0, 0.0), (0.0, 0.01)),
-         gain=Track([(0, 1.0), (31.0, 1.0), (32.5, 0.82), (38.0, 0.82), (40.0, 1.0)])),
-    dict(image=P + "e_thaw_rose.jpg", t0=37.5, t1=50.5, fade_in=2.5, fade_out=3.0, transition="ripple",
-         ripple_from=(0.15, 0.45), zoom=(1.10, 1.04), pan=((-0.03, 0.0), (-0.01, 0.0)), gain=Track([(0, 0.9), (39.5, 0.9), (41.0, 0.78), (46.5, 0.78), (50.5, 0.9)])),
-    dict(image=P + "f_spring_dawn.jpg", t0=47.5, t1=61.0, fade_in=3.0, fade_out=0.0, transition="fade",
-         zoom=(1.40, 1.36), pan=((-0.22, -0.12), (-0.23, -0.13)),
-         gain=Track([(0, 0.85), (49.0, 0.85), (51.0, 0.66), (TOTAL, 0.66)])),
+         gain=Track([(0, 1.0), (30.5, 1.0), (32.0, 0.82), (TOTAL, 0.82)])),
+    # the rose shore holds to the end: the end card stands on the close dawn shore beside the rose
+    dict(image=P + "e_thaw_rose.jpg", t0=39.7, t1=61.0, fade_in=2.5, fade_out=0.0, transition="fade",
+         zoom=(1.10, 1.17), pan=((-0.05, 0.045), (-0.05, 0.045)),
+         gain=Track([(0, 0.85), (41.0, 0.85), (42.0, 0.78), (47.0, 0.78), (49.0, 0.86), (51.0, 0.68),
+                     (TOTAL, 0.68)])),
 ]
 
 # ----------------------------------------------------------------- effect layers
@@ -234,8 +236,8 @@ for i in range(9):
 SF = "assets/song_figures/s02/"
 FIGURES = [
     dict(poses=[SF + "trio_1_arrival.png", SF + "trio_2_encourage.png", SF + "trio_3_rise.png"],
-         t0=FIG_IN, t1=ENC_HOLD - 0.5, pose_times=[16.6, 22.4], morph=0.6, x=0.5, y=0.34, height=0.32,
-         to_star=6, color="#e2d2ff", glow=1.25),
+         t0=FIG_IN, t1=ENC_HOLD - 0.5, pose_times=[16.6, 22.4], morph=0.6, x=0.40, y=0.34, height=0.32,
+         to_star=6, color="#ffd9a8", glow=0.9),   # pale gold, beside the violet column, so they stand out
 ]
 
 OFF = dict(form=1e9, hold=1e9, star=1e9)
@@ -259,8 +261,8 @@ TITLE = dict(label="Healing Concert", lines=["The Words of Mother’s Love"], si
 # Short lyric fragments (a few words each; the song is copyrighted). Never on screen with the expression.
 FRAGMENTS = [
     dict(text="too lonely", t0=4.6, t1=6.6, out=9.6, dy=0.03, size=84, glow="#cfe0ff"),
-    dict(text="the seed", t0=31.8, t1=34.6, out=37.6, dy=0.13, size=88, glow="#ffc98a", style="write"),
-    dict(text="becomes the rose", t0=40.0, t1=43.0, out=46.0, dy=0.02, size=100, style="petals",
+    dict(text="the seed", t0=31.0, t1=33.6, out=36.6, dy=0.13, size=88, glow="#ffc98a", style="write"),
+    dict(text="becomes the rose", t0=41.2, t1=44.0, out=47.0, dy=0.02, size=100, style="petals",
          colors=("#e98aa3", "#ffd3dd")),
 ]
 
