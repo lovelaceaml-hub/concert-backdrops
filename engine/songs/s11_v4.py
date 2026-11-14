@@ -19,8 +19,8 @@ Five scenes, each a different time of day, light and centre of attention:
   city gathers, then its walls, windows and gate light up); lights in all nine colours rise from the lake into an
   aurora of all nine colours;
 4 the sun through the gate, 41 to 48.5 s: the second lift; the sun rises into the open gate of the city with full
-  rays, a flash of light, the whole arch glows; "Joy of salvation endures forever" is engraved high in the deep blue;
-5 peace settled, from 48.5 s: deep warm starry night, the golden city glowing on the mountain, nine glows in the
+  rays, the whole arch glows; "Joy of salvation endures forever" is engraved high in the deep blue;
+5 peace settled, from 48.5 s: deep warm starry night, the golden city glowing far off on the mountain, nine glows in the
   nine colours gather on the calm water beneath their lights; the three-line end card.
 Signature moments: the city filling with gold (scenes 1 to 3), the nations streaming in (scene 3), the sun through
 the gate (scene 4), the nine glows on the water (scene 5).
@@ -215,7 +215,7 @@ GLOW = Track([(t, lin(PAL[p][3])) for t, p in _pal_keys])
 # the sun: under the horizon before dawn (its glow lays the road of light on the lake), up into the gate at the
 # second lift, down again for the night
 SUN_INT = Track([(0, 0.10), (8.5, 0.14), (13.0, 0.42), (23.5, 0.50), (29.0, 0.70), (LIFT - 0.5, 0.80),
-                 (LIFT + 0.8, 1.25), (NIGHT - 1.0, 1.10), (NIGHT + 3.0, 0.16), (TOTAL, 0.14)])
+                 (LIFT + 0.8, 1.05), (NIGHT - 1.0, 0.95), (NIGHT + 3.0, 0.16), (TOTAL, 0.14)])
 SUN_Y = Track([(0, 0.30), (8.5, 0.31), (23.5, 0.335), (29.0, 0.350), (LIFT - 0.5, 0.362), (LIFT + 3.5, 0.392),
                (NIGHT - 1.0, 0.398), (NIGHT + 3.0, 0.32), (TOTAL, 0.32)])
 SUN_SIZE = Track([(0, 0.09), (23.5, 0.095), (LIFT, 0.10), (TOTAL, 0.10)])
@@ -225,16 +225,15 @@ MILKY = Track([(0, 0.0), (4.0, 0.55), (9.0, 0.50), (16.0, 0.12), (24.0, 0.0), (N
                (TOTAL, 0.55)])
 CLOUDS = Track([(0, 0.06), (TOTAL, 0.06)])   # a clear sky
 AURORA = Track([(0, 0.0), (3.0, 0.14), (9.0, 0.18), (11.0, 0.10), (21.5, 0.10), (24.5, 0.32), (29.0, 0.46),
-                (LIFT - 1.0, 0.46), (LIFT + 1.0, 0.18), (NIGHT - 1.0, 0.12), (NIGHT + 3.0, 0.20), (TOTAL, 0.20)])
+                (LIFT - 1.0, 0.46), (LIFT + 1.0, 0.18), (NIGHT - 1.0, 0.12), (NIGHT + 3.0, 0.12), (TOTAL, 0.12)])
 RAIN = Track([(0, 0.0), (TOTAL, 0.0)])
 PETALS = Track([(0, 0.0), (TOTAL, 0.0)])
 PART = Track([(0, 0.0), (TOTAL, 0.0)])
 TRAIL = Track([(0, 0.0), (TOTAL, 0.0)])
 ZOOM = Track([(0, 1.0), (TOTAL, 1.0)])       # the city of light is drawn in screen space: the camera holds still
 EXPOSURE = Track([(0, 1.0), (TOTAL, 1.0)])
-RAYS = Track([(0, 0.0), (24.0, 0.0), (29.0, 0.30), (LIFT - 0.5, 0.40), (LIFT + 1.0, 0.85), (NIGHT - 1.0, 0.75),
+RAYS = Track([(0, 0.0), (24.0, 0.0), (29.0, 0.30), (LIFT - 0.5, 0.40), (LIFT + 1.0, 0.70), (NIGHT - 1.0, 0.62),
               (NIGHT + 2.5, 0.0), (TOTAL, 0.0)])
-FLASH = Track([(0, 0.0), (LIFT - 0.3, 0.0), (LIFT + 0.25, 0.28), (LIFT + 2.2, 0.0), (TOTAL, 0.0)])
 FADE = Track([(0, 0.0), (1.0, 1.0), (TOTAL - 0.4, 1.0), (TOTAL - 0.02, 0.0)])
 # white-gold motes in the air, quieter while words are on screen
 MOTES = Track([(0, 0.20), (ENC_FORM, 0.20), (ENC_FORM + 2, 0.12), (ENC_ARRIVE, 0.12), (ENC_ARRIVE + 2, 0.40),
@@ -257,7 +256,10 @@ FIGURES = [
          particles=9000),
     # 3 the city filled with gold: the gold outline gathers, then walls, windows and the gate fill with light
     dict(poses=[_F + "s11v4_city_outline.png", _F + "s11v4_city_gold.png"], t0=24.5, t1=999.0, gather=4.0,
-         pose_times=[30.5], morph=5.0, x=0.5, y=CITY_Y, height=CITY_H, color="#ffcf7a", glow=0.95, glass=1.0,
+         pose_times=[30.5], morph=5.0, x=0.5,
+         # as night falls the city recedes into the distance, so the end card stands clear above it
+         y=Track([(0, CITY_Y), (NIGHT - 0.5, CITY_Y), (NIGHT + 3.0, HORIZON + 0.012), (TOTAL, HORIZON + 0.012)]),
+         height=Track([(0, CITY_H), (NIGHT - 0.5, CITY_H), (NIGHT + 3.0, 0.040), (TOTAL, 0.040)]), color="#ffcf7a", glow=0.95, glass=1.0,
          sparks=0.9, spark_size=0.85, particles=16000),
 ]
 # 5 nine glows on the calm water, one beneath each light of the arch, each in its expression's colour
@@ -287,11 +289,11 @@ PHRASES = [
 ]
 FORM_DUR = 3.0
 TITLE = dict(label="Healing Concert", lines=["The Words of Mother’s Love"], size=150, form=TITLE_HIT - FORM_DUR,
-             hold=1e9, star=1e9)
+             hold=1e9, star=1e9, y=0.30)
 
 # design fragment 3 in one piece, engraved in gold high in the deep blue above the sun in the gate
 FRAGMENTS = [
-    dict(text="Joy of salvation endures forever", t0=FRAG_T0, t1=FRAG_T1, out=FRAG_OUT, dy=0.175, size=100,
+    dict(text="Joy of salvation endures forever", t0=FRAG_T0, t1=FRAG_T1, out=FRAG_OUT, dy=0.13, size=100,
          glow="#ffcf7a", style="engrave"),
 ]
 
@@ -329,7 +331,7 @@ def credit_state(t, bbox):
 # Waves of light across the sky: Encouragement reaching its light again, the whole arch answering the second lift,
 # and the end card
 WAVES = [(ENC_ARRIVE, STAR_POS[6][0], STAR_POS[6][1], 0.7),
-         (LIFT, 0.5, 0.86, 0.9),
+         (LIFT, 0.5, 0.86, 0.5),
          (TITLE_HIT, 0.5, 0.62, 1.1)]
 
 
