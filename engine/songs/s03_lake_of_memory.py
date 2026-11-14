@@ -144,7 +144,7 @@ from track import Track   # the shared Track refuses keys that are not strictly 
 #                 at 7 s the child dissolves and its sparks fly to the middle of the sky, where Her hands appear.
 #   2  8 to 23    Her warm hands (aurora_hands_night): violet aurora over a mirror lake, sky lanterns rising.
 #                 Mother's hands of light (sleeves only) gather out of the air, open and cupped; "Her warm hands"
-#                 rises out of the lake above them; at 18.6 the hands close into prayer, then drift up as light.
+#                 rises out of the lake above them; at 19.4 the hands close into prayer, then drift up as light.
 #   3  20 to 41   Her prayer (prayer_mirror): one column of light from the horizon into the sky, the lake a mirror.
 #                 People of light act out ENCOURAGEMENT (one prays over a kneeling friend, then rests a hand on
 #                 their back and cheers them on); two small pairs echo it on the far shores. The full words hold
@@ -203,21 +203,23 @@ EXPOSURE = Track([(0, 1.0), (TOTAL, 1.0)])
 FADE = Track([(0, 0.0), (1.0, 1.0), (59.0, 1.0), (TOTAL - 0.05, 0.0)])
 RAYS = Track([(0, 0.0), (TOTAL, 0.0)])
 PART = Track([(0, 0.0), (TOTAL, 0.0)])
-TEXT_SHADOW = Track([(0, 1.1), (44.0, 1.2), (48.0, 1.3), (TOTAL, 1.3)])   # deeper behind the end card at dawn
+TEXT_SHADOW = Track([(0, 1.1), (44.0, 1.2), (48.0, 1.1), (TOTAL, 1.1)])   # deeper behind the end card at dawn
 
 # A. the five painted scenes; each crossfade sits on a musical step, the lake of each one shimmers
 SCENES = [
     dict(image="assets/plates/s03/frozen_rain_lanterns.jpg", t0=0.0, t1=10.5, fade_in=1.0, fade_out=2.5,
-         zoom=(1.12, 1.05), pan=((-0.02, 0.0), (0.0, 0.0)), water=True, water_line=0.25, gain=0.95),
+         zoom=(1.12, 1.05), pan=((-0.02, 0.0), (0.0, 0.0)), water=True, water_line=0.25, gain=0.95,
+         water_strength=0.5, calm_gain=0.4),
     dict(image="assets/plates/s03/aurora_hands_night.jpg", t0=8.0, t1=23.5, fade_in=2.5, fade_out=3.0,
          transition="dissolve", zoom=(1.03, 1.14), pan=((0.0, 0.0), (0.0, 0.02)), water=True, water_line=0.31,
          gain=Track([(0, 1.0), (10.0, 0.88), (17.5, 0.88), (20.0, 1.0)])),
     dict(image="assets/plates/s03/prayer_mirror.jpg", t0=20.5, t1=41.5, fade_in=3.0, fade_out=2.5,
-         transition="bloom", flash=0.35, zoom=(1.14, 1.04), water=True, water_line=0.305,
+         transition="bloom", flash=0.15, zoom=(1.14, 1.04), water=True, water_line=0.305, water_strength=0.5,
+         calm_gain=0.4,
          gain=Track([(0, 1.0), (25.0, 1.0), (27.0, 0.85), (38.0, 0.85), (40.0, 1.0)])),
     dict(image="assets/plates/s03/mended_moon_predawn.jpg", t0=39.0, t1=49.5, fade_in=2.5, fade_out=2.5,
-         transition="ripple", ripple_from=(0.5, 0.25), zoom=(1.04, 1.10), pan=((0.0, -0.02), (0.0, 0.0)),
-         water=True, water_line=0.34, gain=Track([(0, 1.0), (40.0, 0.90), (46.0, 0.90), (48.0, 1.0)])),
+         transition="dissolve", zoom=(1.04, 1.10), pan=((0.0, -0.02), (0.0, 0.0)),
+         water=True, water_line=0.34, water_strength=0.5, calm_gain=0.4, gain=Track([(0, 1.0), (40.0, 0.90), (46.0, 0.90), (48.0, 1.0)])),
     dict(image="assets/plates/s03/rose_dawn.jpg", t0=47.0, t1=61.0, fade_in=2.5, fade_out=0.0,
          transition="fade", zoom=(1.10, 1.03), water=True, water_line=0.255,
          gain=Track([(0, 1.0), (48.0, 0.92), (50.5, 0.64), (TOTAL, 0.64)])),
@@ -225,7 +227,7 @@ SCENES = [
 
 # Scene 4: the upper sky breaks into glass after the prayer and drifts back together into the mended moon
 SHARDS = Track([(0, 0.0), (39.8, 0.0), (41.0, 1.0), (42.2, 1.0), (44.6, 0.0), (TOTAL, 0.0)])
-SHARDS_Y = 0.62           # only above the words
+SHARDS_Y = 0.66           # only above the words
 SHARDS_COLOR = "#ffd27a"
 
 # Nine lights on an arch over the stage, one for each expression
@@ -264,8 +266,8 @@ FIGURES = [
     dict(poses=[_SF + "child_sitting.png"], t0=0.8, t1=7.0, x=0.20, y=0.25, height=0.20, dissolve=3.0,
          to=(0.5, 0.45), color="#ffd8b0", glow=0.9, particles=7000),
     # Mother's hands (sleeves only): open and cupped, then closed in prayer, then rising as light
-    dict(poses=[_SF + "mother_hands_cupped.png", _SF + "mother_hands_praying.png"], t0=8.6, t1=21.4,
-         pose_times=[18.6], x=0.5, y=0.30, height=0.36, dissolve=2.2, leave="drift", color="#ffc9b8",
+    dict(poses=[_SF + "mother_hands_cupped.png", _SF + "mother_hands_praying.png"], t0=8.6, t1=21.8,
+         pose_times=[19.4], x=0.5, y=0.33, height=0.36, dissolve=2.0, leave="drift", color="#ffc9b8",
          glow=1.0, particles=12000),
     # ENCOURAGEMENT acted out: pray over the exhausted friend, then a hand on the back and a cheer
     dict(poses=_ENC[:2], t0=22.6, gather=2.4, t1=ENC_HOLD - 0.5, pose_times=[25.0], x=0.5, y=0.20,
@@ -283,7 +285,7 @@ FIGURES = [
 # Short lyric fragments (never on screen with an expression). Times are estimates from the studio recording.
 FRAGMENTS = [
     # rises out of the lake (short time in the water), then rests above Her hands
-    dict(text="Her warm hands", t0=11.2, t1=13.8, out=17.2, dy=0.09, size=88, glow="#ffb468",
+    dict(text="Her warm hands", t0=11.2, t1=13.8, out=17.2, dy=0.11, size=88, glow="#ffb468",
          style="reflection", line=0.31),
     # below the moon, beside the standing child
     dict(text="courage to go on", t0=40.2, t1=42.8, out=45.8, dy=-0.12, size=84, glow="#ffc070", style="write"),
