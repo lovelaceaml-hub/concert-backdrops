@@ -143,9 +143,9 @@ from track import Track   # the shared Track refuses keys that are not strictly 
 #   1  0 to 10    The storm stands still (frozen_rain_lanterns): raindrops hang in the air, gold on the left and
 #                 cold blue glass on the right. A child of light gathers on the shore for a moment (2 to 4.6) and
 #                 its light flies up to the middle of the sky.
-#   2  8 to 23    Her warm hands (aurora_hands_night): violet aurora, sky lanterns, mirror lake. Mother's hands of
-#                 light (sleeves only) gather cupped, close into prayer and rise away as light (9.4 to 18.4);
-#                 "Her warm hands" rises out of the lake above them.
+#   2  8 to 23    Her warm hands (aurora_hands_night): violet aurora, sky lanterns, mirror lake. "Her warm hands"
+#                 rises out of the lake; then Mother's cupped hands of light (with sleeves) gather under the
+#                 words, lift gently and drift away as light (12.9 to 18.2).
 #   3  20 to 41   Her prayer (prayer_mirror): one column of light from the horizon into the sky, a mirror lake.
 #                 No people: the column, the light and the full words carry ENCOURAGEMENT (about 7 s solid),
 #                 then the words fly to light 7 (flare and a new ring).
@@ -210,6 +210,7 @@ SCENES = [
          water_strength=0.5, calm_gain=0.25),
     dict(image="assets/plates/s03/aurora_hands_night.jpg", t0=8.0, t1=23.5, fade_in=2.5, fade_out=3.0,
          transition="dissolve", zoom=(1.03, 1.14), pan=((0.0, 0.0), (0.0, 0.02)), water=True, water_line=0.31,
+         water_strength=0.5, calm_gain=0.4,
          gain=Track([(0, 1.0), (10.0, 0.88), (17.5, 0.88), (20.0, 1.0)])),
     dict(image="assets/plates/s03/prayer_mirror.jpg", t0=20.5, t1=41.5, fade_in=3.0, fade_out=2.5,
          transition="bloom", flash=0.15, zoom=(1.14, 1.04), water=True, water_line=0.305, water_strength=0.5,
@@ -219,7 +220,7 @@ SCENES = [
          transition="fade", zoom=(1.04, 1.10), pan=((0.0, -0.02), (0.0, 0.0)),
          water=True, water_line=0.34, water_strength=0.5, calm_gain=0.25, gain=Track([(0, 1.0), (40.0, 0.90), (46.0, 0.90), (48.0, 1.0)])),
     dict(image="assets/plates/s03/rose_dawn.jpg", t0=47.0, t1=61.0, fade_in=2.5, fade_out=0.0,
-         transition="fade", zoom=(1.10, 1.03), water=True, water_line=0.255,
+         transition="fade", zoom=(1.10, 1.03), water=True, water_line=0.255, water_strength=0.5, calm_gain=0.4,
          gain=Track([(0, 1.0), (48.0, 0.92), (50.5, 0.64), (TOTAL, 0.64)])),
 ]
 
@@ -259,12 +260,13 @@ TITLE = dict(label="Healing Concert", lines=["The Words of Mother’s Love"], si
 _SF = "assets/song_figures/s03/"
 FIGURES = [
     # the child huddled in the storm: gathers, and at once its light flies up to where Her hands will appear
-    dict(poses=[_SF + "child_sitting.png"], t0=2.0, gather=2.0, t1=4.6, x=0.20, y=0.25, height=0.20, dissolve=3.0,
-         to=(0.5, 0.45), color="#ffd8b0", glow=0.9, particles=7000),
-    # Mother's hands (sleeves only): gather open and cupped, close into prayer, then rise away as light
-    dict(poses=[_SF + "mother_hands_cupped.png", _SF + "mother_hands_praying.png"], t0=9.4, gather=2.4, t1=16.2,
-         pose_times=[13.2], x=0.5, y=0.33, height=0.36, dissolve=2.2, leave="drift", color="#ffc9b8",
-         glow=1.0, particles=12000),
+    dict(poses=[_SF + "child_sitting.png"], t0=2.0, gather=2.0, t1=4.6, x=(0.19, 0.22), y=(0.25, 0.27),
+         move=(2.0, 4.6), height=0.20, dissolve=3.0, to=(0.5, 0.45), color="#ffd8b0", glow=0.9, particles=7000),
+    # Mother's hands (cupped, with sleeves that fade into the sky): one pose only, they gather under the resting
+    # words once "Her warm hands" has risen, lift gently and drift away as light (about 5 s on screen)
+    dict(poses=[_SF + "mother_hands_cupped.png"], t0=12.9, gather=1.4, t1=16.4, x=0.5, y=(0.37, 0.42),
+         move=(12.9, 18.2), height=(0.27, 0.25), dissolve=1.8, leave="drift", color="#ffc9b8",
+         glow=0.6, particles=8000),
 ]
 
 # Short lyric fragments (never on screen with an expression). Times are estimates from the studio recording.
