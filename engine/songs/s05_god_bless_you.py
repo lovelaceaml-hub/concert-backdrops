@@ -1,6 +1,6 @@
 """Song 05, God Bless You! (songbook 247): the 1 minute promo, "The Tree of Blessing".
 
-Timed to audio/promo/s05.mp3, which is 2:26 to 3:26 of the ver.3 recording: the sister verse, from the
+Look: a spring afternoon full of blessing (DESIGN-SYSTEM.md section 6). Timed to audio/promo/s05.mp3, which is 2:26 to 3:26 of the ver.3 recording: the sister verse, from the
 prayer for her to the final climax. Design: Designs/05 God Bless You! - Video Design (Google Doc) in the
 project's Drive folder. Expressions here: Encouragement (lit earlier, relit), Respect and Consideration
 (lit for the first time in the concert). Line times inside the minute are estimates from loudness.
@@ -25,7 +25,7 @@ MUSIC_END = 59.5       # last sounding moment of the promo clip
 SONG_END = 60.0        # length of the promo clip
 TOTAL = 60.0           # promo length
 NFRAMES = int(round(TOTAL * FPS))
-HORIZON = 0.30         # water line, as a fraction of the height from the bottom
+HORIZON = 0.27         # water line: a little lower than other songs, for an open, airy sky
 
 RIDGE_X0, RIDGE_W = 0.035, 0.93
 
@@ -163,46 +163,49 @@ class Track:
 ENC_FORM = 6.0         # Encouragement: the prayer for her (star already lit, shines again)
 RESPECT_FORM = 16.5    # Respect: the brother pauses and listens to his sister's tender voice (first lit)
 CONS_FORM = 27.8       # Consideration: how can I help my sister (first lit)
-SUNRISE = 44.0         # the climax: the sun breaks over the mountains
+SUNRISE = 44.0         # the climax: the afternoon sun breaks through the haze
 NINTH = 1e9            # no whole-arch glow in this song
 TITLE_HIT = 53.0       # end card
 # While prayer and listening are on screen the lake falls perfectly still
 STILL = [(ENC_FORM - 0.5, 16.0), (RESPECT_FORM - 0.5, 27.0)]
 
-# Scene palettes (top of sky, middle, horizon, glow of the low sun): the sister verse happens at dawn
+# Scene palettes (top of sky, middle, horizon, glow of the sun). Song 05's look (DESIGN-SYSTEM.md section 6):
+# a spring afternoon full of blessing, fresh green gold, cream and soft rose, bright daylight, blossom petals,
+# warm haze, open and airy framing. The first daytime scene of the concert. The upper sky stays a clear
+# spring blue so the warm white words read against it; cream and green gold haze sit at the horizon.
 PAL = {
-    "predawn": ("#080d2c", "#2e2558", "#9a5a72", "#ffb48c"),
-    "dawn":    ("#0f1b46", "#553b7c", "#e9836f", "#ffd08c"),
-    "dawnpk":  ("#122156", "#6c4a88", "#f59468", "#ffdf9f"),
-    "rise":    ("#12265c", "#7c4c84", "#f59a6c", "#ffe2ac"),
-    "risepk":  ("#152b68", "#93578a", "#ffb873", "#ffecc4"),
-    "morning": ("#1a3268", "#86608e", "#f3b083", "#ffeac2"),
+    "haze":    ("#2f5f9c", "#7fa6cf", "#e7dcb4", "#fff0c8"),   # soft hazy afternoon
+    "bright":  ("#2b63a8", "#86b3da", "#efe4bc", "#fff4d0"),   # clear bright spring afternoon
+    "blossom": ("#2c66ac", "#93b9db", "#f2dcc0", "#fff1d8"),   # rose tint of blossoms in the haze
+    "bless":   ("#3069b0", "#a3c3df", "#f6e6bf", "#fff8dc"),   # the sun breaks through: full blessing light
+    "golden":  ("#2e5f9e", "#a9bfd6", "#f4d9a6", "#ffe9b8"),   # warm late afternoon, handed to song 06
 }
 _pal_keys = [
-    (0.0, "predawn"), (12.0, "predawn"), (24.0, "dawn"), (36.0, "dawnpk"), (44.0, "rise"),
-    (50.0, "risepk"), (TOTAL, "morning"),
+    (0.0, "haze"), (10.0, "haze"), (22.0, "bright"), (34.0, "blossom"), (44.0, "bless"),
+    (52.0, "bless"), (TOTAL, "golden"),
 ]
 SKY_TOP = Track([(t, lin(PAL[p][0])) for t, p in _pal_keys])
 SKY_MID = Track([(t, lin(PAL[p][1])) for t, p in _pal_keys])
 SKY_HOR = Track([(t, lin(PAL[p][2])) for t, p in _pal_keys])
 GLOW = Track([(t, lin(PAL[p][3])) for t, p in _pal_keys])
 
-SUN_INT = Track([(0, 0.30), (14, 0.42), (26, 0.58), (38, 0.78), (43, 0.85), (46, 1.0), (50, 1.15), (53, 1.0), (TOTAL, 0.92)])
-SUN_Y = Track([(0, 0.255), (26, 0.27), (40, 0.29), (48, 0.325), (TOTAL, 0.335)])
-SUN_SIZE = Track([(0, 0.105), (40, 0.115), (50, 0.13), (TOTAL, 0.13)])
-STARS = Track([(0, 0.0), (0.2, 0.0), (2.0, 0.75), (16, 0.65), (30, 0.42), (44, 0.2), (52, 0.12), (TOTAL, 0.12)])
+# a soft afternoon sun high behind the haze, breaking through at the climax, settling lower and warmer at the end
+SUN_INT = Track([(0, 0.55), (14, 0.62), (26, 0.72), (38, 0.80), (43, 0.85), (46, 1.05), (51, 1.12), (54, 0.98), (TOTAL, 0.9)])
+SUN_Y = Track([(0, 0.47), (40, 0.47), (48, 0.45), (TOTAL, 0.42)])
+SUN_SIZE = Track([(0, 0.15), (40, 0.15), (48, 0.17), (TOTAL, 0.165)])
+STARS = Track([(0, 0.0), (TOTAL, 0.0)])
 MILKY = Track([(0, 0.0), (TOTAL, 0.0)])
-CLOUDS = Track([(0, 0.3), (24, 0.45), (44, 0.65), (TOTAL, 0.6)])
+CLOUDS = Track([(0, 0.55), (24, 0.5), (44, 0.38), (TOTAL, 0.45)])
 AURORA = Track([(0, 0.0), (TOTAL, 0.0)])
 RAIN = Track([(0, 0.0), (TOTAL, 0.0)])
-MOTES = Track([(0, 0.05), (2, 0.18), (6, 0.12), (27, 0.12), (30, 0.32), (42, 0.45), (46, 0.85), (56, 0.8), (TOTAL, 0.6)])
+MOTES = Track([(0, 0.15), (2, 0.3), (6, 0.22), (27, 0.22), (30, 0.4), (42, 0.5), (46, 0.8), (56, 0.7), (TOTAL, 0.6)])
 LANTERNS = Track([(0, 0.0), (TOTAL, 0.0)])
-PETALS = Track([(0, 0.0), (40, 0.0), (45, 0.5), (50, 0.85), (TOTAL, 0.75)])
-TRAIL = Track([(0, 0.0), (1.2, 0.5), (26, 0.6), (44, 1.0), (TOTAL, 0.95)])
-ZOOM = Track([(0, 1.0), (27, 0.99), (44, 0.975), (TOTAL, 0.955)])
+PETALS = Track([(0, 0.3), (6, 0.22), (27, 0.25), (34, 0.45), (42, 0.55), (45, 0.9), (52, 1.0), (TOTAL, 0.85)])
+TRAIL = Track([(0, 0.0), (1.2, 0.4), (26, 0.5), (44, 0.8), (TOTAL, 0.75)])
+ZOOM = Track([(0, 1.0), (27, 0.995), (44, 0.985), (TOTAL, 0.97)])
 EXPOSURE = Track([(0, 1.0), (TOTAL, 1.0)])
 FADE = Track([(0, 0.0), (0.8, 1.0), (59.0, 1.0), (TOTAL, 0.0)])
-RAYS = Track([(0, 0.0), (20, 0.0), (32, 0.2), (42, 0.35), (44.5, 0.45), (49.5, 0.85), (53, 0.6), (TOTAL, 0.5)])
+RAYS = Track([(0, 0.25), (20, 0.3), (32, 0.4), (42, 0.5), (44.5, 0.6), (49.5, 0.9), (53, 0.65), (TOTAL, 0.55)])
 PART = Track([(0, 0.0), (TOTAL, 0.0)])
 
 # Nine lights on an arch over the stage, one for each expression
