@@ -2,12 +2,12 @@
 
 The minute of the 2:38 sung guide recording from 1:01.5 to 2:01.5 (audio/promo/s08.mp3), rebuilt for phase 2
 (project-docs/PHASE2.md; design section 12 "Promo v2: scenes"):
-  1. the royal lake with the olive tree: a swan of light rests on the water; a pair of people of light act out
-     the Compliment (one finishes a task, the other praises the effort); star 9 shines again;
-  2. the festival lake under crimson and gold embroidered aurora: the bridegroom and bride bow to each other;
-  3. heaven opens: a column of gold pours down; a congregation gives thanks and the Gratitude lights star 2,
-     the last dark star, so the arch of nine is complete and Mother's warm answer flows back over everyone;
-  4. the velvet path home: Heavenly Mother, only from behind, opens her arms at the horizon;
+  1. the royal lake with the olive tree: a swan of light gathers and drifts away; the Compliment's words form
+     and star 9 shines again;
+  2. the festival lake under crimson and gold embroidered aurora: the fragment "bridegroom and bride";
+  3. heaven opens: a column of gold pours down; the Gratitude's words light star 2, the last dark star, so the
+     arch of nine is complete;
+  4. the velvet path home: Heavenly Mother, only from behind, briefly opens her arms at the horizon;
   5. the seven-branched lampstand under the embroidered veil (reframed low), with the three-line end card.
 Design: project-docs/designs/08 Out of Heaven, Favor From God.md.
 
@@ -233,29 +233,17 @@ SCENES = [
          gain=0.62),
 ]
 
-F = "assets/figures/"
 SF = "assets/song_figures/s08/"
+# People of light are rare and always moving (Anthony, round 3): two brief appearances of this song's own figures,
+# never under the words. The expressions are carried by the words, heaven opening, the lampstand and the arch.
 FIGURES = [
-    # the swan of light resting on the royal lake (signature effect), right of centre
-    dict(poses=[SF + "swan_glide.png"], t0=0.8, t1=16.5, x=0.74, y=0.25, height=0.20, color="#f1e8ff",
-         glow=0.9, particles=6000, leave="drift"),
-    # Compliment: one finishes a task with a basket, the other claps; then a hand on the shoulder in praise
-    dict(poses=[F + "compliment_a.png", F + "compliment_b.png"], t0=2.0, t1=16.9, pose_times=[6.6],
-         x=0.48, y=0.22, height=0.38, to_star=8, color="#d9c2ff"),
-    # the bridegroom and bride, small and far out on the aurora lake, bow to each other (no embrace)
-    dict(poses=[SF + "couple_bow.png"], t0=19.4, t1=27.6, x=0.5, y=0.33, height=0.22, color="#fff0d8",
-         particles=8000, leave="drift"),
-    # Gratitude: the main pair bows, hand on heart, then offers a small gift of thanks
-    dict(poses=[F + "gratitude_a.png", F + "gratitude_b.png"], t0=28.4, t1=38.2, pose_times=[32.3],
-         x=0.5, y=0.20, height=0.38, to_star=1, color="#ffd890"),
-    # the congregation on both shores bows toward the light
-    dict(poses=[F + "gratitude_a.png"], t0=28.8, t1=38.4, x=0.17, y=0.24, height=0.22, color="#ffcf8a",
-         glow=0.8, particles=5000, to_star=1),
-    dict(poses=[F + "gratitude_a.png"], t0=29.2, t1=38.4, x=0.83, y=0.24, height=0.22, color="#ffcf8a",
-         glow=0.8, particles=5000, flip=True, to_star=1),
-    # Heavenly Mother, only from behind, arms opening at the horizon, then gone back into the horizon light
-    dict(poses=[SF + "mother_back_arms_open.png"], t0=40.0, t1=46.0, dissolve=2.5, x=0.5, y=0.36, height=0.32,
-         color="#ffe6c8", glow=0.9, particles=9000, to=(0.5, 0.43)),
+    # the swan of light gathers on the royal lake and drifts away upward as light (about 1 to 7 s)
+    dict(poses=[SF + "swan_glide.png"], t0=1.0, t1=4.6, gather=2.2, dissolve=2.6, x=0.74, y=0.25, height=0.20,
+         color="#f1e8ff", glow=0.9, particles=6000, leave="drift"),
+    # Heavenly Mother, only from behind, arms opening at the horizon, then her light flows back into the horizon
+    # (about 41 to 46 s)
+    dict(poses=[SF + "mother_back_arms_open.png"], t0=41.0, t1=43.6, gather=2.0, dissolve=2.6, x=0.5, y=0.36,
+         height=0.32, color="#ffe6c8", glow=0.9, particles=9000, to=(0.5, 0.43)),
 ]
 
 # Heaven's column of gold during the thanksgiving, with rising gold dust (only after the fragment has gone)
@@ -299,7 +287,7 @@ TITLE = dict(label="Healing Concert", lines=["The Words of Mother’s Love"], si
 # Short lyric fragments (never on screen with an expression; each at least 3 s solid, 0.5 s clear after a dissolve,
 # 2 s after a wave of light)
 FRAGMENTS = [
-    # written by a pen of light, like a thread of embroidery, above the small bowing pair
+    # written by a pen of light, like a thread of embroidery
     dict(text="bridegroom and bride", t0=21.3, t1=23.8, out=26.8, dy=0.10, size=84, glow="#fff0d2", style="write"),
     # soft words of light above Mother's open arms
     dict(text="into our Mother’s arms", t0=42.5, t1=45.0, out=48.0, dy=0.13, size=84, glow="#e2c4ff"),
