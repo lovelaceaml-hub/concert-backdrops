@@ -202,7 +202,7 @@ SCENES = [
          zoom=(1.04, 1.10), water=True, water_line=0.56, water_strength=0.45, calm_gain=0.8,
          gain=Track([(0, 1.0), (4.5, 0.82), (16.6, 0.82), (18.4, 1.0)])),
     dict(image="assets/plates/s04/reflection_close.jpg", t0=16.4, t1=29.2, fade_in=2.0, fade_out=2.0,
-         zoom=(1.50, 1.56), pan=((0.06, -0.17), (0.04, -0.17)), water=True, water_line=0.98,
+         zoom=(1.50, 1.56), pan=((0.06, -0.10), (0.04, -0.10)), water=True, water_line=0.98,
          water_strength=0.55, calm_gain=0.8, gain=Track([(0, 1.0), (18.4, 0.90), (27.0, 0.90), (29.2, 1.0)])),
     dict(image="assets/plates/s04/ice_path.jpg", t0=27.2, t1=49.0, fade_in=2.0, fade_out=2.0,
          zoom=(1.15, 1.12), pan=((0.06, 0.0), (0.055, 0.0)), water=True, water_line=0.55, water_strength=0.35,
@@ -221,7 +221,7 @@ WALK_T = (29.8, 35.2)
 WALK_X = (0.53, 0.72)
 FIGURES = [
     dict(poses=["assets/song_figures/s04/s04_walk.png"], t0=WALK_T[0], t1=WALK_T[1], gather=1.2, dissolve=2.4,
-         x=WALK_X, move=WALK_T, ease="linear", bob=1.0, y=0.21, height=0.36, to=(0.42, 0.20), color="#ffb7a8"),
+         x=WALK_X, move=WALK_T, ease="linear", bob=1.0, y=0.21, height=0.28, to=(0.42, 0.20), color="#d9a59a", glow=0.72, sparks=0.8),
 ]
 
 
@@ -245,7 +245,7 @@ def _beam(t):
     # ice path: footprints of light from the low sun across the ice toward the walking sister; thaw: a thin gold path that
     # ends in one small warm light at centre
     if t < 47.0:
-        return 0.0 if t < 29.5 else min((t - 29.5) / 2.5, 1.0) * 0.55 * (1.0 - min(max((t - 43.0) / 3.0, 0.0), 1.0))
+        return 0.0 if t < 29.5 else min((t - 29.5) / 2.5, 1.0) * 0.55 * (1.0 - min(max((t - 35.5) / 2.5, 0.0), 1.0))
     return 1.0 * min(max((t - 49.0) / 3.0, 0.0), 1.0)
 
 
@@ -326,8 +326,8 @@ def credit_state(t, bbox):
     return (cx, cy, scale, alpha), (cx0, cy0)
 
 
-# Waves of light that cross the sky: Apology's light flares again, then the end card
-WAVES = [(PHRASES[2]["arrive"], STAR_POS[2][0], STAR_POS[2][1], 0.35), (TITLE_HIT, 0.5, 0.62, 1.2)]
+# Waves of light that cross the sky: only the end card's
+WAVES = [(TITLE_HIT, 0.5, 0.62, 1.2)]   # no sky wave for Apology's relight (it crossed the corner credit); its thin ring stays
 
 
 def params(song, t):
