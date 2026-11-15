@@ -45,7 +45,7 @@ void main(){
   float sway = 0.004*sin(uT*0.7+v*5.0)*v;
   float dx = (vUV.x-uX-sway)*uAspect;
   float u = dx/hw;                                  // -1..1 across the fall
-  float body = smoothstep(1.0, 0.75, abs(u))*step(vUV.y, uTop+0.004)*smoothstep(1.06, 0.98, v);
+  float body = smoothstep(1.0, 0.6, abs(u))*smoothstep(-0.02, 0.06, v)*smoothstep(1.06, 0.98, v);
   // the light pours in from the top as uAmt rises
   float pour = smoothstep(uAmt*1.25, uAmt*1.25-0.12, v);
   float spd = 0.55+1.4*v;                           // accelerating
@@ -54,15 +54,15 @@ void main(){
   float s3 = vnoise(vec2(u*41.0+7.7, (vUV.y+uT*1.30*spd)*26.0/H));
   float streak = pow(s1,3.0)*0.9 + pow(s2,4.0)*1.2 + pow(s3,6.0)*1.6;
   float edge = smoothstep(0.55, 1.0, abs(u))*0.6;
-  float lip = exp(-pow(v/0.035,2.0))*smoothstep(1.0,0.6,abs(u))*1.3;
+  float lip = exp(-pow((v-0.03)/0.035,2.0))*smoothstep(1.0,0.3,abs(u))*(0.45+0.35*vnoise(vec2(u*6.0, uT*1.5)));
   vec3 col = mix(uColA, uColB, clamp(s2*1.3-0.2,0.0,1.0));
-  vec3 fall = col*(0.10 + streak*0.55 + edge*0.35)*body + uColB*lip;
+  vec3 fall = col*(0.035 + streak*0.60 + edge*0.25)*body + uColB*lip;
   // foam and mist at the foot: soft billows that rise and drift outward
   vec2 q = vec2((vUV.x-uX)*uAspect, vUV.y-uBot);
   float r = length(q*vec2(0.55, 1.0));
   float bill = fbm3(vec2(q.x*14.0 - sign(q.x)*uT*0.25, q.y*14.0 - uT*0.45));
-  float mist = exp(-r/0.045)*(0.35+0.9*bill)*smoothstep(-0.03, 0.01, q.y + 0.02);
-  float foam = exp(-pow(q.y/0.010,2.0))*exp(-abs(q.x)/(uW*1.6))*(0.5+0.8*vnoise(vec2(q.x*60.0-uT*2.0, uT*3.0)));
+  float mist = exp(-r/0.040)*(0.35+0.9*bill)*smoothstep(-0.03, 0.01, q.y + 0.02)*smoothstep(0.15, 0.06, r);
+  float foam = exp(-pow(q.y/0.010,2.0))*exp(-abs(q.x)/(uW*1.6))*(0.5+0.8*vnoise(vec2(q.x*60.0-uT*2.0, uT*3.0)))*smoothstep(0.25, 0.12, abs(q.x));
   float calm = 1.0-uCalm*0.6*(1.0-smoothstep(uCalmY-0.07, uCalmY+0.05, vUV.y));
   vec3 c = fall*pour + (uColA*mist*0.30 + uColB*foam*0.45)*smoothstep(0.85, 1.0, uAmt*1.25);
   o = vec4(c*uAmt*calm, 1.0);

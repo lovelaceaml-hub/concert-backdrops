@@ -97,10 +97,10 @@ class Pts:
 # ------------------------------------------------------------------------------------------------ flowers
 class Flowers:
     NP = 6     # petals per flower
-    NS = 6     # samples along each side of a petal outline
+    NS = 10    # samples along each side of a petal outline
 
     def __init__(self):
-        n = int(getattr(S, "FLOWERS_COUNT", 64))
+        n = int(getattr(S, "FLOWERS_COUNT", 44))
         r = np.random.default_rng(int(getattr(S, "FLOWERS_SEED", 5))).random((n, 10))
         self.n, self.r = n, r
         span = getattr(S, "FLOWERS_SPAN", (0.0, 1.0))
@@ -120,8 +120,8 @@ class Flowers:
         stemc, leafc, core = lin(LEAF[1]), lin(LEAF[0]), lin("#fff6e2")
         yb = line - band * (1.0 - d)
         sc = 0.55 + 0.75 * (1.0 - d)
-        h = (0.045 + 0.035 * r[:, 3]) * sc
-        R = (0.013 + 0.008 * r[:, 4]) * sc
+        h = (0.060 + 0.050 * r[:, 3]) * sc
+        R = (0.024 + 0.012 * r[:, 4]) * sc
         # the wave of blooming travels from FLOWERS_WAVE (an x position) across the field
         org = float(val("FLOWERS_WAVE", t, 0.0))
         delay = 0.75 * np.abs(fx - org) / max(org, 1.0 - org, 0.5) + 0.2 * r[:, 5]
@@ -139,11 +139,11 @@ class Flowers:
                     + 0.03 * np.sin(t * 2.3 + TAU * r[:, 8])) * gentle
         X0 = fx * A
         # stem: a quadratic bend from the base to the head
-        s = np.linspace(0.0, 1.0, 14)[None, :]
+        s = np.linspace(0.0, 1.0, 24)[None, :]
         sx = X0[:, None] + (sway * grow)[:, None] * s * s
         sy = yb[:, None] + (h * grow)[:, None] * s
-        a_st = (k * grow * 0.42)[:, None] * np.ones_like(s)
-        P.add(sx / A, sy, (1.9 * sc)[:, None] * np.ones_like(s), stemc, a_st, 2.5)
+        a_st = (k * grow * 0.55)[:, None] * np.ones_like(s)
+        P.add(sx / A, sy, (2.4 * sc)[:, None] * np.ones_like(s), stemc, a_st, 2.5)
         hx, hy = X0 + sway * grow, yb + h * grow
         # two leaves on the stem that flutter
         for side, sl, ph in ((1.0, 0.32, 0.0), (-1.0, 0.52, 1.7)):
@@ -176,13 +176,13 @@ class Flowers:
             ox = hx[:, None, None] + (L * dxp)[..., None] * ss_ + side * (Wd * pxp)[..., None] * np.sin(math.pi * ss_)
             oy = hy[:, None, None] + (L * dyp)[..., None] * ss_ + side * (Wd * pyp)[..., None] * np.sin(math.pi * ss_)
             n_pts = self.NP * self.NS
-            P.add(ox.reshape(self.n, -1) / A, oy.reshape(self.n, -1), np.repeat(2.7 * sc, n_pts),
-                  np.repeat(pc, n_pts, axis=0), np.repeat(pa * 0.62, n_pts), 3.0)
+            P.add(ox.reshape(self.n, -1) / A, oy.reshape(self.n, -1), np.repeat(3.4 * sc, n_pts),
+                  np.repeat(pc, n_pts, axis=0), np.repeat(pa * 0.85, n_pts), 3.2)
         # a glassy fill in each petal
         fxp = hx[:, None] + L * dxp * 0.55
         fyp = hy[:, None] + L * dyp * 0.55
         P.add(fxp / A, fyp, (L * 1080 * 1.25).ravel(), np.repeat(pc, self.NP, axis=0),
-              np.repeat(pa * 0.10, self.NP), 2.0)
+              np.repeat(pa * 0.13, self.NP), 2.0)
         # the heart of the flower
         P.add(hx / A, hy, 5.5 * sc, core, k * bud * (0.35 + 0.65 * bloom), 3.5)
         P.add(hx / A, hy, 30.0 * sc * bloom + 4.0, pc, k * bloom * 0.14, 2.2)
@@ -315,12 +315,14 @@ class Tree:
         # layered wind: a slow gust leaning the whole tree (arriving later at the outer branches),
         # a middle sway per branch and a fast flutter in the twigs
         dep = self.depth
-        flex = (0.012 + 0.030 * dep) * (0.4 + 0.6 * G)
+        # (the angles add up along each path of about 24 segments, so each one bends only a little)
+        flex = 0.0026 * (1.0 + 0.6 * dep) * (0.4 + 0.6 * G)
         lag = t - 0.22 * dep
         gust = np.asarray(wind(t, x0, lag))
         ph = self.phase
-        local = self.rest + flex * (-0.55 * gust + 0.55 * np.sin(lag * (0.55 + 0.25 * ph[:, 0]) + TAU * ph[:, 1])
-                                    + 0.25 * np.sin(t * (1.6 + 0.9 * ph[:, 2]) + TAU * ph[:, 0]) * (dep / 7.0))
+        twig = 0.05 * ssv(4.5, 7.0, dep) * (0.5 + float(val("WIND", t, 0.35) or 0.0))
+        local = (self.rest + flex * (-1.0 * gust + 0.8 * np.sin(lag * (0.55 + 0.25 * ph[:, 0]) + TAU * ph[:, 1]))
+                 + twig * np.sin(t * (1.8 + 1.2 * ph[:, 2]) + TAU * ph[:, 0]))
         bx, by, dx, dy = self._fk(local, 1.0)
         L = self.len
         tk = (0.30 + 0.70 * G)          # trunk thickens as it grows
@@ -336,11 +338,11 @@ class Tree:
         th = (self.th0[self.c_seg] * (1 - self.c_s) + self.th1[self.c_seg] * self.c_s) * tk
         on = (self.c_s <= vis[self.c_seg]).astype(np.float64)
         ck = calm_k(Y, calm, 0.35)
-        P.add(X / A, Y, 0.9 + 4.2 * th * hpx / 560.0, tcol, on * bright * ck * (0.55 + 0.25 * th), 3.0)
+        P.add(X / A, Y, 0.9 + 7.0 * th * hpx / 560.0, tcol, on * bright * ck * (0.55 + 0.25 * th), 3.0)
         X, Y = world(self.h_seg, self.h_s)
         th = (self.th0[self.h_seg] * (1 - self.h_s) + self.th1[self.h_seg] * self.h_s) * tk
         on = (self.h_s <= vis[self.h_seg]).astype(np.float64)
-        P.add(X / A, Y, 5.0 + 16.0 * th * hpx / 560.0, tcol, on * bright * calm_k(Y, calm, 0.35) * 0.075, 2.0)
+        P.add(X / A, Y, 5.0 + 24.0 * th * hpx / 560.0, tcol, on * bright * calm_k(Y, calm, 0.35) * 0.075, 2.0)
         # the growing tips glow like buds of light
         growing = np.nonzero((vis > 0.0) & (vis < 1.0))[0]
         if growing.size:
@@ -479,10 +481,10 @@ class Stream:
         kc = calm_k(cy, calm, 0.4)
         # the body: soft wide light and two thin banks that shimmer
         b = np.arange(0, m, 3)
-        P.add(cx[b] / A, cy[b], wv[b] * 1080 * 3.2, ca, reach[b] * kc[b] * 0.06 * amt, 1.8)
+        P.add(cx[b] / A, cy[b], wv[b] * 1080 * 2.4, ca, reach[b] * kc[b] * 0.010 * amt, 1.8)
         sh = 0.6 + 0.4 * np.sin(u * 60.0 - t * 3.0)
         for side in (1.0, -1.0):
-            P.add((cx + side * nx * wv) / A, cy + side * ny * wv, 1.6, ca, reach * kc * sh * 0.18 * amt, 3.0)
+            P.add((cx + side * nx * wv) / A, cy + side * ny * wv, 1.5, ca, reach * kc * sh * 0.10 * amt, 3.0)
         # flowing glints: carried down the stream, faster in the middle
         r = self.r
         lat = (r[:, 0] * 2 - 1)
@@ -496,7 +498,7 @@ class Stream:
         k = reach[i] * kc[i] * glint * amt
         col = np.where((r[:, 4] > 0.6)[:, None], cb[None, :], ca[None, :])
         for q in (0.0, 0.006):
-            P.add((X - tx[i] * q) / A, Y - ty[i] * q, 2.4 - 60 * q, col, k * (0.5 - 25 * q), 3.0)
+            P.add((X - tx[i] * q) / A, Y - ty[i] * q, 3.0 - 60 * q, col, k * (0.75 - 40 * q), 3.0)
 
 
 # ------------------------------------------------------------------------------------------------ the layer
@@ -545,7 +547,7 @@ class Nature:
                 cs = colors("WATERFALL_COLOR", t, ["#bfe3ff", "#fff4e0"])
                 ca, cb = cs[0], cs[-1]
                 pad = wdt * 2.2 / S.ASPECT + 0.02
-                rect = (max(x - pad - 0.06, 0.0), max(bot - 0.08, 0.0), min(x + pad + 0.06, 1.0), min(top + 0.02, 1.0))
+                rect = (max(x - pad - 0.15, 0.0), max(bot - 0.06, 0.0), min(x + pad + 0.15, 1.0), min(top + 0.02, 1.0))
                 p = self.p_fall
                 for k_, v_ in dict(uRect=rect, uT=t, uAspect=S.ASPECT, uAmt=a, uX=x, uTop=top, uBot=bot, uW=wdt,
                                    uCalm=calm, uCalmY=CALM_Y, uColA=tuple(ca), uColB=tuple(cb)).items():
