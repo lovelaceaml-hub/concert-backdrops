@@ -78,6 +78,9 @@ def comp_blocks():
         out.append("NATURE_PAINT")
     if has("CAMERA_ZOOM", "CAMERA_PAN", "CAMERA_CRANE"):
         out.append("CAMERA_BG")
+    import figure_look
+    if figure_look.wanted():   # look="silk": the faint cool tint of a body of light on a bright sky
+        out.append("FIGURE_TINT")
     return out
 
 
@@ -187,6 +190,8 @@ class Renderer:
         self.react = audio_react.Reactor(self) if audio_react.enabled() else None   # music reactivity (optional)
         import output
         self.out = output.Output(self)   # HOWTO Q: event card and seamless loop (optional)
+        import figure_look
+        self.fl = figure_look.FigureLook(self)   # HOWTO U: the silk look for people of light (optional)
 
     # ------------------------------------------------------------------
     def text_plan(self, t):
@@ -279,8 +284,10 @@ class Renderer:
         self.cr.draw(t)
         if self.react:
             self.react.draw(t, P)
+        self.fl.begin(t, P)       # look="silk" (engine/figure_look.py): figures and crowd queue their bodies,
         self.up.draw_figures(t)
         self.gath.draw(t)
+        self.fl.resolve(t, P)     # which are drawn here, with their mirror images in the lake
         self.water.draw(t)
         self.sky.draw_light(t, P)
 
@@ -424,6 +431,7 @@ class Renderer:
         self.up.comp_uniforms(self.p_comp, t, P)
         self.water.comp_uniforms(self.p_comp, t)
         self.nature.comp_uniforms(self.p_comp)
+        self.fl.comp_uniforms(self.p_comp, t, P)
         self.v_comp.render(moderngl.TRIANGLE_STRIP)
         return self.f_out.read(components=3)
 

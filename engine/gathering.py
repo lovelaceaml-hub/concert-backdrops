@@ -167,6 +167,10 @@ class Crowd:
         keep = np.arange(N)
         self.r = depth[keep]
         self.tx = self.cx + xs[keep] * sx
+        self.silk = m.get("look", getattr(S, "FIGURE_LOOK", None)) == "silk"
+        if self.silk or m.get("cluster") is not None:   # small groups with gaps between (engine/figure_look.py)
+            import figure_look as FL
+            self.tx = FL.cluster_x(self.tx, self.cx, float(m.get("cluster", 1.0)), seed)
         self.fy = self.cy + self.r * sdepth
         self.h = h0 * (1 + hvar * (rng.random(N) * 2 - 1)) * (1 - 0.30 * self.r)
         child = rng.random(N) < float(m.get("children", 0.12))
@@ -756,7 +760,10 @@ class Gathering:
             w = float(c.m["depth"]) if c.m.get("depth") is not None else sky.ground_depth(c.cy)
             aff = sky.aff(w)
             c.fix = lambda q, w=w: sky.unplace(q, w)
-        data = c.sprites(t, self.R.px)
+        if c.silk:   # look="silk": the people are bodies of light (engine/figure_look.py); only flames are sprites
+            data = self.R.fl.draw_crowd(c, t, aff)
+        else:
+            data = c.sprites(t, self.R.px)
         n = len(data)
         if n == 0:
             return
