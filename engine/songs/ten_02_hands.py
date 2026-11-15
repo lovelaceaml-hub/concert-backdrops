@@ -56,6 +56,7 @@ from p3d.api import lin, show  # noqa: E402
 from p3d.body import Body  # noqa: E402
 from p3d.camera import Rig, dolly, orbit  # noqa: E402
 from p3d.effects import Flare  # noqa: E402
+from p3d import world as PWD  # noqa: E402
 
 AUDIO_FILE = "audio/promo/concert-medley.mp3"
 BOTTOM_CALM = 0.0
@@ -69,9 +70,9 @@ FINAL = 58.11            # the final hit
 T_TOUCH = 0.97           # fingertips touch
 T_FIVE = 7.56            # high five
 T_SWEEP = 10.44          # after you
-T_FLAME = 13.95          # the flame lands in the cupped hands (the camera arrives on the 13.30 hit)
+T_FLAME = 14.25          # the flame lands in the cupped hands (the camera arrives on the 13.30 hit)
 T_REST = S[3]            # the open hand comes to rest on the fist
-T_CLASP = 23.55          # the fist has opened: the hands clasp
+T_CLASP = 23.70          # the fist has opened: the hands clasp
 T_WATER = S[4]
 T_GRIP = S[5]
 T_LIFT = 37.42
@@ -125,7 +126,7 @@ def hand(shape, side, at, aim, palm, pose, color, color2="#ffffff", show=None, p
 
 
 # ---- 1 FIRST TOUCH: gold from the left (palm up, from below), blue from the right (palm down, from above)
-_TL = np.radians(16.0)
+_TL = np.radians(9.0)
 _AIM1 = (np.array([np.cos(_TL), np.sin(_TL), 0.0]), np.array([-np.cos(_TL), -np.sin(_TL), 0.0]))
 
 
@@ -276,8 +277,8 @@ class Globe:
         d = self.d.copy()
         d[:, 0], d[:, 2] = ca * self.d[:, 0] + sa * self.d[:, 2], -sa * self.d[:, 0] + ca * self.d[:, 2]
         pos = self.c + d * self.R
-        out = [dict(pos=pos, size=0.0014 + 0.0010 * self.land, color=self.col, alpha=g * (0.45 + 0.55 * self.land),
-                     kind="soft", emit=1.1),
+        out = [dict(pos=pos, size=0.0014 + 0.0010 * self.land, color=self.col, alpha=g * (0.40 + 0.60 * self.land),
+                     kind="soft", emit=0.75),
                dict(pos=self.c[None], size=self.R * 2.2, color=lin("#ffe9c4"), alpha=0.12 * g, kind="soft",
                     emit=1.0, dof=0.3)]
         k = np.arange(9)
@@ -355,23 +356,23 @@ def _rig(focus="target"):
     return Rig([
         # 1 first touch: the lens spirals in front of the gap, snaps back on the touch, then revolves slowly
         orbit(P1, radius=(0.60, 1.0), height=(1.27, 1.37), a0=-18.0, a1=4.0, t0=0.0, t1=1.75, fov=34.0,
-              look=lambda t: P1 + (0.01 + 0.12 * _ss(0.9, 1.9, t)) * up, aperture=0.016, near=0.02, focus=focus,
+              look=lambda t: P1 + (0.10 + 0.03 * _ss(0.9, 1.9, t)) * up, aperture=0.016, near=0.02, focus=focus,
               pace=[(0.0, 0.0), (T_TOUCH, 0.35), (1.75, 1.0)]),
         orbit(P1, radius=1.0, height=1.37, a0=4.0, a1=-20.0, t0=1.75, t1=S[1], fov=34.0,
               look=P1 + 0.13 * up, aperture=0.016, near=0.02, focus=focus, blend=0.5),
         # 2 the high five, then the sweep aside: a whip in, the look follows the palm to the right
-        orbit(P2, radius=(0.95, 1.12), height=(1.38, 1.46), a0=-14.0, a1=12.0, t0=S[1], t1=S[2] + 0.5, fov=36.0,
+        orbit(P2, radius=(0.95, 1.12), height=(1.38, 1.46), a0=-14.0, a1=12.0, t0=S[1], t1=S[2] + 0.9, fov=36.0,
               look=_look_two(P2 + np.array([0.0, 0.13, 0.0]), P2 + np.array([0.12, 0.10, 0.0]), T_SWEEP - 0.4,
                              T_SWEEP + 0.9),
               aperture=0.017, near=0.02, blend=0.42, focus=focus,
-              pace=[(S[1], 0.0), (T_FIVE, 0.16), (8.3, 0.36), (T_SWEEP, 0.55), (11.2, 0.76), (S[2] + 0.5, 1.0)]),
+              pace=[(S[1], 0.0), (T_FIVE, 0.16), (8.3, 0.36), (T_SWEEP, 0.55), (11.2, 0.76), (S[2] + 0.9, 1.0)]),
         # 3 the flame: whip in low, drift up and back as the lines rise
-        orbit(P3, radius=(0.50, 0.82), height=(1.20, 1.36), a0=18.0, a1=-10.0, t0=S[2] + 0.5, t1=S[3], fov=36.0,
-              look=P3 + 0.12 * up, aperture=0.016, near=0.02, blend=0.38, focus=focus,
-              pace=[(S[2] + 0.5, 0.0), (14.6, 0.32), (15.4, 0.55), (S[3], 1.0)]),
+        orbit(P3, radius=(0.50, 0.82), height=(1.20, 1.36), a0=18.0, a1=-10.0, t0=S[2] + 0.9, t1=S[3], fov=36.0,
+              look=P3 + 0.12 * up, aperture=0.016, near=0.02, blend=0.30, focus=focus,
+              pace=[(S[2] + 0.9, 0.0), (15.0, 0.32), (15.8, 0.55), (S[3], 1.0)]),
         # 4 mending: a hard cut inside the flash of the bass slam
         orbit(P4, radius=(0.72, 0.90), height=(1.30, 1.40), a0=-18.0, a1=12.0, t0=S[3], t1=S[4], fov=36.0,
-              look=P4 + 0.12 * up, aperture=0.017, near=0.02, blend=0.0, focus=focus,
+              look=P4 + 0.16 * up, aperture=0.017, near=0.02, blend=0.0, focus=focus,
               pace=[(S[3], 0.0), (20.43, 0.14), (T_CLASP, 0.55), (24.2, 0.70), (S[4], 1.0)]),
         # 5 water: a cut to the lake surface, rising up and back
         orbit(P5, radius=(0.40, 0.64), height=(0.24, 0.36), a0=16.0, a1=-12.0, t0=S[4], t1=S[5], fov=38.0,
@@ -379,13 +380,13 @@ def _rig(focus="target"):
               pace=[(S[4], 0.0), (27.97, 0.30), (29.79, 0.55), (S[5], 1.0)]),
         # 6 the lift: the camera rises with the hands
         orbit(P6, radius=(0.85, 1.0), height=(1.10, 1.68), a0=-14.0, a1=14.0, t0=S[5], t1=S[6], fov=38.0,
-              look=lambda t: P6 + np.array([-0.10, 0.13 + _lift(t), 0.0]), aperture=0.018, near=0.02,
+              look=lambda t: P6 + np.array([-0.17, 0.15 + _lift(t), 0.0]), aperture=0.018, near=0.02,
               blend=0.0, focus=focus, pace=[(S[5], 0.0), (T_LIFT, 0.35), (39.5, 0.92), (S[6], 1.0)]),
         # 7 the breath: almost still in front of the hands in prayer; on the biggest hit the lens pulls back
         dolly(P7 + np.array([0.06, 0.06, 0.78]), P7 + np.array([0.0, 0.04, 0.60]), S[6], BIG, fov=34.0,
               look=P7 + np.array([0.0, 0.13, 0.0]), aperture=0.016, near=0.02, blend=0.9, focus=focus),
         dolly(P7 + np.array([0.0, 0.04, 0.60]), P7 + np.array([0.0, 0.22, 1.40]), BIG, S[7], fov=(34.0, 46.0),
-              look=_look_two(P7 + np.array([0.0, 0.13, 0.0]), P7 + np.array([0.0, 0.50, -3.0]), BIG, BIG + 1.6),
+              look=_look_two(P7 + np.array([0.0, 0.13, 0.0]), P7 + np.array([0.0, 0.62, -3.0]), BIG, BIG + 1.6),
               aperture=(0.016, 0.010), near=0.02, blend=0.12, focus=focus,
               pace=[(BIG, 0.0), (BIG + 1.3, 0.85), (S[7], 1.0)]),
         # 8 Her hands: a cut inside the white flare, close on the globe; the lens pulls back behind the wrists
@@ -420,24 +421,28 @@ def _word(x, y, depth, px, t_in, t_read0, t_read1, t_out, **kw):
 
 
 _SPECS = [
-    _word(0.50, 0.70, 1.0, 140, 0.0, 1.85, 5.0, 6.7, expr="Greeting", arrive="touch", source=tuple(P1),
-          touch_at=(T_TOUCH - 0.0) / 1.85, leave="wind", wind=(1.0, 0.25, -0.2)),
-    _word(0.50, 0.72, 1.05, 104, 7.2, 7.95, 10.45, 10.45, expr="Compliment", arrive="touch",
-          source=tuple(P2), touch_at=(T_FIVE - 7.2) / 0.75, leave="morph"),
-    _word(0.50, 0.70, 1.08, 112, 10.45, 11.1, 13.6, 14.5, expr="Concession", arrive="morph",
-          source="Compliment", leave="wind", wind=(1.0, 0.2, -0.3)),
-    _word(0.50, 0.72, 0.80, 84, 14.0, 15.2, 18.8, 19.85, expr="Gratitude", arrive="palm",
+    _word(0.50, 0.645, 1.0, 136, 0.0, 1.85, 5.0, 6.6, expr="Greeting", arrive="touch", source=tuple(P1),
+          touch_at=(T_TOUCH - 0.0) / 1.85, leave="stream", to=tuple(P2 + np.array([0.0, 0.25, 0.0]))),
+    _word(0.50, 0.615, 1.05, 98, 7.15, 7.9, 10.4, 10.95, expr="Compliment", arrive="touch",
+          source=tuple(P2), touch_at=(T_FIVE - 7.15) / 0.75, leave="stream", to=_sweep_palm),
+    _word(0.50, 0.66, 1.08, 108, 10.8, 11.5, 14.0, 14.9, expr="Concession", arrive="palm", source=_sweep_palm,
+          blow=(0.2, 1.0, 0.2), leave="stream", to=tuple(P3 + np.array([0.0, 0.06, 0.0]))),
+    _word(0.50, 0.595, 0.80, 84, 14.3, 15.6, 19.0, 19.8, expr="Gratitude", arrive="palm",
           source=tuple(P3 + np.array([0.0, 0.07, 0.0])), blow=(0.0, 1.0, 0.1), leave="stream",
           to=tuple(P3 + np.array([0.0, 0.06, 0.0]))),
-    _word(0.50, 0.72, 0.85, 92, 20.0, 20.9, 23.45, 23.45, expr="Apology", arrive="reveal", edge="right",
-          leave="morph"),
-    _word(0.50, 0.72, 0.88, 104, 23.45, 24.15, 26.75, 27.4, expr="Inclusiveness", arrive="morph",
-          source="Apology", leave="wind", wind=(0.8, 0.5, -0.4)),
-    _word(0.50, 0.72, 0.70, 104, 27.0, 28.5, 31.7, 33.2, expr="Respect", arrive="lake", leave="sink"),
-    _word(0.42, 0.72, 0.95, 104, 33.0, 34.4, 37.4, 38.9, expr="Consideration", arrive="touch",
-          source=tuple(P6 + np.array([0.04, 0.02, 0.0])), touch_at=(T_GRIP - 33.0) / 1.4, leave="wind",
-          wind=(-0.6, 0.8, -0.2)),
-    _word(0.52, 0.70, 6.0, 96, 40.4, 44.0, 47.6, 49.3, expr="Encouragement", arrive="shaft", leave="bokeh"),
+    _word(0.50, 0.635, 0.85, 90, 20.0, 20.75, 23.25, 23.8, expr="Apology", arrive="reveal", edge="right",
+          leave="stream", to=tuple(P4 + np.array([0.0, 0.04, 0.0]))),
+    _word(0.50, 0.665, 0.88, 102, 23.5, 24.2, 26.7, 27.3, expr="Inclusiveness", arrive="touch",
+          source=tuple(P4 + np.array([0.0, 0.04, 0.0])), touch_at=(T_CLASP - 23.5) / 0.7, leave="stream",
+          to=tuple(P4 + np.array([0.0, 0.04, 0.0]))),
+    _word(0.50, 0.61, 0.70, 96, 27.0, 28.5, 31.7, 32.8, expr="Respect", arrive="palm",
+          source=tuple(P5 + np.array([0.0, 0.03, 0.0])), blow=(0.0, 1.0, 0.05), leave="stream",
+          to=tuple(P5 + np.array([0.0, 0.03, 0.0]))),
+    _word(0.37, 0.615, 0.95, 98, 33.0, 34.4, 37.4, 38.6, expr="Consideration", arrive="touch",
+          source=tuple(P6 + np.array([0.04, 0.02, 0.0])), touch_at=(T_GRIP - 33.0) / 1.4, leave="stream",
+          to=tuple(P7)),
+    _word(0.52, 0.60, 6.0, 92, 40.4, 44.0, 47.6, 49.2, expr="Encouragement", arrive="shaft", leave="stream",
+          to=tuple(P7 + np.array([0.0, 0.12, 0.0]))),
 ]
 WORDS = PW.Words(_SPECS, face="camera")
 CAMERA = _rig()
@@ -447,21 +452,28 @@ CAMERA = _rig()
 GOLD, BLUE = "#ffb347", "#4f9dff"
 
 
-def _setup(scene):
+def _setup(scene_in):
+    class _Clear:
+        """Every set of this film is kept out of the box of a word that is being read (PW.KeepClear)."""
+
+        def add(self, name, ps, **kw):
+            scene_in.add(name, PW.KeepClear(ps, WORDS), **kw)
+
+    scene = _Clear()
     # 1 first touch
     scene.add("t1_gold", hand("woman", "R", _touch_at(0), _AIM1[0], (0.0, 1.0, 0.15), "offer", GOLD, "#ffe0a0",
                              show=(-1.0, 7.4), anchor="fingertips", trail=-_AIM1[0], seed=2.0))
     scene.add("t1_blue", hand("man", "L", _touch_at(1), _AIM1[1], (0.0, -1.0, 0.1), "open", BLUE, "#bfe0ff",
                              show=(-1.0, 7.4), anchor="fingertips", trail=-_AIM1[1], seed=3.0))
-    scene.add("t1_flare", Soft(Flare(P1, T_TOUCH, color=GOLD, color2=BLUE, n=800, strength=0.35, reach=0.55, life=2.2)))
+    scene.add("t1_flare", Soft(Flare(P1, T_TOUCH, color=GOLD, color2=BLUE, n=800, strength=0.3, reach=0.3, life=1.4)))
     # 2 high five, after you
     scene.add("t2_child", hand("child", "R", _five_child, (0.25, 1.0, 0.1), (1.0, 0.0, 0.05), "spread", "#ff977c",
                                "#fff0e8", show=(6.4, 10.9), trail=(-0.6, -0.8, 0.0), seed=4.0, points=40000))
     scene.add("t2_big", hand("man", "L", _five_big, _five_big_aim, _five_big_palm,
                              [(7.0, "spread"), (T_SWEEP - 0.3, "spread"), (T_SWEEP + 0.6, "offer")], "#8fc4ff",
-                             "#ffffff", show=(6.4, 14.3), trail=(0.6, 0.8, 0.0), seed=5.0))
-    scene.add("t2_flare", Soft(Flare(P2, T_FIVE, color="#ff977c", color2="#8fc4ff", n=800, strength=0.35, reach=0.7,
-                                life=2.0)))
+                             "#ffffff", show=(6.4, 14.3), trail=(0.6, -0.6, -0.4), seed=5.0))
+    scene.add("t2_flare", Soft(Flare(P2, T_FIVE, color="#ff977c", color2="#8fc4ff", n=800, strength=0.3, reach=0.35,
+                                life=1.4)))
     # 3 the flame
     for side, (a, aim, palm) in _cup(P3, 0.042).items():
         scene.add("t3_" + side, hand("woman", side, a, aim, palm, "cup", "#ffb27a", "#ffe6c4",
@@ -469,7 +481,7 @@ def _setup(scene):
                                      shed_n=2000))
     scene.add("t3_flame", Flame(P3 + np.array([0.0, 0.035, 0.0]), T_FLAME, 20.2))
     scene.add("t3_flare", Soft(Flare(P3 + np.array([0.0, 0.05, 0.0]), T_FLAME, color="#ffd78a", color2="#ff9e3d",
-                                n=900, strength=0.3, reach=0.4, life=1.8)))
+                                n=700, strength=0.25, reach=0.25, life=1.4)))
 
     # 4 mending: an open hand comes down on a fist; the fist opens and turns up; the hands clasp
     def fist_palm(t):
@@ -489,8 +501,8 @@ def _setup(scene):
     scene.add("t4_open", hand("man", "R", rest_at, (1.0, 0.0, 0.12), (0.0, -1.0, 0.0),
                               [(19.0, "relaxed"), (T_CLASP - 0.3, "relaxed"), (T_CLASP + 0.3, "hold")],
                               "#ffad69", "#fff0e0", show=(19.6, 27.2), trail=(-1.0, 0.0, -0.3), seed=9.0))
-    scene.add("t4_flare", Soft(Flare(P4 + np.array([0.0, 0.04, 0.0]), T_CLASP, color="#f582af", color2="#fff0f6",
-                                n=1200, strength=0.3, reach=0.5, life=2.0)))
+    scene.add("t4_flare", Soft(core=0.25, ps=Flare(P4 + np.array([0.0, 0.04, 0.0]), T_CLASP, color="#f582af", color2="#fff0f6",
+                                n=900, strength=0.25, reach=0.3, life=1.4)))
 
     # 5 water: two cupped hands rise out of the lake with glowing water
     def cup5(side):
@@ -514,7 +526,7 @@ def _setup(scene):
 
     scene.add("t5_pool", _PoolRide())
     scene.add("t5_flare", Soft(Flare(P5 + np.array([0.0, 0.02, 0.0]), T_WATER, color="#7fe6e0", color2="#ffffff",
-                                n=1000, strength=0.3, reach=0.6, life=2.0)))
+                                n=800, strength=0.25, reach=0.3, life=1.4)))
 
     # 6 the lift: a hand from above closes round a wrist reaching up; then it lifts
     def low_at(t):
@@ -530,9 +542,9 @@ def _setup(scene):
                              "#f0e8ff", show=(33.0, 40.6), trail=(0.0, -1.0, 0.0), seed=12.0))
     scene.add("t6_high", hand("woman", "L", high_at, (-0.18, -1.0, -0.05), (0.05, 0.0, -1.0),
                               [(32.0, "open"), (T_GRIP - 0.3, "open"), (T_GRIP + 0.2, "hold")], "#ef7a96",
-                              "#ffe8ee", show=(33.0, 40.6), trail=(0.6, 0.8, 0.0), seed=13.0))
+                              "#ffe8ee", show=(33.0, 40.6), trail=(0.3, 0.2, -1.0), seed=13.0))
     scene.add("t6_flare", Soft(Flare(lambda t: P6 + np.array([0.02, 0.03 + _lift(t), 0.0]), T_GRIP, color="#ef7a96",
-                                color2="#ffffff", n=1200, strength=0.3, reach=0.5, life=2.0)))
+                                color2="#ffffff", n=900, strength=0.25, reach=0.3, life=1.4)))
 
     # 7 hands pressed in prayer (the breath), then a forest of raised hands at sunrise
     for side, sgn in (("R", -1.0), ("L", 1.0)):
@@ -567,8 +579,8 @@ def _setup(scene):
                                      trail=(0.0, 0.3, 1.0), seed=30.0 + (side == "L"), shed_n=2000, fade=0.2,
                                      shed_until=53.0), "#f2b54a"))
     scene.add("t8_globe", Globe(GLOBE, 0.048, S[7]))
-    WORDS.add_to(scene)
-    WORDS.check(CAMERA)
+    WORDS.add_to(scene_in, reflect=False)
+    WORDS.check(CAMERA, calm=None)
 
 
 # ------------------------------------------------------------------------------------------------ the world
@@ -587,7 +599,9 @@ LOOKS = dict(
     rise=dict(base="dawn", sun_el=0.6, sun_int=0.7, rays=0.4, sky_top="#040824", sky_mid="#1a1a50",
               sky_hor="#c06a50", haze=0.45, exposure=0.8, stars=0.3, dust_color="#ffd9a0", dust_color2="#ffc4e0",
               bokeh=1.2, dust=0.9),
-    her=dict(base="day", water="#0e2c5c", mirror=0.55, mirror_min=0.2, rays=0.15, sun_int=0.55, exposure=0.92),
+    her=dict(base="day", water="#0e2c5c", mirror=0.55, mirror_min=0.2, rays=0.15, sun_int=0.55, exposure=0.92,
+             sky_hor=PWD._day("#9fc2e6", 0.62), haze_color=PWD._day("#a9c4de", 0.50),
+             hill_color=PWD._day("#5d84b0", 0.50), mist=0.08),
     breath=dict(base="predawn", sky_top="#0c1430", sky_mid="#26365e", sky_hor="#8a6f8e", haze_color="#2a3458",
                 dust_color="#8ea0c8", dust_color2="#ef7a96", bokeh=0.9, dust=0.6),
 )
@@ -603,7 +617,7 @@ P3D = dict(
                    color="#ffc070",
                    strength=lambda t: (0.5 * _ss(T_FLAME - 0.2, T_FLAME + 0.3, t) * (1 - _ss(19.6, 19.85, t))
                                        + 0.12 * _ss(S[7], S[7] + 1.0, t)),
-                   size=0.12, rays=0.7),
+                   size=0.12, rays=0.35),
         lights=[dict(pos=tuple(P5 + np.array([0.0, 0.05, 0.0])), color="#7fe6e0",
                      strength=lambda t: 0.45 * _ss(T_WATER, T_WATER + 0.6, t) * (1 - _ss(33.0, 33.36, t)),
                      radius=0.6)],
@@ -611,15 +625,11 @@ P3D = dict(
                      strength=lambda t: 0.8 * _ss(S[6] - 0.3, S[6] + 0.6, t) * (1 - _ss(BIG, BIG + 1.5, t)))],
         react=dict(beat=0.5, level=0.3),
     ),
-    bursts=[dict(t=T_TOUCH, at=tuple(P1), strength=0.35, radius=0.07, color="#fff3d6", rise=0.05, fall=0.3),
-            dict(t=T_FIVE, at=tuple(P2), strength=0.3, radius=0.07, color="#ffe8e0", rise=0.05, fall=0.3),
-            dict(t=T_FLAME, at=tuple(P3), strength=0.25, radius=0.08, color="#ffd78a", rise=0.10, fall=0.4),
-            dict(t=S[3], strength=0.6, radius=0.22, color="#fff0e6", rise=0.05, fall=0.3),
-            dict(t=T_CLASP, at=tuple(P4), strength=0.25, radius=0.08, color="#fff0f6", rise=0.08, fall=0.4),
-            dict(t=S[4], strength=0.6, radius=0.22, color="#e8fffd", rise=0.05, fall=0.3),
-            dict(t=S[5], strength=0.6, radius=0.22, color="#fff0f6", rise=0.05, fall=0.3),
-            dict(t=BIG, strength=0.75, radius=0.26, color="#fff2d8", rise=0.05, fall=0.45),
-            dict(t=S[7], strength=0.75, radius=0.26, color="#fff6e8", rise=0.06, fall=0.45)],
+    bursts=[dict(t=T_TOUCH, at=tuple(P1), strength=0.3, radius=0.06, color="#fff3d6", rise=0.05, fall=0.3),
+            dict(t=T_FIVE, at=tuple(P2), strength=0.25, radius=0.06, color="#ffe8e0", rise=0.05, fall=0.3),
+            dict(t=T_FLAME, at=tuple(P3), strength=0.2, radius=0.07, color="#ffd78a", rise=0.10, fall=0.4),
+            dict(t=BIG, strength=0.3, radius=0.20, color="#ffe6c0", rise=0.05, fall=0.4),
+            dict(t=S[7], strength=0.3, radius=0.20, color="#fff2dc", rise=0.06, fall=0.4)],
     motion_blur=0.4,
     setup=_setup,
 )
@@ -640,7 +650,7 @@ CREDIT = dict(song="The Words of Mother’s Love",
               concert="Healing Concert · Sunday, December 6 · 4:30 PM",
               t_in=-1.0, t_full=0.0,
               t_move=1.6, t_rest=2.8,
-              scale=0.48, alpha_rest=0.92,
+              scale=0.54, alpha_rest=0.92,
               margin_x=0.035, margin_top=0.05)
 CREDIT_DAY = S[7]           # from the cut to Her hands the sky is day: navy letters
 CREDIT_OUT = T_FORM         # the end card starts forming: the badge fades out over 1 s
