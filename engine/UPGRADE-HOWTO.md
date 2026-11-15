@@ -349,3 +349,45 @@ SYMBOLS = [
 - `color`: one hex colour for every line, or a dict by role (`coral`, `orange`, `sky`, `olive`, `gold`, `goldw`, `bridge`). Defaults: hearts `#F0566A` and `#F39A3A`, globe sky blue, olive green, gate gold. Every colour is lifted toward white so it always glows, never dark.
 - `glow` (default 1.0) scales the brightness. `reflect` (default True): the symbol is mirrored in the lake, and the ripples bend that reflection. Gate only: `open` (time the doors start to open; default `t1 + 0.8`; `None` keeps them shut), `open_dur` (default 2.5), `light` (colour of the light through the doors, default `"#ffcf7a"`).
 - Symbols are light drawn before the text protection pass, so they never cross the letters. Keep them clear of an expression's place on screen anyway.
+## I1 Creatures of light (doves, butterflies, fireflies)
+
+Built 2026-11-15 (branch engine-creatures, code in `engine/creatures.py`). Demo: `engine/songs/demo_creatures.py` (36 seconds, song 03 recording). All three are light drawn before the text protection pass, so the words dim them like any other light, and they reflect in the lake. In the calm lower third (BOTTOM_CALM) they are dimmed, the fireflies thinned, and the flock steers up out of it.
+
+Doves: a flock with separation, alignment and cohesion. Each dove beats its wings (a few beats, then a glide; climbing birds keep flapping), the wing tip lags the arm so the beat ripples outward, the body lifts on each downstroke, and the bird banks into its turns (it shows its back or belly and spreads its wings across the screen as it turns). Faint sparks fall from its path.
+
+```python
+DOVES = Track([(0, 0.0), (2.0, 0.0), (4.0, 1.0), (30.0, 1.0), (33.0, 0.0)])   # 0..1: share of the flock shown
+DOVES_COUNT = 14                 # flock size (a constant), default 14
+DOVES_FROM = (-0.04, 0.40)       # where the flock comes from when DOVES first rises above 0 (screen fractions)
+DOVES_TARGET = 4                 # a star index of the arch, or a point (x, y), or a function of time; default (0.5, 0.8)
+DOVES_PATH = [(0.0, (0.4, 0.6)), (8.0, (0.8, 0.75)), (14.0, STAR_POS[4])]   # or follow a moving goal (overrides TARGET)
+DOVES_ORBIT = 0.14               # the flock wheels round the goal at about this radius; 0 = just chase it
+DOVES_SIZE = 0.03                # body length as a fraction of the screen height (wingspan is about twice that)
+DOVES_SPEED = 1.0                # speed multiplier (cruise is about 0.22 screen heights per second)
+DOVES_COLOR = "#fff1da"          # also DOVES_SPARK_COLOR (default "#ffd9a0")
+DOVES_TRAIL = 1.0                # spark trail strength, 0 = none
+DOVES_BRIGHT = 1.0
+```
+
+Every key except DOVES_COUNT and DOVES_FROM may be a Track. The flock is simulated in fixed 1/60 s steps from the moment DOVES first rises above 0, with a fixed seed, so every still and every video part shows the same birds (a part that starts later replays the steps from the start, which takes well under a second per minute of flight). Changing any dove setting changes the flight from that moment on.
+
+Butterflies: fast irregular flutter with short open-winged glides, a bobbing meander, and now and then a landing where they slowly fan their wings before taking off again.
+
+```python
+BUTTERFLIES = Track([(0, 0.0), (8.0, 0.0), (12.0, 1.0)])   # 0..1: share of them shown
+BUTTERFLIES_COUNT = 4
+BUTTERFLIES_COLOR = ("#ffd7ef", "#bfe3ff")    # forewing, hindwing (or one color)
+BUTTERFLIES_SIZE = 0.022                      # wing length as a fraction of the screen height
+BUTTERFLIES_AREA = (0.08, 0.92, 0.40, 0.68)   # x0, x1, y0, y1 where they meander
+BUTTERFLIES_LAND = [(0.06, 0.335), (0.94, 0.34)]   # landing spots (default: the shore at both sides)
+BUTTERFLIES_BRIGHT = 1.0
+```
+
+Fireflies: soft points that wander low and blink (a flash every few seconds, some flash twice, a faint glow between).
+
+```python
+FIREFLIES = Track([(0, 0.0), (20.0, 0.0), (26.0, 1.0)])   # 0..1: share of 160 fireflies shown
+FIREFLIES_Y = (0.05, 0.40)       # the band they live in (default: from the bottom to just above the horizon)
+FIREFLIES_COLOR = "#e4ff9c"
+FIREFLIES_BRIGHT = 1.3
+```

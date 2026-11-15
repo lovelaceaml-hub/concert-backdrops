@@ -142,6 +142,8 @@ class Renderer:
         self.gath = gathering.Gathering(self)   # a gathering crowd and a light passed hand to hand (optional)
         import water
         self.water = water.Water(self)   # lake ripples, symbols drawn in light, falling stars (all optional)
+        import creatures
+        self.cr = creatures.Creatures(self)   # doves, butterflies, fireflies (all optional)
 
     # ------------------------------------------------------------------
     def text_plan(self, t):
@@ -223,6 +225,7 @@ class Renderer:
                  uColB=L(cols("PETAL_COLORS", ("#ff7fa2", "#ffd2c2"))[1]) * 0.62, uCalm=calm0, uCalmY=CALM_Y)
             self.v_petal.render(moderngl.POINTS)
         self.up.draw_effects(t, P)
+        self.cr.draw(t)
         self.up.draw_figures(t)
         self.gath.draw(t)
         self.water.draw(t)
