@@ -15,10 +15,11 @@ import math
 import os
 
 import numpy as np
-from PIL import Image
 
 from . import brand as B
 from .api import hash01, lin, show
+
+Image = B.Image                          # PIL, loaded on first use
 
 TAU = 2.0 * math.pi
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -103,7 +104,7 @@ def _day(hexs, k):
 PASTEL = dict(base="cream", sky_top=_day("#8fc9f2", 0.92), sky_mid=_day("#dcefff", 0.86),
               sky_hor=_day("#fff0e0", 0.74), haze_color=_day("#ffeadc", 0.58), hill_color=_day("#c3cde6", 0.58),
               water=_day("#b4d6f0", 0.52), mist_color=_day("#fff1e4", 0.56), sun_color=_day("#fff4e2", 0.24),
-              sun_el=46.0, sun_int=0.65, sun_disc=0.0, clouds=0.12, stars=0.0, milky=0.0, rays=0.0, haze=0.5,
+              sun_az=0.0, sun_el=46.0, sun_int=0.65, sun_disc=0.0, clouds=0.12, stars=0.0, milky=0.0, rays=0.0, haze=0.5,
               mist=0.15, dust=0.15, bokeh=0.15, dust_color="#fff6ea", dust_color2="#ffe0c8")
 
 LOOK_COLORS = dict(
@@ -155,6 +156,20 @@ class Globe:
         self.t_in, self.t_out, self.fade = float(t_in), t_out, float(fade)
         self.amount = amount
         self.bright = float(bright)
+        self.arcs = (dict(height=0.18, width=0.006, dur=0.8) if arcs is True else dict(arcs)) if (arcs and hearts) \
+            else None
+        self._args = (n, hearts, seed)
+        self._ready = False
+
+    def __getattr__(self, k):
+        # the land and the hearts are made on first use (not when the song file is imported)
+        if k.startswith("_") or self.__dict__.get("_ready", True):
+            raise AttributeError(k)
+        self._build(*self._args)
+        return getattr(self, k)
+
+    def _build(self, n, hearts, seed):
+        self._ready = True
         # land: an even lattice on the sphere, kept where there is land
         tot = int(n / 0.29)
         lat, lon = fib_sphere(tot)
@@ -178,8 +193,6 @@ class Globe:
         self.hearts = None
         if hearts:
             self._make_hearts(dict(hearts), seed)
-        self.arcs = (dict(height=0.18, width=0.006, dur=0.8) if arcs is True else dict(arcs)) if (arcs and hearts) \
-            else None
 
     # ------------------------------------------------------------------ the turn
     def _front_at(self, t):
@@ -476,9 +489,9 @@ class _Bloom:
         u = (t - self.t) / self.dur
         k = math.exp(-((u - 0.25) / 0.35) ** 2)
         r, up, f = cam.basis()
-        rad = self.r * (0.2 + 2.5 * max(u, 0.0)) * (0.3 + 0.7 * self.s2)
+        rad = self.r * (1.05 + 2.5 * max(u, 0.0)) * (0.75 + 0.5 * self.s2)      # from the globe's edge outward
         p = c[None, :] + rad[:, None] * (self.dir[:, 0:1] * r[None, :] + self.dir[:, 1:2] * up[None, :])
-        return [dict(pos=p, size=self.r * 0.06, color=self.col * 1.6, alpha=0.5 * k, emit=2.0, kind="spark",
+        return [dict(pos=p, size=self.r * 0.06, color=self.col * 1.6, alpha=0.3 * k, emit=2.0, kind="spark",
                      twinkle=1.0, seed=self.s, dof=0.0, reflect=False)]
 
 
@@ -494,7 +507,7 @@ class Finale:
     t_logo            (t0, t1): it becomes the logo (hearts sweep in from either side behind it, the grid draws
                       itself over it, the branches grow); the logo is whole at t1 (54.3 to 55.0 in the films)
     shrink            the globe draws in to this share of its size as it settles (0.6), so the whole logo fits
-    bloom             dict(t=54.3, dur=1.0, strength=0.25, glow=0.5, color="#fff1de"): light blooms from the globe
+    bloom             dict(t=54.3, dur=1.0, strength=0.12, glow=0.5, color="#fff1de"): light blooms from the globe
                       (a flash of `strength`, P3D bursts, and a soft spreading light of `glow`); the
                       world turns to the pastel day `look_after` round t (its blend `blend` seconds); None for no
                       bloom (then give the world's look yourself)
@@ -510,7 +523,7 @@ class Finale:
     fin.globe and fin.logo are the two point sets; fin.logo_place is the logo's Place.
     """
 
-    BLOOM = dict(t=54.3, dur=1.0, strength=0.25, color="#fff1de", glow=0.5)
+    BLOOM = dict(t=54.3, dur=1.0, strength=0.12, color="#fff1de", glow=0.5)
 
     def __init__(self, pos=(0.0, 12.0, -40.0), radius=8.0, camera=None, look="night", t_world=49.5, spin=6.0,
                  front=-40.0, tilt=18.0, hearts=None, t_settle=(52.6, 54.0), t_logo=(53.4, 55.0), shrink=0.6,
@@ -578,7 +591,7 @@ class Finale:
         kw = dict(bright=0.5, white=0.45, glow=0.25, sparkle=0.06, n=90000)
         kw.update(logo or {})
         self.logo = B.Logo(place=self.logo_place, camera=camera, t_in=l0, t_full=l1, arrive="build", amount=amt,
-                           paint=paint, **kw)
+                           paint=paint, globe_cover=lambda t: self.globe.strength(t), **kw)
 
     def add_to(self, scene, name="finale"):
         scene.add(name + " globe", self.globe)
@@ -590,11 +603,11 @@ class Finale:
 
     def bursts(self):
         """The bloom's flash of light (P3D bursts); empty with strength 0."""
-        if not self.bloom or float(self.bloom.get("strength", 0.25)) <= 0:
+        if not self.bloom or float(self.bloom.get("strength", 0.12)) <= 0:
             return []
         b = self.bloom
-        return [dict(t=b["t"] + 0.1 * b["dur"], strength=float(b.get("strength", 0.25)), rise=0.3 * b["dur"],
-                     fall=0.55 * b["dur"], color=b.get("color", "#fff1de"), at=tuple(self.pos), radius=0.35)]
+        return [dict(t=b["t"] + 0.1 * b["dur"], strength=float(b.get("strength", 0.12)), rise=0.3 * b["dur"],
+                     fall=0.55 * b["dur"], color=b.get("color", "#fff1de"), at=tuple(self.pos), radius=0.25)]
 
     def world(self, base=None):
         """The song's world settings with the bloom to the pastel day added (the look keys and the PASTEL look)."""

@@ -31,9 +31,26 @@ THE REST (re-exported here, so `from p3d import brand` gives everything)
 import math
 
 import numpy as np
-from PIL import Image, ImageDraw, ImageFilter
 
 from .api import lin, show  # noqa: F401  (re-exported for song files: brand.lin, brand.show)
+
+
+class _LazyPIL:
+    """A PIL module loaded on first use: the render workflow imports song files in a step without PIL, so nothing
+    here may need it at import time."""
+
+    def __init__(self, name):
+        self._name, self._mod = name, None
+
+    def __getattr__(self, k):
+        if self._mod is None:
+            import importlib
+            self._mod = importlib.import_module("PIL." + self._name)
+        return getattr(self._mod, k)
+
+
+Image, ImageDraw, ImageFilter = _LazyPIL("Image"), _LazyPIL("ImageDraw"), _LazyPIL("ImageFilter")
+
 
 # ------------------------------------------------------------------------------------------------- colours
 # Sampled from the campaign's logo (two references: a clean render and the website's version) and settled
@@ -873,13 +890,15 @@ class Logo:
     bulge    0..1: how much the globe's points bulge toward the viewer on their sphere (1.0)
     n        about how many points (70000; 40000 is enough for a logo under a third of the picture high)
     dof, fog how much of the lens blur and of the haze the settled logo takes (0: sharp and clear)
+    globe_cover  a number or function of t: something round already stands where the globe goes (the Finale's
+             Earth); the hearts are hidden under it, as if the globe were there
     """
 
     def __init__(self, pos=(0.0, 3.0, 0.0), size=2.0, facing=0.0, face="fixed", tilt=0.0, roll=0.0, ride=None,
                  frac=0.2, keys=None, place=None, camera=None, t_in=0.0, t_full=3.0, t_out=None, leave_dur=1.6,
                  arrive="build", leave="fade", paint=0.0, paint_light=0.04, bright=0.45, white=0.35, glow=0.25,
                  sparkle=0.08, palette="brand", parts=None, amount=None, timing=None, bulge=1.0, n=70000,
-                 dot=2.1, dof=0.0, fog=0.0, reflect=True, seed=7):
+                 dot=2.1, dof=0.0, fog=0.0, reflect=True, globe_cover=None, seed=7):
         self.place = place or Place(pos=pos, size=size, facing=facing, face=face, tilt=tilt, roll=roll, ride=ride,
                                     frac=frac, keys=keys)
         self.camera = camera
@@ -893,6 +912,19 @@ class Logo:
         self.timing = dict(BUILD, **(timing or {}))
         self.bulge, self.dot = float(bulge), float(dot)
         self.dof, self.fog, self.reflect = dof, fog, reflect
+        self.globe_cover = globe_cover
+        self._args = (n, seed, palette, parts)
+        self._ready = False
+
+    def __getattr__(self, k):
+        # the points are made on first use (not when the song file is imported)
+        if k.startswith("_") or self.__dict__.get("_ready", True):
+            raise AttributeError(k)
+        self._build(*self._args)
+        return getattr(self, k)
+
+    def _build(self, n, seed, palette, parts):
+        self._ready = True
         P = logo_points(n, seed, palette)
         keep = np.ones(len(P["x"]), bool) if parts is None else np.isin(P["part"], [_PID[p] for p in parts])
         self.x, self.y, self.z = P["x"][keep], P["y"][keep], P["z"][keep]
@@ -1021,7 +1053,15 @@ class Logo:
         self.sg = sg = pres[_PID["heart_r"]] * _sc(0.75, 1.0, self.progress("heart_r", t))
         alpha[self.gap] *= self.inside_l[self.gap] + self.gapw[self.gap] * sg
         # the hearts' inner lobes go as the globe arrives over them
+        gc = float(np.clip(_val(self.globe_cover, t), 0.0, 1.0)) if self.globe_cover is not None else 0.0
         alpha *= 1.0 - self.inner * max(pres[_PID["globe"]], pres[_PID["ring"]])
+        if gc > 0.0:
+            # something round already stands where the globe goes (the Earth): the hearts pass behind it as
+            # they sweep in (tested where each point is now)
+            hs = self.part <= _PID["heart_l"]
+            d = np.hypot(x[hs] - GLOBE_CENTER[0], y[hs] - GLOBE_CENTER[1])
+            e = 0.6 * self.cell
+            alpha[hs] *= 1.0 - np.clip((GLOBE_RADIUS + e - d) / (2 * e), 0.0, 1.0) * gc
         # what of the right heart the left heart covers where it is now (light only; paint covers by order)
         self.dyn = np.ones(self.N)
         if self.is_r.any() and a_l > 0.0:
@@ -1079,13 +1119,13 @@ class Logo:
         vis = a_light > 0.004
         if vis.any() and paint < 0.999:
             out.append(dict(pos=pos[vis], size=size, color=light[vis] * self.bright,
-                            alpha=(a_light[vis] * self.k_norm).astype(np.float32),
+                            alpha=(a_light[vis] * self.k_norm * (1.0 - paint)).astype(np.float32),
                             emit=(1.0 + 2.5 * flash[vis]).astype(np.float32), kind="soft", twinkle=0.0,
                             seed=self.s[vis, 0], paint=0.0, **sharp))
         if paint > 0.0:
             # a painted disc keeps its light in its skirt, so its middle covers only about two thirds: an alpha
-            # of 2 (the renderer clamps the cover to 1) makes the fill solid
-            a_p = alpha * np.clip(self.wt * 1.6, 0.0, 1.0) * 2.0
+            # of 1.6 (the renderer clamps the cover to 1) makes the fill solid
+            a_p = alpha * np.clip(self.wt * 1.6, 0.0, 1.0) * 1.6
             vp = a_p > 0.004
             if vp.any():
                 out.append(dict(pos=pos[vp], size=np.float32(self.cell * 1.75 * s), color=paintc[vp], alpha=a_p[vp].astype(np.float32),

@@ -32,10 +32,11 @@ hand cupped at the ear, praying hands, two open hands holding a heart, clapping 
 import math
 
 import numpy as np
-from PIL import Image, ImageDraw
 
 from . import brand as B
 from .api import lin
+
+Image, ImageDraw = B.Image, B.ImageDraw       # PIL, loaded on first use
 
 TAU = 2.0 * math.pi
 SYMBOLS = list(B.LABELS)

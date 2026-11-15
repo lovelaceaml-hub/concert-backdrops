@@ -1310,7 +1310,7 @@ The globe gathers at `t_world`, hearts spread across it with arcs; between `t_se
 | `t_settle` | (52.6, 54.0) | it slows and stops |
 | `shrink` | 0.6 | its size after settling |
 | `t_logo` | (53.4, 55.0) | it becomes the logo: hearts 0 to 0.6 of the window, Earth into the logo's globe 0.30 to 0.70, ring 0.25 to 0.60, grid 0.32 to 0.77, branches 0.54 to 1.0; whole at the end (54.3 to 55.0 in the films, the musical peak) |
-| `bloom` | dict(t=54.3, dur=1.0, strength=0.25, glow=0.5, color="#fff1de") | the bloom: a flash (`strength`, a P3D burst of radius 0.35 at the globe), sparks spreading (`glow`), and the world's look turning to `look_after` (default `"pastel"`) centred on t + 0.2 dur over `blend` (0.9 s); `False`: none |
+| `bloom` | dict(t=54.3, dur=1.0, strength=0.12, glow=0.5, color="#fff1de") | the bloom: a soft flash (`strength`, a P3D burst of radius 0.25 at the globe), sparks spreading (`glow`), and the world's look turning to `look_after` (default `"pastel"`) centred on t + 0.2 dur over `blend` (0.9 s); `False`: none |
 | `end` | dict(t=(55.0, 56.4), ride=(0.5, 0.78, 14.0), frac=0.22) | where the logo goes: from its place at the globe to `ride` (x, y of the picture, 0..1 from the left and the bottom, and metres ahead of the lens) at `frac` of the picture's height, flat to the picture, gliding between the two times; `None`: it stays where it formed |
 | `paint` | painted from t_logo0 + 0.35 of the window to the bloom | the logo's paint, a function of t |
 | `logo` | | other `Logo` keys (default bright 0.5, white 0.45, glow 0.25, sparkle 0.06, n 90000) |

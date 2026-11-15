@@ -78,7 +78,7 @@ CAMERA = Rig([
 
 # ---------------------------------------------------------------------------------------------- the logo
 LOGO = BR.Logo(pos=LOGO_AT, size=6.0, face="camera", camera=CAMERA, t_in=0.4, t_full=4.6, t_out=6.6,
-               leave_dur=1.6, arrive="build", leave="rise", paint=lambda t: 0.85 * float(np.clip((t - 4.4) / 0.8, 0, 1)))
+               leave_dur=1.6, arrive="build", leave="rise", paint=lambda t: float(np.clip((t - 4.4) / 0.8, 0, 1)))
 
 # -------------------------------------------------------------------------------------------- the hearts
 ORB = (-3.6, 4.2, 0.5)          # stands in for an expression being read: hearts drift off it in its colour
