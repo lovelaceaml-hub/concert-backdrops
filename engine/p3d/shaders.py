@@ -118,6 +118,7 @@ in vec3 aPos; in float aSize; in vec3 aColor; in float aAlpha; in float aEmit; i
 in vec3 aNormal; in vec3 aVel;
 uniform int uKind;        // 0 soft, 1 spark, 2 disc, 3 flake, 4 petal, 5 bird
 uniform vec2 uRim;
+uniform vec2 uBokeh;
 flat out vec4 vCol;       // rgb light, glint strength
 flat out vec4 vGeo;       // R, S, Lh, r0 (pixels)
 flat out vec4 vShape;     // cos, sin, squash, how much of the true shape shows
@@ -209,7 +210,8 @@ void main(){
   }
   float stretch = 1.0 + Lh/(R + 2.0*S);
 
-  float areaF = (PI*R*R + 2.0*PI*S*S + 7.874*R*S)*stretch;
+  // (the disc's brighter edge lifts its skirt too: counted here, so the light stays the same)
+  float areaF = (PI*R*R + (1.90*PI*S*S + 7.72*R*S)*(1.0 + 0.75*uBokeh.x*smoothstep(3.0, 9.0, R)))*stretch;
   float amp = min(area0/areaF, 1.0);
 
   float b = aAlpha*aEmit*uGain*keep*amp*mk*ext*flash*twinkle(aSeed);
@@ -692,11 +694,13 @@ vec3 fill(vec2 uv){
   float lit = clamp(0.5 + (n - n2)*3.0, 0.0, 1.0);        // lit from below, where the sun is
   if(uFillKind == 1){
     float y = clamp(q.y*0.5+0.5, 0.0, 1.0);
-    c = mix(vec3(0.95, 0.34, 0.09), vec3(0.42, 0.11, 0.17), smoothstep(0.0, 0.42, y));
-    c = mix(c, vec3(0.030, 0.045, 0.16), smoothstep(0.28, 0.95, y));
-    c += vec3(1.5, 0.80, 0.26)*exp(-dot(q-vec2(0.15, -0.80), q-vec2(0.15, -0.80))*3.5);
-    vec3 cc = mix(vec3(0.030, 0.028, 0.080), vec3(1.25, 0.46, 0.14), lit*lit);
-    c = mix(c, cc, dens*0.92);
+    c = mix(vec3(0.80, 0.27, 0.07), vec3(0.34, 0.085, 0.15), smoothstep(0.0, 0.40, y));
+    c = mix(c, vec3(0.018, 0.035, 0.14), smoothstep(0.26, 0.90, y));
+    vec2 sq = q-vec2(0.12, -0.62);
+    c += vec3(1.6, 0.85, 0.28)*(exp(-dot(sq, sq)*9.0) + 0.35*exp(-dot(sq, sq)*1.8));
+    float under = clamp(0.5 + (n - n2)*4.5, 0.0, 1.0);
+    vec3 cc = mix(vec3(0.016, 0.018, 0.060), vec3(1.05, 0.34, 0.10), under*under*smoothstep(0.9, -0.4, q.y));
+    c = mix(c, cc, smoothstep(0.50, 0.66, n)*0.95);
   } else if(uFillKind == 3){
     float y = clamp(q.y*0.5+0.5, 0.0, 1.0);
     c = mix(vec3(0.80, 0.70, 0.55), vec3(0.14, 0.36, 0.78), smoothstep(0.0, 0.8, y));

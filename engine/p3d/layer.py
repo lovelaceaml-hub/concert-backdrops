@@ -71,6 +71,7 @@ class Layer:
         self.scene.add("_sun", Wd.SunGlow(wd), fog=False, depth_of_field=False, lod=False)
         self.scene.add("_dust", Wd.Dust(wd, **{**dict(n=n(7000), n_bokeh=n(300)), **wd.dust_cfg}))
         self.scene.add("_lanterns", Wd.Lanterns(wd, **{**dict(count=n(420)), **wd.lantern_cfg}), lod=False)
+        self.scene.add("_floats", Wd.Floats(wd, **{**dict(count=n(700)), **wd.float_cfg}))
         self.arch = None
         if wd.arch:
             akw = dict(wd.arch) if isinstance(wd.arch, dict) else {}
