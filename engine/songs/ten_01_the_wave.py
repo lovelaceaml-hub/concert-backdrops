@@ -1,4 +1,4 @@
-"""Film 01 of ten: THE WAVE (60 seconds, a promo for The Words of Mother's Love Healing Concert).
+"""Film 01: THE WAVE (60 seconds, a promo for The Words of Mother's Love Healing Concert).
 
 LOGLINE
   One word falls into a sleeping black sea and becomes the edge of morning. In one unbroken flight we ride
@@ -6,44 +6,55 @@ LOGLINE
   breaks on the far shore as the sunrise.
 
 THE RULES OF THIS FILM
-  1. One shot, no cuts: the camera always travels with the wave (surfing language: drop in, cutback, stall,
-     barrel, trim, hang, big drop, break), fast on the section starts, slower round the people.
+  1. One shot, no cuts: the camera always travels with the wave (drop in, cutback, stall, barrel, trim, run,
+     hang, break), fast on the section starts, slower round the people.
   2. The wave is the edge of morning: night and black glass ahead, glittering water and dawn behind.
-  3. The wave grows: a ripple a hand high at 1 s, a wall of light 26 m high at 43 s.
-  4. Whoever the wave touches wakes: cold blue dust lights gold from the feet up.
-  5. Gold only. The nine campaign colours tint each expression's glow, never the wave.
-  6. No Heavenly Mother figure: the first word falls from above down a thin shaft of light; the morning at
-     the end is hers; the title says whose words these are.
+  3. Everything the wave touches wakes. As the crest passes, people form out of light and ACT the expression
+     it carries, and hold that act while the words are read. No two expressions look alike: each has its own
+     style of people (refs2 p01 to p09) and its own framing (a profile, a pair, figures on the crest, a crowd,
+     tiny people along a vast shore).
+  4. Gold only. The nine campaign colours tint each expression's glow, never the wave.
+  5. No Heavenly Mother figure: the first word falls from above down a thin shaft of light; the morning at the
+     end is hers; the title says whose words these are.
 
-THE TIMELINE (the medley's sections: 0.25, 6.84, 13.30, 19.85, 26.79, 33.36, 40.21 (breath to 42.51), 49.47)
-  S1  0.00  THE DROP.  A spark falls down a thin shaft toward its mirror image in a black sea of stars; it
-            flares on the opening hit and strikes the water at 0.97. A ring races out at the lens; a whip
-            pan and we ride beside a rope of light a hand high. GREETING rises out of the foam. The first
-            sleeper ahead; the crest reaches her feet and she lights gold from the feet up.
-  S2  6.84  THE CUTBACK.  We swing round her and look back for the first time: lit water and dawn behind.
-            An older man wakes beside her. GRATITUDE above the two.
-  S3 13.30  THE STALL.  Whip forward, the wave surges into a field of lanterns that catch in a sweep. We stall
-            beside two people who stood back to back; they turn to each other. APOLOGY, then its answer,
-            INCLUSIVENESS. They reach for each other.
-  S4 19.85  THE BARREL.  The bass slams in, the wave rears up and folds over; we punch through the wall into
-            a tunnel of light and glide down it. CONCESSION hangs in the tube; it rushes past us as we are
-            spat out of the mouth.
-  S5 26.79  THE TRIM.  The wave runs into a strait: lines of light race up the dark hills on both sides. We
-            revolve round two people of light who walk along the crest. RESPECT.
-  S6 33.36  THE RUN.  The wave doubles its speed over a bay full of sleepers; we fly backward ahead of it,
-            then rise over the crest and watch it light them row after row. CONSIDERATION.
-  S7 40.21  THE HANG.  The music breathes: the wave slows and stands up into a wall of light, and stops for one
-            person kneeling on the water. Someone lays a hand on the kneeling shoulder. On the biggest hit
-            (42.51) ENCOURAGEMENT surfaces across the wall and we crane up it. The wall is released; we
-            climb over its lip: a line of people of light rides the crest, backs to us, and lifts its arms
-            in a wave. COMPLIMENT.
-  S8 49.47  THE BREAK.  The wave breaks on the shore under the arch of nine lights: a plume of gold, the sun
-            tears through, the night is swept off the sky. The people stand on the shore; the end card.
-            No fade: the last frame is full daylight.
+THE ACTING PLAN (the medley's sections: 0.25, 6.84, 13.30, 19.85, 26.79, 33.36, 40.21 (breath to 42.51), 49.47)
+  0 to 4      OPENING TITLE over the spark falling down its shaft to its mirror image (TITLES "opening").
+  GREETING    "How are you?"  A woman asleep on the black glass, half figure in profile, a silhouette outlined
+              in sparks (p06). The crest sweeps past her feet, the light climbs her to the face, she lifts her
+              head toward the light and waves one hand: a face lighting up. Read 4.75 to 7.25.
+  GRATITUDE   We swing round her and look back for the first time. An older man in the wake bows to her with
+              his hand on his heart (gold glitter, p08); behind him a whole crowd the wave has woken bows too.
+              She turns to him and opens her hand. Read 8.95 to 11.8. Signature 12.45 to 13.5.
+  APOLOGY     In the mist among lanterns that catch in a sweep: two soft figures of pearl and rose dust (p09).
+              One stands with head bowed and open hands low; the other has turned away. Read 14.35 to 16.95.
+  INCLUSIVENESS  The words turn into their answer: the other turns round, they walk in and hold each other; a
+              warm flare where they meet. Read 17.8 to 20.35.
+  CONCESSION  The bass slams in, the wave folds over and we glide down a tunnel of streaks. Before the mouth of
+              the barrel (a door of light) two constellation wireframes (p01): one steps aside with an open palm
+              toward the door and lets the other walk through first. Read 22.0 to 24.7.
+  RESPECT     Out of the mouth into the strait. Two people seated on the crest of the moving wave, silhouettes
+              that are windows onto the night sky (p07): one speaks with small open hands, the other leans in
+              and listens; we revolve round them. Read 27.9 to 30.6. Signature 31.3 to 33.4.
+  CONSIDERATION  The wave doubles its speed over a bay of sleepers. On its crest one reaches down to someone
+              kneeling, takes their hand and pulls them up (coloured dots, ref 14); then we rise over the crest
+              and see the bay light up row after row. Read 34.7 to 37.6.
+  THE BREATH  40.21 to 42.51: the wave crouches low and waits for one person kneeling on the water; "December 6"
+              is written in light across the sky above it (TITLES "date_light"); on the biggest hit the date
+              bursts and the wave rears up into a wall of light 24 m high and carries the burst.
+  ENCOURAGEMENT  Before the wall the kneeling one prays; another walks to them and lays a hand on their
+              shoulder (white gold, light rising off them like flakes, ref 13). We crane up the wall. Read 43.3
+              to 45.85.
+  COMPLIMENT  The words turn into the compliment as the wall is released. We climb over its lip: the people
+              the wave carries stand along the crest and fling up their arms in a wave of cheering, and at
+              their front a dancer twirls in joy and bursts into embers (p04). Read 46.8 to 49.4.
+  THE BREAK   49.47: the wave breaks on the shore under the arch of nine lights: a plume of gold, the sun comes
+              up warm through it, the night is swept off the sky. The people stand tiny along the vast shore;
+              the end card, readable from 55.5 s to the last frame. No fade: the last frame is full daylight.
 
-Rules kept: no lyrics, no faces (the bodies are featureless), everyone clothed in garments of light, no
-Heavenly Mother figure, all nine expressions from words.EXPRESSIONS, nothing dark behind any text, no em dash
-or en dash, the first frame is a picture, the last frame is daylight.
+Rules kept: no lyrics, artistic faces only (never photorealistic), everyone clothed in garments of light, no
+Heavenly Mother figure, all nine expressions from words.EXPRESSIONS, one read at a time and nothing crossing
+them, nothing dark behind any text, no white-outs, no em dash or en dash, the first frame is a picture, the
+last frame is daylight.
 """
 import numpy as np
 
@@ -65,6 +76,8 @@ import theme  # noqa: E402
 from p3d import words as PW  # noqa: E402
 from p3d.api import lin  # noqa: E402
 from p3d.body import Body  # noqa: E402
+from p3d import effects as fx  # noqa: E402
+from p3d import pairs  # noqa: E402
 from p3d.camera import Move, Rig  # noqa: E402
 from p3d import ten_01_wave as WV  # noqa: E402
 
@@ -98,7 +111,7 @@ SPEED = [(0.0, 0.0), (IMPACT, 0.0), (IMPACT + 0.06, 15.0), (1.9, 10.0), (5.6, 8.
          (60.0, 2.0)]
 HEIGHT = [(0.0, 0.0), (IMPACT, 0.02), (1.4, 0.14), (6.0, 0.24), (6.84, 0.40), (12.8, 0.55), (13.6, 1.0),
           (19.3, 1.25), (19.85, 1.6), (20.9, 4.2), (26.0, 4.4), (27.3, 5.6), (33.0, 6.6), (33.9, 8.0),
-          (39.8, 9.0), (40.4, 11.0), (42.3, 24.0), (46.0, 26.0), (46.8, 18.0), (BREAK, 14.0), (50.4, 6.0),
+          (39.8, 9.0), (40.5, 7.5), (41.3, 4.6), (42.45, 4.4), (43.25, 24.0), (46.0, 26.0), (46.8, 18.0), (BREAK, 14.0), (50.4, 6.0),
           (52.0, 1.2), (60.0, 0.6)]
 CURL = [(0.0, 0.0), (19.85, 0.0), (20.9, 1.0), (25.2, 1.0), (26.6, 0.0), (45.9, 0.0), (46.6, 0.25),
         (47.4, 0.0), (BREAK - 0.3, 0.0), (50.1, 0.9), (51.2, 1.0), (60.0, 1.0)]
@@ -185,27 +198,44 @@ class Spark:
 # ---------------------------------------------------------------------------------------------------------
 # THE PEOPLE: where they stand (each where the crest reaches them, or on the crest itself)
 # ---------------------------------------------------------------------------------------------------------
-T_W1 = 6.45                                     # the first sleeper (a woman) is reached
-W1 = place_where_crest(1.1, T_W1)
-M1 = W1 + np.array([-2.3, 0.0, 1.9])            # an older man, a little behind her (reached a moment before)
+T_W1 = 4.70                                     # the crest reaches the first sleeper (Greeting)
+W1 = place_where_crest(2.2, T_W1)
+M1 = W1 + np.array([-1.4, 0.0, 2.6])            # an older man in the wake behind her (Gratitude)
 T_M1 = float(KIN.time_at(M1[0], M1[2]))
-T_PAIR = 15.25                                  # the two who stood back to back
+FACE_W1_TO_M1 = float(np.degrees(np.arctan2(M1[0] - W1[0], M1[2] - W1[2])))
+FACE_M1_TO_W1 = float(np.degrees(np.arctan2(W1[0] - M1[0], W1[2] - M1[2])))
+T_PAIR = 15.25                                  # the two in the mist (Apology, then Inclusiveness)
 PC = place_where_crest(0.0, T_PAIR)
-P1 = PC + np.array([-0.42, 0.0, 0.0])
-P2 = PC + np.array([0.42, 0.0, 0.0])
-U_WALK = 33.0                                   # the walkers on the crest (where the barrel let us out)
+T_EMBRACE = 17.75
+U_DOOR = 25.0                                   # the two in the barrel, before its mouth (Concession)
+U_WALK = 33.0                                   # the two seated on the crest (Respect)
 U_MAIN = U_WALK                                 # from the barrel on, the camera rides this part of the crest
 T_K = 46.75                                     # the kneeling one: the released wall reaches them
-KN = place_where_crest(U_MAIN + 0.5, T_K)
-HP = KN + np.array([-0.62, 0.0, 0.22])          # the one who lays a hand on their shoulder
-
-
-WALK_SPEED = 1.277                               # how fast the walk motion carries them along +x (measured)
+KN = place_where_crest(U_MAIN + 0.5, T_K)       # (Encouragement)
+HP0 = KN + np.array([2.3, 0.0, -0.4])           # where the one who comes to them starts walking
+T_HELP = 35.3                                   # on the crest: one helps another up (Consideration)
+T_TWIRL = 47.6                                  # on the crest: a dancer twirls into embers (Compliment)
 
 
 def walk_frame(t):
+    """The top of the crest where the seated pair are (moving ground)."""
     p = wp(U_WALK, 0.15, 0.0, t)
     p[1] = float(HGT(t)) * 0.985
+    return p
+
+
+def crest_frame(u, b=0.25):
+    def f(t):
+        p = wp(u, b, 0.0, t)
+        p[1] = float(HGT(t)) * 0.985
+        return p
+    return f
+
+
+def door_frame(t):
+    """The floor of the barrel near its mouth: the water inside the tube."""
+    p = wp(U_DOOR, -0.62 * float(HGT(t)), 0.0, t)
+    p[1] = 0.0
     return p
 
 
@@ -224,28 +254,37 @@ class Path(Move):
 
 
 def cam_drop(t):
-    # frame 0: the spark falling down its shaft, the sleepers far out on the black glass behind it
+    # frame 0: the spark falling down its shaft under the opening title, the sleepers on the glass beyond
     y = spark_y(t)
     return (np.array([X0 + 0.45, 0.36 + 0.62 * y, Z0 + 3.2 - 0.4 * min(max(t, 0.0), 1.0)]),
             np.array([X0, y + 0.72 * max(0.0, 1.0 - max(t, 0.0) / IMPACT) + 0.05, Z0 - 0.5]))
 
 
 def cam_ride(t):
-    # low beside the crest, looking along it: night ahead on the left, the lit wake on the right
-    h = 0.30 + 1.25 * float(ss(3.8, 6.3, t))
+    # low beside the crest, looking along it: night ahead on the left, the lit wake on the right; then we lift
+    # toward the first sleeper as the crest runs at her
+    h = 0.30 + 0.9 * float(ss(2.6, 3.9, t))
     pos = wp(-0.9, 0.45, h, t)
-    look = wp(7.0, -3.2, 0.15 + 0.35 * float(ss(3.8, 6.3, t)), t)
-    her = W1 + np.array([0.0, 1.05, 0.0])
-    return pos, lerp(look, her, float(ss(4.9, 6.5, t)))
+    look = wp(7.0, -3.2, 0.15 + 0.4 * float(ss(2.6, 3.9, t)), t)
+    her = W1 + np.array([0.0, 1.2, 0.3])
+    return pos, lerp(look, her, float(ss(2.9, 3.9, t)))
+
+
+def cam_face(t):
+    # her profile, half figure: the crest sweeps past her feet and she lights up from the feet to the face
+    k = float(ss(3.9, 6.84, t))
+    pos = W1 + np.array([1.62 - 0.12 * k, 1.36, 0.62 - 0.22 * k])
+    return pos, W1 + np.array([0.0, 1.16, 0.46 - 0.1 * k])
 
 
 def cam_orbit_w1(t):
-    u = float(ss(6.6, 13.0, t))
-    a = np.radians(12.0 + 105.0 * u)
-    r = 2.7 + 0.9 * u
-    c = W1 + np.array([-0.6 * u, 1.2, 0.5 * u])
-    pos = c + np.array([np.sin(a) * r, 0.35 + 0.25 * u, np.cos(a) * r])
-    return pos, c + np.array([0.0, -0.05, 0.0])
+    # round in front of her and looking back for the first time: the man bowing, the crowd bowing in the wake
+    u = float(ss(6.84, 13.0, t))
+    a = np.radians(69.0 + 92.0 * u)
+    r = 1.75 + 2.3 * u
+    c = W1 + np.array([-0.35 * u, 1.15 + 0.1 * u, 0.9 * u])
+    pos = c + np.array([np.sin(a) * r, 0.2 + 0.35 * u, np.cos(a) * r])
+    return pos, c + np.array([0.0, -0.1, 0.0])
 
 
 def cam_surge(t):
@@ -253,10 +292,10 @@ def cam_surge(t):
     ride = wp(0.6, 2.4, 1.25, t), wp(0.0, -14.0, 0.5, t)
     u = float(ss(14.3, 15.6, t))
     w = float(ss(15.4, 19.85, t))
-    a = np.radians(10.0 + 60.0 * w)
-    r = 5.0 - 2.0 * w
-    c = PC + np.array([0.0, 1.25, 0.0])
-    orb = c + np.array([np.sin(a) * r, 0.40, np.cos(a) * r]), c
+    a = np.radians(14.0 + 50.0 * w)
+    r = 4.4 - 1.5 * w
+    c = PC + np.array([0.0, 1.15, 0.0])
+    orb = c + np.array([np.sin(a) * r, 0.35, np.cos(a) * r]), c
     return lerp(ride[0], orb[0], u), lerp(ride[1], orb[1], u)
 
 
@@ -272,7 +311,7 @@ def cam_barrel(t):
     k = float(ss(19.9, 20.9, t))                     # through the wall
     ub = 1.5 + 6.6 * max(t - 20.9, 0.0)
     out = wp(0.0, 2.6, 1.6, t), wp(0.0, -12.0, 0.8, t)
-    tube = wp(ub, -0.66 * Hh, 0.42 * Hh, t), wp(ub + 14.0, -0.58 * Hh, 0.46 * Hh, t)
+    tube = wp(ub, -0.66 * Hh, 0.42 * Hh, t), wp(ub + 14.0, -0.60 * Hh, 0.36 * Hh, t)
     pos, tgt = lerp(out[0], tube[0], k), lerp(out[1], tube[1], k)
     # spat out of the mouth: out ahead of the wave, turning to look back at it
     e = float(ss(25.3, 26.79, t))
@@ -283,28 +322,35 @@ def cam_barrel(t):
 
 
 def cam_trim(t):
+    # one slow revolve round the two seated on the crest while the hills race past
     u = (t - 26.79) / (33.36 - 26.79)
-    a = np.radians(-150.0 + 300.0 * float(ss(-0.1, 1.05, u)))
-    c = walk_frame(t) + np.array([WALK_SPEED * max(t - 26.3, 0.0), 1.05, 0.0])   # where the walkers are
-    r = 3.6
-    pos = c + np.array([np.sin(a) * r, 0.7 + 0.5 * np.sin(np.pi * u), np.cos(a) * r])
+    a = np.radians(-150.0 + 230.0 * float(ss(-0.1, 1.05, u)))
+    c = walk_frame(t) + np.array([0.0, 0.75, 0.0])
+    r = 3.2
+    pos = c + np.array([np.sin(a) * r, 0.55 + 0.35 * np.sin(np.pi * u), np.cos(a) * r])
     return pos, c
 
 
 def cam_run(t):
-    # fly backward ahead of the wave through the sleepers, then rise and pass high over its crest
+    # level with the crest just ahead of it, the two on its top; then rise and pass high over it to see the bay
+    # of sleepers ahead light up
     Hh = float(HGT(t))
-    k1 = float(ss(36.3, 37.5, t))
-    k2 = float(ss(37.1, 38.9, t))
-    pos = wp(U_MAIN - 3.5, -15.0 + 29.0 * k2, 3.2 + (Hh + 6.0) * k1, t)
-    tgt = lerp(wp(U_MAIN, 0.0, 0.9 * Hh, t), wp(U_MAIN, -55.0, 0.0, t), k2)
+    k1 = float(ss(36.8, 37.9, t))
+    k2 = float(ss(37.5, 39.2, t))
+    pair = wp(U_MAIN, 0.25, Hh + 0.85, t)
+    near = wp(U_MAIN - 1.2, -6.8, Hh + 0.55, t)
+    pos = lerp(near, wp(U_MAIN - 3.5, 14.0, Hh + 7.0, t), k2)
+    pos[1] = pos[1] + 4.0 * k1 * (1.0 - k2)
+    tgt = lerp(pair, wp(U_MAIN, -55.0, 0.0, t), k2)
     return pos, tgt
 
 
 def cam_hang(t):
-    c = float(ss(42.55, 46.1, t))
-    pos = KN + np.array([0.75 + 0.6 * c, 1.15 + 10.5 * c, -1.7 - 8.0 * c])
-    wall = np.array([KN[0], 0.42 * float(HGT(t)) + 0.6 * c * 6.0, crest_z(t)])
+    # behind the kneeling one; the wave crouches low in the breath (the date is written in the sky above it),
+    # then rears up into a wall on the hit, and we crane up its face
+    c = float(ss(42.65, 46.1, t))
+    pos = KN + np.array([0.85 + 0.6 * c, 1.25 + 10.0 * c, -2.6 - 7.0 * c])
+    wall = np.array([KN[0], 2.6 + 0.30 * float(HGT(t)) + 3.6 * c, crest_z(t)])
     return pos, wall
 
 
@@ -314,7 +360,7 @@ def cam_drop2(t):
     k1 = float(ss(46.6, 47.5, t))
     k2 = float(ss(47.2, 48.5, t))
     pos = wp(U_MAIN + 1.0, -20.0 + 32.0 * k2, 7.0 + (Hh + 2.5) * k1, t)
-    tgt = lerp(wp(U_MAIN, 0.0, 0.5 * Hh, t), wp(U_MAIN, -70.0, 3.0, t), k2)
+    tgt = lerp(wp(U_MAIN, 0.0, 0.5 * Hh, t), wp(U_MAIN + 1.0, -40.0, Hh * 0.6, t), k2)
     return pos, tgt
 
 
@@ -338,21 +384,23 @@ def cam_break(t):
 
 CAMERA = Rig([
     Path(cam_drop, 0.0, 1.55, fov=50.0, aperture=0.003, focus=3.2),
-    Path(cam_ride, 1.55, 6.84, fov=60.0, aperture=0.004, blend=0.75, focus=4.0),
-    Path(cam_orbit_w1, 6.84, 13.30, fov=46.0, aperture=0.02, blend=1.3),
-    Path(cam_surge, 13.30, 19.85, fov=52.0, aperture=0.012, blend=0.8),
-    Path(cam_barrel, 19.85, 26.79, fov=lambda t: 52.0 + 18.0 * float(ss(20.35, 21.3, t)), aperture=0.002, blend=0.5, focus=6.0),
-    Path(cam_trim, 26.79, 33.36, fov=50.0, aperture=0.015, blend=1.1),
-    Path(cam_run, 33.36, 40.21, fov=62.0, aperture=0.008, blend=0.6, focus=12.0),
-    Path(cam_hang, 40.21, 46.35, fov=58.0, aperture=0.01, blend=1.6, focus=9.0),
-    Path(cam_drop2, 46.35, BREAK, fov=62.0, aperture=0.004, blend=0.7, focus=20.0),
+    Path(cam_ride, 1.55, 3.9, fov=60.0, aperture=0.004, blend=0.75, focus=4.0),
+    Path(cam_face, 3.9, 6.84, fov=42.0, aperture=0.012, blend=1.0, focus=1.7),
+    Path(cam_orbit_w1, 6.84, 13.30, fov=48.0, aperture=0.014, blend=1.0),
+    Path(cam_surge, 13.30, 19.85, fov=50.0, aperture=0.012, blend=0.8),
+    Path(cam_barrel, 19.85, 26.79, fov=lambda t: 52.0 + 18.0 * float(ss(20.35, 21.3, t)), aperture=0.002,
+         blend=0.5, focus=6.0),
+    Path(cam_trim, 26.79, 33.36, fov=48.0, aperture=0.012, blend=1.1),
+    Path(cam_run, 33.36, 40.21, fov=54.0, aperture=0.008, blend=0.6, focus=7.0),
+    Path(cam_hang, 40.21, 46.35, fov=56.0, aperture=0.008, blend=1.6, focus=9.0),
+    Path(cam_drop2, 46.35, BREAK, fov=62.0, aperture=0.004, blend=0.7, focus=14.0),
     Path(cam_break, BREAK, 60.0, fov=(62.0, 50.0), aperture=0.003, blend=0.8, focus=60.0),
 ], handheld=0.25, min_height=0.12, near=0.05)
 
 # ---------------------------------------------------------------------------------------------------------
 # THE NINE EXPRESSIONS (words.EXPRESSIONS by name; each read for 2.5 s or more). They ride with the camera,
 # flat to the picture and in the sky part of it, so every one is whole and sharp while it is read; none has a
-# mirror image in the lake.
+# mirror image in the lake; only one is read at a time.
 # ---------------------------------------------------------------------------------------------------------
 
 
@@ -361,7 +409,7 @@ def _fade(t, info):
     w = info["word"]
     if info["state"] == "leave":
         q = (t - w.t_read1) / max(w.t_out - w.t_read1, 1e-6)
-        return dict(alpha=float((1.0 - ss(0.0, 0.55, q)) ** 1.5))
+        return dict(alpha=float((1.0 - ss(0.0, 0.38, q)) ** 2.0))
     return None
 
 
@@ -372,28 +420,39 @@ def _ride(x, y, depth, px, t_read0, t_read1, **kw):
 
 
 _SPECS = [
-    _ride(0.50, 0.66, 6.0, 104, 2.45, 5.55, expr="Greeting", t_in=1.35, t_out=6.6, arrive="pen",
+    _ride(0.36, 0.76, 6.0, 96, 4.75, 7.25, expr="Greeting", t_in=4.0, t_out=7.95, arrive="pen",
           leave="wind", wind=(1.0, 0.25, 0.4), drive=_fade),
-    _ride(0.50, 0.685, 8.0, 84, 9.30, 12.45, expr="Gratitude", t_in=7.55, t_out=13.3, arrive="pen",
+    _ride(0.50, 0.77, 8.0, 80, 8.95, 11.8, expr="Gratitude", t_in=8.0, t_out=12.45, arrive="pen",
           leave="wind", wind=(-1.0, 0.3, 0.2), drive=_fade),
     # the apology, and its answer made of the same light (one reads at a time)
-    _ride(0.50, 0.685, 8.0, 88, 14.35, 16.95, expr="Apology", t_in=13.55, t_out=17.0, arrive="reveal",
+    _ride(0.50, 0.77, 8.0, 84, 14.35, 16.95, expr="Apology", t_in=13.55, t_out=17.0, arrive="reveal",
           edge="right", leave="morph"),
-    _ride(0.50, 0.70, 8.0, 96, 17.80, 20.35, expr="Inclusiveness", t_in=16.95, t_out=21.2, arrive="morph",
+    _ride(0.50, 0.78, 8.0, 96, 17.80, 20.35, expr="Inclusiveness", t_in=16.95, t_out=21.2, arrive="morph",
           source="Apology", leave="wind", wind=(1.0, 0.3, 0.3), drive=_fade),
-    _ride(0.50, 0.63, 7.0, 108, 21.8, 24.6, expr="Concession", t_in=20.95, t_out=25.6, arrive="pen",
+    _ride(0.50, 0.72, 7.0, 104, 22.0, 24.7, expr="Concession", t_in=21.2, t_out=25.5, arrive="pen",
           leave="wind", wind=(1.0, 0.1, 0.4), drive=_fade),
-    _ride(0.50, 0.685, 9.0, 86, 28.35, 31.35, expr="Respect", t_in=27.1, t_out=32.4, arrive="pen", leave="wind",
+    _ride(0.50, 0.77, 9.0, 84, 27.9, 30.6, expr="Respect", t_in=27.0, t_out=31.3, arrive="pen", leave="wind",
           wind=(-1.0, 0.1, 0.6), drive=_fade),
-    _ride(0.50, 0.685, 10.0, 86, 34.85, 37.95, expr="Consideration", t_in=33.7, t_out=38.9, arrive="reveal",
+    _ride(0.50, 0.77, 10.0, 84, 34.7, 37.6, expr="Consideration", t_in=33.6, t_out=38.4, arrive="reveal",
           edge="right", leave="wind", wind=(1.0, 0.2, 0.3), drive=_fade),
-    # the encouragement on the wall becomes the compliment as the wall is released
-    _ride(0.50, 0.64, 14.0, 84, 43.3, 45.85, expr="Encouragement", t_in=42.55, t_out=46.0, arrive="reveal",
+    # the encouragement over the kneeling one becomes the compliment as the wall is released
+    _ride(0.50, 0.70, 14.0, 84, 43.3, 45.85, expr="Encouragement", t_in=42.6, t_out=46.0, arrive="reveal",
           edge="up", leave="morph"),
-    _ride(0.50, 0.68, 12.0, 90, 46.8, 49.4, expr="Compliment", t_in=45.85, t_out=50.3, arrive="morph",
+    _ride(0.50, 0.77, 12.0, 88, 46.8, 49.4, expr="Compliment", t_in=45.85, t_out=50.3, arrive="morph",
           source="Encouragement", leave="wind", wind=(1.0, 0.4, 0.2), drive=_fade),
 ]
 WORDS = PW.Words(_SPECS, camera=CAMERA)
+
+# ---------------------------------------------------------------------------------------------------------
+# TITLE AND DATE (UPDATE 7): the opening title over the spark drop, a discreet signature in two calm stretches
+# between expressions, "December 6" written in light across the sky in the breath and burst on the biggest
+# hit (the wave rears up and carries the burst). Drawn by the engine's TITLES once it lands.
+# ---------------------------------------------------------------------------------------------------------
+TITLES = dict(
+    opening=dict(t_end=4.0, y=0.20, palette="night"),
+    signature=dict(windows=[(12.45, 13.5, "tr", "night"), (31.3, 33.4, "tr", "night")]),
+    date_light=dict(t_form=40.21, t_burst=42.51, y=0.24, palette="night"),
+)
 
 # ---------------------------------------------------------------------------------------------------------
 # THE END CARD (the existing 2D style): the title whole by 54.8 s, every line readable to the last frame
@@ -405,35 +464,17 @@ TITLE = dict(label="Healing Concert", lines=["The Words of Mother’s Love"], si
 TAGLINE = dict(text="Sunday, December 6 · 4:30 PM\nWorld Mission Society Church of God\n"
                     "6720 W Sahara Ave, Las Vegas",
                sizes=(78, 77), t0=53.3, t1=54.8, color=theme.NAVY, glow=theme.WHITE_GLOW, anim="rise")
-# THE CONCERT BADGE (Anthony: "The concert title and the date should show from the beginning and throughout"):
-# large on frame 0, settled in the top left corner by 2.8 s, never covered (every expression is read below it),
-# gone as the end card forms (the end card carries the same words)
-CREDIT = dict(song="The Words of Mother’s Love",
-              concert="Healing Concert · Sunday, December 6 · 4:30 PM",
-              t_in=-1.0, t_full=0.0,
-              t_move=1.6, t_rest=2.8,
-              scale=0.48, alpha_rest=0.92,
-              margin_x=0.035, margin_top=0.05)
+# no corner credit: the title and date are designed into the film (TITLES above)
+CREDIT = dict(song="The Words of Mother’s Love", concert="Healing Concert",
+              t_in=1e9, t_full=1e9 + 1.0, t_move=1e9 + 2.0, t_rest=1e9 + 3.0, scale=0.34, alpha_rest=0.0,
+              margin_x=0.030, margin_top=0.048)
 
 
 def credit_state(t, bbox):
-    """Centre, scale and strength of the concert badge; bbox is its size at full card size."""
-    c = CREDIT
+    """The corner credit is not used in this film."""
     x0, x1, y0, y1 = bbox
-
-    def sm(a, b, x):
-        u = min(max((x - a) / (b - a), 0.0), 1.0)
-        return u * u * (3 - 2 * u)
-
-    a_in = sm(c["t_in"], c["t_full"], t)
-    m = sm(c["t_move"], c["t_rest"], t)
-    scale = c["scale"] ** m
-    cx0, cy0 = (x0 + x1) / 2.0, (y0 + y1) / 2.0
-    tx = c["margin_x"] + c["scale"] * (x1 - x0) / 2.0
-    ty = 1.0 - c["margin_top"] - c["scale"] * (y1 - y0) / 2.0
-    cx, cy = cx0 * (1 - m) + tx * m, cy0 * (1 - m) + ty * m
-    alpha = a_in * (1.0 + (c["alpha_rest"] - 1.0) * m) * (1.0 - sm(T_TITLE - 0.3, T_TITLE + 0.8, t))
-    return (cx, cy, scale, alpha), (cx0, cy0)
+    c0 = ((x0 + x1) / 2.0, (y0 + y1) / 2.0)
+    return (c0[0], c0[1], 1.0, 0.0), c0
 
 
 _base.TITLE, _base.TAGLINE, _base.CREDIT = TITLE, TAGLINE, CREDIT
@@ -592,13 +633,139 @@ def _crest_line(rng, baked):
                     gain=lambda t: float(ss(46.5, 47.3, t)))
 
 
-# the concert badge's box on the screen (x0, y0, x1, y1, y up), with a margin: nothing is seen over it
-BADGE_BOX = (0.022, 0.842, 0.402, 0.962)
-
-
 def C(ps):
-    """A point set that keeps clear of every expression being read and of the concert badge."""
-    return WV.Clear(ps, WORDS, BADGE_BOX, T_TITLE + 0.8)
+    """A point set that keeps clear of every expression being read."""
+    return WV.Clear(ps, WORDS, None)
+
+
+def _add_body(scene, name, body, ignite=None, rise=0.9, mask=None):
+    """A body of light, kept clear of the words, with the mask its look needs (rim: a dark shape with a
+    bright edge; window: a sky inside it)."""
+    ps = WV.Ignite(body, ignite, rise=rise) if ignite is not None else body
+    m = body.mask(**(mask or {})) if mask is not False else None
+    scene.add(name, C(ps), mask=m)
+
+
+def _performances(scene):
+    """THE ACTING: each expression is done by the people the crest has just woken, in its own style."""
+    # 1 GREETING: a face lighting up. A woman asleep on the black glass, seen in profile at half figure, a
+    # silhouette outlined in sparks (p06); the crest sweeps past her feet, the light climbs her to the face,
+    # she lifts her head toward the light and opens one hand in greeting.
+    w1 = Body("woman", at=(W1[0], W1[2]), facing=[(0.0, 180.0), (7.3, 180.0), (8.6, FACE_W1_TO_M1)],
+              garment="dress", hair=True, look=dict(name="rim", power=4), color="#ffd28a", color2="#fff2d8",
+              points=90000, detail=dict(head=3, hand=3), show=(2.2, 14.2), fade=0.5,
+              gesture=[(4.9, 7.4, "look_up", dict(amount=16)), (5.3, 7.6, "wave", dict(side="L")),
+                       (8.8, 13.6, "offer", dict(side="L"))],
+              effects=[dict(kind="shed", t=4.8, n=6000, life=2.2, where="back", dir=(0.0, 0.35, 1.0), speed=0.55)],
+              seed=3)
+    _add_body(scene, "greeting", w1, ignite=T_W1, rise=1.1)
+
+    # 2 GRATITUDE: an older man in the wake bows to her with his hand on his heart (gold glitter, p08), and
+    # behind him a whole crowd woken by the wave bows too.
+    refs = {}
+    m1 = Body("man", at=(M1[0], M1[2]), facing=FACE_M1_TO_W1, garment="coat", stoop=0.25, look="glitter",
+              color="#ffc77a", color2="#fff0cc", points=70000, show=(4.0, 14.2), fade=0.5, seed=4,
+              gesture=[(8.4, 13.8, "touch", dict(side="R", to=lambda t: refs["m1"].where(t, "heart", raw=True),
+                                                  palm="in", fingers="flat")),
+                       (8.7, 13.8, "bow", dict(amount=34))])
+    refs["m1"] = m1
+    _add_body(scene, "gratitude", m1, ignite=T_M1)
+    rng = np.random.default_rng(5)
+    pts, starts = [], []
+    while len(pts) < 70:
+        x = W1[0] + rng.uniform(-24.0, 24.0)
+        z = W1[2] + rng.uniform(4.5, 38.0)
+        if np.hypot(x - M1[0], z - M1[2]) < 1.5 or any(np.hypot(x - q[0], z - q[1]) < 1.2 for q in pts):
+            continue
+        pts.append((x, z))
+        starts.append(float(KIN.time_at(x, z)))
+    from p3d.crowd import Crowd
+    crowd = Crowd(places=np.array(pts), facing=np.array([180.0 + rng.normal(0.0, 12.0) for _ in pts]),
+                  kinds=(("bow", 3), ("stand", 1)), start=np.array(starts), until=15.0, fade=0.5, flash=0.9,
+                  points=2600, color="#ffc977", color2="#fff0d0", seed=2.0)
+    scene.add("bowing", C(crowd))
+
+    # 3 APOLOGY then 4 INCLUSIVENESS: two people in the mist among the lanterns (soft figures of pearl and rose
+    # dust, p09). One stands with head bowed and open hands low; the other has turned away. Then the other
+    # turns, they walk in and hold each other; a warm flare where they meet.
+    a, b = pairs.embrace(T_EMBRACE, at=(PC[0], PC[2]), facing=90.0, approach=1.1, until=21.5,
+                         a=dict(shape="man", garment="tunic", look=dict(name="glitter", bright=0.85),
+                                color="#ffe6cf", color2="#ffffff", points=60000, show=(12.6, 21.4), fade=0.5,
+                                gesture=[(15.5, 16.75, "bow", dict(amount=26)), (15.6, 16.75, "offer"),
+                                         (15.6, 16.75, "offer", dict(side="L"))],
+                                effects=[dict(kind="shed", t=15.3, n=5000, life=3.0, where="top", dir=(0, 1, 0),
+                                              speed=0.18)], seed=5),
+                         b=dict(shape="woman", garment="robe", look=dict(name="glitter", bright=0.85),
+                                color="#ffb8c8", color2="#fff0f4", points=60000, show=(12.6, 21.4), fade=0.5,
+                                facing=[(0.0, 90.0), (15.9, 90.0), (16.5, 270.0)],
+                                effects=[dict(kind="shed", t=15.3, n=5000, life=3.0, where="top", dir=(0, 1, 0),
+                                              speed=0.18)], seed=6))
+    _add_body(scene, "apology_a", a, ignite=T_PAIR)
+    _add_body(scene, "apology_b", b, ignite=T_PAIR + 0.1)
+    scene.add("embrace_flare", C(fx.Flare(lambda t: np.array([PC[0], 1.35, PC[2]]), T_EMBRACE + 0.15,
+                                          color="#ffd6b0", color2="#ffb0c8", scale=1.6, strength=0.8)))
+
+    # 5 CONCESSION: in the barrel, before its mouth (a door of light): one steps aside with an open palm toward
+    # the door and lets the other go through first. Constellation wireframes (p01) in the tunnel of streaks.
+    for name, shape, at, facing, motion, gest, seed in (
+            ("concession_a", "man", (0.0, 0.55), [(0.0, 90.0), (21.6, 90.0), (22.3, 180.0)], "stand",
+             [(22.2, 26.5, "offer", dict(side="L")), (22.2, 26.5, "bow", dict(amount=12))], 7),
+            ("concession_b", "woman", (-0.3, -0.35), 90.0,
+             [(0.0, "stand"), (22.9, "walk", dict(speed=1.0))], [], 8)):
+        body = Body(shape, at=at, facing=facing, motion=motion, gesture=gest, frame=door_frame,
+                    look=dict(name="plexus", bright=1.2), color="#fff0d0", color2="#ffd38a", points=50000,
+                    show=(20.2, 26.9), fade=0.4, effects=[dict(kind="form", t=20.5, dur=1.4)], seed=seed)
+        _add_body(scene, name, body)
+
+    # 6 RESPECT: two people seated on the crest of the moving wave; one speaks with small open hands, the other
+    # leans in and listens. Silhouettes that are windows onto the night sky (p07).
+    for name, shape, at, facing, gest, seed in (
+            ("respect_a", "woman", (-0.42, 0.0), 90.0,
+             [(27.5, 29.4, "offer", dict(side="R")), (29.2, 33.6, "offer", dict(side="L"))], 9),
+            ("respect_b", "man", (0.42, 0.0), 270.0, [(27.4, 33.6, "listen", dict(side="R"))], 10)):
+        body = Body(shape, at=at, facing=facing, motion=[(0.0, "sit", dict(dur=0.01))], gesture=gest,
+                    frame=walk_frame, look=dict(name="window"), color="#ffe2b0", color2="#fff6e6",
+                    points=60000, show=(26.2, 33.9), fade=0.5, effects=[dict(kind="form", t=26.4, dur=1.2)],
+                    seed=seed)
+        _add_body(scene, name, body, mask=dict(sky="stars"))
+
+    # 7 CONSIDERATION: on the crest, one reaches down to someone kneeling, takes their hand and pulls them up;
+    # the one helped up lays a hand on the helper's shoulder. Coloured dots (ref 14).
+    ha, hb = pairs.helped_up(T_HELP, at=(0.0, 0.0), facing=90.0,
+                             a=dict(shape="man", garment="coat", frame=crest_frame(U_MAIN, 0.25), look="dots",
+                                    color="#ffcf8a", color2="#ff9f8a", points=60000, show=(32.9, 40.4), fade=0.5,
+                                    effects=[dict(kind="form", t=33.2, dur=1.2)], seed=11),
+                             b=dict(shape="woman", garment="dress", frame=crest_frame(U_MAIN, 0.25), look="dots",
+                                    color="#ffd9a0", color2="#ef7a96", points=60000, show=(32.9, 40.4), fade=0.5,
+                                    effects=[dict(kind="form", t=33.2, dur=1.2)], seed=12))
+    _add_body(scene, "consider_a", ha)
+    _add_body(scene, "consider_b", hb)
+
+    # 8 ENCOURAGEMENT: one kneels in prayer before the standing wall; another walks to them and lays a hand on
+    # their shoulder. White gold, light rising off them like flakes (ref 13).
+    kn = Body("man", at=(KN[0], KN[2]), facing=0.0, motion=[(0.0, "kneel", dict(hands="pray", dur=0.01))],
+              garment="tunic", look="glitter", color="#fff0d0", color2="#ffd890", points=65000,
+              show=(39.0, 48.2), fade=0.5, seed=13,
+              effects=[dict(kind="shed", t=39.2, n=5000, life=3.0, where="top", dir=(0, 1, 0), speed=0.35)])
+    face_in = float(np.degrees(np.arctan2(KN[0] - HP0[0], KN[2] - HP0[2])))
+    hp = Body("woman", at=(HP0[0], HP0[2]), facing=[(0.0, face_in), (42.6, face_in), (43.2, face_in + 60.0)],
+              motion=[(0.0, "stand"), (40.9, "walk", dict(speed=0.95)), (42.45, "stand", dict(blend=0.8))],
+              garment="robe", look="glitter", color="#ffe6b0", color2="#fff6e0", points=65000,
+              show=(39.0, 48.2), fade=0.5, seed=14,
+              gesture=[(42.7, 48.0, "hand_on_shoulder", dict(side="R", to=lambda t: kn.where(t, "shoulder.R")))],
+              effects=[dict(kind="shed", t=39.2, n=4000, life=3.0, where="top", dir=(0, 1, 0), speed=0.35)])
+    _add_body(scene, "encourage_k", kn)
+    _add_body(scene, "encourage_h", hp)
+
+    # 9 COMPLIMENT: the people the wave carries cheer (arms flung up in a wave along the crest), and at their
+    # front a dancer twirls in joy and bursts into embers (p04).
+    tw = Body("woman", at=(0.0, 0.0), facing=180.0, frame=crest_frame(U_MAIN + 1.2, -0.6),
+              motion=[(0.0, "stand"), (T_TWIRL, "twirl")], garment="dress", hair=True, look="glitter",
+              color="#ffb070", color2="#ffe0b0", points=60000, show=(46.4, 50.6), fade=0.4, seed=15,
+              gesture=[(46.6, T_TWIRL + 0.2, "open_arms", dict(lift=0.6))],
+              effects=[dict(kind="shed", t=T_TWIRL, n=9000, life=1.8, where="back", dir=(0.4, 0.5, 1.0), speed=1.1),
+                       dict(kind="disperse", t=49.0, dur=1.3, dir=(0.6, 0.6, 1.0), share=0.9, speed=1.6)])
+    _add_body(scene, "compliment", tw)
 
 
 def _setup(scene):
@@ -612,20 +779,17 @@ def _setup(scene):
     scene.add("lanterns", lan)
     scene.add("lantern_flames", flame)
     baked = WV.bake_people(Body, n=2600, poses=("stand", "raise", "open_arms", "look_up"))
-
-    # the hero bodies (each with real motion and garments of light)
-    HEROES.extend([W1, M1, P1, P2, KN, HP])
-    # people asleep all over the black glass: each forms out of gold light as the crest reaches them
-    back_or_side = lambda r: r.choice([180.0, 180.0, 150.0, 210.0, 90.0, -90.0]) + r.normal(0.0, 12.0)  # noqa: E731
+    HEROES.extend([W1, M1, PC, KN, HP0])
+    # people asleep all over the black glass: each forms out of gold light as the crest reaches them, and the
+    # people the wave carries stand on its crest at the end and are set down on the shore
     for name, args in (
-            ("s1", dict(n=34, t0=1.6, t1=7.2, u_mid=2.0, u_spread=9.0, near=(0.35, 3.5, 2.5), avoid=(-2.2, 0.4),
-                        gain=lambda t: float(1.0 - ss(13.6, 14.6, t)), yaw=back_or_side)),
-            ("s2", dict(n=26, t0=7.0, t1=13.2, u_mid=0.0, u_spread=7.0, near=(0.3, 0.0, 4.0), avoid=(-0.8, 2.0),
-                        gain=lambda t: float(1.0 - ss(15.0, 16.0, t)), poses=("stand", "look_up", "open_arms"))),
-            ("s3", dict(n=36, t0=13.4, t1=19.8, u_mid=0.0, u_spread=10.0, near=(0.3, 1.5, 3.5), avoid=(-0.8, 2.0),
+            ("s1", dict(n=30, t0=1.6, t1=7.2, u_mid=2.0, u_spread=10.0, near=(0.25, 6.0, 2.5), avoid=(-2.2, 4.0),
+                        gain=lambda t: float(1.0 - ss(13.6, 14.6, t)), yaw=lambda r: r.choice([180.0, 150.0, 210.0, 90.0, -90.0]) + r.normal(0.0, 12.0))),
+            ("s3", dict(n=30, t0=13.4, t1=19.8, u_mid=0.0, u_spread=11.0, near=(0.25, 5.0, 2.5), avoid=(-3.0, 3.0),
                         gain=lambda t: float(ss(11.0, 12.5, t) * (1.0 - ss(22.0, 23.0, t))),
                         poses=("stand", "look_up"))),
-            ("s6", dict(n=170, t0=33.5, t1=40.2, u_mid=U_MAIN, u_spread=11.0, near=(0.3, U_MAIN - 3.5, 3.0), avoid=(U_MAIN - 4.8, U_MAIN - 2.2),
+            ("s6", dict(n=170, t0=33.5, t1=40.2, u_mid=U_MAIN, u_spread=12.0, near=(0.25, U_MAIN - 6.0, 2.5),
+                        avoid=(U_MAIN - 4.8, U_MAIN + 2.0),
                         gain=lambda t: float(ss(32.4, 33.4, t) * (1.0 - ss(40.6, 41.6, t))),
                         poses=("stand", "stand", "look_up", "open_arms"))),
             ("s8", dict(n=60, t0=49.7, t1=52.5, u_mid=U_MAIN - 20.0, u_spread=22.0, min_gap=1.3,
@@ -634,44 +798,7 @@ def _setup(scene):
         for nm, st in _people(rng, baked, name, **args):
             scene.add(nm, C(st))
     scene.add("crest_line", C(_crest_line(rng, baked)))
-
-    # the first two to wake (S1, S2)
-    w1 = Body("woman", at=(W1[0], W1[2]), facing=[(0.0, 180.0), (7.4, 180.0), (9.0, 150.0)], garment="dress",
-              hair=True, look="glitter", color="#ffcf8a", color2="#fff0d0", points=70000, show=(4.2, 14.2),
-              fade=0.4, gesture=[(7.2, 14.5, "look_up", dict(amount=10))], seed=3)
-    scene.add("w1", C(WV.Ignite(w1, T_W1)))
-    m1 = Body("man", at=(M1[0], M1[2]), facing=[(0.0, 160.0), (8.0, 160.0), (9.5, 120.0)], garment="coat",
-              stoop=0.35, look="glitter", color="#ffc27a", color2="#ffe6c0", points=60000, show=(4.2, 14.2),
-              fade=0.4, gesture=[(8.6, 14.5, "bow")], seed=4)
-    scene.add("m1", C(WV.Ignite(m1, T_M1)))
-
-    # the two who stood back to back (S3): they turn to each other and reach
-    p1 = Body("man", at=(P1[0], P1[2]), facing=[(0.0, -90.0), (17.6, -90.0), (18.6, 90.0)], garment="tunic",
-              look="glitter", color="#ffb07a", color2="#ffe2c0", points=60000, show=(12.8, 21.0), fade=0.4,
-              gesture=[(16.1, 17.4, "bow"), (18.8, 21.5, "reach")], seed=5)
-    p2 = Body("woman", at=(P2[0], P2[2]), facing=[(0.0, 90.0), (16.0, 90.0), (17.0, -90.0)], garment="coat",
-              look="glitter", color="#ff9fb4", color2="#ffe2ea", points=60000, show=(12.8, 21.0), fade=0.4,
-              gesture=[(18.9, 21.5, "reach")], seed=6)
-    t_pair = float(KIN.time_at(PC[0], PC[2]))
-    scene.add("p1", C(WV.Ignite(p1, t_pair)))
-    scene.add("p2", C(WV.Ignite(p2, t_pair + 0.1)))
-
-    # two walking the crest (S5)
-    for k, (shape, garment, col, off) in enumerate((("man", "tunic", "#ffcf8a", -0.45),
-                                                    ("woman", "robe", "#ffe0a8", 0.45))):
-        b = Body(shape, at=(0.0, off), facing=90.0, motion="walk", garment=garment, look="glitter", color=col,
-                 color2="#fff4dc", points=60000, show=(26.3, 33.9), fade=0.5, frame=walk_frame, seed=7 + k,
-                 hair=(shape == "woman"), bright=1.3)
-        scene.add(f"walker{k}", C(b))
-
-    # the kneeling one, and the hand on the shoulder (S7)
-    kn = Body("man", at=(KN[0], KN[2]), facing=0.0, motion="kneel", garment="tunic", look="glitter",
-              color="#ffd08a", color2="#fff0d8", points=60000, show=(39.4, 48.2), fade=0.5, seed=9)
-    hp = Body("woman", at=(HP[0], HP[2]), facing=20.0, garment="robe", look="glitter", color="#ffe0a0",
-              color2="#fff6e0", points=60000, show=(39.4, 48.2), fade=0.5, seed=10,
-              gesture=[(40.5, 48.0, "hand_on_shoulder", dict(side="R", to=lambda t: kn.where(t, "shoulder.L")))])
-    scene.add("kneel", C(WV.Ignite(kn, 41.6, rise=1.2)))
-    scene.add("helper", C(hp))
+    _performances(scene)
 
     WORDS.add_to(scene)
     try:
@@ -712,6 +839,7 @@ P3D = dict(
             dict(t=20.55, strength=0.55, radius=0.3, rise=0.12, fall=0.5, color="#ffd49a")],
     setup=_setup,
 )
+
 
 
 if __name__ == "__main__":
