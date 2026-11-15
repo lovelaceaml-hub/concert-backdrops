@@ -196,6 +196,15 @@ def flash(t):
     return flash_level(FLASHES, t)
 
 
+def _flash_place(t):
+    """Where the latest flash is (the cloud light that colours the mist and the water)."""
+    best = FLASHES[0][1]
+    for tf, p, _ in FLASHES:
+        if tf <= t:
+            best = p
+    return best
+
+
 BOLT_A = Bolt((9.0, 38.0, 52.0), (12.2, 5.8, 59.4), STRIKE, seed=11, freeze=STRIKE + 0.24, fade=12.6,
               color="#e8dcff", color2="#ffbf86", width=0.09, turn=1.4)
 BOLT_B = Bolt((-30.0, 40.0, 70.0), (-26.0, 0.0, 74.0), 0.95, seed=4, color="#e0d8ff", width=0.12)
@@ -561,8 +570,7 @@ P3D = dict(
         light=dict(pos=(0.0, 1.62, -1.3), color="#ffd29a",
                    strength=_ramp([(0.0, 0.0), (34.6, 0.0), (36.4, 1.0), (HIT, 1.2), (HIT + 0.6, 0.0), (60, 0.0)]),
                    size=0.5, rays=1.0),
-        lights=lambda t: [dict(pos=FLASHES[i][1], color="#cbbcff", strength=2.5 * flash(t), radius=60.0)
-                          for i in range(1)],
+        lights=[dict(pos=_flash_place, color="#cbbcff", strength=lambda t: 2.5 * flash(t), radius=60.0)],
         react=dict(beat=0.3, level=0.25),
     )),
     bursts=[dict(t=DROP_LAND, at=(0.0, 0.3, 80.0), strength=1.0, radius=0.10, color="#ffb39a", rise=0.08, fall=0.5),
