@@ -107,7 +107,7 @@ in vec2 vP;
 flat in vec4 fInfo; flat in vec4 fColA; flat in vec4 fColB; flat in vec4 fPts; flat in vec4 fLight;
 flat in vec4 fFx; flat in vec4 fPar;
 uniform sampler2D uSeg;
-uniform float uT, uSoft, uDens;
+uniform float uT, uSoft, uDens, uGain, uDay;
 uniform vec3 uMist, uLightCol, uFlameCol;
 out vec4 o;
 void main(){
@@ -121,7 +121,7 @@ void main(){
                   vnoise(vec2(p.x*6.0-uT*0.09+3.1, p.y*7.0+seed*9.0)))-0.5;
     p += w*0.075*low*low;
   }
-  float T = 0.0, cur = 0.0, part = -1.0, sd = 1e3, robeK = 0.0, robeU = 0.0, sm = 0.016;
+  float T = 0.0, cur = 0.0, part = -1.0, sd = 1e3, robeK = 0.0, robeU = 0.0, sm = 0.016, wsd = 0.0;
   vec2 g = vec2(0.0, 1.0);
   for(int i=0;i<n;i++){
     vec4 s0 = texelFetch(uSeg, ivec2(3*i, row), 0);
@@ -143,6 +143,7 @@ void main(){
     float hh = clamp(0.5+0.5*(sd-di)/sm, 0.0, 1.0);
     sd = mix(sd, di, hh)-sm*hh*(1.0-hh);
     g = mix(g, q/max(dist,1e-5), hh);
+    wsd = mix(wsd, w, hh);
   }
   T += cur;
   if(T<=0.0 && sd>0.004){ o = vec4(0.0); return; }
@@ -158,23 +159,27 @@ void main(){
   float body = 1.0-exp(-T*uDens);
   // the warm core: heart and head
   vec2 dh = vP-fPts.xy, dd = vP-fPts.zw;
-  float heart = exp(-dot(dh,dh)/(2.0*0.062*0.062));
-  float headg = exp(-dot(dd,dd)/(2.0*0.040*0.040));
+  float heart = exp(-dot(dh,dh)/(2.0*0.070*0.070));
+  float headg = exp(-dot(dd,dd)/(2.0*0.042*0.042));
   float core = heart + headg*fPar.w;
   // the rim of light on the side that faces the light (all round when the light stands behind the figure)
   vec2 nrm = normalize(g+vec2(1e-6));
   vec2 ld = normalize(fLight.xy-vP);
   float fac = max(dot(nrm, ld), 0.0);
   fac = mix(fac*sqrt(fac), 1.0, fLight.z);
-  float w0 = max(1.4*px, 0.0030);
-  float edge = exp(-pow((sd+w0*0.9)/w0, 2.0));
-  float inner = exp(min(sd, 0.0)/0.030)*step(sd, 0.0);
-  float up = mix(1.0, smoothstep(0.06, 0.34, vP.y), step(0.001, mistK));   // no rim on the mist
-  float rim = (edge + inner*0.20)*fac*up*fLight.w;
+  float w0 = max(2.0*px, 0.0038);
+  float edge = exp(-pow((sd+w0*0.8)/w0, 2.0));
+  float inner = exp(min(sd, 0.0)/0.034)*step(sd, 0.0);
+  float up = mix(1.0, smoothstep(0.10, 0.46, vP.y), step(0.001, mistK));   // no rim on the mist
+  float wav = 0.60+0.40*vnoise(vec2(vP.x*13.0+seed*7.0, vP.y*13.0-uT*0.30));   // it wanders, it is not a wire
+  float rim = (edge*wav + inner*0.22)*fac*up*fLight.w*smoothstep(0.10, 0.50, wsd);
   // a held flame or an offered light warms what is near it
   vec2 df = vP-fFx.xy;
   float fl = fFx.z*exp(-dot(df,df)/(2.0*0.105*0.105));
-  vec3 c = mix(uMist, fColA.rgb, smoothstep(0.05, 0.55, body))*body*0.52;
+  // warm at the heart, cooler toward the hem and at the thin edges
+  float hemK = 1.0-smoothstep(0.04, 0.60, vP.y);
+  vec3 tone = mix(fColA.rgb, uMist, hemK*0.60*step(0.001, mistK));
+  vec3 c = mix(uMist, tone, smoothstep(0.04, 0.50, body))*body*uGain*(1.0-0.55*uDay);
   c += fColB.rgb*core*body*fColB.a;
   c += uLightCol*rim;
   c += uFlameCol*fl*(body*1.25 + edge*up*0.9);
@@ -198,31 +203,35 @@ void main(){ vUV = aUV; vK = aK; vCol = aCol; gl_Position = vec4(aPos*2.0-1.0, 0
 # vK: alpha, fold density, number of threads, kind (0 a sheet of threads, 1 a single streamline)
 CLOTH_FS = "#version 330\n" + G.NOISE + """
 in vec2 vUV; in vec4 vK; in vec3 vCol;
-uniform float uT;
+uniform float uT, uDay;
 out vec4 o;
 void main(){
   float I;
-  if(vK.w>0.5){
+  if(vK.w>0.5 && vK.w<1.5){
     I = vK.x*exp(-vUV.x*vUV.x*3.2);
   } else {
     float fu = vUV.x*vK.z;
     float id = floor(fu), f = fract(fu)-0.5;
     float h = hash11(id*1.37+3.1);
-    float aa = fwidth(fu)*1.1;
-    float lw = 0.13+0.17*h;
-    float line = smoothstep(lw+aa, lw-aa, abs(f))*(0.25+0.75*h);
-    line *= 0.55+0.45*sin(vUV.y*8.0-uT*1.1+h*40.0);
-    line = mix(line, 0.26, smoothstep(0.35, 1.2, aa));       // far away the threads melt into one sheet
+    float aa = fwidth(fu);
+    float lw = 0.16+0.16*h;
+    float line = exp(-pow(f/max(lw, aa*0.9), 2.0))*(0.30+0.70*h);
+    line *= 0.60+0.40*sin(vUV.y*8.0-uT*1.1+h*40.0);
+    line = mix(line, 0.30, smoothstep(0.30, 0.90, aa));      // far away the threads melt into one sheet
     // folds: bands of sheen that run down the cloth and wander as it billows
-    float fold = 0.5+0.5*sin(vUV.x*17.0+2.6*vnoise(vec2(vUV.x*3.0+uT*0.16, vUV.y*2.2-uT*0.21))*6.283);
-    fold = fold*fold*fold;
+    float fold = 0.5+0.5*sin(vUV.x*15.0+2.4*vnoise(vec2(vUV.x*3.0+uT*0.16, vUV.y*2.2-uT*0.21))*6.283);
+    fold = fold*fold;
     float side = min(vUV.x, 1.0-vUV.x);
-    float sel = exp(-pow(side/0.016, 2.0));
-    float hem = exp(-pow((1.0-vUV.y)/0.022, 2.0))*smoothstep(0.0, 0.08, side);
+    float du = max(fwidth(vUV.x)*1.6, 0.012), dv = max(fwidth(vUV.y)*1.6, 0.016);
     float tip = 1.0-smoothstep(0.62, 1.0, vUV.y);
-    I = vK.x*vK.y*((0.16+0.62*line+0.42*fold)*(0.30+0.70*tip) + 0.50*sel*(0.4+0.6*tip) + 0.55*hem);
+    float sel = exp(-pow(side/du, 2.0));
+    float hem = exp(-pow((1.0-vUV.y)/dv, 2.0))*smoothstep(0.0, 0.10, side);
+    float body = (0.20+0.42*line+0.40*fold)*(0.30+0.70*tip);
+    if(vK.w>1.5) I = vK.x*vK.y*body*smoothstep(0.0, 0.22, side);     // the lower robe: no edges, only threads
+    else I = vK.x*vK.y*(body + 0.42*sel*(0.35+0.65*tip) + 0.50*hem);
   }
-  o = vec4(vCol*I, I*0.30);
+  I *= 1.0-0.40*uDay;
+  o = vec4(vCol*I, I*0.35);
 }
 """
 
@@ -318,7 +327,7 @@ def _leg_at(legs, side, y):
     return np.where(f < 0.5, H + (K - H) * (2 * f), K + (A_ - K) * (2 * f - 1))
 
 
-def robe_at(J, F, lag, v, hem=0.035):
+def robe_at(J, F, lag, v, hem=0.035, k=1.0):
     """Centre (N,2) and half width (N,) of the robe at the share v of the way from the hip (0) to the hem (1)."""
     hip = J["hip"]
     y = hip[:, 1] + (hem - hip[:, 1]) * v
@@ -330,7 +339,7 @@ def robe_at(J, F, lag, v, hem=0.035):
     half = 0.5 * np.abs(F.pt(a)[:, 0] - F.pt(b)[:, 0])
     rx = np.interp(v, [0.0, 0.33, 0.66, 1.0], [0.047, 0.055, 0.066, 0.090])
     rz = np.interp(v, [0.0, 0.33, 0.66, 1.0], [0.062, 0.069, 0.082, 0.106])
-    return c2, F.rad(rx, rz) + np.minimum(0.50 * half, 0.05)
+    return c2, F.rad(rx * k, rz * k) + np.minimum(0.50 * half, 0.05)
 
 
 def hand_dir(d2):
@@ -354,49 +363,62 @@ def person_segments(J, F, lag, veil=False, full=True, wide=1.0, head_r=0.052):
     k = wide
     ush = chest + (neck - chest) * 0.62
     waist = hip + (chest - hip) * 0.34
-    r_ush, r_ch, r_wa, r_hip = (F.rad(0.034 * k, 0.050 * k), F.rad(0.045 * k, 0.062 * k),
-                                F.rad(0.036 * k, 0.047 * k), F.rad(0.047 * k, 0.062 * k))
+    if full:
+        r_ush, r_ch, r_wa, r_hip = (F.rad(0.034 * k, 0.050 * k), F.rad(0.045 * k, 0.062 * k),
+                                    F.rad(0.036 * k, 0.047 * k), F.rad(0.047 * k, 0.062 * k))
+        sa, sb = arms[1.0][0], arms[-1.0][0]
+    else:
+        # a crowd wears cloaks: one soft bell from the shoulders down, the hanging arms inside it
+        r_ush, r_ch, r_hip = F.rad(0.040 * k, 0.062 * k), F.rad(0.050 * k, 0.082 * k), F.rad(0.054 * k, 0.090 * k)
+        mid = 0.5 * (arms[1.0][0] + arms[-1.0][0])
+        sa, sb = mid + (arms[1.0][0] - mid) * 0.70, mid + (arms[-1.0][0] - mid) * 0.70
     # part 0: neck, shoulders, torso and robe, one flowing shape
     add(F.pt(neck + (head - neck) * 0.50), F.pt(neck), 0.0185, 0.0215, 1.0, 1.0, 0)
     add(F.pt(neck), F.pt(ush), 0.022, r_ush, 1.0, 1.0, 0)
-    add(F.pt(arms[1.0][0]), F.pt(arms[-1.0][0]), 0.0245, 0.0245, 1.0, 1.0, 0)
+    add(F.pt(sa), F.pt(sb), 0.0245, 0.0245, 1.0, 1.0, 0)
     if full:
         add(F.pt(ush), F.pt(chest), r_ush, r_ch, 1.0, 1.0, 0)
         add(F.pt(chest), F.pt(waist), r_ch, r_wa, 1.0, 0.95, 0)
         add(F.pt(waist), F.pt(hip), r_wa, r_hip, 0.95, 0.86, 0)
-        vs, ws = (0.0, 0.33, 0.66, 1.0), (0.86, 0.66, 0.40, 0.12)
+        vs, ws, kr = (0.0, 0.33, 0.66, 1.0), (0.86, 0.66, 0.40, 0.12), k
     else:
         add(F.pt(ush), F.pt(chest), r_ush, r_ch, 1.0, 1.0, 0)
-        add(F.pt(chest), F.pt(hip), r_ch, r_hip, 1.0, 0.86, 0)
-        vs, ws = (0.0, 0.5, 1.0), (0.86, 0.52, 0.12)
+        add(F.pt(chest), F.pt(hip), r_ch, r_hip, 1.0, 0.88, 0)
+        vs, ws, kr = (0.0, 0.5, 1.0), (0.88, 0.56, 0.14), k * 1.30
     prev = (F.pt(hip), r_hip)
     for v, w0, w1 in zip(vs[1:], ws[:-1], ws[1:]):
-        c2, r = robe_at(J, F, lag, v)
-        add(prev[0], c2, prev[1], r * k, w0, w1, 0, 1.0)
-        prev = (c2, r * k)
-    # part 1: the head, a soft glow under hair or a veil (no face)
+        c2, r = robe_at(J, F, lag, v, k=kr)
+        add(prev[0], c2, prev[1], r, w0, w1, 0, 1.0)
+        prev = (c2, r)
+    # part 1: the head, a soft oval glow under hair or a veil (no face)
     up = np.array([0.0, 1.0, 0.0])
-    add(F.pt(head - up * 0.009), F.pt(head + up * 0.011), head_r * 0.97, head_r * 0.93, 1.25, 1.25, 1, 2.0)
+    add(F.pt(head - up * 0.015), F.pt(head + up * 0.016), head_r * 0.90, head_r * 0.86, 1.25, 1.25, 1, 2.0)
     if veil:
-        add(F.pt(head + np.array([-0.006, 0.016, 0.0])), F.pt(ush + np.array([-0.022, -0.012, 0.0])),
-            head_r + 0.004, F.rad(0.050, 0.088), 0.80, 0.50, 1, 2.0)
+        add(F.pt(head + np.array([-0.006, 0.018, 0.0])), F.pt(ush + np.array([-0.022, -0.012, 0.0])),
+            head_r + 0.002, F.rad(0.050, 0.088), 0.80, 0.50, 1, 2.0)
     else:
-        add(F.pt(head + np.array([-0.015, 0.004, 0.0])), F.pt(neck + np.array([-0.030, -0.034, 0.0])),
-            head_r * 0.90, 0.026, 0.95, 0.50, 1, 2.0)
+        add(F.pt(head + np.array([-0.015, 0.006, 0.0])), F.pt(neck + np.array([-0.030, -0.034, 0.0])),
+            head_r * 0.88, 0.026, 0.95, 0.50, 1, 2.0)
     # parts 2 and 3: the arms, the bell of each sleeve and the hands
     for part, side in ((2, 1.0), (3, -1.0)):
         S0, E, W, d2 = arms[side]
-        add(F.pt(S0), F.pt(E), 0.0225, 0.0195, 0.9, 0.9, part, 3.0)
-        add(F.pt(E), F.pt(W), 0.0195, 0.0160, 0.9, 0.9, part, 3.0)
         hd = hand_dir(d2)
         if full:
+            add(F.pt(S0), F.pt(E), 0.0225, 0.0195, 0.9, 0.9, part, 3.0)
+            add(F.pt(E), F.pt(W), 0.0195, 0.0160, 0.9, 0.9, part, 3.0)
             add(F.pt(E + (W - E) * 0.12), F.pt(W - d2 * 0.006), 0.024, 0.037, 0.36, 0.46, part, 3.0)
             add(F.pt(W), F.pt(W + hd * 0.034), 0.0150, 0.0140, 1.0, 1.0, part, 3.0)
             add(F.pt(W + hd * 0.030), F.pt(W + hd * 0.072), 0.0128, 0.0062, 1.0, 0.9, part, 3.0)
             td = _n3(hd * 0.6 + np.array([0.5, 0.35, 0.0]))
             add(F.pt(W + hd * 0.014), F.pt(W + hd * 0.014 + td * 0.030), 0.0075, 0.0050, 0.9, 0.8, part, 3.0)
         else:
-            add(F.pt(W), F.pt(W + hd * 0.045), 0.0170, 0.0110, 1.0, 1.0, part, 3.0)
+            # an arm shows only when it reaches, holds or lifts; hanging, it is inside the cloak
+            rf = 1.0 + d2[:, 1]
+            ru = np.maximum(1.0 + _n3(E - S0)[:, 1], 0.7 * rf)
+            wu, wf = 0.12 + 0.88 * ss(0.12, 0.55, ru), 0.12 + 0.88 * ss(0.12, 0.55, rf)
+            add(F.pt(S0), F.pt(E), 0.0235, 0.0210, 0.9 * wu, 0.9 * wf, part, 3.0)
+            add(F.pt(E), F.pt(W), 0.0210, 0.0180, 0.9 * wf, 0.9 * wf, part, 3.0)
+            add(F.pt(W), F.pt(W + hd * 0.045), 0.0180, 0.0115, wf, wf, part, 3.0)
     out = np.zeros((N, len(segs), 12), np.float32)
     for i, (A_, B_, ra, rb, wa, wb, part, kind) in enumerate(segs):
         out[:, i, 0:2], out[:, i, 2:4] = A_, B_
@@ -428,8 +450,8 @@ def hands_segments(J):
         add(t1, t2, 0.0170, 0.0125, 1.0, 1.0, part)
         # the sleeve: wide at the wrist, fading out below
         el = h["elbow"]
-        add(el, W - up * 0.02, 0.058, 0.070, 0.0, 0.62, part + 1)
-        add(el + (W - el) * 0.35, W + up * 0.005, 0.024, 0.030, 0.25, 0.9, part + 1)
+        add(el + (W - el) * 0.22, W - up * 0.015, 0.034, 0.074, 0.0, 0.50, part + 1)
+        add(el + (W - el) * 0.45, W + up * 0.005, 0.022, 0.030, 0.08, 0.85, part + 1)
     out = np.zeros((1, len(segs), 12), np.float32)
     for i, (A_, B_, ra, rb, wa, wb, part) in enumerate(segs):
         out[0, i, 0:2], out[0, i, 2:4] = A_, B_
@@ -502,12 +524,12 @@ class Cloth:
         n_str = int(opt(m, "strands", 27))
         spec = []
         if self.veil:
-            spec.append(("veil", 11, 13, dict(g=1.5, km=3.2, kw=2.2, lines=64, alpha=0.60)))
-        spec.append(("sleeve_r", 6, 8, dict(g=2.0, km=3.0, kw=1.4, lines=28, alpha=0.52)))
-        spec.append(("sleeve_l", 6, 8, dict(g=2.0, km=3.0, kw=1.4, lines=28, alpha=0.52)))
-        spec.append(("hem", 9, 9, dict(g=2.2, km=3.5, kw=1.2, lines=54, alpha=0.46)))
+            spec.append(("veil", 11, 13, dict(g=1.5, km=3.2, kw=2.2, lines=44, alpha=0.50)))
+        spec.append(("sleeve_r", 6, 8, dict(g=2.0, km=3.0, kw=1.4, lines=20, alpha=0.44)))
+        spec.append(("sleeve_l", 6, 8, dict(g=2.0, km=3.0, kw=1.4, lines=20, alpha=0.44)))
+        spec.append(("hem", 9, 9, dict(g=2.6, km=3.0, kw=0.9, lines=40, alpha=0.42)))
         if n_str > 0:
-            spec.append(("strand", n_str, 14, dict(g=0.9, km=3.6, kw=1.5, lines=0, alpha=0.9)))
+            spec.append(("strand", n_str, 14, dict(g=0.9, km=3.6, kw=1.5, lines=0, alpha=0.62)))
         for name, M, Kg, par in spec:
             self.groups.append(dict(name=name, c0=C, M=M, K=Kg, **par))
             C += M
@@ -1003,11 +1025,11 @@ class FigureLook:
             self.add_bodies(
                 segs, n, rect, org[None, :], scale[None, :],
                 np.array([[col[0], col[1], col[2], alpha]]),
-                np.array([[core[0], core[1], core[2], float(opt(m, "core_gain", 1.0)) * breath]]),
+                np.array([[core[0], core[1], core[2], float(opt(m, "core_glow", 0.60)) * breath]]),
                 np.array([[heart[0, 0], heart[0, 1], head[0, 0], head[0, 1]]]),
                 np.array([[ll[0], ll[1], back, rimk]]),
                 np.array([[0.0, 0.0, 0.0, reveal]]),
-                np.array([[detail, tint, float(opt(m, "mist", 1.0)), float(opt(m, "head_glow", 0.9))]]),
+                np.array([[detail, tint, float(opt(m, "mist", 1.0)), float(opt(m, "head_glow", 0.70))]]),
                 np.array([px]), np.array([(sr.seed + 0.31 * bi) % 1.0]), mirror)
             cl = sr.cloth[bi]
             if cl is not None and alpha > 0.003:
@@ -1075,15 +1097,21 @@ class FigureLook:
                 Ps = catmull(Pg, f)                                  # (M, n, 2)
                 n = Ps.shape[1]
                 s = np.linspace(0, 1, n)[None, :]
+                sd = gr["seed"]
+                # a fine waviness, growing toward the free end
+                tl = np.gradient(Ps, axis=1)
+                tl /= np.maximum(np.linalg.norm(tl, axis=2, keepdims=True), 1e-6)
+                wv = (np.sin(s * (7.0 + 6.0 * sd[:, :1]) + sd[:, 1:2] * 40.0 - t * (0.7 + 0.8 * sd[:, 2:3]))
+                      + 0.5 * np.sin(s * (15.0 + 9.0 * sd[:, 1:2]) + sd[:, :1] * 70.0 + t * 1.3))
+                Ps = Ps + np.stack([-tl[..., 1], tl[..., 0]], 2) * (0.011 * wv * s ** 1.3)[..., None]
                 scr = org[None, None, :] + Ps * scale[None, None, :]
                 pxy = scr * np.array([W_, H_])
                 tg = np.gradient(pxy, axis=1)
                 tg /= np.maximum(np.linalg.norm(tg, axis=2, keepdims=True), 1e-6)
                 nr = np.stack([-tg[..., 1], tg[..., 0]], 2)
-                sd = gr["seed"]
-                wpx = (1.25 + 1.1 * (1 - s) * sd[:, 2:3]) * max(self.R.px, 0.5) * (0.7 + 0.3 * min(hpx / 400.0, 1.5))
-                a = ca * gr["alpha"] * (0.35 + 0.65 * sd[:, 1:2]) * ss(0.0, 0.07, s) * (1 - s) ** 1.25
-                a = a * reveal_k(Ps) * (0.75 + 0.25 * np.sin(s * 9.0 - t * 1.4 + sd[:, :1] * 40.0))
+                wpx = (1.0 + 0.8 * (1 - s) * sd[:, 2:3]) * max(self.R.px, 0.5) * (0.75 + 0.25 * min(hpx / 400.0, 1.6))
+                a = ca * gr["alpha"] * (0.25 + 0.75 * sd[:, 1:2] ** 1.5) * ss(0.0, 0.16, s) * (1 - s) ** 1.2
+                a = a * reveal_k(Ps) * (0.70 + 0.30 * np.sin(s * 9.0 - t * 1.4 + sd[:, :1] * 40.0))
                 off = nr * wpx[..., None] / np.array([W_, H_])
                 va = np.concatenate([scr - off, np.broadcast_to(-1.0, (M, n, 1)), np.broadcast_to(s[..., None], (M, n, 1)),
                                      a[..., None], np.ones((M, n, 1)), np.zeros((M, n, 1)), np.ones((M, n, 1))], 2)
@@ -1112,7 +1140,9 @@ class FigureLook:
                 lines = gr["lines"] * (0.6 + 0.4 * min(hpx / 420.0, 1.6))
                 vert = np.concatenate([scr, np.broadcast_to(u[..., None], (Mu, n, 1)),
                                        np.broadcast_to(v[..., None], (Mu, n, 1)), a[..., None], fold[..., None],
-                                       np.full((Mu, n, 1), lines), np.zeros((Mu, n, 1))], 2).reshape(Mu * n, 8)
+                                       np.full((Mu, n, 1), lines),
+                                       np.full((Mu, n, 1), 2.0 if gr["name"] == "hem" else 0.0)],
+                                      2).reshape(Mu * n, 8)
                 tri = vert[grid_tris(Mu, n)]
                 c3 = np.broadcast_to(ccol[None, :], (len(tri), 3))
                 out.append(np.concatenate([tri, c3], 1))
@@ -1238,7 +1268,7 @@ class FigureLook:
         sgn = c.fw
         F = Frame2D(J["cy"], J["sy"], sgn, np.zeros(N))
         Jc = dict(hip=J["hip"], chest=J["chest"], neck=J["neck"], head=J["head"], legs=J["legs"], arms=J["arms"])
-        segs, heart, head = person_segments(Jc, F, J["lag"], veil=False, full=False, wide=1.0)
+        segs, heart, head = person_segments(Jc, F, J["lag"], veil=False, full=False, wide=1.0, head_r=0.056)
         n = segs.shape[1]
         rect = seg_rect(segs, pad=0.02)
         asp = S.ASPECT
@@ -1256,11 +1286,11 @@ class FigureLook:
         glow = float(m.get("glow", 1.0))
         # those who wait are cooler and dimmer; the flame warms each one it reaches
         cool = _lin(opt(m, "unlit", "#9fb4ff"))
-        dim = float(opt(m, "unlit_glow", 0.50)) if c.has_pass else 1.0
-        col = c.col * lit[:, None] + (c.col * 0.35 + cool * 0.65) * (1 - lit)[:, None]
+        dim = float(opt(m, "unlit_glow", 0.42)) if c.has_pass else 1.0
+        col = c.col * lit[:, None] + (c.col * 0.30 + cool * 0.70) * (1 - lit)[:, None]
         al = alive * c.bright * glow * (dim + (1.0 - dim) * lit)
         core = _lin(opt(m, "core", "#fff3dc"))
-        coreg = float(opt(m, "core_gain", 1.0)) * (0.35 + 0.65 * lit)
+        coreg = float(opt(m, "core_glow", 0.60)) * (0.30 + 0.70 * lit)
         fxp = np.zeros((N, 4))
         fxp[:, 3] = 99.0
         flames = []
@@ -1272,6 +1302,7 @@ class FigureLook:
             fxp[:, 1] = (fy_ - c.fy) / c.h
             fxp[:, 2] = held * ss(0.0, 0.5, t - c.Tr) * (1 - 0.6 * risen) * float(opt(m, "flame_light", 1.0))
             flames = c._flames(t, J, alive)
+            cand = fxp[:, 2] * alive * (1 - 0.25 * c.r)
         rimk = float(opt(m, "rim", 1.0)) * (0.55 + 0.45 * lit)
         tint = float(opt(m, "day_tint", 1.0))
         wl = None
@@ -1281,6 +1312,19 @@ class FigureLook:
         if r:
             hz = zz * S.HORIZON + aff[2]
             wl = np.minimum(zz * (c.fy - 0.003) + aff[2], hz)
+        mir = None if wl is None else 1.0 / 1.22
+        if c.has_pass and (cand > 0.01).any():
+            # each held light: a small bright point at the chest, like a candle (it rises when they lift it)
+            i = np.nonzero(cand > 0.01)[0]
+            sc = np.sqrt(hpx[i] / 140.0)
+            sx, sy = zz * fx_[i] + aff[1], zz * fy_[i] + aff[2]
+            fcol = _lin(opt(m, "flame", "#ffd08a"))
+            fk = 0.85 + 0.15 * np.sin(t * 11.0 + c.ph[i] * 40.0) * np.sin(t * 6.3 + c.ph[i] * 17.0)
+            rows = [np.column_stack([sx, sy, 6.5 * sc, np.full(len(i), 2.2),
+                                     _lin("#fff8ea")[None, :] * (2.2 * cand[i] * fk)[:, None]]),
+                    np.column_stack([sx, sy, 22.0 * sc, np.full(len(i), 3.0),
+                                     fcol[None, :] * (0.85 * cand[i] * fk)[:, None]])]
+            self.add_points(np.vstack(rows), None if wl is None else (np.tile(wl[i], 2), mir))
         keep = al > 0.004
         if keep.any():
             k = np.nonzero(keep)[0][:ROWS // 2 - 16]
@@ -1293,7 +1337,7 @@ class FigureLook:
                 fxp[k],
                 np.column_stack([ss(110.0, 380.0, hpx[k]), np.full(len(k), tint),
                                  np.full(len(k), float(opt(m, "mist", 1.0))),
-                                 np.full(len(k), float(opt(m, "head_glow", 1.1)))]),
+                                 np.full(len(k), float(opt(m, "head_glow", 0.95)))]),
                 px[k], c.ph[k], None if wl is None else (wl[k], 1.0 / 1.22))
         return np.vstack(flames).astype("f4") if flames else np.zeros((0, 7), "f4")
 
@@ -1305,6 +1349,12 @@ class FigureLook:
         self._reset()
         self.P = P
         self.lcol = _lin("#fff6e6")
+        # how bright the sky is (0 night, about 0.4 dawn, 1 the bright day): light adds little on a bright sky,
+        # so there the bodies glow less and carry the composite's cool tint instead
+        lum = [float(np.dot(np.asarray(P[k_], dtype=np.float64), [0.2126, 0.7152, 0.0722]))
+               for k_ in ("sky_hor", "sky_mid", "sky_top")]
+        d = opt(None, "daylight", None)
+        self.day = _ssf(0.08, 0.50, 0.25 * lum[0] + 0.35 * lum[1] + 0.40 * lum[2]) if d is None else _f(d, t)
 
     def _run(self, fbo, inst, cloth, pts, t, pxk):
         ctx = self.ctx
@@ -1317,10 +1367,11 @@ class FigureLook:
             p = self.p_body
             p["uSeg"].value = 0
             for k_, v_ in (("uT", float(t)), ("uSoft", float(opt(None, "soft", 1.15))),
-                           ("uDens", float(opt(None, "density", 2.3)))):
+                           ("uDens", float(opt(None, "density", 1.6))), ("uGain", float(opt(None, "body_glow", 0.34))),
+                           ("uDay", float(self.day))):
                 if k_ in p:
                     p[k_].value = v_
-            for k_, v_ in (("uMist", self.mist), ("uLightCol", self.lcol * float(opt(None, "rim_glow", 1.5))),
+            for k_, v_ in (("uMist", self.mist), ("uLightCol", self.lcol * float(opt(None, "rim_glow", 0.9))),
                            ("uFlameCol", self.flame)):
                 if k_ in p:
                     p[k_].value = tuple(float(x) for x in v_)
@@ -1335,6 +1386,8 @@ class FigureLook:
             self.b_cloth.write(data.tobytes())
             if "uT" in self.p_cloth:
                 self.p_cloth["uT"].value = float(t)
+            if "uDay" in self.p_cloth:
+                self.p_cloth["uDay"].value = float(self.day)
             self.gl["cloth"].render(moderngl.TRIANGLES, vertices=len(data))
         if pts:
             data = np.vstack(pts)
@@ -1356,7 +1409,11 @@ class FigureLook:
         ctx, R = self.ctx, self.R
         sky_mid = np.asarray(P["sky_mid"], dtype=np.float64)
         mist = opt(None, "mist_color", None)
-        self.mist = _lin(mist) if mist is not None else (_lin("#b9a8ff") * 0.55 + sky_mid * 0.9 + 0.02)
+        if mist is not None:
+            self.mist = _lin(mist)
+        else:   # violet under a night sky, pale and neutral in the day
+            self.mist = (_lin("#b9a8ff") * 0.55 + sky_mid * 0.9 + 0.02) * (1 - self.day) + \
+                _lin("#e6e2f4") * 0.62 * self.day
         self.flame = _lin(opt(None, "flame", "#ffd08a"))
         # the cones of every body, one row each
         rows = self.q_seg[:ROWS]
@@ -1385,7 +1442,7 @@ class FigureLook:
         calm = float(calm(t)) if callable(calm) else float(calm or 0.0)
         for k_, v_ in (("uT", float(t)), ("uAspect", float(S.ASPECT)), ("uWL", wl),
                        ("uRefl", float(opt(None, "reflect_glow", 0.62))), ("uCalm", calm), ("uCalmY", 0.335),
-                       ("uKnee", float(opt(None, "knee", 3.0)))):
+                       ("uKnee", float(opt(None, "knee", 1.8)))):
             if k_ in p:
                 p[k_].value = v_
         p["uFig"].value = 0
@@ -1407,10 +1464,10 @@ class FigureLook:
             return
         self.t_fig.use(location=FIG_UNIT)
         prog["uFigT"].value = FIG_UNIT
-        prog["uFigK"].value = float(opt(None, "day_tint_strength", 0.55))
-        c = _lin(opt(None, "day_tint_color", "#8fa6ff"))
+        prog["uFigK"].value = float(opt(None, "day_tint_strength", 0.85))
+        c = _lin(opt(None, "day_tint_color", "#b8b4ff"))
         lum = float(np.dot(c, [0.2126, 0.7152, 0.0722]))
-        c = c / max(lum, 1e-6) * float(opt(None, "day_tint_level", 0.90))
+        c = c / max(lum, 1e-6) * float(opt(None, "day_tint_level", 0.86))
         if "uFigTint" in prog:
             prog["uFigTint"].value = tuple(float(x) for x in c)
         if "uFigGate" in prog:
