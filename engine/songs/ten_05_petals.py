@@ -94,6 +94,7 @@ WIDE = 37.60                      # the gale calms: up over the whole meadow
 HELP = 43.00                      # the elder rises (pairs.helped_up), on the heels of the biggest hit
 TWIRL = 46.20                     # the girl begins to twirl
 CLIMB = 51.30                     # the climb past the nine boughs
+DATE_FORM = 39.40                 # "December 6" forms in the sky as the gale calms; it bursts on the biggest hit
 
 # ---- the end card (the standard end card: coral title by a ribbon, navy lines rising)
 FORM_DUR = 2.5
@@ -109,12 +110,14 @@ TAGLINE = dict(text="Sunday, December 6 · 4:30 PM\nWorld Mission Society Church
 FRAGMENTS = []
 _base.TITLE, _base.TAGLINE = TITLE, TAGLINE
 
-# ---- title and date (UPDATE 7; drawn by the engine's TITLES when it lands on engine-p3d-words). This film is
-# bright day: navy with gold accents, except the signature over the violet gale.
+# ---- title and date (UPDATE 7 and 11, engine/titles.py, HOWTO Y): the opening over the dawn sky, the signature
+# in three calm stretches, the date in light in the breath, the end card from 55 s on a bright cream sky. Navy
+# "day" palette on bright skies; "night" over the deep lake and the violet gale.
 TITLES = dict(
-    opening=dict(t_end=3.0, y=0.20, palette="day"),
-    signature=dict(windows=[(32.35, 33.45, "tr", "day"), (38.55, 40.05, "br", "night")]),
-    date_light=dict(t_form=S7, t_burst=BIG, y=0.30, palette="day"),
+    opening=dict(t_end=3.2, y=0.28, palette="day"),
+    signature=dict(windows=[(12.0, 13.9, "tl", "night"), (31.9, 33.6, "tl", "day"), (37.9, 39.3, "br", "night")]),
+    date_light=dict(t_form=DATE_FORM, t_burst=BIG, y=0.30, palette="day"),
+    end_card=dict(t_in=55.0),
 )
 
 
@@ -296,30 +299,37 @@ WIND = Wind(base=(2.0, 0.25, -0.6), gusts=[(t, 3.2, 1.4) for t in (HIT0, WHIP1, 
 
 _GRAT_EM = PW.em_for(_LAYOUT, 10.5, 10.4, 90)        # flat on the lake page, read from the +z side
 
-INK = dict(Greeting="#c23e28", Apology="#a8500e", Inclusiveness="#b0225f", Respect="#8a452f",
-           Consideration="#a3203f", Compliment="#6a3fc0")
+WEB = dict(Greeting="#EA5A5E", Gratitude="#F2B25E", Apology="#F6CE46", Inclusiveness="#5ABA5A",
+           Concession="#62B2FA", Respect="#667AF6", Encouragement="#9E6AF6", Consideration="#EE62A6",
+           Compliment="#364E96")          # the expression colours of the website (UPDATE 9)
+INK = dict(Greeting="#c2333a", Apology="#9a6c00", Inclusiveness="#2c7d2e", Respect="#3446c2",
+           Consideration="#b42a72", Compliment="#364E96")      # deep shades for painted letters on bright skies
 
 _SPECS = [
     _w("Greeting", 0.52, 0.62, 7.0, 104, 1.5, 3.5, 6.3, 7.1, arrive="petals",
        source=lambda t: BODIES["giver"].where(t, "lips") if "giver" in BODIES else np.zeros(3),
-       leave="petals", wind=(1.0, 0.35, -0.2), paint=INK["Greeting"]),
+       leave="petals", wind=(1.0, 0.35, -0.2), paint=INK["Greeting"], color=WEB["Greeting"]),
     dict(expr="Gratitude", pos=(float(B[0]), 0.04, float(B[2])), em=_GRAT_EM, face="flat", facing=0.0,
-         t_in=7.6, t_read0=9.0, t_read1=11.9, t_out=12.7, arrive="petals",
-         source=(float(B[0]), 2.0, float(B[2]) + 4.5), leave="petals", wind=(0.8, 0.9, -0.3)),
+         t_in=7.6, t_read0=8.9, t_read1=11.5, t_out=12.1, arrive="petals",
+         source=(float(B[0]), 2.0, float(B[2]) + 4.5), leave="petals", wind=(0.8, 0.9, -0.3),
+         color=WEB["Gratitude"], glow=WEB["Gratitude"]),
     _w("Apology", 0.46, 0.57, 6.4, 92, 14.4, 15.4, 18.1, 18.2, arrive="petals", source=_palm("friend_m", "R"),
-       leave="morph", paint=INK["Apology"]),
+       leave="morph", paint=INK["Apology"], color=WEB["Apology"]),
     _w("Inclusiveness", 0.44, 0.58, 7.8, 100, TOUCH, S4 + 0.25, GUST2, 23.5, arrive="morph", source="Apology",
-       leave="petals", wind=(1.0, 0.4, -0.3), paint=INK["Inclusiveness"]),
+       leave="petals", wind=(1.0, 0.4, -0.3), paint=INK["Inclusiveness"], color=WEB["Inclusiveness"]),
     _w("Concession", 0.52, 0.63, 9.5, 104, 23.3, 24.2, S5 - 0.07, 27.5, arrive="petals",
-       source=_palm("yielder", "R"), leave="wind", wind=(1.0, 0.2, -0.4)),
-    _w("Respect", 0.52, 0.70, 3.6, 92, 28.0, 29.0, 31.7, 32.3, arrive="palm", source=_palm("speaker", "R"),
-       leave="petals", wind=(1.0, 0.5, -0.2), paint=INK["Respect"]),
-    _w("Encouragement", 0.52, 0.66, 6.2, 92, 33.7, 34.6, 37.4, 38.2, arrive="petals",
-       source=lambda t: F(0.0, 0.0, 6.0), leave="petals", wind=(-0.4, 0.9, 0.2)),
+       source=_palm("yielder", "R"), leave="wind", wind=(1.0, 0.2, -0.4), color=WEB["Concession"],
+       glow=WEB["Concession"]),
+    _w("Respect", 0.52, 0.70, 3.6, 92, 28.0, 28.9, 31.5, 32.1, arrive="petals",
+       source=lambda t: BODIES["speaker"].where(t, "lips") if "speaker" in BODIES else np.zeros(3),
+       leave="petals", wind=(1.0, 0.5, -0.2), paint=INK["Respect"], color=WEB["Respect"]),
+    _w("Encouragement", 0.52, 0.66, 6.2, 92, 33.7, 34.6, 37.2, 37.9, arrive="petals",
+       source=lambda t: F(0.0, 0.0, 6.0), leave="petals", wind=(-0.4, 0.9, 0.2), color=WEB["Encouragement"],
+       glow=WEB["Encouragement"]),
     _w("Consideration", 0.53, 0.63, 6.4, 102, 42.6, 43.5, 45.9, 46.0, arrive="palm", source=_palm("helper", "R"),
-       leave="morph", paint=INK["Consideration"]),
+       leave="morph", paint=INK["Consideration"], color=WEB["Consideration"]),
     _w("Compliment", 0.55, 0.64, 6.6, 104, 46.0, 46.8, 49.3, 50.1, arrive="morph", source="Consideration",
-       leave="petals", wind=(-0.6, 0.8, 0.5), paint=INK["Compliment"]),
+       leave="petals", wind=(-0.6, 0.8, 0.5), paint=INK["Compliment"], color=WEB["Compliment"]),
 ]
 WORDS = PW.Words(_SPECS, face="camera", camera=_LAYOUT, tint=0.6, bright=1.25)
 
@@ -330,7 +340,7 @@ CAMERA = _rig(focus=lambda t: WORDS.focus_point(t, _FOCUS_DEFAULT))
 # The great tree: nine boughs that bloom in the nine colours as the camera climbs past them; each word buds
 # its bough when it leaves
 # ---------------------------------------------------------------------------------------------------------
-_COL9 = [e["color"] for e in PW.EXPRESSIONS]
+_COL9 = [WEB[e["label"]] for e in PW.EXPRESSIONS]
 _BLOOM = [CLIMB + 0.15 + 0.32 * i for i in range(9)]
 _BOUGH_AZ = [4.0 + 92.0 * (b - CLIMB) / (PEAK - CLIMB) + 22.0 for b in _BLOOM]
 _BUD = [WORDS[e["label"]].t_read1 for e in PW.EXPRESSIONS]
