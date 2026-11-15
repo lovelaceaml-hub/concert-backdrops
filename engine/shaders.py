@@ -433,6 +433,9 @@ uniform float uCamOn; uniform sampler2D uCamBg;   // CAMERA (engine/sky_camera.p
 #ifdef FIGURE_TINT
 uniform sampler2D uFigT; uniform float uFigK; uniform vec3 uFigTint, uFigTintB; uniform vec4 uFigGate;   // figure_look.py
 #endif
+#ifdef SYMBOL_PAINT
+uniform sampler2D uSymT; uniform float uSymK;   // a symbol's painted lines (engine/water.py, SYMBOLS key `paint`)
+#endif
 float calmK(float y){ return 1.0-uCalm*(1.0-smoothstep(uCalmY-0.07, uCalmY+0.05, y)); }
 vec2 hash22(vec2 p){ vec3 p3 = fract(vec3(p.xyx)*vec3(0.1031,0.1030,0.0973));
   p3 += dot(p3, p3.yzx+33.33); return fract((p3.xx+p3.yz)*p3.zy); }
@@ -854,6 +857,13 @@ void main(){
     figAdd = fg.rgb/(1.0+max(fg.r, max(fg.g, fg.b))/uFigGate.z)*uFigGate.w*tk;
   }
 #endif
+#ifdef SYMBOL_PAINT
+  if(uSymK>0.0){   // a symbol's lines painted in their own colour (light alone pales to pink on a blue sky)
+    vec4 sp = texture(uSymT, uv);
+    float sk = uSymK*(1.0-textField(uv));
+    col = col*(1.0-clamp(sp.a, 0.0, 1.0)*sk) + sp.rgb*sk;
+  }
+#endif
   vec3 L = texture(uL, uv).rgb;
   vec3 bl = texture(uB1,uv).rgb*0.34 + texture(uB2,uv).rgb*0.28 + texture(uB3,uv).rgb*0.24 + texture(uB4,uv).rgb*0.22;
   col += L + bl*uBloom;
@@ -889,7 +899,7 @@ void main(){
 """
 
 COMP_BLOCKS = ("SKY_THEME", "SHADOW_ZERO", "TEXT_INK", "LEAVES_TINT", "LAKE_RIPPLES", "NATURE_PAINT", "CAMERA_BG",
-               "FIGURE_TINT")
+               "FIGURE_TINT", "SYMBOL_PAINT")
 
 
 def comp_fs(blocks=COMP_BLOCKS):

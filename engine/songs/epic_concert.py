@@ -462,10 +462,13 @@ SYMBOLS = [
     # and 1.9 the globe's close lines ran together into a white ball while they were drawn, still at 47.4 s)
     dict(kind="emblem", t0=EMBLEM, t1=EMBLEM_DONE, out=EMBLEM_OUT, x=0.5, y=0.64, size=0.38,
          leave="to_star", star=4, leave_dur=EMBLEM_FLY, reflect=True, glow=1.4, stroke=1.5, mirror=2.2, halo=2.0,
-         # the left heart orange, the right heart coral, as in the real emblem (the engine's builder has them
-         # the other way round). The campaign colours are #F39A3A and #F0566A; light added to a blue sky pales
-         # toward pink, so both are given a little deeper here to read as orange and coral on screen.
-         color=dict(coral="#ff8c1a", orange="#ff3d5a")),
+         # the left heart orange (#F39A3A), the right heart coral (#F0566A), as in the real emblem (the engine's
+         # builder has them the other way round). Light added to a blue sky pales to pink whatever its colour
+         # (check still of run 43709753026: both hearts pink), so the two hearts are also painted in exactly
+         # these colours under a small share of their light (paint, UPGRADE-HOWTO U); the globe and the sprig
+         # stay pure light.
+         color=dict(coral="#F39A3A", orange="#F0566A"), paint=1.0, paint_roles=("coral", "orange"),
+         paint_light=0.22),
 ]
 
 # ---- the arch of nine lights: dark at the start, complete at the peak

@@ -81,6 +81,8 @@ def comp_blocks():
     import figure_look
     if figure_look.wanted():   # look="silk": the faint cool tint of a body of light on a bright sky
         out.append("FIGURE_TINT")
+    if any(isinstance(m, dict) and m.get("paint") for m in (getattr(S, "SYMBOLS", None) or [])):
+        out.append("SYMBOL_PAINT")   # a symbol's lines painted in their own colour (engine/water.py)
     return out
 
 
