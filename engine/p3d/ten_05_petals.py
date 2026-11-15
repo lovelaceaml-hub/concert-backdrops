@@ -419,3 +419,55 @@ def paint_word_petals(words, paint=0.85, paint_light=0.4):
         def sample(t, cam=None, _o=orig):
             return paint_batches(_o(t, cam), ("petal",), paint, paint_light)
         w.sample = sample
+
+
+class PetalPath:
+    """A path of petals lying on the water: from `start` along `direction` for `length` metres, `width` wide,
+    laid down from the near end at `t0` over `dur` seconds (a carpet unrolling)."""
+    static = True
+
+    def __init__(self, start, direction, length=30.0, width=1.1, n=9000, t0=0.0, dur=1.0, colors=PETAL_HEX, seed=61):
+        rng = np.random.default_rng(seed)
+        d = np.asarray(direction, np.float64)
+        d = d / np.linalg.norm(d)
+        side = np.array([-d[2], 0.0, d[0]])
+        u = rng.random(n) ** 0.85
+        v = (rng.random(n) - 0.5) * width * (1.0 + 0.25 * np.sin(u * 9.0))
+        pos = np.asarray(start, np.float64) + d * (u * length)[:, None] + side * v[:, None]
+        pos[:, 1] = 0.03 + 0.02 * rng.random(n)
+        self.b = dict(pos=pos.astype(np.float32), size=(0.05 + 0.03 * rng.random(n)).astype(np.float32),
+                      color=_cols(colors, n, rng, white=0.3), alpha=np.full(n, 0.95, np.float32), kind="petal",
+                      rot=np.stack([rng.random(n) * TAU, 1.35 + 0.2 * rng.random(n)], axis=1).astype(np.float32),
+                      paint=1.0, paint_light=0.12, birth=(t0 + dur * u).astype(np.float32), fade=0.25, flash=0.5,
+                      seed=rng.random(n).astype(np.float32))
+
+    def sample(self, t):
+        return self.b
+
+
+class Rain:
+    """Blossom falling round a place (a disc `radius` wide, from `top` metres) between t0 and t1."""
+
+    def __init__(self, centre, t0, t1, radius=4.0, top=6.0, n=2600, colors=PETAL_HEX, speed=0.9, seed=71):
+        rng = np.random.default_rng(seed)
+        self.c = np.asarray(centre, np.float64)
+        self.t0, self.t1, self.top, self.speed = float(t0), float(t1), float(top), float(speed)
+        r = radius * np.sqrt(rng.random(n))
+        a = rng.random(n) * TAU
+        self.xz = np.stack([r * np.sin(a), r * np.cos(a)], axis=1)
+        self.s = rng.random((n, 4))
+        self.col = _cols(colors, n, rng, white=0.25)
+        self.size = (0.035 + 0.03 * self.s[:, 0]).astype(np.float32)
+
+    def sample(self, t):
+        if t < self.t0 - 0.5 or t > self.t1 + 1.0:
+            return []
+        s = self.s
+        fall = self.top * np.mod(s[:, 1] - (t - self.t0) * self.speed * (0.6 + 0.6 * s[:, 2]) / self.top, 1.0)
+        sway = 0.25 * np.sin(t * (1.0 + s[:, 3]) + s[:, 0] * TAU)
+        pos = np.stack([self.c[0] + self.xz[:, 0] + sway, 0.05 + fall, self.c[2] + self.xz[:, 1] + sway * 0.6], axis=1)
+        k = float(_ss(self.t0 - 0.5, self.t0 + 0.5, t) * (1.0 - _ss(self.t1, self.t1 + 1.0, t)))
+        alpha = np.full(len(pos), k, np.float32) * _ss(0.0, 0.6, fall) * _ss(0.0, 0.8, self.top - fall)
+        rot = np.stack([t * 1.3 + s[:, 0] * TAU, t * (2.0 + 2.0 * s[:, 2])], axis=1)
+        return dict(pos=pos.astype(np.float32), size=self.size, color=self.col, alpha=alpha.astype(np.float32),
+                    kind="petal", rot=rot.astype(np.float32), paint=1.0, paint_light=0.15, seed=s[:, 0], twinkle=0.2)
