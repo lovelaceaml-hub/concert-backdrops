@@ -244,9 +244,13 @@ SKY_THEME = Track([(0, 0.0), (EMBLEM_OUT - 0.5, 0.0), (DAY_FULL, 0.65), (TOTAL, 
 # the lake at the end, so the water keeps a cream sun path.
 SUN_Y = Track([(0, 0.290), (STAR_FALL, 0.320), (S1 - 1.5, 0.375), (S1 + 2.0, 0.432), (S1 + 6.0, 0.446),
                (S2, 0.452), (S3, 0.458), (WARM, 0.466), (TITLE_HIT, 0.500), (TOTAL, 0.510)])
+# While the Encouragement is held the sun is smaller and a little weaker: its second line stands right above
+# the sun, and the sun's bloom under it was the brightest light near the letters (see PHRASES).
 SUN_INT = Track([(0, 0.06), (STAR_FALL, 0.08), (S1 - 1.5, 0.10), (S1 + 1.5, 0.50), (S1 + 4.0, 0.50), (S2, 0.44),
-                 (S3, 0.42), (EMBLEM, 0.34), (EMBLEM_OUT, 0.34), (TITLE_HIT, 0.55), (TOTAL, 0.52)])
-SUN_SIZE = Track([(0, 0.09), (S1 + 3.0, 0.11), (S3, 0.12), (TITLE_HIT, 0.16), (TOTAL, 0.17)])
+                 (E_FORM + 3.0, 0.36), (E_HOLD, 0.36), (S3, 0.42), (EMBLEM, 0.34), (EMBLEM_OUT, 0.34),
+                 (TITLE_HIT, 0.55), (TOTAL, 0.52)])
+SUN_SIZE = Track([(0, 0.09), (S1 + 3.0, 0.11), (S2, 0.105), (E_FORM + 3.0, 0.085), (E_HOLD, 0.085), (S3, 0.12),
+                  (TITLE_HIT, 0.16), (TOTAL, 0.17)])
 STARS = Track([(0, 0.0), (0.5, 0.0), (2.6, 1.0), (STAR_FALL, 1.0), (S1 + 2.0, 0.60), (S1 + 7.0, 0.25),
                (S2 + 2.0, 0.10), (S3, 0.05), (WARM, 0.0), (TOTAL, 0.0)])
 MILKY = Track([(0, 0.0), (0.8, 0.0), (3.5, 0.90), (STAR_FALL, 0.90), (S1 + 0.5, 0.35), (S1 + 3.5, 0.0), (TOTAL, 0.0)])
@@ -265,8 +269,8 @@ ZOOM = Track([(0, 1.0), (TOTAL, 1.0)])
 EXPOSURE = Track([(0, 1.0), (TOTAL, 1.0)])
 FADE = Track([(0, 0.0), (2.4, 1.0), (TOTAL - 0.6, 1.0), (TOTAL - 0.05, 0.0)])   # out of black
 # the sky's own sunbeams round the sun: these are the rays of the sunrise (see GOD_RAYS below)
-RAYS = Track([(0, 0.0), (S1 - 0.5, 0.03), (S1 + 1.2, 0.85), (S1 + 6.0, 0.50), (S2, 0.38), (S3, 0.35),
-              (EMBLEM_OUT, 0.28), (TITLE_HIT, 0.12), (TOTAL, 0.10)])
+RAYS = Track([(0, 0.0), (S1 - 0.5, 0.03), (S1 + 1.2, 0.85), (S1 + 6.0, 0.50), (S2, 0.38), (E_FORM + 3.0, 0.28),
+              (E_HOLD, 0.28), (S3, 0.35), (EMBLEM_OUT, 0.28), (TITLE_HIT, 0.12), (TOTAL, 0.10)])
 # the lane of light at the sun: off. Draft 3 tested it (0 against 0.47, same sun): no change in the picture.
 PART = Track([(0, 0.0), (TOTAL, 0.0)])
 SKYLINE_LANTERN = 0.0      # no travelling light on the skyline: the falling star is the one star of this film
@@ -462,11 +466,13 @@ for i in range(9):
 
 OFF = dict(form=1e9, hold=1e9)
 # Legibility of the two expressions (full quality stills, run 43704517517): the Greeting 4.9, the
-# Encouragement 2.0 (want 2.2: letters 0.89, light round them 0.41, far sky 0.04). The light round letters is
-# the bloom of their own light, and the Encouragement's two close lines add theirs up between them. A `glow`
-# colour does nothing here: an expression with `anim=` is drawn by engine/text_anims.py with fixed colours
-# (run 43705515253, with a deeper glow colour, measured the same 0.413 to three places). So the Encouragement
-# is drawn a little less strong (alpha, a new optional key): the letters stay white, the bloom comes down.
+# Encouragement 2.0 (want 2.2: letters 0.89, light round them 0.41, far sky 0.04). What that light is, was
+# measured, not guessed, after two guesses failed: a deeper glow colour changed nothing (run 43705515253; an
+# expression with `anim=` is drawn by engine/text_anims.py with fixed colours, so `glow=` does nothing on it),
+# and letters drawn 22 percent weaker changed nothing either (run 43706011645: letters 0.85, light round them
+# 0.412). In the still at 36.5 s the sky right under the second line is 0.43 in the middle (the sun's bloom)
+# against 0.16 to 0.18 at the sides and 0.05 beside the text. So the sun is smaller and weaker while the
+# Encouragement is held (SUN_SIZE, SUN_INT, RAYS above).
 PHRASES = [
     dict(label="Greeting", lines=["“How are you?”"], size=150, y=0.258,
          form=G_FORM, hold=G_HOLD, star=G_STAR, anim="bloom"),
@@ -481,7 +487,7 @@ PHRASES = [
     dict(label="Respect", lines=["“I’d love to hear more", "about your thoughts.”"], size=128,
          star=BEATS[11], **OFF),
     dict(label="Encouragement", lines=["“I’ll pray (or root) for you.", "Everything will go well.”"], size=100,
-         y=0.31, form=E_FORM, hold=E_HOLD, star=E_STAR, anim="ink", alpha=0.78),
+         y=0.31, form=E_FORM, hold=E_HOLD, star=E_STAR, anim="ink"),
     dict(label="Consideration", lines=["“Can I give you a hand", "with anything?”"], size=128,
          star=BEATS[12], **OFF),
     dict(label="Compliment", lines=["“You’re amazing.", "You’re doing great!”"], size=140,

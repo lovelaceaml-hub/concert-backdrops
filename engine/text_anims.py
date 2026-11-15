@@ -614,10 +614,7 @@ class TextAnims:
         it = self.items.get(("w", i))
         if it is None:
             return False
-        # optional `alpha` in the expression's entry (default 1.0): the strength of its light. The glow round
-        # letters is the bloom of their own light, so a text of two close lines reads crisper a little below 1.
-        alpha = float((it.get("meta") or {}).get("alpha", 1.0))
-        self._draw(it, t, form_t, S.FORM_DUR, fly_t, fly_dur, star, P["pulse"], calm, alpha, S.lin("#fff5df"),
+        self._draw(it, t, form_t, S.FORM_DUR, fly_t, fly_dur, star, P["pulse"], calm, 1.0, S.lin("#fff5df"),
                    S.lin("#ffc48c"), False)
         return True
 
