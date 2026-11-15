@@ -426,7 +426,7 @@ class Release(_Free):
             size = cl["size"][ii] * smul * self.size * (1.0 + self.grow * u) * (0.7 + 0.9 * bm.hashf(ii, 44) ** 2)
             b = dict(pos=pos, size=size, color=col, alpha=alpha * 0.9 * self.bright * self._crowd(len(ii), t),
                      kind=sk, seed=sd, emit=em, twinkle=0.7 if sk in ("soft", "spark") else 0.15, backlight=0.5)
-            if sk in ("flake", "petal"):
+            if sk in ("flake", "petal", "shard", "butterfly"):
                 b["rot"] = _spin(sd, age)
             out.append(b)
         return out
@@ -595,7 +595,7 @@ class Shed(_Free):
         size = cl["size"][src] * self.size * (0.8 + 1.6 * self.sd[ids] ** 3) * (1.0 + 0.8 * u)
         b = dict(pos=pos, size=size, color=col, alpha=alpha * 0.8 * self.bright, kind=self.sprite, seed=self.sd[ids],
                  twinkle=0.8, backlight=0.6)
-        if self.sprite in ("flake", "petal"):
+        if self.sprite in ("flake", "petal", "shard", "butterfly"):
             b["rot"] = _spin(self.sd[ids], age)
         return [b]
 
@@ -806,6 +806,9 @@ def make(body, spec, index):
     kind = spec.pop("kind")
     if kind not in EFFECTS:
         raise ValueError("effect kind must be one of %s, got %r" % (EFFECTS, kind))
+    # batch=dict(...) is merged into every batch the effect draws (paint=1 for dark painted flakes on a day sky);
+    # a list of dicts draws each batch once per dict (a dark painted shard and its edge of light)
+    extra = spec.pop("batch", None)
     cls = dict(form=Form, shed=Shed, blow=Blow, birds=Birds).get(kind)
     if cls is None:
         e = Release.__new__(Release)
@@ -816,6 +819,13 @@ def make(body, spec, index):
         e.index = index
         e.__init__(body, **spec)
     e.kind = kind
+    if extra:
+        raw = e.batches
+        ways = [dict(x) for x in extra] if isinstance(extra, (list, tuple)) else [dict(extra)]
+
+        def batches(t, cam=None, raw=raw, ways=ways):
+            return [dict(b, **w) for b in raw(t, cam) for w in ways]
+        e.batches = batches
     return e
 
 

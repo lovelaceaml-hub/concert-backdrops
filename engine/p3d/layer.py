@@ -18,7 +18,7 @@ from . import camera as C
 from . import shaders as K
 from . import world as Wd
 
-KIND_ID = dict(soft=0, spark=1, disc=2, flake=3, petal=4, bird=5, line=6, ribbon=7)
+KIND_ID = dict(soft=0, spark=1, disc=2, flake=3, petal=4, bird=5, line=6, ribbon=7, shard=8, butterfly=9)
 CAM_UNIT = 15            # the composite's background unit (shared with engine/sky_camera.py, never both)
 LAKE_UNIT = 7            # the lake field (world key lake), bound while the layer draws
 SHORE = 1400.0           # metres from the origin to the foot of the first hills: the lake ends there
@@ -539,9 +539,14 @@ class Layer:
                 if mk.sky == "flat":
                     c = _val(mk.color, t)
                     col = api.show(c) if isinstance(c, str) else np.asarray(c, np.float64)
+                elif mk.sky == "nebula":
+                    c = _val(mk.color, t) if mk.color is not None else "#ff9440"
+                    col = api.lin(c) if isinstance(c, str) else np.asarray(c, np.float64)
+                gl = _val(mk.glow, t) if mk.glow is not None else (-0.25, 0.30, 1.0, 0.5)
                 layers[s] = dict(key=key, kind=api.MASK_SKIES.index(mk.sky), k=0.0, edge=float(mk.edge),
                                  tint=tuple(float(x) for x in np.asarray(mk.tint, np.float64)), look=mk.look,
-                                 color=col, box=(0.5, 0.5, 0.4, 0.0), parent=-1, soft=0.0, pts=[])
+                                 color=col, box=(0.5, 0.5, 0.4, 0.0), parent=-1, soft=0.0, pts=[],
+                                 glow=tuple(float(x) for x in gl))
             layers[s]["k"] = max(layers[s]["k"], k)
             layers[s]["soft"] = max(layers[s]["soft"], float(mk.soft))
             slot_of[e.name] = s
@@ -895,7 +900,7 @@ class Layer:
         self.t_paint.use(location=4)
         self.t_bg2.use(location=5)
         self.t_bg3.use(location=6)
-        fa, fbox, ftint, fcol = (np.zeros((2, 4), "f4") for _ in range(4))
+        fa, fbox, ftint, fcol, fglow = (np.zeros((2, 4), "f4") for _ in range(5))
         if mk is not None:
             for i, ly in enumerate(mk["layers"]):
                 if ly is None:
@@ -905,7 +910,9 @@ class Layer:
                 ftint[i, :3] = ly["tint"]
                 if ly["color"] is not None:
                     fcol[i, :3] = ly["color"]
-        for name, arr in (("uFillA", fa), ("uFillBox", fbox), ("uFillTint", ftint), ("uFillCol", fcol)):
+                fglow[i] = ly.get("glow", (0.0, 0.0, 0.0, 0.0))
+        for name, arr in (("uFillA", fa), ("uFillBox", fbox), ("uFillTint", ftint), ("uFillCol", fcol),
+                          ("uFillL", fglow)):
             seta(p, name, arr)
         bursts = self._burst_state(t, cam)
         ba = np.zeros((4, 4), "f4")
