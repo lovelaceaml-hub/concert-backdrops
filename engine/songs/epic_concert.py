@@ -461,16 +461,15 @@ for i in range(9):
     STAR_POS.append((x, y))
 
 OFF = dict(form=1e9, hold=1e9)
-# The glow round the two expressions: a deeper gold than the engine's own (#ffc48c). A text's halo is as
-# strong as its glow colour is bright (engine/upgrade.py, text_light). The Greeting measures 4.9 with this
-# colour (full quality stills, run 43704517517). The Encouragement, two lines of smaller letters whose halos
-# add up, measured 2.0 (want 2.2: letters 0.89, light round them 0.41), so it gets a deeper colour, about 0.65
-# times as bright.
-WORD_GLOW = "#f2aa62"
-E_GLOW = "#d08848"
+# Legibility of the two expressions (full quality stills, run 43704517517): the Greeting 4.9, the
+# Encouragement 2.0 (want 2.2: letters 0.89, light round them 0.41, far sky 0.04). The light round letters is
+# the bloom of their own light, and the Encouragement's two close lines add theirs up between them. A `glow`
+# colour does nothing here: an expression with `anim=` is drawn by engine/text_anims.py with fixed colours
+# (run 43705515253, with a deeper glow colour, measured the same 0.413 to three places). So the Encouragement
+# is drawn a little less strong (alpha, a new optional key): the letters stay white, the bloom comes down.
 PHRASES = [
     dict(label="Greeting", lines=["“How are you?”"], size=150, y=0.258,
-         form=G_FORM, hold=G_HOLD, star=G_STAR, anim="bloom", glow=WORD_GLOW),
+         form=G_FORM, hold=G_HOLD, star=G_STAR, anim="bloom"),
     dict(label="Gratitude", lines=["“Thank you. It’s all thanks to you.", "You’ve worked hard.”"], size=118,
          star=S2 + 10.15, **OFF),
     dict(label="Apology", lines=["“I’m sorry.", "It must have been hard on you.”"], size=124,
@@ -482,7 +481,7 @@ PHRASES = [
     dict(label="Respect", lines=["“I’d love to hear more", "about your thoughts.”"], size=128,
          star=BEATS[11], **OFF),
     dict(label="Encouragement", lines=["“I’ll pray (or root) for you.", "Everything will go well.”"], size=100,
-         y=0.31, form=E_FORM, hold=E_HOLD, star=E_STAR, anim="ink", glow=E_GLOW),
+         y=0.31, form=E_FORM, hold=E_HOLD, star=E_STAR, anim="ink", alpha=0.78),
     dict(label="Consideration", lines=["“Can I give you a hand", "with anything?”"], size=128,
          star=BEATS[12], **OFF),
     dict(label="Compliment", lines=["“You’re amazing.", "You’re doing great!”"], size=140,
