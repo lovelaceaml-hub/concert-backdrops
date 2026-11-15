@@ -1,4 +1,4 @@
-"""GLSL programs for the upgrade layers: people of light, snow, net, beam and the fragment styles.
+"""GLSL programs for the upgrade layers: people of light, snow, net, beam, bubbles, leaves and the fragment styles.
 
 Scene plates, ice, shards and the golden field live in the composite pass (shaders.COMP_FS) because they change
 the picture behind the light; everything here is light that is added on top (and so glows and reflects).
@@ -390,5 +390,104 @@ void main(){
   float r2 = dot(p,p); if(r2>1.0) discard;
   vec3 col = mix(mix(uColA, uColB, vK), uHot, clamp(vHot,0.0,1.0));
   o = vec4(col*exp(-r2*3.6)*vA, 1.0);
+}
+"""
+
+# ------------------------------------------------------------------ iridescent soap bubbles (theme, H3)
+BUB_VS = """
+#version 330
+in vec4 aSeed;
+uniform float uT, uAmount, uPx, uSize, uSpeed;
+uniform float uCalm, uCalmY;
+out float vA; out float vHue; out float vSpin; out float vDepth;
+void main(){
+  float depth = aSeed.x;                                 // 0 far and small, 1 near and large
+  float sp = mix(0.010, 0.030, depth)*uSpeed;            // screens per second: a slow, floating rise
+  float ph = fract(uT*sp/1.30 + aSeed.y);
+  float y = -0.15 + ph*1.30;
+  float wob = (0.010+0.020*depth)*(sin(uT*(0.21+0.25*aSeed.w)+aSeed.y*40.0) + 0.6*sin(uT*(0.53+0.3*aSeed.z)+aSeed.w*23.0));
+  float x = fract(aSeed.z + wob + 0.012*sin(ph*6.2832+aSeed.w*9.0));
+  float on = smoothstep(uAmount, uAmount-0.06, aSeed.w*0.999);
+  float life = smoothstep(0.0, 0.10, ph)*smoothstep(1.0, 0.86, ph);
+  vA = on*life*mix(0.55, 1.0, depth);
+  vA *= 1.0-uCalm*0.85*(1.0-smoothstep(uCalmY-0.07, uCalmY+0.06, y));   // calm lower third
+  vHue = aSeed.y*7.0 + uT*0.05;
+  vSpin = uT*(0.10+0.15*aSeed.z) + aSeed.w*6.2832;
+  vDepth = depth;
+  gl_Position = vec4(vec2(x,y)*2.0-1.0, 0.0, 1.0);
+  float sz = mix(26.0, 118.0, pow(depth, 2.2))*uSize;
+  gl_PointSize = min(sz*uPx, 250.0);
+}
+"""
+BUB_FS = """
+#version 330
+in float vA; in float vHue; in float vSpin; in float vDepth; out vec4 o;
+uniform vec3 uCol;
+uniform float uSheen;
+vec3 rainbow(float h){ return 0.5+0.5*cos(6.2832*(h+vec3(0.0,0.33,0.67))); }
+void main(){
+  vec2 p = gl_PointCoord*2.0-1.0; p.y = -p.y;
+  float r = length(p); if(r>1.0) discard;
+  // a thin bright rim, a faint film, a rainbow sheen that swirls round the rim, two soft highlights
+  float rim = exp(-pow((r-0.90)/0.055, 2.0)) + 0.35*exp(-pow((r-0.80)/0.11, 2.0));
+  float film = 0.045*smoothstep(0.2, 0.95, r);
+  float ang = atan(p.y, p.x) + vSpin;
+  float thick = 0.5+0.5*sin(ang*2.0 + r*5.0 + vHue) + 0.3*sin(ang*3.0 - vHue*0.7);
+  vec3 irid = rainbow(vHue*0.13 + thick*0.55 + r*0.4);
+  float band = smoothstep(0.35, 0.98, r)*(0.55+0.45*sin(ang + vHue));
+  vec2 h1 = p - vec2(-0.40, 0.42); vec2 h2 = p - vec2(0.38, -0.40);
+  float spec = exp(-dot(h1,h1)/0.020)*0.85 + exp(-dot(h1*vec2(1.0,2.6),h1*vec2(1.0,2.6))/0.08)*0.25 + exp(-dot(h2,h2)/0.010)*0.35;
+  vec3 c = uCol*(rim*0.55 + film) + irid*uSheen*(rim*0.75 + band*0.22) + vec3(1.0,0.99,0.96)*spec;
+  float edge = smoothstep(1.0, 0.96, r);
+  o = vec4(c*vA*edge, 1.0);
+}
+"""
+
+# ------------------------------------------------------------------ leaves of light (theme, H3)
+LEAF_VS = """
+#version 330
+in vec4 aSeed;
+uniform float uT, uAmount, uPx, uSize, uSpeed, uWind;
+uniform float uCalm, uCalmY;
+out float vA; out float vK; out float vRot; out float vFlip; out float vGlint;
+void main(){
+  float depth = aSeed.x;
+  float sp = mix(0.016, 0.040, depth)*uSpeed;
+  float ph = fract(uT*sp/1.25 + aSeed.y);
+  float y = 1.10 - ph*1.25;                                  // drift down slowly
+  float sway = (0.030+0.040*depth)*sin(uT*(0.32+0.30*aSeed.w)+aSeed.y*30.0);
+  float x = fract(aSeed.z + uWind*ph*0.35 + sway);
+  float on = smoothstep(uAmount, uAmount-0.05, aSeed.w*0.999);
+  float life = smoothstep(0.0, 0.08, ph)*smoothstep(1.0, 0.90, ph);
+  vA = on*life*mix(0.45, 0.95, depth);
+  vA *= 1.0-uCalm*0.80*(1.0-smoothstep(uCalmY-0.07, uCalmY+0.06, y));
+  vK = fract(aSeed.y*13.7);
+  vRot = 0.9*sin(uT*(0.40+0.35*aSeed.z)+aSeed.w*20.0) + aSeed.z*6.2832;     // turning as it swings
+  float fl = cos(uT*(0.55+0.6*aSeed.x)+aSeed.y*17.0);
+  vFlip = 0.22+0.78*abs(fl);                                  // tumbling: the leaf turns edge-on and back
+  vGlint = pow(max(fl, 0.0), 8.0);                            // catches the light as it faces us
+  gl_Position = vec4(vec2(x,y)*2.0-1.0, 0.0, 1.0);
+  gl_PointSize = min(mix(22.0, 64.0, pow(depth, 1.6))*uSize*uPx, 250.0);
+}
+"""
+LEAF_FS = """
+#version 330
+in float vA; in float vK; in float vRot; in float vFlip; in float vGlint; out vec4 o;
+uniform vec3 uColA, uColB;
+void main(){
+  vec2 p = gl_PointCoord*2.0-1.0;
+  float c = cos(vRot), s = sin(vRot);
+  p = vec2(c*p.x-s*p.y, s*p.x+c*p.y);
+  p.x /= vFlip;
+  // a pointed leaf: widest a little below the middle, a tip at the top, a short stem at the bottom
+  float yy = p.y;
+  float w = 0.42*sqrt(max(0.0, 1.0-yy*yy))*(1.0-0.30*yy);
+  float body = smoothstep(w, w-0.12, abs(p.x))*smoothstep(0.98, 0.84, abs(yy));
+  float stem = exp(-p.x*p.x/0.0012)*smoothstep(-0.80, -1.0, yy)*step(yy, -0.80)*0.6;
+  float vein = exp(-p.x*p.x/0.0018)*smoothstep(0.9, -0.6, yy)*0.55;
+  vec3 col = mix(uColA, uColB, vK*0.6 + 0.4*(yy*0.5+0.5));
+  float edge = body*(1.0-smoothstep(w-0.12, w-0.30, abs(p.x)))*0.6;   // a brighter rim of light
+  vec3 cc = col*(body*0.42 + edge*0.55) + vec3(1.0,0.98,0.85)*(vein*body + stem)*0.45 + vec3(1.0,0.96,0.80)*vGlint*body*0.55;
+  o = vec4(cc*vA, 1.0);
 }
 """
