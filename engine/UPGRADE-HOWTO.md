@@ -184,7 +184,7 @@ FRAGMENTS = [dict(text="a quiet word of light", t0=100.0, t1=103.0, out=110.0, a
 - Nothing dark is drawn by the animations; the calm lower third stays calm (petals and flakes fall from above the words, the rise starts above the calm third).
 - Choose one animation per expression to suit its words; vary them through a song rather than using one for all. Good matches: `ink` for a promise or prayer, `bloom` for gratitude or a compliment, `rise` over water scenes, `ribbon` for an energetic moment, `constellation` for the title or a night scene, `petal` or `snow` where the song already has petals or snow, `wave` for a long hold on a strong line.
 - An unknown name stops the render with an error that lists the valid names.
-- Engine test song: `engine/songs/test_text_anims.py` (song 03 timeline, every animation once; stills with `audio/test/silent-60s.mp3`).
+- Engine test song: `engine/songs/test_living.py` uses ink, bloom, constellation, ribbon and rise (section H3).
 - Code: `engine/text_anims.py` (shaders and preparation); `engine/render.py` only hands such texts to it.
 
 ## F. Fixes from the round 2 attack reviews (2026-11-14, branch engine-fix-r2)
