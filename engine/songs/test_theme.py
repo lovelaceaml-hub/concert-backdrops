@@ -21,7 +21,7 @@ _base.FRAGMENTS = [dict(text="your love remains", t0=13.0, t1=15.0, out=18.0, dy
                         color=theme.CORAL_SOFT, glow=theme.GOLD)]
 _base.WAVES = [w for w in _base.WAVES if w[0] < _T]
 theme.campaign_day(vars(_base), [(0.0, "dawn"), (14.0, "day"), (30.0, "golden"), (42.0, "peach"), (_T, "cream")],
-                   total=_T)
+                   total=_T, leaves=0.6)
 _base.SUN_INT = Track([(0.0, 0.55), (_T, 0.75)])
 _base.SUN_Y = Track([(0.0, 0.40), (_T, 0.46)])
 _base.CLOUDS = Track([(0.0, 0.35), (_T, 0.35)])

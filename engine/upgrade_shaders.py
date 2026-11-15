@@ -556,15 +556,15 @@ void main(){
   float x = fract(aSeed.z + uWind*ph*0.35 + sway);
   float on = smoothstep(uAmount, uAmount-0.05, aSeed.w*0.999);
   float life = smoothstep(0.0, 0.08, ph)*smoothstep(1.0, 0.90, ph);
-  vA = on*life*mix(0.45, 0.95, depth);
+  vA = on*life*mix(0.60, 1.0, depth);
   vA *= 1.0-uCalm*0.80*(1.0-smoothstep(uCalmY-0.07, uCalmY+0.06, y));
   vK = fract(aSeed.y*13.7);
   vRot = 0.9*sin(uT*(0.40+0.35*aSeed.z)+aSeed.w*20.0) + aSeed.z*6.2832;     // turning as it swings
   float fl = cos(uT*(0.55+0.6*aSeed.x)+aSeed.y*17.0);
-  vFlip = 0.22+0.78*abs(fl);                                  // tumbling: the leaf turns edge-on and back
+  vFlip = 0.45+0.55*abs(fl);                                  // tumbling: the leaf turns edge-on and back
   vGlint = pow(max(fl, 0.0), 8.0);                            // catches the light as it faces us
   gl_Position = vec4(vec2(x,y)*2.0-1.0, 0.0, 1.0);
-  gl_PointSize = min(mix(22.0, 64.0, pow(depth, 1.6))*uSize*uPx, 250.0);
+  gl_PointSize = min(mix(30.0, 92.0, pow(depth, 1.6))*uSize*uPx, 250.0);
 }
 """
 LEAF_FS = """
@@ -584,7 +584,7 @@ void main(){
   float vein = exp(-p.x*p.x/0.0018)*smoothstep(0.9, -0.6, yy)*0.55;
   vec3 col = mix(uColA, uColB, vK*0.6 + 0.4*(yy*0.5+0.5));
   float edge = body*(1.0-smoothstep(w-0.12, w-0.30, abs(p.x)))*0.6;   // a brighter rim of light
-  vec3 cc = col*(body*0.42 + edge*0.55) + vec3(1.0,0.98,0.85)*(vein*body + stem)*0.45 + vec3(1.0,0.96,0.80)*vGlint*body*0.55;
+  vec3 cc = col*(body*1.05 + edge*0.80) + vec3(1.0,0.98,0.85)*(vein*body + stem)*0.45 + vec3(1.0,0.96,0.80)*vGlint*body*0.55;
   o = vec4(cc*vA, 1.0);
 }
 """
