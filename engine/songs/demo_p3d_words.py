@@ -98,7 +98,7 @@ LIGHTS = arch_points(ARCH["span"], ARCH["height"], ARCH["z"])
 
 # ---- the people (helper BODY): two hands, a woman who blows the Consideration from her palm, a woman the
 # Inclusiveness becomes, with the Compliment's rays behind her head
-_GIVER_AT = _ground(4.2, 0.13, 0.30, 9.5)
+_GIVER_AT = _ground(4.2, 0.16, 0.30, 7.8)
 _PERSON_AT = _ground(21.5, 0.80, 0.30, 15.0)
 
 

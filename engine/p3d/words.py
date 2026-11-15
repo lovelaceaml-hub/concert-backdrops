@@ -377,7 +377,7 @@ class Word:
     def __init__(self, label="", lines=(), expr=None, pos=(0.0, 3.0, 0.0), width=8.0, em=None, facing=0.0,
                  face=None, tilt=0.0, curve=0.0, t_in=0.0, t_read0=2.5, t_read1=5.5, t_out=8.0, arrive=None,
                  leave=None, source=None, to=None, color=None, glow=None, tint=0.45, bright=1.0, halo=1.0,
-                 sparkle=1.0, sharp=1.0, fog=0.0, n=42000, n_label=6000, label_size=0.36, dot=1.9, name=None,
+                 sparkle=1.0, sharp=1.0, fog=0.0, n="auto", n_label=None, label_size=0.36, dot=1.9, name=None,
                  wind=None, font=None, roll=0.0, ride=None, bind=None, camera=None, drive=None, reflect=None,
                  **opts):
         if expr is not None:
@@ -418,7 +418,12 @@ class Word:
         self.glow_hex = glow or self.hex
         self.sharp = float(np.clip(sharp, 0.0, 1.0))
         self.fog = float(np.clip(fog, 0.0, 1.0))
-        self.n, self.n_label, self.label_size, self.dot = int(n), int(n_label), float(label_size), float(dot)
+        # n="auto": the number of points follows the word's size on screen while it is read (see _auto_n)
+        self.n_auto = n in (None, "auto")
+        self.n = 42000 if self.n_auto else int(n)
+        self.n_label_given = n_label
+        self.n_label = int(n_label) if n_label is not None else int(round(6000 * self.n / 42000.0))
+        self.label_size, self.dot = float(label_size), float(dot)
         self.wind = _unit(wind if wind is not None else (1.0, 0.22, 0.10))
         self.font, self.opts = font, opts
         self._g = None
@@ -435,7 +440,36 @@ class Word:
             return self.width / (x1 - x0)
 
     def _glyphs(self):
+        if self.n_auto and self._g is None and not getattr(self, "_n_done", False):
+            self._auto_n()
         return glyphs(self.label, self.lines, self.n, self.n_label, self.label_size, self.font)
+
+    def _auto_n(self):
+        """Chooses n from the size of an em on screen while the word is read (the largest it gets), so that
+        a lattice step of the letters stays about one pixel of a 1080p picture: 42000 points at an em of
+        85 px, growing with the square of the size (12000 to 240000). Without a camera: 42000."""
+        self._n_done = True
+        try:
+            em_m = float(self.em) if self.em else self.width / glyphs(self.label, self.lines, 42000, 6000,
+                                                                     self.label_size, self.font)["width"]
+            best = 0.0
+            for t in np.linspace(self.t_read0, max(self.t_read1, self.t_read0), 5):
+                cam = self._cam(float(t))
+                if cam is None:
+                    return
+                c = self.centre(float(t), cam)
+                depth = float(np.dot(c - np.asarray(cam.pos, np.float64), cam.basis()[2]))
+                if depth <= 0.05:
+                    continue
+                best = max(best, em_m * 540.0 / (np.tan(np.radians(cam.fov) * 0.5) * depth))
+            if best <= 0.0:
+                return
+            self.em_px = best
+            self.n = int(np.clip(42000.0 * (best / 85.0) ** 2, 12000, 240000) // 1000 * 1000)
+            if self.n_label_given is None:
+                self.n_label = int(round(6000 * self.n / 42000.0))
+        except Exception:
+            self.n = 42000
 
     def extent(self):
         """(x0, x1, y0, y1) of the whole text (label included) in metres on its plane, from its centre."""
@@ -869,7 +903,7 @@ class Word:
                             alpha=(alpha[sel] * a_mul * mk), emit=emit[sel] / mk, kind="soft", dof=dof,
                             reflect=reflect,
                             seed=self.s[sel, 0], twinkle=0.12, fog=1.0 if dof else self.fog,
-                            streak=1.0 if dof else 0.0))
+                            streak=float(self.opts.get("streak", 0.5)) if dof else 0.0))
 
         lens = cam is not None and getattr(cam, "aperture", 0.0) > 0.0 and self.sharp > 0.0
         groups = [(vis, True)] if split is None else [(vis & ~split, True), (vis & split, False)]
@@ -978,8 +1012,8 @@ class Word:
                 p = (o[None, :] + ((hx - 0.5) * 1.5 * w + 0.05 * w * np.sin(t * 0.2 + hs * 9.0))[:, None] * r
                      + (self.ymid + (hy - 0.5) * 1.9 * self.Ht)[:, None] * u
                      + ((hz - 0.75) * 0.5 * w)[:, None] * nrm)
-                out.append(dict(pos=p, size=(0.06 + 0.12 * hs) * w, color=_mix(lin("#9fb4d8"), self.c_glow, 0.3),
-                                alpha=0.030 * thin * float(_ss(0.0, 0.12, a)), kind="soft", lod=False))
+                out.append(dict(pos=p, size=(0.04 + 0.08 * hs) * w, color=_mix(lin("#9fb4d8"), self.c_glow, 0.3),
+                                alpha=0.016 * thin * float(_ss(0.0, 0.12, a)), kind="soft", lod=False))
 
     # ------------------------------------------------------------------ nine ways of arriving
     def _arr_palm(self, P, a, t, cam, F, tg):
@@ -1028,7 +1062,9 @@ class Word:
         rho = self.rho[:m] + (1.05 * w * reach * (0.8 + 0.4 * s[:, 1]) - self.rho[:m]) * k
         phi = self.phi[:m] + turn * gap * k ** 1.25
         dx = rho * np.cos(phi) - self.xl[:m]
-        dy = rho * np.sin(phi) + self.ymid - self.yl[:m] + lift * 0.25 * self.Ht * k * k
+        sy = rho * np.sin(phi)
+        sy = np.where(sy < 0.0, 0.45 * sy, sy)                       # the stream stays above the water
+        dy = sy + self.ymid - self.yl[:m] + lift * 0.25 * self.Ht * k * k
         dz = w * reach * (0.30 * (s[:, 3] - 0.5) + 0.08) * k        # kept well away from the lens
         return dx, dy, dz
 
@@ -1197,28 +1233,73 @@ class Word:
                                        dof=0.2, fog=0.3))
 
     def _arr_touch(self, P, a, t, cam, F, tg):
-        """Where two hands touch a flare is born; it writes the words outward from that point."""
+        """Where two hands touch a flare is born; it writes the words outward from that point. When the touch is
+        much nearer the camera than the words (hands in close-up before words in the distance), the writing
+        starts from the touch as seen on the words' plane (touch_plane="auto"), so that it opens out of the
+        flare in the picture instead of flying down the lens."""
         o, r, u, nrm = F
         w = self.W
         f = self._point(self.source, t, cam, o + u * self.ymid).astype(np.float32)
+        f0 = f
+        wave = bool(self.opts.get("touch_wave", False))
+        if cam is not None and self.opts.get("touch_plane", "auto"):
+            eye = np.asarray(cam.pos, np.float64)
+            near = float(np.linalg.norm(f - eye)) < 0.4 * float(np.linalg.norm(o - eye))
+            den = float(np.dot(f - eye, nrm))
+            if near and abs(den) > 1e-6:
+                k = float(np.dot(o - eye, nrm)) / den
+                if k > 1.0:                          # the touch as seen on the words' plane
+                    f = (eye + (f - eye) * k).astype(np.float32)
+                    wave = True
         s = self.s
-        d = tg - f[None, :]
-        dist = np.linalg.norm(d, axis=1)
-        dmax = float(dist.max()) + 1e-6
         ta = float(self.opts.get("touch_at", 0.10))        # the share of the arrival before the touch
         rest = 1.0 - ta
-        p = np.clip((a - (ta + rest * 0.56 * (dist / dmax) ** 0.85)) / (rest * 0.42), 0.0, 1.0)
-        e = 1.0 - (1.0 - p) ** 2.6
-        side = np.cross(d, nrm.astype(np.float32)[None, :]) * np.where(s[:, 0] < 0.5, -1.0, 1.0)[:, None]
-        arc = np.sin(np.pi * e)
-        pos = f[None, :] + d * e[:, None] + side * (arc * 0.22)[:, None] \
-            + nrm.astype(np.float32)[None, :] * (arc * dist * 0.35 * (s[:, 2] - 0.3))[:, None]
-        P["pos"] = pos.astype(np.float32)
-        P["alpha"] = _ss(0.0, 0.04, p)
-        P["assist"] = _ss(0.75, 1.0, p)
         two = np.where((s[:, 1] < 0.5)[:, None], lin("#ffd27a")[None, :], lin("#7ec8ff")[None, :]).astype(np.float32)
-        P["color"] = _mix(two * 1.2, self.c_letter[None, :], (e ** 2)[:, None])
-        P["emit"] = 1.0 + 1.5 * np.exp(-np.abs(p - 1.0) / 0.04) * (p < 1.0)
+        if wave:
+            # a ring of light runs out from the touch over the words' plane and writes them where it passes
+            n32 = nrm.astype(np.float32)
+            dv = tg - f[None, :]
+            dv = dv - (dv @ n32)[:, None] * n32[None, :]
+            rho = np.linalg.norm(dv, axis=1)
+            rmax = float(rho.max()) + 1e-6
+            span = 0.70
+            p = np.clip((a - (ta + rest * span * (rho / rmax) ** 0.8)) / (rest * 0.16), 0.0, 1.0)
+            e = 1.0 - (1.0 - p) ** 2
+            dirn = dv / np.maximum(rho, 1e-6)[:, None]
+            P["pos"] = (tg - dirn * ((1.0 - e) * 0.45 * self.E)[:, None]).astype(np.float32)
+            P["alpha"] = _ss(0.0, 0.3, p)
+            P["assist"] = _ss(0.6, 1.0, p)
+            P["color"] = _mix(two * 1.2, self.c_letter[None, :], (e ** 2)[:, None])
+            P["emit"] = 1.0 + 3.5 * np.exp(-p / 0.18) * (p > 0.0)
+            fr = (a - ta) / (rest * span)
+            if 0.0 < fr < 1.08:
+                rad = rmax * min(fr, 1.08) ** 1.25
+                k_ = 300
+                th = TAU * (np.arange(k_) + 0.5 * _h(k_, 51)) / k_
+                ring = (f[None, :] + rad * (np.cos(th)[:, None] * r.astype(np.float32)[None, :]
+                                            + np.sin(th)[:, None] * u.astype(np.float32)[None, :]))
+                rc = np.where((np.arange(k_) % 2 == 0)[:, None], lin("#ffd27a")[None, :], lin("#9fd0ff")[None, :])
+                gap = np.sin(th * 7.0 + 2.0 * np.sin(th * 3.0) + t * 0.8) > -0.2      # a broken ring, not a hoop
+                ar = 0.22 * float(1.0 - _ss(0.45, 1.05, fr)) * float(_ss(0.0, 0.05, fr)) * gap
+                P["extra"].append(dict(pos=ring.astype(np.float32), size=np.full(k_, 0.05 * self.E, np.float32),
+                                       color=rc.astype(np.float32), alpha=ar.astype(np.float32), emit=2.0,
+                                       kind="spark", twinkle=0.6, dof=0.3, streak=0.0, reflect=False))
+            pos = P["pos"]
+        else:
+            d = tg - f[None, :]
+            dist = np.linalg.norm(d, axis=1)
+            dmax = float(dist.max()) + 1e-6
+            p = np.clip((a - (ta + rest * 0.56 * (dist / dmax) ** 0.85)) / (rest * 0.42), 0.0, 1.0)
+            e = 1.0 - (1.0 - p) ** 1.8
+            side = np.cross(d, nrm.astype(np.float32)[None, :]) * np.where(s[:, 0] < 0.5, -1.0, 1.0)[:, None]
+            arc = np.sin(np.pi * e)
+            pos = f[None, :] + d * e[:, None] + side * (arc * 0.22)[:, None] \
+                + nrm.astype(np.float32)[None, :] * (arc * dist * 0.35 * (s[:, 2] - 0.3))[:, None]
+            P["pos"] = pos.astype(np.float32)
+            P["alpha"] = _ss(0.0, 0.04, p)
+            P["assist"] = _ss(0.75, 1.0, p)
+            P["color"] = _mix(two * 1.2, self.c_letter[None, :], (e ** 2)[:, None])
+            P["emit"] = 1.0 + 1.5 * np.exp(-np.abs(p - 1.0) / 0.04) * (p < 1.0)
         if a < ta + 0.03 and (self.source is None or self.opts.get("comets", False)):
             # two lights of two colours come together (helper BODY's two hands, when a film has them)
             q = float(np.clip(a / ta, 0.0, 1.0))
@@ -1237,14 +1318,15 @@ class Word:
         fl = float(_ss(ta - 0.04, ta + 0.01, a) * (1.0 - _ss(ta + 0.04, ta + 0.5 * rest, a)))
         if fl > 0.01:
             fs = float(self.opts.get("flare_size", 0.55 * w))      # metres: keep it small for hands in close-up
-            P["extra"].append(dict(pos=f[None, :], size=0.09 * fs, color=lin(WARM), alpha=fl, emit=8.0, kind="spark",
+            P["extra"].append(dict(pos=f0[None, :], size=0.09 * fs, color=lin(WARM), alpha=fl, emit=8.0, kind="spark",
                                    dof=False))
-            P["extra"].append(dict(pos=f[None, :], size=fs, color=_mix(lin("#ffd27a"), lin("#7ec8ff"), 0.5),
+            P["extra"].append(dict(pos=f0[None, :], size=fs, color=_mix(lin("#ffd27a"), lin("#7ec8ff"), 0.5),
                                    alpha=0.10 * fl, kind="soft", dof=False))
-        ray = np.nonzero((s[:, 3] < 0.012) & (p > 0.0) & (p < 0.98))[0]
-        if ray.size:
+        ray = np.nonzero((s[:, 3] < 0.005) & (p > 0.0) & (p < 0.98))[0]
+        if ray.size and not wave:
             P["extra"].append(dict(pos=np.repeat(f[None, :], ray.size, 0), pos2=pos[ray], size=0.0012 * w,
-                                   color=two[ray], alpha=0.0, alpha2=0.45 * (1.0 - e[ray]), kind="line"))
+                                   color=two[ray], alpha=0.0, alpha2=0.25 * (1.0 - e[ray]), kind="line",
+                                   streak=0.3))
 
     def _arr_shaft(self, P, a, t, cam, F, tg):
         """Flakes come down a shaft of light from above and assemble into the words."""
@@ -1343,7 +1425,7 @@ class Word:
         col = _mix(nine[np.arange(m) % 9], self.c_letter[None, :], (lift ** 3)[:, None])
         seen = _ss(0.0, 0.08, a) * (1.0 - _ss(0.92, 1.0, p))
         size = _mix(np.full(m, 0.11 * self.E, np.float32), self.size0[:m] * 2.5, lift ** 2)
-        vis = (seen > 0.01) & (np.arange(m) % 5 == 0)      # one light in five is seen; each brings its neighbours
+        vis = (seen > 0.01) & (np.arange(m) % 8 == 0)      # one light in eight is seen; each brings its neighbours
         if vis.any():
             P["extra"].append(dict(pos=pc[vis], size=size[vis], color=col[vis], alpha=seen[vis], emit=1.8,
                                    kind="soft", twinkle=0.35, seed=s[vis, 0], lod=False))
@@ -1415,10 +1497,18 @@ class Word:
             k = 220
             ts = np.linspace(self.t_in, self.t_read0 - 0.12 * (self.t_read0 - self.t_in), k)
             loc = np.zeros((k, 3))
+            sub = np.arange(0, self.N, max(self.N // 6000, 1))
             for j, tj in enumerate(ts):
                 c = self._cam(tj, None)
                 o, r, u, nrm = self.frame(tj, c)
                 pw = self._point(self.source, tj, c, o)
+                if self.bind is not None:
+                    # a word on a moving surface: the pen's place on the word is that of the nearest letter point
+                    q = np.asarray(self.bind(self.xl[sub], self.yl[sub], tj), np.float64).reshape(-1, 3)
+                    dd = np.linalg.norm(q - pw[None, :], axis=1)
+                    i = int(np.argmin(dd))
+                    loc[j] = (self.xl[sub[i]], self.yl[sub[i]], float((pw - q[i]) @ nrm))
+                    continue
                 d = pw - o
                 loc[j] = (d @ r, d @ u, d @ nrm)
             best = np.zeros(self.N, np.int64)
@@ -1667,14 +1757,14 @@ class Word:
         pos += self._world(F, -self.xl * 0.30 * _ss(0.0, 1.0, lp), 0 * lp, (s[:, 2] - 0.5) * 0.25 * w * lp)
         pos += _swirl(tg, t, 3.0 / max(w, 1e-6) * 4.0, 4.1) * (0.06 * w * _ss(0.0, 1.0, sec))[:, None]
         P["pos"] = pos.astype(np.float32)
-        P["alpha"] = 1.0 - _ss(0.10, 0.75, lp)
+        P["alpha"] = 1.0 - _ss(0.0, 0.45, lp)
         P["assist"] = 1.0 - _ss(0.0, 0.12, lp)
         m = self.M
         al = _ss(0.0, 0.10, lp[:m]) * (1.0 - _ss(0.55, 1.0, lp[:m]))
-        vis = al > 0.01
+        vis = (al > 0.01) & (np.arange(m) % 2 == 0)
         if vis.any():
             sm = s[:m]
-            size = self._flake_size(sm[:, 2]) * _ss(0.0, 0.25, lp[:m])
+            size = self._flake_size(sm[:, 2]) * 0.75 * _ss(0.0, 0.25, lp[:m])
             cols = np.stack([lin("#ffe2a8"), lin("#fff3d8"), self.c_base]).astype(np.float32)
             rot = np.stack([sm[:, 0] * TAU + t * (0.8 + 1.6 * sm[:, 1]), sm[:, 2] * TAU + t * (1.5 + 2.5 * sm[:, 3])], 1)
             P["extra"].append(dict(pos=pos[:m][vis], size=size[vis], color=cols[(sm[:, 3] * 3).astype(int) % 3][vis],
@@ -2095,6 +2185,76 @@ def place(camera, t, x, y, depth):
     half = np.tan(np.radians(cam.fov) * 0.5) * depth
     return (np.asarray(cam.pos, np.float64) + f * depth + r * ((x - 0.5) * 2.0 * half * cam.aspect)
             + u * ((y - 0.5) * 2.0 * half))
+
+
+def on_cloth(body, piece="veil", u=0.5, v=0.35, lift=0.012, flip=None, smooth=3):
+    """A bind function (Word(bind=...)) that lays a word on a garment of a Body (helper BODY's cloth): the
+    word lies in the folds of a veil, a robe's skirt or a sleeve and moves with them.
+
+    piece   "veil", "skirt", "sleeve.L", "sleeve.R" (any piece of body.cloth)
+    u, v    where the word's centre sits on the piece: u across it (0..1 along its columns: for a veil from
+            the left side of the face, round the back, to the right), v down it (0 at the top edge, 1 at the hem)
+    lift    metres the letters stand off the cloth (so they are not drawn inside it)
+    flip    None chooses the side to read from (outside, away from the body); True or False forces it
+    smooth  how many passes of a small blur the cloth's shape gets for the word: the word follows the drape
+            and the large folds, not every small wrinkle (0: every wrinkle)
+    Metres on the word are metres along the cloth, so a word keeps its size as the cloth moves and folds."""
+    cs = body.cloth
+    if cs is None or piece not in cs.slices:
+        raise ValueError(f"on_cloth: the body has no cloth piece {piece!r} (has: {sorted(cs.slices) if cs else []})")
+    pc = [p for p in cs.pieces if p.name == piece][0]
+    rest = np.asarray(pc.rest, np.float64)
+    R, C = rest.shape[:2]
+    rm, cm = float(v) * (R - 1), float(u) * (C - 1)
+    i0, j0 = int(np.clip(round(rm), 0, R - 2)), int(np.clip(round(cm), 0, C - 2))
+    col_m = float(np.linalg.norm(rest[i0, j0 + 1] - rest[i0, j0]))        # metres from one column to the next
+    row_m = float(np.linalg.norm(rest[i0 + 1, j0] - rest[i0, j0]))
+    to_world = getattr(body, "_w", None)
+
+    ker = np.array([1.0, 2.0, 3.0, 2.0, 1.0]) / 9.0
+
+    def grid(t):
+        g = np.asarray(cs.piece(piece, t), np.float64)
+        for _ in range(int(smooth)):
+            g = np.pad(g, ((2, 2), (2, 2), (0, 0)), mode="edge")
+            g = sum(ker[k] * g[k:k + R] for k in range(5))
+            g = sum(ker[k] * g[:, k:k + C] for k in range(5))
+        return g if to_world is None else to_world(g.reshape(-1, 3), t).reshape(g.shape)
+
+    def sample(g, rr, cc):
+        rr = np.clip(rr, 0.0, R - 1.001)
+        cc = np.clip(cc, 0.0, C - 1.001)
+        r0, c0 = rr.astype(np.int64), cc.astype(np.int64)
+        fr, fc = (rr - r0)[:, None], (cc - c0)[:, None]
+        return ((g[r0, c0] * (1 - fc) + g[r0, c0 + 1] * fc) * (1 - fr)
+                + (g[r0 + 1, c0] * (1 - fc) + g[r0 + 1, c0 + 1] * fc) * fr)
+
+    # which way along the columns reads left to right from outside the garment
+    if flip is None:
+        c_ = rest[i0].mean(axis=0)
+        out = rest[i0, j0] - c_
+        out[1] = 0.0
+        right = rest[i0, j0 + 1] - rest[i0, j0]
+        up = rest[i0, j0] - rest[i0 + 1, j0]
+        flip = bool(np.dot(np.cross(right, up), out) < 0.0)
+    sgn = -1.0 if flip else 1.0
+
+    def bind(x, y, t):
+        x = np.atleast_1d(np.asarray(x, np.float64))
+        y = np.atleast_1d(np.asarray(y, np.float64))
+        g = grid(t)
+        cc = cm + sgn * x / max(col_m, 1e-6)
+        rr = rm - y / max(row_m, 1e-6)
+        p = sample(g, rr, cc)
+        if lift:
+            a = sample(g, rr, cc + sgn * 0.5) - sample(g, rr, cc - sgn * 0.5)
+            b = sample(g, rr - 0.5, cc) - sample(g, rr + 0.5, cc)
+            n = np.cross(a, b)
+            n /= np.maximum(np.linalg.norm(n, axis=1, keepdims=True), 1e-9)
+            p = p + n * float(lift)
+        return p
+
+    return bind
 
 
 def em_for(camera, t, depth, px):
