@@ -425,6 +425,7 @@ uniform float uTheme;
 uniform sampler2D uLeafT; uniform float uLeafK;   // LEAVES tint: leaf colour (premultiplied) and coverage               // SKY_THEME: 0 the original night-to-dawn world, 1 a bright day (lighter lake, vignette)
 uniform int uNRip; uniform vec4 uRip[24]; uniform float uRipWL;   // lake ripples (engine/water.py)
 uniform float uCalm, uCalmY;   // calm lower third: rings, glitter, reflections and thaw edges fade there
+uniform sampler2D uNatT; uniform float uNatK;   // nature paint (flowers, stream, cliff): colour over the scene
 float calmK(float y){ return 1.0-uCalm*(1.0-smoothstep(uCalmY-0.07, uCalmY+0.05, y)); }
 vec2 hash22(vec2 p){ vec3 p3 = fract(vec3(p.xyx)*vec3(0.1031,0.1030,0.0973));
   p3 += dot(p3, p3.yzx+33.33); return fract((p3.xx+p3.yz)*p3.zy); }
@@ -787,6 +788,11 @@ void main(){
   float tight = max(wordMask(uTextA, uv, uTxA, uBndA, uOffA), wordMask(uTextB, uv, uTxB, uBndB, uOffB));
   col *= 1.0-min(0.50*uShadeK*tight, 0.92);
   col *= 1.0-(ct.g*0.50+ct.b*0.34)*uCredit.w*zk;
+  if(uNatK>0.0){   // nature paint (engine/nature.py): painted over the scene, never over the text
+    vec4 np_ = texture(uNatT, uv);
+    float nk = uNatK*(1.0-textField(uv));
+    col = col*(1.0-np_.a*nk) + np_.rgb*nk;
+  }
   if(uLeafK>0.0){   // leaves are painted green over the scene (light alone only brightens a bright sky)
     vec4 lf = texture(uLeafT, uv);
     float k = uLeafK*(1.0-textField(uv));

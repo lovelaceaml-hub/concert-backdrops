@@ -144,6 +144,8 @@ class Renderer:
         self.water = water.Water(self)   # lake ripples, symbols drawn in light, falling stars (all optional)
         import creatures
         self.cr = creatures.Creatures(self)   # doves, butterflies, fireflies (all optional)
+        import nature
+        self.nature = nature.Nature(self)   # flowers, tree, blossoms, waterfall, stream (all optional)
 
     # ------------------------------------------------------------------
     def text_plan(self, t):
@@ -225,6 +227,7 @@ class Renderer:
                  uColB=L(cols("PETAL_COLORS", ("#ff7fa2", "#ffd2c2"))[1]) * 0.62, uCalm=calm0, uCalmY=CALM_Y)
             self.v_petal.render(moderngl.POINTS)
         self.up.draw_effects(t, P)
+        self.nature.draw(t)
         self.cr.draw(t)
         self.up.draw_figures(t)
         self.gath.draw(t)
@@ -366,6 +369,7 @@ class Renderer:
              uCalm=calm0, uCalmY=CALM_Y)
         self.up.comp_uniforms(self.p_comp, t, P)
         self.water.comp_uniforms(self.p_comp, t)
+        self.nature.comp_uniforms(self.p_comp)
         self.v_comp.render(moderngl.TRIANGLE_STRIP)
         return self.f_out.read(components=3)
 
