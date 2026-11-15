@@ -4,7 +4,8 @@ Everything here is optional. A song file switches a feature on by defining its s
 them render exactly as before. How a song uses these is in engine/UPGRADE-HOWTO.md.
 
   SCENES     painted plates behind the light, with crossfades, slow zoom and pan, and a shimmering lake
-  FIGURES    people of light made of golden sparks that gather, move from pose to pose and dissolve into the arch
+  FIGURES    people of light made of golden sparks that gather, move from pose to pose and dissolve into the arch;
+             kind="rig" builds a living figure on a moving skeleton (engine/rig.py), warp= brings a painted one alive
   SNOW, ICE, SHARDS, SHARDS_MEND, GOLDEN_FIELD, NET, BEAM   effect layers driven by Tracks (0 = off)
   FRAGMENTS  style="write" | "reflection" | "petals" | "engrave" (or the default "sparks")
 """
@@ -130,17 +131,22 @@ class Upgrade:
 
         self.quad = ctx.buffer(np.array([-1, -1, 1, -1, -1, 1, 1, 1], "f4").tobytes())
         self.scenes = list(getattr(S, "SCENES", []) or [])
-        self.figs = list(getattr(S, "FIGURES", []) or [])
+        allf = list(getattr(S, "FIGURES", []) or [])
+        self.figs = [f for f in allf if f.get("kind", "pose") != "rig"]
+        self.rigs = [f for f in allf if f.get("kind", "pose") == "rig"]
         self.sfrags = [f for f in getattr(S, "FRAGMENTS", []) if f.get("style", "sparks") in STYLES]
         self.has_snow = getattr(S, "SNOW", None) is not None
         self.has_net = getattr(S, "NET", None) is not None
         self.has_beam = getattr(S, "BEAM", None) is not None
         self._init_plates()
-        if self.figs:
+        if self.figs or self.rigs:
             self.p_figp = prog(U.FIGP_VS, U.FIGP_FS)
             self.p_figt = prog(U.FIGT_VS, U.FIGT_FS)
             self.v_figt = ctx.vertex_array(self.p_figt, [(self.quad, "2f", "aPos")])
             self._init_figures()
+        if self.rigs:
+            self.p_rigp = prog(U.RIGP_VS, U.FIGP_FS)
+            self._init_rigs()
         if self.has_snow:
             self.p_snow = prog(U.SNOW_VS, U.SNOW_FS)
             sd = np.random.default_rng(11).random((4200, 4)).astype("f4")
@@ -344,12 +350,12 @@ class Upgrade:
         hgt = fig_value(m, "height", 0.34, t) * (1.0 + 0.006 * math.sin(t * 1.1 + x * 9.0))
         wid = hgt * fd["aspect"] / S.ASPECT
         bob = float(m.get("bob", 0.0))
+        dt = 0.05
+        vx = (fig_value(m, "x", 0.5, t + dt) - fig_value(m, "x", 0.5, t - dt)) / (2 * dt)
+        speed = min(abs(vx) / 0.02, 1.0)              # full bob at 0.02 screen widths per second or faster
+        step = 0.10 * hgt                              # screen widths per step
         if bob > 0.0:
             # a gentle walking bob: a small lift per step, only while the figure is actually moving across
-            dt = 0.05
-            vx = (fig_value(m, "x", 0.5, t + dt) - fig_value(m, "x", 0.5, t - dt)) / (2 * dt)
-            speed = min(abs(vx) / 0.02, 1.0)          # full bob at 0.02 screen widths per second or faster
-            step = 0.10 * hgt                          # screen widths per step
             y += bob * 0.010 * hgt * speed * abs(math.sin(math.pi * x / max(step, 1e-3)))
             hgt *= 1.0 + bob * 0.004 * speed * math.sin(2 * math.pi * x / max(step, 1e-3))
         rect = (x - wid / 2.0, y, wid, hgt)
@@ -358,9 +364,25 @@ class Upgrade:
         else:
             to = m.get("to", (0.5, 0.90))
         return dict(a=a, b=b, u=u, rect=rect, gather=t - t0, gdur=gat, diss=(t - t1) if t >= t1 else -1.0,
-                    ddur=dis, to=to, mode=0 if m.get("leave", "rise") == "rise" else 1)
+                    ddur=dis, to=to, mode=0 if m.get("leave", "rise") == "rise" else 1,
+                    walk=(x / max(step, 1e-3), speed))
+
+    @staticmethod
+    def _warp(m):
+        """warp=True (or a dict of sway, breath, lilt, stream strengths) brings a painted figure alive."""
+        w = m.get("warp")
+        if not w:
+            return (0.0, 0.0, 0.0, 0.0)
+        d = dict(sway=1.0, breath=1.0, lilt=1.0, stream=1.0)
+        if isinstance(w, dict):
+            d.update(w)
+        elif not isinstance(w, bool):
+            d = {k: float(w) for k in d}
+        return (float(d["sway"]), float(d["breath"]), float(d["lilt"]), float(d["stream"]))
 
     def draw_figures(self, t):
+        if self.rigs:
+            self.draw_rigs(t)
         if not self.figs:
             return
         for fd in self.fdata:
@@ -377,17 +399,112 @@ class Upgrade:
             dip = 1.0 - 0.55 * math.sin(math.pi * st["u"])
             fd["texs"][st["a"]].use(location=0)
             fd["texs"][st["b"]].use(location=1)
+            wp = self._warp(m)
             setu(self.p_figt, uTexA=0, uTexB=1, uMix=float(mu), uAlpha=float(formed * gone * dip * glow), uT=t,
                  uGlass=float(m.get("glass", 1.0)), uRect=st["rect"], uFlip=1.0 if m.get("flip") else 0.0,
-                 uLine=S.lin("#ffe9c4") * 0.50 + c * 0.55, uBody=c * 0.36, uHalo=c * 0.28)
+                 uLine=S.lin("#ffe9c4") * 0.50 + c * 0.55, uBody=c * 0.36, uHalo=c * 0.28,
+                 uWarp=wp, uWalk=tuple(float(v) for v in st["walk"]))
             self.v_figt.render(moderngl.TRIANGLE_STRIP)
             # the sparks
             setu(self.p_figp, uT=t, uPx=self.px, uRect=st["rect"], uFlip=1.0 if m.get("flip") else 0.0,
                  uPoseA=st["a"], uPoseB=st["b"], uMorph=float(st["u"]), uGather=float(st["gather"]),
                  uGatherDur=float(st["gdur"]), uDiss=float(st["diss"]), uDissDur=float(st["ddur"]),
                  uTo=tuple(float(v) for v in st["to"]), uMode=st["mode"], uBright=glow * float(m.get("sparks", 1.0)),
-                 uSize=float(m.get("spark_size", 1.0)), uColA=S.lin("#ffe8c0"), uColB=c * 1.2)
+                 uSize=float(m.get("spark_size", 1.0)), uColA=S.lin("#ffe8c0"), uColB=c * 1.2,
+                 uWarp=wp, uWalk=tuple(float(v) for v in st["walk"]))
             fd["vao"].render(moderngl.POINTS)
+
+    # ------------------------------------------------------------ B2. living figures (kind="rig")
+    GRID = 256
+
+    def _init_rigs(self):
+        import rig as RG
+        ctx = self.ctx
+        self.rdata = []
+        for k, m in enumerate(self.rigs):
+            R = RG.Rig(m, S.ASPECT, fig_value, seed=k)
+            n = R.n
+            rng = np.random.default_rng(99 + k)
+            seeds = rng.random((n, 4)).astype("f4")
+            gidx = np.arange(0, n, 3)                  # every third spark leaves a short trail when it moves fast
+            seeds_all = np.vstack([seeds, seeds[gidx], seeds[gidx]])
+            tot = len(seeds_all)
+            buf = ctx.buffer(reserve=tot * 8 * 4, dynamic=True)
+            vao = ctx.vertex_array(self.p_rigp, [(buf, "2f 1f 1f 4f", "aPos", "aLy", "aAmul", "aSeed")])
+            tex = ctx.texture((self.GRID, self.GRID), 3, dtype="f1")
+            tex.filter = (moderngl.LINEAR, moderngl.LINEAR)
+            tex.repeat_x = tex.repeat_y = False
+            self.rdata.append(dict(meta=m, rig=R, seeds=seeds_all, gidx=gidx, buf=buf, vao=vao, tex=tex, n=n))
+
+    def _rig_glow(self, rd, pos, b):
+        """The soft outline and glassy body, drawn from where the sparks are now (not from a picture)."""
+        from scipy import ndimage as ndi
+        G = self.GRID
+        px = np.stack([pos[:, 0] * self.w, pos[:, 1] * self.h], 1)
+        lo, hi = px.min(0), px.max(0)
+        side = max(hi[0] - lo[0], hi[1] - lo[1]) * 1.25 + 40.0
+        c = 0.5 * (lo + hi)
+        x0, y0 = c[0] - side / 2, c[1] - side / 2
+        ij = ((px - np.array([x0, y0])) / side * G).astype(int)
+        ok = (ij[:, 0] >= 0) & (ij[:, 0] < G) & (ij[:, 1] >= 0) & (ij[:, 1] < G)
+        img = np.zeros((G, G), np.float32)
+        np.add.at(img, (ij[ok, 1], ij[ok, 0]), np.clip(b[ok], 0.0, 2.0))
+        cell = side / G                                   # pixels per cell
+        d = ndi.gaussian_filter(img, max(4.5 / cell, 0.8))
+        ref = np.percentile(d[d > 0], 75) if (d > 0).any() else 1.0
+        body = np.clip((d / max(ref, 1e-6) - 0.10) / 0.45, 0.0, 1.0)
+        body = body * body * (3 - 2 * body)
+        line = np.clip(4.0 * body * (1.0 - body), 0.0, 1.0) ** 1.5
+        halo = ndi.gaussian_filter(body, max(22.0 / cell, 2.0))
+        halo /= max(halo.max(), 1e-6)
+        tex = (np.dstack([line, body * 0.85, halo]) * 255).astype(np.uint8)
+        rd["tex"].write(tex.tobytes())
+        return (x0 / self.w, y0 / self.h, side / self.w, side / self.h)
+
+    def draw_rigs(self, t):
+        for rd in self.rdata:
+            m, R = rd["meta"], rd["rig"]
+            t0, t1 = R.t0, R.t1
+            gat, dis = float(m.get("gather", 3.0)), float(m.get("dissolve", 3.5))
+            if not (t0 <= t < t1 + dis):
+                continue
+            pos, ly, b = R.sparks(t)
+            gi = rd["gidx"]
+            p1, _, _ = R.sparks(t - 0.05)
+            p2, _, _ = R.sparks(t - 0.10)
+            # trails: older positions of fast-moving sparks (in screen heights per second)
+            sp = np.hypot((pos[gi, 0] - p1[gi, 0]) * S.ASPECT, pos[gi, 1] - p1[gi, 1]) / 0.05
+            trail = np.clip((sp - 0.04) / 0.20, 0.0, 1.0) * float(m.get("trails", 1.0))
+            P = np.vstack([pos, p1[gi], p2[gi]])
+            LY = np.concatenate([ly, ly[gi], ly[gi]])
+            A = np.concatenate([b, -0.55 * trail * b[gi], -0.30 * trail * b[gi]])   # negative: a trail (no lift-off)
+            data = np.hstack([P, LY[:, None], A[:, None], rd["seeds"]]).astype("f4")
+            rd["buf"].write(data.tobytes())
+            c = col(m.get("color"), "#ffcf8a")
+            glow = float(m.get("glow", 1.0))
+            gather = t - t0
+            diss = (t - t1) if t >= t1 else -1.0
+            formed = ss(gat * 0.35, gat * 1.05, gather)
+            gone = 1.0 - ss(0.0, dis * 0.45, diss) if diss >= 0 else 1.0
+            rect = self._rig_glow(rd, pos, b)
+            rd["tex"].use(location=0)
+            rd["tex"].use(location=1)
+            setu(self.p_figt, uTexA=0, uTexB=1, uMix=0.0, uAlpha=float(formed * gone * glow), uT=t,
+                 uGlass=float(m.get("glass", 1.0)), uRect=rect, uFlip=0.0,
+                 uLine=S.lin("#ffe9c4") * 0.30 + c * 0.35, uBody=c * 0.30, uHalo=c * 0.30,
+                 uWarp=(0.0, 0.0, 0.0, 0.0), uWalk=(0.0, 0.0))
+            self.v_figt.render(moderngl.TRIANGLE_STRIP)
+            if "to_star" in m:
+                to = S.STAR_POS[m["to_star"]]
+            else:
+                to = m.get("to", (0.5, 0.90))
+            x, y, h = R.place(t)
+            setu(self.p_rigp, uT=t, uPx=self.px, uH=float(h), uGather=float(gather), uGatherDur=gat,
+                 uDiss=float(diss), uDissDur=dis, uTo=tuple(float(v) for v in to),
+                 uMode=0 if m.get("leave", "rise") == "rise" else 1,
+                 uBright=glow * float(m.get("sparks", 1.0)), uSize=float(m.get("spark_size", 1.0)),
+                 uColA=S.lin("#ffe8c0"), uColB=c * 1.2)
+            rd["vao"].render(moderngl.POINTS)
 
     # ------------------------------------------------------------ C. effect layers drawn as light
     def draw_effects(self, t, P):
