@@ -450,7 +450,7 @@ class Upgrade:
         img = np.zeros((G, G), np.float32)
         np.add.at(img, (ij[ok, 1], ij[ok, 0]), np.clip(b[ok], 0.0, 2.0))
         cell = side / G                                   # pixels per cell
-        d = ndi.gaussian_filter(img, max(4.5 / cell, 0.8))
+        d = ndi.gaussian_filter(img, max(3.0 / cell, 0.7))
         ref = np.percentile(d[d > 0], 75) if (d > 0).any() else 1.0
         body = np.clip((d / max(ref, 1e-6) - 0.10) / 0.45, 0.0, 1.0)
         body = body * body * (3 - 2 * body)
@@ -491,7 +491,7 @@ class Upgrade:
             rd["tex"].use(location=1)
             setu(self.p_figt, uTexA=0, uTexB=1, uMix=0.0, uAlpha=float(formed * gone * glow), uT=t,
                  uGlass=float(m.get("glass", 1.0)), uRect=rect, uFlip=0.0,
-                 uLine=S.lin("#ffe9c4") * 0.30 + c * 0.35, uBody=c * 0.30, uHalo=c * 0.30,
+                 uLine=S.lin("#ffe9c4") * 0.30 + c * 0.35, uBody=c * 0.13, uHalo=c * 0.16,
                  uWarp=(0.0, 0.0, 0.0, 0.0), uWalk=(0.0, 0.0))
             self.v_figt.render(moderngl.TRIANGLE_STRIP)
             if "to_star" in m:

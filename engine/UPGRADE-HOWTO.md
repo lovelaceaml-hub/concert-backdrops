@@ -165,6 +165,54 @@ Nothing to change in a song file; all song files load as before. What changed, a
 - The reflection fragment style's own mirror image stays close to its line.
 - tools/prepare_figure.py removes only thin floor lines (at most 10 rows thick), so filled figures and wide groups survive; add `--keep-lines` to skip the step entirely.
 
+## H. Living figures (2026-11-15, branch engine-living-figures)
+
+Anthony: "why are the people still images? Why aren't they fluid and moving like the sparkles and text?" A painted pose used to slide across as one rigid picture. Now a figure can be built on a moving skeleton, and an existing painted figure can be brought alive. A FIGURES entry that sets none of the keys below renders exactly as before.
+
+### H1. Rigged figures: `kind="rig"`
+
+```python
+FIGURES = [
+    dict(kind="rig", preset="person", t0=0.6, t1=9.0, gather=1.6, dissolve=2.6,
+         x=(0.10, 0.58), move=(1.8, 8.0), ease="linear", y=0.345, height=0.36,
+         actions=[(0.6, "stand"), (1.5, "walk"), (8.0, "stand"), (8.1, "turn", {"yaw": 0.95}), (8.2, "rise")],
+         color="#ffcf9a", to_star=6),
+    dict(kind="rig", preset="person_back", t0=9.0, t1=18.2, x=0.84, y=0.345, height=0.38,
+         actions=[(9.0, "stand"), (11.4, "open", {"blend": 1.6}), (14.6, "bless")], to_star=6),
+    dict(kind="rig", preset="hands", t0=18.6, t1=24.0, x=0.5, y=0.335, height=0.40,
+         actions=[(18.6, "cup"), (20.2, "open"), (21.8, "offer"), (23.2, "release")], to_star=7),
+]
+```
+
+- The body is about 12,000 sparks bound to a skeleton (engine/rig.py). Every frame the skeleton is posed and the sparks follow it, so limbs stride, arms swing, the robe and sleeves sway and lag behind the motion, the veil ripples in the wind, fingers curl and open, and a current of light keeps rising through the body. Fast-moving sparks leave short trails; a few sparks lift off and drift up. The soft outline and glassy inner light are drawn from where the sparks are in that frame, not from a picture.
+- Faceless and clothed by construction: the head is a soft ball of light, everyone wears a long robe.
+- `preset`:
+  - `"person"`: a robed person, seen three-quarter (`yaw` 0.45 by default; 0 is a pure side view). `veil=True` adds a head veil.
+  - `"person_back"`: the same body seen from behind (`yaw` pi/2) with a long veil that flows. Use it for Heavenly Mother (never from the front).
+  - `"child"`: child proportions (larger head, shorter limbs).
+  - `"pair"`: two people. `together=True` (default) side by side, walking in step but not in lockstep; `together=False` facing each other (use `"embrace"`; the key `gap` in an action, for example `(t, "embrace", {"gap": 0.16})`, brings them closer). `gap` (default 0.30) sets the distance.
+  - `"hands"`: two hands with sleeves rising from below; fingers move in a gentle wave all the time.
+- `actions`: a list of `(time, name)` or `(time, name, {overrides})`. Each action eases in over `blend` seconds (default 0.9; per action `{"blend": 1.6}`; per figure `blend=`) from its time, so poses flow into each other.
+  - body: `stand`/`idle` (breathing, weight shift, never fully still), `walk` (legs stride, arms swing; also automatic while `x` moves, `auto_walk=False` turns that off), `offer` (both arms forward, palms up), `reach` (one arm forward), `open` (arms wide), `bless` (arms open and raised), `rise` (arms lifted up), `pray`, `embrace`, `bow`, `kneel`, `wave`, `turn` (turns toward the viewer; set the angle with `{"yaw": 1.2}`), `face` (back to the side).
+  - hands: `cup`, `closed`, `open`, `offer` (palms tip out and a soft light grows above them), `release` (the light rises), `clasp`.
+  - overrides may set `walk`, `lean`, `tilt` (head), `yaw`, `light`, or an arm as `arm_r`/`arm_l` = (upper arm elevation, upper arm azimuth, forearm elevation, forearm azimuth) in radians (elevation 0 hangs down, pi/2 forward or sideways, pi up; azimuth 0 forward, pi/2 out to the side, negative across the body).
+- Walking: the stride is tied to how fast `x` moves, so the feet stay planted on the ground (they do not slide). `stride` sets the length of one full step cycle in figure heights (default 0.62; 0.55 for a child). `speed` (figure heights per second) makes it walk on the spot. `facing="left"`/`"right"` (default: the way it moves; `flip=True` reverses it).
+- Placement and timing are as in section B and G: `x`, `y` (the feet line), `height` (head top to feet), each a number, Track, function or `(start, end)` pair with `move` and `ease`; `t0`, `t1`, `gather`, `dissolve`, `to_star`, `to`, `leave="drift"`.
+- Look: `color`, `glow`, `glass`, `sparks`, `spark_size`, `particles` (default 12000), `trails` (default 1.0; 0 turns the trails off).
+- Size: limbs read well at `height` 0.30 or more. Keep the feet at about 0.33 to 0.35 so the lower third stays calm.
+
+### H2. Painted figures come alive: `warp`
+
+Add `warp=True` to an ordinary FIGURES entry (painted poses). The drawing and its sparks bend with a slow sway from the feet up, breathe at the chest, the hem ripples, and while the figure moves across (`x` a pair or Track) its robe swings with each step (use with `bob=1.0`). A current of light rises through the body and a few sparks lift off it. For finer control give strengths: `warp=dict(sway=1.0, breath=1.0, lilt=1.0, stream=1.0)` (0 turns one part off).
+
+### H3. Test clip
+
+engine/songs/test_living.py (30 seconds, audio/test/s03-newsong-first-60s.mp3) shows a walking person, Heavenly Mother from behind with her veil flowing, hands that open and offer a light, and a painted pair warped alive, moving from a deep dusk into the bright campaign daylight.
+
+### H4. Video in 10 parts
+
+The Render workflow now renders a video in 10 parallel parts (was 4), so a minute renders in well under half the time. Nothing changes for a song file.
+
 ## Rendering
 
 Unchanged: commit and push the song file and its assets (plates and figures are in the repo under `assets/`, so the cloud workflow has them), then run the Render workflow (stills first, then video). See docs/HANDOFF.md.

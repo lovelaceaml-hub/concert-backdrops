@@ -516,7 +516,7 @@ class Hands:
             ta2 = ta + side * 0.5 * curl
             t2 = t1 + np.array([math.sin(ta2), math.cos(ta2)]) * 0.050
             # forearm in a sleeve, from below the frame of the hands
-            elbow = np.array([wx + side * 0.10, -0.02])
+            elbow = W + np.array([side * 0.07, -0.20])
             J[side] = dict(W=W, palm=palm, up=up, rt=rt, fingers=fingers, thumb=(tb, t1, t2), elbow=elbow)
         light = pose.get("light", 0.0)
         rise = pose.get("orb_rise", 0.0)
@@ -581,7 +581,7 @@ class Hands:
             flow = 0.008 * np.sin(TAU * (s * 1.3 - 0.35 * t) + side)
             pts[m] = c + nrm[None, :] * (g["r"][m] * np.cos(g["th"][m]) * rad + flow)[:, None]
         out.append(pts)
-        bright.append(0.70 + 0.4 * (g["r"] > 0.85))
+        bright.append((0.70 + 0.4 * (g["r"] > 0.85)) * ss(0.0, 0.6, g["s"]))   # the sleeves fade out below
         # the offered light: a soft orb that breathes above the palms
         g = self.g["orb"]
         sw = 0.6 + 0.4 * np.sin(t * 2.0 + g["seed"] * 30)
@@ -648,6 +648,8 @@ class Rig:
                 veil = bool(meta.get("veil", back))
                 self.bodies = [Person(rng, n, child=child, veil=veil, yaw=y0)]
             self.base = dict(POSES["stand"], yaw=self.bodies[0].yaw0)
+            if self.preset == "pair":
+                self.base["gap"] = self.gap
         self.n = n
         self.stride = float(meta.get("stride", self.bodies[0].P["stride"] if self.bodies else 0.6))
         for b in self.bodies:

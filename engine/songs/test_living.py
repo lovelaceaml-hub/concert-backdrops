@@ -194,7 +194,7 @@ FIGURES = [
          height=0.38, actions=[(9.0, "stand"), (11.4, "open", {"blend": 1.6}), (14.6, "bless", {"blend": 1.8})],
          color="#ffd9b8", to_star=6),
     # 3. two hands cup, open with moving fingers, offer a light that rises to Consideration's light
-    dict(kind="rig", preset="hands", t0=18.6, t1=24.0, gather=1.8, dissolve=2.6, x=0.5, y=0.335, height=0.40,
+    dict(kind="rig", preset="hands", t0=18.6, t1=24.0, gather=1.8, dissolve=2.6, x=0.5, y=0.39, height=0.40,
          actions=[(18.6, "cup"), (20.2, "open", {"blend": 1.3}), (21.8, "offer", {"blend": 1.2}),
                   (23.2, "release", {"blend": 0.9})],
          color="#ffd6a0", to_star=7, particles=11000),
