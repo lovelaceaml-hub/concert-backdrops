@@ -3,7 +3,7 @@ Not a promo. Original v4 look (the engine's own luminous world), a deep dusk thr
 faces, everyone clothed, nothing dark behind any text, calm lower third.
 
 What it shows (seconds):
- 1 to 14   about 100 small people of light walk in from both sides along the far shore (legs stride, arms swing,
+ 1 to 14   about 64 small people of light walk in from both sides along the far shore (legs stride, arms swing,
            robes sway), slow down, turn toward the centre and settle beneath the arch, breathing, never frozen
  14 to 29  a small flame comes down from the middle of the arch into the hands of the person nearest the centre;
            from there it is passed from hand to hand through the crowd (each giver turns and reaches out, the
@@ -168,8 +168,8 @@ PART = Track([(0, 0.0), (TOTAL, 0.0)])
 SKYLINE_LANTERN = Track([(0, 1.0), (10.0, 1.0), (12.0, 0.25), (TOTAL, 0.25)])
 
 # The crowd and the passed light (engine/UPGRADE-HOWTO.md section I-G)
-GATHERING = dict(t0=1.0, t1=1e9, count=96, center=(0.5, 0.343), spread=(0.40, 0.05), hole=0.035, rows=3,
-                 height=(0.125, 0.10), speed=1.0, arrive_by=13.5, sides=("left", "right"),
+GATHERING = dict(t0=1.0, t1=1e9, count=64, center=(0.5, 0.343), spread=(0.40, 0.035), hole=0.04, rows=2,
+                 height=(0.15, 0.10), speed=1.0, arrive_by=13.5, sides=("left", "right"),
                  colors=("#ffcf9a", "#ffd9b8", "#ffe6c4", "#ffc6a0", "#f2d0ff", "#cfe0ff"))
 PASS_LIGHT = dict(t0=13.5, speed=0.15, path="crowd", start="center", source="arch", color="#ffe2a0",
                   lift=True, rise=True, arch=1.0)
@@ -181,7 +181,7 @@ for i in range(9):
     y = 0.895 - 0.085 * ((x - 0.5) / 0.38) ** 2
     STAR_POS.append((x, y))
 
-ARCH_ON = 34.3
+ARCH_ON = 32.8
 OFF = dict(form=1e9, hold=1e9, star=1e9)
 _lab = [("Greeting", "“How are you?”"), ("Gratitude", "“Thank you.”"), ("Apology", "“I’m sorry.”"),
         ("Inclusiveness", "“It’s okay.”"), ("Concession", "“Please, after you.”"), ("Respect", "“Tell me more.”"),

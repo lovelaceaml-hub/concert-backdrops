@@ -595,7 +595,7 @@ class Crowd:
             col = col + (self.fcol - col) * (0.45 * lit)[:, None]
         tw = 0.62 + 0.38 * np.sin(t * (1.8 + 3.2 * T.seed[None, :, 0]) + T.seed[None, :, 1] * 50 + self.ph[:, None] * 40)
         cur = np.exp(-((((ly * 0.9 - 0.20 * t + self.ph[:, None]) % 1.0) - 0.5) / 0.06) ** 2)   # a rising current
-        amp = b * tw * (1 + 0.8 * cur) * pb[:, None] * 0.62
+        amp = b * tw * (1 + 0.8 * cur) * pb[:, None] * 0.75
         sc = np.sqrt(self.h / 0.13)[:, None]
         size = T.size[None, :] * sc
         if (fdis > 0).any():                       # leaving: the sparks drift up as they fade
@@ -608,12 +608,25 @@ class Crowd:
         keep = amp > 0.004
         parts = [np.column_stack([X[keep], Y[keep], np.broadcast_to(size, keep.shape)[keep], np.full(keep.sum(), 3.2),
                                   C[keep]])]
-        # a soft glow round each body (the bloom of the engine does the rest)
-        gx, gy = self.project(J, J["chest"][:, None] + np.array([0.0, -0.10, 0.0]))
-        gb = pb * (0.10 + 0.22 * lit)
-        on = gb > 0.002
-        parts.append(np.column_stack([gx[on, 0], gy[on, 0], (60.0 * self.h / 0.13)[on], np.full(on.sum(), 2.6),
-                                      (col * gb[:, None])[on] * 0.40]))
+        # the glassy body: soft glows strung along the bones give each person a clear silhouette
+        # (head, chest, waist, robe, sleeves and hands), cheap enough for a crowd
+        legs, arms = J["legs"], J["arms"]
+        knee = 0.5 * (legs[1.0][1] + legs[-1.0][1])
+        ank = 0.5 * (legs[1.0][2] + legs[-1.0][2])
+        hip = J["hip"]
+        bones = [(J["head"], 0.16, 0.50), (0.5 * (J["neck"] + J["chest"]), 0.15, 0.32),
+                 (0.5 * (J["chest"] + hip), 0.17, 0.30), (0.5 * (hip + knee), 0.19, 0.26),
+                 (knee, 0.21, 0.24), (0.5 * (knee + ank) + np.array([0.0, 0.03, 0.0]), 0.23, 0.22)]
+        for side in (1.0, -1.0):
+            S0, E, Hn, d2 = arms[side]
+            bones += [(0.5 * (S0 + E), 0.07, 0.16), (0.5 * (E + Hn), 0.08, 0.20), (Hn + d2 * 0.03, 0.06, 0.55)]
+        bp = np.stack([b[0] for b in bones], 1)
+        bx, by = self.project(J, bp)
+        bsz = np.array([b[1] for b in bones])[None, :] * (self.h * 1080.0)[:, None] * 1.25
+        bw = np.array([b[2] for b in bones])[None, :] * (pb * (0.42 + 0.30 * lit))[:, None]
+        on = bw > 0.003
+        bc = (col[:, None, :] * 0.8 + 0.2) * bw[..., None]
+        parts.append(np.column_stack([bx[on], by[on], bsz[on], np.full(on.sum(), 3.0), bc[on] * 0.55]))
         if self.has_pass:
             parts += self._flames(t, J, alive)
         return np.vstack(parts).astype("f4")
