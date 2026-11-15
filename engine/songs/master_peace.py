@@ -203,13 +203,16 @@ def _s0(t):
     if t < 2.9:
         return C0 + _v(0.0, 0.02 * t, -0.03 * t), look0
     d = drop_pos(t)
-    u = sc(2.9, 3.9, t)                                    # the gaze turns down to the drop
-    look = lerp(look0, d, u)
-    v = sc(3.5, 6.0, t)                                    # and the camera dives after it
+    v = sc(3.5, 6.0, t)                                    # the camera dives after it
     pos = lerp(C0 + _v(0.0, 0.02 * t, -0.03 * t), d + _v(1.2, 4.0, 10.0), v * v * (3 - 2 * v))
     w = sc(5.6, 6.6, t)                                    # pulls out level over the sea
     end = D0 + _v(3.0, 1.7, 15.0)
     pos = lerp(pos, end + _v(0.0, 0.0, -1.5 * max(t - 6.6, 0.0)), w)
+    a, b = _unit(look0 - pos), _unit(d - pos)              # the gaze turns down to the drop (an even turn)
+    om = float(np.arccos(np.clip(a @ b, -1.0, 1.0)))
+    u = sc(2.8, 4.1, t)
+    g = a if om < 1e-6 else (np.sin((1.0 - u) * om) * a + np.sin(u * om) * b) / np.sin(om)
+    look = pos + 12.0 * g
     look = lerp(look, D0 + _v(0.0, 0.6 + 3.2 * sc(6.0, 6.6, t), 0.0), sc(5.4, 6.4, t))   # up with the burst
     return pos, look
 
@@ -306,7 +309,7 @@ def _climb(t):
     if t > HEAVEN_T:
         v = 3.0 + 7.2 * u
         w = t - HEAVEN_T
-        y += v * 0.8 * (1.0 - np.exp(-w / 0.8)) + 4.0 * w
+        y += v * 0.35 * (1.0 - np.exp(-w / 0.35)) + 2.0 * w
     return y
 
 
@@ -354,7 +357,7 @@ HEARTS_T0, HEARTS_T1 = 50.4, 52.6
 SETTLE = (52.2, 54.0)
 LOGO_T = (53.0, 55.0)                            # world to logo; whole at 55.0
 BLOOM_T = 54.3
-CRADLE = (50.2, 52.5)                            # Mother's hands rise under the world and hold it
+CRADLE = (50.5, 52.5)                            # Mother's hands rise under the world and hold it
 END_FOV = 50.0
 EC_SCALE = 1.0                                   # TITLES end card scale (see TITLES below)
 SLOT_Y = (48.0 + 85.0 - 540.0) * EC_SCALE / 1080.0 + 0.5   # the end card logo's middle, from the top
@@ -390,7 +393,7 @@ def _s8(t):
     if t < 51.0:
         e = sc(ASC1, 51.0, t)
         e = 1.0 - (1.0 - e) ** 2.2
-        return lerp(p_a, p_b, e), lerp(q_a, FIN_C, sc(ASC1, 50.4, t))
+        return lerp(p_a, p_b, e), lerp(q_a, FIN_C, sc(ASC1, 50.2, t))
     if t < LOGO_T[0]:
         e = sc(51.0, LOGO_T[0], t)
         return lerp(p_b, p_c, e), FIN_C
@@ -1141,8 +1144,9 @@ def _setup(scene):
             d = 7.0 + 16.0 * u + 8.0 * u * u
             w = 7.0 * (1.0 - 0.8 * d / (d + 50.0))
             wv = 1.3 * (1.0 - 0.6 * d / (d + 50.0))
+            lift = _climb(t) - float(o_h[1]) + float(A7[1])          # they keep pace with us as we rise
             return (o_h + sd * d + rt_h * (x * w + wv * np.sin(1.5 * t + 1.3 * k))
-                    + up_h * (yk * w * 0.55 + wv * np.cos(1.2 * t + 0.9 * k)) - _v(0.0, 1.5, 0.0))
+                    + up_h * (yk * w * 0.55 + wv * np.cos(1.2 * t + 0.9 * k)) + _v(0.0, lift - 1.5, 0.0))
         return f
     heads = [(ahead(k), NINE_GLOW[k], lambda t: sc(HEAVEN_T - 0.3, HEAVEN_T + 0.2, t) * (1.0 - sc(49.1, 49.6, t)), 1.0)
              for k in range(9)]
