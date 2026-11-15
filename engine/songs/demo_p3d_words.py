@@ -88,7 +88,7 @@ _SPECS = [
           arrive="flock", leave="wind", flock_from=3.3, wind=(1.0, 0.18, -0.5), speed=0.7),
     # ---- the sky: the open palm, petals, a light of the arch, the shaft, the stars
     _word(0.50, **SKY, px=92, t_in=4, t_read0=9, t_read1=15, t_out=19, expr="Consideration",
-          arrive="palm", leave="petals", source=_PALM, palm_light=True, wind=(-0.8, 0.5, -0.3)),
+          arrive="palm", leave="petals", source=_PALM, palm_light=True, wind=(-0.8, 0.5, -0.3), reach=0.32),
     _word(0.50, **SKY, px=77, t_in=16, t_read0=21, t_read1=27, t_out=31, expr="Gratitude",
           arrive="petals", leave="arch", to=tuple(LIGHTS[1])),
     _word(0.50, **SKY, px=86, t_in=28, t_read0=33, t_read1=39, t_out=43, expr="Encouragement",

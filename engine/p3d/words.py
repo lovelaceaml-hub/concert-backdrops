@@ -474,16 +474,25 @@ class Word:
     def gain(self, t):
         return 1.0
 
-    def _env(self, t, hold_level):
+    def _read_end(self):
+        """When the reading moment really ends: a word that hands its particles on is held until then."""
+        if self.leave == "morph" and isinstance(self.to, Word):
+            return max(self.to.t_in, self.t_read1)
+        return self.t_read1
+
+    def _env(self, t, hold_level, rise=0.2):
         """How strongly the light of an arrival (shaft, rays) shines at t: up during the arrival, fainter
-        while the words are read, gone as they leave."""
+        while the words are read, gone as they leave (or just before the particles are handed on)."""
         a = (t - self.t_in) / max(self.t_read0 - self.t_in, 1e-6)
-        if a <= 0.0 or t >= self.t_out:
+        end = self._read_end()
+        if a <= 0.0 or t >= max(self.t_out, end):
             return 0.0
-        k = float(_ss(0.0, 0.2, a))
+        k = float(_ss(0.0, rise, a))
         if t > self.t_read0:
             k *= 1.0 - (1.0 - hold_level) * float(_ss(0.0, 1.5, t - self.t_read0))
-        if t > self.t_read1:
+        if self.leave == "morph":
+            k *= 1.0 - float(_ss(end - 0.9, end - 0.1, t))
+        elif t > self.t_read1:
             k *= 1.0 - float(_ss(0.0, 0.6, (t - self.t_read1) / max(self.t_out - self.t_read1, 1e-6)))
         return k
 
@@ -500,7 +509,7 @@ class Word:
         rad = 0.20 * w
         k = 0.8 / rad            # the column's glow grows with its width: keep it gentle whatever the size
         return dict(base=base, radius=rad, top=float(self.centre(self.t_read0)[1] + y1 + 1.6 * w),
-                    spread=-0.6, color=color, strength=lambda t: strength * k * self._env(t, 0.5))
+                    spread=-0.6, color=color, strength=lambda t: strength * k * self._env(t, 0.5, rise=0.55))
 
     def light(self, color=None, strength=1.0, size=None):
         """The world's light (P3D world["light"]) standing behind the word: its rays fan out past the letters
@@ -536,10 +545,14 @@ class Word:
             getattr(self, "_arr_" + self.arrive)(P, a, t, cam, F, tg)
             self._ambient(out, self.arrive, a, t, F, True)
         elif st == "read":
-            self._ambient(out, self.arrive, 1.0, t, F, True, hold=(t - self.t_read0))
+            end = self._read_end()
+            # a word that hands its particles on lets its own light (shaft, rays) go just before
+            gone = float(_ss(end - 0.9, end - 0.1, t)) if self.leave == "morph" else 0.0
+            self._ambient(out, self.arrive, 1.0, t, F, True, hold=(t - self.t_read0), fade=gone * 0.5)
             # a slow wave of brightness runs through the held words
             ph = ((t - self.t_read0) / 3.4) % 1.0 * 1.6 - 0.3
-            P["emit"] = 1.0 + 0.30 * np.exp(-((self.xn - ph) / 0.10) ** 2).astype(np.float32)
+            amp = 0.30 * float(_ss(0.0, 0.5, t - self.t_read0) * (1.0 - _ss(end - 0.5, end, t)))
+            P["emit"] = 1.0 + amp * np.exp(-((self.xn - ph) / 0.10) ** 2).astype(np.float32)
         else:
             if self.leave == "morph":
                 return []          # the next word carries the particles on
@@ -551,8 +564,10 @@ class Word:
 
     def _emit(self, out, P, cam, t):
         """Turns the state of the letters' points into batches: the letters, their halo, their glints."""
-        pos, alpha, size, emit, assist = P["pos"], P["alpha"] * self.wt, P["size"], P["emit"], P["assist"]
+        pos, alpha, size, emit, assist = (P["pos"], P["alpha"] * P.get("wt", self.wt), P["size"], P["emit"],
+                                          P["assist"])
         color = P["color"]
+        glow = P.get("glow", self.c_glow)
         col = self.c_letter if color is None else color
         level = 1.15
         vis = alpha > 0.004
@@ -593,7 +608,7 @@ class Word:
             a = alpha[:k]
             sel = a > 0.01
             if sel.any():
-                out.append(dict(pos=pos[:k][sel], size=self.size0[:k][sel] * 9.0, color=self.c_glow,
+                out.append(dict(pos=pos[:k][sel], size=size[:k][sel] * 9.0, color=glow,
                                 alpha=a[sel] * (0.050 * self.halo * self.N / k / 16.0), kind="soft",
                                 seed=self.s[:k][sel, 1], fog=self.fog, streak=0.0))
         # glints: a few points sparkle like glitter
@@ -662,8 +677,8 @@ class Word:
             h = _h(len(ang), 33)
             flick = 0.65 + 0.35 * np.sin(t * (0.8 + h) + h * 30.0)
             out.append(dict(pos=np.repeat(src[None, :], len(ang), 0), pos2=src[None, :] + d,
-                            size=(0.035 + 0.06 * h) * w, color=_mix(lin(WARM), self.c_glow, 0.45),
-                            alpha=0.16 * env * flick, alpha2=0.0, kind="ribbon", dof=False, reflect=False))
+                            size=(0.02 + 0.04 * h) * w, color=_mix(lin(WARM), self.c_glow, 0.45),
+                            alpha=0.085 * env * flick, alpha2=0.0, kind="ribbon", dof=False, reflect=False))
             # the light itself, behind the words
             out.append(dict(pos=src[None, :], size=0.55 * w, color=_mix(lin(WARM), self.c_glow, 0.5),
                             alpha=0.10 * env, kind="soft", dof=False))
@@ -777,7 +792,7 @@ class Word:
         cx, cz = rad * np.cos(th), 0.9 * rad * np.sin(th)
         cy = self.ymid + self.opts.get("flock_lift", 0.15) * self.Ht + 0.09 * w * np.sin(th * 1.7 + 0.6)
         wave = 1.0 + 0.35 * np.sin(t * 1.6 + s[:, 1] * TAU)
-        ox = (s[:, 1] - 0.5) * 0.55 * w * wave
+        ox = (s[:, 1] - 0.5) * 0.80 * w * wave
         oy = (s[:, 2] - 0.5) * 0.20 * w * wave + 0.04 * w * np.sin(t * 2.3 + s[:, 3] * TAU)
         oz = (s[:, 3] - 0.5) * 0.45 * w * wave
         return cx + ox, cy + oy, cz + oz
@@ -811,8 +826,7 @@ class Word:
         vis = (seen * gone) > 0.01
         if vis.any():
             P["extra"].append(dict(pos=pc[vis], size=size[vis], color=_mix(lin(WARM), self.c_letter, 0.4),
-                                   alpha=(seen * gone)[vis] * 0.95, rot=rot[vis], kind="bird", seed=s[vis, 3],
-                                   emit=1.3))
+                                   alpha=(seen * gone)[vis] * 0.75, rot=rot[vis], kind="bird", seed=s[vis, 3]))
 
     def _arr_stars(self, P, a, t, cam, F, tg):
         """Stars come out of the deep sky onto the letters, fine lines join them, then the letters fill."""
@@ -835,12 +849,12 @@ class Word:
         if len(self.edges):
             ea, eb = self.edges[:, 0], self.edges[:, 1]
             oe = 0.5 * (self.ord[ea] + self.ord[eb])
-            grow = _ss(0.0, 0.07, a - (0.40 + 0.30 * oe))
-            al = grow * (1.0 - float(_ss(0.86, 1.0, a))) * 0.55
+            grow = _ss(0.0, 0.07, a - (0.30 + 0.30 * oe))
+            al = grow * (1.0 - float(_ss(0.86, 1.0, a))) * 0.9
             vis = al > 0.01
             if vis.any():
                 pa, pb = pc[ea[vis]], pc[eb[vis]]
-                P["extra"].append(dict(pos=pa, pos2=pa + (pb - pa) * grow[vis][:, None], size=0.0015 * w,
+                P["extra"].append(dict(pos=pa, pos2=pa + (pb - pa) * grow[vis][:, None], size=0.003 * w,
                                        color=_mix(lin(WARM), self.c_glow, 0.5), alpha=al[vis], kind="line"))
 
     def _arr_touch(self, P, a, t, cam, F, tg):
@@ -909,7 +923,7 @@ class Word:
         self._patches(P, a, st + 0.50)
         vis = (p > 0.0) & (p < 1.0)
         if vis.any():
-            big = (0.016 + 0.020 * s[:, 2]) * w * self.opts.get("flake_size", 1.0)
+            big = (0.013 + 0.016 * s[:, 2]) * w * self.opts.get("flake_size", 1.0)
             size = _mix(big, self.size0[:m] * 2.0, e ** 3)
             cols = np.stack([lin("#ffe2a8"), lin("#fff3d8"), lin("#cfe2ff")]).astype(np.float32)
             col = _mix(cols[(s[:, 3] * 3).astype(int) % 3], self.c_letter[None, :], (e ** 4)[:, None])
@@ -1030,8 +1044,11 @@ class Word:
             ratio = float(np.clip(len(src) / n * (float(np.median(other.size0)) / float(np.median(self.size0))) ** 2,
                                   0.3, 2.5))
             P["alpha"] = _mix(ratio, 1.0, e).astype(np.float32)
+            P["wt"] = _mix(other.wt[j], self.wt, e).astype(np.float32)
             P["color"] = _mix(other.c_letter[None, :], self.c_letter[None, :], e[:, None])
             P["size"] = _mix(other.size0[j], self.size0, e).astype(np.float32)
+            P["glow"] = _mix(other.c_glow * other.halo / max(self.halo, 1e-6), self.c_glow,
+                             float(np.clip((a - 0.05) / 0.5, 0.0, 1.0)))
         else:
             P["alpha"] = _ss(0.0, 0.05, a) * np.ones(n, np.float32)
 
@@ -1084,11 +1101,11 @@ class Word:
         vis = al > 0.01
         if vis.any():
             sm = s[:m]
-            size = (0.012 + 0.022 * sm[:, 2]) * w * _ss(0.0, 0.25, lp[:m])
+            size = (0.006 + 0.012 * sm[:, 2]) * w * self.opts.get("flake_size", 1.0) * _ss(0.0, 0.25, lp[:m])
             cols = np.stack([lin("#ffe2a8"), lin("#fff3d8"), self.c_base]).astype(np.float32)
             rot = np.stack([sm[:, 0] * TAU + t * (0.8 + 1.6 * sm[:, 1]), sm[:, 2] * TAU + t * (1.5 + 2.5 * sm[:, 3])], 1)
             P["extra"].append(dict(pos=pos[:m][vis], size=size[vis], color=cols[(sm[:, 3] * 3).astype(int) % 3][vis],
-                                   alpha=al[vis], rot=rot[vis], kind="flake", seed=sm[vis, 0], emit=1.3))
+                                   alpha=al[vis] * 0.8, rot=rot[vis], kind="flake", seed=sm[vis, 0]))
 
     def _lea_arch(self, P, l, t, cam, F, tg):
         """The words stream into one light of the arch (to= its place) and wake it."""
@@ -1127,7 +1144,7 @@ class Word:
 
         def place(l_, t_):
             sec = np.maximum(l_ - st, 0.0) * tl
-            d = v * (0.5 * sec + 0.5 * sec * sec) * (0.7 + 0.6 * s[:, 1])
+            d = v * (0.5 * sec + 0.5 * sec * sec) * (0.45 + 1.1 * s[:, 1])
             q = away.astype(np.float32)[None, :] * d[:, None]
             wob = _ss(0.0, 1.0, sec) * 0.10 * w
             q += self._world(F, wob * np.sin(t_ * 1.9 + s[:, 2] * TAU),
@@ -1146,8 +1163,9 @@ class Word:
         if vis.any():
             big = (0.018 + 0.012 * s[:, 2]) * w * self.opts.get("bird_size", 1.0)
             size = _mix(np.maximum(self.size0[:m] * 4.0, big * 0.45), big, _ss(0.0, 0.2, lp))
-            P["extra"].append(dict(pos=(tg[:m] + delta)[vis], size=size[vis], color=_mix(lin(WARM), self.c_letter, 0.4),
-                                   alpha=al[vis] * 0.95, rot=rot[vis], kind="bird", seed=s[vis, 3], emit=1.3))
+            P["extra"].append(dict(pos=(tg[:m] + delta)[vis], size=size[vis],
+                                   color=_mix(lin(WARM), self.c_letter, 0.4), alpha=al[vis] * 0.75, rot=rot[vis],
+                                   kind="bird", seed=s[vis, 3]))
 
     def _lea_petals(self, P, l, t, cam, F, tg):
         """The letters turn to petals that spiral away."""
@@ -1156,7 +1174,7 @@ class Word:
         st = 0.42 * (0.6 * self.ord[:m] + 0.4 * s[:, 0])
         lp = self._own(l, st)
         k = lp ** 1.6
-        dx, dy, dz = self._fly_petals(l, t, F, k, turn=-1.0, lift=0.6, reach=self.opts.get("reach", 0.5))
+        dx, dy, dz = self._fly_petals(l, t, F, k, turn=-1.0, lift=0.6, reach=self.opts.get("reach", 0.4))
         tl = self.t_out - self.t_read1
         drift = self.wind.astype(np.float32)[None, :] * (self.opts.get("speed", 0.45) * self.W
                                                          * np.maximum(l - st, 0.0) * tl)[:, None]
@@ -1220,7 +1238,7 @@ class Word:
         pos += _swirl(tg, t, 2.0 / max(w, 1e-6) * 4.0, 5.0) * (0.05 * w * np.sin(np.pi * e))[:, None]
         keep = s[:, 3] < 0.12
         P["pos"] = pos.astype(np.float32)
-        P["alpha"] = np.where(keep, (1.0 - _ss(0.80, 1.0, lp)) * (1.0 + 3.0 * _ss(0.1, 0.5, lp)),
+        P["alpha"] = np.where(keep, (1.0 - _ss(0.58, 0.90, lp)) * (1.0 + 2.2 * _ss(0.1, 0.5, lp)),
                               1.0 - _ss(0.05, 0.45, lp)).astype(np.float32)
         P["assist"] = 1.0 - _ss(0.0, 0.10, lp)
 
@@ -1262,8 +1280,8 @@ class Word:
             ea, eb = self.edges[:, 0], self.edges[:, 1]
             al = float(_ss(0.04, 0.16, l) * (1.0 - _ss(0.30, 0.62, l))) * 0.5
             if al > 0.01:
-                P["extra"].append(dict(pos=pc[ea], pos2=pc[eb], size=0.0015 * w, color=_mix(lin(WARM), self.c_glow, 0.5),
-                                       alpha=al, kind="line"))
+                P["extra"].append(dict(pos=pc[ea], pos2=pc[eb], size=0.003 * w,
+                                       color=_mix(lin(WARM), self.c_glow, 0.5), alpha=al, kind="line"))
 
     def _lea_fade(self, P, l, t, cam, F, tg):
         """The words drift back and go soft."""
