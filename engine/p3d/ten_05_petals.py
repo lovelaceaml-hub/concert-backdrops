@@ -93,8 +93,9 @@ class Tree:
     static = True
 
     def __init__(self, base=(0.0, 0.0, 0.0), height=15.0, colors=(), bough_az=None, bud=None, bloom=None,
-                 crown_t=None, crown_colors=("#ffffff", "#FFD9E4", "#FFE9D6"), bark="#a88466", bark_light="#ffe6c4",
-                 n_bark=26000, n_bloom=3600, n_crown=14000, boughs=9, spread=1.0, seed=11, bright=1.0):
+                 crown_t=None, crown_colors=("#ffffff", "#FFD9E4", "#FFE9D6"), bark="#8c6c58", bark_light="#ffe6c4",
+                 n_bark=26000, n_bloom=3600, n_crown=14000, boughs=9, spread=1.0, seed=11, bright=1.0,
+                 glow=0.05, bloom_glow=0.02, petal_light=0.0):
         rng = np.random.default_rng(seed)
         b = np.asarray(base, np.float64)
         k = height / 15.0
@@ -136,10 +137,10 @@ class Tree:
         nbk = len(bark_p)
         self.bark = dict(pos=bark_p.astype(np.float32), size=np.concatenate(S).astype(np.float32),
                          color=np.tile(show(bark), (nbk, 1)).astype(np.float32), alpha=np.full(nbk, 0.9, np.float32),
-                         kind="soft", paint=0.75, paint_light=0.45, seed=rng.random(nbk).astype(np.float32),
+                         kind="soft", paint=0.95, paint_light=0.15, seed=rng.random(nbk).astype(np.float32),
                          twinkle=0.0, dof=1.0)
         self.bark_glow = dict(pos=bark_p.astype(np.float32), size=(np.concatenate(S) * 1.4).astype(np.float32),
-                              color=np.tile(lin(bark_light) * 0.35 * bright, (nbk, 1)).astype(np.float32),
+                              color=np.tile(lin(bark_light) * glow * bright, (nbk, 1)).astype(np.float32),
                               alpha=np.full(nbk, 1.0, np.float32), kind="soft", seed=rng.random(nbk).astype(np.float32))
         # ---- blossom: clusters along the outer half of each bough and round its twigs
         BP, BC, BL, BB, BS = [], [], [], [], []
@@ -154,9 +155,9 @@ class Tree:
             p = centre + blob + np.array([0.0, 0.35 * k, 0.0])
             BP.append(p)
             mix = rng.random(m)
-            BC.append(np.where((mix < 0.62)[:, None], show(col)[None], np.where((mix < 0.85)[:, None],
+            BC.append(np.where((mix < 0.74)[:, None], show(col)[None], np.where((mix < 0.88)[:, None],
                       show("#ffffff")[None], (0.5 * show(col) + 0.5 * show("#ffffff"))[None])))
-            BL.append(np.where((mix < 0.62)[:, None], lin(col)[None], lin("#fff6ee")[None]))
+            BL.append(np.where((mix < 0.74)[:, None], lin(col)[None], lin("#fff6ee")[None]))
             dist = np.linalg.norm(p - mid, axis=1)
             rank = np.argsort(np.argsort(dist)) / max(m - 1, 1)
             t_bud = (bud[i] if bud is not None and bud[i] is not None else 1e6)
@@ -186,17 +187,33 @@ class Tree:
         self.bloom_pts = bp
         self.bloom = dict(pos=bp.astype(np.float32), size=(np.concatenate(BS) * k).astype(np.float32),
                           color=np.concatenate(BC).astype(np.float32), alpha=np.full(nbl, 0.95, np.float32),
-                          kind="petal", rot=rot.astype(np.float32), paint=0.9, paint_light=0.4,
-                          birth=np.concatenate(BB).astype(np.float32), fade=0.35, flash=2.5, twinkle=0.25,
+                          kind="petal", rot=rot.astype(np.float32), paint=1.0, paint_light=petal_light,
+                          birth=np.concatenate(BB).astype(np.float32), fade=0.4, flash=0.6, twinkle=0.25,
                           seed=rng.random(nbl).astype(np.float32))
         self.bloom_light = dict(pos=bp.astype(np.float32), size=(np.concatenate(BS) * 1.6 * k).astype(np.float32),
-                                color=(np.concatenate(BL) * 0.30 * bright).astype(np.float32),
+                                color=(np.concatenate(BL) * bloom_glow * bright).astype(np.float32),
                                 alpha=np.full(nbl, 1.0, np.float32), kind="soft",
-                                birth=np.concatenate(BB).astype(np.float32), fade=0.35, flash=4.0,
+                                birth=np.concatenate(BB).astype(np.float32), fade=0.4, flash=2.0,
                                 seed=rng.random(nbl).astype(np.float32))
 
     def sample(self, t):
-        return [self.bark, self.bark_glow, self.bloom, self.bloom_light]
+        return [self.bark, self.bloom]
+
+    def glow_set(self, gain=None):
+        """The tree's own light (bark and blossom glow) as a set of its own, so its strength can follow the
+        camera: a soft glow close up, almost none from far away (where thousands of glows would add up to a
+        white blot)."""
+        tree = self
+
+        class _Glow:
+            static = True
+
+            def sample(self, t):
+                return [tree.bark_glow, tree.bloom_light]
+        g = _Glow()
+        if gain is not None:
+            g.gain = gain
+        return g
 
 
 class Meadow:
@@ -248,7 +265,7 @@ class Stones:
 class Release:
     """The tree lets go: petals leave the blossom at `t0` and open outward as a dome on the wind."""
 
-    def __init__(self, starts, t0, wind, colors, n=14000, speed=9.0, rise=4.0, seed=41, life=7.0):
+    def __init__(self, starts, t0, wind, colors, n=9000, speed=8.0, rise=4.0, seed=41, life=4.2):
         rng = np.random.default_rng(seed)
         idx = rng.integers(0, len(starts), n)
         self.p0 = np.asarray(starts, np.float64)[idx]
@@ -282,8 +299,8 @@ class Release:
         rot = np.stack([aa * 1.5 + s[:, 1] * TAU, aa * (3.0 + 3.0 * s[:, 2])], axis=1)
         sel = alpha > 0.01
         return dict(pos=pos[sel].astype(np.float32), size=self.size[sel], color=self.col[sel],
-                    alpha=alpha[sel].astype(np.float32), kind="petal", rot=rot[sel].astype(np.float32), paint=0.9,
-                    paint_light=0.4, seed=s[sel, 0], twinkle=0.2)
+                    alpha=alpha[sel].astype(np.float32), kind="petal", rot=rot[sel].astype(np.float32), paint=1.0,
+                    paint_light=0.08, seed=s[sel, 0], twinkle=0.2)
 
 
 class Stream:
@@ -339,3 +356,66 @@ class Stream:
         return dict(pos=pos[sel].astype(np.float32), size=self.size[sel], color=self.col[sel],
                     alpha=alpha[sel].astype(np.float32), kind="petal", rot=rot[sel].astype(np.float32),
                     paint=self.paint, paint_light=0.4, seed=s[sel, 0], twinkle=0.2)
+
+
+class Painted:
+    """Wraps a point set (a Body) so that its batches of the given kinds are also painted in their own colour
+    over the scene (petals that leave a person keep their colour on a bright day sky), and, with `fill`, lays a
+    translucent coat of that colour under the body's own light (its largest batch drawn again as paint with
+    larger, softer points), so a person of light holds form and colour on a bright day."""
+
+    def __init__(self, inner, kinds=("petal",), paint=0.85, paint_light=0.4, fill=None, fill_alpha=0.2,
+                 fill_size=0.018, words=None):
+        self.inner, self.kinds, self.paint, self.paint_light = inner, tuple(kinds), paint, paint_light
+        self.words = words          # the petals a person sheds keep out of a word that is being read
+        self.fill = None if fill is None else show(fill)
+        self.fill_alpha, self.fill_size = fill_alpha, fill_size
+        self.wants_camera = getattr(inner, "wants_camera", False)
+        if hasattr(inner, "gain"):
+            self.gain = inner.gain
+
+    def sample(self, t, cam=None):
+        res = self.inner.sample(t, cam) if self.wants_camera else self.inner.sample(t)
+        out = paint_batches(res, self.kinds, self.paint, self.paint_light)
+        if self.words is not None and out:
+            from . import words as _pw
+            for b in out:
+                if b and b.get("kind") in self.kinds:
+                    k = _pw.clear(b["pos"], t, self.words, cam, floor=0.0)
+                    if k is not None:
+                        b["alpha"] = np.asarray(b.get("alpha", 1.0), np.float32) * k
+        if self.fill is not None and out:
+            big = max(out, key=lambda b: len(b["pos"]) if b else 0)
+            if big and len(big["pos"]) > 1000:
+                n = len(big["pos"])
+                a = np.asarray(big.get("alpha", 1.0), np.float32)
+                a = np.broadcast_to(a, (n,)) if a.ndim == 0 else a
+                out = [dict(pos=big["pos"], size=np.full(n, self.fill_size, np.float32),
+                            color=np.broadcast_to(self.fill, (n, 3)).astype(np.float32),
+                            alpha=np.clip(a / max(float(np.max(a)), 1e-6), 0.0, 1.0) * self.fill_alpha,
+                            kind="soft", paint=1.0, paint_light=0.0, twinkle=0.0)] + out
+        return out
+
+
+def paint_batches(res, kinds=("petal",), paint=0.85, paint_light=0.4):
+    """The batches of a point set's sample, with those of the given kinds also painted in their colour."""
+    if not res:
+        return res
+    out = []
+    for b in (res if isinstance(res, (list, tuple)) else [res]):
+        if b and b.get("kind") in kinds:
+            b = dict(b)
+            b["paint"] = paint
+            b["paint_light"] = paint_light
+        out.append(b)
+    return out
+
+
+def paint_word_petals(words, paint=0.85, paint_light=0.4):
+    """Every word's flying petals (arrivals and leavings) are also painted in their colour."""
+    for w in words.words:
+        orig = w.sample
+
+        def sample(t, cam=None, _o=orig):
+            return paint_batches(_o(t, cam), ("petal",), paint, paint_light)
+        w.sample = sample

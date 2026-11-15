@@ -74,6 +74,7 @@ TOUCH = 18.20                     # a measured hit in section 3: the friends' ha
 GUST2 = 22.75                     # on to the stepping stones (between the bar starts 22.17 and 24.45)
 CALM = 38.40                      # the runner has gone through her words; the wind drops
 HOME = 46.60                      # the great gust round the tree
+PAIR_T = 37.70                    # the helper starts toward the elder (the pair clip): clasp 41.6, he rises 41.7 to 42.7
 
 # ---- the end card (the standard end card: coral title by a ribbon, navy lines rising)
 FORM_DUR = 2.5
@@ -88,6 +89,43 @@ TAGLINE = dict(text="Sunday, December 6 · 4:30 PM\nWorld Mission Society Church
                sizes=(78, 77), t0=TAG_T0, t1=TAG_T1, color=theme.NAVY, glow=theme.WHITE_GLOW, anim="rise")
 FRAGMENTS = []
 _base.TITLE, _base.TAGLINE = TITLE, TAGLINE
+
+# ---- the concert badge (Anthony: the concert title and the date show from the beginning and throughout): large
+# on frame 0, settled into the top left corner by 2.8 s, gone as the end card forms (it carries the same words).
+# Warm white on this film's deep upper skies; every shot keeps the top left sky open behind it.
+CREDIT = dict(song="The Words of Mother’s Love",
+              concert="Healing Concert · Sunday, December 6 · 4:30 PM",
+              t_in=-1.0, t_full=0.0, t_move=1.6, t_rest=2.8, scale=0.55, alpha_rest=0.92,
+              margin_x=0.035, margin_top=0.05)
+BADGE_OUT = (T_FORM, T_FORM + 1.0)
+BADGE_BBOX = (0.132, 0.869, 0.497, 0.686)      # the card at full size (text.render_credit), screen fractions, y up
+
+
+def _ss1(a, b, x):
+    u = min(max((x - a) / (b - a), 0.0), 1.0)
+    return u * u * (3 - 2 * u)
+
+
+def credit_state(t, bbox):
+    """Centre, scale and strength of the badge; bbox is its size at full card size."""
+    c = CREDIT
+    x0, x1, y0, y1 = bbox
+    a_in = _ss1(c["t_in"], c["t_full"], t)
+    m = _ss1(c["t_move"], c["t_rest"], t)
+    scale = c["scale"] ** m
+    cx0, cy0 = (x0 + x1) / 2.0, (y0 + y1) / 2.0
+    tx = c["margin_x"] + c["scale"] * (x1 - x0) / 2.0
+    ty = 1.0 - c["margin_top"] - c["scale"] * (y1 - y0) / 2.0
+    cx, cy = cx0 * (1 - m) + tx * m, cy0 * (1 - m) + ty * m
+    alpha = a_in * (1.0 + (c["alpha_rest"] - 1.0) * m) * (1.0 - _ss1(BADGE_OUT[0], BADGE_OUT[1], t))
+    return (cx, cy, scale, alpha), (cx0, cy0)
+
+
+def badge_box(t, pad=0.025):
+    """The badge on screen at t (x0, y0, x1, y1; y up), with a margin: nothing of the 3D layer falls in it."""
+    (cx, cy, sc, a), _ = credit_state(t, BADGE_BBOX)
+    hw, hh = 0.5 * (BADGE_BBOX[1] - BADGE_BBOX[0]) * sc + pad, 0.5 * (BADGE_BBOX[3] - BADGE_BBOX[2]) * sc + pad
+    return (cx - hw, cy - hh, cx + hw, cy + hh), a
 
 
 # ---------------------------------------------------------------------------------------------------------
@@ -120,11 +158,11 @@ class St:
 
 
 SUN_AZ = 200.0
-A = St(6.0, 46.0, 180.0)          # the giver: into the low sun
+A = St(6.0, 46.0, 165.0)          # the giver: the low sun just off the left of the picture
 B = np.array([22.0, 0.0, 40.0])   # the lake page (Gratitude, from straight above)
 C = St(34.0, 26.0, 20.0)          # two friends under a small tree
-D = St(44.0, 8.0, 20.0)           # the stepping stones
-E = St(26.0, -24.0, 310.0)        # the one who speaks and the one who listens (the great tree far behind)
+D = St(44.0, 8.0, 20.0)           # one lets the other go first
+E = St(26.0, -24.0, 130.0)        # the one who speaks and the one who listens (open water behind them)
 RUN_AZ, RUN_V, RUN_T0 = 280.0, 5.2, 32.9
 RUN_P0 = np.array([14.0, 0.0, -40.0])
 G = St(-32.0, -14.0, 150.0)       # the breath: an elder, a helping hand; then the child in the light
@@ -159,7 +197,7 @@ def _smooth_keys(keys):
 
 
 # the camera's roll: a bank on the first gust, a spin in the dive, a full barrel roll in the gale
-ROLL = _smooth_keys([(0.0, 0.0), (HIT0, 0.0), (1.05, -20.0), (1.9, 6.0), (2.7, 0.0),
+ROLL = _smooth_keys([(0.0, 0.0), (HIT0, 0.0), (1.05, -9.0), (1.9, 3.0), (2.7, 0.0),
                      (S2, 0.0), (7.7, 12.0), (8.9, 0.0),
                      (S3, 0.0), (13.95, -40.0), (14.7, -8.0), (15.3, 0.0),
                      (S4 - 0.05, 0.0), (S4 + 0.5, 5.0), (21.0, 0.0),
@@ -174,8 +212,8 @@ ROLL = _smooth_keys([(0.0, 0.0), (HIT0, 0.0), (1.05, -20.0), (1.9, 6.0), (2.7, 0
 def _moves(focus):
     """The camera, as one list of moves. focus: the rig's focus (a world point function or "target")."""
     a1 = (A(-4.6, 8.6, 1.15), A(1.0, 12.4, 2.35))      # the Greeting set-up (camera, target)
-    b0 = (B + np.array([0.0, 11.0, 3.4]), B + np.array([0.0, 0.0, 0.3]))
-    b1 = (B + np.array([0.8, 12.7, 3.0]), B + np.array([0.4, 0.0, 0.0]))
+    b0 = (B + np.array([0.0, 9.6, 3.0]), B + np.array([0.0, 0.0, 0.6]))
+    b1 = (B + np.array([0.7, 11.0, 2.6]), B + np.array([0.4, 0.0, 0.3]))
     c0 = (C(-7.4, -0.3, 1.35), C(0.0, 0.0, 2.05))
     d0 = (D(-8.6, -0.6, 1.2), D(2.6, 0.0, 2.05))
     e0 = (E(-7.2, -0.4, 1.25), E(0.0, 0.0, 1.75))
@@ -184,8 +222,8 @@ def _moves(focus):
     ch = [(t, *_chase(t)) for t in np.arange(S6 + 0.25, CALM + 0.01, 0.5)]
     return [
         # 1. close profile; the gust tears the camera off downwind; hover on the Greeting
-        hold(A(-1.75, 0.18, 1.50), A(0.0, 0.22, 1.56), -1.0, HIT0, drift=(0.05, 0.0, 0.0), fov=30, aperture=0.035),
-        fly([(HIT0, A(-1.75, 0.25, 1.50), A(0.0, 0.3, 1.56)), (1.1, A(-2.4, 2.6, 1.25), A(0.6, 5.5, 1.7)),
+        hold(A(-1.9, -0.05, 1.45), A(0.0, -0.25, 1.64), -1.0, HIT0, drift=(0.05, 0.0, 0.0), fov=30, aperture=0.035),
+        fly([(HIT0, A(-1.9, 0.0, 1.45), A(0.0, -0.15, 1.62)), (1.1, A(-2.4, 2.6, 1.25), A(0.6, 5.5, 1.7)),
              (1.9, A(-3.6, 6.0, 1.05), A(1.5, 10.5, 2.1)), (2.8, *a1)],
             fov=lambda t: 30.0 + 12.0 * float(K._ss(HIT0, 2.6, t)), aperture=0.02, blend=0.25),
         hold(a1[0], a1[1], 2.8, S2, drift=(0.22, 0.03, -0.08), fov=42, aperture=0.05, blend=0.8),
@@ -220,27 +258,27 @@ def _moves(focus):
         hold(g0[0], g0[1], S7, BIG, drift=np.array([0.0, -0.06, 0.0]) + _d(G.view) * 0.12, fov=38, aperture=0.08,
              blend=0.8),
         # the biggest hit: thrown low and wide into the light over a jumping child
-        dolly(G(-5.2, -0.2, 1.45), G(-8.4, 2.4, 0.55), BIG, HOME, look=(G(0.6, 1.0, 2.0), G(1.4, 1.6, 2.7)),
+        dolly(G(-5.2, -0.2, 1.45), G(-6.8, 1.9, 0.7), BIG, HOME, look=(G(0.6, 1.0, 2.0), G(1.2, 1.4, 2.5)),
               fov=(44, 40), aperture=0.03, ease="out", blend=0.25),
         # 8. home: round the tree to Heavenly Mother, from behind
-        fly([(HOME, G(-8.4, 2.4, 0.55), G(1.4, 1.6, 2.7)), (47.1, np.array([-14.0, 2.4, 9.0]),
+        fly([(HOME, G(-6.8, 1.9, 0.7), G(1.2, 1.4, 2.5)), (47.1, np.array([-14.0, 2.4, 9.0]),
                                                               np.array([0.0, 3.0, 12.0])), (47.9, *m0)],
             fov=(52, 34), aperture=0.02, blend=0.3),
         hold(m0[0], m0[1], 47.9, S8, drift=(0.05, 0.08, 0.15), fov=34, aperture=0.04, blend=0.6),
         # 9. the spiral climb past the nine boughs
-        orbit((0.0, 8.0, 0.0), radius=(11.6, 8.6), height=(2.0, 18.0), a0=8.0, a1=118.0, t0=S8, t1=PEAK,
-              look=lambda t: (0.0, 4.5 + 2.4 * (t - S8), 0.0), fov=52, aperture=0.03, blend=0.9),
+        orbit((0.0, 7.0, 0.0), radius=(23.0, 19.0), height=(2.2, 12.0), a0=8.0, a1=98.0, t0=S8, t1=PEAK,
+              look=lambda t: (0.0, 5.5 + 0.9 * (t - S8), 0.0), fov=52, aperture=0.02, blend=0.9),
         # 10. the tree lets go; pull back over the lake to the end card
-        fly([(PEAK, np.array([0.0, 18.0, 0.0]) + _d(118.0) * 8.6, np.array([0.0, 16.0, 0.0])),
-             (55.4, _d(116.0) * 30.0 + np.array([0.0, 9.0, 0.0]), np.array([0.0, 19.5, 0.0])),
-             (56.7, _d(112.0) * 56.0 + np.array([0.0, 4.2, 0.0]), np.array([0.0, 22.5, 0.0])),
-             (TOTAL + 0.5, _d(109.0) * 63.5 + np.array([0.0, 3.4, 0.0]), np.array([0.0, 23.0, 0.0]))],
+        fly([(PEAK, np.array([0.0, 12.0, 0.0]) + _d(98.0) * 19.0, np.array([0.0, 9.8, 0.0])),
+             (55.4, _d(106.0) * 28.0 + np.array([0.0, 7.0, 0.0]), np.array([0.0, 16.0, 0.0])),
+             (56.7, _d(112.0) * 38.0 + np.array([0.0, 3.6, 0.0]), np.array([0.0, 20.5, 0.0])),
+             (TOTAL + 0.5, _d(110.0) * 41.5 + np.array([0.0, 3.2, 0.0]), np.array([0.0, 21.0, 0.0]))],
             fov=46, aperture=0.0, blend=0.4),
     ]
 
 
 def _rig(focus="target"):
-    return Rig(_moves(focus), roll=ROLL, handheld=0.22, shutter=0.45, min_height=0.3, focus=focus)
+    return Rig(_moves(focus), roll=ROLL, handheld=0.22, shutter=0.35, min_height=0.3, focus=focus)
 
 
 _LAYOUT = _rig()
@@ -273,27 +311,28 @@ WIND = Wind(base=(2.0, 0.25, -0.6), gusts=[(t, 3.2, 1.4) for t in (HIT0, S2, S3,
                                                                       S8, PEAK)], sway=0.3, seed=2.0)
 
 # flat words on the lake page: the block's centre on the water, read from the +z side
-_GRAT_EM = PW.em_for(_LAYOUT, 11.1, 11.6, 90)
+_GRAT_EM = PW.em_for(_LAYOUT, 11.1, 10.4, 90)
 
 _SPECS = [
-    _w("Greeting", 0.52, 0.64, 7.0, 104, HIT0, 2.6, 6.6, 8.2, arrive="petals", source=_palm("giver", "R"),
+    _w("Greeting", 0.52, 0.62, 7.0, 104, HIT0, 2.6, 6.6, 8.2, arrive="petals", source=_palm("giver", "R"),
        leave="petals", wind=(1.0, 0.35, -0.2)),
     dict(expr="Gratitude", pos=(float(B[0]), 0.04, float(B[2])), em=_GRAT_EM, face="flat", facing=0.0,
          t_in=7.3, t_read0=9.4, t_read1=12.9, t_out=14.6, arrive="petals", source=_palm("child", "R", 0.1),
          leave="petals", wind=(0.8, 0.9, -0.3)),
-    _w("Apology", 0.5, 0.66, 7.4, 92, S3 + 0.2, 15.0, 18.0, 18.2, arrive="lake", leave="morph"),
-    _w("Inclusiveness", 0.5, 0.64, 7.8, 104, TOUCH, S4 + 0.25, GUST2, 24.0, arrive="morph", source="Apology",
+    _w("Apology", 0.46, 0.57, 7.4, 92, 14.5, 15.5, 18.1, 18.2, arrive="petals", source=_palm("friend_m", "R"),
+       leave="morph"),
+    _w("Inclusiveness", 0.44, 0.58, 7.8, 100, TOUCH, S4 + 0.25, GUST2, 24.0, arrive="morph", source="Apology",
        leave="petals", wind=(1.0, 0.4, -0.3)),
-    _w("Concession", 0.5, 0.68, 9.5, 104, 23.0, 24.15, S5 - 0.07, 28.2, arrive="petals",
+    _w("Concession", 0.52, 0.63, 9.5, 104, 23.0, 24.15, S5 - 0.07, 28.2, arrive="petals",
        source=_palm("yielder", "R"), leave="wind", wind=(1.0, 0.2, -0.4)),
-    _w("Respect", 0.5, 0.69, 7.0, 96, S5 + 0.4, 28.6, 31.7, 33.2, arrive="palm", source=_palm("speaker", "R"),
+    _w("Respect", 0.53, 0.63, 7.0, 96, S5 + 0.4, 28.6, 31.7, 33.2, arrive="palm", source=_palm("speaker", "R"),
        leave="petals", wind=(1.0, 0.5, -0.2)),
-    dict(expr="Encouragement", ride=(0.5, 0.67, 9.0), face="screen",
+    dict(expr="Encouragement", ride=(0.53, 0.64, 9.0), face="screen",
          em=PW.em_for(_LAYOUT, 36.0, 9.0, 92), t_in=S6 + 0.2, t_read0=34.6, t_read1=37.5, t_out=CALM + 0.2,
          arrive="petals", leave="petals", wind=(-0.4, 0.8, 0.2)),
-    _w("Consideration", 0.5, 0.68, 6.6, 102, CALM, 39.9, 42.45, 42.5, arrive="palm", source=_palm("helper", "L"),
+    _w("Consideration", 0.53, 0.62, 6.6, 102, CALM, 39.9, 42.45, 42.5, arrive="palm", source=_palm("helper", "L"),
        leave="morph"),
-    _w("Compliment", 0.56, 0.70, 8.0, 104, BIG, 43.6, HOME - 0.2, 48.0, arrive="morph", source="Consideration",
+    _w("Compliment", 0.60, 0.60, 8.0, 104, BIG, 43.6, HOME - 0.2, 48.0, arrive="morph", source="Consideration",
        leave="petals", wind=(-0.6, 0.8, 0.5)),
 ]
 WORDS = PW.Words(_SPECS, face="camera", camera=_LAYOUT, tint=0.6, bright=1.25)
@@ -307,7 +346,7 @@ CAMERA = _rig(focus=lambda t: WORDS.focus_point(t, _FOCUS_DEFAULT))
 # ---------------------------------------------------------------------------------------------------------
 _COL9 = [e["color"] for e in PW.EXPRESSIONS]
 _BLOOM = [S8 + 0.25 + 0.5 * i for i in range(9)]
-_BOUGH_AZ = [8.0 + 110.0 * (b - S8) / (PEAK - S8) + 28.0 for b in _BLOOM]
+_BOUGH_AZ = [8.0 + 90.0 * (b - S8) / (PEAK - S8) + 20.0 for b in _BLOOM]
 _BUD = [WORDS[e["label"]].t_read1 for e in PW.EXPRESSIONS]
 
 
@@ -316,17 +355,27 @@ def _setup(scene):
     w = WIND
     glow = dict(look="glitter", wind=w, fade=0.7, points=52000)
 
-    def body(name, shape, **kw):
+    def body(name, shape, fill=None, **kw):
         d = dict(glow)
         d.update(kw)
+        d["bright"] = d.get("bright", 1.5) * 1.35
+        # every person sheds a few petals on the wind all the time (ref 07, 15)
+        d["effects"] = list(d.get("effects", [])) + [dict(kind="shed", sprite="petal", n=1600, life=2.6, speed=0.5,
+                                                          size=7.0, rise=0.12, turb=0.4)]
         b = Body(shape, **d)
         BODIES[name] = b
-        b.add(scene, name)
+        if fill is None:          # a translucent coat a shade deeper than the person's own colour
+            c = np.array([int(d["color"][k:k + 2], 16) for k in (1, 3, 5)]) * 0.95
+            fill = "#%02x%02x%02x" % tuple(int(v) for v in c)
+        # the petals that leave a person keep their colour (and keep out of the words being read), and the
+        # person holds form on a bright day
+        scene.add(name, K.Painted(b, fill=fill, fill_alpha=0.12, words=WORDS), mask=b.mask())
         return b
 
     # 1. the giver and the man she greets
-    body("giver", "woman", at=(A.c[0], A.c[2]), facing=90.0, garment="dress", hair=True, color="#ff9f84",
-         color2="#ffe7cf", gesture=[(-3.0, 2.2, "blow")], show=(-1.0, 2.6), fade=0.3, bright=1.5,
+    body("giver", "woman", at=(A.c[0], A.c[2]), facing=az_of(-_r(A.view)), garment="dress", hair=True, color="#ffa585",
+         color2="#ffe9d2", gesture=[(-3.0, 2.2, "blow")], show=(-1.0, 2.6), fade=0.3, bright=1.6, points=70000,
+         fill="#f08a6a",
          effects=[dict(kind="petals", t=HIT0, dur=1.6)])
     man = PW.place(_LAYOUT, 4.6, 0.30, 0.42, 8.6)
     body("stranger", "man", at=(man[0], man[2]), facing=az_of(_d(A.view) * -1.0 + _r(A.view) * 1.4),
@@ -334,9 +383,9 @@ def _setup(scene):
          gesture=[(2.2, 4.6, "look_up"), (4.4, 7.4, "reach", dict(to=tuple(WORDS["Greeting"].centre(4.0))))],
          show=(0.8, 8.4), bright=1.4)
     # 2. the child and the woman at work in the shallows (seen from above)
-    body("child", "child", at=(B[0] - 6.6, B[2] + 2.8), facing=90.0, garment="tunic", color="#ffd56a",
+    body("child", "child", at=(B[0] - 3.4, B[2] + 3.3), facing=90.0, garment="tunic", color="#ffd56a",
          color2="#fff3cf", gesture=[(7.0, 11.5, "raise")], show=(6.6, 14.6), bright=1.5)
-    body("worker", "woman", at=(B[0] - 5.4, B[2] + 3.8), facing=60.0, garment="robe", color="#ffe1a8",
+    body("worker", "woman", at=(B[0] - 2.2, B[2] + 3.9), facing=60.0, garment="robe", color="#ffe1a8",
          color2="#ffffff", motion=[(6.6, "kneel", dict(one=True))], show=(6.6, 14.6), bright=1.4)
     # 3. two friends under the small tree
     m_at, w0, w1 = C(0.0, 1.35, 0.0), C(0.25, -1.7, 0.0), C(0.1, -0.5, 0.0)
@@ -350,14 +399,14 @@ def _setup(scene):
          color="#ffa9c4", color2="#fff0f5", gesture=[(17.4, 23.6, "reach", dict(to=tuple(meet)))],
          show=(S3, 23.8), bright=1.4)
     scene.add("touch", Flare(tuple(meet), TOUCH, color="#ffd0e0", color2="#fff6d8", strength=0.7, reach=0.7))
-    small = C(3.4, 0.4, 0.0)
-    scene.add("small_tree", K.Tree(base=small, height=6.5, boughs=6, colors=("#F582AF", "#FFD0E0", "#ffffff"),
-                                   bloom=[TOUCH + 0.12 * i for i in range(6)], crown_t=TOUCH + 0.1,
-                                   crown_colors=("#ffffff", "#FFC4DA", "#F582AF"), n_bloom=1500, n_crown=7000,
-                                   n_bark=9000, seed=12))
-    # 4. the stepping stones
-    stones = [D(0.9 + 0.95 * k, 0.12 * np.sin(1.7 * k), 0.0) for k in range(16)]
-    scene.add("stones", K.Stones(stones))
+    small = C(2.4, 6.3, 0.0)
+    st = K.Tree(base=small, height=6.5, boughs=6, colors=("#F582AF", "#FFD0E0", "#ffffff"),
+                bloom=[TOUCH + 0.12 * i for i in range(6)], crown_t=TOUCH + 0.1,
+                crown_colors=("#ffffff", "#FFC4DA", "#F582AF"), n_bloom=1500, n_crown=7000, n_bark=9000, seed=12,
+                bloom_glow=0.16, petal_light=0.1)
+    scene.add("small_tree", st)
+    scene.add("small_tree_glow", st.glow_set())
+    # 4. one lets the other go first
     body("yielder", "woman", at=tuple(D(0.2, -1.15, 0.0)[[0, 2]]), facing=az_of(_r(D.view)), garment="robe",
          color="#a9cdf5", color2="#ffffff", gesture=[(22.6, 27.4, "offer")], show=(GUST2 - 0.2, 28.0),
          bright=1.5)
@@ -381,13 +430,16 @@ def _setup(scene):
          color2="#ffffff", gesture=[(33.6, 38.8, "raise_hand")], show=(33.4, 38.8), bright=1.4, points=40000)
     body("cheer2", "woman", at=(c2[0], c2[2]), facing=az_of(runner(36.3) - c2), garment="dress", color="#e6d9ff",
          color2="#ffffff", gesture=[(33.6, 38.8, "pray")], show=(33.4, 38.8), bright=1.4, points=40000)
-    # 7. the elder who knelt, the hand offered to him, the child who jumps
-    el, hp = G(0.1, -0.6, 0.0), G(0.0, 0.62, 0.0)
-    body("elder", "man", at=(el[0], el[2]), facing=az_of(hp - el), garment="coat", stoop=0.35,
-         color="#f6b3c2", color2="#fff0f3", motion=[(0.0, "kneel", dict(one=True))], show=(37.8, HOME + 0.4),
-         bright=1.4)
-    body("helper", "woman", at=(hp[0], hp[2]), facing=az_of(el - hp), garment="robe", color="#ff9fb4",
-         color2="#ffffff", gesture=[(38.0, HOME, "offer")], show=(37.8, HOME + 0.4), bright=1.5)
+    # 7. an elder sitting by the water; someone comes and pulls him up by the hands (a pair captured together:
+    # both share one placement); the clasp is at about PAIR_T + 3.9, he rises with the biggest hit
+    F = az_of(_r(G.view))
+    a_ = np.radians(F)
+    cx, cz = 0.05, 1.75
+    pair_at = (G.c[0] - (cx * np.cos(a_) + cz * np.sin(a_)), G.c[2] - (-cx * np.sin(a_) + cz * np.cos(a_)))
+    body("elder", "man", at=pair_at, facing=F, garment="coat", color="#f6b3c2", color2="#fff0f3",
+         motion=[(PAIR_T, "helped_up")], show=(37.6, HOME + 0.4), bright=1.4)
+    body("helper", "woman", at=pair_at, facing=F, garment="robe", color="#ff9fb4", color2="#ffffff",
+         motion=[(PAIR_T, "pull_up")], show=(37.6, HOME + 0.4), bright=1.5)
     ch = G(1.2, 2.0, 0.0)
     body("child2", "child", at=(ch[0], ch[2]), facing=az_of(-_r(G.view)), garment="tunic", color="#d8c2ff",
          color2="#ffffff", motion=[(0.0, "stand"), (BIG + 0.1, "jump")], gesture=[(41.8, 47.0, "raise")],
@@ -397,46 +449,89 @@ def _setup(scene):
          color="#ffd98f", color2="#fff7e6", gesture=[(47.6, 52.0, "open_arms")], show=(HOME - 0.2, 50.8),
          bright=1.7, points=70000, effects=[dict(kind="petals", t=S8 + 0.1, dur=1.4)])
     # the world: the tree, the meadow, the petals in the air, the release at the peak
-    tree = K.Tree(colors=_COL9, bough_az=_BOUGH_AZ, bud=_BUD, bloom=_BLOOM, crown_t=PEAK - 0.4)
+    tree = K.Tree(colors=_COL9, bough_az=_BOUGH_AZ, bud=_BUD, bloom=_BLOOM, crown_t=PEAK - 0.4,
+                  crown_colors=tuple(_COL9) + ("#ffffff", "#ffffff", "#FFE9D6"))
     scene.add("tree", tree)
+
+    def tree_glow(t):
+        d = float(np.linalg.norm(CAMERA.state(t).pos - np.array([0.0, 8.0, 0.0])))
+        return float(np.clip((40.0 - d) / 20.0, 0.0, 1.0))
+    scene.add("tree_glow", tree.glow_set(tree_glow))
     scene.add("meadow", K.Meadow())
-    scene.add("wind_petals", PW.KeepClear(K.PetalWind(WIND, amount=PETAL_AMOUNT), WORDS))
+    scene.add("wind_petals", PW.KeepClear(K.PetalWind(WIND, n=9000, amount=lambda t: min(
+        1.0, 0.8 * PETAL_AMOUNT(t) + 0.12 * WIND.gust(t))), WORDS))
     scene.add("palm_stream", K.Stream(_palm("giver", "R", 0.02), lambda t: WORDS["Greeting"].centre(t), -1.5, 1.0,
                                       wind=WIND, n=1400, flight=1.2, arc=0.4))
     scene.add("release", K.Release(tree.bloom_pts, PEAK, WIND, _COL9 + ["#ffffff", "#FFE9D6"]))
-    WORDS.add_to(scene)
+    K.paint_word_petals(WORDS)
+    WORDS.add_to(scene, reflect=False)          # no words mirrored in the water
     WORDS.check(CAMERA)
 
 
 PETAL_AMOUNT = Track([(0.0, 0.5), (S2, 0.6), (S4, 0.75), (S6, 0.9), (CALM, 0.9), (S7, 0.45), (BIG, 1.0),
                       (TOTAL, 1.0)])
-_SPRING = dict(base="day", sky_top=theme.display("#2b6fd2") * 0.92, sky_mid=theme.display("#6aa8e8") * 0.85,
-               sky_hor=theme.display("#f6e2c6") * 0.62, sun_az=SUN_AZ, sun_el=11.0,
-               sun_color=theme.display("#fff0d2") * 0.30, sun_int=0.95, rays=0.35, clouds=0.25,
-               haze=0.5, haze_color=theme.display("#ece4d8") * 0.5, water=theme.display("#3a72c0") * 0.45,
-               hill_color=theme.display("#5f8cc0") * 0.5, mist=0.15, dust=0.5, dust_color="#fff4e0",
-               dust_color2="#ffd2b8", sun_disc=3.0, sun_glow=0.75)
+def _L(top, mid, hor, haze_c, water, hills, sun, **kw):
+    """A look of this film (display colours: the picture shows them so)."""
+    D = theme.display
+    d = dict(base="day", sky_top=D(top) * 0.92, sky_mid=D(mid) * 0.85, sky_hor=D(hor) * 0.64,
+             haze_color=D(haze_c) * 0.5, water=D(water) * 0.45, hill_color=D(hills) * 0.5, sun_color=D(sun) * 0.32,
+             sun_az=SUN_AZ, sun_el=14.0, sun_int=0.95, rays=0.3, clouds=0.2, haze=0.5, mist=0.15,
+             dust=0.5, dust_color="#fff4e0", dust_color2="#ffd2b8", sun_disc=3.0, sun_glow=0.35)
+    for k in ("mist_color",):
+        if k in kw:
+            kw[k] = D(kw[k]) * 0.55
+    d.update(kw)
+    return d
+
+
+# one look per section: the light changes with every song of the medley
 LOOKS = dict(
-    spring=_SPRING,
-    breath=dict(_SPRING, sky_mid=theme.display("#a9c4ea") * 0.85, sky_hor=theme.display("#ffe0cf") * 0.66,
-                haze=0.7, mist=0.45, mist_color=theme.display("#fff0e4") * 0.55, rays=0.45, sun_el=13.0),
-    radiance=dict(_SPRING, sky_top=theme.display("#2f74d6") * 0.92, sky_mid=theme.display("#86b8ec") * 0.86,
-                  sky_hor=theme.display("#ffe6b8") * 0.66, sun_int=1.2, rays=0.7, sun_el=14.0,
-                  sun_color=theme.display("#fff0c8") * 0.35),
+    first_light=_L("#1f55b4", "#6aa6e0", "#ffd49a", "#ffd8ae", "#2c58a0", "#7f93a8", "#ffcf8a", sun_el=6.5,
+                   sun_int=1.0, sun_glow=0.45, rays=0.55, clouds=0.15, mist=0.25, mist_color="#ffe2c0"),
+    sapphire=_L("#1d54c0", "#5b9be6", "#e8f2fa", "#e4eef6", "#1a4aa8", "#5f86b0", "#fff6e6", sun_el=24.0,
+                sun_int=0.9, rays=0.2, clouds=0.25),
+    pearl=_L("#3d5f98", "#7f98c0", "#e9e6e2", "#e2e2e2", "#4a6a9e", "#7d8fa2", "#fff8f0", sun_int=0.55, rays=0.1,
+             clouds=0.75, mist=0.3, mist_color="#e8e8ec"),
+    blush=_L("#2f6cc8", "#86b6ea", "#ffe2e8", "#ffe6ea", "#3a74c6", "#7fae86", "#fff2ea", sun_int=1.0, rays=0.35),
+    azure=_L("#1048b8", "#3f8ae2", "#d8ecfc", "#dcecf8", "#1550b8", "#5f9a72", "#ffffff", sun_el=30.0, sun_int=0.9,
+             rays=0.15, clouds=0.15),
+    clay=_L("#1d58c0", "#5c9ae0", "#f6e2cc", "#f2e4d4", "#2a62b8", "#8f9a78", "#fff0dc", sun_el=22.0),
+    gale=_L("#2e2f86", "#6a62bc", "#e2cdec", "#d8c8e8", "#2a2f78", "#4e4a80", "#f8f0ff", sun_int=0.7, rays=0.25,
+            clouds=0.85, cloud_speed=6.0, mist=0.25, mist_color="#c8b8e8"),
+    breath=_L("#2c5cb4", "#6a9ad8", "#f6cdb6", "#ffe2cc", "#5a7cb8", "#a8a0a8", "#ffe2c0", sun_el=8.0, sun_int=0.7,
+              mist=0.55, mist_color="#ffe8d8", haze=0.8, rays=0.4),
+    radiance=_L("#1a5ccc", "#559ee8", "#ffe8b0", "#fff0cc", "#3a78d0", "#88a8a0", "#fff0b0", sun_el=9.0,
+                sun_int=1.1, sun_glow=0.4, rays=0.7),
+    gold=_L("#24529e", "#86aed8", "#ffc47a", "#ffcf96", "#36589a", "#7c7480", "#ffc878", sun_el=7.0, sun_int=0.8,
+            sun_glow=0.35, rays=0.45, mist=0.25, mist_color="#ffd8a8", exposure=0.92),
 )
+LOOK_KEYS = [(0.0, "first_light"), (S2, "sapphire", 0.8), (S3, "pearl", 0.8), (TOUCH + 0.2, "blush", 1.2),
+             (GUST2, "azure", 0.8), (S5, "clay", 0.8), (S6, "gale", 0.6), (S7, "breath", 1.4), (BIG, "radiance", 0.4),
+             (HOME, "gold", 1.0), (PEAK - 0.6, "cream", 3.2)]
+
+
+def _clear(t):
+    """Keep-clear boxes of the 3D layer: the badge (while it shows) and the end card."""
+    out = []
+    box, a = badge_box(t)
+    if a > 0.01:
+        out.append(dict(box=box, t0=-10.0, t1=TOTAL + 10.0, soft=0.03, amount=min(1.0, 1.1 * a)))
+    if t >= PEAK - 0.5:
+        out.append(dict(box=(0.08, 0.40, 0.92, 0.86), t0=PEAK, t1=TOTAL + 1.0, soft=0.06, amount=0.92))
+    return out
+
+
 P3D = dict(
     camera=CAMERA,
     world=dict(
         looks=LOOKS,
-        look=[(0.0, "spring"), (S7, "breath", 1.6), (BIG, "radiance", 0.5), (PEAK - 0.6, "cream", 3.2)],
-        sun_az=SUN_AZ,
+        look=LOOK_KEYS,
         light=dict(pos=tuple(M(2.6, 0.25, 2.0)), color="#ffe6b0", size=0.7, rays=1.0,
-                   strength=lambda t: float(K._ss(HOME + 0.6, 47.8, t) * (1.0 - K._ss(S8 + 0.6, S8 + 1.6, t))) * 1.1),
+                   strength=lambda t: float(K._ss(HOME + 0.6, 47.8, t) * (1.0 - K._ss(S8 + 0.6, S8 + 1.6, t))) * 0.3),
         react=dict(beat=0.3, level=0.25),
     ),
-    bursts=[dict(t=TOUCH, strength=0.6, at=None, radius=0.25, color="#fff0f4", rise=0.15, fall=0.7),
-            dict(t=BIG, strength=0.8, radius=0.35, color="#fff6e0", rise=0.12, fall=0.8),
-            dict(t=PEAK, strength=0.9, radius=0.4, color="#fff8ee", rise=0.15, fall=1.0)],
-    clear=[dict(box=(0.08, 0.40, 0.92, 0.86), t0=PEAK, t1=TOTAL + 1.0, soft=0.06, amount=0.92)],
+    bursts=[dict(t=TOUCH, strength=0.3, at=None, radius=0.18, color="#fff0f4", rise=0.15, fall=0.6),
+            dict(t=PEAK, strength=0.35, radius=0.3, color="#fff8ee", rise=0.15, fall=0.8)],
+    clear=lambda t: _clear(t),
     setup=_setup,
 )
