@@ -1005,6 +1005,13 @@ People made of points for the 3D layer of section V: a lifelike human form (the 
 
 ### Changes for song files (newest first)
 
+- Acting (new, `engine/p3d/acting.py`): `acting.add(scene, "Gratitude", t0, t1, at=..., view=..., variant=...)` performs any of the nine expressions by its label in words.EXPRESSIONS, as a solo, a pair or a crowd (see Acting below). Proof: `engine/songs/test_p3d_acting.py`.
+- Gestures are acted, not crossfaded: a small move the other way first, the gesture with a little overshoot that settles, a hold, and a release that drifts a touch past rest; the trunk leads by 0.08 s and the forearm and hand follow 0.1 s late; each person's timing differs a little (by `seed`). Each gesture has its own timing; `ease=` (or `ease_in=`, `ease_out=`) still sets the seconds and `antic=0, over=0` takes out the anticipation and overshoot (`ease=1.2, antic=0, over=0` is close to the old crossfade).
+- Living hands, always on: the fingers breathe (a slow curl that runs from the index to the little finger), the wrist lags the forearm and swings through, hands open and spread while they move fast and close a little as they settle. `body.actor.life = False` turns them off for one body.
+- "kneel" is acted: the right foot steps back and the body sinks onto that knee (for both knees the left follows); no frame passes through an odd pose. "rise" plays it backward. Same keys as before.
+- New gestures: "hand_on_heart" (side, bow), "nod" (period, amount), "after_you" (side, to, bow), "clasp" (to: both hands round a point), "open_hands" (bow), "explain" (side, period), "cheer", "lean_in" (to, amount).
+- `pairs.embrace(approach=...)`: the two now stand still until t - approach, walk exactly that long and stop `gap` apart whatever the bodies' `show` (the walk was measured from t = 0 before, so with a later show they stopped short and had to be timed by hand).
+- Crowds are more varied by default: elders (stooped) and children among the men and women (`people=`), sizes from 0.94 to 1.06, half of them mirrored, each loop on its own phase and tempo. `shapes=("woman", "man"), scale=1.0, mirror=False` gives the crowd of before. New kinds "wave", "heart", "cheer", "light", "nod", "kneel"; `act=` and `act_end=` make a crowd go into its gesture from rest (staggered) and come out of it again. Prototypes bake at 15 frames a second and are interpolated (half the bake time); `P3D_CACHE=<folder>` keeps them between processes.
 - Motion capture is now CMU only (the DeepMimic clips are gone, see `assets/p3d/README.md`). New motions: "jump", "dance", "twirl", "get_up", "pull_up", "helped_up". The old names still play: "spin" plays "twirl", "dance_a" and "dance_b" play "dance". Walk and run keep their names; the walk is a little slower by default (1.26 m/s for the man) and its steps are planted: a foot on the ground stays where it was set down, also while the walker turns.
 - `Flare` (and the flash of `Hands`) is smaller: sized for two hands in close-up. `Flare(..., scale=2.5)` gives the old size; `Hands(..., flare=0)` leaves it out.
 - `Hands`: each hand's second colour is now a pale tint of its own colour (it was white), so gold and blue stay apart as in ref 04.
@@ -1053,7 +1060,7 @@ Looks: "glitter" (refs 15, 10, 09; p08), "plexus" (refs 03, 12; p01; with `detai
 
 Motions: "stand", "walk" and "run" (`speed` in m/s, `phase`; the steps follow the speed, feet stay planted), "kneel" (`sit`, `one`, `hands`="lap" | "pray" | "free", `dur`), "rise" (up from kneeling, `dur`, `one`), "sit", "shuffle" (small steps on the spot), "held" (a child carried), and the captured "jump", "dance", "twirl", "get_up" (from lying), "pull_up" and "helped_up" (`rate`, `phase`).
 
-Gestures: "look_up" (amount), "reach" (side, to, palm, height, far, lead), "open_arms" (lift 0 low to 1 raised), "raise", "blow" (side), "pray", "bow" (amount; from 30 degrees the body bows from the hips), "touch" (side, to, end, palm, fingers), "hand_on_shoulder", "handshake" (grip), "high_five", "embrace" (to, to2, head), "arm_round", "cup" (height, out), "offer", "listen", "raise_hand" (side, to), "clap" (period, height), "throw", "wave", "brace", "hold_thread" (place "pinch.R"). Any gesture takes `fingers=` a hand pose: open, relaxed, flat, spread, cup, fist, point, pinch, offer, hold.
+Gestures: "look_up" (amount), "reach" (side, to, palm, height, far, lead), "open_arms" (lift 0 low to 1 raised), "raise", "blow" (side), "pray", "bow" (amount; from 30 degrees the body bows from the hips), "touch" (side, to, end, palm, fingers), "hand_on_shoulder", "handshake" (grip), "high_five", "embrace" (to, to2, head), "arm_round", "cup" (height, out), "offer", "listen", "raise_hand" (side, to), "clap" (period, height), "throw", "wave", "brace", "hold_thread" (place "pinch.R"), "hand_on_heart" (side, bow), "nod" (period, amount), "after_you" (side, to, bow), "clasp" (to), "open_hands" (bow), "explain" (side, period), "cheer", "lean_in" (to, amount). Any gesture takes `fingers=` a hand pose: open, relaxed, flat, spread, cup, fist, point, pinch, offer, hold; and its timing: `ease` (or `ease_in`, `ease_out`) seconds, `antic` (the small move the other way first, about 0.05), `over` (the overshoot, about 0.05).
 
 For other point sets (world coordinates, any time, any order): `body.where(t, name, normal=False, raw=False)` (head, crown, mouth, neck, heart, chest, back, pelvis, ground; with .L or .R: shoulder, blade, elbow, wrist, palm, fingertips, index, thumb, pinch, hip, knee, ankle, toe, side; `raw=True`: without the body's own gestures), `body.joint(t, bone)`, `body.constellation(t)`, `body.free(t)` (every particle off the body), `body.handover(effect, t, targets)`, `body.shape_points(t)`.
 
@@ -1087,7 +1094,31 @@ Two bodies of your own can reach for each other the same way: give each a gestur
 
 ### Crowds (`engine/p3d/crowd.py`)
 
-`Crowd(n, places=None, area=dict(center, radius=(r0, r1), arc), facing=<degrees, (K,), function (x, z), "center" or "out">, kinds=("stand", "raise", "clap", "walk", "run", "bow", "pray", "open", "sit", "child", "child_run"), start=<t, (K,), dict(t, center, speed) for a wave, or dict(t, dur)>, until, fade, flash, walk=<m/s>, points=2600, scale, color, color2)`. Hundreds of people from a few baked prototypes; each appears at its own time with a flash. The first frame of a render process bakes the prototypes (about 10 s each); a frame of 300 people then costs about 0.2 s. `crowd.where(t, k)` gives person k's place.
+`Crowd(n, places=None, area=dict(center, radius=(r0, r1), arc), facing=<degrees, (K,), function (x, z), "center" or "out">, kinds=(...), people=dict(woman=1, man=1, elder=0.3, child=0.25), start=<t, (K,), dict(t, center, speed) for a wave, or dict(t, dur)>, act=None, act_end=None, until, fade, flash, walk=<m/s>, points=2600, scale=(0.94, 1.06), mirror=True, color, color2, light="#ffcf8a", lamp=(0.11, 1.0))`. Hundreds of people from a few baked prototypes (one per kind and sort of person); each appears at its own time with a flash, and each loops on its own phase and tempo.
+
+Kinds: "stand", "walk", "run", "sit", "raise", "clap", "bow", "pray", "open", "wave", "heart" (a hand on the heart and a bow), "cheer" (arms thrown up), "light" (a light carried in the right hand and raised high; `light=` its colour, `lamp=(size, bright)`), "nod" (leaning in and nodding), "kneel" (hands joined), "child", "child_run"; or (name, weight) pairs, or dicts of Body keys with a "loop" in seconds.
+
+`act=` (a time, (K,) times, or a dict like `start`): the people stand at rest until their act time, then go into the kind's gesture acted, each at its own tempo, and hold it alive; `act_end=` brings them back to rest (a kneeling crowd goes down onto its knees and gets up again). Without `act` they are in the gesture from the moment they appear, as before.
+
+The first frame that shows a crowd bakes its prototypes in each render process (about 10 s for a plain loop, about 30 s for an acted one); a frame of 300 people then costs about 0.2 s. Set the environment variable `P3D_CACHE` to a folder to keep the bakes between processes (a change to the engine bakes afresh). `crowd.where(t, k)` gives person k's place.
+
+### Acting (`engine/p3d/acting.py`)
+
+The nine expressions, acted. `acting.add(scene, expression, t0, t1, at=(x, z), view=<degrees toward the camera>, variant=None, style=dict(<Body keys>), style_a=..., style_b=..., crowd=dict(<Crowd keys>), pre=1.0, post=1.5, seed=1.0)` adds a performance (`acting.perform(...)` returns its point sets instead). `expression` is a label of words.EXPRESSIONS, its number (1 to 9) or its dict. The people are there and alive from t0 - pre; the act begins at t0, its clear pose is reached about a second later and held, alive, until t1, and released over the next second. Start the act about a second before the words are readable. `view` turns the performance to read from the camera (0: the camera at +z of `at`); pairs face each other across the picture, opened to it.
+
+| Expression | Variants (solo, pair, crowd) |
+|---|---|
+| Greeting | "wave" (solo), "turn" (pair: a hand on the shoulder, the other turns and greets), "crowd" (many waving) |
+| Gratitude | "heart" (solo: hand on heart and a bow), "clasp" (pair: an offered hand clasped in both hands, a bow), "crowd" (bowing, hands on hearts) |
+| Apology | "bowed" (solo: head bowed, open hands low), "comfort" (pair: kneeling beside one who sits, a hand on the back) |
+| Inclusiveness | "embrace" (pair), "arm" (pair: an arm round the shoulders), "circle" (crowd: a ring opens its arms as a child walks in) |
+| Concession | "after_you" (solo: a step aside, an open palm to the way), "pass" (pair: one steps aside and bows, the other walks past) |
+| Respect | "listen" (pair seated: one speaks, the other leans in and nods), "nod" (the same standing) |
+| Encouragement | "pray" (solo: kneels, hands joined), "shoulder" (pair: a hand on the shoulder of one kneeling), "lights" (crowd: a ring raising lights round one who kneels) |
+| Consideration | "help_up" (pair), "lift_child" (pair) |
+| Compliment | "applause" (crowd round one person), "twirl" (solo), "raise" (pair: joined hands raised, the other hand thrown up), "cheer" (crowd) |
+
+`variant="solo"`, `"pair"` or `"crowd"` picks the first of that kind. Any Body key goes in `style` (look, colours, garment, points, effects), so every style of people can act.
 
 ## X. Particle words: the nine expressions as light in the 3D world (2026-11-15, branch engine-p3d-words)
 
