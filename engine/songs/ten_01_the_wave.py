@@ -19,9 +19,9 @@ THE RULES OF THIS FILM
 
 THE ACTING PLAN (the medley's sections: 0.25, 6.84, 13.30, 19.85, 26.79, 33.36, 40.21 (breath to 42.51), 49.47)
   0 to 4      OPENING TITLE over the spark falling down its shaft to its mirror image (TITLES "opening").
-  GREETING    "How are you?"  A woman asleep on the black glass, half figure in profile, a silhouette outlined
-              in sparks (p06). The crest sweeps past her feet, the light climbs her to the face, she lifts her
-              head toward the light and waves one hand: a face lighting up. Read 4.75 to 7.25.
+  GREETING    "How are you?"  A woman asleep on the black glass, half figure in profile, white gold glitter.
+              The crest sweeps past her feet, the light climbs her to the face, she lifts her head toward the
+              light and waves one hand: a face lighting up. Read 4.75 to 7.25.
   GRATITUDE   We swing round her and look back for the first time. An older man in the wake bows to her with
               his hand on his heart (gold glitter, p08); behind him a whole crowd the wave has woken bows too.
               She turns to him and opens her hand. Read 8.95 to 11.8. Signature 12.45 to 13.5.
@@ -30,11 +30,11 @@ THE ACTING PLAN (the medley's sections: 0.25, 6.84, 13.30, 19.85, 26.79, 33.36, 
   INCLUSIVENESS  The words turn into their answer: the other turns round, they walk in and hold each other; a
               warm flare where they meet. Read 17.8 to 20.35.
   CONCESSION  The bass slams in, the wave folds over and we glide down a tunnel of streaks. Before the mouth of
-              the barrel (a door of light) two constellation wireframes (p01): one steps aside with an open palm
-              toward the door and lets the other walk through first. Read 22.0 to 24.7.
-  RESPECT     Out of the mouth into the strait. Two people seated on the crest of the moving wave, silhouettes
-              that are windows onto the night sky (p07): one speaks with small open hands, the other leans in
-              and listens; we revolve round them. Read 27.9 to 30.6. Signature 31.3 to 33.4.
+              the barrel (a door of light) two people of clear glass-white light: one steps aside with an open
+              palm toward the door and lets the other walk through first. Read 22.0 to 24.7.
+  RESPECT     Out of the mouth into the strait. Two people seated on the crest of the moving wave, drawn as
+              constellations of points and fine lines (p01): one speaks with small open hands, the other leans
+              in and listens; we revolve round them. Read 27.9 to 30.6. Signature 31.3 to 33.4.
   CONSIDERATION  The wave doubles its speed over a bay of sleepers. On its crest one reaches down to someone
               kneeling, takes their hand and pulls them up (coloured dots, ref 14); then we rise over the crest
               and see the bay light up row after row. Read 34.7 to 37.6.
@@ -42,11 +42,10 @@ THE ACTING PLAN (the medley's sections: 0.25, 6.84, 13.30, 19.85, 26.79, 33.36, 
               is written in light across the sky above it (TITLES "date_light"); on the biggest hit the date
               bursts and the wave rears up into a wall of light 24 m high and carries the burst.
   ENCOURAGEMENT  Before the wall the kneeling one prays; another walks to them and lays a hand on their
-              shoulder (white gold, light rising off them like flakes, ref 13). We crane up the wall. Read 43.3
-              to 45.85.
+              shoulder (white gold, a little light rising off them). Read 43.45 to 45.95.
   COMPLIMENT  The words turn into the compliment as the wall is released. We climb over its lip: the people
               the wave carries stand along the crest and fling up their arms in a wave of cheering, and at
-              their front a dancer twirls in joy and bursts into embers (p04). Read 46.8 to 49.4.
+              their front a dancer twirls in joy, sparks streaming off her dress. Read 47.15 to 49.65.
   THE BREAK   49.47: the wave breaks on the shore under the arch of nine lights: a plume of gold, the sun comes
               up warm through it, the night is swept off the sky. The people stand tiny along the vast shore;
               the end card, readable from 55.5 s to the last frame. No fade: the last frame is full daylight.
@@ -214,7 +213,7 @@ T_K = 46.75                                     # the kneeling one: the released
 KN = place_where_crest(U_MAIN + 0.5, T_K)       # (Encouragement)
 HP0 = KN + np.array([2.3, 0.0, -0.4])           # where the one who comes to them starts walking
 T_HELP = 35.3                                   # on the crest: one helps another up (Consideration)
-T_TWIRL = 47.6                                  # on the crest: a dancer twirls into embers (Compliment)
+T_TWIRL = 47.6                                  # on the crest: a dancer twirls for joy (Compliment)
 
 
 def walk_frame(t):
@@ -624,8 +623,7 @@ def C(ps, pad=0.9):
 
 
 def _add_body(scene, name, body, ignite=None, rise=0.9, mask=None):
-    """A body of light, kept clear of the words, with the mask its look needs (rim: a dark shape with a
-    bright edge; window: a sky inside it)."""
+    """A body of light, kept clear of the words (and with the mask its look needs, if any)."""
     ps = WV.Ignite(body, ignite, rise=rise) if ignite is not None else body
     m = body.mask(**(mask or {})) if mask is not False else None
     scene.add(name, C(ps), mask=m)
@@ -633,9 +631,9 @@ def _add_body(scene, name, body, ignite=None, rise=0.9, mask=None):
 
 def _performances(scene):
     """THE ACTING: each expression is done by the people the crest has just woken, in its own style."""
-    # 1 GREETING: a face lighting up. A woman asleep on the black glass, seen in profile at half figure, a
-    # silhouette outlined in sparks (p06); the crest sweeps past her feet, the light climbs her to the face,
-    # she lifts her head toward the light and opens one hand in greeting.
+    # 1 GREETING: a face lighting up. A woman asleep on the black glass, seen in profile at half figure, in
+    # white gold glitter; the crest sweeps past her feet, the light climbs her to the face, she lifts her head
+    # toward the light and waves one hand in greeting.
     w1 = Body("woman", at=(W1[0], W1[2]), facing=[(0.0, 180.0), (7.3, 180.0), (8.6, FACE_W1_TO_M1)],
               garment="dress", hair=True, look=dict(name="glitter", bright=1.15), color="#fff0d2", color2="#ffd890",
               points=90000, detail=dict(head=3, hand=3), show=(2.2, 14.2), fade=0.5,
@@ -721,7 +719,7 @@ def _performances(scene):
             hearts.append(WV.Hearts(lambda t, bd=body: bd.where(t, "palm.L"), 22.3, 24.6, HEX["Concession"], n=8))
 
     # 6 RESPECT: two people seated on the crest of the moving wave; one speaks with small open hands, the other
-    # leans in and listens. Silhouettes that are windows onto the night sky (p07).
+    # leans in and listens. Constellations of points and fine lines (p01).
     for name, shape, at, facing, gest, seed in (
             ("respect_a", "woman", (-0.42, 0.0), 90.0,
              [(27.5, 29.4, "offer", dict(side="R")), (29.2, 33.6, "offer", dict(side="L"))], 9),
@@ -765,13 +763,12 @@ def _performances(scene):
     hearts.append(WV.Hearts(lambda t: kn.where(t, "chest"), 43.7, 45.9, HEX["Encouragement"], n=10))
 
     # 9 COMPLIMENT: the people the wave carries cheer (arms flung up in a wave along the crest), and at their
-    # front a dancer twirls in joy and bursts into embers (p04).
+    # front a dancer twirls in joy, sparks streaming off her dress (warm, luminous and whole).
     tw = Body("woman", at=(0.0, 0.0), facing=180.0, frame=crest_frame(U_MAIN + 1.2, -0.6),
               motion=[(0.0, "stand"), (T_TWIRL, "twirl")], garment="dress", hair=True, look="glitter",
               color="#ffb070", color2="#ffe0b0", points=60000, show=(46.4, 50.6), fade=0.4, seed=15,
               gesture=[(46.6, T_TWIRL + 0.2, "open_arms", dict(lift=0.6))],
-              effects=[dict(kind="shed", t=T_TWIRL, n=9000, life=1.8, where="back", dir=(0.4, 0.5, 1.0), speed=1.1),
-                       dict(kind="disperse", t=49.0, dur=1.3, dir=(0.6, 0.6, 1.0), share=0.9, speed=1.6)])
+              effects=[dict(kind="shed", t=T_TWIRL, n=7000, life=1.6, where="back", dir=(0.4, 0.5, 1.0), speed=0.9)])
     _add_body(scene, "compliment", tw)
     hearts.append(WV.Hearts(lambda t: tw.where(t, "chest"), 47.3, 49.6, HEX["Compliment"], n=14))
     for k, h in enumerate(hearts):
