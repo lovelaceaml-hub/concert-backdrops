@@ -757,6 +757,13 @@ Each is optional. A song file that sets none of them runs the same code as befor
 
 ## V. The 3D layer: camera, point sets, world (2026-11-15, branch engine-p3d)
 
+**Changes for song files since a1262fe (helper CORE2).** Every old key keeps its meaning; these behave differently:
+- A set with `window=True` (or a window name) is no longer mirrored in the lake outside its window.
+- `Mask(soft=...)` below 3 is now honoured (it used to be raised to 3); below 2.5 the silhouettes of that frame are drawn at full size. The default soft=3 renders as before.
+- Motion blur never reaches across a hard cut (blend 0) any more: the first frame after a cut is clean.
+- The lake mirror of a set of 300 thousand points or more draws every second point (every third from 1.2 million), each brighter; a static set of 60 thousand or more is drawn in spatial cells. Same look, less work.
+New keys (details below in "Added by CORE2"): a move's `whip=`, P3D `motion_samples` as a Track, world `lake=dict(field=...)`, `Mask("sky", sky="flat", color=...)`, `Mask(slot=...)`, `window="<masked set>"` (nested windows).
+
 A true 3D layer inside the engine: a camera that moves through space, point sprites with depth of field and bokeh, and a world with a mirror lake. One song key switches it on, `P3D = dict(...)`. A song without the key never loads the package (`engine/p3d/`) and renders exactly as before (checked: `t_short_test` and `epic_concert` give the same frames, byte for byte, with and without the hooks).
 
 Working examples: `engine/songs/p3d_camera_test.py` (the camera test: one unbroken move of 28.5 s) and `engine/songs/test_p3d.py` (every part once: masks, a shaft, a light with rays, a burst, a whip, every kind of sprite, the 2D words on top).
