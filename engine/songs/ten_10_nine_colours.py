@@ -166,8 +166,8 @@ class Path(Move):
 
 # S1 and S2: one flight along -z over the lake
 def _flight_keys():
-    keys = [(0.00, _v(0.35, 2.30, 307.6), SEED + _v(0, 0.05, 0)),
-            (0.25, _v(0.35, 2.30, 307.4), SEED + _v(0, 0.05, 0)),
+    keys = [(0.00, _v(0.35, 2.30, 307.6), SEED + _v(0, 1.45, 0)),      # the seed low, the badge above it
+            (0.25, _v(0.35, 2.30, 307.4), SEED + _v(0, 1.40, 0)),
             (0.85, _v(-1.4, 3.30, 311.0), _v(0.0, 3.2, 292.0)),
             (1.50, _v(-0.9, 2.50, 307.5), _v(0.0, 2.6, 284.0)),
             (2.20, _v(0.3, 1.90, Z22), _v(0.0, 2.2, Z22 - 24.0))]
@@ -191,7 +191,7 @@ def _s3(t):
     h = 1.75 + 0.5 * np.exp(-u / 1.0) - 0.03 * u
     a = np.radians(-52.0 + 32.0 * (1.0 - np.exp(-u / 0.6)) + 9.0 * u)
     p = C3 + _v(np.sin(a) * r, h, np.cos(a) * r)
-    return p, C3 + _v(0.0, 1.85, 0.0)
+    return p, C3 + _v(0.0, 2.15, 0.0)
 
 
 # S4: round the dancer, then the half loop
@@ -238,7 +238,7 @@ def _s4(t):
     a, r, phi = _s4_az(t), _s4_r(t), _loop_phi(t)
     h = _v(np.sin(a), 0.0, np.cos(a))
     c = D4 + _v(0.0, S4_EYE, 0.0)
-    look = D4 + _v(0.0, 2.0 - 0.6 * _sc(LOOP_T0, LOOP_T0 + 1.0, t), 0.0)
+    look = D4 + _v(0.0, 2.35 - 0.95 * _sc(LOOP_T0, LOOP_T0 + 1.0, t), 0.0)
     return c + r * (np.cos(phi) * h + np.sin(phi) * UP) + _v(0.0, -0.35, 0.0) * (1.0 - _sc(0.0, 0.3, phi)), look
 
 
@@ -254,10 +254,10 @@ def _s5_keys():
             (27.30, E5 + _v(-3.5, 27.5, 46.0), E5 + _v(0.0, 8.0, 4.0)),
             (28.30, E5 + _v(-2.6, 18.0, 33.0), E5 + _v(0.0, 4.0, 0.0)),
             (29.30, E5 + _v(-1.6, 8.0, 18.0), E5 + _v(0.0, 2.6, 0.0)),
-            (30.15, E5 + _v(-1.0, 2.6, 7.6), E5 + _v(0.0, 1.9, 0.0)),
-            (31.20, E5 + _v(1.0, 2.0, 5.9), E5 + _v(0.0, 2.25, 0.0)),
-            (32.30, E5 + _v(2.4, 2.2, 5.6), E5 + _v(0.0, 2.45, 0.0)),
-            (33.40, E5 + _v(3.6, 2.6, 5.2), E5 + _v(0.0, 2.6, 0.0))]
+            (30.15, E5 + _v(-1.0, 2.6, 7.6), E5 + _v(0.0, 2.25, 0.0)),
+            (31.20, E5 + _v(1.0, 2.0, 5.9), E5 + _v(0.0, 2.6, 0.0)),
+            (32.30, E5 + _v(2.4, 2.2, 5.6), E5 + _v(0.0, 2.8, 0.0)),
+            (33.40, E5 + _v(3.6, 2.6, 5.2), E5 + _v(0.0, 2.95, 0.0))]
 
 
 # S6: an arc round the two profiles, head and shoulders
@@ -265,7 +265,7 @@ def _s6(t):
     u = (t - SEC[5]) / (SEC[6] - SEC[5])
     a = np.radians(-24.0 + 46.0 * u)
     r = 2.75 - 0.35 * u
-    return F6 + _v(np.sin(a) * r, 1.66, np.cos(a) * r), F6 + _v(0.0, 1.78, 0.0)
+    return F6 + _v(np.sin(a) * r, 1.72, np.cos(a) * r), F6 + _v(0.0, 1.93, 0.0)
 
 
 # S7: the breath, the orbit on the biggest hit, the corkscrew up the braid
@@ -461,6 +461,12 @@ def _ring(k, t):
 
 
 def _burst(k, t):
+    if t < SEC[0]:                      # before the opening hit the nine colours rush into the seed
+        v = SEC[0] - t
+        a = 1.4 * v * (1.0 if k % 2 == 0 else -1.0)
+        d0 = _burst_dir(k)
+        d = _v(d0[0] * np.cos(a) + d0[2] * np.sin(a), d0[1] + 0.35, -d0[0] * np.sin(a) + d0[2] * np.cos(a))
+        return SEED + (130.0 * v + 60.0 * v * v) * _unit(d)
     u = max(t - SEC[0], 0.0)
     d = 95.0 * (1.0 - np.exp(-u * 1.6)) + 30.0 * u
     return SEED + d * _burst_dir(k) + _v(0.0, -2.0 * u, 0.0)
@@ -603,32 +609,32 @@ def _dist(t, p):
 
 _RIDE1 = (0.5, 0.60, 14.0)
 _RIDE2 = (0.5, 0.67, 12.0)
-_RIDE5 = (0.5, 0.63, 15.0)
+_RIDE5 = (0.5, 0.56, 15.0)
 _AT3 = C3 + _v(0.0, 2.62, 0.0)
-_AT4 = D4 + _v(0.0, 2.95, 0.0)
+_AT4 = D4 + _v(0.0, 2.85, 0.0)
 _AT5 = E5 + _v(0.0, 3.15, 0.0)
 _AT6 = F6 + _v(0.0, 2.17, -0.05)
 _AT7 = G7 + _v(0.0, 3.35, 0.0)
 
 _SPECS = [
-    dict(expr="Greeting", ride=_RIDE1, face="screen", width=_width(4.3, _RIDE1[2], 0.34),
-         t_in=1.45, t_read0=2.85, t_read1=5.85, t_out=6.95, arrive="pen", nib=False, leave="stream",
+    dict(expr="Greeting", ride=_RIDE1, face="screen", width=_width(4.6, _RIDE1[2], 0.34),
+         t_in=2.45, t_read0=3.35, t_read1=6.0, t_out=6.95, arrive="pen", nib=False, leave="stream",
          to=lambda t: HEADS[GREET](t)),
     dict(expr="Concession", ride=_RIDE2, face="screen", width=_width(9.5, _RIDE2[2], 0.50),
-         t_in=6.95, t_read0=8.15, t_read1=11.05, t_out=12.3, arrive="pen", nib=False, leave="doors"),
+         t_in=6.84, t_read0=8.15, t_read1=11.05, t_out=12.3, arrive="pen", nib=False, leave="doors"),
     dict(expr="Apology", pos=_AT3, face="camera", width=_width(15.6, _dist(15.6, _AT3), 0.74),
          t_in=13.35, t_read0=14.35, t_read1=TOUCH3, t_out=17.35, arrive="pen", nib=False, leave="morph"),
     dict(expr="Inclusiveness", pos=_AT3 + _v(0.0, -0.1, 0.0), face="camera",
          width=_width(18.5, _dist(18.5, _AT3), 0.62),
          t_in=TOUCH3, t_read0=17.32, t_read1=19.83, t_out=20.6, arrive="morph", source="Apology", leave="rise"),
     dict(expr="Compliment", pos=_AT4, face="camera", width=_width(23.5, _dist(23.5, _AT4), 0.60),
-         t_in=20.85, t_read0=22.1, t_read1=24.9, t_out=26.2, arrive="pen", nib=False, leave="bokeh"),
+         t_in=20.15, t_read0=21.45, t_read1=24.6, t_out=25.7, arrive="pen", nib=False, leave="bokeh"),
     dict(expr="Consideration", ride=_RIDE5, face="screen", width=_width(28.9, _RIDE5[2], 0.56),
          t_in=26.85, t_read0=27.65, t_read1=30.15, t_out=30.95, arrive="pen", nib=False, leave="stream",
          to=lambda t: HEADS[CONS](t)),
     dict(expr="Gratitude", pos=_AT5, face="camera", width=_width(32.0, _dist(32.0, _AT5), 0.70),
-         t_in=30.05, t_read0=30.75, t_read1=33.32, t_out=34.2, arrive="palm", source=lambda t: _palm5(t),
-         leave="rise"),
+         t_in=30.05, t_read0=30.75, t_read1=33.32, t_out=33.45, arrive="palm", source=lambda t: _palm5(t),
+         leave="fade"),
     dict(expr="Respect", pos=_AT6, face="camera", width=_width(36.8, _dist(36.8, _AT6), 0.48),
          t_in=33.9, t_read0=35.1, t_read1=38.55, t_out=39.6, arrive="pen", nib=False, leave="stream",
          to=lambda t: HEADS[RESP](t)),
@@ -638,25 +644,49 @@ _SPECS = [
 WORDS = PW.Words(_SPECS, camera=_LAYOUT, reflect=False)   # no mirrored text in the lake
 
 
-def _focus(t, default):
-    d = default(t) if callable(default) else default
-    return WORDS.focus_point(t, d)
+CUT_TIMES = [0.0, SEC[3], SEC[4], SEC[5], SEC[6], SEC[7]]
+
+
+def _focus(t, default, ease=0.8):
+    """A focus point that racks to the word being read, but only to a word of the current section that is in
+    front of the camera (a word left behind at a cut would otherwise pull the focus to almost nothing)."""
+    d = np.asarray(default(t) if callable(default) else default, np.float64)
+    cut = max(c for c in CUT_TIMES if c <= t)
+    st = _LAYOUT_SIMPLE.state(t)
+    fwd = _unit(np.asarray(st.target) - np.asarray(st.pos))
+    acc, wsum, top = np.zeros(3), 0.0, 0.0
+    for w in WORDS:
+        if w.t_in < cut - 0.01:
+            continue
+        end = w.to.t_in if (w.leave == "morph" and isinstance(w.to, PW.Word)) else w.t_read1
+        k = _sc(w.t_read0 - ease, w.t_read0, t) * (1.0 - _sc(end, end + ease, t))
+        if k <= 0.0:
+            continue
+        c = np.asarray(w.centre(t), np.float64)
+        if float(np.dot(c - np.asarray(st.pos), fwd)) < 0.5:
+            continue
+        acc += k * c
+        wsum += k
+        top = max(top, k)
+    if wsum <= 0.0:
+        return d
+    return d + (acc / wsum - d) * top
 
 
 CAMERA = _rig(_focus)
 
 # the comets' legs (after WORDS: the pens are the words' own)
-HEADS[GREET].leg(1.45, 2.85, _pen("Greeting"), bi=0.7, bo=0.5) \
-            .leg(3.0, 6.3, _screen(0.5, 0.24, 20.0, wx=0.30, wy=0.05, rate=0.8), bi=0.5, bo=1.2)
-HEADS[CONC].leg(6.95, 8.15, _pen("Concession"), bi=1.0, bo=0.25) \
+HEADS[GREET].leg(2.45, 3.35, _pen("Greeting"), bi=0.8, bo=0.5) \
+            .leg(3.5, 6.3, _screen(0.5, 0.24, 20.0, wx=0.30, wy=0.05, rate=0.8), bi=0.5, bo=1.2)
+HEADS[CONC].leg(6.84, 8.15, _pen("Concession"), bi=1.3, bo=0.25) \
            .leg(8.4, 11.6, _tunnel, bi=0.25, bo=1.5)
 HEADS[APOL].leg(13.35, 14.35, _pen("Apology"), bi=0.9, bo=0.6) \
            .leg(14.7, SEC[3], _helix(C3, 1.45, 0.25, 1.05, 2.2, 0.0), bi=0.6, bo=0.0)
 HEADS[INCL].leg(13.6, SEC[3], _helix(C3, lambda t: 1.9 - 0.4 * _sc(17.0, 18.5, t), 0.9, 1.7, 2.2, np.pi, 0.9),
                 bi=1.0, bo=1.2)
-HEADS[COMP].leg(SEC[3], 20.85, _ribbon_from_hand, bi=0.0, bo=0.3) \
-           .leg(20.85, 22.1, _pen("Compliment"), bi=0.3, bo=0.5) \
-           .leg(22.6, LOOP_T0, _ribbon_from_hand, bi=0.5, bo=0.4) \
+HEADS[COMP].leg(SEC[3], 20.15, _ribbon_from_hand, bi=0.0, bo=0.3) \
+           .leg(20.15, 21.45, _pen("Compliment"), bi=0.3, bo=0.5) \
+           .leg(21.9, LOOP_T0, _ribbon_from_hand, bi=0.5, bo=0.4) \
            .leg(LOOP_T0 + 0.2, SEC[4], _loop_ahead, bi=0.4, bo=0.0)
 HEADS[CONS].leg(SEC[4], 27.65, _pen("Consideration"), bi=0.0, bo=0.5) \
            .leg(27.9, 30.0, _screen(0.5, 0.30, 18.0, wx=0.25, wy=0.04, rate=1.1), bi=0.4, bo=0.6) \
@@ -689,14 +719,14 @@ def _arch_places():
 
 ARCH_AT = _arch_places()
 ARCH_ORDER = list(range(9))          # left to right: the order of words.EXPRESSIONS, as on every arch
-ARCH_LAND = [SEC[7] + 1.25 + 0.17 * k for k in range(9)]
+ARCH_LAND = [SEC[7] + 1.6 + 0.12 * abs(k - 4) for k in range(9)]
 
 
 def _to_arch(k):
     i = ARCH_ORDER.index(k)
     home = ARCH_AT[i]
-    p0 = _v(1.5 * (i - 4), 82.0, 118.0)
-    c1 = _v(home[0] * 1.35, 52.0, 52.0)
+    p0 = _v(0.0, 40.0, 58.0)                      # the white centre, ahead of the camera as the white clears
+    c1 = _v(home[0] * 2.2, 34.0 + 6.0 * abs(i - 4), 30.0)
 
     def f(t):
         u = float(np.clip((t - SEC[7]) / (ARCH_LAND[k] - SEC[7]), 0.0, 1.0))
@@ -727,6 +757,8 @@ def _second_of(t):
 
 
 CUTS = [SEC[3], SEC[4], SEC[5], SEC[6], SEC[7]]
+PEN_OF = {"Greeting": GREET, "Concession": CONC, "Apology": APOL, "Compliment": COMP, "Consideration": CONS,
+          "Respect": RESP, "Gratitude": GRAT, "Inclusiveness": INCL, "Encouragement": ENC}
 
 
 class Comets:
@@ -737,7 +769,7 @@ class Comets:
         self.sp = r.random((9, 140, 4)).astype(np.float64)
 
     def _alpha(self, k, t):
-        return _sc(SEC[0] - 0.02, SEC[0] + 0.12, t)
+        return 1.0
 
     def _near(self, k, t):
         """1 while the comet is a lead near the camera, 0 while it is far away on the ring."""
@@ -746,39 +778,85 @@ class Comets:
             n = max(n, _sc(t0 - bi, t0, t) * (1.0 - (_sc(t1, t1 + bo, t) if bo > 0 else float(t > t1))))
         if t < 3.4:
             n = max(n, 1.0 - _sc(1.6, 3.4, t))
+        if t < SEC[0]:
+            n = 1.0
         return n
 
     wants_camera = True
 
+    def _boxes(self, t, cam):
+        """Screen boxes of the words on screen now, padded, with the comet that may cross each (its pen)."""
+        out = []
+        if cam is None:
+            return out
+        for w in WORDS:
+            if not (w.t_in - 0.2 <= t <= w.t_out):
+                continue
+            b = PW.screen_box(w, cam, t)
+            if not b[4]:
+                continue
+            pen = PEN_OF.get(w.name)
+            free = pen if (t < w.t_read0 + 0.3 or t > w.t_read1) else None
+            out.append(((b[0] - 0.025, b[1] + 0.025, b[2] - 0.03, b[3] + 0.035), free))
+        return out
+
+    @staticmethod
+    def _dim(pts, cam, boxes, k):
+        xy, z = cam.project(pts)
+        f = np.ones(len(pts))
+        for (x0, x1, y0, y1), free in boxes:
+            if free == k:
+                continue
+            e = 0.02
+            inside = (_ss(x0 - e, x0, xy[:, 0]) * (1.0 - _ss(x1, x1 + e, xy[:, 0]))
+                      * _ss(y0 - e, y0, xy[:, 1]) * (1.0 - _ss(y1, y1 + e, xy[:, 1])))
+            f = np.minimum(f, 1.0 - 0.94 * inside * (z > 0))
+        return f
+
     def sample(self, t, cam=None):
         out = []
-        cut = max([c for c in CUTS if c <= t] + [SEC[0]])      # tails never reach back across a cut
+        cut = max([c for c in CUTS if c <= t] + [-2.0])      # tails never reach back across a cut
+        boxes = self._boxes(t, cam)
         eye = None if cam is None else np.asarray(cam.pos, np.float64)
         for k in range(9):
             a = self._alpha(k, t)
             if a <= 0.0:
                 continue
+            start = len(out)
+            self._one(out, k, t, a, cut, eye)
+            if boxes:
+                for b in out[start:]:
+                    f = self._dim(np.asarray(b["pos"], np.float64).reshape(-1, 3), cam, boxes, k)
+                    if f.min() < 0.999:
+                        b["alpha"] = np.asarray(b.get("alpha", 1.0), np.float64) * f
+                        if b.get("pos2") is not None:
+                            b["alpha2"] = np.asarray(b.get("alpha2", 1.0), np.float64) * self._dim(
+                                np.asarray(b["pos2"], np.float64).reshape(-1, 3), cam, boxes, k)
+        return out
+
+    def _one(self, out, k, t, a, cut, eye):
+        if True:
             near = self._near(k, t)
             tail = 0.55 * near + 2.2 * (1.0 - near)
             if BRAID_T0 - 0.2 < t:
                 tail = 0.45
-            w = 0.30 * near + 2.2 * (1.0 - near)
+            w = 0.30 * near + 1.6 * (1.0 - near)
             if t > BRAID_T0:
                 w = 0.30 + 0.25 * _sc(BRAID_T0, SEC[7], t)
             day = 1.0 if t >= SEC[7] else 0.0
             if day:
-                tail = 0.9 * (1.0 - _sc(ARCH_LAND[k] - 0.6, ARCH_LAND[k] + 0.3, t)) + 0.02
-                w = 1.1
+                tail = 1.1 * (1.0 - _sc(ARCH_LAND[k] - 0.5, ARCH_LAND[k] + 0.6, t)) + 0.02
+                w = 1.5 - 0.4 * _sc(ARCH_LAND[k], ARCH_LAND[k] + 0.8, t)
             n = 40
             ts = np.linspace(max(t - tail, cut), t, n)
             if ts[-1] - ts[0] < 1e-3:
-                continue
+                return
             pts = np.array([HEADS[k](float(x)) for x in ts])
             if eye is not None:                         # a head right at the lens would fill the picture
                 dist = float(np.linalg.norm(pts[-1] - eye))
                 a = a * _sc(1.0, 3.0, dist)
                 if a <= 0.0:
-                    continue
+                    return
                 if not day:
                     w = w * float(np.clip(dist / 6.0, 0.35, 1.0))     # close-ups get a finer ribbon
             age = (t - ts) / tail                       # 0 at the head, 1 at the far end
@@ -797,9 +875,9 @@ class Comets:
                 pulse = 1.0 + 0.12 * np.sin(5.0 * t + k)
                 out.append(dict(pos=head, size=1.5 + 0.5 * land, color=pc, alpha=a * (0.55 + 0.4 * land) * pulse,
                                 kind="soft", paint=1.0, paint_light=0.6))
-                out.append(dict(pos=head, size=0.55, color=core, alpha=a, emit=6.0, kind="spark"))
+                out.append(dict(pos=head, size=0.45, color=core, alpha=a * 0.8, emit=3.0, kind="spark"))
                 out.append(dict(pos=head, size=5.0, color=c, alpha=a * 0.10 * land, kind="soft"))
-                continue
+                return
             out.append(_rib(pts, w * (0.12 + 0.88 * kk), deep, a * 0.55 * np.clip(kk * 1.4, 0, 1), emit=1.6))
             out.append(_rib(pts, w * 0.22 * (0.15 + 0.85 * kk), core, a * 0.95 * np.clip(kk * 1.6, 0, 1), emit=2.6))
             head = pts[-1:]
@@ -1012,15 +1090,44 @@ P3D = dict(
 # The end card: the existing one, unchanged in style (coral title, navy date and place)
 # ---------------------------------------------------------------------------------------------------------
 FORM_DUR = 3.0
-TITLE_FORM = 51.4                     # whole at 54.4, the loudest moment of the medley
+TITLE_FORM = 50.7                     # whole at 53.7, before the loudest moment of the medley
 TITLE = dict(label="Healing Concert", lines=["The Words of Mother’s Love"], size=150, y=0.27, label_size=48,
              form=TITLE_FORM, hold=1e9, star=1e9, color=theme.CORAL, glow=theme.WHITE_GLOW, anim="ribbon")
 TAGLINE = dict(text="Sunday, December 6 · 4:30 PM\nWorld Mission Society Church of God\n"
                     "6720 W Sahara Ave, Las Vegas",
-               sizes=(78, 77), t0=53.1, t1=54.8, color=theme.NAVY, glow=theme.WHITE_GLOW, anim="rise")
+               sizes=(78, 77), t0=52.6, t1=54.2, color=theme.NAVY, glow=theme.WHITE_GLOW, anim="rise")
 FRAGMENTS = []
 TITLE_HIT = 54.4
 _base.TITLE_HIT = TITLE_HIT
 PHRASES = _base.PHRASES
-CREDIT = _base.CREDIT
 WAVES = []
+
+# The concert badge (PHASEB UPDATE 3, the same in all ten films): large on frame 0, in the top left corner by
+# 2.8 s, there until the end card forms (it carries the same information), then gone in about 1 s.
+CREDIT = dict(song="The Words of Mother’s Love",
+              concert="Healing Concert · Sunday, December 6 · 4:30 PM",
+              t_in=-1.0, t_full=0.0,
+              t_move=1.6, t_rest=2.8,
+              scale=0.52, alpha_rest=0.92,
+              margin_x=0.035, margin_top=0.05)
+BADGE_OUT = (TITLE_FORM - 0.5, TITLE_FORM + 0.5)
+
+
+def credit_state(t, bbox):
+    """Centre, scale and strength of the concert badge; bbox is its size at full card size."""
+    c = CREDIT
+    x0, x1, y0, y1 = bbox
+
+    def ss(a, b, x):
+        u = min(max((x - a) / (b - a), 0.0), 1.0)
+        return u * u * (3 - 2 * u)
+
+    a_in = ss(c["t_in"], c["t_full"], t)
+    m = ss(c["t_move"], c["t_rest"], t)
+    scale = c["scale"] ** m
+    cx0, cy0 = (x0 + x1) / 2.0, (y0 + y1) / 2.0
+    tx = c["margin_x"] + c["scale"] * (x1 - x0) / 2.0
+    ty = 1.0 - c["margin_top"] - c["scale"] * (y1 - y0) / 2.0
+    cx, cy = cx0 * (1 - m) + tx * m, cy0 * (1 - m) + ty * m
+    alpha = a_in * (1.0 + (c["alpha_rest"] - 1.0) * m) * (1.0 - ss(BADGE_OUT[0], BADGE_OUT[1], t))
+    return (cx, cy, scale, alpha), (cx0, cy0)
