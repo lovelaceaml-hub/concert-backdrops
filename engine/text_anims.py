@@ -585,6 +585,9 @@ class TextAnims:
     def _draw(self, it, t, form_t, form_dur, fly_t, fly_dur, star, pulse, calm, alpha, col, glow, drift):
         R = self.R
         line = float(it["meta"].get("line", S.HORIZON))
+        sky = getattr(self.R, "sky", None)
+        if sky is not None:   # CAMERA: the words stay put, but the water line they rise through is where it shows now
+            line = sky.place((0.5, line), sky.ground_depth(line))[1]
         line = line + (max(line, CALM_Y + 0.015) - line) * min(max(calm, 0.0), 1.0)
         ca, cb, hot = self._colors(it)
         com = dict(uT=t, uFormT=float(form_t), uFormDur=float(form_dur), uFlyT=float(fly_t), uLine=line,

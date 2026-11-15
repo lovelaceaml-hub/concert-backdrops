@@ -7,13 +7,23 @@ these keys renders exactly as before. How a song uses them: engine/UPGRADE-HOWTO
                 silver linings when the sun is low (CLOUDS_SPEED, CLOUDS_LIGHT)
   GOD_RAYS      shafts of light from the sun (or RAYS_FROM, a point in the sky) through the moving clouds and
                 past the mountains: screen space radial light scattering (RAYS_COLOR, RAYS_DECAY)
-  CAMERA_ZOOM, CAMERA_PAN, CAMERA_CRANE, PARALLAX   slow camera moves; the sky, the clouds, three mountain
-                ranges, the lake and near motes (CAMERA_MOTES) each move at their own depth. Text, the arch of
-                lights and the people of light are not moved.
+  CAMERA_ZOOM, CAMERA_PAN, CAMERA_CRANE, PARALLAX   slow camera moves; the sky, the stars, the clouds, three
+                mountain ranges, the lake and near motes (CAMERA_MOTES) each move at their own depth. So does
+                everything that stands in the world: people of light (painted and rigged), the gathering crowd,
+                creatures, nature, symbols, falling stars and ripples (engine-epic). Text, the arch of lights and
+                the drifting air layers (motes, petals, snow, bubbles, leaves, beat sparkles) are not moved.
 
 render.py calls, in frame order: adjust (after params), draw_clouds (after the sky pass), draw_light (after the
-effect layers, before text protection: the rays are dimmed behind words like every other light) and
-camera_bg (after the glow blur, before the composite).
+effect layers, before text protection: the rays are dimmed behind words like every other light), after_protect
+(the rays instead, when TEXT_SHADOW is below 0.05 and nothing dark may stand behind text) and camera_bg (after
+the glow blur, before the composite).
+
+How a layer follows the camera (engine-epic): its vertex shader is wrapped with cam_vs(), and before each draw the
+layer sets the uniform uCamAff to R.sky.aff(depth). A point the layer would draw at screen position s with the
+camera at rest is then drawn at scale * s + offset, exactly where the scenery of that depth has moved to, and
+point sprites grow with the zoom. Depths: R.sky.ground_depth(y) for anything that stands on the ground with its
+feet at screen height y (0.80 on the far shore and above, up to 1.15 at the bottom of the lake); W_SKY for the
+stars. Points on the fixed arch (a star a figure flies to) are passed through R.sky.unplace() first.
 """
 import numpy as np
 import moderngl
@@ -22,9 +32,40 @@ import song as S
 import shaders as G
 import sky_camera_shaders as K
 
-W_SKY, W_FAR = 0.12, 0.45
-CAM_UNIT = 15        # texture unit of the camera background in the composite
+W_SKY, W_FAR, W_NEAR, W_LAKE = 0.12, 0.45, 0.80, 1.15   # the same depths as in sky_camera_shaders.CAM
+CAM_UNIT = 15        # texture unit of the camera background in the composite (reserved: no other layer uses it)
 CALM_Y = 0.335
+CAMERA_KEYS = ("CAMERA_ZOOM", "CAMERA_PAN", "CAMERA_CRANE")
+
+
+def camera_on():
+    """True when the song moves the camera at all (decided once, when the song loads)."""
+    return any(getattr(S, k, None) is not None for k in CAMERA_KEYS)
+
+
+_CAM_WRAP = """
+uniform vec3 uCamAff;   // CAMERA: scale - 1 and screen offset of this layer now ((0,0,0): the camera is at rest)
+void main(){
+  cam_main0();
+  if(uCamAff != vec3(0.0)){
+    vec2 cam_s = (gl_Position.xy*0.5+0.5)*(1.0+uCamAff.x) + uCamAff.yz;
+    gl_Position.xy = cam_s*2.0-1.0;
+    gl_PointSize *= 1.0+uCamAff.x;
+  }
+}
+"""
+
+
+def cam_vs(src):
+    """A vertex shader whose layer follows the camera (see the module text). In a song without a camera the
+    shader is returned untouched, so nothing at all changes there."""
+    if not camera_on():
+        return src
+    import re
+    out, n = re.subn(r"void\s+main\s*\(\s*\)", "void cam_main0()", src, count=1)
+    if n != 1:
+        raise ValueError("cam_vs: no main() in the vertex shader")
+    return out + _CAM_WRAP
 
 # time of day keys: top, middle, horizon, glow, sun height above the horizon, sun strength, sun size, stars
 TOD = [
@@ -122,10 +163,6 @@ class SkyCamera:
             self.p_bg, self.v_bg = prog(K.CAMBG_FS)
             self.t_cam = tex((w, h))
             self.f_cam = ctx.framebuffer([self.t_cam])
-        if self.has_cam:
-            self.p_warp, self.v_warp = prog(K.WARP_FS)
-            self.t_stars, self.t_tmp = tex((w, h)), tex((w, h))
-            self.f_stars, self.f_tmp = ctx.framebuffer([self.t_stars]), ctx.framebuffer([self.t_tmp])
         if self.has_motes:
             self.p_nm = ctx.program(vertex_shader=K.NMOTE_VS, fragment_shader=K.NMOTE_FS)
             sd = np.random.default_rng(23).random((160, 4)).astype("f4")
@@ -165,35 +202,62 @@ class SkyCamera:
              uOffB=tuple(float(v) for v in offB), uCredit=tuple(float(v) for v in credit),
              uC0=tuple(float(v) for v in c0))
 
-    def follow(self, t):
-        return self.has_cam and float(val("CAMERA_FOLLOW", t, 1.0) or 0.0) > 0.5
+    # ------------------------------------------------------------ layers that follow the camera (engine-epic)
+    _state = None   # the camera of the frame being drawn: ((zoom, pan, crane, parallax), centre, base zoom, follow)
 
-    def after_stars(self, t):
-        """Called once the stars are drawn: keep them apart so they can move with the sky."""
-        if not self.on or not self.follow(t):
+    def _frame_state(self, t, P):
+        """Called by adjust() at the start of every frame, so the layers need no t or P to ask where they are."""
+        self._state = None
+        if not getattr(self, "has_cam", False):
             return
-        R = self.R
-        self.ctx.copy_framebuffer(self.f_stars, R.f_L)
-        R.f_L.use()
-        R.f_L.clear(0.0, 0.0, 0.0, 1.0)
-        self._stars_apart = True
+        k = float(val("CAMERA_FOLLOW", t, 1.0) or 0.0)
+        # a scene plate keeps its own zoom and pan and covers the camera background: the camera lets go of the
+        # layers as the plate comes in, so the people stay on the painted ground
+        up = getattr(self.R, "up", None)
+        if up is not None and getattr(up, "scenes", None):
+            slots, _ = up.plate_state(t)
+            cover = 0.0
+            for sl in slots:
+                pin = min(max(float(sl["tr"][1]), 0.0), 1.0)
+                cover = max(cover, float(sl["alpha"]) * pin * pin * (3.0 - 2.0 * pin))
+            k *= 1.0 - min(max(cover, 0.0), 1.0)
+        if k <= 0.0:
+            return
+        cam, c, bz = self.cam(t, P)
+        z, pan, cr, par = cam
+        self._state = ((1.0 + (z - 1.0) * k, pan * k, cr * k, par), c, bz)
 
-    def _warp_light(self, t, P):
-        """Everything drawn into the light layer since the stars follows the camera (figures, effects, motes)."""
-        if not getattr(self, "_stars_apart", False):
-            return
-        self._stars_apart = False
-        ctx, R = self.ctx, self.R
-        ctx.copy_framebuffer(self.f_tmp, R.f_L)
-        R.f_L.use()
-        ctx.disable(moderngl.BLEND)
-        self.t_tmp.use(location=0); self.t_stars.use(location=1)
-        p = self.p_warp
-        self._cam_uniforms(p, t, P)
-        setu(p, uLight=0, uStars=1, uBaseZ=1.0, uWL=float(val("CAMERA_LIGHT_DEPTH", t, 0.95)))
-        self.v_warp.render(moderngl.TRIANGLE_STRIP)
-        ctx.enable(moderngl.BLEND)
-        ctx.blend_func = (moderngl.ONE, moderngl.ONE)
+    @staticmethod
+    def ground_depth(y):
+        """The depth of the ground under something whose feet are at screen height y (camera at rest): the far
+        shore (0.80) at the water line and above, coming nearer down the lake to 1.15 at the bottom."""
+        h = float(S.HORIZON)
+        return W_NEAR + (W_LAKE - W_NEAR) * min(max((h - float(y)) / h, 0.0), 1.0)
+
+    def aff(self, w):
+        """(scale - 1, offset x, offset y): a layer of depth w draws the screen point s at scale * s + offset.
+        All zero while the camera is at rest, off, or let go (CAMERA_FOLLOW = 0)."""
+        st = self._state
+        if st is None:
+            return (0.0, 0.0, 0.0)
+        (z, pan, cr, par), c, bz = st
+        k = 1.0 + (float(w) - 1.0) * par
+        zz = max(1.0 + (z - 1.0) * k, 0.2)
+        h = float(S.HORIZON)
+        bx = (zz * (0.5 - 0.5 * bz) + c[0] * (1.0 - zz) - pan * k * zz - 0.5) / bz + 0.5
+        by = (zz * (h - h * bz) + c[1] * (1.0 - zz) - cr * k * zz - h) / bz + h
+        return (zz - 1.0, bx, by)
+
+    def place(self, s, w):
+        """Where the camera puts a point of depth w that sits at screen position s with the camera at rest."""
+        a = self.aff(w)
+        return ((1.0 + a[0]) * float(s[0]) + a[1], (1.0 + a[0]) * float(s[1]) + a[2])
+
+    def unplace(self, s, w):
+        """The inverse: the rest position that the camera puts at screen position s (for fixed targets such as
+        a light of the arch that a layer of depth w flies to)."""
+        a = self.aff(w)
+        return ((float(s[0]) - a[1]) / (1.0 + a[0]), (float(s[1]) - a[2]) / (1.0 + a[0]))
 
     def sun_screen(self, t, P):
         return self.to_screen((0.5, float(P["sun_y"])), W_SKY, t, P)
@@ -202,6 +266,7 @@ class SkyCamera:
     def adjust(self, t, P):
         if not self.on:
             return
+        self._frame_state(t, P)
         if self.has_tod:
             s = tod_state(val("TIME_OF_DAY", t, 1.0))
             P["sky_top"], P["sky_mid"], P["sky_hor"], P["glow"] = s["top"], s["mid"], s["hor"], s["glow"]
@@ -235,7 +300,12 @@ class SkyCamera:
         self._text_uniforms(p, t)
         sun_dy = float(P["sun_y"]) - S.HORIZON
         silver = (0.25 + 0.75 * (1.0 - ss(0.08, 0.30, sun_dy))) * ss(-0.08, 0.0, sun_dy)
-        setu(p, uT=float(t), uCloudSpd=float(val("CLOUDS_SPEED", t, 1.0)), uCloudAmt=amt,
+        # Clouds thin out round the words so that the veil behind them (TEXT_SHADOW) stays calm. With TEXT_SHADOW 0
+        # there is no veil, and a hole in bright clouds would itself be a darker patch behind the text: then the
+        # clouds simply pass behind the words (engine-epic; CLOUDS_TEXT_CLEAR sets it by hand, 0 to 0.9).
+        zk = min(max(float(val("TEXT_SHADOW", t, 1.0)) * 20.0, 0.0), 1.0)
+        clear = float(val("CLOUDS_TEXT_CLEAR", t, 0.90 * zk))
+        setu(p, uT=float(t), uCloudSpd=float(val("CLOUDS_SPEED", t, 1.0)), uCloudAmt=amt, uTextClear=clear,
              uSkyTop=P["sky_top"], uSkyMid=P["sky_mid"], uSkyHor=P["sky_hor"], uGlow=P["glow"],
              uSunS=self.sun_screen(t, P), uSunInt=float(P["sun_int"]), uLight=float(val("CLOUDS_LIGHT", t, 1.0)),
              uSilver=float(silver))
@@ -254,7 +324,6 @@ class SkyCamera:
         if not self.on:
             return
         ctx, R = self.ctx, self.R
-        self._warp_light(t, P)
         calm = float(val("BOTTOM_CALM", t, 0.0) or 0.0)
         drew = False
         a = float(val("GOD_RAYS", t, 0.0) or 0.0) if self.has_rays else 0.0
@@ -284,14 +353,14 @@ class SkyCamera:
             self.v_rad.render(moderngl.TRIANGLE_STRIP)
             rc = val("RAYS_COLOR", t, None)
             c = col(rc, "#ffffff") if rc is not None else np.asarray(P["glow"]) * 0.75 + S.lin("#fff1dc") * 0.25
-            R.f_L.use()
-            ctx.enable(moderngl.BLEND)
-            ctx.blend_func = (moderngl.ONE, moderngl.ONE)
-            self.t_ray.use(location=0)
-            setu(self.p_rays, uRays=0, uCol=c, uAmt=a * gain * 1.25, uHorizon=float(self.to_screen((0.5, S.HORIZON), 0.80, t, P)[1]), uCalm=calm,
-                 uCalmY=CALM_Y)
-            self.v_rays.render(moderngl.TRIANGLE_STRIP)
-            drew = True
+            self._rays = dict(uRays=0, uCol=c, uAmt=a * gain * 1.25, uCalm=calm, uCalmY=CALM_Y,
+                              uHorizon=float(self.to_screen((0.5, S.HORIZON), 0.80, t, P)[1]))
+            # The shafts are a haze over the whole sky. The text protection dims every light behind the words, which
+            # is right while a veil stands behind them (TEXT_SHADOW); with TEXT_SHADOW 0 nothing dark may stand
+            # behind text, and a hole in the haze is exactly that. Then after_protect() draws them (engine-epic).
+            if min(max(float(val("TEXT_SHADOW", t, 1.0)) * 20.0, 0.0), 1.0) >= 1.0:
+                self._draw_rays(0.0)
+                drew = True
         m = float(val("CAMERA_MOTES", t, 0.0) or 0.0) if self.has_motes else 0.0
         if m > 0.001:
             if not drew:
@@ -306,6 +375,29 @@ class SkyCamera:
         R.f_L.use()
         ctx.enable(moderngl.BLEND)
         ctx.blend_func = (moderngl.ONE, moderngl.ONE)
+
+    _rays = None   # the god rays of this frame, when they are still to be drawn
+
+    def _draw_rays(self, prot_k, t=None):
+        ctx, R = self.ctx, self.R
+        R.f_L.use()
+        ctx.enable(moderngl.BLEND)
+        ctx.blend_func = (moderngl.ONE, moderngl.ONE)
+        if prot_k > 0.0:
+            self._text_uniforms(self.p_rays, t, units=(1, 2, 3))
+        self.t_ray.use(location=0)
+        setu(self.p_rays, uProtK=float(prot_k), **self._rays)
+        self.v_rays.render(moderngl.TRIANGLE_STRIP)
+        self._rays = None
+
+    def after_protect(self, t, P):
+        """Called by render.py right after the text protection pass: the god rays, when TEXT_SHADOW is below 0.05.
+        They dim themselves behind the words only as far as TEXT_SHADOW still asks (not at all at 0)."""
+        if not self.on or self._rays is None:
+            return
+        zk = min(max(float(val("TEXT_SHADOW", t, 1.0)) * 20.0, 0.0), 1.0)
+        prot = min(max(float(val("TEXT_PROTECT", t, 1.0)), 0.0), 1.0)
+        self._draw_rays(0.94 * prot * zk, t)
 
     # ------------------------------------------------------------ 4. the camera background
     def camera_bg(self, t, P):
@@ -326,18 +418,13 @@ class SkyCamera:
             ra[k] = r
         if "uRings" in p:
             p["uRings"].write(ra.tobytes())
-        # SKY_THEME (UPGRADE-HOWTO I): the camera's own copy of the world gets the same day look as the composite
-        # (pale hills, a light lake); 0 (no theme) leaves every pixel as before
-        th = val("SKY_THEME", t, None)
-        k = (1.0 if th == "campaign_day" else 0.0) if isinstance(th, str) else float(th or 0.0)
-        mtn = np.asarray(P["sky_mid"]) * 0.22 + S.lin("#05060f")
-        if k > 0.0:
-            day = (np.asarray(P["sky_hor"]) * 0.55 + np.asarray(P["sky_top"]) * 0.45) * 1.15
-            mtn = mtn * (1.0 - k) + day * k
-        setu(p, uTheme=float(k))
+        # SKY_THEME (engine-epic): the same day sky as the composite gives a scene without a camera
+        theme, mtn = R.up.theme_state(t, P)
+        if mtn is None:
+            mtn = np.asarray(P["sky_mid"]) * 0.22 + S.lin("#05060f")
         setu(p, uSky=0, uRidge=1, uB2=2, uB3=3, uB4=4, uT=float(t), uProg=float(P["prog"]),
-             uTrail=float(P["trail"]), uHi=float(P["hi"]), uSunInt=float(P["sun_int"]),
-             uMtn=mtn, uGlow=P["glow"], uTrailCol=S.lin("#ffd396"),
+             uTrail=float(P["trail"]), uHi=float(P["hi"]), uSunInt=float(P["sun_int"]), uTheme=float(theme),
+             uMtn=np.asarray(mtn), uGlow=P["glow"], uTrailCol=S.lin("#ffd396"),
              uSunS=self.sun_screen(t, P), uNRings=min(len(rings), 16),
              uCalm=float(val("BOTTOM_CALM", t, 0.0) or 0.0), uCalmY=CALM_Y)
         self.v_bg.render(moderngl.TRIANGLE_STRIP)

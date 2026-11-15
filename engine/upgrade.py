@@ -21,6 +21,7 @@ import song as S
 import text as T
 import upgrade_shaders as U
 import shaders as G
+import sky_camera as SKC
 
 THEMES = {"campaign_day": 1.0, "original": 0.0}
 TRANSITIONS = {"fade": 0, "dissolve": 1, "bloom": 2, "ripple": 3, "push": 4}
@@ -153,12 +154,13 @@ class Upgrade:
         self._ink_map = None
         self._init_plates()
         if self.figs or self.rigs:
-            self.p_figp = prog(U.FIGP_VS, U.FIGP_FS)
-            self.p_figt = prog(U.FIGT_VS, U.FIGT_FS)
+            # cam_vs: the people follow the camera (CAMERA_*), each at the depth of the ground under its feet
+            self.p_figp = prog(SKC.cam_vs(U.FIGP_VS), U.FIGP_FS)
+            self.p_figt = prog(SKC.cam_vs(U.FIGT_VS), U.FIGT_FS)
             self.v_figt = ctx.vertex_array(self.p_figt, [(self.quad, "2f", "aPos")])
             self._init_figures()
         if self.rigs:
-            self.p_rigp = prog(U.RIGP_VS, U.FIGP_FS)
+            self.p_rigp = prog(SKC.cam_vs(U.RIGP_VS), U.FIGP_FS)
             self._init_rigs()
         if self.has_snow:
             self.p_snow = prog(U.SNOW_VS, U.SNOW_FS)
@@ -347,14 +349,23 @@ class Upgrade:
             kw["uLeafT"], kw["uLeafK"] = 12, self.leaf_k
         else:
             kw["uLeafK"] = 0.0
+        k, mtn = self.theme_state(t, P)
+        kw["uTheme"] = float(k)
+        if mtn is not None:
+            kw["uMtn"] = mtn
+
+    @staticmethod
+    def theme_state(t, P):
+        """(SKY_THEME amount 0..1, the colour of the hills under it or None). Used by the composite and by the
+        camera background (engine/sky_camera.py), so a camera scene has the same day sky."""
         th = val("SKY_THEME", t, None)
         k = THEMES.get(th, 0.0) if isinstance(th, str) else float(th or 0.0)
-        kw["uTheme"] = float(k)
-        if k > 0.0:
-            # day theme: the far hills are a pale blue-peach haze instead of dark ridges
-            orig = P["sky_mid"] * 0.22 + S.lin("#05060f")
-            day = (np.asarray(P["sky_hor"]) * 0.55 + np.asarray(P["sky_top"]) * 0.45) * 1.15
-            kw["uMtn"] = orig * (1.0 - k) + day * k
+        if k <= 0.0:
+            return float(k), None
+        # day theme: the far hills are a pale blue-peach haze instead of dark ridges
+        orig = P["sky_mid"] * 0.22 + S.lin("#05060f")
+        day = (np.asarray(P["sky_hor"]) * 0.55 + np.asarray(P["sky_top"]) * 0.45) * 1.15
+        return float(k), orig * (1.0 - k) + day * k
 
     def _any_color(self):
         if getattr(self, "_has_color", None) is None:
@@ -481,6 +492,16 @@ class Upgrade:
             d = {k: float(w) for k in d}
         return (float(d["sway"]), float(d["breath"]), float(d["lilt"]), float(d["stream"]))
 
+    def _camera(self, m, t, feet_y, to):
+        """Camera (CAMERA_*, engine/sky_camera.py): a figure moves with the ground under its feet. Returns the
+        uCamAff uniform and the point it flies to (a light of the arch, which the camera does not move), given
+        in the figure's own rest coordinates. `depth=` in the FIGURES entry overrides the depth."""
+        sky = getattr(self.R, "sky", None)
+        if sky is None:
+            return (0.0, 0.0, 0.0), tuple(float(v) for v in to)
+        w = fig_value(m, "depth", None, t) if m.get("depth") is not None else sky.ground_depth(feet_y)
+        return sky.aff(w), sky.unplace(to, w)
+
     def draw_figures(self, t):
         if self.rigs:
             self.draw_rigs(t)
@@ -501,18 +522,19 @@ class Upgrade:
             fd["texs"][st["a"]].use(location=0)
             fd["texs"][st["b"]].use(location=1)
             wp = self._warp(m)
+            aff, to = self._camera(m, t, st["rect"][1], st["to"])
             setu(self.p_figt, uTexA=0, uTexB=1, uMix=float(mu), uAlpha=float(formed * gone * dip * glow), uT=t,
                  uGlass=float(m.get("glass", 1.0)), uRect=st["rect"], uFlip=1.0 if m.get("flip") else 0.0,
                  uLine=S.lin("#ffe9c4") * 0.50 + c * 0.55, uBody=c * 0.36, uHalo=c * 0.28,
-                 uWarp=wp, uWalk=tuple(float(v) for v in st["walk"]))
+                 uWarp=wp, uWalk=tuple(float(v) for v in st["walk"]), uCamAff=aff)
             self.v_figt.render(moderngl.TRIANGLE_STRIP)
             # the sparks
             setu(self.p_figp, uT=t, uPx=self.px, uRect=st["rect"], uFlip=1.0 if m.get("flip") else 0.0,
                  uPoseA=st["a"], uPoseB=st["b"], uMorph=float(st["u"]), uGather=float(st["gather"]),
                  uGatherDur=float(st["gdur"]), uDiss=float(st["diss"]), uDissDur=float(st["ddur"]),
-                 uTo=tuple(float(v) for v in st["to"]), uMode=st["mode"], uBright=glow * float(m.get("sparks", 1.0)),
+                 uTo=to, uMode=st["mode"], uBright=glow * float(m.get("sparks", 1.0)),
                  uSize=float(m.get("spark_size", 1.0)), uColA=S.lin("#ffe8c0"), uColB=c * 1.2,
-                 uWarp=wp, uWalk=tuple(float(v) for v in st["walk"]))
+                 uWarp=wp, uWalk=tuple(float(v) for v in st["walk"]), uCamAff=aff)
             fd["vao"].render(moderngl.POINTS)
 
     # ------------------------------------------------------------ B2. living figures (kind="rig")
@@ -535,7 +557,8 @@ class Upgrade:
             tex = ctx.texture((self.GRID, self.GRID), 3, dtype="f1")
             tex.filter = (moderngl.LINEAR, moderngl.LINEAR)
             tex.repeat_x = tex.repeat_y = False
-            self.rdata.append(dict(meta=m, rig=R, seeds=seeds_all, gidx=gidx, buf=buf, vao=vao, tex=tex, n=n))
+            self.rdata.append(dict(meta=m, rig=R, seeds=seeds_all, gidx=gidx, buf=buf, vao=vao, tex=tex, n=n,
+                                   draft_keep=True))   # body parts in order, then the trails: a draft keeps all
 
     def _rig_glow(self, rd, pos, b):
         """The soft outline and glassy body, drawn from where the sparks are now (not from a picture)."""
@@ -588,20 +611,21 @@ class Upgrade:
             formed = ss(gat * 0.35, gat * 1.05, gather)
             gone = 1.0 - ss(0.0, dis * 0.45, diss) if diss >= 0 else 1.0
             rect = self._rig_glow(rd, pos, b)
-            rd["tex"].use(location=0)
-            rd["tex"].use(location=1)
-            setu(self.p_figt, uTexA=0, uTexB=1, uMix=0.0, uAlpha=float(formed * gone * glow), uT=t,
-                 uGlass=float(m.get("glass", 1.0)), uRect=rect, uFlip=0.0,
-                 uLine=S.lin("#ffe9c4") * 0.30 + c * 0.35, uBody=c * 0.13, uHalo=c * 0.16,
-                 uWarp=(0.0, 0.0, 0.0, 0.0), uWalk=(0.0, 0.0))
-            self.v_figt.render(moderngl.TRIANGLE_STRIP)
             if "to_star" in m:
                 to = S.STAR_POS[m["to_star"]]
             else:
                 to = m.get("to", (0.5, 0.90))
             x, y, h = R.place(t)
+            aff, to = self._camera(m, t, y, to)
+            rd["tex"].use(location=0)
+            rd["tex"].use(location=1)
+            setu(self.p_figt, uTexA=0, uTexB=1, uMix=0.0, uAlpha=float(formed * gone * glow), uT=t,
+                 uGlass=float(m.get("glass", 1.0)), uRect=rect, uFlip=0.0,
+                 uLine=S.lin("#ffe9c4") * 0.30 + c * 0.35, uBody=c * 0.13, uHalo=c * 0.16,
+                 uWarp=(0.0, 0.0, 0.0, 0.0), uWalk=(0.0, 0.0), uCamAff=aff)
+            self.v_figt.render(moderngl.TRIANGLE_STRIP)
             setu(self.p_rigp, uT=t, uPx=self.px, uH=float(h), uGather=float(gather), uGatherDur=gat,
-                 uDiss=float(diss), uDissDur=dis, uTo=tuple(float(v) for v in to),
+                 uDiss=float(diss), uDissDur=dis, uTo=to, uCamAff=aff,
                  uMode=0 if m.get("leave", "rise") == "rise" else 1,
                  uBright=glow * float(m.get("sparks", 1.0)), uSize=float(m.get("spark_size", 1.0)),
                  uColA=S.lin("#ffe8c0"), uColB=c * 1.2)

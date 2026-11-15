@@ -546,8 +546,9 @@ class Creatures:
         self.flock = Flock(int(getattr(S, "DOVES_COUNT", 14))) if getattr(S, "DOVES", None) is not None else None
         self.bf = Butterflies(int(getattr(S, "BUTTERFLIES_COUNT", 4))) if getattr(S, "BUTTERFLIES", None) is not None else None
         self.ff = Fireflies() if getattr(S, "FIREFLIES", None) is not None else None
-        self.p_st = ctx.program(vertex_shader=CS.STROKE_VS, fragment_shader=CS.STROKE_FS)
-        self.p_pt = ctx.program(vertex_shader=CS.POINT_VS, fragment_shader=CS.POINT_FS)
+        import sky_camera as SKC   # cam_vs: the creatures follow the camera (CAMERA_*), at CREATURES_DEPTH
+        self.p_st = ctx.program(vertex_shader=SKC.cam_vs(CS.STROKE_VS), fragment_shader=CS.STROKE_FS)
+        self.p_pt = ctx.program(vertex_shader=SKC.cam_vs(CS.POINT_VS), fragment_shader=CS.POINT_FS)
         quad = ctx.buffer(np.array([-1, -1, 1, -1, -1, 1, 1, 1], "f4").tobytes())
         self.MAXS, self.MAXP = 6000, 8000
         self.b_st = ctx.buffer(reserve=self.MAXS * 13 * 4, dynamic=True)
@@ -560,6 +561,12 @@ class Creatures:
         if not self.on:
             return
         st, pts = Strokes(), []
+        # CAMERA: one depth for the air the creatures fly in (default 0.80, the far shore; CREATURES_DEPTH)
+        sky = getattr(self.R, "sky", None)
+        aff = sky.aff(float(val("CREATURES_DEPTH", t, 0.80))) if sky is not None else (0.0, 0.0, 0.0)
+        for p in (self.p_pt, self.p_st):
+            if "uCamAff" in p:
+                p["uCamAff"].value = aff
         if self.ff is not None:
             p = self.ff.points(t)
             if p is not None and len(p):

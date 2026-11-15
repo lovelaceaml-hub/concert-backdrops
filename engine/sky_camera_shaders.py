@@ -90,7 +90,7 @@ in vec2 vUV;
 layout(location=0) out vec4 o;    // premultiplied cloud colour, laid over the sky
 layout(location=1) out vec4 o2;   // r: raw density (no text thinning), for the god rays
 uniform vec3 uSkyTop, uSkyMid, uSkyHor, uGlow;
-uniform vec2 uSunS; uniform float uSunInt, uLight, uSilver;
+uniform vec2 uSunS; uniform float uSunInt, uLight, uSilver, uTextClear;
 vec4 layerC(vec2 sv, float wc, float layer, out float dens){
   vec2 p = toLayer(sv, wc);
   float d = cloudD(p, layer);
@@ -121,7 +121,7 @@ void main(){
   vec4 hi = layerC(sv, W_CLOUD_HI, 0.0, dh);
   vec4 lo = layerC(sv, W_CLOUD_LO, 1.0, dl);
   vec4 c = lo + hi*(1.0-lo.a);
-  c *= 1.0-0.90*textF(sv);               // clouds thin out round the words
+  c *= 1.0-uTextClear*textF(sv);         // clouds thin out round the words (not at all with TEXT_SHADOW 0)
   o = c;
   float amt = clamp(uCloudAmt, 0.0, 1.0);
   o2 = vec4(1.0-(1.0-dh*amt)*(1.0-dl*amt), 0.0, 0.0, 1.0);
@@ -174,15 +174,16 @@ void main(){
 }
 """
 
-RAYS_FS = """
-#version 330
+RAYS_FS = "#version 330\n" + TEXTF + """
 in vec2 vUV; out vec4 o;
 uniform sampler2D uRays; uniform vec3 uCol; uniform float uAmt, uHorizon, uCalm, uCalmY;   // uHorizon: on screen now
+uniform float uProtK;   // above 0: drawn after the text protection pass, and dimmed behind the words by this much
 float calmK(float y){ return 1.0-uCalm*(1.0-smoothstep(uCalmY-0.07, uCalmY+0.05, y)); }
 void main(){
   float r = texture(uRays, vUV).r;
   float low = mix(0.02, 1.0, smoothstep(uHorizon+0.05, uHorizon+0.18, vUV.y));   // shafts live in the air above the land
-  o = vec4(uCol*uAmt*r*low*calmK(vUV.y), 1.0);
+  float k = uProtK>0.0 ? 1.0-uProtK*textF(vUV) : 1.0;
+  o = vec4(uCol*uAmt*r*low*calmK(vUV.y)*k, 1.0);
 }
 """
 
@@ -198,7 +199,7 @@ uniform vec2 uSunS;
 uniform vec2 uShade; uniform vec4 uCredit; uniform vec2 uC0;
 uniform int uNRings; uniform vec4 uRings[16];
 uniform float uCalm, uCalmY;
-uniform float uTheme;   // SKY_THEME (0 = the original world): the same day changes as shaders.COMP_FS makes
+uniform float uTheme;   // SKY_THEME, exactly as in the composite (shaders.COMP_FS scene() and procedural())
 float calmK(float y){ return 1.0-uCalm*(1.0-smoothstep(uCalmY-0.07, uCalmY+0.05, y)); }
 float creditField(vec2 q){
   vec2 cuv = (q-uCredit.xy)/uCredit.z + uC0;
@@ -220,6 +221,7 @@ vec3 sceneCam(vec2 sv){
   float hh = max(uf.y-uHorizon, 0.0);
   float ry = ridgeFar(uf.x);
   float m1 = smoothstep(ry+aa, ry-aa, uf.y);
+  // SKY_THEME: the far range fades into the haze before its ends, so no hard step shows on a bright sky
   float ef = mix(1.0, smoothstep(0.035, 0.11, uf.x)*smoothstep(0.965, 0.89, uf.x), uTheme);
   m1 *= ef;
   float lit = smoothstep(uProg+0.003, uProg-0.014, uf.x);
@@ -310,18 +312,4 @@ in float vA; out vec4 o;
 uniform vec3 uCol;
 void main(){ vec2 p = gl_PointCoord*2.0-1.0; float r2 = dot(p,p); if(r2>1.0) discard;
   o = vec4(uCol*vA*(exp(-r2*2.2)*0.8+0.2*smoothstep(1.0,0.7,r2)), 1.0); }
-"""
-
-# the light layer drawn so far (motes, petals, effect layers, people of light) moves with the camera at one depth,
-# the stars at the depth of the sky; text and the arch of lights are drawn after this and stay put
-WARP_FS = "#version 330\n" + CAM + """
-in vec2 vUV; out vec4 o;
-uniform sampler2D uLight, uStars; uniform float uWL;
-void main(){
-  vec2 a = toLayer(vUV, uWL), b = toLayer(vUV, W_SKY);
-  vec3 c = vec3(0.0);
-  if(a.x>0.0 && a.x<1.0 && a.y>0.0 && a.y<1.0) c += texture(uLight, a).rgb;
-  c += texture(uStars, clamp(b, 0.0, 1.0)).rgb;
-  o = vec4(c, 1.0);
-}
 """

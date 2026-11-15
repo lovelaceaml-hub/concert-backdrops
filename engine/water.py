@@ -64,15 +64,17 @@ class Water:
         if not self.active:
             return
         quad = ctx.buffer(np.array([-1, -1, 1, -1, -1, 1, 1, 1], "f4").tobytes())
+        import sky_camera as SKC   # cam_vs: symbols and falling stars follow the camera (CAMERA_*)
+        cv = SKC.cam_vs
         self.p_ring = ctx.program(vertex_shader=WS.RING_VS, fragment_shader=WS.RING_FS)
         self.v_ring = ctx.vertex_array(self.p_ring, [(quad, "2f", "aPos")])
-        self.p_glow = ctx.program(vertex_shader=WS.GLOW_VS, fragment_shader=WS.GLOW_FS)
+        self.p_glow = ctx.program(vertex_shader=cv(WS.GLOW_VS), fragment_shader=WS.GLOW_FS)
         self.v_glow = ctx.vertex_array(self.p_glow, [(quad, "2f", "aPos")])
         self.p_dot = ctx.program(vertex_shader=WS.DOT_VS, fragment_shader=WS.DOT_FS)
         self.dot_buf = ctx.buffer(reserve=4 * 4 * 4096, dynamic=True)
         self.v_dot = ctx.vertex_array(self.p_dot, [(self.dot_buf, "2f 1f 1f", "aP", "aB", "aS")])
         self.petal_seeds = np.random.default_rng(3).random((300, 4))   # the same petals render.py draws
-        self.p_sym = ctx.program(vertex_shader=WS.SYM_VS, fragment_shader=WS.SYM_FS)
+        self.p_sym = ctx.program(vertex_shader=cv(WS.SYM_VS), fragment_shader=WS.SYM_FS)
         self.sdata = []
         for k, m in enumerate(self.syms):
             kind = m.get("kind", "heart")
@@ -92,7 +94,8 @@ class Water:
             vao = ctx.vertex_array(self.p_sym, [(ctx.buffer(data.tobytes()), "4f 3f 4f", "aP", "aCol", "aSeed")])
             ext = (pts[:, 0].min(), pts[:, 1].min(), pts[:, 0].max(), pts[:, 1].max())
             avg = cols.mean(axis=0)
-            self.sdata.append(dict(meta=m, vao=vao, ext=ext, avg=avg, kind=kind, size=size, stretch=stretch))
+            self.sdata.append(dict(meta=m, vao=vao, ext=ext, avg=avg, kind=kind, size=size, stretch=stretch,
+                                   draft_keep=True))   # points in drawing order: a draft keeps every stroke
 
     # ------------------------------------------------------------ the water line and the ripples at time t
     def water_line(self, t):
@@ -190,10 +193,20 @@ class Water:
                 out.append((float(xs[j + 1]), y, t - tt, 0.40 * a))
         return out
 
-    def _rip_uniforms(self, prog, rips, wl):
+    def _sky(self):
+        return getattr(self.R, "sky", None)
+
+    def _rip_uniforms(self, prog, rips, wl, cam=True):
+        """cam: the ripples and the water line are given where the camera (CAMERA_*) shows them now, each ripple
+        at the depth of the lake under it. cam=False keeps rest coordinates (for a program wrapped with cam_vs)."""
+        sky = self._sky() if cam else None
         arr = np.zeros((MAX_RIP, 4), "f4")
         for k, r in enumerate(rips):
             arr[k] = r
+            if sky is not None:
+                arr[k, 0:2] = sky.place((r[0], r[1]), sky.ground_depth(r[1]))
+        if sky is not None:
+            wl = sky.place((0.5, wl), sky.ground_depth(wl))[1]
         if "uRip" in prog:
             prog["uRip"].write(arr.tobytes())
         _setu(prog, uNRip=len(rips), uRipWL=float(wl))
@@ -212,15 +225,17 @@ class Water:
         wl = self.water_line(t)
         calm = float(_val("BOTTOM_CALM", t, 0.0) or 0.0)
         rips = self.ripples(t) if self.has_rip else []
+        sky = self._sky()
         if rips:
             self._rip_uniforms(self.p_ring, rips, wl)
-            _setu(self.p_ring, uRect=(0.5, wl / 2.0, 0.5, wl / 2.0), uAspect=S.ASPECT, uCalm=calm, uCalmY=0.335,
+            wls = sky.place((0.5, wl), sky.ground_depth(wl))[1] if sky is not None else wl   # the line on screen now
+            _setu(self.p_ring, uRect=(0.5, wls / 2.0, 0.5, wls / 2.0), uAspect=S.ASPECT, uCalm=calm, uCalmY=0.335,
                   uBright=float(_val("RIPPLE_BRIGHT", t, 1.0)) * 0.24,
                   uCol=_lin(_val("RIPPLE_COLOR", t), "#ffe6c4"))
             self.v_ring.render(moderngl.TRIANGLE_STRIP)
         self._draw_falls(t, wl)
         if self.sdata:
-            self._rip_uniforms(self.p_sym, rips, wl)
+            self._rip_uniforms(self.p_sym, rips, wl, cam=False)
             for sd in self.sdata:
                 self._draw_symbol(sd, t, wl, calm)
 
@@ -233,6 +248,9 @@ class Water:
                 continue
             x1 = float(f[1])
             y1 = float(f[2]) if len(f) > 2 else self._default_y(tl, wl)
+            sky = self._sky()
+            if sky is not None:   # CAMERA: the star lands where the camera shows that spot of the lake now
+                x1, y1 = sky.place((x1, y1), sky.ground_depth(y1))
             x0, y0 = x1 - 0.13, 0.97
             for j in range(60):
                 uj = u - j * 0.006
@@ -262,6 +280,16 @@ class Water:
         size, stretch = sd["size"], sd["stretch"]
         glow = float(m.get("glow", 1.0))
         to = S.STAR_POS[int(m.get("star", 4))] if leave else (0.5, 0.9)
+        # CAMERA: a symbol hangs over the far shore and moves with it (`depth=` overrides 0.80); the light of the
+        # arch it flies to stays where it is
+        sky = self._sky()
+        aff = (0.0, 0.0, 0.0)
+        if sky is not None:
+            w = float(m.get("depth", 0.80))
+            aff, to = sky.aff(w), sky.unplace(to, w)
+        for pr in (self.p_glow, self.p_sym):
+            if "uCamAff" in pr:
+                pr["uCamAff"].value = aff
         op = 0.0
         ot = m.get("open", True)
         if sd["kind"] == "gate" and ot is not None and ot is not False:

@@ -49,6 +49,38 @@ def words_arrive(m):
     return later[0] if later else times[-1]
 
 
+def comp_blocks():
+    """Which optional blocks of the composite shader this song needs (shaders.COMP_BLOCKS), decided once from
+    the song file. A song that uses none of them gets exactly the original shader, so it renders bit for bit as
+    before the features existed."""
+    def has(*keys):
+        return any(getattr(S, k, None) is not None for k in keys)
+
+    out = []
+    if has("SKY_THEME"):
+        out.append("SKY_THEME")
+    ts = getattr(S, "TEXT_SHADOW", None)
+    if ts is not None:
+        # only when TEXT_SHADOW really goes below 0.05 somewhere in the song: there the veil eases to nothing
+        total = float(getattr(S, "TOTAL", 0.0) or S.NFRAMES / S.FPS)
+        low = min(float(ts(k * 0.25)) for k in range(int(total * 4) + 2)) if callable(ts) else float(ts)
+        if low < 0.05:
+            out.append("SHADOW_ZERO")
+    metas = list(getattr(S, "PHRASES", [])) + [getattr(S, "TITLE", {}), getattr(S, "TAGLINE", {}),
+                                               getattr(S, "CREDIT", {})] + list(getattr(S, "FRAGMENTS", []))
+    if any(isinstance(m, dict) and m.get("color") for m in metas):
+        out.append("TEXT_INK")
+    if has("LEAVES"):
+        out.append("LEAVES_TINT")
+    if has("RIPPLES_AUTO") or getattr(S, "RIPPLES", None):
+        out.append("LAKE_RIPPLES")
+    if has("FLOWERS", "TREE", "BLOSSOM", "WATERFALL", "STREAM"):
+        out.append("NATURE_PAINT")
+    if has("CAMERA_ZOOM", "CAMERA_PAN", "CAMERA_CRANE"):
+        out.append("CAMERA_BG")
+    return out
+
+
 class Renderer:
     def __init__(self, w=S.W, h=S.H, ctx=None):
         self.w, self.h = w, h
@@ -69,9 +101,10 @@ class Renderer:
         self.p_lights = prog(G.QUAD_VS, G.LIGHTS_FS); self.v_lights = qvao(self.p_lights)
         self.p_credit = prog(G.QUAD_VS, G.CREDIT_FS); self.v_credit = qvao(self.p_credit)
         self.p_blur = prog(G.QUAD_VS, G.BLUR_FS); self.v_blur = qvao(self.p_blur)
-        self.p_comp = prog(G.QUAD_VS, G.COMP_FS); self.v_comp = qvao(self.p_comp)
+        self.p_comp = prog(G.QUAD_VS, G.comp_fs(comp_blocks())); self.v_comp = qvao(self.p_comp)
         self.p_prot = prog(G.QUAD_VS, G.PROTECT_FS); self.v_prot = qvao(self.p_prot)
-        self.p_star = prog(G.STAR_VS, G.STAR_FS)
+        import sky_camera as SKC   # cam_vs: the stars move with the sky when a song moves the camera
+        self.p_star = prog(SKC.cam_vs(G.STAR_VS), G.STAR_FS)
         self.p_mote = prog(G.MOTE_VS, G.MOTE_FS)
         self.p_petal = prog(G.PETAL_VS, G.PETAL_FS)
         self.p_textp = prog(G.TEXTP_VS, G.TEXTP_FS)
@@ -225,9 +258,8 @@ class Renderer:
         ctx.enable(BL)
         ctx.blend_func = (ONE, ONE)
         calm0 = float(_val("BOTTOM_CALM", t, 0.0))   # Astra round 1, finding 12: a calm lower third
-        setu(self.p_star, uT=t, uStars=P["stars"], uHi=P["hi"], uPx=px)
+        setu(self.p_star, uT=t, uStars=P["stars"], uHi=P["hi"], uPx=px, uCamAff=self.sky.aff(0.12))
         self.v_star.render(moderngl.POINTS)
-        self.sky.after_stars(t)
         setu(self.p_mote, uT=t, uAmount=min(P["motes"], 1.0), uPx=px, uSizeMin=2.4, uSizeMax=24.0, uPeriod=30.0,
              uY0=getattr(S, "MOTE_Y", (-0.05, 1.05))[0], uY1=getattr(S, "MOTE_Y", (-0.05, 1.05))[1], uSway=0.012,
              uBright=0.62 + 0.30 * P["env"], uColA=L(cols("MOTE_COLORS", ("#ffe2a8", "#ff9f8a"))[0]),
@@ -268,6 +300,7 @@ class Renderer:
                  uCredit=tuple(float(v) for v in credit), uC0=c0)
             self.v_prot.render(moderngl.TRIANGLE_STRIP)
             ctx.blend_func = (ONE, ONE)
+        self.sky.after_protect(t, P)   # god rays, when TEXT_SHADOW is below 0.05 (no hole in the haze behind text)
 
         # words: particles, then the solid letters
         calm = float(_val("BOTTOM_CALM", t, 0.0))
