@@ -107,14 +107,14 @@ def lerp(a, b, u):
 SPEED = [(0.0, 0.0), (IMPACT, 0.0), (IMPACT + 0.06, 15.0), (1.9, 10.0), (5.6, 8.0), (6.4, 3.0), (8.0, 0.9),
          (12.7, 0.9), (13.30, 22.0), (14.2, 16.0), (14.9, 3.0), (19.3, 2.5), (19.85, 12.0), (20.6, 15.0),
          (26.0, 15.0), (26.79, 22.0), (33.0, 22.0), (33.36, 32.0), (39.6, 32.0), (40.21, 8.0), (41.2, 1.0),
-         (42.4, 1.0), (42.6, 2.5), (46.05, 2.0), (46.6, 30.0), (49.3, 34.0), (BREAK, 30.0), (50.6, 6.0),
-         (60.0, 2.0)]
+         (42.4, 1.0), (42.6, 2.5), (46.05, 2.0), (46.6, 30.0), (49.3, 34.0), (BREAK, 36.0), (50.6, 90.0),
+         (52.0, 260.0), (54.0, 600.0), (60.0, 900.0)]
 HEIGHT = [(0.0, 0.0), (IMPACT, 0.02), (1.4, 0.14), (6.0, 0.24), (6.84, 0.40), (12.8, 0.55), (13.6, 1.0),
           (19.3, 1.25), (19.85, 1.6), (20.9, 4.2), (26.0, 4.4), (27.3, 5.6), (33.0, 6.6), (33.9, 8.0),
-          (39.8, 9.0), (40.5, 7.5), (41.3, 4.6), (42.45, 4.4), (43.25, 24.0), (46.0, 26.0), (46.8, 18.0), (BREAK, 14.0), (50.4, 6.0),
-          (52.0, 1.2), (60.0, 0.6)]
+          (39.8, 9.0), (40.5, 7.5), (41.3, 4.6), (42.45, 4.4), (43.25, 24.0), (46.0, 26.0), (46.8, 18.0), (BREAK, 14.0), (50.6, 7.0),
+          (52.5, 4.0), (60.0, 3.0)]
 CURL = [(0.0, 0.0), (19.85, 0.0), (20.9, 1.0), (25.2, 1.0), (26.6, 0.0), (45.9, 0.0), (46.6, 0.25),
-        (47.4, 0.0), (BREAK - 0.3, 0.0), (50.1, 0.9), (51.2, 1.0), (60.0, 1.0)]
+        (47.4, 0.0), (60.0, 0.0)]
 _K0 = WV.Kinematics(SPEED, HEIGHT, CURL, drop=(0.0, 0.0), t_impact=IMPACT)
 SHORE = 62.0                                    # the crest breaks this far in front of the arch (z)
 Z0 = float(_K0.R(BREAK)) + SHORE
@@ -369,17 +369,18 @@ END_LOOK = np.array([0.0, 14.0, 0.0])
 
 
 def cam_break(t):
-    # over the breaking wave: carried forward above the plume toward the sun, then down to the water's edge
+    # the wave runs out to the horizon and the camera climbs with it: the ring of light races across the
+    # whole sea and lights it gold behind it; then the view lifts to the morning sky for the end card
     tb = min(t, BREAK + 0.3)
     Hh = float(HGT(tb))
     start = wp(U_MAIN + 1.0, 12.0, Hh + 9.5, tb)
-    high = np.array([0.55 * start[0], 24.0, start[2] + 6.0])
-    land = END_POS + np.array([0.0, 0.0, -1.1 * max(t - 55.0, 0.0)])
-    u1 = float(ss(BREAK, 51.8, t))
-    u2 = float(ss(51.6, 55.2, t))
-    pos = lerp(lerp(start, high, u1), land, u2)
-    tgt = lerp(np.array([start[0], 9.0, start[2] - 80.0]), END_LOOK, float(ss(50.8, 54.6, t)))
-    return pos, tgt
+    c = float(ss(BREAK, 54.6, t))
+    h = start[1] + 640.0 * c ** 1.6
+    pos = np.array([start[0] * (1.0 - c), h, start[2] - 260.0 * c - 20.0 * max(t - 54.6, 0.0)])
+    down = np.array([0.0, -np.tan(np.radians(lerp(14.0, 32.0, float(ss(BREAK, 52.6, t))))), -1.0])
+    level = np.array([0.0, np.tan(np.radians(9.0)), -1.0])
+    d = lerp(down, level, float(ss(53.2, 55.2, t)))
+    return pos, pos + 400.0 * d / np.linalg.norm(d)
 
 
 CAMERA = Rig([
@@ -394,7 +395,7 @@ CAMERA = Rig([
     Path(cam_run, 33.36, 40.21, fov=54.0, aperture=0.008, blend=0.6, focus=7.0),
     Path(cam_hang, 40.21, 46.35, fov=56.0, aperture=0.008, blend=1.6, focus=9.0),
     Path(cam_drop2, 46.35, BREAK, fov=62.0, aperture=0.004, blend=0.7, focus=14.0),
-    Path(cam_break, BREAK, 60.0, fov=(62.0, 50.0), aperture=0.003, blend=0.8, focus=60.0),
+    Path(cam_break, BREAK, 60.0, fov=(62.0, 58.0), aperture=0.0, blend=0.8, focus=400.0),
 ], handheld=0.25, min_height=0.12, near=0.05)
 
 # ---------------------------------------------------------------------------------------------------------
@@ -466,12 +467,12 @@ _LIT = [WORDS[lab].t_read0 for lab in PW.LABELS]
 # THE SCENE
 # ---------------------------------------------------------------------------------------------------------
 def _glow(t):
-    # the wave is whole until it breaks; the broken wave runs on as a line of foam and is gone by 55.5 s
-    return float(1.0 - ss(52.6, 55.5, t))
+    # the near crest gives way to the whole ring as we climb; the ring fades under the end card
+    return float(1.0 - ss(51.0, 53.0, t))
 
 
 def _plume(t):
-    return float(ss(BREAK - 0.1, BREAK + 0.7, t) * (1.0 - ss(52.0, 54.5, t)))
+    return 0.0
 
 
 def _lanterns(rng):
@@ -607,7 +608,7 @@ def _crest_line(rng, baked):
         return p
     return WV.Crowd(shapes, places, place, ["#ffd9a0", "#ffc070", "#ffe6c0", "#ffcf90"], t_lift=47.9,
                     lift_speed=50.0, alpha=0.6, size=0.02, show=(46.4, 60.1), center=U_MAIN,
-                    gain=lambda t: float(ss(46.5, 47.3, t)))
+                    gain=lambda t: float(ss(46.5, 47.3, t) * (1.0 - ss(51.5, 52.5, t))))
 
 
 def C(ps, pad=0.9):
@@ -783,11 +784,18 @@ def _setup(scene):
                         gain=lambda t: float(ss(32.4, 33.4, t) * (1.0 - ss(40.6, 41.6, t))),
                         poses=("stand", "stand", "look_up", "open_arms"), dynamic=False)),
             ("s8", dict(n=60, t0=49.7, t1=52.5, u_mid=U_MAIN - 20.0, u_spread=22.0, min_gap=1.3,
-                        gain=lambda t: float(ss(48.5, 49.5, t)), yaw=lambda r: 180.0 + r.normal(0.0, 15.0),
+                        gain=lambda t: float(ss(48.5, 49.5, t) * (1.0 - ss(51.5, 52.5, t))),
+                        yaw=lambda r: 180.0 + r.normal(0.0, 15.0),
                         poses=("stand", "raise", "open_arms"), dynamic=False))):
         for nm, st in _people(rng, baked, name, **args):
             scene.add(nm, st if st.static else C(st))
     scene.add("crest_line", C(_crest_line(rng, baked)))
+    # the finale: the whole ring, and the whole sea lit gold behind it, seen from high above
+    scene.add("far_ring", WV.FarRing(KIN, n=60000, gain=lambda t: float(ss(50.0, 51.4, t) * (1.0 - ss(55.0, 57.5, t)))))
+    sea = WV.disc_glints(KIN, 5200.0, 220000, rng, r_min=60.0)
+    scene.add("sea_lights", WV.Field(KIN, sea, 2.6, lin("#ffc066"), alpha=0.35, kind="spark", delay=0.0, flash=3.0,
+                                     fade=0.4, twinkle=0.7, emit=1.4, reflect=False,
+                                     gain=lambda t: float(ss(49.8, 51.2, t) * (1.0 - 0.5 * ss(55.0, 58.0, t)))))
     _performances(scene)
 
     WORDS.add_to(scene)
@@ -805,6 +813,7 @@ P3D = dict(
                    golden2=dict(base="golden", sun_int=0.6, rays=0.25, exposure=0.9)),
         sun_az=180.0,
         keep_hue=0.6,
+        shore=2400.0,
         split=dict(look="dawn", toward=0.0, soft=0.4,
                    amount=lambda t: float(0.15 + 0.85 * ss(2.5, 12.0, t)) * float(1.0 - ss(BREAK, 51.5, t))),
         ripple=lambda t: float(0.18 + 0.4 * ss(8.0, 20.0, t)),

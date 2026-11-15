@@ -525,3 +525,45 @@ def bake_people(Body, n=2600, seed=1, poses=("stand", "raise")):
         m = min(len(v) for v in d.values())
         out.append({key: v[:m] for key, v in d.items()})
     return out
+
+
+class FarRing:
+    """The whole ring of the wave, seen from high above in the finale: points evenly round the circle (the
+    crest set only covers the stretch near the camera). gain(t) brings it in as the camera climbs."""
+
+    def __init__(self, kin, n=60000, gain=None, seed=23, color="#ffd27a", top="#fff4dc"):
+        rng = np.random.default_rng(seed)
+        self.kin = kin
+        self.th = rng.uniform(0.0, TAU, n)
+        self.b = rng.random(n) ** 2
+        self.j = rng.normal(0.0, 1.0, (n, 2))
+        self.seed = rng.random(n)
+        self._gain = gain
+        self.col, self.top = lin(color), lin(top)
+
+    def gain(self, t):
+        return 1.0 if self._gain is None else float(self._gain(t))
+
+    def sample(self, t):
+        if self.gain(t) <= 0.002:
+            return []
+        kin = self.kin
+        R = float(kin.R(t))
+        H = max(float(kin.height(t)), 0.3)
+        w = 2.5 * H + 0.012 * R                      # the band widens as it runs out
+        rho = R - self.b * w + self.j[:, 0] * 0.004 * R
+        h = H * np.exp(-3.0 * self.b) * (0.6 + 0.4 * self.seed)
+        pos = np.stack([kin.x0 + rho * np.sin(self.th), h, kin.z0 - rho * np.cos(self.th)], 1)
+        k = np.exp(-4.0 * self.b)[:, None]
+        col = self.col[None] * (1.0 - k) + self.top[None] * k
+        size = 0.25 + 0.0012 * R
+        return dict(pos=pos, size=size, color=col, alpha=0.5 * (0.3 + 0.7 * np.exp(-3.0 * self.b)), kind="spark",
+                    emit=1.6, seed=self.seed, twinkle=0.6, reflect=False)
+
+
+def disc_glints(kin, radius, n, rng, r_min=0.0):
+    """Points spread over the whole sea round the drop point, out to `radius` (for a Field that lights them
+    as the crest passes: seen from high up, the sea lights up gold behind the running ring)."""
+    r = np.sqrt(rng.uniform((r_min / radius) ** 2, 1.0, n)) * radius
+    a = rng.uniform(0.0, TAU, n)
+    return np.stack([kin.x0 + r * np.sin(a), np.full(n, 0.05), kin.z0 - r * np.cos(a)], 1)
