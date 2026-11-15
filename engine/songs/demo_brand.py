@@ -15,7 +15,8 @@ Not a concert video: a proof of what helper BRAND built for the five films (engi
   40.0 to 47.5   THE WORLD by day: a clear blue and green Earth with white clouds on a bright sky, hearts
                  lighting up across it
   47.5 to 60.0   THE FINALE: the world of light at night (golden continents, drifting clouds, a soft air),
-                 hearts in the nine colours blooming across it from Las Vegas, joined by high arcs; it slows
+                 hearts in the nine colours blooming across it from Las Vegas, joined by arcs, a warm light
+                 rising from below it where hands would cradle it (49.6 to 53.2); it slows
                  and settles (52.2 to 54.0) and becomes the logo (53.0 to 55.0): the hearts sweep in behind it,
                  the ring and the grid draw themselves over the Earth, the logo's globe spreads over it, the
                  branches grow; light blooms from it into a pastel day (54.3), and the logo rises into the end
@@ -78,16 +79,17 @@ def world_pieces(camera, o=0.0):
     fin = BR.Finale(pos=GLOBE_AT, radius=11.5, shrink=0.47, camera=camera, look="night", t_world=47.6 + o,
                     spin=8.0, front=-150.0, hearts=dict(t0=48.4 + o, t1=52.6 + o, n=44),
                     t_settle=(52.2 + o, 54.0 + o), t_logo=(53.0 + o, 55.0 + o), bloom=dict(t=54.3 + o),
-                    end=dict(t=(55.0 + o, 56.4 + o), ride=(0.5, 0.74, 14.0), frac=0.27))
+                    end=dict(t=(55.0 + o, 56.4 + o), ride=(0.5, 0.74, 14.0), frac=0.27),
+                    cradle=dict(t0=49.6 + o, t1=53.2 + o))       # light rising from where hands would cradle it
     return day, fin
 
 
 def world_p3d(camera, fin, looks, o=0.0):
-    """The P3D world and bursts for these pieces: `looks` before the day globe, then day, then night."""
-    world = fin.world(dict(look=list(looks) + [(40.0 + o, "day", 0.0), (47.5 + o, "night", 0.0)], arch=None,
+    """The P3D world and bursts for these pieces: `looks` before the day globe, then day, then night (each
+    change a short blend through dusk, never a flash)."""
+    world = fin.world(dict(look=list(looks) + [(40.0 + o, "day", 0.8), (47.5 + o, "night", 0.8)], arch=None,
                            react=dict(beat=0.3, level=0.2)))
-    cuts = [dict(t=tc, strength=1.2, rise=0.2, fall=0.5) for tc in (40.0 + o, 47.5 + o) if tc > 0.0]
-    return world, cuts + fin.bursts()
+    return world, fin.bursts()
 
 
 # --------------------------------------------------------------------------------------------- the camera
