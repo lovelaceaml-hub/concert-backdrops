@@ -579,10 +579,10 @@ def glitter_profile(scene, name, sky, kw):
 
 def constellation_profile(scene, name, sky, kw):
     """A face in profile drawn as a constellation: stars on the skin joined by fine lines, the profile's edge a
-    chain of bright stars, the closed eye and lips small constellations (navy and gold on a day sky)."""
+    chain of bright stars, the closed eye and lips small constellations (navy, painted, on a day sky)."""
     day = _day(sky)
-    color = _pick(kw, "color", "#dce8ff", "#22357e", sky)
-    color2 = _pick(kw, "color2", "#fff2d0", "#b8861e", sky)
+    color = _pick(kw, "color", "#dce8ff", "#1c2a6e", sky)
+    color2 = _pick(kw, "color2", "#fff2d0", "#33449a", sky)
     kw.setdefault("hair", dict(look="ink" if day else "glow", ink="#2a3570", length=1.2, locks=36, per_lock=5,
                                alpha=0.7 if not day else 0.45, scalp=0.3))
     look = dict(name="constellation", bright=2.6, size=1.7) if day else "constellation"
