@@ -198,6 +198,7 @@ uniform vec2 uSunS;
 uniform vec2 uShade; uniform vec4 uCredit; uniform vec2 uC0;
 uniform int uNRings; uniform vec4 uRings[16];
 uniform float uCalm, uCalmY;
+uniform float uTheme;   // SKY_THEME, exactly as in the composite (shaders.COMP_FS scene() and procedural())
 float calmK(float y){ return 1.0-uCalm*(1.0-smoothstep(uCalmY-0.07, uCalmY+0.05, y)); }
 float creditField(vec2 q){
   vec2 cuv = (q-uCredit.xy)/uCredit.z + uC0;
@@ -219,15 +220,18 @@ vec3 sceneCam(vec2 sv){
   float hh = max(uf.y-uHorizon, 0.0);
   float ry = ridgeFar(uf.x);
   float m1 = smoothstep(ry+aa, ry-aa, uf.y);
+  // SKY_THEME: the far range fades into the haze before its ends, so no hard step shows on a bright sky
+  float ef = mix(1.0, smoothstep(0.035, 0.11, uf.x)*smoothstep(0.965, 0.89, uf.x), uTheme);
+  m1 *= ef;
   float lit = smoothstep(uProg+0.003, uProg-0.014, uf.x);
   float depth = clamp(hh/0.17, 0.0, 1.0);
   vec3 far = mix(uMtn*1.5, hz, 0.74-0.30*depth);
   far += uTrailCol*uTrail*lit*0.030*depth;
   c = mix(c, far, m1);
   float dr = uf.y-ry;
-  float rim = exp(-abs(dr)*900.0)*0.85 + exp(-max(dr,0.0)*95.0)*0.13*step(0.0,dr);
+  float rim = (exp(-abs(dr)*900.0)*0.85 + exp(-max(dr,0.0)*95.0)*0.13*step(0.0,dr))*ef;
   c += uTrailCol*uTrail*lit*rim;
-  c += uTrailCol*0.03*exp(-abs(dr)*900.0)*(1.0-lit);
+  c += uTrailCol*0.03*exp(-abs(dr)*900.0)*(1.0-lit)*ef;
   c = mix(c, hz*1.04, exp(-hh/0.030)*0.30);
   // the middle range
   vec2 um = toLayer(sv, W_MID);
@@ -240,7 +244,7 @@ vec3 sceneCam(vec2 sv){
   vec2 un = toLayer(sv, W_NEAR);
   float y3 = ridgeNear(un.x);
   float m3 = smoothstep(y3+aa, y3-aa, un.y);
-  c = mix(c, mix(uMtn*0.30, hz, 0.05), m3);
+  c = mix(c, mix(uMtn*mix(0.30, 0.78, uTheme), hz, mix(0.05, 0.30, uTheme)), m3);
   return c;
 }
 void main(){
@@ -259,7 +263,7 @@ void main(){
     vec2 lr = vec2(lu.x+wob, uHorizon+(uHorizon-lu.y)*1.22+wob*0.4);
     vec2 svR = toScreen(lr, W_NEAR);
     col = sceneCam(svR);
-    col *= mix(0.82, 0.30, pow(d,0.75));
+    col *= mix(mix(0.82, 0.95, uTheme), mix(0.30, 0.74, uTheme), pow(d,0.75));
     float rf = (1.0-d)*(1.0-d);
     float ck = calmK(sv.y);
     col += (texture(uB2, svR).rgb*0.16 + texture(uB3, svR).rgb*0.26 + texture(uB4, svR).rgb*0.30)*rf*mix(0.25, 1.0, ck)
@@ -307,18 +311,4 @@ in float vA; out vec4 o;
 uniform vec3 uCol;
 void main(){ vec2 p = gl_PointCoord*2.0-1.0; float r2 = dot(p,p); if(r2>1.0) discard;
   o = vec4(uCol*vA*(exp(-r2*2.2)*0.8+0.2*smoothstep(1.0,0.7,r2)), 1.0); }
-"""
-
-# the light layer drawn so far (motes, petals, effect layers, people of light) moves with the camera at one depth,
-# the stars at the depth of the sky; text and the arch of lights are drawn after this and stay put
-WARP_FS = "#version 330\n" + CAM + """
-in vec2 vUV; out vec4 o;
-uniform sampler2D uLight, uStars; uniform float uWL;
-void main(){
-  vec2 a = toLayer(vUV, uWL), b = toLayer(vUV, W_SKY);
-  vec3 c = vec3(0.0);
-  if(a.x>0.0 && a.x<1.0 && a.y>0.0 && a.y<1.0) c += texture(uLight, a).rgb;
-  c += texture(uStars, clamp(b, 0.0, 1.0)).rgb;
-  o = vec4(c, 1.0);
-}
 """

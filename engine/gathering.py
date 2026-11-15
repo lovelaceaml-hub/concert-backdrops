@@ -132,6 +132,9 @@ class Crowd:
     def __init__(self, m, pl, aspect, star_pos):
         self.m, self.pl, self.aspect = m, pl, aspect
         self.star_pos = [tuple(p) for p in star_pos] if star_pos else [(0.5, 0.9)]
+        # CAMERA: the crowd moves with the shore, the arch does not. fix(p) gives a fixed screen point (a light
+        # of the arch, the flame's source) in the crowd's own coordinates; Gathering.draw sets it every frame
+        self.fix = lambda p: p
         seed = int(m.get("seed", 7))
         rng = np.random.default_rng(seed)
         N = self.N = int(m.get("count", 80))
@@ -658,7 +661,7 @@ class Crowd:
         if self.src is not None and self.src_t[0] <= t < self.src_t[1] + 0.05:
             u = (t - self.src_t[0]) / (self.src_t[1] - self.src_t[0])
             k = int(np.argmin(np.where(np.isfinite(self.Tr), self.Tr, np.inf)))
-            out += self._travel(t, self.src, (fx[k], fy[k]), u, 0.06, 1.3, sc[k])
+            out += self._travel(t, self.fix(self.src), (fx[k], fy[k]), u, 0.06, 1.3, sc[k])
         # hops in flight
         for g, c, Tg, Tarr, mx, my in self.hops:
             if Tg <= t < Tarr:
@@ -668,12 +671,12 @@ class Crowd:
         fly = (t >= self.Trise) & (t < self.Trise + self.rise_dur)
         for i in np.nonzero(fly)[0]:
             u = (t - self.Trise[i]) / self.rise_dur[i]
-            sp = self.star_pos[self.star_of[i]]
+            sp = self.fix(self.star_pos[self.star_of[i]])
             out += self._travel(t, (fx[i], fy[i]), sp, u, 0.18 + 0.1 * self.ph[i], 0.75 * (1 - 0.6 * self.r[i]),
                                 sc[i] * 0.8, side=0.05 * (self.ph[i] - 0.5))
         A = self.arch_gain * ss(self.arch_t - 1.5, self.arch_t + 3.0, t)
         if A > 0.002:
-            sp = np.array(self.star_pos)
+            sp = np.array([self.fix(q) for q in self.star_pos])
             # along the arch: a band of light through the nine lights
             k = 260
             u = np.linspace(0, 1, k)
@@ -729,7 +732,8 @@ class Gathering:
         self.R = R
         self.crowd = Crowd(dict(g), dict(pl) if pl is not None else None, S.ASPECT, getattr(S, "STAR_POS", None))
         ctx = R.ctx
-        self.prog = ctx.program(vertex_shader=VS, fragment_shader=FS)
+        import sky_camera as SKC
+        self.prog = ctx.program(vertex_shader=SKC.cam_vs(VS), fragment_shader=FS)   # the crowd follows the camera
         self.cap = 0
         self.buf = None
         self.vao = None
@@ -740,6 +744,13 @@ class Gathering:
         c = self.crowd
         if t < float(np.min(c.Te)) or t > float(np.max(c.leave)) + c.dis + 0.1:
             return
+        # CAMERA: the whole crowd stands at one depth, the ground under its feet line (`depth=` overrides it)
+        sky = getattr(self.R, "sky", None)
+        aff = (0.0, 0.0, 0.0)
+        if sky is not None:
+            w = float(c.m["depth"]) if c.m.get("depth") is not None else sky.ground_depth(c.cy)
+            aff = sky.aff(w)
+            c.fix = lambda q, w=w: sky.unplace(q, w)
         data = c.sprites(t, self.R.px)
         n = len(data)
         if n == 0:
@@ -751,4 +762,6 @@ class Gathering:
         self.buf.orphan(self.cap * 7 * 4)
         self.buf.write(data.tobytes())
         self.prog["uPx"].value = float(self.R.px)
+        if "uCamAff" in self.prog:
+            self.prog["uCamAff"].value = aff
         self.vao.render(moderngl.POINTS, vertices=n)

@@ -539,7 +539,11 @@ class Nature:
             return
         ctx = self.ctx = R.ctx
         self.px = R.px
-        self.p_glow = ctx.program(vertex_shader=NS.GLOW_VS, fragment_shader=NS.GLOW_FS)
+        import sky_camera as SKC   # cam_vs: nature follows the camera (CAMERA_*), at NATURE_DEPTH
+        cv = SKC.cam_vs
+        self.progs = []            # every program of this layer, so draw() can hand each the camera
+        self.p_glow = ctx.program(vertex_shader=cv(NS.GLOW_VS), fragment_shader=NS.GLOW_FS)
+        self.progs.append(self.p_glow)
         self.cap = 200000
         self.buf = ctx.buffer(reserve=self.cap * 28, dynamic=True)
         self.vao = ctx.vertex_array(self.p_glow, [(self.buf, "2f 1f 3f 1f", "aPos", "aSize", "aCol", "aSharp")])
@@ -551,22 +555,25 @@ class Nature:
         self.f_paint = ctx.framebuffer([self.t_paint])
         self.flowers = Flowers() if getattr(S, "FLOWERS", None) is not None else None
         if self.flowers is not None:
-            self.p_petal = ctx.program(vertex_shader=NS.PETAL_VS, fragment_shader=NS.PETAL_FS)
+            self.p_petal = ctx.program(vertex_shader=cv(NS.PETAL_VS), fragment_shader=NS.PETAL_FS)
+            self.progs.append(self.p_petal)
             self.pbuf = ctx.buffer(reserve=20000 * 36, dynamic=True)
             self.v_petal = ctx.vertex_array(self.p_petal, [(self.pbuf, "2f 1f 1f 3f 1f 1f", "aPos", "aSize", "aRot",
                                                            "aCol", "aA", "aW")])
         self.tree = Tree() if getattr(S, "TREE", None) is not None else None
         self.stream = Stream() if getattr(S, "STREAM", None) is not None else None
         if self.stream is not None:
-            self.p_rib = ctx.program(vertex_shader=NS.RIBBON_VS, fragment_shader=NS.RIBBON_FS)
+            self.p_rib = ctx.program(vertex_shader=cv(NS.RIBBON_VS), fragment_shader=NS.RIBBON_FS)
+            self.progs.append(self.p_rib)
             self.rbuf = ctx.buffer(reserve=4000 * 20, dynamic=True)
             self.v_rib = ctx.vertex_array(self.p_rib, [(self.rbuf, "2f 1f 1f 1f", "aPos", "aS", "aU", "aW")])
         self.fall = None
         if getattr(S, "WATERFALL", None) is not None:
             self.fall = Waterfall()
-            self.p_fall = ctx.program(vertex_shader=NS.RECT_VS, fragment_shader=NS.FALL_FS)
+            self.p_fall = ctx.program(vertex_shader=cv(NS.RECT_VS), fragment_shader=NS.FALL_FS)
             self.v_fall = ctx.vertex_array(self.p_fall, [(quad, "2f", "aPos")])
-            self.p_cliff = ctx.program(vertex_shader=NS.RECT_VS, fragment_shader=NS.CLIFF_FS)
+            self.p_cliff = ctx.program(vertex_shader=cv(NS.RECT_VS), fragment_shader=NS.CLIFF_FS)
+            self.progs += [self.p_fall, self.p_cliff]
             self.v_cliff = ctx.vertex_array(self.p_cliff, [(quad, "2f", "aPos")])
 
     def comp_uniforms(self, prog):
@@ -599,6 +606,17 @@ class Nature:
             return
         R, ctx = self.R, self.ctx
         calm = float(val("BOTTOM_CALM", t, 0.0) or 0.0)
+        # CAMERA: nature stands on the far shore and moves with it (one depth for the paint and the light;
+        # NATURE_DEPTH overrides the default, the ground at the tree's foot or the flowers' far edge)
+        sky = getattr(R, "sky", None)
+        if sky is not None:
+            w = val("NATURE_DEPTH", t, None)
+            if w is None:
+                w = sky.ground_depth(float(val("TREE_Y", t, None) or val("FLOWERS_LINE", t, None) or S.HORIZON))
+            aff = sky.aff(float(w))
+            for pr in self.progs:
+                if "uCamAff" in pr:
+                    pr["uCamAff"].value = aff
         P = Pts()
         PP = []
         painted = False

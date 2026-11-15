@@ -71,7 +71,8 @@ class Renderer:
         self.p_blur = prog(G.QUAD_VS, G.BLUR_FS); self.v_blur = qvao(self.p_blur)
         self.p_comp = prog(G.QUAD_VS, G.COMP_FS); self.v_comp = qvao(self.p_comp)
         self.p_prot = prog(G.QUAD_VS, G.PROTECT_FS); self.v_prot = qvao(self.p_prot)
-        self.p_star = prog(G.STAR_VS, G.STAR_FS)
+        import sky_camera as SKC   # cam_vs: the stars move with the sky when a song moves the camera
+        self.p_star = prog(SKC.cam_vs(G.STAR_VS), G.STAR_FS)
         self.p_mote = prog(G.MOTE_VS, G.MOTE_FS)
         self.p_petal = prog(G.PETAL_VS, G.PETAL_FS)
         self.p_textp = prog(G.TEXTP_VS, G.TEXTP_FS)
@@ -225,9 +226,8 @@ class Renderer:
         ctx.enable(BL)
         ctx.blend_func = (ONE, ONE)
         calm0 = float(_val("BOTTOM_CALM", t, 0.0))   # Astra round 1, finding 12: a calm lower third
-        setu(self.p_star, uT=t, uStars=P["stars"], uHi=P["hi"], uPx=px)
+        setu(self.p_star, uT=t, uStars=P["stars"], uHi=P["hi"], uPx=px, uCamAff=self.sky.aff(0.12))
         self.v_star.render(moderngl.POINTS)
-        self.sky.after_stars(t)
         setu(self.p_mote, uT=t, uAmount=min(P["motes"], 1.0), uPx=px, uSizeMin=2.4, uSizeMax=24.0, uPeriod=30.0,
              uY0=getattr(S, "MOTE_Y", (-0.05, 1.05))[0], uY1=getattr(S, "MOTE_Y", (-0.05, 1.05))[1], uSway=0.012,
              uBright=0.62 + 0.30 * P["env"], uColA=L(cols("MOTE_COLORS", ("#ffe2a8", "#ff9f8a"))[0]),
