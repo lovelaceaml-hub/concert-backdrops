@@ -167,19 +167,19 @@ CAM_KEYS = [
     # launch 1 (6.84): she breaks upward into flakes; up through the mist with them
     (7.25, 23.0, 3.90, 3.30, (0.0, 5.0, 0.0), 56, 0.01),
     (7.80, 36.0, 3.90, 7.80, (0.0, 12.0, 0.0), 62, 0.0),
-    (8.40, 47.0, 4.50, Y[1] + 1.15, (0.0, Y[1] + 1.95, 0.0), 48, 0.02),
+    (8.30, 46.0, 4.50, Y[1] + 1.15, (0.0, Y[1] + 1.95, 0.0), 48, 0.02),
     (11.0, 66.0, 4.65, Y[1] + 1.40, (0.0, Y[1] + 2.05, 0.0), 48, 0.03),
     (13.30, 80.0, 4.60, Y[1] + 1.75, (0.0, Y[1] + 2.35, 0.0), 48, 0.03),
-    (14.75, 92.0, 4.9, Y[1] + 3.6, (0.0, Y[1] + 4.6, 0.0), 52, 0.02),
+    (15.10, 92.0, 4.9, Y[1] + 3.4, (0.0, Y[1] + 4.3, 0.0), 52, 0.02),
     # launch 2: swing out wide over a lake full of pillars, then swoop in to the old man
-    (15.45, 104.0, 9.5, 21.0, (0.0, 22.5, 0.0), 62, 0.0),
-    (16.25, 114.0, 12.5, 26.0, (0.0, 26.8, 0.0), 64, 0.0),
-    (17.05, 122.0, 4.6, Y[2] + 1.10, (0.0, Y[2] + 1.75, 0.0), 46, 0.02),
-    (18.60, 138.0, 4.5, Y[2] + 1.35, (0.0, Y[2] + 1.85, 0.0), 46, 0.03),
-    (19.85, 152.0, 4.4, Y[2] + 2.00, (0.0, Y[2] + 2.9, 0.0), 50, 0.02),
-    # launch 3 (19.85, the bass slams in)
-    (20.25, 158.0, 4.3, Y[2] + 3.0, (0.0, Y[2] + 4.6, 0.0), 54, 0.01),
-    (20.75, 170.0, 4.2, 42.0, (0.0, 48.0, 0.0), 60, 0.0),
+    (15.80, 104.0, 9.5, 21.0, (0.0, 22.5, 0.0), 62, 0.0),
+    (16.55, 114.0, 12.5, 26.0, (0.0, 26.8, 0.0), 64, 0.0),
+    (17.30, 122.0, 4.6, Y[2] + 1.10, (0.0, Y[2] + 1.75, 0.0), 46, 0.02),
+    (18.70, 138.0, 4.5, Y[2] + 1.35, (0.0, Y[2] + 1.85, 0.0), 46, 0.03),
+    (19.95, 152.0, 4.4, Y[2] + 1.90, (0.0, Y[2] + 2.6, 0.0), 50, 0.02),
+    # launch 3 (the bass slams in at 19.85)
+    (20.35, 158.0, 4.3, Y[2] + 3.0, (0.0, Y[2] + 4.6, 0.0), 54, 0.01),
+    (20.85, 170.0, 4.2, 42.0, (0.0, 48.0, 0.0), 60, 0.0),
     (21.40, 183.0, 4.5, Y[3] + 1.15, (0.0, Y[3] + 1.90, 0.0), 47, 0.02),
     (24.80, 212.0, 4.5, Y[3] + 1.55, (0.0, Y[3] + 2.00, 0.0), 47, 0.03),
     (26.79, 228.0, 4.3, Y[3] + 2.40, (0.0, Y[3] + 3.6, 0.0), 50, 0.02),
@@ -188,7 +188,7 @@ CAM_KEYS = [
     (27.70, 245.0, 4.0, 61.0, (0.0, 67.0, 0.0), 60, 0.0),
     (28.40, 255.0, 4.3, Y[4] + 1.00, (0.0, Y[4] + 1.55, 0.0), 46, 0.02),
     (31.80, 284.0, 4.3, Y[4] + 1.35, (0.0, Y[4] + 1.70, 0.0), 46, 0.03),
-    (33.36, 300.0, 4.1, Y[4] + 2.20, (0.0, Y[4] + 3.4, 0.0), 50, 0.02),
+    (33.36, 300.0, 4.1, Y[4] + 2.00, (0.0, Y[4] + 2.3, 0.0), 50, 0.02),
     # launch 5 (33.36): under the darkening sky, the child
     (33.75, 306.0, 4.1, Y[4] + 3.2, (0.0, Y[4] + 4.8, 0.0), 54, 0.01),
     (34.20, 315.0, 4.0, 79.0, (0.0, 85.0, 0.0), 60, 0.0),
@@ -203,11 +203,11 @@ CAM_KEYS = [
     # launch 7 (42.51, the biggest hit): through the cloud top into sunrise, behind Mother
     (42.70, 424.0, 1.6, _HM[1] + 1.2, tuple(P(424.0, 1.6, _HM[1] + 6.2) + 8.0 * P(244.0, 1.0)), 52, 0.0),
     (43.20, 455.0, 3.0, 114.0, tuple(P(455.0, 3.0, 117.5) + 10.0 * P(282.0, 1.0)), 58, 0.0),
-    (43.90, 490.0, 5.5, TOP + 1.30, tuple(P(SUN_AZ, 30.0, TOP + 4.0)), 48, 0.02),
-    (45.60, 500.0, 7.2, TOP + 1.60, tuple(P(SUN_AZ, 30.0, TOP + 5.2)), 46, 0.02),
-    (48.00, 504.0, 12.0, TOP + 3.0, tuple(P(SUN_AZ, 26.0, TOP + 7.2)), 50, 0.0),
+    (43.90, 489.0, 3.7, TOP + 1.45, tuple(P(SUN_AZ, 30.0, TOP + 2.7)), 50, 0.02),
+    (45.60, 498.0, 4.3, TOP + 1.60, tuple(P(SUN_AZ, 30.0, TOP + 3.5)), 48, 0.02),
+    (48.00, 503.0, 7.0, TOP + 2.3, tuple(P(SUN_AZ, 26.0, TOP + 4.4)), 50, 0.0),
     # the card: pull back and rise over the sea of cloud to the arch of nine lights
-    (49.47, 506.0, 18.0, TOP + 5.0, tuple(P(SUN_AZ, 45.0, TOP + 17.0)), 52, 0.0),
+    (49.47, 506.0, 14.0, TOP + 4.5, tuple(P(SUN_AZ, 45.0, TOP + 14.0)), 54, 0.0),
     (52.26, 508.0, 26.0, TOP + 8.5, tuple(P(SUN_AZ, 60.0, TOP + 23.0)), 58, 0.0),
     (60.00, 513.0, 30.0, TOP + 10.0, tuple(P(SUN_AZ, 60.0, TOP + 18.0)), 60, 0.0),
 ]
@@ -317,7 +317,7 @@ def _hand(j, meet, t_touch, axis, tilt, approach, color, show, apart=0.5, bright
 
 
 _HAND_AXIS = (C[6] - 15.0 + 90.0)            # the hands reach across the picture
-FLARE = FX.Flare(tuple(HANDS_AT), BIG_HIT, color="#fff1d0", color2="#9fd0ff", strength=0.8, reach=0.7)
+FLARE = FX.Flare(tuple(HANDS_AT), BIG_HIT, color="#ffd890", color2="#9fc4ff", strength=0.55, reach=0.6)
 
 
 def _cast():
@@ -359,7 +359,7 @@ def _cast():
                              color2="#ffffff", points=50000, seed=68.0, gesture=[(21.0, 27.5, "offer")],
                              effects=[_form(20.4, 1.0), _dissolve(S[4])], show=(20.3, 29.0), fade=0.15)
     # act 4, ring 4: a young man sits; she kneels and listens (Respect)
-    pp["thinker"] = Body("man", at=_R4[0], facing=_R4[1], garment="tunic", look=dict(name="dots", bright=0.45), color="#ce927e",
+    pp["thinker"] = Body("man", at=_R4[0], facing=_R4[1], garment="tunic", look="glitter", color="#e8a080",
                          color2="#ffe2d0", points=45000, seed=69.0, motion=[(25.0, "sit")],
                          effects=[_form(28.2, 1.0), _dissolve(S[5])], show=(28.1, 35.2), fade=0.15)
     pp["traveller 4"] = Body("woman", at=_L4[0], facing=_L4[1], garment="coat", look="glitter", color="#ffe2b8",
@@ -382,14 +382,14 @@ def _cast():
                                 color2="#ffe0a0")
     # act 7 and the card: above the clouds. Mother from behind, veiled; the traveller at her side, radiant
     pp["Mother"] = Body("woman", at=MOTHER_AT, facing=SUN_AZ, garment="robe", veil=dict(length=1.3),
-                        look=["rim", "glitter"], color="#ffe2a8", color2="#fff8ec", points=70000, seed=90.0,
-                        gesture=[(45.4, 70.0, "open_arms")], effects=[_form(42.6, 1.3)], show=(42.5, 60.5),
+                        look="glitter", color="#ffd890", color2="#fff4e0", points=80000, seed=90.0, bright=1.25,
+                        gesture=[(45.4, 70.0, "open_arms")], effects=[_form(42.6, 1.3), _dissolve(49.7, dur=1.6)],
+                        show=(42.5, 53.0),
                         fade=0.2)
     pp["traveller 7"] = Body("woman", at=-0.38 * _RT + [0.0, TOP, 0.0], facing=SUN_AZ, garment="coat",
-                             look=["rim", dict(name="glitter", bright=1.5)], color="#fff2d8", color2="#ffd27a",
-                             points=55000, seed=91.0,
-                             gesture=[(44.0, 70.0, "look_up", dict(amount=12))], effects=[_form(42.7, 1.3)],
-                             show=(42.6, 60.5), fade=0.2)
+                             look="glitter", color="#ffe6c0", color2="#ffffff", points=60000, seed=91.0,
+                             bright=1.15, gesture=[(44.0, 70.0, "look_up", dict(amount=12))],
+                             effects=[_form(42.7, 1.3), _dissolve(49.55, dur=1.6)], show=(42.6, 53.0), fade=0.2)
     return pp
 
 
@@ -420,27 +420,30 @@ def _w(expr, pos, px, t_in, r0, r1, t_out, **kw):
                 t_out=t_out, **kw)
 
 
+_UP = dict(leave="wind", wind=(0.35, 1.0, 0.0), speed=0.5)     # the words blow away upward, letter by letter
+
+
 def _place(name, part):
     return lambda t: PEOPLE[name].where(t, part)
 
 
 _SPECS = [
-    _w("Greeting", (0.0, 2.50, 0.0), 92, 1.9, 3.0, 5.85, 7.4, arrive="palm", source=_place("greeter", "palm.R"),
-       leave="rise"),
-    _w("Apology", (0.0, Y[1] + 2.30, 0.0), 84, 8.15, 9.0, 11.5, 11.5, arrive="palm",
-       source=_place("man 1", "head"), leave="morph"),
-    _w("Inclusiveness", (0.0, Y[1] + 2.30, 0.0), 88, 11.5, 12.2, 14.75, 15.9, arrive="morph", source="Apology",
-       leave="rise"),
-    _w("Gratitude", (0.0, Y[2] + 2.40, 0.0), 84, 16.25, 17.2, 19.85, 21.2, arrive="palm",
-       source=_place("elder", "shoulder.R"), leave="arch", to=tuple(LIGHTS[1])),
-    _w("Concession", (0.0, Y[3] + 2.45, 0.0), 96, 21.2, 22.05, 24.85, 26.2, arrive="palm",
-       source=_place("traveller 3", "palm.R"), leave="rise"),
-    _w("Respect", (0.0, Y[4] + 2.05, 0.0), 84, 28.35, 29.2, 31.85, 33.2, arrive="palm",
-       source=_place("thinker", "head"), leave="rise"),
-    _w("Encouragement", (0.0, Y[5] + 2.20, 0.0), 84, 34.75, 35.6, 38.25, 39.5, arrive="shaft", leave="rise"),
-    _w("Consideration", HANDS_AT + [0.0, 0.175, 0.0] - 0.09 * right_of(C[6] - 12.0), 84, 39.1, 39.92, 42.47, 43.6, arrive="palm",
-       source=_place("Mother's hand", "fingertips.L"), leave="rise"),
-    _w("Compliment", P(SUN_AZ, 17.0, TOP + 7.2), 96, 44.0, 45.0, 48.0, NINTH, arrive="rays",
+    _w("Greeting", (0.0, 2.50, 0.0), 92, 2.35, 3.2, 5.85, 6.75, arrive="palm", source=_place("greeter", "palm.R"),
+       **_UP),
+    _w("Apology", (0.0, Y[1] + 2.30, 0.0), 84, 8.1, 8.8, 11.3, 11.95, arrive="palm",
+       source=_place("man 1", "head"), **_UP),
+    _w("Inclusiveness", (0.0, Y[1] + 2.30, 0.0), 88, 11.95, 12.6, 15.1, 15.85, arrive="palm",
+       source=_place("traveller 1", "heart"), **_UP),
+    _w("Gratitude", (0.0, Y[2] + 2.40, 0.0), 84, 16.8, 17.45, 19.95, 20.75, arrive="palm",
+       source=_place("elder", "shoulder.R"), **_UP),
+    _w("Concession", (0.0, Y[3] + 2.45, 0.0), 96, 21.35, 22.05, 24.85, 25.6, arrive="palm",
+       source=_place("traveller 3", "palm.R"), **_UP),
+    _w("Respect", (0.0, Y[4] + 2.05, 0.0), 84, 28.5, 29.2, 31.85, 32.6, arrive="palm",
+       source=_place("thinker", "head"), **_UP),
+    _w("Encouragement", (0.0, Y[5] + 2.20, 0.0), 84, 34.75, 35.6, 38.25, 39.0, arrive="shaft", **_UP),
+    _w("Consideration", HANDS_AT + [0.0, 0.175, 0.0] - 0.09 * right_of(C[6] - 12.0), 84, 39.25, 39.92, 42.45,
+       43.1, arrive="palm", source=_place("Mother's hand", "fingertips.L"), **_UP),
+    _w("Compliment", P(SUN_AZ, 15.0, TOP + 4.6), 96, 44.1, 44.95, 47.95, NINTH, arrive="rays",
        source=tuple(SUN_LIGHT), leave="arch", to=tuple(LIGHTS[8])),
 ]
 
@@ -454,7 +457,7 @@ def _riding(base, t0):
 
 for _s in _SPECS:
     if _s["expr"] == "Inclusiveness":
-        _s["pos"] = _riding(_s["pos"], 13.3)
+        _s["pos"] = _riding(_s["pos"], 13.6)
 WORDS = PW.Words(_SPECS, camera=CAMERA, face="camera")
 
 # each light of the arch wakes when its expression has risen (or arrives in it)
@@ -519,7 +522,7 @@ class Rings:
             g = float(_ss(t0, t0 + 0.9, t) * (1.0 - _ss(t1 - 1.4, t1, t)))
             if g <= 0.0:
                 continue
-            out.append(dict(pos=p, size=0.028, color=c, alpha=0.75 * g * br, kind="soft", twinkle=0.6, seed=sd))
+            out.append(dict(pos=p, size=0.028, color=c, alpha=0.75 * g * br, kind="soft", twinkle=0.2, seed=sd))
         return out
 
 
@@ -636,7 +639,7 @@ class CloudTop:
         self.sd = rng.random(n).astype(np.float32)
         warm = rng.random(n)[:, None]
         self.c_dawn = lin("#ffd6c0")[None] * (1 - warm) + lin("#ffe9cf")[None] * warm
-        self.c_day = lin("#ffe2cc")[None] * (1 - warm) + lin("#fff0dc")[None] * warm
+        self.c_day = lin("#f0c0b0")[None] * (1 - warm) + lin("#ffd8c0")[None] * warm
         m = 900
         b = rng.random(m) * 2 * np.pi
         r = 0.4 + 2.2 * np.sqrt(rng.random(m))
@@ -719,15 +722,15 @@ LOOKS = dict(
                   sun_el=-1.0, sun_color="#ffd0dc", sun_int=0.5, stars=0.0, milky=0.0, clouds=0.9, haze=0.9,
                   haze_color="#4a4070", mist=0.9, mist_height=150.0, mist_color="#504470", hills=0.0,
                   water="#2a2050", dust=1.0, dust_color="#ffe6ee", dust_color2="#ffd0dc", bokeh=0.7),
-    above=dict(base="sunrise", sky_top="#06144c", sky_mid="#18388e", sky_hor="#ffa050", sun_az=SUN_AZ_TRUE,
+    above=dict(base="sunrise", sky_top="#040c34", sky_mid="#102872", sky_hor="#e0703a", sun_az=SUN_AZ_TRUE,
                sun_el=SUN_EL_TRUE,
-               sun_color="#ffc870", sun_int=0.75, sun_disc=6.0, sun_glow=0.35, stars=0.25, milky=0.0, clouds=0.30,
-               hills=0.0, haze=0.12, haze_color="#e8805c", mist=4.0, mist_height=26.0, mist_color="#a05a6c",
-               water="#f0a080", rays=0.5, dust=0.6, dust_color="#ffe2a8", dust_color2="#ffd0a8", bokeh=0.6,
+               sun_color="#ffbc60", sun_int=0.6, sun_disc=5.0, sun_glow=0.22, stars=0.3, milky=0.0, clouds=0.30,
+               hills=0.0, haze=0.06, haze_color="#c86040", mist=4.0, mist_height=26.0, mist_color="#5c2e52",
+               water="#f0a080", rays=0.45, dust=0.6, dust_color="#ffe2a8", dust_color2="#ffd0a8", bokeh=0.6,
                exposure=1.0),
-    card=dict(base="day", sky_top="#2f6fd6", sky_mid="#78b2ee", sky_hor="#ffe2bc", sun_az=SUN_AZ_TRUE, sun_el=9.0,
-              sun_int=0.6, sun_glow=0.4, hills=0.0, haze=0.25, haze_color="#ffe6cc", mist=4.0, mist_height=26.0,
-              mist_color="#e2ac98", rays=0.3, clouds=0.25, dust=0.5, water="#a9d4f4", exposure=1.0),
+    card=dict(base="day", sky_top="#2a66cc", sky_mid="#90c2f0", sky_hor="#ffdcb4", sun_az=SUN_AZ_TRUE, sun_el=9.0,
+              sun_int=0.45, sun_glow=0.3, hills=0.0, haze=0.2, haze_color="#ffd8c0", mist=4.0, mist_height=26.0,
+              mist_color="#b48490", rays=0.3, clouds=0.25, dust=0.5, water="#a9d4f4", exposure=1.0),
 )
 
 WORLD = WORDS.world(dict(
@@ -744,7 +747,7 @@ WORLD = WORDS.world(dict(
                strength=Track([(0, 0.0), (BIG_HIT, 0.0), (43.6, 0.32), (49.5, 0.3), (53.0, 0.15), (60, 0.12)]),
                size=0.45, rays=0.75),
     react=dict(beat=0.4, level=0.25),
-    exposure=Track([(0, 1.0), (BIG_HIT - 0.05, 1.0), (BIG_HIT + 0.1, 1.6), (BIG_HIT + 0.9, 1.0), (43.8, 0.86),
+    exposure=Track([(0, 1.0), (BIG_HIT - 0.05, 1.0), (BIG_HIT + 0.1, 1.22), (BIG_HIT + 0.9, 1.0), (43.8, 0.9),
                     (48.6, 0.86), (50.6, 1.0), (TITLE_HIT - 0.1, 1.0), (TITLE_HIT + 0.08, 1.12), (TITLE_HIT + 0.8, 1.0),
                     (FINAL_HIT - 0.1, 1.0), (FINAL_HIT + 0.08, 1.08), (FINAL_HIT + 0.7, 1.0), (60, 1.0)]),
 ))
@@ -754,15 +757,14 @@ def _setup(scene):
     _cast()
     scene.add("ring wave", RingWave(S[0], _L0[0]), reflect=False)
     scene.add("rings", Rings())
-    scene.add("shaft flakes", ShaftFlakes(), reflect=False)
-    scene.add("pillars", Pillars())
+    scene.add("shaft flakes", PW.KeepClear(ShaftFlakes(), WORDS, floor=0.0), reflect=False)
+    scene.add("pillars", PW.KeepClear(Pillars(), WORDS, floor=0.15))
     scene.add("cloud top", CloudTop(), reflect=False)
-    scene.add("cloud wisps", CloudWisps(), reflect=False)
-    scene.add("fountains", Fountains(), reflect=False)
+    scene.add("fountains", PW.KeepClear(Fountains(), WORDS, floor=0.0), reflect=False)
     for name, body in PEOPLE.items():
         body.add(scene, name, reflect=(Y_OF.get(name, 1.0) < 1.0))
     scene.add("flare", FLARE, reflect=False)
-    WORDS.add_to(scene)
+    WORDS.add_to(scene, reflect=False)
     WORDS.check(CAMERA)
 
 
@@ -775,7 +777,7 @@ P3D = dict(
     setup=_setup,
     bursts=[dict(t=S[0], at=tuple(_L0[0] + [0.0, 0.1, 0.0]), strength=0.55, radius=0.16, color="#cfe0ff", rise=0.15,
                  fall=0.7),
-            dict(t=BIG_HIT, at=tuple(HANDS_AT), strength=1.3, radius=0.35, color="#fff0d6", rise=0.08, fall=0.9)],
+            dict(t=BIG_HIT, at=tuple(HANDS_AT), strength=0.45, radius=0.22, color="#ffd9a0", rise=0.08, fall=0.8)],
 )
 
 # ---------------------------------------------------------------------------------------------------------
@@ -793,8 +795,9 @@ CREDIT = dict(song="The Words of Mother’s Love",
               t_in=-1.0, t_full=0.0, t_move=1.6, t_rest=2.8, scale=0.56, alpha_rest=0.92,
               margin_x=0.035, margin_top=0.05, t_out=T_FORM, out_dur=1.0)
 _CB = (0.1323, 0.8693, 0.4972, 0.6861)          # the badge's box at full size (text.render_credit)
-BADGE = (CREDIT["margin_x"], CREDIT["margin_x"] + CREDIT["scale"] * (_CB[1] - _CB[0]) + 0.01, 0.0,
-         CREDIT["margin_top"] + CREDIT["scale"] * (_CB[3] - _CB[2]) + 0.012)   # x0, x1, y0, y1 from the TOP
+BADGE = (CREDIT["margin_x"], CREDIT["margin_x"] + CREDIT["scale"] * (_CB[1] - _CB[0]) + 40.0 / 1920.0, 0.0,
+         CREDIT["margin_top"] + CREDIT["scale"] * (_CB[3] - _CB[2]) + 40.0 / 1080.0)   # x0, x1, y0, y1 from the TOP,
+                                                                                    # with the 40 px gap
 
 
 def credit_state(t, bbox):
