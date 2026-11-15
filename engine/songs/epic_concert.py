@@ -182,12 +182,12 @@ FORM_DUR = 3.0
 # ---- the sky: one continuous rise of light (top, middle, horizon, colour of the light)
 PAL = {
     "night":   ("#03061c", "#0a1440", "#262f6a", "#8ea4ff"),
-    "first":   ("#060b2c", "#2a2258", "#9a5670", "#ffb090"),
-    "dawn":    ("#0e1a48", "#553b7c", "#e8846e", "#ffd08c"),
-    "sunrise": ("#13286a", "#83558c", "#f7a070", "#ffe6b8"),
-    "morning": ("#173478", "#7f66a8", "#f2a27e", "#ffe9c4"),
+    "first":   ("#070c2e", "#2c2460", "#a25a74", "#ffb090"),
+    "dawn":    ("#0c1642", "#4a3676", "#d9706a", "#ffc88c"),
+    "sunrise": ("#102256", "#5d4486", "#e88868", "#ffd9a0"),
+    "morning": ("#143070", "#6c5aa0", "#f09a72", "#ffe2b4"),
 }
-DAY = ("#7cc0ee", "#cfe8fa", "#fff1de", "#fffaee")   # the campaign day, as seen on screen
+DAY = ("#4aa3e6", "#a9d4f4", "#ffe3c4", "#fff4e0")   # the campaign day, as seen on screen
 _DAY_SCALE = (0.92, 0.86, 0.78, 0.42)                 # theme.sky_tracks: the sun glow is added on top
 _pal_keys = [(0.0, "night"), (S1 - 1.0, "night"), (S1 + 3.5, "first"), (S1 + 7.5, "dawn"), (S2 - 1.0, "sunrise"),
              (S2 + 8.0, "morning"), (S3 + 0.5, "morning"), (S3 + 7.0, "day"), (TOTAL, "day")]
@@ -200,18 +200,18 @@ def _sky(k):
 
 
 SKY_TOP, SKY_MID, SKY_HOR, GLOW = (_sky(k) for k in range(4))
-SKY_THEME = Track([(0, 0.0), (S3 + 1.0, 0.0), (S3 + 7.0, 1.0), (TOTAL, 1.0)])   # the hills turn to pale haze
+SKY_THEME = Track([(0, 0.0), (S3 - 0.5, 0.0), (S3 + 8.5, 1.0), (TOTAL, 1.0)])   # the hills turn to pale haze
 # the sun: under the horizon at night, breaking it as the doves rise, then climbing all the way into the
 # middle of the sky, where it becomes the soft white heart of the end card (the poster's circle of light)
 SUN_Y = Track([(0, 0.290), (S1, 0.300), (S1 + 4.5, 0.332), (S1 + 8.0, 0.362), (S2, 0.395), (S3, 0.450),
                (S3 + 8.0, 0.600), (TOTAL, 0.630)])
-SUN_INT = Track([(0, 0.08), (S1 - 1.0, 0.10), (S1 + 3.5, 0.40), (S1 + 8.0, 0.95), (S2, 0.85), (S3, 0.78),
-                 (S3 + 3.0, 1.00), (S3 + 8.0, 0.66), (TOTAL, 0.62)])
+SUN_INT = Track([(0, 0.08), (S1 - 1.0, 0.10), (S1 + 3.5, 0.30), (S1 + 8.0, 0.62), (S2, 0.60), (S3, 0.62),
+                 (S3 + 3.0, 0.85), (S3 + 8.0, 0.55), (TOTAL, 0.52)])
 SUN_SIZE = Track([(0, 0.09), (S1 + 8.0, 0.115), (S3, 0.13), (S3 + 8.0, 0.22), (TOTAL, 0.24)])
 STARS = Track([(0, 0.0), (0.6, 0.0), (3.0, 0.95), (S1 - 1.0, 0.92), (S1 + 4.0, 0.55), (S1 + 9.0, 0.20),
                (S2 + 2.0, 0.07), (S3, 0.04), (S3 + 4.0, 0.0), (TOTAL, 0.0)])
 MILKY = Track([(0, 0.0), (1.0, 0.0), (4.0, 0.60), (S1 - 1.0, 0.55), (S1 + 4.0, 0.0), (TOTAL, 0.0)])
-AURORA = Track([(0, 0.0), (2.0, 0.0), (5.0, 0.16), (S1 - 2.0, 0.14), (S1 + 3.0, 0.0), (TOTAL, 0.0)])   # faint
+AURORA = Track([(0, 0.0), (2.0, 0.0), (5.0, 0.10), (S1 - 2.0, 0.09), (S1 + 3.0, 0.0), (TOTAL, 0.0)])   # faint
 CLOUDS = Track([(0, 0.06), (S1, 0.10), (S1 + 6.0, 0.30), (S2, 0.26), (S3, 0.22), (TOTAL, 0.14)])
 RAIN = Track([(0, 0.0), (TOTAL, 0.0)])
 MOTES = Track([(0, 0.0), (2.0, 0.08), (S1, 0.10), (S2, 0.12), (S3, 0.14), (S3 + 6.0, 0.18), (TOTAL, 0.18)])
@@ -221,7 +221,7 @@ TRAIL = Track([(0, 0.0), (TOTAL, 0.0)])
 ZOOM = Track([(0, 1.0), (TOTAL, 1.0)])
 EXPOSURE = Track([(0, 1.0), (TOTAL, 1.0)])
 FADE = Track([(0, 0.0), (1.8, 1.0), (TOTAL - 0.65, 1.0), (TOTAL - 0.05, 0.0)])
-RAYS = Track([(0, 0.0), (S1 + 4.0, 0.0), (S1 + 8.0, 0.30), (S2, 0.22), (S3, 0.16), (S3 + 3.0, 0.30), (TOTAL, 0.10)])
+RAYS = Track([(0, 0.0), (S1 + 4.0, 0.0), (S1 + 8.0, 0.18), (S2, 0.14), (S3, 0.12), (S3 + 3.0, 0.20), (TOTAL, 0.08)])
 PART = Track([(0, 0.0), (S1 + 3.0, 0.0), (S1 + 8.0, 0.55), (S3, 0.45), (TOTAL, 0.30)])   # clouds part at the sun
 SKYLINE_LANTERN = 0.0      # no travelling light on the skyline: the falling star is the one star of this film
 
@@ -231,13 +231,14 @@ def MOTE_COLORS(t):
 
 
 # ---- sky and camera (UPGRADE-HOWTO I7): soft moving clouds, sunbeams, one slow camera gesture
-CLOUDS3D = Track([(0, 0.16), (S1 - 1.0, 0.22), (S1 + 6.0, 0.46), (S2, 0.40), (S3, 0.34), (S3 + 7.0, 0.18),
-                  (TOTAL, 0.18)])
+CLOUDS3D = Track([(0, 0.14), (S1 - 1.0, 0.20), (S1 + 6.0, 0.30), (S2, 0.28), (S3, 0.25), (S3 + 7.0, 0.15),
+                  (TOTAL, 0.15)])
 CLOUDS_SPEED = 1.3
-CLOUDS_LIGHT = 1.1
-GOD_RAYS = Track([(0, 0.0), (S1 + 3.5, 0.0), (S1 + 8.0, 0.90), (S2, 0.55), (S3 - 2.0, 0.35), (S3 + 2.5, 0.85),
-                  (S3 + 7.5, 0.25), (TOTAL, 0.20)])
-RAYS_DECAY = 0.988
+CLOUDS_LIGHT = 0.8
+# short shafts round the sun only: long ones would wash the sky out and leave a halo behind the words
+GOD_RAYS = Track([(0, 0.0), (S1 + 3.5, 0.0), (S1 + 8.0, 0.40), (S2, 0.24), (S3 - 2.0, 0.18), (S3 + 2.5, 0.45),
+                  (S3 + 7.5, 0.10), (TOTAL, 0.08)])
+RAYS_DECAY = 0.968
 # crane up from the water (0 to 9 s), a slow push in (dawn and morning), then opening wide into the day
 CAMERA_CRANE = Track([(0, -0.26), (1.5, -0.25), (9.5, 0.0), (S3, 0.0), (S3 + 8.0, 0.035), (TOTAL, 0.04)])
 CAMERA_ZOOM = Track([(0, 1.0), (S1, 1.0), (S3 - 0.5, 1.09), (S3 + 8.5, 1.0), (TOTAL, 1.0)])
@@ -246,28 +247,36 @@ CAMERA_MOTES = Track([(0, 0.0), (3.0, 0.35), (S3, 0.35), (S3 + 5.0, 0.15), (TOTA
 
 # ---- music-reactive light, all gentle (UPGRADE-HOWTO I1, engine-audio)
 AUDIO_REACT = 1.0
-REACT_GLOW = 0.5
+REACT_GLOW = 0.35
 REACT_SPARKLE = 0.30
 REACT_ARCH = 0.6
 REACT_AURORA = 0.5
-REACT_CHORUS = 0.4
+REACT_CHORUS = 0.25
 
 # ---- the lake responds (UPGRADE-HOWTO I8)
 STAR_X, STAR_LAND_Y = 0.5, 0.305
 FALLING_STARS = [(STAR_FALL, STAR_X, STAR_LAND_Y)]
-RIPPLES = [(STAR_FALL + 0.45, STAR_X, 0.7, STAR_LAND_Y), (STAR_FALL + 1.0, STAR_X, 0.45, STAR_LAND_Y)]
+RIPPLES = [(STAR_FALL + 0.02, STAR_X, 1.3, STAR_LAND_Y), (STAR_FALL + 0.40, STAR_X, 0.9, STAR_LAND_Y),
+           (STAR_FALL + 0.85, STAR_X, 0.6, STAR_LAND_Y), (STAR_FALL + 1.40, STAR_X, 0.4, STAR_LAND_Y)]
+# where the star touched the water a thin column of light stands for a moment and reaches the middle light of
+# the arch, which wakes on the section start (UPGRADE-HOWTO C)
+BEAM = Track([(0, 0.0), (STAR_FALL, 0.0), (STAR_FALL + 0.9, 0.34), (S1 + 0.5, 0.30), (S1 + 2.8, 0.0), (TOTAL, 0.0)])
+BEAM_FROM = (STAR_X, 0.895)
+BEAM_TO = (STAR_X, STAR_LAND_Y + 0.01)
+BEAM_WIDTH = (0.004, 0.012)
+BEAM_COLOR = "#ffe9c4"
 RIPPLES_AUTO = Track([(0, 1.0), (S2, 1.0), (S2 + 3.0, 0.5), (TOTAL, 0.5)])   # steps on the water, the star
 RIPPLE_COLOR = "#ffe6c4"
 
 # ---- creatures of light (UPGRADE-HOWTO I1, engine-creatures)
-M_X, M_Y, M_H = 0.80, 0.300, 0.39          # Heavenly Mother: where she stands (on the water, nearer to us)
+M_X, M_Y, M_H = 0.82, 0.300, 0.39          # Heavenly Mother: where she stands (on the water, nearer to us)
 FIREFLIES = Track([(0, 0.0), (1.5, 0.0), (5.0, 0.55), (S1 - 1.0, 0.55), (S1 + 3.5, 0.0), (TOTAL, 0.0)])
 FIREFLIES_Y = (0.30, 0.46)
 FIREFLIES_BRIGHT = 1.0
 DOVES = Track([(0, 0.0), (DOVES_UP - 0.1, 0.0), (DOVES_UP + 0.5, 1.0), (S2 + 1.6, 1.0), (S2 + 4.2, 0.0),
                (TOTAL, 0.0)])
 DOVES_COUNT = 12
-DOVES_FROM = (M_X, M_Y + 0.84 * M_H)       # they rise from between her open hands
+DOVES_FROM = (M_X - 0.085, M_Y + 0.80 * M_H)   # they rise from her open hand on the side of the sun
 DOVES_PATH = [(DOVES_UP, (0.66, 0.60)), (DOVES_UP + 2.4, (0.50, 0.565)), (DOVES_UP + 5.0, (0.30, 0.60)),
               (S2 - 1.4, (0.17, 0.72)), (S2, (0.12, 0.81)), (S2 + 4.5, (0.10, 0.86))]
 DOVES_ORBIT = 0.08
@@ -281,13 +290,6 @@ BUTTERFLIES_COLOR = ("#ffb0c8", "#ffd9a0")
 BUTTERFLIES_SIZE = 0.024
 BUTTERFLIES_AREA = (0.06, 0.94, 0.38, 0.56)
 
-# ---- living nature: one tree of light at the left edge grows with the dawn and blossoms (UPGRADE-HOWTO I1)
-WIND = Track([(0, 0.25), (S1 + 6.0, 0.40), (S3, 0.35), (TOTAL, 0.30)])
-TREE = Track([(0, 0.0), (S1 + 0.5, 0.0), (S1 + 2.5, 0.75), (S3, 0.75), (S3 + 6.0, 0.55), (TOTAL, 0.55)])
-TREE_GROW = Track([(0, 0.0), (S1 + 0.5, 0.0), (S2 - 3.0, 1.0), (TOTAL, 1.0)])
-TREE_X, TREE_Y, TREE_HEIGHT = 0.085, 0.335, 0.40
-BLOSSOM = Track([(0, 0.0), (S2 - 6.0, 0.0), (S2 + 4.0, 1.0), (TOTAL, 1.0)])
-
 # ---- the campaign day (UPGRADE-HOWTO I, engine-theme)
 BUBBLES = Track([(0, 0.0), (S3 + 2.5, 0.0), (S3 + 8.0, 0.30), (TOTAL, 0.30)])
 BUBBLES_SPEED = 0.9
@@ -296,21 +298,43 @@ LEAVES_COLORS = ("#3fb83a", "#9ccc40")   # truly green, like the poster
 
 # ---- people of light (UPGRADE-HOWTO H): the lone walker, then Heavenly Mother from behind
 W_Y, W_H = 0.322, 0.29     # the walker walks on the water, a ripple under each step
+W_STOP1, W_STOP2 = 0.40, M_X - 0.195   # where she stops when the star falls; where she stops before Mother
+_LEGS = [(3.6, 11.0, 0.02, W_STOP1), (S1 + 0.2, S1 + 4.6, W_STOP1, W_STOP2)]
+
+
+def walker_x(t):
+    """A steady walk on each leg: the pace eases in and out over 1.2 s at its ends only."""
+    x = _LEGS[0][2]
+    for ta, tb, xa, xb in _LEGS:
+        if t <= ta:
+            break
+        r = 1.2
+        v = 1.0 / (tb - ta - r)                      # speed of the steady part (distance 1 over the leg)
+        u = min(t, tb) - ta
+        if u < r:
+            d = 0.5 * v * u * u / r
+        elif u > tb - ta - r:
+            w = tb - ta - u
+            d = 1.0 - 0.5 * v * w * w / r
+        else:
+            d = 0.5 * v * r + v * (u - r)
+        x = xa + (xb - xa) * d
+    return x
+
+
 FIGURES = [
     # the lone walker: crosses the night, looks up when the star falls, walks on toward the first light,
     # reaches Mother, bows, and rises with the words into the Greeting light
     dict(kind="rig", preset="person", t0=1.8, t1=G_HOLD - 0.4, gather=2.2, dissolve=2.6, facing="right",
-         x=Track([(1.8, 0.05), (3.0, 0.05), (STAR_FALL - 0.8, 0.37), (S1 + 0.2, 0.37), (S1 + 4.0, 0.585),
-                  (TOTAL, 0.585)]),
-         y=W_Y, height=W_H,
-         actions=[(1.8, "stand"), (STAR_FALL - 0.7, {"tilt": 0.30, "blend": 0.8}), (S1 + 0.2, {"tilt": 0.0}),
-                  (DOVES_UP + 0.2, "bow", {"blend": 1.4}), (DOVES_UP + 2.8, "pray", {"blend": 1.4}),
-                  (G_HOLD - 1.6, "rise", {"blend": 1.2})],
+         x=walker_x, y=W_Y, height=W_H,
+         actions=[(1.8, "stand"), (STAR_FALL - 0.9, {"tilt": 0.32, "blend": 0.8}), (S1 + 0.2, {"tilt": 0.0}),
+                  (DOVES_UP + 0.2, "bow", {"blend": 1.5}), (DOVES_UP + 2.8, "pray", {"blend": 1.6}),
+                  (G_HOLD - 1.8, "rise", {"blend": 1.4})],
          color="#ffcf9a", glow=0.85, to_star=0),
     # Heavenly Mother, only from behind; her veil flows; her arms open, then lift in blessing
     dict(kind="rig", preset="person_back", t0=S1 - 0.2, t1=G_HOLD - 0.2, gather=2.2, dissolve=2.8,
          x=M_X, y=M_Y, height=M_H,
-         actions=[(S1 - 0.2, "stand"), (ARMS_OPEN, "open", {"blend": 2.2}), (DOVES_UP + 1.8, "bless", {"blend": 2.4})],
+         actions=[(S1 - 0.2, "stand"), (ARMS_OPEN, "open", {"blend": 2.4}), (DOVES_UP - 0.4, "bless", {"blend": 4.6})],
          color="#ffe0c0", glow=1.1, to_star=0),
 ]
 
@@ -337,7 +361,7 @@ for i in range(9):
 
 OFF = dict(form=1e9, hold=1e9)
 PHRASES = [
-    dict(label="Greeting", lines=["“How are you?”"], size=160, y=0.262,
+    dict(label="Greeting", lines=["“How are you?”"], size=150, y=0.258,
          form=G_FORM, hold=G_HOLD, star=G_STAR, anim="bloom", glow="#ffd9a0"),
     dict(label="Gratitude", lines=["“Thank you. It’s all thanks to you.", "You’ve worked hard.”"], size=118,
          star=S2 + 12.2, **OFF),
