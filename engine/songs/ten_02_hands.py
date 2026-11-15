@@ -274,10 +274,10 @@ class Globe:
         d = self.d.copy()
         d[:, 0], d[:, 2] = ca * self.d[:, 0] + sa * self.d[:, 2], -sa * self.d[:, 0] + ca * self.d[:, 2]
         pos = self.c + d * self.R
-        out = [dict(pos=pos, size=0.0016 + 0.0012 * self.land, color=self.col, alpha=g * (0.55 + 0.45 * self.land),
-                     kind="soft", emit=1.8),
-               dict(pos=self.c[None], size=self.R * 3.2, color=lin("#ffe9c4"), alpha=0.35 * g, kind="soft",
-                    emit=1.2, dof=0.3)]
+        out = [dict(pos=pos, size=0.0014 + 0.0010 * self.land, color=self.col, alpha=g * (0.45 + 0.55 * self.land),
+                     kind="soft", emit=1.1),
+               dict(pos=self.c[None], size=self.R * 2.2, color=lin("#ffe9c4"), alpha=0.12 * g, kind="soft",
+                    emit=1.0, dof=0.3)]
         k = np.arange(9)
         a9 = 2 * np.pi * k / 9 + 0.9 * (t - self.t0)
         p9 = self.c + np.stack([np.cos(a9) * self.R * 1.45, 0.25 * self.R * np.sin(2 * a9 + t),
@@ -329,40 +329,40 @@ def _lift(t):
 def _rig(focus="target"):
     up = np.array([0.0, 1.0, 0.0])
     return Rig([
-        # 1 first touch: the lens spirals in at the gap, snaps back on the touch, then revolves slowly
-        orbit(P1, radius=(0.40, 1.0), height=(1.29, 1.38), a0=46.0, a1=8.0, t0=0.0, t1=1.75, fov=34.0,
-              look=P1 + 0.13 * up, aperture=0.016, near=0.02, focus=focus,
-              pace=[(0.0, 0.0), (T_TOUCH, 0.30), (1.75, 1.0)]),
-        orbit(P1, radius=1.0, height=1.38, a0=8.0, a1=-26.0, t0=1.75, t1=S[1], fov=34.0,
+        # 1 first touch: the lens spirals in front of the gap, snaps back on the touch, then revolves slowly
+        orbit(P1, radius=(0.60, 1.0), height=(1.27, 1.37), a0=-18.0, a1=4.0, t0=0.0, t1=1.75, fov=34.0,
+              look=lambda t: P1 + (0.01 + 0.12 * _ss(0.9, 1.9, t)) * up, aperture=0.016, near=0.02, focus=focus,
+              pace=[(0.0, 0.0), (T_TOUCH, 0.35), (1.75, 1.0)]),
+        orbit(P1, radius=1.0, height=1.37, a0=4.0, a1=-20.0, t0=1.75, t1=S[1], fov=34.0,
               look=P1 + 0.13 * up, aperture=0.016, near=0.02, focus=focus, blend=0.5),
         # 2 the high five, then the sweep aside: a whip in, the look follows the palm to the right
-        orbit(P2, radius=(0.66, 1.08), height=(1.30, 1.50), a0=-34.0, a1=12.0, t0=S[1], t1=S[2] + 0.15, fov=36.0,
-              look=_look_two(P2 + np.array([-0.02, 0.20, 0.0]), P2 + np.array([0.16, 0.16, 0.0]), T_SWEEP - 0.4,
+        orbit(P2, radius=(0.95, 1.12), height=(1.38, 1.46), a0=-14.0, a1=12.0, t0=S[1], t1=S[2] + 0.15, fov=36.0,
+              look=_look_two(P2 + np.array([0.0, 0.13, 0.0]), P2 + np.array([0.12, 0.10, 0.0]), T_SWEEP - 0.4,
                              T_SWEEP + 0.9),
               aperture=0.017, near=0.02, blend=0.42, focus=focus,
               pace=[(S[1], 0.0), (T_FIVE, 0.16), (8.3, 0.36), (T_SWEEP, 0.55), (11.2, 0.76), (S[2] + 0.15, 1.0)]),
         # 3 the flame: whip in low, drift up and back as the lines rise
-        orbit(P3, radius=(0.52, 1.12), height=(1.18, 1.40), a0=26.0, a1=-12.0, t0=S[2] + 0.15, t1=S[3], fov=36.0,
-              look=P3 + 0.16 * up, aperture=0.016, near=0.02, blend=0.38, focus=focus,
+        orbit(P3, radius=(0.50, 0.82), height=(1.20, 1.36), a0=18.0, a1=-10.0, t0=S[2] + 0.15, t1=S[3], fov=36.0,
+              look=P3 + 0.12 * up, aperture=0.016, near=0.02, blend=0.38, focus=focus,
               pace=[(S[2] + 0.15, 0.0), (14.4, 0.32), (15.4, 0.55), (S[3], 1.0)]),
         # 4 mending: a hard cut inside the flash of the bass slam
-        orbit(P4, radius=(0.80, 1.06), height=(1.30, 1.42), a0=-30.0, a1=16.0, t0=S[3], t1=S[4], fov=36.0,
-              look=P4 + 0.15 * up, aperture=0.017, near=0.02, blend=0.0, focus=focus,
+        orbit(P4, radius=(0.72, 0.90), height=(1.30, 1.40), a0=-18.0, a1=12.0, t0=S[3], t1=S[4], fov=36.0,
+              look=P4 + 0.12 * up, aperture=0.017, near=0.02, blend=0.0, focus=focus,
               pace=[(S[3], 0.0), (20.43, 0.14), (T_CLASP, 0.55), (24.2, 0.70), (S[4], 1.0)]),
         # 5 water: a cut to the lake surface, rising up and back
-        orbit(P5, radius=(0.50, 1.10), height=(0.24, 0.52), a0=24.0, a1=-16.0, t0=S[4], t1=S[5], fov=38.0,
-              look=P5 + 0.20 * up, aperture=0.016, near=0.02, blend=0.0, focus=focus,
+        orbit(P5, radius=(0.45, 0.80), height=(0.24, 0.40), a0=16.0, a1=-12.0, t0=S[4], t1=S[5], fov=38.0,
+              look=P5 + 0.12 * up, aperture=0.016, near=0.02, blend=0.0, focus=focus,
               pace=[(S[4], 0.0), (27.97, 0.30), (29.79, 0.55), (S[5], 1.0)]),
         # 6 the lift: the camera rises with the hands
-        orbit(P6, radius=(0.95, 1.12), height=(1.12, 1.78), a0=-22.0, a1=18.0, t0=S[5], t1=S[6], fov=38.0,
-              look=lambda t: P6 + np.array([-0.12, 0.16 + _lift(t), 0.0]), aperture=0.018, near=0.02,
+        orbit(P6, radius=(0.85, 1.0), height=(1.10, 1.68), a0=-14.0, a1=14.0, t0=S[5], t1=S[6], fov=38.0,
+              look=lambda t: P6 + np.array([-0.10, 0.13 + _lift(t), 0.0]), aperture=0.018, near=0.02,
               blend=0.0, focus=focus, pace=[(S[5], 0.0), (T_LIFT, 0.35), (39.5, 0.92), (S[6], 1.0)]),
         # 7 the breath: almost still in front of the hands in prayer; on the biggest hit the lens pulls back
         dolly(P7 + np.array([0.06, 0.06, 0.78]), P7 + np.array([0.0, 0.04, 0.60]), S[6], BIG, fov=34.0,
               look=P7 + np.array([0.0, 0.13, 0.0]), aperture=0.016, near=0.02, blend=0.9, focus=focus),
-        dolly(P7 + np.array([0.0, 0.04, 0.60]), P7 + np.array([0.0, 0.42, 2.9]), BIG, S[7], fov=(34.0, 46.0),
-              look=_look_two(P7 + np.array([0.0, 0.13, 0.0]), P7 + np.array([0.0, 0.75, -6.0]), BIG, BIG + 1.6),
-              aperture=(0.016, 0.006), near=0.02, blend=0.12, focus=focus,
+        dolly(P7 + np.array([0.0, 0.04, 0.60]), P7 + np.array([0.0, 0.30, 1.95]), BIG, S[7], fov=(34.0, 44.0),
+              look=_look_two(P7 + np.array([0.0, 0.13, 0.0]), P7 + np.array([0.0, 0.62, -4.0]), BIG, BIG + 1.6),
+              aperture=(0.016, 0.010), near=0.02, blend=0.12, focus=focus,
               pace=[(BIG, 0.0), (BIG + 1.3, 0.85), (S[7], 1.0)]),
         # 8 Her hands: a cut inside the white flare, close on the globe; the lens pulls back behind the wrists
         dolly(P8 + np.array([0.0, 0.16, 0.24]), P8 + np.array([0.0, 0.29, 0.66]), S[7], 54.6, fov=(40.0, 38.0),
@@ -396,46 +396,46 @@ def _word(x, y, depth, px, t_in, t_read0, t_read1, t_out, **kw):
 
 
 _SPECS = [
-    _word(0.50, 0.70, 1.0, 140, 0.0, 1.85, 5.0, 6.7, expr="Greeting", arrive="touch", source=tuple(P1),
+    _word(0.50, 0.73, 1.0, 140, 0.0, 1.85, 5.0, 6.7, expr="Greeting", arrive="touch", source=tuple(P1),
           touch_at=(T_TOUCH - 0.0) / 1.85, leave="rise"),
-    _word(0.50, 0.77, 0.95, 110, 7.25, 8.0, 10.5, 11.3, expr="Compliment", arrive="touch",
+    _word(0.50, 0.79, 1.05, 104, 7.25, 8.0, 10.5, 11.3, expr="Compliment", arrive="touch",
           source=tuple(P2), touch_at=(T_FIVE - 7.25) / 0.75, leave="rise"),
-    _word(0.56, 0.62, 1.02, 112, 10.1, 10.75, 13.25, 14.3, expr="Concession", arrive="palm", source=_sweep_palm,
+    _word(0.44, 0.68, 1.08, 112, 10.1, 10.75, 13.25, 14.3, expr="Concession", arrive="palm", source=_sweep_palm,
           blow=(0.2, 1.0, 0.2), leave="wind", wind=(1.0, 0.3, -0.3)),
-    _word(0.50, 0.72, 1.08, 84, 13.7, 15.0, 18.6, 19.85, expr="Gratitude", arrive="palm",
+    _word(0.50, 0.75, 0.80, 84, 13.7, 15.0, 18.6, 19.85, expr="Gratitude", arrive="palm",
           source=tuple(P3 + np.array([0.0, 0.07, 0.0])), blow=(0.0, 1.0, 0.1), leave="rise"),
-    _word(0.50, 0.73, 1.0, 92, 20.0, 20.9, 23.45, 23.45, expr="Apology", arrive="reveal", edge="right",
+    _word(0.50, 0.75, 0.85, 92, 20.0, 20.9, 23.45, 23.45, expr="Apology", arrive="reveal", edge="right",
           leave="morph"),
-    _word(0.50, 0.73, 1.0, 104, 23.45, 24.15, 26.75, 27.4, expr="Inclusiveness", arrive="morph",
+    _word(0.50, 0.75, 0.88, 104, 23.45, 24.15, 26.75, 27.4, expr="Inclusiveness", arrive="morph",
           source="Apology", leave="wind", wind=(0.8, 0.5, -0.4)),
-    _word(0.50, 0.72, 1.0, 104, 27.0, 28.5, 31.7, 33.3, expr="Respect", arrive="lake", leave="wind",
+    _word(0.50, 0.74, 0.78, 104, 27.0, 28.5, 31.7, 33.3, expr="Respect", arrive="lake", leave="wind",
           wind=(-0.8, 0.5, -0.3)),
-    _word(0.42, 0.72, 1.06, 104, 33.0, 34.4, 37.4, 38.9, expr="Consideration", arrive="touch",
+    _word(0.40, 0.75, 0.95, 104, 33.0, 34.4, 37.4, 38.9, expr="Consideration", arrive="touch",
           source=tuple(P6 + np.array([0.04, 0.02, 0.0])), touch_at=(T_GRIP - 33.0) / 1.4, leave="rise"),
-    _word(0.50, 0.72, 10.0, 96, 40.4, 44.0, 47.6, 49.3, expr="Encouragement", arrive="shaft", leave="bokeh"),
+    _word(0.47, 0.76, 6.0, 96, 40.4, 44.0, 47.6, 49.3, expr="Encouragement", arrive="shaft", leave="bokeh"),
 ]
 WORDS = PW.Words(_SPECS, face="camera")
 CAMERA = _rig()
 
 
 # ----------------------------------------------------------------------------------------------- the scene
-GOLD, BLUE = "#ffc46b", "#6fb8ff"
+GOLD, BLUE = "#ffb347", "#4f9dff"
 
 
 def _setup(scene):
     # 1 first touch
-    scene.add("t1_gold", hand("woman", "R", _touch_at(0), _AIM1[0], (0.0, 1.0, 0.15), "offer", GOLD, "#fff1d6",
+    scene.add("t1_gold", hand("woman", "R", _touch_at(0), _AIM1[0], (0.0, 1.0, 0.15), "offer", GOLD, "#ffe0a0",
                              show=(-1.0, 7.4), anchor="fingertips", trail=-_AIM1[0], seed=2.0))
-    scene.add("t1_blue", hand("man", "L", _touch_at(1), _AIM1[1], (0.0, -1.0, 0.1), "open", BLUE, "#e8f4ff",
+    scene.add("t1_blue", hand("man", "L", _touch_at(1), _AIM1[1], (0.0, -1.0, 0.1), "open", BLUE, "#bfe0ff",
                              show=(-1.0, 7.4), anchor="fingertips", trail=-_AIM1[1], seed=3.0))
-    scene.add("t1_flare", Flare(P1, T_TOUCH, color=GOLD, color2=BLUE, n=1400, strength=0.35, reach=0.55, life=2.2))
+    scene.add("t1_flare", Flare(P1, T_TOUCH, color=GOLD, color2=BLUE, n=800, strength=0.35, reach=0.55, life=2.2))
     # 2 high five, after you
     scene.add("t2_child", hand("child", "R", _five_child, (0.25, 1.0, 0.1), (1.0, 0.0, 0.05), "spread", "#ff977c",
                                "#fff0e8", show=(6.4, 10.9), trail=(-0.6, -0.8, 0.0), seed=4.0, points=40000))
     scene.add("t2_big", hand("man", "L", _five_big, _five_big_aim, _five_big_palm,
                              [(7.0, "spread"), (T_SWEEP - 0.3, "spread"), (T_SWEEP + 0.6, "offer")], "#8fc4ff",
                              "#ffffff", show=(6.4, 14.3), trail=(0.6, 0.8, 0.0), seed=5.0))
-    scene.add("t2_flare", Flare(P2, T_FIVE, color="#ff977c", color2="#8fc4ff", n=1600, strength=0.4, reach=0.7,
+    scene.add("t2_flare", Flare(P2, T_FIVE, color="#ff977c", color2="#8fc4ff", n=800, strength=0.35, reach=0.7,
                                 life=2.0))
     # 3 the flame
     for side, (a, aim, palm) in _cup(P3, 0.042).items():
@@ -498,12 +498,12 @@ def _setup(scene):
 
     def high_at(t):
         u = _ss(T_GRIP - 0.7, T_GRIP, t)
-        return P6 + np.array([0.035 + 0.26 * (1 - u), 0.015 + 0.30 * (1 - u) + _lift(t), 0.02])
+        return P6 + np.array([0.012 + 0.20 * (1 - u), 0.035 + 0.32 * (1 - u) + _lift(t), 0.038 + 0.06 * (1 - u)])
 
     scene.add("t6_low", hand("man", "R", low_at, (0.05, 1.0, 0.12), (0.0, 0.1, 1.0),
-                             [(32.0, "open"), (T_GRIP - 0.2, "open"), (T_GRIP + 0.4, "relaxed")], "#b293e7",
+                             [(32.0, "open"), (T_GRIP - 0.2, "open"), (T_GRIP + 0.4, "hold")], "#b293e7",
                              "#f0e8ff", show=(33.0, 40.6), trail=(0.0, -1.0, 0.0), seed=12.0))
-    scene.add("t6_high", hand("woman", "L", high_at, (-0.55, -0.80, 0.25), (-1.0, 0.15, 0.1),
+    scene.add("t6_high", hand("woman", "L", high_at, (-0.18, -1.0, -0.05), (0.05, 0.0, -1.0),
                               [(32.0, "open"), (T_GRIP - 0.3, "open"), (T_GRIP + 0.2, "hold")], "#ef7a96",
                               "#ffe8ee", show=(33.0, 40.6), trail=(0.6, 0.8, 0.0), seed=13.0))
     scene.add("t6_flare", Flare(lambda t: P6 + np.array([0.02, 0.03 + _lift(t), 0.0]), T_GRIP, color="#ef7a96",
@@ -516,19 +516,23 @@ def _setup(scene):
                                      trail=(0.0, -1.0, 0.0), seed=14.0 + (side == "L"), shed_n=1500))
     nine = [e["color"] for e in PW.EXPRESSIONS]
     rng = np.random.default_rng(7)
-    for i in range(18):
-        z = P7[2] - 0.7 - 4.5 * (i % 6) / 5.0 - rng.uniform(0.0, 0.5)
-        x = P7[0] + ((i // 6) - 1.0) * (0.7 + 0.35 * (P7[2] - z)) + rng.uniform(-0.45, 0.45) + (i % 2) * 0.3
-        y = P7[1] + 0.25 + rng.uniform(-0.2, 0.35)
-        t_up = BIG + 0.05 + 0.10 * (i % 6) + 0.05 * (i // 6)
+    for i in range(16):
+        row = i // 4
+        z = P7[2] - 0.35 - 0.85 * row - rng.uniform(0.0, 0.3)
+        span = 0.55 + 0.42 * row
+        x = P7[0] + ((i % 4) - 1.5) / 1.5 * span + rng.uniform(-0.12, 0.12)
+        if abs(x - P7[0]) < 0.18:
+            x += 0.25 * np.sign(x - P7[0] + 1e-3)
+        y = P7[1] + 0.05 + 0.10 * row + rng.uniform(-0.08, 0.14)
+        t_up = BIG + 0.05 + 0.09 * row + 0.04 * (i % 4)
         side = "R" if i % 2 else "L"
 
         def up_at(t, x=x, y=y, z=z, t_up=t_up):
-            return np.array([x, y - 1.2 * (1.0 - _ss(t_up, t_up + 0.7, t)) + 0.04 * np.sin(2.1 * t + x), z])
+            return np.array([x, y - 0.9 * (1.0 - _ss(t_up, t_up + 0.6, t)) + 0.03 * np.sin(2.1 * t + 3 * x), z])
 
         scene.add("crowd_%d" % i, hand("woman" if i % 3 else "man", side, up_at,
-                                       (0.15 * np.sin(i), 1.0, -0.1), (0.0, 0.1, -1.0), "open", nine[i % 9],
-                                       "#ffffff", show=(BIG - 0.2, 50.0), points=12000, shed=False,
+                                       (0.18 * np.sin(1.7 * i), 1.0, -0.15), (0.0, 0.15, -1.0), "open", nine[i % 9],
+                                       "#fff4e0", show=(BIG - 0.2, 50.0), points=26000, shed=False,
                                        seed=20.0 + i, fade=0.3))
     # 8 Her hands, holding the light of the world, seen from behind the wrists
     for side, sgn in (("R", -1.0), ("L", 1.0)):
@@ -551,11 +555,11 @@ LOOKS = dict(
                sun_color="#ffb347", dust_color="#ff9e3d", dust_color2="#ffd05f", bokeh=1.3, dust=0.9, stars=0.4),
     mend=dict(base="dusk", sky_top="#120a2e", sky_mid="#3a1c5a", sky_hor="#a04a78", haze_color="#4a2460",
               sun_color="#ffb4a0", dust_color="#ffad69", dust_color2="#f582af", bokeh=1.2, dust=0.9),
-    water=dict(base="night", sky_top="#04142c", sky_mid="#0c3a5a", sky_hor="#2f8a9a", haze_color="#0e4660",
-               mist_color="#1a5a6a", water="#03121c", dust_color="#7fe6e0", dust_color2="#cfe8fa", bokeh=1.2,
+    water=dict(base="night", sky_top="#020a1a", sky_mid="#06223a", sky_hor="#16586a", haze_color="#0a3040",
+               mist=0.2, mist_color="#0c3a48", water="#020a12", dust_color="#7fe6e0", dust_color2="#cfe8fa", bokeh=1.2,
                dust=0.9, stars=0.6, ripple=0.4),
-    rise=dict(base="dawn", sun_el=1.5, sun_int=1.1, rays=0.8, sky_top="#0b1640", sky_mid="#3b3478",
-              stars=0.25, dust_color="#ffd9a0", dust_color2="#ffc4e0", bokeh=1.2, dust=0.9),
+    rise=dict(base="dawn", sun_el=1.0, sun_int=0.9, rays=0.55, sky_top="#060d2e", sky_mid="#2a2766",
+              sky_hor="#d9785a", haze=0.5, exposure=0.85, stars=0.3, dust_color="#ffd9a0", dust_color2="#ffc4e0", bokeh=1.2, dust=0.9),
     her=dict(base="day", water="#0e2c5c", mirror=0.55, mirror_min=0.2, rays=0.25),
     breath=dict(base="predawn", sky_top="#0c1430", sky_mid="#26365e", sky_hor="#8a6f8e", haze_color="#2a3458",
                 dust_color="#8ea0c8", dust_color2="#ef7a96", bokeh=0.9, dust=0.6),
@@ -567,28 +571,28 @@ P3D = dict(
         look=[(0.0, "touch"), (S[1], "play", 0.4), (S[2] + 0.2, "ember", 0.5), (S[3], "mend", 0.0),
               (S[4], "water", 0.0), (S[5], "predawn", 0.0), (S[6], "breath", 1.2), (BIG, "rise", 0.5),
               (S[7], "her", 0.0)],
-        sun_az=180.0,
+        sun_az=lambda t: 180.0 if t < BIG - 1.0 else 163.0,
         light=dict(pos=lambda t: (P3 + np.array([0.0, 0.08, 0.0])) if t < 30.0 else GLOBE,
                    color="#ffc070",
                    strength=lambda t: (0.9 * _ss(T_FLAME - 0.2, T_FLAME + 0.3, t) * (1 - _ss(19.6, 19.85, t))
-                                       + 0.35 * _ss(S[7], S[7] + 1.0, t)),
+                                       + 0.16 * _ss(S[7], S[7] + 1.0, t)),
                    size=0.12, rays=1.0),
         lights=[dict(pos=tuple(P5 + np.array([0.0, 0.05, 0.0])), color="#7fe6e0",
-                     strength=lambda t: 1.4 * _ss(T_WATER, T_WATER + 0.6, t) * (1 - _ss(33.0, 33.36, t)),
-                     radius=1.2)],
+                     strength=lambda t: 0.45 * _ss(T_WATER, T_WATER + 0.6, t) * (1 - _ss(33.0, 33.36, t)),
+                     radius=0.6)],
         shafts=[dict(base=(P7[0], P7[2]), radius=0.7, top=30.0, color="#dfe8ff",
                      strength=lambda t: 0.8 * _ss(S[6] - 0.3, S[6] + 0.6, t) * (1 - _ss(BIG, BIG + 1.5, t)))],
         react=dict(beat=0.5, level=0.3),
     ),
-    bursts=[dict(t=T_TOUCH, at=tuple(P1), strength=0.9, radius=0.10, color="#fff3d6", rise=0.06, fall=0.45),
-            dict(t=T_FIVE, at=tuple(P2), strength=0.8, radius=0.10, color="#ffe8e0", rise=0.05, fall=0.4),
-            dict(t=T_FLAME, at=tuple(P3), strength=0.6, radius=0.12, color="#ffd78a", rise=0.12, fall=0.5),
-            dict(t=S[3], strength=1.6, radius=0.45, color="#fff0e6", rise=0.10, fall=0.55),
-            dict(t=T_CLASP, at=tuple(P4), strength=0.6, radius=0.12, color="#fff0f6", rise=0.08, fall=0.5),
-            dict(t=S[4], strength=1.6, radius=0.45, color="#e8fffd", rise=0.10, fall=0.55),
-            dict(t=S[5], strength=1.6, radius=0.45, color="#fff0f6", rise=0.10, fall=0.55),
-            dict(t=BIG, strength=2.0, radius=0.5, color="#fff2d8", rise=0.10, fall=0.8),
-            dict(t=S[7], strength=2.2, radius=0.55, color="#ffffff", rise=0.12, fall=0.9)],
+    bursts=[dict(t=T_TOUCH, at=tuple(P1), strength=0.55, radius=0.08, color="#fff3d6", rise=0.05, fall=0.35),
+            dict(t=T_FIVE, at=tuple(P2), strength=0.5, radius=0.08, color="#ffe8e0", rise=0.05, fall=0.3),
+            dict(t=T_FLAME, at=tuple(P3), strength=0.4, radius=0.10, color="#ffd78a", rise=0.10, fall=0.4),
+            dict(t=S[3], strength=1.0, radius=0.30, color="#fff0e6", rise=0.06, fall=0.35),
+            dict(t=T_CLASP, at=tuple(P4), strength=0.4, radius=0.10, color="#fff0f6", rise=0.08, fall=0.4),
+            dict(t=S[4], strength=1.0, radius=0.30, color="#e8fffd", rise=0.06, fall=0.35),
+            dict(t=S[5], strength=1.0, radius=0.30, color="#fff0f6", rise=0.06, fall=0.35),
+            dict(t=BIG, strength=1.3, radius=0.34, color="#fff2d8", rise=0.06, fall=0.6),
+            dict(t=S[7], strength=1.3, radius=0.34, color="#ffffff", rise=0.08, fall=0.6)],
     motion_blur=0.4,
     setup=_setup,
 )
@@ -601,3 +605,40 @@ TAGLINE = dict(text="Sunday, December 6 · 4:30 PM\nWorld Mission Society Church
                     "6720 W Sahara Ave, Las Vegas",
                sizes=(78, 77), t0=53.9, t1=54.7, color=theme.NAVY, glow=theme.WHITE_GLOW, anim="rise")
 FRAGMENTS = []
+
+# ---- the concert badge (PHASEB UPDATE 3): large on frame 0, settled in the top left corner by 2.8 s, there the
+# whole film, gone as the end card forms (which says the same). Warm white light on the night and dawn skies;
+# navy letters with a soft white glow on the bright day of the last section (switched inside its white flare).
+CREDIT = dict(song="The Words of Mother’s Love",
+              concert="Healing Concert · Sunday, December 6 · 4:30 PM",
+              t_in=-1.0, t_full=0.0,
+              t_move=1.6, t_rest=2.8,
+              scale=0.48, alpha_rest=0.92,
+              margin_x=0.035, margin_top=0.05)
+CREDIT_DAY = S[7]           # from the cut to Her hands the sky is day: navy letters
+CREDIT_OUT = T_FORM         # the end card starts forming: the badge fades out over 1 s
+
+
+def credit_state(t, bbox):
+    """Centre, scale and strength of the concert badge; bbox is its size at full card size."""
+    c = CREDIT
+    if t >= CREDIT_DAY:
+        c["color"], c["glow"] = theme.NAVY, theme.WHITE_GLOW
+    else:
+        c.pop("color", None)
+        c.pop("glow", None)
+    x0, x1, y0, y1 = bbox
+
+    def ss(a, b, x):
+        u = min(max((x - a) / (b - a), 0.0), 1.0)
+        return u * u * (3 - 2 * u)
+
+    a_in = ss(c["t_in"], c["t_full"], t)
+    m = ss(c["t_move"], c["t_rest"], t)
+    scale = c["scale"] ** m
+    cx0, cy0 = (x0 + x1) / 2.0, (y0 + y1) / 2.0
+    tx = c["margin_x"] + c["scale"] * (x1 - x0) / 2.0
+    ty = 1.0 - c["margin_top"] - c["scale"] * (y1 - y0) / 2.0
+    cx, cy = cx0 * (1 - m) + tx * m, cy0 * (1 - m) + ty * m
+    alpha = a_in * (1.0 + (c["alpha_rest"] - 1.0) * m) * (1.0 - ss(CREDIT_OUT, CREDIT_OUT + 1.0, t))
+    return (cx, cy, scale, alpha), (cx0, cy0)
