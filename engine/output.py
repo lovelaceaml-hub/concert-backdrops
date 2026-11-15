@@ -38,16 +38,24 @@ def settings():
 
 def apply(m):
     """Applies OUT_FPS and LOOP_SECONDS to a freshly imported song module (before its Song() is built)."""
+    import sys
     _res, fps = settings()
-    old = getattr(m, "FPS", 30)
-    if fps and fps != old:
-        m.FPS = fps
     loop = getattr(m, "LOOP_SECONDS", None)
-    if loop:
-        m.TOTAL = float(loop)
-    if loop or (fps and fps != old):
-        total = getattr(m, "TOTAL", None)
-        m.NFRAMES = int(round(total * m.FPS)) if total else int(round(m.NFRAMES * m.FPS / old))
+    mods = [m]
+    # a song file that imports another one's timeline (from songs.x import *) uses x's Song and params, which
+    # read x's own FPS and NFRAMES: set them there too
+    base = sys.modules.get(getattr(getattr(m, "params", None), "__module__", "") or "")
+    if base is not None and base is not m:
+        mods.append(base)
+    for mod in mods:
+        old = getattr(mod, "FPS", 30)
+        if fps and fps != old:
+            mod.FPS = fps
+        if loop:
+            mod.TOTAL = float(loop)
+        if loop or (fps and fps != old):
+            total = getattr(mod, "TOTAL", None)
+            mod.NFRAMES = int(round(total * mod.FPS)) if total else int(round(mod.NFRAMES * mod.FPS / old))
 
 
 def scale(S):
