@@ -549,7 +549,7 @@ class Crowd:
             cc = Hn[:, None] + d2[:, None] * (0.055 * g["s"][m])[None, :, None]
             pts[:, m] = cc + (g["d"][m] * (0.020 * g["r"][m] * (1 - 0.4 * g["s"][m]))[:, None])[None]
         out.append(pts)
-        bri.append(np.full((N, len(g["s"])), 1.05))
+        bri.append(np.full((N, len(g["s"])), 1.6))   # hands read clearly at crowd size
         # legs (faint, under the robe) and feet stepping out under the hem
         g = T.leg
         pts = np.zeros((N, len(g["s"]), 3))
@@ -571,7 +571,7 @@ class Crowd:
             cc = Af[:, None] + (toe - Af)[:, None] * g["s"][m][None, :, None]
             pts[:, m] = cc + (g["d"][m] * (0.017 * g["r"][m])[:, None] * np.array([1.0, 0.7, 1.0]))[None]
         out.append(pts)
-        bri.append(np.full((N, len(g["s"])), 1.0))
+        bri.append(np.full((N, len(g["s"])), 1.7))   # so do the stepping feet
         p = np.concatenate(out, axis=1)
         b = np.concatenate(bri, axis=1)
         X, Y = self.project(J, p)
@@ -619,7 +619,8 @@ class Crowd:
                  (knee, 0.21, 0.24), (0.5 * (knee + ank) + np.array([0.0, 0.03, 0.0]), 0.23, 0.22)]
         for side in (1.0, -1.0):
             S0, E, Hn, d2 = arms[side]
-            bones += [(0.5 * (S0 + E), 0.07, 0.16), (0.5 * (E + Hn), 0.08, 0.20), (Hn + d2 * 0.03, 0.06, 0.55)]
+            bones += [(0.5 * (S0 + E), 0.07, 0.16), (0.5 * (E + Hn), 0.08, 0.20), (Hn + d2 * 0.03, 0.06, 0.55),
+                      (legs[side][2] + np.array([0.03, -0.01, 0.0]), 0.06, 0.45)]
         bp = np.stack([b[0] for b in bones], 1)
         bx, by = self.project(J, bp)
         bsz = np.array([b[1] for b in bones])[None, :] * (self.h * 1080.0)[:, None] * 1.25
