@@ -324,10 +324,10 @@ def draw_doves(fl, t, h, st, pts):
 
     k = keep
     # body, head, tail
-    st.add(pt(-0.30, 0.0)[k], pt(0.22, 0.02)[k], (0.08 * Lpx)[k], (0.12 * Lpx)[k], (0.75, 0.20, 0.08), cw[k])
+    st.add(pt(-0.30, 0.0)[k], pt(0.22, 0.02)[k], (0.08 * Lpx)[k], (0.12 * Lpx)[k], (0.85, 0.06, 0.08), cw[k])
     hd = pt(0.36, 0.07)[k]
-    st.add(hd, hd, (0.065 * Lpx)[k], (0.065 * Lpx)[k], (0.85, 0.15, 0.08), cw[k])
-    st.add(pt(-0.30, 0.0)[k], pt(-0.64, -0.02)[k], (0.04 * Lpx)[k], (0.12 * Lpx)[k], (0.45, 0.35, 0.05), cw[k] * 0.9)
+    st.add(hd, hd, (0.065 * Lpx)[k], (0.065 * Lpx)[k], (0.95, 0.05, 0.08), cw[k])
+    st.add(pt(-0.30, 0.0)[k], pt(-0.64, -0.02)[k], (0.04 * Lpx)[k], (0.12 * Lpx)[k], (0.60, 0.08, 0.05), cw[k] * 0.9)
     # wings: arm then hand, the hand lagging the arm so the beat ripples out to the tip
     for side in (-1.0, 1.0):
         sh = np.array([0.08, 0.04, 0.0])
@@ -342,8 +342,8 @@ def draw_doves(fl, t, h, st, pts):
             return ctr + project((o + bob) * L[:, None])
 
         a_, w_, tp, hp = P2(o_sh), P2(o_wr), P2(o_tp), P2(o_hip)
-        st.add(a_[k], w_[k], (0.11 * Lpx)[k], (0.17 * Lpx)[k], (0.40, 0.45, 0.06), cw[k])
-        st.add(w_[k], tp[k], (0.16 * Lpx)[k], (0.04 * Lpx)[k], (0.40, 0.55, 0.06), cw[k])
+        st.add(a_[k], w_[k], (0.11 * Lpx)[k], (0.17 * Lpx)[k], (0.62, 0.10, 0.06), cw[k])
+        st.add(w_[k], tp[k], (0.16 * Lpx)[k], (0.04 * Lpx)[k], (0.62, 0.14, 0.06), cw[k])
         st.add(tp[k], hp[k], (0.02 * Lpx)[k], (0.06 * Lpx)[k], (0.25, 0.25, 0.0), cw[k] * 0.6)
     # faint spark trail: sparks shed on a fixed time grid, so each spark lives the same life in every render part
     tr = float(val("DOVES_TRAIL", t, 1.0))

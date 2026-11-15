@@ -64,7 +64,7 @@ POINT_FS = """
 in vec3 vC; out vec4 o;
 void main(){
   vec2 p = gl_PointCoord*2.0-1.0; float r2 = dot(p, p); if(r2 > 1.0) discard;
-  float k = exp(-r2*7.0) + 0.28*exp(-r2*2.2)*(1.0 - r2);
+  float k = exp(-r2*7.0) + 0.45*exp(-r2*1.8)*(1.0 - r2);
   o = vec4(vC*k, 1.0);
 }
 """
