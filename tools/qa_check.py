@@ -419,8 +419,8 @@ def dash_checks(S, song_name, extra, issues, log):
             continue
         n += 1
         for i, line in enumerate(lines, 1):
-            if "—" in line or "–" in line:
-                kind = "em dash" if "—" in line else "en dash"
+            if "\u2014" in line or "\u2013" in line:
+                kind = "em dash" if "\u2014" in line else "en dash"
                 issues.append(dict(severity="HIGH", check="Dashes", at=None, block=os.path.relpath(f, ROOT),
                                    detail=f"line {i} has an {kind}: {line.strip()[:90]}"))
     log.append(f"checked {n} file(s) for em and en dashes")
