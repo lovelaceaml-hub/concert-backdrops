@@ -252,7 +252,7 @@ class SkyCamera:
             ctx.enable(moderngl.BLEND)
             ctx.blend_func = (moderngl.ONE, moderngl.ONE)
             self.t_ray.use(location=0)
-            setu(self.p_rays, uRays=0, uCol=c, uAmt=a * gain * 2.2, uHorizon=float(S.HORIZON), uCalm=calm,
+            setu(self.p_rays, uRays=0, uCol=c, uAmt=a * gain * 2.2, uHorizon=float(self.to_screen((0.5, S.HORIZON), 0.80, t, P)[1]), uCalm=calm,
                  uCalmY=CALM_Y)
             self.v_rays.render(moderngl.TRIANGLE_STRIP)
             drew = True

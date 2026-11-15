@@ -109,7 +109,7 @@ vec4 layerC(vec2 sv, float wc, float layer, out float dens){
   float sunK = clamp(uSunInt, 0.0, 1.6);
   vec3 lit = uGlow*sunK*(0.06+0.55*exp(-rs*2.0))*facing*uLight;
   float edge = smoothstep(0.02,0.28,d)*(1.0-smoothstep(0.28,0.85,d));
-  vec3 rim = uGlow*sunK*edge*(0.20*exp(-rs*1.3)+1.5*exp(-rs*4.5))*uLight*uSilver*(0.4+0.6*facing);
+  vec3 rim = uGlow*sunK*edge*(0.30*exp(-rs*1.2)+2.4*exp(-rs*4.0))*uLight*uSilver*(0.4+0.6*facing);
   vec3 c = body*(0.86+0.28*(1.0-d)) + lit + rim;
   float a = d*clamp(uCloudAmt, 0.0, 1.0)*0.92;
   return vec4(c*a, a);
@@ -143,8 +143,8 @@ uniform vec2 uSrc; uniform float uSrcSize;
 void main(){
   vec2 sv = vUV;
   float r = length((sv-uSrc)*vec2(uAspect,1.0));
-  float e = exp(-r*r/(uSrcSize*uSrcSize)) + 0.28*exp(-r/(uSrcSize*2.6));
-  if(uCloudOn>0.5) e *= 1.0-clamp(texture(uCloudD, toLayer(sv, W_SKY)).r*1.15, 0.0, 1.0);
+  float e = exp(-r*r/(uSrcSize*uSrcSize)) + 0.55*exp(-r/(uSrcSize*3.2));
+  if(uCloudOn>0.5) e *= 1.0-clamp(texture(uCloudD, toLayer(sv, W_SKY)).r*1.6, 0.0, 1.0);
   vec2 uf = toLayer(sv, W_FAR), um = toLayer(sv, W_MID), un = toLayer(sv, W_NEAR);
   float open = smoothstep(ridgeFar(uf.x)-0.003, ridgeFar(uf.x)+0.003, uf.y);
   open *= smoothstep(ridgeMid(um.x)-0.003, ridgeMid(um.x)+0.003, um.y);
@@ -170,11 +170,11 @@ void main(){
 RAYS_FS = """
 #version 330
 in vec2 vUV; out vec4 o;
-uniform sampler2D uRays; uniform vec3 uCol; uniform float uAmt, uHorizon, uCalm, uCalmY;
+uniform sampler2D uRays; uniform vec3 uCol; uniform float uAmt, uHorizon, uCalm, uCalmY;   // uHorizon: on screen now
 float calmK(float y){ return 1.0-uCalm*(1.0-smoothstep(uCalmY-0.07, uCalmY+0.05, y)); }
 void main(){
   float r = texture(uRays, vUV).r;
-  float low = mix(0.30, 1.0, smoothstep(uHorizon-0.10, uHorizon+0.06, vUV.y));
+  float low = mix(0.06, 1.0, smoothstep(uHorizon-0.01, uHorizon+0.10, vUV.y));   // shafts live in the air above the land
   o = vec4(uCol*uAmt*r*low*calmK(vUV.y), 1.0);
 }
 """

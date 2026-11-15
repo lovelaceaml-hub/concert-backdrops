@@ -10,6 +10,7 @@ import songs.s03_original as _base
 
 _base.TOTAL = 30.0
 _base.NFRAMES = int(round(_base.TOTAL * _base.FPS))
+_base.MUSIC_END = 29.5   # the skyline is the loudness of this cut, not the whole song
 _base.FADE = _base.Track([(0, 0.0), (1.0, 1.0), (28.5, 1.0), (29.9, 0.0)])
 from songs.s03_original import *  # noqa: E402,F401,F403
 from track import Track  # noqa: E402
