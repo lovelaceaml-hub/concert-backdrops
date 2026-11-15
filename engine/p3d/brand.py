@@ -40,14 +40,19 @@ from .api import lin, show
 # Sampled from the campaign's logo (two references: a clean render and the website's version) and settled
 # between them: the left heart runs from gold at the top to orange at the tip, the right heart is one rose,
 # the globe runs from the orange of the left heart to the rose of the right one. Display hex.
-LOGO_COLORS = dict(
-    gold="#EFCB72",        # top of the left heart
-    orange="#E5964A",      # tip of the left heart
-    rose="#D5646E",        # the right heart
-    globe_l="#E0925A",     # the globe at its left edge
-    globe_r="#D06E72",     # the globe at its right edge
-    white="#FFFFFF",       # grid, ring, the parting line, the branches
+LOGO_PALETTES = dict(
+    # the default: the website's gold to orange gradient, at the strength of the official poster
+    brand=dict(gold="#F1C665", orange="#EF9038", rose="#E25F70", globe_l="#EC8E48", globe_r="#DC6865",
+               white="#FFFFFF"),
+    # exactly as sampled from the website's logo (softer)
+    web=dict(gold="#EECF7C", orange="#E09F53", rose="#D06369", globe_l="#DE9257", globe_r="#CE6C72",
+             white="#FFFFFF"),
+    # exactly as on the official poster (flat, vivid)
+    poster=dict(gold="#F39431", orange="#F39431", rose="#EC5C72", globe_l="#F0904A", globe_r="#E2685E",
+                white="#FFFFFF"),
 )
+LOGO_COLORS = LOGO_PALETTES["brand"]     # gold: top of the left heart, orange: its tip, rose: the right heart,
+#                                          globe_l, globe_r: the globe's two sides, white: grid, ring, lines, branches
 
 # The nine expressions in the website's colours (UPDATE 9; these replace the older campaign colours)
 EXPRESSION_COLORS = {
@@ -375,7 +380,7 @@ def _branch_polys(part, grow=1.0):
     return polys
 
 
-def _layers(canvas, draw=None):
+def _layers(canvas, draw=None, palette="brand", full=False):
     """Coverage of every part (own shape, before anything covers it), plus each part's colour picture.
     `draw` (dict part -> 0..1) draws the grid and the branches only partly (they draw themselves)."""
     draw = draw or {}
@@ -390,7 +395,16 @@ def _layers(canvas, draw=None):
     d.polygon(canvas.px(hl), fill=255)
     d.line(canvas.px(hl), fill=255, width=int(round(2 * GAP * canvas.scale * canvas.ss)), joint="curve")
     gap = canvas.done(img)
-    cov["gap"] = np.clip(gap - cov["heart_l"], 0.0, 1.0) * cov["heart_r"]
+    cov["gap"] = np.clip(gap - cov["heart_l"], 0.0, 1.0) * cov["heart_r"] * (1.0 - canvas.done(canvas.disc(GC, RG - 0.01)))
+    if full:
+        # whole classic hearts (for the build, before the globe stands over their inner lobes)
+        cov["heart_r_full"] = canvas.done(canvas.poly([heart_outline(tipr)]))
+        hf = heart_outline(tipl)
+        cov["heart_l_full"] = canvas.done(canvas.poly([hf]))
+        img, d = canvas.new()
+        d.polygon(canvas.px(hf), fill=255)
+        d.line(canvas.px(hf), fill=255, width=int(round(2 * GAP * canvas.scale * canvas.ss)), joint="curve")
+        cov["heart_l_grown"] = canvas.done(img)
     cov["ring"] = canvas.done(canvas.disc(GC, RG))
     cov["globe"] = canvas.done(canvas.disc(GC, RD))
     lines = grid_lines()
@@ -406,15 +420,16 @@ def _layers(canvas, draw=None):
         cov[b] = canvas.done(canvas.poly(_branch_polys(b, draw.get(b, 1.0))))
     # colours (display rgb, 0..1)
     c = {}
-    gold, orange = _hex_rgb(LOGO_COLORS["gold"]), _hex_rgb(LOGO_COLORS["orange"])
+    P = LOGO_PALETTES[palette] if isinstance(palette, str) else dict(LOGO_COLORS, **palette)
+    gold, orange = _hex_rgb(P["gold"]), _hex_rgb(P["orange"])
     k = np.clip(Y / A_H, 0.0, 1.0)[..., None]
     c["heart_l"] = orange * (1 - k) + gold * k
-    c["heart_r"] = np.broadcast_to(_hex_rgb(LOGO_COLORS["rose"]), X.shape + (3,))
-    gl, gr = _hex_rgb(LOGO_COLORS["globe_l"]), _hex_rgb(LOGO_COLORS["globe_r"])
+    c["heart_r"] = np.broadcast_to(_hex_rgb(P["rose"]), X.shape + (3,))
+    gl, gr = _hex_rgb(P["globe_l"]), _hex_rgb(P["globe_r"])
     u = np.clip((X - GC[0]) / (2 * RD) + 0.5, 0.0, 1.0)[..., None]
     v = np.clip((Y - GC[1]) / (2 * RD), -0.5, 0.5)[..., None]
     c["globe"] = np.clip((gl * (1 - u) + gr * u) * (1.0 + 0.05 * v), 0.0, 1.0)
-    white = np.broadcast_to(_hex_rgb(LOGO_COLORS["white"]), X.shape + (3,))
+    white = np.broadcast_to(_hex_rgb(P["white"]), X.shape + (3,))
     for p in ("gap", "ring", "grid", "branch_l", "branch_r"):
         c[p] = white
     return cov, c
@@ -435,7 +450,11 @@ def _amount(parts, name):
     return 1.0 if key in parts else 0.0
 
 
-def logo_rgba(height=320, parts=None, draw=None, pad=0.06, glow=0.0, glow_color="#FFF3DA", ss=4):
+_RGBA = {}
+
+
+def logo_rgba(height=320, parts=None, draw=None, pad=0.06, glow=0.0, glow_color="#FFF3DA", palette="brand",
+              ss=4):
     """The logo as an RGBA picture (numpy uint8, straight alpha), `height` pixels for the logo itself (the
     picture is a little larger by `pad`, in logo heights, on every side).
 
@@ -443,10 +462,25 @@ def logo_rgba(height=320, parts=None, draw=None, pad=0.06, glow=0.0, glow_color=
     draw     dict part -> 0..1: the grid ("grid") and the branches ("branch_l", "branch_r") drawn only partly,
              as they draw themselves (grid lines run along their length; a stem grows and its leaves open)
     glow     0..1: a soft halo round the logo (in the alpha), for a night sky
+    palette  "brand" (default: the website's gold to orange gradient at the official poster's strength),
+             "web" (the website's softer colours exactly), "poster" (the official poster's flat vivid colours),
+             or a dict of LOGO_COLORS keys to change
+    The last 24 pictures are kept, so asking again for the same one costs nothing.
     """
+    key = repr((round(float(height), 3), parts, draw, pad, glow, glow_color, palette, ss))
+    if key in _RGBA:
+        return _RGBA[key]
+    out = _logo_rgba(height, parts, draw, pad, glow, glow_color, palette, ss)
+    if len(_RGBA) >= 24:
+        _RGBA.pop(next(iter(_RGBA)))
+    _RGBA[key] = out
+    return out
+
+
+def _logo_rgba(height, parts, draw, pad, glow, glow_color, palette, ss):
     scale = float(height) / A_H
     cv = _Canvas(scale, pad=pad * A_H, ss=ss)
-    cov, col = _layers(cv, draw)
+    cov, col = _layers(cv, draw, palette)
     rgb = np.zeros((cv.h, cv.w, 3), np.float32)
     a = np.zeros((cv.h, cv.w), np.float32)
     for name in _ORDER:                     # "over", premultiplied
@@ -520,7 +554,7 @@ def _lattice(cov, b, rng, min_cov=0.06, jitter=0.25):
     return x, y, np.clip(m[iy, ix] * 1.10, 0.0, 1.0)
 
 
-def logo_points(n=60000, seed=7):
+def logo_points(n=60000, seed=7, palette="brand"):
     """The logo as points, in logo units (1.0 high, centred on its box), by part. Returns a dict of arrays:
 
       x, y, z      position (z: the globe's points sit on its sphere, bulging toward the viewer up to `RD`)
@@ -534,7 +568,7 @@ def logo_points(n=60000, seed=7):
       elem         the element inside the part (grid line or leaf number; -1 none)
       cell         lattice spacing (logo units)
     Cached by (n, seed)."""
-    key = (int(n), int(seed))
+    key = (int(n), int(seed), str(palette))
     if key in _PTS:
         return _PTS[key]
     # resolution: about n points over the logo's inked area (about 6.9 square working units), 3 x 3 pixel cells
@@ -542,28 +576,29 @@ def logo_points(n=60000, seed=7):
     b = 3
     scale = math.sqrt(n / area) * b
     cv = _Canvas(scale, pad=0.03, ss=2)
-    cov, col = _layers(cv)
+    cov, col = _layers(cv, palette=palette, full=True)
     lines, labs = _label_image(cv)
     X, Y = cv.coords()
     rng = np.random.default_rng(seed)
-    parts = {"heart_r": cov["heart_r"], "heart_l": np.maximum(cov["heart_l"], cov["gap"]), "ring": cov["ring"],
-             "globe": cov["globe"], "grid": cov["grid"], "branch_l": cov["branch_l"], "branch_r": cov["branch_r"]}
+    # the hearts are sampled whole (classic shape); their inner lobes go when the globe arrives
+    parts = {"heart_r": cov["heart_r_full"], "heart_l": np.maximum(cov["heart_l_full"], cov["gap"]),
+             "ring": cov["ring"], "globe": cov["globe"], "grid": cov["grid"], "branch_l": cov["branch_l"],
+             "branch_r": cov["branch_r"]}
     # what covers what when the logo is whole (later parts cover earlier ones)
-    out = {k: [] for k in ("x", "y", "z", "part", "weight", "rgb", "covered", "order", "elem")}
+    out = {k: [] for k in ("x", "y", "z", "part", "weight", "rgb", "covered", "order", "elem", "inner", "gapw")}
     for pi, name in enumerate(PARTS):
         c = parts[name]
         if name == "ring":
             c = np.clip(c - cov["globe"], 0.0, 1.0)          # the ring is the white band outside the disc
-        if name == "globe":
-            c = np.clip(c - cov["grid"], 0.0, 1.0)           # the disc shows between the lines
         px, py, w = _lattice(c, b, rng)
         ix = np.clip(px.astype(np.int64), 0, cv.w - 1)
         iy = np.clip(py.astype(np.int64), 0, cv.h - 1)
         x = cv.x0 + px / cv.scale
         y = cv.y1 - py / cv.scale
         # colour: the part's own (the left heart's band over the right heart is white)
+        g = np.zeros(len(x))
         if name == "heart_l":
-            g = cov["gap"][iy, ix] / np.maximum(parts[name][iy, ix], 1e-6)
+            g = np.clip(cov["gap"][iy, ix] / np.maximum(parts[name][iy, ix], 1e-6), 0.0, 1.0)
             rgb = col["heart_l"][iy, ix] * (1 - g[:, None]) + g[:, None] * 1.0
         else:
             rgb = np.asarray(col[name])[iy, ix] if np.ndim(col[name]) == 3 else np.broadcast_to(col[name], (len(x), 3))
@@ -575,8 +610,12 @@ def logo_points(n=60000, seed=7):
             if other == "ring":
                 oc = cov["ring"]
             covered[:, qi] = oc[iy, ix]
+        inner = np.zeros(len(x), np.float32)
         if name == "heart_r":
-            covered[:, _PID["heart_l"]] = np.maximum(cov["heart_l"][iy, ix], cov["gap"][iy, ix])
+            covered[:, _PID["heart_l"]] = cov["heart_l_grown"][iy, ix]
+            inner = np.clip(1.0 - cov["heart_r"][iy, ix], 0.0, 1.0)
+        if name == "heart_l":
+            inner = np.clip(1.0 - np.maximum(cov["heart_l"][iy, ix], cov["gap"][iy, ix]), 0.0, 1.0)
         # z: the globe's parts sit on its sphere
         r = np.hypot(x - GC[0], y - GC[1])
         z = np.zeros_like(x)
@@ -586,6 +625,8 @@ def logo_points(n=60000, seed=7):
             z = np.full_like(x, 0.02)
         # order of drawing within the part
         elem = np.full(len(x), -1, np.int64)
+        if name == "heart_l":
+            elem = np.where(g > 0.5, 1, -1)                  # 1: the white parting line over the right heart
         if name == "grid":
             elem = labs["grid"][iy, ix]
             order = np.zeros(len(x))
@@ -624,7 +665,7 @@ def logo_points(n=60000, seed=7):
         else:
             order = np.clip(1.0 - y / A_H, 0.0, 1.0)
         for k_, v in (("x", x), ("y", y), ("z", z), ("weight", w), ("rgb", rgb), ("covered", covered),
-                      ("order", order), ("elem", elem)):
+                      ("order", order), ("elem", elem), ("inner", inner), ("gapw", g)):
             out[k_].append(np.asarray(v))
         out["part"].append(np.full(len(x), pi, np.int64))
     res = {k: np.concatenate(v) for k, v in out.items()}
@@ -633,6 +674,11 @@ def logo_points(n=60000, seed=7):
     res["y"] = ((res["y"] - A_YC) / A_H).astype(np.float32)
     res["z"] = (res["z"] / A_H).astype(np.float32)
     res["cell"] = float(b / cv.scale / A_H)
+    res["inner"] = res["inner"].astype(np.float32)
+    res["gapw"] = res["gapw"].astype(np.float32)
+    # the left heart (grown by the parting line) as a picture in logo units, to test what it covers while the
+    # hearts still move: value at column (x - x0) * k, row (y1 - y) * k
+    res["mask_l"] = (cov["heart_l_grown"].astype(np.float32), cv.x0 / A_H, (cv.y1 - A_YC) / A_H, cv.scale * A_H)
     res["rgb"] = res["rgb"].astype(np.float32)
     res["weight"] = res["weight"].astype(np.float32)
     res["order"] = res["order"].astype(np.float32)
@@ -659,5 +705,424 @@ def _ss(a, b, x):
     return u * u * (3.0 - 2.0 * u)
 
 
+def _sc(a, b, x):
+    return float(_ss(a, b, x))
+
+
 def _val(v, t):
     return v(t) if callable(v) else v
+
+
+def show_rgb(rgb):
+    """Display colours (N, 3) in 0..1 as the linear light the finished picture shows as exactly those colours
+    (api.show for many colours at once)."""
+    y = np.clip(np.asarray(rgb, np.float64) ** 2.2, 0.0, 0.975)
+    a, b, c = 2.43 * y - 2.51, 0.59 * y - 0.03, 0.14 * y
+    return (-b - np.sqrt(np.maximum(b * b - 4.0 * a * c, 0.0))) / (2.0 * a)
+
+
+def _unit(v):
+    v = np.asarray(v, np.float64)
+    return v / max(float(np.linalg.norm(v)), 1e-9)
+
+
+# ------------------------------------------------------------------------------------- placing in the world
+class Place:
+    """Where a flat piece (the logo, a symbol, a heart) stands in the world, at any time.
+
+    pos      centre (x, y, z) in metres, or a function of t
+    size     its height in metres (a number or a function of t)
+    facing   azimuth in degrees the piece faces (0 faces +z, the default camera), a number or a function of t
+    face     "fixed" (use facing), "camera" (turns about the vertical to face the camera), "screen" (flat to
+             the picture), "flat" (lying on the lake, read from above; facing turns it)
+    tilt     degrees it leans back; roll: degrees it turns in its own plane (numbers or functions of t)
+    ride     (x, y, depth): instead of pos, keep that place of the picture (0..1 from the left and the bottom)
+             `depth` metres ahead of the lens, whatever the camera does; flat to the picture. Then `frac`
+             gives the size as a share of the picture's height (instead of `size` in metres)
+    keys     [(t, dict(any of the keys above)), ...]: the place changes over time; between two keys it glides
+             (eased) from one to the other, centre, turn and size together
+
+    place.frame(t, cam) -> (centre, right, up, normal, size): the plane in the world and the size in metres.
+    Needs the camera (cam) for "camera", "screen" and ride; a set using them asks for it (wants_camera).
+    """
+
+    def __init__(self, pos=(0.0, 3.0, 0.0), size=2.0, facing=0.0, face="fixed", tilt=0.0, roll=0.0, ride=None,
+                 frac=0.2, keys=None):
+        self.base = dict(pos=pos, size=size, facing=facing, face=face, tilt=tilt, roll=roll, ride=ride, frac=frac)
+        self.keys = sorted(keys, key=lambda k: k[0]) if keys else None
+
+    def needs_camera(self):
+        specs = [self.base] + ([dict(self.base, **k[1]) for k in self.keys] if self.keys else [])
+        return any(s.get("ride") is not None or s.get("face") in ("camera", "screen") for s in specs)
+
+    @staticmethod
+    def _one(s, t, cam):
+        if s.get("ride") is not None:
+            if cam is None:
+                raise ValueError("a ride needs the camera")
+            x, y, d = (float(v) for v in _val(s["ride"], t))
+            r, u, f = cam.basis()
+            th = math.tan(math.radians(cam.fov) * 0.5)
+            c = np.asarray(cam.pos, np.float64) + d * (f + (2 * x - 1) * th * cam.aspect * r + (2 * y - 1) * th * u)
+            size = 2.0 * d * th * float(_val(s.get("frac", 0.2), t))
+            return c, r, u, -f, size
+        c = np.asarray(_val(s["pos"], t), np.float64)
+        size = float(_val(s["size"], t))
+        face = s.get("face", "fixed")
+        if face == "screen":
+            r, u, f = cam.basis()
+            right, up, nrm = r, u, -f
+        else:
+            if face == "camera" and cam is not None:
+                d = np.asarray(cam.pos, np.float64) - c
+                az = math.degrees(math.atan2(d[0], d[2]))
+            else:
+                az = float(_val(s.get("facing", 0.0), t))
+            a = math.radians(az)
+            nrm = np.array([math.sin(a), 0.0, math.cos(a)])
+            right = np.array([math.cos(a), 0.0, -math.sin(a)])
+            up = np.array([0.0, 1.0, 0.0])
+            if face == "flat":
+                up, nrm = -nrm, np.array([0.0, 1.0, 0.0])
+            tl = math.radians(float(_val(s.get("tilt", 0.0), t)))
+            if tl:
+                up, nrm = up * math.cos(tl) - nrm * math.sin(tl), nrm * math.cos(tl) + up * math.sin(tl)
+        rl = math.radians(float(_val(s.get("roll", 0.0), t)))
+        if rl:
+            right, up = right * math.cos(rl) + up * math.sin(rl), up * math.cos(rl) - right * math.sin(rl)
+        return c, right, up, nrm, size
+
+    def frame(self, t, cam=None):
+        if not self.keys:
+            return self._one(self.base, t, cam)
+        ks = self.keys
+        if t <= ks[0][0]:
+            return self._one(dict(self.base, **ks[0][1]), t, cam)
+        if t >= ks[-1][0]:
+            return self._one(dict(self.base, **ks[-1][1]), t, cam)
+        for (t0, a), (t1, b) in zip(ks[:-1], ks[1:]):
+            if t0 <= t <= t1:
+                fa = self._one(dict(self.base, **a), t, cam)
+                fb = self._one(dict(self.base, **b), t, cam)
+                w = _sc(t0, t1, t)
+                c = fa[0] * (1 - w) + fb[0] * w
+                r = _unit(fa[1] * (1 - w) + fb[1] * w)
+                u = fa[2] * (1 - w) + fb[2] * w
+                u = _unit(u - r * float(u @ r))
+                n = np.cross(r, u)
+                return c, r, u, n, fa[4] * (1 - w) + fb[4] * w
+        return self._one(self.base, t, cam)
+
+    def world(self, t, x, y, z=None, cam=None):
+        """Points given in the piece's own units (1.0 = its size; x right, y up, z toward the viewer) as world
+        points (N, 3) at t."""
+        c, r, u, n, s = self.frame(t, cam)
+        x = np.asarray(x, np.float64)
+        p = c[None, :] + s * (x[:, None] * r[None, :] + np.asarray(y, np.float64)[:, None] * u[None, :])
+        if z is not None:
+            p = p + s * np.asarray(z, np.float64)[:, None] * n[None, :]
+        return p
+
+
+def place_on_screen(camera, t, x, y, depth, frac):
+    """(pos, size) of a piece seen at the picture place (x, y) (0..1 from the left and the bottom) `depth`
+    metres ahead of the camera at t and `frac` of the picture's height tall. camera: a Rig, or a function
+    of t giving a CameraState."""
+    cam = camera.state(t) if hasattr(camera, "state") else camera(t)
+    c, r, u, n, s = Place(ride=(x, y, depth), frac=frac)._one(dict(ride=(x, y, depth), frac=frac), t, cam)
+    return tuple(c.tolist()), s
+
+
+def _cam_of(camera, t):
+    if camera is None:
+        return None
+    return camera.state(t) if hasattr(camera, "state") else camera(t)
+
+
+# ------------------------------------------------------------------------------------- the logo in the world
+# the brand build: when each part arrives, as shares of the arrival time (start, end)
+BUILD = dict(heart_l=(0.00, 0.50), heart_r=(0.06, 0.56), ring=(0.36, 0.62), globe=(0.30, 0.58),
+             grid=(0.50, 0.88), branch_l=(0.66, 1.00), branch_r=(0.62, 0.98))
+GATHER_ORDER = dict(heart_r=0.00, heart_l=0.05, ring=0.30, globe=0.32, grid=0.45, branch_l=0.55, branch_r=0.55)
+
+
+class Logo:
+    """The logo as light (or paint) in the 3D world: it forms, glows, holds and leaves.
+
+    Placing (see Place): pos, size (its height in metres), facing, face, tilt, roll, ride, frac, keys; or
+    place=<a Place>. camera: the song's Rig, needed for face="camera" or "screen", ride and the keys that use them.
+
+    Times: t_in (the first light appears), t_full (whole), t_out (it starts to leave; None: never),
+    leave_dur (seconds).
+    arrive   "build" (default): the brand build. The two hearts sweep in from either side and from behind,
+             the globe's ring draws round and its disc fills from the middle, the grid lines draw
+             themselves, the olive branches grow from the stem's foot and each leaf opens. BUILD holds
+             the timing of each part (shares of t_in..t_full); `timing=dict(part=(start, end))` changes it.
+             "gather": every point flies in from a loose cloud round it, the hearts first. "fade". "none"
+    leave    "fade", "rise" (it lifts apart into sparks from the top), "scatter" (it bursts outward), "none"
+    paint    0 (default): the logo is light (glows on a night sky; the colours are the brand colours on black);
+             1: painted in its exact colours over whatever is behind it (a bright day sky) with a little of its
+             own light (paint_light). A number or a function of t, so it can turn from light to paint.
+    bright   brightness of the light (1.0: the exact colours on a black sky)
+    white    how bright the white parts are against the coloured ones, in light (0.6; 1.0 = full white,
+             which blooms over the colours)
+    glow     a soft coloured halo of the logo's own light (0.35)
+    sparkle  a few glints that twinkle on it (0.25)
+    palette  "brand", "web", "poster" (see logo_rgba)
+    parts    a list of the parts to show (default all, see PARTS)
+    amount   dict part -> function t -> 0..1, to drive a part's progress yourself (it replaces the build)
+    bulge    0..1: how much the globe's points bulge toward the viewer on their sphere (1.0)
+    n        about how many points (70000; 40000 is enough for a logo under a third of the picture high)
+    dof, fog how much of the lens blur and of the haze the settled logo takes (0: sharp and clear)
+    """
+
+    def __init__(self, pos=(0.0, 3.0, 0.0), size=2.0, facing=0.0, face="fixed", tilt=0.0, roll=0.0, ride=None,
+                 frac=0.2, keys=None, place=None, camera=None, t_in=0.0, t_full=3.0, t_out=None, leave_dur=1.6,
+                 arrive="build", leave="fade", paint=0.0, paint_light=0.12, bright=0.45, white=0.35, glow=0.25,
+                 sparkle=0.08, palette="brand", parts=None, amount=None, timing=None, bulge=1.0, n=70000,
+                 dot=2.1, dof=0.0, fog=0.0, reflect=True, seed=7):
+        self.place = place or Place(pos=pos, size=size, facing=facing, face=face, tilt=tilt, roll=roll, ride=ride,
+                                    frac=frac, keys=keys)
+        self.camera = camera
+        self.wants_camera = True
+        self.t_in, self.t_full, self.t_out = float(t_in), float(t_full), t_out
+        self.leave_dur = float(leave_dur)
+        self.arrive, self.leave = arrive, leave
+        self.paint, self.paint_light = paint, float(paint_light)
+        self.bright, self.white, self.glow, self.sparkle = float(bright), float(white), float(glow), float(sparkle)
+        self.amount = amount or {}
+        self.timing = dict(BUILD, **(timing or {}))
+        self.bulge, self.dot = float(bulge), float(dot)
+        self.dof, self.fog, self.reflect = dof, fog, reflect
+        P = logo_points(n, seed, palette)
+        keep = np.ones(len(P["x"]), bool) if parts is None else np.isin(P["part"], [_PID[p] for p in parts])
+        self.x, self.y, self.z = P["x"][keep], P["y"][keep], P["z"][keep]
+        self.part, self.wt, self.order = P["part"][keep], P["weight"][keep], P["order"][keep]
+        self.cov, self.elem = P["covered"][keep].copy(), P["elem"][keep]
+        self.inner = P["inner"][keep]
+        self.mask_l = P["mask_l"]
+        self.rgb = P["rgb"][keep]
+        self.cell = P["cell"]
+        self.N = len(self.x)
+        self.is_r = self.part == _PID["heart_r"]
+        self.cov[self.is_r, _PID["heart_l"]] = 0.0           # the left heart covers the right one as it moves
+        # light: the brand colours as light on black, a little deeper so that the sky and the bloom that add to
+        # them do not pale them (light can only brighten what is behind it)
+        # the parting line: a share of white over the left heart's own colour, shown once the right heart is there
+        self.gapw = P["gapw"][keep]
+        self.gap = self.gapw > 0.01
+        rgb0 = self.rgb.copy()
+        g = self.gapw[self.gap, None]
+        rgb0[self.gap] = np.clip((self.rgb[self.gap] - g) / np.maximum(1.0 - g, 0.05), 0.0, 1.0)
+        rgb0[self.gap & (self.gapw > 0.9)] = _hex_rgb(LOGO_PALETTES[palette]["orange"] if isinstance(palette, str)
+                                                      else LOGO_COLORS["orange"])
+        self.rgb0 = rgb0
+        lc = show_rgb(rgb0)
+        m = np.maximum(lc.max(axis=1, keepdims=True), 1e-6)
+        self.light0 = (m * (lc / m) ** 1.35).astype(np.float32)
+        self.isw = isw = (rgb0.min(axis=1) > 0.97)
+        self.white_light = np.array([1.0, 0.96, 0.9], np.float32) * 2.0 * self.white
+        self.white_paint = np.array([1.25, 1.25, 1.25], np.float32)      # displays close to white, blooms little
+        self.light0[isw] = self.white_light
+        self.paint0 = show_rgb(rgb0).astype(np.float32)
+        self.paint0[isw] = self.white_paint
+        rng = np.random.default_rng(seed + 101)
+        self.s = rng.random((self.N, 4)).astype(np.float32)
+        self.k_norm = 1.0 / (0.304 * self.dot * self.dot)
+        self.i_halo = np.nonzero((self.s[:, 0] < 0.035) & ~isw)[0]          # the coloured parts glow, not the white
+        self.i_spark = np.nonzero(self.s[:, 1] < 0.0012)[0]
+        self.inside_l = 1.0 - self.gapw                     # how much of a left heart point is the heart itself
+        # a loose cloud the points gather from (logo units): round the logo, more behind and below
+        d = rng.normal(size=(self.N, 3))
+        d /= np.maximum(np.linalg.norm(d, axis=1, keepdims=True), 1e-9)
+        rad = 0.7 + 0.9 * rng.random(self.N) ** 0.5
+        self.cloud = (d * rad[:, None] * np.array([1.4, 0.9, 1.0]) + np.array([0.0, -0.2, -0.6])).astype(np.float32)
+
+    # ------------------------------------------------------------------ progress
+    def progress(self, part, t):
+        """0..1: how far a part has arrived at t (its own clock inside the arrival)."""
+        if part in self.amount:
+            return float(np.clip(self.amount[part](t), 0.0, 1.0))
+        if self.arrive == "none":
+            return 1.0
+        span = max(self.t_full - self.t_in, 1e-6)
+        u = (t - self.t_in) / span
+        if self.arrive == "build":
+            a, b = self.timing[part]
+            return float(np.clip((u - a) / max(b - a, 1e-6), 0.0, 1.0))
+        return float(np.clip(u, 0.0, 1.0))
+
+    def _leave(self, t):
+        if self.t_out is None or self.leave == "none":
+            return 0.0
+        return float(np.clip((t - float(self.t_out)) / max(self.leave_dur, 1e-6), 0.0, 1.0))
+
+    def gain(self, t):
+        if t < self.t_in - 0.05:
+            return 0.0
+        if self.t_out is not None and t > float(self.t_out) + self.leave_dur + 0.05:
+            return 0.0
+        return 1.0
+
+    def local(self, t):
+        """Positions (logo units, before placing), alpha, flash and per-part presence at t."""
+        x, y, z = self.x.astype(np.float64).copy(), self.y.astype(np.float64).copy(), self.z * self.bulge
+        z = z.astype(np.float64)
+        alpha = np.ones(self.N)
+        flash = np.zeros(self.N)
+        pres = np.zeros(len(PARTS))
+        off_l = np.zeros(2)
+        a_l = 1.0
+        for pi, name in enumerate(PARTS):
+            sel = self.part == pi
+            if not sel.any():
+                continue
+            g = self.progress(name, t)
+            if self.arrive == "build" or name in self.amount:
+                if name in ("heart_l", "heart_r"):
+                    e = 1.0 - (1.0 - g) ** 3
+                    sgn = -1.0 if name == "heart_l" else 1.0
+                    dx, dy = sgn * (1.0 - e) * 0.85, -(1.0 - e) * 0.10
+                    x[sel] += dx
+                    y[sel] += dy
+                    z[sel] -= (1.0 - e) * 0.55
+                    a = _ss(0.0, 0.45, g)
+                    alpha[sel] = a
+                    flash[sel] = 0.0
+                    pres[pi] = float(a)
+                    if name == "heart_l":
+                        off_l, a_l = np.array([dx, dy]), float(a)
+                else:
+                    o = self.order[sel]
+                    age = g * 1.08 - o
+                    alpha[sel] = np.clip(age / 0.07, 0.0, 1.0)
+                    fk = 0.0 if name == "globe" else (0.5 if name == "ring" else 1.0)
+                    flash[sel] = fk * np.where(g < 1.0, np.exp(-np.maximum(age, 0.0) / 0.05) * (age > 0), 0.0)
+                    pres[pi] = g
+            elif self.arrive == "gather":
+                u0 = GATHER_ORDER[name]
+                span = max(self.t_full - self.t_in, 1e-6)
+                fly = 0.55
+                delay = u0 + (1.0 - fly - u0) * 0.35 * self.s[sel, 2]
+                uu = np.clip(((t - self.t_in) / span - delay) / fly, 0.0, 1.0)
+                e = 1.0 - (1.0 - uu) ** 3
+                c = self.cloud[sel]
+                sw = np.sin(np.pi * e) * 0.25
+                x[sel] = c[:, 0] * (1 - e) + x[sel] * e - sw * c[:, 2]
+                y[sel] = c[:, 1] * (1 - e) + y[sel] * e
+                z[sel] = c[:, 2] * (1 - e) + z[sel] * e + sw * c[:, 0]
+                alpha[sel] = _ss(0.0, 0.3, uu)
+                flash[sel] = np.exp(-np.abs(uu - 1.0) / 0.04) * (uu > 0.9) * 0.6
+                pres[pi] = float(_ss(0.85, 1.0, float(np.clip(((t - self.t_in) / span - u0) / (1 - u0), 0, 1))))
+            else:
+                g2 = _sc(0.0, 1.0, g)
+                alpha[sel] = g2
+                pres[pi] = g2
+        # the white parting line shows only over the right heart, once it is in place
+        self.sg = sg = pres[_PID["heart_r"]] * _sc(0.75, 1.0, self.progress("heart_r", t))
+        alpha[self.gap] *= self.inside_l[self.gap] + self.gapw[self.gap] * sg
+        # the hearts' inner lobes go as the globe arrives over them
+        alpha *= 1.0 - self.inner * max(pres[_PID["globe"]], pres[_PID["ring"]])
+        # what of the right heart the left heart covers where it is now (light only; paint covers by order)
+        self.dyn = np.ones(self.N)
+        if self.is_r.any() and a_l > 0.0:
+            m, x0, y1, k = self.mask_l
+            col = ((x[self.is_r] - off_l[0] - x0) * k).astype(np.int64)
+            row = ((y1 - (y[self.is_r] - off_l[1])) * k).astype(np.int64)
+            ok = (col >= 0) & (col < m.shape[1]) & (row >= 0) & (row < m.shape[0])
+            cvr = np.zeros(len(col))
+            cvr[ok] = m[row[ok], col[ok]]
+            self.dyn[self.is_r] = 1.0 - cvr * a_l
+        lv = self._leave(t)
+        if lv > 0.0:
+            if self.leave == "fade":
+                alpha *= 1.0 - _sc(0.0, 1.0, lv)
+            elif self.leave == "rise":
+                k = np.clip(lv * 1.6 - (0.5 - y) * 0.6 - 0.3 * self.s[:, 3], 0.0, 1.0)
+                y += k * k * (0.9 + 0.8 * self.s[:, 0])
+                x += k * k * (self.s[:, 1] - 0.5) * 0.6
+                z += k * (self.s[:, 2] - 0.5) * 0.4
+                alpha *= np.clip(1.0 - k * 1.1, 0.0, 1.0)
+                flash += 0.8 * k * (1 - k) * 4.0 * (self.s[:, 2] < 0.25)
+            elif self.leave == "scatter":
+                k = _ss(0.0, 1.0, lv)
+                d = np.stack([x, y, z + 0.3], axis=1)
+                d /= np.maximum(np.linalg.norm(d, axis=1, keepdims=True), 1e-6)
+                sp = (0.6 + 1.2 * self.s[:, 0])[:, None] * k
+                x, y, z = x + d[:, 0] * sp[:, 0], y + d[:, 1] * sp[:, 0], z + d[:, 2] * sp[:, 0]
+                alpha *= 1.0 - k
+        return x, y, z, alpha, flash, pres
+
+    def sample(self, t, cam=None):
+        if self.gain(t) <= 0.0:
+            return None
+        if cam is None:
+            cam = _cam_of(self.camera, t)
+        x, y, z, alpha, flash, pres = self.local(t)
+        c, r, u, nrm, s = self.place.frame(t, cam)
+        pos = (c[None, :] + s * (x[:, None] * r[None, :] + y[:, None] * u[None, :] + z[:, None] * nrm[None, :]))
+        pos = pos.astype(np.float32)
+        size = np.float32(self.cell * self.dot * s)
+        paint = float(np.clip(_val(self.paint, t), 0.0, 1.0))
+        out = []
+        sharp = dict(dof=self.dof, fog=self.fog, streak=0.3, reflect=self.reflect)
+        # the parting line whitens as the right heart settles behind the left one
+        light, paintc = self.light0, self.paint0
+        if self.gap.any():
+            k = (self.gapw[self.gap] * self.sg)[:, None]
+            light = light.copy()
+            paintc = paintc.copy()
+            light[self.gap] = light[self.gap] * (1 - k) + self.white_light * k
+            paintc[self.gap] = paintc[self.gap] * (1 - k) + self.white_paint * k
+        # light: each point hidden by what covers it (the parts in front, once they are there)
+        occ = np.prod(1.0 - self.cov * pres[None, :], axis=1) * self.dyn
+        a_light = alpha * self.wt * occ
+        vis = a_light > 0.004
+        if vis.any() and paint < 0.999:
+            out.append(dict(pos=pos[vis], size=size, color=light[vis] * self.bright,
+                            alpha=(a_light[vis] * self.k_norm).astype(np.float32),
+                            emit=(1.0 + 2.5 * flash[vis]).astype(np.float32), kind="soft", twinkle=0.0,
+                            seed=self.s[vis, 0], paint=0.0, **sharp))
+        if paint > 0.0:
+            a_p = alpha * np.clip(self.wt * 1.6, 0.0, 1.0)
+            vp = a_p > 0.004
+            if vp.any():
+                out.append(dict(pos=pos[vp], size=size * 1.25, color=paintc[vp], alpha=a_p[vp].astype(np.float32),
+                                kind="soft", paint=paint, paint_light=self.paint_light, seed=self.s[vp, 0], **sharp))
+        if self.glow > 0.0:
+            i = self.i_halo
+            a = a_light[i] * self.glow * 0.033 * (1.0 - 0.7 * paint)
+            sel = a > 0.0005
+            if sel.any():
+                out.append(dict(pos=pos[i][sel], size=size * 14.0, color=light[i][sel] * self.bright,
+                                alpha=a[sel].astype(np.float32), kind="soft", seed=self.s[i][sel, 1], dof=1.0,
+                                fog=self.fog, streak=0.0, reflect=self.reflect))
+        if self.sparkle > 0.0:
+            i = self.i_spark
+            a = alpha[i] * occ[i] * self.sparkle * (0.6 + flash[i])
+            sel = a > 0.01
+            if sel.any():
+                out.append(dict(pos=pos[i][sel], size=size * 3.0, color=np.array([1.0, 0.93, 0.8]) * 1.4,
+                                alpha=a[sel].astype(np.float32), emit=2.0, kind="spark", twinkle=1.0,
+                                seed=self.s[i][sel, 2], **sharp))
+        # the head of a line that is drawing itself: a small bright spark
+        hd = flash > 0.35
+        if hd.any():
+            j = np.nonzero(hd)[0][:: max(int(hd.sum() // 90), 1)]
+            out.append(dict(pos=pos[j], size=size * 4.0, color=np.array([1.0, 0.95, 0.85]),
+                            alpha=(0.5 * flash[j]).astype(np.float32), emit=3.0, kind="spark", twinkle=0.6,
+                            seed=self.s[j, 3], **sharp))
+        return out
+
+    def where(self, t, cam=None, part=None):
+        """World positions of the logo's points (all, or one part) where they are at t."""
+        if cam is None:
+            cam = _cam_of(self.camera, t)
+        x, y, z, *_ = self.local(t)
+        sel = np.ones(self.N, bool) if part is None else self.part == _PID[part]
+        return self.place.world(t, x[sel], y[sel], z[sel], cam)
+
+    def home(self, part=None):
+        """The settled places of the points in logo units (x, y, z), all or one part."""
+        sel = np.ones(self.N, bool) if part is None else self.part == _PID[part]
+        return self.x[sel], self.y[sel], self.z[sel] * self.bulge
