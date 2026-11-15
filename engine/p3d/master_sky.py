@@ -260,3 +260,61 @@ class CloudSea:
             return None
         return dict(pos=pos, size=size, color=col, alpha=al, kind="soft", dof=0.0, fog=0.15, seed=seed,
                     streak=0.0, reflect=True)
+
+
+class Aurora:
+    """Curtains of aurora hung far away round a place (rose, violet, teal and gold), rippling slowly, mirrored in
+    the sea: the vast heavenly sky. gain(t) their strength; az: the azimuths (degrees) of the curtains."""
+
+    def __init__(self, center=(0.0, 0.0), az=(150.0, 195.0, 240.0, 300.0, 20.0, 85.0), gain=None, seed=81,
+                 radius=(760.0, 920.0), m=1600, alpha=0.05):
+        rng = np.random.default_rng(seed)
+        cols = [("#7affd8", "#b07cff"), ("#ff8fc8", "#ffd27a"), ("#8fd0ff", "#c7a0ff"), ("#ffb48a", "#ff7ab0"),
+                ("#9effc4", "#7aa8ff"), ("#ffd08a", "#ff9ad0")]
+        self.c = np.asarray(center, np.float64)
+        self.cur = []
+        for i, a in enumerate(az):
+            u = rng.random(m)
+            v = rng.random(m) ** 1.6
+            c0, c1 = lin(cols[i % len(cols)][0]), lin(cols[i % len(cols)][1])
+            col = c0[None, :] * (1.0 - v)[:, None] + c1[None, :] * v[:, None]
+            self.cur.append(dict(az=np.radians(a), span=np.radians(34.0 + 10.0 * rng.random()), u=u, v=v, col=col,
+                                 R=rng.uniform(*radius), base=50.0 + 25.0 * rng.random(),
+                                 h=170.0 + 60.0 * rng.random(), ph=rng.random() * 6.0, seed=rng.random(m)))
+        self._gain = gain
+        self.alpha = alpha
+
+    def gain(self, t):
+        return 1.0 if self._gain is None else float(self._gain(t))
+
+    def sample(self, t):
+        k = self.gain(t)
+        if k <= 0.002:
+            return None
+        out = []
+        for c in self.cur:
+            a = c["az"] + (c["u"] - 0.5) * c["span"] + 0.02 * np.sin(0.3 * t + c["ph"])
+            wave = 26.0 * np.sin(5.0 * c["u"] * TAU / 3.0 + 0.5 * t + c["ph"]) + 9.0 * np.sin(17.0 * c["u"] + 1.3 * t)
+            R = c["R"] + wave
+            y = c["base"] + c["h"] * c["v"] * (0.75 + 0.25 * np.sin(9.0 * c["u"] + 0.7 * t + c["ph"]))
+            pos = np.stack([self.c[0] + np.sin(a) * R, y, self.c[1] + np.cos(a) * R], axis=1)
+            glow = 0.55 + 0.45 * np.sin(6.0 * c["u"] - 0.9 * t + c["ph"]) ** 2
+            out.append(dict(pos=pos, size=34.0 + 20.0 * c["seed"], color=c["col"],
+                            alpha=k * self.alpha * glow * (1.0 - 0.8 * c["v"]), kind="soft", dof=0.0, fog=0.25,
+                            seed=c["seed"], streak=0.0))
+        return out
+
+
+def tower(rng, center, width, height, n_layer=4, per=220, bright=1.0):
+    """A towering cumulus: billows stacked from a broad base to a narrower crown (a list of cloud dicts for
+    Billows). center (x, y, z) is the middle of its base."""
+    cx, cy, cz = center
+    out = []
+    for i in range(n_layer):
+        u = i / max(n_layer - 1, 1)
+        w = width * (1.0 - 0.45 * u) * rng.uniform(0.85, 1.1)
+        y = cy + height * u * 0.85
+        out.append(dict(center=(cx + rng.normal(0.0, 0.08 * width), y, cz + rng.normal(0.0, 0.08 * width)),
+                        width=w, height=w * 0.55, n=int(per * (1.0 - 0.3 * u)), towers=int(rng.integers(3, 6)),
+                        bright=bright * (0.8 + 0.4 * u)))
+    return out

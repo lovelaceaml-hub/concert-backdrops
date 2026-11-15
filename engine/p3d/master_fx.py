@@ -112,6 +112,7 @@ class RingWave:
         self.fpos = self.c + np.stack([np.sin(a) * r, np.full(n_field, 0.03), np.cos(a) * r], 1)
         self.fbirth = t0 + r / self.v
         self.fsize = 0.03 + 0.0012 * r * (0.5 + rng.random(n_field))
+        self.fnear = ss(25.0, 110.0, r)              # calm near the drop and the first people
         self.fseed = rng.random(n_field)
         warm = rng.random(n_field)[:, None]
         self.fcol = lin("#ffd890")[None] * (1 - warm) + lin("#ffb0a0")[None] * warm * 0.9
@@ -135,7 +136,7 @@ class RingWave:
                             twinkle=0.4, seed=self.rs))
             out.append(dict(pos=pos[::4], size=sz * 5.0, color=self.col, alpha=0.05 * k, kind="soft"))
         g = 1.0 - sc(self.until - 1.0, self.until, t)
-        out.append(dict(pos=self.fpos, size=self.fsize, color=self.fcol, alpha=0.40 * g, birth=self.fbirth,
+        out.append(dict(pos=self.fpos, size=self.fsize, color=self.fcol, alpha=0.40 * g * self.fnear, birth=self.fbirth,
                         fade=0.5, flash=3.0, emit=1.2, kind="spark", twinkle=0.7, seed=self.fseed))
         return out
 
@@ -289,7 +290,7 @@ class LightColumns:
     meet behind it, like the nave of a cathedral), each a soft core with sparks falling down it."""
 
     def __init__(self, places, top=34.0, per=520, gain=None, seed=71, color="#ffe2a8", color2="#fff6e6",
-                 core_w=1.1, fall=3.0, ring=0.0, core=True, spark=0.06, core_k=1.0):
+                 core_w=1.1, fall=3.0, ring=0.0, core=True, spark=0.06, core_k=1.0, soft=False):
         rng = np.random.default_rng(seed)
         self.base = np.asarray(places, np.float64)
         m = len(self.base)
@@ -304,6 +305,7 @@ class LightColumns:
         else:
             self.j = rng.normal(size=(k, 2)) * 0.35
         self.core = core
+        self.soft = soft
         self.core_k = core_k
         self.spark = spark
         self.v = fall * (0.7 + 0.6 * rng.random(k))
@@ -326,8 +328,8 @@ class LightColumns:
         p = self.base[pi] + np.stack([self.j[:, 0], y, self.j[:, 1]], 1)
         al = g * 0.75 * ss(0.0, 2.0, y) * (0.4 + 0.6 * y / top)
         b = self.base
-        out = [dict(pos=p, size=self.spark, color=self.col2, alpha=al, emit=1.6, kind="spark", seed=self.sd,
-                    twinkle=0.5)]
+        out = [dict(pos=p, size=self.spark, color=self.col2, alpha=al, emit=1.6,
+                    kind="soft" if self.soft else "spark", seed=self.sd, twinkle=0.5)]
         if self.core:
             out += [dict(pos=b, pos2=b + np.stack([np.zeros(len(b)), self.top, np.zeros(len(b))], 1),
                          size=self.core_w, color=self.col, alpha=0.16 * g * self.core_k,
@@ -341,7 +343,7 @@ class Door:
     """A doorway of light standing on the sea: two posts and a round arch of bright sparks with a soft glow,
     its opening a faint warm veil of light that brightens as it opens. facing: degrees (0 faces +z)."""
 
-    def __init__(self, at, width=1.5, height=2.7, facing=0.0, t_open=20.6, gain=None, n=5200, seed=73,
+    def __init__(self, at, width=1.5, height=2.7, facing=0.0, t_open=20.6, gain=None, n=2200, seed=73,
                  color="#ffe6b8", veil="#ffd9a0"):
         rng = np.random.default_rng(seed)
         a = np.radians(facing)
@@ -382,7 +384,7 @@ class Door:
         o = sc(self.t_open - 0.6, self.t_open + 0.8, t)
         draw = float(np.clip((t - (self.t_open - 1.4)) / 1.0, 0.0, 1.0))
         tw = 0.8 + 0.2 * np.sin(t * 6.0 + 30.0 * self.fs)
-        out = [dict(pos=self.frame, size=0.035, color=self.col, alpha=g * draw * tw, emit=2.4, kind="spark",
+        out = [dict(pos=self.frame, size=0.026, color=self.col, alpha=0.55 * g * draw * tw, emit=1.8, kind="spark",
                     twinkle=0.5, seed=self.fs),
                dict(pos=self.frame[::8], size=0.30, color=self.col, alpha=0.05 * g * draw, kind="soft"),
                dict(pos=self.veil, size=0.30, color=self.vcol, alpha=(0.004 + 0.012 * o) * g, kind="soft",
@@ -467,11 +469,11 @@ class TreeOfLight:
         self.b = np.array([s[1] for s in segs])
         self.so = np.array([s[2] for s in segs], np.float64)
         tp = np.array([q for q, _ in tips])
-        m = 90
+        m = 28
         bl = (tp[:, None, :] + rng.normal(size=(len(tp), m, 3)) * np.array([0.32, 0.22, 0.32])).reshape(-1, 3)
         self.bl = bl
         self.bs = rng.random(len(bl))
-        cols = [lin("#ffb8d0"), lin("#ffe2a8"), lin("#fff4ee"), lin("#ff9ec0")]
+        cols = [lin("#ff9ec4"), lin("#ffd890"), lin("#ffc0a0"), lin("#ff86b4")]
         self.bcol = np.array([cols[i % 4] for i in range(len(bl))])
         r = np.linalg.norm(bl[:, [0, 2]] - base[[0, 2]], axis=1)
         self.bbirth = t_bloom + 0.12 * r + 0.4 * self.bs
@@ -491,9 +493,9 @@ class TreeOfLight:
         out = [dict(pos=self.a, pos2=self.b, size=w, size2=w * 0.75, color=lin("#ffd9a0"), alpha=0.75 * g,
                     emit=1.6, kind="line"),
                dict(pos=self.a, pos2=self.b, size=w * 6.0, color=lin("#ffb878"), alpha=0.06 * g, kind="ribbon"),
-               dict(pos=self.bl, size=0.045 + 0.04 * self.bs, color=self.bcol, alpha=0.85 * g, birth=self.bbirth,
-                    fade=0.5, flash=2.0, emit=1.5, kind="spark", twinkle=0.5, seed=self.bs),
-               dict(pos=self.bl[::5], size=0.55, color=self.bcol[::5], alpha=0.05 * g, birth=self.bbirth[::5],
+               dict(pos=self.bl, size=0.035 + 0.03 * self.bs, color=self.bcol, alpha=0.32 * g, birth=self.bbirth,
+                    fade=0.5, flash=1.5, emit=1.2, kind="spark", twinkle=0.5, seed=self.bs),
+               dict(pos=self.bl[::9], size=0.45, color=self.bcol[::9], alpha=0.012 * g, birth=self.bbirth[::9],
                     fade=0.6, kind="soft")]
         u = t - self.t_bloom
         if u > 0.0:                               # a few petals drift down from the crown
@@ -502,8 +504,8 @@ class TreeOfLight:
             ph = self.bs[::30][:k]
             fall = np.mod(ph * 6.0 + 0.6 * u, 6.0)
             pos = sel + np.stack([0.4 * np.sin(1.3 * t + 9 * ph) + 0.3 * fall, -fall, 0.3 * np.cos(t + 7 * ph)], 1)
-            pos[:, 1] = np.maximum(pos[:, 1], 0.02)
-            out.append(dict(pos=pos, size=0.035, color=self.bcol[::30][:k], alpha=0.7 * g * ss(0.0, 0.8, u),
+            low = ss(0.05, 0.8, pos[:, 1])                  # they melt away before they reach the water
+            out.append(dict(pos=pos, size=0.035, color=self.bcol[::30][:k], alpha=0.7 * g * ss(0.0, 0.8, u) * low,
                             kind="petal", rot=np.stack([t * 2 + ph * 9, t * 3 + ph * 5], 1), emit=1.3))
         return out
 
@@ -542,3 +544,59 @@ class Motes:
         tw = 0.6 + 0.4 * np.sin(t * (1.0 + 2.0 * self.s[:, 0]) + 6.0 * self.s[:, 1])
         return dict(pos=pos, size=self.size * (0.6 + 0.8 * self.s[:, 0]), color=self.col,
                     alpha=0.8 * g * edge * tw, emit=1.4, kind="spark", seed=self.s[:, 1], twinkle=0.6)
+
+
+class Fountain:
+    """On a hit, thousands of sparks shoot up from a place in a great fountain, open out, and drift down slowly
+    as warm light (the nine colours among the gold)."""
+
+    def __init__(self, at, t0, n=6000, colors=None, speed=(10.0, 26.0), spread=0.35, seed=95, life=3.2):
+        rng = np.random.default_rng(seed)
+        self.at = np.asarray(at, np.float64)
+        self.t0, self.life = t0, life
+        a = rng.uniform(0.0, TAU, n)
+        el = np.radians(90.0 - np.abs(rng.normal(0.0, np.degrees(spread) * 0.6, n)))
+        sp = rng.uniform(*speed, n)
+        self.v = np.stack([np.sin(a) * np.cos(el), np.sin(el), np.cos(a) * np.cos(el)], 1) * sp[:, None]
+        self.s = rng.random(n)
+        cols = [lin(c) for c in (colors or ["#ffd27a"])]
+        gold = lin("#ffd890")
+        self.col = np.array([cols[i % len(cols)] if rng.random() < 0.45 else gold for i in range(n)])
+
+    def sample(self, t):
+        u = t - self.t0
+        if u < 0.0 or u > self.life:
+            return None
+        drag = (1.0 - np.exp(-u * 1.6)) / 1.6
+        p = self.at + self.v * drag + np.array([0.0, -1.2, 0.0]) * u * u
+        al = (1.0 - ss(0.45 * self.life, self.life, u)) * (0.6 + 0.4 * self.s)
+        return dict(pos=p, size=0.05 + 0.08 * self.s, color=self.col, alpha=al, emit=2.2, kind="spark",
+                    twinkle=0.6, seed=self.s, streak=1.0)
+
+
+class ColorRing:
+    """A ring of the nine colours racing out over the sea from a place (each colour its own arc)."""
+
+    def __init__(self, center, t0, colors, speed=60.0, reach=1200.0, n=3600, seed=97):
+        rng = np.random.default_rng(seed)
+        self.c = np.asarray(center, np.float64)
+        self.t0, self.v, self.reach = t0, speed, reach
+        self.ang = np.linspace(0.0, TAU, n, endpoint=False)
+        k = (self.ang / TAU * len(colors)).astype(int) % len(colors)
+        self.col = np.array([lin(colors[i]) for i in k])
+        self.s = rng.random(n)
+
+    def sample(self, t):
+        u = t - self.t0
+        if u < 0.0:
+            return None
+        R = u * self.v
+        if R > self.reach:
+            return None
+        k = (1.0 - ss(0.3 * self.reach, self.reach, R)) * ss(0.0, 3.0, R)
+        rr = R + (self.s - 0.5) * (0.3 + 0.01 * R)
+        pos = self.c + np.stack([np.sin(self.ang) * rr, np.full(len(rr), 0.06), np.cos(self.ang) * rr], 1)
+        sz = 0.08 + 0.003 * R
+        return [dict(pos=pos, size=sz, color=self.col, alpha=0.8 * k, emit=2.0, kind="spark", twinkle=0.3,
+                     seed=self.s),
+                dict(pos=pos[::4], size=sz * 6.0, color=self.col[::4], alpha=0.06 * k, kind="soft")]

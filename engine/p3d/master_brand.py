@@ -539,3 +539,89 @@ class LogoLight:
         al = g * self.weight * (1.0 - 0.85 * self.cov) * 0.5 * self.bright
         return dict(pos=self.pos, size=self.cell * 1.9, color=self.col * 1.25 + 0.04, alpha=al, birth=self.birth,
                     fade=0.25, flash=2.5, emit=1.4, kind="soft", seed=self.seed, dof=0.0, reflect=False)
+
+
+class RisingHearts:
+    """Hearts of light that rise from an acted moment (between two people, from a heart, from joined hands) in
+    the expression's colour, drifting up and turning a little, then fading: hearts that come from the action.
+    source(t) gives where they are born; windows: list of (t0, t1, color hex)."""
+
+    def __init__(self, source, windows, rate=4.0, size=(0.09, 0.17), rise=0.55, seed=83):
+        r = np.random.default_rng(seed)
+        self.source = source
+        self.shape = heart_curve(30)
+        fill = r.uniform(-0.5, 0.5, (400, 2))
+        self.fill = fill[inside(heart_curve(48), fill)][:30] * 0.85
+        self.items = []
+        for t0, t1, hexs in windows:
+            m = int(max((t1 - t0) * rate, 1))
+            for i in range(m):
+                tb = t0 + (t1 - t0) * (i + r.random()) / m
+                self.items.append(dict(tb=tb, col=lin(hexs) * 0.8 + 0.2 * lin(WHITE), size=r.uniform(*size),
+                                       drift=r.normal(0.0, 0.18, 3), ph=r.random() * TAU))
+        self.rise = rise
+
+    def sample(self, t):
+        pts, cols, al, sz = [], [], [], []
+        for it in self.items:
+            age = t - it["tb"]
+            if not (0.0 <= age <= 3.0):
+                continue
+            c0 = np.asarray(self.source(it["tb"]), np.float64)
+            c = c0 + np.array([0.0, self.rise, 0.0]) * age + it["drift"] * age + \
+                np.array([0.06 * np.sin(1.8 * age + it["ph"]), 0.0, 0.0])
+            s = it["size"] * (0.5 + 0.5 * ss(0.0, 0.6, age))
+            ang = 0.25 * np.sin(1.3 * age + it["ph"])
+            ca, sa = np.cos(ang), np.sin(ang)
+            loc = np.concatenate([self.shape, self.fill]) @ np.array([[ca, sa], [-sa, ca]])
+            p = c[None, :] + s * np.stack([loc[:, 0], loc[:, 1], np.zeros(len(loc))], 1)
+            k = float(ss(0.0, 0.35, age) * (1.0 - ss(1.8, 3.0, age)))
+            pts.append(p)
+            cols.append(np.broadcast_to(it["col"], p.shape))
+            al.append(np.full(len(p), 0.85 * k))
+            sz.append(np.full(len(p), 0.09 * s))
+        if not pts:
+            return None
+        return dict(pos=np.concatenate(pts), size=np.concatenate(sz), color=np.concatenate(cols),
+                    alpha=np.concatenate(al), emit=2.0, kind="spark", twinkle=0.3, reflect=True)
+
+
+class LogoBurst:
+    """The peak of the film: as the world becomes the logo, light bursts out of it in every direction, sparks in
+    the nine colours and gold racing past the camera, and a ring of light opening round the logo."""
+    wants_camera = False
+
+    def __init__(self, center, normal, t0, colors, n=7000, size=10.0, seed=99, life=1.6):
+        r = np.random.default_rng(seed)
+        self.c = np.asarray(center, np.float64)
+        nm = np.asarray(normal, np.float64)
+        d = r.normal(size=(n, 3))
+        d /= np.linalg.norm(d, axis=1, keepdims=True)
+        d = d + nm[None, :] * 0.9                       # more of it toward the camera
+        d /= np.linalg.norm(d, axis=1, keepdims=True)
+        self.d = d
+        self.sp = size * r.uniform(1.0, 3.2, n)
+        self.s = r.random(n)
+        gold = lin("#ffd890")
+        self.col = np.array([lin(colors[i % len(colors)]) if r.random() < 0.55 else gold for i in range(n)])
+        self.t0, self.life, self.size = t0, life, size
+        ref = np.array([0.0, 1.0, 0.0]) if abs(nm[1]) < 0.9 else np.array([1.0, 0.0, 0.0])
+        a1 = np.cross(nm, ref)
+        a1 /= np.linalg.norm(a1)
+        self.a1, self.a2 = a1, np.cross(nm, a1)
+        self.ang = np.linspace(0.0, TAU, 900, endpoint=False)
+
+    def sample(self, t):
+        u = t - self.t0
+        if u < 0.0 or u > self.life:
+            return None
+        e = 1.0 - np.exp(-u * 2.4)
+        p = self.c + self.d * (self.sp * e)[:, None]
+        al = (1.0 - ss(0.35 * self.life, self.life, u)) * (0.5 + 0.5 * self.s)
+        R = self.size * (0.6 + 2.6 * e)
+        ring = self.c + R * (np.cos(self.ang)[:, None] * self.a1 + np.sin(self.ang)[:, None] * self.a2)
+        kr = 1.0 - ss(0.2, 0.9 * self.life, u)
+        return [dict(pos=p, size=0.012 * self.size * (0.6 + 0.8 * self.s), color=self.col, alpha=0.9 * al,
+                     emit=2.4, kind="spark", twinkle=0.4, seed=self.s, streak=1.0, dof=0.0, reflect=False),
+                dict(pos=ring, size=0.03 * self.size, color=lin("#ffe6b0"), alpha=0.5 * kr, emit=1.6, kind="soft",
+                     dof=0.0, reflect=False)]
