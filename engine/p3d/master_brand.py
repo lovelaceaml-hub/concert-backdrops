@@ -633,3 +633,278 @@ class LogoBurst:
             out.append(dict(pos=ring, size=0.03 * self.size, color=lin("#ffe6b0"), alpha=0.5 * kr, emit=1.6,
                             kind="soft", dof=0.0, reflect=False))
         return out
+
+
+# ---------------------------------------------------------------------------------------------------- the finale (v5)
+def _cam_state(camera, t):
+    return camera.state(t) if hasattr(camera, "state") else camera(t)
+
+
+class SymbolSwirl:
+    """The finale's build-up (Anthony, after v4: "No hands. Light with the expression symbols swirling around the
+    earth as a build up, illuminating the world, then dispersing for the final scene").
+
+    The nine expression symbols, BRAND's line art (brand_symbols.symbol_points) in their website colours, draw
+    themselves in light out of the night and swirl round the Earth in rising, quickening spirals, each upright
+    and facing the camera so it always reads as its shape; a stream of light runs behind each and sparkle sheds
+    along it. Where one passes in front of the Earth it lights the world beneath it in its colour. At t_burst
+    they burst outward into light and sparkles that spread across the frame and fade (life seconds), in their
+    own colours. Symbols behind the Earth are hidden by it.
+
+    center, radius   the Earth's centre and radius (metres); scale(t): its size factor (the Finale's settle)
+    labels, colors   the nine labels in order and their light colours (display hex)
+    camera           the song's Rig (the burst keeps the picture plane of t_burst)
+    size             a symbol's height in Earth radii; orbit (start, end) radius in Earth radii (they spiral in);
+                     rise (start, end) height of the spiral's middle in Earth radii; turns: turns of the swirl
+    """
+    wants_camera = True
+
+    def __init__(self, center, radius, labels, colors, t0, t_burst, camera, scale=None, size=0.5,
+                 orbit=(3.2, 1.85), rise=(-0.55, 0.40), turns=0.95, n=700, seed=5, life=1.6, spin=1.0,
+                 bright=1.0, glow_world=1.0):
+        from . import brand_symbols as BS
+        r = np.random.default_rng(seed)
+        self.c = np.asarray(center, np.float64)
+        self.R = float(radius)
+        self.scale = scale
+        self.t0, self.tb, self.life = float(t0), float(t_burst), float(life)
+        self.camera = camera
+        self.size, self.orbit, self.rise, self.turns = float(size), orbit, rise, float(turns)
+        self.spin, self.bright, self.glow_world = float(spin), float(bright), float(glow_world)
+        self.sym = []
+        m = len(labels)
+        for k, (lab, hexs) in enumerate(zip(labels, colors)):
+            sp = BS.symbol_points(lab, n, seed=seed + k)
+            xy = np.asarray(sp["xy"], np.float64)
+            q = len(xy)
+            c = lin(hexs)
+            mx = float(c.max())
+            deep = mx * (c / mx) ** 1.25                       # its own hue, never paled toward white
+            d = r.normal(size=(q, 3))
+            d /= np.linalg.norm(d, axis=1, keepdims=True)
+            self.sym.append(dict(
+                lab=lab, xy=xy, order=np.asarray(sp["order"], np.float64), col=c, deep=deep,
+                core=0.7 * c + 0.3 * lin(WHITE), s=r.random(q), dir=d, spd=r.uniform(0.35, 1.0, q),
+                ph=TAU * k / m, lag=0.07 * ((k * 4) % m),
+                h=0.55 * (((k * 5) % m) / (m - 1) - 0.5),        # spread in height so none hides another
+                tr=r.random((90, 4))))
+
+    # -- the spiral
+    def _rs(self, t):
+        return self.R * (float(self.scale(t)) if callable(self.scale) else float(self.scale or 1.0))
+
+    def _u(self, t):
+        return float(np.clip((t - self.t0) / max(self.tb - self.t0, 1e-6), 0.0, 1.0))
+
+    def _theta(self, t):
+        u = self._u(t)
+        return self.spin * TAU * self.turns * (0.22 * u + 0.78 * u * u)       # it quickens to the burst
+
+    def centre(self, k, t):
+        """The middle of symbol k at t (on the spiral; after the burst, where it burst)."""
+        t = min(t, self.tb)
+        S = self.sym[k]
+        u = self._u(t)
+        rs = self._rs(t)
+        th = S["ph"] + self._theta(t)
+        rho = self.orbit[1] + (self.orbit[0] - self.orbit[1]) * (1.0 - ss(0.0, 0.42, u)) ** 1.5
+        h = self.rise[0] + (self.rise[1] - self.rise[0]) * ss(0.0, 1.0, u) + S["h"] + 0.06 * np.sin(2.0 * th)
+        return self.c + rs * np.array([rho * np.cos(th), h, rho * np.sin(th)])
+
+    def _hidden(self, P, eye, rs):
+        """0..1 per point: how far the Earth hides it from the eye (soft at the edge)."""
+        d = P - eye[None]
+        L = np.linalg.norm(d, axis=1)
+        d = d / np.maximum(L[:, None], 1e-9)
+        oc = eye - self.c
+        b = d @ oc
+        tc = -b                                           # the ray's closest approach to the centre
+        miss = np.sqrt(np.maximum(float(oc @ oc) - b * b, 0.0))
+        behind = (tc > 0.0) & (tc < L)
+        e = 0.06 * rs
+        return np.where(behind, 1.0 - ss(rs - e, rs + e, miss), 0.0)
+
+    def _points(self, k, t, cam):
+        S = self.sym[k]
+        rr, uu, _ = cam.basis()
+        C = self.centre(k, t)
+        sz = self.size * self._rs(t)
+        P = C[None] + sz * (S["xy"][:, :1] * rr[None] + S["xy"][:, 1:2] * uu[None])
+        return P, C
+
+    def sample(self, t, cam=None):
+        if t < self.t0 - 0.05 or t > self.tb + self.life or cam is None:
+            return None
+        eye = np.asarray(cam.pos, np.float64)
+        rs = self._rs(t)
+        _rr, uu, _ff = cam.basis()
+        out = []
+        if t < self.tb:
+            for k, S in enumerate(self.sym):
+                tk = self.t0 + S["lag"]
+                a = ss(tk, tk + 0.55, t) * self.bright
+                if a <= 0.002:
+                    continue
+                P, C = self._points(k, t, cam)
+                drawn = np.clip(((t - tk) / 0.7 - S["order"]) / 0.08, 0.0, 1.0)     # the strokes draw themselves
+                vis = 1.0 - self._hidden(P, eye, rs)
+                al = a * drawn * vis
+                if not (al > 0.004).any():
+                    continue
+                sz = self.size * rs
+                tw = 0.75 + 0.25 * np.sin(9.0 * t + 40.0 * S["s"])
+                out.append(dict(pos=P, size=0.0105 * sz * (0.7 + 0.6 * S["s"]), color=S["core"], alpha=0.85 * al * tw,
+                                emit=1.5, kind="spark", twinkle=0.5, seed=S["s"], dof=0.0, reflect=False))
+                out.append(dict(pos=P[::3], size=0.07 * sz, color=S["deep"], alpha=0.11 * al[::3], kind="soft",
+                                dof=0.0, reflect=False))
+                # the stream of light behind it, and sparkle shed along it
+                ts = np.linspace(max(t - 0.55, tk), t, 36)
+                if ts[-1] - ts[0] > 0.02:
+                    path = np.array([self.centre(k, float(x)) for x in ts])
+                    hv = 1.0 - self._hidden(path, eye, rs)
+                    q = np.linspace(0.0, 1.0, len(ts))
+                    for off, wk in ((-0.32, 0.55), (0.0, 1.0), (0.30, 0.6)):
+                        pp = path + off * sz * uu[None]
+                        rb = ribbon(pp, width=0.05 * sz * wk * (0.2 + 0.8 * q), color=S["deep"],
+                                    alpha=a * 0.32 * wk * q * q * hv, emit=1.3, dof=0.0, reflect=False)
+                        if rb is not None:
+                            out.append(rb)
+                    tr = S["tr"]
+                    f = np.mod(tr[:, 0] + t * (0.8 + 0.5 * tr[:, 1]), 1.0)
+                    i = np.clip((f * (len(ts) - 1)).astype(int), 0, len(ts) - 1)
+                    drift = (tr[:, 1:4] - 0.5) * 0.5 * sz * (1.0 - f)[:, None]
+                    out.append(dict(pos=path[i] + drift, size=0.016 * sz * (0.6 + 0.8 * tr[:, 2]), color=S["core"],
+                                    alpha=a * 0.8 * f ** 1.5 * hv[i], emit=1.8, kind="spark", twinkle=0.8,
+                                    seed=tr[:, 3], dof=0.0, reflect=False))
+                # it lights the world beneath it as it passes in front
+                if self.glow_world > 0.0:
+                    to_eye = eye - self.c
+                    to_eye /= max(np.linalg.norm(to_eye), 1e-9)
+                    fr = float(np.clip(((C - self.c) @ to_eye) / max(np.linalg.norm(C - self.c), 1e-9), 0.0, 1.0))
+                    if fr > 0.02:
+                        Sp = self.c + 1.01 * rs * (C - self.c) / max(np.linalg.norm(C - self.c), 1e-9)
+                        out.append(dict(pos=Sp[None], size=1.15 * rs, color=S["col"],
+                                        alpha=0.09 * a * fr * fr * self.glow_world, kind="soft", dof=0.0,
+                                        reflect=False))
+            return out or None
+        # the burst: each symbol breaks outward into light and sparkle in its own colour, spreading across the frame
+        w = t - self.tb
+        camb = _cam_state(self.camera, self.tb) if self.camera is not None else cam
+        k_out = 1.0 - ss(0.3 * self.life, self.life, w)
+        for k, S in enumerate(self.sym):
+            P, C = self._points(k, self.tb, camb)
+            rad = P - self.c[None]
+            rad /= np.maximum(np.linalg.norm(rad, axis=1, keepdims=True), 1e-9)
+            dirn = rad * 0.75 + S["dir"] * 0.55
+            dirn /= np.maximum(np.linalg.norm(dirn, axis=1, keepdims=True), 1e-9)
+            reach = (8.0 + 26.0 * S["spd"]) * rs / 9.0
+            e = 1.0 - np.exp(-w * 2.3)
+            Q = P + dirn * (reach * e)[:, None]
+            Q[:, 1] += 1.2 * w * w * rs / 9.0
+            flash = 1.0 + 1.3 * np.exp(-w / 0.12)
+            al = k_out * (0.55 + 0.45 * S["s"]) * flash * self.bright
+            out.append(dict(pos=Q, size=0.012 * self.size * rs * (0.8 + 1.2 * S["s"]), color=S["core"],
+                            alpha=0.85 * al, emit=1.6, kind="spark", twinkle=0.9, seed=S["s"], streak=0.8, dof=0.0,
+                            reflect=False))
+            out.append(dict(pos=Q[::4], size=0.09 * self.size * rs, color=S["deep"], alpha=0.07 * al[::4],
+                            kind="soft", dof=0.0, reflect=False))
+        return out
+
+
+class Brighten:
+    """Wraps a point set that has a `bright` attribute (BRAND's Globe): its light follows f(t) (the world
+    brightens as the symbols swirl round it)."""
+    wants_camera = True
+
+    def __init__(self, inner, f):
+        self.inner, self.f = inner, f
+        if hasattr(inner, "gain"):
+            self.gain = inner.gain
+
+    def sample(self, t, cam=None):
+        self.inner.bright = float(self.f(t))
+        ps = self.inner
+        return ps.sample(t, cam) if getattr(ps, "wants_camera", False) else ps.sample(t)
+
+
+def rose_hearts(logo, k0=0.42):
+    """Patches BRAND's Logo (the Finale's) so that its two hearts are whole and opaque in their own colours from
+    the first frame they show: instead of sweeping in from the sides while fading in (in v4 the rose heart faded
+    in translucent over the deep night sky and read as dark magenta for a few frames, the gold one as a muddy
+    purple), each opens out from behind the Earth, growing from a smaller heart as it slides to its place. The
+    Earth hides it until it emerges (the Logo's globe cover), so no frame shows a part-transparent heart."""
+    from . import brand as B
+    base = logo.local
+    gx, gy = B.GLOBE_CENTER
+    parts = []
+    for name, sgn in (("heart_l", -1.0), ("heart_r", 1.0)):
+        sel = np.asarray(logo.part == B._PID[name])
+        if sel.any():
+            parts.append((name, sgn, sel, float(np.mean(logo.x[sel])), float(np.mean(logo.y[sel]))))
+
+    def cover(px, py, t):
+        # where the Earth stands in front of the logo: as brand.Logo.local's globe cover, at these places
+        gc = float(np.clip(B._val(logo.globe_cover, t), 0.0, 1.0)) if logo.globe_cover is not None else 0.0
+        ed = 0.6 * logo.cell
+        d = np.hypot(px - gx, py - gy)
+        return 1.0 - np.clip((B.GLOBE_RADIUS + ed - d) / (2 * ed), 0.0, 1.0) * gc
+
+    def local(t):
+        x, y, z, alpha, flash, pres = base(t)
+        for name, sgn, sel, cx, cy in parts:
+            g = logo.progress(name, t)
+            if g <= 0.0 or g >= 1.0:
+                continue
+            a_old = float(B._ss(0.0, 0.45, g))                 # BRAND's fade-in, taken out again
+            c_old = cover(x[sel], y[sel], t)
+            e = 1.0 - (1.0 - g) ** 3                           # BRAND's sweep, undone: the heart at rest
+            xr = x[sel] - sgn * (1.0 - e) * 0.85
+            yr = y[sel] + (1.0 - e) * 0.10
+            hx, hy = gx + (cx - gx) * e, gy + (cy - gy) * e    # its middle slides out from the Earth's
+            s = k0 + (1.0 - k0) * e
+            x[sel] = hx + (xr - cx) * s
+            y[sel] = hy + (yr - cy) * s
+            c_new = cover(x[sel], y[sel], t)
+            k = np.where(c_old > 1e-3, c_new / np.maximum(c_old, 1e-3), 0.0)
+            alpha[sel] = np.minimum(alpha[sel] / max(a_old, 1e-9), 1.0) * k
+            pres[B._PID[name]] = 1.0
+        return x, y, z, alpha, flash, pres
+
+    logo.local = local
+    return logo
+
+
+class FinalGlow:
+    """The end card glows gently on the final hit: a soft halo of warm gold light opens round it and a few slow
+    glints rise and twinkle, then settle (never a flash: it adds a little light to the pastel day).
+    place(t) -> (centre, right, up): the card's middle and its picture plane in the world."""
+
+    def __init__(self, place, t0, width=12.0, height=7.0, n=900, seed=61, color="#ffc98a", color2="#ffe6b8",
+                 ring=0.022, glint=0.03):
+        r = np.random.default_rng(seed)
+        self.place, self.t0 = place, float(t0)
+        self.k_ring, self.k_glint = float(ring), float(glint)
+        a = r.uniform(0.0, TAU, n)
+        rr = np.sqrt(r.uniform(0.55, 1.0, n))
+        self.o = np.stack([np.cos(a) * rr * width * 0.5, np.sin(a) * rr * height * 0.5], 1)
+        self.v = r.uniform(0.15, 0.5, n)
+        self.s = r.random(n)
+        self.col = lin(color)[None] * (1 - self.s[:, None]) + lin(color2)[None] * self.s[:, None]
+        self.ang = np.linspace(0.0, TAU, 600, endpoint=False)
+        self.w, self.h = width, height
+
+    def sample(self, t):
+        u = t - self.t0
+        if u < -0.15 or u > 2.6:
+            return None
+        c, rt, up = (np.asarray(v, np.float64) for v in self.place(t))
+        env = ss(-0.15, 0.08, u) * (1.0 - ss(0.5, 2.6, u))
+        p = c[None] + self.o[:, :1] * rt[None] + (self.o[:, 1:2] + (self.v * u)[:, None]) * up[None]
+        al = env * (0.4 + 0.6 * self.s)
+        e = 1.0 - np.exp(-max(u, 0.0) * 2.0)
+        ring = c[None] + (0.55 + 0.12 * e) * (np.cos(self.ang)[:, None] * self.w * rt[None]
+                                             + np.sin(self.ang)[:, None] * self.h * up[None])
+        return [dict(pos=p, size=self.k_glint * (0.6 + 0.8 * self.s), color=self.col, alpha=0.6 * al, emit=1.4,
+                     kind="spark", twinkle=0.9, seed=self.s, dof=0.0, reflect=False),
+                dict(pos=ring, size=0.9, color=lin("#ffc890"), alpha=self.k_ring * env, kind="soft", dof=0.0,
+                     reflect=False)]

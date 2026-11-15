@@ -28,9 +28,10 @@ class Drop:
     tail of sparks, landing on the still sea of light. path(t) gives its place; t_land when it touches the sea."""
 
     def __init__(self, path, t_show=(-1.0, 6.4), t_land=6.15, color="#ffd27a", core="#fff6e2", seed=21,
-                 scale=1.0):
+                 scale=1.0, t_pulse=0.25):
         rng = np.random.default_rng(seed)
         self.path, self.show, self.t_land = path, t_show, t_land
+        self.t_pulse = float(t_pulse)
         self.col, self.core = lin(color), lin(core)
         self.halo = rng.normal(size=(500, 3))
         self.halo /= np.linalg.norm(self.halo, axis=1, keepdims=True)
@@ -45,7 +46,7 @@ class Drop:
         if gone <= 0.0:
             return None
         k = self.k
-        pulse = 1.0 + 0.12 * np.sin(t * 6.0) + 0.35 * np.exp(-((t - 0.25) / 0.2) ** 2)
+        pulse = 1.0 + 0.12 * np.sin(t * 6.0) + 0.35 * np.exp(-((t - self.t_pulse) / 0.2) ** 2)
         out = [dict(pos=p[None], size=0.07 * k * pulse, color=self.core, alpha=gone, emit=5.0, kind="spark"),
                dict(pos=p[None], size=0.55 * k * pulse, color=self.col, alpha=0.32 * gone, kind="soft"),
                dict(pos=p[None], size=2.0 * k, color=self.col, alpha=0.05 * gone, kind="soft")]
@@ -620,6 +621,8 @@ class SoftLight:
     def __init__(self, body, every=4, fill=0.04, fill_alpha=0.06, warm="#ffd690", tint=0.55, a_ref=0.7,
                  grain=0.85):
         self.body = body
+        if hasattr(body, "gain"):          # the body's own fade in and out (show, fade): never a pop
+            self.gain = body.gain
         self.every, self.fill, self.fill_alpha = int(every), float(fill), float(fill_alpha)
         self.warm = lin(warm)
         self.tint, self.a_ref, self.grain = float(tint), float(a_ref), float(grain)
@@ -778,4 +781,53 @@ class Glory:
         out.append(dict(pos=c[None], size=self.halo, color=self.c1, alpha=0.06 * g, kind="soft", dof=0.0, fog=0.0))
         out.append(dict(pos=c[None], size=self.halo * 0.35, color=self.c1 * 0.6 + 0.4, alpha=0.12 * g, kind="soft",
                         dof=0.0, fog=0.0))
+        return out
+
+
+class Gather:
+    """The breath before the biggest hit: a still moment of light. Motes in gold and in the nine colours drift in
+    from all round, slow, and gather into one radiant pearl of light hanging above the still sea, which swells
+    softly and is held, quiet, until t1 (the hit), when the burst takes over. Warm and gentle: never white."""
+
+    def __init__(self, at, t0, t1, n=2600, reach=(5.0, 26.0), colors=None, color="#ffd9a0", core="#fff4e0",
+                 seed=141, size=1.0):
+        r = np.random.default_rng(seed)
+        self.at, self.t0, self.t1 = np.asarray(at, np.float64), float(t0), float(t1)
+        d = r.normal(size=(n, 3))
+        d[:, 1] = np.abs(d[:, 1]) * 0.6 - 0.15
+        d /= np.linalg.norm(d, axis=1, keepdims=True)
+        self.off = d * r.uniform(reach[0], reach[1], n)[:, None]
+        self.delay = r.uniform(0.0, 0.45, n)
+        self.s = r.random(n)
+        gold = lin(color)
+        cols = [lin(c) for c in (colors or [])]
+        self.col = np.array([cols[i % len(cols)] if (cols and r.random() < 0.4) else gold for i in range(n)])
+        self.gold, self.core, self.k = gold, lin(core), float(size)
+
+    def sample(self, t):
+        if t < self.t0 or t > self.t1 + 0.05:
+            return None
+        span = max(self.t1 - self.t0 - 0.35, 0.3)
+        u = np.clip((t - self.t0 - self.delay) / (span - self.delay), 0.0, 1.0)
+        e = 1.0 - (1.0 - u) ** 3
+        tw = (1.0 - e) * 1.3                                 # a gentle turn as they come in
+        x, z = self.off[:, 0], self.off[:, 2]
+        c, s_ = np.cos(tw), np.sin(tw)
+        off = np.stack([x * c - z * s_, self.off[:, 1], x * s_ + z * c], 1) * (1.0 - e)[:, None]
+        p = self.at[None] + off
+        al = ss(0.0, 0.2, u) * (1.0 - 0.8 * ss(0.85, 1.0, e))
+        kk = self.k
+        g = ss(self.t0 + 0.3, self.t1 - 0.2, t)
+        pulse = 1.0 + 0.06 * np.sin(5.0 * t)
+        out = [dict(pos=p, size=0.05 * kk * (0.6 + 0.8 * self.s), color=self.col, alpha=0.7 * al, emit=1.6,
+                    kind="spark", twinkle=0.8, seed=self.s, dof=0.0),
+               dict(pos=p[::5], size=0.5 * kk, color=self.col[::5], alpha=0.04 * al[::5], kind="soft", dof=0.0)]
+        if g > 0.002:
+            q = self.at[None]
+            out += [dict(pos=q, size=0.10 * kk * (0.4 + 0.6 * g) * pulse, color=self.core, alpha=0.9 * g, emit=3.0,
+                         kind="spark", dof=0.0),
+                    dict(pos=q, size=1.1 * kk * (0.5 + 0.5 * g) * pulse, color=self.gold, alpha=0.22 * g,
+                         kind="soft", dof=0.0),
+                    dict(pos=q, size=5.0 * kk * (0.5 + 0.5 * g), color=self.gold, alpha=0.045 * g, kind="soft",
+                         dof=0.0)]
         return out
