@@ -398,6 +398,7 @@ class Body:
         self.offs = offs
         n = int(offs[-1])
         part_code = np.concatenate([np.full(s.n, s.part) for s in self.sources])
+        self.src_of = np.concatenate([np.full(s_.n, j) for j, s_ in enumerate(self.sources)])
         seed_arr = np.concatenate([s.seed for s in self.sources]).astype(np.float32)
         rest = np.concatenate([s.rest for s in self.sources]).astype(np.float32)
         h = np.concatenate([s.h for s in self.sources]).astype(np.float32)
@@ -602,13 +603,15 @@ class Body:
         from scipy.spatial import cKDTree
         p = self.cloud["rest"][nodes].astype(np.float64)
         part = self.cloud["part"][nodes]
+        src = self.src_of[nodes]
         tree = cKDTree(p)
         _d, j = tree.query(p, k=links + 1, distance_upper_bound=reach * self.k * max(self.grain, 0.35) ** 0.5)
         i = np.repeat(np.arange(len(nodes)), links)
         j = j[:, 1:].reshape(-1)
         ok = j < len(nodes)
         i, j = i[ok], j[ok]
-        ok = (part[i] == part[j]) | ((part[i] <= 1) & (part[j] <= 1))
+        # lines stay within one piece (a skirt never links to the trousers under it); bare skin links across
+        ok = (src[i] == src[j]) | ((part[i] <= 1) & (part[j] <= 1))
         return np.unique(np.sort(np.stack([i[ok], j[ok]], axis=1), axis=1), axis=0)
 
     def _on(self, t):
@@ -780,10 +783,11 @@ class Body:
         return batches
 
     # ------------------------------------------------------------------ for song files and other point sets
-    def where(self, t, name, normal=False):
+    def where(self, t, name, normal=False, raw=False):
         """A named place on the body at t, in the world (see the module text for the names). With normal=True:
-        (position, the direction it faces)."""
-        r = self.actor.where(t, name, normal)
+        (position, the direction it faces). raw=True: where it is without the body's gestures (what another
+        body's gesture should aim at when this body also reaches for that one: no waiting on each other)."""
+        r = self.actor.where(t, name, normal, raw)
         if normal:
             return self._w(r[0][None], t)[0], self._wdir(r[1], t)
         return self._w(r[None], t)[0]
