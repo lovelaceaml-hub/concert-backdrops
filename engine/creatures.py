@@ -307,7 +307,7 @@ def draw_doves(fl, t, h, st, pts):
     L = float(val("DOVES_SIZE", t, 0.03)) * fl.size * sc     # body length, height units
     Lpx = L * h
     c = col(val("DOVES_COLOR", t), "#fff1da")
-    cw = c[None, :] * bright[:, None]
+    cw = c[None, :] * bright[:, None] * 0.55
     u = (phase / TAU) % 1.0
     th_f, sn = wing_angle(u)
     th_h, _ = wing_angle((u - 0.07) % 1.0)
@@ -324,27 +324,27 @@ def draw_doves(fl, t, h, st, pts):
 
     k = keep
     # body, head, tail
-    st.add(pt(-0.30, 0.0)[k], pt(0.22, 0.02)[k], (0.09 * Lpx)[k], (0.12 * Lpx)[k], (0.55, 0.55, 0.16), cw[k])
+    st.add(pt(-0.30, 0.0)[k], pt(0.22, 0.02)[k], (0.08 * Lpx)[k], (0.12 * Lpx)[k], (0.75, 0.20, 0.08), cw[k])
     hd = pt(0.36, 0.07)[k]
-    st.add(hd, hd, (0.075 * Lpx)[k], (0.075 * Lpx)[k], (0.7, 0.5, 0.2), cw[k])
-    st.add(pt(-0.30, 0.0)[k], pt(-0.64, -0.02)[k], (0.05 * Lpx)[k], (0.11 * Lpx)[k], (0.40, 0.55, 0.10), cw[k] * 0.9)
+    st.add(hd, hd, (0.065 * Lpx)[k], (0.065 * Lpx)[k], (0.85, 0.15, 0.08), cw[k])
+    st.add(pt(-0.30, 0.0)[k], pt(-0.64, -0.02)[k], (0.04 * Lpx)[k], (0.12 * Lpx)[k], (0.45, 0.35, 0.05), cw[k] * 0.9)
     # wings: arm then hand, the hand lagging the arm so the beat ripples out to the tip
     for side in (-1.0, 1.0):
         sh = np.array([0.08, 0.04, 0.0])
         arm = _norm(Lat * (side * np.cos(th1))[:, None] + D * np.sin(th1)[:, None] - 0.15 * f)
-        hand = _norm(Lat * (side * np.cos(th2))[:, None] + D * np.sin(th2)[:, None] - 0.45 * f)
+        hand = _norm(Lat * (side * np.cos(th2))[:, None] + D * np.sin(th2)[:, None] - 0.35 * f)
         o_sh = (f * sh[0] + D * sh[1])
         o_wr = o_sh + arm * 0.42
-        o_tp = o_wr + hand * (0.60 * fold)[:, None]
+        o_tp = o_wr + hand * (0.62 * fold)[:, None]
         o_hip = f * -0.20
 
         def P2(o):
             return ctr + project((o + bob) * L[:, None])
 
         a_, w_, tp, hp = P2(o_sh), P2(o_wr), P2(o_tp), P2(o_hip)
-        st.add(a_[k], w_[k], (0.13 * Lpx)[k], (0.12 * Lpx)[k], (0.42, 0.60, 0.14), cw[k])
-        st.add(w_[k], tp[k], (0.11 * Lpx)[k], (0.035 * Lpx)[k], (0.42, 0.65, 0.12), cw[k])
-        st.add(tp[k], hp[k], (0.02 * Lpx)[k], (0.05 * Lpx)[k], (0.30, 0.35, 0.05), cw[k] * 0.7)
+        st.add(a_[k], w_[k], (0.11 * Lpx)[k], (0.17 * Lpx)[k], (0.40, 0.45, 0.06), cw[k])
+        st.add(w_[k], tp[k], (0.16 * Lpx)[k], (0.04 * Lpx)[k], (0.40, 0.55, 0.06), cw[k])
+        st.add(tp[k], hp[k], (0.02 * Lpx)[k], (0.06 * Lpx)[k], (0.25, 0.25, 0.0), cw[k] * 0.6)
     # faint spark trail: sparks shed on a fixed time grid, so each spark lives the same life in every render part
     tr = float(val("DOVES_TRAIL", t, 1.0))
     if tr > 0.001:
@@ -500,24 +500,24 @@ class Fireflies:
         y0, y1 = val("FIREFLIES_Y", t, (0.05, S.HORIZON + 0.10))
         x = s[:, 0] + 0.030 * np.sin(t * (0.12 + 0.22 * s[:, 2]) + TAU * s[:, 3]) \
             + 0.012 * np.sin(t * (0.5 + 0.5 * s[:, 4]) + TAU * s[:, 5])
-        y = y0 + (y1 - y0) * s[:, 1] ** 1.2 + 0.020 * np.sin(t * (0.17 + 0.25 * s[:, 6]) + TAU * s[:, 7]) \
+        y = y0 + (y1 - y0) * s[:, 1] ** 0.85 + 0.020 * np.sin(t * (0.17 + 0.25 * s[:, 6]) + TAU * s[:, 7]) \
             + 0.006 * np.sin(t * (0.8 + 0.9 * s[:, 8]) + TAU * s[:, 9])
         # blink: a soft flash every few seconds (some flash twice), a faint glow between
         per = 2.6 + 3.6 * s[:, 10]
         u = ((t + s[:, 11] * per) % per) / per
-        e = np.where(u < 0.15, np.sin(np.pi * u / 0.15) ** 2, 0.0)
+        e = np.where(u < 0.22, np.sin(np.pi * u / 0.22) ** 2, 0.0)
         e2 = np.where((s[:, 12] < 0.3) & (u > 0.22) & (u < 0.33), np.sin(np.pi * (u - 0.22) / 0.11) ** 2, 0.0)
         e = np.maximum(e, 0.8 * e2)
-        b = 0.06 + 0.94 * e
+        b = 0.10 + 0.90 * e
         on = s[:, 13] < amt
         calm = float(val("BOTTOM_CALM", t, 0.0) or 0.0)
         low = 1.0 - ss(CALM_Y - 0.07, CALM_Y + 0.05, y)
         on &= s[:, 14] >= 0.6 * calm * low                       # sparse in the calm lower third
         b = b * (1.0 - 0.5 * calm * low) * float(val("FIREFLIES_BRIGHT", t, 1.0)) * on
         x = x % 1.0
-        sz = (3.0 + 3.5 * s[:, 15]) * (0.75 + 0.35 * e)
+        sz = (4.0 + 4.5 * s[:, 15]) * (0.75 + 0.35 * e)
         c = col(val("FIREFLIES_COLOR", t), "#e4ff9c")
-        cc = c[None, :] * (0.85 + 0.3 * s[:, 15:16]) * b[:, None] * 0.9
+        cc = c[None, :] * (0.85 + 0.3 * s[:, 15:16]) * b[:, None] * 2.6
         m = b > 0.002
         return np.hstack([x[:, None], y[:, None], sz[:, None], cc])[m]
 

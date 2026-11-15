@@ -36,8 +36,8 @@ DOVES = Track([(0, 0.0), (1.5, 0.0), (4.0, 1.0), (31.0, 1.0), (34.5, 0.0)])
 DOVES_COUNT = 16
 DOVES_FROM = (-0.04, 0.36)                 # they rise in from the lower left
 DOVES_PATH = [(0.0, (0.40, 0.60)), (7.0, (0.78, 0.74)), (12.0, (0.66, 0.84)), (16.0, STAR_POS[0])]
-DOVES_ORBIT = 0.10                          # then they wheel round the first light, lit at 15.1 s
-DOVES_SIZE = 0.032
+DOVES_ORBIT = 0.08                          # then they wheel round the first light, lit at 15.1 s
+DOVES_SIZE = 0.036
 DOVES_SPEED = 1.0
 DOVES_COLOR = "#fff1da"
 

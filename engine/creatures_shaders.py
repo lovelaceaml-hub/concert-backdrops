@@ -38,7 +38,9 @@ void main(){
   float fill = 1.0 - smoothstep(w-0.8, w+0.8, d);
   float rw = max(0.9, 0.22*w);
   float rim = exp(-pow((d - w + 0.5*rw)/rw, 2.0));
-  float halo = exp(-max(d - w, 0.0)/(1.4*w + 1.0)) * (1.0 - 0.6*fill);
+  float wm = max(vW.x, vW.y);
+  float hx = clamp(max(d - w, 0.0)/(3.0*wm + 2.0), 0.0, 1.0);   // fades to nothing inside the quad
+  float halo = exp(-max(d - w, 0.0)/(1.4*w + 1.0)) * (1.0 - hx)*(1.0 - hx) * (1.0 - 0.6*fill);
   // the glassy fill is brighter toward the stroke's axis, like light inside a shape
   float inner = fill*(0.55 + 0.45*(1.0 - d/w));
   o = vec4(vC*(vS.x*inner + vS.y*rim + vS.z*halo), 1.0);
