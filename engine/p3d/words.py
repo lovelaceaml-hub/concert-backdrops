@@ -23,7 +23,7 @@ import zlib
 
 import numpy as np
 
-from .api import CameraState, lin
+from .api import MASK_SKIES, CameraState, Mask, lin
 
 TAU = 2.0 * np.pi
 
@@ -56,8 +56,10 @@ DEFAULT_STYLE = {
     "Consideration": ("palm", "petals"),     # given from an open hand; it leaves as petals
     "Compliment": ("rays", "bokeh"),         # rays burn the words out of mist; they rush past us as light
 }
-ARRIVALS = ("palm", "petals", "flock", "stars", "touch", "shaft", "lake", "gather", "rays", "morph")
-LEAVINGS = ("wind", "rise", "arch", "flock", "petals", "sink", "bokeh", "give", "stars", "morph", "fade")
+ARRIVALS = ("palm", "petals", "flock", "stars", "touch", "shaft", "lake", "gather", "rays", "morph",
+            "pen", "reveal", "stitch", "weave")
+LEAVINGS = ("wind", "rise", "arch", "flock", "petals", "sink", "bokeh", "give", "stars", "morph", "fade",
+            "stream", "doors", "unravel")
 
 WARM = "#fff4dc"
 NINE = [e["color"] for e in EXPRESSIONS]
@@ -397,6 +399,14 @@ class Word:
         if face not in ("fixed", "camera", "screen", "flat"):
             raise ValueError(f"word {self.name!r}: face must be fixed, camera, screen or flat")
         self.ride, self.bind, self.camera, self.drive = ride, bind, camera, drive
+        # letters as a mask (CORE's mask pass): a window onto a sky, dark ink, or paint in the word's colour
+        self.window, self.ink, self.paint = opts.pop("window", None), bool(opts.pop("ink", False)), opts.pop("paint", None)
+        if self.window is not None and self.window not in MASK_SKIES:
+            raise ValueError(f"word {self.name!r}: window must be one of {MASK_SKIES}, got {self.window!r}")
+        self.masked = bool(self.window or self.ink or self.paint)
+        self._kept = None
+        self.avoid = bool(opts.pop("avoid", True))                 # flying particles keep clear of words being read
+        self.avoid_floor = float(opts.pop("avoid_floor", 0.12))
         self.reflect = (face != "flat") if reflect is None else bool(reflect)   # a word lying on the water has no mirror image
         self._others = []
         self.t_in, self.t_read0, self.t_read1, self.t_out = (float(t_in), float(t_read0), float(t_read1),
@@ -548,9 +558,27 @@ class Word:
         self.fan = fan.astype(np.float32)
         dphi = self.phi[:, None] - fan[None, :]
         self.ray = (np.maximum(np.cos(dphi), 0.0) ** 26).max(axis=1).astype(np.float32)
+        # the pen's path: where the writing is at each share of its order (a smooth line through the ink)
+        kq = 320
+        b_ = np.minimum((self.worder * kq).astype(np.int64), kq - 1)
+        cnt = np.bincount(b_, minlength=kq).astype(np.float64)
+        px_ = np.bincount(b_, weights=self.xl, minlength=kq) / np.maximum(cnt, 1.0)
+        py_ = np.bincount(b_, weights=self.yl, minlength=kq) / np.maximum(cnt, 1.0)
+        have = cnt > 0
+        qs = (np.arange(kq) + 0.5) / kq
+        px_, py_ = np.interp(qs, qs[have], px_[have]), np.interp(qs, qs[have], py_[have])
+        ker = np.array([0.25, 0.5, 0.25])
+        self.pen_q = qs
+        self.pen_x = np.convolve(np.pad(px_, 1, mode="edge"), ker, mode="valid")
+        self.pen_y = np.convolve(np.pad(py_, 1, mode="edge"), ker, mode="valid")
+        self._pen_cache = None
         white = lin(WARM).astype(np.float32)
         base = _col(self.hex)
-        self.c_letter = (_mix(white, base, self.tint) * self.bright).astype(np.float32)
+        if self.paint:
+            base = _col(self.paint) if isinstance(self.paint, str) else base
+            self.c_letter = (base * self.bright).astype(np.float32)       # paint: the colour itself, no white in it
+        else:
+            self.c_letter = (_mix(white, base, self.tint) * self.bright).astype(np.float32)
         self.c_glow = (_col(self.glow_hex) * self.bright).astype(np.float32)
         self.c_base = base
         self.i_spark = np.nonzero(self.s[:, 3] < 0.012)[0]
@@ -713,17 +741,102 @@ class Word:
                 P["assist"] = np.broadcast_to(np.asarray(d["assist"], np.float32), (n,)).astype(np.float32)
             if d.get("color") is not None:
                 P["color"] = np.asarray(d["color"], np.float32)
-        self._emit(out, P, cam, t)
-        return out
+        if self.avoid and self._others:
+            # what flies keeps clear of every other word that is being read
+            flying = P["assist"] < 0.999
+            if flying.any():
+                k = clear(P["pos"][flying], t, self._others, cam, floor=self.avoid_floor)
+                if k is not None:
+                    P["alpha"] = P["alpha"].copy()
+                    P["alpha"][flying] *= k
+            for b in out:
+                k = clear(b["pos"], t, self._others, cam, floor=self.avoid_floor)
+                if k is None:
+                    continue
+                b["alpha"] = np.asarray(b.get("alpha", 1.0), np.float32) * k
+                if b.get("alpha2") is not None and b.get("pos2") is not None:
+                    b["alpha2"] = np.asarray(b["alpha2"], np.float32) * clear(b["pos2"], t, self._others, cam,
+                                                                             floor=self.avoid_floor)
+        if not self.masked:
+            self._emit(out, P, cam, t)
+            return out
+        letters = []
+        self._emit(out, P, cam, t, letters)
+        self._kept = (t, out)
+        return letters
 
-    def _emit(self, out, P, cam, t):
+    def mask(self):
+        """The mask a masked word is added to the scene with (Words.add_to does it): its letters become a
+        window onto a sky (window=), dark ink (ink=True) or the base for paint (paint=)."""
+        if not self.masked:
+            return None
+        self._build()
+        grow = float(self.opts.get("mask_grow", 0.15)) * float(np.median(self.cell))
+        soft = float(self.opts.get("mask_soft", 1.0))
+        if self.window:
+            return Mask("sky", sky=self.window, grow=grow, soft=soft, edge=float(self.opts.get("window_edge", 0.5)),
+                        tint=tuple(self.opts.get("window_tint", (1.0, 1.0, 1.0))))
+        return Mask("dark", grow=grow, soft=soft)
+
+    @property
+    def lights(self):
+        """The rest of a masked word (halo, glints, petals, birds, threads) as its own point set, drawn
+        without the mask."""
+        return _Lights(self)
+
+    def keep_clear(self, t, cam=None, pad=0.6):
+        """The box other layers should keep clear of while this word is read: (strength 0..1, the four
+        corners of the box in the world, the plane's normal). The strength eases in half a second before the
+        reading moment and out after it; pad: how far the box reaches beyond the text, in em."""
+        end = self._read_end()
+        k = float(_ss(self.t_read0 - 0.5, self.t_read0, t) * (1.0 - _ss(end, end + 0.4, t)))
+        if k <= 0.0:
+            return 0.0, None, None
+        cam = self._cam(t, cam)
+        return k, self.corners(t, cam, pad=pad * self.metres_per_em()), self.frame(t, cam)[3]
+
+    def pen(self, t, cam=None):
+        """Where the writing is at t, in the world: the nib of arrive="pen" and the needle of "stitch" while
+        the word arrives, the thread's free end of leave="unravel" while it leaves. For a comet head or a
+        fingertip that should do the writing."""
+        self._build()
+        cam = self._cam(t, cam)
+        F = self.frame(t, cam)
+        if t <= self.t_read0:
+            a = (t - self.t_in) / max(self.t_read0 - self.t_in, 1e-6)
+            q = float(np.clip((a - 0.04) / 0.88, 0.0, 1.0))
+        else:
+            q = 1.0
+        return self._local(F, t, np.array([np.interp(q, self.pen_q, self.pen_x)]),
+                           np.array([np.interp(q, self.pen_q, self.pen_y)]))[0].astype(np.float64)
+
+    def _local(self, F, t, x, y, z=None):
+        """World places of points given on the word's plane (metres from its centre)."""
+        if self.bind is not None:
+            pos = np.asarray(self.bind(np.asarray(x, np.float64), np.asarray(y, np.float64), t), np.float32).reshape(-1, 3)
+        else:
+            o, r, u, nrm = F
+            pos = (o[None, :] + np.asarray(x, np.float64)[:, None] * r[None, :]
+                   + np.asarray(y, np.float64)[:, None] * u[None, :]).astype(np.float32)
+        if z is not None:
+            pos = pos + np.asarray(z, np.float32)[:, None] * F[3].astype(np.float32)[None, :]
+        return pos
+
+    def _emit(self, out, P, cam, t, letters=None):
         """Turns the state of the letters' points into batches: the letters, their halo, their glints."""
+        letters = out if letters is None else letters
         pos, alpha, size, emit, assist = (P["pos"], P["alpha"] * P.get("wt", self.wt), P["size"], P["emit"],
                                           P["assist"])
         color = P["color"]
         glow = P.get("glow", self.c_glow)
         col = self.c_letter if color is None else color
         level = 1.15
+        if self.window:
+            level *= float(self.opts.get("mask_light", 0.0))       # a window word is its sky, not its own light
+        elif self.ink:
+            level *= float(self.opts.get("mask_light", 0.0))
+        elif self.paint:
+            level *= float(self.opts.get("mask_light", 0.75))      # paint: the colour's light on the dark base
         vis = alpha > 0.004
         split = P["split"]            # optional: points below the water are kept out of the mirror
 
@@ -731,7 +844,7 @@ class Word:
             if not sel.any():
                 return
             # settled letters keep clear of the haze and of the motion blur; flying particles take both
-            out.append(dict(pos=pos[sel], size=(size[sel] if s_new is None else s_new),
+            letters.append(dict(pos=pos[sel], size=(size[sel] if s_new is None else s_new),
                             color=(col if col.ndim == 1 else col[sel]) * level,
                             alpha=(alpha[sel] * a_mul), emit=emit[sel], kind="soft", dof=dof, reflect=reflect,
                             seed=self.s[sel, 0], twinkle=0.12, fog=1.0 if dof else self.fog,
@@ -757,7 +870,7 @@ class Word:
                 s1 = np.sqrt(s0 * s0 + coc * coc).astype(np.float32)
                 put(held, False, refl, a_mul=(s0 / s1) ** 2, s_new=s1)
         # halo: a soft coloured light round the letters, carried by an even share of the points
-        if self.halo > 0.0:
+        if self.halo > 0.0 and not (self.ink or self.paint):
             k = self.n_halo
             a = alpha[:k]
             sel = a > 0.01
@@ -766,7 +879,7 @@ class Word:
                                 alpha=a[sel] * (0.050 * self.halo * self.N / k / 16.0), kind="soft",
                                 seed=self.s[:k][sel, 1], fog=self.fog, streak=0.0))
         # glints: a few points sparkle like glitter
-        if self.sparkle > 0.0:
+        if self.sparkle > 0.0 and not self.ink:
             i = self.i_spark
             a = alpha[i] * np.clip(assist[i] * 1.5, 0.25, 1.0)
             sel = a > 0.02
@@ -1181,6 +1294,8 @@ class Word:
         src = points_of(self.source, t, cam)
         if src is None:
             return self._arr_palm(P, a, t, cam, F, tg)
+        if self.opts.get("carry"):
+            return self._morph_carried(P, a, t, cam, F, tg, src, self.opts["carry"])
         n, w = self.N, self.W
         s = self.s
         j = (np.arange(n, dtype=np.int64) * len(src)) // n
@@ -1205,6 +1320,216 @@ class Word:
                              float(np.clip((a - 0.05) / 0.5, 0.0, 1.0)))
         else:
             P["alpha"] = _ss(0.0, 0.05, a) * np.ones(n, np.float32)
+
+    # ------------------------------------------------------------------ more arrivals (for the ten films)
+    def _pen_times(self, t, cam, F):
+        """For a pen that someone else moves (source: a comet head, a fingertip): when each point is written
+        (the moment the pen passes nearest to it, as a share of the arrival) and where the pen was then, on
+        the word's plane. Worked out once."""
+        if self._pen_cache is None:
+            k = 220
+            ts = np.linspace(self.t_in, self.t_read0 - 0.12 * (self.t_read0 - self.t_in), k)
+            loc = np.zeros((k, 3))
+            for j, tj in enumerate(ts):
+                c = self._cam(tj, None)
+                o, r, u, nrm = self.frame(tj, c)
+                pw = self._point(self.source, tj, c, o)
+                d = pw - o
+                loc[j] = (d @ r, d @ u, d @ nrm)
+            best = np.zeros(self.N, np.int64)
+            dmin = np.full(self.N, 1e30)
+            for j0 in range(0, k, 20):                       # the nearest passage of the pen to every point
+                dx = self.xl[:, None] - loc[None, j0:j0 + 20, 0]
+                dy = self.yl[:, None] - loc[None, j0:j0 + 20, 1]
+                d2 = dx * dx + dy * dy
+                jj = d2.argmin(axis=1)
+                dj = d2[np.arange(self.N), jj]
+                better = dj < dmin
+                best[better] = jj[better] + j0
+                dmin[better] = dj[better]
+            rev = (ts[best] - self.t_in) / max(self.t_read0 - self.t_in, 1e-6)
+            self._pen_cache = (rev.astype(np.float32), loc[best].astype(np.float32))
+        return self._pen_cache
+
+    def _arr_pen(self, P, a, t, cam, F, tg):
+        """Written by a moving pen: the ink leaves the nib and runs to its place, in writing order. The pen
+        is the word's own (pen(t) tells where it is) or someone else's (source: a comet head, a fingertip)."""
+        s = self.s
+        w = self.W
+        if self.source is not None and not isinstance(self.source, Word):
+            rev, loc = self._pen_times(t, cam, F)
+            start = self._local(F, t, loc[:, 0], loc[:, 1], loc[:, 2])
+            nib = None
+        else:
+            q = self.worder
+            rev = 0.04 + 0.88 * q
+            start = self._local(F, t, np.interp(q, self.pen_q, self.pen_x), np.interp(q, self.pen_q, self.pen_y))
+            nib = self.pen(t, cam) if self.opts.get("nib", True) else None
+        dt = a - rev
+        k = _ss(0.0, self.opts.get("flow", 0.06), dt - 0.01 * s[:, 0])
+        pos = start + (tg - start) * k[:, None]
+        pos += F[3].astype(np.float32)[None, :] * (np.sin(np.pi * k) * 0.02 * w * (s[:, 2] - 0.3))[:, None]
+        heat = np.exp(-np.maximum(dt, 0.0) / 0.04) * (dt > 0.0)
+        P["pos"] = pos.astype(np.float32)
+        P["alpha"] = _ss(0.0, 0.01, dt)
+        P["emit"] = 1.0 + 3.5 * heat
+        P["assist"] = _ss(0.6, 1.0, k)
+        P["color"] = _mix(self.c_letter[None, :], lin("#fff8ec").astype(np.float32)[None, :] * 1.3, heat[:, None])
+        if nib is not None and 0.03 < a < 0.95:
+            P["extra"].append(dict(pos=nib[None, :], size=0.012 * w, color=lin(WARM), alpha=1.0, emit=5.0,
+                                   kind="spark", twinkle=0.3))
+            P["extra"].append(dict(pos=nib[None, :], size=0.10 * w, color=self.c_glow, alpha=0.12, kind="soft"))
+
+    def _arr_reveal(self, P, a, t, cam, F, tg):
+        """Revealed behind a moving edge: edge= "right", "left", "up", "down" (a lowering height), "out",
+        "in", or gate= a function (places in the world (N, 3), t) -> 0..1 for an edge of the director's own
+        (a wave's crest, a veil's hem, a falling height). The edge itself glows."""
+        gate = self.opts.get("gate")
+        if gate is not None:
+            g = np.clip(np.asarray(gate(tg, t), np.float32), 0.0, 1.0)
+        else:
+            edge = self.opts.get("edge", "right")
+            c = {"right": self.xn, "left": 1.0 - self.xn, "up": self.yn, "down": 1.0 - self.yn,
+                 "out": self.rho / self.rho_max, "in": 1.0 - self.rho / self.rho_max}[edge]
+            soft = float(self.opts.get("soft", 0.07))
+            front = -soft + (1.0 + 2.0 * soft) * float(_ss(0.02, 0.96, a))
+            g = np.clip((front - c) / soft, 0.0, 1.0).astype(np.float32)
+        P["alpha"] = g
+        P["emit"] = (1.0 + self.opts.get("edge_glow", 3.0) * 4.0 * g * (1.0 - g)).astype(np.float32)
+
+    def _thread(self, P, F, t, q_head, alpha, n_st=110, amp=0.10, needle=True):
+        """A sewing thread along the writing as far as q_head: short stitches that show, with gaps between."""
+        if alpha <= 0.01 or q_head <= 0.0:
+            return
+        w = self.W
+        em = self.metres_per_em()
+        qs = np.linspace(0.0, 1.0, n_st + 1)
+        x = np.interp(qs, self.pen_q, self.pen_x)
+        y = np.interp(qs, self.pen_q, self.pen_y) + amp * em * np.where(np.arange(n_st + 1) % 2 == 0, 1.0, -1.0)
+        pts = self._local(F, t, x, y, np.full(n_st + 1, 0.01 * w))
+        vis = np.clip((q_head - qs[:-1]) * n_st, 0.0, 1.0)             # how much of each stitch is drawn
+        on = (np.arange(n_st) % 2 == 0) & (vis > 0.0)
+        if on.any():
+            a_, b_ = pts[:-1][on], pts[1:][on]
+            P["extra"].append(dict(pos=a_, pos2=a_ + (b_ - a_) * vis[on][:, None], size=0.0035 * w,
+                                   color=_mix(lin(WARM), self.c_glow, 0.35), alpha=0.9 * alpha, kind="line"))
+        if needle and q_head < 1.0:
+            nd = self._local(F, t, np.array([np.interp(q_head, self.pen_q, self.pen_x)]),
+                             np.array([np.interp(q_head, self.pen_q, self.pen_y)]), np.array([0.01 * w]))
+            P["extra"].append(dict(pos=nd, size=0.012 * w, color=lin(WARM), alpha=alpha, emit=5.0, kind="spark",
+                                   twinkle=0.3))
+
+    def _arr_stitch(self, P, a, t, cam, F, tg):
+        """Stitched in: a needle runs along the writing, its thread shows as short stitches, and the letters
+        are pulled tight behind it."""
+        s = self.s
+        w = self.W
+        q = self.worder
+        head = float(np.clip((a - 0.04) / 0.84, 0.0, 1.0))
+        dt = a - (0.04 + 0.84 * q)
+        k = _ss(0.0, 0.07, dt)
+        loose = (1.0 - k)
+        pos = tg + F[3].astype(np.float32)[None, :] * (loose * 0.05 * w)[:, None]
+        pos += F[2].astype(np.float32)[None, :] * (loose * 0.03 * w * (s[:, 1] - 0.5))[:, None]
+        P["pos"] = pos.astype(np.float32)
+        P["alpha"] = _ss(0.0, 0.015, dt)
+        P["emit"] = 1.0 + 2.0 * np.exp(-np.maximum(dt, 0.0) / 0.05) * (dt > 0.0)
+        P["assist"] = _ss(0.5, 1.0, k)
+        self._thread(P, F, t, head, float(1.0 - _ss(0.86, 1.0, a)))
+
+    def _arr_weave(self, P, a, t, cam, F, tg):
+        """Woven in: threads run across and down like warp and weft; a letter shows where both have passed."""
+        w = self.W
+        nr, nc = int(self.opts.get("rows", 14)), int(self.opts.get("cols", 34))
+        x0, x1 = float(self.xl.min()), float(self.xl.max())
+        y0, y1 = self.ybot, self.ytop
+        jr = np.minimum((self.yn * nr).astype(np.int64), nr - 1)          # the row of each point (0 at the bottom)
+        jc = np.minimum((self.xn * nc).astype(np.int64), nc - 1)
+        row_dir = np.where(np.arange(nr) % 2 == 0, 1.0, -1.0)            # rows run to and fro
+        ar = 0.04 + 0.44 * (nr - 1 - np.arange(nr)) / max(nr - 1, 1)     # from the top row down
+        bc = 0.28 + 0.44 * np.arange(nc) / max(nc - 1, 1)
+        dr, dc = 0.22, 0.22
+        along_r = np.where(row_dir[jr] > 0, self.xn, 1.0 - self.xn)
+        tr = ar[jr] + dr * along_r
+        tc = bc[jc] + dc * (1.0 - self.yn)
+        dt = a - np.maximum(tr, tc)
+        P["alpha"] = _ss(0.0, 0.03, dt)
+        P["emit"] = 1.0 + 1.8 * np.exp(-np.maximum(dt, 0.0) / 0.05) * (dt > 0.0)
+        fade = float(1.0 - _ss(0.86, 1.0, a))
+        if fade > 0.01:
+            col = _mix(lin(WARM), self.c_glow, 0.4)
+            g = np.clip((a - ar) / dr, 0.0, 1.0)
+            on = g > 0.0
+            if on.any():
+                ys = y0 + (np.arange(nr) + 0.5) / nr * (y1 - y0)
+                xa = np.where(row_dir > 0, x0, x1)
+                xb = xa + (np.where(row_dir > 0, x1, x0) - xa) * g
+                pa = self._local(F, t, xa[on], ys[on])
+                pb = self._local(F, t, xb[on], ys[on])
+                P["extra"].append(dict(pos=pa, pos2=pb, size=0.0025 * w, color=col, alpha=0.5 * fade, kind="line"))
+            g = np.clip((a - bc) / dc, 0.0, 1.0)
+            on = g > 0.0
+            if on.any():
+                xs = x0 + (np.arange(nc) + 0.5) / nc * (x1 - x0)
+                pa = self._local(F, t, xs[on], np.full(int(on.sum()), y1))
+                pb = self._local(F, t, xs[on], y1 + (y0 - y1) * g[on])
+                P["extra"].append(dict(pos=pa, pos2=pb, size=0.0025 * w, color=col, alpha=0.4 * fade, kind="line"))
+
+    def _morph_carried(self, P, a, t, cam, F, tg, src, kind):
+        """Born from someone else's point field: its points fly in as petals, birds, flakes or lights and
+        land as letters; each lights its part of the word."""
+        m = self.M
+        s = self.s[:m]
+        w = self.W
+        j = (np.arange(m, dtype=np.int64) * len(src)) // m
+        st = 0.02 + 0.48 * (0.6 * self.ord[:m] + 0.4 * s[:, 0])
+        dur = 0.46
+
+        def place(a_, t_):
+            p_ = np.clip((a_ - st) / dur, 0.0, 1.0)
+            e_ = p_ * p_ * (3.0 - 2.0 * p_)
+            arc = np.sin(np.pi * e_)
+            q_ = src[j] + (tg[:m] - src[j]) * e_[:, None]
+            q_ += _swirl(src[j], t_, 2.5 / max(w, 1e-6) * 4.0, 1.3) * (arc * 0.06 * w)[:, None]
+            q_ += F[2].astype(np.float32)[None, :] * (arc * 0.10 * w * (s[:, 2] - 0.2))[:, None]
+            return q_, p_, e_
+
+        pc, p, e = place(a, t)
+        self._patches(P, a, st + dur)
+        vis = (p < 1.0)
+        al = _ss(0.0, 0.04, a) * (1.0 - _ss(0.93, 1.0, p))
+        if not vis.any():
+            return
+        if kind == "bird":
+            da = 0.012
+            p2, _, _ = place(a + da, t + da * max(self.t_read0 - self.t_in, 1e-6))
+            rot = self._screen_rot(cam, p2 - pc)
+            big = (0.018 + 0.012 * s[:, 2]) * w * self.opts.get("bird_size", 1.0)
+            P["extra"].append(dict(pos=pc[vis], size=_mix(big, np.maximum(self.size0[:m] * 4.0, big * 0.45), e)[vis],
+                                   color=_mix(lin(WARM), self.c_letter, 0.4), alpha=al[vis] * 0.75, rot=rot[vis],
+                                   kind="bird", seed=s[vis, 3]))
+            return
+        rot = np.stack([s[:, 0] * TAU + t * (1.0 + 1.8 * s[:, 1]), s[:, 2] * TAU + t * (1.8 + 2.6 * s[:, 3])], 1)
+        if kind == "petal":
+            big = (0.020 + 0.016 * s[:, 1]) * w * self.opts.get("petal_size", 1.0)
+            cols = np.stack([lin("#ff8fa3"), lin("#ffb19a"), lin("#ffd9c9")]).astype(np.float32)
+        elif kind == "flake":
+            big = (0.013 + 0.016 * s[:, 2]) * w * self.opts.get("flake_size", 1.0)
+            cols = np.stack([lin("#ffe2a8"), lin("#fff3d8"), lin("#cfe2ff")]).astype(np.float32)
+        else:
+            kind = "soft"
+            big = (0.008 + 0.006 * s[:, 2]) * w
+            cols = np.stack([self.c_base, lin(WARM), self.c_base]).astype(np.float32)
+        if self.opts.get("carry_colors"):
+            cols = np.stack([lin(c) for c in self.opts["carry_colors"]]).astype(np.float32)
+        col = _mix(cols[(s[:, 2] * len(cols)).astype(int) % len(cols)], self.c_letter[None, :], (e ** 4)[:, None])
+        size = _mix(big, self.size0[:m] * 2.0, e ** 3)
+        b = dict(pos=pc[vis], size=size[vis], color=col[vis], alpha=al[vis] * 0.95, kind=kind, seed=s[vis, 0])
+        if kind != "soft":
+            b["rot"] = rot[vis]
+        else:
+            b["emit"] = 2.0
+        P["extra"].append(b)
 
     # ------------------------------------------------------------------ nine ways of leaving
     def _own(self, l, start):
@@ -1261,7 +1586,7 @@ class Word:
             P["extra"].append(dict(pos=pos[:m][vis], size=size[vis], color=cols[(sm[:, 3] * 3).astype(int) % 3][vis],
                                    alpha=al[vis] * 0.8, rot=rot[vis], kind="flake", seed=sm[vis, 0]))
 
-    def _lea_arch(self, P, l, t, cam, F, tg):
+    def _lea_arch(self, P, l, t, cam, F, tg, star=True):
         """The words stream into one light of the arch (to= its place) and wake it."""
         o, r, u, nrm = F
         s = self.s
@@ -1278,7 +1603,7 @@ class Word:
         P["assist"] = 1.0 - _ss(0.0, 0.12, p)
         P["size"] = self.size0 * (1.0 - 0.4 * e)
         got = float((p >= 1.0).mean())
-        star = (0.15 + 0.85 * got) * float(_ss(0.05, 0.30, l) * (1.0 - _ss(0.90, 1.0, l)))
+        star = (0.15 + 0.85 * got) * float(_ss(0.05, 0.30, l) * (1.0 - _ss(0.90, 1.0, l))) if star else 0.0
         if star > 0.01:
             P["extra"].append(dict(pos=goal[None, :], size=0.10 * w, color=_mix(lin(WARM), self.c_base, 0.35),
                                    alpha=star, emit=4.0 + 8.0 * got, kind="spark", twinkle=0.3, dof=False))
@@ -1437,6 +1762,82 @@ class Word:
                 P["extra"].append(dict(pos=pc[ea], pos2=pc[eb], size=0.003 * w,
                                        color=_mix(lin(WARM), self.c_glow, 0.5), alpha=al, kind="line"))
 
+    def _lea_stream(self, P, l, t, cam, F, tg):
+        """The words leave as one stream: to a point that may move (to= a point or a function of t: a comet,
+        a runner's hand), or along a curve (path= points (K, 3), or a function of t that gives them)."""
+        path = self.opts.get("path")
+        if path is None:
+            return self._lea_arch(P, l, t, cam, F, tg, star=bool(self.opts.get("star", False)))
+        s = self.s
+        w = self.W
+        c = np.asarray(path(t) if callable(path) else path, np.float64).reshape(-1, 3)
+        seg = np.linalg.norm(np.diff(c, axis=0), axis=1)
+        d = np.concatenate([[0.0], np.cumsum(seg)])
+        d /= max(d[-1], 1e-9)
+        p = np.clip((l - 0.40 * (0.6 * self.ord + 0.4 * s[:, 0])) / 0.56, 0.0, 1.0)
+        u_ = _ss(0.12, 1.0, p) ** 1.25
+        on = np.stack([np.interp(u_, d, c[:, k]) for k in range(3)], axis=1).astype(np.float32)
+        spread = (1.0 - 0.75 * u_) * 0.05 * w
+        on += self._world(F, (s[:, 1] - 0.5) * spread, (s[:, 2] - 0.5) * spread, (s[:, 3] - 0.5) * spread)
+        join = _ss(0.0, 0.32, p)
+        pos = tg + (on - tg) * join[:, None]
+        pos += _swirl(tg, t, 2.0 / max(w, 1e-6) * 4.0, 3.7) * (np.sin(np.pi * join) * 0.04 * w)[:, None]
+        P["pos"] = pos.astype(np.float32)
+        P["alpha"] = 1.0 - _ss(0.90, 1.0, p)
+        P["assist"] = 1.0 - _ss(0.0, 0.12, p)
+        P["size"] = self.size0 * (1.0 - 0.3 * u_)
+
+    def _lea_doors(self, P, l, t, cam, F, tg):
+        """The word parts like a pair of doors: each half swings open on its outer edge and lets us through."""
+        s = self.s
+        x0, x1 = float(self.xl.min()), float(self.xl.max())
+        xs = x0 + float(self.opts.get("split", 0.5)) * (x1 - x0)
+        left = self.xl < xs
+        hinge = np.where(left, x0, x1)
+        ang = np.radians(float(self.opts.get("swing", 100.0))) * float(_ss(0.0, 0.85, l))
+        away = -1.0 if self.opts.get("inward", True) else 1.0           # inward: the doors open away from the reader
+        dx = self.xl - hinge
+        x = hinge + dx * np.cos(ang)
+        z = away * np.abs(dx) * np.sin(ang)
+        P["pos"] = self._local(F, t, x, self.yl, z + self.zl)
+        P["alpha"] = np.full(self.N, 1.0 - float(_ss(0.45, 1.0, l)), np.float32)
+        P["assist"] = np.full(self.N, 1.0 - float(_ss(0.25, 0.7, l)), np.float32)
+        P["emit"] = np.full(self.N, 1.0 + 1.5 * float(np.sin(np.pi * _ss(0.0, 0.35, l))), np.float32)
+
+    def _lea_unravel(self, P, l, t, cam, F, tg):
+        """The word unravels: the end of the writing is pulled away as a thread (to= where it is pulled to)
+        and everything written before it runs after it, along the writing, until nothing is left."""
+        o, r, u, nrm = F
+        s = self.s
+        w = self.W
+        q = self.worder
+        run = 1.35 * float(l) ** 1.4                         # how far the thread has been pulled (the writing is 1 long)
+        sq = q + run
+        on_word = sq < 1.0
+        cx = np.interp(np.minimum(sq, 1.0), self.pen_q, self.pen_x)
+        cy = np.interp(np.minimum(sq, 1.0), self.pen_q, self.pen_y)
+        ox = self.xl - np.interp(q, self.pen_q, self.pen_x)  # each point's place beside the thread's line
+        oy = self.yl - np.interp(q, self.pen_q, self.pen_y)
+        thin = 1.0 - 0.85 * float(_ss(0.0, 0.10, run))        # the letters draw together into the thread
+        pos = self._local(F, t, cx + ox * thin, cy + oy * thin)
+        end = self._local(F, t, np.array([self.pen_x[-1]]), np.array([self.pen_y[-1]]))[0]
+        goal = self._point(self.to, t, cam, end.astype(np.float64) + r * (0.7 * w) + u * (0.35 * w)).astype(np.float32)
+        beyond = np.clip((sq - 1.0) / 0.35, 0.0, 1.0)
+        off = (~on_word)
+        if off.any():
+            bz = beyond[off][:, None]
+            jit = self._world(F, ox[off] * 0.15, oy[off] * 0.15, 0 * ox[off])
+            pos[off] = end[None, :] + (goal[None, :] - end[None, :]) * bz + jit * (1.0 - bz)
+        P["pos"] = pos.astype(np.float32)
+        P["alpha"] = ((1.0 - _ss(0.75, 1.0, beyond)) * (0.45 + 0.55 * thin)).astype(np.float32)
+        P["assist"] = np.full(self.N, 1.0 - float(_ss(0.0, 0.08, run)), np.float32)
+        tip = self._local(F, t, np.array([self.pen_x[-1]]), np.array([self.pen_y[-1]]))[0]
+        k = float(_ss(0.0, 0.05, l) * (1.0 - _ss(0.85, 1.0, l)))
+        if k > 0.01:
+            lead = tip + (goal - tip) * float(np.clip(run / 0.35, 0.0, 1.0))
+            P["extra"].append(dict(pos=lead[None, :], size=0.012 * w, color=lin(WARM), alpha=k, emit=4.0,
+                                   kind="spark", twinkle=0.3))
+
     def _lea_fade(self, P, l, t, cam, F, tg):
         """The words drift back and go soft."""
         s = self.s
@@ -1445,6 +1846,20 @@ class Word:
         P["assist"] = np.full(self.N, 1.0 - float(_ss(0.0, 0.3, l)), np.float32)
 
     _lea_morph = _lea_fade
+
+
+class _Lights:
+    """What a masked word draws beside its letters (the Word keeps it from its own sample of the same t)."""
+    wants_camera = True
+
+    def __init__(self, word):
+        self.word = word
+
+    def sample(self, t, cam=None):
+        w = self.word
+        if w._kept is None or w._kept[0] != t:
+            w.sample(t, cam)
+        return w._kept[1] if w._kept is not None and w._kept[0] == t else []
 
 
 # ------------------------------------------------------------------------------------------- a set of words
@@ -1485,7 +1900,9 @@ class Words:
 
     def add_to(self, scene, reflect=True, prefix="word "):
         for w in self.words:
-            scene.add(prefix + w.name, w, reflect=reflect and w.reflect, depth_of_field=True)
+            scene.add(prefix + w.name, w, reflect=reflect and w.reflect, depth_of_field=True, mask=w.mask())
+            if w.masked:
+                scene.add(prefix + w.name + " light", w.lights, reflect=reflect and w.reflect)
         return self
 
     def reading(self, t):
@@ -1537,8 +1954,23 @@ class Words:
             out["shafts"] = shafts
         return out
 
+    def clear(self, points, t, cam=None, **kw):
+        """How much of each world point may show so that the words being read stay clear (see `clear`)."""
+        k = clear(points, t, self.words, cam if cam is not None else _cam_at(self.camera, t), **kw)
+        return np.ones(len(np.asarray(points).reshape(-1, 3)), np.float32) if k is None else k
+
+    def keep_clear(self, t, cam=None, pad=0.6):
+        """The boxes to keep clear at t: a list of (word, strength 0..1, corners (4, 3), normal)."""
+        cam = cam if cam is not None else _cam_at(self.camera, t)
+        out = []
+        for w in self.words:
+            k, box, nrm = w.keep_clear(t, cam, pad)
+            if k > 0.0:
+                out.append((w, k, box, nrm))
+        return out
+
     def check(self, camera=None, **kw):
-        return check(self, camera, **kw)
+        return check(self, camera if camera is not None else self.camera, **kw)
 
 
 def place(camera, t, x, y, depth):
@@ -1556,6 +1988,78 @@ def em_for(camera, t, depth, px):
     (80 px is easy to read on a phone)."""
     cam = _cam_at(camera, t)
     return float(px) * 2.0 * np.tan(np.radians(cam.fov) * 0.5) * depth / 1080.0
+
+
+def clear(points, t, words, cam=None, pad=0.6, floor=0.12, soft=0.5):
+    """How much of each point may show so that the words being read stay clear: 1 everywhere except in front
+    of and behind a reading word's box on screen, where it falls to `floor`. points: (N, 3) in the world.
+    Returns (N,) factors, or None when no word is being read at t. Without a camera the box is taken along
+    the word's own normal. pad and soft: the box's margin and its soft border, in em of the word."""
+    pts = None
+    out = None
+    for w in words:
+        k, box, nrm = w.keep_clear(t, cam, pad)
+        if k <= 0.0:
+            continue
+        if pts is None:
+            pts = np.asarray(points, np.float32).reshape(-1, 3)
+            out = np.ones(len(pts), np.float32)
+            if cam is not None:
+                r_, u_, f_ = cam.basis()
+                dp = pts - np.asarray(cam.pos, np.float32)
+                zc = np.maximum(dp @ f_.astype(np.float32), 1e-3)
+                fl = 1.0 / np.tan(np.radians(cam.fov) * 0.5)
+                sx, sy = (dp @ r_.astype(np.float32)) * fl / zc, (dp @ u_.astype(np.float32)) * fl / zc
+        em = w.metres_per_em()
+        if cam is not None:
+            bd = box - np.asarray(cam.pos, np.float64)
+            bz = np.maximum(bd @ f_, 1e-3)
+            bx, by = (bd @ r_) * fl / bz, (bd @ u_) * fl / bz
+            sm = soft * em * fl / float(bz.mean())
+            inx = np.clip(np.minimum(sx - bx.min(), bx.max() - sx) / max(sm, 1e-6), 0.0, 1.0)
+            iny = np.clip(np.minimum(sy - by.min(), by.max() - sy) / max(sm, 1e-6), 0.0, 1.0)
+            inside = inx * iny * (zc > 0.01)
+        else:
+            o = box.mean(axis=0)
+            ex, ey = box[1] - box[0], box[3] - box[0]
+            hx, hy = 0.5 * np.linalg.norm(ex), 0.5 * np.linalg.norm(ey)
+            d = pts - o.astype(np.float32)
+            px_, py_ = d @ (ex / (2 * hx)).astype(np.float32), d @ (ey / (2 * hy)).astype(np.float32)
+            sm = soft * em
+            inside = np.clip((hx - np.abs(px_)) / sm, 0.0, 1.0) * np.clip((hy - np.abs(py_)) / sm, 0.0, 1.0)
+        out *= 1.0 - (1.0 - floor) * k * inside.astype(np.float32)
+    return out
+
+
+class KeepClear:
+    """Wraps any point set so that its points dim where a word is being read: scene.add("petals",
+    PW.KeepClear(petals, WORDS)). floor: how much light is left inside a reading word's box."""
+    wants_camera = True
+
+    def __init__(self, pointset, words, floor=0.12, pad=0.6):
+        self.inner, self.words, self.floor, self.pad = pointset, words, float(floor), float(pad)
+        if hasattr(pointset, "gain"):
+            self.gain = pointset.gain
+
+    def sample(self, t, cam=None):
+        ps = self.inner
+        res = ps.sample(t, cam) if getattr(ps, "wants_camera", False) else ps.sample(t)
+        if res is None:
+            return res
+        batches = res if isinstance(res, (list, tuple)) else [res]
+        out = []
+        for b in batches:
+            if b is None:
+                continue
+            k = clear(b["pos"], t, self.words, cam, pad=self.pad, floor=self.floor)
+            if k is not None:
+                b = dict(b)
+                b["alpha"] = np.asarray(b.get("alpha", 1.0), np.float32) * k
+                if b.get("pos2") is not None:
+                    b["alpha2"] = np.asarray(b.get("alpha2", b["alpha"]), np.float32) * clear(
+                        b["pos2"], t, self.words, cam, pad=self.pad, floor=self.floor)
+            out.append(b)
+        return out
 
 
 def _cam_at(camera, t):
