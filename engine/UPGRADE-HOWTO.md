@@ -183,7 +183,7 @@ DOVES_COUNT = 14                 # flock size (a constant), default 14
 DOVES_FROM = (-0.04, 0.40)       # where the flock comes from when DOVES first rises above 0 (screen fractions)
 DOVES_TARGET = 4                 # a star index of the arch, or a point (x, y), or a function of time; default (0.5, 0.8)
 DOVES_PATH = [(0.0, (0.4, 0.6)), (8.0, (0.8, 0.75)), (14.0, STAR_POS[4])]   # or follow a moving goal (overrides TARGET)
-DOVES_ORBIT = 0.10               # the flock wheels round the goal at about this radius; 0 = just chase it
+DOVES_ORBIT = 0.14               # the flock wheels round the goal at about this radius; 0 = just chase it
 DOVES_SIZE = 0.03                # body length as a fraction of the screen height (wingspan is about twice that)
 DOVES_SPEED = 1.0                # speed multiplier (cruise is about 0.22 screen heights per second)
 DOVES_COLOR = "#fff1da"          # also DOVES_SPARK_COLOR (default "#ffd9a0")
@@ -211,5 +211,5 @@ Fireflies: soft points that wander low and blink (a flash every few seconds, som
 FIREFLIES = Track([(0, 0.0), (20.0, 0.0), (26.0, 1.0)])   # 0..1: share of 160 fireflies shown
 FIREFLIES_Y = (0.05, 0.40)       # the band they live in (default: from the bottom to just above the horizon)
 FIREFLIES_COLOR = "#e4ff9c"
-FIREFLIES_BRIGHT = 1.0
+FIREFLIES_BRIGHT = 1.3
 ```

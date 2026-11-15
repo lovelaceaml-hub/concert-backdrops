@@ -27,6 +27,7 @@ import creatures_shaders as CS
 
 CALM_Y = 0.335      # top of the calm lower third (same as render.py)
 DT = 1.0 / 60.0     # flock simulation step
+TILT = 0.22         # the viewer is a little below the birds: depth shows as this much height
 TAU = 2.0 * math.pi
 
 
@@ -72,7 +73,7 @@ class Strokes:
         if n == 0:
             return
         st = np.zeros((n, 4))
-        st[:, :3] = style
+        st[:, :len(style)] = style
         self.parts.append(np.hstack([a, b, np.broadcast_to(np.atleast_1d(wa), (n,))[:, None],
                                      np.broadcast_to(np.atleast_1d(wb), (n,))[:, None], st, c]))
 
@@ -157,9 +158,9 @@ class Flock:
         # flocking
         diff = P[:, None, :] - P[None, :, :]
         d = np.sqrt((diff ** 2).sum(-1)) + np.eye(n) * 1e3
-        rs, rn = 0.045 * size, 0.16
+        rs, rn = 0.075 * size, 0.18
         near_s = (d < rs)[..., None]
-        sep = (diff / d[..., None] * (rs / d - 1.0)[..., None] * near_s).sum(1) * 1.6
+        sep = (diff / d[..., None] * (rs / d - 1.0)[..., None] * near_s).sum(1) * 2.4
         nb = (d < rn).astype(np.float64)
         cnt = np.maximum(nb.sum(1), 1.0)[:, None]
         has = (nb.sum(1) > 0)[:, None]
@@ -169,8 +170,8 @@ class Flock:
         gx, gy = self.goal(t)
         G = np.array([gx, gy, 0.0])
         rel = P - G
-        R = float(val("DOVES_ORBIT", t, 0.10))
-        aim = G + np.stack([np.zeros(n), self.yoff * 0.06, np.zeros(n)], 1)
+        R = float(val("DOVES_ORBIT", t, 0.14))
+        aim = G + np.stack([np.zeros(n), self.yoff * 0.05, np.zeros(n)], 1)
         seek = _norm(aim - P) * (s0 * self.sf)[:, None]
         if R > 0:
             Ri = R * self.orb
@@ -192,7 +193,7 @@ class Flock:
         bnd = np.zeros_like(P)
         A = S.ASPECT
         bnd[:, 0] = np.clip(-0.12 - P[:, 0], 0, None) - np.clip(P[:, 0] - (A + 0.12), 0, None)
-        bnd[:, 1] = -np.clip(P[:, 1] - 1.0, 0, None)
+        bnd[:, 1] = -np.clip(P[:, 1] - 0.95, 0, None) * 2.0
         bnd[:, 2] = np.clip(-0.28 - P[:, 2], 0, None) - np.clip(P[:, 2] - 0.28, 0, None)
         bnd *= 4.0
         calm = float(val("BOTTOM_CALM", t, 0.0) or 0.0)
@@ -281,7 +282,7 @@ def wing_angle(u):
 def project(o):
     """A 3D offset (height units; z toward the viewer) to a screen offset (fractions). The viewer is a little
     below the birds, so depth shows as a little height."""
-    return np.stack([o[..., 0] / S.ASPECT, o[..., 1] + 0.30 * o[..., 2]], -1)
+    return np.stack([o[..., 0] / S.ASPECT, o[..., 1] + TILT * o[..., 2]], -1)
 
 
 def draw_doves(fl, t, h, st, pts):
@@ -297,7 +298,7 @@ def draw_doves(fl, t, h, st, pts):
     Lat = np.cross(f, D)
     vis = np.clip(amt * n - fl.reveal, 0.0, 1.0)
     calm = float(val("BOTTOM_CALM", t, 0.0) or 0.0)
-    ctr = np.stack([P[:, 0] / S.ASPECT, P[:, 1] + 0.30 * P[:, 2]], 1)
+    ctr = np.stack([P[:, 0] / S.ASPECT, P[:, 1] + TILT * P[:, 2]], 1)
     depth = np.clip(P[:, 2], -0.3, 0.3)
     sc = 1.0 / (1.0 - 0.9 * depth)
     bright = float(val("DOVES_BRIGHT", t, 1.0)) * vis * calm_k(ctr[:, 1], calm) * (0.72 + 0.5 * (depth + 0.3) / 0.6)
@@ -323,28 +324,39 @@ def draw_doves(fl, t, h, st, pts):
         return ctr + project(o)
 
     k = keep
-    # body, head, tail
-    st.add(pt(-0.30, 0.0)[k], pt(0.22, 0.02)[k], (0.08 * Lpx)[k], (0.12 * Lpx)[k], (0.85, 0.06, 0.08), cw[k])
+    # body, head and a fanned tail (style: fill, rim, halo, edge softness)
+    st.add(pt(-0.30, 0.0)[k], pt(0.22, 0.02)[k], (0.08 * Lpx)[k], (0.12 * Lpx)[k], (0.85, 0.05, 0.08, 0.35), cw[k])
     hd = pt(0.36, 0.07)[k]
-    st.add(hd, hd, (0.065 * Lpx)[k], (0.065 * Lpx)[k], (0.95, 0.05, 0.08), cw[k])
-    st.add(pt(-0.30, 0.0)[k], pt(-0.64, -0.02)[k], (0.04 * Lpx)[k], (0.12 * Lpx)[k], (0.60, 0.08, 0.05), cw[k] * 0.9)
-    # wings: arm then hand, the hand lagging the arm so the beat ripples out to the tip
+    st.add(hd, hd, (0.065 * Lpx)[k], (0.065 * Lpx)[k], (0.95, 0.05, 0.08, 0.35), cw[k])
+    for sp in (-1.0, 0.0, 1.0):
+        st.add(pt(-0.28, 0.0)[k], pt(-0.62 + 0.03 * abs(sp), -0.02 - 0.02 * abs(sp), 0.11 * sp)[k],
+               (0.035 * Lpx)[k], (0.075 * Lpx)[k], (0.42, 0.04, 0.03, 0.6), cw[k] * 0.8)
+    # wings: arm then hand, the hand lagging the arm so the beat ripples out to the tip; on the downstroke the
+    # hand curls down further, so the wing bends like a cupped feathered wing; feathers fan along the trailing edge
+    curl = np.radians(28.0) * np.clip(sn, 0, None) * (1 - gs)
+    th2c = th2 - curl
     for side in (-1.0, 1.0):
         sh = np.array([0.08, 0.04, 0.0])
         arm = _norm(Lat * (side * np.cos(th1))[:, None] + D * np.sin(th1)[:, None] - 0.15 * f)
-        hand = _norm(Lat * (side * np.cos(th2))[:, None] + D * np.sin(th2)[:, None] - 0.35 * f)
+        hand = _norm(Lat * (side * np.cos(th2c))[:, None] + D * np.sin(th2c)[:, None] - 0.35 * f)
         o_sh = (f * sh[0] + D * sh[1])
         o_wr = o_sh + arm * 0.42
         o_tp = o_wr + hand * (0.62 * fold)[:, None]
-        o_hip = f * -0.20
 
         def P2(o):
             return ctr + project((o + bob) * L[:, None])
 
-        a_, w_, tp, hp = P2(o_sh), P2(o_wr), P2(o_tp), P2(o_hip)
-        st.add(a_[k], w_[k], (0.11 * Lpx)[k], (0.17 * Lpx)[k], (0.62, 0.10, 0.06), cw[k])
-        st.add(w_[k], tp[k], (0.16 * Lpx)[k], (0.04 * Lpx)[k], (0.62, 0.14, 0.06), cw[k])
-        st.add(tp[k], hp[k], (0.02 * Lpx)[k], (0.06 * Lpx)[k], (0.25, 0.25, 0.0), cw[k] * 0.6)
+        a_, w_, tp = P2(o_sh), P2(o_wr), P2(o_tp)
+        st.add(a_[k], w_[k], (0.10 * Lpx)[k], (0.14 * Lpx)[k], (0.60, 0.05, 0.05, 0.5), cw[k])
+        st.add(w_[k], tp[k], (0.13 * Lpx)[k], (0.035 * Lpx)[k], (0.60, 0.06, 0.05, 0.5), cw[k])
+        # feathers: from points along the wing, swept back and out, longest at the hand (the primaries)
+        for j, u_ in enumerate((0.25, 0.45, 0.62, 0.78, 0.92)):
+            base = o_sh + (o_tp - o_sh) * u_
+            ln = 0.10 + 0.13 * u_
+            tipd = _norm(-f * (1.0 - 0.55 * u_) + hand * (0.25 + 0.6 * u_ * u_))
+            e = base + tipd * (ln * (0.75 + 0.25 * fold))[:, None]
+            st.add(P2(base)[k], P2(e)[k], (0.045 * Lpx)[k], (0.012 * Lpx + 0.5)[k], (0.42, 0.05, 0.02, 0.7),
+                   cw[k] * 0.75)
     # faint spark trail: sparks shed on a fixed time grid, so each spark lives the same life in every render part
     tr = float(val("DOVES_TRAIL", t, 1.0))
     if tr > 0.001:
@@ -356,7 +368,7 @@ def draw_doves(fl, t, h, st, pts):
             ke, te = ke[ok], te[ok]
             Hh = fl.hist(te)                                         # (K, n, 12)
             Pp = Hh[..., 0:3]
-            base = np.stack([Pp[..., 0] / S.ASPECT, Pp[..., 1] + 0.30 * Pp[..., 2]], -1)
+            base = np.stack([Pp[..., 0] / S.ASPECT, Pp[..., 1] + TILT * Pp[..., 2]], -1)
             ids = ke[:, None] * 131.0 + np.arange(n)[None, :] * 7.31
             j1, j2, j3, j4 = hash1(ids), hash1(ids + 0.37), hash1(ids + 0.71), hash1(ids + 1.13)
             age = (t - te)[:, None]
@@ -513,7 +525,7 @@ class Fireflies:
         calm = float(val("BOTTOM_CALM", t, 0.0) or 0.0)
         low = 1.0 - ss(CALM_Y - 0.07, CALM_Y + 0.05, y)
         on &= s[:, 14] >= 0.6 * calm * low                       # sparse in the calm lower third
-        b = b * (1.0 - 0.5 * calm * low) * float(val("FIREFLIES_BRIGHT", t, 1.0)) * on
+        b = b * (1.0 - 0.5 * calm * low) * float(val("FIREFLIES_BRIGHT", t, 1.3)) * on
         x = x % 1.0
         sz = (4.0 + 4.5 * s[:, 15]) * (0.75 + 0.35 * e)
         c = col(val("FIREFLIES_COLOR", t), "#e4ff9c")
