@@ -24,14 +24,20 @@ WORLD = """
 const float PI = 3.14159265;
 uniform vec3 uCamPos;
 uniform float uT;
-uniform vec4 uHillP;      // visibility, height scale, -, -
+uniform vec4 uHillP;      // visibility, height scale, ring distance scale (0 or 1: as built), -
 uniform vec4 uCloudP;     // amount, drift x, drift z, scale
 uniform vec3 uSunDir;
 uniform vec4 uLakeP;      // reflectivity looking down, mirror gain, ripple amount, shore radius
 uniform int uNCalm; uniform vec4 uCalmA[4]; uniform vec4 uCalmB[4];   // discs (x, z, radius, soft) with their own (ripple, mirror)
-// the lake at p: (ripple amount, mirror gain); a disc of calm (or storm) can lie anywhere on it
+uniform sampler2D uLakeTex; uniform vec4 uLakeF; uniform float uLakeOn;  // a field of (ripple, mirror) over a square
+// the lake at p: (ripple amount, mirror gain); a field and discs of calm (or storm) can lie anywhere on it
 vec2 lakeAt(vec2 p){
   vec2 v = vec2(uLakeP.z, uLakeP.y);
+  if(uLakeOn > 0.5){
+    vec2 q = (p - uLakeF.xy)*uLakeF.zw + 0.5;            // 0..1 over the field's square
+    float e = min(min(q.x, 1.0-q.x), min(q.y, 1.0-q.y));
+    if(e > 0.0) v = mix(v, textureLod(uLakeTex, q, 0.0).rg, smoothstep(0.0, 0.04, e));
+  }
   for(int i=0;i<uNCalm;i++){
     float w = 1.0 - smoothstep(uCalmA[i].z - uCalmA[i].w, uCalmA[i].z + uCalmA[i].w, length(p - uCalmA[i].xy));
     v = mix(v, uCalmB[i].xy, w);
@@ -56,14 +62,25 @@ float ridge(vec2 c, float f, float seed){
   for(int i=0;i<5;i++){ float n = vnoise(p); s += a*(1.0-abs(2.0*n-1.0)); p = p*2.03 + 17.1; a *= 0.5; }
   return s;
 }
-// tangent of the elevation of ring k's ridge, seen along the horizontal unit direction c
-float hillTan(vec2 c, int k){
+// tangent of the elevation of ring k's ridge, seen along the horizontal unit direction c. The rings stand on
+// circles round the world's origin (not round the camera), so a camera that flies far or climbs a kilometre
+// sees them come nearer, pass below it and turn into land round the lake
+// (tangent of the ridge, tangent of the ring's foot on the ground) of ring k along c; (-1e3, 1e3): no ring there
+vec2 hillHit(vec2 c, int k){
   float f = k==0 ? 5.0 : (k==1 ? 3.4 : 2.3);
   float seed = 3.7 + 9.1*float(k);
-  vec2 ck = normalize(c*HILL_D[k] + uCamPos.xz);
+  float D = HILL_D[k]*max(uHillP.z, 1.0);
+  vec2 P = uCamPos.xz;
+  float b = dot(P, c), disc = b*b - (dot(P, P) - D*D);
+  if(disc <= 0.0) return vec2(-1e3, 1e3);
+  float sq = sqrt(disc);
+  float sd = dot(P, P) > D*D ? -b - sq : -b + sq;  // inside the ring: its far side; outside: the side facing us
+  if(sd <= 1.0) return vec2(-1e3, 1e3);
+  vec2 ck = normalize(P + c*sd);
   float h = pow(ridge(ck, f, seed), 1.8)*(0.30+0.70*vnoise(ck*1.3+seed*1.7));
-  return (h*HILL_H[k]*uHillP.y - uCamPos.y)/HILL_D[k];
+  return vec2((h*HILL_H[k]*uHillP.y - uCamPos.y)/sd, -uCamPos.y/sd);
 }
+float hillTan(vec2 c, int k){ return hillHit(c, k).x; }
 // how much cloud stands in direction d (0..1), and how lit it is from the sun side
 float cloudDens(vec3 d, out float lit){
   lit = 0.5;
@@ -91,7 +108,7 @@ uniform float uMirror, uDome, uDomeDist, uLod, uLodR, uCocMax, uSigMin;
 uniform float uPaint;     // 0: the light pass. 1: the paint pass (true colour over the scene)
 uniform vec2 uBirth;      // seconds a point takes to appear at its birth, flash when just born
 uniform mat3 uDomeRot; uniform float uTurn;
-uniform vec4 uSplit; uniform float uSplitStars;
+uniform vec4 uSplit; uniform float uSplitStars, uSplitBias;
 uniform int uNLights; uniform vec4 uLightP[4]; uniform vec3 uLightC[4]; uniform float uLit;
 uniform float uBlur, uShutterDt, uMaxStreak, uSmear, uPx;
 
@@ -150,6 +167,8 @@ SPRITE_VS = "#version 330\n" + NOISE + WORLD + SPRITE_COMMON + """
 in vec2 aCorner;
 in vec3 aPos; in float aSize; in vec3 aColor; in float aAlpha; in float aEmit; in float aSeed; in vec2 aRot;
 in vec3 aNormal; in vec3 aVel; in float aBirth;
+in float aIdx;            // the point's own index, when the set is drawn in spatial chunks (uIdxK.x = 1)
+uniform vec2 uIdxK;       // (1: index from aIdx, else the instance number times the stride), stride
 uniform float uHasN;
 uniform int uKind;        // 0 soft, 1 spark, 2 disc, 3 flake, 4 petal, 5 bird
 uniform vec2 uRim;
@@ -173,7 +192,7 @@ void main(){
     vec3 dir = normalize(aPos);
     if(uTurn > 0.5) dir = uDomeRot*dir;                  // the star dome can turn about its pole
     if(uSplit.w > 0.0)                                   // a sky of two looks: the stars follow their side
-      ext *= mix(1.0, uSplitStars, uSplit.w*smoothstep(-uSplit.z, uSplit.z, dot(normalize(dir.xz+vec2(1e-5)), uSplit.xy)));
+      ext *= mix(1.0, uSplitStars, uSplit.w*smoothstep(-uSplit.z, uSplit.z, dot(normalize(dir.xz+vec2(1e-5)), uSplit.xy) + uSplitBias));
     // stars: dimmed by the air near the horizon, hidden by hills and clouds
     ext *= exp(-uFogP.w/(max(dir.y, 0.0)+0.06));
     float te = dir.y/max(length(dir.xz), 1e-4);
@@ -218,7 +237,7 @@ void main(){
   if(uLod > 0.5 && coc > uLodR){
     // far out of focus: draw a share of the points, each brighter (the same light, far fewer big discs)
     float q = (uLodR*uLodR)/(coc*coc);
-    float h = ihash(gl_InstanceID);
+    float h = ihash(uIdxK.x > 0.5 ? int(aIdx + 0.5) : gl_InstanceID*int(uIdxK.y + 0.5));
     float w = clamp((1.25*q - h)/(0.25*q), 0.0, 1.0);
     if(w <= 0.0){ cull(); return; }
     float top = min(1.25*q, 1.0);
@@ -303,20 +322,25 @@ uniform float uT;
 uniform vec2 uRes;
 uniform vec2 uBokeh;      // bright rim of the bokeh disc, how hexagonal it is
 uniform float uMaskOn, uMaskBias;
-uniform vec2 uMaskK;      // how strongly dark silhouettes and sky silhouettes hide the light behind them
+uniform vec3 uMaskK;      // how strongly dark silhouettes and the two sky layers hide the light behind them
 uniform sampler2D uMaskTex;
 uniform float uPaint, uWindow;
+uniform vec3 uWinSel, uWinPar, uWinChild;   // a set inside a window: its layer, that layer's parent, layers inside it
 uniform vec4 uClear[2]; uniform vec4 uClearK;     // keep-clear boxes (x0, y0, x1, y1), their (amount, soft) pairs
 out vec4 o;
 
 // what is left of a sprite at this pixel after the silhouettes, the windows and the keep-clear boxes
+// (mask channels: r dark silhouettes, g and b the two sky layers, a the nearest depth)
 float keepAt(float depth){
   float k = 1.0;
   if(uMaskOn > 0.5){
     vec4 m = texture(uMaskTex, gl_FragCoord.xy/uRes);
-    if(uWindow > 0.5) k *= smoothstep(0.25, 0.80, m.g);
-    else k *= 1.0 - max(smoothstep(0.25, 0.80, m.r)*uMaskK.x, smoothstep(0.25, 0.80, m.g)*uMaskK.y)
-                    *smoothstep(0.0, 0.12, depth - m.a - uMaskBias);
+    vec3 c = smoothstep(0.25, 0.80, m.rgb);
+    if(uWindow > 0.5){
+      k *= dot(c, uWinSel);
+      if(dot(uWinPar, uWinPar) > 0.0) k *= dot(c, uWinPar);
+      k *= 1.0 - dot(c, uWinChild);
+    } else k *= 1.0 - max(c.r*uMaskK.x, max(c.g*uMaskK.y, c.b*uMaskK.z))*smoothstep(0.0, 0.12, depth - m.a - uMaskBias);
   } else if(uWindow > 0.5) k = 0.0;
   vec2 uv = gl_FragCoord.xy/uRes;
   for(int i=0;i<2;i++){
@@ -389,24 +413,27 @@ void main(){
 SEG_VS = "#version 330\n" + NOISE + WORLD + SPRITE_COMMON + """
 in vec2 aCorner;
 in vec3 aPos; in float aSize; in vec3 aColor; in float aAlpha; in float aEmit; in float aSeed; in vec2 aUV;
-in float aBirth; in vec4 aPos2A2; in float aSize2;
+in float aBirth; in vec4 aPos2A2; in float aSize2; in vec3 aVel;
 uniform int uKind;        // 6 line, 7 ribbon
 uniform float uHair;
 flat out vec4 vEnd;       // length on screen (px), S, cap (1 line, 0 ribbon), depth
 out vec4 vCol;            // light (or, in the paint pass, colour and coverage)
 out vec4 vLoc;            // along (px, 0 at pos), across (px), plateau radius here, place along the path
+flat out vec4 vM;         // motion blur: how far each end moved during the shutter, in the segment's own frame
+flat out vec3 vU;         // the places along the path at both ends; the number of moments when drawn out by motion
 
 void cull(){ gl_Position = vec4(2.0, 2.0, 2.0, 1.0); }
 
 void main(){
   float bk = born(aBirth);
   if(bk <= 0.0){ cull(); return; }
-  vec3 w1 = aPos, w2 = aPos2A2.xyz;
+  vec3 w1 = aPos, w2 = aPos2A2.xyz, vel = aVel;
   float mk1 = 1.0, mk2 = 1.0, sm;
-  if(uMirror > 0.5){ w1 = mirrored(w1, mk1, sm); w2 = mirrored(w2, mk2, sm); if(mk1+mk2 < 0.001){ cull(); return; } }
+  if(uMirror > 0.5){ w1 = mirrored(w1, mk1, sm); w2 = mirrored(w2, mk2, sm); vel.y = -vel.y; if(mk1+mk2 < 0.001){ cull(); return; } }
   vec4 v1 = uView*vec4(w1, 1.0), v2 = uView*vec4(w2, 1.0);
   float d1 = -v1.z, d2 = -v2.z;
   if(d1 < uNear && d2 < uNear){ cull(); return; }
+  bool cut1 = d1 < uNear, cut2 = d2 < uNear;
   // cut cleanly where the segment passes the camera
   if(d1 < uNear){ float f = (uNear - d1)/(d2 - d1); v1 = mix(v1, v2, f); d1 = uNear; }
   if(d2 < uNear){ float f = (uNear - d2)/(d1 - d2); v2 = mix(v2, v1, f); d2 = uNear; }
@@ -415,6 +442,17 @@ void main(){
   vec2 dv = s2 - s1; float len = length(dv);
   vec2 dir = len > 1e-4 ? dv/len : vec2(1.0, 0.0);
   vec2 nrm = vec2(-dir.y, dir.x);
+  // motion blur: where each end was when the shutter opened (camera and own motion)
+  vec2 m1 = vec2(0.0), m2 = vec2(0.0);
+  if(uBlur > 0.0){
+    vec4 p1 = uPrevVP*vec4(w1 - vel*uShutterDt, 1.0), p2 = uPrevVP*vec4(w2 - vel*uShutterDt, 1.0);
+    if(p1.w > uNear && !cut1) m1 = (s1 - p1.xy/p1.w*0.5*uRes)*uBlur;
+    if(p2.w > uNear && !cut2) m2 = (s2 - p2.xy/p2.w*0.5*uRes)*uBlur;
+    float ml = max(length(m1), length(m2));
+    if(ml > 2.0*uMaxStreak){ m1 *= 2.0*uMaxStreak/ml; m2 *= 2.0*uMaxStreak/ml; }
+    if(ml < 0.75){ m1 = vec2(0.0); m2 = vec2(0.0); }
+  }
+  bool moving = dot(m1, m1) + dot(m2, m2) > 0.0;
   bool first = aCorner.x < 0.0;
   float depth = first ? d1 : d2;
   float sz = first ? aSize : aSize2;
@@ -433,8 +471,24 @@ void main(){
   b *= 1.0 - smoothstep(0.12*uRes.y, 0.30*uRes.y, R + 3.0*S);
   float h = R + 3.0*S;
   float cap = uKind == 6 ? 1.0 : 0.0;                 // a ribbon's pieces meet end to end: no caps, no beads
-  vec2 p = (first ? s1 - dir*h*cap : s2 + dir*h*cap) + nrm*aCorner.y*h;
-  vLoc = vec4(first ? -h*cap : len + h*cap, aCorner.y*h, R, first ? aUV.x : aUV.y);
+  vec2 p;
+  if(!moving){
+    p = (first ? s1 - dir*h*cap : s2 + dir*h*cap) + nrm*aCorner.y*h;
+    vLoc = vec4(first ? -h*cap : len + h*cap, aCorner.y*h, R, first ? aUV.x : aUV.y);
+    vM = vec4(0.0); vU = vec3(aUV, 0.0);
+  } else {
+    // the rectangle (in the segment's own frame) that holds the segment at every moment of the shutter
+    vec4 m = vec4(dot(m1, dir), dot(m1, nrm), dot(m2, dir), dot(m2, nrm));
+    float hb = max(h, 3.0*uSigMin + 2.0);
+    float ax0 = min(0.0, min(-m.x, len - m.z)) - hb, ax1 = max(len, max(-m.x, len - m.z)) + hb;
+    float ay0 = min(0.0, min(-m.y, -m.w)) - hb, ay1 = max(0.0, max(-m.y, -m.w)) + hb;
+    float x = first ? ax0 : ax1, y = aCorner.y < 0.0 ? ay0 : ay1;
+    p = s1 + dir*x + nrm*y;
+    vLoc = vec4(x, y, R, first ? aUV.x : aUV.y);
+    // enough moments that neighbouring copies overlap (the streak is smooth, not a comb)
+    float ml = max(length(m1), length(m2));
+    vM = m; vU = vec3(aUV, clamp(ceil(ml/max(0.8*(R + 1.5*S), 1.0)), 8.0, 48.0));
+  }
   vEnd = vec4(len, S, cap, depth);
   vCol = uPaint > 0.5 ? vec4(aColor, clamp(b/max(aEmit, 1e-4), 0.0, 1.0)) : vec4(lights(aColor, wp, vec3(0.0), 0.0)*b, 0.0);
   gl_Position = vec4(p*2.0/uRes, 0.0, 1.0);
@@ -443,23 +497,30 @@ void main(){
 
 SEG_FS = """
 #version 330
-in vec4 vCol; in vec4 vLoc; flat in vec4 vEnd;
+in vec4 vCol; in vec4 vLoc; flat in vec4 vEnd; flat in vec4 vM; flat in vec3 vU;
 uniform vec2 uRes;
 uniform float uT;
 uniform vec4 uPulse;      // speed, length, gain, period: a brighter stretch travelling along the path
 uniform float uMaskOn, uMaskBias;
-uniform vec2 uMaskK;
+uniform vec3 uMaskK;      // how strongly dark silhouettes and the two sky layers hide the light behind them
 uniform sampler2D uMaskTex;
 uniform float uPaint, uWindow;
-uniform vec4 uClear[2]; uniform vec4 uClearK;
+uniform vec3 uWinSel, uWinPar, uWinChild;   // a set inside a window: its layer, that layer's parent, layers inside it
+uniform vec4 uClear[2]; uniform vec4 uClearK;     // keep-clear boxes (x0, y0, x1, y1), their (amount, soft) pairs
 out vec4 o;
+
+// what is left of a sprite at this pixel after the silhouettes, the windows and the keep-clear boxes
+// (mask channels: r dark silhouettes, g and b the two sky layers, a the nearest depth)
 float keepAt(float depth){
   float k = 1.0;
   if(uMaskOn > 0.5){
     vec4 m = texture(uMaskTex, gl_FragCoord.xy/uRes);
-    if(uWindow > 0.5) k *= smoothstep(0.25, 0.80, m.g);
-    else k *= 1.0 - max(smoothstep(0.25, 0.80, m.r)*uMaskK.x, smoothstep(0.25, 0.80, m.g)*uMaskK.y)
-                    *smoothstep(0.0, 0.12, depth - m.a - uMaskBias);
+    vec3 c = smoothstep(0.25, 0.80, m.rgb);
+    if(uWindow > 0.5){
+      k *= dot(c, uWinSel);
+      if(dot(uWinPar, uWinPar) > 0.0) k *= dot(c, uWinPar);
+      k *= 1.0 - dot(c, uWinChild);
+    } else k *= 1.0 - max(c.r*uMaskK.x, max(c.g*uMaskK.y, c.b*uMaskK.z))*smoothstep(0.0, 0.12, depth - m.a - uMaskBias);
   } else if(uWindow > 0.5) k = 0.0;
   vec2 uv = gl_FragCoord.xy/uRes;
   for(int i=0;i<2;i++){
@@ -471,16 +532,46 @@ float keepAt(float depth){
   }
   return k;
 }
+float pulseAt(float u){
+  if(uPulse.z <= 0.0) return 1.0;
+  float x = u - uPulse.x*uT;
+  if(uPulse.w > 0.0) x = (fract(x/uPulse.w + 0.5) - 0.5)*uPulse.w;
+  return 1.0 + uPulse.z*exp(-x*x/(uPulse.y*uPulse.y));
+}
+float profAt(float sd, float S){
+  float pr = sd <= 0.0 ? 1.0 : exp(-sd*sd/(2.0*S*S));
+  return max(pr - 0.0111, 0.0)/0.9889;
+}
 void main(){
-  float along = (vLoc.x - clamp(vLoc.x, 0.0, vEnd.x))*vEnd.z;
-  float sd = length(vec2(along, vLoc.y)) - vLoc.z;
   float S = vEnd.y;
-  float prof = sd <= 0.0 ? 1.0 : exp(-sd*sd/(2.0*S*S));
-  prof = max(prof - 0.0111, 0.0)/0.9889;
-  if(uPulse.z > 0.0){
-    float x = vLoc.w - uPulse.x*uT;
-    if(uPulse.w > 0.0) x = (fract(x/uPulse.w + 0.5) - 0.5)*uPulse.w;
-    prof *= 1.0 + uPulse.z*exp(-x*x/(uPulse.y*uPulse.y));
+  float prof;
+  if(vU.z < 0.5){
+    float along = (vLoc.x - clamp(vLoc.x, 0.0, vEnd.x))*vEnd.z;
+    float sd = length(vec2(along, vLoc.y)) - vLoc.z;
+    prof = profAt(sd, S)*pulseAt(vLoc.w);
+  } else {
+    // drawn out by motion: the segment at n moments of the shutter, each a share of the light (each pixel's
+    // set of moments shifted a little, so what is left of the steps is fine grain)
+    prof = 0.0;
+    vec2 q = vLoc.xy;
+    int n = int(vU.z + 0.5);
+    float j = fract(sin(dot(gl_FragCoord.xy, vec2(12.9898, 78.233)))*43758.5453);
+    for(int i=0;i<48;i++){
+      if(i >= n) break;
+      float back = 1.0 - (float(i) + j)/float(n);
+      vec2 A = -back*vM.xy, B = vec2(vEnd.x, 0.0) - back*vM.zw;
+      vec2 ba = B - A; float l2 = max(dot(ba, ba), 1e-6);
+      float tt = dot(q - A, ba)/l2;
+      float tc = clamp(tt, 0.0, 1.0);
+      float sd;
+      if(vEnd.z > 0.5) sd = length(q - A - ba*tc) - vLoc.z;              // a line: round caps
+      else {                                                               // a ribbon piece: open ends
+        if(tt < 0.0 || tt >= 1.0) continue;
+        sd = length(q - A - ba*tt) - vLoc.z;
+      }
+      prof += profAt(sd, S)*pulseAt(mix(vU.x, vU.y, tc));
+    }
+    prof /= float(n);
   }
   float k = keepAt(vEnd.w);
   if(uPaint > 0.5){ float a = clamp(vCol.a*prof, 0.0, 1.0)*k; o = vec4(vCol.rgb*a, a); return; }
@@ -504,6 +595,8 @@ void main(){
   if(depth < uNear || w <= 0.0){ gl_Position = vec4(2.0, 2.0, 2.0, 1.0); return; }
   vec4 cp = uProj*vp;
   float r = max((0.5*aSize + uGrow)*0.5*uRes.y*uFocal/depth, 1.2);
+  w *= 1.0 - smoothstep(0.7*uRes.y, 1.4*uRes.y, r);     // a point right at the lens does not black out the picture
+  if(w <= 0.0){ gl_Position = vec4(2.0, 2.0, 2.0, 1.0); return; }
   vLocal = aCorner*(r + 1.0);
   vP = vec3(r, w, depth);
   gl_Position = vec4(cp.xy/cp.w + vLocal*2.0/uRes, 0.0, 1.0);
@@ -518,7 +611,7 @@ out vec4 o;
 void main(){
   float c = (1.0 - smoothstep(vP.x-1.0, vP.x+1.0, length(vLocal)))*vP.y;
   if(c < 0.02) discard;
-  o = uSel == 0 ? vec4(c, 0.0, 0.0, vP.z) : vec4(0.0, c, 0.0, vP.z);
+  o = uSel == 0 ? vec4(c, 0.0, 0.0, vP.z) : (uSel == 1 ? vec4(0.0, c, 0.0, vP.z) : vec4(0.0, 0.0, c, vP.z));
 }
 """
 
@@ -532,14 +625,18 @@ void main(){ vUV = aPos*0.5+0.5; gl_Position = vec4(aPos, 0.0, 1.0); }
 MASKBLUR_FS = """
 #version 330
 in vec2 vUV; out vec4 o;
-uniform sampler2D uTex; uniform vec2 uDir;
-void main(){
+uniform sampler2D uTex; uniform vec2 uDir; uniform vec3 uRad;    // step (texels) and the softness of each channel
+float ch(int i, float r, out float dmin){
   vec4 c0 = texture(uTex, vUV);
-  vec4 a1 = texture(uTex, vUV+uDir*1.3846), a2 = texture(uTex, vUV-uDir*1.3846);
-  vec4 b1 = texture(uTex, vUV+uDir*3.2308), b2 = texture(uTex, vUV-uDir*3.2308);
-  vec2 c = c0.rg*0.2270 + (a1.rg+a2.rg)*0.3162 + (b1.rg+b2.rg)*0.0703;
-  float dmin = min(c0.a, min(min(a1.a, a2.a), min(b1.a, b2.a)));
-  o = vec4(c, 0.0, dmin);
+  vec4 a1 = texture(uTex, vUV+uDir*1.3846*r), a2 = texture(uTex, vUV-uDir*1.3846*r);
+  vec4 b1 = texture(uTex, vUV+uDir*3.2308*r), b2 = texture(uTex, vUV-uDir*3.2308*r);
+  dmin = min(c0.a, min(min(a1.a, a2.a), min(b1.a, b2.a)));
+  return c0[i]*0.2270 + (a1[i]+a2[i])*0.3162 + (b1[i]+b2[i])*0.0703;
+}
+void main(){
+  float d0, d1, d2;
+  float r = ch(0, uRad.x, d0), g = ch(1, uRad.y, d1), b = ch(2, uRad.z, d2);
+  o = vec4(r, g, b, min(d0, min(d1, d2)));
 }
 """
 
@@ -557,8 +654,20 @@ uniform vec4 uSunP;       // strength, cos of the disc's radius, disc strength, 
 uniform vec4 uAirP;       // haze per metre, mist density at the water, mist scale height, milky way glow
 uniform int uNShaft; uniform vec4 uShA[4]; uniform vec4 uShB[4];
 uniform vec4 uSplit; uniform vec3 uSkyTopB, uSkyMidB, uSkyHorB, uHazeColB;    // a second look on one side of the sky
+uniform float uSplitBias;                                                          // how much of the sky it covers
+uniform vec3 uSunDirB, uSunColB, uWaterB, uHillColB; uniform vec4 uSunPB;         // its own sun, water and hills
 uniform int uNLights; uniform vec4 uLightP[4]; uniform vec3 uLightC[4];
-float splitW(vec2 dxz){ return uSplit.w*smoothstep(-uSplit.z, uSplit.z, dot(normalize(dxz+vec2(1e-5)), uSplit.xy)); }
+float splitW(vec2 dxz){ return uSplit.w*smoothstep(-uSplit.z, uSplit.z, dot(normalize(dxz+vec2(1e-5)), uSplit.xy) + uSplitBias); }
+// the glow of a sun round direction d (and the band of dawn on its side of the horizon)
+vec3 sunGlow(vec3 d, vec3 sd, vec3 sc, vec4 sp){
+  float e = max(d.y, 0.0);
+  float a = max(1.0 - dot(d, sd), 0.0);
+  float w = sp.w;
+  vec3 g = sc*sp.x*(0.42*exp(-a*42.0/w) + 0.20*exp(-a*9.0/w) + 0.07*exp(-a*2.2/w));
+  float az = dot(normalize(d.xz+vec2(1e-5)), normalize(sd.xz+vec2(1e-5)));
+  g += sc*sp.x*0.22*exp(-e*7.0)*pow(max(az, 0.0), 3.0)*smoothstep(-0.45, 0.05, sd.y);
+  return g;
+}
 
 vec3 skyBase(vec3 d){
   float e = max(d.y, 0.0);
@@ -571,6 +680,7 @@ vec3 skyBase(vec3 d){
   // the glow hugs the horizon on the sun's side (the band of dawn)
   float az = dot(normalize(d.xz+vec2(1e-5)), normalize(uSunDir.xz+vec2(1e-5)));
   g += uSunCol*uSunP.x*0.22*exp(-e*7.0)*pow(max(az, 0.0), 3.0)*smoothstep(-0.45, 0.05, uSunDir.y);
+  if(sw > 0.0) g = mix(g, sunGlow(d, uSunDirB, uSunColB, uSunPB), sw);     // the other look's own sun on its side
   c += g;
   if(uAirP.w > 0.001){
     float m = dot(d, uMilkyN);
@@ -594,6 +704,13 @@ vec3 shade(vec3 d, float te, float disc, float aa, out float vis){
     vis *= 1.0 - 0.85*dens;
   }
   c += uSunCol*uSunP.x*uSunP.z*disc*smoothstep(uSunP.y-0.00006, uSunP.y+0.00006, cs)*(1.0-dens);
+  if(uSplit.w > 0.0){
+    float swd = splitW(d.xz);
+    if(swd > 0.0){
+      float cb = dot(d, uSunDirB);
+      c += uSunColB*uSunPB.x*uSunPB.z*disc*smoothstep(uSunPB.y-0.00006, uSunPB.y+0.00006, cb)*(1.0-dens)*swd;
+    }
+  }
   if(uHillP.x > 0.001){
     float lxz = max(length(d.xz), 1e-5);
     if(te < 0.55){
@@ -602,14 +719,26 @@ vec3 shade(vec3 d, float te, float disc, float aa, out float vis){
                 + uSunCol*uSunP.x*0.22*pow(max(dot(cxz, normalize(uSunDir.xz+vec2(1e-5))), 0.0), 3.0)
                 *smoothstep(-0.45, 0.05, uSunDir.y);
       for(int k=2;k>=0;k--){
-        float ht = hillTan(cxz, k);
-        float m = smoothstep(ht+aa, ht-aa, te)*uHillP.x;
-        if(k == 2 && te < 0.0) m = uHillP.x;               // beyond the lake: land out to the horizon
+        vec2 hh = hillHit(cxz, k);
+        float ht = hh.x;
+        // the ring covers the rays that meet its wall above the ground (seen from high up, not down to our feet)
+        float m = smoothstep(ht+aa, ht-aa, te)*smoothstep(hh.y-aa, hh.y+aa, te)*uHillP.x;
+        bool ground = k == 2 && te < 0.0 && m < uHillP.x;
+        if(ground) m = uHillP.x;                           // beyond the lake: land out to the horizon
         if(m > 0.0){
           float far = k==2 ? 0.80 : (k==1 ? 0.56 : 0.30);
-          float low = clamp((ht-te)/max(ht+uCamPos.y/HILL_D[k], 0.02), 0.0, 1.0);   // toward the foot, into the mist
+          float low = clamp((ht-te)/max(ht-hh.y, 0.02), 0.0, 1.0);   // toward the foot, into the mist
           float foot = max(far+0.25, 1.0 - exp(-uLakeP.w*uAirP.x*1.6));       // the lake's haze at the shore
-          vec3 hc = mix(uHillCol, hz, clamp(mix(far, foot, low*low), 0.0, 0.97));
+          vec3 hcol = uSplit.w > 0.0 ? mix(uHillCol, uHillColB, splitW(cxz)) : uHillCol;
+          vec3 hc = mix(hcol, hz, clamp(mix(far, foot, low*low), 0.0, 0.97));
+          if(ground){
+            // the plain round the lake, by its real distance (seen from high up it is near and dark)
+            float gx = uCamPos.y/max(-te, 1e-5);                 // horizontal distance to the ground point
+            vec2 gp = uCamPos.xz + cxz*gx;
+            float gdist = gx*sqrt(1.0 + te*te);
+            vec3 gc = hcol*(0.70 + 0.55*fbm3(gp*0.0035) + 0.15*vnoise(gp*0.03));
+            hc = mix(gc, hz, clamp(1.0 - exp(-gdist*uAirP.x*1.6), max(far - 0.55, 0.0), 0.97));
+          }
           hc += uSunCol*uSunP.x*0.10*exp(-max(ht-te, 0.0)*90.0)*pow(max(cs, 0.0), 4.0);   // a lit ridge
           c = mix(c, hc, m);
           vis *= 1.0 - m;
@@ -641,7 +770,8 @@ void main(){
   float vis = 0.0, dist = 1e5;
   vec3 col;
   vec3 hazeC = uHazeCol;
-  bool water = d.y < 0.0 && (uCamPos.y/(-d.y) < uLakeP.w || uHillP.x < 0.001);
+  // the lake is a disc of radius uLakeP.w round the world's origin (seen from far above it is a disc)
+  bool water = d.y < 0.0 && (uHillP.x < 0.001 || length((uCamPos + d*(uCamPos.y/max(-d.y, 1e-6))).xz) < uLakeP.w);
   vec3 rr = d; vec3 hit = uCamPos; float fres = 0.0;
   if(water){
     dist = uCamPos.y/(-d.y);
@@ -668,7 +798,15 @@ void main(){
     c += uSunCol*uSunP.x*v*(pow(cs, 1500.0)*uSunP.z*0.7 + pow(cs, 260.0)*0.7 + pow(cs, 40.0)*0.16)
          *smoothstep(-0.03, 0.02, uSunDir.y);
     fres = mix(uLakeP.x, 1.0, pow(1.0-clamp(-d.y, 0.0, 1.0), 4.0))*lk.y;
-    col = mix(uWater, c, fres);
+    vec3 wcol = uWater;
+    if(uSplit.w > 0.0){                                                // the other look's water and sun glint
+      float swd = splitW(d.xz);
+      wcol = mix(uWater, uWaterB, swd);
+      float cb = max(dot(rr, uSunDirB), 0.0);
+      c += uSunColB*uSunPB.x*v*(pow(cb, 1500.0)*uSunPB.z*0.7 + pow(cb, 260.0)*0.7 + pow(cb, 40.0)*0.16)
+           *smoothstep(-0.03, 0.02, uSunDirB.y)*swd;
+    }
+    col = mix(wcol, c, fres);
     for(int i=0;i<uNLights;i++){                                       // each moving light lays a pool on the water
       vec2 q = hit.xz - uLightP[i].xz; float r = uLightP[i].w*(1.0 + 0.5*uLightP[i].y);
       col += uLightC[i]*0.35*r*r/(dot(q, q) + r*r);
@@ -733,7 +871,7 @@ void main(){
   vec2 ndc = vUV*2.0-1.0;
   vec3 d = normalize(uCamF*uFocal + uCamR*ndc.x*uAspect + uCamU*ndc.y);
   vec4 m = uMaskOn > 0.5 ? texture(uMask, vUV) : vec4(0.0, 0.0, 0.0, 1e5);
-  float cov = smoothstep(0.25, 0.80, max(m.r, m.g));
+  float cov = smoothstep(0.25, 0.80, max(m.r, max(m.g, m.b)));
   vec3 c;
   if(uMode < 0.5){
     float a = max(1.0 - dot(d, uSunDir), 0.0);
@@ -771,25 +909,28 @@ void main(){
 # the mask, rays, bursts of light.
 RESOLVE_FS = "#version 330\n" + NOISE + """
 in vec2 vUV; out vec4 o;
-uniform sampler2D uBg, uRayA, uRayB, uMask, uPaintT, uBg2;
+uniform sampler2D uBg, uRayA, uRayB, uMask, uPaintT, uBg2, uBg3;
 uniform float uPaintOn;
 uniform vec3 uCamR, uCamU, uCamF, uCamPos;
 uniform mat4 uPrevVP;
 uniform float uFocal, uAspect, uT, uBlur, uShore;
 uniform vec2 uRes;
 uniform vec4 uRayK;       // sun rays strength, light rays strength, -, -
-uniform float uMaskOn, uDarkK, uSkyK, uFillEdge;
-uniform int uFillKind;    // 0 clouds, 1 sunrise, 2 stars, 3 day, 4 the same world in another look
-uniform vec4 uFillBox;    // centre x, y and half height of the shape on screen; drift
-uniform vec3 uFillTint, uDarkTint;
+uniform float uMaskOn, uDarkK;
+uniform vec3 uDarkTint;
+// the two sky layers (mask channels g and b): (fill kind, strength, edge, parent layer + 1),
+// kind 0 clouds, 1 sunrise, 2 stars, 3 day, 4 the same world in another look, 5 a flat colour
+uniform vec4 uFillA[2];
+uniform vec4 uFillBox[2]; // centre x, y and half height of the shape on screen; drift
+uniform vec4 uFillTint[2], uFillCol[2];
 uniform int uNBurst; uniform vec4 uBurst[4]; uniform vec3 uBurstCol[4];
 
-vec3 fill(vec2 uv){
-  vec2 q = (uv - uFillBox.xy)/max(uFillBox.z, 0.02);
+vec3 fill(vec2 uv, int kind, vec4 box){
+  vec2 q = (uv - box.xy)/max(box.z, 0.02);
   q.x *= uAspect;
-  float t = uT*0.03 + uFillBox.w;
+  float t = uT*0.03 + box.w;
   vec3 c;
-  if(uFillKind == 2){
+  if(kind == 2){
     c = mix(vec3(0.004, 0.006, 0.020), vec3(0.020, 0.018, 0.070), smoothstep(-1.0, 1.0, q.y));
     float neb = fbm(q*1.3 + vec2(t, 3.0));
     c += vec3(0.10, 0.05, 0.22)*smoothstep(0.42, 0.85, neb) + vec3(0.02, 0.07, 0.16)*smoothstep(0.5, 0.9, fbm(q*2.1+9.0));
@@ -804,7 +945,7 @@ vec3 fill(vec2 uv){
   float n2 = fbm(q*1.6 + vec2(t, 0.0) + vec2(0.05, -0.10)) + 0.30*fbm3((q+vec2(0.05, -0.10))*4.3 + vec2(-t, 2.0));
   float dens = smoothstep(0.44, 0.80, n);
   float lit = clamp(0.5 + (n - n2)*3.0, 0.0, 1.0);        // lit from below, where the sun is
-  if(uFillKind == 1){
+  if(kind == 1){
     float y = clamp(q.y*0.5+0.5, 0.0, 1.0);
     c = mix(vec3(0.80, 0.27, 0.07), vec3(0.34, 0.085, 0.15), smoothstep(0.0, 0.40, y));
     c = mix(c, vec3(0.018, 0.035, 0.14), smoothstep(0.26, 0.90, y));
@@ -813,7 +954,7 @@ vec3 fill(vec2 uv){
     float under = clamp(0.5 + (n - n2)*4.5, 0.0, 1.0);
     vec3 cc = mix(vec3(0.016, 0.018, 0.060), vec3(1.05, 0.34, 0.10), under*under*smoothstep(0.9, -0.4, q.y));
     c = mix(c, cc, smoothstep(0.50, 0.66, n)*0.95);
-  } else if(uFillKind == 3){
+  } else if(kind == 3){
     float y = clamp(q.y*0.5+0.5, 0.0, 1.0);
     c = mix(vec3(0.80, 0.70, 0.55), vec3(0.14, 0.36, 0.78), smoothstep(0.0, 0.8, y));
     c = mix(c, mix(vec3(0.36, 0.42, 0.58), vec3(1.15, 1.08, 0.98), lit), dens*0.9);
@@ -831,18 +972,33 @@ void main(){
     // where this piece of the world was at the start of the shutter
     vec2 ndc = vUV*2.0-1.0;
     vec3 d = normalize(uCamF*uFocal + uCamR*ndc.x*uAspect + uCamU*ndc.y);
-    float dist = (d.y < 0.0 && uCamPos.y/(-d.y) < uShore) ? uCamPos.y/(-d.y) : 2.0e4;
+    float wd = uCamPos.y/max(-d.y, 1e-6);
+    float dist = (d.y < 0.0 && length((uCamPos + d*wd).xz) < uShore) ? wd : 2.0e4;
     vec4 pc = uPrevVP*vec4(uCamPos + d*dist, 1.0);
     if(pc.w > 0.0){
       vec2 mv = vUV - (pc.xy/pc.w*0.5+0.5);
       float L = length(mv*uRes);
       if(L > 1.5){
         mv *= min(1.0, 0.22*uRes.y/L);
-        vec3 acc = col;
-        for(int i=1;i<8;i++){
-          acc += texture(uBg, vUV - mv*(float(i)/7.0)).rgb;
+        L = min(L, 0.22*uRes.y);
+        if(L < 80.0*uRes.y/1080.0){
+          vec3 acc = col;
+          for(int i=1;i<8;i++){
+            acc += texture(uBg, vUV - mv*(float(i)/7.0)).rgb;
+          }
+          col = acc/8.0;
+        } else {
+          // a long streak (a whip, a dive): more taps, each pixel's set shifted a little, so the copies of the
+          // picture melt into one smooth smear instead of showing as steps
+          int n = int(clamp(L/(7.0*uRes.y/1080.0), 12.0, 40.0));
+          float j = hash21(gl_FragCoord.xy + vec2(uT*61.0, uT*17.0));
+          vec3 acc = vec3(0.0);
+          for(int i=0;i<40;i++){
+            if(i >= n) break;
+            acc += texture(uBg, vUV - mv*((float(i) + j)/float(n))).rgb;
+          }
+          col = acc/float(n);
         }
-        col = acc/8.0;
       }
     }
   }
@@ -850,11 +1006,18 @@ void main(){
     vec4 m = texture(uMask, vUV);
     float cd = smoothstep(0.25, 0.80, m.r)*uDarkK;
     col = mix(col, col*0.06 + uDarkTint, cd);
-    float cs = smoothstep(0.25, 0.80, m.g);
-    if(cs > 0.001){
-      vec3 f = (uFillKind == 4 ? texture(uBg2, vUV).rgb : fill(vUV))*uFillTint;
-      col = mix(col, f, cs*uSkyK);
-      col += f*uFillEdge*4.0*cs*(1.0-cs)*uSkyK;          // a light rim along the edge of the shape
+    vec2 cv = smoothstep(0.25, 0.80, m.gb);
+    for(int i=0;i<2;i++){
+      float cs = cv[i];
+      if(uFillA[i].w > 0.5) cs *= cv[int(uFillA[i].w + 0.5) - 1];     // a window inside a window
+      if(cs > 0.001 && uFillA[i].y > 0.0){
+        int kind = int(uFillA[i].x + 0.5);
+        vec3 f = kind == 5 ? uFillCol[i].rgb : (kind == 4 ? (i == 0 ? texture(uBg2, vUV).rgb : texture(uBg3, vUV).rgb)
+                                                          : fill(vUV, kind, uFillBox[i]));
+        f *= uFillTint[i].rgb;
+        col = mix(col, f, cs*uFillA[i].y);
+        col += f*uFillA[i].z*4.0*cs*(1.0-cs)*uFillA[i].y;      // a light rim along the edge of the shape
+      }
     }
   }
   if(uPaintOn > 0.5){                                  // painted points: true colour over the scene, under the light

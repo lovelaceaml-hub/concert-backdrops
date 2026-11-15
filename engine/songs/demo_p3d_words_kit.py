@@ -154,7 +154,7 @@ _SPECS = [
          t_read1=23.6, t_out=25.2, arrive="morph", source=_RAIN, carry="flake", leave="rise"),
     _word(0.50, 0.76, 30.0, 122, 23.4, 25.2, 27.9, 29.8, expr="Consideration", window="stars", arrive="reveal",
           edge="out", leave="doors"),
-    _word(0.30, 0.42, 22.0, 84, 24.4, 26.2, 28.9, 30.3, expr="Compliment", paint=True, arrive="pen", leave="fade"),
+    _word(0.30, 0.42, 22.0, 84, 24.4, 26.2, 28.9, 30.3, expr="Compliment", paint="#7c58cc", arrive="pen", leave="fade"),
     _word(0.74, 0.44, 18.0, 74, 25.4, 27.0, 29.6, 30.4, expr="Inclusiveness", ink=True, arrive="reveal",
           edge="right", leave="fade"),
 ]

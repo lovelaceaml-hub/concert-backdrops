@@ -430,6 +430,9 @@ uniform int uNRip; uniform vec4 uRip[24]; uniform float uRipWL;   // lake ripple
 uniform float uCalm, uCalmY;   // calm lower third: rings, glitter, reflections and thaw edges fade there
 uniform sampler2D uNatT; uniform float uNatK;   // nature paint (flowers, stream, cliff): colour over the scene
 uniform float uCamOn; uniform sampler2D uCamBg;   // CAMERA (engine/sky_camera.py): the background with parallax
+#ifdef HUE_KEEP
+uniform float uHueKeep;   // P3D world keep_hue: bright lights keep their colour instead of bleaching to white
+#endif
 #ifdef FIGURE_TINT
 uniform sampler2D uFigT; uniform float uFigK; uniform vec3 uFigTint, uFigTintB; uniform vec4 uFigGate;   // figure_look.py
 #endif
@@ -880,7 +883,21 @@ void main(){
   col *= mix(1.0, 0.62, smoothstep(0.30,1.0,length(vq)*1.35));
 #endif
   col *= uExposure*uFade;
+#ifdef HUE_KEEP
+  vec3 hueIn = col;
+#endif
   col = (col*(2.51*col+0.03))/(col*(2.43*col+0.59)+0.14);
+#ifdef HUE_KEEP
+  if(uHueKeep > 0.0){
+    // above the mid tones the curve is applied to the brightest channel and the colour scaled with it, so a
+    // bright coral or blue light stays coral or blue instead of turning white (the hue and saturation hold)
+    float mx = max(hueIn.r, max(hueIn.g, hueIn.b));
+    if(mx > 1e-5){
+      float tm = (mx*(2.51*mx+0.03))/(mx*(2.43*mx+0.59)+0.14);
+      col = mix(col, max(hueIn, 0.0)*(tm/mx), uHueKeep*smoothstep(0.45, 1.6, mx));
+    }
+  }
+#endif
   col = pow(clamp(col,0.0,1.0), vec3(1.0/2.2));
   float luma = dot(col, vec3(0.2126,0.7152,0.0722));
   col = clamp(mix(vec3(luma), col, 1.18), 0.0, 1.0);
@@ -901,7 +918,7 @@ void main(){
 """
 
 COMP_BLOCKS = ("SKY_THEME", "SHADOW_ZERO", "TEXT_INK", "LEAVES_TINT", "LAKE_RIPPLES", "NATURE_PAINT", "CAMERA_BG",
-               "FIGURE_TINT", "SYMBOL_PAINT")
+               "FIGURE_TINT", "SYMBOL_PAINT", "HUE_KEEP")
 
 
 def comp_fs(blocks=COMP_BLOCKS):
