@@ -17,7 +17,8 @@ hand cupped at the ear, praying hands, two open hands holding a heart, clapping 
     Constellation(name, ...) stars come out among the stars and are joined by fine lines, then go
     PetalShape(name, ...)    petals (or any particles) blow in on the wind, settle into the shape, blow on
     LightTrail(name, ...)    one light draws the whole symbol as a continuous ribbon, which then fades
-    Ripples(name, ...)       the symbol lies on the water as rings of light that spread outward from its lines
+    Ripples(name, ...)       the symbol lies on the water as lines of light that waver with a spreading ripple
+                             and break into glints (no rings: rings read as UI)
     Flock(name, ...)         a cluster of birds or embers passes through and makes the shape as it goes
 
   Shared keys:
@@ -218,19 +219,21 @@ def _respect():
 
 
 def _encouragement():
-    # two hands pressed together, fingers up, the line between them, the thumbs, two cuffs
-    left = _join(_line((-0.22, -0.28), (-0.22, -0.02), 6),
+    # two hands pressed together, fingers up, the line between them, the thumbs, the forearms going down and
+    # apart (open lines: no boxes or rings, which read as UI)
+    arm_out = _bez((-0.36, -0.50), (-0.30, -0.44), (-0.23, -0.37), (-0.22, -0.28), 8)
+    left = _join(arm_out,
+                 _line((-0.22, -0.28), (-0.22, -0.02), 6),
                  _bez((-0.22, -0.02), (-0.22, 0.20), (-0.12, 0.38), (-0.05, 0.47), 14),
                  _arc((-0.022, 0.462), 0.03, 160, 0, 6))
     right = left[::-1] * np.array([-1.0, 1.0])
-    mid = _line((0.0, 0.43), (0.0, -0.24), 10)
+    arm_in = _bez((0.0, -0.24), (-0.02, -0.33), (-0.08, -0.43), (-0.15, -0.50), 8)
+    mid = _join(_line((0.0, 0.43), (0.0, -0.24), 10), arm_in)
+    arm_in_r = arm_in * np.array([-1.0, 1.0])
     thumb_l = _join(_bez((-0.22, -0.06), (-0.14, -0.02), (-0.09, 0.06), (-0.07, 0.16), 8),
                     _arc((-0.045, 0.16), 0.025, 180, 0, 5))
     thumb_r = thumb_l[::-1] * np.array([-1.0, 1.0])
-    cuff_l = _join(_line((-0.36, -0.29), (-0.03, -0.29), 6), _line((-0.03, -0.29), (-0.03, -0.48), 4),
-                   _line((-0.03, -0.48), (-0.36, -0.48), 6), _line((-0.36, -0.48), (-0.36, -0.29), 4))
-    cuff_r = cuff_l * np.array([-1.0, 1.0])
-    return [left, right, mid, thumb_l, thumb_r, cuff_l, cuff_r]
+    return [left, right, mid, arm_in_r, thumb_l, thumb_r]
 
 
 def _cupped(c, flip=1.0):
@@ -652,30 +655,43 @@ class LightTrail(_SymbolFX):
 
 
 class Ripples(_SymbolFX):
-    """The symbol lies on the water as thin lines of light; rings spread outward from its lines like ripples,
-    then everything settles. Give pos on the lake (y about 0.02); it lies flat (face="flat"), read from where
-    the camera looks at the water. rings: how many ripples (3); spread: how far they travel (symbol heights)."""
+    """The symbol lies on the water as thin lines of light, mirrored and moved by the water: it appears from its
+    middle outward as if something had touched the lake there, its lines waver with a ripple that travels out
+    and calms, and the light breaks into glints along them, as moonlight does on water. Give pos on the lake
+    (y about 0.02); it lies flat (face="flat"), read from where the camera looks at the water.
+    spread: how strongly the lines waver (0.35). rings: rings of light spreading from the lines (0, none: rings
+    read as UI; kept for older songs)."""
     FACE = "flat"
     N = 700
 
-    def __init__(self, name, rings=3, spread=0.35, **kw):
+    def __init__(self, name, rings=0, spread=0.35, **kw):
         kw.setdefault("reflect", False)
         super().__init__(name, **kw)
         self.R, self.spread = int(rings), float(spread)
         self.lead = 0.2
+        self.rr = np.hypot(self.xy[:, 0], self.xy[:, 1])
+        self.rr = self.rr / max(float(self.rr.max()), 1e-6)
 
     def sample(self, t, cam=None):
         if self.gain(t) <= 0.0:
             return None
         cam = self._cam(t, cam)
         u = (t - self.t0) / max(self.dur, 1e-6)
-        draw = np.clip((u - self.order) * 6.0, 0.0, 1.0)
+        draw = np.clip((u * 1.25 - self.rr) * 4.0, 0.0, 1.0)              # from the middle outward
         fo = self._fade_out(t)
-        wob = 0.006 * np.sin(t * 3.0 + self.order * 40.0)
+        age = max(t - self.t0, 0.0)
+        calm = 0.25 + 0.75 * math.exp(-age / max(self.dur * 1.4, 1e-6))
+        wob = self.spread * 0.035 * calm * np.sin(self.rr * 26.0 - age * 5.5) \
+            + 0.004 * np.sin(t * 3.0 + self.order * 40.0)
         xy = self.xy + self.nrm2 * wob[:, None]
         pos, s = self._world(t, cam, xy)
-        out = [dict(pos=pos, size=s * 0.012, color=self.col * 1.3, alpha=draw * fo * self.k * 1.3, kind="soft",
-                    seed=self.s[:, 0], twinkle=0.3, dof=self.dof, reflect=False)]
+        glint = 0.55 + 0.45 * np.sin(t * 6.0 + self.s[:, 2] * 40.0 + self.rr * 12.0) ** 2
+        out = [dict(pos=pos, size=s * 0.012, color=self.col * 1.3, alpha=draw * fo * self.k * 1.3 * glint,
+                    kind="soft", seed=self.s[:, 0], twinkle=0.3, dof=self.dof, reflect=False)]
+        gl = (self.s[:, 3] < 0.06) & (draw > 0.5)
+        if gl.any():
+            out.append(dict(pos=pos[gl], size=s * 0.02, color=self.col * 0.6 + 0.6, alpha=fo * self.k * 0.9 * draw[gl],
+                            emit=1.6, kind="spark", twinkle=1.0, seed=self.s[gl, 4], dof=self.dof, reflect=False))
         for r in range(self.R):
             tr = self.t0 + 0.35 * r + self.dur * 0.3
             age = t - tr - self.order * self.dur * 0.6

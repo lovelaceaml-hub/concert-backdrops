@@ -12,11 +12,15 @@ Not a concert video: a proof of what helper BRAND built for the five films (engi
                  the water, 24.2 Inclusiveness made of petals, 26.8 Concession a flock of birds passing,
                  29.4 Respect a light trail, 32.0 Encouragement traced by sparks, 34.6 Consideration made of
                  heart petals, 37.2 Compliment a drift of embers
-  40.0 to 47.5   THE WORLD by day: the soft pastel Earth on a bright sky, hearts lighting up across it
-  47.5 to 60.0   THE FINALE: the world of light at night, hearts in the nine colours spreading across it from
-                 Las Vegas, joined by arcs; it slows and settles (52.6 to 54.0), becomes the logo (53.4 to
-                 55.0), light blooms from it into a pastel day (54.3), and the logo rises into the end card's
-                 place at the top of the frame (55.0 to 56.4), held to the end
+  40.0 to 47.5   THE WORLD by day: a clear blue and green Earth with white clouds on a bright sky, hearts
+                 lighting up across it
+  47.5 to 60.0   THE FINALE: the world of light at night (golden continents, drifting clouds, a soft air),
+                 hearts in the nine colours blooming across it from Las Vegas, joined by high arcs; it slows
+                 and settles (52.2 to 54.0) and becomes the logo (53.0 to 55.0): the hearts sweep in behind it,
+                 the ring and the grid draw themselves over the Earth, the logo's globe spreads over it, the
+                 branches grow; light blooms from it into a pastel day (54.3), and the logo rises into the end
+                 card's place at the top of the frame (55.0 to 56.4), held to the end
+  demo_brand_finale.py plays 40.0 to 60.0 of this song as a 20 second proof (the same pieces).
 """
 import numpy as np
 
@@ -54,6 +58,38 @@ EXPOSURE = _base.EXPOSURE
 
 GLOBE_AT = (0.0, 13.0, -44.0)
 
+
+# ------------------------------------------- the world by day and the finale (shared with demo_brand_finale)
+def world_moves(o=0.0):
+    """The camera for the world by day (40.0 to 47.5) and the finale (47.5 to 60.0), `o` seconds later."""
+    return [
+        # the world by day, then the finale: a slow push toward the globe
+        dolly((0.0, 7.0, 6.0), (0.0, 8.5, 2.0), 40.0 + o, 47.5 + o, look=(GLOBE_AT, GLOBE_AT), fov=40.0,
+              aperture=0.0, blend=0.0),
+        dolly((0.0, 9.0, 8.0), (0.0, 11.0, 0.0), 47.5 + o, 60.0 + o, look=(GLOBE_AT, GLOBE_AT), fov=40.0,
+              aperture=0.0, blend=0.0, ease="out"),
+    ]
+
+
+def world_pieces(camera, o=0.0):
+    """The day globe and the finale, `o` seconds later than in this song."""
+    day = BR.Globe(pos=GLOBE_AT, radius=9.0, camera=camera, look="day", spin=7.0, front=-60.0, t_in=40.0 + o,
+                   t_out=46.6 + o, fade=0.8, hearts=dict(t0=41.0 + o, t1=45.6 + o, n=36))
+    fin = BR.Finale(pos=GLOBE_AT, radius=11.5, shrink=0.47, camera=camera, look="night", t_world=47.6 + o,
+                    spin=8.0, front=-150.0, hearts=dict(t0=48.4 + o, t1=52.6 + o, n=44),
+                    t_settle=(52.2 + o, 54.0 + o), t_logo=(53.0 + o, 55.0 + o), bloom=dict(t=54.3 + o),
+                    end=dict(t=(55.0 + o, 56.4 + o), ride=(0.5, 0.74, 14.0), frac=0.27))
+    return day, fin
+
+
+def world_p3d(camera, fin, looks, o=0.0):
+    """The P3D world and bursts for these pieces: `looks` before the day globe, then day, then night."""
+    world = fin.world(dict(look=list(looks) + [(40.0 + o, "day", 0.0), (47.5 + o, "night", 0.0)], arch=None,
+                           react=dict(beat=0.3, level=0.2)))
+    cuts = [dict(t=tc, strength=1.2, rise=0.2, fall=0.5) for tc in (40.0 + o, 47.5 + o) if tc > 0.0]
+    return world, cuts + fin.bursts()
+
+
 # --------------------------------------------------------------------------------------------- the camera
 LOGO_AT = (0.0, 6.2, -6.0)
 CAMERA = Rig([
@@ -69,12 +105,7 @@ CAMERA = Rig([
           aperture=0.0, blend=1.0),
     dolly((-1.0, 4.5, 20.5), (3.0, 4.2, 19.0), 24.4, 40.0, look=((-0.5, 5.9, -4.0), (1.0, 5.6, -4.0)), fov=46.0,
           aperture=0.02, focus=24.0, blend=1.0),
-    # the world by day, then the finale: a slow push toward the globe
-    dolly((0.0, 7.0, 6.0), (0.0, 8.5, 2.0), 40.0, 47.5, look=(GLOBE_AT, GLOBE_AT), fov=40.0, aperture=0.0,
-          blend=0.0),
-    dolly((0.0, 9.0, 8.0), (0.0, 11.0, 0.0), 47.5, 60.0, look=(GLOBE_AT, GLOBE_AT), fov=40.0, aperture=0.0,
-          blend=0.0, ease="out"),
-], blend=1.5, handheld=0.12)
+] + world_moves(), blend=1.5, handheld=0.12)
 
 # ---------------------------------------------------------------------------------------------- the logo
 LOGO = BR.Logo(pos=LOGO_AT, size=6.0, face="camera", camera=CAMERA, t_in=0.4, t_full=4.6, t_out=6.6,
@@ -126,15 +157,8 @@ SYMS = [
              intensity=_K),
 ]
 
-# ------------------------------------------------------------------------------------- the world by day
-DAY_GLOBE = BR.Globe(pos=GLOBE_AT, radius=9.0, camera=CAMERA, look="day", spin=7.0, front=-60.0, t_in=40.0,
-                     t_out=46.6, fade=0.8, hearts=dict(t0=41.0, t1=45.6, n=36))
-
-# ---------------------------------------------------------------------------------------------- the finale
-FINALE = BR.Finale(pos=GLOBE_AT, radius=9.0, camera=CAMERA, look="night", t_world=47.6, spin=8.0, front=-150.0,
-                   hearts=dict(t0=48.6, t1=52.8, n=44), t_settle=(52.4, 54.0), t_logo=(53.4, 55.0),
-                   bloom=dict(t=54.3), end=dict(t=(55.0, 56.4), ride=(0.5, 0.74, 14.0),
-                                                                    frac=0.27))
+# ---------------------------------------------------------------------- the world by day and the finale
+DAY_GLOBE, FINALE = world_pieces(CAMERA)
 
 
 def _setup(scene):
@@ -147,10 +171,5 @@ def _setup(scene):
     FINALE.add_to(scene)
 
 
-P3D = dict(
-    camera=CAMERA,
-    world=FINALE.world(dict(look=[(0.0, "night"), (40.0, "day", 0.0), (47.5, "night", 0.0)], arch=None,
-                            react=dict(beat=0.3, level=0.2))),
-    setup=_setup,
-    bursts=[dict(t=40.0, strength=4.0), dict(t=47.5, strength=4.0)] + FINALE.bursts(),
-)
+_WORLD, _BURSTS = world_p3d(CAMERA, FINALE, [(0.0, "night")])
+P3D = dict(camera=CAMERA, world=_WORLD, setup=_setup, bursts=_BURSTS)
