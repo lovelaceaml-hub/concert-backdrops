@@ -22,6 +22,11 @@ EVERY MOVE takes
                     drawn (default 0.05 m; 0.02 for macro shots of hands).
   blend             the length of the blend INTO this move: 0 is a hard cut (hide it in a burst of light),
                     0.3 to 0.5 a whip (the motion blur streaks the picture), 2 a soft handover.
+  whip              a whip pan INTO this move instead of a blend through space: during `blend` seconds the
+                    camera swings away from the old view toward the new one, faster and faster, cuts at the
+                    middle of the swing (hidden in the motion blur), and swings into the new view, slowing to
+                    rest. It never flies through what stands between the two set-ups. True swings 70 degrees;
+                    a number gives the swing in degrees. Use blend=0.3 to 0.6 with it.
   ease              how the move runs inside its own time: "linear" (default, keeps its speed into the blends),
                     "smooth", "in" (from rest), "out" (to rest: ease into a still reading set-up).
   pace              the speed of the move, driven by the music: a list of (time, progress) keys or a function
@@ -129,12 +134,13 @@ class Move:
     """One camera move. pose(t) gives (pos, target); it is defined for every t (it runs on past its ends)."""
 
     def __init__(self, t0, t1, fov=None, roll=None, focus=None, aperture=None, blend=None, ease="linear", pace=None,
-                 up=None, near=None):
+                 up=None, near=None, whip=None):
         if not t1 > t0:
             raise ValueError(f"a camera move needs t1 > t0, got {t0} and {t1}")
         self.t0, self.t1 = float(t0), float(t1)
         self.fov, self.roll, self.focus, self.aperture, self.blend, self.ease = fov, roll, focus, aperture, blend, ease
         self.up, self.near = up, near
+        self.whip = None if not whip else (70.0 if whip is True else float(whip))
         self.pace = None if pace is None else (pace if callable(pace) else _Pace(pace))
 
     def u(self, t):
@@ -333,16 +339,30 @@ class Rig:
         up = WORLD_UP if up is None else _v(up(t) if callable(up) else up)
         return np.concatenate([pos, tgt, [fov, roll, max(fd, 0.02), max(ap, 0.0), near], up])
 
-    def raw(self, t):
-        """pos, target, fov, roll, focus, aperture, near, up at t as one array (moves blended; no drift)."""
+    def _blend_of(self, m):
+        return self.blend if m.blend is None else float(m.blend)
+
+    def cuts(self):
+        """The times of the hard cuts (blend 0) and of the cuts hidden inside whip pans."""
+        return [m.t0 for m in self.moves[1:] if m.whip or self._blend_of(m) <= 0.0]
+
+    def raw(self, t, ref=None, swing=True):
+        """pos, target, fov, roll, focus, aperture, near, up at t as one array (moves blended; no drift).
+        ref: the time of the frame this sample belongs to (motion blur looks a little back from it). A cut
+        between t and ref is taken on ref's side, so the blur of a frame never reaches across a cut.
+        swing=False leaves out the swing of whip pans."""
         ms = self.moves
+        r = t if ref is None else ref
         # the last move whose blend-in has finished: everything before it no longer counts
         start = 0
         steps = [1.0]
         for j in range(1, len(ms)):
-            w = self.blend if ms[j].blend is None else float(ms[j].blend)
+            w = self._blend_of(ms[j])
             b = ms[j].t0
-            s = (1.0 if t >= b else 0.0) if w <= 0.0 else _smoother((t - (b - 0.5 * w)) / w)
+            if ms[j].whip or w <= 0.0:
+                s = 1.0 if r >= b else 0.0           # a cut (a whip pan cuts at its middle; the swing comes below)
+            else:
+                s = _smoother((t - (b - 0.5 * w)) / w)
             steps.append(s)
             if s >= 1.0:
                 start = j
@@ -351,17 +371,75 @@ class Rig:
             if steps[j] <= 0.0:
                 break
             x = x * (1.0 - steps[j]) + self._one(ms[j], t) * steps[j]
+        if swing:
+            for j in range(1, len(ms)):
+                if ms[j].whip:
+                    x = self._swing(x, j, t, r)
         return x
 
-    def _carried_up(self, t):
+    def _swing(self, x, j, t, r):
+        """A whip pan into move j: the view swings away from the old set-up toward the new one, faster and
+        faster up to the cut at the middle, then swings on into the new view and comes to rest."""
+        m = self.moves[j]
+        w = max(self._blend_of(m), 1e-3)
+        b = m.t0
+        u = (t - (b - 0.5 * w)) / w
+        if not 0.0 < u < 1.0:
+            return x
+        after = r >= b
+        # the other side of the cut: the old set-up (everything before move j), or move j itself
+        # (the swing runs on past the cut on each side, so motion blur samples near the cut keep their speed)
+        if after:
+            other = self.raw(t, ref=b - 1e-6, swing=False)
+            k = (2.0 * (1.0 - u)) ** 2
+        else:
+            other = self._one(m, t)
+            k = (2.0 * u) ** 2
+        if k <= 0.0:
+            return x
+        f0 = x[3:6] - x[0:3]
+        f1 = other[3:6] - other[0:3]
+        d0, d1 = np.linalg.norm(f0), np.linalg.norm(f1)
+        f0, f1 = f0 / max(d0, 1e-9), f1 / max(d1, 1e-9)
+        # before the cut the view turns toward the new one; after it, it comes from the old side, so the turn
+        # keeps its sense through the cut (the axis from this view toward the other one flips by itself)
+        # A pan (about the vertical, horizon level) when the views differ more in heading than in pitch,
+        # else a tilt about the horizontal axis between them.
+        h0, h1 = np.array([f0[0], 0.0, f0[2]]), np.array([f1[0], 0.0, f1[2]])
+        yaw = np.arctan2(np.cross(h0, h1)[1], np.dot(h0, h1)) if min(np.linalg.norm(h0), np.linalg.norm(h1)) > 1e-3 else 0.0
+        pitch = abs(np.arcsin(np.clip(f1[1], -1, 1)) - np.arcsin(np.clip(f0[1], -1, 1)))
+        sense = 1.0
+        if abs(yaw) >= pitch and abs(yaw) > 1e-3:
+            axis = WORLD_UP * np.sign(yaw)
+        else:
+            axis = np.cross(f0, f1)
+            if np.linalg.norm(axis) < 1e-3:     # the same view on both sides: a pan about the vertical
+                axis = WORLD_UP.copy()
+                sense = -1.0 if after else 1.0
+        axis = axis / np.linalg.norm(axis)
+        a = np.radians(float(m.whip)) * k * sense
+        K = np.array([[0.0, -axis[2], axis[1]], [axis[2], 0.0, -axis[0]], [-axis[1], axis[0], 0.0]])
+        Rm = np.eye(3) + np.sin(a) * K + (1.0 - np.cos(a)) * (K @ K)
+        y = x.copy()
+        y[3:6] = x[0:3] + Rm @ (x[3:6] - x[0:3])
+        y[11:14] = Rm @ x[11:14]
+        return y
+
+    def _carried_up(self, t, ref=None):
         """free=True: the up vector carried along the path from the start (a table made once, the same in
         every part of a render), so the picture never flips when the camera loops or looks straight down."""
+        if ref is not None:
+            for c in self.cuts():
+                if t < c <= ref:            # motion blur of the frame just after a cut: the up of after the cut
+                    t = c + 1.0 / 240.0
+                elif ref < c <= t:
+                    t = c - 1.0 / 240.0
         if self._table is None:
             t0, t1 = self.moves[0].t0 - 1.0, self.moves[-1].t1 + 1.0
             ts = np.arange(t0, t1 + 1e-9, 1.0 / 120.0)
             ups = np.zeros((len(ts), 3))
             u = WORLD_UP.copy()
-            cuts = [m.t0 for m in self.moves[1:] if m.blend is not None and float(m.blend) <= 0.0]
+            cuts = self.cuts()
             for i, tt in enumerate(ts):
                 x = self.raw(float(tt))
                 f = x[3:6] - x[0:3]
@@ -382,10 +460,11 @@ class Rig:
         u = ups[i] * (1.0 - (k - i)) + ups[i + 1] * (k - i)
         return u / max(np.linalg.norm(u), 1e-9)
 
-    def state(self, t, aspect=16.0 / 9.0):
-        x = self.raw(t)
+    def state(self, t, aspect=16.0 / 9.0, ref=None):
+        """The CameraState at t. ref: the frame this sample serves (for motion blur), see raw()."""
+        x = self.raw(t, ref)
         pos, tgt = x[0:3].copy(), x[3:6].copy()
-        up = self._carried_up(t) if self.free else x[11:14]
+        up = self._carried_up(t, ref) if self.free else x[11:14]
         roll = float(x[7])
         dist = float(np.linalg.norm(tgt - pos))
         if self.handheld > 0.0:
@@ -409,7 +488,7 @@ class Rig:
 
     def speed(self, t, dt=1.0 / 30.0):
         """How fast the picture moves at t: (metres per second, degrees per second the view turns)."""
-        a, b = self.state(t - dt * 0.5), self.state(t + dt * 0.5)
+        a, b = self.state(t - dt * 0.5, ref=t), self.state(t + dt * 0.5, ref=t)
         fa, fb = a.basis()[2], b.basis()[2]
         ang = np.degrees(np.arccos(min(max(float(np.dot(fa, fb)), -1.0), 1.0)))
         return float(np.linalg.norm(b.pos - a.pos) / dt), float(ang / dt)

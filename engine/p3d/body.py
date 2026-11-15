@@ -29,7 +29,9 @@ KEYS OF Body(...)
              trousers), "coat" (to the knee, open in front, with trousers); default by shape
   veil       True or dict(length=1.0, wide=1.0): a veil from the crown over the shoulders and down the back
              (length 1.5: to the ground)
-  hair       True or dict(length=0.42): long hair as flowing strands (not with a veil)
+  hair       "bun" (hair worn close with a knot at the back: the default for a woman), "cap" (short: the
+             default for a man and a child), True or dict(length=0.42) (long hair as flowing strands,
+             simulated), or False (none). Not with a veil
   look       a look name, a dict, or a list of them (engine/p3d/looks.py). A look dict may carry
              weight=<number or function of time> (looks blend into each other over time) and
              after="<sweep>" or before="<sweep>" (the look lives behind or ahead of a sweep, see sweeps)
@@ -113,7 +115,10 @@ class _SkinSource:
         self.body, self.surf, self.part, self.offset = body, surf, part, offset
         self.n = surf.n
         self.h = (surf.rest[:, 1] / body.rig.height).astype(np.float32)
-        self.rest = surf.rest + surf.rest_normal * offset
+        if callable(offset):
+            offset = np.asarray(offset(surf.rest), np.float32)
+        self.offset = offset
+        self.rest = surf.rest + surf.rest_normal * (offset[:, None] if np.ndim(offset) else offset)
         self.seed = surf.seed
 
     def at(self, t, sel=None):
@@ -123,9 +128,48 @@ class _SkinSource:
         p = (v[vi] * ba[:, :, None]).sum(1)
         n = (nv[vi] * ba[:, :, None]).sum(1)
         n /= np.maximum(np.linalg.norm(n, axis=1, keepdims=True), 1e-9)
-        if self.offset:
+        if np.ndim(self.offset):
+            off = self.offset if sel is None else self.offset[sel]
+            p = p + n * off[:, None]
+        elif self.offset:
             p = p + n * self.offset
         return p, n
+
+
+class _RigidSource:
+    """Points fixed to one bone (a knot of hair at the back of the head)."""
+
+    def __init__(self, body, bone, pts, nrm, part, salt=0):
+        self.body, self.part = body, part
+        self.bone = int(bone)
+        self.pts = np.asarray(pts, np.float32)
+        self.nrm = np.asarray(nrm, np.float32)
+        self.n = len(self.pts)
+        self.rest = self.pts.copy()
+        self.h = (self.pts[:, 1] / body.rig.height).astype(np.float32)
+        self.seed = bm.rand(self.n, 91 + salt).astype(np.float32)
+
+    def at(self, t, sel=None):
+        M = self.body.actor.frame(t)["M"][self.bone].astype(np.float64)
+        p = self.pts if sel is None else self.pts[sel]
+        n = self.nrm if sel is None else self.nrm[sel]
+        return (p @ M[:, :3].T + M[:, 3]).astype(np.float32), (n @ M[:, :3].T).astype(np.float32)
+
+
+def _bun(rig, n):
+    """A knot of hair at the back of the head: points on an egg shape (rest pose), with outward normals."""
+    k = rig.height / 1.6
+    hc = rig.head_centre
+    c = hc + np.array([0.0, 0.0, -0.098]) * k
+    r = np.array([0.043, 0.036, 0.034]) * k
+    u = bm.rand(n, 93) * 2.0 - 1.0
+    a = bm.rand(n, 94) * 2.0 * np.pi
+    q = np.sqrt(1.0 - u * u)
+    d = np.stack([q * np.cos(a), u, q * np.sin(a)], axis=1)
+    pts = c + d * r
+    nrm = d / r
+    nrm /= np.linalg.norm(nrm, axis=1, keepdims=True)
+    return pts, nrm
 
 
 class _ClothSource:
@@ -151,26 +195,50 @@ class _Shape:
     def __init__(self, body):
         self.body = body
         n = body.cloud["n"]
-        self.idx = np.arange(n)[body.cloud["seed"] < min(26000.0 / max(n, 1), 1.0)]
+        self.idx = np.arange(n)[(body.cloud["seed"] < min(26000.0 / max(n, 1), 1.0))
+                                & ((body.cloud["part"] != looks.HAIR) | body.skinlike)]
+        self.skinlike = body.skinlike[self.idx]
+        hy = body.rig.head[body.rig.idx["neck03"]][1]
+        self.head = body.skinlike[self.idx] & (body.cloud["rest"][self.idx, 1] > hy)
+        self.inset = 0.005 + 0.008 + 0.002          # half the disc, the mask's margin, and a little more
 
     def sample(self, t):
         b = self.body
         if b.show is not None and (t < b.show[0] or t > b.show[1]):
             return []
-        pos, _ = b.points_at(t, self.idx)
+        pos, nrm = b.points_at(t, self.idx)
         on = b._on(t)[self.idx]
         keep = on > 0.25
         if not keep.any():
             return []
-        pos = b._w(pos[keep], t)
-        return dict(pos=pos, size=0.012 * b.k * b.scale, alpha=on[keep], kind="soft")
+        pos, nrm = pos[keep].astype(np.float64), nrm[keep].astype(np.float64)
+        # each point is drawn as a disc grown by the mask's own margin: pull it in by as much, so the dark shape
+        # ends just inside the bright edge (no dark halo round the body). Skin follows its normal; cloth (whose
+        # normals may point either way) is pulled toward the body's own axis.
+        inset = self.inset * b.k
+        sk = self.skinlike[keep]
+        d = nrm.copy()
+        # the head (whose smoothed face has a few stray normals): straight in toward its centre
+        hd = self.head[keep]
+        if hd.any():
+            hc = b.actor.where(t, "head")
+            r = pos[hd] - hc
+            d[hd] = r / np.maximum(np.linalg.norm(r, axis=1, keepdims=True), 1e-6)
+        if (~sk).any():
+            ax = b.actor.where(t, "pelvis")
+            h = pos[~sk] - ax
+            h[:, 1] = 0.0
+            d[~sk] = h / np.maximum(np.linalg.norm(h, axis=1, keepdims=True), 1e-6)
+        pos = pos - d * inset
+        pos = b._w(pos, t)
+        return dict(pos=pos, size=0.010 * b.k * b.scale, alpha=on[keep], kind="soft")
 
 
 class Body:
     wants_camera = True
 
     def __init__(self, shape="woman", height=None, at=(0.0, 0.0), facing=0.0, motion="stand", gesture=(),
-                 garment="default", veil=False, hair=False, look="glitter", color="#f2b865", color2="#ffe9c4",
+                 garment="default", veil=False, hair="default", look="glitter", color="#f2b865", color2="#ffe9c4",
                  bright=1.0, points=60000, detail=None, part=None, hand=None, light=None, effects=(), show=None,
                  fade=0.6, wind=None, gust=0.35, seed=1.0, size=1.0, scale=1.0, frame=None, stoop=0.0, wash=None,
                  sweeps=None):
@@ -217,6 +285,7 @@ class Body:
         pieces = []
         layers = []       # (regions, offset, part code, weight function)
         skin = ["head", "neck", "hand", "foot"]
+        skin_w = {}       # region -> weight function (where the region shows as skin)
         side_w = None
         if part in ("arm.L", "arm.R", "hand.L", "hand.R", "hands"):
             skin = ["forearm", "hand"]
@@ -225,6 +294,11 @@ class Body:
             if part != "hands":
                 sg = 1.0 if part[-1] == "L" else -1.0
                 side_w = lambda c: (c[:, 0] * sg > 0).astype(float)      # noqa: E731
+        hip_y = rig.head[rig.idx["upperleg01.L"]][1]
+
+        def loose(c, base, more, hip_y=hip_y):
+            # trousers that hang loose: the cloth stands further off the leg toward the ankle
+            return base + more * np.clip(1.0 - c[:, 1] / hip_y, 0.0, 1.0) ** 1.3
         if garment == "dress":
             layers.append((["torso", "arm", "forearm"], 0.009 * k, looks.CLOTH, None))
             pieces.append(cloth.skirt(rig, flare=1.7))
@@ -232,26 +306,41 @@ class Body:
             layers.append((["torso"], 0.014 * k, looks.CLOTH, None))
             sh_x = abs(rig.head[rig.idx["upperarm01.L"]][0]) + 0.07 * k
             layers.append((["arm"], 0.012 * k, looks.CLOTH, lambda c: (np.abs(c[:, 0]) < sh_x).astype(float)))
+            # an under-sleeve on the forearm, so a raised arm never leaves its hand floating
+            layers.append((["forearm"], 0.008 * k, looks.CLOTH, None))
             pieces += [cloth.skirt(rig, flare=2.0, bell=0.6), cloth.sleeve(rig, "L"), cloth.sleeve(rig, "R")]
         elif garment == "tunic":
-            layers.append((["torso", "arm", "forearm"], 0.010 * k, looks.CLOTH, None))
-            layers.append((["hips", "leg", "shin"], 0.016 * k, looks.CLOTH, None))
-            pieces.append(cloth.skirt(rig, hem=0.70, flare=1.22, rows=10, bell=0.0, air=1.0, name="skirt"))
+            layers.append((["torso", "arm", "forearm"], 0.011 * k, looks.CLOTH, None))
+            layers.append((["hips", "leg", "shin"], lambda c: loose(c, 0.014 * k, 0.026 * k), looks.CLOTH, None))
+            pieces.append(cloth.skirt(rig, hem=0.56, flare=1.32, rows=14, bell=0.12, air=1.1, name="skirt"))
         elif garment == "coat":
             layers.append((["torso", "arm", "forearm"], 0.013 * k, looks.CLOTH, None))
-            layers.append((["hips", "leg", "shin"], 0.016 * k, looks.CLOTH, None))
-            pieces.append(cloth.skirt(rig, hem=0.44, flare=1.45, rows=18, bell=0.25, open_front=True, name="skirt"))
+            layers.append((["hips", "leg", "shin"], lambda c: loose(c, 0.014 * k, 0.022 * k), looks.CLOTH, None))
+            pieces.append(cloth.skirt(rig, hem=0.40, flare=1.5, rows=20, bell=0.25, open_front=True, name="skirt"))
         if veil:
             vk = dict(veil) if isinstance(veil, dict) else {}
             pieces.append(cloth.veil(rig, **vk))
             y0 = hc[1] + 0.012 * k
-            layers.append((["head"], 0.011 * k, looks.VEIL,
-                           lambda c: ((c[:, 1] > y0) | ((c[:, 2] < hc[2] - 0.045 * k) & (c[:, 1] > hc[1] - 0.05 * k))).astype(float)))
+
+            def cover(c, y0=y0, hc=hc, k=k):
+                # all of the head but the face: the top, the back and the sides down to the jaw
+                return ((c[:, 1] > y0) | ((c[:, 2] < hc[2] + 0.025 * k) & (c[:, 1] > hc[1] - 0.075 * k))).astype(float)
+            layers.append((["head"], 0.011 * k, looks.VEIL, cover))
+            skin_w["head"] = lambda c, cover=cover: 1.0 - cover(c)
         elif hair:
-            hk = dict(hair) if isinstance(hair, dict) else {}
-            pieces.append(cloth.hair(rig, **hk))
-            layers.append((["head"], 0.006 * k, looks.HAIR,
-                           lambda c: ((c[:, 1] > hc[1] + 0.02 * k) | ((c[:, 2] < hc[2] + 0.01 * k) & (c[:, 1] > hc[1] - 0.06 * k))).astype(float)))
+            if hair == "default":
+                hair = "bun" if shape == "woman" else "cap"
+            scalp = (lambda c: ((c[:, 1] > hc[1] + 0.02 * k)
+                                | ((c[:, 2] < hc[2] + 0.01 * k) & (c[:, 1] > hc[1] - 0.06 * k))).astype(float))
+            if hair in ("bun", "cap"):
+                # hair worn close: a layer over the scalp (and a knot at the back for "bun"), no simulation
+                layers.append((["head"], 0.007 * k, looks.HAIR, scalp))
+                if hair == "bun":
+                    self._bun = True
+            else:
+                hk = dict(hair) if isinstance(hair, dict) else {}
+                pieces.append(cloth.hair(rig, **hk))
+                layers.append((["head"], 0.006 * k, looks.HAIR, scalp))
         self.cloth = cloth.ClothSystem(self.actor, pieces, t_start=self.t_start, wind=self.wind if self.wind else (0, 0, 0),
                                        gust=gust, seed=self.seed) if pieces else None
 
@@ -259,12 +348,20 @@ class Body:
         det = dict(head=1.5, hand=1.6)
         det.update(detail or {})
         want = []      # (kind, weight, area, payload)
+        def _wfn(reg):
+            fa, fb = side_w, skin_w.get(reg)
+            if fa is None or fb is None:
+                return fa or fb
+            return lambda c: fa(c) * fb(c)
         for reg in skin:
-            a = _area(rig, [reg], side_w)
-            want.append(("skin", a * det.get(reg, 1.0), a, reg))
+            a = _area(rig, [reg], _wfn(reg))
+            if a > 1e-6:
+                want.append(("skin", a * det.get(reg, 1.0), a, reg))
         for (regs, off, pcode, wfn) in layers:
             a = _area(rig, regs, wfn)
             want.append(("layer", a * (1.6 if pcode in (looks.VEIL, looks.HAIR) else 1.0), a, (regs, off, pcode, wfn)))
+        if getattr(self, "_bun", False):
+            want.append(("bun", 0.030 * k * k * 1.6, 0.030 * k * k, None))
         for pc in pieces:
             if pc.strands:
                 want.append(("cloth", 0.10, 0.10, pc))
@@ -272,7 +369,7 @@ class Body:
                 r = pc.rest
                 nxt = np.roll(r, -1, axis=1) if pc.closed else np.concatenate([r[:, 1:], r[:, -1:]], axis=1)
                 a = float(np.linalg.norm(np.cross((nxt - r)[:-1], (r[1:] - r[:-1])), axis=2).sum())
-                want.append(("cloth", a * (0.65 if pc.name == "veil" else 0.8), a, pc))
+                want.append(("cloth", a * (1.05 if pc.name == "veil" else 0.8), a, pc))
         total = sum(w for _, w, _, _ in want)
         area = sum(a for _, _, a, _ in want)
         self.grain = float(np.clip(np.sqrt(area / max(points, 1)) / REF_SPACING, 0.1, 3.0))
@@ -283,13 +380,16 @@ class Body:
             salt += 7
             if kind == "skin":
                 reg = payload
-                surf = assets.Surface(rig, n, keep=[reg], salt=salt, weight=side_w)
+                surf = assets.Surface(rig, n, keep=[reg], salt=salt, weight=_wfn(reg))
                 self.sources.append(_SkinSource(self, surf, looks.HAND if reg in ("hand", "forearm") else
                                                 (looks.FOOT if reg == "foot" else looks.SKIN)))
             elif kind == "layer":
                 regs, off, pcode, wfn = payload
                 surf = assets.Surface(rig, n, keep=regs, salt=salt, weight=wfn)
                 self.sources.append(_SkinSource(self, surf, pcode, off))
+            elif kind == "bun":
+                pts, nrm = _bun(rig, n)
+                self.sources.append(_RigidSource(self, rig.idx["head"], pts, nrm, looks.HAIR, salt))
             else:
                 cp = cloth.ClothPoints(self.cloth, payload.name, n, salt=salt)
                 self.sources.append(_ClothSource(self, cp, looks.HAIR if payload.strands else
@@ -303,7 +403,10 @@ class Body:
         h = np.concatenate([s.h for s in self.sources]).astype(np.float32)
         mix = (bm.hashf(np.arange(n), 4) ** 1.5)[:, None]
         g = k * size * self.grain
-        self.cloud = dict(n=n, part=part_code, seed=seed_arr, rest=rest, h=np.clip(h, 0.0, 1.0),
+        self.skinlike = np.concatenate([np.full(s_.n, isinstance(s_, (_SkinSource, _RigidSource)))
+                                        for s_ in self.sources])
+        edge = self._edges(rest, part_code, k)
+        self.cloud = dict(n=n, part=part_code, seed=seed_arr, rest=rest, h=np.clip(h, 0.0, 1.0), edge=edge,
                           size=((0.003 + 0.008 * seed_arr.astype(np.float64) ** 4) * g).astype(np.float32),
                           color=(self.color[None] * (1 - mix) + self.color2[None] * mix).astype(np.float32),
                           pairs_fn=self._pairs)
@@ -345,6 +448,23 @@ class Body:
         self.fx = []
         for j, e in enumerate(effects):
             self.fx.append(fx.make(self, self._effect_spec(e), j))
+
+    def _edges(self, rest, part_code, k):
+        """0..1 per point: how near it is to the end of a garment (a hem, a cuff, the neckline)."""
+        n = len(rest)
+        edge = np.zeros(n, np.float32)
+        cloth_like = np.isin(part_code, (looks.CLOTH, looks.VEIL))
+        bare = np.isin(part_code, (looks.SKIN, looks.HAND, looks.FOOT))
+        if cloth_like.any() and bare.any():
+            from scipy.spatial import cKDTree
+            d, _ = cKDTree(rest[bare].astype(np.float64)).query(rest[cloth_like].astype(np.float64), k=1)
+            edge[cloth_like] = np.exp(-(d / (0.016 * k)) ** 2)
+        for j, s_ in enumerate(self.sources):
+            if isinstance(s_, _ClothSource) and not s_.cp.strands:
+                u = s_.cp.u
+                sl = slice(self.offs[j], self.offs[j + 1])
+                edge[sl] = np.maximum(edge[sl], bm.smooth((u - 0.88) / 0.10))
+        return edge
 
     # ------------------------------------------------------------------ world and own space
     def _frame(self, t):
@@ -608,12 +728,26 @@ class Body:
                 g = self.cloth.piece("hair", t)
                 seg = g.shape[0] - 1
                 u = (np.arange(seg) / seg)[:, None] * np.ones((1, g.shape[1]))
-                rimmy = 0.35 if "rim" in self.look_names else 1.0
-                a0 = 0.30 * hair_on * self.bright * rimmy
-                out.append(dict(pos=g[:-1].reshape(-1, 3), pos2=g[1:].reshape(-1, 3), size=0.0016 * self.k,
-                                color=self.color * 0.7 + self.color2 * 0.3,
-                                alpha=(a0 * (1.0 - 0.6 * u)).reshape(-1),
-                                alpha2=(a0 * (1.0 - 0.6 * (u + 1.0 / seg))).reshape(-1), kind="line"))
+                a0 = 0.30 * hair_on * self.bright
+                av = (a0 * (1.0 - 0.6 * u)).reshape(-1)
+                av2 = (a0 * (1.0 - 0.6 * (u + 1.0 / seg))).reshape(-1)
+                p1, p2 = g[:-1].reshape(-1, 3), g[1:].reshape(-1, 3)
+                if "rim" in self.look_names and cam is not None:
+                    # a dark head of hair with light only on its outline, as the rim draws the body
+                    eye = self._to_internal(np.asarray(cam.pos, np.float64), t)
+                    mid = 0.5 * (p1 + p2)
+                    hc = self.actor.where(t, "head")
+                    nr = mid - hc
+                    low = mid[:, 1] < hc[1] - 0.10 * self.k
+                    nr[low, 1] = 0.0
+                    nr /= np.maximum(np.linalg.norm(nr, axis=1, keepdims=True), 1e-6)
+                    vv = eye[None] - mid
+                    vv /= np.maximum(np.linalg.norm(vv, axis=1, keepdims=True), 1e-6)
+                    f = (1.0 - np.abs((nr * vv).sum(1))) ** 4
+                    av = av * (0.04 + 1.1 * f)
+                    av2 = av2 * (0.04 + 1.1 * f)
+                out.append(dict(pos=p1, pos2=p2, size=0.0016 * self.k, color=self.color * 0.7 + self.color2 * 0.3,
+                                alpha=av, alpha2=av2, kind="line"))
         for e in self.fx:
             out += e.batches(t, cam)
         return self._out(out, t)
@@ -704,7 +838,7 @@ class Body:
             d.update(kw)
             return Mask(**d)
         if "rim" in self.look_names:
-            d = dict(mode="dark", strength=0.85, grow=0.010 * self.k * self.scale, source=_Shape(self))
+            d = dict(mode="dark", strength=0.9, grow=0.008 * self.k * self.scale, source=_Shape(self))
             d.update(kw)
             return Mask(**d)
         return None
@@ -725,7 +859,7 @@ class Body:
 
 def Hands(meet=(0.0, 1.25, 0.0), t_touch=6.0, axis=90.0, color="#ffcf8a", color2="#8fd0ff", look="glitter",
           apart=0.5, approach=5.0, points=50000, shed=True, shapes=("woman", "man"), bright=1.0, seed=2.0, tilt=18.0,
-          poses=("offer", "open")):
+          poses=("offer", "open"), flare=1.0):
     """Two hands of light reaching for each other until their fingertips touch (ref 04): returns dict(left=Body,
     right=Body, flare=Flare). Add all three to the scene.
 
@@ -733,6 +867,7 @@ def Hands(meet=(0.0, 1.25, 0.0), t_touch=6.0, axis=90.0, color="#ffcf8a", color2
     axis      the direction from the first hand to the second, degrees (90: along +x)
     apart     metres between the fingertips at the start; approach: seconds of reaching
     tilt      degrees: the first hand comes from a little below, the second from a little above
+    flare     size of the flash at the touch (1 suits this close-up; 0 for none)
     """
     meet = np.asarray(meet, np.float64)
     a = np.radians(axis)
@@ -751,9 +886,11 @@ def Hands(meet=(0.0, 1.25, 0.0), t_touch=6.0, axis=90.0, color="#ffcf8a", color2
 
         fxs = [dict(kind="shed", n=5000, life=2.4, where=[looks.HAND], dir=-aim, speed=0.5, rise=0.03, turb=0.22,
                     spread=0.05)] if shed else []
-        out[name] = Body(shapes[j], part="arm." + side, look=look, color=col, color2="#ffffff", points=points,
+        light = _col(col)
+        out[name] = Body(shapes[j], part="arm." + side, look=look, color=col, color2=light * 0.55 + 0.45, points=points,
                          effects=fxs, bright=bright, seed=seed + j,
                          hand=dict(side=side, at=at, aim=aim, palm=(0.0, 1.0, 0.0) if j == 0 else (0.0, -1.0, 0.0),
                                    pose=poses[j], anchor="fingertips"))
-    out["flare"] = fx.Flare(meet, t_touch, color=color, color2=color2)
+    if flare:
+        out["flare"] = fx.Flare(meet, t_touch, color=color, color2=color2, scale=flare)
     return out
