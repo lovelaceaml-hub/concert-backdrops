@@ -24,8 +24,8 @@ THE ACTING PLAN (every expression acted while it reads; style and scale change e
     walks past him and through the door first. Plexus wireframe people (p01, refs 03, 12). We follow her in.
   3 Respect "I'd love to hear more about your thoughts." (13.30, the sea at blue hour). HALF FIGURES,
     CLOSE: two people face each other over the sea. He speaks with an open hand raised, a stream of light
-    flowing from it; she leans in, her head tilted, listening, and nods. Profiles outlined in sparks (p06),
-    filled with the starry night. Into his head.
+    flowing from it to her; she leans in, her head tilted, listening, and nods. He is warm gold glitter, she
+    is crystal light with the starry sky seen through her. We follow his words into her.
   4 Gratitude "Thank you..." (19.85, a field of stars). MANY: a man stands on the starry shore and the
     people round him bow to him, one after another, in thanks; he bows back. Gold glitter (p08); he is a
     window onto the harvest. Into his heart.
@@ -140,16 +140,17 @@ LOOKS = dict(
                  sun_color="#ffc870", sun_int=0.9, sun_glow=0.4, clouds=0.30, rays=0.6, haze=0.4,
                  haze_color="#a8506a", mist=0.4, mist_height=3.0, mist_color="#c86a60", water="#1a1022",
                  hill_color="#1c0e26", stars=0.2, dust=1.0, dust_color="#ffd27a", dust_color2="#ffb060", bokeh=1.0),
-    rain=dict(base="night", sky_top="#0b0d2e", sky_mid="#231f52", sky_hor="#4a4470", sun_el=-5.0, stars=0.0,
-              milky=0.0, clouds=0.65, haze=0.7, haze_color="#2a2858", mist=0.5, mist_height=2.0,
-              mist_color="#3a3a70", ripple=1.8, water="#0e1034", dust=0.3, dust_color="#cfd6ff"),
+    rain=dict(base="dusk", sky_top="#16134a", sky_mid="#45306e", sky_hor="#c87a8a", sun_az=180.0, sun_el=-2.0,
+              sun_color="#ffb090", sun_int=0.5, stars=0.3, milky=0.0, clouds=0.5, haze=0.6, haze_color="#7a4a78",
+              mist=0.5, mist_height=2.0, mist_color="#8a5a80", ripple=1.6, water="#1c1640", dust=0.4,
+              dust_color="#ffe0c0", hill_color="#2a1c40"),
     blossom=dict(base="golden", sky_top="#0a2468", sky_mid="#2a56a8", sky_hor="#ffd2bc", sun_az=146.0,
                  sun_el=2.0, sun_color="#fff0dc", sun_int=0.6, sun_glow=0.3, clouds=0.30, rays=0.25, haze=0.25,
                  haze_color="#7a7ab8", mist=0.12, mist_height=1.0, mist_color="#e8c8d0", water="#123a7a",
                  hill_color="#22325e", dust=0.6, dust_color="#fff4f0", dust_color2="#ffc2cf"),
     stars_lit=dict(base="night", sky_top="#3a4cb8", sky_mid="#6a62d0", sky_hor="#d08ac8", stars=1.0, milky=1.0,
                    hills=0.55, hill_color="#5a50a8", haze_color="#8a72c8", mist=0.2, water="#3a42a0", exposure=1.4),
-    space=dict(base="night", sky_top="#02030e", sky_mid="#060c2c", sky_hor="#0e1a4c", stars=1.0, milky=1.0,
+    space=dict(base="night", sky_top="#0a1446", sky_mid="#1c2c78", sky_hor="#4a3a9a", stars=1.0, milky=1.0,
                hills=0.0, haze=0.15, haze_color="#0e1a4c", mist=0.0, water="#02040e", mirror=1.0, ripple=0.0,
                dust=0.3, dust_color="#cfd8ff", sun_int=0.0),
     space_win=dict(base="night", sky_top="#4656c4", sky_mid="#8a7ad8", sky_hor="#ffc0a0", stars=1.0, milky=1.0,
@@ -210,7 +211,7 @@ C2 = O2 + _A(K2[-1][1])
 # S3 the sea at blue hour: two people face each other (scale 26); into his head
 O3 = _after(C2, (-6.0, 0.0, 120.0))
 K3 = [(X2, (-6.0, C2[1], 120.0), (0.0, 36.0, -70.0)), (15.2, (-3.0, 34.0, 62.0), (0.0, 38.0, -70.0)),
-      (18.2, (4.0, 37.0, 22.0), (10.0, 40.0, -70.0)), (X3, (16.56, 43.2, -71.0), (16.56, 43.2, -110.0))]
+      (18.2, (-3.0, 37.0, 22.0), (-12.0, 39.0, -70.0)), (X3, (-16.05, 39.5, -68.0), (-16.05, 39.5, -110.0))]
 C3 = O3 + _A(K3[-1][1])
 
 # S4 the field of stars: the crowd that bows (scale 12) and the man they thank (scale 16); into his heart
@@ -707,7 +708,7 @@ class Rain:
             ln = 0.32 * min(1.0, max(0.0, (BREATH + 1.2 - t) / 1.0)) + 0.03
             pos2 = pos + np.array([0.0, ln, 0.0])
             g = _ss(X5 - 0.05, X5 + 0.5, t)
-            return dict(pos=pos, pos2=pos2, size=0.006, color=lin("#d6dcff"), alpha=0.45 * near * g, kind="line")
+            return dict(pos=pos, pos2=pos2, size=0.006, color=lin("#ffe8d0"), alpha=0.5 * near * g, kind="line")
         g = 1.0 - _ss(45.0, 47.0, t)
         flash = 1.0 + 0.8 * np.exp(-(t - X6) / 0.35)
         col = lin("#ffd9a0") * (1 - s[:, 3:4]) + lin("#ffb4c8") * s[:, 3:4]
@@ -742,8 +743,24 @@ class Blossom:
 
 # ------------------------------------------------------------------------------------------------ people
 def _style(name, color, color2, bright=1.0):
-    """The looks of each style of person (refs and refs2): window (filled with the next world, a rim of
-    light), sparks (a profile outlined in sparks, filled with the next world), plexus, glitter."""
+    """The looks of each style of person (UPDATE 13: only radiant, whole people): window (filled with the
+    next world, a rim of light), crystal (glass-like: the next world seen through a clear body, prismatic
+    edges and sparkle), crystal_light (the same without a window), gold (warm gold glitter), goldwin (warm gold
+    glitter round a window onto the next world)."""
+    if name == "crystal":
+        return [dict(name="window", bright=0.8 * bright, size=1.2, color="#f4fbff", color2="#ffffff"),
+                dict(name="rim", bright=1.7 * bright, power=2.6, color="#e6f6ff", color2="#ffd6ee"),
+                dict(name="glitter", bright=0.7 * bright, color="#d6f0ff", color2="#fff0fa", glints=0.004)]
+    if name == "crystal_light":
+        return [dict(name="rim", bright=1.9 * bright, power=2.4, color="#e6f6ff", color2="#ffd6ee"),
+                dict(name="glitter", bright=1.0 * bright, color="#d6f0ff", color2="#fff4fa", glints=0.004)]
+    if name == "gold":
+        return [dict(name="glitter", bright=1.5 * bright, color="#ffc860", color2="#fff0c8"),
+                dict(name="rim", bright=0.9 * bright, power=3.0, color="#fff0c8", color2="#ffc860")]
+    if name == "goldwin":
+        return [dict(name="window", bright=1.0 * bright, size=1.3, color="#ffe0a0", color2="#fff6e0"),
+                dict(name="glitter", bright=1.2 * bright, color="#ffc860", color2="#fff0c8"),
+                dict(name="rim", bright=1.2 * bright, power=3.0, color="#fff0c8", color2="#ffc860")]
     if name == "window":
         return [dict(name="window", bright=1.3 * bright, size=1.4, color=color, color2=color2),
                 dict(name="rim", bright=0.6 * bright, color=color2, color2=color)]
@@ -867,12 +884,12 @@ def _setup(scene):
          -1.0, X1, window=True, edge=0.7, grow=0.35, rise=0.0)
     gs, ga = GREET_SCALE, GREET_AT
     refs = {}
-    man = _person("man", (ga[0], ga[2]), (0.0, 0.0, 0.0), style="glitter", color="#fff0d0", color2="#ffffff",
+    man = _person("man", (ga[0], ga[2]), (0.0, 0.0, 0.0), style="gold", color="#fff0d0", color2="#ffffff",
                   bright=1.6, scale=gs, garment="coat", facing=[(0.0, 90.0), (4.2, 90.0), (5.1, -90.0)],
                   motion=[(-1e9, "stand"), (4.1, "shuffle"), (5.2, "stand")],
                   gesture=[(4.9, 30.0, "wave", dict(side="R"))], seed=12.0)
     refs["m"] = man
-    woman = _person("woman", (ga[0] - 0.62 * gs, ga[2] - 0.05 * gs), (0.0, 0.0, 0.0), style="glitter",
+    woman = _person("woman", (ga[0] - 0.62 * gs, ga[2] - 0.05 * gs), (0.0, 0.0, 0.0), style="gold",
                     color="#ffe0c0", color2="#ffffff", bright=1.6, scale=gs, garment="dress", facing=90.0,
                     gesture=[(3.4, 5.0, "hand_on_shoulder",
                               dict(side="R", to=lambda tt: refs["m"].where(tt, "shoulder.R", raw=True)))],
@@ -887,31 +904,32 @@ def _setup(scene):
               mask=Mask("sky", sky="world", look=window_look, edge=0.4, grow=0.6, source=door.fill,
                         strength=lambda t: _ss(X1, X1 + 0.8, t) * (1.0 if t < X2 else 0.0)))
     _add(scene, "s2_host", _person("man", (-14.0, -78.0), O2,
-                                   style="plexus", color="#ffd9a0", color2="#fff4e0", scale=12.0, garment="coat",
+                                   style="gold", color="#ffd9a0", color2="#fff4e0", scale=12.0, garment="coat",
                                    facing=100.0,
                                    gesture=[(8.1, 30.0, "offer", dict(side="L"))], seed=21.0), X1, X2)
-    _add(scene, "s2_guest", _person("woman", (8.0, -24.0), O2, style="plexus", color="#ffe6c0", color2="#ffffff",
+    _add(scene, "s2_guest", _person("woman", (8.0, -24.0), O2, style="crystal", color="#ffe6c0", color2="#ffffff",
                                     scale=12.0, garment="dress", facing=180.0,
-                                    motion=[(-1e9, "stand"), (8.6, "walk", dict(speed=1.6))], seed=22.0), X1, X2)
+                                    motion=[(-1e9, "stand"), (8.6, "walk", dict(speed=1.6))], seed=22.0), X1, X2,
+         window=True, edge=0.8)
 
     # 3 RESPECT: he speaks with an open hand raised, light flowing from it; she leans in and listens
-    speaker = _person("man", (19.0, -70.0), O3, style="sparks", color="#bfe0ff", color2="#ffffff", scale=26.0,
+    speaker = _person("man", (19.0, -70.0), O3, style="gold", color="#ffd090", color2="#fff4e0", scale=26.0,
                       garment="tunic", facing=270.0, seed=31.0,
                       gesture=[(13.9, 30.0, "offer", dict(side="L"))])
-    listener = _person("woman", (-19.0, -70.0), O3, style="sparks", color="#bfe0ff", color2="#ffffff",
+    listener = _person("woman", (-19.0, -70.0), O3, style="crystal", color="#bfe0ff", color2="#ffffff",
                        scale=26.0, garment="dress", facing=90.0, seed=32.0,
                        gesture=[(14.0, 30.0, "listen", dict(side="R", amount=1.0)),
                                 (15.8, 16.6, "bow", dict(amount=9.0, ease=0.4)),
                                 (16.9, 17.7, "bow", dict(amount=7.0, ease=0.4))])
     tint3 = (1.7, 1.6, 1.9)
-    _add(scene, "s3_speaker", speaker, X2, X3, window=True, edge=0.8, tint=tint3)
+    _add(scene, "s3_speaker", speaker, X2, X3)
     _add(scene, "s3_listener", listener, X2, X3, window=True, edge=0.8, tint=tint3)
     scene.add("s3_thought", PW.KeepClear(Stream(lambda t: speaker.where(t, "palm.L"),
                                                 lambda t: listener.where(t, "head"), 14.6, X3 - 0.3, size=0.30),
                                          WORDS, floor=0.0))
 
     # 4 GRATITUDE: the people round him bow to him, one after another; he bows back
-    _add(scene, "s4_worker", _person("man", (WORKER_AT[0], WORKER_AT[2]), O4, style="window", color="#ffd27a",
+    _add(scene, "s4_worker", _person("man", (WORKER_AT[0], WORKER_AT[2]), O4, style="goldwin", color="#ffd27a",
                                      color2="#fff4d0", scale=16.0, garment="coat", facing=0.0,
                                      gesture=[(22.6, 30.0, "bow", dict(amount=20.0))], seed=41.0),
          X3, X4, window=True, edge=0.7)
@@ -931,20 +949,20 @@ def _setup(scene):
                                       color2="#bfe4ff", strength=0.6), X4, X5, rise=0.0))
 
     # 6 APOLOGY and INCLUSIVENESS: they kneel face to face in the rain; they rise and hold each other
-    a6, b6 = _embrace_pair(O6 + PAIR6, 36.9, 38.3, _style("window", "#cfd6ff", "#ffffff"),
-                           _style("window", "#e8dcff", "#ffffff"))
+    a6, b6 = _embrace_pair(O6 + PAIR6, 36.9, 38.3, _style("goldwin", "#ffd090", "#fff4e0"),
+                           _style("crystal", "#e8dcff", "#ffffff"))
     _add(scene, "s6_him", a6, X5, X6, window=True, edge=0.7)
     _add(scene, "s6_her", b6, X5, X6, window=True, edge=0.7)
 
     # 7 ENCOURAGEMENT: she kneels in prayer; COMPLIMENT: a father lifts his daughter into his arms
-    _add(scene, "s7_prayer", _person("woman", (PRAYER_AT[0], PRAYER_AT[2]), O7, style="glitter", color="#fff0e8",
-                                     color2="#ffffff", bright=1.4, garment="dress",
+    _add(scene, "s7_prayer", _person("woman", (PRAYER_AT[0], PRAYER_AT[2]), O7, style="gold", color="#ffd8a0",
+                                     color2="#fff4e0", bright=1.1, garment="dress",
                                      facing=90.0, motion=[(-1e9, "kneel", dict(dur=0.01, hands="pray"))],
                                      gesture=[(X6, 61.0, "bow", dict(amount=14.0))], seed=71.0), X6, REVEAL + 1.0)
     fa, ch = pairs.child_into_arms(47.6, at=(O7[0] + FATHER_AT[0], O7[2] + FATHER_AT[2]), facing=270.0, lift=1.0,
-                                   adult=dict(shape="man", garment="coat", look=_style("glitter", "#ffc070", "#ffe8c0", 1.8),
+                                   adult=dict(shape="man", garment="coat", look=_style("crystal_light", "#e6f6ff", "#ffffff", 1.2),
                                               color="#ffd9a0", seed=72.0),
-                                   child=dict(look=_style("glitter", "#ff9a80", "#ffe0c8", 2.0), color="#ff9a80",
+                                   child=dict(look=_style("gold", "#ffb070", "#fff0d0", 1.3), color="#ffb070",
                                               garment="dress", seed=73.0,
                                               effects=[dict(kind="shed", t=48.3, n=6000, speed=0.6, rise=0.5,
                                                             color="#ffb070", where="top")]))
@@ -952,7 +970,7 @@ def _setup(scene):
     _add(scene, "s7_child", ch, X6, REVEAL + 1.5)
 
     # 8 HEAVENLY MOTHER, only from behind, veiled: a silhouette full of stars, a rim of light
-    _add(scene, "s8_mother", _person("woman", tuple(MOTHER_AT), O7, style="sparks", color="#ffe8c8",
+    _add(scene, "s8_mother", _person("woman", tuple(MOTHER_AT), O7, style="goldwin", color="#ffe8c8",
                                      color2="#ffffff", bright=1.2, scale=45.0, garment="robe",
                                      veil=dict(length=1.5), points=110000, facing=180.0,
                                      gesture=[(50.2, 61.0, "open_arms", dict(lift=0.25))], seed=81.0),
@@ -1014,14 +1032,18 @@ def _clear_boxes(t):
 
 NINE = [e["color"] for e in PW.EXPRESSIONS]
 _HEAD_LIGHT = tuple(O7 + MOTHER_HEAD + _A([0.0, 3.0, -14.0]))     # behind her head: rays fan from it (ref 10)
+_PROFILE_LIGHT = tuple(O1 + BUST_HEAD + _A([-6.0, 10.0, -40.0]))  # behind the giant profile's head
 
 P3D = dict(
     camera=CAMERA,
     world=dict(
         looks=LOOKS,
         look=MAIN_LOOK,
-        light=dict(pos=_HEAD_LIGHT, color="#fff0d0", size=10.0, rays=1.0,
-                   strength=lambda t: 1.4 * _ss(REVEAL + 0.4, REVEAL + 2.0, t) * (1.0 if t < FLOOD else 0.0)),
+        light=dict(pos=lambda t: _PROFILE_LIGHT if t < 20.0 else _HEAD_LIGHT, color="#fff0d0", size=10.0, rays=1.0,
+                   strength=lambda t: (0.9 * (1.0 - _ss(X1 - 0.8, X1 - 0.2, t)) if t < 20.0 else
+                                       1.4 * _ss(REVEAL + 0.4, REVEAL + 2.0, t) * (1.0 if t < FLOOD else 0.0))),
+        shafts=[dict(base=(float(O7[0] + PRAYER_AT[0]), float(O7[2] + PRAYER_AT[2])), radius=0.7, top=14.0,
+                     spread=0.4, color="#fff0d0", strength=lambda t: 0.9 * _ss(X6, X6 + 1.0, t) * (1.0 - _ss(47.0, 48.5, t)))],
         react=dict(beat=0.35, level=0.2),
     ),
     bursts=[dict(t=X5, at=tuple(MEET + _A([0.0, LIFT, 0.0])), strength=0.4, rise=0.15, fall=0.45, color="#ffd8a0",
