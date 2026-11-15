@@ -155,22 +155,17 @@ PAL = {
     "dawn": ("#1d3f7c", "#6b94c9", "#f2c4a6", "#ffdcb4"),
     "day":  ("#4f9bd8", "#9ccbee", "#fcecd6", "#fff2dc"),
 }
-_pal_keys = [(0.0, "dusk"), (8.0, "dusk"), (13.0, "dawn"), (17.5, "dawn")]
-# the bright day is the campaign theme sky (engine/theme.py, UPGRADE-HOWTO section I)
-_day = [Track([(0.0, v), (1.0, v)]) for v in [tr(0.0) for tr in theme.sky_tracks([(0.0, "day")])]]
-
-
-def _sky(k):
-    keys = [(t, lin(PAL[p][k])) for t, p in _pal_keys] + [(20.5, _day[k](0.0)), (TOTAL, _day[k](0.0))]
-    return Track(keys)
-
-
-SKY_TOP, SKY_MID, SKY_HOR, GLOW = (_sky(k) for k in range(4))
-SKY_THEME = Track([(0, 0.0), (16.5, 0.0), (20.5, 1.0), (TOTAL, 1.0)])   # the bright campaign world from 20.5 s
+_pal_keys = [(0.0, "dusk"), (8.0, "dusk"), (13.0, "dawn"), (17.5, "dawn"), (20.5, "day"), (TOTAL, "day")]
+# The bright day: a clear sky blue, kept saturated enough that people of light still read on it (video check
+# 43692067145: the full cream campaign sky washed the hands and the painted pair out), with the campaign world's
+# pale hills, bubbles and leaves (engine/theme.py, UPGRADE-HOWTO section I).
+PAL["day"] = ("#2f7fcc", "#6aaee4", "#f0d2b4", "#ffe2c0")
+SKY_TOP, SKY_MID, SKY_HOR, GLOW = (Track([(t, lin(PAL[p][k])) for t, p in _pal_keys]) for k in range(4))
+SKY_THEME = Track([(0, 0.0), (16.5, 0.0), (20.5, 0.55), (TOTAL, 0.55)])   # half way to the campaign world
 BUBBLES = Track([(0, 0.0), (17.0, 0.0), (21.0, 0.5), (TOTAL, 0.5)])     # iridescent soap bubbles in the day
 LEAVES = Track([(0, 0.0), (18.0, 0.0), (22.0, 0.3), (TOTAL, 0.3)])      # a few leaves of light
 LEAVES_COLORS = (theme.LEAF_GREEN, theme.LEAF_GOLD)
-SUN_INT = Track([(0, 0.20), (8.0, 0.22), (13.0, 0.45), (18.0, 0.55), (21.0, 0.62), (TOTAL, 0.62)])
+SUN_INT = Track([(0, 0.20), (8.0, 0.22), (13.0, 0.45), (18.0, 0.50), (21.0, 0.45), (TOTAL, 0.45)])
 SUN_Y = Track([(0, 0.335), (8.0, 0.34), (13.0, 0.36), (21.0, 0.40), (TOTAL, 0.41)])
 SUN_SIZE = Track([(0, 0.09), (13.0, 0.11), (21.0, 0.13), (TOTAL, 0.13)])
 STARS = Track([(0, 0.0), (0.3, 0.0), (2.0, 0.9), (8.0, 0.8), (13.0, 0.25), (18.0, 0.08), (TOTAL, 0.08)])
@@ -211,11 +206,11 @@ FIGURES = [
     dict(kind="rig", preset="hands", t0=18.6, t1=24.0, gather=1.8, dissolve=2.6, x=0.5, y=0.39, height=0.40,
          actions=[(18.6, "cup"), (20.2, "open", {"blend": 1.3}), (21.8, "offer", {"blend": 1.2}),
                   (23.2, "release", {"blend": 0.9})],
-         color="#ffd6a0", to_star=7, particles=11000),
+         color="#ffbf6a", glow=1.6, sparks=1.4, to_star=7, particles=11000),
     # 4. an existing painted figure, brought alive with the new warp (no new art)
     dict(poses=["assets/figures/consideration_b.png"], t0=19.0, t1=25.6, gather=2.0, dissolve=2.4,
          x=(0.12, 0.25), move=(19.0, 25.6), ease="linear", bob=1.0, y=0.34, height=0.27, warp=True,
-         leave="drift", color="#ffcfa0", glow=0.9),
+         leave="drift", color="#ffbf6a", glow=1.5),
 ]
 
 # Nine lights on an arch over the stage, one for each expression
