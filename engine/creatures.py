@@ -77,7 +77,7 @@ class Strokes:
                                      np.broadcast_to(np.atleast_1d(wb), (n,))[:, None], st, c]))
 
     def data(self):
-        return np.vstack(self.parts).astype("f4") if self.parts else np.zeros((0, 15), "f4")
+        return np.vstack(self.parts).astype("f4") if self.parts else np.zeros((0, 13), "f4")
 
 
 # ---------------------------------------------------------------- doves
@@ -257,7 +257,7 @@ class Flock:
         x = np.clip((te - self.ts) / DT, 0.0, self.k)
         k0 = np.floor(x).astype(int)
         k1 = np.minimum(k0 + 1, self.k)
-        u = (x - k0)[..., None]
+        u = (x - k0)[:, None, None]
         return self.H[k0] * (1 - u) + self.H[k1] * u
 
 
@@ -538,7 +538,7 @@ class Creatures:
         self.p_pt = ctx.program(vertex_shader=CS.POINT_VS, fragment_shader=CS.POINT_FS)
         quad = ctx.buffer(np.array([-1, -1, 1, -1, -1, 1, 1, 1], "f4").tobytes())
         self.MAXS, self.MAXP = 6000, 8000
-        self.b_st = ctx.buffer(reserve=self.MAXS * 15 * 4, dynamic=True)
+        self.b_st = ctx.buffer(reserve=self.MAXS * 13 * 4, dynamic=True)
         self.b_pt = ctx.buffer(reserve=self.MAXP * 6 * 4, dynamic=True)
         self.v_st = ctx.vertex_array(self.p_st, [(quad, "2f", "aCorner"),
                                                  (self.b_st, "2f 2f 2f 4f 3f/i", "aA", "aB", "aW", "aStyle", "aCol")])
