@@ -68,7 +68,7 @@ from songs.s03_original import *  # noqa: E402,F401,F403
 from track import Track  # noqa: E402
 from p3d import lin  # noqa: E402
 from p3d import words as PW  # noqa: E402
-from p3d.api import CameraState  # noqa: E402
+from p3d.api import CameraState, show  # noqa: E402
 from p3d.camera import Move, Rig  # noqa: E402
 from p3d import master_sky as MS  # noqa: E402
 from p3d import brand as BR  # noqa: E402
@@ -283,8 +283,8 @@ def _cam_keys_s2():
     c3, c4, c5 = P2 + _v(1.0, 1.5, 3.9), P2 + _v(2.5, 1.55, 2.1), P2 + _v(2.4, 1.52, 1.8)
     return [(15.3, P1b + _v(-0.5, 1.8, 2.2), P1b + _v(0.0, 1.3, -4.0)),
             (16.4, c1, _aim(c1, kneel, 0.745, 0.72, F2)),               # the two kneeling in the rain of light
-            (18.6, c2, _aim(c2, kneel, 0.75, 0.72, F2)),
-            (19.35, c3, _aim(c3, hold, 0.68, 0.70, F2)),               # round them as they rise
+            (18.6, c2, _aim(c2, kneel, 0.76, 0.72, F2)),
+            (19.35, c3, _aim(c3, hold, 0.74, 0.70, F2)),               # round them as they rise
             (20.2, c4, _aim(c4, hold, 0.68, 0.70, F2)),                # the embrace
             (21.6, c5, _aim(c5, hold, 0.68, 0.70, F2))]
 
@@ -319,7 +319,7 @@ def _cam_keys_s4():
             (30.4, c1, _aim(c1, two, 0.62, 0.72, 52.0)),
             (31.6, c2, _aim(c2, two, 0.67, 0.70, 48.0)),            # closer: the hand on the shoulder
             (33.3, c3, _aim(c3, two, 0.67, 0.70, 48.0)),
-            (35.36, P4 + _v(2.6, 2.4, 6.0), P4 + _v(0.0, 7.95, -6.0))]
+            (35.36, P4 + _v(-0.5, 2.4, 6.0), P4 + _v(-2.0, 7.95, -6.0))]    # up, away from the corner
 
 
 F5 = 48.0
@@ -343,8 +343,8 @@ def _cam_keys_s5():
             (38.6, c2, _aim(c2, g, 0.685, 0.745, F5)),
             (39.0, c3, _aim(c3, g, 0.685, 0.745, F5))], \
         [(38.95, o1, _aim(o1, d, 0.68, 0.71, F5)),                      # a whip pan to the dancer
-         (40.6, o2, _aim(o2, d, 0.68, 0.71, F5)),
-         (42.0, o3, _aim(o3, d, 0.68, 0.71, F5))]
+         (40.6, o2, _aim(o2, d, 0.71, 0.71, F5)),
+         (42.0, o3, _aim(o3, d, 0.72, 0.71, F5))]
 
 
 _B0, _B1 = P5b + _v(-1.1, 1.65, 5.4), P5b + _v(-0.6, 1.7, 10.5)
@@ -625,6 +625,11 @@ LOOKS = dict(
                exposure=0.8),
 )
 
+# the pastel day under the end card (BRAND's PASTEL, warmer and a little deeper below the horizon: a soft peach
+# and cream sea, never near white)
+LOOKS["pastel"] = dict(BR.PASTEL, water=show("#f4e2d2") * 0.5, mirror=0.4, mirror_min=0.22,
+                       mist_color=show("#ffe8d8") * 0.5, haze_color=show("#ffecdc") * 0.55, mist=0.12, exposure=0.94)
+
 LOOK_KEYS = [(0.0, "opening"), (7.6, "shore", 1.6), (SEC[2], "rain", 1.4), (19.6, "sunrise", 2.2),
              (SEC[3], "river", 0.6), (SEC[4], "cathedral", 0.0), (SEC[5], "rivers", 0.0), (SEC[6], "breath", 1.2),
              (45.6, "ascent", 1.6), (HEAVEN_T - 0.5, "glory", 1.0), (ASC1 + 0.4, "heaven", 1.2)]
@@ -787,7 +792,7 @@ def _cast():
     cam3 = _cam_at_key(_cam_keys_s3(), 23.4)
     C["concession"] = acting.perform("Concession", 23.0, 25.6, at=(P3[0] - 1.0, P3[2] + 2.0),
                                      view=_view(P3, cam3), variant="after_you",
-                                     style=dict(points=95000, **dict(GOLD, bright=1.75)), pre=1.4, post=0.4,
+                                     style=dict(points=95000, **dict(GOLD, bright=1.75)), pre=1.4, post=0.0,
                                      seed=5.0)
     cam3b = _cam_at_key(_cam_keys_s3(), 26.5)
     C["respect"] = acting.perform("Respect", 26.2, 28.8, at=(P3b[0], P3b[2]), view=_view(P3b, cam3b),
@@ -797,7 +802,7 @@ def _cast():
     C["encouragement"] = acting.perform("Encouragement", 29.6, 33.6, at=(P4[0], P4[2]), view=_view(P4, cam4),
                                         variant="shoulder", style=dict(points=70000),
                                         style_a=dict(GOLD, shape="woman"), style_b=dict(CRYSTAL, shape="woman"),
-                                        pre=0.9, post=1.9, seed=7.0)
+                                        pre=0.9, post=0.9, seed=7.0)
     cam5 = P5 + _v(-0.8, 1.3, 6.0)
     C["consideration"] = acting.perform("Consideration", 35.9, 38.9, at=(P5[0], P5[2]), view=_view(P5, cam5),
                                         variant="help_up", style=dict(points=70000),
@@ -806,7 +811,7 @@ def _cast():
     cam5b = P5b + _v(-2.0, 1.55, 6.4)
     C["compliment"] = acting.perform("Compliment", 39.0, 42.0, at=(P5b[0], P5b[2]), view=_view(P5b, cam5b),
                                      variant="twirl", style=dict(points=95000, **dict(CRYSTAL, bright=1.8)),
-                                     pre=0.7, post=1.1,                  # gone as the breath begins: stillness
+                                     pre=0.1, post=1.1,                  # gone as the breath begins: stillness
                                      seed=9.0)
     return C
 
@@ -1160,15 +1165,17 @@ def _setup(scene):
                                                   gain=_gain((0.0, 0.0), (20.6, 0.0), (21.85, 1.0), (22.9, 1.0),
                                                              (23.5, 0.5), (25.6, 0.5),
                                                              (26.4, 0.35), (28.6, 0.35), (28.79, 0.0), (TOTAL, 0.0)))))
-    scene.add("door", FX.Door(P3, width=1.4, height=2.5, facing=0.0, t_open=23.0,
-                              gain=_gain((0.0, 0.0), (21.9, 0.0), (22.3, 1.0), (26.4, 1.0), (26.9, 0.0), (TOTAL, 0.0))))
+    # the door fades before we pass through it (no white bars across the arriving Respect)
+    scene.add("door", NearFade(FX.Door(P3, width=1.4, height=2.5, facing=0.0, t_open=23.0,
+                                       gain=_gain((0.0, 0.0), (21.9, 0.0), (22.3, 1.0), (25.2, 1.0), (25.65, 0.0),
+                                                  (TOTAL, 0.0))), 4.0))
     petal_path = [P3 + _v(-3.2, 1.4, 2.6), P3 + _v(-1.4, 1.35, 1.2), P3 + _v(0.0, 1.35, 0.1),
                   P3 + _v(0.2, 1.6, -3.0), P3 + _v(-0.4, 2.2, -8.0), P3 + _v(0.5, 3.4, -14.0)]
-    scene.add("petals3", Clear(FX.PetalStream(petal_path, 23.7, 25.7, n=1300, speed=3.6)),
+    scene.add("petals3", Clear(NearFade(FX.PetalStream(petal_path, 23.7, 25.1, n=1300, speed=3.6), 6.0)),
               reflect=True)
-    scene.add("tree", PW.KeepClear(FX.TreeOfLight(P3b + _v(7.0, 0.0, 2.5), height=3.4, t_bloom=25.9,
-                                                  gain=_gain((0.0, 0.0), (25.4, 0.0), (25.9, 1.0), (28.6, 1.0),
-                                                             (28.79, 0.0), (TOTAL, 0.0))), WORDS))
+    scene.add("tree", Clear(NearFade(FX.TreeOfLight(P3b + _v(7.0, 0.0, 2.5), height=3.4, t_bloom=25.9,
+                                                    gain=_gain((0.0, 0.0), (25.4, 0.0), (25.9, 1.0), (28.6, 1.0),
+                                                               (28.79, 0.0), (TOTAL, 0.0))), 5.0)))
     addp("concession", C["concession"])
     addp("respect", C["respect"])
 
@@ -1277,15 +1284,15 @@ def _setup(scene):
     # bloom into the pastel day, and the logo glides into the end card's place
     MB.rose_hearts(FINALE.logo)
     scene.add("finale globe", MB.Brighten(FINALE.globe, lambda t: 0.72 + 0.55 * sc(SWIRL[0] + 0.2, SWIRL[1], t)))
-    scene.add("finale logo", FINALE.logo)
+    scene.add("finale logo", _Fade(FINALE.logo, lambda t: 1.0 - sc(54.8, 55.2, t)))    # the card's logo takes over
     FINALE.add_to(_OnlyBloom(scene))
     scene.add("swirl", Clear(MB.SymbolSwirl(FIN_C, FIN_R, PW.LABELS, NINE_GLOW, SWIRL[0], SWIRL[1], CAMERA,
                                             scale=_fin_scale)), reflect=False)
     pastel = _cloud_sea(rng, FIN_C, 260.0, 1600.0, 150, float(FIN_C[1]) - 40.0, 60.0, 130.0, 1.0, hk=(0.28, 0.45))
-    scene.add("clouds_pastel", MS.Billows(pastel, gain=_gain((0.0, 0.0), (BLOOM_T, 0.0), (BLOOM_T + 1.0, 1.0),
-                                                             (TOTAL, 1.0)), seed=15, alpha=0.05, body=0.2,
-                                          top="#fff4e8", warm="#ffd8c0", rose="#f8c0cc", lilac="#c8c8f4",
-                                          core="#fff8f0", shade=0.3, sun_az=180.0), depth_of_field=False)
+    scene.add("clouds_pastel", MS.Billows(pastel, gain=_gain((0.0, 0.0), (BLOOM_T, 0.0), (BLOOM_T + 1.0, 0.6),
+                                                             (TOTAL, 0.6)), seed=15, alpha=0.03, body=0.2,
+                                          top="#ffd8bc", warm="#f2b994", rose="#eaa894", lilac="#dcb2a4",
+                                          core="#ffe2c8", shade=0.5, sun_az=180.0), depth_of_field=False)
 
     def card(t):                    # the end card's middle, in the picture's plane, 14 m ahead of the lens
         cam = PW._cam_at(CAMERA, t)
@@ -1313,6 +1320,24 @@ def _setup(scene):
         WORDS.check(CAMERA)
     except Exception as e:          # the check is advice; never stop a render for it
         print("words check failed:", e)
+
+
+class _Fade:
+    """Wraps a point set that has a gain (BRAND's Logo): its gain times f(t)."""
+
+    def __init__(self, inner, f):
+        self.inner, self.f = inner, f
+        self.wants_camera = bool(getattr(inner, "wants_camera", False))
+
+    def gain(self, t):
+        g = float(self.inner.gain(t)) if hasattr(self.inner, "gain") else 1.0
+        return g * float(self.f(t))
+
+    def sample(self, t, cam=None):
+        if float(self.f(t)) <= 0.0:
+            return None
+        ps = self.inner
+        return ps.sample(t, cam) if self.wants_camera else ps.sample(t)
 
 
 class _OnlyBloom:
@@ -1407,5 +1432,7 @@ TITLES = dict(
     # on over the whole film, over every kind of light: the scene's light is dimmed only close round its letters
     # (titles.py signature protect), never as a dark box behind it
     signature=dict(windows=_sig_windows(), fade=SIG_FADE, protect=dict(keep=0.7, blur=6.0, gain=3.0)),
-    end_card=dict(t_in=EC_IN, fade=EC_FADE, scale=EC_SCALE, backdrop="auto", logo=False),   # the 3D logo is its logo
+    # its own crisp BRAND logo (exact colours, drawn over the veil) takes over from the 3D logo as the card sweeps
+    # in; a lighter veil, so the pastel day under the card stays a soft peach and cream
+    end_card=dict(t_in=EC_IN, fade=EC_FADE, scale=EC_SCALE, backdrop="auto", veil=0.6),
 )

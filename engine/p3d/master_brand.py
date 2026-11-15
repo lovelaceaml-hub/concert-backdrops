@@ -753,9 +753,13 @@ class SymbolSwirl:
                     continue
                 sz = self.size * rs
                 tw = 0.75 + 0.25 * np.sin(9.0 * t + 40.0 * S["s"])
-                out.append(dict(pos=P, size=0.0105 * sz * (0.7 + 0.6 * S["s"]), color=S["core"], alpha=0.85 * al * tw,
+                # bold lines of light (1.3 times the first weight) with a soft glow in their own colour, so each
+                # reads on a phone
+                out.append(dict(pos=P, size=0.0137 * sz * (0.7 + 0.6 * S["s"]), color=S["core"], alpha=0.9 * al * tw,
                                 emit=1.5, kind="spark", twinkle=0.5, seed=S["s"], dof=0.0, reflect=False))
-                out.append(dict(pos=P[::3], size=0.07 * sz, color=S["deep"], alpha=0.11 * al[::3], kind="soft",
+                out.append(dict(pos=P[::2], size=0.032 * sz, color=S["deep"], alpha=0.16 * al[::2], kind="soft",
+                                dof=0.0, reflect=False))
+                out.append(dict(pos=P[::3], size=0.085 * sz, color=S["deep"], alpha=0.14 * al[::3], kind="soft",
                                 dof=0.0, reflect=False))
                 # the stream of light behind it, and sparkle shed along it
                 ts = np.linspace(max(t - 0.55, tk), t, 36)
