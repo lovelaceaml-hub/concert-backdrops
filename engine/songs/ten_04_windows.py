@@ -65,11 +65,14 @@ X1, X2, X3, X4, X5, X6 = 6.84, 13.30, 19.85, 26.79, 33.36, 42.51      # the six 
 CLASP = 29.79              # the two hands clasp (a strong hit of song 05)
 BREATH = 40.21
 REVEAL = 49.47             # Heavenly Mother appears
-FLOOD = 52.26              # the day floods out of her (bar start of the last song)
-TITLE_HIT = 55.0           # the end card is whole (the loudest moment is 54.3 to 55.0)
+FLOOD = 52.26              # we pass through her into space (bar start of the last song)
+HEARTS = (52.5, 54.1)      # hearts light up across the world
+LOGO = (54.3, 55.0)        # the world becomes the logo (the loudest moment)
+DAY = 54.9                 # the calm day comes up behind the end card
+TITLE_HIT = 56.2           # the end card is whole
 FORM_DUR = 3.0
 T_FORM = TITLE_HIT - FORM_DUR - 0.75
-TAG_T0, TAG_T1 = 53.35, TITLE_HIT - 0.08
+TAG_T0, TAG_T1 = 54.9, TITLE_HIT + 0.4       # provisional: the official end card (UPDATE 10) replaces these
 
 _base.TOTAL = 60.0
 _base.NFRAMES = int(round(_base.TOTAL * _base.FPS))
@@ -145,12 +148,19 @@ LOOKS = dict(
                  hill_color="#22325e", dust=0.6, dust_color="#fff4f0", dust_color2="#ffc2cf"),
     stars_lit=dict(base="night", sky_top="#1c2a7c", sky_mid="#3a3aa0", sky_hor="#8a62c0", stars=1.0, milky=1.0,
                    hills=0.55, hill_color="#24205a", haze_color="#4a3a9a", mist=0.2, water="#141a5a", exposure=1.3),
+    space=dict(base="night", sky_top="#02030e", sky_mid="#060c2c", sky_hor="#0e1a4c", stars=1.0, milky=1.0,
+               hills=0.0, haze=0.15, haze_color="#0e1a4c", mist=0.0, water="#02040e", mirror=1.0, ripple=0.0,
+               dust=0.3, dust_color="#cfd8ff", sun_int=0.0),
+    space_win=dict(base="night", sky_top="#14206a", sky_mid="#2c3496", sky_hor="#5a4aa8", stars=1.0, milky=1.0,
+                   hills=0.0, haze=0.2, haze_color="#3a3a9a", mist=0.0, water="#101850", mirror=1.0, ripple=0.0,
+                   sun_int=0.0, exposure=1.3),
     dayend=dict(base="day", sun_az=232.0, sun_el=30.0, sun_disc=1.2, haze=0.35, mist=0.08),
 )
 MAIN_LOOK = [(0.0, "pearl"), (X1, "ember", 0.0), (X2, "sea", 0.0), (X3, "stars", 0.0), (X4, "harvest", 0.0),
-             (X5, "rain", 0.0), (X6, "blossom", 0.0), (FLOOD, "dayend", 1.8)]
+             (X5, "rain", 0.0), (X6, "blossom", 0.0), (FLOOD, "space", 0.0),
+             (DAY, "dayend", 1.4)]
 _WIN = [(-9.0, "ember"), (X1, "sea"), (X2, "stars_lit"), (X3, "harvest"), (X4, "rain"), (X5, "blossom"),
-        (X6, "stars")]
+        (X6, "space_win")]
 
 
 def window_look(t):
@@ -236,13 +246,16 @@ C6 = O6 + _A(K6[-1][1])
 # S7 blossom morning, life size, then S8: the camera rises toward Heavenly Mother far ahead (scale 45)
 O7 = _after(C6, (0.0, 0.0, 3.0))
 PRAYER_AT, FATHER_AT = _A([-1.3, 0.0, -2.6]), _A([1.7, 0.0, -6.8])
-MOTHER_AT = _A([0.0, 0.0, -380.0])
-MOTHER_HEAD, MOTHER_HEART = _A([0.3, 69.1, -379.9]), _A([-2.4, 52.4, -386.5])
+MOTHER_AT = _A([0.0, 0.0, -170.0])
+MOTHER_HEAD, MOTHER_HEART = _A([0.3, 69.1, -169.9]), _A([-2.4, 52.4, -176.5])
+WORLD_C, WORLD_R = _A([0.0, 62.0, -560.0]), 105.0
 K7 = [(X6, (0.0, C6[1], 3.0), (-1.3, 0.9, -2.6)), (44.6, (-0.55, 0.95, -0.4), (-1.3, 0.8, -2.6)),
       (46.6, (0.5, 2.0, -2.4), (1.7, 0.8, -6.8)), (48.6, (0.8, 2.3, -3.2), (1.7, 0.95, -6.8)),
       (50.4, (1.0, 2.5, -3.8), (1.7, 1.1, -6.8))]
-K8 = [(REVEAL, (0.8, 2.6, -4.0), (1.0, 6.0, -60.0)), (FLOOD, (0.0, 22.0, -110.0), (0.0, 58.0, -380.0)),
-      (TITLE_HIT, (0.0, 28.0, -130.0), (0.0, 118.0, -380.0)), (60.0, (0.0, 29.0, -142.0), (0.0, 122.0, -380.0))]
+K8 = [(REVEAL, (0.8, 2.6, -4.0), (0.6, 20.0, -170.0)), (50.9, (-0.6, 26.0, -80.0), (-1.2, 48.0, -170.0)),
+      (FLOOD, (-2.4, 52.4, -175.2), (-2.4, 54.0, -230.0)), (53.4, (-1.2, 58.0, -255.0), (0.0, 62.0, -560.0)),
+      (LOGO[0], (0.0, 61.0, -282.0), (0.0, 62.0, -560.0)), (LOGO[1], (0.0, 62.0, -262.0), (0.0, 64.0, -560.0)),
+      (60.0, (0.0, 62.0, -275.0), (0.0, 66.0, -560.0))]
 
 
 def _kick(t0, t1, a, b):
@@ -300,19 +313,16 @@ def _ride(expr, y, px, t_in, r0, r1, t_out, depth=6.0, **kw):
                 t_read1=r1, t_out=t_out, halo=0.6, reflect=False, drive=_clean, **kw)
 
 
-_AWAY = dict(away=(0.1, -0.15, -1.0), speed=1.4)
 _SPECS = [
-    _ride("Greeting", 0.72, 104, 3.4, 4.0, 6.9, 7.3, arrive="flock", leave="flock", **_AWAY),
-    _ride("Concession", 0.72, 98, 7.6, 8.4, 11.2, 11.5, arrive="flock", leave="flock", **_AWAY),
-    _ride("Respect", 0.72, 86, 13.8, 14.8, 17.8, 18.2, arrive="stars", leave="flock", **_AWAY),
-    _ride("Gratitude", 0.72, 78, 20.3, 21.3, 24.3, 24.6, arrive="petals", leave="flock", **_AWAY),
-    _ride("Consideration", 0.74, 88, 27.4, 28.3, 31.0, 31.3, depth=2.5, arrive="flock", leave="flock",
-          away=(0.0, 0.3, -1.0), speed=0.5),
-    _ride("Apology", 0.72, 84, 33.7, 34.3, 36.8, 37.05, depth=1.2, arrive="flock", leave="flock", **_AWAY),
-    _ride("Inclusiveness", 0.72, 94, 37.15, 37.7, 40.2, 40.45, depth=0.9, arrive="flock", leave="flock", **_AWAY),
-    _ride("Encouragement", 0.72, 80, 42.9, 43.6, 46.2, 46.5, depth=1.0, arrive="petals", leave="petals"),
-    _ride("Compliment", 0.72, 92, 46.7, 47.5, 50.1, 50.5, depth=1.0, arrive="flock", leave="flock",
-          away=(0.0, -0.2, -1.0), speed=1.8),
+    _ride("Greeting", 0.72, 104, 3.4, 4.0, 6.6, 6.8, arrive="flock", leave="fade"),
+    _ride("Concession", 0.72, 98, 7.6, 8.4, 11.2, 11.5, arrive="flock", leave="fade"),
+    _ride("Respect", 0.72, 86, 13.8, 14.8, 17.8, 18.2, arrive="stars", leave="fade"),
+    _ride("Gratitude", 0.72, 78, 20.3, 21.3, 24.3, 24.6, arrive="petals", leave="fade"),
+    _ride("Consideration", 0.74, 88, 27.4, 28.3, 31.0, 31.3, depth=2.5, arrive="flock", leave="fade"),
+    _ride("Apology", 0.72, 84, 33.7, 34.3, 36.8, 37.05, depth=1.2, arrive="flock", leave="fade"),
+    _ride("Inclusiveness", 0.72, 94, 37.15, 37.7, 40.2, 40.45, depth=0.9, arrive="flock", leave="fade"),
+    _ride("Encouragement", 0.72, 80, 42.9, 43.6, 46.2, 46.5, depth=1.0, arrive="petals", leave="fade"),
+    _ride("Compliment", 0.72, 92, 46.7, 47.5, 50.1, 50.5, depth=1.0, arrive="flock", leave="fade"),
 ]
 WORDS = PW.Words(_SPECS, camera=CAMERA)
 
@@ -503,6 +513,108 @@ class _Fill:
         return dict(pos=self.pos, size=0.9, color=lin("#ffffff"), alpha=1.0, kind="soft")
 
 
+WEB = ["#EA5A5E", "#F2B25E", "#F6CE46", "#5ABA5A", "#62B2FA", "#667AF6", "#9E6AF6", "#EE62A6", "#364E96"]
+
+
+class Globe:
+    """The world seen through Heavenly Mother and then flown to: a sphere of light with a white grid (as in
+    the logo), a blue atmosphere at its rim, hearts in the nine colours lighting up across it, joined by arcs
+    of light. It turns slowly; from LOGO it shrinks and rises toward the end card's logo and fades."""
+    wants_camera = True
+
+    def __init__(self, center, radius, seed=17):
+        rng = np.random.default_rng(seed)
+        self.c, self.R = _A(center, float), float(radius)
+        g = []
+        for lat in range(-60, 61, 20):
+            a = np.radians(np.arange(0.0, 360.0, 0.7))
+            la = np.radians(lat)
+            g.append(np.stack([np.cos(la) * np.sin(a), np.full(len(a), np.sin(la)), np.cos(la) * np.cos(a)], 1))
+        for lon in range(0, 360, 20):
+            b = np.radians(np.arange(-88.0, 88.1, 0.7))
+            lo = np.radians(lon)
+            g.append(np.stack([np.cos(b) * np.sin(lo), np.sin(b), np.cos(b) * np.cos(lo)], 1))
+        self.grid = np.concatenate(g)
+        v = rng.normal(size=(9000, 3))
+        self.shell = v / np.linalg.norm(v, axis=1, keepdims=True)
+        h = rng.normal(size=(54, 3))
+        h[:, 1] *= 0.6
+        self.hn = h / np.linalg.norm(h, axis=1, keepdims=True)
+        self.ht = HEARTS[0] + (HEARTS[1] - HEARTS[0]) * np.sort(rng.random(54))
+        self.hc = np.array([lin(WEB[k % 9]) for k in range(54)])
+        u = np.linspace(0.0, 2.0 * np.pi, 40, endpoint=False)
+        self.hx = 16.0 * np.sin(u) ** 3 / 17.0
+        self.hy = (13.0 * np.cos(u) - 5.0 * np.cos(2 * u) - 2.0 * np.cos(3 * u) - np.cos(4 * u)) / 17.0
+
+    def _xf(self, t):
+        a = np.radians(5.0 * (t - REVEAL))
+        rot = np.array([[np.cos(a), 0.0, np.sin(a)], [0.0, 1.0, 0.0], [-np.sin(a), 0.0, np.cos(a)]])
+        k = _ss(LOGO[0], LOGO[1] + 0.3, t)
+        c = self.c + _A([0.0, 70.0 * k, 0.0])
+        return rot, c, self.R * (1.0 - 0.45 * k)
+
+    def sample(self, t, cam=None):
+        rot, c, R = self._xf(t)
+        fade = 1.0 - _ss(LOGO[1] + 0.1, LOGO[1] + 0.7, t)
+        if fade <= 0.0:
+            return []
+        view = None if cam is None else np.asarray(cam.pos, float)
+        out = []
+        g = self.grid @ rot.T
+        gp = c + g * R
+        front = 1.0 if view is None else np.clip(0.35 + 0.65 * np.sum(g * _unit(view - gp), axis=1), 0.12, 1.0)
+        out.append(dict(pos=gp, size=0.55 * R / 105.0, color=lin("#eaf2ff"), alpha=0.75 * fade * front, kind="spark",
+                        twinkle=0.3, emit=1.4))
+        sp = c + self.shell * R * 1.01
+        if view is not None:
+            rim = 1.0 - np.abs(np.sum(self.shell * _unit(view - sp), axis=1))
+            a = 0.10 + 0.9 * rim ** 3
+        else:
+            a = 0.3
+        out.append(dict(pos=sp, size=2.2 * R / 105.0, color=lin("#4a8cff"), alpha=0.5 * a * fade, kind="soft"))
+        on = _sm((t - self.ht) / 0.35)
+        if on.any():
+            hn = self.hn @ rot.T
+            P, C, A = [], [], []
+            for k in np.nonzero(on > 0.0)[0]:
+                n = hn[k]
+                e1 = _unit(np.cross(n, [0.0, 1.0, 0.0]) + 1e-6)
+                e2 = np.cross(e1, n)
+                s = 0.07 * R
+                P.append(c + n * R * 1.02 + (self.hx[:, None] * e1 + self.hy[:, None] * e2) * s)
+                vis = 1.0 if view is None else float(np.clip(2.0 * np.dot(n, _unit(view - c)), 0.0, 1.0))
+                C.append(np.repeat(self.hc[k][None], 40, 0))
+                A.append(np.full(40, on[k] * vis * fade))
+            out.append(dict(pos=np.concatenate(P), size=0.9 * R / 105.0, color=np.concatenate(C),
+                            alpha=np.concatenate(A), kind="spark", emit=2.0 + 3.0 * np.exp(-(t - self.ht.max()) ** 2),
+                            twinkle=0.4))
+            # arcs of light between hearts that are lit
+            lit = np.nonzero(on > 0.6)[0]
+            if len(lit) > 1:
+                Q, QA, QC = [], [], []
+                uu = np.linspace(0.0, 1.0, 50)[:, None]
+                for i, j in zip(lit[:-1], lit[1:]):
+                    a0, a1 = hn[i], hn[j]
+                    om = np.arccos(np.clip(np.dot(a0, a1), -1.0, 1.0))
+                    if om < 1e-3:
+                        continue
+                    arc = (np.sin((1 - uu) * om) * a0 + np.sin(uu * om) * a1) / np.sin(om)
+                    lift = 1.02 + 0.14 * np.sin(np.pi * uu)
+                    Q.append(c + arc * R * lift)
+                    grow = _sm((t - max(self.ht[i], self.ht[j]) - 0.2) / 0.5)
+                    QA.append(np.full(50, 0.6 * fade) * (uu[:, 0] <= grow))
+                    QC.append(np.repeat(((self.hc[i] + self.hc[j]) * 0.5)[None], 50, 0))
+                if Q:
+                    out.append(dict(pos=np.concatenate(Q), size=0.4 * R / 105.0, color=np.concatenate(QC),
+                                    alpha=np.concatenate(QA), kind="soft", emit=1.5))
+        return out
+
+
+def _unit(v):
+    v = np.asarray(v, float)
+    return v / np.maximum(np.linalg.norm(v, axis=-1, keepdims=True), 1e-9)
+
+
 def _rain_tau(t):
     """Time as the rain feels it: it falls (rate 1), slows to a stop in the breath, hangs, then rises."""
     a, b = BREATH + 0.2, BREATH + 1.2
@@ -586,8 +698,9 @@ def _style(name, color, color2, bright=1.0):
         return [dict(name="window", bright=1.3 * bright, size=1.4, color=color, color2=color2),
                 dict(name="rim", bright=0.6 * bright, color=color2, color2=color)]
     if name == "sparks":
-        return [dict(name="window", bright=0.7 * bright, size=1.2, color=color, color2=color2),
-                dict(name="rim", bright=1.5 * bright, power=4.0, color=color2, color2=color)]
+        return [dict(name="window", bright=1.0 * bright, size=1.3, color=color, color2=color2),
+                dict(name="glitter", bright=1.3 * bright, color=color, color2=color2),
+                dict(name="rim", bright=1.4 * bright, power=4.0, color=color2, color2=color)]
     if name == "plexus":
         return [dict(name="plexus", bright=1.2 * bright, color=color, color2=color2),
                 dict(name="rim", bright=0.4 * bright, color=color2, color2=color)]
@@ -757,9 +870,9 @@ def _setup(scene):
          X3, X4, window=True, edge=0.7)
     from p3d.crowd import Crowd
     wc = O4 + WORKER_AT
-    crowd = Crowd(n=150, area=dict(center=(wc[0], wc[2]), radius=(16.0, 75.0), arc=(-125.0, 125.0)),
+    crowd = Crowd(n=170, area=dict(center=(wc[0], wc[2]), radius=(20.0, 92.0), arc=(-125.0, 125.0)),
                   facing="center", kinds=(("bow", 3.0), ("pray", 1.0)), shapes=("woman", "man", "child"),
-                  start=dict(t=X3 + 0.5, center=(wc[0], wc[2]), speed=34.0), scale=(5.5, 7.5), points=2600,
+                  start=dict(t=X3 - 0.4, center=(wc[0], wc[2]), speed=70.0), scale=(7.5, 10.5), points=2600,
                   color="#ffd27a", color2="#fff0c0", bright=1.1, seed=4.0)
     scene.add("s4_crowd", PW.KeepClear(_Gate(crowd, X3, X4, rise=0.0, fall=0.0), WORDS, floor=0.0), reflect=False)
 
@@ -768,7 +881,7 @@ def _setup(scene):
         scene.add("s5_hand%d" % k, _Gate(v, X4, X5, rise=0.3))
     from p3d.effects import Flare
     scene.add("s5_flare", _Gate(Flare(lambda t: MEET + _A([0.0, _lift(t), 0.0]), CLASP, color="#ffd9a0",
-                                      color2="#bfe4ff"), X4, X5, rise=0.0))
+                                      color2="#bfe4ff", strength=0.6), X4, X5, rise=0.0))
 
     # 6 APOLOGY and INCLUSIVENESS: they kneel face to face in the rain; they rise and hold each other
     a6, b6 = _embrace_pair(O6 + PAIR6, 37.6, 39.0, _style("window", "#cfd6ff", "#ffffff"),
@@ -796,7 +909,10 @@ def _setup(scene):
                                      color2="#ffffff", bright=1.2, scale=45.0, garment="robe",
                                      veil=dict(length=1.5), points=110000, facing=180.0,
                                      gesture=[(50.2, 61.0, "open_arms", dict(lift=0.25))], seed=81.0),
-         REVEAL, 61.0, window=True, edge=0.9, grow=2.2, rise=1.2, tint=(1.7, 1.6, 2.0))
+         REVEAL, FLOOD, window=True, edge=0.9, grow=2.2, rise=1.0)
+    world = Globe(O7 + WORLD_C, WORLD_R)
+    scene.add("in_s8_world", _Gate(world, REVEAL, FLOOD, rise=0.0, fall=0.0), window=True, reflect=False)
+    scene.add("s8_world", _Gate(world, FLOOD, 56.0, rise=0.0, fall=0.0), reflect=False)
 
     # the depth inside each window, then the air of that world once we are in it
     ember2 = Motes(O2 + _A([0.0, 40.0, -40.0]), (140.0, 40.0, 160.0), 1400, ("#ffc890", "#ff9e6e", "#fff0d0"),
@@ -805,18 +921,15 @@ def _setup(scene):
                  size=(0.15, 0.45), kind="spark", alpha=0.9, drift=(0.0, 0.0, 0.0), twinkle=1.0, emit=2.0, seed=3)
     stars4 = Motes(O4 + _A([0.0, 110.0, -320.0]), (420.0, 110.0, 120.0), 1800, ("#ffffff", "#cfd8ff", "#ffe2a8"),
                    size=(0.8, 2.2), kind="spark", alpha=0.9, drift=(0.0, 0.0, 0.0), twinkle=1.0, emit=2.5, seed=4)
-    gold5 = Motes(MEET + _A([0.0, 0.0, -2.0]), (4.0, 2.0, 5.0), 900, ("#ffd27a", "#ffb060", "#fff0c0"),
+    gold5 = Motes(MEET + _A([0.0, 0.0, -5.5]), (4.0, 2.0, 2.5), 900, ("#ffd27a", "#ffb060", "#fff0c0"),
                   size=(0.01, 0.05), alpha=0.8, drift=(0.05, 0.03, 0.0), seed=5)
     gold5w = Motes(O5 + _A([0.0, 6.0, -40.0]), (60.0, 12.0, 50.0), 1400, ("#ffd27a", "#ffb060"), size=(0.2, 0.7),
                    seed=6)
-    stars8 = Motes(O7 + _A([0.0, 60.0, -420.0]), (90.0, 60.0, 30.0), 1200, ("#ffffff", "#cfd8ff", "#ffe2a8"),
-                   size=(0.3, 0.9), kind="spark", alpha=0.9, drift=(0.0, 0.0, 0.0), twinkle=1.0, emit=2.5, seed=8)
     for name, ps, a, b, win in (
             ("in_s1", ember2, -1.0, X1, True), ("air_s2", ember2, X1, X2, False),
             ("in_s2", sea3, X1, X2, True), ("air_s3", sea3, X2, X3, False),
             ("in_s3", stars4, X2, X3, True), ("air_s4", stars4, X3, X4, False),
-            ("in_s4", gold5w, X3, X4, True), ("air_s5", gold5, X4, X5, False),
-            ("in_s8", stars8, REVEAL, 61.0, True)):
+            ("in_s4", gold5w, X3, X4, True), ("air_s5", gold5, X4, X5, False)):
         scene.add(name, PW.KeepClear(_Gate(ps, a, b, rise=0.0, fall=0.0), WORDS, floor=0.0), window=win,
                   reflect=not win)
     scene.add("in_s6", _Gate(Blossom(O7, paint=False), X5, X6, rise=0.0, fall=0.0), window=True, reflect=False)
@@ -826,8 +939,8 @@ def _setup(scene):
     scene.add("birds_s1", PW.KeepClear(Flock(O1 + BUST_HEAD, O1 + _A([-10.0, 60.0, -80.0]), (60.0, 26.0, 40.0),
                                              260, -3.0, X1 - 0.3, dur=(2.4, 3.8), size=(1.4, 2.6), seed=8),
                                        WORDS, floor=0.0))
-    scene.add("birds_s8", PW.KeepClear(Flock(O7 + MOTHER_HEART, O7 + _A([0.0, 40.0, -150.0]), (160.0, 40.0, 120.0),
-                                             1600, REVEAL + 0.4, FLOOD + 1.8, dur=(1.8, 3.2), size=(1.4, 2.8),
+    scene.add("birds_s8", PW.KeepClear(Flock(O7 + MOTHER_HEART, O7 + _A([0.0, 45.0, -60.0]), (150.0, 40.0, 70.0),
+                                             1400, REVEAL + 0.3, FLOOD - 0.15, dur=(1.4, 2.4), size=(1.2, 2.4),
                                              seed=9), WORDS, floor=0.0))
     WORDS.add_to(scene)
     WORDS.check(CAMERA)
@@ -846,8 +959,8 @@ def _clear_boxes(t):
     if t < TITLES["opening"]["t_end"] + 0.5:
         a = 1.0 - _ss(TITLES["opening"]["t_end"], TITLES["opening"]["t_end"] + 0.5, t)
         out.append(dict(box=(0.12, oy - 0.15, 0.88, oy + 0.15), t0=-2.0, t1=61.0, soft=0.03, amount=a))
-    if t >= T_FORM - 0.3:
-        out.append(dict(box=(0.10, 0.36, 0.90, 0.88), t0=T_FORM - 0.3, t1=61.0, soft=0.05, amount=0.85))
+    if t >= LOGO[1] + 0.4:
+        out.append(dict(box=(0.06, 0.08, 0.94, 0.96), t0=LOGO[1] + 0.4, t1=61.0, soft=0.05, amount=0.85))
     return out[:2]
 
 
@@ -860,16 +973,14 @@ P3D = dict(
         looks=LOOKS,
         look=MAIN_LOOK,
         light=dict(pos=_HEAD_LIGHT, color="#fff0d0", size=10.0, rays=1.0,
-                   strength=lambda t: 1.4 * _ss(REVEAL + 0.4, REVEAL + 2.0, t)),
-        # the arch of nine lights: a low arc behind Heavenly Mother, under the end card
-        arch=dict(lit=[FLOOD + 0.4 + 0.22 * k for k in range(9)], span=210.0, height=72.0,
-                  z=float(O7[2] + MOTHER_AT[2] - 50.0), colors=NINE, bright=1.6),
+                   strength=lambda t: 1.4 * _ss(REVEAL + 0.4, REVEAL + 2.0, t) * (1.0 if t < FLOOD else 0.0)),
         react=dict(beat=0.35, level=0.2),
     ),
     bursts=[dict(t=X5, at=tuple(MEET + _A([0.0, LIFT, 0.0])), strength=0.4, rise=0.15, fall=0.45, color="#ffd8a0",
                  radius=0.3),
-            dict(t=FLOOD, at=tuple(O7 + MOTHER_HEART), strength=0.8, rise=0.35, fall=0.9, color="#fff0d8",
-                 radius=0.3)],
+            dict(t=FLOOD, strength=0.35, rise=0.2, fall=0.6, color="#cfd8ff", radius=0.3),
+            dict(t=LOGO[1] - 0.2, at=tuple(O7 + WORLD_C + _A([0.0, 40.0, 0.0])), strength=0.5, rise=0.3, fall=0.8,
+                 color="#ffe6c0", radius=0.25)],
     clear=lambda t: _clear_boxes(t),
     setup=_setup,
 )
