@@ -62,7 +62,7 @@ from songs.s03_original import *  # noqa: E402,F401,F403
 
 import theme  # noqa: E402
 from track import Track  # noqa: E402
-from p3d import lin  # noqa: E402
+from p3d import lin, show  # noqa: E402
 from p3d import words as PW  # noqa: E402
 from p3d.camera import Move, Rig, fly  # noqa: E402
 
@@ -374,6 +374,17 @@ def _bodies():
         return _BODIES
     from p3d.body import Body
     w = (0.25, 0.0, -0.2)
+    # S1: a man walking on the water whom the chase overtakes; he lifts a hand in greeting
+    _BODIES["walker"] = Body("man", at=(2.3, 197.0), facing=180.0, motion="walk", garment="coat", look="glitter",
+                             color=COL[GREET], color2="#fff0e6", points=50000, show=(3.6, 7.3), fade=0.3,
+                             wind=w, seed=12.0, gesture=[(5.0, 9.0, "wave", dict(side="L"))],
+                             effects=[dict(kind="shed", t=3.6)])
+    # S2: someone at the mouth of the gate, in profile, an open hand held out: after you
+    _BODIES["gatekeeper"] = Body("woman", at=(3.1, TUNNEL_Z0 + 2.0), facing=270.0, motion="stand", garment="robe",
+                                 look="glitter", color=COL[CONC], color2="#eef5ff", points=50000,
+                                 show=(6.7, 10.4), fade=0.3, wind=w, seed=13.0,
+                                 gesture=[(6.9, 12.0, "offer", dict(side="R"))],
+                                 effects=[dict(kind="form", t=6.8, dur=1.2)])
     sorry = Body("man", at=(C3[0] - 0.40, C3[2] - 0.05), facing=90.0, motion=[(10.0, "kneel")],
                  gesture=[(10.0, 30.0, "bow")], garment="tunic", look="glitter", color=COL[APOL], color2="#fff1e0",
                  points=60000, show=(SEC[2] - 0.3, 20.6), fade=0.3, wind=w, seed=3.0,
@@ -664,6 +675,45 @@ for _k in range(9):
     HEADS[_k].leg(BRAID_T0, SEC[7] + 0.5, _braid(_k), bi=0.0 if _k != ENC else 0.8, bo=0.0)
 
 
+def _arch_places():
+    """The nine lights of the morning: a shallow arc of stars over the title, placed by the end card's own
+    picture (screen x from 0.07 to 0.93, y from 0.875 at the ends to 0.96 in the middle) on the plane z = 0."""
+    cam = PW._cam_at(_LAYOUT, 57.0)
+    r, u, f = cam.basis()
+    half = np.tan(np.radians(cam.fov) * 0.5)
+    out = []
+    for i in range(9):
+        sx = 0.07 + 0.86 * i / 8.0
+        sy = 0.875 + 0.085 * np.sin(np.pi * i / 8.0)
+        d = f + r * (sx - 0.5) * 2.0 * half * cam.aspect + u * (sy - 0.5) * 2.0 * half
+        k = (0.0 - cam.pos[2]) / d[2]
+        out.append(cam.pos + k * d)
+    return np.array(out)
+
+
+ARCH_AT = _arch_places()
+ARCH_ORDER = list(range(9))          # left to right: the order of words.EXPRESSIONS, as on every arch
+ARCH_LAND = [SEC[7] + 2.0 + 0.16 * k for k in range(9)]
+
+
+def _to_arch(k):
+    i = ARCH_ORDER.index(k)
+    home = ARCH_AT[i]
+    p0 = _v(0.0, 120.0, 18.0) + _v(6.0 * (i - 4), 0.0, 0.0)
+    c1 = _v(home[0] * 1.7, 70.0, 40.0)
+
+    def f(t):
+        u = float(np.clip((t - SEC[7]) / (ARCH_LAND[k] - SEC[7]), 0.0, 1.0))
+        e = 1.0 - (1.0 - u) ** 2.2
+        p = (1 - e) ** 2 * p0 + 2 * e * (1 - e) * c1 + e * e * home
+        return p + _v(0.0, 0.25 * np.sin(1.3 * t + i), 0.0) * _sc(ARCH_LAND[k], ARCH_LAND[k] + 1.0, t)
+    return f
+
+
+for _k in range(9):
+    HEADS[_k].leg(SEC[7], TOTAL + 1.0, _to_arch(_k), bi=0.0, bo=0.0)
+
+
 def _lead_of(t):
     """The comet the section belongs to (its light lies on the water)."""
     for t0, t1, k in ((0.0, 6.84, GREET), (6.84, 13.3, CONC), (13.3, 19.85, APOL), (19.85, 26.79, COMP),
@@ -688,8 +738,7 @@ class Comets:
         self.sp = r.random((9, 140, 4)).astype(np.float64)
 
     def _alpha(self, k, t):
-        a = _sc(SEC[0] - 0.02, SEC[0] + 0.12, t) * (1.0 - _sc(SEC[7] - 0.02, SEC[7] + 0.05, t))
-        return a
+        return _sc(SEC[0] - 0.02, SEC[0] + 0.12, t)
 
     def _near(self, k, t):
         """1 while the comet is a lead near the camera, 0 while it is far away on the ring."""
@@ -713,6 +762,10 @@ class Comets:
             w = 0.30 * near + 3.2 * (1.0 - near)
             if t > BRAID_T0:
                 w = 0.30 + 0.25 * _sc(BRAID_T0, SEC[7], t)
+            day = 1.0 if t >= SEC[7] else 0.0
+            if day:
+                tail = 0.9 * (1.0 - _sc(ARCH_LAND[k] - 0.6, ARCH_LAND[k] + 0.3, t)) + 0.02
+                w = 1.1
             n = 40
             ts = np.linspace(max(t - tail, SEC[0]), t, n)
             if ts[-1] - ts[0] < 1e-3:
@@ -723,6 +776,20 @@ class Comets:
             c = lin(COL[k])
             deep = deepen(COL[k])
             core = 0.35 * c + 0.65 * lin(WHITE)
+            if day:
+                pc = show(COL[k])
+                out.append(_rib(pts, w * (0.12 + 0.88 * kk), pc, a * 0.9 * np.clip(kk * 1.4, 0, 1), emit=1.0,
+                                paint=1.0, paint_light=0.5))
+                out.append(_rib(pts, w * 0.22 * (0.15 + 0.85 * kk), core, a * 0.95 * np.clip(kk * 1.6, 0, 1),
+                                emit=2.6))
+                head = pts[-1:]
+                land = _sc(ARCH_LAND[k] - 0.2, ARCH_LAND[k] + 0.5, t)
+                pulse = 1.0 + 0.12 * np.sin(5.0 * t + k)
+                out.append(dict(pos=head, size=1.5 + 0.5 * land, color=pc, alpha=a * (0.55 + 0.4 * land) * pulse,
+                                kind="soft", paint=1.0, paint_light=0.6))
+                out.append(dict(pos=head, size=0.55, color=core, alpha=a, emit=6.0, kind="spark"))
+                out.append(dict(pos=head, size=5.0, color=c, alpha=a * 0.10 * land, kind="soft"))
+                continue
             out.append(_rib(pts, w * (0.12 + 0.88 * kk), deep, a * 0.55 * np.clip(kk * 1.4, 0, 1), emit=1.6))
             out.append(_rib(pts, w * 0.22 * (0.15 + 0.85 * kk), core, a * 0.95 * np.clip(kk * 1.6, 0, 1), emit=2.6))
             head = pts[-1:]
@@ -742,9 +809,9 @@ class Comets:
         return out
 
 
-def _rib(pts, width, color, alpha, emit=1.0):
+def _rib(pts, width, color, alpha, emit=1.0, **kw):
     from p3d.api import ribbon
-    return ribbon(pts, width=width, color=color, alpha=alpha, emit=emit)
+    return ribbon(pts, width=width, color=color, alpha=alpha, emit=emit, **kw)
 
 
 class Seed:
@@ -889,7 +956,8 @@ LOOKS = dict(
     embrace=dict(base="night", mist=0.28, mist_color="#2a1020", haze=0.3, haze_color="#1e0c1a", stars=0.5,
                  sky_top="#04020a", sky_mid="#120818", sky_hor="#2a1224"),
     floor=dict(base="night", mist=0.05, haze=0.1, stars=1.0, milky=0.8),
-    drop=dict(base="dusk", sky_hor="#4a2030", mist=0.3, mist_color="#3a1a26", stars=0.6),
+    drop=dict(base="night", sky_top="#05030c", sky_mid="#140a1c", sky_hor="#341426", mist=0.12,
+              mist_color="#2a1020", haze=0.25, haze_color="#1e0c16", stars=0.8, milky=0.4),
     ember=dict(base="night", sky_top="#05040a", sky_mid="#1a0f0c", sky_hor="#3a2210", haze=0.5,
                haze_color="#3a2410", mist=0.35, mist_color="#2a1c10", stars=0.3, milky=0.0),
     prayer=dict(base="night", sky_top="#03020e", sky_mid="#0e0a2e", sky_hor="#1e1648", mist=0.25,
@@ -908,10 +976,7 @@ WORLD = dict(
     lantern_field=dict(count=260, center=(E5[0], E5[2] - 10.0), radius=(10.0, 70.0)),
     lanterns=Track([(0.0, 0.0), (30.2, 0.0), (31.5, 1.0), (SEC[6] - 0.3, 1.0), (SEC[6], 0.0), (TOTAL, 0.0)]),
     lantern_color=COL[GRAT],
-    arch=dict(lit=[SEC[7] + 0.4 + 0.22 * k for k in range(9)], colors=COL, span=ARCH["span"],
-              height=ARCH["height"], z=ARCH["z"],
-              travel=dict(start=(0.0, 95.0, 30.0), t=[SEC[7] + 0.4 + 0.22 * k for k in range(9)], dur=1.6),
-              line=Track([(0.0, 0.0), (SEC[7] + 1.5, 0.0), (SEC[7] + 3.5, 1.0), (TOTAL, 1.0)])),
+    arch=None,                       # the nine comets come down and are the nine lights (Comets, ARCH_AT)
     react=dict(beat=0.35, level=0.25),
 )
 
