@@ -51,7 +51,7 @@ void main(){
     float R = r.z*0.075;
     float ring = exp(-pow((rr-R)/0.007, 2.0)) + 0.45*exp(-pow((rr-R*0.62)/0.007, 2.0))
                + 0.20*exp(-pow((rr-R*0.30)/0.006, 2.0));
-    float splash = exp(-rr*rr/0.0004)*exp(-r.z*3.0)*0.8;   // the touch itself: a small flash
+    float splash = exp(-rr*rr/0.00015)*exp(-r.z*4.0)*0.35;   // the touch itself: a small flash
     l += (ring+splash)*ripEnv(r);
   }
   l *= smoothstep(0.0, 0.010, uRipWL-p.y)*mix(0.25, 1.0, calmK(p.y));
@@ -106,10 +106,10 @@ void main(){
       a *= (1.0-smoothstep(0.0, 1.0, u))*(1.0+1.6*spark*step(0.55, aSeed.w));
       size *= 1.0+0.8*spark*step(0.55, aSeed.w);
     } else {         // gather and fly to a light on the arch
-      float d = aP.z*0.5+aSeed.x*0.35;
+      float d = aP.z*0.35+aSeed.x*0.15;
       float u = clamp((uOut-d)/uLeaveDur, 0.0, 1.0);
       float e = u*u*(3.0-2.0*u);
-      vec2 side = vec2((aSeed.y-0.5)*0.10, 0.04+0.05*aSeed.z);
+      vec2 side = vec2((aSeed.y-0.5)*0.035, 0.02+0.03*aSeed.z);
       s = mix(s, uTo, e) + side*sin(3.14159*e);
       a *= 1.0-smoothstep(0.80, 1.0, u)*0.95;
       size *= 1.0-0.35*e;
@@ -119,7 +119,7 @@ void main(){
     if(s.y<uRipWL) a = 0.0;            // below the water line: nothing to mirror
     s.y = 2.0*uRipWL-s.y;
     float dd = clamp((uRipWL-s.y)/max(uRipWL,0.05), 0.0, 1.0);
-    s += ripDisp(s) + vec2(0.0016*sin(s.y*260.0+uT*1.3)+0.0010*sin(s.y*610.0-uT*2.1), 0.0);
+    s += ripDisp(s) + vec2(0.0011*sin(s.y*190.0+uT*1.3)+0.0003*sin(s.y*520.0-uT*2.1), 0.0);
     a *= 0.40*pow(1.0-dd, 1.3);
   }
   a *= mix(0.35, 1.0, calmK(s.y));

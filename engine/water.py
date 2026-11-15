@@ -144,7 +144,7 @@ class Water:
         tb = per * (k + ph_land - off)
         age = t - tb
         out = []
-        for i in np.nonzero((age >= 0.0) & (age < LIFE) & (h < 0.45))[0]:
+        for i in np.nonzero((age >= 0.0) & (age < LIFE) & (h < 0.30))[0]:
             tbi = float(tb[i])
             amount = petals(tbi) if callable(petals) else float(petals)
             a = float(_val("RIPPLES_AUTO", tbi, 0.0) or 0.0)
@@ -154,7 +154,7 @@ class Water:
             ph = ph_land[i]
             x = (sd[i, 2] + 0.22 * ph + 0.035 * math.sin(tbi * 0.5 + sd[i, 3] * 30.0)
                  + 0.02 * math.sin(tbi * 1.1 + sd[i, 0] * 17.0)) % 1.0
-            out.append((float(x), float(y_land[i]), float(age[i]), 0.45 * a))
+            out.append((float(x), float(y_land[i]), float(age[i]), 0.35 * a))
         return out
 
     def _figure_ripples(self, t, wl):
@@ -215,7 +215,7 @@ class Water:
         if rips:
             self._rip_uniforms(self.p_ring, rips, wl)
             _setu(self.p_ring, uRect=(0.5, wl / 2.0, 0.5, wl / 2.0), uAspect=S.ASPECT, uCalm=calm, uCalmY=0.335,
-                  uBright=float(_val("RIPPLE_BRIGHT", t, 1.0)) * 0.30,
+                  uBright=float(_val("RIPPLE_BRIGHT", t, 1.0)) * 0.24,
                   uCol=_lin(_val("RIPPLE_COLOR", t), "#ffe6c4"))
             self.v_ring.render(moderngl.TRIANGLE_STRIP)
         self._draw_falls(t, wl)
