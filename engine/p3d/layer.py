@@ -71,6 +71,7 @@ class Layer:
         self.scene.add("_sun", Wd.SunGlow(wd), fog=False, depth_of_field=False, lod=False)
         self.scene.add("_dust", Wd.Dust(wd, **{**dict(n=n(7000), n_bokeh=n(300)), **wd.dust_cfg}))
         self.scene.add("_lanterns", Wd.Lanterns(wd, **{**dict(count=n(420)), **wd.lantern_cfg}), lod=False)
+        self.scene.add("_floats", Wd.Floats(wd, **{**dict(count=n(700)), **wd.float_cfg}))
         self.arch = None
         if wd.arch:
             akw = dict(wd.arch) if isinstance(wd.arch, dict) else {}
@@ -439,7 +440,8 @@ class Layer:
         self.t_mask.use(location=1)
         setu(self.p_rsrc, uBg=0, uMask=1, uCamR=U["uCamR"], uCamU=U["uCamU"], uCamF=U["uCamF"],
              uFocal=U["uFocal"], uAspect=U["uAspect"], uSunDir=w["sun_dir"], uSunCol=np.asarray(w["sun_color"]),
-             uSunInt=float(w["sun_int"]), uMaskOn=mask_on, uMode=float(mode),
+             uSunInt=float(w["sun_int"]), uMaskOn=mask_on, uMode=float(mode), uCenter=center, uFan=0.75,
+             uT=U["uT"],
              uLight=light or (0.5, 0.5, 0.1, 1.0), uLightCol=tuple(float(x) for x in light_col))
         self.v_rsrc.render(moderngl.TRIANGLE_STRIP)
         self.f_rtmp.use()

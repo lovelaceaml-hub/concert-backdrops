@@ -118,6 +118,7 @@ in vec3 aPos; in float aSize; in vec3 aColor; in float aAlpha; in float aEmit; i
 in vec3 aNormal; in vec3 aVel;
 uniform int uKind;        // 0 soft, 1 spark, 2 disc, 3 flake, 4 petal, 5 bird
 uniform vec2 uRim;
+uniform vec2 uBokeh;
 flat out vec4 vCol;       // rgb light, glint strength
 flat out vec4 vGeo;       // R, S, Lh, r0 (pixels)
 flat out vec4 vShape;     // cos, sin, squash, how much of the true shape shows
@@ -209,7 +210,8 @@ void main(){
   }
   float stretch = 1.0 + Lh/(R + 2.0*S);
 
-  float areaF = (PI*R*R + 2.0*PI*S*S + 7.874*R*S)*stretch;
+  // (the disc's brighter edge lifts its skirt too: counted here, so the light stays the same)
+  float areaF = (PI*R*R + (1.90*PI*S*S + 7.72*R*S)*(1.0 + 0.75*uBokeh.x*smoothstep(3.0, 9.0, R)))*stretch;
   float amp = min(area0/areaF, 1.0);
 
   float b = aAlpha*aEmit*uGain*keep*amp*mk*ext*flash*twinkle(aSeed);
@@ -299,7 +301,7 @@ void main(){
   prof = max(prof - 0.0111, 0.0)/0.9889;
   if(R > 2.0*S && vShape.w < 0.5){
     float e = clamp(d/R, 0.0, 1.0); e = e*e*e; e = e*e;
-    prof *= 1.0 + uBokeh.x*(e - 0.25);                   // a slightly brighter edge, the same light in all
+    prof *= 1.0 + uBokeh.x*(e - 0.25)*smoothstep(3.0, 9.0, R);   // a slightly brighter edge, the same light in all
   }
   vec3 c = vCol.rgb*prof;
   if(vCol.a > 0.01){
@@ -475,7 +477,7 @@ vec3 skyBase(vec3 d){
   c += g;
   if(uAirP.w > 0.001){
     float m = dot(d, uMilkyN);
-    c += vec3(0.060, 0.075, 0.130)*uAirP.w*exp(-m*m/0.035)*(0.30+0.90*fbm(d.xz*5.0+d.y*3.0+2.0))*smoothstep(0.0, 0.25, e);
+    c += vec3(0.085, 0.100, 0.190)*uAirP.w*exp(-m*m/0.030)*(0.25+1.10*fbm(d.xz*5.0+d.y*3.0+2.0))*smoothstep(0.0, 0.25, e);
   }
   return c;
 }
@@ -504,7 +506,7 @@ vec3 shade(vec3 d, float te, float disc, float aa, out float vis){
       for(int k=2;k>=0;k--){
         float ht = hillTan(cxz, k);
         float m = smoothstep(ht+aa, ht-aa, te)*uHillP.x;
-        if(k == 0 && te < 0.0) m = uHillP.x;               // the shore: ground at the foot of the hills
+        if(k == 2 && te < 0.0) m = uHillP.x;               // beyond the lake: land out to the horizon
         if(m > 0.0){
           float far = k==2 ? 0.80 : (k==1 ? 0.56 : 0.30);
           float low = clamp((ht-te)/max(ht+uCamPos.y/HILL_D[k], 0.02), 0.0, 1.0);   // toward the foot, into the mist
@@ -550,8 +552,13 @@ void main(){
     vec2 g = rip(hit.xz, uT, foot)*uLakeP.z;
     if(uLakeP.z > 0.0){
       float nf = uLakeP.z/(1.0 + dist/22.0);
-      g += (vec2(vnoise(hit.xz*4.7+uT*vec2(0.31, 0.47)), vnoise(hit.xz*4.7+31.7-uT*vec2(0.43, 0.23)))-0.5)*0.045*nf;
-      g += (vec2(vnoise(hit.xz*17.0+uT*vec2(0.9, 0.6)), vnoise(hit.xz*17.0+11.3-uT*vec2(0.7, 1.1)))-0.5)*0.030*nf*nf;
+      g += (vec2(vnoise(hit.xz*4.7+uT*vec2(0.31, 0.47)), vnoise(hit.xz*4.7+31.7-uT*vec2(0.43, 0.23)))-0.5)*0.045*nf
+           *smoothstep(3.0*foot, 9.0*foot, 0.45);
+      g += (vec2(vnoise(hit.xz*17.0+uT*vec2(0.9, 0.6)), vnoise(hit.xz*17.0+11.3-uT*vec2(0.7, 1.1)))-0.5)*0.030*nf*nf
+           *smoothstep(3.0*foot, 9.0*foot, 0.12);
+      // a slow broad swell so the surface never looks ruled
+      g += (vec2(vnoise(hit.xz*0.21+uT*vec2(0.05, 0.03)), vnoise(hit.xz*0.21+7.7-uT*vec2(0.04, 0.06)))-0.5)*0.020*uLakeP.z
+           *smoothstep(3.0*foot, 9.0*foot, 9.0);
     }
     vec3 n = normalize(vec3(-g.x, 1.0, -g.y));
     rr = reflect(d, n);
@@ -559,7 +566,8 @@ void main(){
     float v;
     vec3 c = shade(rr, rr.y/max(length(rr.xz), 1e-5), 0.0, aa*3.0, v);
     float cs = max(dot(rr, uSunDir), 0.0);
-    c += uSunCol*uSunP.x*v*(pow(cs, 1200.0)*uSunP.z*0.8 + pow(cs, 120.0)*0.9)*smoothstep(-0.03, 0.02, uSunDir.y);
+    c += uSunCol*uSunP.x*v*(pow(cs, 1500.0)*uSunP.z*0.7 + pow(cs, 260.0)*0.7 + pow(cs, 40.0)*0.16)
+         *smoothstep(-0.03, 0.02, uSunDir.y);
     fres = mix(uLakeP.x, 1.0, pow(1.0-clamp(-d.y, 0.0, 1.0), 4.0))*uLakeP.y;
     col = mix(uWater, c, fres);
     // far water melts into the haze of the horizon
@@ -603,9 +611,9 @@ void main(){
 # ------------------------------------------------------------------------------------------- rays of light
 # Quarter size. The source: the sun's bright surround where the sky is open, and the world's own light,
 # both cut out by the silhouettes in front. Then two radial blurs toward the light.
-RAYSRC_FS = """
-#version 330
+RAYSRC_FS = "#version 330\n" + NOISE + """
 in vec2 vUV; out vec4 o;
+uniform vec2 uCenter; uniform float uFan, uT;
 uniform sampler2D uBg, uMask;
 uniform vec3 uCamR, uCamU, uCamF, uSunDir, uSunCol, uLightCol;
 uniform float uFocal, uAspect, uSunInt, uMaskOn, uMode;
@@ -619,10 +627,15 @@ void main(){
   if(uMode < 0.5){
     float a = max(1.0 - dot(d, uSunDir), 0.0);
     float src = exp(-a*260.0)*3.2 + exp(-a*30.0)*0.75 + exp(-a*6.0)*0.14;
-    c = uSunCol*uSunInt*src*texture(uBg, vUV).a*(1.0-cov);
+    vec2 qf = (vUV-uCenter)*vec2(uAspect, 1.0);
+    float ang = atan(qf.y, qf.x);
+    float fan = 0.45 + 0.85*vnoise(vec2(ang*5.0, 2.3+uT*0.05)) + 0.50*vnoise(vec2(ang*17.0, 7.1-uT*0.08));
+    c = uSunCol*uSunInt*src*texture(uBg, vUV).a*(1.0-cov)*mix(1.0, fan, uFan);
   } else {
     vec2 q = (vUV-uLight.xy)*vec2(uAspect, 1.0);
-    c = uLightCol*exp(-dot(q, q)/(uLight.z*uLight.z))*(1.0 - cov*step(m.a, uLight.w));
+    float ang = atan(q.y, q.x);
+    float fan = 0.40 + 0.90*vnoise(vec2(ang*5.0, 4.1+uT*0.07)) + 0.55*vnoise(vec2(ang*19.0, 9.3-uT*0.10));
+    c = uLightCol*exp(-dot(q, q)/(uLight.z*uLight.z))*(1.0 - cov*step(m.a, uLight.w))*mix(1.0, fan, uFan);
   }
   o = vec4(c, 1.0);
 }
@@ -677,19 +690,21 @@ vec3 fill(vec2 uv){
   }
   float n = fbm(q*1.6 + vec2(t, 0.0)) + 0.30*fbm3(q*4.3 + vec2(-t, 2.0));
   float n2 = fbm(q*1.6 + vec2(t, 0.0) + vec2(0.05, -0.10)) + 0.30*fbm3((q+vec2(0.05, -0.10))*4.3 + vec2(-t, 2.0));
-  float dens = smoothstep(0.52, 0.86, n);
+  float dens = smoothstep(0.44, 0.80, n);
   float lit = clamp(0.5 + (n - n2)*3.0, 0.0, 1.0);        // lit from below, where the sun is
   if(uFillKind == 1){
     float y = clamp(q.y*0.5+0.5, 0.0, 1.0);
-    c = mix(vec3(1.25, 0.46, 0.12), vec3(0.60, 0.16, 0.22), smoothstep(0.0, 0.45, y));
-    c = mix(c, vec3(0.045, 0.060, 0.19), smoothstep(0.30, 1.0, y));
-    c += vec3(2.2, 1.25, 0.45)*exp(-dot(q-vec2(0.15, -0.75), q-vec2(0.15, -0.75))*1.6);
-    vec3 cc = mix(vec3(0.050, 0.045, 0.110), vec3(1.9, 0.72, 0.22), lit*lit);
-    c = mix(c, cc, dens*0.92);
+    c = mix(vec3(0.80, 0.27, 0.07), vec3(0.34, 0.085, 0.15), smoothstep(0.0, 0.40, y));
+    c = mix(c, vec3(0.018, 0.035, 0.14), smoothstep(0.26, 0.90, y));
+    vec2 sq = q-vec2(0.12, -0.62);
+    c += vec3(1.6, 0.85, 0.28)*(exp(-dot(sq, sq)*9.0) + 0.35*exp(-dot(sq, sq)*1.8));
+    float under = clamp(0.5 + (n - n2)*4.5, 0.0, 1.0);
+    vec3 cc = mix(vec3(0.016, 0.018, 0.060), vec3(1.05, 0.34, 0.10), under*under*smoothstep(0.9, -0.4, q.y));
+    c = mix(c, cc, smoothstep(0.50, 0.66, n)*0.95);
   } else if(uFillKind == 3){
     float y = clamp(q.y*0.5+0.5, 0.0, 1.0);
-    c = mix(vec3(1.05, 0.90, 0.70), vec3(0.22, 0.50, 0.95), smoothstep(0.0, 0.8, y));
-    c = mix(c, mix(vec3(0.55, 0.62, 0.80), vec3(1.5, 1.4, 1.25), lit), dens*0.9);
+    c = mix(vec3(0.80, 0.70, 0.55), vec3(0.14, 0.36, 0.78), smoothstep(0.0, 0.8, y));
+    c = mix(c, mix(vec3(0.36, 0.42, 0.58), vec3(1.15, 1.08, 0.98), lit), dens*0.9);
   } else {
     float y = clamp(q.y*0.5+0.5, 0.0, 1.0);
     c = mix(vec3(0.30, 0.38, 0.55), vec3(0.060, 0.095, 0.22), y);

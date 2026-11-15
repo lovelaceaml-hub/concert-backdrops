@@ -25,7 +25,8 @@ Settings (colours are display hex or linear triples; angles in degrees):
                                 looking straight down, and how restless the surface is (0 = a perfect mirror)
   rays                          rays from the sun through hills, clouds and silhouettes (0 = off)
   dust, dust_color, dust_color2, bokeh     floating dust and the larger soft lights among it
-  lanterns                      amount of floating lanterns (0..1)
+  lanterns                      amount of lanterns rising into the sky (0..1)
+  floats                        amount of small lights floating on the water (0..1)
   exposure                      multiplies the picture's exposure
   bokeh_ring, bokeh_hex         the look of out-of-focus discs: a brighter edge, and how hexagonal (0 round)
 """
@@ -47,7 +48,7 @@ COLOR_KEYS = ("sky_top", "sky_mid", "sky_hor", "sun_color", "haze_color", "hill_
               "dust_color", "dust_color2", "lantern_color", "lantern_color2")
 NUMBER_KEYS = ("sun_az", "sun_el", "sun_int", "sun_size", "sun_disc", "sun_glow", "stars", "milky", "clouds",
                "cloud_speed", "hills", "hill_height", "haze", "mist", "mist_height", "mirror", "mirror_min",
-               "ripple", "rays", "dust", "bokeh", "lanterns", "exposure", "bokeh_ring", "bokeh_hex")
+               "ripple", "rays", "dust", "bokeh", "lanterns", "floats", "exposure", "bokeh_ring", "bokeh_hex")
 
 _NIGHT = dict(
     sky_top=lin("#01020a"), sky_mid=lin("#060b24"), sky_hor=lin("#16204c"),
@@ -56,7 +57,7 @@ _NIGHT = dict(
     haze=0.5, haze_color=lin("#18224e"), mist=0.35, mist_height=2.2, mist_color=lin("#1c2552"),
     water=lin("#010309"), mirror=1.0, mirror_min=0.55, ripple=0.7, rays=0.0,
     dust=0.6, dust_color=lin("#ffe2a8"), dust_color2=lin("#bcd0ff"), bokeh=0.7,
-    lanterns=0.0, lantern_color=lin("#ffb45e"), lantern_color2=lin("#ff8a4c"),
+    lanterns=0.0, floats=0.0, lantern_color=lin("#ffb45e"), lantern_color2=lin("#ff8a4c"),
     exposure=1.0, bokeh_ring=0.5, bokeh_hex=0.0,
 )
 
@@ -81,8 +82,8 @@ LOOKS["dawn"] = _look(_NIGHT, sky_top="#0f1b46", sky_mid="#553b7c", sky_hor="#e9
                       haze_color="#c97a6e", mist=0.55, mist_color="#a86a66", hill_color="#0e0a18", water="#06060f",
                       rays=0.35, dust_color="#ffd9a0", dust_color2="#ffc4b0")
 LOOKS["sunrise"] = _look(_NIGHT, sky_top="#13265e", sky_mid="#7d4c82", sky_hor="#f39a62", sun_color="#ffe6b4",
-                         sun_int=1.10, sun_el=5.5, stars=0.12, milky=0.0, clouds=0.42, haze=0.70,
-                         haze_color="#c9805c", mist=0.45, mist_color="#b87c62", hill_color="#140e1e",
+                         sun_int=1.00, sun_el=5.5, stars=0.12, milky=0.0, clouds=0.50, haze=0.65,
+                         haze_color="#b8704e", mist=0.30, mist_color="#a86e58", hill_color="#140e1e",
                          water="#090811", rays=0.9, dust_color="#ffe2a8", dust_color2="#ffd0a8", sun_disc=8.0,
                          sun_glow=0.8)
 LOOKS["golden"] = _look(_NIGHT, sky_top="#1c3a7c", sky_mid="#5e78b0", sky_hor="#e8c9a8", sun_color="#fff2d8",
@@ -127,6 +128,7 @@ class World:
                 raise ValueError(f"P3D world: unknown look {name!r} (known: {sorted(self.looks)})")
         self.arch = cfg.pop("arch", None)
         self.lantern_cfg = cfg.pop("lantern_field", None) or {}
+        self.float_cfg = cfg.pop("float_field", None) or {}
         self.dust_cfg = cfg.pop("dust_field", None) or {}
         self.shafts = list(cfg.pop("shafts", None) or [])
         self.light = cfg.pop("light", None)
@@ -198,9 +200,9 @@ class Stars:
     def sample(self, t):
         b = self.bright
         return [dict(pos=self.dir, size=self.size, color=self.color, alpha=self.alpha, seed=self.seed,
-                     kind="soft", twinkle=0.55, fog=0.0),
+                     kind="soft", twinkle=0.55, fog=0.0, streak=0.3),
                 dict(pos=self.dir[b], size=self.size[b] * 1.5, color=self.color[b], alpha=self.alpha[b] * 0.7,
-                     seed=self.seed[b], kind="spark", twinkle=0.4, fog=0.0)]
+                     seed=self.seed[b], kind="spark", twinkle=0.4, fog=0.0, streak=0.3)]
 
     def gain(self, t):
         return float(self.world.now["stars"])
@@ -218,7 +220,7 @@ class SunGlow:
         k = float(s["sun_int"]) * min(max((s["sun_el"] + 2.5) / 3.0, 0.0), 1.0)
         if k <= 0.001:
             return None
-        return dict(pos=s["sun_dir"][None, :], size=0.085, color=np.asarray(s["sun_color"]) * 1.1, alpha=min(k, 2.0),
+        return dict(pos=s["sun_dir"][None, :], size=0.060, color=np.asarray(s["sun_color"]), alpha=min(k, 2.0) * 0.6,
                     kind="soft", fog=0.0, dof=0.0, lod=False, streak=False)
 
 
@@ -266,12 +268,53 @@ class Dust:
             fx = np.clip((0.5 - np.abs(rel[:, 0]) / B[0]) / 0.12, 0.0, 1.0)
             fz = np.clip((0.5 - np.abs(rel[:, 2]) / B[2]) / 0.12, 0.0, 1.0)
             fy = np.clip(y / 0.4, 0.0, 1.0) * np.clip((B[1] - y) / 4.0, 0.0, 1.0)
+            # nothing flashes past right at the lens: the dust fades in from a little way off
+            dist = np.sqrt(rel[:, 0] ** 2 + rel[:, 2] ** 2 + (y - cp[1]) ** 2)
+            fy = fy * (np.clip((dist - 1.0) / 2.5, 0.0, 1.0) if k == 0 else np.clip((dist - 3.0) / 5.0, 0.0, 1.0))
             col = np.asarray(s["dust_color"])[None, :] * (1 - d["mix"][:, None] * 0.6) + np.asarray(
                 s["dust_color2"])[None, :] * (d["mix"][:, None] * 0.6)
             out.append(dict(pos=pos, size=d["size"], color=col, alpha=d["alpha"] * fx * fz * fy * amt,
                             emit=d["emit"], seed=d["seed"], kind="soft", twinkle=0.5 if k == 0 else 0.25,
-                            backlight=0.7, streak=0.4, reflect=(k == 1)))
+                            backlight=0.7, streak=0.15, reflect=(k == 1)))
         return out
+
+
+class Floats:
+    """Small lights floating on the water, in a ring round `center` (candles set on the lake). Close to the
+    surface, so each sits on its own mirror image; a low camera rushes past them."""
+
+    def __init__(self, world, count=700, center=(0.0, 0.0), radius=(10.0, 170.0), size=0.16, seed=37):
+        self.world = world
+        rng = np.random.default_rng(seed)
+        r = np.sqrt(rng.random(count) * (radius[1] ** 2 - radius[0] ** 2) + radius[0] ** 2)
+        a = rng.random(count) * 2 * np.pi
+        self.base = np.stack([center[0] + r * np.sin(a), center[1] + r * np.cos(a)], axis=1)
+        self.rank = rng.permutation(count) / float(count)
+        self.seed = rng.random(count).astype(np.float32)
+        self.size = (size * (0.7 + 0.6 * rng.random(count))).astype(np.float32)
+        self.mix = rng.random(count)
+        self.ph = rng.random((count, 2)) * 6.2832
+
+    def sample(self, t):
+        s = self.world.now
+        amt = float(s["floats"])
+        if amt <= 0.001:
+            return None
+        vis = np.clip((amt - self.rank) / 0.08, 0.0, 1.0)
+        keep = vis > 0.002
+        if not np.any(keep):
+            return None
+        x = self.base[keep, 0] + 0.25 * np.sin(t * 0.17 + self.ph[keep, 0])
+        z = self.base[keep, 1] + 0.25 * np.sin(t * 0.13 + self.ph[keep, 1])
+        y = 0.16 + 0.03 * np.sin(t * 0.9 + self.ph[keep, 0])
+        pos = np.stack([x, y, z], axis=1)
+        mix = self.mix[keep, None]
+        col = np.asarray(s["lantern_color"])[None, :] * (1 - mix) + np.asarray(s["lantern_color2"])[None, :] * mix
+        flick = 0.8 + 0.2 * np.sin(t * (6.0 + 5.0 * self.seed[keep]) + self.seed[keep] * 70.0)
+        a = (vis[keep] * flick).astype(np.float32)
+        return [dict(pos=pos, size=self.size[keep] * 2.2, color=col, alpha=a * 0.45, kind="soft", seed=self.seed[keep]),
+                dict(pos=pos, size=self.size[keep] * 0.5, color=col * 0.5 + 0.5, alpha=a, emit=3.0, kind="soft",
+                     seed=self.seed[keep])]
 
 
 class Lanterns:
