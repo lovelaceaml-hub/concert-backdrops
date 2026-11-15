@@ -1,5 +1,5 @@
 """Sky and camera demo (30 seconds, to the first minute of the song 03 New Song recording): night to dawn with
-god rays through moving clouds and a slow crane up (engine/UPGRADE-HOWTO.md, section I7).
+god rays through moving clouds and a slow crane up (engine/UPGRADE-HOWTO.md, section O).
 
 Not a concert video. The song 03 original look and its first two expressions, with the new keys on top:
 TIME_OF_DAY from night to just after dawn, CLOUDS3D, GOD_RAYS from the rising sun, and a camera that cranes up,

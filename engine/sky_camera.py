@@ -1,5 +1,5 @@
 """Sky and camera layers (2026-11-15, engine helper S). Everything here is optional: a song that sets none of
-these keys renders exactly as before. How a song uses them: engine/UPGRADE-HOWTO.md, section I7.
+these keys renders exactly as before. How a song uses them: engine/UPGRADE-HOWTO.md, section O.
 
   TIME_OF_DAY   a Track: 0 night, 0.5 dawn, 1 day, 1.5 dusk, 2 night again. Sky colours, sun height and
                 strength, the colour of the light, stars

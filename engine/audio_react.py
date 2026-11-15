@@ -17,7 +17,7 @@ function of time:
     audio.level(t), audio.beat(t), audio.brightness(t), audio.chorus(t), audio.section_starts(), audio.beats()
 
 The song keys AUDIO_REACT, REACT_GLOW, REACT_SPARKLE, REACT_ARCH, REACT_AURORA and REACT_CHORUS (all optional,
-all off by default) are applied by Reactor in render.py; see engine/UPGRADE-HOWTO.md, section I1.
+all off by default) are applied by Reactor in render.py; see engine/UPGRADE-HOWTO.md, section P.
 
 Which audio: the environment variable AUDIO (set by the Render workflow), else the song's AUDIO_FILE, else
 work/<SONG>/audio.wav. Paths are relative to the repository root.

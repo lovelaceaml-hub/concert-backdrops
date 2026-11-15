@@ -5,7 +5,7 @@ Each builder returns a list of strokes. A stroke is a dict:
   role  colour role ("coral", "orange", "sky", "olive", "gold", "goldw", "bridge")
   win   (s0, s1): when the pen draws this stroke, as fractions of the symbol's draw time
   grp   0 fixed, 1 left door, 2 right door (gate only; the doors swing open)
-How a song uses them: engine/UPGRADE-HOWTO.md, section I8.
+How a song uses them: engine/UPGRADE-HOWTO.md, section L.
 """
 import math
 

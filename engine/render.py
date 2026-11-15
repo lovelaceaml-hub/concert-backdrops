@@ -104,7 +104,7 @@ class Renderer:
         self.t_sky = tex_f((w, h)); self.f_sky = ctx.framebuffer([self.t_sky])
         self.t_L = tex_f((w, h)); self.f_L = ctx.framebuffer([self.t_L])
         self.bl = []
-        gs = max(h / 1080.0, 1.0)   # I10: at 4K the glow buffers keep their 1080p sizes, so the bloom looks the same
+        gs = max(h / 1080.0, 1.0)   # HOWTO Q: at 4K the glow buffers keep their 1080p sizes, so the bloom looks the same
         for k in (2, 4, 8, 16):
             size = (max(int(w // (k * gs)), 8), max(int(h // (k * gs)), 8))
             ta, tb = tex_f(size), tex_f(size)
@@ -139,7 +139,7 @@ class Renderer:
         import upgrade
         self.up = upgrade.Upgrade(self)   # scenes, people of light, effect layers, fragment styles (all optional)
         import text_anims
-        self.ta = text_anims.TextAnims(self)   # other text animations (anim=, UPGRADE-HOWTO J; all optional)
+        self.ta = text_anims.TextAnims(self)   # other text animations (anim=, UPGRADE-HOWTO section J; all optional)
         import gathering
         self.gath = gathering.Gathering(self)   # a gathering crowd and a light passed hand to hand (optional)
         import water
@@ -153,7 +153,7 @@ class Renderer:
         import audio_react
         self.react = audio_react.Reactor(self) if audio_react.enabled() else None   # music reactivity (optional)
         import output
-        self.out = output.Output(self)   # I10: event card and seamless loop (optional)
+        self.out = output.Output(self)   # HOWTO Q: event card and seamless loop (optional)
 
     # ------------------------------------------------------------------
     def text_plan(self, t):
@@ -181,7 +181,7 @@ class Renderer:
             dur = max(m["t1"] - m["t0"], 0.5)
             fly = (t - m["out"]) if t > m["out"] else -1.0
             return A, (fr["tex"], ((t - m["t0"]) + 1.35, dur, fly, m.get("alpha", 0.95)), fr["bounds"], 1.0, (0.0, 0.0))
-        ev = self.out.card_slot(t)   # I10: the event card of a pre-show or intermission loop
+        ev = self.out.card_slot(t)   # HOWTO Q: the event card of a pre-show or intermission loop
         if ev is not None:
             return A, ev
         ts = self.up.text_shadow(t)
@@ -406,7 +406,7 @@ def main():
     ap.add_argument("--preset", default="medium")
     a = ap.parse_args()
     import output
-    a.scale *= output.scale(S)   # I10: OUT_RES=4k draws 3840x2160 frames from the same 1920x1080 design
+    a.scale *= output.scale(S)   # HOWTO Q: OUT_RES=4k draws 3840x2160 frames from the same 1920x1080 design
     w, h = int(S.W * a.scale) // 2 * 2, int(S.H * a.scale) // 2 * 2
     R = Renderer(w, h)
     if a.stills:

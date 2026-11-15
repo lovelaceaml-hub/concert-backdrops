@@ -167,7 +167,7 @@ RAYS = Track([(0, 0.0), (TOTAL, 0.0)])
 PART = Track([(0, 0.0), (TOTAL, 0.0)])
 SKYLINE_LANTERN = Track([(0, 1.0), (10.0, 1.0), (12.0, 0.25), (TOTAL, 0.25)])
 
-# The crowd and the passed light (engine/UPGRADE-HOWTO.md section I-G)
+# The crowd and the passed light (engine/UPGRADE-HOWTO.md section K)
 GATHERING = dict(t0=1.0, t1=1e9, count=64, center=(0.5, 0.343), spread=(0.40, 0.035), hole=0.04, rows=2,
                  height=(0.15, 0.10), speed=1.0, arrive_by=13.5, sides=("left", "right"),
                  colors=("#ffcf9a", "#ffd9b8", "#ffe6c4", "#ffc6a0", "#f2d0ff", "#cfe0ff"))

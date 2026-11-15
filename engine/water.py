@@ -8,7 +8,7 @@ Everything is optional. A song that sets none of these keys renders exactly as b
   FALLING_STARS  [(t, x), ...] or (t, x, y): a star falls and lands on the lake at time t
   SYMBOLS        [dict(kind="emblem"|"heart"|"gate"|"bridge", t0, t1, out, x, y, size, ...)]
 
-How a song uses them: engine/UPGRADE-HOWTO.md, section I8. Every ripple is a pure function of t, so a frame
+How a song uses them: engine/UPGRADE-HOWTO.md, section L. Every ripple is a pure function of t, so a frame
 renders the same whichever part of the video it falls in.
 """
 import math

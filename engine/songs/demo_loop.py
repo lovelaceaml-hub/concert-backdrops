@@ -1,4 +1,4 @@
-"""Pre-show loop demo (I10): a calm two minute backdrop that loops with no seam, with the event card.
+"""Pre-show loop demo (HOWTO Q): a calm two minute backdrop that loops with no seam, with the event card.
 
 The luminous original look (song 03's first version: the low warm sun over the lake, aurora, rays, a glowing
 skyline, motes and a few petals) in the campaign's colours, held calm for the minutes before the concert or
@@ -126,7 +126,7 @@ CREDIT = dict(song="Pre-show", concert="The Words of Mother’s Love Healing Con
               t_in=1e9, t_full=1e9 + 1, t_move=1e9 + 2, t_rest=1e9 + 3, scale=0.34, alpha_rest=0.58,
               margin_x=0.030, margin_top=0.048)   # no corner credit: the event card says it all
 
-# The event card (I10): campaign title, concert title, date and time, place. Edit these for each event.
+# The event card (HOWTO Q): campaign title, concert title, date and time, place. Edit these for each event.
 EVENT_CARD = dict(
     lines=["The Words of Mother’s Love That Bring Peace",
            "The Words of Mother’s Love Healing Concert",

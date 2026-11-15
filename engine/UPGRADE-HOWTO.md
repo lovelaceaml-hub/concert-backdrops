@@ -8,6 +8,28 @@ Section E lists the shared fixes from Astra round 1 (text protection, calm lower
 
 Times are seconds into the video. A "Track" is the timeline helper (new files: `from track import Track`): `Track([(t, value), ...])` eases smoothly between keys. Any setting below that takes a number or a pair can also be a Track or a function of time. Colors are `"#rrggbb"`.
 
+**Contents**
+
+- A. Scenes (painted plates)
+- B. Figures (people of light)
+- C. Effect layers (each is a Track, 0 = off)
+- D. Fragment styles
+- E. Shared fixes from Astra round 1 (2026-11-14)
+- F. Fixes from the round 2 attack reviews (2026-11-14, branch engine-fix-r2)
+- G. Moving figures (round 3, 2026-11-14)
+- H. Living figures (2026-11-15, branch engine-living-figures)
+- I. Theme colours, bubbles, leaves (2026-11-15, branch engine-theme)
+- J. Text animations (2026-11-15, branch engine-text-anims)
+- K. Gathering and the passed light (2026-11-15, branch engine-gathering)
+- L. Water ripples and campaign symbols (2026-11-15, branch engine-water-symbols)
+- M. Creatures of light: doves, butterflies, fireflies (2026-11-15, branch engine-creatures)
+- N. Living nature: flowers, tree, blossoms, waterfall, stream (2026-11-15, branch engine-nature)
+- O. Sky and camera (2026-11-15, branch engine-sky-camera)
+- P. Music reactivity and automatic timing (2026-11-15, branch engine-audio)
+- Q. Output: 4K, 60 fps, pre-show loop, live cue mode (2026-11-15, branch engine-output)
+- R. Draft mode and the automatic quality check (2026-11-15, branch engine-qa)
+- T. Rendering
+
 ## A. Scenes (painted plates)
 
 ```python
@@ -134,6 +156,19 @@ TAGLINE = dict(text="Where a mother’s love reaches, peace settles.\nSunday, De
 - **Look changes** from the demo check: shard lines are thin glass edges now, the beam is a gentle column (raise `BEAM` above 0.5 only for a single big moment), and people of light are brighter. The demo uses figures at `height=0.40`, feet `y=0.20`, with two-line words at `y=0.30` (size 96) or one line at `y=0.29` (size 112).
 - **Reading time** (PHASE2.md item 4) is not enforced by the engine; plan it: formation takes about 3.75 seconds from `form`, so `hold` at least `form + 9.75` gives 6 seconds fully formed.
 
+## F. Fixes from the round 2 attack reviews (2026-11-14, branch engine-fix-r2)
+
+Nothing to change in a song file; all song files load as before. What changed, and the new optional settings:
+
+- The veil and shadow behind text now follow the letters per pixel: they appear as the letters arrive (left to right for sparks, write and engrave), scale with their opacity (petals, reflection), move with a rising reflection and leave as the letters dissolve. No dark ghost before the words, no smudge after them.
+- `transition="dissolve"`: its glowing edge is thin and faint by default. New scene key `edge_glow` (default 0.06; the old look was about 0.45; 0 turns it off).
+- BOTTOM_CALM now also darkens a plate's own painted lower third: the plate's gain ramps from `calm_gain` at the bottom of the screen to 1.0 at 0.30 of the height. New scene key `calm_gain` (default 0.55; 1.0 turns it off for that scene).
+- Plates crossfade in tone space, so a bright painted sun stays soft at partial opacity (no hard blob or spiky rim).
+- Text (expressions, title, end card, fragments, the corner credit) is not mirrored in the lake any more.
+- The light waves when a star lights stay above the calm lower third and off the text and credit.
+- The reflection fragment style's own mirror image stays close to its line.
+- tools/prepare_figure.py removes only thin floor lines (at most 10 rows thick), so filled figures and wide groups survive; add `--keep-lines` to skip the step entirely.
+
 ## G. Moving figures (round 3, 2026-11-14)
 
 People of light are now rare and always moving (project-docs: DIRECTION-R3). A FIGURES entry's `x`, `y` and `height` can each be:
@@ -151,54 +186,6 @@ FIGURES = [
          y=0.22, height=0.30, leave="drift"),
 ]
 ```
-
-## J. Text animations (2026-11-15)
-
-Anthony: "I also want different animations for the text instead of just the same one." Add `anim=` to an entry in PHRASES, to `TITLE`, to `TAGLINE` (the end card lines) or to a FRAGMENTS entry. A song may set `TEXT_ANIM = "ink"` (for example) as the default for every expression and the title; an entry's own `anim=` wins. Without any of these nothing changes: the classic sparks render pixel for pixel as before.
-
-| anim | What happens |
-|---|---|
-| `"sparks"` (default) | the classic: sparks gather into the words left to right, hold, fly to the star |
-| `"ink"` | each letter is written along its own strokes by a hot nib of light; the fresh ink cools, and while held a soft light keeps flowing along the strokes |
-| `"bloom"` | a seed of light glows at the centre of each letter, then the letter opens outward from it, staggered left to right |
-| `"rise"` | the letters float up through the water line, left to right, with a rippling reflection below the line that fades as they reach their place (`line=` the water line, default HORIZON; raised above the calm third when BOTTOM_CALM is on) |
-| `"ribbon"` | a twisting ribbon of light sweeps across from the left; the words appear behind it and sparks shed from it settle into the letters; the ribbon leaves past the last letter |
-| `"constellation"` | stars appear on the letters, lines of light grow between them, then the letters fill with light; the lines fade to a faint trace while held |
-| `"petal"` | petals fall from above and settle into the letters, which fill in specks where they land (`colors=` a pair, default the song's PETAL_COLORS) |
-| `"snow"` | the same with snowflakes (`colors=`, default the song's SNOW_COLOR) |
-| `"wave"` | the classic gathering, then a ripple of brightness runs through the held words every 3.6 seconds |
-
-```python
-PHRASES = [
-    dict(label="Greeting", lines=["“How are you?”"], size=176, form=5.6, hold=12.0, star=VOICE_IN, anim="ink"),
-    dict(label="Gratitude", lines=["“Thank you.”"], size=150, form=18.4, hold=28.0, star=31.14, anim="bloom"),
-]
-TITLE = dict(label="Healing Concert", lines=["The Words of Mother’s Love"], size=150,
-             form=TITLE_HIT - FORM_DUR, hold=1e9, star=1e9, anim="constellation")
-TAGLINE = dict(text="...", t0=TITLE_HIT + 1.4, t1=TITLE_HIT + 4.0, anim="ink")
-FRAGMENTS = [dict(text="a quiet word of light", t0=100.0, t1=103.0, out=110.0, anim="petal")]
-```
-
-- Timing is unchanged for every animation: each part of the words is fully formed at the same moment as with the classic sparks (so `form`, `hold`, FORM_DUR and the 6 second reading time work as before, and the veil behind the words stays in step), and at `hold` the words dissolve and their sparks fly to the star exactly as before. Fragments dissolve at `out` as before; their sparks drift up.
-- `anim=` on a fragment works only with the default fragment `style` (sparks); the styles in section D keep their own look.
-- Nothing dark is drawn by the animations; the calm lower third stays calm (petals and flakes fall from above the words, the rise starts above the calm third).
-- Choose one animation per expression to suit its words; vary them through a song rather than using one for all. Good matches: `ink` for a promise or prayer, `bloom` for gratitude or a compliment, `rise` over water scenes, `ribbon` for an energetic moment, `constellation` for the title or a night scene, `petal` or `snow` where the song already has petals or snow, `wave` for a long hold on a strong line.
-- An unknown name stops the render with an error that lists the valid names.
-- Engine test song: `engine/songs/test_living.py` uses ink, bloom, constellation, ribbon and rise (section H3).
-- Code: `engine/text_anims.py` (shaders and preparation); `engine/render.py` only hands such texts to it.
-
-## F. Fixes from the round 2 attack reviews (2026-11-14, branch engine-fix-r2)
-
-Nothing to change in a song file; all song files load as before. What changed, and the new optional settings:
-
-- The veil and shadow behind text now follow the letters per pixel: they appear as the letters arrive (left to right for sparks, write and engrave), scale with their opacity (petals, reflection), move with a rising reflection and leave as the letters dissolve. No dark ghost before the words, no smudge after them.
-- `transition="dissolve"`: its glowing edge is thin and faint by default. New scene key `edge_glow` (default 0.06; the old look was about 0.45; 0 turns it off).
-- BOTTOM_CALM now also darkens a plate's own painted lower third: the plate's gain ramps from `calm_gain` at the bottom of the screen to 1.0 at 0.30 of the height. New scene key `calm_gain` (default 0.55; 1.0 turns it off for that scene).
-- Plates crossfade in tone space, so a bright painted sun stays soft at partial opacity (no hard blob or spiky rim).
-- Text (expressions, title, end card, fragments, the corner credit) is not mirrored in the lake any more.
-- The light waves when a star lights stay above the calm lower third and off the text and credit.
-- The reflection fragment style's own mirror image stays close to its line.
-- tools/prepare_figure.py removes only thin floor lines (at most 10 rows thick), so filled figures and wide groups survive; add `--keep-lines` to skip the step entirely.
 
 ## H. Living figures (2026-11-15, branch engine-living-figures)
 
@@ -279,13 +266,42 @@ Sun, clouds, rays, lanterns, petals and the arch stay as your song sets them. Th
 
 **`LEAVES`** (Track, 0 = off; share of about 48 leaves): a few leaves of light drift down slowly, swinging, turning and tumbling edge-on and back, with a bright rim, a pale vein and a glint as they face us. Settings: `LEAVES_COLORS` (pair, default green #5fd040 to gold #d8e860), `LEAVES_SIZE` (default 1.0: 30 to 92 px), `LEAVES_SPEED` (default 1.0), `LEAVES_WIND` (sideways drift, default 0.4), `LEAVES_COUNT` (default 48). Calm lower third and text protection as for bubbles. Because light alone can only brighten a bright sky, the leaves are also painted over the scene in their own colours (a tint pass, off when LEAVES is 0), so they read truly green on a day sky; `LEAVES_TINT` (default 0.85, 0 = light only) sets how strongly.
 
-## Rendering
+## J. Text animations (2026-11-15, branch engine-text-anims)
 
-Unchanged: commit and push the song file and its assets (plates and figures are in the repo under `assets/`, so the cloud workflow has them), then run the Render workflow (stills first, then video). See docs/HANDOFF.md.
+Anthony: "I also want different animations for the text instead of just the same one." Add `anim=` to an entry in PHRASES, to `TITLE`, to `TAGLINE` (the end card lines) or to a FRAGMENTS entry. A song may set `TEXT_ANIM = "ink"` (for example) as the default for every expression and the title; an entry's own `anim=` wins. Without any of these nothing changes: the classic sparks render pixel for pixel as before.
 
-The video run's finish job uploads three artifacts: "<name>" (the full 1920x1080 video plus a silent copy), "<name> frames" (4 frame sheets of 8 frames each, for checking without downloading the video) and "<name> (share)" (the file "<name> (share).mp4": 1280x720, H.264 with AAC sound, always under 25 MB, for phones and messages; the job fails if it would be larger).
+| anim | What happens |
+|---|---|
+| `"sparks"` (default) | the classic: sparks gather into the words left to right, hold, fly to the star |
+| `"ink"` | each letter is written along its own strokes by a hot nib of light; the fresh ink cools, and while held a soft light keeps flowing along the strokes |
+| `"bloom"` | a seed of light glows at the centre of each letter, then the letter opens outward from it, staggered left to right |
+| `"rise"` | the letters float up through the water line, left to right, with a rippling reflection below the line that fades as they reach their place (`line=` the water line, default HORIZON; raised above the calm third when BOTTOM_CALM is on) |
+| `"ribbon"` | a twisting ribbon of light sweeps across from the left; the words appear behind it and sparks shed from it settle into the letters; the ribbon leaves past the last letter |
+| `"constellation"` | stars appear on the letters, lines of light grow between them, then the letters fill with light; the lines fade to a faint trace while held |
+| `"petal"` | petals fall from above and settle into the letters, which fill in specks where they land (`colors=` a pair, default the song's PETAL_COLORS) |
+| `"snow"` | the same with snowflakes (`colors=`, default the song's SNOW_COLOR) |
+| `"wave"` | the classic gathering, then a ripple of brightness runs through the held words every 3.6 seconds |
 
-## I-G. Gathering and the passed light (2026-11-15, branch engine-gathering)
+```python
+PHRASES = [
+    dict(label="Greeting", lines=["“How are you?”"], size=176, form=5.6, hold=12.0, star=VOICE_IN, anim="ink"),
+    dict(label="Gratitude", lines=["“Thank you.”"], size=150, form=18.4, hold=28.0, star=31.14, anim="bloom"),
+]
+TITLE = dict(label="Healing Concert", lines=["The Words of Mother’s Love"], size=150,
+             form=TITLE_HIT - FORM_DUR, hold=1e9, star=1e9, anim="constellation")
+TAGLINE = dict(text="...", t0=TITLE_HIT + 1.4, t1=TITLE_HIT + 4.0, anim="ink")
+FRAGMENTS = [dict(text="a quiet word of light", t0=100.0, t1=103.0, out=110.0, anim="petal")]
+```
+
+- Timing is unchanged for every animation: each part of the words is fully formed at the same moment as with the classic sparks (so `form`, `hold`, FORM_DUR and the 6 second reading time work as before, and the veil behind the words stays in step), and at `hold` the words dissolve and their sparks fly to the star exactly as before. Fragments dissolve at `out` as before; their sparks drift up.
+- `anim=` on a fragment works only with the default fragment `style` (sparks); the styles in section D keep their own look.
+- Nothing dark is drawn by the animations; the calm lower third stays calm (petals and flakes fall from above the words, the rise starts above the calm third).
+- Choose one animation per expression to suit its words; vary them through a song rather than using one for all. Good matches: `ink` for a promise or prayer, `bloom` for gratitude or a compliment, `rise` over water scenes, `ribbon` for an energetic moment, `constellation` for the title or a night scene, `petal` or `snow` where the song already has petals or snow, `wave` for a long hold on a strong line.
+- An unknown name stops the render with an error that lists the valid names.
+- Engine test song: `engine/songs/test_living.py` uses ink, bloom, constellation, ribbon and rise (section H3).
+- Code: `engine/text_anims.py` (shaders and preparation); `engine/render.py` only hands such texts to it.
+
+## K. Gathering and the passed light (2026-11-15, branch engine-gathering)
 
 A crowd of small people of light walks in from the sides and gathers in one place; then a small flame passes from hand to hand through them (the peace message spreading) and the arch brightens. Code: engine/gathering.py, drawn by one guarded call in render.py right after the figures, so text protection and the glow apply to it as to every other light. A song that sets neither key renders exactly as before. Demo: engine/songs/demo_gathering.py (44 seconds, dusk).
 
@@ -312,7 +328,8 @@ PASS_LIGHT (needs GATHERING):
 - Each hand-over: the giver turns toward the receiver (turning round if needed) and reaches out with one hand; the receiver reaches with both hands; the flame hops across with a spark trail; the receiver then holds it in cupped hands and begins to glow (the unlit crowd is dimmer). `color`: the flame colour.
 - `lift` (default True, or a time): once all are lit, everyone lifts their light. `rise` (default True): then each light rises to the nearest light of the arch. `arch` (default 1.0, 0 = off): the arch brightens as they arrive (a band of light through the nine lights). To also switch on the nine lights themselves, give PHRASES `star` times around then (the demo does).
 - A 100 person crowd lit from the centre takes about 15 seconds to light completely at the default pace; the demo prints nothing, but `gathering.Crowd(...).Tend` gives the exact time.
-## I8. Water ripples and campaign symbols (2026-11-15, branch engine-water-symbols)
+
+## L. Water ripples and campaign symbols (2026-11-15, branch engine-water-symbols)
 
 Code: `engine/water.py`, `engine/water_shaders.py`, `engine/symbols.py`, plus one guarded block in the composite pass (`shaders.COMP_FS`, `uNRip`). Demo: `engine/songs/demo_water_symbols.py`. A song that sets none of these keys renders exactly as before.
 
@@ -349,7 +366,8 @@ SYMBOLS = [
 - `color`: one hex colour for every line, or a dict by role (`coral`, `orange`, `sky`, `olive`, `gold`, `goldw`, `bridge`). Defaults: hearts `#F0566A` and `#F39A3A`, globe sky blue, olive green, gate gold. Every colour is lifted toward white so it always glows, never dark.
 - `glow` (default 1.0) scales the brightness. `reflect` (default True): the symbol is mirrored in the lake, and the ripples bend that reflection. Gate only: `open` (time the doors start to open; default `t1 + 0.8`; `None` keeps them shut), `open_dur` (default 2.5), `light` (colour of the light through the doors, default `"#ffcf7a"`).
 - Symbols are light drawn before the text protection pass, so they never cross the letters. Keep them clear of an expression's place on screen anyway.
-## I1 Creatures of light (doves, butterflies, fireflies)
+
+## M. Creatures of light: doves, butterflies, fireflies (2026-11-15, branch engine-creatures)
 
 Built 2026-11-15 (branch engine-creatures, code in `engine/creatures.py`). Demo: `engine/songs/demo_creatures.py` (36 seconds, song 03 recording). All three are light drawn before the text protection pass, so the words dim them like any other light, and they reflect in the lake. In the calm lower third (BOTTOM_CALM) they are dimmed, the fireflies thinned, and the flock steers up out of it.
 
@@ -391,7 +409,8 @@ FIREFLIES_Y = (0.05, 0.40)       # the band they live in (default: from the bott
 FIREFLIES_COLOR = "#e4ff9c"
 FIREFLIES_BRIGHT = 1.3
 ```
-## I1. Living nature (flowers, tree, blossoms, waterfall, stream)
+
+## N. Living nature: flowers, tree, blossoms, waterfall, stream (2026-11-15, branch engine-nature)
 
 Living nature made of light, always moving (engine/nature.py, engine/nature_shaders.py). Each layer is switched on by its main setting (a number or a Track, 0 = off); a song that sets none of them renders exactly as before. All of it is drawn as light before the text protection, so the veil behind the words dims it like every other light, and all of it honours `BOTTOM_CALM` (the stream, the waterfall's mist and the tree's trunk are softened in the lower third, not removed; flowers there stay soft and the bottom-centre is kept clear). Working example: `engine/songs/demo_nature.py` (30 seconds, a dawn).
 
@@ -421,7 +440,8 @@ STREAM_PATH = [(0.17, 0.40), (0.25, 0.385), (0.21, 0.365), (0.31, 0.348), (0.40,
 Tips: keep the tree and the waterfall to the sides, clear of the expression (centre, about 0.61 from the bottom) and the arch. Start a stream at the foot of a waterfall by giving them the same point. Remember DESIGN-SYSTEM.md section 6: agree with the coordinator before two songs use the same signature effect.
 
 Paint (round 2): light alone only brightens a bright sky, so the flowers' petals, the stream's water and a cliff behind the waterfall are also painted in colour over the scene (a half-size paint buffer that the composite lays down before the light, never over the text, and only while one of these layers is on). Flowers are drawn as real petal shapes in saturated campaign colours (coral, peach, cream, sky blue) with a rim of light; the stream is one continuous ribbon of water with flowing bands, glints moving downstream and banks that catch the light. Extra settings: `WATERFALL_CLIFF` (1.0: strength of the rock face of light and shadow behind the fall; 0 turns it off), `CLIFF_LIT` ("#c9a3a4"), `CLIFF_SHADE` ("#5d6690"), `STREAM_PAINT` ("#7fb2e0": the water's colour), `NATURE_PAINT` (1.0: strength of all the paint).
-## I7. Sky and camera (2026-11-15, branch engine-sky-camera)
+
+## O. Sky and camera (2026-11-15, branch engine-sky-camera)
 
 Time of day, moving 3D clouds, god rays and slow camera moves with depth. All optional: a song that sets none of these keys renders exactly as before. Code: `engine/sky_camera.py` and `engine/sky_camera_shaders.py`. Working example: `engine/songs/demo_sky_camera.py` (30 seconds, night to dawn, god rays through clouds, a slow crane up).
 
@@ -448,7 +468,8 @@ CAMERA_MOTES = 0.6        # a few large soft motes on the nearest layer, so the 
 - **CAMERA_ZOOM, CAMERA_PAN, CAMERA_CRANE** (numbers or Tracks; any one of them turns the camera on), **PARALLAX** (default 1), **CAMERA_CENTER** (default `(0.5, HORIZON + 0.12)`, the point a push in goes towards). Depths: far sky 0.12, high clouds 0.24, low clouds 0.40, far range 0.45, middle range 0.62, near range 0.80, lake 0.80 at the shore to 1.15 at the bottom of the screen, near motes 1.45. The skyline lantern rides the far range. Good ranges for slow, calm moves: zoom 1.0 to 1.15, pan within plus or minus 0.05, crane within plus or minus 0.12, over 20 seconds or more.
 - **Not moved by the camera**: text of any kind, the arch of nine lights, the stars, the song's own motes and petals, the effect layers and the people of light. To move another layer with depth w, call `R.sky.to_screen((x, y), w, t, P)` (layer point to screen point).
 - The camera moves the engine's own sky, ranges and lake. A scene plate (SCENES) keeps its own `zoom` and `pan` and covers the camera background while it is on screen.
-## I1 Music reactivity and automatic timing (2026-11-15, branch engine-audio)
+
+## P. Music reactivity and automatic timing (2026-11-15, branch engine-audio)
 
 The engine analyses the song's audio once, when it loads (numpy and an ffmpeg decode, in `engine/audio_react.py`): a slow loudness envelope, onsets and beats (a fast pulse is counted in half time, so a ballad pulses at about 70 to 90 bpm), downbeats, a spectral brightness and section starts from a novelty curve. The results are cached as arrays on a 100 per second grid (and on disk under `work/audio_react/`). The audio is the Render workflow's `audio` input; locally set the environment variable `AUDIO`, or `AUDIO_FILE = "audio/promo/sNN.mp3"` in the song file.
 
@@ -490,7 +511,8 @@ When a song file changes a setting of a base song it imports (as `engine/songs/d
 Automatic timing: `python tools/suggest_timing.py audio/promo/sNN.mp3 -n 4 --start 6 --end 46` prints the section starts, the strong beats, and form, hold, out (dissolve end) and star times for 4 expressions. It always honours the reading time contract (formation 3.75 s, then at least 6 s solid, so hold >= form + 9.75; dissolve 1.6 s; 0.5 s gap before the next text), spreads the expressions evenly, places hold on section starts and strong beats where it can, starts each form on the first strong beat after the gap, and lights each star on a strong beat about 3 s after hold. `--solid 8` asks for longer reading time; `--json` gives machine readable output. Treat it as a first draft: the lyrics and the scenes still decide.
 
 Demo: `engine/songs/demo_audio.py` (the original song 03 look over the first minute of the recording, every key at full amount).
-## I10 Output: 4K, 60 fps, pre-show loop, live cue mode
+
+## Q. Output: 4K, 60 fps, pre-show loop, live cue mode (2026-11-15, branch engine-output)
 
 ### 4K and 60 fps
 
@@ -547,7 +569,8 @@ How to start it, step by step:
 3. Start the song: `python engine/live.py s03_original --audio audio/promo/s03.mp3` (the audio file is measured once so the lights follow the song; there is no sound, the musicians play live). For a rehearsal in a window add `--windowed`; to fill the second screen (the projector) add `--display 1`.
 4. Keys: space or right arrow for the next cue, left arrow for the previous one, 1 to 9 (and 0 for 10) to jump to a cue, b to fade to black and back, Esc to quit. Every jump is a 2 second crossfade (change it with `--xfade 3`). The window title and the terminal show the current cue.
 5. The terminal prints the frames per second every 300 frames. Below about 30, use a stronger graphics card, or a song with fewer effects.
-## I11 Draft mode and the automatic quality check (branch engine-qa)
+
+## R. Draft mode and the automatic quality check (2026-11-15, branch engine-qa)
 
 **Draft mode** renders the whole song fast, to judge timing, layout and motion before a full render. It is not for showing anyone.
 
@@ -570,3 +593,24 @@ It uses the engine's own text layout (it imports the song file and engine/text.p
 - Length: the video is as long as the song file says.
 
 By hand (repository root, fonts from tools/setup_fonts.py, ffmpeg): `python tools/qa_check.py --song s08_favor_from_god --video "<file>.mp4" --out qa` (or `--stills <folder>`, or neither for the song-file checks only). It takes under half a minute.
+
+## T. Rendering
+
+Commit and push the song file and its assets (plates and figures are in the repo under `assets/`, so the cloud workflow has them), then run the Render workflow: a draft or stills first, then the video. See docs/HANDOFF.md.
+
+The Render workflow's inputs (one workflow for everything, 8 inputs):
+
+| Input | Values | Meaning |
+|---|---|---|
+| `song` | a file in engine/songs, without .py | the song file |
+| `audio` | a path under audio/ | the clip the video follows |
+| `mode` | `stills`, `video`, `draft` | stills at chosen seconds; the full video; or the whole song small and fast (section R) |
+| `stills` | seconds, comma separated | which stills to draw (stills mode) |
+| `name` | letters, digits, spaces, `_ . , ! ' -` | name of the output files (no parentheses) |
+| `resolution` | `1080p` (default), `4k` | section Q |
+| `fps` | `30` (default), `60` | section Q |
+| `qa` | `flag` (default), `fail`, `off` | the automatic quality check (section R) |
+
+A video renders in 10 parallel parts at 1080p and 30 fps, 20 parts at 4K or at 60 fps, 40 parts at 4K and 60 fps together. A draft always renders in 8 parts.
+
+The video run's finish job uploads: "<name>" (the full video plus a silent copy), "<name> frames" (4 frame sheets of 8 frames each, for checking without downloading the video), "<name> (share)" (the file "<name> (share).mp4": 1280x720, 30 fps, H.264 with AAC sound, always under 25 MB, for phones and messages; the job fails if it would be larger) and "<name> QA" (the quality report). A stills run uploads "<name>-stills" (the stills and their quality report). A draft run uploads "<name> (draft)" and "<name> QA".

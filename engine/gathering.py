@@ -11,7 +11,7 @@ PASS_LIGHT a small flame passes from hand to hand: each giver turns to the next 
            light, the lights rise to the arch and the arch brightens.
 
 Everything is a pure function of time (no state carried between frames), so the cloud workers that render a
-video in parts agree with each other. How a song uses this: engine/UPGRADE-HOWTO.md section I-G.
+video in parts agree with each other. How a song uses this: engine/UPGRADE-HOWTO.md section K.
 No faces (heads are soft glows), everyone wears a long robe. Text protection is automatic: the layer is drawn
 into the light buffer before render.py dims the light behind the letters.
 """

@@ -4,7 +4,7 @@ Everything here is optional and always moving. A song file switches a layer on b
 or a Track, 0 = off); songs that define none of them render exactly as before (no program is even built).
 The layers are drawn as light into the glow buffer before the text protection pass, so the veil behind the words
 dims them like every other light, and they all honour BOTTOM_CALM. How a song uses them: engine/UPGRADE-HOWTO.md,
-section I1.
+section N.
 
   FLOWERS    a field of flowers of light: stems rise, buds form, petals open in a wave across the field, all sway
   TREE       one tree of light with procedural branches that sway in layered wind; TREE_GROW grows it from a seed;

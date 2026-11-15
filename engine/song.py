@@ -19,7 +19,7 @@ import output as _output  # noqa: E402
 
 SONG_NAME = os.environ.get("SONG", "s03_original")
 _m = importlib.import_module("songs." + SONG_NAME)
-_output.apply(_m)   # I10: OUT_FPS (60 fps) and LOOP_SECONDS; nothing changes without them
+_output.apply(_m)   # HOWTO Q: OUT_FPS (60 fps) and LOOP_SECONDS; nothing changes without them
 _track.check_song(_m)   # Astra round 1, finding 8: refuse Track keys that are not strictly increasing
 _m.star_state, _m.link_state = _arch.make(_m)   # params() in the song file looks these up at call time
 if not hasattr(_m, "FRAGMENTS"):

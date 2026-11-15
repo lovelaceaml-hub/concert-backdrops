@@ -1,7 +1,7 @@
 """Creatures of light (2026-11): doves, butterflies and fireflies that move like living things.
 
 Everything here is optional. A song file switches a creature on by defining its setting; songs that define none
-of them render exactly as before. The settings are documented in engine/UPGRADE-HOWTO.md, section I1.
+of them render exactly as before. The settings are documented in engine/UPGRADE-HOWTO.md, section M.
 
   DOVES        a flock (separation, alignment, cohesion) steered toward a target or along a path. Each dove has
                real wing beats (flap, then glide), banks into its turns and sheds faint sparks.

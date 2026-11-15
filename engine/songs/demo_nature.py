@@ -1,4 +1,4 @@
-"""Nature demo (30 seconds, silent): living nature made of light at dawn (engine/nature.py, UPGRADE-HOWTO section I1).
+"""Nature demo (30 seconds, silent): living nature made of light at dawn (engine/nature.py, UPGRADE-HOWTO section N).
 
 Not a concert video. A tree of light grows from a seed and blossoms and its petals fall on the wind; a field of
 flowers blooms in a wave from left to right; a waterfall pours and a stream winds from its foot toward the lake.
@@ -173,7 +173,7 @@ def MOTE_COLORS(t):
     return ("#ffe4bf", "#ffb98c")
 
 
-# I1. living nature
+# N. living nature
 WIND = Track([(0, 0.25), (10, 0.40), (17, 0.70), (22, 0.45), (TOTAL, 0.35)])   # a gust passes at 17 s
 TREE = Track([(0, 0.0), (0.8, 1.0), (TOTAL, 1.0)])
 TREE_GROW = Track([(0, 0.0), (1.0, 0.0), (13.0, 1.0), (TOTAL, 1.0)])        # grows from a seed

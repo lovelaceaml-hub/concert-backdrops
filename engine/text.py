@@ -12,7 +12,7 @@ F_TITLE = os.path.join(FONTS, "cormorant-garamond-latin-700-normal.ttf")
 F_LABEL = os.path.join(FONTS, "jost-latin-500-normal.ttf")
 F_TAG = os.path.join(FONTS, "cormorant-garamond-latin-600-italic.ttf")
 
-# I10: text is drawn at the output resolution. K is 1 at 1080p (everything exactly as before) and 2 at 4K, where
+# HOWTO Q: text is drawn at the output resolution. K is 1 at 1080p (everything exactly as before) and 2 at 4K, where
 # every size and distance below, given in 1080p pixels, is multiplied by K.
 try:
     import output as _output

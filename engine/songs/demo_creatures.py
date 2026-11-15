@@ -1,6 +1,6 @@
 """Creatures of light demo (36 seconds, to the first minute of the song 03 New Song recording).
 
-Not a concert video. It shows the creature layers (engine/UPGRADE-HOWTO.md, section I1) in the original look:
+Not a concert video. It shows the creature layers (engine/UPGRADE-HOWTO.md, section M) in the original look:
 a flock of doves rises across a dawn sky and turns to wheel round the central light of the arch;
 butterflies meander and land on the shore; fireflies blink low over the water at dusk. The Greeting and
 Gratitude expressions form as usual, so the text protection and the calm lower third can be checked too.
@@ -31,7 +31,7 @@ BOTTOM_CALM = 1.0
 
 CREDIT = _base.CREDIT = dict(_base.CREDIT, song="Creatures of Light Demo")
 
-# I1. creatures of light
+# M. creatures of light
 DOVES = Track([(0, 0.0), (1.5, 0.0), (4.0, 1.0), (31.0, 1.0), (34.5, 0.0)])
 DOVES_COUNT = 16
 DOVES_FROM = (-0.04, 0.36)                 # they rise in from the lower left

@@ -1,4 +1,4 @@
-"""Engine demo (32 seconds): the lake ripples and campaign symbols drawn in light (engine/UPGRADE-HOWTO.md, I8).
+"""Engine demo (32 seconds): the lake ripples and campaign symbols drawn in light (engine/UPGRADE-HOWTO.md, L).
 
 Not a concert video. The original song 03 look with no expressions: the Mother's Love and Peace Day emblem draws
 on over the lake, its reflection ripples, then it flies to a light on the arch; a heart draws and dissolves into

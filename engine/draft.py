@@ -76,7 +76,7 @@ def render_range(f0, f1, out, crf="27"):
     t0 = time.time()
     for i in range(f0, f1):
         t = i / FPS
-        ff.stdin.write(R.frame(t, int(round(t * S.FPS))))
+        ff.stdin.write(R.out.frame(t, int(round(t * S.FPS))))   # through Output, so a loop song wraps (HOWTO Q)
         if (i - f0) % 60 == 0:
             el = time.time() - t0
             print(f"draft frame {i} ({i - f0}/{f1 - f0})  {el:.0f}s  {el / max(i - f0, 1):.3f}s/frame", flush=True)

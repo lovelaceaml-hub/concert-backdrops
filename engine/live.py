@@ -1,4 +1,4 @@
-"""Live cue mode (I10): plays a song file in real time, fullscreen, on a venue computer with a graphics card.
+"""Live cue mode (HOWTO Q): plays a song file in real time, fullscreen, on a venue computer with a graphics card.
 
 An operator steps through the song's cues by hand, so the picture follows the live performance:
 
@@ -19,7 +19,7 @@ The cues come from the song file:
 
 A song without CUES gets one cue that plays from the start (a LOOP_SECONDS song: one cue that loops forever).
 
-Start it with (see engine/UPGRADE-HOWTO.md, section I10):
+Start it with (see engine/UPGRADE-HOWTO.md, section Q):
 
     python engine/live.py s03_original --audio audio/promo/s03.mp3
 

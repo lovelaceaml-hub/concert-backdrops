@@ -1,5 +1,5 @@
 """GLSL for the sky and camera layers (engine/sky_camera.py): moving 3D clouds, god rays, the camera background
-with parallax, and near motes. Nothing here runs unless a song sets one of the keys (see UPGRADE-HOWTO.md, I7)."""
+with parallax, and near motes. Nothing here runs unless a song sets one of the keys (see UPGRADE-HOWTO.md, O)."""
 from shaders import NOISE
 
 # ---------------------------------------------------------------- camera

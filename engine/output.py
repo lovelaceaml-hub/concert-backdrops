@@ -1,4 +1,4 @@
-"""Output settings (I10): 4K and 60 fps, the seamless pre-show / intermission loop, and its event card.
+"""Output settings (HOWTO Q): 4K and 60 fps, the seamless pre-show / intermission loop, and its event card.
 
 Nothing here changes a song that does not ask for it:
 
@@ -12,7 +12,7 @@ Nothing here changes a song that does not ask for it:
   LOOP_XFADE seconds (default 6): it fades from the picture at time LOOP_SECONDS + t into the picture at t, so
   the first frame is exactly the frame that would come after the last one.
 - EVENT_CARD = dict(lines=[campaign, concert, date and time, place], ...) shows a calm card with the event's
-  details (see UPGRADE-HOWTO.md, section I10).
+  details (see UPGRADE-HOWTO.md, section Q).
 
 song.py calls apply() on the song module before anything else reads it; render.py calls Output(R) once, and
 frame() for every frame.
