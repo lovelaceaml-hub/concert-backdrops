@@ -170,3 +170,41 @@ Nothing to change in a song file; all song files load as before. What changed, a
 Unchanged: commit and push the song file and its assets (plates and figures are in the repo under `assets/`, so the cloud workflow has them), then run the Render workflow (stills first, then video). See docs/HANDOFF.md.
 
 The video run's finish job uploads three artifacts: "<name>" (the full 1920x1080 video plus a silent copy), "<name> frames" (4 frame sheets of 8 frames each, for checking without downloading the video) and "<name> (share)" (the file "<name> (share).mp4": 1280x720, H.264 with AAC sound, always under 25 MB, for phones and messages; the job fails if it would be larger).
+
+## I8. Water ripples and campaign symbols (2026-11-15, branch engine-water-symbols)
+
+Code: `engine/water.py`, `engine/water_shaders.py`, `engine/symbols.py`, plus one guarded block in the composite pass (`shaders.COMP_FS`, `uNRip`). Demo: `engine/songs/demo_water_symbols.py`. A song that sets none of these keys renders exactly as before.
+
+### Ripples: the lake responds
+
+```python
+RIPPLES = [(10.8, 0.50, 1.0), (11.6, 0.42, 0.7), (13.2, 0.50, 0.6, 0.15)]   # (t, x, strength) or (t, x, strength, y)
+RIPPLES_AUTO = 1.0                                                          # number or Track, 0 = off
+FALLING_STARS = [(9.2, 0.24), (15.0, 0.80, 0.18)]                          # (t lands, x) or (t, x, y)
+```
+
+- A ripple is a ring that spreads from where something touched the water, in perspective (small and flat near the far shore, wider near the bottom). It bends the lake and everything mirrored in it (plates with `water=True` and the engine's own lake), and adds soft rings of light. It lasts 5 seconds.
+- `x`, `y` are screen fractions; `y` must be below the water line. Without `y` a ripple sits at `RIPPLE_Y` (default 0.78 of the water line height).
+- `RIPPLES_AUTO`: petals (`PETALS`) landing on the lake, falling stars, and the feet of figures standing on the water (a figure whose `y` is at most 0.02 above the water line: one ripple as it gathers, one per step while it walks) add ripples. The value scales their strength. Every ripple is a pure function of t, so the cloud's video parts match.
+- `FALLING_STARS`: a star streaks down from the sky and lands at `t` (drawn whether or not `RIPPLES_AUTO` is on; it ripples only when it is).
+- Optional: `RIPPLE_COLOR` (default `"#ffe6c4"`), `RIPPLE_BRIGHT` (default 1.0), `RIPPLE_Y`, `RIPPLE_LINE` (override the water line; default: the active water plate's line, else `HORIZON`).
+- BOTTOM_CALM softens ripple light and bending in the lower third; text protection keeps ripple light out of the letters.
+
+### Campaign symbols drawn in light
+
+```python
+SYMBOLS = [
+    dict(kind="emblem", t0=4.5, t1=10.5, out=14.0, x=0.50, y=0.53, size=0.36, leave="to_star", star=4),
+    dict(kind="heart", t0=6.0, t1=10.0, out=13.5, x=0.17, y=0.62, size=0.15, leave="sparks"),
+    dict(kind="bridge", t0=13.0, t1=18.0, out=28.5, x=0.50, y=0.36, size=0.20, stretch=1.6),
+    dict(kind="gate", t0=18.0, t1=23.0, out=29.0, x=0.50, y=0.575, size=0.34, open=23.8, open_dur=2.6),
+]
+```
+
+- `kind`: `"emblem"` (the Mother's Love and Peace Day emblem: two overlapping hearts, coral and orange, a sky blue globe with latitudes and longitudes, a green olive sprig), `"heart"` (one coral heart), `"gate"` (a gate or temple of light, Zion, drawn line by line from the steps up; its two doors then swing open and gold light pours out over the steps and the water), `"bridge"` (a bridge of light drawn left to right, about 4 times as wide as it is high).
+- Shapes are procedural bezier paths (`engine/symbols.py`), drawn by a pen of light: each line appears as the pen passes, with a bright head.
+- `t0` the pen starts, `t1` the symbol is complete (then it glows and breathes with a soft aura), `out` it leaves. `x`, `y` the centre (screen fractions), `size` its height (fraction of the screen height). `stretch` widens it (default 1.0).
+- `leave="sparks"` (default): it dissolves into sparks that drift up. `leave="to_star", star=N`: it gathers and flies into light N of the arch (0 to 8) over `leave_dur` seconds (default 2.6); give that light's PHRASE a `star` time about 2.6 s after `out` so it lights as the symbol arrives.
+- `color`: one hex colour for every line, or a dict by role (`coral`, `orange`, `sky`, `olive`, `gold`, `goldw`, `bridge`). Defaults: hearts `#F0566A` and `#F39A3A`, globe sky blue, olive green, gate gold. Every colour is lifted toward white so it always glows, never dark.
+- `glow` (default 1.0) scales the brightness. `reflect` (default True): the symbol is mirrored in the lake, and the ripples bend that reflection. Gate only: `open` (time the doors start to open; default `t1 + 0.8`; `None` keeps them shut), `open_dur` (default 2.5), `light` (colour of the light through the doors, default `"#ffcf7a"`).
+- Symbols are light drawn before the text protection pass, so they never cross the letters. Keep them clear of an expression's place on screen anyway.
