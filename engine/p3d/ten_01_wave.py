@@ -163,6 +163,9 @@ class Wave:
         self.s_ph, self.s_per = rng.random(n_spray), rng.uniform(0.9, 2.2, n_spray)
         self.s_dir = rng.normal(0.0, 1.0, (n_spray, 3))
         self.s_seed = rng.random(n_spray)
+        # prismatic spray: each droplet catches its own pale colour of the rainbow
+        self.s_col = _hsv(rng.random(n_spray), 0.38, 1.0) * 0.65 + self.col["spray"][None] * 0.45
+        self.r_col = _hsv(rng.random(n_rope), 0.22, 1.0) * 0.35 + self.col["rope"][None] * 0.75
 
     def _u(self, v, c):
         return self.centers[c] + self.half * np.sinh(self.k * v) / np.sinh(self.k)
@@ -246,7 +249,7 @@ class Wave:
                         h + np.abs(self.r_j[:, 1]) * 0.015 * H + 0.01, t)
         size, nf = self._lens(pos, sz * 0.7, cam)
         a = 0.85 * vis * g * (0.6 + 0.4 * self.r_seed) * nf
-        out.append(dict(pos=pos, size=size, color=self.col["rope"], alpha=a, kind="spark", emit=2.6,
+        out.append(dict(pos=pos, size=size, color=self.r_col, alpha=a, kind="spark", emit=2.6,
                         seed=self.r_seed, twinkle=0.9))
 
         # ---- spray thrown up off the crest, drifting back in the wind of the ride; a plume when it breaks
@@ -275,8 +278,8 @@ class Wave:
         pos = kin.world(pu, pb, ph, t)
         size, nf = self._lens(pos, size, cam)
         a = 0.45 * np.sin(np.pi * age) ** 1.5 * vis * g * boost * nf
-        out.append(dict(pos=pos, size=size, color=self.col["spray"], alpha=a, kind="spark", emit=1.5,
-                        seed=self.s_seed, twinkle=0.7))
+        out.append(dict(pos=pos, size=size, color=self.s_col, alpha=a, kind="spark", emit=1.7,
+                        seed=self.s_seed, twinkle=0.8))
         return out
 
 
@@ -621,3 +624,149 @@ class Hearts:
             size.append(np.full(len(pts), 0.012 + 0.04 * s))
         return dict(pos=np.concatenate(pos), color=np.concatenate(col), alpha=np.concatenate(alpha),
                     size=np.concatenate(size), kind="spark", emit=1.8, twinkle=0.3, dof=0.5)
+
+
+def _hsv(h, s, v):
+    """Hue, saturation, value (arrays, 0..1) to linear light colours (N, 3)."""
+    h = np.asarray(h, np.float64) % 1.0
+    s = np.broadcast_to(np.asarray(s, np.float64), h.shape)
+    v = np.broadcast_to(np.asarray(v, np.float64), h.shape)
+    i = np.floor(h * 6.0)
+    f = h * 6.0 - i
+    p, q, r = v * (1 - s), v * (1 - s * f), v * (1 - s * (1 - f))
+    i = i.astype(int) % 6
+    rgb = np.select([i[:, None] == k for k in range(6)],
+                    [np.stack(c, 1) for c in ((v, r, p), (q, v, p), (p, v, r), (p, q, v), (r, p, v), (v, p, q))])
+    return rgb ** 2.2
+
+
+class Aurora:
+    """Curtains of light hanging in the night sky, waving slowly, rose and gold at their foot, violet above,
+    with fine vertical rays; mirrored in the lake. curtains: list of dict(center=(x, z), length, yaw degrees,
+    base, height). gain(t): their strength."""
+
+    def __init__(self, curtains, n=30000, gain=None, seed=41, low="#ffb27a", mid="#ff7fae", high="#9b7bff"):
+        rng = np.random.default_rng(seed)
+        self.c = []
+        for k, cu in enumerate(curtains):
+            s = rng.random(n)
+            v = rng.random(n) ** 1.35
+            self.c.append(dict(cu, s=s, v=v, ph=rng.uniform(0, TAU), j=rng.normal(0.0, 1.0, (n, 2)),
+                               seed=rng.random(n), ray=rng.uniform(0.0, TAU, 4), rf=rng.uniform(9.0, 23.0, 4)))
+        self._gain = gain
+        self.low, self.mid, self.high = lin(low), lin(mid), lin(high)
+
+    def gain(self, t):
+        return 1.0 if self._gain is None else float(self._gain(t))
+
+    def sample(self, t):
+        if self.gain(t) <= 0.002:
+            return []
+        out = []
+        for cu in self.c:
+            s, v = cu["s"], cu["v"]
+            L, a = cu["length"], np.radians(cu["yaw"])
+            d = np.array([np.cos(a), 0.0, -np.sin(a)])
+            n = np.array([np.sin(a), 0.0, np.cos(a)])
+            fold = 0.09 * L * np.sin(TAU * (1.6 * s + 0.035 * t) + cu["ph"]) + 0.04 * L * np.sin(TAU * (4.1 * s - 0.05 * t))
+            x = cu["center"][0] + (s - 0.5) * L * d[0] + fold * n[0] + cu["j"][:, 0] * 6.0
+            z = cu["center"][1] + (s - 0.5) * L * d[2] + fold * n[2] + cu["j"][:, 1] * 6.0
+            y = cu["base"] + v * cu["height"] * (0.85 + 0.15 * np.sin(TAU * (2.3 * s + 0.04 * t)))
+            rays = sum(0.5 + 0.5 * np.sin(cu["rf"][i] * TAU * s + cu["ray"][i] + 0.3 * t * (i + 1)) for i in range(4)) / 4.0
+            k1 = np.clip(v * 2.0, 0.0, 1.0)[:, None]
+            k2 = np.clip(v * 2.0 - 1.0, 0.0, 1.0)[:, None]
+            col = (self.low[None] * (1 - k1) + self.mid[None] * k1) * (1 - k2) + self.high[None] * k2
+            edge = smoothstep(0.0, 0.08, s) * (1.0 - smoothstep(0.92, 1.0, s))
+            alpha = 0.10 * (1.0 - v) ** 1.2 * (0.35 + 0.65 * rays ** 2) * edge * cu.get("bright", 1.0)
+            out.append(dict(pos=np.stack([x, y, z], 1), size=cu.get("size", 9.0), color=col, alpha=alpha,
+                            kind="soft", dof=0.0, fog=0.25, seed=cu["seed"], twinkle=0.0, streak=0.0))
+        return out
+
+
+class GlowClouds:
+    """Banks of cloud lit from within: soft gold and rose light in billows above the horizon (refs: golden
+    clouds lit from inside). banks: list of dict(center=(x, y, z), size=(sx, sy, sz))."""
+
+    def __init__(self, banks, n=3500, gain=None, seed=43, warm="#ffcf8a", rose="#ff9fb0", core="#fff2d8"):
+        rng = np.random.default_rng(seed)
+        self.banks = []
+        for b in banks:
+            g = rng.normal(0.0, 1.0, (n, 3)) * 0.45
+            puff = rng.integers(0, 9, n)
+            centres = rng.normal(0.0, 0.6, (9, 3)) * np.array([1.0, 0.35, 0.6])
+            p = centres[puff] + g * np.array([1.0, 0.6, 0.8])
+            r = np.linalg.norm(p / np.array([1.0, 0.5, 0.8]), axis=1)
+            self.banks.append(dict(b, p=p, r=r, seed=rng.random(n), mix=rng.random(n)))
+        self._gain = gain
+        self.warm, self.rose, self.core = lin(warm), lin(rose), lin(core)
+
+    def gain(self, t):
+        return 1.0 if self._gain is None else float(self._gain(t))
+
+    def sample(self, t):
+        if self.gain(t) <= 0.002:
+            return []
+        out = []
+        for b in self.banks:
+            sx, sy, sz = b["size"]
+            drift = np.array([0.6 * t, 0.0, 0.0])
+            pos = np.asarray(b["center"], np.float64) + b["p"] * np.array([sx, sy, sz]) + drift
+            inner = np.exp(-1.5 * b["r"] ** 2)[:, None]
+            col = (self.warm[None] * (1 - b["mix"][:, None]) + self.rose[None] * b["mix"][:, None]) * (1 - inner) \
+                + self.core[None] * inner
+            size = (0.10 + 0.08 * b["seed"]) * sx
+            alpha = 0.035 * (0.4 + 1.2 * inner[:, 0]) * b.get("bright", 1.0)
+            out.append(dict(pos=pos, size=size, color=col, alpha=alpha, kind="soft", dof=0.0, fog=0.35,
+                            seed=b["seed"], streak=0.0))
+        return out
+
+
+class Blossoms:
+    """Flowers of light that open on the water where the crest passes: a ring of petals round a bright
+    heart, each opening as the wave reaches it and slowly closing to a glint. places (M, 3)."""
+    wants_camera = False
+
+    def __init__(self, kin, places, size=(0.35, 0.8), petals=10, colors=("#ffd27a", "#ff9fb4", "#fff0d0"),
+                 gain=None, seed=47, life=6.0):
+        rng = np.random.default_rng(seed)
+        self.kin = kin
+        self.p = np.asarray(places, np.float64)
+        self.t_open = kin.time_at(self.p[:, 0], self.p[:, 2]) + rng.uniform(0.0, 0.3, len(self.p))
+        self.size = rng.uniform(size[0], size[1], len(self.p))
+        self.rot = rng.uniform(0.0, TAU, len(self.p))
+        self.col = [lin(c) for c in colors]
+        self.ci = rng.integers(0, len(colors), len(self.p))
+        self.petals, self.life = petals, life
+        self._gain = gain
+        k = np.arange(petals * 6)
+        self.pa = (k // 6) / petals * TAU
+        self.pr = (k % 6) / 5.0
+
+    def gain(self, t):
+        return 1.0 if self._gain is None else float(self._gain(t))
+
+    def sample(self, t):
+        if self.gain(t) <= 0.002:
+            return []
+        age = t - self.t_open
+        live = (age > 0.0) & (age < self.life)
+        if not live.any():
+            return []
+        idx = np.nonzero(live)[0]
+        a = age[idx]
+        openk = smoothstep(0.0, 0.9, a) * (1.0 - 0.6 * smoothstep(0.5 * self.life, self.life, a))
+        fade = 1.0 - smoothstep(0.7 * self.life, self.life, a)
+        m = len(self.pa)
+        ang = self.pa[None] + self.rot[idx, None] + 0.15 * self.pr[None]
+        rad = (self.pr[None] * self.size[idx, None]) * openk[:, None]
+        lift = 0.05 + 0.25 * self.size[idx, None] * self.pr[None] * openk[:, None] * (1.0 - self.pr[None])
+        x = self.p[idx, 0, None] + rad * np.cos(ang)
+        z = self.p[idx, 2, None] + rad * np.sin(ang)
+        y = lift + 0.02
+        pos = np.stack([x, np.broadcast_to(y, x.shape), z], -1).reshape(-1, 3)
+        col = np.stack([self.col[c] for c in self.ci[idx]])[:, None, :] * np.ones((1, m, 1))
+        alpha = (0.55 * fade[:, None] * (0.5 + 0.5 * (1.0 - self.pr[None]))).reshape(-1)
+        heart = self.p[idx] + np.array([0.0, 0.08, 0.0])
+        return [dict(pos=pos, size=0.03, color=col.reshape(-1, 3), alpha=alpha, kind="spark", emit=1.6, twinkle=0.5),
+                dict(pos=heart, size=0.12 + 0.1 * self.size[idx], color=self.col[2], alpha=0.8 * fade, kind="soft",
+                     emit=2.0)]

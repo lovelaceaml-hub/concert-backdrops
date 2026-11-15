@@ -23,21 +23,21 @@ THE ACTING PLAN (the medley's sections: 0.25, 6.84, 13.30, 19.85, 26.79, 33.36, 
               The crest sweeps past her feet, the light climbs her to the face, she lifts her head toward the
               light and waves one hand: a face lighting up. Read 4.75 to 7.25.
   GRATITUDE   We swing round her and look back for the first time. An older man in the wake bows to her with
-              his hand on his heart (gold glitter, p08); behind him a whole crowd the wave has woken bows too.
-              She turns to him and opens her hand. Read 8.95 to 11.8. Signature 12.45 to 13.5.
-  APOLOGY     In the mist among lanterns that catch in a sweep: two soft figures of pearl and rose dust (p09).
+              his hand on his heart, both in warm gold glitter under a shaft of gold light; she turns to him
+              and opens her hand. Flowers of light open on the water wherever the crest has passed. Read 8.95 to 11.8. Signature 12.45 to 13.5.
+  APOLOGY     Among lanterns that catch in a sweep: two people of warm gold glitter.
               One stands with head bowed and open hands low; the other has turned away. Read 14.35 to 16.95.
   INCLUSIVENESS  The words turn into their answer: the other turns round, they walk in and hold each other; a
               warm flare where they meet. Read 17.8 to 20.35.
   CONCESSION  The bass slams in, the wave folds over and we glide down a tunnel of streaks. Before the mouth of
-              the barrel (a door of light) two people of clear glass-white light: one steps aside with an open
+              the barrel (a door of light) two crystal people (clear bodies, bright prismatic edges): one steps aside with an open
               palm toward the door and lets the other walk through first. Read 22.0 to 24.7.
   RESPECT     Out of the mouth into the strait. Two people seated on the crest of the moving wave, drawn as
-              constellations of points and fine lines (p01): one speaks with small open hands, the other leans
+              crystal people: one speaks with small open hands, the other leans
               in and listens; we revolve round them. Read 27.9 to 30.6. Signature 31.3 to 33.4.
-  CONSIDERATION  The wave doubles its speed over a bay of sleepers. On its crest one reaches down to someone
-              kneeling, takes their hand and pulls them up (coloured dots, ref 14); then we rise over the crest
-              and see the bay light up row after row. Read 34.7 to 37.6.
+  CONSIDERATION  The wave doubles its speed across a wide bay. On its crest one reaches down to someone
+              kneeling, takes their hand and pulls them up (warm gold); then we rise over the crest
+              and see the bay flower into light behind it. Read 34.7 to 37.6.
   THE BREATH  40.21 to 42.51: the wave crouches low and waits for one person kneeling on the water; "December 6"
               is written in light across the sky above it (TITLES "date_light"); on the biggest hit the date
               bursts and the wave rears up into a wall of light 24 m high and carries the burst.
@@ -253,7 +253,7 @@ class Path(Move):
 
 
 def cam_drop(t):
-    # frame 0: the spark falling down its shaft under the opening title, the sleepers on the glass beyond
+    # frame 0: the spark falling down its shaft under the opening title, the black glass and stars beyond
     y = spark_y(t)
     return (np.array([X0 + 0.45, 0.36 + 0.62 * y, Z0 + 3.2 - 0.4 * min(max(t, 0.0), 1.0)]),
             np.array([X0, y + 0.72 * max(0.0, 1.0 - max(t, 0.0) / IMPACT) + 0.05, Z0 - 0.5]))
@@ -334,7 +334,7 @@ def cam_trim(t):
 
 def cam_run(t):
     # level with the crest just ahead of it, the two on its top; then rise and pass high over it to see the bay
-    # of sleepers ahead light up
+    # flower into light behind it
     Hh = float(HGT(t))
     k2 = float(ss(37.4, 39.4, t))
     pair = wp(U_MAIN, 0.25, Hh + 0.85, t)
@@ -585,16 +585,18 @@ def _crest_line(rng, baked):
     """The people the wave carries: a ragged line along the crest (two or three deep, all heights), backs to
     us, lifting their arms in a wave that runs along it; after the break, set down on the water by the shore."""
     us, bs = [], []
-    u = U_MAIN - 95.0
-    while u < U_MAIN + 95.0:
-        u += rng.uniform(0.6, 2.1)
+    u = U_MAIN - 16.0
+    while u < U_MAIN + 16.0:
+        u += rng.uniform(1.0, 2.2)
+        if abs(u - (U_MAIN + 1.2)) < 1.2:             # room for the dancer
+            continue
         us.append(u)
-        bs.append(rng.choice([0.4, 0.4, 1.5, 2.6]) + rng.uniform(-0.3, 0.3))
+        bs.append(rng.choice([0.4, 0.4, 1.3]) + rng.uniform(-0.2, 0.2))
     places = np.stack([us, bs], 1)
     shapes = []
     for sh in baked:
-        stand = sh["stand"][::3]
-        up = sh["raise"][::3]
+        stand = sh["stand"][::2]
+        up = sh["raise"][::2]
         m = min(len(stand), len(up))
         shapes.append((stand[:m], up[:m]))
 
@@ -605,8 +607,8 @@ def _crest_line(rng, baked):
         p = KIN.world(uu, bb, np.zeros_like(uu), tb)
         p[:, 1] = h
         return p
-    return WV.Crowd(shapes, places, place, ["#ffd9a0", "#ffc070", "#ffe6c0", "#ffcf90"], t_lift=47.9,
-                    lift_speed=50.0, alpha=0.6, size=0.02, show=(46.4, 60.1), center=U_MAIN,
+    return WV.Crowd(shapes, places, place, ["#ffd9a0", "#ffc070", "#eaf4ff", "#fff0d8"], t_lift=47.9,
+                    lift_speed=12.0, alpha=0.75, size=0.022, show=(46.4, 60.1), center=U_MAIN,
                     gain=lambda t: float(ss(46.5, 47.3, t) * (1.0 - ss(51.5, 52.5, t))))
 
 
@@ -620,6 +622,11 @@ HEX = dict(Greeting="#EA5A5E", Gratitude="#F2B25E", Apology="#F6CE46", Inclusive
 def C(ps, pad=0.9):
     """A point set that keeps clear of every expression being read."""
     return WV.Clear(ps, WORDS, None, pad=pad)
+
+
+# crystal light people: a faint clear body with bright edges that catch the light (no dark mask: they are
+# made only of light); the other look is warm gold glitter
+CRYSTAL = [dict(name="glitter", bright=0.55, glints=0.004), dict(name="rim", bright=1.5, power=3)]
 
 
 def _add_body(scene, name, body, ignite=None, rise=0.9, mask=None):
@@ -644,8 +651,8 @@ def _performances(scene):
     _add_body(scene, "greeting", w1, ignite=T_W1, rise=1.1)
     hearts = [WV.Hearts(lambda t: w1.where(t, "palm.L"), 5.4, 7.2, HEX["Greeting"], n=8, rise=0.3)]
 
-    # 2 GRATITUDE: an older man in the wake bows to her with his hand on his heart (gold glitter, p08), and
-    # behind him a whole crowd woken by the wave bows too.
+    # 2 GRATITUDE: an older man in the wake bows to her with his hand on his heart (warm gold glitter), in a
+    # shaft of gold light; she turns to him and opens her hand.
     refs = {}
     m1 = Body("man", at=(M1[0], M1[2]), facing=FACE_M1_TO_W1, garment="coat", stoop=0.25, look="glitter",
               color="#ffc77a", color2="#fff0cc", points=70000, show=(4.0, 14.2), fade=0.5, seed=4,
@@ -655,23 +662,7 @@ def _performances(scene):
     refs["m1"] = m1
     _add_body(scene, "gratitude", m1, ignite=T_M1)
     hearts.append(WV.Hearts(lambda t: m1.where(t, "heart"), 9.0, 11.8, HEX["Gratitude"], n=10))
-    rng = np.random.default_rng(5)
-    pts, starts = [], []
-    while len(pts) < 70:
-        x = W1[0] + rng.uniform(-24.0, 24.0)
-        z = W1[2] + rng.uniform(4.5, 38.0)
-        if np.hypot(x - M1[0], z - M1[2]) < 1.5 or any(np.hypot(x - q[0], z - q[1]) < 1.2 for q in pts):
-            continue
-        pts.append((x, z))
-        starts.append(float(KIN.time_at(x, z)))
-    from p3d.crowd import Crowd
-    crowd = Crowd(places=np.array(pts), facing=np.array([180.0 + rng.normal(0.0, 12.0) for _ in pts]),
-                  kinds=(("bow", 3), ("stand", 1)), start=np.array(starts), until=15.0, fade=0.5, flash=0.9,
-                  points=2600, color="#ffc977", color2="#fff0d0", seed=2.0)
-    scene.add("bowing", C(crowd))
-
-    # 3 APOLOGY then 4 INCLUSIVENESS: two people in the mist among the lanterns (soft figures of pearl and rose
-    # dust, p09). One stands with head bowed and open hands low; the other has turned away. Then the other
+    # 3 APOLOGY then 4 INCLUSIVENESS: two people of warm gold glitter among the lanterns. One stands with head bowed and open hands low; the other has turned away. Then the other
     # turns, they walk in and hold each other; a warm flare where they meet.
     # (pairs.embrace measures the walk in from t = 0 when the walk starts late, which put them 30 m apart;
     # here each is placed by its own walk with a standing start, and pairs.embrace only adds the hold)
@@ -712,9 +703,9 @@ def _performances(scene):
             ("concession_b", "woman", (-0.3, -0.35), 90.0,
              [(0.0, "stand"), (22.9, "walk", dict(speed=1.0))], [], 8)):
         body = Body(shape, at=at, facing=facing, motion=motion, gesture=gest, frame=door_frame,
-                    look=dict(name="glitter", bright=1.25), color="#e4f2ff", color2="#ffffff", points=60000,
+                    look=CRYSTAL, color="#e8f4ff", color2="#ffe8f6", points=70000,
                     show=(20.2, 26.9), fade=0.4, effects=[dict(kind="form", t=20.5, dur=1.4)], seed=seed)
-        _add_body(scene, name, body)
+        _add_body(scene, name, body, mask=False)
         if name == "concession_a":
             hearts.append(WV.Hearts(lambda t, bd=body: bd.where(t, "palm.L"), 22.3, 24.6, HEX["Concession"], n=8))
 
@@ -725,21 +716,21 @@ def _performances(scene):
              [(27.5, 29.4, "offer", dict(side="R")), (29.2, 33.6, "offer", dict(side="L"))], 9),
             ("respect_b", "man", (0.42, 0.0), 270.0, [(27.4, 33.6, "listen", dict(side="R"))], 10)):
         body = Body(shape, at=at, facing=facing, motion=[(0.0, "sit", dict(dur=0.01))], gesture=gest,
-                    frame=walk_frame, look=dict(name="plexus", bright=1.3), color="#fff2dc", color2="#c8d2ff",
+                    frame=walk_frame, look=CRYSTAL, color="#eef6ff", color2="#ffeedd",
                     points=60000, show=(26.2, 33.9), fade=0.5, effects=[dict(kind="form", t=26.4, dur=1.2)],
                     seed=seed)
-        _add_body(scene, name, body)
+        _add_body(scene, name, body, mask=False)
         if name == "respect_b":
             hearts.append(WV.Hearts(lambda t, bd=body: bd.where(t, "head"), 28.2, 30.5, HEX["Respect"], n=8))
 
     # 7 CONSIDERATION: on the crest, one reaches down to someone kneeling, takes their hand and pulls them up;
     # the one helped up lays a hand on the helper's shoulder. Coloured dots (ref 14).
     ha, hb = pairs.helped_up(T_HELP, at=(0.0, 0.0), facing=90.0,
-                             a=dict(shape="man", garment="coat", frame=crest_frame(U_MAIN, 0.25), look="dots",
-                                    color="#ffcf8a", color2="#ff9f8a", points=60000, show=(32.9, 40.4), fade=0.5,
+                             a=dict(shape="man", garment="coat", frame=crest_frame(U_MAIN, 0.25), look="glitter",
+                                    color="#ffcf8a", color2="#fff0d0", points=60000, show=(32.9, 40.4), fade=0.5,
                                     effects=[dict(kind="form", t=33.2, dur=1.2)], seed=11),
-                             b=dict(shape="woman", garment="dress", frame=crest_frame(U_MAIN, 0.25), look="dots",
-                                    color="#ffd9a0", color2="#ef7a96", points=60000, show=(32.9, 40.4), fade=0.5,
+                             b=dict(shape="woman", garment="dress", frame=crest_frame(U_MAIN, 0.25), look="glitter",
+                                    color="#ffd9a0", color2="#ffe8f0", points=60000, show=(32.9, 40.4), fade=0.5,
                                     effects=[dict(kind="form", t=33.2, dur=1.2)], seed=12))
     _add_body(scene, "consider_a", ha)
     _add_body(scene, "consider_b", hb)
@@ -787,26 +778,32 @@ def _setup(scene):
     lan, flame = _lanterns(rng)
     scene.add("lanterns", lan)
     scene.add("lantern_flames", flame)
-    baked = WV.bake_people(Body, n=2600, poses=("stand", "raise", "open_arms", "look_up"))
     HEROES.extend([W1, M1, PC, KN, HP0])
-    # people asleep all over the black glass: each forms out of gold light as the crest reaches them, and the
-    # people the wave carries stand on its crest at the end and are set down on the shore
-    for name, args in (
-            ("s1", dict(n=30, t0=1.6, t1=7.2, u_mid=2.0, u_spread=10.0, near=(0.25, 6.0, 2.5), avoid=(-2.2, 4.0),
-                        gain=lambda t: float(1.0 - ss(13.6, 14.6, t)), yaw=lambda r: r.choice([180.0, 150.0, 210.0, 90.0, -90.0]) + r.normal(0.0, 12.0))),
-            ("s3", dict(n=30, t0=13.4, t1=19.8, u_mid=0.0, u_spread=11.0, near=(0.25, 5.0, 2.5), avoid=(-3.0, 3.0),
-                        gain=lambda t: float(ss(11.0, 12.5, t) * (1.0 - ss(22.0, 23.0, t))),
-                        poses=("stand", "look_up"))),
-            ("s6", dict(n=170, t0=33.5, t1=40.2, u_mid=U_MAIN, u_spread=12.0, near=(0.25, U_MAIN - 6.0, 2.5),
-                        avoid=(U_MAIN - 4.8, U_MAIN + 2.0),
-                        gain=lambda t: float(ss(32.4, 33.4, t) * (1.0 - ss(40.6, 41.6, t))),
-                        poses=("stand", "stand", "look_up", "open_arms"), dynamic=False)),
-            ("s8", dict(n=60, t0=49.7, t1=52.5, u_mid=U_MAIN - 20.0, u_spread=22.0, min_gap=1.3,
-                        gain=lambda t: float(ss(48.5, 49.5, t) * (1.0 - ss(51.5, 52.5, t))),
-                        yaw=lambda r: 180.0 + r.normal(0.0, 15.0),
-                        poses=("stand", "raise", "open_arms"), dynamic=False))):
-        for nm, st in _people(rng, baked, name, **args):
-            scene.add(nm, st if st.static else C(st))
+    baked = WV.bake_people(Body, n=2600, poses=("stand", "raise"))
+    # the sky: aurora curtains (rose and gold at their foot, violet above) and banks of cloud lit from within
+    night = lambda t: float(1.0 - ss(50.2, 52.4, t))   # noqa: E731
+    scene.add("aurora", WV.Aurora([
+        dict(center=(-250.0, -950.0), length=2400.0, yaw=0.0, base=110.0, height=430.0),
+        dict(center=(950.0, 250.0), length=1700.0, yaw=90.0, base=95.0, height=380.0, bright=0.8),
+        dict(center=(-950.0, 380.0), length=1700.0, yaw=90.0, base=95.0, height=360.0, bright=0.8),
+        dict(center=(150.0, 1950.0), length=2600.0, yaw=0.0, base=120.0, height=460.0)], n=26000, gain=night))
+    scene.add("glow_clouds", WV.GlowClouds([
+        dict(center=(-150.0, 250.0, -1500.0), size=(650.0, 80.0, 260.0)),
+        dict(center=(650.0, 210.0, -1150.0), size=(420.0, 70.0, 220.0), bright=0.8),
+        dict(center=(-700.0, 230.0, -1250.0), size=(460.0, 70.0, 220.0), bright=0.8),
+        dict(center=(-250.0, 240.0, 1750.0), size=(760.0, 90.0, 300.0)),
+        dict(center=(1150.0, 200.0, 650.0), size=(380.0, 70.0, 380.0), bright=0.7)], n=3200))
+    # flowers of light that open on the water as the crest passes (the first run, the lanterns, the bay)
+    fl = []
+    for t0, t1, u_c, sp, n in ((1.4, 7.0, 3.0, 6.0, 70), (13.4, 19.6, 0.0, 9.0, 60), (33.5, 40.0, U_MAIN, 10.0, 120)):
+        for _ in range(n):
+            tt = rng.uniform(t0, t1)
+            uu = u_c + rng.normal(0.0, sp)
+            q = place_where_crest(uu, tt)
+            if any(np.hypot(q[0] - h[0], q[2] - h[2]) < 1.3 for h in HEROES):
+                continue
+            fl.append(q)
+    scene.add("blossoms", C(WV.Blossoms(KIN, np.array(fl), gain=lambda t: float(1.0 - ss(41.0, 42.0, t)))))
     scene.add("crest_line", C(_crest_line(rng, baked)))
     # the finale: the whole ring, and the whole sea lit gold behind it, seen from high above
     scene.add("far_ring", WV.FarRing(KIN, n=60000, gain=lambda t: float(ss(50.0, 51.4, t) * (1.0 - ss(55.0, 57.5, t)))))
@@ -842,7 +839,14 @@ P3D = dict(
         dust=0.25,
         bokeh=0.35,
         shafts=[dict(base=(X0, Z0), radius=0.07, top=60.0, spread=0.01, color="#fff1d0",
-                     strength=lambda t: float(0.35 * (1.0 - ss(IMPACT, IMPACT + 1.2, t))))],
+                     strength=lambda t: float(0.35 * (1.0 - ss(IMPACT, IMPACT + 1.2, t)))),
+                dict(base=(float(0.5 * (W1[0] + M1[0])), float(0.5 * (W1[2] + M1[2]))), radius=2.2, top=90.0,
+                     spread=0.18, color="#ffe2b0",
+                     strength=lambda t: float(0.55 * ss(5.0, 7.5, t) * (1.0 - ss(12.5, 13.6, t)))),
+                dict(base=(float(PC[0]), float(PC[2])), radius=1.6, top=90.0, spread=0.15, color="#ffd6a0",
+                     strength=lambda t: float(0.6 * ss(16.8, 18.0, t) * (1.0 - ss(20.2, 21.0, t)))),
+                dict(base=(float(KN[0]), float(KN[2])), radius=1.3, top=110.0, spread=0.16, color="#fff0d8",
+                     strength=lambda t: float(0.7 * ss(39.8, 41.2, t) * (1.0 - ss(46.0, 47.0, t))))],
         lights=[dict(pos=lambda t: wp(0.0 if t < 20.0 else U_MAIN, 0.3, 0.6 * float(HGT(t)) + 0.3, t),
                      color="#ffc060", strength=lambda t: float(0.0 if t < IMPACT else 0.14 * (1.0 - ss(12.0, 14.0, t))),
                      radius=lambda t: 1.5 + 0.6 * float(HGT(t)))],
