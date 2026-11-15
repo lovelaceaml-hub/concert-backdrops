@@ -439,7 +439,7 @@ class Rig:
             ts = np.arange(t0, t1 + 1e-9, 1.0 / 120.0)
             ups = np.zeros((len(ts), 3))
             u = WORLD_UP.copy()
-            cuts = self.cuts()
+            cuts = self._cut_list = self.cuts()
             for i, tt in enumerate(ts):
                 x = self.raw(float(tt))
                 f = x[3:6] - x[0:3]
@@ -457,7 +457,11 @@ class Rig:
         ts, ups = self._table
         k = min(max((t - ts[0]) * 120.0, 0.0), len(ts) - 1.001)
         i = int(k)
-        u = ups[i] * (1.0 - (k - i)) + ups[i + 1] * (k - i)
+        f = k - i
+        for c in self._cut_list:              # never blend across a cut: take the side t is on
+            if ts[i] < c <= ts[i + 1] or abs(ts[i] - c) < 1e-6:
+                f = 1.0 if t >= c else 0.0
+        u = ups[i] * (1.0 - f) + ups[i + 1] * f
         return u / max(np.linalg.norm(u), 1e-9)
 
     def state(self, t, aspect=16.0 / 9.0, ref=None):
