@@ -420,97 +420,119 @@ def _hands_held(a, b, t0, t1, ease=0.8, grip=1.0):
     return refs["a"], refs["b"]
 
 
+CRYSTAL = dict(name="glitter", glints=0.006, bright=1.2)     # crystal light: clear, pale, sparkling edges
+GOLD = dict(name="glitter", bright=1.1)                       # warm gold glitter
+
+
+def _streams(t_up, n=3500):
+    """Light streaming up from someone as they rise: the body stays whole (UPDATE 13)."""
+    return [dict(kind="shed", t=t_up - 0.4, n=n, life=1.8, dir=(0.0, 1.0, 0.0), speed=0.7, rise=1.4, turb=0.25,
+                 spread=0.12)]
+
+
+def _xz(p):
+    p = np.asarray(p, np.float64)
+    return (float(p[0]), float(p[2]))
+
+
+def _ascend(y0, t_up, accel=9.0):
+    """Ground at height y0 that lifts off at t_up: the people rise whole and luminous, up the shaft of light."""
+    return lambda t: (0.0, float(y0 + 0.5 * accel * max(t - t_up, 0.0) ** 2), 0.0)
+
+
 def _cast():
     """Everyone in the film, in order of appearance (built once). Every one of them ACTS the expression that is
-    read while they are on screen; the style of the people changes from level to level."""
+    read while they are on screen. Everyone is warm, luminous and whole: they appear out of the light and, when
+    their word has been spoken, they rise up the shaft together (UPDATE 12: nobody falls apart)."""
     if PEOPLE:
         return PEOPLE
     pp = PEOPLE
-    from p3d import pairs
-    # 1 GREETING, the lake. She stands alone in a cold shaft, gold glitter dissolving (p08, ref 13). A woman of
-    # coral dots (ref 14) lays a hand on her shoulder; she lifts her head and lights up.
+    # 1 GREETING, the lake. She stands alone in a cold shaft, gold glitter (ref 13). A woman of coral dots (ref 14)
+    # lays a hand on her arm; she lifts her head and lights up. Then both rise.
     sT, sG = near_side(_L0[1], C[0] - 10.0), near_side(_R0[1], C[0] - 10.0)
-    pp["traveller 0"] = Body("woman", at=_L0[0], facing=_L0[1], garment="coat", look="glitter", color="#f2b865",
-                             color2="#ffe2b0", points=60000, seed=61.0,
+    up0 = S[1]
+    pp["traveller 0"] = Body("woman", at=_xz(_L0[0]), frame=_ascend(0.0, up0), facing=_L0[1], garment="coat",
+                             look="glitter", color="#f2b865", color2="#ffe2b0", points=60000, seed=61.0,
                              wash=dict(color="#fff0cc", amount=_ramp(2.9, 4.9, 0.0, 0.55)),
                              gesture=[(-2.0, 3.1, "bow", dict(amount=14)), (3.1, 9.0, "look_up", dict(amount=9)),
-                                      (6.0, 9.0, "open_arms")],
-                             effects=[_dissolve(S[1], dur=1.6)], show=(-2.0, 9.6), fade=0.3)
-    pp["greeter"] = Body("woman", at=_R0[0], facing=_R0[1], garment="dress", look=dict(name="dots", bright=0.45),
-                         color="#ff977c", color2="#ffd9a0", points=45000, seed=62.0,
+                                      (6.0, 9.0, "open_arms")], show=(-2.0, up0 + 1.3), effects=_streams(up0), fade=0.3)
+    pp["greeter"] = Body("woman", at=_xz(_R0[0]), frame=_ascend(0.0, up0 + 0.1), facing=_R0[1], garment="dress",
+                         look=GOLD, color="#ffb07c", color2="#ffe2b8", points=45000,
+                         seed=62.0,
                          gesture=[(2.0, 6.2, "hand_on_shoulder",
                                    dict(side=sG, lean=0.25,
                                         to=lambda t: 0.55 * PEOPLE["traveller 0"].where(t, "shoulder." + sT, raw=True)
                                         + 0.45 * PEOPLE["traveller 0"].where(t, "elbow." + sT, raw=True)))],
-                         effects=[_form(1.3, 0.9), _dissolve(S[1] + 0.25)], show=(1.25, 9.6), fade=0.15)
-    # 2 APOLOGY and 3 INCLUSIVENESS, ring 1 in the mist. A man drawn as a cold constellation (p01) bows low with
-    # open hands; she walks to him and they embrace; his wireframe fills with warm light.
+                         show=(1.2, up0 + 1.7), effects=_streams(up0 + 0.1), fade=0.4)
+    # 2 APOLOGY and 3 INCLUSIVENESS, ring 1 in the mist. A man drawn as a cool constellation of light (p01) bows
+    # low with open hands; she walks to him and they embrace; his constellation fills with warm light.
+    up1 = 15.1
     she, he = _embrace(
         12.0, at=(0.0, 0.0), facing=C[1] + 90.0, gap=0.34, approach=1.1, speed=0.8,
         a=dict(shape="woman", garment="coat", look="glitter", color="#ecc68a", color2="#fff0d8", points=55000,
-               seed=64.0, frame=_lift(Y[1]), gesture=[(9.0, 10.8, "listen", dict(side=near_side(C[1] + 90.0, C[1])))],
-               effects=[_form(7.1, 1.3), _dissolve(15.15)], show=(7.0, 16.6), fade=0.15),
+               seed=64.0, frame=_ascend(Y[1], up1 + 0.05), effects=_streams(up1 + 0.05),
+               gesture=[(9.0, 10.8, "listen", dict(side=near_side(C[1] + 90.0, C[1])))],
+               show=(7.4, up1 + 1.3), fade=0.35),
         b=dict(shape="man", garment="coat", color="#bcd4ff", color2="#ffffff", points=50000, seed=63.0,
-               look=[dict(name="plexus", weight=_ramp(12.0, 13.6, 1.0, 0.0)),
-                     dict(name="glitter", color="#ffbf80", color2="#ffe8c8", weight=_ramp(12.0, 13.6, 0.0, 1.0))],
-               frame=_lift(Y[1]), gesture=[(8.5, 10.8, "bow", dict(amount=32)), (8.6, 10.8, "cup", dict(out=0.1))],
-               effects=[_form(8.1, 1.0), _dissolve(15.1)], show=(8.0, 16.6), fade=0.15))
+               look=[dict(CRYSTAL, weight=_ramp(12.0, 13.6, 1.0, 0.0)),
+                     dict(GOLD, color="#ffbf80", color2="#ffe8c8", weight=_ramp(12.0, 13.6, 0.0, 1.0))],
+               frame=_ascend(Y[1], up1), effects=_streams(up1), gesture=[(8.5, 10.8, "bow", dict(amount=32)), (8.6, 10.8, "cup", dict(out=0.1))],
+               show=(7.85, up1 + 1.3), fade=0.35))
     pp["traveller 1"], pp["man 1"] = she, he
-    # 4 GRATITUDE, ring 2. An old man kneels, spent, shedding ash and flakes (p03). She bows to him with a hand on
-    # her heart; he lifts his head and rises.
+    # 4 GRATITUDE, ring 2. An old man kneels, weary, in pale gold. She bows to him with a hand on her heart; he lifts
+    # his head and rises to his feet; then both rise up the shaft.
     sH = near_side(_L2[1], C[2])
-    pp["elder"] = Body("man", at=_R2[0], facing=_R2[1], garment="tunic", look="glitter", color="#e6dccb",
-                       color2="#fff4e2", points=45000, seed=65.0, stoop=0.6,
+    up2 = 20.0
+    pp["elder"] = Body("man", at=_xz(_R2[0]), frame=_ascend(Y[2], up2), facing=_R2[1], garment="tunic",
+                       look="glitter", color="#f0d49a", color2="#fff4e2", points=45000, seed=65.0, stoop=0.6,
                        motion=[(13.0, "kneel", dict(one=True, dur=0.01)), (18.2, "rise", dict(dur=1.5, one=True))],
                        gesture=[(13.0, 18.2, "bow", dict(amount=20)), (18.4, 22.0, "look_up", dict(amount=8))],
-                       effects=[_form(15.4, 1.1),
-                                dict(kind="shed", t=15.4, n=4000, life=1.6, dir=(0.0, 1.0, 0.0), speed=0.2, rise=0.3,
-                                     turb=0.35, spread=0.15, color="#ffc890"),
-                                _dissolve(20.0)], show=(15.3, 22.6), fade=0.15)
-    pp["traveller 2"] = Body("woman", at=_L2[0], facing=_L2[1], garment="coat", look="glitter", color="#f2d3a0",
-                             color2="#fff0d0", points=50000, seed=66.0,
+                       show=(15.0, up2 + 1.7), effects=_streams(up2), fade=0.35)
+    pp["traveller 2"] = Body("woman", at=_xz(_L2[0]), frame=_ascend(Y[2], up2 + 0.1), facing=_L2[1], garment="coat",
+                             look="glitter", color="#f2d3a0", color2="#fff0d0", points=50000, seed=66.0,
                              gesture=[(16.2, 20.2, "bow", dict(amount=24)),
                                       (16.1, 20.2, "touch", dict(side=sH, palm="in",
-                                                                  to=_safe("traveller 2", "heart", _L2[0] + [0.0, 1.22, 0.0])))],
-                             effects=[_form(15.2, 1.1), _dissolve(20.1)], show=(15.1, 22.6), fade=0.15)
-    # 5 CONCESSION, ring 3. A man who sparkles like frost in mist (p09) stands across the shaft from her; she
-    # holds out an open hand: after you. He bows his thanks, steps into the light and rises first.
+                                                                  to=_safe("traveller 2", "heart", _L2[0] + [0.0, Y[2] + 1.22, 0.0])))],
+                             show=(14.9, up2 + 1.8), effects=_streams(up2 + 0.1), fade=0.35)
+    # 5 CONCESSION, ring 3. A man who sparkles like frost (p09) stands across the shaft from her; she holds out an
+    # open hand: after you. He bows his thanks, steps into the light and rises first; she follows on the hit.
     sO = near_side(_L3[1], C[3])
-    pp["hurried"] = Body("man", at=[(20.0, tuple(_R3[0])), (24.15, tuple(_R3[0])),
-                                    (24.85, (0.0, Y[3], 0.0))],
-                         facing=_R3[1], garment="coat", look=dict(name="glitter", glints=0.006, bright=1.15),
-                         color="#a8d0ff", color2="#ffffff", points=45000, seed=67.0,
+    pp["hurried"] = Body("man", at=[(20.0, _xz(_R3[0])), (24.15, _xz(_R3[0])), (24.85, (0.0, 0.0))],
+                         frame=_ascend(Y[3], 24.95), facing=_R3[1], garment="coat",
+                         look=CRYSTAL, color="#c8e4ff", color2="#ffffff", points=45000, seed=67.0,
                          motion=[(23.9, "shuffle"), (24.9, "stand")],
-                         gesture=[(22.4, 23.6, "bow", dict(amount=16))],
-                         effects=[_form(20.6, 0.6), _dissolve(24.95, dur=1.4)], show=(20.55, 27.6), fade=0.15)
-    pp["traveller 3"] = Body("woman", at=_L3[0], facing=_L3[1], garment="coat", look="glitter", color="#ffdcb0",
-                             color2="#ffffff", points=50000, seed=68.0,
-                             gesture=[(21.3, 26.6, "offer", dict(side=sO))],
-                             effects=[_form(20.4, 0.7), _dissolve(S[4])], show=(20.3, 29.0), fade=0.15)
-    # 6 RESPECT, ring 4, close: two faces in profile outlined in sparks (p06). She leans in, listening; he lifts
-    # his head and nods as he starts to speak.
-    pp["thinker"] = Body("man", at=_R4[0], facing=_R4[1], part="bust", look="rim", color="#ffb878", color2="#fff0d0",
-                         points=60000, seed=69.0, detail=dict(head=4),
+                         gesture=[(22.4, 23.6, "bow", dict(amount=16)), (24.9, 30.0, "look_up", dict(amount=10))],
+                         show=(21.1, 26.9), effects=_streams(24.95), fade=0.35)
+    pp["traveller 3"] = Body("woman", at=_xz(_L3[0]), frame=_ascend(Y[3], S[4]), facing=_L3[1], garment="coat",
+                             look="glitter", color="#ffdcb0", color2="#ffffff", points=50000, seed=68.0,
+                             gesture=[(21.3, 26.6, "offer", dict(side=sO)), (26.6, 30.0, "look_up", dict(amount=10))],
+                             show=(20.3, S[4] + 1.7), effects=_streams(S[4]), fade=0.35)
+    # 6 RESPECT, ring 4, close: two faces in profile, warm glitter. She leans in, listening; he lifts his head and
+    # nods as he starts to speak.
+    up4 = S[5]
+    pp["thinker"] = Body("man", at=_xz(_R4[0]), frame=_ascend(Y[4], up4), facing=_R4[1], part="bust", look="glitter",
+                         color="#ffc890", color2="#fff0d0", points=60000, seed=69.0, detail=dict(head=4), bright=1.1,
                          gesture=[(25.0, 29.3, "bow", dict(amount=16)), (30.0, 30.6, "bow", dict(amount=7)),
                                   (31.2, 31.8, "bow", dict(amount=7))],
-                         effects=[_form(27.55, 0.5), _dissolve(S[5])], show=(27.5, 35.2), fade=0.15)
-    pp["traveller 4"] = Body("woman", at=_L4[0], facing=_L4[1], part="bust", look="rim", color="#ffe0a8",
-                             color2="#ffffff", points=60000, seed=70.0, detail=dict(head=4),
+                         show=(27.3, up4 + 1.4), effects=_streams(up4), fade=0.35)
+    pp["traveller 4"] = Body("woman", at=_xz(_L4[0]), frame=_ascend(Y[4], up4 + 0.1), facing=_L4[1], part="bust",
+                             look="glitter", color="#ffe0a8", color2="#ffffff", points=60000, seed=70.0,
+                             detail=dict(head=4), bright=1.1,
                              gesture=[(28.4, 34.0, "listen", dict(side=near_side(_L4[1], C[4]), amount=0.8))],
-                             effects=[_form(27.5, 0.5), _dissolve(S[5] + 0.1)], show=(27.45, 35.2), fade=0.15)
+                             show=(27.25, up4 + 1.5), effects=_streams(up4 + 0.1), fade=0.35)
     # 7 ENCOURAGEMENT, ring 5. She kneels with her hands joined in a shaft of light, praying for the child beside
-    # her, a small figure sparkling in mist (p09), who looks up as the light comes down.
-    pp["child"] = Body("child", at=_R5[0], facing=_R5[1], garment="dress", look=dict(name="glitter", glints=0.005),
-                       color="#c8b0ff", color2="#ffffff", points=40000, seed=71.0, bright=1.3,
-                       gesture=[(35.6, 40.0, "look_up", dict(amount=18))],
-                       effects=[_form(34.05, 0.6), _dissolve(38.25, dur=1.4)], show=(34.0, 40.6), fade=0.15)
-    pp["traveller 5"] = Body("woman", at=(0.0, Y[5], 0.0), facing=_L5[1], garment="coat", look="glitter",
-                             color="#fff0d0", color2="#ffd27a", points=50000, seed=72.0,
+    # her, a small figure sparkling in the mist (p09), who looks up as the light comes down. The child rises first.
+    pp["child"] = Body("child", at=_xz(_R5[0]), frame=_ascend(Y[5], 38.25), facing=_R5[1], garment="dress",
+                       look=CRYSTAL, color="#e4d8ff", color2="#ffffff", points=40000,
+                       seed=71.0, bright=1.3, gesture=[(35.6, 40.0, "look_up", dict(amount=18))],
+                       show=(34.2, 39.9), effects=_streams(38.25), fade=0.35)
+    pp["traveller 5"] = Body("woman", at=(0.0, 0.0), frame=_ascend(Y[5], 38.6), facing=_L5[1], garment="coat",
+                             look="glitter", color="#fff0d0", color2="#ffd27a", points=50000, seed=72.0,
                              motion=[(30.0, "kneel", dict(hands="pray", sit=0.25, dur=0.01))],
                              gesture=[(34.0, 40.0, "bow", dict(amount=10))],
-                             effects=[_form(33.95, 0.6), _dissolve(38.6, dur=1.4)], show=(33.9, 40.8), fade=0.15)
-    # 8 CONSIDERATION, in the cloud: her hand from below, cold blue; Mother's hand from above, gold (refs 04, 14).
-    # The fingers open as they reach and close round each other at the touch.
+                             show=(33.7, 40.2), effects=_streams(38.6), fade=0.35)
+    # the breath, in the cloud: her hand from below, cold blue; Mother's hand from above, gold (refs 04, 14). The
+    # fingers open as they reach and close round each other at the touch.
     pp["her hand"] = _hand(0, HANDS_AT, BIG_HIT, _HAND_AXIS, 12.0, 2.9, "#4f8fff", (39.0, 43.4), bright=1.4,
                            color2="#9cc4ff", pose=[(39.0, "relaxed"), (40.6, "open"), (42.1, "spread"),
                                                    (BIG_HIT + 0.05, "hold")])
@@ -518,24 +540,22 @@ def _cast():
                                 color2="#ffe0a0", pose=[(39.3, "open"), (41.6, "offer"), (BIG_HIT + 0.05, "hold")])
     # 8 CONSIDERATION (above the clouds) and 9 COMPLIMENT. Mother from behind, veiled, holds the traveller's hand:
     # she has pulled her up through the cloud. Then she lets go and opens her arms; the traveller turns round in joy;
-    # people formed out of the fountains (constellations, glitter, dots) clap and raise their hands.
+    # people of light (a constellation, glitter, dots) clap and raise their hands; hearts rise from them all.
     mo, tr = _hands_held(
         dict(shape="woman", at=MOTHER_AT, facing=SUN_AZ, garment="robe", veil=dict(length=1.3), look="glitter",
              color="#ffd890", color2="#fff4e0", points=80000, seed=90.0, bright=1.25,
-             gesture=[(47.6, 70.0, "open_arms")], effects=[_form(42.2, 1.0), _dissolve(50.7, dur=1.6)],
-             show=(42.1, 54.0), fade=0.2),
+             gesture=[(47.6, 70.0, "open_arms")], show=(42.1, 54.4), fade=0.35),
         dict(shape="woman", at=-0.38 * _RT + [0.0, TOP, 0.0], facing=SUN_AZ, garment="coat", look="glitter",
              color="#ffe6c0", color2="#ffffff", points=60000, seed=91.0, bright=1.15,
              motion=[(47.5, "twirl"), (49.5, "stand", dict(blend=0.6))],
              gesture=[(43.9, 47.4, "look_up", dict(amount=8)), (49.6, 70.0, "raise")],
-             effects=[_form(42.25, 1.0), _dissolve(50.6, dur=1.6)], show=(42.15, 54.0), fade=0.2),
+             show=(42.15, 54.4), fade=0.35),
         42.6, 47.35)
     pp["Mother"], pp["traveller 7"] = mo, tr
-    crowd = [("woman", -3.4, 3.0, dict(name="plexus"), "#bcd4ff", "clap"),
-             ("man", 3.6, 2.4, "glitter", "#ffd27a", "raise"),
-             ("child", -1.9, 4.6, dict(name="dots", bright=0.5), "#ff977c", "clap"),
-             ("woman", 2.2, 5.4, "glitter", "#f582af", "clap"),
-             ("man", -5.6, 6.2, dict(name="plexus"), "#ffe2a8", "raise")]
+    crowd = [("woman", -3.4, 3.0, CRYSTAL, "#d8ecff", "clap"),
+             ("man", 3.6, 2.4, GOLD, "#ffd27a", "raise"),
+             ("child", -1.9, 4.6, GOLD, "#ffc8a0", "clap"),
+             ("woman", 2.2, 5.4, CRYSTAL, "#ffe0f0", "clap")]
     fwd = P(SUN_AZ, 1.0)
     for i, (shape, side, ahead, look, col, act) in enumerate(crowd):
         at = side * _RT + ahead * fwd + [0.0, TOP, 0.0]
@@ -543,8 +563,7 @@ def _cast():
             (47.6 + 0.2 * i, 70.0, "raise")
         pp["crowd %d" % i] = Body(shape, at=at, facing=SUN_AZ + (8.0 if side < 0 else -8.0), look=look, color=col,
                                   color2="#ffffff", points=24000, seed=100.0 + i, gesture=[g],
-                                  effects=[_form(46.9 + 0.25 * i, 1.0), _dissolve(50.4 + 0.1 * i, dur=1.5)],
-                                  show=(46.8 + 0.25 * i, 54.0), fade=0.2)
+                                  show=(46.6 + 0.25 * i, 54.4), fade=0.4)
     return pp
 
 
@@ -959,14 +978,14 @@ LOOKS = dict(
                 sun_color="#d8b8ff", sun_int=0.25, stars=0.35, milky=0.05, clouds=0.62, cloud_speed=2.2, haze=0.6,
                 haze_color="#3a2a70", mist=0.6, mist_height=5.0, mist_color="#3a2a80", water="#030212", ripple=0.5,
                 dust=1.0, dust_color="#e0c8ff", dust_color2="#ffd0e8", bokeh=0.5),
-    cloud=dict(base="night", sky_top="#1c1c40", sky_mid="#2e2c5a", sky_hor="#4a4270", sun_az=SUN_AZ, sun_el=-3.0,
-               sun_color="#ffd0dc", sun_int=0.3, stars=0.0, milky=0.0, clouds=0.9, haze=0.9, haze_color="#2e2c58",
-               mist=0.9, mist_height=150.0, mist_color="#302e5c", hills=0.0, water="#1a1640", dust=0.9,
-               dust_color="#ffe6ee", dust_color2="#cfd8ff", bokeh=0.7),
-    cloudlit=dict(base="night", sky_top="#2c2850", sky_mid="#4a4070", sky_hor="#8a6c8c", sun_az=SUN_AZ,
-                  sun_el=-1.0, sun_color="#ffd0dc", sun_int=0.5, stars=0.0, milky=0.0, clouds=0.9, haze=0.9,
-                  haze_color="#4a4070", mist=0.9, mist_height=150.0, mist_color="#504470", hills=0.0,
-                  water="#2a2050", dust=1.0, dust_color="#ffe6ee", dust_color2="#ffd0dc", bokeh=0.7),
+    cloud=dict(base="night", sky_top="#2a1a3c", sky_mid="#4a2a52", sky_hor="#7a4460", sun_az=SUN_AZ, sun_el=-3.0,
+               sun_color="#ffc8a0", sun_int=0.4, stars=0.0, milky=0.0, clouds=0.9, haze=0.9, haze_color="#4a2a50",
+               mist=0.9, mist_height=150.0, mist_color="#4e2c50", hills=0.0, water="#1a1430", dust=1.0,
+               dust_color="#ffe0b0", dust_color2="#ffc8d8", bokeh=0.8),
+    cloudlit=dict(base="night", sky_top="#3c2240", sky_mid="#6a3a58", sky_hor="#a05a64", sun_az=SUN_AZ,
+                  sun_el=-1.0, sun_color="#ffd0a0", sun_int=0.6, stars=0.0, milky=0.0, clouds=0.9, haze=0.9,
+                  haze_color="#6a3a58", mist=0.9, mist_height=150.0, mist_color="#6c3c5c", hills=0.0,
+                  water="#2a1a38", dust=1.1, dust_color="#ffe0b0", dust_color2="#ffc8d8", bokeh=0.8),
     above=dict(base="sunrise", sky_top="#040c34", sky_mid="#102872", sky_hor="#e0703a", sun_az=SUN_AZ_TRUE,
                sun_el=SUN_EL_TRUE,
                sun_color="#ffbc60", sun_int=0.48, sun_disc=5.0, sun_glow=0.2, stars=0.3, milky=0.0, clouds=0.30,
@@ -990,7 +1009,13 @@ WORLD = WORDS.world(dict(
     arch=dict(lit=_LIT, colors=[e["color"] for e in PW.EXPRESSIONS], line=Track([(0, 0.35), (NINTH, 0.35),
                                                                                   (NINTH + 1.5, 1.0), (60, 1.0)]),
               **ARCH_SET),
-    shafts=[dict(base=(0.0, 0.0), radius=0.75, top=420.0, spread=0.6, color="#9cc4ff",
+    shafts=[dict(base=tuple(P(C[2] + 160.0, 34.0)[[0, 2]]), radius=2.2, top=520.0, spread=1.6, color="#ffd89a",
+                 strength=Track([(0, 0.0), (12.5, 0.0), (14.5, 0.55), (37.5, 0.55), (39.5, 0.0), (60, 0.0)])),
+            dict(base=tuple(P(C[3] + 200.0, 48.0)[[0, 2]]), radius=2.8, top=560.0, spread=1.6, color="#ffe2b0",
+                 strength=Track([(0, 0.0), (17.0, 0.0), (19.5, 0.5), (37.5, 0.5), (39.5, 0.0), (60, 0.0)])),
+            dict(base=tuple(P(C[4] + 150.0, 40.0)[[0, 2]]), radius=2.4, top=560.0, spread=1.6, color="#ffcf9a",
+                 strength=Track([(0, 0.0), (24.0, 0.0), (26.5, 0.5), (37.5, 0.5), (39.5, 0.0), (60, 0.0)])),
+            dict(base=(0.0, 0.0), radius=0.75, top=420.0, spread=0.6, color="#9cc4ff",
                  strength=Track([(0, 0.9), (2.6, 0.6), (S[2], 0.5), (S[5], 0.45), (34.6, 0.45), (35.4, 0.85),
                                  (38.2, 0.85), (38.8, 0.35), (40.0, 0.0), (60, 0.0)]))],
     light=dict(pos=tuple(SUN_LIGHT), color="#ffe0b0",
@@ -1013,15 +1038,7 @@ def _setup(scene):
     scene.add("pillars", PW.KeepClear(Pillars(), WORDS, floor=0.15))
     scene.add("cloud top", CloudTop(), reflect=False)
     scene.add("fountains", PW.KeepClear(Fountains(), WORDS, floor=0.0), reflect=False)
-    from p3d.crowd import Crowd
-    rng = np.random.default_rng(686)
-    k = 70
-    az = SUN_AZ + rng.uniform(-70.0, 70.0, k)
-    dist = 6.0 + 26.0 * rng.random(k) ** 0.9
-    places = np.stack([np.sin(np.radians(az)) * dist, np.full(k, TOP), np.cos(np.radians(az)) * dist], axis=1)
-    scene.add("crowd far", Crowd(places=places, facing=SUN_AZ, kinds=("raise", "clap", "open", "stand"),
-                                 start=dict(t=47.4, center=(0.0, 0.0), speed=14.0), points=6000, color="#ffcf80",
-                                 color2="#ffeccc", bright=0.9, seed=6.0, until=51.8), reflect=False)
+    # (fewer people, more light: no crowd far away; hearts and fountains carry the joy)
     for name, body in PEOPLE.items():
         body.add(scene, name, reflect=(Y_OF.get(name, 1.0) < 1.0))
     scene.add("flare", FLARE, reflect=False)
