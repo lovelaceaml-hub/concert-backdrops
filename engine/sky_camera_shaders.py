@@ -90,7 +90,7 @@ in vec2 vUV;
 layout(location=0) out vec4 o;    // premultiplied cloud colour, laid over the sky
 layout(location=1) out vec4 o2;   // r: raw density (no text thinning), for the god rays
 uniform vec3 uSkyTop, uSkyMid, uSkyHor, uGlow;
-uniform vec2 uSunS; uniform float uSunInt, uLight, uSilver;
+uniform vec2 uSunS; uniform float uSunInt, uLight, uSilver, uTextClear;
 vec4 layerC(vec2 sv, float wc, float layer, out float dens){
   vec2 p = toLayer(sv, wc);
   float d = cloudD(p, layer);
@@ -121,7 +121,7 @@ void main(){
   vec4 hi = layerC(sv, W_CLOUD_HI, 0.0, dh);
   vec4 lo = layerC(sv, W_CLOUD_LO, 1.0, dl);
   vec4 c = lo + hi*(1.0-lo.a);
-  c *= 1.0-0.90*textF(sv);               // clouds thin out round the words
+  c *= 1.0-uTextClear*textF(sv);         // clouds thin out round the words (not at all with TEXT_SHADOW 0)
   o = c;
   float amt = clamp(uCloudAmt, 0.0, 1.0);
   o2 = vec4(1.0-(1.0-dh*amt)*(1.0-dl*amt), 0.0, 0.0, 1.0);

@@ -28,6 +28,7 @@ Times are seconds into the video. A "Track" is the timeline helper (new files: `
 - P. Music reactivity and automatic timing (2026-11-15, branch engine-audio)
 - Q. Output: 4K, 60 fps, pre-show loop, live cue mode (2026-11-15, branch engine-output)
 - R. Draft mode and the automatic quality check (2026-11-15, branch engine-qa)
+- S. Everything together (2026-11-15, branch engine-epic)
 - T. Rendering
 
 ## A. Scenes (painted plates)
@@ -463,11 +464,28 @@ CAMERA_MOTES = 0.6        # a few large soft motes on the nearest layer, so the 
 ```
 
 - **TIME_OF_DAY** (number or Track): 0 night, 0.3 before dawn, 0.5 dawn (sun on the horizon), 0.7 sunrise, 1 day, 1.25 golden hour, 1.5 dusk (sun on the horizon), 1.75 late dusk, 2 night again. It replaces the song's sky colours, glow (the colour of the light), sun height, sun strength and size and the stars, eased smoothly. The sun's strength still breathes with the music. Leave it out to keep the song's own palette.
-- **CLOUDS3D**: two layers of soft clouds on a sky plane in perspective (small and many near the horizon, large overhead). They drift with the wind and keep changing shape; never frozen. The side facing the sun is lit with the glow colour, and thin edges near a low sun get silver linings (strongest at dawn and dusk). A cloud is never much darker than the sky behind it, and clouds thin out round any text (expressions, title, end card, fragments, credit), so no dark shape sits behind words. They are reflected in the lake. The old flat `CLOUDS` of the song is turned mostly down while CLOUDS3D is on.
+- **CLOUDS3D**: two layers of soft clouds on a sky plane in perspective (small and many near the horizon, large overhead). They drift with the wind and keep changing shape; never frozen. The side facing the sun is lit with the glow colour, and thin edges near a low sun get silver linings (strongest at dawn and dusk). A cloud is never much darker than the sky behind it, and clouds thin out round any text (expressions, title, end card, fragments, credit), so no dark shape sits behind words. With `TEXT_SHADOW = 0` (nothing dark behind any text) the clouds are not thinned: a hole in bright clouds would itself read as a darker patch behind the words (`CLOUDS_TEXT_CLEAR`, 0 to 0.9, sets the thinning by hand). They are reflected in the lake. The old flat `CLOUDS` of the song is turned mostly down while CLOUDS3D is on.
 - **GOD_RAYS** (0 = off): shafts of light from the sun, or from `RAYS_FROM`, scattered in screen space. The moving clouds and the three mountain ranges block the light, so the shafts move with the clouds. They are drawn as light (nothing dark), fade below the horizon, follow BOTTOM_CALM and are dimmed behind words by the text protection like every other light. A sun below the horizon (night) gives no rays.
 - **CAMERA_ZOOM, CAMERA_PAN, CAMERA_CRANE** (numbers or Tracks; any one of them turns the camera on), **PARALLAX** (default 1), **CAMERA_CENTER** (default `(0.5, HORIZON + 0.12)`, the point a push in goes towards). Depths: far sky 0.12, high clouds 0.24, low clouds 0.40, far range 0.45, middle range 0.62, near range 0.80, lake 0.80 at the shore to 1.15 at the bottom of the screen, near motes 1.45. The skyline lantern rides the far range. Good ranges for slow, calm moves: zoom 1.0 to 1.15, pan within plus or minus 0.05, crane within plus or minus 0.12, over 20 seconds or more.
-- **Not moved by the camera**: text of any kind, the arch of nine lights, the stars, the song's own motes and petals, the effect layers and the people of light. To move another layer with depth w, call `R.sky.to_screen((x, y), w, t, P)` (layer point to screen point).
-- The camera moves the engine's own sky, ranges and lake. A scene plate (SCENES) keeps its own `zoom` and `pan` and covers the camera background while it is on screen.
+- **Moved by the camera** (engine-epic): everything that stands in the world follows the scenery of its depth, so feet stay on their ground and nothing slides. A point is given exactly as without a camera (where it would be with the camera at rest) and the engine moves it.
+
+  | Layer | Depth it moves at | Override |
+  |---|---|---|
+  | Stars | the sky, 0.12 | |
+  | People of light, painted and rigged (FIGURES) | the ground under the feet: 0.80 on the far shore and above, up to 1.15 at the bottom of the lake | `depth=` in the entry |
+  | The gathering crowd, its flames | the ground under its feet line (`center` y) | `depth=` in GATHERING |
+  | Doves, butterflies, fireflies | 0.80 | `CREATURES_DEPTH` |
+  | Tree, blossom, flowers, waterfall, stream (light and paint) | the ground at `TREE_Y`, else at `FLOWERS_LINE`, else the far shore | `NATURE_DEPTH` |
+  | Symbols and their reflections | 0.80 | `depth=` in the entry |
+  | Ripples and falling stars | the lake under each one | |
+
+  Flights to the arch (a figure's sparks, a symbol, the crowd's lights, the flame from the arch) still land exactly on their light.
+- **Not moved by the camera**: text of any kind, the arch of nine lights, and the drifting air layers (the song's motes, lanterns and petals, SNOW, BUBBLES, LEAVES, the beat sparkles). The effect layers that are painted in the composite or fill the frame (ICE, SHARDS, GOLDEN_FIELD, NET, BEAM) are not moved either: do not combine them with a camera move.
+- `CAMERA_FOLLOW = 0` (default 1; a Track can ease it) lets the layers go: the scenery still moves, the layers stay where the song file puts them.
+- Plan the move so the far shore stays out of the calm lower third. A crane up or a push in moves the ground down the screen: with the default centre, zoom 1.06 and crane 0 put a shore at 0.343 on 0.337; crane +0.05 and zoom 1.09 would put it on 0.29. Start with a negative crane (the land a little high) and end at 0.
+- The camera's picture is the same world as without a camera, including the day sky of `SKY_THEME` (section I).
+- The camera moves the engine's own sky, ranges and lake. A scene plate (SCENES) keeps its own `zoom` and `pan` and covers the camera background while it is on screen; the camera lets the layers go as a plate comes in, so the people stay on the painted ground.
+- For a new layer: wrap its vertex shader with `sky_camera.cam_vs(...)` and set the uniform `uCamAff` to `R.sky.aff(depth)` before drawing (`R.sky.ground_depth(y)` gives the depth of the ground; `R.sky.place(p, depth)` and `R.sky.unplace(p, depth)` move single points). In a song without a camera the shader is untouched.
 
 ## P. Music reactivity and automatic timing (2026-11-15, branch engine-audio)
 
@@ -589,10 +607,51 @@ It uses the engine's own text layout (it imports the song file and engine/text.p
 - End card: three lines under the title, whole for at least 4 s before the fade.
 - Calm bottom third: frame differences in the bottom third against the rest, per 2 s (people of light left out).
 - Static figures: a painted figure with one picture and no warp that moves across the screen is HIGH (it slides as one rigid picture); living figures (kind="rig") and warped ones (warp=True) are never called rigid. Frames inside each figure's box confirm it moves; a still painted figure frozen for 4 s or more is MEDIUM. Checked on the living figures test (run 43692681296): no rigid flags; the rigid walker of song 04 and the swan of song 08 are flagged.
+- Coloured words (`color=`, section I): legibility is measured either way (light letters on a darker sky, dark letters on a bright one). The report names each text's colour and animation; dark letters that are hard to read are flagged with the reminder that they need a bright sky, and dark letters that measure lighter than the sky round them get a LOW note.
+- The gathering crowd (section K) counts as people of light: it is left out of the calm check and is never called rigid. Figure boxes follow a camera move (section O) the way the engine moves the people.
 - Dashes: no em or en dash in the song file or its status file (project-docs/status/NN.md).
 - Length: the video is as long as the song file says.
 
 By hand (repository root, fonts from tools/setup_fonts.py, ffmpeg): `python tools/qa_check.py --song s08_favor_from_god --video "<file>.mp4" --out qa` (or `--stills <folder>`, or neither for the song-file checks only). It takes under half a minute.
+
+## S. Everything together (2026-11-15, branch engine-epic)
+
+One engine holds every section above, and one song file can use them all. Test song: `engine/songs/demo_all.py` (30 seconds on audio/test/s03-newsong-first-60s.mp3): a rigged walker, Heavenly Mother from behind, a painted pair warped alive, a crowd that gathers and passes a flame, doves, a growing tree in blossom, clouds with god rays, one slow camera move, the emblem drawn over a rippling lake, bubbles and leaves on the campaign day sky, coral and navy words with text animations, and music reactivity. It is a test, not a design: a real film gives each moment one hero image.
+
+**Song keys by feature**
+
+| Feature | Keys | Section |
+|---|---|---|
+| Scenes | `SCENES` | A |
+| People of light, painted | `FIGURES` (poses, `warp=`) | B, G, H2 |
+| People of light, rigged | `FIGURES` with `kind="rig"`, `preset`, `actions` | H1 |
+| Effect layers | `SNOW`, `ICE`, `SHARDS`, `SHARDS_MEND`, `GOLDEN_FIELD`, `NET`, `BEAM`, `FLASH` | C |
+| Fragment styles | `FRAGMENTS` with `style=` | D |
+| Text protection, calm third, end card | `TEXT_PROTECT`, `TEXT_SHADOW`, `BOTTOM_CALM`, `RINGS_AT_START`, three-line `TAGLINE` | E |
+| Theme | `theme.campaign_day(...)`, `SKY_THEME`, `color=`, `glow=`, `GLOW_COLOR`, `GLOW_STRENGTH`, `BUBBLES`, `LEAVES` | I |
+| Text animations | `anim=` on PHRASES, TITLE, TAGLINE, FRAGMENTS; `TEXT_ANIM` | J |
+| Gathering | `GATHERING`, `PASS_LIGHT` | K |
+| Water and symbols | `RIPPLES`, `RIPPLES_AUTO`, `FALLING_STARS`, `SYMBOLS` | L |
+| Creatures | `DOVES`, `BUTTERFLIES`, `FIREFLIES` (and their `_COUNT`, `_PATH`, `_COLOR` ...) | M |
+| Nature | `TREE`, `TREE_GROW`, `BLOSSOM`, `FLOWERS`, `WATERFALL`, `STREAM`, `WIND` | N |
+| Sky | `TIME_OF_DAY`, `CLOUDS3D`, `GOD_RAYS`, `RAYS_FROM` | O |
+| Camera | `CAMERA_ZOOM`, `CAMERA_PAN`, `CAMERA_CRANE`, `PARALLAX`, `CAMERA_CENTER`, `CAMERA_MOTES`, `CAMERA_FOLLOW`, depths | O |
+| Music reactivity | `AUDIO_REACT`, `REACT_GLOW`, `REACT_SPARKLE`, `REACT_ARCH`, `REACT_AURORA`, `REACT_CHORUS`; `audio.level(t)` ... | P |
+| Output | workflow inputs `resolution`, `fps`; `LOOP_SECONDS`, `EVENT_CARD`; `engine/live.py` | Q |
+| Draft and quality check | workflow `mode=draft`, input `qa` | R |
+
+**Order of drawing** (render.py, one frame): sky, 3D clouds; then light: stars, motes, lanterns, petals, effect layers (snow, bubbles, leaves, beam, net), nature, creatures, beat sparkles, people of light, the crowd, ripple light, falling stars and symbols, god rays and near motes; then the text protection dims all of that behind the words; then the words, the credit and the arch; glow; the camera background; the composite (plates, ripples bending the lake, ice, shards, field, nature paint, leaf tint, coloured letters).
+
+**What stays exactly as before.** A song file that uses none of the new keys renders bit for bit as on main: `s03_original` on its promo clip was compared pixel by pixel at 25 and 45 seconds. For that, each optional block of the composite shader (`SKY_THEME`, `TEXT_SHADOW` below 0.05, per-text colour, leaf tint, lake ripples, nature paint, camera background) is compiled in only for a song that uses it (`render.comp_blocks()`, `shaders.comp_fs()`). When you add a block to the composite, add it the same way: the same maths written with a uniform in place of a constant is rounded differently by the shader compiler, which changes a few pixels by one level.
+
+**Texture units of the composite**: 0 to 9 the engine's own (sky, light, four glow levels, ridge, text A, text B, credit), 10 and 11 scene plates, 12 leaf tint, 13 nature paint, 15 the camera background. 14 is free. Every other pass binds its own textures from unit 0 just before it draws.
+
+**Working together, in short**
+- With `TIME_OF_DAY` the sky colours come from it; music reactivity then swells them. Without it the song's own palette (or `theme.campaign_day`) stays.
+- `GOD_RAYS` need the sun above the horizon and read best through `CLOUDS3D`.
+- A camera move needs room: keep people near the far shore, and see section O for where the shore ends up.
+- People, crowd and creatures are light: on a bright day sky they read weakly. Use them at night, dusk and dawn, or over a saturated blue; nature paint, leaf tint and coloured letters are the layers made for bright skies.
+- A song file that builds on another one (as `demo_all` does on `test_living`) needs its own `params()` that hands the arch to the base file: see the top of `engine/songs/demo_all.py`.
 
 ## T. Rendering
 

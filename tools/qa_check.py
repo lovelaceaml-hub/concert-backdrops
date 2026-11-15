@@ -141,26 +141,52 @@ def text_blocks(S):
         tex, _, b = T.render(p["label"], p["lines"], p["size"], y_center=p.get("y"))
         blocks.append(dict(name=p["label"], kind="expression", text=" / ".join(p["lines"]), appear=p["form"],
                            solid0=p["form"] + fd + FORM_EXTRA, solid1=p["hold"], gone=p["hold"] + DISSOLVE,
-                           mask=tex[::-1, :, 0]))
+                           mask=tex[::-1, :, 0], meta=p))
     ty = T.title_y()
     if S.TITLE["form"] < 1e8:
         tex, _, b = T.render(S.TITLE["label"], S.TITLE["lines"], S.TITLE["size"], font_path=T.F_TITLE, y_center=ty)
         hold = S.TITLE.get("hold", 1e9)
         blocks.append(dict(name="End card title", kind="title", text=" / ".join(S.TITLE["lines"]),
                            appear=S.TITLE["form"], solid0=S.TITLE["form"] + fd + FORM_EXTRA,
-                           solid1=min(hold, total), gone=min(hold + DISSOLVE, total), mask=tex[::-1, :, 0]))
+                           solid1=min(hold, total), gone=min(hold + DISSOLVE, total), mask=tex[::-1, :, 0],
+                           meta=S.TITLE))
     tg = S.TAGLINE
     if tg["t0"] < total:
         ttex, _ = T.render_tagline(tg["text"], ty)
         blocks.append(dict(name="End card lines", kind="tagline", text=tg["text"].replace("\n", " / "),
-                           appear=tg["t0"], solid0=tg["t1"] - SPARK_EARLY, solid1=total, gone=total, mask=ttex[::-1, :, 0]))
+                           appear=tg["t0"], solid0=tg["t1"] - SPARK_EARLY, solid1=total, gone=total, mask=ttex[::-1, :, 0],
+                           meta=tg))
     for k, fr in enumerate(getattr(S, "FRAGMENTS", [])):
         ftex, _ = T.render_fragment(fr["text"], fr.get("dy", 0.0), fr.get("size", 74))
         styled = fr.get("style", "sparks") != "sparks"
         blocks.append(dict(name=f"Fragment {k + 1}", kind="fragment", text=fr["text"], appear=fr["t0"],
                            solid0=fr["t1"] - (0.0 if styled else SPARK_EARLY), solid1=fr["out"], gone=fr["out"] + (2.6 if styled else DISSOLVE),
-                           mask=ftex[::-1, :, 0]))
+                           mask=ftex[::-1, :, 0], meta=fr))
     return blocks
+
+
+def ink_of(b):
+    """A text's own colour (color=, UPGRADE-HOWTO section I) as (hex, linear luminance, "dark" or "light"), or
+    None for the ordinary light words. Dark letters (navy) must stand on a bright sky, light ones on a darker."""
+    c = (b.get("meta") or {}).get("color")
+    if not c or not isinstance(c, str):
+        return None
+    hx = c.lstrip("#")
+    rgb = np.array([int(hx[i:i + 2], 16) for i in (0, 2, 4)], dtype=np.float64) / 255.0
+    lum = float((rgb ** 2.2) @ np.array([0.2126, 0.7152, 0.0722]))
+    return c, lum, ("dark" if lum < 0.18 else "light")
+
+
+def look_of(b):
+    """Words for the report: the text's colour and animation, when the song file sets them."""
+    out = []
+    ink = ink_of(b)
+    if ink:
+        out.append(f"{ink[2]} letters {ink[0]}")
+    an = (b.get("meta") or {}).get("anim")
+    if an:
+        out.append(f"anim {an}")
+    return (" [" + ", ".join(out) + "]") if out else ""
 
 
 def credit_layer(S):
@@ -315,13 +341,26 @@ def text_checks(S, blocks, cl, get_frame, times_for, w, h, issues, log):
                                detail=f"the rows of the words are {100 * (1 - wb['band']):.0f}% darker than the rows "
                                       f"above and below: maybe a dark band, maybe the scene; look at this frame"))
         sevl = "HIGH" if wc["contrast"] < CONTRAST_HIGH else ("MEDIUM" if wc["contrast"] < CONTRAST_MED else None)
+        ink = ink_of(b)
         if sevl:
             k = sum(m["contrast"] < CONTRAST_MED for m in ms)
+            hint = ""
+            if ink and ink[2] == "dark":
+                hint = f"; these are dark letters ({ink[0]}), which need a bright sky behind them"
+            elif ink:
+                hint = f"; these letters are painted {ink[0]}"
             issues.append(dict(severity=sevl, check="Legibility", at=wc["t"], block=b["name"],
                                detail=f"the letters stand out from the light round them by only "
-                                      f"{wc['contrast']:.1f} times (want {CONTRAST_MED:.1f} or more), " + of.format(k)))
-        log.append(f"{b['name']}: ring/sky {wd['dip']:.2f}, band {wb['band']:.2f}, contrast {wc['contrast']:.1f} "
-                   f"(worst of {len(ms)})")
+                                      f"{wc['contrast']:.1f} times (want {CONTRAST_MED:.1f} or more), " + of.format(k)
+                                      + hint))
+        elif ink and ink[2] == "dark" and wc["letters"] > wc["background"]:
+            # coloured words: the song file asks for dark letters, yet they measure lighter than the sky round
+            # them (the colour is not reaching the screen, or the glow round them carries the reading)
+            issues.append(dict(severity="LOW", check="Legibility", at=wc["t"], block=b["name"],
+                               detail=f"the song file asks for dark letters ({ink[0]}) but they measure lighter than "
+                                      f"the sky round them; look at this frame"))
+        log.append(f"{b['name']}{look_of(b)}: ring/sky {wd['dip']:.2f}, band {wb['band']:.2f}, "
+                   f"contrast {wc['contrast']:.1f} (worst of {len(ms)})")
     # the title card and the corner credit (engine design: its own soft shade, so at most MEDIUM)
     if cl is not None:
         c = S.CREDIT
@@ -451,9 +490,77 @@ def fig_value(m, key, default, t):
     return float(v)
 
 
+def _sv(S, name, t, default):
+    v = getattr(S, name, None)
+    if v is None:
+        return default
+    return v(t) if callable(v) else v
+
+
+def ground_depth(S, y):
+    """Depth of the ground under feet at screen height y (engine/sky_camera.py: 0.80 on the far shore and above,
+    1.15 at the bottom of the lake)."""
+    h = float(S.HORIZON)
+    return 0.80 + 0.35 * min(max((h - float(y)) / h, 0.0), 1.0)
+
+
+def camera_affine(S, depth, t):
+    """(scale, dx, dy): a camera move (CAMERA_ZOOM, CAMERA_PAN, CAMERA_CRANE; UPGRADE-HOWTO section O) shows a
+    point of that depth at scale * p + (dx, dy). The same maths as SkyCamera.aff, without the scene plates."""
+    if all(getattr(S, k, None) is None for k in ("CAMERA_ZOOM", "CAMERA_PAN", "CAMERA_CRANE")):
+        return 1.0, 0.0, 0.0
+    k = float(_sv(S, "CAMERA_FOLLOW", t, 1.0) or 0.0)
+    if k <= 0.0:
+        return 1.0, 0.0, 0.0
+    z = 1.0 + (float(_sv(S, "CAMERA_ZOOM", t, 1.0)) - 1.0) * k
+    pan, cr = float(_sv(S, "CAMERA_PAN", t, 0.0)) * k, float(_sv(S, "CAMERA_CRANE", t, 0.0)) * k
+    par = float(_sv(S, "PARALLAX", t, 1.0))
+    h = float(S.HORIZON)
+    c = _sv(S, "CAMERA_CENTER", t, (0.5, h + 0.12))
+    bz = float(_sv(S, "ZOOM", t, 1.0) or 1.0)
+    kk = 1.0 + (float(depth) - 1.0) * par
+    zz = max(1.0 + (z - 1.0) * kk, 0.2)
+    bx = (zz * (0.5 - 0.5 * bz) + c[0] * (1.0 - zz) - pan * kk * zz - 0.5) / bz + 0.5
+    by = (zz * (h - h * bz) + c[1] * (1.0 - zz) - cr * kk * zz - h) / bz + h
+    return zz, bx, by
+
+
+def on_camera(S, rect, depth, t):
+    """A box (x, y, width, height) where the camera shows it now."""
+    zz, bx, by = camera_affine(S, depth, t)
+    x, y, w_, h_ = rect
+    return (zz * x + bx, zz * y + by, zz * w_, zz * h_)
+
+
 def fig_rect(S, m, aspect, t):
-    """The figure's box (x, y from the bottom, width, height in screen fractions), as engine/upgrade.py draws it."""
-    x, y = fig_value(m, "x", 0.5, t), fig_value(m, "y", 0.18, t)
+    """The figure's box (x, y from the bottom, width, height in screen fractions), as engine/upgrade.py draws it,
+    where the camera shows it (the people follow a camera move at the depth of the ground under their feet)."""
+    r = _fig_rect_rest(S, m, aspect, t)
+    depth = fig_value(m, "depth", 0.0, t) if m.get("depth") is not None else ground_depth(S, r[1])
+    return on_camera(S, r, depth, t)
+
+
+def crowd_rect(S, t):
+    """The box of the gathering crowd (GATHERING, UPGRADE-HOWTO section K) at t, or None when it is not there."""
+    g = getattr(S, "GATHERING", None)
+    if not g:
+        return None
+    t0, t1 = float(g.get("t0", 0.0)), float(g.get("t1", 1e9))
+    if not (t0 <= t < t1 + float(g.get("dissolve", 3.0))):
+        return None
+    cx, cy = g.get("center", (0.5, 0.345))
+    sp = g.get("spread", (0.40, 0.05))
+    hg = g.get("height", (0.13, 0.12))
+    hmax = float(hg[0]) * (1.0 + float(hg[1])) if isinstance(hg, (tuple, list)) else float(hg) * 1.12
+    # while they walk in they can be anywhere between the sides and their places; lifted lights reach higher
+    x0, x1 = (0.0, 1.0) if t < float(g.get("arrive_by", t0 + 14.0)) + 1.0 else (cx - sp[0] - 0.03, cx + sp[0] + 0.03)
+    rect = (x0, float(cy) - 0.015, x1 - x0, hmax * 1.45 + float(sp[1]) + 0.015)
+    depth = float(g["depth"]) if g.get("depth") is not None else ground_depth(S, cy)
+    return on_camera(S, rect, depth, t)
+
+
+def _fig_rect_rest(S, m, aspect, t):
+    x, y = fig_value(m, "x", 0.5, t), fig_value(m, "y", 0.30 if m.get("kind") == "rig" else 0.18, t)
     hgt = fig_value(m, "height", 0.34, t) * (1.0 + 0.006 * math.sin(t * 1.1 + x * 9.0))
     wid = hgt * aspect / S.ASPECT
     bob = float(m.get("bob", 0.0))
@@ -472,7 +579,7 @@ def figure_list(S):
     out = []
     for i, m in enumerate(getattr(S, "FIGURES", []) or []):
         if m.get("kind") == "rig":   # a living figure on a skeleton (engine/rig.py): no picture, a typical shape
-            out.append(dict(i=i, meta=m, aspect=1.0 if m.get("preset") == "hands" else 0.55,
+            out.append(dict(i=i, meta=m, aspect=1.0 if m.get("preset") in ("hands", "pair") else 0.55,
                             name=f"Figure {i + 1} (living {m.get('preset', 'rig')})",
                             on0=m["t0"] + m.get("gather", 3.0) * 1.05, on1=m["t1"]))
             continue
@@ -618,6 +725,11 @@ def calm_checks(S, figs, video, issues, log, w=320, h=180, fps=10):
                 for tt in np.arange(t0, t1, 0.5):
                     x0, y0, x1, y1 = box_px(fig_rect(S, f["meta"], f["aspect"], tt), w, h, pad=0.25)
                     mask[y0:y1, x0:x1] = False
+        for tt in np.arange(t0, t1, 0.5):   # so is the gathering crowd
+            cr = crowd_rect(S, tt)
+            if cr is not None:
+                x0, y0, x1, y1 = box_px(cr, w, h, pad=0.0)
+                mask[y0:y1, x0:x1] = False
         e = seg.mean(axis=0)
         bot = float(e[cut:][mask[cut:]].mean()) if mask[cut:].any() else 0.0
         top = float(e[:cut][mask[:cut]].mean()) if mask[:cut].any() else 0.0
@@ -759,7 +871,12 @@ def main():
         sections.append(("Calm bottom third", log_c))
         log_f = []
         data["figures"] = figure_checks(S, figs, a.video, vfps, issues, log_f)
-        if not figs:
+        g = getattr(S, "GATHERING", None)
+        if g:
+            log_f.append(f"Gathering crowd of {int(g.get('count', 80))} (living, engine/gathering.py): every person "
+                         f"walks and moves on a skeleton, so it is never called rigid; left out of the calm check"
+                         + ("; a light is passed from hand to hand" if getattr(S, "PASS_LIGHT", None) else ""))
+        if not figs and not g:
             log_f.append("no people of light in this song")
         sections.append(("People of light", log_f))
     elif a.stills:

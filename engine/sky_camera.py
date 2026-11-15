@@ -299,7 +299,12 @@ class SkyCamera:
         self._text_uniforms(p, t)
         sun_dy = float(P["sun_y"]) - S.HORIZON
         silver = (0.25 + 0.75 * (1.0 - ss(0.08, 0.30, sun_dy))) * ss(-0.08, 0.0, sun_dy)
-        setu(p, uT=float(t), uCloudSpd=float(val("CLOUDS_SPEED", t, 1.0)), uCloudAmt=amt,
+        # Clouds thin out round the words so that the veil behind them (TEXT_SHADOW) stays calm. With TEXT_SHADOW 0
+        # there is no veil, and a hole in bright clouds would itself be a darker patch behind the text: then the
+        # clouds simply pass behind the words (engine-epic; CLOUDS_TEXT_CLEAR sets it by hand, 0 to 0.9).
+        zk = min(max(float(val("TEXT_SHADOW", t, 1.0)) * 20.0, 0.0), 1.0)
+        clear = float(val("CLOUDS_TEXT_CLEAR", t, 0.90 * zk))
+        setu(p, uT=float(t), uCloudSpd=float(val("CLOUDS_SPEED", t, 1.0)), uCloudAmt=amt, uTextClear=clear,
              uSkyTop=P["sky_top"], uSkyMid=P["sky_mid"], uSkyHor=P["sky_hor"], uGlow=P["glow"],
              uSunS=self.sun_screen(t, P), uSunInt=float(P["sun_int"]), uLight=float(val("CLOUDS_LIGHT", t, 1.0)),
              uSilver=float(silver))
