@@ -445,7 +445,7 @@ void main(){
     float k;
     if(uKind == 8){
       float sw = dot(pr, vec2(0.8, 0.6)) - 2.2*sin(uT*1.3 + vMisc.x*31.0);
-      k = ins*(0.16 + 0.9*exp(-sw*sw*3.0)) + 1.5*edge;
+      k = ins*(0.05 + 0.45*exp(-sw*sw*3.0)) + 1.3*edge;
     } else {
       k = ins*(0.55 + 0.25*smoothstep(0.0, 1.0, length(pr))) + 0.9*edge;
     }
@@ -992,29 +992,31 @@ uniform int uNBurst; uniform vec4 uBurst[4]; uniform vec3 uBurstCol[4];
 vec3 nebula(vec2 q, float t, vec4 L, vec3 lc){
   vec2 lq = L.xy;
   float dens = L.w;
-  vec2 w = vec2(fbm(q*0.9 + vec2(t*0.7, 1.3)), fbm(q*0.9 + vec2(4.1, -t*0.6)));
-  vec2 p = q*1.25 + 1.6*w;
-  float n = fbm(p) + 0.35*fbm3(p*3.1 + 5.0);
+  // billows: domain-warped noise, a big shape and finer curls on it
+  vec2 w = vec2(fbm(q*0.85 + vec2(t*0.7, 1.3)), fbm(q*0.85 + vec2(4.1, -t*0.6)));
+  vec2 p = q*1.35 + 1.7*w;
+  float n = fbm(p) + 0.40*fbm3(p*3.3 + 5.0);
   vec2 dl = lq - q; float r = length(dl); vec2 ld = dl/max(r, 1e-3);
-  vec2 p2 = p + ld*0.10;
-  float n2 = fbm(p2) + 0.35*fbm3(p2*3.1 + 5.0);
-  float d = smoothstep(0.62 - 0.22*dens, 0.92 - 0.12*dens, n);
-  float lit = clamp(0.5 + (n2 - n)*5.0, 0.0, 1.0);                // the side turned toward the light
-  float fall = 1.0/(1.0 + r*r*3.2);
-  // the deep: a dark blue gulf with faint violet gas and stars
-  vec3 c = mix(vec3(0.010, 0.016, 0.045), vec3(0.030, 0.032, 0.080), smoothstep(-1.0, 1.0, q.y));
-  c += vec3(0.05, 0.03, 0.10)*smoothstep(0.45, 0.85, fbm(q*2.2 + 7.0));
-  vec2 g = q*30.0; vec2 id = floor(g); vec2 f = fract(g)-0.5;
+  vec2 p2 = p + ld*0.09;
+  float n2 = fbm(p2) + 0.40*fbm3(p2*3.3 + 5.0);
+  float d = smoothstep(0.66 - 0.26*dens, 0.90 - 0.14*dens, n);
+  float lit = clamp(0.5 + (n2 - n)*6.0, 0.0, 1.0);                // the side turned toward the light
+  float fall = exp(-r*r*2.6);
+  float hot = exp(-r*r*11.0);
+  // the deep: a dark blue gulf with faint violet gas and a few stars
+  vec3 c = mix(vec3(0.008, 0.012, 0.035), vec3(0.022, 0.026, 0.065), smoothstep(-1.0, 1.0, q.y));
+  c += vec3(0.04, 0.025, 0.08)*smoothstep(0.45, 0.85, fbm(q*2.2 + 7.0));
+  vec2 g = q*34.0; vec2 id = floor(g); vec2 f = fract(g)-0.5;
   float h = hash21(id);
   vec2 off = (vec2(hash21(id+3.1), hash21(id+7.7))-0.5)*0.7;
-  c += vec3(1.0, 0.92, 0.80)*exp(-dot(f-off, f-off)*(70.0+200.0*h))*step(0.62, h)*(0.5+2.5*h*h)*(1.0-0.7*d);
-  // the clouds: blue grey in shadow, the light's colour where they face it, hot near it
-  vec3 shade = vec3(0.075, 0.095, 0.150)*(0.6 + 0.8*n);
-  vec3 litc = lc*L.z*(fall*(0.25 + 1.6*pow(lit, 1.6)) + 0.9*exp(-r*r*14.0));
-  vec3 cl = shade + litc*(0.35 + 0.65*d);
-  cl += vec3(0.55, 0.62, 0.80)*0.10*pow(lit, 3.0)*(1.0 - fall);       // a cool silver lining far from the light
+  c += vec3(1.0, 0.93, 0.82)*exp(-dot(f-off, f-off)*(150.0+300.0*h))*step(0.84, h)*(0.6+2.4*h*h)*(1.0-0.85*d);
+  // the clouds: slate blue in shadow, the light's colour on the sides that face it, hot round it
+  vec3 shade = mix(vec3(0.040, 0.058, 0.105), vec3(0.19, 0.23, 0.32), clamp(n - 0.35, 0.0, 1.0));
+  vec3 cl = shade*(0.70 + 0.60*lit);
+  cl += lc*L.z*(fall*(0.03 + 1.05*lit*lit)*(0.4 + 0.6*d) + 0.70*hot);
+  cl += vec3(0.60, 0.66, 0.82)*0.06*pow(lit, 3.0)*(1.0 - fall);       // a cool silver lining far from the light
   c = mix(c, cl, d);
-  c += lc*L.z*0.35*exp(-r*r*6.0)*(1.0 - d);                         // the glow in the gaps near the light
+  c += lc*L.z*0.30*hot*(1.0 - d);                                  // the glow in the gaps near the light
   return c;
 }
 
@@ -1023,7 +1025,11 @@ vec3 fill(vec2 uv, int kind, vec4 box, int slot){
   q.x *= uAspect;
   float t = uT*0.03 + box.w;
   vec3 c;
-  if(kind == 6) return nebula(q, t, uFillL[slot], uFillCol[slot].rgb);
+  if(kind == 6){                                    // the scale rides in the tint's fourth number
+    float sc = uFillTint[slot].w > 0.0 ? uFillTint[slot].w : 1.0;
+    vec4 L = uFillL[slot]; L.xy *= sc;
+    return nebula(q*sc, t, L, uFillCol[slot].rgb);
+  }
   if(kind == 2){
     c = mix(vec3(0.004, 0.006, 0.020), vec3(0.020, 0.018, 0.070), smoothstep(-1.0, 1.0, q.y));
     float neb = fbm(q*1.3 + vec2(t, 3.0));

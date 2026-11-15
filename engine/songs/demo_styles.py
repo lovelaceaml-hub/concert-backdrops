@@ -89,7 +89,7 @@ def s_constellation(scene, x, t0, sky):
                                                aperture=0.025, drift=(0.03, 0.01, -0.05)))
 def s_spark(scene, x, t0, sky):
     ST.add(scene, "spark_profile", name="sp", sky=sky, at=(x, 1.70, 0.0), facing=90.0, height=0.40,
-           tilt=lambda t: 9.0 + 3.0 * np.sin((t - t0) * 0.6), eye_glow=0.6, **win(t0))
+           tilt=lambda t: 9.0 + 3.0 * np.sin((t - t0) * 0.6), eye_glow=0.4, **win(t0))
 
 
 @stage("nebula_profile", lambda x, t0, t1: hold((x - 0.05, 1.98, 1.45), (x - 0.05, 1.93, 0.0), t0, t1, fov=36,
@@ -201,7 +201,7 @@ def _d(hexs, k=1.0):
 LOOKS = dict(
     pale=dict(base="cream", sky_top=_d("#c6ccd2"), sky_mid=_d("#e4e2dc"), sky_hor=_d("#efede7"),
               haze_color=_d("#e8e6e0"), mist=0.35, mist_color=_d("#ebe8e2"), hills=0.35, hill_color=_d("#c4c8cc"),
-              water=_d("#c8ccd0"), sun_int=0.35, sun_el=24.0, sun_az=120.0, clouds=0.12, dust=0.25, rays=0.0),
+              water=_d("#c8ccd0"), sun_int=0.35, sun_el=24.0, sun_az=120.0, clouds=0.12, dust=0.0, rays=0.0),
     pastel=dict(base="cream", sky_top=_d("#9fb0e2"), sky_mid=_d("#d4c4e8"), sky_hor=_d("#f8dccc"),
                 haze_color=_d("#f2d8d8"), mist=0.3, mist_color=_d("#f0dcd8"), hills=0.25, hill_color=_d("#c8b8d8"),
                 water=_d("#c8c0e0"), sun_int=0.5, sun_el=12.0, sun_az=60.0, sun_color=_d("#fff2e0"), clouds=0.05,

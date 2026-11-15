@@ -516,11 +516,20 @@ class Layer:
     def _mask_pass(self, items, t, cam, U):
         """Draws the silhouettes of the masked sets. Returns the frame's mask state, or None."""
         todo = []
+        shapes = {}
         for e, batches in items:
             if e.mask is None:
                 continue
             k = e.mask.strength_at(t)
             if k <= 0.001:
+                continue
+            # a masked set that draws no shape this frame (not on screen yet, or gone) takes no layer
+            if e.mask.source is not None:
+                src = api.Entry(e.name + "#mask", e.mask.source)
+                shapes[e.name] = (src, self._batches(src, t, cam))
+                if not shapes[e.name][1]:
+                    continue
+            elif not batches:
                 continue
             todo.append((e, batches, k))
         if not todo:
@@ -551,10 +560,16 @@ class Layer:
                     c = _val(mk.color, t) if mk.color is not None else "#ff9440"
                     col = api.lin(c) if isinstance(c, str) else np.asarray(c, np.float64)
                 gl = _val(mk.glow, t) if mk.glow is not None else (-0.25, 0.30, 1.0, 0.5)
+                glow_at = None
+                nscale = 1.0
+                if isinstance(gl, dict):            # the light inside a nebula at a world point (placed below)
+                    glow_at = np.asarray(_val(gl["at"], t), np.float64)
+                    nscale = float(gl.get("scale", 1.0))
+                    gl = (0.0, 0.0, float(gl.get("strength", 1.0)), float(gl.get("density", 0.5)))
                 layers[s] = dict(key=key, kind=api.MASK_SKIES.index(mk.sky), k=0.0, edge=float(mk.edge),
                                  tint=tuple(float(x) for x in np.asarray(mk.tint, np.float64)), look=mk.look,
                                  color=col, box=(0.5, 0.5, 0.4, 0.0), parent=-1, soft=0.0, pts=[],
-                                 glow=tuple(float(x) for x in gl))
+                                 glow=tuple(float(x) for x in gl), glow_at=glow_at, nscale=nscale)
             layers[s]["k"] = max(layers[s]["k"], k)
             layers[s]["soft"] = max(layers[s]["soft"], float(mk.soft))
             slot_of[e.name] = s
@@ -590,8 +605,8 @@ class Layer:
             if mk.mode == "sky" and e.name not in slot_of:
                 continue
             if mk.source is not None:
-                src = api.Entry(e.name + "#mask", mk.source)
-                srcs.append((e, self._batches(src, t, cam), k, src.name))
+                src, sb = shapes[e.name]
+                srcs.append((e, sb, k, src.name))
             else:
                 srcs.append((e, batches, k, e.name))
         try:
@@ -636,6 +651,13 @@ class Layer:
                 lo, hi = xy[ok].min(axis=0), xy[ok].max(axis=0)
                 ly["box"] = (float((lo[0] + hi[0]) * 0.5), float((lo[1] + hi[1]) * 0.5),
                              float(max((hi[1] - lo[1]) * 0.5, 0.05)), 0.0)
+            if ly.get("glow_at") is not None:
+                q, zq = cam.project(ly["glow_at"])
+                if zq[0] > 0.05:
+                    bx = ly["box"]
+                    g = ly["glow"]
+                    ly["glow"] = ((float(q[0, 0]) - bx[0]) / bx[2] * float(cam.aspect),
+                                  (float(q[0, 1]) - bx[1]) / bx[2], g[2], g[3])
         # soften each channel by its own softness (pixels of a 1080p picture)
         k = (self.h / 1080.0) * (self.msize[1] / float(self.h)) / 3.2
         rad = tuple(float(s) * k for s in softs)
@@ -969,6 +991,7 @@ class Layer:
                 fa[i] = (ly["kind"], ly["k"], ly["edge"], ly["parent"] + 1)
                 fbox[i] = ly["box"]
                 ftint[i, :3] = ly["tint"]
+                ftint[i, 3] = ly.get("nscale", 1.0)
                 if ly["color"] is not None:
                     fcol[i, :3] = ly["color"]
                 fglow[i] = ly.get("glow", (0.0, 0.0, 0.0, 0.0))

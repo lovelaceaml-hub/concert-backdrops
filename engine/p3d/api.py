@@ -269,10 +269,12 @@ class Mask:
     color: Any = None                       # sky "flat": the colour that fills the shape, a display hex shown
     #                                         exactly (as `paint`), or linear light; may be a function of t.
     #                                         sky "nebula": the colour of the light inside the clouds
-    glow: Any = None                        # sky "nebula": (x, y, strength, density): where the light inside
-    #                                         stands (in half heights of the shape from its centre, y up), how
-    #                                         strong it is, how dense the clouds are (0..1); default
-    #                                         (-0.25, 0.30, 1.0, 0.5). May be a function of t
+    glow: Any = None                        # sky "nebula": the light inside the clouds. dict(at=<world point or
+    #                                         function of t>, strength=1.0, density=0.5, scale=1.0: 2 gives
+    #                                         clouds twice as fine and a light half as wide), or (x, y, strength,
+    #                                         density) with x, y in half heights of the shape from its centre on
+    #                                         screen (y up); density: how much of the shape is cloud (0..1);
+    #                                         default (-0.25, 0.30, 1.0, 0.5). May be a function of t
     slot: Any = None                        # which of the two sky layers (0 or 1); by default sets with the same
     #                                         fill share a layer and different fills take the next free one
 
@@ -294,7 +296,9 @@ class Mask:
             return ("slot", self.slot)
         lk = self.look if isinstance(self.look, (str, type(None))) else id(self.look)
         col = self.color if isinstance(self.color, (str, type(None), tuple)) else id(self.color)
-        gl = self.glow if isinstance(self.glow, (tuple, type(None))) else id(self.glow)
+        gl = self.glow if isinstance(self.glow, (tuple, type(None))) else (
+            ("at", id(self.glow.get("at")), self.glow.get("strength"), self.glow.get("density"))
+            if isinstance(self.glow, dict) else id(self.glow))
         return (self.sky, lk, col, tuple(np.asarray(self.tint, np.float64).round(4)), float(self.edge), gl)
 
     def strength_at(self, t):
