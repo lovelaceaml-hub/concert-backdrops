@@ -253,14 +253,14 @@ def _s4_up(t):
 
 # S5: over the crest and down the dive to the child, then a slow rise round them
 def _s5_keys():
-    up = _v(0.0, 0.30, 0.0)            # the hands sit low in the picture, the riding words above them
+    up = _v(0.0, 0.36, 0.0)            # the hands sit low in the picture, the riding words above them
     return [(SEC[4], E5 + _v(-4.0, 30.0, 52.0), E5 + _v(-2.0, 27.0, 20.0)),
             (27.30, E5 + _v(-3.5, 26.5, 45.0), H5 + _v(0.0, 4.0, 0.0)),
             (28.15, H5 + _v(-1.4, 7.0, 9.0), H5 + up),
-            (28.85, H5 + _v(-0.25, 0.70, 1.70), H5 + up),
-            (29.40, H5 + _v(-0.05, 0.66, 1.55), H5 + up),
-            (29.95, H5 + _v(0.15, 0.62, 1.45), H5 + up),
-            (30.12, H5 + _v(0.2, 0.75, 1.9), H5 + up + _v(0.0, 0.3, -2.0)),
+            (28.85, H5 + _v(-0.18, 0.30, 1.25), H5 + up),
+            (29.40, H5 + _v(-0.05, 0.27, 1.12), H5 + up),
+            (29.95, H5 + _v(0.10, 0.25, 1.05), H5 + up),
+            (30.12, H5 + _v(0.15, 0.40, 1.5), H5 + up + _v(0.0, 0.3, -2.0)),
             (30.6, E5 + _v(-0.9, 1.75, 5.4), E5 + _v(0.0, 1.95, 0.0)),
             (31.60, E5 + _v(0.2, 1.65, 4.4), E5 + _v(0.0, 1.95, 0.0)),
             (33.40, E5 + _v(1.6, 1.75, 3.9), E5 + _v(0.0, 2.0, 0.0))]
@@ -451,7 +451,7 @@ def _bodies():
                               gesture=[(20.6 + 0.2 * i, 26.0, "clap", dict(period=0.46 + 0.03 * i, height=0.6))])
     # S5 Consideration: hands only, a rose hand reaching down takes a gold hand reaching up
     hs = Hands(meet=tuple(H5), t_touch=HANDS_T, axis=90.0, color=COL[GRAT], color2=COL[CONS], approach=2.6,
-               apart=0.55, tilt=32.0, points=60000)
+               apart=0.55, tilt=18.0, points=70000)
     B["hand_gold"], B["hand_rose"] = hs["left"], hs["right"]
     for hb in (hs["left"], hs["right"]):          # the hands exist only in their section
         hb.show = (SEC[4], 30.35)
@@ -678,7 +678,7 @@ def _dist(t, p):
 
 _RIDE1 = (0.5, 0.60, 14.0)
 _RIDE2 = (0.5, 0.67, 12.0)
-_RIDE5 = (0.5, 0.56, 15.0)
+_RIDE5 = (0.5, 0.68, 15.0)
 _AT3 = C3 + _v(0.0, 2.62, 0.0)
 _AT4 = D4 + _v(0.0, 2.78, 0.0)
 _AT5 = E5 + _v(0.0, 2.48, 0.0)
@@ -1166,6 +1166,59 @@ class ScreenClear:
         return out
 
 
+def _heart_curve(m=36):
+    a = np.linspace(0.0, 2.0 * np.pi, m, endpoint=False)
+    x = 16.0 * np.sin(a) ** 3
+    y = 13.0 * np.cos(a) - 5.0 * np.cos(2 * a) - 2.0 * np.cos(3 * a) - np.cos(4 * a)
+    return np.stack([x, y], axis=1) / 17.0
+
+
+class Hearts:
+    """Small hearts of light drift off each expression in its colour while it is read (UPDATE 9)."""
+    wants_camera = True
+
+    def __init__(self, per=7):
+        r = np.random.default_rng(77)
+        self.shape = _heart_curve()
+        self.items = []
+        for w in WORDS:
+            if w.name not in PEN_OF:
+                continue
+            col = lin(PW.COLORS.get(w.name, w.hex))
+            for i in range(per):
+                t0 = w.t_read0 - 0.2 + (w.t_read1 - w.t_read0 + 0.3) * r.random()
+                side = -1.0 if i % 2 == 0 else 1.0
+                self.items.append((w, t0, side * (0.55 + 0.2 * r.random()), r.random() - 0.3, r.random(), col))
+
+    def sample(self, t, cam=None):
+        if cam is None:
+            return None
+        pts, cols, al, sz = [], [], [], []
+        for w, t0, sx, sy, sd, col in self.items:
+            age = t - t0
+            if not (0.0 <= age <= 2.4) or not (w.t_in <= t <= w.t_out + 0.6):
+                continue
+            o, r_, u_, _n = w.frame(t, cam)
+            x0, x1, y0, y1 = w.extent()
+            wdt = float(x1 - x0)
+            size = 0.065 * wdt * (0.8 + 0.4 * sd)
+            c = o + r_ * (sx * wdt + 0.08 * wdt * np.sign(sx) * age) + u_ * (sy * (y1 - y0) + 0.12 * wdt * age)
+            ang = 0.25 * np.sin(1.7 * age + 6.0 * sd)
+            ca, sa = np.cos(ang), np.sin(ang)
+            sh = self.shape @ np.array([[ca, sa], [-sa, ca]])
+            p = c[None, :] + size * (sh[:, :1] * r_[None, :] + sh[:, 1:2] * u_[None, :])
+            k = float(_ss(0.0, 0.4, age) * (1.0 - _ss(1.6, 2.4, age)))
+            pts.append(p)
+            cols.append(np.broadcast_to(0.55 * col + 0.45 * lin(WHITE), p.shape))
+            al.append(np.full(len(p), k))
+            sz.append(np.full(len(p), 0.011 * wdt))
+        if not pts:
+            return None
+        P = np.concatenate(pts)
+        return dict(pos=P, size=np.concatenate(sz), color=np.concatenate(cols), alpha=np.concatenate(al),
+                    emit=2.2, kind="spark", twinkle=0.3, dof=0.3, reflect=False)
+
+
 def _setup(scene):
     scene.add("seed", ScreenClear(Seed()))
     scene.add("hoops", ScreenClear(PW.KeepClear(Hoops(), WORDS)))
@@ -1180,6 +1233,7 @@ def _setup(scene):
             body.add(scene, name)
     scene.add("flares", ScreenClear(Flares()))
     scene.add("comets", PW.KeepClear(Comets(), WORDS))
+    scene.add("hearts", ScreenClear(Hearts()), reflect=False)
     WORDS.add_to(scene)
     WORDS.check(CAMERA)
 
