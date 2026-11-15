@@ -314,11 +314,16 @@ class Crowd:
         lit = self.Tr[np.isfinite(self.Tr)]
         self.Tend = float(lit.max()) if len(lit) else t0
         lift = pl.get("lift", True)
-        self.Tlift = (self.Tend + 0.4 if lift is True else float(lift)) + 0.9 * rng.random(N) if lift else \
+        # optional timing keys (the defaults are the original numbers, so songs without them render as before):
+        # lift_spread (how long the lifts are staggered over), rise_delay (pause between a lift and its rise),
+        # rise_spread (stagger of the rises) and rise_dur (shortest flight time to the arch)
+        l_spread = float(pl.get("lift_spread", 0.9))
+        self.Tlift = (self.Tend + 0.4 if lift is True else float(lift)) + l_spread * rng.random(N) if lift else \
             np.full(N, np.inf)
         rise = pl.get("rise", True)
-        self.Trise = self.Tlift + 1.0 + 1.4 * rng.random(N) if (rise and lift) else np.full(N, np.inf)
-        self.rise_dur = 3.0 + 0.6 * rng.random(N)
+        r_delay, r_spread = float(pl.get("rise_delay", 1.0)), float(pl.get("rise_spread", 1.4))
+        self.Trise = self.Tlift + r_delay + r_spread * rng.random(N) if (rise and lift) else np.full(N, np.inf)
+        self.rise_dur = float(pl.get("rise_dur", 3.0)) + 0.6 * rng.random(N)
         self.star_of = np.array([int(np.argmin([abs(x - p[0]) for p in self.star_pos])) for x in self.tx])
         self.arch_gain = float(pl.get("arch", 1.0))
         self.arch_t = float(np.nanmin(np.where(np.isfinite(self.Trise), self.Trise + self.rise_dur, np.inf))) \
