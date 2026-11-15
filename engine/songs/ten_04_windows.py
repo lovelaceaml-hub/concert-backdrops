@@ -104,7 +104,7 @@ TEXT_SHADOW = 0.0          # nothing dark behind any text
 # in light across the sky in the breath, over the two who hold each other, bursting on the biggest hit.
 TITLES = dict(
     opening=dict(t_end=4.0, y=0.20, palette="night"),
-    signature=dict(windows=[(11.6, 13.2, "br", "night"), (24.7, 26.6, "tr", "night"), (31.4, 33.0, "bl", "night")]),
+    signature=dict(windows=[(11.6, 13.2, "br", "night"), (24.7, 26.6, "tr", "night"), (31.4, 33.0, "tr", "night")]),
     date_light=dict(t_form=BREATH, t_burst=X6, y=0.30, palette="night"),
 )
 
@@ -125,9 +125,9 @@ LOOKS = dict(
     ember=dict(base="sunrise", sky_top="#0a1646", sky_mid="#3c3a86", sky_hor="#f08a4e", sun_az=176.0, sun_el=3.0,
                sun_color="#ffb46e", sun_int=0.9, clouds=0.85, rays=0.7, stars=0.25, haze_color="#b46a5a",
                mist=0.4, mist_height=10.0, mist_color="#a8604a", water="#120e22", hill_color="#160c22"),
-    sea=dict(base="golden", sky_top="#081a4a", sky_mid="#1f5590", sky_hor="#9fd4d0", sun_az=222.0, sun_el=1.5,
+    sea=dict(base="golden", sky_top="#081a4a", sky_mid="#1f5590", sky_hor="#6fb0bc", sun_az=222.0, sun_el=1.5,
              sun_color="#fff0cc", sun_int=0.5, sun_glow=0.3, clouds=0.35, haze=0.3, haze_color="#3d7c90",
-             mist=0.35, mist_height=6.0, mist_color="#6aa8b4", hills=0.25, hill_color="#12304e", water="#0a3448",
+             mist=0.2, mist_height=4.0, mist_color="#5a98a8", hills=0.25, hill_color="#12304e", water="#0a3448",
              mirror=0.8, ripple=1.4, rays=0.2, stars=0.25, dust=0.5, dust_color="#fffbe8", dust_color2="#bff4ff"),
     stars=dict(base="night", sky_top="#02041a", sky_mid="#0a1444", sky_hor="#283270", stars=1.0, milky=1.0,
                hills=0.55, ripple=0.12, mirror=1.0, haze_color="#141a4a", mist=0.25, dust=0.9,
@@ -210,7 +210,7 @@ C4 = O4 + _A(K4[-1][1])
 
 # S5 harvest dusk, life size: two hands meet 1.5 m over the water, 12 m ahead; we dive down to them
 O5 = _after(C4, (0.0, 0.0, 0.0))
-MEET = O5 + _A([0.0, 1.5, -12.0])
+MEET = O5 + _A([0.0, 12.0, -12.0])
 LIFT = 0.35                    # how far the upper hand lifts the lower one after the clasp
 
 
@@ -218,16 +218,17 @@ def _lift(t):
     return LIFT * _ss(CLASP + 0.15, CLASP + 1.7, t)
 
 
-K5 = [(X4, (0.0, C4[1], 0.0), (0.0, 1.5, -12.0)), (27.6, (0.2, 6.5, -5.8), (0.0, 1.5, -12.0)),
-      (28.4, (0.2, 1.6, -9.4), (0.0, 1.6, -12.0)), (CLASP, (0.06, 1.25, -10.95), (0.0, 1.6, -12.0)),
-      (31.9, (0.03, 1.5, -11.2), (0.0, 1.9, -12.0)),
-      (X5, (0.0, 1.5 + LIFT, -11.97), (0.0, 1.5 + LIFT, -14.0))]
+K5 = [(X4, (0.0, C4[1], 0.0), (0.0, 13.0, -12.0)), (27.6, (0.15, 14.2, -6.5), (0.0, 12.2, -12.0)),
+      (28.4, (0.2, 12.2, -9.4), (0.0, 12.1, -12.0)), (CLASP, (0.06, 11.75, -10.95), (0.0, 12.1, -12.0)),
+      (31.9, (0.03, 12.0, -11.2), (0.0, 12.4, -12.0)),
+      (X5, (0.0, 12.0 + LIFT, -11.97), (0.0, 12.0 + LIFT, -14.0))]
 C5 = O5 + _A(K5[-1][1])
 
 # S6 rain at night, life size: the two who kneel, rise and hold each other; into their embrace
 O6 = _after(C5, (0.0, 0.0, 9.0))
 PAIR6 = _A([0.0, 0.0, 0.0])
-K6 = [(X5, (0.0, C5[1], 9.0), (0.0, 0.9, 0.0)), (35.2, (-0.7, 1.25, 5.4), (0.0, 0.75, 0.0)),
+K6 = [(X5, (0.0, C5[1], 9.0), (0.0, 2.0, 0.0)), (34.3, (-0.5, 3.2, 6.6), (0.0, 0.8, 0.0)),
+      (35.2, (-0.7, 1.4, 5.4), (0.0, 0.75, 0.0)),
       (38.4, (-0.4, 2.0, 5.6), (0.0, 1.5, 0.0)), (41.3, (0.15, 1.9, 4.0), (0.0, 1.6, 0.0)),
       (X6, (0.0, 1.22, -0.03), (0.0, 1.22, -3.0))]
 C6 = O6 + _A(K6[-1][1])
@@ -238,8 +239,9 @@ PRAYER_AT, FATHER_AT = _A([-1.3, 0.0, -2.6]), _A([1.7, 0.0, -6.8])
 MOTHER_AT = _A([0.0, 0.0, -380.0])
 MOTHER_HEAD, MOTHER_HEART = _A([0.3, 69.1, -379.9]), _A([-2.4, 52.4, -386.5])
 K7 = [(X6, (0.0, C6[1], 3.0), (-1.3, 0.9, -2.6)), (44.6, (-0.55, 0.95, -0.4), (-1.3, 0.8, -2.6)),
-      (46.6, (0.5, 2.0, -2.4), (1.7, 0.8, -6.8)), (48.6, (0.8, 2.4, -3.4), (1.7, 0.9, -6.8)),
-      (REVEAL, (0.8, 2.8, -4.6), (0.6, 4.0, -60.0)), (FLOOD, (0.0, 22.0, -110.0), (0.0, 58.0, -380.0)),
+      (46.6, (0.5, 2.0, -2.4), (1.7, 0.8, -6.8)), (48.6, (0.8, 2.3, -3.2), (1.7, 0.95, -6.8)),
+      (50.4, (1.0, 2.5, -3.8), (1.7, 1.1, -6.8))]
+K8 = [(REVEAL, (0.8, 2.6, -4.0), (1.0, 6.0, -60.0)), (FLOOD, (0.0, 22.0, -110.0), (0.0, 58.0, -380.0)),
       (TITLE_HIT, (0.0, 28.0, -130.0), (0.0, 118.0, -380.0)), (60.0, (0.0, 29.0, -142.0), (0.0, 122.0, -380.0))]
 
 
@@ -255,8 +257,8 @@ CAMERA = Rig([
     fly(_keys(O4, K4), fov=_kick(25.8, X4, 42.0, 54.0), aperture=0.1, focus=100.0, blend=0.25),
     fly(_keys(O5, K5), fov=40.0, aperture=0.012, focus="target", blend=0.25, near=0.02),
     fly(_keys(O6, K6), fov=42.0, aperture=0.02, focus="target", blend=0.25, near=0.02),
-    fly(_keys(O7, K7), fov=42.0, aperture=lambda t: 0.02 * (1.0 - _ss(REVEAL, FLOOD, t)), focus="target",
-        blend=0.25, near=0.02),
+    fly(_keys(O7, K7), fov=42.0, aperture=0.02, focus="target", blend=0.25, near=0.02),
+    fly(_keys(O7, K8), fov=42.0, aperture=0.0, focus="target", blend=1.6),
 ], fov=42.0, handheld=0.12, shutter=0.5)
 
 
@@ -272,7 +274,7 @@ def _ground_point(t, sx, sy):
 
 
 GREET_AT, _GD = _ground_point(4.0, 0.535, 0.20)
-GREET_SCALE = float(np.clip(150.0 * _GD / (1.73 * 1569.0), 8.0, 90.0))   # about 150 px tall in the picture
+GREET_SCALE = float(np.clip(240.0 * _GD / (1.73 * 1569.0), 8.0, 120.0))  # about 240 px tall in the picture
 
 # ------------------------------------------------------------------------------------------------ words
 # One reading moment at a time, carried at the camera's pace a little ahead of the lens (nothing comes
@@ -545,7 +547,7 @@ class Rain:
             g = _ss(X5 - 0.05, X5 + 0.5, t)
             return dict(pos=pos, pos2=pos2, size=0.006, color=lin("#d6dcff"), alpha=0.45 * near * g, kind="line")
         g = 1.0 - _ss(45.0, 47.0, t)
-        flash = 1.0 + 2.0 * np.exp(-(t - X6) / 0.35)
+        flash = 1.0 + 0.8 * np.exp(-(t - X6) / 0.35)
         col = lin("#ffd9a0") * (1 - s[:, 3:4]) + lin("#ffb4c8") * s[:, 3:4]
         return dict(pos=pos, size=0.03 + 0.03 * s[:, 3], color=col, alpha=0.85 * g * near, emit=flash,
                     kind="spark", twinkle=0.6)
@@ -759,11 +761,11 @@ def _setup(scene):
                   facing="center", kinds=(("bow", 3.0), ("pray", 1.0)), shapes=("woman", "man", "child"),
                   start=dict(t=X3 + 0.5, center=(wc[0], wc[2]), speed=34.0), scale=(5.5, 7.5), points=2600,
                   color="#ffd27a", color2="#fff0c0", bright=1.1, seed=4.0)
-    scene.add("s4_crowd", PW.KeepClear(_Gate(crowd, X3, X4, rise=0.0, fall=0.0), WORDS, floor=0.0))
+    scene.add("s4_crowd", PW.KeepClear(_Gate(crowd, X3, X4, rise=0.0, fall=0.0), WORDS, floor=0.0), reflect=False)
 
     # 5 CONSIDERATION: the helping hands
     for k, v in enumerate(_hands_help(MEET, _lift, CLASP)):
-        scene.add("s5_hand%d" % k, _Gate(v, X4, X5, rise=0.5))
+        scene.add("s5_hand%d" % k, _Gate(v, X4, X5, rise=0.3))
     from p3d.effects import Flare
     scene.add("s5_flare", _Gate(Flare(lambda t: MEET + _A([0.0, _lift(t), 0.0]), CLASP, color="#ffd9a0",
                                       color2="#bfe4ff"), X4, X5, rise=0.0))
@@ -864,9 +866,8 @@ P3D = dict(
                   z=float(O7[2] + MOTHER_AT[2] - 50.0), colors=NINE, bright=1.6),
         react=dict(beat=0.35, level=0.2),
     ),
-    bursts=[dict(t=X5, at=tuple(MEET + _A([0.0, LIFT, 0.0])), strength=0.9, rise=0.15, fall=0.45, color="#ffe6b8",
-                 radius=0.35),
-            dict(t=X6, strength=0.45, rise=0.15, fall=0.6, color="#ffe8d0", radius=0.35),
+    bursts=[dict(t=X5, at=tuple(MEET + _A([0.0, LIFT, 0.0])), strength=0.4, rise=0.15, fall=0.45, color="#ffd8a0",
+                 radius=0.3),
             dict(t=FLOOD, at=tuple(O7 + MOTHER_HEART), strength=0.8, rise=0.35, fall=0.9, color="#fff0d8",
                  radius=0.3)],
     clear=lambda t: _clear_boxes(t),
