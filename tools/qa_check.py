@@ -50,6 +50,8 @@ CONTRAST_HIGH, CONTRAST_MED = 1.6, 2.2    # (letters + 0.05) / (background + 0.0
 CALM_HIGH, CALM_MED = 1.8, 1.25           # bottom third motion / motion in the rest
 CALM_FLOOR = 0.0035                       # mean frame difference (0..1) below which the bottom counts as calm anyway
 RIGID_INTERNAL = 0.10                     # internal change / figure brightness below this is a rigid image
+SHIFT = 6                   # px (at 640x360) of slack when lining up a figure's box between two frames
+FIG_LAG = 0.0               # s between the two frames compared inside a figure (0: consecutive frames)
 MOVE_PX = 0.35                            # figure speed (px per frame at 640x360) that counts as moving
 RIGID_HIGH_S, FROZEN_MED_S = 1.0, 4.0     # seconds of rigid moving / of a fully frozen figure
 
@@ -261,7 +263,8 @@ def measure_text(lum, cov, others, h, sky_bottom=1.0):
     lt = float(np.median(lum[core])) if core.sum() else float("nan")
     bgsel = (d >= 35) & (d < 95) & near_self
     lb = float(np.percentile(lum[bgsel], 90)) if bgsel.sum() > 30 else float("nan")
-    contrast = (lt + 0.05) / (lb + 0.05)
+    # light letters on a dark sky, or dark letters (a navy theme) on a bright one: the ratio either way
+    contrast = (max(lt, lb) + 0.05) / (min(lt, lb) + 0.05)
     return dict(dip=dip, band=band, contrast=contrast, letters=lt, background=lb, sky=sky,
                 rings=[round(v, 4) for v in med])
 
@@ -315,8 +318,8 @@ def text_checks(S, blocks, cl, get_frame, times_for, w, h, issues, log):
         if sevl:
             k = sum(m["contrast"] < CONTRAST_MED for m in ms)
             issues.append(dict(severity=sevl, check="Legibility", at=wc["t"], block=b["name"],
-                               detail=f"the letters are only {wc['contrast']:.1f} times brighter than the light "
-                                      f"round them (want {CONTRAST_MED:.1f} or more), " + of.format(k)))
+                               detail=f"the letters stand out from the light round them by only "
+                                      f"{wc['contrast']:.1f} times (want {CONTRAST_MED:.1f} or more), " + of.format(k)))
         log.append(f"{b['name']}: ring/sky {wd['dip']:.2f}, band {wb['band']:.2f}, contrast {wc['contrast']:.1f} "
                    f"(worst of {len(ms)})")
     # the title card and the corner credit (engine design: its own soft shade, so at most MEDIUM)
@@ -345,7 +348,7 @@ def text_checks(S, blocks, cl, get_frame, times_for, w, h, issues, log):
                                           f"than further out"))
             if m["contrast"] < CONTRAST_MED:
                 issues.append(dict(severity="MEDIUM", check="Legibility", at=m["t"], block=label,
-                                   detail=f"the {label.lower()} is only {m['contrast']:.1f} times brighter than "
+                                   detail=f"the {label.lower()} stands out by only {m['contrast']:.1f} times from "
                                           f"the light round it"))
     return rows
 
@@ -468,6 +471,11 @@ def figure_list(S):
     from PIL import Image
     out = []
     for i, m in enumerate(getattr(S, "FIGURES", []) or []):
+        if m.get("kind") == "rig":   # a living figure on a skeleton (engine/rig.py): no picture, a typical shape
+            out.append(dict(i=i, meta=m, aspect=1.0 if m.get("preset") == "hands" else 0.55,
+                            name=f"Figure {i + 1} (living {m.get('preset', 'rig')})",
+                            on0=m["t0"] + m.get("gather", 3.0) * 1.05, on1=m["t1"]))
+            continue
         try:
             p = m["poses"][0]
             p = p if os.path.isabs(p) else os.path.join(ROOT, p)
@@ -499,23 +507,44 @@ def figure_checks(S, figs, video, vfps, issues, log, w=640, h=360):
         n = max(1, min(6, int((b - a) / 1.5)))
         starts = [a + (b - a - 1.2) * k / max(n - 1, 1) for k in range(n)] if b - a > 1.2 else [a]
         rigid_s = frozen_s = moving_s = 0.0
-        internals, speeds = [], []
+        internals, speeds, fixeds = [], [], []
         for s0 in starts:
-            fr = decode(video, w, h, t0=s0, dur=min(1.2, b - s0)).astype(np.float32) / 255.0
-            for k in range(len(fr) - 1):
+            # compare frames LAG apart: a living body changes shape over a fraction of a second (a frame to the
+            # next is too little for limbs that move a pixel at a time); a rigid picture never does
+            lag = max(1, int(round(FIG_LAG * vfps)))
+            fr = decode(video, w, h, t0=s0, dur=min(1.2 + FIG_LAG, b - s0)).astype(np.float32) / 255.0
+            for k in range(len(fr) - lag):
                 t = s0 + k / vfps
-                r0, r1 = fig_rect(S, f["meta"], f["aspect"], t), fig_rect(S, f["meta"], f["aspect"], t + 1 / vfps)
+                r0, r1 = fig_rect(S, f["meta"], f["aspect"], t), fig_rect(S, f["meta"], f["aspect"], t + lag / vfps)
                 x0, y0, x1, y1 = box_px(r0, w, h)
                 X0, Y0, X1, Y1 = box_px(r1, w, h)
                 if x1 - x0 < 4 or y1 - y0 < 6 or X1 - X0 < 4 or Y1 - Y0 < 6:
                     continue
                 c0 = fr[k][y0:y1, x0:x1]
-                c1 = np.asarray(Image.fromarray(fr[k + 1][Y0:Y1, X0:X1]).resize((x1 - x0, y1 - y0), Image.BILINEAR))
-                same = fr[k + 1][y0:y1, x0:x1]
+                # the later frame's box, with the best small shift (a rigid picture then lines up exactly)
+                base = fr[k + lag][Y0:Y1, X0:X1]
+                if base.shape != c0.shape:
+                    base = None
+                best = None
+                for dy in range(-SHIFT, SHIFT + 1):
+                    for dx in range(-SHIFT, SHIFT + 1):
+                        if X0 + dx < 0 or Y0 + dy < 0 or X1 + dx > w or Y1 + dy > h:
+                            continue
+                        cc = fr[k + lag][Y0 + dy:Y1 + dy, X0 + dx:X1 + dx]
+                        if cc.shape != c0.shape:
+                            cc = np.asarray(Image.fromarray(cc).resize((x1 - x0, y1 - y0), Image.BILINEAR))
+                        e = float(np.mean(np.abs(c0 - cc)))
+                        if best is None or e < best[0]:
+                            best = (e, cc)
+                if best is None:
+                    continue
+                c1 = best[1]
+                same = fr[k + lag][y0:y1, x0:x1]
                 border = np.concatenate([c0[0], c0[-1], c0[:, 0], c0[:, -1]])
                 bg = float(np.median(border))
                 pk = float(np.percentile(c0, 99))
-                sel = (c0 - bg) > max(0.20 * (pk - bg), 6 / 255.0)
+                thr = max(0.20 * (pk - bg), 6 / 255.0)
+                sel = ((c0 - bg) > thr) | ((c1 - bg) > thr)   # the body in either frame, so a moved limb counts
                 if sel.sum() < 10:
                     continue
                 sig = float(np.mean(c0[sel] - bg))
@@ -523,8 +552,9 @@ def figure_checks(S, figs, video, vfps, issues, log, w=640, h=360):
                 fixed = float(np.mean(np.abs(c0 - same)[sel])) / max(sig, 1e-4)
                 cx0, cx1 = (r0[0] + r0[2] / 2) * w, (r1[0] + r1[2] / 2) * w
                 cy0, cy1 = (r0[1] + r0[3] / 2) * h, (r1[1] + r1[3] / 2) * h
-                speed = math.hypot(cx1 - cx0, cy1 - cy0)
+                speed = math.hypot(cx1 - cx0, cy1 - cy0) / lag
                 internals.append(internal)
+                fixeds.append(fixed)
                 speeds.append(speed)
                 dt = 1 / vfps
                 if speed > MOVE_PX:
@@ -536,17 +566,32 @@ def figure_checks(S, figs, video, vfps, issues, log, w=640, h=360):
         if not internals:
             continue
         mi = float(np.median(internals))
-        rows.append(dict(figure=f["name"], whole=[round(a, 2), round(b, 2)], internal_median=round(mi, 3),
+        m = f["meta"]
+        # what the song file says: a living figure (kind="rig") or a warped painted one (warp=True) bends and moves
+        # inside itself; a painted figure with one pose (or the same picture twice) and no warp is one rigid picture.
+        # Measured on the living figures test (run 43692681296): a frame to the next, a walking rig changes 0.08 and
+        # a warped figure 0.03, while the rigid walker of song 04 changes 0.07 and the swan of song 08 0.04, so
+        # frame differences alone cannot tell a gentle living figure from a rigid one; the song file decides and
+        # the frames confirm that it really moves.
+        living = m.get("kind") == "rig" or bool(m.get("warp"))
+        poses = m.get("poses") or []
+        one_picture = not living and len(set(map(str, poses))) <= 1
+        kind = "living (rig)" if m.get("kind") == "rig" else ("warped" if m.get("warp") else
+                                                             ("one picture" if one_picture else f"{len(poses)} poses"))
+        rows.append(dict(figure=f["name"], kind=kind, whole=[round(a, 2), round(b, 2)], internal_median=round(mi, 3),
                          speed_px=round(float(np.median(speeds)), 2), moving_s=round(moving_s, 2),
                          rigid_s=round(rigid_s, 2), frozen_s=round(frozen_s, 2), pairs=len(internals)))
-        log.append(f"{f['name']}: internal change {mi:.3f} (median), moving {moving_s:.1f} s of which rigid "
-                   f"{rigid_s:.1f} s, frozen in place {frozen_s:.1f} s ({len(internals)} frame pairs sampled)")
+        log.append(f"{f['name']}, {kind}: change inside its box {mi:.3f} a frame (median), moving {moving_s:.1f} s "
+                   f"(rigid-looking {rigid_s:.1f} s), still {frozen_s:.1f} s ({len(internals)} frame pairs sampled)")
         span = sum(min(1.2, b - s0) for s0 in starts)
-        if rigid_s >= min(RIGID_HIGH_S, 0.5 * span) and rigid_s >= 0.5 * moving_s:
+        if living:
+            continue
+        if moving_s >= min(RIGID_HIGH_S, 0.5 * span) and (one_picture or rigid_s >= 0.5 * moving_s):
+            why = "it is one painted picture with no warp" if one_picture else \
+                  f"inside its box almost nothing changes (change {mi:.2f}, want {RIGID_INTERNAL} or more)"
             issues.append(dict(severity="HIGH", check="Static figures", at=round(a, 2), block=f["name"],
-                               detail=f"moves across the screen as one rigid picture: inside its box almost nothing "
-                                      f"changes from frame to frame (change {mi:.2f}, want {RIGID_INTERNAL} or more) "
-                                      f"in {rigid_s:.1f} of {moving_s:.1f} s of movement sampled"))
+                               detail=f"moves across the screen as one rigid picture: {why}, in {moving_s:.1f} s of "
+                                      f"movement sampled (give it kind=\"rig\" or warp=True)"))
         elif span >= 2.0 and frozen_s >= min(FROZEN_MED_S, 0.6 * span):
             issues.append(dict(severity="MEDIUM", check="Static figures", at=round(a, 2), block=f["name"],
                                detail=f"stands frozen like a still picture for {frozen_s:.1f} s of the "
@@ -642,8 +687,11 @@ def write_report(out, meta, issues, sections, data):
           f"- End card: three lines under the title, whole for at least {END_HOLD_MIN:.0f} s before the fade.",
           f"- Calm bottom third: mean frame difference in the bottom third against the rest, per 2 s, people of light "
           f"left out. Over {CALM_MED} is busy, over {CALM_HIGH} very busy.",
-          f"- Static figures: frames inside each figure's box, lined up with where the figure has moved to. Change "
-          f"under {RIGID_INTERNAL} of the figure's brightness while it moves means it slides as one rigid picture.",
+          f"- Static figures: a painted figure with one picture and no warp that moves across the screen slides as one "
+          f"rigid picture (HIGH); living figures (kind=\"rig\") and warped ones (warp=True) are never called rigid. "
+          f"The frames inside each figure's box, lined up with where it has moved, confirm it moves and show how much "
+          f"changes inside it (under {RIGID_INTERNAL} a frame looks rigid); a still figure frozen for "
+          f"{FROZEN_MED_S:.0f} s is MEDIUM.",
           ""]
     open(os.path.join(out, "qa-report.md"), "w", encoding="utf-8").write("\n".join(L))
     data.update(meta=meta, verdict=verdict, counts=dict(high=nh, medium=nm, low=nl), issues=issues)

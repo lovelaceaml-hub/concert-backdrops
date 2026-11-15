@@ -189,7 +189,7 @@ It uses the engine's own text layout (it imports the song file and engine/text.p
 - Reading time (from the song file): each expression fully formed (form + FORM_DUR + 0.75 s) for at least 6 s; fragments 3 s; no fragment over an expression; a 0.5 s gap between texts.
 - End card: three lines under the title, whole for at least 4 s before the fade.
 - Calm bottom third: frame differences in the bottom third against the rest, per 2 s (people of light left out).
-- Static figures: frames inside each figure's box, lined up with where the figure moves; a figure that slides across as one rigid picture is HIGH, one frozen still for 4 s or more is MEDIUM.
+- Static figures: a painted figure with one picture and no warp that moves across the screen is HIGH (it slides as one rigid picture); living figures (kind="rig") and warped ones (warp=True) are never called rigid. Frames inside each figure's box confirm it moves; a still painted figure frozen for 4 s or more is MEDIUM. Checked on the living figures test (run 43692681296): no rigid flags; the rigid walker of song 04 and the swan of song 08 are flagged.
 - Dashes: no em or en dash in the song file or its status file (project-docs/status/NN.md).
 - Length: the video is as long as the song file says.
 
