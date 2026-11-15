@@ -152,6 +152,41 @@ FIGURES = [
 ]
 ```
 
+## J. Text animations (2026-11-15)
+
+Anthony: "I also want different animations for the text instead of just the same one." Add `anim=` to an entry in PHRASES, to `TITLE`, to `TAGLINE` (the end card lines) or to a FRAGMENTS entry. A song may set `TEXT_ANIM = "ink"` (for example) as the default for every expression and the title; an entry's own `anim=` wins. Without any of these nothing changes: the classic sparks render pixel for pixel as before.
+
+| anim | What happens |
+|---|---|
+| `"sparks"` (default) | the classic: sparks gather into the words left to right, hold, fly to the star |
+| `"ink"` | each letter is written along its own strokes by a hot nib of light; the fresh ink cools, and while held a soft light keeps flowing along the strokes |
+| `"bloom"` | a seed of light glows at the centre of each letter, then the letter opens outward from it, staggered left to right |
+| `"rise"` | the letters float up through the water line, left to right, with a rippling reflection below the line that fades as they reach their place (`line=` the water line, default HORIZON; raised above the calm third when BOTTOM_CALM is on) |
+| `"ribbon"` | a twisting ribbon of light sweeps across from the left; the words appear behind it and sparks shed from it settle into the letters; the ribbon leaves past the last letter |
+| `"constellation"` | stars appear on the letters, lines of light grow between them, then the letters fill with light; the lines fade to a faint trace while held |
+| `"petal"` | petals fall from above and settle into the letters, which fill in specks where they land (`colors=` a pair, default the song's PETAL_COLORS) |
+| `"snow"` | the same with snowflakes (`colors=`, default the song's SNOW_COLOR) |
+| `"wave"` | the classic gathering, then a ripple of brightness runs through the held words every 3.6 seconds |
+
+```python
+PHRASES = [
+    dict(label="Greeting", lines=["“How are you?”"], size=176, form=5.6, hold=12.0, star=VOICE_IN, anim="ink"),
+    dict(label="Gratitude", lines=["“Thank you.”"], size=150, form=18.4, hold=28.0, star=31.14, anim="bloom"),
+]
+TITLE = dict(label="Healing Concert", lines=["The Words of Mother’s Love"], size=150,
+             form=TITLE_HIT - FORM_DUR, hold=1e9, star=1e9, anim="constellation")
+TAGLINE = dict(text="...", t0=TITLE_HIT + 1.4, t1=TITLE_HIT + 4.0, anim="ink")
+FRAGMENTS = [dict(text="a quiet word of light", t0=100.0, t1=103.0, out=110.0, anim="petal")]
+```
+
+- Timing is unchanged for every animation: each part of the words is fully formed at the same moment as with the classic sparks (so `form`, `hold`, FORM_DUR and the 6 second reading time work as before, and the veil behind the words stays in step), and at `hold` the words dissolve and their sparks fly to the star exactly as before. Fragments dissolve at `out` as before; their sparks drift up.
+- `anim=` on a fragment works only with the default fragment `style` (sparks); the styles in section D keep their own look.
+- Nothing dark is drawn by the animations; the calm lower third stays calm (petals and flakes fall from above the words, the rise starts above the calm third).
+- Choose one animation per expression to suit its words; vary them through a song rather than using one for all. Good matches: `ink` for a promise or prayer, `bloom` for gratitude or a compliment, `rise` over water scenes, `ribbon` for an energetic moment, `constellation` for the title or a night scene, `petal` or `snow` where the song already has petals or snow, `wave` for a long hold on a strong line.
+- An unknown name stops the render with an error that lists the valid names.
+- Engine test song: `engine/songs/test_living.py` uses ink, bloom, constellation, ribbon and rise (section H3).
+- Code: `engine/text_anims.py` (shaders and preparation); `engine/render.py` only hands such texts to it.
+
 ## F. Fixes from the round 2 attack reviews (2026-11-14, branch engine-fix-r2)
 
 Nothing to change in a song file; all song files load as before. What changed, and the new optional settings:
@@ -164,6 +199,85 @@ Nothing to change in a song file; all song files load as before. What changed, a
 - The light waves when a star lights stay above the calm lower third and off the text and credit.
 - The reflection fragment style's own mirror image stays close to its line.
 - tools/prepare_figure.py removes only thin floor lines (at most 10 rows thick), so filled figures and wide groups survive; add `--keep-lines` to skip the step entirely.
+
+## H. Living figures (2026-11-15, branch engine-living-figures)
+
+Anthony: "why are the people still images? Why aren't they fluid and moving like the sparkles and text?" A painted pose used to slide across as one rigid picture. Now a figure can be built on a moving skeleton, and an existing painted figure can be brought alive. A FIGURES entry that sets none of the keys below renders exactly as before.
+
+### H1. Rigged figures: `kind="rig"`
+
+```python
+FIGURES = [
+    dict(kind="rig", preset="person", t0=0.6, t1=9.0, gather=1.6, dissolve=2.6,
+         x=(0.10, 0.58), move=(1.8, 8.0), ease="linear", y=0.345, height=0.36,
+         actions=[(0.6, "stand"), (1.5, "walk"), (8.0, "stand"), (8.1, "turn", {"yaw": 0.95}), (8.2, "rise")],
+         color="#ffcf9a", to_star=6),
+    dict(kind="rig", preset="person_back", t0=9.0, t1=18.2, x=0.84, y=0.345, height=0.38,
+         actions=[(9.0, "stand"), (11.4, "open", {"blend": 1.6}), (14.6, "bless")], to_star=6),
+    dict(kind="rig", preset="hands", t0=18.6, t1=24.0, x=0.5, y=0.335, height=0.40,
+         actions=[(18.6, "cup"), (20.2, "open"), (21.8, "offer"), (23.2, "release")], to_star=7),
+]
+```
+
+- The body is about 12,000 sparks bound to a skeleton (engine/rig.py). Every frame the skeleton is posed and the sparks follow it, so limbs stride, arms swing, the robe and sleeves sway and lag behind the motion, the veil ripples in the wind, fingers curl and open, and a current of light keeps rising through the body. Fast-moving sparks leave short trails; a few sparks lift off and drift up. The soft outline and glassy inner light are drawn from where the sparks are in that frame, not from a picture.
+- Faceless and clothed by construction: the head is a soft ball of light, everyone wears a long robe.
+- `preset`:
+  - `"person"`: a robed person, seen three-quarter (`yaw` 0.45 by default; 0 is a pure side view). `veil=True` adds a head veil.
+  - `"person_back"`: the same body seen from behind (`yaw` pi/2) with a long veil that flows. Use it for Heavenly Mother (never from the front).
+  - `"child"`: child proportions (larger head, shorter limbs).
+  - `"pair"`: two people. `together=True` (default) side by side, walking in step but not in lockstep; `together=False` facing each other (use `"embrace"`; the key `gap` in an action, for example `(t, "embrace", {"gap": 0.16})`, brings them closer). `gap` (default 0.30) sets the distance.
+  - `"hands"`: two hands with sleeves rising from below; fingers move in a gentle wave all the time.
+- `actions`: a list of `(time, name)` or `(time, name, {overrides})`. Each action eases in over `blend` seconds (default 0.9; per action `{"blend": 1.6}`; per figure `blend=`) from its time, so poses flow into each other.
+  - body: `stand`/`idle` (breathing, weight shift, never fully still), `walk` (legs stride, arms swing; also automatic while `x` moves, `auto_walk=False` turns that off), `offer` (both arms forward, palms up), `reach` (one arm forward), `open` (arms wide), `bless` (arms open and raised), `rise` (arms lifted up), `pray`, `embrace`, `bow`, `kneel`, `wave`, `turn` (turns toward the viewer; set the angle with `{"yaw": 1.2}`), `face` (back to the side).
+  - hands: `cup`, `closed`, `open`, `offer` (palms tip out and a soft light grows above them), `release` (the light rises), `clasp`.
+  - overrides may set `walk`, `lean`, `tilt` (head), `yaw`, `light`, or an arm as `arm_r`/`arm_l` = (upper arm elevation, upper arm azimuth, forearm elevation, forearm azimuth) in radians (elevation 0 hangs down, pi/2 forward or sideways, pi up; azimuth 0 forward, pi/2 out to the side, negative across the body).
+- Walking: the stride is tied to how fast `x` moves, so the feet stay planted on the ground (they do not slide). `stride` sets the length of one full step cycle in figure heights (default 0.62; 0.55 for a child). `speed` (figure heights per second) makes it walk on the spot. `facing="left"`/`"right"` (default: the way it moves; `flip=True` reverses it).
+- Placement and timing are as in section B and G: `x`, `y` (the feet line), `height` (head top to feet), each a number, Track, function or `(start, end)` pair with `move` and `ease`; `t0`, `t1`, `gather`, `dissolve`, `to_star`, `to`, `leave="drift"`.
+- Look: `color`, `glow`, `glass`, `sparks`, `spark_size`, `particles` (default 12000), `trails` (default 1.0; 0 turns the trails off).
+- Size: limbs read well at `height` 0.30 or more. Keep the feet at about 0.33 to 0.35 so the lower third stays calm.
+
+### H2. Painted figures come alive: `warp`
+
+Add `warp=True` to an ordinary FIGURES entry (painted poses). The drawing and its sparks bend with a slow sway from the feet up, breathe at the chest, the hem ripples, and while the figure moves across (`x` a pair or Track) its robe swings with each step (use with `bob=1.0`). A current of light rises through the body and a few sparks lift off it. For finer control give strengths: `warp=dict(sway=1.0, breath=1.0, lilt=1.0, stream=1.0)` (0 turns one part off).
+
+### H3. Test clip
+
+engine/songs/test_living.py (30 seconds, audio/test/s03-newsong-first-60s.mp3) shows a walking person, Heavenly Mother from behind with her veil flowing, hands that open and offer a light, and a painted pair warped alive, moving from a deep dusk into the bright campaign daylight.
+
+### H4. Video in 10 parts
+
+The Render workflow now renders a video in 10 parallel parts (was 4), so a minute renders in well under half the time. Nothing changes for a song file.
+
+## I. Theme colours, bubbles, leaves (2026-11-15, branch engine-theme)
+
+Anthony's blend of the luminous original world with the campaign colours: cream and white light, soft sky blue, warm yellow and peach, coral pink and navy accents, fresh green leaves and iridescent soap bubbles. No dark patch behind any text, ever. A song that sets none of these keys renders exactly as before. Working example: `engine/songs/test_theme.py`.
+
+**The quick way: one line.** After `TOTAL` (and your PHRASES, TITLE, TAGLINE, CREDIT, FRAGMENTS) are defined:
+
+```python
+import theme
+theme.campaign_day(globals(), [(0.0, "dawn"), (14.0, "day"), (30.0, "golden"), (42.0, "peach"), (TOTAL, "cream")])
+```
+
+It sets the day sky Tracks (`SKY_TOP`, `SKY_MID`, `SKY_HOR`, `GLOW`), `SKY_THEME = "campaign_day"`, `TEXT_SHADOW = 0`, faint `STARS` (0.10), no milky band, aurora or rain, white and gold motes, coral and peach petals, `BUBBLES` 0.55, `LEAVES` 0.35, `GLOW_COLOR` and `color="#1f2a6b"` (navy) on every text that has no colour yet. Options: `text="navy"` (default: navy words, soft white glow), `text="coral"` (coral words, gold glow) or `text=None` (keep the light words); `bubbles=0`, `leaves=0` switch a layer off. Set any key again after the call to override it. Your own `params()` must read the module's `SKY_TOP` etc. at call time (every song file does). If your file patches another song module (like `test_theme.py`), pass that module's `vars(...)`.
+
+Sun, clouds, rays, lanterns, petals and the arch stay as your song sets them. The arch and its rings read as faint glints on a bright sky; that is intended. On bright days keep `SUN_INT` around 0.5 to 0.8.
+
+**Palette names** (`theme.PAL`, each top, middle, horizon, sun glow, as seen on screen): `dawn` (soft blue over peach and warm cream), `day` (clear sky blue to a cream horizon), `golden` (warm yellow and peach), `peach` (peach with a pink touch), `cream` (almost white, the luminous end). A key may also be a tuple of four hex colours. `theme.sky_tracks(keys)` returns just the four sky Tracks. `theme.display("#rrggbb")` gives the linear light the engine needs to show exactly that colour (it undoes the filmic curve). Campaign colours as constants: `theme.NAVY` #1f2a6b, `NAVY_BRIGHT` #12358f, `CORAL` #f0566a, `CORAL_SOFT` #d9606a, `GOLD` #ffd27a, `CREAM`, `WHITE_GLOW` #fff8ec, `SKY_BLUE`, `PEACH`, `LEAF_GREEN` #5fd040, `LEAF_GOLD` #d8e860.
+
+**`SKY_THEME`** (default none = the original world): `"campaign_day"` (or a number 0..1, or a Track) makes the procedural world bright: the far and near hills turn a pale blue-peach haze instead of dark ridges, the lake stays light toward the bottom, and the vignette is much lighter (corners 0.90 instead of 0.62). The far mountain range also fades into the haze before its ends (no hard step at the right edge). Plates (SCENES) are not changed by it.
+
+**Per-text colour.** Add `color="#rrggbb"` to any PHRASES entry, the `TITLE`, the `TAGLINE` (end card lines), any FRAGMENTS entry (every style) or `CREDIT`. The letters are then painted in exactly that colour on top of the finished picture, revealed and dissolved with the same timing as the light words, and the light layer carries only a soft glow round them (and the forming sparks take the glow colour). Extra keys: `glow="#rrggbb"` (that text's glow; default `GLOW_COLOR`, else the warm #ffc48c), `glow_strength` (default `GLOW_STRENGTH`, else 1.0), `color_alpha` (0..1, default 1). Without `color`, a text keeps its light letters; `glow` and `GLOW_COLOR` then only change the glow colour.
+
+- `GLOW_COLOR` (a hex, or a function of time): the glow colour of every text that does not set its own `glow`. Navy words: a soft white glow (#fff8ec). Coral words: gold (#ffd27a).
+- `GLOW_STRENGTH` (default 1.0): how strong the glow round coloured words is.
+- Dark words need a bright sky behind them: use them with `SKY_THEME` or bright plates. Leave the light words on night scenes.
+
+**`TEXT_SHADOW = 0` is now truly zero.** Before, 0 still capped bright scenery behind the text and darkened round the corner credit. Now, at 0 there is no cap, no veil and no dark round the credit. From 0.05 up the result is exactly as before (every existing song uses 1.0 or more); between 0 and 0.05 it eases, so a Track can fade the protection out without a jump. `TEXT_PROTECT` (dimming the light layers behind the letters, so no bubble, leaf or spark crosses a word) is separate and stays on.
+
+**`BUBBLES`** (Track, 0 = off; the number is the share of about 140 bubbles shown): iridescent soap bubbles rise slowly, wobbling, each with a thin bright rim, a rainbow sheen that swirls round the rim, a faint film and two soft highlights. Far bubbles are small, near ones large. They thin out in the calm lower third under `BOTTOM_CALM`, and text protection keeps them out of the letters. Settings: `BUBBLES_COLOR` (rim and film, default #f4fbff), `BUBBLES_SIZE` (default 1.0; 1.0 is 26 to 118 px at 1080p), `BUBBLES_SPEED` (default 1.0), `BUBBLES_SHEEN` (rainbow strength, default 1.0), `BUBBLES_COUNT` (default 140, a plain number).
+
+**`LEAVES`** (Track, 0 = off; share of about 48 leaves): a few leaves of light drift down slowly, swinging, turning and tumbling edge-on and back, with a bright rim, a pale vein and a glint as they face us. Settings: `LEAVES_COLORS` (pair, default green #5fd040 to gold #d8e860), `LEAVES_SIZE` (default 1.0: 30 to 92 px), `LEAVES_SPEED` (default 1.0), `LEAVES_WIND` (sideways drift, default 0.4), `LEAVES_COUNT` (default 48). Calm lower third and text protection as for bubbles. Because light alone can only brighten a bright sky, the leaves are also painted over the scene in their own colours (a tint pass, off when LEAVES is 0), so they read truly green on a day sky; `LEAVES_TINT` (default 0.85, 0 = light only) sets how strongly.
 
 ## Rendering
 
