@@ -68,7 +68,7 @@ REVEAL = 49.47             # Heavenly Mother appears
 FLOOD = 52.26              # we pass through her into space (bar start of the last song)
 HEARTS = (52.5, 54.1)      # hearts light up across the world
 LOGO = (54.3, 55.0)        # the world becomes the logo (the loudest moment)
-DAY = 54.9                 # the calm day comes up behind the end card
+DAY = 54.7                 # space blooms into a soft pastel day behind the end card
 TITLE_HIT = 56.2           # the end card is whole
 FORM_DUR = 3.0
 T_FORM = TITLE_HIT - FORM_DUR - 0.75
@@ -106,9 +106,10 @@ TEXT_SHADOW = 0.0          # nothing dark behind any text
 # B a discreet signature in three calm stretches between the words, on calm night sky or water, C "December 6"
 # in light across the sky in the breath, over the two who hold each other, bursting on the biggest hit.
 TITLES = dict(
-    opening=dict(t_end=4.0, y=0.20, palette="night"),
+    opening=dict(t_end=3.7, y=0.28, palette="night"),
     signature=dict(windows=[(11.6, 13.2, "br", "night"), (24.7, 26.6, "tr", "night"), (31.4, 33.0, "tr", "night")]),
-    date_light=dict(t_form=BREATH, t_burst=X6, y=0.30, palette="night"),
+    date_light=dict(t_form=39.5, t_burst=X6, y=0.30, palette="night"),
+    end_card=dict(t_in=55.0),
 )
 
 
@@ -154,11 +155,12 @@ LOOKS = dict(
     space_win=dict(base="night", sky_top="#14206a", sky_mid="#2c3496", sky_hor="#5a4aa8", stars=1.0, milky=1.0,
                    hills=0.0, haze=0.2, haze_color="#3a3a9a", mist=0.0, water="#101850", mirror=1.0, ripple=0.0,
                    sun_int=0.0, exposure=1.3),
-    dayend=dict(base="day", sun_az=232.0, sun_el=30.0, sun_disc=1.2, haze=0.35, mist=0.08),
+    dayend=dict(base="cream", sky_top="#9cc8ee", sky_mid="#f2e2d8", sky_hor="#ffe0c8", sun_az=232.0, sun_el=30.0,
+                sun_disc=0.6, haze=0.35, mist=0.08, hills=0.8),
 )
 MAIN_LOOK = [(0.0, "pearl"), (X1, "ember", 0.0), (X2, "sea", 0.0), (X3, "stars", 0.0), (X4, "harvest", 0.0),
              (X5, "rain", 0.0), (X6, "blossom", 0.0), (FLOOD, "space", 0.0),
-             (DAY, "dayend", 1.4)]
+             (DAY, "dayend", 1.0)]
 _WIN = [(-9.0, "ember"), (X1, "sea"), (X2, "stars_lit"), (X3, "harvest"), (X4, "rain"), (X5, "blossom"),
         (X6, "space_win")]
 
@@ -228,8 +230,8 @@ def _lift(t):
     return LIFT * _ss(CLASP + 0.15, CLASP + 1.7, t)
 
 
-K5 = [(X4, (0.0, C4[1], 0.0), (0.0, 13.0, -12.0)), (27.6, (0.15, 14.2, -6.5), (0.0, 12.2, -12.0)),
-      (28.4, (0.2, 12.2, -9.4), (0.0, 12.1, -12.0)), (CLASP, (0.06, 11.75, -10.95), (0.0, 12.1, -12.0)),
+K5 = [(X4, (0.0, C4[1], 0.0), (0.0, 16.0, -40.0)), (27.3, (0.15, 13.0, -8.2), (0.0, 12.1, -12.0)),
+      (28.4, (0.2, 12.2, -9.6), (0.0, 12.1, -12.0)), (CLASP, (0.06, 11.75, -10.95), (0.0, 12.1, -12.0)),
       (31.9, (0.03, 12.0, -11.2), (0.0, 12.4, -12.0)),
       (X5, (0.0, 12.0 + LIFT, -11.97), (0.0, 12.0 + LIFT, -14.0))]
 C5 = O5 + _A(K5[-1][1])
@@ -239,7 +241,7 @@ O6 = _after(C5, (0.0, 0.0, 9.0))
 PAIR6 = _A([0.0, 0.0, 0.0])
 K6 = [(X5, (0.0, C5[1], 9.0), (0.0, 2.0, 0.0)), (34.3, (-0.5, 3.2, 6.6), (0.0, 0.8, 0.0)),
       (35.2, (-0.7, 1.4, 5.4), (0.0, 0.75, 0.0)),
-      (38.4, (-0.4, 2.0, 5.6), (0.0, 1.5, 0.0)), (41.3, (0.15, 1.9, 4.0), (0.0, 1.6, 0.0)),
+      (37.8, (-0.4, 2.0, 5.6), (0.0, 1.5, 0.0)), (41.3, (0.15, 1.9, 4.0), (0.0, 1.6, 0.0)),
       (X6, (0.0, 1.22, -0.03), (0.0, 1.22, -3.0))]
 C6 = O6 + _A(K6[-1][1])
 
@@ -314,13 +316,13 @@ def _ride(expr, y, px, t_in, r0, r1, t_out, depth=6.0, **kw):
 
 
 _SPECS = [
-    _ride("Greeting", 0.72, 104, 3.4, 4.0, 6.6, 6.8, arrive="flock", leave="fade"),
+    _ride("Greeting", 0.72, 104, 3.7, 4.1, 6.6, 6.8, arrive="flock", leave="fade"),
     _ride("Concession", 0.72, 98, 7.6, 8.4, 11.2, 11.5, arrive="flock", leave="fade"),
     _ride("Respect", 0.72, 86, 13.8, 14.8, 17.8, 18.2, arrive="stars", leave="fade"),
     _ride("Gratitude", 0.72, 78, 20.3, 21.3, 24.3, 24.6, arrive="petals", leave="fade"),
     _ride("Consideration", 0.74, 88, 27.4, 28.3, 31.0, 31.3, depth=2.5, arrive="flock", leave="fade"),
-    _ride("Apology", 0.72, 84, 33.7, 34.3, 36.8, 37.05, depth=1.2, arrive="flock", leave="fade"),
-    _ride("Inclusiveness", 0.72, 94, 37.15, 37.7, 40.2, 40.45, depth=0.9, arrive="flock", leave="fade"),
+    _ride("Apology", 0.72, 84, 33.5, 33.9, 36.4, 36.6, depth=1.2, arrive="flock", leave="fade"),
+    _ride("Inclusiveness", 0.72, 94, 36.65, 37.0, 39.5, 39.7, depth=0.9, arrive="flock", leave="fade"),
     _ride("Encouragement", 0.72, 80, 42.9, 43.6, 46.2, 46.5, depth=1.0, arrive="petals", leave="fade"),
     _ride("Compliment", 0.72, 92, 46.7, 47.5, 50.1, 50.5, depth=1.0, arrive="flock", leave="fade"),
 ]
@@ -801,8 +803,8 @@ def _embrace_pair(origin, t_rise, t_hold, look_a, look_b, scale=1.0):
                        (t_hold - 0.2, 61.0, "embrace", dict(to=lambda tt: refs["a"].where(tt, "blade.R", raw=True),
                                                             to2=lambda tt: refs["a"].where(tt, "blade.L", raw=True),
                                                             head="L", ease=1.0))],
-              effects=[dict(kind="dissolve", amount=Track([(0.0, 0.0), (33.8, 0.0), (35.8, 0.32), (37.3, 0.32),
-                                                           (38.5, 0.0), (61.0, 0.0)]), reach=2.5)],
+              effects=[dict(kind="dissolve", amount=Track([(0.0, 0.0), (33.6, 0.0), (35.4, 0.32), (36.6, 0.32),
+                                                           (37.8, 0.0), (61.0, 0.0)]), reach=2.5)],
               look=look_b, seed=62.0)
     refs["a"] = Body(color="#cfd6ff", color2="#ffffff", **ka)
     refs["b"] = Body(color="#e8dcff", color2="#ffffff", **kb)
@@ -884,7 +886,7 @@ def _setup(scene):
                                       color2="#bfe4ff", strength=0.6), X4, X5, rise=0.0))
 
     # 6 APOLOGY and INCLUSIVENESS: they kneel face to face in the rain; they rise and hold each other
-    a6, b6 = _embrace_pair(O6 + PAIR6, 37.6, 39.0, _style("window", "#cfd6ff", "#ffffff"),
+    a6, b6 = _embrace_pair(O6 + PAIR6, 36.9, 38.3, _style("window", "#cfd6ff", "#ffffff"),
                            _style("window", "#e8dcff", "#ffffff"))
     _add(scene, "s6_him", a6, X5, X6, window=True, edge=0.7)
     _add(scene, "s6_her", b6, X5, X6, window=True, edge=0.7)
@@ -956,11 +958,11 @@ _SIG_BOX = dict(br=(0.62, 0.03, 0.98, 0.24), bl=(0.02, 0.03, 0.38, 0.24), tr=(0.
 def _clear_boxes(t):
     out = []
     oy = 1.0 - TITLES["opening"]["y"]
-    if t < TITLES["opening"]["t_end"] + 0.5:
-        a = 1.0 - _ss(TITLES["opening"]["t_end"], TITLES["opening"]["t_end"] + 0.5, t)
-        out.append(dict(box=(0.12, oy - 0.15, 0.88, oy + 0.15), t0=-2.0, t1=61.0, soft=0.03, amount=a))
-    if t >= LOGO[1] + 0.4:
-        out.append(dict(box=(0.06, 0.08, 0.94, 0.96), t0=LOGO[1] + 0.4, t1=61.0, soft=0.05, amount=0.85))
+    if t < TITLES["opening"]["t_end"] + 0.3:
+        a = 1.0 - _ss(TITLES["opening"]["t_end"] - 0.3, TITLES["opening"]["t_end"] + 0.3, t)
+        out.append(dict(box=(0.10, oy - 0.22, 0.90, oy + 0.24), t0=-2.0, t1=61.0, soft=0.03, amount=a))
+    if t >= LOGO[1] + 0.3:
+        out.append(dict(box=(0.04, 0.04, 0.96, 0.98), t0=LOGO[1] + 0.3, t1=61.0, soft=0.05, amount=0.85))
     return out[:2]
 
 
@@ -979,8 +981,8 @@ P3D = dict(
     bursts=[dict(t=X5, at=tuple(MEET + _A([0.0, LIFT, 0.0])), strength=0.4, rise=0.15, fall=0.45, color="#ffd8a0",
                  radius=0.3),
             dict(t=FLOOD, strength=0.35, rise=0.2, fall=0.6, color="#cfd8ff", radius=0.3),
-            dict(t=LOGO[1] - 0.2, at=tuple(O7 + WORLD_C + _A([0.0, 40.0, 0.0])), strength=0.5, rise=0.3, fall=0.8,
-                 color="#ffe6c0", radius=0.25)],
+            dict(t=LOGO[1], at=tuple(O7 + WORLD_C + _A([0.0, 50.0, 0.0])), strength=0.7, rise=0.5, fall=0.9,
+                 color="#ffe8d0", radius=0.45)],
     clear=lambda t: _clear_boxes(t),
     setup=_setup,
 )
