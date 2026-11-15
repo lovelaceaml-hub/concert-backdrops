@@ -881,6 +881,43 @@ At 7.5 s the picture flies into a burst of light; inside it the world cuts to da
 - Draft mode: the world's own sets draw half their points, a set of more than 30000 points draws every second point (twice as bright). The quality check runs as on any song (a camera that moves the whole picture will be called busy in the bottom third; a test without an end card is told so).
 - Speed on the cloud machines at 1080p: the camera test 0.4 to 0.7 s a frame, the feature test (close bokeh, masks, rays) 0.9 s. Costs to know: very large bokeh over much of the screen, and many big soft points near the lens.
 
+### Added for the ten films (same branch; working example `engine/songs/test_p3d_ten.py`)
+
+State of proof: every item below runs in `test_p3d_ten.py` and was looked at in half-size frames rendered in the session (3, 5.4, 6.2, 7, 7.6, 9.5, 11.5 and 14 s); its frames do not depend on render order (3, 9.5 and 14 s in two orders give the same bytes). They have not been viewed as full-size stills and have not run on GitHub. The looks reference is `engine/songs/test_p3d_looks.py` (eight looks, two seconds each).
+
+**Camera** (`engine/p3d/camera.py`, the module text lists every setting)
+
+- `pace=`: the speed of a move from the music: a list of (time, progress) keys or a function of time. Steep keys are fast, flat keys slow: `pace=[(7.5, 0.0), (8.0, 0.45), (12.0, 0.6), (15.0, 1.0)]` dives on the cut at 7.5 s, drifts through a breath, and finishes by 15 s. Works on every move (for `fly` it says when the camera is where along the curve). `ease="out"` still eases into a still reading set-up; `blend` sets how fast one move takes over from the last (0.3 to 0.5 a whip, 0 a cut).
+- `Rig(free=True)`: the camera carries its own up along its path, so loops and looks straight up or down never flip. It rights itself toward the world's up while near level (`right`, default 3 per second; 0 never) and starts level after a hard cut. A move's own `up=` (a vector or a function of time) holds any attitude, for example a long upside down ride. `roll` may be a Track running past 360 degrees (a barrel roll).
+- `Rig(shake=...)`: a number, Track or function of time: a hard fast shake. `handheld` stays the slow drift.
+- `Rig(parent=Frame(...))`: the whole rig rides a moving frame. `near=` (rig or move): the nearest distance drawn, down to 0.02 m for macro shots. `focus` and `aperture` take Tracks (rack focus).
+- `dolly(..., keep_width=W)`: a dolly zoom: the field of view follows the distance so a subject W metres wide keeps its size. `orbit` takes `center` and `look` as functions of time (revolve round someone who moves).
+- A sprite that would fill much of the picture (a point right at the lens) fades away instead, so the camera can pass through a dense sheet of points.
+
+**Points, lines and ribbons** (`engine/p3d/api.py`)
+
+- `birth` (N,) with the settings `fade` and `flash`: each point appears at its own time (and can flare as it does). It runs on the graphics card, so it works on `static` sets: a million points can light up in any order without resending them.
+- Ribbons are continuous: `ribbon(points, width, color, alpha, **settings)` builds one band from a line of points (widths and alphas per point taper it); `Trail(path, length, width, color, ...)` is a ribbon that follows a moving point (a comet, a stream from a hand). Segments take `size2` (the width at the far end) and `u`, `u2` (the place along the path); `pulse=(speed, length, gain, period)` sends a brighter stretch along `u` (lines and ribbons). Lines and ribbons take the lens blur and are cut cleanly where they pass the camera.
+- `paint` (0..1) with `paint_light`: the batch is also painted in its true colour over the scene, under its own light, so a coral petal is coral on a day sky (give the colour with `p3d.show("#f0566a")`). Painted points are drawn over each other in batch order, without sorting; their mirror images are painted too.
+- `lit` (0..1): the points take the colour of the world's moving lights (with `normal`, only the side turned toward a light).
+- `P3D["clear"] = [dict(box=(x0, y0, x1, y1), t0, t1, soft=0.03, amount=1.0)]` (screen fractions, y up; up to two; the list may be a function of time): no sprite and no paint falls inside the box. A batch with `clear=False` is let in (the words the box was made for).
+- `Frame(origin, yaw | basis, scale, parent)` and `Parented(pointset, frame)`: a point set rides a frame that travels, turns and grows.
+
+**Windows onto another world**
+
+- `Mask("sky", sky="world", look="day")`: the silhouette shows the same world on the same camera in another look (its own sky, sun, hills and lake; `look` is a name, a dict `dict(base=..., <settings>)`, or a function of time). `scene.add(name, set, window=True)`: the set lives inside the windows and is drawn only where a "sky" silhouette is. One window world per frame, not nested.
+
+**World** (`engine/p3d/world.py`)
+
+- `split=dict(look=..., toward=azimuth, soft=0.35, amount=1.0)`: a sky of two looks, the other look on the half of the dome toward that azimuth (sky colours, haze, hills and the stars' brightness), with a soft seam: night ahead, dawn behind. `toward` and `amount` may be functions of time. The sun and the lake's own colour stay those of the main look.
+- `calm=[dict(center=(x, z), radius, soft, ripple=0.0, mirror=1.0)]` (up to four; values or the whole list may be functions of time): discs of the lake with their own ripple and mirror, for glass inside a storm or the other way round. The world's `ripple` and `mirror` hold everywhere else.
+- `lights=[dict(pos, color, strength=1.0, radius=3.0)]` (up to four, values or functions of time): moving coloured lights that glow in the mist, lay a pool on the water and colour `lit` batches. The single `light=` with rays (which a masked body eclipses) is unchanged.
+- `star_turn` (degrees, a setting like any other) turns the star dome about `star_pole=(azimuth, elevation)`. `hills=0` removes the hills (the lake and its mirror then run to the horizon).
+- The arch: `center`, `yaw`, `span`, `height` and `line` may be functions of time; `colors` may be nine colours, one for each light; `line` (0..1) draws the arc and the links separately from the lights; `travel=dict(start=point or nine points, t=nine arrival times, dur=1.4)` makes the lights fly to their places. A song file reads the geometry with `Arch(None, **settings).positions(t)` (the nine lights now), `.homes(t)` (their places) and `.point(u, t)`, or `arch_points(span, height, z, center=, yaw=)`.
+- The sky now reaches its upper colours lower down (a level camera sees the blue of a day sky); the looks `golden`, `day` and `cream` were retuned for it.
+
+**Not built yet** (in the order they were asked for): hue preserving highlights; a faster path for 2 to 3 million points a frame (today every sprite is an instanced quad: about 0.1 s per 200 thousand small points on four cores); motion blur for line segments (use `motion_samples`); skies that differ by place beyond the two-look split; several window worlds at once or nested; one silhouette layer per figure.
+
 ### What is weak
 
 - Points are light only: they cannot cover each other. Solid bodies come from the mask pass, which holds one "dark" and one "sky" silhouette layer per frame, not one per figure.
