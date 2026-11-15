@@ -1,13 +1,14 @@
-"""How the particle bodies move: real walk and run cycles, and gestures posed by hand on the skeleton.
+"""How the particle bodies move: motion capture and gestures posed by hand on the skeleton.
 
 Two layers, both pure functions of time:
-  MOTIONS   whole-body states a figure can be in: "stand", "walk", "run", "kneel" (and the extra clips "jump",
-            "spin", "dance_a", "dance_b").
+  MOTIONS   whole-body states a figure can be in. Motion capture (CMU Graphics Lab Motion Capture Database,
+            retargeted by tools/build_p3d_motion.py, see assets/p3d/README.md): "walk", "run" (cycles at any
+            speed), "jump", "dance", "twirl", "get_up", and the pair "pull_up" / "helped_up" (captured together:
+            one pulls the other up from sitting on the ground). Posed here: "stand", "kneel", "sit", "shuffle".
   GESTURES  what the upper body does on top of that: "look_up", "reach", "open_arms", "blow", "raise",
-            "pray", "bow".
-engine/p3d/body.py blends between them with eased crossfades, so a figure can walk, stop, look up and reach
-without a cut. Walk and run are motion capture (the DeepMimic reference clips, see assets/p3d/README.md),
-retargeted onto the MakeHuman skeleton; everything else is posed here in degrees against the neutral pose.
+            "pray", "bow" and the contact gestures of gestures.py.
+engine/p3d/actor.py blends between them with eased crossfades, so a figure can walk, stop, look up and reach
+without a cut, and keeps planted feet where they were set down (no sliding, also while turning).
 
 Sign rules in the neutral pose (body frame: x is the body's left, y up, z forward):
   bend forward: +x rotation for spine and head, -x for hip and shoulder (the limb swings forward), +x for the
@@ -19,9 +20,13 @@ from . import bodymath as bm
 from .gestures import HAND_POSES, MORE_GESTURES, MORE_MOTIONS, Library  # noqa: F401
 
 DEG = np.pi / 180.0
-DM_LEG = 0.8314          # hip to ankle of the figure the motion clips were recorded for, metres
+# motion capture clips in the asset (tools/build_p3d_motion.py): cycles and single moves
+CLIPS = ("walk", "run", "jump", "dance", "twirl", "pull_up", "helped_up", "get_up")
+CYCLES = ("walk", "run")
 
-MOTIONS = ("stand", "walk", "run", "kneel", "jump", "spin", "dance_a", "dance_b") + MORE_MOTIONS
+MOTIONS = ("stand", "walk", "run", "kneel", "jump", "dance", "twirl", "pull_up", "helped_up", "get_up") + MORE_MOTIONS
+# names kept from the first clips (the DeepMimic set, replaced): they play the nearest new clip
+ALIASES = dict(spin=("twirl", 0.0), dance_a=("dance", 0.0), dance_b=("dance", 0.45))
 GESTURES = ("look_up", "reach", "open_arms", "blow", "raise", "pray", "bow") + MORE_GESTURES
 SPINE = ("spine05", "spine04", "spine03", "spine02")
 NECK = ("neck01", "neck02", "neck03")
@@ -29,13 +34,14 @@ NECK = ("neck01", "neck02", "neck03")
 
 class Pose:
     """Local rotations of every bone (in the neutral frames) and where the root joint is."""
-    __slots__ = ("q", "pos", "rot", "ground")
+    __slots__ = ("q", "pos", "rot", "ground", "contact")
 
     def __init__(self, nb):
         self.q = np.tile(bm.IDENT, (nb, 1))
         self.pos = np.zeros(3)        # root joint: offset from its neutral place, body frame, metres
         self.rot = bm.IDENT.copy()    # the whole body turned about the root joint, body frame
         self.ground = 1.0             # 1: the lowest sole or knee is set on the ground; 0: pos[1] as given
+        self.contact = None           # (2,) how planted the left and right foot are (motion capture), or None
 
     def copy(self):
         p = Pose.__new__(Pose)
@@ -43,6 +49,7 @@ class Pose:
         p.pos = self.pos.copy()
         p.rot = self.rot.copy()
         p.ground = self.ground
+        p.contact = None if self.contact is None else self.contact.copy()
         return p
 
 
@@ -57,55 +64,69 @@ def blend(a, b, u):
     p.pos = a.pos * (1 - u) + b.pos * u
     p.rot = bm.qslerp(a.rot, b.rot, u)
     p.ground = a.ground * (1 - u) + b.ground * u
+    ca = np.zeros(2) if a.contact is None else a.contact
+    cb = np.zeros(2) if b.contact is None else b.contact
+    p.contact = None if (a.contact is None and b.contact is None) else ca * (1 - u) + cb * u
     return p
 
 
 class Clip:
-    """One motion capture clip, converted to this engine's axes (x left, y up, z forward)."""
+    """One motion capture clip, already retargeted onto the MakeHuman skeleton by tools/build_p3d_motion.py
+    (CMU Graphics Lab Motion Capture Database, see assets/p3d/README.md).
 
-    def __init__(self, frames, loop, scale):
-        f = np.asarray(frames, np.float64)
-        self.n = len(f)
-        self.dt = f[:-1, 0].copy()
-        self.time = np.concatenate([[0.0], np.cumsum(self.dt)])
-        self.T = float(self.time[-1])
-        self.loop = bool(loop)
-        self.scale = scale
+    q        (frames, bones, 4) local rotations of the driven bones (names in `bones`)
+    rot      (frames, 4) the whole body about the root joint; root (frames, 3) the root joint's offset from its
+             neutral place in metres (cycles include their steady travel along +z)
+    contact  (frames, 2) how planted the left and the right foot are (0..1)
+    """
 
-        def conv(q):          # (w, x, y, z) with x forward, z right  ->  x left, z forward
-            return bm.qn(np.stack([q[:, 0], -q[:, 3], q[:, 2], q[:, 1]], axis=1))
+    def __init__(self, data, name, bones, scale):
+        g = lambda k: np.asarray(data["mclip_%s_%s" % (name, k)], np.float64)      # noqa: E731
+        info = g("info")
+        self.fps = float(info[0])
+        self.loop = bool(info[1] > 0.5)
+        self.n = int(info[3])
+        self.travel = float(info[4]) if len(info) > 4 else 0.0
+        self.scale = float(scale) / float(info[2])
+        self.q = bm.qn(g("q"))
+        self.rot = bm.qn(g("rot"))
+        self.root = g("root")
+        self.contact = g("contact")
+        self.bones = bones
+        self.T = self.n / self.fps if self.loop else (self.n - 1) / self.fps
+        self.stride = self.travel * self.scale          # metres travelled per cycle by this body
+        self.speed = self.stride / self.T if self.loop else 0.0
+        self.lift = 0.0
 
-        def hinge(a):         # one angle about the old z axis (right): about -x here
-            return np.stack([np.cos(a * 0.5), -np.sin(a * 0.5), np.zeros_like(a), np.zeros_like(a)], axis=1)
-
-        self.root_pos = np.stack([-f[:, 3], f[:, 2], f[:, 1]], axis=1)
-        self.j = dict(root=conv(f[:, 4:8]), chest=conv(f[:, 8:12]), neck=conv(f[:, 12:16]),
-                      rhip=conv(f[:, 16:20]), rknee=hinge(f[:, 20]), rankle=conv(f[:, 21:25]),
-                      rsho=conv(f[:, 25:29]), relb=hinge(f[:, 29]),
-                      lhip=conv(f[:, 30:34]), lknee=hinge(f[:, 34]), lankle=conv(f[:, 35:39]),
-                      lsho=conv(f[:, 39:43]), lelb=hinge(f[:, 43]))
-        self.delta = self.root_pos[-1] - self.root_pos[0] if self.loop else np.zeros(3)
-        self.delta[1] = 0.0
-        self.stride = float(np.linalg.norm(self.delta)) * scale      # metres travelled per cycle
-        self.speed = self.stride / self.T
-        self.y_mean = float(self.root_pos[:, 1].mean())
-        self.lift = 0.0       # set by Motions for clips with flight (run, jump)
-        self._stack = None
+    def _at(self, tt):
+        if self.loop:
+            ph = tt % self.T
+        else:
+            ph = min(max(tt, 0.0), self.T)
+        x = ph * self.fps
+        k = min(int(x), self.n - 1)
+        u = x - k
+        k2 = k + 1
+        wrap = 0.0
+        if k2 >= self.n:
+            if self.loop:
+                k2 = 0
+                wrap = self.travel
+            else:
+                k2, u = k, 0.0
+        return ph, k, k2, u, wrap
 
     def sample(self, tt):
-        """Joint rotations and the root's place at clip time tt (seconds; loops wrap)."""
-        ph = tt % self.T if self.loop else min(max(tt, 0.0), self.T)
-        k = int(np.searchsorted(self.time, ph, side="right")) - 1
-        k = min(max(k, 0), self.n - 2)
-        u = (ph - self.time[k]) / self.dt[k]
-        if self._stack is None:
-            self._names = list(self.j)
-            self._stack = np.stack([self.j[n] for n in self._names], axis=1)       # (frames, joints, 4)
-        q = bm.qslerp(self._stack[k], self._stack[k + 1], u)
-        j = {name: q[n] for n, name in enumerate(self._names)}
-        rp = self.root_pos[k] * (1 - u) + self.root_pos[k + 1] * u
-        res = rp - self.root_pos[0] - self.delta * (ph / self.T)      # what is left besides steady travel
-        return j, res, rp[1]
+        """(local rotations (bones, 4), whole-body rotation (4,), root offset without the steady travel (3,),
+        foot contacts (2,)) at clip time tt (seconds; cycles wrap, single clips hold their ends)."""
+        ph, k, k2, u, wrap = self._at(tt)
+        q = bm.qslerp(self.q[k], self.q[k2], u)
+        r = bm.qslerp(self.rot[k], self.rot[k2], u)
+        rp = self.root[k] * (1 - u) + (self.root[k2] + np.array([0.0, 0.0, wrap])) * u
+        if self.loop:
+            rp = rp - np.array([0.0, 0.0, self.travel * ph / self.T])
+        c = self.contact[k] * (1 - u) + self.contact[k2] * u
+        return q, r, rp * self.scale, c
 
 
 class Motions(Library):
@@ -115,10 +136,16 @@ class Motions(Library):
     def __init__(self, rig, clips):
         self.rig = rig
         self.i = rig.idx
-        s = rig.leg_len / DM_LEG
+        N = rig.neutral_pos
+        chain = float(np.linalg.norm(N[self.i["lowerleg01.L"]] - N[self.i["upperleg01.L"]])
+                      + np.linalg.norm(N[self.i["foot.L"]] - N[self.i["lowerleg01.L"]]))
         self.clips = {}
-        for name in ("walk", "run", "jump", "spin", "dance_a", "dance_b"):
-            self.clips[name] = Clip(clips["clip_" + name], bool(clips["clip_" + name + "_loop"]), s)
+        if "mclip_bones" in clips:
+            bones = [str(b) for b in clips["mclip_bones"]]
+            self.clip_bones = np.array([self.i[b] for b in bones])
+            for name in CLIPS:
+                if "mclip_%s_q" % name in clips:
+                    self.clips[name] = Clip(clips, name, bones, chain)
         self.arm_len = {}
         P = rig.neutral_pos
         for sd in ("L", "R"):
@@ -299,48 +326,22 @@ class Motions(Library):
             return self.clip_pose(name, kw.pop("clip_time", age), **kw)
         return getattr(self, "m_" + name)(t, age, **kw)
 
-    def clip_pose(self, name, tt, arms_out=9.0, **kw):
-        """A pose from a motion capture clip at clip time tt (seconds)."""
+    def clip_pose(self, name, tt, arms_out=5.0, **kw):
+        """A pose from a motion capture clip at clip time tt (seconds). arms_out: degrees the arms are held a
+        little further from the body than captured (garments, wider hips)."""
         c = self.clips[name]
-        j, res, ry = c.sample(tt)
+        q, r, rp, con = c.sample(tt)
         P = self.identity()
-        i = self.i
-        P.rot = j["root"]
-        for b in SPINE:
-            P.q[i[b]] = bm.qpow(j["chest"], 0.25)
-        for b in NECK:
-            P.q[i[b]] = bm.qpow(j["neck"], 1.0 / 6.0)
-        P.q[i["head"]] = bm.qpow(j["neck"], 0.5)
-        for sd, pre, sg in (("L", "l", 1.0), ("R", "r", -1.0)):
-            P.q[i["upperleg01." + sd]] = bm.qmul(bm.qz(sg * 2.0 * DEG), j[pre + "hip"])
-            P.q[i["lowerleg01." + sd]] = j[pre + "knee"]
-            P.q[i["foot." + sd]] = j[pre + "ankle"]
-            P.q[i["upperarm01." + sd]] = bm.qmul(bm.qz(sg * arms_out * DEG), bm.qmul(j[pre + "sho"], bm.qy(-sg * 12 * DEG)))
-            P.q[i["lowerarm01." + sd]] = bm.qmul(j[pre + "elb"], bm.qx(-6 * DEG))
-            self._set(P, "wrist." + sd, self._wrist_q(sd, 6.0))
+        P.q[self.clip_bones] = q
+        P.rot = r
+        for sd, sg in (("L", 1.0), ("R", -1.0)):
+            b = self.i["upperarm01." + sd]
+            P.q[b] = bm.qmul(bm.qz(sg * arms_out * DEG), P.q[b])
             self.fingers(P, sd, curl=24.0, thumb=14.0)
-        P.pos = np.array([res[0] * c.scale, 0.0, res[2] * c.scale])
-        if name == "walk":
-            P.ground = 1.0
-        else:
-            P.ground = 0.0
-            P.pos[1] = (ry - c.y_mean) * c.scale + self._lift(name)
+        P.pos = rp
+        P.ground = 1.0 if name == "walk" else 0.0
+        P.contact = con
         return P
-
-    def _lift(self, name):
-        """For clips where both feet leave the ground: the root height that puts the lowest moment of the
-        cycle on the ground (found once)."""
-        c = self.clips[name]
-        if name not in self._calibrated:
-            self._calibrated.add(name)
-            c.lift = 0.0
-            lows = []
-            for k in range(48):
-                P = self.clip_pose(name, c.T * k / 48.0)
-                D, Pj, _ = self.local_fk(P)
-                lows.append(self.rig.lowest(self.rig.matrices(D, Pj)))
-            c.lift = -float(np.percentile(lows, 4))
-        return c.lift
 
     def m_stand(self, t, age=0.0, seed=0.0, calm=1.0, **kw):
         """Standing at ease: weight a little on one leg, breathing, small drift, relaxed hands."""

@@ -1069,12 +1069,13 @@ class Word:
                                    rot=rot[vis], kind="petal", seed=s[vis, 0]))
 
     def _birds(self):
-        """The birds of a flock: an even share of the carriers (`birds=`, default about 90 to 240), every
-        point of the letters belonging to its nearest bird. Worked out once: (count, bird of each point, its
-        distance from that bird as 0..1)."""
+        """The birds of a flock: an even share of the carriers (`birds=`, default about four for each square
+        em of the text, 44 to 200), every point of the letters belonging to its nearest bird. Worked out once:
+        (count, bird of each point, its distance from that bird as 0..1)."""
         if self._bird_cache is None:
             from scipy.spatial import cKDTree
-            nb = int(self.opts.get("birds", np.clip(self.M // 5, 90, 240)))
+            area = (self.W * self.Ht) / max(self.E * self.E, 1e-9)     # the text's size in square em
+            nb = int(self.opts.get("birds", np.clip(4.0 * area, 44, 200)))
             nb = int(np.clip(nb, 8, self.M))
             loc = np.stack([self.xl, self.yl], axis=1)
             d, bi = cKDTree(loc[:nb]).query(loc)
@@ -1235,9 +1236,10 @@ class Word:
                                        alpha=0.0, alpha2=0.8 * al, kind="ribbon"))
         fl = float(_ss(ta - 0.04, ta + 0.01, a) * (1.0 - _ss(ta + 0.04, ta + 0.5 * rest, a)))
         if fl > 0.01:
-            P["extra"].append(dict(pos=f[None, :], size=0.05 * w, color=lin(WARM), alpha=fl, emit=8.0, kind="spark",
+            fs = float(self.opts.get("flare_size", 0.55 * w))      # metres: keep it small for hands in close-up
+            P["extra"].append(dict(pos=f[None, :], size=0.09 * fs, color=lin(WARM), alpha=fl, emit=8.0, kind="spark",
                                    dof=False))
-            P["extra"].append(dict(pos=f[None, :], size=0.55 * w, color=_mix(lin("#ffd27a"), lin("#7ec8ff"), 0.5),
+            P["extra"].append(dict(pos=f[None, :], size=fs, color=_mix(lin("#ffd27a"), lin("#7ec8ff"), 0.5),
                                    alpha=0.10 * fl, kind="soft", dof=False))
         ray = np.nonzero((s[:, 3] < 0.012) & (p > 0.0) & (p < 0.98))[0]
         if ray.size:
@@ -1802,8 +1804,11 @@ class Word:
         pos[:, 1] = np.where(hit, level + 0.004, pos[:, 1])
         end = 1.0 - float(_ss(0.86, 1.0, l))
         P["pos"] = pos
-        P["alpha"] = np.where(hit, 0.45 * np.exp(-after * 2.2), 1.0).astype(np.float32) * end
-        P["emit"] = (1.0 + 1.6 * np.exp(-after / 0.08) * hit).astype(np.float32)
+        # on the water only one point in four stays a moment as a spreading ring of light; the rest go out
+        keep = (np.arange(self.N) % 4 == 0)
+        P["alpha"] = np.where(hit, np.where(keep, 0.35 * np.exp(-after * 2.6), np.exp(-after / 0.05) * 0.6),
+                              1.0).astype(np.float32) * end
+        P["emit"] = (1.0 + 1.2 * np.exp(-after / 0.06) * hit).astype(np.float32)
         P["assist"] = 1.0 - _ss(0.0, 0.3, q)
         P["split"] = hit
 
