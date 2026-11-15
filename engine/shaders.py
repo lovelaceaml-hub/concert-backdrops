@@ -431,7 +431,7 @@ uniform float uCalm, uCalmY;   // calm lower third: rings, glitter, reflections 
 uniform sampler2D uNatT; uniform float uNatK;   // nature paint (flowers, stream, cliff): colour over the scene
 uniform float uCamOn; uniform sampler2D uCamBg;   // CAMERA (engine/sky_camera.py): the background with parallax
 #ifdef FIGURE_TINT
-uniform sampler2D uFigT; uniform float uFigK; uniform vec3 uFigTint; uniform vec2 uFigGate;   // engine/figure_look.py
+uniform sampler2D uFigT; uniform float uFigK; uniform vec3 uFigTint, uFigTintB; uniform vec4 uFigGate;   // figure_look.py
 #endif
 float calmK(float y){ return 1.0-uCalm*(1.0-smoothstep(uCalmY-0.07, uCalmY+0.05, y)); }
 vec2 hash22(vec2 p){ vec3 p3 = fract(vec3(p.xyx)*vec3(0.1031,0.1030,0.0973));
@@ -841,15 +841,25 @@ void main(){
   }
 #endif
 #ifdef FIGURE_TINT
-  if(uFigK>0.0){   // the silk look (engine/figure_look.py): on a bright sky a body of light gets a faint cool tint
-    float fa = clamp(texture(uFigT, uv).a, 0.0, 1.0)*(1.0-textField(uv));   // of the same brightness: no shadow
+  vec3 figAdd = vec3(0.0);
+  if(uFigK>=0.0){   // the silk look (engine/figure_look.py)
+    vec4 fg = texture(uFigT, uv);
+    float tk = 1.0-textField(uv);
     float lb = dot(col, vec3(0.2126,0.7152,0.0722));
-    col = mix(col, uFigTint*lb, fa*uFigK*smoothstep(uFigGate.x, uFigGate.y, lb));
+    // on a bright sky a body of light gets a faint tint of about the same brightness (no shadow): lilac on a
+    // warm sky, a warm pearl on a blue one, so it always stands a little apart from what is behind it
+    vec3 tc = mix(uFigTint, uFigTintB, smoothstep(1.0, 1.8, col.b/max(col.r, 1e-4)));
+    col = mix(col, tc*lb, clamp(fg.a, 0.0, 1.0)*tk*uFigK*smoothstep(uFigGate.x, uFigGate.y, lb));
+    // the bodies' own light, sharp (only a share of it goes through the glow, so a body is not washed white)
+    figAdd = fg.rgb/(1.0+max(fg.r, max(fg.g, fg.b))/uFigGate.z)*uFigGate.w*tk;
   }
 #endif
   vec3 L = texture(uL, uv).rgb;
   vec3 bl = texture(uB1,uv).rgb*0.34 + texture(uB2,uv).rgb*0.28 + texture(uB3,uv).rgb*0.24 + texture(uB4,uv).rgb*0.22;
   col += L + bl*uBloom;
+#ifdef FIGURE_TINT
+  col += figAdd;
+#endif
   // lens: vignette, exposure, filmic curve
   vec2 vq = (uv-0.5)*vec2(1.15,1.0);
 #ifdef SKY_THEME
