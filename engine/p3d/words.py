@@ -422,6 +422,7 @@ class Word:
         self.wind = _unit(wind if wind is not None else (1.0, 0.22, 0.10))
         self.font, self.opts = font, opts
         self._g = None
+        self._bird_cache = None
 
     # ------------------------------------------------------------------ geometry
     def metres_per_em(self):
@@ -505,6 +506,7 @@ class Word:
             return
         g = self._glyphs()
         k = self.metres_per_em()
+        self.E = float(k)                                         # metres per em: the size of flying things
         n = g["x"].size
         self.N = n
         self.xl = (g["x"] * k).astype(np.float32)
@@ -1027,7 +1029,7 @@ class Word:
         phi = self.phi[:m] + turn * gap * k ** 1.25
         dx = rho * np.cos(phi) - self.xl[:m]
         dy = rho * np.sin(phi) + self.ymid - self.yl[:m] + lift * 0.25 * self.Ht * k * k
-        dz = w * reach * (0.55 * (s[:, 3] - 0.2) + 0.35) * k
+        dz = w * reach * (0.30 * (s[:, 3] - 0.5) + 0.08) * k        # kept well away from the lens
         return dx, dy, dz
 
     def _arr_petals(self, P, a, t, cam, F, tg):
@@ -1055,93 +1057,143 @@ class Word:
             a0 = _ss(0.0, 0.06, p[cj]) * 0.5
             P["alpha"][fly] = np.maximum(P["alpha"][fly], a0)
             P["assist"] = np.where(fly, _ss(0.85, 1.0, p[self.ci]), 1.0).astype(np.float32)
-        vis = (p > 0.0) & (p < 1.0)
+        vis = (p > 0.0) & (p < 1.0) & self._petal_share(m)
         if vis.any():
-            big = (0.020 + 0.016 * s[:, 1]) * self.W * self.opts.get("petal_size", 1.0)
+            big = self._petal_size(s[:, 1])
             size = _mix(big, self.size0[:m] * 2.0, e ** 3)
             cols = np.stack([lin("#ff8fa3"), lin("#ffb19a"), lin("#ffd9c9")]).astype(np.float32)
             pc_col = _mix(cols[(s[:, 2] * 3).astype(int) % 3], self.c_letter[None, :], (e ** 4)[:, None])
             al = _ss(0.0, 0.07, p) * (1.0 - _ss(0.93, 1.0, p))
-            rot = np.stack([s[:, 0] * TAU + t * (1.2 + 2.0 * s[:, 1]), s[:, 2] * TAU + t * (2.0 + 3.0 * s[:, 3])], 1)
+            rot = np.stack([s[:, 0] * TAU + t * (0.6 + 1.0 * s[:, 1]), s[:, 2] * TAU + t * (1.0 + 1.6 * s[:, 3])], 1)
             P["extra"].append(dict(pos=pc[vis], size=size[vis], color=pc_col[vis], alpha=al[vis] * 0.95,
                                    rot=rot[vis], kind="petal", seed=s[vis, 0]))
 
-    def _fly_flock(self, a, t, F):
-        """Offsets (plane frame, from the word's centre) of the birds while they wheel as one flock."""
-        m = self.M
-        s = self.s[:m]
-        w = self.W
-        turns = self.opts.get("turns", 1.15)
-        lag = 0.10 * s[:, 0]
-        th = TAU * turns * (a - lag) + self.opts.get("flock_from", 2.6)
-        rad = 0.85 * w * (1.0 - 0.40 * a)
-        cx, cz = rad * np.cos(th), 0.9 * rad * np.sin(th)
-        cy = self.ymid + self.opts.get("flock_lift", 0.15) * self.Ht + 0.09 * w * np.sin(th * 1.7 + 0.6)
-        wave = 1.0 + 0.35 * np.sin(t * 1.6 + s[:, 1] * TAU)
-        ox = (s[:, 1] - 0.5) * 0.80 * w * wave
-        oy = (s[:, 2] - 0.5) * 0.20 * w * wave + 0.04 * w * np.sin(t * 2.3 + s[:, 3] * TAU)
-        oz = (s[:, 3] - 0.5) * 0.45 * w * wave
-        return cx + ox, cy + oy, cz + oz
+    def _birds(self):
+        """The birds of a flock: an even share of the carriers (`birds=`, default about 90 to 240), every
+        point of the letters belonging to its nearest bird. Worked out once: (count, bird of each point, its
+        distance from that bird as 0..1)."""
+        if self._bird_cache is None:
+            from scipy.spatial import cKDTree
+            nb = int(self.opts.get("birds", np.clip(self.M // 5, 90, 240)))
+            nb = int(np.clip(nb, 8, self.M))
+            loc = np.stack([self.xl, self.yl], axis=1)
+            d, bi = cKDTree(loc[:nb]).query(loc)
+            bd = np.clip(d / max(float(np.percentile(d, 96)), 1e-6), 0.0, 1.0).astype(np.float32)
+            self._bird_cache = (nb, bi, bd)
+        return self._bird_cache
+
+    def _petal_share(self, m):
+        """Which carriers are seen as petals (`petals=`, the share, default 0.6); the others land unseen."""
+        q = float(self.opts.get("petals", 0.6))
+        return (np.arange(m) * 0.618034) % 1.0 < q
+
+    def _petal_size(self, s):
+        """Petals, flakes and birds are sized by the letters (em), whatever the length of the phrase."""
+        return (0.13 + 0.10 * s) * self.E * self.opts.get("petal_size", 1.0)
+
+    def _flake_size(self, s):
+        return (0.07 + 0.08 * s) * self.E * self.opts.get("flake_size", 1.0)
+
+    def _bird_size(self, s):
+        return (0.20 + 0.12 * s) * self.E * self.opts.get("bird_size", 1.0)
+
+    def _bird_batch(self, P, pos, nxt, size, alpha, seed, cam, F, color=None):
+        """Birds at pos flying toward nxt (where they are a moment later): wings level, banked a little as they
+        climb or dive, the way birds read from a distance."""
+        vis = alpha > 0.01
+        if not vis.any():
+            return
+        v = (nxt - pos)[vis]
+        r_, u_ = (cam.basis()[:2] if cam is not None else (F[1], F[2]))
+        vx, vy = v @ np.asarray(r_, np.float32), v @ np.asarray(u_, np.float32)
+        bank = np.clip(0.6 * np.arctan2(vy, np.abs(vx) + 1e-9) * np.where(vx < 0.0, -1.0, 1.0), -0.55, 0.55)
+        P["extra"].append(dict(pos=pos[vis], size=size[vis], alpha=alpha[vis] * 0.9, rot=bank.astype(np.float32),
+                               color=_mix(lin(WARM), self.c_letter, 0.35) if color is None else color,
+                               kind="bird", seed=seed[vis]))
 
     def _arr_flock(self, P, a, t, cam, F, tg):
-        """A flock of birds wheels round, then each bird peels off to its place: the words in formation."""
-        m = self.M
-        s = self.s[:m]
-        st = 0.30 + 0.36 * (0.75 * self.ord[:m] + 0.25 * s[:, 0])
-        dur = 0.30
+        """A flock comes in from far away as a long loose stream of birds, wheels round the place of the words,
+        and each bird peels off to its place in reading order: the words in formation. Every bird lights the
+        letters round its place as it lands."""
+        nb, bi, bd = self._birds()
+        s = self.s[:nb]
+        w = self.W
+        rank = np.argsort(np.argsort(self.ord[:nb] + 0.15 * s[:, 0])) / max(nb - 1, 1)
+        st = 0.40 + 0.34 * rank                         # when each bird leaves the stream
+        dur = 0.22
+        lag = float(self.opts.get("stream", 0.22)) * (0.7 * rank + 0.3 * s[:, 1])   # the front of the stream lands first
+        turns = float(self.opts.get("turns", 1.0))
+        th0 = float(self.opts.get("flock_from", 2.6))
+        lift = float(self.opts.get("flock_lift", 0.15))
+        ta = max(self.t_read0 - self.t_in, 1e-6)
 
         def place(a_, t_):
+            tau = a_ - lag
+            th = TAU * turns * tau + th0
+            far = 1.0 - _ss(-0.25, 0.30, tau)          # the stream comes in from far away
+            rad = w * (0.95 - 0.35 * np.clip(tau, 0.0, 1.0) + 2.2 * far)
+            breathe = 1.0 + 0.35 * np.sin(t_ * 1.3 + s[:, 2] * TAU)
+            radial = rad + (s[:, 2] - 0.5) * 0.24 * w * breathe
+            cx = radial * np.cos(th)
+            cz = 0.85 * radial * np.sin(th)
+            cy = (self.ymid + lift * self.Ht + 0.10 * w * np.sin(th * 1.3 + 0.6) + 0.6 * w * far
+                  + (s[:, 3] - 0.5) * 0.12 * w + 0.025 * w * np.sin(t_ * 2.1 + s[:, 3] * TAU + cx * 2.0 / w))
             p_ = np.clip((a_ - st) / dur, 0.0, 1.0)
             e_ = p_ * p_ * (3.0 - 2.0 * p_)
-            fx, fy, fz = self._fly_flock(a_, t_, F)
             k_ = 1.0 - e_
-            return self._world(F, (fx - self.xl[:m]) * k_, (fy - self.yl[:m]) * k_, fz * k_), p_, e_
+            dip = 0.05 * w * np.sin(np.pi * e_)
+            return self._world(F, (cx - self.xl[:nb]) * k_, (cy - self.yl[:nb]) * k_ - dip, cz * k_), p_, e_
 
         delta, p, e = place(a, t)
-        da = 0.012
-        ta = max(self.t_read0 - self.t_in, 1e-6)
-        d2, _, _ = place(a + da, t + da * ta)
-        pc = tg[:m] + delta
-        rot = self._screen_rot(cam, (d2 - delta))
-        hold = 0.035                                    # the birds stand as the letters for a moment
-        self._patches(P, a, st + dur + hold, spread=0.03)
-        seen = _ss(0.0, 0.08, a)
-        gone = 1.0 - _ss(st + dur + hold, st + dur + hold + 0.05, a)
-        big = (0.018 + 0.012 * s[:, 2]) * self.W * self.opts.get("bird_size", 1.0)
-        size = _mix(big, np.maximum(self.size0[:m] * 4.0, big * 0.45), e)
-        vis = (seen * gone) > 0.01
-        if vis.any():
-            P["extra"].append(dict(pos=pc[vis], size=size[vis], color=_mix(lin(WARM), self.c_letter, 0.4),
-                                   alpha=(seen * gone)[vis] * 0.75, rot=rot[vis], kind="bird", seed=s[vis, 3]))
+        d2, _, _ = place(a + 0.01, t + 0.01 * ta)
+        pc = tg[:nb] + delta
+        hold = 0.03                                     # the bird stands as its letters for a moment
+        land = st + dur + hold
+        rev = land[bi] + bd * 0.05
+        dt = a - rev
+        P["alpha"] = _ss(0.0, 0.045, dt)
+        P["emit"] = 1.0 + 1.6 * np.exp(-np.maximum(dt, 0.0) / 0.05) * (dt > 0.0)
+        seen = _ss(0.0, 0.10, a) * (1.0 - _ss(land, land + 0.05, a))
+        size = _mix(self._bird_size(s[:, 2]), np.maximum(self.size0[:nb] * 4.0, self._bird_size(s[:, 2]) * 0.4), e)
+        self._bird_batch(P, pc, tg[:nb] + d2, size, seen, s[:, 3], cam, F)
 
     def _arr_stars(self, P, a, t, cam, F, tg):
-        """Stars come out of the deep sky onto the letters, fine lines join them, then the letters fill."""
+        """Stars come out one by one in the sky behind the words, small and clear from their first frame,
+        and drift onto the letters; a fine line joins two neighbours once both have landed (a constellation
+        drawing itself in reading order); then the letters fill and the lines go."""
         m = self.M
         s = self.s[:m]
         w = self.W
-        k = (1.0 - _ss(0.0, 0.5, a - 0.2 * s[:, 0])) ** 1.5
-        deep = (0.5 + 3.2 * s[:, 1] ** 2) * w
-        delta = self._world(F, (s[:, 2] - 0.5) * 1.5 * w * k, (s[:, 3] - 0.35) * 1.1 * w * k, -deep * k)
+        born = 0.02 + 0.24 * s[:, 3]                                  # when each star comes out
+        land = 0.30 + 0.30 * (0.65 * self.ord[:m] + 0.35 * s[:, 0])  # when it reaches its place
+        u = np.clip((a - born) / np.maximum(land - born, 1e-3), 0.0, 1.0)
+        e = u * u * (3.0 - 2.0 * u)
+        k = 1.0 - e
+        deep = (0.20 + 0.80 * s[:, 1]) * w
+        delta = self._world(F, (s[:, 2] - 0.5) * 0.8 * w * k, (s[:, 3] - 0.4) * 0.5 * w * k, -deep * k)
         pc = tg[:m] + delta
-        seen = _ss(0.0, 0.10, a - 0.14 * s[:, 3])
-        fill = 0.68 + 0.24 * self.cd ** 0.7 + 0.04 * self.ord
+        seen = _ss(0.0, 0.05, a - born)
+        fill = 0.64 + 0.24 * self.cd ** 0.7 + 0.06 * self.ord
         dt = a - fill
         P["alpha"] = _ss(0.0, 0.06, dt)
         P["emit"] = 1.0 + 1.2 * np.exp(-np.maximum(dt, 0.0) / 0.05) * (dt > 0.0)
-        fade = 1.0 - float(_ss(0.72, 1.0, a))
-        P["extra"].append(dict(pos=pc, size=self.size0[:m] * (2.2 + 2.2 * s[:, 1]) * (1.0 - 0.4 * (1.0 - fade)),
-                               color=_mix(lin(WARM), self.c_letter, 0.3), alpha=seen * fade, emit=2.2, kind="spark",
-                               twinkle=0.8, seed=s[:, 0]))
+        fade = 1.0 - _ss(0.80, 1.0, a)
+        shown = (np.arange(m) * 0.618034) % 1.0 < float(self.opts.get("stars", 0.5))   # the stars that are seen
+        P["extra"].append(dict(pos=pc[shown], size=(self.size0[:m] * (1.5 + 1.2 * s[:, 1]))[shown],
+                               alpha=(seen * fade)[shown] * 0.9, color=_mix(lin(WARM), self.c_letter, 0.3), emit=2.4,
+                               kind="spark", twinkle=0.6, seed=s[shown, 0], dof=0.2, fog=0.3, streak=0.0))
         if len(self.edges):
-            ea, eb = self.edges[:, 0], self.edges[:, 1]
-            oe = 0.5 * (self.ord[ea] + self.ord[eb])
-            grow = _ss(0.0, 0.07, a - (0.30 + 0.30 * oe))
-            al = grow * (1.0 - float(_ss(0.86, 1.0, a))) * 0.6
+            both = shown[self.edges[:, 0]] & shown[self.edges[:, 1]]
+            ea, eb = self.edges[both, 0], self.edges[both, 1]
+            late = np.maximum(land[ea], land[eb])
+            grow = _ss(0.0, 0.07, a - late - 0.01)
+            al = grow * (1.0 - _ss(0.80, 0.96, a)) * 0.42
             vis = al > 0.01
             if vis.any():
                 pa, pb = pc[ea[vis]], pc[eb[vis]]
-                P["extra"].append(dict(pos=pa, pos2=pa + (pb - pa) * grow[vis][:, None], size=0.002 * w,
-                                       color=_mix(lin(WARM), self.c_glow, 0.5), alpha=al[vis], kind="line"))
+                P["extra"].append(dict(pos=pa, pos2=pa + (pb - pa) * grow[vis][:, None], size=0.022 * self.E,
+                                       color=_mix(lin(WARM), self.c_glow, 0.5), alpha=al[vis], kind="line",
+                                       dof=0.2, fog=0.3))
 
     def _arr_touch(self, P, a, t, cam, F, tg):
         """Where two hands touch a flare is born; it writes the words outward from that point."""
@@ -1209,7 +1261,7 @@ class Word:
         self._patches(P, a, st + 0.50)
         vis = (p > 0.0) & (p < 1.0)
         if vis.any():
-            big = (0.013 + 0.016 * s[:, 2]) * w * self.opts.get("flake_size", 1.0)
+            big = self._flake_size(s[:, 2]) * 1.3
             size = _mix(big, self.size0[:m] * 2.0, e ** 3)
             cols = np.stack([lin("#ffe2a8"), lin("#fff3d8"), lin("#cfe2ff")]).astype(np.float32)
             col = _mix(cols[(s[:, 3] * 3).astype(int) % 3], self.c_letter[None, :], (e ** 4)[:, None])
@@ -1219,24 +1271,23 @@ class Word:
                                    kind="flake", seed=s[vis, 0], emit=1.4))
 
     def _arr_lake(self, P, a, t, cam, F, tg):
-        """The words show first as a reflection in the still water, then rise out of it, column by column."""
+        """The words show first as a reflection in the still water (of words not yet there); then, column by
+        column, the letters come up out of the water's light into their places, shedding drops that fall back
+        into the lake, and the early reflection gives way to the true one."""
         s = self.s
         level = float(self.opts.get("water", 0.0))
-        p = np.clip((a - (0.24 + 0.48 * self.xn)) / 0.27, 0.0, 1.0)
-        e = 1.0 - (1.0 - p) ** 3 + 0.05 * np.sin(np.pi * p) * (1.0 - p)
-        top = float(tg[:, 1].max()) - level
+        ta = max(self.t_read0 - self.t_in, 1e-6)
+        start = 0.24 + 0.50 * self.xn + 0.04 * s[:, 0]
+        p = np.clip((a - start) / 0.22, 0.0, 1.0)
+        e = 1.0 - (1.0 - p) ** 3
         pos = tg.copy()
-        pos[:, 1] = tg[:, 1] - (1.0 - e) * (top + 0.10 * self.Ht)
-        depth = pos[:, 1] - level
-        under = depth < 0.0
-        near = np.exp(-np.abs(depth) / (0.035 * self.Ht + 1e-6))
+        pos[:, 1] -= (1.0 - e) * 0.55 * self.Ht
         P["pos"] = pos
-        P["alpha"] = np.where(under, 0.9 * _ss(-0.10 * self.Ht, 0.0, depth), 1.0).astype(np.float32)
-        P["emit"] = (1.0 + 2.2 * near * (p < 1.0)).astype(np.float32)
-        P["assist"] = _ss(0.55, 1.0, p)
-        P["split"] = under
+        P["alpha"] = _ss(0.0, 0.35, p)
+        P["emit"] = (1.0 + 2.0 * np.exp(-p / 0.12) * (p > 0.0)).astype(np.float32)
+        P["assist"] = _ss(0.5, 1.0, p)
         # the reflection that is there before the words
-        k = (1.0 - e) * float(_ss(0.0, 0.20, a))
+        k = (1.0 - _ss(0.0, 0.6, p)) * float(_ss(0.0, 0.20, a))
         vis = k > 0.01
         if vis.any():
             rp = tg[vis].copy()
@@ -1246,6 +1297,17 @@ class Word:
             P["extra"].append(dict(pos=rp, size=self.size0[vis] * 1.5, color=_mix(self.c_letter, lin("#9fc4ff"), 0.35),
                                    alpha=k[vis] * self.wt[vis] * 0.40, kind="soft", reflect=False,
                                    seed=s[vis, 1], twinkle=0.5))
+        # drops: a share of the letters' points let fall a drop of light as they come up
+        m = self.M
+        sec = np.maximum(a - start[:m] - 0.03, 0.0) * ta
+        y = tg[:m, 1] - 0.5 * 9.8 * sec * sec * (0.6 + 0.5 * s[:m, 1])
+        al = (sec > 0.0) * _ss(level, level + 0.12 * self.Ht, y) * (np.arange(m) % 3 == 0)
+        vis = al > 0.01
+        if vis.any():
+            dp = tg[:m][vis].copy()
+            dp[:, 1] = y[vis]
+            P["extra"].append(dict(pos=dp, size=self.size0[:m][vis] * 2.0, color=_mix(self.c_letter, lin("#cfe2ff"), 0.4),
+                                   alpha=al[vis] * 0.7, emit=1.8, kind="soft", seed=s[:m][vis, 2], streak=1.0))
 
     def _arr_gather(self, P, a, t, cam, F, tg):
         """Many small lights walk in over the water from every side, stand under the words and rise into them."""
@@ -1259,11 +1321,13 @@ class Word:
         walk = _ss(0.0, 0.62, p)
         lift = _ss(0.58, 1.0, p)
         ang = TAU * s[:, 1]
-        rad = (0.75 + 1.7 * s[:, 2]) * w
+        rad = (0.65 + 1.1 * s[:, 2]) * w
         foot = tg[:m].copy()
         foot[:, 1] = ground
-        start = foot + (np.cos(ang) * rad)[:, None] * r.astype(np.float32) \
-            + (np.sin(ang) * rad * 0.9)[:, None] * nrm.astype(np.float32)
+        # from the sides and from behind; the few that come from the reader's side stay well away from the lens
+        near = 0.35 * float(np.linalg.norm(np.asarray(cam.pos, np.float64) - o)) if cam is not None else 0.3 * w
+        toward = np.minimum(np.sin(ang) * rad * 0.9, near * (0.4 + 0.6 * s[:, 3]))
+        start = foot + (np.cos(ang) * rad)[:, None] * r.astype(np.float32) + toward[:, None] * nrm.astype(np.float32)
         if self.source is not None and not isinstance(self.source, Word):
             src = points_of(self.source, t, cam)
             start = src[(np.arange(m) * len(src)) // m].copy()
@@ -1276,12 +1340,12 @@ class Word:
         nine = np.stack([lin(c) for c in NINE]).astype(np.float32)
         col = _mix(nine[np.arange(m) % 9], self.c_letter[None, :], (lift ** 3)[:, None])
         seen = _ss(0.0, 0.08, a) * (1.0 - _ss(0.92, 1.0, p))
-        size = _mix(np.full(m, 0.010 * w, np.float32), self.size0[:m] * 2.5, lift ** 2)
-        vis = (seen > 0.01) & (np.arange(m) % 3 == 0)      # one light in three is seen; each brings its neighbours
+        size = _mix(np.full(m, 0.11 * self.E, np.float32), self.size0[:m] * 2.5, lift ** 2)
+        vis = (seen > 0.01) & (np.arange(m) % 5 == 0)      # one light in five is seen; each brings its neighbours
         if vis.any():
             P["extra"].append(dict(pos=pc[vis], size=size[vis], color=col[vis], alpha=seen[vis], emit=1.8,
                                    kind="soft", twinkle=0.35, seed=s[vis, 0], lod=False))
-            P["extra"].append(dict(pos=pc[vis], size=size[vis] * 5.0, color=col[vis], alpha=seen[vis] * 0.06,
+            P["extra"].append(dict(pos=pc[vis], size=size[vis] * 4.0, color=col[vis], alpha=seen[vis] * 0.05,
                                    kind="soft", seed=s[vis, 0]))
 
     def _ray_source(self, t, cam, F):
@@ -1498,8 +1562,12 @@ class Word:
 
     def _morph_carried(self, P, a, t, cam, F, tg, src, kind):
         """Born from someone else's point field: its points fly in as petals, birds, flakes or lights and
-        land as letters; each lights its part of the word."""
-        m = self.M
+        land as letters; each lights its part of the word. Birds are fewer and larger (a flock landing), and
+        each lights the letters round its place."""
+        if kind == "bird":
+            m, bi, bd = self._birds()
+        else:
+            m = self.M
         s = self.s[:m]
         w = self.W
         j = (np.arange(m, dtype=np.int64) * len(src)) // m
@@ -1516,7 +1584,12 @@ class Word:
             return q_, p_, e_
 
         pc, p, e = place(a, t)
-        self._patches(P, a, st + dur)
+        if kind == "bird":
+            dt = a - ((st + dur)[bi] + 0.05 * bd)
+            P["alpha"] = _ss(0.0, 0.045, dt)
+            P["emit"] = 1.0 + 1.6 * np.exp(-np.maximum(dt, 0.0) / 0.05) * (dt > 0.0)
+        else:
+            self._patches(P, a, st + dur)
         vis = (p < 1.0)
         al = _ss(0.0, 0.04, a) * (1.0 - _ss(0.93, 1.0, p))
         if not vis.any():
@@ -1524,22 +1597,20 @@ class Word:
         if kind == "bird":
             da = 0.012
             p2, _, _ = place(a + da, t + da * max(self.t_read0 - self.t_in, 1e-6))
-            rot = self._screen_rot(cam, p2 - pc)
-            big = (0.018 + 0.012 * s[:, 2]) * w * self.opts.get("bird_size", 1.0)
-            P["extra"].append(dict(pos=pc[vis], size=_mix(big, np.maximum(self.size0[:m] * 4.0, big * 0.45), e)[vis],
-                                   color=_mix(lin(WARM), self.c_letter, 0.4), alpha=al[vis] * 0.75, rot=rot[vis],
-                                   kind="bird", seed=s[vis, 3]))
+            big = self._bird_size(s[:, 2])
+            self._bird_batch(P, pc, p2, _mix(big, np.maximum(self.size0[:m] * 4.0, big * 0.4), e), al * vis, s[:, 3],
+                             cam, F)
             return
         rot = np.stack([s[:, 0] * TAU + t * (1.0 + 1.8 * s[:, 1]), s[:, 2] * TAU + t * (1.8 + 2.6 * s[:, 3])], 1)
         if kind == "petal":
-            big = (0.020 + 0.016 * s[:, 1]) * w * self.opts.get("petal_size", 1.0)
+            big = self._petal_size(s[:, 1])
             cols = np.stack([lin("#ff8fa3"), lin("#ffb19a"), lin("#ffd9c9")]).astype(np.float32)
         elif kind == "flake":
-            big = (0.007 + 0.009 * s[:, 2]) * w * self.opts.get("flake_size", 1.0)
+            big = self._flake_size(s[:, 2])
             cols = np.stack([lin("#ffe2a8"), lin("#fff3d8"), lin("#cfe2ff")]).astype(np.float32)
         else:
             kind = "soft"
-            big = (0.008 + 0.006 * s[:, 2]) * w
+            big = (0.08 + 0.06 * s[:, 2]) * self.E
             cols = np.stack([self.c_base, lin(WARM), self.c_base]).astype(np.float32)
         if self.opts.get("carry_colors"):
             cols = np.stack([lin(c) for c in self.opts["carry_colors"]]).astype(np.float32)
@@ -1601,7 +1672,7 @@ class Word:
         vis = al > 0.01
         if vis.any():
             sm = s[:m]
-            size = (0.006 + 0.012 * sm[:, 2]) * w * self.opts.get("flake_size", 1.0) * _ss(0.0, 0.25, lp[:m])
+            size = self._flake_size(sm[:, 2]) * _ss(0.0, 0.25, lp[:m])
             cols = np.stack([lin("#ffe2a8"), lin("#fff3d8"), self.c_base]).astype(np.float32)
             rot = np.stack([sm[:, 0] * TAU + t * (0.8 + 1.6 * sm[:, 1]), sm[:, 2] * TAU + t * (1.5 + 2.5 * sm[:, 3])], 1)
             P["extra"].append(dict(pos=pos[:m][vis], size=size[vis], color=cols[(sm[:, 3] * 3).astype(int) % 3][vis],
@@ -1632,40 +1703,57 @@ class Word:
                                    kind="soft", dof=False))
 
     def _lea_flock(self, P, l, t, cam, F, tg):
-        """The letters lift off as birds and fly away together."""
+        """The letters lift off as birds in reading order and draw together into one loose stream that flies
+        away on a gentle curve (`away`); the rest of the letters fall to a little dust behind them."""
         o, r, u, nrm = F
-        m = self.M
-        s = self.s[:m]
+        nb, bi, bd = self._birds()
+        s = self.s[:nb]
         w = self.W
-        tl = self.t_out - self.t_read1
-        st = 0.42 * (0.6 * self.ord[:m] + 0.4 * s[:, 0])
-        away = _unit(self.opts.get("away", self.wind + np.array([0.0, 0.45, 0.0]) - nrm * 0.5))
+        tl = max(self.t_out - self.t_read1, 1e-6)
+        st = 0.40 * (0.7 * self.ord[:nb] + 0.3 * s[:, 0])
+        away = _unit(self.opts.get("away", self.wind + np.array([0.0, 0.45, 0.0]) - nrm * 0.5)).astype(np.float32)
+        side = _unit(np.cross(away, u) if abs(float(away @ u)) < 0.95 else r).astype(np.float32)
         v = self.opts.get("speed", 0.55) * w
+        hx, hy = self.xl[:nb], self.yl[:nb] - self.ymid
+        fx = hx * 0.55 + (s[:, 1] - 0.5) * 0.35 * w     # each bird's place in the loose flock
+        fy = (s[:, 2] - 0.5) * 0.30 * w
+        fz = (s[:, 3] - 0.5) * 0.50 * w
 
         def place(l_, t_):
             sec = np.maximum(l_ - st, 0.0) * tl
-            d = v * (0.5 * sec + 0.5 * sec * sec) * (0.45 + 1.1 * s[:, 1])
-            q = away.astype(np.float32)[None, :] * d[:, None]
-            wob = _ss(0.0, 1.0, sec) * 0.10 * w
-            q += self._world(F, wob * np.sin(t_ * 1.9 + s[:, 2] * TAU),
-                             wob * (0.8 * np.sin(t_ * 1.3 + s[:, 3] * TAU) + 0.15 * sec),
-                             wob * np.cos(t_ * 1.6 + s[:, 1] * TAU))
+            d = v * (0.45 * sec + 0.55 * sec * sec) * (0.75 + 0.50 * s[:, 1])
+            k = 1.0 - np.exp(-sec / 0.8)                # from its letter into its place in the flock
+            hop = 0.07 * w * _ss(0.0, 0.35, sec)
+            wav = 0.04 * w * np.sin(t_ * 1.7 + s[:, 3] * TAU + d / max(w, 1e-6) * 2.5)
+            q = self._world(F, hx * (1.0 - k) + fx * k, hy * (1.0 - k) + fy * k + hop + wav, fz * k)
+            q += away[None, :] * d[:, None]
+            q += side[None, :] * (0.35 * w * np.sin(d / (1.2 * w)))[:, None]
+            q += np.float32([0.0, 1.0, 0.0])[None, :] * (0.10 * d * d / w)[:, None]
             return q
 
-        delta = place(l, t)
-        dl = 0.01
-        rot = self._screen_rot(cam, place(l + dl, t + dl * tl) - delta)
+        base = (o + u * self.ymid).astype(np.float32)[None, :]
+        pc = base + place(l, t)
+        nx = base + place(l + 0.01, t + 0.01 * tl)
         lp = self._own(l, st)
-        dt = l - (st[self.ci] + 0.02 * self.cd)
+        dt = l - (st[bi] + 0.02 * bd)
         P["alpha"] = 1.0 - _ss(0.0, 0.05, dt)
-        al = _ss(0.0, 0.06, lp) * (1.0 - _ss(0.72, 1.0, lp)) * (l > st)
-        vis = al > 0.01
-        if vis.any():
-            big = (0.018 + 0.012 * s[:, 2]) * w * self.opts.get("bird_size", 1.0)
-            size = _mix(np.maximum(self.size0[:m] * 4.0, big * 0.45), big, _ss(0.0, 0.2, lp))
-            P["extra"].append(dict(pos=(tg[:m] + delta)[vis], size=size[vis],
-                                   color=_mix(lin(WARM), self.c_letter, 0.4), alpha=al[vis] * 0.75, rot=rot[vis],
-                                   kind="bird", seed=s[vis, 3]))
+        P["emit"] = 1.0 + 1.4 * np.exp(-np.abs(dt) / 0.03) * (dt > -0.02)
+        al = _ss(0.0, 0.05, lp) * (1.0 - _ss(0.70, 1.0, lp)) * (l > st)
+        big = self._bird_size(s[:, 2])
+        size = _mix(np.maximum(self.size0[:nb] * 4.0, big * 0.4), big, _ss(0.0, 0.18, lp))
+        self._bird_batch(P, pc, nx, size, al, s[:, 3], cam, F)
+        # a little dust where the other carriers were: it drifts after the flock and is gone in a moment
+        m = self.M
+        if m > nb:
+            sd = self.s[nb:m]
+            sec = np.maximum(l - (st[bi[nb:m]] + 0.02), 0.0) * tl
+            q = tg[nb:m] + away[None, :] * (0.25 * v * sec * (0.4 + sd[:, 1]))[:, None]
+            q[:, 1] += 0.05 * w * sec
+            ad = _ss(0.0, 0.1, sec) * (1.0 - _ss(0.2, 0.9, sec))
+            vis = ad > 0.01
+            if vis.any():
+                P["extra"].append(dict(pos=q[vis], size=self.size0[nb:m][vis] * 2.2, color=self.c_letter,
+                                       alpha=ad[vis] * 0.5, emit=1.6, kind="soft", seed=sd[vis, 0]))
 
     def _lea_petals(self, P, l, t, cam, F, tg):
         """The letters turn to petals that spiral away."""
@@ -1682,13 +1770,13 @@ class Word:
         dt = l - (st[self.ci] + 0.02 * self.cd)
         P["alpha"] = 1.0 - _ss(0.0, 0.05, dt)
         al = _ss(0.0, 0.06, lp) * (1.0 - _ss(0.70, 1.0, lp)) * (l > st)
-        vis = al > 0.01
+        vis = (al > 0.01) & self._petal_share(m)
         if vis.any():
-            big = (0.020 + 0.016 * s[:, 1]) * self.W * self.opts.get("petal_size", 1.0)
+            big = self._petal_size(s[:, 1])
             size = _mix(self.size0[:m] * 2.0, big, _ss(0.0, 0.25, lp))
             cols = np.stack([lin("#ff8fa3"), lin("#ffb19a"), lin("#ffd9c9")]).astype(np.float32)
             col = _mix(self.c_letter[None, :], cols[(s[:, 2] * 3).astype(int) % 3], _ss(0.0, 0.2, lp)[:, None])
-            rot = np.stack([s[:, 0] * TAU + t * (1.2 + 2.0 * s[:, 1]), s[:, 2] * TAU + t * (2.0 + 3.0 * s[:, 3])], 1)
+            rot = np.stack([s[:, 0] * TAU + t * (0.6 + 1.0 * s[:, 1]), s[:, 2] * TAU + t * (1.0 + 1.6 * s[:, 3])], 1)
             P["extra"].append(dict(pos=pc[vis], size=size[vis], color=col[vis], alpha=al[vis] * 0.95, rot=rot[vis],
                                    kind="petal", seed=s[vis, 0]))
 
@@ -1714,8 +1802,8 @@ class Word:
         pos[:, 1] = np.where(hit, level + 0.004, pos[:, 1])
         end = 1.0 - float(_ss(0.86, 1.0, l))
         P["pos"] = pos
-        P["alpha"] = np.where(hit, 0.8 * np.exp(-after * 1.5), 1.0).astype(np.float32) * end
-        P["emit"] = (1.0 + 3.0 * np.exp(-after / 0.10) * hit).astype(np.float32)
+        P["alpha"] = np.where(hit, 0.45 * np.exp(-after * 2.2), 1.0).astype(np.float32) * end
+        P["emit"] = (1.0 + 1.6 * np.exp(-after / 0.08) * hit).astype(np.float32)
         P["assist"] = 1.0 - _ss(0.0, 0.3, q)
         P["split"] = hit
 
@@ -1778,9 +1866,9 @@ class Word:
                                    twinkle=0.8, seed=s[vis, 0]))
         if len(self.edges):
             ea, eb = self.edges[:, 0], self.edges[:, 1]
-            al = float(_ss(0.04, 0.16, l) * (1.0 - _ss(0.30, 0.62, l))) * 0.5
+            al = float(_ss(0.04, 0.16, l) * (1.0 - _ss(0.24, 0.40, l))) * 0.42
             if al > 0.01:
-                P["extra"].append(dict(pos=pc[ea], pos2=pc[eb], size=0.003 * w,
+                P["extra"].append(dict(pos=pc[ea], pos2=pc[eb], size=0.022 * self.E,
                                        color=_mix(lin(WARM), self.c_glow, 0.5), alpha=al, kind="line"))
 
     def _lea_stream(self, P, l, t, cam, F, tg):
