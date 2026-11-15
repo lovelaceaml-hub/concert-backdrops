@@ -37,15 +37,28 @@ A POINT SET
     twinkle  0..1   how strongly each point shimmers over time (glitter)                default 0
     rim      (strength 0..1, power): light only where the surface turns away from the camera, so a body shows
              as a bright edge with a dark inside (needs `normal`)                       default (0, 2)
-    dof      False draws the batch sharp whatever the focus                             default True
-    fog      False keeps the batch out of the haze                                      default True
+    dof      how much of the lens blur the batch takes: True or 1 all of it, False or 0 none (drawn sharp
+             whatever the focus), a number between eases from bokeh to sharp            default True
+    fog      how much of the haze the batch takes (True, False or 0..1)                 default True
     reflect  False keeps the batch out of the lake mirror                               default True
     lod      False keeps every point even when very out of focus (see Scene.add)        default True
+    backlight  0..1: the points glow more when the sun (or the world's light) stands behind them as seen
+             from the camera, like dust in a ray of light                               default 0
+    streak   how much of the motion blur the batch takes (True, False or 0..1): a moving point, or any
+             point while the camera moves fast, is drawn out into a streak            default True
+
+  READING MOMENTS (words made of points). A point exactly on the focus plane has no lens blur at all, and a
+  point smaller than a pixel is drawn through a fixed small footprint whose light does not change as it moves
+  across the pixel grid, so tens of thousands of small points stay steady and legible. For words that must be
+  sharp wherever the focus is, give the batch dof=0 (and fog=0 to keep them clear of the haze) for the reading
+  moment; both may change over time, so words can come out of bokeh, hold sharp, and return to it.
 
   A point set may also have these attributes:
     wants_camera = True   sample is then called as sample(t, cam) with a CameraState (for effects that depend
                           on the view, for example dispersing away from the camera)
     static = True         sample(0.0) is called once and the points stay on the graphics card (stars, dust)
+    dome = True           the positions are directions on the sky (unit vectors): the set is drawn far away
+                          round the camera, behind the hills and clouds (stars); size is then an angle in radians
     gain(t) -> number     a brightness for the whole set at t (cheap fades; works with static sets)
 
 KINDS
@@ -90,7 +103,8 @@ MASK_MODES = ("dark", "sky")
 MASK_SKIES = ("clouds", "sunrise", "stars", "day")
 
 _ARRAY_FIELDS = dict(pos=3, size=1, color=3, alpha=1, pos2=3, alpha2=1, rot=2, emit=1, normal=3, seed=1, vel=3)
-_BATCH_SETTINGS = dict(twinkle=0.0, rim=(0.0, 2.0), dof=True, fog=True, reflect=True, lod=True)
+_BATCH_SETTINGS = dict(twinkle=0.0, rim=(0.0, 2.0), dof=1.0, fog=1.0, reflect=True, lod=True, backlight=0.0,
+                       streak=1.0)
 
 
 def lin(hexs):
@@ -289,8 +303,8 @@ def normalize(batch, where="batch"):
                 raise ValueError(f"{where}: rim is (strength, power)")
             if v[0] > 0.0 and out["normal"] is None:
                 raise ValueError(f"{where}: rim needs 'normal'")
-        elif key == "twinkle":
-            v = float(v)
+        elif key in ("twinkle", "dof", "fog", "backlight", "streak"):
+            v = float(min(max(float(v), 0.0), 1.0))
         else:
             v = bool(v)
         out[key] = v

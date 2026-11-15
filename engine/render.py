@@ -83,6 +83,8 @@ def comp_blocks():
         out.append("FIGURE_TINT")
     if any(isinstance(m, dict) and m.get("paint") for m in (getattr(S, "SYMBOLS", None) or [])):
         out.append("SYMBOL_PAINT")   # a symbol's lines painted in their own colour (engine/water.py)
+    if has("P3D") and "CAMERA_BG" not in out:
+        out.append("CAMERA_BG")      # the 3D layer hands the composite its background (engine/p3d, HOWTO V)
     return out
 
 
@@ -198,6 +200,10 @@ class Renderer:
         self.out = output.Output(self)   # HOWTO Q: event card and seamless loop (optional)
         import figure_look
         self.fl = figure_look.FigureLook(self)   # HOWTO H5: the silk look for people of light (optional)
+        self.p3d = None
+        if getattr(S, "P3D", None) is not None:
+            import p3d.layer
+            self.p3d = p3d.layer.Layer(self)     # HOWTO V: the 3D layer (camera, point sets, world; optional)
 
     # ------------------------------------------------------------------
     def text_plan(self, t):
@@ -239,6 +245,8 @@ class Renderer:
         self.sky.adjust(t, P)
         if self.react:
             P = self.react.apply(P, t)
+        if self.p3d:
+            P = self.p3d.adjust(t, P)   # the 3D world replaces the flat sky's stars, motes, arch and lake
         asp = S.ASPECT
         L = S.lin
         cool = S.MILKY(t)
@@ -288,6 +296,8 @@ class Renderer:
             setu(self.p_petal, uT=t, uAmount=P["petals"], uPx=px, uColA=L(cols("PETAL_COLORS", ("#ff7fa2", "#ffd2c2"))[0]) * 0.95,
                  uColB=L(cols("PETAL_COLORS", ("#ff7fa2", "#ffd2c2"))[1]) * 0.62, uCalm=calm0, uCalmY=CALM_Y)
             self.v_petal.render(moderngl.POINTS)
+        if self.p3d:
+            self.p3d.draw(t, P)         # every 3D point set, with its mirror image in the lake
         self.up.draw_effects(t, P)
         self.nature.draw(t)
         self.cr.draw(t)
@@ -410,6 +420,8 @@ class Renderer:
 
         # 4. put it together
         self.sky.camera_bg(t, P)
+        if self.p3d:
+            self.p3d.background(t, P)   # sky dome, hills, lake, mist, rays: the composite's background
         self.f_out.use()
         self.t_sky.use(location=0); self.t_L.use(location=1)
         for k in range(4):
