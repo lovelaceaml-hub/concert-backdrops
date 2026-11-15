@@ -802,11 +802,16 @@ class Flare(_Free):
 
     at      the point (x, y, z), or a function of time that gives it
     t       when it flashes; strength: how bright; n: how many sparks
+    scale   size of the whole flash: 1 suits two hands in close-up (a core of a few centimetres, sparks
+            reaching about 35 cm); 2.5 is the size it had before (a flash for a wide shot)
+    reach   metres the sparks fly (default 0.36 times scale)
     """
 
-    def __init__(self, at, t, color="#fff1d0", color2="#9fd0ff", n=1600, strength=1.0, reach=0.9, life=2.6, seed=3.0,
-                 to=None):
+    def __init__(self, at, t, color="#fff1d0", color2="#9fd0ff", n=900, strength=1.0, reach=None, life=2.2, seed=3.0,
+                 to=None, scale=1.0):
         self.at, self.t = at, float(t)
+        self.scale = float(scale)
+        reach = 0.36 * self.scale if reach is None else reach
         self.n, self.strength, self.reach, self.life = int(n), float(strength), float(reach), float(life)
         i = np.arange(self.n)
         self.sd = bm.hashf(i, 91 + int(seed))
@@ -826,10 +831,11 @@ class Flare(_Free):
             return np.zeros(0, np.int64), np.zeros((0, 3)), np.zeros(0), np.zeros(0)
         a = t - self.t
         c = self._centre(self.t)
-        travel = self.reach * self.pace * (1.0 - np.exp(-a / 0.45)) + 0.05 * a
+        sc = self.scale
+        travel = self.reach * self.pace * (1.0 - np.exp(-a / 0.45)) + 0.02 * sc * a
         pos = c + self.dirs * travel[:, None]
-        pos += bm.flow(pos * 2.0, a * 0.6, speed=1.0, seed=self.seed) * 0.18 * (1.0 - np.exp(-a / 0.8))
-        pos[:, 1] += 0.06 * a
+        pos += bm.flow(pos * 2.0 / sc, a * 0.6, speed=1.0, seed=self.seed) * 0.07 * sc * (1.0 - np.exp(-a / 0.8))
+        pos[:, 1] += 0.025 * sc * a
         aq = tq - self.t
         alpha = np.clip(aq / 0.05, 0, 1) * np.clip(1.0 - aq / (self.life * (0.5 + 0.5 * self.sd)), 0.0, 1.0) ** 1.5
         return np.arange(self.n), pos, alpha, np.full(self.n, a)
@@ -837,25 +843,27 @@ class Flare(_Free):
     def sample(self, t):
         a = t - self.t
         out = []
-        if -0.6 < a < 1.4:
+        sc = self.scale
+        if -0.6 < a < 1.2:
             # the core: swells just before the touch, flashes, dies away
-            k = np.exp(-max(a, 0.0) / 0.28) if a >= 0 else np.exp(a / 0.2) * 0.35
+            k = np.exp(-max(a, 0.0) / 0.22) if a >= 0 else np.exp(a / 0.2) * 0.35
             c = self._centre(t)
-            out.append(dict(pos=c[None], size=0.16 + 0.5 * max(a, 0.0), color=self.color.mean(0), alpha=min(k, 1.0),
-                            kind="soft", emit=14.0 * self.strength * k, dof=0.3))
-            out.append(dict(pos=c[None], size=0.05, color=(1.0, 1.0, 1.0), alpha=min(k, 1.0), kind="spark",
-                            emit=40.0 * self.strength * k, dof=0.0))
+            out.append(dict(pos=c[None], size=(0.035 + 0.07 * max(a, 0.0)) * sc, color=self.color.mean(0),
+                            alpha=min(k, 1.0), kind="soft", emit=5.0 * self.strength * k, dof=0.3))
+            out.append(dict(pos=c[None], size=0.018 * sc, color=(1.0, 1.0, 1.0), alpha=min(k, 1.0), kind="spark",
+                            emit=16.0 * self.strength * k, dof=0.0))
         ids, pos, alpha, age = self._raw(t)
         if len(ids):
             pos, alpha = self._steer(t, ids, pos, alpha)
-            out.append(dict(pos=pos, size=0.006 + 0.016 * self.sd ** 4, color=self.color, alpha=alpha, kind="spark",
-                            seed=self.sd, emit=2.0 + 6.0 * self.strength * np.exp(-age / 0.5), twinkle=0.9))
+            out.append(dict(pos=pos, size=(0.0015 + 0.005 * self.sd ** 4) * sc, color=self.color, alpha=alpha,
+                            kind="soft", seed=self.sd, emit=1.5 + 4.0 * self.strength * np.exp(-age / 0.4),
+                            twinkle=0.9))
         return out
 
     def particles(self, t):
         ids, pos, alpha, age = self._raw(t)
         pos, alpha = self._steer(t, ids, pos, alpha)
-        return dict(id=ids, pos=pos, alpha=alpha, age=age, size=(0.006 + 0.016 * self.sd ** 4)[ids],
+        return dict(id=ids, pos=pos, alpha=alpha, age=age, size=((0.0015 + 0.005 * self.sd ** 4) * self.scale)[ids],
                     color=self.color[ids], seed=self.sd[ids])
 
     def free(self, t):

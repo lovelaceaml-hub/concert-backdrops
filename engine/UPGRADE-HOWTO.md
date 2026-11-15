@@ -925,3 +925,16 @@ State of proof: every item below runs in `test_p3d_ten.py` and was looked at in 
 - Hills, clouds and lake are drawn by formula, not from points: no shadows, and a dark body does not shade the water.
 - By default motion blur is a stretch of each sprite along its path, not a true time average: fine for whips and fast flights, wrong for a point that turns sharply within one frame (use `motion_samples` there). Line segments are not drawn out at all.
 - A whip blends the two camera set-ups through the space between them, so for a few frames the camera can fly through whatever stands there; keep whips short or hide them in a burst.
+
+## W. Particle bodies (2026-11-15, branch engine-p3d-bodies)
+
+People made of points for the 3D layer of section V: a lifelike human form (the MakeHuman CC0 body) moved by motion capture (CMU) and gestures, dressed in simulated garments of light, drawn in looks, with effects that gather the body out of light and scatter it back. The module texts of `engine/p3d/body.py`, `effects.py`, `looks.py`, `actor.py` and `motion.py` are the full reference; this section lists every key a director needs. Working examples: `engine/songs/test_p3d_bodies.py` (one stage per look, effect and motion; `listing()` prints the stage times).
+
+### Changes for song files (newest first)
+
+- Motion capture is now CMU only (the DeepMimic clips are gone, see `assets/p3d/README.md`). New motions: "jump", "dance", "twirl", "get_up", "pull_up", "helped_up". The old names still play: "spin" plays "twirl", "dance_a" and "dance_b" play "dance". Walk and run keep their names; the walk is a little slower by default (1.26 m/s for the man) and its steps are planted: a foot on the ground stays where it was set down, also while the walker turns.
+- `Flare` (and the flash of `Hands`) is smaller: sized for two hands in close-up. `Flare(..., scale=2.5)` gives the old size; `Hands(..., flare=0)` leaves it out.
+- `Hands`: each hand's second colour is now a pale tint of its own colour (it was white), so gold and blue stay apart as in ref 04.
+- `hair` now defaults to "bun" for a woman and "cap" for a man or a child (hair worn close, no simulation), so no head is bare. `hair=False` gives the old bald head; `hair=True` the long simulated strands, which now hang from the back of the head only.
+- Garments read as garments: hems, cuffs and necklines glow (`look=dict(name=..., seams=0)` turns it off), a "tunic" reaches to mid thigh over loose trousers, a "robe" has an under-sleeve on the forearm (a raised arm no longer leaves its hand floating), and the veil drapes over the head and shoulders as its own pale sheer fabric (`veil=True` or `veil=dict(length=1.5)` for a veil to the ground).
+- Looks: glitter has far fewer four-point glints (`glints=`, default 0.0007 of the points); the rim line is thinner (`power=`, default 5) and the dark body no longer leaves a dark halo round it.
