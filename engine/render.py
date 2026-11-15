@@ -352,6 +352,7 @@ class Renderer:
              uOffA=tuple(float(v) for v in offA), uOffB=tuple(float(v) for v in offB),
              uCalm=calm0, uCalmY=CALM_Y)
         self.up.comp_uniforms(self.p_comp, t, P)
+        self.nature.comp_uniforms(self.p_comp)
         self.v_comp.render(moderngl.TRIANGLE_STRIP)
         return self.f_out.read(components=3)
 

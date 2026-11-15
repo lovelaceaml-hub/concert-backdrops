@@ -24,6 +24,7 @@ import nature_shaders as NS
 CALM_Y = 0.335
 TAU = 2.0 * math.pi
 CAMPAIGN = ["#fff1d6", "#ffc8a2", "#ff8f7a", "#9fd0ff", "#ffd9b8"]   # cream, peach, coral, sky blue, soft peach
+FLOWER_COLORS = ["#ff7a68", "#ffaa7e", "#fff0d2", "#78b8ff", "#ff9580"]   # saturated: coral, peach, cream, sky blue
 LEAF = ("#d8ec8a", "#b4dc78", "#f2e08a")                            # fresh green-gold leaves
 
 
@@ -97,10 +98,9 @@ class Pts:
 # ------------------------------------------------------------------------------------------------ flowers
 class Flowers:
     NP = 6     # petals per flower
-    NS = 10    # samples along each side of a petal outline
 
     def __init__(self):
-        n = int(getattr(S, "FLOWERS_COUNT", 44))
+        n = int(getattr(S, "FLOWERS_COUNT", 40))
         r = np.random.default_rng(int(getattr(S, "FLOWERS_SEED", 5))).random((n, 10))
         self.n, self.r = n, r
         span = getattr(S, "FLOWERS_SPAN", (0.0, 1.0))
@@ -110,18 +110,18 @@ class Flowers:
         self.r, self.fx, self.d = self.r[order], self.fx[order], self.d[order]
         self.ci = (self.r[:, 2] * 97.0).astype(int)
 
-    def draw(self, P, t, amt, calm):
+    def draw(self, P, PP, t, amt, calm):
         r, fx, d = self.r, self.fx, self.d
         A = S.ASPECT
         line = float(val("FLOWERS_LINE", t, 0.34))
         band = float(val("FLOWERS_DEPTH", t, 0.16))
         bright = float(val("FLOWERS_BRIGHT", t, 1.0))
-        cols = colors("FLOWERS_COLOR", t, CAMPAIGN)
+        cols = colors("FLOWERS_COLOR", t, FLOWER_COLORS)
         stemc, leafc, core = lin(LEAF[1]), lin(LEAF[0]), lin("#fff6e2")
         yb = line - band * (1.0 - d)
         sc = 0.55 + 0.75 * (1.0 - d)
-        h = (0.060 + 0.050 * r[:, 3]) * sc
-        R = (0.024 + 0.012 * r[:, 4]) * sc
+        h = (0.070 + 0.050 * r[:, 3]) * sc
+        R = (0.034 + 0.016 * r[:, 4]) * sc
         # the wave of blooming travels from FLOWERS_WAVE (an x position) across the field
         org = float(val("FLOWERS_WAVE", t, 0.0))
         delay = 0.75 * np.abs(fx - org) / max(org, 1.0 - org, 0.5) + 0.2 * r[:, 5]
@@ -154,7 +154,8 @@ class Flowers:
             lx = bx[:, None] + (ll * np.cos(ang))[:, None] * q
             ly = by[:, None] + (ll * np.sin(ang))[:, None] * q + (0.15 * ll)[:, None] * q * q
             P.add(lx / A, ly, (2.6 * sc)[:, None] * (1.2 - 0.6 * q), leafc, (k * grow * 0.6)[:, None] * np.ones_like(q), 2.5)
-        # petals: closed into a bud pointing up, then unfurl into an open face seen a little from above
+        # petals: closed into a bud pointing up, then unfurl into an open face seen a little from above.
+        # Each petal is a real petal shape (a sprite), painted in its colour over the scene and edged with light.
         tilt = -0.9 * sway / h
         kk = np.arange(self.NP)[None, :]
         rot = TAU * r[:, 2][:, None]
@@ -164,34 +165,31 @@ class Flowers:
         ang = closed * (1 - bl) + opened * bl + tilt[:, None]
         squash = 1.0 - 0.38 * bl
         breathe = 1.0 + 0.06 * np.sin(1.5 * t + TAU * r[:, 6][:, None] + kk)
-        L = R[:, None] * (0.38 + 0.62 * bl) * breathe
-        Wd = R[:, None] * 0.42 * (0.45 + 0.55 * bl)
+        L = R[:, None] * (0.40 + 0.60 * bl) * breathe
         dxp, dyp = np.cos(ang), np.sin(ang) * squash
-        pxp, pyp = -np.sin(ang), np.cos(ang) * squash
+        Ls = L * np.hypot(dxp, dyp)                         # the petal's length as seen
+        sang = np.arctan2(dyp, dxp)
         cidx = self.ci % len(cols)
-        pc = cols[cidx]                                     # (n, 3)
-        pa = k * bud
-        ss_ = np.linspace(1.0 / self.NS, 1.0, self.NS)
-        for side in (1.0, -1.0):
-            ox = hx[:, None, None] + (L * dxp)[..., None] * ss_ + side * (Wd * pxp)[..., None] * np.sin(math.pi * ss_)
-            oy = hy[:, None, None] + (L * dyp)[..., None] * ss_ + side * (Wd * pyp)[..., None] * np.sin(math.pi * ss_)
-            n_pts = self.NP * self.NS
-            P.add(ox.reshape(self.n, -1) / A, oy.reshape(self.n, -1), np.repeat(3.4 * sc, n_pts),
-                  np.repeat(pc, n_pts, axis=0), np.repeat(pa * 1.3, n_pts), 3.2)
-        # a glassy fill in each petal
-        fxp = hx[:, None] + L * dxp * 0.55
-        fyp = hy[:, None] + L * dyp * 0.55
-        P.add(fxp / A, fyp, (L * 1080 * 1.25).ravel(), np.repeat(pc, self.NP, axis=0),
-              np.repeat(pa * 0.22, self.NP), 2.0)
-        # the heart of the flower
+        pa = (k * bud)[:, None] * np.ones_like(L)
+        width = 0.38 + 0.30 * bl                            # half width over half length
+        cx_ = hx[:, None] + L * dxp * 0.5
+        cy_ = hy[:, None] + L * dyp * 0.5
+        # far petals first, so the nearer ones of the same flower lie over them
+        PP.append(np.stack(np.broadcast_arrays(
+            cx_ / A, cy_, Ls * 1080.0, sang, np.repeat(cidx[:, None], self.NP, 1).astype(np.float64), pa,
+            width * np.ones_like(L)), -1).reshape(-1, 7))
+        # the heart of the flower: a small golden disc with a bright point of light
+        PP.append(np.stack(np.broadcast_arrays(
+            hx / A, hy, R * 1080.0 * 0.55 * (0.4 + 0.6 * bloom), 0.0 * hx, np.full(self.n, -1.0), k * bud,
+            np.full(self.n, 0.9)), -1))
         P.add(hx / A, hy, 6.5 * sc, core, k * bud * (0.5 + 0.9 * bloom), 3.5)
-        P.add(hx / A, hy, 34.0 * sc * bloom + 4.0, pc, k * bloom * 0.22, 2.2)
+        P.add(hx / A, hy, 30.0 * sc * bloom + 4.0, cols[cidx], k * bloom * 0.12, 2.2)
 
 
 # ------------------------------------------------------------------------------------------------ tree
 class Tree:
     def __init__(self):
-        rng = np.random.default_rng(int(getattr(S, "TREE_SEED", 3)))
+        rng = np.random.default_rng(int(getattr(S, "TREE_SEED", 21)))
         depth_max = int(getattr(S, "TREE_DEPTH", 7))
         segs = []   # parent, attach u, local rest angle, length, thick0, thick1, depth
 
@@ -464,51 +462,79 @@ class Stream:
         self._key = key
         return self._path
 
-    def draw(self, P, t, amt, calm):
+    def ribbon(self, t):
+        """The stream as one continuous ribbon: (x, y, s, u, w) per vertex for a triangle strip, plus its settings.
+        s is the distance along the stream (height units), u runs -1.3..1.3 across it, w 0..1 from source to lake."""
         A = S.ASPECT
         default = [(0.20, 0.375), (0.27, 0.36), (0.22, 0.345), (0.33, 0.33), (0.42, 0.318), (0.47, 0.305)]
         cx, cy, tx, ty, tot = self.path(val("STREAM_PATH", t, default))
         nx, ny = -ty, tx
         width = float(val("STREAM_WIDTH", t, 0.010))
+        m = len(cx)
+        w = np.linspace(0, 1, m)
+        wv = width * (0.7 + 1.0 * w)             # wider as it nears the lake
+        meander = 1.0 + 0.12 * np.sin(w * 23.0 + t * 0.9)   # the banks breathe a little
+        s = w * tot
+        v = np.empty((m, 2, 5), np.float32)
+        for j, uu in enumerate((-1.3, 1.3)):
+            off = uu * wv * meander
+            v[:, j, 0] = (cx + nx * off) / A
+            v[:, j, 1] = cy + ny * off
+            v[:, j, 2] = s
+            v[:, j, 3] = uu
+            v[:, j, 4] = w
+        return v.reshape(-1, 5), (cx, cy, tx, ty, nx, ny, wv, w)
+
+    def draw(self, P, t, amt, calm, geo):
+        """Sparkling glints riding on the ribbon (the ribbon itself is drawn by its shader)."""
+        A = S.ASPECT
+        cx, cy, tx, ty, nx, ny, wv, w = geo
         speed = float(val("STREAM_SPEED", t, 1.0))
         cs = colors("STREAM_COLOR", t, ["#9fd0ff", "#fff1d6"])
-        ca, cb = cs[0], cs[-1]
+        cb = cs[-1]
         m = len(cx)
-        u = np.linspace(0, 1, m)
-        front = amt * 1.15                       # the light flows in along the path as STREAM rises
-        reach = ssv(front, front - 0.12, u)
-        wv = width * (0.7 + 1.0 * u)             # wider as it nears the lake
+        front = amt * 1.15
+        reach = ssv(front, front - 0.12, w)
         kc = calm_k(cy, calm, 0.4)
-        # the body: soft wide light and two thin banks that shimmer
-        b = np.arange(0, m, 3)
-        P.add(cx[b] / A, cy[b], wv[b] * 1080 * 2.4, ca, reach[b] * kc[b] * 0.02 * amt, 1.8)
-        sh = 0.6 + 0.4 * np.sin(u * 60.0 - t * 3.0)
-        for side in (1.0, -1.0):
-            P.add((cx + side * nx * wv) / A, cy + side * ny * wv, 1.5, ca, reach * kc * sh * 0.10 * amt, 3.0)
-        # flowing glints: carried down the stream, faster in the middle
-        r = self.r
+        r = self.r[:900]
         lat = (r[:, 0] * 2 - 1)
-        v = speed * (0.040 + 0.03 * r[:, 1]) * (1.0 - 0.45 * lat * lat) / max(tot, 0.05)
+        tot = float(np.sum(np.hypot(np.diff(cx), np.diff(cy))))
+        v = speed * (0.045 + 0.03 * r[:, 1]) * (1.0 - 0.45 * lat * lat) / max(tot, 0.05)
         s = np.mod(r[:, 2] + t * v, 1.0)
         i = np.minimum((s * (m - 1)).astype(int), m - 1)
-        mean = 0.25 * np.sin(t * 1.3 + TAU * r[:, 3] + s * 20.0)
-        off = (lat * 0.85 + mean * 0.2) * wv[i]
+        off = lat * 0.8 * wv[i]
         X, Y = cx[i] + nx[i] * off, cy[i] + ny[i] * off
-        glint = 0.25 + 0.75 * np.sin(t * (3.0 + 4.0 * r[:, 4]) + TAU * r[:, 5]) ** 6
-        k = reach[i] * kc[i] * glint * amt
-        col = np.where((r[:, 4] > 0.6)[:, None], cb[None, :], ca[None, :])
-        for q in (0.0, 0.006):
-            P.add((X - tx[i] * q) / A, Y - ty[i] * q, 3.0 - 60 * q, col, k * (0.75 - 40 * q), 3.0)
+        glint = np.sin(t * (3.0 + 4.0 * r[:, 4]) + TAU * r[:, 5]) ** 8
+        P.add(X / A, Y, 3.2, cb, reach[i] * kc[i] * glint * amt * 0.8, 3.2)
 
 
 # ------------------------------------------------------------------------------------------------ the layer
 KEYS = ("FLOWERS", "TREE", "WATERFALL", "STREAM")
 
 
+def shown(hexs):
+    """Linear colour that the composite's filmic curve shows as this colour (for paint, not light)."""
+    h = hexs.lstrip("#")
+    y = np.clip((np.array([int(h[i:i + 2], 16) for i in (0, 2, 4)], dtype=np.float64) / 255.0) ** 2.2, 0.0, 0.975)
+    a, b, c = 2.43 * y - 2.51, 0.59 * y - 0.03, 0.14 * y
+    return (-b - np.sqrt(np.maximum(b * b - 4.0 * a * c, 0.0))) / (2.0 * a)
+
+
+def setu(prog, **kw):
+    for k, v in kw.items():
+        if k in prog:
+            if isinstance(v, (tuple, list, np.ndarray)):
+                v = tuple(float(z) for z in np.ravel(v))
+            elif not isinstance(v, int):
+                v = float(v)
+            prog[k].value = v
+
+
 class Nature:
     def __init__(self, R):
         self.R = R
         self.on = any(getattr(S, k, None) is not None for k in KEYS)
+        self.paint_k = 0.0
         if not self.on:
             return
         ctx = self.ctx = R.ctx
@@ -517,52 +543,134 @@ class Nature:
         self.cap = 200000
         self.buf = ctx.buffer(reserve=self.cap * 28, dynamic=True)
         self.vao = ctx.vertex_array(self.p_glow, [(self.buf, "2f 1f 3f 1f", "aPos", "aSize", "aCol", "aSharp")])
+        quad = ctx.buffer(np.array([-1, -1, 1, -1, -1, 1, 1, 1], "f4").tobytes())
+        # the paint buffer (half size, premultiplied colour and coverage), laid over the scene by the composite
+        self.t_paint = ctx.texture((max(R.w // 2, 8), max(R.h // 2, 8)), 4, dtype="f2")
+        self.t_paint.filter = (moderngl.LINEAR, moderngl.LINEAR)
+        self.t_paint.repeat_x = self.t_paint.repeat_y = False
+        self.f_paint = ctx.framebuffer([self.t_paint])
         self.flowers = Flowers() if getattr(S, "FLOWERS", None) is not None else None
+        if self.flowers is not None:
+            self.p_petal = ctx.program(vertex_shader=NS.PETAL_VS, fragment_shader=NS.PETAL_FS)
+            self.pbuf = ctx.buffer(reserve=20000 * 36, dynamic=True)
+            self.v_petal = ctx.vertex_array(self.p_petal, [(self.pbuf, "2f 1f 1f 3f 1f 1f", "aPos", "aSize", "aRot",
+                                                           "aCol", "aA", "aW")])
         self.tree = Tree() if getattr(S, "TREE", None) is not None else None
         self.stream = Stream() if getattr(S, "STREAM", None) is not None else None
+        if self.stream is not None:
+            self.p_rib = ctx.program(vertex_shader=NS.RIBBON_VS, fragment_shader=NS.RIBBON_FS)
+            self.rbuf = ctx.buffer(reserve=4000 * 20, dynamic=True)
+            self.v_rib = ctx.vertex_array(self.p_rib, [(self.rbuf, "2f 1f 1f 1f", "aPos", "aS", "aU", "aW")])
         self.fall = None
         if getattr(S, "WATERFALL", None) is not None:
             self.fall = Waterfall()
             self.p_fall = ctx.program(vertex_shader=NS.RECT_VS, fragment_shader=NS.FALL_FS)
-            quad = ctx.buffer(np.array([-1, -1, 1, -1, -1, 1, 1, 1], "f4").tobytes())
             self.v_fall = ctx.vertex_array(self.p_fall, [(quad, "2f", "aPos")])
+            self.p_cliff = ctx.program(vertex_shader=NS.RECT_VS, fragment_shader=NS.CLIFF_FS)
+            self.v_cliff = ctx.vertex_array(self.p_cliff, [(quad, "2f", "aPos")])
+
+    def comp_uniforms(self, prog):
+        """The composite lays the nature paint over the scene only while a painted layer is on."""
+        if "uNatK" not in prog:
+            return
+        if self.on and self.paint_k > 0.0:
+            self.t_paint.use(location=13)
+            prog["uNatT"].value = 13
+            prog["uNatK"].value = float(self.paint_k)
+        else:
+            prog["uNatK"].value = 0.0
+
+    def _petal_rows(self, PP, cols_hex, mode):
+        d = np.concatenate(PP)
+        ci = d[:, 4].astype(int)
+        conv = shown if mode == "paint" else S.lin
+        pal = np.array([conv(c) for c in cols_hex] + [conv("#ffd27a")])
+        col = pal[np.where(ci < 0, len(cols_hex), ci % len(cols_hex))]
+        out = np.empty((len(d), 9), np.float32)
+        out[:, 0:4] = d[:, 0:4]
+        out[:, 4:7] = col
+        out[:, 7] = d[:, 5]
+        out[:, 8] = d[:, 6]
+        return out[(d[:, 5] > 0.004) & (d[:, 2] > 0.5)]
 
     def draw(self, t):
-        """Draws every nature layer that is on into the bound glow buffer (additive blending is already set)."""
+        """Draws every nature layer that is on: paint into the paint buffer, light into the glow buffer."""
         if not self.on:
             return
+        R, ctx = self.R, self.ctx
         calm = float(val("BOTTOM_CALM", t, 0.0) or 0.0)
         P = Pts()
-        if self.stream is not None:
-            a = float(val("STREAM", t, 0.0) or 0.0)
-            if a > 0.001:
-                self.stream.draw(P, t, a, calm)
-        if self.fall is not None:
-            a = float(val("WATERFALL", t, 0.0) or 0.0)
-            if a > 0.001:
-                x = float(val("WATERFALL_X", t, 0.20))
-                top = float(val("WATERFALL_TOP", t, 0.62))
-                bot = float(val("WATERFALL_BOTTOM", t, 0.375))
-                wdt = float(val("WATERFALL_WIDTH", t, 0.040))
-                cs = colors("WATERFALL_COLOR", t, ["#bfe3ff", "#fff4e0"])
-                ca, cb = cs[0], cs[-1]
-                pad = wdt * 2.2 / S.ASPECT + 0.02
-                rect = (max(x - pad - 0.15, 0.0), max(bot - 0.06, 0.0), min(x + pad + 0.15, 1.0), min(top + 0.02, 1.0))
-                p = self.p_fall
-                for k_, v_ in dict(uRect=rect, uT=t, uAspect=S.ASPECT, uAmt=a, uX=x, uTop=top, uBot=bot, uW=wdt,
-                                   uCalm=calm, uCalmY=CALM_Y, uColA=tuple(ca), uColB=tuple(cb)).items():
-                    if k_ in p:
-                        p[k_].value = tuple(float(z) for z in v_) if isinstance(v_, (tuple, np.ndarray)) else float(v_)
-                self.v_fall.render(moderngl.TRIANGLE_STRIP)
-                self.fall.droplets(P, t, a, calm, x, top, bot, wdt, ca, cb)
+        PP = []
+        painted = False
+        A = S.ASPECT
+        # ---- what is on, and its settings
+        sa = float(val("STREAM", t, 0.0) or 0.0) if self.stream is not None else 0.0
+        wa = float(val("WATERFALL", t, 0.0) or 0.0) if self.fall is not None else 0.0
+        fa = float(val("FLOWERS", t, 0.0) or 0.0) if self.flowers is not None else 0.0
+        if fa > 0.001:
+            self.flowers.draw(P, PP, t, fa, calm)
+        cols_hex = val("FLOWERS_COLOR", t, None) or FLOWER_COLORS
+        cols_hex = [cols_hex] if isinstance(cols_hex, str) else list(cols_hex)
+        if sa > 0.001:
+            rib, geo = self.stream.ribbon(t)
+            self.rbuf.write(rib.tobytes())
+            cs = colors("STREAM_COLOR", t, ["#9fd0ff", "#fff1d6"])
+            stream_u = dict(uT=t, uSpeed=float(val("STREAM_SPEED", t, 1.0)), uFront=sa * 1.15, uAmt=sa, uCalm=calm,
+                            uCalmY=CALM_Y, uColA=cs[0], uColB=cs[-1],
+                            uPaint=shown(val("STREAM_PAINT", t, "#7fb2e0")))
+        if wa > 0.001:
+            x = float(val("WATERFALL_X", t, 0.20))
+            top = float(val("WATERFALL_TOP", t, 0.62))
+            bot = float(val("WATERFALL_BOTTOM", t, 0.375))
+            wdt = float(val("WATERFALL_WIDTH", t, 0.040))
+            pad = wdt * 4.2 / A + 0.03
+            rect = (max(x - pad - 0.15, 0.0), max(bot - 0.06, 0.0), min(x + pad + 0.15, 1.0), min(top + 0.05, 1.0))
+            cliff = float(val("WATERFALL_CLIFF", t, 1.0))
+        # ---- paint pass (half size): cliff, stream water, flower petals, back to front
+        if (wa > 0.001 and cliff > 0.001) or sa > 0.001 or PP:
+            self.f_paint.use()
+            self.f_paint.clear(0.0, 0.0, 0.0, 0.0)
+            ctx.blend_func = (moderngl.ONE, moderngl.ONE_MINUS_SRC_ALPHA)
+            if wa > 0.001 and cliff > 0.001:
+                setu(self.p_cliff, uRect=rect, uT=t, uAspect=A, uAmt=wa * cliff, uX=x, uTop=top, uBot=bot, uW=wdt,
+                     uLit=shown(val("CLIFF_LIT", t, "#c9a3a4")), uShade=shown(val("CLIFF_SHADE", t, "#5d6690")),
+                     uRim=shown("#ffd9b8"))
+                self.v_cliff.render(moderngl.TRIANGLE_STRIP)
+            if sa > 0.001:
+                setu(self.p_rib, uMask=1, **stream_u)
+                self.v_rib.render(moderngl.TRIANGLE_STRIP, vertices=len(rib))
+            if PP:
+                rows = self._petal_rows(PP, cols_hex, "paint")
+                if len(rows):
+                    self.pbuf.write(rows[:20000].tobytes())
+                    setu(self.p_petal, uMask=1, uPx=self.px * 0.5)
+                    self.v_petal.render(moderngl.POINTS, vertices=min(len(rows), 20000))
+            painted = True
+            ctx.blend_func = (moderngl.ONE, moderngl.ONE)
+            R.f_L.use()
+        self.paint_k = float(val("NATURE_PAINT", t, 1.0)) if painted else 0.0
+        # ---- light pass (additive, into the glow buffer)
+        if sa > 0.001:
+            setu(self.p_rib, uMask=0, **stream_u)
+            self.v_rib.render(moderngl.TRIANGLE_STRIP, vertices=len(rib))
+            self.stream.draw(P, t, sa, calm, geo)
+        if wa > 0.001:
+            cs = colors("WATERFALL_COLOR", t, ["#bfe3ff", "#fff4e0"])
+            ca, cb = cs[0], cs[-1]
+            setu(self.p_fall, uRect=rect, uT=t, uAspect=A, uAmt=wa, uX=x, uTop=top, uBot=bot, uW=wdt,
+                 uCalm=calm, uCalmY=CALM_Y, uColA=ca, uColB=cb)
+            self.v_fall.render(moderngl.TRIANGLE_STRIP)
+            self.fall.droplets(P, t, wa, calm, x, top, bot, wdt, ca, cb)
         if self.tree is not None:
             a = float(val("TREE", t, 0.0) or 0.0)
             if a > 0.001:
                 self.tree.draw(P, t, a, calm)
-        if self.flowers is not None:
-            a = float(val("FLOWERS", t, 0.0) or 0.0)
-            if a > 0.001:
-                self.flowers.draw(P, t, a, calm)
+        if PP:
+            rows = self._petal_rows(PP, cols_hex, "light")
+            if len(rows):
+                self.pbuf.write(rows[:20000].tobytes())
+                setu(self.p_petal, uMask=0, uPx=self.px)
+                self.v_petal.render(moderngl.POINTS, vertices=min(len(rows), 20000))
         d = P.data()
         n = min(len(d), self.cap)
         if n == 0:

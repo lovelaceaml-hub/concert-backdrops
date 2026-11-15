@@ -421,6 +421,7 @@ uniform vec4 uIce; uniform vec3 uIceCol, uThawCol;
 uniform vec4 uField; uniform vec3 uFieldCol;
 uniform float uShadeK;
 uniform float uCalm, uCalmY;   // calm lower third: rings, glitter, reflections and thaw edges fade there
+uniform sampler2D uNatT; uniform float uNatK;   // nature paint (flowers, stream, cliff): colour over the scene
 float calmK(float y){ return 1.0-uCalm*(1.0-smoothstep(uCalmY-0.07, uCalmY+0.05, y)); }
 vec2 hash22(vec2 p){ vec3 p3 = fract(vec3(p.xyx)*vec3(0.1031,0.1030,0.0973));
   p3 += dot(p3, p3.yzx+33.33); return fract((p3.xx+p3.yz)*p3.zy); }
@@ -753,6 +754,11 @@ void main(){
   float tight = max(wordMask(uTextA, uv, uTxA, uBndA, uOffA), wordMask(uTextB, uv, uTxB, uBndB, uOffB));
   col *= 1.0-min(0.50*uShadeK*tight, 0.92);
   col *= 1.0-(ct.g*0.50+ct.b*0.34)*uCredit.w;
+  if(uNatK>0.0){   // nature paint (engine/nature.py): painted over the scene, never over the text
+    vec4 np_ = texture(uNatT, uv);
+    float nk = uNatK*(1.0-textField(uv));
+    col = col*(1.0-np_.a*nk) + np_.rgb*nk;
+  }
   vec3 L = texture(uL, uv).rgb;
   vec3 bl = texture(uB1,uv).rgb*0.34 + texture(uB2,uv).rgb*0.28 + texture(uB3,uv).rgb*0.24 + texture(uB4,uv).rgb*0.22;
   col += L + bl*uBloom;

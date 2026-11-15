@@ -68,3 +68,108 @@ void main(){
   o = vec4(c*uAmt*calm, 1.0);
 }
 """
+
+
+# ------------------------------------------------------------------ paint (tint) layers
+# The nature paint buffer holds premultiplied colour and coverage; the composite lays it over the scene before the
+# light is added (uNatT, uNatK in shaders.COMP_FS), so flowers, water and the cliff read as colour on bright skies.
+
+# flower petals as real petal shapes: one sprite per petal, rotated along the petal
+PETAL_VS = """
+#version 330
+in vec2 aPos; in float aSize; in float aRot; in vec3 aCol; in float aA; in float aW;
+uniform float uPx;
+out float vRot; out vec3 vCol; out float vA; out float vW;
+void main(){
+  vRot = aRot; vCol = aCol; vA = aA; vW = aW;
+  gl_Position = vec4(aPos*2.0-1.0, 0.0, 1.0);
+  gl_PointSize = max(aSize*uPx, 1.0);
+}
+"""
+PETAL_FS = """
+#version 330
+in float vRot; in vec3 vCol; in float vA; in float vW; out vec4 o;
+uniform int uMask;   // 1: paint (premultiplied colour, coverage), 0: light (a bright rim and vein)
+void main(){
+  vec2 p = gl_PointCoord*2.0-1.0; p.y = -p.y;
+  float c = cos(vRot), s = sin(vRot);
+  p = vec2(c*p.x+s*p.y, -s*p.x+c*p.y);       // p.x along the petal (base -1, tip 1), p.y across
+  float x = p.x;
+  float w = vW*sqrt(max(0.0, 1.0-x*x))*(1.0+0.35*x)*(1.0-0.25*smoothstep(0.75,1.0,x));
+  float body = smoothstep(w+0.02, w-0.10, abs(p.y))*smoothstep(1.0, 0.90, x)*smoothstep(-1.0, -0.88, x);
+  float rim = body*(1.0-smoothstep(w-0.04, w-0.20, abs(p.y)));
+  float vein = exp(-p.y*p.y/0.002)*smoothstep(1.0, -0.6, x)*body;
+  float base = smoothstep(0.2, -0.9, x)*body;
+  if(uMask==1){
+    float a = body*vA;
+    vec3 tc = vCol*(0.78+0.30*(x*0.5+0.5))*(1.0-0.25*base);
+    o = vec4(tc*a, a);
+    return;
+  }
+  o = vec4((vCol*0.25+vec3(0.20,0.18,0.14))*(rim*0.9 + vein*0.35 + base*0.25)*vA, 1.0);
+}
+"""
+
+# the stream as one continuous ribbon: flowing bands and streaks, glints moving downstream, banks catching light
+RIBBON_VS = """
+#version 330
+in vec2 aPos; in float aS; in float aU; in float aW;
+out float vS; out float vU; out float vW; out float vY;
+void main(){ vS = aS; vU = aU; vW = aW; vY = aPos.y; gl_Position = vec4(aPos*2.0-1.0, 0.0, 1.0); }
+"""
+RIBBON_FS = "#version 330\n" + NOISE + """
+in float vS; in float vU; in float vW; in float vY; out vec4 o;
+uniform float uT, uSpeed, uFront, uAmt, uCalm, uCalmY;
+uniform vec3 uColA, uColB, uPaint;
+uniform int uMask;
+void main(){
+  float au = abs(vU);
+  float body = smoothstep(1.12, 0.86, au);
+  float reach = smoothstep(uFront, uFront-0.12, vW);
+  float calm = 1.0-uCalm*0.6*(1.0-smoothstep(uCalmY-0.07, uCalmY+0.05, vY));
+  float k = reach*calm*uAmt;
+  float tt = uT*uSpeed;
+  if(uMask==1){
+    float depth = 1.0-au*au*0.55;
+    float a = body*0.62*k;
+    o = vec4(uPaint*depth*a, a);
+    return;
+  }
+  // flow: long streaks and broad bands carried downstream, the middle faster than the edges
+  float sp = 1.0-0.45*au*au;
+  float streak = pow(vnoise(vec2(vS*14.0 - tt*2.4*sp, vU*7.0)), 3.0);
+  float band = pow(vnoise(vec2(vS*5.0 - tt*1.3*sp, vU*1.6 + 3.0)), 2.0);
+  float ripple = 0.5+0.5*sin(vS*120.0 - tt*9.0*sp + vU*3.0 + 2.0*vnoise(vec2(vS*30.0, vU*4.0)));
+  float glint = pow(vnoise(vec2(vS*160.0 - tt*7.0*sp, vU*22.0 + uT*0.7)), 12.0)*7.0;
+  float bank = exp(-pow((au-0.93)/0.07, 2.0))*(0.55+0.45*vnoise(vec2(vS*50.0 - tt*1.2, 1.0)));
+  vec3 c = uColA*(0.06 + streak*0.55 + band*0.30 + ripple*streak*0.25)*body + uColB*(bank*0.55 + glint*body);
+  o = vec4(c*k, 1.0);
+}
+"""
+
+# a soft cliff of light and shadow behind the waterfall (paint only; the composite keeps it off the text)
+CLIFF_FS = "#version 330\n" + NOISE + """
+in vec2 vUV; out vec4 o;
+uniform float uT, uAspect, uAmt, uX, uTop, uBot, uW;
+uniform vec3 uLit, uShade, uRim;
+void main(){
+  float H = max(uTop-uBot, 0.02);
+  float v = (vUV.y-uBot)/H;                          // 0 at the foot, 1 at the lip
+  float dx = (vUV.x-uX)*uAspect;
+  float hw = uW*(2.4 + 1.6*(1.0-clamp(v,0.0,1.0)));  // wider at the foot
+  float rough = fbm3(vec2(vUV.y*18.0, sign(dx)*3.0))*0.9 - 0.45;
+  float u = dx/hw;
+  float side = smoothstep(1.0+0.30*rough, 0.70+0.30*rough, abs(u));
+  float topE = smoothstep(1.10+0.05*vnoise(vec2(dx*30.0,2.0)), 1.00, v);
+  float foot = smoothstep(-0.12, 0.10, v);
+  float a = side*topE*foot*0.80*uAmt;
+  // rock: facets and ledges, lit from the open sky on the right, the wet face by the water a little darker
+  float n = fbm(vec2(dx*10.0, vUV.y*14.0));
+  float ledge = smoothstep(0.45, 0.62, fbm3(vec2(dx*4.0, vUV.y*30.0)));
+  float light = clamp(0.40 + 0.55*u + 0.55*(n-0.5) + 0.25*ledge, 0.0, 1.0);
+  float wet = exp(-pow(dx/(uW*1.2), 2.0));
+  vec3 c = mix(uShade, uLit, light)*(1.0-0.20*wet);
+  c = mix(c, uRim, smoothstep(0.93, 1.03, v)*0.6);   // the lit brow of the cliff
+  o = vec4(c*a, a);
+}
+"""
