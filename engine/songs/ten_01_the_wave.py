@@ -222,7 +222,7 @@ def cam_drop(t):
     # frame 0: the spark falling down its shaft, the sleepers far out on the black glass behind it
     y = spark_y(t)
     return (np.array([X0 + 0.45, 0.36 + 0.62 * y, Z0 + 3.2 - 0.4 * min(max(t, 0.0), 1.0)]),
-            np.array([X0, 0.78 * y + 0.05, Z0 - 0.5]))
+            np.array([X0, y + 0.55 * max(0.0, 1.0 - max(t, 0.0) / IMPACT) + 0.05, Z0 - 0.5]))
 
 
 def cam_ride(t):
