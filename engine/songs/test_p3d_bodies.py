@@ -7,7 +7,7 @@ Stages (start times): see STAGES below; `python -c "import songs.test_p3d_bodies
 import songs.s03_original as _base
 
 STAGE = 4.0
-_N = 7
+_N = 18
 _base.TOTAL = STAGE * _N
 _base.NFRAMES = int(round(_base.TOTAL * _base.FPS))
 _base.MUSIC_END = _base.TOTAL - 0.2
@@ -36,9 +36,9 @@ GAP = 70.0                 # metres between stages along x
 STAGES = []                # (name, setup(scene, x, t0), camera(x, t0, t1) -> move, light (dx, y, dz) or None)
 
 
-def stage(name, cam, light=None):
+def stage(name, cam, light=None, shaft=False, look="night"):
     def deco(fn):
-        STAGES.append((name, fn, cam, light))
+        STAGES.append((name, fn, cam, light, shaft, look))
         return fn
     return deco
 
@@ -114,6 +114,105 @@ def s_clothes(scene, x, t0):
          look="glitter", color="#ffcf8a", points=60000, seed=2.0, **win(t0)).add(scene, "wb")
 
 
+# ------------------------------------------------------------------------------------------------ effects
+@stage("form: a woman gathers out of drifting dust (0.2 to 3.2 s)",
+       lambda x, t0, t1: hold((x + 1.2, 1.2, 3.0), (x, 0.95, 0.0), t0, t1, fov=36, aperture=0.04))
+def s_form(scene, x, t0):
+    Body("woman", at=(x, 0), facing=25, garment="dress", look="glitter", color="#f2b865", points=60000,
+         gesture=[(t0 + 2.4, t0 + 30, "open_arms", dict(lift=0.1))],
+         effects=[dict(kind="form", t=t0 + 0.2, dur=3.0)], **win(t0)).add(scene, "former")
+
+
+@stage("dissolve: a man from behind rises apart into flakes in a blue shaft (from 0.6 s)",
+       lambda x, t0, t1: hold((x + 0.2, 1.3, 3.6), (x, 1.6, 0.0), t0, t1, fov=42, aperture=0.03), shaft=True)
+def s_dissolve(scene, x, t0):
+    Body("man", at=(x, 0), facing=180, garment="tunic", look="glitter", color="#e8b45a", color2="#ffe2a8",
+         points=60000, effects=[dict(kind="dissolve", t=t0 + 0.6, dur=3.0, share=0.75)], **win(t0)).add(scene, "riser")
+
+
+@stage("petals: a woman turns to petals that leave in a spiral (from 0.4 s)",
+       lambda x, t0, t1: hold((x + 0.6, 1.25, 2.9), (x, 1.05, 0.0), t0, t1, fov=38, aperture=0.03))
+def s_petals(scene, x, t0):
+    Body("woman", at=(x, 0), facing=70, garment="dress", look="glitter", color="#f0d6c0", color2="#ffffff",
+         points=60000, effects=[dict(kind="petals", t=t0 + 0.4, dur=3.2, share=0.6, color="#d0182a",
+                                     color2="#ff5a5a")], **win(t0)).add(scene, "petal")
+
+
+@stage("birds leave a profile window (from 0.5 s), day sky",
+       lambda x, t0, t1: hold((x + 0.1, 1.38, 1.9), (x + 0.1, 1.3, 0.0), t0, t1, fov=34, aperture=0.02),
+       look="cream")
+def s_birds(scene, x, t0):
+    Body("woman", at=(x, 0), facing=-90, garment="dress", look="window", color="#ffd9b0", color2="#ffffff",
+         points=60000, effects=[dict(kind="birds", t=t0 + 0.5, dur=2.5, n=40, color="#2a2a38",
+                                     dir=(1.0, 0.4, 0.2))], **win(t0)).add(scene, "window", mask=dict(sky="sunrise"))
+
+
+@stage("blow: dots of two colours, a palm blowing a stream of light (from 1.2 s)",
+       lambda x, t0, t1: hold((x + 0.15, 1.3, 1.7), (x + 0.15, 1.25, 0.0), t0, t1, fov=36, aperture=0.015))
+def s_blow(scene, x, t0):
+    Body("woman", at=(x - 0.15, 0), facing=90, garment="dress", look="dots", color="#29d6e6", color2="#e83ad0",
+         points=70000, gesture=[(t0, t0 + 30, "blow", dict(side="L"))],
+         effects=[dict(kind="blow", t=t0 + 1.2, dur=2.6, side="L", color="#7af0ff", color2="#ff7ae6")],
+         **win(t0)).add(scene, "blower")
+
+
+@stage("disperse: two in mist, one blowing apart from one side (from 0.5 s)",
+       lambda x, t0, t1: hold((x + 0.1, 1.15, 4.6), (x + 0.1, 1.0, 0.0), t0, t1, fov=34, aperture=0.04))
+def s_disperse(scene, x, t0):
+    Body("man", at=(x - 0.35, 0), facing=80, garment="coat", look="glitter", color="#c86a5a", color2="#ffb08a",
+         points=50000, effects=[dict(kind="disperse", t=t0 + 0.5, dur=3.0, share=0.85, dir=(-1.0, 0.3, 0.2))],
+         **win(t0)).add(scene, "goer")
+    Body("woman", at=(x + 0.45, 0.2), facing=-80, garment="dress", look="glitter", color="#f2c890", points=50000,
+         **win(t0)).add(scene, "stayer")
+
+
+def _ring(x, n=900):
+    a = np.arange(n) / n * 2 * np.pi
+    return np.stack([x + 0.7 * np.cos(a), 1.6 + 0.7 * np.sin(a), np.zeros(n) - 0.3], axis=1)
+
+
+@stage("hand-over: a man disperses and the particles gather into a ring of light (handed over at 1.6 s)",
+       lambda x, t0, t1: hold((x, 1.3, 4.4), (x, 1.3, 0.0), t0, t1, fov=40, aperture=0.02))
+def s_handover(scene, x, t0):
+    Body("man", at=(x - 0.2, 0), facing=90, garment="tunic", look="glitter", color="#ffcf8a", points=50000,
+         effects=[dict(kind="disperse", t=t0 + 0.2, dur=1.4, share=1.0, dir=(1.0, 0.5, 0.0),
+                       to=dict(t=t0 + 1.6, targets=_ring(x), arrive=1.3, stagger=0.6))], **win(t0)).add(scene, "giver")
+
+
+@stage("reversible: dissolve runs out (0.3 to 1.5 s), hangs, and runs home (2.2 to 3.4 s)",
+       lambda x, t0, t1: hold((x + 0.4, 1.2, 3.4), (x, 1.05, 0.0), t0, t1, fov=38, aperture=0.03))
+def s_amount(scene, x, t0):
+    amt = Track([(t0 + 0.3, 0.0), (t0 + 1.5, 0.55), (t0 + 2.2, 0.55), (t0 + 3.4, 0.0)])
+    Body("woman", at=(x, 0), facing=30, garment="dress", look="glitter", color="#ffd29a", points=55000,
+         effects=[dict(kind="dissolve", t=t0 + 0.3, dur=2.0, amount=amt, hang=1.2)], **win(t0)).add(scene, "mender")
+
+
+@stage("plexus: a runner of points and lines, gold bokeh",
+       lambda x, t0, t1: orbit(lambda t: (x - 3.0 + 3.16 * (t - t0), 1.0, 0.0), radius=3.2, height=1.2, a0=60.0,
+                               a1=30.0, t0=t0, t1=t1, fov=34, aperture=0.06))
+def s_plexus(scene, x, t0):
+    Body("man", at=(x - 3.0, 0), facing=90, motion="run", garment="tunic", look="plexus", color="#ffd08a",
+         color2="#a8d8ff", points=40000, **win(t0)).add(scene, "runner")
+
+
+@stage("constellation: a figure of a few stars that fills into the full plexus (detail 0 to 1 over 1 to 3 s)",
+       lambda x, t0, t1: hold((x, 1.1, 3.6), (x, 1.0, 0.0), t0, t1, fov=36, aperture=0.0))
+def s_const(scene, x, t0):
+    Body("woman", at=(x, 0), facing=20, garment="dress", color="#cfe0ff", color2="#ffffff", points=40000,
+         look=dict(name="plexus", detail=Track([(t0 + 1.0, 0.0), (t0 + 3.0, 1.0)])),
+         gesture=[(t0, t0 + 30, "open_arms", dict(lift=0.6))], **win(t0)).add(scene, "stars")
+
+
+@stage("cold dust ignites: a sweep from his palm turns a dark rim body to glitter, a rose wash (from 0.8 s)",
+       lambda x, t0, t1: hold((x + 0.9, 1.25, 3.0), (x, 1.05, 0.0), t0, t1, fov=36, aperture=0.03))
+def s_sweep(scene, x, t0):
+    Body("man", at=(x, 0), facing=40, garment="coat", color="#ffcf8a", points=60000,
+         gesture=[(t0, t0 + 30, "raise_hand", dict(side="R"))],
+         look=[dict(name="rim", before="spark", bright=0.6), dict(name="glitter", after="spark")],
+         sweeps=dict(spark=dict(t=t0 + 0.8, at="palm.R", speed=0.9, width=0.25, flash=2.5)),
+         wash=dict(color="#ff9ab0", amount=Track([(t0 + 2.4, 0.0), (t0 + 3.6, 0.6)])), **win(t0)).add(scene, "igniter")
+
+
 # ------------------------------------------------------------------------------------------------ build
 def _setup(scene):
     for k, st in enumerate(STAGES):
@@ -133,8 +232,20 @@ def _light_strength(t):
     return 1.0 if STAGES[k][3] is not None else 0.0
 
 
+def _shaft_on(t):
+    k = int(min(max(t // STAGE, 0), len(STAGES) - 1))
+    return 1.2 if STAGES[k][4] else 0.0
+
+
+def _shaft_base(t):
+    k = int(min(max(t // STAGE, 0), len(STAGES) - 1))
+    return (k * GAP, -0.6)
+
+
 P3D = dict(
     camera=Rig([st[2](k * GAP, k * STAGE, (k + 1) * STAGE) for k, st in enumerate(STAGES)], blend=0.0),
-    world=dict(look="night", light=dict(pos=_light_pos, color="#ffd29a", strength=_light_strength, size=0.5, rays=1.0)),
+    world=dict(look=[(k * STAGE, st[5], 0.0) for k, st in enumerate(STAGES)],
+               light=dict(pos=_light_pos, color="#ffd29a", strength=_light_strength, size=0.5, rays=1.0),
+               shafts=[dict(base=_shaft_base, radius=0.9, top=30.0, spread=0.15, color="#5f8cff", strength=_shaft_on)]),
     setup=_setup,
 )
