@@ -42,10 +42,12 @@ GAP_MIN = 0.5               # clean gap after a dissolve ends before the next te
 END_HOLD_MIN = 4.0
 FORM_EXTRA = 0.75           # the right edge of the words is fully formed FORM_DUR + 0.75 s after form
 DISSOLVE = 1.6
-DARK_HIGH, DARK_MED = 0.62, 0.78          # ring luminance / sky luminance further out
-BAND_HIGH, BAND_MED = 0.70, 0.84          # rows of the text / rows above and below
-CONTRAST_HIGH, CONTRAST_MED = 2.2, 3.0    # (letters + 0.05) / (background + 0.05)
-CALM_HIGH, CALM_MED = 1.6, 1.15           # bottom third motion / motion in the rest
+SPARK_EARLY = 0.6           # end card lines and plain fragments are whole 0.6 s before their t1 (engine/shaders.py)
+RING_Q = 25.0   # percentile of the sky in each ring (stars are bright outliers)
+DARK_HIGH, DARK_MED = 0.70, 0.85          # ring / sky further out (v4 songs 04 and 07: 0.88 or more; song 08 veil: 0.60)
+BAND_LOW = 0.45                           # rows of the text / darker of the rows above and below (a hint only)
+CONTRAST_HIGH, CONTRAST_MED = 1.6, 2.2    # (letters + 0.05) / (background + 0.05)
+CALM_HIGH, CALM_MED = 1.8, 1.25           # bottom third motion / motion in the rest
 CALM_FLOOR = 0.0035                       # mean frame difference (0..1) below which the bottom counts as calm anyway
 RIGID_INTERNAL = 0.10                     # internal change / figure brightness below this is a rigid image
 MOVE_PX = 0.35                            # figure speed (px per frame at 640x360) that counts as moving
@@ -149,12 +151,12 @@ def text_blocks(S):
     if tg["t0"] < total:
         ttex, _ = T.render_tagline(tg["text"], ty)
         blocks.append(dict(name="End card lines", kind="tagline", text=tg["text"].replace("\n", " / "),
-                           appear=tg["t0"], solid0=tg["t1"], solid1=total, gone=total, mask=ttex[::-1, :, 0]))
+                           appear=tg["t0"], solid0=tg["t1"] - SPARK_EARLY, solid1=total, gone=total, mask=ttex[::-1, :, 0]))
     for k, fr in enumerate(getattr(S, "FRAGMENTS", [])):
         ftex, _ = T.render_fragment(fr["text"], fr.get("dy", 0.0), fr.get("size", 74))
         styled = fr.get("style", "sparks") != "sparks"
         blocks.append(dict(name=f"Fragment {k + 1}", kind="fragment", text=fr["text"], appear=fr["t0"],
-                           solid0=fr["t1"], solid1=fr["out"], gone=fr["out"] + (2.6 if styled else DISSOLVE),
+                           solid0=fr["t1"] - (0.0 if styled else SPARK_EARLY), solid1=fr["out"], gone=fr["out"] + (2.6 if styled else DISSOLVE),
                            mask=ftex[::-1, :, 0]))
     return blocks
 
@@ -186,13 +188,18 @@ def credit_mask(S, cl, t, w, h):
     return m, float(cr[3])
 
 
+def sky_bottom(S):
+    """Lowest row of open sky (fraction from the top): a little above the horizon, over the ridge of hills."""
+    return 1.0 - (float(getattr(S, "HORIZON", 0.3)) + 0.075)
+
+
 def shrink(mask8, w, h):
     from PIL import Image
     return np.asarray(Image.fromarray(mask8).resize((w, h), Image.BOX)).astype(np.float32) / 255.0
 
 
 # ---------------------------------------------------------------- 1. text: dark behind it, and legibility
-def measure_text(lum, cov, others, h):
+def measure_text(lum, cov, others, h, sky_bottom=1.0):
     """lum: linear luminance (h x w); cov: this block's letter coverage; others: coverage of other text on screen.
     Distances are measured in 1080p pixels."""
     from scipy import ndimage as ndi
@@ -201,6 +208,8 @@ def measure_text(lum, cov, others, h):
     d = ndi.distance_transform_edt(any_text < 0.12) * k
     d_self = ndi.distance_transform_edt(cov < 0.12) * k
     near_self = d_self < 260
+    # only the sky: the ridge and the lake under it are scenery with their own light and shadow
+    near_self[int(sky_bottom * lum.shape[0]):] = False
     # the sky changes a lot from top to bottom (night sky, glowing horizon, lake), so compare the ring round the
     # letters with the sky further out in the same rows: strips about 40 px high, then the median over strips
     near = (d >= 30) & (d < 130) & near_self
@@ -212,7 +221,8 @@ def measure_text(lum, cov, others, h):
         f_ = far[r0:r0 + sh]
         if n_.sum() < 12 or f_.sum() < 12:
             continue
-        a_, b_ = float(np.median(lum[r0:r0 + sh][n_])), float(np.median(lum[r0:r0 + sh][f_]))
+        a_ = float(np.percentile(lum[r0:r0 + sh][n_], RING_Q))
+        b_ = float(np.percentile(lum[r0:r0 + sh][f_], RING_Q))
         ratios.append((a_ + 0.002) / (b_ + 0.002))
         wts.append(float(n_.sum()))
         med_n.append(a_)
@@ -265,7 +275,7 @@ def text_checks(S, blocks, cl, get_frame, times_for, w, h, issues, log):
         ts = times_for(b)
         if not ts:
             continue
-        worst = None
+        ms = []
         for t in ts:
             lum = get_frame(t)
             if lum is None:
@@ -278,39 +288,37 @@ def text_checks(S, blocks, cl, get_frame, times_for, w, h, issues, log):
             cm, ca = credit_mask(S, cl, t, w, h)
             if cm is not None:
                 others = np.maximum(others, cm)
-            m = measure_text(lum, cov, others, h)
+            m = measure_text(lum, cov, others, h, sky_bottom(S))
             m["t"] = round(t, 2)
+            ms.append(m)
             rows.append(dict(block=b["name"], kind=b["kind"], **{k: (round(v, 3) if isinstance(v, float) else v)
                                                                 for k, v in m.items()}))
-            if worst is None or (m["dip"] < worst["dip"]):
-                worst = m
-            sev = None
-            if m["dip"] < DARK_HIGH or m["band"] < BAND_HIGH:
-                sev = "HIGH"
-            elif m["dip"] < DARK_MED or m["band"] < BAND_MED:
-                sev = "MEDIUM"
-            if sev:
-                what = []
-                if m["dip"] < DARK_MED:
-                    what.append(f"the sky just round the letters is {100 * (1 - m['dip']):.0f}% darker than the sky "
-                                f"further out (a dark halo or veil)")
-                if m["band"] < BAND_MED:
-                    what.append(f"the rows behind the words are {100 * (1 - m['band']):.0f}% darker than the rows "
-                                f"above and below (a dark band)")
-                issues.append(dict(severity=sev, check="Dark behind text", at=m["t"], block=b["name"],
-                                   detail="; ".join(what)))
-            sevl = None
-            if m["contrast"] < CONTRAST_HIGH:
-                sevl = "HIGH"
-            elif m["contrast"] < CONTRAST_MED:
-                sevl = "MEDIUM"
-            if sevl:
-                issues.append(dict(severity=sevl, check="Legibility", at=m["t"], block=b["name"],
-                                   detail=f"the letters are only {m['contrast']:.1f} times brighter than the light "
-                                          f"round them (want {CONTRAST_MED:.0f} or more)"))
-        if worst:
-            log.append(f"{b['name']}: ring/sky {worst['dip']:.2f}, band {worst['band']:.2f}, "
-                       f"contrast {worst['contrast']:.1f}")
+        if not ms:
+            continue
+        # one line per block and check: the worst moment, and how many of the sampled moments show it
+        wd = min(ms, key=lambda m: m["dip"])
+        wb = min(ms, key=lambda m: m["band"] if not math.isnan(m["band"]) else 9)
+        wc = min(ms, key=lambda m: m["contrast"])
+        of = f"{{}} of {len(ms)} moments checked"
+        sev = "HIGH" if wd["dip"] < DARK_HIGH else ("MEDIUM" if wd["dip"] < DARK_MED else None)
+        if sev:
+            k = sum(m["dip"] < DARK_MED for m in ms)
+            issues.append(dict(severity=sev, check="Dark behind text", at=wd["t"], block=b["name"],
+                               detail=f"the sky just round the letters is {100 * (1 - wd['dip']):.0f}% darker than "
+                                      f"the sky further out in the same rows (a dark halo or veil), "
+                                      + of.format(k)))
+        elif wb["band"] < BAND_LOW:
+            issues.append(dict(severity="LOW", check="Dark behind text", at=wb["t"], block=b["name"],
+                               detail=f"the rows of the words are {100 * (1 - wb['band']):.0f}% darker than the rows "
+                                      f"above and below: maybe a dark band, maybe the scene; look at this frame"))
+        sevl = "HIGH" if wc["contrast"] < CONTRAST_HIGH else ("MEDIUM" if wc["contrast"] < CONTRAST_MED else None)
+        if sevl:
+            k = sum(m["contrast"] < CONTRAST_MED for m in ms)
+            issues.append(dict(severity=sevl, check="Legibility", at=wc["t"], block=b["name"],
+                               detail=f"the letters are only {wc['contrast']:.1f} times brighter than the light "
+                                      f"round them (want {CONTRAST_MED:.1f} or more), " + of.format(k)))
+        log.append(f"{b['name']}: ring/sky {wd['dip']:.2f}, band {wb['band']:.2f}, contrast {wc['contrast']:.1f} "
+                   f"(worst of {len(ms)})")
     # the title card and the corner credit (engine design: its own soft shade, so at most MEDIUM)
     if cl is not None:
         c = S.CREDIT
@@ -326,7 +334,7 @@ def text_checks(S, blocks, cl, get_frame, times_for, w, h, issues, log):
             for o in blocks:
                 if o["appear"] <= t < o["gone"]:
                     others = np.maximum(others, shr[o["name"]])
-            m = measure_text(lum, cm, others, h)
+            m = measure_text(lum, cm, others, h, sky_bottom(S))
             m["t"] = round(t, 2)
             rows.append(dict(block=label, kind="credit", **{k: (round(v, 3) if isinstance(v, float) else v)
                                                            for k, v in m.items()}))
@@ -362,7 +370,7 @@ def timing_checks(S, blocks, issues, log):
     seq = sorted([b for b in blocks if b["kind"] in ("expression", "fragment", "title")], key=lambda b: b["appear"])
     for i, a in enumerate(seq):
         for b in seq[i + 1:]:
-            if b["appear"] >= a["gone"] + GAP_MIN:
+            if b["appear"] >= a["gone"] + GAP_MIN - 0.05:
                 continue
             if b["appear"] < a["gone"] and {a["kind"], b["kind"]} != {"title"}:
                 both = a["kind"] == "expression" or b["kind"] == "expression"
@@ -539,7 +547,7 @@ def figure_checks(S, figs, video, vfps, issues, log, w=640, h=360):
                                detail=f"moves across the screen as one rigid picture: inside its box almost nothing "
                                       f"changes from frame to frame (change {mi:.2f}, want {RIGID_INTERNAL} or more) "
                                       f"in {rigid_s:.1f} of {moving_s:.1f} s of movement sampled"))
-        elif frozen_s >= min(FROZEN_MED_S, 0.6 * span):
+        elif span >= 2.0 and frozen_s >= min(FROZEN_MED_S, 0.6 * span):
             issues.append(dict(severity="MEDIUM", check="Static figures", at=round(a, 2), block=f["name"],
                                detail=f"stands frozen like a still picture for {frozen_s:.1f} s of the "
                                       f"{span:.1f} s sampled"))
@@ -622,9 +630,10 @@ def write_report(out, meta, issues, sections, data):
         if lines:
             L += [f"**{title}**", ""] + [f"- {x}" for x in lines] + [""]
     L += ["## What the checks mean", "",
-          f"- Dark behind text: median sky brightness in rings 30 to 130 px round the letters (1080p pixels) against "
-          f"the sky 140 to 240 px out. Under {DARK_MED} is a visible dark halo or veil, under {DARK_HIGH} a strong one. "
-          f"Also the rows of the words against rows above and below (a band): under {BAND_MED} / {BAND_HIGH}.",
+          f"- Dark behind text: sky brightness in rings 30 to 130 px round the letters (1080p pixels) against "
+          f"the sky 140 to 260 px out, in the same rows, open sky only (above the ridge), using the darker quarter of "
+          f"each ring so stars do not count. Under {DARK_MED} is a visible dark halo or veil, under {DARK_HIGH} a "
+          f"strong one. The rows of the words against the rows above and below (a band) under {BAND_LOW} is a hint.",
           f"- Legibility: (letters + 0.05) / (brightest tenth of the light round them + 0.05), in linear light. "
           f"Under {CONTRAST_MED} is weak, under {CONTRAST_HIGH} hard to read.",
           f"- Reading time: expressions fully formed (form + FORM_DUR + 0.75 s) until hold, at least "

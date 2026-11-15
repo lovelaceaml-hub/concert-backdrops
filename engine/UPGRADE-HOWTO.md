@@ -170,3 +170,27 @@ Nothing to change in a song file; all song files load as before. What changed, a
 Unchanged: commit and push the song file and its assets (plates and figures are in the repo under `assets/`, so the cloud workflow has them), then run the Render workflow (stills first, then video). See docs/HANDOFF.md.
 
 The video run's finish job uploads three artifacts: "<name>" (the full 1920x1080 video plus a silent copy), "<name> frames" (4 frame sheets of 8 frames each, for checking without downloading the video) and "<name> (share)" (the file "<name> (share).mp4": 1280x720, H.264 with AAC sound, always under 25 MB, for phones and messages; the job fails if it would be larger).
+
+## I11 Draft mode and the automatic quality check (branch engine-qa)
+
+**Draft mode** renders the whole song fast, to judge timing, layout and motion before a full render. It is not for showing anyone.
+
+- Run the Render workflow with `mode=draft` (same song, audio and name inputs). It renders 640x360 at 15 fps in 8 parallel parts, with half the particles, then joins them with the music.
+- Artifacts: "<name> (draft)" holds "<name> (draft).mp4" (a few MB) and "<name> (draft contact sheet).jpg" (30 frames over the whole song, each labelled with its time); "<name> QA" holds the quality report.
+- Engine: `engine/draft.py`. `DRAFT=1` in the environment is the flag; `import draft` then `draft.DRAFT` (true in a draft) and `draft.n(count)` (a particle count cut to the draft share, `DRAFT_PARTICLES`, default 0.5) let any layer draw less. Without any change in a layer, the draft already draws only that share of every particle buffer (stars, motes, lanterns, petals, words, figures, snow, fragment sparks and any new layer hung off the renderer), and every full-screen shader does a ninth of the work at 640x360. Normal renders are untouched: no engine file outside `engine/draft.py` changed.
+- By hand: `cd engine && DRAFT=1 python draft.py --range 0 900 --out draft.mp4`, and `python draft.py --sheet draft.mp4 --out sheet.jpg`.
+
+**Quality check** (`tools/qa_check.py`) runs on every stills run (report inside the stills artifact), at the end of every video run (on the share copy, artifact "<name> QA") and on every draft. It writes `qa-report.md` (plain words, a table of issues with HIGH, MEDIUM, LOW) and `qa.json`, adds the report to the run's summary page, and marks HIGH issues as errors and MEDIUM as warnings in the run. The workflow input `qa` is `flag` (default: report only), `fail` (the run fails on any HIGH issue, after the artifacts are saved) or `off`.
+
+It uses the engine's own text layout (it imports the song file and engine/text.py), so it knows where every word sits and when it is fully formed. What it checks:
+
+- Dark behind text: the sky in a ring 30 to 130 px round the letters against the sky 140 to 260 px out, in the same rows, open sky only (above the ridge), using the darker quarter of each ring so stars do not count. Under 0.85 is MEDIUM, under 0.70 HIGH (tuned: the v4 songs 04 and 07 measure 0.88 or more; the song 08 end card veil measures 0.60).
+- Legibility: the letters against the brightest tenth of the light round them; under 2.2 is MEDIUM, under 1.6 HIGH.
+- Reading time (from the song file): each expression fully formed (form + FORM_DUR + 0.75 s) for at least 6 s; fragments 3 s; no fragment over an expression; a 0.5 s gap between texts.
+- End card: three lines under the title, whole for at least 4 s before the fade.
+- Calm bottom third: frame differences in the bottom third against the rest, per 2 s (people of light left out).
+- Static figures: frames inside each figure's box, lined up with where the figure moves; a figure that slides across as one rigid picture is HIGH, one frozen still for 4 s or more is MEDIUM.
+- Dashes: no em or en dash in the song file or its status file (project-docs/status/NN.md).
+- Length: the video is as long as the song file says.
+
+By hand (repository root, fonts from tools/setup_fonts.py, ffmpeg): `python tools/qa_check.py --song s08_favor_from_god --video "<file>.mp4" --out qa` (or `--stills <folder>`, or neither for the song-file checks only). It takes under half a minute.
