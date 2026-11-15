@@ -242,7 +242,7 @@ _K3 = [  # 3 THE CANOPY
 ]
 _K4 = [  # 4 THE RIVER (no cut: we burst up through the roof)
     (19.85, W3(0.1, 2.30, ZC + 5.2), W3(0.0, 2.80, ZC - 6.0)),
-    (21.10, _mrel(21.1, (-5.0, 17.0, 50.0)), _mrel(21.1, (0.0, 0.0, 4.0))),
+    (21.10, _mrel(21.1, (-3.2, 8.5, 31.0)), _mrel(21.1, (0.0, 0.6, 0.0))),
     (22.45, W3(1.30, 1.70, ZN + 6.2), W3(0.0, 1.95, ZN - 3.0)),
     (25.60, W3(0.50, 1.65, ZN + 5.2), W3(0.0, 1.95, ZN - 3.0)),
     (26.79, W3(0.15, 1.45, ZN + 1.8), W3(0.0, 1.60, ZN - 6.0)),
@@ -357,24 +357,23 @@ MEET = W3(0.0, 1.12, ZG)                                # where the greeting han
 PULL_AT, PULL_T0 = (0.07, ZH + 1.58), 6.60                # the pair of the Consideration (motion capture)
 _PULL = Actor("woman", at=PULL_AT, facing=180.0, motion=[(PULL_T0, "pull_up")], seed=22.0)
 _SPECS = [
-    _word(0.5, 0.675, 7.6, 104, 1.30, 3.40, 6.20, 7.10, expr="Greeting", arrive="touch", source=tuple(MEET),
+    # every word builds in place and leaves whole (it rushes past us as light, or parts like doors), so no
+    # frame shows broken letters; one word is read at a time
+    _word(0.5, 0.665, 7.6, 104, 1.30, 3.40, 6.20, 7.00, expr="Greeting", arrive="touch", source=tuple(MEET),
           touch_at=(2.50 - 1.30) / (3.40 - 1.30), leave="bokeh"),
-    _word(0.5, 0.675, 7.0, 84, 7.40, 8.50, 11.20, 12.50, expr="Consideration", arrive="palm",
-          source=lambda t: _PULL.where(t, "palm.L"), palm_light=True, leave="petals", wind=(0.0, 0.5, -1.0),
-          reach=0.3),
-    _word(0.5, 0.68, 7.2, 84, 13.30, 14.30, 16.90, 16.90, expr="Apology", arrive="stitch", leave="morph"),
-    _word(0.5, 0.68, 7.2, 92, 16.90, 17.35, 19.95, 21.0, expr="Inclusiveness", arrive="morph",
+    _word(0.5, 0.615, 7.0, 84, 7.40, 8.50, 11.20, 12.10, expr="Consideration", arrive="palm",
+          source=lambda t: _PULL.where(t, "palm.L"), palm_light=True, leave="bokeh"),
+    _word(0.5, 0.645, 7.2, 84, 13.30, 14.30, 16.90, 16.90, expr="Apology", arrive="stitch", leave="morph"),
+    _word(0.5, 0.635, 7.2, 92, 16.90, 17.30, 19.95, 20.80, expr="Inclusiveness", arrive="morph",
           source="Apology", leave="bokeh"),
-    _word(0.5, 0.675, 7.6, 104, 21.10, 22.80, 25.55, 26.70, expr="Concession", arrive="flock",
-          leave="wind", wind=(0.2, 0.3, -1.0)),
-    _word(0.5, 0.675, 7.0, 86, 27.60, 29.55, 32.30, 33.30, expr="Respect", arrive="weave", leave="unravel",
-          to=tuple(M(32.5) + np.array([0.0, 1.4, 0.0]))),
-    _word(0.5, 0.68, 7.4, 76, 33.70, 35.20, 37.95, 39.30, expr="Gratitude", arrive="petals", leave="stream",
-          to=tuple(MH(39.5))),
-    _word(0.5, 0.685, 6.3, 82, 41.00, 42.55, 45.15, 45.95, expr="Encouragement", arrive="shaft", leave="rise",
+    _word(0.5, 0.665, 7.6, 104, 21.10, 22.80, 25.55, 26.50, expr="Concession", arrive="flock", leave="doors"),
+    _word(0.5, 0.645, 7.0, 86, 27.40, 29.55, 32.30, 33.20, expr="Respect", arrive="reveal", edge="right",
+          leave="bokeh"),
+    _word(0.5, 0.635, 7.4, 76, 33.70, 35.20, 37.95, 38.85, expr="Gratitude", arrive="petals", leave="bokeh"),
+    _word(0.5, 0.645, 6.3, 82, 41.00, 42.55, 45.15, 45.95, expr="Encouragement", arrive="shaft", leave="bokeh",
           halo=1.5, bright=1.15),
-    dict(expr="Compliment", ride=(0.5, 0.69, 6.4), em=PW.em_for(LAYOUT, 48.0, 6.4, 90), face="screen",
-         t_in=45.95, t_read0=46.95, t_read1=49.60, t_out=50.40, arrive="rays", leave="rise", halo=1.5, bright=1.15,
+    dict(expr="Compliment", ride=(0.5, 0.65, 6.4), em=PW.em_for(LAYOUT, 48.0, 6.4, 90), face="screen",
+         t_in=45.95, t_read0=46.95, t_read1=49.60, t_out=50.40, arrive="rays", leave="bokeh", halo=1.5, bright=1.15,
          source=tuple(M(46.0) + np.array([0.0, 1.75, -60.0]))),
 ]
 
@@ -411,7 +410,8 @@ ONE = Track([(0.0, 0.0), (38.0, 0.0), (39.4, 1.0), (BIG - 0.3, 1.0), (BIG + 0.8,
              (50.5, 0.0), (TOTAL, 0.0)])
 SHEET = Track([(0.0, 1.0), (S[4] - 0.01, 1.0), (S[4], 0.12), (S[5] - 0.01, 0.12), (S[5], 1.0), (38.0, 1.0),
                (39.4, 0.06), (BIG - 0.3, 0.06), (BIG + 0.9, 1.15), (TOTAL, 1.15)])
-LIFT_T0, LIFT_DUR, LIFT_SPREAD = 49.9, 2.6, 2.2
+LIFT_T0, LIFT_DUR, LIFT_SPREAD = 49.6, 2.0, 1.6
+WIDE = Track([(0.0, 1.0), (19.6, 1.0), (20.6, 2.2), (25.8, 2.2), (26.79, 1.0), (TOTAL, 1.0)])   # the river shot
 LOOM_TALL = Track([(0.0, 1.0), (29.0, 1.0), (29.7, 0.28), (32.3, 0.28), (33.1, 1.0), (TOTAL, 1.0)])
 
 
@@ -452,7 +452,7 @@ class VeilRiver:
         A = 15.0 * ss(10.0, 170.0, s) * (1.0 - c)
         xc = A * (np.sin(s / 41.0 + 0.6) + 0.45 * np.sin(s / 17.0 + 2.1)) + b[0] * np.exp(-s / 3.0)
         yc = 0.24 + (b[1] - 0.24) * np.exp(-s / 1.25)
-        half = 0.5 * (0.42 + 0.17 * s)
+        half = 0.5 * (0.42 + 0.17 * s) * (1.0 + (float(WIDE(t)) - 1.0) * ss(6.0, 22.0, s))
         amp = np.minimum(0.04 + 0.03 * s, 1.5) * (1.0 - 0.85 * c) * (1.0 - lo) * (0.75 + 0.5 * lvl)
         lam = 3.2 + 0.07 * s
         fold = amp * (np.sin(6.283 * (s / lam) - 3.3 * t + 2.4 * v) + 0.3 * np.sin(5.0 * v + 1.3 * t + 0.21 * s))
@@ -527,7 +527,7 @@ class VeilRiver:
         # near her (s < 4) the cloth stays on her shoulders
         hold = ss(1.0, 5.0, s)
         p = pos * (1.0 - hold[:, None]) + p * hold[:, None]
-        calm = 1.0 - 0.6 * float(ss(52.6, 55.0, t))
+        calm = 1.0 - 0.7 * float(ss(51.6, 53.8, t))
         return p, a * (1.0 + 0.3 * f * hold) * calm, size * (1.0 + 1.5 * f * hold)
 
     def threads(self, t, b, L, lo, one, core, edge, eye=None):
@@ -580,7 +580,11 @@ class VeilRiver:
             al = al * ss(0.5, 2.5, np.linalg.norm(0.5 * (a + b2) - eye, axis=1))
         keep = al > 0.003
         u = s[:, :-1].ravel()
-        return dict(pos=a[keep], pos2=b2[keep], size=0.0045 + 0.004 * lo, color=col[keep], alpha=al[keep],
+        wid = np.full((nt, k), 0.0045 + 0.004 * lo)
+        if one > 0.0:
+            wid[self.j0] = wid[self.j0] * (1.0 - one) + 0.0026 * one
+        wid = wid.ravel()
+        return dict(pos=a[keep], pos2=b2[keep], size=wid[keep], color=col[keep], alpha=al[keep],
                     kind="line", u=u[keep], u2=s[:, 1:].ravel()[keep], pulse=(9.0, 3.0, 2.5, 4.0), emit=1.4)
 
 
@@ -641,8 +645,8 @@ def _people():
     # 5 Respect: two in profile; she gives her thoughts as a stream from her palm, he listens
     sp = body("speaker", "woman", -1.05, ZL, 90.0, (26.79, 33.6), GOLD, "#fff0d0", "dress", seed=51.0, form=False,
               gesture=[(27.6, 31.6, "blow", dict(side="R", ease=0.7))],
-              effects=[dict(kind="blow", t=28.0, dur=3.2, side="R", n=4000, reach=2.0,
-                            dir=(1.0, 0.12, 0.0))])
+              effects=[dict(kind="blow", t=28.0, dur=3.2, side="R", n=4000, reach=2.0, rise=-0.03, turb=0.2,
+                            dir=(1.0, 0.0, 0.0))])
     body("listener", "man", 1.05, ZL, 270.0, (26.79, 33.6), COOL, "#e8f0ff", "tunic", seed=52.0, form=False,
          gesture=[(27.4, 33.6, "listen", dict(side="L", ease=0.8))])
     # 6 Gratitude: people walk in her veil behind her; one bows to another, who bows back
@@ -692,7 +696,7 @@ def _setup(scene):
     scene.add("veil", PW.KeepClear(VEIL, WORDS))
     for name, b in _people().items():
         b.add(scene, name)
-    WORDS.add_to(scene)
+    WORDS.add_to(scene, reflect=False)
     try:
         WORDS.check(CAMERA)
     except Exception as e:          # the check only advises
@@ -703,7 +707,7 @@ def _setup(scene):
 LOOKS = dict(
     veilnight=dict(base="night", sky_mid="#0a1546", sky_hor="#24357a", sun_az=180.0, sun_el=6.0, dust=0.35,
                    bokeh=0.25,
-                   sun_color="#ffd9a0", sun_int=0.6, sun_size=0.7, sun_disc=0.0, sun_glow=0.9, rays=0.9, mist=0.25,
+                   sun_color="#ffd9a0", sun_int=0.5, sun_size=0.7, sun_disc=0.0, sun_glow=0.6, rays=0.9, mist=0.25,
                    haze_color="#22306e", mist_color="#26336e", milky=1.0, stars=1.0),
     mist=dict(base="night", dust=0.35, bokeh=0.25, sky_mid="#11205a", sky_hor="#33488f", sun_az=180.0, sun_el=0.9, sun_color="#ffe0b0",
               sun_int=0.55, sun_size=0.8, rays=0.5, mist=0.85, mist_height=1.6, mist_color="#33488f",
@@ -743,14 +747,22 @@ WORLD = WORDS.world(dict(
     react=dict(beat=0.4, level=0.3),
 ))
 
+def _badge_box(t):
+    """Where the concert badge is on screen (fractions, y up), a little larger than its letters."""
+    m = float(ss(CREDIT["t_move"], CREDIT["t_rest"], t))
+    first, rest = np.array([0.11, 0.67, 0.89, 0.88]), np.array([0.0, 0.82, 0.47, 1.0])
+    return tuple(first * (1.0 - m) + rest * m)
+
+
 P3D = dict(
     camera=CAMERA,
+    clear=[dict(box=_badge_box, t0=-1.0, t1=T_FORM + 0.6, soft=0.035, fade=0.5)],
     world=WORLD,
     setup=_setup,
-    bursts=[dict(t=S[1], strength=1, rise=0.06, fall=0.45, color="#ffe6b8", radius=0.24),
-            dict(t=S[2], strength=1, rise=0.06, fall=0.45, color="#ffd9a0", radius=0.24),
-            dict(t=S[4], strength=1, rise=0.06, fall=0.45, color="#ffe6b8", radius=0.24),
-            dict(t=S[5], strength=1, rise=0.06, fall=0.45, color="#fff0d0", radius=0.24),
+    bursts=[dict(t=S[1], strength=0.7, rise=0.06, fall=0.45, color="#ffe6b8", radius=0.24),
+            dict(t=S[2], strength=0.7, rise=0.06, fall=0.45, color="#ffd9a0", radius=0.24),
+            dict(t=S[4], strength=0.7, rise=0.06, fall=0.45, color="#ffe6b8", radius=0.24),
+            dict(t=S[5], strength=0.7, rise=0.06, fall=0.45, color="#fff0d0", radius=0.24),
             dict(t=BIG, strength=0.9, rise=0.08, fall=0.8, color="#ffe0c8", radius=0.20,
                  at=tuple(M(BIG) + np.array([0.0, 1.0, -260.0]))),
             dict(t=LAST, strength=0.5, rise=0.08, fall=0.8, color="#fff6e8", radius=0.3)],
