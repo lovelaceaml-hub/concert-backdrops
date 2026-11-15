@@ -269,7 +269,7 @@ def _s6(t):
     u = (t - SEC[5]) / (SEC[6] - SEC[5])
     a = np.radians(-24.0 + 46.0 * u)
     r = 2.75 - 0.35 * u
-    return F6 + _v(np.sin(a) * r, 1.0, np.cos(a) * r), F6 + _v(0.0, 1.25, 0.0)
+    return F6 + _v(np.sin(a) * r, 1.72, np.cos(a) * r), F6 + _v(0.0, 1.93, 0.0)
 
 
 # S7: the breath, the orbit on the biggest hit, the corkscrew up the braid
@@ -280,7 +280,7 @@ def _s7_breath(t):
 
 
 ORB7_A0 = 30.0
-BRAID_T0 = 45.4
+BRAID_T0 = 45.65
 
 
 def _orb7_angle(t):
@@ -376,8 +376,8 @@ def place(t, x, y, depth):
 #   Compliment     a dancer twirls, embers bursting off her, while three far figures applaud (plexus); full, far
 #   Consideration  hands only: a rose hand reaches down to a gold hand reaching up, and takes it; extreme close-up
 #   Gratitude      a woman bows with her hand on her heart: gold glitter dissolving; half figure
-#   Respect        two people seated on the ground lean in to each other, one speaking with an open hand, one
-#                  listening: a profile filled with a sunrise and a profile outlined in sparks; close
+#   Respect        two people face each other, one speaking with an open hand, one leaning in to listen:
+#                  a profile filled with a sunrise and a profile outlined in sparks; close, head and shoulders
 #   Encouragement  someone kneels in prayer, a small sparkling figure in mist, and on the biggest hit eight people
 #                  in the other colours gather round and raise a hand for her; far, then many
 #   Morning        none: only the nine lights and the end card
@@ -414,9 +414,11 @@ def _bodies():
                                         dict(kind="birds", t=8.6 + 0.3 * i, dur=2.0, n=10, size=0.16,
                                              color="#eaf3ff", speed=2.0)])
     # S3 Apology and Inclusiveness: he stands bowed, hands low, glass falling from him; she comes and holds him
+    # (pairs.embrace's own approach counts the walk from t = 0 in a long song: the walk-in is given here)
     sorry, kind = pairs.embrace(
-        TOUCH3 + 0.3, at=(C3[0], C3[2]), facing=90.0, approach=1.25,
+        TOUCH3 + 0.3, at=(C3[0], C3[2]), facing=90.0, approach=0.0,
         a=dict(shape="man", garment="tunic", look="glitter", color=COL[APOL], color2="#fff1e0", points=60000,
+               at=(C3[0] - 0.17, C3[2]),
                show=(SEC[2] - 0.3, 20.4), fade=0.3, wind=w, seed=3.0,
                gesture=[(SEC[2], TOUCH3 - 0.5, "bow", dict(amount=24.0)),
                         (SEC[2] + 0.3, TOUCH3 - 0.6, "offer", dict(side="R"))],
@@ -424,6 +426,8 @@ def _bodies():
                         dict(kind="dissolve", t=13.9, dur=3.4, share=0.16, rise=-0.35, life=2.2,
                              sprites=(("flake", 0.55, 2.4, 1.3),), color="#fff0e2")]),
         b=dict(shape="woman", garment="dress", look="dots", color=COL[INCL], color2="#ffd9ea", points=60000,
+               at=(C3[0] + 0.17 + 0.90, C3[2]),
+               motion=[(-1e9, "stand"), (15.9, "walk", dict(speed=0.9)), (16.95, "stand", dict(blend=0.8))],
                show=(SEC[2] - 0.3, 20.4), fade=0.3, wind=w, seed=4.0,
                effects=[dict(kind="form", t=SEC[2] + 0.1, dur=1.4)]))
     B["sorry"], B["kind"] = sorry, kind
@@ -455,13 +459,13 @@ def _bodies():
                       effects=[dict(kind="form", t=29.9, dur=1.0),
                                dict(kind="shed", t=30.6, dir=(0.0, 1.0, -0.3), speed=0.25, rise=0.25, n=5000)])
     _REFS["bower"] = B["bower"]
-    # S6 Respect: two seated on the ground lean in to each other; one profile filled with a sunrise, one in sparks
-    B["speaker"] = Body("woman", at=(F6[0] - 0.55, F6[2]), facing=90.0, motion=[(28.0, "sit")], garment="dress",
+    # S6 Respect: one speaks with an open hand, one leans in to listen; a profile of sunrise, a profile of sparks
+    B["speaker"] = Body("woman", at=(F6[0] - 0.45, F6[2]), facing=90.0, motion="stand", garment="dress",
                         look="window", color=COL[RESP], color2="#ffe8d6", points=60000,
                         show=(SEC[5] - 0.2, SEC[6] + 0.2), fade=0.2, seed=9.0,
                         gesture=[(34.2, 40.0, "offer", dict(side="L"))],
                         effects=[dict(kind="form", t=SEC[5] - 0.2, dur=1.2)])
-    B["listener"] = Body("man", at=(F6[0] + 0.55, F6[2]), facing=270.0, motion=[(28.0, "sit")], garment="coat",
+    B["listener"] = Body("man", at=(F6[0] + 0.45, F6[2]), facing=270.0, motion="stand", garment="coat",
                          look=["rim", dict(name="glitter", bright=0.5)], color=COL[RESP], color2="#fff0e0",
                          points=80000, detail=dict(head=3), show=(SEC[5] - 0.2, SEC[6] + 0.2), fade=0.2, seed=10.0,
                          effects=[dict(kind="form", t=SEC[5], dur=1.2),
@@ -672,14 +676,14 @@ _RIDE5 = (0.5, 0.56, 15.0)
 _AT3 = C3 + _v(0.0, 2.62, 0.0)
 _AT4 = D4 + _v(0.0, 2.78, 0.0)
 _AT5 = E5 + _v(0.0, 2.48, 0.0)
-_AT6 = F6 + _v(0.0, 1.48, -0.05)
+_AT6 = F6 + _v(0.0, 2.17, -0.05)
 _AT7 = G7 + _v(0.0, 3.35, 0.0)
 
 _SPECS = [            # every leaving is a clean fade (no broken letters in any frame); one expression at a time
     dict(expr="Greeting", ride=_RIDE1, face="screen", width=_width(4.6, _RIDE1[2], 0.34),
-         t_in=2.45, t_read0=3.35, t_read1=6.35, t_out=6.75, arrive="pen", nib=False, leave="fade"),
+         t_in=3.6, t_read0=4.1, t_read1=6.6, t_out=6.84, arrive="pen", nib=False, leave="fade"),
     dict(expr="Concession", ride=_RIDE2, face="screen", width=_width(9.5, _RIDE2[2], 0.50),
-         t_in=6.84, t_read0=8.15, t_read1=11.05, t_out=11.6, arrive="pen", nib=False, leave="fade"),
+         t_in=6.84, t_read0=8.15, t_read1=10.7, t_out=10.95, arrive="pen", nib=False, leave="fade"),
     dict(expr="Apology", pos=_AT3, face="camera", width=_width(15.6, _dist(15.6, _AT3), 0.74),
          t_in=13.35, t_read0=14.2, t_read1=16.75, t_out=17.0, arrive="pen", nib=False, leave="fade"),
     dict(expr="Inclusiveness", pos=_AT3 + _v(0.0, -0.1, 0.0), face="camera",
@@ -692,15 +696,42 @@ _SPECS = [            # every leaving is a clean fade (no broken letters in any 
     dict(expr="Gratitude", pos=_AT5, face="camera", width=_width(32.0, _dist(32.0, _AT5), 0.70),
          t_in=30.15, t_read0=30.8, t_read1=33.32, t_out=33.45, arrive="pen", nib=False, leave="fade"),
     dict(expr="Respect", pos=_AT6, face="camera", width=_width(36.8, _dist(36.8, _AT6), 0.48),
-         t_in=33.9, t_read0=35.1, t_read1=38.55, t_out=39.0, arrive="pen", nib=False, leave="fade"),
+         t_in=33.9, t_read0=35.1, t_read1=37.8, t_out=38.05, arrive="pen", nib=False, leave="fade"),
     dict(expr="Encouragement", pos=_AT7, face="camera", width=_width(43.9, _dist(43.9, _AT7), 0.66),
-         t_in=40.3, t_read0=42.45, t_read1=45.35, t_out=45.8, arrive="reveal", edge="down", leave="fade"),
+         t_in=42.6, t_read0=43.0, t_read1=45.5, t_out=45.75, arrive="reveal", edge="down", leave="fade"),
+    # C: the date in light across the sky in the breath (its small line beneath it, see _date_drive)
+    dict(label="Healing Concert · 4:30 PM", lines=["December 6"], name="Date", ride=(0.5, 0.70, 18.0),
+         face="screen", width=_width(41.5, 18.0, 0.50), color="#ffd27a", tint=0.25, label_size=0.30,
+         t_in=40.25, t_read0=40.95, t_read1=BREATH_END, t_out=42.9, arrive="pen", leave="bokeh"),
 ]
 def _clean_leave(t, info):
-    """Every word leaves in place and sharp, thinning out evenly: never smeared, drifting or broken letters."""
+    """Every word leaves in place and sharp, thinning out evenly: never smeared, drifting or broken letters.
+    The date (C) instead bursts apart on the hit, and its small line sits beneath it."""
+    w = info["word"]
+    if w.name == "Date":
+        return _date_drive(t, info)
     if info["state"] == "leave":
         return dict(pos=info["home"], assist=1.0)
     return None
+
+
+_DATE_SHIFT = {}
+
+
+def _date_drive(t, info):
+    """The date's label ("HEALING CONCERT · 4:30 PM") is moved from above the date to beneath it."""
+    w = info["word"]
+    if "k" not in _DATE_SHIFT:
+        hm = w.home()
+        lab = np.asarray(hm["label"], bool)
+        y = np.asarray(hm["y"], np.float64)
+        top_lab, low_ph = float(y[lab].max()), float(y[~lab].min())
+        _DATE_SHIFT["k"] = (lab, (top_lab - low_ph) + 0.35 * w.metres_per_em())
+    lab, dy = _DATE_SHIFT["k"]
+    u = np.asarray(info["frame"][2], np.float32)
+    pos = np.asarray(info["pos"], np.float32).copy()
+    pos[lab] -= u[None, :] * np.float32(dy)
+    return dict(pos=pos)
 
 
 WORDS = PW.Words(_SPECS, camera=_LAYOUT, reflect=False, drive=_clean_leave)   # no mirrored text in the lake
@@ -738,8 +769,8 @@ def _focus(t, default, ease=0.8):
 CAMERA = _rig(_focus)
 
 # the comets' legs (after WORDS: the pens are the words' own)
-HEADS[GREET].leg(2.45, 3.35, _pen("Greeting"), bi=0.8, bo=0.5) \
-            .leg(3.5, 6.3, _screen(0.5, 0.24, 20.0, wx=0.30, wy=0.05, rate=0.8), bi=0.5, bo=1.2)
+HEADS[GREET].leg(3.6, 4.1, _pen("Greeting"), bi=0.8, bo=0.5) \
+            .leg(4.3, 6.4, _screen(0.5, 0.24, 20.0, wx=0.30, wy=0.05, rate=0.8), bi=0.5, bo=1.2)
 HEADS[CONC].leg(6.84, 8.15, _pen("Concession"), bi=1.3, bo=0.25) \
            .leg(8.4, 11.6, _tunnel, bi=0.25, bo=1.5)
 HEADS[APOL].leg(13.35, 14.2, _pen("Apology"), bi=0.9, bo=0.6) \
@@ -1201,7 +1232,8 @@ P3D = dict(
             dict(t=SEC[3], strength=1.8, rise=0.08, fall=0.28, color=COL[COMP]),
             dict(t=SEC[4], strength=1.8, rise=0.08, fall=0.28, color=COL[CONS]),
             dict(t=SEC[5], strength=1.8, rise=0.08, fall=0.28, color=COL[RESP]),
-            dict(t=SEC[6], strength=1.2, rise=0.12, fall=0.4, color=COL[ENC]),
+            dict(t=SEC[6], strength=0.6, rise=0.12, fall=0.3, color=COL[ENC]),
+            dict(t=BREATH_END, strength=0.9, rise=0.08, fall=0.35, color="#ffd9a0"),      # the date bursts
             dict(t=SEC[7], strength=0.5, rise=0.3, fall=0.3, color="#ffd9a0")],      # a warm glint, never white
     motion_blur=0.4,
 )
@@ -1222,32 +1254,42 @@ _base.TITLE_HIT = TITLE_HIT
 PHRASES = _base.PHRASES
 WAVES = []
 
-# The concert badge (PHASEB UPDATE 3, the same in all ten films): large on frame 0, in the top left corner by
-# 2.8 s, there until the end card forms (it carries the same information), then gone in about 1 s.
+# Title and date (PHASEB UPDATE 7). The engine's TITLES (helper WORDS2) will draw these three; the times and
+# places are planned here. A: the opening lockup over the first image (the seed sits low, the sky above it is
+# free). B: a discreet signature only in two calm stretches between expressions. C: "December 6" written in
+# light across the sky during the breath, bursting on the biggest hit (built below as a particle word).
+TITLES = dict(
+    opening=dict(t_end=3.6, y=0.20, palette="night"),
+    signature=dict(windows=[(11.0, 13.2, "br", "night"), (38.25, 40.0, "tr", "night")]),
+    date_light=dict(t_form=40.25, t_burst=BREATH_END, y=0.30, palette="night"),
+)
+
+# Until the engine's TITLES lands, the engine's credit draws A and B (title over the concert line): large and
+# centred high on the first image, then small in a calm corner in each signature window. Nothing else.
 CREDIT = dict(song="The Words of Mother’s Love",
-              concert="Healing Concert · Sunday, December 6 · 4:30 PM",
-              t_in=-1.0, t_full=0.0,
-              t_move=1.6, t_rest=2.8,
-              scale=0.52, alpha_rest=0.92,
+              concert="Healing Concert · Sunday, December 6 · 4:30 PM · Las Vegas",
+              t_in=-1.0, t_full=0.0, t_move=1e9, t_rest=1e9 + 1.0, scale=0.42, alpha_rest=0.92,
               margin_x=0.035, margin_top=0.05)
-BADGE_OUT = (SEC[7] - 0.15, SEC[7] + 0.55)    # gone with the night: never light letters on the day sky
 
 
 def credit_state(t, bbox):
-    """Centre, scale and strength of the concert badge; bbox is its size at full card size."""
-    c = CREDIT
+    """Centre, scale and strength of the title lockup (bbox: its size at full card size)."""
     x0, x1, y0, y1 = bbox
 
     def ss(a, b, x):
         u = min(max((x - a) / (b - a), 0.0), 1.0)
         return u * u * (3 - 2 * u)
 
-    a_in = ss(c["t_in"], c["t_full"], t)
-    m = ss(c["t_move"], c["t_rest"], t)
-    scale = c["scale"] ** m
     cx0, cy0 = (x0 + x1) / 2.0, (y0 + y1) / 2.0
-    tx = c["margin_x"] + c["scale"] * (x1 - x0) / 2.0
-    ty = 1.0 - c["margin_top"] - c["scale"] * (y1 - y0) / 2.0
-    cx, cy = cx0 * (1 - m) + tx * m, cy0 * (1 - m) + ty * m
-    alpha = a_in * (1.0 + (c["alpha_rest"] - 1.0) * m) * (1.0 - ss(BADGE_OUT[0], BADGE_OUT[1], t))
-    return (cx, cy, scale, alpha), (cx0, cy0)
+    op = TITLES["opening"]
+    if t < op["t_end"]:
+        return (0.5, 1.0 - op["y"], 0.92, 1.0 - ss(op["t_end"] - 0.6, op["t_end"], t)), (cx0, cy0)
+    sc = CREDIT["scale"]
+    w, h = (x1 - x0) * sc, (y1 - y0) * sc
+    for a, b, corner, _pal in TITLES["signature"]["windows"]:
+        if a <= t <= b:
+            al = CREDIT["alpha_rest"] * ss(a, a + 0.6, t) * (1.0 - ss(b - 0.6, b, t))
+            cx = CREDIT["margin_x"] + w / 2.0 if corner[1] == "l" else 1.0 - CREDIT["margin_x"] - w / 2.0
+            cy = 1.0 - CREDIT["margin_top"] - h / 2.0 if corner[0] == "t" else CREDIT["margin_top"] + h / 2.0
+            return (cx, cy, sc, al), (cx0, cy0)
+    return (0.5, 0.5, sc, 0.0), (cx0, cy0)
