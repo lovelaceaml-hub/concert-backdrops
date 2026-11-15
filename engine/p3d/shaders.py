@@ -325,8 +325,8 @@ uniform vec2 uRes;
 uniform vec2 uBokeh;      // bright rim of the bokeh disc, how hexagonal it is
 uniform float uMaskOn, uMaskBias;
 uniform vec3 uMaskK;      // how strongly dark silhouettes and the two sky layers hide the light behind them
-uniform sampler2D uMaskTex;
-uniform float uPaint, uWindow;
+uniform sampler2D uMaskTex, uMaskTexM;      // the silhouettes, and their mirror images (for mirror images)
+uniform float uPaint, uWindow, uMirror;
 uniform vec3 uWinSel, uWinPar, uWinChild;   // a set inside a window: its layer, that layer's parent, layers inside it
 uniform vec4 uClear[2]; uniform vec4 uClearK;     // keep-clear boxes (x0, y0, x1, y1), their (amount, soft) pairs
 out vec4 o;
@@ -336,7 +336,7 @@ out vec4 o;
 float keepAt(float depth){
   float k = 1.0;
   if(uMaskOn > 0.5){
-    vec4 m = texture(uMaskTex, gl_FragCoord.xy/uRes);
+    vec4 m = uMirror > 0.5 ? texture(uMaskTexM, gl_FragCoord.xy/uRes) : texture(uMaskTex, gl_FragCoord.xy/uRes);
     vec3 c = smoothstep(0.25, 0.80, m.rgb);
     if(uWindow > 0.5){
       k *= dot(c, uWinSel);
@@ -506,6 +506,7 @@ void main(){
     if(ml < 0.75){ m1 = vec2(0.0); m2 = vec2(0.0); }
   }
   bool moving = dot(m1, m1) + dot(m2, m2) > 0.0;
+  m1 = m2 = 0.5*(m1 + m2);                            // the segment sweeps as one piece (its ends' mean motion)
   bool first = aCorner.x < 0.0;
   float depth = first ? d1 : d2;
   float sz = first ? aSize : aSize2;
@@ -538,9 +539,7 @@ void main(){
     float x = first ? ax0 : ax1, y = aCorner.y < 0.0 ? ay0 : ay1;
     p = s1 + dir*x + nrm*y;
     vLoc = vec4(x, y, R, first ? aUV.x : aUV.y);
-    // enough moments that neighbouring copies overlap (the streak is smooth, not a comb)
-    float ml = max(length(m1), length(m2));
-    vM = m; vU = vec3(aUV, clamp(ceil(ml/max(0.8*(R + 1.5*S), 1.0)), 8.0, 48.0));
+    vM = m; vU = vec3(aUV, 1.0);
   }
   vEnd = vec4(len, S, cap, depth);
   vCol = uPaint > 0.5 ? vec4(aColor, clamp(b/max(aEmit, 1e-4), 0.0, 1.0)) : vec4(lights(aColor, wp, vec3(0.0), 0.0)*b, 0.0);
@@ -556,8 +555,8 @@ uniform float uT;
 uniform vec4 uPulse;      // speed, length, gain, period: a brighter stretch travelling along the path
 uniform float uMaskOn, uMaskBias;
 uniform vec3 uMaskK;      // how strongly dark silhouettes and the two sky layers hide the light behind them
-uniform sampler2D uMaskTex;
-uniform float uPaint, uWindow;
+uniform sampler2D uMaskTex, uMaskTexM;      // the silhouettes, and their mirror images (for mirror images)
+uniform float uPaint, uWindow, uMirror;
 uniform vec3 uWinSel, uWinPar, uWinChild;   // a set inside a window: its layer, that layer's parent, layers inside it
 uniform vec4 uClear[2]; uniform vec4 uClearK;     // keep-clear boxes (x0, y0, x1, y1), their (amount, soft) pairs
 out vec4 o;
@@ -567,7 +566,7 @@ out vec4 o;
 float keepAt(float depth){
   float k = 1.0;
   if(uMaskOn > 0.5){
-    vec4 m = texture(uMaskTex, gl_FragCoord.xy/uRes);
+    vec4 m = uMirror > 0.5 ? texture(uMaskTexM, gl_FragCoord.xy/uRes) : texture(uMaskTex, gl_FragCoord.xy/uRes);
     vec3 c = smoothstep(0.25, 0.80, m.rgb);
     if(uWindow > 0.5){
       k *= dot(c, uWinSel);
@@ -595,6 +594,13 @@ float profAt(float sd, float S){
   float pr = sd <= 0.0 ? 1.0 : exp(-sd*sd/(2.0*S*S));
   return max(pr - 0.0111, 0.0)/0.9889;
 }
+float erfa(float x){ float x2 = x*x; return sign(x)*sqrt(1.0-exp(-x2*(1.2732+0.147*x2)/(1.0+0.147*x2))); }
+// the integral of the profile across a band (plateau of radius R, gaussian skirt S) from 0 to x
+float profInt(float x, float R, float S){
+  float ax = abs(x);
+  float v = min(ax, R) + (ax > R ? S*1.2533*erfa((ax - R)/(S*1.4142)) : 0.0);
+  return sign(x)*v;
+}
 void main(){
   float S = vEnd.y;
   float prof;
@@ -603,28 +609,24 @@ void main(){
     float sd = length(vec2(along, vLoc.y)) - vLoc.z;
     prof = profAt(sd, S)*pulseAt(vLoc.w);
   } else {
-    // drawn out by motion: the segment at n moments of the shutter, each a share of the light (each pixel's
-    // set of moments shifted a little, so what is left of the steps is fine grain)
-    prof = 0.0;
+    // drawn out by motion: the exact average over the shutter of the profile of a segment that slides by vM
+    // (pixels, back to where it was when the shutter opened). s in 0..1 is how far back in the shutter.
     vec2 q = vLoc.xy;
-    int n = int(vU.z + 0.5);
-    float j = fract(sin(dot(gl_FragCoord.xy, vec2(12.9898, 78.233)))*43758.5453);
-    for(int i=0;i<48;i++){
-      if(i >= n) break;
-      float back = 1.0 - (float(i) + j)/float(n);
-      vec2 A = -back*vM.xy, B = vec2(vEnd.x, 0.0) - back*vM.zw;
-      vec2 ba = B - A; float l2 = max(dot(ba, ba), 1e-6);
-      float tt = dot(q - A, ba)/l2;
-      float tc = clamp(tt, 0.0, 1.0);
-      float sd;
-      if(vEnd.z > 0.5) sd = length(q - A - ba*tc) - vLoc.z;              // a line: round caps
-      else {                                                               // a ribbon piece: open ends
-        if(tt < 0.0 || tt >= 1.0) continue;
-        sd = length(q - A - ba*tt) - vLoc.z;
-      }
-      prof += profAt(sd, S)*pulseAt(mix(vU.x, vU.y, tc));
+    float len = vEnd.x, R = vLoc.z;
+    float ma = vM.x, mn = vM.y;                       // where the pixel sits relative to the segment: q + s*(ma, mn)
+    float cap = vEnd.z > 0.5 ? R + 2.0*S : 0.0;       // a line keeps soft round ends
+    float s0 = 0.0, s1 = 1.0;
+    if(abs(ma) > 1e-4){
+      float a = (-cap - q.x)/ma, b = (len + cap - q.x)/ma;
+      s0 = max(s0, min(a, b)); s1 = min(s1, max(a, b));
+    } else if(q.x < -cap || q.x > len + cap) s1 = -1.0;
+    prof = 0.0;
+    if(s1 > s0){
+      if(abs(mn) > 1e-3) prof = (profInt(q.y + s1*mn, R, S) - profInt(q.y + s0*mn, R, S))/mn;
+      else prof = profAt(abs(q.y) - R, S)*(s1 - s0);
+      float xm = clamp((q.x + 0.5*(s0 + s1)*ma)/max(len, 1e-4), 0.0, 1.0);
+      prof *= pulseAt(mix(vU.x, vU.y, xm));
     }
-    prof /= float(n);
   }
   float k = keepAt(vEnd.w);
   if(uPaint > 0.5){ float a = clamp(vCol.a*prof, 0.0, 1.0)*k; o = vec4(vCol.rgb*a, a); return; }
@@ -639,10 +641,15 @@ MASK_VS = """
 in vec2 aCorner; in vec3 aPos; in float aSize; in float aAlpha; in float aBirth;
 uniform mat4 uView, uProj;
 uniform vec2 uRes;
-uniform float uFocal, uNear, uGrow, uT;
+uniform float uFocal, uNear, uGrow, uT, uMirrorM;
 out vec2 vLocal; flat out vec3 vP;    // radius px, weight, depth
 void main(){
-  vec4 vp = uView*vec4(aPos, 1.0);
+  vec3 wp = aPos;
+  if(uMirrorM > 0.5){                       // the silhouette's image in the lake (only what stands above the water)
+    if(wp.y < 0.0){ gl_Position = vec4(2.0, 2.0, 2.0, 1.0); return; }
+    wp.y = -wp.y;
+  }
+  vec4 vp = uView*vec4(wp, 1.0);
   float depth = -vp.z;
   float w = smoothstep(0.02, 0.20, aAlpha)*step(aBirth, uT);
   if(depth < uNear || w <= 0.0){ gl_Position = vec4(2.0, 2.0, 2.0, 1.0); return; }
@@ -962,7 +969,8 @@ void main(){
 # the mask, rays, bursts of light.
 RESOLVE_FS = "#version 330\n" + NOISE + """
 in vec2 vUV; out vec4 o;
-uniform sampler2D uBg, uRayA, uRayB, uMask, uPaintT, uBg2, uBg3;
+uniform sampler2D uBg, uRayA, uRayB, uMask, uPaintT, uBg2, uBg3, uMaskM;
+uniform float uMirrorK;   // how strongly the silhouettes' mirror images show in the lake (0: none)
 uniform float uPaintOn;
 uniform vec3 uCamR, uCamU, uCamF, uCamPos;
 uniform mat4 uPrevVP;
@@ -1090,6 +1098,12 @@ void main(){
   }
   if(uMaskOn > 0.5){
     vec4 m = texture(uMask, vUV);
+    if(uMirrorK > 0.0){
+      // the silhouettes' images in the lake: a dark body is dark in the water too, a window shows its world
+      vec4 mm = texture(uMaskM, vUV);
+      float front = 1.0 - smoothstep(0.25, 0.80, max(m.r, max(m.g, m.b)));
+      m.rgb = max(m.rgb, mm.rgb*uMirrorK*front);
+    }
     float cd = smoothstep(0.25, 0.80, m.r)*uDarkK;
     col = mix(col, col*0.06 + uDarkTint, cd);
     vec2 cv = smoothstep(0.25, 0.80, m.gb);
