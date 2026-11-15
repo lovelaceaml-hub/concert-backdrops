@@ -170,3 +170,32 @@ Nothing to change in a song file; all song files load as before. What changed, a
 Unchanged: commit and push the song file and its assets (plates and figures are in the repo under `assets/`, so the cloud workflow has them), then run the Render workflow (stills first, then video). See docs/HANDOFF.md.
 
 The video run's finish job uploads three artifacts: "<name>" (the full 1920x1080 video plus a silent copy), "<name> frames" (4 frame sheets of 8 frames each, for checking without downloading the video) and "<name> (share)" (the file "<name> (share).mp4": 1280x720, H.264 with AAC sound, always under 25 MB, for phones and messages; the job fails if it would be larger).
+
+## I1. Living nature (flowers, tree, blossoms, waterfall, stream)
+
+Living nature made of light, always moving (engine/nature.py, engine/nature_shaders.py). Each layer is switched on by its main setting (a number or a Track, 0 = off); a song that sets none of them renders exactly as before. All of it is drawn as light before the text protection, so the veil behind the words dims it like every other light, and all of it honours `BOTTOM_CALM` (the stream, the waterfall's mist and the tree's trunk are softened in the lower third, not removed; flowers there stay soft and the bottom-centre is kept clear). Working example: `engine/songs/demo_nature.py` (30 seconds, a dawn).
+
+| Setting | What it draws | Extra settings (defaults) |
+|---|---|---|
+| `FLOWERS` | a field of flowers of light: as the value goes 0 to 1 the stems rise, buds form and the petals unfurl, in a wave that travels across the field; stems, leaves and heads sway in the wind and the petals breathe | `FLOWERS_LINE` (0.34: the far edge of the field, a fraction of the height from the bottom), `FLOWERS_DEPTH` (0.16: how far the field reaches down toward the viewer), `FLOWERS_COLOR` (a list; default cream, peach, coral, sky blue, soft peach), `FLOWERS_WAVE` (0.0: the x where the blooming starts; 0.5 blooms from the centre outward, 1.0 from the right), `FLOWERS_COUNT` (64), `FLOWERS_SPAN` ((0.0, 1.0): the x range), `FLOWERS_BRIGHT` (1.0), `FLOWERS_SEED` (5) |
+| `TREE` | one tree of light with procedural branches: a bright thin core and a soft halo per branch, fresh green-gold leaves that flutter and catch the light, and layered wind (a slow gust that reaches the outer branches later, a sway per branch and a flutter in the twigs). The value is its brightness | `TREE_GROW` (1.0; a Track from 0 to 1 grows it from a seed: the growth front travels out along every branch with glowing buds at the tips, the leaves come last), `TREE_X` (0.80: the trunk's foot), `TREE_Y` (0.30: the ground under it), `TREE_HEIGHT` (0.52), `TREE_COLOR` ("#ffdcaa"), `TREE_BRIGHT` (1.0), `TREE_SEED` (3: a different number grows a different tree), `TREE_DEPTH` (7), `TREE_LEAVES` (1100) |
+| `BLOSSOM` | blossoms open on the tree's twigs (0 to 1, staggered); from about 0.35 petals start to fall, tumbling and carried on the wind, and fade before the ground | `BLOSSOM_COLOR` (blush, peach, cream, coral), `BLOSSOM_COUNT` (150), `BLOSSOM_PETALS` (260) |
+| `WATERFALL` | falling light-water: streaks that pour and speed up, a bright lip, droplets, foam, splashes and rising mist at the foot; as the value rises from 0 the water pours in from the top | `WATERFALL_X` (0.20), `WATERFALL_TOP` (0.62), `WATERFALL_BOTTOM` (0.375), `WATERFALL_WIDTH` (0.040), `WATERFALL_COLOR` (["#bfe3ff", "#fff4e0"]) |
+| `STREAM` | a flowing stream of light along a winding path: a soft body, shimmering banks and glints carried downstream (faster in the middle); as the value rises from 0 the light flows in along the path | `STREAM_PATH` (a list of (x, y) points from the source to the lake; a smooth curve is drawn through them; it widens toward the end), `STREAM_WIDTH` (0.010), `STREAM_SPEED` (1.0), `STREAM_COLOR` (["#9fd0ff", "#fff1d6"]) |
+| `WIND` | shared by all of the above: a steady push plus gusts that roll across the screen from left to right | default 0.35; 0 is still air (the flowers and branches still breathe), 0.7 a strong gust |
+
+```python
+WIND = Track([(0, 0.25), (17, 0.70), (22, 0.45), (TOTAL, 0.35)])
+TREE = 1.0
+TREE_GROW = Track([(0, 0.0), (1.0, 0.0), (13.0, 1.0)])
+TREE_X, TREE_Y, TREE_HEIGHT = 0.77, 0.335, 0.50
+BLOSSOM = Track([(0, 0.0), (12.0, 0.0), (19.0, 1.0)])
+FLOWERS = Track([(0, 0.0), (4.0, 0.0), (18.0, 1.0)])
+FLOWERS_LINE = 0.36
+WATERFALL = Track([(0, 0.0), (0.5, 0.0), (4.5, 1.0)])
+WATERFALL_X, WATERFALL_TOP, WATERFALL_BOTTOM = 0.17, 0.66, 0.40
+STREAM = Track([(0, 0.0), (3.0, 0.0), (9.0, 1.0)])
+STREAM_PATH = [(0.17, 0.40), (0.25, 0.385), (0.21, 0.365), (0.31, 0.348), (0.40, 0.334), (0.47, 0.312)]
+```
+
+Tips: keep the tree and the waterfall to the sides, clear of the expression (centre, about 0.61 from the bottom) and the arch. Start a stream at the foot of a waterfall by giving them the same point. Remember DESIGN-SYSTEM.md section 6: agree with the coordinator before two songs use the same signature effect.
