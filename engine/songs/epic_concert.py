@@ -245,7 +245,7 @@ SKY_THEME = Track([(0, 0.0), (EMBLEM_OUT - 0.5, 0.0), (DAY_FULL, 0.65), (TOTAL, 
 SUN_Y = Track([(0, 0.290), (STAR_FALL, 0.320), (S1 - 1.5, 0.375), (S1 + 2.0, 0.432), (S1 + 6.0, 0.446),
                (S2, 0.452), (S3, 0.458), (WARM, 0.466), (TITLE_HIT, 0.500), (TOTAL, 0.510)])
 SUN_INT = Track([(0, 0.06), (STAR_FALL, 0.08), (S1 - 1.5, 0.10), (S1 + 1.5, 0.50), (S1 + 4.0, 0.50), (S2, 0.44),
-                 (S3, 0.42), (EMBLEM_OUT, 0.42), (TITLE_HIT, 0.55), (TOTAL, 0.52)])
+                 (S3, 0.42), (EMBLEM, 0.34), (EMBLEM_OUT, 0.34), (TITLE_HIT, 0.55), (TOTAL, 0.52)])
 SUN_SIZE = Track([(0, 0.09), (S1 + 3.0, 0.11), (S3, 0.12), (TITLE_HIT, 0.16), (TOTAL, 0.17)])
 STARS = Track([(0, 0.0), (0.5, 0.0), (2.6, 1.0), (STAR_FALL, 1.0), (S1 + 2.0, 0.60), (S1 + 7.0, 0.25),
                (S2 + 2.0, 0.10), (S3, 0.05), (WARM, 0.0), (TOTAL, 0.0)])
@@ -326,28 +326,38 @@ RIPPLE_COLOR = "#ffe6c4"
 # letter (about 0.73 of the width) and her head stays under the words' lower edge.
 M_X, M_Y, M_H = 0.77, 0.335, 0.34
 M_T0 = STAR_FALL + 0.76                    # she gathers while the star's ring spreads
-# The doves: a larger flock, close to us. They rise from her hand on the side of the sun and fly a loose arc
-# over the sunrise, low: the Greeting's letters reach down to about 0.68 of the height, and the goal stays at
-# 0.47 or lower while the flock is under them. They climb only at the far left, to the Greeting light. The
-# first goal is far from her hand: a flock launches toward its goal with an upward lift, and with a near goal
-# (draft 6) a third of the birds shot straight up past the place of the words.
+# The doves: a larger flock, close to us. They rise from her hand on the side of the sun, fly low over the
+# sunrise, wheel in a wide flat ring left of the sun and climb only at the far left, to the Greeting light.
+# The rule: no bird nearer to a letter than 0.08 of the height. The Greeting's letters reach down to 0.69. In
+# drafts 6 and 7 birds flew at 0.62 to 0.67 right under them. These settings were tried in the engine's own
+# flock simulation (numpy, nothing drawn) until every wing tip stayed 0.084 or more from the letters' box from
+# 16.5 s on (16.3 to 16.4: 0.070, under the right half of the line, which blooms a second later):
+# - they leave the hand small and grow as they come nearer (a large bird keeps a large distance, and a flock
+#   that starts as large birds bursts apart, upward too);
+# - the goal is low (the calm lower third pushes the flock up from 0.415);
+# - a wide orbit: birds that wheel round the goal are drawn to its height, so the flock is flat;
+# - the orbit tightens before the climb, so nobody wheels back under the first letters.
 DOVES = Track([(0, 0.0), (DOVES_UP - 0.1, 0.0), (DOVES_UP + 1.2, 1.0), (G_STAR + 0.4, 1.0), (G_STAR + 2.4, 0.0),
                (TOTAL, 0.0)])
 DOVES_COUNT = 14
 DOVES_FROM = (0.715, 0.525)
-DOVES_PATH = [(DOVES_UP, (0.45, 0.47)), (DOVES_UP + 2.5, (0.42, 0.46)), (DOVES_UP + 5.5, (0.30, 0.45)),
-              (DOVES_UP + 8.5, (0.17, 0.46)), (G_HOLD - 0.8, (0.10, 0.56)), (G_STAR, (0.12, 0.80)),
+DOVES_PATH = [(DOVES_UP, (0.30, 0.37)), (DOVES_UP + 4.0, (0.30, 0.37)), (DOVES_UP + 8.0, (0.14, 0.39)),
+              (G_HOLD - 1.5, (0.05, 0.42)), (G_HOLD + 0.3, (0.05, 0.58)), (G_STAR, (0.12, 0.80)),
               (G_STAR + 3.0, (0.11, 0.84))]
-DOVES_ORBIT = 0.05
-DOVES_SIZE = 0.054
+DOVES_ORBIT = Track([(0, 0.20), (G_HOLD - 2.5, 0.20), (G_HOLD - 0.5, 0.06), (TOTAL, 0.06)])
+DOVES_SIZE = Track([(0, 0.030), (DOVES_UP, 0.030), (DOVES_UP + 3.0, 0.051), (TOTAL, 0.051)])   # 1.7 times the usual
 DOVES_SPEED = 1.0
 DOVES_COLOR = "#fff1da"
 DOVES_TRAIL = 0.6
-BUTTERFLIES = Track([(0, 0.0), (WARM + 0.5, 0.0), (WARM + 3.0, 1.0), (TOTAL, 1.0)])
+# two butterflies near the emblem, on the deep sky where their colours read (at the shore, on the bright
+# horizon, they were two white specks in draft 7); they leave as the day opens
+BUTTERFLIES = Track([(0, 0.0), (WARM + 0.5, 0.0), (WARM + 2.5, 1.0), (EMBLEM_OUT + 0.4, 1.0), (EMBLEM_OUT + 2.0, 0.0),
+                     (TOTAL, 0.0)])
 BUTTERFLIES_COUNT = 2
 BUTTERFLIES_COLOR = ("#ffb0c8", "#ffd9a0")
-BUTTERFLIES_SIZE = 0.026
-BUTTERFLIES_AREA = (0.10, 0.90, 0.355, 0.46)
+BUTTERFLIES_SIZE = 0.034
+BUTTERFLIES_AREA = (0.24, 0.76, 0.46, 0.66)
+BUTTERFLIES_LAND = [(0.36, 0.385), (0.64, 0.39)]   # on the hills, not at the far edges of the shore
 
 # ---- the campaign day (UPGRADE-HOWTO I); nothing new starts after 58 s, the picture settles with the music
 BUBBLES = Track([(0, 0.0), (EMBLEM_OUT, 0.0), (TITLE_HIT, 0.26), (TOTAL, 0.26)])
