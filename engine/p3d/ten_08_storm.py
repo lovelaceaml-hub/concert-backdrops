@@ -123,7 +123,7 @@ class Sea:
             foam = np.clip((h / amp - 0.55) / 0.3, 0.0, 1.0) * (seed > 0.55)
             col = col + self.c_foam[None, :] * foam[:, None]
             col = col * (1.0 + 1.6 * fl) + self.c_flash[None, :] * (0.35 * fl * cr)[:, None]
-            ring = np.clip(4.0 * cm * (1.0 - cm), 0.0, 1.0) ** 1.5 * self.edge * (0.25 + 0.75 * _ss(3.0, 10.0, r))
+            ring = np.clip(4.0 * cm * (1.0 - cm), 0.0, 1.0) ** 1.5 * self.edge * _ss(3.0, 10.0, r)
             gl = _val(self.glass, t)
             glass_col = self.c_glass * (1.0 + 0.6 * warm)
             col = col * open_[:, None] + glass_col[None, :] * (cm * (seed > 0.72))[:, None] + \
@@ -334,7 +334,7 @@ class Drop:
         u = float(np.clip((t - self.t0) / (self.t1 - self.t0), 0.0, 1.0))
         e = u * u
         p = self.a + (self.b - self.a) * e
-        tail = [self.a + (self.b - self.a) * max(e - k * 0.02, 0.0) for k in range(12)]
+        tail = [self.a + (self.b - self.a) * max(e - k * 0.007, 0.0) for k in range(12)]
         a = float(_ss(self.t0 - 0.2, self.t0 + 0.1, t) * (1.0 - _ss(self.t1, self.t1 + 0.35, t)))
         boom = float(np.exp(-max(t - self.t1, 0.0) / 0.12) * (t >= self.t1))
         out = [dict(pos=p[None, :], size=0.16 + 0.5 * boom, color=self.c * 3.0, alpha=a + boom, kind="soft", emit=3.0),

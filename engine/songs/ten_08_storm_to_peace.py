@@ -57,7 +57,7 @@ from track import Track
 A, B, C, D, E, F, G, HIT, H, FIN = 0.25, 6.84, 13.30, 19.85, 26.79, 33.36, 40.21, 42.51, 49.47, 58.11
 
 # ---- the end card in the existing style (coral title, navy lines on the campaign day), nothing else 2D
-TITLE_WHOLE = 55.0
+TITLE_WHOLE = 55.6
 _base.FADE = Track([(0.0, 1.0), (60.0, 1.0)])          # frame 0 is lit; no fade to black at the end
 _base.EXPOSURE = Track([(0.0, 1.0), (60.0, 1.0)])
 for _p in _base.PHRASES:                                 # the expressions are particles here, never flat text
@@ -215,10 +215,10 @@ GLASS = _ramp([(0.0, 0.10), (HIT, 0.10), (HIT + 1.5, 0.22), (52.0, 0.18), (55.0,
 # ------------------------------------------------------------------------------------------ the lightning
 # (time, place in the cloud, strength): the cloud flashes, the sea and the people take the light
 FLASHES = [
-    (0.0, (-30.0, 40.0, 48.0), 0.45), (0.95, (36.0, 40.0, 48.0), 0.5), (2.1, (-45.0, 55.0, 55.0), 0.5),
+    (0.0, (-30.0, 40.0, 44.0), 0.45), (0.95, (36.0, 40.0, 48.0), 0.5), (2.1, (-45.0, 55.0, 55.0), 0.5),
     (B, (25.0, 50.0, 55.0), 0.6), (STRIKE, (11.0, 45.0, 52.0), 0.7), (11.0, (-50.0, 40.0, 30.0), 0.35),
-    (18.6, (0.0, 35.0, -8.0), 0.8), (19.5, (8.0, 38.0, -6.0), 1.0), (22.8, (-60.0, 40.0, -10.0), 0.3),
-    (E, (-40.0, 45.0, 0.0), 0.8), (29.6, (-60.0, 40.0, -10.0), 0.5), (F, (30.0, 50.0, -20.0), 0.6),
+    (18.6, (0.0, 35.0, -8.0), 0.45), (19.5, (8.0, 38.0, -6.0), 0.55), (22.8, (-60.0, 40.0, -10.0), 0.3),
+    (E, (-40.0, 45.0, 0.0), 0.5), (29.6, (-60.0, 40.0, -10.0), 0.5), (F, (30.0, 50.0, -20.0), 0.6),
     (35.6, (-90.0, 40.0, -50.0), 0.3), (38.4, (90.0, 40.0, -70.0), 0.25),
 ]
 
@@ -238,7 +238,7 @@ def _flash_place(t):
 
 BOLT_A = Bolt((9.0, 38.0, 52.0), (12.2, 5.8, 59.4), STRIKE, seed=11, freeze=STRIKE + 0.24, fade=9.3,
               color="#e8dcff", color2="#ffbf86", width=0.09, turn=1.4)
-BOLT_B = Bolt((-30.0, 40.0, 50.0), (-24.0, 0.0, 56.0), 0.0, seed=4, color="#e0d8ff", width=0.16)
+BOLT_B = Bolt((-31.0, 38.0, 44.0), (-27.0, 0.0, 51.0), 0.0, seed=4, color="#e0d8ff", width=0.16)
 BOLT_D = Bolt((34.0, 42.0, 48.0), (28.0, 0.0, 56.0), 0.95, seed=9, color="#e0d8ff", width=0.14)
 BOLT_C = Bolt((6.0, 36.0, -4.0), (3.0, 0.0, 8.0), 19.5, seed=7, color="#e0e8ff", width=0.14)
 DROP = Drop((0.4, 26.0, 79.0), (0.0, 0.05, 80.0), 1.9, DROP_LAND)
@@ -528,17 +528,17 @@ _SPECS = [
          t_out=18.7, arrive="morph", source=BEADS_I, carry="soft", leave="sink"),
     dict(expr="Concession", pos=(0.0, 3.1, WAVE_Z + 0.4), width=8.4, face="fixed", facing=0.0, t_in=D + 0.05,
          t_read0=21.0, t_read1=23.7, t_out=24.7, arrive="reveal",
-         gate=lambda P, t: _ss(-0.3, 0.3, P[:, 1] - (WAVE_H(t) - 0.2)), leave="doors"),
+         gate=lambda P, t: _ss(-0.3, 0.3, P[:, 1] - (WAVE_H(t) - 0.2)), leave="rise"),
     dict(expr="Respect", pos=(-1.9, 2.3, 27.6), width=4.0, t_in=24.6, t_read0=26.0, t_read1=28.7, t_out=29.6,
          arrive="pen", leave="give", to=BODIES["giver"]),
     dict(expr="Consideration", pos=(-24.3, 2.3, 15.6), width=3.5, t_in=TOUCH - 0.2, t_read0=31.8, t_read1=34.5,
-         t_out=35.4, arrive="touch", source=MEET, touch_at=0.12, leave="rise"),
+         t_out=35.4, arrive="reveal", edge="up", leave="rise"),
     dict(expr="Encouragement", pos=(0.0, 2.5, -3.0), width=4.9, t_in=36.2, t_read0=37.6, t_read1=40.3,
          t_out=41.4, arrive="rays", source=(0.0, 1.62, -1.0), leave="stream",
          to=lambda t: MOTHER.where(t, "palm.R"), star=True),
     dict(expr="Gratitude", pos=(0.0, 4.7, 7.0), width=15.0, t_in=43.6, t_read0=45.3, t_read1=48.0, t_out=49.0,
-         arrive="lake", leave="rise"),
-    dict(expr="Compliment", pos=(0.0, 3.4, 6.0), width=8.6, t_in=48.4, t_read0=49.8, t_read1=52.4, t_out=53.3,
+         arrive="reveal", edge="up", leave="rise"),
+    dict(expr="Compliment", pos=(0.0, 3.4, 6.0), width=8.6, t_in=48.3, t_read0=49.6, t_read1=52.2, t_out=53.0,
          arrive="gather", leave="arch", to=tuple(LIGHTS[8])),
 ]
 WORDS = PW.Words(_SPECS, face="camera")
@@ -561,17 +561,20 @@ class _Window:
 
 
 def _setup(scene):
-    scene.add("sea", Sea(calm_at, STORM, flash, glass=GLASS, warm=WARM), reflect=False)
-    scene.add("rain", Rain(calm_at, RAIN_SPEED, RAIN_AMOUNT), reflect=False)
-    scene.add("glow", Glow(FLASHES))
-    scene.add("bolt_a", BOLT_A)
-    scene.add("bolt_b", BOLT_B)
-    scene.add("bolt_c", BOLT_C)
-    scene.add("bolt_d", BOLT_D)
-    scene.add("drop", DROP)
+    def kc(ps):                           # nothing of the storm inside a word's reading box
+        return PW.KeepClear(ps, WORDS, floor=0.0)
+
+    scene.add("sea", kc(Sea(calm_at, STORM, flash, glass=GLASS, warm=WARM)), reflect=False)
+    scene.add("rain", kc(Rain(calm_at, RAIN_SPEED, RAIN_AMOUNT)), reflect=False)
+    scene.add("glow", kc(Glow(FLASHES)))
+    scene.add("bolt_a", kc(BOLT_A))
+    scene.add("bolt_b", kc(BOLT_B))
+    scene.add("bolt_c", kc(BOLT_C))
+    scene.add("bolt_d", kc(BOLT_D))
+    scene.add("drop", kc(DROP))
     scene.add("wave", Wave(), mask=Mask("dark", grow=0.22, strength=lambda t: float(_ss(1.2, 3.0, WAVE_H(t)))))
-    scene.add("beads_g", BEADS_G)
-    scene.add("beads_i", BEADS_I)
+    scene.add("beads_g", kc(BEADS_G))
+    scene.add("beads_i", kc(BEADS_I))
     for name, b in BODIES.items():
         b.b.add(scene, name)
     for k, v in Hands(**HANDS).items():
@@ -636,4 +639,6 @@ P3D = dict(
             dict(t=TITLE_WHOLE - 0.6, at=tuple(LIGHTS[4]), strength=0.25, radius=0.2, color="#fff6e0", rise=0.2,
                  fall=0.9)],
     setup=_setup,
+    motion_blur=0.25,
+    clear=[dict(box=(0.015, 0.82, 0.485, 0.975), t0=2.6, t1=BADGE_OUT + 1.0, soft=0.03, amount=0.85)],
 )
