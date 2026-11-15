@@ -121,8 +121,8 @@ def credit_state(t, bbox):
 # Each section is a world (a look of the 3D world); the people of a world are windows onto the next one.
 # Every world keeps a deep sky overhead, where the words are read; only the horizon is pale.
 LOOKS = dict(
-    pearl=dict(base="golden", sky_top="#18286a", sky_mid="#5560a4", sky_hor="#f2bfa6", sun_az=184.0, sun_el=6.0,
-               sun_color="#ffe6cc", sun_int=0.7, sun_glow=0.5, clouds=0.30, haze=0.55, haze_color="#c49aa0",
+    pearl=dict(base="golden", sky_top="#16245e", sky_mid="#4a5498", sky_hor="#f2bfa6", sun_az=203.0, sun_el=3.0,
+               sun_color="#ffe6cc", sun_int=0.6, sun_glow=0.4, clouds=0.30, haze=0.55, haze_color="#c49aa0",
                mist=0.5, mist_height=10.0, mist_color="#d8b4b4", hill_color="#3a3a6a", water="#1e2650",
                rays=0.15, dust=0.6, dust_color="#fff1dc", dust_color2="#ffd0b8"),
     ember=dict(base="sunrise", sky_top="#0a1646", sky_mid="#3c3a86", sky_hor="#f08a4e", sun_az=176.0, sun_el=3.0,
@@ -135,18 +135,18 @@ LOOKS = dict(
     stars=dict(base="night", sky_top="#02041a", sky_mid="#0a1444", sky_hor="#283270", stars=1.0, milky=1.0,
                hills=0.55, ripple=0.12, mirror=1.0, haze_color="#141a4a", mist=0.25, dust=0.9,
                dust_color="#cfd8ff", dust_color2="#ffe2a8", bokeh=0.9),
-    harvest=dict(base="golden", sky_top="#120c3c", sky_mid="#5a2c6e", sky_hor="#ffae52", sun_az=180.0, sun_el=1.5,
-                 sun_color="#ffc870", sun_int=1.0, sun_glow=0.6, clouds=0.30, rays=0.85, haze=0.5,
+    harvest=dict(base="golden", sky_top="#0e0a34", sky_mid="#3a1c5e", sky_hor="#ff9e4a", sun_az=208.0, sun_el=1.5,
+                 sun_color="#ffc870", sun_int=0.9, sun_glow=0.4, clouds=0.30, rays=0.6, haze=0.4,
                  haze_color="#a8506a", mist=0.4, mist_height=3.0, mist_color="#c86a60", water="#1a1022",
                  hill_color="#1c0e26", stars=0.2, dust=1.0, dust_color="#ffd27a", dust_color2="#ffb060", bokeh=1.0),
     rain=dict(base="night", sky_top="#0b0d2e", sky_mid="#231f52", sky_hor="#4a4470", sun_el=-5.0, stars=0.0,
               milky=0.0, clouds=0.65, haze=0.7, haze_color="#2a2858", mist=0.6, mist_height=6.0,
               mist_color="#3a3a70", ripple=1.8, water="#0e1034", dust=0.3, dust_color="#cfd6ff"),
-    blossom=dict(base="golden", sky_top="#0c2a72", sky_mid="#3866b8", sky_hor="#ffd2bc", sun_az=150.0,
-                 sun_el=4.0, sun_color="#fff0dc", sun_int=0.85, sun_glow=0.45, clouds=0.30, rays=0.45, haze=0.4,
+    blossom=dict(base="golden", sky_top="#0a2468", sky_mid="#2a56a8", sky_hor="#ffd2bc", sun_az=146.0,
+                 sun_el=2.0, sun_color="#fff0dc", sun_int=0.6, sun_glow=0.3, clouds=0.30, rays=0.25, haze=0.3,
                  haze_color="#9a8ab8", mist=0.35, mist_color="#e8c8d0", water="#123a7a", hill_color="#22325e",
                  dust=0.6, dust_color="#fff4f0", dust_color2="#ffc2cf"),
-    dayend=dict(base="day", sun_az=232.0, sun_el=30.0, sun_disc=1.2),
+    dayend=dict(base="day", sun_az=232.0, sun_el=30.0, sun_disc=1.2, haze=0.35, mist=0.08),
 )
 MAIN_LOOK = [(0.0, "pearl"), (X1, "ember", 0.0), (X2, "sea", 0.0), (X3, "stars", 0.0), (X4, "harvest", 0.0),
              (X5, "rain", 0.0), (X6, "blossom", 0.0), (FLOOD, "dayend", 1.8)]
@@ -184,7 +184,7 @@ def _after(cross, start):
 
 O1 = _A([0.0, 0.0, 650.0])
 BUST_AT, BUST_HEAD = _A([0.0, -98.0, -250.0]), _A([0.1, 55.6, -248.9])           # S1, scale 100
-K1 = [(0.0, (-12.0, 44.0, -100.0), (0.0, 60.0, -250.0)), (2.0, (-8.0, 46.0, -146.0), (0.0, 60.0, -250.0)),
+K1 = [(0.0, (-12.0, 44.0, -100.0), (0.0, 74.0, -250.0)), (2.0, (-8.0, 46.0, -146.0), (0.0, 60.0, -250.0)),
       (4.9, (-4.0, 48.0, -182.0), (0.0, 58.0, -250.0)), (X1, (0.0, 55.0, -246.0), (0.0, 55.0, -290.0))]
 C1 = O1 + _A(K1[-1][1])
 
@@ -250,10 +250,23 @@ CAMERA = Rig([
 # The badge holds the top left; the words stay below it.
 
 
-def _ride(expr, y, px, t_in, r0, r1, t_out, depth=40.0, **kw):
+def _clean(t, info):
+    """The letters never fly apart: they stay in place, crisp, and fade in as the birds (or stars, petals) of
+    the arrival land on them, and fade out as the birds of the leaving lift off (no broken letter shapes)."""
+    w, st = info["word"], info["state"]
+    if st == "arrive":
+        a = (t - w.t_in) / max(w.t_read0 - w.t_in, 1e-6)
+        return dict(pos=info["home"], alpha=_ss(0.45, 1.0, a), assist=1.0)
+    if st == "leave":
+        lv = (t - w.t_read1) / max(w.t_out - w.t_read1, 1e-6)
+        return dict(pos=info["home"], alpha=1.0 - _ss(0.0, 0.55, lv), assist=1.0)
+    return None
+
+
+def _ride(expr, y, px, t_in, r0, r1, t_out, depth=6.0, **kw):
     tm = 0.5 * (r0 + r1)
     return dict(expr=expr, ride=(0.5, y, depth), em=PW.em_for(CAMERA, tm, depth, px), t_in=t_in, t_read0=r0,
-                t_read1=r1, t_out=t_out, tint=0.55, halo=1.3, **kw)
+                t_read1=r1, t_out=t_out, tint=0.55, halo=1.3, reflect=False, drive=_clean, **kw)
 
 
 _AWAY = dict(away=(0.1, -0.15, -1.0), speed=1.4)
@@ -264,8 +277,8 @@ _SPECS = [
     _ride("Gratitude", 0.70, 78, 20.3, 21.6, 24.9, 25.9, arrive="petals", leave="flock", **_AWAY),
     _ride("Consideration", 0.74, 88, 27.0, 28.3, 31.3, 32.3, depth=3.0, arrive="flock", leave="flock",
           away=(0.0, -0.3, -1.0), speed=0.5),
-    _ride("Apology", 0.71, 84, 33.9, 35.2, 38.4, 39.3, arrive="flock", leave="sink"),
-    _ride("Inclusiveness", 0.71, 94, 39.3, 40.3, 42.9, 43.6, arrive="flock", leave="bokeh"),
+    _ride("Apology", 0.71, 84, 33.9, 35.2, 38.4, 39.3, arrive="flock", leave="flock", **_AWAY),
+    _ride("Inclusiveness", 0.71, 94, 39.3, 40.3, 42.9, 43.6, depth=2.5, arrive="flock", leave="flock", **_AWAY),
     _ride("Encouragement", 0.71, 80, 43.4, 44.6, 47.2, 48.0, arrive="petals", leave="petals"),
     _ride("Compliment", 0.71, 92, 47.4, 48.3, 50.8, 51.5, arrive="flock", leave="flock",
           away=(0.0, -0.2, -1.0), speed=1.8),
@@ -279,8 +292,8 @@ class _Gate:
     frame the camera passes through it). gain() also drives the person's window."""
     wants_camera = True
 
-    def __init__(self, ps, t0, t1, rise=0.6, fall=0.05):
-        self.ps, self.t0, self.t1, self.rise, self.fall = ps, t0, t1, rise, fall
+    def __init__(self, ps, t0, t1, rise=0.6, fall=0.05, dim=0.0):
+        self.ps, self.t0, self.t1, self.rise, self.fall, self.dim = ps, t0, t1, rise, fall, dim
 
     def sample(self, t, cam=None):
         if t < self.t0 or t >= self.t1:
@@ -293,6 +306,25 @@ class _Gate:
         g = _ss(self.t0, self.t0 + self.rise, t) if self.rise > 0 else 1.0
         g *= (1.0 - _ss(self.t1 - self.fall, self.t1, t)) if self.fall > 0 else 1.0
         return g * (float(self.ps.gain(t)) if hasattr(self.ps, "gain") else 1.0)
+
+    def light(self, t):
+        """The gain of the points: as gain(), but out over `dim` seconds before t1 (the window stays)."""
+        g = self.gain(t)
+        return g * (1.0 - _ss(self.t1 - self.dim, self.t1 - 0.04, t)) if self.dim > 0 else g
+
+
+class _Lit:
+    """The points of a gated person, with their own gain (the window keeps the gate's)."""
+    wants_camera = True
+
+    def __init__(self, gate):
+        self.gate = gate
+
+    def sample(self, t, cam=None):
+        return self.gate.sample(t, cam)
+
+    def gain(self, t):
+        return self.gate.light(t)
 
 
 class Motes:
@@ -467,11 +499,11 @@ def _person(scene, name, t0, t1, shape, at, origin, scale=22.0, edge=0.55, grow=
     color, color2 = kw.pop("color", "#ffe0b0"), kw.pop("color2", "#ffffff")
     b = Body(shape, at=place, scale=scale, look=_look(color, color2, kw.pop("bright", 1.0)), effects=fx,
              show=(t0 - 0.02, t1 + 0.02), fade=0.02, color=color, color2=color2, **kw)
-    gate = _Gate(b, t0, t1, rise=rise)
+    gate = _Gate(b, t0, t1, rise=rise, dim=0.45 if t1 < 60.0 else 0.0)
     mk = dict(sky="world", look=window_look, edge=edge, strength=gate.gain)
     if grow is not None:
         mk["grow"] = grow
-    scene.add(name, gate, mask=b.mask(**mk))
+    scene.add(name, PW.KeepClear(_Lit(gate), WORDS, floor=0.0), mask=b.mask(**mk))
     return b
 
 
@@ -542,21 +574,44 @@ def _setup(scene):
             ("in_s3", stars4, X2, X3, True), ("air_s4", stars4, X3, X4, False),
             ("in_s4", gold5w, X3, X4, True), ("air_s5", gold5, X4, X5, False),
             ("in_s7", ember7, X6, 61.0, True)):
-        scene.add(name, PW.KeepClear(_Gate(ps, a, b, rise=0.0, fall=0.0), WORDS), window=win, reflect=not win)
+        scene.add(name, PW.KeepClear(_Gate(ps, a, b, rise=0.0, fall=0.0), WORDS, floor=0.0), window=win, reflect=not win)
     scene.add("in_s6", _Gate(Blossom(O7, paint=False), X5, X6, rise=0.0, fall=0.0), window=True, reflect=False)
-    scene.add("rain", Rain(O6), reflect=False)
-    scene.add("blossom", PW.KeepClear(_Gate(Blossom(O7), X6 - 0.02, 52.0, rise=0.3, fall=0.0), WORDS))
+    scene.add("rain", PW.KeepClear(Rain(O6), WORDS, floor=0.0), reflect=False)
+    scene.add("blossom", PW.KeepClear(_Gate(Blossom(O7), X6 - 0.02, 52.0, rise=0.3, fall=0.0), WORDS, floor=0.0))
     # birds: into the first profile from frame 0, and every bird of the film into Heavenly Mother at the end
     scene.add("birds_s1", PW.KeepClear(Flock(O1 + BUST_HEAD, O1 + _A([-10.0, 60.0, -80.0]), (60.0, 26.0, 40.0),
-                                             260, -3.0, X1 - 0.3, dur=(2.4, 3.8), size=(1.4, 2.6), seed=8), WORDS))
+                                             260, -3.0, X1 - 0.3, dur=(2.4, 3.8), size=(1.4, 2.6), seed=8), WORDS, floor=0.0))
     scene.add("birds_s8", PW.KeepClear(Flock(O7 + MOTHER_HEART, O7 + _A([0.0, 60.0, -120.0]),
                                              (200.0, 55.0, 150.0), 1600, REVEAL + 0.3, FLOOD + 1.6,
-                                             dur=(1.8, 3.2), size=(1.6, 3.0), seed=9), WORDS))
+                                             dur=(1.8, 3.2), size=(1.6, 3.0), seed=9), WORDS, floor=0.0))
     WORDS.add_to(scene)
     WORDS.check(CAMERA)
 
 
 # ------------------------------------------------------------------------------------------------ the 3D layer
+# the badge's box on screen (fractions, y up), measured on stills: large in the middle on frame 0 (centre
+# 0.5, 0.595; 0.74 by 0.19), then at rest in the top left (scale 0.48, margins 0.035 and 0.05)
+_BADGE_FULL, _BADGE_HALF = (0.5, 0.595), (0.37, 0.095)
+
+
+def _clear_boxes(t):
+    m = _ss(CREDIT["t_move"], CREDIT["t_rest"], t)
+    sc = CREDIT["scale"] ** m
+    hx, hy = _BADGE_HALF[0] * sc, _BADGE_HALF[1] * sc
+    rest = (CREDIT["margin_x"] + _BADGE_HALF[0] * CREDIT["scale"],
+            1.0 - CREDIT["margin_top"] - _BADGE_HALF[1] * CREDIT["scale"])
+    cx = _BADGE_FULL[0] * (1 - m) + rest[0] * m
+    cy = _BADGE_FULL[1] * (1 - m) + rest[1] * m
+    out = []
+    a = 1.0 - _ss(T_FORM - 0.2, T_FORM + 0.8, t)
+    if a > 0.01:
+        out.append(dict(box=(cx - hx - 0.02, cy - hy - 0.03, cx + hx + 0.02, cy + hy + 0.03), t0=-2.0, t1=61.0,
+                        soft=0.03, amount=a))
+    if t >= T_FORM - 0.3:
+        out.append(dict(box=(0.10, 0.36, 0.90, 0.88), t0=T_FORM - 0.3, t1=61.0, soft=0.05, amount=0.85))
+    return out
+
+
 NINE = [e["color"] for e in PW.EXPRESSIONS]
 _HEAD_LIGHT = tuple(O7 + MOTHER_HEAD + _A([0.0, 3.0, -14.0]))     # behind her head: rays fan from it (ref 10)
 
@@ -566,7 +621,7 @@ P3D = dict(
         looks=LOOKS,
         look=MAIN_LOOK,
         light=dict(pos=_HEAD_LIGHT, color="#fff0d0", size=10.0, rays=1.0,
-                   strength=lambda t: 2.6 * _ss(REVEAL + 0.4, REVEAL + 2.0, t)),
+                   strength=lambda t: 1.4 * _ss(REVEAL + 0.4, REVEAL + 2.0, t)),
         # the arch of nine lights: a low arc behind Heavenly Mother, under the end card
         arch=dict(lit=[FLOOD + 0.4 + 0.22 * k for k in range(9)], span=210.0, height=72.0,
                   z=float(O7[2] + MOTHER_AT[2] - 50.0), colors=NINE, bright=1.6),
@@ -580,7 +635,7 @@ P3D = dict(
             dict(t=X6, strength=1.0, rise=0.15, fall=0.6, color="#fff0e0", radius=0.4),
             dict(t=FLOOD, at=tuple(O7 + MOTHER_HEART), strength=1.1, rise=0.35, fall=0.9, color="#fff6e0",
                  radius=0.35)],
-    clear=[dict(box=(0.10, 0.36, 0.90, 0.88), t0=T_FORM - 0.3, t1=61.0, soft=0.05, amount=0.85)],
+    clear=lambda t: _clear_boxes(t),
     setup=_setup,
 )
 
