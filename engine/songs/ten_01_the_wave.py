@@ -75,7 +75,7 @@ BOTTOM_CALM = 0.0
 TEXT_SHADOW = 0.0
 
 # ---- the music (scratchpad medley2/SECTION-MAP.md)
-S = [0.25, 6.84, 13.30, 19.85, 26.79, 33.36, 40.21, 49.47]
+SECTION_STARTS = [0.25, 6.84, 13.30, 19.85, 26.79, 33.36, 40.21, 49.47]
 HIT0, IMPACT = 0.25, 0.97
 BREATH, BIG = 40.21, 42.51
 FINAL_HIT = 58.11
@@ -107,10 +107,10 @@ SHORE = 62.0                                    # the crest breaks this far in f
 Z0 = float(_K0.R(BREAK)) + SHORE
 X0 = 0.0
 KIN = WV.Kinematics(SPEED, HEIGHT, CURL, drop=(X0, Z0), t_impact=IMPACT)
-H = KIN.height
+HGT = KIN.height                                # the wave's height (H is the frame height)
 
 
-def P(u, b, h, t):
+def wp(u, b, h, t):
     """A place in the wave's own frame at t (see engine/p3d/ten_01_wave.py)."""
     return KIN.point(u, b, h, t)
 
@@ -197,8 +197,8 @@ HP = KN + np.array([-0.62, 0.0, 0.22])          # the one who lays a hand on the
 
 
 def walk_frame(t):
-    p = P(U_WALK, 0.15, 0.0, t)
-    p[1] = float(H(t)) * 0.985
+    p = wp(U_WALK, 0.15, 0.0, t)
+    p[1] = float(HGT(t)) * 0.985
     return p
 
 
@@ -225,8 +225,8 @@ def cam_drop(t):
 def cam_ride(t):
     h = 0.24 + 1.3 * float(ss(3.6, 6.3, t))
     b = 0.5 + 0.25 * float(ss(1.2, 5.0, t))
-    pos = P(-0.75, b, h, t)
-    look = P(2.2, -9.0, 0.12 + 0.4 * float(ss(3.6, 6.3, t)), t)
+    pos = wp(-0.75, b, h, t)
+    look = wp(2.2, -9.0, 0.12 + 0.4 * float(ss(3.6, 6.3, t)), t)
     her = W1 + np.array([0.0, 1.05, 0.0])
     return pos, lerp(look, her, float(ss(4.9, 6.5, t)))
 
@@ -242,7 +242,7 @@ def cam_orbit_w1(t):
 
 def cam_surge(t):
     # ride behind the crest as it surges, then fall back and stall beside the pair
-    ride = P(0.6, 2.4, 1.25, t), P(0.0, -14.0, 0.5, t)
+    ride = wp(0.6, 2.4, 1.25, t), wp(0.0, -14.0, 0.5, t)
     u = float(ss(14.3, 15.6, t))
     w = float(ss(15.4, 19.85, t))
     a = np.radians(10.0 + 60.0 * w)
@@ -257,16 +257,16 @@ def mouth(t):
 
 
 def cam_barrel(t):
-    Hh = float(H(t))
+    Hh = float(HGT(t))
     k = float(ss(19.9, 20.9, t))                     # through the wall
     ub = 1.5 + 6.6 * max(t - 20.9, 0.0)
-    out = P(0.0, 2.6, 1.6, t), P(0.0, -12.0, 0.8, t)
-    tube = P(ub, -0.66 * Hh, 0.42 * Hh, t), P(ub + 14.0, -0.58 * Hh, 0.46 * Hh, t)
+    out = wp(0.0, 2.6, 1.6, t), wp(0.0, -12.0, 0.8, t)
+    tube = wp(ub, -0.66 * Hh, 0.42 * Hh, t), wp(ub + 14.0, -0.58 * Hh, 0.46 * Hh, t)
     pos, tgt = lerp(out[0], tube[0], k), lerp(out[1], tube[1], k)
     # spat out of the mouth (about u = 36): out ahead of the wave, turning to look back at it
     e = float(ss(25.3, 26.79, t))
     if e > 0.0:
-        ex = P(ub, -5.0 - 2.0 * e, 2.4 + 2.0 * e, t), P(ub + 3.0, 0.0, 0.6 * Hh, t)
+        ex = wp(ub, -5.0 - 2.0 * e, 2.4 + 2.0 * e, t), wp(ub + 3.0, 0.0, 0.6 * Hh, t)
         pos, tgt = lerp(pos, ex[0], e), lerp(tgt, ex[1], e)
     return pos, tgt
 
@@ -281,9 +281,9 @@ def cam_trim(t):
 
 
 def cam_run(t):
-    Hh = float(H(t))
-    ahead = P(U_MAIN - 4.0, -15.0, 2.2, t), P(U_MAIN, 0.0, 0.55 * Hh, t)
-    over = P(U_MAIN - 3.0, 9.0, Hh + 6.0, t), P(U_MAIN, -45.0, 0.0, t)
+    Hh = float(HGT(t))
+    ahead = wp(U_MAIN - 4.0, -15.0, 2.2, t), wp(U_MAIN, 0.0, 0.55 * Hh, t)
+    over = wp(U_MAIN - 3.0, 9.0, Hh + 6.0, t), wp(U_MAIN, -45.0, 0.0, t)
     k = float(ss(36.6, 38.8, t))
     return lerp(ahead[0], over[0], k), lerp(ahead[1], over[1], k)
 
@@ -291,14 +291,14 @@ def cam_run(t):
 def cam_hang(t):
     c = float(ss(42.55, 46.1, t))
     pos = KN + np.array([0.75 + 0.6 * c, 1.15 + 10.5 * c, -1.7 - 8.0 * c])
-    wall = np.array([KN[0], 0.42 * float(H(t)) + 0.6 * c * 6.0, crest_z(t)])
+    wall = np.array([KN[0], 0.42 * float(HGT(t)) + 0.6 * c * 6.0, crest_z(t)])
     return pos, wall
 
 
 def cam_drop2(t):
-    Hh = float(H(t))
-    ahead = P(U_MAIN + 1.0, -20.0, 7.0, t), P(U_MAIN, 0.0, 0.5 * Hh, t)
-    over = P(U_MAIN, 8.0, Hh + 5.0, t), P(U_MAIN, -70.0, 3.0, t)
+    Hh = float(HGT(t))
+    ahead = wp(U_MAIN + 1.0, -20.0, 7.0, t), wp(U_MAIN, 0.0, 0.5 * Hh, t)
+    over = wp(U_MAIN, 8.0, Hh + 5.0, t), wp(U_MAIN, -70.0, 3.0, t)
     k = float(ss(46.9, 48.1, t))
     return lerp(ahead[0], over[0], k), lerp(ahead[1], over[1], k)
 
@@ -309,8 +309,8 @@ END_LOOK = np.array([0.0, 14.0, 0.0])
 
 def cam_break(t):
     tb = min(t, BREAK + 0.4)
-    Hh = float(H(tb))
-    start = P(U_MAIN, 8.0, Hh + 5.0, tb)
+    Hh = float(HGT(tb))
+    start = wp(U_MAIN, 8.0, Hh + 5.0, tb)
     thrown = np.array([0.5 * start[0], 26.0, start[2] + 25.0])
     land = END_POS + np.array([0.0, 0.0, -1.2 * max(t - 54.0, 0.0)])
     u1 = float(ss(BREAK, 51.4, t))
@@ -348,7 +348,7 @@ ENC_DEPTH = 0.0
 
 
 def enc_pos(t):
-    p = P(U_MAIN + 0.5, -0.18 * float(H(t)) - 1.5, 15.0, t)
+    p = wp(U_MAIN + 0.5, -0.18 * float(HGT(t)) - 1.5, 15.0, t)
     return p
 
 
@@ -425,8 +425,8 @@ def _lanterns(rng):
 
 def _wake(rng):
     n = 260000
-    z = rng.uniform(crest_z(1.5) - 2.0, Z0 - 0.3, n)
-    z = np.where(rng.random(n) < 0.2, rng.uniform(crest_z(1.0), crest_z(7.0), n), z)
+    z = rng.uniform(crest_z(BREAK + 0.5), Z0 - 0.3, n)
+    z = np.where(rng.random(n) < 0.2, rng.uniform(crest_z(7.0), Z0 - 0.3, n), z)
     x = rng.laplace(0.0, 14.0, n)
     pos = np.stack([x, np.full(n, 0.01), z], 1)
     r = np.hypot(x - X0, z - Z0)
@@ -490,7 +490,7 @@ def _crest_line(shapes):
 
     def place(uu, bb, t):
         tb = min(t, BREAK + 0.5)
-        h = float(H(t)) * (1.0 - ss(BREAK, 51.6, t)) * 0.98
+        h = float(HGT(t)) * (1.0 - ss(BREAK, 51.6, t)) * 0.98
         p = KIN.world(uu, bb + 0.4 * ss(BREAK, 51.6, t) * 0.0, np.zeros_like(uu), tb)
         p[:, 1] = h
         return p
@@ -575,9 +575,9 @@ P3D = dict(
         bokeh=0.6,
         shafts=[dict(base=(X0, Z0), radius=0.16, top=60.0, spread=0.02, color="#fff1d0",
                      strength=lambda t: float(0.9 * (1.0 - ss(IMPACT, IMPACT + 1.4, t))))],
-        lights=[dict(pos=lambda t: P(0.0 if t < 20.0 else U_MAIN, 0.3, 0.6 * float(H(t)) + 0.3, t), color="#ffc060",
+        lights=[dict(pos=lambda t: wp(0.0 if t < 20.0 else U_MAIN, 0.3, 0.6 * float(HGT(t)) + 0.3, t), color="#ffc060",
                      strength=lambda t: float(0.0 if t < IMPACT else 0.8 * _glow(t)),
-                     radius=lambda t: 2.0 + 1.2 * float(H(t)))],
+                     radius=lambda t: 2.0 + 1.2 * float(HGT(t)))],
         arch=dict(lit=_LIT, **ARCH),
         react=dict(beat=0.4, level=0.3),
     )),
@@ -594,5 +594,5 @@ P3D = dict(
 if __name__ == "__main__":
     print("Z0", Z0, "crest at break", crest_z(BREAK))
     for t in (1.0, 2.0, 6.0, 13.3, 19.85, 26.79, 33.36, 40.21, 42.5, 46.4, BREAK):
-        print(t, "R", round(float(KIN.R(t)), 1), "H", round(float(H(t)), 2), "speed", CAMERA.speed(t))
+        print(t, "R", round(float(KIN.R(t)), 1), "H", round(float(HGT(t)), 2), "speed", CAMERA.speed(t))
     WORDS.check(CAMERA)
