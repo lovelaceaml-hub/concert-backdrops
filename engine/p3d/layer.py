@@ -67,9 +67,9 @@ class Layer:
         self.scene = api.Scene()
         wd = self.world
         n = draft.n
-        self.scene.add("_stars", Wd.Stars(wd, n=n(9000)), fog=False)
+        self.scene.add("_stars", Wd.Stars(wd, n=n(14000)), fog=False)
         self.scene.add("_sun", Wd.SunGlow(wd), fog=False, depth_of_field=False, lod=False)
-        self.scene.add("_dust", Wd.Dust(wd, **{**dict(n=n(7000), n_bokeh=n(420)), **wd.dust_cfg}))
+        self.scene.add("_dust", Wd.Dust(wd, **{**dict(n=n(7000), n_bokeh=n(300)), **wd.dust_cfg}))
         self.scene.add("_lanterns", Wd.Lanterns(wd, **{**dict(count=n(420)), **wd.lantern_cfg}), lod=False)
         self.arch = None
         if wd.arch:

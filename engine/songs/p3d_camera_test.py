@@ -43,7 +43,7 @@ CAMERA = Rig([
     dolly((0.0, 10.0, 30.0), (0.0, 3.4, -34.0), 13.4, 16.6, look="ahead", fov=(50, 58), aperture=0.08, focus=9.0),
     crane((0.0, 3.4, -36.0), 48.0, 16.6, 20.6, look=((0.0, 14.0, -120.0), (0.0, 110.0, -150.0)), fov=52,
           aperture=0.07, focus=(12.0, 60.0)),
-    dolly((0.0, 44.0, -30.0), (0.0, 7.5, 118.0), 20.6, 25.0, look=((0.0, 30.0, -200.0), (0.0, 7.0, 0.0)),
+    dolly((0.0, 44.0, -30.0), (0.0, 6.5, 84.0), 20.6, 25.0, look=((0.0, 30.0, -200.0), (0.0, 7.5, 0.0)),
           fov=(50, 40), aperture=0.05, focus="target", ease="out"),
 ], blend=1.7, handheld=0.25)
 
@@ -58,7 +58,7 @@ def _setup(scene):
 P3D = dict(
     camera=CAMERA,
     world=dict(
-        look=[(0.0, "night"), (17.5, "predawn", 4.0), (21.2, "dawn", 2.5), (23.6, "sunrise", 3.0)],
+        look=[(0.0, "night"), (17.0, "predawn", 4.0), (20.4, "dawn", 3.0), (22.8, "sunrise", 3.0)],
         sun_az=180.0,
         lanterns=_base.Track([(0.0, 0.0), (11.5, 0.0), (15.0, 1.0), (25.0, 1.0)]),
         lantern_field=dict(count=520, radius=(5.0, 75.0), center=(0.0, -25.0), height=52.0),

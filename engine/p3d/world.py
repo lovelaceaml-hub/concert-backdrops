@@ -80,10 +80,11 @@ LOOKS["dawn"] = _look(_NIGHT, sky_top="#0f1b46", sky_mid="#553b7c", sky_hor="#e9
                       sun_int=0.95, sun_el=-1.2, stars=0.30, milky=0.08, clouds=0.38, haze=0.7,
                       haze_color="#c97a6e", mist=0.55, mist_color="#a86a66", hill_color="#0e0a18", water="#06060f",
                       rays=0.35, dust_color="#ffd9a0", dust_color2="#ffc4b0")
-LOOKS["sunrise"] = _look(_NIGHT, sky_top="#152b68", sky_mid="#93578a", sky_hor="#ffb873", sun_color="#ffecc4",
-                         sun_int=1.25, sun_el=5.5, stars=0.10, milky=0.0, clouds=0.42, haze=0.75,
-                         haze_color="#eaa276", mist=0.60, mist_color="#d79a78", hill_color="#161022",
-                         water="#090811", rays=0.9, dust_color="#ffe2a8", dust_color2="#ffd0a8", sun_disc=7.0)
+LOOKS["sunrise"] = _look(_NIGHT, sky_top="#13265e", sky_mid="#7d4c82", sky_hor="#f39a62", sun_color="#ffe6b4",
+                         sun_int=1.10, sun_el=5.5, stars=0.12, milky=0.0, clouds=0.42, haze=0.70,
+                         haze_color="#c9805c", mist=0.45, mist_color="#b87c62", hill_color="#140e1e",
+                         water="#090811", rays=0.9, dust_color="#ffe2a8", dust_color2="#ffd0a8", sun_disc=8.0,
+                         sun_glow=0.8)
 LOOKS["golden"] = _look(_NIGHT, sky_top="#1c3a7c", sky_mid="#5e78b0", sky_hor="#e8c9a8", sun_color="#fff2d8",
                         sun_int=1.15, sun_el=14.0, stars=0.0, milky=0.0, clouds=0.35, haze=0.7,
                         haze_color="#d9c4b0", mist=0.40, mist_color="#d8c8b8", hill_color="#2a3350",
@@ -167,10 +168,10 @@ class Stars:
     static = True
     dome = True
 
-    def __init__(self, world, n=9000, seed=11):
+    def __init__(self, world, n=14000, seed=11):
         self.world = world
         rng = np.random.default_rng(seed)
-        n_band = int(n * 0.34)
+        n_band = int(n * 0.42)
         d = rng.normal(size=(n - n_band, 3))
         d /= np.linalg.norm(d, axis=1, keepdims=True)
         d[:, 1] = np.abs(d[:, 1])
@@ -184,15 +185,15 @@ class Stars:
         b /= np.linalg.norm(b, axis=1, keepdims=True)
         b[:, 1] = np.abs(b[:, 1])
         self.dir = np.concatenate([d, b]).astype(np.float32)
-        mag = rng.random(n) ** 3
-        mag[n - n_band:] *= 0.55                                   # the band is a dust of faint stars
-        self.size = (0.0011 + 0.0024 * mag).astype(np.float32)     # angular diameter in radians
+        mag = rng.random(n) ** 4
+        mag[n - n_band:] *= 0.5                                    # the band is a dust of faint stars
+        self.size = (0.0009 + 0.0026 * mag).astype(np.float32)     # angular diameter in radians
         tint = rng.random(n)
         col = np.stack([0.80 + 0.20 * tint, 0.86 + 0.10 * tint, 1.0 - 0.22 * tint], axis=1)
         self.color = col.astype(np.float32)
-        self.alpha = (0.9 + 6.0 * mag).astype(np.float32)
+        self.alpha = (0.75 + 7.0 * mag).astype(np.float32)
         self.seed = rng.random(n).astype(np.float32)
-        self.bright = np.argsort(mag)[-max(n // 70, 8):]              # the brightest carry a fine glint
+        self.bright = np.argsort(mag)[-max(n // 110, 8):]             # the brightest carry a fine glint
 
     def sample(self, t):
         b = self.bright
@@ -226,7 +227,7 @@ class Dust:
     fixed in the world: the camera flies through it, and a box of it always surrounds the camera."""
     wants_camera = True
 
-    def __init__(self, world, n=7000, n_bokeh=420, seed=21, box=(38.0, 22.0, 38.0), bokeh_box=(64.0, 22.0, 64.0)):
+    def __init__(self, world, n=7000, n_bokeh=300, seed=21, box=(38.0, 22.0, 38.0), bokeh_box=(64.0, 22.0, 64.0)):
         self.world = world
         rng = np.random.default_rng(seed)
         self.sets = []
@@ -236,12 +237,12 @@ class Dust:
             b = rng.random(count)
             if kind == 0:
                 size = 0.010 + 0.022 * b ** 2
-                alpha = 0.25 + 0.75 * rng.random(count)
-                emit = 1.0 + 3.0 * (rng.random(count) > 0.94)
+                alpha = 0.15 + 0.50 * rng.random(count)
+                emit = 1.0 + 3.0 * (rng.random(count) > 0.95)
             else:
                 size = 0.05 + 0.09 * b
-                alpha = 0.55 + 0.45 * rng.random(count)
-                emit = 1.6 + 2.2 * rng.random(count) ** 2
+                alpha = 0.40 + 0.40 * rng.random(count)
+                emit = 2.0 + 3.0 * rng.random(count) ** 2
             self.sets.append(dict(sd=sd, ph=ph, box=np.asarray(bx), size=size.astype(np.float32),
                                   alpha=alpha.astype(np.float32), emit=emit.astype(np.float32),
                                   mix=rng.random(count), seed=rng.random(count).astype(np.float32),
@@ -269,7 +270,7 @@ class Dust:
                 s["dust_color2"])[None, :] * (d["mix"][:, None] * 0.6)
             out.append(dict(pos=pos, size=d["size"], color=col, alpha=d["alpha"] * fx * fz * fy * amt,
                             emit=d["emit"], seed=d["seed"], kind="soft", twinkle=0.5 if k == 0 else 0.25,
-                            backlight=0.7, streak=0.6, reflect=(k == 1)))
+                            backlight=0.7, streak=0.4, reflect=(k == 1)))
         return out
 
 
