@@ -2,54 +2,59 @@
 
 LOGLINE
   Every person is a window onto a sky. One of Mother's words flies to them as a flock of birds, and we fly
-  through the person into the sky inside them: six crossings in one forward dive that never turns back,
-  until Heavenly Mother, seen from behind, opens over us as the day.
+  through the person into the sky inside them: one unbroken forward flight through six people, until
+  Heavenly Mother, seen from behind, a window onto the sunrise, takes in every bird and the day floods out.
 
 THE THREE LAWS OF THIS FILM
-  1. A person is a window (refs 08, 02). People are giants of light, 15 to 160 m tall, standing in the lake.
-     Inside each silhouette is another whole world, seen through it with its own parallax: the world the
-     camera flies into next (the 3D layer's window world, one per frame).
-  2. A word is a flock. Each expression arrives as birds (or stars, petals) and is carried at the camera's
-     pace while it is read, so it holds its size on screen while the world rushes by; it leaves as birds
-     that fly ahead of us into the person it is for.
-  3. The camera only goes forward. It glides while a word is read and surges into the person on the
-     section's downbeat; a flash of the next world's light covers the threshold and we come out inside.
+  1. A person is a window (refs 08, 02). People are giants of light, 30 to 160 m tall, standing in the lake.
+     Each is a double exposure: a glowing rim and glitter on the edge, light streaming off them, and inside
+     the silhouette the next world, with its own sky, hills and lights at real depth (it moves with parallax).
+  2. A word is a flock. Each expression arrives as birds (or stars, petals), is carried at the camera's pace
+     while it is read (so it holds its place while the world rushes by), and leaves as birds that fly ahead
+     of us into the person it is for.
+  3. The camera only goes forward, in one unbroken flight. Each world stands further along the path; the
+     camera surges into a person on the section's downbeat and comes out inside the world it saw through
+     them, from the very same place: the window covers the whole frame at the threshold, so nothing cuts.
 
 SHOT BY SHOT (the medley's section starts: 0.25, 6.84, 13.30, 19.85, 26.79, 33.36, 40.21, 42.51, 49.47)
-  0.0   PEARL MORNING. Frame 0: a woman's profile as tall as a headland over a pearl lake; inside her the
-        sunrise clouds. A flock streaks past the lens to her: "How are you?" We surge into her temple.
-  6.84  SUNRISE CLOUDS. We burst out high in her sunrise, swoop down: an Elder opens his arms low and lets a
-        Runner go first. "Please, after you." We chase the Runner and dive into his back.
-  13.30 THE SEA. Low over a teal sea: a boy blows light from his open palm, a woman kneels to listen. "I'd
-        love to hear more about your thoughts." Into the boy's head.
-  19.85 A FIELD OF STARS. The fastest flight, the stars doubled in the lake. A worker kneels, a woman bows to
-        him. "Thank you..." Into his heart.
-  26.79 HARVEST GOLD. Close on two hands, gold and blue, reaching through golden dust (ref 04). "Can I give
-        you a hand with anything?" They touch and flare on the beat; we fly into the flare.
-  33.36 RAIN AT NIGHT. Silver rain. One kneels, head bowed; the other stands turned away, coming apart.
-        "I'm sorry..." The breath (40.21): the rain slows and hangs in the air, she turns and opens her
-        arms: "It's okay. I understand." 42.51, the biggest hit: every drop turns to warm light and rises
-        as we fly into her heart.
-  42.51 BLOSSOM MORNING. Blossom streaming into our face, the rain's lights still rising. A woman kneels in
-        prayer: "I'll pray (or root) for you..." A child runs into a father's open arms: "You're amazing..."
-  49.47 THE DAY. The haze parts: Heavenly Mother from behind, veiled, rays fanning from behind her head
-        (ref 10), opens her arms; 52.26 the day floods out of her; the arch of nine lights wakes over her;
-        the end card is whole by 55.0 and held to the last frame. No fade to black.
+  0.0   PEARL MORNING. Frame 0: the concert badge large over a woman's profile as tall as a headland, a
+        flock streaming past the lens into her; inside her, the sunrise. "How are you?" Into her head.
+  6.84  SUNRISE CLOUDS. Out inside her sunrise. An Elder opens his arms low; a Runner goes first (inside
+        them, the sea). "Please, after you." We chase the Runner and dive into his back.
+  13.30 THE SEA AT BLUE HOUR. A boy blows light from his open palm; a woman kneels to listen (inside them,
+        the stars). "I'd love to hear more about your thoughts." Into the boy's head.
+  19.85 A FIELD OF STARS. The fastest flight. A worker kneels; a woman bows to him (inside them, the
+        harvest). "Thank you..." Into his heart.
+  26.79 HARVEST DUSK. Out of his heart, close on two hands of light, gold and blue, reaching through golden
+        dust (ref 04). "Can I give you a hand with anything?" They touch and flare on the beat (31.62).
+  33.36 RAIN AT NIGHT. Out of the flare into silver rain. One kneels; the other stands turned away, coming
+        apart. "I'm sorry..." The breath (40.21): the rain slows and hangs in the air; she turns and opens
+        her arms: "It's okay. I understand." 42.51, the biggest hit: into her heart; the drops become warm
+        lights and rise.
+  42.51 BLOSSOM MORNING. Blossom streaming into our face. A woman kneels in prayer: "I'll pray (or root)
+        for you..." A child runs into a father's open arms: "You're amazing..."
+  49.47 THE DAY. Heavenly Mother appears far ahead, from behind, veiled, a window onto the sunrise, rays
+        fanning from behind her head (ref 10). She opens her arms and every bird pours into her; 52.26 the
+        day floods out of her; the arch of nine lights wakes low behind her; the end card is whole by 55.0
+        and held to the last frame. No fade to black.
+
+THE BADGE: "The Words of Mother's Love" over "Healing Concert · Sunday, December 6 · 4:30 PM" (CREDIT), large
+on frame 0, settled top left by 2.8 s, faded as the end card forms.
 
 HOUSE RULES: no facial features (profiles are featureless silhouettes), everyone clothed in garments of
 light, Heavenly Mother only from behind, all nine expressions from words.EXPRESSIONS by name (exact wording),
-each read for 2.5 s or more, the end card readable for 5 s, nothing dark behind text, no lyrics, no em or
-en dash, no fade to black, frame 0 not black.
+each read for 2.5 s or more, one at a time, the end card readable for 5 s, nothing dark behind text, no
+lyrics, no em or en dash, no fade to black, frame 0 not black.
 """
 import numpy as np
 
 import songs.s03_original as _base
 
 # ------------------------------------------------------------------------------------------------ timing
-SEC = [0.0, 6.84, 13.30, 19.85, 26.79, 33.36, 40.21, 42.51, 49.47]    # medley section starts (SECTION-MAP)
 X1, X2, X3, X4, X5, X6 = 6.84, 13.30, 19.85, 26.79, 33.36, 42.51      # the six crossings, on the downbeats
+TOUCH = 31.62              # the two hands touch (a bar start of song 05)
 BREATH = 40.21
-REVEAL = 49.47             # the haze parts on Heavenly Mother
+REVEAL = 49.47             # Heavenly Mother appears
 FLOOD = 52.26              # the day floods out of her (bar start of the last song)
 TITLE_HIT = 55.0           # the end card is whole (the loudest moment is 54.3 to 55.0)
 FORM_DUR = 3.0
@@ -71,12 +76,10 @@ _base.NINTH = 1e9
 _base.TAGLINE = dict(text="Sunday, December 6 · 4:30 PM\nWorld Mission Society Church of God\n"
                           "6720 W Sahara Ave, Las Vegas",
                      sizes=(78, 77), t0=TAG_T0, t1=TAG_T1, color="#1f2a6b", glow="#fff8ec", anim="rise")
-_base.CREDIT["t_in"], _base.CREDIT["t_full"] = 1e9, 1e9 + 1.0
 _base.WAVES = []
 from songs.s03_original import *  # noqa: E402,F401,F403
 
-from track import Track  # noqa: E402
-from p3d import Mask, lin, show  # noqa: E402,F401
+from p3d import lin, show  # noqa: E402
 from p3d import words as PW  # noqa: E402
 from p3d.camera import Rig, fly  # noqa: E402
 
@@ -84,44 +87,71 @@ AUDIO_FILE = "audio/promo/concert-medley.mp3"
 BOTTOM_CALM = 0.0
 TEXT_SHADOW = 0.0          # nothing dark behind any text
 
+# ---- the concert badge (PHASEB UPDATE 3): from frame 0 to the end card, top left
+CREDIT = dict(song="The Words of Mother’s Love",
+              concert="Healing Concert · Sunday, December 6 · 4:30 PM",
+              t_in=-1.0, t_full=0.0,
+              t_move=1.6, t_rest=2.8,
+              scale=0.48, alpha_rest=0.92,
+              margin_x=0.035, margin_top=0.05)
+
 
 def _ss(a, b, x):
     u = min(max((x - a) / (b - a), 0.0), 1.0)
     return u * u * (3.0 - 2.0 * u)
 
 
+def credit_state(t, bbox):
+    """Centre, scale and strength of the badge; bbox is its size at full card size (demo_gathering.py), faded
+    out over a second as the end card starts to form."""
+    c = CREDIT
+    x0, x1, y0, y1 = bbox
+    a_in = _ss(c["t_in"], c["t_full"], t)
+    m = _ss(c["t_move"], c["t_rest"], t)
+    scale = c["scale"] ** m
+    cx0, cy0 = (x0 + x1) / 2.0, (y0 + y1) / 2.0
+    tx = c["margin_x"] + c["scale"] * (x1 - x0) / 2.0
+    ty = 1.0 - c["margin_top"] - c["scale"] * (y1 - y0) / 2.0
+    cx, cy = cx0 * (1 - m) + tx * m, cy0 * (1 - m) + ty * m
+    alpha = a_in * (1.0 + (c["alpha_rest"] - 1.0) * m) * (1.0 - _ss(T_FORM - 0.2, T_FORM + 0.8, t))
+    return (cx, cy, scale, alpha), (cx0, cy0)
+
+
 # ------------------------------------------------------------------------------------------------ worlds
 # Each section is a world (a look of the 3D world); the people of a world are windows onto the next one.
+# Every world keeps a deep sky overhead, where the words are read; only the horizon is pale.
 LOOKS = dict(
-    pearl=dict(base="golden", sky_top="#3f5f9e", sky_mid="#a9a6c8", sky_hor="#f6d8c4", sun_az=184.0, sun_el=9.0,
-               sun_color="#fff0dc", sun_int=0.75, clouds=0.30, haze=0.65, haze_color="#e6cfc6", mist=0.55,
-               mist_height=14.0, mist_color="#efdcd2", hill_color="#7a7898", water="#3a4566", rays=0.30,
-               dust=0.6, dust_color="#fff1dc", dust_color2="#ffd0b8"),
+    pearl=dict(base="golden", sky_top="#18286a", sky_mid="#5560a4", sky_hor="#f2bfa6", sun_az=184.0, sun_el=6.0,
+               sun_color="#ffe6cc", sun_int=0.7, sun_glow=0.5, clouds=0.30, haze=0.55, haze_color="#c49aa0",
+               mist=0.5, mist_height=10.0, mist_color="#d8b4b4", hill_color="#3a3a6a", water="#1e2650",
+               rays=0.15, dust=0.6, dust_color="#fff1dc", dust_color2="#ffd0b8"),
     ember=dict(base="sunrise", sky_top="#0a1646", sky_mid="#3c3a86", sky_hor="#f08a4e", sun_az=176.0, sun_el=3.0,
-               sun_color="#ffb46e", sun_int=1.0, clouds=0.85, rays=0.95, stars=0.25, haze_color="#b46a5a",
+               sun_color="#ffb46e", sun_int=1.0, clouds=0.85, rays=0.9, stars=0.25, haze_color="#b46a5a",
                mist=0.4, mist_height=10.0, mist_color="#a8604a", water="#120e22", hill_color="#160c22"),
-    sea=dict(base="golden", sky_top="#1d4f8e", sky_mid="#78b4cc", sky_hor="#f2ecd6", sun_az=190.0, sun_el=13.0,
-             sun_color="#fff3d0", sun_int=0.8, clouds=0.30, haze=0.6, haze_color="#cfe4e2", mist=0.5,
-             mist_height=8.0, mist_color="#d6ece8", hills=0.25, water="#1d6872", mirror=0.75, ripple=1.5,
-             rays=0.35, dust=0.5, dust_color="#fffbe8", dust_color2="#d8fff4"),
+    sea=dict(base="golden", sky_top="#0a1f52", sky_mid="#24619a", sky_hor="#bfe4dc", sun_az=204.0, sun_el=2.5,
+             sun_color="#fff0cc", sun_int=0.8, sun_glow=0.45, clouds=0.35, haze=0.4, haze_color="#5d9cac",
+             mist=0.45, mist_height=6.0, mist_color="#8cc4c8", hills=0.25, hill_color="#163a5a", water="#0b3f52",
+             mirror=0.8, ripple=1.4, rays=0.35, stars=0.15, dust=0.5, dust_color="#fffbe8", dust_color2="#bff4ff"),
     stars=dict(base="night", sky_top="#02041a", sky_mid="#0a1444", sky_hor="#283270", stars=1.0, milky=1.0,
                hills=0.55, ripple=0.12, mirror=1.0, haze_color="#141a4a", mist=0.25, dust=0.9,
                dust_color="#cfd8ff", dust_color2="#ffe2a8", bokeh=0.9),
-    harvest=dict(base="golden", sky_top="#2c2c7a", sky_mid="#c27a64", sky_hor="#ffbe60", sun_az=180.0, sun_el=3.5,
-                 sun_color="#ffd48a", sun_int=1.0, clouds=0.30, rays=0.85, haze=0.7, haze_color="#e0a060",
-                 mist=0.45, mist_height=3.0, mist_color="#e8b070", water="#3a2a30", hill_color="#4a2a3a",
-                 dust=1.0, dust_color="#ffd27a", dust_color2="#ffb060", bokeh=1.0),
+    harvest=dict(base="golden", sky_top="#120c3c", sky_mid="#5a2c6e", sky_hor="#ffae52", sun_az=180.0, sun_el=1.5,
+                 sun_color="#ffc870", sun_int=1.0, sun_glow=0.6, clouds=0.30, rays=0.85, haze=0.5,
+                 haze_color="#a8506a", mist=0.4, mist_height=3.0, mist_color="#c86a60", water="#1a1022",
+                 hill_color="#1c0e26", stars=0.2, dust=1.0, dust_color="#ffd27a", dust_color2="#ffb060", bokeh=1.0),
     rain=dict(base="night", sky_top="#0b0d2e", sky_mid="#231f52", sky_hor="#4a4470", sun_el=-5.0, stars=0.0,
               milky=0.0, clouds=0.65, haze=0.7, haze_color="#2a2858", mist=0.6, mist_height=6.0,
               mist_color="#3a3a70", ripple=1.8, water="#0e1034", dust=0.3, dust_color="#cfd6ff"),
-    blossom=dict(base="golden", sky_top="#1b4898", sky_mid="#76a4dc", sky_hor="#ffe0cc", sun_az=180.0,
-                 sun_el=16.0, sun_color="#fff4e0", sun_int=0.85, clouds=0.25, rays=0.5, haze=0.6,
-                 haze_color="#f0dcd8", mist=0.4, mist_color="#f8e8e0", water="#2a5a9a", hill_color="#5a7aa8",
+    blossom=dict(base="golden", sky_top="#0c2a72", sky_mid="#3866b8", sky_hor="#ffd2bc", sun_az=150.0,
+                 sun_el=4.0, sun_color="#fff0dc", sun_int=0.85, sun_glow=0.45, clouds=0.30, rays=0.45, haze=0.4,
+                 haze_color="#9a8ab8", mist=0.35, mist_color="#e8c8d0", water="#123a7a", hill_color="#22325e",
                  dust=0.6, dust_color="#fff4f0", dust_color2="#ffc2cf"),
+    dayend=dict(base="day", sun_az=232.0, sun_el=30.0, sun_disc=1.2),
 )
 MAIN_LOOK = [(0.0, "pearl"), (X1, "ember", 0.0), (X2, "sea", 0.0), (X3, "stars", 0.0), (X4, "harvest", 0.0),
-             (X5, "rain", 0.0), (X6, "blossom", 0.0), (FLOOD, "day", 1.6)]
-_WIN = [(0.0, "ember"), (X1, "sea"), (X2, "stars"), (X3, "harvest"), (X4, "rain"), (X5, "blossom"), (X6, "ember")]
+             (X5, "rain", 0.0), (X6, "blossom", 0.0), (FLOOD, "dayend", 1.8)]
+_WIN = [(-9.0, "ember"), (X1, "sea"), (X2, "stars"), (X3, "harvest"), (X4, "rain"), (X5, "blossom"),
+        (X6, "ember")]
 
 
 def window_look(t):
@@ -133,115 +163,215 @@ def window_look(t):
     return name
 
 
-# ------------------------------------------------------------------------------------------------ people
-# Giants: (shape, scale) -> height. Head centre is about 0.93 of the height, the chest 0.72; kneeling 0.66
-# and 0.47. Places are the feet (x, z); the camera comes from +z and looks toward -z, so facing 90 looks to
-# screen right, 270 to screen left, 180 away from us.
-HEIGHTS = dict(woman=1.59, man=1.73, child=1.31)
-BUST = dict(at=(0.0, -98.0, -250.0), head=(0.0, 50.0, -250.0))            # S1, scale 100
+# ------------------------------------------------------------------------------------------------ the path
+# Each section is laid out in its own local frame (people near local z = -60, the camera coming from +z);
+# the frames stand one after the other along the flight, so that each section starts exactly where the last
+# one crossed into a person. Crossing points (local) are measured on the bodies (Body.where at the crossing).
+_A = np.array
 
 
-def _runner_at(t):
-    u = min(max((t - X1) / (X2 - X1), 0.0), 1.0)
-    return (-20.0 + 38.0 * u, 0.0, 10.0 - 130.0 * u)
+def _keys(origin, keys):
+    o = _A(origin, float)
+    return [(t, tuple(_A(p) + o), tuple(_A(q) + o)) for t, p, q in keys]
 
 
-def _child_at(t):
-    u = _ss(45.0, 48.3, t)
-    return (-2.0 + 14.0 * u, 0.0, -36.0 - 26.0 * u)
+def _after(cross, start):
+    """The origin of the next section's frame: its local start lies on the crossing point."""
+    o = _A(cross, float) - _A(start, float)
+    o[1] = 0.0
+    return o
 
 
-# ------------------------------------------------------------------------------------------------ camera
+O1 = _A([0.0, 0.0, 650.0])
+BUST_AT, BUST_HEAD = _A([0.0, -98.0, -250.0]), _A([0.1, 55.6, -248.9])           # S1, scale 100
+K1 = [(0.0, (-12.0, 44.0, -100.0), (0.0, 60.0, -250.0)), (2.0, (-8.0, 46.0, -146.0), (0.0, 60.0, -250.0)),
+      (4.9, (-4.0, 48.0, -182.0), (0.0, 58.0, -250.0)), (X1, (0.0, 55.0, -246.0), (0.0, 55.0, -290.0))]
+C1 = O1 + _A(K1[-1][1])
+
+# S2 sunrise clouds: the Elder and the Runner (scale 22); the Runner's chest at X2 measured
+O2 = _after(C1, (-24.0, 0.0, 120.0))
+RUNNER_AT = (6.0, 5.6)            # he runs from here; his chest is at the crossing point at X2
+K2 = [(X1, (-24.0, C1[1], 120.0), (-6.0, 30.0, -40.0)), (8.7, (-20.0, 32.0, 78.0), (-6.0, 24.0, -40.0)),
+      (11.7, (-2.0, 27.0, 46.0), (6.0, 24.0, -60.0)), (X2, (7.3, 23.1, -69.0), (7.3, 23.1, -110.0))]
+C2 = O2 + _A(K2[-1][1])
+
+# S3 the sea: the boy and the listener; the boy's head at X3 measured
+O3 = _after(C2, (-10.0, 0.0, 130.0))
+K3 = [(X2, (-10.0, C2[1], 130.0), (0.0, 18.0, -60.0)), (15.3, (-4.0, 11.0, 92.0), (0.0, 18.0, -60.0)),
+      (18.3, (2.0, 13.0, 46.0), (6.0, 20.0, -60.0)), (X3, (10.1, 27.2, -59.0), (10.1, 27.2, -100.0))]
+C3 = O3 + _A(K3[-1][1])
+
+# S4 the field of stars: the thanker and the worker; the worker's chest at X4 measured
+O4 = _after(C3, (-20.0, 0.0, 200.0))
+K4 = [(X3, (-20.0, C3[1], 200.0), (0.0, 16.0, -68.0)), (21.8, (-10.0, 17.0, 112.0), (0.0, 16.0, -68.0)),
+      (25.2, (-2.0, 15.0, 46.0), (6.0, 16.0, -68.0)), (X4, (8.6, 15.6, -69.5), (8.6, 15.6, -110.0))]
+C4 = O4 + _A(K4[-1][1])
+
+# S5 harvest dusk, life size: two hands meet 5 m ahead of where we came out of the worker's heart
+O5 = C4.copy()
+MEET = O5 + _A([0.0, 0.0, -5.0])
+K5 = [(X4, (0.0, 0.0, 0.0), (0.0, 0.0, -5.0)), (28.6, (0.12, 0.10, -3.3), (0.0, 0.0, -5.0)),
+      (TOUCH, (0.03, 0.04, -4.35), (0.0, 0.0, -5.0)), (X5, (0.0, 0.0, -4.98), (0.0, 0.0, -7.0))]
+C5 = O5 + _A(K5[-1][1])
+
+# S6 rain at night (scale 20): the hurt one's chest at X6 measured
+O6 = _after(C5, (0.0, 0.0, 120.0))
+K6 = [(X5, (0.0, C5[1], 120.0), (0.0, 18.0, -52.0)), (35.2, (0.0, 17.0, 96.0), (0.0, 18.0, -52.0)),
+      (38.3, (0.0, 18.0, 70.0), (0.0, 19.0, -52.0)), (41.3, (4.0, 21.0, 30.0), (9.0, 23.0, -53.0)),
+      (X6, (9.2, 22.9, -52.5), (9.2, 22.9, -90.0))]
+C6 = O6 + _A(K6[-1][1])
+
+# S7 blossom morning and S8 the day: one move; Heavenly Mother stands far ahead (scale 45)
+O7 = _after(C6, (0.0, 0.0, 130.0))
+MOTHER_AT = _A([0.0, 0.0, -380.0])
+MOTHER_HEAD, MOTHER_HEART = _A([0.3, 69.1, -379.9]), _A([-2.4, 52.4, -386.5])
+K7 = [(X6, (0.0, C6[1], 130.0), (0.0, 18.0, -60.0)), (44.6, (0.0, 12.0, 100.0), (0.0, 18.0, -60.0)),
+      (REVEAL, (0.0, 13.0, 52.0), (0.0, 24.0, -200.0)), (FLOOD, (0.0, 26.0, -88.0), (0.0, 58.0, -380.0)),
+      (TITLE_HIT, (0.0, 34.0, -148.0), (0.0, 94.0, -380.0)), (60.0, (0.0, 37.0, -163.0), (0.0, 98.0, -380.0))]
+
+
 def _kick(t0, t1, a, b):
-    """A field of view that kicks from a to b as the camera surges into a person."""
+    """A field of view that widens as the camera surges into a person."""
     return lambda t: a + (b - a) * _ss(t0, t1, t)
 
 
 CAMERA = Rig([
-    # S1 pearl morning: she is big from frame 0; glide for the Greeting; surge into her temple
-    fly([(0.0, (-10.0, 46.0, -105.0), BUST["head"]), (2.0, (-6.0, 48.0, -150.0), BUST["head"]),
-         (4.9, (-3.0, 49.5, -186.0), BUST["head"]), (X1, (0.0, 50.0, -234.0), (0.0, 50.0, -262.0))],
-        fov=_kick(5.6, X1, 38.0, 52.0), aperture=0.35, focus="target"),
-    # S2 sunrise clouds: burst out high, swoop down past the Elder, chase the Runner into his back
-    fly([(X1, (-40.0, 34.0, 70.0), (-16.0, 14.0, -60.0)), (8.7, (-34.0, 17.0, 40.0), (-6.0, 16.0, -60.0)),
-         (11.7, (-14.0, 15.0, 10.0), (4.0, 16.0, -80.0)), (X2, (18.0, 17.0, -110.0), (18.0, 17.0, -140.0))],
-        fov=_kick(12.2, X2, 40.0, 54.0), aperture=0.3, focus=60.0, blend=0.0),
-    # S3 the sea: low over the swell; glide; rise into the boy's head
-    fly([(X2, (-6.0, 5.0, 70.0), (0.0, 14.0, -70.0)), (15.1, (-2.0, 5.0, 40.0), (2.0, 15.0, -70.0)),
-         (18.1, (2.0, 6.0, 5.0), (6.0, 17.0, -70.0)), (X3, (10.0, 22.0, -60.0), (10.0, 22.0, -90.0))],
-        fov=_kick(18.6, X3, 40.0, 54.0), aperture=0.3, focus=70.0, blend=0.0),
-    # S4 a field of stars: the fastest flight; glide; into the worker's heart
-    fly([(X3, (-20.0, 18.0, 160.0), (0.0, 12.0, -80.0)), (21.7, (-10.0, 12.0, 60.0), (2.0, 13.0, -80.0)),
-         (25.0, (-2.0, 12.0, 10.0), (8.0, 13.0, -80.0)), (X4, (12.0, 13.0, -70.0), (12.0, 13.0, -100.0))],
-        fov=_kick(25.5, X4, 42.0, 56.0), aperture=0.3, focus=80.0, blend=0.0),
-    # S5 harvest gold: close on two hands; they touch on the beat (31.62); into the flare
-    fly([(X4, (0.3, 1.7, 1.2), (0.0, 1.3, -4.0)), (28.4, (0.2, 1.55, 0.2), (0.0, 1.3, -4.0)),
-         (31.4, (0.05, 1.42, -2.2), (0.0, 1.3, -4.0)), (X5, (0.0, 1.3, -3.85), (0.0, 1.3, -6.0))],
-        fov=_kick(32.3, X5, 36.0, 50.0), aperture=0.02, focus="target", blend=0.0, near=0.02),
-    # S6 rain at night, and the breath: the push slows to a glide; then into her heart on the biggest hit
-    fly([(X5, (0.0, 14.0, 80.0), (0.0, 14.0, -60.0)), (35.1, (0.0, 15.0, 52.0), (0.0, 15.0, -60.0)),
-         (38.3, (0.0, 15.0, 28.0), (0.0, 15.0, -60.0)), (41.2, (3.0, 15.0, 8.0), (8.0, 15.0, -64.0)),
-         (X6, (11.0, 16.0, -54.0), (11.0, 16.0, -80.0))],
-        fov=42.0, aperture=0.3, focus=60.0, blend=0.0),
-    # S7 blossom morning: low and forward among the people
-    fly([(X6, (0.0, 10.0, 70.0), (0.0, 12.0, -60.0)), (44.0, (0.0, 9.0, 45.0), (0.0, 12.0, -60.0)),
-         (REVEAL, (0.0, 9.0, -2.0), (0.0, 16.0, -60.0))],
-        fov=42.0, aperture=0.25, focus=50.0, blend=0.0),
-    # S8 the day: the haze parts; rise toward Heavenly Mother; she sinks to the lower part of the picture as
-    # the end card forms above her; still drifting forward on the last frame
-    fly([(REVEAL, (0.0, 9.0, -2.0), (0.0, 30.0, -380.0)), (FLOOD, (0.0, 24.0, -110.0), (0.0, 58.0, -380.0)),
-         (TITLE_HIT, (0.0, 34.0, -150.0), (0.0, 96.0, -380.0)), (60.0, (0.0, 37.0, -165.0), (0.0, 100.0, -380.0))],
-        fov=42.0, aperture=0.0, focus="target", blend=1.0),
-], fov=40.0, handheld=0.15, shutter=0.5)
+    fly(_keys(O1, K1), fov=_kick(5.7, X1, 38.0, 50.0), aperture=0.35, focus="target"),
+    fly(_keys(O2, K2), fov=_kick(12.4, X2, 42.0, 54.0), aperture=0.3, focus=90.0, blend=0.25),
+    fly(_keys(O3, K3), fov=_kick(18.9, X3, 42.0, 54.0), aperture=0.3, focus=110.0, blend=0.25),
+    fly(_keys(O4, K4), fov=_kick(25.8, X4, 42.0, 54.0), aperture=0.3, focus=110.0, blend=0.25),
+    fly(_keys(O5, K5), fov=40.0, aperture=0.012, focus="target", blend=0.25, near=0.02),
+    fly(_keys(O6, K6), fov=42.0, aperture=0.3, focus=100.0, blend=0.25),
+    fly(_keys(O7, K7), fov=42.0, aperture=0.0, focus="target", blend=0.25),
+], fov=42.0, handheld=0.12, shutter=0.5)
 
 # ------------------------------------------------------------------------------------------------ words
-_GAP = dict(away=(0.25, 0.35, -1.0))
+# One reading moment at a time, each in the deep sky over the people, carried at the camera's pace.
+# The badge holds the top left; the words stay below it.
 
 
-def _ride(expr, x, y, px, t_in, r0, r1, t_out, depth=40.0, **kw):
-    """A word carried at the camera's pace: it keeps the screen place (x, y) `depth` metres ahead, at an em of
-    `px` pixels (1080p) in the middle of its reading moment."""
+def _ride(expr, y, px, t_in, r0, r1, t_out, depth=40.0, **kw):
     tm = 0.5 * (r0 + r1)
-    return dict(expr=expr, ride=(x, y, depth), em=PW.em_for(CAMERA, tm, depth, px), t_in=t_in, t_read0=r0,
-                t_read1=r1, t_out=t_out, **kw)
+    return dict(expr=expr, ride=(0.5, y, depth), em=PW.em_for(CAMERA, tm, depth, px), t_in=t_in, t_read0=r0,
+                t_read1=r1, t_out=t_out, tint=0.55, halo=1.3, **kw)
 
 
+_AWAY = dict(away=(0.1, -0.15, -1.0), speed=1.4)
 _SPECS = [
-    _ride("Greeting", 0.5, 0.60, 104, 0.0, 1.9, 4.9, 6.7, arrive="flock", leave="flock", **_GAP),
-    _ride("Concession", 0.5, 0.75, 98, 7.2, 8.7, 11.7, 13.2, arrive="flock", leave="flock", **_GAP),
-    _ride("Respect", 0.5, 0.74, 86, 13.6, 15.1, 18.1, 19.7, arrive="stars", leave="flock", **_GAP),
-    _ride("Gratitude", 0.5, 0.74, 76, 20.1, 21.7, 25.0, 26.6, arrive="petals", leave="flock", **_GAP),
-    _ride("Consideration", 0.5, 0.76, 86, 27.0, 28.4, 31.4, 33.2, depth=8.0, arrive="flock", leave="flock",
-          **_GAP),
-    _ride("Apology", 0.5, 0.75, 82, 33.6, 35.1, 38.3, 39.9, arrive="flock", leave="sink"),
-    _ride("Inclusiveness", 0.5, 0.73, 92, 39.0, 40.4, 43.4, 45.0, arrive="flock", leave="bokeh"),
-    _ride("Encouragement", 0.5, 0.75, 78, 42.8, 44.0, 46.6, 48.0, arrive="petals", leave="petals"),
-    _ride("Compliment", 0.5, 0.75, 90, 45.4, 46.8, 49.4, 51.0, arrive="flock", leave="flock", **_GAP),
+    _ride("Greeting", 0.70, 104, 1.0, 2.6, 5.6, 6.6, arrive="flock", leave="flock", **_AWAY),
+    _ride("Concession", 0.71, 98, 7.3, 8.6, 11.6, 12.6, arrive="flock", leave="flock", **_AWAY),
+    _ride("Respect", 0.70, 86, 13.8, 15.2, 18.2, 19.2, arrive="stars", leave="flock", **_AWAY),
+    _ride("Gratitude", 0.70, 78, 20.3, 21.6, 24.9, 25.9, arrive="petals", leave="flock", **_AWAY),
+    _ride("Consideration", 0.74, 88, 27.0, 28.3, 31.3, 32.3, depth=3.0, arrive="flock", leave="flock",
+          away=(0.0, -0.3, -1.0), speed=0.5),
+    _ride("Apology", 0.71, 84, 33.9, 35.2, 38.4, 39.3, arrive="flock", leave="sink"),
+    _ride("Inclusiveness", 0.71, 94, 39.3, 40.3, 42.9, 43.6, arrive="flock", leave="bokeh"),
+    _ride("Encouragement", 0.71, 80, 43.4, 44.6, 47.2, 48.0, arrive="petals", leave="petals"),
+    _ride("Compliment", 0.71, 92, 47.4, 48.3, 50.8, 51.5, arrive="flock", leave="flock",
+          away=(0.0, -0.2, -1.0), speed=1.8),
 ]
 WORDS = PW.Words(_SPECS, camera=CAMERA)
 
 
 # ------------------------------------------------------------------------------------------------ point sets
-class _Gated:
-    """Any point set, drawn only between t0 and t1 (bodies made by helpers that have no show= of their own)."""
+class _Gate:
+    """A point set drawn only from t0 to t1: it gathers in over `rise` seconds and is gone at t1 exactly (the
+    frame the camera passes through it). gain() also drives the person's window."""
     wants_camera = True
 
-    def __init__(self, ps, t0, t1):
-        self.ps, self.t0, self.t1 = ps, t0, t1
+    def __init__(self, ps, t0, t1, rise=0.6, fall=0.05):
+        self.ps, self.t0, self.t1, self.rise, self.fall = ps, t0, t1, rise, fall
 
     def sample(self, t, cam=None):
-        if t < self.t0 or t > self.t1:
+        if t < self.t0 or t >= self.t1:
             return []
         return self.ps.sample(t, cam) if getattr(self.ps, "wants_camera", False) else self.ps.sample(t)
 
     def gain(self, t):
-        g = _ss(self.t0, self.t0 + 0.4, t) * (1.0 - _ss(self.t1 - 0.4, self.t1, t))
+        if t < self.t0 or t >= self.t1:
+            return 0.0
+        g = _ss(self.t0, self.t0 + self.rise, t) if self.rise > 0 else 1.0
+        g *= (1.0 - _ss(self.t1 - self.fall, self.t1, t)) if self.fall > 0 else 1.0
         return g * (float(self.ps.gain(t)) if hasattr(self.ps, "gain") else 1.0)
+
+
+class Motes:
+    """Lights drifting in a box of the world: the depth inside a window (seen only through the people) or
+    the air of a world. kind soft or spark; sizes in metres."""
+
+    def __init__(self, center, half, n, colors, size=(0.3, 1.2), kind="soft", alpha=0.7, drift=(0.0, 0.4, 0.0),
+                 twinkle=0.6, emit=1.0, seed=1):
+        rng = np.random.default_rng(seed)
+        self.c, self.h = _A(center, float), _A(half, float)
+        self.s = rng.random((n, 6))
+        cols = [lin(c) for c in colors]
+        pick = np.clip(np.floor(self.s[:, 4] * len(cols)).astype(int), 0, len(cols) - 1)
+        self.col = np.array([cols[k] for k in pick])
+        self.size = size[0] + (size[1] - size[0]) * self.s[:, 5] ** 2
+        self.kind, self.alpha, self.drift, self.tw, self.emit = kind, alpha, _A(drift, float), twinkle, emit
+
+    def sample(self, t):
+        s = self.s
+        p = (s[:, :3] * 2.0 - 1.0) * self.h + self.drift * t
+        p = np.mod(p + self.h, 2.0 * self.h) - self.h
+        p = p + self.c + np.stack([np.sin(0.4 * t + 6.28 * s[:, 3]), np.zeros(len(s)),
+                                    np.cos(0.3 * t + 6.28 * s[:, 4])], axis=1) * 1.5 * (self.h[1] > 2.0)
+        return dict(pos=p, size=self.size, color=self.col, alpha=self.alpha, kind=self.kind, twinkle=self.tw,
+                    emit=self.emit)
+
+
+def _sm(x):
+    x = np.clip(x, 0.0, 1.0)
+    return x * x * (3.0 - 2.0 * x)
+
+
+class Flock:
+    """Birds flying from a field of starts to one point (into a person), each on its own curve, as a pure
+    function of time; near the lens they are big soft wings."""
+    wants_camera = True
+
+    def __init__(self, target, start_center, start_half, n, t0, t1, dur=(2.2, 3.6), size=(1.2, 2.4),
+                 color="#fff4e0", seed=5, alpha=0.85):
+        rng = np.random.default_rng(seed)
+        self.target = _A(target, float)
+        self.s = rng.random((n, 8))
+        self.p0 = _A(start_center, float) + (self.s[:, :3] * 2.0 - 1.0) * _A(start_half, float)
+        self.dur = dur[0] + (dur[1] - dur[0]) * self.s[:, 3]
+        self.ts = t0 + (t1 - t0 - self.dur) * self.s[:, 4]
+        mid = 0.5 * (self.p0 + self.target[None, :])
+        self.c = mid + (self.s[:, 5:8] * 2.0 - 1.0) * _A([40.0, 22.0, 30.0])
+        self.size = size[0] + (size[1] - size[0]) * self.s[:, 5]
+        self.col = lin(color)
+        self.alpha, self.t0, self.t1 = alpha, t0, t1
+
+    def _at(self, u, vis):
+        u = u[:, None]
+        return (1 - u) ** 2 * self.p0[vis] + 2 * (1 - u) * u * self.c[vis] + u * u * self.target[None, :]
+
+    def sample(self, t, cam=None):
+        if t < self.t0 - 0.1 or t > self.t1 + 0.1:
+            return []
+        u = (t - self.ts) / self.dur
+        vis = (u > 0.0) & (u < 1.0)
+        if not vis.any():
+            return []
+        uu = u[vis]
+        e = uu * uu * (3.0 - 2.0 * uu) * 0.35 + uu * 0.65
+        p = self._at(e, vis)
+        v = self._at(np.clip(e + 0.01, 0.0, 1.0), vis) - p
+        if cam is not None:
+            r, up, _ = cam.basis()
+            rot = np.arctan2(v @ np.asarray(up, float), v @ np.asarray(r, float))
+        else:
+            rot = np.arctan2(v[:, 1], v[:, 0])
+        a = self.alpha * _sm(uu / 0.08) * (1.0 - _sm((uu - 0.86) / 0.14))
+        return dict(pos=p, size=self.size[vis] * (1.0 - 0.6 * uu), color=self.col, alpha=a, kind="bird",
+                    rot=rot, seed=self.s[vis, 6])
 
 
 def _rain_tau(t):
     """Time as the rain feels it: it falls (rate 1), slows to a stop in the breath, hangs, then rises."""
-    a, b = BREATH + 0.2, BREATH + 1.2          # slows from a, still at b
+    a, b = BREATH + 0.2, BREATH + 1.2
     if t <= a:
         return t
     if t <= b:
@@ -250,160 +380,206 @@ def _rain_tau(t):
     tau = a + 0.5 * (b - a)
     if t <= X6:
         return tau
-    return tau - 0.22 * (t - X6)               # rising, slowly
+    return tau - 0.22 * (t - X6)
 
 
 class Rain:
-    """Silver rain round the camera's path in the night world; in the breath it stops in the air, and on the
+    """Silver rain round the flight in the night world; in the breath it stops in the air, and on the
     biggest hit every drop turns to a warm light and rises (into the blossom world, where it fades)."""
+    wants_camera = True
 
-    def __init__(self, n=7000):
+    def __init__(self, origin, n=9000):
         rng = np.random.default_rng(44)
         self.s = rng.random((n, 4))
-        self.n = n
+        self.o = _A(origin, float)
 
-    def sample(self, t):
-        if t < X5 - 0.1 or t > 47.5:
+    def sample(self, t, cam=None):
+        if t < X5 - 0.05 or t > 46.5:
             return []
         s = self.s
         tau = _rain_tau(t)
-        Hh = 60.0
+        hh = 60.0
         x = -70.0 + 140.0 * s[:, 0]
-        z = -140.0 + 240.0 * s[:, 1]
-        y = Hh - np.mod(s[:, 2] * Hh + 34.0 * tau, Hh)
-        pos = np.stack([x, y, z], axis=1)
+        z = -150.0 + 300.0 * s[:, 1]
+        y = hh - np.mod(s[:, 2] * hh + 34.0 * tau, hh)
+        pos = np.stack([x, y, z], axis=1) + self.o
+        near = 1.0
+        if cam is not None:
+            d = np.linalg.norm(pos - np.asarray(cam.pos, np.float64)[None, :], axis=1)
+            near = np.clip((d - 10.0) / 14.0, 0.0, 1.0)
         if t < X6:
-            ln = 1.6 * min(1.0, max(0.0, (BREATH + 1.2 - t) / 1.0)) + 0.15
+            ln = 1.1 * min(1.0, max(0.0, (BREATH + 1.2 - t) / 1.0)) + 0.12
             pos2 = pos + np.array([0.0, ln, 0.0])
-            return dict(pos=pos, pos2=pos2, size=0.05, color=lin("#cfd6ff"), alpha=0.55, kind="line")
-        g = 1.0 - _ss(45.0, 47.5, t)
+            g = _ss(X5 - 0.05, X5 + 0.5, t)
+            return dict(pos=pos, pos2=pos2, size=0.025, color=lin("#d6dcff"), alpha=0.42 * near * g, kind="line")
+        g = 1.0 - _ss(44.5, 46.5, t)
         flash = 1.0 + 2.5 * np.exp(-(t - X6) / 0.35)
         col = lin("#ffd9a0") * (1 - s[:, 3:4]) + lin("#ffb4c8") * s[:, 3:4]
-        return dict(pos=pos, size=0.18 + 0.12 * s[:, 3], color=col, alpha=0.9 * g, emit=flash, kind="spark",
-                    twinkle=0.6)
+        return dict(pos=pos, size=0.16 + 0.10 * s[:, 3], color=col, alpha=0.9 * g * near, emit=flash,
+                    kind="spark", twinkle=0.6)
 
 
 class Blossom:
-    """Blossom streaming toward the camera in the blossom world (painted in its true colours)."""
+    """Blossom streaming toward the camera in the blossom world (painted in its true colours); the same
+    petals as light only inside the windows of the rain world."""
 
-    def __init__(self, n=1600):
+    def __init__(self, origin, paint=True, n=1600):
         rng = np.random.default_rng(71)
         self.s = rng.random((n, 6))
+        self.o, self.paint = _A(origin, float), paint
 
     def sample(self, t):
-        if t < X6 - 0.2 or t > 52.0:
-            return []
         s = self.s
         d = t - X6
-        x = -45.0 + 90.0 * s[:, 0] + 3.0 * np.sin(1.3 * d + 6.28 * s[:, 3])
-        y = 1.0 + 34.0 * s[:, 1] + 1.5 * np.sin(0.9 * d + 6.28 * s[:, 4])
-        z = -110.0 + np.mod(180.0 * s[:, 2] + 9.0 * d, 180.0)
-        pos = np.stack([x, y, z], axis=1)
-        col = np.where(s[:, 5:6] < 0.55, show("#f0566a"), show("#ffc2cf"))
+        x = -55.0 + 110.0 * s[:, 0] + 3.0 * np.sin(1.3 * d + 6.28 * s[:, 3])
+        y = 1.0 + 40.0 * s[:, 1] + 1.5 * np.sin(0.9 * d + 6.28 * s[:, 4])
+        z = -120.0 + np.mod(260.0 * s[:, 2] + 9.0 * d, 260.0)
+        pos = np.stack([x, y, z], axis=1) + self.o
         rot = np.stack([6.28 * s[:, 3] + d * (0.6 + s[:, 4]), 6.28 * s[:, 5] + d * (1.5 + s[:, 0])], axis=1)
-        g = _ss(X6 - 0.2, X6 + 0.4, t) * (1.0 - _ss(50.5, 52.0, t))
+        if not self.paint:
+            return dict(pos=pos, size=0.7 + 0.4 * s[:, 4], color=lin("#ffd0dc"), alpha=0.8, kind="petal", rot=rot)
+        col = np.where(s[:, 5:6] < 0.55, show("#f0566a"), show("#ffc2cf"))
+        g = 1.0 - _ss(50.5, 52.0, t)
         return dict(pos=pos, size=0.55 + 0.35 * s[:, 4], color=col, alpha=0.95 * g, kind="petal", rot=rot,
                     paint=1.0, paint_light=0.3)
 
 
-def _window(body, name, scene, t0, t1, edge=0.45):
-    """Adds a person as a window onto the next world (the mask opens and closes with the body)."""
-    body.add(scene, name, mask=dict(sky="world", look=window_look, edge=edge,
-                                    strength=lambda t, b=body: float(b.gain(t))))
+# ------------------------------------------------------------------------------------------------ people
+def _look(color, color2, bright=1.0):
+    """A window with a glowing edge: the window look (light rim, a few stars) and a soft rim of light."""
+    return [dict(name="window", bright=1.5 * bright, size=1.5, color=color, color2=color2),
+            dict(name="rim", bright=0.55 * bright, color=color2, color2=color)]
+
+
+def _person(scene, name, t0, t1, shape, at, origin, scale=22.0, edge=0.55, grow=None, shed=True, rise=0.6,
+            **kw):
+    """Adds a giant of light that is a window onto the next world, standing at `at` (local) in the section
+    whose frame starts at `origin`; it gathers in after t0 and is gone at t1 (the camera has passed in)."""
+    from p3d.body import Body
+    o = _A(origin, float)
+    if len(at) == 2:
+        place = (at[0] + o[0], o[1], at[1] + o[2])
+    else:
+        place = tuple(_A(at, float) + o)
+    fx = list(kw.pop("effects", []))
+    if shed:
+        fx.append(dict(kind="shed", t=t0, n=5000, speed=0.3, rise=0.12, where="back"))
+    color, color2 = kw.pop("color", "#ffe0b0"), kw.pop("color2", "#ffffff")
+    b = Body(shape, at=place, scale=scale, look=_look(color, color2, kw.pop("bright", 1.0)), effects=fx,
+             show=(t0 - 0.02, t1 + 0.02), fade=0.02, color=color, color2=color2, **kw)
+    gate = _Gate(b, t0, t1, rise=rise)
+    mk = dict(sky="world", look=window_look, edge=edge, strength=gate.gain)
+    if grow is not None:
+        mk["grow"] = grow
+    scene.add(name, gate, mask=b.mask(**mk))
+    return b
 
 
 def _setup(scene):
-    from p3d.body import Body, Hands
+    from p3d.body import Hands
 
-    # S1: a woman's profile as tall as a headland, hair in long lines of light; inside her, the sunrise
-    _window(Body("woman", at=BUST["at"], facing=90.0, scale=100.0, part="bust", hair=True, garment="dress",
-                 look="window", color="#ffd9a0", color2="#fff4e6", points=90000, detail=dict(head=3),
-                 gesture=[(2.6, 30.0, "look_up", dict(amount=10.0))], show=(0.0, X1 + 0.25), fade=0.05,
-                 seed=11.0), "s1_profile", scene, 0.0, X1)
-    # S2: the Elder opens his arms low and lets the Runner go first; both are windows onto the sea
-    _window(Body("man", at=(-16.0, -60.0), facing=60.0, scale=14.0, garment="coat", stoop=0.3, look="window",
-                 color="#ffd0a0", color2="#fff0dc", gesture=[(8.0, 30.0, "open_arms", dict(lift=0.05))],
-                 show=(X1, X2 + 0.25), fade=0.5, seed=21.0), "s2_elder", scene, X1, X2)
-    _window(Body("man", at=_runner_at, facing=164.0, scale=14.0, garment="tunic", motion="run",
-                 look="window", color="#ffe0b0", color2="#ffffff", show=(X1, X2 + 0.25), fade=0.5,
-                 effects=[dict(kind="shed", t=X1, n=5000)], seed=22.0), "s2_runner", scene, X1, X2)
-    # S3: a boy blows light from his open palm, a woman kneels to listen; windows onto the stars
-    _window(Body("child", at=(10.0, -70.0), facing=270.0, scale=18.0, garment="tunic", look="window",
-                 color="#ffe6c0", color2="#ffffff", gesture=[(14.0, 30.0, "blow")], show=(X2, X3 + 0.25),
-                 fade=0.5, seed=31.0), "s3_boy", scene, X2, X3)
-    _window(Body("woman", at=(-12.0, -72.0), facing=90.0, scale=16.0, garment="dress", hair=True,
-                 motion="kneel", look="window", color="#ffd9b0", color2="#ffffff",
-                 gesture=[(13.6, 30.0, "bow", dict(amount=12.0))], show=(X2, X3 + 0.25), fade=0.5, seed=32.0),
-            "s3_listener", scene, X2, X3)
-    # S4: a worker kneels, a woman bows to him; windows onto the harvest
-    _window(Body("man", at=(12.0, -80.0), facing=270.0, scale=16.0, garment="coat", motion="kneel",
-                 look="window", color="#cfd8ff", color2="#ffffff", gesture=[(24.6, 30.0, "look_up")],
-                 show=(X3, X4 + 0.25), fade=0.5, seed=41.0), "s4_worker", scene, X3, X4)
-    _window(Body("woman", at=(-10.0, -78.0), facing=90.0, scale=16.0, garment="robe", look="window",
-                 color="#ffe2b0", color2="#ffffff", gesture=[(21.4, 30.0, "bow", dict(amount=30.0))],
-                 show=(X3, X4 + 0.25), fade=0.5, seed=42.0), "s4_thanker", scene, X3, X4)
+    # S1: a woman's profile as tall as a headland; inside her, the sunrise; light streams off the back of her
+    _person(scene, "s1_profile", -1.0, X1, "woman", tuple(BUST_AT), O1, scale=100.0, part="bust", facing=90.0,
+            garment="dress", points=90000, detail=dict(head=3), color="#ffd9a0", color2="#fff4e6", bright=0.7,
+            gesture=[(2.6, 30.0, "look_up", dict(amount=10.0))], edge=0.7, grow=0.35, rise=0.0, seed=11.0)
+    # S2: the Elder opens his arms low and lets the Runner go first; inside them, the sea
+    _person(scene, "s2_elder", X1, X2, "man", (-18.0, -40.0), O2, facing=90.0, garment="coat", stoop=0.3,
+            gesture=[(7.8, 30.0, "open_arms", dict(lift=0.05))], color="#ffd0a0", seed=21.0)
+    _person(scene, "s2_runner", X1, X2, "man", RUNNER_AT, O2, facing=180.0, garment="tunic",
+            motion=[(X1, "run", dict(speed=0.5))], color="#ffe0b0", seed=22.0)
+    # S3: a boy blows light from his open palm; a woman kneels to listen; inside them, the stars
+    _person(scene, "s3_boy", X2, X3, "child", (12.0, -60.0), O3, facing=270.0, garment="tunic",
+            gesture=[(13.9, 30.0, "blow")], color="#d8f4ff", color2="#ffffff", seed=31.0,
+            effects=[dict(kind="shed", t=14.4, n=4000, where=[1], dir=(0.0, 0.3, 1.0), speed=0.6, rise=0.05)])
+    _person(scene, "s3_listener", X2, X3, "woman", (-16.0, -64.0), O3, facing=90.0, garment="dress", hair=True,
+            motion="kneel", gesture=[(13.6, 30.0, "bow", dict(amount=12.0))], color="#d8f4ff", seed=32.0)
+    # S4: a worker kneels; a woman bows to him; inside them, the harvest
+    _person(scene, "s4_worker", X3, X4, "man", (12.0, -70.0), O4, facing=270.0, garment="coat", motion="kneel",
+            gesture=[(24.6, 30.0, "look_up")], color="#cfd8ff", seed=41.0)
+    _person(scene, "s4_thanker", X3, X4, "woman", (-12.0, -66.0), O4, facing=90.0, garment="robe",
+            gesture=[(21.3, 30.0, "bow", dict(amount=30.0))], color="#ffe2b0", seed=42.0)
     # S5: two hands of light, gold and blue, reach for each other and touch on the beat (ref 04)
-    for k, v in Hands(meet=(0.0, 1.3, -4.0), t_touch=31.62, approach=3.6, color="#ffcf8a",
-                      color2="#8fd0ff").items():
-        scene.add("s5_" + k, _Gated(v, X4, X5 + 0.3))
-    # S6: one kneels with his head bowed; the other stands turned away, coming apart, then turns and opens
-    # her arms in the breath; windows onto the blossom morning
-    _window(Body("man", at=(-11.0, -60.0), facing=90.0, scale=14.0, garment="coat", motion="kneel",
-                 look="window", color="#cfd6ff", color2="#ffffff", gesture=[(33.8, 30.0, "bow")],
-                 show=(X5, X6 + 0.25), fade=0.5, seed=61.0), "s6_sorry", scene, X5, X6)
-    _window(Body("woman", at=(11.0, -64.0), facing=[(X5, 90.0), (39.6, 90.0), (40.9, 270.0)], scale=14.0,
-                 garment="dress", hair=True, look="window", color="#dcd8ff", color2="#ffffff",
-                 gesture=[(41.0, 30.0, "open_arms", dict(lift=0.15))],
-                 effects=[dict(kind="shed", t=X5, until=40.0, n=6000, where="back")],
-                 show=(X5, X6 + 0.25), fade=0.5, seed=62.0), "s6_hurt", scene, X5, X6)
+    for k, v in Hands(meet=tuple(MEET), t_touch=TOUCH, approach=3.4, color="#ffcf8a", color2="#8fd0ff",
+                      points=60000).items():
+        scene.add("s5_" + k, _Gate(v, X4, X5, rise=0.5))
+    # S6: one kneels, head bowed; the other stands turned away, coming apart, then turns and opens her arms
+    _person(scene, "s6_sorry", X5, X6, "man", (-12.0, -50.0), O6, scale=20.0, facing=90.0, garment="coat",
+            motion="kneel", gesture=[(33.8, 30.0, "bow")], color="#cfd6ff", seed=61.0)
+    _person(scene, "s6_hurt", X5, X6, "woman", (12.0, -54.0), O6, scale=20.0, garment="dress", hair=True,
+            facing=[(X5, 90.0), (39.6, 90.0), (40.9, 270.0)], gesture=[(41.0, 30.0, "open_arms", dict(lift=0.15))],
+            effects=[dict(kind="shed", t=X5, until=40.0, n=7000, where="back", dir=(1.0, 0.3, 0.0), speed=0.8)],
+            color="#dcd8ff", seed=62.0)
     # S7: a woman kneels in prayer; a child runs into a father's open arms
-    _window(Body("woman", at=(-15.0, -52.0), facing=90.0, scale=12.0, garment="dress", hair=True,
-                 motion="kneel", look="window", color="#ffe0d0", color2="#ffffff",
-                 gesture=[(X6, 30.0, "pray")], show=(X6, REVEAL + 0.6), fade=0.5, seed=71.0),
-            "s7_prayer", scene, X6, REVEAL)
-    _window(Body("man", at=(16.0, -66.0), facing=250.0, scale=12.0, garment="coat", look="window",
-                 color="#ffe6c8", color2="#ffffff", gesture=[(45.6, 30.0, "open_arms", dict(lift=0.1))],
-                 show=(X6, REVEAL + 0.6), fade=0.5, seed=72.0), "s7_father", scene, X6, REVEAL)
-    _window(Body("child", at=_child_at, facing=152.0, scale=12.0, garment="tunic", look="window",
-                 motion=[(X6, "stand"), (45.0, "run"), (48.3, "stand")], color="#fff0d0", color2="#ffffff",
-                 gesture=[(48.2, 30.0, "open_arms", dict(lift=0.8))], show=(X6, REVEAL + 0.6), fade=0.5,
-                 seed=73.0), "s7_child", scene, X6, REVEAL)
-    # S8: Heavenly Mother, only from behind, veiled, in a long robe of light; she opens her arms low
-    Body("woman", at=(0.0, -380.0), facing=180.0, scale=45.0, garment="robe", veil=dict(length=1.5),
-         look="glitter", color="#ffd9a0", color2="#fff6e6", bright=1.3, points=110000,
-         gesture=[(50.3, 61.0, "open_arms", dict(lift=0.25))], show=(REVEAL, 61.0), fade=0.8,
-         seed=81.0).add(scene, "s8_mother", mask=False)
+    _person(scene, "s7_prayer", X6, REVEAL + 0.8, "woman", (-18.0, -50.0), O7, scale=20.0, facing=90.0,
+            garment="dress", hair=True, motion="kneel", gesture=[(X6, 30.0, "pray")], color="#ffe0d0", seed=71.0)
+    _person(scene, "s7_father", X6, REVEAL + 0.8, "man", (15.0, -71.0), O7, scale=20.0, facing=300.0,
+            garment="coat", gesture=[(46.4, 30.0, "open_arms", dict(lift=0.1))], color="#ffe6c8", seed=72.0)
+    _person(scene, "s7_child", X6, REVEAL + 0.8, "child", (-2.0, -44.0), O7, scale=20.0, facing=150.0,
+            garment="tunic", motion=[(X6, "stand"), (45.6, "run", dict(speed=0.45)), (48.0, "stand")],
+            gesture=[(47.8, 30.0, "open_arms", dict(lift=0.9))], color="#fff0d0", seed=73.0)
+    # S8: Heavenly Mother, only from behind, veiled, in a long robe of light: a window onto the sunrise
+    _person(scene, "s8_mother", REVEAL, 61.0, "woman", tuple(MOTHER_AT), O7, scale=45.0, facing=180.0,
+            garment="robe", veil=dict(length=1.5), points=110000, color="#ffe2b0", color2="#fff6e6", bright=1.3,
+            gesture=[(50.2, 61.0, "open_arms", dict(lift=0.25))], edge=0.9, grow=2.2, rise=1.2, shed=False,
+            effects=[dict(kind="shed", t=REVEAL, n=7000, where="top", speed=0.5, rise=0.5)], seed=81.0)
 
-    scene.add("rain", Rain())
-    scene.add("blossom", PW.KeepClear(Blossom(), WORDS))
+    # the depth inside each window, then the air of that world once we are in it
+    ember2 = Motes(O2 + _A([0.0, 40.0, -40.0]), (140.0, 40.0, 160.0), 1400, ("#ffc890", "#ff9e6e", "#fff0d0"),
+                   size=(0.4, 1.6), seed=2)
+    sea3 = Motes(O3 + _A([0.0, 1.0, -60.0]), (160.0, 0.9, 170.0), 2400, ("#ffffff", "#d8fff4"),
+                 size=(0.15, 0.45), kind="spark", alpha=0.9, drift=(0.0, 0.0, 0.0), twinkle=1.0, emit=2.0, seed=3)
+    stars4 = Motes(O4 + _A([0.0, 110.0, -320.0]), (420.0, 110.0, 120.0), 1800, ("#ffffff", "#cfd8ff", "#ffe2a8"),
+                   size=(0.8, 2.2), kind="spark", alpha=0.9, drift=(0.0, 0.0, 0.0), twinkle=1.0, emit=2.5, seed=4)
+    gold5 = Motes(MEET + _A([0.0, 0.0, -2.0]), (4.0, 2.0, 5.0), 900, ("#ffd27a", "#ffb060", "#fff0c0"),
+                  size=(0.01, 0.05), alpha=0.8, drift=(0.05, 0.03, 0.0), seed=5)
+    gold5w = Motes(O5 + _A([0.0, 0.0, -60.0]), (60.0, 18.0, 60.0), 1400, ("#ffd27a", "#ffb060"), size=(0.2, 0.7),
+                   seed=6)
+    ember7 = Motes(O7 + _A([0.0, 50.0, -300.0]), (180.0, 50.0, 160.0), 1600, ("#ffc890", "#ff9e6e", "#fff0d0"),
+                   size=(0.6, 2.2), seed=7)
+    for name, ps, a, b, win in (
+            ("in_s1", ember2, -1.0, X1, True), ("air_s2", ember2, X1, X2, False),
+            ("in_s2", sea3, X1, X2, True), ("air_s3", sea3, X2, X3, False),
+            ("in_s3", stars4, X2, X3, True), ("air_s4", stars4, X3, X4, False),
+            ("in_s4", gold5w, X3, X4, True), ("air_s5", gold5, X4, X5, False),
+            ("in_s7", ember7, X6, 61.0, True)):
+        scene.add(name, PW.KeepClear(_Gate(ps, a, b, rise=0.0, fall=0.0), WORDS), window=win, reflect=not win)
+    scene.add("in_s6", _Gate(Blossom(O7, paint=False), X5, X6, rise=0.0, fall=0.0), window=True, reflect=False)
+    scene.add("rain", Rain(O6), reflect=False)
+    scene.add("blossom", PW.KeepClear(_Gate(Blossom(O7), X6 - 0.02, 52.0, rise=0.3, fall=0.0), WORDS))
+    # birds: into the first profile from frame 0, and every bird of the film into Heavenly Mother at the end
+    scene.add("birds_s1", PW.KeepClear(Flock(O1 + BUST_HEAD, O1 + _A([-10.0, 60.0, -80.0]), (60.0, 26.0, 40.0),
+                                             260, -3.0, X1 - 0.3, dur=(2.4, 3.8), size=(1.4, 2.6), seed=8), WORDS))
+    scene.add("birds_s8", PW.KeepClear(Flock(O7 + MOTHER_HEART, O7 + _A([0.0, 60.0, -120.0]),
+                                             (200.0, 55.0, 150.0), 1600, REVEAL + 0.3, FLOOD + 1.6,
+                                             dur=(1.8, 3.2), size=(1.6, 3.0), seed=9), WORDS))
     WORDS.add_to(scene)
     WORDS.check(CAMERA)
 
 
 # ------------------------------------------------------------------------------------------------ the 3D layer
 NINE = [e["color"] for e in PW.EXPRESSIONS]
-_HEAD_LIGHT = (0.0, 72.0, -395.0)          # behind Heavenly Mother's head: rays fan from it (ref 10)
+_HEAD_LIGHT = tuple(O7 + MOTHER_HEAD + _A([0.0, 3.0, -14.0]))     # behind her head: rays fan from it (ref 10)
 
 P3D = dict(
     camera=CAMERA,
     world=dict(
         looks=LOOKS,
         look=MAIN_LOOK,
-        light=dict(pos=_HEAD_LIGHT, color="#fff0d0", size=6.0, rays=1.0,
-                   strength=lambda t: 1.4 * _ss(REVEAL, REVEAL + 1.5, t)),
-        arch=dict(lit=[FLOOD + 0.3 + 0.22 * k for k in range(9)], span=280.0, height=165.0, z=-430.0,
-                  colors=NINE, bright=1.3),
-        react=dict(beat=0.4, level=0.25),
+        light=dict(pos=_HEAD_LIGHT, color="#fff0d0", size=10.0, rays=1.0,
+                   strength=lambda t: 2.6 * _ss(REVEAL + 0.4, REVEAL + 2.0, t)),
+        # the arch of nine lights: a low arc behind Heavenly Mother, under the end card
+        arch=dict(lit=[FLOOD + 0.4 + 0.22 * k for k in range(9)], span=210.0, height=72.0,
+                  z=float(O7[2] + MOTHER_AT[2] - 50.0), colors=NINE, bright=1.6),
+        react=dict(beat=0.35, level=0.2),
     ),
-    bursts=[dict(t=X1, at=BUST["head"], strength=2.6, rise=0.18, fall=0.5, color="#ffc890", radius=0.6),
-            dict(t=X2, strength=2.4, rise=0.18, fall=0.5, color="#e8fff8", radius=0.6),
-            dict(t=X3, strength=2.8, rise=0.15, fall=0.5, color="#c8d4ff", radius=0.6),
-            dict(t=X4, strength=2.8, rise=0.15, fall=0.5, color="#ffd890", radius=0.6),
-            dict(t=X5, at=(0.0, 1.3, -4.0), strength=3.2, rise=0.15, fall=0.5, color="#fff4dc", radius=0.7),
-            dict(t=X6, strength=4.0, rise=0.2, fall=0.7, color="#fff0e0", radius=0.8),
-            dict(t=REVEAL, strength=1.6, rise=0.3, fall=0.8, color="#fff8ec", radius=0.8),
-            dict(t=FLOOD, at=(0.0, 50.0, -380.0), strength=3.0, rise=0.35, fall=0.9, color="#fff6e0",
-                 radius=0.9)],
+    bursts=[dict(t=X1, strength=0.7, rise=0.12, fall=0.4, color="#ffc890", radius=0.35),
+            dict(t=X2, strength=0.7, rise=0.12, fall=0.4, color="#cff4f0", radius=0.35),
+            dict(t=X3, strength=0.8, rise=0.10, fall=0.4, color="#c8d4ff", radius=0.35),
+            dict(t=X4, strength=0.8, rise=0.10, fall=0.4, color="#ffd890", radius=0.35),
+            dict(t=X5, at=tuple(MEET), strength=1.5, rise=0.15, fall=0.45, color="#fff0d0", radius=0.45),
+            dict(t=X6, strength=1.0, rise=0.15, fall=0.6, color="#fff0e0", radius=0.4),
+            dict(t=FLOOD, at=tuple(O7 + MOTHER_HEART), strength=1.1, rise=0.35, fall=0.9, color="#fff6e0",
+                 radius=0.35)],
     clear=[dict(box=(0.10, 0.36, 0.90, 0.88), t0=T_FORM - 0.3, t1=61.0, soft=0.05, amount=0.85)],
     setup=_setup,
 )
