@@ -368,7 +368,7 @@ BUTTERFLIES = Track([(0, 0.0), (S3 + 3.0, 0.0), (S3 + 4.5, 1.0), (EMBLEM_DONE + 
 BUTTERFLIES_COUNT = 2
 BUTTERFLIES_COLOR = ("#ffb0c8", "#ffd9a0")
 BUTTERFLIES_SIZE = 0.030
-BUTTERFLIES_AREA = (0.63, 0.90, 0.42, 0.64)
+BUTTERFLIES_AREA = (0.66, 0.90, 0.56, 0.72)         # beside the emblem, above the people's raised lights
 BUTTERFLIES_LAND = [(0.70, 0.385), (0.84, 0.375)]   # on the hills to the right
 
 # ---- the campaign day (UPGRADE-HOWTO I); nothing new starts after 58 s, the picture settles with the music
@@ -421,7 +421,8 @@ def walker_y(t):
 
 
 # Both figures stand on the water's edge, so each has its mirror image at its feet, and their hems are firm
-# (mist 0.45): in the look's own test the large figures seemed to float above the ground.
+# (mist 0.2): in the look's own test the large figures seemed to float above the ground, and at 0.45 their
+# robes still thinned out above the water line (stills at 12.6 and 21 s).
 FIGURES = [
     # the child: crosses the night, looks up as the star falls, comes to Mother, bows, and rises with the words
     dict(kind="rig", preset="child", t0=1.2, t1=G_HOLD - 0.4, gather=2.0, dissolve=2.4, facing="right",
@@ -429,7 +430,7 @@ FIGURES = [
          actions=[(1.2, "stand"), (STAR_FALL - 1.8, {"tilt": 0.35, "blend": 0.9}), (S1, {"tilt": 0.0, "blend": 0.8}),
                   (S1 + 6.6, "bow", {"blend": 1.4}), (S1 + 8.8, "pray", {"blend": 1.5}),
                   (G_HOLD - 1.9, "rise", {"blend": 1.4})],
-         color="#ffd9a8", glow=1.0, core_glow=1.0, mist=0.45, to_star=0),
+         color="#ffd9a8", glow=1.0, core_glow=1.0, mist=0.2, to_star=0),
     # Heavenly Mother, only from behind, gold against the sunrise; her veil streams away from the sun; her arms
     # open low on the sunrise (the look's own "open" and "bless": about 42 and 37 degrees below the horizontal)
     dict(kind="rig", preset="person_back", t0=M_T0, t1=G_HOLD - 0.2, gather=2.0, dissolve=2.6,
@@ -437,7 +438,7 @@ FIGURES = [
          actions=[(M_T0, "stand"), (ARMS_OPEN, "open", {"blend": 2.6}), (S1 + 5.2, "bless", {"blend": 3.4}),
                   (S1 + 9.4, "open", {"blend": 3.0})],
          color="#ffc98a", glow=1.0, core="#ffd69a", core_glow=1.3, rim=1.3, veil_length=1.25, strand_length=1.2,
-         wind=0.6, mist=0.45, to_star=0),
+         wind=0.6, mist=0.2, to_star=0),
 ]
 
 # ---- the gathering and the passed light (UPGRADE-HOWTO K and H5). People come in twos and threes with gaps
@@ -461,15 +462,17 @@ PASS_LIGHT = dict(t0=FLAME, speed=0.15, hold=0.22, path="crowd", start=(0.44, 0.
 # ---- the campaign emblem, the hero of the day: large (0.40 of the height), drawn over 4 s with a thick line
 # (stroke) in the campaign colours, with a clear mirror image in the lake (mirror) (UPGRADE-HOWTO L and U)
 SYMBOLS = [
-    dict(kind="emblem", t0=EMBLEM, t1=EMBLEM_DONE, out=EMBLEM_OUT, x=0.5, y=0.615, size=0.40,
-         leave="to_star", star=4, leave_dur=EMBLEM_FLY, reflect=True, glow=1.9, stroke=1.8, mirror=2.2),
+    # (0.38 at 0.64: the olive sprig stays above the people's raised hands; stroke 1.5 and glow 1.4: at 1.8
+    # and 1.9 the globe's close lines ran together into a white ball while they were drawn, still at 47.4 s)
+    dict(kind="emblem", t0=EMBLEM, t1=EMBLEM_DONE, out=EMBLEM_OUT, x=0.5, y=0.64, size=0.38,
+         leave="to_star", star=4, leave_dur=EMBLEM_FLY, reflect=True, glow=1.4, stroke=1.5, mirror=2.2),
 ]
 
 # ---- the arch of nine lights: dark at the start, complete at the peak
 STAR_POS = []
 for i in range(9):
     x = 0.12 + 0.095 * i
-    y = 0.915 - 0.085 * ((x - 0.5) / 0.38) ** 2   # a little higher than before: room for the end card's label
+    y = 0.925 - 0.085 * ((x - 0.5) / 0.38) ** 2   # higher than before (0.895): room for the end card's label
     STAR_POS.append((x, y))
 
 OFF = dict(form=1e9, hold=1e9)
@@ -549,7 +552,7 @@ WAVES = [(ARCH_FIRST, STAR_POS[4][0], STAR_POS[4][1], 0.20), (G_STAR, STAR_POS[0
          (TITLE_HIT, 0.5, 0.62, 0.6)]
 
 # the lake's own note rings: none at night (only the walker's steps and the star ring there) and none by day
-NOTE_RINGS = Track([(0, 0.0), (S1, 0.0), (S1 + 3.0, 1.0), (S3, 1.0), (S3 + 3.0, 0.0), (TOTAL, 0.0)])
+NOTE_RINGS = Track([(0, 0.0), (TOTAL, 0.0)])   # off: with the lower third open at dawn they were small targets
 
 
 def params(song, t):
