@@ -64,6 +64,7 @@ def main():
     a.out.parent.mkdir(parents=True, exist_ok=True)
     a.out.write_text(json.dumps(rows, indent=2) + '\n')
     if profile:
+        a.profile.parent.mkdir(parents=True, exist_ok=True)
         profile.dump_stats(str(a.profile))
 
 

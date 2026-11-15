@@ -1486,3 +1486,41 @@ Proof: `demo_brand` stills at full size (1080p) rendered here, and the GitHub vi
 - The bloom (54.1 to 54.6) is a brief dusk blue between the night and the pastel day, with peach and gold sparks over the logo; the logo itself stays exact through it. Never put a large P3D burst near the finale: a burst adds light over everything (the demo's cuts now blend the looks over 0.8 s instead of flashing).
 - The cradle light is shaped for hands that are not in the demo: alone it reads as a warm glow under the globe; it needs MASTER's hands to make sense.
 - The lake mirrors the painted hearts with the water's ripple, a little blotchy where they reach the bottom of the picture during the sweep (`logo=dict(reflect=False)` turns it off).
+
+## AA. Render speed
+
+P3D renders now skip the flat sky and flat camera background that the P3D background replaces in the
+composite. The cloud pass still runs because its textures can also supply light and rays. Songs without
+P3D keep their original passes. Uniform setters in the main renderer and P3D use direct program lookups
+instead of iterating every shader member to test membership. Values, matrix layout, draw order, sprite
+counts, mirrors, motion blur and output encoding are unchanged.
+
+No new render cache is required. The existing `P3D_CACHE` environment variable enables crowd prototype
+caching; set it to an absolute directory such as `$PWD/work/p3d` before launching the renderer. Delete that
+directory to clear it. Crowd keys include the P3D source files, so engine edits can cause a fresh bake.
+Cloth snapshots remain in memory and a first visit to a later body scene can still be expensive.
+
+For repeatable CPU measurements, set the normal SONG, AUDIO, FEATURES, OUT_RES=1080p, OUT_FPS=30 and
+LIBGL_ALWAYS_SOFTWARE=1 variables, then run from the repository root:
+
+```sh
+python tools/profile_render.py --moments 1,8,18,30,44,52,57 --frames 10 --out work/perf/cpu.json
+python tools/profile_render.py --stages --out work/perf/stages.json
+python tools/profile_render.py --profile work/perf/render.prof --out work/perf/profile-cpu.json
+```
+
+Measurements use process CPU time, including llvmpipe worker threads, with a GL finish before recording
+completion. Each moment seeks to the preceding frame before timing successive frames. Construction and
+seek/bake costs are excluded; profile and synchronized-stage runs should be kept separate from the normal
+benchmark. The sampled moments are not a full-film benchmark, especially for the crowd and first-use bakes.
+
+Save reference stills with `engine/render.py --stills ... --outdir ...` before editing the renderer, then:
+
+```sh
+python tools/check_identical.py --song master_peace --moments 1,8,18,30,44,52,57 --reference work/reference
+```
+
+The default requires exact RGB pixels and matching dimensions. `--allow-tolerance` explicitly permits at
+most two channel levels on strictly fewer than 0.1 percent of pixels. It never updates references. Keep
+reference images, profiling output, caches and videos under `work/`, and never commit them. Delete the
+chosen `work/perf` and reference directories when their local evidence is no longer needed.
