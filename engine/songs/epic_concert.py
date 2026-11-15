@@ -203,11 +203,14 @@ SKY_TOP, SKY_MID, SKY_HOR, GLOW = (_sky(k) for k in range(4))
 SKY_THEME = Track([(0, 0.0), (S3 - 0.5, 0.0), (S3 + 8.5, 1.0), (TOTAL, 1.0)])   # the hills turn to pale haze
 # the sun: under the horizon at night, breaking it as the doves rise, then climbing all the way into the
 # middle of the sky, where it becomes the soft white heart of the end card (the poster's circle of light)
+# Draft 2 put the climbing, widening sun right behind the emblem while it was drawn (S3 + 1.8 to S3 + 5.3): the
+# centre of the frame was the brightest thing in it and no emblem showed. Draft 3: the same sun up to S3, then
+# low and modest until the emblem has left, rising and widening only after.
 SUN_Y = Track([(0, 0.290), (S1, 0.300), (S1 + 4.5, 0.332), (S1 + 8.0, 0.362), (S2, 0.395), (S3, 0.450),
-               (S3 + 8.0, 0.600), (TOTAL, 0.630)])
+               (S3 + 5.5, 0.470), (S3 + 10.0, 0.600), (TOTAL, 0.630)])
 SUN_INT = Track([(0, 0.08), (S1 - 1.0, 0.10), (S1 + 3.5, 0.30), (S1 + 8.0, 0.62), (S2, 0.60), (S3, 0.62),
-                 (S3 + 3.0, 0.85), (S3 + 8.0, 0.55), (TOTAL, 0.52)])
-SUN_SIZE = Track([(0, 0.09), (S1 + 8.0, 0.115), (S3, 0.13), (S3 + 8.0, 0.22), (TOTAL, 0.24)])
+                 (S3 + 5.5, 0.62), (S3 + 9.0, 0.55), (TOTAL, 0.52)])
+SUN_SIZE = Track([(0, 0.09), (S1 + 8.0, 0.115), (S3, 0.13), (S3 + 5.5, 0.135), (S3 + 10.0, 0.22), (TOTAL, 0.24)])
 STARS = Track([(0, 0.0), (0.6, 0.0), (3.0, 0.95), (S1 - 1.0, 0.92), (S1 + 4.0, 0.55), (S1 + 9.0, 0.20),
                (S2 + 2.0, 0.07), (S3, 0.04), (S3 + 4.0, 0.0), (TOTAL, 0.0)])
 MILKY = Track([(0, 0.0), (1.0, 0.0), (4.0, 0.60), (S1 - 1.0, 0.55), (S1 + 4.0, 0.0), (TOTAL, 0.0)])
@@ -222,7 +225,12 @@ ZOOM = Track([(0, 1.0), (TOTAL, 1.0)])
 EXPOSURE = Track([(0, 1.0), (TOTAL, 1.0)])
 FADE = Track([(0, 0.0), (1.8, 1.0), (TOTAL - 0.65, 1.0), (TOTAL - 0.05, 0.0)])
 RAYS = Track([(0, 0.0), (S1 + 4.0, 0.0), (S1 + 8.0, 0.18), (S2, 0.14), (S3, 0.12), (S3 + 3.0, 0.20), (TOTAL, 0.08)])
-PART = Track([(0, 0.0), (S1 + 3.0, 0.0), (S1 + 8.0, 0.55), (S3, 0.45), (TOTAL, 0.30)])   # clouds part at the sun
+# Draft 3 test: is the pale column up the middle of the morning this lane term, or the sun's own glow? PART is
+# close to draft 2 until S2 + 6 (within 3 percent at 0:31, the control), 0 from S2 + 7 to S3 - 1.5, and exactly
+# draft 2's again from S3 on, so the day differs from draft 2 in the sun alone. Compare 0:39 and 0:41 here with
+# the same times of draft 2 (same sun, PART about 0.46 there). Not yet known which it is.
+PART = Track([(0, 0.0), (S1 + 3.0, 0.0), (S1 + 8.0, 0.55), (S2 + 6.0, 0.488), (S2 + 7.0, 0.0), (S3 - 1.5, 0.0),
+              (S3, 0.45), (TOTAL, 0.30)])
 SKYLINE_LANTERN = 0.0      # no travelling light on the skyline: the falling star is the one star of this film
 
 
@@ -235,7 +243,9 @@ CLOUDS3D = Track([(0, 0.14), (S1 - 1.0, 0.20), (S1 + 6.0, 0.30), (S2, 0.28), (S3
                   (TOTAL, 0.15)])
 CLOUDS_SPEED = 1.3
 CLOUDS_LIGHT = 0.8
-# short shafts round the sun only: long ones would wash the sky out and leave a halo behind the words
+# short, gentle shafts round the sun. Draft 1 (rays 0.9, decay 0.988, clouds 0.46) washed the sky to cream and
+# the white words lost their contrast (QA legibility 1.1; no dark halo was measured, ring/sky stayed above 1).
+# Rays, clouds and sun were lowered together, so which of them washed the sky is not isolated.
 GOD_RAYS = Track([(0, 0.0), (S1 + 3.5, 0.0), (S1 + 8.0, 0.40), (S2, 0.24), (S3 - 2.0, 0.18), (S3 + 2.5, 0.45),
                   (S3 + 7.5, 0.10), (TOTAL, 0.08)])
 RAYS_DECAY = 0.968
