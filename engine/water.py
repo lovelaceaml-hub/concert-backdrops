@@ -372,10 +372,12 @@ class Water:
         if reflect:
             passes += [(1.0, 3.6 * stroke, 0.30 * mgain, 0.6), (1.0, 15.0, 0.020 * mgain * halo, 0.3)]
         # optional `paint`: while the symbol is here its chosen lines are painted in their own colour and carry
-        # only `paint_light` of their light; as it leaves, the paint goes and the lines are light again
+        # only `paint_light` of their light; as it leaves, the paint goes and the lines are light again. The
+        # mirror image in the lake stays light alone, at its full strength (painted, it was heavier than the
+        # symbol above it: check still of run 43711153933).
         pk = 0.0
         if sd.get("vao_paint") is not None:
-            pk = min(float(m.get("paint", 0.0)), 1.0) * (1.0 - _ss(out, out + 0.6, t))
+            pk = min(float(m.get("paint", 0.0)), 1.0) * (1.0 - _ss(out, out + float(m.get("paint_out", 0.9)), t))
         if pk > 0.001:
             lk = 1.0 + (float(m.get("paint_light", 0.3)) - 1.0) * pk
             groups = [(sd["vao_rest"], 1.0), (sd["vao_lit"], lk)]
@@ -385,7 +387,8 @@ class Water:
             for vao, k in groups:
                 if vao is None:
                     continue
-                _setu(self.p_sym, uMirror=mir, uPt=pt, uBright=br * glow * k, uHead=hd, **common)
+                _setu(self.p_sym, uMirror=mir, uPt=pt, uBright=br * glow * (k if mir < 0.5 else 1.0), uHead=hd,
+                      **common)
                 vao.render(moderngl.POINTS)
         if pk > 0.001:
             ctx = self.ctx
@@ -393,11 +396,9 @@ class Water:
             if self.paint_k <= 0.0:   # the first painted symbol of this frame: a clean layer
                 self.f_paint.clear(0.0, 0.0, 0.0, 0.0)
             ctx.blend_func = (moderngl.ONE, moderngl.ONE_MINUS_SRC_ALPHA)
-            # the line itself, a little wider than its light, a faint tint round it, and the mirror image
+            # the line itself, a little wider than its light, and a faint tint round it
             pw = float(m.get("paint_width", 1.7))
             pp = [(0.0, 3.2 * stroke * pw, 0.90 * pk), (0.0, 24.0, 0.012 * halo * pk)]
-            if reflect:
-                pp += [(1.0, 3.6 * stroke * pw, 0.90 * pk * mgain)]
             for mir, pt, br in pp:
                 _setu(self.p_symp, uMirror=mir, uPt=pt, uBright=br, uHead=0.0, **common)
                 sd["vao_paint"].render(moderngl.POINTS)
