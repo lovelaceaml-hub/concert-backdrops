@@ -1,34 +1,42 @@
-"""Style presets for the people of the 3D layer: one call gives a person (or a face) in a finished artistic look
-(engine/UPGRADE-HOWTO.md, section Y2, "People styles"). Built on the bodies, looks and effects of engine/p3d/body.py,
-engine/p3d/effects.py and engine/p3d/looks.py, the faces and hair of engine/p3d/faces.py and the pieces of
-engine/p3d/stylekit.py.
+"""The two approved looks of the people of the 3D layer (engine/UPGRADE-HOWTO.md, section Y2, "People styles"):
+
+  crystal_light   a person of clear glass with light inside: a bright edge split into soft prismatic colours,
+                  a luminous clear body warmed by a light at the heart, fine twinkling glints, a soft bloom
+                  round the figure (the crystal runners of ten/07-the-relay, refined)
+  gold_glitter    a person of warm gold glitter with depth: deep amber, gold and champagne grains that shimmer,
+                  a light within, and light streaming off in graceful ribbons and drifting sparkles while the
+                  body stays whole (refs2 p08, p09)
+
+Both: faces soft and luminous, hands fine, never a dark silhouette, never glowing eyes, and the body never
+shatters, crumbles or comes apart. For men, women, children (shape="child") and elders (stoop=0.4, a coat).
 
     from p3d import styles as ST
 
     def build(scene):
-        ST.add(scene, "gold_glitter", name="hero", at=(0, 0), facing=30, sky="day", t=4.0, show=(2, 10))
-        ST.add(scene, "spark_profile", name="face", at=(3, 1.6, 0), facing=-90, height=0.6)
+        ST.person(scene, "crystal_light", "she", shape="woman", at=(0, 0), facing=30, gesture=[...])
 
-Every preset takes:
-  name      the scene name of its main part (its other parts are name + "_hair", name + "_glow", ...)
-  sky       "night" (default) or "day": the palette and the way the figure is drawn (light alone on a night
-            sky; on a bright sky the figure is also painted or given a dark silhouette, so it never washes out)
-  show      (t_in, t_out); fade: seconds; seed: another person
-  t         when the preset's own effect starts (shatter, dissolve, butterflies leaving...); dur: how long
-  color, color2, ink   to change the palette (display hex); bright: overall brightness
-  and the keys of the figure it is made of: for a body (Body of engine/p3d/body.py) shape, at, facing,
-  motion, gesture, garment, veil, hair, points, scale, wind, light, plus body=dict(...) for any other Body key;
-  for a face (Profile of engine/p3d/faces.py) shape, at (the middle of the head), facing, height, tilt, turn,
-  hair, features, plus face=dict(...) for any other Profile key.
-add() returns a Styled: .main (the Body or Profile), .parts (scene name -> point set), .where(t, place).
+    # people made by engine/p3d/pairs.py take the look's Body keys, then their dress:
+    a, b = pairs.embrace(8.0, at=(0, 0), facing=90, a=ST.keys("gold_glitter", shape="woman"),
+                         b=ST.keys("crystal_light", shape="man"))
+    a.add(scene, "she"); b.add(scene, "he")
+    ST.dress(scene, "she", a, "gold_glitter"); ST.dress(scene, "he", b, "crystal_light")
 
-The presets (see STYLES, and HOWTO section Y2 for what each looks like and its limits):
-  constellation, spark_profile, sky_window, gold_glitter, ember_dancer, ash_dissolve, mist_figure,
-  star_silhouette, glass_shatter, butterflies, dark_silhouette, nebula_figure, nebula_profile,
-  glitter_profile, constellation_profile
+  keys(style, **body_keys)            the Body keys of the look (look, colours, points, effects) merged with yours
+  dress(scene, name, body, style, **) the light round the body: the heart light, the bloom, and for gold the
+                                      streaming ribbons and sparkles (scene names name + "_heart", "_bloom",
+                                      "_trails", "_motes"). Keys: heart, bloom, trails, motes (0 leaves one out,
+                                      a number scales it), places (where the ribbons leave from), wind
+  person(scene, style, name, **)      keys + Body + add + dress in one; returns a Styled (.main, .parts, .where)
+  add(scene, style, name, **)         the same as person (for the old call)
 
-Faces are for ordinary people only. Heavenly Mother is never shown with a face: give her a body preset seen
-from behind (facing away from the camera) or her hands, never a *_profile preset.
+Light only adds: both looks are made for skies with room for light (night, dusk, dawn, sunrise, a warm
+twilight). On a bright day sky they pale; give such a scene a deeper sky behind the people.
+
+THE PARKED PRESETS. The first fifteen presets (dark silhouettes, figures that shatter, crumble or dissolve,
+faces in profile with a glowing eye) were shown to Anthony and judged "terrible and scary". They are kept
+for reference only: add_parked(scene, preset, ...) (demo_styles.py) and PARKED. Do not use them in films.
+Faces are for ordinary people only. Heavenly Mother is never shown with a face: her figure is seen from behind
+(facing away from the camera) or as her hands.
 """
 import numpy as np
 
@@ -161,7 +169,123 @@ def _hair_for_body(scene, name, body, kw, sky, color, color2, ink, **defaults):
     return hair
 
 
-# ================================================================================================ the presets
+# ======================================================================================== the approved looks
+APPROVED = dict(
+    crystal_light=dict(look=dict(name="crystal"), color="#ffdca0", color2="#d6eaff", points=95000, bright=1.0,
+                       detail=dict(head=3)),
+    gold_glitter=dict(look=dict(name="gold"), color="#f2b44c", color2="#fff0c8", points=105000, bright=1.0,
+                      detail=dict(head=3)),
+)
+_DOC = dict(crystal_light="a person of clear glass with light inside, prismatic edges, glints, a soft bloom",
+            gold_glitter="a person of warm gold glitter with depth, light streaming off in ribbons, body whole")
+
+
+def keys(style, **body_keys):
+    """The Body keys of an approved look, with yours on top (any Body key: shape, at, facing, motion, gesture,
+    garment, hair, stoop, show, fade, seed, bright, effects, look settings through look=dict(...))."""
+    if style not in APPROVED:
+        raise ValueError("style must be one of %s, got %r (the old presets are parked: add_parked)"
+                         % (sorted(APPROVED), style))
+    out = {k: (dict(v) if isinstance(v, dict) else v) for k, v in APPROVED[style].items()}
+    lk = body_keys.pop("look", None)
+    if isinstance(lk, dict):
+        out["look"].update(lk)
+    elif lk is not None:
+        raise ValueError("look: give a dict of look settings (the look itself is the style's)")
+    if "bright" in body_keys:
+        out["bright"] = out["bright"] * float(body_keys.pop("bright"))
+    fx = []
+    if style == "gold_glitter":
+        # light streams off the body all the time; the body stays whole (a shed, not a dispersal)
+        fx.append(dict(kind="shed", n=int(body_keys.pop("shed", 1600)), life=2.2, speed=0.18, rise=0.32,
+                       spread=0.10, turb=0.4, size=1.4, bright=1.0, color="#ffe6a8", where=[2]))
+    else:
+        body_keys.pop("shed", None)
+    out["effects"] = fx + list(body_keys.pop("effects", None) or [])
+    out.update(body_keys)
+    return out
+
+
+def _inside(body, front=0.5):
+    """A place inside the chest (between its front and its back surface), as a function of time."""
+    return lambda t: (np.asarray(body.where(t, "heart"), np.float64) * front
+                      + np.asarray(body.where(t, "back"), np.float64) * (1.0 - front))
+
+
+def _shows(body):
+    return getattr(body, "show", None)
+
+
+def dress(scene, name, body, style, heart=1.0, bloom=1.0, trails=1.0, motes=1.0, places=None, wind=None,
+          color=None, seed=None):
+    """The light round a body in an approved look. Returns dict(scene name -> point set) of what it added."""
+    if style not in APPROVED:
+        raise ValueError("style must be one of %s, got %r" % (sorted(APPROVED), style))
+    sh = _shows(body)
+    sd = float(seed if seed is not None else getattr(body, "seed", 1.0))
+    sc = float(getattr(body, "scale", 1.0) or 1.0)
+    try:
+        hgt = float(body.rig.height) * sc
+    except AttributeError:
+        hgt = 1.6
+    k = hgt / 1.65
+    parts = {}
+    crystal = style == "crystal_light"
+    if heart:
+        g = K.Glow(_inside(body, 0.62), radius=0.07 * k, color="#fff1d0" if crystal else "#fff0c8",
+                   color2="#ffc070" if crystal else "#ffb648", n=70, alpha=0.035 * heart, pulse=0.35, size=0.75,
+                   show=sh, seed=sd)
+        scene.add(name + "_heart", g)
+        parts[name + "_heart"] = g
+    if bloom:
+        g = K.Glow(_inside(body, 0.5), radius=0.40 * k, color="#ffe2b0" if crystal else "#ffd690",
+                   color2="#c8dcff" if crystal else "#ffb860", n=90, alpha=0.006 * bloom, pulse=0.2, size=0.9,
+                   show=sh, seed=sd + 0.5)
+        scene.add(name + "_bloom", g)
+        parts[name + "_bloom"] = g
+    if trails and not crystal:
+        pl = places or ("wrist.L", "wrist.R", "shoulder.L", "shoulder.R", "crown")
+        tr = K.LightTrails(body, places=pl, per=1, length=1.8, wind=wind if wind is not None else (-0.22, 0.0, 0.05),
+                           rise=0.22, curl=0.32, width=0.030 * k, color="#ffc860" if color is None else color,
+                           color2="#fff2cc", bright=0.7 * trails, sparkle=8, seed=sd)
+        scene.add(name + "_trails", tr)
+        parts[name + "_trails"] = tr
+    if motes:
+        box = (0.9 * k, 1.2 * k, 0.7 * k)
+        sp = K.Sparkles(_target(body, "pelvis"), box=box, n=int(260 * motes), stars=int(10 * motes), size=0.016 * k,
+                        color="#fff6e0" if crystal else "#fff0c8", color2="#cfe4ff" if crystal else "#ffcf7a",
+                        bright=0.7, drift=0.10, show=sh)
+        scene.add(name + "_motes", sp)
+        parts[name + "_motes"] = sp
+    return parts
+
+
+def key_light(at, facing, height=1.6, dist=3.0, up=2.6):
+    """A point to light a person from (Body key `light`): in front of them and above, so the form and the
+    features of the face read (the crystal and gold looks are shaded toward it)."""
+    p = np.asarray(at, np.float64)
+    p = np.array([p[0], 0.0, p[1]]) if len(p) == 2 else p.copy()
+    a = np.radians(float(facing))
+    return (p[0] + np.sin(a) * dist, p[1] + height + up, p[2] + np.cos(a) * dist)
+
+
+def person(scene, style, name, **body_keys):
+    """A person in an approved look, added to the scene with its dress. dress=dict(...) passes keys to dress().
+    Without `light` the person is lit from in front and above (key_light). Returns a Styled: .main (the Body),
+    .parts, .where(t, place)."""
+    dk = dict(body_keys.pop("dress", None) or {})
+    at, fc = body_keys.get("at"), body_keys.get("facing", 0.0)
+    if "light" not in body_keys and at is not None and not callable(at) and not callable(fc) and \
+            np.ndim(fc) == 0 and not (isinstance(at, (list, tuple)) and at and isinstance(at[0], (list, tuple))):
+        body_keys["light"] = key_light(at, fc)
+    b = Body(**keys(style, **body_keys))
+    scene.add(name, b)
+    parts = {name: b}
+    parts.update(dress(scene, name, b, style, **dk))
+    return Styled(style, "night", b, parts)
+
+
+# ============================================================================ the parked presets (not for films)
 def constellation(scene, name, sky, kw):
     """p01: a body of stars joined by fine lines, brighter toward the light, specks drifting off."""
     day = _day(sky)
@@ -603,11 +727,11 @@ def constellation_profile(scene, name, sky, kw):
     return Styled("constellation_profile", sky, prof, {name: main, name + "_stars": sp})
 
 
-STYLES = dict(
+PARKED = dict(
     constellation=(constellation, "p01: a body of stars joined by fine lines"),
     spark_profile=(spark_profile, "p06: a face in profile traced by sparks, embers streaming off"),
     sky_window=(sky_window, "p07 flat: the body a window onto a sunrise or clouds, birds leaving"),
-    gold_glitter=(gold_glitter, "p08: gold glitter blowing apart from one side"),
+    gold_dispersal=(gold_glitter, "p08: gold glitter blowing apart from one side"),
     ember_dancer=(ember_dancer, "p04: a dancer of embers bursting into a stream of sparks"),
     ash_dissolve=(ash_dissolve, "p03: a figure crumbling into ash with red embers"),
     mist_figure=(mist_figure, "p09: a small sparkling figure in a field of glittering mist"),
@@ -622,14 +746,25 @@ STYLES = dict(
 )
 
 
-def add(scene, style, name=None, sky="night", **keys):
-    """Adds a preset to the scene. Returns a Styled (see the module text)."""
-    if style not in STYLES:
-        raise ValueError("style must be one of %s, got %r" % (sorted(STYLES), style))
-    kw = dict(keys)
-    return STYLES[style][0](scene, name or style, sky, kw)
+STYLES = PARKED          # the old name
+
+
+def add(scene, style, name=None, sky="night", **body_keys):
+    """A person in an approved look (the same as person()). The parked presets need add_parked()."""
+    if style in PARKED and style not in APPROVED:
+        raise ValueError("%r is a parked preset (judged scary): use crystal_light or gold_glitter, or "
+                         "add_parked() for reference only" % style)
+    return person(scene, style, name or style, **body_keys)
+
+
+def add_parked(scene, style, name=None, sky="night", **keys_):
+    """One of the parked presets (for reference only, never in films). Returns a Styled."""
+    if style not in PARKED:
+        raise ValueError("style must be one of %s, got %r" % (sorted(PARKED), style))
+    return PARKED[style][0](scene, name or style, sky, dict(keys_))
 
 
 def listing():
-    for k, (_fn, doc) in STYLES.items():
-        print("%-22s %s" % (k, doc))
+    for k in APPROVED:
+        print("%-22s %s" % (k, _DOC[k]))
+    print("parked (reference only): " + ", ".join(PARKED))

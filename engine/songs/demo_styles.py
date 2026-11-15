@@ -82,88 +82,88 @@ def win(t0):
 @stage("constellation", lambda x, t0, t1: orbit((x, 1.0, 0.0), radius=(3.3, 3.1), height=1.15, a0=12.0, a1=24.0,
                                                 t0=t0, t1=t1, fov=40, aperture=0.0))
 def s_constellation(scene, x, t0, sky):
-    ST.add(scene, "constellation", name="c", sky=sky, shape="man", at=(x, 0.0), facing=110.0, **win(t0))
+    ST.add_parked(scene, "constellation", name="c", sky=sky, shape="man", at=(x, 0.0), facing=110.0, **win(t0))
 
 
 @stage("spark_profile", lambda x, t0, t1: hold((x + 0.06, 1.69, 1.30), (x + 0.06, 1.66, 0.0), t0, t1, fov=34,
                                                aperture=0.025, drift=(0.03, 0.01, -0.05)))
 def s_spark(scene, x, t0, sky):
-    ST.add(scene, "spark_profile", name="sp", sky=sky, at=(x, 1.70, 0.0), facing=90.0, height=0.40,
+    ST.add_parked(scene, "spark_profile", name="sp", sky=sky, at=(x, 1.70, 0.0), facing=90.0, height=0.40,
            tilt=lambda t: 9.0 + 3.0 * np.sin((t - t0) * 0.6), eye_glow=0.4, **win(t0))
 
 
 @stage("nebula_profile", lambda x, t0, t1: hold((x - 0.05, 1.98, 1.45), (x - 0.05, 1.93, 0.0), t0, t1, fov=36,
                                                 aperture=0.02, drift=(-0.04, 0.0, -0.06)), sky="day", look="pale")
 def s_nebula_profile(scene, x, t0, sky):
-    ST.add(scene, "nebula_profile", name="np", sky=sky, at=(x, 2.0, 0.0), facing=-90.0, height=0.50, tilt=7.0,
+    ST.add_parked(scene, "nebula_profile", name="np", sky=sky, at=(x, 2.0, 0.0), facing=-90.0, height=0.50, tilt=7.0,
            t=t0 + 0.6, **win(t0))
 
 
 @stage("butterflies", lambda x, t0, t1: hold((x - 0.10, 1.95, 1.65), (x - 0.10, 1.88, 0.0), t0, t1, fov=40,
                                              aperture=0.02, drift=(0.03, 0.0, -0.05)), sky="day", look="pastel")
 def s_butterflies(scene, x, t0, sky):
-    ST.add(scene, "butterflies", name="bf", sky=sky, at=(x, 2.0, 0.0), facing=90.0, height=0.45, t=t0 + 0.3,
+    ST.add_parked(scene, "butterflies", name="bf", sky=sky, at=(x, 2.0, 0.0), facing=90.0, height=0.45, t=t0 + 0.3,
            **win(t0))
 
 
 @stage("glass_shatter", lambda x, t0, t1: hold((x + 0.35, 1.30, 2.7), (x + 0.25, 1.25, 0.0), t0, t1, fov=42,
                                                aperture=0.02), sky="day", look="mistgreen")
 def s_glass(scene, x, t0, sky):
-    ST.add(scene, "glass_shatter", name="gs", sky=sky, at=(x, 0.0), facing=-25.0, t=t0 + 0.9, **win(t0))
+    ST.add_parked(scene, "glass_shatter", name="gs", sky=sky, at=(x, 0.0), facing=-25.0, t=t0 + 0.9, **win(t0))
 
 
 @stage("ember_dancer", lambda x, t0, t1: hold((x + 0.2, 1.05, 4.6), (x + 0.2, 1.0, 0.0), t0, t1, fov=40,
                                               aperture=0.02), sky="day", look="amber")
 def s_ember(scene, x, t0, sky):
-    ST.add(scene, "ember_dancer", name="ed", sky=sky, at=(x + 0.4, 0.0), facing=90.0, t=t0 + 0.4,
+    ST.add_parked(scene, "ember_dancer", name="ed", sky=sky, at=(x + 0.4, 0.0), facing=90.0, t=t0 + 0.4,
            **win(t0))
 
 
 @stage("ash_dissolve", lambda x, t0, t1: hold((x + 0.2, 1.25, 4.0), (x + 0.2, 1.1, 0.0), t0, t1, fov=40,
                                               aperture=0.02), sky="day", look="mistgreen")
 def s_ash(scene, x, t0, sky):
-    ST.add(scene, "ash_dissolve", name="ad", sky=sky, at=(x - 0.15, -0.2), facing=20.0, t=t0 + 0.3, **win(t0))
-    ST.add(scene, "dark_silhouette", name="ad2", sky=sky, shape="woman", at=(x + 0.55, 0.1), facing=-35.0,
+    ST.add_parked(scene, "ash_dissolve", name="ad", sky=sky, at=(x - 0.15, -0.2), facing=20.0, t=t0 + 0.3, **win(t0))
+    ST.add_parked(scene, "dark_silhouette", name="ad2", sky=sky, shape="woman", at=(x + 0.55, 0.1), facing=-35.0,
            edge=None, **win(t0))
 
 
 @stage("gold_glitter", lambda x, t0, t1: hold((x - 0.1, 1.25, 3.1), (x + 0.1, 1.15, 0.0), t0, t1, fov=38,
                                               aperture=0.04), sky="day", look="pale")
 def s_gold(scene, x, t0, sky):
-    ST.add(scene, "gold_glitter", name="gg", sky=sky, at=(x, 0.0), facing=-10.0, t=t0 + 0.6, **win(t0))
+    ST.add_parked(scene, "gold_dispersal", name="gg", sky=sky, at=(x, 0.0), facing=-10.0, t=t0 + 0.6, **win(t0))
 
 
 @stage("mist_figure", lambda x, t0, t1: hold((x, 1.25, 7.0), (x, 1.05, -6.0), t0, t1, fov=34, aperture=0.05,
                                              drift=(0.0, 0.0, -0.3)), look="mistnight")
 def s_mist(scene, x, t0, sky):
-    ST.add(scene, "mist_figure", name="mf", sky=sky, at=(x, -6.0), facing=180.0, **win(t0))
+    ST.add_parked(scene, "mist_figure", name="mf", sky=sky, at=(x, -6.0), facing=180.0, **win(t0))
 
 
 @stage("dark_silhouette", lambda x, t0, t1: hold((x + 0.1, 1.15, 3.8), (x + 0.1, 1.05, 0.0), t0, t1, fov=38,
                                                  aperture=0.02))
 def s_dark_night(scene, x, t0, sky):
-    ST.add(scene, "dark_silhouette", name="dn", sky=sky, shape="man", garment="coat", at=(x, 0.0), facing=70.0,
+    ST.add_parked(scene, "dark_silhouette", name="dn", sky=sky, shape="man", garment="coat", at=(x, 0.0), facing=70.0,
            t=t0, **win(t0))
 
 
 @stage("sky_window", lambda x, t0, t1: hold((x + 0.12, 1.40, 2.1), (x + 0.12, 1.32, 0.0), t0, t1, fov=36,
                                             aperture=0.02))
 def s_window(scene, x, t0, sky):
-    ST.add(scene, "sky_window", name="sw", sky=sky, at=(x, 0.0), facing=90.0, t=t0 + 0.4,
+    ST.add_parked(scene, "sky_window", name="sw", sky=sky, at=(x, 0.0), facing=90.0, t=t0 + 0.4,
            gesture=[(t0 - 1.0, t0 + 30.0, "look_up", dict(amount=12))], **win(t0))
 
 
 @stage("star_silhouette", lambda x, t0, t1: hold((x, 1.0, 3.8), (x, 0.95, 0.0), t0, t1, fov=40, aperture=0.02),
        sky="day", look="pastel")
 def s_star(scene, x, t0, sky):
-    ST.add(scene, "star_silhouette", name="ss", sky=sky, at=(x, 0.0), facing=-90.0,
+    ST.add_parked(scene, "star_silhouette", name="ss", sky=sky, at=(x, 0.0), facing=-90.0,
            gesture=[(t0 - 1.0, t0 + 30.0, "open_arms", dict(lift=0.5))], **win(t0))
 
 
 @stage("glitter_profile", lambda x, t0, t1: hold((x + 0.05, 1.80, 1.40), (x + 0.05, 1.76, 0.0), t0, t1, fov=36,
                                                  aperture=0.025, drift=(0.03, 0.0, -0.05)))
 def s_glitter_profile(scene, x, t0, sky):
-    ST.add(scene, "glitter_profile", name="gp", sky=sky, shape="man", at=(x, 1.80, 0.0), facing=90.0,
+    ST.add_parked(scene, "glitter_profile", name="gp", sky=sky, shape="man", at=(x, 1.80, 0.0), facing=90.0,
            height=0.45, tilt=lambda t: 3.0 + 4.0 * np.sin((t - t0) * 0.5), **win(t0))
 
 
@@ -171,21 +171,21 @@ def s_glitter_profile(scene, x, t0, sky):
                                                        fov=36, aperture=0.0, drift=(-0.03, 0.0, -0.05)),
        sky="day", look="pale")
 def s_constellation_profile(scene, x, t0, sky):
-    ST.add(scene, "constellation_profile", name="cp", sky=sky, at=(x, 1.80, 0.0), facing=-90.0, height=0.45,
+    ST.add_parked(scene, "constellation_profile", name="cp", sky=sky, at=(x, 1.80, 0.0), facing=-90.0, height=0.45,
            tilt=6.0, **win(t0))
 
 
 @stage("nebula_figure", lambda x, t0, t1: hold((x + 0.1, 1.30, 2.5), (x + 0.1, 1.22, 0.0), t0, t1, fov=38,
                                                aperture=0.02))
 def s_nebula_figure(scene, x, t0, sky):
-    ST.add(scene, "nebula_figure", name="nf", sky=sky, at=(x, 0.0), facing=90.0, t=t0 + 0.8,
+    ST.add_parked(scene, "nebula_figure", name="nf", sky=sky, at=(x, 0.0), facing=90.0, t=t0 + 0.8,
            gesture=[(t0 - 1.0, t0 + 30.0, "look_up", dict(amount=10))], **win(t0))
 
 
 @stage("dark_silhouette, frayed", lambda x, t0, t1: hold((x + 0.1, 1.15, 3.6), (x + 0.1, 1.05, 0.0), t0, t1,
                                                           fov=38, aperture=0.02), sky="day", look="amber")
 def s_dark_day(scene, x, t0, sky):
-    ST.add(scene, "dark_silhouette", name="dd", sky=sky, at=(x, 0.0), facing=-80.0, t=t0, share=0.35,
+    ST.add_parked(scene, "dark_silhouette", name="dd", sky=sky, at=(x, 0.0), facing=-80.0, t=t0, share=0.35,
            gesture=[(t0 - 1.0, t0 + 30.0, "raise_hand", dict(side="R"))], **win(t0))
 
 

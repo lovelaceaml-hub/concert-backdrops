@@ -806,7 +806,8 @@ class Layer:
         sl = self._slot((e.name, bi), b, static=static, dome=bool(dome))
         p = self.p_seg if seg else self.p_sprite
         chunked = 1.0 if sl.get("cells") is not None else 0.0
-        setu(p, uKind=KIND_ID[b["kind"]], uGain=gain, uTwinkle=b["twinkle"], uRim=b["rim"], uIdxK=(chunked, 1.0),
+        setu(p, uKind=KIND_ID[b["kind"]], uGain=gain, uTwinkle=b["twinkle"], uRim=b["rim"], uFront=b["front"],
+             uIdxK=(chunked, 1.0),
              uDofAmt=b["dof"] if e.depth_of_field else 0.0, uFogAmt=b["fog"] if e.fog else 0.0,
              uBack=b["backlight"], uLod=1.0 if (b["lod"] and e.lod) else 0.0, uDome=dome,
              uTurn=1.0 if getattr(ps, "turns", False) else 0.0, uBlur=blur * b["streak"], uMirror=0.0,

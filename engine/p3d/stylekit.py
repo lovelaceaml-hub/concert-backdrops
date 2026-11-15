@@ -10,6 +10,14 @@
   GlitterMist(center, ...)        a wide slab of glittering mist and bokeh round a small figure (p09, ref 09)
   CloudPuffs(source, ...)         soft billows of painted cloud that spill out of a shape (p07): dark slate
                                   in shadow, the light's colour where they face it
+For the two approved looks (engine/p3d/styles.py) and their heavenly settings:
+  Glow(at, ...)                   a soft ball of light (a heart light inside a body, a bloom round it)
+  LightTrails(body, ...)          ribbons of light streaming off a body that stays whole (gold_glitter)
+  Bloom(at, t, ...)               light blooming from a point: a swelling glow and a slow cloud of sparkles
+  HandLight(body, ...)            a small light held in a hand that floats up into the sky when released
+  LightRiver(path, ...)           a river of light flowing over the lake
+  Aurora(...)                     curtains of an aurora far away in the sky
+  CloudBank(center, ...)          a bank of glowing clouds in the scene, gold toward a light, rose away
 Everything is a pure function of time.
 """
 import numpy as np
@@ -528,3 +536,391 @@ class Nothing:
 
     def sample(self, t):
         return []
+
+
+# ----------------------------------------------------------------------------------------- heavenly pieces
+class Glow:
+    """A soft ball of light (a heart light inside a crystal body, a warm aura round a gold one): many soft
+    sprites in a gaussian ball round a point that may move.
+
+    at       a point or a function of time; radius: metres; color, color2 (the core and the rim, display hex)
+    alpha    the strength of each sprite (the ball's light grows with n); pulse: 0..1, a slow breathing"""
+
+    def __init__(self, at, radius=0.12, color="#ffe2a8", color2="#ffc890", n=60, alpha=0.05, pulse=0.3, size=0.6,
+                 show=None, seed=1.0):
+        self.at, self.radius = at, float(radius)
+        self.color, self.color2 = _col(color), _col(color2)
+        self.n, self.alpha, self.pulse, self.size = int(n), float(alpha), float(pulse), float(size)
+        self.show = show
+        k = int(seed * 100)
+        r = [hash01(self.n, k + i).astype(np.float64) for i in range(4)]
+        g = np.stack([r[0], r[1], r[2]], axis=1) - 0.5
+        g /= np.maximum(np.linalg.norm(g, axis=1, keepdims=True), 1e-6)
+        self.off = g * (np.sqrt(-2.0 * np.log(np.maximum(1.0 - 0.95 * r[3], 1e-6))) * 0.45)[:, None]
+        self.r = r[3]
+        self.seed = float(seed)
+
+    def gain(self, t):
+        if self.show is None:
+            return 1.0
+        return float(bm.ramp(t, self.show[0], self.show[0] + 0.6)) * (1.0 - float(bm.ramp(t, self.show[1] - 0.6, self.show[1])))
+
+    def sample(self, t):
+        if self.show is not None and not (self.show[0] <= t <= self.show[1]):
+            return []
+        c = _pt(self.at, t)
+        br = 1.0 + self.pulse * 0.35 * np.sin(t * 1.3 + self.seed)
+        p = c[None] + self.off * self.radius
+        mix = np.clip(np.linalg.norm(self.off, axis=1) / 0.9, 0, 1)[:, None]
+        col = self.color[None] * (1 - mix) + self.color2[None] * mix
+        return [dict(pos=p, size=self.radius * self.size * (0.6 + 0.8 * self.r), color=col,
+                     alpha=self.alpha * br * np.ones(self.n), kind="soft", lod=False)]
+
+
+class LightTrails:
+    """Graceful ribbons of light streaming off a figure while it stays whole (gold glitter people): each trail
+    leaves a place on the body (a wrist, a shoulder, the back of the head) and flows behind it with the air,
+    rising and curling, thinning and fading to its tip; sparkles drift off along it.
+
+    body     anything with where(t, place) (a Body)
+    places   the places trails leave from (Body.where names); per: trails from each place
+    length   seconds of the past each trail shows (its length follows the figure's own motion and the air)
+    wind     (x, y, z) metres per second the trails drift with; rise: metres per second upward
+    width    metres at the root; color, color2; bright; sparkle (sparkles per trail)"""
+
+    def __init__(self, body, places=("wrist.L", "wrist.R", "shoulder.L", "shoulder.R", "back", "head"), per=2,
+                 length=2.2, wind=(-0.35, 0.0, 0.0), rise=0.18, curl=0.12, width=0.035, color="#ffd27a",
+                 color2="#fff2cc", bright=1.0, sparkle=10, steps=20, show=None, seed=1.0):
+        self.body, self.places = body, list(places)
+        self.per, self.length, self.steps = int(per), float(length), int(steps)
+        self.wind, self.rise, self.curl = np.asarray(wind, np.float64), float(rise), float(curl)
+        self.width, self.bright, self.sparkle = float(width), float(bright), int(sparkle)
+        self.color, self.color2 = _col(color), _col(color2)
+        self.show = show
+        k = int(seed * 100)
+        m = len(self.places) * self.per
+        self.r = [hash01(m, k + i).astype(np.float64) for i in range(6)]
+        self.seed = float(seed)
+
+    def gain(self, t):
+        g = self.body.gain(t) if hasattr(self.body, "gain") else 1.0
+        if self.show is not None:
+            g *= float(bm.ramp(t, self.show[0], self.show[0] + 0.8)) * (1.0 - float(bm.ramp(t, self.show[1] - 0.6, self.show[1])))
+        return g
+
+    def sample(self, t):
+        b = self.body
+        sh = getattr(b, "show", None)
+        if sh is not None and not (sh[0] <= t <= sh[1]):
+            return []
+        if self.show is not None and not (self.show[0] <= t <= self.show[1]):
+            return []
+        # moments on a fixed grid (a pose once asked for is kept by the body), with the present at the head
+        dt = self.length / max(self.steps - 1, 1)
+        g0 = np.floor(t / dt) * dt
+        times = np.r_[t, g0 - dt * np.arange(self.steps)] if t - g0 > 1e-6 else g0 - dt * np.arange(self.steps + 1)
+        ages = t - times
+        S = len(ages)
+        t0 = sh[0] if sh is not None else -1e9
+        # the places in the past (one Body.where per place and moment)
+        P = np.zeros((len(self.places), S, 3))
+        for i, name in enumerate(self.places):
+            for j, a in enumerate(ages):
+                P[i, j] = b.where(max(t - a, t0), name)
+        ages = np.minimum(ages, self.length)
+        m = len(self.places) * self.per
+        pid = np.repeat(np.arange(len(self.places)), self.per)
+        r = self.r
+        q = ages / self.length
+        base = P[pid]                                                   # (m, S, 3)
+        drift = np.broadcast_to(self.wind[None, None, :] * ages[None, :, None], (m, S, 3)).copy()
+        drift[..., 1] += self.rise * ages[None, :] * (0.6 + 0.8 * r[0][:, None])
+        side = np.stack([np.sin(r[1] * 6.28), np.zeros(m), np.cos(r[1] * 6.28)], axis=1)
+        side2 = np.stack([np.cos(r[1] * 6.28), 0.4 * (r[2] - 0.5), -np.sin(r[1] * 6.28)], axis=1)
+        ph = ages[None, :] * (2.2 + 1.2 * r[2][:, None]) - t * (0.9 + 0.4 * r[3][:, None]) + r[4][:, None] * 6.28
+        # each ribbon winds in a slow spiral as it drifts away (graceful, never a straight streak)
+        amp = (self.curl * q[None, :] ** 0.9)[..., None]
+        curl = side[:, None, :] * (amp * np.sin(ph)[..., None]) + side2[:, None, :] * (amp * 0.7 * np.cos(ph)[..., None])
+        off = (np.stack([r[2], r[3], r[4]], axis=1) - 0.5) * 0.05
+        path = base + drift + curl + off[:, None, :] * q[None, :, None]
+        p1 = path[:, :-1].reshape(-1, 3)
+        p2 = path[:, 1:].reshape(-1, 3)
+        qa, qb = np.tile(q[:-1], m), np.tile(q[1:], m)
+        a1 = (1.0 - qa) ** 1.6 * np.clip(qa * 8.0, 0.2, 1.0)
+        a2 = (1.0 - qb) ** 1.6 * np.clip(qb * 8.0, 0.2, 1.0)
+        w1 = self.width * (1.0 - 0.8 * qa)
+        w2 = self.width * (1.0 - 0.8 * qb)
+        mix = np.repeat(r[5], S - 1)[:, None]
+        col = self.color[None] * (1 - mix) + self.color2[None] * mix
+        out = [dict(pos=p1, pos2=p2, size=w1, size2=w2, color=col, alpha=0.30 * self.bright * a1,
+                    alpha2=0.30 * self.bright * a2, kind="ribbon"),
+               dict(pos=p1, pos2=p2, size=w1 * 0.25, size2=w2 * 0.25, color=self.color2,
+                    alpha=0.35 * self.bright * a1, alpha2=0.35 * self.bright * a2, kind="ribbon")]
+        if self.sparkle:
+            n = m * self.sparkle
+            rs = hash01(n, 77).astype(np.float64)
+            rs2 = hash01(n, 78).astype(np.float64)
+            tr = np.repeat(np.arange(m), self.sparkle)
+            u = np.mod(rs + t * (0.15 + 0.2 * rs2), 1.0)
+            j = np.minimum((u * (S - 1)).astype(np.int64), S - 2)
+            f = (u * (S - 1) - j)[:, None]
+            pos = path[tr, j] * (1 - f) + path[tr, j + 1] * f
+            pos = pos + (np.stack([rs2, rs, rs2 * rs], axis=1) - 0.5) * 0.06 * u[:, None]
+            out.append(dict(pos=pos, size=0.006 + 0.008 * rs2 ** 3, color=self.color2,
+                            alpha=0.8 * self.bright * (1.0 - u) ** 1.2, emit=1.0 + 2.0 * (rs2 > 0.9), kind="soft",
+                            twinkle=0.9))
+        return out
+
+
+class LightRiver:
+    """A river of light flowing over the water (or the ground): glowing points streaming along a curve,
+    densest in its middle, with sparkles and a soft glow; mirrored in the lake like any set.
+
+    path     (x, z) points the river follows (a gentle curve), y: its height (just above the water)
+    width    metres; n: points; speed: metres per second along the path; color, color2; bright"""
+
+    def __init__(self, path, width=2.0, n=26000, speed=1.2, y=0.03, color="#ffd890", color2="#fff4d8", bright=1.0,
+                 show=None, seed=1.0):
+        pts = np.asarray(path, np.float64)
+        d = np.r_[0.0, np.cumsum(np.linalg.norm(np.diff(pts, axis=0), axis=1))]
+        self.pts, self.d, self.L = pts, d, float(d[-1])
+        self.width, self.n, self.speed, self.y = float(width), int(n), float(speed), float(y)
+        self.color, self.color2 = _col(color), _col(color2)
+        self.bright = float(bright)
+        self.show = show
+        k = int(seed * 100)
+        self.r = [hash01(self.n, k + i).astype(np.float64) for i in range(4)]
+
+    def gain(self, t):
+        if self.show is None:
+            return 1.0
+        return float(bm.ramp(t, self.show[0], self.show[0] + 0.8)) * (1.0 - float(bm.ramp(t, self.show[1] - 0.8, self.show[1])))
+
+    def sample(self, t):
+        if self.show is not None and not (self.show[0] <= t <= self.show[1]):
+            return []
+        r = self.r
+        s = np.mod(r[0] * self.L + t * self.speed * (0.7 + 0.6 * r[1]), self.L)
+        x = np.interp(s, self.d, self.pts[:, 0])
+        z = np.interp(s, self.d, self.pts[:, 1])
+        ds = 0.5
+        x2 = np.interp(np.minimum(s + ds, self.L), self.d, self.pts[:, 0])
+        z2 = np.interp(np.minimum(s + ds, self.L), self.d, self.pts[:, 1])
+        tx, tz = x2 - x, z2 - z
+        tl = np.maximum(np.hypot(tx, tz), 1e-6)
+        nx, nz = -tz / tl, tx / tl
+        lat = (np.sqrt(-2.0 * np.log(np.maximum(1.0 - 0.98 * r[2], 1e-6))) * np.cos(r[3] * 6.283)) * 0.30
+        wob = 0.25 * np.sin(s * 0.7 - t * 0.8 + r[3] * 3.0)
+        off = (lat + wob * 0.2) * self.width
+        pos = np.stack([x + nx * off, self.y + 0.02 * r[1], z + nz * off], axis=1)
+        edge = np.clip(1.0 - np.abs(lat) / 0.9, 0.0, 1.0)
+        ends = np.clip(s / 3.0, 0, 1) * np.clip((self.L - s) / 3.0, 0, 1)
+        mix = (r[1] ** 2)[:, None]
+        col = self.color[None] * (1 - mix) + self.color2[None] * mix
+        return [dict(pos=pos, size=0.02 + 0.04 * r[2] ** 4, color=col, alpha=0.45 * self.bright * edge * ends,
+                     emit=1.0 + 2.5 * (r[0] > 0.993), kind="soft", twinkle=0.8, backlight=0.4)]
+
+
+class Aurora:
+    """Curtains of an aurora across the sky: tall soft bands hanging in folds, green and teal below fading to
+    rose and violet above, rippling slowly. Far away (hundreds of metres), not blurred by the lens.
+
+    center   (x, z) the middle of the curtain on the ground plan; dist: how far it runs across (metres);
+    height   (bottom, top) metres; n: bands; colors (bottom, middle, top); bright; folds: how deep the folds are"""
+
+    def __init__(self, center=(0.0, -400.0), span=900.0, height=(60.0, 260.0), n=420, folds=60.0,
+                 colors=("#5dffc0", "#62d6ff", "#ff8ad8"), bright=1.0, yaw=0.0, reflect=True, show=None, seed=1.0):
+        self.center = np.asarray(center, np.float64)
+        self.span, self.h0, self.h1 = float(span), float(height[0]), float(height[1])
+        self.n, self.folds, self.bright = int(n), float(folds), float(bright)
+        self.c = [_col(c) for c in colors]
+        self.yaw = np.radians(yaw)
+        self.reflect = bool(reflect)
+        self.show = show
+        k = int(seed * 100)
+        self.r = [hash01(self.n, k + i).astype(np.float64) for i in range(3)]
+
+    def gain(self, t):
+        if self.show is None:
+            return 1.0
+        return float(bm.ramp(t, self.show[0], self.show[0] + 1.5)) * (1.0 - float(bm.ramp(t, self.show[1] - 1.0, self.show[1])))
+
+    def sample(self, t):
+        if self.show is not None and not (self.show[0] <= t <= self.show[1]):
+            return []
+        u = (np.arange(self.n) + 0.5) / self.n - 0.5
+        x = u * self.span
+        fold = (np.sin(u * 7.0 + t * 0.12) * 0.6 + np.sin(u * 17.0 - t * 0.21 + 1.3) * 0.3
+                + np.sin(u * 41.0 + t * 0.35) * 0.1) * self.folds
+        c, s_ = np.cos(self.yaw), np.sin(self.yaw)
+        X = self.center[0] + x * c + fold * s_
+        Z = self.center[1] - x * s_ + fold * c
+        # the light of the curtain varies smoothly along it (soft rays drifting), never band by band
+        ray = (0.55 + 0.25 * np.sin(u * 31.0 - t * 0.6) + 0.15 * np.sin(u * 83.0 + t * 0.9 + 1.7)
+               + 0.05 * np.sin(u * 191.0 - t * 1.3))
+        sheet = 0.5 + 0.5 * np.sin(u * 5.0 + t * 0.15 + 0.8)
+        hb = self.h0 * (1.0 + 0.15 * np.sin(u * 9.0 + t * 0.1))
+        ht = self.h1 * (0.8 + 0.2 * np.sin(u * 6.0 - t * 0.13) + 0.1 * np.sin(u * 23.0 + t * 0.3))
+        hm = hb + (ht - hb) * 0.3
+        ends = np.clip((0.5 - np.abs(u)) / 0.15, 0, 1) ** 1.5
+        a = np.clip(ray, 0, 1) * (0.35 + 0.65 * sheet) * ends * self.bright * 0.35
+        w = self.span / self.n * 3.5
+        pb = np.stack([X, hb, Z], axis=1)
+        pm = np.stack([X, hm, Z], axis=1)
+        pt = np.stack([X, ht, Z], axis=1)
+        z0 = np.zeros(self.n)
+        return [dict(pos=pb, pos2=pm, size=w, size2=w, color=self.c[0] * 0.7 + self.c[1] * 0.3, alpha=z0,
+                     alpha2=a, kind="ribbon", dof=0.0, fog=0.3, reflect=self.reflect),
+                dict(pos=pm, pos2=pt, size=w, size2=w * 1.3, color=self.c[1] * 0.3 + self.c[2] * 0.7, alpha=a,
+                     alpha2=z0, kind="ribbon", dof=0.0, fog=0.3, reflect=self.reflect)]
+
+
+class CloudBank:
+    """A bank of soft clouds of light in the scene (not the far sky): billows of large soft sprites, warm gold
+    toward a light and rose away from it, glowing from within. For cathedral skies round a figure.
+
+    center   (x, y, z); size (width, height, depth) metres; n: billows; light: a world point (the warm side)
+    color, color2; bright"""
+
+    def __init__(self, center, size=(30.0, 6.0, 10.0), n=500, light=None, color="#ffd08a", color2="#ff9ab8",
+                 bright=1.0, alpha=0.012, puff=0.25, show=None, seed=1.0):
+        self.center = np.asarray(center, np.float64)
+        self.dims = np.asarray(size, np.float64)
+        self.n, self.bright = int(n), float(bright)
+        self.alpha, self.puff = float(alpha), float(puff)
+        self.light = light
+        self.color, self.color2 = _col(color), _col(color2)
+        self.show = show
+        k = int(seed * 100)
+        r = [hash01(self.n, k + i).astype(np.float64) for i in range(5)]
+        # billows: clustered round a few centres, flat underneath, heaped above
+        nc = max(self.n // 40, 4)
+        cr = [hash01(nc, k + 10 + i).astype(np.float64) for i in range(3)]
+        cc = np.stack([cr[0] - 0.5, cr[1] * 0.3 - 0.2, cr[2] - 0.5], axis=1)
+        par = (r[0] * nc).astype(np.int64) % nc
+        g = np.stack([r[1] - 0.5, np.abs(r[2] - 0.5), r[3] - 0.5], axis=1)
+        self.p = cc[par] + g * np.array([0.35, 0.5, 0.35])
+        self.s = 0.08 + 0.22 * r[4] ** 1.5
+        self.r = r
+
+    def gain(self, t):
+        if self.show is None:
+            return 1.0
+        return float(bm.ramp(t, self.show[0], self.show[0] + 1.0)) * (1.0 - float(bm.ramp(t, self.show[1] - 1.0, self.show[1])))
+
+    def sample(self, t):
+        if self.show is not None and not (self.show[0] <= t <= self.show[1]):
+            return []
+        q = self.p + np.stack([np.sin(t * 0.05 + self.r[0] * 6.0), np.zeros(self.n), np.cos(t * 0.04 + self.r[1] * 6.0)],
+                              axis=1) * 0.01
+        pos = self.center[None] + q * self.dims[None]
+        L = None if self.light is None else _pt(self.light, t)
+        if L is not None:
+            d = L[None] - pos
+            d /= np.maximum(np.linalg.norm(d, axis=1, keepdims=True), 1e-6)
+            k = np.clip(0.5 + 0.5 * d[:, 1] + 0.3 * (q[:, 1] > 0), 0, 1)[:, None]
+        else:
+            k = np.clip(0.4 + q[:, 1:2] * 1.5, 0, 1)
+        col = self.color2[None] * (1 - k) + self.color[None] * k
+        size = self.s * self.dims.max() * self.puff
+        return [dict(pos=pos, size=size, color=col, alpha=self.alpha * self.bright * np.ones(self.n), kind="soft",
+                     dof=0.3, lod=False)]
+
+
+class Bloom:
+    """Light that blooms from a point (an embrace, a touch): a warm glow swells and softens, and a slow cloud of
+    sparkles opens out from it, rising and fading. Never a flash: everything eases in and out.
+
+    at       a point or a function of time; t: when it begins; dur: seconds it lasts; radius: metres it opens to
+    n        sparkles; color, color2; bright"""
+
+    def __init__(self, at, t, dur=4.0, radius=1.2, n=900, color="#fff0c8", color2="#ffc46a", bright=1.0, seed=1.0):
+        self.at, self.t0, self.dur, self.radius = at, float(t), float(dur), float(radius)
+        self.n, self.bright = int(n), float(bright)
+        self.color, self.color2 = _col(color), _col(color2)
+        k = int(seed * 100)
+        r = [hash01(self.n, k + i).astype(np.float64) for i in range(6)]
+        d = np.stack([r[0], r[1], r[2]], axis=1) - 0.5
+        d[:, 1] *= 0.7
+        self.dir = d / np.maximum(np.linalg.norm(d, axis=1, keepdims=True), 1e-6)
+        self.dist = 0.35 + 0.65 * r[3] ** 0.7
+        self.delay = 0.6 * r[4]
+        self.r = r[5]
+        self.glow = Glow(at, radius=0.16, color=color, color2=color2, n=80, alpha=0.02, pulse=0.0, size=0.9,
+                         seed=seed)
+
+    def sample(self, t):
+        a = t - self.t0
+        if a < 0.0 or a > self.dur + 0.8:
+            return []
+        c = _pt(self.at, t)
+        u = np.clip((a - self.delay) / self.dur, 0.0, 1.0)
+        e = 1.0 - (1.0 - u) ** 3
+        p = c[None] + self.dir * (self.radius * self.dist * e)[:, None]
+        p[:, 1] += 0.25 * u * self.dist
+        p += bm.flow(p * 1.5, t * 0.4, speed=1.0, seed=3.0) * 0.03 * u[:, None]
+        fade = np.clip(u * 6.0, 0, 1) * (1.0 - u) ** 1.3 * (a > self.delay)
+        mix = (self.r ** 2)[:, None]
+        col = self.color[None] * (1 - mix) + self.color2[None] * mix
+        g = float(np.clip(a / 0.9, 0, 1)) * float(np.clip(1.0 - (a - self.dur * 0.6) / (self.dur * 0.6), 0, 1))
+        sw = 0.5 + 1.6 * float(bm.smoother(min(a / (self.dur * 0.5), 1.0)))
+        out = []
+        for bt in self.glow.sample(t):
+            off = (bt["pos"] - c[None]) * sw
+            bt = dict(bt, pos=c[None] + off, size=bt["size"] * sw, alpha=bt["alpha"] * g * self.bright)
+            out.append(bt)
+        out.append(dict(pos=p, size=0.008 + 0.012 * self.r ** 3, color=col, alpha=0.75 * self.bright * fade,
+                        emit=1.0 + 2.0 * (self.r > 0.92), kind="soft", twinkle=0.8))
+        st = self.r > 0.96
+        out.append(dict(pos=p[st], size=0.035 * (0.6 + self.r[st]), color=col[st], alpha=0.8 * self.bright * fade[st],
+                        emit=2.0, kind="spark", twinkle=0.9))
+        return out
+
+
+class HandLight:
+    """A small light held in a hand that, at `release`, leaves it and floats up into the sky, swaying, with a
+    faint trail. Before `born` there is nothing; it kindles over half a second.
+
+    body     a Body; place: where it is held ("palm.R"); born, release: times; rise: metres per second
+    color, color2, radius (metres), bright"""
+
+    def __init__(self, body, place="palm.R", born=0.0, release=None, rise=0.55, color="#fff0c8", color2="#ffb85a",
+                 radius=0.055, bright=1.0, lift=0.06, seed=1.0):
+        self.body, self.place = body, place
+        self.born = float(born)
+        self.release = None if release is None else float(release)
+        self.rise, self.lift, self.bright = float(rise), float(lift), float(bright)
+        self.seed = float(seed)
+        self.glow = Glow(self.pos, radius=radius, color=color, color2=color2, n=50, alpha=0.10, pulse=0.4, size=0.8,
+                         seed=seed)
+        self.core = _col(color)
+
+    def pos(self, t):
+        b = self.body
+        if self.release is None or t <= self.release:
+            p = np.asarray(b.where(t, self.place), np.float64)
+            return p + np.array([0.0, self.lift, 0.0])
+        p0 = np.asarray(b.where(self.release, self.place), np.float64) + np.array([0.0, self.lift, 0.0])
+        a = t - self.release
+        up = self.rise * (a - 0.6 * (1.0 - np.exp(-a / 0.6)))
+        sway = np.array([np.sin(a * 0.9 + self.seed) * 0.25 * min(a, 1.0), 0.0,
+                         np.cos(a * 0.7 + 2.0 * self.seed) * 0.15 * min(a, 1.0)])
+        return p0 + np.array([0.0, up, 0.0]) + sway
+
+    def gain(self, t):
+        return float(bm.ramp(t, self.born, self.born + 0.6))
+
+    def sample(self, t):
+        if t < self.born:
+            return []
+        out = list(self.glow.sample(t))
+        c = self.pos(t)
+        out.append(dict(pos=c[None], size=0.035, color=self.core * 0.5 + 0.5, alpha=0.9 * self.bright, emit=2.2,
+                        kind="spark", twinkle=0.5))
+        if self.release is not None and t > self.release + 0.05:
+            ts = np.linspace(t, max(self.release, t - 1.2), 12)
+            pts = np.stack([self.pos(x) for x in ts])
+            a = np.linspace(0.5, 0.0, 12) * self.bright
+            out.append(dict(pos=pts[:-1], pos2=pts[1:], size=0.02, size2=0.012, color=self.core, alpha=a[:-1],
+                            alpha2=a[1:], kind="ribbon"))
+        return out

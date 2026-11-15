@@ -64,6 +64,9 @@ A POINT SET
              with `normal` only the side turned toward a light                          default 0
     clear    False lets the batch into the keep-clear boxes (P3D `clear`), for example the words
              the box was made for                                                       default True
+    front    0..1: points on the far side of a surface (their normal turned away from the camera) dim, so
+             a clear body shows its near side (a face is not crossed by the back of the head); needs
+             `normal`                                                                   default 0
 
   READING MOMENTS (words made of points). A point exactly on the focus plane has no lens blur at all, and a
   point smaller than a pixel is drawn through a fixed small footprint whose light does not change as it moves
@@ -145,8 +148,8 @@ _ARRAY_FIELDS = dict(pos=3, size=1, color=3, alpha=1, pos2=3, alpha2=1, size2=1,
                      seed=1, vel=3, birth=1)
 _BATCH_SETTINGS = dict(twinkle=0.0, rim=(0.0, 2.0), dof=1.0, fog=1.0, reflect=True, lod=True, backlight=0.0,
                        streak=1.0, fade=0.4, flash=0.0, pulse=(0.0, 1.0, 0.0, 0.0), paint=0.0, paint_light=0.3,
-                       lit=0.0, clear=True)
-_AMOUNTS = ("twinkle", "dof", "fog", "backlight", "streak", "paint", "paint_light", "lit")
+                       lit=0.0, clear=True, front=0.0)
+_AMOUNTS = ("twinkle", "dof", "fog", "backlight", "streak", "paint", "paint_light", "lit", "front")
 
 
 def lin(hexs):

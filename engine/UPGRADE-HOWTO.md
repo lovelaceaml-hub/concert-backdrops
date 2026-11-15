@@ -1283,81 +1283,77 @@ The wording is the corrected title, "The Words of Mother's Love That Bring Peace
 **What is weak.** The opening's dust drifts up whatever the camera does: it belongs to the screen, not the world. The burst is one bright moment that the pop check reports (a change of about 11 against a median of 2.4); it is meant, but put it on a strong beat. The date's line beneath is type, not points (it bursts into points with the date). The end card's veil is one soft ellipse: on a night sky it reads as a pale cloud.
 
 
-## Y2. People styles: many artistic looks for the people (2026-11-15, branch engine-p3d-styles)
+## Y2. People styles: the two approved looks, crystal_light and gold_glitter (2026-11-15, branch engine-p3d-styles)
 
-Anthony: "Use different types of artistic expression for the people ... Do not bind yourself to one way of showing people." Artistic faces are allowed (never photorealistic); Heavenly Mother is still only from behind or as hands. Section Y2 gives each look of the references (scratchpad refs2 p01 to p09, refs 01 to 16) as a named preset: one call puts a finished figure (a body, or a face in profile) into a 3D scene, in a night or a day palette. Code: `engine/p3d/styles.py` (the presets), `engine/p3d/faces.py` (faces in profile and flowing hair), `engine/p3d/stylekit.py` (the small point sets the presets dress a figure with). Working example: `engine/songs/demo_styles.py` (every preset in turn, 3.75 s each, on the concert medley; `STYLES_FLIP=1` in the environment swaps every stage's sky to check the other palette).
+Anthony saw the first fifteen style presets ("Styles proof") and judged them "terrible and scary": dark featureless silhouettes, bodies and heads breaking apart, a glowing eye, stark empty backgrounds. Two looks are approved and perfected instead; everything else is parked (kept for reference, never for films). Code: `engine/p3d/styles.py` (the two looks), `engine/p3d/looks.py` (the body looks `"crystal"` and `"gold"`), `engine/p3d/stylekit.py` (the light round the people and the heavenly settings). Working example: `engine/songs/demo_heavenly.py` (five short tableaux on the concert medley).
+
+**The two looks.**
+
+| Look | What it is | Reference |
+|---|---|---|
+| `crystal_light` | a person of clear glass with light inside: a bright edge split into prismatic colours (rose, peach, gold, mint, sky, lilac) where the body turns away from the eye, a clear silvery body cut in irregular facets that shimmer together, fine light along the cuts, a warm light glowing at the heart, fine four-point glints in the spectrum, a soft luminous face, a faint bloom round the figure | the crystal runners of ten/07-the-relay, refined |
+| `gold_glitter` | a person of warm gold glitter with depth: deep amber, gold and champagne grains that shimmer, many four-point glints, a light within round the heart; light streams off all the time as graceful spiralling ribbons (from the wrists, shoulders and crown, drifting with the air) and sparkles that rise off the garments, while the body stays whole | refs2 p08, p09 |
+
+Both: faces soft and luminous, with gentle features modelled on them (closed, peaceful eyes as a soft crease under a lit lid, a lit brow, the bridge of the nose, the lips in a gentle smile; `looks.face_marks`); never a dark silhouette, never glowing eyes, never a shatter, crumble, ash or dissolve. Every person is lit by a key light in front and above (`ST.key_light(at, facing)`, the Body key `light`), which shades the form. They work for men, women, children (`shape="child"`) and elders (`stoop=0.3` to `0.4`, a coat or a robe), with any garment, motion or gesture of section W, alone or in the pairs of `engine/p3d/pairs.py`.
 
 ```python
+from p3d import pairs
 from p3d import styles as ST
 
 def build(scene):
-    ST.add(scene, "gold_glitter", name="giver", sky="day", at=(0, 0), facing=-10, t=4.0, show=(2.0, 10.0))
-    ST.add(scene, "spark_profile", name="face", at=(3, 1.7, 0), facing=90, height=0.4, show=(10.0, 16.0))
-P3D = dict(camera=..., world=..., setup=build)
+    # one person, added with its light round it
+    ST.person(scene, "crystal_light", "she", shape="woman", at=(0, 0), facing=0, garment="robe",
+              gesture=[(1.0, 9.0, "open_arms", dict(lift=0.2))])
+    # two people made by pairs: the look's Body keys go in, then each is dressed
+    a, b = pairs.embrace(8.0, at=(6, 0), facing=90, approach=1.8,
+                         a=ST.keys("gold_glitter", shape="woman"), b=ST.keys("gold_glitter", shape="man"))
+    a.add(scene, "she2"); b.add(scene, "he2")
+    ST.dress(scene, "she2", a, "gold_glitter"); ST.dress(scene, "he2", b, "gold_glitter")
 ```
 
-`ST.add(scene, style, name=None, sky="night", **keys)` returns a `Styled`: `.main` (the Body or Profile), `.parts` (scene name to point set; extra parts are named `name + "_hair"`, `"_glow"`, `"_stars"`, `"_butterflies"`, `"_birds"`, `"_clouds"`, `"_mist"`, `"_glitter"`, `"_ink"`), `.where(t, place)`. `ST.listing()` prints the presets.
+- `ST.keys(style, **body_keys)`: the Body keys of the look (look, colours, points, the gold shed) with yours on top. `look=dict(...)` changes the look's settings (below); `bright` multiplies; `effects` are added to the look's own; `shed=<n>` sets how many sparkles stream off a gold body (default 5000).
+- `ST.dress(scene, name, body, style, heart=1, bloom=1, trails=1, motes=1, places=None, wind=None, color=None)`: the light round a body, added as `name + "_heart"` (a warm light in the chest), `"_bloom"` (a very soft glow round the figure), `"_trails"` (gold only: ribbons of light streaming off; `places` the Body.where names they leave from, `wind` the air they drift with in metres per second) and `"_motes"` (a few drifting sparkles). 0 leaves a part out, another number scales it. Sizes follow the body's height and scale.
+- `ST.person(scene, style, name, dress=dict(...), **body_keys)`: keys, Body, add and dress in one; without `light` the person gets `key_light(at, facing)`. Returns a Styled (`.main` the Body, `.parts`, `.where(t, place)`). `ST.add(scene, style, name, **body_keys)` is the same. For pairs give `light=ST.key_light(at, facing)` in the keys yourself.
 
-**Keys every preset takes.**
+**The body looks** (`engine/p3d/looks.py`, usable on any Body as `look=dict(name=..., ...)`):
 
-| Key | Meaning |
+- `"crystal"`: `color` is the warm light inside, `color2` the clear glass (the preset: "#ffdca0" and "#d6eaff"). Settings: `prism` (0..1, how much of the spectrum the edge takes, 0.85), `clear` (the clear body, 1), `inner` (the light inside, 1), `reach` (how far the warm heart light spreads, in body heights, 0.18), `glints` (the share of four-point glints, 0.003), `power` (how thin the edge is, 2.0), `facet` (metres across a facet for a 1.6 m body, 0.075), `cuts` (the light along the facets' edges, 1), `front` (how much the far side dims, 0.8), `lit` (how much the key light shades the body, 0.75), `face` (the soft light of the face, 1), `features` (0..1, the gentle features, 1). Hair is faint glass (a knot of hair behind the head must not show through the face).
+- `"gold"`: `color` gold, `color2` champagne (the preset: "#f2b44c" and "#fff0c8"). Settings: `deep` (the darkest gold, "#b8741c"), `depth` (the share of deep grains, 0.3), `inner`, `reach`, `glints` (0.0022), `front` (0.55), `features` (1).
+- Both presets ask the body for more points on the head (`detail=dict(head=3)`), so the face is smooth and its features read.
+
+**Heavenly settings** (`engine/p3d/stylekit.py`, pure functions of time, all with `show=(t_in, t_out)`):
+
+| Piece | What it draws |
 |---|---|
-| `name` | the scene name of the main part (default: the style's name) |
-| `sky` | `"night"` (default) or `"day"`. On a night sky the figure is light. On a bright sky light alone washes out, so the day palette also paints the figure (true colour over the sky) or gives it a dark silhouette of one exact colour (see "Dark silhouettes"). Pick the one that matches the world's look |
-| `show`, `fade`, `seed` | when the figure exists (t_in, t_out), seconds of fade, another person |
-| `t`, `dur` | when the preset's own effect starts (shatter, dissolve, dispersal, butterflies or birds leaving) and how long it runs |
-| `color`, `color2`, `ink` | the palette (display hex); `ink` is the colour of a dark silhouette |
-| `bright` | overall brightness |
-| body keys | for body presets: `shape`, `height`, `at`, `facing`, `motion`, `gesture`, `garment`, `veil`, `hair`, `points`, `scale`, `wind`, `light`, `detail`, `stoop`, `frame`, `part`, `hand`, `size`, `effects` (added to the preset's own), and `body=dict(...)` for any other key of section W |
-| face keys | for face presets: `shape` ("woman", "man"), `at` (the middle of the head), `facing`, `height` (chin to crown, metres), `tilt`, `turn`, `hair`, `features`, `points`, `garment`, `breathe`, `stream`, `eye_glow`, and `face=dict(...)` for any other key of `Profile` |
-| `silhouette` | presets with a dark silhouette by day: `"mask"` (default, crisp, hides the lights behind it, uses one of the frame's two sky layers) or `"paint"` (painted discs, no layer used: for a frame with more dark figures of different colours than there are layers) |
+| `Glow(at, radius, color, color2, n, alpha, pulse)` | a soft ball of light at a point or a moving place (a heart light, an aura, a light in a hand) |
+| `LightTrails(body, places, per, length, wind, rise, curl, width, color, color2, bright, sparkle)` | ribbons of light streaming off a body while it stays whole; the past places are taken on a fixed time grid, so the poses are reused from frame to frame |
+| `Bloom(at, t, dur, radius, n)` | light blooming from a point: a glow that swells and softens and a slow cloud of sparkles opening out and rising (an embrace, a touch); never a flash |
+| `HandLight(body, place, born, release, rise)` | a small light held in a hand that leaves it at `release` and floats up into the sky, swaying, with a faint trail |
+| `LightRiver(path, width, n, speed, y)` | a river of light flowing over the water along a curve of (x, z) points, mirrored in the lake |
+| `Aurora(center, span, height, n, folds, colors)` | curtains of an aurora far away in the sky, in folds, rippling slowly (give warm colours: mint below, rose and violet above) |
+| `CloudBank(center, size, n, light, color, color2)` | a bank of glowing clouds in the scene (gold toward a light, rose away from it), for cathedral skies |
+| `Sparkles(center, box, ..., drift)` | twinkling motes and four-point stars; a negative `drift` makes falling light |
 
-**The presets.** Each is named after its look; the reference it answers is given. "Night" and "day" say how it is drawn on each sky.
+With the world's `shafts` (up to four columns of light; `strength` as a function of time puts them in one scene only), `light=dict(pos, rays)` (a radiance behind a head) and warm looks of your own (`looks=dict(name=dict(base="sunrise", sky_top=..., ...))`), these make the settings of `demo_heavenly.py`: a cathedral of light shafts among golden clouds, a dusk where an embrace blooms, falling light on a prayer, a river of light at sunrise, an aurora over a gathering.
 
-| Preset | Looks like | Night / day | Own keys |
-|---|---|---|---|
-| `constellation` (p01, refs 03, 12) | a body of stars joined by fine lines, brighter toward a light above and in front, a few specks drifting off, small stars round it | white gold light / a denser web in navy, painted | `detail_track` (a Track 0..1: a few stars that fill into the whole web); `light` (a world point) |
-| `spark_profile` (p06, ref 01) | a face in profile, the edge from brow to chin and down the throat traced by fine orange sparks that fray outward, embers streaming up off the top of the head, the inside dark, swept back hair of dim strands | dark silhouette on the night / deep navy silhouette | `eye_glow` (0..1: a small warm star at the closed eye), `stream` |
-| `sky_window` (p07 flat, ref 08) | the body is a window onto a sunrise (night) or a cloud sky (day), a fine edge of light, birds rising out of it | sunrise, light birds / clouds, dark painted birds | `fill` (any Mask sky), `birds` (a colour, or None), `birds_dir` |
-| `gold_glitter` (p08, refs 15, 10) | gold glitter with dark grains among bright ones, blowing apart from one side into flying glitter, glints round it | light / a bronze silhouette under painted gold grains | `dir`, `share` |
-| `ember_dancer` (p04) | a dancer whose body is embers, bursting into a long stream of sparks behind her, long hair streaming | glowing embers / a deep ember red silhouette, the stream painted dark red with glowing grains | `dir`, `share`, `motion` (default "dance"), `flowing_hair=dict(...)` |
-| `ash_dissolve` (p03, refs 05, 11) | a figure crumbling from the head into ash flakes blown to one side, red embers in the breaks | grey ash flakes, a dark body against a soft glow behind / a charcoal silhouette, dark painted flakes | `dir`, `share`, `ash` (the flakes' colour) |
-| `mist_figure` (p09, ref 09) | a small figure of fine sparkling light in a wide slab of glittering mist, warm on one side and cool on the other; frame it far | light / a small bronze silhouette under painted glitter, the mist painted | `field` (width, height, depth of the mist), `n_mist`, `toward` |
-| `star_silhouette` (p02, ref 02) | a silhouette filled with a starry night (a violet tint), a fine edge of light, stars scattered round it | edge and a soft violet glow behind / strongest on pastel skies | `tint` |
-| `glass_shatter` (p05) | a figure (arms opening) that shatters on one side into shards of glass: sharp triangles and quads with bright edges and a sweep of reflection, tumbling away; long hair; the hair leaves with the head | glassy shards of light, a dark body against a cool glow / a near black silhouette, dark painted shards with light on their edges | `dir`, `share` |
-| `butterflies` (p02, ref 02) | a face in profile (or a body with `figure="body"`) filled with a starry night, long flowing hair in the same sky, small glowing butterflies leaving it and fluttering round it with trails of dust, stars about | starry violet / starry violet on pastel, butterflies also painted | `figure`, `n`, `dur` (how long they take to leave) |
-| `dark_silhouette` (p03, p04, p05) | a person as a dark painted shape, the edge fraying into dark particles that drift off | a dark shape against a soft warm glow behind it, with a thin rim / one exact colour on the bright sky | `edge` ("flakes", "dust" or None), `share`, `dir`, `glow` (metres: the glow behind, night) |
-| `nebula_figure` (p07) | the body filled with deep clouds lit from inside by a warm light at the chest, stars in the gaps, billows over the shoulders, birds leaving | the same clouds on both skies (slate shadows, warm light) | `glow` (Mask glow, below), `birds`, `birds_dir` |
-| `nebula_profile` (p07) | a face in profile whose back of the head and shoulders turn into a cumulus of deep clouds lit from inside the skull, the face a smooth painted slate skin with brow, nose, lips, chin and the closed eye clear, birds leaving | as left | `glow`, `skin` (0..1), `birds`, `birds_dir` |
-| `glitter_profile` | a face in profile made of gold glitter, the closed eye, brow and lips in brighter grains, glitter blowing off the back of the head, hair of fine gold strands | light / a bronze silhouette under painted gold grains | `stream` |
-| `constellation_profile` | a face drawn as a constellation: stars on the skin joined by fine lines, the edge a chain of bright stars, the closed eye and lips small constellations | white blue and gold light / navy, painted (a gold edge on a night sky only) | |
+**Keep them in the light.** Light only adds: both looks need a sky with room for light (night, dusk, dawn, sunrise, a deep warm twilight). On a pale day sky they fade to white. Keep the brightest sky under about 235 of 255 behind the people.
 
-**Faces in profile** (`engine/p3d/faces.py`, `Profile`). The MakeHuman body of section W is not enough for a 1080p close-up: its mesh has about 3 mm between vertices on the face, but the bake smooths the face to a mannequin on purpose (the nose and lips are soft bumps, there is no eye), and a whole body spreads its points so thinly that a head gets a few thousand. The faces are therefore drawn: a hand drawn profile curve for a woman and a man (forehead, brow, nose, lips, chin, throat, neck, the back of the skull and the shoulders), turned into a solid with a rounded cross section at every height, plus the lines of the features (the closed eye where the lids meet, its lashes, the crease of the lid, the brow, the parting of the lips, the nostril, the ear, the jaw, a neckline: everyone is clothed). Own geometry, written for this engine; no third party asset. Head units: chin to crown = 1; `height` gives metres (0.23 life size; a giant head in the sky: 3 to 8).
+**Engine changes for the two looks** (backward compatible: a song that uses none of them renders as before):
 
-- `Profile(shape, at, facing, height, tilt, turn, look, color, color2, features, garment, hair, stream, eye_glow, bright, size, points, show, fade, breathe, seed)`. `at` is the middle of the head at eye level (a point or a function of t); `facing` the direction the face looks; `tilt` lifts the chin and `turn` turns the head (numbers or functions of t; only the head and neck move, the shoulders breathe).
-- Looks: "sparks", "glitter", "constellation", "rim", "ink" (only a fine edge of light, for a dark mask), "fill" (a faint edge and the features over a window fill; `skin` paints a smooth face over it), or a list; each may be a dict with `bright`, `size`, `features`.
-- `profile.where(t, name)`: "eye", "nose", "lips", "chin", "forehead", "crown", "nape", "ear", "throat", "heart", "head", "occiput" in the world.
-- `profile.shape_set(hair=True, extra=[...])`: the solid head and shoulders (and the hair mass, and any extra shapes such as `stylekit.Billows`) as the source of a Mask: a dark head at night, a flat colour by day, a window onto a nebula or a starry sky. The bust's lower edge frays into dots instead of a cut.
-- Seen best within about 35 degrees of side on: it is a drawing given depth, not a sculpted head.
+- A batch setting `front` (0..1, `engine/p3d/api.py`, sprite shader): points on the far side of a surface (normal turned away from the camera) dim, so a clear body shows its near side and a face is not crossed by the back of the head or the hair knot. Bodies pass it from their look layers.
+- A look layer may give its own `seed` per point (points that twinkle together: the facets of the glass).
+- `looks.facets(rest, cell)`: irregular cut-glass facets over a body at rest (a jittered Voronoi grid).
 
-**Flowing hair** (`faces.Hair`): long hair as a mass of locks (refs p02, p04, p05), procedural (a pure function of time, no simulation): every lock lies over the skull from the hairline and leaves it somewhere between the crown and the nape, then streams with the wind and waves, its tip curling. Keys: `length` (head heights, 1.0 to the shoulders, 2.0 long), `locks`, `per_lock`, `n`, `wind` ((u, v) in head units, or a function of t), `gust`, `wave`, `curl`, `volume`, `exit` (degrees on the skull where locks leave it), `fan`, `spread`, `roots`, `scalp` (how bright the hair lying on the skull is), `mass` (strand thickness in a silhouette), `look` ("glow" strands of light, "ink" a painted dark mass with a sheen, "sparks"), `color`, `color2`, `ink`, `bright`, `alpha`. A Profile wears it with `hair=dict(...)`; a Body wears it as its own set: `scene.add("hair", Hair(BodyHead(body), ...))` with the Body's own `hair=False` (the body presets with long hair do this, and the hair leaves with the head when an effect takes the head apart).
+**The parked presets.** The first fifteen (constellation, spark_profile, sky_window, gold_dispersal (the old gold_glitter, which blew apart), ember_dancer, ash_dissolve, mist_figure, star_silhouette, glass_shatter, butterflies, dark_silhouette, nebula_figure, nebula_profile, glitter_profile, constellation_profile) stay in `styles.PARKED` and run only through `ST.add_parked(...)` (`engine/songs/demo_styles.py` shows them). `ST.add` refuses them. Their faces in profile and flowing hair (`engine/p3d/faces.py`) and their engine changes stay available:
 
-**Dark silhouettes on bright skies** (p03, p04, p05). Light can only brighten, so a dark figure on a day sky is made two ways, both in the existing passes: a flat fill of the figure's silhouette (`Mask("sky", sky="flat", color=<display hex>)`, crisp below `soft` 2.5, hiding the lights behind it), and painted particles for everything that leaves it (`paint=1`, the batch colour shown exactly). Effects take `batch=` for this (below). At night the same silhouette stands against `stylekit.Backdrop`, a soft glow kept behind the figure as the camera sees it, with a thin rim.
-
-**Engine changes for this section** (all backward compatible: a song that uses none of them renders as before; `test_p3d_bodies` gives the same bytes at six moments with and without them):
-
-- Two new sprite kinds (`engine/p3d/api.py` KINDS): `"shard"` (a sharp triangle or quad, a different one per seed: a faint body, bright edges and a reflection that sweeps across as it turns; `rot` turns and tumbles it, it flares when it faces the camera; painted it is a dark piece of glass) and `"butterfly"` (a butterfly seen from above, two pairs of wings beating; `rot[:, 0]` its heading in the picture, `rot[:, 1]` tilts it).
-- A new window fill `Mask("sky", sky="nebula", color=<the light's colour>, glow=dict(at=<world point or function of t>, strength=1.0, density=0.5, scale=1.0))`: deep billowing clouds, slate in shadow, lit from a light inside them (placed at a world point and followed on screen), hot round it, a dark blue gulf with a few stars between the clouds. `scale` 2 gives clouds twice as fine (use about 2.4 for a whole body, 1 for a head). `glow` may also be `(x, y, strength, density)` in half heights of the shape from its centre.
-- The mask pass: a masked set that draws no shape this frame (not on screen yet, or gone) no longer takes one of the frame's two sky layers (before, a figure that had not appeared yet could push a visible one out).
-- Effects (`engine/p3d/effects.py`): any effect takes `batch=dict(...)` merged into every batch it draws (`paint=1` for dark painted flakes), or a list of dicts to draw each batch once per dict (a dark painted shard and its edge of light); Release effects take `sprites=(("shard", share, size, emit), ...)`; shards and butterflies tumble like flakes.
-- New point sets in `engine/p3d/stylekit.py`: `Dressed` (a set with settings on every batch), `Backdrop`, `Butterflies`, `Sparkles`, `GlitterMist`, `CloudPuffs`, `Flock` (birds for a figure that is not a Body), `Billows` (a cumulus round the back of a head, for a silhouette only), `PaintedShape` (a silhouette of painted discs), `Nothing`.
+- sprite kinds `"shard"` and `"butterfly"`; the window fill `Mask("sky", sky="nebula", color=, glow=dict(at, strength, density, scale))`; effects take `batch=dict(...)` (or a list of dicts); Release effects take `sprites=(...)`;
+- the mask pass no longer gives one of a frame's two sky layers to a masked set that draws no shape this frame (a real fix for songs with several masked figures at different times);
+- all backward compatible: `test_p3d_bodies` gives the same bytes at six moments with and without them.
 
 **Limits** (what is weak):
 
-- Faces are in profile only and read best side on; there is no front or three-quarter face. The eyes are always closed. Only two drawn heads (a woman, a man); a child's profile is not drawn.
-- A frame holds one dark silhouette layer and two sky layers. Presets with a flat silhouette of the same colour share a layer; different colours, a nebula and a starry window together exceed it (the third is left out with a warning): use `silhouette="paint"` for the extra figures. Painted silhouettes do not hide the lights behind them.
-- The nebula and the starry window are screen-space fills (they follow the figure but do not turn with it); the clouds have no real depth. Billows round a head are round blobs and can look like a bunch of bubbles from far.
-- Flowing hair lies on a circle round the skull: on a Body seen from the front or behind it can stand off the head. It does not collide with the shoulders.
-- Body presets inherit the body's motions: the "dance" clip of `ember_dancer` is a sway, not a leap.
-- On a bright sky the world's own dust shows as white specks over a dark fill: lower `dust` in that look.
-- `mist_figure` needs the world's mist and a warm light on one side (world keys) to look like p09; the preset only brings the figure and the glittering slab.
+- The faces come from the body mesh, which is smooth on purpose (a mannequin), and the gentle features are light and shade painted onto it: they read at a medium shot and in a close-up of the head and shoulders as soft forms, not as a portrait. Keep the camera at a medium distance for faces; long simulated hair (`hair=True`) hangs over a clear face seen from the front, so the crystal look keeps the hair knot or a cap.
+- Gold trails follow the places they leave from; a figure that stands still has trails drifting only with the air (`wind`), and a fast turn can bend them sharply for a moment.
+- Each gold body with trails asks for about a hundred past poses a frame (reused across frames): a scene of four dressed gold people renders slower than four plain bodies.
+- One world `light=` with rays and four shafts per song: a song with more scenes of shafts moves them with functions of time.
+- `pairs.embrace(..., approach=...)` (section W) currently starts the two about 7 metres from their meeting place each (its walk-in distance is taken from the wrong value); `demo_heavenly.py` uses approach 0 with open arms before the embrace.

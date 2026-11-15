@@ -172,6 +172,7 @@ uniform vec2 uIdxK;       // (1: index from aIdx, else the instance number times
 uniform float uHasN;
 uniform int uKind;        // 0 soft, 1 spark, 2 disc, 3 flake, 4 petal, 5 bird, 8 shard, 9 butterfly
 uniform vec2 uRim;
+uniform float uFront;     // 0..1: the far side of a body (turned away from the camera) dims (clear glass)
 uniform vec2 uBokeh;
 flat out vec4 vCol;       // rgb light, glint strength
 flat out vec4 vGeo;       // R, S, Lh, r0 (pixels)
@@ -280,6 +281,10 @@ void main(){
   if(uRim.x > 0.0){
     float f = pow(clamp(1.0-abs(dot(normalize(nrm), vdir)), 0.0, 1.0), uRim.y);
     b *= mix(1.0, f, uRim.x);
+  }
+  if(uFront > 0.0 && uHasN > 0.5){
+    float fc = dot(normalize(nrm), -vdir);
+    b *= mix(1.0, smoothstep(-0.45, 0.20, fc), uFront);
   }
   if(uBack > 0.0) b *= 1.0 + uBack*4.0*pow(max(dot(vdir, uSunDir), 0.0), 6.0);
   if(uDome < 0.5) b *= mix(1.0, fogTrans(wp, length(wp - uCamPos)), uFogAmt);

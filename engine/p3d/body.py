@@ -709,7 +709,7 @@ class Body:
                 col = col * (1.0 - wash[0]) + wash[1][None] * lum * wash[0]
             out.append(dict(pos=p, normal=n, size=ly["size"][keep], color=col, alpha=a, emit=emit,
                             seed=ly["seed"][keep], kind=ly["kind"], twinkle=ly["twinkle"], rim=ly["rim"],
-                            backlight=ly["backlight"]))
+                            backlight=ly["backlight"], front=ly.get("front", 0.0)))
             if ly.get("lines") is not None and len(ly["lines"]):
                 pr = ly["lines"]
                 full = np.zeros(len(idx), np.float32)
