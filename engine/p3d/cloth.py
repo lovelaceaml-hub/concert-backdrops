@@ -85,8 +85,16 @@ class Colliders:
         caps.append((n1, rig.head[n1], hd, rig.head[hd], 0.052 * k, 0.05 * k))
         groups.append("neck")
         hc = rig.head_centre
-        caps.append((hd, hc + np.array([0, -0.035, 0.02]) * k, hd, hc + np.array([0, 0.03, -0.012]) * k,
-                     0.083 * k, 0.092 * k))
+        sk = v[(rig.vert_bone == hd) & (v[:, 1] > hc[1] - 0.02 * k)]
+        half_w = float(np.percentile(np.abs(sk[:, 0]), 98))                 # half the width of the skull
+        zc = 0.5 * (sk[:, 2].max() + sk[:, 2].min())
+        half_l = 0.5 * float(sk[:, 2].max() - sk[:, 2].min())
+        top = float(sk[:, 1].max())
+        r = half_w
+        caps.append((hd, np.array([0.0, top - r, zc - max(half_l - r, 0.0)]), hd,
+                     np.array([0.0, top - r, zc + max(half_l - r, 0.0)]), r, r))
+        groups.append("head")
+        caps.append((hd, hc + np.array([0, -0.045, 0.012]) * k, hd, hc + np.array([0, -0.075, 0.03]) * k, 0.07 * k, 0.05 * k))
         groups.append("head")
         self.groups = groups
         # for the bell of a skirt: from the middle of the hips ...
@@ -154,7 +162,7 @@ class Piece:
     """One garment piece as a grid of rows x cols particles in the modelled pose (rest shape), with its pins."""
 
     def __init__(self, name, rest, closed, pin_rows=1, init_bone=None, stiff=1.0, bend=0.08, air=1.4, weight=1.0,
-                 collide=("leg", "foot", "hips"), bell=0.0, strands=False):
+                 collide=("leg", "foot", "hips"), bell=0.0, strands=False, margin=0.012):
         self.name = name
         self.rest = np.asarray(rest, np.float64)          # (rows, cols, 3)
         self.rows, self.cols = self.rest.shape[:2]
@@ -167,6 +175,7 @@ class Piece:
         self.weight = weight
         self.collide = tuple(collide)                      # which body parts push this piece out
         self.bell = bell                                   # skirts: radius of the bell at the hem (0: none)
+        self.margin = margin                               # metres the cloth keeps off the body
         self.strands = strands
 
 
@@ -296,7 +305,7 @@ def hair(rig, length=0.42, strands=150, seg=14, name="hair", salt=0):
         rest[q] = roots + out + np.array([0.0, -1.0, 0.0]) * (ln * u)[:, None] + np.array([0.0, 0.0, -0.03 * k]) * u
     init = np.full((seg, len(pick)), hb)
     return Piece(name, rest, closed=False, pin_rows=1, init_bone=init, bend=0.3, air=1.6, weight=1.0,
-                 collide=("head", "neck", "chest", "arm.L", "arm.R"), strands=True)
+                 collide=("head", "neck", "chest", "arm.L", "arm.R"), strands=True, margin=0.004 * k)
 
 
 # ---------------------------------------------------------------------------------------------------------
@@ -317,7 +326,8 @@ class ClothSystem:
         self.rig = actor.rig
         self.pieces = pieces
         self.t_start = float(t_start)
-        self.wind = np.asarray(wind, np.float64)
+        self.wind_obj = wind if hasattr(wind, "at") else None      # a shared Wind (engine/p3d/effects.py)
+        self.wind = np.zeros(3) if self.wind_obj is not None else np.asarray(wind, np.float64)
         self.gust = float(gust)
         self.seed = float(seed)
         self.ground = ground
@@ -430,7 +440,7 @@ class ClothSystem:
             cum = cum - cum[pc.pin_rows - 1]
             d[o:o + R * C] = np.maximum(cum, 0.0).reshape(-1) * 1.02
             caps = np.array([j for j, g in enumerate(self.col.groups) if g in pc.collide], np.int64)
-            self.col_sets.append((o, o + R * C, caps, pc.bell))
+            self.col_sets.append((o, o + R * C, caps, pc.bell, pc.margin))
         self.lra_len = d
         self.lra_idx = np.where(self.free & (d > 0))[0]
         self.lra_anc = self.lra_anchor[self.lra_idx]
@@ -457,7 +467,7 @@ class ClothSystem:
 
     def _collide(self, xn, ca, cb, g, P, M, touched):
         ra, rb = self.col.ra, self.col.rb
-        for (o0, o1, caps, bell) in self.col_sets:
+        for (o0, o1, caps, bell, margin) in self.col_sets:
             a = ca[caps]
             b = cb[caps]
             r0 = ra[caps]
@@ -478,7 +488,7 @@ class ClothSystem:
             tt = np.clip(np.einsum("nkj,kj->nk", rel, ab) / ab2[None], 0.0, 1.0)
             dv = rel - tt[:, :, None] * ab[None]
             dist = np.sqrt(np.einsum("nkj,nkj->nk", dv, dv))
-            pen = (r0[None] + (r1 - r0)[None] * tt + 0.012) - dist
+            pen = (r0[None] + (r1 - r0)[None] * tt + margin) - dist
             kbest = pen.argmax(1)
             rows = np.arange(o1 - o0)
             pk = pen[rows, kbest]
@@ -505,8 +515,11 @@ class ClothSystem:
         x, xp = self.x, self.xp
         v = (x - xp) / DT
         # air: the cloth is dragged toward the speed of the air around it (a steady wind, gusts, eddies)
-        wind = self.wind * (1.0 + self.gust * bm.wobble(t, self.seed + 0.5, 0.9))
-        ed = bm.flow(x, t, scale=1.3, speed=0.7, seed=self.seed) * ((0.25 + 0.6 * np.linalg.norm(self.wind)) * self.gust)
+        if self.wind_obj is not None:
+            wind = self.wind_obj.at(t)
+        else:
+            wind = self.wind * (1.0 + self.gust * bm.wobble(t, self.seed + 0.5, 0.9))
+        ed = bm.flow(x, t, scale=1.3, speed=0.7, seed=self.seed) * ((0.25 + 0.6 * np.linalg.norm(wind)) * self.gust)
         acc = (wind + ed - v) * self.air
         acc[:, 1] -= 9.81 * self.weight
         xn = x + (x - xp) * 0.996 + acc * (DT * DT)
@@ -615,14 +628,18 @@ class ClothPoints:
         self.n = n
         self.seed = bm.rand(n, 37 + salt).astype(np.float32)
 
-    def at(self, t, with_normals=True):
-        g = self.system.piece(self.name, t)
-        p00 = g[self.r0, self.c0]
-        p01 = g[self.r0, self.c1]
-        p10 = g[self.r0 + 1, self.c0]
-        p11 = g[self.r0 + 1, self.c1]
-        fr = self.fr[:, None]
-        fc = self.fc[:, None]
+    def on(self, g, with_normals=True, sel=None):
+        """The points for a grid of particle positions g (rows, cols, 3); sel: only these points."""
+        r0, c0, c1 = self.r0, self.c0, self.c1
+        fr, fc = self.fr, self.fc
+        if sel is not None:
+            r0, c0, c1, fr, fc = r0[sel], c0[sel], c1[sel], fr[sel], fc[sel]
+        p00 = g[r0, c0]
+        p01 = g[r0, c1]
+        p10 = g[r0 + 1, c0]
+        p11 = g[r0 + 1, c1]
+        fr = fr[:, None]
+        fc = fc[:, None]
         pos = (p00 * (1 - fc) + p01 * fc) * (1 - fr) + (p10 * (1 - fc) + p11 * fc) * fr
         if not with_normals:
             return pos
@@ -633,3 +650,11 @@ class ClothPoints:
         n = np.cross(p01 - p00, p10 - p00)
         n /= np.maximum(np.linalg.norm(n, axis=1, keepdims=True), 1e-9)
         return pos, n
+
+    def at(self, t, with_normals=True, sel=None):
+        return self.on(self.system.piece(self.name, t), with_normals, sel)
+
+    def rest(self):
+        """The points in the rest shape of the piece (the modelled pose)."""
+        pc = [p for p in self.system.pieces if p.name == self.name][0]
+        return self.on(pc.rest.astype(np.float32), False)

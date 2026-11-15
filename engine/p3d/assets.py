@@ -262,9 +262,11 @@ class Surface:
     n         how many points
     density   optional dict region -> multiplier (for example dict(head=2.0, hand=3.0) for close-ups)
     keep      optional list of regions to keep (others get no points)
+    weight    optional function of the triangle centres (F, 3) in the modelled pose that gives a multiplier
+              per triangle (0 leaves a place empty)
     """
 
-    def __init__(self, rig, n=60000, density=None, keep=None, salt=0):
+    def __init__(self, rig, n=60000, density=None, keep=None, salt=0, weight=None):
         t = rig.tris
         v = rig.verts0.astype(np.float64)
         area = 0.5 * np.linalg.norm(np.cross(v[t[:, 1]] - v[t[:, 0]], v[t[:, 2]] - v[t[:, 0]]), axis=1)
@@ -277,6 +279,9 @@ class Surface:
         if keep is not None:
             ok = np.isin(tri_region, [REGIONS.index(k) for k in keep])
             w[~ok] = 0.0
+        if weight is not None:
+            w = w * np.asarray(weight((v[t[:, 0]] + v[t[:, 1]] + v[t[:, 2]]) / 3.0), np.float64)
+        self.area = float(w.sum())
         cdf = np.cumsum(w)
         total = cdf[-1]
         # stratified over the area: even spacing, no clumps

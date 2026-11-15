@@ -4,7 +4,9 @@ dresses it in points and garments).
     Actor(shape="woman", at=(x, z), facing=0, motion=[(0, "walk"), (6, "stand")],
           gesture=[(7, 12, "reach", dict(side="R"))])
 
-at        where the feet are at the start: (x, z) on the lake, or (x, y, z)
+at        where the feet are at the start: (x, z) on the lake, or (x, y, z). Also keys [(t, place), ...]
+          (the figure is moved between them, eased: stepping aside, with motion "shuffle") or a function of
+          time (the figure is carried: a child lifted, feet on moving ground). Walking adds to it.
 facing    degrees around the y axis, 0 faces +z, 90 faces +x (the API's azimuth). A number, or keys
           [(t, degrees), ...] eased between: the figure turns, and a walker follows the turn
 motion    a name, or keys [(t, name), (t, name, dict(...)), ...]: from each t the figure eases into that
@@ -15,7 +17,13 @@ gesture   keys [(t_on, t_off, name), (t_on, t_off, name, dict(...))]: the upper 
           at t_on and out of it at t_off (ease: seconds each way, default 1.2). Names: motion.py GESTURES.
           A gesture's `to` is a point in the WORLD here (for "reach").
 
-Everything is a pure function of t: `frame(t)` may be asked in any order.
+stoop     0..1: an elder's posture (bent back, head forward, knees a little bent)
+hand      dict(side="R", at=<point or function of time>, aim=<direction the fingers point>, palm=<direction the
+          palm faces>, anchor="palm" | "fingertips" | "wrist"): the whole figure is moved so that this hand is
+          exactly there (for close-ups of hands and for exact contact; the rest of the body follows the hand)
+
+Everything is a pure function of t: `frame(t)` may be asked in any order. `where(t, name)` gives named places
+on the body (palm, fingertips, heart, head, shoulder...), `joint(t, bone)` any joint.
 """
 import numpy as np
 
@@ -38,11 +46,11 @@ def _keys(v, default_name=None):
 
 class Actor:
     def __init__(self, shape="woman", height=None, at=(0.0, 0.0), facing=0.0, motion="stand", gesture=(),
-                 seed=1.0, rig=None):
+                 seed=1.0, rig=None, start=None, stoop=0.0, hand=None):
         self.rig = rig or assets.Rig(shape, height)
         self.mo = mo.Motions(self.rig, assets.load())
-        at = tuple(float(x) for x in at)
-        self.origin = np.array([at[0], 0.0, at[1]]) if len(at) == 2 else np.array(at)
+        self._at = at
+        self.origin = self._place(self._origin_raw(0.0) if not callable(at) else at(0.0))
         self.seed = float(seed)
         self.keys = _keys(motion)
         for _, name, _p in self.keys:
@@ -60,9 +68,13 @@ class Actor:
             self.face_keys = sorted((float(a), float(b)) for a, b in facing)
         # the time the travel is counted from: the first key that has a real time, or 0
         times = [k[0] for k in self.keys if k[0] > -1e8]
-        self.t_ref = min(times + [0.0])
+        self.t_ref = min(times + [0.0]) if start is None else float(start)
         self._travel = None
         self._cache = {}
+        self._anc = None
+        self.stoop = float(stoop)          # an elder's posture, 0..1
+        self.hand = dict(hand) if hand else None      # one hand placed exactly (see _place_hand)
+        self.to_internal = None            # set by Body: world points -> this actor's own space
 
     # ------------------------------------------------------------------ timeline
     def heading(self, t):
@@ -119,6 +131,30 @@ class Actor:
             self._travel = (dist, px, pz, sp)
         return self._travel
 
+    @staticmethod
+    def _place(p):
+        p = [float(x) for x in p]
+        return np.array([p[0], 0.0, p[1]]) if len(p) == 2 else np.array(p[:3])
+
+    def _origin_raw(self, t):
+        at = self._at
+        if isinstance(at, (list, tuple)) and len(at) and isinstance(at[0], (list, tuple)):
+            keys = sorted(at, key=lambda k: k[0])
+            if t <= keys[0][0]:
+                return keys[0][1]
+            for (t0, p0), (t1, p1) in zip(keys, keys[1:]):
+                if t < t1:
+                    u = float(bm.smoother((t - t0) / (t1 - t0)))
+                    return self._place(p0) * (1 - u) + self._place(p1) * u
+            return keys[-1][1]
+        return at
+
+    def base(self, t):
+        """Where the figure's place is at t, before any walking: `at` as a point, keys or a function."""
+        if callable(self._at):
+            return self._place(self._at(t))
+        return self._place(self._origin_raw(t))
+
     def travel(self, t):
         """(distance walked so far, the feet's place on the ground, speed) at t."""
         dist, px, pz, sp = self._grid(t)
@@ -126,7 +162,7 @@ class Actor:
         k = min(int(x), len(dist) - 2)
         f = x - k
         d = dist[k] * (1 - f) + dist[k + 1] * f
-        p = self.origin + np.array([px[k] * (1 - f) + px[k + 1] * f, 0.0, pz[k] * (1 - f) + pz[k + 1] * f])
+        p = self.base(t) + np.array([px[k] * (1 - f) + px[k + 1] * f, 0.0, pz[k] * (1 - f) + pz[k + 1] * f])
         return d, p, sp[k] * (1 - f) + sp[k + 1] * f
 
     def base_pose(self, t):
@@ -160,6 +196,10 @@ class Actor:
         rig = self.rig
         P = self.base_pose(t)
         self.mo.breathe(P, t, self.seed)
+        if self.stoop:
+            self.mo.stoop(P, self.stoop)
+        if self.hand is not None:
+            self._hand_pose(P, t)
         _, origin, speed = self.travel(t)
         hd = np.radians(self.heading(t))
         qh = bm.qy(hd)
@@ -174,9 +214,10 @@ class Actor:
             g0 = -rig.lowest(rig.matrices(D, Pj)) * P.ground
             for w, age, name, p in active:
                 kw = {k: v for k, v in p.items() if k != "ease"}
-                if kw.get("to") is not None:
-                    to = np.asarray(kw["to"](t) if callable(kw["to"]) else kw["to"], np.float64)
-                    kw["to"] = bm.qrot(bm.qconj(qh), to - origin) - np.array([0.0, g0, 0.0])
+                for key_to in ("to", "to2"):
+                    if kw.get(key_to) is not None:
+                        to = self._world(kw[key_to], t)
+                        kw[key_to] = bm.qrot(bm.qconj(qh), to - origin) - np.array([0.0, g0, 0.0])
                 self.mo.gesture(name, P, w, t, age, **kw)
         root = origin + bm.qrot(qh, rig.neutral_pos[0] + P.pos)
         D, Pj, A = rig.fk(P.q, root, bm.qmul(qh, P.rot))
@@ -187,17 +228,177 @@ class Actor:
             M = M.copy()
             M[:, 1, 3] += lift
         out = dict(M=M, P=Pj, D=D, A=A, origin=origin, heading=hd, speed=speed)
+        if self.hand is not None:
+            out = self._place_hand(out, t)
         if len(self._cache) > 48:
             self._cache.pop(next(iter(self._cache)))
         self._cache[key] = out
         return out
 
+    def _hand_pose(self, P, t):
+        """Shapes the placed hand: hand["pose"] is a pose name, a dict, or keys [(t, pose), ...] eased between."""
+        h = self.hand
+        side = h.get("side", "R")
+        pose = h.get("pose", "open")
+        keyed = (isinstance(pose, (list, tuple)) and len(pose) and isinstance(pose[0], (list, tuple))
+                 and len(pose[0]) == 2 and isinstance(pose[0][0], (int, float)))
+        if keyed:
+            keys = sorted(pose, key=lambda k: k[0])
+            if t <= keys[0][0]:
+                pose = keys[0][1]
+            elif t >= keys[-1][0]:
+                pose = keys[-1][1]
+            else:
+                for (t0, a), (t1, b) in zip(keys, keys[1:]):
+                    if t < t1:
+                        pose = (a, b, float(bm.smoother((t - t0) / (t1 - t0))))
+                        break
+        self.mo.hand_pose(P, side, pose)
+        self.mo.arm(P, side, flex=25.0, abd=10.0, elbow=h.get("elbow", 22.0), wrist=h.get("wrist", -4.0))
+        self.mo.hand_pose(P, side, pose)
+
+    def _world(self, v, t):
+        """A target given by a song (a point, or a function of time) as a point in this actor's own space."""
+        p = np.asarray(v(t) if callable(v) else v, np.float64)
+        return p if self.to_internal is None else self.to_internal(p, t)
+
+    def _place_hand(self, f, t):
+        """Moves the whole posed skeleton rigidly so that one hand is exactly where the song puts it: the palm
+        centre at hand["at"], the fingers pointing along hand["aim"], the palm facing hand["palm"]."""
+        h = self.hand
+        side = h.get("side", "R")
+        rig = self.rig
+        w = rig.idx["wrist." + side]
+        m3 = rig.idx["finger3-1." + side]
+        k = rig.height / 1.6
+        n0 = bm.qrot(f["A"][w], rig.palm_n[side])
+        d0 = f["P"][m3] - f["P"][w]
+        d0 /= max(np.linalg.norm(d0), 1e-9)
+        c0 = 0.4 * f["P"][w] + 0.6 * f["P"][m3] + n0 * 0.012 * k
+        if h.get("anchor", "palm") == "fingertips":
+            tip = rig.idx["finger3-3." + side]
+            c0 = f["P"][tip] + bm.qrot(f["D"][tip], rig.tail[tip] - rig.head[tip])
+        elif h.get("anchor") == "wrist":
+            c0 = f["P"][w]
+
+        def basis(d, n):
+            d = np.asarray(d, np.float64)
+            d = d / max(np.linalg.norm(d), 1e-9)
+            n = np.asarray(n, np.float64)
+            n = n - np.dot(n, d) * d
+            if np.linalg.norm(n) < 1e-6:
+                n = np.cross(d, [0.0, 1.0, 0.0])
+                if np.linalg.norm(n) < 1e-6:
+                    n = np.cross(d, [1.0, 0.0, 0.0])
+            n = n / np.linalg.norm(n)
+            return np.stack([d, n, np.cross(d, n)], axis=1)
+
+        aim = h.get("aim", (0.0, 0.0, 1.0))
+        palm = h.get("palm", (0.0, 1.0, 0.0))
+        aim = aim(t) if callable(aim) else aim
+        palm = palm(t) if callable(palm) else palm
+        B0 = basis(d0, n0)
+        B1 = basis(aim, palm)
+        Rg = B1 @ B0.T
+        at = self._world(h["at"], t)
+        Tg = at - Rg @ c0
+        qg = bm.qfrommat(Rg)
+        M = f["M"].astype(np.float64)
+        M2 = np.empty_like(M)
+        M2[:, :, :3] = np.einsum("ij,bjk->bik", Rg, M[:, :, :3])
+        M2[:, :, 3] = M[:, :, 3] @ Rg.T + Tg
+        return dict(M=M2.astype(np.float32), P=f["P"] @ Rg.T + Tg, D=bm.qmul(qg[None], f["D"]), A=bm.qmul(qg[None], f["A"]),
+                    origin=at, heading=f["heading"], speed=f["speed"])
+
+    # ------------------------------------------------------------------ named places on the body
+    def _build_anchors(self):
+        rig = self.rig
+        i = rig.idx
+        v = rig.verts0.astype(np.float64)
+        k = rig.height / 1.6
+        A = {}
+
+        def fix(name, bone, p, n=(0.0, 0.0, 1.0)):
+            A[name] = (i[bone] if isinstance(bone, str) else int(bone), np.asarray(p, np.float64), np.asarray(n, np.float64))
+
+        hc = rig.head_centre
+        hv = v[rig.vert_bone == i["head"]]
+        fix("head", "head", hc)
+        fix("crown", "head", [0.0, hv[:, 1].max(), hc[2] - 0.01 * k], (0.0, 1.0, 0.0))
+        fix("mouth", "head", self.mo.mouth)
+        fix("neck", "neck01", rig.head[i["neck02"]], (0.0, 0.0, -1.0))
+        torso = np.isin(rig.bone_region[rig.vert_bone], [2])
+        yh = rig.head[i["spine01"]][1] - 0.035 * k
+        for name, x0, sgn in (("heart", 0.035 * k, 1.0), ("chest", 0.0, 1.0), ("back", 0.0, -1.0)):
+            sel = np.where(torso & (np.abs(v[:, 1] - yh) < 0.025 * k) & (np.abs(v[:, 0] - x0) < 0.035 * k))[0]
+            j = sel[np.argmax(v[sel, 2] * sgn)]
+            fix(name, rig.vert_bone[j], v[j], (0.0, 0.0, sgn))
+        fix("pelvis", "root", rig.head[i["spine05"]], (0.0, 0.0, 1.0))
+        for s, sg in (("L", 1.0), ("R", -1.0)):
+            sh = rig.head[i["upperarm01." + s]]
+            sel = np.where((np.abs(v[:, 0] - (sh[0] - sg * 0.035 * k)) < 0.03 * k) & (v[:, 1] > sh[1]) & (v[:, 1] < sh[1] + 0.1 * k)
+                           & (np.abs(v[:, 2] - sh[2]) < 0.05 * k))[0]
+            j = sel[np.argmax(v[sel, 1])]
+            fix("shoulder." + s, "shoulder01." + s, v[j], (0.0, 1.0, 0.0))
+            sel = np.where(torso & (np.abs(v[:, 1] - (sh[1] - 0.09 * k)) < 0.03 * k) & (np.abs(v[:, 0] - sg * 0.085 * k) < 0.035 * k))[0]
+            j = sel[np.argmin(v[sel, 2])]
+            fix("blade." + s, rig.vert_bone[j], v[j], (0.0, 0.0, -1.0))
+            fix("elbow." + s, "lowerarm01." + s, rig.head[i["lowerarm01." + s]])
+            fix("wrist." + s, "wrist." + s, rig.head[i["wrist." + s]])
+            fix("fingertips." + s, "finger3-3." + s, rig.tail[i["finger3-3." + s]])
+            fix("index." + s, "finger2-3." + s, rig.tail[i["finger2-3." + s]])
+            fix("thumb." + s, "finger1-3." + s, rig.tail[i["finger1-3." + s]])
+            fix("hip." + s, "upperleg01." + s, rig.head[i["upperleg01." + s]])
+            fix("knee." + s, "lowerleg01." + s, rig.head[i["lowerleg01." + s]])
+            fix("ankle." + s, "foot." + s, rig.head[i["foot." + s]])
+            fv = v[rig.vert_bone == i["foot." + s]]
+            fix("toe." + s, "foot." + s, fv[np.argmax(fv[:, 2])], (0.0, 0.0, 1.0))
+            sel = np.where(torso & (np.abs(v[:, 1] - (sh[1] - 0.16 * k)) < 0.03 * k) & (v[:, 0] * sg > 0))[0]
+            j = sel[np.argmax(v[sel, 0] * sg)]
+            fix("side." + s, rig.vert_bone[j], v[j], (sg, 0.0, 0.0))        # under the arm: where a child is lifted
+        return A
+
+    ANCHORS = ("head", "crown", "mouth", "neck", "heart", "chest", "back", "pelvis", "ground",
+               "shoulder", "blade", "elbow", "wrist", "palm", "fingertips", "index", "thumb", "pinch", "hip", "knee",
+               "ankle", "toe", "side")
+
+    def where(self, t, name, normal=False):
+        """A named place on the body at t, in the actor's own space: its position, or (position, direction it
+        faces) with normal=True. Names: head, crown, mouth, neck, heart, chest, back, pelvis, ground, and with
+        .L or .R: shoulder, blade (shoulder blade), elbow, wrist, palm, fingertips, index, thumb, pinch (between
+        thumb and index: where a thread is held), hip, knee, ankle, toe, side (under the arm). Any bone name
+        gives that joint."""
+        if self._anc is None:
+            self._anc = self._build_anchors()
+        f = self.frame(t)
+        base = name.split(".")[0]
+        if base == "palm":
+            c, n, _d = self.palm(t, name[-1])
+            return (c, n) if normal else c
+        if base == "pinch":
+            a = self.where(t, "thumb." + name[-1])
+            b = self.where(t, "index." + name[-1])
+            p = 0.5 * (a + b)
+            return (p, self.palm(t, name[-1])[1]) if normal else p
+        if name == "ground":
+            p = f["origin"].copy()
+            return (p, np.array([0.0, 1.0, 0.0])) if normal else p
+        if name in self._anc:
+            bone, p0, n0 = self._anc[name]
+            m = f["M"][bone].astype(np.float64)
+            p = m[:, :3] @ p0 + m[:, 3]
+            return (p, bm.qrot(f["D"][bone], n0)) if normal else p
+        if name in self.rig.idx:
+            p = f["P"][self.rig.idx[name]].copy()
+            return (p, np.array([0.0, 1.0, 0.0])) if normal else p
+        raise KeyError("no place called %r on a body (see Actor.where)" % (name,))
+
     def joint(self, t, bone):
-        """World position of a joint (the head of a bone) at t."""
+        """Position of a joint (the head of a bone) at t."""
         return self.frame(t)["P"][self.rig.idx[bone]].copy()
 
     def palm(self, t, side="R"):
-        """(centre of the palm, the direction it faces, the direction the fingers point) in the world at t."""
+        """(centre of the palm, the direction it faces, the direction the fingers point) at t."""
         rig = self.rig
         f = self.frame(t)
         w = rig.idx["wrist." + side]
@@ -209,7 +410,7 @@ class Actor:
         return c + n * 0.012 * rig.height / 1.6, n, d
 
     def mouth(self, t):
-        """(the place just before the lips, the direction the face looks) in the world at t."""
+        """(the place just before the lips, the direction the face looks) at t."""
         rig = self.rig
         f = self.frame(t)
         h = rig.idx["head"]
