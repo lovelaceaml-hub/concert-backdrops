@@ -168,9 +168,9 @@ class Crowd:
         self.r = depth[keep]
         self.tx = self.cx + xs[keep] * sx
         self.silk = m.get("look", getattr(S, "FIGURE_LOOK", None)) == "silk"
-        if self.silk or m.get("cluster") is not None:   # small groups with gaps between (engine/figure_look.py)
+        if self.silk and not m.get("cluster"):   # look="silk": uneven spacing, unless the song groups them itself
             import figure_look as FL
-            self.tx = FL.cluster_x(self.tx, self.cx, float(m.get("cluster", 1.0)), seed)
+            self.tx = FL.cluster_x(self.tx, self.cx, float(m.get("spacing", 1.0)), seed)
         self.fy = self.cy + self.r * sdepth
         self.h = h0 * (1 + hvar * (rng.random(N) * 2 - 1)) * (1 - 0.30 * self.r)
         child = rng.random(N) < float(m.get("children", 0.12))

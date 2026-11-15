@@ -378,11 +378,11 @@ def person_segments(J, F, lag, veil=False, full=True, wide=1.0, head_r=0.052):
         # a crowd wears cloaks: a clear line of shoulders, wider than the head, and a cloak that falls straight
         # to the ground and flares a little; the hanging arms are inside it
         kk = np.broadcast_to(np.asarray(k, dtype=np.float64), (N,))
-        r_ush, r_ch, r_hip = F.rad(0.045 * kk, 0.070 * kk), F.rad(0.052 * kk, 0.098 * kk), F.rad(0.058 * kk, 0.106 * kk)
+        r_ush, r_ch, r_hip = F.rad(0.048 * kk, 0.090 * kk), F.rad(0.052 * kk, 0.100 * kk), F.rad(0.058 * kk, 0.106 * kk)
         mid = 0.5 * (arms[1.0][0] + arms[-1.0][0])
-        ush = mid - np.array([0.0, 0.050, 0.0])
-        zz = np.array([0.0, 0.0, 1.0])[None, :] * (0.076 * kk)[:, None]
-        sa, sb = mid - np.array([0.0, 0.008, 0.0]) + zz, mid - np.array([0.0, 0.008, 0.0]) - zz
+        ush = mid - np.array([0.0, 0.070, 0.0])
+        zz = np.array([0.0, 0.0, 1.0])[None, :] * (0.066 * kk)[:, None]
+        sa, sb = mid - np.array([0.0, 0.012, 0.0]) + zz, mid - np.array([0.0, 0.012, 0.0]) - zz
     # part 0: neck, shoulders, torso and robe, one flowing shape
     add(F.pt(neck + (head - neck) * 0.50), F.pt(neck), 0.0185, 0.0215, 1.0, 1.0, 0)
     add(F.pt(neck), F.pt(ush), 0.022, r_ush, 1.0, 1.0, 0)
@@ -1004,7 +1004,7 @@ class FigureLook:
         if dd >= 0.0:
             if rise:
                 reveal = 1.5 * (1.0 - _ssf(0.0, 0.62, dd)) ** 1.3
-                alpha = 1.0 - _ssf(0.55, 0.70, dd)
+                alpha = 1.0 - _ssf(0.36, 0.56, dd)
             else:
                 alpha = 1.0 - _ssf(0.0, 1.0, dd)
                 lift = 0.07 * dd * dd
@@ -1359,7 +1359,7 @@ class FigureLook:
             self.add_points(np.vstack(rows), None if wl is None else (np.tile(wl[i], 3), mir))
         keep = al > 0.004
         if keep.any():
-            k = np.nonzero(keep)[0][:ROWS // 2 - 16]
+            k = np.nonzero(keep)[0][:ROWS - 24]
             self.add_bodies(
                 segs[k], n, rect[k], org[k], scale[k],
                 np.column_stack([col[k], al[k]]),
@@ -1404,7 +1404,7 @@ class FigureLook:
                            ("uDay", float(self.day))):
                 if k_ in p:
                     p[k_].value = v_
-            for k_, v_ in (("uMist", self.mist), ("uLightCol", self.lcol * float(opt(None, "rim_glow", 0.8))),
+            for k_, v_ in (("uMist", self.mist), ("uLightCol", self.lcol * float(opt(None, "rim_glow", 1.0))),
                            ("uFlameCol", self.flame)):
                 if k_ in p:
                     p[k_].value = tuple(float(x) for x in v_)
