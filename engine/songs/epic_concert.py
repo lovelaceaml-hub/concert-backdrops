@@ -189,6 +189,7 @@ E_FORM = S2 + 0.65            # Encouragement: written in light; its middle is w
 E_HOLD = BEATS[13]            # 39.96: fully formed E_FORM + 3.75 to E_HOLD: 7.2 s
 E_STAR = S3 - 1.0             # 42.0: the last light, the arch is complete one second before the lift
 LIFT = S3                     # 43.00: everyone lifts their light
+NINTH = S3 + 4.9              # 47.9: the first risen lights reach the arch and all nine lights brighten (arch.py)
 EMBLEM = BEATS[15]            # 45.81: the emblem's pen of light starts
 EMBLEM_DONE = BEATS[16]       # 48.71: the emblem is whole
 EMBLEM_OUT = BEATS[17]        # 51.55: it lifts away
