@@ -427,10 +427,11 @@ class Profile:
 
     def where(self, t, name="eye"):
         """A place in the world: "eye", "nose", "lips", "chin", "forehead", "crown", "nape", "ear", "throat",
-        "heart" (the middle of the chest), "head" (the middle of the head)."""
+        "heart" (the middle of the chest), "head" (the middle of the head), "occiput" (inside the back of the
+        skull)."""
         uv = dict(eye=(0.29, 0.50), nose=(0.43, 0.34), lips=(0.37, 0.21), chin=(0.34, 0.05), forehead=(0.33, 0.78),
                   crown=(-0.02, 1.0), nape=(-0.26, 0.17), ear=(-0.12, 0.45), throat=(0.12, -0.15),
-                  heart=(0.10, -0.62), head=(U_CENTRE, EYE_LEVEL))[name]
+                  heart=(0.10, -0.62), head=(U_CENTRE, EYE_LEVEL), occiput=(-0.33, 0.62))[name]
         p, _ = self.pose(np.array([[uv[0], uv[1], 0.0]]), None, t)
         return self.frame(t).world(p)[0]
 
@@ -633,6 +634,19 @@ class Profile:
         w = self._edge_weight(c["ep"]) * c["ebot"] * _smooth(-0.30, 0.15, c["ep"][:, 0])
         out = [dict(pos=c["epos"], size=0.0024 * H * sz, color=self.color2, alpha=0.30 * b * w, kind="soft",
                     twinkle=0.3, seed=self.eseeds)]
+        skin = float(lk.get("skin", 0.0))
+        if skin > 0.0:
+            # the face painted smooth over the fill (a slate skin, lighter where it turns up and forward), fading
+            # into the fill toward the back of the head
+            from .api import show
+            sp, nrm = c["sp"], self.sn
+            a = skin * 0.07 * _smooth(-0.22, 0.18, sp[:, 0]) * _smooth(-0.70, -0.30, sp[:, 1]) * c["vis"]
+            lo = np.asarray(show(lk.get("skin_dark", "#2c3448")), np.float64)
+            hi = np.asarray(show(lk.get("skin_light", "#7a8498")), np.float64)
+            k = np.clip(0.5 + 0.35 * nrm[:, 1] + 0.30 * nrm[:, 0], 0.0, 1.0)[:, None]
+            keep = a > 0.002
+            out.append(dict(pos=c["pos"][keep], size=0.05 * H, color=(lo[None] * (1 - k) + hi[None] * k)[keep],
+                            alpha=a[keep], kind="soft", paint=1.0, paint_light=0.0, dof=0.5))
         return out + self._feat(lk, c, 0.40, 0.0026, self.color2)
 
     # ------------------------------------------------------------------ embers leaving the head
@@ -667,26 +681,29 @@ class Profile:
                      emit=1.0 + 2.0 * (r4 > 0.93), kind="soft", twinkle=0.8, seed=r4)]
 
     # ------------------------------------------------------------------ the silhouette for a mask
-    def shape_set(self, hair=True, grow=1.0):
+    def shape_set(self, hair=True, grow=1.0, extra=()):
         """A point set of the whole head and shoulders (and the hair mass): the source of a Mask, so the head is
-        a dark shape, a flat colour or a window onto a nebula."""
-        return _ProfileSolid(self, hair, grow)
+        a dark shape, a flat colour or a window onto a nebula. extra: more point sets whose shapes join it (the
+        billows of stylekit.Billows: the back of the head turns into cloud)."""
+        return _ProfileSolid(self, hair, grow, extra)
 
 
 class _ProfileSolid:
     wants_camera = True
 
-    def __init__(self, prof, hair, grow):
+    def __init__(self, prof, hair, grow, extra=()):
         self.prof, self.hair, self.grow = prof, hair, grow
+        self.extra = list(extra)
         g = prof.g
         rs = np.random.default_rng(7)
         lo, hi = g.outline.min(axis=0), g.outline.max(axis=0)
         m = 40000
         u = rs.uniform(lo[0], hi[0], m)
         v = rs.uniform(-0.86, hi[1], m)
-        ok = g.inside(u, v)
+        bot = _smooth(-0.84, -0.55, v)
+        ok = g.inside(u, v) & (rs.uniform(0, 1, m) < 0.15 + 0.85 * bot)
         self.pts = np.stack([u[ok], v[ok], np.zeros(ok.sum())], axis=1)
-        self.bottom = _smooth(-0.86, -0.62, v[ok])
+        self.bottom = 0.35 + 0.65 * bot[ok]
 
     def gain(self, t):
         return self.prof.gain(t)
@@ -697,11 +714,14 @@ class _ProfileSolid:
             return []
         fr = pr.frame(t)
         p, _ = pr.pose(self.pts, None, t)
-        out = [dict(pos=fr.world(p), size=0.016 * fr.H * self.grow, alpha=self.bottom, kind="soft")]
+        out = [dict(pos=fr.world(p), size=0.016 * fr.H * self.grow * self.bottom, alpha=1.0, kind="soft")]
         e, _n = pr.pose(pr.ep, None, t)
         out.append(dict(pos=fr.world(e), size=0.005 * fr.H * self.grow, alpha=1.0, kind="soft"))
         if self.hair and pr.hair is not None:
             out += pr.hair.solid(t)
+        for x in self.extra:
+            r = x.sample(t, cam) if getattr(x, "wants_camera", False) else x.sample(t)
+            out += list(r) if isinstance(r, (list, tuple)) else [r]
         return out
 
 
@@ -716,6 +736,11 @@ class Hair:
                time; gust: how much the wind swells and falls
     wave       how strongly the locks wave; curl: how much the tips curl (0..1)
     volume     how far the hair stands off the skull (head heights)
+    exit       (degrees, degrees): where on the skull the locks leave it (90 the crown, 180 the back of the head
+               at eye level, 230 the nape); fan: degrees the locks spread round the wind; spread: how far they
+               spread to the sides; roots: (degrees, degrees) from the hairline over the crown
+    scalp      how bright the hair lying on the skull is (0..1, against its flowing part); mass: head heights,
+               the thickness of every strand in the hair's silhouette (masks)
     look       "glow" (strands of light), "ink" (a painted dark mass with a sheen of light: day skies),
                "sparks" (dim strands that shed sparks); bright, alpha, color, color2, ink (display hex)
     """
@@ -724,7 +749,8 @@ class Hair:
 
     def __init__(self, head, length=1.5, locks=70, per_lock=14, n=40, wind=(-1.0, 0.15), gust=0.5, wave=1.0,
                  curl=0.5, volume=0.06, look="glow", color="#ffb060", color2="#ffe2b0", ink="#1a1530", bright=1.0,
-                 alpha=1.0, seed=1.0):
+                 alpha=1.0, seed=1.0, exit=(165.0, 230.0), fan=22.0, spread=0.35, roots=(36.0, 208.0), scalp=0.35,
+                 mass=0.016):
         self.head = head
         self.length, self.locks, self.per_lock, self.n = float(length), int(locks), int(per_lock), int(n)
         self.wind, self.gust, self.wave = wind, float(gust), float(wave)
@@ -740,7 +766,11 @@ class Hair:
         def rk(salt, m=L):
             return hash01(m, base + salt).astype(np.float64)
 
-        self.lock_th = np.radians(36.0 + 172.0 * rk(1) ** 0.9)
+        self.exit, self.fan, self.spread = exit, float(fan), float(spread)
+        self.scalp, self.mass = float(scalp), float(mass)
+        self.lock_th = np.radians(roots[0] + (roots[1] - roots[0]) * rk(1) ** 0.9)
+        self.lock_ex = rk(12)
+        self.lock_fan = rk(13)
         self.lock_w = (rk(2) - 0.5) * 2.0
         self.lock_len = self.length * (0.75 + 0.45 * rk(3))
         self.lock_ph = rk(4) * 2 * np.pi
@@ -754,7 +784,8 @@ class Hair:
         self.s_seed = rk(11, S)
 
     def strands(self, t):
-        """(S, n, 3) points of every strand in head units at t."""
+        """(S, n, 3) points of every strand in head units at t (and self.free: (S, n), 0 where the strand lies
+        on the skull, rising to 1 at its tip)."""
         n = self.n
         lid = self.lid
         th0 = self.lock_th[lid] + self.s_dth
@@ -762,10 +793,12 @@ class Hair:
         L = self.lock_len[lid] * self.s_len
         s = np.linspace(0.0, 1.0, n)[None, :]
         wid = np.sqrt(np.clip(1.0 - w0 ** 2, 0.0, 1.0))
-        # 1. lying on the skull, from the root back over the head to where the hair leaves it
+        # 1. lying on the skull, from the root back over the head to where the lock leaves it (each lock its own
+        # place, from the crown to the nape, so the hair leaves the head as a mass, not a single tail)
         rad = self.RAD + self.volume * (0.4 + 0.6 * np.abs(w0)) + self.s_off
-        th_exit = np.radians(200.0) + 0.25 * np.abs(w0)
-        arc = np.maximum(th_exit - th0, 0.0) * rad
+        th_exit = np.radians(self.exit[0] + (self.exit[1] - self.exit[0]) * self.lock_ex[lid]) + 0.20 * np.abs(w0)
+        th_exit = np.maximum(th_exit, th0 + 0.15)
+        arc = (th_exit - th0) * rad
         sl = s * L[:, None]
         on = sl < arc[:, None]
         th = th0[:, None] + sl / rad[:, None]
@@ -774,36 +807,39 @@ class Hair:
         cv = self.C[1] + rad[:, None] * np.sin(th) * sv[:, None]
         cw = (w0 * (0.36 + self.volume))[:, None] * np.ones_like(s)
         # 2. falling free from the exit point, streaming with the wind and waving
-        th_e = np.maximum(th_exit, th0)
-        eu = self.C[0] + rad * np.cos(th_e) * su
-        ev = self.C[1] + rad * np.sin(th_e) * sv
-        tdir = np.stack([-np.sin(th_e), np.cos(th_e)], axis=1)
+        eu = self.C[0] + rad * np.cos(th_exit) * su
+        ev = self.C[1] + rad * np.sin(th_exit) * sv
+        tdir = np.stack([-np.sin(th_exit), np.cos(th_exit)], axis=1)
         wd = np.asarray(_val(self.wind, t), np.float64)
         g = 1.0 + self.gust * (0.5 * np.sin(t * 0.9 + self.seed) + 0.3 * np.sin(t * 2.3 + 1.1))
         fall = np.array([0.0, -1.0]) + wd * g * 0.85
-        fall = fall / np.linalg.norm(fall)
+        base = np.arctan2(fall[1], fall[0])
+        fa = base + np.radians(self.fan) * (self.lock_fan[lid] - 0.5) * 2.0
+        fall_u, fall_v = np.cos(fa)[:, None], np.sin(fa)[:, None]
         x = np.maximum(sl - arc[:, None], 0.0)
         xl = np.maximum(L - arc, 1e-3)[:, None]
-        bend = 1.0 - np.exp(-x / 0.18)
-        dux = tdir[:, 0:1] * (1.0 - bend) + fall[0] * bend
-        dvx = tdir[:, 1:2] * (1.0 - bend) + fall[1] * bend
+        bend = 1.0 - np.exp(-x / 0.22)
+        dux = tdir[:, 0:1] * (1.0 - bend) + fall_u * bend
+        dvx = tdir[:, 1:2] * (1.0 - bend) + fall_v * bend
         dx = np.diff(np.concatenate([np.zeros((len(lid), 1)), x], axis=1), axis=1)
         fu = eu[:, None] + np.cumsum(dux * dx, axis=1)
         fv = ev[:, None] + np.cumsum(dvx * dx, axis=1)
         q = x / xl
-        nrm = np.array([-fall[1], fall[0]])
+        nu, nv = -fall_v, fall_u
         k = self.lock_k[lid][:, None]
         ph = self.lock_ph[lid][:, None]
-        amp = self.wave * 0.07 * (q ** 1.2) * (0.6 + 0.4 * k)
-        wv = np.sin(x * 7.0 * k - t * 2.4 * k + ph) * amp
-        ww = np.cos(x * 5.0 * k - t * 1.9 * k + ph * 1.3) * amp * 0.8
-        cr = self.curl * self.lock_curl[lid][:, None] * _smooth(0.70, 1.0, q)
-        ang = cr * 5.0 * (q - 0.70)
-        cu2 = 0.06 * cr * (np.cos(ang) - 1.0)
-        cs2 = 0.06 * cr * np.sin(ang)
-        fu = fu + nrm[0] * wv + cu2 * fall[0] - cs2 * nrm[0]
-        fv = fv + nrm[1] * wv + cu2 * fall[1] - cs2 * nrm[1]
-        fw = cw + ww + (w0 * 0.10)[:, None] * q
+        amp = self.wave * 0.08 * (q ** 1.1) * (0.6 + 0.4 * k)
+        wv = np.sin(x * 6.0 * k - t * 2.2 * k + ph) * amp
+        ww = np.cos(x * 4.5 * k - t * 1.7 * k + ph * 1.3) * amp * 0.9
+        cr = self.curl * self.lock_curl[lid][:, None] * _smooth(0.65, 1.0, q)
+        ang = cr * 6.0 * (q - 0.65)
+        rr = 0.07 * cr
+        cu2 = rr * (np.cos(ang) - 1.0)
+        cs2 = rr * np.sin(ang)
+        fu = fu + nu * wv + cu2 * fall_u - cs2 * nu
+        fv = fv + nv * wv + cu2 * fall_v - cs2 * nv
+        fw = cw + ww + (w0 * self.spread)[:, None] * q
+        self.free = np.where(on, 0.0, np.clip(q, 0.0, 1.0))
         return np.stack([np.where(on, cu, fu), np.where(on, cv, fv), np.where(on, cw, fw)], axis=2)
 
     def _world(self, t):
@@ -837,26 +873,34 @@ class Hair:
         p1 = P[:, :-1].reshape(-1, 3)
         p2 = P[:, 1:].reshape(-1, 3)
         q = np.tile(np.linspace(0.0, 1.0, n)[:-1], S)
+        fq = self.free[:, :-1].reshape(-1)
         ss = np.repeat(self.s_seed, n - 1)
-        taper = (1.0 - 0.75 * q ** 1.5) * np.clip(q * 12.0, 0.3, 1.0)
+        # thin at the tips, quiet where it lies on the skull (the mass reads by its flowing part)
+        taper = (1.0 - 0.70 * fq ** 1.6) * (self.scalp + (1.0 - self.scalp) * _smooth(0.0, 0.12, fq))
         b = self.bright * self.alpha
+        if hasattr(self.head, "presence"):
+            b *= self.head.presence(t)
+            if b <= 0.003:
+                return []
         mix = (ss ** 2)[:, None]
         col = self.color[None] * (1 - mix) + self.color2[None] * mix
         out = []
         if self.look in ("glow", "sparks"):
-            a = (0.16 + 0.30 * (ss > 0.92)) * taper * b * (0.55 if self.look == "sparks" else 1.0)
-            out.append(dict(pos=p1, pos2=p2, size=0.0022 * H, color=col, alpha=a, kind="line"))
+            a = (0.12 + 0.28 * (ss > 0.93)) * taper * b * (0.6 if self.look == "sparks" else 1.0)
+            out.append(dict(pos=p1, pos2=p2, size=0.0020 * H, color=col, alpha=a, kind="line"))
             if self.look == "sparks":
-                pts = P[:, ::3].reshape(-1, 3)
+                pts = P[:, 1::3].reshape(-1, 3)
+                fp = self.free[:, 1::3].reshape(-1)
                 r = hash01(len(pts), 61)
-                sel = r > 0.86
+                sel = (r > 0.88) & (fp > 0.05)
                 jit = bm.flow(pts[sel] * 9.0, t * 0.8, speed=1.0, seed=self.seed) * 0.012 * H
-                out.append(dict(pos=pts[sel] + jit, size=0.0045 * H, color=self.color, alpha=0.7 * b,
+                out.append(dict(pos=pts[sel] + jit, size=0.0040 * H, color=self.color, alpha=0.6 * b,
                                 emit=1.0 + 2.0 * (r[sel] > 0.97), kind="soft", twinkle=0.9, seed=r[sel]))
         elif self.look == "ink":
             from .api import show
             ink = show(self.inkc) if isinstance(self.inkc, str) else np.asarray(self.inkc)
-            out.append(dict(pos=p1, pos2=p2, size=0.0075 * H * (1.0 - 0.5 * q), color=ink, alpha=0.55 * taper * b,
+            wide = max(0.0070 * H, 0.0035)
+            out.append(dict(pos=p1, pos2=p2, size=wide * (1.0 - 0.5 * q), color=ink, alpha=0.55 * taper * b,
                             kind="line", paint=1.0, paint_light=0.0))
             sel = np.repeat(self.s_seed > 0.80, n - 1)
             out.append(dict(pos=p1[sel], pos2=p2[sel], size=0.0018 * H, color=col[sel],
@@ -864,11 +908,17 @@ class Hair:
         return out
 
     def solid(self, t):
-        """The hair mass as points for a mask (its silhouette)."""
+        """The hair mass as points for a mask (its silhouette): every strand sampled finely, thinning to its tip."""
         P, fr = self._world(t)
-        pts = P[:, ::2].reshape(-1, 3)
-        q = np.tile(np.linspace(0.0, 1.0, P.shape[1])[::2], P.shape[0])
-        return [dict(pos=pts, size=0.030 * fr.H * (1.0 - 0.6 * q), alpha=1.0, kind="soft")]
+        S, n = P.shape[:2]
+        m = 6 * n
+        u = np.linspace(0.0, n - 1, m)
+        i0 = np.floor(u).astype(np.int64)
+        i1 = np.minimum(i0 + 1, n - 1)
+        f = (u - i0)[None, :, None]
+        Q = P[:, i0] * (1 - f) + P[:, i1] * f
+        q = np.tile(u / (n - 1), S)
+        return [dict(pos=Q.reshape(-1, 3), size=self.mass * fr.H * (1.0 - 0.75 * q), alpha=1.0, kind="soft")]
 
 
 class BodyHead:
@@ -878,6 +928,15 @@ class BodyHead:
     def __init__(self, body, size=1.0):
         self.body = body
         self.size = float(size)
+        cl = body.cloud
+        self._head = np.flatnonzero(cl["h"] > 0.86)
+
+    def presence(self, t):
+        """How much of the head is still there (effects that take the body apart take the hair with it)."""
+        if len(self._head) == 0:
+            return 1.0
+        on = self.body._on(t)[self._head]
+        return float(np.clip((on.mean() - 0.15) / 0.6, 0.0, 1.0))
 
     def frame(self, t):
         b = self.body

@@ -124,7 +124,7 @@ class Backdrop:
         pos = cen[None] + xy[:, :1] * np.asarray(r)[None] + xy[:, 1:] * np.asarray(u)[None]
         mix = np.clip(np.linalg.norm(self.xy, axis=1) / 0.9, 0, 1)[:, None] ** 1.5
         col = self.color[None] * (1 - mix) + self.color2[None] * mix
-        a = 0.055 * self.bright * np.ones(self.n)
+        a = 0.010 * self.bright * np.ones(self.n)
         out = [dict(pos=pos, size=self.size * R * 0.55, color=col, alpha=a, kind="soft", dof=0.0, fog=0.0,
                     reflect=False, lod=False)]
         if self.wisps > 0:
@@ -135,7 +135,7 @@ class Backdrop:
             y = (rr2 - 0.5) * 0.6 + 0.12 * np.sin(rr * 9.0)
             pos2 = cen[None] + (x * R)[:, None] * np.asarray(r)[None] + (y * R)[:, None] * np.asarray(u)[None]
             out.append(dict(pos=pos2, size=0.16 * R, color=self.color * 0.8 + self.color2 * 0.2,
-                            alpha=0.05 * self.wisps * self.bright * np.exp(-x * x * 0.8), kind="soft", dof=0.0,
+                            alpha=0.018 * self.wisps * self.bright * np.exp(-x * x * 0.8), kind="soft", dof=0.0,
                             fog=0.0, reflect=False, lod=False))
         return out
 
@@ -214,10 +214,10 @@ class Butterflies:
         mix = (self.r[5] ** 2)[:, None]
         col = self.color[None] * (1 - mix) + self.color2[None] * mix
         size = self.size * (0.75 + 0.5 * self.r[7])
-        out = [dict(pos=p, size=size, color=col, alpha=0.95 * self.bright * vis, emit=1.4, kind="butterfly", rot=rot,
-                    seed=self.r[0], twinkle=0.15, paint=self.paint, paint_light=1.0)]
-        # a glow round each and a trail of dust behind
-        out.append(dict(pos=p, size=size * 2.4, color=col, alpha=0.20 * self.bright * vis, kind="soft"))
+        out = [dict(pos=p, size=size, color=col, alpha=0.70 * self.bright * vis, emit=1.0, kind="butterfly", rot=rot,
+                    seed=self.r[0], twinkle=0.15, paint=self.paint, paint_light=0.8)]
+        # a faint glow round each and a trail of dust behind
+        out.append(dict(pos=p, size=size * 2.2, color=col, alpha=0.06 * self.bright * vis, kind="soft"))
         if self.trail > 0:
             K = 26
             ages = np.linspace(0.05, 1.6, K)
@@ -285,7 +285,7 @@ class GlitterMist:
     n        points; color (warm side), color2 (cool side), toward: the direction (x, z) of the warm side"""
 
     def __init__(self, center, size=(14.0, 3.0, 10.0), n=26000, color="#ffd29a", color2="#bcd4ff", toward=(1.0, 0.0),
-                 bright=1.0, grain=0.012, drift=0.06, show=None, seed=1.0):
+                 bright=1.0, grain=0.03, drift=0.06, show=None, seed=1.0):
         self.center, self.dims = center, np.asarray(size, np.float64)
         self.n = int(n)
         self.color, self.color2 = _col(color), _col(color2)
@@ -315,7 +315,7 @@ class GlitterMist:
         side = np.clip(0.5 + 1.2 * (q[:, 0] * self.toward[0] + q[:, 2] * self.toward[1]), 0, 1)[:, None]
         col = self.color2[None] * (1 - side) + self.color[None] * side
         fade = np.clip((0.5 - np.abs(q[:, 0])) / 0.12, 0, 1) * np.clip((0.5 - np.abs(q[:, 2])) / 0.12, 0, 1)
-        a = 0.35 * self.bright * fade * (0.6 + 0.8 * side[:, 0]) * np.exp(-np.abs(q[:, 1]) * 3.0)
+        a = 0.55 * self.bright * fade * (0.6 + 0.8 * side[:, 0]) * np.exp(-np.abs(q[:, 1]) * 3.0)
         return [dict(pos=p, size=self.grain * (0.5 + 1.5 * self.g ** 4), color=col, alpha=a,
                      emit=1.0 + 3.0 * (self.g > 0.985), kind="soft", twinkle=0.9, backlight=0.6)]
 
@@ -330,12 +330,12 @@ class CloudPuffs:
     wants_camera = True
 
     def __init__(self, source, light, n=700, size=0.10, spread=0.10, color="#ff9a48", shade="#3b4560",
-                 lit=1.0, paint=0.85, bright=1.0, show=None, seed=1.0):
+                 lit=1.0, paint=0.85, bright=1.0, alpha=0.4, show=None, seed=1.0):
         self.source, self.light = source, light
         self.n, self.size, self.spread = int(n), float(size), float(spread)
         self.color = _col(color)
         self.shade = _show(shade) if isinstance(shade, str) else np.asarray(shade, np.float64)
-        self.lit, self.paint, self.bright = float(lit), float(paint), float(bright)
+        self.lit, self.paint, self.bright, self.alpha = float(lit), float(paint), float(bright), float(alpha)
         self.show_ = show
         k = int(seed * 100)
         self.r = [hash01(self.n, k + i).astype(np.float64) for i in range(6)]
@@ -361,10 +361,11 @@ class CloudPuffs:
         nrm = out / np.maximum(np.linalg.norm(out, axis=1, keepdims=True), 1e-6)
         face = np.clip(-(nrm * d).sum(1) / np.maximum(dist, 1e-6) * 0.5 + 0.5, 0, 1)
         warm = self.lit * face ** 1.5 / (1.0 + (dist / (3.0 * self.size)) ** 2)
+        warm = np.minimum(warm, 0.8)
         col = self.shade[None] * (0.8 + 0.4 * r[4][:, None]) + self.color[None] * warm[:, None] * 1.5
         size = self.size * (0.5 + 1.0 * r[5] ** 1.5)
         order = np.argsort(-np.linalg.norm(p - np.asarray(cam.pos)[None], axis=1)) if cam is not None else slice(None)
-        return [dict(pos=p[order], size=size[order], color=col[order], alpha=(0.55 * self.bright * np.ones(self.n))[order],
+        return [dict(pos=p[order], size=size[order], color=col[order], alpha=(self.alpha * self.bright * np.ones(self.n))[order],
                      kind="soft", paint=self.paint, paint_light=0.25, dof=0.6)]
 
 
@@ -427,3 +428,94 @@ class Flock:
         return [dict(pos=p[on], size=(self.size * (0.7 + 0.6 * self.r[0]) * grow)[on], color=self.color,
                      alpha=(0.95 * self.bright * a)[on], kind="bird", rot=rot[on], seed=self.r[1][on], vel=vel[on],
                      paint=self.paint, paint_light=0.0 if self.paint else 1.0)]
+
+
+class PaintedShape:
+    """A silhouette painted in one exact colour from a shape set (a Body's _Shape, a Profile's shape_set()):
+    flat discs of paint, so it uses no mask layer. For more dark figures in one frame than the mask pass has
+    layers (one dark and two sky layers a frame). It does not hide the lights behind it as a mask does.
+
+    source   the shape set; ink: display hex (shown exactly) or linear triple; grow: metres added to every
+             disc so they close into one shape; alpha: 0..1 (a number or a function of time)"""
+
+    def __init__(self, source, ink, grow=0.014, alpha=1.0):
+        self.source = source
+        self.ink = _show(ink) if isinstance(ink, str) else np.asarray(ink, np.float64)
+        self.grow, self.alpha = float(grow), alpha
+        self.wants_camera = getattr(source, "wants_camera", False)
+
+    def gain(self, t):
+        return float(self.source.gain(t)) if hasattr(self.source, "gain") else 1.0
+
+    def sample(self, t, cam=None):
+        res = self.source.sample(t, cam) if self.wants_camera else self.source.sample(t)
+        bs = res if isinstance(res, (list, tuple)) else [res]
+        a = float(_val(self.alpha, t))
+        out = []
+        for b in bs:
+            if not b or b.get("pos") is None or len(b["pos"]) == 0:
+                continue
+            size = np.asarray(b.get("size", 0.02), np.float64) + self.grow
+            al = np.clip(np.asarray(b.get("alpha", 1.0), np.float64) * 2.0, 0.0, 1.0) * a
+            out.append(dict(pos=b["pos"], size=size, color=self.ink, alpha=al, kind="disc", paint=1.0,
+                            paint_light=0.0, twinkle=0.0))
+        return out
+
+
+class Billows:
+    """A cumulus of round blobs round the back of a head (a Profile or anything with frame(t) and pose()), for
+    a silhouette only: give it to a mask (Profile.shape_set(extra=[Billows(...)])), so the back of the head and
+    the shoulders turn into cloud while the face keeps its edge (p07). Draws nothing itself.
+
+    path     (u, v) places in head units the cumulus follows (default: from the crown down the back of the head
+             and neck to the shoulder); size: (largest, smallest) radius in head units; n: blobs along the path;
+             puffs: small blobs on each; boil: how fast they swell and drift"""
+    PATH = ((-0.12, 0.98), (-0.36, 0.93), (-0.55, 0.78), (-0.63, 0.55), (-0.58, 0.30), (-0.46, 0.08),
+            (-0.48, -0.20), (-0.62, -0.45), (-0.76, -0.70))
+
+    def __init__(self, head, path=None, size=(0.15, 0.06), n=18, puffs=9, boil=1.0, seed=1.0):
+        self.head = head
+        pts = np.asarray(path or self.PATH, np.float64)
+        d = np.r_[0.0, np.cumsum(np.linalg.norm(np.diff(pts, axis=0), axis=1))]
+        k = int(seed * 100)
+        r = [hash01(n, k + i).astype(np.float64) for i in range(4)]
+        s = (np.arange(n) + 0.5) / n
+        c = np.stack([np.interp(s * d[-1], d, pts[:, 0]), np.interp(s * d[-1], d, pts[:, 1])], axis=1)
+        rad = (size[0] + (size[1] - size[0]) * s) * (0.75 + 0.5 * r[0])
+        c += (np.stack([r[1], r[2]], axis=1) - 0.5) * rad[:, None] * 0.8
+        m = n * puffs
+        q = [hash01(m, k + 10 + i).astype(np.float64) for i in range(3)]
+        par = np.repeat(np.arange(n), puffs)
+        ang = q[0] * np.pi * 1.6 + np.pi * 0.2              # on the outer (upper, back) side
+        out = np.stack([np.cos(ang), np.sin(ang)], axis=1) * np.array([-1.0, 1.0])
+        cc = c[par] + out * rad[par, None] * (0.80 + 0.25 * q[1][:, None])
+        rr = rad[par] * (0.18 + 0.30 * q[2] ** 1.5)
+        self.c = np.concatenate([c, cc])
+        self.r = np.concatenate([rad, rr])
+        self.ph = hash01(len(self.r), k + 20).astype(np.float64) * 6.283
+        self.boil = float(boil)
+
+    def gain(self, t):
+        h = self.head
+        return float(h.gain(t)) if hasattr(h, "gain") else 1.0
+
+    def sample(self, t):
+        h = self.head
+        sh = getattr(h, "show", None)
+        if sh is not None and not (sh[0] <= t <= sh[1]):
+            return []
+        b = self.boil
+        c = self.c + np.stack([np.sin(t * 0.21 * b + self.ph), np.cos(t * 0.17 * b + self.ph * 1.3)], axis=1) * 0.02
+        r = self.r * (1.0 + 0.08 * np.sin(t * 0.35 * b + self.ph * 0.7))
+        p = np.concatenate([c, np.zeros((len(c), 1))], axis=1)
+        if hasattr(h, "pose"):
+            p, _ = h.pose(p, None, t)
+        fr = h.frame(t)
+        return [dict(pos=fr.world(p), size=2.0 * r * fr.H, alpha=1.0, kind="soft")]
+
+
+class Nothing:
+    """A point set that draws nothing (to carry a mask whose shape comes from Mask.source)."""
+
+    def sample(self, t):
+        return []
