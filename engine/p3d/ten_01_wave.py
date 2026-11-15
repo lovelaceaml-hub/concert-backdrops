@@ -127,35 +127,45 @@ def profile(s, H, c, back=None):
 
 class Wave:
     """The crest as a point set. glow(t): overall strength; mouth(t): None, or the u beyond which the curl
-    eases out (the open end of the barrel); hide(t): 0..1 how much of the wave is gone (after the break)."""
+    eases out (the open end of the barrel); plume(t): 0..1, the crest thrown up as it breaks. centers: the
+    places along the crest (u) where the particles are densest (where the camera rides)."""
+    wants_camera = True
 
-    def __init__(self, kin, n_face=110000, n_back=60000, n_rope=16000, n_spray=26000, half_len=420.0, k=4.0,
-                 glow=None, mouth=None, plume=None, seed=11, colors=None):
+    def __init__(self, kin, n_face=150000, n_back=50000, n_rope=20000, n_spray=26000, half_len=420.0, k=4.0,
+                 glow=None, mouth=None, plume=None, seed=11, colors=None, centers=(0.0,), back=0.22,
+                 face=0.30, near=(0.5, 3.0), plume_h=14.0):
         self.kin = kin
         rng = np.random.default_rng(seed)
         self.half, self.k = half_len, k
         self.glow = glow or (lambda t: 1.0)
         self.mouth = mouth
         self.plume = plume
+        self.plume_h = plume_h
+        self.back_a, self.face_a, self.near = back, face, near
         c = dict(top="#fff3d2", face="#ffbe55", deep="#ff8a2a", back="#ff9a3c", spray="#ffe6b0", rope="#fff8e6")
         if colors:
             c.update(colors)
         self.col = {k_: lin(v) for k_, v in c.items()}
+        self.centers = np.asarray(centers, np.float64)
 
         def vs(n):
-            return rng.uniform(-1.0, 1.0, n)
-        self.f_v, self.f_s, self.f_j = vs(n_face), rng.random(n_face), rng.normal(0.0, 1.0, (n_face, 3))
+            return rng.uniform(-1.0, 1.0, n), rng.integers(0, len(self.centers), n)
+        self.f_v, self.f_c = vs(n_face)
+        self.f_s, self.f_j = rng.random(n_face), rng.normal(0.0, 1.0, (n_face, 3))
         self.f_rate = rng.uniform(0.07, 0.16, n_face)
         self.f_seed = rng.random(n_face)
-        self.b_v, self.b_w, self.b_j = vs(n_back), rng.random(n_back), rng.normal(0.0, 1.0, (n_back, 3))
+        self.b_v, self.b_c = vs(n_back)
+        self.b_w, self.b_j = rng.random(n_back), rng.normal(0.0, 1.0, (n_back, 3))
         self.b_seed = rng.random(n_back)
-        self.r_v, self.r_j, self.r_seed = vs(n_rope), rng.normal(0.0, 1.0, (n_rope, 3)), rng.random(n_rope)
-        self.s_v, self.s_ph, self.s_per = vs(n_spray), rng.random(n_spray), rng.uniform(0.9, 2.2, n_spray)
+        self.r_v, self.r_c = vs(n_rope)
+        self.r_j, self.r_seed = rng.normal(0.0, 1.0, (n_rope, 3)), rng.random(n_rope)
+        self.s_v, self.s_c = vs(n_spray)
+        self.s_ph, self.s_per = rng.random(n_spray), rng.uniform(0.9, 2.2, n_spray)
         self.s_dir = rng.normal(0.0, 1.0, (n_spray, 3))
         self.s_seed = rng.random(n_spray)
 
-    def _u(self, v):
-        return self.half * np.sinh(self.k * v) / np.sinh(self.k)
+    def _u(self, v, c):
+        return self.centers[c] + self.half * np.sinh(self.k * v) / np.sinh(self.k)
 
     def _curl(self, u, t):
         c = float(self.kin.curl(t))
@@ -168,7 +178,15 @@ class Wave:
             return np.full_like(u, c)
         return c * (1.0 - smoothstep(m - 9.0, m + 9.0, u))
 
-    def sample(self, t):
+    def _lens(self, pos, size, cam):
+        """Near the lens the points shrink to fine sparks and fade, so the camera can ride inside the wave
+        without a fog of huge discs."""
+        if cam is None:
+            return size, 1.0
+        d = np.linalg.norm(pos - np.asarray(cam.pos, np.float64)[None], axis=1)
+        return np.minimum(size, 0.0045 * d + 0.002), smoothstep(self.near[0], self.near[1], d)
+
+    def sample(self, t, cam=None):
         kin = self.kin
         if t < kin.t_impact - 0.01:
             return []
@@ -183,75 +201,129 @@ class Wave:
         out = []
 
         # ---- the face and the lip (or the back of a swell): particles flowing round the section
-        u = self._u(self.f_v)
+        u = self._u(self.f_v, self.f_c)
         vis = np.abs(u) < 0.5 * ring
         cu = self._curl(u, t)
         s = (self.f_s + self.f_rate * tw) % 1.0
         b, h = profile(s, H, cu)
-        jit = 0.035 * H + 0.004
+        jit = 0.03 * H + 0.004
         b = b + self.f_j[:, 0] * jit
         h = np.maximum(h + self.f_j[:, 1] * jit * 0.6, 0.0)
         uu = u + self.f_j[:, 2] * jit
         pos = kin.world(uu, b, h, t)
-        top = np.exp(-((s - 0.42) / 0.06) ** 2)                 # the crest line
+        top = np.exp(-((s - 0.42) / 0.05) ** 2)                 # the crest line
         lipfront = cu * np.exp(-((s - 0.62) / 0.12) ** 2)       # the leading edge of a curling lip
         hrel = np.clip(h / H, 0.0, 1.0)
         col = (self.col["deep"][None] * (1.0 - hrel[:, None]) + self.col["face"][None] * hrel[:, None])
         col = col * (1.0 - top[:, None]) + self.col["top"][None] * top[:, None]
         ends = smoothstep(0.0, 0.05, s) * (1.0 - smoothstep(0.93, 1.0, s))
-        back_fade = np.where(s > 0.42, 1.0 - (1.0 - cu) * smoothstep(0.55, 0.98, s), 1.0)
-        a = (0.42 + 0.9 * top + 0.5 * lipfront) * ends * back_fade * vis * g
-        out.append(dict(pos=pos, size=sz * (0.8 + 0.5 * self.f_seed), color=col, alpha=a, kind="soft",
-                        emit=1.0 + 1.2 * top, seed=self.f_seed, twinkle=0.35, streak=0.6))
+        back_fade = np.where(s > 0.42, 1.0 - (1.0 - cu) * smoothstep(0.50, 0.85, s), 1.0)
+        size, nf = self._lens(pos, sz * (0.7 + 0.5 * self.f_seed), cam)
+        a = (self.face_a * (0.35 + 0.65 * hrel) + 0.9 * top + 0.45 * lipfront) * ends * back_fade * vis * g * nf
+        out.append(dict(pos=pos, size=size, color=col, alpha=a, kind="soft",
+                        emit=1.0 + 1.2 * top, seed=self.f_seed, twinkle=0.35, streak=0.5))
 
         # ---- the back: light the wave leaves behind it, drifting backward and fading
-        u = self._u(self.b_v)
+        u = self._u(self.b_v, self.b_c)
         vis = np.abs(u) < 0.5 * ring
         Lb = 2.6 * H + 0.15
         w = (self.b_w + 0.05 * tw) % 1.0
-        bb = Lb * (0.15 + 1.6 * w ** 1.3)
+        bb = Lb * (0.10 + 1.3 * w ** 1.3)
         hb = H * np.exp(-2.5 * (bb / Lb) ** 2) * 0.85 + np.abs(self.b_j[:, 1]) * 0.02 * H
         pos = kin.world(u + self.b_j[:, 2] * 0.05 * H, bb + self.b_j[:, 0] * 0.04 * H, hb, t)
-        a = 0.55 * (1.0 - w) ** 1.5 * smoothstep(0.0, 0.06, w) * vis * g
-        out.append(dict(pos=pos, size=sz * 0.9, color=self.col["back"], alpha=a, kind="spark",
+        size, nf = self._lens(pos, sz * 0.7, cam)
+        a = self.back_a * (1.0 - w) ** 2.0 * smoothstep(0.0, 0.06, w) * vis * g * nf
+        out.append(dict(pos=pos, size=size, color=self.col["back"], alpha=a, kind="spark",
                         seed=self.b_seed, twinkle=0.8, emit=1.4))
 
         # ---- the rope of sparks on the crest (and on the lip's leading edge)
-        u = self._u(self.r_v)
+        u = self._u(self.r_v, self.r_c)
         vis = np.abs(u) < 0.5 * ring
         cu = self._curl(u, t)
         s_r = 0.42 + 0.22 * cu
         b, h = profile(s_r, H, cu)
-        pos = kin.world(u + self.r_j[:, 2] * 0.01 * H, b + self.r_j[:, 0] * 0.02 * H,
-                        h + np.abs(self.r_j[:, 1]) * 0.02 * H + 0.01, t)
-        a = 0.85 * vis * g * (0.6 + 0.4 * self.r_seed)
-        out.append(dict(pos=pos, size=sz * 0.8, color=self.col["rope"], alpha=a, kind="spark", emit=2.6,
+        pos = kin.world(u + self.r_j[:, 2] * 0.01 * H, b + self.r_j[:, 0] * 0.015 * H,
+                        h + np.abs(self.r_j[:, 1]) * 0.015 * H + 0.01, t)
+        size, nf = self._lens(pos, sz * 0.7, cam)
+        a = 0.85 * vis * g * (0.6 + 0.4 * self.r_seed) * nf
+        out.append(dict(pos=pos, size=size, color=self.col["rope"], alpha=a, kind="spark", emit=2.6,
                         seed=self.r_seed, twinkle=0.9))
 
-        # ---- spray thrown up off the crest, drifting back in the wind of the ride
-        u = self._u(self.s_v)
+        # ---- spray thrown up off the crest, drifting back in the wind of the ride; a plume when it breaks
+        u = self._u(self.s_v, self.s_c)
         vis = np.abs(u) < 0.5 * ring
         cu = self._curl(u, t)
         age = (self.s_ph + tw / self.s_per) % 1.0
         T = age * self.s_per
-        up = (0.9 + 0.4 * self.s_dir[:, 1]) * np.sqrt(H) * 1.9
-        bk = (1.2 + 0.6 * self.s_dir[:, 0]) * np.sqrt(H) * 1.6
+        up = (0.9 + 0.4 * self.s_dir[:, 1]) * np.sqrt(H) * 1.6
+        bk = (1.0 + 0.5 * self.s_dir[:, 0]) * np.sqrt(H) * 1.0
         b0, h0 = profile(np.full_like(u, 0.42) + 0.15 * cu, H, cu)
         pb = b0 + bk * T
         ph = np.maximum(h0 + up * T - 0.5 * 9.8 * 0.35 * T * T, 0.0)
         pu = u + self.s_dir[:, 2] * 0.4 * np.sqrt(H) * T
         boost = 1.0
+        size = sz * 0.7
         if self.plume is not None:
             pl = float(self.plume(t))
             if pl > 0.0:
-                ph = ph + pl * (3.0 + 6.0 * self.s_dir[:, 1] ** 2) * T * np.sqrt(H)
-                pb = pb - pl * 2.0 * T * np.sqrt(H)
-                boost = 1.0 + 1.5 * pl
+                hp = np.sqrt(self.plume_h)
+                ph = ph + pl * (4.0 + 7.0 * self.s_dir[:, 1] ** 2) * T * hp
+                pb = pb - pl * 2.5 * T * hp
+                pu = pu + pl * self.s_dir[:, 2] * 2.0 * T * hp
+                boost = 1.0 + 2.0 * pl
+                size = size * (1.0 + 1.5 * pl)
         pos = kin.world(pu, pb, ph, t)
-        a = 0.5 * np.sin(np.pi * age) ** 1.5 * vis * g * boost
-        out.append(dict(pos=pos, size=sz * 0.7, color=self.col["spray"], alpha=a, kind="spark", emit=1.5,
+        size, nf = self._lens(pos, size, cam)
+        a = 0.45 * np.sin(np.pi * age) ** 1.5 * vis * g * boost * nf
+        out.append(dict(pos=pos, size=size, color=self.col["spray"], alpha=a, kind="spark", emit=1.5,
                         seed=self.s_seed, twinkle=0.7))
         return out
+
+
+class Tube:
+    """The inside of the barrel: streaks of light running up the face, over the lip and down the curtain,
+    drawn as short line segments along the flow, dense where the camera glides (u0..u1). gain(t) fades it."""
+    wants_camera = True
+
+    def __init__(self, kin, u0, u1, n=60000, gain=None, mouth=None, seed=17, color="#ffd07a", top="#fff4dc"):
+        rng = np.random.default_rng(seed)
+        self.kin, self.mouth = kin, mouth
+        self.u = rng.uniform(u0, u1, n)
+        self.s = rng.random(n)
+        self.rate = rng.uniform(0.10, 0.22, n)
+        self.j = rng.normal(0.0, 1.0, (n, 3))
+        self.seed = rng.random(n)
+        self._gain = gain
+        self.col, self.top = lin(color), lin(top)
+
+    def gain(self, t):
+        return 1.0 if self._gain is None else float(self._gain(t))
+
+    def sample(self, t, cam=None):
+        kin = self.kin
+        if self.gain(t) <= 0.002:
+            return []
+        H = max(float(kin.height(t)), 0.05)
+        c = float(kin.curl(t))
+        cu = np.full_like(self.u, c)
+        if self.mouth is not None:
+            cu = c * (1.0 - smoothstep(self.mouth(t) - 9.0, self.mouth(t) + 9.0, self.u))
+        s = (self.s + self.rate * (t - kin.t_impact)) % 1.0
+        ds = 0.018 + 0.02 * self.seed
+        b1, h1 = profile(s, H, cu)
+        b0, h0 = profile(np.maximum(s - ds, 0.0), H, cu)
+        jb, jh = self.j[:, 0] * 0.025 * H, self.j[:, 1] * 0.015 * H
+        p1 = kin.world(self.u + self.j[:, 2] * 0.02, b1 + jb, np.maximum(h1 + jh, 0.0), t)
+        p0 = kin.world(self.u + self.j[:, 2] * 0.02, b0 + jb, np.maximum(h0 + jh, 0.0), t)
+        top = np.exp(-((s - 0.42) / 0.07) ** 2)
+        col = self.col[None] * (1.0 - top[:, None]) + self.top[None] * top[:, None]
+        ends = smoothstep(0.02, 0.08, s) * (1.0 - smoothstep(0.9, 0.99, s))
+        a = (0.35 + 0.5 * top) * ends
+        if cam is not None:
+            d = np.linalg.norm(p1 - np.asarray(cam.pos, np.float64)[None], axis=1)
+            a = a * smoothstep(0.35, 1.5, d)
+        return dict(pos=p1, pos2=p0, size=0.006, color=col, alpha=a, alpha2=a * 0.2, kind="line", seed=self.seed,
+                    emit=1.3)
 
 
 class Field:
@@ -383,21 +455,23 @@ class Crowd:
                     emit=1.3)
 
 
-def people_shapes(Body, n=700, seed=1):
-    """A few baked shapes of people (points of the whole clothed body) in two poses each: arms down and
-    arms raised. Facing -z (backs to a camera that looks toward -z), feet at the origin."""
+def bake_people(Body, n=2600, seed=1, poses=("stand", "raise")):
+    """A few baked people (points of the whole clothed body), each in several poses: "stand" (arms down) and
+    any gestures of engine/p3d (raise, open_arms, look_up, ...). Facing -z (backs to a camera that looks
+    toward -z), feet at the origin. Returns a list of dicts pose -> (N, 3), the same N for every pose."""
     out = []
-    specs = [("woman", "dress", dict(hair=True)), ("man", "coat", {}), ("woman", "robe", dict(veil=False)),
-             ("man", "tunic", {}), ("child", None, {})]
+    specs = [("woman", "dress", dict(hair=True)), ("man", "coat", {}), ("woman", "robe", {}),
+             ("man", "tunic", {}), ("child", None, {}), ("woman", "coat", dict(hair=True))]
     for k, (shape, garment, extra) in enumerate(specs):
         kw = dict(extra)
         if garment:
             kw["garment"] = garment
-        a = Body(shape, at=(0.0, 0.0), facing=180.0, look="glitter", points=n, seed=seed + k, **kw)
-        b = Body(shape, at=(0.0, 0.0), facing=180.0, look="glitter", points=n, seed=seed + k,
-                 gesture=[(0.0, 100.0, "raise")], **kw)
-        pa, _ = a.shape_points(2.0)
-        pb, _ = b.shape_points(2.0)
-        m = min(len(pa), len(pb))
-        out.append((pa[:m], pb[:m]))
+        d = {}
+        for pose in poses:
+            g = [] if pose == "stand" else [(0.0, 100.0, pose)]
+            b = Body(shape, at=(0.0, 0.0), facing=180.0, look="glitter", points=n, seed=seed + k, gesture=g, **kw)
+            p, _ = b.shape_points(1.6)
+            d[pose] = np.asarray(p, np.float64)
+        m = min(len(v) for v in d.values())
+        out.append({key: v[:m] for key, v in d.items()})
     return out
