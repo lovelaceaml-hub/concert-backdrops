@@ -859,8 +859,10 @@ void main(){
 #endif
 #ifdef SYMBOL_PAINT
   if(uSymK>0.0){   // a symbol's lines painted in their own colour (light alone pales to pink on a blue sky)
+    // Like the light (PROTECT_FS), the paint gives way to text only where the letters have arrived (sh), not
+    // in the whole text field: a title forming at the left does not wipe a symbol still standing in the middle.
     vec4 sp = texture(uSymT, uv);
-    float sk = uSymK*(1.0-textField(uv));
+    float sk = uSymK*(1.0-smoothstep(0.0, 0.75, max(sh, ct.b*uCredit.w)));
     col = col*(1.0-clamp(sp.a, 0.0, 1.0)*sk) + sp.rgb*sk;
   }
 #endif
