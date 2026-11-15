@@ -25,6 +25,14 @@ on:
         description: "Name for the output files"
         required: true
         default: test
+      resolution:
+        description: "1080p or 4k (3840x2160; video uses twice the parallel parts)"
+        required: false
+        default: 1080p
+      fps:
+        description: "Frames per second: 30 or 60 (the share copy is always 30)"
+        required: false
+        default: "30"
 
 env:
   SONG: ${{ inputs.song }}
@@ -35,12 +43,17 @@ env:
   FEATURES: ${{ github.workspace }}/work/${{ inputs.song }}/features.npz
   LIBGL_ALWAYS_SOFTWARE: "1"
   PARTS: "10"
+  OUT_RES: ${{ inputs.resolution || '1080p' }}
+  OUT_FPS: ${{ inputs.fps || '30' }}
 
 jobs:
   prepare:
     runs-on: ubuntu-latest
     outputs:
       frames: ${{ steps.n.outputs.frames }}
+      parts: ${{ steps.p.outputs.parts }}
+      list: ${{ steps.p.outputs.list }}
+      loop: ${{ steps.p.outputs.loop }}
     steps:
       - uses: actions/checkout@v4
       - name: Check inputs
@@ -51,11 +64,22 @@ jobs:
           [[ "$MODE" == stills || "$MODE" == video ]] || { echo "bad mode"; exit 1; }
           [[ "$STILLS" =~ ^[0-9.,]*$ ]] || { echo "bad stills list"; exit 1; }
           [[ "$OUTNAME" =~ ^[A-Za-z0-9\ _.,!\'-]+$ ]] || { echo "bad output name"; exit 1; }
+          [[ "$OUT_RES" == 1080p || "$OUT_RES" == 4k ]] || { echo "bad resolution"; exit 1; }
+          [[ "$OUT_FPS" == 30 || "$OUT_FPS" == 60 ]] || { echo "bad fps"; exit 1; }
       - uses: actions/setup-python@v5
         with: { python-version: "3.11" }
       - run: pip install -q numpy
       - id: n
         run: echo "frames=$(cd engine && python -c 'import song; print(song.NFRAMES)')" >> "$GITHUB_OUTPUT"
+      - id: p
+        name: Parallel parts (4K and 60 fps get more), loop length
+        run: |
+          n=$PARTS; [[ "$OUT_RES" == 4k ]] && n=$(( n * 2 )); [[ "$OUT_FPS" == 60 ]] && n=$(( n * 2 )); (( n > 40 )) && n=40
+          [[ "$MODE" == video ]] || n=1
+          echo "parts=$n" >> "$GITHUB_OUTPUT"
+          echo "list=$(python -c "print(list(range($n)))")" >> "$GITHUB_OUTPUT"
+          echo "loop=$(cd engine && python -c 'import song; print(float(getattr(song, "LOOP_SECONDS", 0) or 0))')" >> "$GITHUB_OUTPUT"
+          echo "$n parts"
 
   render:
     needs: prepare
@@ -64,7 +88,7 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        part: ${{ inputs.mode == 'video' && fromJSON('[0,1,2,3,4,5,6,7,8,9]') || fromJSON('[0]') }}
+        part: ${{ fromJSON(needs.prepare.outputs.list) }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -91,6 +115,7 @@ jobs:
         env:
           FRAMES: ${{ needs.prepare.outputs.frames }}
           PART: ${{ matrix.part }}
+          PARTS: ${{ needs.prepare.outputs.parts }}
         run: |
           A=$(( FRAMES * PART / PARTS )); B=$(( FRAMES * (PART + 1) / PARTS ))
           mkdir -p out && cd engine && python render.py --range "$A" "$B" --out "../out/part$PART.mp4" --crf 16
@@ -108,6 +133,8 @@ jobs:
     runs-on: ubuntu-latest
     env:
       FRAMES: ${{ needs.prepare.outputs.frames }}
+      PARTS: ${{ needs.prepare.outputs.parts }}
+      LOOP: ${{ needs.prepare.outputs.loop }}
     steps:
       - uses: actions/checkout@v4
       - run: sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg >/dev/null
@@ -115,11 +142,16 @@ jobs:
         with: { path: parts, pattern: "part*", merge-multiple: true }
       - name: Join the parts, add the music, check the result
         run: |
-          for i in $(seq 0 $((PARTS-1))); do echo "file '$PWD/parts/part$i.mp4'"; done > list.txt
+          for i in $(seq 0 $(( PARTS - 1 ))); do echo "file '$PWD/parts/part$i.mp4'"; done > list.txt
           ffmpeg -v error -y -f concat -safe 0 -i list.txt -c copy silent.mp4
+          want=$(python3 -c "print($FRAMES/$OUT_FPS)")
+          if [[ "$LOOP" != "0.0" ]]; then
+            # a pre-show loop has no music: lay an exact-length silent track under it
+            ffmpeg -v error -y -f lavfi -i anullsrc=r=48000:cl=stereo -t "$want" -c:a aac silence.m4a
+            AUDIO=silence.m4a
+          fi
           vd=$(ffprobe -v error -show_entries format=duration -of csv=p=0 silent.mp4)
           ad=$(ffprobe -v error -show_entries format=duration -of csv=p=0 "$AUDIO")
-          want=$(python3 -c "print($FRAMES/30)")
           echo "video $vd s, audio $ad s, expected $want s"
           python3 -c "import sys; v,a,w=$vd,$ad,$want; sys.exit(0 if abs(v-w)<0.1 and a>=w-0.15 else 1)" || { echo "length check failed"; exit 1; }
           ffmpeg -v error -y -i silent.mp4 -i "$AUDIO" -map 0:v -map 1:a -c:v copy -c:a aac -b:a 256k -shortest -movflags +faststart "$OUTNAME.mp4"
@@ -135,7 +167,7 @@ jobs:
           # video bitrate that fits 24 MB with 160 kb/s audio, at most 2600 kb/s
           vb=$(python3 -c "print(int(min(2600, 24e6*8/1000/$fd - 160)))")
           echo "duration $fd s, video bitrate ${vb}k"
-          ffmpeg -v error -y -i "$OUTNAME.mp4" -vf "scale=1280:720:flags=lanczos" -c:v libx264 -preset slow \
+          ffmpeg -v error -y -i "$OUTNAME.mp4" -vf "fps=30,scale=1280:720:flags=lanczos" -c:v libx264 -preset slow \
             -crf 21 -maxrate "${vb}k" -bufsize "$(( vb * 2 ))k" -pix_fmt yuv420p -g 60 \
             -color_primaries bt709 -color_trc bt709 -colorspace bt709 \
             -c:a aac -b:a 160k -movflags +faststart "share/$OUTNAME (share).mp4"
@@ -150,14 +182,25 @@ jobs:
         continue-on-error: true
         run: |
           mkdir -p sheets
-          q=$(python3 -c "print(round($FRAMES/30/4, 3))")
-          r=$(python3 -c "print(round(8*30*4/$FRAMES, 5))")
+          q=$(python3 -c "print(round($FRAMES/$OUT_FPS/4, 3))")
+          r=$(python3 -c "print(round(8*$OUT_FPS*4/$FRAMES, 5))")
           for k in 0 1 2 3; do
             s=$(python3 -c "print(round($k*$q, 3))")
             ffmpeg -v error -y -ss "$s" -t "$q" -i silent.mp4 \
               -vf "fps=$r,scale=640:-2,tile=4x2" -frames:v 1 -q:v 4 "sheets/sheet$k.jpg" || true
           done
           ls -la sheets
+      - name: Loop seam check (last frame against first, and an ordinary step for comparison)
+        if: needs.prepare.outputs.loop != '0.0'
+        continue-on-error: true
+        run: |
+          ffmpeg -v error -y -i silent.mp4 -vf "select=eq(n\,0)" -frames:v 1 sheets/loop_first.png
+          ffmpeg -v error -y -i silent.mp4 -vf "select=eq(n\,1)" -frames:v 1 seam_second.png
+          ffmpeg -v error -y -sseof -1 -i silent.mp4 -update 1 sheets/loop_last.png
+          echo "last frame to first frame (the seam):"
+          ffmpeg -hide_banner -i sheets/loop_last.png -i sheets/loop_first.png -lavfi psnr -f null - 2>&1 | grep -o "PSNR.*"
+          echo "first frame to second frame (an ordinary step):"
+          ffmpeg -hide_banner -i sheets/loop_first.png -i seam_second.png -lavfi psnr -f null - 2>&1 | grep -o "PSNR.*"
       - uses: actions/upload-artifact@v4
         with:
           name: ${{ inputs.name }} frames

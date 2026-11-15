@@ -50,10 +50,11 @@ def words_arrive(m):
 
 
 class Renderer:
-    def __init__(self, w=S.W, h=S.H):
+    def __init__(self, w=S.W, h=S.H, ctx=None):
         self.w, self.h = w, h
         self.px = h / 1080.0
-        self.ctx = ctx = moderngl.create_standalone_context(backend="egl")
+        # ctx: a window's context (engine/live.py); by default an offscreen one for the cloud render
+        self.ctx = ctx = ctx or moderngl.create_standalone_context(backend="egl")
         self.song = S.Song()
         quad = ctx.buffer(np.array([-1, -1, 1, -1, -1, 1, 1, 1], "f4").tobytes())
 
@@ -103,8 +104,9 @@ class Renderer:
         self.t_sky = tex_f((w, h)); self.f_sky = ctx.framebuffer([self.t_sky])
         self.t_L = tex_f((w, h)); self.f_L = ctx.framebuffer([self.t_L])
         self.bl = []
+        gs = max(h / 1080.0, 1.0)   # I10: at 4K the glow buffers keep their 1080p sizes, so the bloom looks the same
         for k in (2, 4, 8, 16):
-            size = (max(w // k, 8), max(h // k, 8))
+            size = (max(int(w // (k * gs)), 8), max(int(h // (k * gs)), 8))
             ta, tb = tex_f(size), tex_f(size)
             self.bl.append((size, ta, ctx.framebuffer([ta]), tb, ctx.framebuffer([tb])))
         self.t_out = ctx.texture((w, h), 3, dtype="f1"); self.f_out = ctx.framebuffer([self.t_out])
@@ -116,7 +118,7 @@ class Renderer:
         phrases, title, tag = T.build_all()
 
         def ttex(arr):
-            t = ctx.texture((S.W, S.H), 3, data=arr.tobytes(), dtype="f1")
+            t = ctx.texture((T.W, T.H), 3, data=arr.tobytes(), dtype="f1")
             t.filter = (moderngl.LINEAR, moderngl.LINEAR)
             t.repeat_x = t.repeat_y = False
             return t
@@ -128,7 +130,7 @@ class Renderer:
         self.tag = dict(tex=ttex(tag["tex"]), bounds=tag["bounds"])
         self.frags = [dict(tex=ttex(f["tex"]), bounds=f["bounds"], meta=f["meta"]) for f in tag["frags"]]
         ctex, self.credit_bbox = T.render_credit(S.CREDIT["song"], S.CREDIT["concert"])
-        self.t_credit = ctx.texture((S.W, S.H), 3, data=ctex.tobytes(), dtype="f1")
+        self.t_credit = ctx.texture((T.W, T.H), 3, data=ctex.tobytes(), dtype="f1")
         self.t_credit.build_mipmaps()
         self.t_credit.filter = (moderngl.LINEAR_MIPMAP_LINEAR, moderngl.LINEAR)
         self.t_credit.repeat_x = self.t_credit.repeat_y = False
@@ -150,6 +152,8 @@ class Renderer:
         self.sky = sky_camera.SkyCamera(self)   # time of day, 3D clouds, god rays, camera (all optional)
         import audio_react
         self.react = audio_react.Reactor(self) if audio_react.enabled() else None   # music reactivity (optional)
+        import output
+        self.out = output.Output(self)   # I10: event card and seamless loop (optional)
 
     # ------------------------------------------------------------------
     def text_plan(self, t):
@@ -177,6 +181,9 @@ class Renderer:
             dur = max(m["t1"] - m["t0"], 0.5)
             fly = (t - m["out"]) if t > m["out"] else -1.0
             return A, (fr["tex"], ((t - m["t0"]) + 1.35, dur, fly, m.get("alpha", 0.95)), fr["bounds"], 1.0, (0.0, 0.0))
+        ev = self.out.card_slot(t)   # I10: the event card of a pre-show or intermission loop
+        if ev is not None:
+            return A, ev
         ts = self.up.text_shadow(t)
         if ts is not None:
             B = tuple(ts) + ((0.0, 0.0),) if len(ts) == 4 else tuple(ts)
@@ -307,6 +314,7 @@ class Renderer:
                  **self.up.text_light(m, t, "#fff1d6"))
             self.v_text.render(moderngl.TRIANGLE_STRIP)
         self.up.draw_frags(t)
+        self.out.draw_card(t)
 
         # song title and concert title: a card at the start, then small in the corner
         if credit[3] > 0.001:
@@ -397,6 +405,8 @@ def main():
     ap.add_argument("--crf", default="15")
     ap.add_argument("--preset", default="medium")
     a = ap.parse_args()
+    import output
+    a.scale *= output.scale(S)   # I10: OUT_RES=4k draws 3840x2160 frames from the same 1920x1080 design
     w, h = int(S.W * a.scale) // 2 * 2, int(S.H * a.scale) // 2 * 2
     R = Renderer(w, h)
     if a.stills:
@@ -405,7 +415,7 @@ def main():
         for s in a.stills.split(","):
             t = float(s)
             t0 = time.time()
-            buf = R.frame(t, int(t * S.FPS))
+            buf = R.out.frame(t, int(t * S.FPS))
             dt = time.time() - t0
             Image.frombytes("RGB", (w, h), buf).save(os.path.join(a.outdir, f"t{t:07.2f}.png"))
             print(f"still {t:7.2f}s  {dt:.2f}s/frame", flush=True)
@@ -418,7 +428,7 @@ def main():
     ff = subprocess.Popen(cmd, stdin=subprocess.PIPE)
     t0 = time.time()
     for i in range(f0, f1):
-        ff.stdin.write(R.frame(i / S.FPS, i))
+        ff.stdin.write(R.out.frame(i / S.FPS, i))
         if (i - f0) % 150 == 0:
             el = time.time() - t0
             print(f"frame {i} ({i - f0}/{f1 - f0})  {el:.0f}s  {(el / max(i - f0, 1)):.2f}s/frame", flush=True)
