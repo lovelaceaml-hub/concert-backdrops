@@ -470,10 +470,9 @@ class Motions(Library):
             w = p
             for sd, sg in (("L", 1.0), ("R", -1.0)):
                 if hands == "pray":
-                    c = Pj[i["spine02"]] + bm.qrot(P.rot, np.array([sg * 0.012, 0.05, 0.17]) * self.k)
-                    self.arm_to(P, sd, c, palm=bm.qrot(P.rot, [-sg, 0.0, 0.0]), w=w, wrist=-28.0 * w,
-                                pole=bm.qrot(P.rot, [sg * 0.8, -1.0, 0.1]))
-                    self.fingers(P, sd, curl=4.0, thumb=6.0, w=w)
+                    if sd == "L":
+                        # the hands come together as the body settles, not on the way down
+                        self.pray_hands(P, float(bm.smoother(np.clip((u - 0.35) / 0.65, 0.0, 1.0))))
                 else:
                     kn = Pj[i["lowerleg01." + sd]]
                     hp = Pj[i["upperleg01." + sd]]
@@ -572,12 +571,17 @@ class Motions(Library):
                     pole=bm.qrot(P.rot, [sg * 0.35, -1.0, -0.2]))
         self.fingers(P, side, curl=5.0 * w + 22.0 * (1 - w), thumb=4.0, spread=2.0 * w)
 
-    def g_pray(self, P, w, t, age=0.0, **kw):
-        """Hands together before the chest, head bowed."""
-        self._head(P, w, up=-10.0)
+    def pray_hands(self, P, w, height=0.10, out=0.24):
+        """The hands pressed together palm to palm before the chest, fingers up and a little forward."""
         _, Pj, _ = self.local_fk(P)
+        c = Pj[self.i["spine03"]] + bm.qrot(P.rot, np.array([0.0, height, out]) * self.k)
+        up = bm.qrot(P.rot, [0.0, 0.92, 0.40])
         for sd, sg in (("L", 1.0), ("R", -1.0)):
-            c = Pj[self.i["spine02"]] + bm.qrot(P.rot, np.array([sg * 0.012, 0.06, 0.17]) * self.k)
-            self.arm_to(P, sd, c, palm=bm.qrot(P.rot, [-sg, 0.0, 0.0]), w=w, wrist=-30.0,
-                        pole=bm.qrot(P.rot, [sg * 0.8, -1.0, 0.1]))
-            self.fingers(P, sd, curl=4.0 * w + 22.0 * (1 - w), thumb=6.0)
+            self.hand_to(P, sd, c + bm.qrot(P.rot, [sg * 0.004 * self.k, 0.0, 0.0]), up,
+                         bm.qrot(P.rot, [-sg, 0.0, 0.0]), w=w, pole=bm.qrot(P.rot, [sg * 0.9, -1.0, -0.15]))
+            self.fingers(P, sd, curl=3.0 * w + 22.0 * (1 - w), thumb=4.0 * w + 14.0 * (1 - w), w=1.0)
+
+    def g_pray(self, P, w, t, age=0.0, **kw):
+        """Hands together before the chest, palm to palm, head bowed."""
+        self._head(P, w, up=-10.0)
+        self.pray_hands(P, w)
