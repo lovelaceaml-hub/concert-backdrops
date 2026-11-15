@@ -60,8 +60,6 @@ for _k in ("RAIN", "AURORA", "PETALS", "LANTERNS", "MOTES", "RAYS", "PART", "TRA
 for _p in _base.PHRASES:                      # the flat expressions stay off: the words are particles here
     _p["form"] = _p["hold"] = _p["star"] = 1e9
 _base.TITLE_HIT = _base.NINTH = 1e9
-_base.CREDIT["t_in"], _base.CREDIT["t_full"] = 1e9, 1e9 + 1.0
-_base.CREDIT["t_move"], _base.CREDIT["t_rest"] = 1e9 + 2.0, 1e9 + 3.0
 _base.WAVES = []
 from songs.s03_original import *  # noqa: E402,F401,F403
 
@@ -117,48 +115,55 @@ def _yaw(t):
 
 # ---------------------------------------------------------------------------------------------- the camera
 A_HEAD = (-33.15, 1.52, 0.0)
+MOTHER_AT = (-45.0, 0.0, 170.0)      # Heavenly Mother stands on the near side, facing the world (az 171)
+MOTHER_FACING = 171.0
 CAMERA = Rig([
     # S0 first light: fall through the star field, arrive at her profile, revolve, swing out to the two
-    fly([(0.0, (-12.0, 11.0, 54.0), A_HEAD), (0.55, (-27.5, 3.6, 12.0), A_HEAD),
-         (1.0, (-33.05, 1.56, 1.75), A_HEAD), (2.2, (-34.7, 1.72, 1.45), (-31.4, 1.5, -0.2)),
-         (3.3, (-33.4, 2.05, 6.9), (-32.0, 2.25, -0.2)), (6.84, (-31.3, 2.0, 7.4), (-32.0, 2.3, -0.2))],
-        fov=Track([(0.0, 62.0), (0.95, 34.0), (2.2, 38.0), (3.3, 42.0), (6.84, 42.0)]),
-        aperture=Track([(0.0, 0.0), (0.9, 0.035), (2.4, 0.03), (3.3, 0.012), (6.84, 0.012)])),
+    fly([(0.0, (-19.0, 7.5, 36.0), A_HEAD), (0.55, (-29.0, 3.0, 9.5), A_HEAD),
+         (1.05, (-33.05, 1.56, 1.85), A_HEAD)], fov=Track([(0.0, 62.0), (1.05, 32.0)]),
+        aperture=Track([(0.0, 0.0), (0.9, 0.02)]), ease="out"),
+    orbit(A_HEAD, radius=(1.85, 2.5), height=(1.56, 1.7), a0=0.0, a1=-62.0, t0=1.05, t1=2.7,
+          look=lambda t: np.asarray(A_HEAD) * (1 - _ss(1.5, 2.7, t)) + np.array([-30.9, 1.45, -0.2]) * _ss(1.5, 2.7, t),
+          fov=(32.0, 38.0), aperture=0.02, ease="smooth", blend=0.25),
+    fly([(2.7, (-35.3, 1.7, 1.2), (-30.9, 1.45, -0.2)), (3.6, (-33.5, 1.55, 7.4), (-32.0, 1.8, -0.2)),
+         (6.84, (-31.2, 1.45, 8.0), (-32.0, 1.85, -0.2))], fov=Track([(2.7, 38.0), (3.6, 42.0)]),
+        aperture=Track([(2.7, 0.02), (3.6, 0.012)]), blend=0.5),
     # S1 the mirror: dive to the water, skim along the line to the two, close on her as she rises
-    fly([(6.84, (-27.0, 0.45, 9.0), (-16.5, 1.6, 0.0)), (8.6, (-18.6, 1.15, 8.8), (-16.1, 2.45, 0.0)),
-         (11.8, (-16.4, 1.45, 8.1), (-16.0, 2.5, 0.0)), (13.3, (-14.4, 1.35, 4.4), (-15.0, 1.4, 0.0))],
+    fly([(6.84, (-27.0, 0.45, 9.0), (-16.5, 1.6, 0.0)), (8.6, (-18.6, 1.1, 9.0), (-16.1, 1.95, 0.0)),
+         (11.8, (-16.4, 1.35, 8.4), (-16.0, 2.0, 0.0)), (13.3, (-14.4, 1.35, 4.4), (-15.0, 1.4, 0.0))],
         fov=Track([(6.84, 56.0), (8.4, 42.0), (11.8, 42.0), (13.3, 38.0)]), aperture=0.012, blend=0.5),
     # S2 falling stars: revolve round the two who turn back to each other and touch
     orbit((0.0, 1.7, 0.0), radius=(9.8, 6.2), height=(2.6, 1.75), a0=-30.0, a1=22.0, t0=13.3, t1=19.85,
-          look=(0.0, 2.2, 0.0), fov=42.0, aperture=0.012, blend=0.6),
+          look=(0.0, 1.85, 0.0), fov=42.0, aperture=0.012, blend=0.6),
     # S3 the bass slams in: whip to the third place and revolve the other way
-    orbit((15.8, 1.7, 0.0), radius=(10.5, 7.6), height=(2.3, 1.9), a0=28.0, a1=-18.0, t0=19.85, t1=26.79,
-          look=(15.8, 2.25, -0.2), fov=42.0, aperture=0.012, blend=0.45),
+    orbit((16.6, 1.7, 0.0), radius=(10.5, 7.6), height=(2.3, 1.9), a0=28.0, a1=-18.0, t0=19.85, t1=26.79,
+          look=(16.6, 1.9, -0.4), fov=42.0, aperture=0.012, blend=0.45),
     # S4 the stair of the night: round the kneeling youth, the elder and the hand held down
     orbit((31.6, 1.6, 0.0), radius=(9.5, 6.8), height=(3.4, 2.0), a0=-26.0, a1=14.0, t0=26.79, t1=33.36,
-          look=(31.6, 2.1, 0.0), fov=42.0, aperture=0.012, blend=0.45),
+          look=(31.6, 1.8, 0.0), fov=42.0, aperture=0.012, blend=0.45),
     # S5 thrown back by the burst, then up and away toward the arch
-    fly([(33.36, (32.2, 1.9, 5.6), (31.9, 2.0, 0.0)), (33.9, (31.9, 2.6, 10.5), (31.7, 3.6, -0.5)),
-         (34.3, (31.6, 3.3, 14.5), (31.5, 4.3, -1.0))], fov=Track([(33.36, 40.0), (34.3, 44.0)]), aperture=0.006,
+    fly([(33.36, (32.2, 1.7, 5.6), (31.9, 1.9, 0.0)), (33.9, (31.9, 2.0, 10.5), (31.7, 2.8, -0.5)),
+         (34.3, (31.7, 2.0, 12.6), (31.6, 3.0, -1.0))], fov=Track([(33.36, 40.0), (34.3, 48.0)]), aperture=0.006,
         blend=0.35),
-    dolly((31.6, 3.3, 14.5), (30.7, 3.8, 16.3), 34.3, 37.8, look=((31.5, 4.3, -1.0), (31.0, 4.5, -1.0)), fov=44.0,
+    dolly((31.7, 2.0, 12.6), (30.9, 2.3, 14.0), 34.3, 37.8, look=((31.6, 3.0, -1.0), (31.2, 3.1, -1.0)), fov=48.0,
           aperture=0.006, blend=0.4),
-    fly([(37.8, (30.7, 3.8, 16.3), (31.0, 4.5, -1.0)), (39.0, (26.0, 7.0, 34.0), (16.0, 20.0, -60.0)),
-         (40.21, (17.0, 13.0, 62.0), (6.0, 32.0, -120.0))], fov=Track([(37.8, 44.0), (40.21, 50.0)]),
-        aperture=0.0, blend=0.6),
-    # the breath: drift and tilt up to the nine lights and the far constellation beyond them
-    dolly((13.0, 15.0, 72.0), (9.0, 19.0, 86.0), 40.21, 42.51, look=((4.0, 52.0, -200.0), (2.0, 64.0, -240.0)),
-          fov=50.0, aperture=0.0, blend=1.0),
-    # the web: pulled back fast, revolving, past people at many depths
-    orbit((0.0, 40.0, -110.0), radius=(205.0, 425.0), height=(22.0, 15.0), a0=4.0, a1=-12.0, t0=42.51, t1=45.64,
-          look=(0.0, 46.0, -150.0), fov=48.0, aperture=0.0, blend=0.35,
-          pace=[(42.51, 0.0), (43.3, 0.48), (45.64, 1.0)]),
-    # the world: far out, low on the water, revolving against the globe's turn
-    orbit((0.0, 0.0, -110.0), radius=(425.0, 395.0), height=(14.0, 8.0), a0=-12.0, a1=3.0, t0=45.64, t1=52.0,
-          look=(0.0, 30.0, -110.0), fov=42.0, aperture=0.0, blend=1.2),
-    # day: tilt up into the light, room for the title, a slow lean to the last frame
-    orbit((0.0, 0.0, -110.0), radius=(395.0, 370.0), height=(8.0, 12.0), a0=3.0, a1=9.0, t0=52.0, t1=60.0,
-          look=lambda t: (0.0, 30.0 + 42.0 * float(_ss(52.0, 55.5, t)), -110.0), fov=42.0, aperture=0.0,
+    # thrown back and up over the lake, to behind Heavenly Mother, who stands on the near side of the world
+    fly([(37.8, (30.9, 2.3, 14.0), (31.2, 3.1, -1.0)), (38.7, (22.0, 10.0, 60.0), (0.0, 20.0, -110.0)),
+         (39.7, (-40.0, 28.0, 240.0), (-10.0, 30.0, -60.0)), (40.6, (-77.2, 36.0, 321.6), (-12.0, 33.0, -30.0))],
+        fov=Track([(37.8, 48.0), (40.6, 50.0)]), aperture=0.0, blend=0.6),
+    # the breath: behind her, the whole world before her, the nine lights and their threads
+    orbit(MOTHER_AT, radius=(155.0, 152.0), height=(36.0, 40.0), a0=-12.0, a1=-15.0, t0=40.6, t1=42.51,
+          look=(-12.0, 34.0, -30.0), fov=50.0, aperture=0.0, blend=0.8),
+    # the web: rise and revolve behind her while the chain reaction crosses the lake
+    orbit(MOTHER_AT, radius=(152.0, 175.0), height=(40.0, 55.0), a0=-15.0, a1=-30.0, t0=42.51, t1=45.64,
+          look=(-5.0, 25.0, -60.0), fov=52.0, aperture=0.0, blend=0.35,
+          pace=[(42.51, 0.0), (43.3, 0.45), (45.64, 1.0)]),
+    # the world: down toward the water so the mirror completes the globe, still behind her
+    orbit(MOTHER_AT, radius=(175.0, 165.0), height=(55.0, 24.0), a0=-30.0, a1=-22.0, t0=45.64, t1=52.0,
+          look=(-12.0, 38.0, -100.0), fov=44.0, aperture=0.0, blend=1.2),
+    # day: a slow lean and a tilt up into the light, room for the title
+    orbit(MOTHER_AT, radius=(165.0, 160.0), height=(24.0, 26.0), a0=-22.0, a1=-20.5, t0=52.0, t1=60.0,
+          look=lambda t: (-8.0, 38.0 + 34.0 * float(_ss(52.0, 55.5, t)), -110.0), fov=44.0, aperture=0.0,
           blend=1.5),
 ], blend=0.6, fov=42.0, aperture=0.0, handheld=0.2, min_height=0.3)
 
@@ -173,7 +178,7 @@ def _word(t_read0, t_read1, x, y, depth, px, **kw):
 
 
 _MEET = (0.0, 1.22, 0.14)                   # where the two hands touch (S2)
-_CLASP = (32.1, 0.95, 0.12)                  # where the hand held down meets the hand reaching up (S4)
+_CLASP = (31.75, 1.0, 0.12)                  # where the hand held down meets the hand reaching up (S4)
 _P = {}                                      # the people, made in build()
 
 
@@ -193,24 +198,24 @@ def _palm_M(t):
 
 
 _SPECS = [
-    _word(3.3, 6.3, 0.50, 0.73, 7.6, 112, expr="Greeting", t_in=2.3, t_out=7.6, arrive="pen",
+    _word(3.65, 6.45, 0.50, 0.655, 7.6, 108, expr="Greeting", t_in=2.4, t_out=7.6, arrive="pen",
           leave="arch", to=tuple(LIGHTS[0])),
-    _word(8.7, 11.7, 0.50, 0.74, 8.4, 84, expr="Gratitude", t_in=7.1, t_out=13.3, arrive="stars",
+    _word(8.7, 11.7, 0.50, 0.655, 8.4, 84, expr="Gratitude", t_in=7.1, t_out=13.3, arrive="stars",
           leave="give", to=_BodyPoints("D")),
-    _word(14.2, 16.8, 0.50, 0.75, 8.6, 94, expr="Apology", t_in=13.3, t_out=18.2, arrive="lake",
-          leave="arch", to=tuple(LIGHTS[2])),
-    _word(17.2, 19.75, 0.50, 0.69, 6.4, 116, expr="Inclusiveness", t_in=16.4, t_out=21.0, arrive="touch",
+    _word(14.2, 16.8, 0.50, 0.63, 8.6, 86, expr="Apology", t_in=13.3, t_out=17.7, arrive="lake",
+          leave="sink"),
+    _word(17.2, 19.75, 0.50, 0.67, 6.4, 112, expr="Inclusiveness", t_in=16.4, t_out=20.6, arrive="touch",
           source=_MEET, touch_at=0.45, leave="arch", to=tuple(LIGHTS[3])),
-    _word(21.0, 23.6, 0.50, 0.74, 9.6, 118, expr="Concession", t_in=19.85, t_out=24.6, arrive="flock",
-          leave="arch", to=tuple(LIGHTS[4])),
-    _word(24.0, 26.65, 0.50, 0.70, 8.0, 100, expr="Respect", t_in=23.0, t_out=27.6, arrive="weave",
+    _word(20.85, 23.5, 0.50, 0.655, 9.6, 112, expr="Concession", t_in=19.85, t_out=24.3, arrive="flock",
+          leave="wind", wind=(1.0, 0.35, -0.25)),
+    _word(24.1, 26.65, 0.52, 0.635, 8.0, 96, expr="Respect", t_in=23.3, t_out=27.6, arrive="weave",
           leave="arch", to=tuple(LIGHTS[5])),
-    _word(27.8, 30.4, 0.50, 0.74, 8.8, 88, expr="Encouragement", t_in=26.79, t_out=31.4, arrive="shaft",
-          leave="arch", to=tuple(LIGHTS[6])),
-    _word(30.7, 33.3, 0.50, 0.69, 7.0, 100, expr="Consideration", t_in=29.7, t_out=34.2, arrive="palm",
+    _word(27.8, 30.4, 0.50, 0.645, 8.8, 86, expr="Encouragement", t_in=26.79, t_out=31.2, arrive="shaft",
+          leave="rise"),
+    _word(30.8, 33.3, 0.52, 0.625, 7.0, 96, expr="Consideration", t_in=29.9, t_out=34.2, arrive="palm",
           source=_palm_M, leave="arch", to=tuple(LIGHTS[7])),
-    _word(34.3, 37.7, 0.50, 0.62, 15.0, 138, expr="Compliment", t_in=33.36, t_out=40.0, arrive="rays",
-          source=(31.6, 2.0, -3.0), leave="arch", to=tuple(LIGHTS[8]), n=110000, n_label=12000),
+    _word(34.3, 37.7, 0.52, 0.58, 15.0, 132, expr="Compliment", t_in=33.36, t_out=40.0, arrive="rays",
+          source=(31.6, 2.0, -3.0), leave="arch", to=tuple(LIGHTS[8]), n=110000, n_label=12000, reflect=False),
 ]
 WORDS = PW.Words(_SPECS, face="camera")
 LIT = [WORDS[lab].t_out - 0.3 for lab in PW.LABELS]      # each light wakes as its word's stream reaches it
@@ -287,16 +292,16 @@ def _arc(a, b, lift, n=24):
 
 # lines drawn between people: (from, to, t0, t1, colour, lift). A line once drawn never goes out.
 LINKS = [
-    ((-33.0, 1.35, 0.1), (-30.9, 1.35, -0.2), 2.4, 3.0, COL["Greeting"], 0.7),
-    ((-30.9, 1.35, -0.2), (-17.3, 1.3, 0.2), 6.3, 7.2, SILVER, 1.5),
-    ((-17.1, 1.3, 0.2), (-14.9, 0.8, 0.0), 9.4, 10.6, COL["Gratitude"], 0.4),
-    ((-14.9, 1.2, 0.0), (-0.8, 1.3, 0.0), 12.9, 13.7, SILVER, 1.5),
-    ((-0.75, 1.3, 0.0), (0.75, 1.3, 0.0), 16.6, 17.0, COL["Apology"], 0.25),
-    ((0.75, 1.3, 0.0), (13.4, 1.3, 0.8), 19.6, 20.3, SILVER, 1.5),
-    ((16.0, 1.3, -1.2), (18.1, 1.3, -0.3), 23.7, 24.3, COL["Respect"], 0.4),
-    ((18.1, 1.3, -0.3), (31.1, 0.8, 0.0), 26.4, 27.2, SILVER, 1.5),
-    ((29.5, 1.5, -0.8), (31.1, 0.9, 0.0), 27.2, 27.9, COL["Encouragement"], 0.5),
-    ((33.0, 1.2, 0.0), (31.1, 0.9, 0.0), 30.4, 31.0, COL["Consideration"], 0.3),
+    ((-32.5, 1.35, 0.1), (-30.9, 1.3, -0.2), 2.4, 3.0, COL["Greeting"], 0.7),
+    ((-30.7, 0.03, -0.2), (-19.9, 0.03, 0.3), 6.3, 7.2, SILVER, 0.0),          # paths of light on the mirror
+    ((-17.2, 1.3, 0.3), (-14.9, 0.8, 0.0), 9.4, 10.6, COL["Gratitude"], 0.4),
+    ((-14.8, 0.03, 0.0), (-0.6, 0.03, 0.0), 12.9, 13.7, SILVER, 0.0),
+    ((-0.58, 1.3, 0.0), (0.58, 1.3, 0.0), 16.6, 17.0, COL["Apology"], 0.2),
+    ((0.6, 0.03, 0.0), (14.7, 0.03, 0.45), 19.6, 20.3, SILVER, 0.0),
+    ((16.0, 1.3, -1.2), (18.1, 1.3, 0.1), 23.7, 24.3, COL["Respect"], 0.4),
+    ((18.1, 0.03, 0.1), (31.2, 0.03, 0.0), 26.4, 27.2, SILVER, 0.0),
+    ((29.5, 1.5, -0.9), (31.2, 0.8, 0.0), 27.2, 27.9, COL["Encouragement"], 0.5),
+    ((32.5, 1.2, 0.0), (31.3, 0.8, 0.0), 30.4, 31.0, COL["Consideration"], 0.3),
 ]
 
 
@@ -307,12 +312,13 @@ class Lines:
         segs = []
         for a, b, t0, t1, c, lift in LINKS:
             segs.append((_arc(a, b, lift), t0, t1, c, 0.010))
-        threads = [((-32.0, 2.6, 0.0), 0, 7.4), ((-16.0, 2.6, 0.0), 1, 13.0), ((0.0, 2.6, 0.0), 2, 18.0),
-                   ((0.0, 2.4, 0.0), 3, 21.0), ((16.0, 2.6, 0.0), 4, 24.4), ((16.0, 2.4, 0.0), 5, 27.4),
-                   ((31.6, 2.6, 0.0), 6, 31.2), ((31.6, 2.4, 0.0), 7, 34.0), ((31.6, 2.8, 0.0), 8, 39.8)]
+        threads = [((-32.0, 2.6, 0.0), 0), ((-16.0, 2.6, 0.0), 1), ((0.0, 2.6, 0.0), 2), ((0.0, 2.4, 0.0), 3),
+                   ((16.0, 2.6, 0.0), 4), ((16.0, 2.4, 0.0), 5), ((31.6, 2.6, 0.0), 6), ((31.6, 2.4, 0.0), 7),
+                   ((31.6, 2.8, 0.0), 8)]
+        threads = [(p, i, 40.45 + 0.2 * i) for p, i in threads]      # at the breath, one after the other
         for p, i, tt in threads:
             e = np.asarray(LIGHTS[i])
-            segs.append((_arc(p, e, 6.0, 40), tt, tt + 1.4, COL[PW.LABELS[i]], 0.05))
+            segs.append((_arc(p, e, 6.0, 40), tt, tt + 1.2, COL[PW.LABELS[i]], 0.06))
         A, B, T0, T1, C, U, W = [], [], [], [], [], [], []
         for p, t0, t1, c, w in segs:
             m = len(p) - 1
@@ -357,6 +363,8 @@ class Web:
                 continue                                       # keep the pull-back corridor clear
             if np.linalg.norm(p - ARCH_C) < ARCH_R + 6.0:
                 continue                                       # keep the globe clear
+            if np.hypot(p[0] - MOTHER_AT[0], p[2] - MOTHER_AT[2]) < 45.0:
+                continue                                       # keep clear of Heavenly Mother
             pts.append(p)
         self.base = np.array(pts)
         self.scale = rng.uniform(2.2, 6.0, n)
@@ -408,18 +416,18 @@ class Web:
         if t < 37.5:
             return None
         appear = float(_ss(37.5, 40.0, t))
-        day = float(_ss(50.5, 54.0, t))
+        day = float(_ss(50.5, 54.5, t))
         lit = _ss(0.0, 0.25, t - self.person_reach[self.owner])
         flash = np.exp(-np.maximum(t - self.person_reach[self.owner], 0.0) * 3.0) * (t >= self.person_reach[self.owner])
         star_col = lin(STEEL)[None] * (1 - lit[:, None]) + lin(SILVER)[None] * lit[:, None]
         out = [dict(pos=self.stars, size=0.09 * self.scale[self.owner] * (0.7 + 0.6 * self.r),
-                    color=star_col * (1.0 + 2.0 * flash[:, None]), alpha=appear * (0.35 + 0.6 * lit) * (1 - 0.6 * day),
+                    color=star_col * (1.0 + 2.0 * flash[:, None]), alpha=appear * (0.35 + 0.6 * lit) * (1 - day),
                     kind="spark", emit=1.5 + 2.0 * flash, twinkle=0.7)]
         la, lb = self.stars[self.pairs[:, 0]], self.stars[self.pairs[:, 1]]
         lo = self.owner[self.pairs[:, 0]]
         llit = _ss(0.0, 0.4, t - self.person_reach[lo])
         out.append(dict(pos=la, pos2=lb, size=0.02 * self.scale[lo], color=lin(SILVER) * (0.6 + 0.8 * llit[:, None]),
-                        alpha=appear * (0.12 + 0.4 * llit) * (1 - 0.6 * day), kind="line"))
+                        alpha=appear * (0.12 + 0.4 * llit) * (1 - day), kind="line"))
         on = t >= self.et0
         if on.any():
             f = np.clip((t - self.et0[on]) / np.maximum(self.et1[on] - self.et0[on], 1e-6), 0.0, 1.0)
@@ -427,8 +435,8 @@ class Web:
             b = a + (self.eb[on] - a) * f[:, None]
             fresh = 1.0 - _ss(0.0, 1.2, t - self.et1[on])
             col = lin(ELECTRIC)[None] * fresh[:, None] + lin(SILVER)[None] * (1 - fresh[:, None])
-            out.append(dict(pos=a, pos2=b, size=0.12, color=col * (1.2 + 1.8 * fresh[:, None]),
-                            alpha=(0.3 + 0.6 * fresh) * (1 - 0.75 * day), kind="line",
+            out.append(dict(pos=a, pos2=b, size=0.06, color=col * (1.0 + 2.0 * fresh[:, None]),
+                            alpha=(0.16 + 0.6 * fresh) * (1 - day), kind="line",
                             u=np.zeros(on.sum()), u2=self.elen[on], pulse=(60.0, 8.0, 3.0, 12.0)))
         return out
 
@@ -499,14 +507,34 @@ class Globe:
         return out
 
 
+class NineLights:
+    """The nine lights of the arch, large: each wakes with a flare when its word's stream reaches it and rides
+    the arch as it turns."""
+
+    def sample(self, t):
+        on = np.array([t >= x for x in LIT])
+        if not on.any():
+            return None
+        pos = arch_points(ARCH["span"], ARCH["height"], 0.0, center=ARCH["center"], yaw=_yaw(t))
+        age = np.array([t - x for x in LIT])[on]
+        flare = np.exp(-np.maximum(age, 0.0) * 1.6)
+        col = np.array([lin(COL[lab]) for lab in PW.LABELS])[on]
+        day = 1.0 - 0.6 * float(_ss(52.0, 55.0, t))
+        p = pos[on]
+        return [dict(pos=p, size=2.4 + 3.0 * flare, color=col * 0.5 + 0.5, alpha=0.95 * day, kind="spark",
+                     emit=3.0 + 4.0 * flare, twinkle=0.3, fog=0.0),
+                dict(pos=p, size=11.0 + 14.0 * flare, color=col, alpha=(0.22 + 0.5 * flare) * day, kind="soft",
+                     fog=0.0)]
+
+
 class Mother:
     """Heavenly Mother at the breath, a great far constellation seen only from behind: her joints as stars
     and the lines between them over a sheer veiled body of light (the body itself is added in build)."""
 
     def sample(self, t):
-        if not (39.6 <= t <= 50.0):
+        if not (39.6 <= t <= 53.6):
             return None
-        g = float(_ss(40.1, 41.6, t) * (1.0 - _ss(46.5, 49.5, t)))
+        g = float(_ss(40.1, 41.6, t) * (1.0 - _ss(51.2, 53.4, t)))
         if g <= 0.002:
             return None
         c = _P["mother"].constellation(t)
@@ -515,10 +543,10 @@ class Mother:
         a, b = pos[pairs[:, 0]], pos[pairs[:, 1]]
         b = a + (b - a) * k[:, None]
         on = k > 0
-        out = [dict(pos=pos, size=2.6, color=lin("#fff0cf") * 2.0, alpha=0.95 * g, kind="spark", emit=3.0,
+        out = [dict(pos=pos, size=0.9, color=lin("#fff0cf") * 2.0, alpha=0.9 * g, kind="spark", emit=2.5,
                     twinkle=0.4)]
         if on.any():
-            out.append(dict(pos=a[on], pos2=b[on], size=0.5, color=lin("#ffe6b8"), alpha=0.7 * g,
+            out.append(dict(pos=a[on], pos2=b[on], size=0.16, color=lin("#ffe6b8"), alpha=0.5 * g,
                             kind="line"))
         return out
 
@@ -526,34 +554,36 @@ class Mother:
 # ----------------------------------------------------------------------------------------------- the people
 def _people():
     from p3d.body import Body
-    plex = lambda c2, b=1.0: [dict(name="plexus", bright=1.1 * b, color2=c2), dict(name="glitter", bright=0.45 * b)]  # noqa: E731
+    plex = lambda c2, b=1.0: [dict(name="plexus", bright=0.38 * b, color2=c2, haze=0.12, share=0.09),
+                              dict(name="glitter", bright=0.05 * b)]  # noqa: E731
     P = {}
     # S0: the first woman (profile) and the man she greets
-    P["A"] = Body("woman", at=(-33.3, 0.0), facing=90, garment="coat", hair=True, look=plex("#ffd9a0"),
+    P["A"] = Body("woman", at=(-33.3, 0.0), facing=90, garment="coat",
+                  look=[dict(name="rim", bright=0.8), dict(name="plexus", bright=0.3, color2="#ffd9a0", haze=0.1)],
                   color=SILVER, color2="#ffd9a0", points=90000, detail=dict(head=3),
-                  gesture=[(1.3, 2.3, "look_up", dict(amount=10)), (1.9, 6.5, "touch", dict(side="R", to=(-31.6, 1.35, 0.0)))],
+                  gesture=[(1.3, 2.3, "look_up", dict(amount=10)), (1.9, 6.5, "reach", dict(side="R", to=(-31.9, 1.3, 0.15)))],
                   show=(0.4, 8.0), fade=0.5, seed=1)
     P["B"] = Body("man", at=(-30.7, -0.2), facing=270, garment="tunic", look=plex(COL["Greeting"]),
                   color=SILVER, color2=COL["Greeting"], gesture=[(3.4, 7.0, "open_arms")], points=60000,
                   show=(2.4, 8.0), fade=0.6, seed=2)
     # S1: a walker comes to a kneeling, tired worker; the thanks fill her with light and she rises
-    P["C"] = Body("man", at=[(6.84, (-20.6, 0.6)), (9.4, (-17.3, 0.2))], facing=90,
-                  motion=[(6.84, "walk"), (9.4, "stand")], garment="coat", look=plex(COL["Gratitude"]),
+    P["C"] = Body("man", at=(-19.9, 0.3), facing=90,
+                  motion=[(6.84, "walk"), (9.4, "stand")], garment="coat", look=plex(COL["Gratitude"], 0.6),
                   color=SILVER, color2=COL["Gratitude"], gesture=[(9.6, 14.0, "open_arms")], points=60000,
                   effects=[dict(kind="shed", t=6.84)], show=(6.3, 14.2), fade=0.5, seed=3)
     P["D"] = Body("woman", at=(-14.8, 0.0), facing=270, motion=[(6.0, "kneel"), (12.3, "stand")],
-                  garment="dress", look=[dict(name="plexus", bright=0.5, color2=COL["Gratitude"]),
-                                         dict(name="glitter", bright=1.0, color2=COL["Gratitude"],
+                  garment="dress", look=[dict(name="plexus", bright=0.3, color2=COL["Gratitude"]),
+                                         dict(name="glitter", bright=0.35, color2=COL["Gratitude"],
                                               weight=lambda t: float(_ss(11.8, 13.0, t)))],
                   color=STEEL, color2=COL["Gratitude"], gesture=[(10.5, 12.3, "look_up", dict(amount=12))],
                   points=60000, show=(6.3, 14.2), fade=0.5, seed=4)
     # S2: back to back; they turn, reach, and their hands touch
-    P["E"] = Body("man", at=(-0.75, 0.0), facing=[(13.3, 270.0), (14.6, 270.0), (15.4, 90.0)],
+    P["E"] = Body("man", at=(-0.58, 0.0), facing=[(13.3, 270.0), (14.6, 270.0), (15.4, 90.0)],
                   motion=[(13.0, "stand"), (14.5, "shuffle"), (15.5, "stand")], garment="tunic",
                   look=plex(COL["Apology"]), color="#ffd9c0", color2=COL["Apology"], points=60000,
                   gesture=[(13.3, 14.6, "bow"), (16.0, 21.0, "touch", dict(side="R", to=_MEET, palm="in"))],
                   show=(12.8, 21.0), fade=0.5, seed=5)
-    P["F"] = Body("woman", at=(0.75, 0.0), facing=[(13.3, 90.0), (15.6, 90.0), (16.4, 270.0)],
+    P["F"] = Body("woman", at=(0.58, 0.0), facing=[(13.3, 90.0), (15.6, 90.0), (16.4, 270.0)],
                   motion=[(13.0, "stand"), (15.5, "shuffle"), (16.5, "stand")], garment="dress", hair=True,
                   look=plex(COL["Inclusiveness"]), color="#f9d6e6", color2=COL["Inclusiveness"], points=60000,
                   gesture=[(16.2, 21.0, "touch", dict(side="L", to=_MEET, palm="in"))],
@@ -564,29 +594,31 @@ def _people():
                   look=plex(COL["Concession"]), color=SILVER, color2=COL["Concession"], points=60000,
                   gesture=[(20.4, 23.6, "offer", dict(side="L")), (24.4, 28.0, "listen")],
                   show=(19.4, 28.0), fade=0.5, seed=7)
-    P["G"] = Body("woman", at=[(19.85, (12.6, 0.6)), (23.4, (18.1, -0.3))], facing=[(19.85, 95.0), (23.4, 95.0), (24.3, 250.0)],
+    P["G"] = Body("woman", at=(14.7, 0.45), facing=[(19.85, 95.0), (23.4, 95.0), (24.3, 250.0)],
                   motion=[(19.85, "walk"), (23.4, "shuffle"), (24.4, "stand")], garment="robe", hair=True,
                   look=plex(COL["Respect"]), color=SILVER, color2=COL["Respect"], points=60000,
                   effects=[dict(kind="shed", t=19.85)], gesture=[(24.6, 28.0, "offer", dict(side="R"))],
                   show=(19.4, 28.0), fade=0.5, seed=8)
     # S4: a youth on one knee, an elder raising both arms; a woman reaches down and their hands clasp
-    P["K"] = Body("man", at=(31.1, 0.0), facing=90, motion=[(26.0, "kneel"), (33.2, "stand")], garment="tunic",
+    P["K"] = Body("man", at=(31.2, 0.0), facing=90, motion=[(20.0, "kneel"), (33.0, "stand")], garment="tunic",
                   look=plex(ELECTRIC), color=STEEL, color2=ELECTRIC, points=60000,
                   gesture=[(28.6, 30.8, "look_up", dict(amount=14)), (31.2, 33.4, "touch", dict(side="R", to=_CLASP, palm="up")),
-                           (33.4, 41.0, "raise_hand", dict(side="R", to=(32.05, 2.35, 0.1)))],
+                           (33.4, 41.0, "raise_hand", dict(side="R", to=(31.85, 2.3, 0.1)))],
                   show=(26.2, 41.0), fade=0.5, seed=9)
     P["L"] = Body("woman", at=(29.3, -0.9), facing=60, stoop=0.5, garment="robe", look=plex(COL["Encouragement"]),
                   color=SILVER, color2=COL["Encouragement"], points=55000,
                   gesture=[(27.0, 32.0, "raise"), (33.6, 41.0, "open_arms")], show=(26.2, 41.0), fade=0.5, seed=10)
-    P["M"] = Body("woman", at=(33.0, 0.0), facing=270, garment="dress", look=plex(COL["Consideration"]),
+    P["M"] = Body("woman", at=(32.5, 0.0), facing=270, garment="dress", look=plex(COL["Consideration"]),
                   color=SILVER, color2=COL["Consideration"], points=60000,
                   gesture=[(29.8, 33.4, "touch", dict(side="R", to=_CLASP, palm="down")),
-                           (33.4, 41.0, "raise_hand", dict(side="L", to=(32.05, 2.35, 0.1)))],
+                           (33.4, 41.0, "raise_hand", dict(side="L", to=(31.85, 2.3, 0.1)))],
                   show=(29.3, 41.0), fade=0.9, seed=11)
     # Heavenly Mother: far beyond the arch, facing away (the camera never passes her), veiled, arms opening
-    P["mother"] = Body("woman", at=(0.0, -470.0), facing=180, garment="robe", veil=dict(length=1.5),
-                       look="glitter", color="#fff0cf", color2="#cfe0ff", bright=0.8, points=50000, scale=150.0,
-                       gesture=[(40.3, 60.0, "open_arms")], show=(39.8, 49.6), fade=1.2, seed=12)
+    P["mother"] = Body("woman", at=(MOTHER_AT[0], MOTHER_AT[2]), facing=MOTHER_FACING, garment="robe",
+                       veil=dict(length=1.5, wide=1.2),
+                       look=[dict(name="rim", bright=1.0), dict(name="glitter", bright=0.35)],
+                       color="#ffe6b8", color2="#fff6e6", points=70000, scale=40.0,
+                       gesture=[(40.4, 60.0, "open_arms")], show=(39.6, 53.6), fade=1.2, seed=12)
     return P
 
 
@@ -603,8 +635,8 @@ def _templates():
 
 def build(scene):
     _P.update(_people())
-    scene.add("near stars", StarField())
-    scene.add("lines", Lines())
+    scene.add("near stars", PW.KeepClear(StarField(), WORDS))
+    scene.add("lines", PW.KeepClear(Lines(), WORDS))
     for name in ("A", "B", "C", "D", "E", "F", "G", "H", "K", "L", "M"):
         _P[name].add(scene, "person " + name)
     _P["mother"].add(scene, "mother body", reflect=True)
@@ -621,6 +653,7 @@ def build(scene):
                                                     bright=0.8 if name != "A" else 1.0))
     scene.add("web", Web(_templates()))
     scene.add("mother", Mother())
+    scene.add("nine lights", NineLights(), lod=False)
     scene.add("globe", Globe())
     WORDS.add_to(scene)
     WORDS.check(CAMERA)
@@ -648,13 +681,40 @@ LOOKS = dict(
     sunrise2=dict(base="sunrise", sun_el=4.0, sun_int=1.1, rays=0.9, clouds=0.2, mist=0.15),
 )
 
+_RAY_OWN = Track([(0.0, 1.3), (2.6, 1.1), (4.3, 0.0), (39.9, 0.0), (41.2, 1.0), (48.8, 1.0), (50.4, 0.0)])
+_RAYS_WORD = WORDS["Compliment"].light()          # the Compliment's rays from behind the raised hands
+
+
+def RAY_LIGHT(t):
+    if 32.0 < t < 39.5:
+        return float(_RAYS_WORD["strength"](t))
+    return float(_RAY_OWN(t))
+
+
+def _ray_light_color(t):
+    return "#e9dcff" if 32.0 < t < 39.5 else "#ffe2b0"
+
+
+def _ray_light_pos(t):
+    """One warm light whose rays fan round a head seen against it: behind the first woman's head as the
+    camera falls toward her, behind the Compliment, behind Heavenly Mother's veiled head (from behind)."""
+    if 32.0 < t < 39.5:
+        return _RAYS_WORD["pos"](t)
+    who, back, fallback = ("A", 8.0, A_HEAD) if t < 20.0 else ("mother", 70.0, (MOTHER_AT[0], 60.0, MOTHER_AT[2]))
+    head = np.asarray(_P[who].where(t, "head"), np.float64) if who in _P else np.asarray(fallback, np.float64)
+    eye = np.asarray(CAMERA.state(t).pos, np.float64)
+    d = head - eye
+    return tuple(head + d / max(np.linalg.norm(d), 1e-6) * back)
+
+
 WORLD = WORDS.world(dict(
     looks=LOOKS,
     look=[(0.0, "constel"), (13.3, "violet", 0.8), (19.85, "deep", 0.6), (26.79, "electric", 0.6),
           (33.36, "constel", 0.8), (40.6, "hush", 1.6), (45.0, "globe", 2.0), (SUN_BREAK + 0.6, "sunrise2", 2.2),
           (53.4, "day", 2.6)],
     hills=0.0, ripple=0.05, mirror=1.0, clouds=0.0,
-    sun_az=180.0,
+    sun_az=166.0,
+    light=dict(pos=_ray_light_pos, color=_ray_light_color, strength=RAY_LIGHT, size=1.4, rays=1.0),
     star_turn=lambda t: 0.35 * t,
     arch=dict(lit=LIT, colors=[COL[lab] for lab in PW.LABELS], line=Track([(0.0, 0.0), (ARCH_DRAWN, 0.0), (ARCH_DRAWN + 0.6, 1.0)]),
               yaw=_yaw, bright=1.6, **ARCH),
@@ -680,5 +740,39 @@ TAGLINE = dict(text="Sunday, December 6 · 4:30 PM\nWorld Mission Society Church
                sizes=(78, 77), t0=53.6, t1=55.0, color=theme.NAVY, glow=theme.WHITE_GLOW, anim="rise")
 _base.TITLE = TITLE
 _base.TAGLINE = TAGLINE
+
+# The concert badge (PHASEB update 3): the title and the date from frame 0, large over the first image, settled
+# in the top left corner by 2.8 s, gone as the end card forms (it carries the same words).
+CREDIT = dict(song="The Words of Mother’s Love",
+              concert="Healing Concert · Sunday, December 6 · 4:30 PM",
+              t_in=-1.0, t_full=0.0,
+              t_move=1.6, t_rest=2.8,
+              scale=0.55, alpha_rest=0.92,
+              margin_x=0.035, margin_top=0.05)
+CREDIT_OUT = (T_FORM, T_FORM + 1.0)
+
+
+def credit_state(t, bbox):
+    """Centre, scale and strength of the title block; bbox is its size at full card size."""
+    c = CREDIT
+    x0, x1, y0, y1 = bbox
+
+    def ss(a, b, x):
+        u = min(max((x - a) / (b - a), 0.0), 1.0)
+        return u * u * (3 - 2 * u)
+
+    a_in = ss(c["t_in"], c["t_full"], t) * (1.0 - ss(CREDIT_OUT[0], CREDIT_OUT[1], t))
+    m = ss(c["t_move"], c["t_rest"], t)
+    scale = c["scale"] ** m
+    cx0, cy0 = (x0 + x1) / 2.0, (y0 + y1) / 2.0
+    tx = c["margin_x"] + c["scale"] * (x1 - x0) / 2.0
+    ty = 1.0 - c["margin_top"] - c["scale"] * (y1 - y0) / 2.0
+    cx, cy = cx0 * (1 - m) + tx * m, cy0 * (1 - m) + ty * m
+    alpha = a_in * (1.0 + (c["alpha_rest"] - 1.0) * m)
+    return (cx, cy, scale, alpha), (cx0, cy0)
+
+
+_base.CREDIT = CREDIT
+_base.credit_state = credit_state
 FRAGMENTS = []
 WAVES = []
