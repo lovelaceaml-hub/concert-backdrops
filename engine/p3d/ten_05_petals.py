@@ -374,6 +374,11 @@ class Painted:
         if hasattr(inner, "gain"):
             self.gain = inner.gain
 
+    def __getattr__(self, name):
+        if name == "inner":
+            raise AttributeError(name)
+        return getattr(self.inner, name)
+
     def sample(self, t, cam=None):
         res = self.inner.sample(t, cam) if self.wants_camera else self.inner.sample(t)
         out = paint_batches(res, self.kinds, self.paint, self.paint_light)

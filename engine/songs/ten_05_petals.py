@@ -194,7 +194,7 @@ def _moves(focus):
     b1 = (B + np.array([0.7, 11.0, 2.6]), B + np.array([0.4, 0.0, 0.3]))
     c0 = (C(-5.6, -0.3, 1.45), C(0.0, 0.0, 1.62))       # half figures
     d0 = (D(-8.2, -0.6, 1.25), D(2.6, 0.0, 1.95))
-    e0 = (E(-4.4, -0.3, 0.95), E(0.0, 0.0, 1.05))       # two seated, half figures in profile
+    e0 = (E(-1.75, 0.0, 1.62), E(0.0, 0.0, 1.56))       # two faces in profile, close
     f0 = (F(-4.0, -0.7, 1.05), F(0.0, 0.0, 1.25))       # the prayer, close
     w0 = (F(-16.0, 3.0, 9.0), F(22.0, 0.0, 7.5))        # high over the meadow
     w1 = (F(-17.0, 4.0, 9.6), F(22.0, 2.0, 12.5))       # the breath: up into the sky
@@ -226,12 +226,12 @@ def _moves(focus):
         dolly(d0[0], D(-6.0, -0.2, 1.3), 23.8, S5, look=(d0[1], D(3.0, 0.0, 1.9)), fov=40, aperture=0.04,
               blend=0.6),
         # 5. two seated under the white tree: the lens opens round them
-        fly([(S5, D(-6.0, -0.2, 1.3), D(3.0, 0.0, 1.9)), (27.4, E(-10.0, 3.0, 2.6), E(0.0, 0.0, 1.2)),
+        fly([(S5, D(-6.0, -0.2, 1.3), D(3.0, 0.0, 1.9)), (27.4, E(-7.0, 2.0, 2.4), E(0.0, 0.0, 1.5)),
              (28.1, *e0)], fov=(42, 34), aperture=0.02, blend=0.35),
-        hold(e0[0], e0[1], 28.1, S6, drift=_d(E.view) * 0.08, fov=34, focus=4.4,
+        hold(e0[0], e0[1], 28.1, S6, drift=_d(E.view) * 0.03, fov=34, focus=1.75,
              aperture=Track([(28.1, 0.04), (29.0, 0.05), (31.6, 0.20), (S6, 0.20)]), blend=0.6),
         # 6. the gale: a barrel roll down to the prayer; a slow turn round it; then up over the whole meadow
-        fly([(S6, e0[0] + _d(E.view) * 0.4, e0[1]), (33.9, F(-9.0, 2.0, 4.0), F(0.0, 0.0, 1.2)), (34.4, *f0)],
+        fly([(S6, e0[0] + _d(E.view) * 0.16, e0[1]), (33.9, F(-9.0, 2.0, 4.0), F(0.0, 0.0, 1.2)), (34.4, *f0)],
             fov=(46, 36), aperture=0.02, blend=0.3),
         orbit(F(0.0, 0.0, 0.0), radius=4.05, height=(1.05, 1.15), a0=F.view + 180.0 - 10.0,
               a1=F.view + 180.0 + 14.0, t0=34.4, t1=WIDE, look=F(0.0, 0.0, 1.25), fov=36, aperture=0.04, blend=0.5),
@@ -300,7 +300,8 @@ INK = dict(Greeting="#c23e28", Apology="#a8500e", Inclusiveness="#b0225f", Respe
            Consideration="#a3203f", Compliment="#6a3fc0")
 
 _SPECS = [
-    _w("Greeting", 0.52, 0.62, 7.0, 104, 1.5, 3.5, 6.3, 7.1, arrive="petals", source=_palm("giver", "R"),
+    _w("Greeting", 0.52, 0.62, 7.0, 104, 1.5, 3.5, 6.3, 7.1, arrive="petals",
+       source=lambda t: BODIES["giver"].where(t, "lips") if "giver" in BODIES else np.zeros(3),
        leave="petals", wind=(1.0, 0.35, -0.2), paint=INK["Greeting"]),
     dict(expr="Gratitude", pos=(float(B[0]), 0.04, float(B[2])), em=_GRAT_EM, face="flat", facing=0.0,
          t_in=7.6, t_read0=9.0, t_read1=11.9, t_out=12.7, arrive="petals",
@@ -311,7 +312,7 @@ _SPECS = [
        leave="petals", wind=(1.0, 0.4, -0.3), paint=INK["Inclusiveness"]),
     _w("Concession", 0.52, 0.63, 9.5, 104, 23.3, 24.2, S5 - 0.07, 27.5, arrive="petals",
        source=_palm("yielder", "R"), leave="wind", wind=(1.0, 0.2, -0.4)),
-    _w("Respect", 0.53, 0.66, 5.4, 96, 28.0, 29.0, 31.7, 32.3, arrive="palm", source=_palm("speaker", "R"),
+    _w("Respect", 0.52, 0.70, 3.6, 92, 28.0, 29.0, 31.7, 32.3, arrive="palm", source=_palm("speaker", "R"),
        leave="petals", wind=(1.0, 0.5, -0.2), paint=INK["Respect"]),
     _w("Encouragement", 0.52, 0.66, 6.2, 92, 33.7, 34.6, 37.4, 38.2, arrive="petals",
        source=lambda t: F(0.0, 0.0, 6.0), leave="petals", wind=(-0.4, 0.9, 0.2)),
@@ -335,71 +336,83 @@ _BOUGH_AZ = [4.0 + 92.0 * (b - CLIMB) / (PEAK - CLIMB) + 22.0 for b in _BLOOM]
 _BUD = [WORDS[e["label"]].t_read1 for e in PW.EXPRESSIONS]
 
 
-def _hex_scale(h, k):
-    c = np.clip(np.array([int(h[i:i + 2], 16) for i in (1, 3, 5)]) * k, 0, 255)
-    return "#%02x%02x%02x" % tuple(int(v) for v in c)
-
-
 def _setup(scene):
     from p3d import pairs
+    from p3d import styles as ST
     from p3d.body import Body
     from p3d.crowd import Crowd
+    from p3d.stylekit import Dressed
     w = WIND
-    base = dict(wind=w, fade=0.7, points=56000)
-    shed = dict(kind="shed", sprite="petal", n=1600, life=2.6, speed=0.5, size=7.0, rise=0.12, turb=0.4)
+    shed = dict(kind="shed", sprite="petal", n=1400, life=2.6, speed=0.5, size=7.0, rise=0.12, turb=0.4)
 
-    def add(name, b, fill="auto", mask=None):
-        """Adds a body: its shed petals painted and kept out of the words; a coat of colour under its light."""
+    def wrap(name, fill=None):
+        """The named set again, its shed petals painted and kept out of the words being read (and, with fill, a
+        coat of colour under its light)."""
+        e = scene._entries[name]
+        scene.add(name, K.Painted(e.pointset, fill=fill, fill_alpha=0.26, words=WORDS), mask=e.mask,
+                  reflect=e.reflect, depth_of_field=e.depth_of_field)
+
+    def style(name, preset, sky, **kw):
+        if preset not in ("glitter_profile", "constellation_profile", "nebula_profile", "spark_profile"):
+            kw["effects"] = list(kw.get("effects", [])) + [dict(shed)]
+            kw.setdefault("wind", w)
+            # keys over time go to the body itself; the preset gets a plain value for its own sums
+            body = dict(kw.pop("body", None) or {})
+            if isinstance(kw.get("facing"), list):
+                body["facing"] = kw["facing"]
+                kw["facing"] = kw["facing"][-1][1]
+            if isinstance(kw.get("at"), list):
+                body["at"] = kw["at"]
+                kw["at"] = kw["at"][0][1]
+            if body:
+                kw["body"] = body
+        if preset == "gold_glitter":
+            kw.setdefault("t", 1e6)                 # whole: no blowing apart unless asked
+        st = ST.add(scene, preset, name=name, sky=sky, **kw)
+        BODIES[name] = st.main
+        wrap(name)
+        return st
+
+    def pair_body(name, b, paint=0.85, light=1.0, fill=None):
         BODIES[name] = b
-        if fill == "auto":
-            fill = _hex_scale("#%02x%02x%02x" % tuple(int(round(v)) for v in np.clip(
-                np.asarray(b.color) ** (1 / 2.2) * 255, 0, 255)), 0.95)
-        m = b.mask() if mask is None else (b.mask(**mask) if isinstance(mask, dict) else None)
-        scene.add(name, K.Painted(b, fill=fill, fill_alpha=0.26, words=WORDS), mask=m)
+        scene.add(name, K.Painted(Dressed(b, paint=paint, paint_light=light), fill=fill, fill_alpha=0.22,
+                                  words=WORDS), mask=None)
         return b
 
-    def body(name, shape, fill="auto", mask=None, **kw):
-        d = dict(base)
-        d.update(kw)
-        d["bright"] = d.get("bright", 1.5) * 1.35
-        d["effects"] = list(d.get("effects", [])) + [dict(shed)]
-        return add(name, Body(shape, **d), fill, mask)
-
-    # ---- 1. Greeting: the giver in close profile, a window onto a sunrise (p07); the man of gold turns and waves
-    body("giver", "woman", at=(A.c[0], A.c[2]), facing=az_of(-_r(A.view)), garment="dress", hair=True,
-         look=["window", dict(name="glitter", bright=0.5)], color="#ffd2b0", color2="#ffffff",
-         gesture=[(-3.0, WHIP1 + 0.3, "blow", dict(side="R"))], show=(-1.0, 3.4), fade=0.3, points=80000,
-         detail=dict(head=3), fill=None, mask=dict(sky="sunrise", edge=0.6))
-    man = PW.place(_LAYOUT, 4.9, 0.30, 0.42, 8.6)
+    # ---- 1. Greeting: a young woman's face in close profile, gold glitter (p08), breathes a stream of petals
+    # across the water to a man of gold who has his back to her; touched by them he turns and waves
+    head = A(0.0, -0.05, 1.50)
+    style("giver", "glitter_profile", "day", shape="woman", at=tuple(head), facing=az_of(-_r(A.view)),
+          height=0.30, show=(-1.0, 3.4), tilt=lambda t: 6.0 + 4.0 * float(K._ss(-0.5, 0.6, t)))
+    man = PW.place(_LAYOUT, 4.9, 0.30, 0.42, 7.4)
     toward = az_of(_d(A.view) * -1.0 + _r(A.view) * 1.4)
-    body("stranger", "man", at=(man[0], man[2]), facing=[(0.0, toward + 160.0), (2.9, toward + 160.0),
-                                                       (3.7, toward)],
-         garment="coat", look="glitter", color="#ffc76a", color2="#fff1d0",
-         gesture=[(3.5, 6.6, "wave", dict(side="R"))], show=(1.6, 7.4), bright=1.6)
+    style("stranger", "gold_glitter", "day", shape="man", at=(man[0], man[2]),
+          facing=[(0.0, toward + 160.0), (2.9, toward + 160.0), (3.7, toward)], garment="coat",
+          gesture=[(3.5, 6.6, "wave", dict(side="R"))], show=(1.6, 7.4))
     # ---- 2. Gratitude: a ring of people round the thanks on the water, bowing together (from above)
     scene.add("bowing", Crowd(n=22, area=dict(center=(B[0], B[2] + 0.3), radius=(4.0, 5.2), arc=(-62.0, 62.0)),
                               facing="center", kinds=("bow",), start=dict(t=7.6, dur=1.0), until=12.9, points=6000,
                               color="#ffd98a", color2="#fff6e0", bright=1.6, seed=3.0))
-    # ---- 3. Apology and Inclusiveness: a man drawn as stars, head bowed and hands open low; she turns, walks
-    # into his arms, and the embrace blooms
+    # ---- 3. Apology and Inclusiveness: a man drawn as a constellation in navy and gold, head bowed and hands
+    # open low; she turns, walks into his arms, and the embrace blooms into blossom
     meet = C(0.0, 0.0, 0.0)
     ax = _r(C.view)                                    # their axis runs across the picture
     bloom = dict(bloom=dict(t=TOUCH + 0.1, at="chest", speed=1.1, width=0.35, flash=2.0))
     she, he = pairs.embrace(
         TOUCH, at=(meet[0], meet[2]), facing=az_of(ax), approach=1.1,
-        a=dict(shape="woman", garment="dress", hair=True, color="#f7a8c4", color2="#fff0f5", wind=w, fade=0.7,
-               points=56000, bright=2.0, show=(S3, 24.0), sweeps=bloom,
+        a=dict(shape="woman", garment="dress", hair=True, color="#d86a90", color2="#ffd8e6", wind=w, fade=0.7,
+               points=60000, bright=1.3, show=(S3, 24.0), sweeps=bloom,
                facing=[(0.0, az_of(ax) + 180.0), (16.6, az_of(ax) + 180.0), (17.1, az_of(ax))],
-               look=[dict(name="glitter", before="bloom"), dict(name="glitter", after="bloom", color="#ff86b4",
-                                                                bright=1.4)],
+               look=[dict(name="glitter", before="bloom"), dict(name="glitter", after="bloom", color="#e85a90",
+                                                                color2="#ffd0e2", bright=1.2)],
                effects=[dict(shed)]),
-        b=dict(shape="man", garment="tunic", color="#cfe0ff", color2="#ffffff", wind=w, fade=0.7, points=56000,
-               bright=2.1, show=(S3, 24.0), sweeps=bloom,
-               look=[dict(name="plexus", before="bloom", detail=1.0), dict(name="glitter", after="bloom",
-                                                                         color="#ff9fc0", bright=1.4)],
+        b=dict(shape="man", garment="tunic", color="#22357e", color2="#c38a1e", wind=w, fade=0.7, points=64000,
+               bright=1.1, show=(S3, 24.0), sweeps=bloom,
+               look=[dict(name="plexus", before="bloom", detail=1.0, share=0.075, links=3, reach=0.10),
+                     dict(name="glitter", after="bloom", color="#e05a8c", color2="#ffd0e2", bright=1.2)],
                gesture=[(13.0, 17.9, "bow", dict(amount=18.0)), (13.0, 17.9, "offer")], effects=[dict(shed)]))
-    add("friend_w", she, fill="#f08cb2")
-    add("friend_m", he, fill="#c8b8e8")
+    pair_body("friend_w", she, paint=0.85, fill="#e88aac")
+    pair_body("friend_m", he, paint=1.0, light=0.6)
     scene.add("touch", Flare(lambda t: 0.5 * (she.where(t, "chest") + he.where(t, "chest")), TOUCH + 0.1,
                              color="#ffd0e0", color2="#fff6d8", strength=0.6))
     st = K.Tree(base=C(2.4, 6.3, 0.0), height=6.5, boughs=6, colors=("#F582AF", "#FFD0E0", "#ffffff"),
@@ -408,77 +421,72 @@ def _setup(scene):
                 bloom_glow=0.16, petal_light=0.1)
     scene.add("small_tree", st)
     scene.add("small_tree_glow", st.glow_set())
-    # ---- 4. Concession: a star-filled silhouette (p02) steps aside with an open palm toward a path of petals;
-    # butterflies leave her; a man of gold walks on along the path
+    # ---- 4. Concession: a starry silhouette with long hair (p02) steps aside with an open palm toward a path
+    # of petals, butterflies leaving her; a man of gold walks on along the path
     p0, p1 = D(0.2, -0.2, 0.0), D(0.2, -1.3, 0.0)
     scene.add("path", K.PetalPath(D(0.3, 0.1, 0.0), _d(D.view), length=34.0, width=1.2, t0=GUST2 - 0.2, dur=1.6))
-    body("yielder", "woman", at=[(23.6, (p0[0], p0[2])), (24.4, (p1[0], p1[2]))],
-         motion=[(0.0, "stand"), (23.6, "shuffle"), (24.5, "stand")],
-         facing=[(0.0, az_of(-_d(D.view))), (23.6, az_of(-_d(D.view))), (24.4, az_of(_r(D.view)))],
-         garment="robe", look=["window", dict(name="glitter", bright=0.5)], color="#e9dcff", color2="#ffffff",
-         gesture=[(23.9, 27.4, "offer")], show=(GUST2 - 0.2, 27.6), fill=None, mask=dict(sky="stars", edge=0.7),
-         effects=[dict(kind="birds", t=24.6, dur=2.4, n=26, color="#ffd0e8", dir=(0.4, 1.0, 0.3), speed=0.9)])
+    style("yielder", "butterflies", "day", shape="woman", at=[(23.6, (p0[0], p0[2])), (24.4, (p1[0], p1[2]))],
+          motion=[(0.0, "stand"), (23.6, "shuffle"), (24.5, "stand")],
+          facing=[(0.0, az_of(-_d(D.view))), (23.6, az_of(-_d(D.view))), (24.4, az_of(_r(D.view)))],
+          garment="robe", gesture=[(23.9, 27.4, "offer")], show=(GUST2 - 0.2, 27.6), t=24.4)
     q0 = D(-1.6, 0.6, 0.0)
-    body("passer", "man", at=(q0[0], q0[2]), facing=az_of(_d(D.view) + _r(D.view) * 0.05),
-         motion=[(0.0, "stand"), (24.6, "walk", dict(speed=1.1))], garment="tunic", look="glitter",
-         color="#ffc76a", color2="#fff1d0", show=(GUST2 - 0.2, 27.6), bright=1.6)
-    # ---- 5. Respect: two seated under a small white tree, one speaking, the other leaning in, his profile
-    # outlined in sparks (p06)
-    sp, li = E(0.0, -0.75, 0.0), E(0.1, 0.75, 0.0)
-    body("speaker", "woman", at=(sp[0], sp[2]), facing=az_of(li - sp), garment="robe", motion=[(0.0, "sit")],
-         look="glitter", color="#ffb88a", color2="#fff0e0", gesture=[(27.6, 33.6, "offer")], show=(S5 - 0.2, 33.6),
-         bright=1.7)
-    body("listener", "man", at=(li[0], li[2]), facing=az_of(sp - li), garment="tunic", motion=[(0.0, "sit")],
-         look=[dict(name="rim", bright=1.4), dict(name="glitter", bright=0.45)], color="#ffe0b0", color2="#ffffff",
-         gesture=[(27.8, 33.6, "listen")], show=(S5 - 0.2, 33.6), mask=False, detail=dict(head=2))
-    wt = K.Tree(base=E(3.0, 4.6, 0.0), height=5.6, boughs=5, colors=("#ffffff", "#FFE9D6", "#FFD9E4"),
+    style("passer", "gold_glitter", "day", shape="man", at=(q0[0], q0[2]),
+          facing=az_of(_d(D.view) + _r(D.view) * 0.05), motion=[(0.0, "stand"), (24.6, "walk", dict(speed=1.1))],
+          garment="tunic", show=(GUST2 - 0.2, 27.6))
+    # ---- 5. Respect: two faces in profile, close: she speaks (gold glitter), he leans in to listen (a
+    # constellation in navy and gold); a small white tree behind them
+    hs, hl = E(0.0, -0.36, 1.45), E(0.0, 0.36, 1.45)
+    style("speaker", "glitter_profile", "day", shape="woman", at=tuple(hs), facing=az_of(hl - hs), height=0.30,
+          show=(S5 - 0.3, 33.6), tilt=lambda t: 4.0 + 2.0 * np.sin(1.7 * t))
+    style("listener", "constellation_profile", "day", shape="man", at=tuple(hl), facing=az_of(hs - hl), height=0.31,
+          show=(S5 - 0.3, 33.6), tilt=lambda t: -2.0 - 8.0 * float(K._ss(28.2, 29.6, t)))
+    wt = K.Tree(base=E(3.4, 3.4, 0.0), height=5.6, boughs=5, colors=("#ffffff", "#FFE9D6", "#FFD9E4"),
                 bloom=[-5.0] * 5, crown_t=-5.0, crown_colors=("#ffffff", "#FFF3E6", "#FFE1EA"), n_bloom=1300,
                 n_crown=6000, n_bark=8000, seed=14, bloom_glow=0.08, petal_light=0.08)
     scene.add("white_tree", wt)
     scene.add("white_tree_glow", wt.glow_set(lambda t: 1.0 if S5 - 1.0 < t < S6 + 0.5 else 0.0))
-    # ---- 6. Encouragement: kneeling in prayer under falling blossom, her prayer rising as embers; a friend
-    # drawn as stars with a hand on her shoulder
+    # ---- 6. Encouragement: kneeling in prayer under falling blossom, her prayer rising as embers (gold
+    # glitter); a friend drawn as a constellation with a hand on her shoulder (the gale: night palettes)
     kp, fp = F(0.0, -0.25, 0.0), F(0.55, 0.55, 0.0)
-    kneel = body("kneeler", "woman", at=(kp[0], kp[2]), facing=az_of(-_r(F.view)), garment="robe",
-                 motion=[(0.0, "kneel", dict(hands="pray", dur=0.01))], look="glitter", color="#ffcf7a",
-                 color2="#fff4dc", show=(S6 - 0.3, 38.6), bright=1.7,
-                 effects=[dict(kind="shed", sprite="flake", n=2200, life=2.8, speed=0.15, rise=0.7, turb=0.3,
-                               where="top", color="#ffb04a", size=2.5)])
-    body("friend", "man", at=(fp[0], fp[2]), facing=az_of(kp - fp), garment="coat", color="#d8ccff",
-         color2="#ffffff", look=dict(name="plexus", detail=1.0), show=(S6 - 0.3, 38.6), bright=1.9,
-         gesture=[(33.6, 38.6, "hand_on_shoulder", dict(side="R",
-                                                         to=lambda t: kneel.where(t, "shoulder.R", raw=True)))])
+    kneel = style("kneeler", "gold_glitter", "night", shape="woman", at=(kp[0], kp[2]), facing=az_of(-_r(F.view)),
+                  garment="robe", motion=[(0.0, "kneel", dict(hands="pray", dur=0.01))], show=(S6 - 0.3, 38.6),
+                  effects=[dict(kind="shed", sprite="flake", n=2200, life=2.8, speed=0.15, rise=0.7, turb=0.3,
+                                where="top", color="#ffb04a", size=2.5)]).main
+    style("friend", "constellation", "night", shape="man", at=(fp[0], fp[2]), facing=az_of(kp - fp), garment="coat",
+          show=(S6 - 0.3, 38.6),
+          gesture=[(33.6, 38.6, "hand_on_shoulder", dict(side="R", to=lambda t: kneel.where(t, "shoulder.R", raw=True)))])
     scene.add("rain", K.Rain(F(0.0, 0.0, 0.0), S6, 38.4, radius=4.5, top=6.5))
-    # ---- 7. Consideration: an elder drawn as stars, kneeling, is helped up by a young woman of gold; light runs
-    # from the clasp through him
+    # ---- 7. Consideration: an elder drawn as a constellation, kneeling, is helped up by a young woman of gold;
+    # light runs from the clasp through him and he turns to gold
     help_at = G(0.0, 0.0, 0.0)
     warm = dict(warm=dict(t=HELP - 0.6, at="palm.R", speed=1.1, width=0.3, flash=2.0))
     helper, elder = pairs.helped_up(
         HELP, at=(help_at[0], help_at[2]), facing=az_of(_r(G.view)), rise=1.7,
-        a=dict(shape="woman", garment="robe", look="glitter", color="#ffb6a0", color2="#fff0ea", wind=w, fade=0.7,
-               points=56000, bright=2.0, show=(41.4, S8 + 0.4), effects=[dict(shed)]),
-        b=dict(shape="man", garment="coat", stoop=0.3, color="#cfe0ff", color2="#ffffff", wind=w, fade=0.7,
-               points=56000, bright=2.1, show=(41.4, S8 + 0.4), sweeps=warm,
-               look=[dict(name="plexus", before="warm", detail=1.0), dict(name="glitter", after="warm",
-                                                                        color="#ffd08a", bright=1.4)],
+        a=dict(shape="woman", garment="robe", look="glitter", color="#c8783a", color2="#ffe2b8", wind=w, fade=0.7,
+               points=60000, bright=1.2, show=(41.4, S8 + 0.4), effects=[dict(shed)]),
+        b=dict(shape="man", garment="coat", stoop=0.3, color="#22357e", color2="#c38a1e", wind=w, fade=0.7,
+               points=64000, bright=1.1, show=(41.4, S8 + 0.4), sweeps=warm,
+               look=[dict(name="plexus", before="warm", detail=1.0, share=0.075, links=3, reach=0.10),
+                     dict(name="glitter", after="warm", color="#c8843a", color2="#ffe2b8", bright=1.2)],
                effects=[dict(shed)]))
-    add("helper", helper, fill="#f2a08c")
-    add("elder", elder, fill="#e8c48a")
+    pair_body("helper", helper, paint=0.85, fill="#e0a070")
+    pair_body("elder", elder, paint=1.0, light=0.7)
     # ---- 8. Compliment: a girl twirls and throws petals into the air (p04); a few people applaud
     gp = G(1.0, 3.6, 0.0)
-    body("dancer", "woman", at=(gp[0], gp[2]), facing=az_of(-_r(G.view)), garment="dress", hair=True,
-         motion=[(0.0, "stand"), (TWIRL, "twirl")], look="glitter", color="#ff9a7a", color2="#ffe2d2",
-         show=(45.2, S8 + 0.5), bright=1.8,
-         effects=[dict(kind="petals", t=TWIRL + 0.5, dur=2.4, share=0.35, color="#ff5a4a", color2="#ffc0a8")])
+    style("dancer", "gold_glitter", "day", shape="woman", at=(gp[0], gp[2]), facing=az_of(-_r(G.view)),
+          garment="dress", motion=[(0.0, "stand"), (TWIRL, "twirl")], color="#d8603a", color2="#ffd2b0",
+          show=(45.2, S8 + 0.5), t=TWIRL + 0.6, dur=2.6, share=0.3,
+          effects=[dict(kind="petals", t=TWIRL + 0.5, dur=2.4, share=0.35, color="#ff5a4a", color2="#ffc0a8")])
     scene.add("applause", Crowd(n=9, area=dict(center=(gp[0], gp[2]), radius=(3.4, 5.0),
                                                arc=(G.view - 60.0, G.view + 60.0)),
                                 facing="center", kinds=("clap",), start=dict(t=45.6, dur=0.8), until=S8 + 0.3,
                                 points=9000, color="#ffd98a", color2="#fff6e0", bright=1.5, seed=5.0))
     # ---- 9. Heavenly Mother, only from behind, at the foot of the tree; she opens her arms and turns to petals
-    body("mother", "woman", at=(M.c[0], M.c[2]), facing=180.0, garment="robe", veil=dict(length=1.5, wide=1.1),
-         look="glitter", color="#ffd98f", color2="#fff7e6", gesture=[(49.9, 53.0, "open_arms", dict(lift=0.35))],
-         show=(S8 - 0.3, 52.4), bright=1.7, points=80000,
-         effects=[dict(kind="petals", t=50.9, dur=1.4, color="#ffd0a0", color2="#fff4e0")])
+    mother = Body("woman", at=(M.c[0], M.c[2]), facing=180.0, garment="robe", veil=dict(length=1.5, wide=1.1),
+                  look="glitter", color="#d8a050", color2="#fff2d8", gesture=[(49.9, 53.0, "open_arms", dict(lift=0.35))],
+                  show=(S8 - 0.3, 52.4), bright=1.4, points=80000, wind=w, fade=0.7,
+                  effects=[dict(kind="petals", t=50.9, dur=1.4, color="#ffd0a0", color2="#fff4e0"), dict(shed)])
+    pair_body("mother", mother, paint=0.7, light=1.0, fill="#f0c070")
     # ---- the world: the great tree, the crowd under it, the meadow, the petals in the air, the release
     tree = K.Tree(colors=_COL9, bough_az=_BOUGH_AZ, bud=_BUD, bloom=_BLOOM, crown_t=PEAK - 0.4,
                   crown_colors=tuple(_COL9) + ("#ffffff", "#ffffff", "#FFE9D6"))
@@ -494,12 +502,35 @@ def _setup(scene):
     scene.add("meadow", K.Meadow())
     scene.add("wind_petals", PW.KeepClear(K.PetalWind(WIND, n=9000, amount=lambda t: min(
         1.0, 0.8 * PETAL_AMOUNT(t) + 0.12 * WIND.gust(t))), WORDS))
-    scene.add("palm_stream", K.Stream(_palm("giver", "R", 0.02), lambda t: WORDS["Greeting"].centre(t), -1.5, 2.6,
+    scene.add("palm_stream", K.Stream(lambda t: BODIES["giver"].where(t, "lips"), lambda t: WORDS["Greeting"].centre(t),
+                                      -1.5, 2.6,
                                       wind=WIND, n=1600, flight=1.2, arc=0.4))
     scene.add("release", K.Release(tree.bloom_pts, PEAK, WIND, _COL9 + ["#ffffff", "#FFE9D6"]))
     K.paint_word_petals(WORDS)
     WORDS.add_to(scene, reflect=False)          # no words mirrored in the water
+    _gate_masks(scene)
     WORDS.check(CAMERA)
+
+
+def _gate_masks(scene):
+    """A frame holds two sky fills (windows, flat paint): every mask is switched off outside the time its set
+    is on screen, so the fills of sets that are not there never take a layer."""
+    for e in scene.entries():
+        if e.mask is None:
+            continue
+        win = None
+        if e.name.startswith("word "):
+            w = WORDS[e.name[5:].replace(" light", "")]
+            nxt = getattr(w.to, "t_in", None) if w.leave == "morph" else None
+            win = (w.t_in - 0.3, (nxt if nxt is not None else w.t_out) + 0.3)
+        else:
+            sh = getattr(e.pointset, "show", None)
+            if sh:
+                win = (sh[0] - 0.2, sh[1] + 0.2)
+        if win is not None:
+            base = e.mask.strength
+            e.mask.strength = (lambda t, b=base, a=win[0], z=win[1]:
+                               0.0 if (t < a or t > z) else (b(t) if callable(b) else float(b)))
 
 
 PETAL_AMOUNT = Track([(0.0, 0.5), (S2, 0.6), (S4, 0.75), (S6, 0.9), (WIDE, 0.9), (S7, 0.45), (BIG, 1.0),
