@@ -213,6 +213,37 @@ engine/songs/test_living.py (30 seconds, audio/test/s03-newsong-first-60s.mp3) s
 
 The Render workflow now renders a video in 10 parallel parts (was 4), so a minute renders in well under half the time. Nothing changes for a song file.
 
+## I. Theme colours, bubbles, leaves (2026-11-15, branch engine-theme)
+
+Anthony's blend of the luminous original world with the campaign colours: cream and white light, soft sky blue, warm yellow and peach, coral pink and navy accents, fresh green leaves and iridescent soap bubbles. No dark patch behind any text, ever. A song that sets none of these keys renders exactly as before. Working example: `engine/songs/test_theme.py`.
+
+**The quick way: one line.** After `TOTAL` (and your PHRASES, TITLE, TAGLINE, CREDIT, FRAGMENTS) are defined:
+
+```python
+import theme
+theme.campaign_day(globals(), [(0.0, "dawn"), (14.0, "day"), (30.0, "golden"), (42.0, "peach"), (TOTAL, "cream")])
+```
+
+It sets the day sky Tracks (`SKY_TOP`, `SKY_MID`, `SKY_HOR`, `GLOW`), `SKY_THEME = "campaign_day"`, `TEXT_SHADOW = 0`, faint `STARS` (0.10), no milky band, aurora or rain, white and gold motes, coral and peach petals, `BUBBLES` 0.55, `LEAVES` 0.35, `GLOW_COLOR` and `color="#1f2a6b"` (navy) on every text that has no colour yet. Options: `text="navy"` (default: navy words, soft white glow), `text="coral"` (coral words, gold glow) or `text=None` (keep the light words); `bubbles=0`, `leaves=0` switch a layer off. Set any key again after the call to override it. Your own `params()` must read the module's `SKY_TOP` etc. at call time (every song file does). If your file patches another song module (like `test_theme.py`), pass that module's `vars(...)`.
+
+Sun, clouds, rays, lanterns, petals and the arch stay as your song sets them. The arch and its rings read as faint glints on a bright sky; that is intended. On bright days keep `SUN_INT` around 0.5 to 0.8.
+
+**Palette names** (`theme.PAL`, each top, middle, horizon, sun glow, as seen on screen): `dawn` (soft blue over peach and warm cream), `day` (clear sky blue to a cream horizon), `golden` (warm yellow and peach), `peach` (peach with a pink touch), `cream` (almost white, the luminous end). A key may also be a tuple of four hex colours. `theme.sky_tracks(keys)` returns just the four sky Tracks. `theme.display("#rrggbb")` gives the linear light the engine needs to show exactly that colour (it undoes the filmic curve). Campaign colours as constants: `theme.NAVY` #1f2a6b, `NAVY_BRIGHT` #12358f, `CORAL` #f0566a, `CORAL_SOFT` #d9606a, `GOLD` #ffd27a, `CREAM`, `WHITE_GLOW` #fff8ec, `SKY_BLUE`, `PEACH`, `LEAF_GREEN` #9fe07a, `LEAF_GOLD` #ffe08a.
+
+**`SKY_THEME`** (default none = the original world): `"campaign_day"` (or a number 0..1, or a Track) makes the procedural world bright: the far and near hills turn a pale blue-peach haze instead of dark ridges, the lake stays light toward the bottom, and the vignette is much lighter (corners 0.90 instead of 0.62). Plates (SCENES) are not changed by it.
+
+**Per-text colour.** Add `color="#rrggbb"` to any PHRASES entry, the `TITLE`, the `TAGLINE` (end card lines), any FRAGMENTS entry (every style) or `CREDIT`. The letters are then painted in exactly that colour on top of the finished picture, revealed and dissolved with the same timing as the light words, and the light layer carries only a soft glow round them (and the forming sparks take the glow colour). Extra keys: `glow="#rrggbb"` (that text's glow; default `GLOW_COLOR`, else the warm #ffc48c), `glow_strength` (default `GLOW_STRENGTH`, else 1.0), `color_alpha` (0..1, default 1). Without `color`, a text keeps its light letters; `glow` and `GLOW_COLOR` then only change the glow colour.
+
+- `GLOW_COLOR` (a hex, or a function of time): the glow colour of every text that does not set its own `glow`. Navy words: a soft white glow (#fff8ec). Coral words: gold (#ffd27a).
+- `GLOW_STRENGTH` (default 1.0): how strong the glow round coloured words is.
+- Dark words need a bright sky behind them: use them with `SKY_THEME` or bright plates. Leave the light words on night scenes.
+
+**`TEXT_SHADOW = 0` is now truly zero.** Before, 0 still capped bright scenery behind the text and darkened round the corner credit. Now, at 0 there is no cap, no veil and no dark round the credit. From 0.05 up the result is exactly as before (every existing song uses 1.0 or more); between 0 and 0.05 it eases, so a Track can fade the protection out without a jump. `TEXT_PROTECT` (dimming the light layers behind the letters, so no bubble, leaf or spark crosses a word) is separate and stays on.
+
+**`BUBBLES`** (Track, 0 = off; the number is the share of about 140 bubbles shown): iridescent soap bubbles rise slowly, wobbling, each with a thin bright rim, a rainbow sheen that swirls round the rim, a faint film and two soft highlights. Far bubbles are small, near ones large. They thin out in the calm lower third under `BOTTOM_CALM`, and text protection keeps them out of the letters. Settings: `BUBBLES_COLOR` (rim and film, default #f4fbff), `BUBBLES_SIZE` (default 1.0; 1.0 is 26 to 118 px at 1080p), `BUBBLES_SPEED` (default 1.0), `BUBBLES_SHEEN` (rainbow strength, default 1.0), `BUBBLES_COUNT` (default 140, a plain number).
+
+**`LEAVES`** (Track, 0 = off; share of about 48 leaves): a few leaves of light drift down slowly, swinging, turning and tumbling edge-on and back, with a bright rim, a pale vein and a glint as they face us. Settings: `LEAVES_COLORS` (pair, default green #9fe07a to gold #ffe08a), `LEAVES_SIZE` (default 1.0: 22 to 64 px), `LEAVES_SPEED` (default 1.0), `LEAVES_WIND` (sideways drift, default 0.4), `LEAVES_COUNT` (default 48). Calm lower third and text protection as for bubbles.
+
 ## Rendering
 
 Unchanged: commit and push the song file and its assets (plates and figures are in the repo under `assets/`, so the cloud workflow has them), then run the Render workflow (stills first, then video). See docs/HANDOFF.md.

@@ -8,9 +8,10 @@ What it shows (seconds):
            planted on each step; she stops, turns a little toward us and lifts her arms, and her light rises
  8 to 19   dawn: Heavenly Mother, only from behind, her veil flowing in the wind; her arms open in blessing;
            the Encouragement expression forms over the dawn sky (held more than 6 seconds), then flies to its light
- 18 to 30  bright day: two hands of light cup, open with their fingers moving and offer a light that rises to the
-           Consideration light; a painted pair (assets/figures/consideration_b.png) walks in, warped alive
-           (sway, breath, a step lilt, a rippling hem and a rising current); the three-line end card
+ 18 to 30  bright campaign day (theme.py: sky blue and cream, iridescent bubbles, a few leaves of light): two
+           hands of light cup, open with their fingers moving and offer a light that rises to the Consideration
+           light; a painted pair (assets/figures/consideration_b.png) walks in, warped alive (sway, breath, a step
+           lilt, a rippling hem and a rising current); a navy fragment; the end card in coral and navy
 
 Audio: audio/test/s03-newsong-first-60s.mp3 (only its first 30 seconds are used).
 """
@@ -139,6 +140,7 @@ class Song:
 # ----------------------------------------------------------------- timeline
 
 from track import Track   # noqa: E402
+import theme   # noqa: E402
 
 NINTH = 1e9
 TITLE_HIT = 27.4      # end card
@@ -151,15 +153,25 @@ PAL = {
     "dawn": ("#1d3f7c", "#6b94c9", "#f2c4a6", "#ffdcb4"),
     "day":  ("#4f9bd8", "#9ccbee", "#fcecd6", "#fff2dc"),
 }
-_pal_keys = [(0.0, "dusk"), (8.0, "dusk"), (13.0, "dawn"), (17.5, "dawn"), (20.5, "day"), (TOTAL, "day")]
-SKY_TOP = Track([(t, lin(PAL[p][0])) for t, p in _pal_keys])
-SKY_MID = Track([(t, lin(PAL[p][1])) for t, p in _pal_keys])
-SKY_HOR = Track([(t, lin(PAL[p][2])) for t, p in _pal_keys])
-GLOW = Track([(t, lin(PAL[p][3])) for t, p in _pal_keys])
+_pal_keys = [(0.0, "dusk"), (8.0, "dusk"), (13.0, "dawn"), (17.5, "dawn")]
+# the bright day is the campaign theme sky (engine/theme.py, UPGRADE-HOWTO section I)
+_day = [Track([(0.0, v), (1.0, v)]) for v in [tr(0.0) for tr in theme.sky_tracks([(0.0, "day")])]]
+
+
+def _sky(k):
+    keys = [(t, lin(PAL[p][k])) for t, p in _pal_keys] + [(20.5, _day[k](0.0)), (TOTAL, _day[k](0.0))]
+    return Track(keys)
+
+
+SKY_TOP, SKY_MID, SKY_HOR, GLOW = (_sky(k) for k in range(4))
+SKY_THEME = Track([(0, 0.0), (16.5, 0.0), (20.5, 1.0), (TOTAL, 1.0)])   # the bright campaign world from 20.5 s
+BUBBLES = Track([(0, 0.0), (17.0, 0.0), (21.0, 0.5), (TOTAL, 0.5)])     # iridescent soap bubbles in the day
+LEAVES = Track([(0, 0.0), (18.0, 0.0), (22.0, 0.3), (TOTAL, 0.3)])      # a few leaves of light
+LEAVES_COLORS = (theme.LEAF_GREEN, theme.LEAF_GOLD)
 SUN_INT = Track([(0, 0.20), (8.0, 0.22), (13.0, 0.45), (18.0, 0.55), (21.0, 0.62), (TOTAL, 0.62)])
 SUN_Y = Track([(0, 0.335), (8.0, 0.34), (13.0, 0.36), (21.0, 0.40), (TOTAL, 0.41)])
 SUN_SIZE = Track([(0, 0.09), (13.0, 0.11), (21.0, 0.13), (TOTAL, 0.13)])
-STARS = Track([(0, 0.0), (0.3, 0.0), (2.0, 0.9), (8.0, 0.8), (13.0, 0.25), (18.0, 0.0), (TOTAL, 0.0)])
+STARS = Track([(0, 0.0), (0.3, 0.0), (2.0, 0.9), (8.0, 0.8), (13.0, 0.25), (18.0, 0.08), (TOTAL, 0.08)])
 MILKY = Track([(0, 0.0), (TOTAL, 0.0)])
 CLOUDS = Track([(0, 0.10), (8.0, 0.12), (14.0, 0.30), (21.0, 0.40), (TOTAL, 0.40)])
 AURORA = Track([(0, 0.0), (TOTAL, 0.0)])
@@ -177,7 +189,7 @@ SKYLINE_LANTERN = Track([(0, 1.0), (8.0, 1.0), (9.0, 0.3), (TOTAL, 0.3)])
 
 
 def MOTE_COLORS(t):
-    return ("#ffe2a8", "#ff9f8a") if t < 14.0 else ("#fff6e6", "#ffc7a8")
+    return ("#ffe2a8", "#ff9f8a") if t < 14.0 else (theme.WHITE_GLOW, theme.GOLD)
 
 
 # People of light (engine/UPGRADE-HOWTO.md section H): two living rigs, living hands and one painted figure warped
@@ -228,15 +240,16 @@ PHRASES = [
 ]
 FORM_DUR = 3.0
 TITLE = dict(label="Healing Concert", lines=["The Words of Mother’s Love"], size=150,
-             form=TITLE_HIT - FORM_DUR, hold=1e9, star=1e9)
+             form=TITLE_HIT - FORM_DUR, hold=1e9, star=1e9, color=theme.CORAL, glow=theme.GOLD)
 # short phrases written for this test (not lyrics)
 FRAGMENTS = [
     dict(text="every step a little lighter", t0=3.4, t1=6.2, out=8.2, dy=0.15, size=80, glow="#ffc48c"),
-    dict(text="a gift of light", t0=19.4, t1=22.0, out=23.8, dy=0.16, size=88, glow="#ffffff"),
+    dict(text="a gift of light", t0=19.4, t1=22.0, out=23.8, dy=0.16, size=88, color=theme.NAVY,
+         glow=theme.WHITE_GLOW),
 ]
 TAGLINE = dict(text="Where a mother’s love reaches, peace settles.\nSunday, December 6 · 4:30 PM\n"
                     "The World Mission Society Church of God · 6720 W Sahara Ave, Las Vegas",
-               t0=TITLE_HIT + 0.4, t1=TITLE_HIT + 1.6)
+               t0=TITLE_HIT + 0.4, t1=TITLE_HIT + 1.6, color=theme.NAVY, glow=theme.WHITE_GLOW)
 CREDIT = dict(song="Living Figures (engine test)", concert="The Words of Mother’s Love Healing Concert",
               t_in=0.3, t_full=1.1, t_move=2.4, t_rest=3.8, scale=0.34, alpha_rest=0.58,
               margin_x=0.030, margin_top=0.048)
