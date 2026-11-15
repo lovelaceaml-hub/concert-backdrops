@@ -132,6 +132,31 @@ class Library:
                 break
             goal = goal + (tgt - self._hand_end(P, side, end))
 
+    def hand_to(self, P, side, palm_at, fingers, palm, w=1.0, pole=None):
+        """Places one hand exactly: the palm centre on `palm_at`, the fingers pointing along `fingers` and the
+        palm facing `palm` (all in the body frame). The arm bends to bring the wrist there and the wrist turns
+        the hand into place."""
+        rig = self.rig
+        i = self.i
+        wr, m3 = i["wrist." + side], i["finger3-1." + side]
+        N = rig.neutral_pos
+
+        def frame(f, n):
+            f = np.asarray(f, np.float64)
+            f = f / max(np.linalg.norm(f), 1e-9)
+            n = np.asarray(n, np.float64) - np.dot(n, f) * f
+            n = n / max(np.linalg.norm(n), 1e-9)
+            return np.stack([f, n, np.cross(f, n)], axis=1)
+        n_r = rig.palm_n[side]
+        F_r = frame(N[m3] - N[wr], n_r)
+        F_d = frame(fingers, palm)
+        q_h = bm.qfrommat(F_d @ F_r.T)
+        off = 0.4 * N[wr] + 0.6 * N[m3] + n_r * 0.012 * self.k - N[wr]
+        wrist_at = np.asarray(palm_at, np.float64) - bm.qrot(q_h, off)
+        self.arm_to(P, side, wrist_at, pole=pole, palm=np.asarray(palm, np.float64), w=w)
+        _, _, A = self.local_fk(P)
+        self._set(P, "wrist." + side, bm.qmul(bm.qconj(A[rig.parent[wr]]), q_h), w)
+
     def _palm_dir(self, P, side, palm):
         sg = 1.0 if side == "L" else -1.0
         if isinstance(palm, str):
