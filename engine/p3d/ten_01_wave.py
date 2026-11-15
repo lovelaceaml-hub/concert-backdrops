@@ -567,3 +567,57 @@ def disc_glints(kin, radius, n, rng, r_min=0.0):
     r = np.sqrt(rng.uniform((r_min / radius) ** 2, 1.0, n)) * radius
     a = rng.uniform(0.0, TAU, n)
     return np.stack([kin.x0 + r * np.sin(a), np.full(n, 0.05), kin.z0 - r * np.cos(a)], 1)
+
+
+def heart_outline(n=64):
+    """A heart outline in the plane, unit height, centred (x right, y up)."""
+    s = np.linspace(0.0, TAU, n, endpoint=False)
+    x = 16.0 * np.sin(s) ** 3
+    y = 13.0 * np.cos(s) - 5.0 * np.cos(2 * s) - 2.0 * np.cos(3 * s) - np.cos(4 * s)
+    return np.stack([x, y], 1) / 34.0
+
+
+class Hearts:
+    """Small hearts of light that drift up off people while their expression is read, in its colour. Each is
+    an outline of sparks with a soft glow inside, facing the camera, swaying as it rises and fading out.
+    source(t) gives the place they leave from (a point, or a function of time)."""
+    wants_camera = True
+
+    def __init__(self, source, t0, t1, color, n=12, size=(0.10, 0.22), life=2.6, rise=0.45, spread=0.35,
+                 seed=31, bright=1.0):
+        rng = np.random.default_rng(seed)
+        self.source = source
+        self.birth = np.sort(rng.uniform(t0, t1 - 0.4, n))
+        self.size = rng.uniform(size[0], size[1], n)
+        self.off = rng.normal(0.0, spread, (n, 3)) * np.array([1.0, 0.3, 1.0])
+        self.sway = rng.uniform(0.0, TAU, n)
+        self.drift = rng.normal(0.0, 0.12, (n, 3))
+        self.life, self.rise = life, rise
+        self.col = lin(color) * bright
+        self.white = lin("#fff4ea")
+        self.ol = heart_outline(48)
+        self.t0, self.t1 = t0, t1 + life
+
+    def sample(self, t, cam=None):
+        if t < self.t0 or t > self.t1 or cam is None:
+            return []
+        age = t - self.birth
+        live = (age > 0.0) & (age < self.life)
+        if not live.any():
+            return []
+        r, u, f = cam.basis()
+        pos, col, alpha, size = [], [], [], []
+        for k in np.nonzero(live)[0]:
+            a = age[k]
+            src = self.source(t) if callable(self.source) else np.asarray(self.source, np.float64)   # they ride along
+            c = (np.asarray(src, np.float64) + self.off[k] + self.drift[k] * a
+                 + np.array([0.12 * np.sin(2.2 * a + self.sway[k]), self.rise * a, 0.0]))
+            s = self.size[k] * (0.6 + 0.4 * min(a / 0.5, 1.0))
+            fade = min(a / 0.35, 1.0) * (1.0 - smoothstep(0.55 * self.life, self.life, a))
+            pts = c[None] + (self.ol[:, :1] * r[None] + self.ol[:, 1:] * u[None]) * s
+            pos.append(pts)
+            col.append(np.broadcast_to(self.col * 0.8 + self.white * 0.2, pts.shape))
+            alpha.append(np.full(len(pts), 0.9 * fade))
+            size.append(np.full(len(pts), 0.012 + 0.04 * s))
+        return dict(pos=np.concatenate(pos), color=np.concatenate(col), alpha=np.concatenate(alpha),
+                    size=np.concatenate(size), kind="spark", emit=1.8, twinkle=0.3, dof=0.5)

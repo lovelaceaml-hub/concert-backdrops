@@ -611,6 +611,13 @@ def _crest_line(rng, baked):
                     gain=lambda t: float(ss(46.5, 47.3, t) * (1.0 - ss(51.5, 52.5, t))))
 
 
+# the website's expression colours (UPDATE 9), for the hearts that drift off each act; the compliment's navy is
+# lifted toward white so that it shows as light on the night sky
+HEX = dict(Greeting="#EA5A5E", Gratitude="#F2B25E", Apology="#F6CE46", Inclusiveness="#5ABA5A",
+           Concession="#62B2FA", Respect="#667AF6", Encouragement="#9E6AF6", Consideration="#EE62A6",
+           Compliment="#7f93d6")
+
+
 def C(ps, pad=0.9):
     """A point set that keeps clear of every expression being read."""
     return WV.Clear(ps, WORDS, None, pad=pad)
@@ -637,6 +644,7 @@ def _performances(scene):
               effects=[dict(kind="shed", t=4.8, n=6000, life=2.2, where="back", dir=(0.0, 0.35, 1.0), speed=0.55)],
               seed=3)
     _add_body(scene, "greeting", w1, ignite=T_W1, rise=1.1)
+    hearts = [WV.Hearts(lambda t: w1.where(t, "palm.L"), 5.4, 7.2, HEX["Greeting"], n=8, rise=0.3)]
 
     # 2 GRATITUDE: an older man in the wake bows to her with his hand on his heart (gold glitter, p08), and
     # behind him a whole crowd woken by the wave bows too.
@@ -648,6 +656,7 @@ def _performances(scene):
                        (8.7, 13.8, "bow", dict(amount=34))])
     refs["m1"] = m1
     _add_body(scene, "gratitude", m1, ignite=T_M1)
+    hearts.append(WV.Hearts(lambda t: m1.where(t, "heart"), 9.0, 11.8, HEX["Gratitude"], n=10))
     rng = np.random.default_rng(5)
     pts, starts = [], []
     while len(pts) < 70:
@@ -691,6 +700,9 @@ def _performances(scene):
                                               speed=0.18)], seed=6))
     _add_body(scene, "apology_a", a, ignite=T_PAIR)
     _add_body(scene, "apology_b", b, ignite=T_PAIR + 0.1)
+    hearts.append(WV.Hearts(lambda t: a.where(t, "heart"), 15.4, 16.9, HEX["Apology"], n=5, size=(0.08, 0.15)))
+    hearts.append(WV.Hearts(lambda t: 0.5 * (a.where(t, "heart") + b.where(t, "heart")), 17.9, 20.3,
+                            HEX["Inclusiveness"], n=12))
     scene.add("embrace_flare", C(fx.Flare(lambda t: np.array([PC[0], 1.35, PC[2]]), T_EMBRACE + 0.15,
                                           color="#ffd6b0", color2="#ffb0c8", scale=1.6, strength=0.8)))
 
@@ -705,6 +717,8 @@ def _performances(scene):
                     look=dict(name="glitter", bright=1.25), color="#e4f2ff", color2="#ffffff", points=60000,
                     show=(20.2, 26.9), fade=0.4, effects=[dict(kind="form", t=20.5, dur=1.4)], seed=seed)
         _add_body(scene, name, body)
+        if name == "concession_a":
+            hearts.append(WV.Hearts(lambda t, bd=body: bd.where(t, "palm.L"), 22.3, 24.6, HEX["Concession"], n=8))
 
     # 6 RESPECT: two people seated on the crest of the moving wave; one speaks with small open hands, the other
     # leans in and listens. Silhouettes that are windows onto the night sky (p07).
@@ -717,6 +731,8 @@ def _performances(scene):
                     points=60000, show=(26.2, 33.9), fade=0.5, effects=[dict(kind="form", t=26.4, dur=1.2)],
                     seed=seed)
         _add_body(scene, name, body)
+        if name == "respect_b":
+            hearts.append(WV.Hearts(lambda t, bd=body: bd.where(t, "head"), 28.2, 30.5, HEX["Respect"], n=8))
 
     # 7 CONSIDERATION: on the crest, one reaches down to someone kneeling, takes their hand and pulls them up;
     # the one helped up lays a hand on the helper's shoulder. Coloured dots (ref 14).
@@ -729,6 +745,7 @@ def _performances(scene):
                                     effects=[dict(kind="form", t=33.2, dur=1.2)], seed=12))
     _add_body(scene, "consider_a", ha)
     _add_body(scene, "consider_b", hb)
+    hearts.append(WV.Hearts(lambda t: ha.where(t, "palm.R"), 35.6, 37.6, HEX["Consideration"], n=10))
 
     # 8 ENCOURAGEMENT: one kneels in prayer before the standing wall; another walks to them and lays a hand on
     # their shoulder. White gold, light rising off them like flakes (ref 13).
@@ -745,6 +762,7 @@ def _performances(scene):
               effects=[dict(kind="shed", t=39.2, n=3000, life=2.0, where="top", dir=(0, 1, 0), speed=0.25)])
     _add_body(scene, "encourage_k", kn)
     _add_body(scene, "encourage_h", hp)
+    hearts.append(WV.Hearts(lambda t: kn.where(t, "chest"), 43.7, 45.9, HEX["Encouragement"], n=10))
 
     # 9 COMPLIMENT: the people the wave carries cheer (arms flung up in a wave along the crest), and at their
     # front a dancer twirls in joy and bursts into embers (p04).
@@ -755,6 +773,9 @@ def _performances(scene):
               effects=[dict(kind="shed", t=T_TWIRL, n=9000, life=1.8, where="back", dir=(0.4, 0.5, 1.0), speed=1.1),
                        dict(kind="disperse", t=49.0, dur=1.3, dir=(0.6, 0.6, 1.0), share=0.9, speed=1.6)])
     _add_body(scene, "compliment", tw)
+    hearts.append(WV.Hearts(lambda t: tw.where(t, "chest"), 47.3, 49.6, HEX["Compliment"], n=14))
+    for k, h in enumerate(hearts):
+        scene.add(f"hearts{k}", C(h))
 
 
 def _setup(scene):
