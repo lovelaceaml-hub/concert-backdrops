@@ -337,7 +337,7 @@ _BUD = [WORDS[e["label"]].t_read1 for e in PW.EXPRESSIONS]
 
 
 def _setup(scene):
-    from p3d import pairs
+    from p3d import acting, pairs
     from p3d import styles as ST
     from p3d.body import Body
     from p3d.crowd import Crowd
@@ -373,6 +373,28 @@ def _setup(scene):
         wrap(name)
         return st
 
+    def act(name, expression, t0, t1, at, cam, variant, paint=0.85, light=1.0, fills=(None, None), masks=(None, None),
+            **kw):
+        """An acted performance (engine/p3d/acting.py) seen from `cam`; every body painted for the day."""
+        sets = acting.perform(expression, t0, t1, at=at, view=az_of(np.asarray(cam) - np.array([at[0], 0.0, at[1]])),
+                              variant=variant, **kw)
+        out = []
+        k = 0
+        for ps in sets:
+            nm = name if k == 0 else "%s_%d" % (name, k)
+            if isinstance(ps, Body):
+                mk = masks[min(k, 1)]
+                m = ps.mask(**mk) if isinstance(mk, dict) else None
+                pa = paint if m is None else 0.0
+                inner = Dressed(ps, paint=pa, paint_light=light) if pa > 0.0 else ps
+                scene.add(nm, K.Painted(inner, fill=fills[min(k, 1)], fill_alpha=0.22, words=WORDS), mask=m)
+                BODIES[nm] = ps
+                k += 1
+            else:
+                scene.add(nm + "_crowd", ps)
+            out.append(ps)
+        return out
+
     def pair_body(name, b, paint=0.85, light=1.0, fill=None):
         BODIES[name] = b
         scene.add(name, K.Painted(Dressed(b, paint=paint, paint_light=light), fill=fill, fill_alpha=0.22,
@@ -385,13 +407,14 @@ def _setup(scene):
     style("giver", "glitter_profile", "day", shape="woman", at=tuple(head), facing=az_of(-_r(A.view)),
           height=0.30, show=(-1.0, 3.4), tilt=lambda t: 6.0 + 4.0 * float(K._ss(-0.5, 0.6, t)))
     man = PW.place(_LAYOUT, 4.9, 0.30, 0.42, 7.4)
-    toward = az_of(_d(A.view) * -1.0 + _r(A.view) * 1.4)
-    style("stranger", "gold_glitter", "day", shape="man", at=(man[0], man[2]),
-          facing=[(0.0, toward + 160.0), (2.9, toward + 160.0), (3.7, toward)], garment="coat",
-          gesture=[(3.5, 6.6, "wave", dict(side="R"))], show=(1.6, 7.4))
+    act("stranger", "Greeting", 3.2, 6.3, (man[0], man[2]), _LAYOUT.state(4.9).pos, "wave", paint=0.85,
+        fills=("#e8b060", None), pre=1.6,
+        style=dict(shape="man", garment="coat", look="glitter", color="#c88a30", color2="#fff0c8", points=70000,
+                   bright=1.3, wind=w, effects=[dict(shed)]))
     # ---- 2. Gratitude: a ring of people round the thanks on the water, bowing together (from above)
     scene.add("bowing", Crowd(n=22, area=dict(center=(B[0], B[2] + 0.3), radius=(4.0, 5.2), arc=(-62.0, 62.0)),
-                              facing="center", kinds=("bow",), start=dict(t=7.6, dur=1.0), until=12.9, points=6000,
+                              facing="center", kinds=("heart",), start=dict(t=7.4, dur=1.0), act=dict(t=8.4, dur=0.8),
+                              until=12.9, points=6000,
                               color="#ffd98a", color2="#fff6e0", bright=1.6, seed=3.0))
     # ---- 3. Apology and Inclusiveness: a man drawn as a constellation in navy and gold, head bowed and hands
     # open low; she turns, walks into his arms, and the embrace blooms into blossom
@@ -423,16 +446,17 @@ def _setup(scene):
     scene.add("small_tree_glow", st.glow_set())
     # ---- 4. Concession: a starry silhouette with long hair (p02) steps aside with an open palm toward a path
     # of petals, butterflies leaving her; a man of gold walks on along the path
-    p0, p1 = D(0.2, -0.2, 0.0), D(0.2, -1.3, 0.0)
     scene.add("path", K.PetalPath(D(0.3, 0.1, 0.0), _d(D.view), length=34.0, width=1.2, t0=GUST2 - 0.2, dur=1.6))
-    style("yielder", "butterflies", "day", shape="woman", at=[(23.6, (p0[0], p0[2])), (24.4, (p1[0], p1[2]))],
-          motion=[(0.0, "stand"), (23.6, "shuffle"), (24.5, "stand")],
-          facing=[(0.0, az_of(-_d(D.view))), (23.6, az_of(-_d(D.view))), (24.4, az_of(_r(D.view)))],
-          garment="robe", gesture=[(23.9, 27.4, "offer")], show=(GUST2 - 0.2, 27.6), t=24.4)
-    q0 = D(-1.6, 0.6, 0.0)
-    style("passer", "gold_glitter", "day", shape="man", at=(q0[0], q0[2]),
-          facing=az_of(_d(D.view) + _r(D.view) * 0.05), motion=[(0.0, "stand"), (24.6, "walk", dict(speed=1.1))],
-          garment="tunic", show=(GUST2 - 0.2, 27.6))
+    con = act("yielder", "Concession", 23.4, 26.7, tuple(D(0.0, 0.0, 0.0)[[0, 2]]), D(-7.0, -0.4, 1.3), "pass",
+              fills=(None, "#e8b060"), masks=(dict(sky="stars", edge=0.7), None), pre=0.8,
+              style=dict(wind=w, points=70000, effects=[dict(shed)], bright=1.3),
+              style_a=dict(shape="woman", garment="robe", look=["window", dict(name="glitter", bright=0.6)],
+                           color="#e9dcff", color2="#ffffff"),
+              style_b=dict(shape="man", garment="tunic", look="glitter", color="#c88a30", color2="#fff0c8"))
+    from p3d.stylekit import Butterflies
+    scene.add("butterflies", Butterflies(lambda t: con[0].where(t, "chest"), radius=(0.4, 1.6), height=(0.6, 2.4),
+                                         n=22, size=0.09, speed=0.5, t=24.6, color="#ffd0e8", color2="#fff4c0",
+                                         paint=0.35, show=(24.2, 27.6)))
     # ---- 5. Respect: two faces in profile, close: she speaks (gold glitter), he leans in to listen (a
     # constellation in navy and gold); a small white tree behind them
     hs, hl = E(0.0, -0.36, 1.45), E(0.0, 0.36, 1.45)
@@ -447,39 +471,37 @@ def _setup(scene):
     scene.add("white_tree_glow", wt.glow_set(lambda t: 1.0 if S5 - 1.0 < t < S6 + 0.5 else 0.0))
     # ---- 6. Encouragement: kneeling in prayer under falling blossom, her prayer rising as embers (gold
     # glitter); a friend drawn as a constellation with a hand on her shoulder (the gale: night palettes)
-    kp, fp = F(0.0, -0.25, 0.0), F(0.55, 0.55, 0.0)
-    kneel = style("kneeler", "gold_glitter", "night", shape="woman", at=(kp[0], kp[2]), facing=az_of(-_r(F.view)),
-                  garment="robe", motion=[(0.0, "kneel", dict(hands="pray", dur=0.01))], show=(S6 - 0.3, 38.6),
-                  effects=[dict(kind="shed", sprite="flake", n=2200, life=2.8, speed=0.15, rise=0.7, turb=0.3,
-                                where="top", color="#ffb04a", size=2.5)]).main
-    style("friend", "constellation", "night", shape="man", at=(fp[0], fp[2]), facing=az_of(kp - fp), garment="coat",
-          show=(S6 - 0.3, 38.6),
-          gesture=[(33.6, 38.6, "hand_on_shoulder", dict(side="R", to=lambda t: kneel.where(t, "shoulder.R", raw=True)))])
+    act("kneeler", "Encouragement", 33.8, 37.4, tuple(F(0.0, 0.0, 0.0)[[0, 2]]), F(-4.0, -0.7, 1.05), "shoulder",
+        paint=0.0, fills=(None, None), pre=0.6,
+        style=dict(wind=w, points=70000, effects=[dict(shed)]),
+        style_a=dict(shape="woman", garment="robe", look="glitter", color="#ffcf7a", color2="#fff4dc", bright=1.6,
+                     effects=[dict(shed), dict(kind="shed", sprite="flake", n=2200, life=2.8, speed=0.15, rise=0.7,
+                                               turb=0.3, where="top", color="#ffb04a", size=2.5)]),
+        style_b=dict(shape="man", garment="coat", look=dict(name="plexus", detail=1.0), color="#e6deff",
+                     color2="#ffffff", bright=1.8))
     scene.add("rain", K.Rain(F(0.0, 0.0, 0.0), S6, 38.4, radius=4.5, top=6.5))
     # ---- 7. Consideration: an elder drawn as a constellation, kneeling, is helped up by a young woman of gold;
     # light runs from the clasp through him and he turns to gold
-    help_at = G(0.0, 0.0, 0.0)
-    warm = dict(warm=dict(t=HELP - 0.6, at="palm.R", speed=1.1, width=0.3, flash=2.0))
-    helper, elder = pairs.helped_up(
-        HELP, at=(help_at[0], help_at[2]), facing=az_of(_r(G.view)), rise=1.7,
-        a=dict(shape="woman", garment="robe", look="glitter", color="#c8783a", color2="#ffe2b8", wind=w, fade=0.7,
-               points=60000, bright=1.2, show=(41.4, S8 + 0.4), effects=[dict(shed)]),
-        b=dict(shape="man", garment="coat", stoop=0.3, color="#22357e", color2="#c38a1e", wind=w, fade=0.7,
-               points=64000, bright=1.1, show=(41.4, S8 + 0.4), sweeps=warm,
-               look=[dict(name="plexus", before="warm", detail=1.0, share=0.075, links=3, reach=0.10),
-                     dict(name="glitter", after="warm", color="#c8843a", color2="#ffe2b8", bright=1.2)],
-               effects=[dict(shed)]))
-    pair_body("helper", helper, paint=0.85, fill="#e0a070")
-    pair_body("elder", elder, paint=1.0, light=0.7)
+    act("helper", "Consideration", 42.6, 45.9, tuple(G(0.0, 0.0, 0.0)[[0, 2]]), G(-5.0, -0.3, 1.25), "help_up",
+        paint=0.85, fills=("#e0a070", None), pre=1.2,
+        style=dict(wind=w, points=66000, effects=[dict(shed)]),
+        style_a=dict(shape="woman", garment="robe", look="glitter", color="#c8783a", color2="#ffe2b8", bright=1.2),
+        style_b=dict(shape="man", garment="coat", stoop=0.3, color="#22357e", color2="#c38a1e", bright=1.1,
+                     sweeps=dict(warm=dict(t=HELP - 0.4, at="palm.R", speed=1.1, width=0.3, flash=2.0)),
+                     look=[dict(name="plexus", before="warm", detail=1.0, share=0.075, links=3, reach=0.10),
+                           dict(name="glitter", after="warm", color="#c8843a", color2="#ffe2b8", bright=1.2)]))
     # ---- 8. Compliment: a girl twirls and throws petals into the air (p04); a few people applaud
     gp = G(1.0, 3.6, 0.0)
-    style("dancer", "gold_glitter", "day", shape="woman", at=(gp[0], gp[2]), facing=az_of(-_r(G.view)),
-          garment="dress", motion=[(0.0, "stand"), (TWIRL, "twirl")], color="#d8603a", color2="#ffd2b0",
-          show=(45.2, S8 + 0.5), t=TWIRL + 0.6, dur=2.6, share=0.3,
-          effects=[dict(kind="petals", t=TWIRL + 0.5, dur=2.4, share=0.35, color="#ff5a4a", color2="#ffc0a8")])
+    act("dancer", "Compliment", TWIRL, 49.3, (gp[0], gp[2]), G(-4.6, 3.2, 0.85), "twirl", paint=0.8,
+        fills=("#f08a6a", None), pre=1.0,
+        style=dict(shape="woman", garment="dress", hair=True, look="glitter", color="#d8603a", color2="#ffd2b0",
+                   points=80000, bright=1.3, wind=w,
+                   effects=[dict(shed), dict(kind="petals", t=TWIRL + 0.6, dur=2.4, share=0.35, color="#ff5a4a",
+                                             color2="#ffc0a8")]))
     scene.add("applause", Crowd(n=9, area=dict(center=(gp[0], gp[2]), radius=(3.4, 5.0),
                                                arc=(G.view - 60.0, G.view + 60.0)),
-                                facing="center", kinds=("clap",), start=dict(t=45.6, dur=0.8), until=S8 + 0.3,
+                                facing="center", kinds=("clap", "cheer"), start=dict(t=45.4, dur=0.8),
+                                act=dict(t=46.4, dur=0.6), until=S8 + 0.3,
                                 points=9000, color="#ffd98a", color2="#fff6e0", bright=1.5, seed=5.0))
     # ---- 9. Heavenly Mother, only from behind, at the foot of the tree; she opens her arms and turns to petals
     mother = Body("woman", at=(M.c[0], M.c[2]), facing=180.0, garment="robe", veil=dict(length=1.5, wide=1.1),
