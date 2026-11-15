@@ -946,6 +946,83 @@ People made of points for the 3D layer of section V: a lifelike human form (the 
 - Garments read as garments: hems, cuffs and necklines glow (`look=dict(name=..., seams=0)` turns it off), a "tunic" reaches to mid thigh over loose trousers, a "robe" has an under-sleeve on the forearm (a raised arm no longer leaves its hand floating), and the veil drapes over the head and shoulders as its own pale sheer fabric (`veil=True` or `veil=dict(length=1.5)` for a veil to the ground).
 - Looks: glitter has far fewer four-point glints (`glints=`, default 0.0007 of the points); the rim line is thinner (`power=`, default 5) and the dark body no longer leaves a dark halo round it.
 
+### A body
+
+```python
+from p3d.body import Body, Hands
+from p3d import pairs
+from p3d.crowd import Crowd
+
+def build(scene):
+    Body("woman", at=(0, 0), facing=180, garment="robe", veil=dict(length=1.5), look="glitter",
+         gesture=[(1.0, 30.0, "open_arms", dict(lift=0.25))], wind=(0.4, 0, -0.6)).add(scene, "mother")
+```
+
+`body.add(scene, name)` adds the body with the mask its look needs (a dark body for "rim", a window for "window"); `mask=False` leaves it out, `mask=dict(sky="clouds")` sets it.
+
+| Key | Meaning |
+|---|---|
+| `shape`, `height` | "woman", "man", "child"; metres (default 1.59, 1.73, 1.31) |
+| `at` | where the feet stand: (x, z), (x, y, z), keys [(t, place), ...] or a function of time (carried) |
+| `facing` | degrees (0 faces +z, 90 faces +x), or keys [(t, degrees), ...]: the figure turns, a walker follows |
+| `motion` | a name or keys [(t, name), (t, name, dict(...)), ...]; each eases in over `blend` (default 0.9 s). Names below |
+| `gesture` | keys [(t_on, t_off, name), (t_on, t_off, name, dict(...))]: the upper body eases in and out (`ease`, default 1.2 s). Names below. `to`/`to2` are world points or functions of time |
+| `garment` | "dress", "robe", "tunic", "coat" (default dress for a woman, tunic otherwise), None for none |
+| `veil` | True, or dict(length=1.0, wide=1.0): over the head and shoulders and down the back (1.5: to the ground) |
+| `hair` | "bun" (woman default), "cap" (man and child default), True or dict(length=0.42) (long strands), False |
+| `look` | a name, a dict(name=..., bright, size, color, color2, seams, glints, power, detail, share, links, reach, stars), or a list; each may carry weight=<number or function of t>, after="sweep" or before="sweep" |
+| `color`, `color2`, `bright`, `size` | the two colours the look mixes, brightness, grain size |
+| `points`, `detail` | 30 to 120 thousand points; dict(head=3, hand=4) for close-ups |
+| `part` | "bust", "arm.L", "arm.R", "hand.L", "hand.R", "hands": only that part (fading toward the elbow) |
+| `hand` | dict(side, at, aim, palm, pose, anchor="palm" or "fingertips" or "wrist"): the figure is moved so that this hand is exactly there |
+| `scale`, `frame` | any size (100 a giant; everything grows about `at`); a moving ground: a function of t giving (x, y, z) or ((x, y, z), yaw) |
+| `light` | a world point the body is lit from (plexus and glitter brighten toward it) |
+| `wash`, `sweeps` | dict(color, amount=<number or function>); dict(name=dict(t, at=<place name, point or function>, speed=3, width=0.3, flash=2)) |
+| `effects` | a list of dict(kind=..., t=..., ...): see Effects |
+| `show`, `fade` | (t_in, t_out): the body exists only then; seconds of fade. Give late bodies `show` so their garments do not simulate from 0 |
+| `wind`, `gust` | a `Wind` shared by the scene (effects.Wind(base, gusts=[(t, strength, seconds)])) or (x, y, z) m/s |
+| `stoop`, `seed` | an elder's posture 0..1; another person (stance, timing, noise) |
+
+Looks: "glitter" (refs 15, 10, 09; p08), "plexus" (refs 03, 12; p01; with `detail` 0..1 a few stars and lines that fill into the whole web), "rim" (refs 01, 16; p06: a dark body with a thin bright edge), "dots" (ref 14), "window" (ref 08; p07: the silhouette is a window onto a sky; `mask=dict(sky="clouds" | "sunrise" | "stars" | "world", look=...)`).
+
+Motions: "stand", "walk" and "run" (`speed` in m/s, `phase`; the steps follow the speed, feet stay planted), "kneel" (`sit`, `one`, `hands`="lap" | "pray" | "free", `dur`), "rise" (up from kneeling, `dur`, `one`), "sit", "shuffle" (small steps on the spot), "held" (a child carried), and the captured "jump", "dance", "twirl", "get_up" (from lying), "pull_up" and "helped_up" (`rate`, `phase`).
+
+Gestures: "look_up" (amount), "reach" (side, to, palm, height, far, lead), "open_arms" (lift 0 low to 1 raised), "raise", "blow" (side), "pray", "bow" (amount; from 30 degrees the body bows from the hips), "touch" (side, to, end, palm, fingers), "hand_on_shoulder", "handshake" (grip), "high_five", "embrace" (to, to2, head), "arm_round", "cup" (height, out), "offer", "listen", "raise_hand" (side, to), "clap" (period, height), "throw", "wave", "brace", "hold_thread" (place "pinch.R"). Any gesture takes `fingers=` a hand pose: open, relaxed, flat, spread, cup, fist, point, pinch, offer, hold.
+
+For other point sets (world coordinates, any time, any order): `body.where(t, name, normal=False, raw=False)` (head, crown, mouth, neck, heart, chest, back, pelvis, ground; with .L or .R: shoulder, blade, elbow, wrist, palm, fingertips, index, thumb, pinch, hip, knee, ankle, toe, side; `raw=True`: without the body's own gestures), `body.joint(t, bone)`, `body.constellation(t)`, `body.free(t)` (every particle off the body), `body.handover(effect, t, targets)`, `body.shape_points(t)`.
+
+### Effects (`effects=[dict(kind=..., t=..., ...)]`)
+
+| Kind | What it does, main keys |
+|---|---|
+| "form" | the body gathers out of drifting dust: dur, travel, order ("noise", "up", "down", "out"), share (part that flies visibly), source=<points or function> (gather from given places: a word, a veil) |
+| "dissolve" | rises apart from the head into flakes (refs 05, 11, 13): dur, share, rise, swirl, color, color2 |
+| "disperse" | blows away from one side (refs 01, 06, 16): dir, dur, share, speed |
+| "petals" | turns to petals that leave in a spiral (ref 07): color, color2 |
+| "birds" | birds leave the silhouette (ref 08): n, dir, speed, size, color (dark birds are painted) |
+| "blow" | a stream from the open palm (ref 14; give the body the "blow" gesture): side, dur, reach, color, color2 |
+| "shed" | sheds light while it stands or walks (ref 15): n, life, where ("back", "top", or part codes), dir, speed |
+
+The Release effects (form, dissolve, disperse, petals) take `amount=<Track or function 0..1>` instead of their clock: forward, hold (`hang=` seconds: the particles slow and stay in the air) and backward (every particle flies home to where the body is now). Every effect takes a hand-over: `to=dict(t, targets=<(K, 3) or function>, arrive=1.5, stagger=0.5, until=None)` (the free particles fly to the targets; many particles on few targets are dimmed so the targets do not blaze), or later `body.handover(...)`. `Flare(at, t, scale=1)` is the flash of a touch (scale 2.5 for a wide shot); `Takeover(state, t, targets)` flies plain particles to places.
+
+### Pairs in contact (`engine/p3d/pairs.py`)
+
+Each returns two Bodies (add both); `a` and `b` are dicts of Body keys. Contact is solved every frame (measured: 1 to 4 mm).
+
+| Function | What |
+|---|---|
+| `pairs.embrace(t, at, facing, a, b, until=None, gap=0.34, approach=0.0)` | they walk in over `approach` seconds and hold each other from t |
+| `pairs.hands(a, b, t0, t1, raised=False, sides=None)` | hand in hand (standing or walking side by side; the inner hands are found), or joined hands raised high |
+| `pairs.helped_up(t, at, facing, a, b, rise=1.7)` | b kneels; a reaches down, takes b's hand and pulls b up to standing |
+| `pairs.child_into_arms(t, at, facing, adult, child, lift=1.0)` | the adult bends, takes the child under the arms and lifts it into a hold; the child's arms round the adult's neck |
+| `pairs.pull_up(t, at, facing, a, b)` | the captured pair: b sits on a low seat and is pulled up by the right hand |
+
+Two bodies of your own can reach for each other the same way: give each a gesture whose `to` is `lambda t: other.where(t, "blade.R", raw=True)`.
+
+### Crowds (`engine/p3d/crowd.py`)
+
+`Crowd(n, places=None, area=dict(center, radius=(r0, r1), arc), facing=<degrees, (K,), function (x, z), "center" or "out">, kinds=("stand", "raise", "clap", "walk", "run", "bow", "pray", "open", "sit", "child", "child_run"), start=<t, (K,), dict(t, center, speed) for a wave, or dict(t, dur)>, until, fade, flash, walk=<m/s>, points=2600, scale, color, color2)`. Hundreds of people from a few baked prototypes; each appears at its own time with a flash. The first frame of a render process bakes the prototypes (about 10 s each); a frame of 300 people then costs about 0.2 s. `crowd.where(t, k)` gives person k's place.
+
 ## X. Particle words: the nine expressions as light in the 3D world (2026-11-15, branch engine-p3d-words)
 
 For songs that use the 3D layer (`P3D`, section V). The Words of Mother's Love become point sets (`engine/p3d/api.py`): each expression is about fifty thousand points on a plane (or a gentle curve) standing anywhere in space, made of the same light as the people, mirrored in the lake, blurred by the lens when it is not being read. They arrive and leave in nine ways each, may hand their particles to each other, and several can be on screen at once at different depths. Code: `engine/p3d/words.py` (pure numpy, no graphics needed). Working example: `engine/songs/demo_p3d_words.py` (all nine expressions and a title in 31.5 seconds, with helper BODY's hands and people and a camera that never stops moving).
