@@ -82,15 +82,26 @@ _base.LEAVES = Track([(0.0, 0.0), (60.0, 0.0)])
 from songs.epic_concert import *  # noqa: E402,F401,F403
 
 from p3d import words as PW  # noqa: E402
+from p3d import pairs  # noqa: E402
 from p3d.body import Body, Hands  # noqa: E402
 from p3d.camera import Rig, dolly, fly, orbit  # noqa: E402
 from p3d.effects import Wind  # noqa: E402
 from p3d.api import Mask, lin  # noqa: E402
-from p3d.ten_08_storm import Beads, Bolt, Drop, Glow, Rain, Sea, flash_level  # noqa: E402
+from p3d.ten_08_storm import Beads, Bolt, Drop, Glow, Rain, Sea, Shards, flash_level  # noqa: E402
 from p3d.world import arch_points  # noqa: E402
 
 BOTTOM_CALM = 0.0
 TEXT_SHADOW = 0.0
+
+# ---- the title and the date (PHASEB UPDATE 7): A over the opening image (the sky above her profile is kept
+# empty for it), B in two calm stretches between expressions (24.2 to 25.5 over the sky as the camera comes
+# down to the man and the child; 35.0 to 36.2 over the glass as the circles of calm run together), C written
+# across the sky of the breath, above Heavenly Mother and the one who prays, bursting on the hit.
+TITLES = dict(
+    opening=dict(t_end=4.0, y=0.20, palette="night"),
+    signature=dict(windows=[(24.2, 25.5, "tr", "night"), (35.0, 36.2, "br", "night")]),
+    date_light=dict(t_form=40.21, t_burst=42.51, y=0.30, palette="night"),
+)
 
 # ---- the concert badge (PHASEB UPDATE 3, the same in all ten films): large on frame 0, in the top left corner
 # by 2.8 s, gone as the end card starts to form (the end card carries the same words)
@@ -296,6 +307,30 @@ def _crest_y(t):
 
 
 # ------------------------------------------------------------------------------------------------- people
+# THE ACTING PLAN (UPDATE 6): each expression is an act of care that calms the storm round it, and every scene
+# has its own style of person and its own framing.
+#   Greeting       a warm wave across a distance. She (a profile outlined in sparks, refs2 p06; close up at the
+#                  open) and a stranger (glass shards in the storm, p05), far apart on the heaving sea. The drop
+#                  lands between them; she turns and raises her hand to him; he waves back; both warm to gold.
+#   Apology        one kneels beside another who sits. A woman sits hunched in the rain, her light blowing away as
+#                  ash (p03); a man of warm glitter walks to her, goes down on one knee, bows his head and lays a
+#                  hand on her shoulder. The ash stops; she lifts her head. Half figures, a slow push in.
+#   Inclusiveness  two braced apart turn and embrace. Two constellation bodies (p01) among the hanging rain; her
+#                  scattered light flows back as they walk to each other and hold each other.
+#   Concession     stepping aside with an open palm. The wave lies down as glass and leaves a path of light to
+#                  the dawn; the man steps aside and opens his palm toward it; the mother walks on. Gold glitter,
+#                  the child in dots of colour (ref 14). Three backs, full figures.
+#   Respect        a profile turned attentively toward another. The man kneels to the child's height and leans in
+#                  to listen while she speaks; he nods. Close profiles outlined in sparks.
+#   Consideration  someone helps up a person knocked down by the wind. Two hands across the edge of the calm in
+#                  close up; then he pulls her to her feet (captured pair), her glass warming to gold.
+#   Encouragement  kneeling in prayer while another lays a hand on the shoulder. In the eye of the storm a young
+#                  man kneels with his hands joined (constellation lines); Heavenly Mother, only from behind,
+#                  veiled, rests her hand on his shoulder; rays behind her head. The breath: close on her hand.
+#   Gratitude      a whole crowd bowing. On the mirror at sunrise people stand in pairs in many styles (glitter,
+#                  dots, constellation, sparks) and bow to each other with their hands joined.
+#   Compliment     a crowd cheering. They clap while a dancer at their centre twirls and her light flies off as
+#                  embers (p04); then everyone raises their arms under the bow of nine lights.
 WIND = Wind(base=(4.5, 0.0, 0.6), gusts=[(0.5, 0.6, 1.5), (B, 0.5, 1.5), (D - 0.5, 0.8, 1.5), (E, 0.4, 1.2)])
 CALMWIND = Wind(base=(0.4, 0.0, 0.1))
 
@@ -305,35 +340,62 @@ def _fill(t_calm, dur=1.4):
     return lambda t: float(_ss(t_calm, t_calm + dur, t))
 
 
-def _looks(t_calm, warm="#ffd39a", rim="#9fc4ff"):
-    """Everyone is a body of light (glitter, never a dark shape): in the storm a cool, restless light that the
-    wind tears away; in the calm it warms to gold and grows brighter."""
-    f = _fill(t_calm)
-    return [dict(name="glitter", weight=lambda t: 1.0 - f(t), color=rim, color2="#eef4ff", bright=1.7),
-            dict(name="glitter", weight=f, color=warm, color2="#fff4e2", bright=2.0)]
+def _two(a, b, t_calm, dur=1.4):
+    """Look a in the storm, look b in the calm (two look dicts), crossing over from t_calm."""
+    f = _fill(t_calm, dur)
+    return [dict(a, weight=lambda t: 1.0 - f(t)), dict(b, weight=f)]
 
 
-def _storm_shed(t0, t1, dir=(1.0, 0.18, 0.15)):
-    return dict(kind="shed", t=t0, until=t1, dir=dir, speed=1.6, n=7000, life=2.6, color="#cfe0ff")
+def _glitter(color="#ffd39a", color2="#fff4e2", bright=2.0):
+    return dict(name="glitter", color=color, color2=color2, bright=bright)
+
+
+def _sparks(color="#ffd7a0", color2="#fff2dc", bright=2.4):
+    """A profile outlined in sparks (refs2 p06): the rim of the body as seen from the lens, no dark inside."""
+    return dict(name="rim", color=color, color2=color2, bright=bright, power=4)
+
+
+def _lines(color="#bcd4ff", color2="#ffffff", bright=1.8):
+    """A constellation body (refs2 p01): points joined by fine lines."""
+    return dict(name="plexus", color=color, color2=color2, bright=bright)
+
+
+def _dots(color="#ff977c", color2="#82b0ed", bright=1.8):
+    return dict(name="dots", color=color, color2=color2, bright=bright)
+
+
+def _storm_shed(t0, t1, dir=(1.0, 0.18, 0.15), color="#cfe0ff", sprite="soft"):
+    return dict(kind="shed", t=t0, until=t1, dir=dir, speed=1.6, n=7000, life=2.6, color=color, sprite=sprite)
 
 
 BODIES = {}
+STYLE = {}          # name -> how the body is added: dict(shards=<calm time>) or {}
+
+
+def _walk(shape, target, facing, t0, t1, show0, speed=1.1):
+    """A walk that ends exactly at `target` (x, z): the start place and the motion keys. The walk moves the
+    figure forward along `facing` by its own stride (engine/p3d/actor.py), so the start is found by measuring
+    the travel of the same keys."""
+    from p3d import actor as act
+    keys = [(t0, "walk", dict(speed=speed)), (t1 - 0.45, "stand", dict(blend=0.9))]
+    d = float(act.Actor(shape, None, at=(0.0, 0.0), facing=0.0, motion=keys, start=show0).travel(t1 + 2.0)[0])
+    a = np.radians(facing)
+    return (target[0] - np.sin(a) * d, target[1] - np.cos(a) * d), keys
 
 
 class _Person:
     """A body built when it is first needed (the workflow's first step imports the song with numpy only, and
-    a body's garments need scipy)."""
+    a body's garments need scipy). `make` builds it (a Body, or one of a pair made together)."""
+    wants_camera = True
 
-    def __init__(self, shape, kw):
-        self.shape, self.kw, self._b = shape, kw, None
+    def __init__(self, make):
+        self.make, self._b = make, None
 
     @property
     def b(self):
         if self._b is None:
-            self._b = Body(self.shape, **self.kw)
+            self._b = self.make()
         return self._b
-
-    wants_camera = True
 
     def sample(self, t, cam=None):
         return self.b.sample(t, cam)
@@ -342,92 +404,149 @@ class _Person:
         return self.b.where(t, place, **kw)
 
 
-def _person(name, shape, **kw):
+def _person(name, shape, style=None, **kw):
     kw.setdefault("points", 42000)
     kw.setdefault("fade", 0.4)
-    b = _Person(shape, kw)
+
+    def make():
+        k2 = {k: (v() if callable(v) and getattr(v, "__code__", None) is not None and v.__code__.co_argcount == 0
+                  else v) for k, v in kw.items()}
+        return Body(shape, **k2)
+    b = _Person(make)
     BODIES[name] = b
+    STYLE[name] = style or {}
     return b
 
 
-# the first two: apart in the storm, the drop lands between them
-_person("w1", "woman", at=(-1.7, 80.0), facing=[(0.0, 270.0), (DROP_LAND + 0.5, 270.0), (DROP_LAND + 1.6, 90.0)],
-        motion=[(0.0, "stand"), (DROP_LAND + 0.4, "shuffle"), (DROP_LAND + 1.7, "stand")],
-        gesture=[(1.3, DROP_LAND + 0.4, "brace"), (DROP_LAND + 2.2, 9.0, "listen")],
-        garment="dress", look=_looks(DROP_LAND + 0.4), wind=WIND, show=(0.0, 8.6), seed=1,
-        detail=dict(head=2.5), effects=[_storm_shed(0.0, DROP_LAND + 0.8)])
+def _pair(names, fn, *args, styles=(None, None), **kw):
+    """Two people made together by engine/p3d/pairs.py (exact contact), built on first use."""
+    made = {}
+
+    def build():
+        if not made:
+            made["ab"] = fn(*args, **kw)
+        return made["ab"]
+
+    for i, nm in enumerate(names):
+        BODIES[nm] = _Person(lambda i=i: build()[i])
+        STYLE[nm] = styles[i] or {}
+
+
+# ---- Greeting: a warm wave across a distance
+_person("w1", "woman", at=(-1.7, 80.0), facing=[(0.0, 270.0), (DROP_LAND + 0.5, 270.0), (DROP_LAND + 1.4, 90.0)],
+        motion=[(0.0, "stand"), (DROP_LAND + 0.4, "shuffle"), (DROP_LAND + 1.5, "stand")],
+        gesture=[(1.3, DROP_LAND + 0.3, "brace"), (4.0, 6.7, "wave", dict(side="R"))],
+        garment="dress", look=_two(_sparks(), _glitter(), DROP_LAND + 0.6), wind=WIND, show=(0.0, 8.6), seed=1,
+        detail=dict(head=2.5), points=52000,
+        effects=[_storm_shed(0.0, DROP_LAND + 0.8, color="#ffc98a")])
 _person("m1", "man", at=(1.8, 80.3), facing=270.0,
-        gesture=[(0.0, DROP_LAND + 0.4, "brace"), (DROP_LAND + 2.4, 6.4, "raise_hand", dict(side="R"))],
-        garment="coat", look=_looks(DROP_LAND + 0.5), wind=WIND, show=(0.0, 8.6), seed=2,
+        gesture=[(0.0, DROP_LAND + 0.4, "brace"), (4.5, 6.9, "wave", dict(side="L"))],
+        garment="coat", look=_glitter(), wind=WIND, show=(0.0, 8.6), seed=2, style=dict(shards=DROP_LAND + 0.7),
         effects=[_storm_shed(0.0, DROP_LAND + 0.8)])
-# the frozen bolt: someone kneels alone; a man comes, kneels beside her and rests a hand on her shoulder
-_person("kneel", "woman", at=(12.3, 60.0), facing=270.0, motion=[(6.0, "kneel")],
-        gesture=[(6.0, 10.6, "bow", dict(amount=34.0)), (10.6, 14.0, "look_up", dict(amount=8))],
-        garment="robe", look=_looks(STRIKE + 1.2), wind=WIND, show=(6.2, 13.9), seed=3,
-        effects=[_storm_shed(6.2, STRIKE + 1.0)])
-_person("sorry", "man", at=[(6.3, (16.5, 61.2)), (8.9, (13.25, 60.3))], facing=[(6.3, 250.0), (8.9, 255.0)],
-        motion=[(6.3, "walk"), (8.9, "kneel", dict(blend=0.6))],
-        gesture=[(9.7, 14.0, "hand_on_shoulder", dict(side="R", to=lambda t: BODIES["kneel"].where(t, "shoulder.R")))],
-        garment="coat", look=_looks(STRIKE + 1.4), wind=WIND, show=(6.3, 13.9), seed=4,
-        effects=[_storm_shed(6.3, STRIKE + 1.2)])
-# the stopped rain: an outsider whose light is blown away; it hangs and flows back; a friend comes
-_person("outsider", "woman", at=(-6.0, 44.0), facing=270.0,
-        gesture=[(12.6, 15.0, "brace"), (15.4, 19.8, "look_up", dict(amount=6))],
-        garment="dress", look=_looks(C + 1.6), wind=WIND, show=(12.6, 19.8), seed=5,
-        effects=[dict(kind="disperse", t=12.6, amount=_ramp([(12.6, 0.30), (13.2, 0.42), (C + 1.2, 0.42),
-                                                              (C + 3.0, 0.0), (20.0, 0.0)]), reach=2.4,
-                      dir=(1.0, 0.15, 0.1), share=0.45)])
-_person("friend", "man", at=[(13.2, (-10.8, 45.6)), (16.0, (-7.0, 44.3))], facing=[(13.2, 110.0), (16.0, 100.0)],
-        motion=[(13.2, "walk"), (16.0, "stand", dict(blend=0.5))],
-        gesture=[(16.3, 19.8, "hand_on_shoulder", dict(side="L", to=lambda t: BODIES["outsider"].where(t, "shoulder.L")))],
-        garment="tunic", look=_looks(13.0), wind=CALMWIND, show=(13.2, 19.8), seed=6)
-# the three before the wave
-_person("giver", "man", at=[(17.6, (-2.3, 28.0)), (21.4, (-2.3, 28.0)), (22.6, (-3.4, 27.7))],
-        facing=[(17.6, 180.0), (21.2, 180.0), (21.9, 120.0), (24.2, 120.0), (24.8, 90.0)],
-        motion=[(17.6, "stand"), (21.3, "shuffle"), (22.7, "stand"), (24.6, "kneel", dict(blend=0.6))],
-        gesture=[(17.6, D, "brace"), (21.8, 23.8, "offer", dict(side="R")), (25.4, 30.0, "listen")],
-        garment="coat", look=_looks(D + 0.6), wind=WIND, show=(17.6, 29.9), seed=7,
-        effects=[_storm_shed(17.6, D + 0.5)])
+# ---- Apology: one kneels beside another who sits; a hand on her shoulder
+_person("sitter", "woman", at=(12.3, 60.0), facing=270.0, motion=[(6.0, "sit", dict(dur=0.01))],
+        gesture=[(10.5, 14.0, "look_up", dict(amount=12))],
+        garment="robe", look=_two(_glitter("#b9aea6", "#e8e0d8", 1.3), _glitter(), 10.2), wind=WIND,
+        show=(6.2, 13.9), seed=3,
+        effects=[dict(kind="shed", t=6.2, until=10.4, dir=(0.7, 0.7, 0.1), speed=0.9, rise=0.35, n=6000, life=3.0,
+                      color="#d9d2cc", sprite="flake", size=1.6)])
+_SORRY_FACING = 248.0
+_person("sorry", "man", at=lambda: _walk("man", (12.95, 59.35), _SORRY_FACING, 6.4, 9.0, 6.3)[0],
+        facing=_SORRY_FACING,
+        motion=lambda: _walk("man", (12.95, 59.35), _SORRY_FACING, 6.4, 9.0, 6.3)[1] + [
+            (9.0, "kneel", dict(one=True, hands="free", dur=0.9, blend=0.5))],
+        gesture=[(9.4, 12.6, "bow", dict(amount=20.0)),
+                 (9.7, 14.0, "hand_on_shoulder", dict(side="R", to=lambda t: BODIES["sitter"].where(t, "shoulder.R")))],
+        garment="coat", look=_glitter("#ffc87a", "#fff0d0", 2.0), wind=WIND, show=(6.3, 13.9), seed=4,
+        effects=[_storm_shed(6.3, STRIKE + 1.4, color="#ffd6a0")])
+# ---- Inclusiveness: two braced apart turn and embrace (constellation bodies among the hanging rain)
+def _embrace():
+    sa, ka = _walk("woman", (-6.17, 44.0), 90.0, 13.0, 15.0, 12.6, speed=1.0)
+    sb, kb = _walk("man", (-5.83, 44.0), 270.0, 13.0, 15.0, 12.6, speed=1.0)
+    _EMB["a"].update(at=sa, motion=ka)
+    _EMB["b"].update(at=sb, motion=kb)
+    return pairs.embrace(15.0, at=(-6.0, 44.0), facing=90.0, approach=0.0, gap=0.34, a=_EMB["a"], b=_EMB["b"])
+
+
+_EMB = dict(
+      a=dict(shape="woman", look=_lines("#bcd4ff", "#ffe0ee", 1.9), garment="dress", wind=CALMWIND, points=42000,
+             show=(12.6, 19.8), fade=0.4, seed=5, gesture=[(12.6, 13.4, "brace")],
+             effects=[dict(kind="disperse", t=12.6, amount=_ramp([(12.6, 0.35), (C + 0.2, 0.35), (14.6, 0.0),
+                                                                 (20.0, 0.0)]), reach=2.4, dir=(1.0, 0.15, 0.1),
+                           share=0.4)]),
+      b=dict(shape="man", look=_lines("#ffd8a8", "#ffffff", 1.9), garment="tunic", wind=CALMWIND, points=42000,
+             show=(12.6, 19.8), fade=0.4, seed=6, gesture=[(12.6, 13.4, "brace")]))
+_pair(("outsider", "friend"), _embrace)
+# ---- Concession and Respect: the three before the wave
+_person("giver", "man", at=[(17.6, (-2.3, 28.0)), (21.4, (-2.3, 28.0)), (22.6, (-3.0, 27.8))],
+        facing=[(17.6, 180.0), (21.2, 180.0), (21.9, 120.0), (24.0, 120.0), (24.7, 90.0)],
+        motion=[(17.6, "stand"), (21.3, "shuffle"), (22.7, "stand"),
+                (24.5, "kneel", dict(one=True, hands="free", dur=0.9, blend=0.5))],
+        gesture=[(17.6, D, "brace"), (21.8, 23.8, "offer", dict(side="R")), (25.3, 30.0, "listen", dict(side="L")),
+                 (28.3, 29.3, "bow", dict(amount=12.0))],
+        garment="coat", look=_two(_glitter("#ffc87a", "#fff0d0", 2.0), _sparks("#ffd9a8", "#fff4e0", 2.6), 24.5, 0.9),
+        wind=WIND, show=(17.6, 29.9), seed=7, effects=[_storm_shed(17.6, D + 0.5)])
 _person("mother", "woman", at=[(17.6, (2.0, 28.3)), (22.9, (2.0, 28.3)), (26.4, (0.9, 23.0))],
         facing=[(17.6, 180.0), (22.9, 190.0)], motion=[(17.6, "stand"), (22.9, "walk"), (26.4, "stand")],
-        gesture=[(17.6, D, "brace")], garment="dress", veil=False, look=_looks(D + 0.6), wind=WIND,
+        gesture=[(17.6, D, "brace")], garment="dress", look=_glitter("#ffd9a6", "#fff4e2", 2.0), wind=WIND,
         show=(17.6, 27.4), seed=8, effects=[_storm_shed(17.6, D + 0.5)])
-_person("child", "child", at=(-1.25, 28.1), facing=[(17.6, 180.0), (23.8, 180.0), (24.5, 270.0)],
-        motion=[(17.6, "stand"), (23.8, "shuffle"), (24.6, "stand")],
-        gesture=[(25.0, 28.5, "look_up", dict(amount=10))],
-        garment="dress", look=_looks(D + 0.6, warm="#ffe0b8"), wind=WIND, show=(17.6, 29.9), seed=9,
-        effects=[_storm_shed(17.6, D + 0.5)])
-# one on the glass pulls the other, who sits in the swell, up by the hands (the clips are a captured pair:
+_person("child", "child", at=[(17.6, (-1.25, 28.1)), (23.8, (-1.25, 28.1)), (24.7, (-1.95, 27.95))],
+        facing=[(17.6, 180.0), (23.8, 180.0), (24.5, 270.0)],
+        motion=[(17.6, "stand"), (23.8, "shuffle"), (24.8, "stand")],
+        gesture=[(25.2, 28.4, "offer", dict(side="L")), (25.0, 29.0, "look_up", dict(amount=10))],
+        garment="dress", look=_two(_dots("#ff977c", "#82b0ed", 2.0), _sparks("#ffe2c0", "#fff6ea", 2.6), 24.5, 0.9),
+        wind=WIND, show=(17.6, 29.9), seed=9, effects=[_storm_shed(17.6, D + 0.5)])
+# ---- Consideration: one on the glass pulls the other, knocked down in the swell, to her feet (a captured pair:
 # both bodies share one place and facing; at clip time 2.5 s their hands meet, at 3.4 to 4.8 s she rises)
 PULL_T0 = TOUCH - 2.0
-_person("puller", "man", at=(-24.0, 14.04), facing=0.0, motion=[(PULL_T0, "pull_up", dict(phase=0.32)), (34.9, "stand", dict(blend=0.8))],
-        garment="tunic", look=dict(name="glitter", color="#ffc56e", color2="#fff0d0", bright=2.0), wind=CALMWIND,
-        show=(30.7, 35.2), fade=0.15, seed=12)
-_person("helped", "woman", at=(-24.0, 14.04), facing=0.0, motion=[(PULL_T0, "helped_up", dict(phase=0.32)), (34.9, "stand", dict(blend=0.8))],
-        garment="dress", look=_looks(31.6, rim="#8fbcff"), wind=WIND, show=(30.7, 35.2), fade=0.15, seed=13)
+_person("puller", "man", at=(-24.0, 14.04), facing=0.0,
+        motion=[(PULL_T0, "pull_up", dict(phase=0.32)), (34.9, "stand", dict(blend=0.8))],
+        garment="tunic", look=_glitter("#ffc56e", "#fff0d0", 2.0), wind=CALMWIND, show=(30.7, 35.2), fade=0.15,
+        seed=12)
+_person("helped", "woman", at=(-24.0, 14.04), facing=0.0,
+        motion=[(PULL_T0, "helped_up", dict(phase=0.32)), (34.9, "stand", dict(blend=0.8))],
+        garment="dress", look=_glitter("#ffd9a6", "#fff4e2", 2.0), wind=WIND, show=(30.7, 35.2), fade=0.15, seed=13,
+        style=dict(shards=31.9))
 # two hands across the edge of the calm in close up (gold on the glass, storm blue in the swell)
 MEET = (G5[0], 0.92, G5[2])
 HANDS = dict(meet=MEET, t_touch=TOUCH, axis=270.0, color="#ffc56e", color2="#7fb6ff", apart=0.6, approach=2.4,
              points=50000)
-# Heavenly Mother, only from behind: she faces the dawn (-z); every camera that sees her is behind her
+# ---- Encouragement: he kneels in prayer; Heavenly Mother, only from behind, rests her hand on his shoulder
+KNEEL_AT = (0.0, -0.5)
+_person("prayer", "man", at=KNEEL_AT, facing=180.0, motion=[(30.0, "kneel", dict(hands="pray", dur=0.01, sit=0.0))],
+        garment="tunic", look=_two(_lines("#c7b4ff", "#ffffff", 1.9), _glitter("#ffd28a", "#fff4e0", 2.0), 40.6, 1.6),
+        wind=CALMWIND, show=(34.4, 46.0), seed=11, effects=[dict(kind="form", t=34.4, dur=2.0)])
 MOTHER = _person("mother_hm", "woman", at=(0.0, 0.0), facing=180.0, garment="robe", veil=dict(length=1.4),
-                 gesture=[(36.2, 44.0, "open_arms")],
-                 look=dict(name="glitter", color="#f6c27a", color2="#fff0d2", bright=1.15), points=70000,
+                 gesture=[(36.3, 44.0, "hand_on_shoulder",
+                           dict(side="R", to=lambda t: BODIES["prayer"].where(t, "shoulder.R")))],
+                 look=_glitter("#f6c27a", "#fff0d2", 1.4), points=70000,
                  wind=CALMWIND, show=(34.2, 46.0), seed=10,
                  effects=[dict(kind="form", t=34.2, dur=2.2), dict(kind="dissolve", t=HIT + 0.1, dur=2.6)])
-# people on the mirror at sunrise: in pairs, they bow to each other, then raise their arms
+# ---- Gratitude and Compliment: people on the mirror at sunrise, in pairs, in many styles; they bow to each other
+# with joined hands, then clap while a dancer at their centre twirls into embers, then raise their arms
 CROWD = []
-_PAIRS = [((-4.2, 9.0), 75.0), ((-2.7, 9.4), 255.0), ((2.6, 10.6), 95.0), ((4.0, 10.3), 275.0),
-          ((-0.8, 14.2), 70.0), ((0.7, 14.6), 250.0), ((-7.5, 15.5), 120.0), ((7.4, 16.5), 230.0)]
+_PAIRS = [((-4.4, 9.0), 75.0), ((-2.9, 9.4), 255.0), ((2.8, 10.6), 95.0), ((4.2, 10.3), 275.0),
+          ((-1.6, 14.6), 70.0), ((-0.2, 15.0), 250.0), ((-7.6, 15.5), 120.0), ((7.4, 16.5), 230.0)]
 _SHAPES = ["woman", "man", "man", "woman", "child", "woman", "man", "woman"]
+_CLOOKS = [_glitter("#ffd9a6"), _dots("#ffd05f", "#f582af", 1.9), _lines("#ffe0b0", "#ffffff", 1.9),
+           _glitter("#ffcf8a"), _dots("#82b0ed", "#ff977c", 1.9), _sparks("#ffe2c0", "#fff6ea", 2.4),
+           _lines("#d8c8ff", "#ffffff", 1.9), _glitter("#ffe2b8")]
 for _k, ((_x, _z), _f) in enumerate(_PAIRS):
     CROWD.append(_person("crowd%d" % _k, _SHAPES[_k], at=(_x, _z), facing=_f, points=34000,
-                         gesture=[(45.4 + 0.15 * (_k % 3), 48.0, "bow", dict(amount=30.0)),
-                                  (49.6 + 0.12 * _k, 60.0, "raise")],
+                         gesture=[(45.2 + 0.15 * (_k % 3), 48.2, "bow", dict(amount=28.0)),
+                                  (45.0 + 0.15 * (_k % 3), 48.4, "pray"),
+                                  (49.5 + 0.1 * (_k % 4), 53.0, "clap", dict(period=0.48, height=0.6)),
+                                  (53.0 + 0.12 * _k, 60.0, "raise")],
                          garment=["dress", "coat", "tunic", "robe", "dress", "robe", "coat", "dress"][_k],
-                         look=dict(name="glitter", color=["#ffd9a6", "#ffcf8a", "#ffe2b8", "#ffd2a0"][_k % 4],
-                                   color2="#fff2dc", bright=2.1), wind=CALMWIND, show=(42.0, 60.0), seed=20 + _k,
+                         look=_CLOOKS[_k], wind=CALMWIND, show=(42.0, 60.0), seed=20 + _k,
                          effects=[dict(kind="form", t=42.6 + 0.2 * _k, dur=2.0)]))
+_person("dancer", "woman", at=(0.6, 12.2), facing=0.0,
+        motion=[(42.0, "stand"), (49.5, "twirl"), (52.7, "stand", dict(blend=0.8))],
+        gesture=[(45.2, 48.2, "bow", dict(amount=28.0)), (45.0, 48.4, "pray"), (53.0, 60.0, "raise")],
+        garment="dress", look=_glitter("#ffc06a", "#fff0d0", 2.2), wind=CALMWIND, show=(42.0, 60.0), seed=30,
+        effects=[dict(kind="form", t=42.8, dur=2.0),
+                 dict(kind="shed", t=49.6, until=53.2, dir=(0.0, 0.25, 0.0), speed=1.6, rise=0.15, n=9000, life=1.6,
+                      color="#ffb050", sprite="soft", swirl=1.4)])
 
 # ------------------------------------------------------------------------------------------------ camera
 CAMERA = Rig([
@@ -463,12 +582,12 @@ CAMERA = Rig([
          (D - 0.4, (0.6, 1.35, 36.6), (0.0, 6.8, 18.0)),
          (D + 1.0, (0.5, 1.5, 36.0), (0.0, 3.2, 18.5)),
          (23.7, (-0.1, 1.75, 34.2), (0.0, 3.0, 18.5)),
-         (24.8, (-0.4, 1.5, 33.0), (-1.9, 2.3, 27.6))],
+         (24.8, (-1.4, 1.45, 31.4), (-2.4, 1.6, 27.83))],
         fov=lambda t: float(np.interp(t, [18.6, D, 21.0, 24.8], [52.0, 54.0, 46.0, 44.0])),
         roll=lambda t: float(np.interp(t, [18.6, 19.4, D, 20.6], [6.0, -4.0, 3.0, 0.0])), aperture=0.02, blend=0.6),
     # round the man and the child while the wind writes
-    orbit((-1.9, 0.0, 27.8), radius=(6.2, 6.6), height=(1.35, 1.5), a0=18.0, a1=-26.0, t0=24.8, t1=29.3,
-          look=(-1.9, 1.75, 27.6), fov=44.0, aperture=0.02, blend=0.6),
+    orbit((-2.4, 0.0, 27.83), radius=(2.5, 2.75), height=(1.3, 1.35), a0=12.0, a1=-14.0, t0=24.8, t1=29.3,
+          look=(-2.4, 1.55, 27.83), fov=40.0, aperture=0.025, blend=0.7),
     # whip to the two hands at the edge of the calm; the touch; back to see the word
     fly([(29.3, (-22.4, 1.25, 17.6), (-24.3, 0.92, 15.6)),
          (30.2, (-23.5, 1.06, 16.75), (-24.3, 0.92, 15.6)),
@@ -486,12 +605,12 @@ CAMERA = Rig([
          (37.6, (1.3, 1.85, 3.6), (0.0, 1.75, -2.0))],
         fov=lambda t: float(np.interp(t, [34.5, 35.4, 36.5, 37.6], [44.0, 56.0, 46.0, 42.0])), aperture=0.015,
         blend=0.6),
-    orbit((0.0, 0.0, 0.0), radius=(3.85, 3.5), height=(1.8, 1.75), a0=20.0, a1=-12.0, t0=37.6, t1=40.4,
-          look=(0.0, 1.75, -2.0), fov=46.0, aperture=0.02, blend=0.8),
+    orbit((0.0, 0.0, -0.25), radius=(3.6, 3.3), height=(1.7, 1.65), a0=36.0, a1=16.0, t0=37.6, t1=40.4,
+          look=(0.0, 1.55, -1.6), fov=46.0, aperture=0.02, blend=0.8),
     # the breath: close on her open hand from behind; the hit throws the camera back and up
-    dolly((1.5, 1.55, 2.5), (1.08, 1.22, 1.05), 40.4, HIT, look=((0.46, 0.98, -0.2), (0.46, 0.95, -0.25)),
-          fov=(42.0, 36.0), aperture=0.022, blend=0.8),
-    fly([(HIT, (1.1, 1.3, 1.2), (0.46, 0.95, -0.25)),
+    dolly((2.1, 0.8, 3.4), (1.6, 0.85, 2.7), 40.3, HIT, look=((0.0, 4.3, -8.0), (0.0, 4.0, -8.0)),
+          fov=(44.0, 42.0), aperture=0.012, blend=0.8),
+    fly([(HIT, (1.6, 0.85, 2.7), (0.0, 4.0, -8.0)),
          (HIT + 0.5, (0.9, 2.2, 5.0), (0.3, 1.6, -3.0)),
          (HIT + 1.6, (0.0, 6.5, 24.0), (0.0, 3.0, -10.0)),
          (44.6, (-2.0, 3.6, 25.0), (0.0, 4.2, 2.0))],
@@ -523,19 +642,18 @@ _SPECS = [
     dict(expr="Greeting", pos=(0.0, 2.75, 80.0), width=4.6, t_in=DROP_LAND + 0.15, t_read0=4.3, t_read1=6.95,
          t_out=7.9, arrive="morph", source=BEADS_G, carry="soft", leave="sink"),
     dict(expr="Apology", pos=(12.4, 3.35, 60.0), width=7.0, t_in=STRIKE + 0.5, t_read0=9.6, t_read1=12.3,
-         t_out=13.2, arrive="morph", source=BOLT_A, carry="flake", leave="give", to=BODIES["kneel"]),
+         t_out=13.2, arrive="morph", source=BOLT_A, carry="flake", leave="give", to=BODIES["sitter"]),
     dict(expr="Inclusiveness", pos=(-6.0, 3.3, 44.0), width=7.4, t_in=C + 0.3, t_read0=15.0, t_read1=17.7,
          t_out=18.7, arrive="morph", source=BEADS_I, carry="soft", leave="sink"),
     dict(expr="Concession", pos=(0.0, 3.1, WAVE_Z + 0.4), width=8.4, face="fixed", facing=0.0, t_in=D + 0.05,
-         t_read0=21.0, t_read1=23.7, t_out=24.7, arrive="reveal",
+         t_read0=21.0, t_read1=23.5, t_out=24.2, arrive="reveal",
          gate=lambda P, t: _ss(-0.3, 0.3, P[:, 1] - (WAVE_H(t) - 0.2)), leave="rise"),
-    dict(expr="Respect", pos=(-1.9, 2.3, 27.6), width=4.0, t_in=24.6, t_read0=26.0, t_read1=28.7, t_out=29.6,
+    dict(expr="Respect", pos=(-2.4, 1.68, 27.83), width=1.75, t_in=25.5, t_read0=26.5, t_read1=29.0, t_out=29.6,
          arrive="pen", leave="give", to=BODIES["giver"]),
-    dict(expr="Consideration", pos=(-24.3, 2.3, 15.6), width=3.5, t_in=TOUCH - 0.2, t_read0=31.8, t_read1=34.5,
-         t_out=35.4, arrive="reveal", edge="up", leave="rise"),
-    dict(expr="Encouragement", pos=(0.0, 2.5, -3.0), width=4.9, t_in=36.2, t_read0=37.6, t_read1=40.3,
-         t_out=41.4, arrive="rays", source=(0.0, 1.62, -1.0), leave="stream",
-         to=lambda t: MOTHER.where(t, "palm.R"), star=True),
+    dict(expr="Consideration", pos=(-24.3, 2.3, 15.6), width=3.5, t_in=TOUCH - 0.2, t_read0=31.8, t_read1=34.3,
+         t_out=35.0, arrive="reveal", edge="up", leave="rise"),
+    dict(expr="Encouragement", pos=(0.0, 2.25, -3.0), width=4.5, t_in=36.2, t_read0=37.4, t_read1=39.9,
+         t_out=40.6, arrive="shaft", leave="stream", to=lambda t: MOTHER.where(t, "palm.R")),
     dict(expr="Gratitude", pos=(0.0, 4.7, 7.0), width=15.0, t_in=43.6, t_read0=45.3, t_read1=48.0, t_out=49.0,
          arrive="reveal", edge="up", leave="rise"),
     dict(expr="Compliment", pos=(0.0, 3.4, 6.0), width=8.6, t_in=48.3, t_read0=49.6, t_read1=52.2, t_out=53.0,
@@ -575,8 +693,12 @@ def _setup(scene):
     scene.add("wave", Wave(), mask=Mask("dark", grow=0.22, strength=lambda t: float(_ss(1.2, 3.0, WAVE_H(t)))))
     scene.add("beads_g", kc(BEADS_G))
     scene.add("beads_i", kc(BEADS_I))
-    for name, b in BODIES.items():
-        b.b.add(scene, name)
+    for name, b in BODIES.items():        # every person is light: no dark masks
+        st = STYLE.get(name) or {}
+        if "shards" in st:
+            scene.add(name, Shards(b.b, calm=st["shards"]))
+        else:
+            b.b.add(scene, name, mask=False)
     for k, v in Hands(**HANDS).items():
         if k != "flare":
             scene.add("hand_" + k, _Window(v, 28.6, 30.9))
@@ -624,8 +746,8 @@ P3D = dict(
                       (HIT + 1.2, 0.0), (60.0, 0.0)]),
         arch=dict(lit=_LIT, colors=tuple(e["color"] for e in PW.EXPRESSIONS), **ARCH),
         light=dict(pos=(0.0, 1.62, -1.3), color="#ffd29a",
-                   strength=_ramp([(0.0, 0.0), (34.6, 0.0), (36.4, 0.55), (40.3, 0.55), (HIT, 0.9), (HIT + 0.6, 0.0),
-                                   (60, 0.0)]),
+                   strength=_ramp([(0.0, 0.0), (34.6, 0.0), (36.4, 0.55), (39.9, 0.55), (40.6, 0.35), (HIT, 0.35),
+                                   (HIT + 0.6, 0.0), (60, 0.0)]),
                    size=0.5, rays=1.0),
         lights=[dict(pos=_flash_place, color="#cbbcff", strength=lambda t: 1.1 * flash(t), radius=60.0)],
         react=dict(beat=0.3, level=0.25),
@@ -635,7 +757,7 @@ P3D = dict(
             dict(t=C, strength=0.25, radius=0.25, color="#ffe6ee", rise=0.1, fall=0.6),
             dict(t=TOUCH, at=MEET, strength=0.35, radius=0.08, color="#ffc9a8", rise=0.08, fall=0.5),
             dict(t=30.85, at=(-24.3, 1.0, 15.6), strength=0.45, radius=0.18, color="#fff0e0", rise=0.12, fall=0.45),
-            dict(t=HIT, at=(0.46, 0.95, -0.2), strength=0.8, radius=0.16, color="#fff0d0", rise=0.06, fall=0.7),
+            dict(t=HIT, at=(0.12, 0.98, -0.58), strength=0.8, radius=0.16, color="#fff0d0", rise=0.06, fall=0.7),
             dict(t=TITLE_WHOLE - 0.6, at=tuple(LIGHTS[4]), strength=0.25, radius=0.2, color="#fff6e0", rise=0.2,
                  fall=0.9)],
     setup=_setup,

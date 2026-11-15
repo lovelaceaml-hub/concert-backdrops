@@ -341,3 +341,45 @@ class Drop:
                dict(pos=p[None, :], size=1.4 + 6.0 * boom, color=self.c, alpha=0.25 * a + 0.4 * boom, kind="soft")]
         out.append(ribbon(np.asarray(tail), width=0.05, color=self.c * 2.0, alpha=0.6 * a))
         return out
+
+
+class Shards:
+    """A body (or any point set) drawn as glass shards in the storm (refs2 p05): every few points become a small
+    shard that turns and tumbles and flashes as it faces the lens, in cold glass colours. From `calm` on (over
+    `dur` seconds) the shards fade and the set's own look (warm glitter) takes over: the glass warms to gold.
+    keep: one point in `keep` becomes a shard."""
+    wants_camera = True
+
+    def __init__(self, inner, calm=1e9, dur=1.2, keep=3, size=0.016, color="#cfe6ff", color2="#8fb4ff", bright=1.0):
+        self.inner, self.calm, self.dur, self.keep, self.size = inner, float(calm), float(dur), int(keep), float(size)
+        self.c1, self.c2, self.bright = lin(color), lin(color2), float(bright)
+
+    def sample(self, t, cam=None):
+        ps = self.inner
+        res = ps.sample(t, cam) if getattr(ps, "wants_camera", False) else ps.sample(t)
+        batches = [b for b in (res if isinstance(res, (list, tuple)) else [res]) if b is not None]
+        k = float(_ss(self.calm, self.calm + self.dur, t))
+        out = []
+        for b in batches:
+            kind = b.get("kind", "soft")
+            n = len(b["pos"])
+            if kind not in ("soft", "spark") or n == 0:
+                out.append(b)
+                continue
+            if k > 0.0:
+                warm = dict(b)
+                warm["alpha"] = np.asarray(b.get("alpha", 1.0), np.float64) * k
+                out.append(warm)
+            if k >= 1.0:
+                continue
+            sel = np.arange(0, n, self.keep)
+            pos = np.asarray(b["pos"], np.float64)[sel]
+            seed = np.asarray(b.get("seed", _hash(np.arange(n), 3)), np.float64)
+            seed = seed[sel] if seed.ndim else np.full(len(sel), float(seed))
+            rot = np.stack([seed * 6.283 + t * (0.4 + 0.8 * seed), seed * 17.0 + t * (1.2 + 1.6 * seed)], axis=1)
+            col = self.c1[None, :] * (1.0 - seed[:, None]) + self.c2[None, :] * seed[:, None]
+            al = np.asarray(b.get("alpha", 1.0), np.float64)
+            al = al[sel] if al.ndim else np.full(len(sel), float(al))
+            out.append(dict(pos=pos, size=self.size * (0.6 + 0.9 * seed), color=col * self.bright,
+                            alpha=al * (1.0 - k) * 0.9, kind="flake", rot=rot, seed=seed, emit=1.4))
+        return out
