@@ -136,6 +136,8 @@ class Renderer:
         ctx.enable(moderngl.PROGRAM_POINT_SIZE)
         import upgrade
         self.up = upgrade.Upgrade(self)   # scenes, people of light, effect layers, fragment styles (all optional)
+        import creatures
+        self.cr = creatures.Creatures(self)   # doves, butterflies, fireflies (all optional)
 
     # ------------------------------------------------------------------
     def text_plan(self, t):
@@ -217,6 +219,7 @@ class Renderer:
                  uColB=L(cols("PETAL_COLORS", ("#ff7fa2", "#ffd2c2"))[1]) * 0.62, uCalm=calm0, uCalmY=CALM_Y)
             self.v_petal.render(moderngl.POINTS)
         self.up.draw_effects(t, P)
+        self.cr.draw(t)
         self.up.draw_figures(t)
 
         # which text is on screen: A is an expression or the closing title, B the end card lines or a fragment
