@@ -1250,8 +1250,6 @@ FINALE = BR.Finale(pos=tuple(FIN_C), radius=FIN_R, shrink=FIN_SHRINK, camera=CAM
 P3D = dict(
     camera=CAMERA,
     world=FINALE.world(dict(WORLD, shafts=[_shaft([(P1b, 10.3, 14.0, 0.45), (P5, 33.6, 37.2, 0.45)], radius=1.2),
-                              _shaft([(P4, 27.0, 28.6, 0.18)], radius=2.0,
-                                     color="#ffe6b8", top=60.0),
                               _shaft([(P3, 20.6, 23.9, 0.5), (P5b, 37.2, 40.6, 0.5)], radius=1.2, color="#ffeccc"),
                               _shaft([(P2, 17.2, 19.9, 0.35)], radius=1.0, color="#ffd8a0", top=22.0)])),
     setup=_setup,
