@@ -1,1139 +1,661 @@
 """Film 09 of ten: THE VEIL. A 60 second promo for the Healing Concert "The Words of Mother's Love".
 
-PHASE A: direction, not rendering. This file holds the treatment (this text) and the timeline as data, in the
-conventions of the 3D layer engine/p3d: metres, y up, the lake is the plane y = 0, a person is about 1.7 m
-tall, the arch of nine lights stands over the origin in the plane z = 0 and faces +z, azimuth 0 looks along
-+z. Nothing is drawn yet: build() at the end says what phase B has to make.
-`python engine/songs/ten_09_the_veil.py` prints the timeline and checks the film's own rules; with engine/p3d
-on the path it also runs the particle words' own check (helper WORDS) through this camera.
+We follow Heavenly Mother from behind as she walks over a night lake toward the first light. Her veil streams
+back across the water as a river of light. Wherever it reaches, people rise out of it and say the nine Words
+of Mother's Love to one another, until at sunrise she lifts her arms and the veil rises to become the sky and
+the arch of nine lights, and the end card stands in the day.
 
-LOGLINE
-  We follow Heavenly Mother from behind as she walks over a night lake toward the first light. Her veil
-  streams back across the water as a river of light. Wherever it reaches, people rise out of it, say the nine
-  Words of Mother's Love to one another and go on in its light behind her, until at sunrise she lifts her arms
-  and the veil rises to become the dawn sky and the arch of nine lights.
-  The spine is the campaign's own line, "Where a mother's love reaches, peace settles": the veil is that
-  reach. (It is the thought of the film, not text on screen.)
+World    one cloth: the veil is road, roof, river, loom and at last the sky (VeilRiver below, this file's own
+         point set, about 170 thousand points and a warp of threads, mirrored in the lake).
+Camera   always behind her (never more than 60 degrees off straight behind), riding the cloth; a hard cut on
+         every song change, each one a new shape of the veil.
+People   lifelike bodies of light (engine/p3d/body.py) in garments of light, gathered out of the river, in
+         pairs, with real contact. Heavenly Mother only from behind, veiled, or her hand.
+Words    the nine expressions (engine/p3d/words.py, never retyped), each read for 2.6 s or more.
 
-WHAT MAKES THIS FILM ITS OWN (against the other nine)
-  World    One cloth. The veil is river, road, roof, loom and at last the sky. No wave to surf, no comets, no
-           garden, no storm: everything on screen is Mother's veil or what it touches.
-  Camera   A needle. She is always ahead of us, toward the light; we never overtake her and never see her
-           from the front. The camera rides the cloth, goes under it, bursts up through it and passes through
-           the words themselves (every song change is a pass through cloth: a wash of huge soft discs); it
-           rolls through the loom like a shuttle; it ends in a slow half circle behind her.
-  Words    Embroidery. Each expression is sewn into a fold of the veil that opens flat toward us, in warm
-           white and gold only (nine colours are film 10's idea), and leaves as thread or as that wash.
-  People   Made of the veil's own particles, their hems still joined to it. They act each word in pairs,
-           close to the camera, with real contact; then their light goes back into the veil and travels on
-           in it after her (two more glints at her hem each time), and at sunrise it gives them all back.
-  Palette  Warm white and gold on deep blue; one cool silver blue for "the other person" (ref 04); rose only
-           from the breath onward; the campaign day for the end card.
-
-HEAVENLY MOTHER (present in every section; rules, checked in code where they can be)
-  Only from behind, veiled, or as a hand. The camera stays behind her and within 60 degrees of straight behind
-  (REAR_LIMIT, checked on every frame). Her head veil is deep and hangs forward of the face, so at any allowed
-  angle only veil is seen. She is never scaled, never dissolved, never flown about, never hidden by words.
-  When the day comes she is not taken apart: she walks on into the brightness of the sun.
-  How she is seen, section by section: half body with rays (1); the small figure the whole road runs to (2);
-  framed in the bright mouth of the canopy, then the light behind an embrace (3); the head of the river, then
-  seen through a doorway (4); between two people who listen (5); her hand, then her whole figure waiting
-  (6); half body with a child, the sun behind her head (7); walking into the sun under the arch (8).
-
-THE FILM, SHOT BY SHOT (times on the provisional section map 0, 7.5, 15 ... 52.5; every time in the data
-below hangs off SECTIONS, so the map can be swapped when the medley is final)
-
- 1  0.0 to 7.5   THE CAST. Night water, Milky Way.                                      Words: Greeting
-    0.00  Eye: no black, no fade. Frame one is Heavenly Mother from behind, veiled, half body, filling the
-          frame; the one warm star of the horizon is hidden behind her head and its rays fan round her
-          (ref 10). Camera: 2.4 m behind her at shoulder height, creeping in. Light: gold rim on indigo.
-    0.55  THE CAST (first hit): she opens both arms low and the veil leaves her shoulders toward us. Sheets
-          of gold points rush over the lens and we are carried backward with its hem, low over the water,
-          44 m in two seconds, while the veil unrolls across the lake like a road of light, mirrored.
-          Camera: pulled back and up, lens opening from 38 to 62 degrees, motion blur.
-    2.60  Wide for one breath: a small bright figure at the head of an immense shining veil, stars above
-          and below. Then we swoop down along it. Two people gather out of its light, one on each bank, and
-          walk toward each other; between them the hem curls up like a turning page.
-    4.2 to 6.8  GREETING is read on that fold, above Mother's distant figure; the walkers are soft rim-lit
-          profiles coming in from the frame edges (ref 01, 16). Camera: creeps forward at head height.
-    6.8 to 7.5  Focus falls to the walkers: one lifts an open hand, they clasp hands, her small bright
-          figure between their two profiles. We rise over the joined hands; the fold sweeps over the lens.
- 2  7.5 to 15.0  THE ROAD. Blue mist.                                 Words: Consideration, then Gratitude
-    7.5   New: speed. Out of the wash we are far back in a bank of mist, skimming half a metre above the
-          veil, a road now: 40 m in 0.9 s, banking through its bends, the cloth streaming against us, her
-          light ahead growing.
-    8.7 to 11.3  The road is closed by a sheer curtain with CONSIDERATION sewn on it. Through the cloth,
-          soft: someone kneeling, spent, beside a burden of dim light; someone bending to them. Slow push.
-    11.3 to 12.3  We pass through the curtain and arrive as two hands, one gold, one silver blue, meet and
-          flare (ref 04, at arm's length, not a macro: film 02 owns the macro). The kneeling one is lifted.
-    12.3 to 15.0  The flare runs up the next fold and sews GRATITUDE above Mother's figure; in front, soft,
-          the one who was helped bows with a hand on the heart. Camera: a slow crane up.
- 3  15.0 to 22.5 THE CANOPY. Inside the veil.                  Words: Apology, which becomes Inclusiveness
-    15.0  New: on the downbeat the Gratitude fold sweeps over us and the whole veil heaves up over our
-          heads. We are under it: a long roof of warm amber cloth, light falling through the weave in soft
-          shafts, violet night outside, Mother walking in the bright mouth of it ahead.
-    16.2 to 19.0  One person sits turned away, head bowed, coming apart: particles stream off one side
-          (ref 06). Another comes, kneels, lays a hand on the shoulder. APOLOGY hangs on a swag of the roof
-          above them, its stitches loose. Camera: a slow low arc round the pair.
-    19.0 to 19.85  THE MENDING: the hurt one turns, they embrace, and her light is exactly behind them: its
-          rays break round the two. Every particle that left flies back; the body is whole (a healing
-          concert). The loose stitches pull tight and are sewn again...
-    19.85 to 22.4  ...as INCLUSIVENESS on the same swag. Camera: draws back and rises a little: the embrace
-          low in the picture, Mother small beyond it, the words above her.
- 4  22.5 to 30.0 THE RIVER AND THE NARROWS. High clear air.                              Words: Concession
-    22.5  New: height. We burst up through the roof and climb 36 m in a second and a half. The veil is a
-          river of light with braided arms across the whole lake, mirrored, people along every arm, the far
-          hills on a first line of rose, and she at its head.
-    24.0 to 25.4  The camera noses over and dives, rolling, to where two arms join in a strait one person
-          wide. A wall of cloth with a doorway stands there; through the door, Mother and her light.
-    25.6 to 28.3  Two people reach the door together. CONCESSION is sewn across the wall above it. One
-          stops, steps back and opens a palm toward the door.
-    28.3 to 30.0  The other bows the head and walks through into the light; a thread of the words follows.
-          Then the first; then we do.
- 5  30.0 to 37.5 THE LOOM. Strings of light.                                               Words: Respect
-    30.0  New: the veil unwoven. Thousands of taut threads run across the lake to her and sound with the
-          music like harp strings. The camera is the shuttle: 40 m through the warp in one full roll.
-    32.8 to 35.5  Two people face each other in profile, Mother between them in the distance. One gives
-          thoughts as a stream of gold from an open palm (ref 14); the other has turned fully toward them,
-          leaning in, and answers in silver blue. The two streams cross the warp and weave a panel of
-          fresh cloth above them: RESPECT, two different threads in one cloth.
-    35.5 to 37.5  The listener cups the other's light in both hands and holds it to the chest. The loom
-          falls silent thread by thread until one is left. We rush along it, and the rush ends, on the
-          breath, at a hand.
- 6  37.5 to 45.0 THE THREAD. The breath; still water.                                Words: Encouragement
-    37.5  New: stillness. Heavenly Mother has stopped. Her left hand, from behind, held low and a little
-          back, closed lightly on the one thread. Macro, very shallow focus, the first thin line of rose on
-          the horizon. The camera only breathes.
-    39.0 to 40.0  We draw back along the thread, over the head of a child who is stepping onto it, arms out
-          for balance (it lies on the water, a line to walk). Close to us someone kneels, hands clasped.
-    40.0 to 43.0  ENCOURAGEMENT hangs in the still air above the child, sewn from the thread's slow sparks.
-          The child wobbles, steadies, walks on toward her, who waits. Camera: stays with the one who
-          roots, a handheld breath.
-    43.0 to 45.0  We go the last steps with the child. A small hand reaches up into hers: contact, a flare
-          (seen from behind and below). The words go up as flakes. The thread bursts back into the veil.
- 7  45.0 to 52.5 THE LIFTING. Sunrise.                                   Words: Compliment, then all nine
-    45.0  New: the sun, straight ahead of her; the veil floods back in rose gold. The camera begins a slow
-          half circle behind her and the child, hand in hand, from 55 degrees left to 55 degrees right of
-          straight behind. Halfway the sun goes behind her head and its rays break round it. The veil gives
-          back everyone it gathered: they rise out of it on both sides, at many depths, arms lifting.
-    46.5 to 49.2  COMPLIMENT, the largest words of the film, burnt out of the lifting veil above them by
-          the rays, turning with us.
-    49.2 to 52.5  She raises both arms, the child's hand in hers. The whole veil peels off the lake from the
-          far end toward us (its mirror image parts from it), streams over our heads and spreads across the
-          sky. For one breath all nine expressions are written small across it; their threads run to nine
-          pearls on the arc of veil between her raised hands; the arc lifts off, grows and stands over the
-          lake as the arch of nine lights. Rose, then day. Camera: to straight behind, back and up.
- 8  52.5 to 60.0 THE CONCERT. The campaign day.                                                 End card
-    A last fold of the veil crosses the sky and the title stands behind it: the existing end card, its style
-    untouched: "The Words of Mother's Love" (coral, anim "ribbon"), "Healing Concert", and in navy "Sunday,
-    December 6 (middle dot) 4:30 PM", "World Mission Society Church of God", "6720 W Sahara Ave, Las Vegas".
-    All five whole by 55.05 and held to the last frame (4.95 s). On the last hit the nine lights flare and a
-    ripple of rose gold runs through the sky's weave (colour and motion, exposure 1.0 to 1.22 and back: it
-    shows on a pale sky). Under the arch Mother and the child walk on into the sun and its brightness takes
-    them; the procession follows as soft lights. The camera keeps craning up and back. No fade to black.
-
-THE NINE EXPRESSIONS (exact campaign wording and labels: NINE below; how each arrives, is read, leaves)
-  Greeting       sewn on the first fold that curls up from the unrolled hem; read 4.2 to 6.8 over two
-                 walkers who meet; leaves as a wash of bokeh when the fold sweeps over us.
-  Consideration  on a sheer curtain across the road, the helper seen through it; read 8.7 to 11.3; we pass
-                 through it to the joined hands.
-  Gratitude      sewn by the flare of those hands on the next fold; read 12.3 to 14.95 while the helped one
-                 bows; sweeps over us on the downbeat.
-  Apology        on a swag of the canopy, stitches loose; read 16.2 to 19.0; does not leave: it is pulled
-                 tight and sewn again as the next (the same particles).
-  Inclusiveness  made of the Apology's thread at the embrace; read 19.85 to 22.4; rushes past as we burst up
-                 through the roof.
-  Concession     across the cloth wall above a doorway; read 25.6 to 28.3; leaves as a thread that follows
-                 the one who is let through first.
-  Respect        woven, not sewn: gold weft and blue weft cross the loom's warp; read 32.8 to 35.5; unravels
-                 until one thread is left.
-  Encouragement  hangs above a child walking the one thread held in Mother's hand; read 40.0 to 43.0; goes
-                 up as flakes when the small hand reaches hers.
-  Compliment     largest, burnt out of the lifting veil by the sunrise during the half circle; read 46.5 to
-                 49.2; then all nine return small across the sky and their threads become the nine lights.
-
-THREE WOW MOMENTS
-  1  0.55  The cast: from a close, back-lit view of her shoulders the veil bursts over the lens and unrolls
-           across the mirror lake while we are swept 44 m back with its hem.
-  2  19.4  The mending: under the canopy a person who is coming apart is embraced, her light breaks round
-           the two, and every scattered particle flies home.
-  3  45 to 52.5  The lifting: the half circle behind her as the sun passes behind her head; she raises her
-           arms with the child's hand in hers and the whole veil leaves the lake, becomes the sky with all
-           nine words in it, and the arc between her hands becomes the arch.
-  And the quiet one: 37.5, a rush that ends at her hand holding the single thread a child will walk.
-
-WHAT IS PROVISIONAL
-  The section map. MED2's current cut (origin/epic-medley2 45017af) has six sections of about 6.6 s, then
-  a long one from 40.2 (its breath, into a hit at 42.5) and the final chorus from 49.5 to a last hit at 58.1
-  (SECTIONS_MED2_DRAFT). Refit plan: movements 1 to 5 take the six short sections with the two pairs
-  straddling a song change (the reply lands on the new song's downbeat); the hand macro sits on 40.2 and the
-  child steps onto the thread on 42.5; the lifting starts on 49.5; the end card is whole by 55.5 and the
-  last hit at 58.1 flares the arch.
-  The names of CORE's world keys and of BODY's motions (BODY's branch is not on origin yet).
-  ENGINE_NEEDS below lists what this film needs beyond the brief, most important first.
+Sections on the medley (audio/promo/concert-medley.mp3, section starts 0.25, 6.84, 13.30, 19.85, 26.79, 33.36,
+40.21 with the breath to 42.51, 49.47; last hit 58.11):
+ 1  0.00  THE CAST      close behind her, rays round her head; on the first hit the veil unrolls across the
+                        lake and we are swept back along it; two people rise out of it and clasp hands:
+                        Greeting (written by the flare of their hands)
+ 2  6.84  THE ROAD      a fast low skim up the river; someone kneels, spent; another stoops to help:
+                        Consideration (from the open palm)
+ 3  13.30 THE CANOPY    the veil heaves up into a roof of light over us; one sits coming apart, one kneels
+                        beside her: Apology; the embrace mends her (every particle flies home): Inclusiveness
+ 4  19.85 THE RIVER     up through the roof, 30 m over the river of light; dive to the narrows where one
+                        steps aside with an open palm for the other: Concession
+ 5  26.79 THE LOOM      the veil unwoven into a warp of strings; a barrel roll through it; two in profile,
+                        one gives her thoughts as a stream from her palm, one listens: Respect (woven)
+ 6  33.36 THE PROCESSION  people walk in her veil behind her; one bows to another: Gratitude; the veil
+                        narrows to one thread and we rush along it to her hand
+ 7  40.21 THE THREAD    the breath: her hand from behind holding the thread; a child walks the thread to her:
+                        Encouragement; 42.51 the sun breaks the horizon ahead of her, the veil floods rose
+                        gold; a half circle behind her and the child: Compliment (burnt out by the rays)
+ 8  49.47 THE LIFTING   she raises her arms; the whole veil lifts off the lake over our heads and becomes the
+                        sky; the arch of nine lights stands; the end card, whole from 55.0 s to the last frame
+No lyrics, no faces, no dark behind text, no fade to black, frame 0 is a picture.
 """
-import os
-import sys
-
 import numpy as np
 
-HERE = os.path.dirname(os.path.abspath(__file__))
-ENGINE = os.path.dirname(HERE)                      # this file is engine/songs/
-ROOT = os.path.dirname(ENGINE)                      # repository root
-if ENGINE not in sys.path:
-    sys.path.insert(0, ENGINE)
+import theme
 
-from track import Track   # noqa: E402
-import theme   # noqa: E402
+import songs.s03_original as _base
 
-SONG_ID = os.environ.get("SONG", os.path.splitext(os.path.basename(__file__))[0])
-FEATURES = os.environ.get("FEATURES", os.path.join(ROOT, "work", SONG_ID, "features.npz"))
-AUDIO_FILE = "audio/promo/concert-medley.mp3"       # the new medley (branch epic-medley2)
-
-FPS = 30
-W, H = 1920, 1080
-ASPECT = W / H
+# ------------------------------------------------------------------------------------------------ the frame
 TOTAL = 60.0
-SONG_END = 60.0
-MUSIC_END = 59.6
-NFRAMES = int(round(TOTAL * FPS))
+_base.TOTAL = TOTAL
+_base.NFRAMES = int(round(TOTAL * _base.FPS))
+_base.MUSIC_END = 59.6
+_base.SONG_END = 60.0
+_base.FADE = _base.Track([(0.0, 1.0), (TOTAL, 1.0)])       # frame 0 is a picture; no fade at the end
+_base.EXPOSURE = _base.Track([(0.0, 1.0), (TOTAL, 1.0)])
+for _p in _base.PHRASES:                                    # the flat expressions stay off: the words are particles
+    _p["form"] = _p["hold"] = _p["star"] = 1e9
 
-# ---------------------------------------------------------------------------------------------- the sections
-# Section starts in seconds. Provisional (TEN-FILMS.md) until MED2's map is final; every time below hangs
-# off S, so swapping the map moves the whole film with it.
-SECTIONS = (0.0, 7.5, 15.0, 22.5, 30.0, 37.5, 45.0, 52.5)
-SECTIONS_MED2_DRAFT = (0.25, 6.84, 13.30, 19.85, 26.79, 33.36, 40.21, 49.47)   # breath 40.2, hit 42.5, last 58.1
-SECTION_NAMES = ("The Cast", "The Road", "The Canopy", "The River and the Narrows", "The Loom", "The Thread",
-                 "The Lifting", "The Concert")
-S = SECTIONS
+# the sections of the medley
+S = (0.0, 6.84, 13.30, 19.85, 26.79, 33.36, 40.21, 49.47)
+HIT0, BIG, LAST = 0.25, 42.51, 58.11
 
-CAST = S[0] + 0.55          # the first hit: she opens her arms, the veil leaves her shoulders
-MEND = S[2] + 4.40          # the embrace under the canopy: the scattered particles fly home
-BREATH = (S[5], S[5] + 2.5)   # the music's one short breath: her hand on the single thread
-TOUCH = S[5] + 6.80         # the child's hand reaches hers
-SUNBREAK = S[6]             # the biggest passage begins
-ECLIPSE = S[6] + 2.60       # the sun passes behind her head, halfway round the half circle
-LIFT = S[6] + 4.20          # she raises both arms; the veil leaves the lake
-OVERHEAD = S[6] + 5.60      # the veil passes over our heads into the sky
-ARCH_UP = S[7] - 0.10       # the arc between her hands stands as the arch; its nine lights wake to S[7] + 0.7
-FORM_DUR = 2.4              # the end card's title takes this long to form (plus 0.75 s, as the engine does)
-TITLE_HIT = S[7] + 2.55     # 55.05: the title is whole; held to the end (4.95 s)
-T_FORM = TITLE_HIT - FORM_DUR - 0.75   # 51.9: the last fold of the veil starts across the sky
-TAG_T0, TAG_T1 = S[7] + 1.4, TITLE_HIT - 0.05   # the three navy lines rise
-FINAL_HIT = TITLE_HIT       # provisional: the medley's last accent (58.1 in MED2's draft): arch flare, sky ripple
+# the end card (the existing style: coral title with the ribbon, navy lines rising)
+FORM_DUR = 2.4
+TITLE_HIT = 54.30                       # the loudest moment of the medley: the title is whole
+T_FORM = TITLE_HIT - FORM_DUR - 0.75    # 51.15
+TAG_T0, TAG_T1 = 52.6, 55.0
+_base.FORM_DUR = FORM_DUR
+_base.TITLE_HIT = TITLE_HIT
+_base.NINTH = 1e9
+_base.TITLE = dict(label="Healing Concert", lines=["The Words of Mother’s Love"], size=150, y=0.27, label_size=48,
+                   form=T_FORM, hold=1e9, star=1e9, color=theme.CORAL, glow=theme.WHITE_GLOW, anim="ribbon")
+_base.TAGLINE = dict(text="Sunday, December 6 · 4:30 PM\nWorld Mission Society Church of God\n"
+                          "6720 W Sahara Ave, Las Vegas",
+                     sizes=(78, 77), t0=TAG_T0, t1=TAG_T1, color=theme.NAVY, glow=theme.WHITE_GLOW, anim="rise")
+_base.CREDIT["t_in"], _base.CREDIT["t_full"] = 1e9, 1e9 + 1.0
+_base.WAVES = []
+from songs.s03_original import *  # noqa: E402,F401,F403
+
+from track import Track  # noqa: E402
+from p3d import lin  # noqa: E402
+from p3d import words as PW  # noqa: E402
+from p3d.actor import Actor  # noqa: E402
+from p3d.camera import Move, Rig, fly, orbit  # noqa: E402
+
+TOTAL = 60.0
+BOTTOM_CALM = 0.0
+TEXT_SHADOW = 0.0
+FRAGMENTS = []
 
 
-def lin(hexs):
-    """A display hex colour as linear light (the same curve as the other song files and p3d.api.lin)."""
-    h = hexs.lstrip("#")
-    return np.array([int(h[i:i + 2], 16) / 255.0 for i in (0, 2, 4)], dtype=np.float64) ** 2.2
+def ss(a, b, x):
+    """Smoothstep from a to b (works on arrays)."""
+    u = np.clip((np.asarray(x, np.float64) - a) / (b - a), 0.0, 1.0)
+    return u * u * (3.0 - 2.0 * u)
+
+
+def _level(t):
+    """The music's slow loudness 0..1 (0.6 when the analysis is not at hand)."""
+    try:
+        from audio_react import audio
+        return float(audio.level(t))
+    except Exception:
+        return 0.6
+
+
+def _beat(t):
+    try:
+        from audio_react import audio
+        return float(audio.beat(t))
+    except Exception:
+        return 0.0
 
 
 # ------------------------------------------------------------------------------------- Heavenly Mother's path
-# She walks along the line x = 0 toward -z (toward the arch at the origin and the light beyond it, azimuth
-# 180), from z = 62 at a serene 1.05 m/s. She stops for the breath (the hand, the child) and stands through
-# the lifting, then walks on under the arch into the sun. A pure function of t.
-MOTHER_Z0 = 62.0
-MOTHER_PACE = 1.05          # metres per second
-MOTHER_FACING = 180.0       # azimuth she faces (p3d.at convention: 0 is +z)
-MOTHER_HEIGHT = 1.70
-_PACE = ((0.0, 1.0), (S[5] - 0.6, 1.0), (S[5] + 0.4, 0.0), (S[7] + 0.3, 0.0), (S[7] + 1.3, 1.0), (TOTAL, 1.0))
+# She walks toward -z (toward the light on the horizon, azimuth 180) from z = 62, stops for the breath and
+# stands to the end. The skeleton alone (numpy only) gives her place for the camera and the veil; the body in
+# build() is made with the same settings, so it stands exactly there.
+_WALK = dict(at=(0.0, 62.0), facing=180.0, seed=3.0,
+             motion=[(0.0, "walk", dict(speed=0.78)), (38.4, "stand", dict(blend=1.4))])
+_STAND = np.asarray(Actor("woman", **_WALK).where(41.0, "ground"), np.float64)   # where she stands still
+HAND_AT = tuple(_STAND + np.array([-0.40, 0.80, 0.16]))    # her left hand, low and a little back, on the thread
+MOTHER_KW = dict(_WALK, gesture=[(0.12, 3.6, "open_arms", dict(ease=0.45, lift=0.15)),
+                                 (38.0, 48.4, "touch", dict(side="L", to=HAND_AT, palm="down", fingers="pinch",
+                                                            look=False, ease=1.1)),
+                                 (49.6, 60.0, "raise", dict(ease=1.7))])
+_ACT = Actor("woman", **MOTHER_KW)
+_STEP = 0.1
+_GRID = np.arange(-1.0, TOTAL + 1.01, _STEP)
+_MPATH = np.array([_ACT.where(float(t), "ground") for t in _GRID])
+_MBACK = np.array([_ACT.where(float(t), "back") for t in _GRID])
+_MPINCH = np.array([_ACT.where(float(t), "pinch.L") for t in _GRID])
 
 
-def _walked(t):
-    """Seconds of walking done by t (the integral of the pace keys, which are joined by straight lines)."""
-    t = float(min(max(t, 0.0), TOTAL))
-    s = 0.0
-    for (ta, va), (tb, vb) in zip(_PACE[:-1], _PACE[1:]):
-        if t <= ta:
-            break
-        u = min(t, tb)
-        vu = va + (vb - va) * (u - ta) / (tb - ta)
-        s += 0.5 * (va + vu) * (u - ta)
-    return s
+def _interp(tab, t):
+    x = (float(t) - _GRID[0]) / _STEP
+    k = int(np.clip(np.floor(x), 0, len(_GRID) - 2))
+    f = min(max(x - k, 0.0), 1.0)
+    return tab[k] * (1 - f) + tab[k + 1] * f
 
 
-def mother_pos(t):
-    """Where Heavenly Mother's feet are at t (metres)."""
-    return np.array([0.0, 0.0, MOTHER_Z0 - MOTHER_PACE * _walked(t)])
+def M(t):
+    """Heavenly Mother's feet at t (world metres)."""
+    return _interp(_MPATH, t)
 
 
-# ---------------------------------------------------------------------------------------------- the stations
-# A station is a fixed place on the lake where the veil gathers two people and a word. Each is set a number
-# of metres behind where Mother is at its reference time; she walks on, so she is a little farther ahead at
-# the end of a station than at its start. Offsets from a station are in world axes: +x is screen right for a
-# camera that looks toward her, +z is away from her (toward the veil's tail), -z is toward her.
-_STATION_SPEC = dict(
-    st_greet=(S[0] + 4.2, 13.0),     # the two who greet stand here; the fold with the words is 3 m nearer her
-    st_help=(S[1] + 1.2, 9.2),       # the kneeling one and the helper
-    st_mend=(S[2] + 1.2, 13.0),      # the one who sits, under the canopy
-    st_gate=(S[3] + 3.1, 9.5),       # the doorway in the cloth wall at the narrows
-    st_loom=(S[4] + 2.8, 11.0),      # midway between the two who talk
-)
-STATIONS = {k: np.array([0.0, 0.0, mother_pos(tr)[2] + d]) for k, (tr, d) in _STATION_SPEC.items()}
+def MB(t):
+    """Her upper back, where the veil river leaves her."""
+    return _interp(_MBACK, t)
 
 
-def anchor(name, t):
-    """World position of an anchor at t: "W" the world origin, "M" Mother's feet, or a station."""
-    if name == "W":
-        return np.zeros(3)
-    if name == "M":
-        return mother_pos(t)
-    return STATIONS[name]
+def MH(t):
+    """Her left hand (the thread is held between thumb and finger)."""
+    return _interp(_MPINCH, t)
 
 
-def place(spec, t):
-    """A (anchor, (x, y, z)) pair as a world point at t."""
-    return anchor(spec[0], t) + np.asarray(spec[1], np.float64)
+def mz(t):
+    return float(M(t)[2])
+
+
+# stations: places on the lake where the veil gathers two people (world z), set behind where she is then
+ZG = mz(1.6) + 12.0          # 1 the greeting
+ZH = mz(8.3) + 10.0          # 2 the help
+ZC = mz(14.0) + 10.5         # 3 the mending, under the canopy
+ZN = mz(22.4) + 9.0          # 4 the narrows
+ZL = mz(29.3) + 9.5          # 5 the loom
+ZP = mz(35.0) + 9.0          # 6 the procession
+ZSTOP = mz(40.0)             # where she stands from the breath on
+ARCH_Z = ZSTOP - 21.0        # the arch stands ahead of her at the end
+
+
+def W3(x, y, z):
+    return np.array([x, y, z], np.float64)
 
 
 # ------------------------------------------------------------------------------------------------ the camera
-# Keyframes: where the camera is (`at`), what it looks at (`look`), each as (anchor, offset in metres), the
-# vertical field of view in degrees, roll in degrees, what is in focus, the lens opening in metres (p3d:
-# 0.05 is a strong blur) and motion blur 0..1. `cut` marks a relocation that is hidden in a pass through
-# cloth (a wash of bokeh): the camera does not travel between that key and the one before it.
-# Between keys the path is a smooth curve that does not overshoot and does not stop at a key (monotone
-# cubic, see _pchip); CORE's fly() and orbit() replace it in phase B.
-REAR_LIMIT = 60.0           # degrees off "straight behind her" the camera may reach
-MIN_SPEED = 0.10            # metres per second: the camera is never still
+class Path(Move):
+    """A camera move from a function of time giving (position, target)."""
+
+    def __init__(self, fn, t0, t1, **kw):
+        super().__init__(t0, t1, **kw)
+        self.fn = fn
+
+    def pose(self, t):
+        p, q = self.fn(t)
+        return np.asarray(p, np.float64), np.asarray(q, np.float64)
 
 
-def _k(t, at, look, fov, roll=0.0, focus=None, ap=0.03, blur=0.0, cut=False, note=""):
-    return dict(t=float(t), at=at, look=look, fov=float(fov), roll=float(roll), focus=focus, ap=float(ap),
-                blur=float(blur), cut=bool(cut), note=note)
+def _mrel(t, d):
+    return M(t) + np.asarray(d, np.float64)
 
 
-def _orbit(t0, t1, a0, a1, radius, h0, h1, look, fov, n=5, note="", **kw):
-    """Keys on a circle about Mother: a is the angle off straight behind her (degrees, negative: her left)."""
-    out = []
-    for i in range(n):
-        u = i / (n - 1.0)
-        deg = a0 + (a1 - a0) * u
-        a = np.radians(deg)
-        out.append(_k(t0 + (t1 - t0) * u, ("M", (radius * np.sin(a), h0 + (h1 - h0) * u, radius * np.cos(a))),
-                      look, fov, note=note if i == 0 else f"... the half circle, {deg:+.0f} degrees", **kw))
-    return out
-
-
-_HAND = ("M", (-0.33, 0.80, 0.05))            # her left hand, held low and a little back
-_HANDS = ("M", (-0.40, 0.84, 0.14))           # where the child's hand meets it
-_PAIR = ("M", (-0.20, 1.75, 0.0))             # between her head and the child's, at the height of her crown
-
-CAMERA_KEYS = [
-    # 1 THE CAST
-    _k(S[0] + 0.00, ("M", (0.45, 1.55, 2.4)), ("M", (0.0, 1.60, 0.0)), 38, focus=("mother",), ap=0.05,
-       note="frame one: close behind her, half body, veiled, the horizon star behind her head, rays round her"),
-    _k(CAST, ("M", (0.40, 1.56, 2.0)), ("M", (0.0, 1.62, 0.0)), 38, focus=("mother",), ap=0.05,
-       note="THE CAST: arms open low, the veil leaves her shoulders toward the lens"),
-    _k(S[0] + 1.50, ("M", (-1.2, 1.0, 16.0)), ("M", (0.0, 1.4, 0.0)), 56, roll=-6, focus=("mother",), blur=1.0,
-       note="swept backward with the hem, low over the water"),
-    _k(S[0] + 2.60, ("M", (-3.0, 7.0, 46.0)), ("M", (0.0, 1.0, 0.0)), 62, focus=("mother",), blur=0.4,
-       note="wide: a small bright figure at the head of an immense veil, mirrored"),
-    _k(S[0] + 3.60, ("st_greet", (0.0, 1.55, 4.6)), ("M", (0.0, 2.0, 0.0)), 36, focus=("word", "Greeting"),
-       blur=0.6, note="swoop down along the veil to the two who gather on its banks"),
-    _k(S[0] + 4.20, ("st_greet", (0.0, 1.50, 4.0)), ("M", (0.0, 2.0, 0.0)), 34, focus=("word", "Greeting"),
-       ap=0.035, note="READ Greeting on the curled hem; the walkers are soft profiles coming in from the edges"),
-    _k(S[0] + 6.80, ("st_greet", (0.15, 1.42, 3.3)), ("M", (0.0, 2.0, 0.0)), 34, focus=("word", "Greeting"),
-       ap=0.035, note="end of reading; focus falls to the walkers, she is the small bright figure between them"),
-    _k(S[0] + 7.05, ("st_greet", (0.2, 1.50, 2.8)), ("M", (0.0, 1.8, 0.0)), 35, focus=("person", "greet_a"),
-       ap=0.05, note="they clasp hands (contact)"),
-    _k(S[0] + 7.46, ("st_greet", (0.3, 2.30, 0.6)), ("M", (0.0, 1.9, 0.0)), 42, focus=("person", "greet_a"),
-       note="rise over the joined hands; the fold sweeps over the lens"),
-    # 2 THE ROAD
-    _k(S[1] + 0.00, ("M", (2.5, 0.45, 62.0)), ("M", (0.0, 1.2, 0.0)), 60, roll=14, focus=("mother",), blur=1.0,
-       cut=True, note="NEW: speed. Far back in the mist, half a metre above the veil road"),
-    _k(S[1] + 0.45, ("M", (-2.8, 0.50, 42.0)), ("M", (0.0, 1.3, 0.0)), 58, roll=-16, focus=("mother",), blur=1.0,
-       note="banking through the bends, the cloth streaming against us"),
-    _k(S[1] + 0.90, ("st_help", (1.2, 0.90, 12.4)), ("M", (0.0, 1.7, 0.0)), 46, roll=6,
-       focus=("word", "Consideration"), blur=0.6, note="a sheer curtain closes the road ahead"),
-    _k(S[1] + 1.20, ("st_help", (0.6, 1.40, 8.3)), ("M", (0.0, 2.0, 0.0)), 36, focus=("word", "Consideration"),
-       ap=0.035, note="READ Consideration on the curtain; the helper and the kneeling one seen through it"),
-    _k(S[1] + 3.80, ("st_help", (-0.3, 1.35, 7.5)), ("M", (0.0, 1.9, 0.0)), 36, focus=("word", "Consideration"),
-       ap=0.035, note="end of reading; through the curtain"),
-    _k(S[1] + 4.22, ("st_help", (-0.5, 1.20, 1.5)), ("st_help", (0.95, 1.0, 0.05)), 34,
-       focus=("point", ("st_help", (0.95, 1.0, 0.05))), ap=0.05, note="two hands meet and flare (contact)"),
-    _k(S[1] + 4.80, ("st_help", (-1.0, 1.30, 3.4)), ("st_help", (0.0, 2.6, -4.7)), 36,
-       focus=("word", "Gratitude"), ap=0.035, note="READ Gratitude on the next fold; the helped one bows"),
-    _k(S[1] + 7.46, ("st_help", (-0.6, 1.60, 3.0)), ("st_help", (0.0, 2.7, -4.7)), 36,
-       focus=("word", "Gratitude"), ap=0.035, note="slow crane up; the fold comes at us on the downbeat"),
-    # 3 THE CANOPY
-    _k(S[2] + 0.00, ("st_mend", (-2.2, 0.9, 6.0)), ("st_mend", (0.4, 1.75, -2.2)), 44,
-       focus=("word", "Apology"), cut=True,
-       note="NEW: under the veil. A roof of amber cloth, her light in its mouth"),
-    _k(S[2] + 1.20, ("st_mend", (-1.6, 1.0, 4.4)), ("st_mend", (0.4, 1.8, -2.2)), 40, focus=("word", "Apology"),
-       ap=0.035, note="READ Apology on a swag of the roof; one sits coming apart, one kneels beside"),
-    _k(S[2] + 4.00, ("st_mend", (1.0, 1.1, 4.1)), ("st_mend", (0.4, 1.8, -2.2)), 40, focus=("word", "Apology"),
-       ap=0.035, note="end of the low arc: the pair is now exactly in front of her light"),
-    _k(MEND + 0.05, ("st_mend", (1.1, 1.15, 2.3)), ("st_mend", (0.9, 1.15, 0.0)), 36,
-       focus=("point", ("st_mend", (0.9, 1.15, 0.0))), ap=0.05,
-       note="THE MENDING: the embrace (contact); rays break round the two; the particles fly home"),
-    _k(S[2] + 4.85, ("st_mend", (0.5, 1.6, 4.6)), ("st_mend", (0.4, 1.9, -2.2)), 40,
-       focus=("word", "Inclusiveness"), ap=0.035, note="READ Inclusiveness, sewn again from the Apology's thread"),
-    _k(S[2] + 7.40, ("st_mend", (-0.2, 1.9, 4.2)), ("st_mend", (0.4, 2.1, -2.2)), 40,
-       focus=("word", "Inclusiveness"), ap=0.035, note="draw back and rise a little: the embrace low, she beyond it"),
-    # 4 THE RIVER AND THE NARROWS (no cut: we really do burst up through the roof)
-    _k(S[3] + 0.30, ("M", (-5.0, 10.0, 27.0)), ("M", (0.0, 1.0, 0.0)), 54, focus=("mother",), blur=1.0,
-       note="NEW: height. Up through the cloth"),
-    _k(S[3] + 1.50, ("M", (-14.0, 38.0, 64.0)), ("M", (0.0, 0.0, -20.0)), 62, roll=-8, focus=("mother",),
-       note="the veil is a river of light with braided arms across the whole lake; she is its head"),
-    _k(S[3] + 2.10, ("M", (-6.0, 28.0, 46.0)), ("st_gate", (0.0, 1.5, 0.0)), 54, roll=-28,
-       focus=("word", "Concession"), blur=1.0, note="nose over and dive, rolling"),
-    _k(S[3] + 2.90, ("st_gate", (1.0, 1.9, 8.0)), ("M", (0.0, 2.3, 0.0)), 38, focus=("word", "Concession"),
-       blur=0.5, note="pull out at the narrows: a wall of cloth with a doorway, her light through it"),
-    _k(S[3] + 3.10, ("st_gate", (0.9, 1.85, 7.7)), ("M", (0.0, 2.3, 0.0)), 38, focus=("word", "Concession"),
-       ap=0.035, note="READ Concession above the door; one steps back and opens a palm"),
-    _k(S[3] + 5.80, ("st_gate", (-0.4, 1.6, 6.9)), ("M", (0.0, 2.4, 0.0)), 38, focus=("word", "Concession"),
-       ap=0.035, note="end of reading"),
-    _k(S[3] + 6.80, ("st_gate", (-0.2, 1.4, 3.2)), ("M", (0.0, 1.8, 0.0)), 38, focus=("person", "gate_first"),
-       ap=0.05, note="the other walks through into the light; then the one who gave way"),
-    _k(S[3] + 7.47, ("st_gate", (0.0, 1.45, -0.4)), ("M", (0.0, 1.7, 0.0)), 44, focus=("mother",),
-       note="we follow through the door"),
-    # 5 THE LOOM (roll 360 is level again; the keys after the barrel roll keep 360 so nothing unwinds)
-    _k(S[4] + 0.00, ("M", (0.6, 2.4, 55.0)), ("M", (0.0, 1.6, 0.0)), 60, roll=0, focus=("mother",), blur=1.0,
-       cut=True, note="NEW: the veil unwoven into taut threads; the camera is the shuttle"),
-    _k(S[4] + 1.20, ("M", (-0.8, 2.8, 34.0)), ("M", (0.0, 1.7, 0.0)), 54, roll=180, focus=("mother",), blur=1.0,
-       note="through the warp, upside down for an instant"),
-    _k(S[4] + 2.40, ("st_loom", (0.8, 2.2, 6.6)), ("st_loom", (0.0, 2.0, 0.0)), 42, roll=360,
-       focus=("word", "Respect"), blur=0.4, note="level; two people in profile, she between them far ahead"),
-    _k(S[4] + 2.80, ("st_loom", (0.7, 1.9, 6.4)), ("st_loom", (0.0, 2.0, 0.0)), 40, roll=360,
-       focus=("word", "Respect"), ap=0.035, note="READ Respect, woven of a gold and a blue thread above them"),
-    _k(S[4] + 5.50, ("st_loom", (-0.8, 1.7, 5.8)), ("st_loom", (0.0, 2.0, 0.0)), 40, roll=360,
-       focus=("word", "Respect"), ap=0.035, note="end of reading"),
-    _k(S[4] + 6.60, ("st_loom", (1.0, 1.35, 2.0)), ("st_loom", (1.6, 1.2, 0.1)), 32, roll=360,
-       focus=("point", ("st_loom", (1.6, 1.2, 0.1))), ap=0.05,
-       note="the listener cups the other's light in both hands; the loom falls silent to one thread"),
-    # 6 THE THREAD (the rush along the last thread ends, on the breath, at her hand)
-    _k(S[5] + 0.00, ("M", (-0.50, 0.80, 0.62)), _HAND, 26, roll=360, focus=("point", _HAND), ap=0.06,
-       note="NEW: stillness. Her left hand from behind, closed lightly on the one thread (macro)"),
-    _k(S[5] + 1.50, ("M", (-0.62, 0.84, 1.40)), _HAND, 26, roll=360, focus=("point", _HAND), ap=0.06,
-       note="the camera only breathes; a thin line of rose on the horizon"),
-    _k(S[5] + 2.00, ("M", (0.10, 1.65, 4.6)), ("M", (-0.25, 1.2, 0.0)), 30, roll=360,
-       focus=("person", "child"), ap=0.05, note="back along the thread, over the head of a child stepping onto it"),
-    _k(S[5] + 2.50, ("M", (0.70, 0.95, 8.4)), ("M", (-0.20, 1.75, 0.0)), 34, roll=360,
-       focus=("word", "Encouragement"), ap=0.035,
-       note="READ Encouragement above the child; close to us someone kneels with clasped hands"),
-    _k(S[5] + 5.50, ("M", (0.45, 1.10, 8.9)), ("M", (-0.20, 1.80, 0.0)), 34, roll=360,
-       focus=("word", "Encouragement"), ap=0.035, note="end of reading; we stay with the one who roots"),
-    _k(TOUCH, ("M", (-0.42, 0.66, 1.15)), _HANDS, 28, roll=360, focus=("point", _HANDS), ap=0.06,
-       note="the last steps with the child: a small hand reaches up into hers (contact, flare)"),
-    # 7 THE LIFTING
-    _k(S[6] + 0.00, ("M", (-0.60, 0.80, 1.25)), ("M", (-0.38, 0.9, 0.1)), 30, roll=360, focus=("mother",),
-       note="NEW: the sun breaks the horizon straight ahead of her; the veil floods back in rose gold"),
-] + _orbit(S[6] + 0.8, S[6] + 4.4, -55.0, 55.0, 3.66, 1.3, 2.2, _PAIR, 46, roll=360, focus=("mother",), ap=0.04,
-           note="the half circle behind her and the child; READ Compliment above them (46.5 to 49.2); "
-                "halfway the sun passes behind her head") + [
-    _k(S[6] + 5.80, ("M", (1.6, 2.6, 6.5)), ("M", (0.0, 2.6, -6.0)), 50, roll=360, focus=("mother",),
-       note="arms raised; the veil streams over our heads into the sky; all nine words small across it"),
-    # 8 THE CONCERT
-    _k(S[7] + 0.00, ("M", (0.0, 4.6, 12.5)), ("W", (0.0, 7.0, 0.0)), 54, roll=360, focus=("mother",),
-       note="NEW: the arch of nine lights stands over the lake; the title's fold crosses the sky"),
-    _k(S[7] + 3.50, ("M", (0.0, 6.6, 17.0)), ("W", (0.0, 7.5, 0.0)), 52, roll=360, focus=("mother",),
-       note="end card whole; she and the child walk on under the arch into the sun"),
-    _k(TOTAL, ("M", (0.0, 8.6, 21.0)), ("W", (0.0, 8.0, 0.0)), 50, roll=360, focus=("mother",),
-       note="still craning up and back on the last frame; no fade"),
+_K1 = [  # 1 THE CAST
+    (0.00, _mrel(0.00, (0.40, 1.50, 2.05)), _mrel(0.00, (0.0, 1.66, -6.0))),
+    (0.30, _mrel(0.30, (0.38, 1.52, 2.10)), _mrel(0.30, (0.0, 1.62, -6.0))),
+    (1.30, _mrel(1.30, (-0.9, 1.45, 10.0)), _mrel(1.30, (0.0, 1.25, 0.0))),
+    (2.45, _mrel(2.45, (-3.6, 7.8, 33.0)), _mrel(2.45, (0.0, 0.6, -3.0))),
+    (3.35, W3(1.25, 1.75, ZG + 7.3), W3(0.0, 2.05, ZG - 2.0)),
+    (6.20, W3(0.55, 1.70, ZG + 5.7), W3(0.0, 2.05, ZG - 2.0)),
+    (6.84, W3(0.15, 1.95, ZG + 2.4), W3(0.0, 2.25, ZG - 4.0)),
+]
+_K2 = [  # 2 THE ROAD
+    (6.84, _mrel(6.84, (2.3, 0.55, 46.0)), _mrel(6.84, (0.0, 1.0, 0.0))),
+    (7.56, _mrel(7.56, (-1.5, 0.70, 26.0)), _mrel(7.56, (0.0, 1.2, 0.0))),
+    (8.30, W3(1.55, 1.40, ZH + 6.6), W3(0.0, 1.60, ZH - 1.5)),
+    (11.30, W3(0.75, 1.32, ZH + 5.3), W3(0.0, 1.60, ZH - 1.5)),
+    (12.30, W3(0.0, 1.00, ZH + 1.2), _mrel(12.3, (0.0, 1.2, 0.0))),
+    (13.30, _mrel(13.3, (0.0, 1.10, 5.5)), _mrel(13.3, (0.0, 1.3, 0.0))),
+]
+_K3 = [  # 3 THE CANOPY
+    (13.30, W3(-2.2, 0.95, ZC + 6.2), W3(0.3, 1.70, ZC - 3.0)),
+    (16.90, W3(1.3, 1.10, ZC + 4.5), W3(0.3, 1.75, ZC - 3.0)),
+    (17.70, W3(1.05, 1.25, ZC + 4.0), W3(0.15, 1.55, ZC - 2.0)),
+    (19.50, W3(0.3, 1.75, ZC + 5.0), W3(0.2, 2.10, ZC - 3.0)),
+    (19.85, W3(0.1, 2.30, ZC + 5.2), W3(0.0, 2.80, ZC - 6.0)),
+]
+_K4 = [  # 4 THE RIVER (no cut: we burst up through the roof)
+    (19.85, W3(0.1, 2.30, ZC + 5.2), W3(0.0, 2.80, ZC - 6.0)),
+    (21.10, _mrel(21.1, (-11.0, 30.0, 55.0)), _mrel(21.1, (0.0, 0.0, -12.0))),
+    (22.45, W3(1.45, 1.80, ZN + 7.0), W3(0.0, 2.00, ZN - 3.0)),
+    (25.60, W3(0.50, 1.70, ZN + 5.6), W3(0.0, 2.00, ZN - 3.0)),
+    (26.79, W3(0.15, 1.45, ZN + 1.8), W3(0.0, 1.60, ZN - 6.0)),
+]
+_K5 = [  # 5 THE LOOM
+    (26.79, _mrel(26.79, (0.0, 2.20, 40.0)), _mrel(26.79, (0.0, 1.8, 0.0))),
+    (28.30, W3(0.3, 2.30, ZL + 13.0), W3(0.0, 2.00, ZL - 4.0)),
+    (29.35, W3(0.0, 1.75, ZL + 6.1), W3(0.0, 1.95, ZL - 2.0)),
+    (32.30, W3(-0.45, 1.65, ZL + 5.0), W3(0.0, 1.95, ZL - 2.0)),
+    (33.36, W3(0.25, 1.45, ZL + 2.5), W3(0.0, 1.70, ZL - 4.0)),
+]
+_K6 = [  # 6 THE PROCESSION, then the rush along the one thread to her hand
+    (33.36, W3(6.0, 3.6, ZP + 13.0), W3(0.0, 1.2, ZP - 4.0)),
+    (35.00, W3(1.9, 1.70, ZP + 6.6), W3(0.0, 2.0, ZP - 2.0)),
+    (38.10, W3(0.9, 1.60, ZP + 5.3), W3(0.0, 2.0, ZP - 2.0)),
+    (39.20, W3(-0.6, 0.75, ZP - 2.0), _mrel(39.2, (-0.3, 0.85, 0.0))),
+    (40.21, _mrel(40.21, (-0.95, 0.95, 0.80)), MH(40.21)),
+]
+_K7 = [  # 7 THE THREAD (the breath), the sunrise
+    (40.21, _mrel(40.21, (-0.95, 0.95, 0.80)), MH(40.21)),
+    (41.00, _mrel(41.0, (-1.05, 1.00, 1.10)), MH(41.0)),
+    (41.70, _mrel(41.7, (-0.80, 1.55, 4.7)), _mrel(41.7, (-0.3, 1.70, 0.0))),
+    (44.30, _mrel(44.3, (-0.55, 1.45, 5.4)), _mrel(44.3, (-0.25, 1.70, 0.0))),
+]
+_ORBIT_C = M(45.0) + np.array([-0.25, 0.0, 0.0])
+_K8 = [  # 8 THE LIFTING (after the half circle)
+    (49.47, None, None),
+    (51.00, _mrel(51.0, (1.4, 2.6, 7.5)), W3(0.0, 6.5, ARCH_Z)),
+    (55.00, _mrel(55.0, (0.6, 4.4, 13.0)), W3(0.0, 7.4, ARCH_Z)),
+    (60.00, _mrel(60.0, (0.3, 5.6, 17.5)), W3(0.0, 8.2, ARCH_Z)),
 ]
 
-# continuous runs of keys (a cut starts a new run)
-_RUNS = []
-for _key in CAMERA_KEYS:
-    if _key["cut"] or not _RUNS:
-        _RUNS.append([])
-    _RUNS[-1].append(_key)
+
+def _fly(keys, **kw):
+    return fly([(t, tuple(p), tuple(q)) for t, p, q in keys], **kw)
 
 
-def _pchip(ts, ys, t):
-    """Monotone cubic through (ts, ys) at t: smooth, never overshoots a key, keeps moving through a key when
-    the motion goes on in the same direction. ys is (n, d)."""
-    ts, ys = np.asarray(ts, np.float64), np.asarray(ys, np.float64)
-    n = len(ts)
-    if n == 1:
-        return ys[0]
-    h = np.diff(ts)
-    d = np.diff(ys, axis=0) / h[:, None]
-    m = np.zeros_like(ys)
-    m[0], m[-1] = d[0], d[-1]
-    for i in range(1, n - 1):
-        w1, w2 = 2.0 * h[i] + h[i - 1], h[i] + 2.0 * h[i - 1]
-        same = d[i - 1] * d[i] > 0.0
-        with np.errstate(divide="ignore", invalid="ignore"):
-            m[i] = np.where(same, (w1 + w2) / (w1 / d[i - 1] + w2 / d[i]), 0.0)
-    i = int(np.clip(np.searchsorted(ts, t, side="right") - 1, 0, n - 2))
-    u = min(max((t - ts[i]) / h[i], 0.0), 1.0)
-    h00, h10 = 2 * u ** 3 - 3 * u ** 2 + 1, u ** 3 - 2 * u ** 2 + u
-    h01, h11 = -2 * u ** 3 + 3 * u ** 2, u ** 3 - u ** 2
-    return h00 * ys[i] + h10 * h[i] * m[i] + h01 * ys[i + 1] + h11 * h[i] * m[i + 1]
+def _half_circle_end():
+    a = np.radians(50.0)
+    return W3(_ORBIT_C[0] + 4.3 * np.sin(a), 2.2, _ORBIT_C[2] + 4.3 * np.cos(a))
 
 
-def _focus_point(spec, t):
-    """The world point a focus setting names, or None for a camera-locked word (its distance is fixed)."""
-    kind = spec[0]
-    if kind == "mother":
-        return mother_pos(t) + np.array([0.0, 1.45, 0.0])
-    if kind == "point":
-        return place(spec[1], t)
-    if kind == "person":
-        return person_pos(spec[1], t) + np.array([0.0, 1.2, 0.0])
-    if kind == "word":
-        w = WORD_PLACES[spec[1]]
-        return None if w.get("lock") else place(w["at"], t)
-    raise ValueError(f"unknown focus {spec!r}")
+_K8[0] = (49.47, _half_circle_end(), M(49.47) + np.array([0.0, 2.4, -3.0]))
+
+ROLL5 = Track([(26.79, 0.0), (27.35, 0.0), (28.85, 360.0), (TOTAL, 360.0)])
 
 
-def camera_at(t):
-    """The camera at t: dict(pos, target, fov, roll, focus, aperture, blur), metres and degrees, world axes."""
-    t = float(min(max(t, 0.0), TOTAL))
-    run = _RUNS[0]
-    for r in _RUNS:
-        if r[0]["t"] <= t:
-            run = r
-    ts = [k["t"] for k in run]
-    pos = _pchip(ts, [place(k["at"], t) for k in run], t)
-    target = _pchip(ts, [place(k["look"], t) for k in run], t)
-    num = _pchip(ts, [[k["fov"], k["roll"], k["ap"], k["blur"]] for k in run], t)
-    foc = []
-    for k in run:
-        p = _focus_point(k["focus"], t) if k["focus"] else place(k["look"], t)
-        foc.append([LOCK_DIST if p is None else float(np.linalg.norm(p - place(k["at"], t)))])
-    roll = (float(num[1]) + 180.0) % 360.0 - 180.0
-    return dict(pos=pos, target=target, fov=float(num[0]), roll=roll, focus=float(_pchip(ts, foc, t)[0]),
-                aperture=float(num[2]), blur=float(num[3]))
+def _rigs(focus):
+    return Rig([
+        _fly(_K1, fov=Track([(0.0, 40.0), (0.3, 40.0), (1.3, 54.0), (2.45, 60.0), (3.35, 40.0), (6.84, 42.0)]),
+             aperture=Track([(0.0, 0.035), (1.0, 0.02), (3.0, 0.04), (6.84, 0.04)]), focus=focus),
+        _fly(_K2, blend=0.0, fov=Track([(6.84, 60.0), (8.3, 40.0), (12.0, 40.0), (13.3, 52.0)]),
+             roll=Track([(6.84, 12.0), (7.56, -9.0), (8.3, 0.0), (13.3, 0.0)]), aperture=0.04, focus=focus),
+        _fly(_K3, blend=0.0, fov=44.0, aperture=0.045, focus=focus),
+        _fly(_K4, blend=0.3, fov=Track([(19.85, 44.0), (21.1, 62.0), (22.45, 40.0), (26.79, 42.0)]),
+             roll=Track([(19.85, 0.0), (21.1, -8.0), (21.8, -18.0), (22.45, 0.0), (26.79, 0.0)]),
+             aperture=Track([(19.85, 0.04), (21.0, 0.01), (22.4, 0.04)]), focus=focus),
+        _fly(_K5, blend=0.0, fov=Track([(26.79, 58.0), (28.3, 54.0), (29.35, 42.0), (33.36, 42.0)]),
+             roll=ROLL5, aperture=0.04, focus=focus),
+        _fly(_K6, blend=0.0, fov=Track([(33.36, 50.0), (35.0, 42.0), (38.1, 42.0), (39.2, 50.0), (40.21, 30.0)]),
+             roll=Track([(33.36, 360.0), (TOTAL, 360.0)]), aperture=Track([(33.36, 0.04), (39.5, 0.04),
+                                                                            (40.21, 0.02)]), focus=focus,
+             near=0.03),
+        _fly(_K7, blend=0.0, fov=Track([(40.21, 30.0), (41.0, 30.0), (41.7, 40.0), (44.3, 42.0)]),
+             roll=Track([(40.21, 360.0), (TOTAL, 360.0)]), aperture=Track([(40.21, 0.02), (41.4, 0.035)]),
+             focus=focus, near=0.03),
+        orbit(_ORBIT_C, radius=(5.4, 4.3), height=(1.45, 2.2), a0=-46.0, a1=50.0, t0=44.3, t1=49.47,
+              look=lambda t: M(t) + np.array([-0.15, 2.0, -3.0]), fov=46.0, roll=360.0, aperture=0.03,
+              focus=lambda t: M(t) + np.array([0.0, 1.5, 0.0]), blend=1.0),
+        _fly(_K8, blend=1.2, fov=Track([(49.47, 46.0), (51.0, 54.0), (60.0, 54.0)]), roll=360.0,
+             aperture=0.02, focus=lambda t: M(t) + np.array([0.0, 1.5, 0.0])),
+    ], blend=1.0, fov=44.0, aperture=0.04, handheld=0.22, min_height=0.3)
 
 
-def camera_world_keys():
-    """The keyframes as plain world coordinates at their own times: (t, position, target, fov, roll, note)."""
-    return [(k["t"], place(k["at"], k["t"]), place(k["look"], k["t"]), k["fov"], k["roll"], k["note"])
-            for k in CAMERA_KEYS]
-
-
-def frame_width(dist, fov):
-    """Width in metres of the picture at a distance in front of the camera (vertical field of view fov)."""
-    return 2.0 * dist * np.tan(np.radians(fov) / 2.0) * ASPECT
-
-
-def _basis(cam):
-    f = cam["target"] - cam["pos"]
-    f = f / np.linalg.norm(f)
-    r = np.cross(f, [0.0, 1.0, 0.0])
-    r = r / np.linalg.norm(r)
-    return r, np.cross(r, f), f
-
-
-def project(cam, p):
-    """A world point on screen: (x, y) in 0..1 with y up, and its depth in metres (roll ignored)."""
-    r, u, f = _basis(cam)
-    d = np.asarray(p, np.float64) - cam["pos"]
-    z = float(d @ f)
-    k = 1.0 / np.tan(np.radians(cam["fov"]) / 2.0)
-    zz = z if abs(z) > 1e-9 else 1e-9
-    return 0.5 + 0.5 * float(d @ r) * k / (ASPECT * zz), 0.5 + 0.5 * float(d @ u) * k / zz, z
+LAYOUT = _rigs("target")
 
 
 # -------------------------------------------------------------------------------------- the nine expressions
-# Exact campaign wording, labels and line breaks: project-docs/DESIGN-SYSTEM.md section 5 and the PHRASES of
-# engine/songs/epic_concert.py (the same text is p3d.words.EXPRESSIONS on branch engine-p3d-words). In
-# campaign order, which is also the order of the arch's nine lights. The film itself names an expression by
-# its label (`expr=`) and never retypes it; this table is here for the check and for the old 2D keys.
-NINE = [
-    ("Greeting", ["“How are you?”"]),
-    ("Gratitude", ["“Thank you. It’s all thanks to you.", "You’ve worked hard.”"]),
-    ("Apology", ["“I’m sorry.", "It must have been hard on you.”"]),
-    ("Inclusiveness", ["“It’s okay. I understand.”"]),
-    ("Concession", ["“Please, after you.”"]),
-    ("Respect", ["“I’d love to hear more", "about your thoughts.”"]),
-    ("Encouragement", ["“I’ll pray (or root) for you.", "Everything will go well.”"]),
-    ("Consideration", ["“Can I give you a hand", "with anything?”"]),
-    ("Compliment", ["“You’re amazing.", "You’re doing great!”"]),
+def _word(x, y, depth, px, t_in, t0, t1, t_out, **kw):
+    """A word laid out by where it is read: the screen place of its centre and the pixels of one em (1080p)
+    at the middle of its reading moment, `depth` metres from the camera."""
+    tm = 0.5 * (t0 + t1)
+    return dict(pos=tuple(PW.place(LAYOUT, tm, x, y, depth)), em=PW.em_for(LAYOUT, tm, depth, px),
+                t_in=t_in, t_read0=t0, t_read1=t1, t_out=t_out, **kw)
+
+
+MEET = W3(0.0, 1.12, ZG)                                # where the greeting hands meet
+_SPECS = [
+    _word(0.5, 0.735, 7.6, 104, 1.30, 3.40, 6.20, 7.10, expr="Greeting", arrive="touch", source=tuple(MEET),
+          touch_at=(2.50 - 1.30) / (3.40 - 1.30), leave="bokeh"),
+    _word(0.5, 0.735, 7.0, 84, 7.60, 8.50, 11.20, 12.50, expr="Consideration", arrive="palm",
+          leave="petals", wind=(0.0, 0.5, -1.0), reach=0.3),
+    _word(0.5, 0.745, 7.2, 84, 13.30, 14.30, 16.90, 16.90, expr="Apology", arrive="stitch", leave="morph"),
+    _word(0.5, 0.745, 7.2, 92, 16.90, 17.35, 19.95, 21.0, expr="Inclusiveness", arrive="morph",
+          source="Apology", leave="bokeh"),
+    _word(0.5, 0.735, 7.6, 104, 21.10, 22.80, 25.55, 26.70, expr="Concession", arrive="flock",
+          leave="wind", wind=(0.2, 0.3, -1.0)),
+    _word(0.5, 0.735, 7.0, 86, 27.60, 29.55, 32.30, 33.30, expr="Respect", arrive="weave", leave="unravel",
+          to=tuple(M(32.5) + np.array([0.0, 1.4, 0.0]))),
+    _word(0.5, 0.745, 7.4, 76, 33.70, 35.20, 37.95, 39.30, expr="Gratitude", arrive="petals", leave="stream",
+          to=tuple(MH(39.5))),
+    _word(0.5, 0.75, 6.3, 80, 40.40, 41.70, 44.40, 45.60, expr="Encouragement", arrive="shaft", leave="rise"),
+    dict(expr="Compliment", ride=(0.5, 0.755, 6.4), em=PW.em_for(LAYOUT, 47.0, 6.4, 90), face="screen",
+         t_in=44.50, t_read0=45.80, t_read1=48.55, t_out=49.70, arrive="rays", leave="rise",
+         source=tuple(M(46.0) + np.array([0.0, 1.75, -60.0]))),
 ]
-LABELS = [n[0] for n in NINE]
-ORDER_IN_FILM = ["Greeting", "Consideration", "Gratitude", "Apology", "Inclusiveness", "Concession", "Respect",
-                 "Encouragement", "Compliment"]
 
-LOCK_DIST = 5.2             # metres in front of the lens for a word that turns with the camera
-LOCK_ELEV = 12.0            # ... and degrees above the middle of the picture
-
-# Where each expression stands and when. `at`: the centre of the phrase block (anchor, offset in metres).
-# `frac`: the share of the picture's width its widest line takes when its reading moment starts (its width in
-# metres follows from the camera, see word_width). Times are (t_in, t_read0, t_read1, t_out), the four times
-# of p3d.words. `fold`: the part of the veil that carries it. `arrive` and `leave` name the styles helper
-# WORDS has today; `wish` is what this film asks WORDS for instead (ENGINE_NEEDS 4).
-WORD_PLACES = dict(
-    Greeting=dict(
-        at=("st_greet", (0.0, 2.45, -3.0)), frac=0.50, tilt=-6.0,
-        times=(S[0] + 2.6, S[0] + 4.2, S[0] + 6.8, S[0] + 7.6), fold="the hem that curls up like a page",
-        arrive="morph", source="veil", fallback="touch", leave="bokeh",
-        wish=("stitch", "bokeh"), acted_by=("greet_a", "greet_b")),
-    Consideration=dict(
-        at=("st_help", (0.0, 2.15, 2.3)), frac=0.60, tilt=-6.0,
-        times=(S[1] + 0.2, S[1] + 1.2, S[1] + 3.8, S[1] + 4.4), fold="a sheer curtain across the road",
-        arrive="morph", source="veil", fallback="palm", leave="bokeh",
-        wish=("stitch", "bokeh"), acted_by=("helper", "weary")),
-    Gratitude=dict(
-        at=("st_help", (0.0, 3.3, -4.7)), frac=0.80, tilt=-12.0,
-        times=(S[1] + 4.2, S[1] + 4.8, S[1] + 7.45, S[2] + 0.4), fold="the next fold, lit by the flare of two hands",
-        arrive="touch", source=("point", ("st_help", (0.95, 1.0, 0.05))), fallback="touch", leave="bokeh",
-        wish=("stitch", "bokeh"), acted_by=("weary", "helper")),
-    Apology=dict(
-        at=("st_mend", (0.4, 2.8, -2.2)), frac=0.74, tilt=-12.0,
-        times=(S[2] + 0.3, S[2] + 1.2, S[2] + 4.0, S[2] + 4.85), fold="a hanging swag of the canopy, stitches loose",
-        arrive="morph", source="veil", fallback="lake", leave="morph", to="Inclusiveness",
-        wish=("stitch", "morph"), acted_by=("sorry", "hurt")),
-    Inclusiveness=dict(
-        at=("st_mend", (0.4, 2.8, -2.2)), frac=0.66, tilt=-8.0,
-        times=(S[2] + 4.0, S[2] + 4.85, S[2] + 7.4, S[3] + 0.35), fold="the same swag, sewn again",
-        arrive="morph", source="Apology", fallback="morph", leave="bokeh",
-        wish=("morph", "bokeh"), acted_by=("hurt", "sorry")),
-    Concession=dict(
-        at=("st_gate", (0.0, 2.9, 0.0)), frac=0.58, tilt=-8.0,
-        times=(S[3] + 1.6, S[3] + 3.1, S[3] + 5.8, S[3] + 7.2), fold="the cloth wall above the doorway",
-        arrive="morph", source="veil", fallback="flock", leave="give", to=("person", "gate_first"),
-        wish=("stitch", "unravel"), acted_by=("gate_yield", "gate_first")),
-    Respect=dict(
-        at=("st_loom", (0.0, 2.9, 0.0)), frac=0.60, tilt=-8.0,
-        times=(S[4] + 1.3, S[4] + 2.8, S[4] + 5.5, S[4] + 6.9), fold="fresh cloth woven of a gold and a blue weft",
-        arrive="palm", source=("person", "speaker"), fallback="stars", leave="give", to="veil",
-        wish=("weave", "unravel"), acted_by=("listener", "speaker")),
-    Encouragement=dict(
-        at=("M", (0.1, 2.6, 2.0)), frac=0.72, tilt=-12.0,
-        times=(S[5] + 1.0, S[5] + 2.5, S[5] + 5.5, S[5] + 7.0), fold="a sheer banner in still air over the thread",
-        arrive="morph", source="veil", fallback="shaft", leave="rise",
-        wish=("stitch", "rise"), acted_by=("rooter", "child")),
-    Compliment=dict(
-        lock=True, frac=0.58, tilt=0.0,
-        times=(S[6] + 0.1, S[6] + 1.5, S[6] + 4.2, S[6] + 5.0), fold="the veil lifting above her, turning with us",
-        arrive="rays", source=None, fallback="rays", leave="rise",
-        wish=("rays", "rise"), acted_by=("everyone", "child")),
-)
-# At the lifting all nine return small across the sky for one breath (not a reading moment), then each
-# streams into its light of the arch (p3d.words leave "arch").
-REPRISE = dict(t_in=S[6] + 4.8, t_whole=S[6] + 5.6, t_leave=S[6] + 6.4, t_out=ARCH_UP + 0.8, frac=0.20,
-               arrive="rays", leave="arch", rows=((0, 1, 2), (3, 4, 5), (6, 7, 8)))
-# When each light wakes (campaign order): a pearl on the hem of her veil while the film runs (a soft warm
-# white point on her back that the viewer may count: 1, 3, 5, 6, 7, 8, 9), a light of the arch at the end.
-PEARL_LIT = {lab: WORD_PLACES[lab]["times"][3] + 0.3 for lab in LABELS}
-ARCH_LIT = [ARCH_UP + 0.09 * i for i in range(9)]
+WORDS = PW.Words(_SPECS, camera=LAYOUT, face="camera", tint=0.35)
 
 
-def word_pos(label, t):
-    """Centre of an expression's phrase block at t (world metres)."""
-    w = WORD_PLACES[label]
-    if w.get("lock"):
-        cam = camera_at(t)
-        _, u, f = _basis(cam)
-        e = np.radians(LOCK_ELEV)
-        return cam["pos"] + LOCK_DIST * (f * np.cos(e) + u * np.sin(e))
-    return place(w["at"], t)
+def _focus_default(t):
+    return M(t) + np.array([0.0, 1.5, 0.0])
 
 
-def word_width(label):
-    """Width in metres of an expression's widest line: `frac` of the picture when its reading starts."""
-    w = WORD_PLACES[label]
-    t0 = w["times"][1]
-    cam = camera_at(t0)
-    f = cam["target"] - cam["pos"]
-    f = f / np.linalg.norm(f)
-    depth = float((word_pos(label, t0) - cam["pos"]) @ f)
-    return w["frac"] * frame_width(depth, cam["fov"])
+CAMERA = _rigs(lambda t: WORDS.focus_point(t, _focus_default))
+WORDS.camera = CAMERA
+for _w in WORDS:
+    _w.camera = CAMERA
 
-
-def word_specs(veil=None, people=None):
-    """The nine words as settings for p3d.words.Words. With the veil and the people of phase B the words are
-    made of the veil's own particles and leave into people; without them each uses a style WORDS has today."""
-    people = people or {}
-    out = []
-    for lab in ORDER_IN_FILM:
-        w = WORD_PLACES[lab]
-        t_in, t0, t1, t_out = w["times"]
-        arrive, source = w["arrive"], w["source"]
-        if source == "veil":
-            arrive, source = ("morph", veil.fold(lab)) if veil is not None else (w["fallback"], None)
-        elif isinstance(source, tuple) and source[0] == "point":
-            source = (lambda t, s=source[1]: place(s, t))
-        elif isinstance(source, tuple) and source[0] == "person":
-            source = people.get(source[1])
-            arrive = arrive if source is not None else w["fallback"]
-        leave, to = w["leave"], w.get("to")
-        if to == "veil":
-            leave, to = ("give", veil) if veil is not None else ("wind", None)
-        elif isinstance(to, tuple) and to[0] == "person":
-            to = people.get(to[1])
-            leave = leave if to is not None else "wind"
-        spec = dict(expr=lab, pos=(lambda t, k=lab: word_pos(k, t)), width=word_width(lab),
-                    face="screen" if w.get("lock") else "camera", tilt=w["tilt"], t_in=t_in, t_read0=t0,
-                    t_read1=t1, t_out=t_out, arrive=arrive, leave=leave)
-        if source is not None:
-            spec["source"] = source
-        if to is not None:
-            spec["to"] = to
-        out.append(spec)
-    return out
-
-
-# warm white and gold only: the letters keep a quarter of the gold, the halo is gold (p3d.words common keys)
-WORD_LOOK = dict(color="#ffd27a", glow="#ffcf7a", tint=0.25, sharp=1.0)
-
-# ------------------------------------------------------------------------------------------------- palettes
-# Display hex. Sky: (top, middle, horizon, colour of the light on the horizon). One palette per section; the
-# sky changes on every song change, from deep blue through rose to the campaign day.
-PAL = {
-    "night":  ("#03061c", "#0a1546", "#1d2c6e", "#ffd9a0"),   # 1 night water, Milky Way
-    "mist":   ("#050a2a", "#11205a", "#33488f", "#ffe0b0"),   # 2 a bank of blue silver mist
-    "canopy": ("#07082a", "#1a1850", "#3a2c6a", "#ffc880"),   # 3 violet outside, amber under the cloth
-    "high":   ("#07103a", "#16307a", "#6a5a9e", "#ffd0a0"),   # 4 clear air, the first dusty line of rose
-    "loom":   ("#0a1648", "#1f3a8c", "#9a6aa8", "#ffd6a8"),   # 5 royal blue, the rose line wider
-    "hush":   ("#0e1a4e", "#2a3f8a", "#c0809c", "#ffe2c0"),   # 6 the breath: pearl blue, a thin line of rose
-    "dawn":   ("#1c3f96", "#7f8fd8", "#f2a0b4", "#ffe6c0"),   # 7 sunbreak: blue above rose and gold
-    "rose":   ("#5b8fd8", "#f4b6c4", "#ffd9b8", "#fff0d8"),   # 7 the veil is the sky
-    "day":    ("#9cc8ec", "#fbe3de", "#fff4e8", "#ffffff"),   # 8 the campaign day with a breath of rose
-}
-SKY_KEYS = [(0.0, "night"), (S[1] - 0.2, "night"), (S[1] + 0.3, "mist"), (S[2] - 0.2, "mist"),
-            (S[2] + 0.3, "canopy"), (S[3] - 0.1, "canopy"), (S[3] + 0.8, "high"), (S[4], "high"),
-            (S[4] + 0.8, "loom"), (S[5] - 0.5, "loom"), (S[5] + 0.6, "hush"), (S[6] - 0.2, "hush"),
-            (S[6] + 0.6, "dawn"), (LIFT, "dawn"), (S[6] + 6.4, "rose"), (S[7] + 1.2, "day"), (TOTAL, "day")]
-SKY_TOP, SKY_MID, SKY_HOR, SKY_LIGHT = (Track([(t, lin(PAL[p][i])) for t, p in SKY_KEYS]) for i in range(4))
-
-GOLD, WHITE_GOLD, AMBER = "#ffd27a", "#fff3da", "#ffb860"
-COOL = "#a9c8ff"            # the one cool colour: "the other person", the blue weft, the child
-ROSE, ROSE_WHITE = "#ffc2cf", "#ffe9e4"
-# the veil: (core, edge, thread lines) per section
-VEIL_COLORS = {
-    0: (WHITE_GOLD, "#ffcf7a", "#ffe6b8"), 1: ("#fff6e4", "#ffd88a", "#dfe6ff"), 2: ("#ffe2b0", AMBER, "#ffd9a0"),
-    3: (WHITE_GOLD, GOLD, "#ffe6b8"), 4: ("#ffe9c0", "#ffc45e", "#86b8ff"), 5: ("#fff4dc", "#ffe2b0", "#fff4dc"),
-    6: (ROSE_WHITE, ROSE, "#fff0d0"), 7: ("#ffffff", ROSE_WHITE, "#fff6ee"),
-}
-MOTHER_COLORS = dict(body="#ffe2a8", rim="#fff6e0", veil=WHITE_GOLD, hand="#ffdf9e")
-
-# ---------------------------------------------------------------------------------------------- the world
-# For CORE's `world` key (names to be matched to its HOWTO section V when it lands). The one light of the
-# film stands on the horizon straight ahead of her (azimuth 180): a warm star all night, the sun from the
-# sunbreak. Because the camera is behind her, she is back-lit in every shot and the light is the place the
-# whole veil runs to.
-WORLD = dict(
-    light=dict(azimuth=180.0, color=SKY_LIGHT,
-               elevation=Track([(0.0, -0.4), (S[6] - 0.3, -0.3), (S[6] + 0.2, 0.5), (LIFT, 0.7), (S[7], 3.5),
-                                (TOTAL, 6.0)]),          # degrees: on the horizon, crowning her head at the eclipse
-               size=Track([(0.0, 0.25), (S[6] - 0.3, 0.3), (S[6] + 0.3, 1.0), (TOTAL, 1.3)]),   # star, then sun
-               strength=Track([(0.0, 0.8), (S[5], 0.6), (S[6] - 0.2, 0.7), (S[6] + 0.3, 1.6), (S[7] + 2.5, 1.2),
-                               (TOTAL, 1.1)])),
-    # rays from that light, eclipsed by whatever stands in front of it (her head; the embracing pair at MEND)
-    rays=Track([(0.0, 0.9), (CAST, 1.0), (S[0] + 2.6, 0.5), (S[1], 0.35), (S[2] + 0.3, 0.55), (MEND, 0.9),
-                (S[3], 0.3), (S[4], 0.35), (S[5], 0.15), (S[6] - 0.2, 0.2), (S[6] + 0.3, 1.0), (ECLIPSE, 1.2),
-                (LIFT, 0.9), (S[7] + 2.5, 0.35), (TOTAL, 0.3)]),
-    shafts=Track([(0.0, 0.0), (S[2] - 0.1, 0.0), (S[2] + 0.4, 0.8), (S[3] - 0.1, 0.8), (S[3] + 0.3, 0.0),
-                  (TOTAL, 0.0)]),                        # light through the weave of the canopy
-    stars=Track([(0.0, 1.0), (S[3], 0.9), (S[4], 0.7), (S[5], 0.55), (S[6], 0.35), (S[6] + 5.0, 0.05),
-                 (S[7], 0.0), (TOTAL, 0.0)]),
-    milky_way=Track([(0.0, 0.9), (S[3] + 1.5, 1.0), (S[4], 0.6), (S[5], 0.3), (S[6], 0.1), (S[6] + 3.0, 0.0),
-                     (TOTAL, 0.0)]),
-    mist=Track([(0.0, 0.10), (S[1] - 0.3, 0.12), (S[1] + 0.2, 0.75), (S[2] - 0.3, 0.6), (S[2] + 0.3, 0.2),
-                (S[3], 0.1), (S[4], 0.15), (S[5], 0.25), (S[6], 0.3), (S[7], 0.15), (TOTAL, 0.1)]),
-    lake=dict(mirror=Track([(0.0, 1.0), (S[5], 1.0), (S[7], 0.8), (TOTAL, 0.7)]),
-              ripple=Track([(0.0, 0.35), (S[5] - 0.5, 0.35), (S[5] + 0.5, 0.02), (S[6] - 0.2, 0.02),
-                            (S[6] + 0.5, 0.30), (TOTAL, 0.25)])),     # glass for the breath
-    hills=Track([(0.0, 0.3), (S[3], 0.3), (S[3] + 1.5, 0.8), (S[4], 0.6), (S[6], 0.8), (TOTAL, 0.6)]),
-    motes=Track([(0.0, 0.3), (S[2] + 0.3, 0.6), (S[3], 0.2), (S[5], 0.1), (S[6], 0.4), (TOTAL, 0.2)]),
-    exposure=Track([(0.0, 1.0), (FINAL_HIT - 0.1, 1.0), (FINAL_HIT + 0.15, 1.22), (FINAL_HIT + 0.9, 1.0),
-                    (TOTAL, 1.0)]),
-    # the arch: hidden until the arc between her raised hands rises into it; then its lights wake left to
-    # right, each over 5 frames (no one-frame pops), and flare together on the last hit
-    arch=dict(visible_from=ARCH_UP, lit=ARCH_LIT, attack=5.0 / FPS, flare=FINAL_HIT),
-    sky=SKY_KEYS, palettes=PAL,
-)
 
 # ------------------------------------------------------------------------------------------------- the veil
-# One point set, built in phase B in this file (pure numpy, a function of t): a sheet of points on a centre
-# line that starts at her crown and shoulders and runs back behind her, with warp threads as "line" batches.
-# s is metres along it from her, v is across it (-1..1). Points flow along s away from her (a current), so
-# the cloth streams against a camera that flies toward her. Folds are travelling waves; their height follows
-# the music's loudness. Each section gives the same cloth another shape (`mode`).
-VEIL = dict(
-    length=420.0, points=360000, threads=6000, flow=14.0,          # metres, counts, metres per second
-    width=((0.4, 0.9), (3.0, 2.2), (12.0, 6.0), (40.0, 14.0), (150.0, 30.0), (420.0, 80.0)),   # (s, metres)
-    height=((0.0, 1.55), (1.5, 1.10), (5.0, 0.45), (12.0, 0.30)),  # (s, metres above the water)
-    fold=dict(amp=(0.15, 1.4), wavelength=(2.5, 18.0), speed=6.0, audio=0.6),
-    pearls=dict(count=9, on="the back hem of her head veil, across her shoulders", lit=PEARL_LIT),
-    modes=[
-        (S[0], "on her shoulders"), (CAST, "cast: unrolls 46 m in 2 s, the camera on its hem"),
-        (S[0] + 2.6, "river"), (S[1], "road: narrow, firm, low over the water, bends to bank through"),
-        (S[2], "canopy: lifts overhead from 8 m behind her to 30 m, 3 to 4.6 m high, a swag for the words"),
-        (S[3], "river with five braided arms; at the narrows a wall of cloth with a doorway 1.2 m wide"),
-        (S[4], "loom: unwoven into taut warp threads 0.2 to 6 m above the water, sounding with the music"),
-        (S[5] - 0.9, "one thread: from her left hand back along the water, a line to walk"),
-        (S[6], "river again, wider and brighter, rose gold"),
-        (LIFT, "sky: peels off the lake from the tail toward her, passes overhead, spreads over the dome"),
-        (ARCH_UP - 0.6, "the arc between her raised hands lifts off and grows into the arch"),
-    ],
-)
-# every pass through cloth: (time, what passes, whether the camera is moved under cover of the wash)
-PIERCES = [
-    (S[0] + 7.46, "the Greeting's fold sweeps over the lens", True),
-    (S[1] + 4.0, "we go through the Consideration's curtain", False),
-    (S[2], "the Gratitude's fold sweeps over the lens and the veil heaves overhead", True),
-    (S[3], "we burst up through the roof of the canopy", False),
-    (S[3] + 7.47, "we follow the two through the doorway", True),
-    (OVERHEAD, "the whole veil passes over our heads into the sky", False),
-]
+GOLD, WHITE_GOLD, AMBER, COOL = "#ffd27a", "#fff1d6", "#ffb860", "#a9c8ff"
+ROSE, ROSE_WHITE = "#ffb4c4", "#ffe6e0"
+_CT = [(0.0, (WHITE_GOLD, GOLD)), (S[1] - 0.01, (WHITE_GOLD, GOLD)), (S[1], ("#fff6e4", "#ffd88a")),
+       (S[2] - 0.6, ("#fff6e4", "#ffd88a")), (S[2] + 0.4, ("#ffe2b0", AMBER)), (S[3], ("#ffe2b0", AMBER)),
+       (S[3] + 1.0, (WHITE_GOLD, GOLD)), (S[5] - 0.01, (WHITE_GOLD, GOLD)), (S[5], ("#fff4dc", "#ffe2b0")),
+       (BIG - 0.2, ("#fff4dc", "#ffe2b0")), (BIG + 0.8, (ROSE_WHITE, ROSE)), (52.0, (ROSE_WHITE, ROSE)),
+       (55.0, ("#fff4ee", "#ffd0d8")), (TOTAL, ("#fff4ee", "#ffd0d8"))]
+VEIL_CORE = Track([(t, lin(c[0])) for t, c in _CT])
+VEIL_EDGE = Track([(t, lin(c[1])) for t, c in _CT])
 
-# ----------------------------------------------------------------------------------------------- the people
-# Everyone is a lifelike body of particles (helper BODY) in garments of light, without features, gathered out
-# of the veil's own points (`form`: start, seconds) and still joined to it at the hem. Positions are offsets
-# in metres from the person's station (or from Mother for the last three). `facing` is an azimuth: 90 faces
-# +x (screen right for a camera that looks toward her), 270 faces -x, 180 faces the way she walks.
-# `motion` and `gesture` use BODY's draft names where they exist; the others are in ENGINE_NEEDS.
-MOTIONS_PROMISED = {"walk", "stand", "run", "kneel", "look_up", "reach", "open_arms", "blow", "reach_hands"}
-MOTIONS_IN_BODY_DRAFT = {"raise", "pray", "bow"}
+S_MAX = 340.0
+LENGTH = Track([(0.0, 1.8), (HIT0, 1.8), (1.1, 26.0), (2.4, 200.0), (3.4, S_MAX + 30.0), (TOTAL, S_MAX + 30.0)])
+CANOPY = Track([(0.0, 0.0), (12.95, 0.0), (13.65, 1.0), (19.85, 1.0), (20.55, 0.0), (TOTAL, 0.0)])
+LOOM = Track([(0.0, 0.0), (S[4] - 0.01, 0.0), (S[4], 1.0), (S[5] - 0.01, 1.0), (S[5], 0.0), (38.0, 0.0),
+              (39.2, 0.85), (BIG - 0.3, 0.85), (BIG + 0.6, 0.0), (TOTAL, 0.0)])
+ONE = Track([(0.0, 0.0), (38.0, 0.0), (39.4, 1.0), (BIG - 0.3, 1.0), (BIG + 0.8, 0.35), (49.5, 0.35),
+             (50.5, 0.0), (TOTAL, 0.0)])
+SHEET = Track([(0.0, 1.0), (S[4] - 0.01, 1.0), (S[4], 0.12), (S[5] - 0.01, 0.12), (S[5], 1.0), (38.0, 1.0),
+               (39.4, 0.06), (BIG - 0.3, 0.06), (BIG + 0.9, 1.15), (TOTAL, 1.15)])
+LIFT_T0, LIFT_DUR, LIFT_SPREAD = 49.9, 2.6, 2.2
 
 
-def _p(pid, body, clothes, look, color, at, path, facing, motion, gesture=(), form=None, effect=(), contact=None,
-       leave=None, lane=None):
-    return dict(id=pid, body=body, clothes=clothes, look=look, color=color, at=at, path=path, facing=facing,
-                motion=list(motion), gesture=list(gesture), form=form, effect=list(effect), contact=contact,
-                leave=leave, lane=lane)
+class VeilRiver:
+    """Heavenly Mother's veil as a river of light: a sheet of flowing points on a centre line that leaves her
+    upper back, falls to the water and runs back across the lake, widening, with travelling folds; a warp of
+    fine threads in it; one thread from her hand for the breath; and, at the end, the whole cloth lifting off
+    the lake into the sky ahead of her. A pure function of t."""
 
+    def __init__(self, n=170000, threads=44, k=150, seed=9):
+        rng = np.random.default_rng(seed)
+        self.n = n
+        self.u = rng.random(n)
+        v = rng.random(n) * 2.0 - 1.0
+        hem = rng.random(n) < 0.12
+        v[hem] = np.sign(v[hem]) * (0.97 + 0.03 * rng.random(hem.sum()))
+        self.v = v
+        self.hem = hem
+        self.sd = rng.random(n)
+        self.ph = rng.random(n) * 6.283
+        self.spark = rng.random(n) < 0.10
+        self.nt, self.k = threads, k
+        self.tv = np.linspace(-0.92, 0.92, threads)
+        self.th = 0.35 + 4.6 * rng.random(threads)          # each thread's height on the loom
+        self.tcool = (np.arange(threads) % 3) == 1           # a cool thread among the warm ones on the loom
+        self.j0 = threads // 2                               # the one thread of the breath
+        q = np.linspace(0.0, 1.0, k + 1)
+        self.ts = S_MAX * q ** 2.0
 
-PEOPLE = [
-    # 1 Greeting: two strangers cross the veil from its two banks and meet (rim-lit profiles, ref 01, 16)
-    _p("greet_a", "woman", "a long coat of light", "rim", GOLD, "st_greet",
-       [(S[0] + 3.4, (-3.4, 0.0, 0.3)), (S[0] + 6.6, (-0.42, 0.0, 0.0))], 90,
-       [(S[0] + 3.4, "walk"), (S[0] + 6.6, "stand")],
-       [(S[0] + 5.4, S[0] + 6.7, "raise"), (S[0] + 6.7, S[0] + 7.6, "reach_hands")],
-       form=(S[0] + 2.7, 1.1), effect=["walk_shed"], contact=(S[0] + 6.9, "clasp hands", "greet_b"),
-       leave=(S[1] - 0.05, S[1] + 0.3), lane=(-5.2, 1.9)),
-    _p("greet_b", "man", "a loose tunic and trousers of light", "rim", COOL, "st_greet",
-       [(S[0] + 3.4, (3.4, 0.0, -0.3)), (S[0] + 6.6, (0.42, 0.0, 0.0))], 270,
-       [(S[0] + 3.4, "walk"), (S[0] + 6.6, "stand")], [(S[0] + 6.5, S[0] + 7.6, "reach_hands")],
-       form=(S[0] + 2.7, 1.1), effect=["walk_shed"], contact=(S[0] + 6.9, "clasp hands", "greet_a"),
-       leave=(S[1] - 0.05, S[1] + 0.3), lane=(5.2, 1.9)),
-    # 2 Consideration, Gratitude: one is spent, kneeling beside a burden of dim light; one stops to help
-    _p("weary", "man", "a long coat of light", "glitter", COOL, "st_help",
-       [(S[1] + 0.2, (1.3, 0.0, 0.0))], 270,
-       [(S[1] + 0.2, "kneel"), (S[1] + 4.3, "rise"), (S[1] + 5.2, "stand")],
-       [(S[1] + 0.2, S[1] + 3.6, "head_bowed"), (S[1] + 3.6, S[1] + 5.0, "reach_hands"),
-        (S[1] + 5.4, S[1] + 7.5, "bow")],
-       form=(S[1] + 0.2, 0.9), contact=(S[1] + 4.22, "hand in hand, lifted", "helper"),
-       leave=(S[2] - 0.05, S[2] + 0.3), lane=(6.9, 1.2)),
-    _p("helper", "woman", "a long dress of light", "glitter", GOLD, "st_help",
-       [(S[1] + 0.6, (-1.4, 0.0, 1.5)), (S[1] + 3.4, (0.6, 0.0, 0.1))], 90,
-       [(S[1] + 0.6, "walk"), (S[1] + 3.4, "stand")],
-       [(S[1] + 3.4, S[1] + 5.0, "reach_hands"), (S[1] + 5.2, S[1] + 7.5, "nod")],
-       form=(S[1] + 0.2, 0.9), contact=(S[1] + 4.22, "hand in hand, lifts", "weary"),
-       leave=(S[2] - 0.05, S[2] + 0.3), lane=(5.5, 2.9)),
-    # 3 Apology, Inclusiveness: one sits turned away and is coming apart (ref 06); the other kneels beside
-    _p("hurt", "woman", "a long dress of light", "glitter", COOL, "st_mend",
-       [(S[2], (0.6, 0.0, 0.0))], 270,
-       [(S[2], "sit_bowed"), (S[2] + 4.0, "turn"), (S[2] + 4.3, "embrace")], [],
-       form=(S[2], 0.5),
-       effect=[("disperse", S[2] + 0.2, MEND - 0.2, 0.45, "from the side turned away"),
-               ("mend", MEND - 0.2, MEND + 0.8, "every particle that left flies back; the body is whole")],
-       contact=(MEND, "embrace", "sorry"), leave=(S[3] + 0.6, S[3] + 2.0), lane=(-5.5, 2.9)),
-    _p("sorry", "man", "a loose tunic and trousers of light", "glitter", GOLD, "st_mend",
-       [(S[2] + 0.4, (2.6, 0.0, 0.3)), (S[2] + 2.4, (1.45, 0.0, 0.1))], 270,
-       [(S[2] + 0.4, "walk"), (S[2] + 2.4, "kneel"), (S[2] + 4.3, "embrace")],
-       [(S[2] + 3.0, S[2] + 4.2, "hand_on_shoulder")],
-       form=(S[2], 0.5), contact=(S[2] + 3.2, "a hand on the shoulder, then the embrace", "hurt"),
-       leave=(S[3] + 0.6, S[3] + 2.0), lane=(-6.9, 1.2)),
-    # 4 Concession: two reach a door one person wide at the same moment (rim-lit against her light)
-    _p("gate_yield", "man", "a long coat of light", "rim", GOLD, "st_gate",
-       [(S[3] + 2.4, (-2.6, 0.0, 2.4)), (S[3] + 3.7, (-1.3, 0.0, 1.2)), (S[3] + 4.3, (-1.6, 0.0, 1.5)),
-        (S[3] + 6.8, (-1.6, 0.0, 1.5)), (S[3] + 7.6, (0.0, 0.0, -0.5))], 135,
-       [(S[3] + 2.4, "walk"), (S[3] + 3.7, "step_aside"), (S[3] + 4.3, "stand"), (S[3] + 6.8, "walk")],
-       [(S[3] + 4.1, S[3] + 6.6, "after_you"), (S[3] + 4.4, S[3] + 5.2, "nod")],
-       form=(S[3] + 1.8, 0.9), leave=(S[3] + 7.6, S[4] + 0.3), lane=(-8.2, 2.4)),
-    _p("gate_first", "woman", "a long dress of light", "rim", COOL, "st_gate",
-       [(S[3] + 2.4, (2.6, 0.0, 2.4)), (S[3] + 3.7, (1.2, 0.0, 1.2)), (S[3] + 5.6, (1.2, 0.0, 1.2)),
-        (S[3] + 6.9, (0.0, 0.0, -0.6))], 225,
-       [(S[3] + 2.4, "walk"), (S[3] + 3.7, "stand"), (S[3] + 5.6, "walk")], [(S[3] + 5.0, S[3] + 5.7, "nod")],
-       form=(S[3] + 1.8, 0.9), leave=(S[3] + 6.9, S[4] + 0.3), lane=(8.2, 2.4)),
-    # 5 Respect: one speaks thoughts as a stream of light from an open palm (ref 14), one listens (plexus, ref 03)
-    _p("speaker", "man", "a loose tunic and trousers of light", "plexus", GOLD, "st_loom",
-       [(S[4] + 1.0, (-1.7, 0.0, 0.0))], 90, [(S[4] + 1.0, "stand")],
-       [(S[4] + 1.2, S[4] + 3.4, "blow"), (S[4] + 3.4, S[4] + 6.6, "lean_in")],
-       form=(S[4] + 0.6, 0.9), effect=[("palm_stream", S[4] + 1.2, S[4] + 3.6, GOLD)],
-       leave=(S[5] - 0.6, S[5] + 0.3), lane=(-4.4, 3.4)),
-    _p("listener", "woman", "a long dress of light", "plexus", COOL, "st_loom",
-       [(S[4] + 1.0, (1.7, 0.0, 0.0))], 270, [(S[4] + 1.0, "stand")],
-       [(S[4] + 1.2, S[4] + 3.2, "lean_in"), (S[4] + 3.2, S[4] + 5.4, "blow"),
-        (S[4] + 5.5, S[4] + 7.2, "cup_hands")],
-       form=(S[4] + 0.6, 0.9), effect=[("palm_stream", S[4] + 3.2, S[4] + 5.4, COOL)],
-       leave=(S[5] - 0.6, S[5] + 0.3), lane=(4.4, 3.4)),
-    # 6 Encouragement: a child walks the thread to her; the one who roots kneels behind (seen from behind)
-    _p("child", "child", "a tunic of light", "glitter", "#e4eeff", "M",
-       [(S[5] + 1.2, (-0.36, 0.0, 4.6)), (S[5] + 2.0, (-0.36, 0.0, 4.6)), (S[5] + 5.6, (-0.50, 0.0, 1.2)),
-        (S[5] + 6.6, (-0.62, 0.0, 0.28))], 180,
-       [(S[5] + 1.2, "stand"), (S[5] + 2.0, "balance_walk"), (S[5] + 6.6, "stand")],
-       [(S[5] + 3.6, S[5] + 4.1, "wobble"), (S[5] + 6.1, TOTAL, "hand_up")],
-       form=(S[5] + 1.1, 0.8), contact=(TOUCH, "the child's right hand in her left", "Mother")),
-    _p("rooter", "woman", "a long dress of light", "rim", GOLD, "M",
-       [(S[5] + 1.2, (1.5, 0.0, 5.7)), (S[6] + 1.4, (1.5, 0.0, 5.7)), (S[6] + 3.6, (2.9, 0.0, 4.4))], 180,
-       [(S[5] + 1.2, "kneel"), (S[6] + 0.5, "rise"), (S[6] + 1.4, "walk")],
-       [(S[5] + 1.6, S[5] + 7.0, "pray"), (S[6] + 2.0, S[7], "raise")],
-       form=(S[5] + 1.1, 0.8)),
-]
-# After its word each pair turns to walk on after her and, under cover of the next pass through cloth, their
-# light sinks back into the veil and travels on in it as two glints toward her hem (`leave`: from when, and
-# when the body is gone). 7 Everyone: at the sunbreak the veil gives them all back: each gathers again out of
-# it and walks up to a place beside and a little behind her (`lane`: metres to her right, metres behind her;
-# all outside the camera's half circle), lifts both arms as the veil lifts, and their hems stream upward into
-# it (ref 05).
-WALK_ON = 1.2               # metres per second
-PROCESSION = dict(arrive=(S[6] + 0.4, S[6] + 3.6), gesture=[(S[6] + 2.0, S[7], "raise"), (LIFT, S[7], "look_up")],
-                  effect=[("hem_stream_up", LIFT, S[7] + 1.0)], fade_into_day=(S[7] + 0.5, S[7] + 3.0))
-
-MOTHER = dict(
-    body="woman", height=MOTHER_HEIGHT, facing=MOTHER_FACING, colors=MOTHER_COLORS,
-    clothes="a long robe of light and a deep head veil that hangs forward of the face and down her back",
-    look=[(0.0, "glitter with a bright rim, a dark body against the light (ref 10, 13)"),
-          (SUNBREAK, "the same in rose gold; the sun does not shine through her")],
-    motion=[(0.0, "stand"), (S[0] + 2.3, "walk"), (S[5] - 0.6, "slow to a stand"), (S[5] + 0.4, "stand"),
-            (S[7] + 0.3, "walk")],
-    gesture=[(CAST, S[0] + 2.3, "open_arms"), (S[5] - 0.4, TOUCH, "hold_thread: left hand low and back, closed"),
-             (TOUCH, S[7] + 0.3, "take_hand: the child's right hand in her left"),
-             (LIFT, S[7] + 0.3, "raise: both arms, slowly, over 2 s, the child's hand in hers"),
-             (S[7] + 0.3, TOTAL, "walk hand in hand")],
-    rules=dict(rear_limit=REAR_LIMIT, never=("front", "face", "scaled", "dissolved", "behind words")),
-    end="she is not taken apart: she walks on under the arch and the sun's brightness takes her "
-        f"({S[7] + 0.5:g} to {S[7] + 4.0:g} s)",
-)
-
-
-def person_present(pid, t):
-    """Whether a person stands as a body at t (between their word and the sunbreak they are light in the veil)."""
-    p = next(q for q in PEOPLE if q["id"] == pid)
-    if t < p["form"][0]:
-        return False
-    return p["leave"] is None or t <= p["leave"][1] or t >= PROCESSION["arrive"][0]
-
-
-def person_pos(pid, t):
-    """Where a person's feet are at t (world metres): along their path, walking on after her, or, from the
-    sunbreak, coming up to their place beside her."""
-    p = next(q for q in PEOPLE if q["id"] == pid)
-    ts = [k[0] for k in p["path"]]
-    pts = np.array([anchor(p["at"], t) + np.asarray(k[1], np.float64) for k in p["path"]])
-    a0, a1 = PROCESSION["arrive"]
-    if p["leave"] is not None and t >= a0:
-        u = min(max((t - a0) / (a1 - a0), 0.0), 1.0)
-        home = np.array([p["lane"][0], 0.0, p["lane"][1]])
-        return mother_pos(t) + home * (1.6 - 0.6 * u * u * (3 - 2 * u))      # gathers farther out, walks in
-    if p["leave"] is not None and t > p["leave"][0]:
-        return pts[-1] + np.array([0.0, 0.0, -WALK_ON * (min(t, p["leave"][1]) - p["leave"][0])])
-    if len(ts) == 1 or t <= ts[0]:
-        return pts[0]
-    if t >= ts[-1]:
-        return pts[-1]
-    i = int(np.searchsorted(ts, t, side="right")) - 1
-    u = (t - ts[i]) / (ts[i + 1] - ts[i])
-    return pts[i] * (1 - u) + pts[i + 1] * u
-
-
-# ----------------------------------------------------------------------- the end card (existing style, 2D text)
-TEXT_SHADOW = 0.0      # nothing dark behind any text
-TITLE = dict(label="Healing Concert", lines=["The Words of Mother’s Love"], size=150, y=0.27, label_size=48,
-             form=T_FORM, hold=1e9, star=1e9, color=theme.CORAL, glow=theme.WHITE_GLOW, anim="ribbon")
-TAGLINE = dict(text="Sunday, December 6 · 4:30 PM\nWorld Mission Society Church of God\n"
-                    "6720 W Sahara Ave, Las Vegas",
-               sizes=(78, 77), t0=TAG_T0, t1=TAG_T1, color=theme.NAVY, glow=theme.WHITE_GLOW, anim="rise")
-CREDIT = dict(song="The Words of Mother’s Love", concert="Healing Concert",
-              t_in=1e9, t_full=1e9 + 1.0, t_move=1e9 + 2.0, t_rest=1e9 + 3.0, scale=0.34, alpha_rest=0.0,
-              margin_x=0.030, margin_top=0.048)
-FRAGMENTS = []         # no lyrics and no other lines on screen
-FADE = Track([(0.0, 1.0), (TOTAL, 1.0)])   # the first frame is a picture and the last frame is the card
-# The old 2D expressions stay off: the nine are particle words in the world (word_specs). Kept in campaign
-# order because engine/arch.py reads PHRASES; the 2D arch is not lit (CORE's arch in space carries the lights).
-_SIZES = (150, 118, 124, 150, 164, 128, 100, 128, 140)
-PHRASES = [dict(label=lab, lines=lines, size=sz, form=1e9, hold=1e9, star=1e9)
-           for (lab, lines), sz in zip(NINE, _SIZES)]
-NINTH = 1e9
-
-# ------------------------------------------------------------------------------------------- engine needs
-# What this film needs from the 3D layer beyond what P3D-BRIEF.md promises, most important first.
-ENGINE_NEEDS = [
-    ("BODY", "Heavenly Mother as a rear-only figure: walking and standing from behind in a long robe and a deep "
-             "head veil that hangs forward of the face (only veil shows from any angle within 60 degrees of "
-             "straight behind); joints readable every frame (crown, shoulders, wrists, palms) and the veil's "
-             "back hem as points, so the veil river and its nine pearls join her without a seam; gestures: one "
-             "hand held low and back, lightly closed; take a child's hand; raise both arms slowly; hands dense "
-             "enough for a macro (about 20 thousand points a hand)."),
-    ("CORE", "The camera can pass THROUGH a dense sheet of points: near points open into very large soft discs "
-             "with a size cap, an energy cap and a near fade, with no white-out, no popping and no slow frame. "
-             "Every song change in this film is such a pass."),
-    ("BODY", "Contact by targets: a hand that reaches a given point in space (another hand, a shoulder), an "
-             "embrace of two bodies, a child's hand in an adult's; and a child body with a child's proportions."),
-    ("WORDS", "Words that belong to a cloth: `surface=` (a function that carries the word's plane, so a word "
-              "rides and ripples in a fold and lies flat while it is read); arrive `stitch` (a point of light "
-              "sews the letters along their strokes, a thread behind it) and `weave` (two colours of thread); "
-              "leave `unravel` (the letters pull out into threads that run along a given path to a point)."),
-    ("BODY", "Gather from and return to a point field the song gives (people rise out of the veil's own points; "
-             "hems that stay joined to a given curve), and `mend`: the disperse effect run backward on cue until "
-             "the body is whole."),
-    ("BODY", "Motions beyond the brief: sit with the head bowed; kneel beside someone with a hand on the "
-             "shoulder; rise from kneeling; bow with a hand on the heart; step aside and sweep an open palm "
-             "(after you); a nod; lean in to listen; cup both hands; a child's careful walk with arms out and a "
-             "wobble; lift both arms; walk hand in hand."),
-    ("CORE", "Camera: roll along a flown path including one full barrel roll; focus distance and lens opening "
-             "as tracks (rack focus from a word to a person); motion blur per shot; a subtle handheld breath."),
-    ("CORE", "World: one light on the horizon at a fixed azimuth, raised from star to sun, whose rays are "
-             "eclipsed by a head in front of it; sky from the song's own palette keys (deep blue, rose, campaign "
-             "day); shafts through a cloth overhead; the nine arch light positions, and the arch hidden until "
-             "the song hands it its own arc."),
-    ("CORE", "Speed: a veil of about 360 thousand points and 6000 thread lines with its mirror image, plus up "
-             "to 12 bodies at many depths (detail by distance)."),
-    ("MED2", "The medley's map as data: section starts, downbeats, the breath, the last hit; loudness as a "
-             "function of t for the veil's folds and the loom's strings."),
-]
-
-
-# ---------------------------------------------------------------------------------------------- phase B
-class Veil:
-    """The veil as a p3d point set (phase B). sample(t) gives its batches from VEIL; fold(label) gives the
-    point set of the fold that carries an expression (the source its letters are made of)."""
+    # ---- the shape of the cloth at (s, v): s metres back from her, v across (-1..1)
+    def shape(self, s, v, t, hem_pos=None):
+        b = MB(t) if hem_pos is None else hem_pos
+        c = float(CANOPY(t))
+        lo = float(LOOM(t))
+        lvl = _level(t)
+        A = 15.0 * ss(10.0, 170.0, s) * (1.0 - c)
+        xc = A * (np.sin(s / 41.0 + 0.6) + 0.45 * np.sin(s / 17.0 + 2.1)) + b[0] * np.exp(-s / 3.0)
+        yc = 0.24 + (b[1] - 0.24) * np.exp(-s / 1.25)
+        half = 0.5 * (0.42 + 0.17 * s)
+        amp = np.minimum(0.04 + 0.03 * s, 1.5) * (1.0 - 0.85 * c) * (1.0 - lo) * (0.75 + 0.5 * lvl)
+        lam = 3.2 + 0.07 * s
+        fold = amp * (np.sin(6.283 * (s / lam) - 3.3 * t + 2.4 * v) + 0.3 * np.sin(5.0 * v + 1.3 * t + 0.21 * s))
+        y = np.maximum(yc + fold + 0.04 * half * v ** 4, 0.05)
+        x = xc + v * half
+        if c > 0.0:
+            g = c * ss(0.0, 3.0, s) * (1.0 - ss(58.0, 92.0, s))
+            roof = (b[1] + (4.7 - b[1]) * ss(0.0, 3.4, s)) - 2.3 * v ** 2 * ss(1.0, 6.0, s) \
+                + 0.22 * np.sin(0.55 * s - 1.4 * t + 3.0 * v)
+            hw = np.maximum(half, 5.2 * ss(0.0, 5.0, s) + 0.3)
+            x = x * (1.0 - g) + (v * hw) * g
+            y = y * (1.0 - g) + roof * g
+        z = b[2] + s
+        return x, y, z
 
     def sample(self, t):
-        raise NotImplementedError("phase B: the veil's points from VEIL (sheet, warp threads, pearls)")
+        b = MB(t)
+        L = float(LENGTH(t))
+        core, edge = VEIL_CORE(t), VEIL_EDGE(t)
+        sheet = float(SHEET(t))
+        lo, one = float(LOOM(t)), float(ONE(t))
+        out = []
+        # ---- the sheet of flowing points
+        q = np.mod(self.u + 0.010 * t, 1.0)
+        s = S_MAX * q ** 2.2
+        x, y, z = self.shape(s, self.v, t, b)
+        pos = np.stack([x, y, z], axis=1)
+        a = (0.30 + 0.25 * self.hem) * ss(0.0, 0.5, s) * (1.0 - ss(S_MAX * 0.9, S_MAX, s))
+        a = a * (1.0 - ss(L - 3.0, L, s)) * sheet
+        front = np.exp(-((s - L) / 2.5) ** 2) * (L < S_MAX)
+        tw = 0.75 + 0.25 * np.sin(self.ph + 2.1 * t + 0.3 * s)
+        a = a * tw
+        size = (0.020 + 0.035 * self.sd ** 3) * (1.0 + s / 70.0)
+        mix = (np.abs(self.v) ** 2)[:, None]
+        col = core[None] * (1.0 - mix) + edge[None] * mix
+        pos, a, size = self._lift(pos, s, self.v, t, a, size)
+        keep = a > 0.004
+        sp = keep & self.spark
+        so = keep & ~self.spark
+        emit = 1.0 + 2.5 * front
+        if so.any():
+            out.append(dict(pos=pos[so], size=size[so], color=col[so], alpha=a[so], kind="soft", emit=emit[so]))
+        if sp.any():
+            out.append(dict(pos=pos[sp], size=size[sp] * 1.3, color=col[sp], alpha=a[sp] * 1.4, kind="spark",
+                            twinkle=0.8, emit=emit[sp]))
+        # ---- the warp: fine threads along the cloth, which become taut strings on the loom
+        th = self.threads(t, b, L, lo, one, core, edge)
+        if th is not None:
+            out.append(th)
+        return out
 
-    def fold(self, label):
-        raise NotImplementedError("phase B: the points of the fold that carries " + label)
+    def _lift(self, pos, s, v, t, a, size):
+        """The end: the cloth peels off the lake from its far end toward her and streams over our heads into
+        the sky ahead of her, where it spreads as a vast canopy of light."""
+        if t < LIFT_T0:
+            return pos, a, size
+        delay = LIFT_SPREAD * (1.0 - np.clip(s / S_MAX, 0.0, 1.0) ** 0.5)
+        f = ss(0.0, 1.0, (t - LIFT_T0 - delay) / LIFT_DUR)
+        if not np.any(f > 0):
+            return pos, a, size
+        m = M(t)
+        sky = np.stack([v * (14.0 + 0.30 * s) + 4.0 * np.sin(s / 23.0),
+                        24.0 + 0.10 * s + 3.0 * np.sin(v * 3.0 + s / 30.0 + 0.4 * t),
+                        np.full_like(s, m[2]) - 34.0 - 0.42 * s], axis=1)
+        arc = (4.0 * f * (1.0 - f) * (8.0 + 0.04 * s))[:, None] * np.array([0.0, 1.0, 0.0])
+        p = pos * (1.0 - f[:, None]) + sky * f[:, None] + arc
+        # near her (s < 4) the cloth stays on her shoulders
+        hold = ss(1.0, 5.0, s)
+        p = pos * (1.0 - hold[:, None]) + p * hold[:, None]
+        return p, a * (1.0 - 0.35 * f * hold), size * (1.0 + 2.0 * f * hold)
+
+    def threads(self, t, b, L, lo, one, core, edge):
+        nt, k = self.nt, self.k
+        s = np.tile(self.ts, (nt, 1))                        # (nt, k+1)
+        v = np.repeat(self.tv[:, None], k + 1, axis=1)
+        x, y, z = self.shape(s.ravel(), v.ravel(), t, b)
+        x, y, z = x.reshape(nt, -1), y.reshape(nt, -1), z.reshape(nt, -1)
+        if lo > 0.0:
+            fan = 0.25 + 0.30 * s
+            xl = b[0] + v * fan * 0.5
+            hl = 0.24 + (self.th[:, None] - 0.24) * ss(0.0, 14.0, s) + (b[1] - 0.24) * np.exp(-s / 1.3)
+            hl = hl + 0.03 * np.sin(31.0 * t + np.arange(nt)[:, None] * 1.7) * (0.3 + _beat(t)) * ss(0.0, 4.0, s)
+            x = x * (1.0 - lo) + xl * lo
+            y = y * (1.0 - lo) + hl * lo
+        if one > 0.0:
+            h = MH(t)
+            j = self.j0
+            xo = h[0] * np.exp(-s[j] / 2.5) + (1.0 - np.exp(-s[j] / 2.5)) * (-0.5)
+            yo = 0.18 + (h[1] - 0.18) * np.exp(-s[j] / 1.1)
+            zo = h[2] + s[j]
+            x[j] = x[j] * (1.0 - one) + xo * one
+            y[j] = y[j] * (1.0 - one) + yo * one
+            z[j] = z[j] * (1.0 - one) + zo * one
+        p = np.stack([x, y, z], axis=2)
+        lf = 0.0
+        if t >= LIFT_T0:
+            lf = float(ss(LIFT_T0, LIFT_T0 + 1.2, t))
+        a0 = (0.22 + 0.55 * lo) * (1.0 - lf)
+        al = np.full((nt, k), a0)
+        if one > 0.0:
+            keep = np.zeros(nt)
+            keep[self.j0] = 1.0
+            al = al * (1.0 - one) + (keep[:, None] * (0.9 + 0.6 * one)) * one
+        sm = 0.5 * (s[:, :-1] + s[:, 1:])
+        al = al * (1.0 - ss(L - 3.0, L, sm)) * ss(0.0, 0.6, sm) * (1.0 - ss(S_MAX * 0.85, S_MAX, sm))
+        if not np.any(al > 0.003):
+            return None
+        col = np.repeat(edge[None], nt, axis=0)
+        if lo > 0.0:
+            cool = lin(COOL)
+            col = col * (1.0 - lo * self.tcool[:, None]) + cool[None] * (lo * self.tcool[:, None])
+        col = np.repeat(col[:, None, :], k, axis=1).reshape(-1, 3)
+        a, b2 = p[:, :-1].reshape(-1, 3), p[:, 1:].reshape(-1, 3)
+        al = al.ravel()
+        keep = al > 0.003
+        u = s[:, :-1].ravel()
+        return dict(pos=a[keep], pos2=b2[keep], size=0.010 + 0.006 * lo, color=col[keep], alpha=al[keep],
+                    kind="line", u=u[keep], u2=s[:, 1:].ravel()[keep], pulse=(9.0, 3.0, 2.5, 4.0), emit=1.4)
 
 
-def camera_state(t):
-    """camera_at(t) as a p3d CameraState (for p3d.words' check and for CORE)."""
-    from p3d.api import CameraState
-    c = camera_at(t)
-    return CameraState(pos=c["pos"], target=c["target"], fov=c["fov"], roll=c["roll"], focus=c["focus"],
-                       aperture=c["aperture"], aspect=ASPECT)
+VEIL = VeilRiver()
 
 
-def build(scene):
-    """P3D["setup"]: fills the 3D scene. Phase B, in this order:
-      1 the veil (class Veil above) with its mirror image, its pearls and its mode per section;
-      2 Heavenly Mother (BODY) on mother_pos(t), from MOTHER; the veil joins her hem;
-      3 the people (BODY) from PEOPLE: gathered out of the veil, acting in pairs, then the procession;
-      4 the nine words: p3d.words.Words(word_specs(veil, people), **WORD_LOOK), checked with camera_state,
-        and the nine small ones of REPRISE that stream into the arch;
-      5 the old 2D keys the engine still reads (Song, params, credit_state), as in engine/songs/epic_concert.py.
-    """
-    raise NotImplementedError("ten_09_the_veil is a phase A skeleton: the treatment and the timeline as data")
+def river_points(z0, n=900, spread=1.4, seed=0):
+    """Points lying in the river round a station (where a person gathers from)."""
+    rng = np.random.default_rng(seed)
+    return np.stack([rng.normal(0.0, spread, n), 0.24 + 0.05 * rng.random(n), z0 + rng.normal(0.0, 2.2, n)], axis=1)
 
 
-P3D = dict(camera=camera_at, world=WORLD, setup=build)
+# ----------------------------------------------------------------------------------------------- the people
+def _people():
+    from p3d.body import Body
+    P = {}
+
+    def body(name, shape, x, z, facing, show, color, color2, garment, look="glitter", motion="stand", gesture=(),
+             effects=(), points=52000, seed=1.0, form=True, **kw):
+        eff = list(effects)
+        if form:
+            eff.insert(0, dict(kind="form", t=show[0], dur=1.3, source=river_points(z, seed=int(seed * 7)),
+                               travel=1.0))
+        P[name] = Body(shape, at=(x, z), facing=facing, motion=motion, gesture=list(gesture), garment=garment,
+                       look=look, color=color, color2=color2, effects=eff, points=points, seed=seed,
+                       show=show, fade=0.35, **kw)
+        return P[name]
+
+    # 1 Greeting: two rise out of the river and clasp hands on the hit at 2.50
+    body("greet_a", "woman", -0.48, ZG, 90.0, (0.9, 7.3), GOLD, "#fff0d0", "dress", seed=11.0,
+         gesture=[(1.6, 7.2, "handshake", dict(side="R", to=tuple(MEET), grip=1.0, ease=0.7))])
+    body("greet_b", "man", 0.48, ZG, 270.0, (0.9, 7.3), COOL, "#e8f0ff", "coat", seed=12.0,
+         gesture=[(1.6, 7.2, "handshake", dict(side="R", to=tuple(MEET), grip=1.0, ease=0.7))])
+    # 2 Consideration: one kneels, spent; the other stoops with an open hand, then a hand on the shoulder
+    kn = body("weary", "man", 0.55, ZH, 270.0, (6.84, 13.5), COOL, "#e8f0ff", "coat", seed=21.0,
+              motion=[(6.0, "kneel", dict(dur=0.2))], form=False)
+    body("helper", "woman", -0.55, ZH + 0.2, 90.0, (6.84, 13.5), GOLD, "#fff0d0", "dress", seed=22.0, form=False,
+         gesture=[(7.4, 10.4, "offer", dict(side="R", ease=0.8)),
+                  (10.3, 13.5, "hand_on_shoulder", dict(side="L", to=lambda t: kn.where(t, "shoulder.R"),
+                                                        ease=0.7))])
+    # 3 Apology, Inclusiveness: one sits, coming apart; one kneels beside her; the embrace mends her
+    hurt = body("hurt", "woman", -0.42, ZC, 90.0, (13.30, 20.4), COOL, "#eef2ff", "dress", seed=31.0, form=False,
+                motion=[(12.5, "sit", dict(dur=0.2))],
+                effects=[dict(kind="disperse", t=13.6, amount=Track([(13.6, 0.0), (16.4, 0.42), (16.9, 0.42),
+                                                                      (18.3, 0.0)]), reach=2.5)])
+    body("sorry", "man", 0.42, ZC + 0.05, 270.0, (13.30, 20.4), GOLD, "#fff0d0", "tunic", seed=32.0, form=False,
+         motion=[(12.5, "kneel", dict(dur=0.2))],
+         gesture=[(13.9, 16.9, "hand_on_shoulder", dict(side="L", to=lambda t: hurt.where(t, "shoulder.R"),
+                                                       ease=0.8)),
+                  (16.9, 20.4, "embrace", dict(to=lambda t: hurt.where(t, "blade.R"),
+                                               to2=lambda t: hurt.where(t, "blade.L"), ease=0.8))])
+    # 4 Concession: two walk up the narrows; one steps aside and opens a palm, the other walks on
+    body("yield", "man", -0.70, ZN + 1.0, 160.0, (20.6, 27.0), GOLD, "#fff0d0", "coat", seed=41.0,
+         motion=[(20.6, "walk", dict(speed=0.6)), (22.2, "stand")],
+         gesture=[(22.4, 26.8, "offer", dict(side="L", ease=0.8)), (22.6, 24.0, "bow", dict(amount=14.0))])
+    body("first", "woman", 0.55, ZN + 2.2, 180.0, (20.6, 27.0), COOL, "#eef2ff", "dress", seed=42.0,
+         motion=[(20.6, "walk", dict(speed=0.62))])
+    # 5 Respect: two in profile; she gives her thoughts as a stream from her palm, he listens
+    sp = body("speaker", "woman", -1.05, ZL, 90.0, (26.79, 33.6), GOLD, "#fff0d0", "dress", seed=51.0, form=False,
+              gesture=[(27.6, 31.6, "blow", dict(side="R", ease=0.7))],
+              effects=[dict(kind="blow", t=28.0, dur=3.2, side="R", n=4000, reach=2.0,
+                            dir=(1.0, 0.12, 0.0))])
+    body("listener", "man", 1.05, ZL, 270.0, (26.79, 33.6), COOL, "#e8f0ff", "tunic", seed=52.0, form=False,
+         gesture=[(27.4, 33.6, "listen", dict(side="L", ease=0.8))])
+    # 6 Gratitude: people walk in her veil behind her; one bows to another, who bows back
+    body("thank", "man", -0.62, ZP, 90.0, (33.36, 40.3), GOLD, "#fff0d0", "coat", seed=61.0, form=False,
+         gesture=[(34.0, 38.6, "bow", dict(amount=32.0, ease=0.9))])
+    body("thanked", "woman", 0.62, ZP, 270.0, (33.36, 40.3), COOL, "#eef2ff", "dress", seed=62.0, form=False,
+         gesture=[(35.0, 38.6, "bow", dict(amount=14.0, ease=0.9))])
+    for i, (x, dz, sh, c) in enumerate(((-1.6, -4.0, "woman", "#ffe2b0"), (1.7, -5.5, "man", "#ffd9a0"),
+                                        (-0.9, -9.0, "man", "#dfe8ff"), (1.1, -11.5, "woman", "#ffe8c8"))):
+        body(f"walker{i}", sh, x, ZP + dz + 1.0, 180.0, (33.36, 40.3), c, "#fff4e0",
+             "robe" if sh == "woman" else "tunic", seed=70.0 + i, form=False, points=34000,
+             motion=[(33.0, "walk", dict(speed=0.75, phase=0.27 * i))])
+    # 7 the child walks the thread to her and takes her hand
+    body("child", "child", -0.55, ZSTOP + 5.6, 180.0, (40.6, TOTAL), "#e8f0ff", "#fff6e6", "tunic", seed=81.0,
+         form=True, points=40000,
+         motion=[(41.0, "walk", dict(speed=0.55)), (48.6, "stand", dict(blend=0.8))],
+         gesture=[(48.0, TOTAL, "touch", dict(side="R", to=lambda t: MH(t) + np.array([0.0, -0.04, 0.05]),
+                                               end="palm", palm="up", ease=1.0))])
+    return P
 
 
-# ------------------------------------------------------------------------------------------- the self check
-def selfcheck(verbose=True):
-    """Checks the timeline against the film's rules. Returns the list of problems (empty when all is well)."""
-    problems, notes = [], []
-    src = open(os.path.abspath(__file__), encoding="utf-8").read()
-    bad = sorted({hex(ord(c)) for c in src if 0x2010 <= ord(c) <= 0x2015 or ord(c) == 0x2212})
-    if bad:
-        problems.append(f"dash characters in this file: {bad}")
-    # the nine: exact wording (against p3d.words when it is at hand), all placed, each read for 2.5 s or more
+def _mother():
+    from p3d.body import Body
+    return Body("woman", garment="robe", veil=dict(length=1.5), look=["rim", dict(name="glitter", bright=0.55)],
+                color="#ffcf8a", color2="#fff0d2", points=90000, detail=dict(hand=3.0), light=None,
+                wind=(0.0, 0.0, 0.6), **MOTHER_KW)
+
+
+def _setup(scene):
+    mother = _mother()
+    mother.add(scene, "mother")
+    scene.add("veil", PW.KeepClear(VEIL, WORDS))
+    for name, b in _people().items():
+        b.add(scene, name)
+    WORDS.add_to(scene)
     try:
-        from p3d import words as PW
-    except Exception:
-        PW = None
-    if PW is not None:
-        theirs = [(e["label"], e["lines"]) for e in PW.EXPRESSIONS]
-        if theirs != NINE:
-            problems.append("NINE differs from p3d.words.EXPRESSIONS")
-    plain = ["How are you?", "Thank you. It's all thanks to you. You've worked hard.",
-             "I'm sorry. It must have been hard on you.", "It's okay. I understand.", "Please, after you.",
-             "I'd love to hear more about your thoughts.", "I'll pray (or root) for you. Everything will go well.",
-             "Can I give you a hand with anything?", "You're amazing. You're doing great!"]
-    for (lab, lines), want in zip(NINE, plain):
-        got = " ".join(lines).replace("“", "").replace("”", "").replace("’", "'")
-        if got != want:
-            problems.append(f"{lab}: wording {got!r} is not the campaign's {want!r}")
-    if sorted(WORD_PLACES) != sorted(LABELS) or sorted(ORDER_IN_FILM) != sorted(LABELS):
-        problems.append("not all nine expressions are placed")
-    for lab in ORDER_IN_FILM:
-        t_in, t0, t1, t_out = WORD_PLACES[lab]["times"]
-        to = WORD_PLACES[lab].get("to")
-        end = WORD_PLACES[to]["times"][0] if isinstance(to, str) and to in WORD_PLACES else t1
-        if not (0.0 <= t_in < t0 < t1 <= t_out <= TOTAL):
-            problems.append(f"{lab}: times out of order {WORD_PLACES[lab]['times']}")
-        if end - t0 < 2.5 - 1e-6:
-            problems.append(f"{lab}: read for {end - t0:.2f} s, less than 2.5 s")
-        if t1 > T_FORM:
-            problems.append(f"{lab}: still being read when the end card forms")
-        notes.append(f"{lab:14s} arrives {t_in:5.2f}  read {t0:5.2f} to {end:5.2f} ({end - t0:.2f} s)  "
-                     f"gone {t_out:5.2f}  width {word_width(lab):4.1f} m  on {WORD_PLACES[lab]['fold']}")
-    # the end card: all five lines whole for 4 s or more, to the last frame
-    if TOTAL - max(TITLE_HIT, TAG_T1) < 4.0:
-        problems.append(f"end card whole for only {TOTAL - max(TITLE_HIT, TAG_T1):.2f} s")
-    # the camera: key times in order, always behind her, above the water, never still
-    for run in _RUNS:
-        ts = [k["t"] for k in run]
-        if any(b <= a for a, b in zip(ts[:-1], ts[1:])):
-            problems.append(f"camera keys out of order in the run that starts at {ts[0]:g}")
-    cut_times = [r[0]["t"] for r in _RUNS[1:]]
-    worst_rear, slowest, lowest, seen, big = 0.0, (1e9, 0.0), (1e9, 0.0), 0, 0
-    prev = None
-    for f in range(NFRAMES):
-        t = f / FPS
-        cam = camera_at(t)
-        d = cam["pos"] - mother_pos(t)
-        rear = float(np.degrees(np.arctan2(abs(d[0]), d[2])))
-        worst_rear = max(worst_rear, rear)
-        if d[2] <= 0.3 or rear > REAR_LIMIT:
-            problems.append(f"camera not behind Heavenly Mother at {t:.2f} s ({rear:.0f} degrees off, "
-                            f"{d[2]:.1f} m behind)")
-            break
-        if cam["pos"][1] < lowest[0]:
-            lowest = (float(cam["pos"][1]), t)
-        if prev is not None and not any(t - 1.5 / FPS < c <= t + 1e-9 for c in cut_times):
-            v = float(np.linalg.norm(cam["pos"] - prev)) * FPS
-            if v < slowest[0]:
-                slowest = (v, t)
-        prev = cam["pos"]
-        xf, yf, zf = project(cam, mother_pos(t))
-        xh, yh, zh = project(cam, mother_pos(t) + [0.0, MOTHER_HEIGHT, 0.0])
-        if zh > 0 and 0.0 < xh < 1.0 and 0.0 < yh < 1.0:
-            seen += 1
-            big += (yh - yf) > 0.15
-    if lowest[0] < 0.25:
-        problems.append(f"camera {lowest[0]:.2f} m above the water at {lowest[1]:.2f} s")
-    if slowest[0] < MIN_SPEED:
-        problems.append(f"camera nearly still at {slowest[1]:.2f} s ({slowest[0]:.2f} m/s)")
-    notes.append(f"camera: at most {worst_rear:.0f} degrees off straight behind her (limit {REAR_LIMIT:g}); slowest "
-                 f"{slowest[0]:.2f} m/s at {slowest[1]:.2f} s; lowest {lowest[0]:.2f} m at {lowest[1]:.2f} s")
-    notes.append(f"Heavenly Mother: her head is in the picture for {100.0 * seen / NFRAMES:.0f} percent of the film "
-                 f"({seen / FPS:.1f} s), taller than 15 percent of the picture for {big / FPS:.1f} s")
-    # words through this camera: in the picture, facing us, large enough for a phone (helper WORDS' own check)
-    if PW is not None:
-        ws = PW.Words(word_specs(), **WORD_LOOK)
-        probs, wnotes = PW.check(ws, camera_state, quiet=True)
-        problems += ["words: " + s for s in probs]
-        notes += ["words: " + s for s in wnotes if "smallest" in s]
-        for w in ws:           # never over Heavenly Mother while it is read
-            for t in np.arange(w.t_read0, w.t_read1 + 1e-6, 0.25):
-                x0, x1, y0, y1 = PW.screen_box(w, camera_state(float(t)), float(t))[:4]
-                xh, yh, zh = project(camera_at(float(t)), mother_pos(float(t)) + [0.0, MOTHER_HEIGHT, 0.0])
-                if zh > 0 and x0 < xh < x1 and y0 < yh < y1:
-                    problems.append(f"{w.name}: over Heavenly Mother's head at {t:.2f} s")
-                    break
-    else:
-        notes.append("words: engine/p3d is not on the path, so the particle words' own check did not run")
-    used = set()
-    for p in PEOPLE:
-        used |= {m[1] for m in p["motion"]} | {g[2] for g in p["gesture"]}
-    notes.append("motions used beyond the brief: "
-                 + ", ".join(sorted(used - MOTIONS_PROMISED - MOTIONS_IN_BODY_DRAFT)))
-    if verbose:
-        print(f"THE VEIL: {TOTAL:g} s, {len(CAMERA_KEYS)} camera keys in {len(_RUNS)} runs, {len(PEOPLE)} people "
-              f"and Heavenly Mother, {len(WORD_PLACES)} expressions")
-        for i, (a, b) in enumerate(zip(S, S[1:] + (TOTAL,))):
-            print(f"\n {i + 1}  {a:5.2f} to {b:5.2f}  {SECTION_NAMES[i].upper()}")
-            for t, pos, tgt, fov, roll, note in camera_world_keys():
-                if a <= t < b or (i == 7 and t == TOTAL):
-                    print(f"    {t:5.2f}  at ({pos[0]:6.1f} {pos[1]:5.1f} {pos[2]:6.1f})  looks at "
-                          f"({tgt[0]:5.1f} {tgt[1]:4.1f} {tgt[2]:6.1f})  fov {fov:2.0f}  {note}")
-        print()
-        for s in notes:
-            print("note:", s)
-        for s in problems:
-            print("PROBLEM:", s)
-        print("ok" if not problems else f"{len(problems)} problems")
-    return problems
+        WORDS.check(CAMERA)
+    except Exception as e:          # the check only advises
+        print("words check failed:", e)
 
 
-if __name__ == "__main__":
-    sys.exit(1 if selfcheck() else 0)
+# ------------------------------------------------------------------------------------------------ the world
+LOOKS = dict(
+    veilnight=dict(base="night", sky_mid="#0a1546", sky_hor="#24357a", sun_az=180.0, sun_el=0.9,
+                   sun_color="#ffd9a0", sun_int=0.6, sun_size=0.7, sun_disc=5.0, sun_glow=0.9, rays=0.9, mist=0.25,
+                   haze_color="#22306e", mist_color="#26336e", milky=1.0, stars=1.0),
+    mist=dict(base="night", sky_mid="#11205a", sky_hor="#33488f", sun_az=180.0, sun_el=0.9, sun_color="#ffe0b0",
+              sun_int=0.55, sun_size=0.8, rays=0.5, mist=0.85, mist_height=1.6, mist_color="#33488f",
+              haze=0.8, haze_color="#2b3d84", stars=0.8, milky=0.5),
+    canopy=dict(base="night", sky_mid="#1a1850", sky_hor="#4a3270", sun_az=180.0, sun_el=1.2, sun_color="#ffc880",
+                sun_int=0.7, sun_size=0.8, rays=0.8, mist=0.35, mist_color="#3a2c6a", haze_color="#3a2c6a",
+                stars=0.9, milky=0.6),
+    high=dict(base="night", sky_top="#050a2e", sky_mid="#16307a", sky_hor="#6a5a9e", sun_az=180.0, sun_el=0.6,
+              sun_color="#ffd0a0", sun_int=0.7, sun_size=0.8, rays=0.5, mist=0.3, mist_color="#3a4890",
+              haze_color="#4a4a8e", stars=0.9, milky=1.0),
+    loom=dict(base="night", sky_top="#04082a", sky_mid="#1f3a8c", sky_hor="#9a6aa8", sun_az=180.0, sun_el=0.8,
+              sun_color="#ffd6a8", sun_int=0.7, sun_size=0.8, rays=0.6, mist=0.25, mist_color="#40509a",
+              haze_color="#6a5aa0", stars=0.8, milky=0.7),
+    hush=dict(base="night", sky_top="#081040", sky_mid="#2a3f8a", sky_hor="#c0809c", sun_az=180.0, sun_el=-0.4,
+              sun_color="#ffe2c0", sun_int=0.55, sun_size=0.9, rays=0.3, mist=0.3, mist_color="#6a5a90",
+              haze_color="#a07090", stars=0.55, milky=0.3, ripple=0.05),
+    veilsun=dict(base="sunrise", sky_top="#1c3f96", sky_mid="#7f8fd8", sky_hor="#f2a0b4", sun_az=180.0,
+                 sun_el=1.6, sun_color="#ffe6c0", sun_int=1.15, sun_size=1.0, sun_disc=7.0, rays=1.0, stars=0.15,
+                 milky=0.0, mist=0.3, mist_color="#c08a9a", haze_color="#d08a98", ripple=0.3),
+    veilday=dict(base="day", sun_az=180.0, sun_el=14.0, rays=0.25),
+)
+WORLD = WORDS.world(dict(
+    looks=LOOKS,
+    look=[(0.0, "veilnight"), (S[1], "mist", 0.0), (S[2], "canopy", 0.0), (S[3] + 0.8, "high", 1.6),
+          (S[4], "loom", 0.0), (S[5], "veilnight", 0.0), (S[6], "hush", 0.0), (BIG, "veilsun", 0.8),
+          (51.0, "golden", 2.5), (53.6, "veilday", 2.6)],
+    arch=dict(lit=[50.6 + 0.16 * k for k in range(9)], span=26.0, height=15.0, z=ARCH_Z,
+              line=Track([(0.0, 0.0), (50.4, 0.0), (52.0, 1.0)])),
+    exposure=Track([(0.0, 1.0), (LAST - 0.1, 1.0), (LAST + 0.15, 1.16), (LAST + 1.0, 1.0), (TOTAL, 1.0)]),
+    react=dict(beat=0.4, level=0.3),
+))
+
+P3D = dict(
+    camera=CAMERA,
+    world=WORLD,
+    setup=_setup,
+    bursts=[dict(t=S[1], strength=1.4, rise=0.06, fall=0.45, color="#ffe6b8"),
+            dict(t=S[2], strength=1.2, rise=0.06, fall=0.45, color="#ffd9a0"),
+            dict(t=S[4], strength=1.4, rise=0.06, fall=0.45, color="#ffe6b8"),
+            dict(t=S[5], strength=1.4, rise=0.06, fall=0.45, color="#fff0d0"),
+            dict(t=BIG, strength=1.2, rise=0.1, fall=0.9, color="#fff0d8", radius=0.35),
+            dict(t=LAST, strength=0.5, rise=0.08, fall=0.8, color="#fff6e8", radius=0.3)],
+)
