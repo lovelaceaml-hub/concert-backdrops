@@ -475,6 +475,7 @@ LEAF_FS = """
 in float vA; in float vK; in float vRot; in float vFlip; in float vGlint; out vec4 o;
 uniform vec3 uColA, uColB;
 uniform int uMask;   // 1: the tint pass (premultiplied leaf colour and coverage), 0: the light
+uniform float uTintK;   // how strongly the tint pass paints the leaf: the light then keeps mostly the rim and glint
 void main(){
   vec2 p = gl_PointCoord*2.0-1.0;
   float c = cos(vRot), s = sin(vRot);
@@ -489,12 +490,12 @@ void main(){
   vec3 col = mix(uColA, uColB, vK*0.6 + 0.4*(yy*0.5+0.5));
   float edge = body*(1.0-smoothstep(w-0.12, w-0.30, abs(p.x)))*0.6;   // a brighter rim of light
   if(uMask==1){
-    float a = body*clamp(vA*1.1, 0.0, 1.0);
+    float a = body*clamp(vA*1.6, 0.0, 1.0);
     vec3 tc = col*(0.80+0.25*(yy*0.5+0.5)) + vec3(0.15,0.18,0.06)*vein;
     o = vec4(tc*a, a);
     return;
   }
-  vec3 cc = col*(body*1.05 + edge*0.80) + vec3(1.0,0.98,0.85)*(vein*body + stem)*0.45 + vec3(1.0,0.96,0.80)*vGlint*body*0.55;
+  vec3 cc = col*(body*1.05*(1.0-0.85*uTintK) + edge*0.80*(1.0-0.5*uTintK)) + vec3(1.0,0.98,0.85)*(vein*body + stem)*0.45 + vec3(1.0,0.96,0.80)*vGlint*body*0.55;
   o = vec4(cc*vA, 1.0);
 }
 """

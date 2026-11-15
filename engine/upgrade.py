@@ -515,7 +515,8 @@ class Upgrade:
                      uSpeed=float(val("LEAVES_SPEED", t, 1.0)), uWind=float(val("LEAVES_WIND", t, 0.4)),
                      uColA=S.lin(lc[0]), uColB=S.lin(lc[1]),
                      uCalm=float(val("BOTTOM_CALM", t, 0.0) or 0.0), uCalmY=0.335)
-                setu(self.p_leaf, uMask=0)
+                tk = float(val("LEAVES_TINT", t, 0.85))
+                setu(self.p_leaf, uMask=0, uTintK=tk)
                 self.v_leaf.render(moderngl.POINTS)
                 # tint pass into its own buffer, then back to the light buffer
                 self.f_leaf.use()
@@ -525,7 +526,7 @@ class Upgrade:
                 self.v_leaf.render(moderngl.POINTS)
                 self.ctx.blend_func = (moderngl.ONE, moderngl.ONE)
                 self.R.f_L.use()
-                self.leaf_k = float(val("LEAVES_TINT", t, 0.85))
+                self.leaf_k = tk
             else:
                 self.leaf_k = 0.0
         if self.has_beam:
