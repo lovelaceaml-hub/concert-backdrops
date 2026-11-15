@@ -2,36 +2,50 @@
 
 LOGLINE
 Every word of Mother's love lifts someone. One unbroken rising spiral carries a traveller from a dark lake up
-through mist, past hundreds of pillars of light and into a closing cloud, to sunrise above the clouds. On every
-level someone is met; a word of love is spoken, the flakes of light that leave the speaker become the words,
-and the words carry everyone up to the next level. In the cloud a hand reaches down to hers; above the clouds
-Heavenly Mother stands (from behind, veiled) against the rising sun under the arch of nine lights.
+through mist, past hundreds of pillars of light and into a cloud, to sunrise above the clouds. On every level
+someone is met and a word of love is ACTED, not only read; then everyone there rises as flakes of light, and
+the words rise with them. In the cloud, in the breath of the medley, a hand reaches down to hers while the
+date is written in light above them; they touch on the biggest hit and break through into the sunrise, where
+Heavenly Mother (from behind, veiled) holds her hand under the arch of nine lights.
 
 WHAT MAKES IT THIS FILM AND NO OTHER
- - The only vertical film. The camera never cuts and its height never falls: it climbs and turns the whole
-   way (about 130 m and one and a half turns). Height is warmth: cold blue at the lake, violet under the
-   cloud, lilac inside it, rose and gold above it, the pale campaign day on the card.
- - Every launch upward lands on a hit of the medley (6.84, 13.30, 19.85, 26.79, 33.36, 42.51).
- - The look of the traveller is how loved she is: a dark body with a cold rim at the lake, more light at
-   every level, radiant at the top.
+ - The only vertical film: the camera never cuts and its height never falls (about 130 m, a turn and a half).
+   Every launch to the next level lands on a hit of the medley; each level is seen dissolving before we rise.
+ - Height is warmth: cold blue at the lake, violet under the cloud, deep violet inside it, a deep gold and rose
+   sunrise above it, the campaign day on the card.
 
-THE LEVELS (metres above the lake; the shaft of light stands on the y axis)
-   0  the lake: the traveller from behind in a cold shaft; a woman of coral dots blows the GREETING to her
-  12  ring 1 in the mist: a man bows (APOLOGY); she opens her arms (INCLUSIVENESS); both rise
-  30  ring 2: the wide reveal of a lake full of pillars; an old man kneels, her hand on his shoulder (GRATITUDE)
-  50  ring 3: a man in a hurry; she offers him the way up first (CONCESSION); he rises first, she follows
-  68  ring 4: a young man sits; she kneels and listens (RESPECT, stars of his thoughts)
-  86  ring 5: a child under a darkening sky; she kneels and prays (ENCOURAGEMENT comes down a shaft)
- 105  inside the cloud, the breath of the medley: two hands, hers blue from below, Mother's gold from above
-      (CONSIDERATION); they touch on the biggest hit (42.51) and the flare carries us through the cloud top
- 122  above the clouds at sunrise: Mother from behind, veiled, her head over the sun, rays fanning round it;
-      the COMPLIMENT is burned into the sky by the rays and streams into the last light of the arch
-      the card: the camera pulls back over a white sea of cloud; fountains of gold burst from it; the end card
-      under the arch of nine lights in the campaign day (readable from 53.6 s to the end)
+THE ACTING PLAN (who acts each expression, in which style and framing)
+  1 GREETING, the lake (y 0). She stands alone in a cold shaft, gold glitter dissolving (p08, ref 13), seen from
+    the water behind her under the opening title. A woman of coral dots (ref 14) lays a hand on her shoulder; she
+    lifts her head and lights up. Half figures, in profile.
+  2 APOLOGY, ring 1 in the mist (12 m). A man drawn as a cold constellation (p01) bows low with open hands.
+  3 INCLUSIVENESS, ring 1. She walks to him and they embrace; his wireframe fills with warm light. Both rise.
+  4 GRATITUDE, ring 2 (30 m), after a wide view of a lake full of pillars. An old man kneels, spent, shedding ash
+    and flakes (p03); she bows to him with a hand on her heart; he lifts his head and rises to his feet.
+  5 CONCESSION, ring 3 (50 m). A man who sparkles like frost (p09) stands across the shaft from her; she holds out
+    an open hand: after you. He bows his thanks, steps into the light and rises first; she follows.
+  6 RESPECT, ring 4 (68 m), extreme close-up: two faces in profile outlined in sparks (p06). She leans in,
+    listening; he lifts his head and nods as he begins to speak.
+  7 ENCOURAGEMENT, ring 5 (86 m). She kneels with her hands joined in a shaft of light, praying for a small child
+    sparkling in the mist (p09), who looks up as the light comes down.
+     (the breath, 40.21 to 42.51) In the cloud: her hand from below, cold blue, and Mother's hand from above, gold
+     (refs 04, 14), reach for each other; "December 6" is written in light above them and bursts as they touch.
+  8 CONSIDERATION, above the clouds (122 m). Mother, from behind and veiled, holds the traveller's hand: she has
+    pulled her up through the cloud. Mother's head covers the rising sun; rays fan round it.
+  9 COMPLIMENT. Mother lets go and opens her arms; the traveller turns round in joy; people formed out of
+    fountains of gold (constellations, glitter, dots) clap and raise their hands, and a crowd of light wakes
+    across the sea of cloud. Everyone rises into the light; the words stream into the last light of the arch.
+     The card: the end card under the arch of nine lights, over the sea of cloud and the crowd.
+  Framings: worm's eye, half figures, full figures, a wide view of hundreds of pillars, an extreme close-up of
+  two faces, two hands in macro, the two from behind against the sun, many people far away.
 
-House rules kept: no lyrics, no facial features (everyone from behind or in profile, checked below), everyone
-clothed, Heavenly Mother only as a hand and from behind, nothing dark behind any text, never a black frame,
-all nine expressions with their exact wording from p3d.words.EXPRESSIONS (named, never retyped).
+TITLES (UPDATE 7): the opening lockup over the first image (0 to 3.8 s, on the sky above her shaft), a small
+signature in three calm launches between levels, "December 6" in light in the breath. The end card as it was.
+
+House rules kept: no lyrics, artistic faces only (profiles outlined in sparks), everyone clothed, Heavenly
+Mother only as a hand and from behind, nothing dark behind any text, never a black frame, only one expression
+read at a time, no words in the water, all nine expressions with their exact wording from
+p3d.words.EXPRESSIONS (named, never retyped).
 """
 import numpy as np
 
@@ -78,11 +92,11 @@ TEXT_SHADOW = 0.0          # nothing dark behind any text
 S = [0.25, 6.84, 13.30, 19.85, 26.79, 33.36, 40.21, 49.47]
 BIG_HIT = 42.51            # the biggest jump of the mix: the hands touch, through the cloud top
 FINAL_HIT = 58.11
-TITLE_HIT = 52.26          # the title is whole on a bar start of the last song
+TITLE_HIT = 53.8           # the title is whole just before the loudest passage (54.3 to 55.0)
 FORM_DUR = 2.6
 T_FORM = TITLE_HIT - FORM_DUR
 TAG_T0, TAG_T1 = TITLE_HIT + 0.15, TITLE_HIT + 1.35   # the end card lines: readable from 53.6 s to 60 s
-NINTH = 49.4               # the arch is complete
+NINTH = 51.2               # the arch is complete
 
 # ---------------------------------------------------------------------------------------------------------
 # Geometry
@@ -146,7 +160,7 @@ def curve(keys):
 # height never falls (monotone keys).
 # ---------------------------------------------------------------------------------------------------------
 _HM = HANDS_AT
-_MEET_LOOK = _HM + np.array([0.0, 0.10, 0.0])
+_MEET_LOOK = _HM + np.array([0.0, 0.17, 0.0])
 
 
 def _far(az, dist, h, look, reach=8.0):
@@ -203,12 +217,12 @@ CAM_KEYS = [
     # launch 7 (42.51, the biggest hit): through the cloud top into sunrise, behind Mother
     (42.70, 424.0, 1.6, _HM[1] + 1.2, tuple(P(424.0, 1.6, _HM[1] + 6.2) + 8.0 * P(244.0, 1.0)), 52, 0.0),
     (43.20, 455.0, 3.0, 114.0, tuple(P(455.0, 3.0, 117.5) + 10.0 * P(282.0, 1.0)), 58, 0.0),
-    (43.90, 489.0, 3.7, TOP + 1.45, tuple(P(SUN_AZ, 30.0, TOP + 2.7)), 50, 0.02),
-    (45.60, 498.0, 4.3, TOP + 1.60, tuple(P(SUN_AZ, 30.0, TOP + 3.5)), 48, 0.02),
-    (48.00, 503.0, 7.0, TOP + 2.3, tuple(P(SUN_AZ, 26.0, TOP + 4.4)), 50, 0.0),
+    (43.90, 489.0, 3.7, TOP + 1.45, tuple(P(SUN_AZ, 30.0, TOP + 3.2)), 50, 0.02),
+    (45.60, 498.0, 4.3, TOP + 1.60, tuple(P(SUN_AZ, 30.0, TOP + 4.1)), 48, 0.02),
+    (48.60, 503.0, 7.0, TOP + 2.3, tuple(P(SUN_AZ, 26.0, TOP + 4.4)), 50, 0.0),
     # the card: pull back and rise over the sea of cloud to the arch of nine lights
-    (49.47, 506.0, 14.0, TOP + 4.5, tuple(P(SUN_AZ, 45.0, TOP + 14.0)), 54, 0.0),
-    (52.26, 508.0, 26.0, TOP + 8.5, tuple(P(SUN_AZ, 60.0, TOP + 23.0)), 58, 0.0),
+    (50.60, 506.0, 13.0, TOP + 4.3, tuple(P(SUN_AZ, 45.0, TOP + 13.0)), 54, 0.0),
+    (53.80, 509.0, 25.0, TOP + 8.2, tuple(P(SUN_AZ, 60.0, TOP + 22.0)), 58, 0.0),
     (60.00, 513.0, 30.0, TOP + 10.0, tuple(P(SUN_AZ, 60.0, TOP + 18.0)), 60, 0.0),
 ]
 _ck = [(k[0], (k[1], k[2], k[3])) for k in CAM_KEYS]
@@ -263,7 +277,7 @@ def _form(t, dur=1.1):
     return dict(kind="form", t=float(t), dur=dur, travel=0.8)
 
 
-_L0, _R0 = pair(0, gap=0.80)        # close enough for a hand on the shoulder
+_L0, _R0 = pair(0, gap=0.64)        # close enough for a hand on the shoulder
 _L2, _R2 = pair(2, gap=0.95)
 _L3, _R3 = pair(3, gap=1.8)         # she has stepped aside: the way up (the shaft) is open between them
 _L4, _R4 = pair(4, gap=0.56)        # two faces close together
@@ -374,6 +388,33 @@ def _embrace(t, at, facing, a, b, gap=0.34, approach=0.0, speed=0.9, ease=1.1):
     return refs["a"], refs["b"]
 
 
+def _hands_held(a, b, t0, t1, ease=0.8, grip=1.0):
+    """a and b (dicts of Body keys) stand side by side and hold hands (their inner hands) from t0 to t1. As
+    p3d.pairs.hands, but safe while the bodies are built (see _embrace)."""
+    from p3d import actor as _act
+    pa = _act.Actor(a.get("shape", "woman"), a.get("height"), at=a["at"], facing=a.get("facing", 0.0))
+    pb = _act.Actor(b.get("shape", "woman"), b.get("height"), at=b["at"], facing=b.get("facing", 0.0))
+    ga, gb = pb.where(t0, "pelvis"), pa.where(t0, "pelvis")
+    sa = "L" if np.linalg.norm(pa.where(t0, "shoulder.L") - ga) < np.linalg.norm(pa.where(t0, "shoulder.R") - ga) else "R"
+    sb = "L" if np.linalg.norm(pb.where(t0, "shoulder.L") - gb) < np.linalg.norm(pb.where(t0, "shoulder.R") - gb) else "R"
+    refs = {}
+    guess = 0.5 * (pa.where(t0, "palm." + sa) + pb.where(t0, "palm." + sb))
+
+    def grip_point(tt):
+        if "a" not in refs or "b" not in refs:
+            return guess
+        return 0.5 * (refs["a"].where(tt, "palm." + sa, raw=True) + refs["b"].where(tt, "palm." + sb, raw=True))
+
+    ka, kb = dict(a), dict(b)
+    ka["gesture"] = list(ka.get("gesture", ())) + [(t0, t1, "handshake", dict(side=sa, to=grip_point, grip=grip,
+                                                                               ease=ease, look=False, lean=0.0))]
+    kb["gesture"] = list(kb.get("gesture", ())) + [(t0, t1, "handshake", dict(side=sb, to=grip_point, grip=grip,
+                                                                               ease=ease, look=False, lean=0.0))]
+    refs["a"] = Body(**ka)
+    refs["b"] = Body(**kb)
+    return refs["a"], refs["b"]
+
+
 def _cast():
     """Everyone in the film, in order of appearance (built once). Every one of them ACTS the expression that is
     read while they are on screen; the style of the people changes from level to level."""
@@ -393,7 +434,8 @@ def _cast():
     pp["greeter"] = Body("woman", at=_R0[0], facing=_R0[1], garment="dress", look=dict(name="dots", bright=0.45),
                          color="#ff977c", color2="#ffd9a0", points=45000, seed=62.0,
                          gesture=[(2.0, 6.2, "hand_on_shoulder",
-                                   dict(side=sG, to=lambda t: PEOPLE["traveller 0"].where(t, "shoulder." + sT, raw=True)))],
+                                   dict(side=sG, lean=0.25,
+                                        to=lambda t: PEOPLE["traveller 0"].where(t, "shoulder." + sT, raw=True)))],
                          effects=[_form(1.3, 0.9), _dissolve(S[1] + 0.25)], show=(1.25, 9.6), fade=0.15)
     # 2 APOLOGY and 3 INCLUSIVENESS, ring 1 in the mist. A man drawn as a cold constellation (p01) bows low with
     # open hands; she walks to him and they embrace; his wireframe fills with warm light.
@@ -416,7 +458,7 @@ def _cast():
                        motion=[(13.0, "kneel", dict(one=True, dur=0.01)), (18.2, "rise", dict(dur=1.5, one=True))],
                        gesture=[(13.0, 18.2, "bow", dict(amount=20)), (18.4, 22.0, "look_up", dict(amount=8))],
                        effects=[_form(15.4, 1.1),
-                                dict(kind="shed", t=15.4, n=5000, life=2.6, dir=(0.0, 1.0, 0.0), speed=0.25, rise=0.45,
+                                dict(kind="shed", t=15.4, n=4000, life=1.6, dir=(0.0, 1.0, 0.0), speed=0.2, rise=0.3,
                                      turb=0.35, spread=0.15, color="#ffc890"),
                                 _dissolve(20.0)], show=(15.3, 22.6), fade=0.15)
     pp["traveller 2"] = Body("woman", at=_L2[0], facing=_L2[1], garment="coat", look="glitter", color="#f2d3a0",
@@ -463,22 +505,26 @@ def _cast():
                              effects=[_form(34.1, 1.1), _dissolve(38.6, dur=1.4)], show=(34.0, 40.8), fade=0.15)
     # 8 CONSIDERATION, in the cloud: her hand from below, cold blue; Mother's hand from above, gold (refs 04, 14).
     # The fingers open as they reach and close round each other at the touch.
-    pp["her hand"] = _hand(0, HANDS_AT, BIG_HIT, _HAND_AXIS, 26.0, 2.9, "#4f8fff", (39.0, 43.4), bright=1.4,
+    pp["her hand"] = _hand(0, HANDS_AT, BIG_HIT, _HAND_AXIS, 12.0, 2.9, "#4f8fff", (39.0, 43.4), bright=1.4,
                            color2="#9cc4ff", pose=[(39.0, "relaxed"), (40.6, "open"), (42.1, "spread"),
                                                    (BIG_HIT + 0.05, "hold")])
-    pp["Mother's hand"] = _hand(1, HANDS_AT, BIG_HIT, _HAND_AXIS, 26.0, 2.9, "#ffb040", (39.3, 43.4), bright=1.5,
+    pp["Mother's hand"] = _hand(1, HANDS_AT, BIG_HIT, _HAND_AXIS, 12.0, 2.9, "#ffb040", (39.3, 43.4), bright=1.5,
                                 color2="#ffe0a0", pose=[(39.3, "open"), (41.6, "offer"), (BIG_HIT + 0.05, "hold")])
-    # 9 COMPLIMENT, above the clouds. Mother from behind, veiled, opens her arms; the traveller turns round in
-    # joy; people formed out of the fountains (constellations, glitter, dots) clap and raise their hands.
-    pp["Mother"] = Body("woman", at=MOTHER_AT, facing=SUN_AZ, garment="robe", veil=dict(length=1.3),
-                        look="glitter", color="#ffd890", color2="#fff4e0", points=80000, seed=90.0, bright=1.25,
-                        gesture=[(45.0, 70.0, "open_arms")], effects=[_form(42.6, 1.3), _dissolve(49.7, dur=1.6)],
-                        show=(42.5, 53.0), fade=0.2)
-    pp["traveller 7"] = Body("woman", at=-0.38 * _RT + [0.0, TOP, 0.0], facing=SUN_AZ, garment="coat",
-                             look="glitter", color="#ffe6c0", color2="#ffffff", points=60000, seed=91.0,
-                             bright=1.15, motion=[(44.6, "twirl"), (46.7, "stand", dict(blend=0.6))],
-                             gesture=[(46.9, 70.0, "raise")],
-                             effects=[_form(42.7, 1.3), _dissolve(49.55, dur=1.6)], show=(42.6, 53.0), fade=0.2)
+    # 8 CONSIDERATION (above the clouds) and 9 COMPLIMENT. Mother from behind, veiled, holds the traveller's hand:
+    # she has pulled her up through the cloud. Then she lets go and opens her arms; the traveller turns round in joy;
+    # people formed out of the fountains (constellations, glitter, dots) clap and raise their hands.
+    mo, tr = _hands_held(
+        dict(shape="woman", at=MOTHER_AT, facing=SUN_AZ, garment="robe", veil=dict(length=1.3), look="glitter",
+             color="#ffd890", color2="#fff4e0", points=80000, seed=90.0, bright=1.25,
+             gesture=[(47.6, 70.0, "open_arms")], effects=[_form(42.6, 1.3), _dissolve(50.7, dur=1.6)],
+             show=(42.5, 54.0), fade=0.2),
+        dict(shape="woman", at=-0.38 * _RT + [0.0, TOP, 0.0], facing=SUN_AZ, garment="coat", look="glitter",
+             color="#ffe6c0", color2="#ffffff", points=60000, seed=91.0, bright=1.15,
+             motion=[(47.5, "twirl"), (49.5, "stand", dict(blend=0.6))],
+             gesture=[(43.9, 47.4, "look_up", dict(amount=8)), (49.6, 70.0, "raise")],
+             effects=[_form(42.7, 1.3), _dissolve(50.6, dur=1.6)], show=(42.6, 54.0), fade=0.2),
+        42.6, 47.35)
+    pp["Mother"], pp["traveller 7"] = mo, tr
     crowd = [("woman", -3.4, 3.0, dict(name="plexus"), "#bcd4ff", "clap"),
              ("man", 3.6, 2.4, "glitter", "#ffd27a", "raise"),
              ("child", -1.9, 4.6, dict(name="dots", bright=0.5), "#ff977c", "clap"),
@@ -487,12 +533,12 @@ def _cast():
     fwd = P(SUN_AZ, 1.0)
     for i, (shape, side, ahead, look, col, act) in enumerate(crowd):
         at = side * _RT + ahead * fwd + [0.0, TOP, 0.0]
-        g = (45.6 + 0.2 * i, 70.0, "clap", dict(period=0.48, height=0.6)) if act == "clap" else \
-            (45.6 + 0.2 * i, 70.0, "raise")
+        g = (47.6 + 0.2 * i, 70.0, "clap", dict(period=0.48, height=0.6)) if act == "clap" else \
+            (47.6 + 0.2 * i, 70.0, "raise")
         pp["crowd %d" % i] = Body(shape, at=at, facing=SUN_AZ + (8.0 if side < 0 else -8.0), look=look, color=col,
                                   color2="#ffffff", points=24000, seed=100.0 + i, gesture=[g],
-                                  effects=[_form(44.9 + 0.25 * i, 1.0), _dissolve(49.4 + 0.1 * i, dur=1.5)],
-                                  show=(44.8 + 0.25 * i, 53.0), fade=0.2)
+                                  effects=[_form(46.9 + 0.25 * i, 1.0), _dissolve(50.4 + 0.1 * i, dur=1.5)],
+                                  show=(46.8 + 0.25 * i, 54.0), fade=0.2)
     return pp
 
 
@@ -531,8 +577,8 @@ def _place(name, part):
 
 
 _SPECS = [
-    _w("Greeting", (0.0, 2.50, 0.0), 92, 2.35, 3.2, 5.85, 6.75, arrive="palm", source=_place("greeter", "palm.R"),
-       **_UP),
+    _w("Greeting", (0.0, 2.50, 0.0), 92, 3.85, 4.35, 6.85, 7.45, arrive="palm",
+       source=_place("greeter", "palm." + near_side(_R0[1], C[0] - 10.0)), **_UP),
     _w("Apology", (0.0, Y[1] + 2.30, 0.0), 84, 8.1, 8.8, 11.3, 11.95, arrive="palm",
        source=_place("man 1", "head"), **_UP),
     _w("Inclusiveness", (0.0, Y[1] + 2.30, 0.0), 88, 11.95, 12.6, 15.1, 15.85, arrive="palm",
@@ -544,9 +590,9 @@ _SPECS = [
     _w("Respect", (0.0, Y[4] + 1.93, 0.0), 86, 28.5, 29.2, 31.85, 32.6, arrive="palm",
        source=_place("traveller 4", "mouth"), **_UP),
     _w("Encouragement", (0.0, Y[5] + 2.20, 0.0), 84, 34.75, 35.6, 38.25, 39.0, arrive="shaft", **_UP),
-    _w("Consideration", HANDS_AT + [0.0, 0.175, 0.0] - 0.09 * right_of(C[6] - 12.0), 84, 39.25, 39.92, 42.45,
-       43.1, arrive="palm", source=_place("Mother's hand", "fingertips.L"), **_UP),
-    _w("Compliment", P(SUN_AZ, 15.0, TOP + 4.6), 96, 44.1, 44.95, 47.95, NINTH, arrive="rays",
+    _w("Consideration", P(SUN_AZ, 15.0, TOP + 5.9), 96, 43.75, 44.35, 46.85, 47.45, arrive="palm",
+       source=_place("Mother", "palm.L"), **_UP),
+    _w("Compliment", P(SUN_AZ, 15.0, TOP + 5.6), 96, 47.45, 48.0, 50.5, NINTH, arrive="rays",
        source=tuple(SUN_LIGHT), leave="arch", to=tuple(LIGHTS[8])),
 ]
 
@@ -754,7 +800,9 @@ class CloudTop:
             return []
         k = float(_ss(49.0, 53.0, t))
         col = self.c_dawn * (1 - k) + self.c_day * k
-        return [dict(pos=self.p, size=self.sz, color=col, alpha=0.04 * g, kind="soft", seed=self.sd, dof=0.6)]
+        near = np.linalg.norm(self.p - cam_pos(t), axis=1)
+        al = (0.04 * g * np.clip((near - 22.0) / 18.0, 0.0, 1.0)).astype(np.float32)
+        return [dict(pos=self.p, size=self.sz, color=col, alpha=al, kind="soft", seed=self.sd, dof=0.6)]
 
 
 class Fountains:
@@ -839,7 +887,7 @@ LOOKS = dict(
 WORLD = WORDS.world(dict(
     looks=LOOKS,
     look=[(0.0, "lake"), (7.6, "mist", 1.6), (13.6, "pillars", 1.4), (20.6, "gate", 2.0), (28.0, "violet", 3.0),
-          (39.3, "cloud", 1.2), (41.4, "cloudlit", 1.6), (BIG_HIT + 0.2, "above", 0.6), (50.6, "card", 3.6)],
+          (39.3, "cloud", 1.2), (41.4, "cloudlit", 1.6), (BIG_HIT + 0.2, "above", 0.6), (52.0, "card", 3.0)],
     arch=dict(lit=_LIT, colors=[e["color"] for e in PW.EXPRESSIONS], line=Track([(0, 0.35), (NINTH, 0.35),
                                                                                   (NINTH + 1.5, 1.0), (60, 1.0)]),
               **ARCH_SET),
@@ -864,6 +912,15 @@ def _setup(scene):
     scene.add("pillars", PW.KeepClear(Pillars(), WORDS, floor=0.15))
     scene.add("cloud top", CloudTop(), reflect=False)
     scene.add("fountains", PW.KeepClear(Fountains(), WORDS, floor=0.0), reflect=False)
+    from p3d.crowd import Crowd
+    rng = np.random.default_rng(686)
+    k = 150
+    az = SUN_AZ + rng.uniform(-62.0, 62.0, k)
+    dist = 7.0 + 60.0 * rng.random(k) ** 0.8
+    places = np.stack([np.sin(np.radians(az)) * dist, np.full(k, TOP), np.cos(np.radians(az)) * dist], axis=1)
+    scene.add("crowd far", Crowd(places=places, facing=SUN_AZ, kinds=("raise", "clap", "open", "stand"),
+                                 start=dict(t=47.4, center=(0.0, 0.0), speed=18.0), points=2600, color="#ffd890",
+                                 color2="#fff4e0", bright=1.1, seed=6.0), reflect=False)
     for name, body in PEOPLE.items():
         body.add(scene, name, reflect=(Y_OF.get(name, 1.0) < 1.0))
     scene.add("flare", FLARE, reflect=False)
@@ -895,8 +952,17 @@ TAGLINE = dict(text="Sunday, December 6 · 4:30 PM\nWorld Mission Society Church
 # the end card forms (the end card carries the same lines)
 CREDIT = dict(song="The Words of Mother’s Love",
               concert="Healing Concert · Sunday, December 6 · 4:30 PM",
-              t_in=-1.0, t_full=0.0, t_move=1.6, t_rest=2.8, scale=0.56, alpha_rest=0.92,
-              margin_x=0.035, margin_top=0.05, t_out=T_FORM, out_dur=1.0)
+              t_in=1e9, t_full=1e9 + 1.0, t_move=1e9 + 2.0, t_rest=1e9 + 3.0, scale=0.56, alpha_rest=0.92,
+              margin_x=0.035, margin_top=0.05, t_out=T_FORM, out_dur=1.0)   # off: UPDATE 7 replaced the badge
+# the title and the date, designed (UPDATE 7): the opening lockup over the first image (the sky above the
+# traveller in her shaft is kept empty for it), the signature in calm stretches only (the launches between two
+# levels, top right on open sky), and "December 6" written in light above the two reaching hands in the breath,
+# bursting as they touch on the biggest hit
+TITLES = dict(
+    opening=dict(t_end=3.8, y=0.20, palette="night"),
+    signature=dict(windows=[(15.95, 16.75, "tr", "night"), (25.8, 28.3, "tr", "night"), (32.75, 34.6, "tr", "night")]),
+    date_light=dict(t_form=40.21, t_burst=BIG_HIT, y=0.30, palette="night"),
+)
 _CB = (0.1323, 0.8693, 0.4972, 0.6861)          # the badge's box at full size (text.render_credit)
 BADGE = (CREDIT["margin_x"], CREDIT["margin_x"] + CREDIT["scale"] * (_CB[1] - _CB[0]) + 40.0 / 1920.0, 0.0,
          CREDIT["margin_top"] + CREDIT["scale"] * (_CB[3] - _CB[2]) + 40.0 / 1080.0)   # x0, x1, y0, y1 from the TOP,
