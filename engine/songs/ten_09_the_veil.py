@@ -187,55 +187,55 @@ def _mrel(t, d):
 
 
 _K1 = [  # 1 THE CAST
-    (0.00, _mrel(0.00, (0.40, 1.50, 2.05)), _mrel(0.00, (0.0, 1.66, -6.0))),
-    (0.30, _mrel(0.30, (0.38, 1.52, 2.10)), _mrel(0.30, (0.0, 1.62, -6.0))),
+    (0.00, _mrel(0.00, (0.0, 1.22, 2.00)), _mrel(0.00, (0.0, 1.90, -6.0))),
+    (0.30, _mrel(0.30, (-0.05, 1.24, 2.06)), _mrel(0.30, (0.0, 1.88, -6.0))),
     (1.30, _mrel(1.30, (-0.9, 1.45, 10.0)), _mrel(1.30, (0.0, 1.25, 0.0))),
     (2.45, _mrel(2.45, (-3.6, 7.8, 33.0)), _mrel(2.45, (0.0, 0.6, -3.0))),
     (3.35, W3(1.25, 1.75, ZG + 7.3), W3(0.0, 2.05, ZG - 2.0)),
-    (6.20, W3(0.55, 1.70, ZG + 5.7), W3(0.0, 2.05, ZG - 2.0)),
-    (6.84, W3(0.15, 1.95, ZG + 2.4), W3(0.0, 2.25, ZG - 4.0)),
+    (6.20, W3(0.80, 1.72, ZG + 6.5), W3(0.0, 2.05, ZG - 2.0)),
+    (6.84, W3(0.50, 1.85, ZG + 4.9), W3(0.0, 2.20, ZG - 3.0)),
 ]
 _K2 = [  # 2 THE ROAD
     (6.84, _mrel(6.84, (2.3, 0.55, 46.0)), _mrel(6.84, (0.0, 1.0, 0.0))),
     (7.56, _mrel(7.56, (-1.5, 0.70, 26.0)), _mrel(7.56, (0.0, 1.2, 0.0))),
-    (8.30, W3(1.55, 1.40, ZH + 6.6), W3(0.0, 1.60, ZH - 1.5)),
-    (11.30, W3(0.75, 1.32, ZH + 5.3), W3(0.0, 1.60, ZH - 1.5)),
-    (12.30, W3(0.0, 1.00, ZH + 1.2), _mrel(12.3, (0.0, 1.2, 0.0))),
-    (13.30, _mrel(13.3, (0.0, 1.10, 5.5)), _mrel(13.3, (0.0, 1.3, 0.0))),
+    (8.30, W3(1.30, 1.38, ZH + 5.2), W3(0.0, 1.55, ZH - 1.5)),
+    (11.30, W3(0.70, 1.32, ZH + 4.4), W3(0.0, 1.55, ZH - 1.5)),
+    (12.30, W3(0.3, 3.40, ZH + 2.6), _mrel(12.3, (0.0, 1.6, 0.0))),
+    (13.30, _mrel(13.3, (0.0, 2.60, 6.5)), _mrel(13.3, (0.0, 1.5, 0.0))),
 ]
 _K3 = [  # 3 THE CANOPY
-    (13.30, W3(-2.2, 0.95, ZC + 6.2), W3(0.3, 1.70, ZC - 3.0)),
-    (16.90, W3(1.3, 1.10, ZC + 4.5), W3(0.3, 1.75, ZC - 3.0)),
-    (17.70, W3(1.05, 1.25, ZC + 4.0), W3(0.15, 1.55, ZC - 2.0)),
+    (13.30, W3(-1.9, 0.95, ZC + 5.0), W3(0.3, 1.70, ZC - 3.0)),
+    (16.90, W3(1.2, 1.05, ZC + 3.9), W3(0.3, 1.70, ZC - 3.0)),
+    (17.70, W3(0.95, 1.20, ZC + 3.5), W3(0.15, 1.50, ZC - 2.0)),
     (19.50, W3(0.3, 1.75, ZC + 5.0), W3(0.2, 2.10, ZC - 3.0)),
     (19.85, W3(0.1, 2.30, ZC + 5.2), W3(0.0, 2.80, ZC - 6.0)),
 ]
 _K4 = [  # 4 THE RIVER (no cut: we burst up through the roof)
     (19.85, W3(0.1, 2.30, ZC + 5.2), W3(0.0, 2.80, ZC - 6.0)),
-    (21.10, _mrel(21.1, (-11.0, 30.0, 55.0)), _mrel(21.1, (0.0, 0.0, -12.0))),
-    (22.45, W3(1.45, 1.80, ZN + 7.0), W3(0.0, 2.00, ZN - 3.0)),
-    (25.60, W3(0.50, 1.70, ZN + 5.6), W3(0.0, 2.00, ZN - 3.0)),
+    (21.10, _mrel(21.1, (-4.5, 12.5, 27.0)), _mrel(21.1, (0.0, 0.0, -8.0))),
+    (22.45, W3(1.30, 1.70, ZN + 6.2), W3(0.0, 1.95, ZN - 3.0)),
+    (25.60, W3(0.50, 1.65, ZN + 5.2), W3(0.0, 1.95, ZN - 3.0)),
     (26.79, W3(0.15, 1.45, ZN + 1.8), W3(0.0, 1.60, ZN - 6.0)),
 ]
 _K5 = [  # 5 THE LOOM
     (26.79, _mrel(26.79, (0.0, 2.20, 40.0)), _mrel(26.79, (0.0, 1.8, 0.0))),
     (28.30, W3(0.3, 2.30, ZL + 13.0), W3(0.0, 2.00, ZL - 4.0)),
-    (29.35, W3(0.0, 1.75, ZL + 6.1), W3(0.0, 1.95, ZL - 2.0)),
-    (32.30, W3(-0.45, 1.65, ZL + 5.0), W3(0.0, 1.95, ZL - 2.0)),
+    (29.35, W3(0.0, 1.70, ZL + 5.4), W3(0.0, 1.90, ZL - 2.0)),
+    (32.30, W3(-0.45, 1.62, ZL + 4.6), W3(0.0, 1.90, ZL - 2.0)),
     (33.36, W3(0.25, 1.45, ZL + 2.5), W3(0.0, 1.70, ZL - 4.0)),
 ]
 _K6 = [  # 6 THE PROCESSION, then the rush along the one thread to her hand
     (33.36, W3(6.0, 3.6, ZP + 13.0), W3(0.0, 1.2, ZP - 4.0)),
-    (35.00, W3(1.9, 1.70, ZP + 6.6), W3(0.0, 2.0, ZP - 2.0)),
-    (38.10, W3(0.9, 1.60, ZP + 5.3), W3(0.0, 2.0, ZP - 2.0)),
-    (39.20, W3(-0.6, 0.75, ZP - 2.0), _mrel(39.2, (-0.3, 0.85, 0.0))),
-    (40.21, _mrel(40.21, (-0.95, 0.95, 0.80)), MH(40.21)),
+    (35.00, W3(1.6, 1.65, ZP + 5.8), W3(0.0, 1.95, ZP - 2.0)),
+    (38.10, W3(0.8, 1.58, ZP + 4.9), W3(0.0, 1.95, ZP - 2.0)),
+    (39.20, W3(-0.9, 0.80, ZP - 2.0), _mrel(39.2, (-0.3, 0.85, 0.0))),
+    (40.21, _mrel(40.21, (-1.70, 0.55, 3.30)), _mrel(40.21, (-0.30, 0.95, 0.0))),
 ]
 _K7 = [  # 7 THE THREAD (the breath), the sunrise
-    (40.21, _mrel(40.21, (-0.95, 0.95, 0.80)), MH(40.21)),
-    (41.00, _mrel(41.0, (-1.05, 1.00, 1.10)), MH(41.0)),
-    (41.70, _mrel(41.7, (-0.80, 1.55, 4.7)), _mrel(41.7, (-0.3, 1.70, 0.0))),
-    (44.30, _mrel(44.3, (-0.55, 1.45, 5.4)), _mrel(44.3, (-0.25, 1.70, 0.0))),
+    (40.21, _mrel(40.21, (-1.70, 0.55, 3.30)), _mrel(40.21, (-0.30, 0.95, 0.0))),
+    (41.55, _mrel(41.55, (-1.50, 0.62, 3.00)), _mrel(41.55, (-0.30, 0.98, 0.0))),
+    (42.45, _mrel(42.45, (-0.75, 1.45, 5.6)), _mrel(42.45, (-0.3, 1.55, 0.0))),
+    (45.20, _mrel(45.2, (-0.55, 1.45, 5.7)), _mrel(45.2, (-0.25, 1.60, 0.0))),
 ]
 _ORBIT_C = M(45.0) + np.array([-0.25, 0.0, 0.0])
 _K8 = [  # 8 THE LIFTING (after the half circle)
@@ -251,13 +251,37 @@ def _fly(keys, **kw):
 
 
 def _half_circle_end():
-    a = np.radians(50.0)
-    return W3(_ORBIT_C[0] + 4.3 * np.sin(a), 2.2, _ORBIT_C[2] + 4.3 * np.cos(a))
+    a = np.radians(34.0)
+    return W3(_ORBIT_C[0] + 4.6 * np.sin(a), 2.1, _ORBIT_C[2] + 4.6 * np.cos(a))
 
 
 _K8[0] = (49.47, _half_circle_end(), M(49.47) + np.array([0.0, 2.4, -3.0]))
 
 ROLL5 = Track([(26.79, 0.0), (27.35, 0.0), (28.85, 360.0), (TOTAL, 360.0)])
+
+
+def _station_focus(t):
+    """What the lens is focused on: Heavenly Mother, or the two people of the section (the words stay sharp
+    whatever the lens does)."""
+    mm = M(t) + np.array([0.0, 1.45, 0.0])
+    keys = [(-1.0, mm), (2.7, mm), (3.1, MEET), (6.84, MEET), (6.85, mm), (7.9, mm), (8.3, W3(0.0, 1.0, ZH)),
+            (12.0, W3(0.0, 1.0, ZH)), (12.8, mm), (13.29, mm), (13.30, W3(0.0, 0.9, ZC)), (19.85, W3(0.0, 0.9, ZC)),
+            (20.5, mm), (21.8, mm), (22.4, W3(0.0, 1.3, ZN + 1.5)), (26.79, W3(0.0, 1.3, ZN + 1.5)), (26.8, mm),
+            (28.6, mm), (29.3, W3(0.0, 1.4, ZL)), (33.36, W3(0.0, 1.4, ZL)), (33.37, mm), (34.3, mm),
+            (35.0, W3(0.0, 1.3, ZP)), (38.2, W3(0.0, 1.3, ZP)), (39.6, mm), (40.21, MH(40.21)), (41.2, MH(41.2)),
+            (42.4, CHILD(42.4) + np.array([0.0, 0.9, 0.0])), (45.0, CHILD(45.0) + np.array([0.0, 0.9, 0.0])),
+            (45.9, mm), (TOTAL + 1.0, mm)]
+    for (ta, pa), (tb, pb) in zip(keys[:-1], keys[1:]):
+        if ta <= t < tb:
+            u = ss(0.0, 1.0, (t - ta) / (tb - ta))
+            return np.asarray(pa, np.float64) * (1.0 - u) + np.asarray(pb, np.float64) * u
+    return mm
+
+
+def CHILD(t):
+    """Where the child's feet are (an estimate for the lens: she walks the thread toward Heavenly Mother)."""
+    u = float(np.clip((t - 41.2) / (47.9 - 41.2), 0.0, 1.0))
+    return np.array([-0.82, 0.0, ZSTOP + 2.7 - 2.0 * u])
 
 
 def _rigs(focus):
@@ -267,19 +291,19 @@ def _rigs(focus):
         _fly(_K2, blend=0.0, fov=Track([(6.84, 60.0), (8.3, 40.0), (12.0, 40.0), (13.3, 52.0)]),
              roll=Track([(6.84, 12.0), (7.56, -9.0), (8.3, 0.0), (13.3, 0.0)]), aperture=0.04, focus=focus),
         _fly(_K3, blend=0.0, fov=44.0, aperture=0.045, focus=focus),
-        _fly(_K4, blend=0.3, fov=Track([(19.85, 44.0), (21.1, 62.0), (22.45, 40.0), (26.79, 42.0)]),
-             roll=Track([(19.85, 0.0), (21.1, -8.0), (21.8, -18.0), (22.45, 0.0), (26.79, 0.0)]),
+        _fly(_K4, blend=0.3, fov=Track([(19.85, 44.0), (21.1, 58.0), (22.45, 40.0), (26.79, 42.0)]),
+             roll=Track([(19.85, 0.0), (21.1, -6.0), (21.8, -14.0), (22.45, 0.0), (26.79, 0.0)]),
              aperture=Track([(19.85, 0.04), (21.0, 0.01), (22.4, 0.04)]), focus=focus),
         _fly(_K5, blend=0.0, fov=Track([(26.79, 58.0), (28.3, 54.0), (29.35, 42.0), (33.36, 42.0)]),
              roll=ROLL5, aperture=0.04, focus=focus),
-        _fly(_K6, blend=0.0, fov=Track([(33.36, 50.0), (35.0, 42.0), (38.1, 42.0), (39.2, 50.0), (40.21, 30.0)]),
+        _fly(_K6, blend=0.0, fov=Track([(33.36, 50.0), (35.0, 42.0), (38.1, 42.0), (39.2, 50.0), (40.21, 36.0)]),
              roll=Track([(33.36, 360.0), (TOTAL, 360.0)]), aperture=Track([(33.36, 0.04), (39.5, 0.04),
                                                                             (40.21, 0.02)]), focus=focus,
              near=0.03),
-        _fly(_K7, blend=0.0, fov=Track([(40.21, 30.0), (41.0, 30.0), (41.7, 40.0), (44.3, 42.0)]),
-             roll=Track([(40.21, 360.0), (TOTAL, 360.0)]), aperture=Track([(40.21, 0.02), (41.4, 0.035)]),
+        _fly(_K7, blend=0.0, fov=Track([(40.21, 36.0), (41.55, 35.0), (42.45, 42.0), (45.2, 42.0)]),
+             roll=Track([(40.21, 360.0), (TOTAL, 360.0)]), aperture=Track([(40.21, 0.03), (41.4, 0.035)]),
              focus=focus, near=0.03),
-        orbit(_ORBIT_C, radius=(5.4, 4.3), height=(1.45, 2.2), a0=-46.0, a1=50.0, t0=44.3, t1=49.47,
+        orbit(_ORBIT_C, radius=(5.6, 4.6), height=(1.45, 2.1), a0=-30.0, a1=34.0, t0=45.2, t1=49.47,
               look=lambda t: M(t) + np.array([-0.15, 2.0, -3.0]), fov=46.0, roll=360.0, aperture=0.03,
               focus=lambda t: M(t) + np.array([0.0, 1.5, 0.0]), blend=1.0),
         _fly(_K8, blend=1.2, fov=Track([(49.47, 46.0), (51.0, 54.0), (60.0, 54.0)]), roll=360.0,
@@ -314,20 +338,21 @@ _SPECS = [
           to=tuple(M(32.5) + np.array([0.0, 1.4, 0.0]))),
     _word(0.5, 0.745, 7.4, 76, 33.70, 35.20, 37.95, 39.30, expr="Gratitude", arrive="petals", leave="stream",
           to=tuple(MH(39.5))),
-    _word(0.5, 0.75, 6.3, 80, 40.40, 41.70, 44.40, 45.60, expr="Encouragement", arrive="shaft", leave="rise"),
-    dict(expr="Compliment", ride=(0.5, 0.755, 6.4), em=PW.em_for(LAYOUT, 47.0, 6.4, 90), face="screen",
-         t_in=44.50, t_read0=45.80, t_read1=48.55, t_out=49.70, arrive="rays", leave="rise",
+    _word(0.5, 0.75, 6.3, 82, 41.00, 42.55, 45.15, 45.95, expr="Encouragement", arrive="shaft", leave="rise",
+          halo=1.5, bright=1.15),
+    dict(expr="Compliment", ride=(0.5, 0.755, 6.4), em=PW.em_for(LAYOUT, 48.0, 6.4, 90), face="screen",
+         t_in=45.95, t_read0=46.95, t_read1=49.60, t_out=50.40, arrive="rays", leave="rise", halo=1.5, bright=1.15,
          source=tuple(M(46.0) + np.array([0.0, 1.75, -60.0]))),
 ]
 
-WORDS = PW.Words(_SPECS, camera=LAYOUT, face="camera", tint=0.35)
+WORDS = PW.Words(_SPECS, camera=LAYOUT, face="camera", tint=0.5)
 
 
 def _focus_default(t):
     return M(t) + np.array([0.0, 1.5, 0.0])
 
 
-CAMERA = _rigs(lambda t: WORDS.focus_point(t, _focus_default))
+CAMERA = _rigs(_station_focus)
 WORDS.camera = CAMERA
 for _w in WORDS:
     _w.camera = CAMERA
@@ -354,6 +379,7 @@ ONE = Track([(0.0, 0.0), (38.0, 0.0), (39.4, 1.0), (BIG - 0.3, 1.0), (BIG + 0.8,
 SHEET = Track([(0.0, 1.0), (S[4] - 0.01, 1.0), (S[4], 0.12), (S[5] - 0.01, 0.12), (S[5], 1.0), (38.0, 1.0),
                (39.4, 0.06), (BIG - 0.3, 0.06), (BIG + 0.9, 1.15), (TOTAL, 1.15)])
 LIFT_T0, LIFT_DUR, LIFT_SPREAD = 49.9, 2.6, 2.2
+LOOM_TALL = Track([(0.0, 1.0), (29.0, 1.0), (29.7, 0.28), (32.3, 0.28), (33.1, 1.0), (TOTAL, 1.0)])
 
 
 class VeilRiver:
@@ -362,7 +388,9 @@ class VeilRiver:
     fine threads in it; one thread from her hand for the breath; and, at the end, the whole cloth lifting off
     the lake into the sky ahead of her. A pure function of t."""
 
-    def __init__(self, n=170000, threads=44, k=150, seed=9):
+    wants_camera = True
+
+    def __init__(self, n=170000, threads=30, k=150, seed=9):
         rng = np.random.default_rng(seed)
         self.n = n
         self.u = rng.random(n)
@@ -407,8 +435,9 @@ class VeilRiver:
         z = b[2] + s
         return x, y, z
 
-    def sample(self, t):
+    def sample(self, t, cam=None):
         b = MB(t)
+        eye = None if cam is None else np.asarray(cam.pos, np.float64)
         L = float(LENGTH(t))
         core, edge = VEIL_CORE(t), VEIL_EDGE(t)
         sheet = float(SHEET(t))
@@ -420,6 +449,7 @@ class VeilRiver:
         x, y, z = self.shape(s, self.v, t, b)
         pos = np.stack([x, y, z], axis=1)
         a = (0.30 + 0.25 * self.hem) * ss(0.0, 0.5, s) * (1.0 - ss(S_MAX * 0.9, S_MAX, s))
+        a = a * (0.22 + 0.78 * ss(0.3, 9.0, s))          # the cloth is dense near her: keep it from burning out
         a = a * (1.0 - ss(L - 3.0, L, s)) * sheet
         front = np.exp(-((s - L) / 2.5) ** 2) * (L < S_MAX)
         tw = 0.75 + 0.25 * np.sin(self.ph + 2.1 * t + 0.3 * s)
@@ -428,6 +458,9 @@ class VeilRiver:
         mix = (np.abs(self.v) ** 2)[:, None]
         col = core[None] * (1.0 - mix) + edge[None] * mix
         pos, a, size = self._lift(pos, s, self.v, t, a, size)
+        if eye is not None:                               # no giant discs right at the lens
+            d = np.linalg.norm(pos - eye, axis=1)
+            a = a * ss(0.9, 3.2, d)
         keep = a > 0.004
         sp = keep & self.spark
         so = keep & ~self.spark
@@ -438,7 +471,7 @@ class VeilRiver:
             out.append(dict(pos=pos[sp], size=size[sp] * 1.3, color=col[sp], alpha=a[sp] * 1.4, kind="spark",
                             twinkle=0.8, emit=emit[sp]))
         # ---- the warp: fine threads along the cloth, which become taut strings on the loom
-        th = self.threads(t, b, L, lo, one, core, edge)
+        th = self.threads(t, b, L, lo, one, core, edge, eye)
         if th is not None:
             out.append(th)
         return out
@@ -453,26 +486,27 @@ class VeilRiver:
         if not np.any(f > 0):
             return pos, a, size
         m = M(t)
-        sky = np.stack([v * (14.0 + 0.30 * s) + 4.0 * np.sin(s / 23.0),
-                        24.0 + 0.10 * s + 3.0 * np.sin(v * 3.0 + s / 30.0 + 0.4 * t),
-                        np.full_like(s, m[2]) - 34.0 - 0.42 * s], axis=1)
+        sky = np.stack([v * (10.0 + 0.28 * s) + 4.0 * np.sin(s / 23.0),
+                        13.0 + 0.06 * s + 2.0 * np.sin(v * 3.0 + s / 30.0 + 0.4 * t),
+                        np.full_like(s, m[2]) - 26.0 - 0.50 * s], axis=1)
         arc = (4.0 * f * (1.0 - f) * (8.0 + 0.04 * s))[:, None] * np.array([0.0, 1.0, 0.0])
         p = pos * (1.0 - f[:, None]) + sky * f[:, None] + arc
         # near her (s < 4) the cloth stays on her shoulders
         hold = ss(1.0, 5.0, s)
         p = pos * (1.0 - hold[:, None]) + p * hold[:, None]
-        return p, a * (1.0 - 0.35 * f * hold), size * (1.0 + 2.0 * f * hold)
+        return p, a * (1.0 + 0.5 * f * hold), size * (1.0 + 1.5 * f * hold)
 
-    def threads(self, t, b, L, lo, one, core, edge):
+    def threads(self, t, b, L, lo, one, core, edge, eye=None):
         nt, k = self.nt, self.k
         s = np.tile(self.ts, (nt, 1))                        # (nt, k+1)
         v = np.repeat(self.tv[:, None], k + 1, axis=1)
         x, y, z = self.shape(s.ravel(), v.ravel(), t, b)
         x, y, z = x.reshape(nt, -1), y.reshape(nt, -1), z.reshape(nt, -1)
         if lo > 0.0:
-            fan = 0.25 + 0.30 * s
+            fan = 0.25 + (0.30 + 0.25 * (1.0 - float(LOOM_TALL(t)))) * s
             xl = b[0] + v * fan * 0.5
-            hl = 0.24 + (self.th[:, None] - 0.24) * ss(0.0, 14.0, s) + (b[1] - 0.24) * np.exp(-s / 1.3)
+            th = 0.24 + (self.th[:, None] - 0.24) * float(LOOM_TALL(t))
+            hl = 0.24 + (th - 0.24) * ss(0.0, 14.0, s) + (b[1] - 0.24) * np.exp(-s / 1.3)
             hl = hl + 0.03 * np.sin(31.0 * t + np.arange(nt)[:, None] * 1.7) * (0.3 + _beat(t)) * ss(0.0, 4.0, s)
             x = x * (1.0 - lo) + xl * lo
             y = y * (1.0 - lo) + hl * lo
@@ -489,26 +523,30 @@ class VeilRiver:
         lf = 0.0
         if t >= LIFT_T0:
             lf = float(ss(LIFT_T0, LIFT_T0 + 1.2, t))
-        a0 = (0.22 + 0.55 * lo) * (1.0 - lf)
+        a0 = (0.07 + 0.70 * lo) * (1.0 - lf)
         al = np.full((nt, k), a0)
         if one > 0.0:
             keep = np.zeros(nt)
             keep[self.j0] = 1.0
-            al = al * (1.0 - one) + (keep[:, None] * (0.9 + 0.6 * one)) * one
+            al = al * (1.0 - one) + (keep[:, None] * (1.6 + 0.8 * one)) * one
         sm = 0.5 * (s[:, :-1] + s[:, 1:])
         al = al * (1.0 - ss(L - 3.0, L, sm)) * ss(0.0, 0.6, sm) * (1.0 - ss(S_MAX * 0.85, S_MAX, sm))
         if not np.any(al > 0.003):
             return None
         col = np.repeat(edge[None], nt, axis=0)
+        if one > 0.0:
+            col[self.j0] = col[self.j0] * (1.0 - one) + lin("#ffd890") * one
         if lo > 0.0:
             cool = lin(COOL)
             col = col * (1.0 - lo * self.tcool[:, None]) + cool[None] * (lo * self.tcool[:, None])
         col = np.repeat(col[:, None, :], k, axis=1).reshape(-1, 3)
         a, b2 = p[:, :-1].reshape(-1, 3), p[:, 1:].reshape(-1, 3)
         al = al.ravel()
+        if eye is not None:
+            al = al * ss(0.5, 2.5, np.linalg.norm(0.5 * (a + b2) - eye, axis=1))
         keep = al > 0.003
         u = s[:, :-1].ravel()
-        return dict(pos=a[keep], pos2=b2[keep], size=0.010 + 0.006 * lo, color=col[keep], alpha=al[keep],
+        return dict(pos=a[keep], pos2=b2[keep], size=0.0045 + 0.004 * lo, color=col[keep], alpha=al[keep],
                     kind="line", u=u[keep], u2=s[:, 1:].ravel()[keep], pulse=(9.0, 3.0, 2.5, 4.0), emit=1.4)
 
 
@@ -584,24 +622,39 @@ def _people():
              "robe" if sh == "woman" else "tunic", seed=70.0 + i, form=False, points=34000,
              motion=[(33.0, "walk", dict(speed=0.75, phase=0.27 * i))])
     # 7 the child walks the thread to her and takes her hand
-    body("child", "child", -0.55, ZSTOP + 5.6, 180.0, (40.6, TOTAL), "#e8f0ff", "#fff6e6", "tunic", seed=81.0,
+    body("child", "child", -0.82, ZSTOP + 2.7, 180.0, (40.4, TOTAL), "#e8f0ff", "#fff6e6", "tunic", seed=81.0,
          form=True, points=40000,
-         motion=[(41.0, "walk", dict(speed=0.55)), (48.6, "stand", dict(blend=0.8))],
+         motion=[(41.2, "walk", dict(speed=0.30)), (47.9, "stand", dict(blend=0.8))],
          gesture=[(48.0, TOTAL, "touch", dict(side="R", to=lambda t: MH(t) + np.array([0.0, -0.04, 0.05]),
                                                end="palm", palm="up", ease=1.0))])
+    # 8 at the sunrise the veil gives everyone back: they rise out of it on both sides of her, at many depths,
+    # facing the sun with her, and lift their arms with her
+    ring = ((-2.0, 0.9, "woman", GOLD), (2.1, 0.7, "man", COOL), (-4.3, -1.6, "man", "#ffe2b0"),
+            (4.4, -1.9, "woman", "#ffd9a0"), (-6.6, -4.6, "woman", "#dfe8ff"), (6.8, -4.9, "man", "#ffe8c8"),
+            (-9.4, -8.5, "man", "#ffd9a0"), (9.6, -8.8, "woman", "#e8eeff"))
+    for i, (x, dz, sh, c) in enumerate(ring):
+        t0 = BIG + 0.15 * i
+        body(f"risen{i}", sh, x, ZSTOP + dz, 180.0 + (6.0 if x < 0 else -6.0), (t0 - 0.05, TOTAL), c, "#fff6e8",
+             "robe" if sh == "woman" else "coat", seed=90.0 + i, points=30000,
+             gesture=[(46.3 + 0.2 * i, TOTAL, "raise", dict(ease=1.6))])
     return P
 
 
 def _mother():
     from p3d.body import Body
-    return Body("woman", garment="robe", veil=dict(length=1.5), look=["rim", dict(name="glitter", bright=0.55)],
-                color="#ffcf8a", color2="#fff0d2", points=90000, detail=dict(hand=3.0), light=None,
-                wind=(0.0, 0.0, 0.6), **MOTHER_KW)
+    # a body of light, warm gold and white, with a soft rim; the head is only her veil (no head beneath it, so
+    # from behind there is nothing but the veil); light streams off her back into the river
+    return Body("woman", garment="robe", veil=dict(length=1.5, wide=1.6),
+                look=[dict(name="glitter", bright=0.9), dict(name="rim", bright=0.7)],
+                color="#ffd9a0", color2="#fff4e0", points=90000, detail=dict(hand=3.0, head=0.02), light=None,
+                wind=(0.0, 0.0, 0.6),
+                effects=[dict(kind="shed", t=0.0, n=6000, life=3.0, dir=(0.0, 0.15, 1.0), speed=0.45)],
+                **MOTHER_KW)
 
 
 def _setup(scene):
     mother = _mother()
-    mother.add(scene, "mother")
+    mother.add(scene, "mother", mask=dict(strength=0.35))
     scene.add("veil", PW.KeepClear(VEIL, WORDS))
     for name, b in _people().items():
         b.add(scene, name)
@@ -614,34 +667,38 @@ def _setup(scene):
 
 # ------------------------------------------------------------------------------------------------ the world
 LOOKS = dict(
-    veilnight=dict(base="night", sky_mid="#0a1546", sky_hor="#24357a", sun_az=180.0, sun_el=0.9,
+    veilnight=dict(base="night", sky_mid="#0a1546", sky_hor="#24357a", sun_az=180.0, sun_el=6.0, dust=0.35,
+                   bokeh=0.25,
                    sun_color="#ffd9a0", sun_int=0.6, sun_size=0.7, sun_disc=5.0, sun_glow=0.9, rays=0.9, mist=0.25,
                    haze_color="#22306e", mist_color="#26336e", milky=1.0, stars=1.0),
-    mist=dict(base="night", sky_mid="#11205a", sky_hor="#33488f", sun_az=180.0, sun_el=0.9, sun_color="#ffe0b0",
+    mist=dict(base="night", dust=0.35, bokeh=0.25, sky_mid="#11205a", sky_hor="#33488f", sun_az=180.0, sun_el=0.9, sun_color="#ffe0b0",
               sun_int=0.55, sun_size=0.8, rays=0.5, mist=0.85, mist_height=1.6, mist_color="#33488f",
               haze=0.8, haze_color="#2b3d84", stars=0.8, milky=0.5),
-    canopy=dict(base="night", sky_mid="#1a1850", sky_hor="#4a3270", sun_az=180.0, sun_el=1.2, sun_color="#ffc880",
+    canopy=dict(base="night", dust=0.35, bokeh=0.25, sky_mid="#1a1850", sky_hor="#4a3270", sun_az=180.0, sun_el=1.2, sun_color="#ffc880",
                 sun_int=0.7, sun_size=0.8, rays=0.8, mist=0.35, mist_color="#3a2c6a", haze_color="#3a2c6a",
                 stars=0.9, milky=0.6),
-    high=dict(base="night", sky_top="#050a2e", sky_mid="#16307a", sky_hor="#6a5a9e", sun_az=180.0, sun_el=0.6,
+    high=dict(base="night", dust=0.35, bokeh=0.25, sky_top="#050a2e", sky_mid="#16307a", sky_hor="#6a5a9e", sun_az=180.0, sun_el=0.6,
               sun_color="#ffd0a0", sun_int=0.7, sun_size=0.8, rays=0.5, mist=0.3, mist_color="#3a4890",
               haze_color="#4a4a8e", stars=0.9, milky=1.0),
-    loom=dict(base="night", sky_top="#04082a", sky_mid="#1f3a8c", sky_hor="#9a6aa8", sun_az=180.0, sun_el=0.8,
+    loom=dict(base="night", dust=0.35, bokeh=0.25, sky_top="#04082a", sky_mid="#1f3a8c", sky_hor="#9a6aa8", sun_az=180.0, sun_el=0.8,
               sun_color="#ffd6a8", sun_int=0.7, sun_size=0.8, rays=0.6, mist=0.25, mist_color="#40509a",
               haze_color="#6a5aa0", stars=0.8, milky=0.7),
-    hush=dict(base="night", sky_top="#081040", sky_mid="#2a3f8a", sky_hor="#c0809c", sun_az=180.0, sun_el=-0.4,
+    hush=dict(base="night", dust=0.35, bokeh=0.25, sky_top="#081040", sky_mid="#2a3f8a", sky_hor="#c0809c", sun_az=180.0, sun_el=-0.4,
               sun_color="#ffe2c0", sun_int=0.55, sun_size=0.9, rays=0.3, mist=0.3, mist_color="#6a5a90",
               haze_color="#a07090", stars=0.55, milky=0.3, ripple=0.05),
-    veilsun=dict(base="sunrise", sky_top="#1c3f96", sky_mid="#7f8fd8", sky_hor="#f2a0b4", sun_az=180.0,
-                 sun_el=1.6, sun_color="#ffe6c0", sun_int=1.15, sun_size=1.0, sun_disc=7.0, rays=1.0, stars=0.15,
-                 milky=0.0, mist=0.3, mist_color="#c08a9a", haze_color="#d08a98", ripple=0.3),
+    veilsun=dict(base="sunrise", sky_top="#0c1a52", sky_mid="#43408e", sky_hor="#f08a78", sun_az=180.0,
+                 sun_el=1.3, sun_color="#ffd9a8", sun_int=0.9, sun_size=1.0, sun_disc=6.0, sun_glow=0.5, rays=0.75,
+                 stars=0.25, milky=0.0, mist=0.3, mist_color="#a86a80", haze=0.5, haze_color="#b8708a", ripple=0.25,
+                 exposure=0.92, dust=0.35, bokeh=0.25),
+    veilgold=dict(base="golden", sky_top="#16337e", sky_mid="#5d6cb8", sky_hor="#f2b08c", sun_az=180.0, sun_el=6.0,
+                  rays=0.55, haze_color="#c89a90", mist_color="#c8a0a0"),
     veilday=dict(base="day", sun_az=180.0, sun_el=14.0, rays=0.25),
 )
 WORLD = WORDS.world(dict(
     looks=LOOKS,
     look=[(0.0, "veilnight"), (S[1], "mist", 0.0), (S[2], "canopy", 0.0), (S[3] + 0.8, "high", 1.6),
           (S[4], "loom", 0.0), (S[5], "veilnight", 0.0), (S[6], "hush", 0.0), (BIG, "veilsun", 0.8),
-          (51.0, "golden", 2.5), (53.6, "veilday", 2.6)],
+          (51.0, "veilgold", 2.5), (53.6, "veilday", 2.6)],
     arch=dict(lit=[50.6 + 0.16 * k for k in range(9)], span=26.0, height=15.0, z=ARCH_Z,
               line=Track([(0.0, 0.0), (50.4, 0.0), (52.0, 1.0)])),
     exposure=Track([(0.0, 1.0), (LAST - 0.1, 1.0), (LAST + 0.15, 1.16), (LAST + 1.0, 1.0), (TOTAL, 1.0)]),
@@ -652,10 +709,10 @@ P3D = dict(
     camera=CAMERA,
     world=WORLD,
     setup=_setup,
-    bursts=[dict(t=S[1], strength=1.4, rise=0.06, fall=0.45, color="#ffe6b8"),
-            dict(t=S[2], strength=1.2, rise=0.06, fall=0.45, color="#ffd9a0"),
+    bursts=[dict(t=S[1], strength=1.15, rise=0.06, fall=0.45, color="#ffe6b8"),
+            dict(t=S[2], strength=1.0, rise=0.06, fall=0.45, color="#ffd9a0"),
             dict(t=S[4], strength=1.4, rise=0.06, fall=0.45, color="#ffe6b8"),
             dict(t=S[5], strength=1.4, rise=0.06, fall=0.45, color="#fff0d0"),
-            dict(t=BIG, strength=1.2, rise=0.1, fall=0.9, color="#fff0d8", radius=0.35),
+            dict(t=BIG, strength=0.8, rise=0.1, fall=0.9, color="#ffe8d0", radius=0.30),
             dict(t=LAST, strength=0.5, rise=0.08, fall=0.8, color="#fff6e8", radius=0.3)],
 )
