@@ -44,7 +44,8 @@ def _ss(a, b, x):
 class Layer:
     def __init__(self, R):
         cfg = dict(S.P3D) if isinstance(S.P3D, dict) else {}
-        known = {"camera", "world", "setup", "sets", "keep", "motion_blur", "bursts", "lod", "bokeh_max"}
+        known = {"camera", "world", "setup", "sets", "keep", "motion_blur", "motion_samples", "bursts", "lod",
+                 "bokeh_max"}
         if set(cfg) - known:
             raise ValueError(f"P3D: unknown keys {sorted(set(cfg) - known)} (known: {sorted(known)})")
         self.R = R
@@ -59,6 +60,7 @@ class Layer:
             raise ValueError(f"P3D keep: unknown layers {sorted(self.keep - set(FLAT_LAYERS))} (known: {FLAT_LAYERS})")
         mb = cfg.get("motion_blur", None)
         self.shutter = float(self.rig.shutter if mb is None else mb)
+        self.samples = max(int(cfg.get("motion_samples", 1)), 1)
         self.bursts = [dict(b) for b in (cfg.get("bursts") or [])]
         self.lod_r = float(cfg.get("lod", 7.0))
         self.bokeh_max = float(cfg.get("bokeh_max", 0.20))
@@ -375,6 +377,27 @@ class Layer:
         U = self._uniforms(t, cam, prev, w)
         items = [(e, self._batches(e, t, cam)) for e in self.scene.entries()]
         self._mask = self._mask_pass(items, t, cam, U)
+        n = self.samples if self.shutter > 0.0 else 1
+        if n <= 1:
+            self._draw_sets(items, U, cam, w, 1.0)
+        else:
+            # motion blur by time sampling: the sets at n moments inside the shutter, each a share of the light
+            # (and each still drawn out along its own short path, so the moments join into one streak)
+            dt = self.shutter / float(S.FPS)
+            asp = float(S.ASPECT)
+            for i in range(n):
+                ts = t - dt * (n - 1 - i) / n
+                c, pv = self.rig.state(ts, asp), self.rig.state(ts - dt / n, asp)
+                Ui = self._uniforms(ts, c, pv, w)
+                Ui["uShutterDt"] = dt / n
+                its = items if i == n - 1 else [(e, self._batches(e, ts, c)) for e in self.scene.entries()]
+                self._draw_sets(its, Ui, c, w, 1.0 / n)
+        R.f_L.use()
+        ctx.enable(moderngl.BLEND)
+        ctx.blend_func = (moderngl.ONE, moderngl.ONE)
+
+    def _draw_sets(self, items, U, cam, w, share):
+        ctx, R = self.ctx, self.R
         R.f_L.use()
         ctx.enable(moderngl.BLEND)
         ctx.blend_func = (moderngl.ONE, moderngl.ONE)
@@ -397,7 +420,7 @@ class Layer:
                 seg = b["kind"] in api.SEGMENT_KINDS
                 sl = self._slot((e.name, bi), b, static=static)
                 p = self.p_seg if seg else self.p_sprite
-                setu(p, uKind=KIND_ID[b["kind"]], uGain=float(b["gain"]), uTwinkle=b["twinkle"], uRim=b["rim"],
+                setu(p, uKind=KIND_ID[b["kind"]], uGain=float(b["gain"]) * share, uTwinkle=b["twinkle"], uRim=b["rim"],
                      uDofAmt=b["dof"] if e.depth_of_field else 0.0, uFogAmt=b["fog"] if e.fog else 0.0,
                      uBack=b["backlight"], uLod=1.0 if (b["lod"] and e.lod) else 0.0, uDome=dome,
                      uBlur=blur * b["streak"], uMirror=0.0)
@@ -407,9 +430,6 @@ class Layer:
                     setu(p, uMirror=1.0, uMaskOn=0.0)
                     vao.render(moderngl.TRIANGLE_STRIP, vertices=4, instances=sl["n"])
                     setu(p, uMaskOn=mask_on)
-        R.f_L.use()
-        ctx.enable(moderngl.BLEND)
-        ctx.blend_func = (moderngl.ONE, moderngl.ONE)
 
     # ------------------------------------------------------------------ the background
     def _burst_state(self, t, cam):

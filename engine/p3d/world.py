@@ -81,11 +81,11 @@ LOOKS["dawn"] = _look(_NIGHT, sky_top="#0f1b46", sky_mid="#553b7c", sky_hor="#e9
                       sun_int=0.95, sun_el=-1.2, stars=0.30, milky=0.08, clouds=0.38, haze=0.7,
                       haze_color="#c97a6e", mist=0.55, mist_color="#a86a66", hill_color="#0e0a18", water="#06060f",
                       rays=0.35, dust_color="#ffd9a0", dust_color2="#ffc4b0")
-LOOKS["sunrise"] = _look(_NIGHT, sky_top="#13265e", sky_mid="#7d4c82", sky_hor="#f39a62", sun_color="#ffe6b4",
-                         sun_int=1.00, sun_el=5.5, stars=0.12, milky=0.0, clouds=0.50, haze=0.65,
-                         haze_color="#b8704e", mist=0.30, mist_color="#a86e58", hill_color="#140e1e",
-                         water="#090811", rays=0.9, dust_color="#ffe2a8", dust_color2="#ffd0a8", sun_disc=8.0,
-                         sun_glow=0.8)
+LOOKS["sunrise"] = _look(_NIGHT, sky_top="#101f52", sky_mid="#6a3f7a", sky_hor="#e8854a", sun_color="#ffd89a",
+                         sun_int=0.95, sun_el=5.5, stars=0.12, milky=0.0, clouds=0.50, haze=0.62,
+                         haze_color="#a8623f", mist=0.28, mist_color="#96604a", hill_color="#120c1c",
+                         water="#090811", rays=0.7, dust_color="#ffe2a8", dust_color2="#ffd0a8", sun_disc=8.0,
+                         sun_glow=0.75, ripple=0.55, exposure=0.92)
 LOOKS["golden"] = _look(_NIGHT, sky_top="#1c3a7c", sky_mid="#5e78b0", sky_hor="#e8c9a8", sun_color="#fff2d8",
                         sun_int=1.15, sun_el=14.0, stars=0.0, milky=0.0, clouds=0.35, haze=0.7,
                         haze_color="#d9c4b0", mist=0.40, mist_color="#d8c8b8", hill_color="#2a3350",
