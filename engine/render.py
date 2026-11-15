@@ -278,7 +278,9 @@ class Renderer:
              uSkyHor=P["sky_hor"], uGlow=P["glow"], uAurA=aurA, uAurB=aurB, uSun=(0.5, P["sun_y"]),
              uSunInt=P["sun_int"], uSunSize=P["sun_size"], uClouds=P["clouds"], uAurora=P["aurora"],
              uRain=P["rain"], uMilky=P["milky"], uEnv=P["env"], uRays=P["rays"], uPart=P["part"])
-        self.v_sky.render(moderngl.TRIANGLE_STRIP)
+        # P3D supplies the entire composite background; the flat sky is never sampled.
+        if self.p3d is None:
+            self.v_sky.render(moderngl.TRIANGLE_STRIP)
         self.sky.draw_clouds(t, P)
 
         # 2. everything that glows
@@ -433,7 +435,8 @@ class Renderer:
             src = tb
 
         # 4. put it together
-        self.sky.camera_bg(t, P)
+        if self.p3d is None:
+            self.sky.camera_bg(t, P)
         if self.p3d:
             self.p3d.background(t, P)   # sky dome, hills, lake, mist, rays: the composite's background
         self.f_out.use()
