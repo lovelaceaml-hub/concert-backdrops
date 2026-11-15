@@ -159,30 +159,35 @@ void main(){
   float body = 1.0-exp(-T*uDens);
   // the warm core: heart and head
   vec2 dh = vP-fPts.xy, dd = vP-fPts.zw;
-  float heart = exp(-dot(dh,dh)/(2.0*0.070*0.070));
-  float headg = exp(-dot(dd,dd)/(2.0*0.042*0.042));
+  float heart = exp(-dot(dh,dh)/(2.0*0.085*0.085));
+  float headg = exp(-dot(dd,dd)/(2.0*0.045*0.045));
   float core = heart + headg*fPar.w;
-  // the rim of light on the side that faces the light (all round when the light stands behind the figure)
+  // form: the side that faces the light is warmer and brighter, the far side cooler (all round when the light
+  // stands behind the figure); on that side a soft band of light just inside the edge, and a fine line
   vec2 nrm = normalize(g+vec2(1e-6));
   vec2 ld = normalize(fLight.xy-vP);
-  float fac = max(dot(nrm, ld), 0.0);
-  fac = mix(fac*sqrt(fac), 1.0, fLight.z);
-  float w0 = max(2.0*px, 0.0038);
-  float edge = exp(-pow((sd+w0*0.8)/w0, 2.0));
-  float inner = exp(min(sd, 0.0)/0.034)*step(sd, 0.0);
+  float side = dot(nrm, ld);
+  float fac = max(side, 0.0);
+  fac = mix(fac*fac, 1.0, fLight.z);
+  float form = mix(0.5+0.5*side, 0.8, fLight.z);
+  float w0 = max(1.6*px, 0.0032);
+  float line = exp(-pow((sd+w0)/w0, 2.0));
+  float band = exp(-pow((sd+0.011)/0.011, 2.0));
   float up = mix(1.0, smoothstep(0.20, 0.66, vP.y), step(0.001, mistK));   // it fades down the robe: no rim on the mist
   float wav = mix(1.0, 0.55+0.45*vnoise(vec2(vP.x*13.0+seed*7.0, vP.y*13.0-uT*0.30)), detail);   // not a wire
-  float rim = (edge*wav + inner*0.22)*fac*up*fLight.w*smoothstep(0.10, 0.50, wsd);
+  float edge = line;
+  float rim = (band*0.60 + line*0.40*wav)*fac*up*fLight.w*smoothstep(0.10, 0.50, wsd);
   // a held flame or an offered light warms what is near it
   vec2 df = vP-fFx.xy;
   float fl = fFx.z*exp(-dot(df,df)/(2.0*0.105*0.105));
-  // warm at the heart, cooler toward the hem and at the thin edges
+  // warm at the heart, cooler toward the hem, at the thin edges and on the far side
   float hemK = 1.0-smoothstep(0.04, 0.60, vP.y);
-  vec3 tone = mix(fColA.rgb, uMist, hemK*0.70*step(0.001, mistK));
-  vec3 c = mix(uMist, tone, smoothstep(0.04, 0.50, body))*body*uGain*(1.0-0.55*uDay);
+  vec3 warm = fColA.rgb, cool = mix(fColA.rgb, uMist, 0.55);
+  vec3 tone = mix(mix(cool, warm, form), uMist, hemK*0.70*step(0.001, mistK));
+  vec3 c = mix(uMist, tone, smoothstep(0.04, 0.50, body))*body*uGain*(0.70+0.60*form)*(1.0-0.40*uDay);
   c += fColB.rgb*core*body*fColB.a;
   c += uLightCol*rim;
-  c += uFlameCol*fl*(body*1.25 + edge*up*0.9);
+  c += uFlameCol*fl*(body*1.25 + edge*up*0.6);
   // gather and dissolve: the body blooms out of its heart, and returns to it
   float rv = 1.0;
   if(fFx.w<9.0){
@@ -369,10 +374,10 @@ def person_segments(J, F, lag, veil=False, full=True, wide=1.0, head_r=0.052):
                                     F.rad(0.036 * k, 0.047 * k), F.rad(0.047 * k, 0.062 * k))
         sa, sb = arms[1.0][0], arms[-1.0][0]
     else:
-        # a crowd wears cloaks: one soft bell from the shoulders down, the hanging arms inside it
-        r_ush, r_ch, r_hip = F.rad(0.040 * k, 0.062 * k), F.rad(0.050 * k, 0.082 * k), F.rad(0.054 * k, 0.090 * k)
-        mid = 0.5 * (arms[1.0][0] + arms[-1.0][0])
-        sa, sb = mid + (arms[1.0][0] - mid) * 0.70, mid + (arms[-1.0][0] - mid) * 0.70
+        # a crowd wears cloaks: one soft bell from sloping shoulders to the ground, the hanging arms inside it
+        r_ush, r_ch, r_hip = F.rad(0.050 * k, 0.092 * k), F.rad(0.056 * k, 0.098 * k), F.rad(0.062 * k, 0.104 * k)
+        ush = ush - np.array([0.0, 0.028, 0.0])
+        sa = sb = ush
     # part 0: neck, shoulders, torso and robe, one flowing shape
     add(F.pt(neck + (head - neck) * 0.50), F.pt(neck), 0.0185, 0.0215, 1.0, 1.0, 0)
     add(F.pt(neck), F.pt(ush), 0.022, r_ush, 1.0, 1.0, 0)
@@ -381,11 +386,11 @@ def person_segments(J, F, lag, veil=False, full=True, wide=1.0, head_r=0.052):
         add(F.pt(ush), F.pt(chest), r_ush, r_ch, 1.0, 1.0, 0)
         add(F.pt(chest), F.pt(waist), r_ch, r_wa, 1.0, 0.95, 0)
         add(F.pt(waist), F.pt(hip), r_wa, r_hip, 0.95, 0.86, 0)
-        vs, ws, kr = (0.0, 0.33, 0.66, 1.0), (0.86, 0.62, 0.32, 0.07), k
+        vs, ws, kr = (0.0, 0.33, 0.66, 1.0), (0.86, 0.68, 0.42, 0.12), k
     else:
         add(F.pt(ush), F.pt(chest), r_ush, r_ch, 1.0, 1.0, 0)
-        add(F.pt(chest), F.pt(hip), r_ch, r_hip, 1.0, 0.88, 0)
-        vs, ws, kr = (0.0, 0.5, 1.0), (0.88, 0.66, 0.26), k * 1.30
+        add(F.pt(chest), F.pt(hip), r_ch, r_hip, 1.0, 0.92, 0)
+        vs, ws, kr = (0.0, 0.5, 1.0), (0.92, 0.78, 0.46), k * 1.55
     prev = (F.pt(hip), r_hip)
     for v, w0, w1 in zip(vs[1:], ws[:-1], ws[1:]):
         c2, r = robe_at(J, F, lag, v, k=kr)
@@ -397,8 +402,8 @@ def person_segments(J, F, lag, veil=False, full=True, wide=1.0, head_r=0.052):
     if not full:
         # in a crowd some wear a veil or a hood (the head flows into the shoulders), the others show hair
         vv = np.broadcast_to(np.asarray(veil, dtype=np.float64), (N,))
-        add(F.pt(head + np.array([-0.004, 0.020, 0.0])), F.pt(ush + np.array([-0.016, -0.030, 0.0])),
-            (head_r + 0.004) * vv + 0.001, F.rad(0.056, 0.094) * vv + 0.001, 0.90 * vv, 0.66 * vv, 1, 2.0)
+        add(F.pt(head + np.array([-0.004, 0.020, 0.0])), F.pt(ush + np.array([-0.012, 0.0, 0.0])),
+            (head_r + 0.004) * vv + 0.001, r_ush * 0.92 * vv + 0.001, 0.90 * vv, 0.70 * vv, 1, 2.0)
         add(F.pt(head + np.array([-0.015, 0.006, 0.0])), F.pt(neck + np.array([-0.030, -0.034, 0.0])),
             head_r * 0.88 * (1 - vv) + 0.001, 0.026 * (1 - vv) + 0.001, 0.95 * (1 - vv), 0.50 * (1 - vv), 1, 2.0)
     elif veil:
@@ -535,7 +540,7 @@ class Cloth:
             spec.append(("veil", 11, 13, dict(g=1.5, km=3.2, kw=2.2, lines=44, alpha=0.42)))
         spec.append(("sleeve_r", 6, 8, dict(g=2.0, km=3.0, kw=1.4, lines=20, alpha=0.44)))
         spec.append(("sleeve_l", 6, 8, dict(g=2.0, km=3.0, kw=1.4, lines=20, alpha=0.44)))
-        spec.append(("hem", 9, 9, dict(g=2.6, km=3.0, kw=0.9, lines=40, alpha=0.42)))
+        spec.append(("hem", 9, 9, dict(g=2.6, km=3.0, kw=0.9, lines=40, alpha=0.17)))
         if n_str > 0:
             spec.append(("strand", n_str, 14, dict(g=0.9, km=3.6, kw=1.5, lines=0, alpha=0.62)))
         for name, M, Kg, par in spec:
@@ -982,6 +987,7 @@ class FigureLook:
         asp = S.ASPECT
         glow = float(m.get("glow", 1.0))
         col = _lin(m.get("color", "#ffcf8a"))
+        col = col * (0.45 + 0.60 * col)          # a deeper gold for the body: the white is kept for the heart
         core = _lin(opt(m, "core", "#ffe9c4"))
         g = (t - R.t0) / max(gat, 1e-3)
         dd = (t - R.t1) / max(dis, 1e-3) if t >= R.t1 else -1.0
@@ -1033,7 +1039,7 @@ class FigureLook:
             self.add_bodies(
                 segs, n, rect, org[None, :], scale[None, :],
                 np.array([[col[0], col[1], col[2], alpha]]),
-                np.array([[core[0], core[1], core[2], float(opt(m, "core_glow", 0.80)) * breath]]),
+                np.array([[core[0], core[1], core[2], float(opt(m, "core_glow", 0.90)) * breath]]),
                 np.array([[heart[0, 0], heart[0, 1], head[0, 0], head[0, 1]]]),
                 np.array([[ll[0], ll[1], back, rimk]]),
                 np.array([[0.0, 0.0, 0.0, reveal]]),
@@ -1087,7 +1093,14 @@ class FigureLook:
         X, Ls = cl.simulate(t, anchor_fn, origin_fn, base_fn)        # (C, K, 2) in the figure's frame
         out = []
         cool = _lin(opt(m, "cloth_color", "#fff1e0"))
-        ccol = col * 0.55 + cool * 0.45
+        ccol = col * 0.62 + cool * 0.38
+        cfar = ccol * 0.55 + self.mist_now * 0.45                 # the far side of a sheet is cooler
+        lsgn = 1.0 if ll[0] >= heart[0] else -1.0
+
+        def lit_col(P2):
+            f = np.clip(0.5 + 0.5 * lsgn * (P2[..., 0] - heart[0]) / 0.11, 0.0, 1.0)[..., None]
+            return (cfar * (1 - f) + ccol * f) * (0.78 + 0.44 * f)
+
         ca = float(opt(m, "cloth_glow", 1.0)) * alpha
         W_, H_ = self.R.w, self.R.h
 
@@ -1142,7 +1155,7 @@ class FigureLook:
                 fold = np.clip(ref / np.maximum(dx, 1e-5), 0.55, 2.6) ** 0.7
                 a = ca * gr["alpha"] * reveal_k(Pu) * ss(0.0, 0.05, v)
                 if gr["name"] == "hem":      # the lower robe fades out before the ground: no hard feet
-                    a = a * ss(0.0, 0.30, v) * (1.0 - ss(0.45, 0.95, v))
+                    a = a * ss(0.0, 0.45, v) * (1.0 - ss(0.55, 1.0, v))
                 elif gr["name"] != "veil":   # a sleeve ends in a soft fade
                     a = a * (1.0 - 0.85 * ss(0.50, 1.0, v))
                 a = np.broadcast_to(a, (Mu, n))
@@ -1153,9 +1166,8 @@ class FigureLook:
                                        np.full((Mu, n, 1), lines),
                                        np.full((Mu, n, 1), dict(hem=2.0, veil=0.0).get(gr["name"], 3.0))],
                                       2).reshape(Mu * n, 8)
-                tri = vert[grid_tris(Mu, n)]
-                c3 = np.broadcast_to(ccol[None, :], (len(tri), 3))
-                out.append(np.concatenate([tri, c3], 1))
+                vert = np.concatenate([vert, lit_col(Pu).reshape(Mu * n, 3)], 1)
+                out.append(vert[grid_tris(Mu, n)])
         self.add_cloth(np.vstack(out), mirror)
 
     def _motes(self, sr, bi, J, F, t, org, scale, hpx, col, alpha, mirror):
@@ -1299,11 +1311,11 @@ class FigureLook:
         glow = float(m.get("glow", 1.0))
         # those who wait are cooler and dimmer; the flame warms each one it reaches
         cool = _lin(opt(m, "unlit", "#9fb4ff"))
-        dim = float(opt(m, "unlit_glow", 0.50)) if c.has_pass else 1.0
+        dim = float(opt(m, "unlit_glow", 0.55)) if c.has_pass else 1.0
         col = c.col * lit[:, None] + (c.col * 0.45 + cool * 0.55) * (1 - lit)[:, None]
-        al = alive * c.bright * glow * (dim + (1.0 - dim) * lit)
+        al = alive * c.bright * glow * (dim + (1.15 - dim) * lit)
         core = _lin(opt(m, "core", "#fff3dc"))
-        coreg = float(opt(m, "core_glow", 0.60)) * (0.30 + 0.70 * lit)
+        coreg = float(opt(m, "core_glow", 0.90)) * (0.20 + 0.80 * lit)
         fxp = np.zeros((N, 4))
         fxp[:, 3] = 99.0
         flames = []
@@ -1316,7 +1328,7 @@ class FigureLook:
             fxp[:, 2] = held * ss(0.0, 0.5, t - c.Tr) * (1 - 0.6 * risen) * float(opt(m, "flame_light", 1.0))
             flames = c._flames(t, J, alive)
             cand = fxp[:, 2] * alive * (1 - 0.25 * c.r)
-        rimk = float(opt(m, "rim", 1.0)) * (0.55 + 0.45 * lit) * (0.35 + 0.65 * ss(110.0, 380.0, hpx))
+        rimk = float(opt(m, "rim", 1.0)) * (0.45 + 0.55 * lit) * (0.30 + 0.70 * ss(110.0, 380.0, hpx))
         tint = float(opt(m, "day_tint", 1.0))
         wl = None
         r = opt(m, "reflect", None)
@@ -1351,7 +1363,7 @@ class FigureLook:
                 np.column_stack([ll[k], back[k], rimk[k]]),
                 fxp[k],
                 np.column_stack([ss(110.0, 380.0, hpx[k]), np.full(len(k), tint),
-                                 np.full(len(k), float(opt(m, "mist", 0.55))),
+                                 np.full(len(k), float(opt(m, "mist", 0.30))),
                                  np.full(len(k), float(opt(m, "head_glow", 1.25)))]),
                 px[k], c.ph[k], None if wl is None else (wl[k], 1.0 / 1.22))
         return np.vstack(flames).astype("f4") if flames else np.zeros((0, 7), "f4")
@@ -1370,6 +1382,7 @@ class FigureLook:
                for k_ in ("sky_hor", "sky_mid", "sky_top")]
         d = opt(None, "daylight", None)
         self.day = _ssf(0.08, 0.50, 0.25 * lum[0] + 0.35 * lum[1] + 0.40 * lum[2]) if d is None else _f(d, t)
+        self.mist_now = self._mist(P)
 
     def _run(self, fbo, inst, cloth, pts, t, pxk):
         ctx = self.ctx
@@ -1381,8 +1394,8 @@ class FigureLook:
             self.t_seg.use(location=0)
             p = self.p_body
             p["uSeg"].value = 0
-            for k_, v_ in (("uT", float(t)), ("uSoft", float(opt(None, "soft", 1.15))),
-                           ("uDens", float(opt(None, "density", 1.6))), ("uGain", float(opt(None, "body_glow", 0.34))),
+            for k_, v_ in (("uT", float(t)), ("uSoft", float(opt(None, "soft", 1.6))),
+                           ("uDens", float(opt(None, "density", 1.35))), ("uGain", float(opt(None, "body_glow", 0.36))),
                            ("uDay", float(self.day))):
                 if k_ in p:
                     p[k_].value = v_
@@ -1415,6 +1428,14 @@ class FigureLook:
             self.p_pt["uPx"].value = float(self.R.px * pxk)
             self.gl["pt"].render(moderngl.POINTS, vertices=len(data))
 
+    def _mist(self, P):
+        """The colour of the mist and of the far side: violet under a night sky, pale and neutral in the day."""
+        mist = opt(None, "mist_color", None)
+        if mist is not None:
+            return _lin(mist)
+        sky_mid = np.asarray(P["sky_mid"], dtype=np.float64)
+        return (_lin("#b9a8ff") * 0.42 + sky_mid * 0.8 + 0.02) * (1 - self.day) + _lin("#e6e2f4") * 0.62 * self.day
+
     def resolve(self, t, P):
         """Called by render.py after the figures and the crowd: draws everything queued into the figure layer,
         then adds the layer and its mirror image in the lake to the light."""
@@ -1422,13 +1443,7 @@ class FigureLook:
             self.used = False
             return
         ctx, R = self.ctx, self.R
-        sky_mid = np.asarray(P["sky_mid"], dtype=np.float64)
-        mist = opt(None, "mist_color", None)
-        if mist is not None:
-            self.mist = _lin(mist)
-        else:   # violet under a night sky, pale and neutral in the day
-            self.mist = (_lin("#b9a8ff") * 0.42 + sky_mid * 0.8 + 0.02) * (1 - self.day) + \
-                _lin("#e6e2f4") * 0.62 * self.day
+        self.mist = self.mist_now
         self.flame = _lin(opt(None, "flame", "#ffd08a"))
         # the cones of every body, one row each
         rows = self.q_seg[:ROWS]
@@ -1479,8 +1494,8 @@ class FigureLook:
             return
         self.t_fig.use(location=FIG_UNIT)
         prog["uFigT"].value = FIG_UNIT
-        prog["uFigK"].value = float(opt(None, "day_tint_strength", 0.85))
-        lvl = float(opt(None, "day_tint_level", 0.84))
+        prog["uFigK"].value = float(opt(None, "day_tint_strength", 0.92))
+        lvl = float(opt(None, "day_tint_level", 0.80))
         for key, name, default in (("uFigTint", "day_tint_color", "#b8b4ff"), ("uFigTintB", "day_tint_warm", "#ffd8c6")):
             c = _lin(opt(None, name, default))
             c = c / max(float(np.dot(c, [0.2126, 0.7152, 0.0722])), 1e-6) * lvl
