@@ -420,6 +420,9 @@ uniform vec4 uShards; uniform vec3 uShardCol;
 uniform vec4 uIce; uniform vec3 uIceCol, uThawCol;
 uniform vec4 uField; uniform vec3 uFieldCol;
 uniform float uShadeK;
+uniform vec4 uInkA, uInkB, uInkC;   // per-text colour (display rgb, strength) for slot A, slot B and the credit
+uniform float uTheme;
+uniform sampler2D uLeafT; uniform float uLeafK;   // LEAVES tint: leaf colour (premultiplied) and coverage               // SKY_THEME: 0 the original night-to-dawn world, 1 a bright day (lighter lake, vignette)
 uniform float uCalm, uCalmY;   // calm lower third: rings, glitter, reflections and thaw edges fade there
 uniform float uCamOn; uniform sampler2D uCamBg;   // CAMERA (engine/sky_camera.py): the background with parallax
 float calmK(float y){ return 1.0-uCalm*(1.0-smoothstep(uCalmY-0.07, uCalmY+0.05, y)); }
@@ -460,15 +463,18 @@ vec3 scene(vec2 uv){
   // the far range: the loudness of the whole song, left to right
   float ry = uHorizon + texture(uRidge, vec2(uv.x,0.5)).r;
   float m1 = smoothstep(ry+aa, ry-aa, uv.y);
+  // SKY_THEME: the far range fades into the haze before its ends, so no hard step shows on a bright sky
+  float ef = mix(1.0, smoothstep(0.035, 0.11, uv.x)*smoothstep(0.965, 0.89, uv.x), uTheme);
+  m1 *= ef;
   float lit = smoothstep(uProg+0.003, uProg-0.014, uv.x);
   float depth = clamp(hh/0.17, 0.0, 1.0);
   vec3 far = mix(uMtn*1.5, hz, 0.74-0.30*depth);
   far += uTrailCol*uTrail*lit*0.030*depth;
   c = mix(c, far, m1);
   float dr = uv.y-ry;
-  float rim = exp(-abs(dr)*900.0)*0.85 + exp(-max(dr,0.0)*95.0)*0.13*step(0.0,dr);
+  float rim = (exp(-abs(dr)*900.0)*0.85 + exp(-max(dr,0.0)*95.0)*0.13*step(0.0,dr))*ef;
   c += uTrailCol*uTrail*lit*rim;
-  c += uTrailCol*0.03*exp(-abs(dr)*900.0)*(1.0-lit);
+  c += uTrailCol*0.03*exp(-abs(dr)*900.0)*(1.0-lit)*ef;
   // mist, then two nearer ranges
   c = mix(c, hz*1.04, exp(-hh/0.030)*0.30);
   float y2 = uHorizon + 0.010 + 0.105*pow(ridged1(uv.x*2.1, 11.0), 1.7);
@@ -478,7 +484,7 @@ vec3 scene(vec2 uv){
   c = mix(c, hz*1.02, exp(-hh/0.016)*0.26);
   float y3 = uHorizon + 0.003 + 0.070*pow(ridged1(uv.x*3.3+5.0, 3.7), 2.0) + 0.0022*vnoise(vec2(uv.x*520.0,1.0));
   float m3 = smoothstep(y3+aa, y3-aa, uv.y);
-  c = mix(c, mix(uMtn*0.30, hz, 0.05), m3);
+  c = mix(c, mix(uMtn*mix(0.30, 0.78, uTheme), hz, mix(0.05, 0.30, uTheme)), m3);
   return c;
 }
 
@@ -507,6 +513,17 @@ float wordMask(sampler2D tx, vec2 uv, vec4 p, vec2 bnd, vec2 off){
   float dis = 1.0-smoothstep(0.0, 1.0, (p.z-er*0.9)/0.8);
   return texture(tx, uv).g*rev*dis*p.w;
 }
+// the letters themselves (sharp channel), revealed and dissolved exactly as TEXT_FS draws them: per-text colour
+float inkMask(sampler2D tx, vec2 uv, vec4 p, vec2 bnd, vec2 off){
+  uv += off;
+  if(uv.y<0.0 || uv.y>1.0) return 0.0;
+  float od = clamp((uv.x-bnd.x)/(bnd.y-bnd.x), 0.0, 1.0);
+  float arrive = od*(p.y-1.35)+1.35;
+  float rev = smoothstep(-0.25, 0.75, p.x-arrive);
+  float er = vnoise(uv*vec2(uAspect,1.0)*70.0);
+  float dis = 1.0-smoothstep(0.0, 1.0, (p.z-er*0.9)/0.8);
+  return clamp(texture(tx, uv).r*1.04, 0.0, 1.0)*rev*dis*clamp(p.w, 0.0, 1.0);
+}
 // where any text (expression, title, end card, fragment, credit) lies: reflections and light waves skip it
 float creditField(vec2 q){
   vec2 cuv = (q-uCredit.xy)/uCredit.z + uC0;
@@ -531,7 +548,7 @@ vec3 procedural(vec2 sv){
               + sin(uv.y*240.0+uT*1.2)*0.0010;
     vec2 ruv = vec2(uv.x+wob, uHorizon+(uHorizon-uv.y)*1.22+wob*0.4);
     col = scene(ruv);
-    col *= mix(0.82, 0.30, pow(d,0.75));
+    col *= mix(mix(0.82, 0.95, uTheme), mix(0.30, 0.74, uTheme), pow(d,0.75));
     // reflected lights
     float rf = (1.0-d)*(1.0-d);
     float ck = calmK(sv.y);
@@ -747,26 +764,38 @@ void main(){
   float shAll = max(sh, ct.b*min(uCredit.w*1.7, 1.0));
   float lumB = dot(col, vec3(0.2126,0.7152,0.0722));
   float capB = 0.065/max(uShadeK, 0.5);
-  float vk = smoothstep(0.0, 0.85, shAll);
+  // TEXT_SHADOW 0 is truly zero: no cap on bright scenery and no dark round the credit. zk is 1 (unchanged) from
+  // TEXT_SHADOW 0.05 up, and fades to 0 below it so a Track can ease the protection away without a jump.
+  float zk = clamp(uShadeK*20.0, 0.0, 1.0);
+  float vk = smoothstep(0.0, 0.85, shAll)*zk;
   float sc = mix(1.0, min(capB/max(lumB,1e-5), 1.0), vk*0.92);
   col *= sc;
   float lumD = dot(col, vec3(0.2126,0.7152,0.0722));
   col = mix(col, vec3(lumD)*vec3(1.08,0.96,0.88), vk*min((1.0-sc)*2.2, 1.0)*0.85);
   float tight = max(wordMask(uTextA, uv, uTxA, uBndA, uOffA), wordMask(uTextB, uv, uTxB, uBndB, uOffB));
   col *= 1.0-min(0.50*uShadeK*tight, 0.92);
-  col *= 1.0-(ct.g*0.50+ct.b*0.34)*uCredit.w;
+  col *= 1.0-(ct.g*0.50+ct.b*0.34)*uCredit.w*zk;
+  if(uLeafK>0.0){   // leaves are painted green over the scene (light alone only brightens a bright sky)
+    vec4 lf = texture(uLeafT, uv);
+    float k = uLeafK*(1.0-textField(uv));
+    col = col*(1.0-lf.a*k) + lf.rgb*k;
+  }
   vec3 L = texture(uL, uv).rgb;
   vec3 bl = texture(uB1,uv).rgb*0.34 + texture(uB2,uv).rgb*0.28 + texture(uB3,uv).rgb*0.24 + texture(uB4,uv).rgb*0.22;
   col += L + bl*uBloom;
   // lens: vignette, exposure, filmic curve
   vec2 vq = (uv-0.5)*vec2(1.15,1.0);
-  col *= mix(1.0, 0.62, smoothstep(0.30,1.0,length(vq)*1.35));
+  col *= mix(1.0, mix(0.62, 0.90, uTheme), smoothstep(0.30,1.0,length(vq)*1.35));
   col *= uExposure*uFade;
   col = (col*(2.51*col+0.03))/(col*(2.43*col+0.59)+0.14);
   col = pow(clamp(col,0.0,1.0), vec3(1.0/2.2));
   float luma = dot(col, vec3(0.2126,0.7152,0.0722));
   col = clamp(mix(vec3(luma), col, 1.18), 0.0, 1.0);
   col = mix(col, col*col*(3.0-2.0*col), 0.24);
+  // per-text colour (navy, coral...): the letters are painted in exactly that colour over the scene and its glow
+  if(uInkA.w>0.0) col = mix(col, uInkA.rgb*uFade, inkMask(uTextA, uv, uTxA, uBndA, uOffA)*uInkA.w);
+  if(uInkB.w>0.0) col = mix(col, uInkB.rgb*uFade, inkMask(uTextB, uv, uTxB, uBndB, uOffB)*uInkB.w);
+  if(uInkC.w>0.0) col = mix(col, uInkC.rgb*uFade, clamp(ct.r*1.04, 0.0, 1.0)*min(uCredit.w, 1.0)*uInkC.w);
   // fine grain keeps the dark gradients smooth on a big screen
   vec2 px = gl_FragCoord.xy;
   float n1 = hash21(px+vec2(uFrame*1.37, uFrame*0.73));

@@ -6,6 +6,7 @@ them render exactly as before. How a song uses these is in engine/UPGRADE-HOWTO.
   SCENES     painted plates behind the light, with crossfades, slow zoom and pan, and a shimmering lake
   FIGURES    people of light made of golden sparks that gather, move from pose to pose and dissolve into the arch
   SNOW, ICE, SHARDS, SHARDS_MEND, GOLDEN_FIELD, NET, BEAM   effect layers driven by Tracks (0 = off)
+  BUBBLES, LEAVES, per-text color, GLOW_COLOR, SKY_THEME   theme colours (UPGRADE-HOWTO section H3)
   FRAGMENTS  style="write" | "reflection" | "petals" | "engrave" (or the default "sparks")
 """
 import math
@@ -20,6 +21,7 @@ import text as T
 import upgrade_shaders as U
 import shaders as G
 
+THEMES = {"campaign_day": 1.0, "original": 0.0}
 TRANSITIONS = {"fade": 0, "dissolve": 1, "bloom": 2, "ripple": 3, "push": 4}
 STYLES = {"write": 1, "reflection": 2, "petals": 3, "engrave": 4}
 
@@ -30,6 +32,14 @@ def val(name, t, default=None):
     if v is None:
         return default
     return v(t) if callable(v) else v
+
+
+def _shown(hexs):
+    """Linear light that the composite's filmic curve shows as this colour (for paint, not light)."""
+    h = hexs.lstrip("#")
+    y = np.clip((np.array([int(h[i:i + 2], 16) for i in (0, 2, 4)], dtype=np.float64) / 255.0) ** 2.2, 0.0, 0.975)
+    a, b, c = 2.43 * y - 2.51, 0.59 * y - 0.03, 0.14 * y
+    return (-b - np.sqrt(np.maximum(b * b - 4.0 * a * c, 0.0))) / (2.0 * a)
 
 
 def col(c, default):
@@ -135,6 +145,9 @@ class Upgrade:
         self.has_snow = getattr(S, "SNOW", None) is not None
         self.has_net = getattr(S, "NET", None) is not None
         self.has_beam = getattr(S, "BEAM", None) is not None
+        self.has_bubbles = getattr(S, "BUBBLES", None) is not None
+        self.has_leaves = getattr(S, "LEAVES", None) is not None
+        self._ink_map = None
         self._init_plates()
         if self.figs:
             self.p_figp = prog(U.FIGP_VS, U.FIGP_FS)
@@ -145,6 +158,20 @@ class Upgrade:
             self.p_snow = prog(U.SNOW_VS, U.SNOW_FS)
             sd = np.random.default_rng(11).random((4200, 4)).astype("f4")
             self.v_snow = ctx.vertex_array(self.p_snow, [(ctx.buffer(sd.tobytes()), "4f", "aSeed")])
+        if self.has_bubbles:
+            self.p_bub = prog(U.BUB_VS, U.BUB_FS)
+            sd = np.random.default_rng(23).random((int(getattr(S, "BUBBLES_COUNT", 140)), 4)).astype("f4")
+            self.v_bub = ctx.vertex_array(self.p_bub, [(ctx.buffer(sd.tobytes()), "4f", "aSeed")])
+        if self.has_leaves:
+            self.p_leaf = prog(U.LEAF_VS, U.LEAF_FS)
+            sd = np.random.default_rng(29).random((int(getattr(S, "LEAVES_COUNT", 48)), 4)).astype("f4")
+            self.v_leaf = ctx.vertex_array(self.p_leaf, [(ctx.buffer(sd.tobytes()), "4f", "aSeed")])
+            # the tint pass: leaves painted over the scene in the composite (half size, soft edges)
+            self.t_leaf = ctx.texture((max(self.w // 2, 8), max(self.h // 2, 8)), 4, dtype="f2")
+            self.t_leaf.filter = (moderngl.LINEAR, moderngl.LINEAR)
+            self.t_leaf.repeat_x = self.t_leaf.repeat_y = False
+            self.f_leaf = ctx.framebuffer([self.t_leaf])
+            self.leaf_k = 0.0
         if self.has_net:
             self.p_net = prog(G.QUAD_VS, U.NET_FS)
             setu(self.p_net, uFlip=1.0)
@@ -251,10 +278,84 @@ class Upgrade:
                       float(val("ICE_FRAME", t, 0.0) or 0.0))
         kw["uIceCol"] = col(val("ICE_COLOR", t), "#cfe2ff")
         kw["uThawCol"] = col(val("THAW_COLOR", t), "#ffbf8a")
+        self._theme_uniforms(kw, t, P)
         fld = val("GOLDEN_FIELD", t, 0.0) or 0.0
         kw["uField"] = (float(fld), float(val("FIELD_LINE", t, S.HORIZON)), float(val("FIELD_SPEED", t, 1.1)), 0.0)
         kw["uFieldCol"] = col(val("FIELD_COLOR", t), "#ffc35a")
         setu(prog, **kw)
+
+    # ------------------------------------------------------------ H3. theme colours: per-text colour and the day sky
+    def text_light(self, m, t, core="#fff5df", glow="#ffc48c"):
+        """Colours of a text's light (uCol, uGlowCol for TEXT_FS or CREDIT_FS). Unchanged unless the text sets
+        `color` or `glow`, or the song sets GLOW_COLOR. With `color` the letters themselves are painted in the
+        composite (see _ink), and the light buffer only carries the soft glow round them."""
+        m = m or {}
+        g = m.get("glow") or val("GLOW_COLOR", t, None) or glow
+        if m.get("color"):
+            gs = float(m.get("glow_strength", val("GLOW_STRENGTH", t, 1.0)))
+            return dict(uCol=S.lin(g) * 0.55 * gs, uGlowCol=S.lin(g) * 1.6 * gs)
+        return dict(uCol=S.lin(core), uGlowCol=S.lin(g))
+
+    def text_sparks(self, m, t, a="#fff0cc", b="#ffb070"):
+        """Colours of the sparks that form a text (uColA, uColB): the glow colour when one is set."""
+        m = m or {}
+        g = m.get("glow") or val("GLOW_COLOR", t, None)
+        return dict(uColA=S.lin(a), uColB=S.lin(g if g else b) * 1.15)
+
+    @staticmethod
+    def _ink(m):
+        c = (m or {}).get("color")
+        if not c:
+            return (0.0, 0.0, 0.0, 0.0)
+        h = c.lstrip("#")
+        rgb = [int(h[i:i + 2], 16) / 255.0 for i in (0, 2, 4)]
+        return tuple(rgb) + (float(m.get("color_alpha", 1.0)),)
+
+    def _slot_metas(self, t):
+        """Which text settings are in the composite's slots A and B now (matched by texture)."""
+        R = self.R
+        if self._ink_map is None:
+            mp = {}
+            for wd in getattr(R, "words", []):
+                mp[id(wd["tex"])] = wd["meta"]
+            if getattr(R, "tag", None):
+                mp[id(R.tag["tex"])] = S.TAGLINE
+            for fr in getattr(R, "frags", []):
+                mp[id(fr["tex"])] = fr["meta"]
+            for f in getattr(self, "fd", []):
+                mp[id(f["tex"])] = f["meta"]
+            self._ink_map = mp
+        try:
+            A, B = R.text_plan(t)
+            return self._ink_map.get(id(A[0])), self._ink_map.get(id(B[0]))
+        except Exception:
+            return None, None
+
+    def _theme_uniforms(self, kw, t, P):
+        if self._any_color():
+            ma, mb = self._slot_metas(t)
+            kw["uInkA"], kw["uInkB"] = self._ink(ma), self._ink(mb)
+            kw["uInkC"] = self._ink(getattr(S, "CREDIT", {}))
+        if self.has_leaves and self.leaf_k > 0.0:
+            self.t_leaf.use(location=12)
+            kw["uLeafT"], kw["uLeafK"] = 12, self.leaf_k
+        else:
+            kw["uLeafK"] = 0.0
+        th = val("SKY_THEME", t, None)
+        k = THEMES.get(th, 0.0) if isinstance(th, str) else float(th or 0.0)
+        kw["uTheme"] = float(k)
+        if k > 0.0:
+            # day theme: the far hills are a pale blue-peach haze instead of dark ridges
+            orig = P["sky_mid"] * 0.22 + S.lin("#05060f")
+            day = (np.asarray(P["sky_hor"]) * 0.55 + np.asarray(P["sky_top"]) * 0.45) * 1.15
+            kw["uMtn"] = orig * (1.0 - k) + day * k
+
+    def _any_color(self):
+        if getattr(self, "_has_color", None) is None:
+            metas = list(getattr(S, "PHRASES", [])) + [getattr(S, "TITLE", {}), getattr(S, "TAGLINE", {}),
+                                                        getattr(S, "CREDIT", {})] + list(getattr(S, "FRAGMENTS", []))
+            self._has_color = any(isinstance(m, dict) and m.get("color") for m in metas)
+        return self._has_color
 
     # ------------------------------------------------------------ B. people of light
     def _init_figures(self):
@@ -398,6 +499,36 @@ class Upgrade:
                      uSpeed=float(val("SNOW_SPEED", t, 1.0)), uCol=col(val("SNOW_COLOR", t), "#eef4ff") * 0.95,
                      uCalm=float(val("BOTTOM_CALM", t, 0.0) or 0.0), uCalmY=0.335)
                 self.v_snow.render(moderngl.POINTS)
+        if self.has_bubbles:
+            a = val("BUBBLES", t, 0.0) or 0.0
+            if a > 0.001:
+                setu(self.p_bub, uT=t, uAmount=float(a), uPx=self.px, uSize=float(val("BUBBLES_SIZE", t, 1.0)),
+                     uSpeed=float(val("BUBBLES_SPEED", t, 1.0)), uSheen=float(val("BUBBLES_SHEEN", t, 1.0)),
+                     uCol=col(val("BUBBLES_COLOR", t), "#f4fbff"),
+                     uCalm=float(val("BOTTOM_CALM", t, 0.0) or 0.0), uCalmY=0.335)
+                self.v_bub.render(moderngl.POINTS)
+        if self.has_leaves:
+            a = val("LEAVES", t, 0.0) or 0.0
+            if a > 0.001:
+                lc = val("LEAVES_COLORS", t, None) or ("#5fd040", "#d8e860")
+                setu(self.p_leaf, uT=t, uAmount=float(a), uPx=self.px, uSize=float(val("LEAVES_SIZE", t, 1.0)),
+                     uSpeed=float(val("LEAVES_SPEED", t, 1.0)), uWind=float(val("LEAVES_WIND", t, 0.4)),
+                     uColA=S.lin(lc[0]), uColB=S.lin(lc[1]),
+                     uCalm=float(val("BOTTOM_CALM", t, 0.0) or 0.0), uCalmY=0.335)
+                tk = float(val("LEAVES_TINT", t, 0.85))
+                setu(self.p_leaf, uMask=0, uTintK=tk)
+                self.v_leaf.render(moderngl.POINTS)
+                # tint pass into its own buffer, then back to the light buffer
+                self.f_leaf.use()
+                self.f_leaf.clear(0.0, 0.0, 0.0, 0.0)
+                self.ctx.blend_func = (moderngl.ONE, moderngl.ONE_MINUS_SRC_ALPHA)
+                setu(self.p_leaf, uMask=1, uPx=self.px * 0.5, uColA=_shown(lc[0]), uColB=_shown(lc[1]))
+                self.v_leaf.render(moderngl.POINTS)
+                self.ctx.blend_func = (moderngl.ONE, moderngl.ONE)
+                self.R.f_L.use()
+                self.leaf_k = tk
+            else:
+                self.leaf_k = 0.0
         if self.has_beam:
             a = val("BEAM", t, 0.0) or 0.0
             if a > 0.001:
@@ -460,10 +591,11 @@ class Upgrade:
             hot = {1: "#fff4dc", 2: "#e6f0ff", 3: "#ffe8ee", 4: "#ffb662"}[st]
             pc = m.get("colors") or getattr(S, "PETAL_COLORS", None) or ("#ff9fb2", "#ffe0d2")
             f["tex"].use(location=0)
+            tl = self.text_light(m, t, "#fff1d6", "#ffc48c")
             setu(self.p_fragt, uTex=0, uMode=st, uLocal=float(loc), uDur=float(dur), uOut=float(out),
                  uAspect=S.ASPECT, uHz=float(m.get("line", S.HORIZON)), uAlpha=float(m.get("alpha", 0.95)),
-                 uTop=float(f["top"]), uBot=float(f["bot"]), uBounds=f["bounds"], uCol=S.lin("#fff1d6"),
-                 uGlowCol=S.lin(m.get("glow", "#ffc48c")), uHot=S.lin(hot))
+                 uTop=float(f["top"]), uBot=float(f["bot"]), uBounds=f["bounds"], uCol=tl["uCol"],
+                 uGlowCol=tl["uGlowCol"], uHot=S.lin(hot))
             self.v_fragt.render(moderngl.TRIANGLE_STRIP)
             if st == 3:
                 ca, cb = S.lin(pc[0]) * 0.95, S.lin(pc[1]) * 0.7
