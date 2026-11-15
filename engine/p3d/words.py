@@ -654,11 +654,15 @@ class Word:
         s = self.s[:m]
         k = k_of
         w = self.W
-        rho = self.rho[:m] + (0.85 * w * (0.6 + 0.9 * s[:, 1])) * k
-        phi = self.phi[:m] + turn * (TAU * (0.8 + 0.8 * s[:, 2])) * k ** 1.4
+        # every petal's path is a spiral between its place and one far point of the sky (the arm): together
+        # they make one swirling stream
+        arm = self.opts.get("arm", 2.3)                               # the direction the stream comes from (radians)
+        gap = np.mod(arm - self.phi[:m] + 0.5 * (s[:, 2] - 0.5), TAU) + TAU * self.opts.get("swirl", 1.0)
+        rho = self.rho[:m] + (1.05 * w * (0.8 + 0.4 * s[:, 1]) - self.rho[:m]) * k
+        phi = self.phi[:m] + turn * gap * k ** 1.25
         dx = rho * np.cos(phi) - self.xl[:m]
-        dy = rho * np.sin(phi) + self.ymid - self.yl[:m] + lift * 0.9 * self.Ht * k * k
-        dz = w * 0.85 * (s[:, 3] - 0.22) * k
+        dy = rho * np.sin(phi) + self.ymid - self.yl[:m] + lift * 0.25 * self.Ht * k * k
+        dz = w * (0.55 * (s[:, 3] - 0.2) + 0.35) * k
         return dx, dy, dz
 
     def _arr_petals(self, P, a, t, cam, F, tg):
@@ -738,7 +742,7 @@ class Word:
         self._patches(P, a, st + dur + hold, spread=0.03)
         seen = _ss(0.0, 0.08, a)
         gone = 1.0 - _ss(st + dur + hold, st + dur + hold + 0.05, a)
-        big = (0.030 + 0.018 * s[:, 2]) * self.W * self.opts.get("bird_size", 1.0)
+        big = (0.018 + 0.012 * s[:, 2]) * self.W * self.opts.get("bird_size", 1.0)
         size = _mix(big, np.maximum(self.size0[:m] * 4.0, big * 0.45), e)
         vis = (seen * gone) > 0.01
         if vis.any():
@@ -760,9 +764,10 @@ class Word:
         dt = a - fill
         P["alpha"] = _ss(0.0, 0.06, dt)
         P["emit"] = 1.0 + 1.2 * np.exp(-np.maximum(dt, 0.0) / 0.05) * (dt > 0.0)
-        fade = 1.0 - 0.75 * float(_ss(0.90, 1.0, a))
-        P["extra"].append(dict(pos=pc, size=self.size0[:m] * (3.0 + 3.0 * s[:, 1]), color=_mix(lin(WARM), self.c_letter, 0.3),
-                               alpha=seen * fade, emit=2.6, kind="spark", twinkle=0.8, seed=s[:, 0]))
+        fade = 1.0 - float(_ss(0.72, 1.0, a))
+        P["extra"].append(dict(pos=pc, size=self.size0[:m] * (2.2 + 2.2 * s[:, 1]) * (1.0 - 0.4 * (1.0 - fade)),
+                               color=_mix(lin(WARM), self.c_letter, 0.3), alpha=seen * fade, emit=2.2, kind="spark",
+                               twinkle=0.8, seed=s[:, 0]))
         if len(self.edges):
             ea, eb = self.edges[:, 0], self.edges[:, 1]
             oe = 0.5 * (self.ord[ea] + self.ord[eb])
@@ -797,10 +802,10 @@ class Word:
         P["emit"] = 1.0 + 1.5 * np.exp(-np.abs(p - 1.0) / 0.04) * (p < 1.0)
         fl = float(_ss(0.0, 0.10, a) * (1.0 - _ss(0.14, 0.62, a)))
         if fl > 0.01:
-            P["extra"].append(dict(pos=f[None, :], size=0.16 * w, color=lin(WARM), alpha=fl, emit=10.0, kind="spark",
+            P["extra"].append(dict(pos=f[None, :], size=0.05 * w, color=lin(WARM), alpha=fl, emit=8.0, kind="spark",
                                    dof=False))
-            P["extra"].append(dict(pos=f[None, :], size=0.9 * w, color=_mix(lin("#ffd27a"), lin("#7ec8ff"), 0.5),
-                                   alpha=0.16 * fl, kind="soft", dof=False))
+            P["extra"].append(dict(pos=f[None, :], size=0.55 * w, color=_mix(lin("#ffd27a"), lin("#7ec8ff"), 0.5),
+                                   alpha=0.10 * fl, kind="soft", dof=False))
         ray = np.nonzero((s[:, 3] < 0.012) & (p > 0.0) & (p < 0.98))[0]
         if ray.size:
             P["extra"].append(dict(pos=np.repeat(f[None, :], ray.size, 0), pos2=pos[ray], size=0.0012 * w,
@@ -836,7 +841,7 @@ class Word:
         """The words show first as a reflection in the still water, then rise out of it, column by column."""
         s = self.s
         level = float(self.opts.get("water", 0.0))
-        p = np.clip((a - (0.24 + 0.48 * self.xn + 0.03 * s[:, 0])) / 0.27, 0.0, 1.0)
+        p = np.clip((a - (0.24 + 0.48 * self.xn)) / 0.27, 0.0, 1.0)
         e = 1.0 - (1.0 - p) ** 3 + 0.05 * np.sin(np.pi * p) * (1.0 - p)
         top = float(tg[:, 1].max()) - level
         pos = tg.copy()
@@ -890,12 +895,12 @@ class Word:
         nine = np.stack([lin(c) for c in NINE]).astype(np.float32)
         col = _mix(nine[np.arange(m) % 9], self.c_letter[None, :], (lift ** 3)[:, None])
         seen = _ss(0.0, 0.08, a) * (1.0 - _ss(0.92, 1.0, p))
-        size = _mix(np.full(m, 0.016 * w, np.float32), self.size0[:m] * 2.5, lift ** 2)
-        vis = seen > 0.01
+        size = _mix(np.full(m, 0.010 * w, np.float32), self.size0[:m] * 2.5, lift ** 2)
+        vis = (seen > 0.01) & (np.arange(m) % 3 == 0)      # one light in three is seen; each brings its neighbours
         if vis.any():
-            P["extra"].append(dict(pos=pc[vis], size=size[vis], color=col[vis], alpha=seen[vis], emit=2.2,
+            P["extra"].append(dict(pos=pc[vis], size=size[vis], color=col[vis], alpha=seen[vis], emit=1.8,
                                    kind="soft", twinkle=0.35, seed=s[vis, 0], lod=False))
-            P["extra"].append(dict(pos=pc[vis], size=size[vis] * 5.0, color=col[vis], alpha=seen[vis] * 0.10,
+            P["extra"].append(dict(pos=pc[vis], size=size[vis] * 5.0, color=col[vis], alpha=seen[vis] * 0.06,
                                    kind="soft", seed=s[vis, 0]))
 
     def _arr_rays(self, P, a, t, cam, F, tg):
@@ -1043,7 +1048,7 @@ class Word:
         al = _ss(0.0, 0.06, lp) * (1.0 - _ss(0.72, 1.0, lp)) * (l > st)
         vis = al > 0.01
         if vis.any():
-            big = (0.030 + 0.018 * s[:, 2]) * w * self.opts.get("bird_size", 1.0)
+            big = (0.018 + 0.012 * s[:, 2]) * w * self.opts.get("bird_size", 1.0)
             size = _mix(np.maximum(self.size0[:m] * 4.0, big * 0.45), big, _ss(0.0, 0.2, lp))
             P["extra"].append(dict(pos=(tg[:m] + delta)[vis], size=size[vis], color=_mix(lin(WARM), self.c_letter, 0.4),
                                    alpha=al[vis] * 0.95, rot=rot[vis], kind="bird", seed=s[vis, 3], emit=1.3))
@@ -1116,9 +1121,9 @@ class Word:
             + ((s[:, 2] - 0.5) * 1.0)[:, None] * cu[None, :]
         pos = tg + (goal.astype(np.float32) - tg) * e[:, None]
         pos += _swirl(tg, t, 2.0 / max(w, 1e-6) * 4.0, 5.0) * (0.05 * w * np.sin(np.pi * e))[:, None]
-        keep = s[:, 3] < 0.22
+        keep = s[:, 3] < 0.12
         P["pos"] = pos.astype(np.float32)
-        P["alpha"] = np.where(keep, (1.0 - _ss(0.80, 1.0, lp)) * (1.0 + 2.5 * _ss(0.1, 0.5, lp)),
+        P["alpha"] = np.where(keep, (1.0 - _ss(0.80, 1.0, lp)) * (1.0 + 3.0 * _ss(0.1, 0.5, lp)),
                               1.0 - _ss(0.05, 0.45, lp)).astype(np.float32)
         P["assist"] = 1.0 - _ss(0.0, 0.10, lp)
 
@@ -1153,8 +1158,8 @@ class Word:
         seen = _ss(0.0, 0.12, l) * (1.0 - _ss(0.72 + 0.2 * s[:, 3], 1.0, l))
         vis = seen > 0.01
         if vis.any():
-            P["extra"].append(dict(pos=pc[vis], size=(self.size0[:m] * (3.0 + 3.0 * s[:, 1]))[vis],
-                                   color=_mix(lin(WARM), self.c_letter, 0.3), alpha=seen[vis], emit=2.6, kind="spark",
+            P["extra"].append(dict(pos=pc[vis], size=(self.size0[:m] * (2.2 + 2.2 * s[:, 1]))[vis],
+                                   color=_mix(lin(WARM), self.c_letter, 0.3), alpha=seen[vis], emit=2.2, kind="spark",
                                    twinkle=0.8, seed=s[vis, 0]))
         if len(self.edges):
             ea, eb = self.edges[:, 0], self.edges[:, 1]

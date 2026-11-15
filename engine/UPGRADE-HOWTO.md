@@ -751,3 +751,89 @@ Each is optional. A song file that sets none of them runs the same code as befor
 - **A symbol's `paint`** (SYMBOLS entry, default off): a line of light pales to pink or white on a blue sky whatever its colour, because light can only be added to the blue behind it (the epic promo's orange and coral hearts both read pink). `paint=1.0` also paints the lines in exactly their colour over the scene, under the light, so an orange line is orange on any sky. `paint_roles=("coral", "orange")` paints only the lines with those colour roles (default: all of them; the others stay pure light), `paint_light` (default 0.3) is the share of their own light the painted lines keep (more light is paler), `paint_width` (default 1.7) the width of the painted line against the line of light. The mirror image in the lake stays light alone, at its full strength (painted, it was heavier than the symbol above it). When the symbol leaves (`out`) the paint fades in `paint_out` seconds (default 0.9) and the lines fly as light. Code: `engine/water.py` (`_draw_symbol`), `SYM_PAINT_FS` in `water_shaders.py`, the composite block `SYMBOL_PAINT` (compiled in only for a song with a painted symbol; texture unit 16). The emblem's builder gives the left heart the role `coral` and the right one `orange`; the real emblem has the orange heart on the left, so a song swaps the two with `color=dict(coral="#F39A3A", orange="#F0566A")`.
 - **`TITLE["label_size"]`** (default 32, in 1080p pixels): the size of the small label above the end card's title; its letter spacing grows with it.
 - A note on section I: `glow=` in a PHRASES entry has no effect while the entry has `anim=` (`engine/text_anims.py` draws animated expressions with fixed colours); it works for expressions with the classic sparks and for fragments. When the automatic check calls an expression weak, look at what is bright near the letters in the still before changing the text: in the epic promo it was the sun's bloom under the second line, not the text's own glow.
+
+## X. Particle words: the nine expressions as light in the 3D world (2026-11-15, branch engine-p3d-words)
+
+For songs that use the 3D layer (`P3D`, section V). The Words of Mother's Love become point sets (`engine/p3d/api.py`): each expression is tens of thousands of points on a plane (or a gentle curve) standing anywhere in space, made of the same light as the people, mirrored in the lake, blurred by the lens when it is not being read. They arrive and leave in nine ways each, may hand their particles to each other, and several can be on screen at once at different depths. Code: `engine/p3d/words.py` (pure numpy, no graphics needed). Working example: `engine/songs/demo_p3d_words.py`.
+
+The words themselves live in `words.EXPRESSIONS`: the nine labels with the full campaign wording (DESIGN-SYSTEM section 5; "(or root)" stays), their line breaks and their colours. A song never retypes them: it names an expression with `expr="Gratitude"` (or 1 to 9).
+
+```python
+from p3d import words as PW
+
+WORDS = PW.Words([
+    dict(expr="Greeting", pos=(0.0, 3.2, -2.0), width=5.0,
+         t_in=1.0, t_read0=3.0, t_read1=5.8, t_out=7.6, arrive="touch", leave="flock"),
+    dict(expr="Gratitude", pos=(-3.0, 4.0, -9.0), width=11.0, face="camera",
+         t_in=4.4, t_read0=6.6, t_read1=9.4, t_out=11.2),          # arrives while the Greeting is read
+    dict(expr="Apology", pos=(2.0, 1.6, -5.0), width=9.0,
+         t_in=9.4, t_read0=11.4, t_read1=14.2, t_out=16.0, arrive="morph", source="Gratitude"),
+])
+
+def build(scene):                     # the song's P3D["setup"]
+    WORDS.add_to(scene)
+    WORDS.check(camera_at)            # prints what it finds; camera_at(t) gives the camera (section V)
+```
+
+**The four times of a word** (seconds of song time): `t_in` the first particle appears; `t_read0` the word is whole and the reading moment starts; `t_read1` the reading moment ends; `t_out` the last particle is gone. Give every expression a reading moment of at least 2.5 s. Arrivals look best with 1.8 to 3 s, leavings with 1.5 to 2.5 s. Words may overlap freely in time.
+
+**Keys of one word** (a dict in `PW.Words([...])`, or `PW.Word(...)`):
+
+| Key | Default | Meaning |
+|---|---|---|
+| `expr` | | one of the nine labels or 1 to 9: fills label, lines and colour. Or `label=`, `lines=[...]` for any other text (one or two lines) |
+| `pos` | `(0, 3, 0)` | the centre of the phrase block in metres (y up, the lake is y = 0), or a function of t |
+| `width` | 8.0 | metres across the widest line of the phrase (`em=` instead: metres per em, for the same letter size on every word) |
+| `facing` | 0 | the azimuth the words face, degrees (0 faces +z, as `p3d.at`) |
+| `face` | `"fixed"` | `"camera"` turns the plane about the vertical so it always faces the camera; `"screen"` keeps it flat to the picture |
+| `tilt`, `curve` | 0 | degrees the plane leans back; radius in metres of a gentle curve (positive bends the ends toward the reader) |
+| `t_in`, `t_read0`, `t_read1`, `t_out` | | the four times |
+| `arrive`, `leave` | by expression | names from the two tables below; without them each expression uses its own pair (`PW.DEFAULT_STYLE`) |
+| `source` | | where the arrival comes from: a point, a function of t, a point set (a hand, a body), or the name of another word (`arrive="morph"`) |
+| `to` | | where the leaving goes: a point (a light of the arch), a point set (a person), or the name of another word |
+| `color`, `glow` | the expression's colour | display hex of the letters' colour and of the halo; `tint` (0.45): how much of the colour the letters keep (the rest is warm white, which reads best) |
+| `bright`, `halo`, `sparkle` | 1.0 | brightness of the letters, of the coloured halo round them, of the glints on them |
+| `sharp` | 1.0 | how far the settled letters ignore the lens blur: 1 keeps a word sharp for its whole reading moment whatever the camera focuses on; 0 leaves it to the lens. Flying particles always blur with the lens |
+| `n`, `n_label` | 42000, 6000 | points of the phrase and of the label |
+| `label_size` | 0.30 | size of the label in em of the phrase |
+| `wind` | `(1, 0.22, 0.1)` | the direction the air moves (leavings `wind`, `petals`, `flock`) |
+| `water` | 0.0 | height of the water for `lake`, `sink`, `gather` |
+| `name` | the label | the name other words and the scene use |
+
+**Nine ways of arriving** (`arrive=`), from `t_in` to `t_read0`:
+
+| Name | What happens | Made for | Options |
+|---|---|---|---|
+| `touch` | a flare where two hands touch; gold and blue particles write the words outward from it (ref 04) | Greeting | `source` the point of the touch (default the centre) |
+| `petals` | petals spiral in as one stream and land; each lights its part of the letters (ref 07) | Gratitude | `arm` (radians: where the stream comes from), `swirl` (turns), `petal_size`, `source` a body or hand |
+| `lake` | the words lie in the water as a reflection of words not yet there, then rise out of it, column by column | Apology | `water`; stand the word low over the lake |
+| `gather` | many small lights in the nine colours walk in over the water, stand under the words and rise into them | Inclusiveness | `carry` (height the lights are carried, 1.15 m), `water`, `source` |
+| `flock` | a flock of birds wheels round, each bird peels off to its place, the formation fills with light (ref 08) | Concession | `turns`, `flock_from`, `bird_size` |
+| `stars` | stars come out of the deep sky onto the letters, fine lines join them, the letters fill (ref 03) | Respect | |
+| `shaft` | flakes come down a shaft of light from above and assemble (ref 13 reversed); the shaft stays, fainter, while the words are read | Encouragement | `flake_size` |
+| `palm` | a stream of dust blown from an open palm settles into the letters in reading order (ref 14) | Consideration | `source` the palm (a point, a function of t, or a hand's point set), `blow` the direction of the breath |
+| `rays` | rays from a light behind the words burn them out of mist, along the rays first (ref 10, 16) | Compliment | |
+| `morph` | the particles of another word (or of any point set: a person) fly over and become this word | any | `source` (required) |
+
+**Nine ways of leaving** (`leave=`), from `t_read1` to `t_out`:
+
+| Name | What happens | Options |
+|---|---|---|
+| `wind` | the wind takes the words from the downwind side; they stream off as dust (ref 01, 16) | `wind`, `speed` |
+| `rise` | they dissolve upward from the top into flakes and sparks (ref 05, 11, 13) | `speed` |
+| `arch` | they stream into one light of the arch and wake it | `to` the light's place in the world |
+| `flock` | the letters lift off as birds and fly away together | `away` (direction), `speed`, `bird_size` |
+| `petals` | the letters turn to petals that spiral away on the wind | `petal_size`, `wind` |
+| `sink` | they fall like rain into the lake and spread over it as rings of light | `water` |
+| `bokeh` | they rush toward the camera and past it, opening into great soft discs | |
+| `give` | the particles fly to another body of light and become part of it | `to` a point set (a person) |
+| `stars` | the letters thin to stars joined by lines; the stars drift back into the sky | |
+| `morph` | the word is held until the next word (`to`, or the word whose `source` it is) starts, which takes over its particles | |
+
+**Handing particles on.** `dict(expr="Apology", arrive="morph", source="Gratitude", ...)` with `leave="morph"` on the Gratitude: the Gratitude is held until the Apology's `t_in`, then its particles fly to the Apology's letters (colour, size and count blend over). `leave="give", to=<a body's point set>` turns a word into a person; `arrive="morph", source=<a body's point set>` makes a word out of a person. `arrive="palm", source=<a hand>` and `arrive="touch", source=<the point where two hands meet>` take helper BODY's hands as emitters; without a source the word draws a small light of its own there.
+
+**Reading on a phone.** Imagine the frame 6 cm wide: 1 mm is 32 px of a 1080p picture. A word is easy to read when the x-height of its phrase is about 1 mm or more (an em of 80 px), so the longest expression (the Gratitude, 15.5 em wide) wants about two thirds of the picture's width while it is read, a short one (the Greeting, 6 em) a quarter. Settled letters are an even lattice of points with antialiased edges, sharp whatever the lens does (`sharp`), with a coloured halo. They are light: on a night, dusk or deep blue sky they read strongly; on a pale day sky light reads weakly (section S), so keep reading moments in front of the darker parts of the picture.
+
+**The check** `WORDS.check(camera=None, min_read=2.5, need_all=True, min_x_mm=0.9, calm=None, raise_on_error=False)` returns `(problems, notes)` and prints them. Always: the four times are in order; every word is read for at least `min_read` seconds; all nine expressions are there. With a camera (a function of t that gives the camera state): during every reading moment the word is wholly inside the picture, faces the camera, and is large enough for a phone; and two words that are read at the same time never cover each other on screen. `calm=0.335` also refuses a reading word that reaches into the calm lower third. Run it in the song's `setup` (or from a shell: `python -m p3d.words` in `engine/` runs a small self check).
+
+**Focus.** `WORDS.focus(t, eye, default)` gives a focus distance that pulls to the word being read and eases back to `default` afterwards: use it as the camera's focus when the words should be the sharp subject and everything else may go soft.
