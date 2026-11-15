@@ -673,8 +673,12 @@ class Upgrade:
         if self.has_beam:
             a = val("BEAM", t, 0.0) or 0.0
             if a > 0.001:
+                bto = tuple(val("BEAM_TO", t, (0.5, S.HORIZON)))
+                sky = getattr(self.R, "sky", None)
+                if sky is not None:   # CAMERA: the beam's foot stays on its spot of the ground; its top stays put
+                    bto = sky.place(bto, sky.ground_depth(bto[1]))
                 setu(self.p_beam, uT=t, uAspect=S.ASPECT, uAmt=float(a),
-                     uFrom=tuple(val("BEAM_FROM", t, (0.5, 1.02))), uTo=tuple(val("BEAM_TO", t, (0.5, S.HORIZON))),
+                     uFrom=tuple(val("BEAM_FROM", t, (0.5, 1.02))), uTo=bto,
                      uW=tuple(val("BEAM_WIDTH", t, (0.03, 0.08))), uCol=col(val("BEAM_COLOR", t), "#ffe2a8"))
                 self.v_beam.render(moderngl.TRIANGLE_STRIP)
         if self.has_net:
