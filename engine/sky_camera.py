@@ -326,9 +326,18 @@ class SkyCamera:
             ra[k] = r
         if "uRings" in p:
             p["uRings"].write(ra.tobytes())
+        # SKY_THEME (UPGRADE-HOWTO I): the camera's own copy of the world gets the same day look as the composite
+        # (pale hills, a light lake); 0 (no theme) leaves every pixel as before
+        th = val("SKY_THEME", t, None)
+        k = (1.0 if th == "campaign_day" else 0.0) if isinstance(th, str) else float(th or 0.0)
+        mtn = np.asarray(P["sky_mid"]) * 0.22 + S.lin("#05060f")
+        if k > 0.0:
+            day = (np.asarray(P["sky_hor"]) * 0.55 + np.asarray(P["sky_top"]) * 0.45) * 1.15
+            mtn = mtn * (1.0 - k) + day * k
+        setu(p, uTheme=float(k))
         setu(p, uSky=0, uRidge=1, uB2=2, uB3=3, uB4=4, uT=float(t), uProg=float(P["prog"]),
              uTrail=float(P["trail"]), uHi=float(P["hi"]), uSunInt=float(P["sun_int"]),
-             uMtn=np.asarray(P["sky_mid"]) * 0.22 + S.lin("#05060f"), uGlow=P["glow"], uTrailCol=S.lin("#ffd396"),
+             uMtn=mtn, uGlow=P["glow"], uTrailCol=S.lin("#ffd396"),
              uSunS=self.sun_screen(t, P), uNRings=min(len(rings), 16),
              uCalm=float(val("BOTTOM_CALM", t, 0.0) or 0.0), uCalmY=CALM_Y)
         self.v_bg.render(moderngl.TRIANGLE_STRIP)
