@@ -11,8 +11,10 @@ The flag: DRAFT=1 in the environment (this script sets it). Any layer can read i
 
 Without any change in the layers, apply() (called once on the built renderer) already cuts every particle layer
 (stars, motes, lanterns, petals, words, figures, snow, fragment sparks, and any new one) to that share by drawing
-only the first part of each vertex buffer; the seeds are random, so the part drawn is an even sample. The picture
-is drawn at 640x360, so every full-screen shader does a ninth of the work. Normal renders are untouched.
+only the first part of each vertex buffer; the seeds are random, so the part drawn is an even sample. A layer whose
+buffer is in a meaningful order (a rigged figure's body parts, a symbol's strokes) keeps it whole by putting
+draft_keep=True in the dict that holds its vertex array. The picture is drawn at 640x360, so every full-screen
+shader does a ninth of the work. Normal renders are untouched.
 """
 import os
 import sys
@@ -32,6 +34,8 @@ def _collect(obj, found, depth=0):
     import moderngl
     if isinstance(obj, moderngl.VertexArray):
         found[id(obj)] = obj
+    elif isinstance(obj, dict) and obj.get("draft_keep"):
+        return   # an ordered buffer (a rigged figure's body, a symbol's strokes): half of it is not an even sample
     elif depth < 4 and isinstance(obj, dict):
         for v in obj.values():
             _collect(v, found, depth + 1)

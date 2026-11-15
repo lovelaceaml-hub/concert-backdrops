@@ -94,7 +94,8 @@ class Water:
             vao = ctx.vertex_array(self.p_sym, [(ctx.buffer(data.tobytes()), "4f 3f 4f", "aP", "aCol", "aSeed")])
             ext = (pts[:, 0].min(), pts[:, 1].min(), pts[:, 0].max(), pts[:, 1].max())
             avg = cols.mean(axis=0)
-            self.sdata.append(dict(meta=m, vao=vao, ext=ext, avg=avg, kind=kind, size=size, stretch=stretch))
+            self.sdata.append(dict(meta=m, vao=vao, ext=ext, avg=avg, kind=kind, size=size, stretch=stretch,
+                                   draft_keep=True))   # points in drawing order: a draft keeps every stroke
 
     # ------------------------------------------------------------ the water line and the ripples at time t
     def water_line(self, t):

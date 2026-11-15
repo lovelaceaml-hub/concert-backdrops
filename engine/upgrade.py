@@ -557,7 +557,8 @@ class Upgrade:
             tex = ctx.texture((self.GRID, self.GRID), 3, dtype="f1")
             tex.filter = (moderngl.LINEAR, moderngl.LINEAR)
             tex.repeat_x = tex.repeat_y = False
-            self.rdata.append(dict(meta=m, rig=R, seeds=seeds_all, gidx=gidx, buf=buf, vao=vao, tex=tex, n=n))
+            self.rdata.append(dict(meta=m, rig=R, seeds=seeds_all, gidx=gidx, buf=buf, vao=vao, tex=tex, n=n,
+                                   draft_keep=True))   # body parts in order, then the trails: a draft keeps all
 
     def _rig_glow(self, rd, pos, b):
         """The soft outline and glassy body, drawn from where the sparks are now (not from a picture)."""
