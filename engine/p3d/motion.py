@@ -16,12 +16,13 @@ Sign rules in the neutral pose (body frame: x is the body's left, y up, z forwar
 import numpy as np
 
 from . import bodymath as bm
+from .gestures import HAND_POSES, MORE_GESTURES, MORE_MOTIONS, Library  # noqa: F401
 
 DEG = np.pi / 180.0
 DM_LEG = 0.8314          # hip to ankle of the figure the motion clips were recorded for, metres
 
-MOTIONS = ("stand", "walk", "run", "kneel", "jump", "spin", "dance_a", "dance_b")
-GESTURES = ("look_up", "reach", "open_arms", "blow", "raise", "pray", "bow")
+MOTIONS = ("stand", "walk", "run", "kneel", "jump", "spin", "dance_a", "dance_b") + MORE_MOTIONS
+GESTURES = ("look_up", "reach", "open_arms", "blow", "raise", "pray", "bow") + MORE_GESTURES
 SPINE = ("spine05", "spine04", "spine03", "spine02")
 NECK = ("neck01", "neck02", "neck03")
 
@@ -107,7 +108,7 @@ class Clip:
         return j, res, rp[1]
 
 
-class Motions:
+class Motions(Library):
     """Everything a rig can do. `pose(name, t, age, **params)` gives a whole-body Pose; `gesture(name, pose, w,
     t, age, **params)` bends the upper body of a pose toward a gesture by weight w."""
 
@@ -460,9 +461,17 @@ class Motions:
             self._add(P, "clavicle." + sd, bm.qy(sg * 4 * DEG * w))
 
     def g_bow(self, P, w, t, age=0.0, amount=24.0, **kw):
-        """Bows the head and shoulders."""
-        self._lean(P, w, fwd=amount * 0.5)
-        self._head(P, w, up=-amount * 0.8)
+        """Bows the head and shoulders; from about 30 degrees on the whole body bows from the hips."""
+        deep = max(amount - 28.0, 0.0) * w
+        if deep > 0.0 and P.ground > 0.5:
+            _, Pj, _ = self.local_fk(P)
+            ank = {sd: Pj[self.i["foot." + sd]].copy() for sd in ("L", "R")}
+            P.rot = bm.qmul(P.rot, bm.qx(deep * DEG))
+            P.pos = P.pos + bm.qrot(P.rot, np.array([0.0, 0.0, -0.10 * self.k * np.sin(deep * DEG)]))
+            for sd, sg in (("L", 1.0), ("R", -1.0)):
+                self.leg_to(P, sd, ank[sd], foot=bm.qmul(bm.qconj(P.rot), bm.qy(sg * 7 * DEG)))
+        self._lean(P, w, fwd=min(amount, 28.0) * 0.5)
+        self._head(P, w, up=-min(amount, 40.0) * 0.8)
 
     def g_reach(self, P, w, t, age=0.0, side="R", to=None, palm="up", height=0.0, far=0.92, lead=0.6, **kw):
         """One hand reaches forward. to: a point in the body frame to reach for (default: straight ahead at
