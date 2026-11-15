@@ -280,7 +280,10 @@ def veil(rig, length=1.0, cols=40, rows=34, arc=250.0, margin=0.012, name="veil"
         rest[r, :, 2] = zc + rz * np.cos(th)
     init = np.full((rows, cols), i["head"])
     init[vs > 0.2 * k] = i["spine01"]
-    return Piece(name, rest, closed=False, pin_rows=1, init_bone=init, bend=0.04, air=2.6, weight=0.9,
+    # the veil lies on the head and the shoulders (those rows follow the body) and hangs free from there, so it
+    # always drapes wide over the shoulders instead of falling into a strip behind the head
+    pin = int(np.clip(np.searchsorted(vs, (y0 - y_sh) + 0.015 * k), 1, rows - 4))
+    return Piece(name, rest, closed=False, pin_rows=pin, init_bone=init, bend=0.04, air=2.6, weight=0.9,
                  collide=("head", "neck", "chest", "arm.L", "arm.R"))
 
 
@@ -291,8 +294,10 @@ def hair(rig, length=0.42, strands=150, seg=14, name="hair", salt=0):
     hc = rig.head_centre
     v = rig.verts0.astype(np.float64)
     hb = i["head"]
+    # roots on the back and the sides of the head and the back half of the crown, so the hair falls behind
+    # the shoulders and never across the face
     sel = np.where((rig.vert_bone == hb) & (v[:, 1] > hc[1] - 0.045 * k)
-                   & ((v[:, 2] < hc[2] + 0.035 * k) | (v[:, 1] > hc[1] + 0.07 * k)))[0]
+                   & (v[:, 2] < hc[2] - 0.005 * k))[0]
     pick = sel[np.argsort(bm.hashf(sel, 71 + salt), kind="stable")[:strands]]
     roots = v[pick]
     n = rig.normals0[pick].astype(np.float64)

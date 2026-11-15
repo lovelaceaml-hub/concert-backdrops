@@ -30,6 +30,8 @@ GESTURES added here
 MOTIONS added here
   sit       sitting on the ground, knees drawn up, bowed (dur: seconds to sit down)
   shuffle   small steps on the spot (for turning with `facing` keys, or stepping aside with `at` keys)
+  rise      getting up from kneeling (the kneel run backward): dur seconds, one=True from one knee
+  held      a child held in someone's arms: legs bent round the carrier's waist (no ground; see pairs.py)
 
 HAND POSES (HAND_POSES): open, relaxed, flat, spread, cup, fist, point, pinch, offer, hold. Any gesture takes
 fingers=<pose name> to shape the hand; Body(part="hand.R", hand=dict(pose=...)) uses them for close-ups.
@@ -56,7 +58,7 @@ HAND_POSES = dict(
 
 MORE_GESTURES = ("touch", "hand_on_shoulder", "handshake", "high_five", "embrace", "arm_round", "cup", "offer",
                  "listen", "raise_hand", "clap", "throw", "wave", "brace", "hold_thread")
-MORE_MOTIONS = ("sit", "shuffle")
+MORE_MOTIONS = ("sit", "shuffle", "rise", "held")
 
 _PALM = dict(down=(0.0, -1.0, 0.0), up=(0.0, 1.0, 0.15), fwd=(0.0, 0.0, 1.0), back=(0.0, 0.0, -1.0))
 
@@ -352,6 +354,26 @@ class Library:
         Q.ground = 0.0
         from .motion import blend
         return blend(S, Q, float(bm.smoother(age / max(dur, 1e-3))))
+
+    def m_rise(self, t, age=0.0, seed=0.0, dur=1.6, one=True, sit=0.3, **kw):
+        """Getting up from kneeling: the kneel run backward over `dur` seconds (one: from one knee)."""
+        back = max(dur - max(age, 0.0), 0.0)
+        return self.m_kneel(t, back, seed=seed, sit=sit, dur=dur, hands="free", one=one)
+
+    def m_held(self, t, age=0.0, seed=0.0, **kw):
+        """A child held in front of someone: thighs forward and apart, knees bent, a little leaning back."""
+        P = self.identity()
+        for sd, sg in (("L", 1.0), ("R", -1.0)):
+            self._set(P, "upperleg01." + sd, bm.qmul(bm.qz(sg * 24 * DEG), bm.qx(-68 * DEG)))
+            self._set(P, "lowerleg01." + sd, bm.qx(78 * DEG))
+            self._set(P, "foot." + sd, bm.qx(28 * DEG))
+            self.arm(P, sd, flex=30.0, abd=20.0, elbow=60.0, wrist=0.0)
+            self.hand_pose(P, sd, "relaxed")
+        P.rot = bm.qx(-6.0 * DEG)
+        self._set(P, "head", bm.qeuler(-6 * DEG, 0.0, 0.0))
+        self.breathe(P, t, seed, 0.6)
+        P.ground = 0.0
+        return P
 
     def m_shuffle(self, t, age=0.0, seed=0.0, rate=1.15, amount=0.42, **kw):
         """Small steps on the spot."""
