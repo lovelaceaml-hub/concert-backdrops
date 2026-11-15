@@ -122,6 +122,10 @@ class SkyCamera:
             self.p_bg, self.v_bg = prog(K.CAMBG_FS)
             self.t_cam = tex((w, h))
             self.f_cam = ctx.framebuffer([self.t_cam])
+        if self.has_cam:
+            self.p_warp, self.v_warp = prog(K.WARP_FS)
+            self.t_stars, self.t_tmp = tex((w, h)), tex((w, h))
+            self.f_stars, self.f_tmp = ctx.framebuffer([self.t_stars]), ctx.framebuffer([self.t_tmp])
         if self.has_motes:
             self.p_nm = ctx.program(vertex_shader=K.NMOTE_VS, fragment_shader=K.NMOTE_FS)
             sd = np.random.default_rng(23).random((160, 4)).astype("f4")
@@ -160,6 +164,36 @@ class SkyCamera:
              uBndB=tuple(float(v) for v in bndB), uOffA=tuple(float(v) for v in offA),
              uOffB=tuple(float(v) for v in offB), uCredit=tuple(float(v) for v in credit),
              uC0=tuple(float(v) for v in c0))
+
+    def follow(self, t):
+        return self.has_cam and float(val("CAMERA_FOLLOW", t, 1.0) or 0.0) > 0.5
+
+    def after_stars(self, t):
+        """Called once the stars are drawn: keep them apart so they can move with the sky."""
+        if not self.on or not self.follow(t):
+            return
+        R = self.R
+        self.ctx.copy_framebuffer(self.f_stars, R.f_L)
+        R.f_L.use()
+        R.f_L.clear(0.0, 0.0, 0.0, 1.0)
+        self._stars_apart = True
+
+    def _warp_light(self, t, P):
+        """Everything drawn into the light layer since the stars follows the camera (figures, effects, motes)."""
+        if not getattr(self, "_stars_apart", False):
+            return
+        self._stars_apart = False
+        ctx, R = self.ctx, self.R
+        ctx.copy_framebuffer(self.f_tmp, R.f_L)
+        R.f_L.use()
+        ctx.disable(moderngl.BLEND)
+        self.t_tmp.use(location=0); self.t_stars.use(location=1)
+        p = self.p_warp
+        self._cam_uniforms(p, t, P)
+        setu(p, uLight=0, uStars=1, uBaseZ=1.0, uWL=float(val("CAMERA_LIGHT_DEPTH", t, 0.95)))
+        self.v_warp.render(moderngl.TRIANGLE_STRIP)
+        ctx.enable(moderngl.BLEND)
+        ctx.blend_func = (moderngl.ONE, moderngl.ONE)
 
     def sun_screen(self, t, P):
         return self.to_screen((0.5, float(P["sun_y"])), W_SKY, t, P)
@@ -220,6 +254,7 @@ class SkyCamera:
         if not self.on:
             return
         ctx, R = self.ctx, self.R
+        self._warp_light(t, P)
         calm = float(val("BOTTOM_CALM", t, 0.0) or 0.0)
         drew = False
         a = float(val("GOD_RAYS", t, 0.0) or 0.0) if self.has_rays else 0.0
@@ -243,7 +278,8 @@ class SkyCamera:
             self.v_occ.render(moderngl.TRIANGLE_STRIP)
             self.f_ray.use()
             self.t_occ.use(location=0)
-            setu(self.p_rad, uOcc=0, uSrc=(sx, sy), uDecay=float(min(max(val("RAYS_DECAY", t, 0.985), 0.5), 0.995)),
+            setu(self.p_rad, uOcc=0, uSrc=(sx, sy), uDecay=float(min(max(val("RAYS_DECAY", t, 0.99), 0.5), 0.997)),
+                 uContrast=float(val("RAYS_CONTRAST", t, 1.0)),
                  uAspect=float(S.ASPECT))
             self.v_rad.render(moderngl.TRIANGLE_STRIP)
             rc = val("RAYS_COLOR", t, None)
@@ -252,7 +288,7 @@ class SkyCamera:
             ctx.enable(moderngl.BLEND)
             ctx.blend_func = (moderngl.ONE, moderngl.ONE)
             self.t_ray.use(location=0)
-            setu(self.p_rays, uRays=0, uCol=c, uAmt=a * gain * 2.6, uHorizon=float(self.to_screen((0.5, S.HORIZON), 0.80, t, P)[1]), uCalm=calm,
+            setu(self.p_rays, uRays=0, uCol=c, uAmt=a * gain * 1.25, uHorizon=float(self.to_screen((0.5, S.HORIZON), 0.80, t, P)[1]), uCalm=calm,
                  uCalmY=CALM_Y)
             self.v_rays.render(moderngl.TRIANGLE_STRIP)
             drew = True

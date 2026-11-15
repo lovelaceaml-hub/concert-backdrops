@@ -143,28 +143,34 @@ uniform vec2 uSrc; uniform float uSrcSize;
 void main(){
   vec2 sv = vUV;
   float r = length((sv-uSrc)*vec2(uAspect,1.0));
-  float e = exp(-r*r/(uSrcSize*uSrcSize)) + 0.30*exp(-r/(uSrcSize*1.8));
+  float e = exp(-r*r/(uSrcSize*uSrcSize)) + 0.30*exp(-r/(uSrcSize*1.8)) + 0.05*exp(-r/0.45);
+  float e0 = e;
   if(uCloudOn>0.5) e *= 1.0-clamp(texture(uCloudD, toLayer(sv, W_SKY)).r*1.6, 0.0, 1.0);
   vec2 uf = toLayer(sv, W_FAR), um = toLayer(sv, W_MID), un = toLayer(sv, W_NEAR);
   float open = smoothstep(ridgeFar(uf.x)-0.003, ridgeFar(uf.x)+0.003, uf.y);
   open *= smoothstep(ridgeMid(um.x)-0.003, ridgeMid(um.x)+0.003, um.y);
   open *= smoothstep(ridgeNear(un.x)-0.003, ridgeNear(un.x)+0.003, un.y);
-  o = vec4(e*open, 0.0, 0.0, 1.0);
+  o = vec4(e*open, e0, 0.0, 1.0);
 }
 """
 
 RADIAL_FS = "#version 330\n" + NOISE + """
 in vec2 vUV; out vec4 o;
-uniform sampler2D uOcc; uniform vec2 uSrc; uniform float uDecay, uAspect;
-const int N = 96;
+uniform sampler2D uOcc; uniform vec2 uSrc; uniform float uDecay, uAspect, uContrast;
+const int N = 112;
 void main(){
   vec2 dl = (vUV-uSrc)*(0.96/float(N));
   vec2 p = vUV - dl*hash21(gl_FragCoord.xy*0.731);
-  float ill = 1.0, acc = 0.0, wsum = 0.0;
-  for(int i=0;i<N;i++){ acc += texture(uOcc, p).r*ill; wsum += ill; ill *= uDecay; p -= dl; }
+  float ill = 1.0; vec2 acc = vec2(0.0);
+  for(int i=0;i<N;i++){ acc += texture(uOcc, p).rg*ill; ill *= uDecay; p -= dl; }
   float r = length((vUV-uSrc)*vec2(uAspect,1.0));
-  float s = acc/wsum;
-  o = vec4(s*s*2.2*mix(0.25, 1.0, smoothstep(0.02, 0.25, r)), 0.0, 0.0, 1.0);   // squared: the gaps read as shafts
+  // how open the path to the light is (1 = clear sky all the way): shafts are where it is open, gaps where a
+  // cloud or a ridge stands between; the contrast curve turns that into bold soft bands
+  float q = clamp(acc.x/max(acc.y, 1e-5), 0.0, 1.0);
+  float thr = clamp(0.30*uContrast, 0.0, 0.8);
+  float band = pow(clamp((q-thr)/(1.0-thr), 0.0, 1.0), 1.0+0.6*uContrast);
+  float fall = exp(-r*1.5)*smoothstep(0.0, 0.10, r);   // long reach, and no extra blob on the sun itself
+  o = vec4(fall*(0.15*q + 0.95*band), 0.0, 0.0, 1.0);
 }
 """
 
@@ -301,4 +307,18 @@ in float vA; out vec4 o;
 uniform vec3 uCol;
 void main(){ vec2 p = gl_PointCoord*2.0-1.0; float r2 = dot(p,p); if(r2>1.0) discard;
   o = vec4(uCol*vA*(exp(-r2*2.2)*0.8+0.2*smoothstep(1.0,0.7,r2)), 1.0); }
+"""
+
+# the light layer drawn so far (motes, petals, effect layers, people of light) moves with the camera at one depth,
+# the stars at the depth of the sky; text and the arch of lights are drawn after this and stay put
+WARP_FS = "#version 330\n" + CAM + """
+in vec2 vUV; out vec4 o;
+uniform sampler2D uLight, uStars; uniform float uWL;
+void main(){
+  vec2 a = toLayer(vUV, uWL), b = toLayer(vUV, W_SKY);
+  vec3 c = vec3(0.0);
+  if(a.x>0.0 && a.x<1.0 && a.y>0.0 && a.y<1.0) c += texture(uLight, a).rgb;
+  c += texture(uStars, clamp(b, 0.0, 1.0)).rgb;
+  o = vec4(c, 1.0);
+}
 """

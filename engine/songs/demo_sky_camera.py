@@ -20,8 +20,13 @@ TIME_OF_DAY = Track([(0.0, 0.02), (4.0, 0.06), (20.0, 0.48), (30.0, 0.66)])
 CLOUDS3D = Track([(0.0, 0.75), (30.0, 0.85)])
 CLOUDS_SPEED = 1.6
 CLOUDS_LIGHT = 1.1
-GOD_RAYS = Track([(0.0, 0.0), (9.0, 0.0), (19.0, 0.85), (30.0, 1.0)])
-RAYS_DECAY = 0.985
+GOD_RAYS = Track([(0.0, 0.0), (8.0, 0.0), (16.0, 1.0), (30.0, 1.15)])
+RAYS_DECAY = 0.99
+TEXT_SHADOW = 0.0
+FIGURES = [
+    dict(poses=["assets/figures/greeting_a.png", "assets/figures/greeting_b.png"], pose_times=[15.0], t0=3.0,
+         t1=28.0, x=0.74, y=0.19, height=0.28, leave="drift"),   # moves with the camera (CAMERA_LIGHT_DEPTH)
+]
 CAMERA_CRANE = Track([(0.0, -0.03), (30.0, 0.09)])
 CAMERA_ZOOM = Track([(0.0, 1.0), (30.0, 1.07)])
 CAMERA_PAN = Track([(0.0, -0.015), (30.0, 0.02)])

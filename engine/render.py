@@ -206,6 +206,7 @@ class Renderer:
         calm0 = float(_val("BOTTOM_CALM", t, 0.0))   # Astra round 1, finding 12: a calm lower third
         setu(self.p_star, uT=t, uStars=P["stars"], uHi=P["hi"], uPx=px)
         self.v_star.render(moderngl.POINTS)
+        self.sky.after_stars(t)
         setu(self.p_mote, uT=t, uAmount=min(P["motes"], 1.0), uPx=px, uSizeMin=2.4, uSizeMax=24.0, uPeriod=30.0,
              uY0=getattr(S, "MOTE_Y", (-0.05, 1.05))[0], uY1=getattr(S, "MOTE_Y", (-0.05, 1.05))[1], uSway=0.012,
              uBright=0.62 + 0.30 * P["env"], uColA=L(cols("MOTE_COLORS", ("#ffe2a8", "#ff9f8a"))[0]),
