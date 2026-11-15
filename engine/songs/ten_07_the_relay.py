@@ -2,49 +2,64 @@
 A 60 second promo for the Healing Concert "The Words of Mother's Love", on the 3D layer (engine/p3d).
 
 LOGLINE
-  A flame is carried flat out down a causeway of light across a dark lake by one ordinary person after
-  another. Every time it changes hands the world changes, and a Word of Mother's Love bursts from the touch.
-  The fastest runner falls and the flame is scattered into embers; a stranger kneels and gives him her hand,
-  and the embers come back together, larger, in the hands of a child. She carries it to Heavenly Mother
-  (only ever seen from behind, or as hands), who raises it, and the day breaks from her hands as a ring.
+  A flame is carried down a causeway of light across a dark lake, from one person to the next. Every hand-over
+  is a Word of Mother's Love acted out: the runner stops, the two of them DO the word while it is read, the
+  flame changes hands, and the next one runs on into a new world. The fastest falls and the flame is scattered;
+  a stranger kneels, lifts him up and holds him; the embers come together in a child's hands. She carries the
+  flame to Heavenly Mother (only from behind, or as hands), who raises it, and the day breaks from her hands.
 
-WHAT MAKES IT ITSELF
-  Shot like a sports film: the camera runs beside the carrier at her speed, so she holds her place large in
-  the frame while the world streaks past. One rule, repeated: hand-over = contact = a flash = a word = a new
-  world. Gold belongs to the flame: every world before the last is cool, the road behind the flame stays lit
-  gold, so the gold grows through the film until the day.
+THE RULE OF THE FILM
+  Running only between the words. Each word is read while it is acted, by people who stand, kneel, bow and
+  hold each other; the flame passes at the end of the act and the next carrier runs into the next song.
+  Every carrier is a different kind of light (refs and refs2 of the brief), and the framing changes with the
+  act: two in profile, hands close, a far crane, a close embrace.
+
+THE ACTING PLAN (word: what is acted, by whom, style, framing)
+  Greeting       (3.9 to 6.4)   A runner of gold glitter (p08) slows behind a stranger and touches his
+                                shoulder; he turns to her; face to face she lifts the flame between them and he
+                                leans in. Two half figures in profile; then their hands close as he takes it.
+  Concession     (9.65 to 12.15) In the rain of sparks he (a constellation of points, p01) stops beside a woman
+                                waiting at the roadside, gives her the flame and, with an open palm sweeping down
+                                the road and a small bow, lets her go first. Full figures from the other side.
+  Gratitude      (15.95 to 19.0) On the shore she (a dancer shedding embers, p04) gives the light with both
+                                hands to an old man (dotted light, ref 14); he takes it, lays his hand on his
+                                heart and bows; she joins her hands. Two in profile, slow arc.
+  Respect        (21.4 to 24.35) On the sea wall the old man stops before a boy; the boy speaks with an open
+                                hand, the old man leans in, listening, and nods. Close profiles, half figures.
+  Encouragement  (27.0 to 29.5) In the field of lights the boy kneels before a woman who kneels praying for him,
+                                hands joined; the whole field lifts its lights for him. A far crane: two small
+                                kneeling figures in ten thousand lights, the words across the sky.
+  Apology        (32.3 to 34.8) He runs on and falls; the flame bursts into embers and he breaks a little like
+                                glass. She runs to him, kneels before him and lays a hand on his shoulder.
+                                Low side shot, two kneeling figures; the words come up out of the dark water.
+  Consideration  (34.95 to 37.45) She stands and reaches down; their hands meet and she pulls him to his feet
+                                (standing on the hit at 37.42); his broken light mends. Medium side shot.
+  Inclusiveness  (37.6 to 40.1) They hold each other. Close, half figures.
+  (the breath, 40.21 to 42.51)  No word: "December 6" is written in light across the sky (TITLES date_light)
+                                while the embers stream into a child's cupped hands; on the hit the date bursts
+                                and the flame is whole in her hands.
+  Compliment     (44.55 to 47.15) She runs among lanterns into a crowd that applauds her, and twirls with the
+                                flame held high. Raised three-quarter view of the crowd and the child.
+  (day, 49.47)                  She lifts the flame into Heavenly Mother's lowered hand (from behind and above:
+                                hands close); Mother raises it, rays round her head; on the bar the day leaves
+                                her hands as a ring across the lake; the end card is whole from 54.3 to the end.
+
+TITLE AND DATE (UPDATE 7): the opening lockup over frame 0 (the flame low in the frame, the night sky above
+it empty for the title), a discreet signature in two calm walks between words, the date in light in the breath.
+The TITLES dict below holds the times and places for the engine's version; until it lands the corner badge
+(CREDIT) stays.
 
 THE MUSIC (medley map, branch epic-medley2): sections 0.00 6.84 13.30 19.85 26.79 33.36 40.21 49.47, the
   opening hit 0.25, the breath 40.21 to 42.51, the biggest jump 42.51, the loudest passage 54.3, last hit 58.11.
 
-TIMELINE
-  0.00  NIGHT ROAD      frame 0 is the flame in close-up, already running; on the hit the camera whips out to
-                        the sprinter in profile. GREETING bursts from the flame and rides above her.
-  6.84  RAIN OF SPARKS  hand-over 1 in a flash: a man in a long coat. Sparks rain on the mirror. CONCESSION
-                        hangs over the road ahead; on the hit it rushes past the lens.
-  13.30 SHORE OF BIRDS  hand-over 2: a woman. The rain stops in mid air and rises as birds. GRATITUDE streams
-                        out of the spent man behind her as petals and settles over the shore.
-  19.85 THE SEA         hand-over 3: an old man takes it at a walk; the sea stands up in walls of spray on both
-                        sides. RESPECT comes out of the stars. On the bar he breaks into a run, the spray falls.
-  26.79 FIELD OF LIGHTS hand-over 4: the boy, the fastest. Thousands of held lights wake to the horizon and lift
-                        in a wave that races him. ENCOURAGEMENT is written across the sky.
-  33.36 THE FALL        he falls; the flame bursts into embers. APOLOGY rises cold out of the dark water. A
-                        young woman kneels facing him and offers her hand: CONSIDERATION pours from her palm.
-  40.21 THE BREATH      a child kneels in a shaft of light with empty cupped hands; the words become
-                        INCLUSIVENESS and the embers stream into her hands.
-  42.51 LANTERNS        the flame is whole, three times the size; lanterns rise; she runs. COMPLIMENT is burned
-                        out of the air by the flame's own rays.
-  49.47 DAY             Heavenly Mother, from behind, lowers a hand to take the flame and raises it high; rays
-                        round her head. On the bar the day leaves her hands as a ring across the lake. The end
-                        card is whole from 54.3 to the last frame (no fade).
-
 HOW IT IS BUILT
-  The road runs toward -z (toward the arch over the origin). Every carrier is a Body (engine/p3d/body.py) with
-  real run, walk and kneel motions; where each one is at any time is worked out here by the same arithmetic
-  the actor uses (`Runner`), so the camera and the words can follow them with numpy alone (the workflow's
-  prepare step imports this file with numpy only; bodies are built in `_setup`). The flame, the embers, the
-  road of light, the rain and birds, the sea spray, the field of lights and the ring of day are this film's
-  own point sets (below). The nine expressions come from engine/p3d/words.py by name.
+  The road runs toward -z (toward the arch over the origin). Every person is a Body (engine/p3d/body.py) with
+  motion capture (run, walk, kneel, rise, twirl) and acted gestures (touch, offer, reach, bow, listen, pray,
+  handshake, embrace, cup). Where each one is at any time is worked out here by the same arithmetic the actor
+  uses (`Person`), so the camera and the words can follow them with numpy alone (the workflow's prepare step
+  imports this file with numpy only; bodies are built in `_setup`). The flame, the embers, the road of light,
+  the rain and birds, the sea spray, the field of lights and the ring of day are this film's own point sets.
+  The nine expressions come from engine/p3d/words.py by name.
 """
 import numpy as np
 
@@ -142,6 +157,17 @@ def credit_state(t, bbox):
     return (cx, cy, scale, alpha), (cx0, cy0)
 
 
+# Title and date as designed (UPDATE 7), for the engine's TITLES: the opening lockup over frame 0 (the flame low
+# in the frame, the sky above it empty), the signature in two calm walks between words (top right, over sky),
+# "December 6" in light across the sky in the breath, bursting on the hit. Until the engine draws these, the
+# corner badge above stands in.
+TITLES = dict(
+    opening=dict(t_end=3.3, y=0.24, palette="night"),
+    signature=dict(windows=[(19.25, 21.05, "tr", "night"), (47.45, 48.9, "tr", "night")]),
+    date_light=dict(t_form=40.21, t_burst=42.51, y=0.27, palette="night"),
+)
+
+
 def params(song, t):
     """The base film's params, with the arch functions this song was given by engine/song.py."""
     g = globals()
@@ -151,7 +177,8 @@ def params(song, t):
 
 
 # =====================================================================================================
-# THE CARRIERS: where each one is at any time (the same arithmetic as engine/p3d/actor.py's travel)
+# THE PEOPLE: where each one is at any time (the same arithmetic as engine/p3d/actor.py: motion keys give
+# the speed, facing keys the heading, `at` keys a place that is moved, eased, between keys)
 # =====================================================================================================
 GRID = 1.0 / 60.0
 
@@ -161,17 +188,34 @@ def _smoother(x):
     return x * x * x * (x * (6.0 * x - 15.0) + 10.0)
 
 
-class Runner:
-    """A person on the road: lane x, start z, facing -z, motion keys [(t, name, dict(speed, blend, ...))]."""
+def _ease_keys(keys, t):
+    """Value of [(t, v), ...] at t, eased between keys (actor.py heading and _origin_raw)."""
+    if t <= keys[0][0]:
+        return np.asarray(keys[0][1], np.float64)
+    for (t0, v0), (t1, v1) in zip(keys, keys[1:]):
+        if t < t1:
+            u = float(_smoother((t - t0) / (t1 - t0)))
+            return np.asarray(v0, np.float64) * (1.0 - u) + np.asarray(v1, np.float64) * u
+    return np.asarray(keys[-1][1], np.float64)
 
-    def __init__(self, name, shape, height, x, keys, show, facing=180.0, **body):
-        self.name, self.shape, self.height, self.x = name, shape, height, float(x)
-        self.keys = sorted([(float(k[0]), k[1], dict(k[2]) if len(k) > 2 else {}) for k in keys],
-                           key=lambda k: k[0])
+
+class Person:
+    """One person: `at` (x, z) or keys [(t, (x, z))], `facing` degrees or keys, motion keys
+    [(t, name, dict(speed, blend, ...))], `show` (t_in, t_out). Placed later by moving `at` as a whole."""
+
+    def __init__(self, name, shape, height, at, keys, show, facing=180.0, **body):
+        self.name, self.shape, self.height = name, shape, height
+        self.at = [(-1e9, tuple(at))] if not isinstance(at[0], (tuple, list)) else [(float(k[0]), tuple(k[1])) for k in at]
+        self.face = [(-1e9, float(facing))] if isinstance(facing, (int, float)) else [(float(a), float(b)) for a, b in facing]
+        self.keys = sorted([(float(k[0]), k[1], dict(k[2]) if len(k) > 2 else {}) for k in keys], key=lambda k: k[0])
         self.show = (float(show[0]), float(show[1]))
-        self.facing = facing
         self.body = body
-        self.z0 = 0.0
+        self._table()
+
+    def heading(self, t):
+        return float(_ease_keys(self.face, t))
+
+    def _table(self):
         t_ref = self.show[0]
         tt = t_ref + np.arange(int((61.0 - t_ref) / GRID) + 3) * GRID
         n = len(self.keys)
@@ -186,100 +230,153 @@ class Runner:
             rest = rest * (1.0 - u[i])
         sp = np.array([k[2].get("speed", 0.0) if k[1] in ("walk", "run") else 0.0 for k in self.keys])
         speed = (w * sp[:, None]).sum(0)
-        dist = np.concatenate([[0.0], np.cumsum(0.5 * (speed[1:] + speed[:-1]) * GRID)])
-        self.tt, self.dist, self.speed = tt, dist, speed
+        hd = np.radians([self.heading(x) for x in tt])
+        vx, vz = speed * np.sin(hd), speed * np.cos(hd)
+        cum = lambda v: np.concatenate([[0.0], np.cumsum(0.5 * (v[1:] + v[:-1]) * GRID)])   # noqa: E731
+        self.tt, self.px, self.pz, self.speed = tt, cum(vx), cum(vz), speed
 
-    def d(self, t):
-        return float(np.interp(t, self.tt, self.dist))
+    def move(self, dx, dz):
+        self.at = [(k[0], (k[1][0] + dx, k[1][1] + dz)) for k in self.at]
 
-    def v(self, t):
-        return float(np.interp(t, self.tt, self.speed))
+    def base(self, t):
+        b = _ease_keys(self.at, t)
+        return np.array([b[0], 0.0, b[1]])
 
     def root(self, t):
-        if self.facing == 0.0:
-            return np.array([self.x, 0.0, self.z0 + self.d(t)])
-        return np.array([self.x, 0.0, self.z0 - self.d(t)])
+        return self.base(t) + np.array([np.interp(t, self.tt, self.px), 0.0, np.interp(t, self.tt, self.pz)])
+
+    def at_arg(self):
+        return self.at[0][1] if len(self.at) == 1 else self.at
+
+    def face_arg(self):
+        return self.face[0][1] if len(self.face) == 1 else self.face
 
 
-V = dict(sprinter=6.2, coat=5.6, shawl=5.6, elder_walk=1.4, elder=4.6, youth=7.2, child=4.0, child_walk=1.2)
-SNAP = HIT["snap"]
-CHILD_WALK = T7 - 1.45
-R = {}
-R["sprinter"] = Runner("sprinter", "woman", 1.66, 0.0,
-                       [(0.0, "run", dict(speed=V["sprinter"])), (T1 + 0.45, "stand", dict(blend=1.6))],
-                       (0.0, T1 + 2.6))
-R["coat"] = Runner("coat", "man", 1.80, 0.55,
-                   [(T1 - 3.0, "stand"), (T1 - 1.15, "run", dict(speed=V["coat"], blend=0.9)),
-                    (T2 + 0.45, "stand", dict(blend=1.6))], (T1 - 3.0, T2 + 2.8))
-R["shawl"] = Runner("shawl", "woman", 1.64, 0.0,
-                    [(T2 - 3.0, "stand"), (T2 - 1.15, "run", dict(speed=V["shawl"], blend=0.9)),
-                     (T3 - 0.9, "stand", dict(blend=1.6))], (T2 - 3.0, SNAP + 0.6))
-R["elder"] = Runner("elder", "man", 1.70, 0.55,
-                    [(T3 - 3.0, "stand"), (T3 - 0.6, "walk", dict(speed=V["elder_walk"], blend=0.8)),
-                     (SNAP, "run", dict(speed=V["elder"], blend=0.8)), (T4 + 0.45, "stand", dict(blend=1.6))],
-                    (T3 - 3.0, T4 + 2.6))
-R["youth"] = Runner("youth", "man", 1.76, 0.0,
-                    [(T4 - 3.0, "stand"), (T4 - 1.2, "run", dict(speed=V["youth"], blend=0.9)),
-                     (T5 - 0.05, "kneel", dict(blend=0.5)), (HIT["up"], "stand", dict(blend=1.0))],
-                    (T4 - 3.0, T6 + 1.0))
-R["child"] = Runner("child", "child", 1.15, 0.22,
-                    [(BREATH - 2.2, "kneel"), (T6, "stand", dict(blend=0.35)),
-                     (T6 + 0.3, "run", dict(speed=V["child"], blend=0.8)),
-                     (CHILD_WALK, "walk", dict(speed=V["child_walk"], blend=0.7)),
-                     (T7 - 0.1, "stand", dict(blend=0.6))], (BREATH - 2.2, 60.0))
-ORDER = ["sprinter", "coat", "shawl", "elder", "youth"]
-HANDS = [T1, T2, T3, T4]          # when the flame passes from ORDER[i] to ORDER[i + 1]
-GAP = 0.7                         # the taker is this far ahead at the touch
+# ---- the timeline of the acts (each expression is read while it is acted; running only between them)
+G_TOUCH, G_READ = 2.6, (3.7, 6.2)             # Greeting: a touch on the shoulder, he turns, they meet
+PASS1 = 6.45                                  # the flame passes from her right hand to his left
+C_STOP, C_READ = 9.75, (9.65, 12.15)          # Concession: he stops beside her and lets her go first
+PASS2 = HIT["tape1"]                          # 10.44: his left hand to her right
+GR_STOP, GR_READ = 15.3, (15.95, 18.75)       # Gratitude: she gives the light; he, hand on heart, bows
+PASS3 = 15.85
+R_STOP, R_READ = 21.1, (21.4, 24.35)          # Respect: the boy speaks, the old man listens and nods
+PASS4 = 24.6
+E_STOP, E_READ = 26.3, (27.6, 30.1)           # Encouragement: he kneels; she prays for him; the field lifts its lights
+FALL = HIT["dive"]                            # 31.62: he falls, the flame bursts into embers
+A_READ = (32.1, 34.6)                          # Apology: she kneels before him, a hand on his shoulder
+K_READ = (34.9, 37.4)                         # Consideration: she stands and pulls him up by the hand
+I_READ = (37.7, 40.2)                          # Inclusiveness: they hold each other
+# 40.21 to 42.51, the breath: no expression; the date is written in light across the sky (TITLES date_light) while
+# the embers gather into a child's cupped hands; on the hit the date bursts and the flame is whole in her hands
+P_STOP, P_READ = 44.3, (44.55, 47.15)         # Compliment: the crowd applauds, the child twirls with the flame
+RISE = 35.95                                  # he rises from his knee, standing on the hit at 37.42
 
-# place everyone: each taker a step ahead of the giver at the touch; then the child and Heavenly Mother
-for _i, _T in enumerate(HANDS):
-    _a, _b = R[ORDER[_i]], R[ORDER[_i + 1]]
-    _b.z0 = _a.root(_T)[2] - GAP + _b.d(_T)
-Z_FALL = R["youth"].root(T5 + 1.5)[2]                   # where the boy comes to rest
-R["child"].z0 = Z_FALL - 2.3 + R["child"].d(BREATH)      # the child kneels just beyond the two of them
-_zc_end = R["child"].root(60.0)[2]
+P = {}
+P["sprinter"] = Person("sprinter", "woman", 1.66, (0.0, 0.0),
+                       [(0.0, "run", dict(speed=6.2)), (2.3, "walk", dict(speed=1.3, blend=0.55)),
+                        (2.85, "stand", dict(blend=0.5))], (0.0, 9.5))
+_zs = P["sprinter"].root(4.0)[2]
+P["coat"] = Person("coat", "man", 1.80, (0.05, _zs - 0.62),
+                   [(0.0, "stand"), (6.6, "run", dict(speed=5.6, blend=0.8)),
+                    (C_STOP - 0.45, "walk", dict(speed=1.2, blend=0.5)), (C_STOP, "stand", dict(blend=0.5))],
+                   (0.0, 13.6), facing=[(0.0, 180.0), (2.95, 180.0), (3.7, 0.0), (6.4, 0.0), (6.95, 180.0),
+                                        (C_STOP, 180.0), (C_STOP + 0.5, 90.0)])
+_zc = P["coat"].root(C_STOP + 1.0)
+P["shawl"] = Person("shawl", "woman", 1.64, (_zc[0] + 0.85, _zc[2] - 0.30),
+                    [(7.5, "stand"), (12.05, "run", dict(speed=5.6, blend=0.8)),
+                     (GR_STOP - 0.45, "walk", dict(speed=1.2, blend=0.5)), (GR_STOP, "stand", dict(blend=0.5))],
+                    (7.5, 21.0), facing=[(0.0, 270.0), (11.55, 270.0), (12.15, 180.0)])
+_zh = P["shawl"].root(GR_STOP + 1.0)
+P["elder"] = Person("elder", "man", 1.70, (_zh[0], _zh[2] - 0.72),
+                    [(12.5, "stand"), (19.3, "walk", dict(speed=1.35, blend=0.6)),
+                     (R_STOP - 0.4, "stand", dict(blend=0.6))],
+                    (12.5, 27.0), facing=[(0.0, 0.0), (19.0, 0.0), (19.55, 180.0)], stoop=0.3)
+_ze = P["elder"].root(R_STOP + 1.0)
+P["youth"] = Person("youth", "man", 1.76, (_ze[0], _ze[2] - 0.86),
+                    [(18.5, "stand"), (24.9, "run", dict(speed=5.6, blend=0.7)),
+                     (E_STOP - 0.3, "stand", dict(blend=0.5)), (E_STOP + 0.15, "kneel", dict(one=True, blend=0.6)),
+                     (30.2, "rise", dict(one=True, dur=0.5, blend=0.2)),
+                     (30.6, "run", dict(speed=6.8, blend=0.5)),
+                     (FALL - 0.05, "kneel", dict(one=True, blend=0.45)),
+                     (RISE, "rise", dict(one=True, dur=1.5, blend=0.05))],
+                    (18.5, T6 + 1.2), facing=[(0.0, 0.0), (24.65, 0.0), (25.15, 180.0), (E_STOP - 0.1, 180.0),
+                                              (E_STOP + 0.45, 90.0), (30.25, 90.0), (30.7, 180.0)])
+_zk = P["youth"].root(E_STOP + 1.0)
+Z_FALL = P["youth"].root(FALL + 1.5)[2]
+X_FALL = P["youth"].root(FALL + 1.5)[0]
+P["helper"] = Person("helper", "woman", 1.64,
+                     [(0.0, (_zk[0] + 1.0, _zk[2]))],
+                     [(24.0, "kneel", dict(hands="pray", dur=0.01)),
+                      (30.35, "rise", dict(one=True, dur=0.6, blend=0.2)),
+                      (30.85, "run", dict(speed=5.6, blend=0.5)),
+                      (31.95, "walk", dict(speed=1.0, blend=0.5)), (32.2, "stand", dict(blend=0.4)),
+                      (32.35, "kneel", dict(one=True, blend=0.7)),
+                      (34.15, "rise", dict(one=True, dur=0.7, blend=0.15)),
+                      (37.25, "shuffle", dict(blend=0.4)), (38.0, "stand", dict(blend=0.4))],
+                     (24.0, T6 + 1.2), facing=[(0.0, 270.0), (30.4, 270.0), (30.85, 180.0),
+                                               (31.9, 180.0), (32.35, 0.0)])
+# she lands right in front of him, facing him: correct her ground place while she runs
+_hz = P["helper"].root(33.0)
+_tx, _tz = X_FALL + 0.02, Z_FALL - 0.80
+P["helper"].at = [(0.0, (_zk[0] + 1.0, _zk[2])), (30.85, (_zk[0] + 1.0, _zk[2])),
+                  (32.1, (_zk[0] + 1.0 + (_tx - _hz[0]), _zk[2] + (_tz - _hz[2]))),
+                  (37.25, (_zk[0] + 1.0 + (_tx - _hz[0]), _zk[2] + (_tz - _hz[2]))),
+                  (38.0, (_zk[0] + 1.0 + (_tx - _hz[0]), _zk[2] + (_tz - _hz[2]) + 0.42))]
+P["child"] = Person("child", "child", 1.15, (X_FALL + 0.95, Z_FALL - 2.1),
+                    [(37.0, "kneel", dict(dur=0.01)), (T6 + 0.05, "stand", dict(blend=0.35)),
+                     (T6 + 0.35, "run", dict(speed=4.0, blend=0.8)),
+                     (P_STOP - 0.4, "stand", dict(blend=0.5)), (P_STOP + 0.05, "twirl", dict(blend=0.4)),
+                     (P_READ[1] + 0.25, "walk", dict(speed=1.15, blend=0.7)), (T7 - 0.15, "stand", dict(blend=0.6))],
+                    (37.0, 60.0))
+_zch = P["child"].root(60.0)
 MOTHER_Z = 14.0
-_shift = MOTHER_Z - 0.12 - _zc_end                       # Heavenly Mother stands 14 m in front of the arch
-for _r in R.values():
-    _r.z0 += _shift
+MOTHER_POS = np.array([_zch[0] + 0.62, 0.0, MOTHER_Z])          # the child ends at her left side
+_shift = MOTHER_Z + 0.05 - _zch[2]
+for _p in P.values():
+    _p.move(0.0, _shift)
+MOTHER_POS = np.array([P["child"].root(60.0)[0] + 0.62, 0.0, MOTHER_Z])
 Z_FALL += _shift
-Z_CHILD = R["child"].root(BREATH)[2]
-MOTHER_POS = np.array([R["child"].x + 0.62, 0.0, MOTHER_Z])     # the child ends at her left side
-HELPER_POS = np.array([0.15, 0.0, Z_FALL - 1.15])       # she kneels facing him (facing +z)
-GRIP = np.array([0.30, 0.74, Z_FALL - 0.58])             # where their hands meet
-Z_START = R["sprinter"].z0
+Z_START = P["sprinter"].root(0.0)[2]
+Z_CHILD = P["child"].root(BREATH)[2]
+CROWD_AT = P["child"].root(P_STOP + 0.5)
+SNAP = HIT["snap"]
 
 
 def root(who, t):
     if who == "mother":
         return MOTHER_POS.copy()
-    if who == "helper":
-        return HELPER_POS.copy()
-    return R[who].root(t)
+    return P[who].root(t)
 
 
-HOLDERS = [(-1.0, "sprinter"), (T1, "coat"), (T2, "shawl"), (T3, "elder"), (T4, "youth"), (T5, None),
-           (T6, "child"), (T7, "mother")]
+# who holds the flame, and in which hand
+HOLDERS = [(-1.0, "sprinter", "R"), (PASS1, "coat", "L"), (PASS2, "shawl", "R"), (PASS3, "elder", "L"),
+           (PASS4, "youth", "R"), (FALL, None, None), (T6, "child", "R"), (T7, "mother", "L")]
 
 
 def holder(t):
-    k = max(i for i, (t0, _) in enumerate(HOLDERS) if t >= t0)
-    return HOLDERS[k][1], k
+    k = max(i for i, h in enumerate(HOLDERS) if t >= h[0])
+    return HOLDERS[k][1], HOLDERS[k][2], k
 
 
 def flame_guess(t):
-    """Where the flame is at t, worked out without the bodies (held up in the right hand)."""
-    who, k = holder(t)
+    """Where the flame is at t, worked out without the bodies (for the road, rain, bursts and light)."""
+    who, side, k = holder(t)
     if who is None:
-        return np.array([0.1, 0.05, Z_FALL - 1.6])
+        return EMBER_HOME.copy()
     if who == "mother":
         return MOTHER_POS + np.array([0.0, 2.15, -0.15])
-    r = R[who]
-    p = r.root(t) + np.array([0.20 * r.height / 1.7, r.height + 0.34 * r.height / 1.7, -0.08])
-    if who == "child" and t < T6 + 0.4:
-        p = r.root(t) + np.array([0.0, 0.55, -0.25])
-    return p
+    p = P[who]
+    r = p.root(t)
+    hd = np.radians(p.heading(t))
+    fwd = np.array([np.sin(hd), 0.0, np.cos(hd)])
+    left = np.array([np.cos(hd), 0.0, -np.sin(hd)])
+    sg = 1.0 if side == "L" else -1.0
+    moving = float(np.interp(t, p.tt, p.speed)) > 0.5
+    up = p.height + 0.30 if moving else p.height * 0.62
+    return r + left * sg * 0.20 + fwd * (0.05 if moving else 0.30) + np.array([0.0, up, 0.0])
 
+
+EMBER_HOME = np.array([X_FALL + 0.1, 0.05, Z_FALL - 1.3])
 
 # =====================================================================================================
 # THE BODIES (built in _setup: they need scipy and the assets) and the flame's real place
@@ -292,10 +389,10 @@ def _palm_up(name, t, side="R", up=0.11):
     return np.asarray(b.where(t, "palm." + side), np.float64) + np.array([0.0, up, 0.0])
 
 
-def _held(name, t):
+def _held(name, side, t):
     if name not in BODIES:
-        return flame_guess(t) if name != "child" else root("child", t) + np.array([0.0, 0.6, -0.2])
-    if name == "child" and t < T6 + 0.25:
+        return flame_guess(t)
+    if name == "child" and t < T6 + 0.3:
         b = BODIES["child"]
         return 0.5 * (np.asarray(b.where(t, "palm.L")) + np.asarray(b.where(t, "palm.R"))) + [0.0, 0.10, 0.0]
     if name == "mother":
@@ -304,26 +401,26 @@ def _held(name, t):
         both = 0.5 * (np.asarray(b.where(t, "palm.L")) + np.asarray(b.where(t, "palm.R"))) + [0.0, 0.16, 0.0]
         u = float(_smoother((t - (T7 + 0.5)) / 0.9))
         return r * (1.0 - u) + both * u
-    return _palm_up(name, t)
+    return _palm_up(name, t, side)
 
 
 def flame_pos(t):
-    """Where the flame is at t: in the holder's hand (crossing over in 0.14 s at a hand-over)."""
-    who, k = holder(t)
+    """Where the flame is at t: in the holder's hand (crossing over in 0.16 s from hand to hand)."""
+    who, side, k = holder(t)
     if who is None:
         return EMBER_HOME.copy()
-    p = _held(who, t)
+    p = _held(who, side, t)
     t0 = HOLDERS[k][0]
     prev = HOLDERS[k - 1][1] if k > 0 else None
-    if prev is not None and t - t0 < 0.14:
-        u = float(_smoother((t - t0) / 0.14))
-        p = _held(prev, t) * (1.0 - u) + p * u
+    if prev is not None and t - t0 < 0.16:
+        u = float(_smoother((t - t0) / 0.16))
+        p = _held(prev, HOLDERS[k - 1][2], t) * (1.0 - u) + p * u
     return p
 
 
-EMBER_HOME = np.array([0.1, 0.05, Z_FALL - 1.6])
-FLAME_SIZE = Track([(0.0, 0.17), (T1, 0.19), (T2, 0.21), (T3, 0.23), (T4, 0.26), (T5 - 0.1, 0.28), (T5 + 0.25, 0.0),
-                    (T6 - 0.12, 0.0), (T6 + 0.35, 0.27), (T7, 0.28), (REL, 0.34), (60.0, 0.34)], name="FLAME_SIZE")
+FLAME_SIZE = Track([(0.0, 0.17), (PASS1, 0.18), (PASS2, 0.19), (PASS3, 0.20), (PASS4, 0.22), (FALL - 0.1, 0.24),
+                    (FALL + 0.25, 0.0), (T6 - 0.12, 0.0), (T6 + 0.35, 0.27), (T7, 0.28), (REL, 0.34), (60.0, 0.34)],
+                   name="FLAME_SIZE")
 
 
 # =====================================================================================================
@@ -333,8 +430,8 @@ from p3d.camera import Move, Rig  # noqa: E402
 
 
 class follow(Move):
-    """Ride with `who` (a carrier, "flame", "mother", "helper" or "world"): pos and look are offsets in metres
-    (x right of the road, y up, z back along the road), or pairs (start, end) eased over the move."""
+    """Ride with `who` (a person, "flame", "mother" or "world"): pos and look are offsets in metres (x right of
+    the road, y up, z back along the road), or pairs (start, end) eased over the move (or by its pace)."""
 
     def __init__(self, who, pos, look, t0, t1, **kw):
         super().__init__(t0, t1, **kw)
@@ -361,42 +458,42 @@ class follow(Move):
 
 F = "flame"
 MOVES = [
-    # ---- night road
+    # ---- night road: she runs; a touch on a stranger's shoulder; he turns; the Greeting; the flame passes
     follow(F, (1.45, 0.10, 0.85), (0.0, 0.36, -0.2), 0.0, 0.32, fov=40, aperture=0.03, near=0.02),
-    follow("sprinter", (4.6, 1.25, 0.4), (0.0, 1.35, -0.8), 0.32, 5.75, fov=42, blend=0.45),
-    follow("sprinter", (1.0, 2.1, 4.2), (0.0, 1.5, -14.0), 5.75, 6.45, fov=46, blend=0.7, focus=4.7),
-    # ---- rain of sparks
-    follow(F, (2.4, -0.25, 0.55), (0.2, -0.45, -0.3), 6.55, 7.1, fov=42, aperture=0.015, blend=0.5),
-    follow("coat", (1.7, 1.75, 3.5), (0.0, 2.2, -10.0), 7.15, 10.2, fov=48, blend=0.5, focus=3.9),
-    follow("coat", (2.7, 1.3, 0.5), (0.0, 1.35, -0.4), 10.45, 12.5, fov=40, aperture=0.02, blend=0.4),
-    follow("coat", (1.8, 1.7, 3.2), (0.0, 1.4, -10.0), 12.5, 12.95, fov=44, blend=0.9, focus=3.7),
-    # ---- shore of birds
-    follow(F, (2.4, -0.25, 0.55), (0.2, -0.45, -0.3), 13.05, 13.55, fov=42, aperture=0.015, blend=0.4),
-    follow("shawl", ((4.0, 0.7, 1.4), (5.3, 2.4, 0.8)), (0.0, 1.8, -1.4), 13.6, 18.1, fov=46, blend=0.5),
-    follow("shawl", ((3.4, 0.6, 1.0), (2.8, 1.2, 0.6)), (0.0, 1.35, -1.0), 18.25, 19.55, fov=44, aperture=0.015,
-           blend=0.5),
-    # ---- the sea
-    follow(F, (2.4, -0.25, 0.55), (0.2, -0.45, -0.3), 19.65, 20.05, fov=42, aperture=0.015, blend=0.4),
-    follow("elder", (4.4, 0.8, 0.5), (0.0, 1.6, -0.5), 20.1, 24.4, fov=46, blend=0.45),
-    follow("elder", ((2.9, 0.75, 1.6), (2.4, 1.1, 0.4)), (0.0, 1.35, -2.0), 24.5, 25.6, fov=48, aperture=0.015,
+    follow("sprinter", (4.6, 1.25, 0.4), (0.0, 1.35, -0.8), 0.32, 2.1, fov=42, blend=0.45),
+    follow("coat", ((3.6, 1.30, 0.5), (3.0, 1.38, 0.38)), (0.0, 1.40, 0.31), 2.35, 6.3, fov=40, blend=0.9),
+    follow(F, (0.75, 0.05, 0.30), (0.0, -0.05, 0.0), 6.35, 6.85, fov=40, aperture=0.015, blend=0.35),
+    follow("coat", (1.8, 1.6, 3.4), (0.0, 1.6, -10.0), 6.9, 7.5, fov=46, blend=0.45, focus=3.9),
+    # ---- rain of sparks: he runs; he stops beside a woman, gives her the flame and lets her go first
+    follow("coat", (2.8, 1.2, 0.6), (0.0, 1.3, -1.0), 7.5, 9.2, fov=44, blend=0.8),
+    follow("coat", ((0.2, 1.45, 3.6), (0.35, 1.4, 3.0)), (0.45, 1.25, -0.6), 9.3, 12.3, fov=42, blend=0.6),
+    follow("shawl", (1.6, 1.5, 3.2), (0.0, 1.5, -10.0), 12.35, 13.25, fov=46, blend=0.5, focus=3.5),
+    # ---- shore of birds: she runs; she gives the light to an old man; hand on heart, he bows
+    follow("shawl", ((4.2, 0.8, 1.0), (4.6, 1.6, 0.6)), (0.0, 1.5, -1.2), 13.35, 14.9, fov=46, blend=0.5),
+    follow("elder", ((3.2, 1.2, 0.9), (2.8, 1.38, 0.1)), (0.0, 1.32, 0.38), 15.05, 19.0, fov=40, blend=0.7),
+    follow("elder", (1.2, 1.7, 3.0), (0.0, 1.5, -8.0), 19.1, 20.4, fov=46, blend=0.7, focus=3.3),
+    # ---- the sea: they stop; the boy speaks, the old man listens; time returns; the flame passes
+    follow("youth", ((2.6, 1.42, 0.55), (2.3, 1.48, 0.45)), (0.0, 1.48, 0.43), 20.6, 24.4, fov=36, blend=0.7),
+    follow(F, (0.8, 0.05, 0.3), (0.0, 0.0, 0.0), 24.4, 25.0, fov=40, aperture=0.015, blend=0.4),
+    follow("youth", ((2.9, 0.75, 1.6), (2.4, 1.1, 0.4)), (0.0, 1.35, -2.0), 25.05, 26.1, fov=48, aperture=0.015,
            blend=0.45),
-    follow("elder", (-1.0, 2.4, 4.0), (0.0, 1.5, -14.0), 25.6, 26.45, fov=46, blend=1.0, focus=4.3),
-    # ---- field of lights
-    follow(F, (2.4, -0.25, 0.55), (0.2, -0.45, -0.3), 26.55, 26.95, fov=42, aperture=0.015, blend=0.4),
-    follow("youth", (2.0, 2.2, 3.0), (-4.0, 5.0, -45.0), 27.0, 28.3, fov=52, blend=0.45, focus=3.9),
-    follow("youth", (8.0, 7.0, 9.0), (-8.0, 6.0, -40.0), 28.3, 31.6, fov=52, blend=1.2),
-    follow("youth", (1.6, 0.9, 2.8), (0.0, 1.0, -6.0), 31.7, 33.3, fov=54, aperture=0.012, blend=0.5, focus=3.1),
-    # ---- the fall
-    follow("youth", (3.0, 0.55, 0.0), (-0.2, 0.95, -0.55), 33.6, 36.4, fov=40, aperture=0.03, blend=0.45),
-    follow("youth", (2.5, 0.75, -0.4), (0.0, 1.0, -0.6), 36.4, 39.3, fov=36, aperture=0.03, blend=1.5),
-    # ---- the breath
-    follow("child", ((3.3, 1.3, 0.8), (2.4, 1.0, 0.3)), (0.0, 0.95, 0.0), 39.8, 42.75, fov=38, aperture=0.03,
+    # ---- field of lights: he kneels before a woman who prays for him; the whole field lifts its lights for him
+    follow("youth", ((1.2, 1.25, 3.4), (7.0, 8.0, 11.0)), ((0.5, 0.8, 0.0), (-5.0, 6.0, -40.0)), 26.2, 30.1, fov=50,
+           blend=0.6, pace=[(26.2, 0.0), (27.0, 0.25), (27.8, 0.75), (29.0, 0.95), (30.1, 1.0)]),
+    follow("youth", (1.6, 0.9, 2.8), (0.0, 1.0, -6.0), 30.35, 31.5, fov=54, aperture=0.012, blend=0.5, focus=3.1),
+    # ---- the fall: she kneels before him; she pulls him up; they hold each other
+    follow("youth", (3.0, 0.65, -0.35), (0.0, 0.85, -0.42), 31.75, 34.85, fov=40, aperture=0.02, blend=0.45),
+    follow("youth", (2.7, 0.95, -0.45), (0.0, 1.05, -0.45), 34.85, 37.5, fov=38, aperture=0.02, blend=1.2),
+    follow("youth", ((2.7, 1.35, -0.6), (2.5, 1.3, -0.9)), (0.0, 1.2, -0.95), 37.55, 40.45, fov=40, aperture=0.02,
+           blend=0.8),
+    # ---- the breath: a child kneels with cupped hands; the embers come to her; the date is written in the sky
+    follow("child", ((3.4, 0.8, 1.0), (2.8, 0.75, 0.55)), (0.0, 1.75, -0.35), 40.45, 42.6, fov=44, aperture=0.02,
            blend=0.7),
-    # ---- lanterns
-    follow("child", (0.6, 0.8, 2.3), (0.0, 2.0, -10.0), 42.75, 43.05, fov=52, blend=0.4, focus=2.5),
-    follow("child", (2.7, 1.15, 2.4), (-0.6, 2.0, -6.0), 43.0, 45.7, fov=50, blend=0.6, focus=3.6),
-    follow("child", (3.0, 1.0, 0.6), (0.0, 0.95, -1.5), 45.75, 47.8, fov=42, blend=0.45),
-    follow("child", (0.9, 1.3, 3.0), (0.0, 1.5, -12.0), 47.8, 48.9, fov=44, blend=1.0, focus=3.2),
+    # ---- lanterns: the flame is whole; she runs; the crowd applauds and she twirls with it
+    follow("child", (0.6, 0.8, 2.3), (0.0, 2.0, -10.0), 42.7, 43.05, fov=52, blend=0.4, focus=2.5),
+    follow("child", (3.0, 1.0, 0.6), (0.0, 0.95, -1.5), 43.1, 44.2, fov=42, blend=0.5),
+    follow("child", ((4.8, 2.4, 3.6), (4.2, 2.1, 2.6)), (0.0, 1.0, -0.6), 44.3, 47.3, fov=46, blend=0.6),
+    follow("child", (0.9, 1.3, 3.0), (0.0, 1.5, -12.0), 47.35, 48.9, fov=44, blend=0.9, focus=3.2),
     # ---- day: the hands (from behind and above), Heavenly Mother raises the light, the ring of day
     follow(F, (0.0, 0.42, 1.0), (0.0, -0.10, -0.25), 48.95, 50.1, fov=42, aperture=0.02, blend=0.6),
     follow("mother", (0.15, 1.25, 2.7), (0.0, 2.05, -4.0), 50.15, REL, fov=46, blend=0.8),
@@ -410,7 +507,8 @@ CAMERA = Rig(MOVES, blend=1.2, fov=44, aperture=0.025, handheld=0.25, shutter=0.
 
 
 # =====================================================================================================
-# THE NINE EXPRESSIONS (engine/p3d/words.py by name; laid out by where they are read in the picture)
+# THE NINE EXPRESSIONS (engine/p3d/words.py by name), each read while it is acted, fixed in the world over
+# the people who act it, to the right of the badge
 # =====================================================================================================
 from p3d import words as PW  # noqa: E402
 from p3d.world import arch_points  # noqa: E402
@@ -418,18 +516,13 @@ from p3d.world import arch_points  # noqa: E402
 ARCH = arch_points()
 
 
-def _word(who, x, y, depth, px, t_in, t_read0, t_read1, t_out, **kw):
+def _word(x, y, depth, px, t_in, t_read0, t_read1, t_out, **kw):
     """A word laid out at the middle of its reading moment at picture place (x, y), `depth` metres ahead, with
-    an em of `px` pixels; it then travels with `who` (None: it stays where it is)."""
+    an em of `px` pixels; it stays there in the world."""
     tm = 0.5 * (t_read0 + t_read1)
     p = np.asarray(PW.place(CAMERA, tm, x, y, depth), np.float64)
     em = PW.em_for(CAMERA, tm, depth, px)
-    if who is None:
-        pos = tuple(p)
-    else:
-        r0 = root(who, tm)
-        pos = (lambda p, r0, who: (lambda t: p + root(who, t) - r0))(p, r0, who)
-    return dict(pos=pos, em=em, t_in=t_in, t_read0=t_read0, t_read1=t_read1, t_out=t_out, **kw)
+    return dict(pos=tuple(p), em=em, t_in=t_in, t_read0=t_read0, t_read1=t_read1, t_out=t_out, **kw)
 
 
 def _flame_at(tt):
@@ -440,30 +533,29 @@ def _src(name, place, fallback):
     def f(t):
         if name in BODIES:
             return np.asarray(BODIES[name].where(t, place), np.float64)
-        return np.asarray(fallback, np.float64)
+        return np.asarray(fallback(t) if callable(fallback) else fallback, np.float64)
     return f
 
 
 _SPECS = [
-    dict(expr="Greeting", arrive="touch", source=_flame_at(1.7), leave="wind", wind=(0.0, 0.15, 1.0),
-         **_word("sprinter", 0.60, 0.80, 9.0, 100, 1.7, 2.85, 5.35, 6.2)),
-    dict(expr="Concession", arrive="touch", source=_flame_at(T1), leave="bokeh",
-         **_word("coat", 0.60, 0.80, 13.5, 96, T1, 7.4, 9.95, 10.8)),
-    dict(expr="Gratitude", arrive="petals", source=lambda t: root("coat", t) + np.array([0.0, 1.4, 0.0]),
-         leave="flock", **_word("shawl", 0.60, 0.72, 10.5, 84, 12.9, 14.3, 17.9, 18.8)),
-    dict(expr="Respect", arrive="stars", leave="sink",
-         **_word("elder", 0.60, 0.78, 9.0, 94, 18.9, 20.6, 23.9, 24.8)),
-    dict(expr="Encouragement", arrive="touch", source=_flame_at(T4), leave="arch", to=tuple(ARCH[6]), reflect=False,
-         **_word("youth", 0.60, 0.78, 55.0, 90, T4, 29.0, 31.6, 32.5)),
-    dict(expr="Apology", arrive="lake", leave="stars", color="#e6ecff", glow="#9fb4ff",
-         **_word(None, 0.60, 0.74, 4.6, 80, T5, 33.95, 36.45, 37.1)),
-    dict(expr="Consideration", arrive="palm", source=_src("helper", "palm.L", GRIP), leave="morph",
-         **_word(None, 0.60, 0.79, 4.4, 84, 36.15, 36.95, 39.45, 39.45)),
+    dict(expr="Greeting", arrive="touch", source=_src("coat", "shoulder.L", lambda t: root("coat", t) + [0, 1.5, 0]),
+         leave="wind", wind=(0.0, 0.15, 1.0), **_word(0.50, 0.80, 7.0, 100, G_READ[0] - 0.6, *G_READ, 6.95)),
+    dict(expr="Concession", arrive="touch", source=_flame_at(C_STOP - 0.6), leave="bokeh",
+         **_word(0.50, 0.80, 7.5, 96, C_STOP - 0.6, *C_READ, 12.9)),
+    dict(expr="Gratitude", arrive="petals", source=_flame_at(PASS3), leave="flock",
+         **_word(0.50, 0.78, 7.5, 84, PASS3 - 0.55, *GR_READ, 19.8)),
+    dict(expr="Respect", arrive="stars", leave="sink", **_word(0.50, 0.80, 6.5, 94, 20.2, *R_READ, 25.1)),
+    dict(expr="Encouragement", arrive="touch", source=_flame_at(E_STOP + 0.3), leave="arch", to=tuple(ARCH[6]),
+         **_word(0.50, 0.72, 50.0, 90, E_STOP + 0.25, *E_READ, 30.9)),
+    dict(expr="Apology", arrive="lake", leave="morph", color="#e6ecff", glow="#9fb4ff",
+         **_word(0.50, 0.79, 6.0, 84, FALL + 0.08, *A_READ, A_READ[1])),
+    dict(expr="Consideration", arrive="morph", source="Apology", leave="morph",
+         **_word(0.50, 0.79, 6.0, 84, A_READ[1], *K_READ, K_READ[1])),
     dict(expr="Inclusiveness", arrive="morph", source="Consideration", leave="stream",
          to=lambda t: flame_pos(t) if t > T6 else root("child", t) + np.array([0.0, 0.62, -0.2]),
-         **_word(None, 0.60, 0.80, 4.0, 96, 39.45, 40.05, 42.55, 43.1)),
+         **_word(0.50, 0.80, 6.0, 96, K_READ[1], *I_READ, 40.85)),
     dict(expr="Compliment", arrive="rays", source=lambda t: flame_pos(t), leave="arch", to=tuple(ARCH[8]),
-         **_word("child", 0.60, 0.78, 10.5, 94, T6, 43.05, 45.64, 46.4)),
+         **_word(0.50, 0.80, 11.0, 94, P_STOP - 0.6, *P_READ, 47.9)),
 ]
 WORDS = PW.Words(_SPECS, camera=CAMERA, face="camera", reflect=False)    # no upside-down words in the lake
 ARCH_LIT = [w["t_out"] for w in sorted(_SPECS, key=lambda s: [e["label"] for e in PW.EXPRESSIONS].index(s["expr"]))]
@@ -539,7 +631,7 @@ class Flame:
             if self.sparks:
                 out.append(dict(pos=sp_pos, size=0.010 + 0.012 * s[:, 1] * (1.0 - k), color=col,
                                 alpha=(1.0 - k) ** 1.5 * min(1.0, h / 0.15), emit=1.4, kind="spark"))
-        if self.sparks and T5 - 0.05 <= t < T6 + 0.5:
+        if self.sparks and FALL - 0.05 <= t < T6 + 0.5:
             out.append(self._embers(t))
         if self.sparks:
             out = out[2:] if len(out) > 2 and h > 0.004 else [b for b in out if b.get("kind") == "spark"]
@@ -549,20 +641,20 @@ class Flame:
 
     def _embers(self, t):
         e = self.e
-        p0 = flame_guess(T5 - 0.05)
-        fly = _ss(T5, T5 + 0.9 + 0.5 * e[:, 2], t)[:, None]
+        p0 = flame_guess(FALL - 0.05)
+        fly = _ss(FALL, FALL + 0.9 + 0.5 * e[:, 2], t)[:, None]
         hop = np.abs(np.sin(fly[:, 0] * np.pi * (1.0 + 2.0 * e[:, 3]))) * (1.0 - fly[:, 0]) * 0.6
         pos = p0 * (1.0 - fly) + self.rest * fly
         pos[:, 1] += hop
         # lifted in open hands (a share of them), then streamed into the child's cupped hands
-        lift = _ss(36.4 + 1.2 * e[:, 4], 37.6 + 1.2 * e[:, 4], t) * (e[:, 5] < 0.65)
+        lift = np.zeros(len(e))
         pos[:, 1] += lift * (0.55 + 0.45 * e[:, 2])
-        go = _ss(39.4 + 1.9 * e[:, 4], 41.6 + 0.85 * e[:, 4], t)[:, None]
+        go = _ss(40.1 + 1.5 * e[:, 4], 41.9 + 0.55 * e[:, 4], t)[:, None]
         tgt = root("child", t) + np.array([0.0, 0.62, -0.22])
         mid = 0.5 * (pos + tgt) + np.array([0.0, 1.2, 0.0])
         q = go
         pos = (1 - q) ** 2 * pos + 2 * (1 - q) * q * mid + q * q * tgt
-        cool = _ss(T5 + 0.5, T5 + 2.8, t)
+        cool = _ss(FALL + 0.5, FALL + 2.8, t)
         warm = np.maximum(lift, go[:, 0])
         bright = (1.0 - 0.8 * cool) + warm * 0.9
         col = GOLD[None] * (1.0 - cool + warm * cool)[:, None] + EMBER[None] * (cool * (1.0 - warm))[:, None]
@@ -656,7 +748,7 @@ class Spray:
 
     def __init__(self, n=9000):
         r = np.random.default_rng(31).random((n, 5))
-        za, zb = R["elder"].root(T3 - 1.0)[2] + 10.0, R["elder"].root(T4)[2] - 14.0
+        za, zb = P["elder"].root(T3 - 1.0)[2] + 10.0, P["elder"].root(T4)[2] - 14.0
         side = np.where(r[:, 0] < 0.5, -1.0, 1.0)
         ax = 2.6 + 9.0 * r[:, 1] ** 1.3
         x = side * ax + 0.3
@@ -684,7 +776,7 @@ class Field:
 
     def __init__(self, n=14000):
         r = np.random.default_rng(41).random((n, 5))
-        za, zb = R["youth"].root(T4)[2] + 6.0, Z_FALL - 90.0
+        za, zb = P["youth"].root(E_STOP)[2] + 40.0, Z_FALL - 90.0
         side = np.where(r[:, 0] < 0.5, -1.0, 1.0)
         x = side * (3.0 + 85.0 * r[:, 1] ** 1.6) + 0.3
         self.base = np.stack([x, 1.0 + 0.35 * r[:, 2], za + (zb - za) * r[:, 3]], 1)
@@ -696,10 +788,10 @@ class Field:
             return None
         r = self.r
         on = _ss(self.wake, self.wake + 0.35, t)
-        fz = flame_guess(min(t, T5))[2]
+        fz = flame_guess(min(t, FALL))[2]
         dz = self.base[:, 2] - fz
-        wave = np.exp(-((dz + 7.0) / 11.0) ** 2) * np.exp(-np.abs(self.base[:, 0]) / 40.0) * (1.0 - _ss(T5, T5 + 1.0, t))
-        dark = _ss(T5, T5 + 1.6, t)
+        wave = np.exp(-((dz + 7.0) / 11.0) ** 2) * np.exp(-np.abs(self.base[:, 0]) / 40.0) * (1.0 - _ss(FALL, FALL + 1.0, t))
+        dark = _ss(FALL, FALL + 1.6, t)
         pos = self.base.copy()
         pos[:, 1] += 0.75 * wave - 0.4 * dark
         col = lin("#bcd0ff")[None] * (1.0 - wave[:, None]) + lin("#ffd27a")[None] * wave[:, None]
@@ -759,7 +851,7 @@ LOOKS3 = dict(
                     hills=0.8, lanterns=1.0, sun_color="#ffb070", sun_int=0.35, sun_el=-5.0, ripple=0.3),
 )
 LOOK_KEYS = [(0.0, "r_night", 0.0), (T1, "r_rain", 0.0), (T2, "r_shore", 0.0), (T3, "r_sea", 0.0),
-             (T4, "r_field", 0.0), (T5 + 0.6, "r_fall", 1.2), (BREATH, "r_circle", 1.2), (T6, "r_lanterns", 0.0),
+             (T4, "r_field", 0.0), (FALL + 0.4, "r_fall", 1.2), (BREATH, "r_circle", 1.2), (T6, "r_lanterns", 0.0),
              (T7 + 1.0, "predawn", 2.0), (REL + 0.7, "r_day", 1.8)]
 
 
@@ -770,12 +862,12 @@ def _burst(t, strength, color="#fff0d0", rise=0.06, fall=0.6, radius=0.35):
 # quick warm peaks with form and colour, never a white frame
 BURSTS = [_burst(T0, 1.0, "#ffd08a", fall=0.3), _burst(T1, 0.9, "#ffd08a", fall=0.25),
           _burst(T2, 0.9, "#ffe0b0", fall=0.25), _burst(T3, 0.8, "#ffd08a", fall=0.25),
-          _burst(T4, 1.0, "#ffd08a", fall=0.25), _burst(T5, 1.2, "#ffa860", fall=0.35),
+          _burst(T4, 1.0, "#ffd08a", fall=0.25), _burst(FALL, 1.2, "#ffa860", fall=0.35),
           _burst(HIT["grip"], 0.6, "#ffd9b0", fall=0.3), _burst(T6, 1.5, "#ffd08a", fall=0.4),
           _burst(T7, 0.7, "#ffe0b0", fall=0.3), dict(t=REL, strength=1.1, rise=0.06, fall=0.4, color="#ffd9a0",
                                                     at=tuple(MOTHER_POS + [0.0, 2.2, -0.2]), radius=0.5)]
 
-_LIGHT_K = Track([(0.0, 0.14), (T5 - 0.05, 0.16), (T5 + 0.3, 0.0), (T6 - 0.1, 0.0), (T6 + 0.3, 0.12), (T7, 0.14),
+_LIGHT_K = Track([(0.0, 0.14), (FALL - 0.05, 0.16), (FALL + 0.3, 0.0), (T6 - 0.1, 0.0), (T6 + 0.3, 0.12), (T7, 0.14),
                  (T7 + 0.8, 0.40), (REL, 0.55), (REL + 1.2, 0.25), (60.0, 0.15)], name="LIGHT_K")
 
 
@@ -791,55 +883,117 @@ WORLD = WORDS.world(dict(
     light=dict(pos=lambda t: flame_pos(t), color="#ffd9a0", strength=LIGHT_K, size=0.35, rays=1.0),
     lights=[dict(pos=lambda t: flame_pos(t), color="#ffb85a",
                  strength=lambda t: 0.28 * float(FLAME_SIZE(t) > 0.01), radius=2.5)],
-    shafts=[dict(base=(R["child"].x, Z_CHILD), radius=0.9, top=40.0, color="#dfe8ff",
+    shafts=[dict(base=(float(P["child"].root(BREATH)[0]), Z_CHILD), radius=0.9, top=40.0, color="#dfe8ff",
                  strength=lambda t: 0.35 * float(_ss(BREATH - 1.5, BREATH, t) * (1.0 - _ss(T6, T6 + 0.8, t))))],
 ))
+
+def _w(name, place):
+    """A world place on another body, as that body is without its own gestures (contact, as engine/p3d/pairs)."""
+    return lambda t: np.asarray(BODIES[name].where(t, place, raw=True), np.float64)
+
+
+def _grip(t):
+    """Where the helper's right hand and the boy's right hand meet (engine/p3d/pairs.helped_up)."""
+    pa = np.asarray(BODIES["helper"].where(t, "shoulder.R", raw=True), np.float64)
+    pb = np.asarray(BODIES["youth"].where(t, "shoulder.R", raw=True), np.float64)
+    g = 0.5 * (pa + pb)
+    g[1] -= 0.33 * BODIES["helper"].k
+    return g
+
+
+def _ahead(name, right=0.0, up=1.0, ahead=0.9):
+    """A point in front of someone's road position: the way down the road (for "please, after you")."""
+    return lambda t: root(name, t) + np.array([right, up, -ahead])
+
+
+def _heart(name):
+    def f(t):
+        b = BODIES[name]
+        p, n = b.where(t, "heart", normal=True, raw=True)
+        return np.asarray(p, np.float64) + 0.07 * np.asarray(n, np.float64)
+    return f
+
+
+GESTURES = dict(
+    sprinter=[(-1.0, G_TOUCH - 0.05, "raise_hand", dict(side="R", ease=0.35)),
+              (G_TOUCH, 3.7, "hand_on_shoulder", dict(side="L", to=_w("coat", "shoulder.L"), ease=0.45)),
+              (2.9, PASS1 + 0.35, "offer", dict(side="R", ease=0.5)),
+              (PASS1 + 0.3, 9.5, "pray", dict(ease=0.9))],
+    coat=[(3.6, 5.4, "bow", dict(amount=10.0, ease=0.6)),
+          (5.35, PASS1 + 0.25, "reach", dict(side="L", to=_w("sprinter", "palm.R"), palm="down", ease=0.45)),
+          (PASS1 + 0.15, C_STOP + 0.05, "raise_hand", dict(side="L", ease=0.4)),
+          (C_STOP - 0.2, PASS2 + 0.15, "offer", dict(side="L", ease=0.5)),
+          (PASS2 + 0.1, 12.7, "reach", dict(side="L", to=_ahead("coat", 0.15, 0.95, 0.95), palm="up", far=0.95,
+                                            ease=0.6)),
+          (10.9, 12.3, "bow", dict(amount=14.0, ease=0.5))],
+    shawl=[(PASS2 - 0.6, PASS2 + 0.3, "reach", dict(side="R", to=_w("coat", "palm.L"), ease=0.45)),
+           (11.0, 11.7, "bow", dict(amount=10.0, ease=0.3)),
+           (11.85, GR_STOP + 0.05, "raise_hand", dict(side="R", ease=0.4)),
+           (GR_STOP - 0.15, PASS3 + 0.3, "offer", dict(side="R", ease=0.5)),
+           (PASS3 + 0.45, 19.4, "pray", dict(ease=0.8))],
+    elder=[(PASS3 - 0.6, PASS3 + 0.3, "reach", dict(side="L", to=_w("shawl", "palm.R"), ease=0.45)),
+           (PASS3 + 0.2, PASS4 + 0.25, "offer", dict(side="L", ease=0.5)),
+           (PASS3 + 0.4, 18.9, "touch", dict(side="R", to=_heart("elder"), ease=0.55)),
+           (PASS3 + 0.6, 18.7, "bow", dict(amount=24.0, ease=0.6)),
+           (21.3, 24.3, "listen", dict(side="R", amount=1.0, ease=0.6)),
+           (22.7, 23.45, "bow", dict(amount=9.0, ease=0.3))],
+    youth=[(21.25, 24.1, "offer", dict(side="L", ease=0.6)),
+           (PASS4 - 0.5, PASS4 + 0.3, "reach", dict(side="R", to=_w("elder", "palm.L"), ease=0.45)),
+           (PASS4 + 0.2, FALL - 0.05, "raise_hand", dict(side="R", ease=0.3)),
+           (E_STOP + 0.6, 30.2, "bow", dict(amount=16.0, ease=0.6)),
+           (FALL + 0.4, RISE - 0.3, "bow", dict(amount=26.0, ease=0.7)),
+           (34.75, 38.0, "handshake", dict(side="R", to=_grip, grip=1.0, ease=0.6)),
+           (37.5, 45.0, "embrace", dict(to=_w("helper", "blade.R"), to2=_w("helper", "blade.L"), head="L", ease=1.0))],
+    helper=[(32.65, 34.35, "hand_on_shoulder", dict(side="R", to=_w("youth", "shoulder.L"), ease=0.6)),
+            (34.6, 38.0, "handshake", dict(side="R", to=_grip, grip=1.0, ease=0.7)),
+            (37.4, 45.0, "embrace", dict(to=_w("youth", "blade.R"), to2=_w("youth", "blade.L"), head="L", ease=1.0))],
+    child=[(37.0, T6 + 0.2, "cup", dict(ease=0.8)),
+           (T6 + 0.15, T7 + 0.3, "raise_hand", dict(side="R", ease=0.35))],
+)
+# a style of person for each carrier (refs and refs2 of the brief)
+STYLES = dict(
+    sprinter=dict(garment="tunic", look="glitter", color="#ffcf7a", color2="#fff1d6",              # gold glitter, p08
+                  effects=[dict(kind="shed", t=0.0, n=4500, life=1.6, speed=0.5)]),
+    coat=dict(garment="coat", look=dict(name="plexus", bright=1.2), color="#cfe0ff", color2="#ffffff"),  # constellation, p01
+    shawl=dict(garment="dress", look="glitter", color="#ff9a4a", color2="#ffd890",                  # a dancer of embers, p04
+               effects=[dict(kind="shed", t=7.5, n=9000, life=1.4, speed=0.9, color="#ff7a2a")]),
+    elder=dict(garment="coat", look="dots", color="#ffd9a0", color2="#ffb070"),                     # dotted light, ref 14
+    youth=dict(garment="tunic", look="glitter", color="#cfe8ff", color2="#ffffff",                   # crystal, breaks like glass
+               effects=[dict(kind="disperse", t=FALL, share=0.30, dir=(0.0, 0.5, 1.0),
+                             amount=Track([(0.0, 0.0), (FALL, 0.0), (FALL + 0.6, 0.20), (RISE, 0.20), (RISE + 1.3, 0.0),
+                                           (60.0, 0.0)]))]),
+    helper=dict(garment="dress", look="dots", color="#ffb0c4", color2="#ffe2c8"),                   # rose dots
+    child=dict(garment="dress", look="glitter", color="#fff0c4", color2="#ffffff", bright=1.5),     # a small bright spark, p09
+)
 
 
 def _setup(scene):
     from p3d.body import Body
-    wind = (0.0, 0.0, 1.2)
-    common = dict(facing=180.0, look="glitter", points=70000, wind=wind, bright=1.3)
-    looks = dict(
-        sprinter=dict(garment="tunic", veil=dict(length=0.55), color="#ffcf7a", color2="#fff1d6"),
-        coat=dict(garment="coat", color="#a9c8ff", color2="#ffffff"),
-        shawl=dict(garment="dress", veil=dict(length=0.8), color="#8fe3d6", color2="#f2fffb"),
-        elder=dict(garment="coat", stoop=0.3, color="#ffd9a0", color2="#fff4e2"),
-        youth=dict(garment="tunic", color="#bfe0ff", color2="#ffffff"),
-        child=dict(garment="dress", veil=dict(length=0.35), color="#fff0c4", color2="#ffffff", bright=1.5),
-    )
-    gest = dict(
-        sprinter=[(-1.0, T1 + 0.25, "raise_hand", dict(side="R", ease=0.3))],
-        coat=[(T1 - 0.45, T2 + 0.25, "raise_hand", dict(side="R", ease=0.3)), (T2 + 1.2, T2 + 9.0, "bow")],
-        shawl=[(T2 - 0.45, T3 + 0.25, "raise_hand", dict(side="R", ease=0.3))],
-        elder=[(T3 - 0.4, T4 + 0.25, "raise_hand", dict(side="R", ease=0.35))],
-        youth=[(T4 - 0.45, T5 - 0.05, "raise_hand", dict(side="R", ease=0.25)), (T5 + 0.7, 36.6, "bow"),
-               (36.6, HIT["up"] + 0.8, "reach", dict(side="R", to=tuple(GRIP), ease=0.9))],
-        child=[(BREATH - 2.2, T6 + 0.15, "cup", dict(ease=0.8)),
-               (T6 + 0.15, T7 + 0.3, "raise_hand", dict(side="R", ease=0.35))],
-    )
-    for name, r in R.items():
-        kw = dict(common)
-        kw.update(looks[name])
-        BODIES[name] = Body(r.shape, height=r.height, at=(r.x, r.z0), motion=r.keys, gesture=gest[name],
-                            show=r.show, fade=0.5, seed=1.0 + len(BODIES) * 3.1,
-                            effects=[dict(kind="shed", t=r.show[0], n=4500, life=1.6, speed=0.5)], **kw)
+    wind = (0.0, 0.0, 1.0)
+    for name, p in P.items():
+        kw = dict(points=70000, wind=wind, bright=1.3)
+        kw.update(STYLES[name])
+        if "stoop" in p.body:
+            kw["stoop"] = p.body["stoop"]
+        BODIES[name] = Body(p.shape, height=p.height, at=p.at_arg(), facing=p.face_arg(), motion=p.keys,
+                            gesture=GESTURES[name], show=p.show, fade=0.6, seed=1.0 + 3.1 * len(BODIES), **kw)
         BODIES[name].add(scene, name)
-    BODIES["helper"] = Body("woman", height=1.64, at=(HELPER_POS[0], HELPER_POS[2]), facing=0.0, look="glitter",
-                            garment="dress", veil=dict(length=0.7), color="#ffc3a8", color2="#fff0e6",
-                            motion=[(T5 + 0.5, "stand"), (T5 + 0.8, "kneel", dict(blend=0.9)),
-                                    (HIT["up"], "stand", dict(blend=1.0))],
-                            gesture=[(36.0, HIT["up"] + 0.8, "reach", dict(side="L", to=tuple(GRIP), ease=0.9))],
-                            show=(T5 + 0.5, T6 + 1.0), fade=1.0, points=70000, wind=wind, seed=31.0)
-    BODIES["helper"].add(scene, "helper")
     BODIES["mother"] = Body("woman", height=1.70, at=(MOTHER_POS[0], MOTHER_POS[2]), facing=180.0, look="glitter",
                             garment="robe", veil=dict(length=1.5), color="#fff3d6", color2="#ffd89a",
-                            gesture=[(T7 - 1.2, T7 + 0.6, "reach", dict(side="L", to=tuple(flame_guess(T7 - 0.05)
-                                                                                           + [0.0, 0.0, 0.0]),
+                            gesture=[(T7 - 1.2, T7 + 0.6, "reach", dict(side="L", to=tuple(flame_guess(T7 - 0.05)),
                                                                           ease=0.6)),
                                      (T7 + 0.5, 70.0, "raise", dict(ease=1.0))],
                             show=(45.0, 60.0), fade=1.5, points=90000, wind=(0.3, 0.0, 0.9), seed=41.0)
     BODIES["mother"].add(scene, "mother")
+    try:
+        from p3d.crowd import Crowd
+        crowd = Crowd(n=64, area=dict(center=(float(CROWD_AT[0]), float(CROWD_AT[2])), radius=(2.8, 15.0)),
+                      facing="center", kinds=(("clap", 0.6), ("raise", 0.25), ("stand", 0.15)),
+                      start=dict(t=P_STOP - 0.9, center=(float(CROWD_AT[0]), float(CROWD_AT[2])), speed=10.0),
+                      until=49.6, fade=0.7, points=2600, color="#ffe6c0", color2="#bcd0ff")
+        scene.add("crowd", PW.KeepClear(crowd, WORDS))
+    except ImportError:          # an engine without crowds: the lanterns carry the scene alone
+        pass
     scene.add("road", Road())
     scene.add("posts", Posts())
     scene.add("flame", Flame())                                        # the flame itself
@@ -856,10 +1010,3 @@ def _setup(scene):
 
 
 P3D = dict(camera=CAMERA, world=WORLD, setup=_setup, bursts=BURSTS, motion_blur=0.35)
-
-
-if __name__ == "__main__":
-    for n, r in R.items():
-        print(n, "z0 %.1f" % r.z0, "show", r.show, "at T", [round(r.root(x)[2], 1) for x in (r.show[0], r.show[1])])
-    print("fall", round(Z_FALL, 1), "child", round(Z_CHILD, 1), "mother", MOTHER_Z, "start", round(Z_START, 1))
-    print("arch lit", [round(x, 2) for x in ARCH_LIT])
