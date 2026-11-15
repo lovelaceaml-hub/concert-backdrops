@@ -163,7 +163,7 @@ def at(az, dist, height=0.0):
 
 def hash01(n, salt=0):
     """n reproducible numbers in 0..1 (a fixed hash of the index: the same on every machine and run)."""
-    i = np.arange(n, dtype=np.uint64) + np.uint64(salt) * np.uint64(0x9E3779B97F4A7C15)
+    i = np.arange(n, dtype=np.uint64) + np.uint64((int(salt) * 0x9E3779B97F4A7C15) % (1 << 64))
     i = (i ^ (i >> np.uint64(30))) * np.uint64(0xBF58476D1CE4E5B9)
     i = (i ^ (i >> np.uint64(27))) * np.uint64(0x94D049BB133111EB)
     i = i ^ (i >> np.uint64(31))

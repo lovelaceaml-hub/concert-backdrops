@@ -29,9 +29,15 @@ uniform vec4 uCloudP;     // amount, drift x, drift z, scale
 uniform vec3 uSunDir;
 uniform vec4 uLakeP;      // reflectivity looking down, mirror gain, ripple amount, shore radius
 uniform int uNCalm; uniform vec4 uCalmA[4]; uniform vec4 uCalmB[4];   // discs (x, z, radius, soft) with their own (ripple, mirror)
-// the lake at p: (ripple amount, mirror gain); a disc of calm (or storm) can lie anywhere on it
+uniform sampler2D uLakeTex; uniform vec4 uLakeF; uniform float uLakeOn;  // a field of (ripple, mirror) over a square
+// the lake at p: (ripple amount, mirror gain); a field and discs of calm (or storm) can lie anywhere on it
 vec2 lakeAt(vec2 p){
   vec2 v = vec2(uLakeP.z, uLakeP.y);
+  if(uLakeOn > 0.5){
+    vec2 q = (p - uLakeF.xy)*uLakeF.zw + 0.5;            // 0..1 over the field's square
+    float e = min(min(q.x, 1.0-q.x), min(q.y, 1.0-q.y));
+    if(e > 0.0) v = mix(v, textureLod(uLakeTex, q, 0.0).rg, smoothstep(0.0, 0.04, e));
+  }
   for(int i=0;i<uNCalm;i++){
     float w = 1.0 - smoothstep(uCalmA[i].z - uCalmA[i].w, uCalmA[i].z + uCalmA[i].w, length(p - uCalmA[i].xy));
     v = mix(v, uCalmB[i].xy, w);
@@ -150,6 +156,8 @@ SPRITE_VS = "#version 330\n" + NOISE + WORLD + SPRITE_COMMON + """
 in vec2 aCorner;
 in vec3 aPos; in float aSize; in vec3 aColor; in float aAlpha; in float aEmit; in float aSeed; in vec2 aRot;
 in vec3 aNormal; in vec3 aVel; in float aBirth;
+in float aIdx;            // the point's own index, when the set is drawn in spatial chunks (uIdxK.x = 1)
+uniform vec2 uIdxK;       // (1: index from aIdx, else the instance number times the stride), stride
 uniform float uHasN;
 uniform int uKind;        // 0 soft, 1 spark, 2 disc, 3 flake, 4 petal, 5 bird
 uniform vec2 uRim;
@@ -218,7 +226,7 @@ void main(){
   if(uLod > 0.5 && coc > uLodR){
     // far out of focus: draw a share of the points, each brighter (the same light, far fewer big discs)
     float q = (uLodR*uLodR)/(coc*coc);
-    float h = ihash(gl_InstanceID);
+    float h = ihash(uIdxK.x > 0.5 ? int(aIdx + 0.5) : gl_InstanceID*int(uIdxK.y + 0.5));
     float w = clamp((1.25*q - h)/(0.25*q), 0.0, 1.0);
     if(w <= 0.0){ cull(); return; }
     float top = min(1.25*q, 1.0);
@@ -838,11 +846,25 @@ void main(){
       float L = length(mv*uRes);
       if(L > 1.5){
         mv *= min(1.0, 0.22*uRes.y/L);
-        vec3 acc = col;
-        for(int i=1;i<8;i++){
-          acc += texture(uBg, vUV - mv*(float(i)/7.0)).rgb;
+        L = min(L, 0.22*uRes.y);
+        if(L < 80.0*uRes.y/1080.0){
+          vec3 acc = col;
+          for(int i=1;i<8;i++){
+            acc += texture(uBg, vUV - mv*(float(i)/7.0)).rgb;
+          }
+          col = acc/8.0;
+        } else {
+          // a long streak (a whip, a dive): more taps, each pixel's set shifted a little, so the copies of the
+          // picture melt into one smooth smear instead of showing as steps
+          int n = int(clamp(L/(7.0*uRes.y/1080.0), 12.0, 40.0));
+          float j = hash21(gl_FragCoord.xy + vec2(uT*61.0, uT*17.0));
+          vec3 acc = vec3(0.0);
+          for(int i=0;i<40;i++){
+            if(i >= n) break;
+            acc += texture(uBg, vUV - mv*((float(i) + j)/float(n))).rgb;
+          }
+          col = acc/float(n);
         }
-        col = acc/8.0;
       }
     }
   }
