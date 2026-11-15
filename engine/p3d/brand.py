@@ -878,7 +878,7 @@ class Logo:
 
     def __init__(self, pos=(0.0, 3.0, 0.0), size=2.0, facing=0.0, face="fixed", tilt=0.0, roll=0.0, ride=None,
                  frac=0.2, keys=None, place=None, camera=None, t_in=0.0, t_full=3.0, t_out=None, leave_dur=1.6,
-                 arrive="build", leave="fade", paint=0.0, paint_light=0.12, bright=0.45, white=0.35, glow=0.25,
+                 arrive="build", leave="fade", paint=0.0, paint_light=0.04, bright=0.45, white=0.35, glow=0.25,
                  sparkle=0.08, palette="brand", parts=None, amount=None, timing=None, bulge=1.0, n=70000,
                  dot=2.1, dof=0.0, fog=0.0, reflect=True, seed=7):
         self.place = place or Place(pos=pos, size=size, facing=facing, face=face, tilt=tilt, roll=roll, ride=ride,
@@ -919,7 +919,7 @@ class Logo:
         self.rgb0 = rgb0
         lc = show_rgb(rgb0)
         m = np.maximum(lc.max(axis=1, keepdims=True), 1e-6)
-        self.light0 = (m * (lc / m) ** 1.35).astype(np.float32)
+        self.light0 = (m * (lc / m) ** 1.15).astype(np.float32)
         self.isw = isw = (rgb0.min(axis=1) > 0.97)
         self.white_light = np.array([1.0, 0.96, 0.9], np.float32) * 2.0 * self.white
         self.white_paint = np.array([1.25, 1.25, 1.25], np.float32)      # displays close to white, blooms little
@@ -1084,14 +1084,17 @@ class Logo:
                             emit=(1.0 + 2.5 * flash[vis]).astype(np.float32), kind="soft", twinkle=0.0,
                             seed=self.s[vis, 0], paint=0.0, **sharp))
         if paint > 0.0:
-            a_p = alpha * np.clip(self.wt * 1.6, 0.0, 1.0)
+            # a painted disc keeps its light in its skirt, so its middle covers only about two thirds: an alpha
+            # of 2 (the renderer clamps the cover to 1) makes the fill solid
+            a_p = alpha * np.clip(self.wt * 1.6, 0.0, 1.0) * 2.0
             vp = a_p > 0.004
             if vp.any():
-                out.append(dict(pos=pos[vp], size=size * 1.25, color=paintc[vp], alpha=a_p[vp].astype(np.float32),
-                                kind="soft", paint=paint, paint_light=self.paint_light, seed=self.s[vp, 0], **sharp))
+                out.append(dict(pos=pos[vp], size=np.float32(self.cell * 1.75 * s), color=paintc[vp], alpha=a_p[vp].astype(np.float32),
+                                kind="disc", paint=paint, paint_light=self.paint_light, seed=self.s[vp, 0],
+                                **dict(sharp, streak=0.0)))
         if self.glow > 0.0:
             i = self.i_halo
-            a = a_light[i] * self.glow * 0.033 * (1.0 - 0.7 * paint)
+            a = a_light[i] * self.glow * 0.033 * (1.0 - paint)
             sel = a > 0.0005
             if sel.any():
                 out.append(dict(pos=pos[i][sel], size=size * 14.0, color=light[i][sel] * self.bright,
@@ -1099,7 +1102,7 @@ class Logo:
                                 fog=self.fog, streak=0.0, reflect=self.reflect))
         if self.sparkle > 0.0:
             i = self.i_spark
-            a = alpha[i] * occ[i] * self.sparkle * (0.6 + flash[i])
+            a = alpha[i] * occ[i] * self.sparkle * (0.6 + flash[i]) * (1.0 - paint)
             sel = a > 0.01
             if sel.any():
                 out.append(dict(pos=pos[i][sel], size=size * 3.0, color=np.array([1.0, 0.93, 0.8]) * 1.4,
@@ -1126,3 +1129,10 @@ class Logo:
         """The settled places of the points in logo units (x, y, z), all or one part."""
         sel = np.ones(self.N, bool) if part is None else self.part == _PID[part]
         return self.x[sel], self.y[sel], self.z[sel] * self.bulge
+
+
+# ---------------------------------------------------------------------------------- the rest of the brand
+from .brand_hearts import HeartDrift, HeartForm, Hearts, arrange_heart, heart_places, heart_points  # noqa: E402,F401
+from .brand_symbols import (RECIPES, SYMBOLS, Constellation, Flock, LightTrail, PetalShape, Ripples, Traced,  # noqa: E402,F401
+                            recipe, strokes, symbol_image, symbol_points)
+from .brand_world import LAS_VEGAS, PASTEL, Finale, Globe, land  # noqa: E402,F401

@@ -18,7 +18,7 @@ from . import camera as C
 from . import shaders as K
 from . import world as Wd
 
-KIND_ID = dict(soft=0, spark=1, disc=2, flake=3, petal=4, bird=5, line=6, ribbon=7)
+KIND_ID = dict(soft=0, spark=1, disc=2, flake=3, petal=4, bird=5, line=6, ribbon=7, heart=8)
 CAM_UNIT = 15            # the composite's background unit (shared with engine/sky_camera.py, never both)
 LAKE_UNIT = 7            # the lake field (world key lake), bound while the layer draws
 SHORE = 1400.0           # metres from the origin to the foot of the first hills: the lake ends there
