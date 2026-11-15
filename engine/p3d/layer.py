@@ -20,6 +20,7 @@ from . import world as Wd
 
 KIND_ID = dict(soft=0, spark=1, disc=2, flake=3, petal=4, bird=5, line=6, ribbon=7)
 CAM_UNIT = 15            # the composite's background unit (shared with engine/sky_camera.py, never both)
+LAKE_UNIT = 7            # the lake field (world key lake), bound while the layer draws
 SHORE = 1400.0           # metres from the origin to the foot of the first hills: the lake ends there
 FLAT_LAYERS = ("stars", "motes", "lanterns", "petals", "arch", "skyline", "rings", "waves")
 CORE_FMT = "3f 1f 3f 1f 1f 1f 2f 1f /i"     # pos, size, colour, alpha, emit, seed, turn (or path places), birth
@@ -76,7 +77,8 @@ class Layer:
             raise ValueError(f"P3D keep: unknown layers {sorted(self.keep - set(FLAT_LAYERS))} (known: {FLAT_LAYERS})")
         mb = cfg.get("motion_blur", None)
         self.shutter = float(self.rig.shutter if mb is None else mb)
-        self.samples = max(int(cfg.get("motion_samples", 1)), 1)
+        ms = cfg.get("motion_samples", 1)
+        self.samples = ms if callable(ms) else max(int(ms), 1)      # a number, or a Track (more only in the whips)
         self.bursts = [dict(b) for b in (cfg.get("bursts") or [])]
         self.clear = cfg.get("clear") or []
         self.lod_r = float(cfg.get("lod", 7.0))
@@ -145,6 +147,7 @@ class Layer:
         self.f_rayA.clear(0.0, 0.0, 0.0, 1.0)
         self.f_rayB.clear(0.0, 0.0, 0.0, 1.0)
         self.slots = {}
+        self.t_lake, self._lake_t, self._lake_box = None, None, None
         self._static = {}
         self._frame = None
         self._mask = None
@@ -163,7 +166,8 @@ class Layer:
             return self._frame[1:]
         asp = float(S.ASPECT)
         cam = self.rig.state(t, asp)
-        prev = self.rig.state(t - self.shutter / float(S.FPS), asp) if self.shutter > 0.0 else cam
+        # where the camera was when the shutter opened (on this frame's side of any cut: no blur across a cut)
+        prev = self.rig.state(t - self.shutter / float(S.FPS), asp, ref=t) if self.shutter > 0.0 else cam
         w = self.world.state(t)
         rc = self.world.react
         if self.audio is not None and rc:
@@ -240,6 +244,7 @@ class Layer:
         cs = float(w["cloud_speed"])
         wd = self.world
         calm_a, calm_b, ncalm = wd.calm_at(t)
+        lake = self._lake_field(t)
         lp, lc, nl = wd.lights_at(t)
         split, sp = wd.split_at(t, w)
         box, boxk = self._clear_boxes(t)
@@ -257,8 +262,28 @@ class Layer:
             uShutterDt=self.shutter / float(S.FPS), uMaxStreak=0.20 * self.h, uSmear=0.03, uPx=px,
             uBokeh=(float(w["bokeh_ring"]), float(w["bokeh_hex"])), uHair=0.30 * px,
             uNCalm=ncalm, uNLights=nl, uDomeRot=wd.dome_rot(w), uSplit=split, uSplitStars=float(sp.get("_stars", 1.0)),
+            uLakeOn=1.0 if lake is not None else 0.0, uLakeF=lake if lake is not None else (0.0, 0.0, 1.0, 1.0),
+            uLakeTex=LAKE_UNIT,
             _calm=(calm_a, calm_b), _lights=(lp, lc), _clear=(box, boxk), _split=sp,
         )
+
+    def _lake_field(self, t):
+        """The lake field of the frame (world key lake): sent to its texture once per frame, bound at LAKE_UNIT."""
+        if self.world.lake is None:
+            return None
+        if self._lake_t != t:
+            data, box = self.world.lake_at(t)
+            n = data.shape[0]
+            if self.t_lake is None or self.t_lake.size != (n, n):
+                if self.t_lake is not None:
+                    self.t_lake.release()
+                self.t_lake = self.ctx.texture((n, n), 2, dtype="f4")
+                self.t_lake.filter = (moderngl.LINEAR, moderngl.LINEAR)
+                self.t_lake.repeat_x = self.t_lake.repeat_y = False
+            self.t_lake.write(np.ascontiguousarray(data, "f4").tobytes())
+            self._lake_t, self._lake_box = t, box
+        self.t_lake.use(location=LAKE_UNIT)
+        return self._lake_box
 
     def _arrays(self, p, U):
         seta(p, "uCalmA", U["_calm"][0])
@@ -441,7 +466,7 @@ class Layer:
             self.f_paint.use()
             self.f_paint.clear(0.0, 0.0, 0.0, 0.0)
             self._draw_sets(items, U, cam, w, 1.0, paint=True)
-        n = self.samples if self.shutter > 0.0 else 1
+        n = max(int(round(float(_val(self.samples, t)))), 1) if self.shutter > 0.0 else 1
         if n <= 1:
             self._draw_sets(items, U, cam, w, 1.0)
         else:
@@ -451,7 +476,7 @@ class Layer:
             asp = float(S.ASPECT)
             for i in range(n):
                 ts = t - dt * (n - 1 - i) / n
-                c, pv = self.rig.state(ts, asp), self.rig.state(ts - dt / n, asp)
+                c, pv = self.rig.state(ts, asp, ref=t), self.rig.state(ts - dt / n, asp, ref=t)
                 Ui = self._uniforms(ts, c, pv, w)
                 Ui["uShutterDt"] = dt / n
                 its = items if i == n - 1 else [(e, self._batches(e, ts, c)) for e in self.scene.entries()]
