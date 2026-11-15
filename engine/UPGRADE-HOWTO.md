@@ -758,11 +758,13 @@ Each is optional. A song file that sets none of them runs the same code as befor
 ## V. The 3D layer: camera, point sets, world (2026-11-15, branch engine-p3d)
 
 **Changes for song files since a1262fe (helper CORE2).** Every old key keeps its meaning; these behave differently:
-- A set with `window=True` (or a window name) is no longer mirrored in the lake outside its window.
+- A set with `window=True` (or a window name) is mirrored only inside its window's reflection; masked silhouettes are now mirrored in the lake (a dark body's reflection is dark).
 - `Mask(soft=...)` below 3 is now honoured (it used to be raised to 3); below 2.5 the silhouettes of that frame are drawn at full size. The default soft=3 renders as before.
 - Motion blur never reaches across a hard cut (blend 0) any more: the first frame after a cut is clean.
 - The lake mirror of a set of 300 thousand points or more draws every second point (every third from 1.2 million), each brighter; a static set of 60 thousand or more is drawn in spatial cells. Same look, less work.
-New keys (details below in "Added by CORE2"): a move's `whip=`, P3D `motion_samples` as a Track, world `lake=dict(field=...)`, `Mask("sky", sky="flat", color=...)`, `Mask(slot=...)`, `window="<masked set>"` (nested windows).
+- Moving lines and ribbons now take motion blur (they were drawn sharp in whips and fast moves).
+- The lake and the hill rings stand round the world's origin instead of round the camera. Near the origin the picture is as before; a camera hundreds of metres away now sees real parallax, and from high up the lake is a disc.
+New keys (details below in "Added by CORE2"): a move's `whip=`, P3D `motion_samples` as a Track, P3D `sky_res`, world `lake=dict(field=...)`, `shore`, `keep_hue`, `split` with `toward=` a world point and `cover=`, `lights=[dict(..., rays=, size=)]`, `Mask("sky", sky="flat", color=...)`, `Mask(slot=...)`, `window="<masked set>"` (nested windows), segment `vel`.
 
 A true 3D layer inside the engine: a camera that moves through space, point sprites with depth of field and bokeh, and a world with a mirror lake. One song key switches it on, `P3D = dict(...)`. A song without the key never loads the package (`engine/p3d/`) and renders exactly as before (checked: `t_short_test` and `epic_concert` give the same frames, byte for byte, with and without the hooks).
 
@@ -890,7 +892,7 @@ At 7.5 s the picture flies into a burst of light; inside it the world cuts to da
 
 ### Added for the ten films (same branch; working example `engine/songs/test_p3d_ten.py`)
 
-State of proof: every item below runs in `test_p3d_ten.py` and was looked at in half-size frames rendered in the session (3, 5.4, 6.2, 7, 7.6, 9.5, 11.5 and 14 s); its frames do not depend on render order (3, 9.5 and 14 s in two orders give the same bytes). They have not been viewed as full-size stills and have not run on GitHub. The looks reference is `engine/songs/test_p3d_looks.py` (eight looks, two seconds each).
+State of proof: every item below runs in `test_p3d_ten.py` and has been viewed as full-size stills (1.5 to 14.5 s, helper CORE2) with the local render script; the free camera's righting was checked in numbers (upside down at 6.6 s, level again by 8 s). The looks reference is `engine/songs/test_p3d_looks.py` (eight looks, two seconds each).
 
 **Camera** (`engine/p3d/camera.py`, the module text lists every setting)
 
@@ -923,15 +925,79 @@ State of proof: every item below runs in `test_p3d_ten.py` and was looked at in 
 - The arch: `center`, `yaw`, `span`, `height` and `line` may be functions of time; `colors` may be nine colours, one for each light; `line` (0..1) draws the arc and the links separately from the lights; `travel=dict(start=point or nine points, t=nine arrival times, dur=1.4)` makes the lights fly to their places. A song file reads the geometry with `Arch(None, **settings).positions(t)` (the nine lights now), `.homes(t)` (their places) and `.point(u, t)`, or `arch_points(span, height, z, center=, yaw=)`.
 - The sky now reaches its upper colours lower down (a level camera sees the blue of a day sky); the looks `golden`, `day` and `cream` were retuned for it.
 
-**Not built yet** (in the order they were asked for): hue preserving highlights; a faster path for 2 to 3 million points a frame (today every sprite is an instanced quad: about 0.1 s per 200 thousand small points on four cores); motion blur for line segments (use `motion_samples`); skies that differ by place beyond the two-look split; several window worlds at once or nested; one silhouette layer per figure.
+Everything that was still missing here is now built: see the next part.
+
+### Added by CORE2 (same branch; proof songs `test_p3d_motion`, `test_p3d_windows`, `test_p3d_scale`, `test_p3d_checks`, `test_p3d_load`)
+
+**Speed and the camera.** Speed is free per film and per moment (Anthony on the camera test: "It's great. It can adjust speed accordingly."): fast whips, dives and rolls on the hard cuts, slow revolves on the breath.
+
+- `whip=True` (or a number of degrees, default 70) on a move: a whip pan INTO that move over its `blend` (0.3 to 0.6 s). The view swings away from the old set-up toward the new one, faster and faster, cuts at the middle of the swing (hidden in the motion blur), then swings into the new view and comes to rest. It turns about the vertical when the two views differ more in heading than in pitch (the horizon stays level), else it tilts. It never flies through what stands between the two set-ups. Without `whip` a blend is the old blend through space.
+  ```python
+  orbit((0, 1.2, -2), radius=7, height=2, a0=200, a1=440, t0=4.0, t1=8.0, whip=True, blend=0.5)
+  ```
+- Motion blur never reaches across a cut: every sample of a frame's shutter is taken on the frame's side of each hard cut (`blend=0`) and of the cut inside each whip. A hard cut without a burst is clean from its first frame.
+- The background's motion blur takes up to 40 shifted samples on a long streak (a whip, a dive, 40 m/s low over the water), so the picture melts into one smooth smear instead of showing stepped copies. Short streaks keep the old 8 samples.
+- `P3D["motion_samples"]` may be a Track: `Track([(0, 1), (8.0, 1), (8.01, 4), (9.99, 4), (10, 1)])` draws the point sets at four moments of the shutter only during a fast turn (four times the light-pass work there, none elsewhere).
+- Proven in `test_p3d_motion`: a skim at 40 m/s 1.2 m over a storm lake (radial streaks on the near water, far hills crisp), a whip pan into an orbit (level, one smooth smear, cut invisible), a fast revolve, a hard cut with a clean first frame, a turn at 120 degrees a second with four moments, and a flight straight through a curtain of 300 thousand points (a clean warp of streaks, no flash).
+
+**Kilometres.**
+
+- The lake and the hills now stand round the world's origin, not round the camera: a camera that climbs or flies far sees the lake shrink to a disc, the rings of hills come nearer and pass below it, and the plain round the lake shaded by its real distance (dark close below, hazy far off). For a camera near the origin the picture is as before.
+- World setting `shore` (default 1400): metres from the origin to the lake's shore. `shore=350` makes the lake a disc 700 m across that lies whole in the picture from 2 km up (the hills keep their distance, with a plain between); a shore beyond 1400 moves the hills out with it.
+- Proven in `test_p3d_scale`: a pull-back by a constant factor per second from 8 m to 2.4 km above the lake (written as `fly` keys at `d = 8 * 300 ** (t / 4)`), and a flight in from 3 km outside the shore.
+
+**Lines and ribbons.** Segments take motion blur (camera and their own `vel` per segment): each segment is drawn over the whole band it sweeps during the shutter, with the exact time average of its profile there (it slides as one piece, by the mean motion of its two ends), so a streak is smooth at any length. Ribbons keep their joins (faint seams can show where a ribbon bends sharply). Load: 60 thousand long moving lines with pulses cost about 2.6 s of processor time a frame in `test_p3d_load` (an averaging by 48 samples cost 9 s; real plexus lines are much shorter).
+
+**Points, speed.**
+
+- A static set of 60 thousand points or more is sorted once into spatial cells; each frame only the cells in view are drawn (one indirect draw). The picture is the same (max difference 2 of 255 on the 2.4 million point load test).
+- In the lake mirror a set of 300 thousand points or more draws every second point (every third from 1.2 million), each brighter. Bodies and words stay whole.
+- Measured: point sprites as GL points were only 20 percent faster on the render machines (their cost is per primitive, not per vertex), so sprites stay instanced quads.
+- `P3D["sky_res"] = 0.5`: the sky, hills, lake and mist are drawn at half size (they are soft light; stars and every point set stay full size). Halves the background's cost (0.36 to 0.19 s of processor time a 1080p frame). Default 1.0.
+- `keep_hue` (world setting 0..1, a Track): bright lights keep their hue instead of bleaching to white (the tone curve is applied to the brightest channel above the mid tones). Let it fall to 0 for a whiteout into the sun. The key must be in `P3D["world"]` (the composite then compiles the block; songs without it are untouched).
+
+**The lake as a field.** `lake=dict(field=f, center=(x, z), size=200, res=96)`: `f(x, z, t)` gets two arrays of places (metres) and returns `(ripple, mirror)` there (arrays or numbers). Over the square of `size` metres round `center` the field replaces the world's `ripple` and `mirror` (with a soft edge), for the water's colour, its reflections and the mirror images of every point set. The calm discs still apply on top. Example (a storm with glass that widens round a place):
+```python
+def _lake(X, Z, t):
+    r = np.sqrt(X ** 2 + (Z + 2.0) ** 2)
+    calm = 1.0 - np.clip((r - (6.0 + 2.0 * t)) / 3.0, 0.0, 1.0)
+    return 2.6 * (1.0 - calm), 0.55 + 0.45 * calm
+world=dict(..., lake=dict(field=_lake, center=(0.0, -2.0), size=60.0))
+```
+
+**Skies by place.** `split` now also gives the other look's own sun (glow, disc and its glint on the water), water colour and hill colour on its side. `toward` may be a world point `(x, y, z)` or `(x, z)`: the sky toward that place takes the other look wherever the camera flies (the dawn left behind a moving front: `toward=` the place the wave started). `cover` (0..1, default 0.5) is how much of the sky the other look takes: 1 sweeps it over the whole sky (night swept off as the front reaches the horizon). Both may be functions of time.
+
+**Masks and windows.**
+
+- Two sky layers per frame, each with its own fill, look, tint, edge and softness: two different windows at once (a night window beside a flat coral word), or a window inside a window. Masks with the same fill share a layer; `Mask(slot=0 or 1)` picks one. A third different fill in the same frame is left out (a warning is printed once).
+- `Mask("sky", sky="flat", color="#f0566a")`: the shape is filled with exactly that colour (a hex is shown exactly, as `paint`; a triple is linear light; may be a function of t). The flat fill WORDS asked for.
+- `Mask.soft` below 3 is honoured; below 2.5 the silhouettes of that frame are drawn at full size (crisp letters). The default soft 3 renders as before.
+- `window="<masked set>"`: the set lives in that set's window (`window=True` is the first window, as before). A set that lives in a window and has its own `Mask("sky")` is a window inside the window:
+  ```python
+  scene.add("tall", body, mask=Mask("sky", sky="world", look="night"))
+  scene.add("birds", flock, window="tall")                       # live in the night world
+  scene.add("inner", child, window="tall", mask=Mask("sky", sky="flat", color="#ffd060", soft=1.5))
+  ```
+- A window onto another world shows that world's own stars.
+- Silhouettes are mirrored in the lake: a dark body is dark in the water too (its reflection no longer shows both its sides, and the reflections of lights behind it are hidden), a window's reflection shows its world, and sets living in a window are mirrored inside the window's reflection only. A set with `reflect=False` casts no mirrored silhouette.
+- A point right at the lens no longer blacks out the picture through the mask.
+
+**Rays from moving lights.** `lights=[dict(pos, color, strength, radius, rays=1.0, size=0.6)]`: a moving light with `rays` above 0 throws its own rays round whatever stands in front of it (cut by the silhouettes), like the single `light=`. Each costs three quarter-size passes.
+
+**Checked as full-size stills** (`test_p3d_checks`, one set-up per two seconds): a keep-clear box (lights, lines, ribbons and stars all kept out), hexagonal bokeh (`bokeh_hex=1`), a figure coloured by two moving lights (`lit`) with rays from one, a macro 5.5 cm from a fingertip-sized cluster (`near=0.02`), lines with strong pulses under a turning star dome with a set and the camera riding one `Frame`, `keep_hue` on against off, the arch close up in nine colours, and a split toward a world point.
+
+**Also checked** (helper CORE2): `test_p3d_ten` as full-size stills at fourteen moments (paint, the window world, the split sky, the arch in nine colours with travel and yaw, birth times, ribbons with pulses, the free camera through a loop, light pools, calm discs, shake, dolly zoom, rack focus); the eight looks of `test_p3d_looks` (golden, day and cream as retuned); a draft of `test_p3d_ten` (draft mode works with every new part); `keep=("stars", "motes")` brings the flat 2D layers back; frames do not depend on render order (`test_p3d_windows`, `test_p3d_motion`, `test_p3d_checks`, two orders, the same bytes); the camera test at head keeps the approved composition and feel (the far hills now shift a little with real parallax); `t_short_test` and `epic_concert` are byte-identical to epic-promo (12 stills).
 
 ### What is weak
 
-- Points are light only: they cannot cover each other. Solid bodies come from the mask pass, which holds one "dark" and one "sky" silhouette layer per frame, not one per figure.
-- The mirror images are drawn without the mask: a dark body's reflection shows both its sides.
-- Hills, clouds and lake are drawn by formula, not from points: no shadows, and a dark body does not shade the water.
-- By default motion blur is a stretch of each sprite along its path, not a true time average: fine for whips and fast flights, wrong for a point that turns sharply within one frame (use `motion_samples` there). Line segments are not drawn out at all.
-- A whip blends the two camera set-ups through the space between them, so for a few frames the camera can fly through whatever stands there; keep whips short or hide them in a burst.
+- Points are light only: they cannot cover each other. Solid bodies come from the mask pass: one "dark" layer and two "sky" layers per frame, not one per figure.
+- The silhouettes' mirror images are the shapes turned upside down below the water, without the ripples' smear.
+- Hills, clouds and lake are drawn by formula, not from points: no shadows, and a dark body does not shade the water. Clouds are a sky at infinity (the camera cannot fly into them). The plain round a small lake is a plain textured colour.
+- Sprite motion blur is a stretch along each sprite's path, not a true time average (use `motion_samples` for points that turn sharply inside one frame); lines and ribbons take a true average of their positions.
+- Speed on the render machines is mostly the number of sprites drawn (about 0.5 s of processor time per million drawn quads, the mirror doubling it); see the load test.
+- A plain blend between two camera set-ups (no `whip`) still flies through the space between them.
+- The look `golden` reads silver-white rather than gold when its rays face the camera.
+- With more than two different window fills in one frame the third is left out.
 
 ## W. Particle bodies (2026-11-15, branch engine-p3d-bodies)
 
@@ -939,6 +1005,13 @@ People made of points for the 3D layer of section V: a lifelike human form (the 
 
 ### Changes for song files (newest first)
 
+- Acting (new, `engine/p3d/acting.py`): `acting.add(scene, "Gratitude", t0, t1, at=..., view=..., variant=...)` performs any of the nine expressions by its label in words.EXPRESSIONS, as a solo, a pair or a crowd (see Acting below). Proof: `engine/songs/test_p3d_acting.py`.
+- Gestures are acted, not crossfaded: a small move the other way first, the gesture with a little overshoot that settles, a hold, and a release that drifts a touch past rest; the trunk leads by 0.08 s and the forearm and hand follow 0.1 s late; each person's timing differs a little (by `seed`). Each gesture has its own timing; `ease=` (or `ease_in=`, `ease_out=`) still sets the seconds and `antic=0, over=0` takes out the anticipation and overshoot (`ease=1.2, antic=0, over=0` is close to the old crossfade).
+- Living hands, always on: the fingers breathe (a slow curl that runs from the index to the little finger), the wrist lags the forearm and swings through, hands open and spread while they move fast and close a little as they settle. `body.actor.life = False` turns them off for one body.
+- "kneel" is acted: the right foot steps back and the body sinks onto that knee (for both knees the left follows); no frame passes through an odd pose. "rise" plays it backward. Same keys as before.
+- New gestures: "hand_on_heart" (side, bow), "nod" (period, amount), "after_you" (side, to, bow), "clasp" (to: both hands round a point), "open_hands" (bow), "explain" (side, period), "cheer", "lean_in" (to, amount).
+- `pairs.embrace(approach=...)`: the two now stand still until t - approach, walk exactly that long and stop `gap` apart whatever the bodies' `show` (the walk was measured from t = 0 before, so with a later show they stopped short and had to be timed by hand).
+- Crowds are more varied by default: elders (stooped) and children among the men and women (`people=`), sizes from 0.94 to 1.06, half of them mirrored, each loop on its own phase and tempo. `shapes=("woman", "man"), scale=1.0, mirror=False` gives the crowd of before. New kinds "wave", "heart", "cheer", "light", "nod", "kneel"; `act=` and `act_end=` make a crowd go into its gesture from rest (staggered) and come out of it again. Prototypes bake at 15 frames a second and are interpolated (half the bake time); `P3D_CACHE=<folder>` keeps them between processes.
 - Motion capture is now CMU only (the DeepMimic clips are gone, see `assets/p3d/README.md`). New motions: "jump", "dance", "twirl", "get_up", "pull_up", "helped_up". The old names still play: "spin" plays "twirl", "dance_a" and "dance_b" play "dance". Walk and run keep their names; the walk is a little slower by default (1.26 m/s for the man) and its steps are planted: a foot on the ground stays where it was set down, also while the walker turns.
 - `Flare` (and the flash of `Hands`) is smaller: sized for two hands in close-up. `Flare(..., scale=2.5)` gives the old size; `Hands(..., flare=0)` leaves it out.
 - `Hands`: each hand's second colour is now a pale tint of its own colour (it was white), so gold and blue stay apart as in ref 04.
@@ -987,7 +1060,7 @@ Looks: "glitter" (refs 15, 10, 09; p08), "plexus" (refs 03, 12; p01; with `detai
 
 Motions: "stand", "walk" and "run" (`speed` in m/s, `phase`; the steps follow the speed, feet stay planted), "kneel" (`sit`, `one`, `hands`="lap" | "pray" | "free", `dur`), "rise" (up from kneeling, `dur`, `one`), "sit", "shuffle" (small steps on the spot), "held" (a child carried), and the captured "jump", "dance", "twirl", "get_up" (from lying), "pull_up" and "helped_up" (`rate`, `phase`).
 
-Gestures: "look_up" (amount), "reach" (side, to, palm, height, far, lead), "open_arms" (lift 0 low to 1 raised), "raise", "blow" (side), "pray", "bow" (amount; from 30 degrees the body bows from the hips), "touch" (side, to, end, palm, fingers), "hand_on_shoulder", "handshake" (grip), "high_five", "embrace" (to, to2, head), "arm_round", "cup" (height, out), "offer", "listen", "raise_hand" (side, to), "clap" (period, height), "throw", "wave", "brace", "hold_thread" (place "pinch.R"). Any gesture takes `fingers=` a hand pose: open, relaxed, flat, spread, cup, fist, point, pinch, offer, hold.
+Gestures: "look_up" (amount), "reach" (side, to, palm, height, far, lead), "open_arms" (lift 0 low to 1 raised), "raise", "blow" (side), "pray", "bow" (amount; from 30 degrees the body bows from the hips), "touch" (side, to, end, palm, fingers), "hand_on_shoulder", "handshake" (grip), "high_five", "embrace" (to, to2, head), "arm_round", "cup" (height, out), "offer", "listen", "raise_hand" (side, to), "clap" (period, height), "throw", "wave", "brace", "hold_thread" (place "pinch.R"), "hand_on_heart" (side, bow), "nod" (period, amount), "after_you" (side, to, bow), "clasp" (to), "open_hands" (bow), "explain" (side, period), "cheer", "lean_in" (to, amount). Any gesture takes `fingers=` a hand pose: open, relaxed, flat, spread, cup, fist, point, pinch, offer, hold; and its timing: `ease` (or `ease_in`, `ease_out`) seconds, `antic` (the small move the other way first, about 0.05), `over` (the overshoot, about 0.05).
 
 For other point sets (world coordinates, any time, any order): `body.where(t, name, normal=False, raw=False)` (head, crown, mouth, neck, heart, chest, back, pelvis, ground; with .L or .R: shoulder, blade, elbow, wrist, palm, fingertips, index, thumb, pinch, hip, knee, ankle, toe, side; `raw=True`: without the body's own gestures), `body.joint(t, bone)`, `body.constellation(t)`, `body.free(t)` (every particle off the body), `body.handover(effect, t, targets)`, `body.shape_points(t)`.
 
@@ -1021,7 +1094,31 @@ Two bodies of your own can reach for each other the same way: give each a gestur
 
 ### Crowds (`engine/p3d/crowd.py`)
 
-`Crowd(n, places=None, area=dict(center, radius=(r0, r1), arc), facing=<degrees, (K,), function (x, z), "center" or "out">, kinds=("stand", "raise", "clap", "walk", "run", "bow", "pray", "open", "sit", "child", "child_run"), start=<t, (K,), dict(t, center, speed) for a wave, or dict(t, dur)>, until, fade, flash, walk=<m/s>, points=2600, scale, color, color2)`. Hundreds of people from a few baked prototypes; each appears at its own time with a flash. The first frame of a render process bakes the prototypes (about 10 s each); a frame of 300 people then costs about 0.2 s. `crowd.where(t, k)` gives person k's place.
+`Crowd(n, places=None, area=dict(center, radius=(r0, r1), arc), facing=<degrees, (K,), function (x, z), "center" or "out">, kinds=(...), people=dict(woman=1, man=1, elder=0.3, child=0.25), start=<t, (K,), dict(t, center, speed) for a wave, or dict(t, dur)>, act=None, act_end=None, until, fade, flash, walk=<m/s>, points=2600, scale=(0.94, 1.06), mirror=True, color, color2, light="#ffcf8a", lamp=(0.11, 1.0))`. Hundreds of people from a few baked prototypes (one per kind and sort of person); each appears at its own time with a flash, and each loops on its own phase and tempo.
+
+Kinds: "stand", "walk", "run", "sit", "raise", "clap", "bow", "pray", "open", "wave", "heart" (a hand on the heart and a bow), "cheer" (arms thrown up), "light" (a light carried in the right hand and raised high; `light=` its colour, `lamp=(size, bright)`), "nod" (leaning in and nodding), "kneel" (hands joined), "child", "child_run"; or (name, weight) pairs, or dicts of Body keys with a "loop" in seconds.
+
+`act=` (a time, (K,) times, or a dict like `start`): the people stand at rest until their act time, then go into the kind's gesture acted, each at its own tempo, and hold it alive; `act_end=` brings them back to rest (a kneeling crowd goes down onto its knees and gets up again). Without `act` they are in the gesture from the moment they appear, as before.
+
+The first frame that shows a crowd bakes its prototypes in each render process (about 10 s for a plain loop, about 30 s for an acted one); a frame of 300 people then costs about 0.2 s. Set the environment variable `P3D_CACHE` to a folder to keep the bakes between processes (a change to the engine bakes afresh). `crowd.where(t, k)` gives person k's place.
+
+### Acting (`engine/p3d/acting.py`)
+
+The nine expressions, acted. `acting.add(scene, expression, t0, t1, at=(x, z), view=<degrees toward the camera>, variant=None, style=dict(<Body keys>), style_a=..., style_b=..., crowd=dict(<Crowd keys>), pre=1.0, post=1.5, seed=1.0)` adds a performance (`acting.perform(...)` returns its point sets instead). `expression` is a label of words.EXPRESSIONS, its number (1 to 9) or its dict. The people are there and alive from t0 - pre; the act begins at t0, its clear pose is reached about a second later and held, alive, until t1, and released over the next second. Start the act about a second before the words are readable. `view` turns the performance to read from the camera (0: the camera at +z of `at`); pairs face each other across the picture, opened to it.
+
+| Expression | Variants (solo, pair, crowd) |
+|---|---|
+| Greeting | "wave" (solo), "turn" (pair: a hand on the shoulder, the other turns and greets), "crowd" (many waving) |
+| Gratitude | "heart" (solo: hand on heart and a bow), "clasp" (pair: an offered hand clasped in both hands, a bow), "crowd" (bowing, hands on hearts) |
+| Apology | "bowed" (solo: head bowed, open hands low), "comfort" (pair: kneeling beside one who sits, a hand on the back) |
+| Inclusiveness | "embrace" (pair), "arm" (pair: an arm round the shoulders), "circle" (crowd: a ring opens its arms as a child walks in) |
+| Concession | "after_you" (solo: a step aside, an open palm to the way), "pass" (pair: one steps aside and bows, the other walks past) |
+| Respect | "listen" (pair seated: one speaks, the other leans in and nods), "nod" (the same standing) |
+| Encouragement | "pray" (solo: kneels, hands joined), "shoulder" (pair: a hand on the shoulder of one kneeling), "lights" (crowd: a ring raising lights round one who kneels) |
+| Consideration | "help_up" (pair), "lift_child" (pair) |
+| Compliment | "applause" (crowd round one person), "twirl" (solo), "raise" (pair: joined hands raised, the other hand thrown up), "cheer" (crowd) |
+
+`variant="solo"`, `"pair"` or `"crowd"` picks the first of that kind. Any Body key goes in `style` (look, colours, garment, points, effects), so every style of people can act.
 
 ## X. Particle words: the nine expressions as light in the 3D world (2026-11-15, branch engine-p3d-words)
 
@@ -1196,17 +1293,17 @@ The wording is the corrected title, "The Words of Mother's Love That Bring Peace
 |---|---|---|
 | `opening` | N4, the elegant serif: the logo, HEALING CONCERT (Jost, gold), "The Words of Mother's Love" (Cormorant 96 px) and "That Bring Peace" (Cormorant italic 70 px), a gold hairline, SUNDAY, DECEMBER 6 · 4:30 PM, LAS VEGAS, centred. Whole and sharp on frame 0; over the last `dissolve` seconds before `t_end` it crumbles from left to right into glowing dust that drifts up and away, gone by `t_end` | `t_end` (4.0), `y` (0.30: the middle of the block, logo slot included, as a share of the frame height from the top), `palette`, `dissolve` (1.6 s) |
 | `signature` | N5: the logo mark on the outer side of a corner, then the title in italic on one line, DEC 6 · 4:30 PM, HEALING CONCERT · LAS VEGAS, aligned toward the logo (left in the left corners, mirrored in the right ones). Without a logo a thin gold hairline stands in its place. Shown only inside its windows | `windows=[(a, b, corner, palette), ...]` with corner `tl`, `tr`, `bl` or `br` (the palette may be left out: then `palette`, "night"); `fade` (0.6 s each way) |
-| `date_light` | C, unchanged: "December 6" written in points of light across the sky, with HEALING CONCERT · 4:30 PM small beneath. The points fly in from `t_form` and settle (the word is whole at least 1.5 s before the burst), the line beneath fades in, and at `t_burst` everything bursts apart into sparks that fade within about 1.5 s | `t_form`, `t_burst` (give at least 3 s between them), `y` (0.30: the date's middle), `palette`, `text` ("December 6"), `sub` (the line beneath) |
-| `end_card` | N6, in the style of the official campaign poster, in Outfit (titlemock/mock3.py, sizes, tracking and colours exact): the logo (170 px), HEALING CONCERT (600, coral #F35763, tracked), "The Words of" (500, navy #272751), "Mother's Love" (800, 176 px, coral, a little tight), "That Bring Peace" (800, 124 px, a deep blue gradient #0345A5 to #032D81), a coral ribbon with notched ends holding "Sunday, December 6" in yellow #FFE478 and " · 4:30 PM" in white, then "World Mission Society Church of God" and "6720 W Sahara Ave, Las Vegas" (500, navy). Behind the block a soft veil of white light, never dark. From `t_in` the veil fades in and the lettering sweeps in from the left out of a soft grainy edge over `fade` seconds; it stays to the end (or fades over 0.8 s before `t_out`). It replaces the engine's closing title and tagline (song keys `TITLE` and `TAGLINE` never show while a song has an end card; `keep_end_text=True` keeps them) | `t_in`, `t_out`, `fade` (1.6 s), `reveal` ("sweep" or "fade"), `y` (0.5: the block's middle), `scale` (1.0), `veil` (1.0: its strength; up to 1.7), `day`, `time`, `place` (two lines) |
+| `date_light` | C, unchanged: "December 6" written in points of light across the sky, with HEALING CONCERT · 4:30 PM small beneath. The points fly in from `t_form` and settle (the word is whole at least 1.5 s before the burst), the line beneath fades in, and at `t_burst` everything bursts apart into sparks that fade within about 1.5 s. On the day palette the points are deep navy and the letters fill in, navy with a soft white glow, as the points settle (glitter alone does not read on a pale sky) | `t_form`, `t_burst` (give at least 3 s between them), `y` (0.30: the date's middle), `palette`, `text` ("December 6"), `sub` (the line beneath) |
+| `end_card` | N6, in the style of the official campaign poster, in Outfit (titlemock/mock3.py, sizes, tracking and colours exact): the logo (170 px), HEALING CONCERT (600, coral #F35763, tracked), "The Words of" (500, navy #272751), "Mother's Love" (800, 176 px, coral, a little tight), "That Bring Peace" (800, 124 px, a deep blue gradient #0345A5 to #032D81), a coral ribbon with notched ends holding "Sunday, December 6" in yellow #FFE478 and " · 4:30 PM" in white, then "World Mission Society Church of God" and "6720 W Sahara Ave, Las Vegas" (500, navy). Behind the block a soft veil of white light, never dark. From `t_in` the veil fades in and the lettering sweeps in from the left out of a soft grainy edge over `fade` seconds; it stays to the end (or fades over 0.8 s before `t_out`). It replaces the engine's closing title and tagline (song keys `TITLE` and `TAGLINE` never show while a song has an end card; `keep_end_text=True` keeps them) | `t_in`, `t_out`, `fade` (1.6 s), `reveal` ("sweep" or "fade"), `y` (0.5: the block's middle), `scale` (1.0), `veil` (1.0: its strength; up to 1.7), `backdrop` (None, "pastel" or "auto"; also `endcard_backdrop` at the top of TITLES), `day`, `time`, `place` (two lines) |
 | all | | `title` (the wording; a line break splits it in two), `logo`, `keep_credit`, `keep_end_text` |
 
-**Palettes** (opening, signature, date): `"night"`: warm white letters, gold accents (the label, the hairline, LAS VEGAS), a warm glow. `"day"`: navy #1f2a6b letters, deeper gold accents, a soft white glow. Use the day palette on bright skies: the navy is the strongest contrast there. The end card has the campaign's own colours on its veil of light and is made for a bright sky (N6); on a night sky the veil shows as a soft pale cloud and the card still reads (give `veil=1.4` there). Nothing dark is ever put behind the text.
+**Palettes** (opening, signature, date): `"night"`: warm white letters, gold accents (the label, the hairline, LAS VEGAS), a warm glow. `"day"`: navy #1f2a6b letters, deeper gold accents, a soft white glow. Use the day palette on bright skies: the navy is the strongest contrast there. The signature's small line (HEALING CONCERT · LAS VEGAS) is coral #F35763 on the day palette (pale gold vanished on a bright sky). The end card has the campaign's own colours on its veil of light (a warm white bloom, partly added light, so it never greys) and is made for a bright pastel sky (N6): a film brings a bright day sky under it. Where the frame may still be dark under the card, `backdrop="pastel"` brings in a soft pastel light behind it (warm cream in the middle, peach toward the left, sky blue toward the right, like the official poster's background) over about a second round `t_in`; `backdrop="auto"` does the same only as far as the frame is dark where the card stands (measured on the finished picture each frame; on a bright day sky it stays out). Nothing dark is ever put behind the text.
 
 **Font.** The end card needs Outfit (@fontsource/outfit, OFL, weights 500, 600 and 800). The Render workflow fetches it with the other two faces (`npm pack` lines in `.github/workflows/render.yml`), `tools/setup_fonts.py` converts it, and the shared `local_render.sh` fetches it too. The opening and the signature stay in Cormorant and Jost (Anthony's choice).
 
 **Sizes on a phone** (6 cm wide frame, 1 mm = 32 px at 1080p): the opening's title 96 px (x-height about 1.3 mm), its date line 40 px caps (0.9 mm); the signature's title 44 px italic (x-height about 0.55 mm), its date line 33 px caps (0.75 mm), its small line 24 px caps (0.55 mm); "December 6" 250 px italic, the line beneath 36 px caps (0.8 mm); the end card's smallest lines (church, address) 42 px Outfit (x-height about 0.7 mm), its ribbon 44 px. The signature stands 104 px from the side and 92 px from the top or bottom, well inside a phone's safe area.
 
-**Protection.** The titles are drawn over the finished picture, after the bloom and the tone curve, so they show exactly as designed and no light washes over a letter. Before the bloom, the scene's light (point sets, motes, rays, sparks) is dimmed in a broad soft shape round the letters and between the lines (to 8 percent behind a lockup or the end card, 25 percent behind the date's points, 15 percent behind its line beneath), so no spark crosses a letter and no glow bleeds into it. The sky and the water behind are not darkened.
+**Protection.** The titles are drawn over the finished picture, after the bloom and the tone curve, so they show exactly as designed and no light washes over a letter. Before the bloom, the scene's light (point sets, motes, rays, sparks) is dimmed in a broad soft shape round the letters and between the lines (to 1.5 percent behind a lockup or the end card, within about 80 px of the letters; 25 percent behind the date's points, 15 percent behind its line beneath), so no spark crosses a letter and no glow bleeds into it. The sky and the water behind are not darkened.
 
 **The corner badge.** The engine's small credit badge (song key `CREDIT`) is hidden while a song has `TITLES`, because the signature replaces it; `keep_credit=True` keeps it.
 
@@ -1214,4 +1311,4 @@ The wording is the corrected title, "The Words of Mother's Love That Bring Peace
 
 **Cost.** The pictures are built once at the start (about two seconds); a frame costs a few full-frame quads and, while the opening dissolves or the date forms or bursts, a few thousand points.
 
-**What is weak.** The opening's dust drifts up whatever the camera does: it belongs to the screen, not the world. The burst is one bright moment that the pop check reports (a change of about 11 against a median of 2.4); it is meant, but put it on a strong beat. The date's line beneath is type, not points (it bursts into points with the date). The end card's veil is one soft ellipse: on a night sky it reads as a pale cloud.
+**What is weak.** The opening's dust drifts up whatever the camera does: it belongs to the screen, not the world. The burst is one bright moment that the pop check reports (a change of about 11 against a median of 2.4); it is meant, but put it on a strong beat. The date's line beneath is type, not points (it bursts into points with the date). The end card's veil is one soft ellipse; without a backdrop on a night sky it reads as a warm glow, and the navy lines are weak there: use a bright sky or `backdrop`. `backdrop="auto"` reads the picture back each frame of the card (a few milliseconds).

@@ -505,13 +505,14 @@ class ClothSystem:
                 touched[o0 + h] = True
 
     def _body(self, t):
-        """The body at a simulation time: posed at every second step, halfway in between otherwise."""
+        """The body at a simulation time: posed at every second step, halfway in between otherwise (without
+        the living hands, which the cloth does not feel and which cost two more frames each)."""
         k = int(round((t - self.t_start) / DT))
         if k % 2 == 0:
-            f = self.actor.frame(self.t_start + k * DT)
+            f = self.actor.frame(self.t_start + k * DT, life=False)
             return f["M"], f["P"], f["origin"][1]
-        f0 = self.actor.frame(self.t_start + (k - 1) * DT)
-        f1 = self.actor.frame(self.t_start + (k + 1) * DT)
+        f0 = self.actor.frame(self.t_start + (k - 1) * DT, life=False)
+        f1 = self.actor.frame(self.t_start + (k + 1) * DT, life=False)
         return 0.5 * (f0["M"] + f1["M"]), 0.5 * (f0["P"] + f1["P"]), 0.5 * (f0["origin"][1] + f1["origin"][1])
 
     def _step(self):

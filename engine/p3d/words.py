@@ -28,22 +28,27 @@ from .api import MASK_SKIES, CameraState, Mask, lin
 TAU = 2.0 * np.pi
 
 # The nine expressions: exact campaign wording (project-docs/DESIGN-SYSTEM.md section 5), line breaks and
-# typographic quotes as in the PHRASES of engine/songs/epic_concert.py, colours from DESIGN-SYSTEM section 5.
+# typographic quotes as in the PHRASES of engine/songs/epic_concert.py. Colours: the campaign website's (Anthony,
+# UPDATE 9 in PHASEB.md). The two dark ones, Compliment's navy and Respect's indigo, have a lighter glow so their
+# light still reads on a night sky (their paint and pill keep the colour itself).
 EXPRESSIONS = [
-    dict(label="Greeting", lines=["“How are you?”"], color="#FF977C"),
-    dict(label="Gratitude", lines=["“Thank you. It’s all thanks to you.", "You’ve worked hard.”"],
-         color="#FFD05F"),
-    dict(label="Apology", lines=["“I’m sorry.", "It must have been hard on you.”"], color="#FFAD69"),
-    dict(label="Inclusiveness", lines=["“It’s okay. I understand.”"], color="#F582AF"),
-    dict(label="Concession", lines=["“Please, after you.”"], color="#82B0ED"),
-    dict(label="Respect", lines=["“I’d love to hear more", "about your thoughts.”"], color="#CE927E"),
-    dict(label="Encouragement", lines=["“I’ll pray (or root) for you.", "Everything will go well.”"],
-         color="#B293E7"),
-    dict(label="Consideration", lines=["“Can I give you a hand", "with anything?”"], color="#EF7A96"),
-    dict(label="Compliment", lines=["“You’re amazing.", "You’re doing great!”"], color="#BE9CEB"),
+    dict(label="Greeting", lines=["\u201cHow are you?\u201d"], color="#EA5A5E"),
+    dict(label="Gratitude", lines=["\u201cThank you. It\u2019s all thanks to you.", "You\u2019ve worked hard.\u201d"],
+         color="#F2B25E"),
+    dict(label="Apology", lines=["\u201cI\u2019m sorry.", "It must have been hard on you.\u201d"], color="#F6CE46"),
+    dict(label="Inclusiveness", lines=["\u201cIt\u2019s okay. I understand.\u201d"], color="#5ABA5A"),
+    dict(label="Concession", lines=["\u201cPlease, after you.\u201d"], color="#62B2FA"),
+    dict(label="Respect", lines=["\u201cI\u2019d love to hear more", "about your thoughts.\u201d"], color="#667AF6",
+         glow="#97A5FA"),
+    dict(label="Encouragement", lines=["\u201cI\u2019ll pray (or root) for you.", "Everything will go well.\u201d"],
+         color="#9E6AF6"),
+    dict(label="Consideration", lines=["\u201cCan I give you a hand", "with anything?\u201d"], color="#EE62A6"),
+    dict(label="Compliment", lines=["\u201cYou\u2019re amazing.", "You\u2019re doing great!\u201d"], color="#364E96",
+         glow="#8C9FEA"),
 ]
 LABELS = [e["label"] for e in EXPRESSIONS]
 COLORS = {e["label"]: e["color"] for e in EXPRESSIONS}      # each expression's campaign colour (display hex)
+GLOWS = {e["label"]: e.get("glow", e["color"]) for e in EXPRESSIONS}   # the colour of each one's light and halo
 
 # the way each expression arrives and leaves when a song does not choose (matched to what it means)
 DEFAULT_STYLE = {
@@ -383,6 +388,7 @@ class Word:
         if expr is not None:
             e = EXPRESSIONS[expr - 1] if isinstance(expr, int) else EXPRESSIONS[LABELS.index(expr)]
             label, lines = e["label"], e["lines"]
+            glow = glow or (e.get("glow") if color is None else None)
             color = color or e["color"]
         if not lines:
             raise ValueError("a Word needs lines (or expr)")
@@ -617,7 +623,10 @@ class Word:
         else:
             self.c_letter = (_mix(white, base, self.tint) * self.bright).astype(np.float32)
         self.c_glow = (_col(self.glow_hex) * self.bright).astype(np.float32)
-        self.c_base = base
+        # light drawn in the word's colour (petals, stars, goals): a dark colour (navy) would hardly show, so it
+        # takes the lighter glow instead
+        lum = float(np.dot(base, (0.2126, 0.7152, 0.0722)))
+        self.c_base = base if lum >= 0.15 else _col(self.glow_hex)
         self.i_spark = np.nonzero(self.s[:, 3] < 0.012)[0]
         self.n_halo = min(n, 2600)
         self._g = g
