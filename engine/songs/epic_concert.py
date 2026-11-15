@@ -204,7 +204,7 @@ DAY_FULL = TITLE_HIT - 0.4                    # 54.03: the pale campaign day (it
 # The night lake is a mirror (stars, the walker's steps and the star's ring live on the water), so the lower
 # third is let go at night and calmed from the sunrise on.
 # It is eased again while the emblem stands over the lake, so that its mirror image shows in the water.
-BOTTOM_CALM = Track([(0, 0.10), (S1, 0.10), (S1 + 3.5, 1.0), (EMBLEM - 0.5, 1.0), (EMBLEM + 1.5, 0.45),
+BOTTOM_CALM = Track([(0, 0.10), (S1 - 1.0, 0.10), (S1 + 2.2, 1.0), (EMBLEM - 0.5, 1.0), (EMBLEM + 1.5, 0.45),
                      (EMBLEM_OUT, 0.45), (EMBLEM_OUT + 1.5, 1.0), (TOTAL, 1.0)])
 
 # ---- the sky: one continuous rise of light (top, middle, horizon, colour of the light). The upper sky stays
@@ -310,9 +310,10 @@ REACT_CHORUS = 0.25
 
 # ---- the lake responds (UPGRADE-HOWTO L)
 STAR_X, STAR_LAND_Y = 0.50, 0.315    # far out on the water, where the sun will rise
-# one star, a long diagonal streak from the upper left (drawn three times so the thin streak reads)
-_STAR = (STAR_FALL, STAR_X, STAR_LAND_Y, 0.04, 1.03, STAR_AIR, 180)
-FALLING_STARS = [_STAR, _STAR, _STAR]
+# one star, a long diagonal streak from the upper left. 600 trail points: with 180 the full quality still at
+# 9.6 s showed a string of beads, not a streak. Drawn twice so the thin streak reads.
+_STAR = (STAR_FALL, STAR_X, STAR_LAND_Y, 0.04, 1.03, STAR_AIR, 600)
+FALLING_STARS = [_STAR, _STAR]
 # its ring of light spreads wide across the lake toward the camera (the fifth number: how fast a ring spreads);
 # two small rings under the emblem as it is drawn and as it is whole
 RIPPLES = [(STAR_FALL + 0.02, STAR_X, 2.2, STAR_LAND_Y, 4.5), (STAR_FALL + 0.02, STAR_X, 1.2, STAR_LAND_Y),
@@ -329,35 +330,38 @@ M_T0 = STAR_FALL + 0.76                    # she gathers while the star's ring s
 # The doves: a larger flock, close to us. They rise from her hand on the side of the sun, fly low over the
 # sunrise, wheel in a wide flat ring left of the sun and climb only at the far left, to the Greeting light.
 # The rule: no bird nearer to a letter than 0.08 of the height. The Greeting's letters reach down to 0.69. In
-# drafts 6 and 7 birds flew at 0.62 to 0.67 right under them. These settings were tried in the engine's own
-# flock simulation (numpy, nothing drawn) until every wing tip stayed 0.084 or more from the letters' box from
-# 16.5 s on (16.3 to 16.4: 0.070, under the right half of the line, which blooms a second later):
+# drafts 6 and 7 birds flew at 0.62 to 0.67 right under them, and in the full quality still at 18.6 s a wing
+# tip was 0.069 from the H. These settings were tried in the engine's own flock simulation (numpy, nothing
+# drawn; a bird's reach is its size setting times its own size, larger when it is nearer to us) until every
+# wing tip stayed 0.096 or more from the letters' box while the letters are on screen:
 # - they leave the hand small and grow as they come nearer (a large bird keeps a large distance, and a flock
 #   that starts as large birds bursts apart, upward too);
 # - the goal is low (the calm lower third pushes the flock up from 0.415);
 # - a wide orbit: birds that wheel round the goal are drawn to its height, so the flock is flat;
-# - the orbit tightens before the climb, so nobody wheels back under the first letters.
+# - the orbit tightens before the climb, and the climb to the Greeting light starts only as the words leave
+#   (then faster), so nobody rises past the first letters.
 DOVES = Track([(0, 0.0), (DOVES_UP - 0.1, 0.0), (DOVES_UP + 1.2, 1.0), (G_STAR + 0.4, 1.0), (G_STAR + 2.4, 0.0),
                (TOTAL, 0.0)])
 DOVES_COUNT = 14
 DOVES_FROM = (0.715, 0.525)
-DOVES_PATH = [(DOVES_UP, (0.30, 0.37)), (DOVES_UP + 4.0, (0.30, 0.37)), (DOVES_UP + 8.0, (0.14, 0.39)),
-              (G_HOLD - 1.5, (0.05, 0.42)), (G_HOLD + 0.3, (0.05, 0.58)), (G_STAR, (0.12, 0.80)),
+DOVES_PATH = [(DOVES_UP, (0.32, 0.31)), (DOVES_UP + 5.0, (0.30, 0.31)), (DOVES_UP + 8.5, (0.22, 0.32)),
+              (G_HOLD - 1.0, (0.13, 0.36)), (G_HOLD + 0.1, (0.12, 0.40)), (G_STAR, (0.12, 0.80)),
               (G_STAR + 3.0, (0.11, 0.84))]
-DOVES_ORBIT = Track([(0, 0.20), (G_HOLD - 2.5, 0.20), (G_HOLD - 0.5, 0.06), (TOTAL, 0.06)])
-DOVES_SIZE = Track([(0, 0.030), (DOVES_UP, 0.030), (DOVES_UP + 3.0, 0.051), (TOTAL, 0.051)])   # 1.7 times the usual
-DOVES_SPEED = 1.0
+DOVES_ORBIT = Track([(0, 0.20), (G_HOLD - 3.5, 0.20), (G_HOLD - 1.5, 0.07), (TOTAL, 0.07)])
+DOVES_SIZE = Track([(0, 0.030), (DOVES_UP, 0.030), (DOVES_UP + 5.0, 0.048), (TOTAL, 0.048)])   # 1.6 times the usual
+DOVES_SPEED = Track([(0, 1.0), (G_HOLD, 1.0), (G_HOLD + 0.6, 1.5), (TOTAL, 1.5)])
 DOVES_COLOR = "#fff1da"
 DOVES_TRAIL = 0.6
-# two butterflies near the emblem, on the deep sky where their colours read (at the shore, on the bright
-# horizon, they were two white specks in draft 7); they leave as the day opens
+# two butterflies to the right of the emblem, on the deep sky where their colours read (at the shore, on the
+# bright horizon, they were two white specks in draft 7; in one box round the emblem one of them sat on its
+# olive sprig in the still at 49.6 s); they leave as the day opens
 BUTTERFLIES = Track([(0, 0.0), (WARM + 0.5, 0.0), (WARM + 2.5, 1.0), (EMBLEM_OUT + 0.4, 1.0), (EMBLEM_OUT + 2.0, 0.0),
                      (TOTAL, 0.0)])
 BUTTERFLIES_COUNT = 2
 BUTTERFLIES_COLOR = ("#ffb0c8", "#ffd9a0")
-BUTTERFLIES_SIZE = 0.034
-BUTTERFLIES_AREA = (0.24, 0.76, 0.46, 0.66)
-BUTTERFLIES_LAND = [(0.36, 0.385), (0.64, 0.39)]   # on the hills, not at the far edges of the shore
+BUTTERFLIES_SIZE = 0.030
+BUTTERFLIES_AREA = (0.63, 0.90, 0.42, 0.64)
+BUTTERFLIES_LAND = [(0.70, 0.385), (0.84, 0.375)]   # on the hills to the right
 
 # ---- the campaign day (UPGRADE-HOWTO I); nothing new starts after 58 s, the picture settles with the music
 BUBBLES = Track([(0, 0.0), (EMBLEM_OUT, 0.0), (TITLE_HIT, 0.26), (TOTAL, 0.26)])
@@ -424,7 +428,7 @@ FIGURES = [
          actions=[(M_T0, "stand"), (ARMS_OPEN, "open", {"blend": 2.6, "arm_r": M_LOW, "arm_l": M_LOW}),
                   (S1 + 5.2, "open", {"blend": 3.4, "arm_r": M_MID, "arm_l": M_MID}),
                   (S1 + 9.4, "open", {"blend": 3.0, "arm_r": M_LOW, "arm_l": M_LOW})],
-         color="#ffe0c0", glow=0.95, to_star=0),
+         color="#ffe0c0", glow=0.85, to_star=0),
 ]
 
 # ---- the gathering and the passed light (UPGRADE-HOWTO K). People come in twos and threes with gaps between
@@ -434,7 +438,7 @@ FIGURES = [
 # Their robes are cool and dim until the flame reaches them; then each holds a warm point of light.
 GATHERING = dict(t0=CROWD_IN, t1=S3 + 3.6, dissolve=2.6, count=26, center=(0.5, 0.343), spread=(0.33, 0.02),
                  rows=1, hole=0.14, cluster=(2, 3), height=(0.112, 0.07), children=0.0, speed=1.5,
-                 arrive_by=S2 + 7.5, sides=("left", "right"), side_delay=(0.0, 4.8), glow=1.5, detail=520,
+                 arrive_by=S2 + 7.5, sides=("left", "right"), side_delay=(0.0, 4.8), glow=2.0, detail=700,
                  colors=("#cfd6ff", "#d9ccff", "#c8dcff", "#e6dcff"))
 # the flame comes down to the person nearest the middle on the left (start: the nearest to that point)
 # (flame: every flame 1.7 times the engine's size; in draft 6 the flame coming down and the held lights were
@@ -445,8 +449,8 @@ PASS_LIGHT = dict(t0=FLAME, speed=0.15, hold=0.22, path="crowd", start=(0.44, 0.
 
 # ---- the campaign emblem, drawn in light and mirrored in the lake (UPGRADE-HOWTO L)
 SYMBOLS = [
-    dict(kind="emblem", t0=EMBLEM, t1=EMBLEM_DONE, out=EMBLEM_OUT, x=0.5, y=0.63, size=0.27,
-         leave="to_star", star=4, leave_dur=EMBLEM_FLY, reflect=True, glow=1.8),
+    dict(kind="emblem", t0=EMBLEM, t1=EMBLEM_DONE, out=EMBLEM_OUT, x=0.5, y=0.655, size=0.27,
+         leave="to_star", star=4, leave_dur=EMBLEM_FLY, reflect=True, glow=2.0),
 ]
 
 # ---- the arch of nine lights: dark at the start, complete at the peak
@@ -457,9 +461,13 @@ for i in range(9):
     STAR_POS.append((x, y))
 
 OFF = dict(form=1e9, hold=1e9)
-# The glow round the two expressions: a deeper gold than the engine's own (#ffc48c). With it the full quality
-# stills of the earlier cut passed the legibility check; whether the colour is the reason was not isolated.
+# The glow round the two expressions: a deeper gold than the engine's own (#ffc48c). A text's halo is as
+# strong as its glow colour is bright (engine/upgrade.py, text_light). The Greeting measures 4.9 with this
+# colour (full quality stills, run 43704517517). The Encouragement, two lines of smaller letters whose halos
+# add up, measured 2.0 (want 2.2: letters 0.89, light round them 0.41), so it gets a deeper colour, about 0.65
+# times as bright.
 WORD_GLOW = "#f2aa62"
+E_GLOW = "#d08848"
 PHRASES = [
     dict(label="Greeting", lines=["“How are you?”"], size=150, y=0.258,
          form=G_FORM, hold=G_HOLD, star=G_STAR, anim="bloom", glow=WORD_GLOW),
@@ -474,7 +482,7 @@ PHRASES = [
     dict(label="Respect", lines=["“I’d love to hear more", "about your thoughts.”"], size=128,
          star=BEATS[11], **OFF),
     dict(label="Encouragement", lines=["“I’ll pray (or root) for you.", "Everything will go well.”"], size=100,
-         y=0.31, form=E_FORM, hold=E_HOLD, star=E_STAR, anim="ink", glow=WORD_GLOW),
+         y=0.31, form=E_FORM, hold=E_HOLD, star=E_STAR, anim="ink", glow=E_GLOW),
     dict(label="Consideration", lines=["“Can I give you a hand", "with anything?”"], size=128,
          star=BEATS[12], **OFF),
     dict(label="Compliment", lines=["“You’re amazing.", "You’re doing great!”"], size=140,
