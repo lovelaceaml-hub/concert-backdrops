@@ -229,11 +229,12 @@ class Actor:
             tt -= step
         return tt
 
-    def frame(self, t, lock=True):
+    def frame(self, t, lock=True, gest=True):
         """The posed skeleton at t: dict(M bone matrices (world), P joint positions, D, A rotations, origin,
         heading (radians), speed). Feet that the motion plants stay where they were set down (lock=False:
-        the motion as captured, for the lock's own reference)."""
-        key = (round(float(t), 6), bool(lock))
+        the motion as captured, for the lock's own reference). gest=False leaves the gestures out: the
+        "raw" body another body's gestures may aim at without the two waiting on each other."""
+        key = (round(float(t), 6), bool(lock), bool(gest))
         if key in self._cache:
             return self._cache[key]
         rig = self.rig
@@ -247,7 +248,7 @@ class Actor:
         hd = np.radians(self.heading(t))
         qh = bm.qy(hd)
         active = []
-        for (t0, t1, name, p) in self.gest:
+        for (t0, t1, name, p) in (self.gest if gest else ()):
             e = p.get("ease", 1.2)
             w = float(bm.ramp(t, t0, t0 + e) * (1.0 - bm.ramp(t, t1 - e, t1)))
             if w > 1e-5:
@@ -275,7 +276,7 @@ class Actor:
             M = M.copy()
             M[:, 1, 3] += lift
         out = dict(M=M, P=Pj, D=D, A=A, origin=origin, heading=hd, speed=speed)
-        if self.hand is not None:
+        if self.hand is not None and gest:
             out = self._place_hand(out, t)
         if len(self._cache) > 64:
             self._cache.pop(next(iter(self._cache)))
@@ -443,7 +444,7 @@ class Actor:
                "shoulder", "blade", "elbow", "wrist", "palm", "fingertips", "index", "thumb", "pinch", "hip", "knee",
                "ankle", "toe", "side")
 
-    def where(self, t, name, normal=False):
+    def where(self, t, name, normal=False, raw=False):
         """A named place on the body at t, in the actor's own space: its position, or (position, direction it
         faces) with normal=True. Names: head, crown, mouth, neck, heart, chest, back, pelvis, ground, and with
         .L or .R: shoulder, blade (shoulder blade), elbow, wrist, palm, fingertips, index, thumb, pinch (between
@@ -451,16 +452,16 @@ class Actor:
         gives that joint."""
         if self._anc is None:
             self._anc = self._build_anchors()
-        f = self.frame(t)
+        f = self.frame(t, gest=not raw)
         base = name.split(".")[0]
         if base == "palm":
-            c, n, _d = self.palm(t, name[-1])
+            c, n, _d = self.palm(t, name[-1], raw)
             return (c, n) if normal else c
         if base == "pinch":
-            a = self.where(t, "thumb." + name[-1])
-            b = self.where(t, "index." + name[-1])
+            a = self.where(t, "thumb." + name[-1], raw=raw)
+            b = self.where(t, "index." + name[-1], raw=raw)
             p = 0.5 * (a + b)
-            return (p, self.palm(t, name[-1])[1]) if normal else p
+            return (p, self.palm(t, name[-1], raw)[1]) if normal else p
         if name == "ground":
             p = f["origin"].copy()
             return (p, np.array([0.0, 1.0, 0.0])) if normal else p
@@ -478,10 +479,10 @@ class Actor:
         """Position of a joint (the head of a bone) at t."""
         return self.frame(t)["P"][self.rig.idx[bone]].copy()
 
-    def palm(self, t, side="R"):
+    def palm(self, t, side="R", raw=False):
         """(centre of the palm, the direction it faces, the direction the fingers point) at t."""
         rig = self.rig
-        f = self.frame(t)
+        f = self.frame(t, gest=not raw)
         w = rig.idx["wrist." + side]
         m3 = rig.idx["finger3-1." + side]
         c = 0.4 * f["P"][w] + 0.6 * f["P"][m3]

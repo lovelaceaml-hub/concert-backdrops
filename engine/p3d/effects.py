@@ -264,6 +264,19 @@ class _Free:
         """dict(id, pos, alpha, age, size, color, seed, kind) of the free particles at t (steered if handed over)."""
         raise NotImplementedError
 
+    def _crowd(self, n, t):
+        """After a hand-over to fewer targets than particles, each particle is dimmed by as much as they crowd,
+        so the targets do not blaze (several particles share one place). Eases in over the flight."""
+        if self.to is None or t <= self.to["t"]:
+            return 1.0
+        asg = self.assignment()
+        k = len(self._targets(self.to["t"]))
+        m = max(len(asg[0]), 1)
+        if m <= k:
+            return 1.0
+        u = float(bm.smoother((t - self.to["t"]) / max(self.to.get("arrive", 1.5) + self.to.get("stagger", 0.5), 1e-3)))
+        return 1.0 + (min(1.0, 1.6 * k / m) - 1.0) * u
+
 
 # ---------------------------------------------------------------------------------------------------------
 # effects on the points of a body
@@ -271,13 +284,15 @@ class _Free:
 class Release(_Free):
     """Points leave the body one after another and travel away: "disperse", "dissolve", "petals"."""
 
+    # sprites: (kind, share of the leaving points that become this sprite, size multiplier, brightness). The rest
+    # of the leaving points simply go out, so the air never fills with more light than the body had.
     DEFAULTS = dict(
-        disperse=dict(order="side", noise=0.45, life=4.5, speed=0.9, rise=0.12, push=0.05, spread=0.14, turb=0.45,
-                      swirl=0.0, sprites=(("soft", 1.0, 1.0, 1.0),), grow=1.2),
-        dissolve=dict(order="down", noise=0.35, life=5.0, speed=0.0, rise=0.55, push=0.10, spread=0.10, turb=0.30,
-                      swirl=0.35, sprites=(("flake", 0.11, 4.2, 1.0), ("soft", 0.6, 1.0, 1.0)), grow=0.4),
+        disperse=dict(order="side", noise=0.45, life=4.5, speed=0.9, rise=0.12, push=0.05, spread=0.16, turb=0.45,
+                      swirl=0.0, sprites=(("soft", 0.5, 1.0, 0.8),), grow=1.0),
+        dissolve=dict(order="down", noise=0.35, life=5.0, speed=0.0, rise=0.85, push=0.10, spread=0.16, turb=0.32,
+                      swirl=0.35, sprites=(("flake", 0.05, 3.2, 1.0), ("soft", 0.28, 1.0, 0.7)), grow=0.4),
         petals=dict(order="spiral", noise=0.25, life=5.5, speed=0.5, rise=0.18, push=0.12, spread=0.12, turb=0.35,
-                    swirl=1.1, sprites=(("petal", 0.13, 6.0, 1.0), ("soft", 0.3, 0.9, 1.0)), grow=0.2),
+                    swirl=1.1, sprites=(("petal", 0.13, 6.0, 1.0), ("soft", 0.15, 0.9, 0.8)), grow=0.2),
     )
 
     def __init__(self, body, kind, t=0.0, dur=3.0, share=1.0, dir=None, order=None, noise=None, life=None, parts=None,
@@ -409,8 +424,8 @@ class Release(_Free):
                 col = col * (1 - mix) + self.color2[None] * mix
             u = np.clip(age / self.life, 0, 1)
             size = cl["size"][ii] * smul * self.size * (1.0 + self.grow * u) * (0.7 + 0.9 * bm.hashf(ii, 44) ** 2)
-            b = dict(pos=pos, size=size, color=col, alpha=alpha * 0.9 * self.bright, kind=sk, seed=sd, emit=em,
-                     twinkle=0.7 if sk in ("soft", "spark") else 0.15, backlight=0.5)
+            b = dict(pos=pos, size=size, color=col, alpha=alpha * 0.9 * self.bright * self._crowd(len(ii), t),
+                     kind=sk, seed=sd, emit=em, twinkle=0.7 if sk in ("soft", "spark") else 0.15, backlight=0.5)
             if sk in ("flake", "petal"):
                 b["rot"] = _spin(sd, age)
             out.append(b)
@@ -426,8 +441,9 @@ class Release(_Free):
 class Form:
     """The body gathers: its points arrive one after another out of drifting dust, or from given places."""
 
-    def __init__(self, body, t=0.0, dur=4.0, travel=2.2, order="noise", noise=0.6, dust=0.12, source=None, dir=None,
-                 speed=0.25, rise=-0.05, push=0.5, spread=0.35, turb=0.6, swirl=0.5, parts=None, amount=None, **kw):
+    def __init__(self, body, t=0.0, dur=4.0, travel=1.8, order="noise", noise=0.6, dust=0.10, source=None, dir=None,
+                 speed=0.25, rise=-0.05, push=0.32, spread=0.22, turb=0.38, swirl=0.45, parts=None, amount=None,
+                 share=0.5, **kw):
         self.body = body
         self.t, self.dur = float(t), float(dur)
         self.amount = amount
@@ -453,6 +469,8 @@ class Form:
         self.flight = Flight(dir=d, speed=speed, rise=rise, push=push, spread=spread, turb=turb, swirl=swirl,
                              seed=body.seed + 0.71, tau=0.6)
         self._src_pick = None
+        # only a share of the points travel visibly (the others light up where they are as the body forms)
+        self.flying = bm.hashf(np.arange(n), 47) < (1.0 if source is not None else share)
 
     def _clock(self, t):
         if self.amount is None:
@@ -482,7 +500,7 @@ class Form:
         t = self._clock(t)
         rev = self.tau - t                       # seconds until each point arrives
         horizon = self.travel if self.dust <= 0 else self.travel * 2.2
-        ii = np.where((rev > 0) & (rev < horizon) & (t > self.t - 0.01))[0]
+        ii = np.where((rev > 0) & (rev < horizon) & (t > self.t - 0.01) & (self.flying | (rev < 0.25)))[0]
         if len(ii) == 0:
             return []
         if self.amount is not None:
@@ -505,8 +523,8 @@ class Form:
             alpha = np.maximum(near, self.dust * np.clip((horizon - a) / (0.4 * self.travel), 0, 1))
             if self.amount is None:
                 alpha = alpha * np.clip((t - self.t) / 0.4, 0.0, 1.0)
-        size = cl["size"][ii] * (1.0 + 1.3 * u)
-        return [dict(pos=pos, size=size, color=cl["color"][ii], alpha=alpha * 0.85, kind="soft", seed=cl["seed"][ii],
+        size = cl["size"][ii] * (1.0 + 0.5 * u)
+        return [dict(pos=pos, size=size, color=cl["color"][ii], alpha=alpha * 0.6, kind="soft", seed=cl["seed"][ii],
                      twinkle=0.8, backlight=0.5)]
 
     def particles(self, t):
@@ -641,7 +659,8 @@ class Blow(_Free):
 
     def _raw(self, t):
         tq = self._frozen(t)
-        m = (self.birth - self.gather <= tq) & (tq - self.birth < self.life)
+        early = (tq < self.birth) & (bm.hashf(np.arange(self.n), 70) > 0.12)       # most wait unseen
+        m = (self.birth - self.gather <= tq) & (tq - self.birth < self.life) & ~early
         ids = np.where(m)[0]
         if len(ids) == 0:
             return ids, np.zeros((0, 3)), np.zeros(0), np.zeros(0)
@@ -666,7 +685,7 @@ class Blow(_Free):
         off += bm.flow((p0 + off) * 1.4, age * 0.5 + t * 0.1, speed=1.0, seed=self.body.seed + 1.7) * (self.turb * g)[:, None]
         pos = p0 + off
         wait = np.clip((tq - (b - self.gather)) / max(self.gather * 0.6, 1e-3), 0.0, 1.0)
-        alpha = np.where(tq >= b, _fade(tq - b + 0.2, self.life, fin=0.1, fout=0.6), 0.75 * wait)
+        alpha = np.where(tq >= b, _fade(tq - b + 0.2, self.life, fin=0.1, fout=0.6), 0.22 * wait)
         return ids, pos, alpha, age
 
     def batches(self, t, cam=None):
@@ -675,13 +694,13 @@ class Blow(_Free):
             return []
         pos, alpha = self._steer(t, ids, pos, alpha)
         u = np.clip(age / self.life, 0, 1)
-        big = self.sd[ids] > 0.93
+        big = self.sd[ids] > 0.975
         out = [dict(pos=pos[~big], size=(self.size0[ids] * (1.0 + 1.5 * u))[~big], color=self.color[ids][~big],
                     alpha=alpha[~big] * 0.9 * self.bright, kind="soft", seed=self.sd[ids][~big], twinkle=0.85, backlight=0.6)]
         if big.any():
-            out.append(dict(pos=pos[big], size=(self.size0[ids] * 1.6)[big], color=self.color[ids][big],
+            out.append(dict(pos=pos[big], size=(self.size0[ids] * 1.2)[big], color=self.color[ids][big],
                             alpha=alpha[big] * self.bright, kind="spark", seed=self.sd[ids][big], twinkle=1.0,
-                            emit=4.0, backlight=0.6))
+                            emit=2.5, backlight=0.6))
         return out
 
     def particles(self, t):
@@ -693,7 +712,7 @@ class Blow(_Free):
 class Birds(_Free):
     """Birds leave the silhouette: each rises out of a point of the body and flies off (ref 08)."""
 
-    def __init__(self, body, t, dur=3.0, n=36, dir=None, speed=2.4, life=7.0, size=0.2, color="#ffffff", spread=0.35,
+    def __init__(self, body, t, dur=3.0, n=36, dir=None, speed=2.4, life=7.0, size=0.11, color="#ffffff", spread=0.35,
                  rise=0.5, where=None, bright=1.0, to=None, **kw):
         self.body = body
         self.t, self.dur, self.n, self.life = float(t), float(dur), int(n), float(life)
@@ -718,6 +737,12 @@ class Birds(_Free):
         self.speed = speed * (0.75 + 0.5 * bm.hashf(i, 85))
         self.size = size * (0.7 + 0.6 * bm.hashf(i, 86)) * body.rig.height / 1.6
         self.color = _col(color)
+        # dark birds (ref 08: silhouettes on a pale sky) are painted in their true colour: light alone cannot
+        # darken a bright sky
+        self.paint = 1.0 if float(np.mean(self.color)) < 0.12 else 0.0
+        if self.paint and isinstance(color, str):
+            from .api import show as _show
+            self.color = np.asarray(_show(color), np.float64)
         self.bright = bright
         self._init_free(to)
 
@@ -762,7 +787,7 @@ class Birds(_Free):
             rot = np.arctan2(vel[:, 1], np.hypot(vel[:, 0], vel[:, 2]))
         grow = np.clip(age / 0.8, 0.15, 1.0)
         return [dict(pos=pos, size=self.size[ids] * grow, color=self.color, alpha=alpha * 0.95 * self.bright, kind="bird",
-                     rot=rot, seed=self.sd[ids], twinkle=0.0, vel=vel)]
+                     rot=rot, seed=self.sd[ids], twinkle=0.0, vel=vel, paint=self.paint, paint_light=0.0)]
 
     def particles(self, t):
         ids, pos, alpha, age = self._raw(t)

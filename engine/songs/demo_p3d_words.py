@@ -165,7 +165,7 @@ _SPECS = [
           arrive="morph", source="Compliment", leave="bokeh"),
 ]
 
-WORDS = PW.Words(_SPECS, face="camera")
+WORDS = PW.Words(_SPECS, camera=_LAYOUT, face="camera")     # the camera lets each word choose its points
 CAMERA = _rig(focus=lambda t: WORDS.focus_point(t, HANDS if t < 2.0 else (0.0, 4.0, 4.0)))
 
 # each light of the arch wakes when its expression is whole
