@@ -242,7 +242,7 @@ _K3 = [  # 3 THE CANOPY
 ]
 _K4 = [  # 4 THE RIVER (no cut: we burst up through the roof)
     (19.85, W3(0.1, 2.30, ZC + 5.2), W3(0.0, 2.80, ZC - 6.0)),
-    (21.10, _mrel(21.1, (-4.5, 12.5, 27.0)), _mrel(21.1, (0.0, 0.0, -8.0))),
+    (21.10, _mrel(21.1, (-5.0, 17.0, 50.0)), _mrel(21.1, (0.0, 0.0, 4.0))),
     (22.45, W3(1.30, 1.70, ZN + 6.2), W3(0.0, 1.95, ZN - 3.0)),
     (25.60, W3(0.50, 1.65, ZN + 5.2), W3(0.0, 1.95, ZN - 3.0)),
     (26.79, W3(0.15, 1.45, ZN + 1.8), W3(0.0, 1.60, ZN - 6.0)),
@@ -527,7 +527,8 @@ class VeilRiver:
         # near her (s < 4) the cloth stays on her shoulders
         hold = ss(1.0, 5.0, s)
         p = pos * (1.0 - hold[:, None]) + p * hold[:, None]
-        return p, a * (1.0 + 0.5 * f * hold), size * (1.0 + 1.5 * f * hold)
+        calm = 1.0 - 0.6 * float(ss(52.6, 55.0, t))
+        return p, a * (1.0 + 0.3 * f * hold) * calm, size * (1.0 + 1.5 * f * hold)
 
     def threads(self, t, b, L, lo, one, core, edge, eye=None):
         nt, k = self.nt, self.k
@@ -598,11 +599,12 @@ def _people():
     P = {}
 
     def body(name, shape, x, z, facing, show, color, color2, garment, look="glitter", motion="stand", gesture=(),
-             effects=(), points=52000, seed=1.0, form=True, **kw):
+             effects=(), points=52000, seed=1.0, form=True, local=False, **kw):
         eff = list(effects)
         if form:
-            eff.insert(0, dict(kind="form", t=show[0], dur=1.3, source=river_points(z, seed=int(seed * 7)),
-                               travel=1.0))
+            src = river_points(z, seed=int(seed * 7), spread=0.5) + np.array([x, 0.0, 0.0]) if local else \
+                river_points(z, seed=int(seed * 7))
+            eff.insert(0, dict(kind="form", t=show[0], dur=1.3, source=src, travel=1.0))
         P[name] = Body(shape, at=(x, z), facing=facing, motion=motion, gesture=list(gesture), garment=garment,
                        look=look, color=color, color2=color2, effects=eff, points=points, seed=seed,
                        show=show, fade=0.35, **kw)
@@ -644,13 +646,13 @@ def _people():
     body("listener", "man", 1.05, ZL, 270.0, (26.79, 33.6), COOL, "#e8f0ff", "tunic", seed=52.0, form=False,
          gesture=[(27.4, 33.6, "listen", dict(side="L", ease=0.8))])
     # 6 Gratitude: people walk in her veil behind her; one bows to another, who bows back
-    body("thank", "man", -0.62, ZP, 90.0, (33.36, 40.3), GOLD, "#fff0d0", "coat", seed=61.0, form=False,
+    body("thank", "man", -0.62, ZP, 90.0, (33.36, 38.9), GOLD, "#fff0d0", "coat", seed=61.0, form=False,
          gesture=[(34.0, 38.6, "bow", dict(amount=32.0, ease=0.9))])
-    body("thanked", "woman", 0.62, ZP, 270.0, (33.36, 40.3), COOL, "#eef2ff", "dress", seed=62.0, form=False,
+    body("thanked", "woman", 0.62, ZP, 270.0, (33.36, 38.9), COOL, "#eef2ff", "dress", seed=62.0, form=False,
          gesture=[(35.0, 38.6, "bow", dict(amount=14.0, ease=0.9))])
     for i, (x, dz, sh, c) in enumerate(((-1.6, -4.0, "woman", "#ffe2b0"), (1.7, -5.5, "man", "#ffd9a0"),
                                         (-0.9, -9.0, "man", "#dfe8ff"), (1.1, -11.5, "woman", "#ffe8c8"))):
-        body(f"walker{i}", sh, x, ZP + dz + 1.0, 180.0, (33.36, 40.3), c, "#fff4e0",
+        body(f"walker{i}", sh, x, ZP + dz + 1.0, 180.0, (33.36, 38.9), c, "#fff4e0",
              "robe" if sh == "woman" else "tunic", seed=70.0 + i, form=False, points=34000,
              motion=[(33.0, "walk", dict(speed=0.75, phase=0.27 * i))])
     # 7 the child walks the thread to her and takes her hand
@@ -665,9 +667,9 @@ def _people():
             (4.4, -1.9, "woman", "#ffd9a0"), (-6.6, -4.6, "woman", "#dfe8ff"), (6.8, -4.9, "man", "#ffe8c8"),
             (-9.4, -8.5, "man", "#ffd9a0"), (9.6, -8.8, "woman", "#e8eeff"))
     for i, (x, dz, sh, c) in enumerate(ring):
-        t0 = BIG + 0.15 * i
+        t0 = BIG + 0.12 + 0.28 * i
         body(f"risen{i}", sh, x, ZSTOP + dz, 180.0 + (6.0 if x < 0 else -6.0), (t0 - 0.05, TOTAL), c, "#fff6e8",
-             "robe" if sh == "woman" else "coat", seed=90.0 + i, points=30000,
+             "robe" if sh == "woman" else "coat", seed=90.0 + i, points=30000, local=True, bright=0.8,
              gesture=[(46.3 + 0.2 * i, TOTAL, "raise", dict(ease=1.6))])
     return P
 
@@ -680,7 +682,7 @@ def _mother():
                 look=[dict(name="glitter", bright=0.9), dict(name="rim", bright=0.7)],
                 color="#ffd9a0", color2="#fff4e0", points=90000, detail=dict(hand=3.0, head=0.02), light=None,
                 wind=(0.0, 0.0, 0.6),
-                effects=[dict(kind="shed", t=0.0, n=6000, life=3.0, dir=(0.0, 0.15, 1.0), speed=0.45)],
+                effects=[dict(kind="shed", t=0.0, n=3500, life=3.0, dir=(0.0, 0.55, 1.0), speed=0.40)],
                 **MOTHER_KW)
 
 
@@ -701,7 +703,7 @@ def _setup(scene):
 LOOKS = dict(
     veilnight=dict(base="night", sky_mid="#0a1546", sky_hor="#24357a", sun_az=180.0, sun_el=6.0, dust=0.35,
                    bokeh=0.25,
-                   sun_color="#ffd9a0", sun_int=0.6, sun_size=0.7, sun_disc=5.0, sun_glow=0.9, rays=0.9, mist=0.25,
+                   sun_color="#ffd9a0", sun_int=0.6, sun_size=0.7, sun_disc=0.0, sun_glow=0.9, rays=0.9, mist=0.25,
                    haze_color="#22306e", mist_color="#26336e", milky=1.0, stars=1.0),
     mist=dict(base="night", dust=0.35, bokeh=0.25, sky_mid="#11205a", sky_hor="#33488f", sun_az=180.0, sun_el=0.9, sun_color="#ffe0b0",
               sun_int=0.55, sun_size=0.8, rays=0.5, mist=0.85, mist_height=1.6, mist_color="#33488f",
@@ -718,10 +720,14 @@ LOOKS = dict(
     hush=dict(base="night", dust=0.35, bokeh=0.25, sky_top="#081040", sky_mid="#2a3f8a", sky_hor="#c0809c", sun_az=180.0, sun_el=-0.4,
               sun_color="#ffe2c0", sun_int=0.55, sun_size=0.9, rays=0.3, mist=0.3, mist_color="#6a5a90",
               haze_color="#a07090", stars=0.55, milky=0.3, ripple=0.05),
-    veilsun=dict(base="sunrise", sky_top="#0c1a52", sky_mid="#43408e", sky_hor="#f08a78", sun_az=180.0,
-                 sun_el=1.3, sun_color="#ffd9a8", sun_int=0.9, sun_size=1.0, sun_disc=6.0, sun_glow=0.5, rays=0.75,
-                 stars=0.25, milky=0.0, mist=0.3, mist_color="#a86a80", haze=0.5, haze_color="#b8708a", ripple=0.25,
-                 exposure=0.92, dust=0.35, bokeh=0.25),
+    veildawn=dict(base="sunrise", sky_top="#08113e", sky_mid="#262a70", sky_hor="#d8707a", sun_az=180.0,
+                  sun_el=-0.6, sun_color="#ffc8a0", sun_int=0.55, sun_size=1.0, sun_disc=0.0, sun_glow=0.3, rays=0.4,
+                  stars=0.35, milky=0.0, mist=0.3, mist_color="#6a4a78", haze=0.35, haze_color="#7a4a78",
+                  ripple=0.2, exposure=0.95, dust=0.3, bokeh=0.2, clouds=0.25),
+    veilsun=dict(base="sunrise", sky_top="#0a1748", sky_mid="#363680", sky_hor="#e8806e", sun_az=180.0,
+                 sun_el=1.0, sun_color="#ffd9a8", sun_int=0.75, sun_size=1.0, sun_disc=5.0, sun_glow=0.3, rays=0.7,
+                 stars=0.2, milky=0.0, mist=0.3, mist_color="#8a5a78", haze=0.35, haze_color="#9a5a7a", ripple=0.25,
+                 exposure=0.93, dust=0.3, bokeh=0.2, clouds=0.3),
     veilgold=dict(base="golden", sky_top="#16337e", sky_mid="#5d6cb8", sky_hor="#f2b08c", sun_az=180.0, sun_el=6.0,
                   rays=0.55, haze_color="#c89a90", mist_color="#c8a0a0"),
     veilday=dict(base="day", sun_az=180.0, sun_el=14.0, rays=0.25),
@@ -729,7 +735,7 @@ LOOKS = dict(
 WORLD = WORDS.world(dict(
     looks=LOOKS,
     look=[(0.0, "veilnight"), (S[1], "mist", 0.0), (S[2], "canopy", 0.0), (S[3] + 0.8, "high", 1.6),
-          (S[4], "loom", 0.0), (S[5], "veilnight", 0.0), (S[6], "hush", 0.0), (BIG, "veilsun", 0.8),
+          (S[4], "loom", 0.0), (S[5], "veilnight", 0.0), (S[6], "hush", 0.0), (BIG, "veildawn", 0.6), (46.0, "veilsun", 1.4),
           (51.0, "veilgold", 2.5), (53.6, "veilday", 2.6)],
     arch=dict(lit=[50.6 + 0.16 * k for k in range(9)], span=26.0, height=15.0, z=ARCH_Z,
               line=Track([(0.0, 0.0), (50.4, 0.0), (52.0, 1.0)])),
@@ -745,6 +751,7 @@ P3D = dict(
             dict(t=S[2], strength=1, rise=0.06, fall=0.45, color="#ffd9a0", radius=0.24),
             dict(t=S[4], strength=1, rise=0.06, fall=0.45, color="#ffe6b8", radius=0.24),
             dict(t=S[5], strength=1, rise=0.06, fall=0.45, color="#fff0d0", radius=0.24),
-            dict(t=BIG, strength=0.8, rise=0.1, fall=0.9, color="#ffe8d0", radius=0.30),
+            dict(t=BIG, strength=0.9, rise=0.08, fall=0.8, color="#ffe0c8", radius=0.20,
+                 at=tuple(M(BIG) + np.array([0.0, 1.0, -260.0]))),
             dict(t=LAST, strength=0.5, rise=0.08, fall=0.8, color="#fff6e8", radius=0.3)],
 )
