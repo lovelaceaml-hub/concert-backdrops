@@ -34,6 +34,14 @@ def val(name, t, default=None):
     return v(t) if callable(v) else v
 
 
+def _shown(hexs):
+    """Linear light that the composite's filmic curve shows as this colour (for paint, not light)."""
+    h = hexs.lstrip("#")
+    y = np.clip((np.array([int(h[i:i + 2], 16) for i in (0, 2, 4)], dtype=np.float64) / 255.0) ** 2.2, 0.0, 0.975)
+    a, b, c = 2.43 * y - 2.51, 0.59 * y - 0.03, 0.14 * y
+    return (-b - np.sqrt(np.maximum(b * b - 4.0 * a * c, 0.0))) / (2.0 * a)
+
+
 def col(c, default):
     c = c if c is not None else default
     return S.lin(c) if isinstance(c, str) else np.asarray(c, dtype=np.float64)
@@ -158,6 +166,12 @@ class Upgrade:
             self.p_leaf = prog(U.LEAF_VS, U.LEAF_FS)
             sd = np.random.default_rng(29).random((int(getattr(S, "LEAVES_COUNT", 48)), 4)).astype("f4")
             self.v_leaf = ctx.vertex_array(self.p_leaf, [(ctx.buffer(sd.tobytes()), "4f", "aSeed")])
+            # the tint pass: leaves painted over the scene in the composite (half size, soft edges)
+            self.t_leaf = ctx.texture((max(self.w // 2, 8), max(self.h // 2, 8)), 4, dtype="f2")
+            self.t_leaf.filter = (moderngl.LINEAR, moderngl.LINEAR)
+            self.t_leaf.repeat_x = self.t_leaf.repeat_y = False
+            self.f_leaf = ctx.framebuffer([self.t_leaf])
+            self.leaf_k = 0.0
         if self.has_net:
             self.p_net = prog(G.QUAD_VS, U.NET_FS)
             setu(self.p_net, uFlip=1.0)
@@ -322,6 +336,11 @@ class Upgrade:
             ma, mb = self._slot_metas(t)
             kw["uInkA"], kw["uInkB"] = self._ink(ma), self._ink(mb)
             kw["uInkC"] = self._ink(getattr(S, "CREDIT", {}))
+        if self.has_leaves and self.leaf_k > 0.0:
+            self.t_leaf.use(location=12)
+            kw["uLeafT"], kw["uLeafK"] = 12, self.leaf_k
+        else:
+            kw["uLeafK"] = 0.0
         th = val("SKY_THEME", t, None)
         k = THEMES.get(th, 0.0) if isinstance(th, str) else float(th or 0.0)
         kw["uTheme"] = float(k)
@@ -496,7 +515,19 @@ class Upgrade:
                      uSpeed=float(val("LEAVES_SPEED", t, 1.0)), uWind=float(val("LEAVES_WIND", t, 0.4)),
                      uColA=S.lin(lc[0]), uColB=S.lin(lc[1]),
                      uCalm=float(val("BOTTOM_CALM", t, 0.0) or 0.0), uCalmY=0.335)
+                setu(self.p_leaf, uMask=0)
                 self.v_leaf.render(moderngl.POINTS)
+                # tint pass into its own buffer, then back to the light buffer
+                self.f_leaf.use()
+                self.f_leaf.clear(0.0, 0.0, 0.0, 0.0)
+                self.ctx.blend_func = (moderngl.ONE, moderngl.ONE_MINUS_SRC_ALPHA)
+                setu(self.p_leaf, uMask=1, uPx=self.px * 0.5, uColA=_shown(lc[0]), uColB=_shown(lc[1]))
+                self.v_leaf.render(moderngl.POINTS)
+                self.ctx.blend_func = (moderngl.ONE, moderngl.ONE)
+                self.R.f_L.use()
+                self.leaf_k = float(val("LEAVES_TINT", t, 0.85))
+            else:
+                self.leaf_k = 0.0
         if self.has_beam:
             a = val("BEAM", t, 0.0) or 0.0
             if a > 0.001:

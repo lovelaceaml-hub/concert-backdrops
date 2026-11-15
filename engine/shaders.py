@@ -421,7 +421,8 @@ uniform vec4 uIce; uniform vec3 uIceCol, uThawCol;
 uniform vec4 uField; uniform vec3 uFieldCol;
 uniform float uShadeK;
 uniform vec4 uInkA, uInkB, uInkC;   // per-text colour (display rgb, strength) for slot A, slot B and the credit
-uniform float uTheme;               // SKY_THEME: 0 the original night-to-dawn world, 1 a bright day (lighter lake, vignette)
+uniform float uTheme;
+uniform sampler2D uLeafT; uniform float uLeafK;   // LEAVES tint: leaf colour (premultiplied) and coverage               // SKY_THEME: 0 the original night-to-dawn world, 1 a bright day (lighter lake, vignette)
 uniform float uCalm, uCalmY;   // calm lower third: rings, glitter, reflections and thaw edges fade there
 float calmK(float y){ return 1.0-uCalm*(1.0-smoothstep(uCalmY-0.07, uCalmY+0.05, y)); }
 vec2 hash22(vec2 p){ vec3 p3 = fract(vec3(p.xyx)*vec3(0.1031,0.1030,0.0973));
@@ -461,15 +462,18 @@ vec3 scene(vec2 uv){
   // the far range: the loudness of the whole song, left to right
   float ry = uHorizon + texture(uRidge, vec2(uv.x,0.5)).r;
   float m1 = smoothstep(ry+aa, ry-aa, uv.y);
+  // SKY_THEME: the far range fades into the haze before its ends, so no hard step shows on a bright sky
+  float ef = mix(1.0, smoothstep(0.035, 0.11, uv.x)*smoothstep(0.965, 0.89, uv.x), uTheme);
+  m1 *= ef;
   float lit = smoothstep(uProg+0.003, uProg-0.014, uv.x);
   float depth = clamp(hh/0.17, 0.0, 1.0);
   vec3 far = mix(uMtn*1.5, hz, 0.74-0.30*depth);
   far += uTrailCol*uTrail*lit*0.030*depth;
   c = mix(c, far, m1);
   float dr = uv.y-ry;
-  float rim = exp(-abs(dr)*900.0)*0.85 + exp(-max(dr,0.0)*95.0)*0.13*step(0.0,dr);
+  float rim = (exp(-abs(dr)*900.0)*0.85 + exp(-max(dr,0.0)*95.0)*0.13*step(0.0,dr))*ef;
   c += uTrailCol*uTrail*lit*rim;
-  c += uTrailCol*0.03*exp(-abs(dr)*900.0)*(1.0-lit);
+  c += uTrailCol*0.03*exp(-abs(dr)*900.0)*(1.0-lit)*ef;
   // mist, then two nearer ranges
   c = mix(c, hz*1.04, exp(-hh/0.030)*0.30);
   float y2 = uHorizon + 0.010 + 0.105*pow(ridged1(uv.x*2.1, 11.0), 1.7);
@@ -769,6 +773,11 @@ void main(){
   float tight = max(wordMask(uTextA, uv, uTxA, uBndA, uOffA), wordMask(uTextB, uv, uTxB, uBndB, uOffB));
   col *= 1.0-min(0.50*uShadeK*tight, 0.92);
   col *= 1.0-(ct.g*0.50+ct.b*0.34)*uCredit.w*zk;
+  if(uLeafK>0.0){   // leaves are painted green over the scene (light alone only brightens a bright sky)
+    vec4 lf = texture(uLeafT, uv);
+    float k = uLeafK*(1.0-textField(uv));
+    col = col*(1.0-lf.a*k) + lf.rgb*k;
+  }
   vec3 L = texture(uL, uv).rgb;
   vec3 bl = texture(uB1,uv).rgb*0.34 + texture(uB2,uv).rgb*0.28 + texture(uB3,uv).rgb*0.24 + texture(uB4,uv).rgb*0.22;
   col += L + bl*uBloom;
