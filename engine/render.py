@@ -78,6 +78,11 @@ def comp_blocks():
         out.append("NATURE_PAINT")
     if has("CAMERA_ZOOM", "CAMERA_PAN", "CAMERA_CRANE"):
         out.append("CAMERA_BG")
+    import figure_look
+    if figure_look.wanted():   # look="silk": the faint cool tint of a body of light on a bright sky
+        out.append("FIGURE_TINT")
+    if any(isinstance(m, dict) and m.get("paint") for m in (getattr(S, "SYMBOLS", None) or [])):
+        out.append("SYMBOL_PAINT")   # a symbol's lines painted in their own colour (engine/water.py)
     return out
 
 
@@ -120,6 +125,10 @@ class Renderer:
         st[:, 2:] = rng.random((n, 2))
         self.v_star = ctx.vertex_array(self.p_star, [(ctx.buffer(st.tobytes()), "2f 2f", "aPos", "aSeed")])
         self.n_star = n
+        self.lake_stars = None
+        if getattr(S, "LAKE_STARS", None) is not None:
+            import lake_stars
+            self.lake_stars = lake_stars.LakeStars(self, st)   # the stars mirrored in the lake (optional)
 
         def seeds(k, seed):
             return ctx.buffer(np.random.default_rng(seed).random((k, 4)).astype("f4").tobytes())
@@ -187,6 +196,8 @@ class Renderer:
         self.react = audio_react.Reactor(self) if audio_react.enabled() else None   # music reactivity (optional)
         import output
         self.out = output.Output(self)   # HOWTO Q: event card and seamless loop (optional)
+        import figure_look
+        self.fl = figure_look.FigureLook(self)   # HOWTO H5: the silk look for people of light (optional)
 
     # ------------------------------------------------------------------
     def text_plan(self, t):
@@ -260,7 +271,10 @@ class Renderer:
         calm0 = float(_val("BOTTOM_CALM", t, 0.0))   # Astra round 1, finding 12: a calm lower third
         setu(self.p_star, uT=t, uStars=P["stars"], uHi=P["hi"], uPx=px, uCamAff=self.sky.aff(0.12))
         self.v_star.render(moderngl.POINTS)
-        setu(self.p_mote, uT=t, uAmount=min(P["motes"], 1.0), uPx=px, uSizeMin=2.4, uSizeMax=24.0, uPeriod=30.0,
+        if self.lake_stars is not None:   # LAKE_STARS: the same stars, mirrored in the lake (engine/lake_stars.py)
+            self.lake_stars.draw(t, P, calm0)
+        setu(self.p_mote, uT=t, uAmount=min(P["motes"], 1.0), uPx=px, uSizeMin=getattr(S, "MOTE_SIZE", (2.4, 24.0))[0],
+             uSizeMax=getattr(S, "MOTE_SIZE", (2.4, 24.0))[1], uPeriod=30.0,
              uY0=getattr(S, "MOTE_Y", (-0.05, 1.05))[0], uY1=getattr(S, "MOTE_Y", (-0.05, 1.05))[1], uSway=0.012,
              uBright=0.62 + 0.30 * P["env"], uColA=L(cols("MOTE_COLORS", ("#ffe2a8", "#ff9f8a"))[0]),
              uColB=L(cols("MOTE_COLORS", ("#ffe2a8", "#ff9f8a"))[1]), uCalm=calm0, uCalmY=CALM_Y)
@@ -279,8 +293,10 @@ class Renderer:
         self.cr.draw(t)
         if self.react:
             self.react.draw(t, P)
+        self.fl.begin(t, P)       # look="silk" (engine/figure_look.py): figures and crowd queue their bodies,
         self.up.draw_figures(t)
         self.gath.draw(t)
+        self.fl.resolve(t, P)     # which are drawn here, with their mirror images in the lake
         self.water.draw(t)
         self.sky.draw_light(t, P)
 
@@ -424,6 +440,7 @@ class Renderer:
         self.up.comp_uniforms(self.p_comp, t, P)
         self.water.comp_uniforms(self.p_comp, t)
         self.nature.comp_uniforms(self.p_comp)
+        self.fl.comp_uniforms(self.p_comp, t, P)
         self.v_comp.render(moderngl.TRIANGLE_STRIP)
         return self.f_out.read(components=3)
 

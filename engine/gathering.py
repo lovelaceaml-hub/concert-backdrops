@@ -164,9 +164,32 @@ class Crowd:
             xs_l.append(u)
             dp_l.append(np.clip(k / max(rows - 1, 1) + (rng.random(n) - 0.5) * 0.35 / rows, 0, 1))
         xs, depth = np.concatenate(xs_l), np.concatenate(dp_l)
+        # optional `cluster=(2, 3)`: the people stand in small groups of that many with gaps between the groups
+        # (each side of the middle on its own), and a group walks in together. Without the key: as before.
+        self.group = np.arange(N)
+        cl = m.get("cluster")
+        if cl:
+            lo, hi = (int(cl[0]), int(cl[1])) if isinstance(cl, (tuple, list)) else (int(cl), int(cl))
+            tight = float(m.get("cluster_tight", 0.5))
+            crng = np.random.default_rng(seed + 2)
+            gid = 0
+            for side in (xs < 0, xs >= 0):
+                idx = np.nonzero(side)[0]
+                idx = idx[np.argsort(xs[idx])]
+                a = 0
+                while a < len(idx):
+                    g = idx[a:a + int(crng.integers(lo, hi + 1))]
+                    xs[g] = xs[g].mean() + (xs[g] - xs[g].mean()) * tight
+                    self.group[g] = gid
+                    gid += 1
+                    a += len(g)
         keep = np.arange(N)
         self.r = depth[keep]
         self.tx = self.cx + xs[keep] * sx
+        self.silk = m.get("look", getattr(S, "FIGURE_LOOK", None)) == "silk"
+        if self.silk and not m.get("cluster"):   # look="silk": uneven spacing, unless the song groups them itself
+            import figure_look as FL
+            self.tx = FL.cluster_x(self.tx, self.cx, float(m.get("spacing", 1.0)), seed)
         self.fy = self.cy + self.r * sdepth
         self.h = h0 * (1 + hvar * (rng.random(N) * 2 - 1)) * (1 - 0.30 * self.r)
         child = rng.random(N) < float(m.get("children", 0.12))
@@ -193,15 +216,25 @@ class Crowd:
         self.orient = tc                           # which way they face once settled
         spd = float(m.get("speed", 1.0))          # figure heights per second
         self.v = spd * (0.80 + 0.40 * rng.random(N)) * np.where(child, 1.15, 1.0)
+        if cl:                                     # a group keeps one pace
+            for gk in np.unique(self.group):
+                self.v[self.group == gk] = self.v[self.group == gk].mean()
         self.L = np.abs(self.tx - self.sx) * aspect / self.h
         self.D = np.minimum(0.55, 0.3 * self.L)
         self.Tc = (self.L - self.D) / self.v
         self.Td = 2 * self.D / self.v
         walk = self.Tc + self.Td
         arrive_by = float(m.get("arrive_by", self.t0 + 14.0))
-        rank = np.argsort(np.argsort(np.abs(self.tx - self.cx) + 0.06 * rng.random(N)))
+        near_c = np.abs(self.tx - self.cx) + 0.06 * rng.random(N)
+        if cl:                                     # ... and arrives together
+            for gk in np.unique(self.group):
+                near_c[self.group == gk] = near_c[self.group == gk].mean()
+        rank = np.argsort(np.argsort(near_c, kind="stable"), kind="stable")
         q = 0.30 + 0.70 * rank / max(N - 1, 1)
         self.Ta = np.maximum(self.t0 + walk, self.t0 + (arrive_by - self.t0) * q)
+        sd = m.get("side_delay")                   # optional (left, right): seconds the people from that side
+        if sd:                                     # come later (for example while a figure still stands there)
+            self.Ta = self.Ta + np.where(from_left, float(sd[0]), float(sd[1]))
         self.Te = self.Ta - walk
         self.leave = self.t1 + 0.8 * rng.random(N)
         self.has_pass = pl is not None
@@ -217,6 +250,7 @@ class Crowd:
         hold = float(pl.get("hold", 0.25))
         self.lead = lead
         self.fcol = _lin(pl.get("color", "#ffe2a0"))
+        self.fsize = float(pl.get("flame", 1.0))   # optional: the size of every flame (held, passed, rising)
         hx = self.tx + self.orient * 0.16 * self.h / asp     # where the held flame rests (screen)
         hy = self.fy + 0.52 * self.h
         self.Tr = np.full(N, np.inf)
@@ -648,7 +682,8 @@ class Crowd:
         rows = []
         for sz, sharp, cc, a in ((5.5, 2.4, white, 1.6), (15.0, 3.0, c, 0.65), (46.0, 2.6, c, 0.16)):
             amp = (inten * fl * a)[:, None]
-            rows.append(np.column_stack([x, y + 0.002 * (sz > 6), np.full(len(x), sz) * scale, np.full(len(x), sharp),
+            rows.append(np.column_stack([x, y + 0.002 * (sz > 6), np.full(len(x), sz) * scale * self.fsize,
+                                         np.full(len(x), sharp),
                                          cc[None, :] * amp]))
         return rows
 
@@ -756,7 +791,10 @@ class Gathering:
             w = float(c.m["depth"]) if c.m.get("depth") is not None else sky.ground_depth(c.cy)
             aff = sky.aff(w)
             c.fix = lambda q, w=w: sky.unplace(q, w)
-        data = c.sprites(t, self.R.px)
+        if c.silk:   # look="silk": the people are bodies of light (engine/figure_look.py); only flames are sprites
+            data = self.R.fl.draw_crowd(c, t, aff)
+        else:
+            data = c.sprites(t, self.R.px)
         n = len(data)
         if n == 0:
             return

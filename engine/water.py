@@ -23,6 +23,7 @@ import water_shaders as WS
 MAX_RIP = 24
 LIFE = 5.0          # seconds a ripple lasts
 FALL_DUR = 1.1      # seconds a falling star takes to reach the water
+SYM_UNIT = 16       # texture unit of a symbol's paint in the composite (free: UPGRADE-HOWTO section S)
 
 
 def _val(name, t, default=None):
@@ -61,6 +62,9 @@ class Water:
         self.syms = list(getattr(S, "SYMBOLS", None) or [])
         self.has_rip = bool(self.rips) or self.auto
         self.active = self.has_rip or bool(self.syms) or bool(self.falls)
+        # optional: a symbol's lines also painted in their own colour over the scene (SYMBOLS key `paint`)
+        self.painted = any(float(m.get("paint", 0.0) or 0.0) > 0.0 for m in self.syms)
+        self.paint_k = 0.0
         if not self.active:
             return
         quad = ctx.buffer(np.array([-1, -1, 1, -1, -1, 1, 1, 1], "f4").tobytes())
@@ -75,6 +79,12 @@ class Water:
         self.v_dot = ctx.vertex_array(self.p_dot, [(self.dot_buf, "2f 1f 1f", "aP", "aB", "aS")])
         self.petal_seeds = np.random.default_rng(3).random((300, 4))   # the same petals render.py draws
         self.p_sym = ctx.program(vertex_shader=cv(WS.SYM_VS), fragment_shader=WS.SYM_FS)
+        if self.painted:
+            self.p_symp = ctx.program(vertex_shader=cv(WS.SYM_VS), fragment_shader=WS.SYM_PAINT_FS)
+            self.t_paint = ctx.texture((R.w, R.h), 4, dtype="f2")
+            self.t_paint.filter = (moderngl.LINEAR, moderngl.LINEAR)
+            self.t_paint.repeat_x = self.t_paint.repeat_y = False
+            self.f_paint = ctx.framebuffer([self.t_paint])
         self.sdata = []
         for k, m in enumerate(self.syms):
             kind = m.get("kind", "heart")
@@ -94,8 +104,27 @@ class Water:
             vao = ctx.vertex_array(self.p_sym, [(ctx.buffer(data.tobytes()), "4f 3f 4f", "aP", "aCol", "aSeed")])
             ext = (pts[:, 0].min(), pts[:, 1].min(), pts[:, 0].max(), pts[:, 1].max())
             avg = cols.mean(axis=0)
-            self.sdata.append(dict(meta=m, vao=vao, ext=ext, avg=avg, kind=kind, size=size, stretch=stretch,
-                                   draft_keep=True))   # points in drawing order: a draft keeps every stroke
+            sd = dict(meta=m, vao=vao, ext=ext, avg=avg, kind=kind, size=size, stretch=stretch,
+                      draft_keep=True)   # points in drawing order: a draft keeps every stroke
+            if float(m.get("paint", 0.0) or 0.0) > 0.0:
+                # `paint`: the lines of the chosen roles (`paint_roles`, default all of them) are also painted in
+                # exactly their colour. The points are split in two, so the painted lines can carry less light
+                # (`paint_light`) while the other lines stay as they are.
+                import theme
+                pr = m.get("paint_roles")
+                sel = np.array([pr is None or r in pr for r in roles], dtype=bool)
+                pcols = np.array([theme.display(pal[r]) for r in roles], dtype=np.float64)
+
+                def part(prog, rows):
+                    if not len(rows):
+                        return None
+                    buf = ctx.buffer(rows.astype("f4").tobytes())
+                    return ctx.vertex_array(prog, [(buf, "4f 3f 4f", "aP", "aCol", "aSeed")])
+
+                sd["vao_lit"] = part(self.p_sym, data[sel])
+                sd["vao_rest"] = part(self.p_sym, data[~sel])
+                sd["vao_paint"] = part(self.p_symp, np.hstack([pts, pcols, seeds])[sel])
+            self.sdata.append(sd)
 
     # ------------------------------------------------------------ the water line and the ripples at time t
     def water_line(self, t):
@@ -118,7 +147,13 @@ class Water:
             age = t - float(r[0])
             if 0.0 <= age < LIFE:
                 y = float(r[3]) if len(r) > 3 else self._default_y(r[0], wl)
-                out.append((float(r[1]), y, age, float(r[2])))
+                if len(r) > 4:
+                    # optional fifth number: the ring spreads that many times as fast and fades as slowly as any
+                    # other ring (the shader sizes and fades a ring by its age: a larger age, a strength to match)
+                    sp = float(r[4])
+                    out.append((float(r[1]), y, age * sp, float(r[2]) * math.exp(age * (sp - 1.0) / 1.6)))
+                else:
+                    out.append((float(r[1]), y, age, float(r[2])))
         for f in self.falls:
             age = t - float(f[0])
             if self.auto and 0.0 <= age < LIFE:
@@ -213,6 +248,13 @@ class Water:
 
     # ------------------------------------------------------------ composite pass: the ripples bend the lake
     def comp_uniforms(self, prog, t):
+        if "uSymK" in prog:   # the SYMBOL_PAINT block: the painted lines of this frame, laid over the scene
+            if self.painted and self.paint_k > 0.0:
+                self.t_paint.use(location=SYM_UNIT)
+                prog["uSymT"].value = SYM_UNIT
+                prog["uSymK"].value = float(self.paint_k)
+            else:
+                prog["uSymK"].value = 0.0
         if not self.has_rip:
             return
         wl = self.water_line(t)
@@ -234,8 +276,11 @@ class Water:
                   uCol=_lin(_val("RIPPLE_COLOR", t), "#ffe6c4"))
             self.v_ring.render(moderngl.TRIANGLE_STRIP)
         self._draw_falls(t, wl)
+        self.paint_k = 0.0
         if self.sdata:
             self._rip_uniforms(self.p_sym, rips, wl, cam=False)
+            if self.painted:
+                self._rip_uniforms(self.p_symp, rips, wl, cam=False)
             for sd in self.sdata:
                 self._draw_symbol(sd, t, wl, calm)
 
@@ -243,7 +288,11 @@ class Water:
         pts = []
         for f in self.falls:
             tl = float(f[0])
-            u = (t - (tl - FALL_DUR)) / FALL_DUR
+            # optional: (t, x, y, from x, from y, seconds, trail points): the star's own path, flight time and
+            # trail length; without them the original short steep fall
+            dur = float(f[5]) if len(f) > 5 else FALL_DUR
+            ntr = int(f[6]) if len(f) > 6 else 60
+            u = (t - (tl - dur)) / dur
             if not (0.0 <= u <= 1.08):
                 continue
             x1 = float(f[1])
@@ -251,15 +300,16 @@ class Water:
             sky = self._sky()
             if sky is not None:   # CAMERA: the star lands where the camera shows that spot of the lake now
                 x1, y1 = sky.place((x1, y1), sky.ground_depth(y1))
-            x0, y0 = x1 - 0.13, 0.97
-            for j in range(60):
-                uj = u - j * 0.006
+            x0, y0 = (float(f[3]), float(f[4])) if len(f) > 4 else (x1 - 0.13, 0.97)
+            du = 0.006 if ntr == 60 else 0.006 * (60.0 / ntr) ** 0.5   # a longer trail is also a denser one
+            for j in range(ntr):
+                uj = u - j * du
                 if uj < 0.0 or uj > 1.0:
                     continue
                 e = uj * uj
                 x, y = x0 + (x1 - x0) * e, y0 + (y1 - y0) * e
-                b = (1.0 - j / 60.0) ** 2 * (1.6 if j == 0 else 0.55) * (1.0 - _ss(0.98, 1.08, u))
-                pts.append((x, y, b, 9.0 if j == 0 else 5.0 - 3.0 * j / 60.0))
+                b = (1.0 - j / float(ntr)) ** 2 * (1.6 if j == 0 else 0.55) * (1.0 - _ss(0.98, 1.08, u))
+                pts.append((x, y, b, 9.0 if j == 0 else 5.0 - 3.0 * j / float(ntr)))
         if not pts:
             return
         arr = np.array(pts[:4096], "f4")
@@ -287,7 +337,7 @@ class Water:
         if sky is not None:
             w = float(m.get("depth", 0.80))
             aff, to = sky.aff(w), sky.unplace(to, w)
-        for pr in (self.p_glow, self.p_sym):
+        for pr in (self.p_glow, self.p_sym) + ((self.p_symp,) if self.painted else ()):
             if "uCamAff" in pr:
                 pr["uCamAff"].value = aff
         op = 0.0
@@ -315,9 +365,43 @@ class Water:
                   uCol=S.lin(m.get("light", "#ffcf7a")), uColHot=S.lin("#fff3d8"))
             self.v_glow.render(moderngl.TRIANGLE_STRIP)
         reflect = bool(m.get("reflect", True))
-        passes = [(0.0, 3.2, 0.30, 1.0), (0.0, 15.0, 0.022, 0.4)]
+        stroke = float(m.get("stroke", 1.0))   # optional: thickness of the drawn line (1 = as before)
+        mgain = float(m.get("mirror", 1.0))    # optional: strength of the mirror image in the lake (1 = as before)
+        halo = float(m.get("halo", 1.0))       # optional: strength of the soft glow round the line (1 = as before)
+        passes = [(0.0, 3.2 * stroke, 0.30, 1.0), (0.0, 15.0, 0.022 * halo, 0.4)]
         if reflect:
-            passes += [(1.0, 3.6, 0.30, 0.6), (1.0, 15.0, 0.020, 0.3)]
+            passes += [(1.0, 3.6 * stroke, 0.30 * mgain, 0.6), (1.0, 15.0, 0.020 * mgain * halo, 0.3)]
+        # optional `paint`: while the symbol is here its chosen lines are painted in their own colour and carry
+        # only `paint_light` of their light; as it leaves, the paint goes and the lines are light again. The
+        # mirror image in the lake stays light alone, at its full strength (painted, it was heavier than the
+        # symbol above it: check still of run 43711153933).
+        pk = 0.0
+        if sd.get("vao_paint") is not None:
+            pk = min(float(m.get("paint", 0.0)), 1.0) * (1.0 - _ss(out, out + float(m.get("paint_out", 0.9)), t))
+        if pk > 0.001:
+            lk = 1.0 + (float(m.get("paint_light", 0.3)) - 1.0) * pk
+            groups = [(sd["vao_rest"], 1.0), (sd["vao_lit"], lk)]
+        else:
+            groups = [(sd["vao"], 1.0)]
         for mir, pt, br, hd in passes:
-            _setu(self.p_sym, uMirror=mir, uPt=pt, uBright=br * glow, uHead=hd, **common)
-            sd["vao"].render(moderngl.POINTS)
+            for vao, k in groups:
+                if vao is None:
+                    continue
+                _setu(self.p_sym, uMirror=mir, uPt=pt, uBright=br * glow * (k if mir < 0.5 else 1.0), uHead=hd,
+                      **common)
+                vao.render(moderngl.POINTS)
+        if pk > 0.001:
+            ctx = self.ctx
+            self.f_paint.use()
+            if self.paint_k <= 0.0:   # the first painted symbol of this frame: a clean layer
+                self.f_paint.clear(0.0, 0.0, 0.0, 0.0)
+            ctx.blend_func = (moderngl.ONE, moderngl.ONE_MINUS_SRC_ALPHA)
+            # the line itself, a little wider than its light, and a faint tint round it
+            pw = float(m.get("paint_width", 1.7))
+            pp = [(0.0, 3.2 * stroke * pw, 0.90 * pk), (0.0, 24.0, 0.012 * halo * pk)]
+            for mir, pt, br in pp:
+                _setu(self.p_symp, uMirror=mir, uPt=pt, uBright=br, uHead=0.0, **common)
+                sd["vao_paint"].render(moderngl.POINTS)
+            ctx.blend_func = (moderngl.ONE, moderngl.ONE)
+            self.R.f_L.use()
+            self.paint_k = 1.0

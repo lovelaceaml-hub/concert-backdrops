@@ -138,6 +138,18 @@ void main(){
   o = vec4(vCol*vA*g, 1.0);
 }
 """
+# the same sprite as paint (a symbol's `paint`): colour and coverage, premultiplied, laid over the scene by the
+# composite before the light is added (light alone pales to pink on a blue sky)
+SYM_PAINT_FS = """
+#version 330
+in vec3 vCol; in float vA; out vec4 o;
+void main(){
+  vec2 q = gl_PointCoord*2.0-1.0;
+  float g = exp(-dot(q,q)*4.0)*smoothstep(1.0, 0.7, length(q));
+  float a = clamp(vA*g, 0.0, 1.0);
+  o = vec4(vCol*a, a);
+}
+"""
 
 # ------------------------------------------------------------------ a symbol's soft aura, and the gate's open doorway
 GLOW_VS = """

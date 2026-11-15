@@ -73,7 +73,7 @@ def _tracked(draw, xy_center, text, font, tracking, fill):
     return total
 
 
-def render(label, lines, size, font_path=F_PHRASE, label_alpha=232, y_center=None):
+def render(label, lines, size, font_path=F_PHRASE, label_alpha=232, y_center=None, label_size=32):
     """Returns (rgb texture uint8 HxWx3 bottom-up, particle targets Nx3, bounds)."""
     font, size = _fit(lines, font_path, size)
     asc, desc = font.getmetrics()
@@ -90,9 +90,9 @@ def render(label, lines, size, font_path=F_PHRASE, label_alpha=232, y_center=Non
         x0, x1 = min(x0, W / 2 - wl / 2), max(x1, W / 2 + wl / 2)
     lab = Image.new("L", (W, H), 0)
     if label:
-        lf = ImageFont.truetype(F_LABEL, _px(32))
+        lf = ImageFont.truetype(F_LABEL, _px(label_size))   # optional TITLE["label_size"], default 32
         ld = ImageDraw.Draw(lab)
-        _tracked(ld, (W / 2.0, top - _k(34)), label.upper(), lf, _k(15.0), label_alpha)
+        _tracked(ld, (W / 2.0, top - _k(34)), label.upper(), lf, _k(15.0 * label_size / 32.0), label_alpha)
     sharp = np.maximum(np.asarray(phrase), np.asarray(lab))
     both = Image.fromarray(sharp)
     glow = np.asarray(both.filter(ImageFilter.GaussianBlur(_k(9))))
@@ -131,8 +131,10 @@ def render_tagline(text, title_y=None):
         wl = max(f.getlength(l) for l in lines)
     else:
         ty = (title_y if title_y is not None else END_TITLE_Y) * H
-        f1, s1 = _fit(lines[:1], F_TAG, 64)
-        f2, s2 = _fit(lines[1:], F_TAG, 48)
+        # optional TAGLINE["sizes"] = (first line, the other lines), in 1080p pixels; default 64 and 48
+        sz = (getattr(S, "TAGLINE", None) or {}).get("sizes") or (64, 48)
+        f1, s1 = _fit(lines[:1], F_TAG, int(sz[0]))
+        f2, s2 = _fit(lines[1:], F_TAG, int(sz[1]))
         y = ty + _k(81) + _k(82)               # under the title block (title size 150)
         d.text((W / 2.0, y), lines[0], font=f1, fill=252, anchor="ms")
         y += _k(s1) * 0.55 + _k(s2) * 1.05
@@ -190,7 +192,8 @@ def build_all():
         tex, pts, b = render(p["label"], p["lines"], p["size"], y_center=p.get("y"))   # optional y: centre, from the top
         out.append(dict(tex=tex, pts=pts, bounds=b))
     ty = title_y()
-    tex, pts, b = render(S.TITLE["label"], S.TITLE["lines"], S.TITLE["size"], font_path=F_TITLE, y_center=ty)
+    tex, pts, b = render(S.TITLE["label"], S.TITLE["lines"], S.TITLE["size"], font_path=F_TITLE, y_center=ty,
+                         label_size=S.TITLE.get("label_size", 32))
     title = dict(tex=tex, pts=pts, bounds=b)
     ttex, tb = render_tagline(S.TAGLINE["text"], ty)
     frags = []
