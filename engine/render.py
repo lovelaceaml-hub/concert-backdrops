@@ -60,8 +60,12 @@ def comp_blocks():
     if has("SKY_THEME"):
         out.append("SKY_THEME")
     ts = getattr(S, "TEXT_SHADOW", None)
-    if ts is not None and (callable(ts) or float(ts) < 0.05):
-        out.append("SHADOW_ZERO")      # TEXT_SHADOW can go below 0.05: the veil eases all the way to nothing
+    if ts is not None:
+        # only when TEXT_SHADOW really goes below 0.05 somewhere in the song: there the veil eases to nothing
+        total = float(getattr(S, "TOTAL", 0.0) or S.NFRAMES / S.FPS)
+        low = min(float(ts(k * 0.25)) for k in range(int(total * 4) + 2)) if callable(ts) else float(ts)
+        if low < 0.05:
+            out.append("SHADOW_ZERO")
     metas = list(getattr(S, "PHRASES", [])) + [getattr(S, "TITLE", {}), getattr(S, "TAGLINE", {}),
                                                getattr(S, "CREDIT", {})] + list(getattr(S, "FRAGMENTS", []))
     if any(isinstance(m, dict) and m.get("color") for m in metas):
