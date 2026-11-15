@@ -3,44 +3,38 @@ on the high-energy medley (audio/promo/concert-medley.mp3), built on the 3D laye
 particle people, particle words; engine/UPGRADE-HOWTO.md sections V, W, X, X2).
 
 LOGLINE
-  Mother's love is one white light and her nine words are its colours. A white seed bursts into nine comets,
-  one in each campaign colour; we chase them like a rollercoaster while each one writes its words in the
-  air and wraps the people who live them; where two colours touch there is a flash of white; at the end all
-  nine braid round one column of light, then wrap the world in their colours, leaving hearts across it, and
-  braid into the two hearts of the campaign logo, which blooms into a pastel morning and the end card.
+  Mother's love is one white light and her nine words are its colours. A white seed bursts into nine rivers of
+  light, one in each campaign colour, sweeping across a vast sky of aurora curtains; we ride with them while
+  each one writes its words in the air and blooms into a tender moment with a person of crystal or of gold;
+  where two colours touch there is a flash of light; all nine braid round one column of light, wrap the world
+  in their colours leaving hearts across it, and braid into the two hearts of the campaign logo, which blooms
+  into a pastel morning and the end card.
 
 THE RIDE (song sections of the medley: 0.25, 6.84, 13.30, 19.85, 26.79, 33.36, 40.21 with the breath to
 42.51, 49.47; final hit 58.11)
-  0.00   THE PRISM. Frame 0: a white seed blazes over a black mirror lake, rays fanning from it. On the
-         opening hit (0.25) it bursts into nine comets that fan out across the sky.
-  1.2    LAUNCH, coral. We are launched after the coral comet, low over the water at 24 m/s; it loops up and
-         writes the Greeting ahead of us; the words ride with us, then unspool back into it.
-  6.84   THE GATE, sky blue. The blue comet streaks in from the far shore, writes the Concession, then races
-         ahead stitching half hoops over the water, one per beat; the mirror closes each into a ring. We
-         fly through the tunnel; the words part like doors and let us through.
-  13.30  THE EMBRACE, apricot and pink. We brake into a spiral round two people in warm mist: one kneels,
-         head bowed (Apology, written by the apricot comet); the other lays a hand on the shoulder: white
-         flare; the Apology turns into Inclusiveness while the two comets wrap them in a double helix.
-  19.85  THE DANCER, lavender (bass slam). A dancer turns on the black mirror leading the lavender ribbon
-         from her hand like a gymnast's ribbon; it flicks up and writes the Compliment. Then the HALF LOOP:
-         we ride up the wall and over, upside down, the starred lake above us.
-  26.79  THE DROP, rose and gold. Over the crest and down the dive with the Consideration riding ahead; a
-         helper reaches a hand to a child: white flare; the child blows gold from an open palm that settles
-         into the Gratitude while lanterns rise all round.
-  33.36  THE TWO PROFILES, clay. Head and shoulders, two featureless profiles face each other against a sea
-         of gold lanterns; the clay comet weaves between them and writes the Respect above them.
-  40.21  THE BREATH, violet. Someone kneels in prayer in a shaft of violet light, seen from behind; the
-         Encouragement comes down the shaft and is whole on the biggest hit (42.51), when the eight other
-         comets race in from every side and circle. The one who prays rises into light; the nine comets
-         braid round the column and we corkscrew straight up inside them until they fuse into white.
-  49.47  THE WORLD. A globe of light in space: the nine ribbons wrap it, leaving hearts in their colours
-         across the continents, joined by arcs of light. They braid into the two hearts of the logo, the
-         globe settles between them, its grid and the olive branches draw themselves (54.3 to 55), and the
-         frame blooms into a pastel day; the logo rests in the end card's logo slot, the end card (TITLES)
-         reads from 55 s to the last frame (no fade).
+  0.00   THE PRISM. The opening title over a white seed low over a mirror lake; on the opening hit it bursts
+         into nine rivers of light that fan out low across the water.
+  3.6    LAUNCH, coral. We chase the coral river; it writes the Greeting ahead of us.
+  6.84   THE GATE, sky blue. The blue river writes the Concession and stitches half hoops over the water, one
+         per beat; we fly through the gate of light.
+  13.30  THE EMBRACE. A crystal man stands bowed (Apology, yellow); a gold woman walks to him and holds him
+         (Inclusiveness, green): a flash of light where they meet, the two rivers wrap them in a double helix.
+  19.85  THE DANCER, navy. A crystal dancer leads the navy river from her hand and it writes the Compliment;
+         then the half loop over her.
+  26.79  THE DROP, rose and gold. A dive to two hands, crystal and gold, that find each other (Consideration);
+         a whip to a gold woman who bows with her hand on her heart (Gratitude) while lanterns rise.
+  33.36  THE TWO PROFILES, indigo. A crystal woman speaks with an open hand, a gold man leans in and listens.
+  40.21  THE BREATH, violet. A crystal woman kneels in prayer under a shaft of violet light; "December 6" is
+         written in light across the sky and bursts on the biggest hit (42.51), when the eight other rivers
+         race in and circle; the Encouragement; the nine braid round the column and we corkscrew up inside it.
+  49.47  THE WORLD. A globe of light in space: the nine rivers wrap it, leaving hearts in their colours across
+         the continents, joined by arcs of light. They braid into the two hearts of the logo, the globe settles
+         between them, its grid and the olive branches draw themselves (54.3 to 55), and the frame blooms into
+         a pastel day; the logo rests in the end card's logo slot, the end card (TITLES) reads from 55 s to the
+         last frame (no fade).
 
-HOUSE RULES kept: no facial features (mannequin heads, profiles are outlines), everyone clothed in garments
-of light, Heavenly Mother does not appear (only her light: the seed), all nine expressions with their exact
+HOUSE RULES kept: people only in the two approved looks (crystal light, warm gold glitter), whole and
+radiant, faces soft, everyone clothed in garments of light, Heavenly Mother does not appear (only her light: the seed), all nine expressions with their exact
 campaign wording from words.EXPRESSIONS, each read 2.5 s or more, no lyrics, nothing dark behind text, no
 fade to black, frame 0 bright, the nine colours of the campaign website (PHASEB UPDATE 9).
 """
@@ -85,8 +79,8 @@ BREATH_END = 42.51
 FINAL_HIT = 58.11
 
 # ---------------------------------------------------------------------------------------------------------
-# The nine colours: the campaign website's (PHASEB UPDATE 9; words.COLORS switches to them when WORDS2 lands,
-# the film already wears them). Index = the order of words.EXPRESSIONS.
+# The nine colours: the campaign website's (PHASEB UPDATE 9; words.COLORS, which the words wear). Index = the
+# order of words.EXPRESSIONS.
 # ---------------------------------------------------------------------------------------------------------
 LABELS = PW.LABELS
 WEB = {"Greeting": "#EA5A5E", "Gratitude": "#F2B25E", "Apology": "#F6CE46", "Inclusiveness": "#5ABA5A",
@@ -589,24 +583,22 @@ def place(t, x, y, depth):
 # ---------------------------------------------------------------------------------------------------------
 # The people (built when the scene is set up: the workflow's first job imports this file with numpy only)
 # ---------------------------------------------------------------------------------------------------------
-# THE ACTING PLAN (UPDATE 6, held to UPDATE 12): every ribbon wraps the people who ACT its words while they
-# read, each in a different style and framing; everyone warm, luminous and whole (nobody breaks, sheds shards,
-# disperses or dissolves; no dark bodies).
-#   Greeting       a man on the water turns to us and waves across the distance: a constellation (plexus),
-#                  full figure, far to near as the chase passes him
-#   Concession     a line of six people parting along the gate, each holding an open palm toward the path:
-#                  silhouettes that are windows onto a day sky, releasing birds; many
-#   Apology        a man stands with his head bowed and his hands low: warm glitter; half figure
-#   Inclusiveness  the woman who waited walks to him and they embrace: a dotted body and a glitter body; close
-#   Compliment     a dancer twirls, a light trail of sparks from her hands, while three far figures applaud
-#                  (plexus); full, far
-#   Consideration  hands only: a rose hand reaches down to a gold hand reaching up, and takes it; extreme close-up
-#   Gratitude      a woman bows with her hand on her heart: gold glitter, a little gold light rising; half figure
-#   Respect        two people face each other, one speaking with an open hand, one leaning in to listen:
-#                  a profile filled with sunlit clouds and a profile of warm glitter; close, head and shoulders
-#   Encouragement  someone kneels in prayer, a small sparkling figure in mist, and on the biggest hit eight people
-#                  in the other colours gather round and raise a hand for her; far, then many
-#   The world      none: the globe, the hearts, the logo and the end card
+# THE ACTING PLAN (UPDATE 13: fewer people, more light; two looks only, both radiant and whole: crystal light
+# people, clear and pale with inner light and sparkle, and warm gold glitter people). The nine rivers of light
+# carry the film; a few tender moments bloom where a ribbon reaches someone, and the ribbon wraps them while its
+# words are read, then races on. Nobody breaks, darkens or falls apart.
+#   Greeting       no person: the coral river launches us over the water and writes the words
+#   Concession     no person: the blue river stitches a gate of light over the water and lets us through
+#   Apology        a crystal man stands with his head bowed and his hands open and low; half figure
+#   Inclusiveness  a gold woman walks to him and they embrace, bathed in gold light; close
+#   Compliment     a crystal dancer twirls, the navy river flowing from her hand like a gymnast's ribbon; full
+#   Consideration  hands only: a crystal hand reaching down takes a gold hand reaching up; extreme close-up
+#   Gratitude      a gold woman bows with her hand on her heart, gold light rising from her; half figure
+#   Respect        a crystal woman speaks with an open hand, a gold man leans in to listen; close, profiles
+#   Encouragement  a crystal woman kneels in prayer under falling violet light; far, then the braid
+#   The world      no person: the globe, the hearts, the logo and the end card
+CRYSTAL = dict(look=dict(name="glitter", seams=0.6), color="#d6eaff", color2="#ffffff", bright=1.35)
+GOLD = dict(look="glitter", color="#ffcf7a", color2="#fff1d6", bright=1.15)
 _REFS = {}
 
 
@@ -622,99 +614,60 @@ def _bodies():
     from p3d import pairs
     w = (0.25, 0.0, -0.2)
     B = _BODIES
-    # S1 Greeting: a constellation of a man who turns to the oncoming light and waves
-    B["walker"] = Body("man", at=(2.4, 193.0), facing=8.0, motion="stand", garment="coat", look="plexus",
-                       color=GLOW[GREET], color2="#fff0e6", points=40000, show=(3.55, 7.0), fade=0.3, wind=w,
-                       seed=12.0, gesture=[(3.9, 9.0, "wave", dict(side="R"))],
-                       effects=[dict(kind="form", t=3.55, dur=1.2)])
-    # S2 Concession: a line of people parting along the gate, an open palm toward the path
-    for i in range(6):
-        side = -1.0 if i % 2 == 0 else 1.0
-        z = TUNNEL_Z0 - HOOP_GAP * (0.25 + 0.55 * i)
-        B["gate%d" % i] = Body("woman" if i % 3 != 1 else "man", at=(side * 3.3, z),
-                               facing=90.0 if side < 0 else 270.0, motion="stand", garment="robe", look="window",
-                               color=GLOW[CONC], color2="#ffffff", points=30000, show=(6.9 + 0.15 * i, 11.0),
-                               fade=0.35, wind=w, seed=20.0 + i,
-                               gesture=[(7.2 + 0.25 * i, 14.0, "offer", dict(side="L" if side < 0 else "R"))],
-                               effects=[dict(kind="form", t=6.9 + 0.15 * i, dur=1.1),
-                                        dict(kind="birds", t=8.6 + 0.3 * i, dur=2.0, n=10, size=0.16,
-                                             color="#eaf3ff", speed=2.0)])
-    # S3 Apology and Inclusiveness: he stands bowed, hands low; she comes and holds him
-    # (pairs.embrace's own approach counts the walk from t = 0 in a long song: the walk-in is given here)
+    # S3 Apology and Inclusiveness: he stands bowed, hands open and low; she comes and holds him
+    # (the walk-in is given here, so the two stop exactly where the camera expects them)
     sorry, kind = pairs.embrace(
         TOUCH3 + 0.3, at=(C3[0], C3[2]), facing=90.0, approach=0.0,
-        a=dict(shape="man", garment="tunic", look="glitter", color=GLOW[APOL], color2="#fff1e0", points=60000,
-               at=(C3[0] - 0.17, C3[2]),
+        a=dict(shape="man", garment="tunic", points=60000, at=(C3[0] - 0.17, C3[2]),
                show=(SEC[2] - 0.3, 20.4), fade=0.3, wind=w, seed=3.0,
-               gesture=[(SEC[2], TOUCH3 - 0.5, "bow", dict(amount=24.0)),
-                        (SEC[2] + 0.3, TOUCH3 - 0.6, "offer", dict(side="R"))],
-               effects=[dict(kind="form", t=SEC[2] - 0.2, dur=1.3)]),
-        b=dict(shape="woman", garment="dress", look="dots", color=GLOW[INCL], color2="#ffd9ea", points=60000,
-               at=(C3[0] + 0.17 + 0.90, C3[2]),
+               gesture=[(SEC[2] + 0.1, TOUCH3 - 0.5, "open_hands", dict(bow=24.0))],
+               effects=[dict(kind="form", t=SEC[2] - 0.2, dur=1.3)], **CRYSTAL),
+        b=dict(shape="woman", garment="dress", points=60000, at=(C3[0] + 0.17 + 0.90, C3[2]),
                motion=[(-1e9, "stand"), (15.9, "walk", dict(speed=0.9)), (16.95, "stand", dict(blend=0.8))],
                show=(SEC[2] - 0.3, 20.4), fade=0.3, wind=w, seed=4.0,
-               effects=[dict(kind="form", t=SEC[2] + 0.1, dur=1.4)]))
+               effects=[dict(kind="form", t=SEC[2] + 0.1, dur=1.4),
+                        dict(kind="shed", t=17.2, until=19.9, n=2500, life=1.6, speed=0.15, rise=0.35,
+                             color="#ffe2a8")], **GOLD))
     B["sorry"], B["kind"] = sorry, kind
-    # S4 Compliment: a dancer twirls, sparks trailing from her hands; three far figures applaud
+    # S4 Compliment: a crystal dancer twirls, the navy river flowing from her hand, sparks trailing
     B["dancer"] = Body("woman", at=(D4[0], D4[2]), facing=30.0, motion=[(17.5, "dance")], garment="dress",
-                       look="glitter", color=GLOW[COMP], color2="#f4ecff", points=75000, bright=1.25,
-                       show=(SEC[3] - 0.1, LOOP_T1 + 0.3), fade=0.15, wind=(0.0, 0.0, 0.0), seed=6.0,
+                       points=75000, show=(SEC[3] - 0.1, LOOP_T1 + 0.3), fade=0.15, wind=(0.0, 0.0, 0.0), seed=6.0,
                        effects=[dict(kind="form", t=SEC[3] - 0.1, dur=0.9),
                                 dict(kind="shed", t=21.0, until=25.2, n=2600, life=1.3, where="hands",
-                                     speed=0.35, rise=0.25, color="#ffd9b0")])
-    for i, (az, r) in enumerate(((205.0, 7.5), (235.0, 8.5), (262.0, 7.8))):
-        p = D4 + at3(az, r)
-        B["fan%d" % i] = Body(("man", "woman", "man")[i], at=(p[0], p[2]), facing=(az + 180.0) % 360.0,
-                              motion="stand", garment=("coat", "dress", "tunic")[i], look="plexus", color=GLOW[COMP],
-                              color2="#ffffff", points=26000, show=(SEC[3], LOOP_T0 + 0.5), fade=0.3, seed=30.0 + i,
-                              gesture=[(20.6 + 0.2 * i, 26.0, "clap", dict(period=0.46 + 0.03 * i, height=0.6))])
-    # S5 Consideration: hands only, a rose hand reaching down takes a gold hand reaching up
-    hs = Hands(meet=tuple(H5), t_touch=HANDS_T, axis=90.0, color=GLOW[GRAT], color2=GLOW[CONS], approach=2.6,
-               apart=0.55, tilt=18.0, points=70000, bright=1.6)
-    B["hand_gold"], B["hand_rose"] = hs["left"], hs["right"]
+                                     speed=0.35, rise=0.25, color="#e6f0ff")], **CRYSTAL)
+    # S5 Consideration: hands only, a crystal hand reaching down takes a gold hand reaching up
+    hs = Hands(meet=tuple(H5), t_touch=HANDS_T, axis=90.0, color=GOLD["color"], color2=CRYSTAL["color"],
+               approach=2.6, apart=0.55, tilt=18.0, points=70000, bright=1.6)
+    B["hand_gold"], B["hand_crystal"] = hs["left"], hs["right"]
     for hb in (hs["left"], hs["right"]):          # the hands exist only in their section
         hb.show = (SEC[4], 30.35)
     _REFS["hands_flare"] = hs["flare"]
-    # S5 Gratitude: a bow with a hand on the heart, gold glitter dissolving
-    B["bower"] = Body("woman", at=(E5[0], E5[2]), facing=6.0, motion="stand", garment="dress", look="glitter",
-                      color=GLOW[GRAT], color2="#fff4d8", points=70000, show=(29.9, SEC[5] + 0.2), fade=0.3, seed=7.0,
-                      gesture=[(30.4, 40.0, "touch", dict(side="R", palm="in",
-                                                           to=lambda t: _REFS["bower"].where(t, "heart", raw=True))),
-                               (30.9, 40.0, "bow", dict(amount=26.0))],
+    # S5 Gratitude: a gold woman bows with her hand on her heart, gold light rising from her
+    B["bower"] = Body("woman", at=(E5[0], E5[2]), facing=6.0, motion="stand", garment="dress",
+                      points=70000, show=(29.9, SEC[5] + 0.2), fade=0.3, seed=7.0,
+                      gesture=[(30.4, 40.0, "hand_on_heart", dict(side="R", bow=18.0))],
                       effects=[dict(kind="form", t=29.9, dur=1.0),
-                               dict(kind="shed", t=30.6, dir=(0.0, 1.0, -0.3), speed=0.25, rise=0.25, n=5000)])
+                               dict(kind="shed", t=30.6, dir=(0.0, 1.0, -0.3), speed=0.25, rise=0.25, n=5000)],
+                      **GOLD)
     _REFS["bower"] = B["bower"]
-    # S6 Respect: one speaks with an open hand, one leans in to listen; a profile of sunrise, a profile of sparks
+    # S6 Respect: a crystal woman speaks with an open hand, a gold man leans in to listen
     B["speaker"] = Body("woman", at=(F6[0] - 0.45, F6[2]), facing=90.0, motion="stand", garment="dress",
-                        look="window", color=GLOW[RESP], color2="#ffe8d6", points=60000,
-                        show=(SEC[5] - 0.2, SEC[6] + 0.2), fade=0.2, seed=9.0,
-                        gesture=[(34.2, 40.0, "offer", dict(side="L"))],
-                        effects=[dict(kind="form", t=SEC[5] - 0.2, dur=1.2)])
+                        points=60000, show=(SEC[5] - 0.2, SEC[6] + 0.2), fade=0.2, seed=9.0,
+                        gesture=[(34.2, 40.0, "explain", dict(side="L"))],
+                        effects=[dict(kind="form", t=SEC[5] - 0.2, dur=1.2)], **CRYSTAL)
     B["listener"] = Body("man", at=(F6[0] + 0.45, F6[2]), facing=270.0, motion="stand", garment="coat",
-                         look="glitter", bright=0.85, color=GLOW[RESP], color2="#fff0e0",
                          points=80000, detail=dict(head=3), show=(SEC[5] - 0.2, SEC[6] + 0.2), fade=0.2, seed=10.0,
-                         effects=[dict(kind="form", t=SEC[5], dur=1.2),
-                                  dict(kind="shed", t=SEC[5] + 0.5, where="back", dir=(1, 0.3, 0), speed=0.3,
-                                       n=3000)],
-                         gesture=[(34.6, 40.0, "listen", dict(side="R"))])
-    # S7 Encouragement: a small sparkling figure kneeling in prayer in mist; a crowd raises a hand for her
+                         effects=[dict(kind="form", t=SEC[5], dur=1.2)],
+                         gesture=[(34.6, 40.0, "lean_in", dict(to=lambda t: F6 + _v(-0.45, 1.55, 0.0),
+                                                                amount=0.6)),
+                                  (35.2, 40.0, "nod", dict(period=1.6, amount=8.0))], **GOLD)
+    # S7 Encouragement: a crystal woman kneels in prayer under falling violet light
     B["praying"] = Body("woman", at=(G7[0], G7[2]), facing=180.0, motion=[(37.0, "kneel")],
-                        gesture=[(37.0, 60.0, "pray")], garment="robe", veil=True, look="glitter", color=GLOW[ENC],
-                        color2="#e8dcff", points=50000, bright=0.75, show=(SEC[6] - 0.1, BRAID_T0 + 1.6), fade=1.0, seed=11.0,
+                        gesture=[(37.0, 60.0, "pray")], garment="robe", veil=True, points=50000,
+                        show=(SEC[6] - 0.1, BRAID_T0 + 1.6), fade=1.0, seed=11.0,
                         effects=[dict(kind="form", t=SEC[6], dur=1.6),
-                                 dict(kind="shed", t=SEC[6] + 0.5, speed=0.12, rise=0.18, n=6000, life=3.5)])
-    others = [k for k in range(9) if k != ENC]
-    for j, k in enumerate(others):
-        az = 118.0 + 124.0 * j / 7.0
-        p = G7 + at3(az, 10.5 + 0.8 * (j % 2))
-        B["crowd%d" % j] = Body(("woman", "man", "child", "woman", "man", "woman", "man", "woman")[j],
-                                at=(p[0], p[2]), facing=(az + 180.0) % 360.0, motion="stand",
-                                garment=("robe", "coat", "tunic")[j % 3], look="glitter", color=GLOW[k],
-                                color2="#ffffff", points=24000, bright=0.9,
-                                show=(BREATH_END - 0.25, BRAID_T0 + 0.9), fade=0.9, seed=40.0 + j,
-                                gesture=[(BREATH_END + 0.2 + 0.08 * j, 60.0, "raise_hand",
-                                          dict(side="R" if j % 2 else "L"))],
-                                effects=[dict(kind="form", t=BREATH_END - 0.25, dur=0.9)])
+                                 dict(kind="shed", t=SEC[6] + 0.5, speed=0.12, rise=0.18, n=6000, life=3.5,
+                                      color="#e4d8ff")], **CRYSTAL)
     return _BODIES
 
 
@@ -923,9 +876,7 @@ _SPECS = [            # every leaving is a clean fade (no broken letters in any 
     dict(expr="Encouragement", pos=_AT7, face="camera", width=_width(43.9, _dist(43.9, _AT7), 0.66),
          t_in=42.6, t_read0=43.0, t_read1=45.5, t_out=45.75, arrive="reveal", edge="down", leave="fade"),
 ]
-for _d in _SPECS:                       # each in its website colour (glowing: the navy a brighter navy)
-    _d.setdefault("color", COL[LABELS.index(_d["expr"])])
-    _d.setdefault("glow", GLOW[LABELS.index(_d["expr"])])
+
 def _clean_leave(t, info):
     """Every word leaves in place and sharp, thinning out evenly: never smeared, drifting or broken letters."""
     if info["state"] == "leave":
@@ -1107,7 +1058,7 @@ class Comets:
             a = a * (quiet + (1.0 - quiet) * near)
             if a <= 0.002:
                 return
-            tail = 0.55 * near + 2.2 * (1.0 - near)
+            tail = 0.85 * near + 2.2 * (1.0 - near)
             if BRAID_T0 - 0.2 < t:
                 tail = 0.45
             w = 0.30 * near + 1.6 * (1.0 - near)
@@ -1137,6 +1088,7 @@ class Comets:
             c = lin(GLOW[k])
             deep = deepen(GLOW[k])
             core = 0.35 * c + 0.65 * lin(WHITE)
+            out.append(_rib(pts, w * 4.2 * (0.25 + 0.75 * kk), c, a * 0.09 * np.clip(kk * 1.3, 0, 1), emit=1.0))
             out.append(_rib(pts, w * (0.12 + 0.88 * kk), deep, a * 0.55 * np.clip(kk * 1.4, 0, 1), emit=1.6))
             out.append(_rib(pts, w * 0.22 * (0.15 + 0.85 * kk), core, a * 0.95 * np.clip(kk * 1.6, 0, 1), emit=2.6))
             head = pts[-1:]
@@ -1696,6 +1648,45 @@ class LogoFill:
         return _sc(DAY_T + 0.35, DAY_T + 1.1, t)
 
 
+class Aurora:
+    """Curtains of aurora light hung far away round the whole journey (rose, violet, teal and gold), rippling
+    slowly: the vast heavenly sky the nine rivers sweep across. Gone in the world finale."""
+    wants_camera = False
+
+    def __init__(self):
+        r = np.random.default_rng(81)
+        cols = [("#7affd8", "#b07cff"), ("#ff8fc8", "#ffd27a"), ("#8fd0ff", "#c7a0ff"), ("#ffb48a", "#ff7ab0"),
+                ("#9effc4", "#7aa8ff"), ("#ffd08a", "#ff9ad0")]
+        self.cur = []
+        for i, az in enumerate((150.0, 195.0, 240.0, 300.0, 20.0, 85.0)):
+            m = 1500
+            u = r.random(m)
+            v = r.random(m) ** 1.6                         # bright at the foot, thinning upward
+            c0, c1 = lin(cols[i][0]), lin(cols[i][1])
+            col = c0[None, :] * (1.0 - v)[:, None] + c1[None, :] * v[:, None]
+            self.cur.append(dict(az=np.radians(az), span=np.radians(34.0 + 10.0 * r.random()), u=u, v=v, col=col,
+                                 R=820.0 + 160.0 * r.random(), base=55.0 + 25.0 * r.random(),
+                                 h=170.0 + 60.0 * r.random(), ph=r.random() * 6.0, seed=r.random(m)))
+
+    def sample(self, t):
+        k = 1.0 - _sc(SEC[7] - 0.4, SEC[7], t)
+        if k <= 0.0:
+            return None
+        out = []
+        for c in self.cur:
+            a = c["az"] + (c["u"] - 0.5) * c["span"] + 0.02 * np.sin(0.3 * t + c["ph"])
+            wave = 26.0 * np.sin(5.0 * c["u"] * 2.0 * np.pi / 3.0 + 0.5 * t + c["ph"]) \
+                + 9.0 * np.sin(17.0 * c["u"] + 1.3 * t + c["ph"])
+            R = c["R"] + wave
+            y = c["base"] + c["h"] * c["v"] * (0.75 + 0.25 * np.sin(9.0 * c["u"] + 0.7 * t + c["ph"]))
+            pos = np.stack([np.sin(a) * R, y, np.cos(a) * R], axis=1)
+            glow = 0.55 + 0.45 * np.sin(6.0 * c["u"] - 0.9 * t + c["ph"]) ** 2
+            out.append(dict(pos=pos, size=34.0 + 20.0 * c["seed"], color=c["col"],
+                            alpha=k * 0.05 * glow * (1.0 - 0.8 * c["v"]), kind="soft", dof=0.0, fog=0.25,
+                            reflect=True, seed=c["seed"]))
+        return out
+
+
 def _while_shown(body):
     """A mask strength that is on only while the body is shown, so a window mask never holds a sky layer later."""
     sh = getattr(body, "show", None)
@@ -1720,6 +1711,7 @@ def _setup(scene):
     scene.add("flares", ScreenClear(Flares()))
     scene.add("comets", PW.KeepClear(Comets(), WORDS))
     scene.add("hearts", ScreenClear(Hearts()), reflect=False)
+    scene.add("aurora", Aurora(), depth_of_field=False)
     from p3d.api import Mask
     scene.add("globe_shadow", GlobeShadow(), reflect=False,
               mask=Mask("dark", strength=GlobeShadow.strength, grow=GlobeShadow.GROW, soft=2.0))
@@ -1763,16 +1755,18 @@ def _light_str(which):
 
 
 LOOKS = dict(
-    gate=dict(base="night", mist=0.22, mist_color="#0e2148", haze=0.25, haze_color="#0a1636", stars=0.7),
-    embrace=dict(base="night", mist=0.28, mist_color="#2a1020", haze=0.3, haze_color="#1e0c1a", stars=0.5,
-                 sky_top="#04020a", sky_mid="#120818", sky_hor="#2a1224"),
-    floor=dict(base="night", mist=0.05, haze=0.1, stars=1.0, milky=0.8),
-    drop=dict(base="night", sky_top="#05030c", sky_mid="#140a1c", sky_hor="#341426", mist=0.12,
-              mist_color="#2a1020", haze=0.25, haze_color="#1e0c16", stars=0.8, milky=0.4),
-    ember=dict(base="night", sky_top="#05040a", sky_mid="#1a0f0c", sky_hor="#3a2210", haze=0.5,
-               haze_color="#3a2410", mist=0.35, mist_color="#2a1c10", stars=0.3, milky=0.0),
-    prayer=dict(base="night", sky_top="#03020e", sky_mid="#0e0a2e", sky_hor="#1e1648", mist=0.08,
-                mist_color="#1a1440", stars=1.0, milky=0.9),
+    gate=dict(base="predawn", sky_top="#060a26", mist=0.22, mist_color="#3a3070", haze=0.25,
+              haze_color="#4a3a72", stars=0.8, milky=0.5, sun_disc=0.0),
+    embrace=dict(base="dusk", sky_top="#08061c", sky_mid="#2a1a4a", sky_hor="#9a5a6a", mist=0.28,
+                 mist_color="#6a4050", haze=0.3, haze_color="#5a3848", stars=0.6, sun_disc=0.0),
+    floor=dict(base="predawn", sky_top="#04061c", sky_mid="#1e1a4a", sky_hor="#6a4a7a", mist=0.05, haze=0.1,
+               stars=1.0, milky=0.9, sun_disc=0.0),
+    drop=dict(base="dawn", sky_top="#0a1240", sky_mid="#3a2a64", sky_hor="#c87070", mist=0.12,
+              mist_color="#5a3a5a", haze=0.25, haze_color="#6a4058", stars=0.6, milky=0.3, sun_disc=0.0),
+    ember=dict(base="sunrise", sky_top="#0c1640", sky_mid="#4a2e62", sky_hor="#d8804a", haze=0.45,
+               haze_color="#7a4a30", mist=0.3, mist_color="#6a4028", stars=0.3, milky=0.0, sun_disc=0.0),
+    prayer=dict(base="predawn", sky_top="#04031a", sky_mid="#1c1448", sky_hor="#5a3a82", mist=0.08,
+                mist_color="#2a2050", stars=1.0, milky=0.9, sun_disc=0.0),
     space=dict(base="night", sky_top="#010208", sky_mid="#02040f", sky_hor="#060b20", hills=0.0, haze=0.0,
                mist=0.0, stars=1.0, milky=0.9, clouds=0.0, dust=0.12, bokeh=0.15, water="#010206", mirror=0.55,
                sun_int=0.0, sun_el=55.0),
@@ -1795,9 +1789,16 @@ WORLD = dict(
     react=dict(beat=0.35, level=0.25),
 )
 
+def _gold_shaft(at, t0, t1, radius=0.9):
+    """A shaft of warm gold light from high above onto a tender moment (the embrace, the bow of thanks)."""
+    return dict(base=(float(at[0]), float(at[2])), radius=radius, top=float(at[1]) + 16.0, spread=-0.5,
+                color="#ffd89a", strength=lambda t: 0.75 * _sc(t0, t0 + 0.8, t) * (1.0 - _sc(t1 - 0.4, t1, t)))
+
+
 P3D = dict(
     camera=CAMERA,
-    world=dict(WORLD, shafts=[WORDS["Encouragement"].shaft(color="#c9b4ff", strength=0.9)]),
+    world=dict(WORLD, shafts=[WORDS["Encouragement"].shaft(color="#c9b4ff", strength=0.9),
+                              _gold_shaft(C3, 16.9, 20.0), _gold_shaft(E5, 30.3, SEC[5] + 0.1)]),
     setup=_setup,
     bursts=[
             dict(t=SEC[3], strength=1.8, rise=0.08, fall=0.28, color=GLOW[COMP]),
