@@ -154,8 +154,9 @@ def glyphs(label, lines, n=42000, n_label=6000, label_size=0.36, font=None):
         d = ImageDraw.Draw(im)
         for i, l in enumerate(lines):
             d.text((wc / 2.0, top + i * line_h + asc * 0.80), l, font=f, fill=255, anchor="ms")
+        pre = [[f.getlength(l[:k]) for k in range(len(l) + 1)] for l in lines]   # where each letter starts
         return np.asarray(im, np.float32) / 255.0, dict(px=int(px), cx=wc / 2.0, top=top, line_h=line_h,
-                                                        cy=top + line_h * len(lines) / 2.0, w=max(wl))
+                                                        cy=top + line_h * len(lines) / 2.0, w=max(wl), pre=pre)
 
     b = 3
     cov, m = phrase(240)
@@ -169,6 +170,41 @@ def glyphs(label, lines, n=42000, n_label=6000, label_size=0.36, font=None):
     cell = np.full(x.size, b / px, np.float32)
     block = m["line_h"] * len(lines) / px
     out_x, out_y, out_w, out_lab, out_line, out_cell = [ex], [ey], [w], [lab], [line], [cell]
+    # which glyph and which word each point belongs to, and how far along the writing it is
+    chars, g_line, g_word = [], [], []
+    glyph = np.zeros(x.size, np.int32)
+    frac = np.zeros(x.size, np.float32)
+    n_words = 0
+    for li, l in enumerate(lines):
+        pre = np.asarray(m["pre"][li], np.float64)
+        ids = np.full(len(l), -1, np.int64)
+        prev_space = True
+        for k, c in enumerate(l):
+            if c.isspace():
+                prev_space = True
+                continue
+            if prev_space:
+                n_words += 1
+                prev_space = False
+            ids[k] = len(chars)
+            chars.append(c)
+            g_line.append(li)
+            g_word.append(n_words - 1)
+        sel = np.nonzero(line == li)[0]
+        xr = x[sel] - (m["cx"] - pre[-1] / 2.0)
+        k = np.clip(np.searchsorted(pre, xr, side="right") - 1, 0, len(l) - 1)
+        for _ in range(3):                             # ink that overhangs a space belongs to the nearer letter
+            sp = ids[k] < 0
+            if not sp.any():
+                break
+            nearer_left = (xr - pre[k]) < (pre[k + 1] - xr)
+            k = np.where(sp, np.clip(np.where(nearer_left, k - 1, k + 1), 0, len(l) - 1), k)
+        k = np.where(ids[k] < 0, np.clip(k - 1, 0, len(l) - 1), k)
+        glyph[sel] = np.maximum(ids[k], 0)
+        frac[sel] = np.clip((xr - pre[k]) / np.maximum(pre[k + 1] - pre[k], 1e-6), 0.0, 1.0)
+    n_glyphs = len(chars)
+    order = ((glyph + frac) / max(n_glyphs, 1)).astype(np.float32)
+    out_glyph, out_order = [glyph], [order]
     label_cap = 0.0
     if label:
         def lab_img(lpx):
@@ -180,7 +216,12 @@ def glyphs(label, lines, n=42000, n_label=6000, label_size=0.36, font=None):
             im = Image.new("L", (wc, hc), 0)
             base = int(1.5 * lpx)
             tracked(ImageDraw.Draw(im), (wc / 2.0, base), text, lf, track, 255)
-            return np.asarray(im, np.float32) / 255.0, dict(px=int(lpx), cx=wc / 2.0, base=base)
+            adv = [lf.getlength(c) for c in text]
+            edges = [wc / 2.0 - tw / 2.0 - track / 2.0]
+            for a_ in adv:
+                edges.append(edges[-1] + a_ + track)
+            return np.asarray(im, np.float32) / 255.0, dict(px=int(lpx), cx=wc / 2.0, base=base, edges=edges,
+                                                            text=text)
 
         lc, lm = lab_img(200)
         lpx = int(np.clip(200.0 * np.sqrt(n_label * b * b / max(float(lc.sum()), 1.0)), 60, 900))
@@ -195,11 +236,35 @@ def glyphs(label, lines, n=42000, n_label=6000, label_size=0.36, font=None):
         out_line.append(np.zeros(lx.size, np.int32))
         out_cell.append(np.full(lx.size, b * s, np.float32))
         label_cap = CAP_HEIGHT * float(label_size)
+        edges = np.asarray(lm["edges"], np.float64)
+        text = lm["text"]
+        k = np.clip(np.searchsorted(edges, lx, side="right") - 1, 0, len(text) - 1)
+        ids = np.full(len(text), -1, np.int64)
+        prev_space = True
+        for kk, c in enumerate(text):
+            if c.isspace():
+                prev_space = True
+                continue
+            if prev_space:
+                n_words += 1
+                prev_space = False
+            ids[kk] = len(chars)
+            chars.append(c)
+            g_line.append(-1)
+            g_word.append(n_words - 1)
+        k = np.where(ids[k] < 0, np.clip(k - 1, 0, len(text) - 1), k)
+        lg = np.maximum(ids[k], n_glyphs)
+        lf_ = np.clip((lx - edges[k]) / np.maximum(edges[k + 1] - edges[k], 1e-6), 0.0, 1.0)
+        out_glyph.append(lg.astype(np.int32))
+        out_order.append(((lg - n_glyphs + lf_) / max(len(chars) - n_glyphs, 1)).astype(np.float32))
     x = np.concatenate(out_x).astype(np.float32)
     y = np.concatenate(out_y).astype(np.float32)
     perm = rng.permutation(x.size)                     # any leading part of the points is spread evenly
     g = dict(x=x[perm], y=y[perm], w=np.concatenate(out_w)[perm], lab=np.concatenate(out_lab)[perm],
              line=np.concatenate(out_line)[perm], cell=np.concatenate(out_cell)[perm],
+             glyph=np.concatenate(out_glyph)[perm], order=np.concatenate(out_order)[perm],
+             chars=chars, glyph_line=np.asarray(g_line, np.int32), glyph_word=np.asarray(g_word, np.int32),
+             n_glyphs=n_glyphs, n_words=n_words,
              x0=float(x.min()), x1=float(x.max()), y0=float(y.min()), y1=float(y.max()),
              width=float(m["w"] / px), block=float(block), label_cap=label_cap, lines=len(lines))
     _GLYPHS[key] = g
@@ -222,6 +287,11 @@ def _ss(a, b, x):
 def _unit(v):
     v = np.asarray(v, np.float64)
     return v / max(float(np.linalg.norm(v)), 1e-9)
+
+
+def _num(v, t):
+    """A setting that may be a number or a function of t."""
+    return float(v(t)) if callable(v) else float(v)
 
 
 def _col(c):
@@ -302,10 +372,11 @@ class Word:
     wants_camera = True
 
     def __init__(self, label="", lines=(), expr=None, pos=(0.0, 3.0, 0.0), width=8.0, em=None, facing=0.0,
-                 face="fixed", tilt=0.0, curve=0.0, t_in=0.0, t_read0=2.5, t_read1=5.5, t_out=8.0, arrive=None,
+                 face=None, tilt=0.0, curve=0.0, t_in=0.0, t_read0=2.5, t_read1=5.5, t_out=8.0, arrive=None,
                  leave=None, source=None, to=None, color=None, glow=None, tint=0.45, bright=1.0, halo=1.0,
-                 sparkle=1.0, sharp=1.0, fog=0.25, n=42000, n_label=6000, label_size=0.36, dot=1.9, name=None,
-                 wind=None, font=None, **opts):
+                 sparkle=1.0, sharp=1.0, fog=0.0, n=42000, n_label=6000, label_size=0.36, dot=1.9, name=None,
+                 wind=None, font=None, roll=0.0, ride=None, bind=None, camera=None, drive=None, reflect=None,
+                 **opts):
         if expr is not None:
             e = EXPRESSIONS[expr - 1] if isinstance(expr, int) else EXPRESSIONS[LABELS.index(expr)]
             label, lines = e["label"], e["lines"]
@@ -321,9 +392,13 @@ class Word:
         if self.leave not in LEAVINGS:
             raise ValueError(f"word {self.name!r}: leave must be one of {LEAVINGS}, got {self.leave!r}")
         self.pos, self.width, self.em = pos, float(width), em
-        self.facing, self.face, self.tilt, self.curve = float(facing), face, float(tilt), float(curve)
-        if face not in ("fixed", "camera", "screen"):
-            raise ValueError(f"word {self.name!r}: face must be fixed, camera or screen")
+        face = face or ("screen" if ride is not None else "fixed")   # a word that rides with the camera lies flat to the picture
+        self.facing, self.face, self.tilt, self.curve, self.roll = facing, face, tilt, float(curve), roll
+        if face not in ("fixed", "camera", "screen", "flat"):
+            raise ValueError(f"word {self.name!r}: face must be fixed, camera, screen or flat")
+        self.ride, self.bind, self.camera, self.drive = ride, bind, camera, drive
+        self.reflect = (face != "flat") if reflect is None else bool(reflect)   # a word lying on the water has no mirror image
+        self._others = []
         self.t_in, self.t_read0, self.t_read1, self.t_out = (float(t_in), float(t_read0), float(t_read1),
                                                              float(t_out))
         self.source, self.to = source, to
@@ -360,28 +435,58 @@ class Word:
         k = self.metres_per_em()
         return tuple(v * k for v in e)
 
-    def centre(self, t):
+    def _cam(self, t, cam=None):
+        """The camera at t: the one given, else the word's own (`camera=`, or the one its Words set knows)."""
+        if cam is not None:
+            return cam
+        return _cam_at(self.camera, t) if self.camera is not None else None
+
+    def centre(self, t, cam=None):
+        """The centre of the phrase block in the world at t."""
+        if self.ride is not None:
+            c = self._cam(t, cam)
+            if c is None:
+                raise ValueError(f"word {self.name!r}: ride needs a camera (give camera= to the word or to Words)")
+            rd = self.ride(t) if callable(self.ride) else self.ride
+            return place(c, t, float(rd[0]), float(rd[1]), float(rd[2]))
+        if self.bind is not None:
+            return np.asarray(self.bind(np.zeros(1), np.zeros(1), t), np.float64).reshape(-1, 3)[0]
         p = self.pos(t) if callable(self.pos) else self.pos
         return np.asarray(p, np.float64)
 
     def frame(self, t, cam=None):
         """(centre, right, up, normal) of the plane at t: unit vectors in the world. The words read from left
         to right for someone the normal points at."""
-        o = self.centre(t)
+        cam = self._cam(t, cam)
+        o = self.centre(t, cam)
+        if self.bind is not None:
+            # a word bound to a moving surface: the frame is the surface's own at the word's centre
+            e = 0.5 * self.metres_per_em()
+            q = np.asarray(self.bind(np.array([0.0, e, 0.0]), np.array([0.0, 0.0, e]), t), np.float64).reshape(3, 3)
+            r, u = _unit(q[1] - q[0]), _unit(q[2] - q[0])
+            n = _unit(np.cross(r, u))
+            return q[0], r, _unit(np.cross(n, r)), n
         if self.face == "screen" and cam is not None:
             r, u, f = cam.basis()
-            return o, r, u, -f
-        if self.face == "camera" and cam is not None:
-            d = np.asarray(cam.pos, np.float64) - o
-            a = np.arctan2(d[0], d[2])
+            n = -f
         else:
-            a = np.radians(self.facing)
-        n = np.array([np.sin(a), 0.0, np.cos(a)])
-        r = np.array([np.cos(a), 0.0, -np.sin(a)])
-        u = np.array([0.0, 1.0, 0.0])
-        if self.tilt:
-            k = np.radians(self.tilt)
+            if self.face == "camera" and cam is not None:
+                d = np.asarray(cam.pos, np.float64) - o
+                a = np.arctan2(d[0], d[2])
+            else:
+                a = np.radians(_num(self.facing, t))
+            n = np.array([np.sin(a), 0.0, np.cos(a)])
+            r = np.array([np.cos(a), 0.0, -np.sin(a)])
+            u = np.array([0.0, 1.0, 0.0])
+            if self.face == "flat":                    # lying on the water, read from above
+                u, n = -n, np.array([0.0, 1.0, 0.0])
+        tilt, roll = _num(self.tilt, t), _num(self.roll, t)
+        if tilt:
+            k = np.radians(tilt)
             u, n = u * np.cos(k) - n * np.sin(k), n * np.cos(k) + u * np.sin(k)
+        if roll:
+            k = np.radians(roll)
+            r, u = r * np.cos(k) + u * np.sin(k), u * np.cos(k) - r * np.sin(k)
         return o, r, u, n
 
     def _build(self):
@@ -413,6 +518,11 @@ class Word:
         self.yn = ((self.yl - self.ybot) / max(self.Ht, 1e-6)).astype(np.float32)
         nl = g["lines"]
         self.ord = np.where(self.lab, 0.5 * xn / nl, (g["line"] + xn) / nl).astype(np.float32)   # reading order
+        self.glyph, self.gline, self.gword, self.chars = g["glyph"], g["glyph_line"], g["glyph_word"], g["chars"]
+        self.order = g["order"]                                    # 0..1 along the phrase (the label: along itself)
+        # one writing order for everything: the label is written first, then the phrase
+        share = 0.14 if self.lab.any() else 0.0
+        self.worder = np.where(self.lab, share * self.order, share + (1.0 - share) * self.order).astype(np.float32)
         self.rho = np.hypot(self.xl, self.yl - self.ymid).astype(np.float32)
         self.rho_max = float(self.rho.max())
         self.phi = np.arctan2(self.yl - self.ymid, self.xl).astype(np.float32)
@@ -448,18 +558,45 @@ class Word:
         self._g = g
 
     def targets(self, t, cam=None):
-        """World positions (N, 3) of the settled letters at t."""
+        """World positions (N, 3) of the settled letters at t: every point's home place."""
         self._build()
+        if self.bind is not None:
+            return np.asarray(self.bind(self.xl, self.yl, t), np.float32).reshape(-1, 3)
         o, r, u, nrm = self.frame(t, cam)
         return (o[None, :] + self.xl[:, None] * r[None, :] + self.yl[:, None] * u[None, :]
                 + self.zl[:, None] * nrm[None, :]).astype(np.float32)
 
+    def home(self):
+        """Every point's fixed place in the word, for directors who drive reveals and morphs themselves.
+
+        A dict of arrays, one entry per point (label included), in a fixed order that never changes:
+          x, y, z   metres on the word's plane from the centre of the phrase block (x right, y up, z out)
+          line      the line of the phrase (0, 1); -1 for the label
+          word      which word of the text (0.. in reading order; the label's words come after the phrase's)
+          glyph     which letter (0.. in reading order; the label's letters come after the phrase's)
+          order     0..1 along the writing of the phrase (for label points: along the label)
+          write     0..1 along the writing of everything (the label first, then the phrase)
+          label     True for the label's points
+          weight    0..1 (edge points weigh less: the antialiasing), size: the sprite's diameter in metres
+        and: chars (the letter of each glyph), glyph_line, glyph_word (per glyph), n, n_glyphs, n_words.
+        `targets(t, cam)` gives the same points in the world at t; `frame(t, cam)` the plane itself."""
+        self._build()
+        g = self._g
+        return dict(x=self.xl, y=self.yl, z=self.zl, line=np.where(self.lab, -1, g["line"]).astype(np.int32),
+                    word=self.gword[self.glyph], glyph=self.glyph, order=self.order, write=self.worder,
+                    label=self.lab, weight=self.wt, size=self.size0, chars=list(self.chars),
+                    glyph_line=self.gline, glyph_word=self.gword, n=self.N, n_glyphs=int(g["n_glyphs"]),
+                    n_words=int(g["n_words"]))
+
     def corners(self, t, cam=None, pad=0.0):
         """The four corners of the text (label included) in the world: for screen checks."""
         x0, x1, y0, y1 = self.extent()
+        cs = ((x0, -1, y0, -1), (x1, 1, y0, -1), (x1, 1, y1, 1), (x0, -1, y1, 1))
+        if self.bind is not None:
+            return np.asarray(self.bind(np.array([c[0] + c[1] * pad for c in cs]),
+                                        np.array([c[2] + c[3] * pad for c in cs]), t), np.float64).reshape(4, 3)
         o, r, u, _ = self.frame(t, cam)
-        return np.array([o + (x + sx * pad) * r + (y + sy * pad) * u
-                         for x, sx, y, sy in ((x0, -1, y0, -1), (x1, 1, y0, -1), (x1, 1, y1, 1), (x0, -1, y1, 1))])
+        return np.array([o + (x + sx * pad) * r + (y + sy * pad) * u for x, sx, y, sy in cs])
 
     def state(self, t):
         """'out', 'arrive', 'read' or 'leave' at t."""
@@ -532,10 +669,14 @@ class Word:
         if st == "out":
             return []
         self._build()
+        cam = self._cam(t, cam)
         o, r, u, nrm = self.frame(t, cam)
         F = (o, r, u, nrm)
-        tg = (o[None, :] + self.xl[:, None] * r[None, :] + self.yl[:, None] * u[None, :]
-              + self.zl[:, None] * nrm[None, :]).astype(np.float32)
+        if self.bind is not None:
+            tg = np.asarray(self.bind(self.xl, self.yl, t), np.float32).reshape(-1, 3)
+        else:
+            tg = (o[None, :] + self.xl[:, None] * r[None, :] + self.yl[:, None] * u[None, :]
+                  + self.zl[:, None] * nrm[None, :]).astype(np.float32)
         out = []
         n = self.N
         P = dict(pos=tg, alpha=np.ones(n, np.float32), assist=np.ones(n, np.float32),
@@ -559,6 +700,19 @@ class Word:
             l = (t - self.t_read1) / max(self.t_out - self.t_read1, 1e-6)
             getattr(self, "_lea_" + self.leave)(P, l, t, cam, F, tg)
             self._ambient(out, self.arrive, 1.0, t, F, False, fade=l)
+        if self.drive is not None:
+            # the director's own hand on the points: pos replaces, alpha and emit multiply, assist replaces
+            d = self.drive(t, dict(state=st, pos=P["pos"], home=tg, frame=F, cam=cam, word=self)) or {}
+            if d.get("pos") is not None:
+                P["pos"] = np.asarray(d["pos"], np.float32)
+            if d.get("alpha") is not None:
+                P["alpha"] = (P["alpha"] * np.asarray(d["alpha"], np.float32)).astype(np.float32)
+            if d.get("emit") is not None:
+                P["emit"] = (P["emit"] * np.asarray(d["emit"], np.float32)).astype(np.float32)
+            if d.get("assist") is not None:
+                P["assist"] = np.broadcast_to(np.asarray(d["assist"], np.float32), (n,)).astype(np.float32)
+            if d.get("color") is not None:
+                P["color"] = np.asarray(d["color"], np.float32)
         self._emit(out, P, cam, t)
         return out
 
@@ -1298,10 +1452,15 @@ class Words:
     """The words of a song: a list of Word settings (dicts) or Words. `source` and `to` may name another word
     of the set (its `name`, by default its label). add_to(scene) puts each word into the 3D scene."""
 
-    def __init__(self, specs, **common):
+    def __init__(self, specs, camera=None, **common):
         self.words = []
+        self.camera = camera
         for s in specs:
             self.words.append(s if isinstance(s, Word) else Word(**dict(common, **s)))
+        for w in self.words:
+            if w.camera is None:
+                w.camera = camera
+            w._others = [o for o in self.words if o is not w]
         by = {w.name: w for w in self.words}
         for w in self.words:
             if isinstance(w.source, str):
@@ -1326,7 +1485,7 @@ class Words:
 
     def add_to(self, scene, reflect=True, prefix="word "):
         for w in self.words:
-            scene.add(prefix + w.name, w, reflect=reflect, depth_of_field=True)
+            scene.add(prefix + w.name, w, reflect=reflect and w.reflect, depth_of_field=True)
         return self
 
     def reading(self, t):
