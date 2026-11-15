@@ -13,6 +13,9 @@ Looks (may be combined in a list, for example look=["rim", "glitter"]):
   "window"    the silhouette as a window onto a sky (ref 08): a few stars inside and a light edge; the fill
               comes from the renderer's mask pass, see Body.mask()
 A look may also be a dict: dict(name="glitter", bright=1.4, size=1.2, color="#...", color2="#...").
+Settings of any look: seams (0..1, default 1: the hems, cuffs and necklines of garments glow, so cloth reads as
+cloth); glitter: glints (the share of points drawn as four-point glints, default 0.0007); rim: power (how thin
+the edge line is, default 5).
 """
 import numpy as np
 
@@ -61,56 +64,68 @@ def build(look, cloud, color, color2, bright=1.0, scale=1.0):
     sz = scale * sp.get("size", 1.0)
     r2 = bm.hashf((seed * 1e6).astype(np.int64), 5)
     r3 = bm.hashf((seed * 1e6).astype(np.int64), 6)
-    soft_part = np.where(part == VEIL, 0.55, np.where(part == HAIR, 0.8, 1.0))      # a veil is sheer
+    soft_part = np.where(part == VEIL, 0.62, np.where(part == HAIR, 0.8, 1.0))      # a veil is sheer
+    # seams of light where a garment ends (hem, cuffs, neckline): what makes cloth read as cloth
+    edge = cloud.get("edge", np.zeros(n))
+    seam = 1.0 + sp.get("seams", 1.0) * np.where(part == VEIL, 2.6, 1.6) * edge
     layers = []
     allp = np.arange(n)
 
     if name == "glitter":
         mix = np.clip(_noise(cloud["rest"], 3.0, 1.0) * 0.7 + 0.3 * r2, 0, 1)
         col = c1[None] * (1 - mix)[:, None] + c2[None] * mix[:, None]
-        # most grains are fine and some are dark, a few are large: the grain of glitter
+        # skin (face, hands, feet) a little paler than the garments; a veil paler still, so it reads as its
+        # own fabric over the robe
+        skin = np.isin(part, (SKIN, HAND, FOOT))
+        col[skin] = col[skin] * 0.75 + c2[None] * 0.25
+        vl = part == VEIL
+        col[vl] = (col[vl] * 0.15 + (c2[None] * 0.7 + 0.3) * 0.85) * 1.2
+        # most grains are fine and some are dark, a very few are glints: the grain of glitter
         tone = np.where(r3 < 0.28, 0.22, 0.75 + 0.5 * r2)
         size = (0.0026 + 0.0075 * seed ** 4) * sz
-        glint = seed > 0.9965
+        glint = seed > 1.0 - sp.get("glints", 0.0007)
         base = ~glint
         layers.append(dict(kind="soft", idx=allp[base], size=size[base], color=col[base] * tone[base, None],
-                           alpha=0.42 * b * soft_part[base], emit=1.0, twinkle=0.8, rim=(0.55, 1.5), backlight=0.12))
-        layers.append(dict(kind="spark", idx=allp[glint], size=size[glint] * 1.2, color=col[glint] * 0.6 + 0.4 * c2,
-                           alpha=0.9 * b, emit=1.6 + 2.6 * r2[glint], twinkle=1.0, rim=(0.0, 2.0), backlight=0.15))
+                           alpha=0.42 * b * soft_part[base] * seam[base], emit=1.0, twinkle=0.8, rim=(0.55, 1.5),
+                           backlight=0.12))
+        layers.append(dict(kind="spark", idx=allp[glint], size=size[glint] * 0.9, color=col[glint] * 0.6 + 0.4 * c2,
+                           alpha=0.8 * b, emit=1.1 + 1.6 * r2[glint], twinkle=1.0, rim=(0.0, 2.0), backlight=0.15))
     elif name == "rim":
-        size = (0.0024 + 0.0055 * seed ** 4) * sz
+        size = (0.0020 + 0.0040 * seed ** 4) * sz
         mix = r2 * 0.5
         col = c1[None] * (1 - mix)[:, None] + c2[None] * mix[:, None]
         layers.append(dict(kind="soft", idx=allp, size=size, color=col, alpha=0.9 * b * soft_part, emit=1.0,
-                           twinkle=0.5, rim=(1.0, sp.get("power", 3.2)), backlight=0.1))
-        inner = allp[seed > 0.93]
-        layers.append(dict(kind="soft", idx=inner, size=size[inner], color=col[inner], alpha=0.10 * b, emit=1.0,
-                           twinkle=0.9, rim=(0.0, 2.0), backlight=0.0))
+                           twinkle=0.5, rim=(1.0, sp.get("power", 5.0)), backlight=0.1))
+        # a faint glitter inside the dark body (ref 16)
+        inner = allp[seed > 0.95]
+        layers.append(dict(kind="soft", idx=inner, size=size[inner], color=col[inner], alpha=0.07 * b * seam[inner],
+                           emit=1.0, twinkle=0.9, rim=(0.0, 2.0), backlight=0.0))
     elif name == "dots":
-        keep = allp[seed < sp.get("share", 0.26)]
+        keep = allp[seed < sp.get("share", 0.13)]
         f = _noise(cloud["rest"][keep], 2.2, 2.0)
         r = r2[keep]
         t3 = np.where(r < 0.5 + 0.9 * (f - 0.5), 0.0, 1.0)
         col = c1[None] * (1 - t3)[:, None] + c2[None] * t3[:, None]
         white = r3[keep] > 0.9
         col[white] = 0.5 * col[white] + 0.5
-        layers.append(dict(kind="disc", idx=keep, size=np.full(len(keep), 0.0105 * sz) * (0.8 + 0.5 * r3[keep]),
-                           color=col, alpha=0.95 * b, emit=1.3, twinkle=0.15, rim=(0.0, 2.0), backlight=0.0))
+        layers.append(dict(kind="disc", idx=keep, size=np.full(len(keep), 0.0085 * sz) * (0.8 + 0.5 * r3[keep]),
+                           color=col, alpha=0.62 * b, emit=1.0, twinkle=0.15, rim=(0.0, 2.0), backlight=0.0))
     elif name == "plexus":
-        nodes = allp[seed < sp.get("share", 0.07)]
-        size = (0.007 + 0.012 * r2[nodes] ** 3) * sz
+        share = sp.get("share", 0.05)
+        nodes = allp[seed < share]
+        size = (0.004 + 0.008 * r2[nodes] ** 3) * sz
         col = c1[None] * (0.6 + 0.4 * r3[nodes, None]) + c2[None] * 0.4 * (1 - r3[nodes, None])
-        layers.append(dict(kind="spark", idx=nodes, size=size, color=col, alpha=0.95 * b, emit=1.5 + 3.0 * (r2[nodes] > 0.9),
-                           twinkle=0.6, rim=(0.25, 1.5), backlight=0.4, lit=0.7,
+        layers.append(dict(kind="soft", idx=nodes, size=size, color=col, alpha=0.75 * b,
+                           emit=1.2 + 2.2 * (r2[nodes] > 0.93), twinkle=0.6, rim=(0.25, 1.5), backlight=0.4, lit=0.7,
                            lines=cloud["pairs_fn"](nodes, sp.get("links", 3), sp.get("reach", 0.11)),
-                           line_color=c2 * 0.55 + c1 * 0.45, line_alpha=0.42 * b, line_size=0.0022 * sz))
-        haze = allp[(seed > 0.07) & (seed < 0.07 + sp.get("haze", 0.35))]
-        layers.append(dict(kind="soft", idx=haze, size=np.full(len(haze), 0.0036 * sz), color=np.broadcast_to(c1, (len(haze), 3)),
-                           alpha=0.22 * b, emit=1.0, twinkle=0.5, rim=(0.5, 1.8), backlight=0.3))
+                           line_color=c2 * 0.55 + c1 * 0.45, line_alpha=0.30 * b, line_size=0.0016 * sz))
+        haze = allp[(seed > share) & (seed < share + sp.get("haze", 0.25))]
+        layers.append(dict(kind="soft", idx=haze, size=np.full(len(haze), 0.003 * sz), color=np.broadcast_to(c1, (len(haze), 3)),
+                           alpha=0.07 * b, emit=1.0, twinkle=0.5, rim=(0.5, 1.8), backlight=0.3))
     elif name == "window":
-        stars = allp[seed > 0.9]
-        layers.append(dict(kind="spark", idx=stars, size=(0.006 + 0.01 * r2[stars] ** 3) * sz,
-                           color=np.broadcast_to(c2, (len(stars), 3)), alpha=0.7 * b, emit=2.0 + 4.0 * (r3[stars] > 0.85),
+        stars = allp[seed > 1.0 - sp.get("stars", 0.012)]
+        layers.append(dict(kind="spark", idx=stars, size=(0.004 + 0.008 * r2[stars] ** 3) * sz,
+                           color=np.broadcast_to(c2, (len(stars), 3)), alpha=0.6 * b, emit=1.5 + 2.5 * (r3[stars] > 0.85),
                            twinkle=1.0, rim=(0.0, 2.0), backlight=0.0))
         edge = allp[seed < 0.6]
         layers.append(dict(kind="soft", idx=edge, size=np.full(len(edge), 0.005 * sz), color=np.broadcast_to(c1, (len(edge), 3)),

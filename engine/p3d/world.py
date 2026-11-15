@@ -135,6 +135,9 @@ class World:
         self.light = cfg.pop("light", None)
         self.react = cfg.pop("react", None) or {}
         self.calm = cfg.pop("calm", None) or []
+        self.lake = cfg.pop("lake", None)
+        if self.lake is not None and not callable(self.lake.get("field", None)):
+            raise ValueError("P3D world lake: give field=function(x, z, t) -> (ripple, mirror)")
         self.lights = cfg.pop("lights", None) or []
         self.split = cfg.pop("split", None)
         pole = cfg.pop("star_pole", (0.0, 38.0))
@@ -198,6 +201,29 @@ class World:
             b[n] = (float(rp(t) if callable(rp) else rp), float(mr(t) if callable(mr) else mr), 0.0, 0.0)
             n += 1
         return a, b, n
+
+    def lake_at(self, t):
+        """The lake's own field: world key lake=dict(field=f, center=(x, z), size=200, res=96). f(x, z, t) gets
+        two arrays of places (metres) and gives (ripple, mirror) there (arrays or numbers): a storm sea that is
+        glass where a word has fallen, a calm that spreads, a ring of waves. Over the square of `size` metres
+        round `center` the field replaces the world's ripple and mirror (with a soft edge); the calm discs still
+        apply on top. Returns (texture data res x res x 2, (cx, cz, 1/sx, 1/sz)) or None."""
+        lk = self.lake
+        if not lk:
+            return None
+        c = lk.get("center", (0.0, 0.0))
+        c = c(t) if callable(c) else c
+        sz = lk.get("size", 200.0)
+        sz = sz(t) if callable(sz) else sz
+        sx, sy = (float(sz[0]), float(sz[1])) if isinstance(sz, (tuple, list)) else (float(sz), float(sz))
+        n = int(lk.get("res", 96))
+        u = (np.arange(n) + 0.5) / n - 0.5
+        X, Z = np.meshgrid(c[0] + u * sx, c[1] + u * sy)
+        r, m = lk["field"](X, Z, t)
+        out = np.empty((n, n, 2), "f4")
+        out[..., 0] = np.maximum(np.broadcast_to(np.asarray(r, np.float64), (n, n)), 0.0)
+        out[..., 1] = np.maximum(np.broadcast_to(np.asarray(m, np.float64), (n, n)), 0.0)
+        return out, (float(c[0]), float(c[1]), 1.0 / sx, 1.0 / sy)
 
     def lights_at(self, t):
         """The moving coloured lights: world key lights=[dict(pos, color, strength=1.0, radius=3.0)] (values or
