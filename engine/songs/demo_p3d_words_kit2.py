@@ -151,13 +151,23 @@ _LANTERNS = _Field(PW.place(_LAYOUT, 18.0, 0.55, 0.30, 26.0), (18.0, 1.5, 8.0), 
                    14.5, 19.0, 5, speed=(0.0, 0.15, 0.0), dot=0.22)
 
 
+_GRAT = PW.place(_LAYOUT, 13.75, 0.50, 0.70, 30.0)        # where the Gratitude is read
+_GRAT_EM = PW.em_for(_LAYOUT, 13.75, 30.0, 100)
+
+
 def _bar(t):
     """The height of a bar of light that sinks through the Gratitude while it arrives."""
-    return 9.5 - 5.0 * float(np.clip((t - 11.0) / 1.9, 0.0, 1.0))
+    top, bottom = _GRAT[1] + 2.2 * _GRAT_EM, _GRAT[1] - 1.6 * _GRAT_EM
+    return top + (bottom - top) * float(np.clip((t - 11.0) / 1.8, 0.0, 1.0))
 
 
 def _gate(pts, t):
     return np.clip((pts[:, 1] - _bar(t)) / 0.35 + 0.5, 0.0, 1.0)
+
+
+def _ease(x, d):
+    u = float(np.clip(x / d, 0.0, 1.0))
+    return u * u * (3.0 - 2.0 * u)
 
 
 def _ripple(t, info):
@@ -170,8 +180,8 @@ def _ripple(t, info):
     ph = (t - w.t_read0) * 1.3 % 1.0
     xn = (h["x"] - h["x"].min()) / max(float(np.ptp(h["x"])), 1e-6)
     bump = np.exp(-((xn - (ph * 1.4 - 0.2)) / 0.06) ** 2) * k
-    return dict(pos=info["pos"] + n.astype(np.float32)[None, :] * (0.25 * w.metres_per_em() * bump)[:, None],
-                emit=1.0 + 0.8 * bump)
+    return dict(pos=info["pos"] + u.astype(np.float32)[None, :] * (0.10 * w.metres_per_em() * bump)[:, None],
+                emit=1.0 + 0.9 * bump)
 
 
 _SPECS = [
@@ -182,9 +192,9 @@ _SPECS = [
          face="camera", t_in=6.2, t_read0=8.0, t_read1=10.2, t_out=11.0, arrive="palm",
          source=lambda t: HAND.where(t, "palm.R") + np.array([0.0, 0.01, 0.0]), leave="rise"),
     _word(0.50, 0.70, 30.0, 100, 11.0, 12.9, 14.6, 15.2, expr="Gratitude", arrive="reveal", gate=_gate,
-          facing=lambda t: 25.0 * float(np.clip((12.9 - t) / 1.9, 0.0, 1.0)),
-          tilt=lambda t: 18.0 * float(np.clip((12.9 - t) / 1.9, 0.0, 1.0)) - 20.0 * float(np.clip((t - 14.6), 0.0, 1.0)),
-          roll=lambda t: 8.0 * float(np.clip((12.9 - t) / 1.9, 0.0, 1.0)) - 10.0 * float(np.clip((t - 14.6), 0.0, 1.0)),
+          facing=lambda t: 55.0 * _ease(12.9 - t, 1.9),
+          tilt=lambda t: 30.0 * _ease(12.9 - t, 1.9) - 35.0 * _ease(t - 14.6, 0.6),
+          roll=lambda t: 12.0 * _ease(12.9 - t, 1.9) - 14.0 * _ease(t - 14.6, 0.6),
           drive=_ripple, leave="fade"),
     _word(0.30, 0.50, 30.0, 82, 14.6, 16.0, 18.0, 19.0, expr="Apology", arrive="morph", source=_Source(_PETALS),
           carry="petal", leave="fade"),
