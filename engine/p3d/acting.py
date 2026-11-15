@@ -57,6 +57,7 @@ VARIANTS (what is acted)
                  lift_child pair   a child lifted into someone's arms
   Compliment     applause   crowd  a ring clapping and cheering round one person, who lays a hand on the heart
                  twirl      solo   a joyful twirl
+                 clap       solo   applauding warmly, a little toward the one praised
                  raise      pair   two hold hands and raise them high, the other hand thrown up
                  cheer      crowd  a crowd cheering, arms thrown up
 """
@@ -77,7 +78,7 @@ VARIANTS = {
     "Respect": ("listen", "nod"),
     "Encouragement": ("pray", "shoulder", "lights"),
     "Consideration": ("help_up", "lift_child"),
-    "Compliment": ("applause", "twirl", "raise", "cheer"),
+    "Compliment": ("applause", "twirl", "clap", "raise", "cheer"),
 }
 KIND = dict(wave="solo", turn="pair", crowd="crowd", heart="solo", clasp="pair", bowed="solo", comfort="pair",
             embrace="pair", arm="pair", circle="crowd", after_you="solo", listen="pair", nod="pair", pray="solo",
@@ -86,6 +87,7 @@ KIND = dict(wave="solo", turn="pair", crowd="crowd", heart="solo", clasp="pair",
 KIND["pass"] = "pair"
 KIND["gift"] = "pair"
 KIND["raise"] = "pair"
+KIND["clap"] = "solo"
 HOLD_OUT = 0.9          # the gestures let go over about this long after t1
 
 
@@ -144,17 +146,38 @@ class _Stage:
         return self.view + 90.0 * toward_right - open_ * np.sign(toward_right)
 
 
+# every person of a performance is someone else: hair, garment, height and build (unless the style sets them)
+CAST = dict(
+    woman=dict(hair=("long", "bob", "tied", "covered", "bun"), garment=("robe", "dress"), height=(1.64, 1.55, 1.60),
+               build=(0.94, 1.08, 1.0, 1.14)),
+    man=dict(hair=("short", "cap"), garment=("coat", "tunic"), height=(1.78, 1.70, 1.74), build=(1.06, 0.92, 1.16)),
+    child=dict(hair=("tied", "short", "cap"), garment=("dress", "tunic"), height=(1.28, 1.18, 1.34),
+               build=(0.95, 1.05)),
+)
+
+
 class _Cast:
-    """Makes the Body keys of each person: the shared style, the performance's own, then the person's."""
+    """Makes the Body keys of each person: the shared style, the performance's own, then the person's; and
+    what the style leaves open (hair, garment, height, build) differs from person to person."""
 
     def __init__(self, base, seed):
         self.base, self.seed, self.k = base, float(seed), 0
+        self.n = {}
 
     def __call__(self, own=None, **kw):
         d = dict(self.base)
         d.update(kw)
         d.update(own or {})
         d.setdefault("seed", self.seed + 1.37 * self.k)
+        shape = d.get("shape", "woman")
+        j = self.n.get(shape, 0) + int(self.seed * 3)
+        self.n[shape] = self.n.get(shape, 0) + 1
+        for key, opts in CAST.get(shape, {}).items():
+            if key == "garment" and "garment" in d:
+                continue
+            if key == "hair" and d.get("veil"):
+                continue
+            d.setdefault(key, opts[(j + (1 if key in ("height", "build") else 0) * self.k) % len(opts)])
         self.k += 1
         return d
 
@@ -279,7 +302,7 @@ def _greeting_wave(st, t0, t1, who, sa, sb, cw):
 
 
 def _greeting_turn(st, t0, t1, who, sa, sb, cw):
-    refs = {}
+    refs = pairs.Refs()
     turn0, turn1 = t0 + 0.55, t0 + 1.55
 
     def greet(t):
@@ -298,9 +321,7 @@ def _greeting_turn(st, t0, t1, who, sa, sb, cw):
                       (turn1 - 0.4, t1 + HOLD_OUT, "lean_in",
                        dict(to=lambda t: refs["b"].where(t, "head", raw=True), amount=0.8)),
                       (turn1, t1 + HOLD_OUT, "nod", dict(period=1.9, amount=6.0))])
-    refs["a"] = Body(**ka)
-    refs["b"] = Body(**kb)
-    return [refs["a"], refs["b"]]
+    return refs.build(("a", "b"), a=ka, b=kb)
 
 
 def _greeting_crowd(st, t0, t1, who, sa, sb, cw):
@@ -317,7 +338,7 @@ def _gratitude_heart(st, t0, t1, who, sa, sb, cw):
 
 
 def _gratitude_clasp(st, t0, t1, who, sa, sb, cw):
-    refs = {}
+    refs = pairs.Refs()
 
     def meet(t):
         a = refs["a"].where(t, "chest", raw=True)
@@ -331,9 +352,7 @@ def _gratitude_clasp(st, t0, t1, who, sa, sb, cw):
     kb = who(sb, shape="man", at=st.place(0.32, 0.0), facing=st.face(-1.0, 18.0),
              gesture=[(t0 - 0.1, t1 + HOLD_OUT, "handshake", dict(side="R", to=meet, grip=1.0)),
                       (t0 + 0.7, t1 + HOLD_OUT, "hand_on_heart", dict(side="L", bow=6.0))])
-    refs["a"] = Body(**ka)
-    refs["b"] = Body(**kb)
-    return [refs["a"], refs["b"]]
+    return refs.build(("a", "b"), a=ka, b=kb)
 
 
 def _gratitude_gift(st, t0, t1, who, sa, sb, cw):
@@ -367,7 +386,7 @@ def _apology_bowed(st, t0, t1, who, sa, sb, cw):
 
 
 def _apology_comfort(st, t0, t1, who, sa, sb, cw):
-    refs = {}
+    refs = pairs.Refs()
     kb = who(sb, shape="woman", at=st.place(0.30, -0.08), facing=st.face(1.0, 40.0),
              motion=[(-1e9, "sit", dict(dur=0.01, bowed=1.0))])
     ka = who(sa, shape="man", at=st.place(-0.28, 0.06), facing=st.face(1.0, 0.0),
@@ -376,9 +395,7 @@ def _apology_comfort(st, t0, t1, who, sa, sb, cw):
                        dict(side="R", to=lambda t: refs["b"].where(t, "back", raw=True), palm="fwd", fingers="open",
                             lean=0.45)),
                       (t0 + 0.8, t1 + HOLD_OUT, "bow", dict(amount=8.0))])
-    refs["a"] = Body(**ka)
-    refs["b"] = Body(**kb)
-    return [refs["a"], refs["b"]]
+    return refs.build(("a", "b"), a=ka, b=kb)
 
 
 # -------------------------------------------------------------------------------------------- Inclusiveness
@@ -389,7 +406,7 @@ def _inclusiveness_embrace(st, t0, t1, who, sa, sb, cw):
 
 
 def _inclusiveness_arm(st, t0, t1, who, sa, sb, cw):
-    refs = {}
+    refs = pairs.Refs()
     ka = who(sa, shape="man", at=st.place(-0.23, 0.0), facing=st.face(0) + 10.0,
              gesture=[(t0, t1 + HOLD_OUT, "arm_round",
                        dict(side="L", to=lambda t: refs["b"].where(t, "shoulder.L", raw=True))),
@@ -399,9 +416,7 @@ def _inclusiveness_arm(st, t0, t1, who, sa, sb, cw):
              gesture=[(t0 + 0.6, t1 + HOLD_OUT, "lean_in",
                        dict(to=lambda t: refs["a"].where(t, "head", raw=True), amount=0.8)),
                       (t0 + 0.7, t1 + HOLD_OUT, "hand_on_heart", dict(side="R", bow=4.0))])
-    refs["a"] = Body(**ka)
-    refs["b"] = Body(**kb)
-    return [refs["a"], refs["b"]]
+    return refs.build(("a", "b"), a=ka, b=kb)
 
 
 def _inclusiveness_circle(st, t0, t1, who, sa, sb, cw):
@@ -439,7 +454,7 @@ def _concession_pass(st, t0, t1, who, sa, sb, cw):
 
 # -------------------------------------------------------------------------------------------------- Respect
 def _respect_pair(st, t0, t1, who, sa, sb, seated):
-    refs = {}
+    refs = pairs.Refs()
     sit = [(-1e9, "sit", dict(dur=0.01, bowed=0.0))] if seated else "stand"
     x = 0.42 if seated else 0.38
     ka = who(sa, shape="woman", at=st.place(-x, 0.0), facing=st.face(1.0, 22.0), motion=sit,
@@ -447,9 +462,7 @@ def _respect_pair(st, t0, t1, who, sa, sb, seated):
                       (t0 + 0.6, t1 + HOLD_OUT, "nod", dict(period=1.8, amount=8.0))])
     kb = who(sb, shape="man", at=st.place(x, 0.0), facing=st.face(-1.0, 22.0), motion=sit,
              gesture=[(t0 - 0.3, t1 + HOLD_OUT, "explain", dict(side="R", period=1.9))])
-    refs["a"] = Body(**ka)
-    refs["b"] = Body(**kb)
-    return [refs["a"], refs["b"]]
+    return refs.build(("a", "b"), a=ka, b=kb)
 
 
 def _respect_listen(st, t0, t1, who, sa, sb, cw):
@@ -468,7 +481,7 @@ def _encouragement_pray(st, t0, t1, who, sa, sb, cw):
 
 
 def _encouragement_shoulder(st, t0, t1, who, sa, sb, cw):
-    refs = {}
+    refs = pairs.Refs()
     kb = who(sb, shape="man", at=st.place(0.25, 0.0), facing=st.face(1.0, 30.0),
              motion=[(-1e9, "kneel", dict(dur=0.01, one=True, hands="pray"))],
              gesture=[(t0 + 0.4, t1 + HOLD_OUT, "bow", dict(amount=14.0))])
@@ -476,9 +489,7 @@ def _encouragement_shoulder(st, t0, t1, who, sa, sb, cw):
              gesture=[(t0, t1 + HOLD_OUT, "hand_on_shoulder",
                        dict(side="R", to=lambda t: refs["b"].where(t, "shoulder.R", raw=True))),
                       (t0 + 0.5, t1 + HOLD_OUT, "bow", dict(amount=12.0))])
-    refs["a"] = Body(**ka)
-    refs["b"] = Body(**kb)
-    return [refs["a"], refs["b"]]
+    return refs.build(("a", "b"), a=ka, b=kb)
 
 
 def _encouragement_lights(st, t0, t1, who, sa, sb, cw):
@@ -524,6 +535,13 @@ def _compliment_twirl(st, t0, t1, who, sa, sb, cw):
     return [Body(**who(sa, shape="woman", garment="dress", at=st.place(0, 0), facing=st.view - 30.0,
                        motion=[(-1e9, "stand"), (t0 - 0.2, "twirl", dict(blend=0.5)),
                                (t1 + 0.3, "stand", dict(blend=0.9))]))]
+
+
+def _compliment_clap(st, t0, t1, who, sa, sb, cw):
+    return [Body(**who(sa, shape="woman", at=st.place(0, 0), facing=st.face(-1.0, 55.0),
+                       gesture=[(t0, t1 + HOLD_OUT, "clap", dict(period=0.42, height=0.25)),
+                                (t0 + 0.2, t1 + HOLD_OUT, "lean_in", dict(amount=0.5)),
+                                (t0 + 0.3, t1 + HOLD_OUT, "look_up", dict(amount=6.0))]))]
 
 
 def _compliment_raise(st, t0, t1, who, sa, sb, cw):

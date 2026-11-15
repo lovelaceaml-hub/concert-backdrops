@@ -70,9 +70,10 @@ class Rig:
 
     shape    "woman", "man" or "child"
     height   metres (default: the shape's own height, about 1.59, 1.73 and 1.31)
+    build    1 as modelled; above 1 heavier (1.15: broad), below 1 slighter (0.88: slight)
     """
 
-    def __init__(self, shape="woman", height=None):
+    def __init__(self, shape="woman", height=None, build=1.0):
         if shape not in SHAPES:
             raise ValueError("shape must be one of %s, got %r" % (SHAPES, shape))
         d = load()
@@ -100,10 +101,34 @@ class Rig:
         self.vert_bone = self.w_idx[:, 0]
         self.bone_region = np.array([REGIONS.index(_region_of(n)) for n in self.names])
         self.side = np.array([1 if n.endswith(".L") else (-1 if n.endswith(".R") else 0) for n in self.names])
+        self.build = float(build)
+        if abs(self.build - 1.0) > 1e-4:
+            self._inflate(self.build)
         self._neutral()
         self._levels()
         self.normals0 = self._vertex_normals(self.verts0)
         self._measure()
+
+    def _inflate(self, b):
+        """A heavier (b > 1) or slighter (b < 1) build: the flesh moves away from (or toward) the axis of each
+        bone it is weighted to, most on the trunk and thighs, little on the head, hands and feet; blended by
+        the skin weights, so there is no seam at the joints."""
+        gain = dict(head=0.15, neck=0.6, torso=1.0, arm=0.85, forearm=0.65, hand=0.25, hips=1.0, leg=0.9,
+                    shin=0.55, foot=0.12)
+        g_bone = np.array([gain[REGIONS[r]] for r in self.bone_region])
+        v = self.verts0.astype(np.float64)
+        out = np.zeros_like(v)
+        wsum = np.zeros(len(v))
+        for j in range(self.w_idx.shape[1]):
+            bj = self.w_idx[:, j]
+            wj = self.w_val[:, j].astype(np.float64)
+            h, ax = self.head[bj], self.tail[bj] - self.head[bj]
+            u = np.clip(((v - h) * ax).sum(1) / np.maximum((ax * ax).sum(1), 1e-12), 0.0, 1.0)
+            c = h + ax * u[:, None]
+            f = 1.0 + (b - 1.0) * g_bone[bj]
+            out += wj[:, None] * (c + (v - c) * f[:, None])
+            wsum += wj
+        self.verts0 = (out / np.maximum(wsum, 1e-9)[:, None]).astype(np.float32)
 
     # ------------------------------------------------------------------ neutral pose
     def _neutral(self):

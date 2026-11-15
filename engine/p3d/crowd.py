@@ -40,6 +40,7 @@ KEYS
   scale      size (1 life size) or (lo, hi) for a spread; default (0.94, 1.06)
   mirror     True (default): half the people are mirrored (left-handed wavers, other garment folds)
   color, color2, bright, size (grain), twinkle, glints (share of four-point glints)
+  dof        how much of the lens blur the crowd takes (default 0.55: far people stay people, not blobs)
   light      for "light" people: the colour of their lights (default warm "#ffcf8a") and lamp=(size, bright)
   seed       another crowd
 
@@ -76,6 +77,9 @@ KINDS = dict(
                end_motion=[(0.0, "rise", dict(dur=1.7, one=False, blend=0.05))]),
 )
 GARMENTS = dict(woman=("dress", "robe"), man=("tunic", "coat"), child=("tunic", "dress"))
+HAIRS = dict(woman=("bun", "bob", "tied", "covered"), man=("short", "cap"), child=("tied", "cap", "short"),
+             elder_woman=("covered", "bun"), elder_man=("cap", "short"))
+BUILDS = (1.0, 0.9, 1.12, 0.95, 1.06)
 PEOPLE = dict(woman=1.0, man=1.0, elder=0.3, child=0.25)
 NO_ELDER = ("run", "child", "child_run")
 PRE = 2.5           # seconds simulated before anything is taken (the garments settle)
@@ -186,7 +190,7 @@ class _Proto:
         am = sp.pop("act_motion", None)
         em = sp.pop("end_motion", None)
         motion = sp.pop("motion", "stand")
-        kw = dict(look="glitter", points=self.points, seed=self.seed, hair="default")
+        kw = dict(look="glitter", points=self.points, seed=self.seed, hair="default", size=0.8)
         kw.update(sp)
         if isinstance(motion, str) and motion in ("walk", "run"):
             from .motion import Motions
@@ -314,7 +318,7 @@ class Crowd:
     def __init__(self, n=200, places=None, area=None, facing=0.0, kinds=("stand",), shapes=None, people=None,
                  start=0.0, until=None, act=None, act_end=None, fade=0.6, flash=0.6, walk=0.0, points=2600,
                  scale=(0.94, 1.06), mirror=True, color="#f2b865", color2="#ffe6b8", bright=1.0, size=1.0,
-                 twinkle=0.8, glints=0.002, light="#ffcf8a", lamp=(0.11, 1.0), seed=1.0):
+                 twinkle=0.8, glints=0.002, light="#ffcf8a", lamp=(0.11, 1.0), dof=0.55, seed=1.0):
         rng = np.random.default_rng(int(seed * 1000) + 7)
         self.seed = float(seed)
         # ---- where
@@ -374,11 +378,16 @@ class Crowd:
                 if wp <= 0:
                     continue
                 d = dict(base)
+                v = ki * 3 + j
                 if person == "elder":
                     sh = ("woman", "man")[ki % 2]
-                    d.update(shape=sh, garment=GARMENTS[sh][1], stoop=0.55)
+                    hs = HAIRS["elder_" + sh]
+                    d.update(shape=sh, garment=GARMENTS[sh][1], stoop=0.55, hair=hs[v % len(hs)],
+                             build=BUILDS[(v + 2) % len(BUILDS)])
                 else:
-                    d.update(shape=person, garment=GARMENTS[person][(j + ki) % 2])
+                    hs = HAIRS[person]
+                    d.update(shape=person, garment=GARMENTS[person][(j + ki) % 2], hair=hs[v % len(hs)],
+                             build=BUILDS[v % len(BUILDS)])
                 protos.append((d, kact))
                 weights.append(wgt * wp / tot)
         self.protos = [_Proto(p, points, self.seed + 0.31 * k, a) for k, (p, a) in enumerate(protos)]
@@ -403,6 +412,7 @@ class Crowd:
         mix = rng.uniform(0.0, 1.0, n) ** 1.5
         self.tint = c1[None] * (1 - mix)[:, None] + c2[None] * mix[:, None]
         self.bright, self.grain, self.twinkle, self.glints = float(bright), float(size), float(twinkle), float(glints)
+        self.dof = float(dof)
         self.lamp_col = _col(light)
         self.lamp = (float(lamp[0]), float(lamp[1]))
 
@@ -459,7 +469,7 @@ class Crowd:
             alpha = np.ones(m)
             if self.until is not None:
                 alpha *= 1.0 - bm.smooth((t - self.until[ii]) / max(self.fade, 1e-3))
-            a_pt = np.repeat(alpha, npt) * np.tile(0.42 * (1.0 + 1.2 * pr.edge), m)
+            a_pt = np.repeat(alpha, npt) * np.tile(0.30 * (1.0 + 1.6 * pr.edge), m)
             col = (self.tint[ii][:, None, :] * (0.75 + 0.5 * pr.seed_pt[None, :, None])).reshape(-1, 3)
             dark = np.tile(pr.seed_pt < 0.25, m)
             col[dark] *= 0.3
@@ -488,18 +498,18 @@ class Crowd:
             return []
         b = [dict(pos=np.concatenate(out_p), size=np.concatenate(out_s), color=np.concatenate(out_c),
                   alpha=np.concatenate(out_a), birth=np.concatenate(out_b), seed=np.concatenate(out_sd), kind="soft",
-                  twinkle=self.twinkle, fade=self.fade, flash=self.flash, backlight=0.12)]
+                  twinkle=self.twinkle, fade=self.fade, flash=self.flash, backlight=0.05, dof=self.dof)]
         gp = np.concatenate(glint_p)
         if len(gp):
-            b.append(dict(pos=gp, size=0.012, color=np.concatenate(glint_c), alpha=np.concatenate(glint_a) * 1.6,
-                          kind="spark", twinkle=1.0, emit=2.0))
+            b.append(dict(pos=gp, size=0.010, color=np.concatenate(glint_c), alpha=np.concatenate(glint_a) * 1.4,
+                          kind="spark", twinkle=1.0, emit=1.6, dof=self.dof))
         if lamp_p:
             lp, la, lb, ls = (np.concatenate(v) for v in (lamp_p, lamp_a, lamp_b, lamp_s))
             sz, br = self.lamp
-            b.append(dict(pos=lp, size=sz * ls, color=self.lamp_col * 0.9 * br, alpha=0.55 * la, birth=lb,
-                          kind="soft", fade=self.fade, flash=self.flash, backlight=0.3))
-            b.append(dict(pos=lp, size=0.022 * ls, color=self.lamp_col * br, alpha=la, birth=lb, kind="spark",
-                          emit=3.0, fade=self.fade, twinkle=0.3))
+            b.append(dict(pos=lp, size=sz * ls, color=self.lamp_col * 0.9 * br, alpha=0.45 * la, birth=lb,
+                          kind="soft", fade=self.fade, flash=self.flash, backlight=0.2, dof=self.dof))
+            b.append(dict(pos=lp, size=0.02 * ls, color=self.lamp_col * br, alpha=la, birth=lb, kind="spark",
+                          emit=2.6, fade=self.fade, twinkle=0.3, dof=self.dof))
         return b
 
     def where(self, t, k):

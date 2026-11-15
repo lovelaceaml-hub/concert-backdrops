@@ -1005,6 +1005,13 @@ People made of points for the 3D layer of section V: a lifelike human form (the 
 
 ### Changes for song files (newest first)
 
+- Pairs build safely: `pairs.embrace`, `hands`, `helped_up`, `child_into_arms` and the `acting` pairs no longer fail (KeyError) when an effect of the first body asks for its pose while the second is still being made; each aims at a stand-in until both exist. Quick check: `python tools/check_p3d_pairs.py` (about two minutes).
+- Praying hands are pressed palm to palm, fingers up ("pray" gesture and `kneel` with `hands="pray"`); kneeling, they come together as the body settles. New in the gesture library: `hand_to(P, side, palm_at, fingers, palm)` places a hand exactly.
+- People differ: `hair=` now also takes "short", "bob" (to the jaw), "tied" (a tail), "covered" (a headscarf, the face free) and "long" (the simulated strands); `build=` makes a body heavier (1.15) or slighter (0.88). In `acting`, every person of a performance gets their own hair, garment, height and build unless the style sets them, so the two of a pair never look alike; crowds mix hair and builds too.
+- `pairs.embrace`: the two now stand a little to their own left (`side=0.085` metres each) so the heads pass beside each other, cheek past shoulder, and the holds differ (`hold="mixed"`: a's arms over the shoulders, b's round the back, lower). `side=0, hold="high"` gives the old face-to-face embrace.
+- Crowds read person by person: finer grains, less glow (the lake mirrors them less brightly) and only part of the lens blur (`dof=0.55`; 1 gives the old blur).
+- Dresses and robes draw the shins thinly under the skirt, so a kneeling or seated woman's feet no longer float apart from her. `garment=None` now draws the body itself (it drew only the head, hands and feet).
+- New performances: Gratitude "gift" (a small light passed from cupped hands to cupped hands; `acting.Lamp` is that light) and Compliment "clap" (solo applause, for close shots of the hands).
 - Acting (new, `engine/p3d/acting.py`): `acting.add(scene, "Gratitude", t0, t1, at=..., view=..., variant=...)` performs any of the nine expressions by its label in words.EXPRESSIONS, as a solo, a pair or a crowd (see Acting below). Proof: `engine/songs/test_p3d_acting.py`.
 - Gestures are acted, not crossfaded: a small move the other way first, the gesture with a little overshoot that settles, a hold, and a release that drifts a touch past rest; the trunk leads by 0.08 s and the forearm and hand follow 0.1 s late; each person's timing differs a little (by `seed`). Each gesture has its own timing; `ease=` (or `ease_in=`, `ease_out=`) still sets the seconds and `antic=0, over=0` takes out the anticipation and overshoot (`ease=1.2, antic=0, over=0` is close to the old crossfade).
 - Living hands, always on: the fingers breathe (a slow curl that runs from the index to the little finger), the wrist lags the forearm and swings through, hands open and spread while they move fast and close a little as they settle. `body.actor.life = False` turns them off for one body.
@@ -1042,7 +1049,8 @@ def build(scene):
 | `gesture` | keys [(t_on, t_off, name), (t_on, t_off, name, dict(...))]: the upper body eases in and out (`ease`, default 1.2 s). Names below. `to`/`to2` are world points or functions of time |
 | `garment` | "dress", "robe", "tunic", "coat" (default dress for a woman, tunic otherwise), None for none |
 | `veil` | True, or dict(length=1.0, wide=1.0): over the head and shoulders and down the back (1.5: to the ground) |
-| `hair` | "bun" (woman default), "cap" (man and child default), True or dict(length=0.42) (long strands), False |
+| `hair` | "bun" (woman default), "cap" (man and child default), "short", "bob", "tied", "covered" (headscarf), "long" or True or dict(length=0.42) (simulated strands), False |
+| `build` | 1 as modelled; 1.15 broad, 0.88 slight |
 | `look` | a name, a dict(name=..., bright, size, color, color2, seams, glints, power, detail, share, links, reach, stars), or a list; each may carry weight=<number or function of t>, after="sweep" or before="sweep" |
 | `color`, `color2`, `bright`, `size` | the two colours the look mixes, brightness, grain size |
 | `points`, `detail` | 30 to 120 thousand points; dict(head=3, hand=4) for close-ups |
@@ -1084,7 +1092,7 @@ Each returns two Bodies (add both); `a` and `b` are dicts of Body keys. Contact 
 
 | Function | What |
 |---|---|
-| `pairs.embrace(t, at, facing, a, b, until=None, gap=0.34, approach=0.0)` | they walk in over `approach` seconds and hold each other from t |
+| `pairs.embrace(t, at, facing, a, b, until=None, gap=0.34, approach=0.0, side=0.085, hold="mixed")` | they walk in over `approach` seconds and hold each other from t, heads passing beside each other |
 | `pairs.hands(a, b, t0, t1, raised=False, sides=None)` | hand in hand (standing or walking side by side; the inner hands are found), or joined hands raised high |
 | `pairs.helped_up(t, at, facing, a, b, rise=1.7)` | b kneels; a reaches down, takes b's hand and pulls b up to standing |
 | `pairs.child_into_arms(t, at, facing, adult, child, lift=1.0)` | the adult bends, takes the child under the arms and lifts it into a hold; the child's arms round the adult's neck |
@@ -1109,16 +1117,16 @@ The nine expressions, acted. `acting.add(scene, expression, t0, t1, at=(x, z), v
 | Expression | Variants (solo, pair, crowd) |
 |---|---|
 | Greeting | "wave" (solo), "turn" (pair: a hand on the shoulder, the other turns and greets), "crowd" (many waving) |
-| Gratitude | "heart" (solo: hand on heart and a bow), "clasp" (pair: an offered hand clasped in both hands, a bow), "crowd" (bowing, hands on hearts) |
+| Gratitude | "heart" (solo: hand on heart and a bow), "clasp" (pair: an offered hand clasped in both hands, a bow), "gift" (pair: a small light passed from cupped hands to cupped hands), "crowd" (bowing, hands on hearts) |
 | Apology | "bowed" (solo: head bowed, open hands low), "comfort" (pair: kneeling beside one who sits, a hand on the back) |
 | Inclusiveness | "embrace" (pair), "arm" (pair: an arm round the shoulders), "circle" (crowd: a ring opens its arms as a child walks in) |
 | Concession | "after_you" (solo: a step aside, an open palm to the way), "pass" (pair: one steps aside and bows, the other walks past) |
 | Respect | "listen" (pair seated: one speaks, the other leans in and nods), "nod" (the same standing) |
 | Encouragement | "pray" (solo: kneels, hands joined), "shoulder" (pair: a hand on the shoulder of one kneeling), "lights" (crowd: a ring raising lights round one who kneels) |
 | Consideration | "help_up" (pair), "lift_child" (pair) |
-| Compliment | "applause" (crowd round one person), "twirl" (solo), "raise" (pair: joined hands raised, the other hand thrown up), "cheer" (crowd) |
+| Compliment | "applause" (crowd round one person), "twirl" (solo), "clap" (solo applause, for the hands close), "raise" (pair: joined hands raised, the other hand thrown up), "cheer" (crowd) |
 
-`variant="solo"`, `"pair"` or `"crowd"` picks the first of that kind. Any Body key goes in `style` (look, colours, garment, points, effects), so every style of people can act.
+`variant="solo"`, `"pair"` or `"crowd"` picks the first of that kind. Any Body key goes in `style` (look, colours, garment, points, effects), so every style of people can act. For close shots of the hands give `style=dict(points=90000, detail=dict(hand=4))`. Each person of a performance gets their own hair, garment, height and build (`acting.CAST`) unless `style`, `style_a` or `style_b` sets them.
 
 ## X. Particle words: the nine expressions as light in the 3D world (2026-11-15, branch engine-p3d-words)
 

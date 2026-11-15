@@ -29,9 +29,11 @@ KEYS OF Body(...)
              trousers), "coat" (to the knee, open in front, with trousers); default by shape
   veil       True or dict(length=1.0, wide=1.0): a veil from the crown over the shoulders and down the back
              (length 1.5: to the ground)
-  hair       "bun" (hair worn close with a knot at the back: the default for a woman), "cap" (short: the
-             default for a man and a child), True or dict(length=0.42) (long hair as flowing strands,
-             simulated), or False (none). Not with a veil
+  hair       "bun" (hair worn close with a knot at the back: the default for a woman), "cap" (cropped: the
+             default for a man and a child), "short" (fuller, short), "bob" (to the jaw), "tied" (drawn back
+             into a tail), "covered" (a headscarf over the head and neck, the face free), "long" or True or
+             dict(length=0.42) (long hair as flowing strands, simulated), or False (none). Not with a veil
+  build      1 as modelled; above 1 heavier (1.15 broad), below 1 slighter (0.88 slight)
   look       a look name, a dict, or a list of them (engine/p3d/looks.py). A look dict may carry
              weight=<number or function of time> (looks blend into each other over time) and
              after="<sweep>" or before="<sweep>" (the look lives behind or ahead of a sweep, see sweeps)
@@ -156,6 +158,26 @@ class _RigidSource:
         return (p @ M[:, :3].T + M[:, 3]).astype(np.float32), (n @ M[:, :3].T).astype(np.float32)
 
 
+def _tail(rig, n):
+    """Hair drawn back into a tail: a tapering tube from the back of the crown down behind the neck."""
+    k = rig.height / 1.6
+    hc = rig.head_centre
+    p0 = hc + np.array([0.0, 0.030, -0.088]) * k
+    p1 = hc + np.array([0.0, -0.035, -0.150]) * k
+    p2 = hc + np.array([0.0, -0.200, -0.125]) * k
+    s = bm.rand(n, 95) ** 0.8
+    a = bm.rand(n, 96) * 2.0 * np.pi
+    c = ((1 - s) ** 2)[:, None] * p0 + (2 * s * (1 - s))[:, None] * p1 + (s ** 2)[:, None] * p2
+    tg = (2 * (1 - s))[:, None] * (p1 - p0) + (2 * s)[:, None] * (p2 - p1)
+    tg /= np.linalg.norm(tg, axis=1, keepdims=True)
+    x = np.cross(tg, [1.0, 0.0, 0.0])
+    x /= np.maximum(np.linalg.norm(x, axis=1, keepdims=True), 1e-9)
+    y = np.cross(tg, x)
+    r = (0.024 - 0.016 * s + 0.006 * np.exp(-((s - 0.05) / 0.05) ** 2)) * k
+    d = np.cos(a)[:, None] * x + np.sin(a)[:, None] * y
+    return c + d * r[:, None], d
+
+
 def _bun(rig, n):
     """A knot of hair at the back of the head: points on an egg shape (rest pose), with outward normals."""
     k = rig.height / 1.6
@@ -241,8 +263,8 @@ class Body:
                  garment="default", veil=False, hair="default", look="glitter", color="#f2b865", color2="#ffe9c4",
                  bright=1.0, points=60000, detail=None, part=None, hand=None, light=None, effects=(), show=None,
                  fade=0.6, wind=None, gust=0.35, seed=1.0, size=1.0, scale=1.0, frame=None, stoop=0.0, wash=None,
-                 sweeps=None):
-        self.rig = assets.Rig(shape, height)
+                 sweeps=None, build=1.0):
+        self.rig = assets.Rig(shape, height, build)
         rig = self.rig
         self.seed = float(seed)
         self.k = rig.height / 1.6
@@ -294,13 +316,19 @@ class Body:
             if part != "hands":
                 sg = 1.0 if part[-1] == "L" else -1.0
                 side_w = lambda c: (c[:, 0] * sg > 0).astype(float)      # noqa: E731
+        if garment is None and part not in ("arm.L", "arm.R", "hand.L", "hand.R", "hands"):
+            skin += ["torso", "arm", "forearm", "hips", "leg", "shin"]      # no garment: the body itself
         hip_y = rig.head[rig.idx["upperleg01.L"]][1]
 
         def loose(c, base, more, hip_y=hip_y):
             # trousers that hang loose: the cloth stands further off the leg toward the ankle
             return base + more * np.clip(1.0 - c[:, 1] / hip_y, 0.0, 1.0) ** 1.3
+        # under a long skirt the shins are drawn thinly, so legs that come out from under it (kneeling,
+        # sitting) still join the feet
+        under = (["shin"], 0.006 * k, looks.CLOTH, lambda c: np.full(len(c), 0.45))
         if garment == "dress":
             layers.append((["torso", "arm", "forearm"], 0.009 * k, looks.CLOTH, None))
+            layers.append(under)
             pieces.append(cloth.skirt(rig, flare=1.7))
         elif garment == "robe":
             layers.append((["torso"], 0.014 * k, looks.CLOTH, None))
@@ -308,6 +336,7 @@ class Body:
             layers.append((["arm"], 0.012 * k, looks.CLOTH, lambda c: (np.abs(c[:, 0]) < sh_x).astype(float)))
             # an under-sleeve on the forearm, so a raised arm never leaves its hand floating
             layers.append((["forearm"], 0.008 * k, looks.CLOTH, None))
+            layers.append(under)
             pieces += [cloth.skirt(rig, flare=2.0, bell=0.6), cloth.sleeve(rig, "L"), cloth.sleeve(rig, "R")]
         elif garment == "tunic":
             layers.append((["torso", "arm", "forearm"], 0.011 * k, looks.CLOTH, None))
@@ -332,12 +361,28 @@ class Body:
                 hair = "bun" if shape == "woman" else "cap"
             scalp = (lambda c: ((c[:, 1] > hc[1] + 0.02 * k)
                                 | ((c[:, 2] < hc[2] + 0.01 * k) & (c[:, 1] > hc[1] - 0.06 * k))).astype(float))
-            if hair in ("bun", "cap"):
-                # hair worn close: a layer over the scalp (and a knot at the back for "bun"), no simulation
-                layers.append((["head"], 0.007 * k, looks.HAIR, scalp))
+            if hair in ("bun", "cap", "short", "tied"):
+                # hair worn close: a layer over the scalp (a knot or a tail at the back), no simulation
+                layers.append((["head"], (0.013 if hair == "short" else 0.007) * k, looks.HAIR, scalp))
                 if hair == "bun":
                     self._bun = True
+                elif hair == "tied":
+                    self._bun = "tail"
+            elif hair == "bob":
+                bob = (lambda c: ((c[:, 1] > hc[1] + 0.02 * k)
+                                  | ((c[:, 2] < hc[2] + 0.035 * k) & (c[:, 1] > hc[1] - 0.115 * k))).astype(float))
+                layers.append((["head"], 0.017 * k, looks.HAIR, bob))
+            elif hair == "covered":
+                y0 = hc[1] + 0.012 * k
+
+                def scarf(c, y0=y0, hc=hc, k=k):
+                    return ((c[:, 1] > y0) | ((c[:, 2] < hc[2] + 0.03 * k) & (c[:, 1] > hc[1] - 0.10 * k))).astype(float)
+                layers.append((["head"], 0.014 * k, looks.CLOTH, scarf))
+                layers.append((["neck"], 0.016 * k, looks.CLOTH, None))
+                skin_w["head"] = lambda c, scarf=scarf: 1.0 - scarf(c)
             else:
+                if hair == "long":
+                    hair = True
                 hk = dict(hair) if isinstance(hair, dict) else {}
                 pieces.append(cloth.hair(rig, **hk))
                 layers.append((["head"], 0.006 * k, looks.HAIR, scalp))
@@ -361,7 +406,7 @@ class Body:
             a = _area(rig, regs, wfn)
             want.append(("layer", a * (1.6 if pcode in (looks.VEIL, looks.HAIR) else 1.0), a, (regs, off, pcode, wfn)))
         if getattr(self, "_bun", False):
-            want.append(("bun", 0.030 * k * k * 1.6, 0.030 * k * k, None))
+            want.append(("bun", 0.030 * k * k * (2.2 if self._bun == "tail" else 1.6), 0.030 * k * k, None))
         for pc in pieces:
             if pc.strands:
                 want.append(("cloth", 0.10, 0.10, pc))
@@ -388,7 +433,7 @@ class Body:
                 surf = assets.Surface(rig, n, keep=regs, salt=salt, weight=wfn)
                 self.sources.append(_SkinSource(self, surf, pcode, off))
             elif kind == "bun":
-                pts, nrm = _bun(rig, n)
+                pts, nrm = _tail(rig, n) if self._bun == "tail" else _bun(rig, n)
                 self.sources.append(_RigidSource(self, rig.idx["head"], pts, nrm, looks.HAIR, salt))
             else:
                 cp = cloth.ClothPoints(self.cloth, payload.name, n, salt=salt)
