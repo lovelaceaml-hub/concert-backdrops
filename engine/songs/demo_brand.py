@@ -18,8 +18,6 @@ Not a concert video: a proof of what helper BRAND built for the five films (engi
                  55.0), light blooms from it into a pastel day (54.3), and the logo rises into the end card's
                  place at the top of the frame (55.0 to 56.4), held to the end
 """
-import os
-
 import numpy as np
 
 import songs.s03_original as _base
@@ -42,7 +40,7 @@ _base.WAVES = []
 from songs.s03_original import *  # noqa: E402,F401,F403
 
 from p3d import brand as BR  # noqa: E402
-from p3d.camera import Rig, dolly, hold, orbit  # noqa: E402
+from p3d.camera import Rig, dolly, orbit  # noqa: E402
 
 AUDIO_FILE = "audio/promo/concert-medley.mp3"
 TOTAL = 60.0
@@ -64,9 +62,13 @@ CAMERA = Rig([
     # hearts: the lens on the middle distance; the near hearts are bokeh
     dolly((-1.5, 3.4, 17.0), (1.5, 3.8, 15.0), 8.0, 16.0, look=((0.0, 4.6, 0.0), (0.3, 4.8, 0.0)), fov=42.0,
           aperture=0.09, focus=15.5, blend=0.0),
-    # the symbols: a slow drift along the shore
-    dolly((-3.0, 4.6, 21.0), (3.0, 4.2, 19.0), 16.0, 40.0, look=((-1.0, 6.0, -4.0), (1.0, 5.6, -4.0)), fov=46.0,
+    # the symbols: a slow drift along the shore; for the Apology the camera rises to look down on the water
+    dolly((-3.0, 4.6, 21.0), (-1.5, 4.5, 20.5), 16.0, 21.0, look=((-1.0, 6.0, -4.0), (-0.5, 5.9, -4.0)), fov=46.0,
           aperture=0.02, focus=24.0, blend=0.0),
+    dolly((0.0, 9.5, 21.0), (0.5, 10.0, 20.0), 21.0, 24.4, look=((0.0, 0.0, 2.0), (0.3, 0.0, 2.0)), fov=46.0,
+          aperture=0.0, blend=1.0),
+    dolly((-1.0, 4.5, 20.5), (3.0, 4.2, 19.0), 24.4, 40.0, look=((-0.5, 5.9, -4.0), (1.0, 5.6, -4.0)), fov=46.0,
+          aperture=0.02, focus=24.0, blend=1.0),
     # the world by day, then the finale: a slow push toward the globe
     dolly((0.0, 7.0, 6.0), (0.0, 8.5, 2.0), 40.0, 47.5, look=(GLOBE_AT, GLOBE_AT), fov=40.0, aperture=0.0,
           blend=0.0),
@@ -112,11 +114,11 @@ SYMS = [
     BR.Traced("Greeting", pos=(-6.5, 7.6, -6.0), size=4.0, camera=CAMERA, t0=16.4, intensity=_K),
     BR.Constellation("Gratitude", pos=(30.0, 70.0, -190.0), size=46.0, camera=CAMERA, t0=19.0, dur=1.8,
                      intensity=_K),
-    BR.Ripples("Apology", pos=(1.0, 0.03, 7.0), size=6.5, facing=0.0, camera=CAMERA, t0=21.6, intensity=_K),
+    BR.Ripples("Apology", pos=(0.3, 0.03, 2.0), size=7.0, facing=0.0, camera=CAMERA, t0=21.6, intensity=_K),
     BR.PetalShape("Inclusiveness", pos=(6.0, 6.2, -5.0), size=4.2, camera=CAMERA, t0=24.2, intensity=_K),
     BR.Flock("Concession", pos=(-5.0, 9.0, -14.0), size=7.0, camera=CAMERA, t0=26.4, dur=2.6, intensity=_K),
     BR.LightTrail("Respect", pos=(0.5, 7.0, -8.0), size=5.0, camera=CAMERA, t0=29.4, intensity=_K),
-    BR.Traced("Encouragement", style="sparks", pos=(6.5, 7.2, -6.0), size=4.2, camera=CAMERA, t0=32.0,
+    BR.Traced("Encouragement", style="sparks", pos=(6.0, 7.2, -6.0), size=5.0, camera=CAMERA, t0=32.0,
               intensity=_K),
     BR.PetalShape("Consideration", carrier="heart", petal_size=0.05, wind=(-1.0, 0.2), pos=(-5.5, 6.6, -5.0),
                   size=4.2, camera=CAMERA, t0=34.6, intensity=_K),
@@ -131,7 +133,7 @@ DAY_GLOBE = BR.Globe(pos=GLOBE_AT, radius=9.0, camera=CAMERA, look="day", spin=7
 # ---------------------------------------------------------------------------------------------- the finale
 FINALE = BR.Finale(pos=GLOBE_AT, radius=9.0, camera=CAMERA, look="night", t_world=47.6, spin=8.0, front=-150.0,
                    hearts=dict(t0=48.6, t1=52.8, n=44), t_settle=(52.4, 54.0), t_logo=(53.4, 55.0),
-                   bloom=(False if os.environ.get("NOBLOOM") else dict(t=54.3)), end=dict(t=(55.0, 56.4), ride=(0.5, 0.74, 14.0),
+                   bloom=dict(t=54.3), end=dict(t=(55.0, 56.4), ride=(0.5, 0.74, 14.0),
                                                                     frac=0.27))
 
 
@@ -140,7 +142,7 @@ def _setup(scene):
     for name, s in HEARTS:
         scene.add("hearts " + name, s)
     for i, s in enumerate(SYMS):
-        scene.add("symbol %d" % i, s, reflect=getattr(s, "reflect", True))
+        scene.add("symbol %d" % i, s, reflect=False)
     scene.add("day globe", DAY_GLOBE)
     FINALE.add_to(scene)
 

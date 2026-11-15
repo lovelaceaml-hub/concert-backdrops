@@ -489,8 +489,8 @@ class Traced(_SymbolFX):
         k = self.k
         soft = self.style == "fireflies"
         if vis.any():
-            sz = s * (0.016 if soft else 0.011)
-            out.append(dict(pos=pos[vis], size=sz, color=self.col * 1.4, alpha=a[vis] * k * (0.9 if soft else 1.1),
+            sz = s * (0.016 if soft else 0.013)
+            out.append(dict(pos=pos[vis], size=sz, color=self.col * 1.4, alpha=a[vis] * k * (0.9 if soft else 1.4),
                             kind="soft", seed=self.s[vis, 1], twinkle=0.25 if soft else 0.1, dof=self.dof,
                             reflect=self.reflect, paint=self._paint(t), paint_light=0.5))
             out.append(dict(pos=pos[vis][::4], size=s * 0.06, color=self.col, alpha=a[vis][::4] * k * 0.10,

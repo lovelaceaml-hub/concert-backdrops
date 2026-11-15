@@ -29,12 +29,11 @@ THE REST (re-exported here, so `from p3d import brand` gives everything)
   the world               engine/p3d/brand_world.py    the globe of light, hearts across it, and world to logo
 """
 import math
-import zlib
 
 import numpy as np
 from PIL import Image, ImageDraw, ImageFilter
 
-from .api import lin, show
+from .api import lin, show  # noqa: F401  (re-exported for song files: brand.lin, brand.show)
 
 # ------------------------------------------------------------------------------------------------- colours
 # Sampled from the campaign's logo (two references: a clean render and the website's version) and settled
@@ -1043,7 +1042,7 @@ class Logo:
                 x += k * k * (self.s[:, 1] - 0.5) * 0.6
                 z += k * (self.s[:, 2] - 0.5) * 0.4
                 alpha *= np.clip(1.0 - k * 1.1, 0.0, 1.0)
-                flash += 0.8 * k * (1 - k) * 4.0 * (self.s[:, 2] < 0.25)
+                flash += 0.3 * k * (1 - k) * 4.0 * (self.s[:, 2] < 0.25)
             elif self.leave == "scatter":
                 k = _ss(0.0, 1.0, lv)
                 d = np.stack([x, y, z + 0.3], axis=1)
@@ -1135,4 +1134,4 @@ class Logo:
 from .brand_hearts import HeartDrift, HeartForm, Hearts, arrange_heart, heart_places, heart_points  # noqa: E402,F401
 from .brand_symbols import (RECIPES, SYMBOLS, Constellation, Flock, LightTrail, PetalShape, Ripples, Traced,  # noqa: E402,F401
                             recipe, strokes, symbol_image, symbol_points)
-from .brand_world import LAS_VEGAS, PASTEL, Finale, Globe, land  # noqa: E402,F401
+from .brand_world import LAS_VEGAS, LOOK_COLORS, PASTEL, Finale, Globe, land  # noqa: E402,F401

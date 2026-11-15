@@ -103,8 +103,8 @@ def _day(hexs, k):
 PASTEL = dict(base="cream", sky_top=_day("#8fc9f2", 0.92), sky_mid=_day("#dcefff", 0.86),
               sky_hor=_day("#fff0e0", 0.74), haze_color=_day("#ffeadc", 0.58), hill_color=_day("#c3cde6", 0.58),
               water=_day("#b4d6f0", 0.52), mist_color=_day("#fff1e4", 0.56), sun_color=_day("#fff4e2", 0.24),
-              sun_el=46.0, sun_int=0.65, clouds=0.12, stars=0.0, milky=0.0, rays=0.0, dust=0.0, bokeh=0.0, haze=0.0, mist=0.0,
-              dust_color="#fff6ea", dust_color2="#ffe0c8")
+              sun_el=46.0, sun_int=0.65, sun_disc=0.0, clouds=0.12, stars=0.0, milky=0.0, rays=0.0, haze=0.5,
+              mist=0.15, dust=0.15, bokeh=0.15, dust_color="#fff6ea", dust_color2="#ffe0c8")
 
 LOOK_COLORS = dict(
     night=dict(ocean_c="#2a68c6", ocean_e="#123a86", land="#ffd9a0", land2="#fff2d6", rim="#8fd6ff",
@@ -494,7 +494,7 @@ class Finale:
     t_logo            (t0, t1): it becomes the logo (hearts sweep in from either side behind it, the grid draws
                       itself over it, the branches grow); the logo is whole at t1 (54.3 to 55.0 in the films)
     shrink            the globe draws in to this share of its size as it settles (0.6), so the whole logo fits
-    bloom             dict(t=54.3, dur=1.0, strength=0.35, glow=0.5, color="#fff1de"): light blooms from the globe
+    bloom             dict(t=54.3, dur=1.0, strength=0.25, glow=0.5, color="#fff1de"): light blooms from the globe
                       (a flash of `strength`, P3D bursts, and a soft spreading light of `glow`); the
                       world turns to the pastel day `look_after` round t (its blend `blend` seconds); None for no
                       bloom (then give the world's look yourself)
@@ -510,7 +510,7 @@ class Finale:
     fin.globe and fin.logo are the two point sets; fin.logo_place is the logo's Place.
     """
 
-    BLOOM = dict(t=54.3, dur=1.0, strength=0.35, color="#fff1de", glow=0.5)
+    BLOOM = dict(t=54.3, dur=1.0, strength=0.25, color="#fff1de", glow=0.5)
 
     def __init__(self, pos=(0.0, 12.0, -40.0), radius=8.0, camera=None, look="night", t_world=49.5, spin=6.0,
                  front=-40.0, tilt=18.0, hearts=None, t_settle=(52.6, 54.0), t_logo=(53.4, 55.0), shrink=0.6,
@@ -590,11 +590,11 @@ class Finale:
 
     def bursts(self):
         """The bloom's flash of light (P3D bursts); empty with strength 0."""
-        if not self.bloom or float(self.bloom.get("strength", 0.35)) <= 0:
+        if not self.bloom or float(self.bloom.get("strength", 0.25)) <= 0:
             return []
         b = self.bloom
-        return [dict(t=b["t"] + 0.1 * b["dur"], strength=float(b.get("strength", 0.35)), rise=0.3 * b["dur"],
-                     fall=0.55 * b["dur"], color=b.get("color", "#fff1de"), at=tuple(self.pos), radius=0.5)]
+        return [dict(t=b["t"] + 0.1 * b["dur"], strength=float(b.get("strength", 0.25)), rise=0.3 * b["dur"],
+                     fall=0.55 * b["dur"], color=b.get("color", "#fff1de"), at=tuple(self.pos), radius=0.35)]
 
     def world(self, base=None):
         """The song's world settings with the bloom to the pastel day added (the look keys and the PASTEL look)."""
