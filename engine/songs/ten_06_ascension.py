@@ -92,10 +92,12 @@ TEXT_SHADOW = 0.0          # nothing dark behind any text
 S = [0.25, 6.84, 13.30, 19.85, 26.79, 33.36, 40.21, 49.47]
 BIG_HIT = 42.51            # the biggest jump of the mix: the hands touch, through the cloud top
 FINAL_HIT = 58.11
-TITLE_HIT = 53.8           # the title is whole just before the loudest passage (54.3 to 55.0)
+BLOOM = 54.3               # the loudest passage: the climb blooms into light
+CARD_IN = 55.0             # the end card (TITLES) sweeps in on a pastel day; readable to the end
+TITLE_HIT = CARD_IN        # (the engine's own closing title never shows while TITLES has an end card)
 FORM_DUR = 2.6
 T_FORM = TITLE_HIT - FORM_DUR
-TAG_T0, TAG_T1 = TITLE_HIT + 0.15, TITLE_HIT + 1.35   # the end card lines: readable from 53.6 s to 60 s
+TAG_T0, TAG_T1 = CARD_IN + 0.2, CARD_IN + 1.4
 NINTH = 51.2               # the arch is complete
 
 # ---------------------------------------------------------------------------------------------------------
@@ -222,8 +224,11 @@ CAM_KEYS = [
     (48.60, 502.0, 6.4, TOP + 2.2, tuple(P(SUN_AZ, 26.0, TOP + 4.6)), 50, 0.0),
     # the card: pull back and rise over the sea of cloud to the arch of nine lights
     (50.60, 505.0, 8.6, TOP + 2.9, tuple(P(SUN_AZ, 30.0, TOP + 5.6)), 52, 0.0),
-    (53.80, 509.0, 25.0, TOP + 8.2, tuple(P(SUN_AZ, 60.0, TOP + 22.0)), 58, 0.0),
-    (60.00, 513.0, 30.0, TOP + 10.0, tuple(P(SUN_AZ, 60.0, TOP + 18.0)), 60, 0.0),
+    (51.60, 509.0, 14.0, TOP + 11.0, tuple(P(SUN_AZ, 14.0, TOP + 1.0)), 56, 0.0),
+    (53.00, 518.0, 52.0, TOP + 95.0, tuple(P(SUN_AZ, 260.0, TOP + 10.0)), 60, 0.0),
+    (BLOOM, 527.0, 105.0, TOP + 260.0, tuple(P(SUN_AZ, 900.0, TOP + 120.0)), 60, 0.0),
+    (CARD_IN, 531.0, 120.0, TOP + 300.0, tuple(P(SUN_AZ, 1500.0, TOP + 620.0)), 58, 0.0),
+    (60.00, 537.0, 135.0, TOP + 330.0, tuple(P(SUN_AZ, 1500.0, TOP + 700.0)), 56, 0.0),
 ]
 _ck = [(k[0], (k[1], k[2], k[3])) for k in CAM_KEYS]
 _cyl = curve(_ck)
@@ -791,6 +796,55 @@ class LiftStream:
         return dict(pos=p, size=self.sz, color=col, alpha=al, kind="spark", seed=self.sd, twinkle=0.6, reflect=False)
 
 
+HEART_COLORS = ("#EA5A5E", "#F2B25E", "#F6CE46", "#5ABA5A", "#62B2FA", "#667AF6", "#9E6AF6", "#EE62A6", "#364E96")
+
+
+def _heart_outline(k=34):
+    """A heart curve in the plane, about 1 wide, centred (x right, y up)."""
+    a = np.linspace(0.0, 2.0 * np.pi, k, endpoint=False)
+    x = 16.0 * np.sin(a) ** 3
+    y = 13.0 * np.cos(a) - 5.0 * np.cos(2 * a) - 2.0 * np.cos(3 * a) - np.cos(4 * a)
+    return np.stack([x, y + 2.5], axis=1) / 34.0
+
+
+class Hearts:
+    """Hearts of light in the nine colours: born where the people of the top rose into the light, they climb
+    and open out past the camera and spread over the sea of cloud below it."""
+    wants_camera = True
+
+    def __init__(self, n=220, per=34):
+        rng = np.random.default_rng(696)
+        self.n, self.per = n, per
+        az = SUN_AZ + rng.uniform(-80.0, 80.0, n)
+        d = 1.0 + 40.0 * rng.random(n) ** 1.2
+        self.base = np.stack([np.sin(np.radians(az)) * d, np.full(n, TOP + 1.2), np.cos(np.radians(az)) * d], 1)
+        self.t0 = 50.5 + 2.2 * rng.random(n) ** 1.4
+        self.v = 6.0 + 30.0 * rng.random(n) ** 1.5
+        self.size = 0.35 + 1.1 * rng.random(n)
+        self.drift = rng.normal(size=(n, 3)) * [3.0, 0.0, 3.0]
+        self.col = np.array([lin(HEART_COLORS[i % 9]) for i in range(n)])
+        self.shape = _heart_outline(per)
+        self.sd = rng.random(n * per).astype(np.float32)
+
+    def sample(self, t, cam=None):
+        age = t - self.t0
+        on = (age > 0.0) & (t < 60.5)
+        if not on.any() or cam is None:
+            return []
+        r, u, f = cam.basis()
+        a = np.where(on, age, 0.0)
+        c = self.base + (np.array([0.0, 1.0, 0.0]) * self.v[:, None] + self.drift) * a[:, None] \
+            + np.array([0.0, 1.0, 0.0]) * (0.5 * 6.0 * a * a)[:, None]
+        sz = self.size * (1.0 + 0.6 * np.minimum(a, 3.0))
+        pts = c[:, None, :] + (self.shape[None, :, 0:1] * r[None, None, :] + self.shape[None, :, 1:2]
+                               * u[None, None, :]) * sz[:, None, None]
+        g = np.clip(a / 0.4, 0.0, 1.0) * (1.0 - np.clip((t - 54.6) / 0.8, 0.0, 1.0))
+        al = np.repeat(np.where(on, g, 0.0), self.per).astype(np.float32)
+        return dict(pos=pts.reshape(-1, 3), size=np.repeat(0.05 * sz, self.per).astype(np.float32),
+                    color=np.repeat(self.col, self.per, axis=0), alpha=al, kind="spark", seed=self.sd,
+                    twinkle=0.4, reflect=False)
+
+
 class CloudWisps:
     """Inside the cloud: soft lit wisps that the camera rises through, so the fog has depth and speed."""
 
@@ -872,7 +926,7 @@ class Fountains:
         on = _ss(self.t0, self.t0 + 0.8, t)[fi]
         if not (on > 0).any():
             return []
-        surge = 1.0 + 0.9 * np.exp(-((t - TITLE_HIT) / 0.6) ** 2) + 0.7 * np.exp(-((t - FINAL_HIT) / 0.6) ** 2)
+        surge = 1.0 + 0.9 * np.exp(-((t - 52.26) / 0.6) ** 2)
         age = np.mod(self.ph * self.life + t * 0.9, self.life)
         sc = self.scale[fi][:, None]
         p = self.base[fi] + (self.v0 * age[:, None] + np.array([0.0, -2.6, 0.0]) * age[:, None] ** 2) * sc
@@ -919,15 +973,20 @@ LOOKS = dict(
                hills=0.0, haze=0.05, haze_color="#b85838", mist=4.0, mist_height=26.0, mist_color="#3e1c44",
                water="#f0a080", rays=0.45, dust=0.6, dust_color="#ffe2a8", dust_color2="#ffd0a8", bokeh=0.6,
                exposure=1.0),
-    card=dict(base="day", sky_top="#2a66cc", sky_mid="#90c2f0", sky_hor="#ffdcb4", sun_az=SUN_AZ_TRUE, sun_el=9.0,
-              sun_int=0.45, sun_glow=0.3, hills=0.0, haze=0.2, haze_color="#ffd8c0", mist=4.0, mist_height=26.0,
-              mist_color="#9a6c84", rays=0.3, clouds=0.25, dust=0.5, water="#a9d4f4", exposure=1.0),
+    high=dict(base="sunrise", sky_top="#050c38", sky_mid="#1c3c96", sky_hor="#f09060", sun_az=SUN_AZ_TRUE,
+              sun_el=SUN_EL_TRUE + 1.0, sun_color="#ffc870", sun_int=0.5, sun_disc=5.0, sun_glow=0.25, stars=0.55,
+              milky=0.2, clouds=0.15, hills=0.0, haze=0.05, haze_color="#c06a50", mist=4.0, mist_height=26.0,
+              mist_color="#5a3060", water="#f0a080", rays=0.4, dust=0.2, bokeh=0.3, exposure=1.0),
+    card=dict(base="day", sky_top="#8cc0ee", sky_mid="#d6e8f8", sky_hor="#ffe4cc", sun_az=SUN_AZ_TRUE, sun_el=24.0,
+              sun_color="#fff2dc", sun_int=0.35, sun_glow=0.3, hills=0.0, haze=0.25, haze_color="#ffeadc", mist=4.0,
+              mist_height=26.0, mist_color="#f2d8d0", rays=0.15, clouds=0.18, stars=0.0, milky=0.0, dust=0.3,
+              bokeh=0.3, water="#cfe0f0", exposure=1.0),
 )
 
 WORLD = WORDS.world(dict(
     looks=LOOKS,
     look=[(0.0, "lake"), (7.6, "mist", 1.6), (13.6, "pillars", 1.4), (20.6, "gate", 2.0), (28.0, "violet", 3.0),
-          (39.3, "cloud", 1.2), (41.4, "cloudlit", 1.6), (BIG_HIT + 0.2, "above", 0.6), (52.0, "card", 3.0)],
+          (39.3, "cloud", 1.2), (41.4, "cloudlit", 1.6), (BIG_HIT + 0.2, "above", 0.6), (52.4, "high", 2.0), (BLOOM + 0.35, "card", 0.9)],
     arch=dict(lit=_LIT, colors=[e["color"] for e in PW.EXPRESSIONS], line=Track([(0, 0.35), (NINTH, 0.35),
                                                                                   (NINTH + 1.5, 1.0), (60, 1.0)]),
               **ARCH_SET),
@@ -935,11 +994,11 @@ WORLD = WORDS.world(dict(
                  strength=Track([(0, 0.9), (2.6, 0.6), (S[2], 0.5), (S[5], 0.45), (34.6, 0.45), (35.4, 0.85),
                                  (38.2, 0.85), (38.8, 0.35), (40.0, 0.0), (60, 0.0)]))],
     light=dict(pos=tuple(SUN_LIGHT), color="#ffe0b0",
-               strength=Track([(0, 0.0), (BIG_HIT, 0.0), (43.6, 0.32), (49.5, 0.3), (53.0, 0.15), (60, 0.12)]),
+               strength=Track([(0, 0.0), (BIG_HIT, 0.0), (43.6, 0.32), (49.5, 0.3), (52.0, 0.0), (60, 0.0)]),
                size=0.45, rays=0.75),
     react=dict(beat=0.4, level=0.25),
     exposure=Track([(0, 1.0), (BIG_HIT - 0.05, 1.0), (BIG_HIT + 0.1, 1.1), (BIG_HIT + 0.9, 1.0), (43.8, 0.9),
-                    (48.6, 0.86), (50.6, 1.0), (TITLE_HIT - 0.1, 1.0), (TITLE_HIT + 0.08, 1.12), (TITLE_HIT + 0.8, 1.0),
+                    (48.6, 0.86), (50.6, 1.0), (BLOOM - 0.2, 1.0), (BLOOM + 0.35, 1.22), (CARD_IN + 0.2, 1.0),
                     (FINAL_HIT - 0.1, 1.0), (FINAL_HIT + 0.08, 1.08), (FINAL_HIT + 0.7, 1.0), (60, 1.0)]),
 ))
 
@@ -950,6 +1009,7 @@ def _setup(scene):
     scene.add("rings", Rings())
     scene.add("shaft flakes", PW.KeepClear(ShaftFlakes(), WORDS, floor=0.0), reflect=False)
     scene.add("lift", LiftStream(), reflect=False)
+    scene.add("hearts", Hearts(), reflect=False)
     scene.add("pillars", PW.KeepClear(Pillars(), WORDS, floor=0.15))
     scene.add("cloud top", CloudTop(), reflect=False)
     scene.add("fountains", PW.KeepClear(Fountains(), WORDS, floor=0.0), reflect=False)
@@ -961,7 +1021,7 @@ def _setup(scene):
     places = np.stack([np.sin(np.radians(az)) * dist, np.full(k, TOP), np.cos(np.radians(az)) * dist], axis=1)
     scene.add("crowd far", Crowd(places=places, facing=SUN_AZ, kinds=("raise", "clap", "open", "stand"),
                                  start=dict(t=47.4, center=(0.0, 0.0), speed=14.0), points=6000, color="#ffcf80",
-                                 color2="#ffeccc", bright=0.9, seed=6.0), reflect=False)
+                                 color2="#ffeccc", bright=0.9, seed=6.0, until=51.8), reflect=False)
     for name, body in PEOPLE.items():
         body.add(scene, name, reflect=(Y_OF.get(name, 1.0) < 1.0))
     scene.add("flare", FLARE, reflect=False)
@@ -1000,9 +1060,10 @@ CREDIT = dict(song="The Words of Mother’s Love",
 # levels, top right on open sky), and "December 6" written in light above the two reaching hands in the breath,
 # bursting as they touch on the biggest hit
 TITLES = dict(
-    opening=dict(t_end=3.8, y=0.20, palette="night"),
-    signature=dict(windows=[(15.95, 16.75, "tr", "night"), (25.8, 28.3, "tr", "night"), (32.75, 34.6, "tr", "night")]),
-    date_light=dict(t_form=40.21, t_burst=BIG_HIT, y=0.30, palette="night"),
+    opening=dict(t_end=3.8, y=0.28, palette="night"),
+    signature=dict(windows=[(15.95, 16.75, "tr", "night"), (25.8, 27.6, "tr", "night"), (32.75, 34.4, "tr", "night")]),
+    date_light=dict(t_form=39.45, t_burst=BIG_HIT, y=0.30, palette="night"),
+    end_card=dict(t_in=CARD_IN),
 )
 _CB = (0.1323, 0.8693, 0.4972, 0.6861)          # the badge's box at full size (text.render_credit)
 BADGE = (CREDIT["margin_x"], CREDIT["margin_x"] + CREDIT["scale"] * (_CB[1] - _CB[0]) + 40.0 / 1920.0, 0.0,
