@@ -4,7 +4,8 @@ Every sprite is an instanced quad drawn additively into the engine's HDR light b
 is kept whatever its footprint: a point smaller than a pixel goes through a small fixed gaussian (sigma
 SIG_MIN pixels, whose sampled sum does not change as the point moves across the pixel grid), a point out of
 focus is spread over its circle of confusion, a moving point over its streak. Footprint: a flat plateau of
-radius R (the bokeh disc) with a gaussian skirt of sigma S, stretched to a capsule of half length Lh.
+radius R (the bokeh disc) with a gaussian skirt of sigma S, drawn out along one axis by a stretch factor
+(motion during the shutter, or a reflection on restless water).
 """
 
 NOISE = """
@@ -29,13 +30,14 @@ uniform vec3 uSunDir;
 const vec3 HILL_D = vec3(1400.0, 2600.0, 5200.0);
 const vec3 HILL_H = vec3(150.0, 420.0, 950.0);
 
-// slope of the water surface at p (metres) and time t: a few crossing swells
-vec2 rip(vec2 p, float t){
+// slope of the water surface at p (metres) and time t: a few crossing swells. foot: metres of water under one
+// pixel along the view; a swell fades where it is only a few pixels long (far out the lake is a still mirror)
+vec2 rip(vec2 p, float t, float foot){
   vec2 g = vec2(0.0);
-  g += vec2( 0.80, 0.60)*0.012*cos(dot(p, vec2( 0.80, 0.60))*0.90 - t*0.90);
-  g += vec2(-0.45, 0.89)*0.010*cos(dot(p, vec2(-0.45, 0.89))*1.90 - t*1.35 + 1.7);
-  g += vec2( 0.97,-0.24)*0.008*cos(dot(p, vec2( 0.97,-0.24))*3.70 - t*1.90 + 4.1);
-  g += vec2( 0.31, 0.95)*0.006*cos(dot(p, vec2( 0.31, 0.95))*7.00 - t*2.60 + 2.3);
+  g += vec2( 0.80, 0.60)*0.012*cos(dot(p, vec2( 0.80, 0.60))*0.90 - t*0.90)*smoothstep(3.0*foot, 9.0*foot, 6.98);
+  g += vec2(-0.45, 0.89)*0.010*cos(dot(p, vec2(-0.45, 0.89))*1.90 - t*1.35 + 1.7)*smoothstep(3.0*foot, 9.0*foot, 3.31);
+  g += vec2( 0.97,-0.24)*0.008*cos(dot(p, vec2( 0.97,-0.24))*3.70 - t*1.90 + 4.1)*smoothstep(3.0*foot, 9.0*foot, 1.70);
+  g += vec2( 0.31, 0.95)*0.006*cos(dot(p, vec2( 0.31, 0.95))*7.00 - t*2.60 + 2.3)*smoothstep(3.0*foot, 9.0*foot, 0.90);
   return g;
 }
 float ridge(vec2 c, float f, float seed){
@@ -88,8 +90,9 @@ vec3 mirrored(vec3 wp, out float k, out float smear){
   float f = uCamPos.y/max(uCamPos.y - wm.y, 1e-4);
   vec3 s = uCamPos + (wm - uCamPos)*f;                       // where the reflection is seen on the water
   float path = length(wm - s);
-  float far = 1.0/(1.0 + length(s - uCamPos)/150.0);
-  wm.xz += 2.0*rip(s.xz, uT)*uLakeP.z*far*path;
+  float ds = length(s - uCamPos);
+  float foot = ds*ds/(0.5*uRes.y*uFocal*max(uCamPos.y, 0.05));
+  wm.xz += 2.0*rip(s.xz, uT, foot)*uLakeP.z*path;
   vec3 vd = normalize(s - uCamPos);
   k = uLakeP.y*mix(uLakeP.x, 1.0, pow(1.0-clamp(-vd.y, 0.0, 1.0), 4.0))
       *(1.0 - smoothstep(uLakeP.w*0.80, uLakeP.w, length(s.xz)))*step(0.0, wp.y);
@@ -119,14 +122,16 @@ flat out vec4 vCol;       // rgb light, glint strength
 flat out vec4 vGeo;       // R, S, Lh, r0 (pixels)
 flat out vec4 vShape;     // cos, sin, squash, how much of the true shape shows
 flat out vec3 vMisc;      // seed, depth (m), glint length (px)
+flat out float vStretch;  // a reflection on restless water: the footprint drawn out along its axis
 out vec2 vLocal;
 
 void cull(){ gl_Position = vec4(2.0, 2.0, 2.0, 1.0); }
 
 void main(){
   vec3 wp = aPos, vel = aVel, nrm = aNormal;
-  float mk = 1.0, smear = 0.0, ext = 1.0;
+  float mk = 1.0, smear = 0.0, ext = 1.0, size = aSize;
   if(uDome > 0.5){
+    size *= uDomeDist;                                   // on the dome a size is an angle
     vec3 dir = normalize(aPos);
     // stars: dimmed by the air near the horizon, hidden by hills and clouds
     ext = exp(-uFogP.w/(max(dir.y, 0.0)+0.06));
@@ -154,7 +159,7 @@ void main(){
   float pxm = 0.5*uRes.y*uFocal/depth;                 // pixels per metre at this depth
 
   // the footprint in focus
-  float r0 = 0.5*aSize*pxm, sig0 = 0.0, area0, squash = 1.0, flash = 1.0;
+  float r0 = 0.5*size*pxm, sig0 = 0.0, area0, squash = 1.0, flash = 1.0;
   if(uKind <= 1){ sig0 = 0.44*r0; area0 = 2.0*PI*sig0*sig0; r0 = 0.0; }
   else if(uKind == 2){ area0 = PI*r0*r0; }
   else {
@@ -184,26 +189,27 @@ void main(){
 
   // motion blur: the sprite is stretched along its path on screen during the shutter
   vec2 axis = vec2(1.0, 0.0); float Lh = 0.0;
-  if(uBlur > 0.5){
+  if(uBlur > 0.0){
     vec4 pc = uPrevVP*vec4(wp - vel*uShutterDt, 1.0);
     if(pc.w > uNear){
       vec2 mv = (ndc - pc.xy/pc.w)*0.5*uRes;
       float L = length(mv);
-      L *= uBlur;
-      if(L > 0.75){
+      if(L*uBlur > 0.75){
         axis = mv/L;
-        // a sharp point streaks freely; a bokeh disc stays close to a disc (a short capsule at most)
-        Lh = min(0.5*L, mix(uMaxStreak, 0.9*R + 6.0*uPx, smoothstep(1.5*uPx, 6.0*uPx, R)));
+        // a sharp point streaks freely; a bokeh disc stays close to a disc (a short oval at most)
+        Lh = min(0.5*L*uBlur, mix(uMaxStreak, 0.9*R + 6.0*uPx, smoothstep(1.5*uPx, 6.0*uPx, R)));
       }
     }
   }
   if(uMirror > 0.5){
-    float sp = smear*pxm*(uDome > 0.5 ? 0.08 : 1.0);     // the stars' images stay points: a sea of stars                               // ripples draw a reflection out into a vertical streak
-    sp = min(sp, 1.6*R + 14.0*uPx);
-    if(sp > Lh){ axis = vec2(0.0, 1.0); Lh = min(sp, uMaxStreak); }
+    // ripples draw a reflection out along the line of sight: a soft upright oval
+    float sp = smear*pxm*(uDome > 0.5 ? 0.08 : 1.0);     // the stars' images stay points: a sea of stars
+    sp = min(sp, 2.5*R + 22.0*uPx);
+    if(sp > Lh){ axis = vec2(0.0, 1.0); Lh = sp; }
   }
+  float stretch = 1.0 + Lh/(R + 2.0*S);
 
-  float areaF = PI*R*R + 2.0*PI*S*S + 7.874*R*S + 2.0*Lh*(2.0*R + 2.5066*S);
+  float areaF = (PI*R*R + 2.0*PI*S*S + 7.874*R*S)*stretch;
   float amp = min(area0/areaF, 1.0);
 
   float b = aAlpha*aEmit*uGain*keep*amp*mk*ext*flash*twinkle(aSeed);
@@ -227,17 +233,18 @@ void main(){
   float kshape = 0.0;
   if(uKind >= 3) kshape = (1.0 - smoothstep(0.35, 1.2, max(coc, Lh)/max(r0, 1e-3)))*smoothstep(1.0, 2.5, r0);
   float ex = uKind >= 3 ? max(R, r0*kshape*1.05) : R;
-  float hx = max(Lh + ex + 3.0*S, glen), hy = max(ex + 3.0*S, glen);
+  float hx = max((ex + 3.0*S)*stretch, glen*1.42), hy = max(ex + 3.0*S, glen*1.42);
   if(kshape > 0.0){ hx = max(hx, hy); hy = hx; }
   vec2 loc = aCorner*vec2(hx, hy);
   vec2 off = axis*loc.x + vec2(-axis.y, axis.x)*loc.y;
   vLocal = loc;
   vCol = vec4(col, glint);
-  vGeo = vec4(R, S, Lh, r0);
+  vGeo = vec4(R, S, 0.0, r0);
   // the shape's own turn is measured in the picture, so undo the streak axis
   float ang = aRot.x - atan(axis.y, axis.x);
   vShape = vec4(cos(ang), sin(ang), squash, kshape);
   vMisc = vec3(aSeed, depth, glen);
+  vStretch = stretch;
   gl_Position = vec4(ndc + off*2.0/uRes, 0.0, 1.0);
 }
 """
@@ -245,7 +252,7 @@ void main(){
 SPRITE_FS = """
 #version 330
 in vec2 vLocal;
-flat in vec4 vCol; flat in vec4 vGeo; flat in vec4 vShape; flat in vec3 vMisc;
+flat in vec4 vCol; flat in vec4 vGeo; flat in vec4 vShape; flat in vec3 vMisc; flat in float vStretch;
 uniform int uKind;
 uniform float uT;
 uniform vec2 uRes;
@@ -263,8 +270,8 @@ float sdVesica(vec2 p, float r, float d){
 float sdSeg(vec2 p, vec2 a, vec2 b){ vec2 pa = p-a, ba = b-a; return length(pa - ba*clamp(dot(pa, ba)/dot(ba, ba), 0.0, 1.0)); }
 
 void main(){
-  float R = vGeo.x, S = vGeo.y, Lh = vGeo.z, r0 = vGeo.w;
-  vec2 q = vec2(max(abs(vLocal.x)-Lh, 0.0), vLocal.y);
+  float R = vGeo.x, S = vGeo.y, r0 = vGeo.w;
+  vec2 q = vec2(vLocal.x/vStretch, vLocal.y);
   float d = length(q);
   if(uBokeh.y > 0.0 && R > 3.0*S){
     vec2 a = abs(q);
@@ -297,9 +304,9 @@ void main(){
   vec3 c = vCol.rgb*prof;
   if(vCol.a > 0.01){
     float gl = vMisc.z*0.30, sg = max(0.75*S, 0.55);
-    float cross = exp(-abs(vLocal.x)/gl)*exp(-vLocal.y*vLocal.y/(2.0*sg*sg))
-                + exp(-abs(vLocal.y)/gl)*exp(-vLocal.x*vLocal.x/(2.0*sg*sg));
-    float edge = 1.0 - smoothstep(0.7, 1.0, max(abs(vLocal.x), abs(vLocal.y))/vMisc.z);
+    vec2 g = vec2(vShape.x*vLocal.x + vShape.y*vLocal.y, -vShape.y*vLocal.x + vShape.x*vLocal.y);
+    float cross = exp(-abs(g.x)/gl)*exp(-g.y*g.y/(2.0*sg*sg)) + exp(-abs(g.y)/gl)*exp(-g.x*g.x/(2.0*sg*sg));
+    float edge = 1.0 - smoothstep(0.7, 1.0, max(abs(g.x), abs(g.y))/vMisc.z);
     c += vCol.rgb*cross*0.55*vCol.a*edge;
   }
   if(uMaskOn > 0.5){
@@ -474,7 +481,7 @@ vec3 skyBase(vec3 d){
 }
 
 // the sky, the clouds and the hills in direction d (d.y >= 0); vis: the share of sunlight that passes
-vec3 shade(vec3 d, float disc, float aa, out float vis){
+vec3 shade(vec3 d, float te, float disc, float aa, out float vis){
   vec3 c = skyBase(d);
   vis = 1.0;
   float cs = dot(d, uSunDir);
@@ -490,7 +497,6 @@ vec3 shade(vec3 d, float disc, float aa, out float vis){
   c += uSunCol*uSunP.x*uSunP.z*disc*smoothstep(uSunP.y-0.00006, uSunP.y+0.00006, cs)*(1.0-dens);
   if(uHillP.x > 0.001){
     float lxz = max(length(d.xz), 1e-5);
-    float te = d.y/lxz;
     if(te < 0.55){
       vec2 cxz = d.xz/lxz;
       vec3 hz = uHazeCol + uSunCol*uSunP.x*0.22*pow(max(dot(cxz, normalize(uSunDir.xz+vec2(1e-5))), 0.0), 3.0)
@@ -498,6 +504,7 @@ vec3 shade(vec3 d, float disc, float aa, out float vis){
       for(int k=2;k>=0;k--){
         float ht = hillTan(cxz, k);
         float m = smoothstep(ht+aa, ht-aa, te)*uHillP.x;
+        if(k == 0 && te < 0.0) m = uHillP.x;               // the shore: ground at the foot of the hills
         if(m > 0.0){
           float far = k==2 ? 0.80 : (k==1 ? 0.56 : 0.30);
           float low = clamp((ht-te)/max(ht+uCamPos.y/HILL_D[k], 0.02), 0.0, 1.0);   // toward the foot, into the mist
@@ -534,12 +541,13 @@ void main(){
   float vis = 0.0, dist = 1e5;
   vec3 col;
   vec3 hazeC = uHazeCol;
-  bool water = d.y < 0.0 && uCamPos.y/(-d.y) < uLakeP.w;
+  bool water = d.y < 0.0 && (uCamPos.y/(-d.y) < uLakeP.w || uHillP.x < 0.001);
   vec3 rr = d; vec3 hit = uCamPos; float fres = 0.0;
   if(water){
     dist = uCamPos.y/(-d.y);
     hit = uCamPos + d*dist;
-    vec2 g = rip(hit.xz, uT)*uLakeP.z/(1.0 + dist/150.0);
+    float foot = dist*dist/(0.5*uRes.y*uFocal*max(uCamPos.y, 0.05));
+    vec2 g = rip(hit.xz, uT, foot)*uLakeP.z;
     if(uLakeP.z > 0.0){
       float nf = uLakeP.z/(1.0 + dist/22.0);
       g += (vec2(vnoise(hit.xz*4.7+uT*vec2(0.31, 0.47)), vnoise(hit.xz*4.7+31.7-uT*vec2(0.43, 0.23)))-0.5)*0.045*nf;
@@ -549,7 +557,7 @@ void main(){
     rr = reflect(d, n);
     rr.y = max(rr.y, 0.003); rr = normalize(rr);
     float v;
-    vec3 c = shade(rr, 0.0, aa*3.0, v);
+    vec3 c = shade(rr, rr.y/max(length(rr.xz), 1e-5), 0.0, aa*3.0, v);
     float cs = max(dot(rr, uSunDir), 0.0);
     c += uSunCol*uSunP.x*v*(pow(cs, 1200.0)*uSunP.z*0.8 + pow(cs, 120.0)*0.9)*smoothstep(-0.03, 0.02, uSunDir.y);
     fres = mix(uLakeP.x, 1.0, pow(1.0-clamp(-d.y, 0.0, 1.0), 4.0))*uLakeP.y;
@@ -561,7 +569,7 @@ void main(){
     col = mix(col, hazeC, 1.0 - exp(-dist*uAirP.x*1.6));
   } else {
     vec3 dd = d; if(dd.y < 0.0005){ dd.y = 0.0005; dd = normalize(dd); }
-    col = shade(dd, 1.0, aa, vis);
+    col = shade(dd, d.y/max(length(d.xz), 1e-5), 1.0, aa, vis);
   }
   // ground mist: fog that thins with height, lit by the sun, in drifting patches
   if(uAirP.y > 0.0001){
