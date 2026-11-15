@@ -87,6 +87,7 @@ _base.TAGLINE = dict(text="Sunday, December 6 · 4:30 PM\nWorld Mission Society 
                           "6720 W Sahara Ave, Las Vegas",
                      sizes=(78, 77), t0=TAG_T0, t1=TAG_T1, color="#1f2a6b", glow="#fff8ec", anim="rise")
 _base.WAVES = []
+_base.CREDIT["t_in"], _base.CREDIT["t_full"] = 1e9, 1e9 + 1.0      # no corner credit: the TITLES carry it
 from songs.s03_original import *  # noqa: E402,F401,F403
 
 from p3d import lin, show  # noqa: E402
@@ -103,12 +104,9 @@ TEXT_SHADOW = 0.0          # nothing dark behind any text
 # in light across the sky in the breath, over the two who hold each other, bursting on the biggest hit.
 TITLES = dict(
     opening=dict(t_end=4.0, y=0.20, palette="night"),
-    signature=dict(windows=[(11.6, 13.2, "br", "night"), (24.7, 26.6, "br", "night"), (31.4, 33.0, "bl", "night")]),
+    signature=dict(windows=[(11.6, 13.2, "br", "night"), (24.7, 26.6, "tr", "night"), (31.4, 33.0, "bl", "night")]),
     date_light=dict(t_form=BREATH, t_burst=X6, y=0.30, palette="night"),
 )
-CREDIT = dict(song="The Words of Mother’s Love", concert="Healing Concert",   # the old corner badge: off
-              t_in=1e9, t_full=1e9 + 1.0, t_move=1e9 + 2.0, t_rest=1e9 + 3.0, scale=0.34, alpha_rest=0.0,
-              margin_x=0.03, margin_top=0.048)
 
 
 def _ss(a, b, x):
@@ -142,14 +140,16 @@ LOOKS = dict(
               milky=0.0, clouds=0.65, haze=0.7, haze_color="#2a2858", mist=0.5, mist_height=2.0,
               mist_color="#3a3a70", ripple=1.8, water="#0e1034", dust=0.3, dust_color="#cfd6ff"),
     blossom=dict(base="golden", sky_top="#0a2468", sky_mid="#2a56a8", sky_hor="#ffd2bc", sun_az=146.0,
-                 sun_el=2.0, sun_color="#fff0dc", sun_int=0.6, sun_glow=0.3, clouds=0.30, rays=0.25, haze=0.3,
-                 haze_color="#9a8ab8", mist=0.3, mist_height=2.0, mist_color="#e8c8d0", water="#123a7a",
+                 sun_el=2.0, sun_color="#fff0dc", sun_int=0.6, sun_glow=0.3, clouds=0.30, rays=0.25, haze=0.25,
+                 haze_color="#7a7ab8", mist=0.12, mist_height=1.0, mist_color="#e8c8d0", water="#123a7a",
                  hill_color="#22325e", dust=0.6, dust_color="#fff4f0", dust_color2="#ffc2cf"),
+    stars_lit=dict(base="night", sky_top="#1c2a7c", sky_mid="#3a3aa0", sky_hor="#8a62c0", stars=1.0, milky=1.0,
+                   hills=0.55, hill_color="#24205a", haze_color="#4a3a9a", mist=0.2, water="#141a5a", exposure=1.3),
     dayend=dict(base="day", sun_az=232.0, sun_el=30.0, sun_disc=1.2, haze=0.35, mist=0.08),
 )
 MAIN_LOOK = [(0.0, "pearl"), (X1, "ember", 0.0), (X2, "sea", 0.0), (X3, "stars", 0.0), (X4, "harvest", 0.0),
              (X5, "rain", 0.0), (X6, "blossom", 0.0), (FLOOD, "dayend", 1.8)]
-_WIN = [(-9.0, "ember"), (X1, "sea"), (X2, "stars"), (X3, "harvest"), (X4, "rain"), (X5, "blossom"),
+_WIN = [(-9.0, "ember"), (X1, "sea"), (X2, "stars_lit"), (X3, "harvest"), (X4, "rain"), (X5, "blossom"),
         (X6, "stars")]
 
 
@@ -190,7 +190,7 @@ C1 = O1 + _A(K1[-1][1])
 
 # S2 sunrise clouds: a door of light (a window onto the sea) and two people (scale 12)
 O2 = _after(C1, (-20.0, 0.0, 110.0))
-DOOR = dict(c=_A([6.0, 0.0, -95.0]), w=26.0, h=34.0)          # centre of the sill, width, height to the arch
+DOOR = dict(c=_A([6.0, 0.0, -95.0]), w=22.0, h=21.0)          # centre of the sill, width, height to the arch
 K2 = [(X1, (-20.0, C1[1], 110.0), (0.0, 25.0, -80.0)), (8.6, (-8.0, 20.0, 45.0), (2.0, 18.0, -80.0)),
       (11.6, (2.0, 18.0, 10.0), (6.0, 20.0, -95.0)), (X2, (6.0, 22.0, -94.0), (6.0, 22.0, -140.0))]
 C2 = O2 + _A(K2[-1][1])
@@ -198,14 +198,14 @@ C2 = O2 + _A(K2[-1][1])
 # S3 the sea at blue hour: two people face each other (scale 26); into his head
 O3 = _after(C2, (-6.0, 0.0, 120.0))
 K3 = [(X2, (-6.0, C2[1], 120.0), (0.0, 36.0, -70.0)), (15.2, (-3.0, 34.0, 62.0), (0.0, 38.0, -70.0)),
-      (18.2, (2.0, 37.0, 22.0), (6.0, 40.0, -70.0)), (X3, (10.56, 43.2, -71.0), (10.56, 43.2, -110.0))]
+      (18.2, (4.0, 37.0, 22.0), (10.0, 40.0, -70.0)), (X3, (16.56, 43.2, -71.0), (16.56, 43.2, -110.0))]
 C3 = O3 + _A(K3[-1][1])
 
 # S4 the field of stars: the crowd that bows (scale 12) and the man they thank (scale 16); into his heart
 O4 = _after(C3, (-18.0, 0.0, 160.0))
 WORKER_AT = _A([0.0, 0.0, -100.0])
-K4 = [(X3, (-18.0, C3[1], 160.0), (0.0, 14.0, -100.0)), (21.6, (-8.0, 18.0, 70.0), (0.0, 15.0, -100.0)),
-      (24.9, (-2.0, 17.0, 8.0), (0.0, 17.0, -100.0)), (X4, (0.0, 19.6, -97.6), (0.0, 19.6, -140.0))]
+K4 = [(X3, (-18.0, C3[1], 160.0), (0.0, 10.0, -100.0)), (21.6, (-8.0, 36.0, 64.0), (0.0, 8.0, -100.0)),
+      (24.9, (-2.0, 28.0, 0.0), (0.0, 14.0, -100.0)), (X4, (0.0, 19.6, -97.6), (0.0, 19.6, -140.0))]
 C4 = O4 + _A(K4[-1][1])
 
 # S5 harvest dusk, life size: two hands meet 1.5 m over the water, 12 m ahead; we dive down to them
@@ -218,9 +218,9 @@ def _lift(t):
     return LIFT * _ss(CLASP + 0.15, CLASP + 1.7, t)
 
 
-K5 = [(X4, (0.0, C4[1], 0.0), (0.0, 1.5, -12.0)), (27.6, (0.2, 7.0, -5.5), (0.0, 1.5, -12.0)),
-      (28.4, (0.25, 2.3, -8.6), (0.0, 1.5, -12.0)), (CLASP, (0.08, 1.62, -10.4), (0.0, 1.55, -12.0)),
-      (31.9, (0.03, 1.8, -11.1), (0.0, 1.85, -12.0)),
+K5 = [(X4, (0.0, C4[1], 0.0), (0.0, 1.5, -12.0)), (27.6, (0.2, 6.5, -5.8), (0.0, 1.5, -12.0)),
+      (28.4, (0.2, 1.6, -9.4), (0.0, 1.6, -12.0)), (CLASP, (0.06, 1.25, -10.95), (0.0, 1.6, -12.0)),
+      (31.9, (0.03, 1.5, -11.2), (0.0, 1.9, -12.0)),
       (X5, (0.0, 1.5 + LIFT, -11.97), (0.0, 1.5 + LIFT, -14.0))]
 C5 = O5 + _A(K5[-1][1])
 
@@ -228,7 +228,7 @@ C5 = O5 + _A(K5[-1][1])
 O6 = _after(C5, (0.0, 0.0, 9.0))
 PAIR6 = _A([0.0, 0.0, 0.0])
 K6 = [(X5, (0.0, C5[1], 9.0), (0.0, 0.9, 0.0)), (35.2, (-0.7, 1.25, 5.4), (0.0, 0.75, 0.0)),
-      (38.4, (-0.5, 1.15, 4.2), (0.0, 0.8, 0.0)), (41.3, (0.15, 1.4, 2.3), (0.0, 1.3, 0.0)),
+      (38.4, (-0.4, 2.0, 5.6), (0.0, 0.85, 0.0)), (41.3, (0.15, 1.8, 3.0), (0.0, 0.95, 0.0)),
       (X6, (0.0, 1.22, -0.03), (0.0, 1.22, -3.0))]
 C6 = O6 + _A(K6[-1][1])
 
@@ -238,9 +238,9 @@ PRAYER_AT, FATHER_AT = _A([-1.3, 0.0, -2.6]), _A([1.7, 0.0, -6.8])
 MOTHER_AT = _A([0.0, 0.0, -380.0])
 MOTHER_HEAD, MOTHER_HEART = _A([0.3, 69.1, -379.9]), _A([-2.4, 52.4, -386.5])
 K7 = [(X6, (0.0, C6[1], 3.0), (-1.3, 0.9, -2.6)), (44.6, (-0.55, 0.95, -0.4), (-1.3, 0.8, -2.6)),
-      (46.6, (0.55, 1.15, -2.2), (1.6, 1.0, -6.8)), (48.4, (0.9, 1.3, -3.3), (1.7, 1.25, -6.8)),
-      (REVEAL, (0.6, 2.2, -4.6), (0.0, 10.0, -200.0)), (FLOOD, (0.0, 22.0, -110.0), (0.0, 58.0, -380.0)),
-      (TITLE_HIT, (0.0, 34.0, -150.0), (0.0, 94.0, -380.0)), (60.0, (0.0, 37.0, -165.0), (0.0, 98.0, -380.0))]
+      (46.6, (0.6, 1.2, -2.6), (1.7, 1.0, -6.8)), (48.6, (1.1, 1.35, -3.9), (1.7, 1.3, -6.8)),
+      (REVEAL, (0.9, 1.9, -4.9), (0.6, 4.0, -60.0)), (FLOOD, (0.0, 22.0, -110.0), (0.0, 58.0, -380.0)),
+      (TITLE_HIT, (0.0, 30.0, -130.0), (0.0, 108.0, -380.0)), (60.0, (0.0, 31.0, -142.0), (0.0, 112.0, -380.0))]
 
 
 def _kick(t0, t1, a, b):
@@ -252,7 +252,7 @@ CAMERA = Rig([
     fly(_keys(O1, K1), fov=_kick(5.7, X1, 38.0, 50.0), aperture=0.35, focus="target"),
     fly(_keys(O2, K2), fov=_kick(12.4, X2, 42.0, 54.0), aperture=0.3, focus=90.0, blend=0.25),
     fly(_keys(O3, K3), fov=_kick(18.9, X3, 42.0, 54.0), aperture=0.3, focus=80.0, blend=0.25),
-    fly(_keys(O4, K4), fov=_kick(25.8, X4, 42.0, 54.0), aperture=0.3, focus=100.0, blend=0.25),
+    fly(_keys(O4, K4), fov=_kick(25.8, X4, 42.0, 54.0), aperture=0.1, focus=100.0, blend=0.25),
     fly(_keys(O5, K5), fov=40.0, aperture=0.012, focus="target", blend=0.25, near=0.02),
     fly(_keys(O6, K6), fov=42.0, aperture=0.02, focus="target", blend=0.25, near=0.02),
     fly(_keys(O7, K7), fov=42.0, aperture=lambda t: 0.02 * (1.0 - _ss(REVEAL, FLOOD, t)), focus="target",
@@ -295,7 +295,7 @@ def _clean(t, info):
 def _ride(expr, y, px, t_in, r0, r1, t_out, depth=6.0, **kw):
     tm = 0.5 * (r0 + r1)
     return dict(expr=expr, ride=(0.5, y, depth), em=PW.em_for(CAMERA, tm, depth, px), t_in=t_in, t_read0=r0,
-                t_read1=r1, t_out=t_out, halo=0.9, reflect=False, drive=_clean, **kw)
+                t_read1=r1, t_out=t_out, halo=0.6, reflect=False, drive=_clean, **kw)
 
 
 _AWAY = dict(away=(0.1, -0.15, -1.0), speed=1.4)
@@ -642,8 +642,8 @@ def _hands_help(meet, lift, t_clasp, approach=3.2, colors=("#ffcf8a", "#8fd0ff")
     out = []
     t0 = t_clasp - approach
     for j, (shape, side, col, aim, palm, poses) in enumerate((
-            ("woman", "L", colors[0], _A([0.42, 0.91, 0.0]), (0.0, 0.0, 1.0), [(0.0, "offer"), (t_clasp, "hold")]),
-            ("man", "R", colors[1], _A([-0.42, -0.91, 0.0]), (0.0, 0.0, -1.0), [(0.0, "open"), (t_clasp, "hold")]))):
+            ("woman", "L", colors[0], _A([0.82, 0.57, 0.0]), (0.0, 0.0, 1.0), [(0.0, "offer"), (t_clasp, "hold")]),
+            ("man", "R", colors[1], _A([-0.82, -0.57, 0.0]), (0.0, 0.0, -1.0), [(0.0, "open"), (t_clasp, "hold")]))):
         aim = aim / np.linalg.norm(aim)
 
         def at(t, aim=aim, j=j):
@@ -652,9 +652,10 @@ def _hands_help(meet, lift, t_clasp, approach=3.2, colors=("#ffcf8a", "#8fd0ff")
             drift = _A([0.006 * np.sin(2.1 * t + j), 0.008 * np.sin(1.7 * t + 2 * j), 0.0]) * (1.0 - u)
             return meet - aim * gap + drift + _A([0.0, lift(t), 0.0])
 
-        fx = [dict(kind="shed", n=4000, life=2.2, where=[1], dir=tuple(-aim), speed=0.35, rise=0.03, turb=0.2,
+        fx = [dict(kind="shed", n=1500, life=1.8, where=[1], dir=tuple(-aim), speed=0.25, rise=0.03, turb=0.2,
                    spread=0.05)]
-        out.append(Body(shape, part="arm." + side, look="glitter", color=col, points=points, effects=fx,
+        out.append(Body(shape, part="arm." + side, look=dict(name="glitter", bright=1.6), color=col, points=points,
+                        effects=fx,
                         seed=40.0 + j, hand=dict(side=side, at=at, aim=tuple(aim), palm=palm, pose=poses,
                                                  anchor="fingertips")))
     return out
@@ -719,10 +720,9 @@ def _setup(scene):
 
     # 2 CONCESSION: a door of light onto the sea; he steps back and opens his palm toward it, she goes first
     door = Door(O2 + DOOR["c"], DOOR["w"], DOOR["h"], t0=X1)
-    scene.add("s2_door", _Gate(door, X1, X2, rise=0.0, fall=0.0))
     from p3d import Mask
-    scene.add("s2_door_open", _Gate(door.fill, X1, X2, rise=0.0, fall=0.0), reflect=False,
-              mask=Mask("sky", sky="world", look=window_look, edge=0.4, grow=0.6,
+    scene.add("s2_door", _Gate(door, X1, X2, rise=0.0, fall=0.0),
+              mask=Mask("sky", sky="world", look=window_look, edge=0.4, grow=0.6, source=door.fill,
                         strength=lambda t: _ss(X1, X1 + 0.8, t) * (1.0 if t < X2 else 0.0)))
     _add(scene, "s2_host", _person("man", (-14.0, -78.0), O2,
                                    style="plexus", color="#ffd9a0", color2="#fff4e0", scale=12.0, garment="coat",
@@ -733,10 +733,10 @@ def _setup(scene):
                                     motion=[(-1e9, "stand"), (8.6, "walk", dict(speed=1.6))], seed=22.0), X1, X2)
 
     # 3 RESPECT: he speaks with an open hand raised, light flowing from it; she leans in and listens
-    speaker = _person("man", (13.0, -70.0), O3, style="sparks", color="#bfe0ff", color2="#ffffff", scale=26.0,
+    speaker = _person("man", (19.0, -70.0), O3, style="sparks", color="#bfe0ff", color2="#ffffff", scale=26.0,
                       garment="tunic", facing=270.0, seed=31.0,
-                      gesture=[(13.9, 30.0, "reach", dict(side="L", palm="up", height=0.12, far=0.7))])
-    listener = _person("woman", (-13.0, -70.0), O3, style="sparks", color="#bfe0ff", color2="#ffffff",
+                      gesture=[(13.9, 30.0, "offer", dict(side="L"))])
+    listener = _person("woman", (-19.0, -70.0), O3, style="sparks", color="#bfe0ff", color2="#ffffff",
                        scale=26.0, garment="dress", facing=90.0, seed=32.0,
                        gesture=[(14.0, 30.0, "listen", dict(side="R", amount=1.0)),
                                 (15.8, 16.6, "bow", dict(amount=9.0, ease=0.4)),
@@ -780,9 +780,9 @@ def _setup(scene):
                                      facing=90.0, motion=[(-1e9, "kneel", dict(dur=0.01, hands="pray"))],
                                      gesture=[(X6, 61.0, "bow", dict(amount=14.0))], seed=71.0), X6, REVEAL + 1.0)
     fa, ch = pairs.child_into_arms(47.6, at=(O7[0] + FATHER_AT[0], O7[2] + FATHER_AT[2]), facing=270.0, lift=1.0,
-                                   adult=dict(shape="man", garment="coat", look=_style("glitter", "#ffd9a0", "#fff4e0", 1.2),
+                                   adult=dict(shape="man", garment="coat", look=_style("glitter", "#ffc070", "#ffe8c0", 1.8),
                                               color="#ffd9a0", seed=72.0),
-                                   child=dict(look=_style("glitter", "#ffc0a0", "#fff0e0", 1.4), color="#ffc0a0",
+                                   child=dict(look=_style("glitter", "#ff9a80", "#ffe0c8", 2.0), color="#ff9a80",
                                               garment="dress", seed=73.0,
                                               effects=[dict(kind="shed", t=48.3, n=6000, speed=0.6, rise=0.5,
                                                             color="#ffb070", where="top")]))
@@ -844,14 +844,6 @@ def _clear_boxes(t):
     if t < TITLES["opening"]["t_end"] + 0.5:
         a = 1.0 - _ss(TITLES["opening"]["t_end"], TITLES["opening"]["t_end"] + 0.5, t)
         out.append(dict(box=(0.12, oy - 0.15, 0.88, oy + 0.15), t0=-2.0, t1=61.0, soft=0.03, amount=a))
-    for a0, a1, corner, _pal in TITLES["signature"]["windows"]:
-        if a0 - 0.4 <= t <= a1 + 0.4:
-            out.append(dict(box=_SIG_BOX[corner], t0=a0 - 0.4, t1=a1 + 0.4, soft=0.03, amount=1.0))
-    dl = TITLES["date_light"]
-    if dl["t_form"] - 0.3 <= t <= dl["t_burst"]:
-        dy = 1.0 - dl["y"]
-        out.append(dict(box=(0.12, dy - 0.15, 0.88, dy + 0.13), t0=dl["t_form"] - 0.3, t1=dl["t_burst"], soft=0.04,
-                        amount=0.9))
     if t >= T_FORM - 0.3:
         out.append(dict(box=(0.10, 0.36, 0.90, 0.88), t0=T_FORM - 0.3, t1=61.0, soft=0.05, amount=0.85))
     return out[:2]
