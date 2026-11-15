@@ -1,4 +1,4 @@
-"""Engine test only (UPGRADE-HOWTO H2): the original song 03 timeline with a different text animation on each
+"""Engine test only (UPGRADE-HOWTO J): the original song 03 timeline with a different text animation on each
 expression, the title, the end card lines and one fragment. Render stills with audio/test/silent-60s.mp3."""
 import songs.s03_original as _base
 

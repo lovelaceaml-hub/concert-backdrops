@@ -137,7 +137,7 @@ class Renderer:
         import upgrade
         self.up = upgrade.Upgrade(self)   # scenes, people of light, effect layers, fragment styles (all optional)
         import text_anims
-        self.ta = text_anims.TextAnims(self)   # other text animations (anim=, UPGRADE-HOWTO H2; all optional)
+        self.ta = text_anims.TextAnims(self)   # other text animations (anim=, UPGRADE-HOWTO J; all optional)
 
     # ------------------------------------------------------------------
     def text_plan(self, t):

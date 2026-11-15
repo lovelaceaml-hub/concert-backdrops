@@ -152,7 +152,7 @@ FIGURES = [
 ]
 ```
 
-## H2. Text animations (2026-11-15)
+## J. Text animations (2026-11-15)
 
 Anthony: "I also want different animations for the text instead of just the same one." Add `anim=` to an entry in PHRASES, to `TITLE`, to `TAGLINE` (the end card lines) or to a FRAGMENTS entry. A song may set `TEXT_ANIM = "ink"` (for example) as the default for every expression and the title; an entry's own `anim=` wins. Without any of these nothing changes: the classic sparks render pixel for pixel as before.
 

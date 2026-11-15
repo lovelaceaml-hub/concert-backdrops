@@ -1,4 +1,4 @@
-"""Text animations (UPGRADE-HOWTO section H2): other ways for the words to appear than the classic sparks.
+"""Text animations (UPGRADE-HOWTO section J): other ways for the words to appear than the classic sparks.
 
 A PHRASES entry, the closing TITLE, the TAGLINE (end card lines) and a FRAGMENTS entry may set anim= (or ANIM=):
 
