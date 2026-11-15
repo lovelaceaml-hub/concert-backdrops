@@ -1,8 +1,8 @@
 """The human form behind the particle bodies: the baked mesh, its skeleton, skinning and surface sampling.
 
 The asset is assets/p3d/body_v1.npz (see assets/p3d/README.md for what it is, where it comes from and its
-licences: the MakeHuman hm08 base mesh, CC0, and a few DeepMimic motion clips, zlib). It is built by
-tools/build_p3d_body.py; nothing is downloaded at render time.
+licences: the MakeHuman hm08 base mesh, CC0, and motion clips from the CMU motion capture database). It is built by
+tools/build_p3d_body.py and tools/build_p3d_motion.py; nothing is downloaded at render time.
 
 Conventions (the same as engine/p3d/api.py): metres, y up, the body stands with its soles on y = 0 and, at
 facing 0, looks toward +z; the body's own left is +x.

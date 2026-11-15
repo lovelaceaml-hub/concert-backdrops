@@ -9,12 +9,10 @@ exactly where it came from, and rebuilds it from two public packages on PyPI:
    the mesh file itself says "explicitly released as CC0 in september 2020", copyright holders
    Data Collection AB, Joel Palmius, Jonas Hauquier; the weights file says "license": "CC0",
    Copyright (C) 2025 NAVER Corp.).
-2. Two motion cycles (walk, run) and a few extras: the humanoid3d_*.txt reference motions in the
-   source distribution of `pybullet` 3.2.7 under examples/pybullet/gym/pybullet_data/data/motions/.
-   Licence: zlib (LICENSE.txt of the Bullet Physics SDK: "The files in this repository are licensed
-   under the zlib license"); these clips are the DeepMimic reference motions (Peng et al. 2018,
-   whose own repository is MIT licensed). They are stored here in altered form (float32 arrays),
-   which this notice marks plainly.
+2. The motion clips are not made here: tools/build_p3d_motion.py adds them to the same file afterwards,
+   from the CMU Graphics Lab Motion Capture Database (free for research and commercial use). An earlier
+   version took clips from the pybullet source distribution (the DeepMimic reference motions, derived in
+   part from the SFU database, whose terms were not verified); they are no longer used or stored.
 
 What the script changes: the face region is smoothed so that no facial feature survives (a faceless
 mannequin: only the outline of a profile remains), helper geometry is dropped, the face and toe bones
@@ -22,7 +20,8 @@ are folded into the head and the feet, units become metres with the soles at y =
 
 Usage (needs network access to PyPI, numpy only):
     python tools/build_p3d_body.py            # downloads into a temp folder, writes assets/p3d/body_v1.npz
-    python tools/build_p3d_body.py --anny DIR --pybullet DIR   # use already extracted packages
+    python tools/build_p3d_body.py --anny DIR # use an already extracted package
+    python tools/build_p3d_motion.py          # then add the motion clips
 """
 import argparse
 import gzip
@@ -30,15 +29,12 @@ import json
 import os
 import subprocess
 import sys
-import tarfile
 import tempfile
 import zipfile
 
 import numpy as np
 
 ANNY = "anny==0.6.2"
-PYBULLET = "pybullet==3.2.7"
-CLIPS = ["walk", "run", "jump", "spin", "dance_a", "dance_b"]
 SHAPES = {
     # name: list of (target under targets/macrodetails, weight)
     "woman": [("caucasian-female-young", 1 / 3), ("asian-female-young", 1 / 3), ("african-female-young", 1 / 3)],
@@ -49,11 +45,9 @@ SHAPES = {
 
 
 def fetch(tmp):
-    """Downloads the two packages from PyPI and unpacks only what is needed. Returns (mpfb2 dir, motions dir)."""
+    """Downloads the package from PyPI and unpacks only what is needed. Returns the mpfb2 folder."""
     a = os.path.join(tmp, "anny")
-    p = os.path.join(tmp, "pybullet")
     os.makedirs(a)
-    os.makedirs(p)
     subprocess.check_call([sys.executable, "-m", "pip", "download", "-q", "--no-deps", "-d", a, ANNY])
     whl = [f for f in os.listdir(a) if f.endswith(".whl")][0]
     with zipfile.ZipFile(os.path.join(a, whl)) as z:
@@ -62,15 +56,7 @@ def fetch(tmp):
                     n.endswith(("base.obj", "rig.default.json", "weights.default.json", "LICENSE.md"))
                     or "/macrodetails/" in n and n.count("/") == 5):
                 z.extract(n, a)
-    subprocess.check_call([sys.executable, "-m", "pip", "download", "-q", "--no-deps", "--no-binary", ":all:",
-                           "-d", p, PYBULLET])
-    tgz = [f for f in os.listdir(p) if f.endswith(".tar.gz")][0]
-    with tarfile.open(os.path.join(p, tgz)) as t:
-        for m in t.getmembers():
-            if "/pybullet_data/data/motions/humanoid3d_" in m.name and m.isfile():
-                m.name = os.path.basename(m.name)
-                t.extract(m, os.path.join(p, "motions"))
-    return os.path.join(a, "anny", "data", "mpfb2"), os.path.join(p, "motions")
+    return os.path.join(a, "anny", "data", "mpfb2")
 
 
 def read_obj(path):
@@ -230,15 +216,11 @@ def close_cavities(v, tris, sel):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--anny", default="", help="folder that holds the extracted anny/data/mpfb2")
-    ap.add_argument("--pybullet", default="", help="folder that holds the humanoid3d_*.txt motion files")
     ap.add_argument("--smooth", type=int, default=160, help="face smoothing passes")
     ap.add_argument("--out", default=os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "assets", "p3d",
                                                   "body_v1.npz"))
     a = ap.parse_args()
-    if a.anny and a.pybullet:
-        mp, mo = a.anny, a.pybullet
-    else:
-        mp, mo = fetch(tempfile.mkdtemp(prefix="p3dbody"))
+    mp = a.anny or fetch(tempfile.mkdtemp(prefix="p3dbody"))
 
     v0, faces, grp = read_obj(os.path.join(mp, "3dobjs", "base.obj"))
     nv = len(v0)
@@ -362,14 +344,9 @@ def main():
     out["w_idx"] = top.astype(np.int16)
     out["w_val"] = wv.astype(np.float32)
     out["face_weight"] = np.clip(np.maximum(wf, head_w), 0, 1).astype(np.float32)
-    for c in CLIPS:
-        d = json.load(open(os.path.join(mo, "humanoid3d_%s.txt" % c)))
-        out["clip_" + c] = np.array(d["Frames"], np.float32)
-        out["clip_" + c + "_loop"] = np.array(d["Loop"] == "wrap")
     out["source"] = np.array(
         "MakeHuman hm08 base mesh, default rig and weights from the PyPI wheel %s (anny/data/mpfb2, CC0 1.0); "
-        "motion clips from the PyPI source distribution %s (pybullet_data/data/motions, zlib licence; the DeepMimic "
-        "reference motions, altered: stored as float32 arrays). Built by tools/build_p3d_body.py." % (ANNY, PYBULLET))
+        "built by tools/build_p3d_body.py" % ANNY)
     os.makedirs(os.path.dirname(os.path.abspath(a.out)), exist_ok=True)
     np.savez_compressed(a.out, **out)
     print("wrote", a.out, os.path.getsize(a.out), "bytes;", len(names), "bones;", len(tris), "triangles")
