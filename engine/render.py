@@ -296,6 +296,7 @@ class Renderer:
                  uCredit=tuple(float(v) for v in credit), uC0=c0)
             self.v_prot.render(moderngl.TRIANGLE_STRIP)
             ctx.blend_func = (ONE, ONE)
+        self.sky.after_protect(t, P)   # god rays, when TEXT_SHADOW is below 0.05 (no hole in the haze behind text)
 
         # words: particles, then the solid letters
         calm = float(_val("BOTTOM_CALM", t, 0.0))

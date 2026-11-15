@@ -14,8 +14,9 @@ these keys renders exactly as before. How a song uses them: engine/UPGRADE-HOWTO
                 the drifting air layers (motes, petals, snow, bubbles, leaves, beat sparkles) are not moved.
 
 render.py calls, in frame order: adjust (after params), draw_clouds (after the sky pass), draw_light (after the
-effect layers, before text protection: the rays are dimmed behind words like every other light) and
-camera_bg (after the glow blur, before the composite).
+effect layers, before text protection: the rays are dimmed behind words like every other light), after_protect
+(the rays instead, when TEXT_SHADOW is below 0.05 and nothing dark may stand behind text) and camera_bg (after
+the glow blur, before the composite).
 
 How a layer follows the camera (engine-epic): its vertex shader is wrapped with cam_vs(), and before each draw the
 layer sets the uniform uCamAff to R.sky.aff(depth). A point the layer would draw at screen position s with the
@@ -352,14 +353,14 @@ class SkyCamera:
             self.v_rad.render(moderngl.TRIANGLE_STRIP)
             rc = val("RAYS_COLOR", t, None)
             c = col(rc, "#ffffff") if rc is not None else np.asarray(P["glow"]) * 0.75 + S.lin("#fff1dc") * 0.25
-            R.f_L.use()
-            ctx.enable(moderngl.BLEND)
-            ctx.blend_func = (moderngl.ONE, moderngl.ONE)
-            self.t_ray.use(location=0)
-            setu(self.p_rays, uRays=0, uCol=c, uAmt=a * gain * 1.25, uHorizon=float(self.to_screen((0.5, S.HORIZON), 0.80, t, P)[1]), uCalm=calm,
-                 uCalmY=CALM_Y)
-            self.v_rays.render(moderngl.TRIANGLE_STRIP)
-            drew = True
+            self._rays = dict(uRays=0, uCol=c, uAmt=a * gain * 1.25, uCalm=calm, uCalmY=CALM_Y,
+                              uHorizon=float(self.to_screen((0.5, S.HORIZON), 0.80, t, P)[1]))
+            # The shafts are a haze over the whole sky. The text protection dims every light behind the words, which
+            # is right while a veil stands behind them (TEXT_SHADOW); with TEXT_SHADOW 0 nothing dark may stand
+            # behind text, and a hole in the haze is exactly that. Then after_protect() draws them (engine-epic).
+            if min(max(float(val("TEXT_SHADOW", t, 1.0)) * 20.0, 0.0), 1.0) >= 1.0:
+                self._draw_rays(0.0)
+                drew = True
         m = float(val("CAMERA_MOTES", t, 0.0) or 0.0) if self.has_motes else 0.0
         if m > 0.001:
             if not drew:
@@ -374,6 +375,29 @@ class SkyCamera:
         R.f_L.use()
         ctx.enable(moderngl.BLEND)
         ctx.blend_func = (moderngl.ONE, moderngl.ONE)
+
+    _rays = None   # the god rays of this frame, when they are still to be drawn
+
+    def _draw_rays(self, prot_k, t=None):
+        ctx, R = self.ctx, self.R
+        R.f_L.use()
+        ctx.enable(moderngl.BLEND)
+        ctx.blend_func = (moderngl.ONE, moderngl.ONE)
+        if prot_k > 0.0:
+            self._text_uniforms(self.p_rays, t, units=(1, 2, 3))
+        self.t_ray.use(location=0)
+        setu(self.p_rays, uProtK=float(prot_k), **self._rays)
+        self.v_rays.render(moderngl.TRIANGLE_STRIP)
+        self._rays = None
+
+    def after_protect(self, t, P):
+        """Called by render.py right after the text protection pass: the god rays, when TEXT_SHADOW is below 0.05.
+        They dim themselves behind the words only as far as TEXT_SHADOW still asks (not at all at 0)."""
+        if not self.on or self._rays is None:
+            return
+        zk = min(max(float(val("TEXT_SHADOW", t, 1.0)) * 20.0, 0.0), 1.0)
+        prot = min(max(float(val("TEXT_PROTECT", t, 1.0)), 0.0), 1.0)
+        self._draw_rays(0.94 * prot * zk, t)
 
     # ------------------------------------------------------------ 4. the camera background
     def camera_bg(self, t, P):

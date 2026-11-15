@@ -174,15 +174,16 @@ void main(){
 }
 """
 
-RAYS_FS = """
-#version 330
+RAYS_FS = "#version 330\n" + TEXTF + """
 in vec2 vUV; out vec4 o;
 uniform sampler2D uRays; uniform vec3 uCol; uniform float uAmt, uHorizon, uCalm, uCalmY;   // uHorizon: on screen now
+uniform float uProtK;   // above 0: drawn after the text protection pass, and dimmed behind the words by this much
 float calmK(float y){ return 1.0-uCalm*(1.0-smoothstep(uCalmY-0.07, uCalmY+0.05, y)); }
 void main(){
   float r = texture(uRays, vUV).r;
   float low = mix(0.02, 1.0, smoothstep(uHorizon+0.05, uHorizon+0.18, vUV.y));   // shafts live in the air above the land
-  o = vec4(uCol*uAmt*r*low*calmK(vUV.y), 1.0);
+  float k = uProtK>0.0 ? 1.0-uProtK*textF(vUV) : 1.0;
+  o = vec4(uCol*uAmt*r*low*calmK(vUV.y)*k, 1.0);
 }
 """
 

@@ -7,12 +7,13 @@ What it shows (seconds):
  0 to 9    dusk: a person of light walks the far shore (rig); a tree grows at the right; a falling star touches
            the lake and its ripple spreads; the Encouragement expression blooms and is held; doves and the first
            of a crowd come in
- 9 to 14   Heavenly Mother from behind; the crowd gathers; the tree blossoms; clouds, and the first god rays as
-           the sun comes up
- 13 to 21  dawn: a flame comes down from the arch and passes from hand to hand; the emblem is drawn over the
-           crowd and mirrored in the rippling lake, then flies to its light; the crowd lifts its lights
- 21 to 30  bright campaign day: bubbles and leaves; a painted pair walks in, warped alive; the lights reach the
-           arch; the end card in coral and navy (ribbon and rise)
+ 9 to 14   Heavenly Mother from behind; the crowd gathers; the tree blossoms; clouds, and god rays as the sun
+           comes up
+ 13 to 21  still dusk, turning to dawn: a flame comes down from the arch and passes from hand to hand; the emblem
+           is drawn over the crowd and mirrored in the rippling lake, then flies to its light; the crowd lifts
+           its lights; a painted pair walks in, warped alive
+ 22 to 30  bright campaign day: bubbles and leaves; the lights reach the arch; the end card in coral and navy
+           (ribbon and rise)
 All the way through: one slow camera move (the land settles, a push in, a drift right) that the people, the crowd,
 the doves, the tree and the emblem follow at their own depths, and gentle music reactivity.
 
@@ -29,23 +30,23 @@ def params(song, t):
     return _base.params(song, t)
 
 
-# ---- the sky stays dark longer than in the base file, so the people of light read: dusk to 11 s, dawn at 16 to
-# 20 s, the bright campaign day from 23 s. The base file's params() reads these from its own module.
-_keys = [(0.0, "dusk"), (11.0, "dusk"), (16.0, "dawn"), (20.0, "dawn"), (23.5, "day"), (TOTAL, "day")]
+# ---- the sky stays dark longer than in the base file, so the people of light read: dusk to 15.5 s, dawn at 20.5
+# to 22 s, the bright campaign day from 24.5 s. The base file's params() reads these from its own module.
+_keys = [(0.0, "dusk"), (15.5, "dusk"), (20.5, "dawn"), (22.0, "dawn"), (24.5, "day"), (TOTAL, "day")]
 _base.SKY_TOP, _base.SKY_MID, _base.SKY_HOR, _base.GLOW = (
     Track([(t, _base.lin(_base.PAL[p][k])) for t, p in _keys]) for k in range(4))
-_base.SUN_Y = Track([(0, 0.335), (7.0, 0.34), (11.0, 0.362), (16.0, 0.385), (23.5, 0.41), (TOTAL, 0.41)])
-_base.SUN_INT = Track([(0, 0.20), (8.0, 0.24), (12.0, 0.50), (20.0, 0.55), (23.5, 0.45), (TOTAL, 0.45)])
-_base.STARS = Track([(0, 0.0), (0.3, 0.0), (2.0, 0.9), (11.0, 0.8), (16.0, 0.30), (21.0, 0.08), (TOTAL, 0.08)])
-_base.CLOUDS = Track([(0, 0.10), (11.0, 0.12), (17.0, 0.30), (23.5, 0.40), (TOTAL, 0.40)])
+_base.SUN_Y = Track([(0, 0.335), (7.0, 0.34), (11.0, 0.365), (16.0, 0.385), (24.5, 0.41), (TOTAL, 0.41)])
+_base.SUN_INT = Track([(0, 0.20), (9.0, 0.24), (13.0, 0.38), (21.0, 0.45), (TOTAL, 0.45)])
+_base.STARS = Track([(0, 0.0), (0.3, 0.0), (2.0, 0.9), (15.5, 0.8), (20.5, 0.25), (23.0, 0.08), (TOTAL, 0.08)])
+_base.CLOUDS = Track([(0, 0.10), (15.5, 0.12), (21.0, 0.30), (24.5, 0.40), (TOTAL, 0.40)])
 _base.RAYS = Track([(0, 0.0), (TOTAL, 0.0)])   # the old flat rays stay off: GOD_RAYS below draws the shafts
-SKY_THEME = Track([(0, 0.0), (20.0, 0.0), (23.5, 0.55), (TOTAL, 0.55)])
-BUBBLES = Track([(0, 0.0), (20.5, 0.0), (23.5, 0.5), (TOTAL, 0.5)])
-LEAVES = Track([(0, 0.0), (21.0, 0.0), (24.0, 0.3), (TOTAL, 0.3)])
+SKY_THEME = Track([(0, 0.0), (21.5, 0.0), (24.5, 0.55), (TOTAL, 0.55)])
+BUBBLES = Track([(0, 0.0), (21.5, 0.0), (24.5, 0.5), (TOTAL, 0.5)])
+LEAVES = Track([(0, 0.0), (22.0, 0.0), (25.0, 0.3), (TOTAL, 0.3)])
 
 
 def MOTE_COLORS(t):
-    return ("#ffe2a8", "#ff9f8a") if t < 20.0 else (theme.WHITE_GLOW, theme.GOLD)
+    return ("#ffe2a8", "#ff9f8a") if t < 21.0 else (theme.WHITE_GLOW, theme.GOLD)
 
 
 CREDIT = dict(_base.CREDIT, song="Everything at once (engine test)")
@@ -92,7 +93,7 @@ WIND = Track([(0, 0.25), (14.0, 0.45), (TOTAL, 0.35)])
 # ---- sky and camera (section O): clouds, god rays from the rising sun, one slow move
 CLOUDS3D = Track([(0, 0.35), (10.0, 0.70), (20.0, 0.60), (TOTAL, 0.45)])
 CLOUDS_SPEED = 1.4
-GOD_RAYS = Track([(0, 0.0), (9.5, 0.0), (13.0, 1.0), (19.0, 0.9), (23.5, 0.45), (TOTAL, 0.35)])
+GOD_RAYS = Track([(0, 0.0), (9.5, 0.0), (13.0, 0.85), (20.0, 0.85), (24.5, 0.45), (TOTAL, 0.35)])
 RAYS_DECAY = 0.988
 # the land starts a little high and settles as the camera pushes in, so the far shore ends just above the calm third
 CAMERA_CRANE = Track([(0, -0.05), (TOTAL, 0.0)])
