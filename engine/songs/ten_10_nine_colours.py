@@ -638,7 +638,14 @@ _SPECS = [            # every leaving is a clean fade (no broken letters in any 
     dict(expr="Encouragement", pos=_AT7, face="camera", width=_width(43.9, _dist(43.9, _AT7), 0.66),
          t_in=40.3, t_read0=42.45, t_read1=45.35, t_out=45.8, arrive="reveal", edge="down", leave="fade"),
 ]
-WORDS = PW.Words(_SPECS, camera=_LAYOUT, reflect=False)   # no mirrored text in the lake
+def _clean_leave(t, info):
+    """Every word leaves in place and sharp, thinning out evenly: never smeared, drifting or broken letters."""
+    if info["state"] == "leave":
+        return dict(pos=info["home"], assist=1.0)
+    return None
+
+
+WORDS = PW.Words(_SPECS, camera=_LAYOUT, reflect=False, drive=_clean_leave)   # no mirrored text in the lake
 
 
 CUT_TIMES = [0.0, SEC[3], SEC[4], SEC[5], SEC[6], SEC[7]]
