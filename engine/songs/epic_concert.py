@@ -223,13 +223,13 @@ def _sky(k):
 
 
 SKY_TOP, SKY_MID, SKY_HOR, GLOW = (_sky(k) for k in range(4))
-SKY_THEME = Track([(0, 0.0), (DAY_OPENS - 0.8, 0.0), (DAY_FULL + 1.0, 1.0), (TOTAL, 1.0)])   # hills turn to pale haze
+SKY_THEME = Track([(0, 0.0), (S3 + 2.0, 0.0), (DAY_FULL + 1.0, 1.0), (TOTAL, 1.0)])   # hills turn to pale haze
 # the sun: under the horizon at night, breaking it on S1, low and modest while people and the emblem are on
 # screen, then climbing into the middle of the sky, where it becomes the soft white heart of the end card
 SUN_Y = Track([(0, 0.290), (STAR_FALL, 0.300), (S1, 0.334), (S1 + 3.0, 0.352), (S2, 0.385), (S3, 0.410),
                (DAY_OPENS, 0.440), (TITLE_HIT, 0.600), (TOTAL, 0.620)])
 SUN_INT = Track([(0, 0.08), (STAR_FALL, 0.10), (S1, 0.30), (S1 + 3.0, 0.48), (S2, 0.46), (S3, 0.50),
-                 (S3 + 2.8, 0.66), (DAY_OPENS + 1.2, 0.60), (TITLE_HIT, 0.55), (TOTAL, 0.52)])
+                 (DAY_OPENS, 0.52), (TITLE_HIT, 0.55), (TOTAL, 0.52)])
 SUN_SIZE = Track([(0, 0.09), (S1 + 3.0, 0.11), (S3, 0.12), (DAY_OPENS, 0.13), (TITLE_HIT, 0.22), (TOTAL, 0.24)])
 STARS = Track([(0, 0.0), (0.6, 0.0), (3.0, 0.95), (STAR_FALL, 0.92), (S1 + 3.0, 0.55), (S1 + 8.0, 0.25),
                (S2 + 2.0, 0.10), (S3, 0.06), (DAY_OPENS + 1.2, 0.0), (TOTAL, 0.0)])
@@ -244,7 +244,9 @@ TRAIL = Track([(0, 0.0), (TOTAL, 0.0)])
 ZOOM = Track([(0, 1.0), (TOTAL, 1.0)])
 EXPOSURE = Track([(0, 1.0), (TOTAL, 1.0)])
 FADE = Track([(0, 0.0), (1.8, 1.0), (TOTAL - 0.6, 1.0), (TOTAL - 0.05, 0.0)])
-RAYS = Track([(0, 0.0), (S1, 0.0), (S1 + 3.0, 0.16), (S2, 0.12), (S3, 0.12), (S3 + 2.8, 0.20), (TOTAL, 0.08)])
+# sunbeams: the sky's own soft rays, which stay near the sun (see the note on GOD_RAYS below)
+RAYS = Track([(0, 0.0), (S1, 0.05), (DOVES_UP, 0.60), (S2, 0.40), (S3, 0.40), (DAY_OPENS, 0.45), (DAY_FULL, 0.15),
+              (TOTAL, 0.12)])
 # the lane of light at the sun: off. Draft 3 tested it (0 against 0.47, same sun): no change in the picture
 # (centre to side brightness 1.137 and 1.134 at 0:39) or in the light round the words.
 PART = Track([(0, 0.0), (TOTAL, 0.0)])
@@ -260,12 +262,10 @@ CLOUDS3D = Track([(0, 0.14), (STAR_FALL, 0.18), (S1 + 3.0, 0.20), (S2, 0.18), (S
                   (TOTAL, 0.14)])
 CLOUDS_SPEED = 1.3
 CLOUDS_LIGHT = 0.8
-# short, gentle shafts round the sun. Draft 1 (rays 0.9, decay 0.988, clouds 0.46) washed the sky to cream and
-# the white words lost their contrast (QA legibility 1.1; no dark halo was measured, ring/sky stayed above 1).
-# Rays, clouds and sun were lowered together, so which of them washed the sky is not isolated.
-GOD_RAYS = Track([(0, 0.0), (S1, 0.0), (DOVES_UP, 0.30), (S2, 0.18), (S3 - 1.0, 0.15), (S3 + 2.8, 0.36),
-                  (DAY_OPENS + 1.2, 0.22), (DAY_FULL, 0.08), (TOTAL, 0.08)])
-RAYS_DECAY = 0.968
+# GOD_RAYS is not used. In draft 4 a tan haze spread over the upper sky as it rose from 0.07 to 0.30 (0:14.4
+# against 0:16.6) and a grey wash covered the emblem when it and the sun swelled together at the lift (0:43.6
+# against 0:45.6). The sun's strength rose in the same seconds both times, so the rays are the likely cause,
+# not a proven one. The sunbeams are the sky's own RAYS (above).
 # crane up from the water (0 to 9 s; level before the star falls, because its column of light is not moved by
 # the camera), a slow push in through dawn and morning, then opening wide into the day. The engine moves the
 # people, the crowd, the creatures and the emblem with the scenery and still lands every flight on the arch.
@@ -284,7 +284,8 @@ REACT_CHORUS = 0.25
 
 # ---- the lake responds (UPGRADE-HOWTO L)
 STAR_X, STAR_LAND_Y = 0.5, 0.305
-FALLING_STARS = [(STAR_FALL, STAR_X, STAR_LAND_Y)]
+# one star, drawn twice so its thin streak reads (draft 4: a faint line)
+FALLING_STARS = [(STAR_FALL, STAR_X, STAR_LAND_Y), (STAR_FALL, STAR_X, STAR_LAND_Y)]
 RIPPLES = [(STAR_FALL + 0.02, STAR_X, 1.3, STAR_LAND_Y), (STAR_FALL + 0.40, STAR_X, 0.9, STAR_LAND_Y),
            (STAR_FALL + 0.85, STAR_X, 0.6, STAR_LAND_Y), (STAR_FALL + 1.40, STAR_X, 0.4, STAR_LAND_Y)]
 RIPPLES_AUTO = Track([(0, 1.0), (S2, 1.0), (S2 + 3.0, 0.5), (TOTAL, 0.5)])   # steps on the water, the star
@@ -329,7 +330,7 @@ LEAVES_COLORS = ("#3fb83a", "#9ccc40")   # truly green, like the poster
 # ---- people of light (UPGRADE-HOWTO H): the lone walker, then Heavenly Mother from behind
 W_Y, W_H = 0.322, 0.29     # the walker walks on the water, a ripple under each step
 W_STOP1, W_STOP2 = 0.40, M_X - 0.195   # where she stops when the star falls; where she stops before Mother
-_LEGS = [(3.0, STAR_FALL - 1.04, 0.02, W_STOP1), (STAR_FALL + 0.96, S1 + 2.2, W_STOP1, W_STOP2)]
+_LEGS = [(3.0, STAR_FALL - 1.04, 0.06, W_STOP1), (STAR_FALL + 0.96, S1 + 2.2, W_STOP1, W_STOP2)]
 
 
 def walker_x(t):
@@ -381,8 +382,8 @@ PASS_LIGHT = dict(t0=FLAME, speed=0.17, hold=0.22, path="crowd", start="center",
 
 # ---- the campaign emblem, drawn in light and mirrored in the lake (UPGRADE-HOWTO L)
 SYMBOLS = [
-    dict(kind="emblem", t0=EMBLEM, t1=EMBLEM_DONE, out=EMBLEM_OUT, x=0.5, y=0.555, size=0.29,
-         leave="to_star", star=4, leave_dur=EMBLEM_FLY, reflect=True, glow=1.0),
+    dict(kind="emblem", t0=EMBLEM, t1=EMBLEM_DONE, out=EMBLEM_OUT, x=0.5, y=0.60, size=0.29,
+         leave="to_star", star=4, leave_dur=EMBLEM_FLY, reflect=True, glow=1.5),
 ]
 
 # ---- the arch of nine lights: dark at the start, complete at the peak
@@ -393,9 +394,13 @@ for i in range(9):
     STAR_POS.append((x, y))
 
 OFF = dict(form=1e9, hold=1e9)
+# The glow round the two expressions: a deeper gold than the engine's own (#ffc48c). QA on draft 4: the light
+# 35 to 95 px from the letters measured 0.34 (Greeting) and 0.42 (Encouragement) over a sky of 0.10; the
+# Encouragement needs 0.36 or less. Whether the glow colour is what sets that light is not yet tested.
+WORD_GLOW = "#f2aa62"
 PHRASES = [
     dict(label="Greeting", lines=["“How are you?”"], size=150, y=0.258,
-         form=G_FORM, hold=G_HOLD, star=G_STAR, anim="bloom"),
+         form=G_FORM, hold=G_HOLD, star=G_STAR, anim="bloom", glow=WORD_GLOW),
     dict(label="Gratitude", lines=["“Thank you. It’s all thanks to you.", "You’ve worked hard.”"], size=118,
          star=S2 + 10.15, **OFF),
     dict(label="Apology", lines=["“I’m sorry.", "It must have been hard on you.”"], size=124,
@@ -407,7 +412,7 @@ PHRASES = [
     dict(label="Respect", lines=["“I’d love to hear more", "about your thoughts.”"], size=128,
          star=BEATS[11], **OFF),
     dict(label="Encouragement", lines=["“I’ll pray (or root) for you.", "Everything will go well.”"], size=100,
-         y=0.275, form=E_FORM, hold=E_HOLD, star=E_STAR, anim="ink"),
+         y=0.275, form=E_FORM, hold=E_HOLD, star=E_STAR, anim="ink", glow=WORD_GLOW),
     dict(label="Consideration", lines=["“Can I give you a hand", "with anything?”"], size=128,
          star=BEATS[12], **OFF),
     dict(label="Compliment", lines=["“You’re amazing.", "You’re doing great!”"], size=140,
@@ -449,6 +454,11 @@ def credit_state(t, bbox):
     return (cx, cy, scale, alpha), (cx0, cy0)
 
 
+# The three lights with a story (the star's, the Greeting's, the Encouragement's) wake with the arch's usual
+# expanding ring. The six that wake in the wave only flare: in draft 4 their rings crossed the label of the
+# Encouragement again and again.
+QUIET_LIGHTS = (1, 2, 3, 5, 7, 8)
+
 # soft waves of light when a light of the arch wakes, and at the peak
 WAVES = [(ARCH_FIRST, STAR_POS[4][0], STAR_POS[4][1], 0.55), (G_STAR, STAR_POS[0][0], STAR_POS[0][1], 0.55),
          (TITLE_HIT, 0.5, 0.62, 0.6)]
@@ -469,5 +479,7 @@ def params(song, t):
         motes=MOTES(t) * (0.75 + 0.5 * envs), lanterns=LANTERNS(t), petals=PETALS(t),
         trail=TRAIL(t), exposure=EXPOSURE(t), fade=FADE(t), rays=RAYS(t), part=PART(t), zoom=ZOOM(t),
         lantern=(lsx, lsy), prog=lx, rings=song.rings_at(t), waves=waves,
-        star=star_state(t), link=link_state(t),   # noqa: F821  (installed by engine/song.py from arch.py)
+        star=[(s[0], -1.0, s[2]) if i in QUIET_LIGHTS else s
+              for i, s in enumerate(star_state(t))],   # noqa: F821  (installed by engine/song.py from arch.py)
+        link=link_state(t),   # noqa: F821
     )
