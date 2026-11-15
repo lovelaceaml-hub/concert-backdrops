@@ -81,8 +81,8 @@ LOOKS["dawn"] = _look(_NIGHT, sky_top="#0f1b46", sky_mid="#553b7c", sky_hor="#e9
                       haze_color="#c97a6e", mist=0.55, mist_color="#a86a66", hill_color="#0e0a18", water="#06060f",
                       rays=0.35, dust_color="#ffd9a0", dust_color2="#ffc4b0")
 LOOKS["sunrise"] = _look(_NIGHT, sky_top="#13265e", sky_mid="#7d4c82", sky_hor="#f39a62", sun_color="#ffe6b4",
-                         sun_int=1.10, sun_el=5.5, stars=0.12, milky=0.0, clouds=0.42, haze=0.70,
-                         haze_color="#c9805c", mist=0.45, mist_color="#b87c62", hill_color="#140e1e",
+                         sun_int=1.00, sun_el=5.5, stars=0.12, milky=0.0, clouds=0.50, haze=0.65,
+                         haze_color="#b8704e", mist=0.30, mist_color="#a86e58", hill_color="#140e1e",
                          water="#090811", rays=0.9, dust_color="#ffe2a8", dust_color2="#ffd0a8", sun_disc=8.0,
                          sun_glow=0.8)
 LOOKS["golden"] = _look(_NIGHT, sky_top="#1c3a7c", sky_mid="#5e78b0", sky_hor="#e8c9a8", sun_color="#fff2d8",
@@ -198,9 +198,9 @@ class Stars:
     def sample(self, t):
         b = self.bright
         return [dict(pos=self.dir, size=self.size, color=self.color, alpha=self.alpha, seed=self.seed,
-                     kind="soft", twinkle=0.55, fog=0.0),
+                     kind="soft", twinkle=0.55, fog=0.0, streak=0.3),
                 dict(pos=self.dir[b], size=self.size[b] * 1.5, color=self.color[b], alpha=self.alpha[b] * 0.7,
-                     seed=self.seed[b], kind="spark", twinkle=0.4, fog=0.0)]
+                     seed=self.seed[b], kind="spark", twinkle=0.4, fog=0.0, streak=0.3)]
 
     def gain(self, t):
         return float(self.world.now["stars"])
@@ -218,7 +218,7 @@ class SunGlow:
         k = float(s["sun_int"]) * min(max((s["sun_el"] + 2.5) / 3.0, 0.0), 1.0)
         if k <= 0.001:
             return None
-        return dict(pos=s["sun_dir"][None, :], size=0.085, color=np.asarray(s["sun_color"]) * 1.1, alpha=min(k, 2.0),
+        return dict(pos=s["sun_dir"][None, :], size=0.060, color=np.asarray(s["sun_color"]), alpha=min(k, 2.0) * 0.6,
                     kind="soft", fog=0.0, dof=0.0, lod=False, streak=False)
 
 

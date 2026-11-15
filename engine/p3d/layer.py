@@ -439,7 +439,8 @@ class Layer:
         self.t_mask.use(location=1)
         setu(self.p_rsrc, uBg=0, uMask=1, uCamR=U["uCamR"], uCamU=U["uCamU"], uCamF=U["uCamF"],
              uFocal=U["uFocal"], uAspect=U["uAspect"], uSunDir=w["sun_dir"], uSunCol=np.asarray(w["sun_color"]),
-             uSunInt=float(w["sun_int"]), uMaskOn=mask_on, uMode=float(mode),
+             uSunInt=float(w["sun_int"]), uMaskOn=mask_on, uMode=float(mode), uCenter=center, uFan=0.75,
+             uT=U["uT"],
              uLight=light or (0.5, 0.5, 0.1, 1.0), uLightCol=tuple(float(x) for x in light_col))
         self.v_rsrc.render(moderngl.TRIANGLE_STRIP)
         self.f_rtmp.use()
