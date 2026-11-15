@@ -246,6 +246,7 @@ class Crowd:
         hold = float(pl.get("hold", 0.25))
         self.lead = lead
         self.fcol = _lin(pl.get("color", "#ffe2a0"))
+        self.fsize = float(pl.get("flame", 1.0))   # optional: the size of every flame (held, passed, rising)
         hx = self.tx + self.orient * 0.16 * self.h / asp     # where the held flame rests (screen)
         hy = self.fy + 0.52 * self.h
         self.Tr = np.full(N, np.inf)
@@ -677,7 +678,8 @@ class Crowd:
         rows = []
         for sz, sharp, cc, a in ((5.5, 2.4, white, 1.6), (15.0, 3.0, c, 0.65), (46.0, 2.6, c, 0.16)):
             amp = (inten * fl * a)[:, None]
-            rows.append(np.column_stack([x, y + 0.002 * (sz > 6), np.full(len(x), sz) * scale, np.full(len(x), sharp),
+            rows.append(np.column_stack([x, y + 0.002 * (sz > 6), np.full(len(x), sz) * scale * self.fsize,
+                                         np.full(len(x), sharp),
                                          cc[None, :] * amp]))
         return rows
 
