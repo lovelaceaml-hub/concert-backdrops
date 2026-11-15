@@ -85,12 +85,33 @@ from p3d import words as PW  # noqa: E402
 from p3d.body import Body, Hands  # noqa: E402
 from p3d.camera import Rig, fly, orbit  # noqa: E402
 from p3d.effects import Wind  # noqa: E402
-from p3d.api import lin  # noqa: E402
+from p3d.api import Mask, lin  # noqa: E402
 from p3d.ten_08_storm import Beads, Bolt, Drop, Glow, Rain, Sea, flash_level  # noqa: E402
 from p3d.world import arch_points  # noqa: E402
 
 BOTTOM_CALM = 0.0
 TEXT_SHADOW = 0.0
+
+
+def params(song, t):
+    """epic_concert's params, here so that it finds star_state and link_state, which engine/song.py installs
+    into this module (the base module's own copy cannot see them)."""
+    f = min(int(round(t * FPS)), NFRAMES - 1)
+    env, envs, hi, pulse = song.env[f], song.env_slow[f], song.hi[f], song.pulse[f]
+    lx, ly = song.lantern(t)
+    z = ZOOM(t)
+    lsx, lsy = (lx - 0.5) / z + 0.5, (ly - HORIZON) / z + HORIZON
+    return dict(
+        t=t, env=float(env), env_slow=float(envs), hi=float(hi), pulse=float(pulse),
+        sky_top=SKY_TOP(t), sky_mid=SKY_MID(t), sky_hor=SKY_HOR(t), glow=GLOW(t),
+        sun_int=SUN_INT(t) * (0.92 + 0.20 * envs), sun_y=SUN_Y(t), sun_size=SUN_SIZE(t),
+        stars=STARS(t), milky=MILKY(t), clouds=CLOUDS(t), aurora=AURORA(t), rain=RAIN(t),
+        motes=MOTES(t) * (0.75 + 0.5 * envs), lanterns=LANTERNS(t), petals=PETALS(t),
+        trail=TRAIL(t), exposure=EXPOSURE(t), fade=FADE(t), rays=RAYS(t), part=PART(t), zoom=ZOOM(t),
+        lantern=(lsx, lsy), prog=lx, rings=[], waves=[],
+        star=[(s[0], -1.0, 0.0) for s in star_state(t)],   # noqa: F821  (installed by engine/song.py from arch.py)
+        link=link_state(t),   # noqa: F821
+    )
 
 
 def _ss(a, b, x):
@@ -289,7 +310,7 @@ def _person(name, shape, **kw):
 # the first two: apart in the storm, the drop lands between them
 _person("w1", "woman", at=(-1.7, 80.0), facing=[(0.0, 270.0), (DROP_LAND + 0.5, 270.0), (DROP_LAND + 1.6, 90.0)],
         motion=[(0.0, "stand"), (DROP_LAND + 0.4, "shuffle"), (DROP_LAND + 1.7, "stand")],
-        gesture=[(0.0, DROP_LAND + 0.4, "brace"), (DROP_LAND + 2.2, 9.0, "listen")],
+        gesture=[(1.3, DROP_LAND + 0.4, "brace"), (DROP_LAND + 2.2, 9.0, "listen")],
         garment="dress", hair=True, look=_looks(DROP_LAND + 0.4), wind=WIND, show=(0.0, 8.6), seed=1,
         detail=dict(head=2.5), effects=[_storm_shed(0.0, DROP_LAND + 0.8)])
 _person("m1", "man", at=(1.8, 80.3), facing=270.0,
@@ -426,8 +447,8 @@ CAMERA = Rig([
          (48.0, (2.2, 3.4, 24.6), (0.0, 4.2, 2.0)),
          (H, (4.0, 3.2, 23.0), (0.0, 4.0, 5.0)),
          (52.4, (-1.5, 3.0, 23.5), (0.0, 4.0, 5.0)),
-         (56.0, (0.0, 4.6, 46.0), (0.0, 9.0, -20.0)),
-         (60.0, (0.0, 5.0, 54.0), (0.0, 9.5, -20.0))],
+         (56.0, (0.0, 4.0, 46.0), (0.0, 5.2, -60.0)),
+         (60.0, (0.0, 4.3, 54.0), (0.0, 5.4, -60.0))],
         fov=lambda t: float(np.interp(t, [44.6, 52.4, 56.0, 60.0], [46.0, 46.0, 44.0, 44.0])), aperture=0.012,
         blend=1.0),
 ], blend=0.5, fov=45.0, aperture=0.02, handheld=0.25, min_height=0.4,
@@ -437,7 +458,7 @@ CAMERA = Rig([
                  (HIT + 0.1, 0.6), (43.4, 0.0), (60.0, 0.0)]))
 
 # ------------------------------------------------------------------------------------------------- words
-ARCH = dict(span=46.0, height=24.0, z=-34.0)
+ARCH = dict(span=140.0, height=40.0, z=-60.0)    # a bow over the whole sea after the storm
 LIGHTS = arch_points(ARCH["span"], ARCH["height"], ARCH["z"])
 _LAB = [e["label"] for e in PW.EXPRESSIONS]
 
@@ -493,7 +514,7 @@ def _setup(scene):
     scene.add("bolt_b", BOLT_B)
     scene.add("bolt_c", BOLT_C)
     scene.add("drop", DROP)
-    scene.add("wave", Wave())
+    scene.add("wave", Wave(), mask=Mask("dark", grow=0.22))
     scene.add("beads_g", BEADS_G)
     scene.add("beads_i", BEADS_I)
     for name, b in BODIES.items():
