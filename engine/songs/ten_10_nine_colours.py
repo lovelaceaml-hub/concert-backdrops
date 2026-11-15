@@ -186,7 +186,7 @@ def _s3(t):
     u = t - SEC[2]
     r = 4.35 - 0.11 * u + 20.0 * np.exp(-u / 0.42)
     h = 1.75 + 0.5 * np.exp(-u / 1.0) - 0.03 * u
-    a = np.radians(10.0 + 36.0 * (1.0 - np.exp(-u / 0.6)) + 17.0 * u)
+    a = np.radians(-38.0 + 36.0 * (1.0 - np.exp(-u / 0.6)) + 17.0 * u)
     p = C3 + _v(np.sin(a) * r, h, np.cos(a) * r)
     return p, C3 + _v(0.0, 1.85, 0.0)
 
@@ -879,15 +879,15 @@ def _light_str(which):
     def f(t):
         night = 1.0 - _sc(SEC[7] - 0.05, SEC[7], t)
         if which == 0:
-            return 1.6 * _sc(0.3, 1.2, t) * night
-        return (1.4 if _second_of(t) is not None else 0.0) * night
+            return 0.8 * _sc(0.3, 1.2, t) * night
+        return (0.6 if _second_of(t) is not None else 0.0) * night
     return f
 
 
 LOOKS = dict(
-    gate=dict(base="night", mist=0.45, mist_color="#16305e", haze=0.35, haze_color="#0d1d44", stars=0.6),
-    embrace=dict(base="dusk", mist=0.85, mist_color="#4a2434", haze=0.5, haze_color="#2a1424", stars=0.35,
-                 sky_hor="#3a1a30"),
+    gate=dict(base="night", mist=0.22, mist_color="#0e2148", haze=0.25, haze_color="#0a1636", stars=0.7),
+    embrace=dict(base="night", mist=0.28, mist_color="#2a1020", haze=0.3, haze_color="#1e0c1a", stars=0.5,
+                 sky_top="#04020a", sky_mid="#120818", sky_hor="#2a1224"),
     floor=dict(base="night", mist=0.05, haze=0.1, stars=1.0, milky=0.8),
     drop=dict(base="dusk", sky_hor="#4a2030", mist=0.3, mist_color="#3a1a26", stars=0.6),
     ember=dict(base="night", sky_top="#05040a", sky_mid="#1a0f0c", sky_hor="#3a2210", haze=0.5,
