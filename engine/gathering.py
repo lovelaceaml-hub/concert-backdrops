@@ -164,6 +164,25 @@ class Crowd:
             xs_l.append(u)
             dp_l.append(np.clip(k / max(rows - 1, 1) + (rng.random(n) - 0.5) * 0.35 / rows, 0, 1))
         xs, depth = np.concatenate(xs_l), np.concatenate(dp_l)
+        # optional `cluster=(2, 3)`: the people stand in small groups of that many with gaps between the groups
+        # (each side of the middle on its own), and a group walks in together. Without the key: as before.
+        self.group = np.arange(N)
+        cl = m.get("cluster")
+        if cl:
+            lo, hi = (int(cl[0]), int(cl[1])) if isinstance(cl, (tuple, list)) else (int(cl), int(cl))
+            tight = float(m.get("cluster_tight", 0.5))
+            crng = np.random.default_rng(seed + 2)
+            gid = 0
+            for side in (xs < 0, xs >= 0):
+                idx = np.nonzero(side)[0]
+                idx = idx[np.argsort(xs[idx])]
+                a = 0
+                while a < len(idx):
+                    g = idx[a:a + int(crng.integers(lo, hi + 1))]
+                    xs[g] = xs[g].mean() + (xs[g] - xs[g].mean()) * tight
+                    self.group[g] = gid
+                    gid += 1
+                    a += len(g)
         keep = np.arange(N)
         self.r = depth[keep]
         self.tx = self.cx + xs[keep] * sx
@@ -193,15 +212,25 @@ class Crowd:
         self.orient = tc                           # which way they face once settled
         spd = float(m.get("speed", 1.0))          # figure heights per second
         self.v = spd * (0.80 + 0.40 * rng.random(N)) * np.where(child, 1.15, 1.0)
+        if cl:                                     # a group keeps one pace
+            for gk in np.unique(self.group):
+                self.v[self.group == gk] = self.v[self.group == gk].mean()
         self.L = np.abs(self.tx - self.sx) * aspect / self.h
         self.D = np.minimum(0.55, 0.3 * self.L)
         self.Tc = (self.L - self.D) / self.v
         self.Td = 2 * self.D / self.v
         walk = self.Tc + self.Td
         arrive_by = float(m.get("arrive_by", self.t0 + 14.0))
-        rank = np.argsort(np.argsort(np.abs(self.tx - self.cx) + 0.06 * rng.random(N)))
+        near_c = np.abs(self.tx - self.cx) + 0.06 * rng.random(N)
+        if cl:                                     # ... and arrives together
+            for gk in np.unique(self.group):
+                near_c[self.group == gk] = near_c[self.group == gk].mean()
+        rank = np.argsort(np.argsort(near_c, kind="stable"), kind="stable")
         q = 0.30 + 0.70 * rank / max(N - 1, 1)
         self.Ta = np.maximum(self.t0 + walk, self.t0 + (arrive_by - self.t0) * q)
+        sd = m.get("side_delay")                   # optional (left, right): seconds the people from that side
+        if sd:                                     # come later (for example while a figure still stands there)
+            self.Ta = self.Ta + np.where(from_left, float(sd[0]), float(sd[1]))
         self.Te = self.Ta - walk
         self.leave = self.t1 + 0.8 * rng.random(N)
         self.has_pass = pl is not None

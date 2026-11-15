@@ -673,3 +673,14 @@ The Render workflow's inputs (one workflow for everything, 8 inputs):
 A video renders in 10 parallel parts at 1080p and 30 fps, 20 parts at 4K or at 60 fps, 40 parts at 4K and 60 fps together. A draft always renders in 8 parts.
 
 The video run's finish job uploads: "<name>" (the full video plus a silent copy), "<name> frames" (4 frame sheets of 8 frames each, for checking without downloading the video), "<name> (share)" (the file "<name> (share).mp4": 1280x720, 30 fps, H.264 with AAC sound, always under 25 MB, for phones and messages; the job fails if it would be larger) and "<name> QA" (the quality report). A stills run uploads "<name>-stills" (the stills and their quality report). A draft run uploads "<name> (draft)" and "<name> QA".
+
+## U. Small optional keys added for the epic promo (2026-11-15, branch epic-promo)
+
+Each is optional. A song file that sets none of them runs the same code as before. Working example: `engine/songs/epic_concert.py`.
+
+- **`LAKE_STARS`** (a number or a Track, 0 = off, 1 = as bright as the stars above): the engine's own stars are drawn a second time, mirrored in the lake, so a night lake is a sea of stars. Code: `engine/lake_stars.py`, one guarded call in `render.py` right after the stars. BOTTOM_CALM dims the mirror in the lower third like every other light there, so a song that wants the mirror lowers BOTTOM_CALM for its night (BOTTOM_CALM may be a Track). With a camera move the mirror follows the lake.
+- **`FALLING_STARS`** items may carry the star's own path: `(t lands, x, y, from x, from y, seconds, trail points)`. Without the last four numbers the star falls as before (a short steep fall of 1.1 s). A long diagonal streak: `(10.24, 0.50, 0.315, 0.04, 1.03, 2.6, 180)`.
+- **`RIPPLES`** items may carry a fifth number, `(t, x, strength, y, spread)`: the ring spreads that many times as fast and fades as slowly as any other ring. A ring that starts near the far shore then reaches far across the lake toward the camera (try 4 to 5 with a strength of 1.5 to 2.2).
+- **`GATHERING`**: `cluster=(2, 3)` makes the people stand in groups of that many with gaps between the groups; a group walks in at one pace and arrives together (`cluster_tight`, default 0.5: how close the people of a group stand). `side_delay=(left, right)`: seconds by which the people from that side come later (for example while a figure still stands on that side).
+- **`TAGLINE["sizes"] = (first line, other lines)`**: the sizes of a three-line end card's lines in 1080p pixels (default 64 and 48). Larger lines need a higher title (`TITLE["y"]`, default 0.315 from the top) so that the last line still ends above the far shore.
+- **`MOTE_SIZE = (smallest, largest)`**: the sizes of the song's floating motes in 1080p pixels (default 2.4 and 24).

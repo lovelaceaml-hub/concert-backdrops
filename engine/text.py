@@ -131,8 +131,10 @@ def render_tagline(text, title_y=None):
         wl = max(f.getlength(l) for l in lines)
     else:
         ty = (title_y if title_y is not None else END_TITLE_Y) * H
-        f1, s1 = _fit(lines[:1], F_TAG, 64)
-        f2, s2 = _fit(lines[1:], F_TAG, 48)
+        # optional TAGLINE["sizes"] = (first line, the other lines), in 1080p pixels; default 64 and 48
+        sz = (getattr(S, "TAGLINE", None) or {}).get("sizes") or (64, 48)
+        f1, s1 = _fit(lines[:1], F_TAG, int(sz[0]))
+        f2, s2 = _fit(lines[1:], F_TAG, int(sz[1]))
         y = ty + _k(81) + _k(82)               # under the title block (title size 150)
         d.text((W / 2.0, y), lines[0], font=f1, fill=252, anchor="ms")
         y += _k(s1) * 0.55 + _k(s2) * 1.05

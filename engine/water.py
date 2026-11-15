@@ -118,7 +118,13 @@ class Water:
             age = t - float(r[0])
             if 0.0 <= age < LIFE:
                 y = float(r[3]) if len(r) > 3 else self._default_y(r[0], wl)
-                out.append((float(r[1]), y, age, float(r[2])))
+                if len(r) > 4:
+                    # optional fifth number: the ring spreads that many times as fast and fades as slowly as any
+                    # other ring (the shader sizes and fades a ring by its age: a larger age, a strength to match)
+                    sp = float(r[4])
+                    out.append((float(r[1]), y, age * sp, float(r[2]) * math.exp(age * (sp - 1.0) / 1.6)))
+                else:
+                    out.append((float(r[1]), y, age, float(r[2])))
         for f in self.falls:
             age = t - float(f[0])
             if self.auto and 0.0 <= age < LIFE:
@@ -243,7 +249,11 @@ class Water:
         pts = []
         for f in self.falls:
             tl = float(f[0])
-            u = (t - (tl - FALL_DUR)) / FALL_DUR
+            # optional: (t, x, y, from x, from y, seconds, trail points): the star's own path, flight time and
+            # trail length; without them the original short steep fall
+            dur = float(f[5]) if len(f) > 5 else FALL_DUR
+            ntr = int(f[6]) if len(f) > 6 else 60
+            u = (t - (tl - dur)) / dur
             if not (0.0 <= u <= 1.08):
                 continue
             x1 = float(f[1])
@@ -251,15 +261,16 @@ class Water:
             sky = self._sky()
             if sky is not None:   # CAMERA: the star lands where the camera shows that spot of the lake now
                 x1, y1 = sky.place((x1, y1), sky.ground_depth(y1))
-            x0, y0 = x1 - 0.13, 0.97
-            for j in range(60):
-                uj = u - j * 0.006
+            x0, y0 = (float(f[3]), float(f[4])) if len(f) > 4 else (x1 - 0.13, 0.97)
+            du = 0.006 if ntr == 60 else 0.006 * (60.0 / ntr) ** 0.5   # a longer trail is also a denser one
+            for j in range(ntr):
+                uj = u - j * du
                 if uj < 0.0 or uj > 1.0:
                     continue
                 e = uj * uj
                 x, y = x0 + (x1 - x0) * e, y0 + (y1 - y0) * e
-                b = (1.0 - j / 60.0) ** 2 * (1.6 if j == 0 else 0.55) * (1.0 - _ss(0.98, 1.08, u))
-                pts.append((x, y, b, 9.0 if j == 0 else 5.0 - 3.0 * j / 60.0))
+                b = (1.0 - j / float(ntr)) ** 2 * (1.6 if j == 0 else 0.55) * (1.0 - _ss(0.98, 1.08, u))
+                pts.append((x, y, b, 9.0 if j == 0 else 5.0 - 3.0 * j / float(ntr)))
         if not pts:
             return
         arr = np.array(pts[:4096], "f4")
