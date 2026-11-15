@@ -33,8 +33,8 @@ THE ACTING PLAN (every expression acted while it reads; style and scale change e
     blue hand reaches down from above, a gold hand reaches up from below; they clasp on the beat and the
     upper hand lifts the lower one up (helping someone up, told by the hands alone, ref 04).
   6 Apology "I'm sorry..." (33.36, rain at night). FULL FIGURES, LIFE SIZE, CLOSE: two people kneel face to
-    face in the rain; she is bowed and coming apart into flakes (p03); he bows his head, his open hands low.
-    Inclusiveness "It's okay. I understand." (37.7): her flakes fly back, both rise and hold each other. The
+    face in the rain; she is bowed low; he bows his head, his open hands held out low to her.
+    Inclusiveness "It's okay. I understand." (37.0): both rise and hold each other. The
     breath (40.21): they hold on while the rain stops in the air and the date is written in light above them.
     42.51, the biggest hit: the drops turn to warm light and rise, and we fly into their embrace. Both are windows onto the blossom morning, with a rim of light.
   7 Encouragement "I'll pray (or root) for you..." (42.51, blossom morning). PARTIAL, CLOSE: a young woman
@@ -147,14 +147,14 @@ LOOKS = dict(
                  sun_el=2.0, sun_color="#fff0dc", sun_int=0.6, sun_glow=0.3, clouds=0.30, rays=0.25, haze=0.25,
                  haze_color="#7a7ab8", mist=0.12, mist_height=1.0, mist_color="#e8c8d0", water="#123a7a",
                  hill_color="#22325e", dust=0.6, dust_color="#fff4f0", dust_color2="#ffc2cf"),
-    stars_lit=dict(base="night", sky_top="#1c2a7c", sky_mid="#3a3aa0", sky_hor="#8a62c0", stars=1.0, milky=1.0,
-                   hills=0.55, hill_color="#24205a", haze_color="#4a3a9a", mist=0.2, water="#141a5a", exposure=1.3),
+    stars_lit=dict(base="night", sky_top="#3a4cb8", sky_mid="#6a62d0", sky_hor="#d08ac8", stars=1.0, milky=1.0,
+                   hills=0.55, hill_color="#5a50a8", haze_color="#8a72c8", mist=0.2, water="#3a42a0", exposure=1.4),
     space=dict(base="night", sky_top="#02030e", sky_mid="#060c2c", sky_hor="#0e1a4c", stars=1.0, milky=1.0,
                hills=0.0, haze=0.15, haze_color="#0e1a4c", mist=0.0, water="#02040e", mirror=1.0, ripple=0.0,
                dust=0.3, dust_color="#cfd8ff", sun_int=0.0),
-    space_win=dict(base="night", sky_top="#14206a", sky_mid="#2c3496", sky_hor="#5a4aa8", stars=1.0, milky=1.0,
-                   hills=0.0, haze=0.2, haze_color="#3a3a9a", mist=0.0, water="#101850", mirror=1.0, ripple=0.0,
-                   sun_int=0.0, exposure=1.3),
+    space_win=dict(base="night", sky_top="#4656c4", sky_mid="#8a7ad8", sky_hor="#ffc0a0", stars=1.0, milky=1.0,
+                   hills=0.0, haze=0.2, haze_color="#b08ad0", mist=0.0, water="#5a5ab8", mirror=1.0, ripple=0.0,
+                   sun_int=0.0, exposure=1.4),
     dayend=dict(base="cream", sky_top="#9cc8ee", sky_mid="#f2e2d8", sky_hor="#ffe0c8", sun_az=232.0, sun_el=30.0,
                 sun_disc=0.6, haze=0.35, mist=0.08, hills=0.8),
 )
@@ -612,6 +612,54 @@ class Globe:
         return out
 
 
+class WordHearts:
+    """Small hearts of light in each expression's colour that drift up off its letters as the reading moment
+    ends (UPDATE 9, more hearts). They are carried with the camera like the words, so they float on screen."""
+    wants_camera = True
+
+    def __init__(self, specs, n=14, seed=23):
+        rng = np.random.default_rng(seed)
+        self.items = []
+        for sp in specs:
+            lab = PW.EXPRESSIONS[[e["label"] for e in PW.EXPRESSIONS].index(sp["expr"])]["label"]
+            col = lin(WEB[["Greeting", "Gratitude", "Apology", "Inclusiveness", "Concession", "Respect",
+                           "Encouragement", "Consideration", "Compliment"].index(lab)])
+            self.items.append((sp["t_read1"] - 0.15, sp["ride"][1], sp["ride"][2], col, rng.random((n, 5))))
+        u = np.linspace(0.0, 2.0 * np.pi, 28, endpoint=False)
+        self.hx = 16.0 * np.sin(u) ** 3 / 17.0
+        self.hy = (13.0 * np.cos(u) - 5.0 * np.cos(2 * u) - 2.0 * np.cos(3 * u) - np.cos(4 * u)) / 17.0
+
+    def sample(self, t, cam=None):
+        if cam is None:
+            return []
+        r, up, f = cam.basis()
+        th = np.tan(np.radians(cam.fov) * 0.5)
+        P, C, A, S = [], [], [], []
+        for t0, sy, depth, col, rs in self.items:
+            age = t - t0
+            if age < 0.0 or age > 1.6:
+                continue
+            k = len(rs)
+            x = (rs[:, 0] - 0.5) * 0.55
+            y = (sy - 0.5) * 2.0 + (rs[:, 1] - 0.5) * 0.12 + age * (0.25 + 0.25 * rs[:, 2])
+            x = x + 0.04 * np.sin(2.5 * age + 6.28 * rs[:, 3])
+            hw = depth * th
+            centre = (np.asarray(cam.pos, float)[None, :] + f[None, :] * depth + r[None, :] * (x * hw * cam.aspect)[:, None]
+                      + up[None, :] * (y * hw)[:, None])
+            sz = hw * (0.020 + 0.016 * rs[:, 4]) * (1.0 + 0.4 * age)
+            pts = (centre[:, None, :] + (self.hx[None, :, None] * r[None, None, :] + self.hy[None, :, None] * up[None, None, :])
+                   * sz[:, None, None])
+            P.append(pts.reshape(-1, 3))
+            a = _sm(age / 0.25) * (1.0 - _sm((age - 0.9) / 0.7))
+            A.append(np.full(k * 28, a * 0.85))
+            C.append(np.repeat(col[None], k * 28, 0))
+            S.append(np.full(k * 28, 0.0055 * depth))
+        if not P:
+            return []
+        return dict(pos=np.concatenate(P), size=np.concatenate(S), color=np.concatenate(C), alpha=np.concatenate(A),
+                    kind="spark", emit=1.8, twinkle=0.3, dof=0.0, fog=0.0)
+
+
 def _unit(v):
     v = np.asarray(v, float)
     return v / np.maximum(np.linalg.norm(v, axis=-1, keepdims=True), 1e-9)
@@ -780,9 +828,8 @@ def _hands_help(meet, lift, t_clasp, approach=3.2, colors=("#ffcf8a", "#8fd0ff")
 
 def _embrace_pair(origin, t_rise, t_hold, look_a, look_b, scale=1.0):
     """Two people kneel face to face (life size); at t_rise both get up; at t_hold they step in and hold each
-    other. The woman (b) is bowed and comes apart into flakes until the breath, then her flakes fly home."""
+    other. Both stay whole and luminous (UPDATE 12)."""
     from p3d.body import Body
-    from track import Track
     refs = {}
     o = _A(origin, float)
     d0, d1 = 0.50, 0.19                  # half the distance between them: kneeling, and holding
@@ -803,8 +850,6 @@ def _embrace_pair(origin, t_rise, t_hold, look_a, look_b, scale=1.0):
                        (t_hold - 0.2, 61.0, "embrace", dict(to=lambda tt: refs["a"].where(tt, "blade.R", raw=True),
                                                             to2=lambda tt: refs["a"].where(tt, "blade.L", raw=True),
                                                             head="L", ease=1.0))],
-              effects=[dict(kind="dissolve", amount=Track([(0.0, 0.0), (33.6, 0.0), (35.4, 0.32), (36.6, 0.32),
-                                                           (37.8, 0.0), (61.0, 0.0)]), reach=2.5)],
               look=look_b, seed=62.0)
     refs["a"] = Body(color="#cfd6ff", color2="#ffffff", **ka)
     refs["b"] = Body(color="#e8dcff", color2="#ffffff", **kb)
@@ -907,7 +952,7 @@ def _setup(scene):
     _add(scene, "s7_child", ch, X6, REVEAL + 1.5)
 
     # 8 HEAVENLY MOTHER, only from behind, veiled: a silhouette full of stars, a rim of light
-    _add(scene, "s8_mother", _person("woman", tuple(MOTHER_AT), O7, style="window", color="#fff0d8",
+    _add(scene, "s8_mother", _person("woman", tuple(MOTHER_AT), O7, style="sparks", color="#ffe8c8",
                                      color2="#ffffff", bright=1.2, scale=45.0, garment="robe",
                                      veil=dict(length=1.5), points=110000, facing=180.0,
                                      gesture=[(50.2, 61.0, "open_arms", dict(lift=0.25))], seed=81.0),
@@ -944,6 +989,7 @@ def _setup(scene):
     scene.add("birds_s8", PW.KeepClear(Flock(O7 + MOTHER_HEART, O7 + _A([0.0, 45.0, -60.0]), (150.0, 40.0, 70.0),
                                              1400, REVEAL + 0.3, FLOOD - 0.15, dur=(1.4, 2.4), size=(1.2, 2.4),
                                              seed=9), WORDS, floor=0.0))
+    scene.add("word_hearts", WordHearts(_SPECS), reflect=False)
     WORDS.add_to(scene)
     WORDS.check(CAMERA)
 
