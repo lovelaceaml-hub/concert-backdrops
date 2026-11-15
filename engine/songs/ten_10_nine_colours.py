@@ -187,11 +187,11 @@ def _roll_s12(t):
 # S3: brake into a descending spiral round the two
 def _s3(t):
     u = t - SEC[2]
-    r = 4.35 - 0.11 * u + 20.0 * np.exp(-u / 0.42)
+    r = 4.35 - 0.11 * u + 20.0 * np.exp(-u / 0.34)
     h = 1.75 + 0.5 * np.exp(-u / 1.0) - 0.03 * u
     a = np.radians(-52.0 + 32.0 * (1.0 - np.exp(-u / 0.6)) + 9.0 * u)
     p = C3 + _v(np.sin(a) * r, h, np.cos(a) * r)
-    return p, C3 + _v(0.0, 2.15, 0.0)
+    return p, C3 + _v(0.0, 2.32, 0.0)
 
 
 # S4: round the dancer, then the half loop
@@ -238,7 +238,7 @@ def _s4(t):
     a, r, phi = _s4_az(t), _s4_r(t), _loop_phi(t)
     h = _v(np.sin(a), 0.0, np.cos(a))
     c = D4 + _v(0.0, S4_EYE, 0.0)
-    look = D4 + _v(0.0, 2.35 - 0.95 * _sc(LOOP_T0, LOOP_T0 + 1.0, t), 0.0)
+    look = D4 + _v(0.0, 2.45 - 1.05 * _sc(LOOP_T0, LOOP_T0 + 1.0, t), 0.0)
     return c + r * (np.cos(phi) * h + np.sin(phi) * UP) + _v(0.0, -0.35, 0.0) * (1.0 - _sc(0.0, 0.3, phi)), look
 
 
@@ -611,35 +611,32 @@ _RIDE1 = (0.5, 0.60, 14.0)
 _RIDE2 = (0.5, 0.67, 12.0)
 _RIDE5 = (0.5, 0.56, 15.0)
 _AT3 = C3 + _v(0.0, 2.62, 0.0)
-_AT4 = D4 + _v(0.0, 2.85, 0.0)
+_AT4 = D4 + _v(0.0, 2.78, 0.0)
 _AT5 = E5 + _v(0.0, 3.15, 0.0)
 _AT6 = F6 + _v(0.0, 2.17, -0.05)
 _AT7 = G7 + _v(0.0, 3.35, 0.0)
 
-_SPECS = [
+_SPECS = [            # every leaving is a clean fade (no broken letters in any frame); one expression at a time
     dict(expr="Greeting", ride=_RIDE1, face="screen", width=_width(4.6, _RIDE1[2], 0.34),
-         t_in=2.45, t_read0=3.35, t_read1=6.0, t_out=6.95, arrive="pen", nib=False, leave="stream",
-         to=lambda t: HEADS[GREET](t)),
+         t_in=2.45, t_read0=3.35, t_read1=6.35, t_out=6.75, arrive="pen", nib=False, leave="fade"),
     dict(expr="Concession", ride=_RIDE2, face="screen", width=_width(9.5, _RIDE2[2], 0.50),
-         t_in=6.84, t_read0=8.15, t_read1=11.05, t_out=12.3, arrive="pen", nib=False, leave="doors"),
+         t_in=6.84, t_read0=8.15, t_read1=11.05, t_out=11.6, arrive="pen", nib=False, leave="fade"),
     dict(expr="Apology", pos=_AT3, face="camera", width=_width(15.6, _dist(15.6, _AT3), 0.74),
-         t_in=13.35, t_read0=14.35, t_read1=TOUCH3, t_out=17.35, arrive="pen", nib=False, leave="morph"),
+         t_in=13.35, t_read0=14.2, t_read1=16.75, t_out=17.0, arrive="pen", nib=False, leave="fade"),
     dict(expr="Inclusiveness", pos=_AT3 + _v(0.0, -0.1, 0.0), face="camera",
          width=_width(18.5, _dist(18.5, _AT3), 0.62),
-         t_in=TOUCH3, t_read0=17.32, t_read1=19.83, t_out=20.6, arrive="morph", source="Apology", leave="rise"),
+         t_in=17.0, t_read0=17.3, t_read1=19.83, t_out=19.95, arrive="reveal", edge="right", leave="fade"),
     dict(expr="Compliment", pos=_AT4, face="camera", width=_width(23.5, _dist(23.5, _AT4), 0.60),
-         t_in=20.15, t_read0=21.45, t_read1=24.6, t_out=25.7, arrive="pen", nib=False, leave="bokeh"),
+         t_in=20.15, t_read0=21.45, t_read1=24.6, t_out=25.0, arrive="pen", nib=False, leave="fade"),
     dict(expr="Consideration", ride=_RIDE5, face="screen", width=_width(28.9, _RIDE5[2], 0.56),
-         t_in=26.85, t_read0=27.65, t_read1=30.15, t_out=30.95, arrive="pen", nib=False, leave="stream",
-         to=lambda t: HEADS[CONS](t)),
+         t_in=26.85, t_read0=27.5, t_read1=30.0, t_out=30.3, arrive="pen", nib=False, leave="fade"),
     dict(expr="Gratitude", pos=_AT5, face="camera", width=_width(32.0, _dist(32.0, _AT5), 0.70),
-         t_in=30.05, t_read0=30.75, t_read1=33.32, t_out=33.45, arrive="palm", source=lambda t: _palm5(t),
+         t_in=30.25, t_read0=30.8, t_read1=33.32, t_out=33.45, arrive="palm", source=lambda t: _palm5(t),
          leave="fade"),
     dict(expr="Respect", pos=_AT6, face="camera", width=_width(36.8, _dist(36.8, _AT6), 0.48),
-         t_in=33.9, t_read0=35.1, t_read1=38.55, t_out=39.6, arrive="pen", nib=False, leave="stream",
-         to=lambda t: HEADS[RESP](t)),
+         t_in=33.9, t_read0=35.1, t_read1=38.55, t_out=39.0, arrive="pen", nib=False, leave="fade"),
     dict(expr="Encouragement", pos=_AT7, face="camera", width=_width(43.9, _dist(43.9, _AT7), 0.66),
-         t_in=40.3, t_read0=42.45, t_read1=45.35, t_out=47.2, arrive="shaft", leave="rise"),
+         t_in=40.3, t_read0=42.45, t_read1=45.35, t_out=45.8, arrive="reveal", edge="down", leave="fade"),
 ]
 WORDS = PW.Words(_SPECS, camera=_LAYOUT, reflect=False)   # no mirrored text in the lake
 
@@ -680,7 +677,7 @@ HEADS[GREET].leg(2.45, 3.35, _pen("Greeting"), bi=0.8, bo=0.5) \
             .leg(3.5, 6.3, _screen(0.5, 0.24, 20.0, wx=0.30, wy=0.05, rate=0.8), bi=0.5, bo=1.2)
 HEADS[CONC].leg(6.84, 8.15, _pen("Concession"), bi=1.3, bo=0.25) \
            .leg(8.4, 11.6, _tunnel, bi=0.25, bo=1.5)
-HEADS[APOL].leg(13.35, 14.35, _pen("Apology"), bi=0.9, bo=0.6) \
+HEADS[APOL].leg(13.35, 14.2, _pen("Apology"), bi=0.9, bo=0.6) \
            .leg(14.7, SEC[3], _helix(C3, 1.45, 0.25, 1.05, 2.2, 0.0), bi=0.6, bo=0.0)
 HEADS[INCL].leg(13.6, SEC[3], _helix(C3, lambda t: 1.9 - 0.4 * _sc(17.0, 18.5, t), 0.9, 1.7, 2.2, np.pi, 0.9),
                 bi=1.0, bo=1.2)
@@ -688,7 +685,7 @@ HEADS[COMP].leg(SEC[3], 20.15, _ribbon_from_hand, bi=0.0, bo=0.3) \
            .leg(20.15, 21.45, _pen("Compliment"), bi=0.3, bo=0.5) \
            .leg(21.9, LOOP_T0, _ribbon_from_hand, bi=0.5, bo=0.4) \
            .leg(LOOP_T0 + 0.2, SEC[4], _loop_ahead, bi=0.4, bo=0.0)
-HEADS[CONS].leg(SEC[4], 27.65, _pen("Consideration"), bi=0.0, bo=0.5) \
+HEADS[CONS].leg(SEC[4], 27.5, _pen("Consideration"), bi=0.0, bo=0.5) \
            .leg(27.9, 30.0, _screen(0.5, 0.30, 18.0, wx=0.25, wy=0.04, rate=1.1), bi=0.4, bo=0.6) \
            .leg(30.6, SEC[5], _helix(E5, 2.4, 0.6, 2.2, 1.7, 0.5), bi=0.6, bo=0.0)
 HEADS[GRAT].leg(30.2, SEC[5], _gold_stream, bi=0.3, bo=0.0)
@@ -719,14 +716,14 @@ def _arch_places():
 
 ARCH_AT = _arch_places()
 ARCH_ORDER = list(range(9))          # left to right: the order of words.EXPRESSIONS, as on every arch
-ARCH_LAND = [SEC[7] + 1.6 + 0.12 * abs(k - 4) for k in range(9)]
+ARCH_LAND = [SEC[7] + 0.55 + 0.1 * abs(k - 4) for k in range(9)]
 
 
 def _to_arch(k):
     i = ARCH_ORDER.index(k)
     home = ARCH_AT[i]
-    p0 = _v(0.0, 40.0, 58.0)                      # the white centre, ahead of the camera as the white clears
-    c1 = _v(home[0] * 2.2, 34.0 + 6.0 * abs(i - 4), 30.0)
+    p0 = home + _v(0.4 * (i - 4), 46.0, 14.0)      # out of the sky above the picture, down into its place
+    c1 = home + _v(0.0, 9.0, 3.0)
 
     def f(t):
         u = float(np.clip((t - SEC[7]) / (ARCH_LAND[k] - SEC[7]), 0.0, 1.0))
@@ -798,6 +795,9 @@ class Comets:
             pen = PEN_OF.get(w.name)
             free = pen if (t < w.t_read0 + 0.3 or t > w.t_read1) else None
             out.append(((b[0] - 0.025, b[1] + 0.025, b[2] - 0.03, b[3] + 0.035), free))
+        bb = _badge_box(t)
+        if bb is not None:
+            out.append((bb, None))
         return out
 
     @staticmethod
@@ -837,6 +837,10 @@ class Comets:
     def _one(self, out, k, t, a, cut, eye):
         if True:
             near = self._near(k, t)
+            quiet = 0.0 if SEC[4] - 0.05 <= t < SEC[6] else 0.3
+            a = a * (quiet + (1.0 - quiet) * near)
+            if a <= 0.002:
+                return
             tail = 0.55 * near + 2.2 * (1.0 - near)
             if BRAID_T0 - 0.2 < t:
                 tail = 0.45
@@ -1004,14 +1008,66 @@ class Flares:
         return out or None
 
 
+BADGE_BBOX = (0.132, 0.869, 0.497, 0.686)    # the badge at full size (text.render_credit), screen 0..1, y up
+
+
+def _badge_box(t):
+    """The badge on screen now, padded by about 40 px: nothing may cross it."""
+    (cx, cy, sc, al), _ = credit_state(t, BADGE_BBOX)
+    if al <= 0.01:
+        return None
+    x0, x1, y0, y1 = BADGE_BBOX
+    hw, hh = 0.5 * (x1 - x0) * sc, 0.5 * (y1 - y0) * sc
+    return (cx - hw - 0.022, cx + hw + 0.022, cy - hh - 0.037, cy + hh + 0.037)
+
+
+class ScreenClear:
+    """Wraps a point set: its points go dark inside the badge and inside the screen box of every word on screen."""
+    wants_camera = True
+
+    def __init__(self, inner):
+        self.inner = inner
+        if hasattr(inner, "gain"):
+            self.gain = inner.gain
+
+    def sample(self, t, cam=None):
+        ps = self.inner
+        res = ps.sample(t, cam) if getattr(ps, "wants_camera", False) else ps.sample(t)
+        if res is None or cam is None:
+            return res
+        boxes = []
+        for w in WORDS:
+            if w.t_in - 0.2 <= t <= w.t_out:
+                b = PW.screen_box(w, cam, t)
+                if b[4]:
+                    boxes.append(((b[0] - 0.025, b[1] + 0.025, b[2] - 0.03, b[3] + 0.035), None))
+        bb = _badge_box(t)
+        if bb is not None:
+            boxes.append((bb, None))
+        if not boxes:
+            return res
+        out = []
+        for b in (res if isinstance(res, (list, tuple)) else [res]):
+            if b is None:
+                continue
+            b = dict(b)
+            f = Comets._dim(np.asarray(b["pos"], np.float64).reshape(-1, 3), cam, boxes, -1)
+            b["alpha"] = np.asarray(b.get("alpha", 1.0), np.float64) * f
+            if b.get("pos2") is not None:
+                b["alpha2"] = np.asarray(b.get("alpha2", 1.0), np.float64) * Comets._dim(
+                    np.asarray(b["pos2"], np.float64).reshape(-1, 3), cam, boxes, -1)
+            out.append(b)
+        return out
+
+
 def _setup(scene):
-    scene.add("seed", Seed())
-    scene.add("hoops", PW.KeepClear(Hoops(), WORDS))
-    scene.add("lanterns", PW.KeepClear(Lanterns(), WORDS))
+    scene.add("seed", ScreenClear(Seed()))
+    scene.add("hoops", ScreenClear(PW.KeepClear(Hoops(), WORDS)))
+    scene.add("lanterns", ScreenClear(PW.KeepClear(Lanterns(), WORDS)))
     b = _bodies()
     for name, body in b.items():
         body.add(scene, name)
-    scene.add("flares", Flares())
+    scene.add("flares", ScreenClear(Flares()))
     scene.add("comets", PW.KeepClear(Comets(), WORDS))
     WORDS.add_to(scene)
     WORDS.check(CAMERA)
@@ -1062,13 +1118,11 @@ WORLD = dict(
     looks=LOOKS,
     look=[(0.0, "night"), (SEC[1], "gate", 1.2), (SEC[2], "embrace", 1.0), (SEC[3], "floor", 0.0),
           (SEC[4], "drop", 0.0), (SEC[5], "ember", 0.0), (SEC[6], "prayer", 0.0), (SEC[7], "morning", 0.0)],
-    light=dict(pos=SEED, color="#fff1d8", strength=Track([(0.0, 1.6), (SEC[0], 1.9), (0.9, 0.5), (1.8, 0.0),
+    light=dict(pos=SEED, color="#fff1d8", strength=Track([(0.0, 1.4), (SEC[0], 1.4), (0.9, 0.4), (1.8, 0.0),
                                                            (TOTAL, 0.0)]), size=0.5, rays=1.0),
     lights=[dict(pos=_light_pos(0), color=_light_col(0), strength=_light_str(0), radius=2.8),
             dict(pos=_light_pos(1), color=_light_col(1), strength=_light_str(1), radius=2.4)],
-    lantern_field=dict(count=260, center=(E5[0], E5[2] - 10.0), radius=(10.0, 70.0)),
-    lanterns=Track([(0.0, 0.0), (30.2, 0.0), (31.5, 1.0), (SEC[6] - 0.3, 1.0), (SEC[6], 0.0), (TOTAL, 0.0)]),
-    lantern_color=COL[GRAT],
+    lanterns=0.0,
     arch=None,                       # the nine comets come down and are the nine lights (Comets, ARCH_AT)
     react=dict(beat=0.35, level=0.25),
 )
@@ -1077,12 +1131,12 @@ P3D = dict(
     camera=CAMERA,
     world=dict(WORLD, shafts=[WORDS["Encouragement"].shaft(color="#c9b4ff", strength=0.9)]),
     setup=_setup,
-    bursts=[dict(t=SEC[0], strength=1.5, rise=0.10, fall=0.35, color="#fff4e0", at=tuple(SEED)),
+    bursts=[dict(t=SEC[0], strength=0.7, rise=0.10, fall=0.30, color="#ffe9c8", at=tuple(SEED)),
             dict(t=SEC[3], strength=1.8, rise=0.08, fall=0.28, color=COL[COMP]),
             dict(t=SEC[4], strength=1.8, rise=0.08, fall=0.28, color=COL[CONS]),
             dict(t=SEC[5], strength=1.8, rise=0.08, fall=0.28, color=COL[RESP]),
             dict(t=SEC[6], strength=1.2, rise=0.12, fall=0.4, color=COL[ENC]),
-            dict(t=SEC[7], strength=3.2, rise=0.55, fall=0.32, color="#fffaf0")],
+            dict(t=SEC[7], strength=1.2, rise=0.35, fall=0.35, color="#ffe2a8")],      # a warm bloom, never white
     motion_blur=0.4,
 )
 
@@ -1090,12 +1144,12 @@ P3D = dict(
 # The end card: the existing one, unchanged in style (coral title, navy date and place)
 # ---------------------------------------------------------------------------------------------------------
 FORM_DUR = 3.0
-TITLE_FORM = 50.3                     # whole at 53.3, before the loudest moment of the medley
+TITLE_FORM = 49.7                     # whole at 52.7, before the loudest moment of the medley
 TITLE = dict(label="Healing Concert", lines=["The Words of Mother’s Love"], size=150, y=0.27, label_size=48,
              form=TITLE_FORM, hold=1e9, star=1e9, color=theme.CORAL, glow=theme.WHITE_GLOW, anim="ribbon")
 TAGLINE = dict(text="Sunday, December 6 · 4:30 PM\nWorld Mission Society Church of God\n"
                     "6720 W Sahara Ave, Las Vegas",
-               sizes=(78, 77), t0=52.3, t1=53.9, color=theme.NAVY, glow=theme.WHITE_GLOW, anim="rise")
+               sizes=(78, 77), t0=51.6, t1=53.2, color=theme.NAVY, glow=theme.WHITE_GLOW, anim="rise")
 FRAGMENTS = []
 TITLE_HIT = 54.4
 _base.TITLE_HIT = TITLE_HIT
@@ -1110,7 +1164,7 @@ CREDIT = dict(song="The Words of Mother’s Love",
               t_move=1.6, t_rest=2.8,
               scale=0.52, alpha_rest=0.92,
               margin_x=0.035, margin_top=0.05)
-BADGE_OUT = (TITLE_FORM + 0.1, TITLE_FORM + 1.0)
+BADGE_OUT = (SEC[7] - 0.15, SEC[7] + 0.55)    # gone with the night: never light letters on the day sky
 
 
 def credit_state(t, bbox):
