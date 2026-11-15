@@ -18,10 +18,13 @@ BL, ONE = moderngl.BLEND, moderngl.ONE
 
 def setu(prog, **kw):
     for k, v in kw.items():
-        if k in prog:
-            if isinstance(v, np.ndarray):
-                v = tuple(float(x) for x in v.ravel())
-            prog[k].value = v
+        try:
+            uniform = prog[k]
+        except KeyError:
+            continue
+        if isinstance(v, np.ndarray):
+            v = tuple(float(x) for x in v.ravel())
+        uniform.value = v
 
 
 def smoothstep(a, b, x):
