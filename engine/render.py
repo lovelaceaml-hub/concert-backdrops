@@ -136,6 +136,8 @@ class Renderer:
         ctx.enable(moderngl.PROGRAM_POINT_SIZE)
         import upgrade
         self.up = upgrade.Upgrade(self)   # scenes, people of light, effect layers, fragment styles (all optional)
+        import text_anims
+        self.ta = text_anims.TextAnims(self)   # other text animations (anim=, UPGRADE-HOWTO H2; all optional)
 
     # ------------------------------------------------------------------
     def text_plan(self, t):
@@ -247,6 +249,8 @@ class Renderer:
             fly_t = t - m["hold"]
             fly_dur = max(arrive - m["hold"], 1.0)
             star = S.STAR_POS[i] if i < 9 else (0.5, 0.9)
+            if self.ta.draw_word(i, t, form_t, fly_t, fly_dur, star, P, calm):
+                continue
             setu(self.p_textp, uT=t, uFormT=form_t, uFormDur=S.FORM_DUR, uFlyT=fly_t, uFlyDur=fly_dur, uPx=px,
                  uPulse=P["pulse"], uStar=star, **self.up.text_sparks(m, t),
                  uCalm=calm, uCalmY=CALM_Y)
@@ -256,7 +260,7 @@ class Renderer:
                  uPulse=P["pulse"], uBounds=wd["bounds"], **self.up.text_light(m, t, "#fff5df"))
             self.v_text.render(moderngl.TRIANGLE_STRIP)
         tg = S.TAGLINE
-        if t >= tg["t0"]:
+        if t >= tg["t0"] and not self.ta.draw_tagline(t, calm):
             self.tag["tex"].use(location=0)
             setu(self.p_text, uTex=0, uFormT=(t - tg["t0"]) + 1.35, uFormDur=(tg["t1"] - tg["t0"]), uFlyT=-1.0,
                  uAspect=asp, uAlpha=0.92, uPulse=0.0, uBounds=self.tag["bounds"],
@@ -264,11 +268,13 @@ class Renderer:
             self.v_text.render(moderngl.TRIANGLE_STRIP)
 
         # short lyric fragments: form, hold, then dissolve
-        for fr in self.frags:
+        for k, fr in enumerate(self.frags):
             m = fr["meta"]
             if m.get("style", "sparks") != "sparks":
                 continue   # drawn by the upgrade layers below
             if not (m["t0"] <= t < m["out"] + 1.6):
+                continue
+            if self.ta.draw_frag(k, t, calm):
                 continue
             fly = (t - m["out"]) if t > m["out"] else -1.0
             fr["tex"].use(location=0)
