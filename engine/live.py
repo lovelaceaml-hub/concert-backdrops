@@ -142,6 +142,7 @@ def main():
     a = ap.parse_args()
 
     os.environ["SONG"] = a.song
+    os.environ["OUT_RES"] = a.res   # the words are drawn at this size too
     os.environ["LIBGL_ALWAYS_SOFTWARE"] = "0"   # use the graphics card (the cloud render forces software)
     ensure_features(a.song, a.audio)
     sys.path.insert(0, HERE)

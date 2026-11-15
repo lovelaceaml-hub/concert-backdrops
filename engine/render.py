@@ -118,7 +118,7 @@ class Renderer:
         phrases, title, tag = T.build_all()
 
         def ttex(arr):
-            t = ctx.texture((S.W, S.H), 3, data=arr.tobytes(), dtype="f1")
+            t = ctx.texture((T.W, T.H), 3, data=arr.tobytes(), dtype="f1")
             t.filter = (moderngl.LINEAR, moderngl.LINEAR)
             t.repeat_x = t.repeat_y = False
             return t
@@ -130,7 +130,7 @@ class Renderer:
         self.tag = dict(tex=ttex(tag["tex"]), bounds=tag["bounds"])
         self.frags = [dict(tex=ttex(f["tex"]), bounds=f["bounds"], meta=f["meta"]) for f in tag["frags"]]
         ctex, self.credit_bbox = T.render_credit(S.CREDIT["song"], S.CREDIT["concert"])
-        self.t_credit = ctx.texture((S.W, S.H), 3, data=ctex.tobytes(), dtype="f1")
+        self.t_credit = ctx.texture((T.W, T.H), 3, data=ctex.tobytes(), dtype="f1")
         self.t_credit.build_mipmaps()
         self.t_credit.filter = (moderngl.LINEAR_MIPMAP_LINEAR, moderngl.LINEAR)
         self.t_credit.repeat_x = self.t_credit.repeat_y = False

@@ -83,6 +83,7 @@ NINTH = 1e9
 TITLE_HIT = 1e9
 SKYLINE_LANTERN = 0.0     # no light travelling along the skyline (it would not loop)
 BOTTOM_CALM = 1.0         # calm lower third for the stage
+TEXT_SHADOW = 0.0         # no veil behind the event card: the calm sky keeps it readable
 
 # the original's rose dawn, pulled toward the campaign's coral, gold, pink and sky blue
 SKY_TOP = lin("#132358")

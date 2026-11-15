@@ -208,7 +208,7 @@ The video run's finish job uploads three artifacts: "<name>" (the full 1920x1080
 
 Two new choices on the Render workflow, for any song file (nothing to change in the song):
 
-- `resolution`: `1080p` (the default) or `4k` (3840x2160). The song keeps its 1920x1080 design: positions, text sizes and the glow look the same, only sharper. 4K video runs with twice as many parallel parts. Note: the words are still drawn at 1080p and scaled up, so they are a little softer than the scenery at 4K.
+- `resolution`: `1080p` (the default) or `4k` (3840x2160). The song keeps its 1920x1080 design: positions, text sizes and the glow look the same, only sharper. 4K video runs with twice as many parallel parts. The words are drawn at 4K too (text.py multiplies its 1080p sizes and distances by 2), so they are as sharp as the scenery; at 1080p the text is exactly as before.
 - `fps`: `30` (the default) or `60`. Everything the engine draws is a function of the time in seconds, so 60 fps is the same motion, twice as smooth. 60 fps video also runs with twice as many parts (4K at 60 fps: four times, at most 40).
 - The share copy is always 1280x720 at 30 fps and under 25 MB.
 

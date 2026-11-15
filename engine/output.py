@@ -90,7 +90,8 @@ class Output:
         ev = getattr(S, "EVENT_CARD", None)
         if ev:
             tex, bounds = render_card(ev)
-            t = R.ctx.texture((S.W, S.H), 3, data=tex.tobytes(), dtype="f1")
+            import text as T
+            t = R.ctx.texture((T.W, T.H), 3, data=tex.tobytes(), dtype="f1")
             import moderngl
             t.filter = (moderngl.LINEAR, moderngl.LINEAR)
             t.repeat_x = t.repeat_y = False
@@ -160,13 +161,13 @@ def render_card(ev):
     sizes = list(ev.get("sizes", (34, 104, 54, 44)))
     while len(sizes) < len(lines):
         sizes.append(sizes[-1])
-    maxw = float(ev.get("max_width", 1580))
+    maxw = float(T._k(ev.get("max_width", 1580)))
     img = Image.new("L", (W, H), 0)
     d = ImageDraw.Draw(img)
 
     def fit(text, path, size):
         while True:
-            f = ImageFont.truetype(path, int(size))
+            f = ImageFont.truetype(path, T._px(size))
             if f.getlength(text) <= maxw or size <= 24:
                 return f
             size -= 2
@@ -174,8 +175,8 @@ def render_card(ev):
     rows = []   # (font, text, height, fill, tracked)
     for i, (ln, sz) in enumerate(zip(lines, sizes)):
         if i == 0 and ev.get("label_first", True):
-            f = ImageFont.truetype(T.F_LABEL, int(sz))
-            rows.append((f, ln.upper(), sz * 1.9, 236, True))
+            f = ImageFont.truetype(T.F_LABEL, T._px(sz))
+            rows.append((f, ln.upper(), T._k(sz) * 1.9, 236, True))
         elif i == 1:
             f = fit(ln, T.F_TITLE, sz)
             rows.append((f, ln, f.size * 1.30, 255, False))
@@ -194,6 +195,6 @@ def render_card(ev):
             wl = max(wl, f.getlength(ln))
         y += hgt
     sharp = np.asarray(img)
-    glow = np.asarray(img.filter(ImageFilter.GaussianBlur(8)))
+    glow = np.asarray(img.filter(ImageFilter.GaussianBlur(T._k(8))))
     back = T.shield(img)
     return np.dstack([sharp, glow, back])[::-1].copy(), ((W / 2 - wl / 2) / W, (W / 2 + wl / 2) / W)
