@@ -480,7 +480,7 @@ CAMERA_MOTES = 0.6        # a few large soft motes on the nearest layer, so the 
   | Ripples and falling stars | the lake under each one | |
 
   Flights to the arch (a figure's sparks, a symbol, the crowd's lights, the flame from the arch) still land exactly on their light.
-- **Not moved by the camera**: text of any kind, the arch of nine lights, and the drifting air layers (the song's motes, lanterns and petals, SNOW, BUBBLES, LEAVES, the beat sparkles). The effect layers that are painted in the composite or fill the frame (ICE, SHARDS, GOLDEN_FIELD, NET, BEAM) are not moved either: do not combine them with a camera move.
+- **Not moved by the camera**: text of any kind, the arch of nine lights, and the drifting air layers (the song's motes, lanterns and petals, SNOW, BUBBLES, LEAVES, the beat sparkles). The effect layers that are painted in the composite or fill the frame (ICE, SHARDS, GOLDEN_FIELD, NET) are not moved either: do not combine them with a camera move. A BEAM keeps its top where the song puts it and its foot (`BEAM_TO`) on its spot of the ground.
 - `CAMERA_FOLLOW = 0` (default 1; a Track can ease it) lets the layers go: the scenery still moves, the layers stay where the song file puts them.
 - Plan the move so the far shore stays out of the calm lower third. A crane up or a push in moves the ground down the screen: with the default centre, zoom 1.06 and crane 0 put a shore at 0.343 on 0.337; crane +0.05 and zoom 1.09 would put it on 0.29. Start with a negative crane (the land a little high) and end at 0.
 - The camera's picture is the same world as without a camera, including the day sky of `SKY_THEME` (section I).
