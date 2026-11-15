@@ -34,9 +34,9 @@ THE ACTING PLAN (every expression acted while it reads; style and scale change e
     upper hand lifts the lower one up (helping someone up, told by the hands alone, ref 04).
   6 Apology "I'm sorry..." (33.36, rain at night). FULL FIGURES, LIFE SIZE, CLOSE: two people kneel face to
     face in the rain; she is bowed and coming apart into flakes (p03); he bows his head, his open hands low.
-    Inclusiveness "It's okay. I understand." (the breath, 40.21): the rain stops in the air, her flakes fly
-    back, both rise and hold each other. 42.51, the biggest hit: the drops turn to warm light and rise, and
-    we fly into their embrace. Both are windows onto the blossom morning, with a rim of light.
+    Inclusiveness "It's okay. I understand." (37.7): her flakes fly back, both rise and hold each other. The
+    breath (40.21): they hold on while the rain stops in the air and the date is written in light above them.
+    42.51, the biggest hit: the drops turn to warm light and rise, and we fly into their embrace. Both are windows onto the blossom morning, with a rim of light.
   7 Encouragement "I'll pray (or root) for you..." (42.51, blossom morning). PARTIAL, CLOSE: a young woman
     kneels in profile, hands joined in prayer, head bowed, a small sparkling figure in the rising lights
     (p09). Compliment "You're amazing..." (47): FULL FIGURES: a father lifts his little daughter into his
@@ -46,8 +46,10 @@ THE ACTING PLAN (every expression acted while it reads; style and scale change e
     52.26 the day floods out of her; the arch of nine lights wakes low behind her; the end card is whole by
     55.0 and held to the last frame. No fade to black.
 
-THE BADGE: "The Words of Mother's Love" over "Healing Concert · Sunday, December 6 · 4:30 PM" (CREDIT), large
-on frame 0, settled top left by 2.8 s, nothing over it, faded as the end card forms.
+TITLE AND DATE (PHASEB UPDATE 7, the TITLES key): A, the opening title over the sky above the giant profile
+(0 to 4 s); B, a discreet signature in three calm stretches between the words (bottom corners, night palette);
+C, "December 6" in light across the rain sky in the breath (40.21), over the two who hold each other, bursting
+on the biggest hit (42.51). The end card as it is.
 
 HOUSE RULES: artistic, never photorealistic people; Heavenly Mother only from behind; everyone clothed in
 garments of light; all nine expressions from words.EXPRESSIONS by name (exact wording), each read for 2.5 s
@@ -95,34 +97,23 @@ AUDIO_FILE = "audio/promo/concert-medley.mp3"
 BOTTOM_CALM = 0.0
 TEXT_SHADOW = 0.0          # nothing dark behind any text
 
-# ---- the concert badge (PHASEB UPDATE 3): from frame 0 to the end card, top left
-CREDIT = dict(song="The Words of Mother’s Love",
-              concert="Healing Concert · Sunday, December 6 · 4:30 PM",
-              t_in=-1.0, t_full=0.0,
-              t_move=1.6, t_rest=2.8,
-              scale=0.48, alpha_rest=0.92,
-              margin_x=0.035, margin_top=0.05)
+# ---- the title and the date (PHASEB UPDATE 7; drawn by the engine's TITLES once it lands, the corner badge is
+# gone): A the opening title over the first image (the profile stands below it, the sky above her is free),
+# B a discreet signature in three calm stretches between the words, on calm night sky or water, C "December 6"
+# in light across the sky in the breath, over the two who hold each other, bursting on the biggest hit.
+TITLES = dict(
+    opening=dict(t_end=4.0, y=0.20, palette="night"),
+    signature=dict(windows=[(11.6, 13.2, "br", "night"), (24.7, 26.6, "br", "night"), (31.4, 33.0, "bl", "night")]),
+    date_light=dict(t_form=BREATH, t_burst=X6, y=0.30, palette="night"),
+)
+CREDIT = dict(song="The Words of Mother’s Love", concert="Healing Concert",   # the old corner badge: off
+              t_in=1e9, t_full=1e9 + 1.0, t_move=1e9 + 2.0, t_rest=1e9 + 3.0, scale=0.34, alpha_rest=0.0,
+              margin_x=0.03, margin_top=0.048)
 
 
 def _ss(a, b, x):
     u = min(max((x - a) / (b - a), 0.0), 1.0)
     return u * u * (3.0 - 2.0 * u)
-
-
-def credit_state(t, bbox):
-    """Centre, scale and strength of the badge; bbox is its size at full card size (demo_gathering.py), faded
-    out over a second as the end card starts to form."""
-    c = CREDIT
-    x0, x1, y0, y1 = bbox
-    a_in = _ss(c["t_in"], c["t_full"], t)
-    m = _ss(c["t_move"], c["t_rest"], t)
-    scale = c["scale"] ** m
-    cx0, cy0 = (x0 + x1) / 2.0, (y0 + y1) / 2.0
-    tx = c["margin_x"] + c["scale"] * (x1 - x0) / 2.0
-    ty = 1.0 - c["margin_top"] - c["scale"] * (y1 - y0) / 2.0
-    cx, cy = cx0 * (1 - m) + tx * m, cy0 * (1 - m) + ty * m
-    alpha = a_in * (1.0 + (c["alpha_rest"] - 1.0) * m) * (1.0 - _ss(T_FORM - 0.2, T_FORM + 0.8, t))
-    return (cx, cy, scale, alpha), (cx0, cy0)
 
 
 # ------------------------------------------------------------------------------------------------ worlds
@@ -207,7 +198,7 @@ C2 = O2 + _A(K2[-1][1])
 # S3 the sea at blue hour: two people face each other (scale 26); into his head
 O3 = _after(C2, (-6.0, 0.0, 120.0))
 K3 = [(X2, (-6.0, C2[1], 120.0), (0.0, 36.0, -70.0)), (15.2, (-3.0, 34.0, 62.0), (0.0, 38.0, -70.0)),
-      (18.2, (2.0, 37.0, 22.0), (6.0, 40.0, -70.0)), (X3, (11.6, 41.4, -68.5), (11.6, 41.4, -110.0))]
+      (18.2, (2.0, 37.0, 22.0), (6.0, 40.0, -70.0)), (X3, (10.56, 43.2, -71.0), (10.56, 43.2, -110.0))]
 C3 = O3 + _A(K3[-1][1])
 
 # S4 the field of stars: the crowd that bows (scale 12) and the man they thank (scale 16); into his heart
@@ -227,8 +218,9 @@ def _lift(t):
     return LIFT * _ss(CLASP + 0.15, CLASP + 1.7, t)
 
 
-K5 = [(X4, (0.0, C4[1], 0.0), (0.0, 1.5, -12.0)), (27.7, (0.25, 1.8, -9.6), (0.0, 1.5, -12.0)),
-      (CLASP, (0.06, 1.62, -10.75), (0.0, 1.55, -12.0)), (31.9, (0.02, 1.8, -11.2), (0.0, 1.85, -12.0)),
+K5 = [(X4, (0.0, C4[1], 0.0), (0.0, 1.5, -12.0)), (27.6, (0.2, 7.0, -5.5), (0.0, 1.5, -12.0)),
+      (28.4, (0.25, 2.3, -8.6), (0.0, 1.5, -12.0)), (CLASP, (0.08, 1.62, -10.4), (0.0, 1.55, -12.0)),
+      (31.9, (0.03, 1.8, -11.1), (0.0, 1.85, -12.0)),
       (X5, (0.0, 1.5 + LIFT, -11.97), (0.0, 1.5 + LIFT, -14.0))]
 C5 = O5 + _A(K5[-1][1])
 
@@ -237,7 +229,7 @@ O6 = _after(C5, (0.0, 0.0, 9.0))
 PAIR6 = _A([0.0, 0.0, 0.0])
 K6 = [(X5, (0.0, C5[1], 9.0), (0.0, 0.9, 0.0)), (35.2, (-0.7, 1.25, 5.4), (0.0, 0.75, 0.0)),
       (38.4, (-0.5, 1.15, 4.2), (0.0, 0.8, 0.0)), (41.3, (0.15, 1.4, 2.3), (0.0, 1.3, 0.0)),
-      (X6, (0.0, 1.32, 0.10), (0.0, 1.32, -3.0))]
+      (X6, (0.0, 1.22, -0.03), (0.0, 1.22, -3.0))]
 C6 = O6 + _A(K6[-1][1])
 
 # S7 blossom morning, life size, then S8: the camera rises toward Heavenly Mother far ahead (scale 45)
@@ -308,16 +300,16 @@ def _ride(expr, y, px, t_in, r0, r1, t_out, depth=6.0, **kw):
 
 _AWAY = dict(away=(0.1, -0.15, -1.0), speed=1.4)
 _SPECS = [
-    _ride("Greeting", 0.70, 104, 1.0, 2.6, 5.6, 6.6, arrive="flock", leave="flock", **_AWAY),
-    _ride("Concession", 0.71, 98, 7.3, 8.6, 11.6, 12.6, arrive="flock", leave="flock", **_AWAY),
-    _ride("Respect", 0.70, 86, 13.8, 15.2, 18.2, 19.2, arrive="stars", leave="flock", **_AWAY),
-    _ride("Gratitude", 0.70, 78, 20.3, 21.6, 24.9, 25.9, arrive="petals", leave="flock", **_AWAY),
-    _ride("Consideration", 0.74, 88, 27.0, 28.3, 31.3, 32.3, depth=2.5, arrive="flock", leave="flock",
+    _ride("Greeting", 0.72, 104, 3.4, 4.0, 6.9, 7.3, arrive="flock", leave="flock", **_AWAY),
+    _ride("Concession", 0.72, 98, 7.6, 8.4, 11.2, 11.5, arrive="flock", leave="flock", **_AWAY),
+    _ride("Respect", 0.72, 86, 13.8, 14.8, 17.8, 18.2, arrive="stars", leave="flock", **_AWAY),
+    _ride("Gratitude", 0.72, 78, 20.3, 21.3, 24.3, 24.6, arrive="petals", leave="flock", **_AWAY),
+    _ride("Consideration", 0.74, 88, 27.4, 28.3, 31.0, 31.3, depth=2.5, arrive="flock", leave="flock",
           away=(0.0, 0.3, -1.0), speed=0.5),
-    _ride("Apology", 0.72, 84, 33.9, 35.2, 38.4, 39.3, depth=1.2, arrive="flock", leave="flock", **_AWAY),
-    _ride("Inclusiveness", 0.72, 94, 39.3, 40.3, 42.9, 43.6, depth=0.9, arrive="flock", leave="flock", **_AWAY),
-    _ride("Encouragement", 0.72, 80, 43.4, 44.6, 47.2, 48.0, depth=1.0, arrive="petals", leave="petals"),
-    _ride("Compliment", 0.72, 92, 47.0, 47.9, 50.4, 50.9, depth=1.0, arrive="flock", leave="flock",
+    _ride("Apology", 0.72, 84, 33.7, 34.3, 36.8, 37.05, depth=1.2, arrive="flock", leave="flock", **_AWAY),
+    _ride("Inclusiveness", 0.72, 94, 37.15, 37.7, 40.2, 40.45, depth=0.9, arrive="flock", leave="flock", **_AWAY),
+    _ride("Encouragement", 0.72, 80, 42.9, 43.6, 46.2, 46.5, depth=1.0, arrive="petals", leave="petals"),
+    _ride("Compliment", 0.72, 92, 46.7, 47.5, 50.1, 50.5, depth=1.0, arrive="flock", leave="flock",
           away=(0.0, -0.2, -1.0), speed=1.8),
 ]
 WORDS = PW.Words(_SPECS, camera=CAMERA)
@@ -681,7 +673,7 @@ def _embrace_pair(origin, t_rise, t_hold, look_a, look_b, scale=1.0):
     ka = dict(shape="man", at=step(-1.0), facing=90.0, garment="coat",
               motion=[(-1e9, "kneel", dict(dur=0.01, hands="free")), (t_rise, "rise", dict(dur=1.1, blend=0.1)),
                       (t_hold - 0.55, "shuffle"), (t_hold + 0.3, "stand")],
-              gesture=[(33.6, t_rise + 0.2, "bow", dict(amount=22.0)), (34.0, t_rise, "cup", dict(height=-0.25)),
+              gesture=[(33.5, t_rise + 0.2, "bow", dict(amount=22.0)), (33.8, t_rise, "cup", dict(height=-0.25)),
                        (t_hold - 0.2, 61.0, "embrace", dict(to=lambda tt: refs["b"].where(tt, "blade.R", raw=True),
                                                             to2=lambda tt: refs["b"].where(tt, "blade.L", raw=True),
                                                             head="L", ease=1.0))],
@@ -693,8 +685,8 @@ def _embrace_pair(origin, t_rise, t_hold, look_a, look_b, scale=1.0):
                        (t_hold - 0.2, 61.0, "embrace", dict(to=lambda tt: refs["a"].where(tt, "blade.R", raw=True),
                                                             to2=lambda tt: refs["a"].where(tt, "blade.L", raw=True),
                                                             head="L", ease=1.0))],
-              effects=[dict(kind="dissolve", amount=Track([(0.0, 0.0), (34.0, 0.0), (36.6, 0.32), (BREATH, 0.32),
-                                                           (BREATH + 1.4, 0.0), (61.0, 0.0)]), reach=2.5)],
+              effects=[dict(kind="dissolve", amount=Track([(0.0, 0.0), (33.8, 0.0), (35.8, 0.32), (37.3, 0.32),
+                                                           (38.5, 0.0), (61.0, 0.0)]), reach=2.5)],
               look=look_b, seed=62.0)
     refs["a"] = Body(color="#cfd6ff", color2="#ffffff", **ka)
     refs["b"] = Body(color="#e8dcff", color2="#ffffff", **kb)
@@ -713,13 +705,13 @@ def _setup(scene):
     gs, ga = GREET_SCALE, GREET_AT
     refs = {}
     man = _person("man", (ga[0], ga[2]), (0.0, 0.0, 0.0), style="glitter", color="#fff0d0", color2="#ffffff",
-                  bright=1.6, scale=gs, garment="coat", facing=[(0.0, 90.0), (3.0, 90.0), (3.9, -90.0)],
-                  motion=[(-1e9, "stand"), (2.9, "shuffle"), (4.0, "stand")],
-                  gesture=[(3.7, 30.0, "wave", dict(side="R"))], seed=12.0)
+                  bright=1.6, scale=gs, garment="coat", facing=[(0.0, 90.0), (4.2, 90.0), (5.1, -90.0)],
+                  motion=[(-1e9, "stand"), (4.1, "shuffle"), (5.2, "stand")],
+                  gesture=[(4.9, 30.0, "wave", dict(side="R"))], seed=12.0)
     refs["m"] = man
     woman = _person("woman", (ga[0] - 0.62 * gs, ga[2] - 0.05 * gs), (0.0, 0.0, 0.0), style="glitter",
                     color="#ffe0c0", color2="#ffffff", bright=1.6, scale=gs, garment="dress", facing=90.0,
-                    gesture=[(1.9, 3.7, "hand_on_shoulder",
+                    gesture=[(3.4, 5.0, "hand_on_shoulder",
                               dict(side="R", to=lambda tt: refs["m"].where(tt, "shoulder.R", raw=True)))],
                     seed=13.0)
     _add(scene, "s1_greet_man", man, -1.0, X1, inside=True, rise=0.0, dim=0.0)
@@ -732,14 +724,13 @@ def _setup(scene):
     scene.add("s2_door_open", _Gate(door.fill, X1, X2, rise=0.0, fall=0.0), reflect=False,
               mask=Mask("sky", sky="world", look=window_look, edge=0.4, grow=0.6,
                         strength=lambda t: _ss(X1, X1 + 0.8, t) * (1.0 if t < X2 else 0.0)))
-    _add(scene, "s2_host", _person("man", [(X1, (-12.0, -78.0)), (8.3, (-12.0, -78.0)), (9.1, (-17.0, -76.0))], O2,
+    _add(scene, "s2_host", _person("man", (-14.0, -78.0), O2,
                                    style="plexus", color="#ffd9a0", color2="#fff4e0", scale=12.0, garment="coat",
-                                   facing=[(X1, 90.0), (8.3, 90.0), (9.1, 115.0)],
-                                   motion=[(-1e9, "stand"), (8.3, "shuffle"), (9.2, "stand")],
-                                   gesture=[(8.5, 30.0, "offer", dict(side="L"))], seed=21.0), X1, X2)
+                                   facing=100.0,
+                                   gesture=[(8.1, 30.0, "offer", dict(side="L"))], seed=21.0), X1, X2)
     _add(scene, "s2_guest", _person("woman", (8.0, -24.0), O2, style="plexus", color="#ffe6c0", color2="#ffffff",
                                     scale=12.0, garment="dress", facing=180.0,
-                                    motion=[(-1e9, "stand"), (9.0, "walk", dict(speed=1.7))], seed=22.0), X1, X2)
+                                    motion=[(-1e9, "stand"), (8.6, "walk", dict(speed=1.6))], seed=22.0), X1, X2)
 
     # 3 RESPECT: he speaks with an open hand raised, light flowing from it; she leans in and listens
     speaker = _person("man", (13.0, -70.0), O3, style="sparks", color="#bfe0ff", color2="#ffffff", scale=26.0,
@@ -747,9 +738,9 @@ def _setup(scene):
                       gesture=[(13.9, 30.0, "reach", dict(side="L", palm="up", height=0.12, far=0.7))])
     listener = _person("woman", (-13.0, -70.0), O3, style="sparks", color="#bfe0ff", color2="#ffffff",
                        scale=26.0, garment="dress", facing=90.0, seed=32.0,
-                       gesture=[(14.2, 30.0, "listen", dict(side="R", amount=1.0)),
-                                (16.4, 17.3, "bow", dict(amount=9.0, ease=0.4)),
-                                (17.6, 18.5, "bow", dict(amount=7.0, ease=0.4))])
+                       gesture=[(14.0, 30.0, "listen", dict(side="R", amount=1.0)),
+                                (15.8, 16.6, "bow", dict(amount=9.0, ease=0.4)),
+                                (16.9, 17.7, "bow", dict(amount=7.0, ease=0.4))])
     tint3 = (1.7, 1.6, 1.9)
     _add(scene, "s3_speaker", speaker, X2, X3, window=True, edge=0.8, tint=tint3)
     _add(scene, "s3_listener", listener, X2, X3, window=True, edge=0.8, tint=tint3)
@@ -760,20 +751,15 @@ def _setup(scene):
     # 4 GRATITUDE: the people round him bow to him, one after another; he bows back
     _add(scene, "s4_worker", _person("man", (WORKER_AT[0], WORKER_AT[2]), O4, style="window", color="#ffd27a",
                                      color2="#fff4d0", scale=16.0, garment="coat", facing=0.0,
-                                     gesture=[(24.0, 30.0, "bow", dict(amount=18.0))], seed=41.0),
+                                     gesture=[(22.6, 30.0, "bow", dict(amount=20.0))], seed=41.0),
          X3, X4, window=True, edge=0.7)
-    crowd = [(-66.0, "woman", "dress"), (-40.0, "man", "tunic"), (-16.0, "child", "tunic"), (40.0, "woman", "robe"),
-             (66.0, "man", "coat")]
-    for i, (ang, shape, garment) in enumerate(crowd):
-        a = np.radians(ang)
-        r = 34.0 if shape != "child" else 46.0
-        p = WORKER_AT + _A([r * np.sin(a), 0.0, r * np.cos(a)])
-        face = float(np.degrees(np.arctan2(WORKER_AT[0] - p[0], WORKER_AT[2] - p[2])))
-        _add(scene, "s4_crowd%d" % i, _person(shape, (p[0], p[2]), O4, style="glitter", color="#ffd27a",
-                                              color2="#fff0c0", bright=1.2, scale=12.0, garment=garment,
-                                              facing=face, points=30000,
-                                              gesture=[(21.0 + 0.3 * i, 30.0, "bow", dict(amount=32.0, ease=0.9))],
-                                              seed=43.0 + i), X3, X4)
+    from p3d.crowd import Crowd
+    wc = O4 + WORKER_AT
+    crowd = Crowd(n=150, area=dict(center=(wc[0], wc[2]), radius=(16.0, 75.0), arc=(-125.0, 125.0)),
+                  facing="center", kinds=(("bow", 3.0), ("pray", 1.0)), shapes=("woman", "man", "child"),
+                  start=dict(t=X3 + 0.5, center=(wc[0], wc[2]), speed=34.0), scale=(5.5, 7.5), points=2600,
+                  color="#ffd27a", color2="#fff0c0", bright=1.1, seed=4.0)
+    scene.add("s4_crowd", PW.KeepClear(_Gate(crowd, X3, X4, rise=0.0, fall=0.0), WORDS, floor=0.0))
 
     # 5 CONSIDERATION: the helping hands
     for k, v in enumerate(_hands_help(MEET, _lift, CLASP)):
@@ -783,7 +769,7 @@ def _setup(scene):
                                       color2="#bfe4ff"), X4, X5, rise=0.0))
 
     # 6 APOLOGY and INCLUSIVENESS: they kneel face to face in the rain; they rise and hold each other
-    a6, b6 = _embrace_pair(O6 + PAIR6, BREATH + 0.2, 41.7, _style("window", "#cfd6ff", "#ffffff"),
+    a6, b6 = _embrace_pair(O6 + PAIR6, 37.6, 39.0, _style("window", "#cfd6ff", "#ffffff"),
                            _style("window", "#e8dcff", "#ffffff"))
     _add(scene, "s6_him", a6, X5, X6, window=True, edge=0.7)
     _add(scene, "s6_her", b6, X5, X6, window=True, edge=0.7)
@@ -846,27 +832,29 @@ def _setup(scene):
 
 
 # ------------------------------------------------------------------------------------------------ the 3D layer
-# the badge's box on screen (fractions, y up), measured on stills: large in the middle on frame 0 (centre
-# 0.5, 0.595; 0.74 by 0.19), then at rest in the top left (scale 0.48, margins 0.035 and 0.05)
-_BADGE_FULL, _BADGE_HALF = (0.5, 0.595), (0.37, 0.095)
+# Nothing drawn by the 3D layer falls on the titles (screen fractions, y up): the opening title, each
+# signature's corner while it shows, the date in the breath, then the end card.
+_SIG_BOX = dict(br=(0.62, 0.03, 0.98, 0.24), bl=(0.02, 0.03, 0.38, 0.24), tr=(0.62, 0.76, 0.98, 0.97),
+                tl=(0.02, 0.76, 0.38, 0.97))
 
 
 def _clear_boxes(t):
-    m = _ss(CREDIT["t_move"], CREDIT["t_rest"], t)
-    sc = CREDIT["scale"] ** m
-    hx, hy = _BADGE_HALF[0] * sc, _BADGE_HALF[1] * sc
-    rest = (CREDIT["margin_x"] + _BADGE_HALF[0] * CREDIT["scale"],
-            1.0 - CREDIT["margin_top"] - _BADGE_HALF[1] * CREDIT["scale"])
-    cx = _BADGE_FULL[0] * (1 - m) + rest[0] * m
-    cy = _BADGE_FULL[1] * (1 - m) + rest[1] * m
     out = []
-    a = 1.0 - _ss(T_FORM - 0.2, T_FORM + 0.8, t)
-    if a > 0.01:
-        out.append(dict(box=(cx - hx - 0.015, cy - hy - 0.012, cx + hx + 0.015, cy + hy + 0.02), t0=-2.0, t1=61.0,
-                        soft=0.02, amount=a))
+    oy = 1.0 - TITLES["opening"]["y"]
+    if t < TITLES["opening"]["t_end"] + 0.5:
+        a = 1.0 - _ss(TITLES["opening"]["t_end"], TITLES["opening"]["t_end"] + 0.5, t)
+        out.append(dict(box=(0.12, oy - 0.15, 0.88, oy + 0.15), t0=-2.0, t1=61.0, soft=0.03, amount=a))
+    for a0, a1, corner, _pal in TITLES["signature"]["windows"]:
+        if a0 - 0.4 <= t <= a1 + 0.4:
+            out.append(dict(box=_SIG_BOX[corner], t0=a0 - 0.4, t1=a1 + 0.4, soft=0.03, amount=1.0))
+    dl = TITLES["date_light"]
+    if dl["t_form"] - 0.3 <= t <= dl["t_burst"]:
+        dy = 1.0 - dl["y"]
+        out.append(dict(box=(0.12, dy - 0.15, 0.88, dy + 0.13), t0=dl["t_form"] - 0.3, t1=dl["t_burst"], soft=0.04,
+                        amount=0.9))
     if t >= T_FORM - 0.3:
         out.append(dict(box=(0.10, 0.36, 0.90, 0.88), t0=T_FORM - 0.3, t1=61.0, soft=0.05, amount=0.85))
-    return out
+    return out[:2]
 
 
 NINE = [e["color"] for e in PW.EXPRESSIONS]
