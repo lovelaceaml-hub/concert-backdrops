@@ -92,6 +92,37 @@ from p3d.world import arch_points  # noqa: E402
 BOTTOM_CALM = 0.0
 TEXT_SHADOW = 0.0
 
+# ---- the concert badge (PHASEB UPDATE 3, the same in all ten films): large on frame 0, in the top left corner
+# by 2.8 s, gone as the end card starts to form (the end card carries the same words)
+CREDIT = dict(song="The Words of Mother’s Love",
+              concert="Healing Concert · Sunday, December 6 · 4:30 PM",
+              t_in=-1.0, t_full=0.0,
+              t_move=1.6, t_rest=2.8,
+              scale=0.55, alpha_rest=0.92,
+              margin_x=0.035, margin_top=0.05)
+BADGE_OUT = TITLE_WHOLE - _base.FORM_DUR - 0.75      # the end card's title starts to form
+
+
+def credit_state(t, bbox):
+    """Centre, scale and strength of the badge; bbox is its size at full card size (demo_gathering.py), and it
+    fades out over 1 s from BADGE_OUT."""
+    c = CREDIT
+    x0, x1, y0, y1 = bbox
+
+    def ss(a, b, x):
+        u = min(max((x - a) / (b - a), 0.0), 1.0)
+        return u * u * (3 - 2 * u)
+
+    a_in = ss(c["t_in"], c["t_full"], t)
+    m = ss(c["t_move"], c["t_rest"], t)
+    scale = c["scale"] ** m
+    cx0, cy0 = (x0 + x1) / 2.0, (y0 + y1) / 2.0
+    tx = c["margin_x"] + c["scale"] * (x1 - x0) / 2.0
+    ty = 1.0 - c["margin_top"] - c["scale"] * (y1 - y0) / 2.0
+    cx, cy = cx0 * (1 - m) + tx * m, cy0 * (1 - m) + ty * m
+    alpha = a_in * (1.0 + (c["alpha_rest"] - 1.0) * m) * (1.0 - ss(BADGE_OUT, BADGE_OUT + 1.0, t))
+    return (cx, cy, scale, alpha), (cx0, cy0)
+
 
 def params(song, t):
     """epic_concert's params, here so that it finds star_state and link_state, which engine/song.py installs
@@ -495,11 +526,11 @@ _SPECS = [
     dict(expr="Concession", pos=(0.0, 3.1, WAVE_Z + 0.4), width=8.4, face="fixed", facing=0.0, t_in=D + 0.05,
          t_read0=21.0, t_read1=23.7, t_out=24.7, arrive="reveal",
          gate=lambda P, t: _ss(-0.3, 0.3, P[:, 1] - (WAVE_H(t) - 0.2)), leave="doors"),
-    dict(expr="Respect", pos=(-1.9, 2.75, 27.6), width=4.2, t_in=24.6, t_read0=26.0, t_read1=28.7, t_out=29.6,
+    dict(expr="Respect", pos=(-1.9, 2.55, 27.6), width=4.2, t_in=24.6, t_read0=26.0, t_read1=28.7, t_out=29.6,
          arrive="pen", leave="give", to=BODIES["giver"]),
     dict(expr="Consideration", pos=(-24.3, 2.75, 15.6), width=4.2, t_in=TOUCH - 0.2, t_read0=31.8, t_read1=34.5,
          t_out=35.4, arrive="touch", source=MEET, touch_at=0.12, leave="rise"),
-    dict(expr="Encouragement", pos=(0.0, 3.15, -3.0), width=5.6, t_in=36.2, t_read0=37.6, t_read1=40.3,
+    dict(expr="Encouragement", pos=(0.0, 3.0, -3.0), width=5.6, t_in=36.2, t_read0=37.6, t_read1=40.3,
          t_out=41.4, arrive="rays", source=(0.0, 1.62, -1.0), leave="stream",
          to=lambda t: MOTHER.where(t, "palm.R"), star=True),
     dict(expr="Gratitude", pos=(0.0, 4.7, 7.0), width=15.0, t_in=43.6, t_read0=45.3, t_read1=48.0, t_out=49.0,
