@@ -11,6 +11,7 @@ import songs.s03_original as _base
 _base.TOTAL = 30.0
 _base.NFRAMES = int(round(_base.TOTAL * _base.FPS))
 _base.MUSIC_END = 29.5   # the skyline is the loudness of this cut, not the whole song
+_base.RIDGE_X0, _base.RIDGE_W = 0.02, 1.0   # and reaches past the right edge, so the camera never shows its end
 _base.FADE = _base.Track([(0, 0.0), (1.0, 1.0), (28.5, 1.0), (29.9, 0.0)])
 from songs.s03_original import *  # noqa: E402,F401,F403
 from track import Track  # noqa: E402
@@ -20,7 +21,7 @@ CLOUDS3D = Track([(0.0, 0.75), (30.0, 0.85)])
 CLOUDS_SPEED = 1.6
 CLOUDS_LIGHT = 1.1
 GOD_RAYS = Track([(0.0, 0.0), (9.0, 0.0), (19.0, 0.85), (30.0, 1.0)])
-RAYS_DECAY = 0.965
+RAYS_DECAY = 0.985
 CAMERA_CRANE = Track([(0.0, -0.03), (30.0, 0.09)])
 CAMERA_ZOOM = Track([(0.0, 1.0), (30.0, 1.07)])
 CAMERA_PAN = Track([(0.0, -0.015), (30.0, 0.02)])

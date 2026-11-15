@@ -160,10 +160,10 @@ const int N = 96;
 void main(){
   vec2 dl = (vUV-uSrc)*(0.96/float(N));
   vec2 p = vUV - dl*hash21(gl_FragCoord.xy*0.731);
-  float ill = 1.0, acc = 0.0;
-  for(int i=0;i<N;i++){ acc += texture(uOcc, p).r*ill; ill *= uDecay; p -= dl; }
+  float ill = 1.0, acc = 0.0, wsum = 0.0;
+  for(int i=0;i<N;i++){ acc += texture(uOcc, p).r*ill; wsum += ill; ill *= uDecay; p -= dl; }
   float r = length((vUV-uSrc)*vec2(uAspect,1.0));
-  o = vec4(acc*(1.0-uDecay)*mix(0.35, 1.0, smoothstep(0.02, 0.22, r)), 0.0, 0.0, 1.0);
+  o = vec4(acc/wsum*mix(0.35, 1.0, smoothstep(0.02, 0.22, r)), 0.0, 0.0, 1.0);
 }
 """
 
@@ -174,7 +174,7 @@ uniform sampler2D uRays; uniform vec3 uCol; uniform float uAmt, uHorizon, uCalm,
 float calmK(float y){ return 1.0-uCalm*(1.0-smoothstep(uCalmY-0.07, uCalmY+0.05, y)); }
 void main(){
   float r = texture(uRays, vUV).r;
-  float low = mix(0.06, 1.0, smoothstep(uHorizon-0.01, uHorizon+0.10, vUV.y));   // shafts live in the air above the land
+  float low = mix(0.03, 1.0, smoothstep(uHorizon+0.01, uHorizon+0.13, vUV.y));   // shafts live in the air above the land
   o = vec4(uCol*uAmt*r*low*calmK(vUV.y), 1.0);
 }
 """

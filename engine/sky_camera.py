@@ -243,7 +243,7 @@ class SkyCamera:
             self.v_occ.render(moderngl.TRIANGLE_STRIP)
             self.f_ray.use()
             self.t_occ.use(location=0)
-            setu(self.p_rad, uOcc=0, uSrc=(sx, sy), uDecay=float(min(max(val("RAYS_DECAY", t, 0.965), 0.5), 0.995)),
+            setu(self.p_rad, uOcc=0, uSrc=(sx, sy), uDecay=float(min(max(val("RAYS_DECAY", t, 0.985), 0.5), 0.995)),
                  uAspect=float(S.ASPECT))
             self.v_rad.render(moderngl.TRIANGLE_STRIP)
             rc = val("RAYS_COLOR", t, None)
@@ -252,7 +252,7 @@ class SkyCamera:
             ctx.enable(moderngl.BLEND)
             ctx.blend_func = (moderngl.ONE, moderngl.ONE)
             self.t_ray.use(location=0)
-            setu(self.p_rays, uRays=0, uCol=c, uAmt=a * gain * 2.2, uHorizon=float(self.to_screen((0.5, S.HORIZON), 0.80, t, P)[1]), uCalm=calm,
+            setu(self.p_rays, uRays=0, uCol=c, uAmt=a * gain * 2.6, uHorizon=float(self.to_screen((0.5, S.HORIZON), 0.80, t, P)[1]), uCalm=calm,
                  uCalmY=CALM_Y)
             self.v_rays.render(moderngl.TRIANGLE_STRIP)
             drew = True
