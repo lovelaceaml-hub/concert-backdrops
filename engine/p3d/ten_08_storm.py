@@ -109,7 +109,7 @@ class Sea:
             else:
                 vis = _ss(17.0, 25.0, r) * (1.0 - _ss(0.36 * L, 0.48 * L, np.hypot(x - c[0], z - c[1])))
             keep = vis > 0.004
-            x, z, vis = x[keep], z[keep], vis[keep]
+            x, z, vis, r = x[keep], z[keep], vis[keep], r[keep]
             size = ly["size"][keep]
             seed = ly["seed"][keep]
             cm = np.clip(self.calm(x, z, t), 0.0, 1.0)
@@ -122,8 +122,8 @@ class Sea:
             col = self.c_trough[None, :] * (1.0 - cr[:, None]) + self.c_crest[None, :] * cr[:, None]
             foam = np.clip((h / amp - 0.55) / 0.3, 0.0, 1.0) * (seed > 0.55)
             col = col + self.c_foam[None, :] * foam[:, None]
-            col = col * (1.0 + 2.6 * fl) + self.c_flash[None, :] * (0.5 * fl * cr)[:, None]
-            ring = np.clip(4.0 * cm * (1.0 - cm), 0.0, 1.0) ** 1.5 * self.edge
+            col = col * (1.0 + 1.6 * fl) + self.c_flash[None, :] * (0.35 * fl * cr)[:, None]
+            ring = np.clip(4.0 * cm * (1.0 - cm), 0.0, 1.0) ** 1.5 * self.edge * (0.25 + 0.75 * _ss(3.0, 10.0, r))
             gl = _val(self.glass, t)
             glass_col = self.c_glass * (1.0 + 0.6 * warm)
             col = col * open_[:, None] + glass_col[None, :] * (cm * (seed > 0.72))[:, None] + \
@@ -181,9 +181,11 @@ class Rain:
                             alpha=vis * am * 0.42 * min(sp * 3.0, 1.0), kind="line", seed=self.seed, reflect=False))
         if sp < 0.98:
             k = 1.0 - sp
-            out.append(dict(pos=p, size=0.022 + 0.018 * self.seed, color=self.c_bead,
-                            alpha=vis * am * k * 0.85, kind="soft", twinkle=0.5, seed=self.seed, emit=1.6,
-                            reflect=False))
+            near = _ss(2.5, 7.0, np.linalg.norm(p - cp[None, :], axis=1))
+            sel = (self.seed < 0.55) | (near > 0.5)
+            out.append(dict(pos=p[sel], size=0.02 + 0.014 * self.seed[sel], color=self.c_bead,
+                            alpha=(vis * am * k * (0.25 + 0.4 * near))[sel], kind="soft", twinkle=0.5,
+                            seed=self.seed[sel], emit=1.3, reflect=False))
         return out
 
 
@@ -202,13 +204,13 @@ class Beads:
         self.fall = fall
 
     def sample(self, t):
-        a = float(_ss(self.t_in, self.t_in + 0.5, t) * (1.0 - _ss(self.t_out - 0.6, self.t_out, t)))
+        a = float(_ss(self.t_in, self.t_in + 0.4, t) * (1.0 - _ss(self.t_in + 0.5, self.t_out, t)))
         p = self.p
         if self.fall is not None and t > self.fall:
             p = p.copy()
             p[:, 1] = np.maximum(p[:, 1] - (t - self.fall) * (0.6 + 0.6 * self.seed), 0.02)
-        return dict(pos=p, size=0.03 + 0.02 * self.seed, color=self.c, alpha=a * 0.8, kind="soft", twinkle=0.5,
-                    seed=self.seed, emit=1.5)
+        return dict(pos=p, size=0.026 + 0.016 * self.seed, color=self.c, alpha=a * 0.6, kind="soft", twinkle=0.5,
+                    seed=self.seed, emit=1.2)
 
 
 def _bolt_path(top, bottom, seed, n=48, jag=0.16):
