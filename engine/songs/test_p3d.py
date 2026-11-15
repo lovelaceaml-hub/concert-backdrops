@@ -6,8 +6,9 @@ One scene that uses every part of the 3D layer once, for stills and a short vide
               one whose silhouette is a window onto a sunrise sky (Mask "sky"), one of glitter standing in a
               shaft of light. Flakes rise from the glitter figure, petals circle the window figure, birds
               leave it, a plexus ball and a ribbon float in front. The classic 2D words form over it all.
-  8 s         a burst of light; inside it the world cuts to dawn and the camera whips to a second set-up.
-  8 to 16 s   dawn, the same figures from the side, the end of the words.
+  8 s         a burst of light; inside it the world cuts to dawn and the camera cuts to a second set-up.
+  8 to 12 s   dawn, the same figures from the side.
+  12 s        a whip (0.45 s, motion blur) to a third set-up behind the figures; the end of the words.
 """
 import numpy as np
 
@@ -105,7 +106,8 @@ P3D = dict(
     camera=Rig([
         orbit((0.0, 1.15, 0.0), radius=(8.0, 6.6), height=(1.5, 1.8), a0=-22.0, a1=30.0, t0=0.0, t1=8.0, fov=36,
               aperture=0.07),
-        dolly((7.5, 1.5, 2.6), (6.3, 1.6, 4.4), 8.0, 16.0, look=(0.6, 1.2, -0.6), fov=34, aperture=0.07, blend=0.4),
+        dolly((7.5, 1.5, 2.6), (6.9, 1.55, 3.5), 8.0, 12.0, look=(0.6, 1.2, -0.6), fov=34, aperture=0.07, blend=0.0),
+        dolly((-9.0, 3.2, -10.0), (-7.5, 2.6, -8.5), 12.0, 16.0, look=(0.4, 1.3, -1.2), fov=40, aperture=0.05, blend=0.45),
     ], handheld=0.3),
     bursts=[dict(t=8.0, strength=6.0, rise=0.3, fall=0.7, color="#fff1d8")],
     world=dict(

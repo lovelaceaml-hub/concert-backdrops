@@ -27,6 +27,17 @@ uniform float uT;
 uniform vec4 uHillP;      // visibility, height scale, -, -
 uniform vec4 uCloudP;     // amount, drift x, drift z, scale
 uniform vec3 uSunDir;
+uniform vec4 uLakeP;      // reflectivity looking down, mirror gain, ripple amount, shore radius
+uniform int uNCalm; uniform vec4 uCalmA[4]; uniform vec4 uCalmB[4];   // discs (x, z, radius, soft) with their own (ripple, mirror)
+// the lake at p: (ripple amount, mirror gain); a disc of calm (or storm) can lie anywhere on it
+vec2 lakeAt(vec2 p){
+  vec2 v = vec2(uLakeP.z, uLakeP.y);
+  for(int i=0;i<uNCalm;i++){
+    float w = 1.0 - smoothstep(uCalmA[i].z - uCalmA[i].w, uCalmA[i].z + uCalmA[i].w, length(p - uCalmA[i].xy));
+    v = mix(v, uCalmB[i].xy, w);
+  }
+  return v;
+}
 const vec3 HILL_D = vec3(1400.0, 2600.0, 5200.0);
 const vec3 HILL_H = vec3(150.0, 420.0, 950.0);
 
@@ -77,7 +88,11 @@ uniform float uFocal, uFocus, uAperture, uNear;
 uniform vec4 uFogP;       // haze per metre, mist density at the water, mist scale height, dome extinction
 uniform float uFogAmt, uDofAmt, uGain, uTwinkle, uBack;
 uniform float uMirror, uDome, uDomeDist, uLod, uLodR, uCocMax, uSigMin;
-uniform vec4 uLakeP;      // reflectivity looking down, mirror gain, ripple amount, shore radius
+uniform float uPaint;     // 0: the light pass. 1: the paint pass (true colour over the scene)
+uniform vec2 uBirth;      // seconds a point takes to appear at its birth, flash when just born
+uniform mat3 uDomeRot; uniform float uTurn;
+uniform vec4 uSplit; uniform float uSplitStars;
+uniform int uNLights; uniform vec4 uLightP[4]; uniform vec3 uLightC[4]; uniform float uLit;
 uniform float uBlur, uShutterDt, uMaxStreak, uSmear, uPx;
 
 float ihash(int id){
@@ -92,11 +107,12 @@ vec3 mirrored(vec3 wp, out float k, out float smear){
   float path = length(wm - s);
   float ds = length(s - uCamPos);
   float foot = ds*ds/(0.5*uRes.y*uFocal*max(uCamPos.y, 0.05));
-  wm.xz += 2.0*rip(s.xz, uT, foot)*uLakeP.z*path;
+  vec2 lk = lakeAt(s.xz);
+  wm.xz += 2.0*rip(s.xz, uT, foot)*lk.x*path;
   vec3 vd = normalize(s - uCamPos);
-  k = uLakeP.y*mix(uLakeP.x, 1.0, pow(1.0-clamp(-vd.y, 0.0, 1.0), 4.0))
-      *(1.0 - smoothstep(uLakeP.w*0.80, uLakeP.w, length(s.xz)))*step(0.0, wp.y);
-  smear = uLakeP.z*uSmear*path;
+  k = lk.y*mix(uLakeP.x, 1.0, pow(1.0-clamp(-vd.y, 0.0, 1.0), 4.0))
+      *(1.0 - smoothstep(uLakeP.w*0.80, uLakeP.w, length(s.xz))*step(0.001, uHillP.x))*step(0.0, wp.y);
+  smear = lk.x*uSmear*path;
   return wm;
 }
 float fogTrans(vec3 wp, float dist){
@@ -105,6 +121,24 @@ float fogTrans(vec3 wp, float dist){
   float dy = max(abs(y1-y0), 0.02);
   tau += uFogP.y*uFogP.z*abs(exp(-y0/uFogP.z)-exp(-y1/uFogP.z))/dy*dist;
   return exp(-tau);
+}
+// how visible a point born at `birth` is now (0 before), with the flare of a point just born
+float born(float birth){
+  float age = uT - birth;
+  return smoothstep(0.0, max(uBirth.x, 1e-4), age)*(1.0 + uBirth.y*exp(-max(age, 0.0)/0.25));
+}
+// the colour a point takes from the world's moving lights
+vec3 lights(vec3 base, vec3 wp, vec3 nrm, float hasN){
+  if(uLit <= 0.0 || uNLights == 0) return base;
+  vec3 sum = vec3(0.0); float w = 0.0;
+  float lum = dot(base, vec3(0.3, 0.6, 0.1));
+  for(int i=0;i<uNLights;i++){
+    vec3 d = uLightP[i].xyz - wp;
+    float f = uLightP[i].w*uLightP[i].w/(dot(d, d) + uLightP[i].w*uLightP[i].w);
+    if(hasN > 0.5) f *= 0.15 + 0.85*max(dot(normalize(nrm), normalize(d)), 0.0);
+    sum += uLightC[i]*f; w += f;
+  }
+  return mix(base, base*(1.0-clamp(w, 0.0, 1.0)) + sum*max(lum, 0.15), uLit);
 }
 float twinkle(float seed){
   return 1.0 + uTwinkle*(1.6*pow(0.5+0.5*sin(uT*(1.7+5.3*seed)+seed*97.0), 3.0) - 0.5);
@@ -115,9 +149,11 @@ float twinkle(float seed){
 SPRITE_VS = "#version 330\n" + NOISE + WORLD + SPRITE_COMMON + """
 in vec2 aCorner;
 in vec3 aPos; in float aSize; in vec3 aColor; in float aAlpha; in float aEmit; in float aSeed; in vec2 aRot;
-in vec3 aNormal; in vec3 aVel;
+in vec3 aNormal; in vec3 aVel; in float aBirth;
+uniform float uHasN;
 uniform int uKind;        // 0 soft, 1 spark, 2 disc, 3 flake, 4 petal, 5 bird
 uniform vec2 uRim;
+uniform vec2 uBokeh;
 flat out vec4 vCol;       // rgb light, glint strength
 flat out vec4 vGeo;       // R, S, Lh, r0 (pixels)
 flat out vec4 vShape;     // cos, sin, squash, how much of the true shape shows
@@ -130,11 +166,16 @@ void cull(){ gl_Position = vec4(2.0, 2.0, 2.0, 1.0); }
 void main(){
   vec3 wp = aPos, vel = aVel, nrm = aNormal;
   float mk = 1.0, smear = 0.0, ext = 1.0, size = aSize;
+  float bk = born(aBirth);
+  if(bk <= 0.0){ cull(); return; }
   if(uDome > 0.5){
     size *= uDomeDist;                                   // on the dome a size is an angle
     vec3 dir = normalize(aPos);
+    if(uTurn > 0.5) dir = uDomeRot*dir;                  // the star dome can turn about its pole
+    if(uSplit.w > 0.0)                                   // a sky of two looks: the stars follow their side
+      ext *= mix(1.0, uSplitStars, uSplit.w*smoothstep(-uSplit.z, uSplit.z, dot(normalize(dir.xz+vec2(1e-5)), uSplit.xy)));
     // stars: dimmed by the air near the horizon, hidden by hills and clouds
-    ext = exp(-uFogP.w/(max(dir.y, 0.0)+0.06));
+    ext *= exp(-uFogP.w/(max(dir.y, 0.0)+0.06));
     float te = dir.y/max(length(dir.xz), 1e-4);
     if(uHillP.x > 0.001 && te < 0.5){
       vec2 c = normalize(dir.xz);
@@ -209,10 +250,11 @@ void main(){
   }
   float stretch = 1.0 + Lh/(R + 2.0*S);
 
-  float areaF = (PI*R*R + 2.0*PI*S*S + 7.874*R*S)*stretch;
+  // (the disc's brighter edge lifts its skirt too: counted here, so the light stays the same)
+  float areaF = (PI*R*R + (1.90*PI*S*S + 7.72*R*S)*(1.0 + 0.75*uBokeh.x*smoothstep(3.0, 9.0, R)))*stretch;
   float amp = min(area0/areaF, 1.0);
 
-  float b = aAlpha*aEmit*uGain*keep*amp*mk*ext*flash*twinkle(aSeed);
+  float b = aAlpha*aEmit*uGain*keep*amp*mk*ext*flash*twinkle(aSeed)*bk;
   vec3 vdir = normalize(wp - uCamPos);
   if(uRim.x > 0.0){
     float f = pow(clamp(1.0-abs(dot(normalize(nrm), vdir)), 0.0, 1.0), uRim.y);
@@ -221,7 +263,10 @@ void main(){
   if(uBack > 0.0) b *= 1.0 + uBack*4.0*pow(max(dot(vdir, uSunDir), 0.0), 6.0);
   if(uDome < 0.5) b *= mix(1.0, fogTrans(wp, length(wp - uCamPos)), uFogAmt);
   b *= smoothstep(uNear, uNear*5.0, depth);
-  vec3 col = aColor*b;
+  // a sprite that would fill much of the picture (a point right at the lens) fades away instead
+  b *= 1.0 - smoothstep(0.12*uRes.y, 0.30*uRes.y, (max(R, r0) + 3.0*S)*stretch);
+  vec3 col = lights(aColor, wp, nrm, uHasN)*b;
+  if(uPaint > 0.5) col = vec3(clamp(b/max(aEmit, 1e-4), 0.0, 1.0));     // paint: coverage, not light
   if(max(col.r, max(col.g, col.b)) < 0.00012){ cull(); return; }
 
   // spark: a fine four-point glint while the point is sharp
@@ -238,7 +283,7 @@ void main(){
   vec2 loc = aCorner*vec2(hx, hy);
   vec2 off = axis*loc.x + vec2(-axis.y, axis.x)*loc.y;
   vLocal = loc;
-  vCol = vec4(col, glint);
+  vCol = uPaint > 0.5 ? vec4(aColor, col.r) : vec4(col, glint);
   vGeo = vec4(R, S, 0.0, r0);
   // the shape's own turn is measured in the picture, so undo the streak axis
   float ang = aRot.x - atan(axis.y, axis.x);
@@ -260,7 +305,29 @@ uniform vec2 uBokeh;      // bright rim of the bokeh disc, how hexagonal it is
 uniform float uMaskOn, uMaskBias;
 uniform vec2 uMaskK;      // how strongly dark silhouettes and sky silhouettes hide the light behind them
 uniform sampler2D uMaskTex;
+uniform float uPaint, uWindow;
+uniform vec4 uClear[2]; uniform vec4 uClearK;     // keep-clear boxes (x0, y0, x1, y1), their (amount, soft) pairs
 out vec4 o;
+
+// what is left of a sprite at this pixel after the silhouettes, the windows and the keep-clear boxes
+float keepAt(float depth){
+  float k = 1.0;
+  if(uMaskOn > 0.5){
+    vec4 m = texture(uMaskTex, gl_FragCoord.xy/uRes);
+    if(uWindow > 0.5) k *= smoothstep(0.25, 0.80, m.g);
+    else k *= 1.0 - max(smoothstep(0.25, 0.80, m.r)*uMaskK.x, smoothstep(0.25, 0.80, m.g)*uMaskK.y)
+                    *smoothstep(0.0, 0.12, depth - m.a - uMaskBias);
+  } else if(uWindow > 0.5) k = 0.0;
+  vec2 uv = gl_FragCoord.xy/uRes;
+  for(int i=0;i<2;i++){
+    float a = uClearK[2*i], sft = max(uClearK[2*i+1], 1e-4);
+    if(a > 0.0){
+      vec2 d = min(uv - uClear[i].xy, uClear[i].zw - uv);
+      k *= 1.0 - a*smoothstep(0.0, sft, min(d.x, d.y));
+    }
+  }
+  return k;
+}
 
 float sdBox(vec2 p, vec2 b){ vec2 d = abs(p)-b; return length(max(d, 0.0)) + min(max(d.x, d.y), 0.0); }
 float sdVesica(vec2 p, float r, float d){
@@ -301,6 +368,11 @@ void main(){
     float e = clamp(d/R, 0.0, 1.0); e = e*e*e; e = e*e;
     prof *= 1.0 + uBokeh.x*(e - 0.25)*smoothstep(3.0, 9.0, R);   // a slightly brighter edge, the same light in all
   }
+  if(uPaint > 0.5){
+    float a = clamp(vCol.a*prof, 0.0, 1.0)*keepAt(vMisc.y);
+    o = vec4(vCol.rgb*a, a);
+    return;
+  }
   vec3 c = vCol.rgb*prof;
   if(vCol.a > 0.01){
     float gl = vMisc.z*0.30, sg = max(0.75*S, 0.55);
@@ -309,35 +381,33 @@ void main(){
     float edge = 1.0 - smoothstep(0.7, 1.0, max(abs(g.x), abs(g.y))/vMisc.z);
     c += vCol.rgb*cross*0.55*vCol.a*edge;
   }
-  if(uMaskOn > 0.5){
-    vec4 m = texture(uMaskTex, gl_FragCoord.xy/uRes);
-    float hide = max(smoothstep(0.25, 0.80, m.r)*uMaskK.x, smoothstep(0.25, 0.80, m.g)*uMaskK.y);
-    c *= 1.0 - hide*smoothstep(0.0, 0.12, vMisc.y - m.a - uMaskBias);
-  }
-  o = vec4(c, 0.0);
+  o = vec4(c*keepAt(vMisc.y), 0.0);
 }
 """
 
 # ------------------------------------------------------------------------------------------- line segments
 SEG_VS = "#version 330\n" + NOISE + WORLD + SPRITE_COMMON + """
 in vec2 aCorner;
-in vec3 aPos; in float aSize; in vec3 aColor; in float aAlpha; in float aEmit; in float aSeed; in vec2 aRot;
-in vec4 aPos2A2;
+in vec3 aPos; in float aSize; in vec3 aColor; in float aAlpha; in float aEmit; in float aSeed; in vec2 aUV;
+in float aBirth; in vec4 aPos2A2; in float aSize2;
 uniform int uKind;        // 6 line, 7 ribbon
 uniform float uHair;
-flat out vec4 vEnd;       // length on screen (px), S, -, depth
-out vec3 vCol;
-out vec3 vLoc;            // along (px, 0 at pos), across (px), plateau radius here
+flat out vec4 vEnd;       // length on screen (px), S, cap (1 line, 0 ribbon), depth
+out vec4 vCol;            // light (or, in the paint pass, colour and coverage)
+out vec4 vLoc;            // along (px, 0 at pos), across (px), plateau radius here, place along the path
 
 void cull(){ gl_Position = vec4(2.0, 2.0, 2.0, 1.0); }
 
 void main(){
+  float bk = born(aBirth);
+  if(bk <= 0.0){ cull(); return; }
   vec3 w1 = aPos, w2 = aPos2A2.xyz;
   float mk1 = 1.0, mk2 = 1.0, sm;
   if(uMirror > 0.5){ w1 = mirrored(w1, mk1, sm); w2 = mirrored(w2, mk2, sm); if(mk1+mk2 < 0.001){ cull(); return; } }
   vec4 v1 = uView*vec4(w1, 1.0), v2 = uView*vec4(w2, 1.0);
   float d1 = -v1.z, d2 = -v2.z;
   if(d1 < uNear && d2 < uNear){ cull(); return; }
+  // cut cleanly where the segment passes the camera
   if(d1 < uNear){ float f = (uNear - d1)/(d2 - d1); v1 = mix(v1, v2, f); d1 = uNear; }
   if(d2 < uNear){ float f = (uNear - d2)/(d1 - d2); v2 = mix(v2, v1, f); d2 = uNear; }
   vec4 c1 = uProj*v1, c2 = uProj*v2;
@@ -347,48 +417,74 @@ void main(){
   vec2 nrm = vec2(-dir.y, dir.x);
   bool first = aCorner.x < 0.0;
   float depth = first ? d1 : d2;
+  float sz = first ? aSize : aSize2;
   float pxm = 0.5*uRes.y*uFocal/depth;
-  float wpx = max(aSize*pxm, uHair);                  // width on screen, never under a hairline
+  float wpx = max(sz*pxm, uHair);                     // width on screen, never under a hairline
   float coc = min(0.25*uAperture*uFocal*abs(1.0/uFocus - 1.0/depth)*uRes.y*uDofAmt, uCocMax);
   float R, S, e;
-  if(uKind == 6){ R = sqrt(0.25*wpx*wpx + coc*coc); S = uSigMin; e = aSize*pxm; }
-  else { R = coc; S = sqrt(0.09*wpx*wpx + uSigMin*uSigMin); e = 0.752*aSize*pxm; }
+  if(uKind == 6){ R = sqrt(0.25*wpx*wpx + coc*coc); S = uSigMin; e = sz*pxm; }
+  else { R = coc; S = sqrt(0.09*wpx*wpx + uSigMin*uSigMin); e = 0.752*sz*pxm; }
   float amp = min(e/(2.0*R + 2.5066*S), 1.0);
   float a = first ? aAlpha : aPos2A2.w;
-  float b = a*aEmit*uGain*amp*(first ? mk1 : mk2)*twinkle(aSeed);
+  float b = a*aEmit*uGain*amp*(first ? mk1 : mk2)*twinkle(aSeed)*bk;
   vec3 wp = first ? w1 : w2;
   b *= mix(1.0, fogTrans(wp, length(wp - uCamPos)), uFogAmt);
   b *= smoothstep(uNear, uNear*5.0, depth);
+  b *= 1.0 - smoothstep(0.12*uRes.y, 0.30*uRes.y, R + 3.0*S);
   float h = R + 3.0*S;
-  vec2 p = (first ? s1 - dir*h : s2 + dir*h) + nrm*aCorner.y*h;
-  vLoc = vec3(first ? -h : len + h, aCorner.y*h, R);
-  vEnd = vec4(len, S, 0.0, depth);
-  vCol = aColor*b;
+  float cap = uKind == 6 ? 1.0 : 0.0;                 // a ribbon's pieces meet end to end: no caps, no beads
+  vec2 p = (first ? s1 - dir*h*cap : s2 + dir*h*cap) + nrm*aCorner.y*h;
+  vLoc = vec4(first ? -h*cap : len + h*cap, aCorner.y*h, R, first ? aUV.x : aUV.y);
+  vEnd = vec4(len, S, cap, depth);
+  vCol = uPaint > 0.5 ? vec4(aColor, clamp(b/max(aEmit, 1e-4), 0.0, 1.0)) : vec4(lights(aColor, wp, vec3(0.0), 0.0)*b, 0.0);
   gl_Position = vec4(p*2.0/uRes, 0.0, 1.0);
 }
 """
 
 SEG_FS = """
 #version 330
-in vec3 vCol; in vec3 vLoc; flat in vec4 vEnd;
+in vec4 vCol; in vec4 vLoc; flat in vec4 vEnd;
 uniform vec2 uRes;
+uniform float uT;
+uniform vec4 uPulse;      // speed, length, gain, period: a brighter stretch travelling along the path
 uniform float uMaskOn, uMaskBias;
 uniform vec2 uMaskK;
 uniform sampler2D uMaskTex;
+uniform float uPaint, uWindow;
+uniform vec4 uClear[2]; uniform vec4 uClearK;
 out vec4 o;
+float keepAt(float depth){
+  float k = 1.0;
+  if(uMaskOn > 0.5){
+    vec4 m = texture(uMaskTex, gl_FragCoord.xy/uRes);
+    if(uWindow > 0.5) k *= smoothstep(0.25, 0.80, m.g);
+    else k *= 1.0 - max(smoothstep(0.25, 0.80, m.r)*uMaskK.x, smoothstep(0.25, 0.80, m.g)*uMaskK.y)
+                    *smoothstep(0.0, 0.12, depth - m.a - uMaskBias);
+  } else if(uWindow > 0.5) k = 0.0;
+  vec2 uv = gl_FragCoord.xy/uRes;
+  for(int i=0;i<2;i++){
+    float a = uClearK[2*i], sft = max(uClearK[2*i+1], 1e-4);
+    if(a > 0.0){
+      vec2 d = min(uv - uClear[i].xy, uClear[i].zw - uv);
+      k *= 1.0 - a*smoothstep(0.0, sft, min(d.x, d.y));
+    }
+  }
+  return k;
+}
 void main(){
-  float along = vLoc.x - clamp(vLoc.x, 0.0, vEnd.x);
+  float along = (vLoc.x - clamp(vLoc.x, 0.0, vEnd.x))*vEnd.z;
   float sd = length(vec2(along, vLoc.y)) - vLoc.z;
   float S = vEnd.y;
   float prof = sd <= 0.0 ? 1.0 : exp(-sd*sd/(2.0*S*S));
   prof = max(prof - 0.0111, 0.0)/0.9889;
-  vec3 c = vCol*prof;
-  if(uMaskOn > 0.5){
-    vec4 m = texture(uMaskTex, gl_FragCoord.xy/uRes);
-    float hide = max(smoothstep(0.25, 0.80, m.r)*uMaskK.x, smoothstep(0.25, 0.80, m.g)*uMaskK.y);
-    c *= 1.0 - hide*smoothstep(0.0, 0.12, vEnd.w - m.a - uMaskBias);
+  if(uPulse.z > 0.0){
+    float x = vLoc.w - uPulse.x*uT;
+    if(uPulse.w > 0.0) x = (fract(x/uPulse.w + 0.5) - 0.5)*uPulse.w;
+    prof *= 1.0 + uPulse.z*exp(-x*x/(uPulse.y*uPulse.y));
   }
-  o = vec4(c, 0.0);
+  float k = keepAt(vEnd.w);
+  if(uPaint > 0.5){ float a = clamp(vCol.a*prof, 0.0, 1.0)*k; o = vec4(vCol.rgb*a, a); return; }
+  o = vec4(vCol.rgb*prof*k, 0.0);
 }
 """
 
@@ -396,15 +492,15 @@ void main(){
 # Red: coverage of "dark" sets, green: coverage of "sky" sets (both added up), alpha: the nearest depth (MIN).
 MASK_VS = """
 #version 330
-in vec2 aCorner; in vec3 aPos; in float aSize; in float aAlpha;
+in vec2 aCorner; in vec3 aPos; in float aSize; in float aAlpha; in float aBirth;
 uniform mat4 uView, uProj;
 uniform vec2 uRes;
-uniform float uFocal, uNear, uGrow;
+uniform float uFocal, uNear, uGrow, uT;
 out vec2 vLocal; flat out vec3 vP;    // radius px, weight, depth
 void main(){
   vec4 vp = uView*vec4(aPos, 1.0);
   float depth = -vp.z;
-  float w = smoothstep(0.02, 0.20, aAlpha);
+  float w = smoothstep(0.02, 0.20, aAlpha)*step(aBirth, uT);
   if(depth < uNear || w <= 0.0){ gl_Position = vec4(2.0, 2.0, 2.0, 1.0); return; }
   vec4 cp = uProj*vp;
   float r = max((0.5*aSize + uGrow)*0.5*uRes.y*uFocal/depth, 1.2);
@@ -458,14 +554,17 @@ uniform float uFocal, uAspect;
 uniform vec2 uRes;
 uniform vec3 uSkyTop, uSkyMid, uSkyHor, uSunCol, uHazeCol, uHillCol, uWater, uMilkyN, uMistCol;
 uniform vec4 uSunP;       // strength, cos of the disc's radius, disc strength, glow width
-uniform vec4 uLakeP;      // reflectivity looking down, mirror gain, ripple amount, shore radius
 uniform vec4 uAirP;       // haze per metre, mist density at the water, mist scale height, milky way glow
 uniform int uNShaft; uniform vec4 uShA[4]; uniform vec4 uShB[4];
+uniform vec4 uSplit; uniform vec3 uSkyTopB, uSkyMidB, uSkyHorB, uHazeColB;    // a second look on one side of the sky
+uniform int uNLights; uniform vec4 uLightP[4]; uniform vec3 uLightC[4];
+float splitW(vec2 dxz){ return uSplit.w*smoothstep(-uSplit.z, uSplit.z, dot(normalize(dxz+vec2(1e-5)), uSplit.xy)); }
 
 vec3 skyBase(vec3 d){
   float e = max(d.y, 0.0);
-  vec3 c = mix(uSkyHor, uSkyMid, smoothstep(0.0, 0.30, e));
-  c = mix(c, uSkyTop, smoothstep(0.16, 0.80, e));
+  float sw = uSplit.w > 0.0 ? splitW(d.xz) : 0.0;
+  vec3 c = mix(mix(uSkyHor, uSkyHorB, sw), mix(uSkyMid, uSkyMidB, sw), smoothstep(0.0, 0.16, e));
+  c = mix(c, mix(uSkyTop, uSkyTopB, sw), smoothstep(0.07, 0.55, e));
   float a = max(1.0 - dot(d, uSunDir), 0.0);
   float w = uSunP.w;
   vec3 g = uSunCol*uSunP.x*(0.42*exp(-a*42.0/w) + 0.20*exp(-a*9.0/w) + 0.07*exp(-a*2.2/w));
@@ -499,7 +598,8 @@ vec3 shade(vec3 d, float te, float disc, float aa, out float vis){
     float lxz = max(length(d.xz), 1e-5);
     if(te < 0.55){
       vec2 cxz = d.xz/lxz;
-      vec3 hz = uHazeCol + uSunCol*uSunP.x*0.22*pow(max(dot(cxz, normalize(uSunDir.xz+vec2(1e-5))), 0.0), 3.0)
+      vec3 hz = mix(uHazeCol, uHazeColB, uSplit.w > 0.0 ? splitW(cxz) : 0.0)
+                + uSunCol*uSunP.x*0.22*pow(max(dot(cxz, normalize(uSunDir.xz+vec2(1e-5))), 0.0), 3.0)
                 *smoothstep(-0.45, 0.05, uSunDir.y);
       for(int k=2;k>=0;k--){
         float ht = hillTan(cxz, k);
@@ -547,15 +647,16 @@ void main(){
     dist = uCamPos.y/(-d.y);
     hit = uCamPos + d*dist;
     float foot = dist*dist/(0.5*uRes.y*uFocal*max(uCamPos.y, 0.05));
-    vec2 g = rip(hit.xz, uT, foot)*uLakeP.z;
-    if(uLakeP.z > 0.0){
-      float nf = uLakeP.z/(1.0 + dist/22.0);
+    vec2 lk = lakeAt(hit.xz);
+    vec2 g = rip(hit.xz, uT, foot)*lk.x;
+    if(lk.x > 0.0){
+      float nf = lk.x/(1.0 + dist/22.0);
       g += (vec2(vnoise(hit.xz*4.7+uT*vec2(0.31, 0.47)), vnoise(hit.xz*4.7+31.7-uT*vec2(0.43, 0.23)))-0.5)*0.045*nf
            *smoothstep(3.0*foot, 9.0*foot, 0.45);
       g += (vec2(vnoise(hit.xz*17.0+uT*vec2(0.9, 0.6)), vnoise(hit.xz*17.0+11.3-uT*vec2(0.7, 1.1)))-0.5)*0.030*nf*nf
            *smoothstep(3.0*foot, 9.0*foot, 0.12);
       // a slow broad swell so the surface never looks ruled
-      g += (vec2(vnoise(hit.xz*0.21+uT*vec2(0.05, 0.03)), vnoise(hit.xz*0.21+7.7-uT*vec2(0.04, 0.06)))-0.5)*0.020*uLakeP.z
+      g += (vec2(vnoise(hit.xz*0.21+uT*vec2(0.05, 0.03)), vnoise(hit.xz*0.21+7.7-uT*vec2(0.04, 0.06)))-0.5)*0.020*lk.x
            *smoothstep(3.0*foot, 9.0*foot, 9.0);
     }
     vec3 n = normalize(vec3(-g.x, 1.0, -g.y));
@@ -566,11 +667,16 @@ void main(){
     float cs = max(dot(rr, uSunDir), 0.0);
     c += uSunCol*uSunP.x*v*(pow(cs, 1500.0)*uSunP.z*0.7 + pow(cs, 260.0)*0.7 + pow(cs, 40.0)*0.16)
          *smoothstep(-0.03, 0.02, uSunDir.y);
-    fres = mix(uLakeP.x, 1.0, pow(1.0-clamp(-d.y, 0.0, 1.0), 4.0))*uLakeP.y;
+    fres = mix(uLakeP.x, 1.0, pow(1.0-clamp(-d.y, 0.0, 1.0), 4.0))*lk.y;
     col = mix(uWater, c, fres);
+    for(int i=0;i<uNLights;i++){                                       // each moving light lays a pool on the water
+      vec2 q = hit.xz - uLightP[i].xz; float r = uLightP[i].w*(1.0 + 0.5*uLightP[i].y);
+      col += uLightC[i]*0.35*r*r/(dot(q, q) + r*r);
+    }
     // far water melts into the haze of the horizon
     float lxz = max(length(d.xz), 1e-5);
-    hazeC = uHazeCol + uSunCol*uSunP.x*0.22*pow(max(dot(d.xz/lxz, normalize(uSunDir.xz+vec2(1e-5))), 0.0), 3.0)
+    hazeC = mix(uHazeCol, uHazeColB, uSplit.w > 0.0 ? splitW(d.xz) : 0.0)
+            + uSunCol*uSunP.x*0.22*pow(max(dot(d.xz/lxz, normalize(uSunDir.xz+vec2(1e-5))), 0.0), 3.0)
             *smoothstep(-0.45, 0.05, uSunDir.y);
     col = mix(col, hazeC, 1.0 - exp(-dist*uAirP.x*1.6));
   } else {
@@ -590,6 +696,13 @@ void main(){
     float cs = max(dot(d, uSunDir), 0.0);
     vec3 mc = uMistCol + uSunCol*uSunP.x*0.35*pow(cs, 5.0);
     col = mix(col, mc, 1.0 - exp(-tau));
+  }
+  // the moving lights glow in the air round them (more in mist and haze)
+  for(int i=0;i<uNLights;i++){
+    vec3 oc = uLightP[i].xyz - uCamPos;
+    float tc = clamp(dot(oc, d), 0.0, dist);
+    vec3 q = oc - d*tc; float r = uLightP[i].w;
+    col += uLightC[i]*(0.10 + 0.9*uAirP.y*50.0*exp(-max(uLightP[i].y, 0.0)/uAirP.z) + uAirP.x*300.0)*0.5*r*r/(dot(q, q) + r*r);
   }
   // shafts of light, and their image in the water
   for(int i=0;i<uNShaft;i++){
@@ -658,14 +771,15 @@ void main(){
 # the mask, rays, bursts of light.
 RESOLVE_FS = "#version 330\n" + NOISE + """
 in vec2 vUV; out vec4 o;
-uniform sampler2D uBg, uRayA, uRayB, uMask;
+uniform sampler2D uBg, uRayA, uRayB, uMask, uPaintT, uBg2;
+uniform float uPaintOn;
 uniform vec3 uCamR, uCamU, uCamF, uCamPos;
 uniform mat4 uPrevVP;
 uniform float uFocal, uAspect, uT, uBlur, uShore;
 uniform vec2 uRes;
 uniform vec4 uRayK;       // sun rays strength, light rays strength, -, -
 uniform float uMaskOn, uDarkK, uSkyK, uFillEdge;
-uniform int uFillKind;    // 0 clouds, 1 sunrise, 2 stars, 3 day
+uniform int uFillKind;    // 0 clouds, 1 sunrise, 2 stars, 3 day, 4 the same world in another look
 uniform vec4 uFillBox;    // centre x, y and half height of the shape on screen; drift
 uniform vec3 uFillTint, uDarkTint;
 uniform int uNBurst; uniform vec4 uBurst[4]; uniform vec3 uBurstCol[4];
@@ -692,11 +806,13 @@ vec3 fill(vec2 uv){
   float lit = clamp(0.5 + (n - n2)*3.0, 0.0, 1.0);        // lit from below, where the sun is
   if(uFillKind == 1){
     float y = clamp(q.y*0.5+0.5, 0.0, 1.0);
-    c = mix(vec3(0.95, 0.34, 0.09), vec3(0.42, 0.11, 0.17), smoothstep(0.0, 0.42, y));
-    c = mix(c, vec3(0.030, 0.045, 0.16), smoothstep(0.28, 0.95, y));
-    c += vec3(1.5, 0.80, 0.26)*exp(-dot(q-vec2(0.15, -0.80), q-vec2(0.15, -0.80))*3.5);
-    vec3 cc = mix(vec3(0.030, 0.028, 0.080), vec3(1.25, 0.46, 0.14), lit*lit);
-    c = mix(c, cc, dens*0.92);
+    c = mix(vec3(0.80, 0.27, 0.07), vec3(0.34, 0.085, 0.15), smoothstep(0.0, 0.40, y));
+    c = mix(c, vec3(0.018, 0.035, 0.14), smoothstep(0.26, 0.90, y));
+    vec2 sq = q-vec2(0.12, -0.62);
+    c += vec3(1.6, 0.85, 0.28)*(exp(-dot(sq, sq)*9.0) + 0.35*exp(-dot(sq, sq)*1.8));
+    float under = clamp(0.5 + (n - n2)*4.5, 0.0, 1.0);
+    vec3 cc = mix(vec3(0.016, 0.018, 0.060), vec3(1.05, 0.34, 0.10), under*under*smoothstep(0.9, -0.4, q.y));
+    c = mix(c, cc, smoothstep(0.50, 0.66, n)*0.95);
   } else if(uFillKind == 3){
     float y = clamp(q.y*0.5+0.5, 0.0, 1.0);
     c = mix(vec3(0.80, 0.70, 0.55), vec3(0.14, 0.36, 0.78), smoothstep(0.0, 0.8, y));
@@ -736,10 +852,14 @@ void main(){
     col = mix(col, col*0.06 + uDarkTint, cd);
     float cs = smoothstep(0.25, 0.80, m.g);
     if(cs > 0.001){
-      vec3 f = fill(vUV)*uFillTint;
+      vec3 f = (uFillKind == 4 ? texture(uBg2, vUV).rgb : fill(vUV))*uFillTint;
       col = mix(col, f, cs*uSkyK);
       col += f*uFillEdge*4.0*cs*(1.0-cs)*uSkyK;          // a light rim along the edge of the shape
     }
+  }
+  if(uPaintOn > 0.5){                                  // painted points: true colour over the scene, under the light
+    vec4 pt = texture(uPaintT, vUV);
+    col = col*(1.0 - clamp(pt.a, 0.0, 1.0)) + pt.rgb;
   }
   col += texture(uRayA, vUV).rgb*uRayK.x + texture(uRayB, vUV).rgb*uRayK.y;
   for(int i=0;i<uNBurst;i++){

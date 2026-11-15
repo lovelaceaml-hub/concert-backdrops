@@ -46,7 +46,7 @@ CAMERA = Rig([
           focus=9.0, blend=2.0),
     crane((0.0, 3.4, -38.0), 48.0, T_CRANE, T_BACK, look=((0.0, 14.0, -120.0), (0.0, 110.0, -150.0)), fov=52,
           aperture=0.07, focus=(12.0, 60.0), blend=1.8),
-    dolly((0.0, 46.0, -34.0), (0.0, 6.5, 84.0), T_BACK, 28.5, look=((0.0, 30.0, -200.0), (0.0, 7.5, 0.0)),
+    dolly((0.0, 46.0, -34.0), (0.0, 6.0, 72.0), T_BACK, 28.5, look=((0.0, 30.0, -200.0), (0.0, 7.5, 0.0)),
           fov=(50, 40), aperture=0.05, focus="target", ease="smooth", blend=1.6),
 ], handheld=0.25)
 
@@ -64,6 +64,9 @@ P3D = dict(
         look=[(0.0, "night"), (20.0, "predawn", 4.0), (23.8, "dawn", 3.0), (26.2, "sunrise", 3.0)],
         sun_az=180.0,
         lanterns=_base.Track([(0.0, 0.0), (13.5, 0.0), (17.5, 1.0), (28.5, 1.0)]),
+        floats=_base.Track([(0.0, 1.0), (22.0, 1.0), (26.0, 0.45)]),
+        float_field=dict(count=900, radius=(13.0, 190.0)),
+        bokeh=1.1,
         lantern_field=dict(count=520, radius=(5.0, 75.0), center=(0.0, -25.0), height=52.0),
         arch=dict(lit=_LIT),
         react=dict(beat=0.5, level=0.3),
