@@ -98,7 +98,22 @@ TITLE_HIT = _base.TITLE_HIT
 
 # The concert badge (Anthony: "The concert title and the date should show from the beginning and throughout"):
 # large on frame 0, settled into the top left corner by 2.8 s, gone as the end card forms.
-CREDIT = dict(song="The Words of Mother’s Love",
+class _Badge(dict):
+    """The badge's settings. Its colour follows the sky: the engine's warm white light on the night worlds, navy
+    letters with a soft white glow from the jump (42.51 s) on, when the lantern sky turns pale pink. The engine
+    reads the colour with .get() each frame after credit_state(t), which sets the time."""
+    now = None
+
+    def get(self, key, default=None):
+        if key in ("color", "glow"):
+            if _Badge.now is None or _Badge.now >= BADGE_INK_AT:
+                return {"color": "#1f2a6b", "glow": "#ffffff"}[key]
+            return default
+        return dict.get(self, key, default)
+
+
+BADGE_INK_AT = HIT["jump"]
+CREDIT = _Badge(song="The Words of Mother’s Love",
               concert="Healing Concert · Sunday, December 6 · 4:30 PM",
               t_in=-1.0, t_full=0.0, t_move=1.6, t_rest=2.8, scale=0.55, alpha_rest=0.92,
               margin_x=0.035, margin_top=0.05)
@@ -109,6 +124,7 @@ def credit_state(t, bbox):
     """Centre, scale and strength of the badge; bbox is its size at full size (as demo_gathering.py), fading
     out over one second from the moment the end card starts to form."""
     c = CREDIT
+    _Badge.now = float(t)
     x0, x1, y0, y1 = bbox
 
     def ss(a, b, x):
@@ -220,7 +236,7 @@ for _i, _T in enumerate(HANDS):
     _a, _b = R[ORDER[_i]], R[ORDER[_i + 1]]
     _b.z0 = _a.root(_T)[2] - GAP + _b.d(_T)
 Z_FALL = R["youth"].root(T5 + 1.5)[2]                   # where the boy comes to rest
-R["child"].z0 = Z_FALL - 3.4 + R["child"].d(BREATH)      # the child kneels 3.4 m beyond him
+R["child"].z0 = Z_FALL - 2.3 + R["child"].d(BREATH)      # the child kneels just beyond the two of them
 _zc_end = R["child"].root(60.0)[2]
 MOTHER_Z = 14.0
 _shift = MOTHER_Z - 0.12 - _zc_end                       # Heavenly Mother stands 14 m in front of the arch
@@ -307,7 +323,7 @@ def flame_pos(t):
 
 EMBER_HOME = np.array([0.1, 0.05, Z_FALL - 1.6])
 FLAME_SIZE = Track([(0.0, 0.17), (T1, 0.19), (T2, 0.21), (T3, 0.23), (T4, 0.26), (T5 - 0.1, 0.28), (T5 + 0.25, 0.0),
-                    (T6 - 0.12, 0.0), (T6 + 0.35, 0.36), (T7, 0.38), (REL, 0.46), (60.0, 0.46)], name="FLAME_SIZE")
+                    (T6 - 0.12, 0.0), (T6 + 0.35, 0.27), (T7, 0.28), (REL, 0.34), (60.0, 0.34)], name="FLAME_SIZE")
 
 
 # =====================================================================================================
@@ -347,49 +363,50 @@ F = "flame"
 MOVES = [
     # ---- night road
     follow(F, (1.45, 0.10, 0.85), (0.0, 0.36, -0.2), 0.0, 0.32, fov=40, aperture=0.03, near=0.02),
-    follow("sprinter", (4.6, 1.25, 0.4), (0.0, 1.35, -0.8), 0.32, 5.3, fov=42, blend=0.45),
-    follow("sprinter", (1.0, 2.1, 4.2), (0.0, 1.5, -14.0), 5.35, 6.45, fov=46, blend=1.0),
+    follow("sprinter", (4.6, 1.25, 0.4), (0.0, 1.35, -0.8), 0.32, 5.75, fov=42, blend=0.45),
+    follow("sprinter", (1.0, 2.1, 4.2), (0.0, 1.5, -14.0), 5.75, 6.45, fov=46, blend=0.7, focus=4.7),
     # ---- rain of sparks
-    follow(F, (2.4, -0.25, 0.55), (0.2, -0.45, -0.3), 6.5, 7.1, fov=42, aperture=0.02, blend=0.35),
-    follow("coat", (1.7, 1.75, 3.5), (0.0, 2.2, -10.0), 7.15, 10.2, fov=48, blend=0.5),
-    follow("coat", (2.7, 1.3, 0.5), (0.0, 1.35, -0.4), 10.45, 12.5, fov=38, aperture=0.05, blend=0.35),
-    follow("coat", (1.8, 1.7, 3.2), (0.0, 1.4, -10.0), 12.5, 12.95, fov=44, blend=0.9),
+    follow(F, (2.4, -0.25, 0.55), (0.2, -0.45, -0.3), 6.55, 7.1, fov=42, aperture=0.015, blend=0.5),
+    follow("coat", (1.7, 1.75, 3.5), (0.0, 2.2, -10.0), 7.15, 10.2, fov=48, blend=0.5, focus=3.9),
+    follow("coat", (2.7, 1.3, 0.5), (0.0, 1.35, -0.4), 10.45, 12.5, fov=40, aperture=0.02, blend=0.4),
+    follow("coat", (1.8, 1.7, 3.2), (0.0, 1.4, -10.0), 12.5, 12.95, fov=44, blend=0.9, focus=3.7),
     # ---- shore of birds
-    follow(F, (2.4, -0.25, 0.55), (0.2, -0.45, -0.3), 13.0, 13.55, fov=42, aperture=0.02, blend=0.3),
+    follow(F, (2.4, -0.25, 0.55), (0.2, -0.45, -0.3), 13.05, 13.55, fov=42, aperture=0.015, blend=0.4),
     follow("shawl", ((4.0, 0.7, 1.4), (5.3, 2.4, 0.8)), (0.0, 1.8, -1.4), 13.6, 18.1, fov=46, blend=0.5),
-    follow("shawl", (1.6, 0.45, 1.6), (0.0, 1.3, -3.0), 18.2, 18.85, fov=56, blend=0.45),
-    follow("shawl", (1.6, 1.55, 0.35), (0.0, 1.55, -0.3), 18.85, 19.55, fov=34, aperture=0.025, blend=0.8),
+    follow("shawl", ((3.4, 0.6, 1.0), (2.8, 1.2, 0.6)), (0.0, 1.35, -1.0), 18.25, 19.55, fov=44, aperture=0.015,
+           blend=0.5),
     # ---- the sea
-    follow(F, (2.4, -0.25, 0.55), (0.2, -0.45, -0.3), 19.6, 20.05, fov=42, aperture=0.02, blend=0.3),
+    follow(F, (2.4, -0.25, 0.55), (0.2, -0.45, -0.3), 19.65, 20.05, fov=42, aperture=0.015, blend=0.4),
     follow("elder", (4.4, 0.8, 0.5), (0.0, 1.6, -0.5), 20.1, 24.4, fov=46, blend=0.45),
-    follow("elder", (1.4, 3.6, 3.4), (0.0, 1.4, -6.0), 24.5, 25.6, fov=48, blend=0.5),
-    follow("elder", (-1.0, 2.4, 4.0), (0.0, 1.5, -14.0), 25.6, 26.45, fov=46, blend=1.0),
+    follow("elder", ((2.9, 0.75, 1.6), (2.4, 1.1, 0.4)), (0.0, 1.35, -2.0), 24.5, 25.6, fov=48, aperture=0.015,
+           blend=0.45),
+    follow("elder", (-1.0, 2.4, 4.0), (0.0, 1.5, -14.0), 25.6, 26.45, fov=46, blend=1.0, focus=4.3),
     # ---- field of lights
-    follow(F, (2.4, -0.25, 0.55), (0.2, -0.45, -0.3), 26.5, 26.95, fov=42, aperture=0.02, blend=0.3),
-    follow("youth", (2.0, 2.2, 3.0), (-4.0, 5.0, -45.0), 27.0, 28.3, fov=52, blend=0.45),
+    follow(F, (2.4, -0.25, 0.55), (0.2, -0.45, -0.3), 26.55, 26.95, fov=42, aperture=0.015, blend=0.4),
+    follow("youth", (2.0, 2.2, 3.0), (-4.0, 5.0, -45.0), 27.0, 28.3, fov=52, blend=0.45, focus=3.9),
     follow("youth", (8.0, 7.0, 9.0), (-8.0, 6.0, -40.0), 28.3, 31.6, fov=52, blend=1.2),
-    follow("youth", (0.7, 0.55, 1.8), (0.0, 0.95, -6.0), 31.7, 33.3, fov=62, blend=0.5),
+    follow("youth", (1.6, 0.9, 2.8), (0.0, 1.0, -6.0), 31.7, 33.3, fov=54, aperture=0.012, blend=0.5, focus=3.1),
     # ---- the fall
-    follow("youth", (3.0, 0.55, 0.0), (-0.2, 0.95, -0.55), 33.6, 36.4, fov=40, aperture=0.04, blend=0.45),
-    follow("youth", (2.5, 0.75, -0.4), (0.0, 1.0, -0.6), 36.4, 39.3, fov=36, aperture=0.04, blend=1.5),
+    follow("youth", (3.0, 0.55, 0.0), (-0.2, 0.95, -0.55), 33.6, 36.4, fov=40, aperture=0.03, blend=0.45),
+    follow("youth", (2.5, 0.75, -0.4), (0.0, 1.0, -0.6), 36.4, 39.3, fov=36, aperture=0.03, blend=1.5),
     # ---- the breath
-    follow("child", ((3.3, 1.3, 0.8), (2.4, 1.0, 0.3)), (0.0, 0.95, 0.0), 39.4, 42.45, fov=38, aperture=0.04,
-           blend=0.8),
+    follow("child", ((3.3, 1.3, 0.8), (2.4, 1.0, 0.3)), (0.0, 0.95, 0.0), 39.8, 42.75, fov=38, aperture=0.03,
+           blend=0.7),
     # ---- lanterns
-    follow("child", (0.5, 0.75, 2.2), (0.0, 2.2, -10.0), 42.55, 43.0, fov=54, blend=0.35),
-    follow("child", (0.45, 1.35, 3.4), (0.0, 2.5, -9.0), 43.0, 45.7, fov=50, blend=0.6),
-    follow("child", (3.0, 1.0, 0.6), (0.0, 0.95, -1.5), 45.75, 47.8, fov=42, blend=0.4),
-    follow("child", (0.9, 1.3, 3.0), (0.0, 1.5, -12.0), 47.8, 48.9, fov=44, blend=1.0),
-    # ---- day
-    follow(F, (0.05, 0.62, 1.45), (0.0, -0.12, -0.3), 48.95, 50.05, fov=40, aperture=0.04, blend=0.6),
-    follow("mother", (0.15, 1.25, 2.7), (0.0, 2.05, -4.0), 50.1, REL, fov=46, blend=0.8),
+    follow("child", (0.6, 0.8, 2.3), (0.0, 2.0, -10.0), 42.75, 43.05, fov=52, blend=0.4, focus=2.5),
+    follow("child", (2.7, 1.15, 2.4), (-0.6, 2.0, -6.0), 43.0, 45.7, fov=50, blend=0.6, focus=3.6),
+    follow("child", (3.0, 1.0, 0.6), (0.0, 0.95, -1.5), 45.75, 47.8, fov=42, blend=0.45),
+    follow("child", (0.9, 1.3, 3.0), (0.0, 1.5, -12.0), 47.8, 48.9, fov=44, blend=1.0, focus=3.2),
+    # ---- day: the hands (from behind and above), Heavenly Mother raises the light, the ring of day
+    follow(F, (0.0, 0.42, 1.0), (0.0, -0.10, -0.25), 48.95, 50.1, fov=42, aperture=0.02, blend=0.6),
+    follow("mother", (0.15, 1.25, 2.7), (0.0, 2.05, -4.0), 50.15, REL, fov=46, blend=0.8),
     follow("mother", ((0.2, 1.6, 3.6), (6.0, 20.0, 75.0)), ((0.0, 2.2, -6.0), (0.3, 4.0, -25.0)), REL + 0.05,
            TITLE_AT, fov=48, blend=0.5, pace=[(REL + 0.05, 0.0), (REL + 0.6, 0.08), (REL + 1.6, 0.55),
                                                (TITLE_AT, 1.0)]),
-    follow("mother", ((6.0, 20.0, 75.0), (7.5, 20.6, 79.0)), ((0.3, 4.0, -25.0), (0.3, 4.2, -25.0)), TITLE_AT, 60.0,
+    follow("mother", ((6.0, 20.0, 75.0), (6.6, 20.2, 76.5)), ((0.3, 4.0, -25.0), (0.3, 4.1, -25.0)), TITLE_AT, 60.0,
            fov=46, blend=0.8),
 ]
-CAMERA = Rig(MOVES, blend=1.2, fov=44, aperture=0.03, handheld=0.25, shutter=0.5, min_height=0.3)
+CAMERA = Rig(MOVES, blend=1.2, fov=44, aperture=0.025, handheld=0.25, shutter=0.35, min_height=0.3)
 
 
 # =====================================================================================================
@@ -429,26 +446,26 @@ def _src(name, place, fallback):
 
 _SPECS = [
     dict(expr="Greeting", arrive="touch", source=_flame_at(1.7), leave="wind", wind=(0.0, 0.15, 1.0),
-         **_word("sprinter", 0.52, 0.72, 9.0, 100, 1.7, 2.85, 5.4, 6.4)),
+         **_word("sprinter", 0.60, 0.80, 9.0, 100, 1.7, 2.85, 5.35, 6.2)),
     dict(expr="Concession", arrive="touch", source=_flame_at(T1), leave="bokeh",
-         **_word("coat", 0.52, 0.72, 13.5, 96, T1, 7.4, 9.95, 10.9)),
+         **_word("coat", 0.60, 0.80, 13.5, 96, T1, 7.4, 9.95, 10.8)),
     dict(expr="Gratitude", arrive="petals", source=lambda t: root("coat", t) + np.array([0.0, 1.4, 0.0]),
-         leave="flock", **_word("shawl", 0.53, 0.72, 10.5, 84, 12.9, 14.3, 17.9, 19.3)),
+         leave="flock", **_word("shawl", 0.60, 0.72, 10.5, 84, 12.9, 14.3, 17.9, 18.8)),
     dict(expr="Respect", arrive="stars", leave="sink",
-         **_word("elder", 0.52, 0.73, 9.0, 94, 18.9, 20.6, 23.9, 25.2)),
+         **_word("elder", 0.60, 0.78, 9.0, 94, 18.9, 20.6, 23.9, 24.8)),
     dict(expr="Encouragement", arrive="touch", source=_flame_at(T4), leave="arch", to=tuple(ARCH[6]), reflect=False,
-         **_word("youth", 0.52, 0.72, 55.0, 90, T4, 29.0, 31.6, 32.9)),
+         **_word("youth", 0.60, 0.78, 55.0, 90, T4, 29.0, 31.6, 32.5)),
     dict(expr="Apology", arrive="lake", leave="stars", color="#e6ecff", glow="#9fb4ff",
-         **_word(None, 0.52, 0.74, 4.6, 80, T5, 33.95, 36.45, 37.2)),
+         **_word(None, 0.60, 0.74, 4.6, 80, T5, 33.95, 36.45, 37.1)),
     dict(expr="Consideration", arrive="palm", source=_src("helper", "palm.L", GRIP), leave="morph",
-         **_word(None, 0.52, 0.74, 4.4, 84, 36.2, 37.0, 39.5, 39.5)),
+         **_word(None, 0.60, 0.79, 4.4, 84, 36.15, 36.95, 39.45, 39.45)),
     dict(expr="Inclusiveness", arrive="morph", source="Consideration", leave="stream",
          to=lambda t: flame_pos(t) if t > T6 else root("child", t) + np.array([0.0, 0.62, -0.2]),
-         **_word(None, 0.52, 0.73, 4.0, 96, 39.5, 40.0, 42.5, 43.2)),
+         **_word(None, 0.60, 0.80, 4.0, 96, 39.45, 40.05, 42.55, 43.1)),
     dict(expr="Compliment", arrive="rays", source=lambda t: flame_pos(t), leave="arch", to=tuple(ARCH[8]),
-         **_word("child", 0.52, 0.72, 10.5, 94, T6, 43.05, 45.64, 46.9)),
+         **_word("child", 0.60, 0.78, 10.5, 94, T6, 43.05, 45.64, 46.4)),
 ]
-WORDS = PW.Words(_SPECS, camera=CAMERA, face="camera")
+WORDS = PW.Words(_SPECS, camera=CAMERA, face="camera", reflect=False)    # no upside-down words in the lake
 ARCH_LIT = [w["t_out"] for w in sorted(_SPECS, key=lambda s: [e["label"] for e in PW.EXPRESSIONS].index(s["expr"]))]
 
 
@@ -471,7 +488,8 @@ class Flame:
 
     wants_camera = True
 
-    def __init__(self, n=1400, n_sp=1600, n_emb=520):
+    def __init__(self, n=1400, n_sp=1600, n_emb=520, sparks=False):
+        self.sparks = sparks
         rng = np.random.default_rng(7)
         self.c = rng.random((n, 5))
         self.s = rng.random((n_sp, 6))
@@ -503,7 +521,7 @@ class Flame:
             hot = np.clip(1.0 - rr / (0.5 * h + 1e-6) - u * 0.6, 0.0, 1.0)[:, None]
             keep = (0.2 / max(h, 0.2)) ** 1.6              # a bigger flame is not a brighter one
             col = CORE * hot + (GOLD * (1.0 - u[:, None]) + EMBER * u[:, None]) * (1.0 - hot)
-            out.append(dict(pos=pos, size=0.03 * h + 0.003, color=col, alpha=0.38 * keep * (0.5 + 0.5 * near),
+            out.append(dict(pos=pos, size=0.03 * h + 0.003, color=col, alpha=0.38 * keep * (0.35 + 0.65 * near),
                             emit=1.1 + 1.5 * hot[:, 0],
                             kind="soft"))
             out.append(dict(pos=np.array([p + [0.0, 0.35 * h, 0.0]] * 3), size=np.array([0.6, 1.3, 2.8]) * h,
@@ -518,10 +536,15 @@ class Flame:
                                                              0.9 + 0.8 * s[:, 4],
                                                              np.cos(s[:, 5] * 30 + t * 2) * 0.3], 1) * age[:, None])
             col = GOLD * (1.0 - k[:, None]) + EMBER * k[:, None]
-            out.append(dict(pos=sp_pos, size=0.010 + 0.012 * s[:, 1] * (1.0 - k), color=col,
-                            alpha=(1.0 - k) ** 1.5 * min(1.0, h / 0.15), emit=1.4, kind="spark"))
-        if T5 - 0.05 <= t < T6 + 0.5:
+            if self.sparks:
+                out.append(dict(pos=sp_pos, size=0.010 + 0.012 * s[:, 1] * (1.0 - k), color=col,
+                                alpha=(1.0 - k) ** 1.5 * min(1.0, h / 0.15), emit=1.4, kind="spark"))
+        if self.sparks and T5 - 0.05 <= t < T6 + 0.5:
             out.append(self._embers(t))
+        if self.sparks:
+            out = out[2:] if len(out) > 2 and h > 0.004 else [b for b in out if b.get("kind") == "spark"]
+        else:
+            out = out[:2] if h > 0.004 else []
         return out
 
     def _embers(self, t):
@@ -689,10 +712,12 @@ class DayRing:
     """The day leaves Heavenly Mother's hands as a ring of light that runs out across the lake: a bright band
     on the water with a low wall of sparks on its front, slow enough to be seen passing under the camera."""
 
+    wants_camera = True
+
     def __init__(self, n=14000):
         self.r = np.random.default_rng(51).random((n, 4))
 
-    def sample(self, t):
+    def sample(self, t, cam=None):
         k = t - REL
         if not (-0.02 <= k < 4.2):
             return None
@@ -702,7 +727,9 @@ class DayRing:
         c = MOTHER_POS
         wall = (2.2 + 0.4 * k) * r[:, 1] ** 3
         pos = np.stack([c[0] + rad * np.cos(ang), 0.04 + wall, c[2] + rad * np.sin(ang)], 1)
-        a = (1.0 - k / 4.2) ** 1.3 * (0.55 + 0.45 * r[:, 3]) * _ss(-0.02, 0.15, k)
+        a = (1.0 - k / 4.2) ** 1.3 * (0.55 + 0.45 * r[:, 3]) * _ss(-0.02, 0.15, k) * (0.25 + 0.75 * _ss(3.0, 14.0, rad))
+        if cam is not None:                 # where it passes the lens it is a soft veil, never a white wall
+            a = a * (0.08 + 0.92 * _ss(2.5, 12.0, np.linalg.norm(pos - np.asarray(cam.pos)[None], axis=1)))
         col = lin("#fff2d0")[None] * (1.0 - r[:, 1:2] * 0.5) + lin("#ffd27a")[None] * (r[:, 1:2] * 0.5)
         return dict(pos=pos, size=0.06 + 0.0035 * rad, color=col, alpha=a, emit=1.8, kind="soft")
 
@@ -727,28 +754,28 @@ LOOKS3 = dict(
                 hills=0.3, mist=0.45, haze_color="#232a3a", mist_color="#2a3040", ripple=0.2),
     r_circle=dict(base="night", sky_top="#070a14", sky_mid="#121a2e", sky_hor="#26324c", stars=0.3, milky=0.0,
                   hills=0.2, mist=0.35, mist_color="#26324c", haze_color="#26324c", ripple=0.1),
-    r_day=dict(base="day", ripple=0.25),
+    r_day=dict(base="day", ripple=0.08),
     r_lanterns=dict(base="dusk", sky_top="#0a0830", sky_mid="#241a5c", sky_hor="#6a3a78", stars=0.6, milky=0.3,
                     hills=0.8, lanterns=1.0, sun_color="#ffb070", sun_int=0.35, sun_el=-5.0, ripple=0.3),
 )
 LOOK_KEYS = [(0.0, "r_night", 0.0), (T1, "r_rain", 0.0), (T2, "r_shore", 0.0), (T3, "r_sea", 0.0),
              (T4, "r_field", 0.0), (T5 + 0.6, "r_fall", 1.2), (BREATH, "r_circle", 1.2), (T6, "r_lanterns", 0.0),
-             (T7 + 1.0, "predawn", 2.0), (REL, "sunrise", 0.4), (REL + 1.0, "r_day", 1.4)]
+             (T7 + 1.0, "predawn", 2.0), (REL + 0.7, "r_day", 1.8)]
 
 
 def _burst(t, strength, color="#fff0d0", rise=0.06, fall=0.6, radius=0.35):
     return dict(t=t, strength=strength, rise=rise, fall=fall, color=color, at=tuple(flame_guess(t)), radius=radius)
 
 
-BURSTS = [_burst(T0, 1.8, fall=0.35), _burst(T1, 1.6, fall=0.3), _burst(T2, 1.6, fall=0.3), _burst(T3, 1.4, fall=0.3),
-          _burst(T4, 1.8, fall=0.3),
-          _burst(T5, 2.0, "#ffb070", fall=0.4), _burst(HIT["grip"], 1.0, "#ffd9b0", fall=0.35),
-          _burst(T6, 2.6, fall=0.45),
-          _burst(T7, 1.2, fall=0.35), dict(t=REL, strength=2.2, rise=0.06, fall=0.5, color="#fff2d6",
-                                at=tuple(MOTHER_POS + [0.0, 2.2, -0.2]), radius=0.5),
-          dict(t=HIT["final"], strength=0.7, rise=0.05, fall=0.8, color="#fff6e0")]
+# quick warm peaks with form and colour, never a white frame
+BURSTS = [_burst(T0, 1.0, "#ffd08a", fall=0.3), _burst(T1, 0.9, "#ffd08a", fall=0.25),
+          _burst(T2, 0.9, "#ffe0b0", fall=0.25), _burst(T3, 0.8, "#ffd08a", fall=0.25),
+          _burst(T4, 1.0, "#ffd08a", fall=0.25), _burst(T5, 1.2, "#ffa860", fall=0.35),
+          _burst(HIT["grip"], 0.6, "#ffd9b0", fall=0.3), _burst(T6, 1.5, "#ffd08a", fall=0.4),
+          _burst(T7, 0.7, "#ffe0b0", fall=0.3), dict(t=REL, strength=1.1, rise=0.06, fall=0.4, color="#ffd9a0",
+                                                    at=tuple(MOTHER_POS + [0.0, 2.2, -0.2]), radius=0.5)]
 
-_LIGHT_K = Track([(0.0, 0.20), (T5 - 0.05, 0.24), (T5 + 0.3, 0.0), (T6 - 0.1, 0.0), (T6 + 0.3, 0.26), (T7, 0.26),
+_LIGHT_K = Track([(0.0, 0.14), (T5 - 0.05, 0.16), (T5 + 0.3, 0.0), (T6 - 0.1, 0.0), (T6 + 0.3, 0.12), (T7, 0.14),
                  (T7 + 0.8, 0.40), (REL, 0.55), (REL + 1.2, 0.25), (60.0, 0.15)], name="LIGHT_K")
 
 
@@ -758,7 +785,7 @@ def LIGHT_K(t):
     return float(_LIGHT_K(t)) * (0.12 + 0.88 * float(_ss(0.8, 3.0, d)))
 WORLD = WORDS.world(dict(
     look=LOOK_KEYS, looks=LOOKS3,
-    arch=dict(lit=ARCH_LIT),
+    arch=dict(lit=ARCH_LIT, bright=0.6),
     react=dict(beat=0.5, level=0.3),
     lantern_field=dict(count=480, center=(0.0, Z_CHILD - 14.0), radius=(4.0, 60.0), height=40.0),
     light=dict(pos=lambda t: flame_pos(t), color="#ffd9a0", strength=LIGHT_K, size=0.35, rays=1.0),
@@ -815,7 +842,8 @@ def _setup(scene):
     BODIES["mother"].add(scene, "mother")
     scene.add("road", Road())
     scene.add("posts", Posts())
-    scene.add("flame", Flame())
+    scene.add("flame", Flame())                                        # the flame itself
+    scene.add("sparks", PW.KeepClear(Flame(sparks=True), WORDS))       # its sparks and embers keep off the words
     scene.add("rain", PW.KeepClear(Rain(), WORDS))
     scene.add("spray", PW.KeepClear(Spray(), WORDS))
     scene.add("field", PW.KeepClear(Field(), WORDS))
@@ -827,7 +855,7 @@ def _setup(scene):
         print("words check failed:", e)
 
 
-P3D = dict(camera=CAMERA, world=WORLD, setup=_setup, bursts=BURSTS, motion_blur=0.5)
+P3D = dict(camera=CAMERA, world=WORLD, setup=_setup, bursts=BURSTS, motion_blur=0.35)
 
 
 if __name__ == "__main__":
