@@ -1,5 +1,5 @@
 """Figure look test (2026-11-15, branch engine-figure-look): a 20 second close-up clip to judge the silk look of the
-people of light (engine/figure_look.py, UPGRADE-HOWTO section U). Not a promo. The engine's own luminous world,
+people of light (engine/figure_look.py, UPGRADE-HOWTO section H5). Not a promo. The engine's own luminous world,
 from a deep night through dawn into the bright campaign day, so the look can be judged on all three skies and at
 three sizes (large: half the screen height; medium: a fifth; crowd: a tenth). No plates, no lyrics, no faces,
 everyone clothed, Heavenly Mother only from behind, nothing dark behind any text, calm lower third.
@@ -176,7 +176,7 @@ PART = Track([(0, 0.0), (8.6, 0.0), (12.0, 0.4), (TOTAL, 0.5)])
 SKYLINE_LANTERN = 0.0
 WIND = Track([(0, 0.30), (8.0, 0.36), (11.0, 0.50), (14.0, 0.34), (TOTAL, 0.34)])   # a gust passes at 11 s
 
-# ---- the silk look (UPGRADE-HOWTO section U): every rigged figure and the crowd
+# ---- the silk look (UPGRADE-HOWTO section H5): every rigged figure and the crowd
 FIGURE_LOOK = "silk"
 FIGURE_SILK = dict(light_from="sun")
 

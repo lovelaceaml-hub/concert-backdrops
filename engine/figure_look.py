@@ -17,7 +17,7 @@ draws a person as a body of light instead of sparks:
 Everything is a pure function of time. The cloth is simulated afresh for every frame over the last 1.5 seconds
 (from a hanging start), so any frame can be drawn on its own and the cloud workers that render a video in parts
 agree with each other. A song that does not ask for the look renders exactly as before.
-How a song uses it: engine/UPGRADE-HOWTO.md section U.
+How a song uses it: engine/UPGRADE-HOWTO.md section H5.
 """
 import math
 

@@ -191,7 +191,7 @@ class Renderer:
         import output
         self.out = output.Output(self)   # HOWTO Q: event card and seamless loop (optional)
         import figure_look
-        self.fl = figure_look.FigureLook(self)   # HOWTO U: the silk look for people of light (optional)
+        self.fl = figure_look.FigureLook(self)   # HOWTO H5: the silk look for people of light (optional)
 
     # ------------------------------------------------------------------
     def text_plan(self, t):

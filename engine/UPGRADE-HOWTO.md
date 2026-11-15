@@ -18,6 +18,7 @@ Times are seconds into the video. A "Track" is the timeline helper (new files: `
 - F. Fixes from the round 2 attack reviews (2026-11-14, branch engine-fix-r2)
 - G. Moving figures (round 3, 2026-11-14)
 - H. Living figures (2026-11-15, branch engine-living-figures)
+  - H5. The silk look: bodies of light instead of sparks (2026-11-15, branch engine-figure-look)
 - I. Theme colours, bubbles, leaves (2026-11-15, branch engine-theme)
 - J. Text animations (2026-11-15, branch engine-text-anims)
 - K. Gathering and the passed light (2026-11-15, branch engine-gathering)
@@ -30,7 +31,6 @@ Times are seconds into the video. A "Track" is the timeline helper (new files: `
 - R. Draft mode and the automatic quality check (2026-11-15, branch engine-qa)
 - S. Everything together (2026-11-15, branch engine-epic)
 - T. Rendering
-- U. The silk look for people of light (2026-11-15, branch engine-figure-look)
 
 ## A. Scenes (painted plates)
 
@@ -236,6 +236,67 @@ engine/songs/test_living.py (30 seconds, audio/test/s03-newsong-first-60s.mp3) s
 ### H4. Video in 10 parts
 
 The Render workflow now renders a video in 10 parallel parts (was 4), so a minute renders in well under half the time. Nothing changes for a song file.
+
+### H5. The silk look: bodies of light instead of sparks (2026-11-15, branch engine-figure-look)
+
+Anthony asked for "something magnificent that would blow our mind. Ground breaking artistry." The people of light used to be dense sparks with a dotted fill: they moved well, but read as sparkly cut-outs, and a crowd as a glitter fence. The silk look draws the same skeletons (H1) and the same crowd (section K) as bodies of light. It is an option: a song that does not ask for it renders exactly as before. Code: `engine/figure_look.py` (one new file), with small guarded hooks in render.py, upgrade.py, gathering.py and one optional block of the composite (`FIGURE_TINT`). Test: `engine/songs/test_figure_look.py` (20 seconds on audio/test/silent-60s.mp3: a walker, a medium figure, Heavenly Mother from behind, two hands and a crowd of 24, from night through dawn into the bright day).
+
+**Switching it on**
+
+```python
+FIGURE_LOOK = "silk"                      # every rigged figure (kind="rig") and the GATHERING crowd
+FIGURE_SILK = dict(light_from="sun")      # optional: settings for all of them (the keys below)
+# or one at a time:
+FIGURES = [dict(kind="rig", preset="person_back", look="silk", veil_length=1.1, ...)]
+GATHERING = dict(look="silk", ...)
+```
+
+`look="silk"` on one FIGURES entry or on GATHERING switches only that one; `look="sparks"` keeps the old look for one entry under `FIGURE_LOOK = "silk"`. Painted figures (`poses=`) are not changed.
+
+**What is drawn**
+
+- Body: a smooth luminous shape computed from the posed skeleton every frame (rounded cones along the bones, added up like light through frosted glass; no sparks, no outline). A warm heart and head, soft edges, a robe that breaks into mist toward the hem (no hard feet). The side that faces the light is warmer and brighter, the far side cooler, and a soft rim of light runs along the lit side (all round when the light stands behind the figure).
+- Proportions: slender, about 8 heads tall, narrow shoulders, a long robe that flares softly. The head is a soft oval glow under hair or a veil. No face, ever; everyone is clothed. Heavenly Mother is `preset="person_back"` only (from behind, with a long veil).
+- Cloth of light: the veil, both sleeves and the lower robe are sheets of fine threads of light; a few dozen long streamlines run down the body and trail behind a moving figure. All of them are spring chains: gravity, air that drags against the motion (so they trail behind a walk and swing on when she stops), and the shared wind (`WIND`, section N) with gusts and travelling ripples. The cloth is simulated afresh for every frame over the 3.2 seconds before it, so every frame can be drawn on its own and the 10 cloud workers agree.
+- A few bright motes rise off the shoulders, the hands and the head.
+- Water: each figure is mirrored and rippled in the lake (at its feet when it stands on the water, else at the water line); the mirror image fades with depth and stays calm in the lower third.
+- Bright skies: light adds little on a bright sky, so there the bodies glow a little less and the composite gives them a faint tint of about the same brightness as the sky behind them (lilac on a warm sky, a warm pearl on a blue one). It is never darker than about four fifths of the sky: no dark patch, no shadow.
+- Motion: poses flow into each other more slowly (`blend` defaults to 1.4 s instead of 0.9), the forearms follow the upper arms a little late (soft elbows), the wrist lifts as the arm rises, the spine and the head sway a little. `"open"` and `"bless"` are a low, graceful opening by default (the upper arms about 42 and 37 degrees below the horizontal, the forearms a little higher, palms forward).
+- Gather and dissolve work as before (`gather`, `dissolve`, `to_star`, `to`, `leave="drift"`): the body blooms out of its heart; at the end it returns to its heart and one small light rises to its place in the arch.
+- The crowd: each person is a small body of light in a cloak, some veiled or hooded, some bare headed, unevenly spaced (`spacing`). Those who wait are cooler and dimmer; once the passed flame reaches someone, they turn warm, glow from the heart and hold a small bright point of light at the chest, like a candle. When they lift their lights, the points rise.
+- Hands (`preset="hands"`): palms, fingers that curl and sleeves as one soft shape; the offered light warms the palms.
+
+**Keys of a figure** (each also works in `FIGURE_SILK` as the default for all; the usual keys of section H stay: `preset`, `actions`, `x`, `y`, `height`, `color`, `glow`, `t0`, `t1`, `gather`, `dissolve`, `to_star`, `veil`, `yaw`, `stride` ...)
+
+| Key | Default | Meaning |
+|---|---|---|
+| `light_from` | `"sun"` | where the scene's light is: `"sun"` (the sun, or the glow on the horizon at night), `"star"` or `"star:3"` (a light of the arch), a screen point `(x, y)`, or a function of time |
+| `light_color` | warm white | colour of the rim light |
+| `rim` | 1.0 | strength of the rim light (0 = none) |
+| `core`, `core_glow`, `head_glow` | `"#ffe9c4"`, 0.9, 0.7 | the heart's colour and strength, and the head's share of it |
+| `mist` | 1.0 | how much the lower robe breaks into mist (0 = a firm hem) |
+| `cloth` | True | False draws the body only (no veil, sleeves, streamlines) |
+| `veil_length`, `sleeve_length`, `strand_length` | 1.0 | lengths of the cloth |
+| `strands`, `motes` | 27, 30 | how many streamlines and motes |
+| `cloth_color`, `cloth_glow`, `mote_glow` | `"#fff1e0"`, 1.0, 1.0 | the cloth's own tint and brightness |
+| `wind`, `wind_dir`, `wind_gain` | the song's `WIND` (0.35), 1, 0.9 | wind on the cloth (a number or a Track); direction 1 = left to right, -1 the other way |
+| `arms` | `"low"` | `"high"` keeps the engine's wide `open` and `bless` |
+| `open_angle` | 42 | degrees below the horizontal of the open arms |
+| `elbow_lag` | 0.30 | seconds the forearms follow behind |
+| `reflect` | automatic | True, False, or a water line y. Automatic: on, unless the song uses scene plates |
+| `day_tint` | 1.0 | this figure's share of the tint on bright skies |
+
+Not used in this look: `particles`, `sparks`, `spark_size`, `trails`, `glass`.
+
+**Keys of the crowd** (in GATHERING, next to the keys of section K): `look="silk"`, `spacing` (default 1.0: how unevenly people stand, in loose twos and threes with gaps; 0 = the even rows; it is skipped when the song groups the crowd itself with a `cluster` key), `veiled` (0.55: the share who wear a veil or hood), `unlit` (`"#9fb4ff"`) and `unlit_glow` (0.55): colour and brightness of those who wait, `flame_light` (1.0: how much a held light warms its holder), and `rim`, `core_glow`, `head_glow`, `mist`, `reflect`, `day_tint` as above.
+
+**Keys for the whole song** (only in `FIGURE_SILK`): `body_glow` (0.36), `density` (1.35) and `soft` (1.4): how bright, how solid and how soft-edged the bodies are; `rim_glow` (1.0); `bloom` (0.45: the share of the bodies' light that goes through the engine's glow; the rest is added sharp, so a body is not washed white); `knee` (1.8: where bright overlaps roll off); `mist_color`; `flame` (`"#ffd08a"`); `reflect_glow` (0.62); `daylight` (automatic from the sky colours; or 0 to 1, or a Track); `day_tint_color` (`"#c4c0ff"`), `day_tint_warm` (`"#ffd9b4"`), `day_tint_strength` (0.92), `day_tint_level` (0.80: brightness of the tint against the sky behind it), `day_tint_gate` ((0.10, 0.42): how bright the sky must be before the tint starts and is full).
+
+**Sizes and skies.** Checked large (half the screen height), medium (a fifth) and crowd size (a tenth) on a night, a dawn and a bright day sky: stills runs 43702504749, 43703267673, 43703857106 and later ones on `test_figure_look`. At crowd size the pleats, the wandering rim and the cloth are left out or melt into the body. On the bright day sky the figures stay visible but are quiet; they are at their best at night, dusk and dawn.
+
+**Cost.** About 0.75 s per 1080p frame for the whole test scene in the cloud (two large figures with cloth, one medium, 24 people), of which the cloth is about 60 ms per figure.
+
+**Order of drawing.** `figure_look.begin` before the figures, the figures and the crowd queue their bodies, `figure_look.resolve` draws them into their own layer, adds a share of it and the mirror images to the light (before the text protection), and the composite adds the rest sharp and the tint (texture unit 14).
 
 ## I. Theme colours, bubbles, leaves (2026-11-15, branch engine-theme)
 
@@ -640,13 +701,13 @@ One engine holds every section above, and one song file can use them all. Test s
 | Music reactivity | `AUDIO_REACT`, `REACT_GLOW`, `REACT_SPARKLE`, `REACT_ARCH`, `REACT_AURORA`, `REACT_CHORUS`; `audio.level(t)` ... | P |
 | Output | workflow inputs `resolution`, `fps`; `LOOP_SECONDS`, `EVENT_CARD`; `engine/live.py` | Q |
 | Draft and quality check | workflow `mode=draft`, input `qa` | R |
-| The silk look for people of light | `FIGURE_LOOK`, `FIGURE_SILK`, `look="silk"` on a rigged figure or on `GATHERING` | U |
+| The silk look for people of light | `FIGURE_LOOK`, `FIGURE_SILK`, `look="silk"` on a rigged figure or on `GATHERING` | H5 |
 
 **Order of drawing** (render.py, one frame): sky, 3D clouds; then light: stars, motes, lanterns, petals, effect layers (snow, bubbles, leaves, beam, net), nature, creatures, beat sparkles, people of light, the crowd, ripple light, falling stars and symbols, god rays and near motes; then the text protection dims all of that behind the words; then the words, the credit and the arch; glow; the camera background; the composite (plates, ripples bending the lake, ice, shards, field, nature paint, leaf tint, coloured letters).
 
 **What stays exactly as before.** A song file that uses none of the new keys renders bit for bit as on main: `s03_original` on its promo clip was compared pixel by pixel at 25 and 45 seconds, and `s03_lake_of_memory` (scenes, painted figures, fragment styles) at 3.2, 14.5 and 42 seconds. For that, each optional block of the composite shader (`SKY_THEME`, `TEXT_SHADOW` below 0.05, per-text colour, leaf tint, lake ripples, nature paint, camera background) is compiled in only for a song that uses it (`render.comp_blocks()`, `shaders.comp_fs()`). When you add a block to the composite, add it the same way: the same maths written with a uniform in place of a constant is rounded differently by the shader compiler, which changes a few pixels by one level. When you compare stills pixel by pixel, run each side at least twice: the cloud machines are not all alike, and about one run in three of the very same commit (on main too) differs from the others in about 3 pixels by one level.
 
-**Texture units of the composite**: 0 to 9 the engine's own (sky, light, four glow levels, ridge, text A, text B, credit), 10 and 11 scene plates, 12 leaf tint, 13 nature paint, 14 the figure layer of the silk look (section U), 15 the camera background. Every other pass binds its own textures from unit 0 just before it draws.
+**Texture units of the composite**: 0 to 9 the engine's own (sky, light, four glow levels, ridge, text A, text B, credit), 10 and 11 scene plates, 12 leaf tint, 13 nature paint, 14 the figure layer of the silk look (H5), 15 the camera background. Every other pass binds its own textures from unit 0 just before it draws.
 
 **Working together, in short**
 - With `TIME_OF_DAY` the sky colours come from it; music reactivity then swells them. Without it the song's own palette (or `theme.campaign_day`) stays.
@@ -675,64 +736,3 @@ The Render workflow's inputs (one workflow for everything, 8 inputs):
 A video renders in 10 parallel parts at 1080p and 30 fps, 20 parts at 4K or at 60 fps, 40 parts at 4K and 60 fps together. A draft always renders in 8 parts.
 
 The video run's finish job uploads: "<name>" (the full video plus a silent copy), "<name> frames" (4 frame sheets of 8 frames each, for checking without downloading the video), "<name> (share)" (the file "<name> (share).mp4": 1280x720, 30 fps, H.264 with AAC sound, always under 25 MB, for phones and messages; the job fails if it would be larger) and "<name> QA" (the quality report). A stills run uploads "<name>-stills" (the stills and their quality report). A draft run uploads "<name> (draft)" and "<name> QA".
-
-## U. The silk look for people of light (2026-11-15, branch engine-figure-look)
-
-Anthony asked for "something magnificent that would blow our mind. Ground breaking artistry." The people of light used to be dense sparks with a dotted fill: they moved well, but read as sparkly cut-outs, and a crowd as a glitter fence. The silk look draws the same skeletons (section H) and the same crowd (section K) as bodies of light. It is an option: a song that does not ask for it renders exactly as before. Code: `engine/figure_look.py` (one new file), with small guarded hooks in render.py, upgrade.py, gathering.py and one optional block of the composite (`FIGURE_TINT`). Test: `engine/songs/test_figure_look.py` (20 seconds on audio/test/silent-60s.mp3: a walker, a medium figure, Heavenly Mother from behind, two hands and a crowd of 24, from night through dawn into the bright day).
-
-**Switching it on**
-
-```python
-FIGURE_LOOK = "silk"                      # every rigged figure (kind="rig") and the GATHERING crowd
-FIGURE_SILK = dict(light_from="sun")      # optional: settings for all of them (the keys below)
-# or one at a time:
-FIGURES = [dict(kind="rig", preset="person_back", look="silk", veil_length=1.1, ...)]
-GATHERING = dict(look="silk", ...)
-```
-
-`look="silk"` on one FIGURES entry or on GATHERING switches only that one; `look="sparks"` keeps the old look for one entry under `FIGURE_LOOK = "silk"`. Painted figures (`poses=`) are not changed.
-
-**What is drawn**
-
-- Body: a smooth luminous shape computed from the posed skeleton every frame (rounded cones along the bones, added up like light through frosted glass; no sparks, no outline). A warm heart and head, soft edges, a robe that breaks into mist toward the hem (no hard feet). The side that faces the light is warmer and brighter, the far side cooler, and a soft rim of light runs along the lit side (all round when the light stands behind the figure).
-- Proportions: slender, about 8 heads tall, narrow shoulders, a long robe that flares softly. The head is a soft oval glow under hair or a veil. No face, ever; everyone is clothed. Heavenly Mother is `preset="person_back"` only (from behind, with a long veil).
-- Cloth of light: the veil, both sleeves and the lower robe are sheets of fine threads of light; a few dozen long streamlines run down the body and trail behind a moving figure. All of them are spring chains: gravity, air that drags against the motion (so they trail behind a walk and swing on when she stops), and the shared wind (`WIND`, section N) with gusts and travelling ripples. The cloth is simulated afresh for every frame over the 3.2 seconds before it, so every frame can be drawn on its own and the 10 cloud workers agree.
-- A few bright motes rise off the shoulders, the hands and the head.
-- Water: each figure is mirrored and rippled in the lake (at its feet when it stands on the water, else at the water line); the mirror image fades with depth and stays calm in the lower third.
-- Bright skies: light adds little on a bright sky, so there the bodies glow a little less and the composite gives them a faint tint of about the same brightness as the sky behind them (lilac on a warm sky, a warm pearl on a blue one). It is never darker than about four fifths of the sky: no dark patch, no shadow.
-- Motion: poses flow into each other more slowly (`blend` defaults to 1.4 s instead of 0.9), the forearms follow the upper arms a little late (soft elbows), the wrist lifts as the arm rises, the spine and the head sway a little. `"open"` and `"bless"` are a low, graceful opening by default (the upper arms about 42 and 37 degrees below the horizontal, the forearms a little higher, palms forward).
-- Gather and dissolve work as before (`gather`, `dissolve`, `to_star`, `to`, `leave="drift"`): the body blooms out of its heart; at the end it returns to its heart and one small light rises to its place in the arch.
-- The crowd: each person is a small body of light in a cloak, some veiled or hooded, some bare headed, unevenly spaced (`spacing`). Those who wait are cooler and dimmer; once the passed flame reaches someone, they turn warm, glow from the heart and hold a small bright point of light at the chest, like a candle. When they lift their lights, the points rise.
-- Hands (`preset="hands"`): palms, fingers that curl and sleeves as one soft shape; the offered light warms the palms.
-
-**Keys of a figure** (each also works in `FIGURE_SILK` as the default for all; the usual keys of section H stay: `preset`, `actions`, `x`, `y`, `height`, `color`, `glow`, `t0`, `t1`, `gather`, `dissolve`, `to_star`, `veil`, `yaw`, `stride` ...)
-
-| Key | Default | Meaning |
-|---|---|---|
-| `light_from` | `"sun"` | where the scene's light is: `"sun"` (the sun, or the glow on the horizon at night), `"star"` or `"star:3"` (a light of the arch), a screen point `(x, y)`, or a function of time |
-| `light_color` | warm white | colour of the rim light |
-| `rim` | 1.0 | strength of the rim light (0 = none) |
-| `core`, `core_glow`, `head_glow` | `"#ffe9c4"`, 0.9, 0.7 | the heart's colour and strength, and the head's share of it |
-| `mist` | 1.0 | how much the lower robe breaks into mist (0 = a firm hem) |
-| `cloth` | True | False draws the body only (no veil, sleeves, streamlines) |
-| `veil_length`, `sleeve_length`, `strand_length` | 1.0 | lengths of the cloth |
-| `strands`, `motes` | 27, 30 | how many streamlines and motes |
-| `cloth_color`, `cloth_glow`, `mote_glow` | `"#fff1e0"`, 1.0, 1.0 | the cloth's own tint and brightness |
-| `wind`, `wind_dir`, `wind_gain` | the song's `WIND` (0.35), 1, 0.9 | wind on the cloth (a number or a Track); direction 1 = left to right, -1 the other way |
-| `arms` | `"low"` | `"high"` keeps the engine's wide `open` and `bless` |
-| `open_angle` | 42 | degrees below the horizontal of the open arms |
-| `elbow_lag` | 0.30 | seconds the forearms follow behind |
-| `reflect` | automatic | True, False, or a water line y. Automatic: on, unless the song uses scene plates |
-| `day_tint` | 1.0 | this figure's share of the tint on bright skies |
-
-Not used in this look: `particles`, `sparks`, `spark_size`, `trails`, `glass`.
-
-**Keys of the crowd** (in GATHERING, next to the keys of section K): `look="silk"`, `spacing` (default 1.0: how unevenly people stand, in loose twos and threes with gaps; 0 = the even rows; it is skipped when the song groups the crowd itself with a `cluster` key), `veiled` (0.55: the share who wear a veil or hood), `unlit` (`"#9fb4ff"`) and `unlit_glow` (0.55): colour and brightness of those who wait, `flame_light` (1.0: how much a held light warms its holder), and `rim`, `core_glow`, `head_glow`, `mist`, `reflect`, `day_tint` as above.
-
-**Keys for the whole song** (only in `FIGURE_SILK`): `body_glow` (0.36), `density` (1.35) and `soft` (1.4): how bright, how solid and how soft-edged the bodies are; `rim_glow` (1.0); `bloom` (0.45: the share of the bodies' light that goes through the engine's glow; the rest is added sharp, so a body is not washed white); `knee` (1.8: where bright overlaps roll off); `mist_color`; `flame` (`"#ffd08a"`); `reflect_glow` (0.62); `daylight` (automatic from the sky colours; or 0 to 1, or a Track); `day_tint_color` (`"#c4c0ff"`), `day_tint_warm` (`"#ffd9b4"`), `day_tint_strength` (0.92), `day_tint_level` (0.80: brightness of the tint against the sky behind it), `day_tint_gate` ((0.10, 0.42): how bright the sky must be before the tint starts and is full).
-
-**Sizes and skies.** Checked large (half the screen height), medium (a fifth) and crowd size (a tenth) on a night, a dawn and a bright day sky: stills runs 43702504749, 43703267673, 43703857106 and later ones on `test_figure_look`. At crowd size the pleats, the wandering rim and the cloth are left out or melt into the body. On the bright day sky the figures stay visible but are quiet; they are at their best at night, dusk and dawn.
-
-**Cost.** About 0.75 s per 1080p frame for the whole test scene in the cloud (two large figures with cloth, one medium, 24 people), of which the cloth is about 60 ms per figure.
-
-**Order of drawing.** `figure_look.begin` before the figures, the figures and the crowd queue their bodies, `figure_look.resolve` draws them into their own layer, adds a share of it and the mirror images to the light (before the text protection), and the composite adds the rest sharp and the tint (texture unit 14).
