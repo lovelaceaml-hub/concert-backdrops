@@ -156,6 +156,8 @@ SPRITE_VS = "#version 330\n" + NOISE + WORLD + SPRITE_COMMON + """
 in vec2 aCorner;
 in vec3 aPos; in float aSize; in vec3 aColor; in float aAlpha; in float aEmit; in float aSeed; in vec2 aRot;
 in vec3 aNormal; in vec3 aVel; in float aBirth;
+in float aIdx;            // the point's own index, when the set is drawn in spatial chunks (uIdxK.x = 1)
+uniform vec2 uIdxK;       // (1: index from aIdx, else the instance number times the stride), stride
 uniform float uHasN;
 uniform int uKind;        // 0 soft, 1 spark, 2 disc, 3 flake, 4 petal, 5 bird
 uniform vec2 uRim;
@@ -224,7 +226,7 @@ void main(){
   if(uLod > 0.5 && coc > uLodR){
     // far out of focus: draw a share of the points, each brighter (the same light, far fewer big discs)
     float q = (uLodR*uLodR)/(coc*coc);
-    float h = ihash(gl_InstanceID);
+    float h = ihash(uIdxK.x > 0.5 ? int(aIdx + 0.5) : gl_InstanceID*int(uIdxK.y + 0.5));
     float w = clamp((1.25*q - h)/(0.25*q), 0.0, 1.0);
     if(w <= 0.0){ cull(); return; }
     float top = min(1.25*q, 1.0);

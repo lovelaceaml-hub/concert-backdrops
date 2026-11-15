@@ -58,6 +58,82 @@ def _col(c, t):
     return api.lin(c) if isinstance(c, str) else np.asarray(c, np.float64)
 
 
+CHUNK_MIN = 60000        # a static set with at least this many points is drawn in spatial cells (only those in view)
+MIRROR_THIN = ((1200000, 3), (300000, 2))    # in the lake mirror a set this large draws every k-th point, k times
+#                                              brighter (the image is dimmer and rippled; bodies stay whole)
+
+
+def _thin(n):
+    for lim, k in MIRROR_THIN:
+        if n >= lim:
+            return k
+    return 1
+
+
+def _chunks(pos, size, dome):
+    """Sorts points into a grid of cells (about 4000 points each, at most 1024 cells). Returns the order and the
+    cells: start, count, centre and radius (sprite sizes included)."""
+    pos = np.asarray(pos, np.float64)
+    m = len(pos)
+    target = int(min(max(m // 4000, 8), 1024))
+    lo, hi = pos.min(axis=0), pos.max(axis=0)
+    ext = np.maximum(hi - lo, 1e-6)
+    ext_e = np.maximum(ext, ext.max() * 0.02)
+    edge = (np.prod(ext_e) / target) ** (1.0 / 3.0)
+    dims = np.clip(np.ceil(ext_e / edge), 1, 64).astype(np.int64)
+    ijk = np.minimum(((pos - lo) / ext * dims).astype(np.int64), dims - 1)
+    key = (ijk[:, 0] * dims[1] + ijk[:, 1]) * dims[2] + ijk[:, 2]
+    order = np.argsort(key, kind="stable")
+    ks = key[order]
+    start = np.flatnonzero(np.r_[True, ks[1:] != ks[:-1]])
+    count = np.diff(np.r_[start, m])
+    p = pos[order]
+    cen = np.add.reduceat(p, start, axis=0) / count[:, None]
+    d = np.linalg.norm(p - np.repeat(cen, count, axis=0), axis=1)
+    sz = np.broadcast_to(np.asarray(size, np.float64), (m,))[order]
+    rad = np.maximum.reduceat(d, start) + 0.5 * np.maximum.reduceat(sz, start)
+    if dome:
+        cen = cen / np.maximum(np.linalg.norm(cen, axis=1, keepdims=True), 1e-9)
+        rad = rad + 0.01
+    return order, dict(start=start, count=count, cen=cen, rad=rad)
+
+
+def _visible_runs(cells, cam, mirror, dome, stride=1):
+    """Indirect draw commands (count, instances, first, base instance, 0) for the runs of cells in view, None when
+    every cell is in view. The test keeps a cell whose sphere reaches the view widened to 1.6 times (the sprite
+    shader's own limit), so nothing that would be drawn is lost."""
+    cen, rad = cells["cen"], cells["rad"]
+    if mirror:
+        cen = cen * np.array([1.0, -1.0, 1.0])
+        rad = rad + (0.05 if dome else 0.25 * np.abs(cells["cen"][:, 1]) + 0.5)
+    r, u, f = cam.basis()
+    v = cen if dome else cen - np.asarray(cam.pos, np.float64)
+    z, x, y = v @ f, v @ r, v @ u
+    ty = 1.6 * np.tan(np.radians(cam.fov) * 0.5)
+    tx = ty * cam.aspect
+    ok = ((z > -rad) & (np.abs(x) - tx * z <= rad * np.sqrt(1.0 + tx * tx))
+          & (np.abs(y) - ty * z <= rad * np.sqrt(1.0 + ty * ty)))
+    if ok.all():
+        return None
+    st, ct = cells["start"][ok], cells["count"][ok]
+    if len(st) == 0:
+        return []
+    # join neighbouring cells into runs
+    brk = np.flatnonzero(st[1:] != st[:-1] + ct[:-1]) + 1
+    rs = st[np.r_[0, brk]]
+    re = np.r_[(st + ct)[brk - 1], (st + ct)[-1]]
+    if stride > 1:
+        a = (rs + stride - 1) // stride
+        b = (re - 1) // stride + 1
+        keep = b > a
+        rs, re = a[keep], b[keep]
+    cmd = np.zeros((len(rs), 5), np.uint32)       # moderngl reads indirect records 20 bytes apart
+    cmd[:, 0] = 4
+    cmd[:, 1] = re - rs
+    cmd[:, 3] = rs
+    return cmd
+
+
 class Layer:
     def __init__(self, R):
         cfg = dict(S.P3D) if isinstance(S.P3D, dict) else {}
@@ -305,30 +381,40 @@ class Layer:
             return bs
         return self.scene.collect(entry, t, cam)
 
-    def _slot(self, key, b, static=False):
+    def _slot(self, key, b, static=False, dome=False):
         ctx = self.ctx
         sl = self.slots.get(key)
         if sl is None:
-            sl = self.slots[key] = dict(cap=0, core=None, normal=None, seg=None, vel=None, vaos={}, done=False,
-                                        draft_keep=True)
+            sl = self.slots[key] = dict(cap=0, core=None, normal=None, seg=None, vel=None, idx=None, ind=None,
+                                        vaos={}, done=False, draft_keep=True, cells=None)
         if static and sl["done"]:
             return sl
         n = b["n"]
         step = 2 if (self.draft and n > 30000 and b["pos2"] is None) else 1   # a draft draws every second point
-        idx = slice(None, None, step)
-        m = len(range(0, n, step))
+        sel = np.arange(0, n, step) if step > 1 else None
+        m = n if sel is None else len(sel)
+        # a large static set is sorted into spatial cells, so a frame draws only the cells in view
+        cells = order = None
+        if static and b["pos2"] is None and m >= CHUNK_MIN:
+            order, cells = _chunks(b["pos"] if sel is None else b["pos"][sel],
+                                   b["size"] if sel is None else b["size"][sel], dome)
+            sel = order if sel is None else sel[order]
+
+        def pick(a):
+            return a if sel is None else a[sel]
+
         core = np.empty((m, 13), np.float32)
-        core[:, 0:3] = b["pos"][idx]
-        core[:, 3] = b["size"][idx]
-        core[:, 4:7] = b["color"][idx]
-        core[:, 7] = b["alpha"][idx]
-        core[:, 8] = b["emit"][idx] * step
-        core[:, 9] = b["seed"][idx]
-        core[:, 10:12] = b["rot"][idx]
-        core[:, 12] = -1e9 if b["birth"] is None else b["birth"][idx]
+        core[:, 0:3] = pick(b["pos"])
+        core[:, 3] = pick(b["size"])
+        core[:, 4:7] = pick(b["color"])
+        core[:, 7] = pick(b["alpha"])
+        core[:, 8] = pick(b["emit"]) * step
+        core[:, 9] = pick(b["seed"])
+        core[:, 10:12] = pick(b["rot"])
+        core[:, 12] = -1e9 if b["birth"] is None else pick(b["birth"])
         if m > sl["cap"] or sl["core"] is None:
             sl["cap"] = int(m * 1.3) + 64
-            for k in ("core", "normal", "seg", "vel"):
+            for k in ("core", "normal", "seg", "vel", "idx"):
                 if sl[k] is not None:
                     sl[k].release()
                     sl[k] = None
@@ -336,7 +422,7 @@ class Layer:
                 v.release()
             sl["vaos"] = {}
             sl["core"] = ctx.buffer(reserve=sl["cap"] * 52, dynamic=True)
-        sl["core"].write(core.tobytes())
+        sl["core"].write(core)
 
         def extra(name, arr, width):
             if arr is None:
@@ -344,7 +430,7 @@ class Layer:
             if sl[name] is None:
                 sl[name] = ctx.buffer(reserve=sl["cap"] * 4 * width, dynamic=True)
                 sl["vaos"] = {}
-            sl[name].write(np.ascontiguousarray(arr[idx], np.float32).tobytes())
+            sl[name].write(np.ascontiguousarray(pick(arr), np.float32))
             return True
 
         sl["has_normal"] = extra("normal", b["normal"], 3)
@@ -355,21 +441,32 @@ class Layer:
             seg[:, 3] = b["alpha2"]
             seg[:, 4] = b["size2"]
             extra("seg", seg, 5)
+        if cells is not None:
+            sel_keep = sel
+            sel = None
+            extra("idx", order.astype(np.float32), 1)      # each point keeps its own index (bokeh sharing, mirror)
+            sel = sel_keep
+        sl["cells"] = cells
         sl["n"] = m
         sl["done"] = True
         return sl
 
-    def _vao(self, sl, which):
-        key = (which, sl.get("has_normal"), sl.get("has_vel"))
+    def _vao(self, sl, which, stride=1):
+        key = (which, sl.get("has_normal"), sl.get("has_vel"), stride, sl.get("cells") is not None)
         v = sl["vaos"].get(key)
         if v is not None:
             return v
         ctx = self.ctx
         if which == "sprite":
+            pad = (lambda width: f" {width * (stride - 1)}x" if stride > 1 else "")
             content = [(self.quad, "2f", "aCorner"),
-                       (sl["core"], CORE_FMT, "aPos", "aSize", "aColor", "aAlpha", "aEmit", "aSeed", "aRot", "aBirth"),
-                       ((sl["normal"], "3f /i", "aNormal") if sl["has_normal"] else (self.b_zero3, "3f /r", "aNormal")),
-                       ((sl["vel"], "3f /i", "aVel") if sl["has_vel"] else (self.b_vel0, "3f /r", "aVel"))]
+                       (sl["core"], CORE_FMT.replace(" /i", pad(52) + " /i"), "aPos", "aSize", "aColor", "aAlpha",
+                        "aEmit", "aSeed", "aRot", "aBirth"),
+                       ((sl["normal"], "3f" + pad(12) + " /i", "aNormal") if sl["has_normal"]
+                        else (self.b_zero3, "3f /r", "aNormal")),
+                       ((sl["vel"], "3f" + pad(12) + " /i", "aVel") if sl["has_vel"] else (self.b_vel0, "3f /r", "aVel"))]
+            if sl.get("cells") is not None:
+                content.append((sl["idx"], "1f" + pad(4) + " /i", "aIdx"))
             v = ctx.vertex_array(self.p_sprite, content)
         elif which == "seg":
             v = ctx.vertex_array(self.p_seg, [
@@ -382,6 +479,28 @@ class Layer:
                 (sl["core"], "3f 1f 12x 1f 16x 1f /i", "aPos", "aSize", "aAlpha", "aBirth")])
         sl["vaos"][key] = v
         return v
+
+    def _render(self, sl, vao, cam, stride=1, mirror=False, dome=False):
+        """Draws a slot's sprites: all of them, or for a set in spatial cells only the cells in view (one
+        indirect draw of the runs of visible cells). stride k draws every k-th point (the thin mirror)."""
+        n = sl["n"]
+        cells = sl.get("cells")
+        if cells is None:
+            vao.render(moderngl.TRIANGLE_STRIP, vertices=4, instances=(n - 1) // stride + 1)
+            return
+        cmd = _visible_runs(cells, cam, mirror, dome, stride)
+        if cmd is None:
+            vao.render(moderngl.TRIANGLE_STRIP, vertices=4, instances=(n - 1) // stride + 1)
+            return
+        if len(cmd) == 0:
+            return
+        data = np.ascontiguousarray(cmd, np.uint32)
+        if sl["ind"] is None or sl["ind"].size < data.nbytes:
+            if sl["ind"] is not None:
+                sl["ind"].release()
+            sl["ind"] = self.ctx.buffer(reserve=max(data.nbytes, 20 * len(cells["start"])), dynamic=True)
+        sl["ind"].write(data)
+        vao.render_indirect(sl["ind"], mode=moderngl.TRIANGLE_STRIP, count=len(cmd))
 
     # ------------------------------------------------------------------ the silhouette masks
     def _mask_pass(self, items, t, cam, U):
@@ -519,9 +638,10 @@ class Layer:
                     if gain <= 0.0:
                         continue
                 seg = b["kind"] in api.SEGMENT_KINDS
-                sl = self._slot((e.name, bi), b, static=static)
+                sl = self._slot((e.name, bi), b, static=static, dome=bool(dome))
                 p = self.p_seg if seg else self.p_sprite
-                setu(p, uKind=KIND_ID[b["kind"]], uGain=gain, uTwinkle=b["twinkle"], uRim=b["rim"],
+                chunked = 1.0 if sl.get("cells") is not None else 0.0
+                setu(p, uKind=KIND_ID[b["kind"]], uGain=gain, uTwinkle=b["twinkle"], uRim=b["rim"], uIdxK=(chunked, 1.0),
                      uDofAmt=b["dof"] if e.depth_of_field else 0.0, uFogAmt=b["fog"] if e.fog else 0.0,
                      uBack=b["backlight"], uLod=1.0 if (b["lod"] and e.lod) else 0.0, uDome=dome,
                      uTurn=1.0 if getattr(ps, "turns", False) else 0.0, uBlur=blur * b["streak"], uMirror=0.0,
@@ -529,10 +649,17 @@ class Layer:
                      uHasN=1.0 if sl.get("has_normal") else 0.0, uWindow=1.0 if e.window else 0.0,
                      uClearK=tuple(float(x) for x in boxk) if b["clear"] else (0.0, 0.0, 0.0, 0.0))
                 vao = self._vao(sl, "seg" if seg else "sprite")
-                vao.render(moderngl.TRIANGLE_STRIP, vertices=4, instances=sl["n"])
-                if mirror and e.reflect and b["reflect"]:
-                    setu(p, uMirror=1.0, uMaskOn=0.0, uWindow=0.0)
+                if seg:
                     vao.render(moderngl.TRIANGLE_STRIP, vertices=4, instances=sl["n"])
+                else:
+                    self._render(sl, vao, cam, dome=bool(dome))
+                if mirror and e.reflect and b["reflect"] and not e.window:
+                    k = 1 if seg else _thin(sl["n"])
+                    setu(p, uMirror=1.0, uMaskOn=0.0, uWindow=0.0, uGain=gain * k, uIdxK=(chunked, float(k)))
+                    if seg:
+                        vao.render(moderngl.TRIANGLE_STRIP, vertices=4, instances=sl["n"])
+                    else:
+                        self._render(sl, self._vao(sl, "sprite", stride=k), cam, stride=k, mirror=True, dome=bool(dome))
                     setu(p, uMaskOn=mask_on)
         ctx.blend_func = (moderngl.ONE, moderngl.ONE)
 
