@@ -545,6 +545,10 @@ class Upgrade:
         ctx = self.ctx
         self.rdata = []
         for k, m in enumerate(self.rigs):
+            import figure_look as FL
+            if FL.is_silk(m):   # look="silk": a body of light instead of sparks (engine/figure_look.py)
+                self.rdata.append(dict(meta=m, silk=FL.SilkRig(m, k, fig_value), draft_keep=True))
+                continue
             R = RG.Rig(m, S.ASPECT, fig_value, seed=k)
             n = R.n
             rng = np.random.default_rng(99 + k)
@@ -587,6 +591,9 @@ class Upgrade:
 
     def draw_rigs(self, t):
         for rd in self.rdata:
+            if "silk" in rd:
+                self.R.fl.draw_rig(rd["silk"], self, t, self.R.fl.P)
+                continue
             m, R = rd["meta"], rd["rig"]
             t0, t1 = R.t0, R.t1
             gat, dis = float(m.get("gather", 3.0)), float(m.get("dissolve", 3.5))
