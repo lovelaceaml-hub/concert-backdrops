@@ -174,7 +174,7 @@ def _flight_keys():
     for t in np.arange(2.7, 13.31, 0.5):
         tun = _sc(8.6, 9.6, t) * (1.0 - _sc(12.6, 13.3, t))
         x = 1.3 * np.sin(0.85 * t + 0.4) * (1.0 - 0.75 * tun)
-        y = 1.65 + 0.25 * np.sin(1.3 * t) + 1.05 * tun
+        y = 2.1 + 0.25 * np.sin(1.3 * t) + 0.7 * tun
         z = zcam(t)
         keys.append((float(t), _v(x, y, z), _v(0.35 * x, y + 0.45 - 0.2 * tun, z - 24.0)))
     return keys
@@ -213,49 +213,38 @@ def _dancer_ground(t):
     return acc
 
 
-LOOP_T0, LOOP_T1, LOOP_R = 25.0, SEC[4], 12.0
+LOOP_T0, LOOP_T1 = 25.0, SEC[4]
+S4_EYE = 1.6                         # the height of the orbit's centre over the dancer's mark
 
 
-def _s4_orbit(t):
+def _s4_az(t):
     u = t - SEC[3]
-    c = D4                                   # the dancer's mark (she dances on the spot)
-    r = 6.0 - 0.15 * u
-    h = 1.25 + 0.08 * u
-    a = np.radians(25.0 + 24.0 * u)
-    return c + _v(np.sin(a) * r, h, np.cos(a) * r), c + _v(0.0, 2.05, 0.0)
+    return np.radians(25.0 + 24.0 * u)
 
 
-def _loop_frame():
-    p0, q0 = _s4_orbit(LOOP_T0)
-    p1, _ = _s4_orbit(LOOP_T0 + 0.05)
-    h = _unit(_v(p1[0] - p0[0], 0.0, p1[2] - p0[2]))    # the orbit's direction of travel
-    return p0, h
+def _s4_r(t):
+    return 4.9 - 0.12 * min(t - SEC[3], LOOP_T0 - SEC[3])
 
 
 def _loop_phi(t):
-    u = np.clip((t - LOOP_T0) / (LOOP_T1 - LOOP_T0), 0.0, 1.0)
-    return np.pi * (0.55 * u + 0.45 * u * u) * 1.02
+    """0 level with her, pi/2 straight over her head, pi on the far side upside down."""
+    u = float(np.clip((t - LOOP_T0) / (LOOP_T1 - LOOP_T0), 0.0, 1.0))
+    return np.pi * 0.97 * u * u * (2.2 - 1.2 * u)
 
 
 def _s4(t):
-    if t <= LOOP_T0:
-        return _s4_orbit(t)
-    p0, h = _loop_frame()
-    phi = _loop_phi(t)
-    pos = p0 + LOOP_R * np.sin(phi) * h + LOOP_R * (1.0 - np.cos(phi)) * UP
-    tan = np.cos(phi) * h + np.sin(phi) * UP
-    cen = -np.sin(phi) * h + np.cos(phi) * UP
-    w = _sc(LOOP_T0, LOOP_T0 + 0.6, t)
-    _, q0 = _s4_orbit(t)
-    look = pos + 20.0 * _unit(np.cos(0.35) * tan + np.sin(0.35) * cen)
-    return pos, q0 * (1.0 - w) + look * w
+    """Close round the dancer, then the flip: over her head and down the far side, always looking at her,
+    upside down at the end (the lake above, the stars below)."""
+    a, r, phi = _s4_az(t), _s4_r(t), _loop_phi(t)
+    h = _v(np.sin(a), 0.0, np.cos(a))
+    c = D4 + _v(0.0, S4_EYE, 0.0)
+    look = D4 + _v(0.0, 2.0 - 0.6 * _sc(LOOP_T0, LOOP_T0 + 1.0, t), 0.0)
+    return c + r * (np.cos(phi) * h + np.sin(phi) * UP) + _v(0.0, -0.35, 0.0) * (1.0 - _sc(0.0, 0.3, phi)), look
 
 
 def _s4_up(t):
-    if t <= LOOP_T0:
-        return UP
-    _, h = _loop_frame()
-    phi = _loop_phi(t)
+    a, phi = _s4_az(t), _loop_phi(t)
+    h = _v(np.sin(a), 0.0, np.cos(a))
     return _unit(-np.sin(phi) * h + np.cos(phi) * UP)
 
 
@@ -292,7 +281,7 @@ BRAID_T0 = 45.4
 
 def _orb7_angle(t):
     u = max(t - BREATH_END, 0.0)
-    return np.radians(ORB7_A0 + 44.0 * u + 4.0 * u * u)
+    return np.radians(ORB7_A0 - 30.0 * u - 1.0 * u * u - 14.0 * max(t - BRAID_T0, 0.0) ** 2)
 
 
 def _orb7_radius(t):
@@ -344,8 +333,8 @@ def _rig(focus):
             focus=fo(lambda t: SEED if t < 1.2 else np.asarray(PW.place(_LAYOUT_SIMPLE, t, 0.5, 0.5, 14.0)))),
         Path(_s3, SEC[2], SEC[3], blend=0.9, fov=lambda t: 56.0 - 10.0 * _sc(13.3, 14.4, t), roll=0.0,
              aperture=0.03, focus=fo(C3 + _v(0, 1.0, 0))),
-        Path(_s4, SEC[3], SEC[4], blend=0.0, fov=lambda t: 52.0 + 22.0 * _sc(LOOP_T0, LOOP_T1, t),
-             up=_s4_up, aperture=lambda t: 0.03 * (1.0 - _sc(LOOP_T0, LOOP_T0 + 0.6, t)),
+        Path(_s4, SEC[3], SEC[4], blend=0.0, fov=lambda t: 54.0 + 10.0 * _sc(LOOP_T0, LOOP_T1, t),
+             up=_s4_up, aperture=lambda t: 0.02 * (1.0 - _sc(LOOP_T0, LOOP_T0 + 0.6, t)),
              focus=fo(lambda t: D4 + _v(0, 1.4, 0))),
         fly(_s5_keys(), blend=0.0, fov=lambda t: 62.0 - 14.0 * _sc(29.0, 30.6, t), aperture=lambda t: 0.004 + 0.026 * _sc(29.5, 30.5, t),
             roll=lambda t: -10.0 * np.sin(np.pi * _sc(26.9, 29.6, t)), focus=fo(E5 + _v(0, 1.1, 0))),
@@ -399,7 +388,7 @@ def _bodies():
                 wind=w, seed=4.0, effects=[dict(kind="form", t=SEC[2] + 0.1, dur=1.5)])
     _BODIES["kind"] = kind
     dancer = Body("woman", at=(D4[0], D4[2]), facing=30.0, motion=[(17.5, "dance")], garment="dress",
-                  hair=True, look="glitter", color=COL[COMP], color2="#f4ecff", points=65000,
+                  hair=True, look="glitter", color=COL[COMP], color2="#f4ecff", points=75000, bright=1.3,
                   show=(SEC[3] - 0.1, LOOP_T1 + 0.3), fade=0.15, wind=(0.0, 0.0, 0.0), seed=6.0,
                   effects=[dict(kind="form", t=SEC[3] - 0.1, dur=0.9), dict(kind="shed", t=SEC[3] + 0.5)])
     _BODIES["dancer"] = dancer
@@ -417,14 +406,17 @@ def _bodies():
                   effects=[dict(kind="form", t=SEC[4] + 0.8, dur=1.6)])
     _BODIES["helper"] = helper
     speaker = Body("woman", at=(F6[0] - 0.43, F6[2]), facing=90.0, motion="stand", garment="dress", hair=True,
-                   look="rim", color=COL[RESP], color2="#ffe2c8", points=90000, detail=dict(head=4),
+                   look="glitter", color=COL[RESP], color2="#ffe8d6", points=90000, detail=dict(head=3),
                    show=(SEC[5] - 0.2, SEC[6] + 0.2), fade=0.2, seed=9.0,
                    gesture=[(SEC[5], 40.0, "offer", dict(side="L"))],
-                   effects=[dict(kind="shed", t=SEC[5], where="back", dir=(-1, 0.25, 0), speed=0.5)])
+                   effects=[dict(kind="form", t=SEC[5] - 0.2, dur=1.2),
+                            dict(kind="shed", t=SEC[5], where="back", dir=(-1, 0.25, 0), speed=0.5)])
     _BODIES["speaker"] = speaker
     listener = Body("man", at=(F6[0] + 0.43, F6[2]), facing=270.0, motion="stand", garment="coat",
-                    look="rim", color=COL[RESP], color2="#ffe2c8", points=90000, detail=dict(head=4),
+                    look="glitter", color=COL[RESP], color2="#fff0e0", points=90000, detail=dict(head=3),
                     show=(SEC[5] - 0.2, SEC[6] + 0.2), fade=0.2, seed=10.0,
+                    effects=[dict(kind="form", t=SEC[5], dur=1.2),
+                             dict(kind="shed", t=SEC[5] + 0.5, where="back", dir=(1, 0.25, 0), speed=0.4)],
                     gesture=[(SEC[5] + 1.0, 40.0, "listen", dict(side="L"))])
     _BODIES["listener"] = listener
     praying = Body("woman", at=(G7[0], G7[2]), facing=180.0, motion=[(37.0, "kneel")],
@@ -552,9 +544,10 @@ def _ribbon_from_hand(t):
 
 
 def _loop_ahead(t):
-    p0, h = _loop_frame()
-    phi = min(_loop_phi(t) + 0.55, np.pi * 1.05)
-    return p0 + LOOP_R * np.sin(phi) * h + LOOP_R * (1.0 - np.cos(phi)) * UP + 1.6 * _v(-h[2], 0.0, h[0])
+    """The lavender ribbon leads the flip: a wider arc over the dancer, ahead of the camera."""
+    a, phi = _s4_az(t) + 0.35, min(_loop_phi(t) + 0.6, np.pi)
+    h = _v(np.sin(a), 0.0, np.cos(a))
+    return D4 + _v(0.0, S4_EYE, 0.0) + 2.6 * (np.cos(phi) * h + np.sin(phi) * UP)
 
 
 def _palm5(t):
@@ -608,7 +601,7 @@ def _dist(t, p):
 
 
 _RIDE1 = (0.5, 0.60, 14.0)
-_RIDE2 = (0.5, 0.58, 12.0)
+_RIDE2 = (0.5, 0.67, 12.0)
 _RIDE5 = (0.5, 0.63, 15.0)
 _AT3 = C3 + _v(0.0, 2.62, 0.0)
 _AT4 = D4 + _v(0.0, 2.95, 0.0)
@@ -641,7 +634,7 @@ _SPECS = [
     dict(expr="Encouragement", pos=_AT7, face="camera", width=_width(43.9, _dist(43.9, _AT7), 0.66),
          t_in=40.3, t_read0=42.45, t_read1=45.35, t_out=47.2, arrive="shaft", leave="rise"),
 ]
-WORDS = PW.Words(_SPECS, camera=_LAYOUT)
+WORDS = PW.Words(_SPECS, camera=_LAYOUT, reflect=False)   # no mirrored text in the lake
 
 
 def _focus(t, default):
@@ -695,14 +688,14 @@ def _arch_places():
 
 ARCH_AT = _arch_places()
 ARCH_ORDER = list(range(9))          # left to right: the order of words.EXPRESSIONS, as on every arch
-ARCH_LAND = [SEC[7] + 2.0 + 0.16 * k for k in range(9)]
+ARCH_LAND = [SEC[7] + 1.25 + 0.17 * k for k in range(9)]
 
 
 def _to_arch(k):
     i = ARCH_ORDER.index(k)
     home = ARCH_AT[i]
-    p0 = _v(0.0, 120.0, 18.0) + _v(6.0 * (i - 4), 0.0, 0.0)
-    c1 = _v(home[0] * 1.7, 70.0, 40.0)
+    p0 = _v(1.5 * (i - 4), 82.0, 118.0)
+    c1 = _v(home[0] * 1.35, 52.0, 52.0)
 
     def f(t):
         u = float(np.clip((t - SEC[7]) / (ARCH_LAND[k] - SEC[7]), 0.0, 1.0))
@@ -732,6 +725,9 @@ def _second_of(t):
     return None
 
 
+CUTS = [SEC[3], SEC[4], SEC[5], SEC[6], SEC[7]]
+
+
 class Comets:
     """The nine ribbons of colour: a white-hot core, a coloured glow, a head that blooms, sparks shed behind."""
 
@@ -751,8 +747,12 @@ class Comets:
             n = max(n, 1.0 - _sc(1.6, 3.4, t))
         return n
 
-    def sample(self, t):
+    wants_camera = True
+
+    def sample(self, t, cam=None):
         out = []
+        cut = max([c for c in CUTS if c <= t] + [SEC[0]])      # tails never reach back across a cut
+        eye = None if cam is None else np.asarray(cam.pos, np.float64)
         for k in range(9):
             a = self._alpha(k, t)
             if a <= 0.0:
@@ -761,7 +761,7 @@ class Comets:
             tail = 0.55 * near + 2.2 * (1.0 - near)
             if BRAID_T0 - 0.2 < t:
                 tail = 0.45
-            w = 0.30 * near + 3.2 * (1.0 - near)
+            w = 0.30 * near + 2.2 * (1.0 - near)
             if t > BRAID_T0:
                 w = 0.30 + 0.25 * _sc(BRAID_T0, SEC[7], t)
             day = 1.0 if t >= SEC[7] else 0.0
@@ -769,10 +769,14 @@ class Comets:
                 tail = 0.9 * (1.0 - _sc(ARCH_LAND[k] - 0.6, ARCH_LAND[k] + 0.3, t)) + 0.02
                 w = 1.1
             n = 40
-            ts = np.linspace(max(t - tail, SEC[0]), t, n)
+            ts = np.linspace(max(t - tail, cut), t, n)
             if ts[-1] - ts[0] < 1e-3:
                 continue
             pts = np.array([HEADS[k](float(x)) for x in ts])
+            if eye is not None:                         # a head right at the lens would fill the picture
+                a = a * _sc(1.2, 4.5, float(np.linalg.norm(pts[-1] - eye)))
+                if a <= 0.0:
+                    continue
             age = (t - ts) / tail                       # 0 at the head, 1 at the far end
             kk = 1.0 - age
             c = lin(COL[k])
@@ -853,16 +857,20 @@ class Seed:
 class Hoops:
     """The gate: the blue comet's trail stays standing as half hoops over the water (birth times on a static
     set: each point lights as the comet passes it)."""
-    static = True
+
+    def __init__(self):
+        n = 9000
+        self.ts = TUNNEL_T0 + np.linspace(0.0, HOOPS * HOOP_GAP / TUNNEL_V, n)
+        rng = np.random.default_rng(12)
+        self.pos = np.array([_tunnel(float(x)) for x in self.ts]) + rng.normal(size=(n, 3)) * 0.05
+        self.size = 0.07 + 0.05 * rng.random(n)
+        self.seed = rng.random(n)
 
     def sample(self, t):
-        n = 9000
-        ts = TUNNEL_T0 + np.linspace(0.0, HOOPS * HOOP_GAP / TUNNEL_V, n)
-        pos = np.array([_tunnel(float(x)) for x in ts])
-        rng = np.random.default_rng(12)
-        jit = rng.normal(size=(n, 3)) * 0.05
-        return dict(pos=pos + jit, size=0.07 + 0.05 * rng.random(n), color=deepen(COL[CONC], 1.2), alpha=0.85,
-                    birth=ts, fade=0.25, flash=5.0, twinkle=0.5, seed=rng.random(n), kind="spark", emit=1.8)
+        if t < TUNNEL_T0 - 0.1 or t > 14.6:
+            return None
+        return dict(pos=self.pos, size=self.size, color=deepen(COL[CONC], 1.2), alpha=0.85, birth=self.ts,
+                    fade=0.25, flash=5.0, twinkle=0.5, seed=self.seed, kind="spark", emit=1.8)
 
     def gain(self, t):
         return float(_sc(TUNNEL_T0 - 0.1, TUNNEL_T0, t) * (1.0 - _sc(13.6, 14.6, t)))
@@ -916,13 +924,13 @@ class Flares:
 
 def _setup(scene):
     scene.add("seed", Seed())
-    scene.add("hoops", Hoops())
-    scene.add("lanterns", Lanterns())
+    scene.add("hoops", PW.KeepClear(Hoops(), WORDS))
+    scene.add("lanterns", PW.KeepClear(Lanterns(), WORDS))
     b = _bodies()
     for name, body in b.items():
         body.add(scene, name)
     scene.add("flares", Flares())
-    scene.add("comets", Comets())
+    scene.add("comets", PW.KeepClear(Comets(), WORDS))
     WORDS.add_to(scene)
     WORDS.check(CAMERA)
 
@@ -947,9 +955,10 @@ def _light_col(which):
 def _light_str(which):
     def f(t):
         night = 1.0 - _sc(SEC[7] - 0.05, SEC[7], t)
+        calm = 1.0 - 0.6 * _sc(SEC[2] - 0.3, SEC[2] + 0.3, t) * (1.0 - _sc(SEC[3] - 0.1, SEC[3], t))
         if which == 0:
-            return 0.8 * _sc(0.3, 1.2, t) * night
-        return (0.6 if _second_of(t) is not None else 0.0) * night
+            return 0.6 * _sc(0.3, 1.2, t) * night * calm
+        return (0.45 if _second_of(t) is not None else 0.0) * night * calm
     return f
 
 
@@ -973,8 +982,8 @@ WORLD = dict(
           (SEC[4], "drop", 0.0), (SEC[5], "ember", 0.0), (SEC[6], "prayer", 0.0), (SEC[7], "morning", 0.0)],
     light=dict(pos=SEED, color="#fff1d8", strength=Track([(0.0, 1.6), (SEC[0], 1.9), (0.9, 0.5), (1.8, 0.0),
                                                            (TOTAL, 0.0)]), size=0.5, rays=1.0),
-    lights=[dict(pos=_light_pos(0), color=_light_col(0), strength=_light_str(0), radius=4.0),
-            dict(pos=_light_pos(1), color=_light_col(1), strength=_light_str(1), radius=3.5)],
+    lights=[dict(pos=_light_pos(0), color=_light_col(0), strength=_light_str(0), radius=2.8),
+            dict(pos=_light_pos(1), color=_light_col(1), strength=_light_str(1), radius=2.4)],
     lantern_field=dict(count=260, center=(E5[0], E5[2] - 10.0), radius=(10.0, 70.0)),
     lanterns=Track([(0.0, 0.0), (30.2, 0.0), (31.5, 1.0), (SEC[6] - 0.3, 1.0), (SEC[6], 0.0), (TOTAL, 0.0)]),
     lantern_color=COL[GRAT],
@@ -987,11 +996,11 @@ P3D = dict(
     world=WORDS.world(WORLD),
     setup=_setup,
     bursts=[dict(t=SEC[0], strength=3.5, rise=0.12, fall=0.5, color="#fff4e0", at=tuple(SEED)),
-            dict(t=SEC[3], strength=3.0, rise=0.10, fall=0.45, color=COL[COMP]),
-            dict(t=SEC[4], strength=3.0, rise=0.10, fall=0.45, color=COL[CONS]),
-            dict(t=SEC[5], strength=3.0, rise=0.10, fall=0.45, color=COL[RESP]),
-            dict(t=SEC[6], strength=1.6, rise=0.15, fall=0.6, color=COL[ENC]),
-            dict(t=SEC[7], strength=7.0, rise=1.1, fall=1.0, color="#fffaf0")],
+            dict(t=SEC[3], strength=1.8, rise=0.08, fall=0.28, color=COL[COMP]),
+            dict(t=SEC[4], strength=1.8, rise=0.08, fall=0.28, color=COL[CONS]),
+            dict(t=SEC[5], strength=1.8, rise=0.08, fall=0.28, color=COL[RESP]),
+            dict(t=SEC[6], strength=1.2, rise=0.12, fall=0.4, color=COL[ENC]),
+            dict(t=SEC[7], strength=3.2, rise=0.55, fall=0.32, color="#fffaf0")],
     motion_blur=0.4,
 )
 
