@@ -43,6 +43,7 @@ EXPRESSIONS = [
     dict(label="Compliment", lines=["“You’re amazing.", "You’re doing great!”"], color="#BE9CEB"),
 ]
 LABELS = [e["label"] for e in EXPRESSIONS]
+COLORS = {e["label"]: e["color"] for e in EXPRESSIONS}      # each expression's campaign colour (display hex)
 
 # the way each expression arrives and leaves when a song does not choose (matched to what it means)
 DEFAULT_STYLE = {
@@ -1135,11 +1136,11 @@ class Word:
             ea, eb = self.edges[:, 0], self.edges[:, 1]
             oe = 0.5 * (self.ord[ea] + self.ord[eb])
             grow = _ss(0.0, 0.07, a - (0.30 + 0.30 * oe))
-            al = grow * (1.0 - float(_ss(0.86, 1.0, a))) * 0.9
+            al = grow * (1.0 - float(_ss(0.86, 1.0, a))) * 0.6
             vis = al > 0.01
             if vis.any():
                 pa, pb = pc[ea[vis]], pc[eb[vis]]
-                P["extra"].append(dict(pos=pa, pos2=pa + (pb - pa) * grow[vis][:, None], size=0.003 * w,
+                P["extra"].append(dict(pos=pa, pos2=pa + (pb - pa) * grow[vis][:, None], size=0.002 * w,
                                        color=_mix(lin(WARM), self.c_glow, 0.5), alpha=al[vis], kind="line"))
 
     def _arr_touch(self, P, a, t, cam, F, tg):

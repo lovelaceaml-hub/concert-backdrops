@@ -798,7 +798,7 @@ P3D = dict(camera=CAMERA, world=WORDS.world(dict(look="night", ...)), setup=buil
 | `color`, `glow` | the expression's colour | display hex of the letters' colour and of the halo; `tint` (0.45): how much of the colour the letters keep (the rest is warm white, which reads best) |
 | `bright`, `halo`, `sparkle` | 1.0 | brightness of the letters, of the coloured halo round them, of the glints on them |
 | `sharp` | 1.0 | how far the settled letters ignore the lens blur: 1 keeps a word sharp for its whole reading moment whatever the camera focuses on; 0 leaves it to the lens. Flying particles always blur with the lens |
-| `fog` | 0.25 | how much of the world's haze the settled letters take (flying particles take all of it) |
+| `fog` | 0.0 | how much of the world's haze the settled letters take (flying particles take all of it) |
 | `n`, `n_label` | 42000, 6000 | points of the phrase and of the label |
 | `label_size` | 0.36 | size of the label in em of the phrase |
 | `font` | the expressions' italic | `"title"` (the end card's upright bold), `"tag"` (the lighter italic) or a font file |
@@ -847,3 +847,53 @@ P3D = dict(camera=CAMERA, world=WORDS.world(dict(look="night", ...)), setup=buil
 **Focus, shafts, rays.** `WORDS.focus_point(t, default)` gives a world point that travels to the word being read and back to `default` (a point or a function of t): give it to a camera move as `focus=lambda t: WORDS.focus_point(t, (0, 6, 10))` and the lens racks to each word as it is read while the other depths go soft. `WORDS.world(dict(...))` returns the song's world settings with the words' own light added: a real shaft of light (section V, `shafts`) for every word that arrives by `shaft` (gentle on purpose: it also stands behind whatever is read below it), and the world's `light` with rays for the word that arrives by `rays`. `word.shaft(color, strength)` and `word.light(color, strength, size)` give the two entries one at a time.
 
 **Cost.** Sampling one word takes 4 to 16 ms a frame in numpy; a word outside its four times costs nothing. Each word is about 50 thousand points while it is read; a draft draws every second one.
+
+### X2. The directors' kit (added for the ten films, 2026-11-15)
+
+Working example: `engine/songs/demo_p3d_words_kit.py` (every item below in 30 seconds; it needs only one expression at a time, so it calls the check with `need_all=False`). All of it is optional: the keys of section X work as before.
+
+**Home places.** `word.home()` gives every point's fixed place in the word, label included, as arrays in an order that never changes: `x, y, z` (metres on the word's plane from the centre of the phrase block), `line` (-1 for the label), `word`, `glyph`, `order` (0..1 along the writing of the phrase; for label points along the label), `write` (0..1 along the writing of everything, the label first), `label`, `weight`, `size`; and per glyph `chars`, `glyph_line`, `glyph_word`. `word.targets(t, cam)` gives the same points in the world at t, `word.frame(t, cam)` the plane (centre, right, up, normal). To drive the points yourself give the word `drive=f`: `f(t, info)` gets `info = dict(state, pos, home, frame, cam, word)` (state is "arrive", "read" or "leave"; pos is where the built-in effect puts the points, home their settled places) and returns a dict with any of `pos` (replaces), `alpha` and `emit` (multiply), `assist` (0 flying and blurred by the lens, 1 settled and sharp), `color`.
+
+**A sharp reading mode** is the default: settled letters ignore the lens (`sharp=1.0`), the haze (`fog=0.0`) and the motion blur, at any physical size (every effect scales with the word's width). The letters are a lattice of `n` points; the softness of their edge is about one lattice step, which is 1 pixel when an em is 85 px at the default `n=42000`. For a word that fills the picture raise `n` in proportion to the square of its size on screen (an em of 250 px: about `n=300000`). Keep small words more than 0.4 m from the lens: the renderer fades points nearer than that.
+
+**Anchors.**
+
+| Wanted | Setting |
+|---|---|
+| fixed in space | `pos=(x, y, z)`, `facing=` degrees |
+| facing the camera | `face="camera"` (turns about the vertical) or `face="screen"` (flat to the picture) |
+| ride ahead of the camera | `ride=(x, y, depth)`: the word keeps that place of the picture (0..1 from the left and the bottom) `depth` metres ahead of the lens, through any camera move; it lies flat to the picture unless `face=` says otherwise. May be a function of t. Needs the camera: `PW.Words(specs, camera=CAMERA)` |
+| beside a runner | `pos=lambda t: runner_place(t) + offset` (any function of t; with helper BODY, `actor.joint(t, "head")`) |
+| tilting, turning, rolling over time | `tilt=`, `facing=`, `roll=`: numbers or functions of t |
+| lying flat on the lake, read from above | `face="flat"` with `pos=(x, 0.03, z)`; `facing` turns it (0: read from the +z side). No mirror image is drawn |
+| bound to a surface that moves | `bind=f`: `f(x, y, t)` takes arrays of places on the word's plane (metres) and returns their places in the world (N, 3): a veil's fold, the face of a wave. Every arrival and leaving follows the surface |
+
+**More arrivals.**
+
+| `arrive=` | What happens | Options |
+|---|---|---|
+| `pen` | written in order by a pen: the ink leaves the nib and runs to its place. `word.pen(t)` is the nib's place in the world, for a comet head or a fingertip to be put there | `nib=False` hides the word's own nib; `flow` (0.06) |
+| `pen` with `source=f` | someone else moves the pen (`f(t)` gives its place: a comet, a fingertip): each letter is written at the moment the pen passes nearest to it, wherever it flies | |
+| `reveal` | revealed behind a moving edge that glows | `edge=` "right", "left", "up", "down" (a lowering height), "out", "in"; or `gate=f`: `f(places (N, 3), t)` gives 0..1 for an edge of your own (a crest, a hem); `soft`, `edge_glow` |
+| `stitch` | a needle runs along the writing, short stitches show under the letters, the letters are pulled tight behind it | |
+| `weave` | threads run across and down; a letter shows where both have passed | `rows` (14), `cols` (34) |
+| `morph` with `carry=` | born from someone else's point field (`source=` any point set): its points fly in as "petal", "bird", "flake" or "soft" lights and land as letters; each lights its part of the word. Hanging rain, drifting petals, a flock landing | `carry_colors`, `petal_size`, `bird_size`, `flake_size` |
+
+**More leavings.**
+
+| `leave=` | What happens | Options |
+|---|---|---|
+| `stream` | one stream to a point that may move (`to=` a point or a function of t), or along a curve | `path=` points (K, 3) or a function of t that gives them; `star=True` lights a star at the goal |
+| `doors` | the word parts like a pair of doors that swing open on their outer edges | `split` (0.5), `swing` (100 degrees), `inward=False` opens toward the reader |
+| `unravel` | the end of the writing is pulled away as a thread and everything before it runs after it | `to=` where the thread is pulled to |
+
+**Window words, ink and paint** (through the mask pass of section V; `Words.add_to` sets the mask up and adds the word's glints as a second set named "word <name> light"):
+
+- `window="stars"` (or "clouds", "sunrise", "day"): the letters are a window onto that sky. `window_edge`, `window_tint`.
+- `ink=True`: dark letters for bright skies (the renderer's dark tint: a blue grey on a day sky).
+- `paint=True` (or a hex colour): the word's own colour on a bright sky: a dark base with the missing light added. `paint_base` is the dark base's colour (default: the day look's), `mask_light` the share of light.
+- The mask picture has half the size of the frame and blurs every edge by about 3 px, and it knows one sky and one tint a frame: use these three for large words (an em of 110 px or more) and one window sky at a time. `mask_weight` thickens or thins the letters.
+
+**Colour.** `PW.EXPRESSIONS[i]["color"]` is each expression's campaign colour (DESIGN-SYSTEM section 5); a word takes it by itself. `tint=1.0` makes the letters fully that colour (the default 0.45 keeps them warm white with a coloured halo, which reads best).
+
+**Keep clear.** Other layers can ask what to stay out of: `word.keep_clear(t, cam)` gives (strength 0..1, the box's four corners in the world, the plane's normal) for a word in its reading moment; `WORDS.keep_clear(t)` lists all such boxes; `WORDS.clear(points, t, cam)` gives, for any world points, how much of each may show (1 everywhere, down to 0.12 in front of and behind a word being read). `PW.KeepClear(pointset, WORDS)` wraps any point set so that it does this by itself: `scene.add("petals", PW.KeepClear(petals, WORDS))`. The words' own flying particles, birds, petals, threads, shafts and rays already keep clear of every other word that is being read (`avoid=False` on a word switches that off).
