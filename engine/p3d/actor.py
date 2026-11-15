@@ -52,7 +52,13 @@ class Actor:
         self._at = at
         self.origin = self._place(self._origin_raw(0.0) if not callable(at) else at(0.0))
         self.seed = float(seed)
-        self.keys = _keys(motion)
+        self.keys = []
+        for ts, name, p in _keys(motion):
+            if name in mo.ALIASES:
+                name, ph = mo.ALIASES[name]
+                p = dict(p)
+                p.setdefault("phase", ph)
+            self.keys.append((ts, name, p))
         for _, name, _p in self.keys:
             if name not in mo.MOTIONS:
                 raise ValueError("motion must be one of %s, got %r" % (mo.MOTIONS, name))
@@ -187,10 +193,47 @@ class Actor:
             P = pose if P is None else mo.blend(P, pose, w[i] / max(w[:i + 1].sum(), 1e-9))
         return P
 
-    def frame(self, t):
+    def _clip_times(self, t):
+        """(weight, clip, clip time) of every motion capture key that takes part at t."""
+        w = self._weights(t)
+        out = []
+        d_now = None
+        for i, (ts, name, p) in enumerate(self.keys):
+            if w[i] <= 1e-6 or name not in self.mo.clips:
+                continue
+            c = self.mo.clips[name]
+            if c.loop:
+                if d_now is None:
+                    d_now = self.travel(t)[0]
+                d0 = self.travel(max(ts, self.t_ref))[0]
+                ct = ((d_now - d0) / max(c.stride, 1e-6) + p.get("phase", 0.0)) * c.T
+            else:
+                ct = max(t - max(ts, self.t_ref), 0.0) * p.get("rate", 1.0) + p.get("phase", 0.0) * c.T
+            out.append((float(w[i]), c, ct))
+        return out
+
+    def contact(self, t):
+        """(2,) how planted the left and the right foot are at t (from the motion capture; 0 for posed motions)."""
+        c = np.zeros(2)
+        for w, clip, ct in self._clip_times(t):
+            c += w * clip.sample(ct)[3]
+        return c
+
+    def _stance_start(self, t, s):
+        """When the stance of foot s (0 left, 1 right) that holds at t began (searching back at most 1.5 s)."""
+        step = 1.0 / 60.0
+        tt = t
+        for _ in range(90):
+            if self.contact(tt - step)[s] < 0.5:
+                return tt
+            tt -= step
+        return tt
+
+    def frame(self, t, lock=True):
         """The posed skeleton at t: dict(M bone matrices (world), P joint positions, D, A rotations, origin,
-        heading (radians), speed)."""
-        key = round(float(t), 6)
+        heading (radians), speed). Feet that the motion plants stay where they were set down (lock=False:
+        the motion as captured, for the lock's own reference)."""
+        key = (round(float(t), 6), bool(lock))
         if key in self._cache:
             return self._cache[key]
         rig = self.rig
@@ -222,18 +265,56 @@ class Actor:
         root = origin + bm.qrot(qh, rig.neutral_pos[0] + P.pos)
         D, Pj, A = rig.fk(P.q, root, bm.qmul(qh, P.rot))
         M = rig.matrices(D, Pj)
-        if P.ground > 0.0:
-            lift = (origin[1] - rig.lowest(M)) * P.ground
+        lift = (origin[1] - rig.lowest(M)) * P.ground if P.ground > 0.0 else 0.0
+        if lock and P.contact is not None and self.hand is None and float(np.max(P.contact)) > 0.01:
+            if self._lock_feet(t, P, Pj, A, origin, qh, hd, lift):
+                D, Pj, A = rig.fk(P.q, root, bm.qmul(qh, P.rot))
+                M = rig.matrices(D, Pj)
+        if lift:
             Pj = Pj + np.array([0.0, lift, 0.0])
             M = M.copy()
             M[:, 1, 3] += lift
         out = dict(M=M, P=Pj, D=D, A=A, origin=origin, heading=hd, speed=speed)
         if self.hand is not None:
             out = self._place_hand(out, t)
-        if len(self._cache) > 48:
+        if len(self._cache) > 64:
             self._cache.pop(next(iter(self._cache)))
         self._cache[key] = out
         return out
+
+    def _lock_feet(self, t, P, Pj, A, origin, qh, hd, lift):
+        """Keeps each planted foot where it was set down: the ankle stays at its place in the world from the
+        start of its stance (turning with the body only by the turn of the body since then) and the leg bends
+        to reach it. Changes P; returns True when it did."""
+        rig = self.rig
+        i = rig.idx
+        done = False
+        iq = bm.qconj(qh)
+        for s, sd in enumerate(("L", "R")):
+            c = float(bm.smooth(P.contact[s] * 1.25))
+            if c < 0.01:
+                continue
+            t0 = self._stance_start(t, s)
+            t_set = min(t, t0 + 0.05)
+            if t - t_set < 1.0 / 240.0:
+                continue
+            f0 = self.frame(t_set, lock=False)
+            W = f0["P"][i["foot." + sd]]
+            # the place in this frame's own body space (before the frame is lifted onto the ground)
+            here = bm.qrot(iq, W - origin - np.array([0.0, lift, 0.0]))
+            ank_now = bm.qrot(iq, Pj[i["foot." + sd]] - origin)
+            target = ank_now * (1.0 - c) + here * c
+            hip = bm.qrot(iq, Pj[i["upperleg01." + sd]] - origin)
+            knee = bm.qrot(iq, Pj[i["lowerleg01." + sd]] - origin)
+            pole = knee - 0.5 * (hip + ank_now)
+            # the foot keeps its own roll from heel to toe, and its heading from when it was set down
+            fq = bm.qmul(iq, A[i["foot." + sd]])
+            turn = (f0["heading"] - hd + np.pi) % (2 * np.pi) - np.pi
+            fq = bm.qmul(bm.qy(turn * c), fq)
+            # leg_to works in the space of local_fk: undo the body's own rotation about its root (P.rot)
+            self.mo.leg_to(P, sd, target, knee=pole if np.linalg.norm(pole) > 1e-4 else None, foot=fq)
+            done = True
+        return done
 
     def _hand_pose(self, P, t):
         """Shapes the placed hand: hand["pose"] is a pose name, a dict, or keys [(t, pose), ...] eased between."""
