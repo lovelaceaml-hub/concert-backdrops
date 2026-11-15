@@ -10,9 +10,9 @@ in, its clear pose is reached about a second later and held to the next cut.
 import songs.s03_original as _base
 
 ACT = 0.35
-GOLD = dict(look="glitter", color="#f6c46e", color2="#fff0cc")
+GOLD = dict(look="glitter", color="#e9a443", color2="#ffd788", bright=0.9)
 CRYSTAL = dict(look=dict(name="glitter", glints=0.004), color="#e4f2ff", color2="#fff4fa")
-HAND = dict(points=95000, detail=dict(hand=4.0, head=2.0))
+HAND = dict(points=85000, detail=dict(hand=2.6, head=1.8))
 HALF = dict(points=85000, detail=dict(hand=2.5, head=1.5))
 # label, variant, seconds, framing, camera, keys
 #   camera for "far", "full", "half": (distance, height, look-at height, look-at depth, fov, side offset)
@@ -20,15 +20,15 @@ HALF = dict(points=85000, detail=dict(hand=2.5, head=1.5))
 #                        how far above them to aim)
 #   keys: style (both), style_a, style_b, crowd, shaft (a shaft of light falling on the stage)
 ORDER = [
-    ("Inclusiveness", "embrace", 4.4, "half", (2.15, 1.48, 1.32, 0.0, 34, 0.5),
+    ("Inclusiveness", "embrace", 4.4, "half", (2.0, 1.5, 1.3, 0.0, 36, 1.15),
      dict(style=HALF, style_b=CRYSTAL)),
     ("Consideration", "help_up", 4.6, "full", (3.0, 1.05, 0.85, 0.0, 38, -0.45), dict(style=HALF)),
     ("Encouragement", "pray", 4.4, "close", (((0, "palm.L"), (0, "palm.R")), 2.0, (0.62, 0.30, 1.22), 34, 0.22),
      dict(style=HAND, shaft=True)),
     ("Encouragement", "shoulder", 4.0, "half", (2.2, 1.30, 0.95, -0.05, 34, -0.35), dict(style=HALF)),
-    ("Gratitude", "heart", 4.0, "half", (1.7, 1.42, 1.25, 0.0, 34, 0.3), dict(style=HALF)),
-    ("Gratitude", "clasp", 4.0, "close", (((0, "palm.L"), (0, "palm.R"), (1, "palm.R")), 1.7, (0.24, 0.16, 0.85), 32,
-                                          0.06), dict(style=HAND, style_b=CRYSTAL)),
+    ("Gratitude", "heart", 4.0, "half", (1.75, 1.42, 1.2, 0.0, 36, 1.2), dict(style=HALF)),
+    ("Gratitude", "clasp", 4.0, "close", (((0, "palm.L"), (0, "palm.R"), (1, "palm.R")), 1.7, (0.30, 0.38, 1.45), 32,
+                                          0.18), dict(style=HAND, style_b=CRYSTAL)),
     ("Compliment", "clap", 3.6, "close", (((0, "palm.L"), (0, "palm.R")), 1.5, (-0.42, 0.16, 0.78), 34, 0.12),
      dict(style=HAND)),
     ("Consideration", "lift_child", 4.6, "full", (3.2, 1.25, 0.95, 0.0, 38, 0.4), dict(style=HALF)),
@@ -152,7 +152,7 @@ def _shaft_on(t):
 P3D = dict(
     camera=Rig([camera_move(k) for k in range(_N)], blend=0.0),
     world=dict(look="sunrise", clouds=0.6, rays=0.8, dust=0.9, dust_color="#ffe0a0", dust_color2="#ffc8a8",
-               lanterns=0.35, floats=0.45, stars=0.0, exposure=1.0,
+               lanterns=0.35, floats=0.45, stars=0.0, exposure=0.92, ripple=0.22,
                shafts=[dict(base=_shaft_base, radius=0.8, top=26.0, spread=0.18, color="#ffd89a",
                             strength=_shaft_on)]),
     setup=_setup,
