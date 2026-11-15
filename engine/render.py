@@ -136,6 +136,8 @@ class Renderer:
         ctx.enable(moderngl.PROGRAM_POINT_SIZE)
         import upgrade
         self.up = upgrade.Upgrade(self)   # scenes, people of light, effect layers, fragment styles (all optional)
+        import sky_camera
+        self.sky = sky_camera.SkyCamera(self)   # time of day, 3D clouds, god rays, camera (all optional)
 
     # ------------------------------------------------------------------
     def text_plan(self, t):
@@ -171,6 +173,7 @@ class Renderer:
     def frame(self, t, index=0):
         ctx, w, h, px = self.ctx, self.w, self.h, self.px
         P = S.params(self.song, t)
+        self.sky.adjust(t, P)
         asp = S.ASPECT
         L = S.lin
         cool = S.MILKY(t)
@@ -193,6 +196,7 @@ class Renderer:
              uSunInt=P["sun_int"], uSunSize=P["sun_size"], uClouds=P["clouds"], uAurora=P["aurora"],
              uRain=P["rain"], uMilky=P["milky"], uEnv=P["env"], uRays=P["rays"], uPart=P["part"])
         self.v_sky.render(moderngl.TRIANGLE_STRIP)
+        self.sky.draw_clouds(t, P)
 
         # 2. everything that glows
         self.f_L.use()
@@ -218,6 +222,7 @@ class Renderer:
             self.v_petal.render(moderngl.POINTS)
         self.up.draw_effects(t, P)
         self.up.draw_figures(t)
+        self.sky.draw_light(t, P)
 
         # which text is on screen: A is an expression or the closing title, B the end card lines or a fragment
         (texA, txA, bndA, shadeA, offA), (texB, txB, bndB, shadeB, offB) = self.text_plan(t)
@@ -321,6 +326,7 @@ class Renderer:
             src = tb
 
         # 4. put it together
+        self.sky.camera_bg(t, P)
         self.f_out.use()
         self.t_sky.use(location=0); self.t_L.use(location=1)
         for k in range(4):

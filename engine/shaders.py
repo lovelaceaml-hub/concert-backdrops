@@ -421,6 +421,7 @@ uniform vec4 uIce; uniform vec3 uIceCol, uThawCol;
 uniform vec4 uField; uniform vec3 uFieldCol;
 uniform float uShadeK;
 uniform float uCalm, uCalmY;   // calm lower third: rings, glitter, reflections and thaw edges fade there
+uniform float uCamOn; uniform sampler2D uCamBg;   // CAMERA (engine/sky_camera.py): the background with parallax
 float calmK(float y){ return 1.0-uCalm*(1.0-smoothstep(uCalmY-0.07, uCalmY+0.05, y)); }
 vec2 hash22(vec2 p){ vec3 p3 = fract(vec3(p.xyx)*vec3(0.1031,0.1030,0.0973));
   p3 += dot(p3, p3.yzx+33.33); return fract((p3.xx+p3.yz)*p3.zy); }
@@ -518,6 +519,7 @@ float textField(vec2 q){
   return smoothstep(0.0, 0.6, max(m, creditField(q)));
 }
 vec3 procedural(vec2 sv){
+  if(uCamOn>0.5) return texture(uCamBg, sv).rgb;   // CAMERA: drawn by engine/sky_camera.py
   vec2 uv = vec2((sv.x-0.5)*uZoom+0.5, (sv.y-uHorizon)*uZoom+uHorizon);
   vec3 col;
   vec3 hz = texture(uSky, vec2(uv.x, uHorizon+0.012)).rgb;
