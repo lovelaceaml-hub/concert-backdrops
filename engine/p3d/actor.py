@@ -32,6 +32,48 @@ from . import motion as mo
 
 GRID = 1.0 / 60.0
 
+# How each gesture is acted: (seconds in, seconds out, anticipation, overshoot). Anticipation is a small move the
+# other way before the gesture (an arm dips before it rises, the head lifts before a bow); overshoot carries a
+# little past the pose and settles back. A gesture's own ease=... sets both times; every body varies them a
+# little (its seed), so no two people move in lockstep.
+TIMING = dict(
+    wave=(0.45, 0.5, 0.05, 0.08), clap=(0.35, 0.4, 0.0, 0.04), raise_=(0.9, 0.9, 0.08, 0.06),
+    open_arms=(1.0, 1.0, 0.07, 0.05), pray=(1.25, 1.0, 0.03, 0.02), bow=(1.0, 0.9, 0.06, 0.05),
+    embrace=(0.95, 1.0, 0.04, 0.05), look_up=(1.1, 1.0, 0.05, 0.03), reach=(0.8, 0.8, 0.06, 0.05),
+    touch=(0.7, 0.7, 0.05, 0.04), hand_on_shoulder=(0.75, 0.8, 0.04, 0.03), handshake=(0.6, 0.6, 0.05, 0.05),
+    high_five=(0.45, 0.5, 0.1, 0.08), arm_round=(0.8, 0.8, 0.03, 0.04), cup=(1.0, 0.9, 0.03, 0.03),
+    offer=(0.9, 0.8, 0.04, 0.04), listen=(1.1, 1.0, 0.0, 0.03), raise_hand=(0.7, 0.8, 0.08, 0.06),
+    throw=(0.3, 0.6, 0.0, 0.0), blow=(1.0, 0.9, 0.03, 0.03), brace=(0.5, 0.8, 0.0, 0.04), hold_thread=(0.9, 0.9, 0.0, 0.02),
+    hand_on_heart=(1.0, 0.9, 0.04, 0.03), nod=(0.6, 0.6, 0.0, 0.0), after_you=(0.85, 0.9, 0.07, 0.06),
+    clasp=(0.8, 0.8, 0.04, 0.04), open_hands=(1.1, 1.0, 0.03, 0.02), explain=(0.6, 0.6, 0.0, 0.03),
+    cheer=(0.55, 0.7, 0.12, 0.08), lean_in=(1.0, 1.0, 0.0, 0.03))
+DEFAULT_TIMING = (1.0, 1.0, 0.05, 0.04)
+LEAD, LAG = 0.08, 0.10        # the trunk moves first, the forearm and hand follow (overlapping action)
+
+
+def act_curve(t, t0, t1, e_in, e_out, antic=0.05, over=0.04):
+    """The weight of an acted gesture at t: a small move the other way, the gesture with a little overshoot that
+    settles, a hold, and a release that drifts a touch past rest before it settles."""
+    if t <= t0 or t >= t1:
+        return 0.0
+    u = (t - t0) / max(e_in, 1e-3)
+    if u >= 1.0:
+        w_in = 1.0
+    elif u < 0.2:
+        w_in = -antic * np.sin(np.pi * u / 0.2) ** 2
+    else:
+        v = (u - 0.2) / 0.8
+        w_in = float(bm.smoother(v / 0.8)) + over * np.sin(np.pi * float(np.clip((v - 0.6) / 0.4, 0.0, 1.0))) ** 2
+    v = (t - (t1 - e_out)) / max(e_out, 1e-3)
+    if v <= 0.0:
+        w_out = 1.0
+    else:
+        w_out = 1.0 - float(bm.smoother(v / 0.85)) - 0.03 * np.sin(np.pi * float(np.clip((v - 0.85) / 0.15, 0.0, 1.0))) ** 2
+    return float(w_in * w_out)
+
+
+CORE = ("spine05", "spine04", "spine03", "spine02", "spine01", "neck01", "neck02", "neck03", "head")
+
 
 def _keys(v, default_name=None):
     if isinstance(v, str):
@@ -46,7 +88,7 @@ def _keys(v, default_name=None):
 
 class Actor:
     def __init__(self, shape="woman", height=None, at=(0.0, 0.0), facing=0.0, motion="stand", gesture=(),
-                 seed=1.0, rig=None, start=None, stoop=0.0, hand=None):
+                 seed=1.0, rig=None, start=None, stoop=0.0, hand=None, life=True):
         self.rig = rig or assets.Rig(shape, height)
         self.mo = mo.Motions(self.rig, assets.load())
         self._at = at
@@ -81,6 +123,7 @@ class Actor:
         self.stoop = float(stoop)          # an elder's posture, 0..1
         self.hand = dict(hand) if hand else None      # one hand placed exactly (see _place_hand)
         self.to_internal = None            # set by Body: world points -> this actor's own space
+        self.life = bool(life)             # living hands (see _live_hands)
 
     # ------------------------------------------------------------------ timeline
     def heading(self, t):
@@ -229,12 +272,14 @@ class Actor:
             tt -= step
         return tt
 
-    def frame(self, t, lock=True, gest=True):
+    def frame(self, t, lock=True, gest=True, life=True):
         """The posed skeleton at t: dict(M bone matrices (world), P joint positions, D, A rotations, origin,
         heading (radians), speed). Feet that the motion plants stay where they were set down (lock=False:
         the motion as captured, for the lock's own reference). gest=False leaves the gestures out: the
-        "raw" body another body's gestures may aim at without the two waiting on each other."""
-        key = (round(float(t), 6), bool(lock), bool(gest))
+        "raw" body another body's gestures may aim at without the two waiting on each other. life=False leaves
+        out the living hands (their own reference for how fast the hands move)."""
+        life = life and self.life
+        key = (round(float(t), 6), bool(lock), bool(gest), bool(life))
         if key in self._cache:
             return self._cache[key]
         rig = self.rig
@@ -248,21 +293,43 @@ class Actor:
         hd = np.radians(self.heading(t))
         qh = bm.qy(hd)
         active = []
-        for (t0, t1, name, p) in (self.gest if gest else ()):
-            e = p.get("ease", 1.2)
-            w = float(bm.ramp(t, t0, t0 + e) * (1.0 - bm.ramp(t, t1 - e, t1)))
-            if w > 1e-5:
-                active.append((w, t - t0, name, p))
+        for j, (t0, t1, name, p) in enumerate(self.gest if gest else ()):
+            if t <= t0 - 0.2 or t >= t1 + 0.2:
+                continue
+            e_in, e_out, antic, over = self._timing(j, name, p)
+            ws = [act_curve(t + d, t0, t1, e_in, e_out, antic, over) for d in (LEAD, 0.0, -LAG)]
+            if max(abs(x) for x in ws) > 1e-5:
+                active.append((ws, t - t0, name, p))
         if active:
             D, Pj, _ = self.mo.local_fk(P)
             g0 = -rig.lowest(rig.matrices(D, Pj)) * P.ground
-            for w, age, name, p in active:
-                kw = {k: v for k, v in p.items() if k != "ease"}
+            calls = []
+            for ws, age, name, p in active:
+                kw = {k: v for k, v in p.items() if k not in ("ease", "ease_in", "ease_out", "antic", "over")}
                 for key_to in ("to", "to2"):
                     if kw.get(key_to) is not None:
                         to = self._world(kw[key_to], t)
                         kw[key_to] = bm.qrot(bm.qconj(qh), to - origin) - np.array([0.0, g0, 0.0])
-                self.mo.gesture(name, P, w, t, age, **kw)
+                calls.append((ws, age, name, kw))
+            if all(abs(ws[0] - ws[1]) < 1e-4 and abs(ws[2] - ws[1]) < 1e-4 for ws, _a, _n, _k in calls):
+                for ws, age, name, kw in calls:
+                    self.mo.gesture(name, P, ws[1], t, age, **kw)
+            else:
+                # overlapping action: the trunk leads, the arm follows, the forearm and hand come last
+                parts = []
+                for k in range(3):
+                    Q = P.copy()
+                    for ws, age, name, kw in calls:
+                        self.mo.gesture(name, Q, ws[k], t, age, **kw)
+                    parts.append(Q)
+                P = parts[1]
+                core = self._core_bones()
+                P.q[core] = parts[0].q[core]
+                P.rot, P.pos = parts[0].rot, parts[0].pos
+                hand = self._hand_bones()
+                P.q[hand] = parts[2].q[hand]
+        if life:
+            self._live_hands(t, P, origin, qh)
         root = origin + bm.qrot(qh, rig.neutral_pos[0] + P.pos)
         D, Pj, A = rig.fk(P.q, root, bm.qmul(qh, P.rot))
         M = rig.matrices(D, Pj)
@@ -283,6 +350,95 @@ class Actor:
         self._cache[key] = out
         return out
 
+    def _timing(self, j, name, p):
+        e_in, e_out, antic, over = TIMING.get("raise_" if name == "raise" else name, DEFAULT_TIMING)
+        if "ease" in p:
+            e_in = e_out = float(p["ease"])
+        e_in = float(p.get("ease_in", e_in))
+        e_out = float(p.get("ease_out", e_out))
+        if "ease" not in p and "ease_in" not in p:
+            e_in *= 0.88 + 0.24 * float(bm.hashf(int(self.seed * 7919) + 31 * j, 3))
+        if "ease" not in p and "ease_out" not in p:
+            e_out *= 0.88 + 0.24 * float(bm.hashf(int(self.seed * 7919) + 31 * j, 4))
+        return e_in, e_out, float(p.get("antic", antic)), float(p.get("over", over))
+
+    def _core_bones(self):
+        if getattr(self, "_corecache", None) is None:
+            i = self.rig.idx
+            legs = [b for b in self.rig.names if b.startswith(("upperleg", "lowerleg", "foot", "toe", "pelvis"))]
+            self._corecache = np.array([i[b] for b in CORE] + [i[b] for b in legs])
+        return self._corecache
+
+    def _hand_bones(self):
+        if getattr(self, "_handcache", None) is None:
+            self._handcache = np.array([k for k, b in enumerate(self.rig.names)
+                                        if b.startswith(("lowerarm", "wrist", "finger", "metacarpal"))])
+        return self._handcache
+
+    def _live_hands(self, t, P, origin, qh):
+        """Hands that live: the fingers breathe (a slow curl that runs from the index to the little finger), the
+        hand trails behind the forearm when the arm swings (wrist lag), the fingers open and spread while a hand
+        travels and close as it arrives (a reach that takes hold). Every input is the body itself a moment
+        before (its frames without this layer), so it stays a pure function of time."""
+        rig = self.rig
+        mo = self.mo
+        i = rig.idx
+        d1, d2 = 2.0 / 30.0, 4.0 / 30.0
+        f1 = self.frame(t - d1, life=False)
+        f2 = self.frame(t - d2, life=False)
+        root = origin + bm.qrot(qh, rig.neutral_pos[0] + P.pos)
+        _D, Pj, A = rig.fk(P.q, root, bm.qmul(qh, P.rot))
+        sd = self.seed
+        for s, side in enumerate(("L", "R")):
+            sg = 1.0 if side == "L" else -1.0
+            w, fa = i["wrist." + side], i["lowerarm02." + side]
+            # how the hand moves (relative to the body's own place, so a walker's hands do not all trail)
+            o1, o2 = f1["origin"], f2["origin"]
+            p0 = Pj[w] - origin
+            p1 = f1["P"][w] - o1
+            p2 = f2["P"][w] - o2
+            v0 = (p0 - p1) / d1
+            v1 = (p1 - p2) / (d2 - d1)
+            sp = float(np.linalg.norm(v0))
+            dec = float(np.dot(v1 - v0, v0 / max(sp, 1e-6))) / d1 if sp > 0.05 else 0.0
+            # wrist lag: the hand keeps a little of where it pointed before the forearm turned
+            dq = bm.qmul(A[fa], bm.qconj(f1["A"][fa]))
+            dq = dq if dq[0] >= 0 else -dq
+            ang = 2.0 * np.arctan2(np.linalg.norm(dq[1:]), dq[0])
+            lag = None
+            if ang > 1e-4:
+                lag = bm.qaxis(dq[1:], -min(0.55 * ang, 0.42))
+            dr = np.cross(bm.qrot(A[fa], [0.0, -1.0, 0.0]), v0)
+            drag = None
+            if np.linalg.norm(dr) > 1e-4:
+                drag = bm.qaxis(dr, -min(0.16 * float(np.linalg.norm(dr)), 0.28))
+            H = A[w]
+            if lag is not None:
+                H = bm.qmul(lag, H)
+            if drag is not None:
+                H = bm.qmul(drag, H)
+            if lag is not None or drag is not None:
+                P.q[w] = bm.qmul(bm.qconj(A[rig.parent[w]]), H)
+            # fingers: breathe, open on the way, take hold on arrival
+            bones, axes, share, finger, first = mo._finger_table(side)
+            T = 3.4 + 1.3 * float(bm.hashf(int(sd * 977) + s, 9))
+            ph0 = float(bm.hashf(int(sd * 977) + s, 10)) * 6.283
+            breath = (0.62 * np.sin(2 * np.pi * t / T + ph0 - 0.38 * finger)
+                      + 0.38 * np.array([bm.wobble(t, sd + 0.17 * f + 3.1 * s, 0.53) for f in finger]))
+            amp = np.where(finger == 1, 2.6, 3.0 + 0.6 * (finger - 2))
+            opening = float(bm.smooth(sp / 1.1))
+            closing = float(bm.smooth(dec / 5.0))
+            curl = amp * breath - opening * np.where(finger == 1, 7.0, 11.0) + closing * np.where(finger == 1, 5.0, 9.0)
+            amt = curl * share * (np.pi / 180.0 * 0.5)
+            q = np.concatenate([np.cos(amt)[:, None], axes * np.sin(amt)[:, None]], axis=1)
+            spread = 4.5 * opening + 1.2 * float(bm.wobble(t, sd + 7.7 + s, 0.41))
+            m = first & (finger != 1)
+            if spread and m.any():
+                sq = bm.qaxis(np.broadcast_to(rig.palm_n[side], (int(m.sum()), 3)),
+                              sg * spread * (finger[m] - 3.5) * np.pi / 180.0)
+                q[m] = bm.qmul(sq, q[m])
+            P.q[bones] = bm.qmul(P.q[bones], q)
+
     def _lock_feet(self, t, P, Pj, A, origin, qh, hd, lift):
         """Keeps each planted foot where it was set down: the ankle stays at its place in the world from the
         start of its stance (turning with the body only by the turn of the body since then) and the leg bends
@@ -299,7 +455,7 @@ class Actor:
             t_set = min(t, t0 + 0.05)
             if t - t_set < 1.0 / 240.0:
                 continue
-            f0 = self.frame(t_set, lock=False)
+            f0 = self.frame(t_set, lock=False, life=False)
             W = f0["P"][i["foot." + sd]]
             # the place in this frame's own body space (before the frame is lifted onto the ground)
             here = bm.qrot(iq, W - origin - np.array([0.0, lift, 0.0]))

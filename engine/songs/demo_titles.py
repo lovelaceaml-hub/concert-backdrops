@@ -67,7 +67,7 @@ TITLES = dict(
     signature=dict(windows=[(4.6, 7.4, "br", "night" if LOOK != "day" else "day"),
                             (11.8, 14.0, "tl", "night" if LOOK != "day" else "day")]),
     date_light=dict(t_form=8.0, t_burst=11.4, y=0.30, palette="night" if LOOK != "day" else "day"),
-    end_card=dict(t_in=14.4),
-    # the campaign logo: until the BRAND helper's logo is in the repository, a local file can stand in
+    end_card=dict(t_in=14.4, backdrop="auto"),
+    # the campaign logo is BRAND's by default; TITLES_LOGO=<picture> puts another in for a test
     logo=os.environ.get("TITLES_LOGO") or None,
 )

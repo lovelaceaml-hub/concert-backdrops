@@ -26,6 +26,15 @@ GESTURES added here
   wave               a raised hand waving
   brace              braced against wind: a forearm before the face, leaning into it
   hold_thread        a hand held low before the body, thumb and index closed on a thread (place "pinch.R")
+  hand_on_heart      a hand laid flat on the heart (side), the head a little bowed (gratitude)
+  nod                the head nods slowly (period, amount): listening, agreeing
+  after_you          a step's worth of turn aside, an open palm sweeping toward a way (to: a point on the way, or
+                     side and a default way to that side), a small bow (concession)
+  clasp              both hands round a point before the body, palms in (to): clasping another's hand
+  open_hands         both hands open and low before the body, palms up, the head bowed (an apology)
+  explain            one hand turning and opening as someone speaks (side, period)
+  cheer              both arms thrown up high, hands open, the chest lifted
+  lean_in            the body leans toward a point (to) and the head turns to it: attentive
 
 MOTIONS added here
   sit       sitting on the ground, knees drawn up, bowed (dur: seconds to sit down)
@@ -57,7 +66,8 @@ HAND_POSES = dict(
 )
 
 MORE_GESTURES = ("touch", "hand_on_shoulder", "handshake", "high_five", "embrace", "arm_round", "cup", "offer",
-                 "listen", "raise_hand", "clap", "throw", "wave", "brace", "hold_thread")
+                 "listen", "raise_hand", "clap", "throw", "wave", "brace", "hold_thread", "hand_on_heart", "nod",
+                 "after_you", "clasp", "open_hands", "explain", "cheer", "lean_in")
 MORE_MOTIONS = ("sit", "shuffle", "rise", "held")
 
 _PALM = dict(down=(0.0, -1.0, 0.0), up=(0.0, 1.0, 0.15), fwd=(0.0, 0.0, 1.0), back=(0.0, 0.0, -1.0))
@@ -121,6 +131,31 @@ class Library:
             if end == "wrist":
                 break
             goal = goal + (tgt - self._hand_end(P, side, end))
+
+    def hand_to(self, P, side, palm_at, fingers, palm, w=1.0, pole=None):
+        """Places one hand exactly: the palm centre on `palm_at`, the fingers pointing along `fingers` and the
+        palm facing `palm` (all in the body frame). The arm bends to bring the wrist there and the wrist turns
+        the hand into place."""
+        rig = self.rig
+        i = self.i
+        wr, m3 = i["wrist." + side], i["finger3-1." + side]
+        N = rig.neutral_pos
+
+        def frame(f, n):
+            f = np.asarray(f, np.float64)
+            f = f / max(np.linalg.norm(f), 1e-9)
+            n = np.asarray(n, np.float64) - np.dot(n, f) * f
+            n = n / max(np.linalg.norm(n), 1e-9)
+            return np.stack([f, n, np.cross(f, n)], axis=1)
+        n_r = rig.palm_n[side]
+        F_r = frame(N[m3] - N[wr], n_r)
+        F_d = frame(fingers, palm)
+        q_h = bm.qfrommat(F_d @ F_r.T)
+        off = 0.4 * N[wr] + 0.6 * N[m3] + n_r * 0.012 * self.k - N[wr]
+        wrist_at = np.asarray(palm_at, np.float64) - bm.qrot(q_h, off)
+        self.arm_to(P, side, wrist_at, pole=pole, palm=np.asarray(palm, np.float64), w=w)
+        _, _, A = self.local_fk(P)
+        self._set(P, "wrist." + side, bm.qmul(bm.qconj(A[rig.parent[wr]]), q_h), w)
 
     def _palm_dir(self, P, side, palm):
         sg = 1.0 if side == "L" else -1.0
@@ -321,6 +356,106 @@ class Library:
             to = Pj[self.i["spine04"]] + bm.qrot(P.rot, np.array([sg * 0.17, 0.10, 0.30]) * self.k)
         self.g_touch(P, w, t, age, side=side, to=to, end="wrist", palm="in", fingers="pinch", look=False, wrist=-8.0,
                      lean=0.0)
+
+    def g_hand_on_heart(self, P, w, t, age=0.0, side="R", bow=10.0, **kw):
+        sg = 1.0 if side == "L" else -1.0
+        _, Pj, _ = self.local_fk(P)
+        k = self.k
+        heart = Pj[self.i["spine01"]] + bm.qrot(P.rot, np.array([0.045 * k * 1.0, -0.05 * k, 0.115 * k]))
+        self._lean(P, w, fwd=bow * 0.5)
+        self._head(P, w, up=-bow)
+        self.arm_reach(P, side, heart, end="palm", palm=bm.qrot(P.rot, [0.15 * sg, 0.0, -1.0]), w=w, wrist=-6.0,
+                       pole=bm.qrot(P.rot, [sg * 1.0, -0.9, 0.2]))
+        self.hand_pose(P, side, ("flat", "relaxed", 0.35), w=w)
+
+    def g_nod(self, P, w, t, age=0.0, period=1.6, amount=9.0, turn=0.0, **kw):
+        ph = np.sin(2 * np.pi * age / max(period, 0.2))
+        nod = amount * (0.35 + 0.65 * max(ph, 0.0) ** 1.5)
+        self._head(P, w, up=-nod, turn=turn)
+
+    def g_after_you(self, P, w, t, age=0.0, side="R", to=None, bow=12.0, **kw):
+        sg = 1.0 if side == "L" else -1.0
+        _, Pj, _ = self.local_fk(P)
+        S = Pj[self.i["upperarm01." + side]]
+        k = self.k
+        if to is None:
+            to = S + bm.qrot(P.rot, np.array([sg * 0.42, -0.30, 0.34]) * k)
+        to = np.asarray(to, np.float64)
+        d = to - S
+        L = sum(self.arm_len[side])
+        if np.linalg.norm(d) > L * 0.92:
+            to = S + d / np.linalg.norm(d) * L * 0.92
+        self._lean(P, w, fwd=bow * 0.6, twist=sg * 14.0)
+        self._head(P, w, up=-bow * 0.6, turn=sg * 20.0)
+        self.arm_reach(P, side, to, end="palm", palm=bm.qrot(P.rot, [sg * 0.2, 1.0, 0.25]), w=w, wrist=-4.0,
+                       pole=bm.qrot(P.rot, [sg * 0.6, -1.0, -0.4]))
+        self.hand_pose(P, side, "offer", w=w)
+
+    def g_clasp(self, P, w, t, age=0.0, to=None, **kw):
+        _, Pj, _ = self.local_fk(P)
+        k = self.k
+        if to is None:
+            to = Pj[self.i["spine02"]] + bm.qrot(P.rot, np.array([0.0, -0.08, 0.36]) * k)
+        to = np.asarray(to, np.float64)
+        self._lean(P, w, fwd=8.0)
+        self._head(P, w, up=-12.0)
+        for sd, sg in (("L", 1.0), ("R", -1.0)):
+            tg = to + bm.qrot(P.rot, np.array([sg * 0.028, 0.012 * sg, -0.01]) * k)
+            self.arm_reach(P, sd, tg, end="palm", palm=bm.qrot(P.rot, [-sg, 0.0, 0.0]), w=w, wrist=-12.0,
+                           pole=bm.qrot(P.rot, [sg * 0.9, -1.0, -0.1]))
+            self.hand_pose(P, sd, ("open", "hold", 0.7), w=w)
+
+    def g_open_hands(self, P, w, t, age=0.0, bow=22.0, **kw):
+        _, Pj, _ = self.local_fk(P)
+        c = Pj[self.i["spine04"]]
+        k = self.k
+        self._lean(P, w, fwd=bow * 0.35)
+        self._head(P, w, up=-bow)
+        for sd, sg in (("L", 1.0), ("R", -1.0)):
+            tg = c + bm.qrot(P.rot, np.array([sg * 0.17, -0.06, 0.26]) * k)
+            self._add(P, "clavicle." + sd, bm.qy(sg * 4 * DEG * w))
+            self.arm_reach(P, sd, tg, end="palm", palm=bm.qrot(P.rot, [sg * 0.25, 1.0, 0.1]), w=w, wrist=-6.0,
+                           pole=bm.qrot(P.rot, [sg * 0.8, -1.0, -0.3]))
+            self.hand_pose(P, sd, "offer", w=w)
+
+    def g_explain(self, P, w, t, age=0.0, side="R", period=1.7, **kw):
+        sg = 1.0 if side == "L" else -1.0
+        _, Pj, _ = self.local_fk(P)
+        S = Pj[self.i["upperarm01." + side]]
+        k = self.k
+        a = 2 * np.pi * age / max(period, 0.3)
+        off = np.array([-sg * (0.06 + 0.05 * np.sin(a)), -0.26 + 0.05 * np.sin(a * 0.5 + 1.0), 0.32 + 0.04 * np.cos(a)]) * k
+        self._lean(P, w, fwd=4.0, twist=-sg * 5.0)
+        self.arm_reach(P, side, S + bm.qrot(P.rot, off), end="palm",
+                       palm=bm.qrot(P.rot, [-sg * 0.5, 0.7 + 0.3 * np.sin(a), 0.4]), w=w, wrist=-4.0)
+        self.hand_pose(P, side, ("relaxed", "offer", 0.5 + 0.5 * np.sin(a)), w=w)
+
+    def g_cheer(self, P, w, t, age=0.0, **kw):
+        _, Pj, _ = self.local_fk(P)
+        hd = Pj[self.i["head"]]
+        k = self.k
+        self._lean(P, w, fwd=-6.0)
+        self._head(P, w, up=16.0)
+        for sd, sg in (("L", 1.0), ("R", -1.0)):
+            sway = 0.03 * np.sin(2 * np.pi * age / 0.9 + sg)
+            tg = hd + bm.qrot(P.rot, np.array([sg * (0.30 + sway), 0.44, 0.10]) * k)
+            self._add(P, "clavicle." + sd, bm.qz(sg * 16 * DEG * w))
+            self.arm_reach(P, sd, tg, end="palm", palm=bm.qrot(P.rot, [sg * 0.3, 0.2, 1.0]), w=w, wrist=-8.0,
+                           pole=bm.qrot(P.rot, [sg * 1.0, -0.3, -0.2]))
+            self.hand_pose(P, sd, "spread", w=w)
+
+    def g_lean_in(self, P, w, t, age=0.0, to=None, amount=1.0, **kw):
+        if to is None:
+            self._lean(P, w * amount, fwd=9.0)
+            self._head(P, w * amount, up=-5.0, tilt=6.0)
+            return
+        _, Pj, _ = self.local_fk(P)
+        d = np.asarray(to, np.float64) - Pj[self.i["head"]]
+        d_body = bm.qrot(bm.qconj(P.rot), d)
+        turn = float(np.clip(np.degrees(np.arctan2(d_body[0], max(d_body[2], 0.05))), -50, 50))
+        self._lean(P, w * amount, fwd=9.0, twist=turn * 0.25)
+        self._look_to(P, w * amount, to)
+        self._head(P, w * amount, tilt=-np.sign(turn) * 7.0)
 
     # ------------------------------------------------------------------ motions
     def m_sit(self, t, age=0.0, seed=0.0, dur=2.2, bowed=1.0, **kw):

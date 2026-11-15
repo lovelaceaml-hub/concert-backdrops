@@ -379,55 +379,100 @@ class Motions(Library):
     def m_run(self, t, age=0.0, **kw):
         return self.clip_pose("run", kw.get("clip_time", age))
 
-    def m_kneel(self, t, age=0.0, seed=0.0, sit=0.3, dur=2.0, hands="lap", one=False, **kw):
-        """Sinking to the knees over `dur` seconds and staying there. sit: 0 upright on the knees, 1 sitting
-        back on the heels. one=True: a genuflection, one knee down, the other foot forward.
-        hands: "lap" (resting on the thighs), "pray" (together before the chest) or "free" (left to gestures)."""
-        S = self.m_stand(t, age, seed=seed, calm=1.0)
-        p = bm.smoother(age / max(dur, 1e-3))
-        pr = bm.smoother(np.clip(age / max(dur, 1e-3) * 1.25, 0, 1))             # the right leg leads
-        pl = bm.smoother(np.clip(age / max(dur, 1e-3) * 1.25 - 0.25, 0, 1))
+    def _kneel_pose(self, sit=0.3, one=False):
+        """The kneeling pose itself: on both knees (sit: 0 upright, 1 back on the heels), or on the right knee
+        with the left foot forward (one=True)."""
         K = self.identity()
         hipf = 8.0 + 50.0 * sit
         knee = 98.0 + 47.0 * sit
-        K.rot = bm.qx((4.0 + 6.0 * sit) * DEG)
+        K.rot = bm.qx((2.0 if one else 4.0 + 6.0 * sit) * DEG)
         for b in SPINE:
             self._set(K, b, bm.qx((1.0 - 1.5 * sit) * DEG))
         self._set(K, "neck02", bm.qx(5.0 * DEG))
         self._set(K, "head", bm.qx(9.0 * DEG))
-        legs = {}
         for sd, sg in (("L", 1.0), ("R", -1.0)):
             if one and sd == "L":
-                legs[sd] = (bm.qmul(bm.qx(-88 * DEG), bm.qz(sg * 4 * DEG)), bm.qx(92 * DEG), bm.qx(-2 * DEG))
+                hq, kq, fq = bm.qmul(bm.qx(-88 * DEG), bm.qz(sg * 4 * DEG)), bm.qx(92 * DEG), bm.qx(-2 * DEG)
+            elif one:
+                hq, kq, fq = bm.qmul(bm.qx(6 * DEG), bm.qz(-2 * DEG)), bm.qx(96 * DEG), bm.qx(58 * DEG)
             else:
-                legs[sd] = (bm.qmul(bm.qx(-hipf * DEG), bm.qz(sg * 3 * DEG)), bm.qx(knee * DEG),
-                            bm.qx((62.0 + 12.0 * sit) * DEG))
-        if one:
-            K.rot = bm.qx(2.0 * DEG)
-            legs["R"] = (bm.qmul(bm.qx(6 * DEG), bm.qz(-2 * DEG)), bm.qx(96 * DEG), bm.qx(58 * DEG))
-        P = blend(S, K, float(p))
+                hq, kq, fq = (bm.qmul(bm.qx(-hipf * DEG), bm.qz(sg * 3 * DEG)), bm.qx(knee * DEG),
+                              bm.qx((62.0 + 12.0 * sit) * DEG))
+            self._set(K, "upperleg01." + sd, hq)
+            self._set(K, "lowerleg01." + sd, kq)
+            self._set(K, "foot." + sd, fq)
+        K.ground = 1.0
+        return K
+
+    def _grounded(self, P):
+        """(joint positions, rotations, root offset) of a pose set on the ground, in the body frame."""
+        D, Pj, A = self.local_fk(P)
+        lift = -self.rig.lowest(self.rig.matrices(D, Pj)) * P.ground
+        return Pj + np.array([0.0, lift, 0.0]), A, P.pos + np.array([0.0, lift, 0.0])
+
+    def _step_between(self, Pa, Pb, u, mover, other_delay=0.25, arc=0.07, drop_from=0.15):
+        """A plausible way from pose Pa to pose Pb (both standing on the ground) at progress u: the upper body
+        eases across, the `mover` leg steps (its foot lifts in an arc and sets down), the other foot follows a
+        little later and lower, the hips sink only once the stepping foot is on its way, and the legs reach
+        their feet by inverse kinematics, so the feet never pass through the floor or swing up behind."""
         i = self.i
-        for sd, prog in (("L", pl), ("R", pr)):
-            hq, kq, fq = legs[sd]
-            # on the way down the knee bends first while the thigh stays under the body, then the thigh settles
-            mid_h = bm.qx(-(34.0 if sd == "L" else -6.0) * DEG)
-            u = float(prog)
-            h = bm.qslerp(bm.qslerp(S.q[i["upperleg01." + sd]], mid_h, min(u * 2, 1.0)), hq, max(u * 2 - 1, 0.0))
-            P.q[i["upperleg01." + sd]] = h
-            P.q[i["upperleg02." + sd]] = bm.IDENT
-            P.q[i["lowerleg01." + sd]] = bm.qslerp(S.q[i["lowerleg01." + sd]], kq, u)
-            P.q[i["lowerleg02." + sd]] = bm.IDENT
-            P.q[i["foot." + sd]] = bm.qslerp(S.q[i["foot." + sd]], fq, bm.smooth(u * 1.2 - 0.2))
-        P.ground = 1.0
+        Ja, Aa, Ra = self._grounded(Pa)
+        Jb, Ab, Rb = self._grounded(Pb)
+        us = float(bm.smoother(u))
+        P = blend(Pa, Pb, us)
+        uy = float(bm.smoother(np.clip((u - drop_from) / (1.0 - drop_from), 0.0, 1.0)))
+        uxz = float(bm.smoother(np.clip(u / 0.75, 0.0, 1.0)))
+        P.pos = np.array([Ra[0] + (Rb[0] - Ra[0]) * uxz, Ra[1] + (Rb[1] - Ra[1]) * uy, Ra[2] + (Rb[2] - Ra[2]) * uxz])
+        P.ground = 0.0
+        for sd, sg in (("L", 1.0), ("R", -1.0)):
+            f = i["foot." + sd]
+            if sd == mover:
+                v = float(bm.smoother(np.clip(u / 0.6, 0.0, 1.0)))
+                h = arc * self.k * np.sin(np.pi * v)
+            else:
+                v = float(bm.smoother(np.clip((u - other_delay) / 0.6, 0.0, 1.0)))
+                h = arc * 0.35 * self.k * np.sin(np.pi * v)
+            ank = Ja[f] + (Jb[f] - Ja[f]) * v + np.array([0.0, h, 0.0])
+            kn_a = Ja[i["lowerleg01." + sd]] - 0.5 * (Ja[i["upperleg01." + sd]] + Ja[f])
+            kn_b = Jb[i["lowerleg01." + sd]] - 0.5 * (Jb[i["upperleg01." + sd]] + Jb[f])
+            pole = kn_a * (1 - v) + kn_b * v
+            if np.linalg.norm(pole) < 1e-4:
+                pole = np.array([sg * 0.12, 0.0, 1.0])
+            fq = bm.qslerp(Aa[f], Ab[f], v)
+            self.leg_to(P, sd, ank, knee=pole, foot=fq)
+        return P
+
+    def m_kneel(self, t, age=0.0, seed=0.0, sit=0.3, dur=2.0, hands="lap", one=False, **kw):
+        """Going down onto the knees over `dur` seconds and staying there. sit: 0 upright on the knees, 1 sitting
+        back on the heels. one=True: a genuflection, the right knee down and the left foot forward.
+        hands: "lap" (resting on the thighs), "pray" (together before the chest) or "free" (left to gestures).
+        The way down is acted: the right foot steps back and the body sinks onto that knee (and for both knees,
+        the left knee follows), so no frame passes through an odd pose; "rise" plays it backward."""
+        S = self.m_stand(t, age, seed=seed, calm=1.0)
+        u = float(np.clip(age / max(dur, 1e-3), 0.0, 1.0))
+        p = float(bm.smoother(u))
+        K1 = self._kneel_pose(sit=0.0, one=True)
+        if one:
+            P = S if u <= 0.0 else self._step_between(S, K1, u, "R")
+        else:
+            K2 = self._kneel_pose(sit=sit, one=False)
+            if u <= 0.0:
+                P = S
+            elif u < 0.62:
+                P = self._step_between(S, K1, u / 0.62, "R")
+            else:
+                P = self._step_between(K1, K2, (u - 0.62) / 0.38, "L", other_delay=0.4, arc=0.04, drop_from=0.0)
+        if u >= 1.0:
+            P.ground = 1.0
+        i = self.i
         if hands != "free":
             _, Pj, _ = self.local_fk(P)
-            w = float(p)
+            w = p
             for sd, sg in (("L", 1.0), ("R", -1.0)):
                 if hands == "pray":
-                    c = Pj[i["spine02"]] + bm.qrot(P.rot, np.array([sg * 0.012, 0.05, 0.17]) * self.k)
-                    self.arm_to(P, sd, c, palm=bm.qrot(P.rot, [-sg, 0.0, 0.0]), w=w, wrist=-28.0 * w,
-                                pole=bm.qrot(P.rot, [sg * 0.8, -1.0, 0.1]))
-                    self.fingers(P, sd, curl=4.0, thumb=6.0, w=w)
+                    if sd == "L":
+                        # the hands come together as the body settles, not on the way down
+                        self.pray_hands(P, float(bm.smoother(np.clip((u - 0.35) / 0.65, 0.0, 1.0))))
                 else:
                     kn = Pj[i["lowerleg01." + sd]]
                     hp = Pj[i["upperleg01." + sd]]
@@ -526,12 +571,17 @@ class Motions(Library):
                     pole=bm.qrot(P.rot, [sg * 0.35, -1.0, -0.2]))
         self.fingers(P, side, curl=5.0 * w + 22.0 * (1 - w), thumb=4.0, spread=2.0 * w)
 
-    def g_pray(self, P, w, t, age=0.0, **kw):
-        """Hands together before the chest, head bowed."""
-        self._head(P, w, up=-10.0)
+    def pray_hands(self, P, w, height=0.10, out=0.24):
+        """The hands pressed together palm to palm before the chest, fingers up and a little forward."""
         _, Pj, _ = self.local_fk(P)
+        c = Pj[self.i["spine03"]] + bm.qrot(P.rot, np.array([0.0, height, out]) * self.k)
+        up = bm.qrot(P.rot, [0.0, 0.92, 0.40])
         for sd, sg in (("L", 1.0), ("R", -1.0)):
-            c = Pj[self.i["spine02"]] + bm.qrot(P.rot, np.array([sg * 0.012, 0.06, 0.17]) * self.k)
-            self.arm_to(P, sd, c, palm=bm.qrot(P.rot, [-sg, 0.0, 0.0]), w=w, wrist=-30.0,
-                        pole=bm.qrot(P.rot, [sg * 0.8, -1.0, 0.1]))
-            self.fingers(P, sd, curl=4.0 * w + 22.0 * (1 - w), thumb=6.0)
+            self.hand_to(P, sd, c + bm.qrot(P.rot, [sg * 0.004 * self.k, 0.0, 0.0]), up,
+                         bm.qrot(P.rot, [-sg, 0.0, 0.0]), w=w, pole=bm.qrot(P.rot, [sg * 0.9, -1.0, -0.15]))
+            self.fingers(P, sd, curl=3.0 * w + 22.0 * (1 - w), thumb=4.0 * w + 14.0 * (1 - w), w=1.0)
+
+    def g_pray(self, P, w, t, age=0.0, **kw):
+        """Hands together before the chest, palm to palm, head bowed."""
+        self._head(P, w, up=-10.0)
+        self.pray_hands(P, w)

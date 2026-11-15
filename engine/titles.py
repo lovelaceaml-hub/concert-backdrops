@@ -24,7 +24,7 @@ palette     "night": warm white, gold accents, a warm glow. "day": navy #1f2a6b,
 Type, sizes, tracking and glow follow Anthony's approved mockups (scratchpad titlemock: mock.py, mock2.py). The
 lockups are drawn over the finished picture (after the bloom and the tone curve), so they show exactly as
 designed; before the bloom the light of the scene behind them is dimmed (text protection), so no spark or ray
-crosses a letter. The logo's slot is kept free while there is no logo. Everything is a pure function of t. A
+crosses a letter. The logo is BRAND's (engine/p3d/brand.py). Everything is a pure function of t. A
 song without TITLES never loads this module.
 """
 import os
@@ -37,8 +37,10 @@ import song as S
 FONTS = os.path.join(S.ROOT, "fonts")
 PALETTES = dict(
     night=dict(col=(255, 246, 232), acc=(246, 211, 139), glow=(255, 214, 150), dot=(255, 236, 200), light=True),
-    day=dict(col=(31, 42, 107), acc=(180, 132, 44), glow=(255, 255, 255), dot=(31, 42, 107), light=False),
+    day=dict(col=(31, 42, 107), acc=(180, 132, 44), glow=(255, 255, 255), dot=(31, 42, 107), light=False,
+             small=(243, 87, 99)),                       # the signature's small line on a bright sky: coral
 )
+KEEP = 0.985           # how much of the scene's light the protection takes away behind a lockup (to 1.5 percent)
 SEP = "  ·  "          # the middle dot between two parts of a line, with two spaces each side
 TITLE = "The Words of Mother\u2019s Love\nThat Bring Peace"   # Anthony's correction (2026-11-15)
 # the same wording for the films' end cards and credits (song keys TITLE and CREDIT), so it is written once:
@@ -207,10 +209,13 @@ class Titles:
         self.pt_buf = ctx.buffer(reserve=16)
         self.pt_vao = None
         self.layers = {}
+        self.tr_tex = None
         op, sg, dl = self.cfg.get("opening"), self.cfg.get("signature"), self.cfg.get("date_light")
         if op:
             self.op = dict(t_end=float(op.get("t_end", 4.0)), y=float(op.get("y", 0.30)),
-                           palette=op.get("palette", "night"), dissolve=float(op.get("dissolve", 1.6)))
+                           palette=op.get("palette", "night"), dissolve=float(op.get("dissolve", 1.6)),
+                           build=float(op.get("build", 1.2)))
+            self.op_logo = None
             self._build_opening()
         else:
             self.op = None
@@ -229,6 +234,7 @@ class Titles:
             self.ec = dict(t_in=float(ec["t_in"]), t_out=float(ec.get("t_out", 1e9)), y=float(ec.get("y", 0.5)),
                            fade=float(ec.get("fade", 1.6)), reveal=str(ec.get("reveal", "sweep")),
                            scale=float(ec.get("scale", 1.0)), veil=float(ec.get("veil", 1.0)),
+                           backdrop=ec.get("backdrop", self.cfg.get("endcard_backdrop")) or None,
                            day=str(ec.get("day", "Sunday, December 6")), time=str(ec.get("time", "4:30 PM")),
                            place=[str(x) for x in (place.split("\n") if isinstance(place, str) else place)])
             self.ec_layer, self.ec_veil = self._end_card()
@@ -262,10 +268,10 @@ class Titles:
         L = dict(tex=self._tex(out), rect=(x0 / self.w, y0 / self.h, (x1 - x0) / self.w, (y1 - y0) / self.h),
                  box=(x0, y0, x1, y1), a=a, rgb=rgb, pal=pal)
         # the text protection: a broad soft shape round the letters and between the lines
-        g = np.asarray(Image.fromarray((a * 255).astype(np.uint8)).filter(ImageFilter.GaussianBlur(34 * self.s)),
+        g = np.asarray(Image.fromarray((a * 255).astype(np.uint8)).filter(ImageFilter.GaussianBlur(40 * self.s)),
                        np.float32) / 255.0
         pr = np.zeros(a.shape + (4,), np.float32)
-        pr[..., 3] = np.clip(g * 14.0, 0.0, 1.0)
+        pr[..., 3] = np.clip(g * 16.0, 0.0, 1.0)
         L["prot"] = self._tex(pr)
         if noise:
             rng = np.random.default_rng(11)
@@ -278,26 +284,34 @@ class Titles:
             L["t_noise"] = self._tex(L["noise"], 1)
         return L
 
-    def _logo(self, part, height):
-        """The campaign logo for a part as an RGBA picture `height` pixels high (render size), or None while there is
-        no logo: the slot stays empty and the layout does not move. TITLES logo (for all parts, or per part):
-        a path from the repository root, or dict(path=..., height=...) with the height in 1080p pixels; False in a
-        part leaves that part without it."""
+    def _logo(self, part, height, pal="day"):
+        """The campaign logo for a part: (RGBA picture, x, y of the logo's own box inside it, its width), the box
+        `height` pixels high (render size); None when the part has no logo (the slot stays empty, nothing moves).
+        By default BRAND's logo (engine/p3d/brand.py), with a little warm glow on a night palette. TITLES logo (for
+        all parts, or per part): False for none, a picture's path (from the repository root), or
+        dict(path=..., height=<1080p pixels>, glow=0..1)."""
         lg = (self.cfg.get(part) or {}).get("logo", self.cfg.get("logo"))
-        if not lg:
+        if lg is False:
             return None
-        path = lg.get("path") if isinstance(lg, dict) else lg
-        if not path:
-            return None
-        if not os.path.isabs(path):
-            path = os.path.join(S.ROOT, path)
-        if not os.path.exists(path):
-            print(f"titles: no logo file at {path}; the slot stays empty", flush=True)
-            return None
-        im = Image.open(path).convert("RGBA")
-        h = float(lg["height"]) * self.s if isinstance(lg, dict) and "height" in lg else float(height)
+        d = lg if isinstance(lg, dict) else {}
+        h = float(d["height"]) * self.s if "height" in d else float(height)
         h = max(int(round(h)), 2)
-        return im.resize((max(int(round(im.width * h / im.height)), 1), h), Image.LANCZOS)
+        path = d.get("path") if isinstance(lg, dict) else (lg if isinstance(lg, str) else None)
+        if path:
+            if not os.path.isabs(path):
+                path = os.path.join(S.ROOT, path)
+            if not os.path.exists(path):
+                print(f"titles: no logo file at {path}; the slot stays empty", flush=True)
+                return None
+            im = Image.open(path).convert("RGBA")
+            im = im.resize((max(int(round(im.width * h / im.height)), 1), h), Image.LANCZOS)
+            return im, 0.0, 0.0, float(im.width)
+        from p3d import brand
+        glow = float(d.get("glow", 0.35 if PALETTES[pal]["light"] else 0.0))
+        pad = 0.10 if glow > 0.0 else 0.01
+        im = brand.logo_image(h, pad=pad, glow=glow)
+        _, (bx0, by0, bx1, _) = brand.logo_box(h, pad)
+        return im, float(bx0), float(by0), float(bx1 - bx0)
 
     def _title_lines(self):
         """The title's lines: the first upright, the second (when there is one) in italic."""
@@ -317,9 +331,13 @@ class Titles:
         d = ImageDraw.Draw(L)
         cx = W / 2.0
         top = self.op["y"] * H - total * s / 2.0           # the top of the logo slot
-        logo = self._logo("opening", lh * s)
-        if logo is not None:
-            L.alpha_composite(logo, (int(round(cx - logo.width / 2.0)), int(round(top + (lh * s - logo.height)))))
+        lg = self._logo("opening", lh * s, pal)
+        self.op_logo = None
+        if lg is not None:
+            im, ox, oy, lw = lg
+            bx, by = cx - lw / 2.0, top + lh * s - (im.height - 2 * oy)
+            L.alpha_composite(im, (int(round(bx - ox)), int(round(by - oy))))
+            self.op_logo = (int(round(bx - ox)), int(round(by - oy)), im.width, im.height)
         y = top + (lh + 28) * s
         _tracked(d, (cx, y), "HEALING CONCERT", JO(500, 30 * s), acc + (255,), 9 * s)
         d.text((cx, y + 40 * s), lines[0], font=CG(500, 96 * s), fill=col + (255,), anchor="ma")
@@ -347,11 +365,13 @@ class Titles:
         mx, my = 104 * self.s, 92 * self.s                 # margins: well inside the frame on a phone
         blk = 112.0 * s                                     # height of the block of three lines
         y0 = (H - my - blk) if corner[0] == "b" else my
-        logo = self._logo("signature", 96 * s)
-        if logo is not None:
-            lx = (W - mx - logo.width) if right else mx
-            L.alpha_composite(logo, (int(round(lx)), int(round(y0 + (blk - logo.height) / 2.0))))
-            gap = logo.width + 22 * s
+        lg = self._logo("signature", 96 * s, pal)
+        if lg is not None:
+            im, ox, oy, lw = lg
+            lhh = im.height - 2 * oy
+            lx = (W - mx - lw) if right else mx
+            L.alpha_composite(im, (int(round(lx - ox)), int(round(y0 + (blk - lhh) / 2.0 - oy))))
+            gap = lw + 22 * s
         else:
             hx = (W - mx) if right else mx
             d.line((hx, y0 + 6 * s, hx, y0 + blk - 6 * s), fill=acc + (220,), width=max(1, int(round(2 * self.s))))
@@ -360,7 +380,9 @@ class Titles:
         al = "right" if right else "left"
         d.text((tx, y0 - 4 * s), line, font=CG(500, 40 * s, it=True), fill=col + (240,), anchor="ra" if right else "la")
         _tracked(d, (tx, y0 + 48 * s), "DEC 6" + SEP + "4:30 PM", JO(500, 30 * s), col + (255,), 5 * s, align=al)
-        _tracked(d, (tx, y0 + 88 * s), "HEALING CONCERT" + SEP + "LAS VEGAS", JO(400, 22 * s), acc + (230,), 5 * s,
+        small = P.get("small")
+        _tracked(d, (tx, y0 + 88 * s), "HEALING CONCERT" + SEP + "LAS VEGAS", JO(500 if small else 400, 22 * s),
+                 (small or acc) + (255 if small else 230,), 5 * s,
                  align=al)
         return self._finish(L, 9, 0.5, pal)
 
@@ -411,11 +433,12 @@ class Titles:
             for i, c in enumerate(text):
                 d.text((x + f.getlength(text[:i]) + track * i, y), c, font=f, fill=fill)
 
-        logo = self._logo("end_card", 170.0 * k)
+        lg = self._logo("end_card", 170.0 * k, "day")
         cx = W / 2.0
-        if logo is not None:
+        if lg is not None:
+            im, ox, oy, lw = lg
             lx, ly = self._ec_xy(960.0, 48.0)
-            L.alpha_composite(logo, (int(round(lx - logo.width / 2.0)), int(round(ly))))
+            L.alpha_composite(im, (int(round(lx - lw / 2.0 - ox)), int(round(ly - oy))))
         tr(cx, self._ec_xy(0, 236)[1], "HEALING CONCERT", OF(600, 30 * k), CORAL + (255,), 9 * k)
         if small:
             tr(cx, self._ec_xy(0, 278)[1], small, OF(500, 78 * k), NAVY + (255,), -2 * k)
@@ -454,11 +477,50 @@ class Titles:
         ImageDraw.Draw(v).ellipse((vx0, vy0, vx1, vy1), fill=int(round(150 * min(ec["veil"], 1.7))))
         va = np.asarray(v.filter(ImageFilter.GaussianBlur(120 * k)), np.float32) / 255.0
         vo = np.zeros(va.shape + (4,), np.float32)
-        vo[..., :3] = (np.asarray((255, 252, 246), np.float32) / 255.0)[None, None, :] * va[..., None]
-        vo[..., 3] = va
+        vo[..., :3] = (np.asarray((255, 247, 234), np.float32) / 255.0)[None, None, :] * va[..., None]
+        vo[..., 3] = 0.75 * va
         (vo,), (x0, y0, x1, y1) = _crop([vo])
         V = dict(tex=self._tex(vo), rect=(x0 / W, y0 / H, (x1 - x0) / W, (y1 - y0) / H), box=(x0, y0, x1, y1))
+        if ec["backdrop"]:
+            self.ec_back = self._pastel()
         return T, V
+
+    def _pastel(self):
+        """A soft pastel light over the whole frame (premultiplied, low resolution: it is all soft): warm cream in
+        the middle, peach toward the left, a light sky blue toward the right, a little lighter at the top."""
+        w, h = 480, 270
+        x = np.linspace(-1.0, 1.0, w, dtype=np.float32)[None, :]
+        y = np.linspace(-1.0, 1.0, h, dtype=np.float32)[:, None]
+        cream = np.array((255, 249, 240), np.float32) / 255.0
+        peach = np.array((255, 222, 196), np.float32) / 255.0
+        sky = np.array((206, 230, 252), np.float32) / 255.0
+        kl = np.clip(-x, 0.0, 1.0)[..., None] ** 1.3
+        kr = np.clip(x, 0.0, 1.0)[..., None] ** 1.3
+        col = cream * (1.0 - kl - kr) + peach * kl + sky * kr
+        col = col * (1.0 - 0.04 * y[..., None]) + 0.0
+        col = np.broadcast_to(col, (h, w, 3))
+        r = np.sqrt((x * 0.9) ** 2 + (y * 1.0) ** 2)
+        a = (0.97 - 0.22 * np.clip(r - 0.35, 0.0, 1.0)).astype(np.float32)
+        out = np.zeros((h, w, 4), np.float32)
+        out[..., :3] = np.clip(col, 0.0, 1.0) * a[..., None]
+        out[..., 3] = a
+        return dict(tex=self._tex(out), rect=(0.0, 0.0, 1.0, 1.0))
+
+    def _backdrop_k(self, t):
+        """How much of the pastel backdrop is in at t: it comes in over about a second round t_in; with "auto" only
+        as far as the frame is dark where the card stands (measured on the finished picture, before the card)."""
+        if self.ec is None or not self.ec["backdrop"]:
+            return 0.0
+        t0 = self.ec["t_in"]
+        k = float(_ss(t0 - 0.6, t0 + 0.4, t)) * (1.0 - float(_ss(self.ec["t_out"] - 0.8, self.ec["t_out"], t)))
+        if k <= 0.002 or self.ec["backdrop"] != "auto":
+            return k
+        x0, y0, x1, y1 = self.ec_layer["box"]
+        st = 8
+        raw = self.R.f_out.read(viewport=(x0, y0, x1 - x0, y1 - y0), components=3)   # rows: the picture's, top first
+        px = np.frombuffer(raw, np.uint8).reshape(y1 - y0, x1 - x0, 3)[::st, ::st].astype(np.float32) / 255.0
+        lum = float(np.mean(px @ np.array([0.2126, 0.7152, 0.0722], np.float32)))
+        return k * (1.0 - float(_ss(0.42, 0.62, lum)))
 
     def _date_sub(self, pal):
         s, W, H = self.s, self.w, self.h
@@ -517,6 +579,14 @@ class Titles:
         (prot,), (bx0, by0, bx1, by1) = _crop([prot])
         self.dl_prot = dict(tex=self._tex(prot), rect=(bx0 / W, by0 / H, (bx1 - bx0) / W, (by1 - by0) / H))
         self.dl_sub = self._layer(("dsub", pal), self._date_sub, pal)
+        self.dl_fill = None
+        if not P["light"]:
+            # on a bright sky points alone read as faint glitter: the letters themselves fill in, deep navy, as the
+            # points settle, and the points sparkle over them
+            F = Image.new("RGBA", (W, H), (0, 0, 0, 0))
+            ImageDraw.Draw(F).text((W / 2.0, self.dl["y"] * H), self.dl["text"], font=CG(600, 250 * s, it=True),
+                                   fill=P["col"] + (255,), anchor="mm")
+            self.dl_fill = self._finish(F, 14, 0.85, pal)
         # the sub line also bursts: a few hundred points on its letters
         a = self.dl_sub["a"]
         ys, xs = np.nonzero(a > 0.4)
@@ -552,6 +622,36 @@ class Titles:
             return out, (None if u >= 1.0 else -e + (1.0 + 2.0 * e) * u)
         return out * float(_ss(0.0, 1.0, u)), None
 
+    def _trace(self, t):
+        """The opening logo's build-in at t: a premultiplied light picture (alpha 0: added) of the newest stretch
+        of the grid and the branches as they draw themselves, or None outside it."""
+        if self.op is None or self.op_logo is None or self.op["build"] <= 0.0:
+            return None
+        t0, dur = 0.12, self.op["build"]
+        u = (t - t0) / dur
+        if u <= 0.0 or u >= 1.0:
+            return None
+        from p3d import brand
+        x, y, w, h = self.op_logo
+        lh = 130.0 * self.s
+        glow = 0.35 if PALETTES[self.op["palette"]]["light"] else 0.0
+        pad = 0.10 if glow > 0.0 else 0.01
+        parts = ["grid", "branch_l", "branch_r"]
+        pr = 1.0 - (1.0 - u) ** 1.6
+        a1 = brand.logo_rgba(int(round(lh)), parts=parts, pad=pad,
+                             draw={k: pr for k in parts})[..., 3].astype(np.float32) / 255.0
+        a0 = brand.logo_rgba(int(round(lh)), parts=parts, pad=pad,
+                             draw={k: max(pr - 0.22, 0.0) for k in parts})[..., 3].astype(np.float32) / 255.0
+        e = np.clip(a1 - a0, 0.0, 1.0)
+        bl = np.asarray(Image.fromarray((e * 255).astype(np.uint8)).filter(
+            ImageFilter.GaussianBlur(max(2.5 * self.s, 1.0))), np.float32) / 255.0
+        k = float(np.sin(np.pi * u)) ** 0.7
+        warm = np.array((1.0, 0.90, 0.70), np.float32)
+        light = (0.9 * e + 1.6 * bl) * k
+        out = np.zeros(e.shape + (4,), np.float32)
+        out[..., :3] = np.clip(warm[None, None, :] * light[..., None], 0.0, 1.0)
+        return out, (x, y, out.shape[1], out.shape[0])
+
     def _sig_alpha(self, t):
         out = []
         f = self.sig_fade if self.sig else 0.6
@@ -565,6 +665,12 @@ class Titles:
         tf, tb = self.dl["t_form"], self.dl["t_burst"]
         form = float(np.clip((tb - tf) - 1.5, 0.5, 1.4))       # it is whole at least 1.5 s before the burst
         return tf, tb, form
+
+    def _dl_fill_alpha(self, t):
+        if self.dl is None or self.dl_fill is None:
+            return 0.0
+        tf, tb, form = self._dl_times()
+        return 0.95 * float(_ss(tf + 0.7 * form, tf + form + 0.3, t) * (1.0 - _ss(tb - 0.02, tb + 0.10, t)))
 
     def _dl_sub_alpha(self, t):
         if self.dl is None:
@@ -589,12 +695,12 @@ class Titles:
         jobs = []
         a, front, prog = self._op_state(t)
         if a > 0.0 and prog < 1.0:
-            jobs.append((self.op_layer, 0.92 * (1.0 - prog)))
+            jobs.append((self.op_layer, KEEP * (1.0 - prog)))
         for L, k in self._sig_alpha(t):
-            jobs.append((L, 0.92 * k))
+            jobs.append((L, KEEP * k))
         ea, ef = self._ec_state(t)
         if ea > 0.002:
-            jobs.append((self.ec_layer, 0.92 * ea * (1.0 if ef is None else float(np.clip(ef + 0.3, 0.0, 1.0)))))
+            jobs.append((self.ec_layer, KEEP * ea * (1.0 if ef is None else float(np.clip(ef + 0.3, 0.0, 1.0)))))
         if self.dl is not None:
             tf, tb, form = self._dl_times()
             k = float(_ss(tf, tf + form, t) * (1.0 - _ss(tb, tb + 0.4, t)))
@@ -629,8 +735,22 @@ class Titles:
             self._quad(self.p_ovl, self.v_ovl, L, -1.0, uAlpha=1.0,
                        uDis=(float(front) if front is not None else -1.0, 0.06, 0.38, 0.0))
             drew = True
+            tr = self._trace(t)
+            if tr is not None:
+                img, (x, y, w, h) = tr
+                if self.tr_tex is None or self.tr_tex.size != (w, h):
+                    self.tr_tex = self._tex(img)
+                else:
+                    self.tr_tex.write(np.ascontiguousarray(np.clip(img * 255.0 + 0.5, 0, 255).astype(np.uint8)).tobytes())
+                self._quad(self.p_ovl, self.v_ovl, dict(tex=self.tr_tex, rect=(x / self.w, y / self.h, w / self.w,
+                                                                                h / self.h)),
+                           -1.0, uAlpha=1.0, uDis=(-1.0, 0.0, 0.0, 0.0))
         for L, k in self._sig_alpha(t):
             self._quad(self.p_ovl, self.v_ovl, L, -1.0, uAlpha=float(k), uDis=(-1.0, 0.0, 0.0, 0.0))
+            drew = True
+        kb = self._backdrop_k(t)
+        if kb > 0.002:
+            self._quad(self.p_ovl, self.v_ovl, self.ec_back, -1.0, uAlpha=kb, uDis=(-1.0, 0.0, 0.0, 0.0))
             drew = True
         ea, ef = self._ec_state(t)
         if ea > 0.002:
@@ -645,6 +765,10 @@ class Titles:
         ks = self._dl_sub_alpha(t)
         if ks > 0.002:
             self._quad(self.p_ovl, self.v_ovl, self.dl_sub, -1.0, uAlpha=ks, uDis=(-1.0, 0.0, 0.0, 0.0))
+            drew = True
+        kf = self._dl_fill_alpha(t)
+        if kf > 0.002:
+            self._quad(self.p_ovl, self.v_ovl, self.dl_fill, -1.0, uAlpha=kf, uDis=(-1.0, 0.0, 0.0, 0.0))
             drew = True
         pts = []
         if self.op is not None and front is not None:
@@ -759,8 +883,8 @@ class Titles:
             out.append(((xy, size, _rgba(self.dl_col, a * 1.2, False)), True))
         else:
             gl = np.asarray(P["glow"], np.float32) / 255.0
-            out.append(((xy, size * 3.5, _rgba(gl, a * 0.10, False)), True))
-            out.append(((xy, size, _rgba(self.dl_col, a, True)), False))
+            out.append(((xy, size * 3.5, _rgba(gl, a * 0.06, False)), True))
+            out.append(((xy, size * 1.3, _rgba(self.dl_col, a, True)), False))
         # loose sparks round the letters while the date is whole
         k = float(_ss(tf + 0.6 * form, tf + form + 0.4, t) * (1.0 - _ss(tb, tb + 0.15, t)))
         if k > 0.01:

@@ -28,22 +28,27 @@ from .api import MASK_SKIES, CameraState, Mask, lin
 TAU = 2.0 * np.pi
 
 # The nine expressions: exact campaign wording (project-docs/DESIGN-SYSTEM.md section 5), line breaks and
-# typographic quotes as in the PHRASES of engine/songs/epic_concert.py, colours from DESIGN-SYSTEM section 5.
+# typographic quotes as in the PHRASES of engine/songs/epic_concert.py. Colours: the campaign website's (Anthony,
+# UPDATE 9 in PHASEB.md). The two dark ones, Compliment's navy and Respect's indigo, have a lighter glow so their
+# light still reads on a night sky (their paint and pill keep the colour itself).
 EXPRESSIONS = [
-    dict(label="Greeting", lines=["“How are you?”"], color="#FF977C"),
-    dict(label="Gratitude", lines=["“Thank you. It’s all thanks to you.", "You’ve worked hard.”"],
-         color="#FFD05F"),
-    dict(label="Apology", lines=["“I’m sorry.", "It must have been hard on you.”"], color="#FFAD69"),
-    dict(label="Inclusiveness", lines=["“It’s okay. I understand.”"], color="#F582AF"),
-    dict(label="Concession", lines=["“Please, after you.”"], color="#82B0ED"),
-    dict(label="Respect", lines=["“I’d love to hear more", "about your thoughts.”"], color="#CE927E"),
-    dict(label="Encouragement", lines=["“I’ll pray (or root) for you.", "Everything will go well.”"],
-         color="#B293E7"),
-    dict(label="Consideration", lines=["“Can I give you a hand", "with anything?”"], color="#EF7A96"),
-    dict(label="Compliment", lines=["“You’re amazing.", "You’re doing great!”"], color="#BE9CEB"),
+    dict(label="Greeting", lines=["\u201cHow are you?\u201d"], color="#EA5A5E"),
+    dict(label="Gratitude", lines=["\u201cThank you. It\u2019s all thanks to you.", "You\u2019ve worked hard.\u201d"],
+         color="#F2B25E"),
+    dict(label="Apology", lines=["\u201cI\u2019m sorry.", "It must have been hard on you.\u201d"], color="#F6CE46"),
+    dict(label="Inclusiveness", lines=["\u201cIt\u2019s okay. I understand.\u201d"], color="#5ABA5A"),
+    dict(label="Concession", lines=["\u201cPlease, after you.\u201d"], color="#62B2FA"),
+    dict(label="Respect", lines=["\u201cI\u2019d love to hear more", "about your thoughts.\u201d"], color="#667AF6",
+         glow="#97A5FA"),
+    dict(label="Encouragement", lines=["\u201cI\u2019ll pray (or root) for you.", "Everything will go well.\u201d"],
+         color="#9E6AF6"),
+    dict(label="Consideration", lines=["\u201cCan I give you a hand", "with anything?\u201d"], color="#EE62A6"),
+    dict(label="Compliment", lines=["\u201cYou\u2019re amazing.", "You\u2019re doing great!\u201d"], color="#364E96",
+         glow="#8C9FEA"),
 ]
 LABELS = [e["label"] for e in EXPRESSIONS]
 COLORS = {e["label"]: e["color"] for e in EXPRESSIONS}      # each expression's campaign colour (display hex)
+GLOWS = {e["label"]: e.get("glow", e["color"]) for e in EXPRESSIONS}   # the colour of each one's light and halo
 
 # the way each expression arrives and leaves when a song does not choose (matched to what it means)
 DEFAULT_STYLE = {
@@ -383,6 +388,7 @@ class Word:
         if expr is not None:
             e = EXPRESSIONS[expr - 1] if isinstance(expr, int) else EXPRESSIONS[LABELS.index(expr)]
             label, lines = e["label"], e["lines"]
+            glow = glow or (e.get("glow") if color is None else None)
             color = color or e["color"]
         if not lines:
             raise ValueError("a Word needs lines (or expr)")
@@ -407,6 +413,9 @@ class Word:
         self.masked = bool(self.window or self.ink or self.paint)
         self._kept = None
         self.avoid = bool(opts.pop("avoid", True))                 # flying particles keep clear of words being read
+        # the label in a soft pill of the word's colour, as on the campaign website: True, or a colour (display hex)
+        self.pill = opts.pop("pill", False)
+        self.pill_fill = float(opts.pop("pill_fill", 1.0))
         self.avoid_floor = float(opts.pop("avoid_floor", 0.12))
         self.reflect = (face != "flat") if reflect is None else bool(reflect)   # a word lying on the water has no mirror image
         self._others = []
@@ -617,10 +626,62 @@ class Word:
         else:
             self.c_letter = (_mix(white, base, self.tint) * self.bright).astype(np.float32)
         self.c_glow = (_col(self.glow_hex) * self.bright).astype(np.float32)
-        self.c_base = base
+        # light drawn in the word's colour (petals, stars, goals): a dark colour (navy) would hardly show, so it
+        # takes the lighter glow instead
+        lum = float(np.dot(base, (0.2126, 0.7152, 0.0722)))
+        self.c_base = base if lum >= 0.15 else _col(self.glow_hex)
         self.i_spark = np.nonzero(self.s[:, 3] < 0.012)[0]
         self.n_halo = min(n, 2600)
         self._g = g
+
+    def _pill(self, out, P, F):
+        """The label's pill: a thin rounded outline in the word's colour round the label and a soft fill of the
+        same colour inside it, a little behind the letters. It shows as far as the label's points have settled
+        (it forms as they arrive and goes as they leave)."""
+        lab = self.lab
+        settled = P["alpha"][lab] * (np.asarray(P["assist"], np.float32)[lab] > 0.98)
+        k = float(np.mean(settled)) ** 2                  # it goes a little ahead of the label's last points
+        if k <= 0.01:
+            return
+        if not hasattr(self, "_pill_geo"):
+            xs, ys = self.xl[lab], self.yl[lab]
+            x0, x1 = float(np.percentile(xs, 0.5)), float(np.percentile(xs, 99.5))
+            y0, y1 = float(np.percentile(ys, 0.5)), float(np.percentile(ys, 99.5))
+            h = max(y1 - y0, 1e-4)
+            pv, ph = 0.62 * h, 1.15 * h                     # padding round the capitals
+            R = 0.5 * h + pv                                # the ends are half circles
+            cx, cy, hw = 0.5 * (x0 + x1), 0.5 * (y0 + y1), 0.5 * (x1 - x0) + ph - R
+            step = 0.075 * h
+            # the outline: two straight sides and two half circles
+            n_s = max(int(2.0 * hw / step), 2)
+            n_a = max(int(np.pi * R / step), 8)
+            xs_ = np.linspace(-hw, hw, n_s)
+            ang = np.linspace(-0.5 * np.pi, 0.5 * np.pi, n_a)
+            ox = np.concatenate([xs_, xs_, hw + R * np.cos(ang), -hw - R * np.cos(ang)])
+            oy = np.concatenate([np.full(n_s, R), np.full(n_s, -R), R * np.sin(ang), R * np.sin(ang)])
+            # the fill: a loose lattice inside
+            gx, gy = np.meshgrid(np.arange(-hw - R, hw + R + 1e-6, 0.55 * h), np.arange(-R, R + 1e-6, 0.55 * h))
+            gx, gy = gx.ravel(), gy.ravel()
+            dx = np.maximum(np.abs(gx) - hw, 0.0)
+            inside = dx * dx + gy * gy <= (0.82 * R) ** 2
+            self._pill_geo = dict(ox=(ox + cx).astype(np.float32), oy=(oy + cy).astype(np.float32),
+                                  fx=(gx[inside] + cx).astype(np.float32), fy=(gy[inside] + cy).astype(np.float32),
+                                  h=h)
+        g = self._pill_geo
+        o, r, u, nrm = F
+        back = -0.02 * g["h"]                               # a touch behind the letters
+
+        def world(x, y):
+            return (o[None, :] + x[:, None] * r[None, :] + y[:, None] * u[None, :] + back * nrm[None, :]).astype(
+                np.float32)
+
+        col = _col(self.pill) if isinstance(self.pill, str) else self.c_base
+        h = g["h"]
+        out.append(dict(pos=world(g["ox"], g["oy"]), size=0.16 * h, color=col, alpha=0.55 * k, kind="soft",
+                        dof=True))
+        if self.pill_fill > 0.0 and len(g["fx"]):
+            out.append(dict(pos=world(g["fx"], g["fy"]), size=1.25 * h, color=col,
+                            alpha=0.07 * self.pill_fill * k, kind="soft", dof=True))
 
     def targets(self, t, cam=None):
         """World positions (N, 3) of the settled letters at t: every point's home place."""
@@ -765,6 +826,8 @@ class Word:
             l = (t - self.t_read1) / max(self.t_out - self.t_read1, 1e-6)
             getattr(self, "_lea_" + self.leave)(P, l, t, cam, F, tg)
             self._ambient(out, self.arrive, 1.0, t, F, False, fade=l)
+        if self.pill and self.bind is None and self.lab.any():
+            self._pill(out, P, F)
         if self.drive is not None:
             # the director's own hand on the points: pos replaces, alpha and emit multiply, assist replaces
             d = self.drive(t, dict(state=st, pos=P["pos"], home=tg, frame=F, cam=cam, word=self)) or {}
