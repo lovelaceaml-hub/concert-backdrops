@@ -69,7 +69,37 @@ _base.TITLE = dict(label="Healing Concert", lines=["The Words of Mother’s Love
 _base.TAGLINE = dict(text="Sunday, December 6 · 4:30 PM\nWorld Mission Society Church of God\n"
                           "6720 W Sahara Ave, Las Vegas",
                      sizes=(78, 77), t0=TAG_T0, t1=TAG_T1, color=theme.NAVY, glow=theme.WHITE_GLOW, anim="rise")
-_base.CREDIT["t_in"], _base.CREDIT["t_full"] = 1e9, 1e9 + 1.0
+# the concert badge (Anthony: the concert title and the date from the beginning and throughout): large over
+# the first image, settled into the top left corner by 2.8 s, gone as the end card forms
+_base.CREDIT = dict(song="The Words of Mother’s Love",
+                    concert="Healing Concert · Sunday, December 6 · 4:30 PM",
+                    t_in=-1.0, t_full=0.0, t_move=1.6, t_rest=2.8, scale=0.52, alpha_rest=0.92,
+                    margin_x=0.035, margin_top=0.05, y_first=0.765)
+
+
+def credit_state(t, bbox):
+    """Centre, scale and strength of the concert badge; bbox is its size at full card size."""
+    c = CREDIT
+    x0, x1, y0, y1 = bbox
+
+    def sm(a, b, x):
+        u = min(max((x - a) / (b - a), 0.0), 1.0)
+        return u * u * (3 - 2 * u)
+
+    a_in = sm(c["t_in"], c["t_full"], t)
+    m = sm(c["t_move"], c["t_rest"], t)
+    scale = c["scale"] ** m
+    cx0, cy0 = (x0 + x1) / 2.0, (y0 + y1) / 2.0
+    fx, fy = cx0, c["y_first"]                       # on the first image it stands in the sky above her
+    tx = c["margin_x"] + c["scale"] * (x1 - x0) / 2.0
+    ty = 1.0 - c["margin_top"] - c["scale"] * (y1 - y0) / 2.0
+    cx, cy = fx * (1 - m) + tx * m, fy * (1 - m) + ty * m
+    alpha = a_in * (1.0 + (c["alpha_rest"] - 1.0) * m) * (1.0 - sm(T_FORM, T_FORM + 1.0, t))
+    # the card is drawn about (cx0, cy0); move it so that its centre lands on (cx, cy)
+    return (cx, cy, scale, alpha), (cx0, cy0)
+
+
+_base.credit_state = credit_state
 _base.WAVES = []
 from songs.s03_original import *  # noqa: E402,F401,F403
 
@@ -324,23 +354,26 @@ def _word(x, y, depth, px, t_in, t0, t1, t_out, **kw):
 
 
 MEET = W3(0.0, 1.12, ZG)                                # where the greeting hands meet
+PULL_AT, PULL_T0 = (0.07, ZH + 1.58), 6.60                # the pair of the Consideration (motion capture)
+_PULL = Actor("woman", at=PULL_AT, facing=180.0, motion=[(PULL_T0, "pull_up")], seed=22.0)
 _SPECS = [
-    _word(0.5, 0.735, 7.6, 104, 1.30, 3.40, 6.20, 7.10, expr="Greeting", arrive="touch", source=tuple(MEET),
+    _word(0.5, 0.675, 7.6, 104, 1.30, 3.40, 6.20, 7.10, expr="Greeting", arrive="touch", source=tuple(MEET),
           touch_at=(2.50 - 1.30) / (3.40 - 1.30), leave="bokeh"),
-    _word(0.5, 0.735, 7.0, 84, 7.60, 8.50, 11.20, 12.50, expr="Consideration", arrive="palm",
-          leave="petals", wind=(0.0, 0.5, -1.0), reach=0.3),
-    _word(0.5, 0.745, 7.2, 84, 13.30, 14.30, 16.90, 16.90, expr="Apology", arrive="stitch", leave="morph"),
-    _word(0.5, 0.745, 7.2, 92, 16.90, 17.35, 19.95, 21.0, expr="Inclusiveness", arrive="morph",
+    _word(0.5, 0.675, 7.0, 84, 7.40, 8.50, 11.20, 12.50, expr="Consideration", arrive="palm",
+          source=lambda t: _PULL.where(t, "palm.L"), palm_light=True, leave="petals", wind=(0.0, 0.5, -1.0),
+          reach=0.3),
+    _word(0.5, 0.68, 7.2, 84, 13.30, 14.30, 16.90, 16.90, expr="Apology", arrive="stitch", leave="morph"),
+    _word(0.5, 0.68, 7.2, 92, 16.90, 17.35, 19.95, 21.0, expr="Inclusiveness", arrive="morph",
           source="Apology", leave="bokeh"),
-    _word(0.5, 0.735, 7.6, 104, 21.10, 22.80, 25.55, 26.70, expr="Concession", arrive="flock",
+    _word(0.5, 0.675, 7.6, 104, 21.10, 22.80, 25.55, 26.70, expr="Concession", arrive="flock",
           leave="wind", wind=(0.2, 0.3, -1.0)),
-    _word(0.5, 0.735, 7.0, 86, 27.60, 29.55, 32.30, 33.30, expr="Respect", arrive="weave", leave="unravel",
+    _word(0.5, 0.675, 7.0, 86, 27.60, 29.55, 32.30, 33.30, expr="Respect", arrive="weave", leave="unravel",
           to=tuple(M(32.5) + np.array([0.0, 1.4, 0.0]))),
-    _word(0.5, 0.745, 7.4, 76, 33.70, 35.20, 37.95, 39.30, expr="Gratitude", arrive="petals", leave="stream",
+    _word(0.5, 0.68, 7.4, 76, 33.70, 35.20, 37.95, 39.30, expr="Gratitude", arrive="petals", leave="stream",
           to=tuple(MH(39.5))),
-    _word(0.5, 0.75, 6.3, 82, 41.00, 42.55, 45.15, 45.95, expr="Encouragement", arrive="shaft", leave="rise",
+    _word(0.5, 0.685, 6.3, 82, 41.00, 42.55, 45.15, 45.95, expr="Encouragement", arrive="shaft", leave="rise",
           halo=1.5, bright=1.15),
-    dict(expr="Compliment", ride=(0.5, 0.755, 6.4), em=PW.em_for(LAYOUT, 48.0, 6.4, 90), face="screen",
+    dict(expr="Compliment", ride=(0.5, 0.69, 6.4), em=PW.em_for(LAYOUT, 48.0, 6.4, 90), face="screen",
          t_in=45.95, t_read0=46.95, t_read1=49.60, t_out=50.40, arrive="rays", leave="rise", halo=1.5, bright=1.15,
          source=tuple(M(46.0) + np.array([0.0, 1.75, -60.0]))),
 ]
@@ -580,13 +613,12 @@ def _people():
          gesture=[(1.6, 7.2, "handshake", dict(side="R", to=tuple(MEET), grip=1.0, ease=0.7))])
     body("greet_b", "man", 0.48, ZG, 270.0, (0.9, 7.3), COOL, "#e8f0ff", "coat", seed=12.0,
          gesture=[(1.6, 7.2, "handshake", dict(side="R", to=tuple(MEET), grip=1.0, ease=0.7))])
-    # 2 Consideration: one kneels, spent; the other stoops with an open hand, then a hand on the shoulder
-    kn = body("weary", "man", 0.55, ZH, 270.0, (6.84, 13.5), COOL, "#e8f0ff", "coat", seed=21.0,
-              motion=[(6.0, "kneel", dict(dur=0.2))], form=False)
-    body("helper", "woman", -0.55, ZH + 0.2, 90.0, (6.84, 13.5), GOLD, "#fff0d0", "dress", seed=22.0, form=False,
-         gesture=[(7.4, 10.4, "offer", dict(side="R", ease=0.8)),
-                  (10.3, 13.5, "hand_on_shoulder", dict(side="L", to=lambda t: kn.where(t, "shoulder.R"),
-                                                        ease=0.7))])
+    # 2 Consideration: one sits spent on the water; the other comes, gives a hand and pulls them up (a pair
+    # captured together in motion capture, so their hands really meet)
+    body("weary", "man", PULL_AT[0], PULL_AT[1], 180.0, (6.84, 13.5), COOL, "#e8f0ff", "coat", seed=21.0,
+         motion=[(PULL_T0, "helped_up")], form=False)
+    body("helper", "woman", PULL_AT[0], PULL_AT[1], 180.0, (6.84, 13.5), GOLD, "#fff0d0", "dress", seed=22.0,
+         motion=[(PULL_T0, "pull_up")], form=False)
     # 3 Apology, Inclusiveness: one sits, coming apart; one kneels beside her; the embrace mends her
     hurt = body("hurt", "woman", -0.42, ZC, 90.0, (13.30, 20.4), COOL, "#eef2ff", "dress", seed=31.0, form=False,
                 motion=[(12.5, "sit", dict(dur=0.2))],
@@ -709,10 +741,10 @@ P3D = dict(
     camera=CAMERA,
     world=WORLD,
     setup=_setup,
-    bursts=[dict(t=S[1], strength=1.15, rise=0.06, fall=0.45, color="#ffe6b8"),
-            dict(t=S[2], strength=1.0, rise=0.06, fall=0.45, color="#ffd9a0"),
-            dict(t=S[4], strength=1.4, rise=0.06, fall=0.45, color="#ffe6b8"),
-            dict(t=S[5], strength=1.4, rise=0.06, fall=0.45, color="#fff0d0"),
+    bursts=[dict(t=S[1], strength=1, rise=0.06, fall=0.45, color="#ffe6b8", radius=0.24),
+            dict(t=S[2], strength=1, rise=0.06, fall=0.45, color="#ffd9a0", radius=0.24),
+            dict(t=S[4], strength=1, rise=0.06, fall=0.45, color="#ffe6b8", radius=0.24),
+            dict(t=S[5], strength=1, rise=0.06, fall=0.45, color="#fff0d0", radius=0.24),
             dict(t=BIG, strength=0.8, rise=0.1, fall=0.9, color="#ffe8d0", radius=0.30),
             dict(t=LAST, strength=0.5, rise=0.08, fall=0.8, color="#fff6e8", radius=0.3)],
 )
