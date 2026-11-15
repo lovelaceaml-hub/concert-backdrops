@@ -73,7 +73,7 @@ def _word(x, y, depth, px, t_in, t_read0, t_read1, t_out, **kw):
 
 
 # three bands of the picture, at three depths: the sky (far), the sides (middle), the lake (near and low)
-SKY, SIDE, LAKE = dict(y=0.775, depth=30.0), dict(y=0.585, depth=22.0), dict(y=0.425, depth=15.5)
+SKY, SIDE, LAKE = dict(y=0.775, depth=36.0), dict(y=0.560, depth=19.0), dict(y=0.455, depth=25.0)
 ARCH = dict(span=112.0, height=38.0, z=-45.0)       # a great arc far behind the words, round the picture's edge
 LIGHTS = arch_points(ARCH["span"], ARCH["height"], ARCH["z"])
 PERSON_AT = tuple(PW.place(_LAYOUT, _b(48), 0.80, 0.33, 14.0) * np.array([1.0, 0.0, 1.0]))
@@ -82,9 +82,9 @@ _PALM = tuple(PW.place(_LAYOUT, _b(6), 0.84, 0.36, 13.0))
 
 _SPECS = [
     # ---- the sides: a flare where two hands touch, the Greeting; its birds become the Concession
-    _word(0.29, **SIDE, px=104, t_in=-1.2, t_read0=3, t_read1=9, t_out=13, expr="Greeting",
-          arrive="touch", leave="flock", away=(1.0, 0.05, -0.15)),
-    _word(0.71, **SIDE, px=88, t_in=10, t_read0=15, t_read1=21, t_out=25, expr="Concession",
+    _word(0.29, **SIDE, px=104, t_in=-1.9, t_read0=3, t_read1=9, t_out=13, expr="Greeting",
+          arrive="touch", touch_at=(B0 - 0.003) / _b(3), leave="flock", away=(1.0, 0.05, -0.15)),
+    _word(0.745, 0.575, 19.0, px=88, t_in=10, t_read0=15, t_read1=21, t_out=25, expr="Concession",
           arrive="flock", leave="wind", flock_from=3.3, wind=(1.0, 0.18, -0.5), speed=0.7),
     # ---- the sky: the open palm, petals, a light of the arch, the shaft, the stars
     _word(0.50, **SKY, px=92, t_in=4, t_read0=9, t_read1=15, t_out=19, expr="Consideration",
@@ -96,11 +96,11 @@ _SPECS = [
     _word(0.50, **SKY, px=92, t_in=40, t_read0=45, t_read1=51, t_out=55, expr="Respect",
           arrive="stars", leave="stars"),
     # ---- the lake: out of the water, the gathering lights, a person, the rays
-    _word(0.47, **LAKE, px=80, t_in=19, t_read0=24, t_read1=30, t_out=34, expr="Apology",
+    _word(0.45, **LAKE, px=80, t_in=19, t_read0=24, t_read1=30, t_out=34, expr="Apology",
           arrive="lake", leave="sink"),
     _word(0.45, **LAKE, px=92, t_in=31, t_read0=36, t_read1=42, t_out=46, expr="Inclusiveness",
           arrive="gather", leave="give", to="person"),
-    _word(0.44, 0.47, 15.5, px=90, t_in=47, t_read0=51, t_read1=57, t_out=57, expr="Compliment",
+    _word(0.44, 0.50, 22.0, px=90, t_in=47, t_read0=51, t_read1=57, t_out=57, expr="Compliment",
           arrive="rays", leave="morph", source=_HEAD),
     # ---- all nine become the title
     _word(0.50, 0.62, 21.0, px=118, t_in=57, t_read0=61, t_read1=67, t_out=70, label="Healing Concert",
@@ -147,9 +147,9 @@ P3D = dict(
         arch=dict(lit=_LIT, **ARCH),
         react=dict(beat=0.4, level=0.25),
     )),
-    bursts=[dict(t=WORDS["Greeting"].t_in + 0.25, at=tuple(WORDS["Greeting"].centre(0.0)), strength=2.2,
-                 radius=0.22, color="#ffe9c4", rise=0.2, fall=0.6),
-            dict(t=WORDS["Title"].t_in, at=tuple(WORDS["Compliment"].centre(0.0)), strength=1.4, radius=0.30,
+    bursts=[dict(t=B0, at=tuple(WORDS["Greeting"].centre(0.0)), strength=0.9,
+                 radius=0.12, color="#ffe9c4", rise=0.2, fall=0.6),
+            dict(t=WORDS["Title"].t_in, at=tuple(WORDS["Compliment"].centre(0.0)), strength=0.7, radius=0.22,
                  color="#fff0d6", rise=0.3, fall=0.8)],
     setup=_setup,
 )

@@ -773,12 +773,12 @@ class Word:
         turns = self.opts.get("turns", 1.15)
         lag = 0.10 * s[:, 0]
         th = TAU * turns * (a - lag) + self.opts.get("flock_from", 2.6)
-        rad = 0.95 * w * (1.0 - 0.25 * a)
+        rad = 0.85 * w * (1.0 - 0.40 * a)
         cx, cz = rad * np.cos(th), 0.9 * rad * np.sin(th)
-        cy = self.ymid + 0.55 * self.Ht + 0.30 * w * np.sin(th * 1.7 + 0.6)
+        cy = self.ymid + self.opts.get("flock_lift", 0.15) * self.Ht + 0.09 * w * np.sin(th * 1.7 + 0.6)
         wave = 1.0 + 0.35 * np.sin(t * 1.6 + s[:, 1] * TAU)
         ox = (s[:, 1] - 0.5) * 0.55 * w * wave
-        oy = (s[:, 2] - 0.5) * 0.30 * w * wave + 0.05 * w * np.sin(t * 2.3 + s[:, 3] * TAU)
+        oy = (s[:, 2] - 0.5) * 0.20 * w * wave + 0.04 * w * np.sin(t * 2.3 + s[:, 3] * TAU)
         oz = (s[:, 3] - 0.5) * 0.45 * w * wave
         return cx + ox, cy + oy, cz + oz
 
@@ -852,7 +852,9 @@ class Word:
         d = tg - f[None, :]
         dist = np.linalg.norm(d, axis=1)
         dmax = float(dist.max()) + 1e-6
-        p = np.clip((a - (0.10 + 0.50 * (dist / dmax) ** 0.85)) / 0.34, 0.0, 1.0)
+        ta = float(self.opts.get("touch_at", 0.10))        # the share of the arrival before the touch
+        rest = 1.0 - ta
+        p = np.clip((a - (ta + rest * 0.56 * (dist / dmax) ** 0.85)) / (rest * 0.42), 0.0, 1.0)
         e = 1.0 - (1.0 - p) ** 2.6
         side = np.cross(d, nrm.astype(np.float32)[None, :]) * np.where(s[:, 0] < 0.5, -1.0, 1.0)[:, None]
         arc = np.sin(np.pi * e)
@@ -864,7 +866,22 @@ class Word:
         two = np.where((s[:, 1] < 0.5)[:, None], lin("#ffd27a")[None, :], lin("#7ec8ff")[None, :]).astype(np.float32)
         P["color"] = _mix(two * 1.2, self.c_letter[None, :], (e ** 2)[:, None])
         P["emit"] = 1.0 + 1.5 * np.exp(-np.abs(p - 1.0) / 0.04) * (p < 1.0)
-        fl = float(_ss(0.0, 0.10, a) * (1.0 - _ss(0.14, 0.62, a)))
+        if a < ta + 0.03 and (self.source is None or self.opts.get("comets", False)):
+            # two lights of two colours come together (helper BODY's two hands, when a film has them)
+            q = float(np.clip(a / ta, 0.0, 1.0))
+            for sgn, hexc in ((-1.0, "#ffd27a"), (1.0, "#7ec8ff")):
+                def at_(qq):
+                    k = (1.0 - qq) ** 1.6
+                    return f + (r * (sgn * 0.85 * w * k) + u * (0.10 * w * np.sin(np.pi * qq) * sgn)
+                                + nrm * (0.25 * w * k)).astype(np.float32)
+
+                head, tail = at_(q), at_(max(q - 0.22, 0.0))
+                al = float(_ss(0.0, 0.25, q) * (1.0 - _ss(ta, ta + 0.03, a)))
+                P["extra"].append(dict(pos=head[None, :], size=0.035 * w, color=lin(hexc), alpha=al, emit=4.0,
+                                       kind="spark", twinkle=0.3))
+                P["extra"].append(dict(pos=tail[None, :], pos2=head[None, :], size=0.022 * w, color=lin(hexc),
+                                       alpha=0.0, alpha2=0.8 * al, kind="ribbon"))
+        fl = float(_ss(ta - 0.04, ta + 0.01, a) * (1.0 - _ss(ta + 0.04, ta + 0.5 * rest, a)))
         if fl > 0.01:
             P["extra"].append(dict(pos=f[None, :], size=0.05 * w, color=lin(WARM), alpha=fl, emit=8.0, kind="spark",
                                    dof=False))
@@ -1113,7 +1130,8 @@ class Word:
             d = v * (0.5 * sec + 0.5 * sec * sec) * (0.7 + 0.6 * s[:, 1])
             q = away.astype(np.float32)[None, :] * d[:, None]
             wob = _ss(0.0, 1.0, sec) * 0.10 * w
-            q += self._world(F, wob * np.sin(t_ * 1.9 + s[:, 2] * TAU), wob * (0.8 * np.sin(t_ * 1.3 + s[:, 3] * TAU) + 0.6 * sec),
+            q += self._world(F, wob * np.sin(t_ * 1.9 + s[:, 2] * TAU),
+                             wob * (0.8 * np.sin(t_ * 1.3 + s[:, 3] * TAU) + 0.15 * sec),
                              wob * np.cos(t_ * 1.6 + s[:, 1] * TAU))
             return q
 
