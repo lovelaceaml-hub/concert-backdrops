@@ -255,18 +255,19 @@ class Renderer:
             fly_dur = max(arrive - m["hold"], 1.0)
             star = S.STAR_POS[i] if i < 9 else (0.5, 0.9)
             setu(self.p_textp, uT=t, uFormT=form_t, uFormDur=S.FORM_DUR, uFlyT=fly_t, uFlyDur=fly_dur, uPx=px,
-                 uPulse=P["pulse"], uStar=star, uColA=L("#fff0cc") * 1.0, uColB=L("#ffb070") * 1.15,
+                 uPulse=P["pulse"], uStar=star, **self.up.text_sparks(m, t),
                  uCalm=calm, uCalmY=CALM_Y)
             wd["vao"].render(moderngl.POINTS)
             wd["tex"].use(location=0)
             setu(self.p_text, uTex=0, uFormT=form_t, uFormDur=S.FORM_DUR, uFlyT=fly_t, uAspect=asp, uAlpha=1.0,
-                 uPulse=P["pulse"], uBounds=wd["bounds"], uCol=L("#fff5df"), uGlowCol=L("#ffc48c"))
+                 uPulse=P["pulse"], uBounds=wd["bounds"], **self.up.text_light(m, t, "#fff5df"))
             self.v_text.render(moderngl.TRIANGLE_STRIP)
         tg = S.TAGLINE
         if t >= tg["t0"]:
             self.tag["tex"].use(location=0)
             setu(self.p_text, uTex=0, uFormT=(t - tg["t0"]) + 1.35, uFormDur=(tg["t1"] - tg["t0"]), uFlyT=-1.0,
-                 uAspect=asp, uAlpha=0.92, uPulse=0.0, uBounds=self.tag["bounds"], uCol=L("#fff1d6"), uGlowCol=L("#ffc48c"))
+                 uAspect=asp, uAlpha=0.92, uPulse=0.0, uBounds=self.tag["bounds"],
+                 **self.up.text_light(tg, t, "#fff1d6"))
             self.v_text.render(moderngl.TRIANGLE_STRIP)
 
         # short lyric fragments: form, hold, then dissolve
@@ -280,7 +281,7 @@ class Renderer:
             fr["tex"].use(location=0)
             setu(self.p_text, uTex=0, uFormT=(t - m["t0"]) + 1.35, uFormDur=max(m["t1"] - m["t0"], 0.5), uFlyT=fly,
                  uAspect=asp, uAlpha=m.get("alpha", 0.95), uPulse=0.0, uBounds=fr["bounds"],
-                 uCol=L("#fff1d6"), uGlowCol=L(m.get("glow", "#ffc48c")))
+                 **self.up.text_light(m, t, "#fff1d6"))
             self.v_text.render(moderngl.TRIANGLE_STRIP)
         self.up.draw_frags(t)
         self.out.draw_card(t)
@@ -289,7 +290,7 @@ class Renderer:
         if credit[3] > 0.001:
             self.t_credit.use(location=0)
             setu(self.p_credit, uTex=0, uCredit=tuple(float(v) for v in credit), uC0=c0,
-                 uCol=L("#fff5df"), uGlowCol=L("#ffc48c"))
+                 **self.up.text_light(S.CREDIT, t, "#fff5df"))
             self.v_credit.render(moderngl.TRIANGLE_STRIP)
 
         # the nine lights and the lines between them
