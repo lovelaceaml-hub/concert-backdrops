@@ -1331,7 +1331,7 @@ Anthony saw the first fifteen style presets ("Styles proof") and judged them "te
 
 | Look | What it is | Reference |
 |---|---|---|
-| `crystal_light` | a person of clear glass with light inside: a bright edge split into prismatic colours (rose, peach, gold, mint, sky, lilac) where the body turns away from the eye, a clear silvery body cut in irregular facets that shimmer together, fine light along the cuts, a warm light glowing at the heart, fine four-point glints in the spectrum, a soft luminous face, a faint bloom round the figure | the crystal runners of ten/07-the-relay, refined |
+| `crystal_light` | a person of clear glass with light inside: thin rainbow glints along the silhouette (the full spectrum running in bands from the feet to the crown, so each colour is seen and not averaged to white), a soft prismatic edge, a clear silvery body cut in irregular facets that shimmer together, fine light along the cuts, a clear warm light glowing at the heart, four-point rainbow glints, a soft luminous face, a faint bloom round the figure | the crystal runners of ten/07-the-relay, refined |
 | `gold_glitter` | a person of warm gold glitter with depth: deep amber, gold and champagne grains that shimmer, many four-point glints, a light within round the heart; light streams off all the time as graceful spiralling ribbons (from the wrists, shoulders and crown, drifting with the air) and sparkles that rise off the garments, while the body stays whole | refs2 p08, p09 |
 
 Both: faces soft and luminous, with gentle features modelled on them (closed, peaceful eyes as a soft crease under a lit lid, a lit brow, the bridge of the nose, the lips in a gentle smile; `looks.face_marks`); never a dark silhouette, never glowing eyes, never a shatter, crumble, ash or dissolve. Every person is lit by a key light in front and above (`ST.key_light(at, facing)`, the Body key `light`), which shades the form. They work for men, women, children (`shape="child"`) and elders (`stoop=0.3` to `0.4`, a coat or a robe), with any garment, motion or gesture of section W, alone or in the pairs of `engine/p3d/pairs.py`.
@@ -1346,7 +1346,8 @@ def build(scene):
               gesture=[(1.0, 9.0, "open_arms", dict(lift=0.2))])
     # two people made by pairs: the look's Body keys go in, then each is dressed
     a, b = pairs.embrace(8.0, at=(6, 0), facing=90, approach=1.8,
-                         a=ST.keys("gold_glitter", shape="woman"), b=ST.keys("gold_glitter", shape="man"))
+                         a=ST.keys("gold_glitter", shape="woman"),
+                         b=ST.keys("gold_glitter", shape="woman", color="#f0a088", color2="#ffe6dc"))
     a.add(scene, "she2"); b.add(scene, "he2")
     ST.dress(scene, "she2", a, "gold_glitter"); ST.dress(scene, "he2", b, "gold_glitter")
 ```
@@ -1357,7 +1358,7 @@ def build(scene):
 
 **The body looks** (`engine/p3d/looks.py`, usable on any Body as `look=dict(name=..., ...)`):
 
-- `"crystal"`: `color` is the warm light inside, `color2` the clear glass (the preset: "#ffdca0" and "#d6eaff"). Settings: `prism` (0..1, how much of the spectrum the edge takes, 0.85), `clear` (the clear body, 1), `inner` (the light inside, 1), `reach` (how far the warm heart light spreads, in body heights, 0.18), `glints` (the share of four-point glints, 0.003), `power` (how thin the edge is, 2.0), `facet` (metres across a facet for a 1.6 m body, 0.075), `cuts` (the light along the facets' edges, 1), `front` (how much the far side dims, 0.8), `lit` (how much the key light shades the body, 0.75), `face` (the soft light of the face, 1), `features` (0..1, the gentle features, 1). Hair is faint glass (a knot of hair behind the head must not show through the face).
+- `"crystal"`: `color` is the warm light inside, `color2` the clear glass (the preset: "#ffdca0" and "#d6eaff"). Settings: `prism` (0..1, how much of the spectrum the edge takes, 0.85), `clear` (the clear body, 1), `inner` (the light inside, 1), `reach` (how far the warm heart light spreads, in body heights, 0.18), `glints` (the share of four-point glints, 0.003), `power` (how thin the edge is, 2.0), `facet` (metres across a facet for a 1.6 m body, 0.075), `cuts` (the light along the facets' edges, 1), `front` (how much the far side dims, 0.8), `lit` (how much the key light shades the body, 0.75), `face` (the soft light of the face, 1), `features` (0..1, the gentle features, 1), `rainbow` (the share of points in the thin rainbow edge, 0.4), `sparks` (the share of rainbow four-point glints on the silhouette, 0.012), `bands` (how many times the spectrum runs from the feet to the crown, 2.2). Hair is faint glass (a knot of hair behind the head must not show through the face).
 - `"gold"`: `color` gold, `color2` champagne (the preset: "#f2b44c" and "#fff0c8"). Settings: `deep` (the darkest gold, "#b8741c"), `depth` (the share of deep grains, 0.3), `inner`, `reach`, `glints` (0.0022), `front` (0.55), `features` (1).
 - Both presets ask the body for more points on the head (`detail=dict(head=3)`), so the face is smooth and its features read.
 
@@ -1370,11 +1371,14 @@ def build(scene):
 | `Bloom(at, t, dur, radius, n)` | light blooming from a point: a glow that swells and softens and a slow cloud of sparkles opening out and rising (an embrace, a touch); never a flash |
 | `HandLight(body, place, born, release, rise)` | a small light held in a hand that leaves it at `release` and floats up into the sky, swaying, with a faint trail |
 | `LightRiver(path, width, n, speed, y)` | a river of light flowing over the water along a curve of (x, z) points, mirrored in the lake |
-| `Aurora(center, span, height, n, folds, colors)` | curtains of an aurora far away in the sky, in folds, rippling slowly (give warm colours: mint below, rose and violet above) |
-| `CloudBank(center, size, n, light, color, color2)` | a bank of glowing clouds in the scene (gold toward a light, rose away from it), for cathedral skies |
+| `Aurora(center, span, height, curtains, rays, folds, colors)` | an aurora far away in the sky: curtains of fine vertical rays (1500 a curtain), brightest at the lower edge and fading upward, the foot of each curtain winding in folds that move, bright pulses running along it; a few curtains one behind the other |
+| `CloudBank(center, size, billows, n, light, color, color2, shade, gaps, gap)` | a grand bank of billowing clouds glowing from within: heaps with smaller billows on top and flat bellies, gold where they face `light`, a gold lining where the light glows through their thin edges, rose and violet in their shade; `gaps` keeps places open for rays. Crisp (no lens blur) and out of the lake mirror by default |
+| `GodRays(source, targets or around/spread/n, width, reach, tail)` | rays pouring down from a light hidden in clouds: soft volumetric beams of many large faint sprites, widening as they fall, varied widths, slowly shimmering, with dust motes sparkling in them. Put `source` far and high behind a CloudBank gap (a sun 300 to 400 m away) and the rays fall as long slanting streaks to the far lake; a near source with one target and a small `tail` gives a soft beam falling on someone. Sprites that dip into the ground fade (no hard edge) |
 | `Sparkles(center, box, ..., drift)` | twinkling motes and four-point stars; a negative `drift` makes falling light |
 
-With the world's `shafts` (up to four columns of light; `strength` as a function of time puts them in one scene only), `light=dict(pos, rays)` (a radiance behind a head) and warm looks of your own (`looks=dict(name=dict(base="sunrise", sky_top=..., ...))`), these make the settings of `demo_heavenly.py`: a cathedral of light shafts among golden clouds, a dusk where an embrace blooms, falling light on a prayer, a river of light at sunrise, an aurora over a gathering.
+With warm deep looks of your own (`looks=dict(name=dict(base="dawn", sky_top=..., ...))`) these make the settings of `demo_heavenly.py`: god rays pouring through glowing clouds behind a woman of crystal, two women of gold embracing under a rose cloudscape, a soft beam falling on a kneeling elder, a river of light under clouds, an aurora over a gathering. The world's own `shafts` are flat columns standing on the water: for rays use GodRays.
+
+**Framing.** These are hero moments: frame the people large (a full figure filling 60 to 80 percent of the height, or half figures) and move the camera slowly round them (`orbit` with a radius that closes in). Keep every place well inside the lake's shore (1400 m from the middle by default): beyond it the lake gives way to a flat plain that reads as a pink or orange floor. Every touching moment is between two people of the same gender (a parent with a child is the one exception): the embrace in the proof is two women, the lift two women.
 
 **Keep them in the light.** Light only adds: both looks need a sky with room for light (night, dusk, dawn, sunrise, a deep warm twilight). On a pale day sky they fade to white. Keep the brightest sky under about 235 of 255 behind the people.
 
@@ -1396,4 +1400,5 @@ With the world's `shafts` (up to four columns of light; `strength` as a function
 - Gold trails follow the places they leave from; a figure that stands still has trails drifting only with the air (`wind`), and a fast turn can bend them sharply for a moment.
 - Each gold body with trails asks for about a hundred past poses a frame (reused across frames): a scene of four dressed gold people renders slower than four plain bodies.
 - One world `light=` with rays and four shafts per song: a song with more scenes of shafts moves them with functions of time.
-- `pairs.embrace(..., approach=...)` (section W) currently starts the two about 7 metres from their meeting place each (its walk-in distance is taken from the wrong value); `demo_heavenly.py` uses approach 0 with open arms before the embrace.
+- People in pairs (section W, `pairs.embrace`, `pairs.helped_up`) are slow to render: each frame steps their cloth with the contact solved against the other body, about 30 to 60 seconds a frame for an embracing pair on one core. The proof's embrace and lift take most of its render time.
+- Two people of the same look in an embrace merge into one mass of light: give them different colours (the proof has gold and rose gold) and a camera that sees one face over the other's shoulder.

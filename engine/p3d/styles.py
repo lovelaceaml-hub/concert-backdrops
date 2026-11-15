@@ -15,9 +15,10 @@ shatters, crumbles or comes apart. For men, women, children (shape="child") and 
     def build(scene):
         ST.person(scene, "crystal_light", "she", shape="woman", at=(0, 0), facing=30, gesture=[...])
 
-    # people made by engine/p3d/pairs.py take the look's Body keys, then their dress:
+    # people made by engine/p3d/pairs.py take the look's Body keys, then their dress (every touching moment is
+    # between two people of the same gender; a parent with a child is the one exception):
     a, b = pairs.embrace(8.0, at=(0, 0), facing=90, a=ST.keys("gold_glitter", shape="woman"),
-                         b=ST.keys("crystal_light", shape="man"))
+                         b=ST.keys("gold_glitter", shape="woman", color="#f0a088", color2="#ffe6dc"))
     a.add(scene, "she"); b.add(scene, "he")
     ST.dress(scene, "she", a, "gold_glitter"); ST.dress(scene, "he", b, "crystal_light")
 
@@ -232,8 +233,10 @@ def dress(scene, name, body, style, heart=1.0, bloom=1.0, trails=1.0, motes=1.0,
     parts = {}
     crystal = style == "crystal_light"
     if heart:
-        g = K.Glow(_inside(body, 0.62), radius=0.07 * k, color="#fff1d0" if crystal else "#fff0c8",
-                   color2="#ffc070" if crystal else "#ffb648", n=70, alpha=0.035 * heart, pulse=0.35, size=0.75,
+        g = K.Glow(_inside(body, 0.62), radius=(0.09 if crystal else 0.07) * k,
+                   color="#fff1d0" if crystal else "#fff0c8", color2="#ffc070" if crystal else "#ffb648", n=70,
+                   alpha=(0.07 if crystal else 0.03) * heart,
+                   pulse=0.35, size=0.75,
                    show=sh, seed=sd)
         scene.add(name + "_heart", g)
         parts[name + "_heart"] = g

@@ -19,7 +19,10 @@ Looks (may be combined in a list, for example look=["rim", "glitter"]):
               body, default 1), inner (the light inside, default 1), reach (how far the warm heart light spreads,
               in body heights, default 0.18), glints (share of four-point glints, default 0.003), facet (metres
               across a facet for a 1.6 m body, default 0.075), cuts (the light of the facets' edges, default 1),
-              front (0..1, how much the far side of the glass dims so the near side reads, default 0.8).
+              front (0..1, how much the far side of the glass dims so the near side reads, default 0.8),
+              rainbow (share of points in the thin rainbow edge, default 0.4), sparks (share of four-point
+              rainbow glints on the silhouette, default 0.012), bands (how many times the spectrum runs from the
+              feet to the crown along the edge, default 2.2).
               color is the warm light inside, color2 the clear glass
   "gold"      a person of warm gold glitter with depth: deep amber, gold and champagne grains, a soft light
               within round the heart, many four-point glints. Settings: deep (the darkest gold), depth (the share
@@ -41,12 +44,17 @@ LOOKS = ("glitter", "plexus", "rim", "dots", "window", "crystal", "gold")
 PRISM = np.array([lin(h) for h in ("#ff9cc0", "#ffbe86", "#ffe680", "#9cf2c8", "#8cc8ff", "#c0a4ff")])
 
 
-def prism(h):
+# the full spectrum, saturated: the thin rainbow glints along a crystal body's silhouette
+SPECTRUM = np.array([lin(h) for h in ("#ff3d8b", "#ff8a2a", "#ffe03a", "#3df29a", "#3aa8ff", "#8a5cff")])
+
+
+def prism(h, palette=None):
     """Colours of the soft spectrum for hues h in 0..1 (wrapping)."""
-    h = np.mod(np.asarray(h, np.float64), 1.0) * len(PRISM)
-    i = np.floor(h).astype(np.int64) % len(PRISM)
+    pal = PRISM if palette is None else palette
+    h = np.mod(np.asarray(h, np.float64), 1.0) * len(pal)
+    i = np.floor(h).astype(np.int64) % len(pal)
     f = (h - np.floor(h))[:, None]
-    return PRISM[i] * (1 - f) + PRISM[(i + 1) % len(PRISM)] * f
+    return pal[i] * (1 - f) + pal[(i + 1) % len(pal)] * f
 
 # part codes of the cloud points
 SKIN, HAND, CLOTH, VEIL, HAIR, FOOT = 0, 1, 2, 3, 4, 5
@@ -248,7 +256,7 @@ def build(look, cloud, color, color2, bright=1.0, scale=1.0):
         fr = sp.get("front", 0.8)
         glass = soft_part * np.where(part == HAIR, 0.35, 1.0) * face_marks(rest, part, sp.get("features", 1.0))
         layers.append(dict(kind="soft", idx=allp, size=size, color=edge_col,
-                           alpha=0.55 * b * glass * seam, emit=1.0, twinkle=0.45,
+                           alpha=0.22 * b * glass * seam, emit=1.0, twinkle=0.45,
                            rim=(1.0, sp.get("power", 2.0)), backlight=0.35, front=fr * 0.7))
         # the facets' edges: fine lines of light where the cuts meet
         fe = allp[fedge > 0.45]
@@ -262,16 +270,29 @@ def build(look, cloud, color, color2, bright=1.0, scale=1.0):
         clear = c2[None] * (1 - wk) + c1[None] * wk
         clear = clear * (0.85 + 0.3 * rainbow * 0.5)
         layers.append(dict(kind="soft", idx=allp, size=size * 1.05, color=clear,
-                           alpha=0.20 * b * sp.get("clear", 1.0) * glass
+                           alpha=0.17 * b * sp.get("clear", 1.0) * glass
                            * np.where(sk, 1.1 * (0.85 + 0.3 * fid), 0.25 + 1.5 * fid ** 1.5),
                            emit=1.0, twinkle=0.6, rim=(0.25, 1.2), backlight=0.25, seed=fseed, front=fr,
                            lit=sp.get("lit", 0.75)))
         # the light inside: larger soft points, warm, gathered round the heart
         inner = allp[(seed < 0.12) & ~((part == SKIN) & (cloud["h"] > 0.84)) & (part != HAIR)]
-        layers.append(dict(kind="soft", idx=inner, size=0.020 * sz * (0.6 + 0.8 * r3[inner]),
+        layers.append(dict(kind="soft", idx=inner, size=0.012 * sz * (0.6 + 0.8 * r3[inner]),
                            color=np.broadcast_to(c1, (len(inner), 3)),
-                           alpha=0.07 * b * sp.get("inner", 1.0) * soft_part[inner] * (0.12 + 0.88 * warm[inner]),
+                           alpha=0.10 * b * sp.get("inner", 1.0) * soft_part[inner] * (0.12 + 0.88 * warm[inner]),
                            emit=1.0, twinkle=0.3, rim=(0.0, 2.0), backlight=0.4))
+        # thin rainbow glints along the silhouette: the spectrum, saturated, on a very thin edge
+        sil = allp[r3 < sp.get("rainbow", 0.4)]
+        # (the hue runs smoothly up the body, so neighbouring points share a colour and it is seen, not
+        # averaged to white)
+        band = cloud["h"] * sp.get("bands", 2.2) + 0.12 * _noise(rest, 1.2, 3.0)
+        spec = prism(band[sil], SPECTRUM)
+        layers.append(dict(kind="soft", idx=sil, size=size[sil] * 1.25, color=spec,
+                           alpha=1.0 * b * glass[sil], emit=1.6, twinkle=0.6, rim=(1.0, 3.0), backlight=0.3,
+                           front=0.5))
+        sg = allp[(r2 > 1.0 - sp.get("sparks", 0.012)) & (part != HAIR)]
+        layers.append(dict(kind="spark", idx=sg, size=0.0075 * sz * (0.7 + 0.6 * r3[sg]),
+                           color=prism(band[sg], SPECTRUM) * 0.8 + 0.2, alpha=0.9 * b,
+                           emit=2.2 + 2.0 * r3[sg], twinkle=1.0, rim=(1.0, 6.0), backlight=0.3, front=0.5))
         # the face: a soft, even light over the skin of the head (luminous, never hollow), modelled by the
         # gentle features of face_marks
         fc = allp[(part == SKIN) & (cloud["h"] > 0.84)]

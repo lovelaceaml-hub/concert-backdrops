@@ -17,7 +17,8 @@ For the two approved looks (engine/p3d/styles.py) and their heavenly settings:
   HandLight(body, ...)            a small light held in a hand that floats up into the sky when released
   LightRiver(path, ...)           a river of light flowing over the lake
   Aurora(...)                     curtains of an aurora far away in the sky
-  CloudBank(center, ...)          a bank of glowing clouds in the scene, gold toward a light, rose away
+  CloudBank(center, ...)          a grand bank of billowing clouds glowing from within, gold, rose, violet
+  GodRays(source, ...)            soft volumetric rays pouring down through gaps in clouds, motes in them
 Everything is a pure function of time.
 """
 import numpy as np
@@ -601,6 +602,7 @@ class LightTrails:
         m = len(self.places) * self.per
         self.r = [hash01(m, k + i).astype(np.float64) for i in range(6)]
         self.seed = float(seed)
+        self._memo = {}
 
     def gain(self, t):
         g = self.body.gain(t) if hasattr(self.body, "gain") else 1.0
@@ -623,10 +625,20 @@ class LightTrails:
         S = len(ages)
         t0 = sh[0] if sh is not None else -1e9
         # the places in the past (one Body.where per place and moment)
+        # each past moment's places are asked once and kept while the trail needs them (a body's pose can be
+        # costly: a body in a pair solves its contact with the other)
         P = np.zeros((len(self.places), S, 3))
-        for i, name in enumerate(self.places):
-            for j, a in enumerate(ages):
-                P[i, j] = b.where(max(t - a, t0), name)
+        memo = self._memo
+        for j, a in enumerate(ages):
+            tk = round(float(max(t - a, t0)), 6)
+            got = memo.get(tk)
+            if got is None:
+                got = np.array([b.where(tk, name) for name in self.places], np.float64)
+                if j > 0:
+                    memo[tk] = got
+            P[:, j] = got
+        for tk in [k for k in memo if k < t - self.length - 1.0 or k > t + 1.0]:
+            del memo[tk]
         ages = np.minimum(ages, self.length)
         m = len(self.places) * self.per
         pid = np.repeat(np.arange(len(self.places)), self.per)
@@ -722,23 +734,26 @@ class LightRiver:
 
 
 class Aurora:
-    """Curtains of an aurora across the sky: tall soft bands hanging in folds, green and teal below fading to
-    rose and violet above, rippling slowly. Far away (hundreds of metres), not blurred by the lens.
+    """An aurora: curtains of fine vertical rays hanging in the sky, brightest at their lower edge and fading
+    upward, folding and rippling slowly, bright pulses running along them. Far away, sharp (no lens blur).
 
-    center   (x, z) the middle of the curtain on the ground plan; dist: how far it runs across (metres);
-    height   (bottom, top) metres; n: bands; colors (bottom, middle, top); bright; folds: how deep the folds are"""
+    center   (x, z) on the ground plan; span: metres across; height: (lower edge, top) metres
+    curtains how many curtains, one behind the other; rays: fine rays per curtain
+    colors   (lower edge, middle, top) display hex; bright; folds: how deep the folds are (metres)"""
 
-    def __init__(self, center=(0.0, -400.0), span=900.0, height=(60.0, 260.0), n=420, folds=60.0,
-                 colors=("#5dffc0", "#62d6ff", "#ff8ad8"), bright=1.0, yaw=0.0, reflect=True, show=None, seed=1.0):
+    def __init__(self, center=(0.0, -400.0), span=900.0, height=(80.0, 300.0), curtains=3, rays=1400,
+                 folds=60.0, colors=("#b8ffd8", "#7cf0c0", "#c890ff"), bright=1.0, yaw=0.0, reflect=True, show=None,
+                 seed=1.0):
         self.center = np.asarray(center, np.float64)
         self.span, self.h0, self.h1 = float(span), float(height[0]), float(height[1])
-        self.n, self.folds, self.bright = int(n), float(folds), float(bright)
+        self.k, self.n, self.folds, self.bright = int(curtains), int(rays), float(folds), float(bright)
         self.c = [_col(c) for c in colors]
         self.yaw = np.radians(yaw)
         self.reflect = bool(reflect)
         self.show = show
         k = int(seed * 100)
-        self.r = [hash01(self.n, k + i).astype(np.float64) for i in range(3)]
+        m = self.k * self.n
+        self.r = [hash01(m, k + i).astype(np.float64) for i in range(4)]
 
     def gain(self, t):
         if self.show is None:
@@ -748,60 +763,118 @@ class Aurora:
     def sample(self, t):
         if self.show is not None and not (self.show[0] <= t <= self.show[1]):
             return []
-        u = (np.arange(self.n) + 0.5) / self.n - 0.5
-        x = u * self.span
-        fold = (np.sin(u * 7.0 + t * 0.12) * 0.6 + np.sin(u * 17.0 - t * 0.21 + 1.3) * 0.3
-                + np.sin(u * 41.0 + t * 0.35) * 0.1) * self.folds
-        c, s_ = np.cos(self.yaw), np.sin(self.yaw)
-        X = self.center[0] + x * c + fold * s_
-        Z = self.center[1] - x * s_ + fold * c
-        # the light of the curtain varies smoothly along it (soft rays drifting), never band by band
-        ray = (0.55 + 0.25 * np.sin(u * 31.0 - t * 0.6) + 0.15 * np.sin(u * 83.0 + t * 0.9 + 1.7)
-               + 0.05 * np.sin(u * 191.0 - t * 1.3))
-        sheet = 0.5 + 0.5 * np.sin(u * 5.0 + t * 0.15 + 0.8)
-        hb = self.h0 * (1.0 + 0.15 * np.sin(u * 9.0 + t * 0.1))
-        ht = self.h1 * (0.8 + 0.2 * np.sin(u * 6.0 - t * 0.13) + 0.1 * np.sin(u * 23.0 + t * 0.3))
-        hm = hb + (ht - hb) * 0.3
-        ends = np.clip((0.5 - np.abs(u)) / 0.15, 0, 1) ** 1.5
-        a = np.clip(ray, 0, 1) * (0.35 + 0.65 * sheet) * ends * self.bright * 0.35
-        w = self.span / self.n * 3.5
-        pb = np.stack([X, hb, Z], axis=1)
-        pm = np.stack([X, hm, Z], axis=1)
-        pt = np.stack([X, ht, Z], axis=1)
-        z0 = np.zeros(self.n)
-        return [dict(pos=pb, pos2=pm, size=w, size2=w, color=self.c[0] * 0.7 + self.c[1] * 0.3, alpha=z0,
-                     alpha2=a, kind="ribbon", dof=0.0, fog=0.3, reflect=self.reflect),
-                dict(pos=pm, pos2=pt, size=w, size2=w * 1.3, color=self.c[1] * 0.3 + self.c[2] * 0.7, alpha=a,
-                     alpha2=z0, kind="ribbon", dof=0.0, fog=0.3, reflect=self.reflect)]
+        n, K = self.n, self.k
+        out = []
+        cy, sy = np.cos(self.yaw), np.sin(self.yaw)
+        for j in range(K):
+            r = [x[j * n:(j + 1) * n] for x in self.r]
+            u = (np.arange(n) + r[0]) / n - 0.5                     # along the curtain, jittered
+            span = self.span * (1.0 - 0.18 * j)
+            x = u * span
+            ph = 1.7 * j
+            # the curtain folds: its foot line winds in depth, slowly moving
+            fold = (np.sin(u * 6.0 + t * 0.10 + ph) * 0.55 + np.sin(u * 15.0 - t * 0.17 + 2 * ph) * 0.3
+                    + np.sin(u * 37.0 + t * 0.29 + ph) * 0.15) * self.folds
+            depth = -120.0 * j
+            X = self.center[0] + x * cy + (fold + depth) * sy
+            Z = self.center[1] - x * sy + (fold + depth) * cy
+            # the lower edge rises and falls gently along the curtain
+            base = self.h0 * (1.0 + 0.10 * np.sin(u * 5.0 + ph + t * 0.07) + 0.08 * j)
+            top = base + (self.h1 - self.h0) * (0.55 + 0.35 * (0.5 + 0.5 * np.sin(u * 3.0 - t * 0.05 + ph))
+                                                + 0.15 * r[1])
+            # rays: fine striations with bright pulses running along the curtain
+            ray = 0.45 + 0.55 * r[2] ** 1.5
+            run = 0.5 + 0.5 * np.sin(u * 40.0 - t * 0.9 + ph) * np.sin(u * 11.0 + t * 0.35)
+            sheet = 0.55 + 0.45 * np.sin(u * 4.0 + t * 0.12 + ph)
+            ends = np.clip((0.5 - np.abs(u)) / 0.12, 0, 1) ** 1.5
+            a = ray * (0.35 + 0.65 * run) * sheet * ends * self.bright * (0.55 if j else 1.0)
+            w = span / n * 1.1
+            mid = base + (top - base) * 0.12
+            p0 = np.stack([X, base - 2.0, Z], axis=1)
+            p1 = np.stack([X, mid, Z], axis=1)
+            p2 = np.stack([X, top, Z], axis=1)
+            z0 = np.zeros(n)
+            cl = self.c[0][None] * np.ones((n, 1))
+            cm = self.c[1][None] * 0.6 + self.c[2][None] * 0.4
+            ct = self.c[2][None] * np.ones((n, 1))
+            st = dict(kind="ribbon", dof=0.0, fog=0.2, reflect=self.reflect)
+            # the bright lower edge (a quick rise), then the long fade upward
+            out.append(dict(pos=p0, pos2=p1, size=w, size2=w, color=cl, alpha=z0, alpha2=0.30 * a, **st))
+            out.append(dict(pos=p1, pos2=p2, size=w, size2=w * 1.4, color=cm * np.ones((n, 1)), alpha=0.30 * a,
+                            alpha2=z0, **st))
+            # a faint violet glow high above the curtain
+            p3 = np.stack([X, top + (top - base) * 0.4, Z], axis=1)
+            out.append(dict(pos=p2 - (p2 - p1) * 0.5, pos2=p3, size=w * 3, size2=w * 3, color=ct,
+                            alpha=0.05 * a, alpha2=z0, **st))
+        return out
 
 
 class CloudBank:
-    """A bank of soft clouds of light in the scene (not the far sky): billows of large soft sprites, warm gold
-    toward a light and rose away from it, glowing from within. For cathedral skies round a figure.
+    """A grand bank of clouds glowing with warm light from within: billowing heaps (each a round mass with
+    smaller billows on top, flat underneath) at several depths, gold where they face the light and glowing
+    through at their edges, rose and then violet in their shade. Light only adds: the clouds are light.
 
-    center   (x, y, z); size (width, height, depth) metres; n: billows; light: a world point (the warm side)
-    color, color2; bright"""
+    center   (x, y, z) the middle of the bank; size (width, height, depth) metres
+    billows  how many heaps; n: soft sprites in all; light: a world point the light comes from (behind and
+             above the bank for light glowing through); color (lit gold), color2 (rose), shade (violet)
+    bright, alpha (each sprite), gaps: (x, z) places to leave open for rays (a list), gap: their radius,
+    dof (how much lens blur, default none: the billows stay crisp), reflect (in the lake; default off: the
+    mirror of so many large soft points floods the water)"""
 
-    def __init__(self, center, size=(30.0, 6.0, 10.0), n=500, light=None, color="#ffd08a", color2="#ff9ab8",
-                 bright=1.0, alpha=0.012, puff=0.25, show=None, seed=1.0):
+    def __init__(self, center, size=(60.0, 14.0, 20.0), billows=26, n=8000, light=None, color="#ffd894",
+                 color2="#f08cac", shade="#5a3482", bright=1.0, alpha=0.014, gaps=(), gap=6.0, dof=0.0,
+                 reflect=False, show=None, seed=1.0, puff=None):
         self.center = np.asarray(center, np.float64)
         self.dims = np.asarray(size, np.float64)
-        self.n, self.bright = int(n), float(bright)
-        self.alpha, self.puff = float(alpha), float(puff)
+        self.bright, self.alpha = float(bright), float(alpha)
         self.light = light
-        self.color, self.color2 = _col(color), _col(color2)
+        self.color, self.color2, self.shade = _col(color), _col(color2), _col(shade)
         self.show = show
         k = int(seed * 100)
-        r = [hash01(self.n, k + i).astype(np.float64) for i in range(5)]
-        # billows: clustered round a few centres, flat underneath, heaped above
-        nc = max(self.n // 40, 4)
-        cr = [hash01(nc, k + 10 + i).astype(np.float64) for i in range(3)]
-        cc = np.stack([cr[0] - 0.5, cr[1] * 0.3 - 0.2, cr[2] - 0.5], axis=1)
-        par = (r[0] * nc).astype(np.int64) % nc
-        g = np.stack([r[1] - 0.5, np.abs(r[2] - 0.5), r[3] - 0.5], axis=1)
-        self.p = cc[par] + g * np.array([0.35, 0.5, 0.35])
-        self.s = 0.08 + 0.22 * r[4] ** 1.5
-        self.r = r
+        W, H, D = self.dims
+        nb = int(billows)
+        rb = [hash01(nb, k + i).astype(np.float64) for i in range(5)]
+        bc = np.stack([(rb[0] - 0.5) * W, np.zeros(nb), (rb[1] - 0.5) * D], axis=1)
+        R = (0.06 + 0.10 * rb[2] ** 1.5) * W
+        R = np.minimum(R, 0.45 * H + 0.02 * W)
+        for g in gaps:                                   # keep the gaps open: push heaps out of them
+            gx = np.asarray(g, np.float64) - self.center[[0, 2]]
+            d = np.hypot(bc[:, 0] - gx[0], bc[:, 2] - gx[1])
+            push = np.clip(gap + R * 0.6 - d, 0, None)
+            dirx = (bc[:, 0] - gx[0]) / np.maximum(d, 1e-6)
+            dirz = (bc[:, 2] - gx[1]) / np.maximum(d, 1e-6)
+            bc[:, 0] += dirx * push
+            bc[:, 2] += dirz * push
+        bc[:, 1] = -0.5 * H + R * (0.55 + 0.35 * rb[3])          # sitting on a flat floor
+        # smaller billows heaped on top of each mass
+        sub = []
+        for i in range(nb):
+            ns = 3 + int(rb[4][i] * 4)
+            rs = [hash01(ns, k + 50 + 7 * i + j).astype(np.float64) for j in range(4)]
+            ang = rs[0] * 6.283
+            up = 0.35 + 0.5 * rs[1]
+            off = np.stack([np.cos(ang) * (1 - up) * 0.8, up, np.sin(ang) * (1 - up) * 0.8], axis=1) * R[i]
+            sub.append(np.c_[bc[i] + off * 0.85, R[i] * (0.35 + 0.3 * rs[2])])
+        sub = np.concatenate(sub)
+        cents = np.r_[np.c_[bc, R], sub]
+        self.cents = cents
+        m = int(n)
+        rr = [hash01(m, k + 20 + i).astype(np.float64) for i in range(6)]
+        w = cents[:, 3] ** 2
+        cid = np.searchsorted(np.cumsum(w) / w.sum(), rr[0])
+        cid = np.minimum(cid, len(cents) - 1)
+        v = np.stack([rr[1] - 0.5, rr[2] - 0.5, rr[3] - 0.5], axis=1)
+        v /= np.maximum(np.linalg.norm(v, axis=1, keepdims=True), 1e-6)
+        rad = cents[cid, 3] * (0.62 + 0.38 * rr[4] ** 0.35)
+        p = cents[cid, :3] + v * rad[:, None]
+        p[:, 1] = np.maximum(p[:, 1], -0.5 * H + 0.15 * cents[cid, 3])        # flat bellies
+        self.p = p
+        self.v = v
+        self.cid = cid
+        self.s = cents[cid, 3] * (0.30 + 0.28 * rr[5])
+        self.r = rr[5]
+        self.puff = 1.0 if puff is None else float(puff)
+        self.dof, self.reflect = float(dof), bool(reflect)
 
     def gain(self, t):
         if self.show is None:
@@ -811,20 +884,137 @@ class CloudBank:
     def sample(self, t):
         if self.show is not None and not (self.show[0] <= t <= self.show[1]):
             return []
-        q = self.p + np.stack([np.sin(t * 0.05 + self.r[0] * 6.0), np.zeros(self.n), np.cos(t * 0.04 + self.r[1] * 6.0)],
-                              axis=1) * 0.01
-        pos = self.center[None] + q * self.dims[None]
-        L = None if self.light is None else _pt(self.light, t)
-        if L is not None:
-            d = L[None] - pos
+        drift = np.array([np.sin(t * 0.03) * 0.6, 0.0, 0.0])
+        pos = self.center[None] + self.p + drift[None]
+        if self.light is not None:
+            L = _pt(self.light, t)
+            c = self.center[None] + self.cents[self.cid, :3]
+            d = L[None] - c
             d /= np.maximum(np.linalg.norm(d, axis=1, keepdims=True), 1e-6)
-            k = np.clip(0.5 + 0.5 * d[:, 1] + 0.3 * (q[:, 1] > 0), 0, 1)[:, None]
+            s = (self.v * d).sum(1)
         else:
-            k = np.clip(0.4 + q[:, 1:2] * 1.5, 0, 1)
-        col = self.color2[None] * (1 - k) + self.color[None] * k
-        size = self.s * self.dims.max() * self.puff
-        return [dict(pos=pos, size=size, color=col, alpha=self.alpha * self.bright * np.ones(self.n), kind="soft",
-                     dof=0.3, lod=False)]
+            s = self.v[:, 1]
+        lit = np.clip((s + 0.25) / 1.25, 0.0, 1.0)
+        top = np.clip(self.v[:, 1] * 0.5 + 0.5, 0, 1)
+        k1 = np.clip((s + 0.8) / 0.9, 0, 1)[:, None]                      # shade to rose
+        k2 = (lit ** 1.6)[:, None]                                       # rose to gold
+        col = self.shade[None] * (1 - k1) + self.color2[None] * k1
+        col = col * (1 - k2) + self.color[None] * k2
+        # light glowing through the thin edges that face it (a gold lining)
+        edge = np.clip(np.linalg.norm(self.p - self.cents[self.cid, :3], axis=1) / self.cents[self.cid, 3], 0, 1)
+        glow = 1.0 + 1.2 * lit ** 3 * edge ** 2 + 0.3 * top
+        a = self.alpha * self.bright * (0.35 + 0.65 * lit) * glow
+        return [dict(pos=pos, size=self.s * self.puff, color=col, alpha=a, kind="soft", dof=self.dof, fog=0.4,
+                     lod=False, reflect=self.reflect)]
+
+
+class GodRays:
+    """Rays of light pouring down from a light behind clouds: soft volumetric beams that widen as they fall
+    and fade toward the ground, of varied widths and angles, slowly shimmering, with dust motes sparkling in
+    them. Put the source among a CloudBank's gaps so the rays pour through them.
+
+    source   (x, y, z) the light (high, behind or among the clouds), or a function of time
+    targets  (x, z) or (x, y, z) points the rays fall toward; or n rays landing at random round `around`
+             within `spread` metres
+    width    (at the source, at the end) metres, each ray 0.5 to 1.6 times it; reach: how far toward its
+             target a ray stays visible (0..1)
+    color, color2 (the motes), bright, sprites per ray, motes per ray, shimmer (0..1), burst: the soft bright
+    glow where the light breaks through (0: none), tail: the share of its length over which a ray fades out
+    at its end (0.45: a long fade toward the ground; small: the ray lands bright, a beam falling on someone)"""
+
+    def __init__(self, source, targets=None, around=(0.0, 0.0), spread=6.0, n=6, width=(0.8, 4.0), reach=0.95,
+                 color="#ffe2a8", color2="#fff4dc", bright=1.0, sprites=420, motes=140, shimmer=0.3, ground=0.0,
+                 burst=0.0, tail=0.45, show=None, seed=1.0):
+        self.source = source
+        k = int(seed * 100)
+        if targets is None:
+            rt = [hash01(int(n), k + 90 + i).astype(np.float64) for i in range(2)]
+            ang = rt[0] * 6.283
+            rad = spread * np.sqrt(rt[1])
+            targets = [(around[0] + np.cos(a) * r, around[1] + np.sin(a) * r) for a, r in zip(ang, rad)]
+        T = []
+        for tg in targets:
+            tg = np.asarray(tg, np.float64)
+            T.append(np.array([tg[0], ground, tg[1]]) if len(tg) == 2 else tg)
+        self.T = np.array(T)
+        self.ground = float(ground)
+        self.nr = len(self.T)
+        self.w0, self.w1 = float(width[0]), float(width[1])
+        self.reach, self.bright, self.shimmer = float(reach), float(bright), float(shimmer)
+        self.ns, self.nm = int(sprites), int(motes)
+        self.color, self.color2 = _col(color), _col(color2)
+        self.show = show
+        rr = [hash01(self.nr, k + 30 + i).astype(np.float64) for i in range(3)]
+        self.wk = 0.5 + 1.1 * rr[0]
+        self.bk = 0.55 + 0.45 * rr[1]
+        self.ph = rr[2] * 6.283
+        m = self.nr * self.ns
+        self.rs = [hash01(m, k + 40 + i).astype(np.float64) for i in range(4)]
+        mm = self.nr * self.nm
+        self.rm = [hash01(mm, k + 60 + i).astype(np.float64) for i in range(5)]
+        self.burst = float(burst)
+        self.tail = max(float(tail), 0.02)
+        rb = [hash01(40, k + 80 + i).astype(np.float64) for i in range(4)]
+        self.boff = (np.stack([rb[0], rb[1], rb[2]], axis=1) - 0.5) * np.array([1.0, 0.5, 1.0])
+        self.br = rb[3]
+
+    def gain(self, t):
+        if self.show is None:
+            return 1.0
+        return float(bm.ramp(t, self.show[0], self.show[0] + 1.0)) * (1.0 - float(bm.ramp(t, self.show[1] - 1.0, self.show[1])))
+
+    def _frame(self, S):
+        ax = self.T - S[None]
+        ln = np.linalg.norm(ax, axis=1, keepdims=True)
+        ax = ax / np.maximum(ln, 1e-6)
+        e1 = np.cross(ax, np.array([0.0, 0.0, 1.0]))
+        e1 /= np.maximum(np.linalg.norm(e1, axis=1, keepdims=True), 1e-6)
+        e2 = np.cross(ax, e1)
+        return ax, ln[:, 0], e1, e2
+
+    def sample(self, t):
+        if self.show is not None and not (self.show[0] <= t <= self.show[1]):
+            return []
+        S = _pt(self.source, t)
+        ax, ln, e1, e2 = self._frame(S)
+        out = []
+        # the beams: many large soft sprites, gaussian across, widening downward
+        rid = np.repeat(np.arange(self.nr), self.ns)
+        r = self.rs
+        u = 0.04 + (self.reach - 0.04) * r[0] ** 0.75
+        w = (self.w0 + (self.w1 - self.w0) * u) * self.wk[rid]
+        g1 = np.sqrt(-2.0 * np.log(np.maximum(1.0 - 0.97 * r[1], 1e-6))) * np.cos(r[2] * 6.283) * 0.30
+        g2 = np.sqrt(-2.0 * np.log(np.maximum(1.0 - 0.97 * r[1], 1e-6))) * np.sin(r[2] * 6.283) * 0.30
+        pos = S[None] + ax[rid] * (u * ln[rid])[:, None] + (e1[rid] * g1[:, None] + e2[rid] * g2[:, None]) * w[:, None]
+        prof = np.clip(u / 0.12, 0, 1) * np.clip((self.reach - u) / (self.tail * self.reach), 0, 1) ** 1.2
+        sh = 1.0 + self.shimmer * np.sin(t * 0.45 + self.ph[rid] + u * 2.0)
+        core = np.exp(-(g1 ** 2 + g2 ** 2) / 0.09)
+        a = 0.022 * self.bright * self.bk[rid] * prof * sh * (0.5 + 0.5 * core) * (420.0 / max(self.ns, 1))
+        sz = w * (0.55 + 0.35 * r[3])
+        # a soft sprite that dips into the ground is cut by it (a hard edge): fade those out
+        a = a * np.clip((pos[:, 1] - self.ground) / (0.5 * sz), 0.0, 1.0)
+        out.append(dict(pos=pos, size=sz, color=self.color, alpha=a, kind="soft", dof=0.3,
+                        fog=0.15, lod=False, reflect=False))
+        if self.burst > 0.0:
+            # where the light breaks through the clouds: a soft bright source
+            out.append(dict(pos=S[None] + self.boff * self.w1 * 0.8, size=self.w1 * (0.6 + 0.8 * self.br),
+                            color=self.color2, alpha=0.05 * self.burst * self.bright * np.ones(len(self.br)),
+                            kind="soft", dof=0.0, fog=0.1, lod=False))
+        # the motes: fine dust drifting slowly inside the beams, sparkling
+        q = self.rm
+        mid = np.repeat(np.arange(self.nr), self.nm)
+        um = np.mod(0.25 + 0.75 * q[0] + t * (0.004 + 0.006 * q[1]), 1.0) * self.reach
+        wm = (self.w0 + (self.w1 - self.w0) * um) * self.wk[mid]
+        rad = np.sqrt(q[2]) * 0.42
+        ang = q[3] * 6.283 + t * 0.1 * (q[1] - 0.5)
+        pm = S[None] + ax[mid] * (um * ln[mid])[:, None] + (e1[mid] * (np.cos(ang) * rad)[:, None]
+                                                            + e2[mid] * (np.sin(ang) * rad)[:, None]) * wm[:, None]
+        pm = pm + bm.flow(pm * 0.3, t * 0.2, speed=1.0, seed=4.0) * 0.15
+        prm = np.clip(um / 0.25, 0, 1) * np.clip((self.reach - um) / (0.3 * self.reach), 0, 1)
+        out.append(dict(pos=pm, size=0.010 + 0.022 * q[4] ** 3, color=self.color2,
+                        alpha=0.85 * self.bright * self.bk[mid] * prm, emit=1.0 + 2.5 * (q[4] > 0.9), kind="soft",
+                        twinkle=1.0, backlight=0.6, dof=0.8, reflect=False))
+        return out
 
 
 class Bloom:
