@@ -165,11 +165,11 @@ def _hair_for_body(scene, name, body, kw, sky, color, color2, ink, **defaults):
 def constellation(scene, name, sky, kw):
     """p01: a body of stars joined by fine lines, brighter toward the light, specks drifting off."""
     day = _day(sky)
-    color = _pick(kw, "color", "#fff2dc", "#22357e", sky)
-    color2 = _pick(kw, "color2", "#bcd8ff", "#c38a1e", sky)
+    color = _pick(kw, "color", "#fff2dc", "#1c2a6e", sky)
+    color2 = _pick(kw, "color2", "#bcd8ff", "#2c3e94", sky)
     detail = kw.pop("detail_track", None)
-    look = dict(name="plexus", share=0.05, links=3, reach=0.11, haze=0.12, bright=0.70 if not day else 1.7,
-                size=1.0 if not day else 2.2)
+    look = (dict(name="plexus", share=0.05, links=3, reach=0.11, haze=0.12, bright=0.70) if not day else
+            dict(name="plexus", share=0.08, links=3, reach=0.10, haze=0.25, bright=2.0, size=2.6))
     if detail is not None:
         look["detail"] = detail
     at = kw.get("at", (0.0, 0.0))
@@ -343,15 +343,23 @@ def mist_figure(scene, name, sky, kw):
     b = _body(kw, sky, dict(name="glitter", bright=1.3, glints=0.004, size=1.2), color, color2, points=50000,
               facing=180.0, garment="dress",
               effects=[dict(kind="shed", n=2500, life=4.0, speed=0.15, rise=0.12, spread=0.2)])
-    main = K.Dressed(b, paint=1.0, paint_light=0.6) if day else b
-    scene.add(name, main)
+    parts = {}
+    if day:
+        main = K.Dressed(b, paint=1.0, paint_light=0.8)
+        _add_inked(scene, name, main, _Shape(b), kw.pop("ink", "#6e4e30"), kw, parts, soft=1.6)
+    else:
+        main = b
+        scene.add(name, main)
+        parts[name] = main
     def c(t):
         return b.where(t, "ground") + np.array([0.0, 1.0, 0.0])
     mist = K.GlitterMist(c, size=tuple(kw.pop("field", (16.0, 2.4, 12.0))), n=int(kw.pop("n_mist", 24000)),
-                         color="#ffcf8a" if not day else "#e8b070", color2="#b8d0ff" if not day else "#9ab4e0",
-                         toward=kw.pop("toward", (1.0, 0.0)), bright=0.9 if not day else 0.7, show=kw.get("show"))
+                         color="#ffcf8a" if not day else "#b88440", color2="#b8d0ff" if not day else "#7088b8",
+                         toward=kw.pop("toward", (1.0, 0.0)), bright=0.9 if not day else 1.4, show=kw.get("show"),
+                         paint=0.8 if day else 0.0)
     scene.add(name + "_mist", mist)
-    return Styled("mist_figure", sky, b, {name: main, name + "_mist": mist})
+    parts[name + "_mist"] = mist
+    return Styled("mist_figure", sky, b, parts)
 
 
 def star_silhouette(scene, name, sky, kw):

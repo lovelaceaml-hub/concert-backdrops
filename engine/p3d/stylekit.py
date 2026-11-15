@@ -282,16 +282,18 @@ class GlitterMist:
     figure's height, thinning up and down, many out of focus, warm on one side and cool on the other.
 
     center   a point or function of time; size: (width, height, depth) metres of the slab
-    n        points; color (warm side), color2 (cool side), toward: the direction (x, z) of the warm side"""
+    n        points; color (warm side), color2 (cool side), toward: the direction (x, z) of the warm side;
+             paint (0..1): also painted, for a bright sky"""
 
     def __init__(self, center, size=(14.0, 3.0, 10.0), n=26000, color="#ffd29a", color2="#bcd4ff", toward=(1.0, 0.0),
-                 bright=1.0, grain=0.018, drift=0.06, show=None, seed=1.0):
+                 bright=1.0, grain=0.018, drift=0.06, show=None, paint=0.0, seed=1.0):
         self.center, self.dims = center, np.asarray(size, np.float64)
         self.n = int(n)
         self.color, self.color2 = _col(color), _col(color2)
         tw = np.asarray(toward, np.float64)
         self.toward = tw / max(np.linalg.norm(tw), 1e-6)
         self.bright, self.grain, self.drift = float(bright), float(grain), float(drift)
+        self.paint = float(paint)
         self.show = show
         k = int(seed * 100)
         u = np.stack([hash01(self.n, k + i).astype(np.float64) for i in range(3)], axis=1) - 0.5
@@ -318,7 +320,7 @@ class GlitterMist:
         a = 0.16 * self.bright * fade * (0.6 + 0.8 * side[:, 0]) * np.exp(-np.abs(q[:, 1]) * 4.0)
         return [dict(pos=p, size=self.grain * (0.5 + 1.5 * self.g ** 4), color=col, alpha=a,
                      emit=1.0 + 3.0 * (self.g > 0.985), kind="soft", twinkle=0.9, backlight=0.6, dof=0.55,
-                     reflect=False)]
+                     reflect=False, paint=self.paint, paint_light=1.0)]
 
 
 class CloudPuffs:
