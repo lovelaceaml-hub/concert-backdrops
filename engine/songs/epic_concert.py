@@ -182,7 +182,8 @@ DOVES_UP = S1 + 1.4           # 14.61: the doves rise from her hands
 G_FORM = BEATS[5]             # 16.28: the Greeting blooms after the release
 G_HOLD = G_FORM + 9.8         # fully formed G_FORM + 3.75 to G_HOLD: 6.05 s
 G_STAR = G_HOLD + 1.7         # 27.78: its light wakes
-CROWD_IN = 20.4               # the first people step in at the far left; the right side follows later (side_delay)
+CROWD_IN = 21.6               # the first people step in at the far left once the doves have climbed away;
+#                               the right side follows later (side_delay)
 FLAME = S2                    # 28.35: the flame leaves the middle light of the arch
 FLAME_DOWN = BEATS[10] - S2   # ... and is in the first hands on the next downbeat (31.23)
 E_FORM = S2 + 1.85            # 30.2: the Encouragement is written once the flame has come down past its place
@@ -190,7 +191,7 @@ E_HOLD = BEATS[13]            # 39.96: fully formed E_FORM + 3.75 to E_HOLD: 6.0
 E_STAR = S3 - 1.0             # 42.0: the last light, the arch is complete one second before the lift
 LIFT = S3                     # 43.00: everyone lifts their light
 NINTH = S3 + 4.9              # 47.9: the first risen lights reach the arch and all nine lights brighten (arch.py)
-EMBLEM = BEATS[15]            # 45.81: the emblem's pen of light starts
+EMBLEM = BEATS[16] - 4.0      # 44.71: the emblem's pen of light starts; it draws for 4 s, so the eye can follow
 EMBLEM_DONE = BEATS[16]       # 48.71: the emblem is whole
 EMBLEM_OUT = BEATS[17]        # 51.55: it lifts away
 TITLE_HIT = BEATS[18]         # 54.43, the loudest moment: the emblem enters the arch, the arch's peak (arch.py)
@@ -201,31 +202,34 @@ TAG_T0, TAG_T1 = T_FORM + 1.6, T_FORM + 3.5   # the end card lines rise: 52.28 t
 WARM = S3 + 4.0                               # 47: the horizon has turned to gold
 DAY_FULL = TITLE_HIT - 0.4                    # 54.03: the pale campaign day (it opens as the emblem leaves)
 
-# The night lake is a mirror (stars, the walker's steps and the star's ring live on the water), so the lower
-# third is let go at night and calmed from the sunrise on.
-# It is eased again while the emblem stands over the lake, so that its mirror image shows in the water.
-BOTTOM_CALM = Track([(0, 0.10), (S1 - 1.0, 0.10), (S1 + 2.2, 1.0), (EMBLEM - 0.5, 1.0), (EMBLEM + 1.5, 0.45),
-                     (EMBLEM_OUT, 0.45), (EMBLEM_OUT + 1.5, 1.0), (TOTAL, 1.0)])
+# The lake is a mirror. At night stars, the walker's steps and the star's ring live on the water, so the lower
+# third is let go. Through the dawn it stays mostly open, so that Mother and the child are mirrored as figures
+# (the silk look fades a mirror image where the lower third is calm). It is calm for the vigil, and eased again
+# while the emblem stands over the lake, so that its mirror image shows in the water.
+BOTTOM_CALM = Track([(0, 0.10), (S1 - 1.0, 0.10), (S1 + 2.2, 0.30), (G_HOLD, 0.30), (S2 + 1.0, 1.0),
+                     (EMBLEM - 0.5, 1.0), (EMBLEM + 1.5, 0.25), (EMBLEM_OUT, 0.25), (EMBLEM_OUT + 1.5, 1.0),
+                     (TOTAL, 1.0)])
 
-# ---- the sky: one continuous rise of light (top, middle, horizon, colour of the light). The upper sky stays
-# deep while white words and people of light are on screen (QA on drafts 1 to 3: the words lost contrast once
-# the sky at their height passed about 0.1 in linear light).
+# ---- the sky: one continuous rise of light (top, middle, horizon, colour of the light). The upper sky stays a
+# deep blue while white words and people of light are on screen. The dawn is peach, rose gold and soft coral at
+# the horizon under that blue (the earlier cut had a purple middle and a magenta band, which looked synthetic),
+# so it leads on into the campaign day. From 46 s the sky warms and brightens step by step as the lanterns
+# rise, and the title lands on a sky that is already bright.
 PAL = {
     "night":   ("#02041a", "#0a1444", "#283270", "#8ea4ff"),
-    "first":   ("#060a2a", "#231d54", "#8f4f6e", "#ffb090"),
-    "dawn":    ("#0a1238", "#33276a", "#c8646a", "#ffc88c"),
-    "sunrise": ("#0c1a48", "#3d2f78", "#cc6c68", "#ffd49c"),
-    "morning": ("#0d1e50", "#40347e", "#c0606c", "#ffd8a6"),   # a rose horizon: the vigil's flames read on it
-    # The lights rise: the horizon turns to gold, the sky above stays deep. Draft 6 opened the sky to a pale
-    # blue by 49.5 and the emblem, which is light, was all but gone on it.
-    "lift":    ("#102868", "#47409a", "#f09a70", "#ffe2b4"),
-    "emblem":  ("#17378a", "#5258b2", "#f8b080", "#ffe8c0"),   # a saturated morning blue behind the emblem
+    "first":   ("#050a2c", "#152258", "#a05a58", "#ffb48a"),
+    "dawn":    ("#081238", "#1e2f6e", "#e08a66", "#ffc890"),
+    "sunrise": ("#0a1844", "#263a80", "#f0a070", "#ffd49c"),
+    "morning": ("#0c1c4c", "#2c4088", "#eea27a", "#ffd8a6"),
+    "lift":    ("#102868", "#3a4f9c", "#f6ac78", "#ffe2b4"),   # 46 s: the horizon turns to gold
+    "royal":   ("#1c46a4", "#5677c4", "#f8b888", "#ffe8c4"),   # 48.71 s: the emblem is whole
+    "sky":     ("#2f6cc8", "#7aa8e2", "#fdd0a4", "#fff0d8"),   # 51.55 s: the emblem leaves
 }
 DAY = ("#4aa3e6", "#a9d4f4", "#ffe3c4", "#fff4e0")   # the campaign day, as seen on screen
 _DAY_SCALE = (0.92, 0.86, 0.78, 0.42)                 # theme.sky_tracks: the sun glow is added on top
 _pal_keys = [(0.0, "night"), (STAR_FALL, "night"), (S1, "first"), (S1 + 4.0, "dawn"), (S2 - 2.0, "sunrise"),
-             (S2 + 6.0, "morning"), (S3, "morning"), (WARM, "lift"), (EMBLEM_OUT, "emblem"), (DAY_FULL, "day"),
-             (TOTAL, "day")]
+             (S2 + 6.0, "morning"), (S3, "morning"), (S3 + 3.0, "lift"), (EMBLEM_DONE, "royal"),
+             (EMBLEM_OUT, "sky"), (DAY_FULL, "day"), (TOTAL, "day")]
 
 
 def _sky(k):
@@ -236,7 +240,7 @@ def _sky(k):
 
 SKY_TOP, SKY_MID, SKY_HOR, GLOW = (_sky(k) for k in range(4))
 # the hills pale and the lake brightens for the day, but both stay in the picture to the very end
-SKY_THEME = Track([(0, 0.0), (EMBLEM_OUT - 0.5, 0.0), (DAY_FULL, 0.65), (TOTAL, 0.65)])
+SKY_THEME = Track([(0, 0.0), (S3 + 3.0, 0.0), (DAY_FULL, 0.65), (TOTAL, 0.65)])
 # The sun: under the horizon at night. The hill in the middle of the skyline reaches about 0.40 of the height
 # (draft 6: with the sun at 0.365 on S1 nothing broke the skyline until about 19 s), so the sun climbs from
 # 0.375 to 0.432 round S1 and passes the hilltop on S1, moving fastest there (a Track eases at its keys, so S1
@@ -245,12 +249,13 @@ SKY_THEME = Track([(0, 0.0), (EMBLEM_OUT - 0.5, 0.0), (DAY_FULL, 0.65), (TOTAL, 
 SUN_Y = Track([(0, 0.290), (STAR_FALL, 0.320), (S1 - 1.5, 0.375), (S1 + 2.0, 0.432), (S1 + 6.0, 0.446),
                (S2, 0.452), (S3, 0.458), (WARM, 0.466), (TITLE_HIT, 0.500), (TOTAL, 0.510)])
 # While the Encouragement is held the sun is smaller and a little weaker: its second line stands right above
-# the sun, and the sun's bloom under it was the brightest light near the letters (see PHRASES).
+# the sun, and the sun's bloom under it was the brightest light near the letters (see PHRASES). The same while
+# the emblem stands above the sun.
 SUN_INT = Track([(0, 0.06), (STAR_FALL, 0.08), (S1 - 1.5, 0.10), (S1 + 1.5, 0.50), (S1 + 4.0, 0.50), (S2, 0.44),
-                 (E_FORM + 3.0, 0.36), (E_HOLD, 0.36), (S3, 0.42), (EMBLEM, 0.34), (EMBLEM_OUT, 0.34),
+                 (E_FORM + 3.0, 0.36), (E_HOLD, 0.36), (S3, 0.42), (EMBLEM + 1.0, 0.28), (EMBLEM_OUT, 0.28),
                  (TITLE_HIT, 0.55), (TOTAL, 0.52)])
 SUN_SIZE = Track([(0, 0.09), (S1 + 3.0, 0.11), (S2, 0.105), (E_FORM + 3.0, 0.085), (E_HOLD, 0.085), (S3, 0.12),
-                  (TITLE_HIT, 0.16), (TOTAL, 0.17)])
+                  (EMBLEM + 1.0, 0.09), (EMBLEM_OUT, 0.09), (TITLE_HIT, 0.16), (TOTAL, 0.17)])
 STARS = Track([(0, 0.0), (0.5, 0.0), (2.6, 1.0), (STAR_FALL, 1.0), (S1 + 2.0, 0.60), (S1 + 7.0, 0.25),
                (S2 + 2.0, 0.10), (S3, 0.05), (WARM, 0.0), (TOTAL, 0.0)])
 MILKY = Track([(0, 0.0), (0.8, 0.0), (3.5, 0.90), (STAR_FALL, 0.90), (S1 + 0.5, 0.35), (S1 + 3.5, 0.0), (TOTAL, 0.0)])
@@ -329,31 +334,29 @@ RIPPLE_COLOR = "#ffe6c4"
 # ---- creatures of light (UPGRADE-HOWTO M)
 # Heavenly Mother: on the right third, at the water's edge. She stands to the right of the Greeting's last
 # letter (about 0.73 of the width) and her head stays under the words' lower edge.
-M_X, M_Y, M_H = 0.77, 0.335, 0.34
+M_X, M_Y, M_H = 0.77, 0.332, 0.30
 M_T0 = STAR_FALL + 0.76                    # she gathers while the star's ring spreads
-# The doves: a larger flock, close to us. They rise from her hand on the side of the sun, fly low over the
-# sunrise, wheel in a wide flat ring left of the sun and climb only at the far left, to the Greeting light.
-# The rule: no bird nearer to a letter than 0.08 of the height. The Greeting's letters reach down to 0.69. In
-# drafts 6 and 7 birds flew at 0.62 to 0.67 right under them, and in the full quality still at 18.6 s a wing
-# tip was 0.069 from the H. These settings were tried in the engine's own flock simulation (numpy, nothing
-# drawn; a bird's reach is its size setting times its own size, larger when it is nearer to us) until every
-# wing tip stayed 0.096 or more from the letters' box while the letters are on screen:
-# - they leave the hand small and grow as they come nearer (a large bird keeps a large distance, and a flock
-#   that starts as large birds bursts apart, upward too);
-# - the goal is low (the calm lower third pushes the flock up from 0.415);
-# - a wide orbit: birds that wheel round the goal are drawn to its height, so the flock is flat;
-# - the orbit tightens before the climb, and the climb to the Greeting light starts only as the words leave
-#   (then faster), so nobody rises past the first letters.
-DOVES = Track([(0, 0.0), (DOVES_UP - 0.1, 0.0), (DOVES_UP + 1.2, 1.0), (G_STAR + 0.4, 1.0), (G_STAR + 2.4, 0.0),
-               (TOTAL, 0.0)])
+# The doves rise from her hand on the side of the sun, fly low over the sunrise under the forming words, and at
+# the far left climb high and away; they are gone by 25.4 s. Three rules: no wing tip nearer to a letter than
+# 0.08 of the height (the Greeting's letters reach down to 0.69); above the water and the arriving people; high
+# and far, or gone, by 26 s. The flock is about 0.2 of the height tall whatever the settings, and the room
+# between the hilltops (0.36 to 0.40) and the words is less than that, so under the words the birds are a
+# little smaller (0.036) and fly at hilltop height. Tried in the engine's own flock simulation (numpy, nothing
+# drawn; a bird's reach is its size setting times its own size, larger when it is nearer to us): every wing
+# tip stays 0.092 or more from the letters' box, the lowest bird is at 0.355 (the water line is 0.34) at
+# 19.5 s, and at 24 s the flock is at 0.76 to 0.94 of the height at the far left, small and fading.
+# - they leave the hand small and grow as they come nearer (a flock of large birds bursts apart, upward too);
+# - a wide orbit while under the words: birds that wheel round the goal are drawn to its height;
+# - the orbit tightens and the goal goes to the far left before the climb, so nobody rises past the first letters.
+DOVES = Track([(0, 0.0), (DOVES_UP - 0.1, 0.0), (DOVES_UP + 1.2, 1.0), (23.4, 1.0), (25.4, 0.0), (TOTAL, 0.0)])
 DOVES_COUNT = 14
 DOVES_FROM = (0.715, 0.525)
-DOVES_PATH = [(DOVES_UP, (0.32, 0.31)), (DOVES_UP + 5.0, (0.30, 0.31)), (DOVES_UP + 8.5, (0.22, 0.32)),
-              (G_HOLD - 1.0, (0.13, 0.36)), (G_HOLD + 0.1, (0.12, 0.40)), (G_STAR, (0.12, 0.80)),
-              (G_STAR + 3.0, (0.11, 0.84))]
-DOVES_ORBIT = Track([(0, 0.20), (G_HOLD - 3.5, 0.20), (G_HOLD - 1.5, 0.07), (TOTAL, 0.07)])
-DOVES_SIZE = Track([(0, 0.030), (DOVES_UP, 0.030), (DOVES_UP + 5.0, 0.048), (TOTAL, 0.048)])   # 1.6 times the usual
-DOVES_SPEED = Track([(0, 1.0), (G_HOLD, 1.0), (G_HOLD + 0.6, 1.5), (TOTAL, 1.5)])
+DOVES_PATH = [(DOVES_UP, (0.36, 0.40)), (DOVES_UP + 4.0, (0.30, 0.40)), (20.3, (0.10, 0.46)), (22.0, (0.06, 0.66)),
+              (24.0, (0.05, 0.92)), (27.0, (0.04, 1.0))]
+DOVES_ORBIT = Track([(0, 0.20), (19.0, 0.20), (20.5, 0.06), (TOTAL, 0.06)])
+DOVES_SIZE = Track([(0, 0.028), (DOVES_UP, 0.028), (DOVES_UP + 2.0, 0.036), (19.3, 0.036), (21.0, 0.042),
+                    (22.2, 0.040), (25.0, 0.026), (TOTAL, 0.026)])
+DOVES_SPEED = 1.0
 DOVES_COLOR = "#fff1da"
 DOVES_TRAIL = 0.6
 # two butterflies to the right of the emblem, on the deep sky where their colours read (at the shore, on the
@@ -368,18 +371,23 @@ BUTTERFLIES_AREA = (0.63, 0.90, 0.42, 0.64)
 BUTTERFLIES_LAND = [(0.70, 0.385), (0.84, 0.375)]   # on the hills to the right
 
 # ---- the campaign day (UPGRADE-HOWTO I); nothing new starts after 58 s, the picture settles with the music
-BUBBLES = Track([(0, 0.0), (EMBLEM_OUT, 0.0), (TITLE_HIT, 0.26), (TOTAL, 0.26)])
+BUBBLES = Track([(0, 0.0), (EMBLEM_OUT, 0.0), (TITLE_HIT, 0.20), (TOTAL, 0.20)])
+BUBBLES_SIZE = 0.85
 BUBBLES_SPEED = 0.9
 LEAVES = Track([(0, 0.0), (EMBLEM_OUT + 0.8, 0.0), (TITLE_HIT + 0.5, 0.18), (TOTAL, 0.18)])
 LEAVES_COLORS = ("#3fb83a", "#9ccc40")   # truly green, like the poster
 
-# ---- people of light (UPGRADE-HOWTO H): the lone walker, then Heavenly Mother from behind
-# The walker is small: one light crossing a sea of stars. She walks on the mirror, away from us and to the
-# right, and stops as the star crosses the sky. She stands while it lands, its ring spreads and the sun breaks
-# the horizon (left of the sun, so she does not hide it), then walks on through the sunrise and comes to Mother.
-W_X0, W_XP, W_X1 = 0.07, 0.36, 0.62     # where she starts, where she stops for the star, where she stops
-W_Y0, W_Y1 = 0.250, 0.318               # her feet line: on the water, rising toward the far shore
-W_H0, W_H1 = 0.17, 0.15                 # ... and she grows a little smaller as she walks away
+# ---- people of light (UPGRADE-HOWTO H and H5, the silk look): a child coming home, and Heavenly Mother
+FIGURE_LOOK = "silk"       # bodies of light with cloth of light, for the child, Mother and the crowd
+FIGURE_SILK = dict(light_from="sun", reflect_glow=0.85)
+WIND = 0.5                 # veils and threads trail to the right, away from the sun
+# The child is small: one light crossing a sea of stars (0.18 of the height, 0.6 of Mother's). She walks on the
+# mirror, away from us and to the right, and stops as the star crosses the sky. She stands while it lands, its
+# ring spreads and the sun breaks the horizon (left of the sun, so she does not hide it), then walks on through
+# the sunrise and comes to Mother at the water's edge.
+W_X0, W_XP, W_X1 = 0.07, 0.36, 0.635    # where she starts, where she stops for the star, where she stops
+W_Y0, W_Y1 = 0.250, 0.330               # her feet line: on the water, rising to the water's edge
+W_H = 0.18
 _LEGS = [(3.0, STAR_FALL - 0.94, W_X0, W_XP), (S1 + 0.8, S1 + 6.2, W_XP, W_X1)]
 
 
@@ -411,57 +419,56 @@ def walker_y(t):
     return W_Y0 + (W_Y1 - W_Y0) * _walk_u(t)
 
 
-def walker_h(t):
-    return W_H0 + (W_H1 - W_H0) * _walk_u(t)
-
-
-# Mother's arms open low and stay low: about 40 degrees below the horizontal, forearms a little higher, then
-# a breath up (about 30 degrees below) and down again. Never a flat T.
-M_LOW = (0.82, 1.25, 0.96, 1.05)
-M_MID = (0.93, 1.25, 1.06, 1.05)
+# Both figures stand on the water's edge, so each has its mirror image at its feet, and their hems are firm
+# (mist 0.45): in the look's own test the large figures seemed to float above the ground.
 FIGURES = [
-    dict(kind="rig", preset="person", t0=1.2, t1=G_HOLD - 0.4, gather=2.0, dissolve=2.4, facing="right",
-         x=walker_x, y=walker_y, height=walker_h,
+    # the child: crosses the night, looks up as the star falls, comes to Mother, bows, and rises with the words
+    dict(kind="rig", preset="child", t0=1.2, t1=G_HOLD - 0.4, gather=2.0, dissolve=2.4, facing="right",
+         x=walker_x, y=walker_y, height=W_H,
          actions=[(1.2, "stand"), (STAR_FALL - 1.8, {"tilt": 0.35, "blend": 0.9}), (S1, {"tilt": 0.0, "blend": 0.8}),
                   (S1 + 6.6, "bow", {"blend": 1.4}), (S1 + 8.8, "pray", {"blend": 1.5}),
                   (G_HOLD - 1.9, "rise", {"blend": 1.4})],
-         color="#ffd9a8", glow=0.8, to_star=0),
-    # Heavenly Mother, only from behind; her veil flows; her arms open on the sunrise (never still)
+         color="#ffd9a8", glow=1.0, core_glow=1.0, mist=0.45, to_star=0),
+    # Heavenly Mother, only from behind, gold against the sunrise; her veil streams away from the sun; her arms
+    # open low on the sunrise (the look's own "open" and "bless": about 42 and 37 degrees below the horizontal)
     dict(kind="rig", preset="person_back", t0=M_T0, t1=G_HOLD - 0.2, gather=2.0, dissolve=2.6,
          x=M_X, y=M_Y, height=M_H,
-         actions=[(M_T0, "stand"), (ARMS_OPEN, "open", {"blend": 2.6, "arm_r": M_LOW, "arm_l": M_LOW}),
-                  (S1 + 5.2, "open", {"blend": 3.4, "arm_r": M_MID, "arm_l": M_MID}),
-                  (S1 + 9.4, "open", {"blend": 3.0, "arm_r": M_LOW, "arm_l": M_LOW})],
-         color="#ffe0c0", glow=0.85, to_star=0),
+         actions=[(M_T0, "stand"), (ARMS_OPEN, "open", {"blend": 2.6}), (S1 + 5.2, "bless", {"blend": 3.4}),
+                  (S1 + 9.4, "open", {"blend": 3.0})],
+         color="#ffc98a", glow=1.0, core="#ffd69a", core_glow=1.3, rim=1.3, veil_length=1.25, strand_length=1.2,
+         wind=0.6, mist=0.45, to_star=0),
 ]
 
-# ---- the gathering and the passed light (UPGRADE-HOWTO K). People come in twos and threes with gaps between
-# the groups (cluster), in one row, all grown ups of about the same height (0.13 to 0.15 of the screen once the
-# camera has pushed in); the two halves leave the middle open, where the sun stands and the flame comes down.
-# The people from the right come 4.8 s later (side_delay): Heavenly Mother stands there until G_HOLD.
-# Their robes are cool and dim until the flame reaches them; then each holds a warm point of light.
+# ---- the gathering and the passed light (UPGRADE-HOWTO K and H5). People come in twos and threes with gaps
+# between the groups (cluster), in one row, all grown ups of about the same height (0.13 to 0.15 of the screen
+# once the camera has pushed in); the two halves leave the middle open, where the sun stands and the flame
+# comes down. The people from the right come 4.8 s later (side_delay): Heavenly Mother stands there until G_HOLD.
+# The bodies stay soft, cool and translucent, also once they are lit (cool robe colours, a low heart glow, a
+# held light that warms its holder only a little): the warm gold points of light carry the brightness.
 GATHERING = dict(t0=CROWD_IN, t1=S3 + 3.6, dissolve=2.6, count=26, center=(0.5, 0.343), spread=(0.33, 0.02),
-                 rows=1, hole=0.14, cluster=(2, 3), height=(0.112, 0.07), children=0.0, speed=1.5,
-                 arrive_by=S2 + 7.5, sides=("left", "right"), side_delay=(0.0, 4.8), glow=2.0, detail=700,
+                 rows=1, hole=0.14, cluster=(2, 3), height=(0.112, 0.07), children=0.0, speed=1.8,
+                 arrive_by=S2 + 7.5, sides=("left", "right"), side_delay=(0.0, 4.8), glow=0.9,
+                 unlit="#9fb4ff", unlit_glow=0.5, flame_light=0.5, core_glow=0.55, mist=0.6,
                  colors=("#cfd6ff", "#d9ccff", "#c8dcff", "#e6dcff"))
-# the flame comes down to the person nearest the middle on the left (start: the nearest to that point)
-# (flame: every flame 1.7 times the engine's size; in draft 6 the flame coming down and the held lights were
-# small points)
+# the flame comes down to the person nearest the middle on the left (start: the nearest to that point); every
+# flame is 1.6 times the engine's size; the arch's own bloom as the lights arrive is low (arch), so the nine
+# lights stay crisp stars at the peak
 PASS_LIGHT = dict(t0=FLAME, speed=0.15, hold=0.22, path="crowd", start=(0.44, 0.34), source="arch",
-                  descent=FLAME_DOWN, color="#ffcf8a", flame=1.7, lift=LIFT, rise=True, arch=1.0,
+                  descent=FLAME_DOWN, color="#ffc46a", flame=1.6, lift=LIFT, rise=True, arch=0.3,
                   lift_spread=0.6, rise_delay=0.7, rise_spread=2.0, rise_dur=3.6)
 
-# ---- the campaign emblem, drawn in light and mirrored in the lake (UPGRADE-HOWTO L)
+# ---- the campaign emblem, the hero of the day: large (0.40 of the height), drawn over 4 s with a thick line
+# (stroke) in the campaign colours, with a clear mirror image in the lake (mirror) (UPGRADE-HOWTO L and U)
 SYMBOLS = [
-    dict(kind="emblem", t0=EMBLEM, t1=EMBLEM_DONE, out=EMBLEM_OUT, x=0.5, y=0.655, size=0.27,
-         leave="to_star", star=4, leave_dur=EMBLEM_FLY, reflect=True, glow=2.0),
+    dict(kind="emblem", t0=EMBLEM, t1=EMBLEM_DONE, out=EMBLEM_OUT, x=0.5, y=0.615, size=0.40,
+         leave="to_star", star=4, leave_dur=EMBLEM_FLY, reflect=True, glow=1.5, stroke=1.8, mirror=2.2),
 ]
 
 # ---- the arch of nine lights: dark at the start, complete at the peak
 STAR_POS = []
 for i in range(9):
     x = 0.12 + 0.095 * i
-    y = 0.895 - 0.085 * ((x - 0.5) / 0.38) ** 2
+    y = 0.915 - 0.085 * ((x - 0.5) / 0.38) ** 2   # a little higher than before: room for the end card's label
     STAR_POS.append((x, y))
 
 OFF = dict(form=1e9, hold=1e9)
@@ -495,7 +502,7 @@ PHRASES = [
 ]
 # The end card. The title sits a little higher than the engine's own place for it (0.315), so that the three
 # lines under it, now much larger, end above the far shore.
-TITLE = dict(label="Healing Concert", lines=["The Words of Mother’s Love"], size=150, y=0.28,
+TITLE = dict(label="Healing Concert", lines=["The Words of Mother’s Love"], size=150, y=0.27, label_size=48,
              form=T_FORM, hold=1e9, star=1e9, color=theme.CORAL, glow=theme.WHITE_GLOW, anim="ribbon")
 # the opening line: written for this film (not a lyric)
 FRAGMENTS = [
@@ -505,7 +512,7 @@ FRAGMENTS = [
 # date, church, address: each line more than 60 percent larger than the engine's own 48 (sizes)
 TAGLINE = dict(text="Sunday, December 6 · 4:30 PM\nWorld Mission Society Church of God\n"
                     "6720 W Sahara Ave, Las Vegas",
-               sizes=(80, 78), t0=TAG_T0, t1=TAG_T1, color=theme.NAVY, glow=theme.WHITE_GLOW, anim="rise")
+               sizes=(78, 77), t0=TAG_T0, t1=TAG_T1, color=theme.NAVY, glow=theme.WHITE_GLOW, anim="rise")
 # no corner credit in this film (the title is the end card); t_in never comes
 CREDIT = dict(song="The Words of Mother’s Love", concert="Healing Concert",
               t_in=1e9, t_full=1e9 + 1.0, t_move=1e9 + 2.0, t_rest=1e9 + 3.0, scale=0.34, alpha_rest=0.0,
@@ -532,10 +539,8 @@ def credit_state(t, bbox):
     return (cx, cy, scale, alpha), (cx0, cy0)
 
 
-# The three lights with a story (the star's, the Greeting's, the Encouragement's) wake with the arch's usual
-# expanding ring. The six that wake in the wave only flare: in draft 4 their rings crossed the label of the
-# Encouragement again and again.
-QUIET_LIGHTS = (1, 2, 3, 5, 7, 8)
+# No light of the arch wakes with an expanding ring any more: the hard circles read as a target marker (stills
+# at 12.6, 13.4, 42.3 and 43.6 s). A light wakes with its own soft flare, and the first two with a faint wave.
 
 # soft waves of light when a light of the arch wakes, and at the peak (the first two are faint: at 0.55 the
 # wave round the first light was a wide rose ring over the whole upper sky, draft 6 at 12.8 s)
@@ -563,7 +568,6 @@ def params(song, t):
         motes=MOTES(t) * (0.75 + 0.5 * envs), lanterns=LANTERNS(t), petals=PETALS(t),
         trail=TRAIL(t), exposure=EXPOSURE(t), fade=FADE(t), rays=RAYS(t), part=PART(t), zoom=ZOOM(t),
         lantern=(lsx, lsy), prog=lx, rings=rings, waves=waves,
-        star=[(s[0], -1.0, s[2]) if i in QUIET_LIGHTS else s
-              for i, s in enumerate(star_state(t))],   # noqa: F821  (installed by engine/song.py from arch.py)
+        star=[(s[0], -1.0, 0.0) for s in star_state(t)],   # noqa: F821  (installed by engine/song.py from arch.py)
         link=link_state(t),   # noqa: F821
     )
