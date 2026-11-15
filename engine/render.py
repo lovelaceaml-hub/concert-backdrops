@@ -85,6 +85,9 @@ def comp_blocks():
         out.append("SYMBOL_PAINT")   # a symbol's lines painted in their own colour (engine/water.py)
     if has("P3D") and "CAMERA_BG" not in out:
         out.append("CAMERA_BG")      # the 3D layer hands the composite its background (engine/p3d, HOWTO V)
+    p3 = getattr(S, "P3D", None)
+    if isinstance(p3, dict) and "keep_hue" in (p3.get("world") or {}):
+        out.append("HUE_KEEP")       # HOWTO V: bright lights keep their colour (world setting keep_hue)
     return out
 
 
