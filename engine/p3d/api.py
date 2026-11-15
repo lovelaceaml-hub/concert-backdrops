@@ -131,7 +131,7 @@ import numpy as np
 KINDS = ("soft", "spark", "disc", "flake", "petal", "bird", "line", "ribbon")
 SEGMENT_KINDS = ("line", "ribbon")
 MASK_MODES = ("dark", "sky")
-MASK_SKIES = ("clouds", "sunrise", "stars", "day", "world")
+MASK_SKIES = ("clouds", "sunrise", "stars", "day", "world", "flat")
 
 _ARRAY_FIELDS = dict(pos=3, size=1, color=3, alpha=1, pos2=3, alpha2=1, size2=1, u=1, u2=1, rot=2, emit=1, normal=3,
                      seed=1, vel=3, birth=1)
@@ -163,7 +163,7 @@ def at(az, dist, height=0.0):
 
 def hash01(n, salt=0):
     """n reproducible numbers in 0..1 (a fixed hash of the index: the same on every machine and run)."""
-    i = np.arange(n, dtype=np.uint64) + np.uint64(salt) * np.uint64(0x9E3779B97F4A7C15)
+    i = np.arange(n, dtype=np.uint64) + np.uint64((int(salt) * 0x9E3779B97F4A7C15) % (1 << 64))
     i = (i ^ (i >> np.uint64(30))) * np.uint64(0xBF58476D1CE4E5B9)
     i = (i ^ (i >> np.uint64(27))) * np.uint64(0x94D049BB133111EB)
     i = i ^ (i >> np.uint64(31))
@@ -251,12 +251,17 @@ class Mask:
     sky: str = "sunrise"                    # mode "sky": which picture fills the shape (MASK_SKIES)
     strength: Union[float, Callable] = 1.0  # 0..1, a number or a function of t
     grow: float = 0.03                      # metres added to each point's size when the shape is drawn
-    soft: float = 3.0                       # softness of the edge, in pixels of a 1080p picture
+    soft: float = 3.0                       # softness of the edge, in pixels of a 1080p picture. Below 2.5 the
+    #                                         silhouettes are drawn at full size that frame (crisp letters)
     source: Any = None                      # another point set that gives the shape (default: the set itself)
     edge: float = 0.0                       # mode "sky": a light rim along the edge of the shape (0..1)
     tint: Any = (1.0, 1.0, 1.0)             # mode "sky": multiplies the fill (linear)
     look: Any = None                        # sky "world": the look (a name, or a dict of world settings) of the
     #                                         world seen through the shape; may be a function of t giving a name
+    color: Any = None                       # sky "flat": the colour that fills the shape, a display hex shown
+    #                                         exactly (as `paint`), or linear light; may be a function of t
+    slot: Any = None                        # which of the two sky layers (0 or 1); by default sets with the same
+    #                                         fill share a layer and different fills take the next free one
 
     def __post_init__(self):
         if self.mode not in MASK_MODES:
@@ -265,6 +270,18 @@ class Mask:
             raise ValueError(f"Mask sky must be one of {MASK_SKIES}, got {self.sky!r}")
         if self.mode == "sky" and self.sky == "world" and self.look is None:
             raise ValueError('Mask("sky", sky="world") needs look=: the look of the world behind the window')
+        if self.mode == "sky" and self.sky == "flat" and self.color is None:
+            raise ValueError('Mask("sky", sky="flat") needs color=: the colour that fills the shape')
+        if self.slot not in (None, 0, 1):
+            raise ValueError("Mask slot is 0 or 1 (two sky layers per frame)")
+
+    def fill_key(self):
+        """Masks with the same key share one sky layer."""
+        if self.slot is not None:
+            return ("slot", self.slot)
+        lk = self.look if isinstance(self.look, (str, type(None))) else id(self.look)
+        col = self.color if isinstance(self.color, (str, type(None), tuple)) else id(self.color)
+        return (self.sky, lk, col, tuple(np.asarray(self.tint, np.float64).round(4)), float(self.edge))
 
     def strength_at(self, t):
         s = self.strength(t) if callable(self.strength) else self.strength
@@ -383,7 +400,7 @@ class Entry:
     fog: bool = True
     lod: bool = True
     order: int = 0
-    window: bool = False
+    window: Any = False
 
 
 class Scene:
@@ -394,6 +411,7 @@ class Scene:
         self._count = 0
 
     def add(self, name, pointset, reflect=True, depth_of_field=True, mask=None, fog=True, lod=True, window=False):
+        # window: False, True (inside the first window), or the name of the masked set whose window it lives in
         """Adds (or replaces) a point set.
 
         reflect          also draw its mirror image in the lake (rippled, dimmer)
@@ -404,14 +422,17 @@ class Scene:
                          renderer then draws a share of such points, each brighter, which looks the same in
                          a cloud of points and keeps the frame fast. Set False for a few big lights whose
                          every disc matters (lanterns).
-        window           the set lives inside the windows: it is drawn only where a "sky" silhouette is
+        window           the set lives inside a window: it is drawn only where a "sky" silhouette is. True: the
+                         first window; the name of a masked set: inside that set's window. A set that lives in
+                         a window and has a Mask("sky") of its own is a window inside the window (nested)
         """
         if not hasattr(pointset, "sample"):
             raise TypeError(f"Scene.add({name!r}): the point set needs a sample(t) method")
         if mask is not None and not isinstance(mask, Mask):
             raise TypeError(f"Scene.add({name!r}): mask must be a p3d.api.Mask")
+        win = window if isinstance(window, str) else bool(window)
         self._entries[name] = Entry(name, pointset, bool(reflect), bool(depth_of_field), mask, bool(fog),
-                                    bool(lod), self._count, bool(window))
+                                    bool(lod), self._count, win)
         self._count += 1
         return pointset
 
