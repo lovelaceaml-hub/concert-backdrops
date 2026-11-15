@@ -984,7 +984,9 @@ world=dict(..., lake=dict(field=_lake, center=(0.0, -2.0), size=60.0))
 
 **Rays from moving lights.** `lights=[dict(pos, color, strength, radius, rays=1.0, size=0.6)]`: a moving light with `rays` above 0 throws its own rays round whatever stands in front of it (cut by the silhouettes), like the single `light=`. Each costs three quarter-size passes.
 
-**Checked as full-size stills** (`test_p3d_checks`, one set-up per two seconds): a keep-clear box (lights, lines and ribbons all kept out), hexagonal bokeh (`bokeh_hex=1`), a figure coloured by two moving lights (`lit`) with rays from one, a macro 5.5 cm from a fingertip-sized cluster (`near=0.02`), lines with strong pulses under a turning star dome with a set and the camera riding one `Frame`, `keep_hue` on against off, the arch close up in nine colours, and a split toward a world point.
+**Checked as full-size stills** (`test_p3d_checks`, one set-up per two seconds): a keep-clear box (lights, lines, ribbons and stars all kept out), hexagonal bokeh (`bokeh_hex=1`), a figure coloured by two moving lights (`lit`) with rays from one, a macro 5.5 cm from a fingertip-sized cluster (`near=0.02`), lines with strong pulses under a turning star dome with a set and the camera riding one `Frame`, `keep_hue` on against off, the arch close up in nine colours, and a split toward a world point.
+
+**Also checked** (helper CORE2): `test_p3d_ten` as full-size stills at fourteen moments (paint, the window world, the split sky, the arch in nine colours with travel and yaw, birth times, ribbons with pulses, the free camera through a loop, light pools, calm discs, shake, dolly zoom, rack focus); the eight looks of `test_p3d_looks` (golden, day and cream as retuned); a draft of `test_p3d_ten` (draft mode works with every new part); `keep=("stars", "motes")` brings the flat 2D layers back; frames do not depend on render order (`test_p3d_windows`, `test_p3d_motion`, `test_p3d_checks`, two orders, the same bytes); the camera test at head keeps the approved composition and feel (the far hills now shift a little with real parallax); `t_short_test` and `epic_concert` are byte-identical to epic-promo (12 stills).
 
 ### What is weak
 
@@ -994,3 +996,5 @@ world=dict(..., lake=dict(field=_lake, center=(0.0, -2.0), size=60.0))
 - Sprite motion blur is a stretch along each sprite's path, not a true time average (use `motion_samples` for points that turn sharply inside one frame); lines and ribbons take a true average of their positions.
 - Speed on the render machines is mostly the number of sprites drawn (about 0.5 s of processor time per million drawn quads, the mirror doubling it); see the load test.
 - A plain blend between two camera set-ups (no `whip`) still flies through the space between them.
+- The look `golden` reads silver-white rather than gold when its rays face the camera.
+- With more than two different window fills in one frame the third is left out.
