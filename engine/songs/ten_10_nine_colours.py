@@ -271,11 +271,11 @@ def _s6(t):
 # S7: the breath, the orbit on the biggest hit, the corkscrew up the braid
 def _s7_breath(t):
     u = _sc(SEC[6], 42.0, t)
-    p = _v(3.6, 3.4, 11.5) * (1.0 - u) + _v(1.4, 1.65, 5.6) * u
-    return p, G7 + _v(0.0, 1.0 + 0.6 * (1.0 - u), 0.0)
+    p = _v(6.5, 3.2, 10.5) * (1.0 - u) + _v(2.9, 1.55, 4.9) * u      # from behind and beside her, closing in
+    return p, G7 + _v(0.0, 0.95 + 0.6 * (1.0 - u), 0.0)
 
 
-ORB7_A0 = float(np.degrees(np.arctan2(1.4, 5.6 - G7[2])))
+ORB7_A0 = float(np.degrees(np.arctan2(2.9, 4.9 - G7[2])))
 BRAID_T0 = 45.4
 
 
@@ -421,7 +421,7 @@ def _bodies():
     _BODIES["listener"] = listener
     praying = Body("woman", at=(G7[0], G7[2]), facing=180.0, motion=[(37.0, "kneel")],
                    gesture=[(37.0, 60.0, "pray")], garment="robe", veil=True, look="glitter", color=COL[ENC],
-                   color2="#f0e8ff", points=70000, show=(SEC[6] - 0.1, 49.0), fade=0.3, seed=11.0,
+                   color2="#e8dcff", points=70000, bright=0.7, show=(SEC[6] - 0.1, 49.0), fade=0.3, seed=11.0,
                    effects=[dict(kind="form", t=SEC[6], dur=1.6), dict(kind="dissolve", t=BRAID_T0 + 0.1, dur=2.6)])
     _BODIES["praying"] = praying
     return _BODIES
@@ -651,7 +651,7 @@ def _focus(t, default, ease=0.8):
     """A focus point that racks to the word being read, but only to a word of the current section that is in
     front of the camera (a word left behind at a cut would otherwise pull the focus to almost nothing)."""
     d = np.asarray(default(t) if callable(default) else default, np.float64)
-    cut = max(c for c in CUT_TIMES if c <= t)
+    cut = max([c for c in CUT_TIMES if c <= t] + [-1e9])
     st = _LAYOUT_SIMPLE.state(t)
     fwd = _unit(np.asarray(st.target) - np.asarray(st.pos))
     acc, wsum, top = np.zeros(3), 0.0, 0.0
@@ -1090,12 +1090,12 @@ P3D = dict(
 # The end card: the existing one, unchanged in style (coral title, navy date and place)
 # ---------------------------------------------------------------------------------------------------------
 FORM_DUR = 3.0
-TITLE_FORM = 50.7                     # whole at 53.7, before the loudest moment of the medley
+TITLE_FORM = 50.3                     # whole at 53.3, before the loudest moment of the medley
 TITLE = dict(label="Healing Concert", lines=["The Words of Mother’s Love"], size=150, y=0.27, label_size=48,
              form=TITLE_FORM, hold=1e9, star=1e9, color=theme.CORAL, glow=theme.WHITE_GLOW, anim="ribbon")
 TAGLINE = dict(text="Sunday, December 6 · 4:30 PM\nWorld Mission Society Church of God\n"
                     "6720 W Sahara Ave, Las Vegas",
-               sizes=(78, 77), t0=52.6, t1=54.2, color=theme.NAVY, glow=theme.WHITE_GLOW, anim="rise")
+               sizes=(78, 77), t0=52.3, t1=53.9, color=theme.NAVY, glow=theme.WHITE_GLOW, anim="rise")
 FRAGMENTS = []
 TITLE_HIT = 54.4
 _base.TITLE_HIT = TITLE_HIT
@@ -1110,7 +1110,7 @@ CREDIT = dict(song="The Words of Mother’s Love",
               t_move=1.6, t_rest=2.8,
               scale=0.52, alpha_rest=0.92,
               margin_x=0.035, margin_top=0.05)
-BADGE_OUT = (TITLE_FORM - 0.5, TITLE_FORM + 0.5)
+BADGE_OUT = (TITLE_FORM + 0.1, TITLE_FORM + 1.0)
 
 
 def credit_state(t, bbox):
