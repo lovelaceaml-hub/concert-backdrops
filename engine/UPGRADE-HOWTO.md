@@ -1092,3 +1092,12 @@ Working example: `engine/songs/demo_p3d_words_kit.py` (every item below in 30 se
 **Colour.** `PW.EXPRESSIONS[i]["color"]` is each expression's campaign colour (DESIGN-SYSTEM section 5); a word takes it by itself. `tint=1.0` makes the letters fully that colour (the default 0.45 keeps them warm white with a coloured halo, which reads best).
 
 **Keep clear.** Other layers can ask what to stay out of: `word.keep_clear(t, cam)` gives (strength 0..1, the box's four corners in the world, the plane's normal) for a word in its reading moment; `WORDS.keep_clear(t)` lists all such boxes; `WORDS.clear(points, t, cam)` gives, for any world points, how much of each may show (1 everywhere, down to 0.12 in front of and behind a word being read). `PW.KeepClear(pointset, WORDS)` wraps any point set so that it does this by itself: `scene.add("petals", PW.KeepClear(petals, WORDS))`. The words' own flying particles, birds, petals, threads, shafts and rays already keep clear of every other word that is being read (`avoid=False` on a word switches that off).
+
+**What is weak** (seen in the proof, watched as motion, and in stills of the two kit songs):
+
+- The check knows only the words' own boxes; a petal storm, a flock or a body crossing a word being read is not reported (the words' own flying particles dim there by themselves).
+- A word lying on cloth reads only as well as the cloth faces the camera: keep it on the back of a veil seen from behind and give the body a lower `bright` so the letters stand out (the kit uses 0.45).
+- Window words and painted words share CORE's two sky fills a frame. Pale campaign colours painted on a pale sky are true but faint: give a deeper shade.
+- The palm's stream (`palm`) is dense near the hand when the hand is close to the camera; the gathering lights (`gather`) still make a wide carpet of coloured points over the water.
+- Flying letters take half the motion blur; under a fast camera turn they still streak.
+
