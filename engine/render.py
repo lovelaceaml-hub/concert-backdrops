@@ -146,6 +146,8 @@ class Renderer:
         self.cr = creatures.Creatures(self)   # doves, butterflies, fireflies (all optional)
         import nature
         self.nature = nature.Nature(self)   # flowers, tree, blossoms, waterfall, stream (all optional)
+        import sky_camera
+        self.sky = sky_camera.SkyCamera(self)   # time of day, 3D clouds, god rays, camera (all optional)
 
     # ------------------------------------------------------------------
     def text_plan(self, t):
@@ -181,6 +183,7 @@ class Renderer:
     def frame(self, t, index=0):
         ctx, w, h, px = self.ctx, self.w, self.h, self.px
         P = S.params(self.song, t)
+        self.sky.adjust(t, P)
         asp = S.ASPECT
         L = S.lin
         cool = S.MILKY(t)
@@ -203,6 +206,7 @@ class Renderer:
              uSunInt=P["sun_int"], uSunSize=P["sun_size"], uClouds=P["clouds"], uAurora=P["aurora"],
              uRain=P["rain"], uMilky=P["milky"], uEnv=P["env"], uRays=P["rays"], uPart=P["part"])
         self.v_sky.render(moderngl.TRIANGLE_STRIP)
+        self.sky.draw_clouds(t, P)
 
         # 2. everything that glows
         self.f_L.use()
@@ -212,6 +216,7 @@ class Renderer:
         calm0 = float(_val("BOTTOM_CALM", t, 0.0))   # Astra round 1, finding 12: a calm lower third
         setu(self.p_star, uT=t, uStars=P["stars"], uHi=P["hi"], uPx=px)
         self.v_star.render(moderngl.POINTS)
+        self.sky.after_stars(t)
         setu(self.p_mote, uT=t, uAmount=min(P["motes"], 1.0), uPx=px, uSizeMin=2.4, uSizeMax=24.0, uPeriod=30.0,
              uY0=getattr(S, "MOTE_Y", (-0.05, 1.05))[0], uY1=getattr(S, "MOTE_Y", (-0.05, 1.05))[1], uSway=0.012,
              uBright=0.62 + 0.30 * P["env"], uColA=L(cols("MOTE_COLORS", ("#ffe2a8", "#ff9f8a"))[0]),
@@ -232,6 +237,7 @@ class Renderer:
         self.up.draw_figures(t)
         self.gath.draw(t)
         self.water.draw(t)
+        self.sky.draw_light(t, P)
 
         # which text is on screen: A is an expression or the closing title, B the end card lines or a fragment
         (texA, txA, bndA, shadeA, offA), (texB, txB, bndB, shadeB, offB) = self.text_plan(t)
@@ -340,6 +346,7 @@ class Renderer:
             src = tb
 
         # 4. put it together
+        self.sky.camera_bg(t, P)
         self.f_out.use()
         self.t_sky.use(location=0); self.t_L.use(location=1)
         for k in range(4):

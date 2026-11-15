@@ -421,3 +421,30 @@ STREAM_PATH = [(0.17, 0.40), (0.25, 0.385), (0.21, 0.365), (0.31, 0.348), (0.40,
 Tips: keep the tree and the waterfall to the sides, clear of the expression (centre, about 0.61 from the bottom) and the arch. Start a stream at the foot of a waterfall by giving them the same point. Remember DESIGN-SYSTEM.md section 6: agree with the coordinator before two songs use the same signature effect.
 
 Paint (round 2): light alone only brightens a bright sky, so the flowers' petals, the stream's water and a cliff behind the waterfall are also painted in colour over the scene (a half-size paint buffer that the composite lays down before the light, never over the text, and only while one of these layers is on). Flowers are drawn as real petal shapes in saturated campaign colours (coral, peach, cream, sky blue) with a rim of light; the stream is one continuous ribbon of water with flowing bands, glints moving downstream and banks that catch the light. Extra settings: `WATERFALL_CLIFF` (1.0: strength of the rock face of light and shadow behind the fall; 0 turns it off), `CLIFF_LIT` ("#c9a3a4"), `CLIFF_SHADE` ("#5d6690"), `STREAM_PAINT` ("#7fb2e0": the water's colour), `NATURE_PAINT` (1.0: strength of all the paint).
+## I7. Sky and camera (2026-11-15, branch engine-sky-camera)
+
+Time of day, moving 3D clouds, god rays and slow camera moves with depth. All optional: a song that sets none of these keys renders exactly as before. Code: `engine/sky_camera.py` and `engine/sky_camera_shaders.py`. Working example: `engine/songs/demo_sky_camera.py` (30 seconds, night to dawn, god rays through clouds, a slow crane up).
+
+```python
+from track import Track
+TIME_OF_DAY = Track([(0.0, 0.02), (20.0, 0.48), (30.0, 0.66)])   # night to just after dawn
+CLOUDS3D = 0.8            # cover, 0 = off
+CLOUDS_SPEED = 1.6        # drift and change of shape (1 = gentle)
+CLOUDS_LIGHT = 1.1        # how strongly the sun lights them (and their silver linings)
+GOD_RAYS = Track([(0.0, 0.0), (9.0, 0.0), (19.0, 0.85)])
+RAYS_FROM = "sun"         # or a point in the sky, (x, y) in screen fractions
+RAYS_COLOR = "#ffe6c0"    # default: the colour of the light at that time of day
+RAYS_DECAY = 0.985        # how far the shafts reach: 0.95 short, 0.995 long (default 0.985)
+CAMERA_CRANE = Track([(0.0, -0.03), (30.0, 0.09)])   # + rises: the land sinks, more sky
+CAMERA_ZOOM = Track([(0.0, 1.0), (30.0, 1.07)])      # > 1 pushes in
+CAMERA_PAN = Track([(0.0, -0.015), (30.0, 0.02)])    # + moves right: the land slides left
+PARALLAX = 1.0            # 1 = full depth, 0 = everything moves as one flat picture
+CAMERA_MOTES = 0.6        # a few large soft motes on the nearest layer, so the depth reads
+```
+
+- **TIME_OF_DAY** (number or Track): 0 night, 0.3 before dawn, 0.5 dawn (sun on the horizon), 0.7 sunrise, 1 day, 1.25 golden hour, 1.5 dusk (sun on the horizon), 1.75 late dusk, 2 night again. It replaces the song's sky colours, glow (the colour of the light), sun height, sun strength and size and the stars, eased smoothly. The sun's strength still breathes with the music. Leave it out to keep the song's own palette.
+- **CLOUDS3D**: two layers of soft clouds on a sky plane in perspective (small and many near the horizon, large overhead). They drift with the wind and keep changing shape; never frozen. The side facing the sun is lit with the glow colour, and thin edges near a low sun get silver linings (strongest at dawn and dusk). A cloud is never much darker than the sky behind it, and clouds thin out round any text (expressions, title, end card, fragments, credit), so no dark shape sits behind words. They are reflected in the lake. The old flat `CLOUDS` of the song is turned mostly down while CLOUDS3D is on.
+- **GOD_RAYS** (0 = off): shafts of light from the sun, or from `RAYS_FROM`, scattered in screen space. The moving clouds and the three mountain ranges block the light, so the shafts move with the clouds. They are drawn as light (nothing dark), fade below the horizon, follow BOTTOM_CALM and are dimmed behind words by the text protection like every other light. A sun below the horizon (night) gives no rays.
+- **CAMERA_ZOOM, CAMERA_PAN, CAMERA_CRANE** (numbers or Tracks; any one of them turns the camera on), **PARALLAX** (default 1), **CAMERA_CENTER** (default `(0.5, HORIZON + 0.12)`, the point a push in goes towards). Depths: far sky 0.12, high clouds 0.24, low clouds 0.40, far range 0.45, middle range 0.62, near range 0.80, lake 0.80 at the shore to 1.15 at the bottom of the screen, near motes 1.45. The skyline lantern rides the far range. Good ranges for slow, calm moves: zoom 1.0 to 1.15, pan within plus or minus 0.05, crane within plus or minus 0.12, over 20 seconds or more.
+- **Not moved by the camera**: text of any kind, the arch of nine lights, the stars, the song's own motes and petals, the effect layers and the people of light. To move another layer with depth w, call `R.sky.to_screen((x, y), w, t, P)` (layer point to screen point).
+- The camera moves the engine's own sky, ranges and lake. A scene plate (SCENES) keeps its own `zoom` and `pan` and covers the camera background while it is on screen.
