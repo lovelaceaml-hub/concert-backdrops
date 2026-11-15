@@ -139,6 +139,9 @@ TUNNEL_T0 = 8.15                    # the blue comet starts stitching
 TUNNEL_Z0 = zcam(TUNNEL_T0) - 34.0
 TUNNEL_V = 50.0                     # its speed along the tunnel
 C3 = _v(0.0, 0.0, 6.0)              # the embrace
+PAIR_AT = (C3[0] - 1.6, C3[2] - 0.2)  # the shared placement of the pull-up pair (centred on C3)
+PAIR_T0 = 14.6                      # the pull-up clip starts: the hands meet at about 17.0, both stand by 19.0
+TOUCH3 = 17.0
 D4 = _v(-90.0, 0.0, -60.0)          # the dancer
 E5 = _v(90.0, 0.0, -70.0)           # the child and the helper; the lantern field
 F6 = _v(90.0, 0.0, -40.0)           # the two profiles (looking -z: the lanterns behind them)
@@ -186,7 +189,7 @@ def _s3(t):
     u = t - SEC[2]
     r = 4.35 - 0.11 * u + 20.0 * np.exp(-u / 0.42)
     h = 1.75 + 0.5 * np.exp(-u / 1.0) - 0.03 * u
-    a = np.radians(-38.0 + 36.0 * (1.0 - np.exp(-u / 0.6)) + 17.0 * u)
+    a = np.radians(-52.0 + 32.0 * (1.0 - np.exp(-u / 0.6)) + 9.0 * u)
     p = C3 + _v(np.sin(a) * r, h, np.cos(a) * r)
     return p, C3 + _v(0.0, 1.85, 0.0)
 
@@ -385,18 +388,17 @@ def _bodies():
                                  show=(6.7, 10.4), fade=0.3, wind=w, seed=13.0,
                                  gesture=[(6.9, 12.0, "offer", dict(side="R"))],
                                  effects=[dict(kind="form", t=6.8, dur=1.2)])
-    sorry = Body("man", at=(C3[0] - 0.40, C3[2] - 0.05), facing=90.0, motion=[(10.0, "kneel")],
-                 gesture=[(10.0, 30.0, "bow")], garment="tunic", look="glitter", color=COL[APOL], color2="#fff1e0",
-                 points=60000, show=(SEC[2] - 0.3, 20.6), fade=0.3, wind=w, seed=3.0,
-                 effects=[dict(kind="form", t=SEC[2] - 0.2, dur=1.4)])
+    # S3: the pair captured together (CMU 22_01 and 23_01): one sits low, the other comes, takes both hands
+    # and pulls them up. Both share one placement; the clip starts at PAIR_T0 (hands meet about 2.4 s in).
+    sorry = Body("man", at=PAIR_AT, facing=90.0, motion=[(PAIR_T0, "helped_up")], garment="tunic", look="glitter",
+                 color=COL[APOL], color2="#fff1e0", points=60000, show=(SEC[2] - 0.3, 20.6), fade=0.3, wind=w,
+                 seed=3.0, effects=[dict(kind="form", t=SEC[2] - 0.2, dur=1.4)])
     _BODIES["sorry"] = sorry
-    kind = Body("woman", at=(C3[0] + 0.20, C3[2] - 0.08), facing=270.0, motion="stand", garment="dress", hair=True,
+    kind = Body("woman", at=PAIR_AT, facing=90.0, motion=[(PAIR_T0, "pull_up")], garment="dress", hair=True,
                 look="glitter", color=COL[INCL], color2="#ffe6f0", points=60000, show=(SEC[2] - 0.3, 20.6), fade=0.3,
-                wind=w, seed=4.0,
-                gesture=[(15.4, 30.0, "hand_on_shoulder", dict(side="R", to=lambda t: sorry.where(t, "shoulder.R")))],
-                effects=[dict(kind="form", t=SEC[2] + 0.1, dur=1.5)])
+                wind=w, seed=4.0, effects=[dict(kind="form", t=SEC[2] + 0.1, dur=1.5)])
     _BODIES["kind"] = kind
-    dancer = Body("woman", at=(D4[0], D4[2]), facing=30.0, motion=[(SEC[3] - 0.5, "dance_a")], garment="dress",
+    dancer = Body("woman", at=(D4[0], D4[2]), facing=30.0, motion=[(17.5, "dance")], garment="dress",
                   hair=True, look="glitter", color=COL[COMP], color2="#f4ecff", points=65000,
                   show=(SEC[3] - 0.1, LOOP_T1 + 0.3), fade=0.15, wind=(0.0, 0.0, 0.0), seed=6.0,
                   effects=[dict(kind="form", t=SEC[3] - 0.1, dur=0.9), dict(kind="shed", t=SEC[3] + 0.5)])
@@ -621,10 +623,10 @@ _SPECS = [
     dict(expr="Concession", ride=_RIDE2, face="screen", width=_width(9.5, _RIDE2[2], 0.50),
          t_in=6.95, t_read0=8.15, t_read1=11.05, t_out=12.3, arrive="pen", nib=False, leave="doors"),
     dict(expr="Apology", pos=_AT3, face="camera", width=_width(15.6, _dist(15.6, _AT3), 0.74),
-         t_in=13.35, t_read0=14.35, t_read1=16.95, t_out=17.3, arrive="pen", nib=False, leave="morph"),
+         t_in=13.35, t_read0=14.35, t_read1=TOUCH3, t_out=17.35, arrive="pen", nib=False, leave="morph"),
     dict(expr="Inclusiveness", pos=_AT3 + _v(0.0, -0.1, 0.0), face="camera",
          width=_width(18.5, _dist(18.5, _AT3), 0.62),
-         t_in=16.95, t_read0=17.3, t_read1=19.82, t_out=20.6, arrive="morph", source="Apology", leave="rise"),
+         t_in=TOUCH3, t_read0=17.32, t_read1=19.83, t_out=20.6, arrive="morph", source="Apology", leave="rise"),
     dict(expr="Compliment", pos=_AT4, face="camera", width=_width(23.5, _dist(23.5, _AT4), 0.60),
          t_in=20.85, t_read0=22.1, t_read1=24.9, t_out=26.2, arrive="pen", nib=False, leave="bokeh"),
     dict(expr="Consideration", ride=_RIDE5, face="screen", width=_width(28.9, _RIDE5[2], 0.56),
@@ -656,7 +658,7 @@ HEADS[CONC].leg(6.95, 8.15, _pen("Concession"), bi=1.0, bo=0.25) \
            .leg(8.4, 11.6, _tunnel, bi=0.25, bo=1.5)
 HEADS[APOL].leg(13.35, 14.35, _pen("Apology"), bi=0.9, bo=0.6) \
            .leg(14.7, 20.2, _helix(C3, 1.45, 0.25, 1.05, 2.2, 0.0), bi=0.6, bo=1.2)
-HEADS[INCL].leg(13.6, 20.2, _helix(C3, lambda t: 1.75 - 0.35 * _sc(16.9, 18.0, t), 0.9, 1.6, 2.2, np.pi, 0.9),
+HEADS[INCL].leg(13.6, 20.2, _helix(C3, lambda t: 1.9 - 0.4 * _sc(17.0, 18.5, t), 0.9, 1.7, 2.2, np.pi, 0.9),
                 bi=1.0, bo=1.2)
 HEADS[COMP].leg(SEC[3], 20.85, _ribbon_from_hand, bi=0.0, bo=0.3) \
            .leg(20.85, 22.1, _pen("Compliment"), bi=0.3, bo=0.5) \
@@ -897,7 +899,7 @@ class Flares:
     def __init__(self):
         from p3d.effects import Flare
         b = _bodies()
-        self.f = [Flare(lambda t: b["kind"].where(t, "palm.R"), 16.95, color=WHITE, color2=COL[APOL], n=900,
+        self.f = [Flare(lambda t: b["kind"].where(min(t, TOUCH3), "palm.R"), TOUCH3, color=WHITE, color2=COL[APOL], n=900,
                         strength=0.55, reach=0.55, life=2.0, seed=4.0),
                   Flare(_touch5, 30.15, color=WHITE, color2=COL[GRAT], n=900, strength=0.55, reach=0.55, life=2.0,
                         seed=5.0)]
