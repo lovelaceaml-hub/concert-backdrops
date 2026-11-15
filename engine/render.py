@@ -49,6 +49,34 @@ def words_arrive(m):
     return later[0] if later else times[-1]
 
 
+def comp_blocks():
+    """Which optional blocks of the composite shader this song needs (shaders.COMP_BLOCKS), decided once from
+    the song file. A song that uses none of them gets exactly the original shader, so it renders bit for bit as
+    before the features existed."""
+    def has(*keys):
+        return any(getattr(S, k, None) is not None for k in keys)
+
+    out = []
+    if has("SKY_THEME"):
+        out.append("SKY_THEME")
+    ts = getattr(S, "TEXT_SHADOW", None)
+    if ts is not None and (callable(ts) or float(ts) < 0.05):
+        out.append("SHADOW_ZERO")      # TEXT_SHADOW can go below 0.05: the veil eases all the way to nothing
+    metas = list(getattr(S, "PHRASES", [])) + [getattr(S, "TITLE", {}), getattr(S, "TAGLINE", {}),
+                                               getattr(S, "CREDIT", {})] + list(getattr(S, "FRAGMENTS", []))
+    if any(isinstance(m, dict) and m.get("color") for m in metas):
+        out.append("TEXT_INK")
+    if has("LEAVES"):
+        out.append("LEAVES_TINT")
+    if has("RIPPLES_AUTO") or getattr(S, "RIPPLES", None):
+        out.append("LAKE_RIPPLES")
+    if has("FLOWERS", "TREE", "BLOSSOM", "WATERFALL", "STREAM"):
+        out.append("NATURE_PAINT")
+    if has("CAMERA_ZOOM", "CAMERA_PAN", "CAMERA_CRANE"):
+        out.append("CAMERA_BG")
+    return out
+
+
 class Renderer:
     def __init__(self, w=S.W, h=S.H, ctx=None):
         self.w, self.h = w, h
@@ -69,7 +97,7 @@ class Renderer:
         self.p_lights = prog(G.QUAD_VS, G.LIGHTS_FS); self.v_lights = qvao(self.p_lights)
         self.p_credit = prog(G.QUAD_VS, G.CREDIT_FS); self.v_credit = qvao(self.p_credit)
         self.p_blur = prog(G.QUAD_VS, G.BLUR_FS); self.v_blur = qvao(self.p_blur)
-        self.p_comp = prog(G.QUAD_VS, G.COMP_FS); self.v_comp = qvao(self.p_comp)
+        self.p_comp = prog(G.QUAD_VS, G.comp_fs(comp_blocks())); self.v_comp = qvao(self.p_comp)
         self.p_prot = prog(G.QUAD_VS, G.PROTECT_FS); self.v_prot = qvao(self.p_prot)
         import sky_camera as SKC   # cam_vs: the stars move with the sky when a song moves the camera
         self.p_star = prog(SKC.cam_vs(G.STAR_VS), G.STAR_FS)
