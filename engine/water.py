@@ -328,9 +328,10 @@ class Water:
         reflect = bool(m.get("reflect", True))
         stroke = float(m.get("stroke", 1.0))   # optional: thickness of the drawn line (1 = as before)
         mgain = float(m.get("mirror", 1.0))    # optional: strength of the mirror image in the lake (1 = as before)
-        passes = [(0.0, 3.2 * stroke, 0.30, 1.0), (0.0, 15.0, 0.022, 0.4)]
+        halo = float(m.get("halo", 1.0))       # optional: strength of the soft glow round the line (1 = as before)
+        passes = [(0.0, 3.2 * stroke, 0.30, 1.0), (0.0, 15.0, 0.022 * halo, 0.4)]
         if reflect:
-            passes += [(1.0, 3.6 * stroke, 0.30 * mgain, 0.6), (1.0, 15.0, 0.020 * mgain, 0.3)]
+            passes += [(1.0, 3.6 * stroke, 0.30 * mgain, 0.6), (1.0, 15.0, 0.020 * mgain * halo, 0.3)]
         for mir, pt, br, hd in passes:
             _setu(self.p_sym, uMirror=mir, uPt=pt, uBright=br * glow, uHead=hd, **common)
             sd["vao"].render(moderngl.POINTS)

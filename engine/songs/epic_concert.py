@@ -10,27 +10,29 @@ section starts and BEATS its downbeats, as measured by the helper who cut it).
 
 What happens (seconds; the hero of each movement is marked HERO):
  0 to 13.2    NIGHT, vast. Out of black the camera cranes up from a lake that mirrors the stars to the Milky
-              Way above it. One small person of light walks on the mirror, a soft ring of light under each
-              step. The opening line forms as stars joining into letters. HERO (10.24): a star crosses the
-              whole sky in one long diagonal streak and lands far out on the water; its ring of light spreads
-              wide across the lake toward us, and the middle light of the arch answers it.
- 13.2 to 28.4 DAWN. HERO (13.21): the sun breaks the horizon, its rays come through thin clouds, and Heavenly
-              Mother, only from behind, at the water's edge, opens her arms low. Doves rise from her hands
-              (14.6) and fly in a loose arc into the sunrise, always well below the words. The Greeting
-              blooms on the next downbeat (16.28). The walker reaches her and bows. Words, walker, Mother's
-              light and the doves rise to the Greeting light.
+              Way above it. A child of light walks on the mirror, a soft ring of light under each step. The
+              opening line forms as stars joining into letters. HERO (10.24): a star crosses the whole sky in
+              one long diagonal streak and lands far out on the water; its ring of light spreads wide across
+              the lake toward us, and the middle light of the arch answers it.
+ 13.2 to 28.4 DAWN, peach and rose gold under deep blue. HERO (13.21): the sun breaks the horizon and Heavenly
+              Mother, only from behind, at the water's edge, her veil streaming away from the sun, opens her
+              arms low. Doves rise from her hand (14.6), fly low over the sunrise, always well below the
+              words, and climb away at the far left (gone by 25.4). The Greeting blooms on the next downbeat
+              (16.28). The child comes home to her and bows. Words, child and Mother's light rise to the
+              Greeting light.
  28.4 to 43   THE MESSAGE SPREADS. The camera pushes in slowly on the far shore, where people have come in
               twos and threes. HERO (28.35): a flame leaves the middle light of the arch, comes down into the
               first hands (31.23) and is passed from hand to hand: a vigil of warm points of light, the ones
               still waiting cooler and dimmer. The Encouragement is written in light above them. The lights of
               the arch wake one by one; the Encouragement light is the last (42.0): the arch is complete.
  43 to 60     DAY. HERO (43.00): everyone lifts their light. The lights rise slowly like lanterns while the
-              camera opens wide again, and as they rise the sky warms to day: the lights become the day. The
-              hearts and globe emblem draws itself in light above the lake (45.81 to 48.71) and is mirrored in
-              it; a ribbon of light reveals the title while the emblem rises into the middle light of the
-              arch, where it arrives on the loudest moment (54.43) and the whole arch flares. The end card
-              (coral title, navy date and place) is whole by then and holds through the music's decay, over a
-              sky blue lake with pale mountains, bubbles and a few green leaves. Nothing new moves after 58.
+              camera opens wide again, and from 46 the sky warms and brightens step by step: the lights
+              become the day. The hearts and globe emblem draws itself in light above the lake (44.71 to
+              48.71), large, and is mirrored in it; a ribbon of light reveals the title while the emblem rises
+              into the middle light of the arch (53.1); then the end card's lines rise, and on the loudest
+              moment (54.43) the title is whole and the whole arch flares. The end card (coral title, navy
+              date and place) holds through the music's decay, over a sky blue lake with pale mountains,
+              bubbles and a few green leaves. Nothing new moves after 58.
 
 Why the sky stays saturated until about 51: people, flames and the emblem are light, and light reads weakly
 on a bright sky (engine HOWTO, section S). The day opens from the horizon at the lift and reaches the pale
@@ -194,11 +196,14 @@ NINTH = S3 + 4.9              # 47.9: the first risen lights reach the arch and 
 EMBLEM = BEATS[16] - 4.0      # 44.71: the emblem's pen of light starts; it draws for 4 s, so the eye can follow
 EMBLEM_DONE = BEATS[16]       # 48.71: the emblem is whole
 EMBLEM_OUT = BEATS[17]        # 51.55: it lifts away
-TITLE_HIT = BEATS[18]         # 54.43, the loudest moment: the emblem enters the arch, the arch's peak (arch.py)
-EMBLEM_FLY = TITLE_HIT - EMBLEM_OUT
+TITLE_HIT = BEATS[18]         # 54.43, the loudest moment: the title is whole and the arch peaks (arch.py)
+EMBLEM_FLY = 1.55             # ... and is in the arch's middle light at 53.10, before the end card lines rise
 FORM_DUR = 3.0
 T_FORM = TITLE_HIT - FORM_DUR - 0.75          # 50.68: the title's ribbon starts; the title is whole on TITLE_HIT
-TAG_T0, TAG_T1 = T_FORM + 1.6, T_FORM + 3.5   # the end card lines rise: 52.28 to 54.18
+# The end card lines rise from 53.10 to 54.35, after the emblem has flown into the arch: in draft 9 they rose
+# from 52.28, with their ghost reflections, while the title was half written and the emblem was a cloud of
+# sparks in the middle (the frames at 52.4 s were a pile-up).
+TAG_T0, TAG_T1 = EMBLEM_OUT + EMBLEM_FLY, TITLE_HIT - 0.08
 WARM = S3 + 4.0                               # 47: the horizon has turned to gold
 DAY_FULL = TITLE_HIT - 0.4                    # 54.03: the pale campaign day (it opens as the emblem leaves)
 
@@ -360,16 +365,7 @@ DOVES_SIZE = Track([(0, 0.028), (DOVES_UP, 0.028), (DOVES_UP + 2.0, 0.036), (19.
 DOVES_SPEED = 1.0
 DOVES_COLOR = "#fff1da"
 DOVES_TRAIL = 0.6
-# two butterflies to the right of the emblem, on the deep sky where their colours read (at the shore, on the
-# bright horizon, they were two white specks in draft 7; in one box round the emblem one of them sat on its
-# olive sprig in the still at 49.6 s); they are there from 46 to 50.5 s, while the sky is still deep
-BUTTERFLIES = Track([(0, 0.0), (S3 + 3.0, 0.0), (S3 + 4.5, 1.0), (EMBLEM_DONE + 0.6, 1.0), (EMBLEM_DONE + 1.8, 0.0),
-                     (TOTAL, 0.0)])
-BUTTERFLIES_COUNT = 2
-BUTTERFLIES_COLOR = ("#ffb0c8", "#ffd9a0")
-BUTTERFLIES_SIZE = 0.030
-BUTTERFLIES_AREA = (0.66, 0.90, 0.56, 0.72)         # beside the emblem, above the people's raised lights
-BUTTERFLIES_LAND = [(0.70, 0.385), (0.84, 0.375)]   # on the hills to the right
+# (no butterflies: on this sky they read as odd neon shapes, and the frame is better without them)
 
 # ---- the campaign day (UPGRADE-HOWTO I); nothing new starts after 58 s, the picture settles with the music
 BUBBLES = Track([(0, 0.0), (EMBLEM_OUT, 0.0), (TITLE_HIT, 0.20), (TOTAL, 0.20)])
@@ -465,7 +461,11 @@ SYMBOLS = [
     # (0.38 at 0.64: the olive sprig stays above the people's raised hands; stroke 1.5 and glow 1.4: at 1.8
     # and 1.9 the globe's close lines ran together into a white ball while they were drawn, still at 47.4 s)
     dict(kind="emblem", t0=EMBLEM, t1=EMBLEM_DONE, out=EMBLEM_OUT, x=0.5, y=0.64, size=0.38,
-         leave="to_star", star=4, leave_dur=EMBLEM_FLY, reflect=True, glow=1.4, stroke=1.5, mirror=2.2),
+         leave="to_star", star=4, leave_dur=EMBLEM_FLY, reflect=True, glow=1.4, stroke=1.5, mirror=2.2, halo=2.0,
+         # the left heart orange, the right heart coral, as in the real emblem (the engine's builder has them
+         # the other way round). The campaign colours are #F39A3A and #F0566A; light added to a blue sky pales
+         # toward pink, so both are given a little deeper here to read as orange and coral on screen.
+         color=dict(coral="#ff8c1a", orange="#ff3d5a")),
 ]
 
 # ---- the arch of nine lights: dark at the start, complete at the peak
@@ -494,7 +494,7 @@ PHRASES = [
     dict(label="Inclusiveness", lines=["“It’s okay. I understand.”"], size=150, star=S2 + 4.35, **OFF),
     # the middle light: woken by the falling star, the flame comes down from it, the emblem rises into it
     dict(label="Concession", lines=["“Please, after you.”"], size=164, star=ARCH_FIRST,
-         arrive=[TITLE_HIT], **OFF),
+         arrive=[EMBLEM_OUT + EMBLEM_FLY], **OFF),
     dict(label="Respect", lines=["“I’d love to hear more", "about your thoughts.”"], size=128,
          star=BEATS[11], **OFF),
     dict(label="Encouragement", lines=["“I’ll pray (or root) for you.", "Everything will go well.”"], size=100,
