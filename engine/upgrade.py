@@ -491,7 +491,7 @@ class Upgrade:
         if self.has_leaves:
             a = val("LEAVES", t, 0.0) or 0.0
             if a > 0.001:
-                lc = val("LEAVES_COLORS", t, None) or ("#9fe07a", "#ffe08a")
+                lc = val("LEAVES_COLORS", t, None) or ("#5fd040", "#d8e860")
                 setu(self.p_leaf, uT=t, uAmount=float(a), uPx=self.px, uSize=float(val("LEAVES_SIZE", t, 1.0)),
                      uSpeed=float(val("LEAVES_SPEED", t, 1.0)), uWind=float(val("LEAVES_WIND", t, 0.4)),
                      uColA=S.lin(lc[0]), uColB=S.lin(lc[1]),
