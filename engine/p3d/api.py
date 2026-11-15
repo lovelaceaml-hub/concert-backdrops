@@ -12,7 +12,8 @@ CONVENTIONS
               carried from frame to frame, so any part of a video renders the same frames.
   Light       colours are linear light, added to the engine's HDR light buffer (bloom, then the filmic curve).
               A colour around 1.0 is a clearly bright light; `emit` multiplies it for glints that bloom.
-              `lin("#ffd27a")` turns a display hex colour into linear light.
+              `lin("#ffd27a")` turns a display hex colour into linear light. `show("#f0566a")` gives the light
+              that the finished picture shows as exactly that colour (for `paint`).
   Size        the diameter of a sprite in metres (in focus). The renderer keeps the energy of a point when
               it is smaller than a pixel or spread by depth of field, so sizes are physical, not pixels.
 
@@ -26,11 +27,16 @@ A POINT SET
     kind     one of KINDS   how each point is drawn (one kind per batch)                default "soft"
     pos2     (N, 3)         the other end of each segment                               "line", "ribbon"
     alpha2   (N,)           alpha at the pos2 end (tapered trails)                      default alpha
+    size2    (N,)           width at the pos2 end (tapering ribbons)                    default size
+    u, u2    (N,)           a place along the path at each end (metres along a ribbon, or any measure):
+                            `pulse` travels along it                                    default 0
     rot      (N,) or (N, 2) radians: turn in the picture plane; second column: tumble   "flake", "petal", "bird"
     emit     (N,) or number extra brightness (HDR), for glints                          default 1
-    normal   (N, 3)         unit surface normals; needed for `rim`                      optional
+    normal   (N, 3)         unit surface normals; needed for `rim` and `lit`            optional
     seed     (N,)           0..1 per point, drives the twinkle (default: a hash of the index)
     vel      (N, 3)         metres per second; with motion blur the sprite is stretched along it
+    birth    (N,)           the time in seconds at which each point appears (it stays dark before); works on
+                            static sets too, so a million points can light up in any order    default: always there
 
   and per batch settings (numbers, all optional):
 
@@ -46,6 +52,18 @@ A POINT SET
              from the camera, like dust in a ray of light                               default 0
     streak   how much of the motion blur the batch takes (True, False or 0..1): a moving point, or any
              point while the camera moves fast, is drawn out into a streak            default True
+    fade     seconds a point takes to appear at its `birth`                             default 0.4
+    flash    extra brightness of a point just born (it flares, then settles)            default 0
+    pulse    (speed, length, gain, period): a brighter stretch `length` long travels along `u` at `speed`
+             (units of u per second), every `period` units; for lines and ribbons       default off
+    paint    0..1: also paint the points in their true colour over the scene, under their light. Light
+             alone can only brighten what is behind it, so on a bright day sky a coloured point pales
+             to white; a painted point shows its `color` exactly (give it with `show("#hex")`)   default 0
+    paint_light  the share of its own light a painted batch keeps                       default 0.3
+    lit      0..1: how much the points take the colour of the world's moving lights (world `lights`);
+             with `normal` only the side turned toward a light                          default 0
+    clear    False lets the batch into the keep-clear boxes (P3D `clear`), for example the words
+             the box was made for                                                       default True
 
   READING MOMENTS (words made of points). A point exactly on the focus plane has no lens blur at all, and a
   point smaller than a pixel is drawn through a fixed small footprint whose light does not change as it moves
@@ -56,7 +74,8 @@ A POINT SET
   A point set may also have these attributes:
     wants_camera = True   sample is then called as sample(t, cam) with a CameraState (for effects that depend
                           on the view, for example dispersing away from the camera)
-    static = True         sample(0.0) is called once and the points stay on the graphics card (stars, dust)
+    static = True         sample(0.0) is called once and the points stay on the graphics card (stars, dust);
+                          `birth`, `pulse`, twinkle and gain still run on them
     dome = True           the positions are directions on the sky (unit vectors): the set is drawn far away
                           round the camera, behind the hills and clouds (stars); size is then an angle in radians
     gain(t) -> number     a brightness for the whole set at t (cheap fades; works with static sets)
@@ -69,11 +88,13 @@ KINDS
   "petal"   a petal shape that turns and tumbles
   "bird"    a small pair of wings; rot is the heading in the picture plane, the wings beat with seed and time
   "line"    a straight segment from pos to pos2 (plexus lines); size is its width in metres, never thinner
-            than a hairline on screen
-  "ribbon"  a soft band from pos to pos2 of width size, alpha to alpha2 along it (trails, streams of light)
+            than a hairline on screen. Tens of thousands are fine; they take the lens blur and are cut
+            cleanly where they pass the camera
+  "ribbon"  a soft band from pos to pos2, width size to size2, alpha to alpha2. Segments that share their
+            ends join into one continuous band (no beads): build one with `ribbon(points, ...)` or `Trail`
 
 THE SCENE
-  scene.add(name, pointset, reflect=True, depth_of_field=True, mask=None, fog=True, lod=True)
+  scene.add(name, pointset, reflect=True, depth_of_field=True, mask=None, fog=True, lod=True, window=False)
   scene.remove(name), scene.names(), scene.get(name)
 
   A song file reaches the scene through its P3D key:
@@ -83,16 +104,26 @@ THE SCENE
           scene.add("walker", MyBody(...))
       P3D = dict(camera=..., world=dict(...), setup=build)      # see engine/UPGRADE-HOWTO.md, section V
 
-THE MASK PASS (dark bodies and double exposures)
+THE MASK PASS (dark bodies, double exposures, windows onto another world)
   scene.add("profile", body, mask=Mask("dark"))            the silhouette of the set dims every light and the
                                                            sky BEHIND it (by depth): a dark body with a rim
   scene.add("profile", body, mask=Mask("sky", sky="sunrise"))   the silhouette is filled with a sky picture
                                                            (clouds, a sunrise, stars): a double exposure
+  scene.add("profile", body, mask=Mask("sky", sky="world", look="day"))   the silhouette is a window onto the
+                                                           same world, on the same camera, in another look
+                                                           (its own sky, sun, hills and lake)
+  scene.add("flock", birds, window=True)                   a set that lives inside the windows: it is drawn
+                                                           only where a "sky" silhouette is
   The silhouette is drawn from the set's own points, each grown by Mask.grow metres so the cloud closes into
   a solid shape, then softened. Mask.source gives another point set for the shape (for example the whole body
   while the visible points are already dispersing). Mask.strength may be a function of t.
+
+MOVING FRAMES
+  frame = Frame(origin=lambda t: (0, 0, -20 * t), yaw=lambda t: 10 * t)     a frame that travels and turns
+  scene.add("rider", Parented(body, frame))                the set rides the frame (positions, normals, speeds)
+  Rig([...], parent=frame)                                 so does the camera (engine/p3d/camera.py)
 """
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from typing import Any, Callable, Optional, Protocol, Union, runtime_checkable
 
 import numpy as np
@@ -100,17 +131,28 @@ import numpy as np
 KINDS = ("soft", "spark", "disc", "flake", "petal", "bird", "line", "ribbon")
 SEGMENT_KINDS = ("line", "ribbon")
 MASK_MODES = ("dark", "sky")
-MASK_SKIES = ("clouds", "sunrise", "stars", "day")
+MASK_SKIES = ("clouds", "sunrise", "stars", "day", "world")
 
-_ARRAY_FIELDS = dict(pos=3, size=1, color=3, alpha=1, pos2=3, alpha2=1, rot=2, emit=1, normal=3, seed=1, vel=3)
+_ARRAY_FIELDS = dict(pos=3, size=1, color=3, alpha=1, pos2=3, alpha2=1, size2=1, u=1, u2=1, rot=2, emit=1, normal=3,
+                     seed=1, vel=3, birth=1)
 _BATCH_SETTINGS = dict(twinkle=0.0, rim=(0.0, 2.0), dof=1.0, fog=1.0, reflect=True, lod=True, backlight=0.0,
-                       streak=1.0)
+                       streak=1.0, fade=0.4, flash=0.0, pulse=(0.0, 1.0, 0.0, 0.0), paint=0.0, paint_light=0.3,
+                       lit=0.0, clear=True)
+_AMOUNTS = ("twinkle", "dof", "fog", "backlight", "streak", "paint", "paint_light", "lit")
 
 
 def lin(hexs):
     """A display hex colour as linear light (the same curve as song files use)."""
     h = hexs.lstrip("#")
     return np.array([int(h[i:i + 2], 16) / 255.0 for i in (0, 2, 4)], dtype=np.float64) ** 2.2
+
+
+def show(hexs, exposure=1.0):
+    """The linear light that the finished picture shows as exactly this display colour (the inverse of the
+    engine's filmic curve; the same as theme.display). Use it for `paint` colours and sky colours."""
+    y = np.clip(lin(hexs), 0.0, 0.975)
+    a, b, c = 2.43 * y - 2.51, 0.59 * y - 0.03, 0.14 * y
+    return (-b - np.sqrt(np.maximum(b * b - 4.0 * a * c, 0.0))) / (2.0 * a) / exposure
 
 
 def at(az, dist, height=0.0):
@@ -140,21 +182,23 @@ class CameraState:
     pos: np.ndarray                 # where the camera is (metres)
     target: np.ndarray              # the point it looks at
     fov: float = 50.0               # vertical field of view, degrees
-    roll: float = 0.0               # degrees, positive tilts the horizon clockwise
+    roll: float = 0.0               # degrees, positive tilts the horizon clockwise (any number: barrel rolls)
     focus: float = 10.0             # distance in metres that is sharp
     aperture: float = 0.0           # lens opening in metres (0: everything sharp). 0.05 is a strong blur
     aspect: float = 16.0 / 9.0
-    near: float = 0.05
+    near: float = 0.05              # nothing nearer than this is drawn (0.02 for macro shots)
     far: float = 5000.0
+    up: Any = None                  # which way is up for the camera (default: the world's up). A camera that
+    #                                 loops or looks straight down carries its own up, so it never flips
 
     def basis(self):
         """(right, up, forward) unit vectors of the camera, roll included."""
         f = np.asarray(self.target, np.float64) - np.asarray(self.pos, np.float64)
         f = f / max(np.linalg.norm(f), 1e-9)
-        wup = np.array([0.0, 1.0, 0.0])
+        wup = np.array([0.0, 1.0, 0.0]) if self.up is None else np.asarray(self.up, np.float64)
         r = np.cross(f, wup)
-        if np.linalg.norm(r) < 1e-6:        # looking straight up or down
-            r = np.array([1.0, 0.0, 0.0])
+        if np.linalg.norm(r) < 1e-6:        # looking straight along up: any steady sideways will do
+            r = np.cross(f, [0.0, 0.0, -1.0] if abs(f[1]) > 0.9 else [0.0, 1.0, 0.0])
         r = r / np.linalg.norm(r)
         u = np.cross(r, f)
         if self.roll:
@@ -211,12 +255,16 @@ class Mask:
     source: Any = None                      # another point set that gives the shape (default: the set itself)
     edge: float = 0.0                       # mode "sky": a light rim along the edge of the shape (0..1)
     tint: Any = (1.0, 1.0, 1.0)             # mode "sky": multiplies the fill (linear)
+    look: Any = None                        # sky "world": the look (a name, or a dict of world settings) of the
+    #                                         world seen through the shape; may be a function of t giving a name
 
     def __post_init__(self):
         if self.mode not in MASK_MODES:
             raise ValueError(f"Mask mode must be one of {MASK_MODES}, got {self.mode!r}")
         if self.mode == "sky" and self.sky not in MASK_SKIES:
             raise ValueError(f"Mask sky must be one of {MASK_SKIES}, got {self.sky!r}")
+        if self.mode == "sky" and self.sky == "world" and self.look is None:
+            raise ValueError('Mask("sky", sky="world") needs look=: the look of the world behind the window')
 
     def strength_at(self, t):
         s = self.strength(t) if callable(self.strength) else self.strength
@@ -271,6 +319,7 @@ def normalize(batch, where="batch"):
         out["seed"] = hash01(n)
     out["normal"] = arr("normal", 3, None)
     out["vel"] = arr("vel", 3, None)
+    out["birth"] = arr("birth", 1, None)
     rot = batch.get("rot", None)
     if rot is None:
         out["rot"] = np.zeros((n, 2), np.float32)
@@ -292,9 +341,13 @@ def normalize(batch, where="batch"):
         out["alpha2"] = arr("alpha2", 1, None)
         if out["alpha2"] is None:
             out["alpha2"] = out["alpha"]
+        out["size2"] = arr("size2", 1, None)
+        if out["size2"] is None:
+            out["size2"] = out["size"]
+        # the place along the path at each end rides in the slot a sprite uses for its turn
+        out["rot"] = np.ascontiguousarray(np.stack([arr("u", 1, 0.0), arr("u2", 1, 0.0)], axis=1), dtype=np.float32)
     else:
-        out["pos2"] = None
-        out["alpha2"] = None
+        out["pos2"] = out["alpha2"] = out["size2"] = None
     for key, default in _BATCH_SETTINGS.items():
         v = batch.get(key, default)
         if key == "rim":
@@ -303,8 +356,14 @@ def normalize(batch, where="batch"):
                 raise ValueError(f"{where}: rim is (strength, power)")
             if v[0] > 0.0 and out["normal"] is None:
                 raise ValueError(f"{where}: rim needs 'normal'")
-        elif key in ("twinkle", "dof", "fog", "backlight", "streak"):
+        elif key == "pulse":
+            v = tuple(float(x) for x in v)
+            if len(v) != 4:
+                raise ValueError(f"{where}: pulse is (speed, length, gain, period)")
+        elif key in _AMOUNTS:
             v = float(min(max(float(v), 0.0), 1.0))
+        elif key in ("fade", "flash"):
+            v = float(max(float(v), 0.0))
         else:
             v = bool(v)
         out[key] = v
@@ -324,6 +383,7 @@ class Entry:
     fog: bool = True
     lod: bool = True
     order: int = 0
+    window: bool = False
 
 
 class Scene:
@@ -333,7 +393,7 @@ class Scene:
         self._entries = {}
         self._count = 0
 
-    def add(self, name, pointset, reflect=True, depth_of_field=True, mask=None, fog=True, lod=True):
+    def add(self, name, pointset, reflect=True, depth_of_field=True, mask=None, fog=True, lod=True, window=False):
         """Adds (or replaces) a point set.
 
         reflect          also draw its mirror image in the lake (rippled, dimmer)
@@ -344,13 +404,14 @@ class Scene:
                          renderer then draws a share of such points, each brighter, which looks the same in
                          a cloud of points and keeps the frame fast. Set False for a few big lights whose
                          every disc matters (lanterns).
+        window           the set lives inside the windows: it is drawn only where a "sky" silhouette is
         """
         if not hasattr(pointset, "sample"):
             raise TypeError(f"Scene.add({name!r}): the point set needs a sample(t) method")
         if mask is not None and not isinstance(mask, Mask):
             raise TypeError(f"Scene.add({name!r}): mask must be a p3d.api.Mask")
         self._entries[name] = Entry(name, pointset, bool(reflect), bool(depth_of_field), mask, bool(fog),
-                                    bool(lod), self._count)
+                                    bool(lod), self._count, bool(window))
         self._count += 1
         return pointset
 
@@ -384,6 +445,146 @@ class Scene:
             nb["gain"] = gain
             out.append(nb)
         return out
+
+
+# ---------------------------------------------------------------------------------------------------------
+# Moving frames: parenting a point set (or the camera) to something that travels and turns
+# ---------------------------------------------------------------------------------------------------------
+def _at_time(v, t):
+    return v(t) if callable(v) else v
+
+
+class Frame:
+    """A frame of reference that can travel, turn and grow: each setting a constant or a function of time.
+
+    origin   where the frame's own origin is in the world (or in its parent)
+    yaw      degrees it is turned about the vertical (toward +x from +z, like every azimuth)
+    basis    instead of yaw: a full 3 x 3 turn (columns: the frame's x, y, z axes in the world)
+    scale    a size factor (a hand at 5000 times life size)
+    parent   another Frame this one rides
+    """
+
+    def __init__(self, origin=(0.0, 0.0, 0.0), yaw=0.0, basis=None, scale=1.0, parent=None):
+        self.origin, self.yaw, self.basis, self.scale, self.parent = origin, yaw, basis, scale, parent
+
+    def at(self, t):
+        """(origin (3,), turn (3, 3), scale) in the world at t."""
+        o = np.asarray(_at_time(self.origin, t), np.float64)
+        if self.basis is not None:
+            R = np.asarray(_at_time(self.basis, t), np.float64)
+        else:
+            a = np.radians(float(_at_time(self.yaw, t)))
+            ca, sa = np.cos(a), np.sin(a)
+            R = np.array([[ca, 0.0, sa], [0.0, 1.0, 0.0], [-sa, 0.0, ca]])
+        s = float(_at_time(self.scale, t))
+        if self.parent is not None:
+            po, pR, ps = self.parent.at(t)
+            o, R, s = po + (pR @ o) * ps, pR @ R, ps * s
+        return o, R, s
+
+    def points(self, p, t):
+        """Positions given in the frame, as world positions."""
+        o, R, s = self.at(t)
+        return (np.asarray(p, np.float64) @ R.T) * s + o
+
+    def vectors(self, v, t):
+        """Directions given in the frame, as world directions (turned, not moved or scaled)."""
+        return np.asarray(v, np.float64) @ self.at(t)[1].T
+
+    def velocity(self, t, dt=1.0 / 120.0):
+        """How fast the frame's origin moves in the world at t (metres per second)."""
+        return (self.at(t + dt)[0] - self.at(t - dt)[0]) / (2.0 * dt)
+
+
+class Parented:
+    """A point set that rides a Frame: its positions, segment ends, normals, speeds and sizes follow the
+    frame. The set itself keeps working in its own coordinates."""
+
+    def __init__(self, pointset, frame):
+        self.pointset, self.frame = pointset, frame
+        self.wants_camera = bool(getattr(pointset, "wants_camera", False))
+        if hasattr(pointset, "gain"):
+            self.gain = pointset.gain
+
+    def _move(self, b, t):
+        if b is None:
+            return None
+        o, R, s = self.frame.at(t)
+        b = dict(b)
+        b["pos"] = (np.asarray(b["pos"], np.float64) @ R.T) * s + o
+        if b.get("pos2") is not None:
+            b["pos2"] = (np.asarray(b["pos2"], np.float64) @ R.T) * s + o
+        if b.get("normal") is not None:
+            b["normal"] = np.asarray(b["normal"], np.float64) @ R.T
+        if b.get("vel") is not None:
+            b["vel"] = (np.asarray(b["vel"], np.float64) @ R.T) * s + self.frame.velocity(t)
+        if s != 1.0:
+            for k in ("size", "size2"):
+                if b.get(k) is not None:
+                    b[k] = np.asarray(b[k], np.float64) * s
+                elif k == "size":
+                    b[k] = 0.02 * s
+        return b
+
+    def sample(self, t, cam=None):
+        res = self.pointset.sample(t, cam) if self.wants_camera else self.pointset.sample(t)
+        if isinstance(res, (list, tuple)):
+            return [self._move(b, t) for b in res]
+        return self._move(res, t)
+
+
+# ---------------------------------------------------------------------------------------------------------
+# Ribbons: one continuous tapering band along a path
+# ---------------------------------------------------------------------------------------------------------
+def ribbon(points, width=0.08, color=(1.0, 1.0, 1.0), alpha=1.0, **settings):
+    """A ribbon batch along a line of points (M, 3): one continuous band, no beads.
+
+    width, alpha   a number, or M values (one per point) for tapering: for example np.linspace(0, 1, M)
+    color          one colour or M colours
+    settings       any batch setting (emit, pulse=(speed, length, gain, period), dof, paint, ...)
+    The path coordinate u is the length along the ribbon in metres, so a pulse travels at metres per second.
+    """
+    p = np.asarray(points, np.float64).reshape(-1, 3)
+    m = p.shape[0]
+    if m < 2:
+        return None
+    w = np.broadcast_to(np.asarray(width, np.float64), (m,))
+    a = np.broadcast_to(np.asarray(alpha, np.float64), (m,))
+    c = np.asarray(color, np.float64)
+    c = np.broadcast_to(c, (m, 3)) if c.ndim == 1 else c
+    u = np.concatenate([[0.0], np.cumsum(np.linalg.norm(np.diff(p, axis=0), axis=1))])
+    b = dict(pos=p[:-1], pos2=p[1:], size=w[:-1], size2=w[1:], alpha=a[:-1], alpha2=a[1:], u=u[:-1], u2=u[1:],
+             color=0.5 * (c[:-1] + c[1:]), kind="ribbon")
+    b.update(settings)
+    return b
+
+
+class Trail:
+    """A ribbon that follows a moving point: its head is at path(t), its tail where the point was `length`
+    seconds ago, tapering to nothing (a comet, a stream from a hand, a road of light).
+
+    path     a function t -> (x, y, z)
+    length   seconds of the path the ribbon keeps
+    width    metres at the head (the tail narrows to `tail` of it)
+    born     the ribbon starts growing at this time (nothing before it)
+    """
+
+    def __init__(self, path, length=1.5, n=64, width=0.10, color=(1.0, 1.0, 1.0), alpha=1.0, tail=0.15, born=None,
+                 **settings):
+        self.path, self.length, self.n, self.width, self.alpha, self.tail = path, float(length), int(n), width, alpha, tail
+        self.color, self.born, self.settings = color, born, settings
+
+    def sample(self, t):
+        t0 = t - self.length if self.born is None else max(t - self.length, float(self.born))
+        if t - t0 < 1e-4:
+            return None
+        ts = np.linspace(t0, t, self.n + 1)
+        pts = np.array([np.asarray(self.path(float(x)), np.float64) for x in ts])
+        k = (ts - (t - self.length)) / self.length          # 0 at the far end of a full tail, 1 at the head
+        w = float(_at_time(self.width, t)) * (self.tail + (1.0 - self.tail) * k)
+        a = float(_at_time(self.alpha, t)) * np.clip(k * 1.5, 0.0, 1.0)
+        col = self.color(t) if callable(self.color) else self.color
+        return ribbon(pts, width=w, color=col, alpha=a, **self.settings)
 
 
 # ---------------------------------------------------------------------------------------------------------
@@ -458,7 +659,9 @@ class StandIn:
 if __name__ == "__main__":
     # a quick self check without graphics: python engine/p3d/api.py
     sc = Scene()
-    sc.add("stand-in", StandIn(pos=(0, 0, 2)), mask=Mask("dark"))
+    frame = Frame(origin=lambda t: (0.0, 0.0, 2.0 - t), yaw=lambda t: 20.0 * t)
+    sc.add("stand-in", Parented(StandIn(), frame), mask=Mask("dark"))
+    sc.add("trail", Trail(lambda t: (np.sin(t), 1.0 + 0.2 * t, np.cos(t)), length=1.0, pulse=(2.0, 0.3, 2.0, 1.5)))
     cam = CameraState(pos=at(0, 8, 1.6), target=np.array([0.0, 1.0, 0.0]), fov=40.0, focus=6.0, aperture=0.04)
     for e in sc.entries():
         for b in sc.collect(e, 1.0, cam):
@@ -467,4 +670,7 @@ if __name__ == "__main__":
                   "blur radius %.4f of the height" % (xy[:, 0].min(), xy[:, 0].max(), xy[:, 1].min(),
                                                      xy[:, 1].max(), z.min(), z.max(),
                                                      float(cam.coc_radius(z.mean()))))
+    down = CameraState(pos=np.array([0.0, 30.0, 0.0]), target=np.zeros(3), up=np.array([0.0, 0.0, -1.0]))
+    print("looking straight down, right and up:", np.round(down.basis()[0], 3), np.round(down.basis()[1], 3))
+    print("show('#f0566a') =", np.round(show("#f0566a"), 3))
     print("ok")
