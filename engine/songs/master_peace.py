@@ -115,6 +115,43 @@ def lerp(a, b, u):
 UP = _v(0.0, 1.0, 0.0)
 
 
+def _pchip_1d(x, y):
+    """Monotone cubic slopes (Fritsch and Carlson): no overshoot between keys."""
+    h = np.diff(x)
+    d = np.diff(y) / h
+    m = np.zeros_like(y)
+    m[0], m[-1] = d[0], d[-1]
+    for i in range(1, len(y) - 1):
+        if d[i - 1] * d[i] <= 0.0:
+            m[i] = 0.0
+        else:
+            w1, w2 = 2 * h[i] + h[i - 1], h[i] + 2 * h[i - 1]
+            m[i] = (w1 + w2) / (w1 / d[i - 1] + w2 / d[i])
+    return m
+
+
+def _pchip(keys):
+    """A camera path through keys [(t, pos, target), ...] with no overshoot: f(t) -> (pos, target)."""
+    ts = np.array([k[0] for k in keys], np.float64)
+    P = np.array([np.r_[k[1], k[2]] for k in keys], np.float64)       # (K, 6)
+    M = np.stack([_pchip_1d(ts, P[:, j]) for j in range(6)], 1)
+
+    def f(t):
+        if t <= ts[0]:
+            v = P[0]
+        elif t >= ts[-1]:
+            v = P[-1]
+        else:
+            i = int(np.searchsorted(ts, t, side="right") - 1)
+            h = ts[i + 1] - ts[i]
+            u = (t - ts[i]) / h
+            h00, h10 = 2 * u ** 3 - 3 * u ** 2 + 1, u ** 3 - 2 * u ** 2 + u
+            h01, h11 = -2 * u ** 3 + 3 * u ** 2, u ** 3 - u ** 2
+            v = h00 * P[i] + h10 * h * M[i] + h01 * P[i + 1] + h11 * h * M[i + 1]
+        return v[:3], v[3:]
+    return f
+
+
 class Path(Move):
     """A camera move from a function f(t) -> (pos, target)."""
 
@@ -132,7 +169,7 @@ class Path(Move):
 # =============================================================================================================
 D0 = _v(0.0, 0.0, 7.6)                  # where the drop lands
 H0 = _v(0.0, 50.75, 7.6)                # Mother's cupped hands, high above it
-HAND_S = 4.2                            # their scale (hands of light, larger than life)
+HAND_S = 5.0                            # their scale (hands of light, larger than life)
 C0 = _v(0.0, 51.45, 10.9)              # frame 0's camera, in front of the hands
 P1 = _v(-2.4, 0.0, -6.0)               # Greeting: the pair
 P1b = _v(3.6, 0.0, -9.5)               # Gratitude: the gold woman under the pouring light
@@ -181,8 +218,8 @@ def _cam_keys_s1():
     a = P1 + _v(0.0, 1.30, 0.0)
     b = P1b + _v(0.0, 1.20, 0.0)
     return [(6.84, D0 + _v(2.6, 1.7, 13.4), D0 + _v(-1.0, 0.8, -4.0)),
-            (7.7, P1 + _v(2.0, 1.75, 4.6), a),
-            (9.9, P1 + _v(1.5, 1.70, 3.7), a + _v(0.05, 0.0, 0.0)),
+            (7.7, P1 + _v(0.5, 1.80, 4.6), a),
+            (9.9, P1 + _v(0.2, 1.75, 3.8), a + _v(0.05, 0.0, 0.0)),
             (10.75, P1b + _v(-1.0, 1.70, 3.4), b),
             (13.0, P1b + _v(-0.7, 1.62, 2.8), b + _v(0.0, -0.03, 0.0))]
 
@@ -212,8 +249,8 @@ def _cam_keys_s3():
             (21.4, P3 + _v(-0.9, 1.60, 7.6), door),
             (23.3, P3 + _v(-0.5, 1.60, 6.4), door + _v(0.0, 0.0, -1.0)),
             (23.85, P3 + _v(0.0, 1.55, 0.5), P3 + _v(0.0, 1.4, -8.0)),
-            (24.5, P3b + _v(1.7, 1.25, 3.6), tree),
-            (26.6, P3b + _v(1.3, 1.20, 3.0), tree + _v(0.0, 0.05, 0.0))]
+            (24.5, P3b + _v(-3.3, 1.40, 1.9), tree),
+            (26.6, P3b + _v(-2.7, 1.32, 1.5), tree + _v(0.0, 0.05, 0.0))]
 
 
 def _cam_keys_s4():
@@ -259,9 +296,9 @@ def _s7(t):
     r = 14.0 + 4.0 * np.exp(-u / 0.6)
     y = _climb(t)
     p = A7 + _v(np.sin(a) * r, y, np.cos(a) * r)
-    look = A7 + _v(0.0, y + 4.0 + 7.0 * sc(ASC0, ASC0 + 1.5, t), 0.0)
-    tilt = sc(46.2, 48.6, t)
-    ahead = p + _unit(_v(np.sin(a + 1.4), 0.0, np.cos(a + 1.4))) * 30.0 + _v(0.0, 6.0, 0.0)
+    look = A7 + _v(0.0, y + 1.5 + 2.5 * sc(ASC0, ASC0 + 1.5, t), 0.0)
+    tilt = sc(46.4, 48.8, t)
+    ahead = p + _unit(_v(np.sin(a + 1.3), 0.0, np.cos(a + 1.3))) * 40.0 + _v(0.0, 4.0, 0.0)
     return p, lerp(look, ahead, tilt)
 
 
@@ -312,7 +349,7 @@ def _globe_static():
 GC, RG = _globe_static()
 EARTH_T0 = SEC[7]
 HEARTS_T0, HEARTS_T1 = 50.1, 53.2
-CRADLE = (50.2, 53.9)
+CRADLE = (50.2, 53.5)
 LOGO_T0, LOGO_T1 = 53.75, 54.95       # the logo builds round the world
 DAY_T = 54.55                         # the bloom into a pastel day
 END_T = 56.0
@@ -348,14 +385,14 @@ def _rig(focus):
     return Rig([
         Path(_s0, 0.0, SEC[1], fov=lambda t: 50.0 + 8.0 * sc(3.4, 5.4, t) - 6.0 * sc(5.6, 6.6, t), aperture=0.0,
              focus=fo(lambda t: drop_pos(t) if t < 6.2 else D0 + _v(0, 1.0, 0))),
-        fly(_cam_keys_s1(), blend=0.6, fov=46.0, aperture=0.012, focus=fo(lambda t: P1 + _v(0, 1.2, 0)
+        Path(_pchip(_cam_keys_s1()), SEC[1], SEC[2], blend=0.6, fov=46.0, aperture=0.012, focus=fo(lambda t: P1 + _v(0, 1.2, 0)
                                                                           if t < 10.2 else P1b + _v(0, 1.3, 0))),
-        fly(_cam_keys_s2(), blend=0.8, fov=44.0, aperture=0.012, focus=fo(P2 + _v(0, 0.9, 0))),
-        fly(_cam_keys_s3(), blend=0.35, fov=lambda t: 46.0 + 14.0 * sc(19.85, 20.1, t) * (1.0 - sc(20.3, 20.9, t)),
+        Path(_pchip(_cam_keys_s2()), SEC[2], SEC[3], blend=0.8, fov=44.0, aperture=0.012, focus=fo(P2 + _v(0, 0.9, 0))),
+        Path(_pchip(_cam_keys_s3()), SEC[3], SEC[4], blend=0.35, fov=lambda t: 46.0 + 14.0 * sc(19.85, 20.1, t) * (1.0 - sc(20.3, 20.9, t)),
             aperture=0.01, focus=fo(lambda t: P3 + _v(0, 1.4, 0) if t < 23.7 else P3b + _v(0, 0.9, 0))),
-        fly(_cam_keys_s4(), blend=0.45, whip=True, fov=lambda t: 58.0 - 10.0 * sc(26.79, 28.4, t), aperture=0.01,
+        Path(_pchip(_cam_keys_s4()), SEC[4], SEC[5], blend=0.45, whip=True, fov=lambda t: 58.0 - 10.0 * sc(26.79, 28.4, t), aperture=0.01,
             focus=fo(P4 + _v(0, 1.0, 0))),
-        fly(_cam_keys_s5(), blend=0.45, whip=True, fov=48.0, aperture=0.01,
+        Path(_pchip(_cam_keys_s5()), SEC[5], 40.0, blend=0.45, whip=True, fov=48.0, aperture=0.01,
             focus=fo(lambda t: P5 + _v(0, 1.0, 0) if t < 37.0 else P5b + _v(0, 1.1, 0))),
         Path(_s6, 40.0, BREATH_END, blend=0.6, fov=48.0, aperture=0.0),
         Path(_s7, BREATH_END, SEC[7], blend=0.35, fov=lambda t: 56.0 + 10.0 * sc(42.5, 43.3, t), aperture=0.0),
@@ -402,15 +439,15 @@ _REVEAL = dict(arrive="reveal", edge="right", soft=0.16, edge_glow=2.2)
 _PEN = dict(arrive="pen", nib=False)
 
 _SPECS = [
-    _w("Greeting", 7.0, 7.6, 10.1, 10.35, 0.50, 0.76, 7.0, 0.30, **_REVEAL),
-    _w("Gratitude", 10.4, 10.85, 13.35, 13.6, 0.50, 0.75, 7.0, 0.64, **_PEN),
-    _w("Apology", 13.95, 14.45, 16.95, 17.15, 0.50, 0.75, 7.0, 0.56, **_REVEAL),
-    _w("Inclusiveness", 17.15, 17.25, 19.75, 19.85, 0.50, 0.77, 7.0, 0.50, **_PEN),
-    _w("Concession", 20.6, 21.0, 23.5, 23.7, 0.50, 0.77, 7.0, 0.42, **_REVEAL),
-    _w("Respect", 23.95, 24.2, 26.7, 26.79, 0.50, 0.75, 7.0, 0.54, **_PEN),
-    _w("Encouragement", 27.5, 28.0, 31.3, 31.6, 0.50, 0.75, 7.0, 0.60, **_REVEAL),
-    _w("Consideration", 33.6, 34.1, 36.6, 36.85, 0.50, 0.75, 7.0, 0.54, **_PEN),
-    _w("Compliment", 36.95, 37.4, 39.9, 40.15, 0.50, 0.75, 7.0, 0.50, **_REVEAL),
+    _w("Greeting", 7.0, 7.6, 10.1, 10.35, 0.50, 0.80, 7.0, 0.30, **_REVEAL),
+    _w("Gratitude", 10.4, 10.85, 13.35, 13.6, 0.50, 0.79, 7.0, 0.62, **_PEN),
+    _w("Apology", 13.95, 14.45, 16.95, 17.15, 0.50, 0.79, 7.0, 0.54, **_REVEAL),
+    _w("Inclusiveness", 17.15, 17.25, 19.75, 19.85, 0.50, 0.80, 7.0, 0.50, **_PEN),
+    _w("Concession", 20.6, 21.0, 23.5, 23.7, 0.50, 0.80, 7.0, 0.42, **_REVEAL),
+    _w("Respect", 23.95, 24.2, 26.7, 26.79, 0.50, 0.765, 7.0, 0.52, **_PEN),
+    _w("Encouragement", 27.5, 28.0, 31.3, 31.6, 0.50, 0.79, 7.0, 0.58, **_REVEAL),
+    _w("Consideration", 33.6, 34.1, 36.6, 36.85, 0.50, 0.79, 7.0, 0.52, **_PEN),
+    _w("Compliment", 36.95, 37.4, 39.9, 40.15, 0.50, 0.765, 7.0, 0.48, **_REVEAL),
 ]
 
 
@@ -440,11 +477,12 @@ LOOKS = dict(
     # above the sea of clouds at twilight: a deep blue-violet zenith, a band of gold and coral low down
     opening=dict(base="dawn", sky_top="#0d1250", sky_mid="#3a2e86", sky_hor="#e88a6a", sun_color="#ffc88a",
                  sun_int=0.7, sun_el=-1.5, sun_disc=0.0, sun_glow=0.65, stars=0.85, milky=0.4, clouds=0.0,
-                 haze=0.3, haze_color="#9a5a7a", mist=0.0, hills=0.0, water="#0a0820", mirror=1.0,
+                 haze=0.65, haze_color="#c87a72", mist=0.35, mist_height=30.0, mist_color="#b0708a", hills=0.0,
+                 water="#2a1838", mirror=0.6,
                  ripple=0.2, rays=0.25, dust=0.3, dust_color="#ffe0a8", dust_color2="#ffc0c8", bokeh=0.3,
                  keep_hue=0.8),
     # the sea of light: deep and clear, the warm light of the dawn off to one side
-    shore=dict(base="dawn", sky_top="#0b1046", sky_mid="#2c2672", sky_hor="#d4766a", sun_color="#ffc890",
+    shore=dict(base="dawn", sky_top="#0b1046", sky_mid="#2a2470", sky_hor="#b8625e", sun_color="#ffc890",
                sun_int=0.7, sun_el=-1.5, sun_disc=0.0, sun_glow=0.6, stars=0.75, milky=0.35, clouds=0.25,
                haze=0.3, haze_color="#7a4a6a", mist=0.12, mist_color="#6a4a7a", hills=0.0, water="#070818",
                mirror=1.0, ripple=0.25, rays=0.3, dust=0.6, dust_color="#ffe0a8", dust_color2="#ffc0c8",
@@ -559,8 +597,8 @@ def _mother_hands():
                 _v(0.0, 0.004 * HAND_S * np.sin(1.1 * t + j), 0.0)
         aim = _unit(_v(sg * 0.18, 0.12, 1.0))       # fingers toward the camera, a little apart
         palm = _unit(_v(-sg * 0.30, 1.0, 0.45))     # palms up, turned a little toward us and toward each other
-        out.append(Body("woman", part="arm." + ("R" if side == "L" else "L"), look="glitter", color="#ffd890",
-                        color2="#fff3dc", bright=1.6, points=70000, scale=HAND_S, show=(-1.0, 4.6), fade=0.8,
+        out.append(Body("woman", part="arm." + ("R" if side == "L" else "L"), look="glitter", color="#ffcc6a",
+                        color2="#fff0c8", bright=1.7, points=80000, scale=HAND_S, show=(-1.0, 4.6), fade=0.8,
                         seed=3.0 + j,
                         effects=[dict(kind="shed", t=-1.0, n=3000, life=2.0, speed=0.15, rise=0.25, spread=0.05)],
                         hand=dict(side=("R" if side == "L" else "L"), at=at, aim=aim, palm=palm, pose="cup",
@@ -583,7 +621,7 @@ def _cradle_hands():
         aim = _unit(_v(-sg * 0.25, 0.05, -1.0))
         palm = _unit(_v(-sg * 0.4, 1.0, 0.0))
         out.append(Body("woman", part="arm." + side, look="glitter", color="#ffe0a0", color2="#fff6e6", bright=1.5,
-                        points=70000, scale=S, show=(CRADLE[0] - 0.3, CRADLE[1] + 0.6), fade=0.7, seed=7.0 + j,
+                        points=70000, scale=S, show=(CRADLE[0] - 0.3, CRADLE[1] + 0.5), fade=0.6, seed=7.0 + j,
                         effects=[dict(kind="shed", t=CRADLE[0], n=3000, life=2.0, speed=0.12, rise=0.2,
                                       spread=0.05)],
                         hand=dict(side=side, at=at, aim=aim, palm=palm, pose="cup", anchor="palm")))
@@ -591,43 +629,59 @@ def _cradle_hands():
 
 
 def _embrace_pair(o, t_rise, t_hold, until):
-    """APOLOGY then INCLUSIVENESS: she kneels alone, head bowed; he kneels by her and lays a hand on her shoulder;
-    they rise together and hold each other (life size, whole and luminous)."""
-    from p3d.body import Body
+    """APOLOGY then INCLUSIVENESS (two women, UPDATE 15): one kneels alone, head bowed; the other kneels beside
+    her and lays a hand on her shoulder; they rise together and hold each other, cheek past shoulder (the
+    engine's embrace). Life size, whole and luminous."""
+    from p3d import pairs
     refs = {}
-    d0, d1 = 0.52, 0.19
-    st = (o[0] - d0, o[2]), (o[0] - d1, o[2])
-
-    def step(sgn):
-        return [(0.0, (o[0] + sgn * d0, o[2])), (t_hold - 0.6, (o[0] + sgn * d0, o[2])),
-                (t_hold + 0.2, (o[0] + sgn * d1, o[2]))]
+    gap, side = 0.34, 0.085
+    d0 = 0.52
+    # a faces +x (toward b), b faces -x; each stands a little to their own left (pairs.embrace's side)
+    ka_k = (o[0] - d0, o[2] - side)
+    ka_e = (o[0] - 0.5 * gap, o[2] - side)
+    kb_k = (o[0] + d0, o[2] + side)
+    kb_e = (o[0] + 0.5 * gap, o[2] + side)
     show = (SEC[2] - 0.4, until)
-    ka = dict(shape="man", at=step(-1.0), facing=90.0, garment="tunic",
-              motion=[(-1e9, "kneel", dict(dur=0.01, one=True, hands="free")),
-                      (t_rise, "rise", dict(dur=1.1, blend=0.1, one=True)),
-                      (t_hold - 0.6, "shuffle"), (t_hold + 0.3, "stand")],
-              gesture=[(14.2, t_rise - 0.1, "hand_on_shoulder",
-                        dict(side="R", to=lambda tt: refs["b"].where(tt, "shoulder.L", raw=True) if "b" in refs
-                             else o + _v(0.3, 1.0, 0.0))),
-                       (14.6, t_rise, "bow", dict(amount=10.0)),
-                       (t_hold - 0.25, until + 2.0, "embrace",
-                        dict(to=lambda tt: refs["b"].where(tt, "blade.R", raw=True) if "b" in refs else o,
-                             to2=lambda tt: refs["b"].where(tt, "blade.L", raw=True) if "b" in refs else o,
-                             head="L", ease=1.0))],
-              points=70000, show=show, fade=0.6, seed=61.0, wind=(0.2, 0.0, -0.1), **GOLD)
-    kb = dict(shape="woman", at=step(1.0), facing=270.0, garment="dress",
-              motion=[(-1e9, "kneel", dict(dur=0.01, sit=0.6, hands="lap")),
-                      (t_rise + 0.15, "rise", dict(dur=1.1, blend=0.1)),
-                      (t_hold - 0.6, "shuffle"), (t_hold + 0.3, "stand")],
-              gesture=[(SEC[2] - 0.4, t_rise + 0.3, "bow", dict(amount=30.0)),
-                       (t_hold - 0.25, until + 2.0, "embrace",
-                        dict(to=lambda tt: refs["a"].where(tt, "blade.R", raw=True) if "a" in refs else o,
-                             to2=lambda tt: refs["a"].where(tt, "blade.L", raw=True) if "a" in refs else o,
-                             head="L", ease=1.0))],
-              points=70000, show=show, fade=0.6, seed=62.0, wind=(0.2, 0.0, -0.1), **CRYSTAL)
-    refs["a"] = Body(**ka)
-    refs["b"] = Body(**kb)
-    return refs["a"], refs["b"]
+
+    def other(name, part, guess):
+        return lambda tt: refs[name].where(tt, part, raw=True) if name in refs else np.asarray(guess, np.float64)
+    a = dict(shape="woman", garment="dress", hair="bun",
+             at=[(0.0, ka_k), (t_hold - 0.6, ka_k), (t_hold + 0.15, ka_e)],
+             motion=[(-1e9, "kneel", dict(dur=0.01, one=True, hands="free")),
+                     (t_rise, "rise", dict(dur=1.1, blend=0.1, one=True)),
+                     (t_hold - 0.6, "shuffle"), (t_hold + 0.3, "stand")],
+             gesture=[(14.2, t_rise - 0.1, "hand_on_shoulder",
+                       dict(side="R", to=other("b", "shoulder.L", o + _v(0.3, 1.0, 0.0)))),
+                      (14.6, t_rise, "bow", dict(amount=10.0))],
+             points=75000, show=show, fade=0.6, seed=61.0, wind=(0.2, 0.0, -0.1), **GOLD)
+    b = dict(shape="woman", garment="dress", hair=True,
+             at=[(0.0, kb_k), (t_hold - 0.6, kb_k), (t_hold + 0.15, kb_e)],
+             motion=[(-1e9, "kneel", dict(dur=0.01, sit=0.6, hands="lap")),
+                     (t_rise + 0.15, "rise", dict(dur=1.1, blend=0.1)),
+                     (t_hold - 0.6, "shuffle"), (t_hold + 0.3, "stand")],
+             gesture=[(SEC[2] - 0.4, t_rise + 0.3, "bow", dict(amount=30.0))],
+             points=75000, show=show, fade=0.6, seed=62.0, wind=(0.2, 0.0, -0.1), **CRYSTAL)
+    A, B = pairs.embrace(t_hold, at=(o[0], o[2]), facing=90.0, a=a, b=b, until=until + 1.0, gap=gap,
+                         approach=0.0, side=side)
+    refs["a"], refs["b"] = A, B
+    return A, B
+
+
+def _greeting_pair(o, t0, t1):
+    """GREETING (two men, UPDATE 15): they face each other and each gives a slight, warm bow, a gentle nod of
+    the head and shoulders; no touch."""
+    from p3d.body import Body
+    a = Body("man", at=(o[0] - 0.55, o[2]), facing=90.0, garment="tunic", points=75000, show=(t0 - 1.0, t1 + 0.8),
+             fade=0.6, seed=21.0,
+             gesture=[(t0, t1 + 0.6, "bow", dict(amount=16.0, ease=0.9)),
+                      (t0 + 0.9, t1 + 0.6, "nod", dict(period=2.2, amount=4.0))],
+             sweeps=dict(glow=dict(t=t0 + 0.2, at="heart", speed=2.5, width=0.35, flash=1.6)), **GOLD)
+    b = Body("man", at=(o[0] + 0.55, o[2]), facing=270.0, garment="coat", points=75000, show=(t0 - 1.0, t1 + 0.8),
+             fade=0.6, seed=22.0,
+             gesture=[(t0 + 0.35, t1 + 0.6, "bow", dict(amount=13.0, ease=0.9)),
+                      (t0 + 1.2, t1 + 0.6, "nod", dict(period=2.4, amount=4.0))],
+             sweeps=dict(glow=dict(t=t0 + 0.55, at="heart", speed=2.5, width=0.35, flash=1.6)), **CRYSTAL)
+    return [a, b]
 
 
 def _cast():
@@ -636,30 +690,29 @@ def _cast():
     from p3d import acting
     C = _CAST
     C["hands0"] = _mother_hands()
-    cam1 = P1 + _v(2.8, 1.6, 6.4)
-    C["greeting"] = acting.perform("Greeting", 7.15, 10.2, at=(P1[0], P1[2]), view=_view(P1, cam1), variant="turn",
-                                   style=dict(points=70000), style_a=dict(GOLD), style_b=dict(CRYSTAL),
-                                   pre=1.0, post=0.8, seed=2.0)
+    C["greeting"] = _greeting_pair(P1, 7.25, 10.1)
     cam1b = P1b + _v(-1.4, 1.5, 5.6)
     C["gratitude"] = acting.perform("Gratitude", 10.6, 13.4, at=(P1b[0], P1b[2]), view=_view(P1b, cam1b),
                                     variant="heart", style=dict(points=80000, **GOLD), pre=1.2, post=0.6, seed=3.0)
     C["embrace"] = list(_embrace_pair(P2, 16.75, 17.55, 20.15))
     cam3 = P3 + _v(-1.0, 1.5, 7.6)
-    C["concession"] = acting.perform("Concession", 21.0, 23.6, at=(P3[0] + 1.25, P3[2] + 0.4),
+    C["concession"] = acting.perform("Concession", 21.0, 23.6, at=(P3[0] + 1.55, P3[2] + 0.5),
                                      view=_view(P3, cam3), variant="after_you",
                                      style=dict(points=70000, **CRYSTAL), pre=1.4, post=0.4, seed=5.0)
-    cam3b = P3b + _v(2.2, 1.1, 4.8)
+    cam3b = P3b + _v(-3.0, 1.35, 1.7)
     C["respect"] = acting.perform("Respect", 24.2, 26.8, at=(P3b[0], P3b[2]), view=_view(P3b, cam3b),
                                   variant="listen", style=dict(points=65000), style_a=dict(CRYSTAL),
                                   style_b=dict(GOLD), pre=0.9, post=0.3, seed=6.0)
     cam4 = P4 + _v(1.8, 1.3, 6.0)
     C["encouragement"] = acting.perform("Encouragement", 27.6, 31.6, at=(P4[0], P4[2]), view=_view(P4, cam4),
-                                        variant="shoulder", style=dict(points=70000), style_a=dict(GOLD),
-                                        style_b=dict(CRYSTAL), pre=0.9, post=1.9, seed=7.0)
+                                        variant="shoulder", style=dict(points=70000),
+                                        style_a=dict(GOLD, shape="woman"), style_b=dict(CRYSTAL, shape="woman"),
+                                        pre=0.9, post=1.9, seed=7.0)
     cam5 = P5 + _v(-0.8, 1.3, 6.0)
     C["consideration"] = acting.perform("Consideration", 33.9, 36.9, at=(P5[0], P5[2]), view=_view(P5, cam5),
-                                        variant="help_up", style=dict(points=70000), style_a=dict(GOLD),
-                                        style_b=dict(CRYSTAL), pre=0.6, post=0.5, seed=8.0)
+                                        variant="help_up", style=dict(points=70000),
+                                        style_a=dict(GOLD, shape="man"), style_b=dict(CRYSTAL, shape="man"),
+                                        pre=0.6, post=0.5, seed=8.0)
     cam5b = P5b + _v(-2.0, 1.55, 6.4)
     C["compliment"] = acting.perform("Compliment", 37.0, 40.0, at=(P5b[0], P5b[2]), view=_view(P5b, cam5b),
                                      variant="twirl", style=dict(points=75000, **CRYSTAL), pre=0.7, post=2.4,
@@ -683,6 +736,67 @@ def _cloud_sea(rng, center, r0, r1, n, y, wmin, wmax, bright=1.0, hk=(0.35, 0.6)
     return out
 
 
+OPENING_BOX = (0.15, 0.85, 0.40, 0.97)       # the opening lockup (TITLES opening at y 0.30), screen 0..1, y up
+
+
+def _boxes(t, cam):
+    """Screen boxes (x0, x1, y0, y1; y up) of every word on screen now, padded, and of the opening title."""
+    out = []
+    for w in WORDS:
+        if w.t_in - 0.2 <= t <= w.t_out + 0.2:
+            b = PW.screen_box(w, cam, t)
+            if b[4]:
+                out.append((b[0] - 0.035, b[1] + 0.035, b[2] - 0.04, b[3] + 0.04))
+    if t < TITLES["opening"]["t_end"] + 0.3:
+        out.append(OPENING_BOX)
+    return out
+
+
+class Clear:
+    """Wraps a point set: its light goes out inside the screen box of every word on screen and of the opening
+    title, so nothing crosses a word while it is read (lines and ribbons at both ends)."""
+    wants_camera = True
+
+    def __init__(self, inner):
+        self.inner = inner
+        if hasattr(inner, "gain"):
+            self.gain = inner.gain
+
+    @staticmethod
+    def _dim(pts, cam, boxes):
+        xy, z = cam.project(np.asarray(pts, np.float64).reshape(-1, 3))
+        f = np.ones(len(xy))
+        for x0, x1, y0, y1 in boxes:
+            e = 0.025
+            inside = (ss(x0 - e, x0, xy[:, 0]) * (1.0 - ss(x1, x1 + e, xy[:, 0]))
+                      * ss(y0 - e, y0, xy[:, 1]) * (1.0 - ss(y1, y1 + e, xy[:, 1])))
+            f = np.minimum(f, 1.0 - inside * (z > 0))
+        return f
+
+    def sample(self, t, cam=None):
+        ps = self.inner
+        res = ps.sample(t, cam) if getattr(ps, "wants_camera", False) else ps.sample(t)
+        if res is None or cam is None:
+            return res
+        boxes = _boxes(t, cam)
+        if not boxes:
+            return res
+        out = []
+        for b in (res if isinstance(res, (list, tuple)) else [res]):
+            if b is None:
+                continue
+            b = dict(b)
+            P = np.asarray(b["pos"], np.float64).reshape(-1, 3)
+            f = self._dim(P, cam, boxes)
+            if b.get("pos2") is not None:
+                f2 = self._dim(np.asarray(b["pos2"], np.float64).reshape(-1, 3), cam, boxes)
+                f = np.minimum(f, f2)
+                b["alpha2"] = np.asarray(b.get("alpha2", b.get("alpha", 1.0)), np.float64) * f
+            b["alpha"] = np.asarray(b.get("alpha", 1.0), np.float64) * f
+            out.append(b)
+        return out
+
+
 def _gain(*keys):
     tr = Track(list(keys))
     return lambda t: float(tr(t))
@@ -702,7 +816,7 @@ def _setup(scene):
     scene.add("clouds_near", MS.Billows(near, gain=_gain((0.0, 1.0), (5.6, 1.0), (7.4, 0.0), (60.0, 0.0)),
                                         seed=12, alpha=0.085), depth_of_field=False)
     scene.add("clouds_far", MS.Billows(far, gain=_gain((0.0, 1.0), (49.0, 1.0), (50.0, 0.0), (60.0, 0.0)), seed=13,
-                                       alpha=0.075, body=0.25), depth_of_field=False)
+                                       alpha=0.055, body=0.2, sun_az=WORLD["sun_az"]), depth_of_field=False)
     scene.add("clouds_high", MS.Billows(high, gain=_gain((0.0, 0.0), (42.4, 0.0), (43.2, 1.0), (49.3, 1.0),
                                                          (50.0, 0.0), (60.0, 0.0)), seed=14, alpha=0.09),
               depth_of_field=False)
@@ -732,7 +846,7 @@ def _setup(scene):
                                                     spark=0.035,
                                                     gain=_gain((0.0, 0.0), (10.3, 0.0), (11.0, 1.0), (13.6, 1.0),
                                                                (14.4, 0.0), (60.0, 0.0))), WORDS))
-    scene.add("motes1", PW.KeepClear(FX.Motes(n=1600, box=(18.0, 6.0, 18.0), center=(P1 + P1b) * 0.5 + _v(0, 3, 0),
+    scene.add("motes1", PW.KeepClear(FX.Motes(n=700, box=(18.0, 6.0, 18.0), center=(P1 + P1b) * 0.5 + _v(0, 3, 0),
                                               gain=_gain((0.0, 0.0), (6.4, 0.0), (7.2, 1.0), (13.6, 1.0),
                                                          (14.6, 0.0), (60.0, 0.0))), WORDS), reflect=False)
 
@@ -751,15 +865,16 @@ def _setup(scene):
 
     # ---- S3: the river of light, the doorway, the tree of light
     scene.add("river", PW.KeepClear(FX.LightRiver(RIVER, width=3.2, n=30000, speed=10.0,
-                                                  gain=_gain((0.0, 0.0), (18.6, 0.0), (19.85, 1.0), (26.6, 1.0),
-                                                             (26.79, 0.0), (60.0, 0.0))), WORDS))
+                                                  gain=_gain((0.0, 0.0), (18.6, 0.0), (19.85, 1.0), (23.6, 1.0),
+                                                             (24.4, 0.35), (26.6, 0.35), (26.79, 0.0), (60.0, 0.0))),
+                                    WORDS))
     scene.add("door", FX.Door(P3, width=1.4, height=2.5, facing=0.0, t_open=21.0,
                               gain=_gain((0.0, 0.0), (19.9, 0.0), (20.3, 1.0), (24.4, 1.0), (24.9, 0.0), (60.0, 0.0))))
     petal_path = [P3 + _v(2.6, 1.3, 3.0), P3 + _v(1.0, 1.4, 1.2), P3 + _v(0.0, 1.45, 0.0), P3 + _v(-0.2, 1.6, -3.0),
                   P3 + _v(0.4, 2.2, -8.0), P3 + _v(-0.5, 3.4, -14.0)]
     scene.add("petals3", PW.KeepClear(FX.PetalStream(petal_path, 21.7, 23.7, n=1300, speed=3.6), WORDS),
               reflect=True)
-    scene.add("tree", PW.KeepClear(FX.TreeOfLight(P3b + _v(0.6, 0.0, -1.6), height=5.4, t_bloom=23.9,
+    scene.add("tree", PW.KeepClear(FX.TreeOfLight(P3b + _v(7.0, 0.0, 2.5), height=3.4, t_bloom=23.9,
                                                   gain=_gain((0.0, 0.0), (23.4, 0.0), (23.9, 1.0), (26.6, 1.0),
                                                              (26.79, 0.0), (60.0, 0.0))), WORDS))
     addp("concession", C["concession"])
@@ -768,10 +883,11 @@ def _setup(scene):
     # ---- S4: the cathedral of falling light, rising lights
     nave = [P4 + _v(sx * 6.5, 0.0, dz) for dz in (8.0, 0.0, -8.0, -16.0, -24.0) for sx in (-1.0, 1.0)]
     nave += [P4 + _v(0.0, 0.0, -30.0)]
-    scene.add("nave", PW.KeepClear(FX.LightColumns(nave, top=40.0, per=700, core_w=1.4, fall=3.5,
+    scene.add("nave", PW.KeepClear(FX.LightColumns(nave, top=40.0, per=700, core_w=0.9, fall=3.5, core_k=0.35,
                                                    gain=_gain((0.0, 0.0), (26.79, 0.0), (27.0, 1.0), (33.2, 1.0),
                                                               (33.36, 0.0), (60.0, 0.0))), WORDS))
-    scene.add("pour4", PW.KeepClear(FX.LightColumns([P4], top=30.0, per=1800, core_w=2.0, fall=3.0,
+    scene.add("pour4", PW.KeepClear(FX.LightColumns([P4], top=30.0, per=900, fall=2.4, ring=1.1, core=False,
+                                                    spark=0.04,
                                                     gain=_gain((0.0, 0.0), (26.79, 0.0), (27.3, 1.0), (33.2, 1.0),
                                                                (33.36, 0.0), (60.0, 0.0))), WORDS))
     scene.add("rising4", PW.KeepClear(FX.RisingLights(P4, 28.0, r0=2.5, r1=45.0, n=700, speed=16.0,
@@ -780,33 +896,33 @@ def _setup(scene):
 
     # ---- S5: the nine rivers across the sky, the help up, the twirl, the crowd of light
     def sky_river(k):
-        a0 = np.radians(-70.0 + 140.0 * ((k * 4) % 9) / 8.0)
-        h = 26.0 + 4.0 * ((k * 5) % 9)
-        R = 110.0 + 6.0 * k
+        a0 = np.radians(-80.0 + 160.0 * ((k * 4) % 9) / 8.0)
+        h = 30.0 + 6.0 * ((k * 5) % 9)
+        R = 90.0 + 5.0 * k
 
         def f(t):
             u = t - SEC[5]
             a = a0 + 0.22 * u * (1.0 if k % 2 == 0 else -1.0)
             return P5 + _v(np.sin(a) * R, h + 5.0 * np.sin(0.8 * t + k), -np.cos(a) * R)
         return f
-    heads = [(sky_river(k), NINE_GLOW[k], lambda t: sc(SEC[5], SEC[5] + 0.6, t) * (1.0 - sc(39.6, 40.3, t)), 1.6)
+    heads = [(sky_river(k), NINE_GLOW[k], lambda t: sc(SEC[5], SEC[5] + 0.6, t) * (1.0 - sc(39.6, 40.3, t)), 3.2)
              for k in range(9)]
-    scene.add("sky_rivers", PW.KeepClear(MB.Rivers(heads, cuts=[SEC[5]], tail=1.4), WORDS), reflect=True)
+    scene.add("sky_rivers", Clear(MB.Rivers(heads, cuts=[SEC[5]], tail=2.6)), reflect=False)
     addp("consideration", C["consideration"])
     addp("compliment", C["compliment"])
     try:
         from p3d.crowd import Crowd
-        crowd = Crowd(n=40, area=dict(center=(float(P5b[0]), float(P5b[2]) - 2.0), radius=(6.0, 14.0),
-                                      arc=(-160.0, 160.0)),
+        crowd = Crowd(n=28, area=dict(center=(float(P5b[0]), float(P5b[2]) - 1.0), radius=(3.6, 7.5),
+                                      arc=(-150.0, 150.0)),
                       facing="center", kinds=(("clap", 2.0), ("cheer", 1.0)), start=dict(t=36.6, dur=0.8),
-                      act=dict(t=37.4, dur=0.8), until=40.6, fade=0.6, points=2600, color="#ffe6c0",
-                      color2="#fff6e6")
+                      act=dict(t=37.4, dur=0.8), until=40.6, fade=0.6, points=4000, color="#ffcf7a",
+                      color2="#fff1d6", bright=1.3)
         scene.add("crowd5", PW.KeepClear(crowd, WORDS), reflect=False)      # no tall columns in the water
     except Exception as e:          # pragma: no cover
         print("crowd skipped:", e)
     twirl = C["compliment"][0]
-    scene.add("hearts5", PW.KeepClear(MB.HeartBurst(lambda t: twirl.where(t, "chest"), 37.9, NINE_GLOW, n=30,
-                                                    reach=3.0), WORDS), reflect=False)
+    scene.add("hearts5", Clear(MB.HeartBurst(lambda t: twirl.where(t, "chest"), 37.9, NINE_GLOW, n=30,
+                                             reach=2.4)), reflect=False)
 
     # ---- the breath and the ascent: the nine colours braid up the column with us
     def braid(k):
@@ -820,7 +936,7 @@ def _setup(scene):
     up_heads = [(braid(k), NINE_GLOW[k], lambda t: sc(BREATH_END, BREATH_END + 0.5, t) * (1.0 - sc(49.0, 49.6, t)),
                  0.9) for k in range(9)]
     scene.add("braid", MB.Rivers(up_heads, cuts=[BREATH_END], tail=0.8), reflect=False)
-    scene.add("pillar7", FX.LightColumns([A7], top=320.0, per=4000, core_w=3.0, fall=-6.0,
+    scene.add("pillar7", FX.LightColumns([A7], top=320.0, per=4000, core_w=2.2, fall=-6.0, core_k=0.4,
                                          gain=_gain((0.0, 0.0), (42.4, 0.0), (42.8, 1.0), (49.0, 1.0), (49.6, 0.0),
                                                     (60.0, 0.0))), reflect=False)
 
@@ -849,14 +965,20 @@ def _setup(scene):
     addp("cradle", C["cradle"])
     logo = brand.Logo(pos=tuple(LOGO_C), size=LOGO_H, facing=float(np.degrees(np.arctan2(LOGO_N[0], LOGO_N[2]))),
                       tilt=float(np.degrees(np.arcsin(np.clip(LOGO_N[1], -1.0, 1.0)))), t_in=LOGO_T0, t_full=LOGO_T1, t_out=56.2, leave_dur=0.8, arrive="build",
-                      leave="fade", paint=lambda t: sc(DAY_T + 0.2, DAY_T + 1.0, t), bright=0.55, glow=0.3,
+                      leave="fade", paint=lambda t: sc(DAY_T + 0.2, DAY_T + 1.0, t), bright=0.38, glow=0.14,
                       reflect=False)
     scene.add("logo", logo, reflect=False)
+
+    pastel = _cloud_sea(rng, CAM_END, 260.0, 1600.0, 150, EARTH_Y - 34.0, 60.0, 130.0, 1.0, hk=(0.28, 0.45))
+    scene.add("clouds_pastel", MS.Billows(pastel, gain=_gain((0.0, 0.0), (DAY_T, 0.0), (DAY_T + 1.0, 1.0),
+                                                             (60.0, 1.0)), seed=15, alpha=0.05, body=0.2,
+                                          top="#fff4e8", warm="#ffd8c0", rose="#f8c0cc", lilac="#c8c8f4",
+                                          core="#fff8f0", shade=0.3, sun_az=180.0), depth_of_field=False)
 
     # ---- hearts off every word, the nine symbols as subtle scenery
     scene.add("word_hearts", MB.WordHearts(WORDS, GLOWC, per=9), reflect=False)
     for k, (lab, tt, anchor, size) in enumerate(SYMBOL_PLAN):
-        scene.add("symbol_%d" % k, MB.SymbolLight(lab, anchor, tt, GLOWC[lab], size=size, seed=91 + k))
+        scene.add("symbol_%d" % k, Clear(MB.SymbolLight(lab, anchor, tt, GLOWC[lab], size=size, seed=91 + k)))
 
     WORDS.add_to(scene, reflect=False)
     try:
@@ -891,12 +1013,11 @@ SYMBOL_PLAN = [
 
 P3D = dict(
     camera=CAMERA,
-    world=dict(WORLD, shafts=[_shaft([(P1b, 10.3, 14.0, 0.8), (P5, 33.6, 37.2, 0.55)], radius=1.4),
-                              _shaft([(P4, 27.0, 33.2, 0.9), (A7 + _v(26.0, 0.0, 8.0), 42.8, 49.4, 0.8)], radius=2.2,
+    world=dict(WORLD, shafts=[_shaft([(P1b, 10.3, 14.0, 0.45), (P5, 33.6, 37.2, 0.45)], radius=1.2),
+                              _shaft([(P4, 27.0, 33.2, 0.5)], radius=2.2,
                                      color="#ffe6b8", top=60.0),
                               _shaft([(P3, 20.6, 23.9, 0.5), (P5b, 37.2, 40.6, 0.5)], radius=1.2, color="#ffeccc"),
-                              _shaft([(A7 + _v(-24.0, 0.0, -14.0), 42.8, 49.4, 0.8)], radius=2.6, color="#ffd8a0",
-                                     top=60.0)]),
+                              _shaft([(P2, 17.2, 19.9, 0.35)], radius=1.0, color="#ffd8a0", top=22.0)]),
     setup=_setup,
     bursts=[dict(t=BREATH_END, strength=0.6, rise=0.08, fall=0.4, color="#ffd9a0")],
     motion_blur=0.4,
@@ -918,7 +1039,7 @@ WAVES = []
 
 TITLES = dict(
     opening=dict(t_end=3.7, y=0.30, palette="night"),
-    signature=dict(windows=[(31.9, 33.25, "tl", "night"), (47.8, 49.3, "tr", "day")]),
-    date_light=dict(t_form=SEC[6], t_burst=BREATH_END, y=0.30, palette="night"),
+    signature=dict(windows=[(31.85, 33.25, "tr", "night"), (47.8, 49.3, "tr", "day")]),
+    date_light=dict(t_form=SEC[6], t_burst=BREATH_END, y=0.27, palette="night"),
     end_card=dict(t_in=55.0, scale=EC_SCALE, backdrop="auto"),
 )

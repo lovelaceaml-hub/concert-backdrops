@@ -375,7 +375,7 @@ class Earth:
             return None
         out = []
         o = self.geo(self.ocean_ll[:, 0], self.ocean_ll[:, 1], 0.995, t)
-        out.append(dict(pos=o, size=0.06 * self.R, color=self.col_o, alpha=0.05 * g, kind="soft", seed=self.oseed,
+        out.append(dict(pos=o, size=0.06 * self.R, color=self.col_o, alpha=0.085 * g, kind="soft", seed=self.oseed,
                         dof=0.0, reflect=False))
         lk = float(self.land_k(t)) * g
         if lk > 0.0:
@@ -448,7 +448,7 @@ class EarthHearts:
         if t < self.tb.min():
             return None
         pts, cols, al, sz = [], [], [], []
-        size = 0.10 * self.R
+        size = 0.17 * self.R
         for i in range(len(self.ll)):
             age = t - self.tb[i]
             if age < 0.0:
@@ -471,7 +471,7 @@ class EarthHearts:
             pts.append(q)
             cols.append(np.broadcast_to(0.85 * self.col[i] + 0.15 * lin(WHITE), q.shape))
             al.append(np.full(len(q), k))
-            sz.append(np.full(len(q), 0.010 * self.R))
+            sz.append(np.full(len(q), 0.016 * self.R))
         fade_arcs = 1.0 if self.t_fly is None else 1.0 - sc(self.t_fly - 0.3, self.t_fly + 0.1, t)
         if fade_arcs > 0.0:
             for a, b in self.arcs:

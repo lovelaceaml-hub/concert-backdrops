@@ -289,7 +289,7 @@ class LightColumns:
     meet behind it, like the nave of a cathedral), each a soft core with sparks falling down it."""
 
     def __init__(self, places, top=34.0, per=520, gain=None, seed=71, color="#ffe2a8", color2="#fff6e6",
-                 core_w=1.1, fall=3.0, ring=0.0, core=True, spark=0.06):
+                 core_w=1.1, fall=3.0, ring=0.0, core=True, spark=0.06, core_k=1.0):
         rng = np.random.default_rng(seed)
         self.base = np.asarray(places, np.float64)
         m = len(self.base)
@@ -304,6 +304,7 @@ class LightColumns:
         else:
             self.j = rng.normal(size=(k, 2)) * 0.35
         self.core = core
+        self.core_k = core_k
         self.spark = spark
         self.v = fall * (0.7 + 0.6 * rng.random(k))
         self.sd = rng.random(k)
@@ -329,8 +330,10 @@ class LightColumns:
                     twinkle=0.5)]
         if self.core:
             out += [dict(pos=b, pos2=b + np.stack([np.zeros(len(b)), self.top, np.zeros(len(b))], 1),
-                         size=self.core_w, color=self.col, alpha=0.16 * g, alpha2=0.03 * g, kind="ribbon"),
-                    dict(pos=b + np.array([0.0, 0.05, 0.0]), size=3.0, color=self.col, alpha=0.12 * g, kind="soft")]
+                         size=self.core_w, color=self.col, alpha=0.16 * g * self.core_k,
+                         alpha2=0.03 * g * self.core_k, kind="ribbon"),
+                    dict(pos=b + np.array([0.0, 0.05, 0.0]), size=3.0, color=self.col, alpha=0.12 * g * self.core_k,
+                         kind="soft")]
         return out
 
 
@@ -358,7 +361,7 @@ class Door:
         j = rng.normal(size=(n, 3)) * 0.035
         self.frame = self.c + x[:, None] * self.r + y[:, None] * np.array([0.0, 1.0, 0.0]) + j
         self.fs = rng.random(n)
-        m = 2600
+        m = 700
         vx = rng.uniform(-w2, w2, m)
         vy = rng.uniform(0.0, height, m)
         ok = (vy < hp) | ((vx ** 2 + (vy - hp) ** 2) < w2 * w2)
@@ -381,11 +384,11 @@ class Door:
         tw = 0.8 + 0.2 * np.sin(t * 6.0 + 30.0 * self.fs)
         out = [dict(pos=self.frame, size=0.035, color=self.col, alpha=g * draw * tw, emit=2.4, kind="spark",
                     twinkle=0.5, seed=self.fs),
-               dict(pos=self.frame[::8], size=0.35, color=self.col, alpha=0.10 * g * draw, kind="soft"),
-               dict(pos=self.veil, size=0.30, color=self.vcol, alpha=(0.015 + 0.05 * o) * g, kind="soft",
+               dict(pos=self.frame[::8], size=0.30, color=self.col, alpha=0.05 * g * draw, kind="soft"),
+               dict(pos=self.veil, size=0.30, color=self.vcol, alpha=(0.004 + 0.012 * o) * g, kind="soft",
                     seed=self.vs),
-               dict(pos=self.c[None] + np.array([[0.0, 0.04, 0.0]]), size=2.6, color=self.col,
-                    alpha=0.16 * g * draw, kind="soft")]
+               dict(pos=self.c[None] + np.array([[0.0, 0.04, 0.0]]), size=2.2, color=self.col,
+                    alpha=0.08 * g * draw, kind="soft")]
         return out
 
 
@@ -494,13 +497,13 @@ class TreeOfLight:
                     fade=0.6, kind="soft")]
         u = t - self.t_bloom
         if u > 0.0:                               # a few petals drift down from the crown
-            k = len(self.bl) // 12
-            sel = self.bl[::12][:k]
-            ph = self.bs[::12][:k]
+            k = len(self.bl) // 30
+            sel = self.bl[::30][:k]
+            ph = self.bs[::30][:k]
             fall = np.mod(ph * 6.0 + 0.6 * u, 6.0)
             pos = sel + np.stack([0.4 * np.sin(1.3 * t + 9 * ph) + 0.3 * fall, -fall, 0.3 * np.cos(t + 7 * ph)], 1)
             pos[:, 1] = np.maximum(pos[:, 1], 0.02)
-            out.append(dict(pos=pos, size=0.05, color=self.bcol[::12][:k], alpha=0.8 * g * ss(0.0, 0.8, u),
+            out.append(dict(pos=pos, size=0.035, color=self.bcol[::30][:k], alpha=0.7 * g * ss(0.0, 0.8, u),
                             kind="petal", rot=np.stack([t * 2 + ph * 9, t * 3 + ph * 5], 1), emit=1.3))
         return out
 
