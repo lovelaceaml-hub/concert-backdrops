@@ -9,7 +9,7 @@
     P3D = dict(camera=..., world=..., setup=build)
 
 A Body is a point set for the 3D layer (engine/p3d/api.py). What it is made of:
-  the form      the MakeHuman base mesh (CC0), posed by a skeleton: real walk and run cycles and gestures
+  the form      the MakeHuman base mesh (CC0), posed by a skeleton: motion capture (CMU) and gestures
                 posed by hand (engine/p3d/actor.py, motion.py, gestures.py). No face: a profile is an outline.
   garments      cloth simulated on the body (engine/p3d/cloth.py): everyone is clothed.
   looks         how the points are drawn (engine/p3d/looks.py): glitter, plexus, rim, dots, window.
