@@ -18,7 +18,7 @@ from . import camera as C
 from . import shaders as K
 from . import world as Wd
 
-KIND_ID = dict(soft=0, spark=1, disc=2, flake=3, petal=4, bird=5, line=6, ribbon=7)
+KIND_ID = dict(soft=0, spark=1, disc=2, flake=3, petal=4, bird=5, line=6, ribbon=7, shard=8, butterfly=9)
 CAM_UNIT = 15            # the composite's background unit (shared with engine/sky_camera.py, never both)
 LAKE_UNIT = 7            # the lake field (world key lake), bound while the layer draws
 SHORE = 1400.0           # metres from the origin to the foot of the first hills: the lake ends there
@@ -137,7 +137,7 @@ def _visible_runs(cells, cam, mirror, dome, stride=1):
 class Layer:
     def __init__(self, R):
         cfg = dict(S.P3D) if isinstance(S.P3D, dict) else {}
-        known = {"camera", "world", "setup", "sets", "keep", "motion_blur", "motion_samples", "bursts", "lod",
+        known = {"camera", "world", "setup", "sets", "keep", "motion_blur", "motion_samples", "bursts", "lod", "sky_res",
                  "bokeh_max", "clear"}
         if set(cfg) - known:
             raise ValueError(f"P3D: unknown keys {sorted(set(cfg) - known)} (known: {sorted(known)})")
@@ -210,9 +210,15 @@ class Layer:
         w, h = self.w, self.h
         self.msize = self.msize_half = (max(w // 2, 8), max(h // 2, 8))
         self._tex = tex
-        self.masks = {"half": (tex(self.msize), tex(self.msize))}   # silhouettes; full size made when asked for
-        (self.t_mask, self.f_mask), (self.t_mask2, self.f_mask2) = self.masks["half"]
-        self.t_bg, self.f_bg = tex((w, h))
+        # silhouettes, a scratch texture, and the silhouettes' mirror images in the lake; full size made when asked
+        self.masks = {"half": (tex(self.msize), tex(self.msize), tex(self.msize))}
+        (self.t_mask, self.f_mask), (self.t_mask2, self.f_mask2), (self.t_mmask, self.f_mmask) = self.masks["half"]
+        self._mirror_mask = False
+        # the sky, hills, lake and mist: full size, or (P3D sky_res=0.5) half size for speed on heavy scenes
+        self.sky_res = float(cfg.get("sky_res", 1.0))
+        bs = (w, h) if self.sky_res >= 0.999 else (max(int(w * self.sky_res), 8), max(int(h * self.sky_res), 8))
+        self.t_bg, self.f_bg = tex(bs)
+        self.bg_size = bs
         self.t_bg2, self.f_bg2 = tex(self.msize)        # the world behind a window (sky layer 0), in its other look
         self.t_bg3, self.f_bg3 = tex(self.msize)        # the same for sky layer 1
         self.t_paint, self.f_paint = tex((w, h))        # painted sets: premultiplied colour and coverage
@@ -541,9 +547,14 @@ class Layer:
                 if mk.sky == "flat":
                     c = _val(mk.color, t)
                     col = api.show(c) if isinstance(c, str) else np.asarray(c, np.float64)
+                elif mk.sky == "nebula":
+                    c = _val(mk.color, t) if mk.color is not None else "#ff9440"
+                    col = api.lin(c) if isinstance(c, str) else np.asarray(c, np.float64)
+                gl = _val(mk.glow, t) if mk.glow is not None else (-0.25, 0.30, 1.0, 0.5)
                 layers[s] = dict(key=key, kind=api.MASK_SKIES.index(mk.sky), k=0.0, edge=float(mk.edge),
                                  tint=tuple(float(x) for x in np.asarray(mk.tint, np.float64)), look=mk.look,
-                                 color=col, box=(0.5, 0.5, 0.4, 0.0), parent=-1, soft=0.0, pts=[])
+                                 color=col, box=(0.5, 0.5, 0.4, 0.0), parent=-1, soft=0.0, pts=[],
+                                 glow=tuple(float(x) for x in gl))
             layers[s]["k"] = max(layers[s]["k"], k)
             layers[s]["soft"] = max(layers[s]["soft"], float(mk.soft))
             slot_of[e.name] = s
@@ -571,28 +582,48 @@ class Layer:
         setu(p, uView=U["uView"], uProj=U["uProj"], uFocal=U["uFocal"], uNear=U["uNear"], uT=U["uT"],
              uRes=(float(self.msize[0]), float(self.msize[1])))
         st = dict(dark=0.0, layers=layers, slot_of=slot_of, full=full)
+        w = self.world.now
+        mirror = float(w["mirror"]) > 0.001 and cam.pos[1] > 0.0
+        srcs = []
+        for e, batches, k in todo:
+            mk = e.mask
+            if mk.mode == "sky" and e.name not in slot_of:
+                continue
+            if mk.source is not None:
+                src = api.Entry(e.name + "#mask", mk.source)
+                srcs.append((e, self._batches(src, t, cam), k, src.name))
+            else:
+                srcs.append((e, batches, k, e.name))
         try:
-            for e, batches, k in todo:
+            for e, batches, k, name in srcs:
                 mk = e.mask
                 sky = mk.mode == "sky"
-                if sky and e.name not in slot_of:
-                    continue
-                if mk.source is not None:
-                    src = api.Entry(e.name + "#mask", mk.source)
-                    batches = self._batches(src, t, cam)
-                    name = src.name
-                else:
-                    name = e.name
                 for bi, b in enumerate(batches):
                     if b["kind"] in api.SEGMENT_KINDS:
                         continue
                     sl = self._slot((name, bi), b, static=getattr(e.pointset, "static", False) and mk.source is None)
-                    setu(p, uGrow=float(mk.grow), uSel=(1 + slot_of[e.name]) if sky else 0)
+                    setu(p, uGrow=float(mk.grow), uSel=(1 + slot_of[e.name]) if sky else 0, uMirrorM=0.0)
                     self._vao(sl, "mask").render(moderngl.TRIANGLE_STRIP, vertices=4, instances=sl["n"])
                     if sky:
                         layers[slot_of[e.name]]["pts"].append(b["pos"][:: max(b["n"] // 400, 1)])
                 if not sky:
                     st["dark"] = max(st["dark"], k)
+            # the silhouettes' images in the lake (the same shapes upside down below the water)
+            self._mirror_mask = mirror and any(e.reflect for e, _, _, _ in srcs)
+            if self._mirror_mask:
+                self.f_mmask.use()
+                self.f_mmask.clear(0.0, 0.0, 0.0, 60000.0)
+                for e, batches, k, name in srcs:
+                    if not e.reflect:
+                        continue
+                    mk = e.mask
+                    sky = mk.mode == "sky"
+                    for bi, b in enumerate(batches):
+                        if b["kind"] in api.SEGMENT_KINDS or not b["reflect"]:
+                            continue
+                        sl = self._slot((name, bi), b, static=getattr(e.pointset, "static", False) and mk.source is None)
+                        setu(p, uGrow=float(mk.grow), uSel=(1 + slot_of[e.name]) if sky else 0, uMirrorM=1.0)
+                        self._vao(sl, "mask").render(moderngl.TRIANGLE_STRIP, vertices=4, instances=sl["n"])
         finally:
             ctx.blend_equation = moderngl.FUNC_ADD
             ctx.disable(moderngl.BLEND)
@@ -608,22 +639,24 @@ class Layer:
         # soften each channel by its own softness (pixels of a 1080p picture)
         k = (self.h / 1080.0) * (self.msize[1] / float(self.h)) / 3.2
         rad = tuple(float(s) * k for s in softs)
-        self.f_mask2.use()
-        self.t_mask.use(location=0)
-        setu(self.p_mblur, uTex=0, uDir=(1.0 / self.msize[0], 0.0), uRad=rad)
-        self.v_mblur.render(moderngl.TRIANGLE_STRIP)
-        self.f_mask.use()
-        self.t_mask2.use(location=0)
-        setu(self.p_mblur, uTex=0, uDir=(0.0, 1.0 / self.msize[1]), uRad=rad)
-        self.v_mblur.render(moderngl.TRIANGLE_STRIP)
+        pairs = [(self.t_mask, self.f_mask)] + ([(self.t_mmask, self.f_mmask)] if self._mirror_mask else [])
+        for tm, fm in pairs:
+            self.f_mask2.use()
+            tm.use(location=0)
+            setu(self.p_mblur, uTex=0, uDir=(1.0 / self.msize[0], 0.0), uRad=rad)
+            self.v_mblur.render(moderngl.TRIANGLE_STRIP)
+            fm.use()
+            self.t_mask2.use(location=0)
+            setu(self.p_mblur, uTex=0, uDir=(0.0, 1.0 / self.msize[1]), uRad=rad)
+            self.v_mblur.render(moderngl.TRIANGLE_STRIP)
         return st
 
     def _use_mask(self, which):
         """Switches the silhouette textures between half size (soft edges, the default) and full size."""
         if which not in self.masks:
             size = (self.w, self.h)
-            self.masks[which] = (self._tex(size), self._tex(size))
-        (self.t_mask, self.f_mask), (self.t_mask2, self.f_mask2) = self.masks[which]
+            self.masks[which] = (self._tex(size), self._tex(size), self._tex(size))
+        (self.t_mask, self.f_mask), (self.t_mask2, self.f_mask2), (self.t_mmask, self.f_mmask) = self.masks[which]
         self.msize = self.t_mask.size
 
     # ------------------------------------------------------------------ the light pass
@@ -668,6 +701,8 @@ class Layer:
         if self._mask is not None:
             self.t_mask.use(location=0)
             mask_on = 1.0
+            if self._mirror_mask:
+                self.t_mmask.use(location=1)
         blur = 1.0 if self.shutter > 0.0 else 0.0
         mirror = float(w["mirror"]) > 0.001 and cam.pos[1] > 0.0
         Uv = {k: v for k, v in U.items() if not k.startswith("_")}
@@ -678,7 +713,8 @@ class Layer:
         else:
             hide = (0.0, 0.0, 0.0)
         for p in (self.p_sprite, self.p_seg):
-            setu(p, uMaskTex=0, uMaskOn=mask_on, uPaint=1.0 if paint else 0.0, uMaskK=hide, uMaskBias=0.05, **Uv)
+            setu(p, uMaskTex=0, uMaskTexM=1, uMaskOn=mask_on, uPaint=1.0 if paint else 0.0, uMaskK=hide, uMaskBias=0.05,
+                 **Uv)
             self._arrays(p, U)
         boxk = U["_clear"][1]
         for e, batches in items:
@@ -760,9 +796,11 @@ class Layer:
             vao.render(moderngl.TRIANGLE_STRIP, vertices=4, instances=sl["n"])
         else:
             self._render(sl, vao, cam, dome=bool(dome))
-        if mirror and e.reflect and b["reflect"] and not e.window:
+        mm = 1.0 if (self._mask is not None and self._mirror_mask) else 0.0
+        if mirror and e.reflect and b["reflect"] and (not e.window or mm > 0.0):
             k = 1 if seg else _thin(sl["n"])
-            setu(p, uMirror=1.0, uMaskOn=0.0, uWindow=0.0, uGain=gain * k, uIdxK=(chunked, float(k)))
+            setu(p, uMirror=1.0, uMaskOn=mm, uWindow=win[0] if mm > 0.0 else 0.0, uGain=gain * k,
+                 uIdxK=(chunked, float(k)))
             if seg:
                 vao.render(moderngl.TRIANGLE_STRIP, vertices=4, instances=sl["n"])
             else:
@@ -872,7 +910,7 @@ class Layer:
         U = self._uniforms(t, cam, prev, w)
         ctx.disable(moderngl.BLEND)
         # 1. sky, hills, lake, mist, shafts (and, behind a window, the same world in its other look)
-        self._sky(self.f_bg, (self.w, self.h), w, U, t, split=U["_split"])
+        self._sky(self.f_bg, self.bg_size, w, U, t, split=U["_split"])
         mk = self._mask
         if mk is not None:
             for ly, fb in zip(mk["layers"], (self.f_bg2, self.f_bg3)):
@@ -920,7 +958,10 @@ class Layer:
         self.t_paint.use(location=4)
         self.t_bg2.use(location=5)
         self.t_bg3.use(location=6)
-        fa, fbox, ftint, fcol = (np.zeros((2, 4), "f4") for _ in range(4))
+        mm = mk is not None and self._mirror_mask
+        if mm:
+            self.t_mmask.use(location=7)
+        fa, fbox, ftint, fcol, fglow = (np.zeros((2, 4), "f4") for _ in range(5))
         if mk is not None:
             for i, ly in enumerate(mk["layers"]):
                 if ly is None:
@@ -930,7 +971,9 @@ class Layer:
                 ftint[i, :3] = ly["tint"]
                 if ly["color"] is not None:
                     fcol[i, :3] = ly["color"]
-        for name, arr in (("uFillA", fa), ("uFillBox", fbox), ("uFillTint", ftint), ("uFillCol", fcol)):
+                fglow[i] = ly.get("glow", (0.0, 0.0, 0.0, 0.0))
+        for name, arr in (("uFillA", fa), ("uFillBox", fbox), ("uFillTint", ftint), ("uFillCol", fcol),
+                          ("uFillL", fglow)):
             seta(p, name, arr)
         bursts = self._burst_state(t, cam)
         ba = np.zeros((4, 4), "f4")
@@ -941,6 +984,7 @@ class Layer:
         seta(p, "uBurstCol", bc)
         moving = self.shutter > 0.0 and (not np.allclose(cam.pos, prev.pos, atol=1e-5)
                                          or not np.allclose(cam.target, prev.target, atol=1e-5))
+        setu(p, uMaskM=7, uMirrorK=0.85 * min(float(w["mirror"]), 1.0) if mm else 0.0)
         setu(p, uBg=0, uRayA=1, uRayB=2, uMask=3, uPaintT=4, uBg2=5, uBg3=6, uPaintOn=1.0 if self._painted else 0.0,
              uCamR=U["uCamR"], uCamU=U["uCamU"], uCamF=U["uCamF"],
              uCamPos=U["uCamPos"], uPrevVP=U["uPrevVP"], uFocal=U["uFocal"], uAspect=U["uAspect"], uT=float(t),

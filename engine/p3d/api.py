@@ -87,6 +87,11 @@ KINDS
   "flake"   an irregular shard that turns and tumbles (dissolving bodies)
   "petal"   a petal shape that turns and tumbles
   "bird"    a small pair of wings; rot is the heading in the picture plane, the wings beat with seed and time
+  "shard"   a shard of glass (a sharp triangle or quad, one per seed): a faint body, bright edges and a
+            reflection that sweeps across; it turns (rot[:, 0]) and tumbles (rot[:, 1]), flaring as it faces
+            the camera. Painted (paint=1) it is a dark piece of a silhouette
+  "butterfly"  a butterfly seen from above, its two pairs of wings beating; rot[:, 0] is its heading in the
+            picture, rot[:, 1] tilts it away from the camera
   "line"    a straight segment from pos to pos2 (plexus lines); size is its width in metres, never thinner
             than a hairline on screen. Tens of thousands are fine; they take the lens blur and are cut
             cleanly where they pass the camera
@@ -112,6 +117,9 @@ THE MASK PASS (dark bodies, double exposures, windows onto another world)
   scene.add("profile", body, mask=Mask("sky", sky="world", look="day"))   the silhouette is a window onto the
                                                            same world, on the same camera, in another look
                                                            (its own sky, sun, hills and lake)
+  scene.add("profile", body, mask=Mask("sky", sky="nebula", color="#ff9a3c", glow=(-0.2, 0.3, 1.2, 0.6)))
+                                                           the silhouette is filled with deep clouds lit from
+                                                           a light inside them (p07)
   scene.add("flock", birds, window=True)                   a set that lives inside the windows: it is drawn
                                                            only where a "sky" silhouette is
   The silhouette is drawn from the set's own points, each grown by Mask.grow metres so the cloud closes into
@@ -128,10 +136,10 @@ from typing import Any, Callable, Optional, Protocol, Union, runtime_checkable
 
 import numpy as np
 
-KINDS = ("soft", "spark", "disc", "flake", "petal", "bird", "line", "ribbon")
+KINDS = ("soft", "spark", "disc", "flake", "petal", "bird", "line", "ribbon", "shard", "butterfly")
 SEGMENT_KINDS = ("line", "ribbon")
 MASK_MODES = ("dark", "sky")
-MASK_SKIES = ("clouds", "sunrise", "stars", "day", "world", "flat")
+MASK_SKIES = ("clouds", "sunrise", "stars", "day", "world", "flat", "nebula")
 
 _ARRAY_FIELDS = dict(pos=3, size=1, color=3, alpha=1, pos2=3, alpha2=1, size2=1, u=1, u2=1, rot=2, emit=1, normal=3,
                      seed=1, vel=3, birth=1)
@@ -259,7 +267,12 @@ class Mask:
     look: Any = None                        # sky "world": the look (a name, or a dict of world settings) of the
     #                                         world seen through the shape; may be a function of t giving a name
     color: Any = None                       # sky "flat": the colour that fills the shape, a display hex shown
-    #                                         exactly (as `paint`), or linear light; may be a function of t
+    #                                         exactly (as `paint`), or linear light; may be a function of t.
+    #                                         sky "nebula": the colour of the light inside the clouds
+    glow: Any = None                        # sky "nebula": (x, y, strength, density): where the light inside
+    #                                         stands (in half heights of the shape from its centre, y up), how
+    #                                         strong it is, how dense the clouds are (0..1); default
+    #                                         (-0.25, 0.30, 1.0, 0.5). May be a function of t
     slot: Any = None                        # which of the two sky layers (0 or 1); by default sets with the same
     #                                         fill share a layer and different fills take the next free one
 
@@ -281,7 +294,8 @@ class Mask:
             return ("slot", self.slot)
         lk = self.look if isinstance(self.look, (str, type(None))) else id(self.look)
         col = self.color if isinstance(self.color, (str, type(None), tuple)) else id(self.color)
-        return (self.sky, lk, col, tuple(np.asarray(self.tint, np.float64).round(4)), float(self.edge))
+        gl = self.glow if isinstance(self.glow, (tuple, type(None))) else id(self.glow)
+        return (self.sky, lk, col, tuple(np.asarray(self.tint, np.float64).round(4)), float(self.edge), gl)
 
     def strength_at(self, t):
         s = self.strength(t) if callable(self.strength) else self.strength
