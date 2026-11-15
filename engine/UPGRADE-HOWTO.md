@@ -795,7 +795,8 @@ def build(scene):                     # the song's P3D["setup"]
 | `bright`, `halo`, `sparkle` | 1.0 | brightness of the letters, of the coloured halo round them, of the glints on them |
 | `sharp` | 1.0 | how far the settled letters ignore the lens blur: 1 keeps a word sharp for its whole reading moment whatever the camera focuses on; 0 leaves it to the lens. Flying particles always blur with the lens |
 | `n`, `n_label` | 42000, 6000 | points of the phrase and of the label |
-| `label_size` | 0.30 | size of the label in em of the phrase |
+| `label_size` | 0.36 | size of the label in em of the phrase |
+| `font` | the expressions' italic | `"title"` (the end card's upright bold), `"tag"` (the lighter italic) or a font file |
 | `wind` | `(1, 0.22, 0.1)` | the direction the air moves (leavings `wind`, `petals`, `flock`) |
 | `water` | 0.0 | height of the water for `lake`, `sink`, `gather` |
 | `name` | the label | the name other words and the scene use |

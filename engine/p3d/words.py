@@ -92,6 +92,22 @@ def _text_tools():
                 os.path.join(fonts, "jost-latin-500-normal.ttf"), tracked)
 
 
+def _font_file(font):
+    """font= of a Word: None or "phrase" (the expressions' italic), "title" (the end card's upright bold),
+    "tag" (the lighter italic), or a path to a font file."""
+    if font in (None, "phrase"):
+        return None
+    if font in ("title", "tag"):
+        try:
+            import text as T
+            return T.F_TITLE if font == "title" else T.F_TAG
+        except Exception:
+            base = os.path.dirname(_text_tools()[0])
+            return os.path.join(base, "cormorant-garamond-latin-700-normal.ttf" if font == "title"
+                                else "cormorant-garamond-latin-600-italic.ttf")
+    return font
+
+
 def _lattice(cov, rng, b=3, min_cov=0.10, jitter=0.22):
     """An even lattice of points over a coverage picture (0..1, top row first): one point per cell of b x b
     pixels that holds ink, placed at the centre of the ink inside the cell (so edges stay crisp), its weight
@@ -114,7 +130,7 @@ def _lattice(cov, rng, b=3, min_cov=0.10, jitter=0.22):
 _GLYPHS = {}
 
 
-def glyphs(label, lines, n=42000, n_label=6000, label_size=0.30, font=None):
+def glyphs(label, lines, n=42000, n_label=6000, label_size=0.36, font=None):
     """The points of a text, in em of the phrase face: x to the right and y up from the centre of the phrase
     block. Returns a dict: x, y, w (weight 0..1), lab (True for label points), line (line number),
     cell (lattice spacing of each point, em), and the extents x0, x1, y0, y1, width (widest phrase line),
@@ -128,7 +144,7 @@ def glyphs(label, lines, n=42000, n_label=6000, label_size=0.30, font=None):
     rng = np.random.default_rng(zlib.crc32((label + "|" + "|".join(lines)).encode("utf-8")))
 
     def phrase(px):
-        f = ImageFont.truetype(font or f_phrase, int(px))
+        f = ImageFont.truetype(_font_file(font) or f_phrase, int(px))
         asc, _ = f.getmetrics()
         line_h = int(px * 1.08)                       # the line spacing of engine/text.py
         wl = [f.getlength(l) for l in lines]
@@ -190,7 +206,7 @@ def glyphs(label, lines, n=42000, n_label=6000, label_size=0.30, font=None):
     return g
 
 
-def estimate_extent(label, lines, label_size=0.30):
+def estimate_extent(label, lines, label_size=0.36):
     """Rough extents in em when the fonts are not at hand (timing checks before a render): (x0, x1, y0, y1)."""
     w = 0.40 * max(len(l) for l in lines)
     block = 1.08 * len(lines)
@@ -288,7 +304,7 @@ class Word:
     def __init__(self, label="", lines=(), expr=None, pos=(0.0, 3.0, 0.0), width=8.0, em=None, facing=0.0,
                  face="fixed", tilt=0.0, curve=0.0, t_in=0.0, t_read0=2.5, t_read1=5.5, t_out=8.0, arrive=None,
                  leave=None, source=None, to=None, color=None, glow=None, tint=0.45, bright=1.0, halo=1.0,
-                 sparkle=1.0, sharp=1.0, n=42000, n_label=6000, label_size=0.30, dot=1.9, name=None, wind=None,
+                 sparkle=1.0, sharp=1.0, n=42000, n_label=6000, label_size=0.36, dot=1.9, name=None, wind=None,
                  font=None, **opts):
         if expr is not None:
             e = EXPRESSIONS[expr - 1] if isinstance(expr, int) else EXPRESSIONS[LABELS.index(expr)]
@@ -1261,7 +1277,7 @@ def screen_box(word, cam, t):
             bool(z.min() > 0.0), em_px, float(abs(view @ nrm)))
 
 
-def check(words, camera=None, min_read=2.5, need_all=True, min_x_mm=0.9, min_cap_mm=0.6, margin=0.02,
+def check(words, camera=None, min_read=2.5, need_all=True, min_x_mm=0.9, min_cap_mm=0.55, margin=0.02,
           step=0.25, calm=None, raise_on_error=False, quiet=False):
     """Checks the timing of a set of words. Returns (problems, notes): lists of sentences.
 
