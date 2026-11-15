@@ -96,6 +96,36 @@ TITLE, TAGLINE, FADE, EXPOSURE = _base.TITLE, _base.TAGLINE, _base.FADE, _base.E
 TITLE_HIT = _base.TITLE_HIT
 
 
+# The concert badge (Anthony: "The concert title and the date should show from the beginning and throughout"):
+# large on frame 0, settled into the top left corner by 2.8 s, gone as the end card forms.
+CREDIT = dict(song="The Words of Mother’s Love",
+              concert="Healing Concert · Sunday, December 6 · 4:30 PM",
+              t_in=-1.0, t_full=0.0, t_move=1.6, t_rest=2.8, scale=0.55, alpha_rest=0.92,
+              margin_x=0.035, margin_top=0.05)
+CARD_FORMS = TITLE["form"]
+
+
+def credit_state(t, bbox):
+    """Centre, scale and strength of the badge; bbox is its size at full size (as demo_gathering.py), fading
+    out over one second from the moment the end card starts to form."""
+    c = CREDIT
+    x0, x1, y0, y1 = bbox
+
+    def ss(a, b, x):
+        u = min(max((x - a) / (b - a), 0.0), 1.0)
+        return u * u * (3 - 2 * u)
+
+    a_in = ss(c["t_in"], c["t_full"], t)
+    m = ss(c["t_move"], c["t_rest"], t)
+    scale = c["scale"] ** m
+    cx0, cy0 = (x0 + x1) / 2.0, (y0 + y1) / 2.0
+    tx = c["margin_x"] + c["scale"] * (x1 - x0) / 2.0
+    ty = 1.0 - c["margin_top"] - c["scale"] * (y1 - y0) / 2.0
+    cx, cy = cx0 * (1 - m) + tx * m, cy0 * (1 - m) + ty * m
+    alpha = a_in * (1.0 + (c["alpha_rest"] - 1.0) * m) * (1.0 - ss(CARD_FORMS, CARD_FORMS + 1.0, t))
+    return (cx, cy, scale, alpha), (cx0, cy0)
+
+
 def params(song, t):
     """The base film's params, with the arch functions this song was given by engine/song.py."""
     g = globals()
@@ -155,7 +185,7 @@ class Runner:
         return np.array([self.x, 0.0, self.z0 - self.d(t)])
 
 
-V = dict(sprinter=7.2, coat=6.6, shawl=6.6, elder_walk=1.5, elder=5.2, youth=8.4, child=5.0, child_walk=1.3)
+V = dict(sprinter=6.2, coat=5.6, shawl=5.6, elder_walk=1.4, elder=4.6, youth=7.2, child=4.0, child_walk=1.2)
 SNAP = HIT["snap"]
 CHILD_WALK = T7 - 1.45
 R = {}
@@ -193,12 +223,12 @@ Z_FALL = R["youth"].root(T5 + 1.5)[2]                   # where the boy comes to
 R["child"].z0 = Z_FALL - 3.4 + R["child"].d(BREATH)      # the child kneels 3.4 m beyond him
 _zc_end = R["child"].root(60.0)[2]
 MOTHER_Z = 14.0
-_shift = MOTHER_Z + 0.45 - _zc_end                       # Heavenly Mother stands 14 m in front of the arch
+_shift = MOTHER_Z - 0.12 - _zc_end                       # Heavenly Mother stands 14 m in front of the arch
 for _r in R.values():
     _r.z0 += _shift
 Z_FALL += _shift
 Z_CHILD = R["child"].root(BREATH)[2]
-MOTHER_POS = np.array([-0.30, 0.0, MOTHER_Z])
+MOTHER_POS = np.array([R["child"].x + 0.62, 0.0, MOTHER_Z])     # the child ends at her left side
 HELPER_POS = np.array([0.15, 0.0, Z_FALL - 1.15])       # she kneels facing him (facing +z)
 GRIP = np.array([0.30, 0.74, Z_FALL - 0.58])             # where their hands meet
 Z_START = R["sprinter"].z0
@@ -254,7 +284,7 @@ def _held(name, t):
         return 0.5 * (np.asarray(b.where(t, "palm.L")) + np.asarray(b.where(t, "palm.R"))) + [0.0, 0.10, 0.0]
     if name == "mother":
         b = BODIES["mother"]
-        r = _palm_up("mother", t, "R", 0.10)
+        r = _palm_up("mother", t, "L", 0.10)
         both = 0.5 * (np.asarray(b.where(t, "palm.L")) + np.asarray(b.where(t, "palm.R"))) + [0.0, 0.16, 0.0]
         u = float(_smoother((t - (T7 + 0.5)) / 0.9))
         return r * (1.0 - u) + both * u
@@ -277,7 +307,7 @@ def flame_pos(t):
 
 EMBER_HOME = np.array([0.1, 0.05, Z_FALL - 1.6])
 FLAME_SIZE = Track([(0.0, 0.17), (T1, 0.19), (T2, 0.21), (T3, 0.23), (T4, 0.26), (T5 - 0.1, 0.28), (T5 + 0.25, 0.0),
-                    (T6 - 0.12, 0.0), (T6 + 0.35, 0.50), (T7, 0.52), (REL, 0.75), (60.0, 0.8)], name="FLAME_SIZE")
+                    (T6 - 0.12, 0.0), (T6 + 0.35, 0.36), (T7, 0.38), (REL, 0.46), (60.0, 0.46)], name="FLAME_SIZE")
 
 
 # =====================================================================================================
@@ -296,7 +326,10 @@ class follow(Move):
 
     def _off(self, v, t):
         if isinstance(v[0], (tuple, list)):
-            u = float(_smoother((t - self.t0) / (self.t1 - self.t0)))
+            if self.pace is not None:
+                u = float(np.clip(self.pace(t), 0.0, 1.0))
+            else:
+                u = float(_smoother((t - self.t0) / (self.t1 - self.t0)))
             return np.asarray(v[0], np.float64) * (1.0 - u) + np.asarray(v[1], np.float64) * u
         return np.asarray(v, np.float64)
 
@@ -313,27 +346,26 @@ class follow(Move):
 F = "flame"
 MOVES = [
     # ---- night road
-    follow(F, (0.62, 0.05, 0.40), (0.0, -0.02, 0.0), 0.0, 0.32, fov=34, aperture=0.05, near=0.02),
-    follow("sprinter", (4.6, 1.25, 0.4), (0.0, 1.35, -0.8), 0.32, 3.9, fov=42, blend=0.45),
-    follow("sprinter", (2.1, 1.7, 0.9), (0.0, 1.75, -0.4), 3.9, 5.4, fov=36, aperture=0.05, blend=1.3),
-    follow("sprinter", (1.0, 2.1, 4.2), (0.0, 1.5, -14.0), 5.4, 6.45, fov=46, blend=1.2),
+    follow(F, (1.45, 0.10, 0.85), (0.0, 0.36, -0.2), 0.0, 0.32, fov=40, aperture=0.03, near=0.02),
+    follow("sprinter", (4.6, 1.25, 0.4), (0.0, 1.35, -0.8), 0.32, 5.3, fov=42, blend=0.45),
+    follow("sprinter", (1.0, 2.1, 4.2), (0.0, 1.5, -14.0), 5.35, 6.45, fov=46, blend=1.0),
     # ---- rain of sparks
-    follow(F, (0.80, 0.12, 0.55), (0.0, 0.0, 0.0), 6.5, 7.1, fov=36, aperture=0.05, blend=0.35),
-    follow("coat", (2.4, 2.0, 5.0), (0.0, 2.4, -10.0), 7.15, 10.2, fov=46, blend=0.5),
+    follow(F, (2.4, -0.25, 0.55), (0.2, -0.45, -0.3), 6.5, 7.1, fov=42, aperture=0.02, blend=0.35),
+    follow("coat", (1.7, 1.75, 3.5), (0.0, 2.2, -10.0), 7.15, 10.2, fov=48, blend=0.5),
     follow("coat", (2.7, 1.3, 0.5), (0.0, 1.35, -0.4), 10.45, 12.5, fov=38, aperture=0.05, blend=0.35),
     follow("coat", (1.8, 1.7, 3.2), (0.0, 1.4, -10.0), 12.5, 12.95, fov=44, blend=0.9),
     # ---- shore of birds
-    follow(F, (0.80, 0.12, 0.55), (0.0, 0.0, 0.0), 13.0, 13.55, fov=36, aperture=0.05, blend=0.3),
+    follow(F, (2.4, -0.25, 0.55), (0.2, -0.45, -0.3), 13.0, 13.55, fov=42, aperture=0.02, blend=0.3),
     follow("shawl", ((4.0, 0.7, 1.4), (5.3, 2.4, 0.8)), (0.0, 1.8, -1.4), 13.6, 18.1, fov=46, blend=0.5),
     follow("shawl", (1.6, 0.45, 1.6), (0.0, 1.3, -3.0), 18.2, 18.85, fov=56, blend=0.45),
-    follow("shawl", (1.6, 1.55, 0.35), (0.0, 1.55, -0.3), 18.85, 19.55, fov=32, aperture=0.06, blend=0.8),
+    follow("shawl", (1.6, 1.55, 0.35), (0.0, 1.55, -0.3), 18.85, 19.55, fov=34, aperture=0.025, blend=0.8),
     # ---- the sea
-    follow(F, (0.75, 0.10, 0.50), (0.0, 0.0, 0.0), 19.6, 20.05, fov=36, aperture=0.05, blend=0.3),
+    follow(F, (2.4, -0.25, 0.55), (0.2, -0.45, -0.3), 19.6, 20.05, fov=42, aperture=0.02, blend=0.3),
     follow("elder", (4.4, 0.8, 0.5), (0.0, 1.6, -0.5), 20.1, 24.4, fov=46, blend=0.45),
     follow("elder", (1.4, 3.6, 3.4), (0.0, 1.4, -6.0), 24.5, 25.6, fov=48, blend=0.5),
     follow("elder", (-1.0, 2.4, 4.0), (0.0, 1.5, -14.0), 25.6, 26.45, fov=46, blend=1.0),
     # ---- field of lights
-    follow(F, (0.75, 0.10, 0.50), (0.0, 0.0, 0.0), 26.5, 26.95, fov=36, aperture=0.05, blend=0.3),
+    follow(F, (2.4, -0.25, 0.55), (0.2, -0.45, -0.3), 26.5, 26.95, fov=42, aperture=0.02, blend=0.3),
     follow("youth", (2.0, 2.2, 3.0), (-4.0, 5.0, -45.0), 27.0, 28.3, fov=52, blend=0.45),
     follow("youth", (8.0, 7.0, 9.0), (-8.0, 6.0, -40.0), 28.3, 31.6, fov=52, blend=1.2),
     follow("youth", (0.7, 0.55, 1.8), (0.0, 0.95, -6.0), 31.7, 33.3, fov=62, blend=0.5),
@@ -349,11 +381,13 @@ MOVES = [
     follow("child", (3.0, 1.0, 0.6), (0.0, 0.95, -1.5), 45.75, 47.8, fov=42, blend=0.4),
     follow("child", (0.9, 1.3, 3.0), (0.0, 1.5, -12.0), 47.8, 48.9, fov=44, blend=1.0),
     # ---- day
-    follow(F, (0.45, 0.30, 0.45), (0.0, 0.0, 0.0), 48.95, 50.0, fov=32, aperture=0.05, near=0.02, blend=0.6),
-    follow("mother", (0.25, 1.75, 2.9), (0.0, 1.95, -6.0), 50.0, REL, fov=42, blend=0.8),
-    follow("mother", ((0.25, 1.9, 3.4), (6.0, 20.0, 75.0)), ((0.0, 2.1, -6.0), (0.3, 4.0, -25.0)), REL + 0.05, 55.5,
-           fov=46, blend=0.6),
-    follow("mother", (9.0, 22.0, 82.0), (0.3, 4.5, -25.0), 55.5, 60.0, fov=46, blend=2.0),
+    follow(F, (0.05, 0.62, 1.45), (0.0, -0.12, -0.3), 48.95, 50.05, fov=40, aperture=0.04, blend=0.6),
+    follow("mother", (0.15, 1.25, 2.7), (0.0, 2.05, -4.0), 50.1, REL, fov=46, blend=0.8),
+    follow("mother", ((0.2, 1.6, 3.6), (6.0, 20.0, 75.0)), ((0.0, 2.2, -6.0), (0.3, 4.0, -25.0)), REL + 0.05,
+           TITLE_AT, fov=48, blend=0.5, pace=[(REL + 0.05, 0.0), (REL + 0.6, 0.08), (REL + 1.6, 0.55),
+                                               (TITLE_AT, 1.0)]),
+    follow("mother", ((6.0, 20.0, 75.0), (7.5, 20.6, 79.0)), ((0.3, 4.0, -25.0), (0.3, 4.2, -25.0)), TITLE_AT, 60.0,
+           fov=46, blend=0.8),
 ]
 CAMERA = Rig(MOVES, blend=1.2, fov=44, aperture=0.03, handheld=0.25, shutter=0.5, min_height=0.3)
 
@@ -394,25 +428,25 @@ def _src(name, place, fallback):
 
 
 _SPECS = [
-    dict(expr="Greeting", arrive="touch", source=_flame_at(T0), leave="wind", wind=(0.0, 0.15, 1.0),
-         **_word("sprinter", 0.5, 0.80, 9.0, 104, T0, 1.2, 3.75, 4.9)),
+    dict(expr="Greeting", arrive="touch", source=_flame_at(1.7), leave="wind", wind=(0.0, 0.15, 1.0),
+         **_word("sprinter", 0.52, 0.72, 9.0, 100, 1.7, 2.85, 5.4, 6.4)),
     dict(expr="Concession", arrive="touch", source=_flame_at(T1), leave="bokeh",
-         **_word("coat", 0.5, 0.75, 13.5, 98, T1, 7.4, 9.95, 10.9)),
+         **_word("coat", 0.52, 0.72, 13.5, 96, T1, 7.4, 9.95, 10.9)),
     dict(expr="Gratitude", arrive="petals", source=lambda t: root("coat", t) + np.array([0.0, 1.4, 0.0]),
-         leave="flock", **_word("shawl", 0.5, 0.80, 10.5, 84, 12.9, 14.3, 17.9, 19.3)),
+         leave="flock", **_word("shawl", 0.53, 0.72, 10.5, 84, 12.9, 14.3, 17.9, 19.3)),
     dict(expr="Respect", arrive="stars", leave="sink",
-         **_word("elder", 0.5, 0.80, 9.0, 98, 18.9, 20.6, 23.9, 25.2)),
-    dict(expr="Encouragement", arrive="touch", source=_flame_at(T4), leave="arch", to=tuple(ARCH[6]),
-         **_word("youth", 0.5, 0.76, 55.0, 92, T4, 29.0, 31.6, 32.9)),
-    dict(expr="Apology", arrive="lake", leave="sink", color="#e6ecff", glow="#9fb4ff",
-         **_word(None, 0.5, 0.82, 4.6, 80, 33.4, 34.15, 36.7, 37.3)),
+         **_word("elder", 0.52, 0.73, 9.0, 94, 18.9, 20.6, 23.9, 25.2)),
+    dict(expr="Encouragement", arrive="touch", source=_flame_at(T4), leave="arch", to=tuple(ARCH[6]), reflect=False,
+         **_word("youth", 0.52, 0.72, 55.0, 90, T4, 29.0, 31.6, 32.9)),
+    dict(expr="Apology", arrive="lake", leave="stars", color="#e6ecff", glow="#9fb4ff",
+         **_word(None, 0.52, 0.74, 4.6, 80, T5, 33.95, 36.45, 37.2)),
     dict(expr="Consideration", arrive="palm", source=_src("helper", "palm.L", GRIP), leave="morph",
-         **_word(None, 0.5, 0.80, 4.4, 84, 35.6, 36.75, 39.3, 39.35)),
+         **_word(None, 0.52, 0.74, 4.4, 84, 36.2, 37.0, 39.5, 39.5)),
     dict(expr="Inclusiveness", arrive="morph", source="Consideration", leave="stream",
          to=lambda t: flame_pos(t) if t > T6 else root("child", t) + np.array([0.0, 0.62, -0.2]),
-         **_word(None, 0.5, 0.80, 4.0, 96, 39.35, 39.95, 42.5, 43.2)),
+         **_word(None, 0.52, 0.73, 4.0, 96, 39.5, 40.0, 42.5, 43.2)),
     dict(expr="Compliment", arrive="rays", source=lambda t: flame_pos(t), leave="arch", to=tuple(ARCH[8]),
-         **_word("child", 0.5, 0.78, 10.5, 96, T6, 43.05, 45.64, 46.9)),
+         **_word("child", 0.52, 0.72, 10.5, 94, T6, 43.05, 45.64, 46.9)),
 ]
 WORDS = PW.Words(_SPECS, camera=CAMERA, face="camera")
 ARCH_LIT = [w["t_out"] for w in sorted(_SPECS, key=lambda s: [e["label"] for e in PW.EXPRESSIONS].index(s["expr"]))]
@@ -435,21 +469,25 @@ class Flame:
     """The flame: a flickering teardrop of light with a glow, sparks streaming back from it as it runs; after
     the fall a scatter of embers that cool, are lifted, and stream into the child's hands."""
 
-    def __init__(self, n=1400, n_sp=1600, n_emb=1100):
+    wants_camera = True
+
+    def __init__(self, n=1400, n_sp=1600, n_emb=520):
         rng = np.random.default_rng(7)
         self.c = rng.random((n, 5))
         self.s = rng.random((n_sp, 6))
         self.e = rng.random((n_emb, 6))
         ang = self.e[:, 0] * 6.2832
         rad = 0.25 + 2.6 * self.e[:, 1] ** 0.7
-        self.rest = EMBER_HOME + np.stack([rad * np.cos(ang) * 0.8, np.zeros_like(rad), rad * np.sin(ang)], 1)
+        self.rest = EMBER_HOME + np.stack([rad * np.cos(ang) * 0.8, np.zeros_like(rad), rad * np.sin(ang) * 1.4], 1)
+        self.rest[:, 0] = np.minimum(self.rest[:, 0], 0.6 - 0.4 * self.e[:, 5])     # none at the lens side
         self.rest[:, 1] = 0.03
 
-    def sample(self, t):
+    def sample(self, t, cam=None):
         out = []
         h = float(FLAME_SIZE(t))
         if h > 0.004:
             p = flame_pos(t)
+            near = 1.0 if cam is None else float(_ss(0.5, 2.6, np.linalg.norm(np.asarray(cam.pos) - p)))
             vel = (flame_guess(t) - flame_guess(t - 0.05)) / 0.05
             sp = float(np.linalg.norm(vel))
             back = -vel / sp if sp > 0.2 else np.array([0.0, 0.0, 0.0])
@@ -463,13 +501,16 @@ class Flame:
             pos = p + np.stack([rr * np.cos(ang) + fl, u * h * (1.0 + 0.12 * np.sin(t * 7.0 + c[:, 4] * 9.0)),
                                 rr * np.sin(ang)], 1) + back[None] * lean[:, None]
             hot = np.clip(1.0 - rr / (0.5 * h + 1e-6) - u * 0.6, 0.0, 1.0)[:, None]
+            keep = (0.2 / max(h, 0.2)) ** 1.6              # a bigger flame is not a brighter one
             col = CORE * hot + (GOLD * (1.0 - u[:, None]) + EMBER * u[:, None]) * (1.0 - hot)
-            out.append(dict(pos=pos, size=0.05 * h + 0.004, color=col, alpha=0.55, emit=1.6 + 2.0 * hot[:, 0],
+            out.append(dict(pos=pos, size=0.03 * h + 0.003, color=col, alpha=0.38 * keep * (0.5 + 0.5 * near),
+                            emit=1.1 + 1.5 * hot[:, 0],
                             kind="soft"))
-            out.append(dict(pos=np.array([p + [0.0, 0.35 * h, 0.0]] * 3), size=np.array([0.9, 1.9, 4.0]) * h,
-                            color=GOLD, alpha=np.array([0.35, 0.14, 0.05]), kind="soft", dof=1.0))
+            out.append(dict(pos=np.array([p + [0.0, 0.35 * h, 0.0]] * 3), size=np.array([0.6, 1.3, 2.8]) * h,
+                            color=GOLD, alpha=np.array([0.22, 0.08, 0.03]) * keep * (0.15 + 0.85 * near),
+                            kind="soft", dof=1.0))
             s = self.s
-            life = 0.7 + 0.8 * s[:, 0]
+            life = 0.35 + 0.45 * s[:, 0]
             age = np.mod(t * (0.9 + 0.3 * s[:, 1]) + s[:, 2] * 7.0, life)
             k = age / life
             sp_pos = (p + np.stack([(s[:, 3] - 0.5) * 0.25 * h, np.full(len(s), 0.4 * h), (s[:, 5] - 0.5) * 0.25 * h], 1)
@@ -503,8 +544,8 @@ class Flame:
         bright = (1.0 - 0.8 * cool) + warm * 0.9
         col = GOLD[None] * (1.0 - cool + warm * cool)[:, None] + EMBER[None] * (cool * (1.0 - warm))[:, None]
         a = np.clip(bright, 0.0, 1.6) * (1.0 - _ss(T6 + 0.05, T6 + 0.45, t))
-        return dict(pos=pos, size=0.02 + 0.03 * e[:, 1], color=col, alpha=np.clip(a, 0.0, 1.0),
-                    emit=1.0 + 0.8 * warm, kind="spark")
+        return dict(pos=pos, size=0.006 + 0.010 * e[:, 1], color=col, alpha=np.clip(0.55 * a, 0.0, 1.0),
+                    emit=0.9 + 0.8 * warm, kind="spark")
 
 
 def _flame_z_table():
@@ -524,9 +565,26 @@ class Road:
         x = 0.28 + rng.normal(size=n) * 0.42 * (1.0 + 0.6 * rng.random(n))
         born = np.interp(-z, -fz, tt)                 # fz falls with t: interp on its negative
         born = np.where(z > fz[0], 0.0, born)
-        self.batch = dict(pos=np.stack([x, 0.012 + 0.03 * rng.random(n), z], 1), size=0.018 + 0.03 * rng.random(n),
-                          color=GOLD * (0.6 + 0.6 * rng.random((n, 1))), alpha=0.75, emit=1.0, kind="soft",
+        self.batch = dict(pos=np.stack([x, 0.012 + 0.03 * rng.random(n), z], 1), size=0.012 + 0.02 * rng.random(n),
+                          color=GOLD * (0.6 + 0.6 * rng.random((n, 1))), alpha=0.5, emit=1.0, kind="soft",
                           birth=born + 0.05 * rng.random(n), fade=0.5, flash=2.5)
+
+    def sample(self, t):
+        return self.batch
+
+
+class Posts:
+    """Small lamps on posts along the far side of the causeway, every 5 m: at running speed they stream past
+    behind the carrier, which is what makes the speed felt."""
+    static = True
+
+    def __init__(self):
+        z = np.arange(MOTHER_Z + 6.0, Z_START + 10.0, 5.0)
+        n = len(z)
+        x = np.full(n, -2.3)
+        top = np.stack([x, np.full(n, 0.95), z], 1)
+        foot = np.stack([x, np.full(n, 0.05), z], 1)
+        self.batch = dict(pos=top, size=0.09, color=lin("#d6e4ff"), alpha=0.45, emit=1.5, kind="soft")
 
     def sample(self, t):
         return self.batch
@@ -536,10 +594,12 @@ class Rain:
     """Sparks raining on the mirror around the runner; at the touch on the shore they stop in mid air, and on
     the hit they rise and fly ahead as birds."""
 
+    wants_camera = True
+
     def __init__(self, n=3200):
         self.r = np.random.default_rng(21).random((n, 6))
 
-    def sample(self, t):
+    def sample(self, t, cam=None):
         if not (T1 - 0.3 < t < 19.6):
             return None
         r = self.r
@@ -551,11 +611,13 @@ class Rain:
         edge = np.clip((26.0 + zr) / 4.0, 0, 1) * np.clip((10.0 - zr) / 4.0, 0, 1)
         a = edge * _ss(T1 - 0.3, T1 + 0.1, t)
         pos = np.stack([x, y, c[2] + zr], 1)
+        if cam is not None:                     # no drop right at the lens: they were great bright bars
+            a = a * _ss(1.6, 4.0, np.linalg.norm(pos - np.asarray(cam.pos)[None], axis=1))
         if t < HIT["birds"]:
             hang = _ss(T2 - 0.1, T2 + 0.25, t)
             streak = 0.06 + 0.25 * (1.0 - hang)
-            return dict(pos=pos, pos2=pos + np.array([0.12, streak * 1.8, 0.0]) * 1.0,
-                        size=0.010, color=lin("#ffe9c0"), alpha=a * 0.75, kind="line")
+            return dict(pos=pos, pos2=pos + np.array([0.08, streak * 1.2, 0.0]),
+                        size=0.0035, color=lin("#ffe9c0"), alpha=a * 0.6, emit=1.3, kind="line")
         k = t - HIT["birds"]
         fly = np.stack([0.4 * np.sin(r[:, 4] * 9 + k), 2.2 + 1.2 * r[:, 4], -(4.0 + 4.0 * r[:, 5])], 1) * k
         bp = pos + fly
@@ -624,22 +686,25 @@ class Field:
 
 
 class DayRing:
-    """The day leaves Heavenly Mother's hands as a ring of light that runs out across the lake."""
+    """The day leaves Heavenly Mother's hands as a ring of light that runs out across the lake: a bright band
+    on the water with a low wall of sparks on its front, slow enough to be seen passing under the camera."""
 
-    def __init__(self, n=5000):
-        self.r = np.random.default_rng(51).random((n, 3))
+    def __init__(self, n=14000):
+        self.r = np.random.default_rng(51).random((n, 4))
 
     def sample(self, t):
         k = t - REL
-        if not (0.0 <= k < 3.2):
+        if not (-0.02 <= k < 4.2):
             return None
         r = self.r
-        rad = 1.0 + 160.0 * k ** 1.25
+        rad = 0.6 + 38.0 * k ** 1.45 + (r[:, 2] - 0.5) * (0.4 + 0.08 * k * k)
         ang = r[:, 0] * 6.2832
         c = MOTHER_POS
-        pos = np.stack([c[0] + rad * np.cos(ang), 0.05 + 0.6 * r[:, 1] * (1.0 - k / 3.2), c[2] + rad * np.sin(ang)], 1)
-        a = (1.0 - k / 3.2) ** 1.5
-        return dict(pos=pos, size=0.08 + 0.004 * rad, color=lin("#fff2d0"), alpha=a, emit=2.0, kind="soft")
+        wall = (2.2 + 0.4 * k) * r[:, 1] ** 3
+        pos = np.stack([c[0] + rad * np.cos(ang), 0.04 + wall, c[2] + rad * np.sin(ang)], 1)
+        a = (1.0 - k / 4.2) ** 1.3 * (0.55 + 0.45 * r[:, 3]) * _ss(-0.02, 0.15, k)
+        col = lin("#fff2d0")[None] * (1.0 - r[:, 1:2] * 0.5) + lin("#ffd27a")[None] * (r[:, 1:2] * 0.5)
+        return dict(pos=pos, size=0.06 + 0.0035 * rad, color=col, alpha=a, emit=1.8, kind="soft")
 
 
 # =====================================================================================================
@@ -660,51 +725,61 @@ LOOKS3 = dict(
                  hills=0.7, haze_color="#2a3fa0", mist=0.2, ripple=0.3),
     r_fall=dict(base="night", sky_top="#06080f", sky_mid="#10141f", sky_hor="#232a3a", stars=0.25, milky=0.0,
                 hills=0.3, mist=0.45, haze_color="#232a3a", mist_color="#2a3040", ripple=0.2),
-    r_circle=dict(base="night", sky_top="#101624", sky_mid="#232c40", sky_hor="#465066", stars=0.1, milky=0.0,
-                  hills=0.2, mist=0.7, mist_color="#465066", haze_color="#465066", ripple=0.1),
+    r_circle=dict(base="night", sky_top="#070a14", sky_mid="#121a2e", sky_hor="#26324c", stars=0.3, milky=0.0,
+                  hills=0.2, mist=0.35, mist_color="#26324c", haze_color="#26324c", ripple=0.1),
+    r_day=dict(base="day", ripple=0.25),
     r_lanterns=dict(base="dusk", sky_top="#0a0830", sky_mid="#241a5c", sky_hor="#6a3a78", stars=0.6, milky=0.3,
                     hills=0.8, lanterns=1.0, sun_color="#ffb070", sun_int=0.35, sun_el=-5.0, ripple=0.3),
 )
 LOOK_KEYS = [(0.0, "r_night", 0.0), (T1, "r_rain", 0.0), (T2, "r_shore", 0.0), (T3, "r_sea", 0.0),
              (T4, "r_field", 0.0), (T5 + 0.6, "r_fall", 1.2), (BREATH, "r_circle", 1.2), (T6, "r_lanterns", 0.0),
-             (T7 + 1.0, "predawn", 2.0), (REL, "sunrise", 0.4), (REL + 1.0, "day", 1.4)]
+             (T7 + 1.0, "predawn", 2.0), (REL, "sunrise", 0.4), (REL + 1.0, "r_day", 1.4)]
 
 
 def _burst(t, strength, color="#fff0d0", rise=0.06, fall=0.6, radius=0.35):
     return dict(t=t, strength=strength, rise=rise, fall=fall, color=color, at=tuple(flame_guess(t)), radius=radius)
 
 
-BURSTS = [_burst(T0, 3.0), _burst(T1, 4.5), _burst(T2, 4.5), _burst(T3, 3.5), _burst(T4, 5.0),
-          _burst(T5, 3.0, "#ffb070"), _burst(HIT["grip"], 1.6, "#ffd9b0"), _burst(T6, 6.0),
-          _burst(T7, 2.0), dict(t=REL, strength=7.0, rise=0.08, fall=1.2, color="#fff6e0",
+BURSTS = [_burst(T0, 1.8, fall=0.35), _burst(T1, 1.6, fall=0.3), _burst(T2, 1.6, fall=0.3), _burst(T3, 1.4, fall=0.3),
+          _burst(T4, 1.8, fall=0.3),
+          _burst(T5, 2.0, "#ffb070", fall=0.4), _burst(HIT["grip"], 1.0, "#ffd9b0", fall=0.35),
+          _burst(T6, 2.6, fall=0.45),
+          _burst(T7, 1.2, fall=0.35), dict(t=REL, strength=2.2, rise=0.06, fall=0.5, color="#fff2d6",
                                 at=tuple(MOTHER_POS + [0.0, 2.2, -0.2]), radius=0.5),
-          dict(t=HIT["final"], strength=1.4, rise=0.05, fall=0.8, color="#fff6e0")]
+          dict(t=HIT["final"], strength=0.7, rise=0.05, fall=0.8, color="#fff6e0")]
 
-LIGHT_K = Track([(0.0, 0.55), (T5 - 0.05, 0.6), (T5 + 0.3, 0.0), (T6 - 0.1, 0.0), (T6 + 0.3, 0.8), (T7, 0.8),
-                 (T7 + 0.8, 1.2), (REL, 1.6), (REL + 1.2, 0.6), (60.0, 0.4)], name="LIGHT_K")
+_LIGHT_K = Track([(0.0, 0.20), (T5 - 0.05, 0.24), (T5 + 0.3, 0.0), (T6 - 0.1, 0.0), (T6 + 0.3, 0.26), (T7, 0.26),
+                 (T7 + 0.8, 0.40), (REL, 0.55), (REL + 1.2, 0.25), (60.0, 0.15)], name="LIGHT_K")
+
+
+def LIGHT_K(t):
+    """The flame's rays, weaker when the lens is right at the flame (in the close-ups they filled the frame)."""
+    d = float(np.linalg.norm(CAMERA.state(t).pos - flame_pos(t)))
+    return float(_LIGHT_K(t)) * (0.12 + 0.88 * float(_ss(0.8, 3.0, d)))
 WORLD = WORDS.world(dict(
     look=LOOK_KEYS, looks=LOOKS3,
     arch=dict(lit=ARCH_LIT),
+    react=dict(beat=0.5, level=0.3),
     lantern_field=dict(count=480, center=(0.0, Z_CHILD - 14.0), radius=(4.0, 60.0), height=40.0),
     light=dict(pos=lambda t: flame_pos(t), color="#ffd9a0", strength=LIGHT_K, size=0.35, rays=1.0),
     lights=[dict(pos=lambda t: flame_pos(t), color="#ffb85a",
-                 strength=lambda t: 0.9 * float(FLAME_SIZE(t) > 0.01), radius=4.0)],
-    shafts=[dict(base=(R["child"].x, Z_CHILD), radius=1.4, top=40.0, color="#dfe8ff",
-                 strength=lambda t: float(_ss(BREATH - 1.5, BREATH, t) * (1.0 - _ss(T6, T6 + 0.8, t))))],
+                 strength=lambda t: 0.28 * float(FLAME_SIZE(t) > 0.01), radius=2.5)],
+    shafts=[dict(base=(R["child"].x, Z_CHILD), radius=0.9, top=40.0, color="#dfe8ff",
+                 strength=lambda t: 0.35 * float(_ss(BREATH - 1.5, BREATH, t) * (1.0 - _ss(T6, T6 + 0.8, t))))],
 ))
 
 
 def _setup(scene):
     from p3d.body import Body
     wind = (0.0, 0.0, 1.2)
-    common = dict(facing=180.0, look="glitter", points=70000, wind=wind)
+    common = dict(facing=180.0, look="glitter", points=70000, wind=wind, bright=1.3)
     looks = dict(
         sprinter=dict(garment="tunic", veil=dict(length=0.55), color="#ffcf7a", color2="#fff1d6"),
         coat=dict(garment="coat", color="#a9c8ff", color2="#ffffff"),
         shawl=dict(garment="dress", veil=dict(length=0.8), color="#8fe3d6", color2="#f2fffb"),
         elder=dict(garment="coat", stoop=0.3, color="#ffd9a0", color2="#fff4e2"),
         youth=dict(garment="tunic", color="#bfe0ff", color2="#ffffff"),
-        child=dict(garment="dress", veil=dict(length=0.35), color="#fff0c4", color2="#ffffff", bright=1.25),
+        child=dict(garment="dress", veil=dict(length=0.35), color="#fff0c4", color2="#ffffff", bright=1.5),
     )
     gest = dict(
         sprinter=[(-1.0, T1 + 0.25, "raise_hand", dict(side="R", ease=0.3))],
@@ -725,24 +800,25 @@ def _setup(scene):
         BODIES[name].add(scene, name)
     BODIES["helper"] = Body("woman", height=1.64, at=(HELPER_POS[0], HELPER_POS[2]), facing=0.0, look="glitter",
                             garment="dress", veil=dict(length=0.7), color="#ffc3a8", color2="#fff0e6",
-                            motion=[(T5 + 0.9, "stand"), (35.0, "kneel", dict(blend=0.8)),
+                            motion=[(T5 + 0.5, "stand"), (T5 + 0.8, "kneel", dict(blend=0.9)),
                                     (HIT["up"], "stand", dict(blend=1.0))],
                             gesture=[(36.0, HIT["up"] + 0.8, "reach", dict(side="L", to=tuple(GRIP), ease=0.9))],
-                            show=(T5 + 0.9, T6 + 1.0), fade=0.8, points=70000, wind=wind, seed=31.0)
+                            show=(T5 + 0.5, T6 + 1.0), fade=1.0, points=70000, wind=wind, seed=31.0)
     BODIES["helper"].add(scene, "helper")
     BODIES["mother"] = Body("woman", height=1.70, at=(MOTHER_POS[0], MOTHER_POS[2]), facing=180.0, look="glitter",
                             garment="robe", veil=dict(length=1.5), color="#fff3d6", color2="#ffd89a",
-                            gesture=[(T7 - 1.2, T7 + 0.6, "reach", dict(side="R", to=tuple(flame_guess(T7 - 0.05)
+                            gesture=[(T7 - 1.2, T7 + 0.6, "reach", dict(side="L", to=tuple(flame_guess(T7 - 0.05)
                                                                                            + [0.0, 0.0, 0.0]),
                                                                           ease=0.6)),
                                      (T7 + 0.5, 70.0, "raise", dict(ease=1.0))],
                             show=(45.0, 60.0), fade=1.5, points=90000, wind=(0.3, 0.0, 0.9), seed=41.0)
     BODIES["mother"].add(scene, "mother")
     scene.add("road", Road())
+    scene.add("posts", Posts())
     scene.add("flame", Flame())
-    scene.add("rain", Rain())
-    scene.add("spray", Spray())
-    scene.add("field", Field())
+    scene.add("rain", PW.KeepClear(Rain(), WORDS))
+    scene.add("spray", PW.KeepClear(Spray(), WORDS))
+    scene.add("field", PW.KeepClear(Field(), WORDS))
     scene.add("dayring", DayRing())
     WORDS.add_to(scene)
     try:
