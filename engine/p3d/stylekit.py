@@ -285,7 +285,7 @@ class GlitterMist:
     n        points; color (warm side), color2 (cool side), toward: the direction (x, z) of the warm side"""
 
     def __init__(self, center, size=(14.0, 3.0, 10.0), n=26000, color="#ffd29a", color2="#bcd4ff", toward=(1.0, 0.0),
-                 bright=1.0, grain=0.03, drift=0.06, show=None, seed=1.0):
+                 bright=1.0, grain=0.018, drift=0.06, show=None, seed=1.0):
         self.center, self.dims = center, np.asarray(size, np.float64)
         self.n = int(n)
         self.color, self.color2 = _col(color), _col(color2)
@@ -315,9 +315,10 @@ class GlitterMist:
         side = np.clip(0.5 + 1.2 * (q[:, 0] * self.toward[0] + q[:, 2] * self.toward[1]), 0, 1)[:, None]
         col = self.color2[None] * (1 - side) + self.color[None] * side
         fade = np.clip((0.5 - np.abs(q[:, 0])) / 0.12, 0, 1) * np.clip((0.5 - np.abs(q[:, 2])) / 0.12, 0, 1)
-        a = 0.55 * self.bright * fade * (0.6 + 0.8 * side[:, 0]) * np.exp(-np.abs(q[:, 1]) * 3.0)
+        a = 0.16 * self.bright * fade * (0.6 + 0.8 * side[:, 0]) * np.exp(-np.abs(q[:, 1]) * 4.0)
         return [dict(pos=p, size=self.grain * (0.5 + 1.5 * self.g ** 4), color=col, alpha=a,
-                     emit=1.0 + 3.0 * (self.g > 0.985), kind="soft", twinkle=0.9, backlight=0.6)]
+                     emit=1.0 + 3.0 * (self.g > 0.985), kind="soft", twinkle=0.9, backlight=0.6, dof=0.55,
+                     reflect=False)]
 
 
 class CloudPuffs:
@@ -473,7 +474,7 @@ class Billows:
     PATH = ((-0.12, 0.98), (-0.36, 0.93), (-0.55, 0.78), (-0.63, 0.55), (-0.58, 0.30), (-0.46, 0.08),
             (-0.48, -0.20), (-0.62, -0.45), (-0.76, -0.70))
 
-    def __init__(self, head, path=None, size=(0.15, 0.06), n=18, puffs=9, boil=1.0, seed=1.0):
+    def __init__(self, head, path=None, size=(0.12, 0.05), n=24, puffs=10, boil=1.0, seed=1.0):
         self.head = head
         pts = np.asarray(path or self.PATH, np.float64)
         d = np.r_[0.0, np.cumsum(np.linalg.norm(np.diff(pts, axis=0), axis=1))]
@@ -492,12 +493,18 @@ class Billows:
         rr = rad[par] * (0.18 + 0.30 * q[2] ** 1.5)
         self.c = np.concatenate([c, cc])
         self.r = np.concatenate([rad, rr])
+        self.n_big = n
         self.ph = hash01(len(self.r), k + 20).astype(np.float64) * 6.283
         self.boil = float(boil)
 
     def gain(self, t):
         h = self.head
         return float(h.gain(t)) if hasattr(h, "gain") else 1.0
+
+    def rim(self, t):
+        """World places of the small outer puffs (where soft painted cloud can blur the cumulus edge)."""
+        r = self.sample(t)
+        return r[0]["pos"][self.n_big:] if r else np.zeros((0, 3))
 
     def sample(self, t):
         h = self.head

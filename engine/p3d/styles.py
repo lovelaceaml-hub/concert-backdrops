@@ -168,7 +168,8 @@ def constellation(scene, name, sky, kw):
     color = _pick(kw, "color", "#fff2dc", "#22357e", sky)
     color2 = _pick(kw, "color2", "#bcd8ff", "#c38a1e", sky)
     detail = kw.pop("detail_track", None)
-    look = dict(name="plexus", share=0.05, links=3, reach=0.11, haze=0.12, bright=0.70 if not day else 1.3)
+    look = dict(name="plexus", share=0.05, links=3, reach=0.11, haze=0.12, bright=0.70 if not day else 1.7,
+                size=1.0 if not day else 2.2)
     if detail is not None:
         look["detail"] = detail
     at = kw.get("at", (0.0, 0.0))
@@ -224,7 +225,7 @@ def sky_window(scene, name, sky, kw):
     color = _pick(kw, "color", "#ffd9b0", "#ffffff", sky)
     color2 = _pick(kw, "color2", "#ffffff", "#ffe6c8", sky)
     t0 = _t(kw, 1.0)
-    fill = kw.pop("fill", "clouds" if day else "sunrise")
+    fill = kw.pop("fill", "sunrise")
     birds = kw.pop("birds", "#22242e" if day else "#ffe9c4")
     fx = [dict(kind="birds", t=t0, dur=2.6, n=38, color=birds, dir=kw.pop("birds_dir", (1.0, 0.45, 0.2)),
                speed=1.6, size=0.07)] if birds else []
@@ -279,13 +280,14 @@ def ember_dancer(scene, name, sky, kw):
     back = kw.pop("dir", (-np.sin(a), 0.15, -np.cos(a)))
     ways = None
     if day:
-        ways = [dict(paint=1.0, paint_light=0.0, color=_ink(ink)), dict(paint=0.0, color=lin(color) * 0.7)]
-    fx = [dict(kind="disperse", t=t0, dur=dur, share=float(kw.pop("share", 0.55)), dir=back, speed=1.3,
+        ways = [dict(paint=1.0, paint_light=0.0, color=_ink(ink), kind="disc"), dict(paint=0.0, color=lin(color) * 0.4)]
+    fx = [dict(kind="disperse", t=t0, dur=dur, share=float(kw.pop("share", 0.55 if day else 0.4)), dir=back,
+               speed=1.3 if day else 1.6,
                spread=0.25, turb=0.5, sprites=(("soft", 0.60, 6.5, 1.0), ("spark", 0.08, 3.0, 2.0)),
                color=color, color2=color2, batch=ways)]
     hair = kw.pop("hair", None)
     b = _body(kw, sky, dict(name="glitter", glints=0.003, bright=1.2 if not day else 0.9), color, color2, effects=fx,
-              motion=kw.pop("motion", "dance"), garment="dress", hair=False if hair is None else hair, points=80000,
+              motion=kw.pop("motion", "jump"), garment="dress", hair=False if hair is None else hair, points=80000,
               facing=fc)
     parts = {}
     if day:
@@ -336,16 +338,16 @@ def mist_figure(scene, name, sky, kw):
     """p09: a small figure of fine sparkling light standing in a wide field of glittering mist, warm light on
     one side and cool on the other. Frame it far: the figure a fifth of the picture high or less."""
     day = _day(sky)
-    color = _pick(kw, "color", "#ffe2b8", "#f0c890", sky)
+    color = _pick(kw, "color", "#ffe2b8", "#b8823a", sky)
     color2 = _pick(kw, "color2", "#ffffff", "#fff4e0", sky)
     b = _body(kw, sky, dict(name="glitter", bright=1.3, glints=0.004, size=1.2), color, color2, points=50000,
               facing=180.0, garment="dress",
               effects=[dict(kind="shed", n=2500, life=4.0, speed=0.15, rise=0.12, spread=0.2)])
-    main = K.Dressed(b, paint=0.5, paint_light=1.0) if day else b
+    main = K.Dressed(b, paint=1.0, paint_light=0.6) if day else b
     scene.add(name, main)
     def c(t):
         return b.where(t, "ground") + np.array([0.0, 1.0, 0.0])
-    mist = K.GlitterMist(c, size=tuple(kw.pop("field", (16.0, 3.4, 12.0))), n=int(kw.pop("n_mist", 30000)),
+    mist = K.GlitterMist(c, size=tuple(kw.pop("field", (16.0, 2.4, 12.0))), n=int(kw.pop("n_mist", 24000)),
                          color="#ffcf8a" if not day else "#e8b070", color2="#b8d0ff" if not day else "#9ab4e0",
                          toward=kw.pop("toward", (1.0, 0.0)), bright=0.9 if not day else 0.7, show=kw.get("show"))
     scene.add(name + "_mist", mist)
@@ -389,7 +391,7 @@ def glass_shatter(scene, name, sky, kw):
     if day:
         ways = [dict(paint=1.0, paint_light=0.0, color=_ink(ink)), dict(paint=0.0, color=lin(color) * 0.28)]
     else:
-        ways = [dict(color=lin(color))]
+        ways = [dict(color=lin(color) * 0.6)]
     fx = [dict(kind="disperse", t=t0, dur=dur, share=float(kw.pop("share", 0.45)), dir=away, speed=1.0, burst=0.4,
                rise=0.25, spread=0.28, turb=0.20, order="side", noise=0.35, life=4.0,
                sprites=(("shard", 0.030, 9.0, 1.0), ("shard", 0.025, 4.5, 1.0), ("soft", 0.05, 0.8, 0.5)),
@@ -417,8 +419,8 @@ def butterflies(scene, name, sky, kw):
     """p02: a figure filled with a starry night (a face in profile with long flowing hair by default, or a whole
     body with figure="body"), small glowing butterflies leaving it and fluttering round it, stars about."""
     day = _day(sky)
-    color = _pick(kw, "color", "#ffd890", "#ffd890", sky)
-    color2 = _pick(kw, "color2", "#ffb8c8", "#ffc0a0", sky)
+    color = _pick(kw, "color", "#ffc070", "#ffb860", sky)
+    color2 = _pick(kw, "color2", "#ffa8c0", "#ffa890", sky)
     ink = _pick(kw, "ink", "#2a2060", "#5a4a9c", sky)
     t0 = _t(kw, 0.8)
     figure = kw.pop("figure", "profile")
@@ -444,8 +446,8 @@ def butterflies(scene, name, sky, kw):
         rad, hgt, size = (0.35, 0.95), (-0.6, 0.7), 0.06
     parts[name] = main
     bf = K.Butterflies(around, radius=rad, height=hgt, n=n, size=size * 1.35, speed=0.35 * rad[1], t=t0,
-                       spread=float(kw.pop("dur", 2.5)), color=color, color2=color2, bright=1.1,
-                       paint=0.35 if day else 0.0, show=kw.get("show"), seed=float(kw.get("seed", 1.0)))
+                       spread=float(kw.pop("dur", 2.5)), color=color, color2=color2, bright=0.8,
+                       paint=0.6 if day else 0.0, show=kw.get("show"), seed=float(kw.get("seed", 1.0)))
     scene.add(name + "_butterflies", bf)
     parts[name + "_butterflies"] = bf
     sp = K.Sparkles(around, box=(rad[1] * 1.3, rad[1] * 1.2, rad[1] * 0.6), n=300, stars=34, size=size * 0.8,
@@ -476,7 +478,7 @@ def dark_silhouette(scene, name, sky, kw):
                        color=None if day else color))
         fx.append(dict(kind="disperse", t=t0, dur=30.0, share=float(kw.pop("share", 0.18)), dir=away, speed=0.45,
                        sprites=sprites,
-                       batch=[dict(paint=1.0, paint_light=0.0, color=_ink(ink))] if day else [dict(color=lin(ink) * 0.0 + lin(color) * 0.5)]))
+                       batch=[dict(paint=1.0, paint_light=0.0, color=_ink(ink))] if day else [dict(color=lin(color) * 0.3)]))
     b = _body(kw, sky, dict(name="rim", bright=0.30 if day else 0.75, power=6.0), color, color2, effects=fx,
               points=70000, facing=fc)
     parts = {name: b}
@@ -541,9 +543,13 @@ def nebula_profile(scene, name, sky, kw):
     H = float(prof.height)
     birds = kw.pop("birds", "#1c1e2a" if day else "#ffe2c0")
     parts = {name: prof}
+    puffs = K.CloudPuffs(bil.rim, _target(prof, "occiput"), n=220, size=0.10 * H, spread=0.03 * H, color=color,
+                         shade="#56627c" if day else "#1e2640", paint=0.8, alpha=0.22, lit=0.5, show=kw.get("show"))
+    scene.add(name + "_clouds", puffs)
+    parts[name + "_clouds"] = puffs
     if birds:
-        fl = K.Flock(_target(prof, "forehead"), dir=kw.pop("birds_dir", (1.0, 0.35, 0.0)), n=26, t=t0, dur=2.5,
-                     speed=0.9 * H / 0.5, size=0.035 * H / 0.5, spread=0.4, color=birds, scatter=0.25 * H)
+        fl = K.Flock(_target(prof, "forehead"), dir=kw.pop("birds_dir", (1.0, 0.35, 0.0)), n=34, t=t0, dur=2.5,
+                     speed=0.9 * H / 0.5, size=0.06 * H, spread=0.4, color=birds, scatter=0.25 * H)
         scene.add(name + "_birds", fl)
         parts[name + "_birds"] = fl
     return Styled("nebula_profile", sky, prof, parts)

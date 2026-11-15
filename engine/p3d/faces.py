@@ -697,9 +697,12 @@ class _ProfileSolid:
         g = prof.g
         rs = np.random.default_rng(7)
         lo, hi = g.outline.min(axis=0), g.outline.max(axis=0)
-        m = 40000
-        u = rs.uniform(lo[0], hi[0], m)
-        v = rs.uniform(-0.86, hi[1], m)
+        # a jittered grid (random points leave pin holes in the silhouette), thinning out at the bust's foot
+        step = 0.0085
+        uu, vv = np.meshgrid(np.arange(lo[0], hi[0], step), np.arange(-0.86, hi[1], step))
+        u = uu.ravel() + rs.uniform(-0.25, 0.25, uu.size) * step
+        v = vv.ravel() + rs.uniform(-0.25, 0.25, vv.size) * step
+        m = len(u)
         bot = _smooth(-0.84, -0.55, v)
         ok = g.inside(u, v) & (rs.uniform(0, 1, m) < 0.15 + 0.85 * bot)
         self.pts = np.stack([u[ok], v[ok], np.zeros(ok.sum())], axis=1)
@@ -902,9 +905,9 @@ class Hair:
             wide = max(0.0070 * H, 0.0035)
             out.append(dict(pos=p1, pos2=p2, size=wide * (1.0 - 0.5 * q), color=ink, alpha=0.55 * taper * b,
                             kind="line", paint=1.0, paint_light=0.0))
-            sel = np.repeat(self.s_seed > 0.80, n - 1)
+            sel = np.repeat(self.s_seed > 0.85, n - 1)
             out.append(dict(pos=p1[sel], pos2=p2[sel], size=0.0018 * H, color=col[sel],
-                            alpha=0.30 * taper[sel] * b, kind="line"))
+                            alpha=0.16 * taper[sel] * b, kind="line"))
         return out
 
     def solid(self, t):

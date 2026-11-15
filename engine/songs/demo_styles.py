@@ -115,7 +115,8 @@ def s_glass(scene, x, t0, sky):
 @stage("ember_dancer", lambda x, t0, t1: hold((x + 0.2, 1.05, 4.6), (x + 0.2, 1.0, 0.0), t0, t1, fov=40,
                                               aperture=0.02), sky="day", look="amber")
 def s_ember(scene, x, t0, sky):
-    ST.add(scene, "ember_dancer", name="ed", sky=sky, at=(x + 0.4, 0.0), facing=90.0, t=t0 + 0.4, **win(t0))
+    ST.add(scene, "ember_dancer", name="ed", sky=sky, at=(x + 0.4, 0.0), facing=90.0, t=t0 + 0.4,
+           **win(t0))
 
 
 @stage("ash_dissolve", lambda x, t0, t1: hold((x + 0.2, 1.25, 4.0), (x + 0.2, 1.1, 0.0), t0, t1, fov=40,
