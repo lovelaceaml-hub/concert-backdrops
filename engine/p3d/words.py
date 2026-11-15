@@ -812,7 +812,12 @@ class Word:
         soft = float(self.opts.get("mask_soft", 1.0))
         if self.window:
             return Mask("sky", sky=self.window, grow=grow, soft=soft, edge=float(self.opts.get("window_edge", 0.5)),
-                        tint=tuple(self.opts.get("window_tint", (1.0, 1.0, 1.0))))
+                        tint=tuple(self.opts.get("window_tint", (1.0, 1.0, 1.0))),
+                        look=self.opts.get("window_look", "day") if self.window == "world" else None)
+        if self.paint:
+            # the letters filled with exactly their colour (CORE's flat fill), whatever the sky behind them
+            return Mask("sky", sky="flat", color=self.paint if isinstance(self.paint, str) else self.hex, grow=grow,
+                        soft=soft)
         return Mask("dark", grow=grow, soft=soft)
 
     @property
@@ -871,13 +876,12 @@ class Word:
         mk = 1.0
         if self.masked:
             if self.paint:
-                # paint: the letters' own light fills what the dark base lacks of the colour
-                base = np.asarray(self.opts.get("paint_base", (0.10, 0.20, 0.30)), np.float32)
-                col = np.maximum(col - base, 0.0) / (1.1 * level) * float(self.opts.get("mask_light", 1.0)) + 1e-4
+                # paint: the flat fill gives the colour; the letters keep a little of their own light (a sheen)
+                level *= float(self.opts.get("paint_light", 0.12))
             else:
                 level *= float(self.opts.get("mask_light", 0.0))   # a window or ink word is not its own light
-            # The mask pass draws every point as a disc of at least 1.2 pixels of its half size picture and
-            # adds the discs up; full weights would fatten the letters by that much. Each point is given a
+            # The mask pass draws every point as a disc of at least 1.2 pixels of its picture (half size, or full
+            # size for crisp masks) and adds the discs up; full weights would fatten the letters by that much. Each point is given a
             # weight at which the sum passes the mask's threshold close to the letter's own edge (thin
             # strokes still pass after the mask's blur), and its light is kept.
             if cam is not None:
@@ -885,7 +889,8 @@ class Word:
                                          - np.asarray(cam.pos, np.float64), cam.basis()[2])), 0.05)
                 pxm = 0.5 * 1080.0 / np.tan(np.radians(cam.fov) * 0.5) / depth       # 1080p pixels per metre
                 cell = float(np.median(self.cell))
-                rad = max(0.95 * cell * pxm, 2.4)
+                crisp = float(self.opts.get("mask_soft", 1.0)) < 2.5        # crisp masks are drawn at full size
+                rad = max(0.95 * cell * pxm, 1.2 if crisp else 2.4)
                 n_disc = max(np.pi * rad * rad / max(cell * pxm, 1e-6) ** 2, 1.0)
                 wgt = min(1.04 / n_disc * float(self.opts.get("mask_weight", 2.2 if self.window else 3.4)), 1.0)
                 mk = 0.02 + 0.18 * float(np.sqrt(wgt / 3.0)) if wgt < 0.5 else 1.0
@@ -936,7 +941,7 @@ class Word:
         # glints: a few points sparkle like glitter
         if self.sparkle > 0.0 and not self.ink:
             i = self.i_spark
-            a = alpha[i] * np.clip(assist[i] * 1.5, 0.25, 1.0)
+            a = alpha[i] * np.clip(assist[i] * 1.5, 0.25, 1.0) * (0.3 if self.paint else 1.0)
             sel = a > 0.02
             if sel.any():
                 out.append(dict(pos=pos[i][sel], size=self.size0[i][sel] * 2.6, color=self.c_letter,

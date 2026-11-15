@@ -1082,12 +1082,12 @@ Working example: `engine/songs/demo_p3d_words_kit.py` (every item below in 30 se
 | `doors` | the word parts like a pair of doors that swing open on their outer edges | `split` (0.5), `swing` (100 degrees), `inward=False` opens toward the reader |
 | `unravel` | the end of the writing is pulled away as a thread and everything before it runs after it | `to=` where the thread is pulled to |
 
-**Window words, ink and paint** (through the mask pass of section V; `Words.add_to` sets the mask up and adds the word's glints as a second set named "word <name> light"):
+**Window words, ink and paint** (through the mask pass of section V; `Words.add_to` sets the mask up and adds the word's glints as a second set named "word <name> light"). The masks of words are crisp (drawn at full size, `mask_soft` 1.0; 3 or more gives the old soft half size edge):
 
-- `window="stars"` (or "clouds", "sunrise", "day"): the letters are a window onto that sky. `window_edge`, `window_tint`.
-- `ink=True`: dark letters for bright skies (the renderer's dark tint: a blue grey on a day sky).
-- `paint=True` (or a hex colour): the word's own colour on a bright sky: a dark base with the missing light added. `paint_base` is the dark base's colour (default: the day look's), `mask_light` the share of light.
-- The mask picture has half the size of the frame and blurs every edge by about 3 px, and it knows one sky and one tint a frame: use these three for large words (an em of 110 px or more) and one window sky at a time. `mask_weight` thickens or thins the letters.
+- `window="stars"` (or "clouds", "sunrise", "day", "world" with `window_look=`): the letters are a window onto that sky. `window_edge`, `window_tint`.
+- `ink=True`: dark letters for bright skies (the renderer's dark tint: a deep blue grey on a day sky); the strongest contrast on a pale sky.
+- `paint=True` (or a hex colour): the letters filled with exactly their colour on any sky (CORE's flat fill, `Mask("sky", sky="flat")`), with a little of their own light over it (`paint_light`, 0.12) and few glints. True colour also means the campaign's pale colours (lavender, the pinks) stay pale on a pale sky: for a reading moment on a bright sky give a deeper shade of the colour (`paint="#8a63d2"` for the Compliment) or use `ink=True`.
+- A frame holds two different sky fills (two window skies, or a window and a paint colour); a third is left out with a warning. Words with the same window sky or paint colour share one. `mask_weight` thickens or thins the letters.
 
 **Colour.** `PW.EXPRESSIONS[i]["color"]` is each expression's campaign colour (DESIGN-SYSTEM section 5); a word takes it by itself. `tint=1.0` makes the letters fully that colour (the default 0.45 keeps them warm white with a coloured halo, which reads best).
 
