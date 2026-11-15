@@ -140,6 +140,8 @@ class Renderer:
         self.ta = text_anims.TextAnims(self)   # other text animations (anim=, UPGRADE-HOWTO J; all optional)
         import gathering
         self.gath = gathering.Gathering(self)   # a gathering crowd and a light passed hand to hand (optional)
+        import water
+        self.water = water.Water(self)   # lake ripples, symbols drawn in light, falling stars (all optional)
 
     # ------------------------------------------------------------------
     def text_plan(self, t):
@@ -223,6 +225,7 @@ class Renderer:
         self.up.draw_effects(t, P)
         self.up.draw_figures(t)
         self.gath.draw(t)
+        self.water.draw(t)
 
         # which text is on screen: A is an expression or the closing title, B the end card lines or a fragment
         (texA, txA, bndA, shadeA, offA), (texB, txB, bndB, shadeB, offB) = self.text_plan(t)
@@ -359,6 +362,7 @@ class Renderer:
              uOffA=tuple(float(v) for v in offA), uOffB=tuple(float(v) for v in offB),
              uCalm=calm0, uCalmY=CALM_Y)
         self.up.comp_uniforms(self.p_comp, t, P)
+        self.water.comp_uniforms(self.p_comp, t)
         self.v_comp.render(moderngl.TRIANGLE_STRIP)
         return self.f_out.read(components=3)
 

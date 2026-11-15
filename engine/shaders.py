@@ -423,6 +423,7 @@ uniform float uShadeK;
 uniform vec4 uInkA, uInkB, uInkC;   // per-text colour (display rgb, strength) for slot A, slot B and the credit
 uniform float uTheme;
 uniform sampler2D uLeafT; uniform float uLeafK;   // LEAVES tint: leaf colour (premultiplied) and coverage               // SKY_THEME: 0 the original night-to-dawn world, 1 a bright day (lighter lake, vignette)
+uniform int uNRip; uniform vec4 uRip[24]; uniform float uRipWL;   // lake ripples (engine/water.py)
 uniform float uCalm, uCalmY;   // calm lower third: rings, glitter, reflections and thaw edges fade there
 float calmK(float y){ return 1.0-uCalm*(1.0-smoothstep(uCalmY-0.07, uCalmY+0.05, y)); }
 vec2 hash22(vec2 p){ vec3 p3 = fract(vec3(p.xyx)*vec3(0.1031,0.1030,0.0973));
@@ -664,6 +665,19 @@ void main(){
       vec2 qq = cell+hash22(cell)+rr+drift;
       bsv = vec2(qq.x/uAspect, qq.y)/uShards.z;
     }
+  }
+  // ---- lake ripples (engine/water.py, RIPPLES): rings bend the water and its reflections (water_shaders.RIP_GLSL)
+  if(uNRip>0 && bsv.y<uRipWL){
+    vec2 rd = vec2(0.0);
+    for(int i=0;i<uNRip;i++){
+      vec4 r = uRip[i];
+      float k = 0.35+1.6*clamp((uRipWL-r.y)/max(uRipWL,0.05), 0.0, 1.0);
+      vec2 q = vec2((bsv.x-r.x)*uAspect, (bsv.y-r.y)*3.2)/k;
+      float rr = length(q), e = (rr-r.z*0.075)/0.03;
+      vec2 dir = q/max(rr, 1e-4);
+      rd += vec2(dir.x, dir.y*0.6)*k*0.006*r.w*exp(-r.z/1.6)*smoothstep(0.0, 0.15, r.z)*exp(-e*e)*sin(e*4.0);
+    }
+    bsv += rd*smoothstep(0.0, 0.012, uRipWL-bsv.y)*mix(0.35, 1.0, calmK(bsv.y));
   }
   vec3 col = background(bsv);
   if(shA>0.0){
