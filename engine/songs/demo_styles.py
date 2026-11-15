@@ -1,6 +1,6 @@
-"""The style presets of engine/p3d/styles.py, one after another (engine/UPGRADE-HOWTO.md, section Y). Not a
-concert video: a proving ground for every artistic look of the people, each on its own stage far from the
-others, 3.75 seconds each, cut hard, set to the concert medley (audio/promo/concert-medley.mp3).
+"""The style presets of engine/p3d/styles.py, one after another (engine/UPGRADE-HOWTO.md, section Y2, "People
+styles"). Not a concert video: a proving ground for every artistic look of the people, each on its own stage far
+from the others, 3.75 seconds each, cut hard, set to the concert medley (audio/promo/concert-medley.mp3).
 
 Stages (start times; `python -c "import songs.demo_styles as s; s.listing()"` prints them):
    0.00  constellation          night   p01

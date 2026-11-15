@@ -1,5 +1,5 @@
 """Style presets for the people of the 3D layer: one call gives a person (or a face) in a finished artistic look
-(engine/UPGRADE-HOWTO.md, section Y). Built on the bodies, looks and effects of engine/p3d/body.py,
+(engine/UPGRADE-HOWTO.md, section Y2, "People styles"). Built on the bodies, looks and effects of engine/p3d/body.py,
 engine/p3d/effects.py and engine/p3d/looks.py, the faces and hair of engine/p3d/faces.py and the pieces of
 engine/p3d/stylekit.py.
 
@@ -22,7 +22,7 @@ Every preset takes:
   hair, features, plus face=dict(...) for any other Profile key.
 add() returns a Styled: .main (the Body or Profile), .parts (scene name -> point set), .where(t, place).
 
-The presets (see STYLES, and section Y for what each looks like and its limits):
+The presets (see STYLES, and HOWTO section Y2 for what each looks like and its limits):
   constellation, spark_profile, sky_window, gold_glitter, ember_dancer, ash_dissolve, mist_figure,
   star_silhouette, glass_shatter, butterflies, dark_silhouette, nebula_figure, nebula_profile,
   glitter_profile, constellation_profile

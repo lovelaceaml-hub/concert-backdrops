@@ -1245,9 +1245,9 @@ Working example: `engine/songs/demo_p3d_words_kit.py` (every item below in 30 se
 - Flying letters take half the motion blur; under a fast camera turn they still streak.
 
 
-## Y. Style presets: many artistic looks for the people (2026-11-15, branch engine-p3d-styles)
+## Y2. People styles: many artistic looks for the people (2026-11-15, branch engine-p3d-styles)
 
-Anthony: "Use different types of artistic expression for the people ... Do not bind yourself to one way of showing people." Artistic faces are allowed (never photorealistic); Heavenly Mother is still only from behind or as hands. Section Y gives each look of the references (scratchpad refs2 p01 to p09, refs 01 to 16) as a named preset: one call puts a finished figure (a body, or a face in profile) into a 3D scene, in a night or a day palette. Code: `engine/p3d/styles.py` (the presets), `engine/p3d/faces.py` (faces in profile and flowing hair), `engine/p3d/stylekit.py` (the small point sets the presets dress a figure with). Working example: `engine/songs/demo_styles.py` (every preset in turn, 3.75 s each, on the concert medley; `STYLES_FLIP=1` in the environment swaps every stage's sky to check the other palette).
+Anthony: "Use different types of artistic expression for the people ... Do not bind yourself to one way of showing people." Artistic faces are allowed (never photorealistic); Heavenly Mother is still only from behind or as hands. Section Y2 gives each look of the references (scratchpad refs2 p01 to p09, refs 01 to 16) as a named preset: one call puts a finished figure (a body, or a face in profile) into a 3D scene, in a night or a day palette. Code: `engine/p3d/styles.py` (the presets), `engine/p3d/faces.py` (faces in profile and flowing hair), `engine/p3d/stylekit.py` (the small point sets the presets dress a figure with). Working example: `engine/songs/demo_styles.py` (every preset in turn, 3.75 s each, on the concert medley; `STYLES_FLIP=1` in the environment swaps every stage's sky to check the other palette).
 
 ```python
 from p3d import styles as ST
