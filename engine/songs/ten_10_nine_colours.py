@@ -270,12 +270,12 @@ def _s6(t):
 
 # S7: the breath, the orbit on the biggest hit, the corkscrew up the braid
 def _s7_breath(t):
-    u = _sc(SEC[6], BREATH_END + 0.2, t)
-    p = _v(6.5, 6.2, 18.0) * (1.0 - u) + _v(2.4, 2.1, 9.6) * u
-    return p, G7 + _v(0.0, 2.45, 0.0)
+    u = _sc(SEC[6], 42.0, t)
+    p = _v(3.6, 3.4, 11.5) * (1.0 - u) + _v(1.4, 1.65, 5.6) * u
+    return p, G7 + _v(0.0, 1.0 + 0.6 * (1.0 - u), 0.0)
 
 
-ORB7_A0 = float(np.degrees(np.arctan2(2.4, 9.6 - G7[2])))
+ORB7_A0 = float(np.degrees(np.arctan2(1.4, 5.6 - G7[2])))
 BRAID_T0 = 45.4
 
 
@@ -339,8 +339,8 @@ def _rig(focus):
         fly(_s5_keys(), blend=0.0, fov=lambda t: 62.0 - 14.0 * _sc(29.0, 30.6, t), aperture=lambda t: 0.004 + 0.026 * _sc(29.5, 30.5, t),
             roll=lambda t: -10.0 * np.sin(np.pi * _sc(26.9, 29.6, t)), focus=fo(E5 + _v(0, 1.1, 0))),
         Path(_s6, SEC[5], SEC[6], blend=0.0, fov=38.0, aperture=0.035, focus=fo(F6 + _v(0, 1.55, 0))),
-        Path(_s7_breath, SEC[6], BREATH_END, blend=0.0, fov=48.0, aperture=0.03, focus=fo(G7 + _v(0, 1.2, 0))),
-        Path(_s7_orbit, BREATH_END, BRAID_T0, blend=0.9, fov=52.0, aperture=0.02, focus=fo(G7 + _v(0, 1.2, 0))),
+        Path(_s7_breath, SEC[6], 41.9, blend=0.0, fov=48.0, aperture=0.03, focus=fo(G7 + _v(0, 1.2, 0))),
+        Path(_s7_orbit, 41.9, BRAID_T0, blend=0.9, fov=52.0, aperture=0.02, focus=fo(G7 + _v(0, 1.2, 0))),
         Path(_s7_braid, BRAID_T0, SEC[7], blend=0.5, up=_s7_up, fov=lambda t: 64.0 + 30.0 * _sc(46.0, 49.4, t),
              aperture=0.0, focus=30.0),
         fly([(SEC[7], _v(0.0, 62.0, 100.0), _v(0.0, 18.0, 0.0)), (51.4, _v(0.0, 17.0, 64.0), _v(0.0, 14.0, 0.0)),
@@ -583,7 +583,8 @@ def _braid(k):
         u = max(t - BRAID_T0, 0.0)
         a = 1.25 * t + 2.0 * np.pi * k / 9.0 + 1.6 * u + 0.9 * u * u
         r = 0.9 + 12.1 * np.exp(-u / 0.9)
-        y = _y_climb(t) + 9.0 + 5.0 * _sc(BRAID_T0, BRAID_T0 + 1.5, t) + 0.6 * np.sin(2.0 * t + k)
+        y = (_y_climb(t) - _y_climb(BRAID_T0) + 1.6 + 2.2 * np.sin(1.3 * t + k) * (1.0 - _sc(BRAID_T0, BRAID_T0 + 1.0, t))
+             + 14.0 * _sc(BRAID_T0, BRAID_T0 + 1.4, t))
         return G7 + _v(np.sin(a) * r, y, np.cos(a) * r)
     return f
 
@@ -650,8 +651,8 @@ HEADS[GREET].leg(1.45, 2.85, _pen("Greeting"), bi=0.7, bo=0.5) \
 HEADS[CONC].leg(6.95, 8.15, _pen("Concession"), bi=1.0, bo=0.25) \
            .leg(8.4, 11.6, _tunnel, bi=0.25, bo=1.5)
 HEADS[APOL].leg(13.35, 14.35, _pen("Apology"), bi=0.9, bo=0.6) \
-           .leg(14.7, 20.2, _helix(C3, 1.45, 0.25, 1.05, 2.2, 0.0), bi=0.6, bo=1.2)
-HEADS[INCL].leg(13.6, 20.2, _helix(C3, lambda t: 1.9 - 0.4 * _sc(17.0, 18.5, t), 0.9, 1.7, 2.2, np.pi, 0.9),
+           .leg(14.7, SEC[3], _helix(C3, 1.45, 0.25, 1.05, 2.2, 0.0), bi=0.6, bo=0.0)
+HEADS[INCL].leg(13.6, SEC[3], _helix(C3, lambda t: 1.9 - 0.4 * _sc(17.0, 18.5, t), 0.9, 1.7, 2.2, np.pi, 0.9),
                 bi=1.0, bo=1.2)
 HEADS[COMP].leg(SEC[3], 20.85, _ribbon_from_hand, bi=0.0, bo=0.3) \
            .leg(20.85, 22.1, _pen("Compliment"), bi=0.3, bo=0.5) \
@@ -659,10 +660,10 @@ HEADS[COMP].leg(SEC[3], 20.85, _ribbon_from_hand, bi=0.0, bo=0.3) \
            .leg(LOOP_T0 + 0.2, SEC[4], _loop_ahead, bi=0.4, bo=0.0)
 HEADS[CONS].leg(SEC[4], 27.65, _pen("Consideration"), bi=0.0, bo=0.5) \
            .leg(27.9, 30.0, _screen(0.5, 0.30, 18.0, wx=0.25, wy=0.04, rate=1.1), bi=0.4, bo=0.6) \
-           .leg(30.6, SEC[5], _helix(E5, 2.4, 0.6, 2.2, 1.7, 0.5), bi=0.6, bo=0.8)
-HEADS[GRAT].leg(30.2, SEC[5], _gold_stream, bi=0.3, bo=0.8)
+           .leg(30.6, SEC[5], _helix(E5, 2.4, 0.6, 2.2, 1.7, 0.5), bi=0.6, bo=0.0)
+HEADS[GRAT].leg(30.2, SEC[5], _gold_stream, bi=0.3, bo=0.0)
 HEADS[RESP].leg(33.9, 35.1, _pen("Respect"), bi=0.5, bo=0.5) \
-           .leg(35.4, SEC[6], _weave6, bi=0.5, bo=0.4)
+           .leg(35.4, SEC[6], _weave6, bi=0.5, bo=0.0)
 HEADS[ENC].leg(SEC[6], BRAID_T0, _thread7, bi=0.4, bo=0.0)
 for _k in range(9):
     if _k != ENC:
@@ -774,9 +775,12 @@ class Comets:
                 continue
             pts = np.array([HEADS[k](float(x)) for x in ts])
             if eye is not None:                         # a head right at the lens would fill the picture
-                a = a * _sc(1.2, 4.5, float(np.linalg.norm(pts[-1] - eye)))
+                dist = float(np.linalg.norm(pts[-1] - eye))
+                a = a * _sc(1.0, 3.0, dist)
                 if a <= 0.0:
                     continue
+                if not day:
+                    w = w * float(np.clip(dist / 6.0, 0.35, 1.0))     # close-ups get a finer ribbon
             age = (t - ts) / tail                       # 0 at the head, 1 at the far end
             kk = 1.0 - age
             c = lin(COL[k])
@@ -971,7 +975,7 @@ LOOKS = dict(
               mist_color="#2a1020", haze=0.25, haze_color="#1e0c16", stars=0.8, milky=0.4),
     ember=dict(base="night", sky_top="#05040a", sky_mid="#1a0f0c", sky_hor="#3a2210", haze=0.5,
                haze_color="#3a2410", mist=0.35, mist_color="#2a1c10", stars=0.3, milky=0.0),
-    prayer=dict(base="night", sky_top="#03020e", sky_mid="#0e0a2e", sky_hor="#1e1648", mist=0.25,
+    prayer=dict(base="night", sky_top="#03020e", sky_mid="#0e0a2e", sky_hor="#1e1648", mist=0.08,
                 mist_color="#1a1440", stars=1.0, milky=0.9),
     morning=dict(base="day", sun_az=180.0, sun_el=13.0, sun_int=0.9, sun_glow=0.7, mist=0.22, rays=0.25),
 )
@@ -993,9 +997,9 @@ WORLD = dict(
 
 P3D = dict(
     camera=CAMERA,
-    world=WORDS.world(WORLD),
+    world=dict(WORLD, shafts=[WORDS["Encouragement"].shaft(color="#c9b4ff", strength=0.9)]),
     setup=_setup,
-    bursts=[dict(t=SEC[0], strength=3.5, rise=0.12, fall=0.5, color="#fff4e0", at=tuple(SEED)),
+    bursts=[dict(t=SEC[0], strength=1.5, rise=0.10, fall=0.35, color="#fff4e0", at=tuple(SEED)),
             dict(t=SEC[3], strength=1.8, rise=0.08, fall=0.28, color=COL[COMP]),
             dict(t=SEC[4], strength=1.8, rise=0.08, fall=0.28, color=COL[CONS]),
             dict(t=SEC[5], strength=1.8, rise=0.08, fall=0.28, color=COL[RESP]),
