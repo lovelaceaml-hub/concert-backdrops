@@ -591,15 +591,21 @@ class LogoBurst:
     the nine colours and gold racing past the camera, and a ring of light opening round the logo."""
     wants_camera = False
 
-    def __init__(self, center, normal, t0, colors, n=7000, size=10.0, seed=99, life=1.6):
+    def __init__(self, center, normal, t0, colors, n=7000, size=10.0, seed=99, life=1.6, plane=False, r0=0.0,
+                 ring=True):
         r = np.random.default_rng(seed)
         self.c = np.asarray(center, np.float64)
         nm = np.asarray(normal, np.float64)
         d = r.normal(size=(n, 3))
         d /= np.linalg.norm(d, axis=1, keepdims=True)
-        d = d + nm[None, :] * 0.9                       # more of it toward the camera
+        if plane:                                       # outward in the picture's plane, never across the middle
+            d = d - (d @ nm)[:, None] * nm[None, :] + nm[None, :] * r.uniform(-0.12, 0.25, (n, 1))
+        else:
+            d = d + nm[None, :] * 0.9                   # more of it toward the camera
         d /= np.linalg.norm(d, axis=1, keepdims=True)
         self.d = d
+        self.r0 = float(r0) * r.uniform(0.9, 1.15, n)
+        self.ring = ring
         self.sp = size * r.uniform(1.0, 3.2, n)
         self.s = r.random(n)
         gold = lin("#ffd890")
@@ -616,12 +622,14 @@ class LogoBurst:
         if u < 0.0 or u > self.life:
             return None
         e = 1.0 - np.exp(-u * 2.4)
-        p = self.c + self.d * (self.sp * e)[:, None]
+        p = self.c + self.d * (self.r0 + self.sp * e)[:, None]
         al = (1.0 - ss(0.35 * self.life, self.life, u)) * (0.5 + 0.5 * self.s)
         R = self.size * (0.6 + 2.6 * e)
         ring = self.c + R * (np.cos(self.ang)[:, None] * self.a1 + np.sin(self.ang)[:, None] * self.a2)
         kr = 1.0 - ss(0.2, 0.9 * self.life, u)
-        return [dict(pos=p, size=0.012 * self.size * (0.6 + 0.8 * self.s), color=self.col, alpha=0.9 * al,
-                     emit=2.4, kind="spark", twinkle=0.4, seed=self.s, streak=1.0, dof=0.0, reflect=False),
-                dict(pos=ring, size=0.03 * self.size, color=lin("#ffe6b0"), alpha=0.5 * kr, emit=1.6, kind="soft",
-                     dof=0.0, reflect=False)]
+        out = [dict(pos=p, size=0.012 * self.size * (0.6 + 0.8 * self.s), color=self.col, alpha=0.9 * al,
+                    emit=2.4, kind="spark", twinkle=0.4, seed=self.s, streak=1.0, dof=0.0, reflect=False)]
+        if self.ring:
+            out.append(dict(pos=ring, size=0.03 * self.size, color=lin("#ffe6b0"), alpha=0.5 * kr, emit=1.6,
+                            kind="soft", dof=0.0, reflect=False))
+        return out

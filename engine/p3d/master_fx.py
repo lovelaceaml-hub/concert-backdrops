@@ -600,3 +600,174 @@ class ColorRing:
         return [dict(pos=pos, size=sz, color=self.col, alpha=0.8 * k, emit=2.0, kind="spark", twinkle=0.3,
                      seed=self.s),
                 dict(pos=pos[::4], size=sz * 6.0, color=self.col[::4], alpha=0.06 * k, kind="soft")]
+
+
+# ------------------------------------------------------------------------------------- soft hands of light
+class SoftLight:
+    """Wraps a body of light (p3d.body.Body) so that it reads as warm, soft light and never as a net of grains:
+    the grains are warmed and evened out (no dark grains), and a soft glow fills the body (every k-th point
+    drawn again as a large faint soft light), so that palms and fingers read as luminous volumes."""
+    wants_camera = True
+
+    def __init__(self, body, every=4, fill=0.04, fill_alpha=0.06, warm="#ffd690", tint=0.55, a_ref=0.7,
+                 grain=0.85):
+        self.body = body
+        self.every, self.fill, self.fill_alpha = int(every), float(fill), float(fill_alpha)
+        self.warm = lin(warm)
+        self.tint, self.a_ref, self.grain = float(tint), float(a_ref), float(grain)
+
+    def where(self, *a, **k):
+        return self.body.where(*a, **k)
+
+    def sample(self, t, cam=None):
+        out = self.body.sample(t, cam)
+        if not out:
+            return out
+        res = []
+        wm = float(self.warm.mean())
+        for b in out:
+            if b.get("kind") != "soft" or "pos2" in b:
+                res.append(b)
+                continue
+            col = np.asarray(b["color"], np.float64)
+            lum = col.mean(1, keepdims=True)
+            lum = np.maximum(lum, 0.6 * float(lum.mean()))
+            col = col * (1.0 - self.tint) + self.warm[None] * (lum / max(wm, 1e-6)) * self.tint
+            al = np.asarray(b["alpha"], np.float64)
+            res.append(dict(b, color=col.astype(np.float32), alpha=(al * self.grain).astype(np.float32)))
+            k = self.every
+            p = np.asarray(b["pos"])[::k]
+            if len(p) == 0:
+                continue
+            a = np.clip(al[::k] / self.a_ref, 0.0, 1.0)
+            res.append(dict(pos=p, size=self.fill, color=self.warm, alpha=self.fill_alpha * a, emit=1.0,
+                            kind="soft", twinkle=0.0))
+        return res
+
+
+class Upwell:
+    """Light rising from a place (Mother's palms): fine sparks and soft motes lifting gently, swaying, fading as
+    they rise. src(t) gives the place (or a fixed point); radius the spread round it; up the way they rise."""
+
+    def __init__(self, src, t0, t1, n=1500, radius=0.3, speed=0.6, life=2.2, up=(0.0, 1.0, 0.0),
+                 color="#ffe0a0", color2="#fff4dc", size=0.02, gain=None, seed=131, fade=0.55):
+        r = np.random.default_rng(seed)
+        self.src, self.t0, self.t1, self.life = src, float(t0), float(t1), float(life)
+        self.ph = r.random(n)
+        a = r.uniform(0.0, TAU, n)
+        rr = radius * np.sqrt(r.random(n))
+        self.o1, self.o2 = np.cos(a) * rr, np.sin(a) * rr
+        self.sp = speed * (0.6 + 0.8 * r.random(n))
+        self.sw = r.random((n, 2))
+        self.s = r.random(n)
+        up = np.asarray(up, np.float64)
+        up = up / np.linalg.norm(up)
+        ref = np.array([1.0, 0.0, 0.0]) if abs(up[0]) < 0.9 else np.array([0.0, 0.0, 1.0])
+        e1 = np.cross(up, ref)
+        e1 /= np.linalg.norm(e1)
+        self.up, self.e1, self.e2 = up, e1, np.cross(up, e1)
+        self.col = lin(color)[None] * (1.0 - self.s[:, None]) + lin(color2)[None] * self.s[:, None]
+        self.size, self._gain, self.fade = float(size), gain, float(fade)
+        self.radius = float(radius)
+
+    def sample(self, t):
+        if t < self.t0 or t > self.t1 + self.life:
+            return None
+        g = 1.0 if self._gain is None else float(self._gain(t))
+        if g <= 0.002:
+            return None
+        age = np.mod((t - self.t0) / self.life + self.ph, 1.0) * self.life
+        born = t - age
+        ok = (born >= self.t0) & (born <= self.t1)
+        if not ok.any():
+            return None
+        c = np.asarray(self.src(t) if callable(self.src) else self.src, np.float64)
+        h = self.sp * age
+        sway = 0.35 * self.radius * np.sin(age * 1.6 + TAU * self.sw[:, 0]) * (age / self.life)
+        p = (c[None] + (self.o1 + sway)[:, None] * self.e1[None] + self.o2[:, None] * self.e2[None]
+             + h[:, None] * self.up[None])
+        al = g * ss(0.0, 0.3, age) * (1.0 - ss(self.fade * self.life, self.life, age)) * ok
+        return [dict(pos=p, size=self.size * (0.5 + 0.9 * self.s), color=self.col, alpha=0.85 * al, emit=1.8,
+                     kind="spark", twinkle=0.7, seed=self.s),
+                dict(pos=p[::6], size=self.size * 9.0, color=self.col[::6], alpha=0.05 * al[::6], kind="soft")]
+
+
+class Pour:
+    """Light pouring from a place and falling: sparks leave src between t0 and t1 and fall (gravity g, a little
+    spread), fading as they go: a stream of light from Mother's hands down after the falling drop."""
+
+    def __init__(self, src, t0, t1, n=5000, g=7.8, spread=0.18, life=3.2, color="#ffd27a", color2="#fff4dc",
+                 size=0.03, seed=133, until=None, width=0.25):
+        r = np.random.default_rng(seed)
+        self.b = np.sort(r.uniform(t0, t1, n))
+        self.p0 = np.array([np.asarray(src(float(x)), np.float64) for x in self.b])
+        self.p0 = self.p0 + r.normal(size=(n, 3)) * width * np.array([1.0, 0.2, 1.0])
+        self.v = r.normal(size=(n, 3)) * spread * np.array([1.0, 0.3, 1.0])
+        self.g, self.life = float(g), float(life)
+        self.s = r.random(n)
+        self.col = lin(color)[None] * (1.0 - self.s[:, None]) + lin(color2)[None] * self.s[:, None]
+        self.size = float(size)
+        self.until = until
+
+    def sample(self, t):
+        if self.until is not None and t > self.until:
+            return None
+        age = t - self.b
+        ok = (age >= 0.0) & (age <= self.life)
+        if not ok.any():
+            return None
+        a = age[ok]
+        p = self.p0[ok] + self.v[ok] * a[:, None]
+        p[:, 1] -= 0.5 * self.g * a * a
+        keep = p[:, 1] > 0.05
+        al = ss(0.0, 0.15, a) * (1.0 - ss(0.55 * self.life, self.life, a)) * (0.5 + 0.5 * self.s[ok]) * keep
+        if self.until is not None:
+            al = al * (1.0 - ss(self.until - 0.6, self.until, t))
+        col = self.col[ok]
+        return [dict(pos=p, size=self.size * (0.5 + 0.9 * self.s[ok]), color=col, alpha=0.8 * al, emit=1.8,
+                     kind="spark", twinkle=0.6, seed=self.s[ok], streak=1.0),
+                dict(pos=p[::5], size=self.size * 10.0, color=col[::5], alpha=0.05 * al[::5], kind="soft")]
+
+
+class Glory:
+    """A sun's glory: long soft rays fanning out from a place far off (the sun over the sea of clouds), turning
+    slowly, each a tapering ribbon of warm light, with a great soft halo round the source. src(t) the place;
+    the camera lays the fan flat to the picture."""
+    wants_camera = True
+
+    def __init__(self, src, n=26, length=(260.0, 620.0), width=(5.0, 16.0), color="#ffe2a8", color2="#ffc2a0",
+                 gain=None, seed=137, halo=140.0, turn=0.03):
+        r = np.random.default_rng(seed)
+        self.src = src
+        self.a = np.sort(r.uniform(0.0, TAU, n))
+        self.L = r.uniform(*length, n)
+        self.W = r.uniform(*width, n)
+        self.k = 0.5 + 0.5 * r.random(n)
+        self.c1, self.c2 = lin(color), lin(color2)
+        self._gain, self.halo, self.turn = gain, float(halo), float(turn)
+
+    def sample(self, t, cam=None):
+        g = 1.0 if self._gain is None else float(self._gain(t))
+        if g <= 0.002 or cam is None:
+            return None
+        c = np.asarray(self.src(t) if callable(self.src) else self.src, np.float64)
+        e = np.asarray(cam.pos, np.float64)
+        f = c - e
+        f /= max(float(np.linalg.norm(f)), 1e-9)
+        rt = np.cross(f, np.array([0.0, 1.0, 0.0]))
+        rt /= max(float(np.linalg.norm(rt)), 1e-9)
+        up = np.cross(rt, f)
+        out = []
+        q = np.linspace(0.0, 1.0, 16)
+        for i in range(len(self.a)):
+            ang = self.a[i] + self.turn * t * (1.0 if i % 2 == 0 else -1.0)
+            d = np.cos(ang) * rt + np.sin(ang) * up
+            pts = c[None] + (q * self.L[i])[:, None] * d[None]
+            col = self.c1 if i % 3 else self.c2
+            al = g * 0.07 * self.k[i] * (1.0 - q) ** 1.6 * ss(0.0, 0.08, q)
+            out.append(ribbon(pts, width=self.W[i] * (0.4 + 1.6 * q), color=col, alpha=al, emit=1.0, dof=0.0,
+                              fog=0.0))
+        out.append(dict(pos=c[None], size=self.halo, color=self.c1, alpha=0.06 * g, kind="soft", dof=0.0, fog=0.0))
+        out.append(dict(pos=c[None], size=self.halo * 0.35, color=self.c1 * 0.6 + 0.4, alpha=0.12 * g, kind="soft",
+                        dof=0.0, fog=0.0))
+        return out
