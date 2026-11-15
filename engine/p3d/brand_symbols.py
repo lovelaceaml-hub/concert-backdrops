@@ -17,8 +17,8 @@ hand cupped at the ear, praying hands, two open hands holding a heart, clapping 
     Constellation(name, ...) stars come out among the stars and are joined by fine lines, then go
     PetalShape(name, ...)    petals (or any particles) blow in on the wind, settle into the shape, blow on
     LightTrail(name, ...)    one light draws the whole symbol as a continuous ribbon, which then fades
-    Ripples(name, ...)       the symbol lies on the water as lines of light that waver with a spreading ripple
-                             and break into glints (no rings: rings read as UI)
+    Ripples(name, ...)       the symbol stands clear just above the water; only its reflection wavers with a
+                             spreading ripple and breaks into glints (no rings: rings read as UI)
     Flock(name, ...)         a cluster of birds or embers passes through and makes the shape as it goes
 
   Shared keys:
@@ -655,19 +655,24 @@ class LightTrail(_SymbolFX):
 
 
 class Ripples(_SymbolFX):
-    """The symbol lies on the water as thin lines of light, mirrored and moved by the water: it appears from its
-    middle outward as if something had touched the lake there, its lines waver with a ripple that travels out
-    and calms, and the light breaks into glints along them, as moonlight does on water. Give pos on the lake
-    (y about 0.02); it lies flat (face="flat"), read from where the camera looks at the water.
-    spread: how strongly the lines waver (0.35). rings: rings of light spreading from the lines (0, none: rings
-    read as UI; kept for older songs)."""
-    FACE = "flat"
+    """The symbol stands upright just above the water, facing the camera, as clear lines of light; only its
+    reflection in the lake moves: it appears from the middle outward as if something had touched the water
+    there, and the reflection wavers with a ripple that travels down and calms, breaking into glints as
+    moonlight does on water. The symbol itself always reads as its shape.
+    Give pos about 0.6 symbol heights above the water (the demo: size 4.0, y 2.6); water: the lake's height (0.0);
+    mirror: how strong the reflection is (0.55); spread: how strongly it wavers (0.35).
+    face="flat" lays the symbol on the water with its lines wavering (no reflection then): use that only when
+    the camera looks down on the water from above, or its outline reads as an ellipse.
+    rings: rings of light spreading from the lines (0, none: rings read as UI; kept for older songs)."""
+    FACE = "camera"
     N = 700
 
-    def __init__(self, name, rings=0, spread=0.35, **kw):
+    def __init__(self, name, rings=0, spread=0.35, water=0.0, mirror=0.55, **kw):
         kw.setdefault("reflect", False)
+        self.flat = (kw.get("face") or self.FACE) == "flat" and kw.get("place") is None
         super().__init__(name, **kw)
         self.R, self.spread = int(rings), float(spread)
+        self.water, self.mirror = float(water), float(mirror)
         self.lead = 0.2
         self.rr = np.hypot(self.xy[:, 0], self.xy[:, 1])
         self.rr = self.rr / max(float(self.rr.max()), 1e-6)
@@ -681,22 +686,40 @@ class Ripples(_SymbolFX):
         fo = self._fade_out(t)
         age = max(t - self.t0, 0.0)
         calm = 0.25 + 0.75 * math.exp(-age / max(self.dur * 1.4, 1e-6))
-        wob = self.spread * 0.035 * calm * np.sin(self.rr * 26.0 - age * 5.5) \
-            + 0.004 * np.sin(t * 3.0 + self.order * 40.0)
-        xy = self.xy + self.nrm2 * wob[:, None]
+        xy = self.xy
+        if self.flat:
+            wob = self.spread * 0.035 * calm * np.sin(self.rr * 26.0 - age * 5.5) \
+                + 0.004 * np.sin(t * 3.0 + self.order * 40.0)
+            xy = self.xy + self.nrm2 * wob[:, None]
         pos, s = self._world(t, cam, xy)
-        glint = 0.55 + 0.45 * np.sin(t * 6.0 + self.s[:, 2] * 40.0 + self.rr * 12.0) ** 2
-        out = [dict(pos=pos, size=s * 0.012, color=self.col * 1.3, alpha=draw * fo * self.k * 1.3 * glint,
-                    kind="soft", seed=self.s[:, 0], twinkle=0.3, dof=self.dof, reflect=False)]
-        gl = (self.s[:, 3] < 0.06) & (draw > 0.5)
+        a0 = draw * fo * self.k * 1.3
+        out = [dict(pos=pos, size=s * 0.012, color=self.col * 1.3, alpha=a0, kind="soft", seed=self.s[:, 0],
+                    twinkle=0.2, dof=self.dof, reflect=False)]
+        gl = (self.s[:, 3] < 0.04) & (draw > 0.5)
         if gl.any():
-            out.append(dict(pos=pos[gl], size=s * 0.02, color=self.col * 0.6 + 0.6, alpha=fo * self.k * 0.9 * draw[gl],
+            out.append(dict(pos=pos[gl], size=s * 0.02, color=self.col * 0.6 + 0.6, alpha=fo * self.k * 0.7 * draw[gl],
                             emit=1.6, kind="spark", twinkle=1.0, seed=self.s[gl, 4], dof=self.dof, reflect=False))
-        for r in range(self.R):
-            tr = self.t0 + 0.35 * r + self.dur * 0.3
-            age = t - tr - self.order * self.dur * 0.6
-            d = np.clip(age, 0.0, None) * self.spread / 1.6
-            al = np.where(age > 0, np.exp(-age / 1.1), 0.0) * fo * self.k * (0.9 - 0.2 * r)
+        if not self.flat and self.mirror > 0.0:
+            # the reflection: mirrored in the water, wavering side to side, more the further it lies from the
+            # shore line, broken into bands of glints
+            c, r, up, n, _ = self.place.frame(t, cam)
+            mp = pos.copy()
+            mp[:, 1] = 2.0 * self.water - pos[:, 1]
+            below = np.maximum(self.water - mp[:, 1], 0.0) / max(s, 1e-6)          # symbol heights under the water
+            wv = self.spread * 0.09 * s * (0.35 + below) * (calm * 0.7 + 0.3) \
+                * np.sin(below * 24.0 - age * 5.5 + self.s[:, 2] * 0.6)
+            rh = r - up * float(r @ up)
+            rh = rh / max(float(np.linalg.norm(rh)), 1e-9)
+            mp = mp + rh[None, :] * wv[:, None]
+            band = 0.3 + 0.7 * np.sin(below * 30.0 + t * 2.5) ** 2
+            am = a0 * self.mirror * band * np.exp(-below * 0.6)
+            out.append(dict(pos=mp, size=s * 0.014, color=self.col * 1.1, alpha=am, kind="soft", seed=self.s[:, 1],
+                            twinkle=0.6, dof=self.dof, reflect=False))
+        for ri in range(self.R):
+            tr = self.t0 + 0.35 * ri + self.dur * 0.3
+            age_r = t - tr - self.order * self.dur * 0.6
+            d = np.clip(age_r, 0.0, None) * self.spread / 1.6
+            al = np.where(age_r > 0, np.exp(-age_r / 1.1), 0.0) * fo * self.k * (0.9 - 0.2 * ri)
             if al.max() <= 0.003:
                 continue
             for sgn in (1.0, -1.0):
@@ -704,7 +727,6 @@ class Ripples(_SymbolFX):
                 out.append(dict(pos=pp, size=s * 0.010, color=self.col * 0.9 + 0.15, alpha=al * 0.8, kind="soft",
                                 seed=self.s[:, 1], dof=self.dof, reflect=False))
         return out
-
 
 class Flock(_SymbolFX):
     """A loose cluster of birds (or embers) passes through and, for a moment as it goes, its members stand in
