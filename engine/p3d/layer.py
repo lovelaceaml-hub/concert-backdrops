@@ -324,22 +324,23 @@ class Layer:
         calm_a, calm_b, ncalm = wd.calm_at(t)
         lake = self._lake_field(t)
         lp, lc, nl = wd.lights_at(t)
-        split, sp = wd.split_at(t, w)
+        split, sp = wd.split_at(t, w, cam.pos)
         box, boxk = self._clear_boxes(t)
         return dict(
             uView=cam.view(), uProj=cam.proj(), uPrevVP=prev.proj() @ prev.view(), uCamPos=np.asarray(cam.pos),
             uCamR=r, uCamU=u, uCamF=f, uRes=(float(self.w), float(self.h)), uFocal=float(focal),
             uAspect=float(cam.aspect), uFocus=float(cam.focus), uAperture=float(cam.aperture),
             uNear=float(min(max(cam.near, 0.02), 1.0)),
-            uT=float(t), uHillP=(float(w["hills"]), float(w["hill_height"]), 0.0, 0.0),
+            uT=float(t), uHillP=(float(w["hills"]), float(w["hill_height"]), max(float(w["shore"]) / SHORE, 1.0), 0.0),
             uCloudP=(float(w["clouds"]), 0.006 * cs, 0.003 * cs, 0.55), uSunDir=w["sun_dir"],
             uFogP=(float(w["haze"]) * 0.0011, float(w["mist"]) * 0.020, float(w["mist_height"]),
                    0.10 + 0.25 * float(w["haze"])),
-            uLakeP=(float(w["mirror_min"]), float(w["mirror"]), float(w["ripple"]), SHORE),
+            uLakeP=(float(w["mirror_min"]), float(w["mirror"]), float(w["ripple"]), float(w["shore"])),
             uSigMin=0.6, uCocMax=self.bokeh_max * self.h, uLodR=self.lod_r * px, uDomeDist=3000.0,
             uShutterDt=self.shutter / float(S.FPS), uMaxStreak=0.20 * self.h, uSmear=0.03, uPx=px,
             uBokeh=(float(w["bokeh_ring"]), float(w["bokeh_hex"])), uHair=0.30 * px,
             uNCalm=ncalm, uNLights=nl, uDomeRot=wd.dome_rot(w), uSplit=split, uSplitStars=float(sp.get("_stars", 1.0)),
+            uSplitBias=float(sp.get("_bias", 0.0)),
             uLakeOn=1.0 if lake is not None else 0.0, uLakeF=lake if lake is not None else (0.0, 0.0, 1.0, 1.0),
             uLakeTex=LAKE_UNIT,
             _calm=(calm_a, calm_b), _lights=(lp, lc), _clear=(box, boxk), _split=sp,
@@ -474,7 +475,8 @@ class Layer:
             v = ctx.vertex_array(self.p_seg, [
                 (self.quad, "2f", "aCorner"),
                 (sl["core"], CORE_FMT, "aPos", "aSize", "aColor", "aAlpha", "aEmit", "aSeed", "aUV", "aBirth"),
-                (sl["seg"], "4f 1f /i", "aPos2A2", "aSize2")])
+                (sl["seg"], "4f 1f /i", "aPos2A2", "aSize2"),
+                ((sl["vel"], "3f /i", "aVel") if sl["has_vel"] else (self.b_vel0, "3f /r", "aVel"))])
         else:
             v = ctx.vertex_array(self.p_mask, [
                 (self.quad, "2f", "aCorner"),
@@ -793,8 +795,9 @@ class Layer:
             out.append(((xy[0], xy[1], float(b.get("radius", 0.35)), k), tuple(float(x) for x in col)))
         return out[:4]
 
-    def _rays(self, U, mode, center, mask_on, light=None, light_col=(0, 0, 0)):
-        """Source and two radial blurs at quarter size; the result is left in t_rayA (sun) or t_rayB (light)."""
+    def _rays(self, U, mode, center, mask_on, light=None, light_col=(0, 0, 0), add=False):
+        """Source and two radial blurs at quarter size; the result is left in t_rayA (sun) or t_rayB (lights;
+        add=True adds this light's rays to those already there)."""
         w = self.world.now
         self.f_rsrc.use()
         self.t_bg.use(location=0)
@@ -812,7 +815,12 @@ class Layer:
         (self.f_rayA if mode == 0 else self.f_rayB).use()
         self.t_rtmp.use(location=0)
         setu(self.p_rad, uTex=0, uCenter=center, uLen=0.92 / 14.0, uDecay=1.0)
+        if add:
+            self.ctx.enable(moderngl.BLEND)
+            self.ctx.blend_func = (moderngl.ONE, moderngl.ONE)
         self.v_rad.render(moderngl.TRIANGLE_STRIP)
+        if add:
+            self.ctx.disable(moderngl.BLEND)
 
     def _sky(self, fbo, size, w, U, t, split=None):
         """Sky, hills, lake, mist, shafts and the glow of the moving lights for the world state w."""
@@ -837,11 +845,18 @@ class Layer:
         sp = split if split is not None else {}
         Uv = {k: v for k, v in U.items() if not k.startswith("_")}
         Uv.update(uRes=(float(size[0]), float(size[1])), uSunDir=w["sun_dir"],
-                  uHillP=(float(w["hills"]), float(w["hill_height"]), 0.0, 0.0),
+                  uHillP=(float(w["hills"]), float(w["hill_height"]), max(float(w["shore"]) / SHORE, 1.0), 0.0),
                   uCloudP=(float(w["clouds"]), 0.006 * float(w["cloud_speed"]), 0.003 * float(w["cloud_speed"]), 0.55),
-                  uLakeP=(float(w["mirror_min"]), float(w["mirror"]), float(w["ripple"]), SHORE))
+                  uLakeP=(float(w["mirror_min"]), float(w["mirror"]), float(w["ripple"]), float(w["shore"])))
         if split is None:
             Uv["uSplit"] = (0.0, 1.0, 0.3, 0.0)
+        # the other look's own sun, water and hills (the split side)
+        sb = sp if sp else w
+        cosb = float(np.cos(np.radians(sb["sun_size"])))
+        setu(p, uSunDirB=np.asarray(sb["sun_dir"]), uSunColB=np.asarray(sb["sun_color"]),
+             uWaterB=np.asarray(sb["water"]), uHillColB=np.asarray(sb["hill_color"]),
+             uSunPB=(float(sb["sun_int"]), cosb, float(sb["sun_disc"]) * _ss(-1.5, 0.5, float(sb["sun_el"])),
+                     float(sb["sun_glow"])))
         hz = float(w["haze"]) * 0.0011
         setu(p, uNShaft=ns, uSkyTop=np.asarray(w["sky_top"]), uSkyMid=np.asarray(w["sky_mid"]),
              uSkyHor=np.asarray(w["sky_hor"]), uSunCol=np.asarray(w["sun_color"]),
@@ -878,17 +893,27 @@ class Layer:
             self._rays(U, 0, (float(q[0, 0]), float(q[0, 1])), mask_on)
         else:
             ray_sun = 0.0
+        # rays round the world's light (light=) and round each moving light that asks for them (lights=[...,
+        # rays=...]): each is cut by the silhouettes in front of it; they add up
         ray_light = 0.0
+        srcs = []
         lt = self.world.light
         if lt:
-            k = float(_val(lt.get("strength", 1.0), t)) * float(lt.get("rays", 1.0))
-            q, z = cam.project(np.asarray(_val(lt["pos"], t), np.float64))
+            srcs.append((_val(lt["pos"], t), _col(lt.get("color", "#fff0cc"), t),
+                         float(_val(lt.get("strength", 1.0), t)) * float(lt.get("rays", 1.0)), float(lt.get("size", 0.6))))
+        for it in self.world.lights:
+            r = float(_val(it.get("rays", 0.0), t))
+            if r > 0.0:
+                srcs.append((_val(it["pos"], t), _col(it.get("color", "#ffffff"), t),
+                             float(_val(it.get("strength", 1.0), t)) * r, float(_val(it.get("size", 0.6), t))))
+        for pos, col, k, size in srcs:
+            q, z = cam.project(np.asarray(pos, np.float64))
             if k > 0.002 and z[0] > 0.1:
-                rad = max(float(lt.get("size", 0.6)) * 0.5 * U["uFocal"] / z[0], 0.01)
+                rad = max(size * 0.5 * U["uFocal"] / z[0], 0.01)
                 self._rays(U, 1, (float(q[0, 0]), float(q[0, 1])), mask_on,
                            light=(float(q[0, 0]), float(q[0, 1]), rad, float(z[0])),
-                           light_col=_col(lt.get("color", "#fff0cc"), t))
-                ray_light = k
+                           light_col=np.asarray(col, np.float64) * k, add=ray_light > 0.0)
+                ray_light = 1.0
 
         # 3. resolve: motion blur, dark bodies, windows, paint, rays, bursts
         self.f_fin.use()
@@ -926,9 +951,9 @@ class Layer:
         setu(p, uBg=0, uRayA=1, uRayB=2, uMask=3, uPaintT=4, uBg2=5, uBg3=6, uPaintOn=1.0 if self._painted else 0.0,
              uCamR=U["uCamR"], uCamU=U["uCamU"], uCamF=U["uCamF"],
              uCamPos=U["uCamPos"], uPrevVP=U["uPrevVP"], uFocal=U["uFocal"], uAspect=U["uAspect"], uT=float(t),
-             uBlur=1.0 if moving else 0.0, uShore=SHORE if float(w["hills"]) > 0.001 else 1e9, uRes=U["uRes"],
+             uBlur=1.0 if moving else 0.0, uShore=float(w["shore"]) if float(w["hills"]) > 0.001 else 1e9, uRes=U["uRes"],
              uRayK=(ray_sun * 0.55, ray_light, 0.0, 0.0),
              uMaskOn=mask_on, uDarkK=mk["dark"] if mk else 0.0, uDarkTint=tuple(float(x) for x in np.asarray(w["sky_top"]) * 0.35), uNBurst=len(bursts))
         self.v_res.render(moderngl.TRIANGLE_STRIP)
         self.t_fin.use(location=CAM_UNIT)
-        setu(R.p_comp, uCamOn=1.0, uCamBg=CAM_UNIT)
+        setu(R.p_comp, uCamOn=1.0, uCamBg=CAM_UNIT, uHueKeep=float(min(max(w["keep_hue"], 0.0), 1.0)))

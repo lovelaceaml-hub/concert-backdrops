@@ -19,6 +19,8 @@ Settings (colours are display hex or linear triples; angles in degrees):
   stars, milky                  the star dome and the Milky Way (0..1)
   clouds, cloud_speed           amount of cloud (0..1) and its drift
   hills, hill_height, hill_color   the three rings of far hills (0 hides them)
+  shore                         metres from the origin to the lake's shore (1400). Smaller: the lake is a disc
+                                in a plain (seen whole from a kilometre up); larger: the hills move out with it
   haze, haze_color              the air: how fast things fade into the horizon colour
   mist, mist_height, mist_color    ground mist over the lake
   water, mirror, mirror_min, ripple   the lake: its own colour, the strength of the mirror, the mirror when
@@ -29,6 +31,8 @@ Settings (colours are display hex or linear triples; angles in degrees):
   floats                        amount of small lights floating on the water (0..1)
   star_turn                     degrees the star dome has turned about its pole (world key star_pole=(az, el))
   exposure                      multiplies the picture's exposure (a Track gives flashes and dips)
+  keep_hue                      0..1: bright lights keep their hue instead of bleaching to white (a Track: let
+                                it fall to 0 for a whiteout into the sun). Needs the key in P3D["world"]
   bokeh_ring, bokeh_hex         the look of out-of-focus discs: a brighter edge, and how hexagonal (0 round)
 """
 import numpy as np
@@ -49,7 +53,8 @@ COLOR_KEYS = ("sky_top", "sky_mid", "sky_hor", "sun_color", "haze_color", "hill_
               "dust_color", "dust_color2", "lantern_color", "lantern_color2")
 NUMBER_KEYS = ("sun_az", "sun_el", "sun_int", "sun_size", "sun_disc", "sun_glow", "stars", "milky", "clouds",
                "cloud_speed", "hills", "hill_height", "haze", "mist", "mist_height", "mirror", "mirror_min",
-               "ripple", "rays", "dust", "bokeh", "lanterns", "floats", "exposure", "bokeh_ring", "bokeh_hex", "star_turn")
+               "ripple", "rays", "dust", "bokeh", "lanterns", "floats", "exposure", "bokeh_ring", "bokeh_hex", "star_turn",
+               "keep_hue", "shore")
 
 _NIGHT = dict(
     sky_top=lin("#01020a"), sky_mid=lin("#060b24"), sky_hor=lin("#16204c"),
@@ -59,7 +64,7 @@ _NIGHT = dict(
     water=lin("#010309"), mirror=1.0, mirror_min=0.55, ripple=0.7, rays=0.0,
     dust=0.6, dust_color=lin("#ffe2a8"), dust_color2=lin("#bcd0ff"), bokeh=0.7,
     lanterns=0.0, floats=0.0, lantern_color=lin("#ffb45e"), lantern_color2=lin("#ff8a4c"),
-    exposure=1.0, bokeh_ring=0.5, bokeh_hex=0.0, star_turn=0.0,
+    exposure=1.0, bokeh_ring=0.5, bokeh_hex=0.0, star_turn=0.0, keep_hue=0.0, shore=1400.0,
 )
 
 
@@ -226,9 +231,10 @@ class World:
         return out, (float(c[0]), float(c[1]), 1.0 / sx, 1.0 / sy)
 
     def lights_at(self, t):
-        """The moving coloured lights: world key lights=[dict(pos, color, strength=1.0, radius=3.0)] (values or
-        functions of time). They glow in the mist, lay a pool on the water and colour the points of batches
-        with `lit`. Up to four."""
+        """The moving coloured lights: world key lights=[dict(pos, color, strength=1.0, radius=3.0, rays=0.0,
+        size=0.6)] (values or functions of time). They glow in the mist, lay a pool on the water and colour the
+        points of batches with `lit`; with rays above 0 each also throws rays round whatever stands in front of
+        it (size: the light's own size in metres). Up to four."""
         p, c = np.zeros((4, 4), "f4"), np.zeros((4, 3), "f4")
         n = 0
         for it in list(self.lights)[:4]:
@@ -246,10 +252,14 @@ class World:
             n += 1
         return p, c, n
 
-    def split_at(self, t, w):
-        """A sky of two looks: world key split=dict(look=..., toward=azimuth, soft=0.35, amount=1.0): the half of
-        the sky toward that azimuth (and the haze and hills there) takes the other look, with a soft seam
-        between (night ahead, dawn behind). Returns the shader's (x, z, soft, amount) and the other colours."""
+    def split_at(self, t, w, cam_pos=None):
+        """A sky of two looks: world key split=dict(look=..., toward=azimuth, soft=0.35, amount=1.0, cover=0.5):
+        the part of the sky toward `toward` (and the haze, hills, water and the sun there) takes the other look,
+        with a soft seam between (night ahead, dawn behind). toward: an azimuth in degrees, or a world point
+        (x, y, z) or (x, z): the sky toward that place, wherever the camera is (the dawn left behind a moving
+        front). cover: how much of the sky the other look takes (0.5 half; 1 all of it: the seam sweeps over
+        the sky as it rises). Each may be a function of time. Returns the shader's (x, z, soft, amount), the
+        other look's settings (with "_bias" for the cover)."""
         sp = self.split
         if not sp:
             return (0.0, 1.0, 0.3, 0.0), {}
@@ -257,10 +267,20 @@ class World:
         amt = float(amt(t) if callable(amt) else amt)
         if amt <= 0.0005:
             return (0.0, 1.0, 0.3, 0.0), {}
-        az = sp.get("toward", 0.0)
-        az = np.radians(float(az(t) if callable(az) else az))
+        to = sp.get("toward", 0.0)
+        to = to(t) if callable(to) else to
+        if isinstance(to, (tuple, list, np.ndarray)):
+            p = np.asarray(to, np.float64)
+            px, pz = (p[0], p[2]) if len(p) == 3 else (p[0], p[1])
+            c = np.zeros(3) if cam_pos is None else np.asarray(cam_pos, np.float64)
+            az = np.arctan2(px - c[0], pz - c[2])
+        else:
+            az = np.radians(float(to))
         b = self.state_of(sp["look"], t)
         b["_stars"] = float(b["stars"]) / max(float(w["stars"]), 1e-3)
+        cov = sp.get("cover", 0.5)
+        cov = float(cov(t) if callable(cov) else cov)
+        b["_bias"] = 2.0 * min(max(cov, 0.0), 1.0) - 1.0
         return (float(np.sin(az)), float(np.cos(az)), float(sp.get("soft", 0.35)), amt), b
 
     def dome_rot(self, w):
