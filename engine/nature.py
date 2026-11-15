@@ -142,7 +142,7 @@ class Flowers:
         s = np.linspace(0.0, 1.0, 24)[None, :]
         sx = X0[:, None] + (sway * grow)[:, None] * s * s
         sy = yb[:, None] + (h * grow)[:, None] * s
-        a_st = (k * grow * 0.55)[:, None] * np.ones_like(s)
+        a_st = (k * grow * 0.8)[:, None] * np.ones_like(s)
         P.add(sx / A, sy, (2.4 * sc)[:, None] * np.ones_like(s), stemc, a_st, 2.5)
         hx, hy = X0 + sway * grow, yb + h * grow
         # two leaves on the stem that flutter
@@ -153,7 +153,7 @@ class Flowers:
             q = np.linspace(0.15, 1.0, 5)[None, :]
             lx = bx[:, None] + (ll * np.cos(ang))[:, None] * q
             ly = by[:, None] + (ll * np.sin(ang))[:, None] * q + (0.15 * ll)[:, None] * q * q
-            P.add(lx / A, ly, (2.6 * sc)[:, None] * (1.2 - 0.6 * q), leafc, (k * grow * 0.38)[:, None] * np.ones_like(q), 2.5)
+            P.add(lx / A, ly, (2.6 * sc)[:, None] * (1.2 - 0.6 * q), leafc, (k * grow * 0.6)[:, None] * np.ones_like(q), 2.5)
         # petals: closed into a bud pointing up, then unfurl into an open face seen a little from above
         tilt = -0.9 * sway / h
         kk = np.arange(self.NP)[None, :]
@@ -177,15 +177,15 @@ class Flowers:
             oy = hy[:, None, None] + (L * dyp)[..., None] * ss_ + side * (Wd * pyp)[..., None] * np.sin(math.pi * ss_)
             n_pts = self.NP * self.NS
             P.add(ox.reshape(self.n, -1) / A, oy.reshape(self.n, -1), np.repeat(3.4 * sc, n_pts),
-                  np.repeat(pc, n_pts, axis=0), np.repeat(pa * 0.85, n_pts), 3.2)
+                  np.repeat(pc, n_pts, axis=0), np.repeat(pa * 1.3, n_pts), 3.2)
         # a glassy fill in each petal
         fxp = hx[:, None] + L * dxp * 0.55
         fyp = hy[:, None] + L * dyp * 0.55
         P.add(fxp / A, fyp, (L * 1080 * 1.25).ravel(), np.repeat(pc, self.NP, axis=0),
-              np.repeat(pa * 0.13, self.NP), 2.0)
+              np.repeat(pa * 0.22, self.NP), 2.0)
         # the heart of the flower
-        P.add(hx / A, hy, 5.5 * sc, core, k * bud * (0.35 + 0.65 * bloom), 3.5)
-        P.add(hx / A, hy, 30.0 * sc * bloom + 4.0, pc, k * bloom * 0.14, 2.2)
+        P.add(hx / A, hy, 6.5 * sc, core, k * bud * (0.5 + 0.9 * bloom), 3.5)
+        P.add(hx / A, hy, 34.0 * sc * bloom + 4.0, pc, k * bloom * 0.22, 2.2)
 
 
 # ------------------------------------------------------------------------------------------------ tree
@@ -481,7 +481,7 @@ class Stream:
         kc = calm_k(cy, calm, 0.4)
         # the body: soft wide light and two thin banks that shimmer
         b = np.arange(0, m, 3)
-        P.add(cx[b] / A, cy[b], wv[b] * 1080 * 2.4, ca, reach[b] * kc[b] * 0.010 * amt, 1.8)
+        P.add(cx[b] / A, cy[b], wv[b] * 1080 * 2.4, ca, reach[b] * kc[b] * 0.02 * amt, 1.8)
         sh = 0.6 + 0.4 * np.sin(u * 60.0 - t * 3.0)
         for side in (1.0, -1.0):
             P.add((cx + side * nx * wv) / A, cy + side * ny * wv, 1.5, ca, reach * kc * sh * 0.10 * amt, 3.0)

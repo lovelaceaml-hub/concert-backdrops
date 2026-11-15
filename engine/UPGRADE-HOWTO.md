@@ -188,7 +188,7 @@ Living nature made of light, always moving (engine/nature.py, engine/nature_shad
 WIND = Track([(0, 0.25), (17, 0.70), (22, 0.45), (TOTAL, 0.35)])
 TREE = 1.0
 TREE_GROW = Track([(0, 0.0), (1.0, 0.0), (13.0, 1.0)])
-TREE_X, TREE_Y, TREE_HEIGHT = 0.77, 0.335, 0.50
+TREE_X, TREE_Y, TREE_HEIGHT = 0.82, 0.335, 0.44
 BLOSSOM = Track([(0, 0.0), (12.0, 0.0), (19.0, 1.0)])
 FLOWERS = Track([(0, 0.0), (4.0, 0.0), (18.0, 1.0)])
 FLOWERS_LINE = 0.36

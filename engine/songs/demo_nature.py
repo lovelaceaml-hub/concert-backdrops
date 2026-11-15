@@ -177,9 +177,9 @@ def MOTE_COLORS(t):
 WIND = Track([(0, 0.25), (10, 0.40), (17, 0.70), (22, 0.45), (TOTAL, 0.35)])   # a gust passes at 17 s
 TREE = Track([(0, 0.0), (0.8, 1.0), (TOTAL, 1.0)])
 TREE_GROW = Track([(0, 0.0), (1.0, 0.0), (13.0, 1.0), (TOTAL, 1.0)])        # grows from a seed
-TREE_X = 0.77
+TREE_X = 0.82
 TREE_Y = 0.335
-TREE_HEIGHT = 0.50
+TREE_HEIGHT = 0.44
 BLOSSOM = Track([(0, 0.0), (12.0, 0.0), (19.0, 1.0), (TOTAL, 1.0)])        # opens, then petals fall
 FLOWERS = Track([(0, 0.0), (4.0, 0.0), (18.0, 1.0), (TOTAL, 1.0)])         # blooms in a wave, left to right
 FLOWERS_LINE = 0.36
