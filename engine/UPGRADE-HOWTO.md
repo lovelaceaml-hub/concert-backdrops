@@ -152,6 +152,41 @@ FIGURES = [
 ]
 ```
 
+## H2. Text animations (2026-11-15)
+
+Anthony: "I also want different animations for the text instead of just the same one." Add `anim=` to an entry in PHRASES, to `TITLE`, to `TAGLINE` (the end card lines) or to a FRAGMENTS entry. A song may set `TEXT_ANIM = "ink"` (for example) as the default for every expression and the title; an entry's own `anim=` wins. Without any of these nothing changes: the classic sparks render pixel for pixel as before.
+
+| anim | What happens |
+|---|---|
+| `"sparks"` (default) | the classic: sparks gather into the words left to right, hold, fly to the star |
+| `"ink"` | each letter is written along its own strokes by a hot nib of light; the fresh ink cools, and while held a soft light keeps flowing along the strokes |
+| `"bloom"` | a seed of light glows at the centre of each letter, then the letter opens outward from it, staggered left to right |
+| `"rise"` | the letters float up through the water line, left to right, with a rippling reflection below the line that fades as they reach their place (`line=` the water line, default HORIZON; raised above the calm third when BOTTOM_CALM is on) |
+| `"ribbon"` | a twisting ribbon of light sweeps across from the left; the words appear behind it and sparks shed from it settle into the letters; the ribbon leaves past the last letter |
+| `"constellation"` | stars appear on the letters, lines of light grow between them, then the letters fill with light; the lines fade to a faint trace while held |
+| `"petal"` | petals fall from above and settle into the letters, which fill in specks where they land (`colors=` a pair, default the song's PETAL_COLORS) |
+| `"snow"` | the same with snowflakes (`colors=`, default the song's SNOW_COLOR) |
+| `"wave"` | the classic gathering, then a ripple of brightness runs through the held words every 3.6 seconds |
+
+```python
+PHRASES = [
+    dict(label="Greeting", lines=["“How are you?”"], size=176, form=5.6, hold=12.0, star=VOICE_IN, anim="ink"),
+    dict(label="Gratitude", lines=["“Thank you.”"], size=150, form=18.4, hold=28.0, star=31.14, anim="bloom"),
+]
+TITLE = dict(label="Healing Concert", lines=["The Words of Mother’s Love"], size=150,
+             form=TITLE_HIT - FORM_DUR, hold=1e9, star=1e9, anim="constellation")
+TAGLINE = dict(text="...", t0=TITLE_HIT + 1.4, t1=TITLE_HIT + 4.0, anim="ink")
+FRAGMENTS = [dict(text="a quiet word of light", t0=100.0, t1=103.0, out=110.0, anim="petal")]
+```
+
+- Timing is unchanged for every animation: each part of the words is fully formed at the same moment as with the classic sparks (so `form`, `hold`, FORM_DUR and the 6 second reading time work as before, and the veil behind the words stays in step), and at `hold` the words dissolve and their sparks fly to the star exactly as before. Fragments dissolve at `out` as before; their sparks drift up.
+- `anim=` on a fragment works only with the default fragment `style` (sparks); the styles in section D keep their own look.
+- Nothing dark is drawn by the animations; the calm lower third stays calm (petals and flakes fall from above the words, the rise starts above the calm third).
+- Choose one animation per expression to suit its words; vary them through a song rather than using one for all. Good matches: `ink` for a promise or prayer, `bloom` for gratitude or a compliment, `rise` over water scenes, `ribbon` for an energetic moment, `constellation` for the title or a night scene, `petal` or `snow` where the song already has petals or snow, `wave` for a long hold on a strong line.
+- An unknown name stops the render with an error that lists the valid names.
+- Engine test song: `engine/songs/test_text_anims.py` (song 03 timeline, every animation once; stills with `audio/test/silent-60s.mp3`).
+- Code: `engine/text_anims.py` (shaders and preparation); `engine/render.py` only hands such texts to it.
+
 ## F. Fixes from the round 2 attack reviews (2026-11-14, branch engine-fix-r2)
 
 Nothing to change in a song file; all song files load as before. What changed, and the new optional settings:
