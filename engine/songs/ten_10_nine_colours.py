@@ -253,13 +253,15 @@ def _s4_up(t):
 
 # S5: over the crest and down the dive to the child, then a slow rise round them
 def _s5_keys():
-    up = _v(0.0, 0.42, 0.0)            # the hands sit low in the picture, the riding words above them
+    up = _v(0.0, 0.30, 0.0)            # the hands sit low in the picture, the riding words above them
     return [(SEC[4], E5 + _v(-4.0, 30.0, 52.0), E5 + _v(-2.0, 27.0, 20.0)),
             (27.30, E5 + _v(-3.5, 26.5, 45.0), H5 + _v(0.0, 4.0, 0.0)),
             (28.15, H5 + _v(-1.4, 7.0, 9.0), H5 + up),
-            (28.85, H5 + _v(-0.25, 0.75, 1.75), H5 + up),
-            (29.75, H5 + _v(0.15, 0.62, 1.40), H5 + up),
-            (30.45, E5 + _v(-0.9, 1.75, 5.4), E5 + _v(0.0, 1.95, 0.0)),
+            (28.85, H5 + _v(-0.25, 0.70, 1.70), H5 + up),
+            (29.40, H5 + _v(-0.05, 0.66, 1.55), H5 + up),
+            (29.95, H5 + _v(0.15, 0.62, 1.45), H5 + up),
+            (30.12, H5 + _v(0.2, 0.75, 1.9), H5 + up + _v(0.0, 0.3, -2.0)),
+            (30.6, E5 + _v(-0.9, 1.75, 5.4), E5 + _v(0.0, 1.95, 0.0)),
             (31.60, E5 + _v(0.2, 1.65, 4.4), E5 + _v(0.0, 1.95, 0.0)),
             (33.40, E5 + _v(1.6, 1.75, 3.9), E5 + _v(0.0, 2.0, 0.0))]
 
@@ -340,14 +342,16 @@ def _rig(focus):
         Path(_s4, SEC[3], SEC[4], blend=0.0, fov=lambda t: 54.0 + 10.0 * _sc(LOOP_T0, LOOP_T1, t),
              up=_s4_up, aperture=lambda t: 0.02 * (1.0 - _sc(LOOP_T0, LOOP_T0 + 0.6, t)),
              focus=fo(lambda t: D4 + _v(0, 1.4, 0))),
-        fly(_s5_keys(), blend=0.0, fov=lambda t: 62.0 - 14.0 * _sc(29.0, 30.6, t), aperture=lambda t: 0.004 + 0.026 * _sc(29.5, 30.5, t),
-            roll=lambda t: -10.0 * np.sin(np.pi * _sc(26.9, 29.6, t)), focus=fo(E5 + _v(0, 1.1, 0))),
+        fly(_s5_keys(), blend=0.0, fov=lambda t: 62.0 - 14.0 * _sc(28.2, 28.9, t),
+            aperture=lambda t: 0.004 + 0.010 * _sc(28.3, 28.9, t) + 0.012 * _sc(30.2, 30.6, t), near=0.03,
+            roll=lambda t: -10.0 * np.sin(np.pi * _sc(26.9, 29.6, t)),
+            focus=fo(lambda t: H5 if t < 30.15 else E5 + _v(0, 1.3, 0))),
         Path(_s6, SEC[5], SEC[6], blend=0.0, fov=38.0, aperture=0.035, focus=fo(F6 + _v(0, 1.55, 0))),
         Path(_s7_breath, SEC[6], 41.9, blend=0.0, fov=48.0, aperture=0.03, focus=fo(G7 + _v(0, 1.2, 0))),
         Path(_s7_orbit, 41.9, BRAID_T0, blend=0.9, fov=52.0, aperture=0.02, focus=fo(G7 + _v(0, 1.2, 0))),
         Path(_s7_braid, BRAID_T0, SEC[7], blend=0.5, up=_s7_up, fov=lambda t: 64.0 + 30.0 * _sc(46.0, 49.4, t),
              aperture=0.0, focus=30.0),
-        fly([(SEC[7], _v(0.0, 62.0, 100.0), _v(0.0, 18.0, 0.0)), (51.4, _v(0.0, 17.0, 64.0), _v(0.0, 14.0, 0.0)),
+        fly([(SEC[7], _v(0.0, 36.0, 96.0), _v(0.0, 24.0, 0.0)), (51.4, _v(0.0, 15.0, 64.0), _v(0.0, 15.0, 0.0)),
              (54.6, _v(0.0, 4.8, 45.5), _v(0.0, 13.6, 0.0)), (TOTAL, _v(0.0, 4.2, 42.0), _v(0.0, 13.6, 0.0))],
             blend=0.0, ease="out", fov=50.0, aperture=0.0, focus=40.0),
     ], blend=0.6, fov=50.0, aperture=0.02, handheld=0.15, min_height=0.3)
@@ -423,8 +427,8 @@ def _bodies():
                gesture=[(SEC[2], TOUCH3 - 0.5, "bow", dict(amount=24.0)),
                         (SEC[2] + 0.3, TOUCH3 - 0.6, "offer", dict(side="R"))],
                effects=[dict(kind="form", t=SEC[2] - 0.2, dur=1.3),
-                        dict(kind="dissolve", t=13.9, dur=3.4, share=0.16, rise=-0.35, life=2.2,
-                             sprites=(("flake", 0.55, 2.4, 1.3),), color="#fff0e2")]),
+                        dict(kind="shed", t=13.8, until=17.2, n=1800, life=1.6, sprite="flake", size=1.6,
+                             speed=0.15, rise=-0.45, spread=0.2, color="#ffc79a", bright=0.8)]),
         b=dict(shape="woman", garment="dress", look="dots", color=COL[INCL], color2="#ffd9ea", points=60000,
                at=(C3[0] + 0.17 + 0.90, C3[2]),
                motion=[(-1e9, "stand"), (15.9, "walk", dict(speed=0.9)), (16.95, "stand", dict(blend=0.8))],
@@ -449,6 +453,8 @@ def _bodies():
     hs = Hands(meet=tuple(H5), t_touch=HANDS_T, axis=90.0, color=COL[GRAT], color2=COL[CONS], approach=2.6,
                apart=0.55, tilt=32.0, points=60000)
     B["hand_gold"], B["hand_rose"] = hs["left"], hs["right"]
+    for hb in (hs["left"], hs["right"]):          # the hands exist only in their section
+        hb.show = (SEC[4], 30.35)
     _REFS["hands_flare"] = hs["flare"]
     # S5 Gratitude: a bow with a hand on the heart, gold glitter dissolving
     B["bower"] = Body("woman", at=(E5[0], E5[2]), facing=6.0, motion="stand", garment="dress", look="glitter",
@@ -744,6 +750,8 @@ def _focus(t, default, ease=0.8):
     """A focus point that racks to the word being read, but only to a word of the current section that is in
     front of the camera (a word left behind at a cut would otherwise pull the focus to almost nothing)."""
     d = np.asarray(default(t) if callable(default) else default, np.float64)
+    if 28.4 < t < 30.2:
+        return d                        # the hands' close-up keeps the hands sharp (the words are sharp anyway)
     cut = max([c for c in CUT_TIMES if c <= t] + [-1e9])
     st = _LAYOUT_SIMPLE.state(t)
     fwd = _unit(np.asarray(st.target) - np.asarray(st.pos))
@@ -788,9 +796,9 @@ HEADS[GRAT].leg(30.15, 30.8, _pen("Gratitude"), bi=0.5, bo=0.4) \
            .leg(31.1, SEC[5], _helix(E5, 2.2, 0.5, 2.6, 1.6, 0.3), bi=0.5, bo=0.0)
 HEADS[RESP].leg(33.9, 35.1, _pen("Respect"), bi=0.5, bo=0.5) \
            .leg(35.4, SEC[6], _weave6, bi=0.5, bo=0.0)
-HEADS[ENC].leg(SEC[6], BRAID_T0, _thread7, bi=0.4, bo=0.0)
+HEADS[ENC].leg(BREATH_END, BRAID_T0, _circle7(ENC), bi=1.4, bo=0.0)
 for _k in range(9):
-    if _k != ENC:
+    if _k != ENC:                         # (the violet one was given its circle above)
         HEADS[_k].leg(BREATH_END, BRAID_T0, _circle7(_k), bi=1.4, bo=0.0)
     HEADS[_k].leg(BRAID_T0, SEC[7] + 0.5, _braid(_k), bi=0.0 if _k != ENC else 0.8, bo=0.0)
 
@@ -933,6 +941,7 @@ class Comets:
 
     def _one(self, out, k, t, a, cut, eye):
         if True:
+            a = a * (1.0 - 0.45 * _sc(48.7, SEC[7] - 0.05, t) * (1.0 - _sc(SEC[7] - 0.05, SEC[7], t)))
             near = self._near(k, t)
             quiet = 0.0 if SEC[4] - 0.05 <= t < SEC[6] else 0.3
             a = a * (quiet + (1.0 - quiet) * near)
@@ -1163,7 +1172,12 @@ def _setup(scene):
     scene.add("lanterns", ScreenClear(PW.KeepClear(Lanterns(), WORDS)))
     b = _bodies()
     for name, body in b.items():
-        body.add(scene, name, mask=False) if name == "listener" else body.add(scene, name)   # sparks, never dark
+        if name == "listener":
+            body.add(scene, name, mask=False)                      # a profile of sparks, never a dark body
+        elif name == "speaker":
+            body.add(scene, name, mask=dict(sky="clouds"))         # a profile filled with sunlit clouds
+        else:
+            body.add(scene, name)
     scene.add("flares", ScreenClear(Flares()))
     scene.add("comets", PW.KeepClear(Comets(), WORDS))
     WORDS.add_to(scene)
@@ -1232,9 +1246,8 @@ P3D = dict(
             dict(t=SEC[3], strength=1.8, rise=0.08, fall=0.28, color=COL[COMP]),
             dict(t=SEC[4], strength=1.8, rise=0.08, fall=0.28, color=COL[CONS]),
             dict(t=SEC[5], strength=1.8, rise=0.08, fall=0.28, color=COL[RESP]),
-            dict(t=SEC[6], strength=0.6, rise=0.12, fall=0.3, color=COL[ENC]),
             dict(t=BREATH_END, strength=0.9, rise=0.08, fall=0.35, color="#ffd9a0"),      # the date bursts
-            dict(t=SEC[7], strength=0.5, rise=0.3, fall=0.3, color="#ffd9a0")],      # a warm glint, never white
+            ],
     motion_blur=0.4,
 )
 
