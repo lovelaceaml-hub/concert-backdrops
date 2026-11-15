@@ -66,7 +66,7 @@ float waveBand(float od, float y){
   if(hw<0.0 || uFlyT>0.0) return 0.0;
   float wp = fract(hw/3.6)*1.7-0.35;
   float yy = (y-uYB.x)/max(uYB.y-uYB.x, 0.01);
-  return exp(-pow((od-wp-0.08*(yy-0.5))/0.075, 2.0))*smoothstep(0.0, 0.8, hw);
+  return exp(-pow((od-wp-0.08*(yy-0.5))/0.09, 2.0))*smoothstep(0.0, 0.8, hw);
 }
 """
 
@@ -136,7 +136,7 @@ void main(){
     rev = smoothstep(u-0.01, u+0.05, f);
     add = uHot*(tx.r*0.9+tx.g*0.7)*exp(-pow((f-u-0.02)/0.035, 2.0));
     float ry = ribbonY(u, uT);
-    float hw = 0.0040+0.0095*abs(cos(u*4.6-uT*0.9));
+    float hw = 0.0055+0.0130*abs(cos(u*4.6-uT*0.9));
     float dy = abs(uv.y-ry);
     float core = exp(-pow(dy/hw, 2.0)*1.3), halo = exp(-dy/(hw*3.5));
     float behind = f-u;
@@ -144,7 +144,7 @@ void main(){
     env *= smoothstep(-0.14, -0.02, u)*(1.0-smoothstep(1.02, 1.16, u));
     float life = 1.0-smoothstep(1.05, 1.40, f);
     float edge = 0.75+0.25*sin(u*40.0-uT*3.0);
-    add += uHot*(core*0.85*edge+halo*0.22)*env*life*calmK(uv.y);
+    add += uHot*(core*1.0*edge+halo*0.28)*env*life*calmK(uv.y);
   } else if(uAnim==5){
     // constellation: the letters fill with light after their stars and lines (drawn separately)
     rev = smoothstep(-0.10, 0.65, uFormT-a);
@@ -154,8 +154,8 @@ void main(){
     float n = vnoise(uv*vec2(uAspect,1.0)*150.0);
     rev = smoothstep(n*0.7-0.35, n*0.7+0.25, uFormT-a);
   } else if(uAnim==8){
-    gain = 1.0+0.55*band; ggain = 1.0+1.6*band;
-    add = uHot*tx.r*0.25*band;
+    gain = 1.0+0.80*band; ggain = 1.0+2.4*band;
+    add = uHot*(tx.r*0.45+tx.g*0.25)*band;
   }
   vec3 c = uCol*tx.r*0.92*gain + uGlowCol*tx.g*(0.15+0.06*uPulse)*ggain;
   o = vec4((c*rev + add)*dis*uAlpha, 1.0);
@@ -186,7 +186,7 @@ void main(){
     float flash = exp(-max(s,0.0)*2.2)*on;
     float fade = mix(1.0, 0.45, smoothstep(1.6, 3.2, s));
     alpha = on*(0.55*fade+0.9*flash)*(0.65+0.35*sin(uT*(2.5+2.0*aSeed.y)+aSeed.z*40.0));
-    size = 6.0+5.0*aSeed.w+6.0*flash;
+    size = 9.0+7.0*aSeed.w+8.0*flash;
     vShape = 3.0;
   } else if(uAnim==1){
     // ink: sparks spring from the nib as it passes, a few drip down and fade
@@ -197,7 +197,7 @@ void main(){
     float sp = exp(-max(dt,0.0)*3.0)*on;
     alpha = on*(0.085+0.95*sp);
     alpha *= mix(1.0, tw*(1.0+0.5*uPulse), 1.0-sp);
-    if(aSeed.w>0.88){ pos.y -= 0.030*(1.0-exp(-max(dt,0.0)*1.1)); alpha *= exp(-max(dt,0.0)*0.6); }
+    if(aSeed.w>0.95){ pos.y -= 0.022*(1.0-exp(-max(dt,0.0)*1.1)); alpha *= exp(-max(dt,0.0)*0.6); }
     pos += hj*on;
     size += 2.5*sp;
   } else if(uAnim==2){
@@ -257,13 +257,13 @@ void main(){
     float s = clamp((uFormT-dep+1.5)/(TAU+1.5), 0.0, 1.0);
     float e = 1.0-(1.0-s)*(1.0-s);
     float since = uFormT-(dep+TAU);
-    bool vis = aSeed.w>(uAnim==6 ? 0.90 : 0.86);
-    vec2 start = tg+vec2((aSeed.y-0.5)*0.30, 0.26+0.30*aSeed.z);
+    bool vis = aSeed.w>(uAnim==6 ? 0.965 : 0.95);
+    vec2 start = tg+vec2((aSeed.y-0.5)*0.36, 0.30+0.34*aSeed.z);
     float sw = (uAnim==6 ? 0.035 : 0.020)*(1.0-e);
     if(vis){
       pos = mix(start, tg, e)+vec2(sw*sin(uT*1.3+aSeed.x*30.0), 0.0);
       alpha = smoothstep(0.0, 0.6, uFormT)*smoothstep(0.0, 0.12, s)*(1.0-smoothstep(0.0, 0.8, since))*0.9;
-      size = uAnim==6 ? (12.0+12.0*aSeed.y*aSeed.y) : (5.0+7.0*aSeed.y*aSeed.y);
+      size = uAnim==6 ? (16.0+16.0*aSeed.y*aSeed.y) : (7.0+10.0*aSeed.y*aSeed.y);
       vShape = uAnim==6 ? 1.0 : 2.0;
       vRot = uT*(0.6+1.2*aSeed.y)*(aSeed.x>0.5 ? 1.0 : -1.0)+aSeed.z*6.283;
       vFlip = 0.3+0.7*abs(cos(uT*(0.9+1.3*aSeed.z)+aSeed.w*9.0));
@@ -366,7 +366,7 @@ void main(){
   float on = smoothstep(g+0.002, g-0.03, vE.x)*step(0.0001, g);
   float tip = exp(-pow((vE.x-g)/0.06, 2.0))*(1.0-step(0.999, g));
   float prof = exp(-vE.y*vE.y*3.2);
-  float lvl = mix(0.85, 0.16, smoothstep(0.5, 2.6, uFormT-arriveAt(vE.z)));
+  float lvl = mix(1.1, 0.18, smoothstep(0.5, 2.6, uFormT-arriveAt(vE.z)));
   float fly = uFlyT>0.0 ? 1.0-smoothstep(0.0, 0.7, uFlyT-vE.w*0.3) : 1.0;
   o = vec4((uColA*on*lvl + uHot*tip*on*1.2)*prof*fly, 1.0);
 }
@@ -449,7 +449,7 @@ def sample_targets(sharp, bounds, seed, nmin=6000, nmax=16000):
     return np.hstack([pts, rng.random((n, 4)).astype("f4")])
 
 
-def constellation(mask, bounds, seed, spacing=11.0):
+def constellation(mask, bounds, seed, spacing=14.0):
     """Stars on the letters (about every 22 px) and the lines between near neighbours that stay on the strokes.
     Returns star points (Nx7 like sample_targets) and the line quads (Mx6 vertices of x, y, along, across, order,
     seed), all in screen fractions with y from the bottom."""
@@ -494,7 +494,7 @@ def constellation(mask, bounds, seed, spacing=11.0):
     x0, x1 = bounds
     od = np.clip((U[:, 0] - x0) / max(x1 - x0, 1e-3), 0, 1)
     stars = np.hstack([U, od[:, None], rng.random((len(U), 4))]).astype("f4")
-    hw = 2.6 / 1080.0
+    hw = 3.4 / 1080.0
     verts = []
     for i, j in edges:
         a, b = U[i], U[j]
