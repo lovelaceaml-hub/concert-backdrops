@@ -12,6 +12,8 @@ What it shows (seconds):
            hands of light cup, open with their fingers moving and offer a light that rises to the Consideration
            light; a painted pair (assets/figures/consideration_b.png) walks in, warped alive (sway, breath, a step
            lilt, a rippling hem and a rising current); a navy fragment; the end card in coral and navy
+Text animations (text_anims.py): "ink" (first fragment), "bloom" (Encouragement), "constellation" (second fragment),
+"ribbon" (the closing title) and "rise" (the end card lines, out of the lake).
 
 Audio: audio/test/s03-newsong-first-60s.mp3 (only its first 30 seconds are used).
 """
@@ -233,23 +235,24 @@ PHRASES = [
     dict(label="Concession", lines=["“Please, after you.”"], size=164, **OFF),
     dict(label="Respect", lines=["“I’d love to hear more", "about your thoughts.”"], size=128, **OFF),
     dict(label="Encouragement", lines=["“I’ll pray (or root) for you.", "Everything will go well.”"], size=100, y=0.28,
-         form=8.6, hold=18.4, star=19.6),
+         form=8.6, hold=18.4, star=19.6, anim="bloom"),
     dict(label="Consideration", lines=["“Can I give you a hand", "with anything?”"], size=128,
          form=1e9, hold=1e9, star=25.2),
     dict(label="Compliment", lines=["“You’re amazing.", "You’re doing great!”"], size=140, **LIT),
 ]
 FORM_DUR = 3.0
 TITLE = dict(label="Healing Concert", lines=["The Words of Mother’s Love"], size=150,
-             form=TITLE_HIT - FORM_DUR, hold=1e9, star=1e9, color=theme.CORAL, glow=theme.GOLD)
+             form=TITLE_HIT - FORM_DUR, hold=1e9, star=1e9, color=theme.CORAL, glow=theme.GOLD,
+             anim="ribbon")
 # short phrases written for this test (not lyrics)
 FRAGMENTS = [
-    dict(text="every step a little lighter", t0=3.4, t1=6.2, out=8.2, dy=0.15, size=80, glow="#ffc48c"),
+    dict(text="every step a little lighter", t0=3.4, t1=6.2, out=8.2, dy=0.15, size=80, glow="#ffc48c", anim="ink"),
     dict(text="a gift of light", t0=19.4, t1=22.0, out=23.8, dy=0.16, size=88, color=theme.NAVY,
-         glow=theme.WHITE_GLOW),
+         glow=theme.WHITE_GLOW, anim="constellation"),
 ]
 TAGLINE = dict(text="Where a mother’s love reaches, peace settles.\nSunday, December 6 · 4:30 PM\n"
                     "The World Mission Society Church of God · 6720 W Sahara Ave, Las Vegas",
-               t0=TITLE_HIT + 0.4, t1=TITLE_HIT + 1.6, color=theme.NAVY, glow=theme.WHITE_GLOW)
+               t0=TITLE_HIT + 0.4, t1=TITLE_HIT + 1.6, color=theme.NAVY, glow=theme.WHITE_GLOW, anim="rise")
 CREDIT = dict(song="Living Figures (engine test)", concert="The Words of Mother’s Love Healing Concert",
               t_in=0.3, t_full=1.1, t_move=2.4, t_rest=3.8, scale=0.34, alpha_rest=0.58,
               margin_x=0.030, margin_top=0.048)
