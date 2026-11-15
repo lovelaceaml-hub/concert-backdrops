@@ -125,7 +125,7 @@ uniform int uMask;
 void main(){
   float au = abs(vU);
   float body = smoothstep(1.12, 0.86, au);
-  float reach = smoothstep(uFront, uFront-0.12, vW);
+  float reach = smoothstep(uFront, uFront-0.12, vW)*smoothstep(1.0, 0.90, vW)*smoothstep(0.0, 0.04, vW);   // melts into the lake
   float calm = 1.0-uCalm*0.6*(1.0-smoothstep(uCalmY-0.07, uCalmY+0.05, vY));
   float k = reach*calm*uAmt;
   float tt = uT*uSpeed;
@@ -157,19 +157,20 @@ void main(){
   float v = (vUV.y-uBot)/H;                          // 0 at the foot, 1 at the lip
   float dx = (vUV.x-uX)*uAspect;
   float hw = uW*(2.4 + 1.6*(1.0-clamp(v,0.0,1.0)));  // wider at the foot
-  float rough = fbm3(vec2(vUV.y*18.0, sign(dx)*3.0))*0.9 - 0.45;
+  float rough = fbm(vec2(vUV.y*26.0, sign(dx)*3.0))*0.8 - 0.40;
   float u = dx/hw;
-  float side = smoothstep(1.0+0.30*rough, 0.70+0.30*rough, abs(u));
-  float topE = smoothstep(1.10+0.05*vnoise(vec2(dx*30.0,2.0)), 1.00, v);
+  float side = smoothstep(1.0+0.30*rough, 0.92+0.30*rough, abs(u));
+  float topE = smoothstep(1.06+0.08*fbm3(vec2(dx*24.0,2.0)), 1.01+0.08*fbm3(vec2(dx*24.0,2.0)), v);
   float foot = smoothstep(-0.12, 0.10, v);
   float a = side*topE*foot*0.80*uAmt;
   // rock: facets and ledges, lit from the open sky on the right, the wet face by the water a little darker
   float n = fbm(vec2(dx*10.0, vUV.y*14.0));
   float ledge = smoothstep(0.45, 0.62, fbm3(vec2(dx*4.0, vUV.y*30.0)));
-  float light = clamp(0.40 + 0.55*u + 0.55*(n-0.5) + 0.25*ledge, 0.0, 1.0);
+  float facet = floor(fbm3(vec2(dx*7.0, vUV.y*9.0))*5.0)/5.0;   // flat rock facets
+  float light = clamp(0.35 + 0.45*u + 0.35*(n-0.5) + 0.35*(facet-0.5) + 0.25*ledge, 0.0, 1.0);
   float wet = exp(-pow(dx/(uW*1.2), 2.0));
   vec3 c = mix(uShade, uLit, light)*(1.0-0.20*wet);
-  c = mix(c, uRim, smoothstep(0.93, 1.03, v)*0.6);   // the lit brow of the cliff
+  c = mix(c, uRim, smoothstep(0.96, 1.04, v)*0.22);   // the brow of the cliff catches a little light
   o = vec4(c*a, a);
 }
 """
