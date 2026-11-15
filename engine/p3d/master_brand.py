@@ -54,7 +54,7 @@ class WordHearts:
             for i in range(per):
                 t0 = w.t_read0 - 0.3 + (w.t_read1 - w.t_read0 + 0.2) * (i + r.random()) / per
                 side = -1.0 if i % 2 == 0 else 1.0
-                self.items.append((w, t0, side * (0.50 + 0.12 * r.random()), r.random() - 0.4, r.random(), col))
+                self.items.append((w, t0, side * (0.64 + 0.12 * r.random()), r.random() - 0.5, r.random(), col))
 
     def sample(self, t, cam=None):
         if cam is None:
@@ -62,7 +62,7 @@ class WordHearts:
         pts, cols, al, sz = [], [], [], []
         for w, t0, sx, sy, sd, col in self.items:
             age = t - t0
-            if not (0.0 <= age <= 2.6) or not (w.t_in <= t <= w.t_out + 0.8):
+            if not (0.0 <= age <= 2.6) or not (w.t_in <= t <= w.t_out):
                 continue
             o, r_, u_, _n = w.frame(t, cam)
             x0, x1, y0, y1 = w.extent()
@@ -73,7 +73,7 @@ class WordHearts:
             ca, sa = np.cos(ang), np.sin(ang)
             sh = self.local @ np.array([[ca, sa], [-sa, ca]])
             p = c[None, :] + size * (sh[:, :1] * r_[None, :] + sh[:, 1:2] * u_[None, :])
-            k = float(ss(0.0, 0.4, age) * (1.0 - ss(1.7, 2.6, age)))
+            k = float(ss(0.0, 0.4, age) * (1.0 - ss(1.7, 2.6, age)) * (1.0 - ss(w.t_read1, w.t_out, t)))
             pts.append(p)
             cols.append(np.broadcast_to(0.7 * col + 0.3 * lin(WHITE), p.shape))
             al.append(np.full(len(p), k))
@@ -144,6 +144,13 @@ def _palm(sgn=1.0, tilt=0.0):
     return pts[i] * (1 - f) + pts[i + 1] * f
 
 
+def _rot(pts, deg, about=(0.0, -0.42)):
+    a = np.radians(deg)
+    c = np.asarray(about)
+    m = np.array([[np.cos(a), np.sin(a)], [-np.sin(a), np.cos(a)]])
+    return (np.asarray(pts) - c) @ m + c
+
+
 SYMBOLS = {
     # waving hand: a palm, four fingers, a thumb, two motion arcs
     "Greeting": [_arc(0.0, -0.10, 0.17, 200, 340), _line(-0.16, -0.16, -0.17, 0.12),
@@ -161,22 +168,25 @@ SYMBOLS = {
     # a hugging face: a smiling face with two open hands
     "Inclusiveness": [_arc(0.0, 0.05, 0.32, 0, 360, 56), _arc(0.0, -0.02, 0.15, 200, 340),
                       _arc(-0.30, -0.25, 0.12, 0, 360, 26), _arc(0.30, -0.25, 0.12, 0, 360, 26)],
-    # "after you": an arm and open palm held out, the way it shows
-    "Concession": [_line(-0.42, -0.12, -0.02, -0.08), _line(-0.02, -0.08, 0.26, -0.02),
-                   _line(-0.02, -0.12, 0.22, -0.12), _line(-0.02, -0.04, 0.12, 0.10),
-                   _arc(0.05, 0.10, 0.34, 160, 20, 30), _line(0.37, 0.22, 0.37, 0.07, 6), _line(0.37, 0.07, 0.24, 0.10, 6)],
-    # a hand cupped at the ear, sound coming in
-    "Respect": [_arc(0.08, 0.02, 0.22, 100, 290, 30), _arc(0.08, 0.04, 0.10, 120, 280, 18),
-                _arc(0.24, 0.0, 0.20, -80, 80, 24), _line(0.40, -0.06, 0.48, -0.40),
-                _arc(-0.34, 0.02, 0.10, 120, 240, 12), _arc(-0.34, 0.02, 0.20, 125, 235, 16)],
+    # "after you": a doorway, and an open hand held out toward it
+    "Concession": [np.concatenate([_line(0.12, -0.42, 0.12, 0.12, 12), _arc(0.27, 0.12, 0.15, 180, 0, 20),
+                                   _line(0.42, 0.12, 0.42, -0.42, 12)]),
+                   _line(-0.48, -0.26, -0.20, -0.16, 8), _line(-0.20, -0.16, 0.02, -0.10, 8),
+                   _line(-0.20, -0.20, 0.00, -0.20, 6), _line(-0.18, -0.12, -0.02, -0.02, 6),
+                   _line(-0.30, -0.20, -0.26, -0.06, 5)],
+    # a hand cupped behind the ear, the sound coming in
+    "Respect": [_arc(0.0, 0.04, 0.17, 95, 285, 26), _arc(0.02, 0.05, 0.07, 110, 260, 14),
+                _arc(0.10, 0.02, 0.28, -75, 75, 26), _line(0.17, 0.29, 0.10, 0.40, 5), _line(0.24, 0.24, 0.20, 0.36, 5),
+                _line(0.29, 0.16, 0.30, 0.28, 5),
+                _arc(-0.05, 0.04, 0.32, 150, 210, 10), _arc(-0.05, 0.04, 0.44, 155, 205, 12)],
     # praying hands
     "Encouragement": [_palm(1.0), _palm(-1.0), _line(-0.18, -0.42, 0.18, -0.42, 8)],
     # two hands holding a heart
     "Consideration": [heart_curve(48) * 0.42 + np.array([0.0, 0.10]),
                       _arc(-0.18, -0.08, 0.26, 180, 300, 26), _arc(0.18, -0.08, 0.26, 240, 360, 26)],
     # clapping hands with a little burst
-    "Compliment": [_palm(1.0, 22.0) + np.array([0.06, -0.06]), _palm(-1.0, 22.0) + np.array([-0.06, -0.06]),
-                   _line(0.0, 0.46, 0.0, 0.56, 4), _line(-0.14, 0.42, -0.20, 0.50, 4), _line(0.14, 0.42, 0.20, 0.50, 4)],
+    "Compliment": [_rot(_palm(1.0), 14.0) + np.array([-0.03, 0.0]), _rot(_palm(-1.0), -14.0) + np.array([0.03, 0.0]),
+                   _line(0.0, 0.50, 0.0, 0.62, 4), _line(-0.16, 0.46, -0.23, 0.55, 4), _line(0.16, 0.46, 0.23, 0.55, 4)],
 }
 
 

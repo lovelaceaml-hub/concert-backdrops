@@ -73,6 +73,7 @@ def billow(rng, center, width, height, n=220, towers=5, flat=0.18):
     base = flat * height
     keep = ~inside & (p[:, 1] > base * rng.uniform(0.0, 1.0, m))
     p, li = p[keep][:n], li[keep][:n]
+    p[:, 1] *= min(1.0, height / max(0.55 * width, 1e-6))      # flatter banks when asked
     pts = np.asarray([cx, cy, cz]) + p
     top = np.clip((p[:, 1]) / max(float(np.max(p[:, 1])), 1e-6), 0.0, 1.0)
     return pts, top, rad[li]
@@ -88,9 +89,9 @@ class Billows:
     through)."""
     wants_camera = True
 
-    def __init__(self, clouds, gain=None, seed=11, top="#ffe2a8", warm="#ffbe7a", rose="#ff93ad", lilac="#a98cff",
-                 core="#fff1d8", sun_az=180.0, alpha=0.11, puff=0.42, drift=(0.6, 0.0, 0.0), sparkle=0.0,
-                 body=0.35):
+    def __init__(self, clouds, gain=None, seed=11, top="#ffd890", warm="#ffb060", rose="#f0708e", lilac="#7a6ae0",
+                 core="#ffe8c0", sun_az=180.0, alpha=0.11, puff=0.42, drift=(0.6, 0.0, 0.0), sparkle=0.0,
+                 body=0.35, shade=0.55):
         rng = np.random.default_rng(seed)
         P, U, S, B, R = [], [], [], [], []
         for c in clouds:
@@ -121,6 +122,11 @@ class Billows:
         u = self.up[:, None] ** 0.8
         self.color = hi * u + low * (1.0 - u)
         self.color = self.color * (0.75 + 0.5 * self.sunny[:, None])
+        # the side away from the light is dimmer (clouds have depth); far from the sun's azimuth a whole cloud
+        # is in shade
+        caz = np.arctan2(cen[:, 0], cen[:, 2])
+        off = np.abs(((caz - a + np.pi) % TAU) - np.pi)
+        self.lit = (1.0 - shade) + shade * (0.55 * self.sunny + 0.45 * np.clip(1.0 - off / np.pi, 0.0, 1.0) ** 1.5)
         self.core = core
         self.cen = cen
         self._gain = gain
@@ -138,7 +144,7 @@ class Billows:
             return None
         sh = self.drift[None] * t
         pos = self.pos + sh
-        al = self.alpha * self.bright * g * (0.55 + 0.45 * self.up)
+        al = self.alpha * self.bright * g * (0.55 + 0.45 * self.up) * self.lit
         size = self.size
         col, seed = self.color, self.seed
         if cam is not None:

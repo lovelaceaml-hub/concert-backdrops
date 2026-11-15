@@ -85,8 +85,10 @@ GLOWC = dict(COL, Respect="#8a9cff", Compliment="#6f86d8")
 NINE = [COL[k] for k in PW.LABELS]
 NINE_GLOW = [GLOWC[k] for k in PW.LABELS]
 
-CRYSTAL = dict(look=dict(name="glitter", seams=0.6), color="#cfe8ff", color2="#ffffff", bright=1.3)
-GOLD = dict(look="glitter", color="#ffcf7a", color2="#fff1d6", bright=1.15)
+# The two radiant looks. Until STYLES delivers crystal_light (coordinator), both are warm gold glitter: a deep
+# gold, and a lighter gold for the second person of a pair, so the two stay apart.
+GOLD = dict(look="glitter", color="#f2a640", color2="#ffdc96", bright=1.45)
+CRYSTAL = dict(look=dict(name="glitter", seams=0.6), color="#ffc664", color2="#fff0c8", bright=1.45)
 
 
 def _v(x, y, z):
@@ -128,10 +130,10 @@ class Path(Move):
 # =============================================================================================================
 # GEOGRAPHY (metres, y up, the sea of light is y = 0; the light of dawn lies toward -z)
 # =============================================================================================================
-D0 = _v(0.0, 0.0, 8.0)                  # where the drop lands
-H0 = _v(0.0, 50.4, 8.0)                 # Mother's cupped hands, high above it
+D0 = _v(0.0, 0.0, 7.6)                  # where the drop lands
+H0 = _v(0.0, 50.75, 7.6)                # Mother's cupped hands, high above it
 HAND_S = 4.2                            # their scale (hands of light, larger than life)
-C0 = _v(0.0, 51.25, 10.7)              # frame 0's camera
+C0 = _v(0.0, 51.45, 10.9)              # frame 0's camera, in front of the hands
 P1 = _v(-2.4, 0.0, -6.0)               # Greeting: the pair
 P1b = _v(3.6, 0.0, -9.5)               # Gratitude: the gold woman under the pouring light
 P2 = _v(0.0, 0.0, -40.0)               # Apology and Inclusiveness: the two kneeling in the rain, then the embrace
@@ -160,7 +162,7 @@ def drop_pos(t):
 def _s0(t):
     """Frame 0 to the landing: hold on the hands under the title, tilt down after the falling drop, dive with
     it through the clouds and level out over the sea as it lands."""
-    look0 = _v(0.0, 46.6, -40.0)
+    look0 = _v(0.0, 54.2, -40.0)            # looking a little up: the title stands on the deep sky
     if t < 2.9:
         return C0 + _v(0.0, 0.02 * t, -0.03 * t), look0
     d = drop_pos(t)
@@ -176,22 +178,23 @@ def _s0(t):
 
 
 def _cam_keys_s1():
-    a = P1 + _v(0.0, 1.25, 0.0)
-    b = P1b + _v(0.0, 1.30, 0.0)
+    a = P1 + _v(0.0, 1.30, 0.0)
+    b = P1b + _v(0.0, 1.20, 0.0)
     return [(6.84, D0 + _v(2.6, 1.7, 13.4), D0 + _v(-1.0, 0.8, -4.0)),
-            (7.6, P1 + _v(3.4, 1.6, 7.2), a),
-            (9.9, P1 + _v(2.6, 1.55, 6.1), a + _v(0.1, 0.0, 0.0)),
-            (10.7, P1b + _v(-1.6, 1.55, 6.2), b),
-            (13.0, P1b + _v(-1.1, 1.45, 5.0), b + _v(0.0, -0.05, 0.0))]
+            (7.7, P1 + _v(2.0, 1.75, 4.6), a),
+            (9.9, P1 + _v(1.5, 1.70, 3.7), a + _v(0.05, 0.0, 0.0)),
+            (10.75, P1b + _v(-1.0, 1.70, 3.4), b),
+            (13.0, P1b + _v(-0.7, 1.62, 2.8), b + _v(0.0, -0.03, 0.0))]
 
 
 def _cam_keys_s2():
-    c = P2 + _v(0.0, 0.85, 0.0)
-    return [(13.3, P1b + _v(-1.0, 1.6, 4.6), P1b + _v(0.0, 1.3, -4.0)),
-            (14.4, P2 + _v(3.6, 1.35, 6.6), c),
-            (16.8, P2 + _v(2.9, 1.25, 5.4), c),
-            (18.3, P2 + _v(1.8, 1.45, 4.6), c + _v(0.0, 0.45, 0.0)),
-            (19.6, P2 + _v(1.0, 1.25, 4.1), c + _v(0.0, 0.40, -3.0))]
+    c = P2 + _v(0.0, 0.80, 0.0)
+    e = P2 + _v(0.0, 1.30, 0.0)
+    return [(13.3, P1b + _v(-0.9, 1.8, 3.2), P1b + _v(0.0, 1.3, -4.0)),
+            (14.4, P2 + _v(0.9, 1.45, 4.4), c),
+            (16.6, P2 + _v(0.6, 1.35, 3.7), c),
+            (18.2, P2 + _v(0.5, 2.05, 3.3), e + _v(0.0, -0.1, 0.0)),
+            (19.6, P2 + _v(0.3, 1.95, 2.9), e + _v(0.0, -0.05, -1.0))]
 
 
 RIVER = [P2 + _v(0.0, 0.0, -1.0), P2 + _v(1.5, 0.0, -14.0), P2 + _v(-2.0, 0.0, -30.0), P2 + _v(1.0, 0.0, -44.0),
@@ -201,40 +204,40 @@ RIVER = [P2 + _v(0.0, 0.0, -1.0), P2 + _v(1.5, 0.0, -14.0), P2 + _v(-2.0, 0.0, -
 
 
 def _cam_keys_s3():
-    door = P3 + _v(0.0, 1.7, 0.0)
-    tree = P3b + _v(0.0, 1.0, 0.0)
-    return [(19.85, P2 + _v(0.8, 1.2, 3.6), P2 + _v(0.0, 1.0, -6.0)),
-            (20.25, P2 + _v(0.6, 0.9, -12.0), P2 + _v(0.0, 0.9, -40.0)),
-            (20.75, P3 + _v(-1.4, 1.3, 13.0), door),
-            (21.4, P3 + _v(-1.2, 1.45, 8.6), door),
-            (23.3, P3 + _v(-0.6, 1.55, 6.6), door + _v(0.0, 0.0, -1.0)),
+    door = P3 + _v(0.3, 1.5, 0.0)
+    tree = P3b + _v(0.0, 0.85, 0.0)
+    return [(19.85, P2 + _v(0.2, 1.4, 2.8), P2 + _v(0.0, 1.0, -6.0)),
+            (20.25, P2 + _v(0.6, 1.6, -12.0), P2 + _v(0.0, 1.2, -40.0)),
+            (20.75, P3 + _v(-1.2, 1.5, 11.0), door),
+            (21.4, P3 + _v(-0.9, 1.60, 7.6), door),
+            (23.3, P3 + _v(-0.5, 1.60, 6.4), door + _v(0.0, 0.0, -1.0)),
             (23.85, P3 + _v(0.0, 1.55, 0.5), P3 + _v(0.0, 1.4, -8.0)),
-            (24.5, P3b + _v(2.4, 1.15, 5.2), tree),
-            (26.6, P3b + _v(1.9, 1.10, 4.3), tree + _v(0.0, 0.05, 0.0))]
+            (24.5, P3b + _v(1.7, 1.25, 3.6), tree),
+            (26.6, P3b + _v(1.3, 1.20, 3.0), tree + _v(0.0, 0.05, 0.0))]
 
 
 def _cam_keys_s4():
-    c = P4 + _v(0.0, 1.0, 0.0)
-    return [(26.79, P4 + _v(0.5, 1.0, 17.0), P4 + _v(0.0, 6.5, -6.0)),
-            (27.9, P4 + _v(1.6, 1.25, 8.5), c + _v(0.0, 0.6, 0.0)),
-            (31.3, P4 + _v(2.2, 1.35, 5.6), c + _v(0.0, 0.3, 0.0)),
-            (33.36, P4 + _v(3.0, 2.6, 7.0), c + _v(0.0, 6.0, -6.0))]
+    c = P4 + _v(0.0, 0.95, 0.0)
+    return [(26.79, P4 + _v(0.5, 1.0, 15.0), P4 + _v(0.0, 6.5, -6.0)),
+            (27.9, P4 + _v(1.2, 1.35, 6.0), c + _v(0.0, 0.5, 0.0)),
+            (31.3, P4 + _v(1.5, 1.45, 3.9), c + _v(0.0, 0.2, 0.0)),
+            (33.36, P4 + _v(2.6, 2.4, 6.0), c + _v(0.0, 6.0, -6.0))]
 
 
 def _cam_keys_s5():
-    c = P5 + _v(0.0, 1.0, 0.0)
+    c = P5 + _v(0.0, 0.95, 0.0)
     d = P5b + _v(0.0, 1.15, 0.0)
-    return [(33.36, P5 + _v(-2.0, 1.2, 12.0), c + _v(0.0, 2.0, 0.0)),
-            (34.3, P5 + _v(-1.2, 1.3, 6.4), c),
-            (36.6, P5 + _v(-0.4, 1.35, 5.6), c),
-            (37.3, P5b + _v(-3.0, 1.5, 7.0), d),
-            (40.0, P5b + _v(-1.4, 1.6, 6.0), d + _v(0.0, 0.2, 0.0))]
+    return [(33.36, P5 + _v(-1.6, 1.3, 10.0), c + _v(0.0, 2.0, 0.0)),
+            (34.3, P5 + _v(-0.9, 1.45, 4.8), c),
+            (36.6, P5 + _v(-0.3, 1.45, 4.1), c),
+            (37.3, P5b + _v(-2.2, 1.6, 5.4), d),
+            (40.0, P5b + _v(-1.1, 1.65, 4.6), d + _v(0.0, 0.2, 0.0))]
 
 
 def _s6(t):
     """The breath: still, the camera drifts back and the gaze lifts to the sky where the date is written."""
     u = sc(40.0, 42.4, t)
-    p0, q0 = P5b + _v(-1.4, 1.6, 6.0), P5b + _v(0.0, 1.35, 0.0)
+    p0, q0 = P5b + _v(-1.1, 1.65, 4.6), P5b + _v(0.0, 1.35, 0.0)
     p1, q1 = P5b + _v(-0.6, 1.8, 9.5), P5b + _v(0.0, 4.5, -12.0)
     return lerp(p0, p1, u), lerp(q0, q1, u)
 
@@ -322,7 +325,7 @@ def _s8(t):
         u = sc(SEC[7] - 0.3, 53.4, x)
         d = RG * (6.5 - 2.4 * u)
         az = np.radians(-60.0 + 70.0 * u)
-        el = np.radians(16.0 - 10.0 * u)
+        el = np.radians(-11.0 + 8.0 * u)            # from a little below: the heavens behind the world
         return GC + d * (np.cos(el) * (np.cos(az) * LOGO_N + np.sin(az) * _v(1.0, 0.0, 0.0)) + np.sin(el) * UP), GC
 
     th = np.tan(np.radians(END_FOV) * 0.5)
@@ -434,61 +437,65 @@ CAMERA = _rig(_focus)
 # THE WORLD: heavenly looks, section by section (never dark, never cold)
 # =============================================================================================================
 LOOKS = dict(
-    opening=dict(base="dawn", sky_top="#16185a", sky_mid="#5c4896", sky_hor="#f2a478", sun_color="#ffd49a",
-                 sun_int=0.9, sun_el=-1.0, sun_disc=0.0, sun_glow=0.8, stars=0.75, milky=0.3, clouds=0.0,
-                 haze=0.45, haze_color="#d08a86", mist=0.0, hills=0.0, water="#100a24", mirror=1.0,
-                 ripple=0.2, rays=0.35, dust=0.3, dust_color="#ffe0a8", dust_color2="#ffc0c8", bokeh=0.3,
-                 keep_hue=0.7),
-    shore=dict(base="dawn", sky_top="#191b5e", sky_mid="#6e4a94", sky_hor="#ffaa78", sun_color="#ffd49a",
-               sun_int=0.95, sun_el=-1.5, sun_disc=0.0, sun_glow=0.85, stars=0.55, milky=0.25, clouds=0.30,
-               haze=0.5, haze_color="#d48c84", mist=0.25, mist_color="#c48a90", hills=0.0, water="#140c26",
-               mirror=1.0, ripple=0.25, rays=0.45, dust=0.6, dust_color="#ffe0a8", dust_color2="#ffc0c8",
-               bokeh=0.6, keep_hue=0.7),
-    rain=dict(base="dusk", sky_top="#15164c", sky_mid="#58428a", sky_hor="#d8889a", sun_color="#ffb8a0",
-              sun_int=0.6, sun_el=-3.5, sun_disc=0.0, sun_glow=0.9, stars=0.45, milky=0.2, clouds=0.45,
-              haze=0.55, haze_color="#a87090", mist=0.45, mist_color="#9a7096", hills=0.0, water="#100a22",
-              mirror=1.0, ripple=0.35, rays=0.1, dust=0.4, dust_color="#e8e8ff", dust_color2="#ffd0d8",
-              bokeh=0.5, keep_hue=0.7),
-    sunrise=dict(base="sunrise", sky_top="#1c1d62", sky_mid="#8a4e8e", sky_hor="#ffb468", sun_color="#ffd890",
-                 sun_int=1.0, sun_el=2.5, sun_disc=5.0, sun_glow=0.75, stars=0.2, milky=0.0, clouds=0.45,
-                 haze=0.55, haze_color="#e09a7a", mist=0.30, mist_color="#d89a84", hills=0.0, water="#1a0e26",
-                 mirror=1.0, ripple=0.25, rays=0.75, dust=0.6, dust_color="#ffe2a8", dust_color2="#ffcfa8",
-                 bokeh=0.6, keep_hue=0.7, exposure=0.95),
-    river=dict(base="sunrise", sky_top="#1a1c66", sky_mid="#7a5098", sky_hor="#ffbe82", sun_color="#ffe0a0",
-               sun_int=0.95, sun_el=3.5, sun_disc=4.0, sun_glow=0.7, stars=0.15, milky=0.0, clouds=0.40,
-               haze=0.5, haze_color="#e0a07a", mist=0.2, mist_color="#d8a088", hills=0.0, water="#160e2a",
-               mirror=1.0, ripple=0.3, rays=0.6, dust=0.6, dust_color="#ffe6b0", dust_color2="#ffd0b0",
-               bokeh=0.6, keep_hue=0.7, exposure=0.95),
-    cathedral=dict(base="dusk", sky_top="#120e3e", sky_mid="#45307e", sky_hor="#e09a7a", sun_color="#ffcf8a",
-                   sun_int=0.8, sun_el=-2.0, sun_disc=0.0, sun_glow=0.8, stars=0.7, milky=0.5, clouds=0.25,
-                   haze=0.45, haze_color="#8a5a80", mist=0.35, mist_color="#7a5a8a", hills=0.0, water="#0e0a22",
-                   mirror=1.0, ripple=0.2, rays=0.2, dust=0.7, dust_color="#ffe2a8", dust_color2="#e0c8ff",
-                   bokeh=0.7, keep_hue=0.7),
-    rivers=dict(base="predawn", sky_top="#0e1046", sky_mid="#3c2c80", sky_hor="#d4889a", sun_color="#ffc0a0",
-                sun_int=0.6, sun_el=-3.0, sun_disc=0.0, sun_glow=0.9, stars=1.0, milky=0.8, clouds=0.15,
-                haze=0.45, haze_color="#7a5088", mist=0.25, mist_color="#6a5090", hills=0.0, water="#0c0a24",
+    # above the sea of clouds at twilight: a deep blue-violet zenith, a band of gold and coral low down
+    opening=dict(base="dawn", sky_top="#0d1250", sky_mid="#3a2e86", sky_hor="#e88a6a", sun_color="#ffc88a",
+                 sun_int=0.7, sun_el=-1.5, sun_disc=0.0, sun_glow=0.65, stars=0.85, milky=0.4, clouds=0.0,
+                 haze=0.3, haze_color="#9a5a7a", mist=0.0, hills=0.0, water="#0a0820", mirror=1.0,
+                 ripple=0.2, rays=0.25, dust=0.3, dust_color="#ffe0a8", dust_color2="#ffc0c8", bokeh=0.3,
+                 keep_hue=0.8),
+    # the sea of light: deep and clear, the warm light of the dawn off to one side
+    shore=dict(base="dawn", sky_top="#0b1046", sky_mid="#2c2672", sky_hor="#d4766a", sun_color="#ffc890",
+               sun_int=0.7, sun_el=-1.5, sun_disc=0.0, sun_glow=0.6, stars=0.75, milky=0.35, clouds=0.25,
+               haze=0.3, haze_color="#7a4a6a", mist=0.12, mist_color="#6a4a7a", hills=0.0, water="#070818",
+               mirror=1.0, ripple=0.25, rays=0.3, dust=0.6, dust_color="#ffe0a8", dust_color2="#ffc0c8",
+               bokeh=0.6, keep_hue=0.8),
+    rain=dict(base="dusk", sky_top="#0a0c3a", sky_mid="#28226a", sky_hor="#9a5a7a", sun_color="#ffb8a0",
+              sun_int=0.45, sun_el=-3.5, sun_disc=0.0, sun_glow=0.7, stars=0.6, milky=0.3, clouds=0.35,
+              haze=0.3, haze_color="#5a3a6a", mist=0.25, mist_color="#4a3a6a", hills=0.0, water="#060716",
+              mirror=1.0, ripple=0.35, rays=0.05, dust=0.4, dust_color="#e8e8ff", dust_color2="#ffd0d8",
+              bokeh=0.5, keep_hue=0.8),
+    # the embrace: the dawn breaks to the side, a warm amber glow over the sea
+    sunrise=dict(base="sunrise", sky_top="#0c1048", sky_mid="#3c2670", sky_hor="#d8703e", sun_color="#ffb860",
+                 sun_int=0.55, sun_el=0.5, sun_disc=2.0, sun_glow=0.45, stars=0.4, milky=0.15, clouds=0.3,
+                 haze=0.22, haze_color="#8a4a4a", mist=0.12, mist_color="#6a4060", hills=0.0, water="#080716",
+                 mirror=1.0, ripple=0.25, rays=0.35, dust=0.6, dust_color="#ffe2a8", dust_color2="#ffcfa8",
+                 bokeh=0.6, keep_hue=0.8, exposure=0.9),
+    river=dict(base="sunrise", sky_top="#0e1254", sky_mid="#3e2c80", sky_hor="#f09a5a", sun_color="#ffd090",
+               sun_int=0.75, sun_el=2.0, sun_disc=2.5, sun_glow=0.55, stars=0.3, milky=0.1, clouds=0.35,
+               haze=0.3, haze_color="#9a5a5a", mist=0.1, mist_color="#8a5a6a", hills=0.0, water="#0a0a1c",
+               mirror=1.0, ripple=0.3, rays=0.4, dust=0.6, dust_color="#ffe6b0", dust_color2="#ffd0b0",
+               bokeh=0.6, keep_hue=0.8, exposure=0.92),
+    cathedral=dict(base="dusk", sky_top="#080a34", sky_mid="#241c62", sky_hor="#b0606a", sun_color="#ffcf8a",
+                   sun_int=0.5, sun_el=-2.0, sun_disc=0.0, sun_glow=0.6, stars=0.9, milky=0.6, clouds=0.2,
+                   haze=0.3, haze_color="#5a3a6a", mist=0.25, mist_color="#4a3a6a", hills=0.0, water="#060616",
+                   mirror=1.0, ripple=0.2, rays=0.15, dust=0.7, dust_color="#ffe2a8", dust_color2="#e0c8ff",
+                   bokeh=0.7, keep_hue=0.8),
+    rivers=dict(base="predawn", sky_top="#080a3a", sky_mid="#22206a", sky_hor="#a05a80", sun_color="#ffc0a0",
+                sun_int=0.45, sun_el=-3.0, sun_disc=0.0, sun_glow=0.7, stars=1.0, milky=0.8, clouds=0.12,
+                haze=0.3, haze_color="#4a3a72", mist=0.15, mist_color="#4a3a7a", hills=0.0, water="#060618",
                 mirror=1.0, ripple=0.2, rays=0.0, dust=0.6, dust_color="#ffe2a8", dust_color2="#c8d0ff",
-                bokeh=0.6, keep_hue=0.7),
-    breath=dict(base="predawn", sky_top="#0c0e40", sky_mid="#32307a", sky_hor="#b87898", sun_color="#ffc0a0",
-                sun_int=0.5, sun_el=-3.5, sun_disc=0.0, sun_glow=0.9, stars=1.0, milky=0.9, clouds=0.0,
-                haze=0.4, haze_color="#6a5088", mist=0.2, mist_color="#5a5090", hills=0.0, water="#0a0a22",
+                bokeh=0.6, keep_hue=0.8),
+    breath=dict(base="predawn", sky_top="#070a36", sky_mid="#1e1e62", sky_hor="#8a5a86", sun_color="#ffc0a0",
+                sun_int=0.4, sun_el=-3.5, sun_disc=0.0, sun_glow=0.7, stars=1.0, milky=0.9, clouds=0.0,
+                haze=0.3, haze_color="#3e3a72", mist=0.12, mist_color="#3e3a7a", hills=0.0, water="#050616",
                 mirror=1.0, ripple=0.05, rays=0.0, dust=0.4, dust_color="#ffe2a8", dust_color2="#c8d0ff",
-                bokeh=0.4, keep_hue=0.7),
-    ascent=dict(base="sunrise", sky_top="#1e2a78", sky_mid="#8a5e9e", sky_hor="#ffc488", sun_color="#ffe4a8",
-                sun_int=1.0, sun_el=6.0, sun_disc=4.0, sun_glow=0.7, stars=0.1, milky=0.0, clouds=0.3,
-                haze=0.45, haze_color="#e8b090", mist=0.0, hills=0.0, water="#1c1430", mirror=0.8,
-                rays=0.8, dust=0.5, dust_color="#fff0d0", dust_color2="#ffe0b0", bokeh=0.4, keep_hue=0.7),
-    radiant=dict(base="golden", sky_top="#2c58b8", sky_mid="#7ea2e0", sky_hor="#ffdcb0", sun_color="#fff0d0",
-                 sun_int=0.9, sun_el=12.0, sun_disc=3.0, sun_glow=0.65, stars=0.0, milky=0.0, clouds=0.2,
-                 haze=0.45, haze_color="#f0d0b0", mist=0.0, hills=0.0, water="#2a3050", rays=0.5, dust=0.4,
-                 dust_color="#fff4dc", dust_color2="#ffe0b0", bokeh=0.3, keep_hue=0.7),
-    heaven=dict(base="night", sky_top="#070a30", sky_mid="#141c5e", sky_hor="#4a3a86", sun_color="#c8b8ff",
+                bokeh=0.4, keep_hue=0.8),
+    ascent=dict(base="sunrise", sky_top="#121c66", sky_mid="#4c3a8a", sky_hor="#f0a060", sun_color="#ffd890",
+                sun_int=0.8, sun_el=5.0, sun_disc=3.0, sun_glow=0.55, stars=0.2, milky=0.0, clouds=0.25,
+                haze=0.3, haze_color="#b07a6a", mist=0.0, hills=0.0, water="#100c24", mirror=0.8,
+                rays=0.6, dust=0.5, dust_color="#fff0d0", dust_color2="#ffe0b0", bokeh=0.4, keep_hue=0.8,
+                exposure=0.92),
+    radiant=dict(base="golden", sky_top="#1e48a8", sky_mid="#5e86d0", sky_hor="#ffcf9a", sun_color="#fff0d0",
+                 sun_int=0.75, sun_el=12.0, sun_disc=2.5, sun_glow=0.55, stars=0.0, milky=0.0, clouds=0.2,
+                 haze=0.35, haze_color="#e0c0a0", mist=0.0, hills=0.0, water="#1a2448", rays=0.45, dust=0.4,
+                 dust_color="#fff4dc", dust_color2="#ffe0b0", bokeh=0.3, keep_hue=0.8, exposure=0.9),
+    heaven=dict(base="night", sky_top="#060a30", sky_mid="#121a5a", sky_hor="#3a3486", sun_color="#c8b8ff",
                 sun_int=0.0, sun_el=40.0, sun_disc=0.0, stars=1.0, milky=0.9, clouds=0.0, haze=0.2,
                 haze_color="#3a3a86", mist=0.0, hills=0.0, water="#060820", mirror=0.4, rays=0.0, dust=0.15,
-                bokeh=0.15, keep_hue=0.7),
-    pastel=dict(base="cream", sky_top="#9cc8f0", sky_mid="#f2e2d8", sky_hor="#fde0cc", mist=0.25,
-                mist_color="#fbe6dc", haze_color="#f4e2d6", clouds=0.25, dust=0.3, rays=0.0, sun_el=40.0,
-                sun_disc=0.0, hills=0.0, water="#a8c8e8", keep_hue=0.7),
+                bokeh=0.15, keep_hue=0.8),
+    pastel=dict(base="cream", sky_top="#8ec0ec", sky_mid="#efdcd6", sky_hor="#fbd8c4", mist=0.2,
+                mist_color="#f6dcd2", haze_color="#efd8cc", clouds=0.25, dust=0.3, rays=0.0, sun_el=40.0,
+                sun_disc=0.0, hills=0.0, water="#98bce0", keep_hue=0.8, exposure=0.92),
 )
 
 LOOK_KEYS = [(0.0, "opening"), (5.6, "shore", 1.6), (SEC[2], "rain", 1.4), (17.6, "sunrise", 2.2),
@@ -498,16 +505,33 @@ LOOK_KEYS = [(0.0, "opening"), (5.6, "shore", 1.6), (SEC[2], "rain", 1.4), (17.6
 WORLD = dict(
     looks=LOOKS,
     look=LOOK_KEYS,
-    sun_az=180.0,
+    sun_az=228.0,              # the dawn lies ahead and to the left: its glow never stands behind the people
     lanterns=0.0,
     arch=None,
     react=dict(beat=0.3, level=0.2),
 )
 
 
-def _shaft(at, t0, t1, radius=1.0, strength=0.75, color="#ffd89a", top=26.0):
-    return dict(base=(float(at[0]), float(at[2])), radius=radius, top=top, spread=-0.4, color=color,
-                strength=lambda t: strength * sc(t0, t0 + 0.8, t) * (1.0 - sc(t1 - 0.5, t1, t)))
+def _shaft(segs, radius=1.0, color="#ffd89a", top=26.0):
+    """One of the world's four shafts of light, moved from place to place over time: segs is a list of
+    (place, t0, t1, strength); it fades in and out at each."""
+    segs = sorted(segs, key=lambda s: s[1])
+
+    def which(t):
+        best = segs[0]
+        for sg in segs:
+            if t >= sg[1] - 1.0:
+                best = sg
+        return best
+
+    def base(t):
+        p = which(t)[0]
+        return (float(p[0]), float(p[2]))
+
+    def strength(t):
+        p, t0, t1, k = which(t)
+        return k * sc(t0, t0 + 0.8, t) * (1.0 - sc(t1 - 0.5, t1, t))
+    return dict(base=base, radius=radius, top=top, spread=-0.4, color=color, strength=strength)
 
 
 # =============================================================================================================
@@ -522,23 +546,25 @@ def _view(at, cam_pos):
 
 
 def _mother_hands():
-    """Heavenly Mother's hands of light (never more of her): cupped together, palms up, holding the drop; they
-    part a little and open on the release."""
+    """Heavenly Mother's hands of light (never more of her): held out toward us, cupped together, palms up,
+    holding the drop; on the release they part a little and tip forward, and the drop slips away."""
     from p3d.body import Body
     out = []
     for j, side in enumerate(("L", "R")):
-        sg = -1.0 if side == "L" else 1.0
+        sg = -1.0 if side == "L" else 1.0          # L: the hand on the picture's left (fingers toward us)
 
-        def at(t, sg=sg):
+        def at(t, sg=sg, j=j):
             o = sc(RELEASE_T - 0.25, RELEASE_T + 0.6, t)
-            return H0 + _v(sg * (0.035 + 0.05 * o) * HAND_S, -0.02 * HAND_S * o, 0.0) + \
+            return H0 + _v(sg * (0.034 + 0.05 * o) * HAND_S, -0.03 * HAND_S * o, 0.0) + \
                 _v(0.0, 0.004 * HAND_S * np.sin(1.1 * t + j), 0.0)
-        aim = _unit(_v(-sg * 0.30, 0.10, -1.0))
-        palm = _unit(_v(-sg * 0.35, 1.0, 0.0))
-        out.append(Body("woman", part="arm." + side, look="glitter", color="#ffe0a0", color2="#fff6e6", bright=1.5,
-                        points=60000, scale=HAND_S, show=(-1.0, 4.6), fade=0.8, seed=3.0 + j,
+        aim = _unit(_v(sg * 0.18, 0.12, 1.0))       # fingers toward the camera, a little apart
+        palm = _unit(_v(-sg * 0.30, 1.0, 0.45))     # palms up, turned a little toward us and toward each other
+        out.append(Body("woman", part="arm." + ("R" if side == "L" else "L"), look="glitter", color="#ffd890",
+                        color2="#fff3dc", bright=1.6, points=70000, scale=HAND_S, show=(-1.0, 4.6), fade=0.8,
+                        seed=3.0 + j,
                         effects=[dict(kind="shed", t=-1.0, n=3000, life=2.0, speed=0.15, rise=0.25, spread=0.05)],
-                        hand=dict(side=side, at=at, aim=aim, palm=palm, pose="cup", anchor="palm")))
+                        hand=dict(side=("R" if side == "L" else "L"), at=at, aim=aim, palm=palm, pose="cup",
+                                  anchor="palm")))
     return out
 
 
@@ -617,7 +643,7 @@ def _cast():
     cam1b = P1b + _v(-1.4, 1.5, 5.6)
     C["gratitude"] = acting.perform("Gratitude", 10.6, 13.4, at=(P1b[0], P1b[2]), view=_view(P1b, cam1b),
                                     variant="heart", style=dict(points=80000, **GOLD), pre=1.2, post=0.6, seed=3.0)
-    C["embrace"] = list(_embrace_pair(P2, 16.75, 17.55, 20.4))
+    C["embrace"] = list(_embrace_pair(P2, 16.75, 17.55, 20.15))
     cam3 = P3 + _v(-1.0, 1.5, 7.6)
     C["concession"] = acting.perform("Concession", 21.0, 23.6, at=(P3[0] + 1.25, P3[2] + 0.4),
                                      view=_view(P3, cam3), variant="after_you",
@@ -645,14 +671,14 @@ def _cast():
 # =============================================================================================================
 # THE SCENE
 # =============================================================================================================
-def _cloud_sea(rng, center, r0, r1, n, y, wmin, wmax, bright=1.0):
+def _cloud_sea(rng, center, r0, r1, n, y, wmin, wmax, bright=1.0, hk=(0.35, 0.6)):
     out = []
     for _ in range(n):
         a = rng.uniform(0.0, 2.0 * np.pi)
         r = np.sqrt(rng.uniform(r0 * r0, r1 * r1))
         w = rng.uniform(wmin, wmax) * (0.7 + 0.6 * r / r1)
         out.append(dict(center=(center[0] + np.sin(a) * r, y + rng.uniform(-3.0, 5.0), center[2] + np.cos(a) * r),
-                        width=w, height=w * rng.uniform(0.35, 0.6), n=int(140 + 110 * w / 100.0),
+                        width=w, height=w * rng.uniform(*hk), n=int(140 + 110 * w / 100.0),
                         towers=int(rng.integers(3, 7)), bright=bright))
     return out
 
@@ -671,7 +697,7 @@ def _setup(scene):
     # ---- the sky's clouds: the sea of clouds at the start (we fall through it), far banks round the
     # horizon all the way, and the high golden layer we rise through
     near = _cloud_sea(rng, D0, 24.0, 300.0, 70, 22.0, 26.0, 60.0, 1.0)
-    far = _cloud_sea(rng, _v(0.0, 0.0, -120.0), 420.0, 1500.0, 230, 18.0, 70.0, 150.0, 0.9)
+    far = _cloud_sea(rng, _v(0.0, 0.0, -120.0), 650.0, 1600.0, 230, 14.0, 70.0, 140.0, 0.9, hk=(0.28, 0.45))
     high = _cloud_sea(rng, A7, 30.0, 900.0, 160, 118.0, 40.0, 110.0, 1.0)
     scene.add("clouds_near", MS.Billows(near, gain=_gain((0.0, 1.0), (5.6, 1.0), (7.4, 0.0), (60.0, 0.0)),
                                         seed=12, alpha=0.085), depth_of_field=False)
@@ -694,14 +720,16 @@ def _setup(scene):
     addp("hands0", C["hands0"])
     scene.add("drop", FX.Drop(drop_pos, t_show=(-1.0, LAND_T + 0.2), t_land=LAND_T, scale=1.6), reflect=True)
     scene.add("splash", FX.Splash(D0, LAND_T, scale=1.0))
-    scene.add("ring", FX.RingWave(D0, LAND_T, speed=36.0, reach=1500.0, until=SEC[3] + 0.5))
+    scene.add("ring", FX.RingWave(D0, LAND_T, speed=36.0, reach=1500.0, until=SEC[3] + 0.5, color="#ffb24a",
+                                  core="#ffd88a"))
     scene.add("motes0", FX.Motes(n=900, box=(14.0, 8.0, 14.0), center=None,
                                  gain=_gain((0.0, 0.6), (3.0, 0.6), (4.0, 0.0), (60.0, 0.0))), reflect=False)
 
     # ---- S1: the greeting and the bow of thanks under pouring light
     addp("greeting", C["greeting"])
     addp("gratitude", C["gratitude"])
-    scene.add("pour", PW.KeepClear(FX.LightColumns([P1b], top=18.0, per=1600, core_w=1.6, fall=4.0,
+    scene.add("pour", PW.KeepClear(FX.LightColumns([P1b], top=9.0, per=700, fall=2.2, ring=0.85, core=False,
+                                                    spark=0.035,
                                                     gain=_gain((0.0, 0.0), (10.3, 0.0), (11.0, 1.0), (13.6, 1.0),
                                                                (14.4, 0.0), (60.0, 0.0))), WORDS))
     scene.add("motes1", PW.KeepClear(FX.Motes(n=1600, box=(18.0, 6.0, 18.0), center=(P1 + P1b) * 0.5 + _v(0, 3, 0),
@@ -725,7 +753,7 @@ def _setup(scene):
     scene.add("river", PW.KeepClear(FX.LightRiver(RIVER, width=3.2, n=30000, speed=10.0,
                                                   gain=_gain((0.0, 0.0), (18.6, 0.0), (19.85, 1.0), (26.6, 1.0),
                                                              (26.79, 0.0), (60.0, 0.0))), WORDS))
-    scene.add("door", FX.Door(P3, width=1.6, height=2.9, facing=0.0, t_open=21.0,
+    scene.add("door", FX.Door(P3, width=1.4, height=2.5, facing=0.0, t_open=21.0,
                               gain=_gain((0.0, 0.0), (19.9, 0.0), (20.3, 1.0), (24.4, 1.0), (24.9, 0.0), (60.0, 0.0))))
     petal_path = [P3 + _v(2.6, 1.3, 3.0), P3 + _v(1.0, 1.4, 1.2), P3 + _v(0.0, 1.45, 0.0), P3 + _v(-0.2, 1.6, -3.0),
                   P3 + _v(0.4, 2.2, -8.0), P3 + _v(-0.5, 3.4, -14.0)]
@@ -773,7 +801,7 @@ def _setup(scene):
                       facing="center", kinds=(("clap", 2.0), ("cheer", 1.0)), start=dict(t=36.6, dur=0.8),
                       act=dict(t=37.4, dur=0.8), until=40.6, fade=0.6, points=2600, color="#ffe6c0",
                       color2="#fff6e6")
-        scene.add("crowd5", PW.KeepClear(crowd, WORDS))
+        scene.add("crowd5", PW.KeepClear(crowd, WORDS), reflect=False)      # no tall columns in the water
     except Exception as e:          # pragma: no cover
         print("crowd skipped:", e)
     twirl = C["compliment"][0]
@@ -863,10 +891,12 @@ SYMBOL_PLAN = [
 
 P3D = dict(
     camera=CAMERA,
-    world=dict(WORLD, shafts=[_shaft(P1b, 10.3, 14.0, radius=1.4, strength=0.8),
-                              _shaft(P4, 27.0, 33.2, radius=2.2, strength=0.9, color="#ffe6b8", top=40.0),
-                              _shaft(P2, 17.4, 20.0, radius=1.6, strength=0.6),
-                              _shaft(P3, 20.6, 23.9, radius=1.2, strength=0.5, color="#e8f0ff")]),
+    world=dict(WORLD, shafts=[_shaft([(P1b, 10.3, 14.0, 0.8), (P5, 33.6, 37.2, 0.55)], radius=1.4),
+                              _shaft([(P4, 27.0, 33.2, 0.9), (A7 + _v(26.0, 0.0, 8.0), 42.8, 49.4, 0.8)], radius=2.2,
+                                     color="#ffe6b8", top=60.0),
+                              _shaft([(P3, 20.6, 23.9, 0.5), (P5b, 37.2, 40.6, 0.5)], radius=1.2, color="#ffeccc"),
+                              _shaft([(A7 + _v(-24.0, 0.0, -14.0), 42.8, 49.4, 0.8)], radius=2.6, color="#ffd8a0",
+                                     top=60.0)]),
     setup=_setup,
     bursts=[dict(t=BREATH_END, strength=0.6, rise=0.08, fall=0.4, color="#ffd9a0")],
     motion_blur=0.4,

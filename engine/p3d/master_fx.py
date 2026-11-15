@@ -91,8 +91,8 @@ class Splash:
         bloom = np.exp(-u / 0.35)
         return [dict(pos=p, size=0.03 * self.k, color=self.core, alpha=al, emit=2.5, kind="spark", twinkle=0.6,
                      seed=self.s),
-                dict(pos=self.at[None] + np.array([[0.0, 0.3, 0.0]]), size=4.0 * self.k, color=self.col,
-                     alpha=0.22 * bloom, kind="soft")]
+                dict(pos=self.at[None] + np.array([[0.0, 0.3, 0.0]]), size=2.6 * self.k, color=self.col,
+                     alpha=0.12 * bloom, kind="soft")]
 
 
 class RingWave:
@@ -111,7 +111,7 @@ class RingWave:
         a = rng.uniform(0.0, TAU, n_field)
         self.fpos = self.c + np.stack([np.sin(a) * r, np.full(n_field, 0.03), np.cos(a) * r], 1)
         self.fbirth = t0 + r / self.v
-        self.fsize = 0.03 + 0.0025 * r * (0.5 + rng.random(n_field))
+        self.fsize = 0.03 + 0.0012 * r * (0.5 + rng.random(n_field))
         self.fseed = rng.random(n_field)
         warm = rng.random(n_field)[:, None]
         self.fcol = lin("#ffd890")[None] * (1 - warm) + lin("#ffb0a0")[None] * warm * 0.9
@@ -125,16 +125,17 @@ class RingWave:
         out = []
         R = self.radius(t)
         if R < self.reach:
-            k = 1.0 - sc(0.6 * self.reach, self.reach, R)
-            w = 0.4 + 0.012 * R
+            # the front thins as it races away (never a white wall at the horizon)
+            k = (1.0 - sc(0.25 * self.reach, 0.7 * self.reach, R)) * sc(0.0, 2.5, R) * (0.35 + 0.65 * np.exp(-R / 60.0))
+            w = 0.25 + 0.004 * R
             rr = R + (self.rs - 0.5) * w
             pos = self.c + np.stack([np.sin(self.ang) * rr, np.full(len(rr), 0.05), np.cos(self.ang) * rr], 1)
-            sz = 0.10 + 0.006 * R
-            out.append(dict(pos=pos, size=sz, color=self.core, alpha=0.75 * k, emit=2.5, kind="spark",
+            sz = 0.05 + 0.0015 * R
+            out.append(dict(pos=pos, size=sz, color=self.core, alpha=0.55 * k, emit=1.8, kind="spark",
                             twinkle=0.4, seed=self.rs))
-            out.append(dict(pos=pos[::3], size=sz * 6.0, color=self.col, alpha=0.10 * k, kind="soft"))
+            out.append(dict(pos=pos[::4], size=sz * 5.0, color=self.col, alpha=0.05 * k, kind="soft"))
         g = 1.0 - sc(self.until - 1.0, self.until, t)
-        out.append(dict(pos=self.fpos, size=self.fsize, color=self.fcol, alpha=0.55 * g, birth=self.fbirth,
+        out.append(dict(pos=self.fpos, size=self.fsize, color=self.fcol, alpha=0.40 * g, birth=self.fbirth,
                         fade=0.5, flash=3.0, emit=1.2, kind="spark", twinkle=0.7, seed=self.fseed))
         return out
 
@@ -180,7 +181,9 @@ class LightRiver:
         n = np.stack([-d[:, 2], np.zeros(len(d)), d[:, 0]], 1)
         return a + (b - a) * f[:, None], n
 
-    def sample(self, t):
+    wants_camera = True
+
+    def sample(self, t, cam=None):
         g = self.gain(t)
         if g <= 0.002:
             return None
@@ -191,10 +194,17 @@ class LightRiver:
         pos[:, 1] = self.lift
         edge = ss(0.0, 30.0, s) * (1.0 - ss(self.L - 30.0, self.L, s))
         al = g * edge * np.exp(-0.5 * (self.lat / (0.55 * self.width)) ** 2)
+        if cam is not None:                          # nothing large or bright right at the lens
+            dist = np.linalg.norm(pos - np.asarray(cam.pos, np.float64), axis=1)
+            al = al * ss(0.6, 2.0, dist)
+        else:
+            dist = np.full(len(pos), 100.0)
+        k = slice(None, None, 40)
+        soft_al = 0.05 * al[k] * ss(4.0, 12.0, dist[k])
         return [dict(pos=pos, size=self.size, color=self.col, alpha=0.85 * al, emit=1.8, kind="spark",
                      twinkle=0.6, seed=self.seed),
-                dict(pos=pos[::14], size=self.width * 0.9, color=lin("#ffcf8a"), alpha=0.035 * al[::14],
-                     kind="soft")]
+                dict(pos=pos[k], size=self.width * 0.55, color=lin("#ffcf8a"), alpha=soft_al, kind="soft",
+                     streak=0.2)]
 
 
 # ---------------------------------------------------------------------------------------------------- rain
@@ -279,7 +289,7 @@ class LightColumns:
     meet behind it, like the nave of a cathedral), each a soft core with sparks falling down it."""
 
     def __init__(self, places, top=34.0, per=520, gain=None, seed=71, color="#ffe2a8", color2="#fff6e6",
-                 core_w=1.1, fall=3.0):
+                 core_w=1.1, fall=3.0, ring=0.0, core=True, spark=0.06):
         rng = np.random.default_rng(seed)
         self.base = np.asarray(places, np.float64)
         m = len(self.base)
@@ -287,7 +297,14 @@ class LightColumns:
         k = m * per
         self.pi = np.repeat(np.arange(m), per)
         self.ph = rng.random(k)
-        self.j = rng.normal(size=(k, 2)) * 0.35
+        if ring > 0.0:                          # sparks falling round someone, never in front of them
+            a = rng.uniform(0.0, TAU, k)
+            r = ring * (1.0 + 0.35 * rng.random(k))
+            self.j = np.stack([np.sin(a) * r, np.cos(a) * r], 1)
+        else:
+            self.j = rng.normal(size=(k, 2)) * 0.35
+        self.core = core
+        self.spark = spark
         self.v = fall * (0.7 + 0.6 * rng.random(k))
         self.sd = rng.random(k)
         self.col = lin(color)
@@ -308,11 +325,13 @@ class LightColumns:
         p = self.base[pi] + np.stack([self.j[:, 0], y, self.j[:, 1]], 1)
         al = g * 0.75 * ss(0.0, 2.0, y) * (0.4 + 0.6 * y / top)
         b = self.base
-        return [dict(pos=p, size=0.06, color=self.col2, alpha=al, emit=1.6, kind="spark", seed=self.sd,
-                     twinkle=0.5),
-                dict(pos=b, pos2=b + np.stack([np.zeros(len(b)), self.top, np.zeros(len(b))], 1),
-                     size=self.core_w, color=self.col, alpha=0.16 * g, alpha2=0.03 * g, kind="ribbon"),
-                dict(pos=b + np.array([0.0, 0.05, 0.0]), size=3.0, color=self.col, alpha=0.12 * g, kind="soft")]
+        out = [dict(pos=p, size=self.spark, color=self.col2, alpha=al, emit=1.6, kind="spark", seed=self.sd,
+                    twinkle=0.5)]
+        if self.core:
+            out += [dict(pos=b, pos2=b + np.stack([np.zeros(len(b)), self.top, np.zeros(len(b))], 1),
+                         size=self.core_w, color=self.col, alpha=0.16 * g, alpha2=0.03 * g, kind="ribbon"),
+                    dict(pos=b + np.array([0.0, 0.05, 0.0]), size=3.0, color=self.col, alpha=0.12 * g, kind="soft")]
+        return out
 
 
 class Door:
@@ -358,7 +377,7 @@ class Door:
         if g <= 0.002:
             return None
         o = sc(self.t_open - 0.6, self.t_open + 0.8, t)
-        draw = np.clip((t - (self.t_open - 1.4)) / 1.0 - self.fs * 0.0, 0.0, 1.0)
+        draw = float(np.clip((t - (self.t_open - 1.4)) / 1.0, 0.0, 1.0))
         tw = 0.8 + 0.2 * np.sin(t * 6.0 + 30.0 * self.fs)
         out = [dict(pos=self.frame, size=0.035, color=self.col, alpha=g * draw * tw, emit=2.4, kind="spark",
                     twinkle=0.5, seed=self.fs),
