@@ -448,3 +448,45 @@ CAMERA_MOTES = 0.6        # a few large soft motes on the nearest layer, so the 
 - **CAMERA_ZOOM, CAMERA_PAN, CAMERA_CRANE** (numbers or Tracks; any one of them turns the camera on), **PARALLAX** (default 1), **CAMERA_CENTER** (default `(0.5, HORIZON + 0.12)`, the point a push in goes towards). Depths: far sky 0.12, high clouds 0.24, low clouds 0.40, far range 0.45, middle range 0.62, near range 0.80, lake 0.80 at the shore to 1.15 at the bottom of the screen, near motes 1.45. The skyline lantern rides the far range. Good ranges for slow, calm moves: zoom 1.0 to 1.15, pan within plus or minus 0.05, crane within plus or minus 0.12, over 20 seconds or more.
 - **Not moved by the camera**: text of any kind, the arch of nine lights, the stars, the song's own motes and petals, the effect layers and the people of light. To move another layer with depth w, call `R.sky.to_screen((x, y), w, t, P)` (layer point to screen point).
 - The camera moves the engine's own sky, ranges and lake. A scene plate (SCENES) keeps its own `zoom` and `pan` and covers the camera background while it is on screen.
+## I1 Music reactivity and automatic timing (2026-11-15, branch engine-audio)
+
+The engine analyses the song's audio once, when it loads (numpy and an ffmpeg decode, in `engine/audio_react.py`): a slow loudness envelope, onsets and beats (a fast pulse is counted in half time, so a ballad pulses at about 70 to 90 bpm), downbeats, a spectral brightness and section starts from a novelty curve. The results are cached as arrays on a 100 per second grid (and on disk under `work/audio_react/`). The audio is the Render workflow's `audio` input; locally set the environment variable `AUDIO`, or `AUDIO_FILE = "audio/promo/sNN.mp3"` in the song file.
+
+Song keys (all optional, all off by default; each a number 0 to 1 or a Track):
+
+| Key | What it does |
+|---|---|
+| `AUDIO_REACT` | Master amount for all of the keys below. Defaults to 1 once any REACT_* key is set; 0 turns everything off. |
+| `REACT_GLOW` | The sky glow and the rays swell with loudness. |
+| `REACT_SPARKLE` | Small warm sparkles breathe on each beat (above the calm lower third, and kept out of the letters by text protection); a few more motes on the beat. |
+| `REACT_ARCH` | The lit lights of the arch pulse gently on the beat (unlit lights stay dark). |
+| `REACT_AURORA` | The aurora, the Milky Way and the upper sky follow loudness (and a little brightness). |
+| `REACT_CHORUS` | A bigger bloom (and a little more glow) in the loud sections, crossfaded over about 1.5 s. |
+
+Taste is built in: the loudness follower is slow (0.5 s up, 1.6 s down), each beat pulse rises over 0.07 s and decays over 0.45 s, quiet beats are small, and no reaction lifts anything by more than 25 percent. The reaction only ever adds light: the designed look is the floor in quiet passages. A song that sets none of these keys renders exactly as before.
+
+```python
+AUDIO_REACT = 1.0
+REACT_GLOW = 0.8
+REACT_AURORA = 1.0
+REACT_ARCH = Track([(0, 0.0), (14, 0.0), (16, 1.0)])   # pulse only once the first light is lit
+REACT_CHORUS = 1.0
+```
+
+Helpers for timelines (any song setting that is a function of time):
+
+```python
+from audio_react import audio
+RAYS = lambda t: _rays(t) + 0.3 * audio.chorus(t)
+audio.level(t)        # slow loudness, 0..1
+audio.beat(t)         # smooth beat pulse, 0..1
+audio.brightness(t)   # spectral brightness, 0..1
+audio.chorus(t)       # how loud the current section is, 0..1
+audio.section_starts(), audio.beats(), audio.downbeats(), audio.strong_beats(), audio.tempo
+```
+
+When a song file changes a setting of a base song it imports (as `engine/songs/demo_audio.py` does with `s03_original`), set it on the base module, because the base's `params()` reads its own globals.
+
+Automatic timing: `python tools/suggest_timing.py audio/promo/sNN.mp3 -n 4 --start 6 --end 46` prints the section starts, the strong beats, and form, hold, out (dissolve end) and star times for 4 expressions. It always honours the reading time contract (formation 3.75 s, then at least 6 s solid, so hold >= form + 9.75; dissolve 1.6 s; 0.5 s gap before the next text), spreads the expressions evenly, places hold on section starts and strong beats where it can, starts each form on the first strong beat after the gap, and lights each star on a strong beat about 3 s after hold. `--solid 8` asks for longer reading time; `--json` gives machine readable output. Treat it as a first draft: the lyrics and the scenes still decide.
+
+Demo: `engine/songs/demo_audio.py` (the original song 03 look over the first minute of the recording, every key at full amount).

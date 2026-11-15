@@ -148,6 +148,8 @@ class Renderer:
         self.nature = nature.Nature(self)   # flowers, tree, blossoms, waterfall, stream (all optional)
         import sky_camera
         self.sky = sky_camera.SkyCamera(self)   # time of day, 3D clouds, god rays, camera (all optional)
+        import audio_react
+        self.react = audio_react.Reactor(self) if audio_react.enabled() else None   # music reactivity (optional)
 
     # ------------------------------------------------------------------
     def text_plan(self, t):
@@ -184,6 +186,8 @@ class Renderer:
         ctx, w, h, px = self.ctx, self.w, self.h, self.px
         P = S.params(self.song, t)
         self.sky.adjust(t, P)
+        if self.react:
+            P = self.react.apply(P, t)
         asp = S.ASPECT
         L = S.lin
         cool = S.MILKY(t)
@@ -234,6 +238,8 @@ class Renderer:
         self.up.draw_effects(t, P)
         self.nature.draw(t)
         self.cr.draw(t)
+        if self.react:
+            self.react.draw(t, P)
         self.up.draw_figures(t)
         self.gath.draw(t)
         self.water.draw(t)
@@ -367,7 +373,7 @@ class Renderer:
         mtn = P["sky_mid"] * 0.22 + L("#05060f")
         setu(self.p_comp, uSky=0, uL=1, uB1=2, uB2=3, uB3=4, uB4=5, uRidge=6, uTextA=7, uTextB=8,
              uT=t, uAspect=asp, uHorizon=S.HORIZON, uProg=P["prog"], uTrail=P["trail"], uExposure=P["exposure"],
-             uFade=P["fade"], uFrame=float(index % 1024), uBloom=1.0 - 0.30 * min(P["sun_int"], 1.3) / 1.3,
+             uFade=P["fade"], uFrame=float(index % 1024), uBloom=(1.0 - 0.30 * min(P["sun_int"], 1.3) / 1.3) * P.get("bloom_gain", 1.0),
              uTxA=txA, uBndA=bndA, uTxB=txB, uBndB=bndB, uZoom=P["zoom"],
              uTextC=9, uCredit=tuple(float(v) for v in credit), uC0=c0, uHi=P["hi"], uEnv=P["env"],
              uSunInt=P["sun_int"], uMtn=mtn, uSkyHor=P["sky_hor"], uGlow=P["glow"], uTrailCol=L("#ffd396"),
