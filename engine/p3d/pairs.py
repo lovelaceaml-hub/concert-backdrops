@@ -41,20 +41,25 @@ def _gest(kw, *extra):
     return kw
 
 
-def _walk_in(shape, height, t_stop, approach, speed):
-    """How far someone walks in `approach` seconds before stopping at t_stop (with the motion blends)."""
+def _walk_in(shape, height, t_stop, approach, speed, show=None):
+    """How far someone walks in `approach` seconds before stopping at t_stop (with the motion blends).
+    They stand until t_stop - approach, so the walk lasts `approach` seconds whenever the Body starts; the
+    distance is measured from the same start the Body counts its travel from (its show, as Body does)."""
     if approach <= 0.0:
         return 0.0, None
-    keys = [(t_stop - approach, "walk", dict(speed=speed)), (t_stop - 0.45, "stand", dict(blend=0.9))]
-    a = act.Actor(shape, height, at=(0.0, 0.0), facing=0.0, motion=keys)
-    return float(a.travel(t_stop + 1.5)[0]), keys
+    keys = [(-1e9, "stand", {}), (t_stop - approach, "walk", dict(speed=speed, blend=0.6)),
+            (t_stop - 0.45, "stand", dict(blend=0.9))]
+    start = None if show is None else float(show[0])
+    a = act.Actor(shape, height, at=(0.0, 0.0), facing=0.0, motion=keys, start=start)
+    return float(a.travel(t_stop + 1.5)[0] - a.travel(t_stop - approach - 0.05)[0]), keys
 
 
 def embrace(t, at=(0.0, 0.0), facing=0.0, a=None, b=None, until=None, gap=0.34, approach=0.0, speed=0.9,
             ease=1.1):
     """Two people meet and hold each other (from t until `until`). a faces `facing` (degrees), b faces a.
     gap: metres between the two (chest to chest when they hold). approach: seconds they walk in toward each
-    other before t (0: already standing there)."""
+    other before t (0: already standing there); they stand still until then, wherever their show starts, and
+    stop exactly `gap` apart."""
     c = _xz(at)
     d = _dir(facing)
     ka = _kw(a, shape="woman", facing=facing)
@@ -62,7 +67,7 @@ def embrace(t, at=(0.0, 0.0), facing=0.0, a=None, b=None, until=None, gap=0.34, 
     refs = {}
     end = 1e9 if until is None else float(until)
     for kw, sgn in ((ka, -1.0), (kb, 1.0)):
-        walked, keys = _walk_in(kw["shape"], kw.get("height"), t - 0.15, approach, speed)
+        walked, keys = _walk_in(kw["shape"], kw.get("height"), t - 0.15, approach, speed, kw.get("show"))
         place = c + d * sgn * (0.5 * gap + walked)
         kw.setdefault("at", (place[0], place[2]))
         if keys and "motion" not in kw:
