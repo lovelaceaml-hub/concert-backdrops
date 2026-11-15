@@ -36,7 +36,6 @@ from . import faces as FC
 from . import stylekit as K
 from .api import Mask, lin, show
 from .body import Body, _Shape
-from track import Track
 
 DAY = ("day", "bright", "light")
 

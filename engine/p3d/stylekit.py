@@ -225,7 +225,7 @@ class Butterflies:
             ag = np.repeat(ages, self.n)
             jit = bm.flow(pts * 6.0, t * 0.5, speed=1.0, seed=3.0) * (0.02 + 0.05 * ag)[:, None]
             vv = np.tile(vis, K)
-            out.append(dict(pos=pts + jit + np.array([0.0, -0.05, 0.0]) * ag[:, None], size=size * 0.10,
+            out.append(dict(pos=pts + jit + np.array([0.0, -0.05, 0.0]) * ag[:, None], size=np.tile(size, K) * 0.10,
                             color=np.tile(col, (K, 1)), alpha=0.45 * self.trail * self.bright * vv * (1.0 - ag / 1.7) ** 2,
                             emit=1.0 + 2.0 * (hash01(len(pts), 5) > 0.9), kind="soft", twinkle=0.9))
         return out
