@@ -290,7 +290,7 @@ class LightColumns:
     meet behind it, like the nave of a cathedral), each a soft core with sparks falling down it."""
 
     def __init__(self, places, top=34.0, per=520, gain=None, seed=71, color="#ffe2a8", color2="#fff6e6",
-                 core_w=1.1, fall=3.0, ring=0.0, core=True, spark=0.06, core_k=1.0, soft=False):
+                 core_w=1.1, fall=3.0, ring=0.0, core=True, spark=0.06, core_k=1.0, soft=False, segs=1):
         rng = np.random.default_rng(seed)
         self.base = np.asarray(places, np.float64)
         m = len(self.base)
@@ -314,6 +314,7 @@ class LightColumns:
         self.col2 = lin(color2)
         self.core_w = core_w
         self._gain = gain
+        self.segs = max(int(segs), 1)            # the core in pieces, so a keep-clear can open a gap in it
 
     def gain(self, t):
         return 1.0 if self._gain is None else float(self._gain(t))
@@ -331,9 +332,16 @@ class LightColumns:
         out = [dict(pos=p, size=self.spark, color=self.col2, alpha=al, emit=1.6,
                     kind="soft" if self.soft else "spark", seed=self.sd, twinkle=0.5)]
         if self.core:
-            out += [dict(pos=b, pos2=b + np.stack([np.zeros(len(b)), self.top, np.zeros(len(b))], 1),
-                         size=self.core_w, color=self.col, alpha=0.16 * g * self.core_k,
-                         alpha2=0.03 * g * self.core_k, kind="ribbon"),
+            m = self.segs
+            q0 = np.repeat(np.arange(m)[None] / m, len(b), 0).reshape(-1)
+            q1 = q0 + 1.0 / m
+            bb = np.repeat(b, m, 0)
+            tt = np.repeat(self.top, m)
+            up0 = np.stack([np.zeros(len(bb)), tt * q0, np.zeros(len(bb))], 1)
+            up1 = np.stack([np.zeros(len(bb)), tt * q1, np.zeros(len(bb))], 1)
+            k = g * self.core_k
+            out += [dict(pos=bb + up0, pos2=bb + up1, size=self.core_w, color=self.col,
+                         alpha=(0.16 - 0.13 * q0) * k, alpha2=(0.16 - 0.13 * q1) * k, kind="ribbon"),
                     dict(pos=b + np.array([0.0, 0.05, 0.0]), size=3.0, color=self.col, alpha=0.12 * g * self.core_k,
                          kind="soft")]
         return out

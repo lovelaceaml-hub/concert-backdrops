@@ -234,6 +234,7 @@ def _cam_keys_s2():
     return [(13.3, P1b + _v(-0.5, 1.8, 2.2), P1b + _v(0.0, 1.3, -4.0)),
             (14.4, P2 + _v(0.3, 0.75, 3.0), c),                      # low, looking up at them and the storm of light
             (16.6, P2 + _v(0.2, 0.72, 2.5), c + _v(0.0, 0.05, 0.0)),
+            (17.35, P2 + _v(1.9, 0.95, 2.1), e + _v(0.0, -0.05, 0.0)),        # round them, well clear
             (18.2, P2 + _v(2.15, 1.12, -0.38), e + _v(0.0, 0.06, 0.0)),   # behind one: her hands on the other's
             (19.6, P2 + _v(1.85, 1.1, -0.32), e + _v(0.0, 0.08, 0.0))]     # back, her face over the other's shoulder
 
@@ -282,9 +283,10 @@ def _cam_keys_s5():
     return [(33.36, side(3.8, 1.7, -50.0), k + up),                          # straight onto them on the hit
             (34.3, side(2.3, 0.66, -38.0), k + up),                          # low and close on the hands
             (36.6, side(1.95, 0.64, -34.0), k + up + _v(0.0, 0.08, 0.0)),
-            (37.3, orb(-30.0), d),
-            (38.6, orb(-10.0), d),
-            (40.0, orb(10.0), d + _v(0.0, 0.1, 0.0))]
+            (37.0, side(1.9, 0.64, -33.0), k + up + _v(0.0, 0.09, 0.0))], \
+        [(36.95, orb(-34.0), d),                                               # a whip pan to the dancer
+         (38.6, orb(-12.0), d),
+         (40.0, orb(10.0), d + _v(0.0, 0.1, 0.0))]
 
 
 def _s6(t):
@@ -418,8 +420,10 @@ def _rig(focus):
             aperture=0.01, focus=fo(lambda t: P3 + _v(0, 1.4, 0) if t < 23.7 else P3b + _v(0, 0.9, 0))),
         Path(_pchip(_cam_keys_s4()), SEC[4], SEC[5], blend=0.45, whip=True, fov=lambda t: 58.0 - 10.0 * sc(26.79, 28.4, t), aperture=0.01,
             focus=fo(P4 + _v(0, 1.0, 0))),
-        Path(_pchip(_cam_keys_s5()), SEC[5], 40.0, blend=0.45, whip=True, fov=48.0, aperture=0.01,
-            focus=fo(lambda t: P5 + _v(0, 1.0, 0) if t < 37.0 else P5b + _v(0, 1.1, 0))),
+        Path(_pchip(_cam_keys_s5()[0]), SEC[5], 36.95, blend=0.45, whip=True, fov=48.0, aperture=0.01,
+            focus=fo(P5 + _v(0, 1.0, 0))),
+        Path(_pchip(_cam_keys_s5()[1]), 36.95, 40.0, blend=0.4, whip=True, fov=48.0, aperture=0.01,
+            focus=fo(P5b + _v(0, 1.1, 0))),
         Path(_s6, 40.0, BREATH_END, blend=0.6, fov=48.0, aperture=0.0),
         Path(_s7, BREATH_END, SEC[7], blend=0.35, fov=lambda t: 56.0 + 10.0 * sc(42.5, 43.3, t), aperture=0.0),
         Path(_s8, SEC[7], TOTAL + 1.0, blend=0.6, fov=END_FOV, aperture=0.0),
@@ -467,12 +471,12 @@ _PEN = dict(arrive="pen", nib=False)
 _SPECS = [
     _w("Greeting", 7.0, 7.6, 10.1, 10.35, 0.50, 0.80, 7.0, 0.30, **_REVEAL),
     _w("Gratitude", 10.4, 10.85, 13.35, 13.6, 0.33, 0.77, 7.0, 0.56, **_PEN),
-    _w("Apology", 13.95, 14.45, 16.95, 17.15, 0.50, 0.79, 7.0, 0.54, **_REVEAL),
-    _w("Inclusiveness", 17.15, 17.25, 19.75, 19.85, 0.50, 0.80, 7.0, 0.50, **_PEN),
-    _w("Concession", 20.6, 21.0, 23.5, 23.7, 0.50, 0.815, 7.0, 0.40, **_REVEAL),
-    _w("Respect", 23.95, 24.2, 26.7, 26.79, 0.50, 0.765, 7.0, 0.52, **_PEN),
+    _w("Apology", 13.75, 14.25, 16.75, 16.95, 0.50, 0.79, 7.0, 0.54, **_REVEAL),
+    _w("Inclusiveness", 16.95, 17.45, 19.95, 20.2, 0.50, 0.80, 7.0, 0.50, **_PEN),
+    _w("Concession", 20.55, 20.95, 23.45, 23.6, 0.50, 0.815, 7.0, 0.40, **_REVEAL),
+    _w("Respect", 23.65, 24.15, 26.65, 26.79, 0.50, 0.765, 7.0, 0.52, **_PEN),
     _w("Encouragement", 27.5, 28.0, 31.3, 31.6, 0.50, 0.79, 7.0, 0.58, **_REVEAL),
-    _w("Consideration", 33.6, 34.1, 36.6, 36.85, 0.31, 0.78, 7.0, 0.50, **_PEN),
+    _w("Consideration", 33.42, 34.0, 36.6, 36.85, 0.31, 0.78, 7.0, 0.50, **_PEN),
     _w("Compliment", 36.95, 37.4, 39.9, 40.15, 0.50, 0.765, 7.0, 0.48, **_REVEAL),
 ]
 
@@ -714,7 +718,7 @@ def _embrace_pair(o, t_rise, t_hold, until):
                        dict(side="R", to=other("b", "shoulder.L", o + _v(0.3, 1.0, 0.0)))),
                       (14.6, t_rise, "bow", dict(amount=10.0))],
              points=75000, show=show, fade=0.6, seed=61.0, wind=(0.2, 0.0, -0.1), **GOLD)
-    b = dict(shape="woman", garment="dress", hair=True,
+    b = dict(shape="woman", garment="dress", hair="tied",
              at=[(0.0, kb_k), (t_hold - 0.6, kb_k), (t_hold + 0.15, kb_e)],
              motion=[(-1e9, "kneel", dict(dur=0.01, sit=0.6, hands="lap")),
                      (t_rise + 0.15, "rise", dict(dur=1.1, blend=0.1)),
@@ -805,7 +809,7 @@ def _boxes(t, cam):
     """Screen boxes (x0, x1, y0, y1; y up) of every word on screen now, padded, and of the opening title."""
     out = []
     for w in WORDS:
-        if w.t_in - 0.2 <= t <= w.t_out + 0.2:
+        if w.t_in - 0.05 <= t <= w.t_out + 0.2:
             b = PW.screen_box(w, cam, t)
             if b[4]:
                 out.append((b[0] - 0.035, b[1] + 0.035, b[2] - 0.04, b[3] + 0.04))
@@ -998,7 +1002,7 @@ def _setup(scene):
                                           colors=["#ffd27a", "#ffb84a", "#ffc890", "#ffa8b8", "#ffcf9a"],
                                           speed=(9.0, 32.0), spread=0.22, life=3.0, seed=96)), reflect=True)
     scene.add("pillar0", Clear(FX.LightColumns([D0], top=70.0, per=1300, core_w=1.4, fall=-16.0, core_k=0.3,
-                                               spark=0.05, seed=72, color="#ffcf80", color2="#ffdca0",
+                                               spark=0.05, seed=72, color="#ffcf80", color2="#ffdca0", segs=40,
                                                gain=_gain((0.0, 0.0), (LAND_T - 0.02, 0.0), (LAND_T + 0.12, 1.0),
                                                           (LAND_T + 0.8, 0.55), (LAND_T + 2.0, 0.0), (60.0, 0.0)))),
               reflect=False)
@@ -1026,10 +1030,10 @@ def _setup(scene):
             return t
         u = t - 17.3
         return 17.3 + 0.9 * u - 0.55 * u * u
-    scene.add("rain", PW.KeepClear(NearFade(FX.RainOfLight(P2, radius=11.0, top=15.0, n=6000, speed=4.0, tau=rain_tau,
+    scene.add("rain", Clear(NearFade(FX.RainOfLight(P2, radius=11.0, top=15.0, n=6000, speed=4.0, tau=rain_tau,
                                                   warm=lambda t: sc(17.0, 18.5, t),
                                                   gain=_gain((0.0, 0.0), (12.8, 0.0), (13.8, 1.0), (19.6, 1.0),
-                                                             (20.2, 0.0), (60.0, 0.0))), 2.5), WORDS))
+                                                             (20.2, 0.0), (60.0, 0.0))), 4.0)))
     addp("embrace", C["embrace"])
 
     # ---- S3: the river of light, the doorway, the tree of light
@@ -1058,10 +1062,10 @@ def _setup(scene):
                                                            (33.4, 0.0), (60.0, 0.0)), seed=20, alpha=0.07, body=0.2,
                                          rose="#d0609a", lilac="#6a50c0",
                                          sun_az=SUN_AZ), depth_of_field=False)
-    scene.add("nave", PW.KeepClear(FX.LightColumns(nave, top=62.0, per=650, core_w=0.45, fall=6.0, core_k=0.8,
-                                                   spark=0.04,
-                                                   gain=_gain((0.0, 0.0), (26.79, 0.0), (27.0, 1.0), (33.2, 1.0),
-                                                              (33.36, 0.0), (60.0, 0.0))), WORDS))
+    scene.add("nave", Clear(FX.LightColumns(nave, top=62.0, per=650, core_w=0.45, fall=6.0, core_k=0.8,
+                                            spark=0.04, segs=40,
+                                            gain=_gain((0.0, 0.0), (26.79, 0.0), (27.0, 1.0), (33.2, 1.0),
+                                                       (33.36, 0.0), (60.0, 0.0)))))
     scene.add("pour4", PW.KeepClear(FX.LightColumns([P4], top=30.0, per=420, fall=2.4, ring=1.2, core=False,
                                                     spark=0.03, soft=True,
                                                     gain=_gain((0.0, 0.0), (26.79, 0.0), (27.3, 0.45), (33.2, 0.45),
@@ -1082,7 +1086,7 @@ def _setup(scene):
             return P5 + _v(np.sin(a) * R, h + 5.0 * np.sin(0.8 * t + k), -np.cos(a) * R)
         return f
     heads = [(sky_river(k), NINE_GLOW[k], lambda t: sc(SEC[5], SEC[5] + 0.6, t) * (1.0 - sc(39.6, 40.3, t))
-              * (1.0 - sc(33.2, 33.6, t) * (1.0 - sc(36.6, 37.2, t))), 3.2)
+              * (1.0 - sc(33.2, 33.6, t)), 3.2)
              for k in range(9)]
     scene.add("sky_rivers", Clear(MB.Rivers(heads, cuts=[SEC[5]], tail=2.6)), reflect=False)
     addp("consideration", C["consideration"])
@@ -1109,7 +1113,7 @@ def _setup(scene):
         print("crowd skipped:", e)
     twirl = C["compliment"][0]
     scene.add("hearts5", Clear(MB.HeartBurst(lambda t: twirl.where(t, "chest"), 37.9, NINE_GLOW, n=30,
-                                             reach=2.4)), reflect=False)
+                                             reach=1.5)), reflect=False)
 
     # ---- the ascent: the nine colours stream past us and upward in long sweeping spirals, opening out as we
     # break above the clouds
@@ -1187,7 +1191,7 @@ def _setup(scene):
 
     # ---- hearts off every word, the nine symbols as subtle scenery
     acts = [("Greeting", P1 + _v(0.0, 1.45, 0.0), 8.2, 10.1), ("Gratitude", None, 11.3, 13.4),
-            ("Apology", P2 + _v(0.0, 0.95, 0.0), 15.0, 17.0), ("Inclusiveness", P2 + _v(0.0, 1.78, 0.0), 17.9, 19.8),
+            ("Apology", P2 + _v(0.0, 1.05, 0.0), 15.0, 16.2), ("Inclusiveness", P2 + _v(0.0, 1.78, 0.0), 17.9, 19.8),
             ("Concession", P3 + _v(-1.0, 1.45, 2.0), 21.5, 23.5), ("Respect", P3b + _v(0.0, 1.0, 0.0), 24.6, 26.6),
             ("Encouragement", P4 + _v(-0.05, 1.05, 0.0), 29.0, 31.3),
             ("Consideration", P5 + _v(0.0, 1.0, 0.0), 34.8, 36.7), ("Compliment", P5b + _v(0.0, 1.3, 0.0), 38.2, 40.0)]
