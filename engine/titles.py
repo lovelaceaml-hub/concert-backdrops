@@ -24,7 +24,7 @@ palette     "night": warm white, gold accents, a warm glow. "day": navy #1f2a6b,
 Type, sizes, tracking and glow follow Anthony's approved mockups (scratchpad titlemock: mock.py, mock2.py). The
 lockups are drawn over the finished picture (after the bloom and the tone curve), so they show exactly as
 designed; before the bloom the light of the scene behind them is dimmed (text protection), so no spark or ray
-crosses a letter. The logo's slot is kept free while there is no logo. Everything is a pure function of t. A
+crosses a letter. The logo is BRAND's (engine/p3d/brand.py). Everything is a pure function of t. A
 song without TITLES never loads this module.
 """
 import os
@@ -209,10 +209,13 @@ class Titles:
         self.pt_buf = ctx.buffer(reserve=16)
         self.pt_vao = None
         self.layers = {}
+        self.tr_tex = None
         op, sg, dl = self.cfg.get("opening"), self.cfg.get("signature"), self.cfg.get("date_light")
         if op:
             self.op = dict(t_end=float(op.get("t_end", 4.0)), y=float(op.get("y", 0.30)),
-                           palette=op.get("palette", "night"), dissolve=float(op.get("dissolve", 1.6)))
+                           palette=op.get("palette", "night"), dissolve=float(op.get("dissolve", 1.6)),
+                           build=float(op.get("build", 1.2)))
+            self.op_logo = None
             self._build_opening()
         else:
             self.op = None
@@ -281,26 +284,34 @@ class Titles:
             L["t_noise"] = self._tex(L["noise"], 1)
         return L
 
-    def _logo(self, part, height):
-        """The campaign logo for a part as an RGBA picture `height` pixels high (render size), or None while there is
-        no logo: the slot stays empty and the layout does not move. TITLES logo (for all parts, or per part):
-        a path from the repository root, or dict(path=..., height=...) with the height in 1080p pixels; False in a
-        part leaves that part without it."""
+    def _logo(self, part, height, pal="day"):
+        """The campaign logo for a part: (RGBA picture, x, y of the logo's own box inside it, its width), the box
+        `height` pixels high (render size); None when the part has no logo (the slot stays empty, nothing moves).
+        By default BRAND's logo (engine/p3d/brand.py), with a little warm glow on a night palette. TITLES logo (for
+        all parts, or per part): False for none, a picture's path (from the repository root), or
+        dict(path=..., height=<1080p pixels>, glow=0..1)."""
         lg = (self.cfg.get(part) or {}).get("logo", self.cfg.get("logo"))
-        if not lg:
+        if lg is False:
             return None
-        path = lg.get("path") if isinstance(lg, dict) else lg
-        if not path:
-            return None
-        if not os.path.isabs(path):
-            path = os.path.join(S.ROOT, path)
-        if not os.path.exists(path):
-            print(f"titles: no logo file at {path}; the slot stays empty", flush=True)
-            return None
-        im = Image.open(path).convert("RGBA")
-        h = float(lg["height"]) * self.s if isinstance(lg, dict) and "height" in lg else float(height)
+        d = lg if isinstance(lg, dict) else {}
+        h = float(d["height"]) * self.s if "height" in d else float(height)
         h = max(int(round(h)), 2)
-        return im.resize((max(int(round(im.width * h / im.height)), 1), h), Image.LANCZOS)
+        path = d.get("path") if isinstance(lg, dict) else (lg if isinstance(lg, str) else None)
+        if path:
+            if not os.path.isabs(path):
+                path = os.path.join(S.ROOT, path)
+            if not os.path.exists(path):
+                print(f"titles: no logo file at {path}; the slot stays empty", flush=True)
+                return None
+            im = Image.open(path).convert("RGBA")
+            im = im.resize((max(int(round(im.width * h / im.height)), 1), h), Image.LANCZOS)
+            return im, 0.0, 0.0, float(im.width)
+        from p3d import brand
+        glow = float(d.get("glow", 0.35 if PALETTES[pal]["light"] else 0.0))
+        pad = 0.10 if glow > 0.0 else 0.01
+        im = brand.logo_image(h, pad=pad, glow=glow)
+        _, (bx0, by0, bx1, _) = brand.logo_box(h, pad)
+        return im, float(bx0), float(by0), float(bx1 - bx0)
 
     def _title_lines(self):
         """The title's lines: the first upright, the second (when there is one) in italic."""
@@ -320,9 +331,13 @@ class Titles:
         d = ImageDraw.Draw(L)
         cx = W / 2.0
         top = self.op["y"] * H - total * s / 2.0           # the top of the logo slot
-        logo = self._logo("opening", lh * s)
-        if logo is not None:
-            L.alpha_composite(logo, (int(round(cx - logo.width / 2.0)), int(round(top + (lh * s - logo.height)))))
+        lg = self._logo("opening", lh * s, pal)
+        self.op_logo = None
+        if lg is not None:
+            im, ox, oy, lw = lg
+            bx, by = cx - lw / 2.0, top + lh * s - (im.height - 2 * oy)
+            L.alpha_composite(im, (int(round(bx - ox)), int(round(by - oy))))
+            self.op_logo = (int(round(bx - ox)), int(round(by - oy)), im.width, im.height)
         y = top + (lh + 28) * s
         _tracked(d, (cx, y), "HEALING CONCERT", JO(500, 30 * s), acc + (255,), 9 * s)
         d.text((cx, y + 40 * s), lines[0], font=CG(500, 96 * s), fill=col + (255,), anchor="ma")
@@ -350,11 +365,13 @@ class Titles:
         mx, my = 104 * self.s, 92 * self.s                 # margins: well inside the frame on a phone
         blk = 112.0 * s                                     # height of the block of three lines
         y0 = (H - my - blk) if corner[0] == "b" else my
-        logo = self._logo("signature", 96 * s)
-        if logo is not None:
-            lx = (W - mx - logo.width) if right else mx
-            L.alpha_composite(logo, (int(round(lx)), int(round(y0 + (blk - logo.height) / 2.0))))
-            gap = logo.width + 22 * s
+        lg = self._logo("signature", 96 * s, pal)
+        if lg is not None:
+            im, ox, oy, lw = lg
+            lhh = im.height - 2 * oy
+            lx = (W - mx - lw) if right else mx
+            L.alpha_composite(im, (int(round(lx - ox)), int(round(y0 + (blk - lhh) / 2.0 - oy))))
+            gap = lw + 22 * s
         else:
             hx = (W - mx) if right else mx
             d.line((hx, y0 + 6 * s, hx, y0 + blk - 6 * s), fill=acc + (220,), width=max(1, int(round(2 * self.s))))
@@ -416,11 +433,12 @@ class Titles:
             for i, c in enumerate(text):
                 d.text((x + f.getlength(text[:i]) + track * i, y), c, font=f, fill=fill)
 
-        logo = self._logo("end_card", 170.0 * k)
+        lg = self._logo("end_card", 170.0 * k, "day")
         cx = W / 2.0
-        if logo is not None:
+        if lg is not None:
+            im, ox, oy, lw = lg
             lx, ly = self._ec_xy(960.0, 48.0)
-            L.alpha_composite(logo, (int(round(lx - logo.width / 2.0)), int(round(ly))))
+            L.alpha_composite(im, (int(round(lx - lw / 2.0 - ox)), int(round(ly - oy))))
         tr(cx, self._ec_xy(0, 236)[1], "HEALING CONCERT", OF(600, 30 * k), CORAL + (255,), 9 * k)
         if small:
             tr(cx, self._ec_xy(0, 278)[1], small, OF(500, 78 * k), NAVY + (255,), -2 * k)
@@ -604,6 +622,36 @@ class Titles:
             return out, (None if u >= 1.0 else -e + (1.0 + 2.0 * e) * u)
         return out * float(_ss(0.0, 1.0, u)), None
 
+    def _trace(self, t):
+        """The opening logo's build-in at t: a premultiplied light picture (alpha 0: added) of the newest stretch
+        of the grid and the branches as they draw themselves, or None outside it."""
+        if self.op is None or self.op_logo is None or self.op["build"] <= 0.0:
+            return None
+        t0, dur = 0.12, self.op["build"]
+        u = (t - t0) / dur
+        if u <= 0.0 or u >= 1.0:
+            return None
+        from p3d import brand
+        x, y, w, h = self.op_logo
+        lh = 130.0 * self.s
+        glow = 0.35 if PALETTES[self.op["palette"]]["light"] else 0.0
+        pad = 0.10 if glow > 0.0 else 0.01
+        parts = ["grid", "branch_l", "branch_r"]
+        pr = 1.0 - (1.0 - u) ** 1.6
+        a1 = brand.logo_rgba(int(round(lh)), parts=parts, pad=pad,
+                             draw={k: pr for k in parts})[..., 3].astype(np.float32) / 255.0
+        a0 = brand.logo_rgba(int(round(lh)), parts=parts, pad=pad,
+                             draw={k: max(pr - 0.22, 0.0) for k in parts})[..., 3].astype(np.float32) / 255.0
+        e = np.clip(a1 - a0, 0.0, 1.0)
+        bl = np.asarray(Image.fromarray((e * 255).astype(np.uint8)).filter(
+            ImageFilter.GaussianBlur(max(2.5 * self.s, 1.0))), np.float32) / 255.0
+        k = float(np.sin(np.pi * u)) ** 0.7
+        warm = np.array((1.0, 0.90, 0.70), np.float32)
+        light = (0.9 * e + 1.6 * bl) * k
+        out = np.zeros(e.shape + (4,), np.float32)
+        out[..., :3] = np.clip(warm[None, None, :] * light[..., None], 0.0, 1.0)
+        return out, (x, y, out.shape[1], out.shape[0])
+
     def _sig_alpha(self, t):
         out = []
         f = self.sig_fade if self.sig else 0.6
@@ -687,6 +735,16 @@ class Titles:
             self._quad(self.p_ovl, self.v_ovl, L, -1.0, uAlpha=1.0,
                        uDis=(float(front) if front is not None else -1.0, 0.06, 0.38, 0.0))
             drew = True
+            tr = self._trace(t)
+            if tr is not None:
+                img, (x, y, w, h) = tr
+                if self.tr_tex is None or self.tr_tex.size != (w, h):
+                    self.tr_tex = self._tex(img)
+                else:
+                    self.tr_tex.write(np.ascontiguousarray(np.clip(img * 255.0 + 0.5, 0, 255).astype(np.uint8)).tobytes())
+                self._quad(self.p_ovl, self.v_ovl, dict(tex=self.tr_tex, rect=(x / self.w, y / self.h, w / self.w,
+                                                                                h / self.h)),
+                           -1.0, uAlpha=1.0, uDis=(-1.0, 0.0, 0.0, 0.0))
         for L, k in self._sig_alpha(t):
             self._quad(self.p_ovl, self.v_ovl, L, -1.0, uAlpha=float(k), uDis=(-1.0, 0.0, 0.0, 0.0))
             drew = True
