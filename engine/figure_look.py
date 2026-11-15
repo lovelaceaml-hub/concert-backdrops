@@ -123,7 +123,7 @@ void main(){
     p += w*0.075*low*low;
   }
   float T = 0.0, cur = 0.0, part = -1.0, sd = 1e3, robeK = 0.0, robeU = 0.0, sm = 0.016, wsd = 0.0;
-  vec2 g = vec2(0.0, 1.0);
+  vec2 g = vec2(0.0, 1.0), gs = vec2(0.0);
   for(int i=0;i<n;i++){
     vec4 s0 = texelFetch(uSeg, ivec2(3*i, row), 0);
     vec4 s1 = texelFetch(uSeg, ivec2(3*i+1, row), 0);
@@ -145,8 +145,10 @@ void main(){
     sd = mix(sd, di, hh)-sm*hh*(1.0-hh);
     g = mix(g, q/max(dist,1e-5), hh);
     wsd = mix(wsd, w, hh);
+    gs = mix(gs, q/max(r,1e-5), hh);
   }
   T += cur;
+  T *= smoothstep(-0.03, 0.045, vP.y);      // the ground: a robe ends softly there
   if(T<=0.0 && sd>0.004){ o = vec4(0.0); return; }
   // wisps at the hem, long soft pleats in the robe, a slow current of light inside
   float wisp = fbm3(vec2(p.x*5.0+seed*31.0, p.y*4.0-uT*0.11));
@@ -167,10 +169,9 @@ void main(){
   // stands behind the figure); on that side a soft band of light just inside the edge, and a fine line
   vec2 nrm = normalize(g+vec2(1e-6));
   vec2 ld = normalize(fLight.xy-vP);
-  float side = dot(nrm, ld);
-  float fac = max(side, 0.0);
+  float fac = max(dot(nrm, ld), 0.0);
   fac = mix(fac*fac, 1.0, fLight.z);
-  float form = mix(0.5+0.5*side, 0.8, fLight.z);
+  float form = mix(0.5+0.5*clamp(dot(gs, ld), -1.0, 1.0), 0.8, fLight.z);
   float w0 = max(1.6*px, 0.0032);
   float line = exp(-pow((sd+w0)/w0, 2.0));
   float band = exp(-pow((sd+0.011)/0.011, 2.0));
@@ -374,14 +375,18 @@ def person_segments(J, F, lag, veil=False, full=True, wide=1.0, head_r=0.052):
                                     F.rad(0.036 * k, 0.047 * k), F.rad(0.047 * k, 0.062 * k))
         sa, sb = arms[1.0][0], arms[-1.0][0]
     else:
-        # a crowd wears cloaks: one soft bell from sloping shoulders to the ground, the hanging arms inside it
-        r_ush, r_ch, r_hip = F.rad(0.050 * k, 0.092 * k), F.rad(0.056 * k, 0.098 * k), F.rad(0.062 * k, 0.104 * k)
-        ush = ush - np.array([0.0, 0.028, 0.0])
-        sa = sb = ush
+        # a crowd wears cloaks: a clear line of shoulders, wider than the head, and a cloak that falls straight
+        # to the ground and flares a little; the hanging arms are inside it
+        kk = np.broadcast_to(np.asarray(k, dtype=np.float64), (N,))
+        r_ush, r_ch, r_hip = F.rad(0.045 * kk, 0.070 * kk), F.rad(0.052 * kk, 0.098 * kk), F.rad(0.058 * kk, 0.106 * kk)
+        mid = 0.5 * (arms[1.0][0] + arms[-1.0][0])
+        ush = mid - np.array([0.0, 0.050, 0.0])
+        zz = np.array([0.0, 0.0, 1.0])[None, :] * (0.076 * kk)[:, None]
+        sa, sb = mid - np.array([0.0, 0.008, 0.0]) + zz, mid - np.array([0.0, 0.008, 0.0]) - zz
     # part 0: neck, shoulders, torso and robe, one flowing shape
     add(F.pt(neck + (head - neck) * 0.50), F.pt(neck), 0.0185, 0.0215, 1.0, 1.0, 0)
     add(F.pt(neck), F.pt(ush), 0.022, r_ush, 1.0, 1.0, 0)
-    add(F.pt(sa), F.pt(sb), 0.0245, 0.0245, 1.0, 1.0, 0)
+    add(F.pt(sa), F.pt(sb), 0.0245 if full else 0.029, 0.0245 if full else 0.029, 1.0, 1.0, 0)
     if full:
         add(F.pt(ush), F.pt(chest), r_ush, r_ch, 1.0, 1.0, 0)
         add(F.pt(chest), F.pt(waist), r_ch, r_wa, 1.0, 0.95, 0)
@@ -390,7 +395,7 @@ def person_segments(J, F, lag, veil=False, full=True, wide=1.0, head_r=0.052):
     else:
         add(F.pt(ush), F.pt(chest), r_ush, r_ch, 1.0, 1.0, 0)
         add(F.pt(chest), F.pt(hip), r_ch, r_hip, 1.0, 0.92, 0)
-        vs, ws, kr = (0.0, 0.5, 1.0), (0.95, 0.86, 0.56), k * 1.55
+        vs, ws, kr = (0.0, 0.5, 1.0), (0.95, 0.88, 0.62), k * 1.28
     prev = (F.pt(hip), r_hip)
     for v, w0, w1 in zip(vs[1:], ws[:-1], ws[1:]):
         c2, r = robe_at(J, F, lag, v, k=kr)
@@ -402,8 +407,8 @@ def person_segments(J, F, lag, veil=False, full=True, wide=1.0, head_r=0.052):
     if not full:
         # in a crowd some wear a veil or a hood (the head flows into the shoulders), the others show hair
         vv = np.broadcast_to(np.asarray(veil, dtype=np.float64), (N,))
-        add(F.pt(head + np.array([-0.004, 0.020, 0.0])), F.pt(ush + np.array([-0.012, 0.0, 0.0])),
-            (head_r + 0.004) * vv + 0.001, r_ush * 0.92 * vv + 0.001, 0.90 * vv, 0.70 * vv, 1, 2.0)
+        add(F.pt(head + np.array([-0.004, 0.020, 0.0])), F.pt(mid + np.array([-0.012, -0.020, 0.0])),
+            (head_r + 0.004) * vv + 0.001, F.rad(0.050 * kk, 0.100 * kk) * vv + 0.001, 0.90 * vv, 0.70 * vv, 1, 2.0)
         add(F.pt(head + np.array([-0.015, 0.006, 0.0])), F.pt(neck + np.array([-0.030, -0.034, 0.0])),
             head_r * 0.88 * (1 - vv) + 0.001, 0.026 * (1 - vv) + 0.001, 0.95 * (1 - vv), 0.50 * (1 - vv), 1, 2.0)
     elif veil:
@@ -1019,7 +1024,7 @@ class FigureLook:
         rimk = float(opt(m, "rim", 1.0)) * (0.75 + 0.25 * detail)
         wl = self._water(m, y, aff)
         mirror = None if wl is None else (np.array([wl]), 1.0 / 1.22)
-        tint = float(opt(m, "day_tint", 1.0)) * 1.4
+        tint = float(opt(m, "day_tint", 1.0)) * 1.2
         if sr.is_hands:
             self._draw_hands(sr, t, org, scale, px, col, core, alpha, reveal, ll, back, rimk, tint, mirror, dd,
                              rise, to, hpx)
@@ -1495,8 +1500,8 @@ class FigureLook:
         self.t_fig.use(location=FIG_UNIT)
         prog["uFigT"].value = FIG_UNIT
         prog["uFigK"].value = float(opt(None, "day_tint_strength", 0.92))
-        lvl = float(opt(None, "day_tint_level", 0.78))
-        for key, name, default in (("uFigTint", "day_tint_color", "#b8b4ff"), ("uFigTintB", "day_tint_warm", "#ffd9b4")):
+        lvl = float(opt(None, "day_tint_level", 0.80))
+        for key, name, default in (("uFigTint", "day_tint_color", "#c4c0ff"), ("uFigTintB", "day_tint_warm", "#ffd9b4")):
             c = _lin(opt(None, name, default))
             c = c / max(float(np.dot(c, [0.2126, 0.7152, 0.0722])), 1e-6) * lvl
             if key in prog:
