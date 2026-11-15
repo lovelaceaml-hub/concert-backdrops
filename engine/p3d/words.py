@@ -771,7 +771,7 @@ class Word:
         if not self.masked:
             return None
         self._build()
-        grow = float(self.opts.get("mask_grow", 0.15)) * float(np.median(self.cell))
+        grow = float(self.opts.get("mask_grow", 0.0)) * float(np.median(self.cell))
         soft = float(self.opts.get("mask_soft", 1.0))
         if self.window:
             return Mask("sky", sky=self.window, grow=grow, soft=soft, edge=float(self.opts.get("window_edge", 0.5)),
@@ -784,7 +784,7 @@ class Word:
         without the mask."""
         return _Lights(self)
 
-    def keep_clear(self, t, cam=None, pad=0.6):
+    def keep_clear(self, t, cam=None, pad=0.8):
         """The box other layers should keep clear of while this word is read: (strength 0..1, the four
         corners of the box in the world, the plane's normal). The strength eases in half a second before the
         reading moment and out after it; pad: how far the box reaches beyond the text, in em."""
@@ -831,12 +831,29 @@ class Word:
         glow = P.get("glow", self.c_glow)
         col = self.c_letter if color is None else color
         level = 1.15
-        if self.window:
-            level *= float(self.opts.get("mask_light", 0.0))       # a window word is its sky, not its own light
-        elif self.ink:
-            level *= float(self.opts.get("mask_light", 0.0))
-        elif self.paint:
-            level *= float(self.opts.get("mask_light", 0.75))      # paint: the colour's light on the dark base
+        mk = 1.0
+        if self.masked:
+            if self.paint:
+                # paint: the letters' own light fills what the dark base lacks of the colour
+                base = np.asarray(self.opts.get("paint_base", (0.10, 0.20, 0.30)), np.float32)
+                col = np.maximum(col - base, 0.0) / (1.1 * level) * float(self.opts.get("mask_light", 1.0)) + 1e-4
+            else:
+                level *= float(self.opts.get("mask_light", 0.0))   # a window or ink word is not its own light
+            # The mask pass draws every point as a disc of at least 1.2 pixels of its half size picture and
+            # adds the discs up; full weights would fatten the letters by that much. Each point is given a
+            # weight at which the sum passes the mask's threshold close to the letter's own edge (thin
+            # strokes still pass after the mask's blur), and its light is kept.
+            if cam is not None:
+                depth = max(float(np.dot(np.asarray(pos[:: max(len(pos) // 64, 1)], np.float64).mean(axis=0)
+                                         - np.asarray(cam.pos, np.float64), cam.basis()[2])), 0.05)
+                pxm = 0.5 * 1080.0 / np.tan(np.radians(cam.fov) * 0.5) / depth       # 1080p pixels per metre
+                cell = float(np.median(self.cell))
+                rad = max(0.95 * cell * pxm, 2.4)
+                n_disc = max(np.pi * rad * rad / max(cell * pxm, 1e-6) ** 2, 1.0)
+                wgt = min(1.04 / n_disc * float(self.opts.get("mask_weight", 2.2 if self.window else 3.4)), 1.0)
+                mk = 0.02 + 0.18 * float(np.sqrt(wgt / 3.0)) if wgt < 0.5 else 1.0
+            else:
+                mk = 0.05
         vis = alpha > 0.004
         split = P["split"]            # optional: points below the water are kept out of the mirror
 
@@ -846,7 +863,8 @@ class Word:
             # settled letters keep clear of the haze and of the motion blur; flying particles take both
             letters.append(dict(pos=pos[sel], size=(size[sel] if s_new is None else s_new),
                             color=(col if col.ndim == 1 else col[sel]) * level,
-                            alpha=(alpha[sel] * a_mul), emit=emit[sel], kind="soft", dof=dof, reflect=reflect,
+                            alpha=(alpha[sel] * a_mul * mk), emit=emit[sel] / mk, kind="soft", dof=dof,
+                            reflect=reflect,
                             seed=self.s[sel, 0], twinkle=0.12, fog=1.0 if dof else self.fog,
                             streak=1.0 if dof else 0.0))
 
@@ -870,7 +888,7 @@ class Word:
                 s1 = np.sqrt(s0 * s0 + coc * coc).astype(np.float32)
                 put(held, False, refl, a_mul=(s0 / s1) ** 2, s_new=s1)
         # halo: a soft coloured light round the letters, carried by an even share of the points
-        if self.halo > 0.0 and not (self.ink or self.paint):
+        if self.halo > 0.0 and not self.masked:
             k = self.n_halo
             a = alpha[:k]
             sel = a > 0.01
@@ -1397,7 +1415,7 @@ class Word:
         P["alpha"] = g
         P["emit"] = (1.0 + self.opts.get("edge_glow", 3.0) * 4.0 * g * (1.0 - g)).astype(np.float32)
 
-    def _thread(self, P, F, t, q_head, alpha, n_st=110, amp=0.10, needle=True):
+    def _thread(self, P, F, t, q_head, alpha, n_st=110, amp=0.05, needle=True):
         """A sewing thread along the writing as far as q_head: short stitches that show, with gaps between."""
         if alpha <= 0.01 or q_head <= 0.0:
             return
@@ -1405,10 +1423,12 @@ class Word:
         em = self.metres_per_em()
         qs = np.linspace(0.0, 1.0, n_st + 1)
         x = np.interp(qs, self.pen_q, self.pen_x)
-        y = np.interp(qs, self.pen_q, self.pen_y) + amp * em * np.where(np.arange(n_st + 1) % 2 == 0, 1.0, -1.0)
+        drop = np.where(qs < (0.14 if self.lab.any() else 0.0), 0.5 * self.label_size, 0.40) * em   # under the letters
+        y = np.interp(qs, self.pen_q, self.pen_y) - drop + amp * em * np.where(np.arange(n_st + 1) % 2 == 0, 1.0, -1.0)
         pts = self._local(F, t, x, y, np.full(n_st + 1, 0.01 * w))
         vis = np.clip((q_head - qs[:-1]) * n_st, 0.0, 1.0)             # how much of each stitch is drawn
-        on = (np.arange(n_st) % 2 == 0) & (vis > 0.0)
+        ln = np.hypot(np.diff(x), np.diff(y))
+        on = (np.arange(n_st) % 2 == 0) & (vis > 0.0) & (ln < 2.5 * np.median(ln))   # no stitch across a line break
         if on.any():
             a_, b_ = pts[:-1][on], pts[1:][on]
             P["extra"].append(dict(pos=a_, pos2=a_ + (b_ - a_) * vis[on][:, None], size=0.0035 * w,
@@ -1514,7 +1534,7 @@ class Word:
             big = (0.020 + 0.016 * s[:, 1]) * w * self.opts.get("petal_size", 1.0)
             cols = np.stack([lin("#ff8fa3"), lin("#ffb19a"), lin("#ffd9c9")]).astype(np.float32)
         elif kind == "flake":
-            big = (0.013 + 0.016 * s[:, 2]) * w * self.opts.get("flake_size", 1.0)
+            big = (0.007 + 0.009 * s[:, 2]) * w * self.opts.get("flake_size", 1.0)
             cols = np.stack([lin("#ffe2a8"), lin("#fff3d8"), lin("#cfe2ff")]).astype(np.float32)
         else:
             kind = "soft"
@@ -1524,7 +1544,7 @@ class Word:
             cols = np.stack([lin(c) for c in self.opts["carry_colors"]]).astype(np.float32)
         col = _mix(cols[(s[:, 2] * len(cols)).astype(int) % len(cols)], self.c_letter[None, :], (e ** 4)[:, None])
         size = _mix(big, self.size0[:m] * 2.0, e ** 3)
-        b = dict(pos=pc[vis], size=size[vis], color=col[vis], alpha=al[vis] * 0.95, kind=kind, seed=s[vis, 0])
+        b = dict(pos=pc[vis], size=size[vis], color=col[vis], alpha=al[vis] * 0.8, kind=kind, seed=s[vis, 0])
         if kind != "soft":
             b["rot"] = rot[vis]
         else:
@@ -1959,7 +1979,7 @@ class Words:
         k = clear(points, t, self.words, cam if cam is not None else _cam_at(self.camera, t), **kw)
         return np.ones(len(np.asarray(points).reshape(-1, 3)), np.float32) if k is None else k
 
-    def keep_clear(self, t, cam=None, pad=0.6):
+    def keep_clear(self, t, cam=None, pad=0.8):
         """The boxes to keep clear at t: a list of (word, strength 0..1, corners (4, 3), normal)."""
         cam = cam if cam is not None else _cam_at(self.camera, t)
         out = []
@@ -1990,7 +2010,7 @@ def em_for(camera, t, depth, px):
     return float(px) * 2.0 * np.tan(np.radians(cam.fov) * 0.5) * depth / 1080.0
 
 
-def clear(points, t, words, cam=None, pad=0.6, floor=0.12, soft=0.5):
+def clear(points, t, words, cam=None, pad=0.8, floor=0.12, soft=1.1):
     """How much of each point may show so that the words being read stay clear: 1 everywhere except in front
     of and behind a reading word's box on screen, where it falls to `floor`. points: (N, 3) in the world.
     Returns (N,) factors, or None when no word is being read at t. Without a camera the box is taken along
@@ -2036,7 +2056,7 @@ class KeepClear:
     PW.KeepClear(petals, WORDS)). floor: how much light is left inside a reading word's box."""
     wants_camera = True
 
-    def __init__(self, pointset, words, floor=0.12, pad=0.6):
+    def __init__(self, pointset, words, floor=0.12, pad=0.8):
         self.inner, self.words, self.floor, self.pad = pointset, words, float(floor), float(pad)
         if hasattr(pointset, "gain"):
             self.gain = pointset.gain
