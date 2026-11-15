@@ -284,3 +284,31 @@ Sun, clouds, rays, lanterns, petals and the arch stay as your song sets them. Th
 Unchanged: commit and push the song file and its assets (plates and figures are in the repo under `assets/`, so the cloud workflow has them), then run the Render workflow (stills first, then video). See docs/HANDOFF.md.
 
 The video run's finish job uploads three artifacts: "<name>" (the full 1920x1080 video plus a silent copy), "<name> frames" (4 frame sheets of 8 frames each, for checking without downloading the video) and "<name> (share)" (the file "<name> (share).mp4": 1280x720, H.264 with AAC sound, always under 25 MB, for phones and messages; the job fails if it would be larger).
+
+## I-G. Gathering and the passed light (2026-11-15, branch engine-gathering)
+
+A crowd of small people of light walks in from the sides and gathers in one place; then a small flame passes from hand to hand through them (the peace message spreading) and the arch brightens. Code: engine/gathering.py, drawn by one guarded call in render.py right after the figures, so text protection and the glow apply to it as to every other light. A song that sets neither key renders exactly as before. Demo: engine/songs/demo_gathering.py (44 seconds, dusk).
+
+```python
+GATHERING = dict(t0=1.0, count=96, center=(0.5, 0.343), spread=(0.40, 0.05), rows=3, hole=0.035,
+                 height=(0.125, 0.10), speed=1.0, arrive_by=13.5, sides=("left", "right"),
+                 colors=("#ffcf9a", "#ffd9b8", "#ffe6c4", "#ffc6a0", "#f2d0ff", "#cfe0ff"))
+PASS_LIGHT = dict(t0=13.5, speed=0.15, path="crowd", start="center", source="arch", color="#ffe2a0",
+                  lift=True, rise=True, arch=1.0)
+```
+
+GATHERING (all keys optional):
+- `t0`: when the first people step in. `arrive_by`: when the last ones arrive (default `t0` + 14). The people bound for the middle come first, the outer ones last. `t1` (default never): when they leave; each person's sparks rise and fade over `dissolve` seconds (default 3).
+- `count` (default 80; 50 to 200 stay fast: about 20 ms of numpy per frame for 100 people). `detail`: sparks per person (default 420).
+- `center` = (x, feet line y). Keep y about 0.34 to 0.35: the crowd stands on the far shore and the lower third stays calm. `spread` = (half width, depth) in screen fractions; back rows stand up to `depth` higher, smaller and dimmer. `rows` (default 3, staggered so people behind stand in the gaps). `hole` (0 to 1): an open space in the middle (for a light, or the flame coming down).
+- `height` = base figure height or (height, variation), default (0.13, 0.12). `children` (default 0.12): share of smaller people. `speed`: walking speed in figure heights per second (default 1.0, each person 0.8 to 1.2 times that). `colors`: robe colours, one per person at random. `glow`: overall brightness. `seed`.
+- `sides`: ("left", "right") (default: each comes in from its own side), or "left" / "right" only.
+- Each person is a light version of the rig (section H): the same proportions and walk cycle, planted feet, swinging arms, a robe that follows the legs and lags behind. They slow down on the last steps, turn toward the centre and settle into breathing, weight shift and small hand motion (never frozen). Heads are soft glows (no faces); everyone wears a long robe.
+
+PASS_LIGHT (needs GATHERING):
+- `t0`: when the flame starts. `source`: None (the first person simply lights), "arch" (it comes down from the middle light of the arch, over `descent` seconds, default 2.5, and the first person reaches up for it) or a screen point (x, y).
+- `start`: "center" (default), "left", "right" or a person index. `path`: "crowd" (default: every lit person passes it on to near neighbours who still wait, one after another, so it spreads out like a wave), "line" (a single chain along the crowd from the start side), or a list of screen points (the people nearest them, in order).
+- `speed`: how fast the flame hops, in screen widths per second (default 0.15). `reach` (default 0.40 s): how long before the hop the hands reach out; `hold` (0.25 s): pause before a new receiver passes it on; `reach_far` (2.2): how far (in neighbour spacings) a hand-over may reach.
+- Each hand-over: the giver turns toward the receiver (turning round if needed) and reaches out with one hand; the receiver reaches with both hands; the flame hops across with a spark trail; the receiver then holds it in cupped hands and begins to glow (the unlit crowd is dimmer). `color`: the flame colour.
+- `lift` (default True, or a time): once all are lit, everyone lifts their light. `rise` (default True): then each light rises to the nearest light of the arch. `arch` (default 1.0, 0 = off): the arch brightens as they arrive (a band of light through the nine lights). To also switch on the nine lights themselves, give PHRASES `star` times around then (the demo does).
+- A 100 person crowd lit from the centre takes about 15 seconds to light completely at the default pace; the demo prints nothing, but `gathering.Crowd(...).Tend` gives the exact time.

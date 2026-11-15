@@ -138,6 +138,8 @@ class Renderer:
         self.up = upgrade.Upgrade(self)   # scenes, people of light, effect layers, fragment styles (all optional)
         import text_anims
         self.ta = text_anims.TextAnims(self)   # other text animations (anim=, UPGRADE-HOWTO J; all optional)
+        import gathering
+        self.gath = gathering.Gathering(self)   # a gathering crowd and a light passed hand to hand (optional)
 
     # ------------------------------------------------------------------
     def text_plan(self, t):
@@ -220,6 +222,7 @@ class Renderer:
             self.v_petal.render(moderngl.POINTS)
         self.up.draw_effects(t, P)
         self.up.draw_figures(t)
+        self.gath.draw(t)
 
         # which text is on screen: A is an expression or the closing title, B the end card lines or a fragment
         (texA, txA, bndA, shadeA, offA), (texB, txB, bndB, shadeB, offB) = self.text_plan(t)
