@@ -304,8 +304,8 @@ class Word:
     def __init__(self, label="", lines=(), expr=None, pos=(0.0, 3.0, 0.0), width=8.0, em=None, facing=0.0,
                  face="fixed", tilt=0.0, curve=0.0, t_in=0.0, t_read0=2.5, t_read1=5.5, t_out=8.0, arrive=None,
                  leave=None, source=None, to=None, color=None, glow=None, tint=0.45, bright=1.0, halo=1.0,
-                 sparkle=1.0, sharp=1.0, n=42000, n_label=6000, label_size=0.36, dot=1.9, name=None, wind=None,
-                 font=None, **opts):
+                 sparkle=1.0, sharp=1.0, fog=0.25, n=42000, n_label=6000, label_size=0.36, dot=1.9, name=None,
+                 wind=None, font=None, **opts):
         if expr is not None:
             e = EXPRESSIONS[expr - 1] if isinstance(expr, int) else EXPRESSIONS[LABELS.index(expr)]
             label, lines = e["label"], e["lines"]
@@ -331,6 +331,7 @@ class Word:
         self.tint, self.bright, self.halo, self.sparkle = float(tint), float(bright), float(halo), float(sparkle)
         self.glow_hex = glow or self.hex
         self.sharp = float(np.clip(sharp, 0.0, 1.0))
+        self.fog = float(np.clip(fog, 0.0, 1.0))
         self.n, self.n_label, self.label_size, self.dot = int(n), int(n_label), float(label_size), float(dot)
         self.wind = _unit(wind if wind is not None else (1.0, 0.22, 0.10))
         self.font, self.opts = font, opts
@@ -473,6 +474,49 @@ class Word:
     def gain(self, t):
         return 1.0
 
+    def _env(self, t, hold_level):
+        """How strongly the light of an arrival (shaft, rays) shines at t: up during the arrival, fainter
+        while the words are read, gone as they leave."""
+        a = (t - self.t_in) / max(self.t_read0 - self.t_in, 1e-6)
+        if a <= 0.0 or t >= self.t_out:
+            return 0.0
+        k = float(_ss(0.0, 0.2, a))
+        if t > self.t_read0:
+            k *= 1.0 - (1.0 - hold_level) * float(_ss(0.0, 1.5, t - self.t_read0))
+        if t > self.t_read1:
+            k *= 1.0 - float(_ss(0.0, 0.6, (t - self.t_read1) / max(self.t_out - self.t_read1, 1e-6)))
+        return k
+
+    def shaft(self, color="#cfe0ff", strength=1.0):
+        """A shaft of light for P3D world["shafts"]: it stands where the word is, from above it down to the
+        lake, bright while the word arrives and fainter while it is read."""
+        x0, x1, y0, y1 = self.extent()
+        w = x1 - x0
+
+        def base(t):
+            c = self.centre(t)
+            return (float(c[0]), float(c[2]))
+
+        rad = 0.20 * w
+        k = 0.8 / rad            # the column's glow grows with its width: keep it gentle whatever the size
+        return dict(base=base, radius=rad, top=float(self.centre(self.t_read0)[1] + y1 + 1.6 * w),
+                    spread=-0.6, color=color, strength=lambda t: strength * k * self._env(t, 0.5))
+
+    def light(self, color=None, strength=1.0, size=None):
+        """The world's light (P3D world["light"]) standing behind the word: its rays fan out past the letters
+        while the word arrives by `rays`."""
+        x0, x1, y0, y1 = self.extent()
+
+        def pos(t):
+            if self.source is not None and not isinstance(self.source, Word):
+                q = points_of(self.source, t)
+                return tuple(float(v) for v in np.asarray(q, np.float64).mean(axis=0))
+            c = self.centre(t)
+            return (float(c[0]), float(c[1] + 0.5 * (y0 + y1)), float(c[2]))
+
+        return dict(pos=pos, strength=lambda t: strength * self._env(t, 0.35), rays=1.0,
+                    size=size or 0.10 * (x1 - x0), color=color or self.glow_hex)
+
     # ------------------------------------------------------------------ sampling
     def sample(self, t, cam=None):
         st = self.state(t)
@@ -517,16 +561,20 @@ class Word:
         def put(sel, dof, reflect=True, a_mul=1.0, s_new=None):
             if not sel.any():
                 return
+            # settled letters keep clear of the haze and of the motion blur; flying particles take both
             out.append(dict(pos=pos[sel], size=(size[sel] if s_new is None else s_new),
                             color=(col if col.ndim == 1 else col[sel]) * level,
                             alpha=(alpha[sel] * a_mul), emit=emit[sel], kind="soft", dof=dof, reflect=reflect,
-                            seed=self.s[sel, 0], twinkle=0.12))
+                            seed=self.s[sel, 0], twinkle=0.12, fog=1.0 if dof else self.fog,
+                            streak=1.0 if dof else 0.0))
 
         lens = cam is not None and getattr(cam, "aperture", 0.0) > 0.0 and self.sharp > 0.0
         groups = [(vis, True)] if split is None else [(vis & ~split, True), (vis & split, False)]
         for sel, refl in groups:
             if not lens:
-                put(sel, True, refl)
+                held = sel & (assist >= 0.999)
+                put(held, False, refl)
+                put(sel & ~held, True, refl)
                 continue
             held = sel & (assist > 0.0)
             put(sel & ~held, True, refl)
@@ -547,7 +595,7 @@ class Word:
             if sel.any():
                 out.append(dict(pos=pos[:k][sel], size=self.size0[:k][sel] * 9.0, color=self.c_glow,
                                 alpha=a[sel] * (0.050 * self.halo * self.N / k / 16.0), kind="soft",
-                                seed=self.s[:k][sel, 1]))
+                                seed=self.s[:k][sel, 1], fog=self.fog, streak=0.0))
         # glints: a few points sparkle like glitter
         if self.sparkle > 0.0:
             i = self.i_spark
@@ -607,7 +655,7 @@ class Word:
             env = (_ss(0.0, 0.25, a) * (1.0 - 0.55 * _ss(0.0, 1.2, hold))) * (1.0 - _ss(0.0, 0.5, fade))
             if env <= 0.003:
                 return
-            src = o + u * self.ymid - nrm * (0.30 * w)
+            src = self._ray_source(t, None, F)
             ang = self.fan + 0.10 * np.sin(t * 0.35 + self.fan * 3.0)
             reach = (0.45 + 1.25 * float(_ss(0.0, 0.6, a))) * w
             d = (np.cos(ang)[:, None] * r[None, :] + np.sin(ang)[:, None] * u[None, :]) * reach + nrm * (0.42 * w)
@@ -659,12 +707,12 @@ class Word:
         if self.source is None or self.opts.get("palm_light", False):
             g = float(_ss(0.0, 0.08, a) * (1.0 - _ss(0.62, 0.95, a)))
             if g > 0.01:     # the giving hand as a small warm light, when no body gives it
-                P["extra"].append(dict(pos=src[None, :], size=0.05 * w, color=lin(WARM), alpha=0.9 * g, emit=3.0,
+                P["extra"].append(dict(pos=src[None, :], size=0.018 * w, color=lin(WARM), alpha=0.9 * g, emit=2.0,
                                        kind="spark", twinkle=0.5))
-                P["extra"].append(dict(pos=src[None, :], size=0.30 * w, color=self.c_glow, alpha=0.10 * g,
+                P["extra"].append(dict(pos=src[None, :], size=0.16 * w, color=self.c_glow, alpha=0.08 * g,
                                        kind="soft"))
 
-    def _fly_petals(self, a, t, F, k_of, turn=1.0, lift=1.0):
+    def _fly_petals(self, a, t, F, k_of, turn=1.0, lift=1.0, reach=1.0):
         """Offsets (plane frame) of the carriers on their spiral: k is 1 far away, 0 in place."""
         m = self.M
         s = self.s[:m]
@@ -674,11 +722,11 @@ class Word:
         # they make one swirling stream
         arm = self.opts.get("arm", 2.3)                               # the direction the stream comes from (radians)
         gap = np.mod(arm - self.phi[:m] + 0.5 * (s[:, 2] - 0.5), TAU) + TAU * self.opts.get("swirl", 1.0)
-        rho = self.rho[:m] + (1.05 * w * (0.8 + 0.4 * s[:, 1]) - self.rho[:m]) * k
+        rho = self.rho[:m] + (1.05 * w * reach * (0.8 + 0.4 * s[:, 1]) - self.rho[:m]) * k
         phi = self.phi[:m] + turn * gap * k ** 1.25
         dx = rho * np.cos(phi) - self.xl[:m]
         dy = rho * np.sin(phi) + self.ymid - self.yl[:m] + lift * 0.25 * self.Ht * k * k
-        dz = w * (0.55 * (s[:, 3] - 0.2) + 0.35) * k
+        dz = w * reach * (0.55 * (s[:, 3] - 0.2) + 0.35) * k
         return dx, dy, dz
 
     def _arr_petals(self, P, a, t, cam, F, tg):
@@ -919,9 +967,23 @@ class Word:
             P["extra"].append(dict(pos=pc[vis], size=size[vis] * 5.0, color=col[vis], alpha=seen[vis] * 0.06,
                                    kind="soft", seed=s[vis, 0]))
 
+    def _ray_source(self, t, cam, F):
+        o, r, u, nrm = F
+        return self._point(self.source, t, cam, o + u * self.ymid - nrm * (0.30 * self.W))
+
     def _arr_rays(self, P, a, t, cam, F, tg):
         """Rays from a light behind burn the words out of mist: along the rays first, then outward."""
-        rev = np.clip(0.14 + 0.62 * (self.rho / self.rho_max) ** 0.9 - 0.16 * self.ray, 0.03, 0.9)
+        if self.source is not None and not isinstance(self.source, Word):
+            # the light stands somewhere else (behind a person's head): burn outward from there
+            o, r, u, nrm = F
+            d = tg - self._ray_source(t, cam, F).astype(np.float32)[None, :]
+            dx, dy = d @ r.astype(np.float32), d @ u.astype(np.float32)
+            rho = np.hypot(dx, dy)
+            rho = (rho - rho.min()) / max(float(np.ptp(rho)), 1e-6)
+            ray = (np.maximum(np.cos(np.arctan2(dy, dx)[:, None] - self.fan[None, :]), 0.0) ** 26).max(axis=1)
+        else:
+            rho, ray = self.rho / self.rho_max, self.ray
+        rev = np.clip(0.14 + 0.62 * rho ** 0.9 - 0.16 * ray, 0.03, 0.9)
         dt = a - rev
         heat = np.exp(-np.maximum(dt, 0.0) / 0.07) * (dt > 0.0)
         P["alpha"] = _ss(0.0, 0.03, dt)
@@ -1076,9 +1138,10 @@ class Word:
         st = 0.42 * (0.6 * self.ord[:m] + 0.4 * s[:, 0])
         lp = self._own(l, st)
         k = lp ** 1.6
-        dx, dy, dz = self._fly_petals(l, t, F, k, turn=-1.0, lift=0.6)
+        dx, dy, dz = self._fly_petals(l, t, F, k, turn=-1.0, lift=0.6, reach=self.opts.get("reach", 0.5))
         tl = self.t_out - self.t_read1
-        drift = self.wind.astype(np.float32)[None, :] * (0.25 * self.W * np.maximum(l - st, 0.0) * tl)[:, None]
+        drift = self.wind.astype(np.float32)[None, :] * (self.opts.get("speed", 0.45) * self.W
+                                                         * np.maximum(l - st, 0.0) * tl)[:, None]
         pc = tg[:m] + self._world(F, dx, dy, dz) + drift
         dt = l - (st[self.ci] + 0.02 * self.cd)
         P["alpha"] = 1.0 - _ss(0.0, 0.05, dt)
@@ -1248,8 +1311,56 @@ class Words:
             return best
         return float(default + (best - default) * wgt)
 
+    def focus_point(self, t, default=(0.0, 6.0, 0.0), ease=0.8):
+        """A world point for the camera to focus on: the word being read, easing from and back to `default`
+        (a point or a function of t). Give it to a camera move as focus=lambda t: WORDS.focus_point(t, ...)."""
+        d = np.asarray(default(t) if callable(default) else default, np.float64)
+        acc, wsum, top = np.zeros(3), 0.0, 0.0
+        for w in self.words:
+            end = w.to.t_in if (w.leave == "morph" and isinstance(w.to, Word)) else w.t_read1
+            k = float(_ss(w.t_read0 - ease, w.t_read0, t) * (1.0 - _ss(end, end + ease, t)))
+            if k > 0.0:
+                acc += k * w.centre(t)
+                wsum += k
+                top = max(top, k)
+        if wsum <= 0.0:
+            return d
+        return d + (acc / wsum - d) * top
+
+    def world(self, world=None):
+        """The song's P3D world settings with the light that belongs to the words added: a real shaft of
+        light for every word that arrives by `shaft` (up to four) and the world's light with rays behind the
+        word that arrives by `rays` (one). Give the result as P3D["world"]."""
+        out = dict(world or {})
+        shafts = list(out.get("shafts") or [])
+        for w in self.words:
+            if w.arrive == "shaft" and len(shafts) < 4:
+                shafts.append(w.shaft())
+            if w.arrive == "rays" and not out.get("light"):
+                out["light"] = w.light()
+        if shafts:
+            out["shafts"] = shafts
+        return out
+
     def check(self, camera=None, **kw):
         return check(self, camera, **kw)
+
+
+def place(camera, t, x, y, depth):
+    """The world point seen at the screen place (x, y) (0..1 from the left and from the bottom) `depth` metres
+    in front of the camera at time t. For laying words out by where they should be read on screen."""
+    cam = _cam_at(camera, t)
+    r, u, f = cam.basis()
+    half = np.tan(np.radians(cam.fov) * 0.5) * depth
+    return (np.asarray(cam.pos, np.float64) + f * depth + r * ((x - 0.5) * 2.0 * half * cam.aspect)
+            + u * ((y - 0.5) * 2.0 * half))
+
+
+def em_for(camera, t, depth, px):
+    """Metres per em so that an em is `px` pixels of a 1080p picture at `depth` metres from the camera at t
+    (80 px is easy to read on a phone)."""
+    cam = _cam_at(camera, t)
+    return float(px) * 2.0 * np.tan(np.radians(cam.fov) * 0.5) * depth / 1080.0
 
 
 def _cam_at(camera, t):
