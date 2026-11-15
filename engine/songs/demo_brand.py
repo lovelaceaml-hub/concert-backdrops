@@ -8,14 +8,15 @@ Not a concert video: a proof of what helper BRAND built for the five films (engi
    8.0 to 16.0   HEARTS: heart bokeh near the lens, small sparkling hearts, heart petals on the wind, hearts
                  drifting off a light in the Greeting's colour, fireflies gathering into a heart
   16.0 to 40.0   THE NINE SYMBOLS as quiet scenery, each in its website colour and each a different recipe:
-                 16.4 Greeting traced by fireflies, 19.0 Gratitude a constellation, 21.6 Apology ripples on
-                 the water, 24.2 Inclusiveness made of petals, 26.8 Concession a flock of birds passing,
-                 29.4 Respect a light trail, 32.0 Encouragement traced by sparks, 34.6 Consideration made of
+                 16.4 Greeting traced by fireflies, 19.0 Gratitude a constellation, 21.6 Apology over the
+                 water, its reflection rippling, 24.2 Inclusiveness made of petals, 26.8 Concession a flock
+                 of birds passing, 29.4 Respect a light trail, 32.0 Encouragement traced by sparks, 34.6 Consideration made of
                  heart petals, 37.2 Compliment a drift of embers
   40.0 to 47.5   THE WORLD by day: a clear blue and green Earth with white clouds on a bright sky, hearts
                  lighting up across it
   47.5 to 60.0   THE FINALE: the world of light at night (golden continents, drifting clouds, a soft air),
-                 hearts in the nine colours blooming across it from Las Vegas, joined by high arcs; it slows
+                 hearts in the nine colours blooming across it from Las Vegas, joined by arcs, a warm light
+                 rising from below it where hands would cradle it (49.6 to 53.2); it slows
                  and settles (52.2 to 54.0) and becomes the logo (53.0 to 55.0): the hearts sweep in behind it,
                  the ring and the grid draw themselves over the Earth, the logo's globe spreads over it, the
                  branches grow; light blooms from it into a pastel day (54.3), and the logo rises into the end
@@ -78,16 +79,17 @@ def world_pieces(camera, o=0.0):
     fin = BR.Finale(pos=GLOBE_AT, radius=11.5, shrink=0.47, camera=camera, look="night", t_world=47.6 + o,
                     spin=8.0, front=-150.0, hearts=dict(t0=48.4 + o, t1=52.6 + o, n=44),
                     t_settle=(52.2 + o, 54.0 + o), t_logo=(53.0 + o, 55.0 + o), bloom=dict(t=54.3 + o),
-                    end=dict(t=(55.0 + o, 56.4 + o), ride=(0.5, 0.74, 14.0), frac=0.27))
+                    end=dict(t=(55.0 + o, 56.4 + o), ride=(0.5, 0.74, 14.0), frac=0.27),
+                    cradle=dict(t0=49.6 + o, t1=53.2 + o))       # light rising from where hands would cradle it
     return day, fin
 
 
 def world_p3d(camera, fin, looks, o=0.0):
-    """The P3D world and bursts for these pieces: `looks` before the day globe, then day, then night."""
-    world = fin.world(dict(look=list(looks) + [(40.0 + o, "day", 0.0), (47.5 + o, "night", 0.0)], arch=None,
+    """The P3D world and bursts for these pieces: `looks` before the day globe, then day, then night (each
+    change a short blend through dusk, never a flash)."""
+    world = fin.world(dict(look=list(looks) + [(40.0 + o, "day", 0.8), (47.5 + o, "night", 0.8)], arch=None,
                            react=dict(beat=0.3, level=0.2)))
-    cuts = [dict(t=tc, strength=1.2, rise=0.2, fall=0.5) for tc in (40.0 + o, 47.5 + o) if tc > 0.0]
-    return world, cuts + fin.bursts()
+    return world, fin.bursts()
 
 
 # --------------------------------------------------------------------------------------------- the camera
@@ -98,10 +100,10 @@ CAMERA = Rig([
     # hearts: the lens on the middle distance; the near hearts are bokeh
     dolly((-1.5, 3.4, 17.0), (1.5, 3.8, 15.0), 8.0, 16.0, look=((0.0, 4.6, 0.0), (0.3, 4.8, 0.0)), fov=42.0,
           aperture=0.09, focus=15.5, blend=0.0),
-    # the symbols: a slow drift along the shore; for the Apology the camera rises to look down on the water
+    # the symbols: a slow drift along the shore; for the Apology the camera comes down toward the water
     dolly((-3.0, 4.6, 21.0), (-1.5, 4.5, 20.5), 16.0, 21.0, look=((-1.0, 6.0, -4.0), (-0.5, 5.9, -4.0)), fov=46.0,
           aperture=0.02, focus=24.0, blend=0.0),
-    dolly((0.0, 9.5, 21.0), (0.5, 10.0, 20.0), 21.0, 24.4, look=((0.0, 0.0, 2.0), (0.3, 0.0, 2.0)), fov=46.0,
+    dolly((0.0, 3.6, 20.0), (0.5, 3.8, 19.0), 21.0, 24.4, look=((0.0, 1.2, 2.0), (0.3, 1.2, 2.0)), fov=46.0,
           aperture=0.0, blend=1.0),
     dolly((-1.0, 4.5, 20.5), (3.0, 4.2, 19.0), 24.4, 40.0, look=((-0.5, 5.9, -4.0), (1.0, 5.6, -4.0)), fov=46.0,
           aperture=0.02, focus=24.0, blend=1.0),
@@ -145,7 +147,7 @@ SYMS = [
     BR.Traced("Greeting", pos=(-6.5, 7.6, -6.0), size=4.0, camera=CAMERA, t0=16.4, intensity=_K),
     BR.Constellation("Gratitude", pos=(30.0, 70.0, -190.0), size=46.0, camera=CAMERA, t0=19.0, dur=1.8,
                      intensity=_K),
-    BR.Ripples("Apology", pos=(0.3, 0.03, 2.0), size=7.0, facing=0.0, camera=CAMERA, t0=21.6, intensity=_K),
+    BR.Ripples("Apology", pos=(0.3, 2.9, 2.0), size=4.0, camera=CAMERA, t0=21.6, intensity=_K),
     BR.PetalShape("Inclusiveness", pos=(6.0, 6.2, -5.0), size=4.2, camera=CAMERA, t0=24.2, intensity=_K),
     BR.Flock("Concession", pos=(-5.0, 9.0, -14.0), size=7.0, camera=CAMERA, t0=26.4, dur=2.6, intensity=_K),
     BR.LightTrail("Respect", pos=(0.5, 7.0, -8.0), size=5.0, camera=CAMERA, t0=29.4, intensity=_K),

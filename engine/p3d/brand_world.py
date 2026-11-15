@@ -115,10 +115,10 @@ LOOK_COLORS = dict(
                rim="#8fd6ff", cloud="#d6e6ff", paint_land=False, rim_k=0.5, cloud_k=0.30, glow_k=1.0, land_k=1.0),
     space=dict(ocean_c="#1d4fa6", ocean_e="#0a2160", land="#ffb340", land2="#ffeccc", land_base="#24160a",
                rim="#7cc8ff", cloud="#c8dcff", paint_land=False, rim_k=0.65, cloud_k=0.25, glow_k=1.0, land_k=1.0),
-    # day: the bright world of world_ref, painted (it never adds light over the sky): a clear blue ocean,
-    # fresh green land, white clouds, a thin pale air
-    day=dict(ocean_c="#3f95dc", ocean_e="#1d5fb0", land="#6cc35a", land2="#9bd884", land_base="#5fb04f",
-             rim="#eaf5ff", cloud="#ffffff", paint_land=True, rim_k=0.14, cloud_k=0.22, glow_k=0.0, land_k=1.0),
+    # day: the soft pastel clay world of world_ref, painted (it never adds light over the sky): a gentle blue
+    # ocean, soft green land, a little white cloud, a thin pale air
+    day=dict(ocean_c="#8cc3e3", ocean_e="#5b98cb", land="#a3d593", land2="#bfe3ad", land_base="#a3d593",
+             rim="#f2fbff", cloud="#ffffff", paint_land=True, rim_k=0.12, cloud_k=0.12, glow_k=0.0, land_k=1.0),
 )
 
 
@@ -163,10 +163,10 @@ class Globe:
     Place: pos (its centre), radius (metres), face ("camera" by default: it turns to the camera), camera
     (the song's Rig), or place=<brand.Place> (its size is the globe's diameter).
     look      "night" (a deep blue ocean, continents of warm golden light, moonlit cloud wisps, a soft blue
-              atmosphere), "space" (deeper), "day" (the bright world: a clear blue ocean and green land painted
-              in their colours, white clouds, a thin pale air; it adds almost no light, so it never washes out
-              on a bright sky); or a dict of LOOK_COLORS keys; may change: look=[(t, name), ...] blends the
-              colours over `blend` s
+              atmosphere), "space" (deeper), "day" (a gentle blue ocean and soft green land painted in their
+              colours, a little white cloud, a thin pale air; it adds almost no light, so it never washes out
+              on a bright sky; the soft pastel clay colours of world_ref); or a dict of LOOK_COLORS keys; may
+              change: look=[(t, name), ...] blends the colours over `blend` s
     scale     a size factor, a number or a function of t (the Finale shrinks the globe as it settles)
     spin      degrees a second it turns (6.0); front: the longitude that faces the camera at t=0 (-40: the
               Atlantic, the Americas on the left)
@@ -187,14 +187,19 @@ class Globe:
               look's cloud_k); False for none
     air, marks  a number or function of t: the strength of the air (rim and halo) and of the hearts and arcs
               (the Finale fades both as the logo's ring and grid draw over the Earth)
+    cradle    dict(t0, t1, at=None, width=1.3, color="#ffcf8f", glow=1.0, motes=180, rise=1.5): a soft warm
+              light rising from below the globe, as from hands cradling it: a pool of warm light at `at` (a
+              world point or function of t; default cradle_at(t), just under the globe, where the hands go),
+              motes of light drifting up in front of the globe, its lower edge warmed from below; it comes in
+              over the first second after t0 and goes over the last second before t1; None for none
     n         land points (40000 a hemisphere and a half; more for a globe that fills the picture)
     bright    strength of the light (land, rim, hearts)
     """
 
     def __init__(self, pos=(0.0, 12.0, -40.0), radius=8.0, face="camera", camera=None, place=None, look="night",
                  blend=1.2, spin=6.0, front=-40.0, tilt=18.0, settle=None, t_in=0.0, t_out=None, fade=1.2,
-                 amount=None, hearts=None, arcs=True, clouds=True, air=None, marks=None, n=40000, bright=1.0,
-                 scale=None, seed=4):
+                 amount=None, hearts=None, arcs=True, clouds=True, air=None, marks=None, cradle=None, n=40000,
+                 bright=1.0, scale=None, seed=4):
         sz = (lambda t: 2.0 * radius * float(scale(t))) if callable(scale) else 2.0 * radius * float(scale or 1.0)
         self.place = place or B.Place(pos=pos, size=sz, face=face)
         self.camera = camera
@@ -206,6 +211,8 @@ class Globe:
         self.t_in, self.t_out, self.fade = float(t_in), t_out, float(fade)
         self.amount = amount
         self.air, self.marks = air, marks
+        self.cradle = dict(dict(at=None, width=1.3, color="#ffcf8f", glow=1.0, motes=180, rise=1.5), **cradle) \
+            if cradle else None
         self.bright = float(bright)
         arc0 = dict(height=0.2, width=0.009, dur=1.0, glow=1.0)
         self.arcs = (dict(arc0, **({} if arcs is True else dict(arcs)))) if (arcs and hearts) else None
@@ -524,10 +531,67 @@ class Globe:
             out.append(dict(pos=air, size=R * 0.12, color=rimc * 0.8 * self.bright,
                             alpha=(0.018 * L["rim_k"] * ka * np.exp(-q * 2.4)).astype(np.float32), kind="soft",
                             dof=0.0, fog=0.0, streak=0.0))
+        # the light rising from the hands that cradle it
+        if self.cradle:
+            cr = self.cradle
+            kc = k * _sc(float(cr["t0"]), float(cr["t0"]) + 1.0, t) * (1.0 - _sc(float(cr["t1"]) - 1.0,
+                                                                                 float(cr["t1"]), t))
+            if kc > 0.0:
+                out += self._cradle(t, cam, c, M, R, kc)
         # hearts and arcs
         km = k * self._marks(t)
         if self.hearts is not None and km > 0.0:
             out += self._hearts(t, cam, c, R, T, km)
+        return out
+
+    def cradle_at(self, t, cam=None):
+        """The world point just under the globe at t, where hands cradling it go (the cradle's light rises
+        from there unless the cradle gives its own `at`)."""
+        if cam is None and self.camera is not None:
+            cam = self.camera.state(t) if hasattr(self.camera, "state") else self.camera(t)
+        c, M, R = self._view(t, cam)
+        return c - np.array([0.0, 1.0, 0.0]) * R * 1.08
+
+    def _cradle(self, t, cam, c, M, R, kc):
+        cr = self.cradle
+        at = cr["at"]
+        base = np.asarray(_val(at, t), np.float64) if at is not None else c - np.array([0.0, 1.0, 0.0]) * R * 1.08
+        col = lin(cr["color"])
+        g = float(cr["glow"])
+        right, upv, fwd = M[:, 0], np.array([0.0, 1.0, 0.0]), M[:, 2]
+        wd = float(cr["width"]) * R
+        out = []
+        # a pool of warm light where the hands are
+        xs = np.linspace(-0.5, 0.5, 9) * wd
+        pool = base[None, :] + xs[:, None] * right[None, :]
+        out.append(dict(pos=pool, size=R * 0.42, color=col * 0.6 * g, alpha=np.full(9, 0.07 * kc), kind="soft",
+                        dof=0.0, fog=0.0, streak=0.0, reflect=False))
+        # a soft column of that light rising to the globe and up its front, thinning as it goes
+        h = np.linspace(0.0, 1.0, 14)
+        col_p = base[None, :] + (h * 0.9 * R)[:, None] * upv[None, :] + (0.3 * R) * fwd[None, :]
+        out.append(dict(pos=col_p, size=R * (0.30 + 0.25 * h), color=col * 0.55 * g,
+                        alpha=(0.05 * kc * (1.0 - h) ** 1.3).astype(np.float32), kind="soft", dof=0.0, fog=0.0,
+                        streak=0.0, reflect=False))
+        # motes of light drifting up in front of the globe
+        m = int(cr["motes"])
+        s1, s2, s3 = hash01(m, 91), hash01(m, 92), hash01(m, 93)
+        rise = float(cr["rise"]) * R
+        speed = (0.10 + 0.08 * s2) * R
+        life = np.mod(t * speed / rise + s1, 1.0)
+        x = (s3 - 0.5) * wd * (1.0 - 0.35 * life) + 0.04 * R * np.sin(t * 1.3 + s2 * 20.0)
+        pos = base[None, :] + x[:, None] * right[None, :] + (life * rise)[:, None] * upv[None, :] \
+            + (R * (0.25 + 0.6 * s1))[:, None] * fwd[None, :]
+        a = np.sin(np.pi * life) ** 1.5 * kc
+        out.append(dict(pos=pos, size=R * 0.010 * (0.7 + 0.6 * s2), color=col * 1.5 * g, alpha=a * 0.8, emit=1.6,
+                        kind="spark", twinkle=0.8, seed=s3, dof=0.0, fog=0.0, reflect=False))
+        out.append(dict(pos=pos, size=R * 0.05, color=col * 0.5 * g, alpha=a * 0.10, kind="soft", dof=0.0, fog=0.0,
+                        streak=0.0, reflect=False))
+        # the globe's lower edge warmed from below
+        ang = np.radians(np.linspace(200.0, 340.0, 60))
+        w = np.sin((ang - ang[0]) / (ang[-1] - ang[0]) * np.pi)
+        rim = c[None, :] + R * 0.985 * (np.cos(ang)[:, None] * right[None, :] + np.sin(ang)[:, None] * M[:, 1][None, :])
+        out.append(dict(pos=rim, size=R * 0.16, color=col * 0.8 * g, alpha=0.11 * kc * w, kind="soft", dof=0.0,
+                        fog=0.0, streak=0.0, reflect=False))
         return out
 
     def _air(self, t):
@@ -650,8 +714,9 @@ class Globe:
 class _Bloom:
     """A soft spreading light from a point: the globe blooming into day."""
 
-    def __init__(self, at, t, dur, radius, color="#fff1de", glow=0.5):
+    def __init__(self, at, t, dur, radius, color="#ffd9b4", glow=0.5):
         self.at, self.t, self.dur, self.r, self.col = at, float(t), float(dur), float(radius), lin(color) * glow / 0.5
+        self.gold = lin("#ffc27a") * glow / 0.5
         s = hash01(400, 77)
         s2 = hash01(400, 78)
         a = s * TAU
@@ -671,7 +736,8 @@ class _Bloom:
         r, up, f = cam.basis()
         rad = self.r * (1.05 + 2.5 * max(u, 0.0)) * (0.75 + 0.5 * self.s2)      # from the globe's edge outward
         p = c[None, :] + rad[:, None] * (self.dir[:, 0:1] * r[None, :] + self.dir[:, 1:2] * up[None, :])
-        return [dict(pos=p, size=self.r * 0.06, color=self.col * 1.6, alpha=0.3 * k, emit=2.0, kind="spark",
+        col = np.where((self.s2 < 0.5)[:, None], self.col[None, :], self.gold[None, :]) * 1.3   # peach and gold
+        return [dict(pos=p, size=self.r * 0.05, color=col, alpha=0.22 * k, emit=1.6, kind="spark",
                      twinkle=1.0, seed=self.s, dof=0.0, reflect=False)]
 
 
@@ -693,8 +759,9 @@ class Finale:
     timing            dict(part=(start, end)) in shares of t_logo, for any of heart_l, heart_r, ring, grid,
                       globe, branch_l, branch_r
     shrink            the globe draws in to this share of its size as it settles (0.6), so the whole logo fits
-    bloom             dict(t=54.3, dur=1.0, strength=0.12, glow=0.5, color="#fff1de"): light blooms from the globe
-                      (a flash of `strength`, P3D bursts, and a soft spreading light of `glow`); the
+    bloom             dict(t=54.3, dur=1.0, strength=0.12, glow=0.5, color="#ffd9b4"): warm pastel light blooms
+                      from the globe (a flash of `strength`, capped at 0.3 so it never whites out, P3D bursts, and
+                      peach and gold sparks spreading, `glow`, capped at 1); the
                       world turns to the pastel day `look_after` round t (its blend `blend` seconds); None for no
                       bloom (then give the world's look yourself)
     end               dict(t=(55.0, 56.4), ride=(0.5, 0.78, 14.0), frac=0.22): the logo glides from where the globe
@@ -705,6 +772,8 @@ class Finale:
     glow              a soft halo of the hearts' own colours round the painted logo (Logo paint_glow; default
                       0: painted clean, which reads best); a number or function of t
     clouds            the Earth's cloud wisps (True)
+    cradle            as Globe: a soft warm light rising from below the globe, as from hands cradling it (the
+                      hands go at fin.globe.cradle_at(t), or give the cradle your own `at`)
     logo              dict of other brand.Logo keys (bright, white, glow, sparkle, palette, n, ...)
 
     Use: fin.add_to(scene) in the song's setup; P3D world=fin.world(dict(...)) (adds the pastel look at the bloom
@@ -712,12 +781,13 @@ class Finale:
     fin.globe and fin.logo are the two point sets; fin.logo_place is the logo's Place.
     """
 
-    BLOOM = dict(t=54.3, dur=1.0, strength=0.12, color="#fff1de", glow=0.5)
+    BLOOM = dict(t=54.3, dur=1.0, strength=0.12, color="#ffd9b4", glow=0.5)
+    MAX_FLASH = 0.3            # the bloom's flash is capped: it can never white out the picture
 
     def __init__(self, pos=(0.0, 12.0, -40.0), radius=8.0, camera=None, look="night", t_world=49.5, spin=6.0,
                  front=-40.0, tilt=18.0, hearts=None, t_settle=(52.6, 54.0), t_logo=(53.4, 55.0), shrink=0.6,
                  bloom=None, end=None, look_after="pastel", blend=0.9, paint=None, glow=None, timing=None,
-                 logo=None, clouds=True, n=40000):
+                 logo=None, clouds=True, cradle=None, n=40000):
         self.pos, self.R, self.camera = np.asarray(pos, np.float64), float(radius), camera
         self.t_world = float(t_world)
         self.t_settle, self.t_logo = tuple(t_settle), tuple(t_logo)
@@ -750,7 +820,7 @@ class Finale:
         self.globe = Globe(pos=tuple(self.pos), radius=self.R, camera=camera, look=look, spin=spin, front=front,
                            tilt=tilt, settle=dict(t0=s0, t1=s1, pole=tuple(B.POLE)), scale=scale,
                            amount=lambda t: _sc(self.t_world, self.t_world + 1.2, t) * (1.0 - _sc(fade_a, fade_b, t)),
-                           hearts=hearts, clouds=clouds, n=n,
+                           hearts=hearts, clouds=clouds, cradle=cradle, n=n,
                            # the logo's ring takes the place of the air; the hearts and arcs give way to the grid
                            air=lambda t: 1.0 - _sc(l0 + tm["ring"][0] * w, l0 + tm["ring"][1] * w, t),
                            marks=lambda t: 1.0 - _sc(l0 + 0.10 * w, l0 + 0.50 * w, t))
@@ -798,15 +868,17 @@ class Finale:
         if self.bloom and self.bloom.get("glow", 0.5) > 0:
             b = self.bloom
             scene.add(name + " bloom", _Bloom(self.pos, b["t"], b["dur"], self.R * self.shrink,
-                                              b.get("color", "#fff1de"), float(b.get("glow", 0.5))), reflect=False)
+                                              b.get("color", "#ffd9b4"), min(float(b.get("glow", 0.5)), 1.0)),
+                      reflect=False)
 
     def bursts(self):
         """The bloom's flash of light (P3D bursts); empty with strength 0."""
         if not self.bloom or float(self.bloom.get("strength", 0.12)) <= 0:
             return []
         b = self.bloom
-        return [dict(t=b["t"] + 0.1 * b["dur"], strength=float(b.get("strength", 0.12)), rise=0.3 * b["dur"],
-                     fall=0.55 * b["dur"], color=b.get("color", "#fff1de"), at=tuple(self.pos), radius=0.25)]
+        return [dict(t=b["t"] + 0.1 * b["dur"], strength=min(float(b.get("strength", 0.12)), self.MAX_FLASH),
+                     rise=0.3 * b["dur"], fall=0.55 * b["dur"], color=b.get("color", "#ffd9b4"), at=tuple(self.pos),
+                     radius=0.25)]
 
     def world(self, base=None):
         """The song's world settings with the bloom to the pastel day added (the look keys and the PASTEL look)."""
