@@ -256,10 +256,32 @@ def _storm_shed(t0, t1, dir=(1.0, 0.18, 0.15)):
 BODIES = {}
 
 
+class _Person:
+    """A body built when it is first needed (the workflow's first step imports the song with numpy only, and
+    a body's garments need scipy)."""
+
+    def __init__(self, shape, kw):
+        self.shape, self.kw, self._b = shape, kw, None
+
+    @property
+    def b(self):
+        if self._b is None:
+            self._b = Body(self.shape, **self.kw)
+        return self._b
+
+    wants_camera = True
+
+    def sample(self, t, cam=None):
+        return self.b.sample(t, cam)
+
+    def where(self, t, place, **kw):
+        return self.b.where(t, place, **kw)
+
+
 def _person(name, shape, **kw):
     kw.setdefault("points", 42000)
     kw.setdefault("fade", 0.4)
-    b = Body(shape, **kw)
+    b = _Person(shape, kw)
     BODIES[name] = b
     return b
 
@@ -313,8 +335,8 @@ _person("child", "child", at=(-1.25, 28.1), facing=[(17.6, 180.0), (23.8, 180.0)
         effects=[_storm_shed(17.6, D + 0.5)])
 # two hands across the edge of the calm (gold on the glass, storm blue in the swell)
 MEET = (G5[0], 0.92, G5[2])
-HANDS = Hands(meet=MEET, t_touch=TOUCH, axis=270.0, color="#ffc56e", color2="#7fb6ff", apart=0.6, approach=2.4,
-              points=50000)
+HANDS = dict(meet=MEET, t_touch=TOUCH, axis=270.0, color="#ffc56e", color2="#7fb6ff", apart=0.6, approach=2.4,
+             points=50000)
 # Heavenly Mother, only from behind: she faces the dawn (-z); every camera that sees her is behind her
 MOTHER = _person("mother_hm", "woman", at=(0.0, 0.0), facing=180.0, garment="robe", veil=dict(length=1.4),
                  gesture=[(36.2, 42.3, "open_arms"), (40.4, 44.0, "offer", dict(side="R"))],
@@ -475,8 +497,8 @@ def _setup(scene):
     scene.add("beads_g", BEADS_G)
     scene.add("beads_i", BEADS_I)
     for name, b in BODIES.items():
-        b.add(scene, name)
-    for k, v in HANDS.items():
+        b.b.add(scene, name)
+    for k, v in Hands(**HANDS).items():
         scene.add("hand_" + k, _Window(v, 28.6, 35.8))
     WORDS.add_to(scene)
     WORDS.check(CAMERA)
