@@ -433,10 +433,11 @@ def person_segments(J, F, lag, veil=False, full=True, wide=1.0, head_r=0.052):
             # an arm shows only when it reaches, holds or lifts; hanging, it is inside the cloak
             rf = 1.0 + d2[:, 1]
             ru = np.maximum(1.0 + _n3(E - S0)[:, 1], 0.7 * rf)
-            wu, wf = 0.12 + 0.88 * ss(0.12, 0.55, ru), 0.12 + 0.88 * ss(0.12, 0.55, rf)
-            add(F.pt(S0), F.pt(E), 0.0235, 0.0210, 0.9 * wu, 0.9 * wf, part, 3.0)
-            add(F.pt(E), F.pt(W), 0.0210, 0.0180, 0.9 * wf, 0.9 * wf, part, 3.0)
-            add(F.pt(W), F.pt(W + hd * 0.045), 0.0180, 0.0115, wf, wf, part, 3.0)
+            wu, wf = ss(0.12, 0.55, ru), ss(0.12, 0.55, rf)
+            su, sf = 0.15 + 0.85 * wu, 0.15 + 0.85 * wf           # a hanging arm is thin too, so it leaves no edge
+            add(F.pt(S0), F.pt(E), 0.0235 * su, 0.0210 * sf, 0.9 * wu, 0.9 * wf, part, 3.0)
+            add(F.pt(E), F.pt(W), 0.0210 * sf, 0.0180 * sf, 0.9 * wf, 0.9 * wf, part, 3.0)
+            add(F.pt(W), F.pt(W + hd * 0.045), 0.0180 * sf, 0.0115 * sf, wf, wf, part, 3.0)
     out = np.zeros((N, len(segs), 12), np.float32)
     for i, (A_, B_, ra, rb, wa, wb, part, kind) in enumerate(segs):
         out[:, i, 0:2], out[:, i, 2:4] = A_, B_
