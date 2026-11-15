@@ -106,7 +106,7 @@ jobs:
         run: pip install -q numpy scipy librosa moderngl pillow fonttools brotli soundfile
       - name: Fonts
         run: |
-          mkdir -p /tmp/fs && cd /tmp/fs && npm pack -q @fontsource/cormorant-garamond @fontsource/jost >/dev/null
+          mkdir -p /tmp/fs && cd /tmp/fs && npm pack -q @fontsource/cormorant-garamond @fontsource/jost @fontsource/outfit >/dev/null
           for f in *.tgz; do d="${f%.tgz}"; mkdir -p "$d"; tar xzf "$f" -C "$d"; done
           cd "$GITHUB_WORKSPACE" && python tools/setup_fonts.py /tmp/fs fonts
       - name: Measure the music
@@ -237,7 +237,7 @@ jobs:
         if: inputs.qa != 'off'
         run: |
           pip install -q numpy scipy pillow fonttools brotli
-          mkdir -p /tmp/fs && cd /tmp/fs && npm pack -q @fontsource/cormorant-garamond @fontsource/jost >/dev/null
+          mkdir -p /tmp/fs && cd /tmp/fs && npm pack -q @fontsource/cormorant-garamond @fontsource/jost @fontsource/outfit >/dev/null
           for f in *.tgz; do d="${f%.tgz}"; mkdir -p "$d"; tar xzf "$f" -C "$d"; done
           cd "$GITHUB_WORKSPACE" && python tools/setup_fonts.py /tmp/fs fonts
           python tools/qa_check.py --song "$SONG" --video "share/$OUTNAME (share).mp4" --out qa --name "$OUTNAME"
@@ -271,7 +271,7 @@ jobs:
         run: |
           (sudo apt-get update -qq && sudo apt-get install -y -qq --no-install-recommends libegl1 libgles2 libgl1-mesa-dri libegl-mesa0 ffmpeg >/dev/null) &
           (pip install -q numpy scipy librosa moderngl pillow fonttools brotli soundfile) &
-          (mkdir -p /tmp/fs && cd /tmp/fs && npm pack -q @fontsource/cormorant-garamond @fontsource/jost >/dev/null) &
+          (mkdir -p /tmp/fs && cd /tmp/fs && npm pack -q @fontsource/cormorant-garamond @fontsource/jost @fontsource/outfit >/dev/null) &
           wait
           cd /tmp/fs && for f in *.tgz; do d="${f%.tgz}"; mkdir -p "$d"; tar xzf "$f" -C "$d"; done
           cd "$GITHUB_WORKSPACE" && python tools/setup_fonts.py /tmp/fs fonts
@@ -311,7 +311,7 @@ jobs:
         run: |
           (sudo apt-get update -qq && sudo apt-get install -y -qq --no-install-recommends ffmpeg >/dev/null) &
           (pip install -q numpy scipy pillow fonttools brotli) &
-          (mkdir -p /tmp/fs && cd /tmp/fs && npm pack -q @fontsource/cormorant-garamond @fontsource/jost >/dev/null) &
+          (mkdir -p /tmp/fs && cd /tmp/fs && npm pack -q @fontsource/cormorant-garamond @fontsource/jost @fontsource/outfit >/dev/null) &
           wait
           cd /tmp/fs && for f in *.tgz; do d="${f%.tgz}"; mkdir -p "$d"; tar xzf "$f" -C "$d"; done
           cd "$GITHUB_WORKSPACE" && python tools/setup_fonts.py /tmp/fs fonts

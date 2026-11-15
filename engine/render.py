@@ -95,6 +95,9 @@ class Renderer:
     def __init__(self, w=S.W, h=S.H, ctx=None):
         self.w, self.h = w, h
         self.px = h / 1080.0
+        if getattr(S, "TITLES", None):
+            import titles
+            titles.prepare()                     # HOWTO Y: a designed end card replaces the closing title and tagline
         # ctx: a window's context (engine/live.py); by default an offscreen one for the cloud render
         self.ctx = ctx = ctx or moderngl.create_standalone_context(backend="egl")
         self.song = S.Song()
@@ -207,6 +210,10 @@ class Renderer:
         if getattr(S, "P3D", None) is not None:
             import p3d.layer
             self.p3d = p3d.layer.Layer(self)     # HOWTO V: the 3D layer (camera, point sets, world; optional)
+        self.titles = None
+        if getattr(S, "TITLES", None):
+            import titles
+            self.titles = titles.Titles(self)    # HOWTO Y: the title and the date, designed (optional)
 
     # ------------------------------------------------------------------
     def text_plan(self, t):
@@ -316,6 +323,8 @@ class Renderer:
         # which text is on screen: A is an expression or the closing title, B the end card lines or a fragment
         (texA, txA, bndA, shadeA, offA), (texB, txB, bndB, shadeB, offB) = self.text_plan(t)
         credit, c0 = S.credit_state(t, self.credit_bbox)
+        if self.titles is not None and not S.TITLES.get("keep_credit", False):
+            credit = (credit[0], credit[1], credit[2], 0.0)   # HOWTO Y: the designed titles replace the corner badge
 
         # protect the text (Astra round 1, finding 3): dim every light drawn so far (motes, petals, snow, beams,
         # nets, figures) behind the words, so no spark or ray crosses a letter; the words are drawn after this
@@ -409,6 +418,8 @@ class Renderer:
         self.v_lights.render(moderngl.TRIANGLE_STRIP)
         self.f_L.scissor = None
 
+        if self.titles is not None:
+            self.titles.protect(t)      # HOWTO Y: the scene's light dims behind the titles
         # 3. glow: four blurred copies, each half the size of the last
         ctx.disable(BL)
         src = self.t_L
@@ -457,6 +468,8 @@ class Renderer:
         self.nature.comp_uniforms(self.p_comp)
         self.fl.comp_uniforms(self.p_comp, t, P)
         self.v_comp.render(moderngl.TRIANGLE_STRIP)
+        if self.titles is not None:
+            self.titles.overlay(t)      # HOWTO Y: the title and the date over the finished picture
         return self.f_out.read(components=3)
 
 
