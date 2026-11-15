@@ -215,8 +215,8 @@ GLASS = _ramp([(0.0, 0.10), (HIT, 0.10), (HIT + 1.5, 0.22), (52.0, 0.18), (55.0,
 # ------------------------------------------------------------------------------------------ the lightning
 # (time, place in the cloud, strength): the cloud flashes, the sea and the people take the light
 FLASHES = [
-    (0.0, (-60.0, 45.0, 30.0), 0.55), (0.95, (40.0, 45.0, 50.0), 0.6), (2.1, (-45.0, 55.0, 55.0), 0.5),
-    (B, (25.0, 50.0, 55.0), 0.8), (STRIKE, (11.0, 45.0, 52.0), 1.2), (11.0, (-50.0, 40.0, 30.0), 0.35),
+    (0.0, (-30.0, 40.0, 48.0), 0.45), (0.95, (36.0, 40.0, 48.0), 0.5), (2.1, (-45.0, 55.0, 55.0), 0.5),
+    (B, (25.0, 50.0, 55.0), 0.6), (STRIKE, (11.0, 45.0, 52.0), 0.7), (11.0, (-50.0, 40.0, 30.0), 0.35),
     (18.6, (0.0, 35.0, -8.0), 0.8), (19.5, (8.0, 38.0, -6.0), 1.0), (22.8, (-60.0, 40.0, -10.0), 0.3),
     (E, (-40.0, 45.0, 0.0), 0.8), (29.6, (-60.0, 40.0, -10.0), 0.5), (F, (30.0, 50.0, -20.0), 0.6),
     (35.6, (-90.0, 40.0, -50.0), 0.3), (38.4, (90.0, 40.0, -70.0), 0.25),
@@ -236,9 +236,10 @@ def _flash_place(t):
     return best
 
 
-BOLT_A = Bolt((9.0, 38.0, 52.0), (12.2, 5.8, 59.4), STRIKE, seed=11, freeze=STRIKE + 0.24, fade=12.6,
+BOLT_A = Bolt((9.0, 38.0, 52.0), (12.2, 5.8, 59.4), STRIKE, seed=11, freeze=STRIKE + 0.24, fade=9.3,
               color="#e8dcff", color2="#ffbf86", width=0.09, turn=1.4)
-BOLT_B = Bolt((-30.0, 40.0, 70.0), (-26.0, 0.0, 74.0), 0.95, seed=4, color="#e0d8ff", width=0.12)
+BOLT_B = Bolt((-30.0, 40.0, 50.0), (-24.0, 0.0, 56.0), 0.0, seed=4, color="#e0d8ff", width=0.16)
+BOLT_D = Bolt((34.0, 42.0, 48.0), (28.0, 0.0, 56.0), 0.95, seed=9, color="#e0d8ff", width=0.14)
 BOLT_C = Bolt((6.0, 36.0, -4.0), (3.0, 0.0, 8.0), 19.5, seed=7, color="#e0e8ff", width=0.14)
 DROP = Drop((0.4, 26.0, 79.0), (0.0, 0.05, 80.0), 1.9, DROP_LAND)
 
@@ -280,12 +281,12 @@ class Wave:
             return []
         X, Y, Z, S, hh = w
         pos = np.stack([X + self.j[:, 0] * 0.14, Y + self.j[:, 1] * 0.10, Z + self.j[:, 2] * 0.10], axis=1)
-        crest = S ** 6
+        crest = S ** 6 * _ss(2.0, 5.0, hh)
         fl = flash(t)
-        col = (lin("#1b4a60") * 0.35)[None, :] * (1.0 - crest[:, None]) + (lin("#e2f2ff") * 1.6)[None, :] * \
+        col = (lin("#1b4a60") * 0.35)[None, :] * (1.0 - crest[:, None]) + (lin("#e2f2ff") * 1.1)[None, :] * \
             crest[:, None]
         col = col * (1.0 + 2.0 * fl)
-        a = 0.85 * _ss(0.02, 0.6, hh)
+        a = 0.85 * _ss(1.2, 3.0, hh)
         return [dict(pos=pos, size=0.07 + 0.08 * crest, color=col, alpha=a, kind="soft", seed=self.seed,
                      twinkle=0.4, emit=1.0 + 2.0 * crest, reflect=True)]
 
@@ -300,18 +301,20 @@ CALMWIND = Wind(base=(0.4, 0.0, 0.1))
 
 
 def _fill(t_calm, dur=1.4):
-    """0 the storm look (rim), 1 the calm look (glitter) from t_calm on."""
+    """0 the storm light, 1 the calm light from t_calm on."""
     return lambda t: float(_ss(t_calm, t_calm + dur, t))
 
 
-def _looks(t_calm, warm="#ffd9a6", rim="#ffb066"):
+def _looks(t_calm, warm="#ffd39a", rim="#9fc4ff"):
+    """Everyone is a body of light (glitter, never a dark shape): in the storm a cool, restless light that the
+    wind tears away; in the calm it warms to gold and grows brighter."""
     f = _fill(t_calm)
-    return [dict(name="rim", weight=lambda t: 1.0 - f(t), color=rim, color2="#ffe2b0", bright=1.8),
-            dict(name="glitter", weight=f, color=warm, color2="#fff2dc")]
+    return [dict(name="glitter", weight=lambda t: 1.0 - f(t), color=rim, color2="#eef4ff", bright=1.7),
+            dict(name="glitter", weight=f, color=warm, color2="#fff4e2", bright=2.0)]
 
 
 def _storm_shed(t0, t1, dir=(1.0, 0.18, 0.15)):
-    return dict(kind="shed", t=t0, until=t1, dir=dir, speed=1.6, n=6000, life=2.6, color="#ffbe7a")
+    return dict(kind="shed", t=t0, until=t1, dir=dir, speed=1.6, n=7000, life=2.6, color="#cfe0ff")
 
 
 BODIES = {}
@@ -398,10 +401,10 @@ _person("child", "child", at=(-1.25, 28.1), facing=[(17.6, 180.0), (23.8, 180.0)
 # both bodies share one place and facing; at clip time 2.5 s their hands meet, at 3.4 to 4.8 s she rises)
 PULL_T0 = TOUCH - 2.0
 _person("puller", "man", at=(-24.0, 14.04), facing=0.0, motion=[(PULL_T0, "pull_up", dict(phase=0.32)), (34.9, "stand", dict(blend=0.8))],
-        garment="tunic", look=dict(name="glitter", color="#ffc56e", color2="#fff0d0"), wind=CALMWIND,
+        garment="tunic", look=dict(name="glitter", color="#ffc56e", color2="#fff0d0", bright=2.0), wind=CALMWIND,
         show=(30.7, 35.2), fade=0.15, seed=12)
 _person("helped", "woman", at=(-24.0, 14.04), facing=0.0, motion=[(PULL_T0, "helped_up", dict(phase=0.32)), (34.9, "stand", dict(blend=0.8))],
-        garment="dress", look=_looks(31.6, rim="#7fb6ff"), wind=WIND, show=(30.7, 35.2), fade=0.15, seed=13)
+        garment="dress", look=_looks(31.6, rim="#8fbcff"), wind=WIND, show=(30.7, 35.2), fade=0.15, seed=13)
 # two hands across the edge of the calm in close up (gold on the glass, storm blue in the swell)
 MEET = (G5[0], 0.92, G5[2])
 HANDS = dict(meet=MEET, t_touch=TOUCH, axis=270.0, color="#ffc56e", color2="#7fb6ff", apart=0.6, approach=2.4,
@@ -423,21 +426,21 @@ for _k, ((_x, _z), _f) in enumerate(_PAIRS):
                                   (49.6 + 0.12 * _k, 60.0, "raise")],
                          garment=["dress", "coat", "tunic", "robe", "dress", "robe", "coat", "dress"][_k],
                          look=dict(name="glitter", color=["#ffd9a6", "#ffcf8a", "#ffe2b8", "#ffd2a0"][_k % 4],
-                                   color2="#fff2dc", bright=1.5), wind=CALMWIND, show=(42.0, 60.0), seed=20 + _k,
+                                   color2="#fff2dc", bright=2.1), wind=CALMWIND, show=(42.0, 60.0), seed=20 + _k,
                          effects=[dict(kind="form", t=42.6 + 0.2 * _k, dur=2.0)]))
 
 # ------------------------------------------------------------------------------------------------ camera
 CAMERA = Rig([
     # torn away from her profile downwind, over the crests; look up at the drop; it lands; glide
-    fly([(0.0, (-1.74, 1.47, 81.28), (-1.80, 1.44, 80.0)),
-         (0.7, (-1.2, 1.62, 81.7), (-1.6, 1.42, 79.9)),
+    fly([(0.0, (-1.95, 1.56, 81.45), (-2.15, 1.66, 80.0)),
+         (0.7, (-1.35, 1.66, 81.8), (-1.85, 1.55, 79.9)),
          (1.7, (4.6, 2.5, 85.5), (0.0, 1.2, 79.0)),
          (2.5, (5.4, 2.0, 88.6), (0.6, 4.5, 79.0)),
          (DROP_LAND, (4.0, 1.9, 89.4), (0.0, 1.8, 80.0)),
          (5.0, (2.0, 1.85, 89.9), (0.0, 2.3, 80.0)),
          (B, (-2.2, 1.95, 89.8), (0.0, 2.3, 80.0))],
-        fov=lambda t: float(np.interp(t, [0.0, 0.7, 1.7, 3.3, 6.8], [32.0, 36.0, 52.0, 46.0, 44.0])),
-        roll=lambda t: float(np.interp(t, [0.0, 0.8, 1.6, 2.4, 3.3], [-5.0, -9.0, -15.0, 6.0, 0.0])),
+        fov=lambda t: float(np.interp(t, [0.0, 0.7, 1.7, 3.3, 6.8], [40.0, 40.0, 52.0, 46.0, 44.0])),
+        roll=lambda t: float(np.interp(t, [0.0, 0.8, 1.6, 2.4, 3.3], [0.0, -3.0, -12.0, 5.0, 0.0])),
         aperture=lambda t: float(np.interp(t, [0.0, 1.2, 2.0], [0.03, 0.03, 0.015]))),
     # out into the storm; the strike; down to the two
     fly([(B, (-2.2, 1.95, 89.8), (0.0, 2.3, 80.0)),
@@ -472,8 +475,8 @@ CAMERA = Rig([
          (30.85, (-23.75, 1.02, 16.45), (-24.3, 0.92, 15.6))],
         fov=lambda t: float(np.interp(t, [29.3, 30.2, 30.85], [40.0, 34.0, 32.0])), aperture=0.03, blend=0.4),
     # the flash of the touch hides a cut: the two of them, she is pulled to her feet; the camera drifts in
-    fly([(30.85, (-24.6, 1.45, 21.2), (-24.3, 1.7, 15.6)),
-         (F, (-24.4, 1.5, 20.4), (-24.3, 1.75, 15.6)),
+    fly([(30.85, (-24.6, 1.45, 21.9), (-24.3, 1.6, 15.6)),
+         (F, (-24.4, 1.5, 21.1), (-24.3, 1.65, 15.6)),
          (34.5, (-25.0, 3.0, 22.0), (-24.3, 1.95, 15.6))],
         fov=lambda t: float(np.interp(t, [30.85, F, 34.5], [44.0, 44.0, 47.0])), aperture=0.015, blend=0.0),
     # the circles run together: up and over the sea, down behind Heavenly Mother
@@ -526,11 +529,11 @@ _SPECS = [
     dict(expr="Concession", pos=(0.0, 3.1, WAVE_Z + 0.4), width=8.4, face="fixed", facing=0.0, t_in=D + 0.05,
          t_read0=21.0, t_read1=23.7, t_out=24.7, arrive="reveal",
          gate=lambda P, t: _ss(-0.3, 0.3, P[:, 1] - (WAVE_H(t) - 0.2)), leave="doors"),
-    dict(expr="Respect", pos=(-1.9, 2.55, 27.6), width=4.2, t_in=24.6, t_read0=26.0, t_read1=28.7, t_out=29.6,
+    dict(expr="Respect", pos=(-1.9, 2.3, 27.6), width=4.0, t_in=24.6, t_read0=26.0, t_read1=28.7, t_out=29.6,
          arrive="pen", leave="give", to=BODIES["giver"]),
-    dict(expr="Consideration", pos=(-24.3, 2.75, 15.6), width=4.2, t_in=TOUCH - 0.2, t_read0=31.8, t_read1=34.5,
+    dict(expr="Consideration", pos=(-24.3, 2.3, 15.6), width=3.5, t_in=TOUCH - 0.2, t_read0=31.8, t_read1=34.5,
          t_out=35.4, arrive="touch", source=MEET, touch_at=0.12, leave="rise"),
-    dict(expr="Encouragement", pos=(0.0, 3.0, -3.0), width=5.6, t_in=36.2, t_read0=37.6, t_read1=40.3,
+    dict(expr="Encouragement", pos=(0.0, 2.5, -3.0), width=4.9, t_in=36.2, t_read0=37.6, t_read1=40.3,
          t_out=41.4, arrive="rays", source=(0.0, 1.62, -1.0), leave="stream",
          to=lambda t: MOTHER.where(t, "palm.R"), star=True),
     dict(expr="Gratitude", pos=(0.0, 4.7, 7.0), width=15.0, t_in=43.6, t_read0=45.3, t_read1=48.0, t_out=49.0,
@@ -564,8 +567,9 @@ def _setup(scene):
     scene.add("bolt_a", BOLT_A)
     scene.add("bolt_b", BOLT_B)
     scene.add("bolt_c", BOLT_C)
+    scene.add("bolt_d", BOLT_D)
     scene.add("drop", DROP)
-    scene.add("wave", Wave(), mask=Mask("dark", grow=0.22))
+    scene.add("wave", Wave(), mask=Mask("dark", grow=0.22, strength=lambda t: float(_ss(1.2, 3.0, WAVE_H(t)))))
     scene.add("beads_g", BEADS_G)
     scene.add("beads_i", BEADS_I)
     for name, b in BODIES.items():
@@ -574,6 +578,9 @@ def _setup(scene):
         if k != "flare":
             scene.add("hand_" + k, _Window(v, 28.6, 30.9))
     WORDS.add_to(scene)
+    for n in scene.names():               # the words are never mirrored in the water (no text upside down)
+        if n.startswith("word "):
+            scene._entries[n].reflect = False
     WORDS.check(CAMERA)
 
 
@@ -596,17 +603,19 @@ P3D = dict(
                       sun_el=-6.0, sun_color="#ffb48c", stars=0.0, milky=0.0, clouds=0.9, cloud_speed=3.0,
                       hills=0.0, haze=0.75, haze_color="#4a3a6a", mist=0.4, mist_color="#3c3466", water="#04050f",
                       mirror=0.55, ripple=1.0, dust=0.4),
-            eye=dict(base="dawn", sky_top="#081640", sky_mid="#1a3170", sky_hor="#c08a66", sun_el=-2.2,
-                     sun_int=0.5, stars=0.15, milky=0.0, clouds=0.55, hills=0.0, haze=0.6, mist=0.3,
-                     water="#030816", mirror=1.0, ripple=0.4, rays=0.4),
-            dawnsea=dict(base="sunrise", sun_el=3.0, sun_int=0.8, hills=0.0, clouds=0.45, ripple=0.0, mirror=1.0,
-                         rays=0.55, exposure=0.92),
+            eye=dict(base="dawn", sky_top="#060f30", sky_mid="#14265c", sky_hor="#8a5e58", sun_el=-3.0,
+                     sun_int=0.35, stars=0.25, milky=0.0, clouds=0.5, hills=0.0, haze=0.5, haze_color="#5a4060",
+                     mist=0.25, mist_color="#4a3a60", water="#030816", mirror=1.0, ripple=0.4, rays=0.3,
+                     exposure=0.9),
+            dawnsea=dict(base="sunrise", sky_top="#0a1440", sky_mid="#30245e", sky_hor="#b4664a", sun_el=2.0,
+                         sun_int=0.5, sun_glow=0.45, hills=0.0, clouds=0.4, haze=0.45, haze_color="#7a4a50",
+                         mist=0.2, ripple=0.0, mirror=1.0, rays=0.3, exposure=0.82),
             daysea=dict(base="day", hills=0.0, ripple=0.0, mirror=1.0, sun_el=20.0, clouds=0.25),
         ),
         look=[(0.0, "storm"), (C, "pearl", 0.6), (18.4, "wave", 1.0), (E, "edge", 1.2), (F + 1.0, "eye", 2.5),
               (HIT, "dawnsea", 0.0), (52.6, "daysea", 2.6)],
         # the sun rises off to the right of the words, never behind them (cut inside the burst of the hit)
-        sun_az=lambda t: SUN_AZ if t < HIT else SUN_AZ + 27.0,
+        sun_az=lambda t: SUN_AZ if t < HIT else SUN_AZ + 30.0,
         calm=_engine_calm,
         ripple=_ramp([(0.0, 1.0), (C, 1.0), (C + 0.5, 0.7), (18.4, 1.0), (F, 1.0), (F + 2.5, 0.6), (HIT, 0.6),
                       (HIT + 1.2, 0.0), (60.0, 0.0)]),
@@ -618,13 +627,13 @@ P3D = dict(
         lights=[dict(pos=_flash_place, color="#cbbcff", strength=lambda t: 1.1 * flash(t), radius=60.0)],
         react=dict(beat=0.3, level=0.25),
     )),
-    bursts=[dict(t=DROP_LAND, at=(0.0, 0.3, 80.0), strength=1.0, radius=0.10, color="#ffb39a", rise=0.08, fall=0.5),
-            dict(t=STRIKE, at=(12.2, 6.0, 59.4), strength=2.2, radius=0.3, color="#e6dcff", rise=0.05, fall=0.5),
-            dict(t=C, strength=0.8, radius=0.4, color="#ffe6ee", rise=0.1, fall=0.6),
-            dict(t=TOUCH, at=MEET, strength=0.7, radius=0.12, color="#ffc9a8", rise=0.08, fall=0.5),
-            dict(t=30.85, at=(-24.3, 1.0, 15.6), strength=1.1, radius=0.3, color="#fff0e0", rise=0.12, fall=0.45),
-            dict(t=HIT, at=(0.46, 0.95, -0.2), strength=3.0, radius=0.35, color="#fff0d0", rise=0.06, fall=0.9),
-            dict(t=TITLE_WHOLE - 0.6, at=tuple(LIGHTS[4]), strength=0.6, radius=0.3, color="#fff6e0", rise=0.2,
+    bursts=[dict(t=DROP_LAND, at=(0.0, 0.3, 80.0), strength=0.6, radius=0.08, color="#ffb39a", rise=0.08, fall=0.5),
+            dict(t=STRIKE, at=(12.2, 6.0, 59.4), strength=0.5, radius=0.12, color="#e6dcff", rise=0.05, fall=0.4),
+            dict(t=C, strength=0.25, radius=0.25, color="#ffe6ee", rise=0.1, fall=0.6),
+            dict(t=TOUCH, at=MEET, strength=0.35, radius=0.08, color="#ffc9a8", rise=0.08, fall=0.5),
+            dict(t=30.85, at=(-24.3, 1.0, 15.6), strength=0.45, radius=0.18, color="#fff0e0", rise=0.12, fall=0.45),
+            dict(t=HIT, at=(0.46, 0.95, -0.2), strength=0.8, radius=0.16, color="#fff0d0", rise=0.06, fall=0.7),
+            dict(t=TITLE_WHOLE - 0.6, at=tuple(LIGHTS[4]), strength=0.25, radius=0.2, color="#fff6e0", rise=0.2,
                  fall=0.9)],
     setup=_setup,
 )

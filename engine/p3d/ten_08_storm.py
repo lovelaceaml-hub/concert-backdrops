@@ -128,7 +128,7 @@ class Sea:
             glass_col = self.c_glass * (1.0 + 0.6 * warm)
             col = col * open_[:, None] + glass_col[None, :] * (cm * (seed > 0.72))[:, None] + \
                 self.c_edge[None, :] * ring[:, None]
-            alpha = vis * np.clip(open_ * 0.95 + cm * gl * (seed > 0.72) + ring, 0.0, 1.0)
+            alpha = vis * np.clip(open_ * 0.95 + cm * gl * (seed > 0.72) * _ss(4.0, 12.0, r) + ring, 0.0, 1.0)
             pos = np.stack([px, y, pz], axis=1)
             out.append(dict(pos=pos, size=size * (1.0 + 0.8 * ring), color=col, alpha=alpha, kind="soft",
                             seed=seed, twinkle=0.35, emit=1.0 + 1.5 * ring + 1.2 * foam, reflect=False))
@@ -173,7 +173,8 @@ class Rain:
         p = _wrap(p, c, self.L)
         d = np.abs(p - c) / (0.5 * self.L)
         vis = (1.0 - _ss(0.7, 1.0, d[:, 0])) * (1.0 - _ss(0.7, 1.0, d[:, 2])) * _ss(0.0, 0.6, p[:, 1])
-        vis *= 1.0 - np.clip(self.calm(p[:, 0], p[:, 2], t), 0.0, 1.0)
+        vis *= 1.0 - np.clip(self.calm(p[:, 0], p[:, 2], t), 0.0, 1.0) * min(sp * 2.0, 1.0)
+        vis *= _ss(1.2, 5.0, np.linalg.norm(p - cp[None, :], axis=1))     # no thick bars across the lens
         out = []
         if sp > 0.02:
             ln = self.length * sp
