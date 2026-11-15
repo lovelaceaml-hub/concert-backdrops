@@ -222,8 +222,9 @@ PAL = {
     "sunrise": ("#0a1844", "#263a80", "#f0a070", "#ffd49c"),
     "morning": ("#0c1c4c", "#2c4088", "#eea27a", "#ffd8a6"),
     "lift":    ("#102868", "#3a4f9c", "#f6ac78", "#ffe2b4"),   # 46 s: the horizon turns to gold
-    "royal":   ("#1c46a4", "#5677c4", "#f8b888", "#ffe8c4"),   # 48.71 s: the emblem is whole
-    "sky":     ("#2f6cc8", "#7aa8e2", "#fdd0a4", "#fff0d8"),   # 51.55 s: the emblem leaves
+    # (draft 8 had these two steps lighter, and the emblem, which is light, paled on them from 49.5 s)
+    "royal":   ("#183f9c", "#4a6cc0", "#f8b888", "#ffe8c4"),   # 48.71 s: the emblem is whole
+    "sky":     ("#2760c0", "#6092dc", "#fdd0a4", "#fff0d8"),   # 51.55 s: the emblem leaves
 }
 DAY = ("#4aa3e6", "#a9d4f4", "#ffe3c4", "#fff4e0")   # the campaign day, as seen on screen
 _DAY_SCALE = (0.92, 0.86, 0.78, 0.42)                 # theme.sky_tracks: the sun glow is added on top
@@ -252,9 +253,9 @@ SUN_Y = Track([(0, 0.290), (STAR_FALL, 0.320), (S1 - 1.5, 0.375), (S1 + 2.0, 0.4
 # the sun, and the sun's bloom under it was the brightest light near the letters (see PHRASES). The same while
 # the emblem stands above the sun.
 SUN_INT = Track([(0, 0.06), (STAR_FALL, 0.08), (S1 - 1.5, 0.10), (S1 + 1.5, 0.50), (S1 + 4.0, 0.50), (S2, 0.44),
-                 (E_FORM + 3.0, 0.36), (E_HOLD, 0.36), (S3, 0.42), (EMBLEM + 1.0, 0.28), (EMBLEM_OUT, 0.28),
+                 (E_FORM + 3.0, 0.32), (E_HOLD, 0.32), (S3, 0.42), (EMBLEM + 1.0, 0.28), (EMBLEM_OUT, 0.28),
                  (TITLE_HIT, 0.55), (TOTAL, 0.52)])
-SUN_SIZE = Track([(0, 0.09), (S1 + 3.0, 0.11), (S2, 0.105), (E_FORM + 3.0, 0.085), (E_HOLD, 0.085), (S3, 0.12),
+SUN_SIZE = Track([(0, 0.09), (S1 + 3.0, 0.11), (S2, 0.105), (E_FORM + 3.0, 0.08), (E_HOLD, 0.08), (S3, 0.12),
                   (EMBLEM + 1.0, 0.09), (EMBLEM_OUT, 0.09), (TITLE_HIT, 0.16), (TOTAL, 0.17)])
 STARS = Track([(0, 0.0), (0.5, 0.0), (2.6, 1.0), (STAR_FALL, 1.0), (S1 + 2.0, 0.60), (S1 + 7.0, 0.25),
                (S2 + 2.0, 0.10), (S3, 0.05), (WARM, 0.0), (TOTAL, 0.0)])
@@ -361,8 +362,8 @@ DOVES_COLOR = "#fff1da"
 DOVES_TRAIL = 0.6
 # two butterflies to the right of the emblem, on the deep sky where their colours read (at the shore, on the
 # bright horizon, they were two white specks in draft 7; in one box round the emblem one of them sat on its
-# olive sprig in the still at 49.6 s); they leave as the day opens
-BUTTERFLIES = Track([(0, 0.0), (WARM + 0.5, 0.0), (WARM + 2.5, 1.0), (EMBLEM_OUT + 0.4, 1.0), (EMBLEM_OUT + 2.0, 0.0),
+# olive sprig in the still at 49.6 s); they are there from 46 to 50.5 s, while the sky is still deep
+BUTTERFLIES = Track([(0, 0.0), (S3 + 3.0, 0.0), (S3 + 4.5, 1.0), (EMBLEM_DONE + 0.6, 1.0), (EMBLEM_DONE + 1.8, 0.0),
                      (TOTAL, 0.0)])
 BUTTERFLIES_COUNT = 2
 BUTTERFLIES_COLOR = ("#ffb0c8", "#ffd9a0")
@@ -461,7 +462,7 @@ PASS_LIGHT = dict(t0=FLAME, speed=0.15, hold=0.22, path="crowd", start=(0.44, 0.
 # (stroke) in the campaign colours, with a clear mirror image in the lake (mirror) (UPGRADE-HOWTO L and U)
 SYMBOLS = [
     dict(kind="emblem", t0=EMBLEM, t1=EMBLEM_DONE, out=EMBLEM_OUT, x=0.5, y=0.615, size=0.40,
-         leave="to_star", star=4, leave_dur=EMBLEM_FLY, reflect=True, glow=1.5, stroke=1.8, mirror=2.2),
+         leave="to_star", star=4, leave_dur=EMBLEM_FLY, reflect=True, glow=1.9, stroke=1.8, mirror=2.2),
 ]
 
 # ---- the arch of nine lights: dark at the start, complete at the peak
