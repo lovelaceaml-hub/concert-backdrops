@@ -170,3 +170,61 @@ Nothing to change in a song file; all song files load as before. What changed, a
 Unchanged: commit and push the song file and its assets (plates and figures are in the repo under `assets/`, so the cloud workflow has them), then run the Render workflow (stills first, then video). See docs/HANDOFF.md.
 
 The video run's finish job uploads three artifacts: "<name>" (the full 1920x1080 video plus a silent copy), "<name> frames" (4 frame sheets of 8 frames each, for checking without downloading the video) and "<name> (share)" (the file "<name> (share).mp4": 1280x720, H.264 with AAC sound, always under 25 MB, for phones and messages; the job fails if it would be larger).
+
+## I10 Output: 4K, 60 fps, pre-show loop, live cue mode
+
+### 4K and 60 fps
+
+Two new choices on the Render workflow, for any song file (nothing to change in the song):
+
+- `resolution`: `1080p` (the default) or `4k` (3840x2160). The song keeps its 1920x1080 design: positions, text sizes and the glow look the same, only sharper. 4K video runs with twice as many parallel parts. Note: the words are still drawn at 1080p and scaled up, so they are a little softer than the scenery at 4K.
+- `fps`: `30` (the default) or `60`. Everything the engine draws is a function of the time in seconds, so 60 fps is the same motion, twice as smooth. 60 fps video also runs with twice as many parts (4K at 60 fps: four times, at most 40).
+- The share copy is always 1280x720 at 30 fps and under 25 MB.
+
+```
+gh workflow run render.yml --ref <branch> -f song=s03_original -f audio=audio/test/s03-newsong-first-60s.mp3 \
+  -f mode=video -f name="s03 4k60" -f resolution=4k -f fps=60
+```
+
+A song file that does its own frame maths should read `FPS` and `NFRAMES` at call time (as every song's `Song` and `params` already do), never copy them into other numbers when the file loads.
+
+### Pre-show and intermission loop
+
+A song file with `LOOP_SECONDS` is a seamless loop: the video is exactly that long and its first frame is the frame that would come after its last, so a player set to repeat shows no seam. Keys:
+
+- `LOOP_SECONDS = 120.0`: the loop length (for example 120 or 300). `TOTAL` and `NFRAMES` follow it.
+- `LOOP_XFADE = 6.0` (optional): the first seconds of the loop fade from the picture one loop later into the picture now. This hides what still drifts (cloud noise, twinkles, motes) at the seam. Keep the song's own settings periodic so the fade has nothing to hide but drift: use `from output import loop_wave` and `loop_wave(t, LOOP_SECONDS, cycles, phase)`, a sine that repeats a whole number of times per loop, and wrap `t % LOOP_SECONDS` in `params()`. Avoid anything that only grows (the skyline lantern, a trail that advances, one-off waves, figures that walk in).
+- `EVENT_CARD = dict(lines=[...], ...)`: a calm card in the middle band, protected like every other text. `lines`: campaign title (drawn in small spaced capitals), concert title (large serif), then the date and time, then the place (italic). Optional: `t_show` and `t_hide` (seconds into the loop it fades in and out; None means always on), `fade` (2.0 s), `y` (centre from the top, default 0.40, stays above the lower third), `sizes` (default (34, 104, 54, 44) px; long lines shrink to fit), `alpha` (0.95), `color`, `glow`, `breathe` (True: a slow breath of the glow, whole cycles per loop). The card works in any song file, not only loops.
+- No music is needed: the workflow lays an exact-length silent track under a loop video. Pass any audio file in the repo (for example `audio/test/silent-60s.mp3`); it is only measured.
+- The video run checks the seam: the finish job log prints the difference (PSNR) between the last and the first frame next to the difference between the first two frames; the two should be close. `loop_first.png` and `loop_last.png` are in the "<name> frames" artifact.
+
+Example: engine/songs/demo_loop.py (two minutes, the luminous original look in the campaign colours, no light on the arch yet).
+
+```python
+from output import loop_wave
+LOOP_SECONDS = 120.0
+EVENT_CARD = dict(lines=["The Words of Mother’s Love That Bring Peace",
+                         "The Words of Mother’s Love Healing Concert",
+                         "Sunday, December 6 · 4:30 PM",
+                         "The World Mission Society Church of God · 6720 W Sahara Ave, Las Vegas"])
+```
+
+### Live cue mode
+
+`engine/live.py` plays a song file in real time, fullscreen, so the picture can follow the live performance cue by cue. It needs a computer with a graphics card (the cloud render is far too slow for real time). Running it at the venue is Anthony's decision; it has not been run on any computer yet.
+
+Cues come from the song file: `CUES = [(name, start seconds, loop end seconds or None), ...]`, for example
+
+```python
+CUES = [("Opening", 0.0, None), ("Verse 1, hold", 12.0, 40.0), ("Chorus", 40.0, None), ("End card hold", 236.0, 250.0)]
+```
+
+A cue with a loop end holds: when it reaches the loop end it crossfades back to its own start and keeps doing so until the next cue. A cue without one plays on through the song (and holds the very last frame at the end). A song without `CUES` gets one cue from the start; a `LOOP_SECONDS` song loops forever.
+
+How to start it, step by step:
+
+1. On the venue computer, install Python 3.11 and ffmpeg, then, in a terminal inside the repository folder: `pip install numpy scipy librosa moderngl pillow fonttools brotli soundfile pygame`
+2. Get the fonts once: run the commands of the "Fonts" step in .github/workflows/render.yml (they need Node's npm; they put the fonts in the `fonts` folder).
+3. Start the song: `python engine/live.py s03_original --audio audio/promo/s03.mp3` (the audio file is measured once so the lights follow the song; there is no sound, the musicians play live). For a rehearsal in a window add `--windowed`; to fill the second screen (the projector) add `--display 1`.
+4. Keys: space or right arrow for the next cue, left arrow for the previous one, 1 to 9 (and 0 for 10) to jump to a cue, b to fade to black and back, Esc to quit. Every jump is a 2 second crossfade (change it with `--xfade 3`). The window title and the terminal show the current cue.
+5. The terminal prints the frames per second every 300 frames. Below about 30, use a stronger graphics card, or a song with fewer effects.
