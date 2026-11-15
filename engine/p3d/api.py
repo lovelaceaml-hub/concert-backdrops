@@ -87,6 +87,8 @@ KINDS
   "flake"   an irregular shard that turns and tumbles (dissolving bodies)
   "petal"   a petal shape that turns and tumbles
   "bird"    a small pair of wings; rot is the heading in the picture plane, the wings beat with seed and time
+  "heart"   a heart (engine/p3d/brand_hearts.py): sharp, a crisp heart that turns (rot[:, 0]) and tumbles (rot[:, 1]);
+            out of focus, a heart-shaped bokeh disc
   "line"    a straight segment from pos to pos2 (plexus lines); size is its width in metres, never thinner
             than a hairline on screen. Tens of thousands are fine; they take the lens blur and are cut
             cleanly where they pass the camera
@@ -128,7 +130,7 @@ from typing import Any, Callable, Optional, Protocol, Union, runtime_checkable
 
 import numpy as np
 
-KINDS = ("soft", "spark", "disc", "flake", "petal", "bird", "line", "ribbon")
+KINDS = ("soft", "spark", "disc", "flake", "petal", "bird", "line", "ribbon", "heart")
 SEGMENT_KINDS = ("line", "ribbon")
 MASK_MODES = ("dark", "sky")
 MASK_SKIES = ("clouds", "sunrise", "stars", "day", "world", "flat")
