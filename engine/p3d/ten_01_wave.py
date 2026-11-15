@@ -270,8 +270,8 @@ class Wave:
                 ph = ph + pl * (4.0 + 7.0 * self.s_dir[:, 1] ** 2) * T * hp
                 pb = pb - pl * 2.5 * T * hp
                 pu = pu + pl * self.s_dir[:, 2] * 2.0 * T * hp
-                boost = 1.0 + 2.0 * pl
-                size = size * (1.0 + 1.5 * pl)
+                boost = 1.0 + 0.8 * pl
+                size = size * (1.0 + 0.8 * pl)
         pos = kin.world(pu, pb, ph, t)
         size, nf = self._lens(pos, size, cam)
         a = 0.45 * np.sin(np.pi * age) ** 1.5 * vis * g * boost * nf
@@ -332,8 +332,9 @@ class Field:
     static = True
 
     def __init__(self, kin, pos, size, color, alpha=1.0, kind="spark", delay=0.0, flash=2.0, fade=0.35,
-                 twinkle=0.6, emit=1.0, gain=None, reflect=True, seed=3):
+                 twinkle=0.6, emit=1.0, gain=None, reflect=True, seed=3, static=True):
         self.kin = kin
+        self.static = bool(static)      # a dynamic field can be wrapped in Clear (it is sent every frame)
         pos = np.asarray(pos, np.float64)
         rng = np.random.default_rng(seed)
         birth = kin.time_at(pos[:, 0], pos[:, 2]) + delay
@@ -348,12 +349,61 @@ class Field:
         return 1.0 if self._gain is None else float(self._gain(t))
 
 
+class Clear:
+    """Wraps a point set so that nothing of it is seen inside an expression's reading box or over the concert
+    badge: points dim to `floor` there (the words' own keep-clear test, engine/p3d/words.py, plus a box on the
+    screen for the badge, given as (x0, y0, x1, y1) in picture fractions with y up, until t_badge)."""
+    wants_camera = True
+
+    def __init__(self, pointset, words=None, badge=None, t_badge=1e9, floor=0.06, pad=0.9, soft=0.025):
+        from . import words as _w
+        self.inner, self.words, self.badge, self.t_badge = pointset, words, badge, float(t_badge)
+        self.floor, self.pad, self.soft = float(floor), float(pad), float(soft)
+        self._clear = _w.clear
+        if hasattr(pointset, "gain"):
+            self.gain = pointset.gain
+
+    def _k(self, pos, t, cam):
+        k = None
+        if self.words is not None:
+            k = self._clear(pos, t, self.words, cam, pad=self.pad, floor=self.floor)
+        if self.badge is not None and t < self.t_badge and cam is not None:
+            xy, z = cam.project(np.asarray(pos, np.float64))
+            x0, y0, x1, y1 = self.badge
+            sx = smoothstep(x0 - self.soft, x0, xy[:, 0]) * (1.0 - smoothstep(x1, x1 + self.soft, xy[:, 0]))
+            sy = smoothstep(y0 - self.soft, y0, xy[:, 1]) * (1.0 - smoothstep(y1, y1 + self.soft, xy[:, 1]))
+            inside = sx * sy * (z > 0)
+            kb = 1.0 - (1.0 - self.floor) * inside
+            k = kb if k is None else np.minimum(k, kb)
+        return k
+
+    def sample(self, t, cam=None):
+        ps = self.inner
+        res = ps.sample(t, cam) if getattr(ps, "wants_camera", False) else ps.sample(t)
+        if res is None:
+            return res
+        out = []
+        for b in (res if isinstance(res, (list, tuple)) else [res]):
+            if b is None or len(np.asarray(b["pos"])) == 0:
+                continue
+            k = self._k(b["pos"], t, cam)
+            if k is not None:
+                b = dict(b)
+                b["alpha"] = np.asarray(b.get("alpha", 1.0), np.float32) * k
+                if b.get("pos2") is not None:
+                    k2 = self._k(b["pos2"], t, cam)
+                    b["alpha2"] = np.asarray(b.get("alpha2", 1.0), np.float32) * (1.0 if k2 is None else k2)
+            out.append(b)
+        return out
+
+
 class Static:
     """Fixed points that are simply there (sleepers before the wave reaches them); gain(t) fades them."""
     static = True
 
-    def __init__(self, batch, gain=None):
+    def __init__(self, batch, gain=None, static=True):
         self.batch, self._gain = batch, gain
+        self.static = bool(static)
 
     def sample(self, t):
         return self.batch

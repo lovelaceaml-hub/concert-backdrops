@@ -157,11 +157,13 @@ class Spark:
         out = []
         c = np.array([X0, spark_y(t), Z0])
         if t < IMPACT + 0.02:
-            flare = 1.0 + 3.0 * np.exp(-((t - HIT0) / 0.09) ** 2)
+            flare = 1.0 + 1.5 * np.exp(-((t - HIT0) / 0.09) ** 2)
             pos = c + self.h * 0.016
-            out.append(dict(pos=pos, size=0.014, color=self.col, alpha=0.9 * flare, kind="spark", emit=4.0,
+            out.append(dict(pos=pos, size=0.012, color=self.col, alpha=0.8 * flare, kind="soft", emit=3.0,
                             dof=0.4))
-            out.append(dict(pos=c[None], size=0.22, color=self.gold, alpha=0.35 * flare, kind="soft", emit=2.0,
+            out.append(dict(pos=c[None], size=0.004, color=self.col, alpha=0.8 * flare, kind="spark", emit=1.5,
+                            dof=0.4))
+            out.append(dict(pos=c[None], size=0.16, color=self.gold, alpha=0.22 * flare, kind="soft", emit=1.5,
                             dof=0.4))
             # the comet tail above it (longer while it falls faster)
             ln = 0.25 + 0.9 * min(t / IMPACT, 1.0) if t > 0 else 0.25
@@ -198,6 +200,9 @@ KN = place_where_crest(U_MAIN + 0.5, T_K)
 HP = KN + np.array([-0.62, 0.0, 0.22])          # the one who lays a hand on their shoulder
 
 
+WALK_SPEED = 1.277                               # how fast the walk motion carries them along +x (measured)
+
+
 def walk_frame(t):
     p = wp(U_WALK, 0.15, 0.0, t)
     p[1] = float(HGT(t)) * 0.985
@@ -222,7 +227,7 @@ def cam_drop(t):
     # frame 0: the spark falling down its shaft, the sleepers far out on the black glass behind it
     y = spark_y(t)
     return (np.array([X0 + 0.45, 0.36 + 0.62 * y, Z0 + 3.2 - 0.4 * min(max(t, 0.0), 1.0)]),
-            np.array([X0, y + 0.55 * max(0.0, 1.0 - max(t, 0.0) / IMPACT) + 0.05, Z0 - 0.5]))
+            np.array([X0, y + 0.72 * max(0.0, 1.0 - max(t, 0.0) / IMPACT) + 0.05, Z0 - 0.5]))
 
 
 def cam_ride(t):
@@ -280,7 +285,7 @@ def cam_barrel(t):
 def cam_trim(t):
     u = (t - 26.79) / (33.36 - 26.79)
     a = np.radians(-150.0 + 300.0 * float(ss(-0.1, 1.05, u)))
-    c = walk_frame(t) + np.array([0.0, 1.05, 0.0])
+    c = walk_frame(t) + np.array([WALK_SPEED * max(t - 26.3, 0.0), 1.05, 0.0])   # where the walkers are
     r = 3.6
     pos = c + np.array([np.sin(a) * r, 0.7 + 0.5 * np.sin(np.pi * u), np.cos(a) * r])
     return pos, c
@@ -291,8 +296,8 @@ def cam_run(t):
     Hh = float(HGT(t))
     k1 = float(ss(36.3, 37.5, t))
     k2 = float(ss(37.1, 38.9, t))
-    pos = wp(U_MAIN - 3.5, -15.0 + 29.0 * k2, 2.2 + (Hh + 7.0) * k1, t)
-    tgt = lerp(wp(U_MAIN, 0.0, 0.55 * Hh, t), wp(U_MAIN, -55.0, 0.0, t), k2)
+    pos = wp(U_MAIN - 3.5, -15.0 + 29.0 * k2, 3.2 + (Hh + 6.0) * k1, t)
+    tgt = lerp(wp(U_MAIN, 0.0, 0.9 * Hh, t), wp(U_MAIN, -55.0, 0.0, t), k2)
     return pos, tgt
 
 
@@ -322,7 +327,7 @@ def cam_break(t):
     tb = min(t, BREAK + 0.3)
     Hh = float(HGT(tb))
     start = wp(U_MAIN + 1.0, 12.0, Hh + 9.5, tb)
-    high = np.array([0.55 * start[0], 19.0, start[2] - 14.0])
+    high = np.array([0.55 * start[0], 24.0, start[2] + 6.0])
     land = END_POS + np.array([0.0, 0.0, -1.1 * max(t - 55.0, 0.0)])
     u1 = float(ss(BREAK, 51.8, t))
     u2 = float(ss(51.6, 55.2, t))
@@ -335,8 +340,8 @@ CAMERA = Rig([
     Path(cam_drop, 0.0, 1.55, fov=50.0, aperture=0.003, focus=3.2),
     Path(cam_ride, 1.55, 6.84, fov=60.0, aperture=0.004, blend=0.75, focus=4.0),
     Path(cam_orbit_w1, 6.84, 13.30, fov=46.0, aperture=0.02, blend=1.3),
-    Path(cam_surge, 13.30, 19.85, fov=52.0, aperture=0.02, blend=0.8),
-    Path(cam_barrel, 19.85, 26.79, fov=70.0, aperture=0.002, blend=0.5, focus=6.0),
+    Path(cam_surge, 13.30, 19.85, fov=52.0, aperture=0.012, blend=0.8),
+    Path(cam_barrel, 19.85, 26.79, fov=lambda t: 52.0 + 18.0 * float(ss(20.35, 21.3, t)), aperture=0.002, blend=0.5, focus=6.0),
     Path(cam_trim, 26.79, 33.36, fov=50.0, aperture=0.015, blend=1.1),
     Path(cam_run, 33.36, 40.21, fov=62.0, aperture=0.008, blend=0.6, focus=12.0),
     Path(cam_hang, 40.21, 46.35, fov=58.0, aperture=0.01, blend=1.6, focus=9.0),
@@ -351,6 +356,15 @@ CAMERA = Rig([
 # ---------------------------------------------------------------------------------------------------------
 
 
+def _fade(t, info):
+    """Words leave by fading as their dust streams away, so no frame shows broken letters."""
+    w = info["word"]
+    if info["state"] == "leave":
+        q = (t - w.t_read1) / max(w.t_out - w.t_read1, 1e-6)
+        return dict(alpha=float((1.0 - ss(0.0, 0.55, q)) ** 1.5))
+    return None
+
+
 def _ride(x, y, depth, px, t_read0, t_read1, **kw):
     tm = 0.5 * (t_read0 + t_read1)
     return dict(ride=(x, y, depth), em=PW.em_for(CAMERA, tm, depth, px), t_read0=t_read0, t_read1=t_read1,
@@ -358,24 +372,26 @@ def _ride(x, y, depth, px, t_read0, t_read1, **kw):
 
 
 _SPECS = [
-    _ride(0.50, 0.66, 6.0, 104, 2.45, 5.55, expr="Greeting", t_in=1.35, t_out=6.75, arrive="reveal", edge="up",
-          leave="wind", wind=(1.0, 0.25, 0.4)),
-    _ride(0.50, 0.705, 8.0, 84, 9.30, 12.45, expr="Gratitude", t_in=7.55, t_out=13.45, arrive="pen",
-          leave="rise"),
-    _ride(0.50, 0.70, 8.0, 88, 15.55, 18.55, expr="Apology", t_in=14.35, t_out=19.75, arrive="reveal",
-          edge="right", leave="wind", wind=(-1.0, 0.3, 0.3)),
-    _ride(0.50, 0.49, 8.0, 94, 17.35, 19.95, expr="Inclusiveness", t_in=16.15, t_out=20.85, arrive="reveal",
-          edge="out", leave="rise"),
-    _ride(0.50, 0.63, 7.0, 108, 21.95, 24.85, expr="Concession", t_in=20.75, t_out=26.2, arrive="reveal",
-          edge="out", leave="bokeh"),
-    _ride(0.50, 0.695, 9.0, 86, 28.35, 31.35, expr="Respect", t_in=27.0, t_out=32.6, arrive="pen", leave="wind",
-          wind=(-1.0, 0.1, 0.6)),
-    _ride(0.50, 0.695, 10.0, 86, 34.85, 37.95, expr="Consideration", t_in=33.6, t_out=39.3, arrive="reveal",
-          edge="left", leave="rise"),
-    _ride(0.50, 0.64, 14.0, 84, 43.35, 46.0, expr="Encouragement", t_in=42.55, t_out=47.1, arrive="reveal",
-          edge="up", leave="rise"),
-    _ride(0.50, 0.695, 12.0, 90, 47.45, 50.05, expr="Compliment", t_in=46.6, t_out=51.2, arrive="reveal",
-          edge="out", leave="rise"),
+    _ride(0.50, 0.66, 6.0, 104, 2.45, 5.55, expr="Greeting", t_in=1.35, t_out=6.6, arrive="pen",
+          leave="wind", wind=(1.0, 0.25, 0.4), drive=_fade),
+    _ride(0.50, 0.685, 8.0, 84, 9.30, 12.45, expr="Gratitude", t_in=7.55, t_out=13.3, arrive="pen",
+          leave="wind", wind=(-1.0, 0.3, 0.2), drive=_fade),
+    # the apology, and its answer made of the same light (one reads at a time)
+    _ride(0.50, 0.685, 8.0, 88, 14.35, 16.95, expr="Apology", t_in=13.55, t_out=17.0, arrive="reveal",
+          edge="right", leave="morph"),
+    _ride(0.50, 0.70, 8.0, 96, 17.80, 20.35, expr="Inclusiveness", t_in=16.95, t_out=21.2, arrive="morph",
+          source="Apology", leave="wind", wind=(1.0, 0.3, 0.3), drive=_fade),
+    _ride(0.50, 0.63, 7.0, 108, 21.8, 24.6, expr="Concession", t_in=20.95, t_out=25.6, arrive="pen",
+          leave="wind", wind=(1.0, 0.1, 0.4), drive=_fade),
+    _ride(0.50, 0.685, 9.0, 86, 28.35, 31.35, expr="Respect", t_in=27.1, t_out=32.4, arrive="pen", leave="wind",
+          wind=(-1.0, 0.1, 0.6), drive=_fade),
+    _ride(0.50, 0.685, 10.0, 86, 34.85, 37.95, expr="Consideration", t_in=33.7, t_out=38.9, arrive="reveal",
+          edge="right", leave="wind", wind=(1.0, 0.2, 0.3), drive=_fade),
+    # the encouragement on the wall becomes the compliment as the wall is released
+    _ride(0.50, 0.64, 14.0, 84, 43.3, 45.85, expr="Encouragement", t_in=42.55, t_out=46.0, arrive="reveal",
+          edge="up", leave="morph"),
+    _ride(0.50, 0.68, 12.0, 90, 46.8, 49.4, expr="Compliment", t_in=45.85, t_out=50.3, arrive="morph",
+          source="Encouragement", leave="wind", wind=(1.0, 0.4, 0.2), drive=_fade),
 ]
 WORDS = PW.Words(_SPECS, camera=CAMERA)
 
@@ -541,9 +557,9 @@ def _people(rng, baked, name, n, t0, t1, u_mid, u_spread, near=None, gain=None, 
     cols = np.concatenate(cols)
     cold = warm[::3]
     cold_set = WV.Static(dict(pos=cold, size=0.016, color=lin("#86a2ff") * 0.45, alpha=0.38, kind="spark",
-                              twinkle=0.5), gain=gain)
+                              twinkle=0.5), gain=gain, static=False)
     warm_set = WV.Field(KIN, warm, 0.017, cols, alpha=0.6, kind="spark", delay=delay, flash=3.2, fade=0.35,
-                        twinkle=0.6, emit=1.3, gain=gain)
+                        twinkle=0.6, emit=1.3, gain=gain, static=False)
     return [(name + "_cold", cold_set), (name + "_warm", warm_set)]
 
 
@@ -576,17 +592,25 @@ def _crest_line(rng, baked):
                     gain=lambda t: float(ss(46.5, 47.3, t)))
 
 
+# the concert badge's box on the screen (x0, y0, x1, y1, y up), with a margin: nothing is seen over it
+BADGE_BOX = (0.022, 0.842, 0.402, 0.962)
+
+
+def C(ps):
+    """A point set that keeps clear of every expression being read and of the concert badge."""
+    return WV.Clear(ps, WORDS, BADGE_BOX, T_TITLE + 0.8)
+
+
 def _setup(scene):
     rng = np.random.default_rng(21)
-    scene.add("wave", WV.Wave(KIN, glow=_glow, mouth=mouth, plume=_plume, centers=(0.0, U_MAIN)))
-    scene.add("tube", WV.Tube(KIN, -2.0, U_MOUTH + 10.0, n=70000, mouth=mouth,
-                              gain=lambda t: float(ss(19.9, 20.8, t) * (1.0 - ss(25.8, 26.7, t)))))
-    scene.add("spark", Spark())
+    scene.add("wave", C(WV.Wave(KIN, glow=_glow, mouth=mouth, plume=_plume, centers=(0.0, U_MAIN))))
+    scene.add("tube", C(WV.Tube(KIN, -2.0, U_MOUTH + 10.0, n=70000, mouth=mouth,
+                                gain=lambda t: float(ss(19.9, 20.8, t) * (1.0 - ss(25.8, 26.7, t))))))
+    scene.add("spark", C(Spark()))
     scene.add("wake", _wake(rng), reflect=False)
     lan, flame = _lanterns(rng)
     scene.add("lanterns", lan)
     scene.add("lantern_flames", flame)
-    scene.add("ridges", _ridges(rng))
     baked = WV.bake_people(Body, n=2600, poses=("stand", "raise", "open_arms", "look_up"))
 
     # the hero bodies (each with real motion and garments of light)
@@ -608,18 +632,18 @@ def _setup(scene):
                         gain=lambda t: float(ss(48.5, 49.5, t)), yaw=lambda r: 180.0 + r.normal(0.0, 15.0),
                         poses=("stand", "raise", "open_arms")))):
         for nm, st in _people(rng, baked, name, **args):
-            scene.add(nm, st)
-    scene.add("crest_line", _crest_line(rng, baked))
+            scene.add(nm, C(st))
+    scene.add("crest_line", C(_crest_line(rng, baked)))
 
     # the first two to wake (S1, S2)
     w1 = Body("woman", at=(W1[0], W1[2]), facing=[(0.0, 180.0), (7.4, 180.0), (9.0, 150.0)], garment="dress",
               hair=True, look="glitter", color="#ffcf8a", color2="#fff0d0", points=70000, show=(4.2, 14.2),
               fade=0.4, gesture=[(7.2, 14.5, "look_up", dict(amount=10))], seed=3)
-    scene.add("w1", WV.Ignite(w1, T_W1))
+    scene.add("w1", C(WV.Ignite(w1, T_W1)))
     m1 = Body("man", at=(M1[0], M1[2]), facing=[(0.0, 160.0), (8.0, 160.0), (9.5, 120.0)], garment="coat",
               stoop=0.35, look="glitter", color="#ffc27a", color2="#ffe6c0", points=60000, show=(4.2, 14.2),
               fade=0.4, gesture=[(8.6, 14.5, "bow")], seed=4)
-    scene.add("m1", WV.Ignite(m1, T_M1))
+    scene.add("m1", C(WV.Ignite(m1, T_M1)))
 
     # the two who stood back to back (S3): they turn to each other and reach
     p1 = Body("man", at=(P1[0], P1[2]), facing=[(0.0, -90.0), (17.6, -90.0), (18.6, 90.0)], garment="tunic",
@@ -629,8 +653,8 @@ def _setup(scene):
               look="glitter", color="#ff9fb4", color2="#ffe2ea", points=60000, show=(12.8, 21.0), fade=0.4,
               gesture=[(18.9, 21.5, "reach")], seed=6)
     t_pair = float(KIN.time_at(PC[0], PC[2]))
-    scene.add("p1", WV.Ignite(p1, t_pair))
-    scene.add("p2", WV.Ignite(p2, t_pair + 0.1))
+    scene.add("p1", C(WV.Ignite(p1, t_pair)))
+    scene.add("p2", C(WV.Ignite(p2, t_pair + 0.1)))
 
     # two walking the crest (S5)
     for k, (shape, garment, col, off) in enumerate((("man", "tunic", "#ffcf8a", -0.45),
@@ -638,7 +662,7 @@ def _setup(scene):
         b = Body(shape, at=(0.0, off), facing=90.0, motion="walk", garment=garment, look="glitter", color=col,
                  color2="#fff4dc", points=60000, show=(26.3, 33.9), fade=0.5, frame=walk_frame, seed=7 + k,
                  hair=(shape == "woman"), bright=1.3)
-        scene.add(f"walker{k}", b)
+        scene.add(f"walker{k}", C(b))
 
     # the kneeling one, and the hand on the shoulder (S7)
     kn = Body("man", at=(KN[0], KN[2]), facing=0.0, motion="kneel", garment="tunic", look="glitter",
@@ -646,8 +670,8 @@ def _setup(scene):
     hp = Body("woman", at=(HP[0], HP[2]), facing=20.0, garment="robe", look="glitter", color="#ffe0a0",
               color2="#fff6e0", points=60000, show=(39.4, 48.2), fade=0.5, seed=10,
               gesture=[(40.5, 48.0, "hand_on_shoulder", dict(side="R", to=lambda t: kn.where(t, "shoulder.L")))])
-    scene.add("kneel", WV.Ignite(kn, 41.6, rise=1.2))
-    scene.add("helper", hp)
+    scene.add("kneel", C(WV.Ignite(kn, 41.6, rise=1.2)))
+    scene.add("helper", C(hp))
 
     WORDS.add_to(scene)
     try:
@@ -659,7 +683,9 @@ def _setup(scene):
 P3D = dict(
     camera=CAMERA,
     world=WORDS.world(dict(
-        look=[(0.0, "night"), (BREAK + 0.3, "sunrise", 1.6), (51.9, "golden", 1.6), (53.6, "day", 1.6)],
+        look=[(0.0, "night"), (BREAK + 0.9, "warmrise", 1.8), (52.2, "golden2", 1.6), (53.7, "day", 1.4)],
+        looks=dict(warmrise=dict(base="sunrise", sun_int=0.55, rays=0.40, exposure=0.82, sun_glow=0.6, sun_disc=5.0),
+                   golden2=dict(base="golden", sun_int=0.6, rays=0.25, exposure=0.9)),
         sun_az=180.0,
         split=dict(look="dawn", toward=0.0, soft=0.4,
                    amount=lambda t: float(0.15 + 0.85 * ss(2.5, 12.0, t)) * float(1.0 - ss(BREAK, 51.5, t))),
@@ -670,22 +696,20 @@ P3D = dict(
         mist=0.22,
         dust=0.25,
         bokeh=0.35,
-        shafts=[dict(base=(X0, Z0), radius=0.14, top=60.0, spread=0.02, color="#fff1d0",
-                     strength=lambda t: float(0.9 * (1.0 - ss(IMPACT, IMPACT + 1.4, t))))],
+        shafts=[dict(base=(X0, Z0), radius=0.07, top=60.0, spread=0.01, color="#fff1d0",
+                     strength=lambda t: float(0.35 * (1.0 - ss(IMPACT, IMPACT + 1.2, t))))],
         lights=[dict(pos=lambda t: wp(0.0 if t < 20.0 else U_MAIN, 0.3, 0.6 * float(HGT(t)) + 0.3, t),
-                     color="#ffc060", strength=lambda t: float(0.0 if t < IMPACT else 0.28 * _glow(t)),
-                     radius=lambda t: 2.0 + 1.0 * float(HGT(t)))],
+                     color="#ffc060", strength=lambda t: float(0.0 if t < IMPACT else 0.14 * (1.0 - ss(12.0, 14.0, t))),
+                     radius=lambda t: 1.5 + 0.6 * float(HGT(t)))],
         arch=dict(lit=_LIT, **ARCH),
         react=dict(beat=0.4, level=0.3),
     )),
-    bursts=[dict(t=HIT0, strength=0.3, at=(X0, spark_y(HIT0), Z0), radius=0.05, rise=0.04, fall=0.3,
-                 color="#fff1d0"),
-            dict(t=IMPACT, strength=0.8, at=(X0, 0.05, Z0), radius=0.10, rise=0.05, fall=0.5, color="#fff1d0"),
-            dict(t=19.80, strength=0.9, at=(float(PC[0]), 1.3, float(PC[2])), radius=0.09, rise=0.05, fall=0.45,
-                 color="#ffe0b8"),
-            dict(t=20.45, strength=1.3, radius=0.4, rise=0.12, fall=0.5, color="#ffe2a8"),
-            dict(t=BIG, strength=0.7, radius=0.3, rise=0.08, fall=0.9, color="#fff0d0"),
-            dict(t=BREAK + 0.2, strength=1.0, radius=0.32, rise=0.12, fall=1.0, color="#fff4dc")],
+    bursts=[dict(t=HIT0, strength=0.25, at=(X0, spark_y(HIT0), Z0), radius=0.04, rise=0.04, fall=0.3,
+                 color="#ffe9c4"),
+            dict(t=IMPACT, strength=0.55, at=(X0, 0.05, Z0), radius=0.07, rise=0.05, fall=0.5, color="#ffe2b0"),
+            dict(t=19.80, strength=0.45, at=(float(PC[0]), 1.3, float(PC[2])), radius=0.07, rise=0.05, fall=0.45,
+                 color="#ffd9a8"),
+            dict(t=20.55, strength=0.55, radius=0.3, rise=0.12, fall=0.5, color="#ffd49a")],
     setup=_setup,
 )
 
