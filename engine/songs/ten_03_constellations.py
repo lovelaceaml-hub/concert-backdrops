@@ -11,27 +11,34 @@ RULES OF THIS WORLD
   People are plexus bodies (points joined by fine lines, refs 03 and 12) with their joints as bright stars
   joined by lines: a constellation in human form, clothed in garments of light, featureless. Sky above and
   the same sky in a still mirror below; no hills, no shore. The camera always revolves. Heavenly Mother
-  appears once, at the breath, as a great far constellation seen only from behind, veiled, arms opening low.
+  appears once, from the breath to the sunrise: a great veiled figure on the near side of the lake, seen only
+  from behind (the camera stays behind her), dark against the light before her, her arms opening low toward
+  the world. A concert badge (title and date) is on screen from frame 0 until the end card forms.
 
 TIMELINE (medley sections 0.25, 6.84, 13.30, 19.85, 26.79, 33.36, 40.21 (breath to 42.51), 49.47; hit 58.11)
-  0.0   No black: the camera falls through a field of stars toward one warm star. Scattered stars swing into
-        line as it arrives (1.0): a woman in profile, head and shoulders. It revolves round her head.
+  0.0   No black: the concert badge, large, over a woman's silhouette against one warm star whose rays fan
+        round her head; the camera falls through the stars toward her. Scattered stars swing into line as it
+        arrives (1.0): her profile, head and shoulders, rimmed with light. It revolves round her head.
   2.4   A coral line leaves her hand to the man she greets; the Greeting writes itself with a star (read
-        3.3 to 6.3), then climbs to light 1 of the arch.
+        3.65 to 6.45), then climbs to light 1 of the arch.
   6.84  Dive to the mirror: a walker comes to a kneeling, tired worker. Gratitude (stars out of the deep sky
         settle into letters, read 8.7 to 11.7) rains into her: she fills with light and rises.
-  13.30 Two stand back to back. Apology rises out of its own reflection in the lake (read 14.2 to 16.8); they
-        turn, reach, and their hands TOUCH: Inclusiveness is born at the touch (read 17.3 to 19.9).
+  13.30 Two stand back to back. Apology rises out of its own reflection in the lake (read 14.2 to 16.8) and
+        sinks back as rings; they turn, reach, and their hands TOUCH: Inclusiveness is born at the touch
+        (read 17.2 to 19.75).
   19.85 The bass: a flock of stars wheels in as Concession, while one steps aside and offers the way (read
-        21.0 to 23.6); the other is listened to: Respect is woven from threads of light (read 24.0 to 26.6).
-  26.79 A youth sinks to one knee, an elder raises both arms: Encouragement comes down a shaft of light
-        (read 27.8 to 30.4). A woman forms from dust and reaches down: Consideration is blown from her open
-        palm (read 30.7 to 33.3); their hands clasp.
+        20.85 to 23.35; the wind takes it); the other is listened to: Respect is woven from threads of light
+        (read 24.05 to 26.55).
+  26.79 A youth sinks to his knees, an elder raises both arms: Encouragement comes down a shaft of light
+        (read 27.8 to 30.4) and rises away as flakes. A woman reaches down: Consideration is blown from her
+        open palm (read 30.8 to 33.3); their hands clasp.
   33.36 The clasp bursts: Compliment, the largest words, burned out of the air by rays (read 34.3 to 37.7);
-        the joined hands are raised. The camera is thrown back and up; the lake fills with faint people.
-  40.21 THE BREATH. The nine lights stand in the sky, a thread from every stage to its light. Beyond the arch
-        a great constellation draws itself: Heavenly Mother from behind, veiled, her arms opening low.
-  42.51 THE WEB. Lines race from everyone to everyone across the lake while the camera is pulled back.
+        the joined hands are raised. The camera is thrown back and up over the lake, which fills with faint
+        people, to behind Heavenly Mother.
+  40.21 THE BREATH. Seen from behind, she opens her arms low toward the world; a warm light before her fans
+        rays round her veiled head. The nine lights stand in the sky; a thread rises from every place to its
+        light.
+  42.51 THE WEB. Lines race from everyone to everyone across the lake while the camera rises behind her.
   45.64 The arch is drawn dot to dot, flares, and turns: its lights and its curve sweep out a globe of light
         that the mirror completes; lights spread over it like cities at night.
   49.47 The sun breaks behind the globe; the sky floods to day. 52.0 the title draws itself as a
@@ -119,7 +126,7 @@ MOTHER_AT = (-45.0, 0.0, 170.0)      # Heavenly Mother stands on the near side, 
 MOTHER_FACING = 171.0
 CAMERA = Rig([
     # S0 first light: fall through the star field, arrive at her profile, revolve, swing out to the two
-    fly([(0.0, (-19.0, 7.5, 36.0), A_HEAD), (0.55, (-29.0, 3.0, 9.5), A_HEAD),
+    fly([(0.0, (-26.5, 3.6, 15.0), (-33.15, 2.3, 0.0)), (0.55, (-30.6, 2.2, 6.6), (-33.15, 1.9, 0.0)),
          (1.05, (-33.05, 1.56, 1.85), A_HEAD)], fov=Track([(0.0, 62.0), (1.05, 32.0)]),
         aperture=Track([(0.0, 0.0), (0.9, 0.02)]), ease="out"),
     orbit(A_HEAD, radius=(1.85, 2.5), height=(1.56, 1.7), a0=0.0, a1=-62.0, t0=1.05, t1=2.7,
@@ -206,9 +213,9 @@ _SPECS = [
           leave="sink"),
     _word(17.2, 19.75, 0.50, 0.67, 6.4, 112, expr="Inclusiveness", t_in=16.4, t_out=20.6, arrive="touch",
           source=_MEET, touch_at=0.45, leave="arch", to=tuple(LIGHTS[3])),
-    _word(20.85, 23.5, 0.50, 0.655, 9.6, 112, expr="Concession", t_in=19.85, t_out=24.3, arrive="flock",
+    _word(20.85, 23.35, 0.50, 0.655, 9.6, 112, expr="Concession", t_in=19.85, t_out=23.85, arrive="flock",
           leave="wind", wind=(1.0, 0.35, -0.25)),
-    _word(24.1, 26.65, 0.52, 0.635, 8.0, 96, expr="Respect", t_in=23.3, t_out=27.6, arrive="weave",
+    _word(24.05, 26.55, 0.52, 0.635, 8.0, 96, expr="Respect", t_in=23.55, t_out=27.6, arrive="weave",
           leave="arch", to=tuple(LIGHTS[5])),
     _word(27.8, 30.4, 0.50, 0.645, 8.8, 86, expr="Encouragement", t_in=26.79, t_out=31.2, arrive="shaft",
           leave="rise"),
@@ -293,11 +300,11 @@ def _arc(a, b, lift, n=24):
 # lines drawn between people: (from, to, t0, t1, colour, lift). A line once drawn never goes out.
 LINKS = [
     ((-32.5, 1.35, 0.1), (-30.9, 1.3, -0.2), 2.4, 3.0, COL["Greeting"], 0.7),
-    ((-30.7, 0.03, -0.2), (-19.9, 0.03, 0.3), 6.3, 7.2, SILVER, 0.0),          # paths of light on the mirror
+    ((-30.7, 0.03, -0.2), (-21.7, 0.03, 0.3), 6.3, 7.2, SILVER, 0.0),          # paths of light on the mirror
     ((-17.2, 1.3, 0.3), (-14.9, 0.8, 0.0), 9.4, 10.6, COL["Gratitude"], 0.4),
     ((-14.8, 0.03, 0.0), (-0.6, 0.03, 0.0), 12.9, 13.7, SILVER, 0.0),
     ((-0.58, 1.3, 0.0), (0.58, 1.3, 0.0), 16.6, 17.0, COL["Apology"], 0.2),
-    ((0.6, 0.03, 0.0), (14.7, 0.03, 0.45), 19.6, 20.3, SILVER, 0.0),
+    ((0.6, 0.03, 0.0), (13.4, 0.03, 0.45), 19.6, 20.3, SILVER, 0.0),
     ((16.0, 1.3, -1.2), (18.1, 1.3, 0.1), 23.7, 24.3, COL["Respect"], 0.4),
     ((18.1, 0.03, 0.1), (31.2, 0.03, 0.0), 26.4, 27.2, SILVER, 0.0),
     ((29.5, 1.5, -0.9), (31.2, 0.8, 0.0), 27.2, 27.9, COL["Encouragement"], 0.5),
@@ -411,6 +418,7 @@ class Web:
         self.elen = d[ea, eb]
         self.person_reach = self.reach[5:]
         self.r = rng.random(len(self.stars))
+        self.head_k = np.where(np.arange(len(self.stars)) % 20 == 0, 3.2, 1.0)     # the crown star: a head
 
     def sample(self, t):
         if t < 37.5:
@@ -420,7 +428,7 @@ class Web:
         lit = _ss(0.0, 0.25, t - self.person_reach[self.owner])
         flash = np.exp(-np.maximum(t - self.person_reach[self.owner], 0.0) * 3.0) * (t >= self.person_reach[self.owner])
         star_col = lin(STEEL)[None] * (1 - lit[:, None]) + lin(SILVER)[None] * lit[:, None]
-        out = [dict(pos=self.stars, size=0.09 * self.scale[self.owner] * (0.7 + 0.6 * self.r),
+        out = [dict(pos=self.stars, size=0.09 * self.scale[self.owner] * (0.7 + 0.6 * self.r) * self.head_k,
                     color=star_col * (1.0 + 2.0 * flash[:, None]), alpha=appear * (0.35 + 0.6 * lit) * (1 - day),
                     kind="spark", emit=1.5 + 2.0 * flash, twinkle=0.7)]
         la, lb = self.stars[self.pairs[:, 0]], self.stars[self.pairs[:, 1]]
@@ -562,12 +570,12 @@ def _people():
                   look=[dict(name="rim", bright=0.8), dict(name="plexus", bright=0.3, color2="#ffd9a0", haze=0.1)],
                   color=SILVER, color2="#ffd9a0", points=90000, detail=dict(head=3),
                   gesture=[(1.3, 2.3, "look_up", dict(amount=10)), (1.9, 6.5, "reach", dict(side="R", to=(-31.9, 1.3, 0.15)))],
-                  show=(0.4, 8.0), fade=0.5, seed=1)
+                  show=(-1.0, 8.0), fade=0.5, seed=1)
     P["B"] = Body("man", at=(-30.7, -0.2), facing=270, garment="tunic", look=plex(COL["Greeting"]),
                   color=SILVER, color2=COL["Greeting"], gesture=[(3.4, 7.0, "open_arms")], points=60000,
                   show=(2.4, 8.0), fade=0.6, seed=2)
     # S1: a walker comes to a kneeling, tired worker; the thanks fill her with light and she rises
-    P["C"] = Body("man", at=(-19.9, 0.3), facing=90,
+    P["C"] = Body("man", at=(-21.7, 0.3), facing=90,
                   motion=[(6.84, "walk"), (9.4, "stand")], garment="coat", look=plex(COL["Gratitude"], 0.6),
                   color=SILVER, color2=COL["Gratitude"], gesture=[(9.6, 14.0, "open_arms")], points=60000,
                   effects=[dict(kind="shed", t=6.84)], show=(6.3, 14.2), fade=0.5, seed=3)
@@ -594,7 +602,7 @@ def _people():
                   look=plex(COL["Concession"]), color=SILVER, color2=COL["Concession"], points=60000,
                   gesture=[(20.4, 23.6, "offer", dict(side="L")), (24.4, 28.0, "listen")],
                   show=(19.4, 28.0), fade=0.5, seed=7)
-    P["G"] = Body("woman", at=(14.7, 0.45), facing=[(19.85, 95.0), (23.4, 95.0), (24.3, 250.0)],
+    P["G"] = Body("woman", at=(13.4, 0.45), facing=[(19.85, 95.0), (23.4, 95.0), (24.3, 250.0)],
                   motion=[(19.85, "walk"), (23.4, "shuffle"), (24.4, "stand")], garment="robe", hair=True,
                   look=plex(COL["Respect"]), color=SILVER, color2=COL["Respect"], points=60000,
                   effects=[dict(kind="shed", t=19.85)], gesture=[(24.6, 28.0, "offer", dict(side="R"))],
@@ -617,7 +625,7 @@ def _people():
     P["mother"] = Body("woman", at=(MOTHER_AT[0], MOTHER_AT[2]), facing=MOTHER_FACING, garment="robe",
                        veil=dict(length=1.5, wide=1.2),
                        look=[dict(name="rim", bright=1.0), dict(name="glitter", bright=0.35)],
-                       color="#ffe6b8", color2="#fff6e6", points=70000, scale=40.0,
+                       color="#ffe6b8", color2="#fff6e6", points=70000, scale=40.0, detail=dict(head=0.0),
                        gesture=[(40.4, 60.0, "open_arms")], show=(39.6, 53.6), fade=1.2, seed=12)
     return P
 
@@ -625,7 +633,7 @@ def _people():
 def _templates():
     from p3d.body import Body
     out = []
-    for shape, g in (("woman", "open_arms"), ("man", "raise"), ("woman", "look_up"), ("man", "reach")):
+    for shape, g in (("woman", "open_arms"), ("man", "open_arms"), ("woman", "wave"), ("man", "raise_hand")):
         b = Body(shape, at=(0.0, 0.0), facing=0, garment="tunic" if shape == "man" else "dress", look="glitter",
                  points=3000, gesture=[(0.0, 9.0, g)])
         c = b.constellation(3.0)
@@ -681,7 +689,7 @@ LOOKS = dict(
     sunrise2=dict(base="sunrise", sun_el=4.0, sun_int=1.1, rays=0.9, clouds=0.2, mist=0.15),
 )
 
-_RAY_OWN = Track([(0.0, 1.3), (2.6, 1.1), (4.3, 0.0), (39.9, 0.0), (41.2, 1.0), (48.8, 1.0), (50.4, 0.0)])
+_RAY_OWN = Track([(0.0, 1.5), (0.7, 1.2), (1.4, 0.95), (2.6, 1.0), (4.3, 0.0), (39.9, 0.0), (41.2, 1.0), (48.8, 1.0), (50.4, 0.0)])
 _RAYS_WORD = WORDS["Compliment"].light()          # the Compliment's rays from behind the raised hands
 
 
