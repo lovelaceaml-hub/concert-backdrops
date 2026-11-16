@@ -13,7 +13,9 @@ Earth resolves into the campaign logo and invitation.
 The environments now have detailed ivory architecture, magnolia gardens,
 reflective marble, cloud valleys and vast sunlit space. The locally animated
 people have shaded gold surfaces, opaque smoothed long-sleeved costumes and
-simulated cloth beneath their golden particle grain. Camera orbits, dollies and
+simulated cloth beneath their golden particle grain. A final photographic gold
+grade uses masks from the actual animated body and cloth geometry, giving the
+people more depth without recolouring the scenery, campaign words or logo. Camera orbits, dollies and
 an ascending crane replace the baseline whips. An output-space phrase treatment
 keeps the exact nine expressions readable without repeating large category pills.
 The approved opening, logo and end-card typography and event information remain.
@@ -93,7 +95,8 @@ python sol_edits/v3/render_all.py > work/sol3/render-all.log 2>&1
 ```
 
 This recomputes frame count from the song settings, requires 62 seconds at 60 fps,
-renders five exclusive ranges, concatenates them, muxes the original score, and
+renders five exclusive ranges, concatenates them, grades every frame through
+locally rendered body masks, muxes the original score, and
 encodes a 1280 by 720 review at the same actual 60 fps. Audio comes directly from
 the source WAV in both encodes. Both MP4s use H.264, AAC and faststart for phones.
 Do not trigger GitHub's paid Render workflow.
@@ -112,7 +115,9 @@ python sol_edits/v3/inspect_motion.py \
 ```
 
 Media checks count decoded frames and timestamps. The seam check compares all 16
-boundary-adjacent raw frames against one independent ordered sampling pass. Audio
+boundary-adjacent raw scene frames against one independent ordered sampling pass.
+The photographic finish then processes all 3720 frames in one continuous pass,
+with an input-length guard and a decoded output frame-count check. Audio
 checks measure the exact silence, final decay and source-to-AAC alignment in six
 places. These checks do not judge beauty, natural acting or musical feeling.
 

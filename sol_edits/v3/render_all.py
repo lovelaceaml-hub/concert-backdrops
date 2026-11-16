@@ -50,9 +50,13 @@ def finish(S,bounds,report=None):
     concat=OUT/'parts.txt'
     concat.write_text(''.join(f"file '{(OUT/r['file']).as_posix()}'\n" for r in parts))
     command(['ffmpeg','-v','error','-y','-f','concat','-safe','0','-i',str(concat),'-c','copy',str(OUT/'sol-v3-silent.mp4')])
+    beauty=OUT/'sol-v3-photographic-finish.mp4'
+    command([sys.executable,str(ROOT/'sol_edits/v3/grade_people.py'),'--input',str(OUT/'sol-v3-silent.mp4'),'--out',str(beauty)])
+    result['photographic_finish']=json.loads(beauty.with_suffix('.cost.json').read_text())
+    (OUT/'render-cost.json').write_text(json.dumps(result,indent=2)+'\n')
     duration=str(S.NFRAMES/S.FPS)
     master=OUT/'Sol-V3-When-Love-Becomes-Light-1080p60.mp4'
-    command(['ffmpeg','-v','error','-y','-i',str(OUT/'sol-v3-silent.mp4'),'-i',str(OUT/'sol-v3-score.wav'),
+    command(['ffmpeg','-v','error','-y','-i',str(beauty),'-i',str(OUT/'sol-v3-score.wav'),
              '-map','0:v:0','-map','1:a:0','-c:v','copy','-c:a','aac','-b:a','320k','-t',duration,
              '-metadata','title=Concert comparison - GPT-6.1 Sol V3','-movflags','+faststart',str(master)])
     command(['ffmpeg','-v','error','-y','-i',str(master),'-i',str(OUT/'sol-v3-score.wav'),
