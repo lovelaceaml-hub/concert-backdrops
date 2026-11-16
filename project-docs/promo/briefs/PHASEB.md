@@ -222,3 +222,20 @@ The owner reported grain in both the 720p and 1080p Revision 3 exports, then sai
 The quality export is complete: real 3840x2160, native 60 fps, 66.000 seconds, 10-bit HEVC Main 10, CRF 12 without a bitrate cap, floating-point composite and no added composite grain. All 3,960 frames decode, timestamps are correct, zero adjacent repeated frames were found, five fresh source samples match full-range frames and the approved audio packets are unchanged. This is high-quality lossy video, not a lossless or HDR claim.
 
 The single MP4 is 318,834,702 bytes. The Drive connector rejected the upload before action invocation because its limit is 104,857,600 bytes. No reduced copy was made. The full file remains in the Codex workspace and is linked in chat; Drive video transfer is pending. [Exact file, hash, QA and reproduction](../QUALITY-NINE-COLOURS-R3.md). Draft PR #73 remains unmerged, and the new quality file awaits owner review. Earlier approval records and uploads are preserved. No paid service or GitHub Render workflow was used.
+
+## UPDATE 23 (2026-11-16): Preserve the exact master and deliver through Drive
+
+The owner explicitly chose "Preserve the exact 319 MB master" and reported that direct chat MP4 and ZIP downloads failed. Do not reduce its quality or create another encode.
+
+The original 318,834,702-byte master is now in [this private Google Drive folder](https://drive.google.com/drive/folders/1_m5HLeo8brJgZMgdXleEbY7klrAGaxgS) as four byte parts plus an offline restore helper. This is one video, not four versions. No video or audio was re-encoded, and no quality was reduced.
+
+On a computer:
+
+1. Download the entire Drive folder and unzip it.
+2. Open `Open-to-save-video.html` in Chrome, Edge or Safari.
+3. Select all four `Nine-Colours-4K60.part01` through `.part04` files.
+4. After verification, click **Save the 4K60 video** to save the original MP4 to Downloads.
+
+Drive preview does not run the helper; download and open it locally. Each part is checked against its SHA-256 before saving. Full-sized Chromium testing over loopback HTTP produced the exact original MP4 and full-file SHA-256, rejected a missing part, handled reverse selection order, and made zero external requests. Drive confirms all seven package files are downloadable and their sizes match. Local file-URL opening and the owner's device download have not been verified.
+
+The single-file Drive upload exceeds the connector's 100 MiB limit. The owner also authorized a private GitHub draft-release upload, but the asset endpoint returned HTTP 401; that draft has no video asset. Both direct workspace MP4 and ZIP links failed on the owner's device. The four-part package is the available transfer route. No public share permission, smaller encode, paid service or Render workflow was used.
