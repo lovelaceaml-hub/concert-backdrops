@@ -10,36 +10,36 @@ THE IDEA
   hearts as the logo. Heavenly Mother appears only as hands of light: her open hands release the first word
   at the start.
 
-THE TIMELINE. The film's cues were built on its own clock (the "old" time of v6, every constant below); TIME_MAP
-plays that clock on the new medley (W(t_new) = t_old, smooth and monotone), so every stretch lands on its music
-(new times):
-  0.00   The opening title over a vast twilight sky above a sea of glowing clouds, held whole for 7 s; Mother's
-         hands of light hold a drop of gold in the quiet; the music swells in from 2.0; the drop is let go (4.5)
-         and falls; the title crumbles into dust (7.0 to 7.9) as we dive after it through the clouds (an eased
-         1.5 s dive); it lands on a still sea of light on the 03 to 04 blend (8.0) and a ring of gold races out.
-  8.75   GREETING: two men give each other a slight, warm bow. GRATITUDE: a gold woman lays her hand on her heart
-         and bows as golden light pours down on her.
-  15.46  (an eased carry on, on 01's downbeat) APOLOGY: in a soft rain of light a woman sits back on her
-         heels, head bowed; her friend kneels beside her and lays a hand gently on her back; she lifts her head
-         to her. INCLUSIVENESS: they rise together, turn to each other and embrace; the sun rises behind them.
-  22.94  (a gliding carry, the 01 to 08 blend) up the river of light. CONCESSION: at a doorway of light a man steps
-         aside, his hand on his heart, his other palm offering the way; petals rise from it through the door.
-         On through the door (unhurried): RESPECT: two seated lean in to listen.
-  31.46  (a gliding carry, the 08 to 11 blend) ENCOURAGEMENT: under a cathedral of falling light one kneels in
-         prayer; her friend kneels behind her, a hand on her shoulder, the other on her heart; lights rise.
-  37.35  (a gliding carry, on 11's bar) CONSIDERATION: a man reaches down and helps another up.
-  40.81  (a gliding carry, the 11 to 06 blend) COMPLIMENT: a dancer gathers her arms, turns once as they open in
-         a soft arc and lifts them high; hearts burst; a crowd of light claps and raises its hands.
-  43.8   A still moment: motes in gold and the nine colours gather into one pearl of light over the calm sea.
-  45.17  It bursts on 06's attack; we rise from rest up the column of light in one even, unhurried glide, the
-         nine colours streaming with us, and break above the clouds into the glory of the sun on 06's cadence
-         (47.19), easing to a hover through the breath.
-  49.69  THE LIFT: the sun flares and we sweep out to the whole Earth; the nine symbols draw themselves in light
-         and swirl round it through 07's climax, lighting the world; hearts bloom across it.
-  52.76  They burst outward; the world becomes the logo between two hearts; light blooms into a soft pastel day;
-         the logo glides into the end card, whole by the final cadence (55.0), alive to the last frame: a slow
-         push-in, drifting sparkles and hearts, a breathing glow, a warm glow on the held final chord (56.75),
-         settling to stillness over the last 1.5 s.
+THE TIMELINE (v9: Anthony after Film 10: the nine comets of colour are the thread; every word is written by its
+own comet as the pen; the scenes change by travelling, more and more theatrical; not every scene has people).
+The film's cues were built on its own clock (the "old" time of v6, every constant below); TIME_MAP plays that
+clock on the new medley (W(t_new) = t_old, smooth and monotone), so every stretch lands on its music (new times):
+  0.00   The opening title over a twilight sky above a sea of glowing clouds, held whole for 7 s; Mother's hands
+         of light hold the seed, a drop of gold; the music swells in from 2.0; she lets it go (4.25) and we dive
+         after it (the title kept clear) to the sea.
+  8.0    The seed touches the sea on the 03 to 04 blend and bursts flat into the nine comets, which race on low over
+         the water ahead of us; the red one writes GREETING over two men who bow.
+  12.2   Three ribbons stream past and open the gold pour: GRATITUDE in light alone (the gold comet writes it and
+         spirals up the pour, hearts rise).
+  15.5   Ribbons sweep past us into the rain of light: APOLOGY (one sits, head bowed; her friend kneels and lays a
+         hand on her back; she lifts her head). INCLUSIVENESS: a double helix of yellow and green wraps them as
+         they rise and embrace.
+  22.9   Up the river through hoop gates the violet comet stitches ahead of us to a doorway of light:
+         CONCESSION in light alone (the comets pass through the door one by one, petals stream through).
+  27.6   On through the door: RESPECT in light alone (two ribbons circle each other, listening, by a tree of
+         light that blooms).
+  31.5   A braking spiral lands us by two kneeling under a cathedral of falling light: ENCOURAGEMENT.
+  37.4   The ribbons lead a banking glide to CONSIDERATION: a man helps another up.
+  40.8   On in to COMPLIMENT: a dancer turns with her arms opening, her navy ribbon led by her hand, a ring of
+         colours round her and a crowd of light that claps and raises its hands.
+  43.8   The breath: the nine circle in to one pearl; it bursts on 06's attack (45.17) and we rise with them up
+         the column of light into the glory of the sun (47.19), hovering through the breath.
+  49.69  THE LIFT, the peak: the hyperspace braid. We corkscrew up out of the glory with all nine colours wheeling
+         round us, their trails streaming past on every side, out to the whole Earth.
+  51     The ribbons wrap the world, the nine symbols swirl round it; it becomes the logo between two hearts;
+         light blooms into a soft pastel day; the logo glides into the end card, whole from 55.0, alive to the
+         last frame (a slow push-in, drifting sparkles and hearts, a breathing glow, a warm glow on the held
+         final chord at 56.75, settling to stillness over the last 1.5 s).
 
 THE CONCERT INFORMATION (Anthony after v4: never flashed, at least 7 s at a time): the opening title holds
 whole 0 to 7.0; from there the discreet signature stays on in the bottom left corner without a break (its
@@ -77,6 +77,7 @@ from p3d import words as PW  # noqa: E402
 from p3d.api import CameraState, show  # noqa: E402
 from p3d.camera import Move, Rig  # noqa: E402
 from p3d import master_sky as MS  # noqa: E402
+from p3d import master_comets as MC  # noqa: E402
 from p3d import brand as BR  # noqa: E402
 
 AUDIO_FILE = "audio/promo/concert-medley7.mp3"
@@ -386,12 +387,42 @@ def _cam_keys_s3():
 def _cam_keys_s4():
     two = P4 + _v(0.0, 0.62, 0.0)                  # the two kneeling: their heads at about 0.9 m
     c0, c1 = P4 + _v(-1.2, 1.3, 14.0), P4 + _v(-1.3, 1.0, 8.5)
-    c2, c3, c4 = P4 + _v(-0.9, 1.0, 3.9), P4 + _v(-0.85, 0.98, 3.5), P4 + _v(-0.8, 1.05, 3.1)
+    def rot(v, deg=-26.0):            # the spiral lands us a little round to their left
+        a = np.radians(deg)
+        return _v(v[0] * np.cos(a) + v[2] * np.sin(a), v[1], -v[0] * np.sin(a) + v[2] * np.cos(a))
+    c2, c3, c4 = P4 + rot(_v(-0.9, 1.0, 3.9)), P4 + rot(_v(-0.85, 0.98, 3.5)), P4 + rot(_v(-0.8, 1.05, 3.1))
     return [(28.79, c0, _aim(c0, two, 0.62, 0.73, 58.0)),           # wide: small people under the light
             (30.4, c1, _aim(c1, two, 0.62, 0.72, 52.0)),
             (31.6, c2, _aim(c2, two, 0.67, 0.71, 48.0)),            # closer: the hand on the shoulder
             (33.6, c3, _aim(c3, two, 0.67, 0.71, 48.0)),
             (35.9, c4, _aim(c4, two + _v(0.0, 0.5, 0.0), 0.62, 0.66, 48.0))]   # drifting on as the carry begins
+
+
+def _s4_make():
+    """Into the cathedral: a braking spiral. We swing in round the two kneeling, falling from a height and
+    slowing as the circle tightens, and settle by them (the three ribbons spiral down with us)."""
+    keys = _cam_keys_s4()
+    tail = _pchip(keys[2:])
+    two = P4 + _v(0.0, 0.62, 0.0)
+    a1 = float(np.degrees(np.arctan2(keys[2][1][0] - P4[0], keys[2][1][2] - P4[2])))
+    r1 = float(np.hypot(keys[2][1][0] - P4[0], keys[2][1][2] - P4[2]))
+
+    def f(t):
+        if t >= 31.6:
+            return tail(t)
+        u = float(np.clip((t - 28.6) / (31.6 - 28.6), 0.0, 1.0))
+        e = 1.0 - (1.0 - u) ** 2 * (1.0 + 0.0 * u)          # quick at first, braking to rest
+        e = e * e * (3.0 - 2.0 * e) * 0.35 + e * 0.65
+        a = np.radians(a1 + 62.0 * (1.0 - e))
+        r = r1 + 15.0 * (1.0 - e) ** 1.4
+        h = 1.0 + 1.8 * (1.0 - e) ** 1.2
+        pos = P4 + _v(np.sin(a) * r, h, np.cos(a) * r)
+        sx = 0.62 + 0.05 * e
+        return pos, _aim(pos, two, sx, 0.73 - 0.02 * e, 58.0 - 10.0 * e)
+    return f
+
+
+_s4 = _s4_make()
 
 
 F5 = 48.0
@@ -635,8 +666,15 @@ def _s8(t):
     tgt_logo = FIN_C - _v(0.0, _LOGO_DROP + 1.0 * FIN_LIFT, 0.0)
     p_d = _fin_cam(8.0, 1.0, 3.9 * FIN_R) - _v(0.0, _LOGO_DROP, 0.0)
     if t < LIFT_END:
-        e = sc(ASC1 - 0.3, LIFT_END, t)                # out to the world: a long, eased glide (about 2 s)
-        return lerp(p_a, p_b, e), lerp(q_a, tgt, sc(ASC1 - 0.2, LIFT_END - 0.4, t))
+        # THE LIFT, the peak of the film: we corkscrew up out of the glory inside the braid of all nine colours
+        # (the gaze tilts up and turns as we rise, then comes down onto the world)
+        e = sc(ASC1 - 0.3, LIFT_END, t)
+        b = float(np.sin(np.pi * e))                   # 0 at both ends
+        th = 0.5 * np.pi * e
+        pos = lerp(p_a, p_b, e) + 4.0 * b * _v(np.cos(th), 0.0, np.sin(th))
+        q = lerp(q_a, tgt, sc(ASC1 - 0.2, LIFT_END - 0.4, t))
+        d = _slerp(_unit(q - pos), _unit(_v(np.cos(th + 1.2), 1.8, np.sin(th + 1.2))), 0.35 * b * b)
+        return pos, pos + 30.0 * d
     if t < LOGO_T[0]:
         e = sc(LIFT_END, LOGO_T[0], t)
         return lerp(p_b, p_c, e), tgt
@@ -662,7 +700,7 @@ def _rig(focus):
              focus=fo(lambda t: lerp(P2 + _v(0, 0.8, 0), P2 + _v(0, 1.25, 0), sc(18.4, 19.8, t)))),
         Path(_pchip(_cam_keys_s3()), SEC[3], SEC[4], blend=1.8, fov=F3, aperture=0.01,
              focus=fo(lambda t: lerp(P3 + _v(-1.0, 1.3, 2.0), P3b + _v(0, 0.9, 0), sc(25.4, 26.7, t)))),
-        Path(_pchip(_cam_keys_s4()), SEC[4], SEC[5], blend=2.4,
+        Path(_s4, SEC[4], SEC[5], blend=2.4,
              fov=lambda t: 58.0 - 6.0 * sc(28.79, 30.4, t) - 4.0 * sc(30.4, 31.6, t), aperture=0.01,
              focus=fo(P4 + _v(0, 0.7, 0))),
         Path(_s5, SEC[5], 42.0, blend=3.0, fov=F5, aperture=0.01,
@@ -703,15 +741,15 @@ _REVEAL = dict(arrive="reveal", edge="right", soft=0.16, edge_glow=2.2)
 _PEN = dict(arrive="pen", nib=False)
 
 _SPECS = [
-    _w("Greeting", 8.95, 9.35, 11.95, 12.15, 0.46, 0.625, 7.0, 0.30, **_REVEAL),
+    _w("Greeting", 8.95, 9.35, 11.95, 12.15, 0.46, 0.625, 7.0, 0.30, **_PEN),
     _w("Gratitude", 12.15, 12.52, 15.0, 15.2, 0.36, 0.620, 7.0, 0.52, **_PEN),
-    _w("Apology", 15.6, 16.0, 18.4, 18.6, 0.46, 0.620, 7.0, 0.52, **_REVEAL),
+    _w("Apology", 15.6, 16.0, 18.4, 18.6, 0.46, 0.620, 7.0, 0.52, **_PEN),
     _w("Inclusiveness", 18.6, 19.0, 21.35, 21.55, 0.46, 0.625, 7.0, 0.48, **_PEN),
-    _w("Concession", 22.45, 22.85, 25.25, 25.45, 0.46, 0.625, 7.0, 0.40, **_REVEAL),
+    _w("Concession", 22.45, 22.85, 25.25, 25.45, 0.46, 0.625, 7.0, 0.40, **_PEN),
     _w("Respect", 25.5, 25.95, 28.3, 28.5, 0.46, 0.620, 7.0, 0.45, **_PEN),
-    _w("Encouragement", 29.5, 30.0, 33.3, 33.6, 0.46, 0.620, 7.0, 0.51, **_REVEAL),
+    _w("Encouragement", 29.5, 30.0, 33.3, 33.6, 0.46, 0.620, 7.0, 0.51, **_PEN),
     _w("Consideration", 35.5, 35.85, 38.75, 38.9, 0.40, 0.620, 7.0, 0.44, **_PEN),
-    _w("Compliment", 38.95, 39.2, 42.0, 42.15, 0.45, 0.620, 7.0, 0.41, **_REVEAL),
+    _w("Compliment", 38.95, 39.2, 42.0, 42.15, 0.45, 0.620, 7.0, 0.41, **_PEN),
 ]
 
 
@@ -1217,9 +1255,6 @@ def _boxes(t, cam):
     k = 1.0 - sc(OPEN_FULL, OPEN_FULL + 0.8, t)
     if k > 0.0:
         out.append(OPENING_BOX + (k, 0.025))
-    k = _sig_on(t)
-    if k > 0.0:
-        out.append(SIG_CLEAR + (k, 0.07))
     return out
 
 
@@ -1525,7 +1560,6 @@ def _setup(scene):
 
     # ---- S1: the greeting and the bow of thanks under pouring light
     addp("greeting", C["greeting"])
-    addp("gratitude", C["gratitude"])
     scene.add("pour", PW.KeepClear(FX.LightColumns([P1b], top=9.0, per=360, fall=2.2, ring=0.95, core=False,
                                                     spark=0.028, soft=True,
                                                     gain=_gain((0.0, 0.0), (12.3, 0.0), (13.0, 1.0), (15.6, 1.0),
@@ -1562,8 +1596,8 @@ def _setup(scene):
     scene.add("door", NearFade(FX.Door(P3, width=1.4, height=2.5, facing=0.0, t_open=23.0,
                                        gain=_gain((0.0, 0.0), (21.9, 0.0), (22.3, 1.0), (25.2, 1.0), (25.65, 0.0),
                                                   (TOTAL, 0.0))), 4.0))
-    # the petals rise from his open palm and stream on through the doorway (never across him)
-    palm = np.asarray(C["concession"][0].where(24.6, "palm.L"), np.float64)
+    # the petals rise from the water before the doorway and stream on through it ("after you")
+    palm = P3 + _v(-0.9, 0.9, 1.6)
     petal_path = [palm + _v(0.05, 0.02, 0.0), palm + _v(0.35, 0.18, -0.25), P3 + _v(-0.25, 1.25, 0.5),
                   P3 + _v(0.0, 1.35, 0.0), P3 + _v(0.2, 1.6, -3.0), P3 + _v(-0.4, 2.2, -8.0), P3 + _v(0.5, 3.4, -14.0)]
     scene.add("petals3", Clear(NearFade(FX.PetalStream(petal_path, 24.1, 25.3, n=1100, speed=2.6, spread=0.2), 6.0)),
@@ -1571,8 +1605,6 @@ def _setup(scene):
     scene.add("tree", Clear(NearFade(FX.TreeOfLight(P3b + _v(7.0, 0.0, 2.5), height=3.4, t_bloom=25.9,
                                                     gain=_gain((0.0, 0.0), (25.4, 0.0), (25.9, 1.0), (28.2, 1.0),
                                                                (29.1, 0.0), (TOTAL, 0.0))), 5.0)))
-    addp("concession", C["concession"])
-    addp("respect", C["respect"])
 
     # ---- S4: the cathedral of falling light, rising lights
     nave = [P4 + _v(sx * 7.5, 0.0, dz) for dz in (8.0, 0.0, -8.0, -16.0) for sx in (-1.0, 1.0)]
@@ -1699,25 +1731,292 @@ def _setup(scene):
         print("end card push skipped:", e)
 
     # ---- hearts off every word, the nine symbols as subtle scenery
-    acts = [("Greeting", P1 + _v(0.0, 1.45, 0.0), 10.2, 12.1), ("Gratitude", None, 13.3, 15.4),
+    acts = [("Greeting", P1 + _v(0.0, 1.45, 0.0), 10.2, 12.1), ("Gratitude", P1b + _v(0.0, 1.3, 0.0), 13.3, 15.4),
             ("Apology", P2 + _v(0.0, 1.05, 0.0), 17.0, 18.2), ("Inclusiveness", P2 + _v(0.0, 1.78, 0.0), 19.9, 21.8),
-            ("Concession", P3 + _v(-1.0, 1.45, 2.0), 23.5, 25.5), ("Respect", P3b + _v(0.0, 1.0, 0.0), 26.6, 28.6),
+            ("Concession", P3 + _v(0.0, 1.45, 0.3), 23.5, 25.5), ("Respect", P3b + _v(0.0, 1.2, 0.0), 26.6, 28.6),
             ("Encouragement", P4 + _v(-0.05, 1.05, 0.0), 31.0, 33.3),
             ("Consideration", P5 + _v(0.0, 1.0, 0.0), 36.8, 38.7), ("Compliment", P5b + _v(0.0, 1.3, 0.0), 40.2, 42.0)]
-    grat = C["gratitude"][0]
     for k, (lab, at, t0, t1) in enumerate(acts):
-        src = (lambda t: np.asarray(grat.where(t, "heart"), np.float64)) if at is None else (lambda t, at=at: at)
+        src = (lambda t, at=at: at)
         scene.add("hearts_%d" % k, Clear(BR.HeartDrift(src, t0, t1, color=GLOWC[lab], rate=3.2, life=2.6, rise=0.42,
                                                        spread=0.35, size=(0.06, 0.12), style="heart", seed=300 + k)),
                   reflect=False)
     for k, (lab, tt, anchor, size) in enumerate(SYMBOL_PLAN):
         scene.add("symbol_%d" % k, Clear(MB.SymbolLight(lab, anchor, tt, GLOWC[lab], size=size, seed=91 + k)))
 
+    scene.add("comets", _comets(C), reflect=False)
+    scene.add("hoops", Clear(NearFade(MC.Hoops(_tunnel, TUNNEL[0], TUNNEL[1], NINE_GLOW[ENC], until=26.4), 4.0)),
+              reflect=False)
+    scene.add("seedburst", Clear(MC.Burst(D0 + _v(0.0, 0.2, 0.0), LAND_T, NINE_GLOW)), reflect=True)
+
     WORDS.add_to(scene, reflect=False)
     try:
         WORDS.check(CAMERA)
     except Exception as e:          # the check is advice; never stop a render for it
         print("words check failed:", e)
+
+
+# =============================================================================================================
+# THE NINE COMETS (Anthony for v9: the travelling ribbons and the text style of Film 10, the thread of the film)
+# =============================================================================================================
+GREET, GRAT, APOL, INCL, CONC, RESP, ENC, CONS, COMP = range(9)
+_CAMTAB = {}
+
+
+def _cam_frame(t):
+    """The camera's place and axes (pos, right, up, forward) on the film's own time, from a table."""
+    if not _CAMTAB:
+        ts = np.arange(-0.5, TOTAL + 1.5, 1.0 / 120.0)
+        P, R, U, F = [], [], [], []
+        for x in ts:
+            c = CAMERA.state(float(x))
+            r, u, f = c.basis()
+            P.append(np.asarray(c.pos, np.float64))
+            R.append(r)
+            U.append(u)
+            F.append(f)
+        _CAMTAB.update(t=ts, p=np.array(P), r=np.array(R), u=np.array(U), f=np.array(F))
+    T = _CAMTAB
+    i = float(np.clip((t - T["t"][0]) * 120.0, 0.0, len(T["t"]) - 1.001))
+    i0 = int(i)
+    fr = i - i0
+    return tuple(T[k][i0] * (1.0 - fr) + T[k][i0 + 1] * fr for k in ("p", "r", "u", "f"))
+
+
+def _rel(d, x, y):
+    """A point that travels with the camera: d metres ahead, x to the right, y up (numbers or functions of t)."""
+    def f(t):
+        p, r, u, fw = _cam_frame(t)
+        val = [(v(t) if callable(v) else v) for v in (d, x, y)]
+        return p + fw * val[0] + r * val[1] + u * val[2]
+    return f
+
+
+def _far(k):
+    """A comet's base: far away round the world of the film, low over the sea (unseen until it is called in)."""
+    def f(t):
+        a = 2.0 * np.pi * k / 9.0 + 0.05 * t
+        return _v(6.0 + np.sin(a) * (380.0 + 25.0 * k), 14.0 + 5.0 * (k % 4), -50.0 + np.cos(a) * (380.0 + 25.0 * k))
+    return f
+
+
+def _helix_at(c, r, y0, y1, w, ph, rate_y=1.1):
+    def f(t):
+        cc = c(t) if callable(c) else c
+        rr = r(t) if callable(r) else r
+        a = w * t + ph
+        return np.asarray(cc, np.float64) + _v(np.sin(a) * rr, y0 + (y1 - y0) * (0.5 + 0.5 * np.sin(rate_y * t + ph)),
+                                                np.cos(a) * rr)
+    return f
+
+
+def _pen_of(name):
+    w = [x for x in WORDS if x.name == name][0]
+    return lambda t: np.asarray(w.pen(t, PW._cam_at(CAMERA, t)), np.float64)
+
+
+HOOP_R, HOOP_GAP, HOOPS_N = 3.0, 2.5, 5
+TUNNEL = (21.6, 23.2)
+
+
+def _tunnel(t):
+    """The violet comet stitching half hoops over the river, ahead of the camera (we fly through them)."""
+    s = float(np.clip((t - TUNNEL[0]) / (TUNNEL[1] - TUNNEL[0]), 0.0, 1.0)) * HOOPS_N
+    n = min(np.floor(s), HOOPS_N - 1)
+    f = s - n
+    zf = f + 0.9 * np.sin(2.0 * np.pi * f) / (2.0 * np.pi)
+    th = np.pi * (f if int(n) % 2 == 0 else 1.0 - f)
+    z = -21.0 - HOOP_GAP * (n + zf)
+    xc = float(np.interp(-z, [19.6, 25.0, 27.2, 33.7], [-3.2, 0.3, 0.6, 1.8]))
+    return _v(xc - HOOP_R * np.cos(th), HOOP_R * np.sin(th) * 0.92, z)
+
+
+def _through_door(i, t0):
+    """A comet bowing through the doorway of light in its turn ("after you")."""
+    x = 0.55 * (i - 3)
+    A = P3 + _v(x, 1.0 + 0.12 * i, 4.2)
+    B = P3 + _v(0.0, 1.25, -0.2)
+    Cc = P3 + _v(1.6 * x, 3.4, -9.0)
+    Bc = 2.0 * B - 0.5 * (A + Cc)
+
+    def f(t):
+        u = float(np.clip((t - t0) / 1.0, 0.0, 1.0))
+        return (1 - u) ** 2 * A + 2 * u * (1 - u) * Bc + u * u * Cc
+    return f
+
+
+def _sc_(a, b, t):
+    return sc(a, b, t)
+
+
+def _spiral4(i):
+    def f(t):
+        u = max(t - 28.5, 0.0)
+        r = 1.6 + 9.0 * np.exp(-u / 0.7)
+        a = -1.7 * t + 2.1 * i
+        return P4 + _v(np.sin(a) * r, 0.5 + 0.3 * i + 3.5 * np.exp(-u / 0.8), np.cos(a) * r)
+    return f
+
+
+def _gather(ph):
+    def f(t):
+        r = 1.0 + 7.0 * (1.0 - _sc_(42.4, BREATH_END, t))
+        return PEARL + _v(np.sin(2.4 * t + ph) * r, 0.4 * np.sin(3.0 * t + ph), np.cos(2.4 * t + ph) * r)
+    return f
+
+
+def _rise7(ph, k):
+    def f(t):
+        r = 2.0 + 7.0 * _sc_(BREATH_END, BREATH_END + 0.8, t)
+        return A7 + _v(np.sin(1.3 * t + ph) * r, _climb(t) + 1.5 + 0.9 * (k % 4), np.cos(1.3 * t + ph) * r)
+    return f
+
+
+def _braid8(ph, k):
+    """THE LIFT: the hyperspace braid. The nine heads wheel in a ring just ahead of us round the line of our
+    flight, so their trails stream past on every side as we corkscrew up to the world."""
+    def f(t):
+        p, r_, u_, fw = _cam_frame(t)
+        a = 3.2 * t + ph
+        rad = 2.6 + 0.6 * (k % 3)
+        return p + fw * (7.0 + 1.6 * (k % 4)) + r_ * (np.cos(a) * rad * 1.5) + u_ * (np.sin(a) * rad)
+    return f
+
+
+def _globe8(ph, k):
+    tilt = np.radians(-50.0 + 12.5 * k)
+
+    def f(t):
+        a = 0.9 * t + ph
+        return FIN_C + FIN_R * _fin_scale(t) * 1.35 * _v(np.cos(a), np.sin(a) * np.sin(tilt), np.sin(a) * np.cos(tilt))
+    return f
+
+
+def _comet_heads(C):
+    H = [MC.Head(_far(k)) for k in range(9)]
+    # the seed bursts flat into the nine as the drop touches the sea, and they race on low over the water ahead
+    # of us to the greeting
+    for k in range(9):
+        az = np.radians(194.0 + (k - 4) * 14.0)
+        dk = _v(np.sin(az), 0.0, np.cos(az))
+        H[k].leg(LAND_T, LAND_T + 0.75,
+                 (lambda t, dk=dk, k=k: D0 + dk * (0.6 + 18.0 * (1.0 - np.exp(-2.4 * max(t - LAND_T, 0.0))))
+                  + _v(0.0, 0.35 + 0.25 * (k % 3) + 1.2 * max(t - LAND_T, 0.0), 0.0)), bi=0.0, bo=0.45)
+        H[k].leg(LAND_T + 0.85, 10.2, _rel(lambda t, k=k: 15.0 + 2.5 * (k % 3) + 3.0 * max(t - 9.0, 0.0),
+                                           1.5 * (k - 4), -1.35 + 0.15 * (k % 3)), bi=0.4, bo=1.2)
+    H[GREET].leg(8.95, 9.35, _pen_of("Greeting"), bi=0.35, bo=0.6)
+    # Greeting to Gratitude: three ribbons stream past us and open the gold pour; the gold one writes
+    for i, k in enumerate((GREET, APOL, CONS)):
+        H[k].leg(11.8, 12.45, _rel(lambda t: -3.0 + 15.0 * _sc_(11.8, 12.45, t), 0.8 * (i - 1), 0.4 * i - 0.2),
+                 bi=0.3, bo=0.3)
+        H[k].leg(12.5, 13.9, _helix_at(P1b, 1.7 + 0.35 * i, 0.4, 2.9, 2.0, 2.1 * i), bi=0.3, bo=1.0)
+    H[GRAT].leg(12.15, 12.52, _pen_of("Gratitude"), bi=0.6, bo=0.5)
+    H[GRAT].leg(12.9, 15.4, _helix_at(P1b, 1.3, 0.4, 2.8, 2.1, 0.0), bi=0.5, bo=0.8)
+    # to the Apology: five ribbons sweep past us, low, into the rain of light
+    for i, k in enumerate((GREET, INCL, CONC, RESP, COMP)):
+        H[k].leg(14.6, 15.6, _rel(lambda t: -4.0 + 26.0 * _sc_(14.6, 15.6, t), 1.1 * (i - 2),
+                                  -0.9 + 0.2 * (i % 2)), bi=0.3, bo=0.8)
+    H[APOL].leg(15.6, 16.0, _pen_of("Apology"), bi=0.4, bo=0.6)
+    # Inclusiveness: a double helix (yellow and green) wraps the two as they rise and embrace
+    H[APOL].leg(16.7, 21.7, _helix_at(P2, 1.55, 0.3, 1.2, 1.7, 0.0), bi=0.8, bo=1.0)
+    H[INCL].leg(18.6, 19.0, _pen_of("Inclusiveness"), bi=0.5, bo=0.5)
+    H[INCL].leg(19.3, 21.7, _helix_at(P2, lambda t: 1.9 - 0.45 * _sc_(19.3, 20.6, t), 0.9, 1.8, 1.7, np.pi, 0.9),
+                bi=0.5, bo=1.0)
+    # to the Concession: up the river through hoop gates the violet ribbon stitches ahead of us
+    H[ENC].leg(TUNNEL[0], TUNNEL[1], _tunnel, bi=0.5, bo=0.8)
+    H[CONC].leg(22.45, 22.85, _pen_of("Concession"), bi=0.6, bo=0.5)
+    for i, k in enumerate((GREET, GRAT, APOL, INCL, CONS, COMP, CONC)):      # through the door, each in turn
+        t0 = 23.5 + 0.24 * i
+        H[k].leg(t0, t0 + 1.0, _through_door(i, t0), bi=0.4, bo=0.5)
+    # Respect: two ribbons circle each other slowly, listening, by the tree of light
+    H[RESP].leg(25.5, 25.95, _pen_of("Respect"), bi=0.5, bo=0.5)
+    for i, k in enumerate((RESP, CONC)):
+        H[k].leg(26.3, 28.7, (lambda t, i=i: P3b + _v(0.6 * np.sin(1.9 * t + np.pi * i),
+                                                       1.15 + 0.2 * np.sin(0.9 * t) + 0.1 * i,
+                                                       0.6 * np.cos(1.9 * t + np.pi * i))), bi=0.7, bo=0.8)
+    # to the Encouragement: three ribbons spiral down, braking, to the two kneeling under the falling light
+    for i, k in enumerate((CONS, COMP, GRAT)):
+        H[k].leg(28.5, 30.6, _spiral4(i), bi=0.5, bo=0.9)
+    H[ENC].leg(29.5, 30.0, _pen_of("Encouragement"), bi=0.5, bo=0.5)
+    H[ENC].leg(30.4, 33.2, _helix_at(P4, 1.3, 0.3, 1.5, 1.4, 0.7), bi=0.6, bo=0.9)
+    # to the Consideration: ribbons lead our banking glide; the pink one writes, then circles the two
+    for i, k in enumerate((INCL, APOL, GREET, CONC)):
+        H[k].leg(34.3, 35.7, _rel(lambda t: 6.0 + 3.0 * max(t - 34.3, 0.0), 0.9 * (i - 1.5), -0.8 + 0.2 * i),
+                 bi=0.5, bo=0.9)
+    H[CONS].leg(35.5, 35.85, _pen_of("Consideration"), bi=0.5, bo=0.6)
+    H[CONS].leg(36.2, 38.6, _helix_at(P5, 1.5, 0.4, 1.7, 1.5, 0.3), bi=0.6, bo=0.8)
+    # the Compliment: the navy ribbon led by the dancer's hand, a ring of colours round her and the crowd
+    H[COMP].leg(38.95, 39.2, _pen_of("Compliment"), bi=0.5, bo=0.4)
+    dancer = C["compliment"][0]
+    H[COMP].leg(39.4, 42.1, (lambda t: np.asarray(dancer.where(min(t, 42.0), "palm.R"), np.float64)
+                             + _v(0.9 * np.sin(3.0 * t), 0.45 + 0.3 * np.sin(1.7 * t), 0.9 * np.cos(3.0 * t))),
+                bi=0.4, bo=0.8)
+    for i, k in enumerate((GREET, GRAT, APOL, INCL, CONC, RESP)):
+        H[k].leg(39.5, 42.3, _helix_at(P5b, 5.5, 1.4, 2.8, 0.85, 2.0 * np.pi * i / 6.0, 0.7), bi=0.8, bo=0.9)
+    # the breath: the nine circle in to the pearl, burst out with it and rise with us round the column; the lift
+    # winds them round us; then round the world until it becomes the logo
+    for k in range(9):
+        ph = 2.0 * np.pi * k / 9.0
+        H[k].leg(42.4, BREATH_END, _gather(ph), bi=0.8, bo=0.0)
+        H[k].leg(BREATH_END, HEAVEN_T, _rise7(ph, k), bi=0.0, bo=1.0)
+        H[k].leg(ASC1 - 0.3, LIFT_END, _braid8(ph, k), bi=0.6, bo=0.5)
+        H[k].leg(LIFT_END + 0.3, 53.4, _globe8(ph, k), bi=1.0, bo=0.8)
+    return H
+
+
+def _comet_dim(pts, cam, t, k):
+    """The comets go out inside a word's box while it is read (its own pen may write it) and inside the
+    opening title while it stands."""
+    xy, z = cam.project(pts)
+    f = np.ones(len(pts))
+    for w in WORDS:
+        if not (w.t_in - 0.3 <= t <= w.t_out + 0.3):
+            continue
+        if PW.LABELS.index(w.name) == k and (t < w.t_read0 + 0.3 or t > w.t_read1):
+            continue
+        b = PW.screen_box(w, cam, t)
+        if not b[4]:
+            continue
+        kk = sc(w.t_in - 0.3, w.t_in, t) * (1.0 - sc(w.t_out, w.t_out + 0.3, t))
+        x0, x1, y0, y1 = b[0] - 0.025, b[1] + 0.025, b[2] - 0.03, b[3] + 0.035
+        e = 0.02
+        inside = (ss(x0 - e, x0, xy[:, 0]) * (1.0 - ss(x1, x1 + e, xy[:, 0]))
+                  * ss(y0 - e, y0, xy[:, 1]) * (1.0 - ss(y1, y1 + e, xy[:, 1])))
+        f = np.minimum(f, 1.0 - 0.94 * kk * inside * (z > 0))
+    ko = 1.0 - sc(OPEN_FULL, OPEN_FULL + 0.8, t)
+    if ko > 0.0:
+        x0, x1, y0, y1 = OPENING_BOX
+        inside = (ss(x0 - 0.02, x0, xy[:, 0]) * (1.0 - ss(x1, x1 + 0.02, xy[:, 0]))
+                  * ss(y0 - 0.02, y0, xy[:, 1]) * (1.0 - ss(y1, y1 + 0.02, xy[:, 1])))
+        f = np.minimum(f, 1.0 - ko * inside * (z > 0))
+    return f
+
+
+def _comet_width(k, t):
+    if t > LIFT_END:
+        return 0.5                                   # round the world, seen from forty metres
+    return 0.22
+
+
+_PEN_T = {PW.LABELS.index(w.name): (w.t_in, w.t_read0) for w in WORDS}
+
+
+def _comet_tail(k, t):
+    if ASC1 - 0.3 < t < LIFT_END + 0.3:
+        return 0.35                                  # the braid: streaks past us
+    a, b = _PEN_T[k]
+    if a - 0.2 < t < b + 0.6:                        # writing: the trail is the stroke, not the road here
+        return 0.85 - 0.5 * sc(a - 0.2, a, t) * (1.0 - sc(b + 0.2, b + 0.6, t))
+    return 0.85
+
+
+def _comet_alpha(k, t):
+    return 0.72 * sc(LAND_T - 0.02, LAND_T + 0.35, t) * (1.0 - sc(53.4, 54.1, t))
+
+
+def _comets(C):
+    return MC.Comets(_comet_heads(C), NINE_GLOW, dim=_comet_dim, width=_comet_width, tail=_comet_tail,
+                     alpha=_comet_alpha)
 
 
 class _Dim:
