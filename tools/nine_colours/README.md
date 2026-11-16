@@ -1,6 +1,6 @@
 # Nine Colours, restored and upgraded
 
-Anthony selected the original saved Film 10 video and its music, asking for
+The owner selected the original saved Film 10 video and its music, asking for
 essentially the same film with the later model, animation, text and card upgrades.
 This version restores that film directly instead of restaging its concept.
 
@@ -46,6 +46,10 @@ No old dark, fragmented or mixed-gender touching cast is instantiated.
   Moving perimeter fountains and comet arcs continue through the final accent.
 - Reduce the source's full-frame flash strengths while retaining their cue times.
   The original free-flying half-loop and braid retain their explicit camera up.
+- Remove the opening flash that obscured the card. Clear Apology before
+  Inclusiveness arrives, and clear Consideration before Gratitude forms.
+- Match the spiral's scale with a close luminous globe on the musical hit,
+  followed by the symbols, hearts, logo and the animated event card.
 
 ## Reproduce locally
 
@@ -71,9 +75,9 @@ reuse requires matching source manifests and complete decoded part frame counts.
 The soundtrack check reports the original song joins rather than replacing the
 owner's preferred edit to satisfy a threshold. Frame and audio measurements do
 not establish artistic quality or replace a listening audition. Final delivery
-validation is recorded separately after the finished exports are inspected.
+validation is recorded in [VALIDATION.md](VALIDATION.md).
 
 All source changes are isolated under `tools/nine_colours/`; the final card's
 perimeter animation reuses `tools/radiance/celebration.py`. Shared song, master,
 acting, audio and workflow files remain untouched. No paid services or GitHub
-Render workflow. Draft PR only; Anthony decides whether to merge.
+Render workflow. Draft PR only; the owner decides whether to merge.
