@@ -1,5 +1,11 @@
 # Concert Backdrops: video track status
 
+## Latest promo approval, 2026-11-16
+
+The owner approved **Film 10, Nine Colours, Revision 3** and requested preservation, documentation and upload. [Phone 720p60](https://drive.google.com/file/d/1CBQ4OtpLW3Kp3zBWsEMkjXYiAWUwhDQw/view) and [master 1080p60](https://drive.google.com/file/d/1gcxnb4Oyexq5Kbb8LvFWqOrikF-BVSht/view) are saved in Videos. Both are 66 seconds at native 60 fps. The exact source is `46df53b98a43f58e51a78d40ee5794108a68e13c`, tag `film10-revision3-approved-2026-11-16`; draft PR #71 remains unmerged. [Full approval and handoff record](promo/APPROVED-NINE-COLOURS-R3.md).
+
+This is the approved promo cut, not a claim that all eleven full-length song backdrops below are complete. The older per-song status and its unresolved live-performance decisions remain preserved.
+
 The one current-status page for the moving backdrop videos. Rules and decisions live in DESIGN-SYSTEM.md (read it first; its section 1 is the concert's message). The 30 still samples are tracked separately by Codex in SHARED-HANDOFF.txt and production-status.json. Rewritten 2026-11-13 by the coordinating Claude Code session; nothing was dropped (older notes are summarized in the log at the bottom and kept in full in production-log.jsonl).
 
 ## Where things stand (2026-11-13, evening, autonomous run while Anthony is away)

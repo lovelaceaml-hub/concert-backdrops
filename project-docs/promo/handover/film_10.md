@@ -1,5 +1,15 @@
 # Film 10, Nine Colours: handover
 
+## Current approved cut, 2026-11-16
+
+The owner approved **Revision 3**, 66 seconds at native 60 fps, and requested that it be saved, documented and uploaded. The exact source is `46df53b98a43f58e51a78d40ee5794108a68e13c`, tag `film10-revision3-approved-2026-11-16`, draft PR #71. [Approval record, video links, hashes and reproduction](../APPROVED-NINE-COLOURS-R3.md).
+
+It builds from Film 10 render 1 (`d928ff9`, run 43726203825), with an extended opening, signature, updated expression capsules and serif text, Claude Final v1's golden listening pair for Respect, and a continuous swirling-light approach to Earth with orbiting expression symbols. The original medley and final accent are preserved. Its implementation is isolated under `tools/nine_colours_minor/`; do not overwrite shared song/acting files to reproduce it. No merge is authorized.
+
+## Historical ten-film handover
+
+The notes below describe the older ten-film development branch and remain as history. Its later passes and 62-second alternatives are not the approved Revision 3 delivery.
+
 The branch is ten/10-nine-colours at 5a4b936, and the song file is engine/songs/ten_10_nine_colours.py.
 - Last full cloud render: run 43734065813 (v5, before the finale and UPDATE 13).
 - Pass 9 local stills (finale, TITLES): scratchpad/ten10b/s9a/ (open4.jpg, fin1.jpg, fin2.jpg, logo_zoom.png).

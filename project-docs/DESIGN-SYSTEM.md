@@ -1,5 +1,7 @@
 # Concert Backdrops: shared design rules for every song
 
+Promo status, 2026-11-16: the owner approved **Film 10, Nine Colours, Revision 3**. Its specific 66-second timeline, native 60 fps, original medley, concert cards/signature, expression typography, Respect and Earth finale are recorded in [APPROVED-NINE-COLOURS-R3.md](promo/APPROVED-NINE-COLOURS-R3.md) and PHASEB UPDATE 21. Those newer approved choices govern that promo. The earlier per-song design rules and open live-performance decisions below remain historical context and are not silently changed by this approval.
+
 The rules every video follows, in priority order. Each song's own design is in Designs/. A design may break a rule only if it explains why; Anthony decides. Reorganized 2026-11-13 with nothing removed.
 
 ## 1. THE MESSAGE (above every other rule)
