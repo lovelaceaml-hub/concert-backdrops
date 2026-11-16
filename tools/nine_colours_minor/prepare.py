@@ -7,9 +7,11 @@ import subprocess
 import tarfile
 
 ROOT = Path(__file__).resolve().parents[2]
-WORK = ROOT / 'work/nine_colours_minor'
+WORK = ROOT / 'work/nine_colours_revision2'
 ENGINE_COMMIT = 'd928ff9eafe02ac3150f0c646bdcc497fe5a7278'
-SNAPSHOT = WORK / 'render1'
+SNAPSHOT = ROOT / 'work/nine_colours_minor/render1'
+LEAD_IN = 6
+DURATION = 60 + LEAD_IN
 
 
 def prepare():
@@ -18,7 +20,7 @@ def prepare():
         archive = WORK / 'render1.tar'
         subprocess.run(['git', 'archive', '--format=tar', f'--output={archive}', ENGINE_COMMIT],
                        cwd=ROOT, check=True)
-        SNAPSHOT.mkdir(exist_ok=True)
+        SNAPSHOT.mkdir(parents=True, exist_ok=True)
         with tarfile.open(archive) as stream:
             stream.extractall(SNAPSHOT, filter='data')
         archive.unlink()
@@ -35,8 +37,9 @@ def prepare():
     approved = ROOT / 'audio/promo/concert-medley-leadin.mp3'
     if not (WORK / 'score.wav').exists():
         subprocess.run(['ffmpeg', '-v', 'error', '-y', '-i', str(approved), '-ac', '2',
-                        '-ar', '48000', '-c:a', 'pcm_s24le', str(WORK / 'score.wav')], check=True)
-    report = dict(engine_commit=ENGINE_COMMIT,
+                        '-ar', '48000', '-af', 'adelay=4000|4000', '-c:a', 'pcm_s24le', str(WORK / 'score.wav')], check=True)
+    report = dict(engine_commit=ENGINE_COMMIT, lead_in_seconds=LEAD_IN,
+                  duration_seconds=DURATION, approved_audio_delay_seconds=4,
                   original_audio_sha256=hashlib.sha256(original.read_bytes()).hexdigest(),
                   approved_audio_sha256=hashlib.sha256(approved.read_bytes()).hexdigest())
     (WORK / 'provenance.json').write_text(json.dumps(report, indent=2) + '\n')

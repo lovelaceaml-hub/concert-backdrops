@@ -15,9 +15,9 @@ import sys
 import time
 
 ROOT = Path(__file__).resolve().parents[2]
-OUT = ROOT / 'out/nine_colours_minor'
-WORK = ROOT / 'work/nine_colours_minor'
-FRAMES = 3720
+OUT = ROOT / 'out/nine_colours_revision2'
+WORK = ROOT / 'work/nine_colours_revision2'
+FRAMES = 3960
 
 
 def frame_count(path):
@@ -32,7 +32,7 @@ def frame_count(path):
 def run(workers, parts):
     OUT.mkdir(parents=True, exist_ok=True)
     WORK.mkdir(parents=True, exist_ok=True)
-    keys = sorted((WORK / 'render1/engine').rglob('*.py')) + sorted((ROOT / 'tools/nine_colours_minor').glob('*.py')) + sorted((ROOT / 'engine/p3d').glob('brand*.py')) + [ROOT / 'engine/titles.py'] + [WORK / 'features.npz', WORK / 'score.wav']
+    keys = sorted((ROOT / 'work/nine_colours_minor/render1/engine').rglob('*.py')) + sorted((ROOT / 'tools/nine_colours_minor').glob('*.py')) + sorted((ROOT / 'engine/p3d').glob('brand*.py')) + [ROOT / 'engine/titles.py'] + [WORK / 'features.npz', WORK / 'score.wav']
     keys += sorted(p for p in (ROOT / 'fonts').rglob('*') if p.is_file())
     manifest = {str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest() for p in keys}
     manifest.update(parts=parts, frames=FRAMES, resolution='1920x1080', fps=60)
@@ -55,7 +55,7 @@ def run(workers, parts):
         start = time.monotonic()
         with (WORK / f'render-{i:02d}.log').open('w') as log:
             subprocess.run([sys.executable, str(ROOT / 'tools/nine_colours_minor/render.py'), '--range', str(first), str(last),
-                            '--out', str(path), '--crf', '18'],
+                            '--out', str(path), '--crf', '19'],
                            cwd=ROOT, env=env, stdout=log, stderr=subprocess.STDOUT, check=True)
         found = frame_count(path)
         if found != last - first:
@@ -66,19 +66,19 @@ def run(workers, parts):
         list(pool.map(part, range(parts)))
     listing = WORK / 'parts.txt'
     listing.write_text(''.join(f"file '{OUT / f'part-{i:02d}.mp4'}'\n" for i in range(parts)))
-    master = OUT / 'Film-10-Minor-Additions-1080p60.mp4'
+    master = OUT / 'Film-10-Nine-Colours-Revision-2-1080p60.mp4'
     subprocess.run(['ffmpeg', '-v', 'error', '-y', '-f', 'concat', '-safe', '0', '-i', str(listing),
                     '-i', str(WORK / 'score.wav'), '-map', '0:v:0', '-map', '1:a:0',
-                    '-c:v', 'copy', '-c:a', 'aac', '-b:a', '192k', '-t', '62',
+                    '-c:v', 'copy', '-c:a', 'aac', '-b:a', '192k', '-t', '66',
                     '-movflags', '+faststart', str(master)], check=True)
     if frame_count(master) != FRAMES:
-        raise RuntimeError('Master frame count does not match 3720')
-    review = OUT / 'Film-10-Minor-Additions-phone-720p60.mp4'
+        raise RuntimeError('Master frame count does not match 3960')
+    review = OUT / 'Film-10-Nine-Colours-Revision-2-phone-720p60.mp4'
     subprocess.run(['ffmpeg', '-v', 'error', '-y', '-i', str(master), '-vf', 'scale=1280:720',
                     '-c:v', 'libx264', '-threads', '2', '-preset', 'fast', '-crf', '24', '-maxrate', '3M', '-bufsize', '6M',
-                    '-c:a', 'aac', '-b:a', '128k', '-t', '62', '-movflags', '+faststart', str(review)], check=True)
+                    '-c:a', 'aac', '-b:a', '128k', '-t', '66', '-movflags', '+faststart', str(review)], check=True)
     if frame_count(review) != FRAMES:
-        raise RuntimeError('Review frame count does not match 3720')
+        raise RuntimeError('Review frame count does not match 3960')
     print(str(master), flush=True)
     print(str(review), flush=True)
 

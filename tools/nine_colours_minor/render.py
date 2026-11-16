@@ -7,7 +7,7 @@ import subprocess
 import sys
 import time
 
-from prepare import ROOT, WORK, SNAPSHOT, ENGINE_COMMIT
+from prepare import ROOT, WORK, SNAPSHOT, ENGINE_COMMIT, LEAD_IN
 
 
 def load(baseline=False):
@@ -37,9 +37,11 @@ def load(baseline=False):
     # Replace only the old 2D closing card, leaving its world and light cues.
     song.TITLE = dict(song.TITLE, form=1e9, hold=1e9, star=1e9)
     song.TAGLINE = dict(song.TAGLINE, t0=1e9, t1=1e9+1)
-    song.TITLES = dict(signature=dict(windows=[(7.0, 51.47, 'bl', 'night'),
-                                                (51.47, 54.7, 'bl', 'day')], fade=.15),
-                       end_card=dict(t_in=54.5, fade=.5, scale=.94, veil=.85, backdrop=False))
+    song.TITLES = dict(
+        opening=dict(t_end=7.45, dissolve=.45, build=0, y=.28),
+        signature=dict(windows=[(7.4, 58.1, 'bl', 'night'),
+                                (58.1, 58.7, 'bl', 'day')], fade=.12),
+        end_card=dict(t_in=58.5, fade=.5, scale=.94, veil=.4, backdrop=False))
     spec = importlib.util.spec_from_file_location('titles', ROOT/'engine/titles.py')
     titles = importlib.util.module_from_spec(spec)
     sys.modules['titles'] = titles
@@ -54,7 +56,7 @@ def load(baseline=False):
         def frame(self, t, index=0):
             data = super().frame(t, index)
             self.base_frame = data
-            if self.cards.overlay(t+2):
+            if self.cards.overlay(t+LEAD_IN):
                 return self.f_out.read(components=3)
             return data
 
@@ -66,7 +68,7 @@ def main():
     ap.add_argument('--baseline', action='store_true')
     ap.add_argument('--original-clock', action='store_true')
     ap.add_argument('--stills', default='')
-    ap.add_argument('--outdir', type=Path, default=ROOT/'out/nine_colours_minor/stills')
+    ap.add_argument('--outdir', type=Path, default=ROOT/'out/nine_colours_revision2/stills')
     ap.add_argument('--range', type=int, nargs=2)
     ap.add_argument('--out', type=Path)
     ap.add_argument('--scale', type=float, default=1)
@@ -75,7 +77,7 @@ def main():
     Renderer, film = load(args.baseline)
     w, h = int(1920*args.scale)//2*2, int(1080*args.scale)//2*2
     renderer = Renderer(w, h)
-    shift = 0 if args.original_clock else 2
+    shift = 0 if args.original_clock else LEAD_IN
 
     def frame(t):
         clock = t-shift
