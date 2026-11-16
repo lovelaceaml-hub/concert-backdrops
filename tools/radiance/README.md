@@ -1,15 +1,17 @@
 # The Light That Reaches You
 
 An independent 62-second Astra revision, built in the existing Python and
-moderngl engine. It follows light from a pair of luminous hands through nine
-human encounters, along a reflected river and a flowing veil, then rises to a
-world lit by the acts of kindness. The world becomes the campaign logo and a
-living end card.
+moderngl engine. Anthony selected Film 10, Nine Colours as the principal visual
+reference. White-cored coloured comets travel over a star-filled mirror lake,
+visit nine human encounters, pass through blue hoops, wrap the embrace in a
+double helix, then gather into a rising nine-colour braid. The colours reach a
+world of light that becomes the campaign logo and a living end card.
 
 The saved-film review is in
-`project-docs/promo/astra/VISUAL-REFERENCE-REVIEW.md`. The Wave, The Relay,
-Ascension and Masterpiece supply visual references, not pre-rendered footage.
-Every final frame is rendered locally from the engine.
+`project-docs/promo/astra/VISUAL-REFERENCE-REVIEW.md`. Film 10's handover and
+source on `ten/10-nine-colours` informed the layered comet treatment. No saved
+video is composited into the result. Every frame is rendered locally. The
+intermediate cloud/veil export was stopped when Anthony chose Nine Colours.
 
 ## Scope and provenance
 
@@ -17,7 +19,7 @@ This is a separate entry point under `tools/radiance`. It changes no shared song
 acting, masterpiece, music asset, workflow or renderer file. `master_astra` from
 the earlier independent comparison supplies existing human performances; these
 are restaged and retimed by `Performance`. Two standing performances from the
-previous Astra treatment are retained in `actors.py`. Cloud, globe, symbol,
+previous Astra treatment are retained in `actors.py`. Globe, symbol,
 word and title APIs are reused unchanged. The previous static camera, garden,
 opaque-hand studies and lotus renderer are not used.
 

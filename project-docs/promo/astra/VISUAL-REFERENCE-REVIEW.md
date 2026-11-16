@@ -58,3 +58,12 @@ A tender act releases light that reaches another person and eventually fills the
 The next production check must be a short actual moving shot with a readable gesture, a motivated camera reveal, layered atmosphere and controlled highlights. Compare its frames directly with the concrete references above. A static concept image or a technically successful render is not evidence that the film meets Anthony's aesthetic goal. Do not extend an unconvincing study into another full-length delivery.
 
 The solid-hand and lotus studies remain uncommitted experiments and are not the basis of the revision. No paid service, shared song/acting file, music file, workflow or merge is involved in this review. Private extracted media remain outside Git. Music still requires its own audible review; this visual review does not approve the previous edit.
+
+## Owner selection: Nine Colours
+
+Anthony subsequently chose Film 10, Nine Colours as the principal reference.
+The independent revision now uses its deep star field, coloured light with
+white cores, blue hoop flight, embrace helix and rising nine-colour braid.
+The prior cloud/veil export was stopped. Updated concert details, native 60 fps,
+the seven-song edit, readable opening and ending, warm gold people and gentler
+camera transitions remain. The original Film 10 video is a reference only.

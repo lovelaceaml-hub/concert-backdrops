@@ -6,7 +6,8 @@ performances and renderer APIs are read only. All motion is a function of time.
 import numpy as np
 from songs.master_astra import *  # noqa: F401,F403
 from songs import master_astra as CAST
-from p3d import brand as BR, words as PW, master_sky as SKY, master_brand as MB
+from p3d import brand as BR, words as PW, master_brand as MB
+from tools.radiance.colours import NineColours, StarGarden
 from p3d.api import lin, ribbon
 from p3d.camera import Move, Rig
 from tools.radiance.actors import standing_encouragement, standing_consideration
@@ -16,7 +17,8 @@ NFRAMES = int(TOTAL*FPS)
 MUSIC_END = 61.8
 TEXT_SHADOW = BOTTOM_CALM = 0.0
 STARTS = 8.6 + np.arange(9)*3.9
-CENTERS = np.array([[3*np.sin(k*.65),0,-6-6*k] for k in range(9)])
+CENTERS = np.array([[4*np.sin(k*.7),0,-20-16*k] for k in range(9)])
+WORLD_CENTER = np.array([0,22,-174])
 COLORS = [PW.COLORS[k] for k in PW.LABELS]
 
 
@@ -34,17 +36,22 @@ def aim(p,c,where=(.65,.63)):
 
 
 def camera_path():
-    keys=[(0,(0,9.8,12),(0,11,-10)),(6.9,(.5,9.4,10),(0,10.5,-10))]
-    for k,(a,c) in enumerate(zip(STARTS,CENTERS)):
-        for dt,side,dist in [(.25,-1.2,7.0),(2.65,1.1,6.5)]:
-            p=c+np.array([side,1.9,dist])
+    keys=[(0,(0,2.6,12),(0,4.8,-16)),
+          (5.6,(.5,2.5,9),(0,4.3,-19)),
+          (7.3,(-1,2.1,2),(0,3.6,-21))]
+    distances=[7.2,6.3,6.7,6.7,8.4,5.6,6.2,5.6,8.4]
+    for k,(a,c,dist) in enumerate(zip(STARTS,CENTERS,distances)):
+        for dt,side,depth in [(.25,-1.25,dist),(2.75,1.1,dist-.5)]:
+            p=c+np.array([side,1.9,depth])
             keys.append((float(a+dt),p,aim(p,c+[0,1.4,0])))
-    keys.extend([(44.7,(-.5,3.1,-47),(0,3,-64)),
-                 (47.0,(4,10,-48),(0,12,-68)),
-                 (49.7,(7,16,-49),(0,12,-68)),
-                 (52.0,(3,14,-53),(0,12,-68)),
-                 (55.0,(0,13.3,-52),(0,12,-68)),
-                 (62.0,(0,13.1,-52.4),(0,12,-68))])
+    keys.extend([(44.5,(2,3,-146),(0,7,-169)),
+                 (45.5,(3.5,5,-156),(0,13,-172)),
+                 (46.7,(1,10,-164),(0,23,-174)),
+                 (48.0,(-3,18,-159),(0,22,-174)),
+                 (49.7,(-6,25,-155),(0,22,-174)),
+                 (52.0,(3,24,-159),(0,22,-174)),
+                 (55.0,(0,23.3,-158),(0,22,-174)),
+                 (62.0,(0,23.1,-158.4),(0,22,-174))])
     return CAST._pchip(keys)
 
 
@@ -57,7 +64,7 @@ class Journey(Move):
         return self.path(t)
 
 
-CAMERA=Rig([Journey()],fov=44,aperture=.035,handheld=0,shutter=.65)
+CAMERA=Rig([Journey()],fov=44,aperture=.015,handheld=0,shutter=.65)
 SPECS=[dict(expr=label,t_in=float(a+.15),t_read0=float(a+.5),
             t_read1=float(a+3.10),t_out=float(a+3.50),
             ride=(.5,.66,8),em=PW.em_for(CAMERA,float(a+1.8),8,87),
@@ -131,45 +138,6 @@ class Performance:
         return out
 
 
-class River:
-    """Thousands of fine gold filaments curl into a rising vault of light."""
-    def __init__(self):
-        r=np.random.default_rng(711)
-        self.u=np.linspace(0,1,900)
-        self.p=r.uniform([-22,.2,-110],[22,15,8],(15000,3))
-        self.seed=r.random(15000)
-        self.size=r.uniform(.012,.045,15000)
-
-    def sample(self,t):
-        fade=float(1-smooth(51,54.4,t))
-        if fade<=0:return None
-        out=[]
-        z=10-120*self.u
-        for k in range(19):
-            phase=k*.28
-            x=-3*np.sin((z+6)*(.65/6))+(.9+.16*k)*np.cos(self.u*11+phase+t*.08)
-            y=.06+.018*k+(.12+.08*k)*np.sin(self.u*8+phase+t*.12)**2
-            p=np.stack([x,y,z],1)
-            a=(.12+.10*np.sin(self.u*30-t*.7+k)**2)*fade
-            out.append(ribbon(p,width=.012+.002*(k%4),color=lin('#ffd486'),alpha=a,emit=1.3))
-        # Broad arcs form a gold cathedral; their fine contour stays visible.
-        lift=float(smooth(42,48.5,t))
-        for j in range(7):
-            u=np.linspace(0,np.pi,380)
-            radius=7.5+j*.7
-            p=np.stack([radius*np.cos(u)+.5*np.sin(u*3+t*.1),
-                        1.8+radius*np.sin(u)*(1+.8*lift),
-                        np.full(len(u),-10-j*8)+1.7*np.sin(u*2+t*.12)],1)
-            out.append(ribbon(p,width=.035,color=lin('#ffd188'),alpha=.22*fade,emit=1.1))
-            out.append(dict(pos=p[::3],size=.14,color=lin('#ffa96c'),alpha=.06*fade,kind='soft',dof=0))
-        p=self.p.copy()
-        p[:,0]+=.3*np.sin(t*.23+self.seed*20)
-        p[:,1]+=.3*np.sin(t*.27+self.seed*17)
-        out.append(dict(pos=p,size=self.size,color=lin('#ffdfa1'),alpha=.46*fade,
-                        kind='disc',dof=.5,fog=.08,twinkle=.03,seed=self.seed))
-        return out
-
-
 class Blessing:
     """At each gesture a wave crosses the lake and joins the same river."""
     def __init__(self):
@@ -192,70 +160,7 @@ class Blessing:
         return out
 
 
-class LivingVeil:
-    """A continuous flowing surface made of fine light, opening around people."""
-    def __init__(self):
-        rng=np.random.default_rng(741)
-        self.u=rng.random(38000)
-        self.v=rng.random(38000)
-        self.seed=rng.random(38000)
-
-    def sample(self,t):
-        a=float(window(5.8,52.3,t,2.2))
-        if a<=0:return None
-        z=8-100*self.u
-        angle=.12+2.65*self.v+.20*np.sin(self.u*18-t*.24)
-        radius=3.8+.65*np.sin(self.u*12-t*.20)
-        x=-8.5+radius*np.cos(angle)-3*np.sin((z+6)*(.65/6))
-        y=.16+radius*np.sin(angle)*(1+.2*np.sin(self.u*14+t*.18))
-        p=np.stack([x,y,z],1)
-        col=lin('#ffc570')[None]*(.65+.35*self.v[:,None])+lin('#fff0c4')[None]*.22
-        return [dict(pos=p,size=.018+.018*self.seed,color=col,alpha=.50*a,emit=1.2,
-                     kind='disc',dof=.3,seed=self.seed,twinkle=0),
-                dict(pos=p[::18],size=.14,color=lin('#ffb34e'),alpha=.025*a,kind='soft',dof=0)]
-
-
-class FirstLight:
-    def sample(self,t):
-        if t>9:return None
-        u=float(smooth(6.6,8.6,t))
-        p=np.array([[0,7.8*(1-u)+.1,2-5*u]])
-        a=1-float(smooth(8.5,9,t))
-        return [dict(pos=p,size=.18,color=lin('#fff0c3'),alpha=.85*a,emit=2,kind='disc'),
-                dict(pos=p,size=.75,color=lin('#ffcc6b'),alpha=.15*a,kind='soft')]
-
-
-class RisingStreams:
-    def __init__(self):
-        rng=np.random.default_rng(753)
-        self.phase=rng.random((9,1800))
-        self.offset=rng.normal(0,.14,(9,1800,3))
-
-    def sample(self,t):
-        a=float(window(43,53.6,t,1.8))
-        if a<=0:return None
-        out=[]
-        u=np.linspace(0,1,650)
-        for k,color in enumerate(COLORS):
-            theta=k*2*np.pi/9+u*3.5-t*.12
-            r=9*(1-u)+3*u
-            p=np.stack([r*np.cos(theta),.2+u*12,-68+r*np.sin(theta)],1)
-            al=a*(.5+.5*np.sin(u*13-t*1.4+k)**2)
-            out.append(ribbon(p,width=.055,color=lin(color)*.35+lin('#ffcf88')*.65,alpha=al*.65,emit=1.3))
-            out.append(dict(pos=p[::2],size=.045,color=lin('#ffe4b8'),alpha=al[::2]*.6,kind='disc',dof=0))
-            v=(self.phase[k]+t*.13)%1
-            th=k*2*np.pi/9+v*3.5-t*.12
-            radius=9*(1-v)+3*v
-            q=np.stack([radius*np.cos(th),.2+12*v,-68+radius*np.sin(th)],1)+self.offset[k]
-            out.append(dict(pos=q,size=.024,color=lin('#ffe5af'),alpha=a*.7*np.sin(np.pi*v),
-                            emit=1.4,kind='disc',dof=.1,twinkle=0))
-        if t<49:
-            out.append(dict(pos=np.array([[0,12,-68]]),size=.4,color=lin('#fff0c7'),
-                            alpha=a*(1-float(smooth(47.5,49,t))),kind='disc',emit=1.5))
-        return out
-
-
-FINALE=BR.Finale(pos=(0,12,-68),radius=3.2,camera=CAMERA,look='night',
+FINALE=BR.Finale(pos=tuple(WORLD_CENTER),radius=3.2,camera=CAMERA,look='night',
                  t_world=47.6,spin=3,front=-115.14-3*48,shrink=.48,
                  hearts=dict(t0=48,t1=51.8,n=27),t_settle=(51,53),
                  t_logo=(52,54),bloom=dict(t=53.8,strength=.035,glow=.2),
@@ -281,25 +186,14 @@ def setup(scene):
     for people,source,k in [(standing_encouragement(),(32,36),6),(standing_consideration(),(36,40),7)]:
         a=float(STARTS[k])
         scene.add('encounter '+str(k),Performance(people,(0,0,0),source,(a,a+3.85),CENTERS[k]),reflect=True)
-    scene.add('opening hands of light',Performance(cast['hands0'],CAST.H0,(.8,7.6),(0,8.1),(0,7.4,2),scale=2.5),reflect=False)
-    scene.add('the first light',KeepWords(FirstLight()),reflect=False)
-    scene.add('the river',KeepWords(River()),reflect=True)
-    scene.add('the living veil',KeepWords(LivingVeil()),reflect=True)
+    scene.add('nine colours of love',KeepWords(NineColours(CENTERS,STARTS,COLORS)),reflect=True)
+    scene.add('stars around the journey',KeepWords(StarGarden()),reflect=True)
     scene.add('kindness spreading',KeepWords(Blessing()),reflect=True)
-    scene.add('nine rising streams',KeepWords(RisingStreams()),reflect=True)
-    clouds=[]
-    rng=np.random.default_rng(733)
-    for z in [-35,-85,-145]:
-        for side in [-1,1]:
-            clouds+=SKY.tower(rng,(side*28,0,z),19,36,n_layer=3,per=130)
-    scene.add('lit cloud architecture',KeepWords(SKY.Billows(clouds,seed=732,alpha=.07,body=.22,
-              top='#ffe1a0',warm='#ffb56c',rose='#ef7e9a',lilac='#8571cc',
-              puff=.42,shade=.4,drift=(.018,0,0),gain=lambda t:1-float(smooth(51.5,54.5,t)))),reflect=True,depth_of_field=False)
     FINALE.add_to(scene)
-    scene.add('expressions reach the world',MB.SymbolSwirl((0,12,-68),3.2,PW.LABELS,COLORS,
+    scene.add('expressions reach the world',MB.SymbolSwirl(tuple(WORLD_CENTER),3.2,PW.LABELS,COLORS,
               48,52.2,CAMERA,scale=FINALE.scale,size=.42,orbit=(1.9,1.65),
               turns=.35,n=600,life=1.8,bright=.55,glow_world=.3),reflect=False)
-    place=lambda t:(np.array([0,12,-68]),np.array([1,0,0]),np.array([0,1,0]))
+    place=lambda t:(WORLD_CENTER,np.array([1,0,0]),np.array([0,1,0]))
     scene.add('final chord',MB.FinalGlow(place,57.5,width=11,height=7,ring=.012,glint=.02),reflect=False)
     for word in WORDS:
         mask=word.mask()
@@ -310,20 +204,26 @@ def setup(scene):
     WORDS.check(CAMERA,min_read=2.5)
 
 
-WORLD=dict(look=[(0,'radiance'),(44,'radiance_lift',3)],
-    looks=dict(radiance=dict(base='predawn',sky_top='#0b1046',sky_mid='#38206c',
-                sky_hor='#9a5068',water='#070818',haze_color='#7a4a6a',sun_color='#ffcf90',
-                sun_el=-1.5,sun_az=190,sun_int=.55,sun_disc=0,sun_glow=.55),
-               radiance_lift=dict(base='dawn',sky_top='#191253',sky_mid='#563477',
-                sky_hor='#ce8271',water='#11152e',haze_color='#754461',
-                sun_int=.55,sun_el=3,sun_az=190,sun_disc=1.2,sun_glow=.4),
-               radiance_end=dict(base='dawn',sky_top='#eed8ce',sky_mid='#ffe8ce',
-                sky_hor='#fff1d6',water='#ddc8ce',sun_int=.18,sun_el=16,sun_az=190)),
-    stars=.7,milky=.12,clouds=.16,cloud_speed=.08,hills=.12,mirror=.7,ripple=.30,
-    haze=.15,mist=.08,mist_color='#4a2a65',lanterns=0,floats=0,dust=.25,bokeh=.08,
-    dust_color='#ffdda4',dust_color2='#f6af91',keep_hue=.8,react=dict(beat=.06,level=.06),
-    shafts=[dict(base=(side*10,-15-j*18),radius=2,top=35,color='#ffd593',strength=.2)
-            for j in range(4) for side in [-1,1]])
+WORLD=dict(look=[(0,'radiance'),(16,'rose_space',1.8),(24,'blue_space',1.8),
+                (28,'ember_space',1.8),(35.5,'violet_space',1.8),(46.5,'radiance',1.5)],
+    looks=dict(radiance=dict(base='night',sky_top='#020414',sky_mid='#060b28',
+                sky_hor='#1a2051',water='#01030b',haze_color='#161b44',
+                sun_int=0,sun_el=55,sun_disc=0,sun_glow=0),
+               rose_space=dict(base='night',sky_top='#05031a',sky_mid='#21102b',
+                sky_hor='#58243f',water='#08020d',sun_int=0,sun_el=55,sun_disc=0),
+               blue_space=dict(base='night',sky_top='#02041a',sky_mid='#091548',
+                sky_hor='#25275b',water='#010413',sun_int=0,sun_el=55,sun_disc=0),
+               ember_space=dict(base='night',sky_top='#05051a',sky_mid='#251229',
+                sky_hor='#63352c',water='#08040a',sun_int=0,sun_el=55,sun_disc=0),
+               violet_space=dict(base='night',sky_top='#030218',sky_mid='#171039',
+                sky_hor='#33205c',water='#02020b',sun_int=0,sun_el=55,sun_disc=0),
+               radiance_end=dict(base='cream',sky_top='#d8e6f3',sky_mid='#f4e5e5',
+                sky_hor='#fff0da',water='#cdd9ea',sun_int=.15,sun_el=55,
+                sun_disc=0,stars=.08,milky=.05)),
+    stars=1,milky=.8,clouds=.05,cloud_speed=.08,hills=.08,mirror=.65,ripple=.16,
+    haze=.06,mist=.04,mist_color='#2a2048',lanterns=0,floats=0,dust=.12,bokeh=.02,
+    dust_color='#dfdfff',dust_color2='#f8b6d5',keep_hue=.95,
+    react=dict(beat=.06,level=.06))
 P3D=dict(camera=CAMERA,world=FINALE.world(WORLD),setup=setup,
          bursts=FINALE.bursts(),motion_blur=.65,motion_samples=1)
 TITLES=dict(opening=dict(t_end=8.1,dissolve=1.1,y=.30,palette='night'),
