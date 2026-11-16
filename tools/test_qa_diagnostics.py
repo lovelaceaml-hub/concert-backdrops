@@ -37,6 +37,15 @@ class Diagnostics(unittest.TestCase):
         q.titles_checks(s, issues, [])
         self.assertEqual(len(issues), 2)
 
+    def test_intended_entrance_is_excluded(self):
+        rate = 48000
+        t = np.arange(rate * 6) / rate
+        # Two seconds quiet, a 1.5 second fade, then steady level.
+        audio = 0.1 * np.clip((t - 2.0) / 1.5, 0, 1)
+        issues = []
+        q.audio_metrics(audio, rate, issues, [], 2.0)
+        self.assertFalse(any(i['check'] == 'Audio level change' for i in issues))
+
     def test_empty_audio(self):
         issues = []
         result = q.audio_metrics(np.array([]), 48000, issues, [])
