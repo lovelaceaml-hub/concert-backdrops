@@ -566,7 +566,7 @@ def _s7(t):
     p = _asc_pos(t)
     y = _climb(t)
     r = _asc_radius(t)
-    up = _unit(A7 + _v(0.0, y + 1.5 + 0.42 * r, 0.0) - p)       # up along the column (about 25 degrees)
+    up = _unit(A7 + _v(0.0, y + 1.5 + 0.2 * r, 0.0) - p)        # a little up along the column (about 12 degrees)
     d0 = _slerp(_unit(_BQ1 - _B1), up, sc(ASC0 - 0.2, ASC0 + 2.2, t))  # from the breath's gaze, without a jolt
     d = _slerp(d0, _unit(HV + _v(0.0, -0.06, 0.0)), sc(HEAVEN_T - 0.7, HEAVEN_T + 1.2, t))   # level, to the sun
     return p, p + 30.0 * d
@@ -1438,11 +1438,11 @@ def _setup(scene):
                                         sun_az=WORLD["sun_az"]), depth_of_field=False)
     # the glory: a vast sea of golden-rose clouds that we rise through and then see from above, to the horizon
     glory = _cloud_sea(r2, A7, 10.0, 1500.0, 280, GLORY_Y, 46.0, 150.0, 1.0, hk=(0.26, 0.46))
-    scene.add("clouds_glory", MS.Billows(glory, gain=_gain((0.0, 0.0), (43.6, 0.0), (44.9, 1.0), (ASC1 + 0.4, 1.0),
-                                                           (ASC1 + 1.2, 0.0), (TOTAL, 0.0)), seed=14, alpha=0.07,
-                                         top="#ffd49a", warm="#ffa46c", rose="#e8789c", lilac="#7a68c0",
-                                         core="#ffe0b8", body=0.25, shade=0.55, sun_az=SUN_AZ),
-              depth_of_field=False)
+    # (we rise through it: the puffs near the lens thin away, so it never whites out the picture or the corner)
+    glory_b = MS.Billows(glory, gain=_gain((0.0, 0.0), (43.6, 0.0), (44.9, 1.0), (ASC1 + 0.4, 1.0), (ASC1 + 1.2, 0.0),
+                                           (TOTAL, 0.0)), seed=14, alpha=0.07, top="#ffd49a", warm="#ffa46c",
+                         rose="#e8789c", lilac="#7a68c0", core="#ffe0b8", body=0.25, shade=0.55, sun_az=SUN_AZ)
+    scene.add("clouds_glory", NearFade(glory_b, 28.0), depth_of_field=False)
     # S2: towering clouds of rose light over the rain
     storm = []
     for (x, z, w, h) in ((-70, -110, 80, 120), (-20, -160, 95, 150), (45, -125, 75, 110), (100, -170, 90, 140),
@@ -1470,9 +1470,10 @@ def _setup(scene):
         r = rng.uniform(34.0, 60.0)
         rise += MS.tower(rng, A7 + _v(np.sin(a) * r, 6.0 + rng.uniform(0, 14), np.cos(a) * r), rng.uniform(26, 40),
                          0.36 * rng.uniform(120, 170), n_layer=5, per=200)
-    scene.add("clouds_rise", MS.Billows(rise, gain=_gain((0.0, 0.0), (43.75, 0.0), (44.25, 1.0), (HEAVEN_T - 0.3, 1.0),
-                                                         (HEAVEN_T + 0.6, 0.0), (TOTAL, 0.0)), seed=18, alpha=0.075,
-                                        sun_az=WORLD["sun_az"]), depth_of_field=False)
+    rise_b = MS.Billows(rise, gain=_gain((0.0, 0.0), (43.75, 0.0), (44.25, 1.0), (HEAVEN_T - 0.3, 1.0),
+                                         (HEAVEN_T + 0.6, 0.0), (TOTAL, 0.0)), seed=18, alpha=0.075,
+                        sun_az=WORLD["sun_az"])
+    scene.add("clouds_rise", NearFade(rise_b, 20.0), depth_of_field=False)
 
     C = _cast()
 
@@ -1502,8 +1503,8 @@ def _setup(scene):
     scene.add("trail0", Clear(MB.Rivers([(drop_pos, "#ffd27a",
                                     lambda t: sc(RELEASE_T, RELEASE_T + 0.3, t) * (1.0 - sc(LAND_T - 0.05, LAND_T + 0.1, t)),
                                     0.2)], cuts=[RELEASE_T], tail=0.9)), reflect=True)
-    scene.add("drop", FX.Drop(drop_pos, t_show=(-1.0, LAND_T + 0.2), t_land=LAND_T, scale=1.6, t_pulse=3.4),
-              reflect=True)
+    scene.add("drop", Clear(FX.Drop(drop_pos, t_show=(-1.0, LAND_T + 0.2), t_land=LAND_T, scale=1.6, t_pulse=3.4)),
+              reflect=True)                       # (its glowing tail never across the title)
     # the landing: a towering fountain and a pillar of light, the ring racing out over the sea
     # (the camera then glides past the landing place to the greeting: what is near the lens fades away)
     burst0 = FX.Fountain(D0 + _v(0.0, 0.1, 0.0), LAND_T, n=2600, colors=["#ffd27a", "#ffb84a", "#ffc890", "#ffa8b8",
