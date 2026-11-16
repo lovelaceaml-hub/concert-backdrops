@@ -66,9 +66,25 @@ channel difference was 1/255 and the mean was 0.0207/255. A sampled sky region
 retained 832 blue-channel levels at 10-bit versus 213 at 8-bit. This change
 prevents grain removal from exposing coarse gradient steps.
 
-The full export must still pass frame counts, timestamps, exact-source
-comparison, audio identity and visual checks before delivery. Final results
-and the single delivery link will be recorded here when complete.
+## Completed master and validation
+
+`Film-10-Nine-Colours-Revision-3-HQ-4K60.mp4` is complete under the quality output
+folder: 318,834,702 bytes, 66.000 seconds, 3,960 native 4K60 frames, HEVC Main 10.
+SHA-256: `6ed17b8cd9a0fd5031cd857c517696ebe5f24514e019abf038be736714f186a2`.
+
+All frames decode without errors; zero consecutive repeated frames were found.
+The maximum timestamp error is 0.000000333 seconds. Approved audio packets
+match exactly, and five fresh samples match their full-range source frames.
+Across 18 encoded/source comparisons, RGB PSNR is 43.34 to 49.99 dB and
+mean absolute channel error is 0.320 to 0.763/255. Full-film frames, Respect,
+Earth details and the closing card were visually reviewed.
+
+Drive video transfer remains pending. The connector rejected the 318,834,702-byte
+file before action invocation because its limit is 104,857,600 bytes. The full
+quality original is linked in the Codex chat; no smaller copy was created.
+The [shared quality record](https://drive.google.com/file/d/1Naj7qe3t4kvS1KV8xYG2PrbYJcFc5On8/view)
+records the exact file, source, checks and transfer limitation. The new quality
+file awaits owner review, and draft PR #73 remains unmerged.
 
 For full quality, download the original file. A Drive streaming preview can
 use a lower-resolution transcode even when the uploaded original is 4K.
