@@ -28,6 +28,20 @@ def load():
     import titles
 
     class RadianceTitles(titles.Titles):
+        def overlay(self, t):
+            drew = super().overlay(t)
+            if not hasattr(self, 'celebration'):
+                self.celebration = module.Celebration()
+            batch = self.celebration.points(t, self.w, self.h)
+            if batch is not None:
+                self.R.f_out.use()
+                self.ctx.enable(self.mgl.BLEND)
+                self.ctx.blend_func = (self.mgl.ONE, self.mgl.ONE_MINUS_SRC_ALPHA)
+                self._points(batch)
+                self.ctx.disable(self.mgl.BLEND)
+                drew = True
+            return drew
+
         def _op_points(self, t, front):
             if t >= 8.1:
                 return []

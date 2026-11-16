@@ -9,16 +9,17 @@ from songs import master_astra as CAST
 from p3d import brand as BR, words as PW, master_brand as MB
 from tools.radiance.colours import NineColours, StarGarden
 from p3d.api import lin, ribbon
-from p3d.camera import Move, Rig
+from tools.radiance.flight import make_camera
+from tools.radiance.celebration import Celebration
 from tools.radiance.actors import standing_encouragement, standing_consideration
 
 TOTAL = SONG_END = 62.0
 NFRAMES = int(TOTAL*FPS)
-MUSIC_END = 61.8
+MUSIC_END = 62.0
 TEXT_SHADOW = BOTTOM_CALM = 0.0
 STARTS = 8.6 + np.arange(9)*3.9
 CENTERS = np.array([[4*np.sin(k*.7),0,-20-16*k] for k in range(9)])
-WORLD_CENTER = np.array([0,22,-174])
+WORLD_CENTER = np.array([0,50,-174])
 COLORS = [PW.COLORS[k] for k in PW.LABELS]
 
 
@@ -35,43 +36,19 @@ def aim(p,c,where=(.65,.63)):
     return CAST._aim(np.asarray(p),np.asarray(c),*where,fov=44)
 
 
-def camera_path():
-    keys=[(0,(0,2.6,12),(0,4.8,-16)),
-          (5.6,(.5,2.5,9),(0,4.3,-19)),
-          (7.3,(-1,2.1,2),(0,3.6,-21))]
-    distances=[7.2,6.3,6.7,6.7,8.4,5.6,6.2,5.6,8.4]
-    for k,(a,c,dist) in enumerate(zip(STARTS,CENTERS,distances)):
-        for dt,side,depth in [(.25,-1.25,dist),(2.75,1.1,dist-.5)]:
-            p=c+np.array([side,1.9,depth])
-            keys.append((float(a+dt),p,aim(p,c+[0,1.4,0])))
-    keys.extend([(44.5,(2,3,-146),(0,7,-169)),
-                 (45.5,(3.5,5,-156),(0,13,-172)),
-                 (46.7,(1,10,-164),(0,23,-174)),
-                 (48.0,(-3,18,-159),(0,22,-174)),
-                 (49.7,(-6,25,-155),(0,22,-174)),
-                 (52.0,(3,24,-159),(0,22,-174)),
-                 (55.0,(0,23.3,-158),(0,22,-174)),
-                 (62.0,(0,23.1,-158.4),(0,22,-174))])
-    return CAST._pchip(keys)
-
-
-class Journey(Move):
-    def __init__(self):
-        super().__init__(0,62)
-        self.path=camera_path()
-
-    def pose(self,t):
-        return self.path(t)
-
-
-CAMERA=Rig([Journey()],fov=44,aperture=.015,handheld=0,shutter=.65)
-SPECS=[dict(expr=label,t_in=float(a+.15),t_read0=float(a+.5),
-            t_read1=float(a+3.10),t_out=float(a+3.50),
-            ride=(.5,.66,8),em=PW.em_for(CAMERA,float(a+1.8),8,87),
-            face='screen',arrive='reveal',edge='out',soft=.18,leave='fade',
-            color=color,paint=False,tint=.30,bright=.85,halo=.25,sparkle=.025,
-            pill=True,sharp=1,n='auto',n_label=4000)
-       for label,a,color in zip(PW.LABELS,STARTS,COLORS)]
+CAMERA, FLIGHT = make_camera(CENTERS, STARTS, aim)
+SPECS=[]
+for label,a,color in zip(PW.LABELS,STARTS,COLORS):
+    reference=CAMERA.state(float(a+1.65))
+    position=PW.place(reference,float(a+1.65),.5,.66,9)
+    forward=reference.basis()[2]
+    facing=np.degrees(np.arctan2(-forward[0],-forward[2]))
+    SPECS.append(dict(expr=label,t_in=float(a+.05),t_read0=float(a+.4),
+        t_read1=float(a+3.0),t_out=float(a+4.0),
+        pos=position,em=PW.em_for(CAMERA,float(a+1.65),9,83),
+        face='fixed',facing=float(facing),arrive='reveal',edge='out',soft=.18,leave='fade',
+        color=color,paint=False,tint=.40,bright=.85,halo=.25,sparkle=.025,
+        pill=True,sharp=1,n='auto',n_label=4000))
 WORDS=PW.Words(SPECS,camera=CAMERA)
 
 
@@ -90,17 +67,22 @@ class KeepWords:
             b=dict(original)
             for position,alpha in [('pos','alpha'),('pos2','alpha2')]:
                 if position not in b:continue
-                xy,_=cam.project(np.asarray(b[position]))
+                xy,depth=cam.project(np.asarray(b[position]))
                 x,y=xy.T
-                keep=np.ones(len(x))
+                keep=smooth(.8,2.1,depth)
                 if t<8.1:
                     keep*=1-.9*(1-smooth(7,8.1,t))*window(.12,.88,x,.1)*window(.4,.98,y,.08)
                 if 7<t<54.8:
                     keep*=1-window(-.1,.55,x,.06)*window(-.1,.24,y,.04)
-                for s in SPECS:
-                    strength=window(s['t_in'],s['t_out'],t,.3)
+                for a in STARTS:
+                    hold=window(a+.1,a+3.15,t,.3)
+                    keep*=1-.75*hold*window(.56,.78,x,.04)*window(.38,.55,y,.04)
+                for word in WORDS:
+                    strength=window(word.t_in,word.t_read1+.2,t,.25)
                     if strength>0:
-                        keep*=1-strength*window(.1,.9,x,.04)*window(.53,.79,y,.04)
+                        box=PW.screen_box(word,cam,t)
+                        if box[4]:
+                            keep*=1-strength*window(box[0]-.02,box[1]+.02,x,.02)*window(box[2]-.02,box[3]+.02,y,.02)
                 b[alpha]=np.asarray(b.get(alpha,b.get('alpha',1)))*keep
             out.append(b)
         return out
@@ -166,9 +148,9 @@ class Blessing:
 
 
 FINALE=BR.Finale(pos=tuple(WORLD_CENTER),radius=3.2,camera=CAMERA,look='night',
-                 t_world=47.6,spin=3,front=-115.14-3*48,shrink=.48,
-                 hearts=dict(t0=48,t1=51.8,n=27),t_settle=(51,53),
-                 t_logo=(52,54),bloom=dict(t=53.8,strength=.035,glow=.2),
+                 t_world=48.9,spin=3,front=-115.14-3*50,shrink=.48,
+                 hearts=dict(t0=49.4,t1=52.5,n=27),t_settle=(51,53),
+                 t_logo=(52,54),bloom=dict(t=53.8,strength=.10,glow=.45),
                  look_after='radiance_end',blend=1.8,
                  end=dict(t=(54,54.6),ride=(.5,.862,14),frac=.157),
                  logo=dict(reflect=False),n=60000)
@@ -185,27 +167,27 @@ def setup(scene):
             ('compliment',CAST.P5b,(38.7,42.8),8)]
     for name,origin,source,k in scenes:
         delta=np.asarray(CAST.CAMERA.state(sum(source)/2).pos)-origin
-        yaw=-np.degrees(np.arctan2(delta[0],delta[2]))
+        yaw=-np.degrees(np.arctan2(delta[0],delta[2]))+np.degrees(FLIGHT.angles[k])
         a=float(STARTS[k])
         scene.add('encounter '+str(k),Performance(cast[name],origin,source,(a,a+3.85),CENTERS[k],yaw),reflect=True)
     for people,source,k in [(standing_encouragement(),(32,36),6),(standing_consideration(),(36,40),7)]:
         a=float(STARTS[k])
-        scene.add('encounter '+str(k),Performance(people,(0,0,0),source,(a,a+3.85),CENTERS[k]),reflect=True)
-    scene.add('nine colours of love',KeepWords(NineColours(CENTERS,STARTS,COLORS)),reflect=True)
+        scene.add('encounter '+str(k),Performance(people,(0,0,0),source,(a,a+3.85),CENTERS[k],np.degrees(FLIGHT.angles[k])),reflect=True)
+    scene.add('nine colours of love',KeepWords(NineColours(CENTERS,STARTS,COLORS,FLIGHT)),reflect=True)
     scene.add('stars around the journey',KeepWords(StarGarden()),reflect=True)
     scene.add('kindness spreading',KeepWords(Blessing()),reflect=True)
     FINALE.add_to(scene)
     scene.add('expressions reach the world',MB.SymbolSwirl(tuple(WORLD_CENTER),3.2,PW.LABELS,COLORS,
-              48,52.2,CAMERA,scale=FINALE.scale,size=.42,orbit=(1.9,1.65),
+              49.3,52.8,CAMERA,scale=FINALE.scale,size=.42,orbit=(1.9,1.65),
               turns=.35,n=600,life=1.8,bright=.55,glow_world=.3),reflect=False)
     place=lambda t:(WORLD_CENTER,np.array([1,0,0]),np.array([0,1,0]))
-    scene.add('final chord',MB.FinalGlow(place,57.5,width=11,height=7,ring=.012,glint=.02),reflect=False)
+    scene.add('final chord',MB.FinalGlow(place,60.2,width=11,height=7,ring=.12,glint=.2),reflect=False)
     for word in WORDS:
         mask=word.mask()
         if mask is not None:
             mask.strength=lambda t,a=word.t_in,b=word.t_out:float(a<=t<=b)
-        scene.add('word '+word.name,word,reflect=False,depth_of_field=True,mask=mask)
-        scene.add('word '+word.name+' light',word.lights,reflect=False)
+        scene.add('word '+word.name,word,reflect=True,depth_of_field=True,mask=mask)
+        scene.add('word '+word.name+' light',word.lights,reflect=True)
     WORDS.check(CAMERA,min_read=2.5)
 
 
@@ -230,7 +212,7 @@ WORLD=dict(look=[(0,'radiance'),(16,'rose_space',1.8),(24,'blue_space',1.8),
     dust_color='#dfdfff',dust_color2='#f8b6d5',keep_hue=.95,
     react=dict(beat=.06,level=.06))
 P3D=dict(camera=CAMERA,world=FINALE.world(WORLD),setup=setup,
-         bursts=FINALE.bursts(),motion_blur=.65,motion_samples=1)
+         bursts=FINALE.bursts(),motion_blur=.72,motion_samples=1)
 TITLES=dict(opening=dict(t_end=8.1,dissolve=1.1,y=.30,palette='night'),
             signature=dict(windows=[(7,54.8,'bl','night')],fade=.4,protect=dict(keep=0)),
             end_card=dict(t_in=54.5,fade=.5,scale=1,backdrop=True,veil=.65,ambient_motes=True))
