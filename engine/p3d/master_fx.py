@@ -148,7 +148,7 @@ class LightRiver:
     points), meandering to the horizon. Prismatic glints ride in it. gain(t) its strength."""
 
     def __init__(self, path, width=3.0, n=26000, speed=9.0, gain=None, seed=41, color="#ffd89a",
-                 color2="#fff4e0", prism=0.25, clock=None, twinkle=0.6):
+                 color2="#fff4e0", prism=0.25, clock=None, twinkle=0.6, edge=30.0):
         rng = np.random.default_rng(seed)
         p = np.asarray(path, np.float64)
         seg = np.linalg.norm(np.diff(p, axis=0), axis=1)
@@ -169,6 +169,7 @@ class LightRiver:
         self._gain = gain
         self.width = width
         self.clock = clock            # the river's own clock (it may slow down: a calm scene), default t
+        self.edge = float(edge)       # metres over which it fades in at its source and out at its end
         self.twinkle = float(twinkle)
 
     def gain(self, t):
@@ -197,7 +198,7 @@ class LightRiver:
         wob = 0.25 * np.sin(0.7 * s + 6.0 * self.seed + 1.3 * t)
         pos = c + nrm * (self.lat + wob * self.width * 0.1)[:, None]
         pos[:, 1] = self.lift
-        edge = ss(0.0, 30.0, s) * (1.0 - ss(self.L - 30.0, self.L, s))
+        edge = ss(0.0, self.edge, s) * (1.0 - ss(self.L - 30.0, self.L, s))
         al = g * edge * np.exp(-0.5 * (self.lat / (0.55 * self.width)) ** 2)
         if cam is not None:                          # nothing large or bright right at the lens
             dist = np.linalg.norm(pos - np.asarray(cam.pos, np.float64), axis=1)
@@ -562,10 +563,11 @@ class Fountain:
     """On a hit, thousands of sparks shoot up from a place in a great fountain, open out, and drift down slowly
     as warm light (the nine colours among the gold)."""
 
-    def __init__(self, at, t0, n=6000, colors=None, speed=(10.0, 26.0), spread=0.35, seed=95, life=3.2):
+    def __init__(self, at, t0, n=6000, colors=None, speed=(10.0, 26.0), spread=0.35, seed=95, life=3.2, fade0=0.45):
         rng = np.random.default_rng(seed)
         self.at = np.asarray(at, np.float64)
         self.t0, self.life = t0, life
+        self.fade0 = float(fade0)                # the sparks fade out from this share of their life
         a = rng.uniform(0.0, TAU, n)
         el = np.radians(90.0 - np.abs(rng.normal(0.0, np.degrees(spread) * 0.6, n)))
         sp = rng.uniform(*speed, n)
@@ -581,7 +583,7 @@ class Fountain:
             return None
         drag = (1.0 - np.exp(-u * 1.6)) / 1.6
         p = self.at + self.v * drag + np.array([0.0, -1.2, 0.0]) * u * u
-        al = (1.0 - ss(0.45 * self.life, self.life, u)) * (0.6 + 0.4 * self.s)
+        al = (1.0 - ss(self.fade0 * self.life, self.life, u)) * (0.6 + 0.4 * self.s)
         return dict(pos=p, size=0.05 + 0.08 * self.s, color=self.col, alpha=al, emit=2.2, kind="spark",
                     twinkle=0.6, seed=self.s, streak=1.0)
 

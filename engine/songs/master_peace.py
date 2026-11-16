@@ -1,8 +1,8 @@
 """THE WORDS THAT BRING PEACE: the masterpiece. A 62 second promo for the Healing Concert "The Words of Mother's
-Love That Bring Peace" (Sunday, December 6, 4:30 PM, World Mission Society Church of God, Las Vegas), on the
-concert medley with a quiet lead-in (audio/promo/concert-medley-leadin.mp3: 2.0 s of silence, then the medley
-fading in over 1.5 s), built on the 3D layer (engine/p3d; UPGRADE-HOWTO sections V, W, X, X2, Y, Z). Approved
-treatment: scratchpad MASTER-TREATMENT.md.
+Love That Bring Peace" (Sunday, December 6, 4:30 PM, World Mission Society Church of God, Las Vegas), on the seven
+song medley with smooth blends (audio/promo/concert-medley7.mp3, MEDLEY3: 2.0 s of silence, the music fading in to
+3.5, a natural ring-out to 62.0), built on the 3D layer (engine/p3d; UPGRADE-HOWTO sections V, W, X, X2, Y, Z) and
+rendered at 60 fps. Approved treatment: scratchpad MASTER-TREATMENT.md.
 
 THE IDEA
   Heavenly Mother's words of love fall from heaven as light. Wherever a word lands, light, colour and peace
@@ -10,34 +10,40 @@ THE IDEA
   hearts as the logo. Heavenly Mother appears only as hands of light: her open hands release the first word
   at the start.
 
-THE JOURNEY (film time: every music time is the medley's plus LEAD = 2.0; sections 8.84, 15.30, 21.85, 28.79,
-35.36, the breath 42.21 to 44.51, the biggest hit 44.51, the finale 51.47, the final hit 60.11)
+THE TIMELINE. The film's cues were built on its own clock (the "old" time of v6, every constant below); TIME_MAP
+plays that clock on the new medley (W(t_new) = t_old, smooth and monotone), so every stretch lands on its music
+(new times):
   0.00   The opening title over a vast twilight sky above a sea of glowing clouds, held whole for 7 s; Mother's
-         hands of light hold a drop of gold in the quiet; the medley swells in from 2.0; the drop is let go (4.5)
-         and falls; the title crumbles into dust (7.0 to 8.2) as we dive after it through the clouds; it lands
-         on a still sea of light (8.15) and a ring of gold races to the horizon.
-  8.84   GREETING: two men bow to each other. GRATITUDE: a gold woman bows, her hand on her heart, as golden
-         light pours down on her.
-  15.30  APOLOGY: in a soft rain of light one woman kneels by another who kneels alone, head bowed, and lays a
-         hand on her shoulder. INCLUSIVENESS: they rise into an embrace; the sun rises behind them.
-  21.85  The bass slams in: we surge along a river of light. CONCESSION: at a doorway of light a man steps
-         aside with an open palm; petals of light stream through. RESPECT: two seated lean in to listen.
-  28.79  ENCOURAGEMENT: under a cathedral of falling light one kneels in prayer, another lays a hand on her
-         shoulder; hundreds of lights rise round them.
-  35.36  CONSIDERATION: a hand reaches down and lifts someone up. COMPLIMENT: a joyful twirl bursts into
-         hearts; a crowd of light applauds.
-  42.21  The breath: a still moment of light. Motes in gold and the nine colours gather over the calm sea into
-         one radiant pearl of light.
-  44.51  It bursts; we launch upward through golden clouds lit from within, the nine colours spiralling up with
-         us, into the glory of the sun above the clouds (47.64).
-  49.2   Out to the whole Earth, luminous in the night. The nine expression symbols draw themselves in light and
-         swirl round it in rising, quickening spirals, lighting the world as they pass; hearts bloom across it.
-  52.22  They burst outward into light and sparkle; the world becomes the logo between two hearts; light
-         blooms into a soft pastel day (53.34); the logo glides into the end card, readable from 54.9 to the end.
+         hands of light hold a drop of gold in the quiet; the music swells in from 2.0; the drop is let go (4.5)
+         and falls; the title crumbles into dust (7.0 to 7.9) as we dive after it through the clouds (an eased
+         1.5 s dive); it lands on a still sea of light on the 03 to 04 blend (8.0) and a ring of gold races out.
+  8.75   GREETING: two men give each other a slight, warm bow. GRATITUDE: a gold woman lays her hand on her heart
+         and bows as golden light pours down on her.
+  15.46  (an eased carry on, on 01's downbeat) APOLOGY: in a soft rain of light a woman sits back on her
+         heels, head bowed; her friend kneels beside her and lays a hand gently on her back; she lifts her head
+         to her. INCLUSIVENESS: they rise together, turn to each other and embrace; the sun rises behind them.
+  22.94  (a gliding carry, the 01 to 08 blend) up the river of light. CONCESSION: at a doorway of light a man steps
+         aside, his hand on his heart, his other palm offering the way; petals rise from it through the door.
+         On through the door (unhurried): RESPECT: two seated lean in to listen.
+  31.46  (a gliding carry, the 08 to 11 blend) ENCOURAGEMENT: under a cathedral of falling light one kneels in
+         prayer; her friend kneels behind her, a hand on her shoulder, the other on her heart; lights rise.
+  37.35  (a gliding carry, on 11's bar) CONSIDERATION: a man reaches down and helps another up.
+  40.81  (a gliding carry, the 11 to 06 blend) COMPLIMENT: a dancer gathers her arms, turns once as they open in
+         a soft arc and lifts them high; hearts burst; a crowd of light claps and raises its hands.
+  43.8   A still moment: motes in gold and the nine colours gather into one pearl of light over the calm sea.
+  45.17  It bursts on 06's attack; we rise from rest up the column of light in one even, unhurried glide, the
+         nine colours streaming with us, and break above the clouds into the glory of the sun on 06's cadence
+         (47.19), easing to a hover through the breath.
+  49.69  THE LIFT: the sun flares and we sweep out to the whole Earth; the nine symbols draw themselves in light
+         and swirl round it through 07's climax, lighting the world; hearts bloom across it.
+  52.76  They burst outward; the world becomes the logo between two hearts; light blooms into a soft pastel day;
+         the logo glides into the end card, whole by the final cadence (55.0), alive to the last frame: a slow
+         push-in, drifting sparkles and hearts, a breathing glow, a warm glow on the held final chord (56.75),
+         settling to stillness over the last 1.5 s.
 
 THE CONCERT INFORMATION (Anthony after v4: never flashed, at least 7 s at a time): the opening title holds
 whole 0 to 7.0; from there the discreet signature stays on in the bottom left corner without a break (its
-palette cross-fades to day as the sky turns bright) until the end card, which holds from 54.9 to the last frame.
+palette cross-fades to day as the sky turns bright) until the end card, which is whole from 55.0 to the last frame.
 
 HOUSE RULES: people only in the two radiant looks, whole, few, tender, acted, with living hands; every touch
 between two of the same gender (UPDATE 15), except parent and child; Heavenly Mother only as hands of light;
@@ -84,10 +90,10 @@ FADE = _base.FADE
 EXPOSURE = _base.EXPOSURE
 
 SEC = [LEAD + s for s in (0.25, 6.84, 13.30, 19.85, 26.79, 33.36, 40.21, 49.47)]
-BREATH_END = LEAD + 42.51
+BREATH_END = LEAD + 41.85
 FINAL_HIT = LEAD + 58.11                         # (set again from the new medley's map below)
 LAND_T = LEAD + 6.15        # the drop touches the sea (a bar start of the first song)
-RELEASE_T = LEAD + 2.50     # Mother's hands let the drop go (a hit, once the music has swelled in)
+RELEASE_T = LEAD + 2.25     # Mother's hands let the drop go (on a beat, once the music has swelled in)
 OPEN_FULL = 7.0             # the opening title is whole and still until here (Anthony: at least 7 s)
 OPEN_END = 8.0              # ... and has crumbled away by here
 
@@ -231,8 +237,8 @@ class Warp:
 # the card is whole on the final cadence (55.11) and holds through the ring-out; one warm glow on the held final
 # chord (56.75).
 TIME_MAP = [(0.0, 0.0), (2.0, 2.0), (3.5, 3.5), (5.5, 5.5), (7.0, 7.0), (8.0, 8.15), (8.75, 8.84), (15.46, 15.3),
-            (22.94, 21.85), (31.46, 28.79), (37.35, 35.36), (40.81, 38.95), (43.8, 42.21), (45.17, 44.51),
-            (47.19, 47.64), (49.69, 49.2), (52.76, 52.22), (54.0, 53.85), (54.3, 54.15), (55.1, 54.95), (62.0, 62.0)]
+            (22.94, 21.85), (31.46, 28.79), (37.35, 35.36), (40.81, 38.95), (43.8, 42.21), (45.17, 43.85),
+            (47.19, 46.3), (49.69, 49.2), (52.76, 52.22), (54.0, 53.85), (54.3, 54.15), (55.1, 54.95), (62.0, 62.0)]
 TW = Warp(TIME_MAP)
 FINAL_HIT = TW(56.75)                            # the held final chord (old time, for the glow)
 
@@ -253,18 +259,20 @@ class Path(Move):
 # GEOGRAPHY (metres, y up, the sea of light is y = 0; the light of dawn lies toward -z)
 # =============================================================================================================
 D0 = _v(0.0, 0.0, 7.6)                  # where the drop lands
-H0 = _v(0.0, 50.75, 7.6)                # Mother's cupped hands, high above it
+H0 = _v(0.0, 41.0, 7.6)                 # Mother's cupped hands, high above it (a dive of about 40 m)
 HAND_S = 5.0                            # their scale (hands of light, larger than life)
-C0 = _v(0.0, 51.45, 10.9)              # frame 0's camera, in front of the hands
-P1 = _v(-2.4, 0.0, -6.0)               # Greeting: the pair
-P1b = _v(3.6, 0.0, -9.5)               # Gratitude: the gold woman under the pouring light
-P2 = _v(0.0, 0.0, -40.0)               # Apology and Inclusiveness: the two kneeling in the rain, then the embrace
-P3 = _v(2.0, 0.0, -96.0)               # Concession: the doorway of light on the river
-P3b = _v(2.0, 0.0, -114.0)             # Respect: the two seated beyond the door
-P4 = _v(-60.0, 0.0, -170.0)            # Encouragement: the cathedral of falling light
-P5 = _v(60.0, 0.0, -230.0)             # Consideration
-P5b = _v(66.0, 0.0, -238.0)            # Compliment: the dancer and the crowd of light
-A7 = _v(66.0, 0.0, -262.0)             # the axis of the ascent
+C0 = _v(0.0, 41.7, 10.9)               # frame 0's camera, in front of the hands
+P1 = _v(-2.4, 0.0, -2.0)               # Greeting: the pair
+P1b = _v(3.6, 0.0, -5.5)               # Gratitude: the gold woman under the pouring light
+# The stages stand close together along the sea (Anthony after v6: no strobing whips), so the camera glides from
+# one to the next in a continuous carry where the songs blend, while the scenery of each fades in and out
+P2 = _v(0.0, 0.0, -18.0)               # Apology and Inclusiveness: the two kneeling in the rain, then the embrace
+P3 = _v(2.0, 0.0, -34.0)               # Concession: the doorway of light on the river
+P3b = _v(2.0, 0.0, -44.0)              # Respect: the two seated beyond the door
+P4 = _v(-6.0, 0.0, -58.0)              # Encouragement: the cathedral of falling light
+P5 = _v(6.0, 0.0, -70.0)               # Consideration
+P5b = _v(12.0, 0.0, -78.0)             # Compliment: the dancer and the crowd of light
+A7 = _v(12.0, 0.0, -102.0)             # the axis of the ascent
 PEARL = A7 + _v(0.0, 3.2, 0.0)         # the breath: the light gathers here, and bursts on the biggest hit
 
 
@@ -274,37 +282,43 @@ def drop_pos(t):
     if t <= RELEASE_T:
         return hold
     u = min((t - RELEASE_T) / (LAND_T - RELEASE_T), 1.0)
-    y = float(hold[1]) * (1.0 - u * u)
+    e = u * u * u * (u * (6.0 * u - 15.0) + 10.0)           # it floats free, falls, and settles onto the sea
+    y = float(hold[1]) * (1.0 - e)
     return _v(float(hold[0]), y, float(hold[2]))
 
 
 # =============================================================================================================
 # THE CAMERA
 # =============================================================================================================
-DIVE = (6.7, 8.2)           # the dive after the drop (a smooth 1.5 s; the title stays whole to 7.0 over it)
+DIVE = (5.3, 8.45)          # the dive after the drop (one eased 3.15 s glide; the title stays whole to 7.0)
 
 
 def _s0(t):
     """Frame 0 to the landing: a still, slow push on the hands under the title through the quiet lead-in and
     the swell, the release, then (as the title crumbles) the gaze turns down after the falling drop and we dive
     with it through the clouds and level out over the sea as it lands."""
-    look0 = _v(0.0, 54.2, -40.0)            # looking a little up: the title stands on the deep sky
+    look0 = _v(0.0, 44.45, -40.0)            # looking a little up: the title stands on the deep sky
     drift = C0 + _v(0.0, 0.015 * t, -0.045 * t)
-    if t < 6.45:
+    if t < RELEASE_T:
         return drift, look0
     d = drop_pos(t)
-    v = (t - DIVE[0]) / (DIVE[1] - DIVE[0])                # the camera dives after it, from rest to rest
-    v = float(np.clip(v, 0.0, 1.0))
-    pos = lerp(drift, d + _v(1.2, 4.0, 10.0), v * v * v * (v * (6.0 * v - 15.0) + 10.0))
-    w = sc(7.8, 8.8, t)                                    # pulls out level over the sea
-    end = D0 + _v(3.0, 1.7, 15.0)
-    pos = lerp(pos, end + _v(0.0, 0.0, -1.5 * max(t - 8.6, 0.0)), w)
-    a, b = _unit(look0 - pos), _unit(d - pos)              # the gaze turns down to the drop (an even turn)
+    # the camera falls with the drop (whose own fall is eased: it floats free, falls and settles), keeping it in
+    # view from a little above and behind; the distance opens out evenly, so nothing turns or jolts; after the
+    # landing it drifts on over the sea
+    f = sc(RELEASE_T, RELEASE_T + 0.6, t)                    # from the release (the drop barely moving yet)
+    hold = drop_pos(RELEASE_T)
+    off = lerp(drift - hold, _v(2.2, 1.7, 11.0), sc(RELEASE_T + 0.3, 8.6, t))
+    w = max(t - 8.6, 0.0)
+    drift_on = 1.5 * (w * w / 1.2 if w < 0.6 else w - 0.3)  # eased into a slow drift
+    pos = lerp(drift, d + off, f) + _v(0.0, 0.0, -drift_on)
+    # the gaze turns down to the drop (an even turn), keeping it low in the picture, below the title (nothing
+    # crosses the title while it stands whole)
+    a, b = _unit(look0 - pos), _unit(_aim(pos, d, 0.5, 0.70, 52.0) - pos)
     om = float(np.arccos(np.clip(a @ b, -1.0, 1.0)))
-    u = sc(6.45, 7.75, t)
+    u = sc(RELEASE_T + 0.2, 6.7, t)
     g = a if om < 1e-6 else (np.sin((1.0 - u) * om) * a + np.sin(u * om) * b) / np.sin(om)
     look = pos + 12.0 * g
-    look = lerp(look, D0 + _v(-2.7, 0.6 + 3.2 * sc(8.0, 8.6, t), 0.0), sc(7.6, 8.4, t))   # up with the burst,
+    look = lerp(look, D0 + _v(-2.7, 0.6 + 3.2 * sc(7.9, 8.9, t), 0.0), sc(7.7, 8.8, t))   # up with the burst,
     # the landing a little right of the middle: its light and reflection stay clear of the signature's corner
     return pos, look
 
@@ -317,12 +331,14 @@ def _cam_keys_s1():
     her = P1b + _v(0.0, 1.2, 0.0)
     c1, c2 = P1 + _v(-0.75, 1.7, 4.6), P1 + _v(-0.75, 1.68, 4.1)
     c3, c4, c5 = P1b + _v(-1.0, 1.5, 4.6), P1b + _v(-0.9, 1.48, 4.1), P1b + _v(-0.87, 1.47, 3.9)
-    return [(8.84, D0 + _v(2.6, 1.7, 13.4), D0 + _v(-1.0, 0.8, -4.0)),
-            (9.9, c1, _aim(c1, pair, 0.70, 0.70, F1)),                 # the two men, below the words, right
-            (11.7, c2, _aim(c2, pair, 0.705, 0.70, F1)),
-            (13.0, c3, _aim(c3, her, 0.74, 0.69, F1)),                 # she stands right, her words on the left
+    cw = D0 + _v(-3.4, 1.72, 2.4)                    # wide of the landing's light
+    return [(8.84, D0 + _v(2.0, 1.7, 9.6), D0 + _v(-1.0, 0.8, -4.0)),
+            (9.6, cw, _aim(cw, pair, 0.66, 0.70, F1)),
+            (10.4, c1, _aim(c1, pair, 0.70, 0.70, F1)),                 # the two men, below the words, right
+            (11.5, c2, _aim(c2, pair, 0.705, 0.70, F1)),
+            (13.3, c3, _aim(c3, her, 0.74, 0.69, F1)),                 # she stands right, her words on the left
             (15.3, c4, _aim(c4, her, 0.74, 0.69, F1)),
-            (15.8, c5, _aim(c5, her, 0.74, 0.69, F1))]                 # drifting on into the veil of light
+            (15.8, c5, _aim(c5, her, 0.74, 0.69, F1))]                 # drifting on as the carry begins
 
 
 F2 = 44.0
@@ -334,7 +350,7 @@ def _cam_keys_s2():
     c0, c1, c2 = P2 + _v(-1.45, 1.62, 5.8), P2 + _v(-1.3, 1.6, 5.3), P2 + _v(-1.2, 1.55, 4.9)
     c3, c4, c5, c6 = (P2 + _v(-1.6, 1.55, 4.1), P2 + _v(-2.0, 1.52, 3.2), P2 + _v(-1.9, 1.5, 2.85),
                       P2 + _v(-1.85, 1.49, 2.7))
-    return [(15.3, c0, _aim(c0, kneel, 0.745, 0.72, F2)),               # out of the veil of light, drifting in
+    return [(15.3, c0, _aim(c0, kneel, 0.745, 0.72, F2)),               # the carry arrives, drifting in
             (16.6, c1, _aim(c1, kneel, 0.745, 0.72, F2)),               # the two kneeling in the rain of light
             (18.3, c2, _aim(c2, kneel, 0.76, 0.72, F2)),
             (19.6, c3, _aim(c3, hold, 0.72, 0.70, F2)),                # with them as they rise
@@ -344,7 +360,7 @@ def _cam_keys_s2():
 
 
 RIVER_CALM = 25.4                     # the river calms behind Respect
-RIVER = [P2 + _v(0.0, 0.0, -1.0), P2 + _v(1.5, 0.0, -14.0), P2 + _v(-2.0, 0.0, -30.0), P2 + _v(1.0, 0.0, -44.0),
+RIVER = [P2 + _v(0.0, 0.0, -1.0), P2 + _v(1.2, 0.0, -7.0), P3 + _v(-0.5, 0.0, 7.0),
          P3 + _v(0.0, 0.0, 3.0), P3 + _v(0.0, 0.0, -4.0), P3b + _v(-0.5, 0.0, 1.5), P3b + _v(-3.0, 0.0, -10.0),
          P3b + _v(4.0, 0.0, -40.0), P3b + _v(-6.0, 0.0, -90.0), P3b + _v(10.0, 0.0, -180.0),
          P3b + _v(-10.0, 0.0, -420.0), P3b + _v(30.0, 0.0, -900.0)]
@@ -354,10 +370,10 @@ F3 = 46.0
 def _cam_keys_s3():
     door = P3 + _v(0.0, 1.25, 0.0)
     two = P3b + _v(0.0, 0.75, 0.0)
-    c1, c2, c3, c4 = (P3 + _v(-1.9, 1.6, 13.0), P3 + _v(-1.7, 1.5, 9.0), P3 + _v(-1.5, 1.42, 7.6),
-                      P3 + _v(-1.4, 1.4, 6.8))
-    c6, c7, c8 = P3b + _v(-2.9, 1.25, 2.7), P3b + _v(-2.65, 1.22, 2.4), P3b + _v(-2.58, 1.21, 2.3)
-    return [(21.85, c1, _aim(c1, door, 0.74, 0.66, F3)),                # out of the veil, gliding up the river
+    c1 = P2 + _v(-3.2, 2.3, -1.6)                 # past the embrace, on the left, up the river to the door
+    c2, c3, c4 = P3 + _v(-1.7, 1.5, 9.0), P3 + _v(-1.5, 1.42, 7.6), P3 + _v(-1.4, 1.4, 6.8)
+    c6, c7, c8 = P3b + _v(-0.5, 1.25, 4.0), P3b + _v(-0.46, 1.22, 3.65), P3b + _v(-0.45, 1.21, 3.55)
+    return [(21.85, c1, _aim(c1, door, 0.70, 0.62, F3)),                # gliding on up the river of light
             (23.0, c2, _aim(c2, door, 0.76, 0.67, F3)),
             (23.6, c3, _aim(c3, door, 0.76, 0.67, F3)),
             (25.3, c4, _aim(c4, door, 0.79, 0.67, F3)),
@@ -369,13 +385,13 @@ def _cam_keys_s3():
 
 def _cam_keys_s4():
     two = P4 + _v(0.0, 0.62, 0.0)                  # the two kneeling: their heads at about 0.9 m
-    c0, c1 = P4 + _v(-2.6, 0.7, 34.0), P4 + _v(-1.4, 0.9, 17.0)
+    c0, c1 = P4 + _v(-1.2, 1.3, 14.0), P4 + _v(-1.3, 1.0, 8.5)
     c2, c3, c4 = P4 + _v(-0.9, 1.0, 3.9), P4 + _v(-0.85, 0.98, 3.5), P4 + _v(-0.8, 1.05, 3.1)
-    return [(28.79, c0, _aim(c0, two, 0.62, 0.73, 58.0)),           # vast: tiny people under the light
+    return [(28.79, c0, _aim(c0, two, 0.62, 0.73, 58.0)),           # wide: small people under the light
             (30.4, c1, _aim(c1, two, 0.62, 0.72, 52.0)),
             (31.6, c2, _aim(c2, two, 0.67, 0.71, 48.0)),            # closer: the hand on the shoulder
             (33.6, c3, _aim(c3, two, 0.67, 0.71, 48.0)),
-            (35.9, c4, _aim(c4, two + _v(0.0, 0.5, 0.0), 0.62, 0.66, 48.0))]   # on into the veil of light
+            (35.9, c4, _aim(c4, two + _v(0.0, 0.5, 0.0), 0.62, 0.66, 48.0))]   # drifting on as the carry begins
 
 
 F5 = 48.0
@@ -394,28 +410,93 @@ def _cam_keys_s5():
         return P5b + _v(np.sin(a) * r, h, np.cos(a) * r)
     c0, c1, c2, c3 = side(6.4, 1.8, -50.0), side(5.7, 1.6, -42.0), side(5.3, 1.56, -37.0), side(5.25, 1.56, -36.0)
     o1, o2, o3 = orb(-34.0), orb(-14.0), orb(6.0)
-    return [(35.36, c0, _aim(c0, g, 0.68, 0.72, F5)),                  # out of the veil, onto them
+    m = P5 + _v(2.8, 2.4, 2.2)                      # the carry arcs up and round them (never through anyone)
+    return [(35.36, c0, _aim(c0, g, 0.68, 0.72, F5)),                  # the carry arrives, onto them
             (36.3, c1, _aim(c1, g, 0.68, 0.73, F5)),
-            (38.6, c2, _aim(c2, g, 0.685, 0.745, F5)),
-            (39.6, c3, _aim(c3, g, 0.685, 0.745, F5))], \
-        [(38.3, o1, _aim(o1, d, 0.68, 0.71, F5)),                       # a gliding carry to the dancer
-         (40.6, o2, _aim(o2, d, 0.71, 0.71, F5)),
-         (42.0, o3, _aim(o3, d, 0.72, 0.71, F5))]
+            (38.2, c2, _aim(c2, g, 0.685, 0.745, F5)),
+            (39.05, m, lerp(g, d, 0.55) + _v(0.0, 0.4, 0.0)),           # a gliding carry to the dancer
+            (39.9, o1, _aim(o1, d, 0.68, 0.71, F5)),
+            (40.6, o2, _aim(o2, d, 0.71, 0.71, F5)),
+            (42.0, o3, _aim(o3, d, 0.72, 0.71, F5))]
 
 
-_B0, _B1 = P5b + _v(-1.1, 1.65, 5.4), P5b + _v(-0.6, 1.7, 10.5)
-_BQ0, _BQ1 = _aim(_B0, P5b + _v(0.0, 1.1, 0.0), 0.68, 0.71, F5), _aim(_B1, PEARL, 0.5, 0.40, F5)
+CARRY5 = (38.2, 42.0)                            # the carry from the two to the dancer and round her
+
+
+def _catmull(pts, n=400):
+    """A smooth curve through points (centripetal Catmull-Rom), densely sampled."""
+    P = [2 * pts[0] - pts[1]] + list(pts) + [2 * pts[-1] - pts[-2]]
+    out = []
+    for i in range(1, len(P) - 2):
+        p0, p1, p2, p3 = P[i - 1], P[i], P[i + 1], P[i + 2]
+        t0 = 0.0
+        t1 = t0 + float(np.linalg.norm(p1 - p0)) ** 0.5 + 1e-6
+        t2 = t1 + float(np.linalg.norm(p2 - p1)) ** 0.5 + 1e-6
+        t3 = t2 + float(np.linalg.norm(p3 - p2)) ** 0.5 + 1e-6
+        for u in np.linspace(t1, t2, n, endpoint=False):
+            a1 = (t1 - u) / (t1 - t0) * p0 + (u - t0) / (t1 - t0) * p1
+            a2 = (t2 - u) / (t2 - t1) * p1 + (u - t1) / (t2 - t1) * p2
+            a3 = (t3 - u) / (t3 - t2) * p2 + (u - t2) / (t3 - t2) * p3
+            b1 = (t2 - u) / (t2 - t0) * a1 + (u - t0) / (t2 - t0) * a2
+            b2 = (t3 - u) / (t3 - t1) * a2 + (u - t1) / (t3 - t1) * a3
+            out.append((t2 - u) / (t2 - t1) * b1 + (u - t1) / (t2 - t1) * b2)
+    out.append(pts[-1])
+    return np.array(out)
+
+
+def _s5_make():
+    """Onto the two (keys), then one even carry (eased from rest, a constant glide, eased to rest): up and
+    round the two, never through them, and gently on in to the dancer as she turns."""
+    keys = _cam_keys_s5()
+    head = _pchip(keys[:3])
+    c2 = np.asarray(keys[2][1], np.float64)
+    orb = [np.asarray(k[1], np.float64) for k in keys[4:]]
+    mid = 0.5 * (c2 + orb[0])
+    perp = _unit(np.cross(orb[0] - c2, UP))
+    if perp @ _v(1.0, 0.0, 1.0) < 0.0:
+        perp = -perp
+    bulge = mid + 3.0 * perp + _v(0.0, 0.6, 0.0)
+    curve = _catmull([c2, bulge, orb[-1]])                 # on in one smooth curve (no corner round her)
+    seg = np.linalg.norm(np.diff(curve, axis=0), axis=1)
+    arc = np.r_[0.0, np.cumsum(seg)]
+    ts = np.linspace(CARRY5[0], CARRY5[1], 1200)
+    v = ss(CARRY5[0], CARRY5[0] + 1.0, ts) * (1.0 - ss(CARRY5[1] - 1.4, CARRY5[1], ts))
+    prog = np.r_[0.0, np.cumsum(0.5 * (v[1:] + v[:-1]) * np.diff(ts))]
+    prog /= prog[-1]
+    g, d = P5 + _v(0.0, 0.85, 0.0), P5b + _v(0.0, 1.1, 0.0)
+
+    def f(t):
+        if t <= CARRY5[0]:
+            return head(t)
+        s_ = float(np.interp(t, ts, prog)) * arc[-1]
+        pos = np.array([np.interp(s_, arc, curve[:, j]) for j in range(3)])
+        k = ss(38.5, 40.2, t)
+        subj = lerp(g, d, k)
+        sx = 0.685 + (0.72 - 0.685) * ss(38.5, CARRY5[1], t)
+        sy = 0.745 + (0.71 - 0.745) * k
+        return pos, _aim(pos, subj, sx, sy, F5)
+    return f
+
+
+_s5 = _s5_make()
+_B0, _BQ0 = _s5(42.0)                             # the breath starts just where the dancer's shot ends
+_B1 = _B0 + _v(1.2, 0.6, -0.6)                   # a slow drift up and aside (no pull back: no bounce)
+_BQ1 = _aim(_B1, PEARL, 0.5, 0.40, F5)
 
 
 def _s6(t):
-    """The breath: still, the camera drifts back from the dancer and the gaze lifts over the calm sea to where
-    the light gathers."""
-    u = sc(42.0, 44.4, t)
-    return lerp(_B0, _B1, u), lerp(_BQ0, _BQ1, u)
+    """The breath: nearly still, the camera drifts a little up and aside from the dancer and the gaze lifts over
+    the calm sea to where the light gathers beyond her."""
+    u = sc(41.6, BREATH_END - 0.1, t)
+    d0, d1 = _unit(_BQ0 - _B0), _unit(_BQ1 - _B1)
+    om = float(np.arccos(np.clip(d0 @ d1, -1.0, 1.0)))             # an even turn of the gaze
+    d = d0 if om < 1e-6 else (np.sin((1.0 - u) * om) * d0 + np.sin(u * om) * d1) / np.sin(om)
+    p = lerp(_B0, _B1, u)
+    return p, p + d * float(np.linalg.norm(lerp(_BQ0 - _B0, _BQ1 - _B1, u)))
 
 
 ASC0 = BREATH_END
-HEAVEN_T = LEAD + 45.64                          # we break above the clouds into the glory of the sun (a hit)
+HEAVEN_T = LEAD + 44.3                           # we break above the clouds into the glory of the sun (06's cadence)
 ASC1 = 49.2                                      # out of the glory, up to the world
 SUN_AZ = 228.0                                   # the dawn lies ahead and to the left (WORLD sun_az)
 HV = _v(np.sin(np.radians(SUN_AZ)), 0.0, np.cos(np.radians(SUN_AZ)))     # level, toward the sun
@@ -424,35 +505,48 @@ GLORY_EL = 6.0                                   # the sun stands low over the s
 
 _A0 = float(np.degrees(np.arctan2(_B1[0] - A7[0], _B1[2] - A7[2])))      # the ascent starts where the breath is
 _R0 = float(np.hypot(_B1[0] - A7[0], _B1[2] - A7[2]))
+ASC_R = 20.0                                     # how far from the column we rise
+ASC_AZ = 40.0                                    # where we come out: the column between us and the sun (it fades)
+
+
+GLORY_Y = 22.0                                   # the sea of golden clouds we break through
+CLIMB_H = GLORY_Y + 6.0 - float(_B1[1])          # how far we rise to break above it
+ASC_DRIFT = 1.0                                  # metres a second we keep rising in the glory
+
+
+def _asc_tables():
+    """The ascent as one even glide: the climb and the turn round the column gather from rest (about a second),
+    run at a constant speed, and ease off as we break above the clouds into a slow drift (no rush, no snap).
+    Integrated once from the speed profiles."""
+    t = np.arange(ASC0 - 1.0, TOTAL + 2.0, 1.0 / 600.0)
+    up = ss(ASC0 - 0.5, ASC0 + 1.8, t)
+    down = ss(HEAVEN_T - 0.5, HEAVEN_T + 1.0, t)
+    shape = up * (1.0 - down)
+    dt = t[1] - t[0]
+    A = float(np.sum(shape[t < HEAVEN_T]) * dt)
+    B = float(np.sum((up * down)[t < HEAVEN_T]) * dt)
+    v = shape * (CLIMB_H - ASC_DRIFT * B) / A + ASC_DRIFT * up * down
+    y = float(_B1[1]) + np.concatenate([[0.0], np.cumsum(0.5 * (v[1:] + v[:-1]) * dt)])
+    tot = ((ASC_AZ - _A0 + 180.0) % 360.0) - 180.0
+    turn = ss(ASC0, ASC0 + 1.2, t) * (1.0 - ss(HEAVEN_T - 0.3, HEAVEN_T + 1.4, t))
+    a = np.concatenate([[0.0], np.cumsum(0.5 * (turn[1:] + turn[:-1]) * dt)])
+    a = _A0 + tot * a / a[-1]
+    return t, y, a
+
+
+_AT, _AY, _AA = _asc_tables()
 
 
 def _climb(t):
-    """Up the column and through the clouds (about 72 m at HEAVEN_T): from rest where the breath left us,
-    accelerating smoothly (no jolt), then easing above the clouds."""
-    u = max(min(t, HEAVEN_T) - ASC0, 0.0)
-    y = float(_B1[1]) + 7.2 * u * u
-    if t > HEAVEN_T:
-        v = 14.4 * u
-        w = t - HEAVEN_T
-        y += v * 0.35 * (1.0 - np.exp(-w / 0.35)) + 2.0 * w
-    return y
+    return float(np.interp(t, _AT, _AY))
 
 
 def _asc_angle(t):
-    """The turn round the column: it gathers from rest (30 to 46 degrees a second, never a whip) and brings us
-    to the same side of the column as before when we break above the clouds;
-    above the clouds it eases to a stop (we hover in the glory)."""
-    u = max(min(t, HEAVEN_T) - ASC0, 0.0)
-    a = _A0 + 30.0 * (u - 0.4 * (1.0 - np.exp(-u / 0.4))) + 2.6 * u * u
-    if t > HEAVEN_T:
-        om = 30.0 * (1.0 - np.exp(-u / 0.4)) + 5.2 * u
-        a += om * 0.5 * (1.0 - np.exp(-(t - HEAVEN_T) / 0.5))
-    return np.radians(a)
+    return np.radians(float(np.interp(t, _AT, _AA)))
 
 
 def _asc_radius(t):
-    u = max(t - ASC0, 0.0)
-    return 14.0 + (_R0 - 14.0) * (1.0 - sc(0.0, 1.7, u))
+    return ASC_R + (_R0 - ASC_R) * (1.0 - sc(ASC0, ASC0 + 2.4, t))
 
 
 def _asc_pos(t):
@@ -466,22 +560,28 @@ def _sun_dir(el=GLORY_EL):
 
 
 def _s7(t):
-    """The ascent: a corkscrew up round the column of light with the nine colours streaming past, then we break
-    above the clouds and turn to the glory of the sun over a sea of golden-rose clouds."""
+    """The ascent: a slow corkscrew up round the column of light, looking up along it with the nine colours
+    streaming past, then we break above the clouds and the gaze levels to the glory of the sun over a sea of
+    golden-rose clouds."""
     p = _asc_pos(t)
     y = _climb(t)
-    look = A7 + _v(0.0, y + 1.5 + 2.5 * sc(ASC0, ASC0 + 1.5, t), 0.0)
-    tilt = sc(HEAVEN_T - 0.7, HEAVEN_T + 1.0, t)
-    d0, d1 = _unit(look - p), _unit(HV + _v(0.0, -0.06, 0.0))  # the sun ahead, the sea of clouds below it
-    om = float(np.arccos(np.clip(d0 @ d1, -1.0, 1.0)))           # an even turn of the gaze, never a swing
-    d = d0 if om < 1e-6 else (np.sin((1.0 - tilt) * om) * d0 + np.sin(tilt * om) * d1) / np.sin(om)
+    r = _asc_radius(t)
+    up = _unit(A7 + _v(0.0, y + 1.5 + 0.42 * r, 0.0) - p)       # up along the column (about 25 degrees)
+    d0 = _slerp(_unit(_BQ1 - _B1), up, sc(ASC0 - 0.2, ASC0 + 2.2, t))  # from the breath's gaze, without a jolt
+    d = _slerp(d0, _unit(HV + _v(0.0, -0.06, 0.0)), sc(HEAVEN_T - 0.7, HEAVEN_T + 1.2, t))   # level, to the sun
     return p, p + 30.0 * d
+
+
+def _slerp(d0, d1, u):
+    """An even turn from one direction to another (never a swing)."""
+    om = float(np.arccos(np.clip(d0 @ d1, -1.0, 1.0)))
+    return d0 if om < 1e-6 else (np.sin((1.0 - u) * om) * d0 + np.sin(u * om) * d1) / np.sin(om)
 
 
 # ---- the finale: BRAND's world of light, the nine symbols swirl round it and burst, it becomes the logo ------
 FIN_R = 9.0                                      # the Earth's radius (metres)
 FIN_SHRINK = 0.47
-FIN_C = A7 + _v(0.0, 172.0, 0.0) + HV * 90.0     # it hangs in the night above the glory
+FIN_C = A7 + _v(0.0, 140.0, 0.0) + HV * 90.0     # it hangs in the night above the glory
 FIN_T = 49.4                                     # it gathers (BR.Finale t_world)
 SWIRL = (49.25, LEAD + 50.22)                    # the symbols swirl round it from the lift; they burst on the bar
 HEARTS_T0, HEARTS_T1 = 50.5, 52.1
@@ -493,7 +593,7 @@ EC_SCALE = 1.0                                   # TITLES end card scale (see TI
 SLOT_Y = (48.0 + 85.0 - 540.0) * EC_SCALE / 1080.0 + 0.5   # the end card logo's middle, from the top
 SLOT_H = 170.0 * EC_SCALE / 1080.0
 END_T0, END_T = 53.85, 54.4                      # the logo glides into the end card's logo slot
-EC_IN, EC_FADE = 54.15, 0.8                      # the end card: whole from 54.95 to the last frame
+EC_IN, EC_FADE = 54.15, 0.7                      # the end card: whole from 55.0 (new) to the last frame
 
 
 PUSH = (EC_IN + EC_FADE, TOTAL)                  # the end card's slow push-in (whole card to the last frame)
@@ -520,6 +620,9 @@ _LOGO_DROP = 0.1624 * FIN_R * FIN_SHRINK / 0.3058     # the logo's middle stands
 FIN_LIFT = 0.17 * FIN_R                                # the world a little high in the picture (the corner)
 
 
+LIFT_END = 51.0                                  # the glide out to the world has arrived
+
+
 def _s8(t):
     """Out to the world: up from the glory into the night where the Earth hangs, a slow turn round it while the
     symbols swirl and the hearts light across it, in to frame the logo as the world becomes it, then still
@@ -531,11 +634,11 @@ def _s8(t):
     tgt = FIN_C - _v(0.0, FIN_LIFT, 0.0)
     tgt_logo = FIN_C - _v(0.0, _LOGO_DROP + 1.0 * FIN_LIFT, 0.0)
     p_d = _fin_cam(8.0, 1.0, 3.9 * FIN_R) - _v(0.0, _LOGO_DROP, 0.0)
-    if t < 50.6:
-        e = sc(ASC1 - 0.3, 50.6, t)                    # out to the world: a long, eased glide (about 1.7 s)
-        return lerp(p_a, p_b, e), lerp(q_a, tgt, sc(ASC1 - 0.2, 50.2, t))
+    if t < LIFT_END:
+        e = sc(ASC1 - 0.3, LIFT_END, t)                # out to the world: a long, eased glide (about 2 s)
+        return lerp(p_a, p_b, e), lerp(q_a, tgt, sc(ASC1 - 0.2, LIFT_END - 0.4, t))
     if t < LOGO_T[0]:
-        e = sc(50.6, LOGO_T[0], t)
+        e = sc(LIFT_END, LOGO_T[0], t)
         return lerp(p_b, p_c, e), tgt
     if t < LOGO_T[1]:
         e = sc(LOGO_T[0], LOGO_T[1], t)
@@ -545,29 +648,27 @@ def _s8(t):
 
 
 def _rig(focus):
-    """Anthony after v6: no strobing whips. Every change of place is either a dissolve through light where the
-    songs blend (a hard cut hidden in the LightVeil, the camera drifting on both sides of it) or a gliding
-    carry of a second or more with eased ends; focus moves smoothly from one subject to the next."""
+    """Anthony after v6: no strobing whips. Every change of place is a gliding carry (the stages stand close
+    together, so the camera simply travels on to the next, about two seconds, eased at both ends, on the music's
+    blends) while each stage's scenery fades out and the next one's fades in; focus moves smoothly."""
     def fo(default):
         return (lambda t: focus(t, default)) if focus is not None else "target"
     return Rig([
-        Path(_s0, 0.0, SEC[1], fov=lambda t: 50.0 + 8.0 * sc(6.9, 7.8, t) - 6.0 * sc(7.8, 8.8, t), aperture=0.0,
+        Path(_s0, 0.0, SEC[1], fov=lambda t: 50.0 + 6.0 * sc(6.0, 7.6, t) - 4.0 * sc(7.7, 9.0, t), aperture=0.0,
              focus=fo(lambda t: lerp(drop_pos(t), D0 + _v(0, 1.0, 0), sc(7.9, 8.5, t)))),
-        Path(_pchip(_cam_keys_s1()), SEC[1], SEC[2], blend=1.1, fov=F1, aperture=0.012,
+        Path(_pchip(_cam_keys_s1()), SEC[1], SEC[2], blend=1.6, fov=F1, aperture=0.012,
              focus=fo(lambda t: lerp(P1 + _v(0, 1.2, 0), P1b + _v(0, 1.3, 0), sc(11.8, 12.9, t)))),
-        Path(_pchip(_cam_keys_s2()), SEC[2], SEC[3], blend=0.0, fov=F2, aperture=0.012,
+        Path(_pchip(_cam_keys_s2()), SEC[2], SEC[3], blend=2.0, fov=F2, aperture=0.012,
              focus=fo(lambda t: lerp(P2 + _v(0, 0.8, 0), P2 + _v(0, 1.25, 0), sc(18.4, 19.8, t)))),
-        Path(_pchip(_cam_keys_s3()), SEC[3], SEC[4], blend=0.0, fov=F3, aperture=0.01,
+        Path(_pchip(_cam_keys_s3()), SEC[3], SEC[4], blend=1.8, fov=F3, aperture=0.01,
              focus=fo(lambda t: lerp(P3 + _v(-1.0, 1.3, 2.0), P3b + _v(0, 0.9, 0), sc(25.4, 26.7, t)))),
-        Path(_pchip(_cam_keys_s4()), SEC[4], SEC[5], blend=0.0,
+        Path(_pchip(_cam_keys_s4()), SEC[4], SEC[5], blend=2.4,
              fov=lambda t: 58.0 - 6.0 * sc(28.79, 30.4, t) - 4.0 * sc(30.4, 31.6, t), aperture=0.01,
              focus=fo(P4 + _v(0, 0.7, 0))),
-        Path(_pchip(_cam_keys_s5()[0]), SEC[5], 38.95, blend=0.0, fov=F5, aperture=0.01,
-             focus=fo(P5 + _v(0, 1.0, 0))),
-        Path(_pchip(_cam_keys_s5()[1]), 38.95, 42.0, blend=1.3, fov=F5, aperture=0.01,
-             focus=fo(P5b + _v(0, 1.1, 0))),
-        Path(_s6, 42.0, BREATH_END, blend=1.0, fov=F5, aperture=0.0),
-        Path(_s7, BREATH_END, ASC1, blend=0.5, fov=lambda t: F5 + 14.0 * sc(44.45, 45.8, t), aperture=0.0),
+        Path(_s5, SEC[5], 42.0, blend=3.0, fov=F5, aperture=0.01,
+             focus=fo(lambda t: lerp(P5 + _v(0, 1.0, 0), P5b + _v(0, 1.1, 0), sc(38.4, 39.6, t)))),
+        Path(_s6, 42.0, BREATH_END, blend=1.2, fov=F5, aperture=0.0),
+        Path(_s7, BREATH_END, ASC1, blend=0.5, fov=lambda t: F5 + 10.0 * sc(ASC0 - 0.2, ASC0 + 1.8, t), aperture=0.0),
         Path(_s8, ASC1, TOTAL + 1.0, blend=1.0, fov=_end_fov, aperture=0.0),
     ], blend=0.6, fov=48.0, aperture=0.0, handheld=0.12, min_height=0.4)
 
@@ -755,8 +856,8 @@ LOOKS["pastel"] = dict(BR.PASTEL, water=show("#f4e2d2") * 0.5, mirror=0.4, mirro
                        mist_color=show("#ffe8d8") * 0.5, haze_color=show("#ffecdc") * 0.55, mist=0.12, exposure=0.94)
 
 LOOK_KEYS = [(0.0, "opening"), (7.6, "shore", 1.6), (SEC[2], "rain", 1.4), (19.6, "sunrise", 2.2),
-             (SEC[3], "river", 0.6), (SEC[4], "cathedral", 0.0), (SEC[5], "rivers", 0.0), (SEC[6], "breath", 1.2),
-             (45.6, "ascent", 1.6), (HEAVEN_T - 0.5, "glory", 1.0), (ASC1 + 0.4, "heaven", 1.2)]
+             (SEC[3], "river", 1.4), (SEC[4], "cathedral", 1.6), (SEC[5], "rivers", 1.6), (SEC[6], "breath", 1.2),
+             (BREATH_END + 1.1, "ascent", 2.4), (HEAVEN_T - 0.5, "glory", 1.0), (ASC1 + 0.4, "heaven", 1.2)]
 
 STAGES = [(8.4, P1), (12.3, P1b), (15.3, P2), (22.3, P3), (25.8, P3b), (28.79, P4), (35.36, P5), (38.9, P5b)]
 
@@ -1061,7 +1162,7 @@ def _cast():
     C["gratitude"] = acting.perform("Gratitude", 12.6, 15.4, at=(P1b[0], P1b[2]), view=_view(P1b, cam1b),
                                     variant="heart", style=dict(points=80000, **GOLD), pre=1.2, post=0.6, seed=3.0)
     C["embrace"] = list(_embrace_pair(P2, 15.4, 16.8, 18.0, 20.4, 22.15))
-    cam3 = _cam_at_key(_cam_keys_s3(), 23.4)
+    cam3 = _pchip(_cam_keys_s3())(23.4)[0]        # where we watch him from as he steps aside
     C["concession"] = _concession_man(P3 + _v(-1.0, 0.0, 2.0), 23.0, 25.6, _view(P3, cam3))
     cam3b = _cam_at_key(_cam_keys_s3(), 26.5)
     C["respect"] = acting.perform("Respect", 26.2, 28.8, at=(P3b[0], P3b[2]), view=_view(P3b, cam3b),
@@ -1108,10 +1209,11 @@ def _boxes(t, cam):
     signature's corner while it is on (a wide feather: the effects fade softly as they come near it)."""
     out = []
     for w in WORDS:
-        if w.t_in - 0.05 <= t <= w.t_out + 0.2:
+        if w.t_in - 0.5 < t < w.t_out + 0.4:       # eased in before the word arrives and out after it goes
+            k = sc(w.t_in - 0.5, w.t_in + 0.02, t) * (1.0 - sc(w.t_out, w.t_out + 0.4, t))
             b = PW.screen_box(w, cam, t)
-            if b[4]:
-                out.append((b[0] - 0.035, b[1] + 0.035, b[2] - 0.04, b[3] + 0.04, 1.0, 0.025))
+            if b[4] and k > 0.0:
+                out.append((b[0] - 0.035, b[1] + 0.035, b[2] - 0.04, b[3] + 0.04, k, 0.025))
     k = 1.0 - sc(OPEN_FULL, OPEN_FULL + 0.8, t)
     if k > 0.0:
         out.append(OPENING_BOX + (k, 0.025))
@@ -1312,8 +1414,8 @@ def _setup(scene):
     high = _cloud_sea(rng, A7, 30.0, 900.0, 160, 118.0, 40.0, 110.0, 1.0)
     scene.add("clouds_near", MS.Billows(near, gain=_gain((0.0, 1.0), (7.7, 1.0), (9.4, 0.0), (TOTAL, 0.0)),
                                         seed=12, alpha=0.085), depth_of_field=False)
-    scene.add("clouds_far", MS.Billows(far, gain=_gain((0.0, 1.0), (8.6, 1.0), (9.6, 0.0), (42.0, 0.0), (43.0, 0.45),
-                                                       (44.6, 0.45), (45.4, 0.0), (TOTAL, 0.0)), seed=13,
+    scene.add("clouds_far", MS.Billows(far, gain=_gain((0.0, 1.0), (8.6, 1.0), (9.6, 0.0), (42.0, 0.0), (42.6, 0.45),
+                                                       (43.95, 0.45), (44.75, 0.0), (TOTAL, 0.0)), seed=13,
                                        alpha=0.055, body=0.2, sun_az=WORLD["sun_az"]), depth_of_field=False)
     del high                                  # (drawn for the order of the random numbers; the glory replaces it)
     r2 = np.random.default_rng(77)
@@ -1329,14 +1431,14 @@ def _setup(scene):
                                                          (TOTAL, 0.0)), seed=21, alpha=0.07, body=0.35,
                                         sun_az=SUN_AZ), depth_of_field=False)
     # the fall: layers of cloud round the drop's path that the camera dives through with it
-    dive = (_cloud_sea(r2, D0, 7.0, 70.0, 16, 40.0, 12.0, 24.0, 1.0)
-            + _cloud_sea(r2, D0, 7.0, 90.0, 20, 25.0, 14.0, 28.0, 1.0))
+    dive = (_cloud_sea(r2, D0, 7.0, 70.0, 16, 32.0, 12.0, 24.0, 1.0)
+            + _cloud_sea(r2, D0, 7.0, 90.0, 20, 19.0, 14.0, 28.0, 1.0))
     scene.add("clouds_dive", MS.Billows(dive, gain=_gain((0.0, 0.0), (6.9, 0.0), (7.25, 1.0), (7.8, 1.0), (8.3, 0.0),
                                                          (TOTAL, 0.0)), seed=19, alpha=0.08, body=0.3,
                                         sun_az=WORLD["sun_az"]), depth_of_field=False)
     # the glory: a vast sea of golden-rose clouds that we rise through and then see from above, to the horizon
-    glory = _cloud_sea(r2, A7, 10.0, 1500.0, 280, 66.0, 46.0, 150.0, 1.0, hk=(0.26, 0.46))
-    scene.add("clouds_glory", MS.Billows(glory, gain=_gain((0.0, 0.0), (44.4, 0.0), (45.2, 1.0), (ASC1 + 0.4, 1.0),
+    glory = _cloud_sea(r2, A7, 10.0, 1500.0, 280, GLORY_Y, 46.0, 150.0, 1.0, hk=(0.26, 0.46))
+    scene.add("clouds_glory", MS.Billows(glory, gain=_gain((0.0, 0.0), (43.6, 0.0), (44.9, 1.0), (ASC1 + 0.4, 1.0),
                                                            (ASC1 + 1.2, 0.0), (TOTAL, 0.0)), seed=14, alpha=0.07,
                                          top="#ffd49a", warm="#ffa46c", rose="#e8789c", lilac="#7a68c0",
                                          core="#ffe0b8", body=0.25, shade=0.55, sun_az=SUN_AZ),
@@ -1358,17 +1460,17 @@ def _setup(scene):
             w = rng.uniform(42.0, 66.0) * (1.0 + 0.6 * abs(z) / 600.0)
             h = rng.uniform(60.0, 110.0) * (1.0 + 0.8 * abs(z) / 600.0)
             canyon += MS.tower(rng, _v(P3[0] + off, 2.0, P3[2] + 40.0 + z), w, h, n_layer=4, per=200)
-    scene.add("clouds_canyon", MS.Billows(canyon, gain=_gain((0.0, 0.0), (21.3, 0.0), (21.85, 1.0), (28.6, 1.0),
-                                                             (28.79, 0.0), (TOTAL, 0.0)), seed=17, alpha=0.048,
+    scene.add("clouds_canyon", MS.Billows(canyon, gain=_gain((0.0, 0.0), (21.3, 0.0), (21.85, 1.0), (28.2, 1.0),
+                                                             (29.3, 0.0), (TOTAL, 0.0)), seed=17, alpha=0.048,
                                           sun_az=WORLD["sun_az"]), depth_of_field=False)
     # the ascent: columns of golden cloud standing round the column of light
     rise = []
     for i in range(10):
         a = 2.0 * np.pi * i / 10.0 + rng.uniform(-0.2, 0.2)
         r = rng.uniform(34.0, 60.0)
-        rise += MS.tower(rng, A7 + _v(np.sin(a) * r, 8.0 + rng.uniform(0, 30), np.cos(a) * r), rng.uniform(26, 40),
-                         0.62 * rng.uniform(120, 170), n_layer=5, per=200)
-    scene.add("clouds_rise", MS.Billows(rise, gain=_gain((0.0, 0.0), (44.4, 0.0), (44.9, 1.0), (HEAVEN_T - 0.3, 1.0),
+        rise += MS.tower(rng, A7 + _v(np.sin(a) * r, 6.0 + rng.uniform(0, 14), np.cos(a) * r), rng.uniform(26, 40),
+                         0.36 * rng.uniform(120, 170), n_layer=5, per=200)
+    scene.add("clouds_rise", MS.Billows(rise, gain=_gain((0.0, 0.0), (43.75, 0.0), (44.25, 1.0), (HEAVEN_T - 0.3, 1.0),
                                                          (HEAVEN_T + 0.6, 0.0), (TOTAL, 0.0)), seed=18, alpha=0.075,
                                         sun_az=WORLD["sun_az"]), depth_of_field=False)
 
@@ -1384,34 +1486,39 @@ def _setup(scene):
     # ---- S0: Mother's hands, the drop, the landing, the ring of gold. The lead-in (0 to 2.0) is quiet: the
     # hands hold the drop and breathe, light wells softly from the palms; it grows as the music swells in.
     for i, h in enumerate(C["hands0"]):           # warm, soft hands of light (never a net of grains)
-        scene.add("hands0_%d" % i, FX.SoftLight(h, every=40, fill=0.014 * HAND_S, fill_alpha=0.02, a_ref=0.63,
-                                                grain=0.8))
+        scene.add("hands0_%d" % i, Clear(FX.SoftLight(h, every=40, fill=0.014 * HAND_S, fill_alpha=0.02, a_ref=0.63,
+                                                      grain=0.8)))
     palms = H0 + _v(0.0, 0.07 * HAND_S, 0.0)
     scene.add("palm_light0", Clear(FX.Upwell(palms, -1.0, 6.8, n=1400, radius=0.13 * HAND_S, speed=0.3, life=2.6,
                                              size=0.012, gain=_gain((0.0, 0.6), (2.0, 0.65), (3.5, 1.0), (5.8, 1.0),
                                                                     (7.2, 0.0), (TOTAL, 0.0)))),
               reflect=False)
     # on the release light pours from her hands after the drop, which falls with a luminous trail
-    scene.add("pour0", NearFade(FX.Pour(lambda t: H0 + _v(0.0, 0.03 * HAND_S, 0.0), RELEASE_T - 0.05, RELEASE_T + 2.3,
-                                        n=4200, g=7.8, spread=0.10, life=3.8, size=0.022, width=0.04 * HAND_S,
-                                        until=LAND_T + 1.25, color="#ffc860", color2="#ffe0a0"), 3.5), reflect=True)
-    scene.add("trail0", MB.Rivers([(drop_pos, "#ffd27a",
+    pour = FX.Pour(lambda t: H0 + _v(0.0, 0.03 * HAND_S, 0.0), RELEASE_T - 0.05, RELEASE_T + 2.3, n=4200, g=7.8,
+                   spread=0.10, life=3.8, size=0.022, width=0.04 * HAND_S, until=LAND_T + 1.25, color="#ffc860",
+                   color2="#ffe0a0")
+    scene.add("pour0", _Dim(Clear(NearFade(pour, 3.5)), lambda t: 1.0 - sc(LAND_T + 0.1, LAND_T + 0.7, t)),
+              reflect=True)                       # gone before the camera glides past the landing place
+    scene.add("trail0", Clear(MB.Rivers([(drop_pos, "#ffd27a",
                                     lambda t: sc(RELEASE_T, RELEASE_T + 0.3, t) * (1.0 - sc(LAND_T - 0.05, LAND_T + 0.1, t)),
-                                    0.2)], cuts=[RELEASE_T], tail=0.9), reflect=True)
+                                    0.2)], cuts=[RELEASE_T], tail=0.9)), reflect=True)
     scene.add("drop", FX.Drop(drop_pos, t_show=(-1.0, LAND_T + 0.2), t_land=LAND_T, scale=1.6, t_pulse=3.4),
               reflect=True)
     # the landing: a towering fountain and a pillar of light, the ring racing out over the sea
-    scene.add("burst0", Clear(FX.Fountain(D0 + _v(0.0, 0.1, 0.0), LAND_T, n=4500,
-                                          colors=["#ffd27a", "#ffb84a", "#ffc890", "#ffa8b8", "#ffcf9a"],
-                                          speed=(9.0, 32.0), spread=0.22, life=3.0, seed=96)), reflect=True)
-    scene.add("pillar0", Clear(FX.LightColumns([D0], top=70.0, per=1300, core_w=1.4, fall=-16.0, core_k=0.3,
+    # (the camera then glides past the landing place to the greeting: what is near the lens fades away)
+    burst0 = FX.Fountain(D0 + _v(0.0, 0.1, 0.0), LAND_T, n=2600, colors=["#ffd27a", "#ffb84a", "#ffc890", "#ffa8b8",
+                                                                     "#ffcf9a"],
+                         speed=(4.0, 11.0), spread=0.22, life=1.2, seed=96, fade0=0.25)
+    scene.add("burst0", _Dim(NearFade(Clear(burst0), 9.0), lambda t: 1.0 - sc(LAND_T + 0.3, LAND_T + 0.85, t)),
+              reflect=True)
+    scene.add("pillar0", NearFade(Clear(FX.LightColumns([D0], top=70.0, per=1300, core_w=1.4, fall=-16.0, core_k=0.22,
                                                spark=0.05, seed=72, color="#ffcf80", color2="#ffdca0", segs=40,
-                                               gain=_gain((0.0, 0.0), (LAND_T - 0.02, 0.0), (LAND_T + 0.12, 1.0),
-                                                          (LAND_T + 0.8, 0.55), (LAND_T + 2.0, 0.0), (TOTAL, 0.0)))),
-              reflect=False)
-    scene.add("splash", Clear(FX.Splash(D0, LAND_T, scale=1.0)))
-    scene.add("ring", Clear(FX.RingWave(D0, LAND_T, speed=36.0, reach=1500.0, until=SEC[3] + 0.5, color="#ffb24a",
-                                        core="#ffd88a")))
+                                               gain=_gain((0.0, 0.0), (LAND_T - 0.02, 0.0), (LAND_T + 0.45, 0.6),
+                                                          (LAND_T + 0.75, 0.4), (LAND_T + 1.05, 0.0), (TOTAL, 0.0)))),
+                                  7.0), reflect=False)
+    scene.add("splash", NearFade(Clear(FX.Splash(D0, LAND_T, scale=1.0)), 5.0))
+    scene.add("ring", NearFade(Clear(FX.RingWave(D0, LAND_T, speed=24.0, reach=1500.0, until=SEC[3] + 0.5,
+                                                 color="#ffb24a", core="#ffd88a")), 9.0))
     scene.add("motes0", FX.Motes(n=900, box=(14.0, 8.0, 14.0), center=None,
                                  gain=_gain((0.0, 0.6), (6.0, 0.6), (7.0, 0.0), (TOTAL, 0.0))), reflect=False)
 
@@ -1431,22 +1538,24 @@ def _setup(scene):
         # falls, slows at the embrace, hangs, then runs backward: the drops rise as warm sparks
         if t < 19.3:
             return t
-        u = t - 19.3
-        return 19.3 + 0.9 * u - 0.55 * u * u
+        u = t - 19.3                  # (the turn eased over a second, then an even, gentle rise: never a rush)
+        if u < 1.2:
+            return 19.3 + 0.9 * u - 0.6 * u * u
+        return 19.3 + 0.9 * 1.2 - 0.6 * 1.44 - 0.54 * (u - 1.2)
     scene.add("rain", Clear(NearFade(FX.RainOfLight(P2, radius=11.0, top=15.0, n=6000, speed=4.0, tau=rain_tau,
                                                   warm=lambda t: sc(19.0, 20.5, t),
-                                                  gain=_gain((0.0, 0.0), (14.8, 0.0), (15.8, 1.0), (21.6, 1.0),
-                                                             (22.2, 0.0), (TOTAL, 0.0))), 4.0)))
+                                                  gain=_gain((0.0, 0.0), (14.8, 0.0), (15.8, 1.0), (20.8, 1.0),
+                                                             (22.0, 0.0), (TOTAL, 0.0))), 4.0)))
     addp("embrace", C["embrace"])
 
     # ---- S3: the river of light, the doorway, the two seated
     # the river flows fast for the surge, then calms to a slow drift behind the two seated listening (no sparkle
     # flicker: slower, softer twinkle, its points drawn sharp, without the lens's bokeh discs)
-    scene.add("river", Clear(FX.LightRiver(RIVER, width=3.2, n=30000, speed=10.0, twinkle=0.25,
+    scene.add("river", Clear(FX.LightRiver(RIVER, width=3.2, n=30000, speed=10.0, twinkle=0.25, edge=9.0,
                                            clock=lambda t: MB.still_clock(t, RIVER_CALM, dur=1.0, floor=0.25),
                                                   gain=_gain((0.0, 0.0), (20.6, 0.0), (21.85, 1.0), (22.9, 1.0),
                                                              (23.5, 0.5), (25.6, 0.5),
-                                                             (26.4, 0.35), (28.6, 0.35), (28.79, 0.0), (TOTAL, 0.0)))),
+                                                             (26.4, 0.35), (28.2, 0.35), (29.2, 0.0), (TOTAL, 0.0)))),
               depth_of_field=False)
     # the door fades before we pass through it (no white bars across the arriving Respect)
     scene.add("door", NearFade(FX.Door(P3, width=1.4, height=2.5, facing=0.0, t_open=23.0,
@@ -1459,28 +1568,28 @@ def _setup(scene):
     scene.add("petals3", Clear(NearFade(FX.PetalStream(petal_path, 24.1, 25.3, n=1100, speed=2.6, spread=0.2), 6.0)),
               reflect=True)
     scene.add("tree", Clear(NearFade(FX.TreeOfLight(P3b + _v(7.0, 0.0, 2.5), height=3.4, t_bloom=25.9,
-                                                    gain=_gain((0.0, 0.0), (25.4, 0.0), (25.9, 1.0), (28.6, 1.0),
-                                                               (28.79, 0.0), (TOTAL, 0.0))), 5.0)))
+                                                    gain=_gain((0.0, 0.0), (25.4, 0.0), (25.9, 1.0), (28.2, 1.0),
+                                                               (29.1, 0.0), (TOTAL, 0.0))), 5.0)))
     addp("concession", C["concession"])
     addp("respect", C["respect"])
 
     # ---- S4: the cathedral of falling light, rising lights
-    nave = [P4 + _v(sx * 7.5, 0.0, dz) for dz in (10.0, 0.0, -10.0, -20.0, -30.0) for sx in (-1.0, 1.0)]
-    nave += [P4 + _v(0.0, 0.0, -30.0)]
+    nave = [P4 + _v(sx * 7.5, 0.0, dz) for dz in (8.0, 0.0, -8.0, -16.0) for sx in (-1.0, 1.0)]
+    nave += [P4 + _v(0.0, 0.0, -24.0)]
     vault = _cloud_sea(r2, P4 + _v(0.0, 0.0, -14.0), 0.0, 75.0, 26, 56.0, 24.0, 48.0, 1.0, hk=(0.3, 0.5))
-    scene.add("clouds_vault", MS.Billows(vault, gain=_gain((0.0, 0.0), (28.6, 0.0), (28.9, 1.0), (35.2, 1.0),
-                                                           (35.4, 0.0), (TOTAL, 0.0)), seed=20, alpha=0.07, body=0.2,
+    scene.add("clouds_vault", MS.Billows(vault, gain=_gain((0.0, 0.0), (28.2, 0.0), (29.3, 1.0), (34.8, 1.0),
+                                                           (35.9, 0.0), (TOTAL, 0.0)), seed=20, alpha=0.07, body=0.2,
                                          rose="#d0609a", lilac="#6a50c0",
                                          sun_az=SUN_AZ), depth_of_field=False)
     # the light pours down from under the words while they are read (never across them)
     scene.add("nave", ColumnClear(FX.LightColumns(nave, top=62.0, per=650, core_w=0.45, fall=6.0, core_k=0.8,
                                                   spark=0.04, segs=40,
-                                                  gain=_gain((0.0, 0.0), (28.79, 0.0), (29.0, 1.0), (35.2, 1.0),
-                                                             (35.36, 0.0), (TOTAL, 0.0)))))
+                                                  gain=_gain((0.0, 0.0), (28.4, 0.0), (29.4, 1.0), (33.9, 1.0),
+                                                             (34.8, 0.0), (TOTAL, 0.0)))))
     scene.add("pour4", PW.KeepClear(FX.LightColumns([P4], top=30.0, per=420, fall=2.4, ring=1.2, core=False,
                                                     spark=0.03, soft=True,
-                                                    gain=_gain((0.0, 0.0), (28.79, 0.0), (29.3, 0.45), (35.2, 0.45),
-                                                               (35.36, 0.0), (TOTAL, 0.0))), WORDS))
+                                                    gain=_gain((0.0, 0.0), (28.4, 0.0), (29.4, 0.45), (33.9, 0.45),
+                                                               (34.8, 0.0), (TOTAL, 0.0))), WORDS))
     scene.add("rising4", Clear(FX.RisingLights(P4, 30.0, r0=2.5, r1=45.0, n=700, speed=16.0, until=SEC[5])))
     addp("encouragement", C["encouragement"])
 
@@ -1511,7 +1620,7 @@ def _setup(scene):
         rr = rs.uniform(3.5, 10.5)
         om = (1.0 if j % 2 == 0 else -1.0) * rs.uniform(0.25, 0.6)
         y0 = rs.uniform(-15.0, -9.0)
-        vr = rs.uniform(22.0, 30.0)
+        vr = rs.uniform(7.0, 11.0)
 
         def f(t, tl=tl, dl=dl, rr=rr, om=om, y0=y0, vr=vr):
             u = t - tl
@@ -1522,9 +1631,10 @@ def _setup(scene):
         def g(t, tl=tl):
             return sc(tl, tl + 0.15, t) * (1.0 - sc(tl + 1.0, tl + 1.5, t)) * (1.0 - sc(HEAVEN_T, HEAVEN_T + 0.4, t))
         streaks.append((f, NINE_GLOW[j % 9], g, 0.5))
-    scene.add("streaks", Clear(MB.Rivers(streaks, cuts=[BREATH_END], tail=0.32, seed=12)), reflect=False)
+    scene.add("streaks", NearFade(Clear(MB.Rivers(streaks, cuts=[BREATH_END], tail=0.6, seed=12)), 4.0),
+              reflect=False)
     scene.add("pillar7", FX.LightColumns([A7], top=320.0, per=4000, core_w=2.2, fall=-6.0, core_k=0.4,
-                                         gain=_gain((0.0, 0.0), (44.4, 0.0), (44.8, 1.0), (HEAVEN_T - 0.7, 1.0),
+                                         gain=_gain((0.0, 0.0), (43.75, 0.0), (44.15, 1.0), (HEAVEN_T - 0.7, 1.0),
                                                     (HEAVEN_T + 0.2, 0.0), (TOTAL, 0.0))), reflect=False)
 
     # ---- above the clouds: the glory of the sun, and the nine colours flying ahead of us toward the light
@@ -1553,10 +1663,10 @@ def _setup(scene):
                                 gain=_gain((0.0, 0.0), (HEAVEN_T - 0.4, 0.0), (HEAVEN_T + 0.6, 1.0), (ASC1 - 0.2, 1.0),
                                            (ASC1 + 0.4, 0.0), (TOTAL, 0.0))), reflect=False)
 
-    # ---- the biggest hit (44.51): the pearl bursts, a fountain of light and a ring of the nine colours
-    scene.add("fountain", Clear(FX.Fountain(A7 + _v(0.0, 0.5, 0.0), BREATH_END, n=7000, colors=NINE_GLOW,
-                                            speed=(12.0, 34.0))), reflect=True)
-    scene.add("ring9", Clear(FX.ColorRing(A7, BREATH_END, NINE_GLOW, speed=70.0, reach=320.0)))
+    # ---- the pearl bursts (06's attack), a fountain of light and a ring of the nine colours
+    scene.add("fountain", Clear(FX.Fountain(A7 + _v(0.0, 0.5, 0.0), BREATH_END, n=4000, colors=NINE_GLOW,
+                                            speed=(6.0, 16.0))), reflect=True)
+    scene.add("ring9", NearFade(Clear(FX.ColorRing(A7, BREATH_END, NINE_GLOW, speed=18.0, reach=320.0)), 20.0))
 
     # ---- the finale: BRAND's world of light. The nine symbols swirl round it as the music builds, lighting it
     # (the world brightens, hearts bloom across it from Las Vegas); at the hit they burst outward into light and
@@ -1602,15 +1712,38 @@ def _setup(scene):
     for k, (lab, tt, anchor, size) in enumerate(SYMBOL_PLAN):
         scene.add("symbol_%d" % k, Clear(MB.SymbolLight(lab, anchor, tt, GLOWC[lab], size=size, seed=91 + k)))
 
-    # the dissolves through light where the songs blend (the hard cuts of the camera hide inside them)
-    scene.add("veil", FX.LightVeil([(SEC[2], 0.45, 0.7), (SEC[3], 0.45, 0.7), (SEC[4], 0.45, 0.7),
-                                    (SEC[5], 0.45, 0.7)], k=0.5), reflect=False, depth_of_field=False, lod=False)
-
     WORDS.add_to(scene, reflect=False)
     try:
         WORDS.check(CAMERA)
     except Exception as e:          # the check is advice; never stop a render for it
         print("words check failed:", e)
+
+
+class _Dim:
+    """Wraps a point set: its light (alpha) times f(t); nothing drawn while f is 0."""
+
+    def __init__(self, inner, f):
+        self.inner, self.f = inner, f
+        self.wants_camera = bool(getattr(inner, "wants_camera", False))
+
+    def sample(self, t, cam=None):
+        k = float(self.f(t))
+        if k <= 0.0:
+            return None
+        ps = self.inner
+        res = ps.sample(t, cam) if self.wants_camera else ps.sample(t)
+        if res is None or k >= 1.0:
+            return res
+        out = []
+        for b in (res if isinstance(res, (list, tuple)) else [res]):
+            if b is None:
+                continue
+            b = dict(b)
+            b["alpha"] = np.asarray(b.get("alpha", 1.0), np.float64) * k
+            if b.get("alpha2") is not None:
+                b["alpha2"] = np.asarray(b["alpha2"], np.float64) * k
+            out.append(b)
+        return out
 
 
 class _Fade:
@@ -1672,8 +1805,8 @@ FIN_SPIN = 6.0
 FINALE = BR.Finale(pos=tuple(FIN_C), radius=FIN_R, shrink=FIN_SHRINK, camera=CAMERA, look="night", t_world=FIN_T,
                    spin=FIN_SPIN, front=LAS_VEGAS_LON - FIN_SPIN * HEARTS_T0,   # Las Vegas faces us as hearts begin
                    hearts=dict(t0=HEARTS_T0, t1=HEARTS_T1, n=44), t_settle=SETTLE, t_logo=LOGO_T,
-                   bloom=dict(t=BLOOM_T), end=dict(t=(END_T0, END_T), ride=(0.5, 1.0 - SLOT_Y, 14.0), frac=SLOT_H),
-                   logo=dict(reflect=False))
+                   bloom=dict(t=BLOOM_T, dur=1.6), blend=2.4,       # the day comes up softly (about 1.7 s)
+                   end=dict(t=(END_T0, END_T), ride=(0.5, 1.0 - SLOT_Y, 14.0), frac=SLOT_H), logo=dict(reflect=False))
 
 def _world_on_new_time(w):
     """The world's settings on the new medley's time: its look keys moved to the new times (blends scaled with
@@ -1724,17 +1857,17 @@ P3D = dict(
                                          _shaft([(P2, 19.2, 21.9, 0.35)], radius=1.0, color="#ffd8a0", top=22.0)]))),
     setup=_setup,
     bursts=_bursts_on_new_time(
-        [dict(t=LAND_T, strength=0.22, rise=0.05, fall=0.7, color="#ffd9a0", at=tuple(D0 + _v(0.0, 2.0, 0.0))),
-         dict(t=BREATH_END, strength=0.6, rise=0.06, fall=0.45, color="#ffd9a0", at=tuple(A7 + _v(0.0, 6.0, 0.0))),
+        [dict(t=LAND_T, strength=0.1, rise=0.35, fall=0.8, color="#ffd9a0", at=tuple(D0 + _v(0.0, 2.0, 0.0))),
+         dict(t=BREATH_END, strength=0.15, rise=0.4, fall=0.9, color="#ffd9a0", at=tuple(A7 + _v(0.0, 6.0, 0.0))),
          # THE LIFT: the sun of the glory flares warm as we launch out to the world (never white)
-         dict(t=ASC1 + 0.02, strength=0.32, rise=0.12, fall=0.9, color="#ffd2a0", radius=0.5,
+         dict(t=ASC1 + 0.02, strength=0.2, rise=0.12, fall=0.9, color="#ffc890", radius=0.45,
               at=tuple(_asc_pos(ASC1) + 900.0 * _sun_dir()))]
         + FINALE.bursts()),
     motion_blur=0.5,
     # true motion blur (the point sets drawn at several moments of the shutter) through the fast moves where no
     # person is on screen (a body asked at several moments of a frame re-simulates its garments: very slow); the
     # carries past people are slow enough for the shutter's own streaks at 60 fps
-    motion_samples=_samples_on_new_time([(6.85, 8.6, 6), (44.3, 48.2, 5), (49.0, 50.8, 4)]),
+    motion_samples=_samples_on_new_time([(6.85, 8.6, 6), (43.65, 48.2, 5), (49.0, 50.8, 4)]),
 )
 
 

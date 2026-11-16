@@ -978,17 +978,17 @@ class CardLife:
         hy, fh = self._wrap(self.hy + self.hv * tau, self.hh)
         hx = self.hx + 0.35 * np.sin(0.6 * tau + self.hs[:, 0] * TAU)
         hp = c[None] + hx[:, None] * rt[None] + hy[:, None] * up[None]
-        hsize = 0.30 + 0.22 * self.hs[:, 1]
+        hsize = 0.34 + 0.26 * self.hs[:, 1]
         rot = np.stack([0.3 * np.sin(0.7 * tau + self.hs[:, 2] * 6.0),
                         0.35 * np.sin(0.9 * tau + self.hs[:, 3] * 6.0)], 1)
-        a_h = env * fh * (0.75 + 0.25 * self.hs[:, 2])
+        a_h = env * fh * (0.85 + 0.15 * self.hs[:, 2])
         # the glow behind the card: a slow breath (about 5 s)
         br = 0.5 + 0.5 * np.sin(TAU * tau / 5.2 - 1.2)
         g = env * (0.045 + 0.035 * br)
         return [dict(pos=sp, size=0.05 + 0.06 * self.ss_, color=self.scol, alpha=0.55 * a_sp, emit=1.3, kind="spark",
                      twinkle=0.9, seed=self.ss_, dof=0.0, reflect=False, streak=0.0),
                 dict(pos=hp, size=hsize, color=self.hcol, alpha=a_h, kind="heart", rot=rot, seed=self.hs[:, 0],
-                     paint=0.85, paint_light=0.35, dof=0.0, reflect=False, streak=0.0),
+                     paint=1.0, paint_light=0.3, dof=0.0, reflect=False, streak=0.0),
                 dict(pos=hp, size=hsize * 3.0, color=self.hcol * 0.6, alpha=0.05 * a_h, kind="soft", dof=0.0,
                      reflect=False, streak=0.0),
                 dict(pos=(c + 0.6 * up)[None], size=14.0, color=self.glow[None], alpha=np.array([g]), kind="soft",
