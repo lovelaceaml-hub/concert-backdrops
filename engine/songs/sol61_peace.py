@@ -173,6 +173,8 @@ def setup(scene):
 
 # Gentle colour transitions instead of the two zero-duration look switches in v6.
 film.LOOK_KEYS[:]=[(a,b,1.4 if len(k)<3 or k[2]==0 else k[2]) for k in film.LOOK_KEYS for a,b in [k[:2]]]
+film.P3D['world']['look']=[(k[0],k[1],1.4) if len(k)>2 and k[2]==0 else k
+                            for k in film.P3D['world']['look']]
 film.TITLES['end_card'].update(t_out=62.0,backdrop=None,veil=0.65)
 film.P3D.update(setup=setup,motion_blur=0.6)
 # The baseline setup builds all Body layers before returning. Retain the soft body grain with no twinkle.

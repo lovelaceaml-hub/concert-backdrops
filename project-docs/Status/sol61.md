@@ -63,3 +63,5 @@ Final encode checks, render cost and remaining limitations are recorded after th
 
 - 2026-11-16: isolated v6 worktree created; notice posted on PR #55; baseline downloaded; campaign copy and repository design guidance read.
 - 2026-11-16: independent score construction, moving-shot edit, all nine acting changes and complete-picture finish implemented. Framing stills, a 60 fps Apology clip and a 1080p60 Compliment clip rendered locally. A first render pass was stopped to improve tonal compatibility before the final run.
+
+- 2026-11-16: final audit found that the finale helper copied the world look list. Corrected the two remaining zero-duration colour switches in the actual P3D world configuration. The current local run replaces those two 84-frame windows; a fresh render uses the corrected configuration directly.
