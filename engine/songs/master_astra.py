@@ -42,7 +42,7 @@ EXPOSURE = _base.EXPOSURE
 
 SEC = [LEAD + s for s in (0.25, 6.84, 13.30, 19.85, 26.79, 33.36, 40.21, 49.47)]
 BREATH_END = LEAD + 42.51
-FINAL_HIT = LEAD + 58.11
+FINAL_HIT = 58.11
 LAND_T = LEAD + 6.15        # the drop touches the sea (a bar start of the first song)
 RELEASE_T = LEAD + 2.50     # Mother's hands let the drop go (a hit, once the music has swelled in)
 OPEN_FULL = 7.0             # the opening title is whole and still until here (Anthony: at least 7 s)
