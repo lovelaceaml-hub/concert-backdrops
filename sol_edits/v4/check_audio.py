@@ -46,7 +46,7 @@ def check(video,score_path,tail_seconds):
 
 if __name__=='__main__':
     p=argparse.ArgumentParser();p.add_argument('--video',type=Path)
-    p.add_argument('--score',type=Path,default=ROOT/'work/sol3/sol-v3-score.wav')
+    p.add_argument('--score',type=Path,default=ROOT/'work/sol4/Nine-Colours-original-medley.wav')
     p.add_argument('--tail-seconds',type=float,default=1)
-    p.add_argument('--out',type=Path,default=ROOT/'work/sol3/nine-colors/audio-check.json')
+    p.add_argument('--out',type=Path,default=ROOT/'work/sol4/audio-check.json')
     a=p.parse_args();r=check(a.video,a.score,a.tail_seconds);a.out.write_text(json.dumps(r,indent=2)+'\n');print(json.dumps(r,indent=2))

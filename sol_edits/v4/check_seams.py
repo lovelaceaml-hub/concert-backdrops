@@ -6,11 +6,11 @@ from pathlib import Path
 
 ROOT=Path(__file__).resolve().parents[2]
 sys.path.insert(0,str(ROOT))
-from sol_edits.v3.render import S,make_renderer,frame
+from sol_edits.v4.render import S,make_renderer,frame
 
 
 def main():
-    out=ROOT/'work/sol3/nine-colors'
+    out=ROOT/'work/sol4'
     expected={}
     for path in sorted(out.glob('part-*.hashes.json')):
         expected.update(json.loads(path.read_text()))
