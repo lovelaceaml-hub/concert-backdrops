@@ -1,7 +1,8 @@
 """Build Sol's seven-source score. Media stays in work/sol61, never in git.
 
-Pitch-preserving tempo maps: 156, 156, 156, 104, 104, 104, 156 bpm.
-The two tempo families share a 3:2 pulse. Source offsets are on measured beats.
+The first six excerpts map measured groups to 156 or 104 bpm, sharing a 3:2
+pulse. The final orchestral coda keeps its faster cadence and release instead
+of forcing the final decay onto that grid. Source offsets are on measured beats.
 The opening three sources share B flat; the final four share C. Pitch shifts
 are limited to three semitones and preserve formants with ffmpeg Rubber Band.
 The last orchestral chord excites a deterministic hall response, with no new

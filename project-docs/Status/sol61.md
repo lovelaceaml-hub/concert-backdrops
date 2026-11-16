@@ -6,7 +6,7 @@ This is an independent creative edit. It reuses the v6 scenery and brand assets,
 
 ## Creative treatment
 
-The musical arc is welcome, reconciliation, memory, blessing, generosity, conviction, celebration. Seven sources in order: 07, 04, 03, 05, 06, 11, 01. The first three share B flat; the final four share C, with a tonal lift at the blessing. Small formant-preserving pitch adjustments and local tempo adjustments join measured beat groups. The faster and slower sections share a 3:2 pulse. All six music overlaps are about 2.31 seconds. These are edited excerpts, not complete songs or a live concert arrangement.
+The musical arc is welcome, reconciliation, memory, blessing, generosity, conviction, celebration. Seven sources in order: 07, 04, 03, 05, 06, 11, 01. The first three share B flat; the final four share C, with a tonal lift at the blessing. Small formant-preserving pitch adjustments and local tempo adjustments join measured beat groups. The first six excerpts share a 3:2 pulse between faster and slower groups; the final orchestral coda keeps its faster cadence and release. All six music overlaps are about 2.31 seconds. These are edited excerpts, not complete songs or a live concert arrangement.
 
 The soundtrack starts after exactly two seconds of digital silence. The final selected orchestral attack feeds early reflections and a decaying hall response. It stops introducing attacks at 57.38 seconds and resonates through the close. A 0.3 second taper removes only the residual floor at the file boundary.
 
@@ -75,3 +75,17 @@ The people remain stylized particles. Small hand contacts are approximate. Cloth
 For this local delivery, two middle parts are reassembled with corrected colour and Concession windows at CRF 16, which adds encode generations to retained middle frames. A clean run of the committed script draws the corrected timeline directly and does not need that repair.
 
 - 2026-11-16: full-size final inspection found the doorway and petals obscuring Concession. Their light now eases down while the phrase is read and returns as it leaves. Re-rendered global frames 1344 through 1538 for the local delivery.
+
+## Finished local delivery
+
+Final master: `work/sol61/Sol61-Concert-1080p60.mp4` (86,952,868 bytes). Review: `work/sol61/Sol61-Concert-review-720p60.mp4` (19,268,386 bytes). Both have audio, 62.000 seconds, 3720 decoded frames and 60/1 fps. Every one of the 3719 presentation intervals in each file is one 60 fps sample. Master audio and video both start at 0.000 and end at 62.000 seconds. The final encoded frame was inspected and is the deliberate cream release.
+
+All six join picture sequences, the revised Concession view and the final eight seconds were inspected after assembly. The original Apology reach and stray kneeling foot are avoided by the new standing performance. Compliment uses the quieter paired response. Listening remains unverified for the reasons above.
+
+Main render: 33.6 minutes wall time; 104.9 summed worker-minutes including startup. Runtime: llvmpipe (LLVM 19.1.7), Mesa 25.0.7, Python 3.12, ffmpeg 7.1.5, five available CPU cores, four concurrent main render jobs. Previews, targeted repairs and encoding are additional.
+
+The source ranges and all replacement windows cover `[0,3720)` without overlap or gap. Raw checks at frames 1488/1489 and 2976/2977 matched fresh independent renderer evaluation; the actual part headers were checked too. Final timing checks were repeated after the last repair.
+
+The master SHA-256 is `61b573651f22c25a996298a3655263c1ba613b16075dafd6584c197c02f63607`. The review SHA-256 is `7ff358f57593d10a158584d81ea201f7642ae273edb1d7aa3bfad07af028d0f2`.
+
+Draft PR: https://github.com/lovelaceaml-hub/concert-backdrops/pull/56 . Findings posted on the coordination thread. A private draft release upload returned HTTP 401 at GitHub's upload host; no media was uploaded, and the empty draft release was removed. The finished files remain in the task workspace and are linked in the chat delivery. No media is committed. No workflow was invoked or anything merged.
