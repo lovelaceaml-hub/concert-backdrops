@@ -31,7 +31,8 @@ official logo. The closing card rests on a warm cream and peach field.
 
 The camera, garden, light paths, drop, scene timing and score are new. The
 encouragement scene uses two newly staged standing women to avoid the source
-kneel exposing a disconnected-looking shin. Reviewed
+kneel exposing a disconnected-looking shin. Consideration uses two standing men
+with an offered hand, avoiding an awkward leg extension in the helping-up pose. Reviewed
 performances from songs.master_astra are reused as cast assets, transformed and
 retimed without changing the shared acting implementation. This is not a claim
 that the engine, brand assets or human performances were created from scratch.
@@ -87,8 +88,8 @@ old parts and manifest aside together before regenerating changed input.
 
 ## Checks and limits
 
-The raw frame probe compares twelve 1080p frames near three part boundaries and
-within the new standing encouragement scene in
+The raw frame probe compares fifteen 1080p frames near three part boundaries and
+within both new standing scenes in
 sequential and shuffled fresh processes. The encoded-file checker inspects all
 frame timestamps and native frame hashes, half-second motion differences and
 jitter, the seven part joins, audio clipping, lead silence, six quarter-second

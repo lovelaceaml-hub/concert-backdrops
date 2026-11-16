@@ -258,6 +258,23 @@ def standing_encouragement():
     return [beside,praying]
 
 
+def standing_consideration():
+    """An offered hand and a grateful acknowledgement, with planted feet."""
+    from p3d.body import Body
+    people=[]
+    for j,(x,facing) in enumerate(((-.38,65),(.38,-65))):
+        gestures=[(36.35,39.65,'handshake',dict(side='R',to=(0,1.02,.10),
+                    grip=.3,ease=.9,over=0,antic=0)),
+                  (36.8,39.4,'nod',dict(period=2.8,amount=4,ease=.9))]
+        if j:
+            gestures.append((37.0,39.4,'hand_on_heart',dict(side='L',bow=3,ease=.9,over=0,antic=0)))
+        people.append(Body('man',at=(x,0),facing=facing,seed=51+j,
+            motion='stand',garment='tunic',points=70000,show=(35.8,40.2),fade=.5,
+            look='glitter',color='#f2a640' if j==0 else '#ffc664',
+            color2='#ffdc96' if j==0 else '#fff0c8',bright=1.45,gesture=gestures))
+    return people
+
+
 def setup(scene):
     cast=CAST._cast()
     scenes=[('greeting',CAST.P1,(8.3,12.7),(8,12)),
@@ -265,7 +282,6 @@ def setup(scene):
             ('embrace',CAST.P2,(15.0,22.2),(16,24)),
             ('concession',CAST.P3+np.array([-1,0,2]),(22.3,25.8),(24,28)),
             ('respect',CAST.P3b,(25.5,29.0),(28,32)),
-            ('consideration',CAST.P5,(35.0,39.2),(36,40)),
             ('compliment',CAST.P5b,(38.7,42.8),(40,44))]
     for name,origin,source,times in scenes:
         old_cam=CAST.CAMERA.state(sum(source)/2)
@@ -274,6 +290,8 @@ def setup(scene):
         scene.add('gentle '+name,Clear(Performance(cast[name],origin,source,times,yaw)),reflect=True)
     scene.add('gentle encouragement',Clear(Performance(standing_encouragement(),
               (0,0,0),(32,36),(32,36))),reflect=True)
+    scene.add('gentle consideration',Clear(Performance(standing_consideration(),
+              (0,0,0),(36,40),(36,40))),reflect=True)
     scene.add('opening hands',Clear(Performance(cast['hands0'],CAST.H0,(.8,7.6),(0,7.8),opening=True)),reflect=False)
     scene.add('the first kindness',Clear(OpeningDrop()),reflect=True)
     scene.add('nine petal cathedral',Clear(Garden()),reflect=True)

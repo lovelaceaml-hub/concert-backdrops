@@ -14,7 +14,7 @@ import time
 
 from render import ROOT, load
 
-FRAMES=[929,930,931,1859,1860,1861,2039,2040,2041,2789,2790,2791]
+FRAMES=[929,930,931,1859,1860,1861,2039,2040,2041,2279,2280,2281,2789,2790,2791]
 
 
 def worker(order, destination):
