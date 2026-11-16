@@ -4,19 +4,22 @@ Anthony selected the original saved Film 10 video and its music, asking for
 essentially the same film with the later model, animation, text and card upgrades.
 This version restores that film directly instead of restaging its concept.
 
-The reference is the Film 10 share copy from run 43734065813, whose source commit
-is `3d8dbc40e8a9cc7fe7b5f19f230f3fbd4af866f8`. `original.py` retains that exact
+The reference is the Film 10 render 1 share copy from run 43726203825, whose source commit
+is `d928ff9eafe02ac3150f0c646bdcc497fe5a7278`. `original.py` retains that exact
 shot/light source with a provenance header and ASCII dash normalization. Its
 historical cast builder and old card are overridden by `film.py` and `cast.py`.
 No old dark, fragmented or mixed-gender touching cast is instantiated.
 
 ## Retained from the preferred film
 
-- Original camera paths, sequence and geography: prism, lake chase, blue gate,
-  embrace helix, dancer orbit and half-loop, dive to hands, gratitude, two profiles,
-  prayer and musical breath, rising braid, nine lights arriving in morning.
-- Original comet paths, colours, light cues and music-section timing.
-- Original `audio/promo/concert-medley.mp3`, with a two-second quiet lead-in.
+- Original camera paths, sequence and geography through the spiral: prism, lake chase, blue gate,
+  embrace helix, dancer orbit and half-loop, dive to parent and child, gratitude, two profiles,
+  prayer and musical breath, rising braid, world of light becoming the campaign logo.
+- Original comet paths, colours, light cues and music-section timing. The finale
+  is the requested exception: globe, surrounding expression symbols and hearts,
+  then the official logo and card, as specified in PHASEB UPDATE 20.
+- Approved `audio/promo/concert-medley-leadin.mp3`, preserving the original
+  eight-song medley with its two-second quiet lead-in and gentle entry fade.
   No song is replaced, reordered, pitch shifted or tempo adjusted. The soundtrack
   is the original eight-section edit, superseding the earlier Astra seven-song
   requirement under the owner's latest choice of this exact film and music.
@@ -32,11 +35,11 @@ No old dark, fragmented or mixed-gender touching cast is instantiated.
 - Current exact expression wording, campaign-colour label pills and sharp type.
   All nine readings hold for at least 2.5 seconds. Just the first two readings
   move within the original chase/gate interval to clear the longer opening card.
-- Original particle date in the breath. It is a brief accent, not the sole event
-  information: the date/time also remain continuously in the signature.
+- No isolated date in the musical breath. Date/time stay in the signature and
+  full event cards, following PHASEB UPDATE 16.
 - Reflections appear on departure, after the main phrase has been read, through
   the engine's real mirror pass. This avoids reflected letters crossing the
-  reading during the low hand close-up. Reflection-only batches are implemented
+  reading during the parent-and-child approach. Reflection-only batches are implemented
   by this entry point's Layer subclass, with no shared renderer changes.
 - Current opening, fully readable through seven seconds; a smaller continuous
   corner signature; official-style end card, whole from 55 seconds to the end.

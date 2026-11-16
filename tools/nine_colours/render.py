@@ -49,6 +49,8 @@ def load():
 
         def _draw_batch(self,e,bi,b,cam,share,paint,blur,mirror,mask_on,boxk,win):
             if e.name.startswith('passing reflection ') and not mirror:return
+            if e.name.startswith(('word ','passing reflection ')):
+                b=dict(b,clear=False)
             return super()._draw_batch(e,bi,b,cam,share,paint,blur,mirror,mask_on,boxk,win)
 
     class UpdatedTitles(titles.Titles):
