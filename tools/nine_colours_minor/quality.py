@@ -1,7 +1,7 @@
 """Opt-in clean export of the approved Revision 3, without changing its edit.
 
-Render real 3840x2160 frames with no synthetic composite grain. Keep a lossless
-RGB intermediate so final delivery codecs can be compared without rerendering.
+Render real 3840x2160 frames with no synthetic composite grain. Preserve the
+floating-point composite until the direct 10-bit delivery encode.
 The approved renderer, media and shared engine sources are left intact.
 """
 import argparse
@@ -21,6 +21,9 @@ CHECKS = ROOT / 'work/nine_colours_quality'
 SIZE = (3840, 2160)
 FRAMES = 3960
 GRAIN = 'col += (n1+n2-1.0)*(1.15/255.0);'
+SAMPLE_TIMES = [0, 3, 10, 16, 21, 24.5, 29, 34.5, 39, 43, 49, 54.5,
+                55.8, 56.8, 57.8, 59, 62, 65.98]
+SAMPLE_FRAMES = {round(t * 60) for t in SAMPLE_TIMES}
 
 
 def renderer(size=SIZE):
@@ -30,12 +33,23 @@ def renderer(size=SIZE):
     if shaders.COMP_FS.count(GRAIN) != 1:
         raise RuntimeError('Pinned composite grain statement changed')
     shaders.COMP_FS = shaders.COMP_FS.replace(GRAIN, '// Clean export: no synthetic film grain.')
-    return Renderer(*size)
+    r = Renderer(*size)
+    # The original final target is 8-bit. Keep tone-mapped sky gradients in
+    # half-float through the cards, then transport RGB48 to the 10-bit encoder.
+    old_texture, old_framebuffer = r.t_out, r.f_out
+    r.t_out = r.ctx.texture(size, 3, dtype='f2')
+    r.f_out = r.ctx.framebuffer([r.t_out])
+    old_framebuffer.release()
+    old_texture.release()
+    return r
 
 
 def get_frame(r, index):
+    import numpy as np
     clock = index / 60 - LEAD_IN
-    return r.out.frame(clock, index - LEAD_IN * 60)
+    r.out.frame(clock, index - LEAD_IN * 60)
+    pixels = np.frombuffer(r.f_out.read(components=3, dtype='f2'), np.float16)
+    return np.clip(np.rint(pixels.astype(np.float32) * 65535), 0, 65535).astype('<u2').tobytes()
 
 
 def probe(path):
@@ -55,15 +69,26 @@ def worker(first, last, path):
                       P3D_CACHE=str(WORK / 'p3d-cache'))
     r = renderer()
     path.parent.mkdir(parents=True, exist_ok=True)
-    temp = path.with_suffix('.partial.mkv')
-    cmd = ['ffmpeg', '-v', 'error', '-y', '-f', 'rawvideo', '-pix_fmt', 'rgb24',
-           '-s', '3840x2160', '-r', '60', '-i', '-', '-an', '-c:v', 'libx264rgb',
-           '-crf', '0', '-preset', 'ultrafast', '-threads', '1', '-g', '60', str(temp)]
+    temp = path.with_suffix('.partial.mp4')
+    cmd = ['ffmpeg', '-v', 'error', '-y', '-filter_threads', '1', '-f', 'rawvideo',
+           '-pix_fmt', 'rgb48le', '-s', '3840x2160', '-r', '60', '-i', '-', '-an',
+           '-vf', 'scale=out_color_matrix=bt709:out_range=tv', '-c:v', 'libx265',
+           '-crf', '12', '-preset', 'medium', '-pix_fmt', 'yuv420p10le', '-tag:v', 'hvc1',
+           '-x265-params', 'pools=1:frame-threads=1:keyint=120:min-keyint=60:log-level=error',
+           '-color_primaries', 'bt709', '-color_trc', 'bt709', '-colorspace', 'bt709',
+           '-color_range', 'tv', '-movflags', '+faststart', str(temp)]
     ff = subprocess.Popen(cmd, stdin=subprocess.PIPE)
     started = time.process_time()
     try:
         for index in range(first, last):
-            ff.stdin.write(get_frame(r, index))
+            data = get_frame(r, index)
+            if index in SAMPLE_FRAMES or index in (first, last - 1):
+                import numpy as np
+                samples = CHECKS / 'source-frames'
+                samples.mkdir(parents=True, exist_ok=True)
+                np.savez_compressed(samples / f'frame-{index:06d}.npz',
+                                    rgb=np.frombuffer(data, '<u2').reshape(SIZE[1], SIZE[0], 3))
+            ff.stdin.write(data)
             if (index - first) % 30 == 0:
                 print(f'frame {index}: {time.process_time() - started:.1f} CPU s', flush=True)
     except BaseException:
@@ -73,10 +98,10 @@ def worker(first, last, path):
     finally:
         ff.stdin.close()
     if ff.wait():
-        raise RuntimeError('Lossless encoder failed')
+        raise RuntimeError('UHD encoder failed')
     info = probe(temp)
     if not info or int(info['nb_read_frames']) != last - first:
-        raise RuntimeError('Lossless range frame count mismatch')
+        raise RuntimeError('UHD range frame count mismatch')
     temp.replace(path)
     print(f'finished {path.name}: {last-first} frames', flush=True)
 
@@ -90,6 +115,7 @@ def manifest(parts):
     for directory in [ROOT / 'fonts', CLAUDE / 'assets']:
         paths += sorted(p for p in directory.rglob('*') if p.is_file())
     return dict(parts=parts, frames=FRAMES, fps=60, size=SIZE, synthetic_grain=False,
+                composite='float16', transport='rgb48le', codec='hevc-main10', crf=12,
                 hashes={str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest()
                         for p in paths})
 
@@ -105,7 +131,7 @@ def render_all(workers, parts):
 
     def part(i):
         first, last = FRAMES * i // parts, FRAMES * (i + 1) // parts
-        path = DEST / f'lossless-{i:02d}.mkv'
+        path = DEST / f'part-{i:02d}.mp4'
         info = probe(path)
         if info and int(info.get('nb_read_frames', 0)) == last - first:
             print(f'part {i}: reuse {last-first} frames', flush=True)
@@ -118,8 +144,8 @@ def render_all(workers, parts):
 
     with ThreadPoolExecutor(max_workers=workers) as pool:
         list(pool.map(part, range(parts)))
-    (CHECKS / 'lossless-parts.txt').write_text(''.join(
-        f"file '{DEST / f'lossless-{i:02d}.mkv'}'\n" for i in range(parts)))
+    (CHECKS / 'parts.txt').write_text(''.join(
+        f"file '{DEST / f'part-{i:02d}.mp4'}'\n" for i in range(parts)))
     print('All clean native 4K frames are complete.', flush=True)
 
 
@@ -137,7 +163,6 @@ def main():
     if not 1 <= a.workers <= 4 or not 1 <= a.parts <= 32:
         p.error('workers must be 1..4 and parts must be 1..32')
     if a.stills:
-        from PIL import Image
         size = SIZE if a.size == '4k' else (1920, 1080)
         r = renderer(size)
         a.outdir.mkdir(parents=True, exist_ok=True)
@@ -145,7 +170,10 @@ def main():
         for t in map(float, a.stills.split(',')):
             index = round(t * 60)
             data = get_frame(r, index)
-            Image.frombytes('RGB', size, data).save(a.outdir / f't{t:07.2f}.png')
+            subprocess.run(['ffmpeg', '-v', 'error', '-y', '-f', 'rawvideo',
+                            '-pix_fmt', 'rgb48le', '-s', f'{size[0]}x{size[1]}',
+                            '-i', '-', '-frames:v', '1',
+                            str(a.outdir / f't{t:07.2f}.png')], input=data, check=True)
             hashes[str(t)] = hashlib.sha256(data).hexdigest()
             print(f'clean frame {index}', flush=True)
         (a.outdir / 'hashes.json').write_text(json.dumps(hashes, indent=2) + '\n')

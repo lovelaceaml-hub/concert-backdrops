@@ -11,12 +11,14 @@ This is an image-quality export of the approved edit, not a new creative cut.
 - Disable the pinned composite shader's synthetic film grain in this wrapper
   only. The shared engine, its snapshot on disk and the approved renderer are
   not edited. Scene particles, stars, sparkles and materials stay intact.
-- Save lossless RGB render ranges, then make the one delivery encode directly
-  from them. No older compressed video is used as an image source.
+- Retain the final composite in half-float, then send 16-bit RGB directly to
+  the 10-bit encoder. This avoids prematurely rounding smooth sky gradients
+  to 8-bit. Exact RGB48 samples are saved losslessly for validation. No older
+  compressed video is used as an image source.
 - Encode HEVC Main 10 in an MP4 with the Apple-compatible hvc1 tag, BT.709 SDR,
   CRF 12 and no bitrate or file-size cap. This is a very high-quality lossy
-  delivery, not a mathematically lossless claim. The 10-bit encode preserves
-  conversion precision; the renderer still supplies 8-bit RGB, not HDR.
+  delivery, not a mathematically lossless claim. Half-float scene precision
+  feeds the 10-bit encode; the color and brightness remain SDR, not HDR.
 - Copy the approved master audio stream without another audio encode. The
   exact 66-second edit, music, camera, animation, effects, cards and wording
   remain unchanged.
@@ -34,6 +36,7 @@ already present, run from the repo root:
 python tools/nine_colours_minor/quality.py --stills 3,16,43,56.8,62
 python tools/nine_colours_minor/quality.py --all --workers 4 --parts 12
 python tools/nine_colours_quality/deliver.py
+python tools/nine_colours_quality/verify.py
 ```
 
 The input restoration procedure is in `tools/nine_colours_minor/README.md`.
@@ -55,7 +58,13 @@ noise removal across the image, not the old zero-pixel-change performance
 task. Native 4K frames at these five times match exactly in fresh forward and
 reverse processes.
 
-The full export must still pass frame counts, timestamps, lossless-source
+An additional precision check at 56.8 seconds compared the half-float final
+target with the old 8-bit target. Rounded to 8-bit for comparison, the largest
+channel difference was 1/255 and the mean was 0.0207/255. A sampled sky region
+retained 832 blue-channel levels at 10-bit versus 213 at 8-bit. This change
+prevents grain removal from exposing coarse gradient steps.
+
+The full export must still pass frame counts, timestamps, exact-source
 comparison, audio identity and visual checks before delivery. Final results
 and the single delivery link will be recorded here when complete.
 

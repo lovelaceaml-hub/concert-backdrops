@@ -1,7 +1,8 @@
-"""Deliver one clean native 4K master, with the approved audio stream copied.
+"""Join native 4K ranges and approved audio without another lossy encode.
 
 No bitrate cap or smaller viewing copy is applied. The owner requested only
-the highest quality version. CRF 12 preserves fine detail from lossless RGB.
+the highest quality version. The range renderer encodes CRF 12 directly from
+RGB48 frames, with the scene kept in floating point until that handoff.
 """
 import hashlib
 import json
@@ -15,21 +16,16 @@ AUDIO = ROOT / 'out/nine_colours_revision3/Film-10-Nine-Colours-Revision-3-1080p
 
 
 def run():
-    listing = WORK / 'lossless-parts.txt'
+    listing = WORK / 'parts.txt'
     if not listing.exists():
         raise SystemExit('Run tools/nine_colours_minor/quality.py --all first.')
     name = 'Film-10-Nine-Colours-Revision-3-HQ-4K60.mp4'
     dest = OUT / name
     temp = dest.with_suffix('.partial.mp4')
-    cmd = ['ffmpeg', '-hide_banner', '-y', '-filter_threads', '2',
+    cmd = ['ffmpeg', '-hide_banner', '-y',
            '-f', 'concat', '-safe', '0', '-i', str(listing), '-i', str(AUDIO),
            '-map', '0:v:0', '-map', '1:a:0']
-    cmd += ['-vf', 'settb=1/60,setpts=N,scale=out_color_matrix=bt709:out_range=tv',
-            '-c:v', 'libx265', '-preset', 'medium', '-crf', '12',
-            '-pix_fmt', 'yuv420p10le', '-tag:v', 'hvc1', '-x265-params',
-            'pools=3:frame-threads=2:keyint=120:min-keyint=60:log-level=error']
-    cmd += ['-r', '60', '-color_primaries', 'bt709', '-color_trc', 'bt709',
-            '-colorspace', 'bt709', '-color_range', 'tv', '-c:a', 'copy',
+    cmd += ['-c:v', 'copy', '-tag:v', 'hvc1', '-c:a', 'copy',
             '-t', '66', '-movflags', '+faststart', str(temp)]
     with (WORK / 'encode-4K.log').open('w') as log:
         subprocess.run(cmd, stdout=log, stderr=subprocess.STDOUT, check=True)
