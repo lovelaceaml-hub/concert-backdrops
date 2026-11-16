@@ -85,7 +85,7 @@ EXPOSURE = _base.EXPOSURE
 
 SEC = [LEAD + s for s in (0.25, 6.84, 13.30, 19.85, 26.79, 33.36, 40.21, 49.47)]
 BREATH_END = LEAD + 42.51
-FINAL_HIT = LEAD + 58.11
+FINAL_HIT = LEAD + 58.11                         # (set again from the new medley's map below)
 LAND_T = LEAD + 6.15        # the drop touches the sea (a bar start of the first song)
 RELEASE_T = LEAD + 2.50     # Mother's hands let the drop go (a hit, once the music has swelled in)
 OPEN_FULL = 7.0             # the opening title is whole and still until here (Anthony: at least 7 s)
@@ -221,9 +221,20 @@ class Warp:
         return (self(t + 0.01) - self(t - 0.01)) / 0.02
 
 
-# The new medley's cues against the film's own (new, old); identity until MEDLEY3's section map is in
-TIME_MAP = [(0.0, 0.0), (62.0, 62.0)]
+# The new medley (audio/promo/concert-medley7.mp3, MEDLEY3's SECTION-MAP) against the film's own cues: (new, old).
+# 0 to 2 s silence, the music fades in by 3.5; the title whole to 7.0; the dive lands on the 03 to 04 blend
+# (7.99); Greeting and Gratitude in 04; the dissolve into the Apology on 01's C minor downbeat (15.46); into the
+# river on the 01 to 08 blend (22.94); into the cathedral on the 08 to 11 blend (31.46); the help up inside 11;
+# the carry to the dancer on the 11 to 06 blend (40.81); the pearl gathers and bursts on 06's attack (45.17); we
+# break above the clouds on 06's cadence (47.19) and hover in the glory through the breath; THE LIFT (49.69):
+# out to the world, the symbols swirl through 07's climax and burst on its bar (52.76); the world becomes the logo,
+# the card is whole on the final cadence (55.11) and holds through the ring-out; one warm glow on the held final
+# chord (56.75).
+TIME_MAP = [(0.0, 0.0), (2.0, 2.0), (3.5, 3.5), (5.5, 5.5), (7.0, 7.0), (8.0, 8.15), (8.75, 8.84), (15.46, 15.3),
+            (22.94, 21.85), (31.46, 28.79), (37.35, 35.36), (40.81, 38.95), (43.8, 42.21), (45.17, 44.51),
+            (47.19, 47.64), (49.69, 49.2), (52.76, 52.22), (54.0, 53.85), (54.3, 54.15), (55.1, 54.95), (62.0, 62.0)]
 TW = Warp(TIME_MAP)
+FINAL_HIT = TW(56.75)                            # the held final chord (old time, for the glow)
 
 
 class Path(Move):
@@ -591,15 +602,15 @@ _REVEAL = dict(arrive="reveal", edge="right", soft=0.16, edge_glow=2.2)
 _PEN = dict(arrive="pen", nib=False)
 
 _SPECS = [
-    _w("Greeting", 9.0, 9.6, 12.1, 12.35, 0.46, 0.625, 7.0, 0.30, **_REVEAL),
-    _w("Gratitude", 12.4, 12.85, 15.35, 15.6, 0.36, 0.620, 7.0, 0.52, **_PEN),
-    _w("Apology", 15.75, 16.25, 18.75, 18.95, 0.46, 0.620, 7.0, 0.52, **_REVEAL),
-    _w("Inclusiveness", 18.95, 19.45, 21.95, 22.2, 0.46, 0.625, 7.0, 0.48, **_PEN),
-    _w("Concession", 22.55, 22.95, 25.45, 25.6, 0.46, 0.625, 7.0, 0.40, **_REVEAL),
-    _w("Respect", 25.65, 26.15, 28.65, 28.79, 0.46, 0.620, 7.0, 0.45, **_PEN),
+    _w("Greeting", 8.95, 9.35, 11.95, 12.15, 0.46, 0.625, 7.0, 0.30, **_REVEAL),
+    _w("Gratitude", 12.15, 12.52, 15.0, 15.2, 0.36, 0.620, 7.0, 0.52, **_PEN),
+    _w("Apology", 15.6, 16.0, 18.4, 18.6, 0.46, 0.620, 7.0, 0.52, **_REVEAL),
+    _w("Inclusiveness", 18.6, 19.0, 21.35, 21.55, 0.46, 0.625, 7.0, 0.48, **_PEN),
+    _w("Concession", 22.45, 22.85, 25.25, 25.45, 0.46, 0.625, 7.0, 0.40, **_REVEAL),
+    _w("Respect", 25.5, 25.95, 28.3, 28.5, 0.46, 0.620, 7.0, 0.45, **_PEN),
     _w("Encouragement", 29.5, 30.0, 33.3, 33.6, 0.46, 0.620, 7.0, 0.51, **_REVEAL),
-    _w("Consideration", 35.42, 36.0, 38.6, 38.85, 0.40, 0.620, 7.0, 0.44, **_PEN),
-    _w("Compliment", 38.95, 39.4, 41.9, 42.15, 0.45, 0.620, 7.0, 0.41, **_REVEAL),
+    _w("Consideration", 35.5, 35.85, 38.75, 38.9, 0.40, 0.620, 7.0, 0.44, **_PEN),
+    _w("Compliment", 38.95, 39.2, 42.0, 42.15, 0.45, 0.620, 7.0, 0.41, **_REVEAL),
 ]
 
 
@@ -1714,7 +1725,10 @@ P3D = dict(
     setup=_setup,
     bursts=_bursts_on_new_time(
         [dict(t=LAND_T, strength=0.22, rise=0.05, fall=0.7, color="#ffd9a0", at=tuple(D0 + _v(0.0, 2.0, 0.0))),
-         dict(t=BREATH_END, strength=0.6, rise=0.06, fall=0.45, color="#ffd9a0", at=tuple(A7 + _v(0.0, 6.0, 0.0)))]
+         dict(t=BREATH_END, strength=0.6, rise=0.06, fall=0.45, color="#ffd9a0", at=tuple(A7 + _v(0.0, 6.0, 0.0))),
+         # THE LIFT: the sun of the glory flares warm as we launch out to the world (never white)
+         dict(t=ASC1 + 0.02, strength=0.32, rise=0.12, fall=0.9, color="#ffd2a0", radius=0.5,
+              at=tuple(_asc_pos(ASC1) + 900.0 * _sun_dir()))]
         + FINALE.bursts()),
     motion_blur=0.5,
     # true motion blur (the point sets drawn at several moments of the shutter) through every fast move
