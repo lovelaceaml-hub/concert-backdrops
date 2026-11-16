@@ -17,6 +17,10 @@ O._bodies=lambda:build(O)
 # Only these first readings move to accommodate the seven-second opening.
 O._SPECS[0].update(t_in=5.1,t_read0=5.4,t_read1=7.9,t_out=8.05)
 O._SPECS[1].update(t_in=8.05,t_read0=8.4,t_read1=10.95,t_out=11.2)
+# Clear Apology before Inclusiveness begins, with a full 2.5 s reading.
+O._SPECS[2].update(t_read1=16.85,t_out=16.95)
+O._SPECS[5].update(t_out=30.25)
+O._SPECS[6].update(t_in=30.3)
 for spec in O._SPECS:
     spec.update(pill=True,sharp=1,bright=.9,halo=.3,sparkle=.025,leave='fade')
     spec['t_out']=min(spec['t_out'],spec['t_read1']+.30)
@@ -58,12 +62,12 @@ CAMERA.shutter=.6
 # Keep every original flight through the spiral. The requested world-to-logo
 # finale replaces only the old morning arch, beginning on the same music cue.
 CENTER=np.array([0.,18.,0.])
-CAMERA.moves[-1]=O.fly([(49.47,(0,62,100),CENTER),(50.5,(9,24,34),CENTER),
+CAMERA.moves[-1]=O.fly([(49.47,(0,21,28),CENTER),(50.5,(6,20,25),CENTER),
                        (51.5,(5,20,24),CENTER),(53,(0,18,23),CENTER),
                        (60,(-1,18.3,24),CENTER)],blend=0,ease='out',fov=50,aperture=0,focus=24)
 O.CAMERA=CAMERA
 FINALE=BR.Finale(pos=tuple(CENTER),radius=4.2,camera=CAMERA,look='night',
-    t_world=49.47,spin=5,front=-40,shrink=.52,
+    t_world=48.7,spin=5,front=-40,shrink=.52,
     hearts=dict(t0=49.8,t1=51.8,n=27),t_settle=(50.8,52),t_logo=(51.3,52.8),
     bloom=dict(t=52.7,strength=.10,glow=.6),look_after='pastel',blend=1.2,
     end=dict(t=(52.8,53.4),ride=(.5,.862,14),frac=.157),
@@ -160,7 +164,9 @@ WORLD['light']=dict(O.WORLD['light'],rays=.06,
 WORLD['look']=[k for k in O.WORLD['look'] if k[0]<49.47]
 P3D=dict(O.P3D,camera=CAMERA,world=FINALE.world(O.WORDS.world(WORLD)),
     setup=setup,clear=reading_clear,motion_blur=.6,motion_samples=1,
-    bursts=[dict(b,strength=min(b['strength'],.6)) for b in O.P3D['bursts'][:-1]]+FINALE.bursts())
+    bursts=[dict(b,strength=min(b['strength'],.6)) for b in O.P3D['bursts'][:-1]]+FINALE.bursts()+[dict(t=49.47,strength=.18,rise=.15,fall=.65,color='#fff1de',at=tuple(CENTER),radius=.35)])
+# The opening hit keeps its sparks; its broad flash must not cover the card.
+P3D['bursts'][0]['strength']=0.0
 TITLES=dict(opening=dict(t_end=7.1,dissolve=.1,y=.30,palette='night'),
     signature=dict(windows=[(7.1,54.8,'bl','night')],fade=.25,protect=dict(keep=0)),
     end_card=dict(t_in=54.5,fade=.5,scale=1,backdrop=True,veil=.65,ambient_motes=True))
