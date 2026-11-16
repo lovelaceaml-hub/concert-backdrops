@@ -8,6 +8,13 @@ os.environ.update(SONG='dot_full',OUT_FPS='60',FEATURES=os.environ.get('FEATURES
     LIBGL_ALWAYS_SOFTWARE='1',LP_NUM_THREADS='1',OPENBLAS_NUM_THREADS='1',MESA_SHADER_CACHE_DIR=str(OUT/'mesa'),NUMBA_CACHE_DIR=str(OUT/'numba'))
 sys.path.insert(0,str(ROOT/'engine'))
 spec=importlib.util.spec_from_file_location('songs.dot_full',Path(__file__).with_name('film.py'));m=importlib.util.module_from_spec(spec);sys.modules[spec.name]=m;spec.loader.exec_module(m)
+import titles
+class CleanOpening(titles.Titles):
+    def _op_points(self,t,front):
+        if t>=8.:return []
+        gain=float(1-m.smooth(7.,8.,t))
+        return [((xy,size,rgba*gain),additive) for (xy,size,rgba),additive in super()._op_points(t,front)]
+titles.Titles=CleanOpening
 import render
 p=argparse.ArgumentParser();p.add_argument('--stills');p.add_argument('--range',nargs=2,type=int,default=[0,3720]);p.add_argument('--name',default='part');a=p.parse_args()
 R=render.Renderer(960,540)
