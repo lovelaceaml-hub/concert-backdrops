@@ -21,6 +21,13 @@ class Phrases:
                     if font.getlength(trial)>670*s and line:lines.append(line);line=word
                     else:line=trial
                 if line:lines.append(line)
+            reflow={
+                'Gratitude':['“Thank you.','It’s all thanks to you.','You’ve worked hard.”'],
+                'Apology':['“I’m sorry.','It must have been','hard on you.”'],
+                'Inclusiveness':['“It’s okay.','I understand.”']}
+            if expression['label'] in reflow:
+                lines=reflow[expression['label']]
+                assert ' '.join(lines)==' '.join(expression['lines'])
             x,y=round(.095*w),round(.27*h)
             for k,line in enumerate(lines):
                 d.text((x,y+k*77*s),line,font=font,fill='#272751',stroke_width=max(1,round(s)),stroke_fill='#fff2de')

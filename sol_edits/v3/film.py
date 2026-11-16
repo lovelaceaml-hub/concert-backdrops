@@ -44,7 +44,7 @@ def pose(t,j):
         return orbit(film.P1b,t,11.95,16.0,-26,19,5.8,4.5,2.3,1.45,sx=.68,sy=.65)
     if j==3:
         # The approach and embrace gain intimacy without a camera cut.
-        return orbit(film.P2,t,15.2,22.7,-37,32,5.6,3.8,2.0,1.65,sx=.64,sy=.63,height=1.12,fov=43)
+        return orbit(film.P2,t,15.2,22.7,-37,32,5.0,3.15,1.9,1.55,sx=.64,sy=.63,height=1.12,fov=43)
     if j==4:
         return orbit(film.P3,t,21.85,26.15,-25,21,8.4,6.3,2.6,1.4,sx=.62,sy=.64)
     if j==5:
@@ -242,7 +242,11 @@ def setup(scene):
 film.LOOK_KEYS[:]=[(a,b,1.4 if len(k)<3 or k[2]==0 else k[2]) for k in film.LOOK_KEYS for a,b in [k[:2]]]
 film.P3D['world']['look']=[(k[0],k[1],1.4) if len(k)>2 and k[2]==0 else k
                             for k in film.P3D['world']['look']]
-film.TITLES['signature']['windows']=[(a,b,c,'day') for a,b,c,p in film.TITLES['signature']['windows']]
+film.TITLES['signature']['windows']=[
+    (film.OPEN_FULL+.7,50.2,film.SIG_CORNER,'day'),
+    (49.6,film.BLOOM_T+.65,film.SIG_CORNER,'night'),
+    (film.BLOOM_T+.05,film.SIG_END,film.SIG_CORNER,'day')]
+
 film.TITLES['end_card'].update(t_out=63.0,backdrop=None,veil=0.65)
 film.FINAL_HIT=55.65
 film.P3D.update(setup=setup,motion_blur=0.75)
