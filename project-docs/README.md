@@ -7,3 +7,4 @@ Copied from the project's home (Anthony's Google Drive folder "Concert Backdrops
 - status/: each song's status (what exists, what is missing) and the engine builder's handoff (engine.md).
 - reviews/: Astra's attack reviews.
 Cloud sessions write their own status into project-docs/status/NN.md on their branch; the coordinator copies it back to Drive.
+- promo/: the promo masterpiece phase (2026-11-15 on). Start with promo/PROJECT-HANDBOOK.md (shared instructions for Claude and Codex), then promo/briefs/PHASEB.md (every owner direction), promo/handover/ (engine helpers and parked films), promo/medley/ (music section maps), promo/tools/ and promo/design/.
