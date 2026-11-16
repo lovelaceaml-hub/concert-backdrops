@@ -34,12 +34,13 @@ def frame(path, *, index=None, seconds=None):
 def run():
     path = OUT / 'Film-10-Nine-Colours-Revision-3-HQ-4K60.mp4'
     metadata = json.loads(subprocess.check_output([
-        'ffprobe', '-v', 'error', '-count_frames', '-show_streams',
+        'ffprobe', '-v', 'error', '-count_packets', '-show_streams',
         '-show_format', '-of', 'json', str(path)]))
     video = next(s for s in metadata['streams'] if s['codec_type'] == 'video')
     audio = next(s for s in metadata['streams'] if s['codec_type'] == 'audio')
     assert (video['width'], video['height']) == (3840, 2160)
-    assert video['nb_read_frames'] == '3960'
+    assert video['nb_read_packets'] == '3960'
+    assert video['nb_frames'] == '3960'
     assert video['avg_frame_rate'] == '60/1'
     assert video['pix_fmt'] == 'yuv420p10le'
     assert video['codec_tag_string'] == 'hvc1'
@@ -47,10 +48,11 @@ def run():
     assert abs(float(audio['duration']) - 66) < .001
     timestamps = json.loads(subprocess.check_output([
         'ffprobe', '-v', 'error', '-select_streams', 'v:0',
-        '-show_frames', '-show_entries', 'frame=best_effort_timestamp_time',
+        '-show_packets', '-show_entries', 'packet=pts_time',
         '-of', 'json', str(path)]))
-    times = np.array([float(f['best_effort_timestamp_time'])
-                      for f in timestamps['frames']])
+    # Packets arrive in decode order because of B frames. Their sorted PTS
+    # gives the presentation cadence; the full decode below checks every frame.
+    times = np.sort([float(f['pts_time']) for f in timestamps['packets']])
     assert len(times) == 3960
     timing_error = float(np.max(np.abs(times - np.arange(3960) / 60)))
     assert timing_error < .000002
@@ -58,10 +60,11 @@ def run():
     assert same_audio, 'Approved compressed audio packets changed'
 
     data = subprocess.check_output([
-        'ffmpeg', '-v', 'error', '-threads', '2', '-filter_threads', '1',
+        'ffmpeg', '-v', 'error', '-xerror', '-threads', '2', '-filter_threads', '1',
         '-i', str(path), '-an', '-vf', 'scale=160:90', '-pix_fmt', 'gray',
         '-f', 'rawvideo', '-'])
     small = np.frombuffer(data, np.uint8).reshape(-1, 90, 160).astype(np.int16)
+    assert len(small) == 3960, 'Decoded frame count mismatch'
     delta = np.abs(np.diff(small, axis=0)).mean(axis=(1, 2))
     duplicates = int(np.count_nonzero(delta == 0))
     assert duplicates == 0, 'Repeated frames found'

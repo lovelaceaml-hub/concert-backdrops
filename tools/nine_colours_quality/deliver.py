@@ -30,11 +30,11 @@ def run():
     with (WORK / 'encode-4K.log').open('w') as log:
         subprocess.run(cmd, stdout=log, stderr=subprocess.STDOUT, check=True)
     info = json.loads(subprocess.check_output([
-        'ffprobe', '-v', 'error', '-count_frames', '-show_streams',
+        'ffprobe', '-v', 'error', '-show_streams',
         '-show_format', '-of', 'json', str(temp)]))
     video = next(s for s in info['streams'] if s['codec_type'] == 'video')
     expected = (3840, 2160)
-    if (int(video['nb_read_frames']) != 3960 or
+    if (int(video['nb_frames']) != 3960 or
             video['avg_frame_rate'] != '60/1' or
             (video['width'], video['height']) != expected):
         raise RuntimeError('Delivery geometry or timing validation failed')
