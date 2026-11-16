@@ -10,7 +10,7 @@ from sol_edits.v3.render import S,make_renderer,frame
 
 
 def main():
-    out=ROOT/'work/sol3'
+    out=ROOT/'work/sol3/nine-colors'
     expected={}
     for path in sorted(out.glob('part-*.hashes.json')):
         expected.update(json.loads(path.read_text()))

@@ -8,7 +8,8 @@ import sys
 import time
 
 ROOT=Path(__file__).resolve().parents[2]
-OUT=ROOT/'work/sol3'
+OUT=ROOT/'work/sol3/nine-colors'
+SCORE=ROOT/'work/sol3/sol-v3-score.wav'
 
 
 def run_part(bounds):
@@ -55,15 +56,15 @@ def finish(S,bounds,report=None):
     result['photographic_finish']=json.loads(beauty.with_suffix('.cost.json').read_text())
     (OUT/'render-cost.json').write_text(json.dumps(result,indent=2)+'\n')
     duration=str(S.NFRAMES/S.FPS)
-    master=OUT/'Sol-V3-When-Love-Becomes-Light-1080p60.mp4'
-    command(['ffmpeg','-v','error','-y','-i',str(beauty),'-i',str(OUT/'sol-v3-score.wav'),
+    master=OUT/'Sol-V3-Nine-Colors-One-Love-1080p60.mp4'
+    command(['ffmpeg','-v','error','-y','-i',str(beauty),'-i',str(SCORE),
              '-map','0:v:0','-map','1:a:0','-c:v','copy','-c:a','aac','-b:a','320k','-t',duration,
-             '-metadata','title=Concert comparison - GPT-6.1 Sol V3','-movflags','+faststart',str(master)])
-    command(['ffmpeg','-v','error','-y','-i',str(master),'-i',str(OUT/'sol-v3-score.wav'),
+             '-metadata','title=Concert comparison - GPT-6.1 Sol V3 - Nine Colors, One Love','-movflags','+faststart',str(master)])
+    command(['ffmpeg','-v','error','-y','-i',str(master),'-i',str(SCORE),
              '-map','0:v:0','-map','1:a:0','-vf','scale=1280:720','-c:v','libx264','-threads','2',
              '-preset','medium','-crf','23','-pix_fmt','yuv420p','-fps_mode','passthrough',
-             '-c:a','aac','-b:a','160k','-t',duration,'-metadata','title=Concert review - GPT-6.1 Sol V3 - 60 fps',
-             '-movflags','+faststart',str(OUT/'Sol-V3-When-Love-Becomes-Light-review-720p60.mp4')])
+             '-c:a','aac','-b:a','160k','-t',duration,'-metadata','title=Concert review - GPT-6.1 Sol V3 - Nine Colors, One Love - 60 fps',
+             '-movflags','+faststart',str(OUT/'Sol-V3-Nine-Colors-One-Love-review-720p60.mp4')])
     print('finished',OUT,flush=True)
 
 

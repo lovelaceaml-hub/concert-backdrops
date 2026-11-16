@@ -9,7 +9,9 @@ class Phrases:
         self.w=w;self.h=h;self.film=film;self.layers=[];s=h/1080
         self.label=Image.new('RGBA',(w,h));ld=ImageDraw.Draw(self.label)
         lf=ImageFont.truetype(str(ROOT/'fonts/outfit-latin-500-normal.ttf'),round(17*s))
-        ld.text((.96*w,.965*h),'GPT-6.1 SOL',font=lf,anchor='rs',fill='#272751',stroke_width=max(1,round(s)),stroke_fill='#fff2de')
+        ld.text((.96*w,.965*h),'GPT-6.1 SOL',font=lf,anchor='rs',fill='#fff4de',stroke_width=0)
+        self.day_label=Image.new('RGBA',(w,h));dd=ImageDraw.Draw(self.day_label)
+        dd.text((.96*w,.965*h),'GPT-6.1 SOL',font=lf,anchor='rs',fill='#272751')
         font=ImageFont.truetype(str(ROOT/'fonts/cormorant-garamond-latin-600-italic.ttf'),round(68*s))
         for spec,expression in zip(film._SPECS,film.PW.EXPRESSIONS):
             layer=Image.new('RGBA',(w,h));d=ImageDraw.Draw(layer)
@@ -29,17 +31,18 @@ class Phrases:
                 lines=reflow[expression['label']]
                 assert ' '.join(lines)==' '.join(expression['lines'])
             x,y=round(.095*w),round(.27*h)
+            ink='#272751' if expression['label'] in ('Gratitude','Apology','Inclusiveness','Encouragement') else '#fff4de'
             for k,line in enumerate(lines):
-                d.text((x,y+k*77*s),line,font=font,fill='#272751',stroke_width=max(1,round(s)),stroke_fill='#fff2de')
+                d.text((x,y+k*77*s),line,font=font,fill=ink,stroke_width=0)
             yy=y+len(lines)*77*s+12*s
             d.line((x,yy,x+80*s,yy),fill=expression['color'],width=max(1,round(3*s)))
             # A soft cream halo follows the letters, leaving the scenery visible.
             mask=layer.getchannel('A').filter(ImageFilter.GaussianBlur(6*s))
-            glow=Image.new('RGBA',(w,h),'#fff4e6');glow.putalpha(mask.point(lambda q:round(q*.7)))
+            glow=Image.new('RGBA',(w,h),'#f4c887');glow.putalpha(mask.point(lambda q:round(q*.7)))
             glow.alpha_composite(layer)
             self.layers.append((spec,glow))
     def apply(self,image,t):
-        image=image.convert('RGBA');image.alpha_composite(self.label)
+        image=image.convert('RGBA');image.alpha_composite(self.day_label if t>54 else self.label)
         for spec,layer in self.layers:
             a,b=spec['t_in'],spec['t_out']
             if not a<=t<=b:continue

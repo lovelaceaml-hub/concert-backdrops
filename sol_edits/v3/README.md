@@ -1,66 +1,72 @@
-# When Love Becomes Light
+# Nine Colors, One Love
 
-GPT-6.1 Sol's third independent concert treatment, from v6 commit
-`b7895aef771f4dcdbb7a3383afeab235fd945b6e`. This responds to the owner's rejection
-of Sol V2 and subsequent direction to pursue beauty and emotion freely. It is an
-alternative for review, not a change to Claude's or Astra's films.
+GPT-6.1 Sol's independent 62 second concert film, from v6 commit
+`b7895aef771f4dcdbb7a3383afeab235fd945b6e`, on `compare/sol61-cinema-v3`.
 
-A warm light passes from person to person. A bow welcomes, an apology becomes an
-embrace, listening opens a garden, prayer fills a vast cathedral, a helping hand
-raises someone, and encouragement sends the light toward the world. The luminous
-Earth resolves into the campaign logo and invitation.
+The owner's chosen visual reference is Film 10, Nine Colours. Its existing share
+artifact from run `43734065813` was inspected directly. The new choreography is
+independently authored for Sol's current cast and timing; no Film 10 song code or
+competitor revision is imported into this edit.
 
-The environments now have detailed ivory architecture, magnolia gardens,
-reflective marble, cloud valleys and vast sunlit space. The locally animated
-people have shaded gold surfaces, opaque smoothed long-sleeved costumes and
-simulated cloth beneath their golden particle grain. A final photographic gold
-grade uses masks from the actual animated body and cloth geometry, giving the
-people more depth without recolouring the scenery, campaign words or logo. Camera orbits, dollies and
-an ascending crane replace the baseline whips. An output-space phrase treatment
-keeps the exact nine expressions readable without repeating large category pills.
-The approved opening, logo and end-card typography and event information remain.
+One white light becomes nine colours. The ribbons carry a welcome, gratitude,
+reconciliation, listening, prayer and practical kindness. A blue gateway opens,
+yellow and green surround an embrace, and all nine spiral upward into one light
+before illuminating the world and resolving into the campaign logo.
+
+This blends Film 10's comet journey, reflections and exhilarating braid with the
+new emotional direction: closer gold-figure acting, opaque flowing costumes,
+soft garden and cathedral atmosphere, controlled light, eased cameras and a real
+musical release. Detailed environment paintings support selected tender scenes;
+the braid is actual three dimensional light and clouds around a moving camera.
+
+All nine phrases retain their exact campaign wording. The approved logo, opening,
+signature, official-style end card and current event details remain. The opening
+reads from frame 0 for seven seconds; the complete end card reads for seven
+seconds and gently settles while the recorded final chord decays.
 
 ## Music
 
-The latest creative freedom is used to choose one continuous 60 second passage
-from the original full recording of concert Song 11, rather than another short
-seven-song compilation. There are no internal song joins, tempo changes or pitch
-shifts. The recording's final chord and recorded reverberation are retained.
+The owner's newest creative freedom is used to choose one continuous 60 second
+passage from original concert Song 11 rather than another seven-song compilation.
+There are no internal song joins, tempo changes or pitch shifts. The final chord
+and recorded reverberation are retained. No synthesized music, voiceover or
+ElevenLabs media is used.
 
 Source: the owner's original `11 Almighty God Who Knows Future.mp3`, Drive file
-`1tESu4rGGlTJwVpiMXiEA2UC0wA6r2Rf7`. The exact hash is in `assets.json`.
-Extract 203.026939 to 263.026939 seconds, add two seconds of silence, ease the first
-1.5 seconds of music in, and apply one fixed gain. Only the last 50 milliseconds of
-already quiet decoder noise is tapered. The final cadence is around film time
-55.6 seconds and the recording rings out to the end. No synthesized music,
-voiceover or ElevenLabs footage is used.
+`1tESu4rGGlTJwVpiMXiEA2UC0wA6r2Rf7`. Its exact hash is in `assets.json`.
+Extract 203.026939 to 263.026939 seconds, prepend two seconds of silence, ease the
+first 1.5 seconds of music in, and apply one fixed gain. Only the last 50
+milliseconds of already quiet decoder noise is tapered. The cadence falls around
+film time 55.6 seconds and the recording rings out to the end.
 
-## Assets and reproducibility
+## Assets and isolation
 
-All new code is here. No protected engine files are edited. The loader registers
-`songs.sol_v3` from this directory, imports the untouched v6 scene, and applies
-configuration to this render process only. It never writes into `engine/`.
+All new code is under `sol_edits/`. The loader registers `songs.sol_v3` from this
+directory, imports the untouched v6 scene and configures this process only. No
+protected engine file, competitor branch or workflow is edited. Nothing is
+merged and the paid GitHub Render workflow is never dispatched.
 
-Four new environment paintings were created with ChatGPT's image tool. Their
-production prompts are recorded in `environment-prompts.md`. The exact PNGs are
-in the local delivery archive `work/sol3/Sol-V3-environment-sources.zip`; their SHA256
-hashes are in `assets.json`. The paintings are animated projections, not generated
-video clips. Original 3D cameras, people, cloth, shadows, petals, rain, light trails
-and logo animation are rendered locally. Regenerating a prompt will not reproduce
-identical pixels; retain the exact archive for exact reconstruction.
+Four supporting environment paintings were created with ChatGPT's image tool.
+Their directions are in `environment-prompts.md`; exact PNG hashes are in
+`assets.json`. They are animated projections, not generated video clips. The
+people, cloth, contact shadows, ribbons, sparks, cloud flight, camera and logo
+animation are rendered locally. A final photographic gold grade uses masks from
+the actual animated body and cloth geometry, preserving scenery and brand colours.
 
-Drive upload of the separate source-art archive was blocked by automatic approval
-review because the owner's Drive delivery request covered finished videos. The
-archive remains local. Finished-video delivery is separate and authorized.
+The exact local source archive is `work/sol3/Sol-V3-environment-sources.zip`.
+Retain it for exact reconstruction; regenerating a prompt does not reproduce
+identical pixels. Automatic approval review blocked a separate Drive upload of
+this archive because the owner's Drive request covered finished videos. It stays
+local; finished-video delivery is separate and authorized.
 
-Never commit the source recording, paintings, fonts, features, caches or outputs.
+Never commit recordings, paintings, fonts, features, caches or rendered outputs.
 
-## Local build
+## Local construction
 
-Use the existing Python dependencies: numpy, scipy, librosa, moderngl, pillow,
-fonttools, brotli and soundfile. FFmpeg must be on PATH. Software EGL uses llvmpipe.
+Existing dependencies only: numpy, scipy, librosa, moderngl, pillow, fonttools,
+brotli and soundfile. FFmpeg must be on PATH. EGL uses llvmpipe.
 
-From the repository root, prepare the exact assets:
+From the repository root:
 
 ```bash
 python sol_edits/v3/prepare.py \
@@ -68,10 +74,9 @@ python sol_edits/v3/prepare.py \
   --environment-archive /path/to/Sol-V3-environment-sources.zip
 ```
 
-Install the three existing font families using Fontsource 5.3.0. Pack
-`@fontsource/cormorant-garamond@5.3.0`, `@fontsource/jost@5.3.0` and
-`@fontsource/outfit@5.3.0` with `npm pack`, extract each package into a separate
-subdirectory of `/tmp/fs`, then run:
+Pack `@fontsource/cormorant-garamond@5.3.0`, `@fontsource/jost@5.3.0` and
+`@fontsource/outfit@5.3.0` with `npm pack`. Extract each package into its own
+subdirectory of `/tmp/fs`, then:
 
 ```bash
 python tools/setup_fonts.py /tmp/fs fonts
@@ -81,44 +86,51 @@ python engine/analyze.py work/sol3/audio.wav work/sol3/features.npz
 source sol_edits/v3/env.sh
 ```
 
-Short previews retain the 60 fps shutter while sampling fewer frames:
+A timing preview samples fewer frames while retaining the final 60 fps shutter:
 
 ```bash
-python sol_edits/v3/render.py --range 0 3720 --step 4 --scale 0.6666667 \
-  --out work/sol3/preview-silent.mp4
+mkdir -p work/sol3/nine-colors
+python sol_edits/v3/render.py --range 0 3720 --step 4 --scale 0.5 \
+  --out work/sol3/nine-colors/preview-silent.mp4
 ```
 
-The final master uses every frame and the full 1920 by 1080 canvas:
+The final master renders every frame at 1920 by 1080:
 
 ```bash
-python sol_edits/v3/render_all.py > work/sol3/render-all.log 2>&1
+mkdir -p work/sol3/nine-colors
+python sol_edits/v3/render_all.py > work/sol3/nine-colors/render-all.log 2>&1
 ```
 
 This recomputes frame count from the song settings, requires 62 seconds at 60 fps,
-renders five exclusive ranges, concatenates them, grades every frame through
-locally rendered body masks, muxes the original score, and
-encodes a 1280 by 720 review at the same actual 60 fps. Audio comes directly from
-the source WAV in both encodes. Both MP4s use H.264, AAC and faststart for phones.
-Do not trigger GitHub's paid Render workflow.
+renders five exclusive ranges, checks each decoded range, concatenates them,
+grades all 3720 frames through locally rendered body masks, muxes the score, and
+encodes a 1280 by 720 review at the same actual 60 fps. Both audio encodes use the
+original WAV directly. MP4s use H.264, AAC and faststart for phones.
 
-## Checks
+Outputs are `work/sol3/nine-colors/Sol-V3-Nine-Colors-One-Love-1080p60.mp4` and
+`work/sol3/nine-colors/Sol-V3-Nine-Colors-One-Love-review-720p60.mp4`.
+
+`--mux-only` on `render_all.py` validates and finishes already completed ranges;
+it never dispatches cloud work.
+
+## Validation
 
 ```bash
-python sol_edits/v3/check_media.py work/sol3/Sol-V3-When-Love-Becomes-Light-1080p60.mp4 \
-  work/sol3/Sol-V3-When-Love-Becomes-Light-review-720p60.mp4
+python sol_edits/v3/check_media.py \
+  work/sol3/nine-colors/Sol-V3-Nine-Colors-One-Love-1080p60.mp4 \
+  work/sol3/nine-colors/Sol-V3-Nine-Colors-One-Love-review-720p60.mp4
 python sol_edits/v3/check_audio.py \
-  --video work/sol3/Sol-V3-When-Love-Becomes-Light-1080p60.mp4
+  --video work/sol3/nine-colors/Sol-V3-Nine-Colors-One-Love-1080p60.mp4
 python sol_edits/v3/check_seams.py
 python sol_edits/v3/inspect_motion.py \
-  work/sol3/Sol-V3-When-Love-Becomes-Light-review-720p60.mp4 \
-  --out work/sol3/motion-check.json
+  work/sol3/nine-colors/Sol-V3-Nine-Colors-One-Love-review-720p60.mp4 \
+  --out work/sol3/nine-colors/motion-check.json
 ```
 
-Media checks count decoded frames and timestamps. The seam check compares all 16
-boundary-adjacent raw scene frames against one independent ordered sampling pass.
-The photographic finish then processes all 3720 frames in one continuous pass,
-with an input-length guard and a decoded output frame-count check. Audio
-checks measure the exact silence, final decay and source-to-AAC alignment in six
-places. These checks do not judge beauty, natural acting or musical feeling.
+Checks count decoded frames and timestamps. All 16 boundary-adjacent raw scene
+frames are compared with an independent ordered sampling pass. The photographic
+finish processes every frame continuously with input-length guards. Audio checks
+measure the lead-in, natural decay and source-to-AAC alignment in six places.
+These checks do not judge beauty, acting or musical feeling.
 
-See `VALIDATION.md` for the reviewed result, actual render cost and limitations.
+See `VALIDATION.md` for the reviewed result, measured cost and remaining limits.

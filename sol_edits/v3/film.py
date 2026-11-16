@@ -1,4 +1,4 @@
-"""When Love Becomes Light: Sol V3's independent creative treatment from v6.
+"""Nine Colors, One Love: Sol V3's independent creative treatment from v6.
 
 One standing apology grows into an embrace; a gentle camera carries the light
 through listening, prayer and practical kindness into the world. All approved
@@ -30,7 +30,7 @@ def orbit(o,t,a,b,az0,az1,r0,r1,y0,y1,sx=.64,sy=.65,height=1.03,fov=43):
 
 
 def rise_y(t):
-    return 5+145*film.sc(44.35,49.15,t)
+    return 5+145*film.sc(44.55,49.1,t)
 
 
 def pose(t,j):
@@ -46,7 +46,7 @@ def pose(t,j):
         # The approach and embrace gain intimacy without a camera cut.
         return orbit(film.P2,t,15.2,22.7,-37,32,5.0,3.15,1.9,1.55,sx=.64,sy=.63,height=1.12,fov=43)
     if j==4:
-        return orbit(film.P3,t,21.85,26.15,-25,21,8.4,6.3,2.6,1.4,sx=.62,sy=.64)
+        return orbit(film.P3,t,21.85,26.15,-18,18,12.5,6.3,2.7,1.5,sx=.62,sy=.64,fov=48)
     if j==5:
         return orbit(film.P3b,t,25.3,29.6,29,-19,5.8,4.4,2.1,1.5,sx=.63,sy=.64)
     if j==6:
@@ -60,13 +60,17 @@ def pose(t,j):
         p=film.A7+v(8-3*u,3+2*u,18-6*u)
         return p,film.PEARL+v(0,.4,0),52
     if j==10:
-        u=film.sc(44.35,49.15,t)
-        az=np.radians(48+18*u)
-        p=film.A7+v(np.sin(az)*(18+10*u),rise_y(t),np.cos(az)*(18+10*u))
-        inward=film._unit(film.A7+v(0,p[1]+5,0)-p)
-        sun=film._unit(film.HV+v(0,.10,0))
-        q=p+80*film._unit(inward*(1-film.sc(46.4,49.0,t))+sun*film.sc(46.4,49.0,t))
-        return p,q,57
+        u=film.sc(44.55,49.1,t)
+        az=np.radians(23+160*u)
+        radius=13-(13-1.2)*film.sc(44.55,46.0,t)
+        p=film.A7+v(np.sin(az)*radius,rise_y(t),np.cos(az)*radius)
+        h=film._unit(v(-np.sin(az),0,-np.cos(az)))
+        beta=np.radians(5+77*film.sc(44.7,46.6,t))
+        forward=np.cos(beta)*h+np.sin(beta)*film.UP
+        turn=film.sc(48.0,49.1,t)
+        destination=film._unit(film.FIN_C-p)
+        forward=film._unit(forward*(1-turn)+destination*turn)
+        return p,p+80*forward,52+24*film.sc(44.8,47.0,t)
     u=film.sc(48.65,53.85,t)
     p=film._fin_cam(-26+42*u,-8+14*u,(4.45-.55*u)*film.FIN_R)
     drop=film._LOGO_DROP*film.sc(51.9,53.85,t)
@@ -75,7 +79,17 @@ def pose(t,j):
 
 def state(self, t, aspect=16/9, ref=None):
     p, q, fov = pose(t, shot_at(t) if SHOT is None else SHOT)
-    return CameraState(pos=p, target=q, fov=fov, aspect=aspect, aperture=0.015 if 8<t<42.5 else 0, focus=np.linalg.norm(q-p))
+    j=shot_at(t) if SHOT is None else SHOT
+    up=None
+    if j==10:
+        u=film.sc(44.55,49.1,t);az=np.radians(23+160*u)
+        h=film._unit(v(-np.sin(az),0,-np.cos(az)))
+        beta=np.radians(5+77*film.sc(44.7,46.6,t))
+        local_up=-np.sin(beta)*h+np.cos(beta)*film.UP
+        turn=film.sc(48.0,49.1,t)
+        up=film._unit(local_up*(1-turn)+film.UP*turn)
+    return CameraState(pos=p,target=q,up=up,fov=fov,aspect=aspect,
+        aperture=0.015 if 8<t<42.5 else 0,focus=np.linalg.norm(q-p))
 
 
 # Preserve object identity: words, logo, world and renderer share these rigs.
@@ -182,9 +196,10 @@ class Stage:
     def add(self,name,ps,**kw):
         # Replace the repeated foreground cloud curtain with authored depth.
         if name.startswith('word ') or name.startswith('clouds_') or name in ('river','crowd5','hearts5','tree','ahead','streaks') or name.startswith('hearts_'):return
-        if name in ('nave','door','petals3','palm_light0','pour0','trail0'):return
+        if name in ('nave','door','petals3','palm_light0','pour0','trail0','drop','burst0','pillar0','splash','ring','motes0'):return
         if name=='rain': ps=film._Fade(ps,lambda t:.48)
-        if name=='pillar7':ps=film._Fade(ps,lambda t:.65)
+        if name=='pillar7':ps=film._Fade(ps,lambda t:.35)
+        if name in ('gather','glory','fountain'):ps=film._Fade(ps,lambda t:.35)
         if name=='door':ps=film._Fade(ps,lambda t:.55)
         if name=='petals3':ps=film._Fade(ps,lambda t:.45)
         self.scene.add(name,Steady(ps),**kw)
@@ -195,21 +210,16 @@ film._cast=cast
 
 def setup(scene):
     _original_setup(Stage(scene))
-    from sol_edits.v3.effects import Arcade,Lotus,HeartPass,PrayerLights,LivingCanopy,Constellation,envelope
+    from sol_edits.v3.effects import HeartPass,PrayerLights,envelope
     from p3d import master_sky as MS
     C=cast()
-    scene.add('cathedral of light',film.Clear(Arcade(film.P4,28.3,30.0,count=4,span=5.7,height=8.5)),reflect=True)
-    scene.add('open way',film.Clear(Arcade(film.P3,21.7,26.5,count=4,span=3.6,height=5.8)),reflect=True)
-    scene.add('love canopy',film.Clear(LivingCanopy(film.P5b+v(-3,0,-3),38.1,43.4)),reflect=True)
-    scene.add('listening tree',film.Clear(LivingCanopy(film.P3b+v(-3,0,-4),25.2,29.7)),reflect=True)
-    for name,o,a,b,r in [('welcome',film.P1,8.3,13,1.4),('forgiveness',film.P2,19.4,23,1.4),
-                          ('prayer',film.P4,30.0,35.8,1.9),('joy',film.P5b,39.2,43,1.6)]:
-        scene.add('lotus '+name,Lotus(o,a,b,radius=r),reflect=True)
+    from sol_edits.v3.nine_lights import NineLights,LightGate
+    scene.add('nine colours, one love',NineLights(film,C,rise_y),reflect=True)
+    scene.add('the blue way opens',LightGate(film.P3),reflect=True)
     src=lambda t:C['embrace'][0].where(t,'heart')
     dst=lambda t:C['embrace'][1].where(t,'heart')
     scene.add('the light is accepted',film.Clear(HeartPass(src,dst,17.1,18.8)),reflect=True)
-    scene.add('prayers rise',film.Clear(PrayerLights(film.P4,29.9,36.2)),reflect=True)
-    scene.add('ascent currents',Constellation(film.A7,rise_y,film.NINE_GLOW),reflect=False)
+    scene.add('prayers rise',film.Clear(PrayerLights(film.P4,29.9,36.2,n=650)),reflect=True)
     # Each setting has its own banks, scale and light; foreground geometry gives parallax.
     stages=[(film.H0+v(0,-12,-35),-1,8.7),(film.P1,7.9,15.8),(film.P2,14.8,23.1),
             (film.P3,21.5,29.4),(film.P4,28.1,36.0),(film.P5,34.8,42.8),(film.A7,41.8,50.0)]
@@ -218,49 +228,45 @@ def setup(scene):
         for side in [-1,1]:
             for j in range(3):
                 banks.append(dict(center=tuple(o+v(side*(13+14*j),1+2*j,-18-24*j)),width=14+11*j,
-                                  height=4.5+3*j,n=180,bright=.70))
+                                  height=4.5+3*j,n=85,bright=.65))
         ps=MS.Billows(banks,gain=lambda t,a=a,b=b:envelope(t,a,b,1),seed=341+k,
                       top='#ffe9bd',warm='#efc284',rose='#dba7a0',lilac='#8b9fbd',core='#fff1d0',
-                      alpha=.006,body=.15,shade=.85,drift=(.22,0,0),sun_az=228)
+                      alpha=.025,body=.22,shade=.75,drift=(.22,0,0),sun_az=228)
         scene.add('cloud garden '+str(k),film.Clear(Steady(ps)),depth_of_field=True)
-    # Golden silk paths lead into each encounter and carry it toward the next.
-    from p3d.api import ribbon,lin
-    class GardenPaths:
-        def sample(self,t):
-            out=[]
-            for o,a,b in stages[1:-1]:
-                g=envelope(t,a,b)
-                if g<.001:continue
-                for side in [-1,1]:
-                    z=np.linspace(-34,10,180);x=side*(2.7+.035*(z+8)**2)
-                    p=o+np.stack([x,np.full(len(z),.04),z],1)
-                    out.append(ribbon(p,width=.012,color=lin('#ffdca0'),alpha=.20*g,emit=1.2,twinkle=0))
-            return out
-    scene.add('the way of light',film.Clear(GardenPaths()),reflect=True)
+    # True cloud layers give the ascending camera parallax inside the braid.
+    banks=[]
+    for level in [28,66,108,145]:
+        for side in [-1,1]:
+            banks.append(dict(center=tuple(film.A7+v(side*26,level,-8-12*side)),
+                width=31,height=16,n=85,bright=.65))
+    ps=MS.Billows(banks,gain=lambda t:envelope(t,44.2,49.5,.6),seed=571,
+        top='#ffe8bf',warm='#e7b28c',rose='#ce9ab4',lilac='#7886be',core='#fff0d6',
+        alpha=.028,body=.24,shade=.8,drift=(.12,0,0),sun_az=228)
+    scene.add('clouds inside the braid',Steady(ps),depth_of_field=True)
 
 # Gentle colour transitions instead of the two zero-duration look switches in v6.
 film.LOOK_KEYS[:]=[(a,b,1.4 if len(k)<3 or k[2]==0 else k[2]) for k in film.LOOK_KEYS for a,b in [k[:2]]]
 film.P3D['world']['look']=[(k[0],k[1],1.4) if len(k)>2 and k[2]==0 else k
                             for k in film.P3D['world']['look']]
 film.TITLES['signature']['windows']=[
-    (film.OPEN_FULL+.7,50.2,film.SIG_CORNER,'day'),
-    (49.6,film.BLOOM_T+.65,film.SIG_CORNER,'night'),
+    (film.OPEN_FULL+.7,film.BLOOM_T+.65,film.SIG_CORNER,'night'),
     (film.BLOOM_T+.05,film.SIG_END,film.SIG_CORNER,'day')]
-
 film.TITLES['end_card'].update(t_out=63.0,backdrop=None,veil=0.65)
 film.FINAL_HIT=55.65
 film.P3D.update(setup=setup,motion_blur=0.75)
-# Deep blue and champagne replace the uniform violet cloud wash.
-for name,colors in {'opening':('#223b68','#8c9cae','#efc894'),
-                    'shore':('#335c80','#9bb9c4','#f3d3a0'),
-                    'rain':('#293f70','#718da9','#cbbeb1'),
-                    'sunrise':('#54778d','#d7c8ae','#f5ce8a'),
-                    'river':('#426a84','#b5c9c7','#f0d4a5'),
-                    'cathedral':('#254d72','#6e99ae','#e9cca5'),
-                    'rivers':('#3a6682','#a9c8ca','#f6d8ab'),
-                    'breath':('#234c70','#7ca4ba','#f1d8b5')}.items():
+film.P3D['bursts']=[dict(b,strength=.25) if abs(b.get('t',-100)-film.BREATH_END)<.1 else b for b in film.P3D['bursts']]
+# Nine Colours is the visual spine: rich reflective blue, coloured light and warm dawn.
+for name,colors in {'opening':('#111b3e','#34406d','#b07c88'),
+                    'shore':('#151d40','#3f4279','#c7827a'),
+                    'rain':('#131a3f','#37376a','#986c80'),
+                    'sunrise':('#2b3757','#8b7c96','#f0b989'),
+                    'river':('#0d1d43','#1f4475','#8ca6c2'),
+                    'cathedral':('#1a1741','#524879','#b092b0'),
+                    'rivers':('#162242','#3b426f','#ce8c92'),
+                    'breath':('#172344','#4e4a78','#a1829e')}.items():
     look=film.P3D['world']['looks'][name]
-    look.update(sky_top=colors[0],sky_mid=colors[1],sky_hor=colors[2],stars=.06,milky=.02,bokeh=.10,dust=.12,water='#355d72',haze=.08,mist=.04,mirror=.5,rays=.08)
+    look.update(sky_top=colors[0],sky_mid=colors[1],sky_hor=colors[2],stars=.4,milky=.18,
+        bokeh=.12,dust=.16,water='#0b1530',haze=.12,mist=.06,mirror=.94,rays=.12)
 film.P3D['world']['react']=dict(beat=.12,level=.12)
 # Words become intimate phrases rather than repeated category cards.
 specs=[]

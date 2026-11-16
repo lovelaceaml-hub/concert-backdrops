@@ -115,13 +115,6 @@ class Surfaces:
                 ns=mesh_normals(points,tri)
                 self.prog['tint'].value=(.82,.67,.45)
                 self.draw_mesh(points,ns,tri,body,t)
-        if active:
-            origin=active[0].where(t,'ground')
-            points,normals,tris=self.atmosphere.petals(t,origin)
-            self.prog['coverage'].value=.75
-            self.prog['tint'].value=(.95,.82,.68)
-            packed=np.concatenate([points,normals],axis=1)[tris].astype('f4').reshape(-1,6)
-            self.buf.write(packed.tobytes());self.vao.render(moderngl.TRIANGLES,vertices=len(packed))
         self.layer._painted=True
         self.ctx.disable(moderngl.DEPTH_TEST)
         self.R.f_L.use();self.ctx.blend_func=(moderngl.ONE,moderngl.ONE)
