@@ -120,6 +120,11 @@ class Performance:
         source=self.source[0]+u*(self.source[1]-self.source[0])
         fade=float(window(a,b,t,.35))
         if a==0:fade=float(1-smooth(b-.7,b,t))
+        else:
+            # The camera leaves along the river. Dissolve the encounter before
+            # passing its stage, while the expression completes its read.
+            fade*=float(1-smooth(b-1.4,b-.7,t))
+        if fade<=.0001:return None
         out=[]
         for person in self.people:
             got=person.sample(float(source))
