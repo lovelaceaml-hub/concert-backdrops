@@ -351,13 +351,13 @@ def _cam_keys_s2():
     c0, c1, c2 = P2 + _v(-1.45, 1.62, 5.8), P2 + _v(-1.3, 1.6, 5.3), P2 + _v(-1.2, 1.55, 4.9)
     c3, c4, c5, c6 = (P2 + _v(-1.6, 1.55, 4.1), P2 + _v(-2.0, 1.52, 3.2), P2 + _v(-1.9, 1.5, 2.85),
                       P2 + _v(-1.85, 1.49, 2.7))
-    return [(15.3, c0, _aim(c0, kneel, 0.745, 0.72, F2)),               # the carry arrives, drifting in
-            (16.6, c1, _aim(c1, kneel, 0.745, 0.72, F2)),               # the two kneeling in the rain of light
-            (18.3, c2, _aim(c2, kneel, 0.76, 0.72, F2)),
-            (19.6, c3, _aim(c3, hold, 0.72, 0.70, F2)),                # with them as they rise
-            (20.6, c4, _aim(c4, hold, 0.70, 0.70, F2)),                # the embrace, her face over her shoulder
-            (21.85, c5, _aim(c5, hold, 0.70, 0.70, F2)),
-            (22.4, c6, _aim(c6, hold, 0.70, 0.70, F2))]
+    return [(15.3, c0, _aim(c0, kneel, 0.66, 0.72, F2)),               # the carry arrives, drifting in
+            (16.6, c1, _aim(c1, kneel, 0.66, 0.72, F2)),               # the two kneeling in the rain of light
+            (18.3, c2, _aim(c2, kneel, 0.67, 0.72, F2)),
+            (19.6, c3, _aim(c3, hold, 0.64, 0.70, F2)),                # with them as they rise
+            (20.6, c4, _aim(c4, hold, 0.62, 0.70, F2)),                # the embrace, her face over her shoulder
+            (21.85, c5, _aim(c5, hold, 0.62, 0.70, F2)),
+            (22.4, c6, _aim(c6, hold, 0.62, 0.70, F2))]
 
 
 RIVER_CALM = 25.4                     # the river calms behind Respect
@@ -387,13 +387,13 @@ def _cam_keys_s3():
 def _cam_keys_s4():
     two = P4 + _v(0.0, 0.62, 0.0)                  # the two kneeling: their heads at about 0.9 m
     c0, c1 = P4 + _v(-1.2, 1.3, 14.0), P4 + _v(-1.3, 1.0, 8.5)
-    def rot(v, deg=-26.0):            # the spiral lands us a little round to their left
+    def rot(v, deg=-22.0):            # the spiral lands us a little round to their left
         a = np.radians(deg)
         return _v(v[0] * np.cos(a) + v[2] * np.sin(a), v[1], -v[0] * np.sin(a) + v[2] * np.cos(a))
     c2, c3, c4 = P4 + rot(_v(-0.9, 1.0, 3.9)), P4 + rot(_v(-0.85, 0.98, 3.5)), P4 + rot(_v(-0.8, 1.05, 3.1))
     return [(28.79, c0, _aim(c0, two, 0.62, 0.73, 58.0)),           # wide: small people under the light
             (30.4, c1, _aim(c1, two, 0.62, 0.72, 52.0)),
-            (31.6, c2, _aim(c2, two, 0.67, 0.71, 48.0)),            # closer: the hand on the shoulder
+            (32.2, c2, _aim(c2, two, 0.67, 0.71, 48.0)),            # closer: the hand on the shoulder
             (33.6, c3, _aim(c3, two, 0.67, 0.71, 48.0)),
             (35.9, c4, _aim(c4, two + _v(0.0, 0.5, 0.0), 0.62, 0.66, 48.0))]   # drifting on as the carry begins
 
@@ -408,12 +408,12 @@ def _s4_make():
     r1 = float(np.hypot(keys[2][1][0] - P4[0], keys[2][1][2] - P4[2]))
 
     def f(t):
-        if t >= 31.6:
+        if t >= 32.2:
             return tail(t)
-        u = float(np.clip((t - 28.6) / (31.6 - 28.6), 0.0, 1.0))
+        u = float(np.clip((t - 28.6) / (32.2 - 28.6), 0.0, 1.0))
         e = 1.0 - (1.0 - u) ** 2 * (1.0 + 0.0 * u)          # quick at first, braking to rest
         e = e * e * (3.0 - 2.0 * e) * 0.35 + e * 0.65
-        a = np.radians(a1 + 62.0 * (1.0 - e))
+        a = np.radians(a1 + 45.0 * (1.0 - e))
         r = r1 + 15.0 * (1.0 - e) ** 1.4
         h = 1.0 + 1.8 * (1.0 - e) ** 1.2
         pos = P4 + _v(np.sin(a) * r, h, np.cos(a) * r)
@@ -651,7 +651,7 @@ _LOGO_DROP = 0.1624 * FIN_R * FIN_SHRINK / 0.3058     # the logo's middle stands
 FIN_LIFT = 0.17 * FIN_R                                # the world a little high in the picture (the corner)
 
 
-LIFT_END = 51.0                                  # the glide out to the world has arrived
+LIFT_END = 51.3                                  # the glide out to the world has arrived
 
 
 def _s8(t):
@@ -670,10 +670,10 @@ def _s8(t):
         # (the gaze tilts up and turns as we rise, then comes down onto the world)
         e = sc(ASC1 - 0.3, LIFT_END, t)
         b = float(np.sin(np.pi * e))                   # 0 at both ends
-        th = 0.5 * np.pi * e
+        th = 0.3 * np.pi * e
         pos = lerp(p_a, p_b, e) + 4.0 * b * _v(np.cos(th), 0.0, np.sin(th))
         q = lerp(q_a, tgt, sc(ASC1 - 0.2, LIFT_END - 0.4, t))
-        d = _slerp(_unit(q - pos), _unit(_v(np.cos(th + 1.2), 1.8, np.sin(th + 1.2))), 0.35 * b * b)
+        d = _slerp(_unit(q - pos), _unit(_v(np.cos(th + 1.2), 1.8, np.sin(th + 1.2))), 0.25 * b * b)
         return pos, pos + 30.0 * d
     if t < LOGO_T[0]:
         e = sc(LIFT_END, LOGO_T[0], t)
@@ -711,7 +711,67 @@ def _rig(focus):
     ], blend=0.6, fov=48.0, aperture=0.0, handheld=0.12, min_height=0.4)
 
 
-_LAYOUT = _rig(None)
+# Anthony for v10: never stop moving. While each moment is read the camera keeps travelling round it (a slow
+# orbit about the people or the light), eased in and out of every carry: no hold anywhere from 7 s to the end card.
+# (window start, window end, pivot, degrees a second); the turn starts from the composed view as the window
+# opens (no turning back first) and is given back during the carry out, where we are travelling anyway.
+ORBITS = [(10.3, 11.7, P1 + _v(0.0, 1.2, 0.0), 18.0),          # each turns the way the next carry goes
+          (13.0, 15.0, P1b + _v(0.0, 1.2, 0.0), -16.0),
+          (16.4, 18.9, P2 + _v(0.0, 1.0, 0.0), 10.0),
+          (20.7, 22.0, P2 + _v(0.0, 1.0, 0.0), -12.0),
+          (23.4, 25.2, P3 + _v(0.0, 1.2, 0.0), 12.0),
+          (27.2, 29.0, P3b + _v(0.0, 0.8, 0.0), -16.0),
+          (31.9, 35.0, P4 + _v(0.0, 0.6, 0.0), -8.0),
+          (36.3, 38.1, P5 + _v(0.0, 0.9, 0.0), 10.0),
+          (40.9, 43.4, P5b + _v(0.0, 1.1, 0.0), 12.0),
+          (47.4, 48.9, A7 + _v(0.0, 34.0, 0.0), 10.0)]
+
+
+def _orbit_tables():
+    t = np.arange(0.0, TOTAL + 2.0, 1.0 / 240.0)
+    out = []
+    for a, b, piv, w in ORBITS:
+        v = ss(a - 0.5, a + 0.3, t) * (1.0 - ss(b - 0.3, b + 0.5, t))
+        S = np.concatenate([[0.0], np.cumsum(0.5 * (v[1:] + v[:-1]) * np.diff(t))])
+        G = 1.0 - ss(b + 0.3, b + 2.0, t)
+        out.append((np.radians(w) * S * G, np.asarray(piv, np.float64)))
+    return t, out
+
+
+_ORB_T, _ORB = _orbit_tables()
+
+
+def _orbit_at(t):
+    """The orbit turns (angle, pivot) at t (at most one window is active at a time)."""
+    res = []
+    for th, piv in _ORB:
+        a = float(np.interp(t, _ORB_T, th))
+        if abs(a) > 1e-7:
+            res.append((a, piv))
+    return res
+
+
+class OrbitRig(Rig):
+    """The film's rig, turned round each moment's pivot while it is read (never a hold)."""
+
+    def __init__(self, inner):
+        self.__dict__.update(inner.__dict__)
+        self.inner = inner
+        self._table = None
+
+    def raw(self, t, ref=None, swing=True):
+        x = np.array(self.inner.raw(t, ref=ref, swing=swing), np.float64)
+        for a, piv in _orbit_at(float(t)):
+            c, s_ = np.cos(a), np.sin(a)
+            R = np.array([[c, 0.0, s_], [0.0, 1.0, 0.0], [-s_, 0.0, c]])
+            x[0:3] = piv + R @ (x[0:3] - piv)
+            x[3:6] = piv + R @ (x[3:6] - piv)
+            if len(x) >= 14:
+                x[11:14] = R @ x[11:14]
+        return x
+
+
+_LAYOUT = OrbitRig(_rig(None))
 
 
 def place(t, x, y, depth):
@@ -768,7 +828,7 @@ def _focus(t, default, ease=0.6):
     return np.asarray(default(t) if callable(default) else default, np.float64)
 
 
-CAMERA = _rig(_focus)            # on the film's own (old) time: what the scene's pieces look through
+CAMERA = OrbitRig(_rig(_focus))  # on the film's own (old) time: what the scene's pieces look through
 
 
 class WarpRig(Rig):
@@ -895,7 +955,7 @@ LOOKS["pastel"] = dict(BR.PASTEL, water=show("#f4e2d2") * 0.5, mirror=0.4, mirro
 
 LOOK_KEYS = [(0.0, "opening"), (7.6, "shore", 1.6), (SEC[2], "rain", 1.4), (19.6, "sunrise", 2.2),
              (SEC[3], "river", 1.4), (SEC[4], "cathedral", 1.6), (SEC[5], "rivers", 1.6), (SEC[6], "breath", 1.2),
-             (BREATH_END + 1.1, "ascent", 2.4), (HEAVEN_T - 0.5, "glory", 1.0), (ASC1 + 0.4, "heaven", 1.2)]
+             (BREATH_END + 1.1, "ascent", 2.4), (HEAVEN_T - 0.5, "glory", 1.0), (ASC1 + 0.5, "heaven", 2.2)]
 
 STAGES = [(8.4, P1), (12.3, P1b), (15.3, P2), (22.3, P3), (25.8, P3b), (28.79, P4), (35.36, P5), (38.9, P5b)]
 
@@ -1206,7 +1266,7 @@ def _cast():
     C["respect"] = acting.perform("Respect", 26.2, 28.8, at=(P3b[0], P3b[2]), view=_view(P3b, cam3b),
                                   variant="listen", style=dict(points=65000), style_a=dict(CRYSTAL),
                                   style_b=dict(GOLD), pre=0.9, post=0.3, seed=6.0)
-    cam4 = _cam_at_key(_cam_keys_s4(), 31.6)
+    cam4 = _cam_at_key(_cam_keys_s4(), 32.2)
     C["encouragement"] = _prayer_pair(P4, 29.6, 33.6, _view(P4, cam4))
     cam5 = P5 + _v(-0.8, 1.3, 6.0)
     C["consideration"] = _help_up(P5, 35.9, 38.9, _view(P5, cam5))
@@ -1474,7 +1534,7 @@ def _setup(scene):
     # the glory: a vast sea of golden-rose clouds that we rise through and then see from above, to the horizon
     glory = _cloud_sea(r2, A7, 10.0, 1500.0, 280, GLORY_Y, 46.0, 150.0, 1.0, hk=(0.26, 0.46))
     # (we rise through it: the puffs near the lens thin away, so it never whites out the picture or the corner)
-    glory_b = MS.Billows(glory, gain=_gain((0.0, 0.0), (43.6, 0.0), (44.9, 1.0), (ASC1 + 0.4, 1.0), (ASC1 + 1.2, 0.0),
+    glory_b = MS.Billows(glory, gain=_gain((0.0, 0.0), (43.6, 0.0), (44.9, 1.0), (ASC1 + 0.1, 1.0), (ASC1 + 1.6, 0.0),
                                            (TOTAL, 0.0)), seed=14, alpha=0.07, top="#ffd49a", warm="#ffa46c",
                          rose="#e8789c", lilac="#7a68c0", core="#ffe0b8", body=0.25, shade=0.55, sun_az=SUN_AZ)
     scene.add("clouds_glory", NearFade(glory_b, 28.0), depth_of_field=False)
@@ -1697,7 +1757,7 @@ def _setup(scene):
                                            (ASC1 + 0.4, 0.0), (TOTAL, 0.0))), reflect=False)
 
     # ---- the pearl bursts (06's attack), a fountain of light and a ring of the nine colours
-    scene.add("fountain", Clear(FX.Fountain(A7 + _v(0.0, 0.5, 0.0), BREATH_END, n=4000, colors=NINE_GLOW,
+    scene.add("fountain", Clear(FX.Fountain(A7 + _v(0.0, 0.5, 0.0), BREATH_END, n=2400, colors=NINE_GLOW,
                                             speed=(6.0, 16.0))), reflect=True)
     scene.add("ring9", NearFade(Clear(FX.ColorRing(A7, BREATH_END, NINE_GLOW, speed=18.0, reach=320.0)), 20.0))
 
@@ -1721,7 +1781,7 @@ def _setup(scene):
         cam = PW._cam_at(CAMERA, t)
         r, u, f = cam.basis()
         return np.asarray(cam.pos, np.float64) + 14.0 * f, r, u
-    scene.add("final_glow", MB.FinalGlow(card, FINAL_HIT, ring=0.04, glint=0.05), reflect=False)
+    scene.add("final_glow", MB.FinalGlow(card, FINAL_HIT, ring=0.075, glint=0.085), reflect=False)
     # the end card stays alive: sparkles and hearts drifting, a slow glow breath, settling to near stillness
     # over the last 1.5 s; the lettering pushes in with the picture (about 2 percent)
     scene.add("card_life", MB.CardLife(card, EC_IN + 0.3, TOTAL - 1.5), reflect=False, depth_of_field=False)
@@ -1836,11 +1896,11 @@ def _through_door(i, t0):
     x = 0.55 * (i - 3)
     A = P3 + _v(x, 1.0 + 0.12 * i, 4.2)
     B = P3 + _v(0.0, 1.25, -0.2)
-    Cc = P3 + _v(1.6 * x, 3.4, -9.0)
+    Cc = P3 + _v(2.5 * x, 16.0, -24.0)                # on up and away into the sky beyond
     Bc = 2.0 * B - 0.5 * (A + Cc)
 
     def f(t):
-        u = float(np.clip((t - t0) / 1.0, 0.0, 1.0))
+        u = float(np.clip((t - t0) / 1.6, 0.0, 1.0)) ** 1.6
         return (1 - u) ** 2 * A + 2 * u * (1 - u) * Bc + u * u * Cc
     return f
 
@@ -1877,7 +1937,7 @@ def _braid8(ph, k):
     flight, so their trails stream past on every side as we corkscrew up to the world."""
     def f(t):
         p, r_, u_, fw = _cam_frame(t)
-        a = 3.2 * t + ph
+        a = 2.2 * t + ph
         rad = 2.6 + 0.6 * (k % 3)
         return p + fw * (7.0 + 1.6 * (k % 4)) + r_ * (np.cos(a) * rad * 1.5) + u_ * (np.sin(a) * rad)
     return f
@@ -1902,19 +1962,21 @@ def _comet_heads(C):
         H[k].leg(LAND_T, LAND_T + 0.75,
                  (lambda t, dk=dk, k=k: D0 + dk * (0.6 + 18.0 * (1.0 - np.exp(-2.4 * max(t - LAND_T, 0.0))))
                   + _v(0.0, 0.35 + 0.25 * (k % 3) + 1.2 * max(t - LAND_T, 0.0), 0.0)), bi=0.0, bo=0.45)
-        H[k].leg(LAND_T + 0.85, 10.2, _rel(lambda t, k=k: 15.0 + 2.5 * (k % 3) + 3.0 * max(t - 9.0, 0.0),
+        H[k].leg(LAND_T + 0.85, 10.2, _rel(lambda t, k=k: 21.0 + 2.5 * (k % 3) + 3.0 * max(t - 9.0, 0.0),
                                            1.5 * (k - 4), -1.35 + 0.15 * (k % 3)), bi=0.4, bo=1.2)
     H[GREET].leg(8.95, 9.35, _pen_of("Greeting"), bi=0.35, bo=0.6)
+    H[GREET].leg(9.9, 11.9, _helix_at(P1, 2.2, 0.5, 2.0, 1.6, 0.0), bi=0.5, bo=0.8)
+    H[RESP].leg(10.1, 11.9, _helix_at(P1, 2.6, 0.7, 2.4, 1.6, np.pi), bi=0.6, bo=0.8)
     # Greeting to Gratitude: three ribbons stream past us and open the gold pour; the gold one writes
-    for i, k in enumerate((GREET, APOL, CONS)):
+    for i, k in enumerate((GREET, CONS)):
         H[k].leg(11.8, 12.45, _rel(lambda t: -3.0 + 15.0 * _sc_(11.8, 12.45, t), 0.8 * (i - 1), 0.4 * i - 0.2),
                  bi=0.3, bo=0.3)
         H[k].leg(12.5, 13.9, _helix_at(P1b, 1.7 + 0.35 * i, 0.4, 2.9, 2.0, 2.1 * i), bi=0.3, bo=1.0)
     H[GRAT].leg(12.15, 12.52, _pen_of("Gratitude"), bi=0.6, bo=0.5)
     H[GRAT].leg(12.9, 15.4, _helix_at(P1b, 1.3, 0.4, 2.8, 2.1, 0.0), bi=0.5, bo=0.8)
     # to the Apology: five ribbons sweep past us, low, into the rain of light
-    for i, k in enumerate((GREET, INCL, CONC, RESP, COMP)):
-        H[k].leg(14.6, 15.6, _rel(lambda t: -4.0 + 26.0 * _sc_(14.6, 15.6, t), 1.1 * (i - 2),
+    for i, k in enumerate((INCL, CONC, COMP)):
+        H[k].leg(14.6, 15.6, _rel(lambda t: -4.0 + 26.0 * _sc_(14.6, 15.6, t), 1.4 * (i - 1),
                                   -0.9 + 0.2 * (i % 2)), bi=0.3, bo=0.8)
     H[APOL].leg(15.6, 16.0, _pen_of("Apology"), bi=0.4, bo=0.6)
     # Inclusiveness: a double helix (yellow and green) wraps the two as they rise and embrace
@@ -1926,8 +1988,8 @@ def _comet_heads(C):
     H[ENC].leg(TUNNEL[0], TUNNEL[1], _tunnel, bi=0.5, bo=0.8)
     H[CONC].leg(22.45, 22.85, _pen_of("Concession"), bi=0.6, bo=0.5)
     for i, k in enumerate((GREET, GRAT, APOL, INCL, CONS, COMP, CONC)):      # through the door, each in turn
-        t0 = 23.5 + 0.24 * i
-        H[k].leg(t0, t0 + 1.0, _through_door(i, t0), bi=0.4, bo=0.5)
+        t0 = 24.0 + 0.22 * i
+        H[k].leg(t0, t0 + 1.6, _through_door(i, t0), bi=0.4, bo=0.3)
     # Respect: two ribbons circle each other slowly, listening, by the tree of light
     H[RESP].leg(25.5, 25.95, _pen_of("Respect"), bi=0.5, bo=0.5)
     for i, k in enumerate((RESP, CONC)):
@@ -2158,7 +2220,7 @@ P3D = dict(
     setup=_setup,
     bursts=_bursts_on_new_time(
         [dict(t=LAND_T, strength=0.1, rise=0.35, fall=0.8, color="#ffd9a0", at=tuple(D0 + _v(0.0, 2.0, 0.0))),
-         dict(t=BREATH_END, strength=0.15, rise=0.4, fall=0.9, color="#ffd9a0", at=tuple(A7 + _v(0.0, 6.0, 0.0))),
+         dict(t=BREATH_END, strength=0.08, rise=0.6, fall=1.0, color="#ffd9a0", at=tuple(A7 + _v(0.0, 6.0, 0.0))),
          # THE LIFT: the sun of the glory flares warm as we launch out to the world (never white)
          dict(t=ASC1 + 0.02, strength=0.2, rise=0.12, fall=0.9, color="#ffc890", radius=0.45,
               at=tuple(_asc_pos(ASC1) + 900.0 * _sun_dir()))]

@@ -107,12 +107,17 @@ class Comets:
             self._one(out, k, t, a, eye)
             if self.dim is not None and cam is not None:
                 for b in out[start:]:
-                    f = self.dim(np.asarray(b["pos"], np.float64).reshape(-1, 3), cam, t, k)
-                    if f is not None and f.min() < 0.999:
+                    P = np.asarray(b["pos"], np.float64).reshape(-1, 3)
+                    f = self.dim(P, cam, t, k)
+                    if b.get("pos2") is not None:      # a segment: its two ends and its middle (a long segment
+                        P2 = np.asarray(b["pos2"], np.float64).reshape(-1, 3)      # may span a word's box)
+                        f2 = self.dim(P2, cam, t, k)
+                        fm = self.dim(0.5 * (P + P2), cam, t, k)
+                        if min(f.min(), f2.min(), fm.min()) < 0.999:
+                            b["alpha"] = np.asarray(b.get("alpha", 1.0), np.float64) * np.minimum(f, fm)
+                            b["alpha2"] = np.asarray(b.get("alpha2", 1.0), np.float64) * np.minimum(f2, fm)
+                    elif f is not None and f.min() < 0.999:
                         b["alpha"] = np.asarray(b.get("alpha", 1.0), np.float64) * f
-                        if b.get("pos2") is not None:
-                            f2 = self.dim(np.asarray(b["pos2"], np.float64).reshape(-1, 3), cam, t, k)
-                            b["alpha2"] = np.asarray(b.get("alpha2", 1.0), np.float64) * f2
         return out or None
 
     def _one(self, out, k, t, a, eye):
