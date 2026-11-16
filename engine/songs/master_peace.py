@@ -73,7 +73,7 @@ from p3d.camera import Move, Rig  # noqa: E402
 from p3d import master_sky as MS  # noqa: E402
 from p3d import brand as BR  # noqa: E402
 
-AUDIO_FILE = "audio/promo/concert-medley-leadin.mp3"
+AUDIO_FILE = "audio/promo/concert-medley7.mp3"
 TOTAL = 62.0
 NFRAMES = int(round(TOTAL * FPS))  # noqa: F405
 MUSIC_END = 61.6
@@ -483,7 +483,7 @@ FIN_R = 9.0                                      # the Earth's radius (metres)
 FIN_SHRINK = 0.47
 FIN_C = A7 + _v(0.0, 172.0, 0.0) + HV * 90.0     # it hangs in the night above the glory
 FIN_T = 49.4                                     # it gathers (BR.Finale t_world)
-SWIRL = (49.6, LEAD + 50.22)                     # the symbols swirl round it; they burst on the hit at 52.22
+SWIRL = (49.25, LEAD + 50.22)                    # the symbols swirl round it from the lift; they burst on the bar
 HEARTS_T0, HEARTS_T1 = 50.5, 52.1
 SETTLE = (51.5, 53.0)
 LOGO_T = (SWIRL[1], 53.85)                       # world to logo, straight out of the burst
@@ -1263,9 +1263,9 @@ def _joy_crowd(places):
     places = np.asarray(places, np.float64)
     toward = np.degrees(np.arctan2(P5b[0] - places[:, 0], P5b[2] - places[:, 1]))      # each faces the dancer
     return Crowd(n=len(places), places=places, facing=toward,
-                 kinds=(("joy_clap", 1.5), ("joy_raise", 1.5), ("joy_up", 1.0), ("joy_heart", 0.6)),
-                 people=dict(woman=1.0, man=1.0, elder=0.2, child=0.2),
-                 start=dict(t=38.6, dur=0.8), act=dict(t=39.3, dur=1.4), until=42.3, fade=0.6, points=5200,
+                 kinds=(("joy_clap", 1.5), ("joy_raise", 1.4), ("joy_up", 1.0)),
+                 people=dict(woman=1.0, man=1.0),                      # six prototypes: a quick bake
+                 start=dict(t=38.6, dur=0.8), act=dict(t=39.3, dur=1.4), until=42.3, fade=0.6, points=4600,
                  color="#ffcf7a", color2="#fff1d6", bright=1.3)
 
 
@@ -1731,10 +1731,10 @@ P3D = dict(
               at=tuple(_asc_pos(ASC1) + 900.0 * _sun_dir()))]
         + FINALE.bursts()),
     motion_blur=0.5,
-    # true motion blur (the point sets drawn at several moments of the shutter) through every fast move
-    motion_samples=_samples_on_new_time([(6.8, 8.9, 6), (8.9, 9.6, 3), (11.6, 13.1, 3), (15.2, 29.0, 2),
-                                         (25.2, 26.9, 4),
-                                         (38.2, 39.7, 5), (41.6, 42.6, 3), (44.3, 48.2, 5), (49.0, 50.8, 4)]),
+    # true motion blur (the point sets drawn at several moments of the shutter) through the fast moves where no
+    # person is on screen (a body asked at several moments of a frame re-simulates its garments: very slow); the
+    # carries past people are slow enough for the shutter's own streaks at 60 fps
+    motion_samples=_samples_on_new_time([(6.85, 8.6, 6), (44.3, 48.2, 5), (49.0, 50.8, 4)]),
 )
 
 
