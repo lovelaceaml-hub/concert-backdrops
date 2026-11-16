@@ -883,7 +883,7 @@ def audio_metrics(samples, rate, issues, log, silence=0.0):
         t = k * 0.25
         prior = max(range(max(0, k-3), k), key=lambda j: abs(db[k]-db[j]))
         delta = db[k] - db[prior]
-        if t >= silence + 1.5 and t < end-1 and t-last_flag >= 0.75 and abs(delta) > 3 and max(db[k],db[prior]) > -45:
+        if prior * 0.25 >= silence + 1.5 and t < end-1 and t-last_flag >= 0.75 and abs(delta) > 3 and max(db[k],db[prior]) > -45:
             _issue(issues, "Audio level change", t, f"RMS change {delta:+.2f} dB across {(k-prior)*0.25:.2f} s; audition this passage")
             last_flag = t
     log.append(f"sample peak {20*np.log10(max(peak,1e-8)):.2f} dBFS; last-second RMS {tail:.2f} dBFS; not a listening audition")
