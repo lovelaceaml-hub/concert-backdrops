@@ -1,74 +1,35 @@
-# Film 10, opening and world revision
+# Film 10, Revision 3
 
-The owner chose the original Film 10, Nine Colours, and requested three focused
-changes to the previous additions: the centered reference opening with the
-sparkle explosion behind its words, a replacement for the Respect scene, and a
-clearly visible Earth with orbiting expression symbols before the final card.
+This isolated creative revision implements the owner's three requests after approving Revision 2:
 
-This version uses the original engine snapshot from
-`d928ff9eafe02ac3150f0c646bdcc497fe5a7278`, the source of render 1
-(run 43726203825). It does not use the rejected Restored film's scene code.
-Shared engine, song, acting, music and workflow files remain untouched.
+- The original nine colored comets flow into the luminous Earth. A continuous camera arc replaces the old finale cut. Each comet joins the path of its own expression symbol; the symbols orbit in three dimensions, pass behind the Earth, illuminate it and disperse as it becomes the logo.
+- All nine expressions use Claude Final v1's glowing capsule labels and cream Cormorant serif phrases, with its camera-facing placement and clean departures. Original reading times remain except small overlap corrections. Hoops and comets dim within the reading bounds.
+- Respect uses the reference's two warm gold women, refined offer/listen gestures, hair and garments, in a wider moving shot of the lantern lake. This replaces Revision 2's light flower.
 
-## Revised passages
+The approved six-second lead-in, opening card and burst, small signature, original concert medley and 66-second duration remain. The closing card is fully readable from 59 seconds through the last frame. Both delivery files are native 60 fps. The other original people, original aerial loop and pre-finale camera ride remain.
 
-- Opening: cream serif title and official logo over the original night lake.
-  The opening camera places the light and horizon below the lettering,
-  returning to the original path before Greeting. The centered card remains
-  fully readable until 7 s, then dissolves by 7.45 s
-  as Greeting arrives. A smooth, animated veil keeps the burst behind the words
-  legible without a cropped text-mask edge. Four extra seconds precede the
-  earlier delivered version, making the movie 66 s.
-- Respect: the two rim-lit profiles are replaced by two answering streams of
-  gold and lavender light, opening into nine luminous petals beneath the phrase.
-  The original Respect words and their timing remain. Comets and lanterns are
-  gated only in this passage, retaining each original entry's draw order and
-  render flags outside it.
-- Finale: a large blue/gold Earth appears against a night sky with all nine
-  expression symbols and colored orbit trails. It becomes the official heart
-  logo before the pastel closing card. The original arch and bright morning
-  burst are replaced in this passage so the globe remains visible.
-- Closing: the official coral/navy card is fully readable from 59 s through
-  the last frame. Pastel hearts drift at the edges over the moving lake.
+## Exact references
 
-The original camera paths, performances, word transformations, reflections and
-music remain outside the requested passages. The complete original clock moves
-by six seconds. The existing approved lead-in soundtrack receives four seconds
-of additional silence, with no tempo, gain or internal edit changes. The owner
-explicitly permitted extra opening time. This retains the selected Film 10
-soundtrack, including its final accent, rather than substituting a new medley.
+Film 10 render 1: run 43726203825, commit `d928ff9eafe02ac3150f0c646bdcc497fe5a7278`.
+Claude Nine Colours Final v1: run 43855882765, commit `f43f4514e4bc42dc25166e90160d98219f5a0db4`, share artifact 14222872749.
+Prior approved version: draft PR #70, commit `3c88a7942c381d07e77d1ff9f89dfb920200910d`.
 
-## Local reproduction
+The complete original render engine stays pinned. Claude's words, body/acting and symbol-orbit modules are read from a second private pinned snapshot in a separate Python package. Their public value types are mapped to the original renderer's API. This leaves every shared/protected song, acting, master, music and workflow file untouched. No paid services or workflow dispatch are used. The PR stays draft and unmerged.
 
-Install the engine's existing dependencies and fonts as documented in the
-project handbook. No paid service or GitHub Render workflow is used.
+## Reproduce locally
+
+From the repository root, with the existing fonts and Python dependencies:
 
 ```sh
-git fetch origin d928ff9eafe02ac3150f0c646bdcc497fe5a7278
 python tools/nine_colours_minor/prepare.py
+python tools/nine_colours_minor/render.py --stills 0,10,16,43,55.7,56.8,57.7,59 --outdir work/nine_colours_revision3/stills
 python tools/nine_colours_minor/check_fidelity.py
 python tools/nine_colours_minor/export.py --workers 4 --parts 8
-python tools/nine_colours_minor/verify.py out/nine_colours_revision2/Film-10-Nine-Colours-Revision-2-1080p60.mp4 out/nine_colours_revision2/Film-10-Nine-Colours-Revision-2-phone-720p60.mp4
+python tools/nine_colours_minor/verify.py out/nine_colours_revision3/Film-10-Nine-Colours-Revision-3-1080p60.mp4 out/nine_colours_revision3/Film-10-Nine-Colours-Revision-3-phone-720p60.mp4
 ```
 
-`prepare.py` reuses the private original snapshot under
-`work/nine_colours_minor/render1`. The wrapper imports only missing brand modules
-and the card renderer from the current checkout. Existing engine modules come
-from the pinned snapshot. Features remain on the original clock.
+`prepare.py` restores Git objects into `work/nine_colours_minor/render1` and `work/nine_colours_revision3/claude-final`. Fetch the two source commits if they are absent locally. It creates analyzed audio features and a 66-second PCM score: the approved lead-in track with four extra seconds of silence. It does not modify any audio source.
 
-Output: 66 seconds, 3960 native frames, H.264/AAC, 1080p60 master and 720p60 phone
-copy under `out/nine_colours_revision2/`. Render parts are reusable only if their
-input manifest and decoded frame counts match. Both video copies keep 60 fps.
+All private snapshots, caches, logs and validation files live under `work/`. Renders live under `out/nine_colours_revision3/`. Both folders are untracked. Clear Revision 3 caches by deleting its `work/nine_colours_revision3` folder, then run preparation again. Retain earlier output folders to keep previous deliveries. Export hashes its source, reference assets, fonts and score, and refuses to reuse parts after an input change.
 
-`check_fidelity.py` compares raw frames at 12 moments outside the intentionally
-revised passages against the original engine, with additions disabled. It also
-renders 16 final moments in forward and reverse order in fresh processes.
-`verify.py` checks encoded timing, repeated frames, chunk joins and audio levels.
-Neither check substitutes for visual review or claims that the new art is
-pixel-identical to the original movie.
-
-Private features, caches, stills, logs and reports are under
-`work/nine_colours_revision2/` and `out/nine_colours_revision2/`. Remove these two
-folders to clear this revision's generated files. The original engine snapshot
-in `work/nine_colours_minor/render1` is shared with the previous version; leave
-it in place unless clearing both versions. Never commit generated media.
+The fidelity script tests fresh-process forward/reverse render order. Creative changes intentionally alter pixels, so it does not claim equality with the previous video. `verify.py` checks duration, native frame rate, every timestamp, repeated frames, audio levels and release, and reports motion statistics for visual review. See VALIDATION.md for final evidence and limits.
