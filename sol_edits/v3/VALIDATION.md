@@ -75,7 +75,10 @@ base, including the corrected camera section and photographic finish, consumed
 grade consumed 1.49 CPU minutes and 0.95 wall minutes. The grand finale assembly,
 master mux and two-pass phone encode consumed 12.85 CPU minutes and 5.31 wall
 minutes. Their sum before the extra downloadable master encode is 141.58 CPU
-minutes. Peak native worker RSS was about 1.62 GiB.
+minutes. The smaller 1080p60 transfer encode adds 8.06 CPU minutes and 3.76 wall
+minutes, giving 149.63 CPU minutes across these production passes. Peak native
+worker RSS was about 1.62 GiB. The original master is 134400806 bytes, the
+downloadable 1080p60 copy is 88453800 bytes, and the review is 23307011 bytes.
 
 These figures describe the delivered direction's production passes. Earlier
 abandoned scene passes recorded about 55.85 CPU minutes before the owner chose
