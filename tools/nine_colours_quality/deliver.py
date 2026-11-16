@@ -25,7 +25,12 @@ def run():
     cmd = ['ffmpeg', '-hide_banner', '-y',
            '-f', 'concat', '-safe', '0', '-i', str(listing), '-i', str(AUDIO),
            '-map', '0:v:0', '-map', '1:a:0']
-    cmd += ['-c:v', 'copy', '-tag:v', 'hvc1', '-c:a', 'copy',
+    # x265 retained the matrix but omitted primaries/transfer in its VUI.
+    # Set those tags explicitly without touching encoded picture samples.
+    cmd += ['-c:v', 'copy', '-bsf:v',
+            'hevc_metadata=colour_primaries=1:transfer_characteristics=1:matrix_coefficients=1:video_full_range_flag=0',
+            '-color_primaries', 'bt709', '-color_trc', 'bt709', '-colorspace', 'bt709',
+            '-color_range', 'tv', '-tag:v', 'hvc1', '-c:a', 'copy',
             '-t', '66', '-movflags', '+faststart', str(temp)]
     with (WORK / 'encode-4K.log').open('w') as log:
         subprocess.run(cmd, stdout=log, stderr=subprocess.STDOUT, check=True)

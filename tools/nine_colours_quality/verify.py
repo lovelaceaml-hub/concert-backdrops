@@ -44,6 +44,8 @@ def run():
     assert video['avg_frame_rate'] == '60/1'
     assert video['pix_fmt'] == 'yuv420p10le'
     assert video['codec_tag_string'] == 'hvc1'
+    assert video['color_space'] == video['color_transfer'] == video['color_primaries'] == 'bt709'
+    assert video['color_range'] == 'tv'
     assert abs(float(video['duration']) - 66) < .001
     assert abs(float(audio['duration']) - 66) < .001
     timestamps = json.loads(subprocess.check_output([
