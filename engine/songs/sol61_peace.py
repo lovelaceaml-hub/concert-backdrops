@@ -161,6 +161,8 @@ class Stage:
     def add(self,name,ps,**kw):
         # No sparkling carpet behind Respect; the scene keeps its tree and mirror.
         if name in ('river','crowd5','clouds_dive','pillar7'): return
+        if name in ('door','petals3'):
+            ps=film._Fade(ps,lambda t: 1-0.88*film.sc(22.4,22.9,t)*(1-film.sc(25.45,25.65,t)))
         if name=='tree': ps=film.NearFade(ps,8)
         self.scene.add(name,Steady(ps),**kw)
 

@@ -65,3 +65,13 @@ Final encode checks, render cost and remaining limitations are recorded after th
 - 2026-11-16: independent score construction, moving-shot edit, all nine acting changes and complete-picture finish implemented. Framing stills, a 60 fps Apology clip and a 1080p60 Compliment clip rendered locally. A first render pass was stopped to improve tonal compatibility before the final run.
 
 - 2026-11-16: final audit found that the finale helper copied the world look list. Corrected the two remaining zero-duration colour switches in the actual P3D world configuration. The current local run replaces those two 84-frame windows; a fresh render uses the corrected configuration directly.
+
+## Limits of this review
+
+Visual inspection used dense frame sequences extracted from short encoded motion previews, including Apology, Compliment, the opening transition, the colour correction and the final eight seconds. This is stronger than isolated framing stills, but it is not a real-time playback review. The session explicitly rejected audio input, so listening to the six joins with their pictures was not possible. Musical flow, vocal phrase continuity and Rubber Band pitch-shift artifacts remain listening checks for the comparison, rather than claimed successes from envelope or key metrics.
+
+The people remain stylized particles. Small hand contacts are approximate. Cloth still interpolates 30 Hz snapshots; outputting 60 distinct camera and effect samples does not turn that into a 60 Hz simulation. Some natural star shimmer remains. The moving end card is deliberately calm.
+
+For this local delivery, two middle parts are reassembled with corrected colour and Concession windows at CRF 16, which adds encode generations to retained middle frames. A clean run of the committed script draws the corrected timeline directly and does not need that repair.
+
+- 2026-11-16: full-size final inspection found the doorway and petals obscuring Concession. Their light now eases down while the phrase is read and returns as it leaves. Re-rendered global frames 1344 through 1538 for the local delivery.
