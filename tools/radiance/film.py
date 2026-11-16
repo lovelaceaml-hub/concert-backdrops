@@ -49,6 +49,8 @@ for label,a,color in zip(PW.LABELS,STARTS,COLORS):
         face='fixed',facing=float(facing),arrive='reveal',edge='out',soft=.18,leave='fade',
         color=color,paint=False,tint=.40,bright=.85,halo=.25,sparkle=.025,
         pill=True,sharp=1,n='auto',n_label=4000))
+# Finish the final phrase before the ascending camera reaches its plane.
+SPECS[-1]['t_out']=43.1
 WORDS=PW.Words(SPECS,camera=CAMERA)
 
 
