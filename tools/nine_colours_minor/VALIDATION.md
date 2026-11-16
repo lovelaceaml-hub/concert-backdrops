@@ -1,5 +1,7 @@
 # Revision 3 validation
 
+Owner approved the delivered video on 2026-11-16 and requested preservation, documentation and upload. The approved source is `46df53b98a43f58e51a78d40ee5794108a68e13c`, archived by tag `film10-revision3-approved-2026-11-16`. Subsequent approval-documentation commits do not change the video or its checksums. PR #71 remains draft and unmerged.
+
 ## Provenance and scope
 
 Film 10 render 1 remains the base: d928ff9eafe02ac3150f0c646bdcc497fe5a7278, run 43726203825. The targeted reference is Claude Nine Colours Final v1, f43f4514e4bc42dc25166e90160d98219f5a0db4, run 43855882765, share artifact 14222872749. The actual share video was downloaded and inspected, including the typography, Respect pair and finale motion.

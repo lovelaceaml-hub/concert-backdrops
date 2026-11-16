@@ -1,5 +1,9 @@
 # Film 10, Revision 3
 
+Owner approved on 2026-11-16: "thats so good. save this and update all docs and upload". Preserve this cut as the approved Revision 3. The exact delivery source is `46df53b98a43f58e51a78d40ee5794108a68e13c`, saved as tag `film10-revision3-approved-2026-11-16`. PR #71 stays draft and unmerged; approval of the video is not permission to merge.
+
+Approved files: [phone 720p60](https://drive.google.com/file/d/1CBQ4OtpLW3Kp3zBWsEMkjXYiAWUwhDQw/view), [master 1080p60](https://drive.google.com/file/d/1gcxnb4Oyexq5Kbb8LvFWqOrikF-BVSht/view). Both are 66 seconds at native 60 fps. SHA-256 hashes and the completed checks are in VALIDATION.md. The shared approval record is `project-docs/promo/APPROVED-NINE-COLOURS-R3.md` on branch `docs/nine-colours-revision3-approved`.
+
 This isolated creative revision implements the owner's three requests after approving Revision 2:
 
 - The original nine colored comets flow into the luminous Earth. A continuous camera arc replaces the old finale cut. Each comet joins the path of its own expression symbol; the symbols orbit in three dimensions, pass behind the Earth, illuminate it and disperse as it becomes the logo.
