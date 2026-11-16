@@ -227,6 +227,28 @@ FINALE=BR.Finale(pos=(0,3.0,0),radius=2.35,camera=CAMERA,look='night',
                  logo=dict(reflect=False),n=45000)
 
 
+def standing_encouragement():
+    """A quiet same-gender prayer, with both feet planted and one-way contact.
+
+    The source kneel exposed a shin beyond its skirt in this camera angle.
+    These whole standing figures use the existing Body API without editing it.
+    """
+    from p3d.body import Body
+    common=dict(motion='stand',garment='dress',hair='tied',points=70000,
+                show=(31.8,36.2),fade=.5,look='glitter',bright=1.45)
+    praying=Body('woman',at=(.38,0),facing=-16,seed=47,
+        color='#ffc664',color2='#fff0c8',
+        gesture=[(32.15,35.85,'pray',dict(ease=.8,over=0,antic=0)),
+                 (32.5,35.8,'bow',dict(amount=5,ease=.9,over=0,antic=0))],**common)
+    beside=Body('woman',at=(-.25,-.04),facing=20,seed=48,
+        color='#f2a640',color2='#ffdc96',
+        gesture=[(32.4,35.7,'hand_on_shoulder',
+                  dict(side='L',to=lambda t: praying.where(t,'shoulder.R',raw=True),
+                       ease=.85,over=0,antic=0)),
+                 (32.8,35.6,'bow',dict(amount=5,ease=.9,over=0,antic=0))],**common)
+    return [beside,praying]
+
+
 def setup(scene):
     cast=CAST._cast()
     scenes=[('greeting',CAST.P1,(8.3,12.7),(8,12)),
@@ -234,7 +256,6 @@ def setup(scene):
             ('embrace',CAST.P2,(15.0,22.2),(16,24)),
             ('concession',CAST.P3+np.array([-1,0,2]),(22.3,25.8),(24,28)),
             ('respect',CAST.P3b,(25.5,29.0),(28,32)),
-            ('encouragement',CAST.P4,(29.5,33.8),(32,36)),
             ('consideration',CAST.P5,(35.0,39.2),(36,40)),
             ('compliment',CAST.P5b,(38.7,42.8),(40,44))]
     for name,origin,source,times in scenes:
@@ -242,6 +263,8 @@ def setup(scene):
         delta=np.asarray(old_cam.pos)-origin
         yaw=-np.degrees(np.arctan2(delta[0],delta[2]))
         scene.add('gentle '+name,Clear(Performance(cast[name],origin,source,times,yaw)),reflect=True)
+    scene.add('gentle encouragement',Clear(Performance(standing_encouragement(),
+              (0,0,0),(32,36),(32,36))),reflect=True)
     scene.add('opening hands',Clear(Performance(cast['hands0'],CAST.H0,(.8,7.6),(0,7.8),opening=True)),reflect=False)
     scene.add('the first kindness',Clear(OpeningDrop()),reflect=True)
     scene.add('nine petal cathedral',Clear(Garden()),reflect=True)
