@@ -7,6 +7,24 @@ from nine_reference_p3d.body import Body
 
 def install(film):
     original = film._bodies
+    # Final v1 carries the indigo thread above the pair, leaving their
+    # expressions and the offered hand clear throughout the listening moment.
+    def weave(t):
+        a = 2.4*t
+        return film.F6+np.array([.78*np.sin(a),1.95+.12*np.sin(2*a),
+                                -.30+.45*np.sin(2*a)])
+    for i, leg in enumerate(film.HEADS[film.RESP].legs):
+        if getattr(leg[2], '__name__', '') == '_weave6':
+            film.HEADS[film.RESP].legs[i] = (*leg[:2],weave,*leg[3:])
+    old_alpha = film.Comets._alpha
+
+    def alpha(self,k,t):
+        value = old_alpha(self,k,t)
+        if k == film.RESP:
+            value *= 1-.85*film._sc(35.1,35.6,t)*(1-film._sc(39.7,40.21,t))
+        return value
+
+    film.Comets._alpha = alpha
 
     def bodies():
         all_bodies = original()
