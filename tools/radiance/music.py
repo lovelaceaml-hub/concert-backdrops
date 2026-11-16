@@ -30,7 +30,7 @@ TEMPO = dict(s09=161.4990234375, s08=151.99908088235293,
 METER = dict(s09=2/3, s08=2/3, s04=2/3)
 PREFERRED = [22.0, 27.8, 39.0, 40.0, 39.0, 34.3]
 STARTS = [2.0 + 4 * BAR * i for i in range(7)]
-FINAL_CHORD = 57.5
+FINAL_CHORD = 60.2
 SOURCE_FINAL_CHORD = 55.145
 
 
@@ -132,7 +132,7 @@ def build():
             env *= np.cos(u*np.pi/2)
             bass_env *= np.cos(u*np.pi/2)**1.6
         else:
-            tail = np.cos(np.clip((tt-58.5)/3.3,0,1)*np.pi/2)**4
+            tail = np.cos(np.clip((tt-61.55)/.45,0,1)*np.pi/2)**2
             env *= tail
             bass_env *= tail
         bass = sosfiltfilt(lowpass, clip, axis=0)
@@ -169,8 +169,15 @@ def build():
         distance=np.abs(level_t-t)
         weight=np.maximum(weight,np.clip((2.5-distance)/.8,0,1))
     mix *= 10**(np.interp(times,level_t,gain*weight)[:,None]/20)
+    # The owner asked for a powerful finish. The final recording crescendos
+    # into its own resolved chord at 60.2 s, followed by a short natural release.
+    lift = np.interp(times, [0, 42, 49, 54, 59.9, 60.2, 62], [0, 0, 2, 3, 7, 7, 7])
+    mix *= 10**(lift[:,None]/20)
+    # A linked stereo soft knee catches the loudest peaks without hard clipping.
+    ceiling = 10**(-1.2/20)
+    mix = ceiling*np.tanh(mix/ceiling)
     peak = np.abs(mix).max()
-    global_gain = min(1, 10**(-2/20)/peak)
+    global_gain = min(1.15, 10**(-1.2/20)/peak)
     mix *= global_gain
     sf.write(WORK/'score.wav',mix,RATE,subtype='PCM_24')
     def level(a,b):return db(mix[round(a*RATE):round(b*RATE)])
@@ -178,6 +185,8 @@ def build():
     report = dict(title='The Light That Reaches You',duration=TOTAL,bpm=BPM,order=ORDER,cues=rows,
                   final_chord=FINAL_CHORD,global_gain=float(global_gain),
                   peak_dbfs=float(20*np.log10(np.abs(mix).max())),
+                  climax_rms_dbfs=level(59.5,60.7),middle_rms_dbfs=level(30,40),
+                  final_10ms_peak_dbfs=float(20*np.log10(max(np.abs(mix[-480:]).max(),1e-12))),
                   last_second_rms_dbfs=level(61,62),last_quarter_rms_dbfs=level(61.75,62),
                   lead_peak=float(np.abs(mix[:2*RATE]).max()),joins=joins,
                   validation='Measured source timing, chroma and level checks; not a listening audition.')

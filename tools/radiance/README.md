@@ -4,7 +4,10 @@ An independent 62-second Astra revision, built in the existing Python and
 moderngl engine. The owner selected Film 10, Nine Colours as the principal visual
 reference. White-cored coloured comets travel over a star-filled mirror lake,
 visit nine human encounters, pass through blue hoops, wrap the embrace in a
-double helix, then gather into a rising nine-colour braid. The colours reach a
+double helix, then gather into a rising nine-colour braid. The flight revision adds banked
+fly-bys over reflected words and a full climbing barrel roll through a 62 metre
+column of light. Camera direction is interpolated separately from position; a
+carried up vector prevents flips near the vertical. The colours reach a
 world of light that becomes the campaign logo and a living end card.
 
 The saved-film review is in
@@ -31,7 +34,10 @@ The independent seven-song edit is retained from the earlier Astra treatment:
 09, 08, 04, 05, 11, 01, 03. `music.py` rebuilds it from read-only concert clips,
 with a common 112 bpm pulse, pitch-preserving timing, harmonic excerpt selection,
 six 2.143-second overlaps, bass handoffs and controlled levels. Its final chord
-is at 57.5 seconds, with the tail settling by 61.8. No music is generated.
+is now at 60.2 seconds, with a crescendo and a brief release at the very end.
+The owner explicitly requested a loud finale, replacing the prior quiet ending.
+A linked stereo soft knee controls peaks. Nine colored fountains and comet arcs
+continue around the invitation. No music is generated.
 
 ## Local build
 
@@ -40,7 +46,7 @@ root:
 
 ```sh
 python tools/radiance/music.py
-python engine/analyze.py work/radiance/score.wav work/radiance/features.npz
+NUMBA_CACHE_DIR="$PWD/work/radiance/numba" python engine/analyze.py work/radiance/score.wav work/radiance/features.npz
 python tools/radiance/render.py --stills '1,10.5,22,30,41.5,47,50,57' --outdir out/radiance/stills
 python tools/radiance/probe.py
 python tools/radiance/export.py --workers 4 --parts 8
@@ -55,6 +61,15 @@ Private outputs are under `out/radiance/`. Audio, features, logs, the source
 manifest and caches are under `work/radiance/`; removing these folders clears
 only this revision's local products. No generated media or caches belong in Git.
 Do not dispatch the paid Render workflow.
+
+## Reflected words and the loud ending
+
+The latest owner direction replaces the handbook's earlier no-reflected-words
+and quiet-final-second rules for this independent film. Expressions now occupy
+fixed planes in the world. They hold for 2.6 seconds, then the camera banks over
+their true water reflections. The engine mirror pass draws those reflections.
+The final audio check requires a strong climax and a clean last 10 ms release,
+not a quiet final second. Both policies are explicit in the verification report.
 
 ## Review limits
 

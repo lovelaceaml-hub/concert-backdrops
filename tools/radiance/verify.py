@@ -87,6 +87,9 @@ def inspect(path):
                   audio_first_1_9_seconds_peak_dbfs=db(np.abs(audio[:91200]).max()),
                   audio_final_quarter_second_rms_dbfs=db(np.sqrt(np.mean(tail**2))),
                   audio_final_second_rms_dbfs=db(np.sqrt(np.mean(audio[-48000:]**2))),
+                  audio_last_10ms_peak_dbfs=db(np.abs(audio[round(61.99*48000):62*48000]).max()),
+                  audio_climax_rms_dbfs=db(np.sqrt(np.mean(audio[round(59.5*48000):round(60.7*48000)]**2))),
+                  ending_policy='Owner requested loud finale; verify last 10 ms release, not quiet final second',
                   audio_joins=audio_joins,
                   half_second_motion=motion,
                   busiest_motion_intervals=busiest,
@@ -99,7 +102,8 @@ def inspect(path):
                             and abs(float(sound['duration']) - 62) < .05
                             and len(audio) >= 62*48000
                             and exact_longest < 90 and result['audio_peak_dbfs'] < 0
-                            and result['audio_final_second_rms_dbfs'] < -45
+                            and result['audio_last_10ms_peak_dbfs'] < -40
+                            and result['audio_climax_rms_dbfs'] > -14
                             and result['audio_first_1_9_seconds_peak_dbfs'] < -90
                             and all(j['largest_quarter_second_jump_db'] <= 3 for j in audio_joins))
     return result
