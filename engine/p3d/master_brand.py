@@ -912,3 +912,116 @@ class FinalGlow:
                      kind="spark", twinkle=0.9, seed=self.s, dof=0.0, reflect=False),
                 dict(pos=ring, size=0.9, color=lin("#ffc890"), alpha=self.k_ring * env, kind="soft", dof=0.0,
                      reflect=False)]
+
+
+def still_clock(t, t_slow, dur=1.5, floor=0.12):
+    """A clock that runs at normal speed until t_slow, then eases down to `floor` of it over `dur` seconds (the
+    end card's motion settling to near stillness as the music fades)."""
+    if t <= t_slow:
+        return float(t)
+    u = min((t - t_slow) / dur, 1.0)
+    run = dur * (u - (1.0 - floor) * (u ** 3 - 0.5 * u ** 4))
+    if t > t_slow + dur:
+        run += (t - t_slow - dur) * floor
+    return float(t_slow + run)
+
+
+class CardLife:
+    """The end card stays alive to the last frame: soft sparkles of warm light and small hearts in the nine
+    colours drift slowly up through the pastel day round the card (the hearts keep to the margins, clear of the
+    text), a warm glow behind the card breathes slowly, and everything eases to near stillness over the last
+    1.5 s (still_clock). Never a flash, never dark, nothing over a letter (the card is drawn over the picture).
+
+    place(t) -> (centre, right, up): the card's middle and its picture plane in the world (camera-attached)
+    t0       when it begins (it fades in over about a second); t_slow: when the motion starts to settle
+    half     (half width, half height) of the picture at the card's depth, metres
+    colors   the hearts' display colours (painted true on the bright sky)"""
+
+    def __init__(self, place, t0, t_slow, half=(11.6, 6.5), colors=None, n_spark=320, n_heart=20, seed=88,
+                 glow="#ffdcae", margin=6.6):
+        from .api import show
+        r = np.random.default_rng(seed)
+        self.place, self.t0, self.t_slow = place, float(t0), float(t_slow)
+        self.hw, self.hh = float(half[0]), float(half[1])
+        self.sp = np.stack([r.uniform(-1.0, 1.0, n_spark) * self.hw, r.uniform(-1.0, 1.0, n_spark) * self.hh], 1)
+        self.sv = r.uniform(0.10, 0.32, n_spark)
+        self.ss_ = r.random(n_spark)
+        self.scol = lin("#fff1d8")[None] * (1 - self.ss_[:, None]) + lin("#ffd29a")[None] * self.ss_[:, None]
+        side = np.where(r.random(n_heart) < 0.5, -1.0, 1.0)
+        self.hx = side * r.uniform(margin, self.hw * 0.98, n_heart)
+        self.hy = r.uniform(-1.0, 1.0, n_heart) * self.hh
+        self.hv = r.uniform(0.14, 0.26, n_heart)
+        self.hs = r.random((n_heart, 4))
+        cols = colors or ["#EA5A5E", "#F2B25E", "#F6CE46", "#5ABA5A", "#62B2FA", "#667AF6", "#9E6AF6", "#EE62A6",
+                          "#EE8AA6"]
+        self.hcol = np.array([show(cols[i % len(cols)]) for i in range(n_heart)])
+        self.glow = lin(glow)
+
+    def _wrap(self, y, h):
+        """Positions that drift up forever: wrapped into -h..h, faded near the top and bottom (no pop)."""
+        yy = (y + h) % (2.0 * h) - h
+        return yy, np.clip((h - np.abs(yy)) / (0.22 * h), 0.0, 1.0)
+
+    def sample(self, t):
+        if t < self.t0 - 0.05:
+            return None
+        c, rt, up = (np.asarray(v, np.float64) for v in self.place(t))
+        tau = still_clock(t, self.t_slow) - self.t0
+        env = ss(self.t0, self.t0 + 1.2, t)
+        # sparkles: a slow rise, a little sway, twinkling; fewer in the middle of the card
+        sy, fy = self._wrap(self.sp[:, 1] + self.sv * tau, self.hh)
+        sx = self.sp[:, 0] + 0.18 * np.sin(0.5 * tau + self.ss_ * TAU)
+        sp = c[None] + sx[:, None] * rt[None] + sy[:, None] * up[None]
+        mid = np.clip((np.abs(sx) - 4.5) / 2.5, 0.25, 1.0)
+        a_sp = env * fy * mid * (0.35 + 0.65 * self.ss_)
+        # hearts: in the margins, rising and swaying, turning a little
+        hy, fh = self._wrap(self.hy + self.hv * tau, self.hh)
+        hx = self.hx + 0.35 * np.sin(0.6 * tau + self.hs[:, 0] * TAU)
+        hp = c[None] + hx[:, None] * rt[None] + hy[:, None] * up[None]
+        hsize = 0.30 + 0.22 * self.hs[:, 1]
+        rot = np.stack([0.3 * np.sin(0.7 * tau + self.hs[:, 2] * 6.0),
+                        0.35 * np.sin(0.9 * tau + self.hs[:, 3] * 6.0)], 1)
+        a_h = env * fh * (0.75 + 0.25 * self.hs[:, 2])
+        # the glow behind the card: a slow breath (about 5 s)
+        br = 0.5 + 0.5 * np.sin(TAU * tau / 5.2 - 1.2)
+        g = env * (0.045 + 0.035 * br)
+        return [dict(pos=sp, size=0.05 + 0.06 * self.ss_, color=self.scol, alpha=0.55 * a_sp, emit=1.3, kind="spark",
+                     twinkle=0.9, seed=self.ss_, dof=0.0, reflect=False, streak=0.0),
+                dict(pos=hp, size=hsize, color=self.hcol, alpha=a_h, kind="heart", rot=rot, seed=self.hs[:, 0],
+                     paint=0.85, paint_light=0.35, dof=0.0, reflect=False, streak=0.0),
+                dict(pos=hp, size=hsize * 3.0, color=self.hcol * 0.6, alpha=0.05 * a_h, kind="soft", dof=0.0,
+                     reflect=False, streak=0.0),
+                dict(pos=(c + 0.6 * up)[None], size=14.0, color=self.glow[None], alpha=np.array([g]), kind="soft",
+                     dof=0.0, reflect=False, streak=0.0)]
+
+
+def endcard_push(t0, t1, push=0.02):
+    """The end card's lettering pushes in slowly (scale 1 to 1 + push about the frame's middle), easing from rest
+    and settling to rest at t1: patches the TITLES end card's layers (engine/titles.py) from the song file, so no
+    shared file changes. Call once the renderer has loaded titles (the song's 3D setup)."""
+    import titles as _T
+    if getattr(_T.Titles, "_master_push", None):
+        return
+
+    def k_of(t):
+        u = min(max((t - t0) / max(t1 - t0, 1e-3), 0.0), 1.0)
+        return 1.0 + push * (0.5 - 0.5 * np.cos(np.pi * u))
+
+    def scaled(self, t, fn, *a):
+        if getattr(self, "ec", None) is None:
+            return fn(self, t, *a)
+        k = k_of(t)
+        keep = []
+        for L in (self.ec_layer, self.ec_veil):
+            x, y, w, h = L["rect"]
+            keep.append((L, L["rect"]))
+            L["rect"] = (0.5 + (x - 0.5) * k, 0.5 + (y - 0.5) * k, w * k, h * k)
+        try:
+            return fn(self, t, *a)
+        finally:
+            for L, r in keep:
+                L["rect"] = r
+    po, pp = _T.Titles.overlay, _T.Titles.protect
+    _T.Titles.overlay = lambda self, t: scaled(self, t, po)
+    _T.Titles.protect = lambda self, t: scaled(self, t, pp)
+    _T.Titles._master_push = True

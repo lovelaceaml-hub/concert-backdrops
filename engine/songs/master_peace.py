@@ -187,6 +187,45 @@ def _aim(pos, subject, sx, sy, fov=46.0):
     return tgt
 
 
+class Warp:
+    """The film's own timeline (its cues as built for v6, "old" time) played on the new medley's timeline: a
+    smooth monotone curve through anchors [(new, old), ...]. W(t_new) gives t_old; W.R(t_old) gives t_new.
+    Everything in the 3D layer (camera, point sets, world looks, bursts) runs on old time through it, so each
+    stretch of the film keeps its shape and simply lands on the new music's cues (MEDLEY3's section map)."""
+
+    def __init__(self, pairs):
+        pairs = sorted((float(a), float(b)) for a, b in pairs)
+        lo, hi = pairs[0], pairs[-1]
+        pairs = [(lo[0] - 20.0, lo[1] - 20.0)] + pairs + [(hi[0] + 20.0, hi[1] + 20.0)]
+        self.n = np.array([p_[0] for p_ in pairs])
+        self.o = np.array([p_[1] for p_ in pairs])
+        self.m = _pchip_1d(self.n, self.o)
+        tt = np.arange(self.n[1] - 4.0, self.n[-2] + 4.0, 1.0 / 480.0)
+        self._tn, self._to = tt, np.array([self(x) for x in tt])
+
+    def __call__(self, t):
+        t = float(t)
+        n, o, m = self.n, self.o, self.m
+        i = int(np.clip(np.searchsorted(n, t, side="right") - 1, 0, len(n) - 2))
+        h = n[i + 1] - n[i]
+        u = (t - n[i]) / h
+        h00, h10 = 2 * u ** 3 - 3 * u ** 2 + 1, u ** 3 - 2 * u ** 2 + u
+        h01, h11 = -2 * u ** 3 + 3 * u ** 2, u ** 3 - u ** 2
+        return float(h00 * o[i] + h10 * h * m[i] + h01 * o[i + 1] + h11 * h * m[i + 1])
+
+    def R(self, t_old):
+        return float(np.interp(float(t_old), self._to, self._tn))
+
+    def rate(self, t):
+        """How fast old time runs at new time t (1: as built)."""
+        return (self(t + 0.01) - self(t - 0.01)) / 0.02
+
+
+# The new medley's cues against the film's own (new, old); identity until MEDLEY3's section map is in
+TIME_MAP = [(0.0, 0.0), (62.0, 62.0)]
+TW = Warp(TIME_MAP)
+
+
 class Path(Move):
     """A camera move from a function f(t) -> (pos, target)."""
 
@@ -231,7 +270,7 @@ def drop_pos(t):
 # =============================================================================================================
 # THE CAMERA
 # =============================================================================================================
-DIVE = (7.1, 8.1)           # the dive after the drop: the opening image holds still while the title is whole
+DIVE = (6.7, 8.2)           # the dive after the drop (a smooth 1.5 s; the title stays whole to 7.0 over it)
 
 
 def _s0(t):
@@ -240,17 +279,18 @@ def _s0(t):
     with it through the clouds and level out over the sea as it lands."""
     look0 = _v(0.0, 54.2, -40.0)            # looking a little up: the title stands on the deep sky
     drift = C0 + _v(0.0, 0.015 * t, -0.045 * t)
-    if t < OPEN_FULL:
+    if t < 6.45:
         return drift, look0
     d = drop_pos(t)
-    v = sc(DIVE[0], DIVE[1], t)                            # the camera dives after it
-    pos = lerp(drift, d + _v(1.2, 4.0, 10.0), v * v * (3 - 2 * v))
-    w = sc(7.75, 8.6, t)                                   # pulls out level over the sea
+    v = (t - DIVE[0]) / (DIVE[1] - DIVE[0])                # the camera dives after it, from rest to rest
+    v = float(np.clip(v, 0.0, 1.0))
+    pos = lerp(drift, d + _v(1.2, 4.0, 10.0), v * v * v * (v * (6.0 * v - 15.0) + 10.0))
+    w = sc(7.8, 8.8, t)                                    # pulls out level over the sea
     end = D0 + _v(3.0, 1.7, 15.0)
     pos = lerp(pos, end + _v(0.0, 0.0, -1.5 * max(t - 8.6, 0.0)), w)
     a, b = _unit(look0 - pos), _unit(d - pos)              # the gaze turns down to the drop (an even turn)
     om = float(np.arccos(np.clip(a @ b, -1.0, 1.0)))
-    u = sc(OPEN_FULL + 0.15, 7.8, t)
+    u = sc(6.45, 7.75, t)
     g = a if om < 1e-6 else (np.sin((1.0 - u) * om) * a + np.sin(u * om) * b) / np.sin(om)
     look = pos + 12.0 * g
     look = lerp(look, D0 + _v(-2.7, 0.6 + 3.2 * sc(8.0, 8.6, t), 0.0), sc(7.6, 8.4, t))   # up with the burst,
@@ -265,12 +305,13 @@ def _cam_keys_s1():
     pair = P1 + _v(0.0, 1.25, 0.0)
     her = P1b + _v(0.0, 1.2, 0.0)
     c1, c2 = P1 + _v(-0.75, 1.7, 4.6), P1 + _v(-0.75, 1.68, 4.1)
-    c3, c4 = P1b + _v(-1.0, 1.5, 4.6), P1b + _v(-0.9, 1.48, 4.1)
+    c3, c4, c5 = P1b + _v(-1.0, 1.5, 4.6), P1b + _v(-0.9, 1.48, 4.1), P1b + _v(-0.87, 1.47, 3.9)
     return [(8.84, D0 + _v(2.6, 1.7, 13.4), D0 + _v(-1.0, 0.8, -4.0)),
-            (9.7, c1, _aim(c1, pair, 0.70, 0.70, F1)),                 # the two men, below the words, right
-            (11.9, c2, _aim(c2, pair, 0.705, 0.70, F1)),
-            (12.75, c3, _aim(c3, her, 0.74, 0.69, F1)),                # she stands right, her words on the left
-            (15.0, c4, _aim(c4, her, 0.74, 0.69, F1))]
+            (9.9, c1, _aim(c1, pair, 0.70, 0.70, F1)),                 # the two men, below the words, right
+            (11.7, c2, _aim(c2, pair, 0.705, 0.70, F1)),
+            (13.0, c3, _aim(c3, her, 0.74, 0.69, F1)),                 # she stands right, her words on the left
+            (15.3, c4, _aim(c4, her, 0.74, 0.69, F1)),
+            (15.8, c5, _aim(c5, her, 0.74, 0.69, F1))]                 # drifting on into the veil of light
 
 
 F2 = 44.0
@@ -279,16 +320,19 @@ F2 = 44.0
 def _cam_keys_s2():
     kneel = P2 + _v(0.0, 0.8, 0.0)
     hold = P2 + _v(0.0, 1.25, 0.0)
-    c1, c2 = P2 + _v(-1.3, 1.6, 5.3), P2 + _v(-1.2, 1.55, 4.9)
-    c3, c4, c5 = P2 + _v(1.0, 1.5, 3.9), P2 + _v(2.5, 1.55, 2.1), P2 + _v(2.4, 1.52, 1.8)
-    return [(15.3, P1b + _v(-0.5, 1.8, 2.2), P1b + _v(0.0, 1.3, -4.0)),
-            (16.4, c1, _aim(c1, kneel, 0.745, 0.72, F2)),               # the two kneeling in the rain of light
-            (18.6, c2, _aim(c2, kneel, 0.76, 0.72, F2)),
-            (19.35, c3, _aim(c3, hold, 0.74, 0.70, F2)),               # round them as they rise
-            (20.2, c4, _aim(c4, hold, 0.68, 0.70, F2)),                # the embrace
-            (21.6, c5, _aim(c5, hold, 0.68, 0.70, F2))]
+    c0, c1, c2 = P2 + _v(-1.45, 1.62, 5.8), P2 + _v(-1.3, 1.6, 5.3), P2 + _v(-1.2, 1.55, 4.9)
+    c3, c4, c5, c6 = (P2 + _v(-1.6, 1.55, 4.1), P2 + _v(-2.0, 1.52, 3.2), P2 + _v(-1.9, 1.5, 2.85),
+                      P2 + _v(-1.85, 1.49, 2.7))
+    return [(15.3, c0, _aim(c0, kneel, 0.745, 0.72, F2)),               # out of the veil of light, drifting in
+            (16.6, c1, _aim(c1, kneel, 0.745, 0.72, F2)),               # the two kneeling in the rain of light
+            (18.3, c2, _aim(c2, kneel, 0.76, 0.72, F2)),
+            (19.6, c3, _aim(c3, hold, 0.72, 0.70, F2)),                # with them as they rise
+            (20.6, c4, _aim(c4, hold, 0.70, 0.70, F2)),                # the embrace, her face over her shoulder
+            (21.85, c5, _aim(c5, hold, 0.70, 0.70, F2)),
+            (22.4, c6, _aim(c6, hold, 0.70, 0.70, F2))]
 
 
+RIVER_CALM = 25.4                     # the river calms behind Respect
 RIVER = [P2 + _v(0.0, 0.0, -1.0), P2 + _v(1.5, 0.0, -14.0), P2 + _v(-2.0, 0.0, -30.0), P2 + _v(1.0, 0.0, -44.0),
          P3 + _v(0.0, 0.0, 3.0), P3 + _v(0.0, 0.0, -4.0), P3b + _v(-0.5, 0.0, 1.5), P3b + _v(-3.0, 0.0, -10.0),
          P3b + _v(4.0, 0.0, -40.0), P3b + _v(-6.0, 0.0, -90.0), P3b + _v(10.0, 0.0, -180.0),
@@ -299,27 +343,28 @@ F3 = 46.0
 def _cam_keys_s3():
     door = P3 + _v(0.0, 1.25, 0.0)
     two = P3b + _v(0.0, 0.75, 0.0)
-    c2, c3, c4 = P3 + _v(-1.7, 1.5, 9.0), P3 + _v(-1.5, 1.42, 7.6), P3 + _v(-1.4, 1.4, 6.8)
-    c6, c7 = P3b + _v(-2.9, 1.25, 2.7), P3b + _v(-2.65, 1.22, 2.4)
-    return [(21.85, P2 + _v(1.5, 1.4, 0.4), P2 + _v(0.0, 1.0, -6.0)),
-            (22.25, P2 + _v(0.6, 1.6, -12.0), P2 + _v(0.0, 1.2, -40.0)),
-            (22.75, c2, _aim(c2, door, 0.76, 0.67, F3)),
-            (23.4, c3, _aim(c3, door, 0.76, 0.67, F3)),
+    c1, c2, c3, c4 = (P3 + _v(-1.9, 1.6, 13.0), P3 + _v(-1.7, 1.5, 9.0), P3 + _v(-1.5, 1.42, 7.6),
+                      P3 + _v(-1.4, 1.4, 6.8))
+    c6, c7, c8 = P3b + _v(-2.9, 1.25, 2.7), P3b + _v(-2.65, 1.22, 2.4), P3b + _v(-2.58, 1.21, 2.3)
+    return [(21.85, c1, _aim(c1, door, 0.74, 0.66, F3)),                # out of the veil, gliding up the river
+            (23.0, c2, _aim(c2, door, 0.76, 0.67, F3)),
+            (23.6, c3, _aim(c3, door, 0.76, 0.67, F3)),
             (25.3, c4, _aim(c4, door, 0.79, 0.67, F3)),
-            (25.85, P3 + _v(0.0, 1.55, 0.5), P3 + _v(0.0, 1.4, -8.0)),
-            (26.5, c6, _aim(c6, two, 0.70, 0.71, F3)),                 # the two seated, both in profile
-            (28.6, c7, _aim(c7, two, 0.705, 0.71, F3))]
+            (26.15, P3 + _v(-0.2, 1.5, 0.3), P3 + _v(-0.6, 1.25, -8.0)),   # on through the door, unhurried
+            (27.1, c6, _aim(c6, two, 0.70, 0.71, F3)),                 # the two seated, both in profile
+            (28.79, c7, _aim(c7, two, 0.705, 0.71, F3)),
+            (29.3, c8, _aim(c8, two, 0.705, 0.71, F3))]
 
 
 def _cam_keys_s4():
-    two = P4 + _v(0.0, 0.9, 0.0)
+    two = P4 + _v(0.0, 0.62, 0.0)                  # the two kneeling: their heads at about 0.9 m
     c0, c1 = P4 + _v(-2.6, 0.7, 34.0), P4 + _v(-1.4, 0.9, 17.0)
-    c2, c3 = P4 + _v(-0.9, 1.25, 4.1), P4 + _v(-0.85, 1.22, 3.7)
+    c2, c3, c4 = P4 + _v(-0.9, 1.0, 3.9), P4 + _v(-0.85, 0.98, 3.5), P4 + _v(-0.8, 1.05, 3.1)
     return [(28.79, c0, _aim(c0, two, 0.62, 0.73, 58.0)),           # vast: tiny people under the light
             (30.4, c1, _aim(c1, two, 0.62, 0.72, 52.0)),
-            (31.6, c2, _aim(c2, two, 0.67, 0.70, 48.0)),            # closer: the hand on the shoulder
-            (33.3, c3, _aim(c3, two, 0.67, 0.70, 48.0)),
-            (35.36, P4 + _v(-0.5, 2.4, 6.0), P4 + _v(-2.0, 7.95, -6.0))]    # up, away from the corner
+            (31.6, c2, _aim(c2, two, 0.67, 0.71, 48.0)),            # closer: the hand on the shoulder
+            (33.6, c3, _aim(c3, two, 0.67, 0.71, 48.0)),
+            (35.9, c4, _aim(c4, two + _v(0.0, 0.5, 0.0), 0.62, 0.66, 48.0))]   # on into the veil of light
 
 
 F5 = 48.0
@@ -338,11 +383,11 @@ def _cam_keys_s5():
         return P5b + _v(np.sin(a) * r, h, np.cos(a) * r)
     c0, c1, c2, c3 = side(6.4, 1.8, -50.0), side(5.7, 1.6, -42.0), side(5.3, 1.56, -37.0), side(5.25, 1.56, -36.0)
     o1, o2, o3 = orb(-34.0), orb(-14.0), orb(6.0)
-    return [(35.36, c0, _aim(c0, g, 0.68, 0.72, F5)),                  # straight onto them on the hit
+    return [(35.36, c0, _aim(c0, g, 0.68, 0.72, F5)),                  # out of the veil, onto them
             (36.3, c1, _aim(c1, g, 0.68, 0.73, F5)),
             (38.6, c2, _aim(c2, g, 0.685, 0.745, F5)),
-            (39.0, c3, _aim(c3, g, 0.685, 0.745, F5))], \
-        [(38.95, o1, _aim(o1, d, 0.68, 0.71, F5)),                      # a whip pan to the dancer
+            (39.6, c3, _aim(c3, g, 0.685, 0.745, F5))], \
+        [(38.3, o1, _aim(o1, d, 0.68, 0.71, F5)),                       # a gliding carry to the dancer
          (40.6, o2, _aim(o2, d, 0.71, 0.71, F5)),
          (42.0, o3, _aim(o3, d, 0.72, 0.71, F5))]
 
@@ -366,29 +411,37 @@ HV = _v(np.sin(np.radians(SUN_AZ)), 0.0, np.cos(np.radians(SUN_AZ)))     # level
 GLORY_EL = 6.0                                   # the sun stands low over the sea of clouds
 
 
+_A0 = float(np.degrees(np.arctan2(_B1[0] - A7[0], _B1[2] - A7[2])))      # the ascent starts where the breath is
+_R0 = float(np.hypot(_B1[0] - A7[0], _B1[2] - A7[2]))
+
+
 def _climb(t):
-    """Fast up the column and through the clouds (about 72 m at HEAVEN_T), then easing above them."""
+    """Up the column and through the clouds (about 72 m at HEAVEN_T): from rest where the breath left us,
+    accelerating smoothly (no jolt), then easing above the clouds."""
     u = max(min(t, HEAVEN_T) - ASC0, 0.0)
-    y = 2.0 + 5.0 * u + 5.6 * u * u
+    y = float(_B1[1]) + 7.2 * u * u
     if t > HEAVEN_T:
-        v = 5.0 + 11.2 * u
+        v = 14.4 * u
         w = t - HEAVEN_T
         y += v * 0.35 * (1.0 - np.exp(-w / 0.35)) + 2.0 * w
     return y
 
 
 def _asc_angle(t):
-    """The corkscrew round the column; above the clouds the turning eases to a stop (we hover in the glory)."""
+    """The turn round the column: it gathers from rest (30 to 46 degrees a second, never a whip) and brings us
+    to the same side of the column as before when we break above the clouds;
+    above the clouds it eases to a stop (we hover in the glory)."""
     u = max(min(t, HEAVEN_T) - ASC0, 0.0)
-    a = 200.0 + 60.0 * u + 8.0 * u * u
+    a = _A0 + 30.0 * (u - 0.4 * (1.0 - np.exp(-u / 0.4))) + 2.6 * u * u
     if t > HEAVEN_T:
-        a += (60.0 + 16.0 * u) * 0.5 * (1.0 - np.exp(-(t - HEAVEN_T) / 0.5))
+        om = 30.0 * (1.0 - np.exp(-u / 0.4)) + 5.2 * u
+        a += om * 0.5 * (1.0 - np.exp(-(t - HEAVEN_T) / 0.5))
     return np.radians(a)
 
 
 def _asc_radius(t):
     u = max(t - ASC0, 0.0)
-    return 14.0 + 4.0 * np.exp(-u / 0.6)
+    return 14.0 + (_R0 - 14.0) * (1.0 - sc(0.0, 1.7, u))
 
 
 def _asc_pos(t):
@@ -407,9 +460,11 @@ def _s7(t):
     p = _asc_pos(t)
     y = _climb(t)
     look = A7 + _v(0.0, y + 1.5 + 2.5 * sc(ASC0, ASC0 + 1.5, t), 0.0)
-    tilt = sc(HEAVEN_T - 0.5, HEAVEN_T + 0.9, t)
-    glory = p + 100.0 * _unit(HV + _v(0.0, -0.06, 0.0))      # the sun ahead, the sea of clouds below it
-    return p, lerp(look, glory, tilt)
+    tilt = sc(HEAVEN_T - 0.7, HEAVEN_T + 1.0, t)
+    d0, d1 = _unit(look - p), _unit(HV + _v(0.0, -0.06, 0.0))  # the sun ahead, the sea of clouds below it
+    om = float(np.arccos(np.clip(d0 @ d1, -1.0, 1.0)))           # an even turn of the gaze, never a swing
+    d = d0 if om < 1e-6 else (np.sin((1.0 - tilt) * om) * d0 + np.sin(tilt * om) * d1) / np.sin(om)
+    return p, p + 30.0 * d
 
 
 # ---- the finale: BRAND's world of light, the nine symbols swirl round it and burst, it becomes the logo ------
@@ -428,6 +483,14 @@ SLOT_Y = (48.0 + 85.0 - 540.0) * EC_SCALE / 1080.0 + 0.5   # the end card logo's
 SLOT_H = 170.0 * EC_SCALE / 1080.0
 END_T0, END_T = 53.85, 54.4                      # the logo glides into the end card's logo slot
 EC_IN, EC_FADE = 54.15, 0.8                      # the end card: whole from 54.95 to the last frame
+
+
+PUSH = (EC_IN + EC_FADE, TOTAL)                  # the end card's slow push-in (whole card to the last frame)
+
+
+def _end_fov(t):
+    """The end: a slow push-in of about 3 percent, from rest, settling to stillness at the last frame."""
+    return END_FOV * (1.0 - 0.03 * sc(PUSH[0], PUSH[1], t))
 
 
 def _fin_scale(t):
@@ -458,9 +521,8 @@ def _s8(t):
     tgt_logo = FIN_C - _v(0.0, _LOGO_DROP + 1.0 * FIN_LIFT, 0.0)
     p_d = _fin_cam(8.0, 1.0, 3.9 * FIN_R) - _v(0.0, _LOGO_DROP, 0.0)
     if t < 50.6:
-        e = sc(ASC1, 50.6, t)
-        e = 1.0 - (1.0 - e) ** 2.2
-        return lerp(p_a, p_b, e), lerp(q_a, tgt, sc(ASC1, 50.0, t))
+        e = sc(ASC1 - 0.3, 50.6, t)                    # out to the world: a long, eased glide (about 1.7 s)
+        return lerp(p_a, p_b, e), lerp(q_a, tgt, sc(ASC1 - 0.2, 50.2, t))
     if t < LOGO_T[0]:
         e = sc(50.6, LOGO_T[0], t)
         return lerp(p_b, p_c, e), tgt
@@ -472,27 +534,30 @@ def _s8(t):
 
 
 def _rig(focus):
+    """Anthony after v6: no strobing whips. Every change of place is either a dissolve through light where the
+    songs blend (a hard cut hidden in the LightVeil, the camera drifting on both sides of it) or a gliding
+    carry of a second or more with eased ends; focus moves smoothly from one subject to the next."""
     def fo(default):
         return (lambda t: focus(t, default)) if focus is not None else "target"
     return Rig([
-        Path(_s0, 0.0, SEC[1], fov=lambda t: 50.0 + 8.0 * sc(7.0, 7.7, t) - 6.0 * sc(7.75, 8.6, t), aperture=0.0,
-             focus=fo(lambda t: drop_pos(t) if t < 8.2 else D0 + _v(0, 1.0, 0))),
-        Path(_pchip(_cam_keys_s1()), SEC[1], SEC[2], blend=0.6, fov=F1, aperture=0.012,
-             focus=fo(lambda t: P1 + _v(0, 1.2, 0) if t < 12.2 else P1b + _v(0, 1.3, 0))),
-        Path(_pchip(_cam_keys_s2()), SEC[2], SEC[3], blend=0.8, fov=F2, aperture=0.012, focus=fo(P2 + _v(0, 0.9, 0))),
-        Path(_pchip(_cam_keys_s3()), SEC[3], SEC[4], blend=0.35,
-             fov=lambda t: F3 + 14.0 * sc(21.85, 22.1, t) * (1.0 - sc(22.3, 22.9, t)),
-             aperture=0.01, focus=fo(lambda t: P3 + _v(0, 1.4, 0) if t < 25.7 else P3b + _v(0, 0.9, 0))),
-        Path(_pchip(_cam_keys_s4()), SEC[4], SEC[5], blend=0.45, whip=True,
+        Path(_s0, 0.0, SEC[1], fov=lambda t: 50.0 + 8.0 * sc(6.9, 7.8, t) - 6.0 * sc(7.8, 8.8, t), aperture=0.0,
+             focus=fo(lambda t: lerp(drop_pos(t), D0 + _v(0, 1.0, 0), sc(7.9, 8.5, t)))),
+        Path(_pchip(_cam_keys_s1()), SEC[1], SEC[2], blend=1.1, fov=F1, aperture=0.012,
+             focus=fo(lambda t: lerp(P1 + _v(0, 1.2, 0), P1b + _v(0, 1.3, 0), sc(11.8, 12.9, t)))),
+        Path(_pchip(_cam_keys_s2()), SEC[2], SEC[3], blend=0.0, fov=F2, aperture=0.012,
+             focus=fo(lambda t: lerp(P2 + _v(0, 0.8, 0), P2 + _v(0, 1.25, 0), sc(18.4, 19.8, t)))),
+        Path(_pchip(_cam_keys_s3()), SEC[3], SEC[4], blend=0.0, fov=F3, aperture=0.01,
+             focus=fo(lambda t: lerp(P3 + _v(-1.0, 1.3, 2.0), P3b + _v(0, 0.9, 0), sc(25.4, 26.7, t)))),
+        Path(_pchip(_cam_keys_s4()), SEC[4], SEC[5], blend=0.0,
              fov=lambda t: 58.0 - 6.0 * sc(28.79, 30.4, t) - 4.0 * sc(30.4, 31.6, t), aperture=0.01,
-             focus=fo(P4 + _v(0, 1.0, 0))),
-        Path(_pchip(_cam_keys_s5()[0]), SEC[5], 38.95, blend=0.45, whip=True, fov=F5, aperture=0.01,
+             focus=fo(P4 + _v(0, 0.7, 0))),
+        Path(_pchip(_cam_keys_s5()[0]), SEC[5], 38.95, blend=0.0, fov=F5, aperture=0.01,
              focus=fo(P5 + _v(0, 1.0, 0))),
-        Path(_pchip(_cam_keys_s5()[1]), 38.95, 42.0, blend=0.4, whip=True, fov=F5, aperture=0.01,
+        Path(_pchip(_cam_keys_s5()[1]), 38.95, 42.0, blend=1.3, fov=F5, aperture=0.01,
              focus=fo(P5b + _v(0, 1.1, 0))),
-        Path(_s6, 42.0, BREATH_END, blend=0.6, fov=F5, aperture=0.0),
-        Path(_s7, BREATH_END, ASC1, blend=0.35, fov=lambda t: 56.0 + 10.0 * sc(44.5, 45.3, t), aperture=0.0),
-        Path(_s8, ASC1, TOTAL + 1.0, blend=0.6, fov=END_FOV, aperture=0.0),
+        Path(_s6, 42.0, BREATH_END, blend=1.0, fov=F5, aperture=0.0),
+        Path(_s7, BREATH_END, ASC1, blend=0.5, fov=lambda t: F5 + 14.0 * sc(44.45, 45.8, t), aperture=0.0),
+        Path(_s8, ASC1, TOTAL + 1.0, blend=1.0, fov=_end_fov, aperture=0.0),
     ], blend=0.6, fov=48.0, aperture=0.0, handheld=0.12, min_height=0.4)
 
 
@@ -553,7 +618,55 @@ def _focus(t, default, ease=0.6):
     return np.asarray(default(t) if callable(default) else default, np.float64)
 
 
-CAMERA = _rig(_focus)
+CAMERA = _rig(_focus)            # on the film's own (old) time: what the scene's pieces look through
+
+
+class WarpRig(Rig):
+    """The camera on the new medley's time: the film's rig asked at W(t)."""
+
+    def __init__(self, inner, warp):
+        self.__dict__.update(inner.__dict__)
+        self.inner, self.warp = inner, warp
+
+    def state(self, t, aspect=16.0 / 9.0, ref=None):
+        return self.inner.state(self.warp(t), aspect, ref=None if ref is None else self.warp(ref))
+
+    def raw(self, t, ref=None, swing=True):
+        return self.inner.raw(self.warp(t), ref=None if ref is None else self.warp(ref), swing=swing)
+
+    def cuts(self):
+        return [self.warp.R(c) for c in self.inner.cuts()]
+
+
+class _Warped:
+    """A point set of the scene on the new medley's time (it is asked at W(t))."""
+
+    def __init__(self, inner, warp):
+        self.inner, self.warp = inner, warp
+        self.wants_camera = bool(getattr(inner, "wants_camera", False))
+        for k in ("static", "dome", "turns"):
+            if hasattr(inner, k):
+                setattr(self, k, getattr(inner, k))
+        if hasattr(inner, "gain"):
+            self.gain = lambda t: inner.gain(warp(t))
+
+    def sample(self, t, cam=None):
+        to = self.warp(t)
+        return self.inner.sample(to, cam) if self.wants_camera else self.inner.sample(to)
+
+
+class _WarpScene:
+    """Hands the song's setup a scene whose every point set runs on the new medley's time."""
+
+    def __init__(self, scene, warp):
+        self.scene, self.warp = scene, warp
+
+    def add(self, name, ps, **kw):
+        self.scene.add(name, _Warped(ps, self.warp), **kw)
+        return ps
+
+    def __getattr__(self, k):
+        return getattr(self.scene, k)
 
 
 # =============================================================================================================
@@ -714,60 +827,192 @@ def _mother_hands():
     return out
 
 
-def _embrace_pair(o, t_rise, t_hold, until):
-    """APOLOGY then INCLUSIVENESS (two women, UPDATE 15): one kneels alone, head bowed; the other kneels beside
-    her and lays a hand on her shoulder; they rise together and hold each other, cheek past shoulder (the
-    engine's embrace). Life size, whole and luminous."""
+def _embrace_pair(o, t_touch, t_look, t_rise, t_hold, until):
+    """APOLOGY then INCLUSIVENESS (two women, UPDATE 15). Anthony after v6: tender and simple. One woman sits
+    back on her heels, head bowed, hands in her lap. The other kneels beside her, leans in and gently lays her
+    hand on her shoulder, the arm rounded (t_touch). After a beat the seated woman lifts her head toward her
+    (t_look). They rise together (t_rise; the comforting hand lets go as they rise), turn to each other with a
+    small step, and hold each other (t_hold), cheek past shoulder."""
     from p3d import pairs
+    from p3d.body import Body
     refs = {}
-    gap, side = 0.34, 0.085
-    d0 = 0.52
-    # a faces +x (toward b), b faces -x; each stands a little to their own left (pairs.embrace's side)
-    ka_k = (o[0] - d0, o[2] - side)
+    gap, side = 0.27, 0.085
+    # kneeling, both seen in profile: b sits back on her heels facing the picture's right, a little toward us;
+    # a kneels just behind her (picture left), turned to her, and lays her near hand on b's upper back
+    kb_k, fb_k = (o[0] + 0.25, o[2] + 0.02), 58.0
+    ka_k, fa_k = (o[0] - 0.30, o[2] - 0.06), 74.0
+    # the embrace (pairs.embrace's places: a faces +x, b faces -x, each a little to their own left)
     ka_e = (o[0] - 0.5 * gap, o[2] - side)
-    kb_k = (o[0] + d0, o[2] + side)
     kb_e = (o[0] + 0.5 * gap, o[2] + side)
+    up_a, up_b = 1.45, 1.55                      # seconds to rise
+    t_ra, t_rb = t_rise, t_rise + 0.2
+    s0 = t_hold - 0.9                            # stood up: she turns round to her friend with small steps
     show = (SEC[2] - 0.4, until)
 
-    def other(name, part, guess):
-        return lambda tt: refs[name].where(tt, part, raw=True) if name in refs else np.asarray(guess, np.float64)
+    def on(name, fn, guess):
+        return lambda tt: fn(refs[name], tt) if name in refs else np.asarray(guess, np.float64)
+
+    def her_back(B, tt):                # high on her back, by the right shoulder blade: where a hand rests
+        bl, n = B.where(tt, "blade.R", normal=True, raw=True)
+        sh = B.where(tt, "shoulder.R", raw=True)
+        return 0.6 * bl + 0.4 * sh + 0.015 * n
     a = dict(shape="woman", garment="dress", hair="bun",
-             at=[(0.0, ka_k), (t_hold - 0.6, ka_k), (t_hold + 0.15, ka_e)],
-             motion=[(-1e9, "kneel", dict(dur=0.01, one=True, hands="free")),
-                     (t_rise, "rise", dict(dur=1.1, blend=0.1, one=True)),
-                     (t_hold - 0.6, "shuffle"), (t_hold + 0.3, "stand")],
-             gesture=[(16.2, t_rise - 0.1, "hand_on_shoulder",
-                       dict(side="R", to=other("b", "shoulder.L", o + _v(0.3, 1.0, 0.0)))),
-                      (16.6, t_rise, "bow", dict(amount=10.0))],
+             at=[(0.0, ka_k), (s0, ka_k), (t_hold + 0.1, ka_e)],
+             facing=[(0.0, fa_k), (s0, fa_k), (t_hold + 0.1, 90.0)],
+             motion=[(-1e9, "kneel", dict(dur=0.01, sit=0.85, hands="free")),
+                     (t_ra, "rise_up", dict(dur=up_a, sit=0.85, blend=0.15)),
+                     (s0, "shuffle", dict(blend=0.45, amount=0.3)), (t_hold + 0.15, "stand", dict(blend=0.6))],
+             gesture=[(-1e9, t_ra + 0.3, "lap", dict(ease_out=0.9)),
+                      (t_touch, t_ra + 0.35, "comfort",
+                       dict(side="R", to=on("b", her_back, o + _v(0.12, 1.0, 0.08)), lean=9.0, bow=8.0,
+                            ease_in=1.3, ease_out=0.9))],
              points=75000, show=show, fade=0.6, seed=61.0, wind=(0.2, 0.0, -0.1), **GOLD)
-    b = dict(shape="woman", garment="dress", hair="tied",
-             at=[(0.0, kb_k), (t_hold - 0.6, kb_k), (t_hold + 0.15, kb_e)],
-             motion=[(-1e9, "kneel", dict(dur=0.01, sit=0.6, hands="lap")),
-                     (t_rise + 0.15, "rise", dict(dur=1.1, blend=0.1)),
-                     (t_hold - 0.6, "shuffle"), (t_hold + 0.3, "stand")],
-             gesture=[(SEC[2] - 0.4, t_rise + 0.3, "bow", dict(amount=30.0))],
+    b = dict(shape="woman", garment="dress", hair="bob",
+             at=[(0.0, kb_k), (s0, kb_k), (t_hold + 0.1, kb_e)],
+             facing=[(0.0, fb_k), (s0, fb_k), (t_hold + 0.1, -90.0)],
+             motion=[(-1e9, "kneel", dict(dur=0.01, sit=0.85, hands="free")),
+                     (t_rb, "rise_up", dict(dur=up_b, sit=0.85, blend=0.15)),
+                     (s0, "shuffle", dict(blend=0.45, amount=0.35)), (t_hold + 0.15, "stand", dict(blend=0.6))],
+             gesture=[(-1e9, t_rb + 0.35, "lap", dict(ease_out=1.0)),
+                      (-1e9, t_look + 0.4, "bow", dict(amount=24.0, ease_out=1.2)),
+                      (t_look, t_hold + 0.2, "look_to",
+                       dict(to=on("a", lambda A, tt: A.where(tt, "head", raw=True), o + _v(-0.30, 1.0, -0.04)),
+                            up=2.0, ease_in=1.4, ease_out=0.8))],
              points=75000, show=show, fade=0.6, seed=62.0, wind=(0.2, 0.0, -0.1), **CRYSTAL)
-    A, B = pairs.embrace(t_hold, at=(o[0], o[2]), facing=90.0, a=a, b=b, until=until + 1.0, gap=gap,
-                         approach=0.0, side=side)
-    refs["a"], refs["b"] = A, B
+    # the embrace (as pairs.embrace, closer, the arms rounded): her arms over her friend's shoulders, the
+    # other's round her back at the shoulder blades; heads beside each other; they rock gently together
+    def back(name, side_, drop):
+        def f(X, tt):
+            bl, br = X.where(tt, "blade.L", raw=True), X.where(tt, "blade.R", raw=True)
+            c = 0.5 * (bl + br)
+            u = (bl - br) if side_ == "L" else (br - bl)
+            return c + 0.38 * u - _v(0.0, drop, 0.0)
+        return on(name, f, o + _v(0.0, 1.1, 0.0))
+    end = until + 1.0
+    a["gesture"] = a["gesture"] + [
+        (t_hold, end, "embrace", dict(to=back("b", "R", 0.0), to2=back("b", "L", 0.0), head="L", ease=1.25)),
+        (t_hold + 1.0, end, "sway", dict(period=3.6, amount=1.6, ease_in=1.2))]
+    b["gesture"] = b["gesture"] + [
+        (t_hold + 0.15, end, "embrace", dict(to=back("a", "R", 0.10), to2=back("a", "L", 0.10), head="L",
+                                             ease=1.3)),
+        (t_hold + 1.0, end, "sway", dict(period=3.6, amount=1.6, phase=0.5, ease_in=1.2))]
+    A = Body(**a)
+    refs["a"] = A
+    B = Body(**b)
+    refs["b"] = B
+    pairs._built(A, B)
     return A, B
 
 
 def _greeting_pair(o, t0, t1):
-    """GREETING (two men, UPDATE 15): they face each other and each gives a slight, warm bow, a gentle nod of
-    the head and shoulders; no touch."""
+    """GREETING (two men, UPDATE 15): they face each other and each gives a slight, warm bow, a gentle dip of
+    the head and shoulders that comes back up to a small nod; the hands stay relaxed at the sides; no touch."""
     from p3d.body import Body
     a = Body("man", at=(o[0] - 0.55, o[2]), facing=90.0, garment="tunic", points=75000, show=(t0 - 1.0, t1 + 0.8),
              fade=0.6, seed=21.0,
-             gesture=[(t0, t1 + 0.6, "bow", dict(amount=26.0, ease=0.8)),
-                      (t0 + 0.9, t1 + 0.6, "nod", dict(period=2.2, amount=7.0))],
+             gesture=[(t0, t1 + 0.8, "greet_bow", dict(amount=17.0, down=0.95, hold=0.55, up=1.1, ease_in=0.5,
+                                                       ease_out=1.0)),
+                      (t0 + 2.4, t1 + 0.8, "nod", dict(period=2.6, amount=4.0, ease_in=1.0))],
              sweeps=dict(glow=dict(t=t0 + 0.2, at="heart", speed=2.5, width=0.35, flash=1.6)), **GOLD)
     b = Body("man", at=(o[0] + 0.55, o[2]), facing=270.0, garment="coat", points=75000, show=(t0 - 1.0, t1 + 0.8),
              fade=0.6, seed=22.0,
-             gesture=[(t0 + 0.45, t1 + 0.6, "bow", dict(amount=23.0, ease=0.8)),
-                      (t0 + 1.3, t1 + 0.6, "nod", dict(period=2.4, amount=7.0))],
+             gesture=[(t0 + 0.4, t1 + 0.8, "greet_bow", dict(amount=15.0, down=1.0, hold=0.5, up=1.1, ease_in=0.5,
+                                                             ease_out=1.0)),
+                      (t0 + 2.8, t1 + 0.8, "nod", dict(period=2.9, amount=4.0, ease_in=1.0))],
              sweeps=dict(glow=dict(t=t0 + 0.55, at="heart", speed=2.5, width=0.35, flash=1.6)), **CRYSTAL)
     return [a, b]
+
+
+def _prayer_pair(o, t0, t1, view):
+    """ENCOURAGEMENT (two women): one kneels, sitting back on her heels, hands joined in prayer, head bowed. Her
+    friend kneels close behind her shoulder (the mirror of the Apology), lays her near hand gently on her
+    shoulder, the arm rounded, her other hand on her own heart, and bows her head with her: she prays for her."""
+    from p3d import pairs
+    from p3d.body import Body
+    refs = {}
+    a_ = np.radians(view)
+    cam = np.array([np.sin(a_), 0.0, np.cos(a_)])
+    right = np.array([np.cos(a_), 0.0, -np.sin(a_)])
+
+    def pl(x, z):
+        p = np.array([o[0], 0.0, o[2]]) + right * x + cam * z
+        return (float(p[0]), float(p[2]))
+
+    def her_shoulder(B, tt):
+        sh = B.where(tt, "shoulder.L", raw=True)
+        bl, n = B.where(tt, "blade.L", normal=True, raw=True)
+        return 0.62 * sh + 0.38 * bl + 0.015 * n + _v(0.0, 0.01, 0.0)
+    show = (t0 - 0.9, t1 + 0.9)
+    kb = dict(shape="woman", garment="dress", hair="covered", at=pl(-0.22, 0.02), facing=view - 58.0,
+              motion=[(-1e9, "kneel", dict(dur=0.01, sit=0.85, hands="pray"))],
+              gesture=[(t0 - 0.6, t1 + 0.9, "bow", dict(amount=16.0, ease_in=1.4))],
+              points=70000, show=show, fade=0.6, seed=71.0, **CRYSTAL)
+    ka = dict(shape="woman", garment="dress", hair="bun", at=pl(0.33, -0.06), facing=view - 74.0,
+              motion=[(-1e9, "kneel", dict(dur=0.01, sit=0.85, hands="free"))],
+              gesture=[(-1e9, t0 + 0.6, "lap", dict(ease_out=1.0)),
+                       (t0, t1 + 0.9, "comfort",
+                        dict(side="L", to=lambda tt: her_shoulder(refs["b"], tt) if "b" in refs else
+                             np.array([o[0], 0.75, o[2]]), lean=9.0, bow=12.0, ease_in=1.4, ease_out=1.0)),
+                       (t0 + 0.5, t1 + 0.9, "hand_on_heart", dict(side="R", bow=6.0, ease_in=1.2)),
+                       (t0 + 1.2, t1 + 0.9, "sway", dict(period=4.4, amount=1.0, ease_in=1.2))],
+              points=70000, show=show, fade=0.6, seed=72.0, **GOLD)
+    B = Body(**kb)
+    refs["b"] = B
+    A = Body(**ka)
+    pairs._built(A, B)
+    return [A, B]
+
+
+def _concession_man(o, t0, t1, view):
+    """CONCESSION: a man takes a small step aside from the doorway of light, turns a little toward the way through
+    it and offers it with an open palm low and to the side, the elbow soft (never a straight arm), his other hand
+    on his heart, a small bow: "Please, after you." """
+    from p3d.body import Body
+    a_ = np.radians(view)
+    cam = np.array([np.sin(a_), 0.0, np.cos(a_)])
+    right = np.array([np.cos(a_), 0.0, -np.sin(a_)])
+
+    def pl(x, z):
+        p = np.array([o[0], 0.0, o[2]]) + right * x + cam * z
+        return (float(p[0]), float(p[2]))
+    ref = {}
+
+    def way(tt):                    # his open palm: low and out to his left, a comfortable reach
+        if "m" not in ref:
+            return np.array([o[0], 1.0, o[2]])
+        M = ref["m"]
+        sh = M.where(tt, "shoulder.L", raw=True)
+        h = np.radians(M.actor.heading(tt))
+        fwd = np.array([np.sin(h), 0.0, np.cos(h)])
+        left = np.array([np.cos(h), 0.0, -np.sin(h)])
+        return sh + left * 0.26 * M.k + fwd * 0.24 * M.k + np.array([0.0, -0.28, 0.0]) * M.k
+    m = Body("man", garment="coat", hair="short", height=1.74,
+             at=[(t0 - 0.1, pl(0.0, 0.0)), (t0 + 0.8, pl(-0.40, -0.08))],
+             facing=[(t0 - 0.1, view + 4.0), (t0 + 0.8, view + 22.0)],
+             motion=[(-1e9, "stand"), (t0 - 0.15, "shuffle", dict(blend=0.3, amount=0.35)),
+                     (t0 + 0.85, "stand", dict(blend=0.5))],
+             gesture=[(t0 + 0.25, t1 + 0.9, "after_you", dict(side="L", to=way, bow=12.0, ease_in=1.0)),
+                      (t0 + 0.45, t1 + 0.9, "hand_on_heart", dict(side="R", bow=4.0, ease_in=1.1))],
+             points=95000, show=(t0 - 1.4, t1), fade=0.5, seed=5.0, **dict(GOLD, bright=1.75))
+    ref["m"] = m
+    from p3d import pairs
+    pairs._built(m)
+    return [m]
+
+
+def _dancer(o, t0, t1, view):
+    """COMPLIMENT: a joyful, graceful moment. She gathers her arms low and round, turns once as they open in a soft
+    rounded arc, the way a dancer moves, and lifts them into a high, open V, her face rising; then she sways,
+    alive, as the crowd round her claps and raises its hands."""
+    from p3d.body import Body
+    f0 = view - 25.0
+    sp0, sp1 = t0 + 0.9, t0 + 2.5
+    return [Body("woman", at=(o[0], o[2]), garment="dress", hair="bun",
+                 facing=[(0.0, f0), (sp0, f0), (sp1, f0 + 360.0)],
+                 motion=[(-1e9, "stand")],
+                 gesture=[(t0, t1 + 1.0, "dance", dict(ease_in=0.3, ease_out=1.3)),
+                          (t0 + 2.8, t1 + 1.0, "sway", dict(period=3.2, amount=2.0, ease_in=1.0))],
+                 points=95000, show=(t0 - 0.15, t1 + 1.1), fade=0.5, seed=9.0, **dict(CRYSTAL, bright=1.8))]
 
 
 def _cam_at_key(keys, t):
@@ -782,37 +1027,29 @@ def _cast():
     if _CAST:
         return _CAST
     from p3d import acting
+    from p3d import master_acting  # noqa: F401  (registers the film's own gestures and crowd kinds)
     C = _CAST
     C["hands0"] = _mother_hands()
     C["greeting"] = _greeting_pair(P1, 9.25, 12.1)
     cam1b = _cam_at_key(_cam_keys_s1(), 12.75)
     C["gratitude"] = acting.perform("Gratitude", 12.6, 15.4, at=(P1b[0], P1b[2]), view=_view(P1b, cam1b),
                                     variant="heart", style=dict(points=80000, **GOLD), pre=1.2, post=0.6, seed=3.0)
-    C["embrace"] = list(_embrace_pair(P2, 18.75, 19.55, 22.15))
+    C["embrace"] = list(_embrace_pair(P2, 15.4, 16.8, 18.0, 20.4, 22.15))
     cam3 = _cam_at_key(_cam_keys_s3(), 23.4)
-    C["concession"] = acting.perform("Concession", 23.0, 25.6, at=(P3[0] - 1.0, P3[2] + 2.0),
-                                     view=_view(P3, cam3), variant="after_you",
-                                     style=dict(points=95000, **dict(GOLD, bright=1.75)), pre=1.4, post=0.0,
-                                     seed=5.0)
+    C["concession"] = _concession_man(P3 + _v(-1.0, 0.0, 2.0), 23.0, 25.6, _view(P3, cam3))
     cam3b = _cam_at_key(_cam_keys_s3(), 26.5)
     C["respect"] = acting.perform("Respect", 26.2, 28.8, at=(P3b[0], P3b[2]), view=_view(P3b, cam3b),
                                   variant="listen", style=dict(points=65000), style_a=dict(CRYSTAL),
                                   style_b=dict(GOLD), pre=0.9, post=0.3, seed=6.0)
     cam4 = _cam_at_key(_cam_keys_s4(), 31.6)
-    C["encouragement"] = acting.perform("Encouragement", 29.6, 33.6, at=(P4[0], P4[2]), view=_view(P4, cam4),
-                                        variant="shoulder", style=dict(points=70000),
-                                        style_a=dict(GOLD, shape="woman"), style_b=dict(CRYSTAL, shape="woman"),
-                                        pre=0.9, post=0.9, seed=7.0)
+    C["encouragement"] = _prayer_pair(P4, 29.6, 33.6, _view(P4, cam4))
     cam5 = P5 + _v(-0.8, 1.3, 6.0)
     C["consideration"] = acting.perform("Consideration", 35.9, 38.9, at=(P5[0], P5[2]), view=_view(P5, cam5),
                                         variant="help_up", style=dict(points=70000),
                                         style_a=dict(GOLD, shape="man"), style_b=dict(CRYSTAL, shape="man"),
                                         pre=1.4, post=0.5, seed=8.0)
     cam5b = P5b + _v(-2.0, 1.55, 6.4)
-    C["compliment"] = acting.perform("Compliment", 39.0, 42.0, at=(P5b[0], P5b[2]), view=_view(P5b, cam5b),
-                                     variant="twirl", style=dict(points=95000, **dict(CRYSTAL, bright=1.8)),
-                                     pre=0.1, post=1.1,                  # gone as the breath begins: stillness
-                                     seed=9.0)
+    C["compliment"] = _dancer(P5b, 39.0, 42.0, _view(P5b, cam5b))
     return C
 
 
@@ -995,6 +1232,24 @@ def _gain(*keys):
     return lambda t: float(tr(t))
 
 
+def _joy_crowd(places):
+    """The crowd of light round the dancer: they appear one by one, then each in their own time claps, raises a
+    hand, lifts both arms or lays a hand on the heart, swaying with the music (master_acting's crowd kinds)."""
+    from p3d import master_acting  # noqa: F401
+    from p3d.crowd import Crowd
+    places = np.asarray(places, np.float64)
+    toward = np.degrees(np.arctan2(P5b[0] - places[:, 0], P5b[2] - places[:, 1]))      # each faces the dancer
+    return Crowd(n=len(places), places=places, facing=toward,
+                 kinds=(("joy_clap", 1.5), ("joy_raise", 1.5), ("joy_up", 1.0), ("joy_heart", 0.6)),
+                 people=dict(woman=1.0, man=1.0, elder=0.2, child=0.2),
+                 start=dict(t=38.6, dur=0.8), act=dict(t=39.3, dur=1.4), until=42.3, fade=0.6, points=5200,
+                 color="#ffcf7a", color2="#fff1d6", bright=1.3)
+
+
+def _crowd_for_preview():
+    return _joy_crowd(_crowd_places(np.random.default_rng(55)))
+
+
 def _crowd_places(rr):
     """The crowd of light round the dancer, in depth (near, middle and far, never in a row), keeping out of the
     words and the signature's corner while she twirls (checked from the camera)."""
@@ -1022,6 +1277,7 @@ def _crowd_places(rr):
 
 
 def _setup(scene):
+    scene = _WarpScene(scene, TW)
     from p3d import master_fx as FX
     from p3d import master_brand as MB
     rng = np.random.default_rng(2026)
@@ -1161,17 +1417,23 @@ def _setup(scene):
     addp("embrace", C["embrace"])
 
     # ---- S3: the river of light, the doorway, the two seated
-    scene.add("river", Clear(FX.LightRiver(RIVER, width=3.2, n=30000, speed=10.0,
+    # the river flows fast for the surge, then calms to a slow drift behind the two seated listening (no sparkle
+    # flicker: slower, softer twinkle, its points drawn sharp, without the lens's bokeh discs)
+    scene.add("river", Clear(FX.LightRiver(RIVER, width=3.2, n=30000, speed=10.0, twinkle=0.25,
+                                           clock=lambda t: MB.still_clock(t, RIVER_CALM, dur=1.0, floor=0.25),
                                                   gain=_gain((0.0, 0.0), (20.6, 0.0), (21.85, 1.0), (22.9, 1.0),
                                                              (23.5, 0.5), (25.6, 0.5),
-                                                             (26.4, 0.35), (28.6, 0.35), (28.79, 0.0), (TOTAL, 0.0)))))
+                                                             (26.4, 0.35), (28.6, 0.35), (28.79, 0.0), (TOTAL, 0.0)))),
+              depth_of_field=False)
     # the door fades before we pass through it (no white bars across the arriving Respect)
     scene.add("door", NearFade(FX.Door(P3, width=1.4, height=2.5, facing=0.0, t_open=23.0,
                                        gain=_gain((0.0, 0.0), (21.9, 0.0), (22.3, 1.0), (25.2, 1.0), (25.65, 0.0),
                                                   (TOTAL, 0.0))), 4.0))
-    petal_path = [P3 + _v(-3.2, 1.4, 2.6), P3 + _v(-1.4, 1.35, 1.2), P3 + _v(0.0, 1.35, 0.1),
-                  P3 + _v(0.2, 1.6, -3.0), P3 + _v(-0.4, 2.2, -8.0), P3 + _v(0.5, 3.4, -14.0)]
-    scene.add("petals3", Clear(NearFade(FX.PetalStream(petal_path, 23.7, 25.1, n=1300, speed=3.6), 6.0)),
+    # the petals rise from his open palm and stream on through the doorway (never across him)
+    palm = np.asarray(C["concession"][0].where(24.6, "palm.L"), np.float64)
+    petal_path = [palm + _v(0.05, 0.02, 0.0), palm + _v(0.35, 0.18, -0.25), P3 + _v(-0.25, 1.25, 0.5),
+                  P3 + _v(0.0, 1.35, 0.0), P3 + _v(0.2, 1.6, -3.0), P3 + _v(-0.4, 2.2, -8.0), P3 + _v(0.5, 3.4, -14.0)]
+    scene.add("petals3", Clear(NearFade(FX.PetalStream(petal_path, 24.1, 25.3, n=1100, speed=2.6, spread=0.2), 6.0)),
               reflect=True)
     scene.add("tree", Clear(NearFade(FX.TreeOfLight(P3b + _v(7.0, 0.0, 2.5), height=3.4, t_bloom=25.9,
                                                     gain=_gain((0.0, 0.0), (25.4, 0.0), (25.9, 1.0), (28.6, 1.0),
@@ -1203,13 +1465,8 @@ def _setup(scene):
     addp("consideration", C["consideration"])
     addp("compliment", C["compliment"])
     try:
-        from p3d.crowd import Crowd
         places = _crowd_places(np.random.default_rng(55))
-        crowd = Crowd(n=len(places), places=places, light="#ffd58a",
-                      facing="center", kinds=(("light", 2.0), ("clap", 1.5), ("cheer", 1.0)),
-                      start=dict(t=38.6, dur=0.8),
-                      act=dict(t=39.4, dur=0.8), until=42.3, fade=0.6, points=4000, color="#ffcf7a",
-                      color2="#fff1d6", bright=1.3)
+        crowd = _joy_crowd(places)
         scene.add("crowd5", PW.KeepClear(crowd, WORDS), reflect=False)      # no tall columns in the water
     except Exception as e:          # pragma: no cover
         print("crowd skipped:", e)
@@ -1299,6 +1556,13 @@ def _setup(scene):
         r, u, f = cam.basis()
         return np.asarray(cam.pos, np.float64) + 14.0 * f, r, u
     scene.add("final_glow", MB.FinalGlow(card, FINAL_HIT, ring=0.04, glint=0.05), reflect=False)
+    # the end card stays alive: sparkles and hearts drifting, a slow glow breath, settling to near stillness
+    # over the last 1.5 s; the lettering pushes in with the picture (about 2 percent)
+    scene.add("card_life", MB.CardLife(card, EC_IN + 0.3, TOTAL - 1.5), reflect=False, depth_of_field=False)
+    try:
+        MB.endcard_push(TW.R(PUSH[0]), TOTAL, push=0.02)
+    except Exception as e:          # pragma: no cover (the titles are drawn by the renderer)
+        print("end card push skipped:", e)
 
     # ---- hearts off every word, the nine symbols as subtle scenery
     acts = [("Greeting", P1 + _v(0.0, 1.45, 0.0), 10.2, 12.1), ("Gratitude", None, 13.3, 15.4),
@@ -1314,6 +1578,10 @@ def _setup(scene):
                   reflect=False)
     for k, (lab, tt, anchor, size) in enumerate(SYMBOL_PLAN):
         scene.add("symbol_%d" % k, Clear(MB.SymbolLight(lab, anchor, tt, GLOWC[lab], size=size, seed=91 + k)))
+
+    # the dissolves through light where the songs blend (the hard cuts of the camera hide inside them)
+    scene.add("veil", FX.LightVeil([(SEC[2], 0.5, 0.75), (SEC[3], 0.5, 0.75), (SEC[4], 0.5, 0.75),
+                                    (SEC[5], 0.5, 0.75)], k=1.0), reflect=False, depth_of_field=False, lod=False)
 
     WORDS.add_to(scene, reflect=False)
     try:
@@ -1384,16 +1652,63 @@ FINALE = BR.Finale(pos=tuple(FIN_C), radius=FIN_R, shrink=FIN_SHRINK, camera=CAM
                    bloom=dict(t=BLOOM_T), end=dict(t=(END_T0, END_T), ride=(0.5, 1.0 - SLOT_Y, 14.0), frac=SLOT_H),
                    logo=dict(reflect=False))
 
+def _world_on_new_time(w):
+    """The world's settings on the new medley's time: its look keys moved to the new times (blends scaled with
+    the local pace), its calm discs and shafts asked at W(t)."""
+    w = dict(w)
+    keys = []
+    for k in w["look"]:
+        t, name = float(k[0]), k[1]
+        bl = float(k[2]) if len(k) > 2 else 1.5
+        tn = TW.R(t)
+        keys.append((tn, name, bl / max(TW.rate(tn), 1e-3)))
+    w["look"] = keys
+    calm = w.get("calm")
+    if callable(calm):
+        w["calm"] = lambda t, f=calm: f(TW(t))
+    sh = []
+    for d in w.get("shafts", []):
+        d = dict(d)
+        for k in ("base", "strength"):
+            if callable(d.get(k)):
+                d[k] = (lambda f: (lambda t: f(TW(t))))(d[k])
+        sh.append(d)
+    w["shafts"] = sh
+    return w
+
+
+def _bursts_on_new_time(bs):
+    out = []
+    for b in bs:
+        b = dict(b)
+        b["t"] = TW.R(float(b["t"]))
+        out.append(b)
+    return out
+
+
+def _samples_on_new_time(spans):
+    """P3D motion_samples on the new medley's time: n samples in each (old t0, old t1, n), 1 elsewhere."""
+    sp = [(TW.R(a), TW.R(b), int(n)) for a, b, n in spans]
+    return lambda t: max([n for a, b, n in sp if a <= t <= b] + [1])
+
+
 P3D = dict(
-    camera=CAMERA,
-    world=FINALE.world(dict(WORLD, shafts=[_shaft([(P1b, 12.3, 16.0, 0.45), (P5, 35.6, 39.2, 0.45)], radius=1.2),
-                              _shaft([(P3, 22.6, 25.9, 0.5), (P5b, 39.2, 42.6, 0.5)], radius=1.2, color="#ffeccc"),
-                              _shaft([(P2, 19.2, 21.9, 0.35)], radius=1.0, color="#ffd8a0", top=22.0)])),
+    camera=WarpRig(CAMERA, TW),
+    world=_world_on_new_time(
+        FINALE.world(dict(WORLD, shafts=[_shaft([(P1b, 12.3, 16.0, 0.45), (P5, 35.6, 39.2, 0.45)], radius=1.2),
+                                         _shaft([(P3, 22.6, 25.9, 0.5), (P5b, 39.2, 42.6, 0.5)], radius=1.2,
+                                                color="#ffeccc"),
+                                         _shaft([(P2, 19.2, 21.9, 0.35)], radius=1.0, color="#ffd8a0", top=22.0)]))),
     setup=_setup,
-    bursts=[dict(t=LAND_T, strength=0.22, rise=0.05, fall=0.7, color="#ffd9a0", at=tuple(D0 + _v(0.0, 2.0, 0.0))),
-            dict(t=BREATH_END, strength=0.6, rise=0.06, fall=0.45, color="#ffd9a0", at=tuple(A7 + _v(0.0, 6.0, 0.0)))]
-    + FINALE.bursts(),
-    motion_blur=0.4,
+    bursts=_bursts_on_new_time(
+        [dict(t=LAND_T, strength=0.22, rise=0.05, fall=0.7, color="#ffd9a0", at=tuple(D0 + _v(0.0, 2.0, 0.0))),
+         dict(t=BREATH_END, strength=0.6, rise=0.06, fall=0.45, color="#ffd9a0", at=tuple(A7 + _v(0.0, 6.0, 0.0)))]
+        + FINALE.bursts()),
+    motion_blur=0.5,
+    # true motion blur (the point sets drawn at several moments of the shutter) through every fast move
+    motion_samples=_samples_on_new_time([(6.8, 8.9, 6), (8.9, 9.6, 3), (11.6, 13.1, 3), (15.2, 29.0, 2),
+                                         (25.2, 26.9, 4),
+                                         (38.2, 39.7, 5), (41.6, 42.6, 3), (44.3, 48.2, 5), (49.0, 50.8, 4)]),
 )
 
 
@@ -1422,17 +1737,17 @@ def _sig_windows():
     out = []
     for i, (a, pal) in enumerate(SIG_PALETTES):
         b = SIG_PALETTES[i + 1][0] + SIG_FADE if i + 1 < len(SIG_PALETTES) else SIG_END
-        out.append((a, b, SIG_CORNER, pal))
+        out.append((TW.R(a), TW.R(b), SIG_CORNER, pal))      # on the new medley's time
     return out
 
 
 TITLES = dict(
-    opening=dict(t_end=OPEN_END, dissolve=OPEN_END - OPEN_FULL, y=0.30, palette="night",
+    opening=dict(t_end=TW.R(OPEN_END), dissolve=TW.R(OPEN_END) - TW.R(OPEN_FULL), y=0.30, palette="night",
                  protect=dict(keep=0.6, blur=12.0, gain=4.0)),      # no dark window as we dive behind it
     # on over the whole film, over every kind of light: the scene's light is dimmed only close round its letters
     # (titles.py signature protect), never as a dark box behind it
     signature=dict(windows=_sig_windows(), fade=SIG_FADE, protect=dict(keep=0.7, blur=6.0, gain=3.0)),
     # its own crisp BRAND logo (exact colours, drawn over the veil) takes over from the 3D logo as the card sweeps
     # in; a lighter veil, so the pastel day under the card stays a soft peach and cream
-    end_card=dict(t_in=EC_IN, fade=EC_FADE, scale=EC_SCALE, backdrop="auto", veil=0.6),
+    end_card=dict(t_in=TW.R(EC_IN), fade=EC_FADE, scale=EC_SCALE, backdrop="auto", veil=0.6),
 )

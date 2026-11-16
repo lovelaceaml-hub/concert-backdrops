@@ -148,7 +148,7 @@ class LightRiver:
     points), meandering to the horizon. Prismatic glints ride in it. gain(t) its strength."""
 
     def __init__(self, path, width=3.0, n=26000, speed=9.0, gain=None, seed=41, color="#ffd89a",
-                 color2="#fff4e0", prism=0.25):
+                 color2="#fff4e0", prism=0.25, clock=None, twinkle=0.6):
         rng = np.random.default_rng(seed)
         p = np.asarray(path, np.float64)
         seg = np.linalg.norm(np.diff(p, axis=0), axis=1)
@@ -168,6 +168,8 @@ class LightRiver:
         self.col = c
         self._gain = gain
         self.width = width
+        self.clock = clock            # the river's own clock (it may slow down: a calm scene), default t
+        self.twinkle = float(twinkle)
 
     def gain(self, t):
         return 1.0 if self._gain is None else float(self._gain(t))
@@ -189,7 +191,8 @@ class LightRiver:
         g = self.gain(t)
         if g <= 0.002:
             return None
-        s = np.mod(self.u0 + self.v * t, self.L)
+        tc = float(self.clock(t)) if self.clock is not None else t
+        s = np.mod(self.u0 + self.v * tc, self.L)
         c, nrm = self.at(s)
         wob = 0.25 * np.sin(0.7 * s + 6.0 * self.seed + 1.3 * t)
         pos = c + nrm * (self.lat + wob * self.width * 0.1)[:, None]
@@ -204,7 +207,7 @@ class LightRiver:
         k = slice(None, None, 40)
         soft_al = 0.05 * al[k] * ss(4.0, 12.0, dist[k])
         return [dict(pos=pos, size=self.size, color=self.col, alpha=0.85 * al, emit=1.8, kind="spark",
-                     twinkle=0.6, seed=self.seed),
+                     twinkle=self.twinkle, seed=self.seed),
                 dict(pos=pos[k], size=self.width * 0.55, color=lin("#ffcf8a"), alpha=soft_al, kind="soft",
                      streak=0.2)]
 
@@ -831,3 +834,60 @@ class Gather:
                     dict(pos=q, size=5.0 * kk * (0.5 + 0.5 * g), color=self.gold, alpha=0.045 * g, kind="soft",
                          dof=0.0)]
         return out
+
+
+# ---------------------------------------------------------------------------------------- dissolve through light
+class LightVeil:
+    """A dissolve through light (Anthony after v6: no hard whips where the songs blend): a veil of soft warm
+    glows and fine sparkles drifts across the lens, thickens for a moment (the change of scene hides inside it)
+    and clears again. It rides with the camera, so it flows on unbroken across the cut. Never white: a warm,
+    see-through veil over a picture that stays visible.
+
+    cuts   [(t, rise, fall), ...]: the moment of each change and the seconds the veil takes to gather and clear
+    k      how thick the veil is at its peak"""
+    wants_camera = True
+
+    def __init__(self, cuts, n=520, k=1.0, seed=17, colors=("#ffd9a6", "#ffc7b4", "#fff0d6", "#f6c2e0")):
+        r = np.random.default_rng(seed)
+        self.cuts = [tuple(float(x) for x in c) for c in cuts]
+        self.k = float(k)
+        self.xy = r.uniform(-1.15, 1.15, (n, 2))
+        self.d = r.uniform(2.2, 7.0, n)
+        self.v = r.normal(0.0, 1.0, (n, 2)) * 0.06 + np.array([0.10, 0.05])
+        self.s = r.random(n)
+        cols = np.array([lin(c) for c in colors])
+        self.col = cols[r.integers(0, len(cols), n)]
+        m = n // 4
+        self.sp = r.uniform(-1.1, 1.1, (m, 2))
+        self.sd = r.uniform(1.5, 5.0, m)
+        self.ss_ = r.random(m)
+
+    def env(self, t):
+        e = 0.0
+        for tc, rise, fall in self.cuts:
+            if tc - rise <= t <= tc + fall:
+                u = sc(tc - rise, tc, t) if t <= tc else 1.0 - sc(tc, tc + fall, t)
+                e = max(e, u)
+        return e
+
+    def sample(self, t, cam=None):
+        e = self.env(t)
+        if e <= 0.002 or cam is None:
+            return None
+        r, u, f = (np.asarray(v, np.float64) for v in cam.basis())
+        th = np.tan(np.radians(cam.fov) * 0.5)
+        asp = float(getattr(cam, "aspect", 16.0 / 9.0))
+        pos0 = np.asarray(cam.pos, np.float64)
+        # the glows drift slowly across the picture (the same way on both sides of the cut)
+        xy = self.xy + self.v * t
+        xy = (xy + 1.15) % 2.3 - 1.15
+        P = (pos0[None] + f[None] * self.d[:, None] + r[None] * (xy[:, :1] * th * asp * self.d[:, None])
+             + u[None] * (xy[:, 1:2] * th * self.d[:, None]))
+        size = (0.55 + 0.9 * self.s) * self.d * th * 0.42
+        a = self.k * e ** 1.3 * (0.05 + 0.07 * self.s)
+        sxy = (self.sp + np.array([0.12, 0.08]) * t + 1.1) % 2.2 - 1.1
+        S = (pos0[None] + f[None] * self.sd[:, None] + r[None] * (sxy[:, :1] * th * asp * self.sd[:, None])
+             + u[None] * (sxy[:, 1:2] * th * self.sd[:, None]))
+        return [dict(pos=P, size=size, color=self.col, alpha=a, kind="soft", dof=0.0, reflect=False, streak=0.0),
+                dict(pos=S, size=0.012 * self.sd, color=lin("#fff2dc"), alpha=self.k * e * (0.4 + 0.6 * self.ss_),
+                     emit=1.5, kind="spark", twinkle=0.6, seed=self.ss_, dof=0.0, reflect=False, streak=0.0)]
