@@ -836,7 +836,7 @@ def _embrace_pair(o, t_touch, t_look, t_rise, t_hold, until):
     from p3d import pairs
     from p3d.body import Body
     refs = {}
-    gap, side = 0.27, 0.085
+    gap, side = 0.24, 0.085
     # kneeling, both seen in profile: b sits back on her heels facing the picture's right, a little toward us;
     # a kneels just behind her (picture left), turned to her, and lays her near hand on b's upper back
     kb_k, fb_k = (o[0] + 0.25, o[2] + 0.02), 58.0
@@ -890,11 +890,11 @@ def _embrace_pair(o, t_touch, t_look, t_rise, t_hold, until):
         return on(name, f, o + _v(0.0, 1.1, 0.0))
     end = until + 1.0
     a["gesture"] = a["gesture"] + [
-        (t_hold, end, "embrace", dict(to=back("b", "R", 0.0), to2=back("b", "L", 0.0), head="L", ease=1.25)),
+        (t_hold, end, "embrace", dict(to=back("b", "R", 0.0), to2=back("b", "L", 0.0), head="L", ease=1.1)),
         (t_hold + 1.0, end, "sway", dict(period=3.6, amount=1.6, ease_in=1.2))]
     b["gesture"] = b["gesture"] + [
-        (t_hold + 0.15, end, "embrace", dict(to=back("a", "R", 0.10), to2=back("a", "L", 0.10), head="L",
-                                             ease=1.3)),
+        (t_hold + 0.12, end, "embrace", dict(to=back("a", "R", 0.10), to2=back("a", "L", 0.10), head="L",
+                                             ease=1.15)),
         (t_hold + 1.0, end, "sway", dict(period=3.6, amount=1.6, phase=0.5, ease_in=1.2))]
     A = Body(**a)
     refs["a"] = A
@@ -1000,6 +1000,21 @@ def _concession_man(o, t0, t1, view):
     return [m]
 
 
+def _help_up(o, t0, t1, view):
+    """CONSIDERATION (two men): one kneels on one knee; the other steps close, bends a little and reaches down a
+    hand, the elbow soft; they clasp hands and he is lifted gently to his feet, then lays his free hand on his
+    helper's shoulder in thanks (pairs.helped_up, closer than the library's default so no arm locks straight)."""
+    from p3d import pairs
+    st_face = view + 90.0 - 15.0                                   # facing the picture's right, opened to us
+    a = dict(shape="man", garment="coat", hair="short", height=1.76, build=1.06, points=70000,
+             show=(t0 - 1.4, t1 + 0.5), fade=0.5, seed=8.0,
+             gesture=[(t0 - 0.2, t0 + 1.6, "bow", dict(amount=14.0, ease_in=0.9, ease_out=1.0))], **GOLD)
+    b = dict(shape="man", garment="tunic", hair="cap", height=1.72, build=0.92, points=70000,
+             show=(t0 - 1.4, t1 + 0.5), fade=0.5, seed=9.37, **CRYSTAL)
+    A, B = pairs.helped_up(t0 + 0.5, at=(o[0], o[2]), facing=st_face, a=a, b=b, rise=1.7, reach=1.0, apart=0.68)
+    return [A, B]
+
+
 def _dancer(o, t0, t1, view):
     """COMPLIMENT: a joyful, graceful moment. She gathers her arms low and round, turns once as they open in a soft
     rounded arc, the way a dancer moves, and lifts them into a high, open V, her face rising; then she sways,
@@ -1044,10 +1059,7 @@ def _cast():
     cam4 = _cam_at_key(_cam_keys_s4(), 31.6)
     C["encouragement"] = _prayer_pair(P4, 29.6, 33.6, _view(P4, cam4))
     cam5 = P5 + _v(-0.8, 1.3, 6.0)
-    C["consideration"] = acting.perform("Consideration", 35.9, 38.9, at=(P5[0], P5[2]), view=_view(P5, cam5),
-                                        variant="help_up", style=dict(points=70000),
-                                        style_a=dict(GOLD, shape="man"), style_b=dict(CRYSTAL, shape="man"),
-                                        pre=1.4, post=0.5, seed=8.0)
+    C["consideration"] = _help_up(P5, 35.9, 38.9, _view(P5, cam5))
     cam5b = P5b + _v(-2.0, 1.55, 6.4)
     C["compliment"] = _dancer(P5b, 39.0, 42.0, _view(P5b, cam5b))
     return C
@@ -1580,8 +1592,8 @@ def _setup(scene):
         scene.add("symbol_%d" % k, Clear(MB.SymbolLight(lab, anchor, tt, GLOWC[lab], size=size, seed=91 + k)))
 
     # the dissolves through light where the songs blend (the hard cuts of the camera hide inside them)
-    scene.add("veil", FX.LightVeil([(SEC[2], 0.5, 0.75), (SEC[3], 0.5, 0.75), (SEC[4], 0.5, 0.75),
-                                    (SEC[5], 0.5, 0.75)], k=1.0), reflect=False, depth_of_field=False, lod=False)
+    scene.add("veil", FX.LightVeil([(SEC[2], 0.45, 0.7), (SEC[3], 0.45, 0.7), (SEC[4], 0.45, 0.7),
+                                    (SEC[5], 0.45, 0.7)], k=0.5), reflect=False, depth_of_field=False, lod=False)
 
     WORDS.add_to(scene, reflect=False)
     try:

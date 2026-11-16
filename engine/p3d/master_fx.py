@@ -847,7 +847,7 @@ class LightVeil:
     k      how thick the veil is at its peak"""
     wants_camera = True
 
-    def __init__(self, cuts, n=520, k=1.0, seed=17, colors=("#ffd9a6", "#ffc7b4", "#fff0d6", "#f6c2e0")):
+    def __init__(self, cuts, n=520, k=1.0, seed=17, colors=("#ffd49a", "#ffc2a6", "#ffe6c0", "#f8c0d4")):
         r = np.random.default_rng(seed)
         self.cuts = [tuple(float(x) for x in c) for c in cuts]
         self.k = float(k)
