@@ -947,4 +947,3 @@ _base.TITLE_HIT = TITLE_HIT
 PHRASES = _base.PHRASES
 CREDIT = _base.CREDIT
 WAVES = []
-
