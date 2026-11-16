@@ -80,7 +80,7 @@ def install(film):
     finale = B.Finale(pos=(0, 2.6, 0), radius=2.9, camera=virtual, look='day',
                       t_world=49.55, spin=6, front=-40, shrink=.52,
                       hearts=False,
-                      t_settle=(50.4, 51.2), t_logo=(51.0, 52.6), bloom=False,
+                      t_settle=(50.4, 51.2), t_logo=(51.0, 52.1), bloom=False,
                       end=dict(t=(52.0, 52.5), ride=(.5, .8542, 20), frac=.148),
                       logo=dict(reflect=False), n=50000)
 
