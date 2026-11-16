@@ -84,6 +84,9 @@ Runs of the masterpiece so far, all on branch `master/words-that-bring-peace`:
 | v5 | 43767697863 | |
 | v6 | 43769618192 | Latest complete, 62 s at 30 fps |
 | v7 test 1 | 43785749994 | Work in progress, 60 fps, old medley |
+| v7 | 43800824532 | 60 fps, medley7, refined acting, smooth carries |
+| v8 | 43806325783 | v7 plus two small fixes |
+| v9 | 43810639666 | LATEST (head 58ec94f): Nine Colours comets as the travelling thread, words written by comet pens, Gratitude, Concession and Respect in light only, escalating theatrical transitions; v10 polish list waits for Anthony |
 
 ### 2.4 The Claude session scratch space (ephemeral)
 
@@ -93,7 +96,7 @@ The working copy of everything above lives at `/tmp/claude-0/-home-user-concert-
 
 | Branch | Head | What it is |
 |---|---|---|
-| `master/words-that-bring-peace` | bfac3ad (v6 is b7895ae) | THE MASTERPIECE. Song `engine/songs/master_peace.py`, plus its own effects in `engine/p3d/master_sky.py`, `master_fx.py` and `master_brand.py`. PR #54 into engine-p3d-words. Claude's helper MASTER3 is the only writer. |
+| `master/words-that-bring-peace` | 58ec94f (v9; v6 is b7895ae) | THE MASTERPIECE. Song `engine/songs/master_peace.py`, plus its own effects in `engine/p3d/master_sky.py`, `master_fx.py` and `master_brand.py`. PR #54 into engine-p3d-words. Claude's helper MASTER3 is the only writer. |
 | `medley7` | 19f2c83 | The new 7-song medley `audio/promo/concert-medley7.mp3` (order 03, 04, 01, 08, 11, 06, 07; 62.000 s; map in `project-docs/promo/medley/SECTION-MAP-medley7.md`). Built by MEDLEY3; MASTER3 merges it into the masterpiece. |
 | `engine-p3d-words` | afd2bd3 | The integrated engine the masterpiece builds on (3D layer + bodies + words + TITLES + brand merged). |
 | `engine-p3d` | 8902405 | 3D layer (CORE2 final). PR #53. |
