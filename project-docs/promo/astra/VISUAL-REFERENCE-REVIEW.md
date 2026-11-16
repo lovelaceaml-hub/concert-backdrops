@@ -1,6 +1,6 @@
 # Astra visual reset: saved-film review
 
-2026-11-16. Anthony rejected A World Made Gentle and then the opaque gold hands and flower studies. He directed Astra to study the saved versions before continuing. These are review findings, not a new finished film or an assertion of owner approval.
+2026-11-16. The owner rejected A World Made Gentle and then the opaque gold hands and flower studies. He directed Astra to study the saved versions before continuing. These are review findings, not a new finished film or an assertion of owner approval.
 
 ## Review method and coverage
 
@@ -55,13 +55,13 @@ The corrective direction is not merely more particles or more bloom. Light must 
 
 A tender act releases light that reaches another person and eventually fills the surrounding world. Keep warm luminous people whole, with soft faces, natural shoulders, elbows and hands. Use royal violet, rose and living gold, with separate foreground, subject and distant cloud layers. Move from intimate human scale to an immense environment, then return to a calm, warm resolution. Keep the official campaign information and true logo colors.
 
-The next production check must be a short actual moving shot with a readable gesture, a motivated camera reveal, layered atmosphere and controlled highlights. Compare its frames directly with the concrete references above. A static concept image or a technically successful render is not evidence that the film meets Anthony's aesthetic goal. Do not extend an unconvincing study into another full-length delivery.
+The next production check must be a short actual moving shot with a readable gesture, a motivated camera reveal, layered atmosphere and controlled highlights. Compare its frames directly with the concrete references above. A static concept image or a technically successful render is not evidence that the film meets the owner's aesthetic goal. Do not extend an unconvincing study into another full-length delivery.
 
 The solid-hand and lotus studies remain uncommitted experiments and are not the basis of the revision. No paid service, shared song/acting file, music file, workflow or merge is involved in this review. Private extracted media remain outside Git. Music still requires its own audible review; this visual review does not approve the previous edit.
 
 ## Owner selection: Nine Colours
 
-Anthony subsequently chose Film 10, Nine Colours as the principal reference.
+The owner subsequently chose Film 10, Nine Colours as the principal reference.
 The independent revision now uses its deep star field, coloured light with
 white cores, blue hoop flight, embrace helix and rising nine-colour braid.
 The prior cloud/veil export was stopped. Updated concert details, native 60 fps,

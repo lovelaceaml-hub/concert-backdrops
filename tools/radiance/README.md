@@ -1,7 +1,7 @@
 # The Light That Reaches You
 
 An independent 62-second Astra revision, built in the existing Python and
-moderngl engine. Anthony selected Film 10, Nine Colours as the principal visual
+moderngl engine. The owner selected Film 10, Nine Colours as the principal visual
 reference. White-cored coloured comets travel over a star-filled mirror lake,
 visit nine human encounters, pass through blue hoops, wrap the embrace in a
 double helix, then gather into a rising nine-colour braid. The colours reach a
@@ -11,7 +11,7 @@ The saved-film review is in
 `project-docs/promo/astra/VISUAL-REFERENCE-REVIEW.md`. Film 10's handover and
 source on `ten/10-nine-colours` informed the layered comet treatment. No saved
 video is composited into the result. Every frame is rendered locally. The
-intermediate cloud/veil export was stopped when Anthony chose Nine Colours.
+intermediate cloud/veil export was stopped when the owner chose Nine Colours.
 
 ## Scope and provenance
 
