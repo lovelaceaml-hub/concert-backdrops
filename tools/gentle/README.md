@@ -29,7 +29,9 @@ official logo. The closing card rests on a warm cream and peach field.
 - 55 to 62 s: the full official-style end card remains readable. Gentle motes
   keep it alive while the final musical chord decays. No fade to black.
 
-The camera, garden, light paths, drop, scene timing and score are new. Reviewed
+The camera, garden, light paths, drop, scene timing and score are new. The
+encouragement scene uses two newly staged standing women to avoid the source
+kneel exposing a disconnected-looking shin. Reviewed
 performances from songs.master_astra are reused as cast assets, transformed and
 retimed without changing the shared acting implementation. This is not a claim
 that the engine, brand assets or human performances were created from scratch.
@@ -55,7 +57,9 @@ This branch is based on compare/astra6-concert at 10e347f. The draft PR targets
 that branch to show only the new treatment. It relies on PR57's opt-in end-card
 motes and reusable cast. No existing song, master effect, acting, audio or
 workflow file is changed here. The entry point loads film.py in memory as a song
-module, without creating anything under engine/songs/.
+module, without creating anything under engine/songs/. A process-local Titles subclass
+fades the opening dust out by 8 s so it cannot cross the first expression. The
+opening remains fully readable for seven seconds.
 
 Use the normal engine dependencies and fonts from the handbook. From the repo
 root:
@@ -83,7 +87,8 @@ old parts and manifest aside together before regenerating changed input.
 
 ## Checks and limits
 
-The raw frame probe compares nine 1080p frames near three part boundaries in
+The raw frame probe compares twelve 1080p frames near three part boundaries and
+within the new standing encouragement scene in
 sequential and shuffled fresh processes. The encoded-file checker inspects all
 frame timestamps and native frame hashes, half-second motion differences and
 jitter, the seven part joins, audio clipping, lead silence, six quarter-second

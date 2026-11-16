@@ -1,7 +1,7 @@
 """Compare raw 1080p frames in sequential and shuffled fresh processes.
 
 This is a creative-film regression check, not the engine performance suite.
-Images and reports are private outputs under work/gentle/order/.
+Hashes and reports are private outputs under work/gentle/order/.
 """
 import argparse
 import hashlib
@@ -14,7 +14,7 @@ import time
 
 from render import ROOT, load
 
-FRAMES=[929,930,931,1859,1860,1861,2789,2790,2791]
+FRAMES=[929,930,931,1859,1860,1861,2039,2040,2041,2789,2790,2791]
 
 
 def worker(order, destination):
@@ -52,7 +52,7 @@ def main():
     (folder/'report.json').write_text(json.dumps(report,indent=2)+'\n')
     if not same:
         raise SystemExit('Raw frame order mismatch')
-    print('All nine raw frames are pixel identical across fresh-process render orders.')
+    print(f'All {len(FRAMES)} raw frames are pixel identical across fresh-process render orders.')
 
 
 if __name__=='__main__':

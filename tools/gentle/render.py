@@ -27,6 +27,22 @@ def load():
     module=importlib.util.module_from_spec(spec)
     sys.modules[spec.name]=module
     spec.loader.exec_module(module)
+    import titles
+
+    class GentleTitles(titles.Titles):
+        """Let the opening's dust settle before the first reading moment.
+
+        This process-local adapter changes no shared title implementation.
+        The full opening still holds through seven seconds.
+        """
+        def _op_points(self,t,front):
+            if t>=8.0:
+                return []
+            amount=float(1-module.smooth(7.0,8.0,t))
+            return [((xy,size,rgba*amount),additive)
+                    for (xy,size,rgba),additive in super()._op_points(t,front)]
+
+    titles.Titles=GentleTitles
     return module
 
 
