@@ -157,7 +157,7 @@ def main():
     p.add_argument('--range', type=int, nargs=2)
     p.add_argument('--out', type=Path)
     p.add_argument('--all', action='store_true')
-    p.add_argument('--workers', type=int, default=4)
+    p.add_argument('--workers', type=int, default=3)
     p.add_argument('--parts', type=int, default=12)
     a = p.parse_args()
     if not 1 <= a.workers <= 4 or not 1 <= a.parts <= 32:

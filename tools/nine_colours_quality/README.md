@@ -34,12 +34,14 @@ already present, run from the repo root:
 
 ```sh
 python tools/nine_colours_minor/quality.py --stills 3,16,43,56.8,62
-python tools/nine_colours_minor/quality.py --all --workers 4 --parts 12
+python tools/nine_colours_minor/quality.py --all --workers 3 --parts 12
 python tools/nine_colours_quality/deliver.py
 python tools/nine_colours_quality/verify.py
 ```
 
 The input restoration procedure is in `tools/nine_colours_minor/README.md`.
+Use three workers on a 16 GB machine; four UHD renderers plus 10-bit encoders
+can exceed memory during scene or encoder-buffer peaks.
 The delivery script expects the exact approved master under
 `out/nine_colours_revision3/` solely to copy its audio stream.
 
