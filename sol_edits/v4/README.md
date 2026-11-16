@@ -49,7 +49,8 @@ and fingers. It avoids opaque arm stumps. The late gate gains a secondary phrase
 and its real water reflection after the main phrase's reading moment. This
 follows the owner's explicit request for passing reflected words.
 
-Fast cuts use short moving picture dissolves; shader sparkle flicker is removed.
+Fast cuts use short moving picture dissolves. Strong shader twinkle on figures,
+words and ribbons is removed, while the original sky's stars remain.
 Near-lens ribbon widths and alpha are bounded to prevent a large triangular
 streak from filling the image. Native motion blur uses a 0.8/60 second shutter.
 The original ending's sky and coloured arch remain alive behind the official
@@ -101,6 +102,10 @@ python sol_edits/v4/check_audio.py --tail-seconds .02 \
   --video work/sol4/Sol-V4-Nine-Colours-Upgraded-1080p60.mp4 \
   --out work/sol4/master-audio-check.json
 python sol_edits/v4/check_seams.py
+python sol_edits/v4/check_music_identity.py \
+  --reference '/path/to/Film 10, Nine Colours (share).mp4' \
+  --video work/sol4/Sol-V4-Nine-Colours-Upgraded-1080p60.mp4 \
+  --out work/sol4/original-music-match.json
 python sol_edits/v4/inspect_motion.py \
   work/sol4/Sol-V4-Nine-Colours-Upgraded-review-720p60.mp4 \
   --out work/sol4/motion-check.json

@@ -56,10 +56,13 @@ def main():
         with concurrent.futures.ThreadPoolExecutor(max_workers=a.workers) as pool:list(pool.map(part,bounds))
     parts=[json.loads((OUT/f'part-{x:04}-{y:04}.cost.json').read_text()) for x,y in bounds]
     native_done=time.time();report=dict(parts=parts,native_cpu_seconds=sum(x['cpu_seconds'] for x in parts))
+    discarded=OUT/'discarded-native.json'
+    if discarded.exists():report['discarded_cpu_seconds']=sum(x['cpu_seconds'] for x in json.loads(discarded.read_text()))
     production=json.loads((OUT/'production-start.json').read_text())['start_epoch']
     report['native_wall_seconds']=native_done-production
     (OUT/'render-cost.json').write_text(json.dumps(report,indent=2)+'\n')
-    report['finish']=finish(bounds);report['total_cpu_seconds']=report['native_cpu_seconds']+report['finish']['cpu_seconds']
+    report['finish']=finish(bounds)
+    report['total_cpu_seconds']=report['native_cpu_seconds']+report.get('discarded_cpu_seconds',0)+report['finish']['cpu_seconds']
     report['total_wall_seconds']=time.time()-production
     (OUT/'render-cost.json').write_text(json.dumps(report,indent=2)+'\n');print(report,flush=True)
 if __name__=='__main__':main()

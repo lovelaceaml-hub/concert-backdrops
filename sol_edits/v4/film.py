@@ -30,6 +30,12 @@ for label,times in [('Greeting',(5.2,5.55,8.05,8.25)),('Concession',(8.25,8.65,1
     k=O.GREET if label=='Greeting' else O.CONC
     old=O.HEADS[k].legs[0]
     O.HEADS[k].legs[0]=(times[0],times[1],old[2],.35,.4)
+old=O.HEADS[O.GREET].legs[1]
+O.HEADS[O.GREET].legs[1]=(5.8,8.0,old[2],.15,.4)
+_gate_rate=(11.6-O.TUNNEL_T0)/(11.6-9.0)
+O.HEADS[O.CONC].legs[1]=(9.0,11.6,lambda t:O._tunnel(O.TUNNEL_T0+(t-9.0)*_gate_rate),.3,1.5)
+_lead=O._lead_of
+O._lead_of=lambda t:O.GREET if t<8.25 else _lead(t)
 for word in O.WORDS:
     word.sparkle=.06
     word.halo=.55
@@ -150,7 +156,9 @@ def setup(scene):
     proxy=SceneProxy(scene)
     from sol_edits.v4.paths import install
     install(O,bodies())
-    for name,ps in [('seed',O.ScreenClear(O.Seed())),('hoops',O.ScreenClear(O.PW.KeepClear(O.Hoops(),O.WORDS))),
+    hoops=O.Hoops()
+    hoops.ts=9.0+(hoops.ts-O.TUNNEL_T0)/_gate_rate
+    for name,ps in [('seed',O.ScreenClear(O.Seed())),('hoops',O.ScreenClear(O.PW.KeepClear(hoops,O.WORDS))),
                     ('lanterns',O.ScreenClear(O.PW.KeepClear(O.Lanterns(),O.WORDS)))]:proxy.add(name,ps)
     for name,body in bodies().items():body.add(proxy,name,mask=False)
     proxy.add('flares',O.ScreenClear(O.Flares()))
