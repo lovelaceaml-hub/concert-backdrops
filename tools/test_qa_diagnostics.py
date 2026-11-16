@@ -37,6 +37,12 @@ class Diagnostics(unittest.TestCase):
         q.titles_checks(s, issues, [])
         self.assertEqual(len(issues), 2)
 
+    def test_empty_audio(self):
+        issues = []
+        result = q.audio_metrics(np.array([]), 48000, issues, [])
+        self.assertEqual(result["skipped"], "empty decoded audio")
+        self.assertEqual(issues[0]["check"], "Audio decode")
+
     def test_audio_silence_clipping_and_stereo(self):
         issues = []
         q.audio_metrics(np.zeros(48000 * 5), 48000, issues, [], 2)
