@@ -1,6 +1,8 @@
 # Concert Backdrops: video track status
 
-## Latest promo approval, 2026-11-16
+**Current quality master, 2026-11-16:** one native 3840x2160, 60 fps, 10-bit export of the approved Revision 3 is complete and checked. Added composite grain is removed; the edit and exact music stream are preserved. The owner requested one highest-quality file. The 318,834,702-byte MP4 exceeds this connector's 104,857,600-byte Drive upload limit, so video transfer is pending and no smaller copy was created. The original is available in the Codex workspace and chat. The new quality file awaits owner review; prior approved files remain archived. [Quality record and checks](promo/QUALITY-NINE-COLOURS-R3.md).
+
+## Archived creative approval, 2026-11-16
 
 The owner approved **Film 10, Nine Colours, Revision 3** and requested preservation, documentation and upload. [Phone 720p60](https://drive.google.com/file/d/1CBQ4OtpLW3Kp3zBWsEMkjXYiAWUwhDQw/view) and [master 1080p60](https://drive.google.com/file/d/1gcxnb4Oyexq5Kbb8LvFWqOrikF-BVSht/view) are saved in Videos. Both are 66 seconds at native 60 fps. The exact source is `46df53b98a43f58e51a78d40ee5794108a68e13c`, tag `film10-revision3-approved-2026-11-16`; draft PR #71 remains unmerged. [Full approval and handoff record](promo/APPROVED-NINE-COLOURS-R3.md).
 

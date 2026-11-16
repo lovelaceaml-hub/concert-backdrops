@@ -1,8 +1,10 @@
 # Concert promo project handbook (shared instructions for Claude and Codex)
 
-Last updated 2026-11-16 by Codex to record the owner's approval of Film 10 Revision 3, preserving the coordinator's earlier history below. This handbook is the single source of truth for every AI agent (Claude sessions, Claude helpers, Codex, or any other) working on this project. If you are an agent starting work, read this whole file first, then the files it points to. If anything here conflicts with an older brief, this file wins, and the newest owner direction (section 4) wins over everything.
+**Current quality master, 2026-11-16:** one native 3840x2160, 60 fps, 10-bit export of the approved Revision 3 is complete and checked. Added composite grain is removed; the edit and exact music stream are preserved. The owner requested one highest-quality file. The 318,834,702-byte MP4 exceeds this connector's 104,857,600-byte Drive upload limit, so video transfer is pending and no smaller copy was created. The original is available in the Codex workspace and chat. The new quality file awaits owner review; prior approved files remain archived. [Quality record and checks](QUALITY-NINE-COLOURS-R3.md).
 
-**Current approved delivery: Film 10, Nine Colours, Revision 3.** On 2026-11-16 the owner said "thats so good. save this and update all docs and upload" after viewing this cut. Read [APPROVED-NINE-COLOURS-R3.md](APPROVED-NINE-COLOURS-R3.md) for the exact videos, source tag, hashes, reproduction and scope. The approved cut is 66 seconds at native 60 fps, with the original Film 10 medley. Older 62-second/seven-song plans below describe earlier versions. This approval does not authorize any merge.
+Last updated 2026-11-16 by Codex to record the clean UHD master and pending Drive transfer, preserving the coordinator's earlier history below. This handbook is the single source of truth for every AI agent (Claude sessions, Claude helpers, Codex, or any other) working on this project. If you are an agent starting work, read this whole file first, then the files it points to. If anything here conflicts with an older brief, this file wins, and the newest owner direction (section 4) wins over everything.
+
+**Approved creative cut: Film 10, Nine Colours, Revision 3.** On 2026-11-16 the owner said "thats so good. save this and update all docs and upload" after viewing this cut. Read [APPROVED-NINE-COLOURS-R3.md](APPROVED-NINE-COLOURS-R3.md) for the exact videos, source tag, hashes, reproduction and scope. The approved cut is 66 seconds at native 60 fps, with the original Film 10 medley. Older 62-second/seven-song plans below describe earlier versions. This approval does not authorize any merge.
 
 ---
 
@@ -14,7 +16,7 @@ Last updated 2026-11-16 by Codex to record the owner's approval of Film 10 Revis
   - Sunday, December 6, 4:30 PM.
   - World Mission Society Church of God, 6720 W Sahara Ave, Las Vegas.
   - It is part of the church's campaign "The Words of Mother's Love" (the 2026 Mother's Love Preaching Festival; theme: the Art of Happy Communication), with the logo of two hearts, a globe and olive branches.
-- **Current delivery:** the owner-approved 66-second Film 10 Revision 3 promo, built in our own engine with the original concert medley, saved for phone and screen playback at 60 fps. The earlier masterpiece work and alternatives remain preserved below.
+- **Current quality export:** one 66-second native 4K60 master of the approved Film 10 Revision 3, complete and checked. Drive video upload is blocked by the connector size limit; see the quality record above. The earlier masterpiece work and alternatives remain preserved below.
 - **The bar (Anthony's words):** "majestic, beautiful, awesome, brilliant, extravagant, beyond imagination, heavenly, very expressive ... so breathtakingly beautiful that emotions are felt." Express the words of Mother's love that bring peace.
 - **Earlier phases, kept for reference:**
   - 11 per-song backdrop promos (main branch);
@@ -33,7 +35,7 @@ The engine code, song files, short audio clips and these docs.
 - **project-docs/promo/:** everything from the promo phase, copied out of the Claude session scratch space:
   - `PROJECT-HANDBOOK.md`: this file.
   - `briefs/`: the working briefs.
-    - `PHASEB.md` records the owner directions through UPDATE 21, the Revision 3 approval. Read UPDATES 13 to 21 at least.
+    - `PHASEB.md` records the owner directions through UPDATE 22, the single clean UHD master. Read UPDATES 13 to 22 at least.
     - `P3D-BRIEF.md`: direction for the 3D particle engine and the house rules.
     - `EPIC-BRIEF.md`: mechanics.
     - `MASTER-TREATMENT.md`: the approved masterpiece treatment.
@@ -69,7 +71,7 @@ The project's home for media and documents.
   - the reference images: Anthony's inspiration photos and people-style references;
   - brand material: the logo, the official poster, the expression icons and website screenshots;
   - the approved design mockups.
-- Approved Revision 3 is saved in the project's Videos folder: [phone 720p60](https://drive.google.com/file/d/1CBQ4OtpLW3Kp3zBWsEMkjXYiAWUwhDQw/view) and [master 1080p60](https://drive.google.com/file/d/1gcxnb4Oyexq5Kbb8LvFWqOrikF-BVSht/view). The phone copy was also delivered in the Codex chat. Older render artifacts remain in GitHub Actions (section 2.3); they are not this approved cut.
+- Archived approved Revision 3 exports are saved in the project's Videos folder: [phone 720p60](https://drive.google.com/file/d/1CBQ4OtpLW3Kp3zBWsEMkjXYiAWUwhDQw/view) and [master 1080p60](https://drive.google.com/file/d/1gcxnb4Oyexq5Kbb8LvFWqOrikF-BVSht/view). The phone copy was also delivered in the Codex chat. Older render artifacts remain in GitHub Actions (section 2.3); they are not this approved cut.
 
 ### 2.3 GitHub Actions: the "Render" workflow (.github/workflows/render.yml)
 
@@ -103,6 +105,7 @@ The working copy of everything above lives at `/tmp/claude-0/-home-user-concert-
 |---|---|---|
 | `master/words-that-bring-peace` | 58ec94f (v9; v6 is b7895ae) | THE MASTERPIECE. Song `engine/songs/master_peace.py`, plus its own effects in `engine/p3d/master_sky.py`, `master_fx.py` and `master_brand.py`. PR #54 into engine-p3d-words. Claude's helper MASTER3 is the only writer. |
 | `creative/nine-colours-spiral-and-expression` | approved source `46df53b`, tag `film10-revision3-approved-2026-11-16` | Owner-approved Film 10 Revision 3, 66 s / 60 fps. Draft PR #71 based on draft #70, unmerged. Implementation only under `tools/nine_colours_minor/`. |
+| `quality/nine-colours-clean-master` | renderer `2c95ee0`, delivery/QA through `dd8f0f5` | One clean UHD60 master, draft PR #73. Complete and checked; Drive video upload exceeds connector limit. New quality file awaits owner review. |
 | `medley7` | 19f2c83 | The new 7-song medley `audio/promo/concert-medley7.mp3` (order 03, 04, 01, 08, 11, 06, 07; 62.000 s; map in `project-docs/promo/medley/SECTION-MAP-medley7.md`). Built by MEDLEY3; MASTER3 merges it into the masterpiece. |
 | `engine-p3d-words` | afd2bd3 | The integrated engine the masterpiece builds on (3D layer + bodies + words + TITLES + brand merged). |
 | `engine-p3d` | 8902405 | 3D layer (CORE2 final). PR #53. |
@@ -121,7 +124,7 @@ Nothing is merged without Anthony's explicit approval. Comparison PRs #56 and #5
 
 ## 4. Owner directions (all still in force unless replaced)
 
-The newest are in `project-docs/promo/briefs/PHASEB.md`, through UPDATE 21.
+The newest are in `project-docs/promo/briefs/PHASEB.md`, through UPDATE 22.
 
 **Approved Revision 3, 2026-11-16:** preserve the extended opening/burst, original eight-song Film 10 medley and final accent, cream serif expression text with capsule labels, golden listening pair for Respect, swirling light becoming Earth with orbiting expression symbols, signature and official pastel closing card. The approved timeline is 66 seconds with a six-second lead-in, and both exports are 60 fps. These specific approved choices supersede the earlier duration, seven-song and quiet-last-second proposals for this cut only. No new creative change or render was requested with the save instruction. [Exact approval record](APPROVED-NINE-COLOURS-R3.md).
 
@@ -271,7 +274,7 @@ The 62 s timeline on the lead-in medley:
   - renders at 60 fps.
 
 **Codex**
-- Latest owner-authorized creative work is complete: Film 10 Revision 3 in draft PR #71, saved under its approval tag. Shared records and Drive copies have been updated for handoff. The engineering tasks below are earlier assignments, not permission to alter the approved video while archiving it.
+- The new owner-authorized quality export is complete and checked in draft PR #73; Drive video transfer is pending because of the connector size limit. No smaller copy was made. The approved creative work is complete: Film 10 Revision 3 in draft PR #71, saved under its approval tag. Shared records and Drive copies have been updated for handoff. The engineering tasks below are earlier assignments, not permission to alter the approved video while archiving it.
 - **Own branches only** (perf/render-speed, and a new QA branch). Does not trigger Render and does not merge.
 - **Hands off:**
   - `engine/songs/*`

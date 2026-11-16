@@ -214,3 +214,11 @@ This is the 66-second, native 60 fps cut on `creative/nine-colours-spiral-and-ex
 Approved files: [phone 720p60](https://drive.google.com/file/d/1CBQ4OtpLW3Kp3zBWsEMkjXYiAWUwhDQw/view), [master 1080p60](https://drive.google.com/file/d/1gcxnb4Oyexq5Kbb8LvFWqOrikF-BVSht/view). Both are 66.000 seconds and 3,960 frames, with zero adjacent duplicated frames. All 28 sampled raw-frame order checks pass; the phone upload was downloaded and hash-verified. See [the approval and handoff record](../APPROVED-NINE-COLOURS-R3.md) for hashes, reference sources, QA scope and reproduction.
 
 Preserve these exact outputs and earlier versions. Record any future alternative under a new revision. Draft PR #71 remains based on draft PR #70, with no merge. No paid service or GitHub Render workflow was used or requested for this save.
+
+## UPDATE 22 (2026-11-16): One clean UHD master, highest quality first
+
+The owner reported grain in both the 720p and 1080p Revision 3 exports, then said they need one highest-quality version: "I want it super clear ultra hd no pixelation". Preserve the approved creative edit and original music. The small phone-copy target is superseded for this cut.
+
+The quality export is complete: real 3840x2160, native 60 fps, 66.000 seconds, 10-bit HEVC Main 10, CRF 12 without a bitrate cap, floating-point composite and no added composite grain. All 3,960 frames decode, timestamps are correct, zero adjacent repeated frames were found, five fresh source samples match full-range frames and the approved audio packets are unchanged. This is high-quality lossy video, not a lossless or HDR claim.
+
+The single MP4 is 318,834,702 bytes. The Drive connector rejected the upload before action invocation because its limit is 104,857,600 bytes. No reduced copy was made. The full file remains in the Codex workspace and is linked in chat; Drive video transfer is pending. [Exact file, hash, QA and reproduction](../QUALITY-NINE-COLOURS-R3.md). Draft PR #73 remains unmerged, and the new quality file awaits owner review. Earlier approval records and uploads are preserved. No paid service or GitHub Render workflow was used.

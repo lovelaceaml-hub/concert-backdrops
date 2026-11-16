@@ -1,6 +1,8 @@
 # Film 10, Nine Colours: handover
 
-## Current approved cut, 2026-11-16
+**Current quality master, 2026-11-16:** one native 3840x2160, 60 fps, 10-bit export of the approved Revision 3 is complete and checked. Added composite grain is removed; the edit and exact music stream are preserved. The owner requested one highest-quality file. The 318,834,702-byte MP4 exceeds this connector's 104,857,600-byte Drive upload limit, so video transfer is pending and no smaller copy was created. The original is available in the Codex workspace and chat. The new quality file awaits owner review; prior approved files remain archived. [Quality record and checks](../QUALITY-NINE-COLOURS-R3.md).
+
+## Approved creative cut, 2026-11-16
 
 The owner approved **Revision 3**, 66 seconds at native 60 fps, and requested that it be saved, documented and uploaded. The exact source is `46df53b98a43f58e51a78d40ee5794108a68e13c`, tag `film10-revision3-approved-2026-11-16`, draft PR #71. [Approval record, video links, hashes and reproduction](../APPROVED-NINE-COLOURS-R3.md).
 

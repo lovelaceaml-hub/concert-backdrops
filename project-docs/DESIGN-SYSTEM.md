@@ -1,5 +1,7 @@
 # Concert Backdrops: shared design rules for every song
 
+**Current quality master, 2026-11-16:** one native 3840x2160, 60 fps, 10-bit export of the approved Revision 3 is complete and checked. Added composite grain is removed; the edit and exact music stream are preserved. The owner requested one highest-quality file. The 318,834,702-byte MP4 exceeds this connector's 104,857,600-byte Drive upload limit, so video transfer is pending and no smaller copy was created. The original is available in the Codex workspace and chat. The new quality file awaits owner review; prior approved files remain archived. [Quality record and checks](promo/QUALITY-NINE-COLOURS-R3.md).
+
 Promo status, 2026-11-16: the owner approved **Film 10, Nine Colours, Revision 3**. Its specific 66-second timeline, native 60 fps, original medley, concert cards/signature, expression typography, Respect and Earth finale are recorded in [APPROVED-NINE-COLOURS-R3.md](promo/APPROVED-NINE-COLOURS-R3.md) and PHASEB UPDATE 21. Those newer approved choices govern that promo. The earlier per-song design rules and open live-performance decisions below remain historical context and are not silently changed by this approval.
 
 The rules every video follows, in priority order. Each song's own design is in Designs/. A design may break a rule only if it explains why; Anthony decides. Reorganized 2026-11-13 with nothing removed.
