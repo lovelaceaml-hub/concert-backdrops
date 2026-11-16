@@ -1,12 +1,12 @@
-"""Song 01, All You Stars of Zion: the 1 minute promo, version 2 (design "From Starlight to Sunrise").
+"""Song 01, All You Stars of Zion: the 1 minute promo, version 3 (design "From Starlight to Sunrise").
 
-The minute is 3:01 to 4:01 of the studio recording: the final chorus, from the last stars of the night to the
-first sunrise of the concert. Four painted scenes: the stars come down over the night lake (the morning star
-flares on the loudest moment); "dew of the dawn" written in light across a dawn web in the violet blue hour;
-"Arise" rising out of the lake as the sun breaks the ridge; Encouragement acted out by people of light on the
-golden morning shore beside the tree of light, with two torch bearers raising their torches toward the one who
-kneels, then star 7 lit for the first time in the concert (Compliment, star 9, was lit earlier in the song);
-the end card over the same morning shore as the camera keeps pushing in.
+A clip of the real concert backdrop for this song: the minute 3:01 to 4:01 of the studio recording, the final
+chorus, from the last stars of the night to the first sunrise of the concert. Four painted scenes: the stars come
+down over the night lake (the morning star flares on the loudest moment); "dew of the dawn" written in light across
+a dawn web in the violet blue hour; "Arise" rising out of the lake as the sun breaks the ridge; the golden morning
+shore with the tree of light, where one young torch bearer briefly gathers out of a sunbeam, lifts his torch and
+drifts up as light, then ENCOURAGEMENT forms in full and lights star 7 for the first time in the concert
+(Compliment, star 9, was lit earlier in the song), and the end card follows over the same morning.
 Audio: audio/promo/s01.mp3 (60 s clip). Live the song is a 3:08 brass version with no singing.
 """
 import os
@@ -203,7 +203,10 @@ def MOTE_COLORS(t):
 # 2 dew of the dawn: close on the shore in the violet blue hour, silk threads of a dawn web, the lake blurred
 # 3 Arise: the sun breaking over the ridge, rays filling the sky, a golden road on the water
 # 4 Encouragement and the end card: the golden morning shore, sunbeams through the haze, the tree of light;
-#   the camera keeps pushing in and drifting right to the end, so the tree slides toward the edge behind the card.
+#   the camera keeps pushing in and drifting right to the end, so the tree slides off the left edge and its
+#   strands stay clear of the end card title (round 3 review: they crowded the first letters). It also tilts
+#   down a little (more lake), so the painted sun sits in the gap between the title and the tagline on the end
+#   card instead of under the tagline's veil (where it showed as a dull grey disc).
 # The heavenly city plate (s01_heavenly_city.jpg) is not used: Astra round 2 found its centred sun and reflection
 # column repeated the Arise scene, and the city sat behind the end card.
 SCENES = [
@@ -218,42 +221,32 @@ SCENES = [
          water_line=0.22, water_strength=0.8,
          gain=Track([(0, 1.0), (22.0, 1.0), (24.0, 0.78), (30.5, 0.78), (32.0, 0.95), (TOTAL, 0.95)])),
     dict(image="assets/plates/s01/s01_morning_beams.jpg", t0=30.5, t1=61.0, fade_in=3.5, fade_out=0.0,
-         transition="push", zoom=(1.10, 1.24), pan=((0.035, 0.0), (0.09, 0.0)), water=True, water_line=0.19,
+         transition="push", zoom=(1.16, 1.48), pan=((0.05, 0.0), (0.22, -0.10)), water=True, water_line=0.19,
          water_strength=0.5,
          gain=Track([(0, 1.0), (31.5, 1.0), (33.5, 0.78), (35.5, 0.70), (44.0, 0.70), (47.0, 0.64),
                      (TOTAL, 0.62)])),
 ]
 
-# B. People of light. Encouragement acted out in full on the morning shore (the shared library): the young man
-# kneels exhausted and his friend prays over him; she rests a hand on his back and cheers him on as he begins to
-# rise; they stand and lift their joined hands (both moves finish before the words are fully formed). Two torch
-# bearers (song 01's special figures) stand on the shore and raise their torches toward him, each flame a small
-# bright light of its own; at the end every flame and figure lifts as sparks into the new violet light.
-_ENC_C = "#e2d2ff"
-_FEET = 0.24
-_TB_A = dict(x=0.30, h=0.30)          # torch low, flame tip at (0.3005, 0.430), clear of the tree
-_TB_B = dict(x=0.79, h=0.36)          # torch raised (mirrored), flame tip at (0.8096, 0.569)
-_FLAME = dict(poses=["assets/song_figures/s01/s01_torch_flame.png"], height=0.05, color="#ffb45a", glow=1.7,
-              glass=1.4, sparks=1.3, particles=1800, to_star=6)
+# B. People of light: rare and always moving (Anthony, round 3). One brief appearance only, off to the side of
+# the morning shore and before the words: a young torch bearer gathers out of the light of the sunbeam already
+# walking briskly along the shore toward the sunrise, lifts his torch high as he goes, rises off the ground and
+# drifts upward into the morning as sparks (about 6.5 s, moving the whole time, never standing still). Nobody
+# stands under the Encouragement words: they are carried by the words, the light and the new star.
+FIG_T0, FIG_T1 = 30.8, 34.9
 FIGURES = [
-    dict(poses=["assets/figures/encouragement_a.png", "assets/figures/encouragement_b.png",
-                "assets/figures/encouragement_c.png"],
-         t0=30.5, t1=ENC_HOLD - 0.5, pose_times=[33.8, 37.4], morph=1.3, x=0.5, y=_FEET, height=0.35,
-         to_star=6, color=_ENC_C, glow=1.05),
-    dict(poses=["assets/song_figures/s01/s01_torchbearer_a.png"], t0=31.5, t1=ENC_HOLD - 0.3,
-         x=_TB_A["x"], y=_FEET, height=_TB_A["h"], to_star=6, color="#ffd796", glow=0.9, particles=7000),
-    dict(poses=["assets/song_figures/s01/s01_torchbearer_b.png"], t0=32.5, t1=ENC_HOLD - 0.1,
-         x=_TB_B["x"], y=_FEET, height=_TB_B["h"], to_star=6, color="#ffd796", glow=0.9, particles=7000,
-         flip=True),
-    dict(_FLAME, t0=33.0, t1=ENC_HOLD - 0.2, x=0.3005, y=0.430 - 0.014),
-    dict(_FLAME, t0=34.0, t1=ENC_HOLD, x=0.8096, y=0.569 - 0.014),
+    dict(poses=["assets/song_figures/s01/s01_torchbearer_low.png", "assets/song_figures/s01/s01_torchbearer_raise.png"],
+         t0=FIG_T0, t1=FIG_T1, gather=2.0, pose_times=[32.6], morph=1.8, dissolve=2.4, leave="drift",
+         x=(0.90, 0.62), move=(FIG_T0, FIG_T1 + 1.6), ease="linear", bob=3.5,
+         y=Track([(FIG_T0, 0.24), (31.8, 0.24), (FIG_T1 + 1.6, 0.34)]), height=0.36,
+         color="#ffd796", glow=1.0, particles=8000),
 ]
 
-# C. Effect layers: a sunbeam falls on the kneeling young man while the words begin to form (it is gone before
-# they are solid), and soft flashes on the morning star (the loudest moment) and on the new star.
-BEAM = Track([(0, 0.0), (32.2, 0.0), (33.6, 0.5), (35.0, 0.5), (37.2, 0.0), (TOTAL, 0.0)])
-BEAM_FROM = (0.60, 1.02)
-BEAM_TO = (0.52, 0.25)
+# C. Effect layers: a sunbeam falls on the torch bearer and follows him along the shore (it is gone before the
+# words are solid),
+# and soft flashes on the morning star (the loudest moment) and on the new star.
+BEAM = Track([(0, 0.0), (30.8, 0.0), (32.4, 0.3), (34.6, 0.3), (36.8, 0.0), (TOTAL, 0.0)])   # soft: he stays secondary
+BEAM_FROM = Track([(FIG_T0, np.array([0.96, 1.02])), (FIG_T1 + 1.6, np.array([0.76, 1.02]))])
+BEAM_TO = Track([(FIG_T0, np.array([0.90, 0.25])), (FIG_T1 + 1.6, np.array([0.62, 0.34]))])
 BEAM_WIDTH = (0.02, 0.09)
 BEAM_COLOR = "#ffe6b0"
 FLASH = Track([(0, 0.0), (8.4, 0.0), (9.0, 0.22), (10.6, 0.0), (46.2, 0.0), (46.6, 0.14), (48.0, 0.0),
@@ -268,6 +261,26 @@ for i in range(9):
     STAR_POS.append((x, y))
 
 _NOT_YET = dict(form=1e9, hold=1e9, star=1e9)
+
+# The arch of nine lights reads weakly with only two lights in this minute (star 9 already lit, star 7 lit now)
+# over bright dawn and morning plates. Two things in the song file only, the star history is unchanged:
+# 1 the seven lights not yet lit show as very faint sockets (a dim point, no ring, no flash), so the curve of the empty
+#   arch is there from the opening, as in the full design ("the empty arch is drawn"); a socket is about a fifth
+#   of a lit light and never flashes, so nothing reads as lit before its time.
+# 2 lit lights are lifted on the bright plates so they hold their own against the sunrise sky.
+ARCH_SOCKET = Track([(0, 0.0), (2.0, 0.0), (4.0, 0.11), (TOTAL, 0.11)])
+ARCH_GAIN = Track([(0, 1.0), (19.0, 1.0), (23.0, 1.45), (TOTAL, 1.45)])
+
+
+def arch_lights(t):
+    out = []
+    sock, g = ARCH_SOCKET(t), ARCH_GAIN(t)
+    for i, (inten, age, rings) in enumerate(star_state(t)):
+        if inten > 0.001:
+            out.append((inten * g, age, rings))
+        else:
+            out.append((sock, -1.0, 0.0))
+    return out
 PHRASES = [
     # label, lines, max font px, form start, hold end, star time
     dict(label="Greeting", lines=["“How are you?”"], size=176, **_NOT_YET),
@@ -287,7 +300,8 @@ PHRASES = [
 FORM_DUR = 3.0
 # PHRASES keys: label, lines, size, form (words start forming), hold (words start flying), star (the light is lit).
 # A light already lit before this minute: star=-100.0. Not lit yet in the concert: form=hold=star=1e9.
-TITLE = dict(label="Healing Concert", lines=["The Words of Mother’s Love"], size=150, form=TITLE_HIT - FORM_DUR,
+# size 132 (was 150): a little narrower, so its first letters keep clear of the tree's strands at the left
+TITLE = dict(label="Healing Concert", lines=["The Words of Mother’s Love"], size=132, form=TITLE_HIT - FORM_DUR,
              hold=1e9, star=1e9)
 
 # D. Short lyric fragments (never on screen together with an expression), each in its own way:
@@ -356,7 +370,7 @@ def params(song, t):
         motes=MOTES(t) * (0.75 + 0.5 * envs), lanterns=LANTERNS(t), petals=PETALS(t),
         trail=TRAIL(t), exposure=EXPOSURE(t), fade=FADE(t), rays=RAYS(t), part=PART(t), zoom=ZOOM(t),
         lantern=(lsx, lsy), prog=lx, rings=song.rings_at(t), waves=waves,
-        star=star_state(t), link=link_state(t),
+        star=arch_lights(t), link=link_state(t),
     )
 
 
