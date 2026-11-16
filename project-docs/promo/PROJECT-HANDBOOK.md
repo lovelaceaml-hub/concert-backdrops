@@ -55,7 +55,7 @@ The engine code, song files, short audio clips and these docs.
   - `s01.mp3` to `s11.mp3`: 60 s clips of the 11 concert songs. s02 and s10 have no music.
   - `concert-medley.mp3`: the old 8-song 60 s medley.
   - `concert-medley-leadin.mp3`: the same with a 2 s quiet lead-in, 62 s.
-  - `concert-medley7.mp3`: the new 7-song medley, being built on branch `medley7`.
+  - `concert-medley7.mp3`: the new 7-song medley (branch `medley7`, map in `project-docs/promo/medley/SECTION-MAP-medley7.md`).
 
 ### 2.2 Anthony's Google Drive: folder "Concert Backdrops - Songs"
 
@@ -94,7 +94,7 @@ The working copy of everything above lives at `/tmp/claude-0/-home-user-concert-
 | Branch | Head | What it is |
 |---|---|---|
 | `master/words-that-bring-peace` | bfac3ad (v6 is b7895ae) | THE MASTERPIECE. Song `engine/songs/master_peace.py`, plus its own effects in `engine/p3d/master_sky.py`, `master_fx.py` and `master_brand.py`. PR #54 into engine-p3d-words. Claude's helper MASTER3 is the only writer. |
-| `medley7` | (being created) | The new 7-song medley, by Claude's helper MEDLEY3. |
+| `medley7` | 19f2c83 | The new 7-song medley `audio/promo/concert-medley7.mp3` (order 03, 04, 01, 08, 11, 06, 07; 62.000 s; map in `project-docs/promo/medley/SECTION-MAP-medley7.md`). Built by MEDLEY3; MASTER3 merges it into the masterpiece. |
 | `engine-p3d-words` | afd2bd3 | The integrated engine the masterpiece builds on (3D layer + bodies + words + TITLES + brand merged). |
 | `engine-p3d` | 8902405 | 3D layer (CORE2 final). PR #53. |
 | `engine-p3d-bodies` | 436057d | Particle people and acting (BODY2 final). |
@@ -248,7 +248,7 @@ The 62 s timeline on the lead-in medley:
   - 2 to 3 s phrase-aligned, tempo-matched blends with EQ hand-off;
   - one "lift" join;
   - a natural ring-out of 4 s or more.
-- Writes the map to `project-docs/promo/medley/SECTION-MAP-medley7.md` when copied.
+- DONE (2026-11-16): order 03, 04, 01, 08, 11, 06, 07; six 2.3 to 3 s blends at 7.99, 13.97, 22.94, 31.46, 40.81 (midpoints) and the lift 46.69 to 49.69 (breath 47.19, hit 49.69); final chord 56.75, ring-out to silence by about 59.5. Map: `project-docs/promo/medley/SECTION-MAP-medley7.md`; build scripts beside it. Measured, not yet heard by Anthony.
 
 **MASTER3 (Claude helper)**
 - The only writer of `master/words-that-bring-peace`. Makes v7:
