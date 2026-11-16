@@ -59,7 +59,7 @@ def grade(frame,mask):
 
 def main():
     p=argparse.ArgumentParser();p.add_argument('--input',type=Path,required=True);p.add_argument('--out',type=Path,required=True)
-    p.add_argument('--still',type=float);a=p.parse_args()
+    p.add_argument('--still',type=float);p.add_argument('--range',nargs=2,type=int);a=p.parse_args()
     r=Renderer(S.W,S.H);mask=BodyMask(r)
     if a.still is not None:
         frame=np.asarray(Image.open(a.input).convert('RGB'))
@@ -70,7 +70,8 @@ def main():
         '-preset','medium','-crf','16','-pix_fmt','yuv420p','-g','60','-bf','2','-color_primaries','bt709',
         '-color_trc','bt709','-colorspace','bt709','-color_range','tv','-movflags','+faststart',str(a.out)],stdin=subprocess.PIPE)
     start=time.time();nbytes=S.W*S.H*3
-    for i in range(S.NFRAMES):
+    start_frame,end_frame=a.range or (0,S.NFRAMES)
+    for i in range(start_frame,end_frame):
         raw=decoder.stdout.read(nbytes)
         assert len(raw)==nbytes,'Missing source frame in the photographic finish'
         x=np.frombuffer(raw,np.uint8).reshape(S.H,S.W,3)
@@ -81,7 +82,7 @@ def main():
     decoder.stdout.close();encoder.stdin.close()
     assert decoder.wait()==0 and encoder.wait()==0
     usage=resource.getrusage(resource.RUSAGE_SELF);children=resource.getrusage(resource.RUSAGE_CHILDREN)
-    a.out.with_suffix('.cost.json').write_text(json.dumps(dict(frames=S.NFRAMES,seconds=time.time()-start,
+    a.out.with_suffix('.cost.json').write_text(json.dumps(dict(frames=end_frame-start_frame,seconds=time.time()-start,
         cpu_seconds=usage.ru_utime+usage.ru_stime+children.ru_utime+children.ru_stime),indent=2)+'\n')
 
 if __name__=='__main__':main()

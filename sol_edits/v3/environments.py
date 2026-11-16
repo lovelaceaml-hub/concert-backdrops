@@ -52,7 +52,7 @@ class Environments:
         if j==0:pan=(-.005,-.018);zoom=1.04+.06*u
         if j==10:pan=((u-.5)*.02,-.015+.035*u)
         # The owner's Film 10 reference leads. Paintings are supporting atmosphere.
-        weights=[.18,.0,.30,.34,.0,.08,.35,.05,.12,.14,.0,.0]
+        weights=[.18,.0,.30,.34,.0,.08,.35,.05,.12,.0,.0,.0]
         opacity=weights[j]
         if j==10:opacity*=1-film.film.sc(44.6,45.5,t)
         self.textures[name].use(0)

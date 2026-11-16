@@ -2,6 +2,7 @@
 import argparse
 import concurrent.futures
 import json
+import resource
 from pathlib import Path
 import subprocess
 import sys
@@ -33,6 +34,7 @@ def validate_part(path,expected):
 
 
 def finish(S,bounds,report=None):
+    before=resource.getrusage(resource.RUSAGE_CHILDREN)
     parts=[]
     for a,b in bounds:
         path=OUT/f'part-{a:04}-{b:04}.mp4';validate_part(path,b-a)
@@ -65,6 +67,11 @@ def finish(S,bounds,report=None):
              '-preset','medium','-crf','23','-pix_fmt','yuv420p','-fps_mode','passthrough',
              '-c:a','aac','-b:a','160k','-t',duration,'-metadata','title=Concert review - GPT-6.1 Sol V3 - Nine Colors, One Love - 60 fps',
              '-movflags','+faststart',str(OUT/'Sol-V3-Nine-Colors-One-Love-review-720p60.mp4')])
+    after=resource.getrusage(resource.RUSAGE_CHILDREN)
+    result['postprocess_cpu_seconds']=(after.ru_utime+after.ru_stime)-(before.ru_utime+before.ru_stime)
+    result['total_wall_seconds']=time.time()-production['start_epoch']
+    result['total_cpu_seconds']=result['native_cpu_seconds']+result['discarded_cpu_seconds']+result['postprocess_cpu_seconds']
+    (OUT/'render-cost.json').write_text(json.dumps(result,indent=2)+'\n')
     print('finished',OUT,flush=True)
 
 

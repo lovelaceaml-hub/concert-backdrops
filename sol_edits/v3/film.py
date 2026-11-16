@@ -56,9 +56,9 @@ def pose(t,j):
     if j==8:
         return orbit(film.P5b,t,38.55,42.8,-26,24,6,4.6,1.8,2.35,sx=.64,sy=.65,height=1.0,fov=45)
     if j==9:
-        u=film.sc(41.9,44.8,t)
-        p=film.A7+v(8-3*u,3+2*u,18-6*u)
-        return p,film.PEARL+v(0,.4,0),52
+        u=film.sc(42.025,44.55,t)
+        p=film.A7+v(5.08*u,2.2+2.8*u,31-19.04*u)
+        return p,film.A7+v(1.8*u,2.0+2.0*u,8),60
     if j==10:
         u=film.sc(44.55,49.1,t)
         az=np.radians(23+160*u)
@@ -93,7 +93,7 @@ def state(self, t, aspect=16/9, ref=None):
         # Carry the camera's up vector through the turn without a vertical flip.
         up=film._unit(local_up+np.cross(axis,local_up)
             +np.cross(axis,np.cross(axis,local_up))/max(1+cosine,1e-6))
-    return CameraState(pos=p,target=q,up=up,fov=fov,aspect=aspect,
+    return CameraState(pos=p,target=q,up=up,roll=360*film.sc(42.025,44.55,t) if j==9 else 0,fov=fov,aspect=aspect,
         aperture=0.015 if 8<t<42.5 else 0,focus=np.linalg.norm(q-p))
 
 
@@ -221,6 +221,18 @@ def setup(scene):
     from sol_edits.v3.nine_lights import NineLights,LightGate
     scene.add('nine colours, one love',NineLights(film,C,rise_y),reflect=True)
     scene.add('the blue way opens',LightGate(film.P3),reflect=True)
+    # Words already read in the acted scenes now stand in space above the mirror.
+    # The camera flies past their real reflections during its aerial roll.
+    for k,(line,x,z,w,color) in enumerate([
+        ('Thank you.',-3.0,24.0,4.8,'#f2b25e'),
+        ('I understand.',3.4,19.0,5.3,'#5aba5a'),
+        ('Everything will go well.',-3.5,13.0,7.4,'#9e6af6')]):
+        word=film.PW.Word(label='',lines=[line],pos=tuple(film.A7+v(x,1.25,z)),width=w,
+            face='fixed',facing=0,t_in=42.025,t_read0=42.15,t_read1=44.55,t_out=44.875,
+            arrive='reveal',leave='fade',color=color,glow=color,tint=.7,bright=.8,halo=.3,
+            sparkle=0,n=22000,n_label=0,pill=False,reflect=True,sharp=.85)
+        scene.add('passing reflection '+str(k),film.NearFade(Steady(word),d=1.7),reflect=True,depth_of_field=True)
+
     src=lambda t:C['embrace'][0].where(t,'heart')
     dst=lambda t:C['embrace'][1].where(t,'heart')
     scene.add('the light is accepted',film.Clear(HeartPass(src,dst,17.1,18.8)),reflect=True)
