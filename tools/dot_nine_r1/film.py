@@ -57,6 +57,12 @@ def bodies():
     result['sorry'],result['kind']=pairs.embrace(16.8,at=(O.C3[0],O.C3[2]),
         facing=0,gap=0.40,a=dict(common,hair='bob',seed=3),b=dict(common,hair='tied',seed=4),
         until=20.6,ease=1.4,approach=0,hold='mixed')
+    # Raw partner targets must not re-enter the live-hand lag layer.
+    # Keep the explicit embrace pose, disabling only incidental wrist lag.
+    for key in ('sorry','kind'):
+        result[key].actor.life=False
+        result[key].actor._cache.clear()
+        result[key]._pts.clear()
     # Same-gender gentle greeting, seen during the original low chase.
     for i in range(2):
         result['greeting_'+str(i)]=BaseBody('man', at=(-2.0+i*1.1,155.0),
@@ -85,6 +91,17 @@ O.P3D['world']=O.WORDS.world(O.WORLD)
 for burst in O.P3D['bursts']:
     burst['strength']=min(burst['strength'],0.85)
 O.P3D['motion_blur']=0.75
+# Keep the opening seed visible without washing out the event details.
+OriginalSeed=O.Seed
+class ReadableSeed(OriginalSeed):
+    def sample(self,t):
+        samples=super().sample(t)
+        for sample in samples or []:
+            sample['alpha']=np.asarray(sample.get('alpha',1.0))*0.12
+        return samples
+O.Seed=ReadableSeed
+O.P3D['world']['light']['strength']=O.Track([(0.0,0.12),(0.9,0.06),(1.8,0.0),(60.0,0.0)])
+O.P3D['bursts'][0]['strength']=0.15
 O.P3D['world']['look'][-1]=(O.SEC[7],'morning',0.9)
 
 globals().update({k:v for k,v in vars(O).items() if not k.startswith('__')})
