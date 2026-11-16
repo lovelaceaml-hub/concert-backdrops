@@ -198,3 +198,7 @@ v9: the nine comet ribbons are the film's travelling thread (rollercoaster run, 
 
 ## UPDATE 19 (2026-11-16): Anthony after v9: "It needs to flow more like" Nine Colours render 1
 He chose: never stop moving (one continuous ride; every acted moment and its words happen as we fly past, alongside or around them; no stop-and-hold) and faster, more energy (pace near Nine Colours, still smooth). The 7 s opening hold stays. Targets: mean frame diff per 1 s about 7 to 9 (v9 5.3, Nine Colours 8.3), near-still windows under 10% between 7 and 55 s, peaks only on hits. Plus the v9 polish list.
+
+## UPDATE 20 (2026-11-16): Anthony: remake Nine Colours render 1 with every improvement
+"The video concept and song for Nine Colours is the best. Basically make the same video but with all the improvements such as better models and animation, the text additions, beginning and ending cards, etc."
+Choices: the original 8-song medley with the 2 s quiet lead-in (audio/promo/concert-medley-leadin.mp3, 62 s); Nine Colours' moving opening with the full title readable on top for 7 s; v10 finishes as a comparison. Build: engine/songs/nine_colours_final.py on master/words-that-bring-peace, porting Film 10 r1 (run 43726203825, ten/10-nine-colours d928ff9) cue for cue (+2.0 s), plus gold glitter refined acting and casting rules, comet-pen words with pills, the signature, symbols, hearts, BRAND finale, the official end card, 60 fps and smoothness.
