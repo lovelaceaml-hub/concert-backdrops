@@ -147,7 +147,7 @@ class River:
         z=10-120*self.u
         for k in range(19):
             phase=k*.28
-            x=3*np.sin((z+6)*.105)+(.9+.16*k)*np.cos(self.u*11+phase+t*.08)
+            x=-3*np.sin((z+6)*(.65/6))+(.9+.16*k)*np.cos(self.u*11+phase+t*.08)
             y=.06+.018*k+(.12+.08*k)*np.sin(self.u*8+phase+t*.12)**2
             p=np.stack([x,y,z],1)
             a=(.12+.10*np.sin(self.u*30-t*.7+k)**2)*fade
@@ -206,7 +206,7 @@ class LivingVeil:
         z=8-100*self.u
         angle=.12+2.65*self.v+.20*np.sin(self.u*18-t*.24)
         radius=3.8+.65*np.sin(self.u*12-t*.20)
-        x=-6.4+radius*np.cos(angle)+2*np.sin((z+6)*.105)
+        x=-8.5+radius*np.cos(angle)-3*np.sin((z+6)*(.65/6))
         y=.16+radius*np.sin(angle)*(1+.2*np.sin(self.u*14+t*.18))
         p=np.stack([x,y,z],1)
         col=lin('#ffc570')[None]*(.65+.35*self.v[:,None])+lin('#fff0c4')[None]*.22

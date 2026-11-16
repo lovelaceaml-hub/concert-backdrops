@@ -37,4 +37,3 @@ def standing_consideration():
             look='glitter',color='#f2a640' if j==0 else '#ffc664',
             color2='#ffdc96' if j==0 else '#fff0c8',bright=1.45,gesture=gestures))
     return people
-
