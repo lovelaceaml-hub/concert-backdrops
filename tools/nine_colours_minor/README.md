@@ -13,7 +13,9 @@ Shared engine, song, acting, music and workflow files remain untouched.
 ## Revised passages
 
 - Opening: cream serif title and official logo over the original night lake.
-  The centered card remains fully readable until 7 s, then dissolves by 7.45 s
+  The opening camera places the light and horizon below the lettering,
+  returning to the original path before Greeting. The centered card remains
+  fully readable until 7 s, then dissolves by 7.45 s
   as Greeting arrives. A smooth, animated veil keeps the burst behind the words
   legible without a cropped text-mask edge. Four extra seconds precede the
   earlier delivered version, making the movie 66 s.

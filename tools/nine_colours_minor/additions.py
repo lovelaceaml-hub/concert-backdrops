@@ -10,6 +10,19 @@ def ease(a, b, t):
     return x*x*(3-2*x)
 
 
+class OpeningRig(Rig):
+    """Lower the opening light below the card; rejoin the original camera."""
+
+    def __init__(self, original):
+        self.__dict__.update(original.__dict__)
+
+    def state(self, t, aspect=16.0/9.0):
+        cam = super().state(t, aspect)
+        if t < 1.4:
+            cam.target[1] += 1.5*(1-ease(.45, 1.4, t))
+        return cam
+
+
 class CameraAttached:
     """Place the added brand scene in the original view without moving its camera."""
     wants_camera = True
@@ -145,5 +158,5 @@ def install(film):
             burst.update(strength=.35)
         elif abs(burst['t']-49.47) < .001:
             burst.update(strength=.18, rise=.4, fall=.55)
-    film.P3D = dict(film.P3D, setup=setup, world=world, bursts=bursts)
+    film.P3D = dict(film.P3D, setup=setup, camera=OpeningRig(camera), world=world, bursts=bursts)
     return finale
