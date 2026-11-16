@@ -855,6 +855,10 @@ def motion_checks(S, video, issues, log):
 
 def audio_metrics(samples, rate, issues, log, silence=0.0):
     """Per-channel energy avoids cancellation in stereo; uses decoded sample peak, not true peak."""
+    if samples.size == 0:
+        _issue(issues, "Audio decode", 0, "audio stream decoded to zero samples", "HIGH")
+        log.append("Audio metrics unavailable: no decoded samples")
+        return dict(skipped="empty decoded audio")
     if samples.ndim == 1:
         samples = samples[:, None]
     n = max(1, int(round(rate * 0.25)))
