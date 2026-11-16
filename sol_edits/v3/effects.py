@@ -48,5 +48,3 @@ class PrayerLights:
                           .4+self.speed*age+.10*age*age,np.cos(self.ang)*self.rad],1)
         return [dict(pos=p,size=.026,color=PEARL,alpha=.8*g,emit=2,kind='spark',twinkle=0),
                 dict(pos=p,size=.25,color=GOLD,alpha=.055*g,kind='soft',twinkle=0)]
-
-

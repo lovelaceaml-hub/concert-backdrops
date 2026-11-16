@@ -86,8 +86,13 @@ def state(self, t, aspect=16/9, ref=None):
         h=film._unit(v(-np.sin(az),0,-np.cos(az)))
         beta=np.radians(5+77*film.sc(44.7,46.6,t))
         local_up=-np.sin(beta)*h+np.cos(beta)*film.UP
-        turn=film.sc(48.0,49.1,t)
-        up=film._unit(local_up*(1-turn)+film.UP*turn)
+        initial_forward=np.cos(beta)*h+np.sin(beta)*film.UP
+        forward=film._unit(q-p)
+        axis=np.cross(initial_forward,forward)
+        cosine=float(np.dot(initial_forward,forward))
+        # Carry the camera's up vector through the turn without a vertical flip.
+        up=film._unit(local_up+np.cross(axis,local_up)
+            +np.cross(axis,np.cross(axis,local_up))/max(1+cosine,1e-6))
     return CameraState(pos=p,target=q,up=up,fov=fov,aspect=aspect,
         aperture=0.015 if 8<t<42.5 else 0,focus=np.linalg.norm(q-p))
 
