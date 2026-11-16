@@ -203,10 +203,12 @@ class KindnessHearts:
 
 
 class OpeningDrop:
+    wants_camera=True
+
     def __init__(self):
         self.u=np.linspace(0,2*np.pi,600)
 
-    def sample(self,t):
+    def sample(self,t,cam):
         if t>10:return None
         release=float(smooth(5.5,7.4,t))
         p=np.array([1.45,.98*(1-release)+.08,-.65])
@@ -216,7 +218,14 @@ class OpeningDrop:
         r=.15+3.0*(t-7.5)
         a=float(1-smooth(8.0,10,t))
         points=np.stack([1.45+r*np.sin(self.u),np.full(600,.04),-.65+r*np.cos(self.u)],1)
-        return ribbon(points,width=.06,color=lin('#ffd58d'),alpha=a*.45)
+        batch=ribbon(points,width=.06,color=lin('#ffd58d'),alpha=a*.45)
+        # A ribbon has two endpoint alphas. Protect both so a long arc cannot
+        # bridge the quiet area behind the complete concert signature.
+        for position,alpha in (('pos','alpha'),('pos2','alpha2')):
+            xy,_=cam.project(batch[position])
+            keep=1-window(-.12,.70,xy[:,0],.14)*window(-.12,.36,xy[:,1],.14)
+            batch[alpha]=np.asarray(batch.get(alpha,a*.45))*keep
+        return batch
 
 
 FINALE=BR.Finale(pos=(0,3.0,0),radius=2.35,camera=CAMERA,look='night',
