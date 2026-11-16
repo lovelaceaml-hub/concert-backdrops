@@ -79,12 +79,28 @@ Across 18 encoded/source comparisons, RGB PSNR is 43.34 to 49.99 dB and
 mean absolute channel error is 0.320 to 0.763/255. Full-film frames, Respect,
 Earth details and the closing card were visually reviewed.
 
-Drive video transfer remains pending. The connector rejected the 318,834,702-byte
-file before action invocation because its limit is 104,857,600 bytes. The full
-quality original is linked in the Codex chat; no smaller copy was created.
-The [shared quality record](https://drive.google.com/file/d/1Naj7qe3t4kvS1KV8xYG2PrbYJcFc5On8/view)
-records the exact file, source, checks and transfer limitation. The new quality
-file awaits owner review, and draft PR #73 remains unmerged.
+## Exact master download, 2026-11-16
 
-For full quality, download the original file. A Drive streaming preview can
-use a lower-resolution transcode even when the uploaded original is 4K.
+The original 318,834,702-byte master is now in [this private Google Drive folder](https://drive.google.com/drive/folders/1_m5HLeo8brJgZMgdXleEbY7klrAGaxgS) as four byte parts plus an offline restore helper. This is one video, not four versions. No video or audio was re-encoded, and no quality was reduced.
+
+On a computer:
+
+1. Download the entire Drive folder and unzip it.
+2. Open `Open-to-save-video.html` in Chrome, Edge or Safari.
+3. Select all four `Nine-Colours-4K60.part01` through `.part04` files.
+4. After verification, click **Save the 4K60 video** to save the original MP4 to Downloads.
+
+Drive preview does not run the helper; download and open it locally. Each part is checked against its SHA-256 before saving. Full-sized Chromium testing over loopback HTTP produced the exact original MP4 and full-file SHA-256, rejected a missing part, handled reverse selection order, and made zero external requests. Drive confirms all seven package files are downloadable and their sizes match. Local file-URL opening and the owner's device download have not been verified.
+
+The single-file Drive upload exceeds the connector's 100 MiB limit. The owner also authorized a private GitHub draft-release upload, but the asset endpoint returned HTTP 401; that draft has no video asset. Both direct workspace MP4 and ZIP links failed on the owner's device. The four-part package is the available transfer route. No public share permission, smaller encode, paid service or Render workflow was used.
+
+Rebuild this transfer package without re-encoding:
+
+```sh
+python tools/nine_colours_quality/package_transfer.py
+```
+
+Parts, the generated HTML and the manifest live under
+`work/nine_colours_quality/exact-transfer/` and must not be committed.
+Only the generator is source-controlled. It pins the master to `final-qa.json`.
+Draft PR #73 remains unmerged; the quality export awaits owner review.
