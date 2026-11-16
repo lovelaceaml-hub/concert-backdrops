@@ -74,6 +74,23 @@ def bodies():
 O._bodies=bodies
 O.AUDIO_FILE=str(HERE.parents[1]/'work/dot_nine_r1/original-score.wav')
 
+# Cache the same smooth hand path at 120 Hz, above the 60 fps output rate.
+# Adjacent comet-tail samples otherwise repeat expensive skeletal solves.
+from functools import lru_cache
+def sampled_anchor(fn):
+    @lru_cache(maxsize=8192)
+    def sample(i): return np.asarray(fn(i/120.0),dtype=np.float64)
+    def at(t):
+        x=float(t)*120.0
+        i=int(np.floor(x))
+        f=x-i
+        return sample(i)*(1.0-f)+sample(i+1)*f
+    at.original=fn
+    return at
+O._dancer_hand=sampled_anchor(O._dancer_hand)
+O._palm5=sampled_anchor(O._palm5)
+O._touch5=sampled_anchor(O._touch5)
+
 # The first reading moves within the continuing chase to clear the full title.
 for cfg in O._SPECS:
     cfg.update(pill=True, sharp=1.0)
