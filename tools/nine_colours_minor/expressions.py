@@ -55,7 +55,7 @@ class Clear:
             if source is None:
                 continue
             b = dict(source)
-            if t >= 48.5:
+            if t >= 47.8:
                 # A ribbon straddling the lens projects into a large triangle.
                 # Keep the continuous trail, but fade its near-plane segments.
                 p = np.asarray(b['pos']).reshape(-1,3)
@@ -64,12 +64,13 @@ class Clear:
                 if b.get('pos2') is not None:
                     depth = np.minimum(depth,(np.asarray(b['pos2'])-cam.pos)@forward)
                 u = np.clip((depth-1.0)/3.0,0,1)
-                close = u*u*(3-2*u)
+                transition = np.clip((t-47.8)/.8,0,1)
+                transition = transition*transition*(3-2*transition)
+                close = 1-transition*(1-u*u*(3-2*u))
                 b['alpha'] = np.asarray(b.get('alpha',1))*close
                 if 'alpha2' in b:
                     b['alpha2'] = np.asarray(b['alpha2'])*close
-                b['streak'] = False
-                b['reflect'] = False
+                b['streak'] = np.asarray(b.get('streak',1))*(1-transition)
             if boxes:
                 p = np.asarray(b['pos']).reshape(-1, 3)
                 xy, z = cam.project(p)
