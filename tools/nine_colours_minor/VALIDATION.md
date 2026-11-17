@@ -1,82 +1,68 @@
-# Validation of Film 10 with minor additions
+# Revision 3 validation
 
-## Fidelity and frame order
+Owner approved the delivered video on 2026-11-16 and requested preservation, documentation and upload. The approved source is `46df53b98a43f58e51a78d40ee5794108a68e13c`, archived by tag `film10-revision3-approved-2026-11-16`. Subsequent approval-documentation commits do not change the video or its checksums. PR #71 remains draft and unmerged.
 
-Reference: original Film 10 render 1, commit
-`d928ff9eafe02ac3150f0c646bdcc497fe5a7278`, run 43726203825.
+## Provenance and scope
 
-All 82 original engine Python files in the private snapshot match their Git
-blob hashes. The camera, world, people, word effects and original shader code
-are loaded from that snapshot. No shared or protected file was edited.
+Film 10 render 1 remains the base: d928ff9eafe02ac3150f0c646bdcc497fe5a7278, run 43726203825. The targeted reference is Claude Nine Colours Final v1, f43f4514e4bc42dc25166e90160d98219f5a0db4, run 43855882765, share artifact 14222872749. The actual share video was downloaded and inspected, including the typography, Respect pair and finale motion.
 
-At original times 0, 0.5, 4, 6.5, 9, 13.5, 18, 23.5, 25.5, 30, 34, 38.5, 41.5,
-44, 48.5 and 51 s, the original renderer and the new wrapper with additions
-disabled produced identical raw 1920x1080 RGB frames at 60 fps. All 16 SHA-256
-comparisons passed, with zero changed pixels. The original closing card is
-intentionally replaced after original time 51.4 s.
+All 82 original-engine Python files and all 108 Claude-reference Python files in the private snapshots match their Git blobs. The new source is isolated under tools/nine_colours_minor. No protected or shared source was edited. No paid service, workflow dispatch or merge occurred.
 
-With all additions enabled, final times 0, 2.5, 6, 11, 19, 27.5, 40.5, 50.5,
-53, 54.5, 54.75, 55 and 61.98 s were rendered in forward and reverse order in
-fresh processes. All 13 raw-frame hash comparisons passed.
+The owner requested a creative revision, so these outputs intentionally change pixels. The reference typography and body/symbol components run through the original renderer; this is not a claim that the whole film matches Claude's encoded pixels. The rest of the original people, fast aerial flight and musical joins remain. Respect's original chapter cuts remain; the new continuous camera join is specifically the spiral-to-Earth transition.
 
-This establishes fidelity to the original engine at the tested times. It does
-not claim pixel identity for the added art, the replaced closing card, the
-extra 60 fps samples, or a lossy encode compared with the old 720p30 share MP4.
+## Raw-frame checks
+
+All 28 sampled 1920x1080 frames are pixel-identical in separate fresh processes rendering forward and reverse. Final-clock samples:
+
+`0, 6.3, 7.2, 8, 10, 16, 21, 24.5, 29, 34.5, 38, 40, 41.5, 43, 44.5, 46.3, 49, 54.5, 54.75, 55.46, 55.48, 55.8, 56.4, 57.2, 57.8, 58.4, 59, 65.98`.
+
+The original-to-new camera join at final 55.47 s has a 0.01244 m position step and 0.00253 degree viewing-direction step across 0.0002 seconds, consistent with continuing motion. Earth's projected center remains inside x=0.4996..0.5002, y=0.4997..0.5283 during the new arc. The initial close pass intentionally brings some orbiting symbols near the frame edge before the full orbit settles into view.
+
+The opening layout is unchanged. Raw frames at 0 and 6.3 s exactly match Revision 2. At 7.2 s the light path has started responding to the updated Greeting pen, so that frame differs. The card timing remains the same.
+
+## Picture review
+
+Full-resolution stills cover the opening, every expression, Respect, Earth formation, world-to-logo and final card. A dense finale strip was inspected during development. This caught and corrected an Earth framing dip and the original renderer's large triangular ribbon shapes where a segment straddled the camera lens. Near-lens segments now fade in the revised finale while the rest of the ribbon path continues.
+
+The near-lens correction itself is eased over 0.8 seconds. At the previously hard switch, adjacent-frame RGB differences on a 960x540 review fell from 49.72 then 13.31 to 19.65 then 18.87. This removes the isolated brightness pop rather than claiming the original fast flight has been slowed.
+
+The two Respect figures use the exact reference models, garments, hair, seed values and refined offer/listen gestures. They remain whole. The nine phrases use the reference's cream serif treatment, colored capsule labels, screen-facing placement and clean departures. Small timing corrections prevent consecutive phrases from overlapping. Comets and hoops dim within phrase bounds, including segments with endpoints outside a word box.
+
+Respect's light thread now follows the reference's higher path and softens during the reading interval, keeping it above the faces and listening gesture. The affected production parts were replaced in full after this final adjustment. Earlier partial encodes are private rejected drafts and are excluded from delivery.
 
 ## Soundtrack
 
-The existing approved `concert-medley-leadin.mp3` is decoded without a new
-arrangement, tempo change or gain adjustment. Its first 1.9 s are silent. The
-stereo PCM source peaks at -2.624 dBFS, with zero full-scale samples. The last
-10 ms peak at -93.177 dBFS. The original final musical accent remains, with
-59.5 to 60.7 s averaging -13.638 dBFS RMS.
+The 66-second PCM score is byte-identical to Revision 2: SHA-256 `524f0d14abafd517335c87049e59a2538c0b560cf04b26828463707790c31d6e`. It is the approved lead-in medley with four additional seconds of opening silence. The original final musical accent and release are retained. No generated music or paid audio service was used.
 
-The existing original song joins and loud final accent are retained as part
-of the owner's selected film. The final second is not forced below -45 dBFS;
-the actual final release is checked separately. No human listening audition
-is claimed by these signal measurements.
+## Encoded delivery
 
-## Visual review
+Both exports pass `verify.py`. Each has exactly 3,960 frames, video and audio duration 66.000 s, 60/1 frame rate, stereo 48 kHz audio, and zero consecutive duplicate frames. Every video timestamp advances by 1/60 s, within 0.000000667 s of container rounding. Both files have the MP4 metadata before media data for progressive playback.
 
-Full-size stills were inspected for the opening, signature, symbols, globe,
-logo handover and closing card. A duplicate logo during the handover was found
-and corrected before the full export. Dense review then found the logo rising
-before the globe had fully disappeared. The added morph was shortened by 0.5 s
-and both affected sections were rendered again. The final correction passed all
-13 forward/reverse checks; eight sampled frames before 53 s remained identical
-to the previous pass. The original bright bursts, fast camera
-rolls, hoop crossings and word reflections are preserved as directed.
+| Measurement | Master | Phone |
+|---|---|---|
+| Resolution | 1920x1080 | 1280x720 |
+| File bytes | 94,541,396 | 22,278,585 |
+| Audio sample peak | -2.682 dBFS | -2.317 dBFS |
+| Final accent RMS, 63.5 to 64.7 s | -13.670 dBFS | -13.759 dBFS |
+| Final quarter-second RMS | -49.349 dBFS | -49.329 dBFS |
+| Last 10 ms peak | -92.949 dBFS | -92.080 dBFS |
 
-Private source hashes, raw-frame hashes and reports are under
-`work/nine_colours_minor/`. Only source and this written record are committed.
+The master measures -12.94 LUFS integrated and -2.68 dBTP true peak. The score deliberately retains the approved final accent: its last full second is -23.09 dBFS RMS, followed by the quiet release. It does not meet the older masterpiece brief's quiet-last-second policy, which would remove that requested accent. Five original medley joins retain quarter-second level changes above 3 dB; the largest is 5.67 dB near 46.21 s. They are reported, not silently remixed. These are objective measurements, not a claim of a human listening review.
 
-The 15.5 s motion-scan alert was reproduced in the unmodified original engine:
-its 160x90 grayscale frame difference is 29.954 levels, versus 30.030 in the
-encoded master. This is the original comet passing close to the lens, not a
-render-part discontinuity.
+The full encoded timeline was inspected at 2 fps, Respect at 10 fps, Earth formation and its orbit at 15 fps, and the closing-card transition at 10 fps. Selected encoded frames were inspected at native 1080p and 720p. The new globe remains visible through the approach; orbiting symbols pass in front of and behind it. The Respect light clears the faces and the hand gesture. Original pre-finale flight remains energetic: the largest half-second motion/jitter interval is 54.0 s, in the retained spiral flight. The automatic motion report is a review aid, not a claim that every original whip has been redesigned.
 
-## Final encoded delivery
+All seven main render-part boundaries have frame differences within 1.41 times their surrounding median. The two additional corrected-Respect chunk boundaries at frames 2227 and 2722 have ratios 1.057 and 1.021. The closing card keeps moving through the last frame; there are no repeated-frame freezes.
 
-Both final files passed tools/nine_colours/verify.py after the corrected ending
-was assembled. Each has 3720 frames, native 60 fps, 62.000 s video and audio,
-zero consecutive identical frames, and no missing presentation timestamps.
-Maximum timestamp step error is 0.667 microseconds. Dense 10 fps sheets were
-reviewed across all eight sections, including the corrected finale and outro.
+## Delivery links and integrity
 
-| Metric | 1080p60 master | 720p60 phone |
-|---|---:|---:|
-| File bytes | 102934999 | 21016563 |
-| Audio sample peak, dBFS | -2.593 | -2.494 |
-| Integrated loudness, LUFS | -13.0 | -13.0 |
-| True peak, dBTP | -2.6 | -2.5 |
-| Final 10 ms peak, dBFS | -93.05 | -93.257 |
+- [Phone 720p60](https://drive.google.com/file/d/1CBQ4OtpLW3Kp3zBWsEMkjXYiAWUwhDQw/view)
+- [Master 1080p60](https://drive.google.com/file/d/1gcxnb4Oyexq5Kbb8LvFWqOrikF-BVSht/view)
 
-The card is fully readable from 55 s through the last frame. Its background
-continues moving: no frozen stretch or black ending was introduced.
+Both uploads are in the designated video folder `1oNl_-SVqTwrYzqT87JQ3Om9HQFrcMOkz`, and Drive reports the expected names and byte counts. The phone file was downloaded back from Drive for the chat attachment; its SHA-256 exactly matches the local deliverable.
 
-[Phone copy](https://drive.google.com/file/d/1jsLihGhX6RgmXOkm4IT9te89AgD5nDlc/view)
-and [1080p master](https://drive.google.com/file/d/1c7P_0moEF2jaEoIN4SxlvGKZMOUKiT3j/view)
-are saved in the existing Videos folder. No media is committed.
+| File | SHA-256 |
+|---|---|
+| Master | `508c5518bced94b21f96e8727d2b7ffd0da0ee69de9da164e7e5e824e80eda7b` |
+| Phone, local and Drive download | `ad4b4e7fe861ae34eb80e8b921ee747efc477c08bb89ec981f1b588a0b3c0af5` |
 
-The phone copy was downloaded back from Drive. Its SHA-256 exactly matches
-the local final export; the same verified file is attached in chat.
+Private evidence is under work/nine_colours_revision3: source-check.json, fidelity-report.json, finale-continuity.json, opening-preserved.json, encoded-qa.json, additional-part-joins.json, drive-roundtrip.json, the source-transition audit records, and the raw/encoded review frames. The final 344-file render manifest matches every current input. Earlier draft parts were replaced only where the two final fixes can affect the timeline; those time bounds are recorded in the source-transition audit. No frames, videos or caches are committed.
