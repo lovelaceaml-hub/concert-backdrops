@@ -770,6 +770,27 @@ class Titles:
             self._quad(self.p_ovl, self.v_ovl, L, -1.0, uAlpha=ea,
                        uDis=(float(ef) if ef is not None else -1.0, 0.30, 0.72, 1.0))
             drew = True
+        # Optional quiet life at the outer edges of the closing card. Kept outside
+        # the text and logo so all event details remain steady and readable.
+        if ea > 0.002 and self.cfg.get("end_card", {}).get("ambient_motes", False):
+            if not hasattr(self, "ec_mote"):
+                grid = np.linspace(-1.0, 1.0, 64, dtype=np.float32)
+                xx, yy = np.meshgrid(grid, grid)
+                alpha = np.exp(-9.0 * (xx * xx + yy * yy)) * 0.38
+                rgba = np.empty((64, 64, 4), np.float32)
+                rgba[..., :3] = alpha[..., None] * np.array([1.0, 0.98, 0.87])
+                rgba[..., 3] = alpha
+                self.ec_mote = self._tex(rgba)
+            age = max(0.0, t - self.ec["t_in"])
+            for j in range(8):
+                side = 0.06 if j % 2 == 0 else 0.92
+                x = side + 0.012 * np.sin(age * 0.35 + j * 1.7)
+                y = 0.16 + 0.18 * (j // 2) - 0.013 * age
+                strength = ea * (0.75 + 0.25 * np.sin(age * 1.2 + j))
+                layer = dict(tex=self.ec_mote, rect=(x, y, 0.035, 0.062))
+                self._quad(self.p_ovl, self.v_ovl, layer, -1.0,
+                           uAlpha=float(strength), uDis=(-1.0, 0.0, 0.0, 0.0))
+            drew = True
         ks = self._dl_sub_alpha(t)
         if ks > 0.002:
             self._quad(self.p_ovl, self.v_ovl, self.dl_sub, -1.0, uAlpha=ks, uDis=(-1.0, 0.0, 0.0, 0.0))
