@@ -1,5 +1,7 @@
 # Film 10 Revision 3: clean UHD delivery
 
+**Codex stopping point, 2026-11-16 (Las Vegas):** paused at the owner's request after saving findings. The exact 4K60 master and its Drive parts are preserved; download to the owner's computer and review of the quality export are still unconfirmed. A local Codex handoff prompt, checksums, known transfer failures and the next step are saved in [the session checkpoint](https://drive.google.com/file/d/1BdI-R2ceMFqyBe1nsxSdzBtM6dG5K9UN/view). Resume with local delivery, not another render or encode. No background render job is running, and PRs remain draft and unmerged.
+
 **One native 4K60 master is complete, checked and uploaded as an exact-file transfer package.** The owner reported grain in both older exports and requested one highest-quality file. This quality-only export preserves the approved 66-second cut and exact compressed music stream. It removes added composite grain and renders real 3840x2160 frames at 60 fps through a floating-point composite into 10-bit HEVC. Download the original for full quality; Drive preview can be lower resolution. The 318,834,702-byte original exceeds the 104,857,600-byte connector upload limit. The exact master is now uploaded as four byte parts with an offline restore helper; use the download instructions below. No smaller encode was made. The owner's download is not yet confirmed. The new quality delivery awaits owner review. The earlier approved files and source tag remain archived. Draft PR #73 is unmerged.
 
 ## Exact file

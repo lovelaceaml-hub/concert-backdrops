@@ -1,5 +1,7 @@
 # Phase B: build and render your film, fast
 
+**Codex stopping point, 2026-11-16 (Las Vegas):** paused at the owner's request after saving findings. The exact 4K60 master and its Drive parts are preserved; download to the owner's computer and review of the quality export are still unconfirmed. A local Codex handoff prompt, checksums, known transfer failures and the next step are saved in [the session checkpoint](https://drive.google.com/file/d/1BdI-R2ceMFqyBe1nsxSdzBtM6dG5K9UN/view). Resume with local delivery, not another render or encode. No background render job is running, and PRs remain draft and unmerged.
+
 Anthony: "I need the videos as quickly as possible." Speed is now the first priority. A complete, beautiful, watchable 60 s film delivered soon beats a perfect one later. Get a first full video out, then improve it.
 
 ## Read
@@ -239,3 +241,11 @@ On a computer:
 Drive preview does not run the helper; download and open it locally. Each part is checked against its SHA-256 before saving. Full-sized Chromium testing over loopback HTTP produced the exact original MP4 and full-file SHA-256, rejected a missing part, handled reverse selection order, and made zero external requests. Drive confirms all seven package files are downloadable and their sizes match. Local file-URL opening and the owner's device download have not been verified.
 
 The single-file Drive upload exceeds the connector's 100 MiB limit. The owner also authorized a private GitHub draft-release upload, but the asset endpoint returned HTTP 401; that draft has no video asset. Both direct workspace MP4 and ZIP links failed on the owner's device. The four-part package is the available transfer route. No public share permission, smaller encode, paid service or Render workflow was used.
+
+## UPDATE 24 (2026-11-16): Stop for today and save a local delivery handoff
+
+The owner asked Codex to come to a stopping point, update all docs and save findings. The exact 319 MB UHD master remains unchanged. No new creative work, render, encode or paid action is requested. The owner asked the assistant to perform the download and then requested a prompt for a local Codex chat; that prompt was supplied, but a successful local download has not been confirmed.
+
+[Session checkpoint and local prompt](https://drive.google.com/file/d/1BdI-R2ceMFqyBe1nsxSdzBtM6dG5K9UN/view) records the exact file/hash, all four Drive part IDs, validation, failed transfer routes and the safe next step. The current cloud chat has no callable control of the owner's browser or Downloads folder; merely seeing its open Drive tab does not grant that access. On resume, confirm an actual local session, assemble the four parts without re-encoding, verify the full SHA-256, save to Downloads and confirm playback. Do not claim completion until that happens.
+
+The source master was rehashed and all seven Drive package items were listed at closeout. No render/encode job or helper agent is active. PRs #72 and #73 remain draft and unmerged. Earlier approval records and media are unchanged. This pause applies to this Codex session; it does not authorize changes to other agents' work.
