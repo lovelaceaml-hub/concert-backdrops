@@ -104,3 +104,16 @@ Parts, the generated HTML and the manifest live under
 `work/nine_colours_quality/exact-transfer/` and must not be committed.
 Only the generator is source-controlled. It pins the master to `final-qa.json`.
 Draft PR #73 remains unmerged; the quality export awaits owner review.
+
+## Session paused, November 16, 2026
+
+The owner requested a stopping point. [Saved findings and local delivery
+handoff](https://drive.google.com/file/d/1BdI-R2ceMFqyBe1nsxSdzBtM6dG5K9UN/view) include the ready-to-use local Codex prompt and exact
+Drive part IDs. The original master hash and all seven Drive package file sizes
+were rechecked. No render/encode job is active. PRs #72 and #73 remain draft.
+
+The owner asked the assistant to save the video to Downloads, but this cloud
+session has no local file or browser-control access. A local handoff prompt was
+provided; successful download and owner review remain unconfirmed. Resume with
+actual local delivery and full-file SHA-256 verification. Do not rerender,
+re-encode, reduce quality, merge or schedule overnight work for this checkpoint.
