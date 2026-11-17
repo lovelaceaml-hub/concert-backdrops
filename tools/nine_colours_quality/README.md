@@ -1,5 +1,7 @@
 # Nine Colours: clean UHD master
 
+**Owner-authorized integration, 2026-11-16:** the owner explicitly requested "Push, merge, and commit everything" after the stopping point. The completed video stack (#73, #71, #70, #69, #66, #64, #59, #57) and speed PR #55 are merged into `master/words-that-bring-peace`. Documentation is being integrated through #72 and #58 into `main`; [the integration record](https://github.com/lovelaceaml-hub/concert-backdrops/pull/55#issuecomment-6933778970) tracks final merge results. This supersedes earlier draft/unmerged instructions for these named PRs only. The exact 4K60 file is unchanged; local download and quality review are still unconfirmed. No render or paid workflow was started.
+
 The owner reported grain and low quality in both Revision 3 deliveries, then
 requested one highest-quality version instead of multiple viewing copies.
 This is an image-quality export of the approved edit, not a new creative cut.
