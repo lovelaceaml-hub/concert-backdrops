@@ -15,8 +15,8 @@ import sys
 import time
 
 ROOT = Path(__file__).resolve().parents[2]
-OUT = ROOT / 'out/nine_colours_revision2'
-WORK = ROOT / 'work/nine_colours_revision2'
+OUT = ROOT / 'out/nine_colours_revision3'
+WORK = ROOT / 'work/nine_colours_revision3'
 FRAMES = 3960
 
 
@@ -33,6 +33,8 @@ def run(workers, parts):
     OUT.mkdir(parents=True, exist_ok=True)
     WORK.mkdir(parents=True, exist_ok=True)
     keys = sorted((ROOT / 'work/nine_colours_minor/render1/engine').rglob('*.py')) + sorted((ROOT / 'tools/nine_colours_minor').glob('*.py')) + sorted((ROOT / 'engine/p3d').glob('brand*.py')) + [ROOT / 'engine/titles.py'] + [WORK / 'features.npz', WORK / 'score.wav']
+    keys += sorted((WORK / 'claude-final/engine').rglob('*.py'))
+    keys += sorted(p for p in (WORK / 'claude-final/assets').rglob('*') if p.is_file())
     keys += sorted(p for p in (ROOT / 'fonts').rglob('*') if p.is_file())
     manifest = {str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest() for p in keys}
     manifest.update(parts=parts, frames=FRAMES, resolution='1920x1080', fps=60)
@@ -66,14 +68,14 @@ def run(workers, parts):
         list(pool.map(part, range(parts)))
     listing = WORK / 'parts.txt'
     listing.write_text(''.join(f"file '{OUT / f'part-{i:02d}.mp4'}'\n" for i in range(parts)))
-    master = OUT / 'Film-10-Nine-Colours-Revision-2-1080p60.mp4'
+    master = OUT / 'Film-10-Nine-Colours-Revision-3-1080p60.mp4'
     subprocess.run(['ffmpeg', '-v', 'error', '-y', '-f', 'concat', '-safe', '0', '-i', str(listing),
                     '-i', str(WORK / 'score.wav'), '-map', '0:v:0', '-map', '1:a:0',
                     '-c:v', 'copy', '-c:a', 'aac', '-b:a', '192k', '-t', '66',
                     '-movflags', '+faststart', str(master)], check=True)
     if frame_count(master) != FRAMES:
         raise RuntimeError('Master frame count does not match 3960')
-    review = OUT / 'Film-10-Nine-Colours-Revision-2-phone-720p60.mp4'
+    review = OUT / 'Film-10-Nine-Colours-Revision-3-phone-720p60.mp4'
     subprocess.run(['ffmpeg', '-v', 'error', '-y', '-i', str(master), '-vf', 'scale=1280:720',
                     '-c:v', 'libx264', '-threads', '2', '-preset', 'fast', '-crf', '24', '-maxrate', '3M', '-bufsize', '6M',
                     '-c:a', 'aac', '-b:a', '128k', '-t', '66', '-movflags', '+faststart', str(review)], check=True)

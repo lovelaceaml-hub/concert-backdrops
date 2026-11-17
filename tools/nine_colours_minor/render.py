@@ -68,7 +68,7 @@ def main():
     ap.add_argument('--baseline', action='store_true')
     ap.add_argument('--original-clock', action='store_true')
     ap.add_argument('--stills', default='')
-    ap.add_argument('--outdir', type=Path, default=ROOT/'out/nine_colours_revision2/stills')
+    ap.add_argument('--outdir', type=Path, default=ROOT/'out/nine_colours_revision3/stills')
     ap.add_argument('--range', type=int, nargs=2)
     ap.add_argument('--out', type=Path)
     ap.add_argument('--scale', type=float, default=1)
