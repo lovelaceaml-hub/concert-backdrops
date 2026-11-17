@@ -143,7 +143,7 @@ def text_blocks(S):
                            solid0=p["form"] + fd + FORM_EXTRA, solid1=p["hold"], gone=p["hold"] + DISSOLVE,
                            mask=tex[::-1, :, 0], meta=p))
     ty = T.title_y()
-    if S.TITLE["form"] < 1e8:
+    if S.TITLE["form"] < 1e8 and not ((getattr(S, "TITLES", None) or {}).get("end_card") and not (getattr(S, "TITLES", None) or {}).get("keep_end_text")):
         tex, _, b = T.render(S.TITLE["label"], S.TITLE["lines"], S.TITLE["size"], font_path=T.F_TITLE, y_center=ty)
         hold = S.TITLE.get("hold", 1e9)
         blocks.append(dict(name="End card title", kind="title", text=" / ".join(S.TITLE["lines"]),
@@ -151,7 +151,7 @@ def text_blocks(S):
                            solid1=min(hold, total), gone=min(hold + DISSOLVE, total), mask=tex[::-1, :, 0],
                            meta=S.TITLE))
     tg = S.TAGLINE
-    if tg["t0"] < total:
+    if tg["t0"] < total and not ((getattr(S, "TITLES", None) or {}).get("end_card") and not (getattr(S, "TITLES", None) or {}).get("keep_end_text")):
         ttex, _ = T.render_tagline(tg["text"], ty)
         blocks.append(dict(name="End card lines", kind="tagline", text=tg["text"].replace("\n", " / "),
                            appear=tg["t0"], solid0=tg["t1"] - SPARK_EARLY, solid1=total, gone=total, mask=ttex[::-1, :, 0],
@@ -192,6 +192,9 @@ def look_of(b):
 def credit_layer(S):
     """The song title card and its small resting copy in the corner: (sharp texture, bbox) or None."""
     import text as T
+    cfg = getattr(S, "TITLES", None) or {}
+    if cfg and not cfg.get("keep_credit", False):
+        return None
     try:
         ctex, bbox = T.render_credit(S.CREDIT["song"], S.CREDIT["concert"])
     except Exception:
@@ -425,6 +428,11 @@ def timing_checks(S, blocks, issues, log):
                                    block=f"{a['name']} then {b['name']}",
                                    detail=f"only {b['appear'] - a['gone']:.1f} s between {a['name']} leaving and "
                                           f"{b['name']} starting (want {GAP_MIN} s)"))
+    # TITLES replaces legacy title and tagline checks, not the other checks.
+    if getattr(S, "TITLES", None):
+        titles_checks(S, issues, log)
+        if S.TITLES.get("end_card"):
+            return
     # end card
     tg = S.TAGLINE
     nlines = len(tg["text"].split("\n"))
@@ -760,6 +768,143 @@ def calm_checks(S, figs, video, issues, log, w=320, h=180, fps=10):
     return rows
 
 
+
+# ---------------------------------------------------------------- TITLES and encoded-media diagnostics
+def titles_checks(S, issues, log):
+    """Configuration checks, not proof of on-screen legibility or visibility."""
+    cfg = S.TITLES
+    total = float(S.NFRAMES) / S.FPS
+    for key in ("opening", "end_card"):
+        part = cfg.get(key)
+        if not part:
+            issues.append(dict(severity="HIGH", check="TITLES", at=None, block=key,
+                               detail="missing TITLES section"))
+            continue
+        if key == "opening":
+            end = float(part.get("t_end", 4.0))
+            start, stop = 0.0, end - min(float(part.get("dissolve", 1.6)), max(end, 0.2))
+        else:
+            start = float(part.get("t_in", total)) + float(part.get("fade", 1.6))
+            stop = min(total, float(part.get("t_out", 1e9)) - 0.8)
+        hold = max(0.0, stop - start)
+        log.append(f"TITLES {key}: configured full hold {start:.2f} to {stop:.2f}, {hold:.2f} s")
+        if hold + 1e-6 < 7.0:
+            issues.append(dict(severity="HIGH", check="TITLES", at=start, block=key,
+                               detail=f"full hold is {hold:.2f} s; need 7 s excluding reveal/dissolve"))
+    windows = (cfg.get("signature") or {}).get("windows", [])
+    log.append(f"TITLES signature: {len(windows)} configured windows; rendered text requires visual review")
+    log.append("TITLES masks are not measured by the legacy text-legibility checker; no visual pass is implied")
+
+
+def _issue(issues, check, at, detail, severity="MEDIUM"):
+    issues.append(dict(severity=severity, check=check, at=float(at), block="encoded media", detail=detail))
+
+
+def motion_metrics(fr, times, issues, log, cuts=()):
+    """Actual decoded frame timestamps; thresholds are review heuristics, not a perceptual verdict."""
+    if len(fr) < 3 or len(times) != len(fr):
+        raise ValueError("motion check needs matching decoded frames and timestamps")
+    f = fr.astype(np.float32)
+    mad = np.abs(np.diff(f, axis=0)).mean(axis=(1, 2))
+    jitter = np.abs(f[2:] - 2*f[1:-1] + f[:-2]).mean(axis=(1, 2))
+    dt = float(np.median(np.diff(times)))
+    end = float(times[-1] + dt)
+    rows = []
+    for a in np.arange(0, end, 0.5):
+        sel = (times[1:] >= a) & (times[1:] < a + 0.5)
+        js = (times[2:] >= a) & (times[2:] < a + 0.5)
+        if not sel.any():
+            continue
+        m, j = float(mad[sel].mean()), float(jitter[js].mean()) if js.any() else 0.0
+        rows.append(dict(t0=round(float(a), 3), mean_difference=m, jitter=j))
+        if m > 8.0 and j > 8.0:
+            _issue(issues, "Motion strobing", a, f"mean difference {m:.2f}, second difference {j:.2f} (0..255); review rapid motion")
+    # Near-frozen decoded pixels, tolerant of tiny codec changes, clipped before final easing.
+    frozen = mad < 0.15
+    start = None
+    for k in range(len(frozen) + 1):
+        on = k < len(frozen) and frozen[k] and times[k+1] <= end - 1.5
+        if on and start is None:
+            start = k
+        if not on and start is not None:
+            a, b = float(times[start]), float(times[k])
+            if b - a > 1.5:
+                _issue(issues, "Frozen video", a, f"near-frozen pixels for {b-a:.2f} s, through {b:.2f} s")
+            start = None
+    for k, d in enumerate(mad):
+        t = float(times[k+1])
+        neighbors = np.concatenate((mad[max(0,k-4):k], mad[k+1:k+5]))
+        ref = float(np.median(neighbors)) if len(neighbors) else 0.0
+        if d > 12.0 and d > 4 * max(ref, 0.2) and not any(abs(t-c) <= 2*dt for c in cuts):
+            _issue(issues, "Single-frame jump", t, f"difference {d:.2f}, local median {ref:.2f}; no declared cut nearby")
+    log.append(f"{len(fr)} frames at measured median interval {dt:.6f} s; half-second MAD/jitter in JSON")
+    return rows
+
+
+def motion_checks(S, video, issues, log):
+    cmd = ["ffprobe", "-v", "error", "-select_streams", "v:0", "-show_frames",
+           "-show_entries", "frame=best_effort_timestamp_time", "-of", "json", video]
+    probe = json.loads(subprocess.run(cmd, capture_output=True, text=True, check=True).stdout)
+    times = np.array([float(f["best_effort_timestamp_time"]) for f in probe["frames"]])
+    raw = subprocess.run(["ffmpeg", "-v", "error", "-i", video, "-map", "0:v:0", "-vf", "scale=160:90:flags=area",
+                          "-vsync", "0", "-f", "rawvideo", "-pix_fmt", "gray", "-"], capture_output=True, check=True).stdout
+    fr = np.frombuffer(raw, np.uint8).reshape(-1, 90, 160)
+    # Directors can explicitly declare editorial cuts; camera movements are not automatically exempt.
+    return motion_metrics(fr, times, issues, log, getattr(S, "QA_CUTS", ()))
+
+
+def audio_metrics(samples, rate, issues, log, silence=0.0):
+    """Per-channel energy avoids cancellation in stereo; uses decoded sample peak, not true peak."""
+    if samples.size == 0:
+        _issue(issues, "Audio decode", 0, "audio stream decoded to zero samples", "HIGH")
+        log.append("Audio metrics unavailable: no decoded samples")
+        return dict(skipped="empty decoded audio")
+    if samples.ndim == 1:
+        samples = samples[:, None]
+    n = max(1, int(round(rate * 0.25)))
+    power = np.mean(samples.astype(np.float64)**2, axis=1)
+    rms = np.array([np.sqrt(power[k:k+n].mean()) for k in range(0, len(power), n)])
+    db = 20*np.log10(np.maximum(rms, 1e-8))
+    end = len(samples)/rate
+    peak = float(np.max(np.abs(samples))) if samples.size else 0.0
+    if peak >= 0.999:
+        _issue(issues, "Audio clipping", 0, f"decoded sample peak {peak:.5f}; inspect possible clipping", "HIGH")
+    if silence > 0:
+        quiet = samples[:int(silence*rate)]
+        quiet_db = float(20*np.log10(max(np.sqrt(np.mean(quiet.astype(np.float64)**2)), 1e-8)))
+        if quiet_db > -45:
+            _issue(issues, "Opening silence", 0, f"first {silence:.2f} s RMS {quiet_db:.2f} dBFS, expected <= -45")
+    tail = float(20*np.log10(max(np.sqrt(power[-min(rate,len(power)):].mean()), 1e-8)))
+    if tail > -45:
+        _issue(issues, "Abrupt audio ending", max(0,end-1), f"last second RMS {tail:.2f} dBFS, expected <= -45")
+    # Exclude the intended entrance and final fade. A level flag is not proof of a bad musical edit.
+    last_flag = -1.0
+    for k in range(1, len(db)):
+        t = k * 0.25
+        prior = max(range(max(0, k-3), k), key=lambda j: abs(db[k]-db[j]))
+        delta = db[k] - db[prior]
+        if prior * 0.25 >= silence + 1.5 and t < end-1 and t-last_flag >= 0.75 and abs(delta) > 3 and max(db[k],db[prior]) > -45:
+            _issue(issues, "Audio level change", t, f"RMS change {delta:+.2f} dB across {(k-prior)*0.25:.2f} s; audition this passage")
+            last_flag = t
+    log.append(f"sample peak {20*np.log10(max(peak,1e-8)):.2f} dBFS; last-second RMS {tail:.2f} dBFS; not a listening audition")
+    return dict(rms_dbfs=db.tolist(), window_seconds=0.25, tail_dbfs=tail, peak=peak)
+
+
+def audio_checks(S, video, issues, log, silence=None):
+    probe = json.loads(subprocess.run(["ffprobe", "-v", "error", "-select_streams", "a:0", "-show_entries",
+                       "stream=channels", "-of", "json", video], capture_output=True, text=True, check=True).stdout)
+    if not probe["streams"]:
+        log.append("No audio stream; audio checks skipped")
+        return dict(skipped="no audio stream")
+    channels = int(probe["streams"][0]["channels"])
+    rate = 48000
+    raw = subprocess.run(["ffmpeg", "-v", "error", "-i", video, "-map", "0:a:0", "-ar", str(rate),
+                          "-f", "f32le", "-"], capture_output=True, check=True).stdout
+    samples = np.frombuffer(raw, np.float32).reshape(-1, channels)
+    quiet = float(getattr(S, "QA_SILENCE_SECONDS", 0.0)) if silence is None else silence
+    return audio_metrics(samples, rate, issues, log, quiet)
+
+
 # ---------------------------------------------------------------- report
 SEV_ORDER = {"HIGH": 0, "MEDIUM": 1, "LOW": 2}
 
@@ -796,7 +941,9 @@ def write_report(out, meta, issues, sections, data):
           f"- Reading time: expressions fully formed (form + FORM_DUR + 0.75 s) until hold, at least "
           f"{EXPR_SOLID_MIN:.0f} s; fragments {FRAG_SOLID_MIN:.0f} s; no fragment over an expression; "
           f"{GAP_MIN} s gap.",
-          f"- End card: three lines under the title, whole for at least {END_HOLD_MIN:.0f} s before the fade.",
+          f"- Legacy end card: three lines under the title, whole for at least {END_HOLD_MIN:.0f} s before the fade. TITLES uses 7 s excluding reveal/dissolve; configuration only.",
+          "- Motion: decoded timestamp-preserving 160x90 grayscale frames, half-second MAD and second difference. Thresholds are review cues, not proof of a perceptual defect. QA_CUTS exempts declared cuts from jump flags.",
+          "- Audio: per-channel RMS over 0.25 s, changes over 3 dB within 0.75 s, decoded sample peak and final-second RMS. --silence-start explicitly declares intended quiet. This does not replace listening or true-peak metering.",
           f"- Calm bottom third: mean frame difference in the bottom third against the rest, per 2 s, people of light "
           f"left out. Over {CALM_MED} is busy, over {CALM_HIGH} very busy.",
           f"- Static figures: a painted figure with one picture and no warp that moves across the screen slides as one "
@@ -821,6 +968,7 @@ def main():
     ap.add_argument("--files", nargs="*", default=[], help="more files to check for dashes")
     ap.add_argument("--fail-on", default="none", choices=["none", "high"])
     ap.add_argument("--name", default="")
+    ap.add_argument("--silence-start", type=float, default=None, help="expected quiet opening in seconds; otherwise QA_SILENCE_SECONDS or 0")
     a = ap.parse_args()
     t_start = time.time()
     S = load_song(a.song)
@@ -843,6 +991,10 @@ def main():
             issues.append(dict(severity="HIGH", check="Length", at=None, block=source,
                                detail=f"the video is {dur:.2f} s but the song file says {total:.2f} s"))
         sections.append(("Length", log_l))
+        log_m, log_a = [], []
+        data["motion"] = motion_checks(S, a.video, issues, log_m)
+        data["audio"] = audio_checks(S, a.video, issues, log_a, a.silence_start)
+        sections += [("Motion diagnostics", log_m), ("Audio diagnostics", log_a)]
         w, h = (vw, vh) if vh <= 540 else (960, 540)
         cache = {}
 
@@ -925,3 +1077,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
