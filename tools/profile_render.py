@@ -19,7 +19,10 @@ def main():
         p.error('--frames must be positive')
     sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'engine'))
     import render
-    r = render.Renderer()
+    import output
+    scale = output.scale(render.S)
+    width, height = (int(size * scale) // 2 * 2 for size in (render.S.W, render.S.H))
+    r = render.Renderer(width, height)
     stage_totals = {}
     if a.stages:
         def instrument(obj, name, label):
