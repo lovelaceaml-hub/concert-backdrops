@@ -30,7 +30,7 @@ on:
         required: false
         default: 1080p
       fps:
-        description: "Frames per second: 30 or 60 (the share copy is always 30)"
+        description: "Frames per second: 30 or 60 (the share copy keeps it: 1280x720 at 30 or 60 fps, under 25 MB)"
         required: false
         default: "30"
       qa:
@@ -173,15 +173,18 @@ jobs:
           echo "final $fd s, audio streams $na"
           python3 -c "import sys; sys.exit(0 if abs($fd-$want)<0.15 and $na==1 else 1)" || { echo "final check failed"; exit 1; }
           cp silent.mp4 "$OUTNAME (silent).mp4"
-      - name: Share copy (1280x720, under 25 MB, for phones and messages)
+      - name: Share copy (1280x720 at the render's fps, under 25 MB, for phones and messages)
         run: |
           mkdir -p share
           fd=$(ffprobe -v error -show_entries format=duration -of csv=p=0 "$OUTNAME.mp4")
           # video bitrate that fits 24 MB with 160 kb/s audio, at most 2600 kb/s
           vb=$(python3 -c "print(int(min(2600, 24e6*8/1000/$fd - 160)))")
-          echo "duration $fd s, video bitrate ${vb}k"
-          ffmpeg -v error -y -i "$OUTNAME.mp4" -vf "fps=30,scale=1280:720:flags=lanczos" -c:v libx264 -preset slow \
-            -crf 21 -maxrate "${vb}k" -bufsize "$(( vb * 2 ))k" -pix_fmt yuv420p -g 60 \
+          # the share copy keeps the render's frame rate (30 or 60); a keyframe every 2 s either way
+          sfps=$OUT_FPS
+          gop=$(( sfps * 2 ))
+          echo "duration $fd s, video bitrate ${vb}k, $sfps fps"
+          ffmpeg -v error -y -i "$OUTNAME.mp4" -vf "fps=$sfps,scale=1280:720:flags=lanczos" -c:v libx264 -preset slow \
+            -crf 21 -maxrate "${vb}k" -bufsize "$(( vb * 2 ))k" -pix_fmt yuv420p -g $gop \
             -color_primaries bt709 -color_trc bt709 -colorspace bt709 \
             -c:a aac -b:a 160k -movflags +faststart "share/$OUTNAME (share).mp4"
           size=$(stat -c %s "share/$OUTNAME (share).mp4")

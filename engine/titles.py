@@ -215,12 +215,20 @@ class Titles:
             self.op = dict(t_end=float(op.get("t_end", 4.0)), y=float(op.get("y", 0.30)),
                            palette=op.get("palette", "night"), dissolve=float(op.get("dissolve", 1.6)),
                            build=float(op.get("build", 1.2)))
+            pr = dict(op.get("protect") or {})          # optional, as for the signature (see there)
+            self.op_keep = float(pr.get("keep", KEEP))
+            self.op_prot = (float(pr.get("blur", 40.0)), float(pr.get("gain", 16.0)))
             self.op_logo = None
             self._build_opening()
         else:
             self.op = None
         self.sig = []
         if sg:
+            # optional, for a signature that stays on over a busy scene: protect=dict(keep=, blur=, gain=) dims the
+            # scene's light only close round the letters and less strongly (default: as the other lockups)
+            pr = dict(sg.get("protect") or {})
+            self.sig_keep = float(pr.get("keep", KEEP))
+            self.sig_prot = (float(pr.get("blur", 40.0)), float(pr.get("gain", 16.0)))
             for win in sg.get("windows", []):
                 a, b, corner = float(win[0]), float(win[1]), str(win[2])
                 pal = win[3] if len(win) > 3 else sg.get("palette", "night")
@@ -261,17 +269,17 @@ class Titles:
             self.layers[key] = fn(*args)
         return self.layers[key]
 
-    def _finish(self, layer, radius, strength, pal, noise=False):
+    def _finish(self, layer, radius, strength, pal, noise=False, prot=(40.0, 16.0)):
         P = PALETTES[pal]
         out, a, rgb = _compose(layer, radius * self.s, strength, P["glow"])
         (out, a, rgb), (x0, y0, x1, y1) = _crop([out, a, rgb])
         L = dict(tex=self._tex(out), rect=(x0 / self.w, y0 / self.h, (x1 - x0) / self.w, (y1 - y0) / self.h),
                  box=(x0, y0, x1, y1), a=a, rgb=rgb, pal=pal)
         # the text protection: a broad soft shape round the letters and between the lines
-        g = np.asarray(Image.fromarray((a * 255).astype(np.uint8)).filter(ImageFilter.GaussianBlur(40 * self.s)),
+        g = np.asarray(Image.fromarray((a * 255).astype(np.uint8)).filter(ImageFilter.GaussianBlur(prot[0] * self.s)),
                        np.float32) / 255.0
         pr = np.zeros(a.shape + (4,), np.float32)
-        pr[..., 3] = np.clip(g * 16.0, 0.0, 1.0)
+        pr[..., 3] = np.clip(g * prot[1], 0.0, 1.0)
         L["prot"] = self._tex(pr)
         if noise:
             rng = np.random.default_rng(11)
@@ -348,7 +356,7 @@ class Titles:
         d.line((cx - 60 * s, y + 242 * s, cx + 60 * s, y + 242 * s), fill=acc + (200,), width=max(1, int(round(2 * s))))
         _tracked(d, (cx, y + 262 * s), "SUNDAY, DECEMBER 6" + SEP + "4:30 PM", JO(500, 40 * s), col + (255,), 6 * s)
         _tracked(d, (cx, y + 320 * s), "LAS VEGAS", JO(400, 26 * s), acc + (235,), 8 * s)
-        return self._finish(L, 14, 0.55, pal, noise=True)
+        return self._finish(L, 14, 0.55, pal, noise=True, prot=getattr(self, "op_prot", (40.0, 16.0)))
 
     def _signature(self, corner, pal):
         """N5: the logo mark on the outer side, then the title in italic on one line, DEC 6 · 4:30 PM, and
@@ -384,7 +392,7 @@ class Titles:
         _tracked(d, (tx, y0 + 88 * s), "HEALING CONCERT" + SEP + "LAS VEGAS", JO(500 if small else 400, 22 * s),
                  (small or acc) + (255 if small else 230,), 5 * s,
                  align=al)
-        return self._finish(L, 9, 0.5, pal)
+        return self._finish(L, 9, 0.5, pal, prot=getattr(self, "sig_prot", (40.0, 16.0)))
 
     def _ec_xy(self, x, y):
         """A point of the end card mockup (1080p pixels) on the render: scaled about the frame's middle, with the
@@ -695,9 +703,9 @@ class Titles:
         jobs = []
         a, front, prog = self._op_state(t)
         if a > 0.0 and prog < 1.0:
-            jobs.append((self.op_layer, KEEP * (1.0 - prog)))
+            jobs.append((self.op_layer, getattr(self, "op_keep", KEEP) * (1.0 - prog)))
         for L, k in self._sig_alpha(t):
-            jobs.append((L, KEEP * k))
+            jobs.append((L, getattr(self, "sig_keep", KEEP) * k))
         ea, ef = self._ec_state(t)
         if ea > 0.002:
             jobs.append((self.ec_layer, KEEP * ea * (1.0 if ef is None else float(np.clip(ef + 0.3, 0.0, 1.0)))))
@@ -761,6 +769,27 @@ class Titles:
             self.p_ovl["uNoise"].value = 1
             self._quad(self.p_ovl, self.v_ovl, L, -1.0, uAlpha=ea,
                        uDis=(float(ef) if ef is not None else -1.0, 0.30, 0.72, 1.0))
+            drew = True
+        # Optional quiet life at the outer edges of the closing card. Kept outside
+        # the text and logo so all event details remain steady and readable.
+        if ea > 0.002 and self.cfg.get("end_card", {}).get("ambient_motes", False):
+            if not hasattr(self, "ec_mote"):
+                grid = np.linspace(-1.0, 1.0, 64, dtype=np.float32)
+                xx, yy = np.meshgrid(grid, grid)
+                alpha = np.exp(-9.0 * (xx * xx + yy * yy)) * 0.38
+                rgba = np.empty((64, 64, 4), np.float32)
+                rgba[..., :3] = alpha[..., None] * np.array([1.0, 0.98, 0.87])
+                rgba[..., 3] = alpha
+                self.ec_mote = self._tex(rgba)
+            age = max(0.0, t - self.ec["t_in"])
+            for j in range(8):
+                side = 0.06 if j % 2 == 0 else 0.92
+                x = side + 0.012 * np.sin(age * 0.35 + j * 1.7)
+                y = 0.16 + 0.18 * (j // 2) - 0.013 * age
+                strength = ea * (0.75 + 0.25 * np.sin(age * 1.2 + j))
+                layer = dict(tex=self.ec_mote, rect=(x, y, 0.035, 0.062))
+                self._quad(self.p_ovl, self.v_ovl, layer, -1.0,
+                           uAlpha=float(strength), uDis=(-1.0, 0.0, 0.0, 0.0))
             drew = True
         ks = self._dl_sub_alpha(t)
         if ks > 0.002:

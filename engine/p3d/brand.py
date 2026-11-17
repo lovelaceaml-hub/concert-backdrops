@@ -29,12 +29,28 @@ THE REST (re-exported here, so `from p3d import brand` gives everything)
   the world               engine/p3d/brand_world.py    the globe of light, hearts across it, and world to logo
 """
 import math
-import zlib
 
 import numpy as np
-from PIL import Image, ImageDraw, ImageFilter
 
-from .api import lin, show
+from .api import lin, show  # noqa: F401  (re-exported for song files: brand.lin, brand.show)
+
+
+class _LazyPIL:
+    """A PIL module loaded on first use: the render workflow imports song files in a step without PIL, so nothing
+    here may need it at import time."""
+
+    def __init__(self, name):
+        self._name, self._mod = name, None
+
+    def __getattr__(self, k):
+        if self._mod is None:
+            import importlib
+            self._mod = importlib.import_module("PIL." + self._name)
+        return getattr(self._mod, k)
+
+
+Image, ImageDraw, ImageFilter = _LazyPIL("Image"), _LazyPIL("ImageDraw"), _LazyPIL("ImageFilter")
+
 
 # ------------------------------------------------------------------------------------------------- colours
 # Sampled from the campaign's logo (two references: a clean render and the website's version) and settled
@@ -554,6 +570,19 @@ def _lattice(cov, b, rng, min_cov=0.06, jitter=0.25):
     return x, y, np.clip(m[iy, ix] * 1.10, 0.0, 1.0)
 
 
+def _box_blur(a, r, passes=2):
+    """A soft blur of a picture (box of radius r pixels, twice: close to a Gaussian)."""
+    a = np.asarray(a, np.float64)
+    for _ in range(passes):
+        for ax in (0, 1):
+            p = np.pad(a, [(r + 1, r) if i == ax else (0, 0) for i in range(2)], mode="edge")
+            cs = np.cumsum(p, axis=ax)
+            hi = np.take(cs, np.arange(2 * r + 1, cs.shape[ax]), axis=ax)
+            lo = np.take(cs, np.arange(0, cs.shape[ax] - 2 * r - 1), axis=ax)
+            a = (hi - lo) / (2 * r + 1)
+    return a
+
+
 def logo_points(n=60000, seed=7, palette="brand"):
     """The logo as points, in logo units (1.0 high, centred on its box), by part. Returns a dict of arrays:
 
@@ -566,6 +595,8 @@ def logo_points(n=60000, seed=7, palette="brand"):
                    their length in a staggered order; a branch from the stem's foot outward, each leaf from
                    its base; the ring round from the bottom; the globe from its centre; hearts top down)
       elem         the element inside the part (grid line or leaf number; -1 none)
+      edge, nrm    the hearts only: 0..1 how near the point is to its heart's outline, and the outward
+                   direction there (x, y)
       cell         lattice spacing (logo units)
     Cached by (n, seed)."""
     key = (int(n), int(seed), str(palette))
@@ -585,7 +616,8 @@ def logo_points(n=60000, seed=7, palette="brand"):
              "ring": cov["ring"], "globe": cov["globe"], "grid": cov["grid"], "branch_l": cov["branch_l"],
              "branch_r": cov["branch_r"]}
     # what covers what when the logo is whole (later parts cover earlier ones)
-    out = {k: [] for k in ("x", "y", "z", "part", "weight", "rgb", "covered", "order", "elem", "inner", "gapw")}
+    out = {k: [] for k in ("x", "y", "z", "part", "weight", "rgb", "covered", "order", "elem", "inner", "gapw",
+                           "edge", "nrm")}
     for pi, name in enumerate(PARTS):
         c = parts[name]
         if name == "ring":
@@ -616,6 +648,16 @@ def logo_points(n=60000, seed=7, palette="brand"):
             inner = np.clip(1.0 - cov["heart_r"][iy, ix], 0.0, 1.0)
         if name == "heart_l":
             inner = np.clip(1.0 - np.maximum(cov["heart_l"][iy, ix], cov["gap"][iy, ix]), 0.0, 1.0)
+        # the hearts' edge: how near each point is to its heart's outline, and the outward direction there
+        edge = np.zeros(len(x), np.float32)
+        nrm = np.zeros((len(x), 2), np.float32)
+        if name in ("heart_l", "heart_r"):
+            bl = _box_blur(cov[name + "_full"], max(int(0.035 * cv.scale), 2))
+            gy_, gx_ = np.gradient(bl)
+            gx, gy = -gx_[iy, ix], gy_[iy, ix]                  # outward: where the cover falls (rows go down)
+            gn = np.maximum(np.hypot(gx, gy), 1e-9)
+            nrm = np.stack([gx / gn, gy / gn], axis=1).astype(np.float32)
+            edge = np.clip((1.0 - bl[iy, ix]) * 2.2, 0.0, 1.0).astype(np.float32)
         # z: the globe's parts sit on its sphere
         r = np.hypot(x - GC[0], y - GC[1])
         z = np.zeros_like(x)
@@ -665,7 +707,7 @@ def logo_points(n=60000, seed=7, palette="brand"):
         else:
             order = np.clip(1.0 - y / A_H, 0.0, 1.0)
         for k_, v in (("x", x), ("y", y), ("z", z), ("weight", w), ("rgb", rgb), ("covered", covered),
-                      ("order", order), ("elem", elem), ("inner", inner), ("gapw", g)):
+                      ("order", order), ("elem", elem), ("inner", inner), ("gapw", g), ("edge", edge), ("nrm", nrm)):
             out[k_].append(np.asarray(v))
         out["part"].append(np.full(len(x), pi, np.int64))
     res = {k: np.concatenate(v) for k, v in out.items()}
@@ -874,13 +916,18 @@ class Logo:
     bulge    0..1: how much the globe's points bulge toward the viewer on their sphere (1.0)
     n        about how many points (70000; 40000 is enough for a logo under a third of the picture high)
     dof, fog how much of the lens blur and of the haze the settled logo takes (0: sharp and clear)
+    globe_cover  a number or function of t: something round already stands where the globe goes (the Finale's
+             Earth); the hearts are hidden under it, as if the globe were there
+    paint_glow   0 (default) .. 1, a number or function of t: a soft halo of the hearts' own colours just
+             outside their edges, kept while the logo is painted (on a night sky a little reads as light; much
+             reads as a neon edge: the Finale leaves it off)
     """
 
     def __init__(self, pos=(0.0, 3.0, 0.0), size=2.0, facing=0.0, face="fixed", tilt=0.0, roll=0.0, ride=None,
                  frac=0.2, keys=None, place=None, camera=None, t_in=0.0, t_full=3.0, t_out=None, leave_dur=1.6,
-                 arrive="build", leave="fade", paint=0.0, paint_light=0.12, bright=0.45, white=0.35, glow=0.25,
+                 arrive="build", leave="fade", paint=0.0, paint_light=0.04, bright=0.45, white=0.35, glow=0.25,
                  sparkle=0.08, palette="brand", parts=None, amount=None, timing=None, bulge=1.0, n=70000,
-                 dot=2.1, dof=0.0, fog=0.0, reflect=True, seed=7):
+                 dot=2.1, dof=0.0, fog=0.0, reflect=True, globe_cover=None, paint_glow=0.0, seed=7):
         self.place = place or Place(pos=pos, size=size, facing=facing, face=face, tilt=tilt, roll=roll, ride=ride,
                                     frac=frac, keys=keys)
         self.camera = camera
@@ -894,6 +941,21 @@ class Logo:
         self.timing = dict(BUILD, **(timing or {}))
         self.bulge, self.dot = float(bulge), float(dot)
         self.dof, self.fog, self.reflect = dof, fog, reflect
+        self.globe_cover = globe_cover
+        self.paint_glow = paint_glow
+        self.glow_shape = (0.035, 14.0, 0.006, 0.9)      # paint_glow: offset, size, strength, colour
+        self._args = (n, seed, palette, parts)
+        self._ready = False
+
+    def __getattr__(self, k):
+        # the points are made on first use (not when the song file is imported)
+        if k.startswith("_") or self.__dict__.get("_ready", True):
+            raise AttributeError(k)
+        self._build(*self._args)
+        return getattr(self, k)
+
+    def _build(self, n, seed, palette, parts):
+        self._ready = True
         P = logo_points(n, seed, palette)
         keep = np.ones(len(P["x"]), bool) if parts is None else np.isin(P["part"], [_PID[p] for p in parts])
         self.x, self.y, self.z = P["x"][keep], P["y"][keep], P["z"][keep]
@@ -919,7 +981,7 @@ class Logo:
         self.rgb0 = rgb0
         lc = show_rgb(rgb0)
         m = np.maximum(lc.max(axis=1, keepdims=True), 1e-6)
-        self.light0 = (m * (lc / m) ** 1.35).astype(np.float32)
+        self.light0 = (m * (lc / m) ** 1.15).astype(np.float32)
         self.isw = isw = (rgb0.min(axis=1) > 0.97)
         self.white_light = np.array([1.0, 0.96, 0.9], np.float32) * 2.0 * self.white
         self.white_paint = np.array([1.25, 1.25, 1.25], np.float32)      # displays close to white, blooms little
@@ -932,6 +994,9 @@ class Logo:
         self.i_halo = np.nonzero((self.s[:, 0] < 0.035) & ~isw)[0]          # the coloured parts glow, not the white
         self.i_spark = np.nonzero(self.s[:, 1] < 0.0012)[0]
         self.inside_l = 1.0 - self.gapw                     # how much of a left heart point is the heart itself
+        # the edge glow: points near the hearts' outlines, moved a little outward
+        self.edge, self.nrm = P["edge"][keep], P["nrm"][keep]
+        self.i_rim = np.nonzero((self.edge > 0.3) & (self.s[:, 3] < 0.35) & ~isw & (self.gapw < 0.5))[0]
         # a loose cloud the points gather from (logo units): round the logo, more behind and below
         d = rng.normal(size=(self.N, 3))
         d /= np.maximum(np.linalg.norm(d, axis=1, keepdims=True), 1e-9)
@@ -1022,7 +1087,15 @@ class Logo:
         self.sg = sg = pres[_PID["heart_r"]] * _sc(0.75, 1.0, self.progress("heart_r", t))
         alpha[self.gap] *= self.inside_l[self.gap] + self.gapw[self.gap] * sg
         # the hearts' inner lobes go as the globe arrives over them
+        gc = float(np.clip(_val(self.globe_cover, t), 0.0, 1.0)) if self.globe_cover is not None else 0.0
         alpha *= 1.0 - self.inner * max(pres[_PID["globe"]], pres[_PID["ring"]])
+        if gc > 0.0:
+            # something round already stands where the globe goes (the Earth): the hearts pass behind it as
+            # they sweep in (tested where each point is now)
+            hs = self.part <= _PID["heart_l"]
+            d = np.hypot(x[hs] - GLOBE_CENTER[0], y[hs] - GLOBE_CENTER[1])
+            e = 0.6 * self.cell
+            alpha[hs] *= 1.0 - np.clip((GLOBE_RADIUS + e - d) / (2 * e), 0.0, 1.0) * gc
         # what of the right heart the left heart covers where it is now (light only; paint covers by order)
         self.dyn = np.ones(self.N)
         if self.is_r.any() and a_l > 0.0:
@@ -1043,7 +1116,7 @@ class Logo:
                 x += k * k * (self.s[:, 1] - 0.5) * 0.6
                 z += k * (self.s[:, 2] - 0.5) * 0.4
                 alpha *= np.clip(1.0 - k * 1.1, 0.0, 1.0)
-                flash += 0.8 * k * (1 - k) * 4.0 * (self.s[:, 2] < 0.25)
+                flash += 0.3 * k * (1 - k) * 4.0 * (self.s[:, 2] < 0.25)
             elif self.leave == "scatter":
                 k = _ss(0.0, 1.0, lv)
                 d = np.stack([x, y, z + 0.3], axis=1)
@@ -1080,18 +1153,36 @@ class Logo:
         vis = a_light > 0.004
         if vis.any() and paint < 0.999:
             out.append(dict(pos=pos[vis], size=size, color=light[vis] * self.bright,
-                            alpha=(a_light[vis] * self.k_norm).astype(np.float32),
+                            alpha=(a_light[vis] * self.k_norm * (1.0 - paint)).astype(np.float32),
                             emit=(1.0 + 2.5 * flash[vis]).astype(np.float32), kind="soft", twinkle=0.0,
                             seed=self.s[vis, 0], paint=0.0, **sharp))
         if paint > 0.0:
-            a_p = alpha * np.clip(self.wt * 1.6, 0.0, 1.0)
+            # a painted disc keeps its light in its skirt, so its middle covers only about two thirds: an alpha
+            # of 1.6 (the renderer clamps the cover to 1) makes the fill solid
+            # (the batch is fully a paint batch and fades by its alpha: a half painted batch would also be drawn
+            # as half light in its paint colours, which pales it)
+            a_p = alpha * np.clip(self.wt * 1.6, 0.0, 1.0) * 1.6 * paint
             vp = a_p > 0.004
             if vp.any():
-                out.append(dict(pos=pos[vp], size=size * 1.25, color=paintc[vp], alpha=a_p[vp].astype(np.float32),
-                                kind="soft", paint=paint, paint_light=self.paint_light, seed=self.s[vp, 0], **sharp))
+                out.append(dict(pos=pos[vp], size=np.float32(self.cell * 1.75 * s), color=paintc[vp], alpha=a_p[vp].astype(np.float32),
+                                kind="disc", paint=1.0, paint_light=self.paint_light, seed=self.s[vp, 0],
+                                **dict(sharp, streak=0.0)))
+        pg = float(_val(self.paint_glow, t)) if self.paint_glow is not None else 0.0
+        if pg > 0.0 and paint > 0.0:
+            i = self.i_rim
+            go, gs, ga, gc_ = self.glow_shape
+            a = alpha[i] * occ[i] * pg * min(paint * 2.0, 1.0) * ga
+            sel = a > ga * 0.01
+            if sel.any():
+                j = i[sel]
+                off = go * s
+                ph = pos[j] + off * (self.nrm[j, 0:1] * r[None, :] + self.nrm[j, 1:2] * u[None, :])
+                out.append(dict(pos=ph.astype(np.float32), size=size * gs, color=paintc[j] * gc_,
+                                alpha=a[sel].astype(np.float32), kind="soft", seed=self.s[j, 1], dof=1.0,
+                                fog=self.fog, streak=0.0, reflect=self.reflect))
         if self.glow > 0.0:
             i = self.i_halo
-            a = a_light[i] * self.glow * 0.033 * (1.0 - 0.7 * paint)
+            a = a_light[i] * self.glow * 0.033 * (1.0 - paint)
             sel = a > 0.0005
             if sel.any():
                 out.append(dict(pos=pos[i][sel], size=size * 14.0, color=light[i][sel] * self.bright,
@@ -1099,7 +1190,7 @@ class Logo:
                                 fog=self.fog, streak=0.0, reflect=self.reflect))
         if self.sparkle > 0.0:
             i = self.i_spark
-            a = alpha[i] * occ[i] * self.sparkle * (0.6 + flash[i])
+            a = alpha[i] * occ[i] * self.sparkle * (0.6 + flash[i]) * (1.0 - paint)
             sel = a > 0.01
             if sel.any():
                 out.append(dict(pos=pos[i][sel], size=size * 3.0, color=np.array([1.0, 0.93, 0.8]) * 1.4,
@@ -1126,3 +1217,10 @@ class Logo:
         """The settled places of the points in logo units (x, y, z), all or one part."""
         sel = np.ones(self.N, bool) if part is None else self.part == _PID[part]
         return self.x[sel], self.y[sel], self.z[sel] * self.bulge
+
+
+# ---------------------------------------------------------------------------------- the rest of the brand
+from .brand_hearts import HeartDrift, HeartForm, Hearts, arrange_heart, heart_places, heart_points  # noqa: E402,F401
+from .brand_symbols import (RECIPES, SYMBOLS, Constellation, Flock, LightTrail, PetalShape, Ripples, Traced,  # noqa: E402,F401
+                            recipe, strokes, symbol_image, symbol_points)
+from .brand_world import LAS_VEGAS, LOOK_COLORS, PASTEL, Finale, Globe, land  # noqa: E402,F401

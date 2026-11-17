@@ -1321,3 +1321,206 @@ The wording is the corrected title, "The Words of Mother's Love That Bring Peace
 **Cost.** The pictures are built once at the start (about two seconds); a frame costs a few full-frame quads and, while the opening dissolves or the date forms or bursts, a few thousand points; during the logo's build-in two small logo pictures a frame (about 0.05 s).
 
 **What is weak.** The opening's dust drifts up whatever the camera does: it belongs to the screen, not the world. The burst is one bright moment that the pop check reports (a change of about 11 against a median of 2.4); it is meant, but put it on a strong beat. The date's line beneath is type, not points (it bursts into points with the date). The end card's veil is one soft ellipse; without a backdrop on a night sky it reads as a warm glow, and the navy lines are weak there: use a bright sky or `backdrop`. `backdrop="auto"` reads the picture back each frame of the card (a few milliseconds).
+
+## Z. The brand: the logo, the nine symbols in light, hearts, the world (2026-11-15, branch engine-p3d-brand)
+
+The campaign's visual elements as engine pieces for the five films (UPDATE 9). Code: `engine/p3d/brand.py` (the logo, and everything re-exported: `from p3d import brand as BR` gives every name below), `brand_hearts.py`, `brand_symbols.py`, `brand_world.py`; pure numpy and PIL, nothing needs a graphics context. Working examples: `engine/songs/demo_brand_finale.py` (its 40 to 60 s on their own, 20 s) and `engine/songs/demo_brand.py` (60 s on the medley: the logo builds and leaves, hearts, the nine symbols each with another recipe, the world by day, then the finale: world of light, hearts across it, it becomes the logo, the bloom into a pastel day, the logo rises into the end card's place). Asset: `assets/p3d/brand/land_2048.png` (Natural Earth land, public domain; `assets/p3d/brand/README.md`).
+
+One small shared change, backward compatible: a new sprite kind `"heart"` (api `KINDS`, layer `KIND_ID`, a few lines in the sprite shaders). Every other kind draws exactly as before.
+
+### Z1. The logo
+
+Drawn from vector geometry measured on the campaign's own logo (no picture is stored or traced): two classic hearts (a square on its corner with a half circle on each upper side), tips one diagonal apart, the left (gold to orange) in front of the right (rose) and parted from it by a thin white line; the globe over the join, its grid a real sphere fitted to the reference (12 meridians, parallels every 19.25 degrees, the pole leaning toward the viewer and a little right, 84 percent of the reference's pixels agree), a white ring round it and a white cap beyond the pole; two white olive branches (stems and leaves placed as measured). `BR.LOGO_ASPECT` (width over height) is 1.547.
+
+**The 2D picture** (for TITLES and the end card):
+
+```python
+img = BR.logo_image(320)              # PIL RGBA, straight alpha; 320 px is the logo's own height
+arr = BR.logo_rgba(320)               # the same as a numpy array (H, W, 4) uint8
+(w, h), (x0, y0, x1, y1) = BR.logo_box(320, pad=0.06)   # picture size and the logo's box inside it
+```
+
+| Key | Default | Meaning |
+|---|---|---|
+| `height` | 320 | pixels for the logo itself; the picture is larger by `pad` (logo heights) on every side |
+| `pad` | 0.06 | margin round it (0 for a tight box) |
+| `palette` | `"brand"` | `"brand"`: the website's gold to orange gradient at the official poster's strength; `"web"`: the website's softer colours exactly; `"poster"`: the official poster's flat vivid orange and pink; or a dict of `LOGO_COLORS` keys (`gold`, `orange`, `rose`, `globe_l`, `globe_r`, `white`) |
+| `glow` | 0 | 0..1: a soft warm halo in the alpha (for a night sky); `glow_color` |
+| `parts` | all | a list of part names, or a dict part to opacity 0..1 (`BR.PARTS`: `heart_r`, `heart_l`, `ring`, `globe`, `grid`, `branch_l`, `branch_r`) |
+| `draw` | | dict `grid`, `branch_l`, `branch_r` to 0..1: the grid lines run along their length and the branches grow (a 2D build-in) |
+
+Cost: about 0.13 s at 300 px, 1.3 s at 700 px, 4 s at 1400 px; the last 24 pictures are kept, so ask once per size.
+
+**In the 3D world** (`BR.Logo`, a point set):
+
+```python
+LOGO = BR.Logo(pos=(0, 6, -6), size=6.0, face="camera", camera=CAMERA, t_in=0.4, t_full=4.6, t_out=6.6,
+               arrive="build", leave="rise", paint=lambda t: 0.85 * min(max((t - 4.4) / 0.8, 0), 1))
+scene.add("logo", LOGO)
+```
+
+| Key | Default | Meaning |
+|---|---|---|
+| `pos`, `size` | (0, 3, 0), 2.0 | centre of the logo's box; its height in metres. Or any key of `BR.Place` below (`face`, `facing`, `tilt`, `roll`, `ride`, `frac`, `keys`), or `place=` a Place |
+| `camera` | | the song's Rig (needed for `face="camera"`, `"screen"`, `ride`) |
+| `t_in`, `t_full`, `t_out`, `leave_dur` | 0, 3, None, 1.6 | first light; whole; starts to leave (None: never); seconds of leaving |
+| `arrive` | `"build"` | `"build"`: the two hearts sweep in from either side and from behind, the globe's disc fills from the middle while its ring draws round, the grid lines draw themselves, the branches grow from the stem's foot and each leaf opens. `"gather"`: every point flies in from a loose cloud, the hearts first. `"fade"`, `"none"` |
+| `timing` | `BR.BUILD` | dict part to (start, end) as shares of t_in..t_full: hearts 0 to 0.56, globe 0.30 to 0.58, ring 0.36 to 0.62, grid 0.50 to 0.88, branches 0.62 to 1.0 |
+| `amount` | | dict part to a function of t (0..1): drive a part yourself (the Finale does) |
+| `leave` | `"fade"` | `"fade"`, `"rise"` (lifts apart into sparks from the top), `"scatter"` (bursts outward), `"none"` |
+| `paint` | 0 | 0: light (glows; the brand colours as light on black, a little deeper); 1: painted in its exact colours over whatever is behind it, a bright day included; a number or function of t. On a bright sky always paint |
+| `paint_light` | 0.04 | the share of its own light a painted logo keeps |
+| `paint_glow` | 0 | a soft halo of the hearts' own colours just outside their edges, kept while painted (a number or function of t); a little reads as light on a night sky, much reads as a neon edge |
+| `bright`, `white`, `glow`, `sparkle` | 0.45, 0.35, 0.25, 0.08 | light strength; the white parts against the coloured ones; the coloured halo; glints (none once painted) |
+| `palette`, `parts`, `bulge` | `"brand"`, all, 1.0 | as the 2D picture; how much the globe's points bulge on their sphere |
+| `n`, `dot` | 70000, 2.1 | points; sprite size in lattice steps. 70000 keeps a logo a third of the picture high crisp; 90000 for a larger one |
+| `dof`, `fog`, `reflect` | 0, 0, True | the settled logo ignores the lens blur and the haze; mirrored in the lake |
+
+`LOGO.where(t, part=None)` gives the points in the world (for effects of your own); `LOGO.home()` their settled places in logo units; `BR.logo_points(n)` the plain points by part with colour, order and cover.
+
+**Placing anything** (`BR.Place`, used by the logo, the symbols and the globe): `pos`, `size` (metres), `facing` (azimuth, 0 faces +z), `face` (`"fixed"`, `"camera"` turns about the vertical to the camera, `"screen"` flat to the picture, `"flat"` lying on the lake), `tilt`, `roll`, `ride=(x, y, depth)` (keeps that place of the picture, x and y 0..1 from the left and the bottom, `depth` metres ahead of the lens, whatever the camera does; then `frac` is the height as a share of the picture), `keys=[(t, dict(...)), ...]` (the place glides, eased, from one key to the next: centre, turn and size). Every value may be a function of t. `BR.place_on_screen(camera, t, x, y, depth, frac)` gives `(pos, size)` for a fixed place.
+
+### Z2. Hearts
+
+The sprite: any batch may use `kind="heart"`. In focus it is a crisp heart (size: the diameter of the circle round it) that turns (`rot[:, 0]`, radians) and tumbles (`rot[:, 1]`); out of focus its bokeh disc is itself a heart.
+
+| Call | What, main keys |
+|---|---|
+| `BR.Hearts(style, n, center, box, size, colors, drift, sway, bright, paint, t0, t1, fade, dof)` | a field of hearts that hang and drift and wrap round inside `box` (they fade near its edges). `style`: `"bokeh"` (soft hearts out of focus: place them nearer or farther than the focus), `"sparkle"` (small bright hearts with a glint), `"petal"` (heart petals tumbling on the wind; `paint=1` on a bright sky). `colors`: one hex, an expression name, a list, or `"nine"` (the website colours). Default sizes: bokeh 0.35 to 0.8 m, sparkle 0.06 to 0.14, petal 0.10 to 0.22 |
+| `BR.HeartDrift(source, t0, t1, color, rate=12, life=2.8, rise=0.9, spread=0.6, size=(0.10, 0.22), style="heart", wind, paint)` | small hearts released from a place and rising, swaying away: hearts drifting off an expression in its colour. `source`: a point, a function of t (a moving hand: it leaves a trail), or a point set with `targets(t)` (a particle word: they rise from its letters) or `where(t)`. `style`: `"heart"`, `"sparkle"` (with a glint), `"bokeh"` |
+| `BR.HeartForm(center, size, facing, face, start, n, scatter, t0, t1, hold, release, then, fill, color, kind, point, camera)` | lights that gather into a heart between t0 and t1 (each on a curved path, staggered), hold `hold` s, then `"up"` (rise and fade), `"back"` (fly home) or `"burst"`. `start`: (K, 3) points or a function of t (a crowd's lights that move); None for a loose cloud of `n` lights. `fill=True` spreads them inside the heart |
+| `BR.arrange_heart(points, center, size, facing, tilt, face, fill)` | for any K points, K places on a heart, matched by direction from the middle so paths barely cross |
+| `BR.heart_places(n, center=(x, z), size, facing, fill)` | places on the ground for n people or lanterns standing in a heart |
+| `BR.heart_points(n, fill)` | a heart 1.0 high, centred: outline at even steps or spread inside |
+
+### Z3. The nine symbols in light
+
+Each symbol is redrawn by hand as clean strokes (`BR.strokes(name)`, symbol units 1.0 high, y up, in the order a pen draws them): Greeting a waving hand with two lines of the wave; Gratitude someone bowing deeply, seen from the side; Apology a face with raised brows, a small sad mouth and a tear; Inclusiveness a smiling face with closed eyes and two open hands hugging; Concession a half figure holding one arm out low, palm up, "after you"; Respect a face with long hair and one hand cupped behind the ear; Encouragement two hands pressed together, the forearms going down and apart (open lines: a symbol never has a box or a ring round it, which reads as UI); Consideration two open hands under a heart; Compliment two hands meeting in a clap with confetti. `BR.symbol_points(name, n)` gives points along them (with `order`, `stroke`, `tangent`); `BR.symbol_image(name, height)` a 2D picture of the line art (for checking).
+
+They are never an icon over the words: each recipe sets the symbol IN the world as a quiet effect, in its website colour, round its expression.
+
+| Recipe | What happens | Own keys |
+|---|---|---|
+| `BR.Traced(name, ...)` | fireflies (or sparks) fly in over 0.8 s and trace the lines over `dur`, the line glows, holds, and breaks up as it fades; the tracers fly off | `heads` (3), `style` `"fireflies"` or `"sparks"` |
+| `BR.Constellation(name, ...)` | stars come out one by one in drawing order, fine lines join neighbours; the lines go first, then the stars. Put it far off in the sky (a size of 30 to 50 m at 150 to 200 m) | `stars` (24; every stroke keeps its ends) |
+| `BR.PetalShape(name, ...)` | petals blow in on the wind, settle into the symbol (turning to follow its lines), hold, blow on | `wind` (x, y in the symbol's plane), `carrier` `"petal"`, `"heart"` or `"soft"`, `petal_size` (symbol heights) |
+| `BR.LightTrail(name, ...)` | one light draws the whole symbol as a continuous ribbon, stroke after stroke; the ribbon fades from where it began | `width` (symbol heights, 0.016) |
+| `BR.Ripples(name, ...)` | stands upright just above the water, facing the camera, as clear lines of light (give `pos` about 0.6 symbol heights above the water: the demo uses size 4.0 at y 2.9); it appears from its middle outward as if something had touched the lake there, and only its reflection moves: mirrored in the water, it wavers with a ripple that travels down and calms and breaks into bands of glints. No rings (they read as UI). `face="flat"` lays it on the water with its lines wavering instead: only for a camera looking down from above, or its outline reads as an ellipse | `water` (0.0, the lake's height), `mirror` (0.55, the reflection's strength), `spread` (0.35, how strongly it wavers), `rings` (0; kept for older songs) |
+| `BR.Flock(name, ...)` | a loose cluster of birds or embers passes through; its members slow as they pass their places, so the symbol stands clearest at `t0 + dur / 2`, then they speed off | `carrier` `"bird"` or `"ember"`, `heading`, `travel` |
+
+Keys every recipe takes: `pos`, `size` (the symbol's height in metres), `facing`, `face` (default `"camera"`), `tilt`, `roll`, `ride`, `frac`, `keys`, `place`, `camera` (the song's Rig), `color` (default the expression's website colour), `t0` (start), `dur` (the forming: 1 to 2 s, default 1.6), `hold` (0.9), `out` (1.2), `intensity` (0..1, default 0.35: subtle, part of the scenery; the demo uses 0.55 to be judged), `paint` (0..1 for a bright sky), `n` (points along the lines), `dof`, `reflect`. Timings: Traced starts 0.8 s before `t0` (the tracers fly in); a Flock lasts exactly `t0` to `t0 + dur` (give 2 to 3 s). `BR.recipe("traced", "Greeting", ...)` builds one by name; `fx.where(t)` gives the symbol's points in the world.
+
+Placing them: a symbol must always read as its shape: stand it upright, facing the camera, in the air or just above the water (never flat on the water seen from low, where a round face becomes an ellipse); no rings or boxes round it. Keep them off the words being read (a corner of the sky, above the water, beside a person), a symbol 1 to 2 times the height of the phrase. Give them `reflect=False` in `scene.add` when the lake would mirror them into the bottom of the picture.
+
+### Z4. The world
+
+```python
+GLOBE = BR.Globe(pos=(0, 13, -44), radius=9, camera=CAMERA, look="night", spin=6, front=-40, tilt=18,
+                 t_in=40.0, hearts=dict(t0=41.0, t1=46.0, n=42))
+```
+
+| Key | Default | Meaning |
+|---|---|---|
+| `pos`, `radius`, `face`, `camera`, `place` | | centre, radius in metres; it turns to the camera (`face="camera"`) |
+| `look` | `"night"` | `"night"`: a deep blue ocean (painted, so stars do not show through), continents of warm golden light (a smooth glow over a dark amber base, a few glints, a soft golden haze), pale moonlit cloud wisps, a thin soft rim of air and a halo that thins outward. `"space"`: deeper. `"day"`: the soft pastel clay world of world_ref for a bright sky: a gentle blue ocean and soft green land, both painted in their colours, a little white cloud, a thin pale air; it adds almost no light, so it stays blue and green under clipping. A dict of `BR.LOOK_COLORS` keys (`ocean_c`, `ocean_e`, `land`, `land2`, `land_base`, `rim`, `cloud`, `paint_land`, `rim_k`, `cloud_k`, `glow_k`, `land_k`), or `[(t, name), ...]` to change (`blend` s) |
+| `spin`, `front`, `tilt` | 6, -40, 18 | degrees a second it turns; the longitude facing the camera at t = 0 (-40: the Atlantic); degrees the north pole leans toward the camera |
+| `settle` | | dict(t0, t1, front=None, pole=None): the turn eases to a stop (at `front`, or where it would come to rest) and the pole swings to `pole` |
+| `scale` | 1 | a size factor, a number or function of t |
+| `t_in`, `t_out`, `fade`, `amount` | | when it is there (it gathers out of light over `fade` s); `amount` (function of t) overrides |
+| `hearts` | None | dict(t0, t1, n=42, size=0.15, start=LAS_VEGAS, colors="nine", pulse=1.0): hearts light up on land across the world, spreading from Las Vegas outward (an even spread over every continent, not on the ice); size in globe radii. Each blooms open (0.55 s, a little overshoot) with a small flash and a soft pulse of light in its colour that swells and fades (`pulse`); the hearts are painted in their exact colours with a faint halo, and the land's light and the clouds give way under them, so they stay true |
+| `arcs` | True | each new heart is joined to the nearest one already lit by an arc of light that travels over `dur` with a glowing head and arrives as the heart opens; its colour runs from one heart's colour to the other's; a soft wide glow goes with it (dict(height=0.2, width=0.009, dur=1.0, glow=1.0); `height`: how far a long arc rises above the land, in radii); arcs and hearts behind the globe are hidden |
+| `clouds` | True | drifting cloud wisps (dict(drift=2.5): degrees of longitude a second against the turn); the look's `cloud_k` sets how much they show; the land dims a little under them |
+| `air`, `marks` | 1 | a number or function of t: the strength of the air (rim and halo) and of the hearts and arcs (the Finale fades the air as the logo's ring draws round the Earth, and the hearts and arcs as its grid draws over it) |
+| `cradle` | None | dict(t0, t1, at=None, width=1.3, color="#ffcf8f", glow=1.0, motes=180, rise=1.5): a soft warm light rising from below the globe, as from hands cradling it: a pool of warm light at `at` (a world point or function of t; default `globe.cradle_at(t)`, just under the globe), a soft column of it rising up the globe's front, motes of light drifting up, the globe's lower edge warmed from below; in over the first second after `t0`, out over the last before `t1`. The masterpiece's hands (MASTER builds them) go at `globe.cradle_at(t)`, or MASTER gives its hands' place as `at` |
+| `n`, `bright` | 40000, 1.0 | land points; strength of the light |
+
+Land: Natural Earth 1:50m (`BR.land(lat, lon)`). Cost at 1080p: about 0.6 to 0.9 s a frame with hearts and arcs. For a majestic world give it about 60 percent of the picture's height (the demo: radius 11.5 m at about 50 m from the lens, fov 40).
+
+### Z5. World to logo, and the bloom into day
+
+```python
+FINALE = BR.Finale(pos=(0, 13, -44), radius=11.5, shrink=0.47, camera=CAMERA, look="night", t_world=47.6,
+                   hearts=dict(t0=48.4, t1=52.6, n=44), t_settle=(52.2, 54.0), t_logo=(53.0, 55.0),
+                   bloom=dict(t=54.3), end=dict(t=(55.0, 56.4), ride=(0.5, 0.74, 14.0), frac=0.27))
+def setup(scene):
+    FINALE.add_to(scene)
+P3D = dict(camera=CAMERA, world=FINALE.world(dict(look="night")), bursts=FINALE.bursts(), setup=setup)
+```
+
+The globe gathers at `t_world`, hearts bloom across it with arcs; between `t_settle` it slows to a stop, its pole swings to the logo's pole and it draws in to `shrink` of its size so the whole logo will fit; between `t_logo` it becomes the logo, in this order (shares of the window, `timing` changes any): the two hearts sweep in from either side behind the Earth (0 to 0.54), the ring draws round it as the air fades (0.15 to 0.5), the grid lines draw themselves over the Earth while the hearts and arcs on it give way (0.2 to 0.65), the logo's globe spreads over the Earth from its middle (0.5 to 0.78) as the Earth's lights fade (0.62 to 0.88), the olive branches grow (0.58 to 1.0). The logo is painted in its exact colours the whole way: its hearts are gold to orange and rose from the moment they appear, on the night sky and on the day (nothing white, no glow edges). At `bloom.t` light blooms from the globe (a soft flash and sparks) and the world turns to the pastel day; between `end.t` the logo glides to its end card place and stays there to the last frame. Give the globe about 60 percent of the picture's height and shrink it to about 0.47 (the demo), or radius 9 and the default 0.6 for a smaller world.
+
+| Key | Default | Meaning |
+|---|---|---|
+| `pos`, `radius`, `camera`, `look`, `spin`, `front`, `tilt`, `n` | | the globe, as `Globe` |
+| `t_world` | 49.5 | the globe forms (1.2 s) |
+| `hearts` | t_world + 0.8 to t_settle + 0.4, 42 | as `Globe`; `False` for none |
+| `clouds` | True | the Earth's cloud wisps |
+| `cradle` | None | as `Globe`: a warm light rising from below the globe, as from hands cradling it (the demo: dict(t0=49.6, t1=53.2)); the hands go at `FINALE.globe.cradle_at(t)` |
+| `t_settle` | (52.6, 54.0) | it slows and stops |
+| `shrink` | 0.6 | its size after settling |
+| `t_logo` | (53.4, 55.0) | it becomes the logo (give about 2 s: the demo uses (53.0, 55.0)); whole at the end (54.3 to 55.0 in the films, the musical peak) |
+| `timing` | | dict(part=(start, end)) in shares of `t_logo` for `heart_l` (0, 0.5), `heart_r` (0.04, 0.54), `ring` (0.15, 0.5), `grid` (0.2, 0.65), `globe` (0.5, 0.78; the Earth's lights fade 0.12 later), `branch_l` (0.62, 1.0), `branch_r` (0.58, 0.96) |
+| `bloom` | dict(t=54.3, dur=1.0, strength=0.12, glow=0.5, color="#ffd9b4") | the bloom, a warm pastel light that never whites out: a soft flash (`strength`, capped at `Finale.MAX_FLASH` 0.3; a P3D burst of radius 0.25 at the globe), peach and gold sparks spreading (`glow`, capped at 1), and the world's look turning to `look_after` (default `"pastel"`) centred on t + 0.2 dur over `blend` (0.9 s); `False`: none |
+| `end` | dict(t=(55.0, 56.4), ride=(0.5, 0.78, 14.0), frac=0.22) | where the logo goes: from its place at the globe to `ride` (x, y of the picture, 0..1 from the left and the bottom, and metres ahead of the lens) at `frac` of the picture's height, flat to the picture, gliding between the two times; `None`: it stays where it formed |
+| `paint` | 1.0 | the logo's paint (a number or function of t): painted in its exact colours the whole way |
+| `glow` | 0 | a soft halo of the hearts' own colours round the painted logo (the Logo key `paint_glow`); off by default: on a night sky any halo round a painted heart reads as a neon or burnt edge |
+| `logo` | | other `Logo` keys (default n 90000) |
+
+`FINALE.world(base)` returns the song's world settings with the `pastel` look added (`BR.PASTEL`: sky blue at the top, a pale blue middle, cream and peach at the horizon, soft lilac hills, as the official poster) and the look key at the bloom; keep earlier look keys in `base`. `FINALE.bursts()` the bloom's flash for P3D `bursts`. `FINALE.logo_box(t)` gives the logo's box in the picture (x0, y0, x1, y1, shares, y up), so the end card text can sit under it; `FINALE.globe`, `FINALE.logo`, `FINALE.logo_place` are the pieces.
+
+**For the end card (WORDS2).** The 3D logo lands at `end.ride` (top centre by default) by `end.t[1]` and stays, painted in its exact colours, to the last frame. Either draw the end card's text under it (`FINALE.logo_box(t)`), or hand over to the crisp 2D picture (`BR.logo_image`) at that box after `end.t[1]` (they match: the same geometry).
+
+### Z6. Colours
+
+`BR.EXPRESSION_COLORS` (the website colours of UPDATE 9: Greeting `#EA5A5E`, Gratitude `#F2B25E`, Apology `#F6CE46`, Inclusiveness `#5ABA5A`, Concession `#62B2FA`, Respect `#667AF6`, Encouragement `#9E6AF6`, Consideration `#EE62A6`, Compliment `#364E96`), `BR.NINE` (the list), `BR.LOGO_PALETTES`, `BR.LOGO_COLORS`, `BR.show_rgb(rgb)` (display colours to paint light, many at once).
+
+### Z7. Proof and what is weak
+
+Proof: `demo_brand` stills at full size (1080p) rendered here, and the GitHub videos "Brand proof" (the whole demo, v1) and "Brand finale proof" (`demo_brand_finale`: demo_brand 40 to 60 s as a 20 second song, the day globe, the night globe, world to logo and the bloom; v2).
+
+- Light on a pale day sky pales (light can only add): on bright skies use `paint=1` for the logo, petals and hearts; the symbols in light read best on night, dusk or deep blue skies.
+- A painted point set can only be painted over the background: the P3D bursts and other light still add over it (keep a burst small near a painted logo).
+- The logo's light mode (forming at night) shows the brand colours a little deeper and its white parts a little grey; the painted logo is exact (measured within about 15 levels of the brand colours on the pastel sky).
+- The symbols are drawn by hand and read at a glance as line art; the bowing person (Gratitude) and the listening face (Respect) are the least obvious at small sizes. The Compliment's navy (#364E96) is faint as light on a night sky (give it more `intensity`).
+- The globe's arcs are a short Python loop (one vector slerp per arc, 44 arcs).
+- The bloom (54.1 to 54.6) is a brief dusk blue between the night and the pastel day, with peach and gold sparks over the logo; the logo itself stays exact through it. Never put a large P3D burst near the finale: a burst adds light over everything (the demo's cuts now blend the looks over 0.8 s instead of flashing).
+- The cradle light is shaped for hands that are not in the demo: alone it reads as a warm glow under the globe; it needs MASTER's hands to make sense.
+- The lake mirrors the painted hearts with the water's ripple, a little blotchy where they reach the bottom of the picture during the sweep (`logo=dict(reflect=False)` turns it off).
+
+## AA. Render speed
+
+P3D renders now skip the flat sky and flat camera background that the P3D background replaces in the
+composite. The cloud pass still runs because its textures can also supply light and rays. Songs without
+P3D keep their original passes. Uniform setters in the main renderer and P3D use direct program lookups
+instead of iterating every shader member to test membership. Values, matrix layout, draw order, sprite
+counts, mirrors, motion blur and output encoding are unchanged.
+
+No new render cache is required. The existing `P3D_CACHE` environment variable enables crowd prototype
+caching; set it to an absolute directory such as `$PWD/work/p3d` before launching the renderer. Delete that
+directory to clear it. Crowd keys include the P3D source files, so engine edits can cause a fresh bake.
+Cloth snapshots remain in memory and a first visit to a later body scene can still be expensive.
+
+For repeatable CPU measurements, set the normal SONG, AUDIO, FEATURES, OUT_RES=1080p, OUT_FPS=30 and
+LIBGL_ALWAYS_SOFTWARE=1 variables, then run from the repository root:
+
+```sh
+python tools/profile_render.py --moments 1,8,18,30,44,52,57 --frames 10 --out work/perf/cpu.json
+python tools/profile_render.py --stages --out work/perf/stages.json
+python tools/profile_render.py --profile work/perf/render.prof --out work/perf/profile-cpu.json
+```
+
+Measurements use process CPU time, including llvmpipe worker threads, with a GL finish before recording
+completion. Each moment seeks to the preceding frame before timing successive frames. Construction and
+seek/bake costs are excluded; profile and synchronized-stage runs should be kept separate from the normal
+benchmark. The sampled moments are not a full-film benchmark, especially for the crowd and first-use bakes.
+
+Save reference stills with `engine/render.py --stills ... --outdir ...` before editing the renderer, then:
+
+```sh
+python tools/check_identical.py --song master_peace --moments 1,8,18,30,44,52,57 --reference work/reference
+```
+
+The default requires exact RGB pixels and matching dimensions. `--allow-tolerance` explicitly permits at
+most two channel levels on strictly fewer than 0.1 percent of pixels. It never updates references. Keep
+reference images, profiling output, caches and videos under `work/`, and never commit them. Delete the
+chosen `work/perf` and reference directories when their local evidence is no longer needed.

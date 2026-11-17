@@ -170,7 +170,7 @@ in vec3 aNormal; in vec3 aVel; in float aBirth;
 in float aIdx;            // the point's own index, when the set is drawn in spatial chunks (uIdxK.x = 1)
 uniform vec2 uIdxK;       // (1: index from aIdx, else the instance number times the stride), stride
 uniform float uHasN;
-uniform int uKind;        // 0 soft, 1 spark, 2 disc, 3 flake, 4 petal, 5 bird
+uniform int uKind;        // 0 soft, 1 spark, 2 disc, 3 flake, 4 petal, 5 bird, 8 heart
 uniform vec2 uRim;
 uniform vec2 uBokeh;
 flat out vec4 vCol;       // rgb light, glint strength
@@ -225,8 +225,8 @@ void main(){
   else {
     float c = abs(cos(aRot.y));
     squash = max(c, 0.14);
-    flash = uKind == 5 ? 1.0 : 0.40 + 1.25*pow(c, 6.0);    // a flake flashes when it faces the camera
-    area0 = (uKind == 3 ? 1.9 : (uKind == 4 ? 1.25 : 0.55))*r0*r0*squash;
+    flash = (uKind == 5 || uKind == 8) ? 1.0 : 0.40 + 1.25*pow(c, 6.0);    // a flake flashes when it faces the camera
+    area0 = (uKind == 3 ? 1.9 : (uKind == 4 ? 1.25 : (uKind == 8 ? 1.95 : 0.55)))*r0*r0*squash;
   }
   float req = sqrt(area0/PI);
 
@@ -359,6 +359,15 @@ float sdVesica(vec2 p, float r, float d){
   return ((p.y-b)*d > p.x*b) ? length(p-vec2(0.0, b)) : length(p-vec2(-d, 0.0))-r;
 }
 float sdSeg(vec2 p, vec2 a, vec2 b){ vec2 pa = p-a, ba = b-a; return length(pa - ba*clamp(dot(pa, ba)/dot(ba, ba), 0.0, 1.0)); }
+// a heart (the classic one: a square on its corner with a half circle on each upper side) inside the unit circle
+float sdHeart(vec2 p){
+  p = p*0.673 + vec2(0.0, 0.552); p.x = abs(p.x);
+  float r;
+  if(p.y + p.x > 1.0) r = length(p - vec2(0.25, 0.75)) - 0.35355;
+  else { vec2 a = p - vec2(0.0, 1.0), b = p - 0.5*max(p.x + p.y, 0.0);
+         r = sqrt(min(dot(a, a), dot(b, b)))*sign(p.x - p.y); }
+  return r/0.673;
+}
 
 void main(){
   float R = vGeo.x, S = vGeo.y, r0 = vGeo.w;
@@ -370,6 +379,10 @@ void main(){
     d = mix(d, dh, uBokeh.y*smoothstep(3.0*S, 8.0*S, R));
   }
   float sd = d - R;
+  if(uKind == 8 && R > 1.5*S){                           // a heart out of focus: a heart-shaped bokeh disc
+    vec2 pq = vec2(vShape.x*q.x + vShape.y*q.y, -vShape.y*q.x + vShape.x*q.y)/R;
+    sd = mix(sd, sdHeart(pq)*R, smoothstep(1.5*S, 4.0*S, R));
+  }
   if(vShape.w > 0.001){
     vec2 pr = vec2(vShape.x*vLocal.x + vShape.y*vLocal.y, -vShape.y*vLocal.x + vShape.x*vLocal.y)/r0;
     pr.y /= vShape.z;
@@ -379,6 +392,8 @@ void main(){
       ss = max(sdBox(pr, vec2(0.88, 0.60)), dot(pr, vec2(cos(a), sin(a))) - 0.52);
     } else if(uKind == 4){
       ss = sdVesica(pr.yx, 1.25, 0.80);
+    } else if(uKind == 8){
+      ss = sdHeart(pr);
     } else {
       float fl = 0.25 + 0.75*sin(uT*(7.0+3.0*vMisc.x) + vMisc.x*40.0);     // the wings beat
       vec2 tip = vec2(cos(fl*0.8), sin(fl*0.8));
@@ -388,7 +403,7 @@ void main(){
   }
   float prof = sd <= 0.0 ? 1.0 : exp(-sd*sd/(2.0*S*S));
   prof = max(prof - 0.0111, 0.0)/0.9889;
-  if(R > 2.0*S && vShape.w < 0.5){
+  if(R > 2.0*S && vShape.w < 0.5 && uKind != 8){
     float e = clamp(d/R, 0.0, 1.0); e = e*e*e; e = e*e;
     prof *= 1.0 + uBokeh.x*(e - 0.25)*smoothstep(3.0, 9.0, R);   // a slightly brighter edge, the same light in all
   }
