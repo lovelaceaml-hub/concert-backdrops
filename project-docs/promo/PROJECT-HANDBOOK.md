@@ -1,5 +1,7 @@
 # Concert promo project handbook (shared instructions for Claude and Codex)
 
+**Owner-authorized integration, 2026-11-16:** the owner explicitly requested "Push, merge, and commit everything" after the stopping point. The completed video stack (#73, #71, #70, #69, #66, #64, #59, #57) and speed PR #55 are merged into `master/words-that-bring-peace`. Documentation is being integrated through #72 and #58 into `main`; [the integration record](https://github.com/lovelaceaml-hub/concert-backdrops/pull/55#issuecomment-6933778970) tracks final merge results. This supersedes earlier draft/unmerged instructions for these named PRs only. The exact 4K60 file is unchanged; local download and quality review are still unconfirmed. No render or paid workflow was started.
+
 **Codex stopping point, 2026-11-16 (Las Vegas):** paused at the owner's request after saving findings. The exact 4K60 master and its Drive parts are preserved; download to the owner's computer and review of the quality export are still unconfirmed. A local Codex handoff prompt, checksums, known transfer failures and the next step are saved in [the session checkpoint](https://drive.google.com/file/d/1BdI-R2ceMFqyBe1nsxSdzBtM6dG5K9UN/view). Resume with local delivery, not another render or encode. No background render job is running, and PRs remain draft and unmerged.
 
 **Current quality master, 2026-11-16:** one native 3840x2160, 60 fps, 10-bit export of the approved Revision 3 is complete and checked. Added composite grain is removed; the edit and exact music stream are preserved. The owner requested one highest-quality file. The exact 318,834,702-byte master is available in [Google Drive](https://drive.google.com/drive/folders/1_m5HLeo8brJgZMgdXleEbY7klrAGaxgS) as four parts with an offline helper that restores one original MP4. Download the folder on a computer, unzip it, open Open-to-save-video.html, select all four parts, then save the video. The restored file was verified byte for byte. The owner's download is not yet confirmed; no smaller encode was created. The new quality file awaits owner review; prior approved files remain archived. [Quality record and checks](QUALITY-NINE-COLOURS-R3.md).
@@ -12,7 +14,7 @@ Last updated 2026-11-16 by Codex to save the stopping point, local delivery hand
 
 ## 1. What the project is
 
-- **Owner:** Anthony. He decides everything and merges nothing he has not seen. Agents never merge pull requests.
+- **Owner:** Anthony. He decides everything and merges nothing he has not seen. Agents merge only when the owner explicitly authorizes the specific work; UPDATE 25 records this session's authorization.
 - **The event.**
   - Healing Concert, "The Words of Mother's Love That Bring Peace".
   - Sunday, December 6, 4:30 PM.
@@ -37,7 +39,7 @@ The engine code, song files, short audio clips and these docs.
 - **project-docs/promo/:** everything from the promo phase, copied out of the Claude session scratch space:
   - `PROJECT-HANDBOOK.md`: this file.
   - `briefs/`: the working briefs.
-    - `PHASEB.md` records the owner directions through UPDATE 24, the stopping point and local delivery handoff. Read UPDATES 13 to 24 at least.
+    - `PHASEB.md` records the owner directions through UPDATE 25, the owner-authorized integration. Read UPDATES 13 to 25 at least.
     - `P3D-BRIEF.md`: direction for the 3D particle engine and the house rules.
     - `EPIC-BRIEF.md`: mechanics.
     - `MASTER-TREATMENT.md`: the approved masterpiece treatment.
@@ -126,7 +128,7 @@ Nothing is merged without Anthony's explicit approval. Comparison PRs #56 and #5
 
 ## 4. Owner directions (all still in force unless replaced)
 
-The newest are in `project-docs/promo/briefs/PHASEB.md`, through UPDATE 24.
+The newest are in `project-docs/promo/briefs/PHASEB.md`, through UPDATE 25.
 
 **Approved Revision 3, 2026-11-16:** preserve the extended opening/burst, original eight-song Film 10 medley and final accent, cream serif expression text with capsule labels, golden listening pair for Respect, swirling light becoming Earth with orbiting expression symbols, signature and official pastel closing card. The approved timeline is 66 seconds with a six-second lead-in, and both exports are 60 fps. These specific approved choices supersede the earlier duration, seven-song and quiet-last-second proposals for this cut only. No new creative change or render was requested with the save instruction. [Exact approval record](APPROVED-NINE-COLOURS-R3.md).
 
@@ -203,7 +205,7 @@ The newest are in `project-docs/promo/briefs/PHASEB.md`, through UPDATE 24.
 - No em dash or en dash characters anywhere: code, comments, docs, commit messages, PR text. Grep your diff.
 - Never commit full songs, lyrics, finished videos, frames, stills, caches or personal data. Short promo audio clips under `audio/` are the only media allowed.
 - Never `git add -A`: `fonts` is an untracked symlink. Stage files by name. Run git as separate plain commands.
-- Work on your own branch and open a draft PR. Never merge; Anthony decides.
+- Work on your own branch and open a draft PR. Anthony decides; merge only within his explicit authorization.
 - Commit messages from Claude end with:
   ```
   Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
@@ -276,9 +278,10 @@ The 62 s timeline on the lead-in medley:
   - renders at 60 fps.
 
 **Codex**
+- Owner-authorized integration is recorded above and in UPDATE 25. The code stack and speed work are merged. Resume actual video delivery only when requested; no new render is needed. Earlier draft/paused descriptions below are historical.
 - Paused for today at the owner's request. Resume only when the owner returns; the next task is saving the exact master to the actual local Downloads folder and confirming playback. The ready-to-use prompt is in the session checkpoint above.
 - The new owner-authorized quality export is complete and checked in draft PR #73; the exact video is uploaded to Drive as four byte parts with a tested restore helper. The owner's download is not yet confirmed. No smaller encode was made. The approved creative work is complete: Film 10 Revision 3 in draft PR #71, saved under its approval tag. Shared records and Drive copies have been updated for handoff. The engineering tasks below are earlier assignments, not permission to alter the approved video while archiving it.
-- **Own branches only** (perf/render-speed, and a new QA branch). Does not trigger Render and does not merge.
+- **Own branches only** (perf/render-speed, and a new QA branch). Does not trigger Render; merges only the work explicitly authorized in UPDATE 25.
 - **Hands off:**
   - `engine/songs/*`
   - `engine/p3d/master_*.py`

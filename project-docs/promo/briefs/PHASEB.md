@@ -1,5 +1,7 @@
 # Phase B: build and render your film, fast
 
+**Owner-authorized integration, 2026-11-16:** the owner explicitly requested "Push, merge, and commit everything" after the stopping point. The completed video stack (#73, #71, #70, #69, #66, #64, #59, #57) and speed PR #55 are merged into `master/words-that-bring-peace`. Documentation is being integrated through #72 and #58 into `main`; [the integration record](https://github.com/lovelaceaml-hub/concert-backdrops/pull/55#issuecomment-6933778970) tracks final merge results. This supersedes earlier draft/unmerged instructions for these named PRs only. The exact 4K60 file is unchanged; local download and quality review are still unconfirmed. No render or paid workflow was started.
+
 **Codex stopping point, 2026-11-16 (Las Vegas):** paused at the owner's request after saving findings. The exact 4K60 master and its Drive parts are preserved; download to the owner's computer and review of the quality export are still unconfirmed. A local Codex handoff prompt, checksums, known transfer failures and the next step are saved in [the session checkpoint](https://drive.google.com/file/d/1BdI-R2ceMFqyBe1nsxSdzBtM6dG5K9UN/view). Resume with local delivery, not another render or encode. No background render job is running, and PRs remain draft and unmerged.
 
 Anthony: "I need the videos as quickly as possible." Speed is now the first priority. A complete, beautiful, watchable 60 s film delivered soon beats a perfect one later. Get a first full video out, then improve it.
@@ -249,3 +251,11 @@ The owner asked Codex to come to a stopping point, update all docs and save find
 [Session checkpoint and local prompt](https://drive.google.com/file/d/1BdI-R2ceMFqyBe1nsxSdzBtM6dG5K9UN/view) records the exact file/hash, all four Drive part IDs, validation, failed transfer routes and the safe next step. The current cloud chat has no callable control of the owner's browser or Downloads folder; merely seeing its open Drive tab does not grant that access. On resume, confirm an actual local session, assemble the four parts without re-encoding, verify the full SHA-256, save to Downloads and confirm playback. Do not claim completion until that happens.
 
 The source master was rehashed and all seven Drive package items were listed at closeout. No render/encode job or helper agent is active. PRs #72 and #73 remain draft and unmerged. Earlier approval records and media are unchanged. This pause applies to this Codex session; it does not authorize changes to other agents' work.
+
+## UPDATE 25 (2026-11-16): Owner explicitly authorizes commit, push and merge
+
+The owner said "Push, merge, and commit everything". This replaces the previous no-merge/draft restriction for this session's completed video, speed and documentation work. Scope: the video chain #73, #71, #70, #69, #66, #64, #59, #57; speed #55; documentation #72 then #58. Other agents' independent films and unrelated engine/song PRs are untouched. Source history and the approved render tag are preserved.
+
+The video chain and speed PR are merged into master/words-that-bring-peace at fbc36222a4e29d79498ac1ca9f960539aa624a65. The 4K60 MP4 and all approved renderer/tool sources are unchanged by integration. A profiler-only correction in 42746a5 makes OUT_RES=4k construct a 3840x2160 renderer; 1080p and invalid-resolution checks also pass. This changes measurement setup, not video output or the earlier 1080p benchmark results. The original 2x speed goal remains unachieved.
+
+Documentation follows #72 into docs/promo-handbook and #58 into main. [Recorded merge results](https://github.com/lovelaceaml-hub/concert-backdrops/pull/55#issuecomment-6933778970) are the current authority for PR states. No GitHub Render dispatch or paid service. User-device delivery and quality review remain unconfirmed; this request does not ask for another render, smaller encode, public release or a merge of unrelated agents' work.

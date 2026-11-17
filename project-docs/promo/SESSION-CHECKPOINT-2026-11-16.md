@@ -1,5 +1,7 @@
 # Nine Colours: stopping point for November 16, 2026
 
+**Owner-authorized integration, 2026-11-16:** the owner explicitly requested "Push, merge, and commit everything" after the stopping point. The completed video stack (#73, #71, #70, #69, #66, #64, #59, #57) and speed PR #55 are merged into `master/words-that-bring-peace`. Documentation is being integrated through #72 and #58 into `main`; [the integration record](https://github.com/lovelaceaml-hub/concert-backdrops/pull/55#issuecomment-6933778970) tracks final merge results. This supersedes earlier draft/unmerged instructions for these named PRs only. The exact 4K60 file is unchanged; local download and quality review are still unconfirmed. No render or paid workflow was started.
+
 Status: paused at the owner's request. The approved creative cut and the clean
 4K60 quality master are saved. The remaining task is delivery to the owner's
 actual computer, followed by confirmation that the owner can play and review it.
