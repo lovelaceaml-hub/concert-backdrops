@@ -28,14 +28,16 @@ CORE_FMT = "3f 1f 3f 1f 1f 1f 2f 1f /i"     # pos, size, colour, alpha, emit, se
 
 def setu(prog, **kw):
     for k, v in kw.items():
-        if k not in prog:
+        try:
+            uniform = prog[k]
+        except KeyError:
             continue
         if isinstance(v, np.ndarray):
             if v.shape in ((4, 4), (3, 3)):
-                prog[k].write(np.ascontiguousarray(v.T, dtype="f4").tobytes())
+                uniform.write(np.ascontiguousarray(v.T, dtype="f4").tobytes())
                 continue
             v = tuple(float(x) for x in v.ravel())
-        prog[k].value = v
+        uniform.value = v
 
 
 def seta(prog, name, arr):
