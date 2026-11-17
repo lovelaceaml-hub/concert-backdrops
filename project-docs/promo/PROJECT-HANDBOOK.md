@@ -1,18 +1,26 @@
 # Concert promo project handbook (shared instructions for Claude and Codex)
 
-Last updated 2026-11-16 by the Claude coordinator. This handbook is the single source of truth for every AI agent (Claude sessions, Claude helpers, Codex, or any other) working on this project. If you are an agent starting work, read this whole file first, then the files it points to. If anything here conflicts with an older brief, this file wins, and the newest owner direction (section 4) wins over everything.
+**Owner-authorized integration, 2026-11-16:** the owner explicitly requested "Push, merge, and commit everything" after the stopping point. The completed video stack (#73, #71, #70, #69, #66, #64, #59, #57) and speed PR #55 are merged into `master/words-that-bring-peace`. Documentation is being integrated through #72 and #58 into `main`; [the integration record](https://github.com/lovelaceaml-hub/concert-backdrops/pull/55#issuecomment-6933778970) tracks final merge results. This supersedes earlier draft/unmerged instructions for these named PRs only. The exact 4K60 file is unchanged; local download and quality review are still unconfirmed. No render or paid workflow was started.
+
+**Codex stopping point, 2026-11-16 (Las Vegas):** paused at the owner's request after saving findings. The exact 4K60 master and its Drive parts are preserved; download to the owner's computer and review of the quality export are still unconfirmed. A local Codex handoff prompt, checksums, known transfer failures and the next step are saved in [the session checkpoint](https://drive.google.com/file/d/1BdI-R2ceMFqyBe1nsxSdzBtM6dG5K9UN/view). Resume with local delivery, not another render or encode. No background render job is running, and PRs remain draft and unmerged.
+
+**Current quality master, 2026-11-16:** one native 3840x2160, 60 fps, 10-bit export of the approved Revision 3 is complete and checked. Added composite grain is removed; the edit and exact music stream are preserved. The owner requested one highest-quality file. The exact 318,834,702-byte master is available in [Google Drive](https://drive.google.com/drive/folders/1_m5HLeo8brJgZMgdXleEbY7klrAGaxgS) as four parts with an offline helper that restores one original MP4. Download the folder on a computer, unzip it, open Open-to-save-video.html, select all four parts, then save the video. The restored file was verified byte for byte. The owner's download is not yet confirmed; no smaller encode was created. The new quality file awaits owner review; prior approved files remain archived. [Quality record and checks](QUALITY-NINE-COLOURS-R3.md).
+
+Last updated 2026-11-16 by Codex to save the stopping point, local delivery handoff and exact UHD transfer package, preserving the coordinator's earlier history below. This handbook is the single source of truth for every AI agent (Claude sessions, Claude helpers, Codex, or any other) working on this project. If you are an agent starting work, read this whole file first, then the files it points to. If anything here conflicts with an older brief, this file wins, and the newest owner direction (section 4) wins over everything.
+
+**Approved creative cut: Film 10, Nine Colours, Revision 3.** On 2026-11-16 the owner said "thats so good. save this and update all docs and upload" after viewing this cut. Read [APPROVED-NINE-COLOURS-R3.md](APPROVED-NINE-COLOURS-R3.md) for the exact videos, source tag, hashes, reproduction and scope. The approved cut is 66 seconds at native 60 fps, with the original Film 10 medley. Older 62-second/seven-song plans below describe earlier versions. This approval does not authorize any merge.
 
 ---
 
 ## 1. What the project is
 
-- **Owner:** Anthony. He decides everything and merges nothing he has not seen. Agents never merge pull requests.
+- **Owner:** Anthony. He decides everything and merges nothing he has not seen. Agents merge only when the owner explicitly authorizes the specific work; UPDATE 25 records this session's authorization.
 - **The event.**
   - Healing Concert, "The Words of Mother's Love That Bring Peace".
   - Sunday, December 6, 4:30 PM.
   - World Mission Society Church of God, 6720 W Sahara Ave, Las Vegas.
   - It is part of the church's campaign "The Words of Mother's Love" (the 2026 Mother's Love Preaching Festival; theme: the Art of Happy Communication), with the logo of two hearts, a globe and olive branches.
-- **The goal right now:** one 62 second promo video, "the masterpiece", built in our own engine and timed to a medley of the concert's songs, for sharing on phones and screens before the concert.
+- **Current quality export:** one 66-second native 4K60 master of the approved Film 10 Revision 3, complete and checked. The exact master is uploaded as four byte parts with a restore helper; see the quality record above. The earlier masterpiece work and alternatives remain preserved below.
 - **The bar (Anthony's words):** "majestic, beautiful, awesome, brilliant, extravagant, beyond imagination, heavenly, very expressive ... so breathtakingly beautiful that emotions are felt." Express the words of Mother's love that bring peace.
 - **Earlier phases, kept for reference:**
   - 11 per-song backdrop promos (main branch);
@@ -31,7 +39,7 @@ The engine code, song files, short audio clips and these docs.
 - **project-docs/promo/:** everything from the promo phase, copied out of the Claude session scratch space:
   - `PROJECT-HANDBOOK.md`: this file.
   - `briefs/`: the working briefs.
-    - `PHASEB.md` holds every owner direction, UPDATES 1 to 17. Read UPDATES 13 to 17 at least.
+    - `PHASEB.md` records the owner directions through UPDATE 25, the owner-authorized integration. Read UPDATES 13 to 25 at least.
     - `P3D-BRIEF.md`: direction for the 3D particle engine and the house rules.
     - `EPIC-BRIEF.md`: mechanics.
     - `MASTER-TREATMENT.md`: the approved masterpiece treatment.
@@ -67,7 +75,7 @@ The project's home for media and documents.
   - the reference images: Anthony's inspiration photos and people-style references;
   - brand material: the logo, the official poster, the expression icons and website screenshots;
   - the approved design mockups.
-- Finished share videos are delivered to Anthony in the Claude session. Download them from the GitHub Actions run artifacts (section 2.3).
+- Archived approved Revision 3 exports are saved in the project's Videos folder: [phone 720p60](https://drive.google.com/file/d/1CBQ4OtpLW3Kp3zBWsEMkjXYiAWUwhDQw/view) and [master 1080p60](https://drive.google.com/file/d/1gcxnb4Oyexq5Kbb8LvFWqOrikF-BVSht/view). The phone copy was also delivered in the Codex chat. Older render artifacts remain in GitHub Actions (section 2.3); they are not this approved cut.
 
 ### 2.3 GitHub Actions: the "Render" workflow (.github/workflows/render.yml)
 
@@ -82,11 +90,14 @@ Runs of the masterpiece so far, all on branch `master/words-that-bring-peace`:
 | v3 | 43754886880 | |
 | v4 | 43761338964 | |
 | v5 | 43767697863 | |
-| v6 | 43769618192 | Latest complete, 62 s at 30 fps |
+| v6 | 43769618192 | Historical 62 s version at 30 fps |
 | v7 test 1 | 43785749994 | Work in progress, 60 fps, old medley |
 | v7 | 43800824532 | 60 fps, medley7, refined acting, smooth carries |
 | v8 | 43806325783 | v7 plus two small fixes |
-| v9 | 43810639666 | LATEST (head 58ec94f): Nine Colours comets as the travelling thread, words written by comet pens, Gratitude, Concession and Respect in light only, escalating theatrical transitions; v10 polish list waits for Anthony |
+| v9 | 43810639666 | Historical v9 (head 58ec94f): Nine Colours comets as the travelling thread, words written by comet pens, Gratitude, Concession and Respect in light only, escalating theatrical transitions |
+| Nine Colours Final v1 | 43855882765 | Claude reference, f43f451, 62 s / 60 fps; source for Revision 3's typography, Respect and orbiting symbols |
+
+The approved 66-second Revision 3 was rendered in the cloud execution workspace, not by dispatching GitHub Actions. Its source tag and Drive files are recorded above.
 
 ### 2.4 The Claude session scratch space (ephemeral)
 
@@ -97,6 +108,8 @@ The working copy of everything above lives at `/tmp/claude-0/-home-user-concert-
 | Branch | Head | What it is |
 |---|---|---|
 | `master/words-that-bring-peace` | 58ec94f (v9; v6 is b7895ae) | THE MASTERPIECE. Song `engine/songs/master_peace.py`, plus its own effects in `engine/p3d/master_sky.py`, `master_fx.py` and `master_brand.py`. PR #54 into engine-p3d-words. Claude's helper MASTER3 is the only writer. |
+| `creative/nine-colours-spiral-and-expression` | approved source `46df53b`, tag `film10-revision3-approved-2026-11-16` | Owner-approved Film 10 Revision 3, 66 s / 60 fps. Draft PR #71 based on draft #70, unmerged. Implementation only under `tools/nine_colours_minor/`. |
+| `quality/nine-colours-clean-master` | renderer `2c95ee0`, delivery/QA `dd8f0f5`, transfer helper `5858307` | One clean UHD60 master, draft PR #73. Complete and checked; exact master transferred to Drive as four byte parts with a restore helper. New quality file awaits owner review. |
 | `medley7` | 19f2c83 | The new 7-song medley `audio/promo/concert-medley7.mp3` (order 03, 04, 01, 08, 11, 06, 07; 62.000 s; map in `project-docs/promo/medley/SECTION-MAP-medley7.md`). Built by MEDLEY3; MASTER3 merges it into the masterpiece. |
 | `engine-p3d-words` | afd2bd3 | The integrated engine the masterpiece builds on (3D layer + bodies + words + TITLES + brand merged). |
 | `engine-p3d` | 8902405 | 3D layer (CORE2 final). PR #53. |
@@ -115,7 +128,9 @@ Nothing is merged without Anthony's explicit approval. Comparison PRs #56 and #5
 
 ## 4. Owner directions (all still in force unless replaced)
 
-The newest are in `project-docs/promo/briefs/PHASEB.md`, UPDATES 13 to 17.
+The newest are in `project-docs/promo/briefs/PHASEB.md`, through UPDATE 25.
+
+**Approved Revision 3, 2026-11-16:** preserve the extended opening/burst, original eight-song Film 10 medley and final accent, cream serif expression text with capsule labels, golden listening pair for Respect, swirling light becoming Earth with orbiting expression symbols, signature and official pastel closing card. The approved timeline is 66 seconds with a six-second lead-in, and both exports are 60 fps. These specific approved choices supersede the earlier duration, seven-song and quiet-last-second proposals for this cut only. No new creative change or render was requested with the save instruction. [Exact approval record](APPROVED-NINE-COLOURS-R3.md).
 
 **Look and feeling**
 - Majestic, heavenly, breathtaking. Warm radiant light: golden clouds lit from within, cathedral shafts of light, rivers and seas of light, prismatic sparkle.
@@ -190,7 +205,7 @@ The newest are in `project-docs/promo/briefs/PHASEB.md`, UPDATES 13 to 17.
 - No em dash or en dash characters anywhere: code, comments, docs, commit messages, PR text. Grep your diff.
 - Never commit full songs, lyrics, finished videos, frames, stills, caches or personal data. Short promo audio clips under `audio/` are the only media allowed.
 - Never `git add -A`: `fonts` is an untracked symlink. Stage files by name. Run git as separate plain commands.
-- Work on your own branch and open a draft PR. Never merge; Anthony decides.
+- Work on your own branch and open a draft PR. Anthony decides; merge only within his explicit authorization.
 - Commit messages from Claude end with:
   ```
   Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
@@ -263,7 +278,10 @@ The 62 s timeline on the lead-in medley:
   - renders at 60 fps.
 
 **Codex**
-- **Own branches only** (perf/render-speed, and a new QA branch). Does not trigger Render and does not merge.
+- Owner-authorized integration is recorded above and in UPDATE 25. The code stack and speed work are merged. Resume actual video delivery only when requested; no new render is needed. Earlier draft/paused descriptions below are historical.
+- Paused for today at the owner's request. Resume only when the owner returns; the next task is saving the exact master to the actual local Downloads folder and confirming playback. The ready-to-use prompt is in the session checkpoint above.
+- The new owner-authorized quality export is complete and checked in draft PR #73; the exact video is uploaded to Drive as four byte parts with a tested restore helper. The owner's download is not yet confirmed. No smaller encode was made. The approved creative work is complete: Film 10 Revision 3 in draft PR #71, saved under its approval tag. Shared records and Drive copies have been updated for handoff. The engineering tasks below are earlier assignments, not permission to alter the approved video while archiving it.
+- **Own branches only** (perf/render-speed, and a new QA branch). Does not trigger Render; merges only the work explicitly authorized in UPDATE 25.
 - **Hands off:**
   - `engine/songs/*`
   - `engine/p3d/master_*.py`

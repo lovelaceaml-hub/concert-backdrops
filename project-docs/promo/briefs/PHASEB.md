@@ -1,5 +1,9 @@
 # Phase B: build and render your film, fast
 
+**Owner-authorized integration, 2026-11-16:** the owner explicitly requested "Push, merge, and commit everything" after the stopping point. The completed video stack (#73, #71, #70, #69, #66, #64, #59, #57) and speed PR #55 are merged into `master/words-that-bring-peace`. Documentation is being integrated through #72 and #58 into `main`; [the integration record](https://github.com/lovelaceaml-hub/concert-backdrops/pull/55#issuecomment-6933778970) tracks final merge results. This supersedes earlier draft/unmerged instructions for these named PRs only. The exact 4K60 file is unchanged; local download and quality review are still unconfirmed. No render or paid workflow was started.
+
+**Codex stopping point, 2026-11-16 (Las Vegas):** paused at the owner's request after saving findings. The exact 4K60 master and its Drive parts are preserved; download to the owner's computer and review of the quality export are still unconfirmed. A local Codex handoff prompt, checksums, known transfer failures and the next step are saved in [the session checkpoint](https://drive.google.com/file/d/1BdI-R2ceMFqyBe1nsxSdzBtM6dG5K9UN/view). Resume with local delivery, not another render or encode. No background render job is running, and PRs remain draft and unmerged.
+
 Anthony: "I need the videos as quickly as possible." Speed is now the first priority. A complete, beautiful, watchable 60 s film delivered soon beats a perfect one later. Get a first full video out, then improve it.
 
 ## Read
@@ -204,3 +208,54 @@ He chose: never stop moving (one continuous ride; every acted moment and its wor
 Choices: the original 8-song medley with the 2 s quiet lead-in (audio/promo/concert-medley-leadin.mp3, 62 s); Nine Colours' moving opening with the full title readable on top for 7 s; v10 finishes as a comparison. Build: engine/songs/nine_colours_final.py on master/words-that-bring-peace, porting Film 10 r1 (run 43726203825, ten/10-nine-colours d928ff9) cue for cue (+2.0 s), plus gold glitter refined acting and casting rules, comet-pen words with pills, the signature, symbols, hearts, BRAND finale, the official end card, 60 fps and smoothness.
 
 Status: Nine Colours Final v1 rendered (run 43855882765, master/words-that-bring-peace f43f451). Coordinator review: title over the moving opening 0 to 7 s, signature on, pills and words upper middle, end card whole 55 to 62 s, never still from 7 to 55 s (mean 6.7, median 5.1 per 1 s; 6 jump frames against 96 in r1). Open items: the Concession hoop crosses "Please, after you." at about 12.6 s; Greeting men, Consideration pair and the praying figure too small; the Apology pair cut off at the bottom edge; the world sits in the lower left on the signature at about 52 s; the song still ends with a 1 s fade (no ring-out); the end card motion is very low.
+
+## UPDATE 21 (2026-11-16): Owner approves Film 10 Revision 3 and requests preservation
+
+After requesting a longer opening card with sparkles behind it, Claude-style expression text and Respect, and swirling light becoming Earth with orbiting expression symbols, the owner approved the delivered Revision 3: "thats so good. save this and update all docs and upload".
+
+This is the 66-second, native 60 fps cut on `creative/nine-colours-spiral-and-expression`, approved source `46df53b98a43f58e51a78d40ee5794108a68e13c`, saved as tag `film10-revision3-approved-2026-11-16`. It preserves the original eight-song Film 10 music and final accent, six-second lead-in, signature and official pastel closing card. It is not the earlier seven-song masterpiece edit. Its source stays isolated under `tools/nine_colours_minor/`; no protected files were edited.
+
+Approved files: [phone 720p60](https://drive.google.com/file/d/1CBQ4OtpLW3Kp3zBWsEMkjXYiAWUwhDQw/view), [master 1080p60](https://drive.google.com/file/d/1gcxnb4Oyexq5Kbb8LvFWqOrikF-BVSht/view). Both are 66.000 seconds and 3,960 frames, with zero adjacent duplicated frames. All 28 sampled raw-frame order checks pass; the phone upload was downloaded and hash-verified. See [the approval and handoff record](../APPROVED-NINE-COLOURS-R3.md) for hashes, reference sources, QA scope and reproduction.
+
+Preserve these exact outputs and earlier versions. Record any future alternative under a new revision. Draft PR #71 remains based on draft PR #70, with no merge. No paid service or GitHub Render workflow was used or requested for this save.
+
+## UPDATE 22 (2026-11-16): One clean UHD master, highest quality first
+
+The owner reported grain in both the 720p and 1080p Revision 3 exports, then said they need one highest-quality version: "I want it super clear ultra hd no pixelation". Preserve the approved creative edit and original music. The small phone-copy target is superseded for this cut.
+
+The quality export is complete: real 3840x2160, native 60 fps, 66.000 seconds, 10-bit HEVC Main 10, CRF 12 without a bitrate cap, floating-point composite and no added composite grain. All 3,960 frames decode, timestamps are correct, zero adjacent repeated frames were found, five fresh source samples match full-range frames and the approved audio packets are unchanged. This is high-quality lossy video, not a lossless or HDR claim.
+
+The single MP4 is 318,834,702 bytes. The Drive connector rejected the upload before action invocation because its limit is 104,857,600 bytes. No reduced copy was made. The full file remains in the Codex workspace and is linked in chat; Drive video transfer is pending. [Exact file, hash, QA and reproduction](../QUALITY-NINE-COLOURS-R3.md). Draft PR #73 remains unmerged, and the new quality file awaits owner review. Earlier approval records and uploads are preserved. No paid service or GitHub Render workflow was used.
+
+## UPDATE 23 (2026-11-16): Preserve the exact master and deliver through Drive
+
+The owner explicitly chose "Preserve the exact 319 MB master" and reported that direct chat MP4 and ZIP downloads failed. Do not reduce its quality or create another encode.
+
+The original 318,834,702-byte master is now in [this private Google Drive folder](https://drive.google.com/drive/folders/1_m5HLeo8brJgZMgdXleEbY7klrAGaxgS) as four byte parts plus an offline restore helper. This is one video, not four versions. No video or audio was re-encoded, and no quality was reduced.
+
+On a computer:
+
+1. Download the entire Drive folder and unzip it.
+2. Open `Open-to-save-video.html` in Chrome, Edge or Safari.
+3. Select all four `Nine-Colours-4K60.part01` through `.part04` files.
+4. After verification, click **Save the 4K60 video** to save the original MP4 to Downloads.
+
+Drive preview does not run the helper; download and open it locally. Each part is checked against its SHA-256 before saving. Full-sized Chromium testing over loopback HTTP produced the exact original MP4 and full-file SHA-256, rejected a missing part, handled reverse selection order, and made zero external requests. Drive confirms all seven package files are downloadable and their sizes match. Local file-URL opening and the owner's device download have not been verified.
+
+The single-file Drive upload exceeds the connector's 100 MiB limit. The owner also authorized a private GitHub draft-release upload, but the asset endpoint returned HTTP 401; that draft has no video asset. Both direct workspace MP4 and ZIP links failed on the owner's device. The four-part package is the available transfer route. No public share permission, smaller encode, paid service or Render workflow was used.
+
+## UPDATE 24 (2026-11-16): Stop for today and save a local delivery handoff
+
+The owner asked Codex to come to a stopping point, update all docs and save findings. The exact 319 MB UHD master remains unchanged. No new creative work, render, encode or paid action is requested. The owner asked the assistant to perform the download and then requested a prompt for a local Codex chat; that prompt was supplied, but a successful local download has not been confirmed.
+
+[Session checkpoint and local prompt](https://drive.google.com/file/d/1BdI-R2ceMFqyBe1nsxSdzBtM6dG5K9UN/view) records the exact file/hash, all four Drive part IDs, validation, failed transfer routes and the safe next step. The current cloud chat has no callable control of the owner's browser or Downloads folder; merely seeing its open Drive tab does not grant that access. On resume, confirm an actual local session, assemble the four parts without re-encoding, verify the full SHA-256, save to Downloads and confirm playback. Do not claim completion until that happens.
+
+The source master was rehashed and all seven Drive package items were listed at closeout. No render/encode job or helper agent is active. PRs #72 and #73 remain draft and unmerged. Earlier approval records and media are unchanged. This pause applies to this Codex session; it does not authorize changes to other agents' work.
+
+## UPDATE 25 (2026-11-16): Owner explicitly authorizes commit, push and merge
+
+The owner said "Push, merge, and commit everything". This replaces the previous no-merge/draft restriction for this session's completed video, speed and documentation work. Scope: the video chain #73, #71, #70, #69, #66, #64, #59, #57; speed #55; documentation #72 then #58. Other agents' independent films and unrelated engine/song PRs are untouched. Source history and the approved render tag are preserved.
+
+The video chain and speed PR are merged into master/words-that-bring-peace at fbc36222a4e29d79498ac1ca9f960539aa624a65. The 4K60 MP4 and all approved renderer/tool sources are unchanged by integration. A profiler-only correction in 42746a5 makes OUT_RES=4k construct a 3840x2160 renderer; 1080p and invalid-resolution checks also pass. This changes measurement setup, not video output or the earlier 1080p benchmark results. The original 2x speed goal remains unachieved.
+
+Documentation follows #72 into docs/promo-handbook and #58 into main. [Recorded merge results](https://github.com/lovelaceaml-hub/concert-backdrops/pull/55#issuecomment-6933778970) are the current authority for PR states. No GitHub Render dispatch or paid service. User-device delivery and quality review remain unconfirmed; this request does not ask for another render, smaller encode, public release or a merge of unrelated agents' work.

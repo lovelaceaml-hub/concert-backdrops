@@ -1,5 +1,21 @@
 # Film 10, Nine Colours: handover
 
+**Owner-authorized integration, 2026-11-16:** the owner explicitly requested "Push, merge, and commit everything" after the stopping point. The completed video stack (#73, #71, #70, #69, #66, #64, #59, #57) and speed PR #55 are merged into `master/words-that-bring-peace`. Documentation is being integrated through #72 and #58 into `main`; [the integration record](https://github.com/lovelaceaml-hub/concert-backdrops/pull/55#issuecomment-6933778970) tracks final merge results. This supersedes earlier draft/unmerged instructions for these named PRs only. The exact 4K60 file is unchanged; local download and quality review are still unconfirmed. No render or paid workflow was started.
+
+**Codex stopping point, 2026-11-16 (Las Vegas):** paused at the owner's request after saving findings. The exact 4K60 master and its Drive parts are preserved; download to the owner's computer and review of the quality export are still unconfirmed. A local Codex handoff prompt, checksums, known transfer failures and the next step are saved in [the session checkpoint](https://drive.google.com/file/d/1BdI-R2ceMFqyBe1nsxSdzBtM6dG5K9UN/view). Resume with local delivery, not another render or encode. No background render job is running, and PRs remain draft and unmerged.
+
+**Current quality master, 2026-11-16:** one native 3840x2160, 60 fps, 10-bit export of the approved Revision 3 is complete and checked. Added composite grain is removed; the edit and exact music stream are preserved. The owner requested one highest-quality file. The exact 318,834,702-byte master is available in [Google Drive](https://drive.google.com/drive/folders/1_m5HLeo8brJgZMgdXleEbY7klrAGaxgS) as four parts with an offline helper that restores one original MP4. Download the folder on a computer, unzip it, open Open-to-save-video.html, select all four parts, then save the video. The restored file was verified byte for byte. The owner's download is not yet confirmed; no smaller encode was created. The new quality file awaits owner review; prior approved files remain archived. [Quality record and checks](../QUALITY-NINE-COLOURS-R3.md).
+
+## Approved creative cut, 2026-11-16
+
+The owner approved **Revision 3**, 66 seconds at native 60 fps, and requested that it be saved, documented and uploaded. The exact source is `46df53b98a43f58e51a78d40ee5794108a68e13c`, tag `film10-revision3-approved-2026-11-16`, draft PR #71. [Approval record, video links, hashes and reproduction](../APPROVED-NINE-COLOURS-R3.md).
+
+It builds from Film 10 render 1 (`d928ff9`, run 43726203825), with an extended opening, signature, updated expression capsules and serif text, Claude Final v1's golden listening pair for Respect, and a continuous swirling-light approach to Earth with orbiting expression symbols. The original medley and final accent are preserved. Its implementation is isolated under `tools/nine_colours_minor/`; do not overwrite shared song/acting files to reproduce it. No merge is authorized.
+
+## Historical ten-film handover
+
+The notes below describe the older ten-film development branch and remain as history. Its later passes and 62-second alternatives are not the approved Revision 3 delivery.
+
 The branch is ten/10-nine-colours at 5a4b936, and the song file is engine/songs/ten_10_nine_colours.py.
 - Last full cloud render: run 43734065813 (v5, before the finale and UPDATE 13).
 - Pass 9 local stills (finale, TITLES): scratchpad/ten10b/s9a/ (open4.jpg, fin1.jpg, fin2.jpg, logo_zoom.png).
