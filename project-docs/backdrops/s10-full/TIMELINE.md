@@ -45,7 +45,7 @@ Hits (onset peaks, seconds): 22.62, 25.33, 52.04, 191.47, 205.11. The coordinato
 | 2:32 to 2:40 | | down toward the water road | slow descent (9 s) |
 | 2:38.5 to 3:38 | E | six people of light form on the water road, facing the lamp (seen from behind), gently swaying | low, behind them, slow drift |
 | 3:12 to 3:23.4 | E | GRATITUDE, two women: a small light given from hand to hand, a hand laid on the heart. Words readable 3:13.6 to 3:22.6. Gold comet. | medium shot, held |
-| 3:16 to 3:25.1 | E | the nine comets rise into their own lights of the arch; on the last hit (3:25.1) all nine shine | |
+| 3:23.6 to 3:29 | E | the nine comets rise into their own lights of the arch; as the final chord ends (3:29) all nine shine | |
 | 3:24 to 3:46.6 | E, night of peace | home view: deep indigo, stars, the lamp resting as a warm star with a faint glow, a calm mirror, all nine lights steady; the people fade softly 3:36 to 3:38.5. The agreed hand-off frame to song 11 (no closing card). | slow move home (7.4 s), then still |
 
 After each expression its light of the arch shines again briefly (design: a light shines again where its act is spoken).

@@ -24,7 +24,7 @@ THE STORY ON THE MUSIC
   2:30     soft: down again toward the shore.
   2:40     the people of light gather on the water road facing the lamp (seen from behind).
   3:13.5   GRATITUDE (two women): thanks for the One who saved us.
-  3:21     the comets rise into their own lights of the arch; on the last hit (3:25.1) the arch shines.
+  3:23.6   the comets rise into their own lights of the arch; as the final chord ends (3:29) the arch shines.
   3:29     night of peace: home view, deep indigo, stars, the lamp resting as a warm star with a faint glow,
            a calm mirror, all nine lights steady (the agreed hand-off frame to song 11). Hold to 3:46.6.
 
@@ -131,17 +131,17 @@ MOMENTS = [
     dict(expr="Consideration", k=CONS, at=_v(13.0, 0.0, -2.0), yaw=22.0, words=(72.6, 74.0, 83.0, 83.8)),
     dict(expr="Inclusiveness", k=INCL, at=_v(-9.0, 0.0, -16.0), yaw=-22.0, words=(90.2, 91.6, 101.0, 101.8)),
     dict(expr="Encouragement", k=ENC, at=_v(8.0, 0.0, 14.0), yaw=24.0, words=(117.0, 118.5, 127.0, 127.8)),
-    dict(expr="Gratitude", k=GRAT, at=_v(-6.0, 0.0, 20.0), yaw=-22.0, words=(192.0, 193.6, 202.6, 203.4)),
+    dict(expr="Gratitude", k=GRAT, at=_v(-10.5, 0.0, 21.0), yaw=-22.0, words=(192.0, 193.6, 202.6, 203.4)),
 ]
 BY = {m["expr"]: m for m in MOMENTS}
 SHORE_LINE = dict(t_in=158.5, t_out=218.5)        # the people of light on the water road, facing the lamp
-LINE_Z = 33.0
+LINE_Z = 12.0
 LINE_X = [-6.6, -4.4, -2.2, 2.2, 4.4, 6.6]
 
 # ---------------------------------------------------------------------------------------------------------
 # The camera: held shots joined by slow eased moves (performers stand in front: never fast, no orbits)
 # ---------------------------------------------------------------------------------------------------------
-MED_D, MED_H, MED_TY, MED_FOV = 11.0, 1.9, 1.4, 36.0
+MED_D, MED_H, MED_TY, MED_FOV = 11.0, 2.0, 1.52, 36.0
 
 
 def _medium(m):
@@ -161,8 +161,8 @@ MOTHER_B = (MOTHER_CAM + _v(0.0, 0.05, -2.4), _v(0.0, 2.05, 0.0), 40.0)
 WIDE_MID = (_v(0.0, 11.0, 72.0), _v(0.0, 2.5, -10.0), 50.0)
 PEACE = (_v(0.0, 24.0, 92.0), _v(0.0, 4.0, -20.0), 52.0)
 PEACE_B = (_v(0.0, 27.0, 96.0), _v(0.0, 4.5, -24.0), 52.0)
-SHORE = (_v(0.0, 2.6, 49.0), _v(0.0, 2.3, 0.0), 42.0)
-SHORE_B = (_v(0.0, 2.8, 51.0), _v(0.0, 2.6, 0.0), 42.0)
+SHORE = (_v(0.0, 2.5, 28.0), _v(0.0, 2.0, 0.0), 42.0)
+SHORE_B = (_v(0.0, 2.7, 30.5), _v(0.0, 2.3, 0.0), 42.0)
 
 # (time, pose): the camera holds a pose until the next key's move starts; a key with a move duration eases
 # from the previous pose to its own over that many seconds ending at its time.
@@ -247,8 +247,8 @@ def place(t, x, y, depth):
 # The words: five of the nine, exact campaign wording, Claude Final v1 type (cream serif, coloured capsule)
 # ---------------------------------------------------------------------------------------------------------
 DEPTH = 7.0
-WIDTHS = dict(Greeting=.32, Consideration=.46, Inclusiveness=.50, Encouragement=.52, Gratitude=.56)
-RIDE_Y = .615                      # block centre about .345 of the height from the top
+WIDTHS = dict(Greeting=.32, Consideration=.43, Inclusiveness=.48, Encouragement=.49, Gratitude=.52)
+RIDE_Y = .625                      # block centre about .345 of the height from the top
 
 
 def _width(t, depth, frac):
@@ -305,7 +305,7 @@ def _arch_lit(t):
         b = 0.62
         if k in ARCH_FLARE:
             b += _flare(t, ARCH_FLARE[k])
-        b += _flare(t, HITS["last"] + 0.1, 0.7)
+        b += _flare(t, RISE_T1, 0.7)
         out.append((b, 30.0))
     return out
 
@@ -398,20 +398,20 @@ class LakeLights:
 # each moment; they weave a web across the lake at the peak; at the end they rise into their own lights.
 # ---------------------------------------------------------------------------------------------------------
 BIRTH = LOUDEST
-RISE_T0, RISE_T1 = 196.0, HITS["last"]
+RISE_T0, RISE_T1 = 203.6, 209.0
 WEB_T0, WEB_T1 = 128.5, 152.0
 
 
 def _ring(k, t):
     a = 2.0 * np.pi * k / 9.0 + 0.035 * t * (1 if k % 2 == 0 else -1)
     r = 95.0 + 12.0 * (k % 3)
-    return _v(np.sin(a) * r, 24.0 + 6.0 * ((k * 2) % 5) + 2.0 * np.sin(0.3 * t + k), -40.0 + np.cos(a) * r * 0.6)
+    return _v(np.sin(a) * r, 24.0 + 6.0 * ((k * 2) % 5) + 2.0 * np.sin(0.3 * t + k), -75.0 + np.cos(a) * r * 0.5)
 
 
 def _fan(k, t):
     u = max(t - BIRTH, 0.0)
-    ang = np.radians(-80.0 + 20.0 * k)
-    d = _v(np.sin(ang), 0.0, -np.cos(ang) * 0.6 + 0.4)
+    ang = np.radians(-64.0 + 16.0 * k)
+    d = _unit(_v(np.sin(ang), 0.0, -np.cos(ang) - 0.25))
     dist = 26.0 * (1.0 - np.exp(-u / 1.8)) + 2.0 * u
     return LAMP_PT + d * dist + _v(0.0, 0.8 * u + 1.2 * np.sin(1.3 * u), 0.0)
 
@@ -485,6 +485,14 @@ def deepen(hexs, k=1.35):
     return m * (c / m) ** k
 
 
+def _reading(t):
+    k = 0.0
+    for m in MOMENTS:
+        r0, r1 = m["words"][1], m["words"][2]
+        k = max(k, _sc(r0 - 1.5, r0, t) * (1.0 - _sc(r1, r1 + 1.5, t)))
+    return k
+
+
 class Comets:
     def __init__(self):
         r = np.random.default_rng(10)
@@ -508,10 +516,11 @@ class Comets:
             if a <= 0.0:
                 continue
             near = self._near(k, t) * (1.0 - web)
+            a *= 1.0 - 0.75 * _reading(t) * (1.0 - self._near(k, t))
             tail = 1.3 * near + 2.4 * (1.0 - near) + 3.5 * web
-            w = 0.16 * near + 1.6 * (1.0 - near) * (1.0 - web) + 0.9 * web
+            w = 0.16 * near + 1.1 * (1.0 - near) * (1.0 - web) + 0.9 * web
             if t < BIRTH + 6.0:
-                w = 0.35 + 0.6 * _sc(BIRTH, BIRTH + 6.0, t)
+                w = 0.22 + 0.5 * _sc(BIRTH, BIRTH + 6.0, t)
             n = 48
             ts = np.linspace(max(t - tail, BIRTH), t, n)
             if ts[-1] - ts[0] < 1e-3:
