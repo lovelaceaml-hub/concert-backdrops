@@ -128,8 +128,8 @@ def _keys():
     add(34.0, (0.4, 1.70, 5.4), (0.3, 1.10, -40.0))
     add(49.0, (0.6, 1.60, 3.6), (0.4, 0.95, -30.0))
     # chorus 1: a slow respectful half circle (about 25 degrees) round the two, never closer than full length
-    add(58.0, (-0.3, 1.50, -0.4), (0.6, 1.10, -6.5))
-    add(68.0, (-1.7, 1.50, -0.7), (0.6, 1.10, -6.5))
+    add(58.0, (-0.3, 1.50, -0.4), (0.6, 1.25, -6.5))
+    add(68.0, (-1.7, 1.50, -0.7), (0.6, 1.25, -6.5))
     add(77.0, (-2.2, 1.70, -1.2), (0.0, 1.30, -16.0))
     # verse 2: glide up behind Heavenly Mother, Her lamp in the centre of the frame
     add(89.0, (-0.4, 2.0, -8.0), (-0.6, 1.5, -60.0))
@@ -174,10 +174,50 @@ def place(t, x, y, depth):
 # ---------------------------------------------------------------------------------------------------------
 # The arch of nine lights (star history: 3 to 9 lit at the start, 1 lit by this song, 2 waits for song 08)
 # ---------------------------------------------------------------------------------------------------------
-ARCH = dict(span=84.0, height=27.0, z=-62.0, center=(0.0, 5.0, 0.0))
-_th = np.radians(np.linspace(172.0, 8.0, 9))
-ARCH_PTS = np.stack([0.5 * ARCH["span"] * np.cos(_th), ARCH["center"][1] + ARCH["height"] * np.sin(_th),
-                     np.full(9, ARCH["z"])], axis=1)
+# The arch keeps one place in the picture, whatever the calm camera does: across the top of the sky, its feet
+# at about half the picture's height near the sides, its top above the words, every star clear of the
+# signature in the top left (checked by check_layout.py over the whole video).
+ARCH_D = 60.0            # metres ahead of the lens
+ARCH_SCREEN = dict(x0=0.13, x1=0.87, foot=0.50, top=0.19)    # picture fractions (y from the top)
+
+
+def _arch_frame(t):
+    cam = PW._cam_at(_LAYOUT, t)
+    f = np.asarray(cam.target, np.float64) - np.asarray(cam.pos, np.float64) if hasattr(cam, "target") else None
+    if f is None:
+        f = place(t, 0.5, 0.5, 10.0) - np.asarray(cam.pos, np.float64)
+    yaw = float(np.degrees(np.arctan2(-f[0], -f[2])))
+    foot = place(t, 0.5, 1.0 - ARCH_SCREEN["foot"], ARCH_D)
+    top = place(t, 0.5, 1.0 - ARCH_SCREEN["top"], ARCH_D)
+    span = _width_at(t, ARCH_D, ARCH_SCREEN["x1"] - ARCH_SCREEN["x0"])
+    return foot, yaw, span, float(top[1] - foot[1])
+
+
+def _arch_center(t):
+    return _arch_frame(t)[0]
+
+
+def _arch_yaw(t):
+    return _arch_frame(t)[1]
+
+
+def _arch_span(t):
+    return _arch_frame(t)[2]
+
+
+def _arch_height(t):
+    return _arch_frame(t)[3]
+
+
+def arch_homes(t):
+    """The nine places of the arch at t (as p3d.world.Arch.point)."""
+    c, yaw, span, height = _arch_frame(t)
+    th = np.radians(np.linspace(172.0, 8.0, 9))
+    x, y = 0.5 * span * np.cos(th), height * np.sin(th)
+    a = np.radians(yaw)
+    return np.stack([c[0] + x * np.cos(a), c[1] + y, c[2] - x * np.sin(a)], axis=1)
+
+
 STAR1_T = 64.8           # Greeting's light reaches star 1 (lit for the first time in the concert)
 STAR8_T = 77.8           # Consideration's light reaches star 8 (relit: a brief flare and one new ring)
 
@@ -235,7 +275,7 @@ def _raw(name, t, part):
     return np.asarray(_BODIES[name].where(t, part, raw=True), np.float64)
 
 
-T_RISE = 66.6            # the traveler rises, pulled up by the helper's hand (Consideration)
+T_RISE = 67.2            # the traveler rises, pulled up by the helper's hand (Consideration)
 
 
 def _grip(t):
@@ -256,7 +296,7 @@ def _bodies():
     _body("traveler", "man", at=(BENCH[0] - 2.94, BENCH[2]),
           facing=[(0.0, 90.0), (70.2, 90.0), (71.6, 180.0)],
           motion=[(7.0, "walk", dict(speed=0.42)), (14.0, "stand", dict(blend=1.4)),
-                  (61.6, "kneel", dict(one=True, dur=1.8, blend=0.3)),
+                  (62.9, "kneel", dict(one=True, dur=1.6, blend=0.3)),
                   (T_RISE, "rise", dict(dur=1.7, one=True, blend=0.05)),
                   (71.4, "walk", dict(speed=0.42)), (88.0, "stand", dict(blend=1.5))],
           gesture=[(14.5, 52.0, "bow", dict(amount=16.0)), (53.4, 59.8, "bow", dict(amount=18.0)),
@@ -352,9 +392,9 @@ _SPECS = [
           color="#ffe2a8", glow=GOLD, tint=0.35, arrive="gather", leave="rise"),
     # the two expressions: exact wording from words.EXPRESSIONS, website colours, capsule labels
     _spec("Greeting", 52.6, 54.0, 63.2, 64.8, 0.36, expr="Greeting", pill=True, arrive="pen", nib=False,
-          leave="stream", to=ARCH_PTS[GREET]),
-    _spec("Consideration", 65.0, 66.4, 75.8, 77.8, 0.42, expr="Consideration", pill=True, arrive="pen",
-          nib=False, leave="stream", to=ARCH_PTS[CONS]),
+          leave="stream", to=arch_homes(64.8)[GREET]),
+    _spec("Consideration", 65.0, 66.4, 75.8, 77.8, 0.40, expr="Consideration", pill=True, arrive="pen",
+          nib=False, leave="stream", to=arch_homes(77.8)[CONS], ride=(0.5, WORD_Y - 0.025, WORD_DEPTH)),
     _spec("return", 79.2, 80.5, 88.8, 90.6, 0.40, lines=["\u201cplease return\u201d"], color=PEARL,
           glow="#ffe2a8", tint=0.2, arrive="reveal", leave="wind"),
     _spec("kingdom", 150.4, 152.0, 160.6, 162.2, 0.52, lines=["\u201cthe eternal kingdom\u201d"], color=PEARL,
@@ -625,7 +665,7 @@ class Gate:
                     twinkle=0.5, fog=0.3, reflect=False),
                dict(pos=self.outline[::4], size=6.0, color=lin("#ffc880"), alpha=0.06 * oa[::4], kind="soft",
                     fog=0.3, reflect=False),
-               dict(pos=self.inner, size=2.2, color=lin("#fff2d6"), alpha=g * (0.10 + 0.5 * open_) * self.isd,
+               dict(pos=self.inner, size=2.2, color=lin("#fff2d6"), alpha=g * (0.08 + 0.22 * open_) * self.isd,
                     kind="soft", fog=0.3, reflect=False),
                dict(pos=self.city, size=1.4, color=lin("#ffd9a0"), alpha=0.55 * g * build * (0.4 + 0.6 * self.cs),
                     emit=1.4, kind="soft", seed=self.cs, twinkle=0.4, fog=0.4, reflect=False)]
@@ -797,21 +837,21 @@ def _crowds(scene):
     from nine_reference_p3d.crowd import Crowd
     gold = dict(color="#ffc664", color2="#fff0c8", bright=2.2, size=1.6, points=4200)
     # villagers who carry their lights out over the water into the mist (verse 2)
-    scene.add("crowd search", Clear(Crowd(n=14, area=dict(center=(LAMP[0], LAMP[2] - 4.0), radius=(3.0, 11.0),
+    scene.add("crowd search", Clear(Crowd(n=10, area=dict(center=(LAMP[0], LAMP[2] - 4.0), radius=(3.0, 11.0),
                                                           arc=(130.0, 230.0)),
                                           facing=lambda x, z: 180.0 + 0.6 * x, kinds=("light",), walk=0.55,
-                                          start=dict(t=101.0, dur=5.0), until=138.0, fade=1.6, seed=7, **gold)))
+                                          start=dict(t=101.0, dur=5.0), until=138.0, fade=1.6, seed=7, **gold)), reflect=False)
     # the whole family gathered on the shore round Mother's lamp (hush and verse 3), arms raised to the kingdom
-    scene.add("crowd shore", Clear(Crowd(n=44, area=dict(center=(LAMP[0], LAMP[2] - 7.0), radius=(5.0, 16.0),
+    scene.add("crowd shore", Clear(Crowd(n=24, area=dict(center=(LAMP[0], LAMP[2] - 7.0), radius=(5.0, 16.0),
                                                          arc=(115.0, 245.0)),
                                          facing=lambda x, z: 180.0 - 1.2 * x, kinds=("stand", ("raise", 0.35)),
                                          act=dict(t=162.0, dur=6.0), start=dict(t=131.0, dur=6.0), until=200.0,
-                                         fade=2.0, seed=8, **gold)))
+                                         fade=2.0, seed=8, **gold)), reflect=False)
     # the family walking home behind Mother over the water (final chorus)
-    scene.add("crowd home", Clear(Crowd(n=40, area=dict(center=(LAMP[0], LAMP[2] + 3.0), radius=(2.0, 12.0),
+    scene.add("crowd home", Clear(Crowd(n=26, area=dict(center=(LAMP[0], LAMP[2] + 3.0), radius=(2.0, 12.0),
                                                         arc=(120.0, 240.0)),
                                         facing=180.0, kinds=("walk",), walk=0.6, start=dict(t=197.0, dur=5.0),
-                                        until=234.0, fade=2.5, seed=9, **gold)))
+                                        until=234.0, fade=2.5, seed=9, **gold)), reflect=False)
 
 
 def _setup(scene):
@@ -820,10 +860,10 @@ def _setup(scene):
     scene.add("first stars", FirstStars(), reflect=False)
     scene.add("footprints", Clear(Footprints()), reflect=False)
     scene.add("peace rings", Clear(PeaceRings()), reflect=False)
-    scene.add("lost lights", Clear(LostLights()))
+    scene.add("lost lights", Clear(LostLights()), reflect=False)
     scene.add("lamps", Clear(Lamps()), reflect=False)
     scene.add("gate", Clear(Gate()), reflect=False)
-    scene.add("bridge", Clear(Bridge()))
+    scene.add("bridge", Clear(Bridge()), reflect=False)
     _hearts_and_symbols(scene)
     _crowds(scene)
     for e in scene.entries():
@@ -863,22 +903,22 @@ LOOKS = dict(
                   haze_color="#5a5a8a", mist=0.0, hill_color="#0c0e28", water="#03061a", ripple=0.0,
                   mirror=1.0, dust=0.6, dust_color="#ffd9a0", dust_color2="#ffc08a"),
     dawn07=dict(base="dawn", sky_top="#16265e", sky_mid="#6a508a", sky_hor="#eea684", sun_color="#ffd8a0",
-                sun_int=0.75, sun_el=-1.0, sun_az=180.0, stars=0.3, milky=0.08, clouds=0.3, haze=0.6,
+                sun_int=0.5, sun_el=-1.0, sun_az=180.0, stars=0.3, milky=0.08, clouds=0.3, haze=0.5,
                 haze_color="#c48a84", mist=0.3, mist_color="#c09090", hill_color="#161430", water="#0a0a20",
-                rays=0.4, ripple=0.1, dust=0.9, dust_color="#ffe2a8", dust_color2="#ffc4a8"),
+                rays=0.25, ripple=0.1, dust=0.9, dust_color="#ffe2a8", dust_color2="#ffc4a8"),
     glory07=dict(base="dawn", sky_top="#1c2a64", sky_mid="#6a4f86", sky_hor="#f0a874", sun_color="#ffd89a",
-                 sun_int=0.8, sun_el=0.5, sun_az=180.0, stars=0.3, milky=0.05, clouds=0.3, haze=0.45,
+                 sun_int=0.5, sun_el=0.5, sun_az=180.0, stars=0.3, milky=0.05, clouds=0.3, haze=0.45,
                  haze_color="#a8707a", mist=0.22, mist_color="#a0707a", hill_color="#1a1430", water="#08081c",
-                 rays=0.4, ripple=0.15, dust=1.1, dust_color="#ffe0a0", dust_color2="#ffc890"),
-    night07=dict(base="night", sky_top="#0b1530", sky_mid="#1a2858", sky_hor="#4c4880", sun_color="#ffcf8a",
+                 rays=0.25, ripple=0.15, dust=1.1, dust_color="#ffe0a0", dust_color2="#ffc890"),
+    night07=dict(base="night", sky_top="#0b1530", sky_mid="#1a2c62", sky_hor="#2e3e78", sun_color="#ffcf8a",
                  sun_int=0.6, sun_el=-1.8, sun_az=180.0, stars=1.0, milky=0.55, clouds=0.08, haze=0.3,
-                 haze_color="#262c5c", mist=0.12, mist_color="#2c3262", hill_color="#05071a", water="#02040f",
+                 haze_color="#1e2c64", mist=0.12, mist_color="#24306a", hill_color="#05071a", water="#02040f",
                  ripple=0.12, dust=0.7, dust_color="#ffd9a0", dust_color2="#ffc08a"),
 )
 
 STAR_LIGHT = Track([(0.0, 0.9), (25.0, 0.9), (27.0, 1.5), (36.0, 1.5), (39.0, 1.0), (78.5, 1.0), (80.5, 1.45),
-                    (89.0, 1.45), (92.0, 1.1), (149.0, 1.1), (152.0, 1.6), (161.0, 1.6), (174.5, 1.3),
-                    (217.0, 1.8), (232.0, 1.2), (246.0, 0.95), (TOTAL, 0.95)])
+                    (89.0, 1.45), (92.0, 1.1), (149.0, 1.1), (152.0, 1.25), (161.0, 1.25), (174.5, 1.15),
+                    (217.0, 1.3), (232.0, 1.2), (246.0, 0.95), (TOTAL, 0.95)])
 
 WORLD = dict(
     looks=LOOKS,
@@ -891,8 +931,8 @@ WORLD = dict(
     lantern_field=dict(count=220, center=(0.0, -160.0), radius=(40.0, 220.0)),
     lanterns=Track([(0.0, 0.0), (200.0, 0.0), (208.0, 0.6), (230.0, 0.6), (240.0, 0.0), (TOTAL, 0.0)]),
     lantern_color="#ffc070",
-    arch=dict(lit=_arch_lit, colors=COL, span=ARCH["span"], height=ARCH["height"], z=ARCH["z"],
-              center=ARCH["center"], line=0.7, bright=1.5),
+    arch=dict(lit=_arch_lit, colors=COL, span=_arch_span, height=_arch_height, z=0.0, center=_arch_center,
+              yaw=_arch_yaw, line=0.7, bright=1.5),
     react=dict(beat=0.12, level=0.12),
 )
 
@@ -901,8 +941,8 @@ P3D = dict(
     world=WORDS.world(WORLD),
     setup=_setup,
     bursts=[dict(t=53.3, strength=0.35, rise=0.4, fall=1.2, color="#ffb08a"),
-            dict(t=161.4, strength=0.3, rise=0.6, fall=1.5, color="#ffd8a8"),
-            dict(t=217.0, strength=0.5, rise=1.2, fall=2.5, color="#ffe2b0")],
+            dict(t=161.4, strength=0.18, rise=0.6, fall=1.5, color="#ffd8a8"),
+            dict(t=217.0, strength=0.18, rise=1.2, fall=2.5, color="#ffe2b0")],
     motion_blur=0.3,
 )
 
