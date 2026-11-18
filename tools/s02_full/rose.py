@@ -136,7 +136,7 @@ WOMAN = _v(1.7, 0.0, 6.2)                   # verse 2
 TRAV = _v(0.9, 0.0, 2.0)                    # where the traveler kneels
 TRAV_START = _v(12.6, 0.0, 2.0)
 ARCH = dict(span=150.0, height=47.0, z=-170.0)
-SUN_AZ = 186.0                               # the dawn rises a little left of centre, behind the mountains
+SUN_AZ = 161.0                               # the dawn rises right of the words, behind the mountains
 
 
 # ------------------------------------------------------------------------------------------------ the camera
@@ -157,14 +157,14 @@ _CAM = [
     (50.0, (-0.1, 0.95, 17.9), (0.0, 1.0, 0.0)),
     (95.0, (0.15, 0.95, 17.2), (0.1, 1.0, 0.0)),
     (106.0, (0.3, 1.10, 16.8), (0.3, 1.02, 0.0)),
-    (126.0, (0.4, 1.06, 16.0), (0.4, 1.00, 0.0)),
-    (131.0, (0.55, 0.98, 14.6), (0.55, 0.95, 0.0)),        # low beside the kneeling traveler, then still
-    (142.5, (0.55, 0.98, 14.6), (0.55, 0.95, 0.0)),
-    (152.0, (-1.2, 0.95, 13.6), (-2.2, 0.62, 0.0)),        # toward the seed under the ice
-    (160.0, (-1.4, 0.92, 13.4), (-2.4, 0.70, 0.0)),
-    (172.0, (-0.9, 1.20, 15.6), (-1.2, 1.05, 0.0)),        # back and up into the spring
-    (198.0, (-0.9, 1.70, 17.2), (-1.3, 1.45, 0.0)),        # the slow crane: the whole lake, the rose
-    (TOTAL, (-0.8, 1.78, 17.6), (-1.2, 1.50, 0.0)),
+    (126.0, (0.4, 1.20, 16.0), (0.4, 0.95, 0.0)),
+    (131.0, (0.55, 1.32, 14.6), (0.55, 0.92, 0.0)),        # close to the kneeling traveler, then still
+    (142.5, (0.55, 1.32, 14.6), (0.55, 0.92, 0.0)),
+    (152.0, (-5.6, 1.15, 11.2), (-2.9, 0.45, 0.0)),        # toward the seed under the ice, from the left
+    (160.0, (-5.8, 1.12, 11.0), (-3.0, 0.50, 0.0)),
+    (172.0, (-1.6, 1.25, 13.6), (-1.8, 1.15, 0.0)),        # back and up into the spring
+    (198.0, (-1.4, 1.75, 12.6), (-1.7, 1.45, 0.0)),        # the slow crane: the lake, the rose, the arch
+    (TOTAL, (-1.3, 1.82, 12.9), (-1.6, 1.50, 0.0)),
 ]
 
 
@@ -177,7 +177,7 @@ def _cam(t):
 
 def _fov(t):
     return float(_keys([(0.0, 33.0), (46.0, 32.0), (95.0, 31.0), (128.0, 30.5), (131.0, 30.0), (142.5, 30.0),
-                        (155.0, 29.0), (172.0, 31.0), (198.0, 33.0)], t))
+                        (152.0, 27.0), (160.0, 27.0), (172.0, 31.0), (198.0, 33.0)], t))
 
 
 CAMERA = Rig([Path(_cam, -1.0, TOTAL + 2.0, blend=0.0, fov=_fov, aperture=0.004, focus="target")],
@@ -194,8 +194,8 @@ def _width(t, depth, frac):
 
 
 # ------------------------------------------------------------------------------------------------ the words
-RIDE = (0.5, 0.655, 7.0)            # centred 0.345 of the height from the top: the upper middle
-_ENC_STYLE = dict(tint=0.62, bright=1.0, halo=1.35)
+RIDE = (0.5, 0.672, 7.0)            # centred 0.33 of the height from the top: the upper middle
+_ENC_STYLE = dict(tint=0.62, bright=1.0, halo=1.35, pill=True, nib=False)
 _FRAG = dict(color="#f4e2c0", glow="#ffd9a0", tint=0.85, bright=0.95, halo=1.15)
 
 
@@ -209,10 +209,10 @@ def _spec(name, times, width, **kw):
 
 _SPECS = [
     _spec("too lonely", WT["lonely"], 0.30, label="", lines=["too lonely"], arrive="reveal", leave="wind", **_FRAG),
-    _spec("Encouragement", WT["enc"], 0.62, expr="Encouragement", arrive="weave", leave="rise", **_ENC_STYLE),
+    _spec("Encouragement", WT["enc"], 0.58, expr="Encouragement", arrive="weave", leave="rise", **_ENC_STYLE),
     _spec("the seed", WT["seed"], 0.27, label="", lines=["the seed"], arrive="stitch", leave="sink", **_FRAG),
-    _spec("becomes the rose", WT["rose"], 0.42, label="", lines=["becomes the rose"], arrive="gather",
-          leave="petals", **dict(_FRAG, color="#ffd9c8", glow="#ffb8a0")),
+    _spec("becomes the rose", WT["rose"], 0.44, label="", lines=["becomes the rose"], arrive="gather",
+          leave="petals", **dict(_FRAG, color="#ffe8dc", glow="#ffc0a8", tint=0.8, bright=1.0, halo=1.5)),
     _spec("Encouragement again", WT["enc2"], 0.50, expr="Encouragement", arrive="reveal", leave="fade",
           **_ENC_STYLE),
 ]
@@ -249,10 +249,16 @@ def _clear(pos, cam, t, alpha):
 _BODIES = {}
 
 
+LANTERN_DOWN = TRAV + _v(-0.48, 0.10, 0.08)      # set on the ice before her as she kneels
+
+
 def lantern(t):
-    """The traveler's small lantern: held low in her right hand."""
+    """The traveler's small lantern: held low in her right hand, then set down on the ice before her."""
+    if t >= T["kneel"] + 0.8:
+        return LANTERN_DOWN
     b = bodies()["traveler"]
-    return np.asarray(b.where(t, "pinch.R"), np.float64) + _v(0.0, -0.05, 0.0)
+    held = np.asarray(b.where(t, "pinch.R"), np.float64) + _v(0.0, -0.05, 0.0)
+    return _mix(held, LANTERN_DOWN, _sc(T["kneel"] - 0.6, T["kneel"] + 0.8, t))
 
 
 def _woman_light(t):
@@ -282,7 +288,7 @@ def bodies():
                         (T["rise"] + 2.8, "stand")],
                 garment="robe", veil=True, color="#f7b24e", color2="#ffe2a8", points=60000, seed=22.0,
                 show=T["traveler"], fade=2.2,
-                gesture=[(T["walk"][0], T["rise"] + 1.0, "hold_thread", dict(side="R")),
+                gesture=[(T["walk"][0], T["kneel"] + 0.6, "hold_thread", dict(side="R")),
                          (T["kneel"] + 0.5, T["head_up"], "bow"),
                          (T["head_up"], 150.0, "look_up", dict(amount=14.0, turn=-20.0)),
                          (T["hands"], T["rise"], "touch", dict(side="L", to=lambda t: _hands_meet(t), palm="down")),
@@ -290,7 +296,7 @@ def bodies():
                 effects=[dict(kind="form", t=T["traveler"][0], dur=2.0)], **glitter)
     _BODIES["traveler"] = trav
     # the three women of the trio: warm white, pale gold, soft rose (all women: every touch is between women)
-    kneel_at = TRAV + _v(-0.82, 0.0, 0.10)
+    kneel_at = TRAV + _v(-0.95, 0.0, 0.12)
     a = Body("woman", at=(kneel_at[0], kneel_at[2]), facing=90.0,
              motion=[(T["women"][0], "stand"), (129.0, "kneel", dict(one=True)),
                      (T["rise"] - 0.4, "rise", dict(dur=2.6, one=True)), (T["rise"] + 2.6, "stand")],
@@ -298,8 +304,6 @@ def bodies():
              show=T["women"], fade=2.2,
              gesture=[(130.2, T["rise"] - 0.2, "touch", dict(side="R", to=lambda t: lantern(t) + _v(0.0, 0.06, 0.0),
                                                                     palm="down")),
-                      (T["rise"] + 0.5, 168.0, "hand_on_shoulder",
-                       dict(side="R", to=lambda t: bodies()["traveler"].where(t, "blade.L"))),
                       (172.0, 201.0, "look_up", dict(amount=20.0))],
              effects=[dict(kind="form", t=T["women"][0], dur=1.8)], **glitter)
     _BODIES["kneeler"] = a
@@ -310,15 +314,14 @@ def bodies():
              garment="coat", hair=True,
              color="#ffcf6a", color2="#fff0c0", points=55000, seed=24.0, show=(T["women"][0] + 0.4, T["women"][1]),
              fade=2.2,
-             gesture=[(130.6, 166.0, "hand_on_shoulder",
+             gesture=[(130.6, T["rise"] - 0.6, "hand_on_shoulder",
                        dict(side="R", to=lambda t: bodies()["traveler"].where(t, "shoulder.R"))),
                       (172.0, 201.0, "look_up", dict(amount=20.0))],
              effects=[dict(kind="form", t=T["women"][0] + 0.4, dur=1.8)], **glitter)
     _BODIES["scarf"] = b
-    c_at = TRAV + _v(-0.55, 0.0, -1.0)
+    c_at = TRAV + _v(-1.25, 0.0, -1.1)
     c = Body("woman", at=(c_at[0], c_at[2]), facing=150.0,
-             motion=[(T["women"][0], "stand"), (129.8, "kneel"), (T["rise"] + 0.2, "rise", dict(dur=2.6)),
-                     (T["rise"] + 3.0, "stand")],
+             motion=[(T["women"][0], "stand"), (129.8, "kneel"), (T["rise"] + 0.6, "stand", dict(blend=2.4))],
              garment="coat", hair="bun",
              color="#ffb6a0", color2="#ffe6dc", points=55000, seed=25.0, show=(T["women"][0] + 0.8, T["women"][1]),
              fade=2.2,
@@ -461,7 +464,7 @@ class Seed:
                 d = d + 0.25 * (r.random(3) - 0.5)
                 d[1] = min(d[1], -0.2)
                 d = d / np.linalg.norm(d)
-                p = p + d * 0.018
+                p = p + d * 0.008
                 roots.append((p.copy(), i / 120.0, k))
         self.roots = np.array([q for q, _, _ in roots])
         self.rr = np.array([f for _, f, _ in roots])
@@ -646,7 +649,8 @@ class Ribbons:
             tt = np.linspace(t - span, t, n)
             pts = np.array([self.head(k, float(x)) for x in tt])
             if t < T["ribbons"][0]:
-                pts = np.array([self._sky(k, float(x)) + _v(2.5 * (x - t), 0.0, 0.0) for x in tt])
+                pts = np.array([self._sky(k, float(x)) + _v(2.8 * (x - t), 1.6 * np.sin(0.9 * (x - t) + 0.6 * t + 2.0 * k),
+                                                      0.0) for x in tt])
             age = np.linspace(1.0, 0.0, n)
             c = lin(self.COLS[k])
             env = np.sin(np.pi * (1 - age))
@@ -739,7 +743,7 @@ def rose_open(t):
     return float(_sc(T["bud"][0], T["bud"][1], t) * 0.18 + _sc(T["bloom"][0], T["bloom"][1], t) * 0.82)
 
 
-STEM_H = 1.45
+STEM_H = 1.6
 
 
 def rose_top(t=None):
@@ -773,24 +777,24 @@ class Rose:
         ri, phi, ln, u, v, s = self.p.T
         ring = ri / (self.nr - 1)
         breathe = 1.0 + 0.015 * np.sin(t * 0.8) * _sc(205.0, 212.0, t)
-        o = np.clip(opening * 1.25 - 0.25 * (1 - ring), 0.0, 1.0)
-        tilt = np.radians(8.0 + 4.0 * ring) + o * np.radians(30.0 + 52.0 * ring)
-        curl = o * np.radians(35.0) * u ** 2
-        L = ln * (0.75 + 0.35 * opening) * breathe * 2.3
-        w = L * 0.95 * np.sin(np.pi * np.clip(u * 0.9 + 0.08, 0, 1)) ** 0.7
-        along = u * L
-        cup = 0.18 * L * v ** 2
+        o = np.clip(opening * 1.2 - 0.2 * (1 - ring), 0.0, 1.0)
+        # each petal rises from the heart along an arc: its angle from the vertical grows from a to a + b
+        a = np.radians(3.0 + 5.0 * ring) + o * np.radians(5.0 + 22.0 * ring ** 1.2)
+        b = np.radians(4.0) + o * np.radians(6.0 + 22.0 * ring)
+        L = ln * (0.85 + 0.25 * opening) * breathe * 2.1
+        th = a + b * u
+        r = L * (np.cos(a) - np.cos(th)) / b
+        y = L * (np.sin(th) - np.sin(a)) / b
+        w = L * 0.62 * np.sin(np.pi * np.clip(u * 0.85 + 0.12, 0, 1)) ** 0.6 * (0.7 + 0.3 * ring)
         lx = v * w
-        th = tilt + curl
-        ly = along * np.cos(th) + cup * np.sin(tilt)
-        lr = along * np.sin(th) - cup * np.cos(tilt) + 0.012
-        x = lr * np.cos(phi) - lx * np.sin(phi)
-        z = lr * np.sin(phi) + lx * np.cos(phi)
-        base = rose_top() + _v(0.0, -0.10, 0.0)
-        pos = base + np.stack([x, ly, z], axis=1)
-        edge = np.clip(0.55 * u + 0.45 * np.abs(v), 0, 1)
-        col = _mix(lin("#b8304a"), lin("#f7a889"), edge[:, None] ** 1.2)
-        col = _mix(col, lin("#ffd9b8"), (edge[:, None] > 0.92) * 0.6)
+        r = r - 0.30 * w * v ** 2 + 0.015 + 0.02 * ring          # the edges curve in: a cup
+        x = r * np.cos(phi) - lx * np.sin(phi)
+        z = r * np.sin(phi) + lx * np.cos(phi)
+        base = rose_top() + _v(0.0, -0.16, 0.0)
+        pos = base + np.stack([x, y, z], axis=1)
+        edge = np.clip(0.6 * u + 0.4 * np.abs(v), 0, 1)
+        col = _mix(lin("#c01840"), lin("#ff7a70"), edge[:, None] ** 1.6)
+        col = _mix(col, lin("#ffc0a0"), (edge[:, None] > 0.94) * 0.5)
         return pos, col, s
 
     def sample(self, t):
@@ -806,7 +810,7 @@ class Rose:
             pos = SEED + np.stack([0.03 * np.sin(su * 4.0) + sway * su, su * STEM_H, 0.02 * np.cos(su * 3.0)],
                                   axis=1)
             pos += (self.stem_s[: len(su)] - 0.5) @ np.array([[0.012, 0, 0], [0, 0, 0.012]])
-            out.append(_dots(pos, 0.014, lin("#d8e8a0"), 0.75, emit=1.8, kind="spark"))
+            out.append(_dots(pos, 0.012, lin("#d8e8a0"), 0.42, emit=1.4, kind="spark"))
         # two leaves
         lg = _sc(T["stem"][0] + 7.0, T["stem"][1] + 2.0, t)
         if lg > 0:
@@ -827,12 +831,12 @@ class Rose:
             keep = np.ones(len(pos), bool)
             if t > T["petal"][0]:
                 keep[:650] = False                           # the lifted petal leaves the rose
-            al = bk * (0.55 + 0.45 * s)
-            out.append(_dots(pos[keep], 0.011, col[keep], al[keep], emit=2.4, kind="spark", twinkle=0.2,
+            al = bk * (0.24 + 0.16 * s)
+            out.append(_dots(pos[keep], 0.012, col[keep] * 1.3, al[keep], emit=0.9, kind="spark", twinkle=0.2,
                              seed=s[keep]))
             heart = rose_top() + _v(0.0, -0.02, 0.0)
-            out.append(_dots(heart, 0.5 + 0.2 * o, lin("#ff8a7a"), 0.10 * bk * (0.5 + o), kind="soft"))
-            out.append(_dots(heart, 1.8, lin("#ffc0a0"), 0.035 * bk * o, kind="soft"))
+            out.append(_dots(heart, 0.35 + 0.15 * o, lin("#e0506a"), 0.06 * bk * (0.5 + o), kind="soft"))
+            out.append(_dots(heart, 1.8, lin("#ffb090"), 0.02 * bk * o, kind="soft"))
             dew = _sc(T["bloom"][0] + 3.0, T["bloom"][1], t) * (1.0 - 0.6 * _win(188.8, 190.8, 199.2, 201.2, t))
             if dew > 0:
                 d = pos[self.dew]
@@ -922,8 +926,9 @@ class Comets:
             deep = m * (c / m) ** 1.35
             core = 0.35 * c + 0.65 * lin(WHITE)
             w = 2.6
-            out.append(ribbon(pts, width=w * (0.12 + 0.88 * kk), color=deep, alpha=a * 0.5 * kk, emit=1.6))
-            out.append(ribbon(pts, width=w * 0.22 * (0.15 + 0.85 * kk), color=core, alpha=a * 0.9 * kk, emit=2.4))
+            core = 0.6 * c + 0.4 * lin(WHITE)
+            out.append(ribbon(pts, width=w * (0.12 + 0.88 * kk), color=deep, alpha=a * 0.85 * kk, emit=2.2))
+            out.append(ribbon(pts, width=w * 0.22 * (0.15 + 0.85 * kk), color=core, alpha=a * 0.6 * kk, emit=2.0))
             out.append(_dots(pts[-1:], w * 0.6, core, a, emit=6.0, kind="spark"))
             out.append(_dots(pts[-1:], w * 4.0, c, a * 0.14, kind="soft"))
         return out
@@ -970,9 +975,11 @@ def _setup(scene):
     scene.add("s02 wave", Wave(), reflect=False)
     scene.add("s02 blossoms", Blossoms(), reflect=True)
     scene.add("s02 comets", Comets(), reflect=False)
-    scene.add("s02 rose", Rose(), reflect=True)
-    for name, body in bodies().items():
-        body.add(scene, name)
+    scene.add("s02 rose", Rose(), reflect=False)
+    import os
+    if not os.environ.get("S02_NO_PEOPLE"):                  # quick look checks only
+        for name, body in bodies().items():
+            body.add(scene, name)
     scene.add("s02 snow", Snow(), reflect=False)
     WORDS.add_to(scene)
 
@@ -980,7 +987,7 @@ def _setup(scene):
 # ------------------------------------------------------------------------------------------------ the world
 LOOKS = dict(
     morning=dict(base="sunrise", sky_top="#173a74", sky_mid="#8c7282", sky_hor="#ffc47c", sun_az=180.0,
-                 sun_el=3.0, sun_int=0.8, sun_glow=0.6, haze=0.35, haze_color="#a8786a", mist=0.12,
+                 sun_el=2.0, sun_int=0.7, sun_glow=0.4, haze=0.25, haze_color="#a8786a", mist=0.08,
                  mist_color="#8a6a78", exposure=0.8,
                  hill_color="#2a2440", water="#141022", stars=0.05, milky=0.0, rays=0.45, clouds=0.35,
                  dust_color="#ffe2a8", dust_color2="#ffd0a8"),
@@ -1003,18 +1010,18 @@ LOOKS = dict(
                 haze=0.45, haze_color="#5a3e8c", mist=0.3, mist_color="#6c4e9c", hill_color="#0b0820",
                 dust=0.6, dust_color="#ffdcae", dust_color2="#e8d0ff", bokeh=0.7, clouds=0.08, sun_int=0.05,
                 water="#05040f"),
-    blush=dict(base="predawn", sky_top="#1a1c52", sky_mid="#5a4486", sky_hor="#d08890", stars=0.55, milky=0.0,
+    blush=dict(base="predawn", exposure=0.85, sky_top="#1a1c52", sky_mid="#5a4486", sky_hor="#d08890", stars=0.55, milky=0.0,
                sun_az=SUN_AZ, sun_el=-3.0, sun_int=0.6, haze_color="#9a6a88", mist=0.38, mist_color="#9a7090",
                hill_color="#120e24", water="#08061a", rays=0.2, dust_color="#ffdcae", dust_color2="#ffc8c0"),
-    dawn=dict(base="dawn", sky_top="#3a4c94", sky_mid="#b496c4", sky_hor="#f4b6a0", sun_az=SUN_AZ, sun_el=1.5,
-              sun_int=0.95, sun_glow=0.8, stars=0.15, milky=0.0, haze=0.6, haze_color="#e0a0a0", mist=0.42,
-              mist_color="#e8b0aa", hill_color="#3a2c50", water="#1a1430", rays=0.6, clouds=0.42,
+    dawn=dict(base="dawn", sky_top="#26347a", sky_mid="#8a68ac", sky_hor="#ec9a88", sun_az=SUN_AZ, sun_el=1.5,
+              sun_int=0.85, sun_glow=0.6, stars=0.2, milky=0.0, haze=0.4, haze_color="#b87888", mist=0.22,
+              mist_color="#c08890", exposure=0.82, hill_color="#3a2c50", water="#1a1430", rays=0.6, clouds=0.42,
               dust_color="#fff0d0", dust_color2="#ffd0c0"),
-    spring=dict(base="sunrise", sky_top="#5a78bc", sky_mid="#e6bccc", sky_hor="#ffd3b0", sun_az=SUN_AZ,
-                sun_el=6.0, sun_int=0.95, sun_glow=0.8, sun_color="#ffe6c0", stars=0.0, milky=0.0, haze=0.6,
-                haze_color="#f0c0b0", mist=0.32, mist_color="#f0c8c0", hill_color="#5a4870", water="#2a2440",
-                rays=0.55, clouds=0.42, dust=0.5, dust_color="#fff4dc", dust_color2="#ffd8d0", exposure=0.95),
-    evening=dict(base="dusk", sky_top="#2a3478", sky_mid="#8a6aa0", sky_hor="#f0a8a0", sun_az=SUN_AZ, sun_el=0.5,
+    spring=dict(base="sunrise", sky_top="#34509c", sky_mid="#c98aa8", sky_hor="#f8b48e", sun_az=SUN_AZ,
+                sun_el=3.2, sun_int=0.8, sun_glow=0.5, sun_color="#ffdcb0", stars=0.05, milky=0.0, haze=0.42,
+                haze_color="#c88a90", mist=0.18, mist_color="#c89098", hill_color="#3a2a52", water="#1c1630",
+                rays=0.5, clouds=0.42, dust=0.5, dust_color="#fff4dc", dust_color2="#ffd8d0", exposure=0.74),
+    evening=dict(base="dusk", exposure=0.85, sky_top="#2a3478", sky_mid="#8a6aa0", sky_hor="#f0a8a0", sun_az=SUN_AZ, sun_el=0.5,
                  sun_int=0.7, sun_glow=0.75, stars=0.25, milky=0.0, haze=0.55, haze_color="#c08aa0",
                  mist=0.35, mist_color="#c094a8", hill_color="#2a2040", water="#100c22", rays=0.35, clouds=0.35,
                  dust_color="#ffe8cc", dust_color2="#ffd0c8"),
@@ -1022,7 +1029,7 @@ LOOKS = dict(
 
 _LOOK_KEYS = [(0.0, "morning"), (6.5, "dusk", 7.0), (15.5, "home", 7.0), (60.0, "winter", 20.0),
               (100.0, "deep", 9.0), (136.0, "violet", 9.0), (163.0, "blush", 8.0), (173.0, "dawn", 9.0),
-              (184.0, "spring", 10.0), (220.0, "evening", 14.0)]
+              (206.0, "spring", 10.0), (220.0, "evening", 14.0)]
 
 
 def _ripple(t):
@@ -1071,7 +1078,8 @@ P3D = dict(camera=CAMERA, world=WORDS.world(WORLD), setup=_setup,
            motion_blur=0.3)
 
 # ------------------------------------------------------------------------------------------------ titles
-TITLES = dict(signature=dict(windows=[(T["title_out1"] + 0.4, TOTAL + 5.0, "bl", "night")], fade=1.2))
+TITLES = dict(signature=dict(windows=[(T["title_out1"] + 0.4, 177.0, "bl", "night"),
+                                      (175.8, TOTAL + 5.0, "bl", "day")], fade=1.2))
 SONG_TITLE = dict(text="The Rose", sub="The Words of Mother’s Love  ·  Healing Concert",
                   t_in=T["title_in"], t_full=T["title_full"], t_out0=T["title_out0"], t_out1=T["title_out1"],
                   y=0.30, small_in=(15.6, 17.8))
