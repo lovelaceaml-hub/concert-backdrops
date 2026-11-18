@@ -25,7 +25,7 @@ Every rule of the version 2 brief (quoting DESIGN-SYSTEM, PHASEB and the handboo
 
 | Rule | Yes/No | Where checked |
 |---|---|---|
-| Music part exactly the live length 5:13 (313.0 s), then a 15 s calm hold, never black: 328.0 s | Yes (after render) | verify.py: 19,680 frames, 328.000 s |
+| Music part exactly the live length 5:13 (313.0 s), then a 15 s calm hold, never black: 328.0 s | Yes | verify.py: all three files 19,680 frames, 328.000 s, 60 fps |
 | Reference measured; mapped to the live length (cut of one repeated passage, no tempo change, within 0.04 s); recorded as an estimate | Yes | prepare.py, TIMELINE.md |
 | CUES.md with every section start, what is on screen and the calm moment that ends it | Yes | CUES.md |
 
@@ -66,7 +66,7 @@ Every rule of the version 2 brief (quoting DESIGN-SYSTEM, PHASEB and the handboo
 | Rule | Yes/No | Where checked |
 |---|---|---|
 | Opening readable from frame 0, at least 7 s (whole to 8.6 s): logo, HEALING CONCERT, The Words of Mother's Love / That Bring Peace (italic), the song title large; calm sky behind | Yes | stills 0, 5 |
-| Signature top left from the end of the opening to the last frame: logo mark, song title, The Words of Mother's Love That Bring Peace, DEC 6 · 4:30 PM (brightest), HEALING CONCERT · LAS VEGAS; never flashes | Yes | stills 12 to 327.98; verify.py (signature present every second from 12 s, after render) |
+| Signature top left from the end of the opening to the last frame: logo mark, song title, The Words of Mother's Love That Bring Peace, DEC 6 · 4:30 PM (brightest), HEALING CONCERT · LAS VEGAS; never flashes | Yes | stills 12 to 327.98; verify.py: present at every whole second from 12 s |
 | Nothing covers the signature; 40 px clear of any expression box | Yes | about 65 px from the signature's last line to the Apology label |
 | Date capitals at least about 22 px at 1080p | Yes | measured 22 px |
 | 3 to 6 short lyric fragments, each with its own effect, never with an expression | Yes | three (the design's): 116 to 127.5, 199 to 211, 292.3 to 315.5 |
@@ -77,18 +77,20 @@ Every rule of the version 2 brief (quoting DESIGN-SYSTEM, PHASEB and the handboo
 
 | Rule | Yes/No | Where checked |
 |---|---|---|
-| 1 No white-outs | Yes | soft highlight shoulder on every frame; brightest frame mean (after render) |
+| 1 No white-outs | Yes | soft highlight shoulder on every frame; brightest pixel 251 of 255 |
 | 2 No white text on pale skies | Yes | navy on the dawn |
 | 3 Nothing crossing a reading box or the signature | Yes | protection behind text; stills |
 | 4 One expression at a time | Yes | 26.8 to 40.6 and 222.6 to 237.0 only |
 | 5 No garbled letters while forming or leaving | Yes | written by a clean pen reveal; they fade cleanly while sparks rise from them (an earlier version looked doubled; fixed) |
 | 6 No words mirrored in water | Yes | all words are drawn after the engine's water |
 | 7 No dark, brown, solid or mannequin people; big enough for the back of the hall | Partly | radiant gold glitter; about 0.2 of the frame high, smaller than ideal so the words keep their clear box (noted as a weak point) |
-| 8 No mushy blur, jitter, popping or sliding | Yes (after render) | motion strips through the word arrivals and departures from the final video |
+| 8 No mushy blur, jitter, popping or sliding | Yes | motion strips at 12 frames a second from the final render through the opening, both expressions and all fragments; no identical consecutive frames |
 | 9 Bottom third calm | Yes | no rings; a smooth highlight press below the far shore on every frame; people's feet on the shore line |
-| 10 Calm camera, never frozen | Yes | slow plate pushes; verify.py longest near-frozen stretch (after render) |
+| 10 Calm camera, never frozen | Yes | slow plate pushes; longest near-still stretch 0.02 s |
 | 11 No other logos or watermarks; no realistic faces | Yes | only the campaign logo; smooth artistic heads |
 
 ## Delivery (after render)
 
-See STATUS.md for the files, lengths and SHA-256.
+All three files made, checked and attached; no black frames; music in sync at three hits (0.0 ms). See STATUS.md for the files and SHA-256.
+
+Result: every rule yes, except two partial: the night section is the darkest part of the song (as its look asks), and the people are about 0.2 of the frame high (smaller than ideal, to keep the words' box clear).
