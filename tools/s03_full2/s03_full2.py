@@ -257,8 +257,8 @@ SHARDS_COLOR = "#ffd27a"
 FLASH = Track([(0, 0.0), (241.4, 0.0), (242.2, 0.16), (244.5, 0.0), (TOTAL, 0.0)])   # the sun breaks through
 
 # The lake answers (the engine keeps rings out of the calm lower third; these sit at the far water)
-RIPPLES = [(36.9, 0.50, 1.4, 0.27, 4.5), (85.0, 0.62, 1.4, 0.28, 4.8), (239.0, 0.50, 1.2, 0.28, 3.5),
-           (240.4, 0.50, 1.2, 0.28, 4.0), (TAG + 0.3, 0.50, 0.8, 0.27, 3.5)]
+# No rings on the water: the lake is the calm lower third (the stillness is shown by the mirror instead)
+RIPPLES = []
 RIPPLES.sort(key=lambda r: r[0])
 RIPPLES_AUTO = Track([(0, 0.0), (TOTAL, 0.0)])
 RIPPLE_COLOR = "#ffe2b8"
@@ -323,7 +323,7 @@ def credit_state(t, bbox):
 
 
 # Waves of light across the sky: the Apology lighting light 3, the Encouragement relighting light 7, the sunrise
-WAVES = [(APOLOGY_STAR, STAR_POS[2][0], STAR_POS[2][1], 0.5), (ENC_ARRIVE, STAR_POS[6][0], STAR_POS[6][1], 0.5),
+WAVES = [(APOLOGY_STAR, STAR_POS[2][0], STAR_POS[2][1], 0.35), (ENC_ARRIVE, STAR_POS[6][0], STAR_POS[6][1], 0.35),
          (SUNRISE, 0.5, 0.33, 0.45)]
 
 

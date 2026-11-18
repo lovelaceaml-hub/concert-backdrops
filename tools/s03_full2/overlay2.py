@@ -74,8 +74,9 @@ DAWN = (240.5, 245.5)                 # the signature's colours change from nigh
 ENGRAVE = dict(t0=116.0, t1=119.6, out=126.0, gone=127.5, y=0.455)
 WARM = dict(t0=199.0, t1=203.5, out=209.5, gone=211.0, y=0.275)
 LOVE = dict(t0=292.3, t1=296.0, out=312.0, gone=315.5, y=0.33)
-PEOPLE_FEET = 0.705          # the far shore line, from the top
-PEOPLE_SCALE = 0.52 / 0.6    # people.py renders at 0.6 of 1080p; on screen at 0.52
+PEOPLE_FEET = 0.715          # the far shore line, from the top
+PEOPLE_SCALE = 0.45 / 0.6    # people.py renders at 0.6 of 1080p; on screen at 0.45
+PEOPLE_X = [0.50, 0.40]      # the Encouragement pair stands left of the column of prayer light, facing it
 PEOPLE_ANCHOR = [(590.0, 572.0), (600.0, 584.0)]   # each act's foot centre in people.py's frames
 ARCH_DAWN = (243.0, 247.0)   # from here the lit lights are drawn over the bright dawn sky
 
@@ -423,7 +424,7 @@ class Overlay:
         prot = _sf(e["t_in"] - 1.2, e["t_in"] + 0.3, t) * (1 - _sf(e["t_read1"] + 0.6, e["t_read1"] + 2.2, t))
         self._protect(img, L, prot)
         write = _sf(e["t_in"], e["t_read0"] - 0.2, t)
-        alpha = _sf(e["t_in"], e["t_in"] + 0.4, t) * (1 - _sf(e["t_read1"], e["t_read1"] + 0.9, t))
+        alpha = _sf(e["t_in"], e["t_in"] + 0.4, t) * (1 - _sf(e["t_read1"], e["t_read1"] + 0.7, t))
         if alpha > 0.002:
             rev = self._pen_reveal(L, write) if write < 1.0 else None
             self._put(img, L, alpha, reveal=rev)
@@ -438,17 +439,20 @@ class Overlay:
             pts, xn, rnd = self.particles[e["label"]]
             sx, sy = self.S.STAR_POS[e["star"]]
             tx, ty = sx * self.W, (1.0 - sy) * self.H
-            start = t0 + 0.15 + 0.55 * xn + 0.25 * rnd
-            dur = (t1 - 0.15) - start
+            start = t0 + 0.75 + 0.35 * rnd
+            dur = (t1 - 0.1) - start
             u = np.clip((t - start) / dur, 0.0, 1.0)
             e_ = u * u * (3 - 2 * u)
-            # a gentle rising arc to the light, wider for the letters far from it
-            mx = 0.5 * (pts[:, 0] + tx) + (pts[:, 0] - tx) * 0.25
-            my = np.minimum(pts[:, 1], ty) - 0.05 * self.H - 0.04 * self.H * rnd
-            x = (1 - e_) ** 2 * pts[:, 0] + 2 * (1 - e_) * e_ * mx + e_ * e_ * tx
-            y = (1 - e_) ** 2 * pts[:, 1] + 2 * (1 - e_) * e_ * my + e_ * e_ * ty
-            live = (t >= start - 0.05)
-            w = live * (np.minimum(u / 0.08, 1.0)) * (1 - _ss(0.92, 1.0, u)) * 0.85
+            # the whole cloud of sparks contracts into the light, turning gently as it gathers (not a stream)
+            dx, dy = pts[:, 0] - tx, pts[:, 1] - ty
+            ang = 1.1 * e_ * (0.8 + 0.4 * rnd)
+            ca, sa = np.cos(ang), np.sin(ang)
+            k = (1 - e_) ** 1.15
+            x = tx + (dx * ca - dy * sa * 0.6) * k
+            y = ty + (dx * sa * 0.6 + dy * ca) * k - 0.05 * self.H * np.sin(np.pi * e_) * (0.5 + rnd)
+            # the sparks glow where the letters were as the letters fade, then fly; thinning as they converge
+            glow_in = np.clip((t - (t0 + 0.1)) / 0.6, 0.0, 1.0)
+            w = glow_in * (1 - 0.85 * e_) * (1 - _ss(0.75, 1.0, u)) * 0.55
             w = w * (1 - _sf(t1, t1 + 0.4, t))
             colmix = 0.45 * L.col + 0.55 * np.array(CREAM) / 255.0
             self._splat(img, np.stack([x, y], 1), w, colmix, r_core=1.4, r_glow=5.0)
@@ -524,7 +528,7 @@ class Overlay:
             w, h = int(round(p.width * sc)), int(round(p.height * sc))
             p = np.asarray(p.resize((w, h), Image.LANCZOS), np.float32) / 255.0
             ax, ay = PEOPLE_ANCHOR[k]
-            x0 = int(round(0.5 * self.W - ax * sc))
+            x0 = int(round(PEOPLE_X[k] * self.W - ax * sc))
             y0 = int(round(PEOPLE_FEET * self.H - ay * sc))
             cx0, cy0 = max(x0, 0), max(y0, 0)
             cx1, cy1 = min(x0 + w, self.W), min(y0 + h, self.H)
