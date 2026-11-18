@@ -103,9 +103,9 @@ def _v(x, y, z):
 # ---------------------------------------------------------------------------------------------------------
 # Geography (metres, y up, the lake is y = 0). The camera looks toward -z, the sun rises at azimuth 180.
 # ---------------------------------------------------------------------------------------------------------
-MSTAR = _v(0.0, 4.0, -700.0)            # the morning star on the horizon
-MOTHER_AT = _v(1.9, 0.0, -20.0)           # Heavenly Mother, far on the shore, seen only from behind
-TREE_AT = _v(-6.0, 0.0, -17.0)             # where the dew falls and the tree of life grows
+MSTAR = _v(110.0, 4.0, -700.0)           # the morning star on the horizon
+MOTHER_AT = _v(4.5, 0.0, -16.0)           # Heavenly Mother, far on the shore, seen only from behind
+TREE_AT = _v(-9.0, 0.0, -17.0)             # where the dew falls and the tree of life grows
 ARCH_GEO = dict(span=96.0, height=30.0, z=-70.0, center=(0.0, 2.0, 0.0))
 LIT_AT = {COMP: 56.2, ENC: 176.0}         # the two stars this song lights
 
@@ -117,7 +117,7 @@ def arch_homes(t=0.0):
                      np.full(9, c[2] + ARCH_GEO["z"])], axis=1)
 
 
-READS = [(10.4, 19.4), (41.6, 52.4), (63.4, 68.6), (116.6, 121.4), (150.6, 155.0), (160.6, 172.4)]
+READS = [(41.6, 52.4), (63.4, 68.6), (116.6, 121.4), (150.6, 155.0), (160.6, 172.4)]
 
 
 def _reading(t):
@@ -215,11 +215,11 @@ def _bodies():
     helper, tired = pairs.helped_up(
         RISE_T, at=PAIR_AT, facing=270.0, rise=2.0, reach=1.2,
         a=dict(shape="man", garment="tunic", look=dict(name="glitter", seams=0.6), color="#ffcf7a",
-               color2="#fff0c8", bright=1.4, points=56000, seed=50.0, show=(153.0, TOTAL + 5.0), fade=0.8,
+               color2="#fff0c8", bright=2.0, points=56000, seed=50.0, show=(153.0, TOTAL + 5.0), fade=0.8,
                gesture=[(158.0, 163.2, "comfort", dict(side="L", to=lambda t: _BODIES["tired"].where(t, "shoulder.R")))],
                effects=[dict(kind="form", t=153.0, dur=2.2)]),
         b=dict(shape="man", garment="tunic", look=dict(name="glitter", seams=0.6), color="#f2a640",
-               color2="#ffdc96", bright=1.25, points=56000, seed=51.0, show=(153.0, TOTAL + 5.0), fade=0.8,
+               color2="#ffdc96", bright=1.8, points=56000, seed=51.0, show=(153.0, TOTAL + 5.0), fade=0.8,
                effects=[dict(kind="form", t=153.2, dur=2.2)]))
     _BODIES["helper"], _BODIES["tired"] = helper, tired
     # the morning companions round them (back again after the walk), torches low, lifted on the fanfare
@@ -228,11 +228,12 @@ def _bodies():
                                                        ("e3", "woman", (4.2, -4.6), 230.0),
                                                        ("e4", "man", (6.8, -3.4), 240.0)]):
         kw = dict(common)
+        kw.pop("bright")
         if shape == "man":
             kw.update(garment="tunic")
         _BODIES[name] = Body(shape, at=(x, z), facing=facing, motion="stand",
                              hair="bun" if shape == "woman" else "default",
-                             color=["#ffd88a", "#ffcf7a", "#f6b856", "#f0b050"][i], color2="#fff0c8",
+                             color=["#ffd88a", "#ffcf7a", "#f6b856", "#f0b050"][i], color2="#fff0c8", bright=1.9,
                              seed=60.0 + i, show=(152.0 + 0.5 * i, TOTAL + 5.0),
                              gesture=[(153.0, 165.0, "offer", dict(side="R")),
                                       (165.0, 176.6, "soft_raise", dict(side="R", period=6.0 + i)),
@@ -289,9 +290,9 @@ CAM_KEYS = [
     (112.8, _v(0.4, 1.9, -1.6), _v(0.0, 10.0, -60.0)),
 ]
 CAM_CLOSE = [
-    (113.0, _v(-3.6, 0.70, -6.0), _v(-6.0, 2.6, -24.0)),
-    (125.0, _v(-3.4, 0.80, -4.6), _v(-6.0, 3.2, -24.0)),
-    (138.0, _v(-2.2, 1.10, 2.0), _v(-3.6, 4.6, -24.0)),
+    (113.0, _v(-6.6, 0.70, -6.0), _v(-9.0, 2.6, -24.0)),
+    (125.0, _v(-6.4, 0.80, -4.6), _v(-9.0, 3.2, -24.0)),
+    (138.0, _v(-4.6, 1.10, 2.0), _v(-6.0, 4.6, -24.0)),
     (147.4, _v(-0.6, 1.25, 8.0), _v(-1.2, 6.0, -40.0)),
 ]
 CAM_MORNING = [
@@ -473,14 +474,6 @@ class Torches:
                     pts = ((1 - us) ** 2)[:, None] * prev + (2 * (1 - us) * us)[:, None] * mid + (us ** 2)[:, None] * tip
                     out.append(ribbon(pts, width=0.05, color=lin("#ffd890"), alpha=0.8 * (1.0 - _sc(1.0, 1.25, u)),
                                       emit=2.5))
-            # beams of glory leaning toward Heavenly Mother (chorus 1)
-            beam = _win(68.0, 74.0, 82.5, 86.0, t)
-            if beam > 0.002 and n in TORCH_T:
-                goal = MOTHER_AT + _v(0.0, 3.4, 0.0)
-                us = np.linspace(0.0, 1.0, 24)
-                lean = tip + (goal - tip) * us[:, None] + _v(0.0, 2.4, 0.0) * np.sin(np.pi * us)[:, None]
-                out.append(ribbon(lean, width=0.10 + 0.25 * us, color=lin("#ffe0a8"), alpha=0.22 * beam * lit *
-                                  (1.0 - 0.7 * us), emit=1.4))
             # the fanfare: the flames lift as sparks to the arch (Compliment and Encouragement first)
             lift = _win(HIT["fan"], HIT["fan"] + 1.0, 186.0, 189.0, t)
             if lift > 0.002:
@@ -495,6 +488,30 @@ class Torches:
                                 lin(COL[k]) * f[:, None], alpha=lift * lit * 0.85 * np.sin(np.pi * f) ** 0.6,
                                 emit=2.4, kind="spark", twinkle=0.5, seed=fs[:, 3]))
         return out or None
+
+
+class Beams:
+    """Chorus 1: soft beams of glory leaning from the torches toward Heavenly Mother, and her gentle light."""
+    wants_camera = False
+
+    def sample(self, t):
+        beam = _win(68.0, 74.0, 82.5, 86.0, t)
+        glow = _win(60.0, 63.0, 110.0, 113.0, t)
+        if glow <= 0.002:
+            return None
+        out = [dict(pos=(MOTHER_AT + _v(0.0, 1.0, 0.0))[None], size=4.0, color=lin("#fff0d0"), alpha=0.10 * glow,
+                    kind="soft", lod=False),
+               dict(pos=(MOTHER_AT + _v(0.0, 1.0, 0.0))[None], size=12.0, color=lin("#ffd8a0"), alpha=0.04 * glow,
+                    kind="soft", lod=False)]
+        if beam > 0.002:
+            goal = MOTHER_AT + _v(0.0, 7.0, -2.0)
+            us = np.linspace(0.0, 1.0, 24)
+            for n in TORCH_ORDER:
+                tip = _torch_tip(n, t)
+                lean = tip + (goal - tip) * (us ** 0.8)[:, None] + _v(0.0, 0.8, 0.0) * np.sin(np.pi * us)[:, None]
+                out.append(ribbon(lean, width=0.06 + 0.5 * us, color=lin("#ffe6b8"),
+                                  alpha=0.10 * beam * _torch_lit(n, t) * (1.0 - 0.85 * us), emit=1.2))
+        return out
 
 
 class LightFall:
@@ -583,7 +600,9 @@ class GrowingTree:
                     if np.ndim(r.get(key)) > 0:
                         r[key] = np.asarray(r[key])[keep]
             out.append(r)
-        g = 1.0 - 0.6 * _sc(150.0, 156.0, t)
+        g = 1.0 - _sc(151.0, 156.5, t) + 0.8 * _sc(176.0, 181.0, t)   # out of the way of the Encouragement
+        if g <= 0.002:
+            return None
         for r in out:
             r["alpha"] = np.asarray(r.get("alpha", 1.0)) * g
         return out
@@ -623,6 +642,18 @@ class Blossoms:
         return [dict(r, alpha=np.asarray(r.get("alpha", 1.0)) * g) for r in rows]
 
 
+class Dim:
+    def __init__(self, inner, k):
+        self.inner, self.k = inner, k
+
+    def sample(self, t):
+        rows = self.inner.sample(t)
+        if not rows:
+            return rows
+        rows = rows if isinstance(rows, list) else [rows]
+        return [dict(r, alpha=np.asarray(r.get("alpha", 1.0)) * self.k) for r in rows if r is not None]
+
+
 def _setup(scene):
     from expressions import Clear
     scene.add("star", MorningStar(), reflect=True)
@@ -631,9 +662,10 @@ def _setup(scene):
     for name, body in _bodies().items():
         body.add(scene, name)
     scene.add("torches", Clear(Torches(), WORDS))
+    scene.add("beams", Clear(Beams(), WORDS), reflect=False)
     scene.add("lightfall", LightFall())
     scene.add("net", Clear(GoldenNet(), WORDS), reflect=False)
-    scene.add("ring", Clear(FX.RingWave(_v(0.0, 0.0, -10.0), 99.4, speed=34.0, until=113.5), WORDS))
+    scene.add("ring", Clear(Dim(FX.RingWave(_v(0.0, 0.0, -10.0), 99.4, speed=34.0, until=113.5), 0.45), WORDS))
     scene.add("dew", DewDrops())
     scene.add("tree", Clear(GrowingTree(), WORDS), reflect=False)
     scene.add("blossoms", Clear(Blossoms(), WORDS))
