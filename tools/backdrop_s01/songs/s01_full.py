@@ -710,6 +710,15 @@ LOOKS = dict(
                dust_color="#fff0d0", dust_color2="#ffd8a0", exposure=0.82),
 )
 
+def _toward_white(hexs, k):
+    c = [int(hexs[i:i + 2], 16) for i in (1, 3, 5)]
+    return "#" + "".join("%02x" % int(round(v + (255 - v) * k)) for v in c)
+
+
+# the arch lights glow in the website colours, lifted toward white so the deep ones (Compliment's navy)
+# still read as lit stars on a bright morning sky
+ARCH_COL = [_toward_white(c, 0.35) for c in COL]
+
 WORLD = dict(
     looks=LOOKS,
     look=[(0.0, "lake"), (24.0, "verse", 4.0), (54.6, "mirror", 2.5), (58.4, "rose", 8.0), (84.0, "glory", 3.0),
@@ -719,7 +728,7 @@ WORLD = dict(
     light=dict(pos=MSTAR, color="#ffe2a0", strength=Track([(0.0, 0.8), (HIT["lift"], 0.8), (HIT["lift"] + 0.3, 1.6),
                                                           (HIT["lift"] + 3.0, 0.8), (146.0, 0.8), (150.0, 0.0),
                                                           (TOTAL, 0.0)]), size=0.6, rays=0.6),
-    arch=dict(lit=arch_states, colors=COL, span=ARCH_GEO["span"], height=ARCH_GEO["height"], z=ARCH_GEO["z"],
+    arch=dict(lit=arch_states, colors=ARCH_COL, span=ARCH_GEO["span"], height=ARCH_GEO["height"], z=ARCH_GEO["z"],
               center=ARCH_GEO["center"], line=arch_line),
     react=dict(beat=0.15, level=0.15),
 )

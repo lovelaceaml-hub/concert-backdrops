@@ -2,6 +2,10 @@
 
 Status: stills for Anthony's review (2026-11-18). No full render yet; it waits for his OK.
 
+Stills (1280x720, 12 landmarks plus 2 extras, rendered in the cloud session, checked at full size): Drive "Videos/01 All You Stars of Zion/backdrop stills", https://drive.google.com/drive/folders/1jkvApQ43Jdf_IkLig0fr7UjuuI4fcPRH
+
+Open points for review: the people's reflections reach into the bottom third during the verse and the morning (their feet sit just below it); the light ring at the 1:40 peak crosses the lower lake for a few seconds; the heavenly city is left out as decided.
+
 ## The audio (kept in Drive only)
 
 Owner decision 2026-11-18: the song stays in Drive only and is never committed to this repository. It is the church's brass ensemble version (the same performance as youtu.be/YuBYZDgmf0I).
