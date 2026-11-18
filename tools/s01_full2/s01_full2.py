@@ -819,7 +819,7 @@ P3D = dict(
     camera=CAMERA,
     world=WORDS.world(WORLD) if hasattr(WORDS, "world") else WORLD,
     setup=_setup,
-    bursts=[dict(t=HIT["open"], strength=0.35, rise=0.15, fall=0.8, color="#fff4e0", at=tuple(MSTAR)),
+    bursts=[dict(t=HIT["open"], strength=0.12, rise=0.25, fall=1.0, color="#ffc470", at=tuple(MSTAR)),
             dict(t=HIT["lift"], strength=0.25, rise=0.15, fall=0.9, color="#ffe2a0", at=tuple(MSTAR)),
             dict(t=99.0, strength=0.14, rise=0.5, fall=1.5, color="#ffc870"),
             dict(t=HIT["sun"], strength=0.22, rise=0.6, fall=1.6, color="#ffe8c0")],
