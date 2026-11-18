@@ -286,8 +286,8 @@ CAM_KEYS = [
     (58.0, _v(0.0, 1.30, 9.0), _v(0.0, 10.0, -60.0)),
     (84.0, _v(-0.6, 1.35, 10.6), _v(0.0, 10.4, -60.0)),
     (87.3, _v(-0.6, 1.40, 10.6), _v(0.0, 10.4, -60.0)),
-    (104.0, _v(0.0, 1.9, -1.0), _v(0.0, 10.0, -60.0)),
-    (112.8, _v(0.4, 1.9, -1.6), _v(0.0, 10.0, -60.0)),
+    (104.0, _v(0.0, 1.9, -3.8), _v(0.0, 10.0, -60.0)),
+    (112.8, _v(0.4, 1.9, -4.4), _v(0.0, 10.0, -60.0)),
 ]
 CAM_CLOSE = [
     (113.0, _v(-6.6, 0.70, -6.0), _v(-9.0, 2.6, -24.0)),
@@ -297,10 +297,10 @@ CAM_CLOSE = [
 ]
 CAM_MORNING = [
     (147.5, _v(0.0, 1.30, 15.0), _v(0.0, 11.8, -60.0)),
-    (156.0, _v(0.5, 1.30, 6.6), _v(0.4, 9.6, -60.0)),
-    (175.0, _v(0.6, 1.30, 6.0), _v(0.4, 9.6, -60.0)),
-    (188.0, _v(0.2, 1.35, 14.5), _v(0.0, 12.6, -60.0)),
-    (TOTAL, _v(0.0, 1.35, 15.4), _v(0.0, 12.8, -60.0)),
+    (156.0, _v(0.5, 2.30, 6.6), _v(0.4, 6.0, -60.0)),     # a little higher: the people stand against the
+    (175.0, _v(0.6, 2.30, 6.0), _v(0.4, 6.0, -60.0)),     # deep water, not the bright horizon (v2)
+    (188.0, _v(0.3, 2.25, 9.5), _v(0.2, 6.6, -60.0)),
+    (TOTAL, _v(0.1, 2.25, 10.4), _v(0.0, 6.8, -60.0)),
 ]
 
 
@@ -687,7 +687,7 @@ class ExprHearts:
     def _src(self, src, t, s):
         if src == "words":
             return np.asarray(CPW.place(_LAYOUT, t, 0.5 + (s[0] - 0.5) * 0.4, 0.62 + 0.06 * s[1], 7.0), np.float64)
-        b = _bodies()[src[int(s[6] * 2) % 2]]
+        b = _bodies()[src[int(s[5] * 2) % 2]]
         return np.asarray(b.where(t, "heart"), np.float64) + _v((s[0] - 0.5) * 0.3, 0.1 * s[1], 0.0)
 
     def sample(self, t, cam=None):
@@ -722,11 +722,11 @@ def _symbols():
     (praying hands): a flock of morning birds that, for a moment as they pass, stands in its shape."""
     from p3d import brand  # noqa: F401  (brand imports brand_symbols; importing it first avoids a cycle)
     from p3d import brand_symbols as BS
-    comp = BS.Traced("Compliment", heads=3, style="sparks", pos=(50.0, 31.0, -100.0), size=15.0, face="camera",
+    comp = BS.Traced("Compliment", heads=3, style="sparks", pos=(70.0, 46.0, -100.0), size=11.0, face="camera",
                      camera=CAMERA, color=_toward_white(COL[COMP], 0.45), t0=40.0, dur=2.2, hold=10.5, out=3.0,
                      intensity=0.6, reflect=False)
-    enc = BS.Flock("Encouragement", carrier="bird", heading=(0.55, 0.85), travel=2.0, pos=(46.0, 27.0, -100.0),
-                   size=17.0, face="camera", camera=CAMERA, color=_toward_white(COL[ENC], 0.15), t0=162.0, dur=7.0,
+    enc = BS.Flock("Encouragement", carrier="bird", heading=(0.55, 0.85), travel=2.0, pos=(70.0, 44.0, -100.0),
+                   size=12.0, face="camera", camera=CAMERA, color=_toward_white(COL[ENC], 0.15), t0=162.0, dur=7.0,
                    intensity=0.6, reflect=False)
     return comp, enc
 
@@ -780,11 +780,11 @@ LOOKS = dict(
                  sun_int=0.7, sun_glow=0.45, clouds=0.25, haze_color="#d0906a", mist_color="#c09080", ripple=0.25,
                  exposure=0.85),
     morning=dict(base="golden", sky_top="#12306c", sky_mid="#5e5c98", sky_hor="#f4b070", sun_el=5.5,
-                 sun_int=0.55, sun_glow=0.35, sun_disc=3.0, sun_color="#ffe8c0", clouds=0.2, haze=0.28, haze_color="#c89070",
+                 sun_int=0.42, sun_glow=0.22, sun_disc=2.6, sun_color="#ffe8c0", clouds=0.2, haze=0.28, haze_color="#c89070",
                  mist=0.10, mist_color="#d0a080", water="#141c3a", ripple=0.25, rays=0.15, dust=0.6,
                  dust_color="#fff0d0", dust_color2="#ffd8a0", exposure=0.82),
     still=dict(base="golden", sky_top="#173a74", sky_mid="#8c7282", sky_hor="#ffc47c", sun_el=6.5,
-               sun_int=0.55, sun_glow=0.35, sun_disc=3.0, sun_color="#ffe8c0", clouds=0.2, haze=0.28, haze_color="#c89070",
+               sun_int=0.42, sun_glow=0.24, sun_disc=2.6, sun_color="#ffe8c0", clouds=0.2, haze=0.28, haze_color="#c89070",
                mist=0.10, mist_color="#d0a080", water="#141c3a", ripple=0.05, rays=0.15, dust=0.45,
                dust_color="#fff0d0", dust_color2="#ffd8a0", exposure=0.82),
 )
