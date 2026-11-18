@@ -420,7 +420,25 @@ uniform vec4 uShards; uniform vec3 uShardCol;
 uniform vec4 uIce; uniform vec3 uIceCol, uThawCol;
 uniform vec4 uField; uniform vec3 uFieldCol;
 uniform float uShadeK;
+// The optional blocks below are compiled in only for a song that uses them (comp_fs() adds the #defines). A
+// song that uses none gets exactly the original shader, so its frames stay identical bit for bit: the same
+// maths written with a uniform in place of a constant is rounded differently by the shader compiler.
+uniform vec4 uInkA, uInkB, uInkC;   // per-text colour (display rgb, strength) for slot A, slot B and the credit
+uniform float uTheme;               // SKY_THEME: 0 the original night-to-dawn world, 1 a bright day
+uniform sampler2D uLeafT; uniform float uLeafK;   // LEAVES tint: leaf colour (premultiplied) and coverage
+uniform int uNRip; uniform vec4 uRip[24]; uniform float uRipWL;   // lake ripples (engine/water.py)
 uniform float uCalm, uCalmY;   // calm lower third: rings, glitter, reflections and thaw edges fade there
+uniform sampler2D uNatT; uniform float uNatK;   // nature paint (flowers, stream, cliff): colour over the scene
+uniform float uCamOn; uniform sampler2D uCamBg;   // CAMERA (engine/sky_camera.py): the background with parallax
+#ifdef HUE_KEEP
+uniform float uHueKeep;   // P3D world keep_hue: bright lights keep their colour instead of bleaching to white
+#endif
+#ifdef FIGURE_TINT
+uniform sampler2D uFigT; uniform float uFigK; uniform vec3 uFigTint, uFigTintB; uniform vec4 uFigGate;   // figure_look.py
+#endif
+#ifdef SYMBOL_PAINT
+uniform sampler2D uSymT; uniform float uSymK;   // a symbol's painted lines (engine/water.py, SYMBOLS key `paint`)
+#endif
 float calmK(float y){ return 1.0-uCalm*(1.0-smoothstep(uCalmY-0.07, uCalmY+0.05, y)); }
 vec2 hash22(vec2 p){ vec3 p3 = fract(vec3(p.xyx)*vec3(0.1031,0.1030,0.0973));
   p3 += dot(p3, p3.yzx+33.33); return fract((p3.xx+p3.yz)*p3.zy); }
@@ -459,15 +477,26 @@ vec3 scene(vec2 uv){
   // the far range: the loudness of the whole song, left to right
   float ry = uHorizon + texture(uRidge, vec2(uv.x,0.5)).r;
   float m1 = smoothstep(ry+aa, ry-aa, uv.y);
+#ifdef SKY_THEME
+  // SKY_THEME: the far range fades into the haze before its ends, so no hard step shows on a bright sky
+  float ef = mix(1.0, smoothstep(0.035, 0.11, uv.x)*smoothstep(0.965, 0.89, uv.x), uTheme);
+  m1 *= ef;
+#endif
   float lit = smoothstep(uProg+0.003, uProg-0.014, uv.x);
   float depth = clamp(hh/0.17, 0.0, 1.0);
   vec3 far = mix(uMtn*1.5, hz, 0.74-0.30*depth);
   far += uTrailCol*uTrail*lit*0.030*depth;
   c = mix(c, far, m1);
   float dr = uv.y-ry;
+#ifdef SKY_THEME
+  float rim = (exp(-abs(dr)*900.0)*0.85 + exp(-max(dr,0.0)*95.0)*0.13*step(0.0,dr))*ef;
+  c += uTrailCol*uTrail*lit*rim;
+  c += uTrailCol*0.03*exp(-abs(dr)*900.0)*(1.0-lit)*ef;
+#else
   float rim = exp(-abs(dr)*900.0)*0.85 + exp(-max(dr,0.0)*95.0)*0.13*step(0.0,dr);
   c += uTrailCol*uTrail*lit*rim;
   c += uTrailCol*0.03*exp(-abs(dr)*900.0)*(1.0-lit);
+#endif
   // mist, then two nearer ranges
   c = mix(c, hz*1.04, exp(-hh/0.030)*0.30);
   float y2 = uHorizon + 0.010 + 0.105*pow(ridged1(uv.x*2.1, 11.0), 1.7);
@@ -477,7 +506,11 @@ vec3 scene(vec2 uv){
   c = mix(c, hz*1.02, exp(-hh/0.016)*0.26);
   float y3 = uHorizon + 0.003 + 0.070*pow(ridged1(uv.x*3.3+5.0, 3.7), 2.0) + 0.0022*vnoise(vec2(uv.x*520.0,1.0));
   float m3 = smoothstep(y3+aa, y3-aa, uv.y);
+#ifdef SKY_THEME
+  c = mix(c, mix(uMtn*mix(0.30, 0.78, uTheme), hz, mix(0.05, 0.30, uTheme)), m3);
+#else
   c = mix(c, mix(uMtn*0.30, hz, 0.05), m3);
+#endif
   return c;
 }
 
@@ -506,6 +539,19 @@ float wordMask(sampler2D tx, vec2 uv, vec4 p, vec2 bnd, vec2 off){
   float dis = 1.0-smoothstep(0.0, 1.0, (p.z-er*0.9)/0.8);
   return texture(tx, uv).g*rev*dis*p.w;
 }
+#ifdef TEXT_INK
+// the letters themselves (sharp channel), revealed and dissolved exactly as TEXT_FS draws them: per-text colour
+float inkMask(sampler2D tx, vec2 uv, vec4 p, vec2 bnd, vec2 off){
+  uv += off;
+  if(uv.y<0.0 || uv.y>1.0) return 0.0;
+  float od = clamp((uv.x-bnd.x)/(bnd.y-bnd.x), 0.0, 1.0);
+  float arrive = od*(p.y-1.35)+1.35;
+  float rev = smoothstep(-0.25, 0.75, p.x-arrive);
+  float er = vnoise(uv*vec2(uAspect,1.0)*70.0);
+  float dis = 1.0-smoothstep(0.0, 1.0, (p.z-er*0.9)/0.8);
+  return clamp(texture(tx, uv).r*1.04, 0.0, 1.0)*rev*dis*clamp(p.w, 0.0, 1.0);
+}
+#endif
 // where any text (expression, title, end card, fragment, credit) lies: reflections and light waves skip it
 float creditField(vec2 q){
   vec2 cuv = (q-uCredit.xy)/uCredit.z + uC0;
@@ -518,6 +564,9 @@ float textField(vec2 q){
   return smoothstep(0.0, 0.6, max(m, creditField(q)));
 }
 vec3 procedural(vec2 sv){
+#ifdef CAMERA_BG
+  if(uCamOn>0.5) return texture(uCamBg, sv).rgb;   // CAMERA: drawn by engine/sky_camera.py
+#endif
   vec2 uv = vec2((sv.x-0.5)*uZoom+0.5, (sv.y-uHorizon)*uZoom+uHorizon);
   vec3 col;
   vec3 hz = texture(uSky, vec2(uv.x, uHorizon+0.012)).rgb;
@@ -529,7 +578,11 @@ vec3 procedural(vec2 sv){
               + sin(uv.y*240.0+uT*1.2)*0.0010;
     vec2 ruv = vec2(uv.x+wob, uHorizon+(uHorizon-uv.y)*1.22+wob*0.4);
     col = scene(ruv);
+#ifdef SKY_THEME
+    col *= mix(mix(0.82, 0.95, uTheme), mix(0.30, 0.74, uTheme), pow(d,0.75));
+#else
     col *= mix(0.82, 0.30, pow(d,0.75));
+#endif
     // reflected lights
     float rf = (1.0-d)*(1.0-d);
     float ck = calmK(sv.y);
@@ -648,6 +701,21 @@ void main(){
       bsv = vec2(qq.x/uAspect, qq.y)/uShards.z;
     }
   }
+#ifdef LAKE_RIPPLES
+  // ---- lake ripples (engine/water.py, RIPPLES): rings bend the water and its reflections (water_shaders.RIP_GLSL)
+  if(uNRip>0 && bsv.y<uRipWL){
+    vec2 rd = vec2(0.0);
+    for(int i=0;i<uNRip;i++){
+      vec4 r = uRip[i];
+      float k = 0.35+1.6*clamp((uRipWL-r.y)/max(uRipWL,0.05), 0.0, 1.0);
+      vec2 q = vec2((bsv.x-r.x)*uAspect, (bsv.y-r.y)*3.2)/k;
+      float rr = length(q), e = (rr-r.z*0.075)/0.03;
+      vec2 dir = q/max(rr, 1e-4);
+      rd += vec2(dir.x, dir.y*0.6)*k*0.006*r.w*exp(-r.z/1.6)*smoothstep(0.0, 0.15, r.z)*exp(-e*e)*sin(e*4.0);
+    }
+    bsv += rd*smoothstep(0.0, 0.012, uRipWL-bsv.y)*mix(0.35, 1.0, calmK(bsv.y));
+  }
+#endif
   vec3 col = background(bsv);
   if(shA>0.0){
     float gw = 0.0075*uShards.x;
@@ -745,26 +813,101 @@ void main(){
   float shAll = max(sh, ct.b*min(uCredit.w*1.7, 1.0));
   float lumB = dot(col, vec3(0.2126,0.7152,0.0722));
   float capB = 0.065/max(uShadeK, 0.5);
+  // TEXT_SHADOW 0 is truly zero: no cap on bright scenery and no dark round the credit. zk is 1 (unchanged) from
+  // TEXT_SHADOW 0.05 up, and fades to 0 below it so a Track can ease the protection away without a jump.
+#ifdef SHADOW_ZERO
+  float zk = clamp(uShadeK*20.0, 0.0, 1.0);
+  float vk = smoothstep(0.0, 0.85, shAll)*zk;
+#else
   float vk = smoothstep(0.0, 0.85, shAll);
+#endif
   float sc = mix(1.0, min(capB/max(lumB,1e-5), 1.0), vk*0.92);
   col *= sc;
   float lumD = dot(col, vec3(0.2126,0.7152,0.0722));
   col = mix(col, vec3(lumD)*vec3(1.08,0.96,0.88), vk*min((1.0-sc)*2.2, 1.0)*0.85);
   float tight = max(wordMask(uTextA, uv, uTxA, uBndA, uOffA), wordMask(uTextB, uv, uTxB, uBndB, uOffB));
   col *= 1.0-min(0.50*uShadeK*tight, 0.92);
+#ifdef SHADOW_ZERO
+  col *= 1.0-(ct.g*0.50+ct.b*0.34)*uCredit.w*zk;
+#else
   col *= 1.0-(ct.g*0.50+ct.b*0.34)*uCredit.w;
+#endif
+#ifdef NATURE_PAINT
+  if(uNatK>0.0){   // nature paint (engine/nature.py): painted over the scene, never over the text
+    vec4 np_ = texture(uNatT, uv);
+    float nk = uNatK*(1.0-textField(uv));
+    col = col*(1.0-np_.a*nk) + np_.rgb*nk;
+  }
+#endif
+#ifdef LEAVES_TINT
+  if(uLeafK>0.0){   // leaves are painted green over the scene (light alone only brightens a bright sky)
+    vec4 lf = texture(uLeafT, uv);
+    float k = uLeafK*(1.0-textField(uv));
+    col = col*(1.0-lf.a*k) + lf.rgb*k;
+  }
+#endif
+#ifdef FIGURE_TINT
+  vec3 figAdd = vec3(0.0);
+  if(uFigK>=0.0){   // the silk look (engine/figure_look.py)
+    vec4 fg = texture(uFigT, uv);
+    float tk = 1.0-textField(uv);
+    float lb = dot(col, vec3(0.2126,0.7152,0.0722));
+    // on a bright sky a body of light gets a faint tint of about the same brightness (no shadow): lilac on a
+    // warm sky, a warm pearl on a blue one, so it always stands a little apart from what is behind it
+    vec3 tc = mix(uFigTint, uFigTintB, smoothstep(1.0, 1.8, col.b/max(col.r, 1e-4)));
+    col = mix(col, tc*lb, clamp(fg.a, 0.0, 1.0)*tk*uFigK*smoothstep(uFigGate.x, uFigGate.y, lb));
+    // the bodies' own light, sharp (only a share of it goes through the glow, so a body is not washed white)
+    figAdd = fg.rgb/(1.0+max(fg.r, max(fg.g, fg.b))/uFigGate.z)*uFigGate.w*tk;
+  }
+#endif
+#ifdef SYMBOL_PAINT
+  if(uSymK>0.0){   // a symbol's lines painted in their own colour (light alone pales to pink on a blue sky)
+    // Like the light (PROTECT_FS), the paint gives way to text only where the letters have arrived (sh), not
+    // in the whole text field: a title forming at the left does not wipe a symbol still standing in the middle.
+    vec4 sp = texture(uSymT, uv);
+    float sk = uSymK*(1.0-smoothstep(0.0, 0.75, max(sh, ct.b*uCredit.w)));
+    col = col*(1.0-clamp(sp.a, 0.0, 1.0)*sk) + sp.rgb*sk;
+  }
+#endif
   vec3 L = texture(uL, uv).rgb;
   vec3 bl = texture(uB1,uv).rgb*0.34 + texture(uB2,uv).rgb*0.28 + texture(uB3,uv).rgb*0.24 + texture(uB4,uv).rgb*0.22;
   col += L + bl*uBloom;
+#ifdef FIGURE_TINT
+  col += figAdd;
+#endif
   // lens: vignette, exposure, filmic curve
   vec2 vq = (uv-0.5)*vec2(1.15,1.0);
+#ifdef SKY_THEME
+  col *= mix(1.0, mix(0.62, 0.90, uTheme), smoothstep(0.30,1.0,length(vq)*1.35));
+#else
   col *= mix(1.0, 0.62, smoothstep(0.30,1.0,length(vq)*1.35));
+#endif
   col *= uExposure*uFade;
+#ifdef HUE_KEEP
+  vec3 hueIn = col;
+#endif
   col = (col*(2.51*col+0.03))/(col*(2.43*col+0.59)+0.14);
+#ifdef HUE_KEEP
+  if(uHueKeep > 0.0){
+    // above the mid tones the curve is applied to the brightest channel and the colour scaled with it, so a
+    // bright coral or blue light stays coral or blue instead of turning white (the hue and saturation hold)
+    float mx = max(hueIn.r, max(hueIn.g, hueIn.b));
+    if(mx > 1e-5){
+      float tm = (mx*(2.51*mx+0.03))/(mx*(2.43*mx+0.59)+0.14);
+      col = mix(col, max(hueIn, 0.0)*(tm/mx), uHueKeep*smoothstep(0.45, 1.6, mx));
+    }
+  }
+#endif
   col = pow(clamp(col,0.0,1.0), vec3(1.0/2.2));
   float luma = dot(col, vec3(0.2126,0.7152,0.0722));
   col = clamp(mix(vec3(luma), col, 1.18), 0.0, 1.0);
   col = mix(col, col*col*(3.0-2.0*col), 0.24);
+  // per-text colour (navy, coral...): the letters are painted in exactly that colour over the scene and its glow
+#ifdef TEXT_INK
+  if(uInkA.w>0.0) col = mix(col, uInkA.rgb*uFade, inkMask(uTextA, uv, uTxA, uBndA, uOffA)*uInkA.w);
+  if(uInkB.w>0.0) col = mix(col, uInkB.rgb*uFade, inkMask(uTextB, uv, uTxB, uBndB, uOffB)*uInkB.w);
+  if(uInkC.w>0.0) col = mix(col, uInkC.rgb*uFade, clamp(ct.r*1.04, 0.0, 1.0)*min(uCredit.w, 1.0)*uInkC.w);
+#endif
   // fine grain keeps the dark gradients smooth on a big screen
   vec2 px = gl_FragCoord.xy;
   float n1 = hash21(px+vec2(uFrame*1.37, uFrame*0.73));
@@ -773,3 +916,16 @@ void main(){
   o = vec4(col,1.0);
 }
 """
+
+COMP_BLOCKS = ("SKY_THEME", "SHADOW_ZERO", "TEXT_INK", "LEAVES_TINT", "LAKE_RIPPLES", "NATURE_PAINT", "CAMERA_BG",
+               "FIGURE_TINT", "SYMBOL_PAINT", "HUE_KEEP")
+
+
+def comp_fs(blocks=COMP_BLOCKS):
+    """The composite shader with the given optional blocks compiled in (render.comp_blocks() picks them from
+    the song). With none it is the original shader."""
+    unknown = [b for b in blocks if b not in COMP_BLOCKS]
+    if unknown:
+        raise ValueError(f"unknown composite blocks {unknown}")
+    head, body = COMP_FS.split("\n", 1)   # the #version line must stay first
+    return head + "\n" + "".join(f"#define {b} 1\n" for b in blocks) + body
