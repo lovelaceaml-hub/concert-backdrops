@@ -89,4 +89,4 @@ Every rule of the coordinator's version 2 brief (which quotes DESIGN-SYSTEM, PHA
 | Branch backdrop2/s08-full from the approved tag; code in tools/s08_full2, docs in project-docs/backdrops/s08-full2 | yes | git |
 | No audio, lyrics, videos or frames in git; no em or en dash | yes | git status; dash scan of every new file |
 | Render only in this cloud session; no Render workflow, no paid service | yes | four local processes |
-| Three files: stage (silent, CRF 16), review (music, AAC 320k, CRF 20), phone (720p60, under 25 MB) | see report | finish.sh, check.py |
+| Three files: stage (silent, CRF 16), review (music, AAC 320k, CRF 20), phone (720p60, under 25 MB) | yes | fix 1 files: each 225.000 s, 13500 frames, 60 fps; stage 172.2 MB silent, review 102.2 MB AAC, phone 23.5 MB; no black, frozen or repeated frames; share above 245 at most 1.5 percent; signature on every sampled frame after 0:09; hits at 43.20, 109.16, 202.28 s heard on the frame (check.py) |
