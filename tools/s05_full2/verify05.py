@@ -1,11 +1,13 @@
-"""Check song 05's finished backdrop: length, audio sync, dropped or frozen frames, black frames, first and last.
+"""Check song 05's finished backdrop (version 2): length, sync, frames, the signature, first and last frames.
 
-    python tools/s05_full2/verify05.py --video "out/s05_full2/05 God Bless You! - Backdrop 1080p30.mp4" \
-        --audio <s05.m4a> --frames out/s05_full2/check
+    python tools/s05_full2/verify05.py --video "out/s05_full2/05 God Bless You! - Backdrop v2 - review 1080p60.mp4" \
+        --audio out/s05_full2/music_conformed.wav --frames out/s05_full2/check
 
-Prints a plain report. Sync: the music's loudness envelope in the video is cross-correlated with the source
-around three hit points (0:08, 0:51.5, 1:58); the offset must be under one frame. Frozen frames: neighbouring
-frames that are pixel identical (the picture is always gently alive, so there should be none).
+Prints a plain report. Sync: (1) the music in the video against the conformed music around the three measured
+hits (stage 53.39, 115.74, 142.93 s), offset under one frame; (2) the picture's own reaction to the music
+(frame brightness change) against the music's loudness around each hit, best lag reported. Frozen frames:
+neighbouring frames that are pixel identical. Signature: the top left corner of every frame after the opening
+compared with one frame (correlation, must stay high: never covered, never flashing).
 No em dash or en dash anywhere in this file.
 """
 import argparse
@@ -15,9 +17,14 @@ import subprocess
 
 import numpy as np
 
-NFRAMES = 5045
-FPS = 30
-HITS = (8.0, 51.5, 118.0)
+import sys
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import timing  # noqa: E402
+
+NFRAMES = timing.NFRAMES
+FPS = timing.FPS
+HITS = tuple(timing.stage(r) for r in (51.43, 111.48, 137.67))
+SIG = (40, 24, 700, 210)            # the signature's box at 1080p: x0, y0, x1, y1
 
 
 def probe(path):
@@ -62,7 +69,7 @@ def main():
         seg = src[i0:i1]
         best = max(range(-40, 41), key=lambda k: float(np.dot(seg, got[i0 + k:i1 + k])))
         print(f"sync at {h:6.1f} s: offset {best / rate * 1000:+.1f} ms ({'OK' if abs(best / rate) < 1 / FPS else 'OFF'})")
-    tail = got[int(153.4 * rate):]
+    tail = got[int((timing.LIVE + 0.4) * rate):]
     print(f"after the music: peak level {20 * np.log10(tail.max() + 1e-9):.1f} dBFS (silence expected)")
     # frames: identical neighbours and dark frames, on a small grey copy of every frame
     w, h = 96, 54
@@ -76,6 +83,27 @@ def main():
           f"largest change {diff.max():.2f} at frame {int(diff.argmax()) + 1}")
     print(f"brightness: darkest frame {mean.min():.1f}/255 at {int(mean.argmin())}, brightest {mean.max():.1f}/255 "
           f"at {int(mean.argmax())}; black frames (mean under 16): {int((mean < 16).sum())}")
+    # the picture follows the music: brightness change against loudness, around each hit
+    fr = np.abs(np.diff(f.mean(axis=(1, 2))))
+    env = np.interp(np.arange(len(fr)) / FPS, np.arange(len(src)) / rate, src)
+    for hh in HITS:
+        i0, i1 = int((hh - 4) * FPS), int((hh + 4) * FPS)
+        a_ = (env[i0:i1] - env[i0:i1].mean())
+        best = max(range(-30, 31), key=lambda k: float(np.dot(a_, fr[i0 + k:i1 + k] - fr[i0 + k:i1 + k].mean())))
+        print(f"picture reacts to the music near {hh:6.2f} s: best lag {best / FPS * 1000:+.0f} ms")
+    # the signature on every frame after the opening
+    x0, y0, x1, y1 = SIG
+    r = subprocess.run(["ffmpeg", "-v", "error", "-i", str(args.video), "-vf",
+                        f"crop={x1 - x0}:{y1 - y0}:{x0}:{y0},scale=166:46,format=gray", "-f", "rawvideo", "-"],
+                       capture_output=True, check=True)
+    g = np.frombuffer(r.stdout, np.uint8).reshape(-1, 46, 166).astype(np.float32)
+    ref = g[int(30 * FPS)]
+    rz = (ref - ref.mean()) / (ref.std() + 1e-6)
+    cor = np.array([float(((x - x.mean()) / (x.std() + 1e-6) * rz).mean()) for x in g])
+    after = cor[int(10.0 * FPS):]
+    print(f"signature after the opening (from 10.0 s): lowest match {after.min():.3f} at frame "
+          f"{int(after.argmin()) + int(10.0 * FPS)} ({'OK' if after.min() > 0.85 else 'CHECK'}); "
+          f"present from frame {int(np.argmax(cor > 0.85))}")
     if args.frames:
         args.frames.mkdir(parents=True, exist_ok=True)
         for name, sel in (("first", "eq(n\\,0)"), ("last", f"eq(n\\,{NFRAMES - 1})")):

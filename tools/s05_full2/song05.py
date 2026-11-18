@@ -275,7 +275,7 @@ _SPRING = dict(base="day", sky_top=_day("#5aa0e0", 0.86), sky_mid=_day("#a8d0ee"
                sky_hor=_day("#f4e6c4", 0.56), sun_color=_day("#fff0cc", 0.26), sun_int=0.85, sun_el=20.0,
                sun_az=156.0, sun_disc=2.0, sun_glow=0.55, clouds=0.45, haze=0.26, haze_color=_day("#d8e6ee", 0.44),
                mist=0.0, mist_color=_day("#f4ecd8", 0.50), hills=1.0, hill_height=0.75,
-               hill_color=_day("#3f8a5c", 0.30), water=_day("#5590c4", 0.40), mirror_min=0.45, rays=0.38,
+               hill_color=_day("#2f9a52", 0.32), water=_day("#5590c4", 0.40), mirror_min=0.45, rays=0.38,
                dust=0.45, dust_color="#fff6e0", dust_color2="#ffd2de", ripple=0.30, stars=0.0, milky=0.0)
 
 
