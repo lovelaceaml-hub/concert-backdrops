@@ -111,4 +111,22 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    # the embrace pair's bodies ask each other where they are: deep recursion when a range starts mid-embrace
+    import threading
+    sys.setrecursionlimit(200000)
+    threading.stack_size(1024 * 1024 * 1024)
+    failed = []
+
+    def run():
+        try:
+            main()
+        except BaseException as e:  # noqa: BLE001
+            import traceback
+            traceback.print_exc()
+            failed.append(e)
+
+    th = threading.Thread(target=run)
+    th.start()
+    th.join()
+    if failed:
+        sys.exit(1)
