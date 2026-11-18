@@ -82,3 +82,13 @@ The two helper lanes were merged into this branch (`tools/s01_full/people.py`, `
 Checks: one round of stills at 0:03, 0:12, 0:22, 0:33, 0:46, 0:56, 1:04, 1:40, 1:45, 1:59, 2:11, 2:30, 2:40, 2:46, 2:56, 3:15 (half size, looked at full size and in quarter-size grids); motion strips at 0:55 to 0:58, 0:59 to 1:01, 1:27 to 1:29, 2:44 to 2:46 at 1080p.
 
 Render: inside the cloud session only (no GitHub Render workflow, nothing paid), 10 frame ranges, 4 at a time, about 2 to 2.5 s per 1080p frame per core.
+
+Result (checked on the master):
+
+- 203.000 s, 6,090 frames, 30 fps, 1920x1080, H.264 CRF 18 yuv420p, AAC 320k, faststart. 120,825,288 bytes, SHA-256 `505ac2abcb6806c8017b260c7506aa6e9b3050bed30eed3c1c192c7d8376cabe`.
+- Share copy 1280x720, 23,074,383 bytes, SHA-256 `19951f1a437b8c33cc28e87576094bd421045e3b91b584d7e54371841d344b9f`.
+- Audio matches the source at 0:07.1, 2:27.8 and 2:57.4 with 0.0 ms offset; the 15 s hold is silent.
+- No black stretches, no freeze of 1 s or more, no identical neighbouring frames. Every part join changes the picture no more than normal motion does; the only large jumps are the planned ones (the 0:07 brass flash, the 0:30.6 flare, the cuts at 1:53 and 2:27.5).
+- Delivered as two files attached to the build session's chat (share copy first). They still need copying to Drive "Videos/01 All You Stars of Zion/".
+
+Weak points: in the morning (2:27 on) the people are pale cream rather than deep gold and small in the wide frame; the Compliment words travel to a star near the right edge of the picture, so the cloud leaves the frame on a long curve; the 1:40 peak is very bright pink-white haze with the people small in it.
