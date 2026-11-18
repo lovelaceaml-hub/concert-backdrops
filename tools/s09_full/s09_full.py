@@ -632,10 +632,10 @@ class Comets:
         high = _v(np.sin(a) * 260.0, 95.0 + 18.0 * np.sin(0.3 * t + k), -330.0 + np.cos(a) * 120.0)
         lowa = 0.32 * t + 2 * np.pi * k / 9.0
         low = _v(np.sin(lowa) * 70.0, 14.0 + 6.0 * np.sin(0.7 * t + k), -60.0 + np.cos(lowa) * 30.0)
-        w = _win(t, 212.0, 218.0, 226.0, 230.5)
+        w = _win(t, 212.0, 218.0, 224.0, 227.5)
         p = high * (1 - w) + low * w
         # the net: each comet sweeps its own row across the sky, left to right and back
-        n = _win(t, 229.5, 232.0, 248.0, 255.0)
+        n = _win(t, 226.0, 229.5, 248.0, 255.0)
         if n > 0.0:
             row = 24.0 + 2.8 * k
             sweep = np.sin(0.42 * (t - 229.5) + k * 0.7)
@@ -859,14 +859,14 @@ def _people():
     # lifts her head, her glow strengthens, and the two stand side by side (two women)
     refs2 = pairs.Refs()
     tired = dict(shape="woman", at=(PAIR[0] + 0.35, PAIR[2]), facing=-20.0, garment="robe", hair="long",
-                 look=LOOK, color="#e8b064", color2="#ffe6bc", points=36000, show=(171.0, 197.0), fade=1.4,
+                 look=LOOK, color="#e8b064", color2="#ffe6bc", points=36000, show=(174.2, 197.0), fade=1.2,
                  seed=41.0, bright=1.0,
                  motion=[(-1e9, "kneel", dict(dur=0.01, hands="free")), (187.3, "rise_up", dict(dur=2.2))],
                  gesture=[(-1e9, 182.6, "bow", dict(amount=22.0)),
                           (183.0, 187.6, "look_to", dict(to=lambda t: refs2["b"].where(t, "head", raw=True))),
                           (189.6, 196.0, "look_up", dict(amount=14.0))])
     friend = dict(shape="woman", at=(PAIR[0] - 0.4, PAIR[2] + 0.15), facing=40.0, garment="dress", hair="bun",
-                  look=LOOK, color="#f6b040", color2="#ffdc96", points=36000, show=(171.0, 197.0), fade=1.4,
+                  look=LOOK, color="#f6b040", color2="#ffdc96", points=36000, show=(174.2, 197.0), fade=1.2,
                   seed=42.0,
                   motion=[(-1e9, "stand"), (175.6, "kneel", dict(one=True, dur=1.8, hands="free")),
                           (187.4, "rise", dict(one=True, dur=2.0, blend=0.08)), (189.6, "stand", dict(blend=0.6))],
