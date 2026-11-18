@@ -152,7 +152,7 @@ def _show(h, k=1.0):
 # ---------------------------------------------------------------------------------------------------------
 # Geography: the lake is y = 0, the camera looks toward -z, the low sun stands left of centre
 # ---------------------------------------------------------------------------------------------------------
-SUN_AZ = 200.0
+SUN_AZ = 188.0
 SUN_DIR = _v(np.sin(np.radians(SUN_AZ)), 0.0, np.cos(np.radians(SUN_AZ)))
 A0 = _v(-1.25, 0.0, 0.0)            # the first sister's place
 B0 = _v(1.25, 0.0, 0.0)             # the second sister's place
@@ -230,8 +230,8 @@ CAM_KEYS = [
     _kk(152.0, -0.3, 3.9, 14.5, 0.0, -1.0, up=-0.10),               # verse 3, chorus 2: rising, centred
     _kk(176.0, 0.0, 4.2, 14.0, 0.0, -1.0, up=-0.11),
     _kk(198.0, 0.0, 4.0, 13.5, 0.0, -1.0, up=-0.105),                # the ring
-    _kk(MUSIC_END, 0.0, 3.9, 14.0, 0.0, -1.2, up=-0.10),
-    _kk(TOTAL, 0.0, 3.85, 14.4, 0.0, -1.2, up=-0.10),
+    _kk(MUSIC_END, 0.0, 3.9, 14.0, 0.0, -1.2, up=-0.05),
+    _kk(TOTAL, 0.0, 3.85, 14.4, 0.0, -1.2, up=-0.05),
 ]
 
 CAMERA = Rig([Path(_glide(CAM_KEYS), 0.0, TOTAL, blend=0.0, fov=40.0, aperture=0.008, focus="target")],
@@ -685,9 +685,9 @@ class Ember:
                dict(pos=c[None, :], size=1.6, color=lin("#ffbf70"), alpha=0.35 * g, kind="soft")]
         for j in range(3):
             age = np.mod(t + j * 2.0, 6.0)
-            rad = 0.3 + 1.1 * age
+            rad = 0.25 + 0.45 * age
             p = np.stack([c[0] + np.sin(self.ring) * rad, np.full(160, 0.02), c[2] + np.cos(self.ring) * rad], 1)
-            a = g * 0.30 * np.exp(-age / 2.0)
+            a = g * 0.30 * np.exp(-age / 1.6)
             out.append(dict(pos=p, size=0.05, color=lin("#ffd9a0"), alpha=a, emit=1.4, kind="spark",
                             seed=self.s, twinkle=0.3, reflect=False))
         return out
@@ -698,7 +698,7 @@ class Ember:
 # warmth, the full warm apricot morning, the calm warm hold. Bright skies throughout, so every text is navy.
 # ---------------------------------------------------------------------------------------------------------
 _COMMON = dict(sun_az=SUN_AZ, hills=1.0, hill_height=0.7, stars=0.0, milky=0.0, ripple=0.0, dust=0.2,
-               bokeh=0.15, sun_size=1.5, sun_disc=3.0, mist_height=1.6)
+               bokeh=0.0, sun_size=1.5, sun_disc=3.0, mist_height=1.6)
 
 
 def _look(top, mid, hor, sun, hazec, hill, water, mistc, **kw):
@@ -720,7 +720,7 @@ LOOKS = dict(
                 sun_el=5.0, sun_int=0.9, sun_glow=0.55, haze=0.42, mist=0.12, mirror=0.7, mirror_min=0.35,
                 rays=0.6, clouds=0.35, dust_color="#fff0d0", dust_color2="#ffcfa0"),
     hold=_look("#86b6e8", "#f0d4c0", "#f7b07a", "#ffdeb0", "#ecc8b2", "#a0a6c2", "#5276ae", "#ecd6c8",
-               sun_el=5.4, sun_int=0.85, sun_glow=0.55, haze=0.42, mist=0.12, mirror=0.7, mirror_min=0.35,
+               sun_el=3.6, sun_int=0.85, sun_glow=0.55, haze=0.42, mist=0.12, mirror=0.7, mirror_min=0.35,
                rays=0.4, clouds=0.3, dust_color="#fff0d0", dust_color2="#ffd2a4"),
 )
 
@@ -731,7 +731,7 @@ WORLD = dict(
     light=dict(pos=tuple(PAIR + _v(0, 2.2, 1.5)), color="#ffe2b0",
                strength=Track([(0.0, 0.10), (T["chorus1"], 0.14), (85.0, 0.32), (100.0, 0.2), (T["chorus2"], 0.24),
                                (170.0, 0.32), (MUSIC_END, 0.2), (TOTAL, 0.2)]), size=0.5, rays=0.0),
-    lantern_field=dict(count=200, center=(0.0, -30.0), radius=(10.0, 70.0)),
+    lantern_field=dict(count=200, center=(0.0, -34.0), radius=(8.0, 28.0)),
     lanterns=Track([(0.0, 0.0), (T["lanterns"][0], 0.0), (T["lanterns"][0] + 6.0, 0.8),
                     (T["lanterns"][1] - 6.0, 0.8), (T["lanterns"][1] + 4.0, 0.2), (MUSIC_END + 4.0, 0.15),
                     (TOTAL, 0.15)]),
