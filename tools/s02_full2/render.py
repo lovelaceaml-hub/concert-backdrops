@@ -8,6 +8,8 @@ The audio is never in the repository: S02_AUDIO_DIR points at a folder holding s
 s02_features.npz (made by tools/s02_full2/export.py --prepare). No em dash or en dash anywhere in this file.
 """
 import argparse
+
+import numpy as np
 import os
 import subprocess
 import sys
