@@ -136,8 +136,8 @@ CAM_KEYS = [                         # target heights put the horizon near 0.40 
     (130.0, _v(0.6, 2.8, 2.5), _v(0.0, -6.5, -120.0)),
     (148.0, _v(-3.0, 2.4, 4.0), _v(-1.0, -4.0, -80.0)),
     (168.0, _v(2.5, 2.6, 2.0), _v(1.0, -4.2, -80.0)),
-    (176.0, _v(1.45, 0.66, 11.9), _v(1.2, 1.75, -30.0)),     # the Encouragement: horizon mid, the pair
-    (186.0, _v(1.45, 0.64, 11.7), _v(1.2, 1.78, -30.0)),     # below the words, the arch in the sky above
+    (176.0, _v(1.45, 1.95, 12.6), _v(1.2, 0.95, -30.0)),     # the Encouragement: eye just above the pair's
+    (186.0, _v(1.45, 1.93, 12.4), _v(1.2, 0.97, -30.0)),     # heads, so they stand clearly below the words
     (192.0, _v(1.5, 1.5, 15.5), _v(1.2, 1.6, -30.0)),
     (200.0, _v(0.0, 3.0, 24.0), _v(0.0, -2.0, -120.0)),
     (214.0, _v(0.0, 3.0, 20.0), _v(0.0, -7.0, -120.0)),
@@ -476,7 +476,8 @@ class Shore:
             return None
         steady = _ss(0.0, 2.5, t - self.steady_t)
         fl = 0.5 + 0.5 * np.sin(t * (2.0 + 3.0 * self.seed) + 40.0 * self.seed)
-        al = a * (0.25 + 0.45 * fl * (1 - steady) + 0.45 * steady)
+        # kept faint (fix 1): a quiet line of grains, never a bright band across the water
+        al = 0.42 * a * (0.25 + 0.45 * fl * (1 - steady) + 0.45 * steady)
         col = lin("#ffd9a0")[None, :] * (1 - steady)[:, None] + lin("#ffc664")[None, :] * steady[:, None]
         return dict(pos=self.pos, size=self.size, color=col, alpha=al, emit=1.3, kind="spark", seed=self.seed)
 

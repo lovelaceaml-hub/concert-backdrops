@@ -69,7 +69,7 @@ class Cards09(titles.Titles):
         d.text((tx, my + 42 * s), line, font=CG(500, 22 * s, it=True), fill=col + (225,), anchor="la")
         _tracked(d, (tx, my + 74 * s), "DEC 6" + SEP + "4:30 PM", JO(600, 34 * s), col + (255,), 5 * s,
                  align="left")
-        _tracked(d, (tx, my + 118 * s), "HEALING CONCERT" + SEP + "LAS VEGAS", JO(500, 18 * s), acc + (235,),
+        _tracked(d, (tx, my + 118 * s), "HEALING CONCERT" + SEP + "LAS VEGAS", JO(500, 18 * s), col + (240,),
                  4 * s, align="left")
         return self._finish(L, 9, 0.5, pal, prot=getattr(self, "sig_prot", (40.0, 16.0)))
 
@@ -99,17 +99,59 @@ class Cards09(titles.Titles):
             self.layers[key] = self._finish(L, 12 if glow else 10, 1.1 if glow else 0.95, pal)
         return self.layers[key]
 
+    def _enc_layer(self):
+        """The Encouragement in navy (fix 1): the same layout as the particle words (p3d words.glyphs), drawn
+        exactly over them, so the light letters underneath read as a soft glow round crisp navy letters."""
+        key = ("enc",)
+        if key not in self.layers:
+            S = self._song()
+            PW = S.PW
+            w = [x for x in S.WORDS if x.name == "Encouragement"][0]
+            t = 0.5 * (S.ENC_READ[0] + S.ENC_READ[1])
+            cam = S.CAMERA.state(t)
+            o, r, u, _ = w.frame(t, cam)
+            k = w.metres_per_em()
+            pts, _ = cam.project(np.array([o, o + r * k, o + u * k]))
+            W, H = self.w, self.h
+            c = np.array([pts[0][0] * W, (1.0 - pts[0][1]) * H])
+            em = float(np.hypot((pts[1][0] - pts[0][0]) * W, (pts[1][1] - pts[0][1]) * H))
+            f_phrase, f_label, tracked = PW._text_tools()
+            fp = ImageFont.truetype(PW._font_file(w.font) or f_phrase, max(int(round(em)), 8))
+            asc, _ = fp.getmetrics()
+            line_h = em * 1.08
+            n = len(w.lines)
+            L = Image.new("RGBA", (W, H), (0, 0, 0, 0))
+            d = ImageDraw.Draw(L)
+            navy = PALETTES["day"]["col"] + (255,)
+            for i, line in enumerate(w.lines):
+                # glyphs(): baseline of line i at top + i*line_h + 0.8*asc, block centre at top + n*line_h/2
+                y = c[1] + (i * line_h + 0.80 * asc - n * line_h / 2.0)
+                d.text((c[0], y), line, font=fp, fill=navy, anchor="ms")
+            if w.label:
+                lpx = w.label_size * em
+                lf = ImageFont.truetype(f_label, max(int(round(lpx)), 6))
+                g = PW.glyphs(w.label, w.lines, w.n, w.n_label, w.label_size, w.font)
+                base_y = c[1] - (g["block"] / 2.0 + 0.30) * em
+                tracked(d, (c[0], base_y), w.label.upper(), lf, 0.47 * lpx, navy)
+            self.layers[key] = self._finish(L, 10, 0.95, "day")
+        return self.layers[key]
+
     def overlay(self, t):
         drew = super().overlay(t)
         S = self._song()
         jobs = [(name, S.frag_alpha(name, t)) for name in S.FRAG_TEXT]
         jobs = [(n, a) for n, a in jobs if a > 0.002]
+        r0, r1 = S.ENC_READ
+        ea = float(S._ss(r0 - 0.4, r0 + 0.2, t) * (1.0 - S._ss(r1 + 0.5, r1 + 1.4, t)))
+        if ea > 0.002:
+            jobs.append(("__enc__", ea))
         if jobs:
             self.R.f_out.use()
             self.ctx.enable(self.mgl.BLEND)
             self.ctx.blend_func = (self.mgl.ONE, self.mgl.ONE_MINUS_SRC_ALPHA)
             for name, a in jobs:
-                self._quad(self.p_ovl, self.v_ovl, self._frag_layer(name), -1.0, uAlpha=float(a),
+                lay = self._enc_layer() if name == "__enc__" else self._frag_layer(name)
+                self._quad(self.p_ovl, self.v_ovl, lay, -1.0, uAlpha=float(a),
                            uDis=(-1.0, 0.0, 0.0, 0.0))
             self.ctx.blend_func = (self.mgl.ONE, self.mgl.ONE)
             self.ctx.disable(self.mgl.BLEND)
