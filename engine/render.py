@@ -49,11 +49,57 @@ def words_arrive(m):
     return later[0] if later else times[-1]
 
 
+def comp_blocks():
+    """Which optional blocks of the composite shader this song needs (shaders.COMP_BLOCKS), decided once from
+    the song file. A song that uses none of them gets exactly the original shader, so it renders bit for bit as
+    before the features existed."""
+    def has(*keys):
+        return any(getattr(S, k, None) is not None for k in keys)
+
+    out = []
+    if has("SKY_THEME"):
+        out.append("SKY_THEME")
+    ts = getattr(S, "TEXT_SHADOW", None)
+    if ts is not None:
+        # only when TEXT_SHADOW really goes below 0.05 somewhere in the song: there the veil eases to nothing
+        total = float(getattr(S, "TOTAL", 0.0) or S.NFRAMES / S.FPS)
+        low = min(float(ts(k * 0.25)) for k in range(int(total * 4) + 2)) if callable(ts) else float(ts)
+        if low < 0.05:
+            out.append("SHADOW_ZERO")
+    metas = list(getattr(S, "PHRASES", [])) + [getattr(S, "TITLE", {}), getattr(S, "TAGLINE", {}),
+                                               getattr(S, "CREDIT", {})] + list(getattr(S, "FRAGMENTS", []))
+    if any(isinstance(m, dict) and m.get("color") for m in metas):
+        out.append("TEXT_INK")
+    if has("LEAVES"):
+        out.append("LEAVES_TINT")
+    if has("RIPPLES_AUTO") or getattr(S, "RIPPLES", None):
+        out.append("LAKE_RIPPLES")
+    if has("FLOWERS", "TREE", "BLOSSOM", "WATERFALL", "STREAM"):
+        out.append("NATURE_PAINT")
+    if has("CAMERA_ZOOM", "CAMERA_PAN", "CAMERA_CRANE"):
+        out.append("CAMERA_BG")
+    import figure_look
+    if figure_look.wanted():   # look="silk": the faint cool tint of a body of light on a bright sky
+        out.append("FIGURE_TINT")
+    if any(isinstance(m, dict) and m.get("paint") for m in (getattr(S, "SYMBOLS", None) or [])):
+        out.append("SYMBOL_PAINT")   # a symbol's lines painted in their own colour (engine/water.py)
+    if has("P3D") and "CAMERA_BG" not in out:
+        out.append("CAMERA_BG")      # the 3D layer hands the composite its background (engine/p3d, HOWTO V)
+    p3 = getattr(S, "P3D", None)
+    if isinstance(p3, dict) and "keep_hue" in (p3.get("world") or {}):
+        out.append("HUE_KEEP")       # HOWTO V: bright lights keep their colour (world setting keep_hue)
+    return out
+
+
 class Renderer:
-    def __init__(self, w=S.W, h=S.H):
+    def __init__(self, w=S.W, h=S.H, ctx=None):
         self.w, self.h = w, h
         self.px = h / 1080.0
-        self.ctx = ctx = moderngl.create_standalone_context(backend="egl")
+        if getattr(S, "TITLES", None):
+            import titles
+            titles.prepare()                     # HOWTO Y: a designed end card replaces the closing title and tagline
+        # ctx: a window's context (engine/live.py); by default an offscreen one for the cloud render
+        self.ctx = ctx = ctx or moderngl.create_standalone_context(backend="egl")
         self.song = S.Song()
         quad = ctx.buffer(np.array([-1, -1, 1, -1, -1, 1, 1, 1], "f4").tobytes())
 
@@ -68,9 +114,10 @@ class Renderer:
         self.p_lights = prog(G.QUAD_VS, G.LIGHTS_FS); self.v_lights = qvao(self.p_lights)
         self.p_credit = prog(G.QUAD_VS, G.CREDIT_FS); self.v_credit = qvao(self.p_credit)
         self.p_blur = prog(G.QUAD_VS, G.BLUR_FS); self.v_blur = qvao(self.p_blur)
-        self.p_comp = prog(G.QUAD_VS, G.COMP_FS); self.v_comp = qvao(self.p_comp)
+        self.p_comp = prog(G.QUAD_VS, G.comp_fs(comp_blocks())); self.v_comp = qvao(self.p_comp)
         self.p_prot = prog(G.QUAD_VS, G.PROTECT_FS); self.v_prot = qvao(self.p_prot)
-        self.p_star = prog(G.STAR_VS, G.STAR_FS)
+        import sky_camera as SKC   # cam_vs: the stars move with the sky when a song moves the camera
+        self.p_star = prog(SKC.cam_vs(G.STAR_VS), G.STAR_FS)
         self.p_mote = prog(G.MOTE_VS, G.MOTE_FS)
         self.p_petal = prog(G.PETAL_VS, G.PETAL_FS)
         self.p_textp = prog(G.TEXTP_VS, G.TEXTP_FS)
@@ -86,6 +133,10 @@ class Renderer:
         st[:, 2:] = rng.random((n, 2))
         self.v_star = ctx.vertex_array(self.p_star, [(ctx.buffer(st.tobytes()), "2f 2f", "aPos", "aSeed")])
         self.n_star = n
+        self.lake_stars = None
+        if getattr(S, "LAKE_STARS", None) is not None:
+            import lake_stars
+            self.lake_stars = lake_stars.LakeStars(self, st)   # the stars mirrored in the lake (optional)
 
         def seeds(k, seed):
             return ctx.buffer(np.random.default_rng(seed).random((k, 4)).astype("f4").tobytes())
@@ -103,8 +154,9 @@ class Renderer:
         self.t_sky = tex_f((w, h)); self.f_sky = ctx.framebuffer([self.t_sky])
         self.t_L = tex_f((w, h)); self.f_L = ctx.framebuffer([self.t_L])
         self.bl = []
+        gs = max(h / 1080.0, 1.0)   # HOWTO Q: at 4K the glow buffers keep their 1080p sizes, so the bloom looks the same
         for k in (2, 4, 8, 16):
-            size = (max(w // k, 8), max(h // k, 8))
+            size = (max(int(w // (k * gs)), 8), max(int(h // (k * gs)), 8))
             ta, tb = tex_f(size), tex_f(size)
             self.bl.append((size, ta, ctx.framebuffer([ta]), tb, ctx.framebuffer([tb])))
         self.t_out = ctx.texture((w, h), 3, dtype="f1"); self.f_out = ctx.framebuffer([self.t_out])
@@ -116,7 +168,7 @@ class Renderer:
         phrases, title, tag = T.build_all()
 
         def ttex(arr):
-            t = ctx.texture((S.W, S.H), 3, data=arr.tobytes(), dtype="f1")
+            t = ctx.texture((T.W, T.H), 3, data=arr.tobytes(), dtype="f1")
             t.filter = (moderngl.LINEAR, moderngl.LINEAR)
             t.repeat_x = t.repeat_y = False
             return t
@@ -128,7 +180,7 @@ class Renderer:
         self.tag = dict(tex=ttex(tag["tex"]), bounds=tag["bounds"])
         self.frags = [dict(tex=ttex(f["tex"]), bounds=f["bounds"], meta=f["meta"]) for f in tag["frags"]]
         ctex, self.credit_bbox = T.render_credit(S.CREDIT["song"], S.CREDIT["concert"])
-        self.t_credit = ctx.texture((S.W, S.H), 3, data=ctex.tobytes(), dtype="f1")
+        self.t_credit = ctx.texture((T.W, T.H), 3, data=ctex.tobytes(), dtype="f1")
         self.t_credit.build_mipmaps()
         self.t_credit.filter = (moderngl.LINEAR_MIPMAP_LINEAR, moderngl.LINEAR)
         self.t_credit.repeat_x = self.t_credit.repeat_y = False
@@ -136,6 +188,32 @@ class Renderer:
         ctx.enable(moderngl.PROGRAM_POINT_SIZE)
         import upgrade
         self.up = upgrade.Upgrade(self)   # scenes, people of light, effect layers, fragment styles (all optional)
+        import text_anims
+        self.ta = text_anims.TextAnims(self)   # other text animations (anim=, UPGRADE-HOWTO section J; all optional)
+        import gathering
+        self.gath = gathering.Gathering(self)   # a gathering crowd and a light passed hand to hand (optional)
+        import water
+        self.water = water.Water(self)   # lake ripples, symbols drawn in light, falling stars (all optional)
+        import creatures
+        self.cr = creatures.Creatures(self)   # doves, butterflies, fireflies (all optional)
+        import nature
+        self.nature = nature.Nature(self)   # flowers, tree, blossoms, waterfall, stream (all optional)
+        import sky_camera
+        self.sky = sky_camera.SkyCamera(self)   # time of day, 3D clouds, god rays, camera (all optional)
+        import audio_react
+        self.react = audio_react.Reactor(self) if audio_react.enabled() else None   # music reactivity (optional)
+        import output
+        self.out = output.Output(self)   # HOWTO Q: event card and seamless loop (optional)
+        import figure_look
+        self.fl = figure_look.FigureLook(self)   # HOWTO H5: the silk look for people of light (optional)
+        self.p3d = None
+        if getattr(S, "P3D", None) is not None:
+            import p3d.layer
+            self.p3d = p3d.layer.Layer(self)     # HOWTO V: the 3D layer (camera, point sets, world; optional)
+        self.titles = None
+        if getattr(S, "TITLES", None):
+            import titles
+            self.titles = titles.Titles(self)    # HOWTO Y: the title and the date, designed (optional)
 
     # ------------------------------------------------------------------
     def text_plan(self, t):
@@ -163,6 +241,9 @@ class Renderer:
             dur = max(m["t1"] - m["t0"], 0.5)
             fly = (t - m["out"]) if t > m["out"] else -1.0
             return A, (fr["tex"], ((t - m["t0"]) + 1.35, dur, fly, m.get("alpha", 0.95)), fr["bounds"], 1.0, (0.0, 0.0))
+        ev = self.out.card_slot(t)   # HOWTO Q: the event card of a pre-show or intermission loop
+        if ev is not None:
+            return A, ev
         ts = self.up.text_shadow(t)
         if ts is not None:
             B = tuple(ts) + ((0.0, 0.0),) if len(ts) == 4 else tuple(ts)
@@ -171,6 +252,11 @@ class Renderer:
     def frame(self, t, index=0):
         ctx, w, h, px = self.ctx, self.w, self.h, self.px
         P = S.params(self.song, t)
+        self.sky.adjust(t, P)
+        if self.react:
+            P = self.react.apply(P, t)
+        if self.p3d:
+            P = self.p3d.adjust(t, P)   # the 3D world replaces the flat sky's stars, motes, arch and lake
         asp = S.ASPECT
         L = S.lin
         cool = S.MILKY(t)
@@ -193,6 +279,7 @@ class Renderer:
              uSunInt=P["sun_int"], uSunSize=P["sun_size"], uClouds=P["clouds"], uAurora=P["aurora"],
              uRain=P["rain"], uMilky=P["milky"], uEnv=P["env"], uRays=P["rays"], uPart=P["part"])
         self.v_sky.render(moderngl.TRIANGLE_STRIP)
+        self.sky.draw_clouds(t, P)
 
         # 2. everything that glows
         self.f_L.use()
@@ -200,9 +287,12 @@ class Renderer:
         ctx.enable(BL)
         ctx.blend_func = (ONE, ONE)
         calm0 = float(_val("BOTTOM_CALM", t, 0.0))   # Astra round 1, finding 12: a calm lower third
-        setu(self.p_star, uT=t, uStars=P["stars"], uHi=P["hi"], uPx=px)
+        setu(self.p_star, uT=t, uStars=P["stars"], uHi=P["hi"], uPx=px, uCamAff=self.sky.aff(0.12))
         self.v_star.render(moderngl.POINTS)
-        setu(self.p_mote, uT=t, uAmount=min(P["motes"], 1.0), uPx=px, uSizeMin=2.4, uSizeMax=24.0, uPeriod=30.0,
+        if self.lake_stars is not None:   # LAKE_STARS: the same stars, mirrored in the lake (engine/lake_stars.py)
+            self.lake_stars.draw(t, P, calm0)
+        setu(self.p_mote, uT=t, uAmount=min(P["motes"], 1.0), uPx=px, uSizeMin=getattr(S, "MOTE_SIZE", (2.4, 24.0))[0],
+             uSizeMax=getattr(S, "MOTE_SIZE", (2.4, 24.0))[1], uPeriod=30.0,
              uY0=getattr(S, "MOTE_Y", (-0.05, 1.05))[0], uY1=getattr(S, "MOTE_Y", (-0.05, 1.05))[1], uSway=0.012,
              uBright=0.62 + 0.30 * P["env"], uColA=L(cols("MOTE_COLORS", ("#ffe2a8", "#ff9f8a"))[0]),
              uColB=L(cols("MOTE_COLORS", ("#ffe2a8", "#ff9f8a"))[1]), uCalm=calm0, uCalmY=CALM_Y)
@@ -216,12 +306,25 @@ class Renderer:
             setu(self.p_petal, uT=t, uAmount=P["petals"], uPx=px, uColA=L(cols("PETAL_COLORS", ("#ff7fa2", "#ffd2c2"))[0]) * 0.95,
                  uColB=L(cols("PETAL_COLORS", ("#ff7fa2", "#ffd2c2"))[1]) * 0.62, uCalm=calm0, uCalmY=CALM_Y)
             self.v_petal.render(moderngl.POINTS)
+        if self.p3d:
+            self.p3d.draw(t, P)         # every 3D point set, with its mirror image in the lake
         self.up.draw_effects(t, P)
+        self.nature.draw(t)
+        self.cr.draw(t)
+        if self.react:
+            self.react.draw(t, P)
+        self.fl.begin(t, P)       # look="silk" (engine/figure_look.py): figures and crowd queue their bodies,
         self.up.draw_figures(t)
+        self.gath.draw(t)
+        self.fl.resolve(t, P)     # which are drawn here, with their mirror images in the lake
+        self.water.draw(t)
+        self.sky.draw_light(t, P)
 
         # which text is on screen: A is an expression or the closing title, B the end card lines or a fragment
         (texA, txA, bndA, shadeA, offA), (texB, txB, bndB, shadeB, offB) = self.text_plan(t)
         credit, c0 = S.credit_state(t, self.credit_bbox)
+        if self.titles is not None and not S.TITLES.get("keep_credit", False):
+            credit = (credit[0], credit[1], credit[2], 0.0)   # HOWTO Y: the designed titles replace the corner badge
 
         # protect the text (Astra round 1, finding 3): dim every light drawn so far (motes, petals, snow, beams,
         # nets, figures) behind the words, so no spark or ray crosses a letter; the words are drawn after this
@@ -235,6 +338,7 @@ class Renderer:
                  uCredit=tuple(float(v) for v in credit), uC0=c0)
             self.v_prot.render(moderngl.TRIANGLE_STRIP)
             ctx.blend_func = (ONE, ONE)
+        self.sky.after_protect(t, P)   # god rays, when TEXT_SHADOW is below 0.05 (no hole in the haze behind text)
 
         # words: particles, then the solid letters
         calm = float(_val("BOTTOM_CALM", t, 0.0))
@@ -247,41 +351,47 @@ class Renderer:
             fly_t = t - m["hold"]
             fly_dur = max(arrive - m["hold"], 1.0)
             star = S.STAR_POS[i] if i < 9 else (0.5, 0.9)
+            if self.ta.draw_word(i, t, form_t, fly_t, fly_dur, star, P, calm):
+                continue
             setu(self.p_textp, uT=t, uFormT=form_t, uFormDur=S.FORM_DUR, uFlyT=fly_t, uFlyDur=fly_dur, uPx=px,
-                 uPulse=P["pulse"], uStar=star, uColA=L("#fff0cc") * 1.0, uColB=L("#ffb070") * 1.15,
+                 uPulse=P["pulse"], uStar=star, **self.up.text_sparks(m, t),
                  uCalm=calm, uCalmY=CALM_Y)
             wd["vao"].render(moderngl.POINTS)
             wd["tex"].use(location=0)
             setu(self.p_text, uTex=0, uFormT=form_t, uFormDur=S.FORM_DUR, uFlyT=fly_t, uAspect=asp, uAlpha=1.0,
-                 uPulse=P["pulse"], uBounds=wd["bounds"], uCol=L("#fff5df"), uGlowCol=L("#ffc48c"))
+                 uPulse=P["pulse"], uBounds=wd["bounds"], **self.up.text_light(m, t, "#fff5df"))
             self.v_text.render(moderngl.TRIANGLE_STRIP)
         tg = S.TAGLINE
-        if t >= tg["t0"]:
+        if t >= tg["t0"] and not self.ta.draw_tagline(t, calm):
             self.tag["tex"].use(location=0)
             setu(self.p_text, uTex=0, uFormT=(t - tg["t0"]) + 1.35, uFormDur=(tg["t1"] - tg["t0"]), uFlyT=-1.0,
-                 uAspect=asp, uAlpha=0.92, uPulse=0.0, uBounds=self.tag["bounds"], uCol=L("#fff1d6"), uGlowCol=L("#ffc48c"))
+                 uAspect=asp, uAlpha=0.92, uPulse=0.0, uBounds=self.tag["bounds"],
+                 **self.up.text_light(tg, t, "#fff1d6"))
             self.v_text.render(moderngl.TRIANGLE_STRIP)
 
         # short lyric fragments: form, hold, then dissolve
-        for fr in self.frags:
+        for k, fr in enumerate(self.frags):
             m = fr["meta"]
             if m.get("style", "sparks") != "sparks":
                 continue   # drawn by the upgrade layers below
             if not (m["t0"] <= t < m["out"] + 1.6):
                 continue
+            if self.ta.draw_frag(k, t, calm):
+                continue
             fly = (t - m["out"]) if t > m["out"] else -1.0
             fr["tex"].use(location=0)
             setu(self.p_text, uTex=0, uFormT=(t - m["t0"]) + 1.35, uFormDur=max(m["t1"] - m["t0"], 0.5), uFlyT=fly,
                  uAspect=asp, uAlpha=m.get("alpha", 0.95), uPulse=0.0, uBounds=fr["bounds"],
-                 uCol=L("#fff1d6"), uGlowCol=L(m.get("glow", "#ffc48c")))
+                 **self.up.text_light(m, t, "#fff1d6"))
             self.v_text.render(moderngl.TRIANGLE_STRIP)
         self.up.draw_frags(t)
+        self.out.draw_card(t)
 
         # song title and concert title: a card at the start, then small in the corner
         if credit[3] > 0.001:
             self.t_credit.use(location=0)
             setu(self.p_credit, uTex=0, uCredit=tuple(float(v) for v in credit), uC0=c0,
-                 uCol=L("#fff5df"), uGlowCol=L("#ffc48c"))
+                 **self.up.text_light(S.CREDIT, t, "#fff5df"))
             self.v_credit.render(moderngl.TRIANGLE_STRIP)
 
         # the nine lights and the lines between them
@@ -308,6 +418,8 @@ class Renderer:
         self.v_lights.render(moderngl.TRIANGLE_STRIP)
         self.f_L.scissor = None
 
+        if self.titles is not None:
+            self.titles.protect(t)      # HOWTO Y: the scene's light dims behind the titles
         # 3. glow: four blurred copies, each half the size of the last
         ctx.disable(BL)
         src = self.t_L
@@ -321,6 +433,9 @@ class Renderer:
             src = tb
 
         # 4. put it together
+        self.sky.camera_bg(t, P)
+        if self.p3d:
+            self.p3d.background(t, P)   # sky dome, hills, lake, mist, rays: the composite's background
         self.f_out.use()
         self.t_sky.use(location=0); self.t_L.use(location=1)
         for k in range(4):
@@ -341,7 +456,7 @@ class Renderer:
         mtn = P["sky_mid"] * 0.22 + L("#05060f")
         setu(self.p_comp, uSky=0, uL=1, uB1=2, uB2=3, uB3=4, uB4=5, uRidge=6, uTextA=7, uTextB=8,
              uT=t, uAspect=asp, uHorizon=S.HORIZON, uProg=P["prog"], uTrail=P["trail"], uExposure=P["exposure"],
-             uFade=P["fade"], uFrame=float(index % 1024), uBloom=1.0 - 0.30 * min(P["sun_int"], 1.3) / 1.3,
+             uFade=P["fade"], uFrame=float(index % 1024), uBloom=(1.0 - 0.30 * min(P["sun_int"], 1.3) / 1.3) * P.get("bloom_gain", 1.0),
              uTxA=txA, uBndA=bndA, uTxB=txB, uBndB=bndB, uZoom=P["zoom"],
              uTextC=9, uCredit=tuple(float(v) for v in credit), uC0=c0, uHi=P["hi"], uEnv=P["env"],
              uSunInt=P["sun_int"], uMtn=mtn, uSkyHor=P["sky_hor"], uGlow=P["glow"], uTrailCol=L("#ffd396"),
@@ -349,7 +464,12 @@ class Renderer:
              uOffA=tuple(float(v) for v in offA), uOffB=tuple(float(v) for v in offB),
              uCalm=calm0, uCalmY=CALM_Y)
         self.up.comp_uniforms(self.p_comp, t, P)
+        self.water.comp_uniforms(self.p_comp, t)
+        self.nature.comp_uniforms(self.p_comp)
+        self.fl.comp_uniforms(self.p_comp, t, P)
         self.v_comp.render(moderngl.TRIANGLE_STRIP)
+        if self.titles is not None:
+            self.titles.overlay(t)      # HOWTO Y: the title and the date over the finished picture
         return self.f_out.read(components=3)
 
 
@@ -363,6 +483,8 @@ def main():
     ap.add_argument("--crf", default="15")
     ap.add_argument("--preset", default="medium")
     a = ap.parse_args()
+    import output
+    a.scale *= output.scale(S)   # HOWTO Q: OUT_RES=4k draws 3840x2160 frames from the same 1920x1080 design
     w, h = int(S.W * a.scale) // 2 * 2, int(S.H * a.scale) // 2 * 2
     R = Renderer(w, h)
     if a.stills:
@@ -371,7 +493,7 @@ def main():
         for s in a.stills.split(","):
             t = float(s)
             t0 = time.time()
-            buf = R.frame(t, int(t * S.FPS))
+            buf = R.out.frame(t, int(t * S.FPS))
             dt = time.time() - t0
             Image.frombytes("RGB", (w, h), buf).save(os.path.join(a.outdir, f"t{t:07.2f}.png"))
             print(f"still {t:7.2f}s  {dt:.2f}s/frame", flush=True)
@@ -384,7 +506,7 @@ def main():
     ff = subprocess.Popen(cmd, stdin=subprocess.PIPE)
     t0 = time.time()
     for i in range(f0, f1):
-        ff.stdin.write(R.frame(i / S.FPS, i))
+        ff.stdin.write(R.out.frame(i / S.FPS, i))
         if (i - f0) % 150 == 0:
             el = time.time() - t0
             print(f"frame {i} ({i - f0}/{f1 - f0})  {el:.0f}s  {(el / max(i - f0, 1)):.2f}s/frame", flush=True)

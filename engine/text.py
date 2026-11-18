@@ -12,9 +12,30 @@ F_TITLE = os.path.join(FONTS, "cormorant-garamond-latin-700-normal.ttf")
 F_LABEL = os.path.join(FONTS, "jost-latin-500-normal.ttf")
 F_TAG = os.path.join(FONTS, "cormorant-garamond-latin-600-italic.ttf")
 
-W, H = S.W, S.H
+# HOWTO Q: text is drawn at the output resolution. K is 1 at 1080p (everything exactly as before) and 2 at 4K, where
+# every size and distance below, given in 1080p pixels, is multiplied by K.
+try:
+    import output as _output
+    K = float(_output.scale(S))
+except ImportError:
+    K = 1.0
+if abs(K - 1.0) < 1e-9:
+    K = 1
+
+
+def _k(v):
+    """A 1080p distance in output pixels (unchanged at 1080p)."""
+    return v if K == 1 else v * K
+
+
+def _px(size):
+    """A 1080p font size in output pixels (unchanged at 1080p)."""
+    return int(size) if K == 1 else int(round(size * K))
+
+
+W, H = (S.W, S.H) if K == 1 else (int(round(S.W * K)), int(round(S.H * K)))
 Y_CENTER = 0.392 * H     # centre of the words, measured from the top
-MAX_W = 1580
+MAX_W = _k(1580)
 END_TITLE_Y = 0.315      # centre of the title on a three-line end card (the lines sit under it, above the lower third)
 
 
@@ -24,7 +45,8 @@ def shield(img, reach=1.25, gain=1.6):
     from scipy import ndimage as ndi
     a = np.asarray(img).astype(np.float32) / 255.0
     h, w = a.shape
-    small = a[: h - h % 4, : w - w % 4].reshape(h // 4, 4, w // 4, 4).max(axis=(1, 3))
+    b = 4 if K == 1 else int(round(4 * K))   # blocks of 4 px at 1080p
+    small = a[: h - h % b, : w - w % b].reshape(h // b, b, w // b, b).max(axis=(1, 3))
     small = ndi.maximum_filter(small, size=int(round(7 * reach)) | 1)
     small = ndi.gaussian_filter(small, 9.0 * reach)
     small = np.clip(small * gain, 0.0, 1.0)
@@ -34,7 +56,7 @@ def shield(img, reach=1.25, gain=1.6):
 
 def _fit(lines, path, size):
     while True:
-        f = ImageFont.truetype(path, size)
+        f = ImageFont.truetype(path, _px(size))
         wmax = max(f.getlength(l) for l in lines)
         if wmax <= MAX_W or size <= 60:
             return f, size
@@ -51,11 +73,11 @@ def _tracked(draw, xy_center, text, font, tracking, fill):
     return total
 
 
-def render(label, lines, size, font_path=F_PHRASE, label_alpha=232, y_center=None):
+def render(label, lines, size, font_path=F_PHRASE, label_alpha=232, y_center=None, label_size=32):
     """Returns (rgb texture uint8 HxWx3 bottom-up, particle targets Nx3, bounds)."""
     font, size = _fit(lines, font_path, size)
     asc, desc = font.getmetrics()
-    line_h = int(size * 1.08)
+    line_h = int(_k(size) * 1.08)
     block_h = line_h * len(lines)
     top = (Y_CENTER if y_center is None else y_center * H) - block_h / 2.0
     phrase = Image.new("L", (W, H), 0)
@@ -68,18 +90,18 @@ def render(label, lines, size, font_path=F_PHRASE, label_alpha=232, y_center=Non
         x0, x1 = min(x0, W / 2 - wl / 2), max(x1, W / 2 + wl / 2)
     lab = Image.new("L", (W, H), 0)
     if label:
-        lf = ImageFont.truetype(F_LABEL, 32)
+        lf = ImageFont.truetype(F_LABEL, _px(label_size))   # optional TITLE["label_size"], default 32
         ld = ImageDraw.Draw(lab)
-        _tracked(ld, (W / 2.0, top - 34), label.upper(), lf, 15.0, label_alpha)
+        _tracked(ld, (W / 2.0, top - _k(34)), label.upper(), lf, _k(15.0 * label_size / 32.0), label_alpha)
     sharp = np.maximum(np.asarray(phrase), np.asarray(lab))
     both = Image.fromarray(sharp)
-    glow = np.asarray(both.filter(ImageFilter.GaussianBlur(9)))
+    glow = np.asarray(both.filter(ImageFilter.GaussianBlur(_k(9))))
     back = shield(both)
     tex = np.dstack([sharp, glow, back])[::-1].copy()
     # particle targets from the expression itself (not the label)
     a = np.asarray(phrase).astype(np.float64)
     area = float((a > 128).sum())
-    n = int(np.clip(area / 2.0, 9000, 22000))
+    n = int(np.clip(area / (2.0 * K * K), 9000, 22000))
     rng = np.random.default_rng(zlib.crc32(" ".join(lines).encode("utf-8")))
     p = (a / a.sum()).ravel()
     idx = rng.choice(a.size, size=n, p=p)
@@ -103,37 +125,39 @@ def render_tagline(text, title_y=None):
     d = ImageDraw.Draw(img)
     if len(lines) < 3:
         f, size = _fit(lines, F_TAG, 68)
-        y = Y_CENTER + 158
+        y = Y_CENTER + _k(158)
         for k, line in enumerate(lines):
-            d.text((W / 2.0, y + k * size * 1.25), line, font=f, fill=250, anchor="ms")
+            d.text((W / 2.0, y + k * _k(size) * 1.25), line, font=f, fill=250, anchor="ms")
         wl = max(f.getlength(l) for l in lines)
     else:
         ty = (title_y if title_y is not None else END_TITLE_Y) * H
-        f1, s1 = _fit(lines[:1], F_TAG, 64)
-        f2, s2 = _fit(lines[1:], F_TAG, 48)
-        y = ty + 81 + 82                       # under the title block (title size 150)
+        # optional TAGLINE["sizes"] = (first line, the other lines), in 1080p pixels; default 64 and 48
+        sz = (getattr(S, "TAGLINE", None) or {}).get("sizes") or (64, 48)
+        f1, s1 = _fit(lines[:1], F_TAG, int(sz[0]))
+        f2, s2 = _fit(lines[1:], F_TAG, int(sz[1]))
+        y = ty + _k(81) + _k(82)               # under the title block (title size 150)
         d.text((W / 2.0, y), lines[0], font=f1, fill=252, anchor="ms")
-        y += s1 * 0.55 + s2 * 1.05
+        y += _k(s1) * 0.55 + _k(s2) * 1.05
         for line in lines[1:]:
             d.text((W / 2.0, y), line, font=f2, fill=238, anchor="ms")
-            y += s2 * 1.25
+            y += _k(s2) * 1.25
         wl = max([f1.getlength(lines[0])] + [f2.getlength(l) for l in lines[1:]])
     sharp = np.asarray(img)
-    glow = np.asarray(img.filter(ImageFilter.GaussianBlur(6)))
+    glow = np.asarray(img.filter(ImageFilter.GaussianBlur(_k(6))))
     back = shield(img)
     return np.dstack([sharp, glow, back])[::-1].copy(), ((W / 2 - wl / 2) / W, (W / 2 + wl / 2) / W)
 
 
 def render_fragment(text, dy=0.0, size=74):
     """A short lyric fragment in the light italic serif, centred, dy (fraction of height) above the expression line."""
-    f = ImageFont.truetype(F_TAG, int(size))
+    f = ImageFont.truetype(F_TAG, _px(size))
     img = Image.new("L", (W, H), 0)
     d = ImageDraw.Draw(img)
     y = Y_CENTER - dy * H
     d.text((W / 2.0, y), text, font=f, fill=250, anchor="ms")
     wl = f.getlength(text)
     sharp = np.asarray(img)
-    glow = np.asarray(img.filter(ImageFilter.GaussianBlur(6)))
+    glow = np.asarray(img.filter(ImageFilter.GaussianBlur(_k(6))))
     back = shield(img, reach=1.0)
     return np.dstack([sharp, glow, back])[::-1].copy(), ((W / 2 - wl / 2) / W, (W / 2 + wl / 2) / W)
 
@@ -144,13 +168,13 @@ def render_credit(song_title, concert_title):
     fc, _ = _fit([concert_title], F_TAG, 64)
     img = Image.new("L", (W, H), 0)
     d = ImageDraw.Draw(img)
-    y1 = Y_CENTER + 10
+    y1 = Y_CENTER + _k(10)
     d.text((W / 2.0, y1), song_title, font=fs, fill=255, anchor="ms")
-    d.text((W / 2.0, y1 + 92), concert_title, font=fc, fill=240, anchor="ms")
+    d.text((W / 2.0, y1 + _k(92)), concert_title, font=fc, fill=240, anchor="ms")
     sharp = np.asarray(img)
     ys, xs = np.nonzero(sharp > 8)
     bbox = (xs.min() / W, (xs.max() + 1) / W, 1.0 - (ys.max() + 1) / H, 1.0 - ys.min() / H)
-    glow = np.asarray(img.filter(ImageFilter.GaussianBlur(9)))
+    glow = np.asarray(img.filter(ImageFilter.GaussianBlur(_k(9))))
     back = shield(img)
     return np.dstack([sharp, glow, back])[::-1].copy(), bbox
 
@@ -168,7 +192,8 @@ def build_all():
         tex, pts, b = render(p["label"], p["lines"], p["size"], y_center=p.get("y"))   # optional y: centre, from the top
         out.append(dict(tex=tex, pts=pts, bounds=b))
     ty = title_y()
-    tex, pts, b = render(S.TITLE["label"], S.TITLE["lines"], S.TITLE["size"], font_path=F_TITLE, y_center=ty)
+    tex, pts, b = render(S.TITLE["label"], S.TITLE["lines"], S.TITLE["size"], font_path=F_TITLE, y_center=ty,
+                         label_size=S.TITLE.get("label_size", 32))
     title = dict(tex=tex, pts=pts, bounds=b)
     ttex, tb = render_tagline(S.TAGLINE["text"], ty)
     frags = []
