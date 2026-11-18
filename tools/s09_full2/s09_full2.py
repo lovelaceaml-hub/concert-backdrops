@@ -674,7 +674,7 @@ class Net:
         if fly >= 1.0:
             return sky
         bow = BOATS_SET.place(0, t)[0] + _v(0.0, 2.2, 0.0)
-        hand = bow[None, :] + 0.6 * np.stack([self.g[:, 0], self.g[:, 1], 0.0 * self.g[:, 0]], 1)
+        hand = bow[None, :] + 1.6 * np.stack([self.g[:, 0], self.g[:, 1], 0.0 * self.g[:, 0]], 1)
         u = fly
         arc = _v(0.0, 18.0, 0.0) * np.sin(np.pi * u)
         return hand * (1 - u) + sky * u + arc
@@ -687,7 +687,9 @@ class Net:
         flash = 1.0 + 2.0 * np.exp(-max(t - 242.0, 0.0) * 2.0) * (t >= 241.9)
         out = []
         grid = k.reshape(self.ny, self.nx, 3)
-        line_a = a * 0.16 * flash
+        # while the bundle flies the knots overlap: keep it a faint gold bundle (no soft white blob), full only once open
+        op = _sc(CAST + 0.8, 234.5, t)
+        line_a = a * 0.16 * flash * op
         # a fisherman's diamond mesh: gold threads along both diagonals, each sagging a little between knots
         for sgn in (1, -1):
             for i0 in range(-self.ny, self.nx + self.ny, 2):
@@ -699,9 +701,9 @@ class Net:
                 seg = [pts[m] * (1 - x) + pts[m + 1] * x - _v(0.0, 0.5 * np.sin(np.pi * x), 0.0)
                        for m in range(len(pts) - 1) for x in u] + [pts[-1]]
                 out.append(ribbon(np.array(seg), width=0.10, color=lin("#ffdca0"), alpha=line_a, emit=1.3))
-        out.append(dict(pos=k, size=0.55, color=self.kcol * 0.6 + lin("#fff2dc") * 0.4, alpha=a * 0.85,
+        out.append(dict(pos=k, size=0.55, color=self.kcol * 0.6 + lin("#fff2dc") * 0.4, alpha=a * 0.85 * (0.06 + 0.94 * op),
                         emit=2.2 * flash, kind="spark", twinkle=0.5, seed=self.seed))
-        out.append(dict(pos=k, size=3.0, color=self.kcol, alpha=a * 0.10 * flash, kind="soft"))
+        out.append(dict(pos=k, size=3.0, color=self.kcol, alpha=a * 0.10 * flash * op, kind="soft"))
         # threads down to the shores on the peak
         th = _win(t, 241.8, 242.4, 245.0, 248.0)
         if th > 0.0:
