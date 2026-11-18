@@ -146,9 +146,10 @@ def _keys():
     add(163.0, (1.0, 2.5, -3.0), (-0.4, 5.0, -80.0))
     add(174.5, (0.8, 2.7, -2.5), (-0.2, 5.6, -80.0))
     # final chorus: wide and majestic, a slow crane up beside the procession
-    add(192.0, (2.6, 3.6, -6.0), (0.0, 6.4, -80.0))
-    add(210.0, (3.2, 5.6, -8.0), (0.0, 8.6, -80.0))
-    add(226.0, (2.4, 6.4, -10.0), (0.0, 9.6, -80.0))
+    # (low and level, so Heavenly Mother and the procession stay in the middle band, above the bottom third)
+    add(192.0, (2.0, 2.3, -3.0), (0.0, 4.9, -80.0))
+    add(210.0, (2.6, 2.2, -4.0), (0.0, 5.0, -80.0))
+    add(226.0, (2.0, 2.2, -4.0), (0.0, 4.8, -80.0))
     # ending: down to the closing frame for song 08, wide at eye level just above the water
     add(240.0, (0.6, 2.4, 2.0), (0.0, 3.2, -80.0))
     add(248.0, (0.0, 1.55, 6.0), (0.0, 2.6, -80.0))
@@ -207,6 +208,11 @@ def _arch_span(t):
 
 def _arch_height(t):
     return _arch_frame(t)[3]
+
+
+def _arch_line(t):
+    """The arc's own dust and lines stay faint behind the opening card (the stars themselves stay lit)."""
+    return 0.08 + 0.62 * _sc(8.4, 11.5, t)
 
 
 def arch_homes(t):
@@ -398,7 +404,7 @@ _SPECS = [
     _spec("return", 79.2, 80.5, 88.8, 90.6, 0.40, lines=["\u201cplease return\u201d"], color=PEARL,
           glow="#ffe2a8", tint=0.2, arrive="reveal", leave="wind"),
     _spec("kingdom", 150.4, 152.0, 160.6, 162.2, 0.52, lines=["\u201cthe eternal kingdom\u201d"], color=PEARL,
-          glow="#ffe2a8", tint=0.2, arrive="shaft", leave="rise"),
+          glow="#ffe2a8", tint=0.2, arrive="rays", leave="rise"),
     _spec("home", 207.4, 209.0, 217.6, 219.6, 0.50, lines=["my heavenly home"], font="tag", color="#ffe2a8",
           glow=GOLD, tint=0.35, arrive="weave", leave="doors"),
 ]
@@ -805,7 +811,7 @@ def _hearts_and_symbols(scene):
     b = _bodies()
     # GREETING: the waving hand drawn as a constellation of the first stars, high on the right, as the two bow
     # (each placed in the world where the picture has room beside the words at that moment)
-    scene.add("symbol Greeting", Clear(BS.Constellation("Greeting", pos=tuple(place(58.0, 0.84, 0.63, 300.0)),
+    scene.add("symbol Greeting", Clear(BS.Constellation("Greeting", pos=tuple(place(58.0, 0.80, 0.56, 300.0)),
                                                         size=_width_at(58.0, 300.0, 0.10),
                                                         face="camera", camera=CAMERA, t0=55.0, dur=2.4,
                                                         hold=6.5, out=2.5, intensity=0.55, stars=26)),
@@ -932,7 +938,7 @@ WORLD = dict(
     lanterns=Track([(0.0, 0.0), (200.0, 0.0), (208.0, 0.6), (230.0, 0.6), (240.0, 0.0), (TOTAL, 0.0)]),
     lantern_color="#ffc070",
     arch=dict(lit=_arch_lit, colors=COL, span=_arch_span, height=_arch_height, z=0.0, center=_arch_center,
-              yaw=_arch_yaw, line=0.7, bright=1.5),
+              yaw=_arch_yaw, line=_arch_line, bright=1.5),
     react=dict(beat=0.12, level=0.12),
 )
 
