@@ -32,7 +32,7 @@ LOOKS = {
     "bluehour": dict(base="night", sky_top="#1b2558", sky_mid="#44508f", sky_hor="#9a8fc0", stars=.35,
                      milky=.2, mist=.22, mist_color="#5a5f9a", haze=.12, haze_color="#6d6aa8"),
     "sunrise": dict(base="day", sun_az=180.0, sun_el=6.0, sun_int=.9, sun_glow=.8, mist=.22, rays=.3,
-                    sky_top="#7fa6d6", sky_mid="#f2c79a", sky_hor="#ffcf8a"),
+                    sky_top="#6f93cf", sky_mid="#f1ad6e", sky_hor="#ffb862"),
 }
 
 
@@ -79,7 +79,7 @@ class ShiftedBoxes:
         return self.words.boxes(t + Shift.value, cam)
 
 
-def render_group(look, items, outdir, scale):
+def render_group(look, items, outdir, scale, style=None):
     sys.path.insert(0, str(ROOT / "tools/nine_colours_minor"))
     sys.path.insert(0, str(HERE))
     import render as r3
@@ -88,7 +88,7 @@ def render_group(look, items, outdir, scale):
     import words as S01W
     camera = LayoutCamera(film.P3D["camera"])
     Shift.value = items[0][0] - items[0][1]
-    WORDS = S01W.build(camera)
+    WORDS = S01W.build(camera, style=style)
     old_setup = film.P3D["setup"]
 
     def setup(scene):
@@ -132,6 +132,7 @@ def main():
     ap.add_argument("--times", default=DEFAULT_TIMES)
     ap.add_argument("--outdir", type=Path, required=True)
     ap.add_argument("--scale", type=float, default=.5)
+    ap.add_argument("--style", default="", help="JSON: per moment Word settings passed to build(style=)")
     ap.add_argument("--group", default=None, help=argparse.SUPPRESS)
     args = ap.parse_args()
     args.outdir.mkdir(parents=True, exist_ok=True)
@@ -141,11 +142,12 @@ def main():
         clock, look = background(ts)
         groups.setdefault(look, []).append((ts, clock))
     if args.group:
-        render_group(args.group, groups[args.group], args.outdir, args.scale)
+        render_group(args.group, groups[args.group], args.outdir, args.scale,
+                     json.loads(args.style) if args.style else None)
         return
     # one fresh process per sky look (each builds its own renderer and world)
     procs = [subprocess.Popen([sys.executable, __file__, "--times", args.times, "--outdir", str(args.outdir),
-                               "--scale", str(args.scale), "--group", look]) for look in groups]
+                               "--scale", str(args.scale), "--style", args.style, "--group", look]) for look in groups]
     if any(p.wait() for p in procs):
         raise SystemExit("a still group failed")
 

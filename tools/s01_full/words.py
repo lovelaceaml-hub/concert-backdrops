@@ -44,6 +44,7 @@ Parameters the lead may adjust (all keyword arguments of build()):
     widths     dict of width as a share of the frame width per moment (WIDTH)
     stars      dict: "Compliment"/"Encouragement" -> a world point (x, y, z), a function of t giving one,
                or ("screen", x, y, depth) for a place on screen (x, y from the left and from the BOTTOM)
+    style      dict per moment of Word settings (tint, bright, halo, color, glow) over STYLE
     backing    0..1: a very soft warm glow behind each text block so nothing dark sits behind a word
                (default .0; raise it if a scene is dark behind the words)
 No em dash or en dash anywhere in this file.
@@ -64,11 +65,18 @@ TIMELINE = {
     "Encouragement": dict(t_in=158.0, t_read0=161.0, t_read1=172.0, t_loose=175.0, t_out=177.0),
 }
 # width of the widest line of each phrase as a share of the frame width (R3 used .30 to .60)
-WIDTH = {"Compliment": .50, "torch": .40, "dew": .44, "Arise": .40, "Encouragement": .64}
+WIDTH = {"Compliment": .50, "torch": .40, "dew": .44, "Arise": .36, "Encouragement": .64}
 TEXT = {"torch": "like a torch", "dew": "dew of the dawn", "Arise": "Arise"}
 # default star places on screen (x, y from the left and from the bottom, depth in metres): high in the
 # sky where the arch is, Compliment far right (star 9), Encouragement third from the right (star 7)
 STARS = {"Compliment": ("screen", .80, .88, 30.0), "Encouragement": ("screen", .68, .90, 30.0)}
+# extra look per moment (any Word setting: tint, bright, halo, color, glow, paint). The two sunrise
+# moments are read over a bright sky, so their letters keep more of their colour and a stronger halo
+# instead of going cream-white into a pale sky.
+STYLE = {
+    "Arise": dict(color="#f0a032", glow="#d9731c", tint=.80, bright=.95, halo=1.6),
+    "Encouragement": dict(tint=.75, bright=.95, halo=1.5),
+}
 STAR_HANDOFF = {"Compliment": TIMELINE["Compliment"]["t_out"],
                 "Encouragement": TIMELINE["Encouragement"]["t_out"]}
 
@@ -100,7 +108,7 @@ def _make_class(PW):
 
         def __init__(self, arrive=None, leave=None, backing=0.0, **kw):
             mine_in = arrive in ("flame", "stand")
-            mine_out = leave in ("star", "beams", "drift")
+            mine_out = leave in ("star", "beams", "drift", "embers")
             super().__init__(arrive="reveal" if mine_in else arrive, leave="fade" if mine_out else leave, **kw)
             if mine_in:
                 self.arrive = arrive
@@ -139,7 +147,7 @@ def _make_class(PW):
             e = 1.0 - (1.0 - p) ** 3
             lie = (1.0 - e) * np.radians(80.0)                 # lying back on the water, then upright
             yy = self.yl - self.ybot
-            climb = (1.0 - e) * float(self.opts.get("climb", 1.6)) * self.Ht
+            climb = (1.0 - e) * float(self.opts.get("climb", 1.0)) * self.Ht
             y = self.ybot + yy * np.cos(lie) - climb
             z = -yy * np.sin(lie)
             P["pos"] = self._local(F, t, self.xl, y, z)
@@ -172,6 +180,19 @@ def _make_class(PW):
             P["alpha"] = (1.0 - _ss(0.15, 1.0, lp)).astype(np.float32)
             P["assist"] = (1.0 - _ss(0.0, 0.15, lp)).astype(np.float32)
             P["size"] = self.size0 * (1.0 - 0.5 * lp)
+
+        def _lea_embers(self, P, l, t, cam, F, tg):
+            """Each letter lets go of its flame as small rising embers that drift up and go out."""
+            n0 = len(P["extra"])
+            self._lea_rise(P, l, t, cam, F, tg)
+            for b in P["extra"][n0:]:
+                if b.get("kind") == "flake":
+                    b.pop("rot", None)
+                    b.update(kind="soft", size=np.asarray(b["size"]) * 0.28, emit=2.2, reflect=False,
+                             color=_mix(lin("#ff8a2a"), lin("#ffd08a"), 0.45),
+                             alpha=np.asarray(b["alpha"]) * (0.75 + 0.25 * np.sin(t * 11.0 + np.arange(len(b["pos"])))))
+            P["color"] = _mix(self.c_letter[None, :], lin("#ff9d48").astype(np.float32)[None, :],
+                              np.full((self.N, 1), float(_ss(0.0, 0.5, l)), np.float32)).astype(np.float32)
 
         def _lea_beams(self, P, l, t, cam, F, tg):
             """Each letter stretches upward and becomes a ray of the sunrise."""
@@ -284,7 +305,7 @@ class S01Words:
     """The five moments as one set. All methods take song time t (seconds)."""
 
     def __init__(self, camera, timeline=None, centre_y=.345, x=.5, depth=7.0, scale=1.0, widths=None,
-                 stars=None, backing=0.0):
+                 stars=None, backing=0.0, style=None):
         PW = _pw()
         self.PW, self.camera = PW, camera
         self.timeline = {k: dict(v) for k, v in (timeline or TIMELINE).items()}
@@ -300,7 +321,7 @@ class S01Words:
         specs = [
             dict(expr="Compliment", name="Compliment", arrive="pen", nib=False, leave="star",
                  to=to_star("Compliment"), pill=True, **tl["Compliment"]),
-            dict(label="", lines=[TEXT["torch"]], name="torch", arrive="flame", leave="rise",
+            dict(label="", lines=[TEXT["torch"]], name="torch", arrive="flame", leave="embers",
                  color="#ffc77a", glow="#ff9d48", tint=.30, speed=.22, **tl["torch"]),
             dict(label="", lines=[TEXT["dew"]], name="dew", arrive="stitch", leave="drift",
                  color="#e6eeff", glow="#a9c2ff", tint=.30, **tl["dew"]),
@@ -309,6 +330,9 @@ class S01Words:
             dict(expr="Encouragement", name="Encouragement", arrive="pen", nib=False, leave="star",
                  to=to_star("Encouragement"), pill=True, **tl["Encouragement"]),
         ]
+        style = {k: dict(STYLE.get(k, {}), **(style or {}).get(k, {})) for k in set(STYLE) | set(style or {})}
+        for spec in specs:
+            spec.update(style.get(spec["name"], {}))
         self.words = []
         for spec in specs:
             name = spec["name"]
