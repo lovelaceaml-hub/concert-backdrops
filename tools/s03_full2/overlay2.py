@@ -78,7 +78,8 @@ PEOPLE_FEET = 0.715          # the far shore line, from the top
 PEOPLE_SCALE = 0.45 / 0.6    # people.py renders at 0.6 of 1080p; on screen at 0.45
 PEOPLE_X = [0.50, 0.40]      # the Encouragement pair stands left of the column of prayer light, facing it
 PEOPLE_ANCHOR = [(590.0, 572.0), (600.0, 584.0)]   # each act's foot centre in people.py's frames
-ARCH_DAWN = (243.0, 247.0)   # from here the lit lights are drawn over the bright dawn sky
+ARCH_DAWN = (243.0, 247.0)
+STILL_WATER = (94.0, 95.5, 176.5, 178.0)   # under the mended moon the painted rings on the water are stilled   # from here the lit lights are drawn over the bright dawn sky
 
 
 def _font(name, size):
@@ -268,33 +269,38 @@ class Overlay:
         return pts, L.xn[ys, xs].astype(np.float64), rng.random(n)
 
     def _symbol(self, e):
-        """The expression's symbol as fine light lines with the drawing order in each pixel."""
+        """The expression's symbol as a faint constellation in the sky: a few dozen small stars of its colour along
+        the symbol's strokes (brand_symbols.symbol_points), joined by hair-thin, very faint lines. No outline is
+        drawn: up close it is stars among stars; together they make the shape."""
         s = self.s
-        h = int(round(0.15 * self.H))
-        pad = int(0.25 * h)
-        size = h + 2 * pad
-        order = Image.new("L", (size, size), 0)
-        line = Image.new("L", (size, size), 0)
-        do, dl = ImageDraw.Draw(order), ImageDraw.Draw(line)
-        strokes = self.BS.strokes(e["label"])
-        total = sum(len(p) for p in strokes)
-        k = 0
-        for p in strokes:
-            q = np.asarray(p, np.float64)
-            xy = [(pad + h / 2.0 + x * h, pad + h / 2.0 - y * h) for x, y in q]
-            for j in range(len(xy) - 1):
-                v = int(1 + 254 * (k + j) / max(total - 1, 1))
-                do.line([xy[j], xy[j + 1]], fill=v, width=max(int(5 * s), 2))
-                dl.line([xy[j], xy[j + 1]], fill=255, width=max(int(2.6 * s), 1))
-            k += len(q)
-        o = np.asarray(order, np.float32) / 255.0
-        a = np.asarray(line.filter(ImageFilter.GaussianBlur(0.7 * s)), np.float32) / 255.0
-        g = np.asarray(line.filter(ImageFilter.GaussianBlur(7 * s)), np.float32) / 255.0
-        o = np.asarray(Image.fromarray((o * 255).astype(np.uint8)).filter(ImageFilter.MaxFilter(5)),
-                       np.float32) / 255.0
+        h = 0.20 * self.H
+        sp = self.BS.symbol_points(e["label"], n=34, seed=3)
         cx, cy = e["symbol"]
-        return dict(order=o, a=a, g=g, x0=int(cx * self.W - size / 2), y0=int(cy * self.H - size / 2),
-                    col=np.asarray(_hex(e["color"]), np.float32) / 255.0)
+        X = cx * self.W + sp["xy"][:, 0] * h
+        Y = cy * self.H - sp["xy"][:, 1] * h
+        rng = np.random.default_rng(40 + e["star"])
+        X = X + (rng.random(len(X)) - 0.5) * 3.0 * s
+        Y = Y + (rng.random(len(Y)) - 0.5) * 3.0 * s
+        pad = int(20 * s)
+        x0, y0 = int(X.min()) - pad, int(Y.min()) - pad
+        w, hh = int(X.max()) + pad - x0, int(Y.max()) + pad - y0
+        lines = Image.new("L", (w, hh), 0)
+        dl = ImageDraw.Draw(lines)
+        segs = []
+        for k in range(len(X) - 1):
+            if sp["stroke"][k] == sp["stroke"][k + 1]:
+                dl.line([(X[k] - x0, Y[k] - y0), (X[k + 1] - x0, Y[k + 1] - y0)], fill=255, width=1)
+                segs.append(k)
+        la = np.asarray(lines.filter(ImageFilter.GaussianBlur(0.6 * s)), np.float32) / 255.0
+        # the drawing order of each line pixel, so the lines appear behind the tracing spark
+        order = Image.new("L", (w, hh), 0)
+        do = ImageDraw.Draw(order)
+        for k in segs:
+            do.line([(X[k] - x0, Y[k] - y0), (X[k + 1] - x0, Y[k + 1] - y0)],
+                    fill=int(1 + 254 * sp["order"][k + 1]), width=3)
+        o = np.asarray(order, np.float32) / 255.0
+        return dict(X=X, Y=Y, order=sp["order"], phase=rng.random(len(X)) * 6.28, size=0.7 + 0.6 * rng.random(len(X)),
+                    la=la, lo=o, x0=x0, y0=y0, col=np.asarray(_hex(e["color"]), np.float32) / 255.0)
 
     def _heart_sprite(self, r):
         r = max(int(round(r)), 3)
@@ -492,29 +498,32 @@ class Overlay:
             reg[:] = reg * (1 - core[..., None] * a * 0.8) + core[..., None] * a * 0.8 * (0.75 * col + 0.25)
 
     def _symbol_draw(self, img, e, t):
-        """The symbol traced by sparks in its colour in the sky beside the moment, subtle, then gone."""
+        """The symbol traced in the sky by one spark of its colour, leaving small stars behind it that join into a
+        faint constellation, subtle, beside the moment (never over the words); then the stars fade."""
         a0 = e["t_read0"] + 1.0
-        a1 = a0 + 2.2
-        out0, out1 = e["t_read1"] + 1.0, e["t_read1"] + 3.0
+        a1 = a0 + 3.0
+        out0, out1 = e["t_read1"] + 0.8, e["t_read1"] + 3.0
         if not (a0 <= t <= out1):
             return
         sy = self.symbols[e["label"]]
         u = _sf(a0, a1, t)
-        k = (1 - _sf(out0, out1, t)) * 0.5
-        o = sy["order"]
-        drawn = np.clip((u * 1.02 - o) / 0.02 + 1.0, 0, 1) * (o > 0)
-        line = sy["a"] * np.clip(drawn * 1.0, 0, 1)
-        glow = sy["g"] * _sf(a0, a1, t)
-        h, w = line.shape
-        y0, x0 = sy["y0"], sy["x0"]
-        reg = img[y0:y0 + h, x0:x0 + w]
+        k = 1 - _sf(out0, out1, t)
         c = sy["col"]
-        reg += (line[..., None] * (0.55 * c + 0.45) + glow[..., None] * c * 0.6) * k
-        if u < 1.0:
-            # the spark at the tip of the tracing
-            ys, xs = np.nonzero((o > 0) & (np.abs(o - u) < 0.01))
-            if len(xs):
-                self._stamp(img, x0 + xs.mean(), y0 + ys.mean(), 6 * self.s, 0.5 * c + 0.5, 0.6 * k * 2)
+        tone = 0.9 * c + 0.1
+        # the stars: each lights as the spark passes, then twinkles softly
+        lit = np.clip((u - sy["order"]) / 0.04, 0.0, 1.0)
+        tw = 0.75 + 0.25 * np.sin(2.1 * t + sy["phase"])
+        w = lit * tw * sy["size"] * 0.5 * k
+        self._splat(img, np.stack([sy["X"], sy["Y"]], 1), w, tone, r_core=1.2, r_glow=4.5)
+        # the hair-thin lines between them, very faint
+        line = sy["la"] * np.clip((u - sy["lo"]) / 0.04 + 1.0, 0, 1) * (sy["lo"] > 0)
+        hh, ww = line.shape
+        y0, x0 = sy["y0"], sy["x0"]
+        img[y0:y0 + hh, x0:x0 + ww] += line[..., None] * c * 0.20 * k
+        if 0.0 < u < 1.0:
+            # the tracing spark
+            j = int(np.clip(np.searchsorted(sy["order"], u), 0, len(sy["X"]) - 1))
+            self._stamp(img, sy["X"][j], sy["Y"][j], 4 * self.s, 0.5 * c + 0.5, 0.45 * k)
 
     def _people_draw(self, img, t, index):
         for k, (a, b) in enumerate(PEOPLE_WINDOWS):
@@ -673,6 +682,17 @@ class Overlay:
         knee = 0.30
         soft = np.where(low > knee, knee + 0.45 * (low - knee) / (1 + (low - knee) / 0.35), low)
         img[y0:] = low * (1 - ramp) + soft * ramp
+        # the mended moon's plate has rings painted on its water: there the water below two thirds of the frame
+        # is stilled (smoothed mostly up and down, so the rings dissolve into calm water, and pressed darker)
+        a, b, c_, d = STILL_WATER
+        sw = _sf(a, b, t) * (1 - _sf(c_, d, t))
+        if sw > 0.0:
+            y1 = int(0.645 * H)
+            low = img[y1:]
+            calm = gaussian_filter(low, (14 * self.s, 5 * self.s, 0), mode="nearest")
+            calm = np.where(calm > 0.20, 0.20 + 0.40 * (calm - 0.20), calm)
+            r2 = (_ss(0.645, 0.675, (np.arange(y1, H) + 0.5) / H) * sw).astype(np.float32)[:, None, None]
+            img[y1:] = low * (1 - r2) + calm * r2
         # soft shoulder: keep highlights under clipping (no white-outs)
         hi = img > 0.86
         if hi.any():

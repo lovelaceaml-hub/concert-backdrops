@@ -49,7 +49,7 @@ Every rule of the version 2 brief (quoting DESIGN-SYSTEM, PHASEB and the handboo
 | Words collapse into the expression's star | Yes | stills 39.4 to 40.4, 235.4 to 236.9 |
 | Star history: starts 7 and 9; lights 3; relights 7 (flare and one new thin ring); ends 3, 7, 9; nothing else lit | Yes | s03_full2.py PHRASES, RINGS_AT_START; stills 44, 237.2, 327.98 |
 | Acted while it reads (PHASEB 6) | Yes | ACTING.md; Apology: a hand laid gently on the back of one sitting with head bowed; Encouragement: a hand on the shoulder of one kneeling in prayer |
-| Symbols in the world, subtle, in the expression's colour, never over the words; hearts in the colour drift off | Yes | overlay2.py _symbol_draw, _hearts_draw; stills 34, 230, 41.5, 236 |
+| Symbols in the world, subtle, in the expression's colour, never over the words; hearts in the colour drift off | Yes (fix 1) | the symbols are faint constellations traced by one spark (stars of the colour joined by hair-thin lines), no longer line drawings that read as icons; overlay2.py _symbol, _symbol_draw, _hearts_draw; stills 32, 36, 229, 233 |
 
 ## People
 
@@ -85,7 +85,7 @@ Every rule of the version 2 brief (quoting DESIGN-SYSTEM, PHASEB and the handboo
 | 6 No words mirrored in water | Yes | all words are drawn after the engine's water |
 | 7 No dark, brown, solid or mannequin people; big enough for the back of the hall | Partly | radiant gold glitter; about 0.2 of the frame high, smaller than ideal so the words keep their clear box (noted as a weak point) |
 | 8 No mushy blur, jitter, popping or sliding | Yes | motion strips at 12 frames a second from the final render through the opening, both expressions and all fragments; no identical consecutive frames |
-| 9 Bottom third calm | Yes | no rings; a smooth highlight press below the far shore on every frame; people's feet on the shore line |
+| 9 Bottom third calm | Yes (fix 1) | no engine rings; a smooth highlight press below the far shore on every frame; under the mended moon (1:34 to 2:58) the rings painted on the plate's water are stilled below two thirds of the frame (stills 121, 150); people's feet on the shore line |
 | 10 Calm camera, never frozen | Yes | slow plate pushes; longest near-still stretch 0.02 s |
 | 11 No other logos or watermarks; no realistic faces | Yes | only the campaign logo; smooth artistic heads |
 

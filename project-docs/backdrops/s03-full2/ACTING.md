@@ -9,7 +9,7 @@ Both expressions are acted by warm gold glitter people of light (the approved 3D
 - Look: warm gold glitter (#f6c46e with #fff0cc), robes.
 - Framing: a three-quarter view (turned 28 degrees toward the camera), seen at hem height so no ring of the hem shows; both kneel on both knees so no leg stands clear of a gown.
 - Times: they gather from light 25.6; the touch begins 27.6 (a second before the words are readable at 28.6) and is held, alive (breathing, living hands), to 38.0; they let go and fade by 40.8.
-- With light: the rain stops as the words are written and the lake is a mirror; the symbol (a face with a tear) is traced by yellow sparks at the right; yellow hearts drift up from the pair after the reading; the words collapse into light 3.
+- With light: the rain stops as the words are written and the lake is a mirror; the symbol (a face with a tear) appears as a faint yellow constellation at the right, traced by one spark; yellow hearts drift up from the pair after the reading; the words collapse into light 3.
 
 ## ENCOURAGEMENT: "I'll pray (or root) for you. Everything will go well."
 
@@ -18,7 +18,7 @@ Both expressions are acted by warm gold glitter people of light (the approved 3D
 - Look: warm gold glitter, robes; in front of the plate's column of prayer light.
 - Framing: three-quarter view (turned 28 degrees the other way), hem height; the kneeling woman on both knees.
 - Times: gather from 221.4; the hand comes to the shoulder 223.4 (a second before the words are readable at 224.4), held to 233.8; they fade by 236.6.
-- With light: the praying hands symbol traced by violet sparks at the right; violet hearts drift up after the reading; the words collapse into light 7 (relit, a flare and one new ring).
+- With light: the praying hands symbol as a faint violet constellation at the right; violet hearts drift up after the reading; the words collapse into light 7 (relit, a flare and one new ring).
 
 ## Heavenly Mother
 
