@@ -853,12 +853,19 @@ class Calm:
         if got is None or cam is None:
             return got
         # nothing competes inside a reading box: the words' boxes (with a margin), as expressions.Clear does
-        boxes = []
+        # (fix 1) and, while a word reads, the whole row of lights just under its box (the horizon band of
+        # grain lights) sinks to faint across the full width, eased in and out, so nothing bright touches the
+        # lower edge of the words
+        boxes, rows = [], []
         for word in WORDS:
-            if word.t_in <= t <= word.t_out:
-                x0, x1, y0, y1, front, *_ = PW.screen_box(word, cam, t)
-                if front:
+            if word.t_in - 0.6 <= t <= word.t_out + 0.6:
+                x0, x1, y0, y1, front, *_ = PW.screen_box(word, cam, min(max(t, word.t_in), word.t_out))
+                if not front:
+                    continue
+                if word.t_in <= t <= word.t_out:
                     boxes.append((x0 - 0.03, x1 + 0.03, y0 - 0.045, y1 + 0.045))
+                env = _ss(word.t_in - 0.6, word.t_in + 0.4, t) * (1.0 - _ss(word.t_out - 0.4, word.t_out + 0.6, t))
+                rows.append((y0, env))
         out = []
         for source in got if isinstance(got, (list, tuple)) else [got]:
             if source is None or source.get("pos") is None:
@@ -867,7 +874,12 @@ class Calm:
             b = dict(source)
             p = np.asarray(b["pos"], np.float64).reshape(-1, 3)
             xy, z = cam.project(p)
-            g = 0.12 + 0.88 * _ss(0.24, 0.37, xy[:, 1])
+            # (fix 1) the bottom third is calm water only: every light is gone below 0.345 of the height (from
+            # the bottom) and fades in by 0.42
+            g = _ss(0.345, 0.42, xy[:, 1])
+            for y0, env in rows:
+                row = _ss(y0 - 0.13, y0 - 0.06, xy[:, 1]) * (1.0 - _ss(y0 + 0.01, y0 + 0.05, xy[:, 1]))
+                g = g * (1.0 - 0.85 * env * row)
             for x0, x1, y0, y1 in boxes:
                 dx = np.minimum(xy[:, 0] - x0, x1 - xy[:, 0])
                 dy = np.minimum(xy[:, 1] - y0, y1 - xy[:, 1])
@@ -993,6 +1005,7 @@ def _setup(scene):
                 and e.name not in BODIES \
                 and not getattr(e.pointset, "static", False):
             e.pointset = Calm(e.pointset)
+            e.reflect = False   # (fix 1) no mirror images of lights: they fell into the bottom third
 
 
 # ---------------------------------------------------------------------------------------------------------
