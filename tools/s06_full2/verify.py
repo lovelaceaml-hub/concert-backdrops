@@ -4,7 +4,7 @@
 
 Stage: exact frame count (9120) and length (152.0 s), 60 fps, 1920x1080, yuv420p, no audio; no black, frozen or
 exactly repeated frames; the signature present on every frame after the opening (bright letter pixels in the top
-left corner on every frame from 8.6 s); first, last and sync-checkpoint frames saved for a look.
+left corner on every frame from 9.4 s, dimmer ones during the fade-in from 8.6 s); first, last and sync-checkpoint frames saved for a look.
 Review: same picture length, AAC audio from 0, music level at the three sync hits (live times).
 Phone: 1280x720, 60 fps, under 25 MB.
 No em dash or en dash anywhere in this file.
@@ -69,10 +69,14 @@ def main():
                          capture_output=True, check=True).stdout
     g = np.frombuffer(raw, np.uint8).reshape(-1, h, w)
     bright = (g > 200).sum(axis=(1, 2))
-    start = int(8.6 * FPS)
+    # it fades in over 0.9 s (reference 8.3 to 9.2 s, live about 8.43 to 9.35 s): during the fade the letters are
+    # there but dimmer, so that window is checked with a lower brightness level
+    fade = (g[int(8.6 * FPS):int(9.4 * FPS)] > 120).sum(axis=(1, 2))
+    start = int(9.4 * FPS)
     after = bright[start:]
-    print(f'signature: frames checked {len(after)}, letter pixels min {after.min()} median {int(np.median(after))}')
-    sig_ok = after.min() >= 40
+    print(f'signature fade-in 8.6 to 9.4 s: letter pixels (dimmer level) min {fade.min()}')
+    print(f'signature from 9.4 s: frames checked {len(after)}, letter pixels min {after.min()} median {int(np.median(after))}')
+    sig_ok = after.min() >= 40 and fade.min() >= 10
     ok &= bool(sig_ok)
     print('signature on every frame after the opening:', 'yes' if sig_ok else 'NO')
     out = stage.parent / 'check'

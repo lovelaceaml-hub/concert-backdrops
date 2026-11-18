@@ -80,5 +80,19 @@ Every rule of the v2 brief, yes or no, and where it was checked. "Stills" = land
 | 10 Calmer camera, never frozen | yes | eased keys; verify freezedetect |
 | 11 No other logos or watermarks, no realistic faces | yes | |
 
-## Render and delivery (filled in after the render)
-See the bottom of this file.
+## Render and delivery
+Rendered in this cloud session only (software OpenGL, 16 parts on 4 cores, native 60 fps), checked with `tools/s06_full2/verify.py`: PASS.
+
+| Rule | OK | Where checked |
+|---|---|---|
+| Exact length: 9,120 frames, 152.000 s, 60/1, 1920x1080, yuv420p | yes | verify (ffprobe frame count) |
+| Stage file silent | yes | verify: no audio stream |
+| No black frames | yes | verify blackdetect: none |
+| No frozen stretches | yes | verify freezedetect (1 s): none; the hold is gently alive |
+| No dropped or exactly repeated frames | yes | verify mpdecimate: 0 repeated; frame count exact |
+| First and last frames | yes | frames 0.00 and 151.98 s saved and looked at: the opening whole on blue sky; the calm closing frame with the signature and arch 3 to 9 |
+| Signature on every frame after the opening | yes | verify: full strength on all 8,556 frames from 9.4 s (letter pixels min 220, median 251); it fades in over 8.4 to 9.3 s while the opening dissolves, present but dimmer in that window |
+| Sync at 3 hits against the conformed music | yes | review file: 18.49 s (-35.9 to -22.1 dB), 81.89 s (-25.5 to -18.6 dB), 128.32 s (-15.3 to -14.4 dB); the music ends at 136.50 s and the hold is silent (-91 dB) |
+| Review: conformed music from 0, AAC (set to 320k), CRF 20 | yes | verify: audio starts at 0.000, 152.000 s; the encoder's measured average is about 200 kbit/s because of quiet passages and the silent hold |
+| Phone: 1280x720, 60 fps, under 25 MB | yes | verify: 22.9 MB (21.9 MiB) |
+| Contact sheet under 3 MB, from the finished video | yes | 20 frames, 0.58 MB, uploaded to Drive Status as "06 backdrop v2 stills.jpg" |
