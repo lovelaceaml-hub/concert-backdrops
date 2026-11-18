@@ -131,18 +131,18 @@ def _keys():
     add(68.0, (-2.2, 1.55, 1.9), (0.5, 1.05, -6.5))
     add(77.0, (-2.4, 1.75, 1.0), (0.0, 1.30, -16.0))
     # verse 2: glide up behind Heavenly Mother, Her lamp in the centre of the frame
-    add(89.0, (-0.5, 2.3, -9.5), (-0.6, 2.0, -60.0))
-    add(97.0, (-0.4, 2.6, -10.5), (-0.6, 2.1, -60.0))
+    add(89.0, (-0.4, 2.0, -8.0), (-0.6, 1.5, -60.0))
+    add(97.0, (-0.3, 2.1, -9.0), (-0.6, 1.5, -60.0))
     # the search: a high gliding aerial over the river of lanterns
     add(110.0, (2.5, 8.0, -14.0), (-1.5, 0.6, -44.0))
     add(121.0, (3.0, 6.2, -19.0), (-1.6, 0.9, -45.0))
     # down to the shore for the reunions, then completely still for the hush
-    add(131.0, (1.4, 2.7, -11.5), (-0.8, 1.6, -45.0))
-    add(137.5, (1.2, 2.6, -11.0), (-0.8, 1.6, -45.0))
-    add(149.0, (1.2, 2.6, -11.0), (-0.8, 1.6, -45.0))
+    add(131.0, (1.4, 2.5, -4.0), (-0.8, 1.2, -45.0))
+    add(137.5, (1.2, 2.4, -3.5), (-0.8, 1.2, -45.0))
+    add(149.0, (1.2, 2.4, -3.5), (-0.8, 1.2, -45.0))
     # verse 3: a slow tilt from the lake toward the sky where the kingdom appears
-    add(163.0, (1.0, 2.6, -10.0), (-0.4, 5.6, -80.0))
-    add(174.5, (0.8, 2.8, -9.0), (-0.2, 6.2, -80.0))
+    add(163.0, (1.0, 2.5, -3.0), (-0.4, 5.0, -80.0))
+    add(174.5, (0.8, 2.7, -2.5), (-0.2, 5.6, -80.0))
     # final chorus: wide and majestic, a slow crane up beside the procession
     add(192.0, (2.6, 3.6, -6.0), (0.0, 6.4, -80.0))
     add(210.0, (3.2, 5.6, -8.0), (0.0, 8.6, -80.0))
@@ -172,7 +172,7 @@ def place(t, x, y, depth):
 # ---------------------------------------------------------------------------------------------------------
 # The arch of nine lights (star history: 3 to 9 lit at the start, 1 lit by this song, 2 waits for song 08)
 # ---------------------------------------------------------------------------------------------------------
-ARCH = dict(span=380.0, height=118.0, z=-300.0, center=(0.0, 8.0, 0.0))
+ARCH = dict(span=150.0, height=50.0, z=-120.0, center=(0.0, 6.0, 0.0))
 _th = np.radians(np.linspace(172.0, 8.0, 9))
 ARCH_PTS = np.stack([0.5 * ARCH["span"] * np.cos(_th), ARCH["center"][1] + ARCH["height"] * np.sin(_th),
                      np.full(9, ARCH["z"])], axis=1)
@@ -235,11 +235,11 @@ def _bodies():
     import nine_reference_p3d.master_acting  # noqa: F401  (Final v1 refined acting)
     # the elderly traveler (a man): walks in slowly along the shore and sits down alone; greeted, helped up
     _body("traveler", "man", at=(BENCH[0] - 5.25, BENCH[2]), facing=90.0,
-          motion=[(0.0, "walk", dict(speed=0.42)), (12.5, "stand", dict(blend=1.2)),
-                  (14.0, "sit", dict(dur=2.6, bowed=1.0)), (66.2, "stand", dict(blend=2.6)),
+          motion=[(0.0, "walk", dict(speed=0.42)), (12.5, "stand", dict(blend=1.4)),
                   (70.4, "walk", dict(speed=0.45)), (88.0, "stand", dict(blend=1.5))],
-          gesture=[(53.6, 59.5, "bow", dict(amount=10.0)), (64.2, 69.6, "offer", dict(side="R"))],
-          stoop=0.45, garment="coat", tone=1, seed=21.0, show=(-1.0, 88.5), fade=1.8, points=32000)
+          gesture=[(14.0, 50.5, "bow", dict(amount=22.0)), (53.6, 59.5, "bow", dict(amount=14.0)),
+                   (64.2, 69.6, "offer", dict(side="R"))],
+          stoop=0.45, garment="coat", tone=1, seed=21.0, show=(-1.0, 84.0), fade=3.0, points=32000)
     # the helper (a man): passes by, stops, turns back, kneels to his eye level (Greeting), offers his hand
     # (Consideration), and they walk on together at the traveler's pace
     _body("helper", "man", at=(-9.0, BENCH[2] - 1.6),
@@ -247,11 +247,10 @@ def _bodies():
                   (70.6, -180.0)],
           motion=[(16.5, "walk", dict(speed=1.0)), (29.0, "stand", dict(blend=1.4)),
                   (41.3, "walk", dict(speed=0.3)), (49.2, "stand", dict(blend=1.0)),
-                  (50.4, "kneel", dict(sit=0.15, dur=2.0, hands="lap", one=True)),
-                  (63.2, "stand", dict(blend=2.2)), (70.6, "walk", dict(speed=0.45)), (88.0, "stand", dict(blend=1.5))],
+                  (70.6, "walk", dict(speed=0.45)), (88.0, "stand", dict(blend=1.5))],
           gesture=[(38.6, 41.2, "look_up", dict(amount=-4.0, turn=-28.0)), (52.6, 59.5, "bow", dict(amount=14.0)),
                    (64.6, 69.6, "handshake", dict(side="R", to=lambda t: _palm("traveler", t)))],
-          tone=0, seed=22.0, show=(15.6, 88.5), fade=1.8, garment="tunic", points=32000)
+          tone=0, seed=22.0, show=(15.6, 84.0), fade=3.0, garment="tunic", points=32000)
     # two busy passers-by going the other way (not unkind, just not noticing)
     _body("passer1", "woman", at=(7.0, BENCH[2] - 3.0), facing=270.0, motion=[(2.0, "walk", dict(speed=1.15))],
           garment="dress", hair="bun", tone=2, seed=23.0, show=(2.0, 15.0), fade=1.5, points=20000)
@@ -283,10 +282,10 @@ def _bodies():
     # the shore: two women embrace (one who has come home); a mother holds her child close (parent and child)
     _body("sister0", "woman", at=(2.6, LAMP[2] - 5.5), facing=90.0, motion="stand", garment="dress",
           hair="bun", tone=0, seed=60.0, show=(126.0, 176.0), fade=1.6, points=22000,
-          gesture=[(129.5, 137.5, "embrace", dict(to=lambda t: _BODIES["sister1"].where(t, "back", raw=True), head="L"))])
+          gesture=[(129.5, 137.5, "embrace", dict(to=_v(3.32 + 0.12, 1.25, LAMP[2] - 5.55), head="L"))])
     _body("sister1", "woman", at=(3.32, LAMP[2] - 5.55), facing=270.0, motion="stand", garment="robe",
           hair="bob", tone=1, seed=61.0, show=(126.0, 176.0), fade=1.6, points=22000,
-          gesture=[(129.8, 137.5, "embrace", dict(to=lambda t: _BODIES["sister0"].where(t, "back", raw=True), head="L"))])
+          gesture=[(129.8, 137.5, "embrace", dict(to=_v(2.6 - 0.12, 1.25, LAMP[2] - 5.5), head="L"))])
     _body("parent", "woman", at=(-4.6, LAMP[2] - 6.0), facing=120.0, motion="stand", garment="dress",
           hair="bun", tone=2, seed=62.0, show=(126.0, 176.0), fade=1.6, points=22000,
           gesture=[(130.0, 174.0, "arm_round", dict(side="L", to=lambda t: _BODIES["child"].where(t, "shoulder.R")))])
@@ -671,8 +670,8 @@ def _circle(c, r, y, w, ph=0.0):
     return lambda t: c + _v(np.sin(w * t + ph) * r, y + 0.3 * np.sin(0.8 * t + ph), np.cos(w * t + ph) * r)
 
 
-HEADS[GREET].leg(49.0, 53.5, _circle(BENCH, 3.2, 2.6, 0.55), bi=5.0, bo=4.0)
-HEADS[CONS].leg(62.0, 66.5, _circle(BENCH, 3.4, 2.9, -0.5, 1.0), bi=5.0, bo=4.0)
+HEADS[GREET].leg(49.0, 53.5, _circle(BENCH, 1.5, 3.3, 0.55), bi=5.0, bo=4.0)
+HEADS[CONS].leg(62.0, 66.5, _circle(BENCH, 1.5, 3.5, -0.5, 1.0), bi=5.0, bo=4.0)
 for _k in range(9):
     HEADS[_k].leg(212.0, 232.0, _circle(GATE, 40.0 + 3.0 * _k, -6.0 + 3.0 * (_k % 3), 0.32, 2 * np.pi * _k / 9),
                   bi=10.0, bo=40.0)
@@ -690,7 +689,7 @@ class Comets:
             for t0, t1, f, bi, bo in HEADS[k].legs:
                 if t0 < 100.0:
                     near = max(near, _sc(t0 - bi, t0, t) * (1.0 - _sc(t1, t1 + bo, t)))
-            a = _sc(0.0, 3.0, t) * (0.55 + 0.45 * near)
+            a = _sc(0.0, 3.0, t) * (0.55 + 0.45 * near) * (1.0 - 0.6 * _sc(238.0, 250.0, t))
             tail = 3.5 - 2.2 * near
             ts = np.linspace(t - tail, t, 36)
             pts = np.array([HEADS[k](float(x)) for x in ts])
@@ -741,7 +740,7 @@ def _setup(scene):
     scene.add("footprints", Footprints(), reflect=False)
     scene.add("peace rings", PeaceRings(), reflect=False)
     scene.add("lost lights", Clear(LostLights()))
-    scene.add("lamps", Clear(Lamps()))
+    scene.add("lamps", Clear(Lamps()), reflect=False)
     scene.add("gate", Clear(Gate()), reflect=False)
     scene.add("bridge", Clear(Bridge()))
     scene.add("comets", Clear(Comets()))
@@ -784,8 +783,8 @@ LOOKS = dict(
                  sun_int=0.8, sun_el=0.5, sun_az=180.0, stars=0.3, milky=0.05, clouds=0.3, haze=0.45,
                  haze_color="#a8707a", mist=0.22, mist_color="#a0707a", hill_color="#1a1430", water="#08081c",
                  rays=0.4, ripple=0.15, dust=1.1, dust_color="#ffe0a0", dust_color2="#ffc890"),
-    night07=dict(base="night", sky_top="#060c24", sky_mid="#0b1530", sky_hor="#2e3466", sun_color="#ffcf8a",
-                 sun_int=0.4, sun_el=-1.8, sun_az=180.0, stars=1.0, milky=0.55, clouds=0.08, haze=0.3,
+    night07=dict(base="night", sky_top="#0b1530", sky_mid="#1a2858", sky_hor="#4c4880", sun_color="#ffcf8a",
+                 sun_int=0.6, sun_el=-1.8, sun_az=180.0, stars=1.0, milky=0.55, clouds=0.08, haze=0.3,
                  haze_color="#262c5c", mist=0.12, mist_color="#2c3262", hill_color="#05071a", water="#02040f",
                  ripple=0.12, dust=0.7, dust_color="#ffd9a0", dust_color2="#ffc08a"),
 )
