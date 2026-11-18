@@ -42,9 +42,9 @@ TIMELINE = {
 }
 # widest line as a share of the frame width
 WIDTH = {"title": .42, "bless": .38, "Encouragement": .62, "father": .46, "Consideration": .56, "fruit": .30,
-         "Encouragement2": .62, "Consideration2": .56, "Encouragement3": .50, "Consideration3": .45}
+         "Encouragement2": .62, "Consideration2": .56, "Encouragement3": .39, "Consideration3": .35}
 # centre of each block, share of the frame height from the top
-CENTRE = {"Encouragement3": .235, "Consideration3": .465}
+CENTRE = {"Encouragement3": .175, "Consideration3": .385}
 TEXT = {"title": "God Bless You!", "bless": "God bless you!", "father": "Father\u2019s great love",
         "fruit": "good fruit"}
 STYLE = {}

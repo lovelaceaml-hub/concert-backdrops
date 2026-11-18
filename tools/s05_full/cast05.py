@@ -44,13 +44,13 @@ SEG = (13.5, 50.0, 80.5, 112.0, 151.0, 175.0)     # still moments where a body i
 JOIN = 0.6
 LOOK = dict(name="glitter", seams=0.6)
 STYLE = dict(
-    A=dict(shape="man", hair="short", garment="coat", color="#ffc664", color2="#fff0c8", height=1.72, build=.98,
+    A=dict(shape="man", hair="short", garment="coat", color="#f6b042", color2="#ffd88a", height=1.72, build=.98,
            seed=51.0),
-    B=dict(shape="man", hair="cap", garment="tunic", color="#f2a640", color2="#ffdc96", height=1.75, build=1.0,
+    B=dict(shape="man", hair="cap", garment="tunic", color="#ee9c30", color2="#ffd07a", height=1.75, build=1.0,
            seed=52.0),
-    C=dict(shape="woman", hair="bun", garment="dress", color="#ffd27a", color2="#fff4d6", height=1.60, build=.95,
+    C=dict(shape="woman", hair="bun", garment="dress", color="#f8b84c", color2="#ffdc90", height=1.60, build=.95,
            seed=53.0),
-    D=dict(shape="woman", hair="covered", garment="robe", color="#f6b552", color2="#ffe6b0", height=1.58, build=.93,
+    D=dict(shape="woman", hair="covered", garment="robe", color="#f2a83c", color2="#ffd486", height=1.58, build=.93,
            seed=54.0),
 )
 
@@ -270,7 +270,7 @@ class Cast:
                                                      motion=mk, seed=st["seed"], rig=rig, start=show[0])))
             b = Body(st["shape"], height=st["height"], at=at_arg, facing=keys["facing"], motion=mk, gesture=gest,
                      garment=st["garment"], hair=st["hair"], look=LOOK, color=st["color"], color2=st["color2"],
-                     bright=1.9, points=self.points, seed=st["seed"], build=st["build"], show=show,
+                     bright=2.5, points=self.points, seed=st["seed"], build=st["build"], show=show,
                      fade=(0.5 if i == 0 else JOIN * 0.5), effects=effects, wind=(0.25, 0.0, -0.1),
                      detail=dict(hand=2), wash=self._wash(k))
             person.bodies.append((s0, s1, b))
