@@ -128,23 +128,25 @@ def _keys():
     add(34.0, (0.4, 1.70, 5.4), (0.3, 1.10, -40.0))
     add(49.0, (0.6, 1.60, 3.6), (0.4, 0.95, -30.0))
     # chorus 1: a slow respectful half circle (about 25 degrees) round the two, never closer than full length
-    add(58.0, (-0.3, 1.50, -0.4), (0.6, 1.25, -6.5))
-    add(68.0, (-1.7, 1.50, -0.7), (0.6, 1.25, -6.5))
-    add(77.0, (-2.2, 1.70, -1.2), (0.0, 1.30, -16.0))
+    # (a little farther back and lower than the stills of round 4, so their feet stay above the bottom third)
+    add(58.0, (-0.52, 1.22, 1.1), (0.6, 1.08, -6.5))
+    add(68.0, (-2.29, 1.22, 0.79), (0.6, 1.08, -6.5))
+    add(77.0, (-2.6, 1.40, 0.6), (0.0, 1.20, -16.0))
+    add(83.0, (-2.3, 1.55, -0.8), (-0.3, 1.30, -30.0))
     # verse 2: glide up behind Heavenly Mother, Her lamp in the centre of the frame
     add(89.0, (-0.4, 2.0, -8.0), (-0.6, 1.5, -60.0))
-    add(97.0, (-0.3, 2.1, -9.0), (-0.6, 1.5, -60.0))
+    add(97.0, (-0.3, 1.9, -7.5), (-0.6, 1.5, -60.0))
     # the search: a gentle rise over the river of lanterns, looking out level so the people stay in the
     # middle band (the first run looked down on them and filled the lower third, 1:38 to 2:17)
-    add(110.0, (1.8, 3.6, -9.0), (-1.2, 2.6, -70.0))
-    add(121.0, (2.2, 3.4, -11.0), (-1.4, 2.5, -70.0))
+    add(110.0, (1.6, 2.3, -5.0), (-1.2, 2.3, -70.0))
+    add(121.0, (2.0, 2.3, -6.0), (-1.4, 2.3, -70.0))
     # the reunions on the shore, then completely still for the hush
-    add(131.0, (1.4, 2.9, -6.0), (-0.8, 2.4, -60.0))
-    add(137.5, (1.2, 2.8, -5.5), (-0.8, 2.4, -60.0))
-    add(149.0, (1.2, 2.8, -5.5), (-0.8, 2.4, -60.0))
+    add(131.0, (1.4, 2.5, -4.5), (-0.8, 2.3, -60.0))
+    add(137.5, (1.2, 2.5, -4.0), (-0.8, 2.3, -60.0))
+    add(149.0, (1.2, 2.5, -4.0), (-0.8, 2.3, -60.0))
     # verse 3: a slow tilt from the lake toward the sky where the kingdom appears
-    add(163.0, (1.0, 2.5, -3.0), (-0.4, 5.0, -80.0))
-    add(174.5, (0.8, 2.7, -2.5), (-0.2, 5.6, -80.0))
+    add(163.0, (1.0, 2.2, -2.0), (-0.4, 4.8, -80.0))
+    add(174.5, (0.8, 2.1, -1.5), (-0.2, 5.2, -80.0))
     # final chorus: wide and majestic, a slow crane up beside the procession
     # (low and level, so Heavenly Mother and the procession stay in the middle band, above the bottom third)
     add(192.0, (2.0, 2.3, -3.0), (0.0, 4.9, -80.0))
@@ -309,7 +311,7 @@ def _bodies():
                    (T_RISE - 0.8, T_RISE + 2.6, "handshake", dict(side="R", to=_grip, grip=1.0, ease=0.6)),
                    (T_RISE + 2.4, 70.8, "hand_on_shoulder",
                     dict(side="L", to=lambda t: _raw("helper", t, "shoulder.R"), ease=0.9))],
-          stoop=0.4, garment="coat", tone=1, seed=21.0, show=(6.0, 86.0), fade=2.5, points=34000)
+          stoop=0.4, garment="coat", tone=1, seed=21.0, show=(9.6, 82.0), fade=2.5, points=34000)
     # the helper (a man): passes by behind, stops, turns back, walks to him and faces him (Greeting), steps
     # close and reaches down his hand (Consideration), then walks on beside him at his pace
     _body("helper", "man", at=(-9.0, BENCH[2] - 1.6),
@@ -321,7 +323,7 @@ def _bodies():
                   (71.4, "walk", dict(speed=0.42)), (88.0, "stand", dict(blend=1.5))],
           gesture=[(38.6, 41.2, "look_up", dict(amount=-4.0, turn=-28.0)), (53.2, 59.6, "bow", dict(amount=18.0)),
                    (T_RISE - 1.0, T_RISE + 2.6, "handshake", dict(side="R", to=_grip, grip=1.0, ease=0.7))],
-          tone=0, seed=22.0, show=(15.6, 86.0), fade=2.5, garment="tunic", points=34000)
+          tone=0, seed=22.0, show=(15.6, 82.0), fade=2.5, garment="tunic", points=34000)
     # two busy passers-by going the other way, after the opening card (not unkind, just not noticing): men
     _body("passer1", "man", at=(7.0, BENCH[2] - 3.0), facing=270.0, motion=[(8.5, "walk", dict(speed=1.15))],
           garment="coat", tone=2, seed=23.0, show=(8.5, 20.5), fade=1.5, points=20000)
