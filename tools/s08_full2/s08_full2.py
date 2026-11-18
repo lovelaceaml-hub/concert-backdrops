@@ -935,7 +935,7 @@ WORLD = dict(
           (M["chord"] + 3.0, "hold", 10.0)],
     light=dict(pos=STAR, color="#ffe2b0",
                strength=Track([(0.0, 0.9), (14.0, 1.2), (60.0, 1.0), (90.0, 1.5), (100.0, 1.0), (109.2, 1.7),
-                               (115.0, 1.1), (202.3, 1.8), (210.0, 1.3), (TOTAL, 1.3)]),
+                               (115.0, 1.1), (202.3, 1.35), (210.0, 1.2), (TOTAL, 1.3)]),
                size=0.9, rays=0.6),
     lights=[dict(pos=lambda t: _v(0.0, 3.0, -8.0), color="#ffd8a0",
                  strength=lambda t: 0.3 * _win(t, 84.0, 88.0, 97.0, 101.0), radius=9.0),
@@ -952,7 +952,7 @@ P3D = dict(
     setup=_setup,
     bursts=[dict(t=M["full1"], strength=0.25, rise=0.6, fall=1.4, color="#ffe6b0", at=tuple(SEAM)),
             dict(t=M["hit2"], strength=0.2, rise=0.3, fall=1.6, color="#ffe0b0", at=tuple(MOTHER + _v(0, 12, 0))),
-            dict(t=M["chord"], strength=0.35, rise=0.6, fall=2.5, color="#fff2d8", at=tuple(SEAM))],
+            dict(t=M["chord"], strength=0.12, rise=0.8, fall=2.5, color="#ffd9a0", at=tuple(SEAM))],
     motion_blur=0.25,
 )
 
