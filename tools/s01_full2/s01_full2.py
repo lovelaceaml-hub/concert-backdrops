@@ -229,6 +229,7 @@ def _bodies():
                                                        ("e4", "man", (6.8, -3.4), 240.0)]):
         kw = dict(common)
         kw.pop("bright")
+        kw.pop("points")
         if shape == "man":
             kw.update(garment="tunic")
         _BODIES[name] = Body(shape, at=(x, z), facing=facing, motion="stand",
