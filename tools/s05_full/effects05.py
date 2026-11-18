@@ -75,26 +75,26 @@ class Tree:
             p1 = p0 + d * length
             o1 = o0 + length / height * 0.55
             segs.append((p0, p1, o0, o1, depth))
-            if depth >= 5:
+            if depth >= 6:
                 return
-            n = 2 if depth == 0 else (3 if depth < 3 else 2)
+            n = 3 if depth in (1, 2) else 2
             for k in range(n):
                 a = rng.uniform(0, TAU) if depth else (k * np.pi + rng.uniform(-0.4, 0.4))
-                tilt = (0.42 + 0.25 * rng.random()) if depth else 0.50
+                tilt = (0.38 + 0.30 * rng.random()) if depth else 0.42
                 nd = d * np.cos(tilt) + np.array([np.cos(a), 0.0, 0.55 * np.sin(a)]) * np.sin(tilt)
                 nd[1] = max(nd[1], 0.18 if depth < 3 else -0.05)
                 nd /= np.linalg.norm(nd)
-                grow(p1, nd, length * (0.72 + 0.12 * rng.random()), depth + 1, o1 + 0.02 * k)
+                grow(p1, nd, length * (0.66 + 0.12 * rng.random()), depth + 1, o1 + 0.02 * k)
 
-        grow(self.base.copy(), _v(0.03, 1.0, 0.0) / np.linalg.norm(_v(0.03, 1.0, 0.0)), 1.15, 0, 0.0)
+        grow(self.base.copy(), _v(0.03, 1.0, 0.0) / np.linalg.norm(_v(0.03, 1.0, 0.0)), 0.95 * height / 3.3, 0, 0.0)
         self.segs = segs
         top = max(max(s[2], s[3]) for s in segs)
         pts, us, o0s, o1s, dep, sd = [], [], [], [], [], []
         for p0, p1, o0, o1, depth in segs:
             o0, o1 = o0 / top, o1 / top
             L = float(np.linalg.norm(p1 - p0))
-            thick = 0.11 * 0.62 ** depth
-            n = int(220 * L * (1.0 + 2.5 * thick / 0.11))
+            thick = 0.08 * 0.62 ** depth
+            n = int(260 * L * (1.0 + 2.0 * thick / 0.08))
             u = rng.random(n)
             r = rng.normal(size=(n, 3)) * thick * 0.35
             pts.append(p0[None] + (p1 - p0)[None] * u[:, None] + r)
@@ -114,7 +114,7 @@ class Tree:
         k = np.clip(self.dep / 5.0, 0, 1)[:, None]
         self.col = (warm[None] * (1 - 0.5 * k) + green[None] * 0.5 * k)
         # tips: blossoms and fruits
-        tips = [s for s in segs if s[4] >= 4]
+        tips = [s for s in segs if s[4] >= 5]
         self.tips = np.array([s[1] for s in tips])
         rng2 = np.random.default_rng(seed + 1)
         nb = 1600
@@ -130,22 +130,30 @@ class Tree:
         self.fruit = self.fruit[hx]
         self.height = float(self.p[:, 1].max() - self.base[1])
 
+    def scale(self, t):
+        return 0.22 + 0.78 * growth(t)
+
     def tip_top(self):
         return self.base + _v(0.0, self.height, 0.0)
+
+    def place(self, p, t):
+        """A point of the grown tree where it stands at t (the tree grows as a whole, a miniature first)."""
+        return self.base + (np.asarray(p) - self.base) * self.scale(t)
 
     def sample(self, t):
         g = growth(t)
         if g <= 0.0:
             return None
         out = []
-        # a branch point shows once the growth front has passed it along its branch
-        front = (g - self.o0) / np.maximum(self.o1 - self.o0, 1e-6)
-        vis = np.clip((front - self.u) / 0.08, 0.0, 1.0)
+        sc = self.scale(t)
+        front = 0.6 + 6.4 * g                       # branches of depth k grow in as the front passes k .. k+1
+        vis = np.clip((front - self.dep - self.u) / 0.25, 0.0, 1.0)
         m = vis > 0.01
         if m.any():
             breathe = 1.0 + 0.10 * np.sin(t * 1.3 + self.sd[m] * TAU)
             pulse = 1.0 + 0.6 * _s(146.0, 147.5, t) * (1.0 - _s(150.0, 156.0, t))
-            out.append(dict(pos=self.p[m], size=self.size[m], color=self.col[m] * 0.85 * pulse,
+            pos = self.base + (self.p[m] - self.base) * sc
+            out.append(dict(pos=pos, size=self.size[m] * (0.5 + 0.5 * sc), color=self.col[m] * 0.55 * pulse,
                             alpha=vis[m] * breathe, emit=1.4, kind="spark", twinkle=0.35, seed=self.sd[m]))
         # the young sprout glow at the base before the tree stands
         a0 = _s(13.4, 14.2, t)
@@ -153,7 +161,7 @@ class Tree:
             out.append(dict(pos=self.base[None] + _v(0, 0.08, 0)[None], size=0.9, color=lin("#ffe2a0"),
                             alpha=0.22 * a0, kind="soft"))
         # blossoms: open from 76 s along the crown, swell to fruit colour later, in the hold breathe softly
-        b = _ss(76.0 + 4.0 * self.bseed, 79.0 + 4.0 * self.bseed, t) * (self.btip_o < g + 0.02)
+        b = _ss(76.0 + 4.0 * self.bseed, 79.0 + 4.0 * self.bseed, t)
         if b.max() > 0.01:
             mb = b > 0.01
             pink = lin("#ffc6d2")
@@ -161,7 +169,7 @@ class Tree:
             c = pink[None] * self.bseed[mb, None] + cream[None] * (1 - self.bseed[mb, None])
             sway = 0.02 * np.sin(t * 0.9 + self.bseed[mb] * 9.0)[:, None]
             storm = _s(146.0, 147.0, t) * (1.0 - _s(149.0, 158.0, t))
-            out.append(dict(pos=self.bpos[mb] + sway, size=0.05 + 0.04 * self.bseed[mb],
+            out.append(dict(pos=self.base + (self.bpos[mb] - self.base) * sc + sway, size=0.05 + 0.04 * self.bseed[mb],
                             color=c * (0.7 + 0.5 * storm), alpha=b[mb] * 0.85, emit=1.2, kind="soft"))
         # the nine fruits: small glows from 110 s, their colours from 139 s, bright at the climax
         f = _s(110.0, 124.0, t)
@@ -172,9 +180,9 @@ class Tree:
             br = 0.55 + 0.45 * ripe + 0.5 * _s(146.0, 147.5, t) * (1 - _s(150.0, 158.0, t))
             br = br * (1.0 + 0.08 * np.sin(t * 1.1 + np.arange(9)))
             size = 0.07 + 0.08 * f + 0.03 * ripe
-            out.append(dict(pos=self.fruit, size=np.full(9, size), color=cols * br[:, None], alpha=f, emit=2.6,
+            out.append(dict(pos=self.place(self.fruit, t), size=np.full(9, size), color=cols * br[:, None], alpha=f, emit=2.6,
                             kind="spark"))
-            out.append(dict(pos=self.fruit, size=np.full(9, 0.55 * f + 0.2 * ripe), color=cols * 0.5,
+            out.append(dict(pos=self.place(self.fruit, t), size=np.full(9, 0.55 * f + 0.2 * ripe), color=cols * 0.5,
                             alpha=0.22 * f, kind="soft"))
         return out
 
@@ -192,7 +200,7 @@ class Island:
         self.s = rng.random(n)
 
     def sample(self, t):
-        return dict(pos=self.pos, size=0.02 + 0.02 * self.s, color=lin("#ffd98c") * 0.7, alpha=0.8,
+        return dict(pos=self.pos, size=0.015 + 0.015 * self.s, color=lin("#ffd98c") * 0.35, alpha=0.6,
                     kind="spark", twinkle=0.5, seed=self.s, birth=13.6 + 2.0 * self.s, fade=1.2)
 
 
@@ -224,7 +232,7 @@ class Stones:
         self.stones = []
         for t0, t1, p0, p1, linger in walks:
             d = float(np.hypot(p1[0] - p0[0], p1[1] - p0[1]))
-            n = max(int(d / 0.55), 3)
+            n = max(int(d / 0.80), 3)
             for k in range(n):
                 f = (k + 0.5) / n
                 x = p0[0] + (p1[0] - p0[0]) * f
@@ -244,7 +252,7 @@ class Stones:
             p = np.stack([x + r * np.cos(self.a), np.full_like(self.a, 0.02), z + 0.55 * r * np.sin(self.a)], 1)
             pos.append(p)
             al.append(np.full(len(p), a))
-            col.append(np.tile(gold * 0.6 + rose * 0.25, (len(p), 1)) * flash)
+            col.append(np.tile(gold * 0.4 + rose * 0.2, (len(p), 1)) * flash)
             size.append(0.025 + 0.02 * self.s)
             glow_p.append(_v(x, 0.03, z))
             glow_a.append(a)
@@ -259,7 +267,7 @@ class Stones:
 class Waves:
     """Waves of peace: one wide slow ring of gold across the lake, from a centre, at each practised word."""
 
-    def __init__(self, waves, n=1600, speed=4.2, reach=34.0):
+    def __init__(self, waves, n=1600, speed=3.6, reach=20.0):
         self.waves = waves                       # list of (t0, (x, z))
         rng = np.random.default_rng(17)
         self.a = rng.random(n) * TAU
@@ -278,7 +286,7 @@ class Waves:
             p = np.stack([x + (r + jitter) * np.cos(self.a), np.full_like(self.a, 0.025),
                           z + (r + jitter) * np.sin(self.a)], 1)
             out.append(dict(pos=p, size=0.05 + 0.03 * self.s + 0.004 * r, color=lin("#ffe2a8") * 0.9,
-                            alpha=fade * 0.75, emit=1.3, kind="soft", reflect=False))
+                            alpha=fade * 0.45, emit=1.1, kind="soft", reflect=False))
         return out or None
 
 
@@ -303,7 +311,7 @@ class Load:
         sway = 0.02 * np.sin(t * 0.8 + self.s[:, :1] * TAU)
         if t < self.t_off:
             p = base + self.o + sway
-            return dict(pos=p, size=0.10 + 0.08 * self.s[:, 1], color=lin("#c9c4d6") * 0.30, alpha=0.55 * k,
+            return dict(pos=p, size=0.05 + 0.05 * self.s[:, 1], color=lin("#d8d0e0") * 0.10, alpha=0.30 * k,
                         kind="soft", seed=self.s[:, 2], twinkle=0.1)
         age = t - self.t_off
         p = base + self.o * (1 + 2.5 * age) + _v(0.4, 0.9, 0.2) * age * (0.5 + self.s[:, :1])
@@ -395,10 +403,10 @@ class Halos:
                 continue
             a, b = self.src(tb), self.toward(tb)
             c = a + (b - a) * min(age / 5.0, 1.0) * 0.85 + _v(0, 0.3 * age, 0)
-            r = 0.25 + 0.38 * age
+            r = 0.20 + 0.22 * age
             p = c + np.stack([r * np.cos(self.a), 0.8 * r * np.sin(self.a), 0.3 * r * np.cos(self.a)], 1)
             fade = _s(0, 0.5, age) * (1 - _s(2.5, 5.0, age))
-            out.append(dict(pos=p, size=0.035 + 0.02 * self.s, color=lin("#ffe6c0") * 0.9, alpha=0.55 * fade,
+            out.append(dict(pos=p, size=0.05 + 0.04 * self.s, color=lin("#ffe6c0") * 0.7, alpha=0.30 * fade,
                             emit=1.4, kind="soft"))
         return out or None
 
@@ -463,28 +471,30 @@ class Shores:
 
 
 class Road:
-    """A road of light that rises gently from the tree toward the arch at the climax."""
+    """A road of light that rises gently from the tree toward the arch at the climax: a wide, soft flow of small
+    lights moving upward, brightest near the tree and thinning as it climbs."""
 
-    def __init__(self, start, end, t0=147.0, t1=151.0, n=2600):
+    def __init__(self, start, end, t0=147.0, t1=151.5, n=3200):
         self.a, self.b = np.asarray(start, np.float64), np.asarray(end, np.float64)
         self.t0, self.t1 = t0, t1
         rng = np.random.default_rng(59)
         self.s = rng.random((n, 4))
+        self.j = rng.normal(size=(n, 3))
 
     def sample(self, t):
         if t < self.t0:
             return None
         head = _s(self.t0, self.t1, t)
-        u = self.s[:, 0] * head
-        mid = 0.5 * (self.a + self.b) + _v(0, -3.0, 6.0)
+        flow = np.mod(self.s[:, 0] + 0.06 * (t - self.t0), 1.0)
+        u = flow * head
+        mid = 0.5 * (self.a + self.b) + _v(-4.0, -4.0, 10.0)
         c = _bez(self.a, mid, self.b, u)
-        w = 0.35 * (1.0 - 0.6 * u)
-        side = (self.s[:, 1] - 0.5) * 2.0 * w
-        p = c + np.stack([side, 0.05 * (self.s[:, 2] - 0.5), 0.3 * side], 1)
-        flow = np.mod(self.s[:, 3] - 0.15 * t, 1.0)
-        a = (0.55 + 0.45 * flow) * (1.0 - 0.45 * _s(153.0, 160.0, t)) * (1 - 0.7 * u)
-        return dict(pos=p, size=0.04 + 0.04 * self.s[:, 2], color=lin("#ffe6b0") * 1.1, alpha=a, emit=1.8,
-                    kind="spark", twinkle=0.5, seed=self.s[:, 2])
+        w = 0.25 + 1.6 * u
+        p = c + self.j * (w * 0.35)[:, None]
+        env = _ss(0.0, 0.08, flow) * (1.0 - _ss(0.75, 1.0, flow))
+        a = env * (1.0 - 0.5 * _s(153.0, 160.0, t)) * (1.0 - 0.6 * u) * 0.55
+        return dict(pos=p, size=0.05 + 0.08 * self.s[:, 2] * (1 + 2 * u), color=lin("#ffe6b0") * 0.9, alpha=a,
+                    emit=1.5, kind="soft", seed=self.s[:, 2])
 
 
 class Drift:

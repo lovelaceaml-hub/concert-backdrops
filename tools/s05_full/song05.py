@@ -84,21 +84,21 @@ def arch_point(k):
 # ---------------------------------------------------------------------------------------------- the camera
 # (time, position, target): calm, slow, level; performers stand in front, so the bottom third stays quiet
 KEYS = [
-    (0.0, _v(0.6, 1.75, 23.0), _v(0.2, 2.75, 0.0)),
-    (13.5, _v(-0.6, 1.60, 18.5), _v(-0.9, 2.55, 0.0)),
-    (24.0, _v(-1.4, 1.52, 17.2), _v(-2.2, 2.45, 0.0)),
-    (37.0, _v(-2.0, 1.50, 16.6), _v(-2.9, 2.45, 0.0)),
-    (55.0, _v(-2.2, 1.52, 16.6), _v(-3.0, 2.45, 0.0)),
-    (66.0, _v(-3.0, 1.52, 16.4), _v(-3.7, 2.45, 0.0)),
-    (78.0, _v(-1.6, 1.55, 17.0), _v(-2.2, 2.50, 0.0)),
-    (92.0, _v(1.0, 1.55, 17.2), _v(1.2, 2.50, 0.0)),
-    (106.0, _v(1.6, 1.55, 17.0), _v(1.8, 2.50, 0.0)),
-    (126.0, _v(2.0, 1.55, 17.0), _v(2.3, 2.50, 0.0)),
-    (137.5, _v(2.9, 1.55, 16.8), _v(3.1, 2.50, 0.0)),
-    (146.0, _v(0.0, 1.65, 18.0), _v(-0.6, 2.65, 0.0)),
-    (152.5, _v(-0.4, 2.30, 19.5), _v(-0.9, 3.30, 0.0)),
-    (158.0, _v(-0.3, 1.95, 20.5), _v(-0.7, 2.95, 0.0)),
-    (TOTAL + 1.0, _v(-0.3, 1.92, 20.7), _v(-0.7, 2.93, 0.0)),
+    (0.0, _v(0.6, 1.10, 21.0), _v(0.2, 2.45, 0.0)),
+    (13.5, _v(-0.6, 0.95, 16.0), _v(-0.9, 2.20, 0.0)),
+    (24.0, _v(-1.4, 0.90, 15.2), _v(-2.2, 2.15, 0.0)),
+    (37.0, _v(-2.0, 0.88, 14.8), _v(-2.9, 2.15, 0.0)),
+    (55.0, _v(-2.2, 0.90, 14.8), _v(-3.0, 2.15, 0.0)),
+    (66.0, _v(-3.0, 0.90, 14.6), _v(-3.7, 2.15, 0.0)),
+    (78.0, _v(-1.6, 0.92, 15.0), _v(-2.2, 2.17, 0.0)),
+    (92.0, _v(1.0, 0.92, 15.2), _v(1.2, 2.17, 0.0)),
+    (106.0, _v(1.6, 0.92, 15.0), _v(1.8, 2.17, 0.0)),
+    (126.0, _v(2.0, 0.92, 15.0), _v(2.3, 2.17, 0.0)),
+    (137.5, _v(2.9, 0.92, 14.8), _v(3.1, 2.17, 0.0)),
+    (146.0, _v(0.0, 0.98, 16.0), _v(-0.6, 2.30, 0.0)),
+    (152.5, _v(-0.4, 1.40, 17.5), _v(-0.9, 2.85, 0.0)),
+    (158.0, _v(-0.3, 1.15, 18.5), _v(-0.7, 2.50, 0.0)),
+    (TOTAL + 1.0, _v(-0.3, 1.13, 18.7), _v(-0.7, 2.48, 0.0)),
 ]
 FOV = 40.0
 
@@ -112,7 +112,7 @@ LAYOUT = _rig()
 
 # ---------------------------------------------------------------------------------------------- people
 CAST = cast05.Cast()
-TREE_FX = FX.Tree(TREE_AT)
+TREE_FX = FX.Tree(TREE_AT, height=2.7)
 FRUITS = TREE_FX.fruit
 
 # ---------------------------------------------------------------------------------------------- words
@@ -182,10 +182,10 @@ def _setup(scene):
     scene.add("s05 scatter", WORDS.clear(FX.Scatter(lambda t: CAST.where("B", t, "palm.R"), _neck("D", -0.1),
                                                     T["reach_B"][0] + 0.6, T["reach_B"][1])))
     scene.add("s05 halos", WORDS.clear(FX.Halos(lambda t: CAST.where("D", t, "head"), _hands("C"),
-                                                108.4, 124.0)))
+                                                108.4, 124.0)), reflect=False)
     scene.add("s05 petals", WORDS.clear(FX.Petals(_petal_amount)))
     scene.add("s05 shores", FX.Shores())
-    scene.add("s05 road", WORDS.clear(FX.Road(TREE_FX.tip_top(), arch_point(4) + _v(0, -1.0, 0))))
+    scene.add("s05 road", WORDS.clear(FX.Road(TREE_FX.tip_top(), arch_point(4) + _v(0, -2.0, 0))), reflect=False)
     scene.add("s05 drift", FX.Drift(FRUITS))
     CAST.add(scene)
     WORDS.add_to(scene)
@@ -214,30 +214,35 @@ def _arch_lit(t):
 
 LOOKS = dict(
     # song 04's warm apricot late morning, the hand-off frame
-    morning=dict(base="golden", sky_top="#2c5594", sky_mid="#8aa2c8", sky_hor="#f2c9a0", sun_color="#fff0d6",
-                 sun_int=0.75, sun_el=9.0, sun_az=204.0, exposure=0.42, clouds=0.25, haze=0.55, haze_color="#e8c4a4",
-                 mist=0.25, mist_color="#f0d0b0", hill_color="#4a5a7c", water="#1a2a44", rays=0.25,
-                 dust_color="#fff0d0", dust_color2="#ffe0b8", ripple=0.25),
-    # the hazy spring afternoon of verse 1 (a soft grey veil over the left shore comes from the mist)
-    haze=dict(base="golden", sky_top="#25488a", sky_mid="#7690bc", sky_hor="#ead2a8", sun_color="#fff2d8",
-              sun_int=0.62, sun_el=9.5, sun_az=205.0, exposure=0.40, clouds=0.45, haze=0.62, haze_color="#d6c8b4",
-              mist=0.30, mist_color="#d8cfc4", hill_color="#465878", water="#16253f", rays=0.22,
-              dust_color="#fff4dc", dust_color2="#e8f0b0", ripple=0.35),
+    morning=dict(base="golden", sky_top="#1d3a78", sky_mid="#5d6fa6", sky_hor="#c8905a", sun_color="#fff0d6",
+                 sun_int=0.75, sun_el=9.0, sun_az=221.0, clouds=0.30, haze=0.24, haze_color="#8a6c5c",
+                 mist=0.05, mist_color="#c8a088", hills=0.8, hill_height=0.55, hill_color="#1c1d36",
+                 water="#050b18", rays=0.25, dust_color="#fff0d0", dust_color2="#ffe0b8", ripple=0.25,
+                 exposure=0.52),
+    # the hazy spring afternoon of verse 1
+    haze=dict(base="golden", sky_top="#18336e", sky_mid="#556a9e", sky_hor="#c49468", sun_color="#fff2d8",
+              sun_int=0.60, sun_el=9.5, sun_az=221.0, clouds=0.45, haze=0.24, haze_color="#8a6c5c",
+              mist=0.05, mist_color="#b8a090", hills=0.8, hill_height=0.55, hill_color="#1c1d36",
+              water="#050b18", rays=0.22, dust_color="#fff4dc", dust_color2="#e8f0b0", ripple=0.35,
+              exposure=0.50),
     # the bright clear afternoon of verse 2
-    bright=dict(base="golden", sky_top="#21488f", sky_mid="#6f8fc4", sky_hor="#f2d6a6", sun_color="#fff4dc",
-                sun_int=0.85, sun_el=9.0, sun_az=205.0, exposure=0.44, clouds=0.25, haze=0.50, haze_color="#e6cfae",
-                mist=0.22, mist_color="#f0dcc0", hill_color="#40567c", water="#142641", rays=0.30,
-                dust_color="#fff4dc", dust_color2="#ffd6e0", ripple=0.30),
+    bright=dict(base="golden", sky_top="#173a7c", sky_mid="#5a76b0", sky_hor="#cc955e", sun_color="#fff4dc",
+                sun_int=0.85, sun_el=9.0, sun_az=221.0, clouds=0.25, haze=0.24, haze_color="#8a6c5c",
+                mist=0.05, mist_color="#d0a888", hills=0.8, hill_height=0.55, hill_color="#1c1d36",
+                water="#050b18", rays=0.30, dust_color="#fff4dc", dust_color2="#ffd6e0", ripple=0.30,
+                exposure=0.54),
     # the climax: the sun breaks through the haze
-    glory=dict(base="golden", sky_top="#2a4c90", sky_mid="#8a98c4", sky_hor="#ffd8a0", sun_color="#fff2d0",
-               sun_int=1.15, sun_el=8.0, sun_az=203.0, sun_glow=0.9, clouds=0.30, haze=0.48,
-               haze_color="#f0cfa0", mist=0.22, mist_color="#f6dcb6", hill_color="#4a5880", water="#1a2a48",
-               rays=0.75, dust_color="#fff4dc", dust_color2="#ffe0b0", ripple=0.25, exposure=0.47),
-    # the hold: warm late afternoon, the hand-off to song 06 (sun midway down, light haze)
-    late=dict(base="golden", sky_top="#2b5a98", sky_mid="#8fa8c8", sky_hor="#efd3a0", sun_color="#ffe9b8",
-              sun_int=0.85, sun_el=7.0, sun_az=204.0, sun_glow=0.8, exposure=0.43, clouds=0.25, haze=0.5, haze_color="#e8cfa4",
-              mist=0.22, mist_color="#f0d8b4", hill_color="#4c5c80", water="#1a2b4a", rays=0.40,
-              dust_color="#fff0d0", dust_color2="#ffe0b8", ripple=0.15),
+    glory=dict(base="golden", sky_top="#1e3a7a", sky_mid="#7a6fa8", sky_hor="#e0a060", sun_color="#fff0cc",
+               sun_int=1.15, sun_el=8.0, sun_az=221.0, sun_glow=0.9, clouds=0.30, haze=0.40,
+               haze_color="#8a6c5c", mist=0.05, mist_color="#e0a878", hills=0.8, hill_height=0.55,
+               hill_color="#1c1d36", water="#050b18", rays=0.75, dust_color="#fff4dc", dust_color2="#ffe0b0",
+               ripple=0.25, exposure=0.58),
+    # the hold: warm late afternoon, the hand-off to song 06 (sun lower, light haze)
+    late=dict(base="golden", sky_top="#1c3c7c", sky_mid="#6676a8", sky_hor="#cc9460", sun_color="#ffe9b8",
+              sun_int=0.85, sun_el=7.0, sun_az=221.0, sun_glow=0.8, clouds=0.25, haze=0.24, haze_color="#8a6c5c",
+              mist=0.05, mist_color="#d0a080", hills=0.8, hill_height=0.55, hill_color="#1c1d36",
+              water="#050b18", rays=0.40, dust_color="#fff0d0", dust_color2="#ffe0b8", ripple=0.15,
+              exposure=0.52),
 )
 
 # the lake: a perfect mirror during each prayer and each reading, gently alive otherwise
@@ -251,8 +256,9 @@ WORLD = dict(
     look=[(0.0, "morning"), (12.0, "haze", 10.0), (70.0, "haze"), (84.0, "bright", 12.0), (138.0, "bright"),
           (146.4, "glory", 2.4), (152.0, "glory"), (156.0, "late", 6.0)],
     ripple=RIPPLE,
-    arch=dict(lit=_arch_lit, colors=FX.NINE, span=ARCH05["span"], height=ARCH05["height"], z=ARCH05["z"], bright=0.9,
-              line=0.55),
+    mirror=0.72,
+    arch=dict(lit=_arch_lit, colors=FX.NINE, span=ARCH05["span"], height=ARCH05["height"], z=ARCH05["z"], bright=1.25,
+              line=1.0),
     lights=[dict(pos=lambda t: TREE_AT + _v(0.0, 1.8, 0.0), color="#ffd890",
                  strength=lambda t: 0.2 + 0.5 * _ss(52.0, 82.0, t) + 0.6 * _ss(146.0, 148.0, t), radius=4.0),
             dict(pos=lambda t: CAST.where("B", t, "chest"), color="#ffd27a",
@@ -273,6 +279,6 @@ TITLE = dict(label="Healing Concert", lines=["God Bless You"], size=120, y=0.27,
              hold=1e9, star=1e9, color="#ffffff", glow="#ffffff", anim="ribbon")     # never shown
 TAGLINE = dict(text="God Bless You", sizes=(60, 60), t0=1e9, t1=1e9 + 1.0, color="#ffffff", glow="#ffffff",
                anim="rise")                                                         # never shown
-TITLES = dict(signature=dict(windows=[(12.5, TOTAL + 5.0, "bl", "day")], fade=1.2))
+TITLES = dict(signature=dict(windows=[(12.5, TOTAL + 5.0, "bl", "night")], fade=1.2))
 PHRASES = _base.PHRASES
 CREDIT = _base.CREDIT

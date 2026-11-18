@@ -33,11 +33,11 @@ T = dict(
     form_A=14.0, form_B=14.6, bless=(16.0, 23.0),
     turn_A=21.8, kneel_A=24.4, pray1=(25.4, 36.2), cloak=(28.5, 33.5), lift_B=32.0,
     rise_B=37.5, rise_A=55.2,
-    walk1=56.6, walk1_speed=0.72, offer1=63.8, grip1=(64.6, 69.2), load_off=66.4,
+    walk1=57.6, walk1_speed=0.72, offer1=63.8, grip1=(64.6, 69.2), load_off=66.4,
     back1=69.6, back_speed=0.66, touch_tree=(76.8, 82.6),
     form_C=83.6, form_D=79.0, reach_B=(85.0, 91.5),
     kneel2=94.6, pray2=(95.6, 106.4), lift_D=103.0, getup_D=107.2, rise2=125.8,
-    walk2=127.4, walk2_speed=0.72, offer2=134.6, grip2=(135.4, 139.6),
+    walk2=128.2, walk2_speed=0.72, offer2=134.6, grip2=(135.4, 139.6),
     back2=139.8, back2_speed=0.70, open_arms=(146.4, 152.6), quiet=153.4,
 )
 SEG = (13.5, 50.0, 80.5, 112.0, 151.0, 175.0)     # still moments where a body is renewed
@@ -107,7 +107,7 @@ class Person:
 
 
 class Cast:
-    def __init__(self, points=26000):
+    def __init__(self, points=50000):
         self.points = points
         self.p = {k: Person(k) for k in "ABCD"}
         self.keys = self._plan()
@@ -270,7 +270,7 @@ class Cast:
                                                      motion=mk, seed=st["seed"], rig=rig, start=show[0])))
             b = Body(st["shape"], height=st["height"], at=at_arg, facing=keys["facing"], motion=mk, gesture=gest,
                      garment=st["garment"], hair=st["hair"], look=LOOK, color=st["color"], color2=st["color2"],
-                     bright=1.45, points=self.points, seed=st["seed"], build=st["build"], show=show,
+                     bright=1.9, points=self.points, seed=st["seed"], build=st["build"], show=show,
                      fade=(0.5 if i == 0 else JOIN * 0.5), effects=effects, wind=(0.25, 0.0, -0.1),
                      detail=dict(hand=2), wash=self._wash(k))
             person.bodies.append((s0, s1, b))
