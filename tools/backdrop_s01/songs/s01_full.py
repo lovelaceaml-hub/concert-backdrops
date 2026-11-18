@@ -107,7 +107,7 @@ MSTAR = _v(110.0, 4.0, -700.0)           # the morning star on the horizon
 MOTHER_AT = _v(4.5, 0.0, -16.0)           # Heavenly Mother, far on the shore, seen only from behind
 TREE_AT = _v(-9.0, 0.0, -17.0)             # where the dew falls and the tree of life grows
 ARCH_GEO = dict(span=96.0, height=30.0, z=-70.0, center=(0.0, 2.0, 0.0))
-LIT_AT = {COMP: 56.2, ENC: 176.0}         # the two stars this song lights
+LIT_AT = {COMP: 58.0, ENC: 177.0}         # the words lane hands off here         # the two stars this song lights
 
 
 def arch_homes(t=0.0):
@@ -117,7 +117,7 @@ def arch_homes(t=0.0):
                      np.full(9, c[2] + ARCH_GEO["z"])], axis=1)
 
 
-READS = [(41.6, 52.4), (63.4, 68.6), (116.6, 121.4), (150.6, 155.0), (160.6, 172.4)]
+READS = [(42.0, 52.0), (62.0, 67.0), (117.5, 121.0), (147.8, 151.8), (161.0, 172.0)]   # words lane times
 
 
 def _reading(t):
@@ -340,14 +340,6 @@ def _spec(t_in, t_read0, t_read1, t_out, **kw):
 _SPECS = [
     _spec(7.1, 10.4, 19.4, 22.0, label="", lines=["All You Stars", "of Zion"], frac=0.42, name="title",
           color="#ffe6b8", glow="#ffd27a", arrive="stars", leave="fade", stars=0.8, ride=(0.5, 0.66, 9.0)),
-    _spec(38.4, 41.6, 52.4, 55.6, expr="Compliment", frac=0.50, pill=True, arrive="pen", leave="fade"),
-    _spec(61.6, 63.4, 68.6, 70.0, label="", lines=["like a torch"], frac=0.26, name="torch",
-          color="#ffd9a0", glow="#ffb060", arrive="reveal", leave="rise", ride=(0.5, 0.74, 9.0)),
-    _spec(114.6, 116.6, 121.4, 123.4, label="", lines=["dew of the dawn"], frac=0.30, name="dew",
-          color="#eef2ff", glow="#c8d4ff", arrive="stitch", leave="fade", ride=(0.5, 0.72, 8.0)),
-    _spec(148.2, 150.6, 155.0, 156.8, label="", lines=["Arise"], frac=0.26, name="arise",
-          color="#ffd890", glow="#ff9a40", arrive="lake", leave="rise", ride=(0.5, 0.68, 9.0)),
-    _spec(157.4, 160.6, 172.4, 175.4, expr="Encouragement", frac=0.58, pill=True, arrive="pen", leave="fade"),
 ]
 
 
@@ -356,7 +348,31 @@ def _clean_leave(t, info):
         return dict(pos=info["home"], assist=1.0)
 
 
-WORDS = CPW.Words(_SPECS, camera=_LAYOUT, reflect=False, drive=_clean_leave)
+def _lane_words():
+    """The words lane (tools/s01_full/words.py): Compliment and Encouragement gather into their own stars of
+    the arch (the real arch places, not a guess on screen), the torch letters burn, the dew is stitched in
+    light, "Arise" stands up out of the lake on the 2:27.8 sunrise hit."""
+    import importlib.util
+    import sys as _sys
+    from pathlib import Path as _P
+    root = _P(__file__).resolve().parents[3]
+    spec = importlib.util.spec_from_file_location("s01_lane_words", root / "tools/s01_full/words.py")
+    mod = importlib.util.module_from_spec(spec)
+    _sys.modules["s01_lane_words"] = mod
+    spec.loader.exec_module(mod)
+    homes = arch_homes()
+    # the morning sky behind Arise and Encouragement is bright: keep the letters' colour, a deeper glow and
+    # a stronger halo so they stand out from the pale sky (see also the deeper morning looks below)
+    style = {"Arise": dict(color="#ffb347", glow="#c85a10", tint=.85, bright=1.0, halo=1.9),
+             "Encouragement": dict(tint=.85, bright=1.0, halo=1.9)}
+    return mod.build(camera=_LAYOUT, stars={"Compliment": tuple(homes[COMP]), "Encouragement": tuple(homes[ENC])},
+                     style=style)
+
+
+_LANE = _lane_words()
+_TIMES = _LANE.timeline
+WORDS = CPW.Words(_SPECS + list(_LANE), camera=_LAYOUT, reflect=False, drive=_clean_leave)
+
 
 
 # ---------------------------------------------------------------------------------------------------------
@@ -697,14 +713,14 @@ LOOKS = dict(
                   ripple=0.15, rays=0.0),
     dawnwarm=dict(base="dawn", sky_top="#1a2a64", sky_mid="#6a5a9a", sky_hor="#f0a07a", sun_el=-1.5,
                   sun_int=0.8, clouds=0.2, stars=0.15, mist=0.45, mist_color="#b08090", ripple=0.15),
-    sunrise=dict(base="sunrise", sky_top="#163470", sky_mid="#7a5a86", sky_hor="#f2a060", sun_el=1.0,
+    sunrise=dict(base="sunrise", sky_top="#12306c", sky_mid="#64528a", sky_hor="#f2a060", sun_el=1.0,
                  sun_int=0.7, sun_glow=0.45, clouds=0.25, haze_color="#d0906a", mist_color="#c09080", ripple=0.25,
                  exposure=0.85),
-    morning=dict(base="golden", sky_top="#173a74", sky_mid="#7a6a8c", sky_hor="#f4b070", sun_el=5.5,
+    morning=dict(base="golden", sky_top="#12306c", sky_mid="#5e5c98", sky_hor="#f4b070", sun_el=5.5,
                  sun_int=0.55, sun_glow=0.35, sun_disc=3.0, sun_color="#ffe8c0", clouds=0.2, haze=0.28, haze_color="#c89070",
                  mist=0.10, mist_color="#d0a080", water="#141c3a", ripple=0.25, rays=0.15, dust=0.6,
                  dust_color="#fff0d0", dust_color2="#ffd8a0", exposure=0.82),
-    still=dict(base="golden", sky_top="#173a74", sky_mid="#7a6a8c", sky_hor="#f4b070", sun_el=6.5,
+    still=dict(base="golden", sky_top="#12306c", sky_mid="#5e5c98", sky_hor="#f4b070", sun_el=6.5,
                sun_int=0.55, sun_glow=0.35, sun_disc=3.0, sun_color="#ffe8c0", clouds=0.2, haze=0.28, haze_color="#c89070",
                mist=0.10, mist_color="#d0a080", water="#141c3a", ripple=0.05, rays=0.15, dust=0.45,
                dust_color="#fff0d0", dust_color2="#ffd8a0", exposure=0.82),
