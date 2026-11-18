@@ -75,15 +75,19 @@ SEGMENTS = (25.0, 56.0, 86.6, 121.0, 151.5, 178.0, 205.0)   # still moments wher
 JOIN = 0.6                                                   # cross-fade seconds at a join
 
 N = 16
-SHORE_X = np.linspace(-5.4, 5.0, N)
-COMP_A, COMP_B = 7, 9                 # the Compliment pair (young women)
-ENC_K, ENC_H = 8, 6                   # the Encouragement pair (young men): K kneels, H helps
-SHAPES = ["woman", "man", "woman", "man", "woman", "man", "man", "woman", "man", "woman",
+SHORE_X = np.r_[np.linspace(-5.9, -1.1, 7), np.linspace(1.1, 5.9, 7)]
+SHORE_X = np.r_[SHORE_X[:7], -0.42, 0.42, SHORE_X[7:]]   # the two middle places are the Compliment pair's
+COMP_A, COMP_B = 7, 8                 # the Compliment pair (young women)
+ENC_K, ENC_H = 9, 6                   # the Encouragement pair (young men): K kneels, H helps
+COMP_FRONT = ((-0.62, 2.3), (0.95, 2.2))   # where the Compliment pair act, before the line's gap
+ENC_FRONT = ((0.36, 2.4), (-0.42, 2.45))   # where the Encouragement pair act after the walk back (K, H)
+SHAPES = ["woman", "man", "woman", "man", "woman", "man", "man", "woman", "woman", "man",
           "man", "woman", "man", "woman", "man", "woman"]
 HAIR = dict(woman=("bun", "tied", "bob", "long", "covered"), man=("short", "cap"))
 GOLDS = [("#ffc664", "#fff0c8"), ("#f2a640", "#ffdc96"), ("#ffd27a", "#fff4d6"), ("#f6b552", "#ffe6b0")]
 LOOK = dict(name="glitter", seams=0.6)
 FLAME = "#ffb45a"
+DAY_WASH, DAY_WASH_AMOUNT, DAY_WASH_T = "#ffa83c", 0.45, (118.0, 140.0)   # deeper gold once the sky is light
 FLAME2 = "#fff0c8"
 
 
@@ -190,16 +194,13 @@ class Cast:
         T = self.T
         rng = np.random.default_rng(11)
         n = self.n
-        xs = np.linspace(-5.4, 5.0, n) if n != N else SHORE_X
+        xs = np.linspace(-5.9, 5.9, n) if n != N else SHORE_X
         self.shore = []
         for i in range(n):
-            z = 0.25 * np.sin(1.7 * i) + rng.uniform(-0.15, 0.15)
-            self.shore.append((float(xs[i] + rng.uniform(-0.1, 0.1)), float(z)))
-        a, b = COMP_A, COMP_B
-        self.shore[a] = (-0.35, 0.95)        # in front of the line, beside her young trees
-        self.shore[b] = (1.05, 0.80)
-        self.shore[ENC_K] = (0.25, 0.20)
-        self.shore[ENC_H] = (-0.45, 0.25)
+            z = 0.22 * np.sin(1.7 * i) + rng.uniform(-0.12, 0.12)
+            self.shore.append((float(xs[i] + rng.uniform(-0.08, 0.08)), float(z)))
+        self.shore2 = list(self.shore)       # where each one returns to after the lake
+        self.shore2[ENC_K], self.shore2[ENC_H] = ENC_FRONT
         # landing order: from the middle outward, a little shuffled
         order = np.argsort(np.abs(np.array([p[0] for p in self.shore])) + rng.uniform(0, 1.6, n))
         self.land = np.zeros(n)
@@ -227,7 +228,9 @@ class Cast:
         ax, az = self.arc[i]
         motion = [(-1e9, "stand")]
         gesture = []
-        face0 = float(np.clip(-sx * 4.0, -25, 25)) + rng.uniform(-12, 12)     # toward the camera, a little in
+        # toward the camera, turned a little toward the middle where the pairs act
+        face0 = 0.45 * float(np.degrees(np.arctan2(0.15 - sx, 2.2 - sz))) + rng.uniform(-10, 10)
+        face0 = float(np.clip(face0, -50, 50))
         facing = [(-1e9, face0)]
         # torch held at the chest from torch_in, raised at lift, lowered to walk
         hold = (T["torch_in"], T["enc"] - 3.0 if i in (ENC_K, ENC_H) else T["sparks"] + 1.0)
@@ -253,15 +256,15 @@ class Cast:
         motion += [(t_go - 1.2, "shuffle"), (t_go, "walk", dict(speed=speed)), (t_arr, "stand", dict(blend=0.8))]
         walks = [(t_go, t_arr)]
         # back to the shore
-        bx, bz = sx, sz
+        bx, bz = self.shore2[i]
         d2 = np.array([bx - ax, bz - az])
         dist2 = float(np.hypot(*d2))
         head2 = float(np.degrees(np.arctan2(d2[0], d2[1])))
         t_go2 = T["back"] + 0.2 * abs(self.arc_rank(i) - (self.n - 1) / 2.0) + rng.uniform(0, 0.3)
         t_arr2 = t_go2 + dist2 / speed + 0.6
         face_end = face0
-        if i == COMP_A:
-            face_end = 25.0
+        if i in (ENC_K, ENC_H):
+            face_end = 10.0 if i == ENC_K else 25.0
         facing += [(t_go2 - 1.0, face_lake), (t_go2 - 0.1, head2), (t_arr2 - 0.4, head2), (t_arr2 + 1.6, face_end)]
         motion += [(t_go2 - 1.0, "shuffle"), (t_go2, "walk", dict(speed=speed)), (t_arr2, "stand", dict(blend=0.8))]
         walks.append((t_go2, t_arr2))
@@ -293,30 +296,33 @@ class Cast:
     # ------------------------------------------------------------------ the two acted moments
     def _compliment(self, keys, i):
         T = self.T
+        back0, back1 = T["comp_end"] - 1.2, T["comp_end"] + 0.4      # both step back into the line
         if i == COMP_A:
             # she kneels by her third young tree, pours water from cupped hands, rises, straightens, tired
-            keys["facing"] = [(-1e9, -62.0), (T["comp"] + 5.6, -62.0), (T["comp"] + 6.6, 35.0),
-                              (T["comp_end"] + 0.5, 35.0), (T["comp_end"] + 2.0, keys["face0"])] + \
-                keys["facing"][1:]
+            fa = COMP_FRONT[0]
+            keys["at"] = [(-1e9, fa), (back0, fa), (back1, self.shore[i])]
+            keys["facing"] = [(-1e9, -62.0), (T["comp"] + 5.6, -62.0), (T["comp"] + 6.6, 38.0),
+                              (back0 - 0.3, 38.0), (back1, keys["face0"])] + keys["facing"][1:]
             keys["motion"] = [(-1e9, "stand"), (self.land[i] + 3.2, "kneel", dict(one=True, dur=1.6, hands="free")),
                               (T["comp"] + 3.0, "rise", dict(one=True, dur=2.2, blend=0.08)),
-                              (T["comp"] + 5.4, "stand", dict(blend=0.6))] + keys["motion"][1:]
+                              (T["comp"] + 5.4, "stand", dict(blend=0.6)), (back0, "shuffle"),
+                              (back1, "stand")] + keys["motion"][1:]
             keys["gesture"] = [(self.land[i] + 4.0, T["comp"] + 2.6, "cup", dict(ease=0.9)),
                                (T["comp"] + 4.6, T["comp"] + 6.4, "bow", dict(amount=14.0)),
-                               (T["comp"] + 7.0, T["comp_end"] - 0.2, "hand_on_heart", dict(side="R", bow=5.0))] + \
+                               (T["comp"] + 7.0, back0 - 0.2, "hand_on_heart", dict(side="R", bow=5.0))] + \
                 keys["gesture"]
         if i == COMP_B:
-            ta = self.people_keys_place(COMP_A)
-            keys["facing"] = [(-1e9, -55.0), (T["comp"] + 4.4, -55.0), (T["comp"] + 5.4, -75.0),
-                              (T["comp_end"] + 0.5, -75.0), (T["comp_end"] + 2.0, keys["face0"])] + \
-                keys["facing"][1:]
-            keys["motion"] = [(-1e9, "stand"), (T["comp"] + 4.4, "shuffle"), (T["comp"] + 5.8, "stand")] + \
-                keys["motion"][1:]
-            keys["at"] = [(-1e9, self.shore[i]), (T["comp"] + 4.4, self.shore[i]),
-                          (T["comp"] + 5.8, (ta[0] + 0.95, ta[1] - 0.05))]
+            fa, fb = COMP_FRONT
+            near = (fa[0] + 0.92, fa[1] - 0.02)
+            keys["at"] = [(-1e9, fb), (T["comp"] + 4.4, fb), (T["comp"] + 5.8, near), (back0, near),
+                          (back1, self.shore[i])]
+            keys["facing"] = [(-1e9, -55.0), (T["comp"] + 4.4, -55.0), (T["comp"] + 5.4, -72.0),
+                              (back0 - 0.3, -72.0), (back1, keys["face0"])] + keys["facing"][1:]
+            keys["motion"] = [(-1e9, "stand"), (T["comp"] + 4.4, "shuffle"), (T["comp"] + 5.8, "stand"),
+                              (back0, "shuffle"), (back1, "stand")] + keys["motion"][1:]
             keys["gesture"] = [(T["comp"] + 0.5, T["comp"] + 4.6, "lean_in",
                                 dict(to=lambda t: self.people[COMP_A].aim(t, "head"), ease=0.8)),
-                               (T["comp"] + 5.8, T["comp_end"] - 0.4, "offer", dict(side="L", ease=1.0))] + \
+                               (T["comp"] + 5.8, back0 - 0.4, "offer", dict(side="L", ease=1.0))] + \
                 keys["gesture"]
 
     def people_keys_place(self, i):
@@ -360,6 +366,7 @@ class Cast:
             self._compliment(keys, i)
             self._encouragement(keys, i)
             plans.append(keys)
+        self.first = [keys["at"][0][1] for keys in plans]
         for i, keys in enumerate(plans):
             self.people.append(Person(self, i, st, SHAPES[i % len(SHAPES)], self.shore[i], keys))
         for i, keys in enumerate(plans):
@@ -377,7 +384,8 @@ class Cast:
                  height=(1.52 + 0.1 * rng.random()) if shape == "woman" else (1.66 + 0.1 * rng.random()),
                  build=0.92 + 0.12 * rng.random(), bright=1.45, seed=20.0 + 1.37 * i,
                  points=self.apoints if acting else self.points, scale=self.st.scale,
-                 wind=(0.25, 0.0, -0.15))
+                 wind=(0.25, 0.0, -0.15),
+                 wash=dict(color=DAY_WASH, amount=lambda t: DAY_WASH_AMOUNT * _ss(*DAY_WASH_T, t)))
         if acting:
             d["detail"] = dict(hand=2)
         return d
@@ -591,17 +599,18 @@ class Torch:
         if len(u):
             pts = b0[None] * (1 - u[:, None]) + b1[None] * u[:, None] + self.jit[:len(u)] * self.k
             col = lin("#f6c26a") * (0.7 + 0.5 * u[:, None])
-            out.append(dict(pos=pts, size=0.008 * self.k, color=col, alpha=0.75 * a, kind="spark", emit=1.6,
-                            twinkle=0.6))
+            out.append(dict(pos=pts, size=0.013 * self.k, color=col, alpha=0.9 * a, kind="spark", emit=2.2,
+                            twinkle=0.4))
         f = self.flame(t)
         if f is not None:
             p, g = f
             fl = 0.88 + 0.12 * np.sin(t * 7.3 + self.i) * np.sin(t * 3.1 + 1.0)
             c = lin(FLAME)
-            out.append(dict(pos=p[None], size=0.16 * self.k * min(g, 1.4), color=c * 0.9, alpha=0.55 * fl * min(g, 1.0),
-                            kind="soft", backlight=0.3))
-            out.append(dict(pos=p[None], size=0.035 * self.k, color=lin(FLAME2), alpha=min(g, 1.0), kind="spark",
-                            emit=3.2 * fl * g))
+            out.append(dict(pos=p[None], size=0.45 * self.k * min(g, 1.4), color=c * 0.9,
+                            alpha=0.45 * fl * min(g, 1.0), kind="soft", backlight=0.3))
+            out.append(dict(pos=p[None], size=0.14 * self.k, color=lin(FLAME2), alpha=0.8 * min(g, 1.0), kind="soft"))
+            out.append(dict(pos=p[None], size=0.06 * self.k, color=lin(FLAME2), alpha=min(g, 1.0), kind="spark",
+                            emit=4.5 * fl * g))
             mo = p + self.motes * (1.0 + 0.3 * np.sin(t * 1.7 + self.mph))[:, None] * self.k + \
                 np.stack([np.zeros(18), (0.04 + 0.06 * ((t * 0.9 + self.mph) % 1.0)) * self.k, np.zeros(18)], axis=1)
             out.append(dict(pos=mo, size=0.006 * self.k, color=c, alpha=0.7 * min(g, 1.0), kind="spark", twinkle=1.0,
@@ -661,7 +670,8 @@ class FallingStars:
             tl = c.land[i]
             if not (tl - 2.2 <= t <= tl + 1.6):
                 continue
-            g = c.st.point(*c.shore[i][:1], y=0.9, z=c.shore[i][1])
+            lx, lz = c.first[i]
+            g = c.st.point(lx, 0.9, lz)
             top = g + (c.st.right * (2.5 + 1.5 * self.off[i, 0]) + c.st.cam * (-4.0 + self.off[i, 1])) * c.st.scale \
                 + np.array([0, 9.0 * c.st.scale, 0])
             u = min(max((t - (tl - 2.2)) / 2.2, 0.0), 1.0)
@@ -687,7 +697,7 @@ class Saplings:
     def __init__(self, cast):
         self.c = cast
         st = cast.st
-        ax, az = cast.shore[COMP_A]
+        ax, az = COMP_FRONT[0]
         self.spots = [(ax - 1.75, az - 0.25, 0.62, 0.0), (ax - 1.2, az - 0.05, 0.5, 0.0),
                       (ax - 0.62, az + 0.18, 0.42, 1.0)]
         rng = np.random.default_rng(31)
@@ -776,7 +786,7 @@ class Hearts:
     def __init__(self, cast):
         self.c = cast
         T = cast.T
-        self.on = (T["comp"] + 6.6, T["comp_end"] - 0.3)
+        self.on = (T["comp"] + 6.6, T["comp_end"] - 1.2)
         rng = np.random.default_rng(51)
         self.motes = rng.normal(0, 1, (24, 3)) * 0.05
         self.ph = rng.uniform(0, 6.28, 24)
@@ -817,21 +827,23 @@ class StepRings:
                                 np.sin(np.linspace(0, 2 * np.pi, 40, endpoint=False))], axis=1)
 
     def _steps(self, i, w):
-        """Footfalls of one walk: where an ankle comes down, on a 1/30 s grid (found once, when first needed)."""
+        """Footfalls of one walk, at the stride's cadence along the walker's path (found once, when needed)."""
         key = (i, w)
         if key not in self.cache:
             c = self.c
             p = c.people[i]
             a, b = p.keys["walks"][w]
-            ts = np.arange(a, b + 0.6, 1 / 30.0)
             out = []
-            for side in ("L", "R"):
-                y = np.array([p.where(tt, "ankle." + side)[1] for tt in ts])
-                down = y < y.min() + 0.02 * c.st.scale
-                for s in np.where(down & ~np.r_[False, down[:-1]])[0]:
-                    q = p.where(ts[s], "toe." + side)
-                    if c.st.local(q)[2] < -0.7:          # on the water, not the shore
-                        out.append((float(ts[s]), q[0], c.st.c[1] + 0.01, q[2]))
+            side = 1.0
+            for tt in np.arange(a + 0.35, b + 0.2, 0.56):
+                g, n = p.aim(tt, "pelvis", normal=True)
+                n = np.array([n[0], 0.0, n[2]])
+                n /= max(np.linalg.norm(n), 1e-6)
+                lat = np.cross(n, [0.0, 1.0, 0.0]) * 0.1 * side * c.st.scale
+                q = np.array([g[0], c.st.c[1] + 0.01, g[2]]) + lat + n * 0.12 * c.st.scale
+                side = -side
+                if c.st.local(q)[2] < -0.7:              # on the water, not the shore
+                    out.append((float(tt), q[0], q[1], q[2]))
             self.cache[key] = out
         return self.cache[key]
 
@@ -868,7 +880,7 @@ class Mound:
         x, z = r * np.cos(a), r * np.sin(a) * 0.8
         y = 0.55 * np.exp(-(r / 1.15) ** 2) - 0.02
         self.pts = np.array([st.point(7.9 + xx, yy, -1.4 + zz) for xx, yy, zz in zip(x, y, z)])
-        self.a = 0.35 * np.exp(-(r / 1.6) ** 2) + 0.05
+        self.a = 0.22 * np.exp(-(r / 1.4) ** 2) + 0.03
         self.t0, self.t1 = cast.T["mother"][0] - 1.0, cast.T["mother"][1] + 1.0
 
     def sample(self, t):

@@ -28,12 +28,12 @@ def shots(stage, people):
     wide = (st.point(0.4, 2.3, 13.5), st.point(0.6, 1.0, -0.8), 40.0)
     return {
         30.0: wide,
-        46.0: (st.point(0.2, 1.55, 6.4), st.point(0.25, 1.05, 0.6), 36.0),
-        50.0: (st.point(0.2, 1.55, 6.4), st.point(0.25, 1.05, 0.6), 36.0),
+        46.0: (st.point(0.15, 1.5, 7.6), st.point(0.15, 1.05, 2.2), 32.0),
+        50.0: (st.point(0.15, 1.5, 7.6), st.point(0.15, 1.05, 2.2), 32.0),
         70.0: (st.point(1.2, 2.2, 12.5), st.point(1.4, 1.1, -0.8), 44.0),
         100.0: (st.point(0.0, 3.0, 12.0), st.point(0.0, 0.9, -4.0), 46.0),
-        160.0: (st.point(0.0, 1.5, 6.6), st.point(-0.1, 0.9, 0.2), 36.0),
-        168.0: (st.point(0.0, 1.5, 6.6), st.point(-0.1, 0.9, 0.2), 36.0),
+        160.0: (st.point(0.0, 1.5, 7.9), st.point(0.0, 0.85, 2.4), 32.0),
+        168.0: (st.point(0.0, 1.5, 7.9), st.point(0.0, 0.85, 2.4), 32.0),
         195.0: wide,
     }
 
@@ -62,8 +62,8 @@ def main():
         moves.append(hold(tuple(pos), tuple(look), t - 0.6, t + 0.6, blend=0.0, fov=fov))
     rig = Rig(moves, blend=0.0, fov=40.0, aperture=0.0, handheld=0.0)
     looks = dict(film.LOOKS)
-    looks["sunrise"] = dict(base="day", sun_az=180.0, sun_el=6.0, sun_int=0.8, sun_glow=0.9, mist=0.25,
-                            sky_hor="#ffc890", rays=0.2)
+    looks["sunrise"] = dict(base="dusk", sky_top="#2c3c7c", sky_mid="#b8708a", sky_hor="#ffb070",
+                            sun_az=180.0, sun_el=4.0, sun_int=0.8, sun_glow=0.9, mist=0.2, mist_color="#c08070")
     world = dict(looks=looks, look=[(0.0, "floor"), (75.0, "prayer", 6.0), (118.0, "drop", 8.0),
                                     (150.0, "sunrise", 10.0)],
                  light=dict(pos=(0.0, 30.0, -200.0), color="#fff1d8", strength=0.0, size=0.5, rays=0.0),
