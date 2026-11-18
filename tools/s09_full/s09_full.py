@@ -107,9 +107,9 @@ BOATS = [_v(-7.0, 0.0, 6.0), _v(10.0, 0.0, -16.0), _v(-24.0, 0.0, -34.0)]
 SHORE_Z = -14.0             # the sand bar of light where the called people stand
 MOTHER1 = _v(0.0, 0.0, -6.0)
 MOTHER2 = _v(0.0, 0.0, -8.0)
-SAINT_Z = -30.0
+SAINT_Z = -40.0
 PAIR = _v(1.2, 0.0, 5.0)    # the Encouragement pair on the near shore
-ARCH = dict(span=330.0, height=118.0, z=-340.0)
+ARCH = dict(span=380.0, height=80.0, z=-340.0)
 
 
 class Path(Move):
@@ -137,7 +137,8 @@ CAM_KEYS = [                         # target heights put the horizon near 0.40 
     (148.0, _v(-3.0, 2.4, 4.0), _v(-1.0, -4.0, -80.0)),
     (168.0, _v(2.5, 2.6, 2.0), _v(1.0, -4.2, -80.0)),
     (176.0, _v(1.6, 3.0, 11.5), _v(1.2, -7.0, -18.5)),
-    (188.0, _v(1.6, 3.0, 11.3), _v(1.2, -6.9, -18.5)),
+    (186.0, _v(1.6, 3.0, 11.3), _v(1.2, -6.9, -18.5)),
+    (192.0, _v(1.6, 3.2, 13.5), _v(1.2, -5.4, -18.5)),
     (200.0, _v(0.0, 3.0, 24.0), _v(0.0, -2.0, -120.0)),
     (214.0, _v(0.0, 3.0, 20.0), _v(0.0, -7.0, -120.0)),
     (228.0, _v(0.0, 3.4, 12.0), _v(0.0, -6.5, -120.0)),
@@ -610,7 +611,7 @@ class City:
         self.seed = r.random(len(p))
 
     def sample(self, t):
-        a = 0.2 * _win(t, 200.0, 208.0, 1e9, 2e9) + 0.12 * _win(t, 214.0, 224.0, 1e9, 2e9)
+        a = 0.1 * _win(t, 200.0, 208.0, 1e9, 2e9) + 0.06 * _win(t, 214.0, 224.0, 1e9, 2e9)
         if a <= 0.0:
             return None
         return dict(pos=self.pos, size=0.9, color=lin("#fff3d8"), alpha=a * 0.6, emit=1.2, kind="soft",
@@ -634,7 +635,7 @@ class Comets:
         w = _win(t, 212.0, 218.0, 226.0, 230.5)
         p = high * (1 - w) + low * w
         # the net: each comet sweeps its own row across the sky, left to right and back
-        n = _win(t, 229.5, 232.0, 1e9, 2e9)
+        n = _win(t, 229.5, 232.0, 248.0, 255.0)
         if n > 0.0:
             row = 24.0 + 2.8 * k
             sweep = np.sin(0.42 * (t - 229.5) + k * 0.7)
@@ -719,6 +720,34 @@ class Net:
             out.append(dict(pos=pos, size=0.18, color=lin("#ffe2b0"), alpha=dew * u * 0.6, emit=1.4,
                             kind="spark", twinkle=0.7, seed=d[:, 2]))
         return out
+
+
+class NineLights:
+    """The arch of nine lights, high in the sky the whole song, all nine lit (songs 01 to 08 lit them); drawn
+    at the scale of this song's wide sea. Star 7 flares when the Encouragement rises into it."""
+
+    def __init__(self):
+        r = np.random.default_rng(41)
+        self.du = r.random(4000)
+        self.jit = r.normal(size=(4000, 3)) * 1.2
+        self.ds = r.random(4000)
+
+    def sample(self, t):
+        g = _arch_geo()
+        P = g.homes(t)
+        st = _arch_lit(t)
+        k = np.array([a for a, _ in st])
+        cols = np.array([lin(c) for c in COL])
+        u = np.mod(self.du + 0.004 * t, 1.0)
+        grid = np.linspace(0.0, 1.0, 9)
+        dc = np.stack([np.interp(u, grid, cols[:, j]) for j in range(3)], 1) * 0.5 + lin("#ffe6c0") * 0.5
+        pulse = 1.0 + 0.08 * np.sin(1.3 * t + np.arange(9))
+        return [dict(pos=g.point(u, t) + self.jit, size=0.9 + 0.8 * self.ds, color=dc, alpha=0.10, kind="soft",
+                     twinkle=0.6, seed=self.ds, fog=0.2),
+                dict(pos=P, size=3.2, color=cols, alpha=np.minimum(k * pulse, 1.6), emit=3.0, kind="spark",
+                     lod=False, fog=0.2),
+                dict(pos=P, size=26.0, color=cols * 0.6 + lin("#fff0d8") * 0.4, alpha=0.10 * np.minimum(k, 2.0),
+                     kind="soft", lod=False, dof=0.0, fog=0.2)]
 
 
 class Rising:
@@ -832,18 +861,18 @@ def _people():
     tired = dict(shape="woman", at=(PAIR[0] + 0.35, PAIR[2]), facing=-20.0, garment="robe", hair="long",
                  look=LOOK, color="#e8b064", color2="#ffe6bc", points=36000, show=(171.0, 197.0), fade=1.4,
                  seed=41.0, bright=1.0,
-                 motion=[(-1e9, "kneel", dict(dur=0.01, hands="free")), (185.6, "rise_up", dict(dur=2.2))],
+                 motion=[(-1e9, "kneel", dict(dur=0.01, hands="free")), (187.3, "rise_up", dict(dur=2.2))],
                  gesture=[(-1e9, 182.6, "bow", dict(amount=22.0)),
-                          (183.0, 186.0, "look_to", dict(to=lambda t: refs2["b"].where(t, "head", raw=True))),
-                          (188.0, 196.0, "look_up", dict(amount=14.0))])
+                          (183.0, 187.6, "look_to", dict(to=lambda t: refs2["b"].where(t, "head", raw=True))),
+                          (189.6, 196.0, "look_up", dict(amount=14.0))])
     friend = dict(shape="woman", at=(PAIR[0] - 0.4, PAIR[2] + 0.15), facing=40.0, garment="dress", hair="bun",
                   look=LOOK, color="#f6b040", color2="#ffdc96", points=36000, show=(171.0, 197.0), fade=1.4,
                   seed=42.0,
                   motion=[(-1e9, "stand"), (175.6, "kneel", dict(one=True, dur=1.8, hands="free")),
-                          (185.8, "rise", dict(one=True, dur=2.0, blend=0.08)), (188.0, "stand", dict(blend=0.6))],
-                  gesture=[(177.4, 185.6, "hand_on_shoulder",
+                          (187.4, "rise", dict(one=True, dur=2.0, blend=0.08)), (189.6, "stand", dict(blend=0.6))],
+                  gesture=[(177.4, 187.2, "hand_on_shoulder",
                             dict(side="R", to=lambda t: refs2["a"].where(t, "shoulder.R", raw=True))),
-                           (188.0, 196.0, "look_up", dict(amount=14.0))])
+                           (189.8, 196.0, "look_up", dict(amount=14.0))])
     ta, fr = refs2.build(("a", "b"), a=tired, b=friend)
     P["tired"], P["friend"] = ta, fr
 
@@ -863,7 +892,7 @@ class TiredGlow:
         if a <= 0.0:
             return None
         p = _people()["tired"].where(t, "chest", raw=True)
-        return [dict(pos=np.asarray(p)[None], size=1.4, color=lin("#ffcf7a"), alpha=0.35 * a, kind="soft")]
+        return [dict(pos=np.asarray(p)[None], size=0.9, color=lin("#ffcf7a"), alpha=0.12 * a, kind="soft")]
 
 
 BOATS_SET = Boats()
@@ -880,6 +909,7 @@ def _setup(scene):
     scene.add("threads", Clear(Threads(places, t_on)))
     scene.add("lamps", Clear(P["_lamps"]))
     scene.add("violet", Clear(VioletFlames(P["_lamps"])), reflect=False)
+    scene.add("nine", Clear(NineLights()), reflect=False)
     scene.add("star7", StarRing(), reflect=False)
     scene.add("city", City(), reflect=False)
     scene.add("comets", Clear(Comets()), reflect=False)
@@ -990,9 +1020,8 @@ WORLD = dict(
             dict(pos=lambda t: BOATS_SET.lamp_at(1, t), color=LAMP, strength=lambda t: 0.5 * BOATS_SET.alpha(t),
                  radius=4.0),
             dict(pos=lambda t: PAIR + _v(0.0, 1.0, 0.6), color="#ffcf7a",
-                 strength=lambda t: 0.8 * _win(t, 182.0, 186.0, 192.0, 197.0), radius=3.0)],
+                 strength=lambda t: 0.25 * _win(t, 182.0, 186.0, 192.0, 197.0), radius=2.0)],
     calm=_calm_discs,
-    arch=dict(lit=_arch_lit, colors=COL, span=ARCH["span"], height=ARCH["height"], z=ARCH["z"], line=0.8),
     react=dict(beat=0.0, level=0.15),
 )
 
@@ -1001,7 +1030,7 @@ P3D = dict(
     world=WORDS.world(WORLD),
     setup=_setup,
     bursts=[dict(t=59.5, strength=0.3, rise=0.8, fall=1.5, color="#ffe2b0"),
-            dict(t=242.0, strength=0.35, rise=0.3, fall=1.4, color="#fff4e0")],
+            ],
     motion_blur=0.3,
 )
 
