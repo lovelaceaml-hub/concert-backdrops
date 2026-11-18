@@ -70,9 +70,11 @@ def join(audio, outdir):
     parts = sorted((outdir / "parts").glob("part_*.mp4"))
     lst = outdir / "parts.txt"
     lst.write_text("".join(f"file '{p.resolve()}'\n" for p in parts))
-    stage = outdir / STAGE
+    joined = outdir / "joined.mp4"
     subprocess.run(["ffmpeg", "-v", "error", "-y", "-f", "concat", "-safe", "0", "-i", str(lst), "-c", "copy",
-                    "-an", "-movflags", "+faststart", str(stage)], check=True)
+                    "-an", str(joined)], check=True)
+    stage = outdir / STAGE                      # the last calm pass over the bottom third (post05.py), CRF 16
+    subprocess.run([sys.executable, str(HERE / "post05.py"), str(joined), str(stage), "--crf", "16"], check=True)
     wav = conformed(audio, outdir)
     total = timing.TOTAL
     review = outdir / REVIEW

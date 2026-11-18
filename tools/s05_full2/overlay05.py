@@ -316,15 +316,15 @@ class Overlay:
 
     def _in_sunbeam(self, F, it, L, a, r):
         order = 0.8 * L.yn + 0.2 * L.xn
-        front = -0.08 + 1.2 * a
-        mask = _ss(-0.10, 0.0, front - order).astype(np.float32)
+        front = -0.1 + 1.75 * a
+        mask = _ss(-0.65, 0.0, front - order).astype(np.float32)        # a soft fade from the top, never a cut
         L.paste(F, mask)
         # the shaft of sun that writes it: a warm band down through the letters, brightest at the writing line
-        band = np.exp(-((order - front) / 0.07) ** 2) * (L.white > 0.02)
+        band = np.exp(-((order - front + 0.3) / 0.25) ** 2) * (L.white > 0.02)
         k = float(np.sin(np.pi * min(a * 1.1, 1.0)))
         ya, xa = L.y0, L.x0
         reg = F[ya:ya + L.h, xa:xa + L.w]
-        g = (0.55 * k * band * np.clip(L.white * 2, 0, 1))[..., None]
+        g = (0.7 * k * band * np.clip(L.white * 2, 0, 1))[..., None]
         reg[:] = 1 - (1 - reg) * (1 - g * _hexf("#ffd88a"))
 
     def _in_ripen(self, F, it, L, a, r):
@@ -367,7 +367,8 @@ class Overlay:
             cy1 = y0 - (60 + 80 * pr[:, 1]) * self.s
             x = (1 - e) ** 2 * x0 + 2 * (1 - e) * e * cx1 + e * e * sx
             y = (1 - e) ** 2 * y0 + 2 * (1 - e) * e * cy1 + e * e * sy
-            self.dots.draw(F, x, y, 2.4 * self.s, col, 0.9 * (1 - 0.6 * e), "light")
+            self.dots.draw(F, x, y, 3.0 * self.s, col * 0.92, 0.85 * (1 - 0.5 * e), "paint")
+            self.dots.draw(F, x, y, 1.4 * self.s, np.ones(3, np.float32), 0.35 * (1 - e), "light")
         # the star flares as the last light arrives
         got = float(np.mean(go >= 1.0)) if len(go) else 0.0
         if got > 0.02:
@@ -381,14 +382,14 @@ class Overlay:
         front = -0.15 + 1.3 * l
         L.paste(F, (1.0 - _ss(-0.15, 0.0, front - order)).astype(np.float32))
         o = order[L.pi]
-        go = np.clip((front - o) / 0.4, 0, 1)
-        on = (go > 0) & (go < 1)
+        go = np.clip((front - o + 0.05 * L.pr[:, 3]) / 0.75, 0, 1)
+        on = (go > 0) & (go < 1) & (np.arange(len(o)) % 3 == 0)
         if on.any():
             pr = L.pr[on]
-            g = go[on]
-            x = L.px[on] + (260 + 200 * pr[:, 0]) * self.s * g + 20 * self.s * np.sin(r * 3 + pr[:, 2] * 7)
-            y = L.py[on] - (40 + 80 * pr[:, 1]) * self.s * g + 50 * self.s * g * g
-            self.dots.draw(F, x, y, 2.6 * self.s, _hexf("#f3a0b8"), 0.9 * (1 - g), "paint")
+            g = go[on] ** 0.8
+            x = L.px[on] + (180 + 380 * pr[:, 0]) * self.s * g + 30 * self.s * np.sin(r * 3 + pr[:, 2] * 7)
+            y = L.py[on] + (pr[:, 1] - 0.6) * 220 * self.s * g + 60 * self.s * g * g
+            self.dots.draw(F, x, y, 2.2 * self.s, _hexf("#f3a0b8"), 0.6 * (1 - g), "paint")
 
     def _out_rise(self, F, it, L, l, r):
         k = 1.0 - float(_ss(0.0, 1.0, l))
@@ -404,14 +405,14 @@ class Overlay:
         front = -0.15 + 1.3 * l
         L.paste(F, (1.0 - _ss(-0.15, 0.0, front - order)).astype(np.float32))
         o = order[L.pi]
-        go = np.clip((front - o) / 0.45, 0, 1)
-        on = (go > 0) & (go < 1) & (np.arange(len(o)) % 2 == 0)
+        go = np.clip((front - o + 0.05 * L.pr[:, 3]) / 0.75, 0, 1)
+        on = (go > 0) & (go < 1) & (np.arange(len(o)) % 3 == 0)
         if on.any():
             pr = L.pr[on]
             g = go[on]
-            x = L.px[on] + 30 * self.s * np.sin(r * 2.2 + pr[:, 2] * 8) * g + 60 * self.s * g * pr[:, 0]
-            y = L.py[on] + (90 + 90 * pr[:, 1]) * self.s * g
-            self.dots.draw(F, x, y, 2.4 * self.s, _hexf("#f6b6c6"), 0.85 * (1 - g), "paint")
+            x = L.px[on] + 40 * self.s * np.sin(r * 2.2 + pr[:, 2] * 8) * g + (pr[:, 0] - 0.3) * 160 * self.s * g
+            y = L.py[on] + (60 + 160 * pr[:, 1]) * self.s * g
+            self.dots.draw(F, x, y, 2.2 * self.s, _hexf("#f6b6c6"), 0.6 * (1 - g), "paint")
 
     def _out_fade(self, F, it, L, l, r):
         L.paste(F, np.ones_like(L.alpha), 1.0 - float(_ss(0.0, 1.0, l)), dy=-14 * self.s * l)
