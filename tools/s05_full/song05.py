@@ -27,7 +27,7 @@ import songs.s03_original as _base  # noqa: E402
 MUSIC_END = 153.15
 HOLD = 15.0
 FPS = 30
-NFRAMES = int(round((MUSIC_END + HOLD) * FPS))          # 5045 frames
+NFRAMES = 5045                       # (153.15 + 15) s at 30 fps, rounded up
 TOTAL = NFRAMES / FPS
 _base.TOTAL = TOTAL
 _base.NFRAMES = NFRAMES
