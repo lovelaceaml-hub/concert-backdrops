@@ -79,8 +79,8 @@ SHORE_X = np.r_[np.linspace(-5.9, -1.1, 7), np.linspace(1.1, 5.9, 7)]
 SHORE_X = np.r_[SHORE_X[:7], -0.42, 0.42, SHORE_X[7:]]   # the two middle places are the Compliment pair's
 COMP_A, COMP_B = 7, 8                 # the Compliment pair (young women)
 ENC_K, ENC_H = 9, 6                   # the Encouragement pair (young men): K kneels, H helps
-COMP_FRONT = ((-0.62, 2.3), (0.95, 2.2))   # where the Compliment pair act, before the line's gap
-ENC_FRONT = ((0.36, 2.4), (-0.42, 2.45))   # where the Encouragement pair act after the walk back (K, H)
+COMP_FRONT = ((-0.62, 3.3), (0.95, 3.2))   # where the Compliment pair act, before the line's gap
+ENC_FRONT = ((0.36, 3.2), (-0.14, 2.92))   # where the Encouragement pair act after the walk back (K, H)
 SHAPES = ["woman", "man", "woman", "man", "woman", "man", "man", "woman", "woman", "man",
           "man", "woman", "man", "woman", "man", "woman"]
 HAIR = dict(woman=("bun", "tied", "bob", "long", "covered"), man=("short", "cap"))
@@ -301,8 +301,8 @@ class Cast:
             # she kneels by her third young tree, pours water from cupped hands, rises, straightens, tired
             fa = COMP_FRONT[0]
             keys["at"] = [(-1e9, fa), (back0, fa), (back1, self.shore[i])]
-            keys["facing"] = [(-1e9, -62.0), (T["comp"] + 5.6, -62.0), (T["comp"] + 6.6, 38.0),
-                              (back0 - 0.3, 38.0), (back1, keys["face0"])] + keys["facing"][1:]
+            keys["facing"] = [(-1e9, -62.0), (T["comp"] + 5.6, -62.0), (T["comp"] + 6.6, 55.0),
+                              (back0 - 0.3, 55.0), (back1, keys["face0"])] + keys["facing"][1:]
             keys["motion"] = [(-1e9, "stand"), (self.land[i] + 3.2, "kneel", dict(one=True, dur=1.6, hands="free")),
                               (T["comp"] + 3.0, "rise", dict(one=True, dur=2.2, blend=0.08)),
                               (T["comp"] + 5.4, "stand", dict(blend=0.6)), (back0, "shuffle"),
@@ -330,8 +330,8 @@ class Cast:
 
     def _encouragement(self, keys, i):
         T = self.T
-        turn = [(T["enc"] - 2.6, keys["face0"]), (T["enc"] - 1.2, 60.0 if i == ENC_K else 72.0),
-                (T["enc_end"] - 0.2, 60.0 if i == ENC_K else 72.0), (T["enc_end"] + 1.4, keys["face0"])]
+        turn = [(T["enc"] - 2.6, keys["face0"]), (T["enc"] - 1.2, 60.0 if i == ENC_K else 58.0),
+                (T["enc_end"] - 0.2, 60.0 if i == ENC_K else 58.0), (T["enc_end"] + 1.4, keys["face0"])]
         if i in (ENC_K, ENC_H):
             keys["facing"] = sorted(keys["facing"] + turn, key=lambda k: k[0])
         if i == ENC_K:
@@ -340,13 +340,18 @@ class Cast:
                  (T["enc_rise"], "rise", dict(one=True, dur=2.0, blend=0.05)),
                  (T["enc_rise"] + 2.2, "stand", dict(blend=0.6))]
             keys["gesture"] += [(T["enc"] + 0.6, T["enc_rise"] - 0.6, "bow", dict(amount=16.0)),
-                                (T["enc_rise"] - 1.2, T["enc_rise"] + 2.6, "handshake",
+                                (T["enc_rise"] - 0.7, T["enc_rise"] + 2.6, "handshake",
                                  dict(side="R", to=self._grip, grip=1.0, ease=0.7))]
         if i == ENC_H:
+            # he kneels beside his friend, a hand on his back; he rises first and helps him up
+            keys["motion"] = [k for k in keys["motion"] if k[0] < T["enc"] - 3.0] + \
+                [(T["enc"] + 0.3, "kneel", dict(one=True, dur=1.7, hands="free", blend=0.05)),
+                 (T["enc_rise"] - 2.4, "rise", dict(one=True, dur=1.8, blend=0.05)),
+                 (T["enc_rise"] - 0.5, "stand", dict(blend=0.6))]
             keys["gesture"] += [(T["enc"] + 1.0, T["enc_end"] - 0.8, "hand_on_shoulder",
                                  dict(side="L", to=lambda t: self.people[ENC_K].aim(t, "blade.R"), ease=1.0)),
-                                (T["enc"] + 1.6, T["enc_rise"] - 1.0, "bow", dict(amount=10.0)),
-                                (T["enc_rise"] - 1.4, T["enc_rise"] + 2.6, "handshake",
+                                (T["enc"] + 2.0, T["enc_rise"] - 2.6, "bow", dict(amount=8.0)),
+                                (T["enc_rise"] - 0.9, T["enc_rise"] + 2.6, "handshake",
                                  dict(side="R", to=self._grip, grip=1.0, ease=0.7))]
 
     def _grip(self, t):
@@ -859,11 +864,11 @@ class StepRings:
         pts, al = [], []
         for t0, x, y, z in live:
             age = (t - t0) / self.LIFE
-            r = (0.06 + 0.5 * age ** 0.7) * k
+            r = (0.08 + 0.7 * age ** 0.7) * k
             pts.append(np.array([x, y, z])[None] + self.circle * r)
-            al.append(np.full(40, 0.7 * (1 - age) ** 1.6))
-        return [dict(pos=np.concatenate(pts), size=0.007 * k, color=lin("#ffe6b0"), alpha=np.concatenate(al),
-                     kind="spark", emit=1.6)]
+            al.append(np.full(40, 0.95 * (1 - age) ** 1.4))
+        return [dict(pos=np.concatenate(pts), size=0.011 * k, color=lin("#ffe6b0"), alpha=np.concatenate(al),
+                     kind="spark", emit=2.2)]
 
 
 class Mound:
