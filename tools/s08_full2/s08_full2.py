@@ -305,7 +305,11 @@ class Seam:
     def sample(self, t):
         crack = _sc(8.0, 12.5, t)
         wide = _sc(M["full1"] - 0.5, M["full1"] + 3.0, t)
-        a = crack * (1.0 - _sc(40.0, 47.0, t)) + 0.45 * _win(t, 196.0, M["chord"], 207.0, 216.0)
+        early = crack * (1.0 - _sc(40.0, 47.0, t))
+        # fix 1: the finale seam waits for the chord and stays low, so no pale glow sits above and below
+        # "the glory of Zion" while it reads
+        fin = 0.30 * _win(t, M["chord"] - 0.4, M["chord"] + 2.0, 207.0, 216.0)
+        a = early + fin
         if a <= 0.002:
             return None
         u = self.u
@@ -318,7 +322,7 @@ class Seam:
         out = [dict(pos=pos, size=2.4 + 2.4 * u[:, 2], color=lin("#ffd98a"), alpha=0.16 * a, emit=1.8, kind="soft",
                     twinkle=0.4, seed=u[:, 3], reflect=False, fog=0.3),
                dict(pos=_v(0.0, SEAM[1], SEAM[2] - 6.0)[None, :], size=30.0 + 30.0 * wide,
-                    color=lin("#ffe6b0"), alpha=0.22 * a * (0.4 + 0.6 * wide), kind="soft", reflect=False, fog=0.0,
+                    color=lin("#ffe6b0"), alpha=0.22 * (early + 0.35 * fin) * (0.4 + 0.6 * wide), kind="soft", reflect=False, fog=0.0,
                     dof=0.0, lod=False)]
         return out
 
@@ -332,7 +336,7 @@ class GoldColumn:
         self.s = r.random((n, 5))
 
     def gain(self, t):
-        return _win(t, M["full1"] - 0.5, M["full1"] + 2.5, 40.0, 46.0) + 0.45 * _win(t, 85.0, 87.5, 97.0, 100.0)
+        return _win(t, M["full1"] - 0.5, M["full1"] + 2.5, 40.0, 46.0) + 0.40 * _win(t, 98.2, 99.4, 100.6, 103.0)   # fix 1: after the words reach star 2
 
     def sample(self, t):
         g = self.gain(t)
@@ -642,8 +646,9 @@ class HeavenLight:
                             reflect=False))
             # the gate of light: a tall warm column where the curtain has parted, gold edges either side
             g = self.gate
+            hush = 0.3 + 0.7 * _sc(210.5, 213.5, t)   # fix 1: faint until "the glory of Zion" has gone
             out.append(dict(pos=g["pos"] * _v(0.6 + 1.2 * flood, 1.0, 1.0) + _v(0.0, 0.0, -141.0),
-                            size=g["size"] * 1.8, color=lin("#ffd29a"), alpha=0.16 * flood * g["a"], emit=1.3, kind="soft",
+                            size=g["size"] * 1.8, color=lin("#ffd29a"), alpha=0.16 * flood * hush * g["a"], emit=1.3, kind="soft",
                             twinkle=0.3, seed=g["seed"], reflect=False, fog=0.0))
             out.append(dict(pos=g["edge"] * _v(1.0 + 0.9 * flood, 1.0, 1.0) + _v(0.0, 0.0, -140.0),
                             size=0.5, color=lin("#ffc864"), alpha=0.45 * flood * (1.0 - 0.9 * _sc(206.0, 214.0, t)),
@@ -856,8 +861,8 @@ def _setup(scene):
     scene.add("heaven", Clear(HeavenLight(), words))
     scene.add("soul", Clear(Soul(), words))
     B = _bodies()
-    for name, body in B.items():
-        body.add(scene, name)
+    for name, body in B.items():         # fix 1: no people mirrored into the calm bottom third
+        body.add(scene, name, reflect=False)
     comp, grat = _symbols()
     scene.add("symbol compliment", Clear(comp, words), reflect=False)
     scene.add("symbol gratitude", Clear(grat, words), reflect=False)
@@ -869,8 +874,8 @@ def _setup(scene):
     scene.add("hearts gratitude", Clear(Hearts(grat_src, 89.0, 98.0, COL[GRAT], rate=4.0, seed=5), words),
               reflect=False)
     left, right = _congregation()
-    scene.add("crowd left", Clear(left, words))
-    scene.add("crowd right", Clear(right, words))
+    scene.add("crowd left", Clear(left, words), reflect=False)
+    scene.add("crowd right", Clear(right, words), reflect=False)
     WORDS.add_to(scene, reflect=False)
 
 

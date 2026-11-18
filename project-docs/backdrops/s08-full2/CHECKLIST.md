@@ -71,14 +71,14 @@ Every rule of the coordinator's version 2 brief (which quotes DESIGN-SYSTEM, PHA
 | Rule | Yes/No | Where checked |
 |---|---|---|
 | 1 No white-outs | yes | brightest sampled frame and the share above 245 (check.py) |
-| 2 No white text on pale skies | yes | finale fragment moved up; sun and flood softened |
-| 3 Nothing crossing an expression box or the signature | yes | `Clear` on every song light set; people kept below and to the sides |
+| 2 No white text on pale skies | yes | finale fragment moved up; sun and flood softened; fix 1: the seam waits for the chord and the gate stays faint until "the glory of Zion" has gone, so no pale glow sits above and below it |
+| 3 Nothing crossing an expression box or the signature | yes | `Clear` on every song light set; people kept below and to the sides; fix 1: the gold column of the Gratitude waits until the words are in star 2 (1:38.2 to 1:43) |
 | 4 One expression at a time | yes | WT times |
 | 5 No garbled letters while words form or leave | yes | motion strip |
 | 6 No words mirrored in water | yes | `reflect=False` on every word |
 | 7 No dark, brown, solid or mannequin people | yes | glitter bodies |
 | 8 No mushy blur, jitter, popping or sliding | yes | the gold wave keeps out of the lens (fixed at 1:40); motion strip |
-| 9 Bottom third calm | yes | lights, rings and gold dimmed below 0.37 of the height; no arch or star field mirrored; softer mirror; check.py bottom third numbers |
+| 9 Bottom third calm | yes | lights, rings and gold dimmed below 0.37 of the height; no arch or star field mirrored; fix 1: no people or congregation mirrored in the lake; softer mirror; check.py bottom third numbers |
 | 10 Calm camera, never frozen | yes | eased keys, still only while words read; gentle drift elsewhere |
 | 11 No other logos or watermarks, no realistic faces | yes | stills |
 

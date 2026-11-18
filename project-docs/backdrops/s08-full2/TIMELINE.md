@@ -40,7 +40,7 @@ Concert item 9, Sunday December 6. Orchestra only, nothing sung live: the pictur
 | 0:43 to 0:57 | Deep royal purple. The brother of light forms on the left shore and kindles small lights along it; the sister kneels on the right shore and warms one flickering light in cupped hands. Close, calm side drift. | |
 | 0:57 to 1:11 | Both shores, close, camera still. **Compliment** (acting below). Star 9 flares with one new thin ring as the words stream into it at 1:10.8. | **COMPLIMENT** "You're amazing. You're doing great!" readable **0:59.6 to 1:09.4 (9.8 s)**. |
 | 1:13 to 1:23 | They walk toward each other on the reflection path and meet at the centre with a slight bow (no touch). | Fragment **"bridegroom and bride"** 1:16.2 to 1:21.4 (5.2 s). |
-| 1:25 to 1:39 | The building peak. A congregation of light (two groups of 18, all ages) stands on both shores with the pair at the centre. The gold column returns; the sky warms to rich gold; Mother's answer flows back as a warm gold wave. **Gratitude** (acting below). Star 2 lights for the first time at 1:38.2: the arch is complete and glows together. | **GRATITUDE** "Thank you. It's all thanks to you. You've worked hard." readable **1:27.0 to 1:36.8 (9.8 s)**. |
+| 1:25 to 1:39 | The building peak. A congregation of light (two groups of 18, all ages) stands on both shores with the pair at the centre. The sky warms to rich gold; Mother's answer flows back as a warm gold wave. **Gratitude** (acting below). Star 2 lights for the first time at 1:38.2: the arch is complete and glows together, and the gold column of favor falls once more (1:38.2 to 1:43, after the words have gone). | **GRATITUDE** "Thank you. It's all thanks to you. You've worked hard." readable **1:27.0 to 1:36.8 (9.8 s)**. |
 | 1:40 to 1:56 | Velvet purple. Far at the horizon Heavenly Mother, only from behind, slowly opens her arms; one small light crosses the lake and reaches her on the hit at 1:49.16; a warm glow blooms. | |
 | 1:56 to 2:14 | A tall golden seven-branched lampstand rises from the lake; its lamps catch flame from the centre outward on the full entry at 2:03. | |
 | 2:12 to 2:30 | Fine linen of light unfurls across the sky with a satin sheen; small gold points (good deeds) rise and settle on it. | |
@@ -86,9 +86,9 @@ None is on screen with an expression (Compliment ends 1:11.2, "bridegroom and br
 - New opening lockup (logo, HEALING CONCERT, concert title, song title, date) readable from frame 0 for 7.8 s; the signature now top left with the song title, from 0:08.4 to the last frame.
 - The curtain opening was too subtle: now it parts wide on the final chord with a tall warm gate of light.
 - People were too small: now about 30 percent of the frame height in the Compliment and the meeting; the congregation is closer and fewer.
-- Gratitude was too pale: now a rich gold sky, the gold column returns, Mother's answer is a deep gold wave, gold hearts and the bowing symbol.
+- Gratitude was too pale: now a rich gold sky, the gold column returns as the arch completes, Mother's answer is a deep gold wave, gold hearts and the bowing symbol.
 - The words of each expression now stream into their star in the arch.
-- Calm bottom third: nothing bright there (lights, rings, gold dimmed below 0.37 of the height), no arch or star field mirrored in the water, a softer mirror.
+- Calm bottom third: nothing bright there (lights, rings, gold dimmed below 0.37 of the height), no arch, star field or people mirrored in the water (fix 1), a softer mirror.
 - Not built (would need new engine work): the swan, the olive tree, the outlines of everyday kindness in the congregation's lights, the cherubim and pomegranates, a city of light beyond the curtain.
 
 ## Where this brief and the Drive files differ
