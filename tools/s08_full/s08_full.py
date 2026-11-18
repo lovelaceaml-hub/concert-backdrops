@@ -114,9 +114,9 @@ STAR = _v(0.0, 7.0, -420.0)         # the warm star at the exact centre of the h
 SEAM = _v(0.0, 70.0, -150.0)        # the opening in the sky
 LEFT = _v(-3.1, 0.0, -1.0)          # the brother's shore
 RIGHT = _v(3.1, 0.0, -1.0)          # the sister's shore
-MEET = _v(0.0, 0.0, -1.6)           # where the bridegroom and the bride meet
+MEET = _v(0.0, 0.0, -1.0)           # where the bridegroom and the bride meet
 LAMP = _v(0.0, 0.0, -24.0)          # the lampstand
-MOTHER = _v(0.0, 0.0, -150.0)       # Heavenly Mother at the horizon, seen only from behind
+MOTHER = _v(0.0, 0.0, -95.0)       # Heavenly Mother at the horizon, seen only from behind
 ARCH = dict(span=104.0, height=36.0, z=-45.0)
 
 # ---------------------------------------------------------------------------------------------------------
@@ -235,9 +235,9 @@ _SPECS = [
           arrive="petals", leave="sink", petals=0.0),
     _spec("Compliment", 0.56, expr="Compliment", pill=True, arrive="pen", nib=False, leave="fade"),
     _spec("bride", 0.46, label="", lines=["bridegroom and bride"], color="#fff0dc", glow="#ffe2b0",
-          tint=0.35, arrive="weave", leave="fade"),
+          tint=0.35, arrive="pen", nib=False, leave="fade"),
     _spec("Gratitude", 0.62, expr="Gratitude", pill=True, arrive="pen", nib=False, leave="fade"),
-    _spec("zion", 0.44, label="", lines=["the glory of Zion"], color="#fff3dc", glow="#ffcf7a", tint=0.35,
+    _spec("zion", 0.44, label="", lines=["the glory of Zion"], color="#ffe2a0", glow="#ffb84a", tint=0.6, halo=1.4,
           arrive="stitch", leave="fade"),
 ]
 WORDS = PW.Words(_SPECS, camera=_LAYOUT, reflect=False, drive=_clean_leave)
@@ -297,17 +297,18 @@ class Seam:
     def sample(self, t):
         crack = _sc(1.0, 6.0, t)
         wide = _sc(M["full1"] - 0.5, M["full1"] + 3.0, t)
-        a = crack * (1.0 - 0.75 * _sc(42.0, 50.0, t)) + 0.6 * _win(t, 196.0, M["chord"], 210.0, 222.0)
+        a = crack * (1.0 - 0.8 * _sc(40.0, 46.0, t)) * (1.0 - 0.8 * _sc(150.0, 165.0, t)) \
+            + 0.5 * _win(t, 196.0, M["chord"], 212.0, 224.0)
         if a <= 0.002:
             return None
         u = self.u
         h = 46.0
         y = SEAM[1] + (u[:, 0] - 0.5) * h
-        half = (0.4 + 9.0 * wide) * np.cos((u[:, 0] - 0.5) * np.pi) ** 0.8
+        half = (0.6 + 5.0 * wide) * np.cos((u[:, 0] - 0.5) * np.pi) ** 1.5
         side = np.where(u[:, 1] > 0.5, 1.0, -1.0)
-        x = side * half * u[:, 2] ** 0.35          # filled, brightest toward the parting edges
+        x = side * half * np.abs(np.tan(1.2 * (u[:, 2] - 0.5))) * 1.4   # a soft glow, densest at the centre
         pos = np.stack([x, y, np.full(self.n, SEAM[2]) + (u[:, 3] - 0.5) * 4.0], axis=1)
-        out = [dict(pos=pos, size=1.2 + 1.6 * u[:, 2], color=lin("#ffd98a"), alpha=0.28 * a, emit=1.8, kind="soft",
+        out = [dict(pos=pos, size=2.4 + 2.4 * u[:, 2], color=lin("#ffd98a"), alpha=0.16 * a, emit=1.8, kind="soft",
                     twinkle=0.4, seed=u[:, 3], reflect=False, fog=0.3),
                dict(pos=_v(0.0, SEAM[1], SEAM[2] - 6.0)[None, :], size=30.0 + 30.0 * wide,
                     color=lin("#ffe6b0"), alpha=0.22 * a * (0.4 + 0.6 * wide), kind="soft", reflect=False, fog=0.0,
@@ -391,7 +392,7 @@ class Ribbons:
         self.k = 5
         self.ph = r.random((self.k, 3))
         r2 = _rng(5)
-        n = 340
+        n = 150
         self.win = np.stack([-150.0 + 300.0 * r2.random(n), 1.0 + 9.0 * r2.random(n) ** 2,
                              -230.0 - 50.0 * r2.random(n)], axis=1)
         self.wt = 30.0 + 11.0 * ((self.win[:, 0] + 150.0) / 300.0) + 1.5 * r2.random(n)
@@ -415,8 +416,8 @@ class Ribbons:
                 out.append(b)
         lit = _ss(0.0, 1.2, t - self.wt) * (1.0 - _sc(206.0, 220.0, t) * 0.4)
         if t > 29.0:
-            out.append(dict(pos=self.win, size=0.55 + 0.6 * self.ws, color=lin("#ffcf8a"),
-                            alpha=0.75 * lit, emit=2.0, kind="spark", twinkle=0.5, seed=self.ws, fog=0.4))
+            out.append(dict(pos=self.win, size=0.35 + 0.4 * self.ws, color=lin("#ffcf8a"),
+                            alpha=0.5 * lit * (1.0 - 0.8 * _win(t, 99.0, 102.0, 112.0, 116.0)), emit=2.0, kind="spark", twinkle=0.5, seed=self.ws, fog=0.4))
         return out or None
 
 
@@ -425,10 +426,10 @@ class Shore:
     warms one flickering light on the right; at the thanksgiving they rise as lights released to Mother."""
 
     def __init__(self):
-        n = 9
+        n = 7
         self.left = np.stack([np.linspace(-4.2, -9.8, n), np.full(n, 0.06), np.linspace(-0.4, -5.5, n)], axis=1)
-        self.lt = 45.0 + np.arange(n) * 0.9
-        m = 9
+        self.lt = 45.0 + np.arange(n) * 1.1
+        m = 7
         self.right = np.stack([np.linspace(4.4, 10.0, m), np.full(m, 0.06), np.linspace(-0.6, -5.8, m)], axis=1)
         self.rs = _rng(6).random(m)
 
@@ -440,9 +441,9 @@ class Shore:
         gone = 1.0 - _sc(97.0, 101.0, t)
         lk = _ss(0.0, 0.5, t - self.lt)
         L = self.left + lift
-        out = [dict(pos=L, size=0.10, color=lin("#ffcf7a"), alpha=(0.12 + 0.88 * lk) * gone, emit=2.5,
+        out = [dict(pos=L, size=0.08, color=lin("#ffcf7a"), alpha=(0.12 + 0.88 * lk) * gone, emit=2.5,
                     kind="spark", twinkle=0.3, reflect=True),
-               dict(pos=L, size=0.6, color=lin("#ffb45e"), alpha=0.18 * lk * gone, kind="soft")]
+               dict(pos=L, size=0.3, color=lin("#ffb45e"), alpha=0.18 * lk * gone, kind="soft")]
         warm = _sc(52.0, 55.5, t)
         flick = 0.55 + 0.45 * np.sin(17.0 * t + 6.0 * self.rs) * (1.0 - warm)
         rk = np.full(len(self.right), 1.0) * _sc(44.0, 46.0, t)
@@ -450,7 +451,7 @@ class Shore:
         R = self.right + lift
         out += [dict(pos=R, size=0.10, color=lin("#ffe2b8"), alpha=rk * gone, emit=2.5, kind="spark",
                      twinkle=0.3),
-                dict(pos=R, size=0.6, color=lin("#ffc8a0"), alpha=0.18 * rk * gone, kind="soft")]
+                dict(pos=R, size=0.3, color=lin("#ffc8a0"), alpha=0.18 * rk * gone, kind="soft")]
         return out
 
 
@@ -502,7 +503,7 @@ class Linen:
 
     def __init__(self):
         r = _rng(8)
-        nu, nv = 230, 70
+        nu, nv = 150, 46
         u, v = np.meshgrid(np.linspace(-1.0, 1.0, nu), np.linspace(0.0, 1.0, nv))
         self.u = u.ravel() + r.normal(size=u.size) * 0.002
         self.v = v.ravel()
@@ -517,10 +518,11 @@ class Linen:
             for side in (-1.0, 1.0):
                 s = np.linspace(0.0, 1.0, 2200)
                 uu = side * (1.0 - s * 0.98)
-                vv = y0 + amp * np.sin(9.0 * np.pi * s + ph) + 0.02 * np.sin(31.0 * np.pi * s)
-                # small loops (curls of the vine) every so often
-                loop = 0.025 * np.sin(60.0 * np.pi * s)
-                uu = uu + loop * side * np.cos(60.0 * np.pi * s)
+                vv = y0 + amp * np.sin(3.0 * np.pi * s + ph)
+                # a gentle curl of the vine at every crest
+                cr = 0.022 * np.exp(-((np.mod(1.5 * s + ph / (2 * np.pi), 1.0) - 0.5) / 0.08) ** 2)
+                uu = uu + cr * side * np.cos(40.0 * np.pi * s)
+                vv = vv + cr * np.sin(40.0 * np.pi * s)
                 threads.append(np.stack([uu, vv], axis=1))
                 cols.append(np.tile(lin(c), (s.size, 1)))
                 t0 = 152.0 + 6.0 * k
@@ -546,7 +548,7 @@ class Linen:
     def part(self, u, t):
         """How far the curtain has parted at the centre on the final chord (outward shift of u)."""
         o = _ss(M["chord"] - 0.2, M["chord"] + 6.0, t)
-        return u + np.sign(u) * 0.22 * o * (1.0 - np.abs(u)) ** 0.5
+        return u + np.sign(u) * 0.22 * o * np.clip(1.0 - np.abs(u), 0.0, 1.0) ** 0.5
 
     def sample(self, t):
         g = _win(t, 132.5, 140.0, 206.0, 221.0)
@@ -557,10 +559,12 @@ class Linen:
         show = (np.abs(self.u) < unf + 0.02).astype(np.float64)
         P = self.where(u, self.v, t)
         sheen = np.exp(-((self.u - (-1.4 + 2.8 * np.mod((t - 133.0) / 11.0, 1.0))) / 0.18) ** 2)
-        fade_top = np.sin(np.pi * np.clip(self.v, 0, 1)) ** 0.5
-        a = g * show * (0.10 + 0.25 * sheen) * fade_top * (1.0 - 0.6 * _sc(195.0, 210.0, t))
-        out = [dict(pos=P, size=0.9 + 0.5 * self.s, color=lin("#fff2dc"), alpha=a, emit=1.0, kind="soft",
-                    reflect=False, fog=0.2, twinkle=0.2, seed=self.s)]
+        edge = np.sin(np.pi * np.clip(self.v, 0, 1)) ** 1.5 * np.clip(1.0 - np.abs(self.u), 0.0, 1.0) ** 0.7
+        a = g * show * (0.012 + 0.07 * sheen) * edge * (1.0 - 0.6 * _sc(195.0, 210.0, t))
+        # the sheet itself is only a fine shimmer of light points; the sheen glides across it
+        a = a * 3.0 * (self.s > 0.55)
+        out = [dict(pos=P, size=0.16 + 0.12 * self.s, color=lin("#fff0d8"), alpha=a, emit=1.8, kind="spark",
+                    reflect=False, fog=0.2, twinkle=0.7, seed=self.s)]
         # the good deeds: gold points rise from the shores and the windows and stay on the linen
         dk = _ss(0.0, 3.0, t - self.deeds_t)
         if t > 140.0:
@@ -576,7 +580,7 @@ class Linen:
             if loose > 0:
                 rs = _rng(9).normal(size=Pt.shape)
                 Pt = Pt + rs * np.array([14.0, 10.0, 6.0]) * loose + _v(0.0, 18.0 * loose, 0.0)
-            out.append(dict(pos=Pt, size=0.32 + 0.18 * self.ts, color=self.tc * 1.5, alpha=g * 0.85,
+            out.append(dict(pos=Pt, size=0.22 + 0.12 * self.ts, color=self.tc * 1.3, alpha=g * 0.7,
                             birth=self.tb, fade=0.5, flash=3.0, emit=1.8, kind="spark", twinkle=0.35,
                             seed=self.ts, reflect=False, fog=0.15))
             # the needle points of light that lead each thread
@@ -608,18 +612,18 @@ class Comets:
         R = 170.0 + 40.0 * ph[1]
         y = 42.0 + 22.0 * ph[2] + 6.0 * np.sin(0.11 * t + 7.0 * ph[0])
         p = _v(np.sin(a) * R, y, -120.0 + np.cos(a) * R * 0.45)
-        go = _ss(M["chord"] - 2.0, M["chord"] + 2.5, t)
+        go = _ss(M["chord"] - 5.0, M["chord"] + 1.0, t)
         return p * (1.0 - go) + (SEAM + _v(0.0, -8.0, 4.0)) * go
 
     def sample(self, t):
         from p3d.api import ribbon
-        a = _sc(0.5, 4.0, t) * (1.0 - _sc(M["chord"] + 1.5, M["chord"] + 3.5, t)) * \
+        a = _sc(0.5, 4.0, t) * (1.0 - _sc(M["chord"] - 0.5, M["chord"] + 1.5, t)) * \
             (1.0 - 0.6 * _win(t, 57.0, 59.6, 69.8, 72.0)) * (1.0 - 0.6 * _win(t, 84.5, 87.0, 97.2, 99.5))
         if a <= 0.002:
             return None
         out = []
         for k in range(9):
-            tail = 6.0
+            tail = 6.0 - 4.5 * _sc(M["chord"] - 6.0, M["chord"] - 3.0, t)
             ts = np.linspace(t - tail, t, 40)
             pts = np.array([self.head(k, float(x)) for x in ts])
             kk = np.linspace(0.0, 1.0, 40)
@@ -652,11 +656,11 @@ class HeavenLight:
             z = -60.0 + 66.0 * u - 6.0 * s[:, 1]
             y = 0.4 + 3.0 * s[:, 2] * (1.0 - u)
             out.append(dict(pos=np.stack([x, y, z], axis=1), size=0.25 + 0.3 * s[:, 2], color=lin("#ffd890"),
-                            alpha=0.45 * wave, emit=1.5, kind="soft", twinkle=0.4, seed=s[:, 1], reflect=False))
+                            alpha=0.3 * wave, emit=1.3, kind="soft", twinkle=0.4, seed=s[:, 1], reflect=False))
         flood = _ss(M["chord"] - 0.1, M["chord"] + 2.5, t) * (1.0 - 0.55 * _sc(210.0, 222.0, t))
         if flood > 0.002:
-            out.append(dict(pos=(SEAM + _v(0.0, -30.0, 2.0))[None, :], size=80.0 + 40.0 * flood,
-                            color=lin("#fff0cc"), alpha=0.18 * flood, kind="soft", lod=False, dof=0.0, fog=0.0,
+            out.append(dict(pos=_v(0.0, 18.0, -140.0)[None, :], size=60.0 + 50.0 * flood,
+                            color=lin("#fff0cc"), alpha=0.22 * flood, kind="soft", lod=False, dof=0.0, fog=0.0,
                             reflect=True))
         return out or None
 
@@ -675,12 +679,12 @@ def _bodies():
     # work with an open hand; at the meeting he walks to the centre and bows; at the thanksgiving he bows
     # toward the horizon star.
     _BODIES["brother"] = Body(
-        "man", at=[(44.0, (LEFT[0] - 1.6, LEFT[2] + 0.6)), (51.0, (LEFT[0] - 0.3, LEFT[2] - 0.1)),
-                   (55.0, (LEFT[0], LEFT[2])), (73.0, (LEFT[0], LEFT[2])), (77.0, (MEET[0] - 0.75, MEET[2])),
-                   (100.0, (MEET[0] - 0.75, MEET[2]))],
+        # the walk carries the body itself (speed in metres a second along the facing), so the place is
+        # only where he starts: 2.3 m along the shore (44.5 to 51), then 2.5 m to the meeting (73 to 77)
+        "man", at=(-1.3, 0.2),
         facing=[(44.0, 240.0), (55.5, 240.0), (57.5, 100.0), (73.0, 100.0), (73.6, 90.0), (79.5, 90.0),
                 (81.5, 160.0), (100.0, 160.0)],
-        motion=[(43.0, "stand"), (44.5, "walk", dict(speed=0.35)), (51.0, "stand"), (73.0, "walk", dict(speed=0.8)),
+        motion=[(43.0, "stand"), (44.5, "walk", dict(speed=0.35)), (51.0, "stand"), (73.0, "walk", dict(speed=0.63)),
                 (77.0, "stand")],
         gesture=[(46.0, 52.0, "reach", dict(side="R")), (60.5, 69.0, "offer", dict(side="R")),
                  (77.4, 79.6, "greet_bow", dict(amount=1.0)), (89.0, 95.0, "greet_bow", dict(amount=1.3, hold=2.0))],
@@ -689,12 +693,10 @@ def _bodies():
     # the sister of light (the princess): warms one flickering light on the right shore, then lays a hand on
     # her heart and returns the honour; at the meeting she walks to the centre and bows.
     _BODIES["sister"] = Body(
-        "woman", at=[(44.0, (RIGHT[0] + 1.3, RIGHT[2] - 0.6)), (50.0, (RIGHT[0] + 1.3, RIGHT[2] - 0.6)),
-                     (55.0, (RIGHT[0], RIGHT[2])), (73.0, (RIGHT[0], RIGHT[2])), (77.0, (MEET[0] + 0.75, MEET[2])),
-                     (100.0, (MEET[0] + 0.75, MEET[2]))],
+        "woman", at=(RIGHT[0], RIGHT[2]),
         facing=[(44.0, 200.0), (55.0, 200.0), (57.5, 260.0), (73.0, 260.0), (73.6, 270.0), (79.5, 270.0),
                 (81.5, 200.0), (100.0, 200.0)],
-        motion=[(43.0, "stand"), (49.5, "kneel"), (55.0, "stand"), (73.0, "walk", dict(speed=0.8)), (77.0, "stand")],
+        motion=[(43.0, "stand"), (49.5, "kneel"), (55.0, "stand"), (73.0, "walk", dict(speed=0.59)), (77.0, "stand")],
         gesture=[(49.8, 54.5, "cup"), (61.2, 69.0, "hand_on_heart", dict(side="R")),
                  (77.4, 79.6, "greet_bow", dict(amount=1.0)), (89.0, 95.0, "greet_bow", dict(amount=1.3, hold=2.0))],
         garment="robe", veil=True, color="#f2a640", color2="#ffdc96", points=70000, show=(43.6, 103.0), fade=1.2,
@@ -703,7 +705,7 @@ def _bodies():
     _BODIES["mother"] = Body(
         "woman", at=(MOTHER[0], MOTHER[2]), facing=180.0, motion="stand",
         gesture=[(102.0, 116.0, "open_arms")], garment="robe", veil=dict(length=1.5, wide=1.2),
-        color="#ffd690", color2="#fff4e0", points=90000, scale=9.0, show=(100.5, 116.5), fade=2.5, seed=23.0,
+        color="#ffd690", color2="#fff4e0", points=110000, scale=11.0, show=(100.5, 116.5), fade=2.5, seed=23.0,
         look=dict(name="glitter", seams=0.6), bright=1.2)
     return _BODIES
 
@@ -720,9 +722,9 @@ class Soul:
         p = src + (dst - src) * u + _v(0.0, 2.5 * np.sin(np.pi * u), 0.0)
         a = _sc(102.5, 103.5, t) * (1.0 - _sc(M["hit2"] + 0.2, M["hit2"] + 1.4, t))
         bloom = np.exp(-max(t - M["hit2"], 0.0) / 1.6) * float(t > M["hit2"])
-        out = [dict(pos=p[None, :], size=0.25 + 0.6 * u, color=lin("#fff2d8"), alpha=a, emit=5.0, kind="spark",
+        out = [dict(pos=p[None, :], size=0.45 + 1.2 * u, color=lin("#fff2d8"), alpha=a, emit=7.0, kind="spark",
                     lod=False),
-               dict(pos=p[None, :], size=1.6 + 5.0 * u, color=lin("#ffd8a0"), alpha=0.18 * a, kind="soft", lod=False)]
+               dict(pos=p[None, :], size=2.5 + 8.0 * u, color=lin("#ffd8a0"), alpha=0.18 * a, kind="soft", lod=False)]
         if bloom > 0.01:
             out.append(dict(pos=dst[None, :], size=40.0, color=lin("#ffd8a0"), alpha=0.25 * bloom, kind="soft",
                             lod=False, dof=0.0))
@@ -829,8 +831,8 @@ LOOKS = dict(
     purple=dict(base="night", sky_top="#0c0418", sky_mid="#251045", sky_hor="#5a2a5e", haze=0.4,
                 haze_color="#40204e", mist=0.22, mist_color="#3c2050", stars=0.9, milky=0.6, ripple=0.06,
                 dust=0.7, dust_color="#ffd690", dust_color2="#e6c8ff"),
-    wedding=dict(base="night", sky_top="#1a1026", sky_mid="#4a3048", sky_hor="#e0b088", haze=0.55,
-                 haze_color="#a07858", mist=0.32, mist_color="#9a7258", stars=0.4, milky=0.2, ripple=0.15,
+    wedding=dict(base="night", sky_top="#160c22", sky_mid="#36223e", sky_hor="#a8785c", haze=0.32,
+                 haze_color="#7a5a48", mist=0.18, mist_color="#6a4e44", stars=0.4, milky=0.2, ripple=0.15,
                  dust=0.9, dust_color="#fff0c8", dust_color2="#ffd890"),
     velvet=dict(base="night", sky_top="#0a0414", sky_mid="#1e0a30", sky_hor="#4a2048", haze=0.4,
                 haze_color="#381a40", mist=0.2, mist_color="#341a44", stars=1.0, milky=0.7, ripple=0.05,
@@ -838,19 +840,19 @@ LOOKS = dict(
     amber=dict(base="night", sky_top="#140a1a", sky_mid="#3a2030", sky_hor="#c87a3a", haze=0.5,
                haze_color="#8a5030", mist=0.3, mist_color="#7a4a30", stars=0.5, milky=0.2, ripple=0.2,
                dust=0.8, dust_color="#ffd08a", dust_color2="#ffb64a"),
-    linen=dict(base="night", sky_top="#1c1630", sky_mid="#463a54", sky_hor="#d8a888", haze=0.5,
-               haze_color="#98786a", mist=0.28, mist_color="#8a7064", stars=0.35, milky=0.1, ripple=0.2,
+    linen=dict(base="night", sky_top="#16122c", sky_mid="#3a3050", sky_hor="#c89878", haze=0.4,
+               haze_color="#7a6058", mist=0.18, mist_color="#6a5450", stars=0.35, milky=0.1, ripple=0.2,
                dust=0.8, dust_color="#fff4e0", dust_color2="#ffe0b0"),
-    embroid=dict(base="night", sky_top="#0e1236", sky_mid="#3a2050", sky_hor="#e08a6a", haze=0.55,
-                 haze_color="#a05a5a", mist=0.3, mist_color="#904a50", stars=0.5, milky=0.2, ripple=0.25,
+    embroid=dict(base="night", sky_top="#0c1034", sky_mid="#321c4a", sky_hor="#c87a62", haze=0.4,
+                 haze_color="#7a4450", mist=0.18, mist_color="#6a3a48", stars=0.5, milky=0.2, ripple=0.25,
                  sun_az=180.0, sun_el=-2.0, sun_color="#ffc890", sun_int=0.5, rays=0.25,
                  dust=0.9, dust_color="#ffe0b0", dust_color2="#ffc0a0"),
-    glory=dict(base="night", sky_top="#1a1a40", sky_mid="#6a4070", sky_hor="#ffc890", haze=0.6,
-               haze_color="#c08a6a", mist=0.34, mist_color="#b07a60", stars=0.25, milky=0.0, ripple=0.2,
+    glory=dict(base="night", sky_top="#121436", sky_mid="#4a2c5c", sky_hor="#e8a878", haze=0.42,
+               haze_color="#8a5e58", mist=0.2, mist_color="#7a5250", stars=0.25, milky=0.0, ripple=0.2,
                sun_az=180.0, sun_el=-0.8, sun_color="#ffe0a8", sun_int=0.85, rays=0.4,
                dust=1.0, dust_color="#fff0d0", dust_color2="#ffd8a8", water="#120a08"),
-    hold=dict(base="night", sky_top="#16183e", sky_mid="#5a3a66", sky_hor="#f0a880", haze=0.55,
-              haze_color="#b07a6a", mist=0.3, mist_color="#a07060", stars=0.45, milky=0.1, ripple=0.04,
+    hold=dict(base="night", sky_top="#121436", sky_mid="#44305c", sky_hor="#e09a78", haze=0.42,
+              haze_color="#8a5a58", mist=0.2, mist_color="#7a5050", stars=0.45, milky=0.1, ripple=0.04,
               sun_az=180.0, sun_el=-1.5, sun_color="#ffd0a0", sun_int=0.6, rays=0.25,
               dust=0.8, dust_color="#ffe8c8", dust_color2="#ffd0a8"),
 )
