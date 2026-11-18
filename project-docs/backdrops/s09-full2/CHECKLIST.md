@@ -79,11 +79,11 @@ Where the brief and the Drive files differ: DESIGN-SYSTEM 4 still says 30 fps an
 
 | Rule | Yes/No | Where |
 |---|---|---|
-| 1 No white-outs | yes | brightest landmark 0:59.5 mean 155, near-white pixels 0.03 percent; render check |
+| 1 No white-outs | yes | brightest frame mean 174 of 255; the cast net's soft white blob (3:49) found in the motion strip and fixed; render check |
 | 2 No white text on pale skies | yes, one note | fragments navy; the Encouragement cream phrase sits on a mid teal sky with a violet halo (weak point listed) |
 | 3 Nothing crossing a reading box or the signature | yes | code Clear wrapper; stills |
 | 4 One expression at a time | yes | only one |
-| 5 No garbled letters while words form or leave | yes | motion strip |
+| 5 No garbled letters while words form or leave | yes, one note | motion strips: letters assemble from light for about half a second before they settle; no broken letters once readable |
 | 6 No words mirrored in water | yes | reflect=False on all words |
 | 7 No dark, brown, solid or mannequin people; big enough | yes | stills (Encouragement pair about a fifth of the frame height) |
 | 8 No mushy blur, jitter, popping or sliding | yes | motion strip |
@@ -103,4 +103,4 @@ Where the brief and the Drive files differ: DESIGN-SYSTEM 4 still says 30 fps an
 
 ## Render checks (after the render)
 
-See STATUS.md for the file names, SHA-256, length, frame counts, black, frozen and repeated frame checks, signature presence and the sync check at 0:59.5, 2:28.8 and 4:02.
+Stage and review files pass every check (17,460 frames, 291.0 s, 0 black, 0 repeated, signature on every frame after the opening, sync 0 ms at all three hit points). The phone copy has 33 near-repeated frames in the quietest interlude (bitrate limit); see STATUS.md for the file names, SHA-256, length, frame counts, black, frozen and repeated frame checks, signature presence and the sync check at 0:59.5, 2:28.8 and 4:02.

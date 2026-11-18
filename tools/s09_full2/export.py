@@ -77,14 +77,18 @@ def join(paths):
     if frames(review) != FRAMES:
         raise RuntimeError(f'review file has {frames(review)} frames, expected {FRAMES}')
     phone = OUT / f'{NAME} - phone 720p60.mp4'
-    # under 25 MB: 291 s at about 0.55 Mbit/s video plus 96 kbit/s audio
-    for rate in ('560k', '500k', '440k'):
-        subprocess.run(['ffmpeg', '-v', 'error', '-y', '-i', str(review), '-vf', 'scale=1280:720:flags=lanczos',
-                        '-c:v', 'libx264', '-preset', 'slow', '-b:v', rate, '-maxrate', '1000k', '-bufsize', '2M',
-                        '-pix_fmt', 'yuv420p', '-threads', '4', *color, '-c:a', 'aac', '-b:a', '96k',
-                        '-movflags', '+faststart', str(phone)], check=True)
-        if phone.stat().st_size < 25 * 1000 * 1000:
-            break
+    # under 25 MB: two-pass at about 0.59 Mbit/s video plus 80 kbit/s audio, tuned so the slow calm passages keep
+    # their small movements (no decimated, held blocks)
+    vf = ['-vf', 'scale=1280:720:flags=lanczos', '-c:v', 'libx264', '-preset', 'slow', '-b:v', '590k',
+          '-x264-params', 'aq-mode=3:no-dct-decimate=1:deadzone-inter=8:deadzone-intra=8', '-pix_fmt', 'yuv420p',
+          '-threads', '8', *color]
+    log = OUT / 'phone2pass'
+    subprocess.run(['ffmpeg', '-v', 'error', '-y', '-i', str(review), *vf, '-pass', '1', '-passlogfile', str(log),
+                    '-an', '-f', 'null', '/dev/null'], check=True)
+    subprocess.run(['ffmpeg', '-v', 'error', '-y', '-i', str(review), *vf, '-pass', '2', '-passlogfile', str(log),
+                    '-c:a', 'aac', '-b:a', '80k', '-movflags', '+faststart', str(phone)], check=True)
+    if phone.stat().st_size >= 25 * 1000 * 1000:
+        raise RuntimeError('phone copy is not under 25 MB')
     if frames(phone) != FRAMES:
         raise RuntimeError('phone copy frame count is wrong')
     for f in (stage, review, phone):
