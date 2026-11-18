@@ -1,8 +1,13 @@
-"""Checks a finished song 06 backdrop: exact length and frame count, audio length and start, no black frames,
-no frozen stretches, frame timestamps, loudness of the music and of the hold, and saves the first, last and
-sync-checkpoint frames for a look.
+"""Checks the finished song 06 backdrop v2 files.
 
-    python tools/s06_full/verify.py <master.mp4> [<share.mp4>]
+    python tools/s06_full2/verify.py <stage.mp4> <review.mp4> <phone.mp4>
+
+Stage: exact frame count (9120) and length (152.0 s), 60 fps, 1920x1080, yuv420p, no audio; no black, frozen or
+exactly repeated frames; the signature present on every frame after the opening (bright letter pixels in the top
+left corner on every frame from 8.6 s); first, last and sync-checkpoint frames saved for a look.
+Review: same picture length, AAC audio from 0, music level at the three sync hits (live times).
+Phone: 1280x720, 60 fps, under 25 MB.
+No em dash or en dash anywhere in this file.
 """
 import json
 from pathlib import Path
@@ -10,9 +15,15 @@ import re
 import subprocess
 import sys
 
-NFRAMES, FPS = 4496, 30
+import numpy as np
+
+NFRAMES, FPS = 9120, 60
 TOTAL = NFRAMES / FPS
-CHECK = (0.0, 10.0, 18.2, 80.6, 126.3, 134.35, TOTAL - 1 / FPS)
+K = 137.0 / 134.8467
+HITS = {'breath before verse 1 line 2': 18.2 * K, 'the same breath in verse 2': 80.6 * K,
+        'loudest hit of the final refrain': 126.3 * K}
+LAST_NOTE = 134.35 * K
+CHECK = (0.0, 7.0, 8.6, *HITS.values(), LAST_NOTE, 145.0, TOTAL - 1 / FPS)
 
 
 def probe(path):
@@ -21,54 +32,69 @@ def probe(path):
     return json.loads(out)
 
 
+def level(path, t0, dur=0.25):
+    r = subprocess.run(['ffmpeg', '-v', 'info', '-ss', f'{t0:.3f}', '-t', str(dur), '-i', str(path), '-vn', '-af',
+                        'volumedetect', '-f', 'null', '-'], capture_output=True, text=True).stderr
+    m = re.search(r'mean_volume: (\S+) dB', r)
+    return float(m.group(1)) if m else float('nan')
+
+
 def main():
-    master = Path(sys.argv[1])
-    info = probe(master)
+    stage, review, phone = map(Path, sys.argv[1:4])
+    ok = True
+    info = probe(stage)
     v = next(s for s in info['streams'] if s['codec_type'] == 'video')
-    a = next(s for s in info['streams'] if s['codec_type'] == 'audio')
-    print('video', v['codec_name'], v['width'], v['height'], v['pix_fmt'], v['r_frame_rate'],
-          'frames', v['nb_read_frames'], 'duration', v['duration'])
-    print('audio', a['codec_name'], a['sample_rate'], a['channels'], 'bit_rate', a.get('bit_rate'),
-          'start', a['start_time'], 'duration', a['duration'])
-    print('size', info['format']['size'])
-    ok = int(v['nb_read_frames']) == NFRAMES and abs(float(v['duration']) - TOTAL) < 0.02
-    ok &= abs(float(a['duration']) - TOTAL) < 0.05 and abs(float(a['start_time'])) < 0.01
-    log = subprocess.run(['ffmpeg', '-v', 'info', '-i', str(master), '-vf',
-                          'blackdetect=d=0.05:pix_th=0.06,freezedetect=n=0.0005:d=1.0', '-af',
-                          'ebur128', '-f', 'null', '-'], capture_output=True, text=True).stderr
+    audio = [s for s in info['streams'] if s['codec_type'] == 'audio']
+    print('stage', v['codec_name'], v['width'], v['height'], v['pix_fmt'], v['r_frame_rate'], 'frames',
+          v['nb_read_frames'], 'duration', v['duration'], 'audio streams', len(audio), 'size', info['format']['size'])
+    ok &= int(v['nb_read_frames']) == NFRAMES and abs(float(v['duration']) - TOTAL) < 0.02
+    ok &= v['r_frame_rate'] == '60/1' and v['width'] == 1920 and v['height'] == 1080 and not audio
+    log = subprocess.run(['ffmpeg', '-v', 'info', '-i', str(stage), '-vf',
+                          'blackdetect=d=0.03:pix_th=0.06,freezedetect=n=0.0005:d=1.0', '-f', 'null', '-'],
+                         capture_output=True, text=True).stderr
     black = re.findall(r'black_start:\S+ black_end:\S+', log)
     freeze = re.findall(r'freeze_start: \S+', log)
     print('black stretches:', black or 'none')
     print('frozen stretches (1 s or more):', freeze or 'none')
-    m = re.search(r'Integrated loudness:\s+I:\s+(\S+) LUFS', log)
-    print('integrated loudness', m.group(1) if m else '?', 'LUFS')
     ok &= not black and not freeze
-    # repeated frames: every frame differs from the one before
-    rep = subprocess.run(['ffmpeg', '-v', 'info', '-i', str(master), '-vf', 'mpdecimate=hi=1:lo=1:frac=1', '-an',
+    rep = subprocess.run(['ffmpeg', '-v', 'info', '-i', str(stage), '-vf', 'mpdecimate=hi=1:lo=1:frac=1', '-an',
                           '-f', 'null', '-'], capture_output=True, text=True).stderr
     drops = len(re.findall(r'drop pts', rep))
     print('exactly repeated frames:', drops)
-    out = master.parent / 'check'
+    ok &= drops == 0
+    # the signature on every frame: bright warm letter pixels in its corner box (top left, 1080p)
+    w, h = 176, 56
+    raw = subprocess.run(['ffmpeg', '-v', 'error', '-i', str(stage), '-vf',
+                          f'crop=700:220:40:30,scale={w}:{h}:flags=area,format=gray', '-f', 'rawvideo', '-'],
+                         capture_output=True, check=True).stdout
+    g = np.frombuffer(raw, np.uint8).reshape(-1, h, w)
+    bright = (g > 200).sum(axis=(1, 2))
+    start = int(8.6 * FPS)
+    after = bright[start:]
+    print(f'signature: frames checked {len(after)}, letter pixels min {after.min()} median {int(np.median(after))}')
+    sig_ok = after.min() >= 40
+    ok &= bool(sig_ok)
+    print('signature on every frame after the opening:', 'yes' if sig_ok else 'NO')
+    out = stage.parent / 'check'
     out.mkdir(exist_ok=True)
     for t in CHECK:
-        subprocess.run(['ffmpeg', '-v', 'error', '-y', '-ss', f'{t:.4f}', '-i', str(master), '-frames:v', '1',
+        subprocess.run(['ffmpeg', '-v', 'error', '-y', '-ss', f'{t:.4f}', '-i', str(stage), '-frames:v', '1',
                         str(out / f'frame_{t:07.2f}.png')], check=True)
-    # audio at the sync checkpoints: level in a 0.25 s window before and after
-    for t in (18.2, 80.6, 126.3, 134.35):
-        lv = []
-        for s0 in (t - 0.3, t):
-            r = subprocess.run(['ffmpeg', '-v', 'info', '-ss', f'{s0:.3f}', '-t', '0.25', '-i', str(master), '-vn',
-                                '-af', 'volumedetect', '-f', 'null', '-'], capture_output=True, text=True).stderr
-            mm = re.search(r'mean_volume: (\S+) dB', r)
-            lv.append(mm.group(1) if mm else '?')
-        print(f'audio at {t}: before {lv[0]} dB, after {lv[1]} dB')
-    r = subprocess.run(['ffmpeg', '-v', 'info', '-ss', '135.5', '-i', str(master), '-vn', '-af', 'volumedetect',
-                        '-f', 'null', '-'], capture_output=True, text=True).stderr
-    print('hold audio:', re.search(r'max_volume: (\S+) dB', r).group(1), 'dB max')
-    for extra in sys.argv[2:]:
-        i = probe(extra)
-        vv = next(s for s in i['streams'] if s['codec_type'] == 'video')
-        print('share', vv['width'], vv['height'], 'frames', vv['nb_read_frames'], 'size', i['format']['size'])
+    info = probe(review)
+    rv = next(s for s in info['streams'] if s['codec_type'] == 'video')
+    ra = next(s for s in info['streams'] if s['codec_type'] == 'audio')
+    print('review', rv['width'], rv['height'], rv['r_frame_rate'], 'frames', rv['nb_read_frames'], 'audio',
+          ra['codec_name'], ra.get('bit_rate'), 'start', ra['start_time'], 'duration', ra['duration'])
+    ok &= int(rv['nb_read_frames']) == NFRAMES and abs(float(ra['start_time'])) < 0.01
+    for name, t in HITS.items():
+        print(f'sync {name} at {t:.2f} s: before {level(review, t - 0.35):.1f} dB, after {level(review, t):.1f} dB')
+    print(f'music stops at {LAST_NOTE:.2f} s: before {level(review, LAST_NOTE - 0.4):.1f} dB, '
+          f'hold {level(review, 140.0, 5):.1f} dB')
+    info = probe(phone)
+    pv = next(s for s in info['streams'] if s['codec_type'] == 'video')
+    size = int(info['format']['size'])
+    print('phone', pv['width'], pv['height'], pv['r_frame_rate'], 'frames', pv['nb_read_frames'], 'size', size)
+    ok &= size < 25 * 1024 * 1024 and pv['r_frame_rate'] == '60/1'
     print('PASS' if ok else 'CHECK FAILED')
 
 

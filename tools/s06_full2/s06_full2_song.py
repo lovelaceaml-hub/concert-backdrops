@@ -169,16 +169,20 @@ _KEYS = [
     (7.6, _v(0.0, 2.4, 22.6), _v(0.0, 15.5, -40.0)),
     (12.0, _v(0.0, 2.6, 19.0), _v(0.0, 5.2, -40.0)),
     (16.4, _v(0.0, 2.5, 16.5), _v(0.0, 5.0, -40.0)),
-    (19.4, _v(0.4, CAM_H, -6.4), _v(-0.4, CAM_H - 0.16, -13.0)),
-    (30.0, _v(-0.2, CAM_H + 0.05, -7.0), _v(-0.5, CAM_H - 0.11, -13.0)),
+    (19.4, _v(0.2, 2.04, -0.8), _v(-0.4, 1.51, -13.4)),
+    (30.0, _v(-0.2, 2.09, -1.2), _v(-0.5, 1.56, -13.4)),
     (38.0, _v(0.0, 34.0, 26.0), _v(0.0, 8.0, -240.0)),
     (45.0, _v(0.0, 36.0, 30.0), _v(0.0, 8.0, -250.0)),
     (55.0, _v(3.0, 8.0, 10.0), _v(0.0, 6.0, -180.0)),
     (65.0, _v(1.0, 7.0, 8.0), _v(0.0, 5.5, -170.0)),
-    (70.2, _v(0.0, CAM_H, -5.4), _v(0.0, CAM_H - 0.16, -12.4)),
-    (80.4, _v(0.0, CAM_H, -5.8), _v(0.0, CAM_H - 0.16, -12.4)),
-    (83.0, _v(0.0, 0.85, -4.2), _v(0.0, 0.70, -9.8)),
-    (93.6, _v(0.0, 0.9, -4.5), _v(0.0, 0.75, -9.8)),
+    (70.2, _v(0.0, 2.04, 0.4), _v(0.0, 1.51, -12.4)),
+    (80.4, _v(0.0, 2.04, 0.1), _v(0.0, 1.51, -12.4)),
+    (83.0, _v(0.0, 2.04, 2.4), _v(0.0, 1.51, -10.0)),
+    (84.4, _v(0.0, 1.95, 1.8), _v(0.0, 1.45, -10.0)),
+    (86.6, _v(0.0, 1.32, -1.6), _v(0.0, 0.97, -10.0)),
+    (87.6, _v(0.0, 1.32, -1.75), _v(0.0, 0.97, -10.0)),
+    (90.9, _v(0.0, 2.04, 2.6), _v(0.0, 1.51, -10.0)),
+    (94.6, _v(0.0, 2.04, 2.8), _v(0.0, 1.51, -10.0)),
     (98.5, _v(17.0, 8.0, -38.0), _v(40.0, 2.0, -80.0)),
     (101.8, _v(19.0, 7.5, -42.0), _v(40.0, 2.0, -82.0)),
     (106.5, _v(6.0, 7.0, -16.0), _v(0.0, 4.0, -140.0)),
@@ -271,7 +275,7 @@ def _specs():
              arrive="pen", nib=False, leave="fade", reflect=False, **INCL),
     ]
     widths = dict(grains=0.40, love=0.30, bright=0.38, water=0.38, fragrance=0.42)
-    leaves = dict(grains="sink", love="fade", bright="rise", water="fade", fragrance="wind")
+    leaves = dict(grains="fade", love="fade", bright="fade", water="fade", fragrance="fade")
     for key, f in FRAG.items():
         d = dict(f)
         text = d.pop("text")
@@ -282,7 +286,14 @@ def _specs():
     return specs
 
 
-WORDS = PW.Words(_specs(), camera=_LAYOUT)
+def _clean_leave(t, info):
+    """As the approved Revision 3 (tools/nine_colours_minor/expressions.py): letters stay whole while they
+    leave, and fade in place (no garbled or broken letters)."""
+    if info["state"] == "leave":
+        return dict(pos=info["home"], assist=1.0)
+
+
+WORDS = PW.Words(_specs(), camera=_LAYOUT, reflect=False, drive=_clean_leave)
 
 
 def _focus(t):
@@ -373,7 +384,6 @@ class Rings:
             (28.2, FAM[0] - 0.5, FAM[2] + 0.4, 0.6, 2.6, 0.28),      # golden rings from the family's feet
             (29.0, FAM[0] + 0.5, FAM[2] + 0.5, 0.6, 2.6, 0.28),
             (29.8, FAM[0] + 0.1, FAM[2] + 0.6, 0.6, 2.6, 0.28),
-            (STAR4_T - 6.0, SHORE[0], SHORE[2] + 0.6, 0.6, 4.0, 0.45),   # the relit lantern on the water
             (Grain.T3_LAND, GRAIN[0], GRAIN[2], 0.9, 12.0, 0.9),    # the last grain: one slow, widening ring
         ]
         n = 720
@@ -748,19 +758,16 @@ def _bodies():
     mother = Body("woman", at=(FAM[0], FAM[2]), facing=160.0, motion="stand", garment="robe", veil=True,
                   stoop=0.12, points=70000, show=(17.0, 33.0), fade=0.8, wind=w, seed=21.0,
                   gesture=[(18.6, 21.6, "cup"), (21.6, 23.8, "offer", dict(side="R")),
-                           (25.0, 31.0, "arm_round", dict(side="L", to=lambda t: _child_where(t, "blade.R")))],
-                  effects=[dict(kind="form", t=17.0, dur=1.6)], **_gold(0))
+                           (25.0, 31.0, "arm_round", dict(side="L", to=lambda t: _child_where(t, "blade.R")))], **_gold(0))
     BODIES["mother"] = mother
     daughter = Body("woman", at=(FAM[0] + 1.0, FAM[2] + 0.3), facing=225.0, motion="stand", garment="dress",
                     points=65000, show=(17.4, 33.0), fade=0.8, wind=w, seed=22.0,
-                    gesture=[(21.8, 24.6, "offer", dict(side="L")), (25.0, 31.0, "hand_on_heart", dict(side="R"))],
-                    effects=[dict(kind="form", t=17.4, dur=1.6)], **_gold(1))
+                    gesture=[(21.8, 24.6, "offer", dict(side="L")), (25.0, 31.0, "hand_on_heart", dict(side="R"))], **_gold(1))
     BODIES["daughter"] = daughter
     child = Body("child", at=(FAM[0] - 0.62, FAM[2] + 0.42), facing=120.0, motion="stand", garment="tunic",
                  points=45000, show=(17.8, 33.0), fade=0.8, wind=w, seed=23.0,
                  gesture=[(22.8, 25.0, "offer", dict(side="R")),
-                          (25.2, 31.0, "look_to", dict(to=lambda t: BODIES["mother"].where(min(t, 25.0), "head")))],
-                 effects=[dict(kind="form", t=17.8, dur=1.6)], **_gold(0))
+                          (25.2, 31.0, "look_to", dict(to=lambda t: BODIES["mother"].where(min(t, 25.0), "head")))], **_gold(0))
     BODIES["child"] = child
     # verse 2, line 1: "Please, after you." Someone in a hurry on the narrow path stops short, takes one long
     # breath, steps aside toward the wheat and opens a hand toward the way; an elder passes, bowing in thanks
@@ -774,15 +781,13 @@ def _bodies():
                          (80.2, "walk", dict(speed=0.8))],
                  gesture=[(72.0, 73.9, "hand_on_heart", dict(side="L")),
                           (75.1, 79.9, "after_you", dict(side="R", to=(hx - 0.35, 0.95, PATH[2] + 0.15)))],
-                 garment="tunic", points=70000, show=(68.2, 83.2), fade=0.8, wind=w, seed=31.0,
-                 effects=[dict(kind="form", t=68.2, dur=1.4), dict(kind="dissolve", t=81.6, dur=1.6)], **_gold(1))
+                 garment="tunic", points=70000, show=(68.2, 82.6), fade=0.8, wind=w, seed=31.0, **_gold(1))
     BODIES["hurry"] = hurry
     elder = Body("man", at=(ELDER_X0, PATH[2] + 0.15),
                  facing=[(69.4, 270.0), (TOTAL, 270.0)],
                  motion=[(69.4, "walk", dict(speed=0.7)), (72.4, "stand"), (75.6, "walk", dict(speed=0.6))],
                  gesture=[(76.6, 79.2, "greet_bow", dict(amount=18.0, hold=0.8))], stoop=0.5, garment="robe",
-                 points=65000, show=(69.2, 82.4), fade=0.8, wind=w, seed=32.0,
-                 effects=[dict(kind="form", t=69.2, dur=1.4), dict(kind="dissolve", t=80.8, dur=1.6)], **_gold(0))
+                 points=65000, show=(69.2, 82.2), fade=0.8, wind=w, seed=32.0, **_gold(0))
     BODIES["elder"] = elder
     # verse 2, lines 2 and 3: "It's okay. I understand." Two women: the young one kneels at the water's edge,
     # head bowed, the lantern dark on the water; the older one kneels at her level, a hand on her shoulder,
@@ -795,8 +800,7 @@ def _bodies():
                  gesture=[(80.0, 85.2, "bow"), (85.2, 88.4, "look_to", dict(to=(ox0, 1.0, SHORE[2]))),
                           (90.2, 94.8, "embrace", dict(to=(ox1 + 0.06, 1.18, SHORE[2] + 0.14),
                                                        to2=(ox1 + 0.06, 1.18, SHORE[2] - 0.20)))],
-                 garment="dress", points=75000, show=(80.4, 97.0), fade=0.9, wind=w, seed=41.0,
-                 effects=[dict(kind="form", t=80.4, dur=1.6)], **_gold(1))
+                 garment="dress", points=75000, show=(81.0, 95.6), fade=1.0, wind=w, seed=41.0, **_gold(1))
     BODIES["young"] = young
     older = Body("woman", at=[(81.4, (OLDER_X0, SHORE[2] - 0.05)), (89.4, (OLDER_X0, SHORE[2] - 0.05)),
                               (90.2, (OLDER_X0 - 0.16, SHORE[2] - 0.03))],
@@ -807,8 +811,8 @@ def _bodies():
                           (86.6, 88.6, "offer", dict(side="L")),
                           (90.2, 94.8, "embrace", dict(to=lambda t: BODIES["young"].where(t, "blade.R"),
                                                        to2=lambda t: BODIES["young"].where(t, "blade.L")))],
-                 garment="robe", veil=True, stoop=0.1, points=75000, show=(81.2, 97.0), fade=0.9, wind=w,
-                 seed=42.0, effects=[dict(kind="form", t=81.2, dur=1.6)], **_gold(0))
+                 garment="robe", veil=True, stoop=0.1, points=75000, show=(81.2, 95.6), fade=1.0, wind=w,
+                 seed=42.0, **_gold(0))
     BODIES["older"] = older
     # the refrains: a few people of light among the wheat, small and unhurried; in the final refrain the
     # pairs walk together (no touching here)
@@ -848,6 +852,13 @@ class Calm:
         got = self.inner.sample(t, cam) if getattr(self.inner, "wants_camera", False) else self.inner.sample(t)
         if got is None or cam is None:
             return got
+        # nothing competes inside a reading box: the words' boxes (with a margin), as expressions.Clear does
+        boxes = []
+        for word in WORDS:
+            if word.t_in <= t <= word.t_out:
+                x0, x1, y0, y1, front, *_ = PW.screen_box(word, cam, t)
+                if front:
+                    boxes.append((x0 - 0.03, x1 + 0.03, y0 - 0.045, y1 + 0.045))
         out = []
         for source in got if isinstance(got, (list, tuple)) else [got]:
             if source is None or source.get("pos") is None:
@@ -857,10 +868,80 @@ class Calm:
             p = np.asarray(b["pos"], np.float64).reshape(-1, 3)
             xy, z = cam.project(p)
             g = 0.12 + 0.88 * _ss(0.24, 0.37, xy[:, 1])
+            for x0, x1, y0, y1 in boxes:
+                dx = np.minimum(xy[:, 0] - x0, x1 - xy[:, 0])
+                dy = np.minimum(xy[:, 1] - y0, y1 - xy[:, 1])
+                g = g * (1.0 - 0.97 * np.clip(np.minimum(dx, dy) / 0.02 + 0.5, 0.0, 1.0))
             g = np.where(z > 0, g, 1.0)
             b["alpha"] = np.asarray(b.get("alpha", 1.0), np.float64) * g
             out.append(b)
         return out
+
+
+class Flight:
+    """Each expression's words, once read, go into the arch: as the letters fade, one spark of the expression's
+    colour (with a short trail) rises from the words to its star, arriving as the star lights or flares."""
+
+    def __init__(self):
+        self.legs = [("Concession", 4, CONC["t_read1"] + 0.1, STAR5_T), ("Inclusiveness", 3, INCL["t_read1"] + 0.1,
+                                                                          STAR4_T)]
+
+    def sample(self, t):
+        out = []
+        for name, i, t0, t1 in self.legs:
+            if not (t0 - 0.05 < t < t1 + 0.3):
+                continue
+            a = place(t0, 0.5, WORD_Y, WORD_DEPTH)
+            b = np.asarray(star_point(i, t1), np.float64)
+            col = lin(COL[name])
+            us = np.clip((t - t0 - np.linspace(0.0, 0.35, 14)) / (t1 - t0), 0.0, 1.0)
+            us = us * us * (3.0 - 2.0 * us)
+            lift = np.sin(np.pi * us)[:, None] * _v(0.0, 6.0, 0.0)[None, :]
+            pts = a[None, :] * (1.0 - us[:, None]) + b[None, :] * us[:, None] + lift
+            k = _sc(t0 - 0.05, t0 + 0.25, t) * (1.0 - _sc(t1, t1 + 0.3, t))
+            fall = np.linspace(1.0, 0.1, 14)
+            out.append(dict(pos=pts, size=0.18 + 0.6 * us, color=col, alpha=k * fall, emit=3.0, kind="spark",
+                            lod=False, streak=0.0))
+        return out or None
+
+
+class HeartSparks:
+    """brand_hearts.HeartDrift draws kind="heart", which the pinned Film 10 engine does not have. This draws each
+    heart as its outline in fine sparks (36 points) plus a soft glow, flat to the picture, in the same colour,
+    place, size, sway and fade."""
+    wants_camera = True
+
+    def __init__(self, inner, n=36):
+        from p3d import brand_hearts as BH
+        self.inner = inner
+        self.hp = BH.heart_points(n)
+        self.hp = self.hp - self.hp.mean(axis=0)
+
+    def gain(self, t):
+        return self.inner.gain(t)
+
+    def sample(self, t, cam=None):
+        got = self.inner.sample(t)
+        if not got or cam is None:
+            return None
+        r, u, _ = cam.basis()
+        out = []
+        for b in got:
+            if b.get("kind") != "heart":
+                out.append(b)
+                continue
+            pos = np.asarray(b["pos"], np.float64)
+            size = np.asarray(b["size"], np.float64)
+            m = len(self.hp)
+            off = self.hp[None, :, 0:1] * r[None, None, :] + self.hp[None, :, 1:2] * u[None, None, :]
+            pts = (pos[:, None, :] + off * size[:, None, None]).reshape(-1, 3)
+            col = np.asarray(b["color"], np.float64)
+            col = np.repeat(col, m, axis=0) if col.ndim == 2 else col
+            al = np.repeat(np.asarray(b["alpha"], np.float64), m)
+            out.append(dict(pos=pts, size=np.repeat(size * 0.07, m), color=col, alpha=al, emit=2.2, kind="spark",
+                            twinkle=0.2, seed=np.repeat(np.asarray(b.get("seed", 0.5)), m) if np.ndim(b.get("seed", 0.5))
+                            else 0.5, dof=0.6))
+        return out or None
 
 
 _CALM_SKIP = ("_stars", "_sun", "_arch")
@@ -893,19 +974,23 @@ def _setup(scene):
                                                  ride=(0.19, 0.47, 8.0), frac=0.15, camera=_LAYOUT, t0=85.6,
                                                  dur=1.8, hold=2.6, out=1.6, intensity=0.24, reflect=False),
               reflect=False)
+    scene.add("flight", Flight(), reflect=False)
     # hearts in the expression colours drift off each expression as its words leave for the arch (PHASEB 9.5)
-    for name, spec in (("Concession", CONC), ("Inclusiveness", INCL)):
+    # (Concession's are short: they are gone before Inclusiveness forms, 0.2 s after Concession leaves)
+    for name, spec, t1, life in (("Concession", CONC, CONC["t_read1"] + 0.6, 1.1),
+                                 ("Inclusiveness", INCL, INCL["t_out"] + 0.4, 2.4)):
         src = (lambda t: place(t, 0.5, WORD_Y - 0.03, WORD_DEPTH))
-        scene.add("hearts_" + name, BH.HeartDrift(src, spec["t_read1"] - 0.1, spec["t_out"] + 0.4, color=name,
-                                                   rate=12.0, life=2.4, rise=0.35, spread=0.9, size=(0.05, 0.11),
-                                                   bright=0.9, style="heart", wind=(0.0, 0.05, 0.0), seed=7),
+        scene.add("hearts_" + name, HeartSparks(BH.HeartDrift(src, spec["t_read1"] - 0.2, t1, color=name,
+                                                   rate=12.0, life=life, rise=0.35, spread=0.9, size=(0.05, 0.11),
+                                                   bright=0.9, style="heart", wind=(0.0, 0.05, 0.0), seed=7)),
                   reflect=False)
     # keep the arch's light out of the words while they are read; calm the bottom third for every other light
     from expressions import Clear
     for e in scene.entries():
         if e.name == "_arch":
             e.pointset = Clear(e.pointset, WORDS)
-        elif e.name not in _CALM_SKIP and not e.name.startswith("word ") and e.name not in BODIES \
+        elif e.name not in _CALM_SKIP and not e.name.startswith(("word ", "hearts_", "flight")) \
+                and e.name not in BODIES \
                 and not getattr(e.pointset, "static", False):
             e.pointset = Calm(e.pointset)
 
@@ -960,8 +1045,6 @@ WORLD = dict(
 
 _BURSTS = [dict(t=Grain.T_LAND, strength=0.35, rise=0.15, fall=0.9, color="#ffd8a0", at=tuple(GRAIN * _v(1, 0, 1))),
            dict(t=PEAK1, strength=0.14, rise=0.4, fall=1.2, color="#ffc878"),
-           dict(t=STAR5_T, strength=0.07, rise=0.3, fall=0.9, color=PW.COLORS["Concession"]),
-           dict(t=STAR4_T, strength=0.07, rise=0.3, fall=0.9, color=PW.COLORS["Inclusiveness"]),
            dict(t=PEAK2, strength=0.15, rise=0.4, fall=1.3, color="#ffd08a"),
            dict(t=LAST_NOTE - 0.5, strength=0.1, rise=0.8, fall=2.6, color="#ffd8a0")]
 
@@ -974,7 +1057,7 @@ P3D = dict(
 )
 
 # the concert's title and signature (engine/titles.py): the song title opens, then a small signature
-TITLES = dict(opening=dict(t_end=8.6, dissolve=1.1, build=0, y=0.32),
+TITLES = dict(opening=dict(t_end=8.6, dissolve=0.7, build=0, y=0.32),
               signature=dict(windows=[(8.3, TOTAL + 5.0, "tl", "night")], fade=0.9))
 FRAGMENTS = []
 PHRASES = _base.PHRASES
