@@ -133,11 +133,11 @@ ARCH = dict(span=84.0, height=34.0, z=-70.0)
 
 # the expression moments: stage (where the two stand), words (in, read, read end, out), act (t0, t1)
 MOMENTS = [
-    dict(expr="Greeting", k=GREET, at=_v(-14.0, 0.0, 8.0), yaw=-24.0, words=(56.0, 57.5, 66.8, 69.0)),
-    dict(expr="Consideration", k=CONS, at=_v(13.0, 0.0, -2.0), yaw=22.0, words=(72.6, 74.0, 83.3, 85.5)),
-    dict(expr="Inclusiveness", k=INCL, at=_v(-9.0, 0.0, -16.0), yaw=-22.0, words=(90.2, 91.6, 101.0, 103.2)),
-    dict(expr="Encouragement", k=ENC, at=_v(8.0, 0.0, 14.0), yaw=24.0, words=(117.0, 118.5, 127.5, 129.7)),
-    dict(expr="Gratitude", k=GRAT, at=_v(-10.5, 0.0, 21.0), yaw=-22.0, words=(192.0, 193.6, 202.6, 204.8)),
+    dict(expr="Greeting", k=GREET, at=_v(-14.0, 0.0, 8.0), yaw=24.0, words=(56.0, 57.5, 66.8, 69.0)),
+    dict(expr="Consideration", k=CONS, at=_v(13.0, 0.0, -2.0), yaw=-22.0, words=(72.6, 74.0, 83.3, 85.5)),
+    dict(expr="Inclusiveness", k=INCL, at=_v(-9.0, 0.0, -16.0), yaw=22.0, words=(90.2, 91.6, 101.0, 103.2)),
+    dict(expr="Encouragement", k=ENC, at=_v(8.0, 0.0, 14.0), yaw=-24.0, words=(117.0, 118.5, 127.5, 129.7)),
+    dict(expr="Gratitude", k=GRAT, at=_v(-10.5, 0.0, 21.0), yaw=22.0, words=(192.0, 193.6, 202.6, 204.8)),
 ]
 BY = {m["expr"]: m for m in MOMENTS}
 SHORE_LINE = dict(t_in=158.5, t_out=218.5)        # the people of light on the water road, facing the lamp
@@ -147,11 +147,12 @@ LINE_X = [-6.6, -4.4, -2.2, 2.2, 4.4, 6.6]
 # ---------------------------------------------------------------------------------------------------------
 # The camera: held shots joined by slow eased moves (performers stand in front: never fast, no orbits)
 # ---------------------------------------------------------------------------------------------------------
-MED_D, MED_H, MED_TY, MED_FOV = 11.0, 2.0, 1.52, 36.0
+MED_D, MED_H, MED_TY, MED_FOV = 9.6, 1.9, 1.32, 36.0     # people about 30 percent of the height, under the words
 
 
 def _medium(m):
-    """A steady medium shot of a moment, turned by `yaw` so the lamp sits off to the side, not behind words."""
+    """A steady medium shot of a moment, turned by `yaw` toward the side where the moment's own star stands, so
+    the words are seen streaming into it (and the lamp sits off to the side, not behind the words)."""
     a = np.radians(m["yaw"])
     back = _v(np.sin(a), 0.0, np.cos(a))
     pos = m["at"] + back * MED_D + _v(0.0, MED_H, 0.0)
@@ -466,8 +467,8 @@ class Threads:
             c = lin(COL[m["k"]])
             core = 0.45 * c + 0.55 * lin("#fff1dc")
             fall = np.linspace(0.45, 1.0, n)
-            out.append(ribbon(seg, width=0.10 * fall, color=deepen(COL[m["k"]]), alpha=a * 0.45 * fall, emit=1.4))
-            out.append(ribbon(seg, width=0.025 * fall, color=core, alpha=a * 0.85 * fall, emit=2.0))
+            out.append(ribbon(seg, width=0.26 * fall, color=deepen(COL[m["k"]]), alpha=a * 0.55 * fall, emit=1.8))
+            out.append(ribbon(seg, width=0.06 * fall, color=core, alpha=a * 0.9 * fall, emit=2.6))
             out.append(dict(pos=seg[-1:], size=0.22, color=core, alpha=a, emit=4.0, kind="spark"))
             out.append(dict(pos=seg[-1:], size=1.4, color=c, alpha=a * 0.10, kind="soft"))
             sp = self.sp[j]
@@ -505,7 +506,8 @@ class GoldWeb:
     def sample(self, t):
         if t < WEB_T0 - 0.5 or t > WEB_END + 4.0:
             return None
-        g = _ss(self.t, self.t + 3.0, t) * (1.0 - _sc(WEB_END, WEB_END + 4.0, t))
+        u0 = np.clip((t - self.t) / 3.0, 0.0, 1.0)
+        g = u0 * u0 * (3.0 - 2.0 * u0) * (1.0 - _sc(WEB_END, WEB_END + 4.0, t))
         on = g > 0.003
         if not np.any(on):
             return None
@@ -600,18 +602,24 @@ class Clear:
     bottom third (calm for the performers). bottom=False leaves the bottom third to the source (people)."""
     wants_camera = True
 
-    def __init__(self, inner, bottom=True):
+    def __init__(self, inner, bottom=True, words=True):
         self.inner = inner
         self.bottom = bottom
+        self.words = words
 
     def gain(self, t):
         return self.inner.gain(t) if hasattr(self.inner, "gain") else 1
+
+    def __getattr__(self, name):
+        if name == "inner":
+            raise AttributeError(name)
+        return getattr(self.inner, name)
 
     def sample(self, t, cam):
         got = self.inner.sample(t, cam) if getattr(self.inner, "wants_camera", False) else self.inner.sample(t)
         if got is None:
             return None
-        boxes = word_boxes(t, cam)
+        boxes = word_boxes(t, cam) if self.words else []
         if t >= SIG_T0 - 1.0:
             boxes = boxes + [SIG_BOX]
         if not boxes and not self.bottom:
@@ -738,9 +746,9 @@ def _symbols():
     for m in MOMENTS:
         a = np.radians(m["yaw"])
         side = _v(np.cos(a), 0.0, -np.sin(a)) * (1.0 if m["yaw"] < 0 else -1.0)
-        out.append(BS.Traced(m["expr"], pos=tuple(m["at"] + side * 2.6 + _v(0.0, 1.9, -0.6)), size=1.0,
-                             face="camera", camera=CAMERA, t0=m["words"][2] + 0.2, dur=1.6, hold=2.4, out=1.4,
-                             intensity=0.4, reflect=False))
+        out.append(BS.Traced(m["expr"], pos=tuple(m["at"] + side * 2.6 + _v(0.0, 1.9, -0.6)), size=0.75,
+                             face="camera", camera=CAMERA, t0=m["words"][2] + 0.2, dur=1.6, hold=2.2, out=1.4,
+                             intensity=0.26, reflect=False))
     return out
 
 
@@ -783,6 +791,9 @@ def _setup(scene):
             else:
                 scene.add(f"{group} {i}", Clear(b, bottom=False))
     WORDS.add_to(scene, reflect=False)
+    for e in scene.entries():
+        if e.name.startswith("word "):
+            e.pointset = Clear(e.pointset, bottom=False, words=False)   # a leaving word never crosses the signature
 
 
 # ---------------------------------------------------------------------------------------------------------
@@ -815,7 +826,7 @@ LOOKS = dict(
                 mist=0.16, mist_color="#262a4a", water="#02030a", ripple=0.15, rays=0.05, dust=0.45,
                 dust_color="#ffd9a0", dust_color2="#ffc070", bokeh=0.45),
     night_peace=dict(base="night", sky_top="#03051a", sky_mid="#0d1442", sky_hor="#2a2c5e", sun_az=180.0,
-                     sun_el=STAR_EL, sun_color="#ffe3a3", sun_int=0.38, sun_size=0.8, sun_disc=7.0, sun_glow=0.5,
+                     sun_el=STAR_EL, sun_color="#ffe3a3", sun_int=0.30, sun_size=0.8, sun_disc=7.0, sun_glow=0.12,
                      stars=1.0, milky=0.0, clouds=0.0, hills=0.9, hill_color="#04050f", haze=0.45,
                      haze_color="#24285a", mist=0.15, mist_color="#22285a", water="#01030a", ripple=0.0,
                      dust=0.4, dust_color="#ffd9a0", dust_color2="#ffcf8a", bokeh=0.4, rays=0.0),
@@ -845,6 +856,6 @@ P3D = dict(
 TITLE = dict(_base.TITLE, form=1e9, hold=1e9, star=1e9)
 TAGLINE = dict(_base.TAGLINE, t0=1e9, t1=1e9 + 1)
 TITLES = dict(
-    opening=dict(t_end=9.8, dissolve=1.6, build=1.2, y=.33),              # readable 0 to 8.2 s
+    opening=dict(t_end=8.9, dissolve=.5, build=0, y=.33),                 # readable 0 to 8.4 s (as Revision 3)
     signature=dict(windows=[(SIG_T0, TOTAL + 10.0, "tl", "night")], fade=.9),
 )
