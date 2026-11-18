@@ -1,10 +1,8 @@
 # 01 All You Stars of Zion: full-length backdrop (pilot)
 
-Status: stills for Anthony's review (2026-11-18). No full render yet; it waits for his OK.
+Status: full video rendered and delivered (2026-11-18), on Anthony's word that night: "I trust you to finish making the videos for all of them in multiple parallel chats." See "Final build" at the end.
 
-Stills (1280x720, 12 landmarks plus 2 extras, rendered in the cloud session, checked at full size): Drive "Videos/01 All You Stars of Zion/backdrop stills", https://drive.google.com/drive/folders/1jkvApQ43Jdf_IkLig0fr7UjuuI4fcPRH
-
-Open points for review: the people's reflections reach into the bottom third during the verse and the morning (their feet sit just below it); the light ring at the 1:40 peak crosses the lower lake for a few seconds; the heavenly city is left out as decided.
+Earlier stills for review (1280x720, 12 landmarks plus 2 extras): Drive "Videos/01 All You Stars of Zion/backdrop stills", https://drive.google.com/drive/folders/1jkvApQ43Jdf_IkLig0fr7UjuuI4fcPRH
 
 ## The audio (kept in Drive only)
 
@@ -73,6 +71,14 @@ python tools/backdrop_s01/s01_render.py --stills 3,12,22 --scale 0.5 --outdir <d
 
 Render only in the cloud. Never commit the song, stills, frames or videos.
 
-## Next (after Anthony approves the stills)
+## Final build (2026-11-18)
 
-The full 30 fps render, split across parallel cloud machines (`--range` parts), joined with the score, checked for length (203 s, 6,090 frames), sync and frames, then delivered to Drive "Videos/01 All You Stars of Zion/". The GitHub "Render" workflow or anything paid is not dispatched without his explicit OK.
+The two helper lanes were merged into this branch (`tools/s01_full/people.py`, `tools/s01_full/words.py`, each with its own stills tool). The calls made:
+
+- Words: the lane's words are used for Compliment, "like a torch", "dew of the dawn", "Arise" and Encouragement (the title stays the lead's). Compliment gathers into its arch star 55 to 58 and Encouragement 175 to 177, now aimed at the real arch places (the lane's default was a guessed place on screen); the arch stars light at 58.0 and 177.0. "Arise" stands up out of the lake and is whole on the 2:27.8 hit. The words lane's read times drive the arch calm (READS).
+- Sky contrast 2:27 to 2:57: the sunrise, morning and still skies are a deeper blue above the horizon, and "Arise" and Encouragement keep more of their colour with a stronger halo, so they read over the bright morning.
+- People: the lead's people are kept for both acting moments. In the lane's Compliment the pair stood close to camera and one woman showed as a doubled, blown-out figure (a join between body segments), and its line of 16 people crowded the frame and the bottom third; the lead's wide pair reads more naturally from the hall. For Encouragement the lead's helped-up pair (refined shared pair move) is natural in the motion strip. The lane's 16 bodies also cost several times as much per frame. people.py stays in the tree for later songs.
+
+Checks: one round of stills at 0:03, 0:12, 0:22, 0:33, 0:46, 0:56, 1:04, 1:40, 1:45, 1:59, 2:11, 2:30, 2:40, 2:46, 2:56, 3:15 (half size, looked at full size and in quarter-size grids); motion strips at 0:55 to 0:58, 0:59 to 1:01, 1:27 to 1:29, 2:44 to 2:46 at 1080p.
+
+Render: inside the cloud session only (no GitHub Render workflow, nothing paid), 10 frame ranges, 4 at a time, about 2 to 2.5 s per 1080p frame per core.
