@@ -72,6 +72,6 @@ Written before the full render, then completed with the checks of the finished v
 | 6 No words mirrored in water | yes | reflect=False on every word |
 | 7 No dark, brown, solid or mannequin people; big enough | yes | stills (people about a quarter of the frame height at the expressions) |
 | 8 No mushy blur, jitter, popping or sliding | yes | motion strip |
-| 9 Bottom third calm: no people, bright reflections, rings or particles | yes | Clear(calm) dims light effects below 0.37 of the height; people, crowds, arch, bridge and lights not mirrored; verify.py bottom third brightness |
+| 9 Bottom third calm: no people, bright reflections, rings or particles | yes | `check_people.py` (every person's feet above the line every 0.25 s; added after the first full render showed Heavenly Mother in the bottom third at 1:38 to 2:00, so those parts were rendered again); Clear(calm) dims light effects below 0.37 of the height; people, crowds, arch, bridge and lights not mirrored |
 | 10 Calm camera, never frozen | yes | camera keys; verify.py longest frozen stretch |
 | 11 No other logos or watermarks; no realistic faces | yes | stills |
