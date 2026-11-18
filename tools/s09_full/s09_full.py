@@ -62,7 +62,7 @@ ACCENTS = [43.9, 59.5, 73.5, 93.6, 99.2, 111.2, 129.0, 148.8, 156.3, 184.9, 191.
 LABELS = PW.LABELS
 COL = [PW.COLORS[k] for k in LABELS]
 GREET, GRAT, APOL, INCL, CONC, RESP, ENC, CONS, COMP = range(9)
-GOLD, GOLD2 = "#ffc664", "#fff0c8"
+GOLD, GOLD2 = "#f6a838", "#ffd890"
 LAMP = "#ffc27a"
 
 
@@ -107,8 +107,8 @@ BOATS = [_v(-7.0, 0.0, 6.0), _v(10.0, 0.0, -16.0), _v(-24.0, 0.0, -34.0)]
 SHORE_Z = -14.0             # the sand bar of light where the called people stand
 MOTHER1 = _v(0.0, 0.0, -6.0)
 MOTHER2 = _v(0.0, 0.0, -8.0)
-SAINT_Z = -5.0
-PAIR = _v(1.2, 0.0, 6.0)    # the Encouragement pair on the near shore
+SAINT_Z = -30.0
+PAIR = _v(1.2, 0.0, 5.0)    # the Encouragement pair on the near shore
 ARCH = dict(span=330.0, height=118.0, z=-340.0)
 
 
@@ -125,24 +125,24 @@ class Path(Move):
 
 
 # the camera: calm, slow, eased between resting places (performers stand in front of the screen)
-CAM_KEYS = [
-    (0.0, _v(0.0, 2.2, 52.0), _v(0.0, 4.0, -120.0)),
-    (42.0, _v(0.4, 1.9, 34.0), _v(-2.0, 3.4, -120.0)),
-    (54.0, _v(-1.0, 2.2, 17.0), _v(-6.0, 1.6, 0.0)),
-    (66.0, _v(-2.5, 2.0, 15.0), _v(-5.0, 2.4, -60.0)),
-    (80.0, _v(0.0, 8.0, 28.0), _v(0.0, 0.0, -40.0)),
-    (100.0, _v(0.0, 11.0, 30.0), _v(0.0, 0.5, -40.0)),
-    (112.0, _v(0.9, 2.5, 3.0), _v(0.0, 4.0, -120.0)),
-    (130.0, _v(0.6, 2.5, 0.0), _v(0.0, 4.2, -120.0)),
-    (148.0, _v(-3.0, 2.3, 22.0), _v(0.0, 2.2, -40.0)),
-    (168.0, _v(2.5, 2.2, 19.0), _v(1.0, 2.2, -40.0)),
-    (176.0, _v(2.0, 1.8, 15.0), _v(1.2, 2.2, -30.0)),
-    (188.0, _v(1.8, 1.8, 14.6), _v(1.2, 2.3, -30.0)),
-    (200.0, _v(0.0, 3.0, 24.0), _v(0.0, 9.0, -120.0)),
-    (214.0, _v(0.0, 3.0, 20.0), _v(0.0, 5.0, -120.0)),
-    (228.0, _v(0.0, 3.4, 12.0), _v(0.0, 6.5, -120.0)),
-    (246.0, _v(0.0, 4.6, 30.0), _v(0.0, 7.5, -120.0)),
-    (TOTAL, _v(0.0, 5.0, 34.0), _v(0.0, 7.5, -120.0)),
+CAM_KEYS = [                         # target heights put the horizon near 0.40 of the frame (song 09 look)
+    (0.0, _v(0.0, 2.2, 52.0), _v(0.0, -6.0, -120.0)),
+    (42.0, _v(0.4, 1.9, 34.0), _v(-2.0, -7.0, -120.0)),
+    (54.0, _v(-1.5, 2.6, 19.0), _v(-6.0, 0.2, -2.0)),
+    (66.0, _v(-2.5, 2.4, 17.0), _v(-5.0, -8.0, -100.0)),
+    (80.0, _v(0.0, 8.0, 28.0), _v(0.0, -1.5, -40.0)),
+    (100.0, _v(0.0, 11.0, 30.0), _v(0.0, -1.0, -40.0)),
+    (112.0, _v(0.9, 2.8, 5.0), _v(0.0, -6.5, -120.0)),
+    (130.0, _v(0.6, 2.8, 2.5), _v(0.0, -6.5, -120.0)),
+    (148.0, _v(-3.0, 2.4, 4.0), _v(-1.0, -4.0, -80.0)),
+    (168.0, _v(2.5, 2.6, 2.0), _v(1.0, -4.2, -80.0)),
+    (176.0, _v(1.6, 3.0, 11.5), _v(1.2, -7.0, -18.5)),
+    (188.0, _v(1.6, 3.0, 11.3), _v(1.2, -6.9, -18.5)),
+    (200.0, _v(0.0, 3.0, 24.0), _v(0.0, -2.0, -120.0)),
+    (214.0, _v(0.0, 3.0, 20.0), _v(0.0, -7.0, -120.0)),
+    (228.0, _v(0.0, 3.4, 12.0), _v(0.0, -6.5, -120.0)),
+    (246.0, _v(0.0, 4.6, 30.0), _v(0.0, -6.0, -120.0)),
+    (TOTAL, _v(0.0, 5.0, 34.0), _v(0.0, -6.0, -120.0)),
 ]
 
 
@@ -190,7 +190,7 @@ def _arch_geo():
 
 _FRAG = dict(ride=(0.5, RIDE_Y, DEPTH), face="screen", label="", arrive="pen", nib=False, leave="fade",
              font="tag", tint=0.30, bright=0.95, halo=1.2)
-DAYWORD = dict(font="title", color="#f0a032", glow="#d9731c", tint=0.80, bright=0.95, halo=1.6)
+DAYWORD = dict(font="title", color="#e8901c", glow="#c8641a", tint=0.92, bright=0.95, halo=1.6)
 WORD_SPECS = [
     dict(_FRAG, name="title", lines=["Let’s Save the World"], width=_width(0.50),
          t_in=4.0, t_read0=6.5, t_read1=14.5, t_out=16.0),
@@ -201,7 +201,7 @@ WORD_SPECS = [
     dict(_FRAG, name="honor", lines=["hardships as honor"], width=_width(0.46), color="#ffd49a", glow="#ff9a4a",
          tint=0.55, t_in=155.5, t_read0=157.5, t_read1=165.5, t_out=167.0),
     dict(expr="Encouragement", ride=(0.5, RIDE_Y, DEPTH), face="screen", width=_width(0.58), pill=True,
-         arrive="pen", nib=False, leave="fade", tint=0.75, bright=0.95, halo=1.4,
+         arrive="pen", nib=False, leave="fade", tint=0.75, bright=0.85, halo=1.2,
          t_in=176.0, t_read0=178.5, t_read1=187.5, t_out=188.6),
     dict(_FRAG, name="save", lines=["Let’s save the world"], width=_width(0.50), **DAYWORD,
          t_in=230.0, t_read0=232.0, t_read1=241.5, t_out=243.5),
@@ -610,7 +610,7 @@ class City:
         self.seed = r.random(len(p))
 
     def sample(self, t):
-        a = 0.35 * _win(t, 200.0, 208.0, 1e9, 2e9) + 0.25 * _win(t, 214.0, 224.0, 1e9, 2e9)
+        a = 0.2 * _win(t, 200.0, 208.0, 1e9, 2e9) + 0.12 * _win(t, 214.0, 224.0, 1e9, 2e9)
         if a <= 0.0:
             return None
         return dict(pos=self.pos, size=0.9, color=lin("#fff3d8"), alpha=a * 0.6, emit=1.2, kind="soft",
@@ -636,7 +636,7 @@ class Comets:
         # the net: each comet sweeps its own row across the sky, left to right and back
         n = _win(t, 229.5, 232.0, 1e9, 2e9)
         if n > 0.0:
-            row = 18.0 + 9.0 * k
+            row = 24.0 + 2.8 * k
             sweep = np.sin(0.42 * (t - 229.5) + k * 0.7)
             net = _v(110.0 * sweep, row, -150.0 - 4.0 * k)
             p = p * (1 - n) + net * n
@@ -683,9 +683,9 @@ class Net:
         open_ = _sc(230.5, 234.5, t)
         fall = _sc(244.0, 254.0, t)
         x = self.g[:, 0] * (40.0 + 120.0 * open_)
-        y = 14.0 + self.g[:, 1] * (6.0 + 50.0 * open_) - 30.0 * fall + 2.0 * np.sin(0.5 * t + 3 * self.g[:, 0])
+        y = 22.0 + self.g[:, 1] * (4.0 + 22.0 * open_) - 20.0 * fall + 2.0 * np.sin(0.5 * t + 3 * self.g[:, 0])
         z = -150.0 - 30.0 * (1 - open_) + 20.0 * self.g[:, 1]
-        return np.stack([x, np.maximum(y, 6.0), z], 1)
+        return np.stack([x, np.maximum(y, 3.0), z], 1)
 
     def sample(self, t):
         a = _win(t, 230.0, 233.0, 250.0, 258.0)
@@ -768,7 +768,7 @@ def _people():
     b0 = BOATS[0]
     refs = pairs.Refs()
     fa = dict(shape="man", at=(b0[0] - 0.45, b0[2] + 0.1), facing=200.0, motion="stand", garment="tunic",
-              hair="short", look=LOOK, color="#ffc664", color2="#fff0c8", points=26000, show=(44.0, 76.0),
+              hair="short", look=LOOK, color="#f6b040", color2="#ffdc96", points=26000, show=(44.0, 76.0),
               fade=1.2, seed=21.0,
               gesture=[(45.0, 58.0, "cup", dict(ease=1.2)),
                        (61.5, 72.0, "hand_on_shoulder", dict(side="R", to=lambda t: refs["b"].where(t, "shoulder.L", raw=True))),
@@ -789,17 +789,17 @@ def _people():
         t_on[i] = 84.5 + 0.95 * k
     P["_shore"] = (places, t_on)
     P["called"] = Crowd(places=places[:, [0, 2]], facing=lambda x, z: 180.0 + 0.0 * x, kinds=("stand", "open"),
-                        start=t_on, until=137.0, fade=1.0, flash=0.25, points=4200, color=GOLD, color2=GOLD2, bright=1.6,
+                        start=t_on, until=137.0, fade=1.0, flash=0.25, points=4200, color=GOLD, color2=GOLD2, bright=1.25,
                         people=dict(woman=1, man=1, elder=0.3, child=0.2), act=118.5, seed=4.0)
     # the waking world: thousands suggested by many small people along every shore
     wide = _shore_places(70, seed=8, spread=80.0)
     P["world"] = Crowd(places=wide[:, [0, 2]], facing=lambda x, z: 180.0, kinds=("stand", "wave", "heart", "open",
                                                                                     "bow", "child"),
                        start=dict(t=212.0, center=(0.0, SHORE_Z), speed=14.0), fade=1.2, flash=0.2, points=3600,
-                       color=GOLD, color2=GOLD2, bright=1.6, act=dict(t=216.0, center=(0.0, SHORE_Z), speed=10.0), seed=6.0)
+                       color=GOLD, color2=GOLD2, bright=1.25, act=dict(t=216.0, center=(0.0, SHORE_Z), speed=10.0), seed=6.0)
     # Heavenly Mother, only ever from behind: on a point of the shore facing the sunrise, her arms opening
-    mother = dict(shape="woman", garment="robe", veil=True, look=LOOK, color="#ffd27a", color2="#fff4d6",
-                  points=42000, fade=1.5, seed=31.0, height=1.72)
+    mother = dict(shape="woman", garment="robe", veil=True, look=LOOK, color="#f8bc50", color2="#ffe4a8",
+                  points=42000, fade=1.5, seed=31.0, height=1.72, bright=1.5)
     P["mother1"] = Body(at=(MOTHER1[0], MOTHER1[2]), facing=180.0, show=(106.0, 135.0),
                         gesture=[(109.5, 131.0, "open_arms", dict(ease=2.5))], **mother)
     P["mother2"] = Body(at=(MOTHER2[0], MOTHER2[2]), facing=180.0, show=(212.0, 252.0),
@@ -809,7 +809,7 @@ def _people():
     # then they stop, turn to us, and lift their lamps
     r = np.random.default_rng(12)
     n = 11
-    walk_x = -24.0 + np.arange(n) * 2.4 + r.uniform(-0.4, 0.4, n)
+    walk_x = -22.0 + np.arange(n) * 2.6 + r.uniform(-0.4, 0.4, n)
     walk_z = SAINT_Z + r.uniform(-0.8, 0.8, n)
     t0 = 146.0
     speed = 0.55
@@ -817,11 +817,11 @@ def _people():
     stop = places.copy()
     stop[:, 0] += speed * (STOP - t0)
     P["saints_walk"] = Crowd(places=places[:, [0, 2]], facing=90.0, kinds=("walk",), walk=speed, start=t0,
-                             until=STOP + 0.4, fade=1.0, flash=0.1, points=4200, color="#ffd08a", bright=1.5,
+                             until=STOP + 0.4, fade=1.0, flash=0.1, points=4200, color="#ffd08a", bright=1.25,
                              color2="#fff0d0", people=dict(woman=1, man=1, elder=0.4), seed=9.0, scale=(0.95, 1.05))
     P["saints_stand"] = Crowd(places=stop[:, [0, 2]], facing=lambda x, z: 180.0 + 0.6 * x, kinds=("light",),
                               start=STOP - 0.2, act=dict(t=STOP + 0.5, center=(0.0, SAINT_Z), speed=8.0),
-                              until=206.0, fade=1.0, flash=0.05, points=4200, color="#ffd08a", color2="#fff0d0", bright=1.5,
+                              until=206.0, fade=1.0, flash=0.05, points=4200, color="#ffd08a", color2="#fff0d0", bright=1.25,
                               people=dict(woman=1, man=1, elder=0.4), seed=9.0, light=LAMP)
     P["_lamps"] = Lamps(None, None, places, t0, speed, 90.0)
 
@@ -837,7 +837,7 @@ def _people():
                           (183.0, 186.0, "look_to", dict(to=lambda t: refs2["b"].where(t, "head", raw=True))),
                           (188.0, 196.0, "look_up", dict(amount=14.0))])
     friend = dict(shape="woman", at=(PAIR[0] - 0.4, PAIR[2] + 0.15), facing=40.0, garment="dress", hair="bun",
-                  look=LOOK, color="#ffc664", color2="#fff0c8", points=36000, show=(171.0, 197.0), fade=1.4,
+                  look=LOOK, color="#f6b040", color2="#ffdc96", points=36000, show=(171.0, 197.0), fade=1.4,
                   seed=42.0,
                   motion=[(-1e9, "stand"), (175.6, "kneel", dict(one=True, dur=1.8, hands="free")),
                           (185.8, "rise", dict(one=True, dur=2.0, blend=0.08)), (188.0, "stand", dict(blend=0.6))],
@@ -850,7 +850,7 @@ def _people():
     # the fishers of people at the bows of the boats in the peace
     bows = np.array([BOATS[k] + _v(0.0, 0.0, 0.0) for k in range(3)])
     P["bows"] = Crowd(places=bows[:, [0, 2]], facing=180.0, kinds=("stand",), start=246.0, fade=2.0, flash=0.1,
-                      points=3600, color=GOLD, color2=GOLD2, bright=1.6, people=dict(woman=1, man=1), seed=12.0)
+                      points=3600, color=GOLD, color2=GOLD2, bright=1.25, people=dict(woman=1, man=1), seed=12.0)
     return P
 
 
@@ -915,32 +915,32 @@ LOOKS = dict(
                   sun_el=-2.6, sun_int=0.7, sun_color="#ffd8a0", stars=0.3, milky=0.05, clouds=0.3, haze=0.65,
                   haze_color="#6e9488", mist=0.5, mist_height=2.4, mist_color="#86a294", hill_color="#0e2228",
                   water="#06161c", ripple=0.55, dust_color="#ffe2b0", dust_color2="#e8f0dc"),
-    firstdawn=dict(base="night", sky_top=_d("#2a5a6c", .75), sky_mid=_d("#7aa49a", .55), sky_hor=_d("#ffd496", .62),
+    firstdawn=dict(base="night", exposure=0.8, sky_top=_d("#2a5a6c", .5), sky_mid=_d("#6a9a90", .38), sky_hor=_d("#ffd496", .55),
                    sun_az=180.0, sun_el=2.2, sun_int=0.85, sun_color="#ffe0a8", sun_glow=0.7, sun_disc=6.0,
                    stars=0.05, milky=0.0, clouds=0.35, haze=0.45, haze_color=_d("#c8aa80", .45), mist=0.28,
-                   mist_height=2.0, mist_color=_d("#d6be98", .42), hill_color="#22383e", water="#0c2228",
+                   mist_height=2.0, mist_color=_d("#d6be98", .42), hill_color="#22383e", water="#081a20",
                    ripple=0.18, rays=0.35, dust_color="#fff0d0", dust_color2="#ffe0b0"),
     church=dict(base="night", sky_top="#0a1c20", sky_mid="#1c3634", sky_hor="#6a6448", sun_az=180.0,
                 sun_el=-6.0, sun_int=0.3, sun_color="#ffcf98", stars=0.45, milky=0.1, clouds=0.35, haze=0.7,
                 haze_color="#4a5a4c", mist=0.62, mist_height=2.8, mist_color="#56685a", hill_color="#081414",
                 water="#040e10", ripple=0.7, dust_color="#ffd8a0", dust_color2="#ffe8c0"),
-    glory=dict(base="night", sky_top=_d("#2c5664", .8), sky_mid=_d("#94b8a4", .55), sky_hor=_d("#ffe6b4", .62),
-               sun_az=180.0, sun_el=4.5, sun_int=1.0, sun_color="#fff0c8", sun_glow=0.8, sun_disc=6.0, stars=0.0,
+    glory=dict(base="night", exposure=0.8, sky_top=_d("#2c5664", .5), sky_mid=_d("#86ac9a", .38), sky_hor=_d("#ffe0aa", .55),
+               sun_az=180.0, sun_el=4.5, sun_int=0.75, sun_color="#fff0c8", sun_glow=0.6, sun_disc=6.0, stars=0.0,
                milky=0.0, clouds=0.3, haze=0.45, haze_color=_d("#d8c49c", .45), mist=0.25,
                mist_color=_d("#e0cca8", .42), hill_color="#263e42", water="#0e262c", ripple=0.25, rays=0.7,
                dust_color="#fff4d8", dust_color2="#ffe6b8"),
-    morning=dict(base="night", sky_top=_d("#3c7690", .8), sky_mid=_d("#98c2b6", .55), sky_hor=_d("#ffe8c4", .6),
-                 sun_az=180.0, sun_el=9.0, sun_int=0.9, sun_color="#fff0d0", sun_glow=0.65, sun_disc=5.0,
+    morning=dict(base="night", exposure=0.8, sky_top=_d("#3c7690", .55), sky_mid=_d("#88b6aa", .38), sky_hor=_d("#ffe2b8", .55),
+                 sun_az=180.0, sun_el=9.0, sun_int=0.4, sun_color="#fff0d0", sun_glow=0.35, sun_disc=5.0,
                  stars=0.0, milky=0.0, clouds=0.3, haze=0.42, haze_color=_d("#dccca8", .42), mist=0.16,
-                 mist_color=_d("#e8d8bc", .42), hill_color="#36565e", water="#143640", ripple=0.08, rays=0.25,
+                 mist_color=_d("#e8d8bc", .42), hill_color="#36565e", water="#0c262e", ripple=0.08, rays=0.25,
                  dust_color="#fff6e0", dust_color2="#ffe2b0"),
-    mirror=dict(base="night", sky_top=_d("#3c7690", .8), sky_mid=_d("#98c2b6", .55), sky_hor=_d("#ffe4c0", .6),
-                sun_az=180.0, sun_el=7.5, sun_int=0.9, sun_color="#fff0d0", sun_glow=0.7, sun_disc=5.0,
+    mirror=dict(base="night", exposure=0.8, sky_top=_d("#3c7690", .55), sky_mid=_d("#88b6aa", .38), sky_hor=_d("#ffe0b4", .55),
+                sun_az=180.0, sun_el=7.5, sun_int=0.4, sun_color="#fff0d0", sun_glow=0.35, sun_disc=5.0,
                 stars=0.0, milky=0.0, clouds=0.28, haze=0.42, haze_color=_d("#e0cca8", .42), mist=0.15,
-                mist_color=_d("#ecdcc0", .42), hill_color="#36565e", water="#143640", ripple=0.0, rays=0.25,
+                mist_color=_d("#ecdcc0", .42), hill_color="#36565e", water="#0c262e", ripple=0.0, rays=0.25,
                 dust_color="#fff6e0", dust_color2="#ffe2b0"),
-    evening=dict(base="night", sky_top=_d("#36607e", .8), sky_mid=_d("#b0a8a0", .55), sky_hor=_d("#ffc890", .62),
-                 sun_az=180.0, sun_el=3.0, sun_int=0.95, sun_color="#ffdcaa", sun_glow=0.8, sun_disc=5.5,
+    evening=dict(base="night", exposure=0.8, sky_top=_d("#36607e", .55), sky_mid=_d("#a49a94", .4), sky_hor=_d("#ffc890", .55),
+                 sun_az=180.0, sun_el=3.0, sun_int=0.65, sun_color="#ffdcaa", sun_glow=0.55, sun_disc=5.5,
                  stars=0.08, milky=0.0, clouds=0.3, haze=0.45, haze_color=_d("#e0b890", .45), mist=0.18,
                  mist_color=_d("#e8ccac", .42), hill_color="#30464e", water="#12303a", ripple=0.0, rays=0.3,
                  dust_color="#fff0d4", dust_color2="#ffd8a8"),
@@ -989,8 +989,6 @@ WORLD = dict(
                  radius=4.0),
             dict(pos=lambda t: BOATS_SET.lamp_at(1, t), color=LAMP, strength=lambda t: 0.5 * BOATS_SET.alpha(t),
                  radius=4.0),
-            dict(pos=lambda t: PAIR + _v(0.0, 2.6, 0.0), color=PW.GLOWS["Encouragement"],
-                 strength=lambda t: 0.22 * _win(t, 175.0, 178.0, 188.0, 191.0), radius=2.0),
             dict(pos=lambda t: PAIR + _v(0.0, 1.0, 0.6), color="#ffcf7a",
                  strength=lambda t: 0.8 * _win(t, 182.0, 186.0, 192.0, 197.0), radius=3.0)],
     calm=_calm_discs,
