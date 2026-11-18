@@ -161,9 +161,13 @@ def load():
                 if front is not None:
                     self._op_dust(ts, front)
             k = self.sig_alpha(ts)
+            # the navy layer is laid OVER a whole warm white layer, so the letters change colour and the
+            # sky never shows through them; the white goes only once the navy is whole (and comes back first)
             day = float(titles._ss(DAY[0], DAY[0] + 3.0, ts) * (1.0 - titles._ss(DAY[1] - 3.0, DAY[1], ts)))
-            if k * (1.0 - day) > 0.002:
-                self._quad(self.p_ovl, self.v_ovl, self.sig_layer, -1.0, uAlpha=k * (1.0 - day),
+            white = 1.0 - float(titles._ss(DAY[0] + 2.6, DAY[0] + 3.0, ts)
+                                * (1.0 - titles._ss(DAY[1] - 3.0, DAY[1] - 2.6, ts)))
+            if k * white > 0.002:
+                self._quad(self.p_ovl, self.v_ovl, self.sig_layer, -1.0, uAlpha=k * white,
                            uDis=(-1.0, 0.0, 0.0, 0.0))
             if k * day > 0.002:
                 self._quad(self.p_ovl, self.v_ovl, self.sig_day, -1.0, uAlpha=k * day, uDis=(-1.0, 0.0, 0.0, 0.0))

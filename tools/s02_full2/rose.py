@@ -231,13 +231,16 @@ WORDS = PW.Words(_SPECS, camera=CAMERA)
 
 
 def word_boxes(t, cam):
-    """Screen boxes (x0, x1, y0, y1, from the bottom left) of the words on screen at t, with a margin."""
+    """Screen boxes (x0, x1, y0, y1, from the bottom left) of the words on screen at t, with a margin, and how
+    strongly each holds light out (0 to 1: it eases in before the words arrive and out after they leave, so
+    light inside a box never pops on or off)."""
     out = []
     for w in WORDS:
-        if w.t_in - 0.3 <= t <= w.t_out + 0.3:
+        if w.t_in - 0.8 <= t <= w.t_out + 0.8:
             x0, x1, y0, y1, front, *_ = PW.screen_box(w, cam, t)
             if front:
-                out.append((x0 - 0.03, x1 + 0.03, y0 - 0.045, y1 + 0.045))
+                k = _sc(w.t_in - 0.8, w.t_in - 0.2, t) * (1.0 - _sc(w.t_out + 0.2, w.t_out + 0.8, t))
+                out.append((x0 - 0.03, x1 + 0.03, y0 - 0.045, y1 + 0.045, k))
     return out
 
 
@@ -246,16 +249,16 @@ SIG_BOX = (-0.2, 0.39, 0.74, 1.2)     # the signature's corner (top left, with i
 
 def _clear(pos, cam, t, alpha):
     """Fade light that would cross a word (nothing crosses a word)."""
-    boxes = word_boxes(t, cam) + [SIG_BOX]
+    boxes = word_boxes(t, cam) + [SIG_BOX + (1.0,)]
     if len(pos) == 0:
         return alpha
     xy, z = cam.project(np.asarray(pos, np.float64).reshape(-1, 3))
     gain = np.ones(len(xy))
-    for x0, x1, y0, y1 in boxes:
+    for x0, x1, y0, y1, k in boxes:
         dx = np.minimum(xy[:, 0] - x0, x1 - xy[:, 0])
         dy = np.minimum(xy[:, 1] - y0, y1 - xy[:, 1])
         f = np.clip(np.minimum(dx, dy) / 0.025 + 0.5, 0.0, 1.0)
-        gain = np.minimum(gain, 1.0 - f * (z > 0))
+        gain = np.minimum(gain, 1.0 - k * f * (z > 0))
     return np.asarray(alpha) * gain
 
 
@@ -631,7 +634,7 @@ class Ribbons:
     def _sky(self, k, t):
         ph = 2.1 * k
         z = -70.0 - 6.0 * k
-        x = -18.0 + 6.0 * np.sin(0.11 * t + ph) + 14.0 * k
+        x = -12.0 + 6.0 * np.sin(0.11 * t + ph) + 14.0 * k
         y = 17.0 + 2.2 * np.sin(0.07 * t + ph) + 1.5 * k
         return _v(x, y, z)
 
@@ -652,23 +655,32 @@ class Ribbons:
         return float(_keys([(14.0, 0.0), (20.0, 0.35), (46.0, 0.45), (95.0, 0.5), (100.0, 0.15), (118.0, 0.15),
                             (124.0, 0.6), (128.6, 0.6), (130.0, 0.0)], t))
 
-    def sample(self, t):
+    wants_camera = True
+
+    def sample(self, t, cam=None):
         a = self.amount(t)
         if a <= 0.003:
             return None
         from p3d.api import ribbon
         out = []
+        pour = _sc(T["ribbons"][0], T["ribbons"][0] + 0.8, t)     # the sky wave eases into the pour
         for k in range(3):
             n = 50
-            span = 9.0 if t < T["ribbons"][0] else 2.2
+            span = 9.0 + (2.2 - 9.0) * pour
             tt = np.linspace(t - span, t, n)
-            pts = np.array([self.head(k, float(x)) for x in tt])
-            if t < T["ribbons"][0]:
-                pts = np.array([self._sky(k, float(x)) + _v(2.8 * (x - t), 1.6 * np.sin(0.9 * (x - t) + 0.6 * t + 2.0 * k),
-                                                      0.0) for x in tt])
+            wave = np.array([self._sky(k, float(x)) + _v(2.8 * (x - t), 1.6 * np.sin(0.9 * (x - t) + 0.6 * t + 2.0 * k),
+                                                         0.0) for x in tt])
+            pts = wave
+            if pour > 0.0:
+                pts = _mix(wave, np.array([self.head(k, float(x)) for x in tt]), pour)
             age = np.linspace(1.0, 0.0, n)
             c = lin(self.COLS[k])
             env = np.sin(np.pi * (1 - age))
+            if cam is not None:                                       # never across the signature
+                xy, z = cam.project(np.asarray(pts, np.float64))
+                dx = np.minimum(xy[:, 0] - SIG_BOX[0], SIG_BOX[1] + 0.06 - xy[:, 0])
+                dy = np.minimum(xy[:, 1] - SIG_BOX[2] + 0.06, SIG_BOX[3] - xy[:, 1])
+                env = env * (1.0 - np.clip(np.minimum(dx, dy) / 0.04 + 0.5, 0.0, 1.0) * (z > 0))
             falling = _sc(T["ribbons"][0], T["ribbons"][0] + 0.5, t)
             wide = 2.6 * (1.0 - falling) + 0.45 * falling
             out.append(ribbon(pts, width=wide * (0.3 + 0.7 * env ** 0.5), color=c * 0.55,
@@ -1114,7 +1126,20 @@ def _ripple(t):
                         (TOTAL, 0.35)], t))
 
 
+_LIGHT_CUTS = (T["star_land"], T["woman"][0], T["woman"][1] - 2, T["walk"][0], T["farewell"][0])
+_LIGHT_GLIDE = 1.8
+
+
 def _light_pos0(t):
+    """The warm light glides (never jumps) from one source to the next."""
+    p = _light_pos_step(t)
+    for b in _LIGHT_CUTS:
+        if b <= t < b + _LIGHT_GLIDE:
+            return _mix(_light_pos_step(b - 1e-3), p, _sc(b, b + _LIGHT_GLIDE, t))
+    return p
+
+
+def _light_pos_step(t):
     """The warm light on the scene: the home star, then the seed, then the lantern."""
     if t < T["star_land"]:
         return _v(-8.0, 3.0, -40.0) if t < T["star_lift"] else HomeStar().where(t) * 0.0 + \
