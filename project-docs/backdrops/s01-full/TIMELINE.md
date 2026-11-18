@@ -1,0 +1,94 @@
+# 01 All You Stars of Zion: full-length backdrop (pilot)
+
+Status: full video rendered and delivered (2026-11-18), on Anthony's word that night: "I trust you to finish making the videos for all of them in multiple parallel chats." See "Final build" at the end.
+
+Earlier stills for review (1280x720, 12 landmarks plus 2 extras): Drive "Videos/01 All You Stars of Zion/backdrop stills", https://drive.google.com/drive/folders/1jkvApQ43Jdf_IkLig0fr7UjuuI4fcPRH
+
+## The audio (kept in Drive only)
+
+Owner decision 2026-11-18: the song stays in Drive only and is never committed to this repository. It is the church's brass ensemble version (the same performance as youtu.be/YuBYZDgmf0I).
+
+Download it into `work/s01_full/` (ignored by git) before preparing:
+
+```sh
+mkdir -p work/s01_full
+curl -L -o work/s01_full/s01-ensemble.mp3 "https://drive.usercontent.google.com/download?id=1wmWrkUIuIU_zE1Hogp_hPUFYBH0J5YJR&export=download&confirm=t"
+```
+
+SHA-256 `2ef650dcf9b2fab141c72a2ce9a3301265326d2b6fe2ec807dcbe3dddd177a01` (checked by `s01_prepare.py`).
+
+Measurements (`engine/analyze.py`, pinned engine d928ff9):
+
+- Length 187.97 s. Key B-flat major (A# major in the analyzer, 0.96 confidence).
+- Beat grid 0.418 s (the analyzer reports 143.6; the felt pulse is about 99 BPM, as measured before).
+- Natural fade 3:03 to 3:08 (loudness falls from about -19 dB to -38 dB in the last 4 s).
+- Loud hits refined to the nearest measured onset: 7.11, 30.60, 77.18, 87.33, 106.39, 125.04, 131.54, 141.48, 147.77 (largest), 177.35.
+- Loudest stretch 1:39 to 1:43. Quiet interlude about 1:53 to 2:05 (down to -35 dB).
+- Structural segment boundaries (k=8): 0.0, 31.0, 51.7, 61.4, 110.0, 143.3, 148.2, 170.9.
+
+## Approved timeline (owner: "Approve as proposed", 2026-11-18)
+
+One continuous video, 30 fps, 1920x1080, 203 s (187.97 s of music plus a 15 s calm hold).
+
+| Time | What happens |
+|---|---|
+| 0:00 to 0:07 | Soft opening: luminous starry lake, warm, never dark; gold morning star on the horizon; nine dim seeds of the arch. |
+| 0:07.1 | First big brass hit: the song title forms as a constellation; the arch of nine lights draws across the sky at about 0:11. |
+| 0:19.5 to 0:25 | Soft: the title settles into the small signature; the nine coloured comets begin to fall. |
+| 0:25.5 to 0:55 | Verse: the comets land on the shore as gold glitter people; the morning star flares on the 0:30.6 lift. COMPLIMENT acted from 0:38 by two young women; words fully readable 0:42 to 0:52. |
+| 0:55 to 0:58 | Breath: the lake stills to a mirror; Compliment's star lights in the arch. |
+| 0:58 to 1:24 | Chorus: "like a torch"; the flame passes hand to hand; torches lift; beams of glory lean toward Heavenly Mother, far on the shore and seen only from behind (never a face); the sky flushes rose gold. |
+| 1:24 to 1:27 | Breath: light falls gently onto every torch. |
+| 1:27 to 1:53 | Chorus again, peak 1:39 to 1:43: the young people walk out on the lake; light spreads over the whole world; a golden net of light lands on the peak. |
+| 1:53 to 2:05 | Quiet interlude: blue hour, close on the shore, "dew of the dawn" written in light. |
+| 2:05 to 2:27 | The tree of life grows from the dew; blossoms drift on the 2:21 hit. |
+| 2:27.8 | The sun rises and "Arise" stands up out of the lake. |
+| 2:36 to 2:55 | Final section: ENCOURAGEMENT acted, one young man helps another rise (same gender); words fully readable 2:41 to 2:52. |
+| 2:55 to 2:57 | Breath: the words go to Encouragement's star in the arch. |
+| 2:57 to 3:08 | Final fanfare, fade from 3:03: torch flames lift as sparks to the arch. |
+| 3:08 to 3:23 | Silence: calm radiant morning hold, two lit stars, still lake, gently alive. Never black. |
+
+## Other owner decisions
+
+- Look: the approved Nine Colours Revision 3 (warm gold glitter people, cream Cormorant serif phrases with coloured capsule labels, nine coloured comets, warm heavenly light) applied to the song design.
+- Expression colours are the website colours: Compliment #364E96, Encouragement #9E6AF6. Exact wording from the campaign.
+- The faint heavenly city is left out.
+- Backdrop rules: calmer camera than the promo (performers stand in front), calm bottom third, expression phrases readable from the back of the hall, small signature, no lyrics on screen beyond the three short fragments ("like a torch", "dew of the dawn", "Arise").
+- Every touching moment is same gender (parent and child excepted); refined natural movement; no realistic faces.
+- Stars at the end: 9 Compliment and 7 Encouragement lit (arch numbered left to right in campaign order).
+
+## How it is built
+
+- Branch `backdrop/s01-full`, from tag `film10-revision3-approved-2026-11-16`. The approved promo files are not changed.
+- Song file: `tools/backdrop_s01/songs/s01_full.py`, read into the pinned Film 10 engine (d928ff9) with Claude Final v1 words, bodies and light effects (f43f451), exactly as Revision 3 does.
+- `tools/backdrop_s01/s01_prepare.py`: restores the pinned engines, checks the audio, measures it, makes the score (song plus 15 s of silence).
+- `tools/backdrop_s01/s01_render.py`: stills or frame ranges, 30 fps.
+
+```sh
+python tools/backdrop_s01/s01_prepare.py
+python tools/backdrop_s01/s01_render.py --stills 3,12,22 --scale 0.5 --outdir <dir outside the repo>
+```
+
+Render only in the cloud. Never commit the song, stills, frames or videos.
+
+## Final build (2026-11-18)
+
+The two helper lanes were merged into this branch (`tools/s01_full/people.py`, `tools/s01_full/words.py`, each with its own stills tool). The calls made:
+
+- Words: the lane's words are used for Compliment, "like a torch", "dew of the dawn", "Arise" and Encouragement (the title stays the lead's). Compliment gathers into its arch star 55 to 58 and Encouragement 175 to 177, now aimed at the real arch places (the lane's default was a guessed place on screen); the arch stars light at 58.0 and 177.0. "Arise" stands up out of the lake and is whole on the 2:27.8 hit. The words lane's read times drive the arch calm (READS).
+- Sky contrast 2:27 to 2:57: the sunrise, morning and still skies are a deeper blue above the horizon, and "Arise" and Encouragement keep more of their colour with a stronger halo, so they read over the bright morning.
+- People: the lead's people are kept for both acting moments. In the lane's Compliment the pair stood close to camera and one woman showed as a doubled, blown-out figure (a join between body segments), and its line of 16 people crowded the frame and the bottom third; the lead's wide pair reads more naturally from the hall. For Encouragement the lead's helped-up pair (refined shared pair move) is natural in the motion strip. The lane's 16 bodies also cost several times as much per frame. people.py stays in the tree for later songs.
+
+Checks: one round of stills at 0:03, 0:12, 0:22, 0:33, 0:46, 0:56, 1:04, 1:40, 1:45, 1:59, 2:11, 2:30, 2:40, 2:46, 2:56, 3:15 (half size, looked at full size and in quarter-size grids); motion strips at 0:55 to 0:58, 0:59 to 1:01, 1:27 to 1:29, 2:44 to 2:46 at 1080p.
+
+Render: inside the cloud session only (no GitHub Render workflow, nothing paid), 10 frame ranges, 4 at a time, about 2 to 2.5 s per 1080p frame per core.
+
+Result (checked on the master):
+
+- 203.000 s, 6,090 frames, 30 fps, 1920x1080, H.264 CRF 18 yuv420p, AAC 320k, faststart. 120,825,288 bytes, SHA-256 `505ac2abcb6806c8017b260c7506aa6e9b3050bed30eed3c1c192c7d8376cabe`.
+- Share copy 1280x720, 23,074,383 bytes, SHA-256 `19951f1a437b8c33cc28e87576094bd421045e3b91b584d7e54371841d344b9f`.
+- Audio matches the source at 0:07.1, 2:27.8 and 2:57.4 with 0.0 ms offset; the 15 s hold is silent.
+- No black stretches, no freeze of 1 s or more, no identical neighbouring frames. Every part join changes the picture no more than normal motion does; the only large jumps are the planned ones (the 0:07 brass flash, the 0:30.6 flare, the cuts at 1:53 and 2:27.5).
+- Delivered as two files attached to the build session's chat (share copy first). They still need copying to Drive "Videos/01 All You Stars of Zion/".
+
+Weak points: in the morning (2:27 on) the people are pale cream rather than deep gold and small in the wide frame; the Compliment words travel to a star near the right edge of the picture, so the cloud leaves the frame on a long curve; the 1:40 peak is very bright pink-white haze with the people small in it.
