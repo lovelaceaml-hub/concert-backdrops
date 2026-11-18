@@ -401,12 +401,16 @@ class Clear:
 # ---------------------------------------------------------------------------------------------------------
 # Effects: peace rings, footprints of light, the lost lights, lamps, comets, the kingdom, bridge, procession
 # ---------------------------------------------------------------------------------------------------------
-RINGS = [(54.0, BENCH, 70.0), (64.0, BENCH, 70.0), (76.4, BENCH, 70.0), (126.5, LAMP + _v(-1.9, 0, -18.0), 60.0),
-         (137.6, LAMP, 80.0), (231.6, _v(0.0, 0.0, -30.0), 110.0)]
+# (start, centre, reach in metres, slow): a slow ring spreads at a steady 3.5 m/s (the hush and the ending)
+RINGS = [(54.0, BENCH, 70.0, False), (64.0, BENCH, 70.0, False), (76.4, BENCH, 70.0, False),
+         (126.5, LAMP + _v(-1.9, 0, -18.0), 60.0, False), (137.6, LAMP, 80.0, True),
+         (231.6, _v(0.0, 0.0, -30.0), 110.0, True)]
 
 
 class PeaceRings:
-    """A slow ring of golden stillness spreading across the lake from where one of Mother's words is spoken."""
+    """A slow ring of golden stillness spreading across the lake from where one of Mother's words is spoken.
+    The ring fades out before it reaches the camera, so it never sweeps through the lens as a flash."""
+    wants_camera = True
 
     def __init__(self, n=1800):
         r = np.random.default_rng(71)
@@ -414,20 +418,27 @@ class PeaceRings:
         self.j = r.normal(size=n) * 0.35
         self.s = r.random(n)
 
-    def sample(self, t):
+    def sample(self, t, cam):
         out = []
-        for t0, c, rmax in RINGS:
+        eye = np.asarray(cam.pos, np.float64)
+        for t0, c, rmax, slow in RINGS:
             u = t - t0
-            if u < 0.0 or u > 11.0:
+            if u < 0.0 or u > (12.0 if slow else 11.0):
                 continue
-            rad = rmax * (1.0 - np.exp(-u / 4.0)) + 0.3
-            al = _sc(0.0, 0.6, u) * (1.0 - _sc(6.0, 11.0, u))
+            if slow:
+                rad = 3.5 * u + 0.3
+                al = _sc(0.0, 0.8, u) * (1.0 - _sc(7.0, 12.0, u))
+            else:
+                rad = rmax * (1.0 - np.exp(-u / 4.0)) + 0.3
+                al = _sc(0.0, 0.6, u) * (1.0 - _sc(6.0, 11.0, u))
             pos = np.stack([c[0] + np.sin(self.a) * (rad + self.j * (0.3 + 0.03 * rad)), np.full_like(self.a, 0.04),
                             c[2] + np.cos(self.a) * (rad + self.j * (0.3 + 0.03 * rad))], axis=1)
+            near = _ss(6.0, 16.0, np.linalg.norm(pos - eye, axis=1))
+            al = al * near
             out.append(dict(pos=pos, size=0.10 + 0.012 * rad * (0.5 + self.s), color=lin("#ffcf86"),
                             alpha=0.55 * al * (0.4 + 0.6 * self.s), emit=1.2, kind="soft", reflect=False,
                             seed=self.s, twinkle=0.4))
-            out.append(dict(pos=pos[::6], size=0.05 + 0.004 * rad, color=lin("#fff0cc"), alpha=0.7 * al,
+            out.append(dict(pos=pos[::6], size=0.05 + 0.004 * rad, color=lin("#fff0cc"), alpha=0.7 * al[::6],
                             emit=2.0, kind="spark", reflect=False, seed=self.s[::6], twinkle=0.6))
         return out or None
 
