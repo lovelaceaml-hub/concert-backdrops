@@ -1021,15 +1021,15 @@ LOOKS = dict(
                 sun_el=3.2, sun_int=0.8, sun_glow=0.5, sun_color="#ffdcb0", stars=0.05, milky=0.0, haze=0.42,
                 haze_color="#c88a90", mist=0.18, mist_color="#c89098", hill_color="#3a2a52", water="#1c1630",
                 rays=0.5, clouds=0.42, dust=0.5, dust_color="#fff4dc", dust_color2="#ffd8d0", exposure=0.74),
-    evening=dict(base="dusk", exposure=0.85, sky_top="#2a3478", sky_mid="#8a6aa0", sky_hor="#f0a8a0", sun_az=SUN_AZ, sun_el=0.5,
-                 sun_int=0.7, sun_glow=0.75, stars=0.25, milky=0.0, haze=0.55, haze_color="#c08aa0",
-                 mist=0.35, mist_color="#c094a8", hill_color="#2a2040", water="#100c22", rays=0.35, clouds=0.35,
-                 dust_color="#ffe8cc", dust_color2="#ffd0c8"),
+    evening=dict(base="dusk", exposure=0.8, sky_top="#1c2460", sky_mid="#563f84", sky_hor="#d48890",
+                 sun_az=SUN_AZ, sun_el=-0.5, sun_int=0.55, sun_glow=0.55, stars=0.4, milky=0.0, haze=0.3,
+                 haze_color="#6a4a7c", mist=0.14, mist_color="#7a5a8a", hill_color="#1a1430", water="#0a0818",
+                 rays=0.2, clouds=0.3, dust_color="#ffe8cc", dust_color2="#ffd0c8"),
 )
 
 _LOOK_KEYS = [(0.0, "morning"), (6.5, "dusk", 7.0), (15.5, "home", 7.0), (60.0, "winter", 20.0),
               (100.0, "deep", 9.0), (136.0, "violet", 9.0), (163.0, "blush", 8.0), (173.0, "dawn", 9.0),
-              (206.0, "spring", 10.0), (220.0, "evening", 14.0)]
+              (204.0, "spring", 7.0), (211.5, "evening", 6.0)]
 
 
 def _ripple(t):
@@ -1060,7 +1060,8 @@ WORLD = dict(
     looks=LOOKS,
     look=_LOOK_KEYS,
     ripple=_ripple,
-    mirror=1.0,
+    mirror=lambda t: 1.0 - 0.72 * _win(124.0, 129.0, 160.0, 170.0, t),     # snow lies on the ice
+    mirror_min=lambda t: 0.55 * (1.0 - 0.72 * _win(124.0, 129.0, 160.0, 170.0, t)),
     light=dict(pos=_v(-50.0, 6.0, -380.0), color="#ffe2b0", strength=Track([(0.0, 0.0), (TOTAL, 0.0)]),
                size=0.5, rays=0.0),
     lights=[dict(pos=_light_pos0, color="#ffcf8a", strength=_light_str0, radius=4.5),
@@ -1079,7 +1080,8 @@ P3D = dict(camera=CAMERA, world=WORDS.world(WORLD), setup=_setup,
 
 # ------------------------------------------------------------------------------------------------ titles
 TITLES = dict(signature=dict(windows=[(T["title_out1"] + 0.4, 177.0, "bl", "night"),
-                                      (175.8, TOTAL + 5.0, "bl", "day")], fade=1.2))
+                                      (175.8, 212.6, "bl", "day"), (211.4, TOTAL + 5.0, "bl", "night")],
+                             fade=1.2))
 SONG_TITLE = dict(text="The Rose", sub="The Words of Mother’s Love  ·  Healing Concert",
                   t_in=T["title_in"], t_full=T["title_full"], t_out0=T["title_out0"], t_out1=T["title_out1"],
                   y=0.30, small_in=(15.6, 17.8))
