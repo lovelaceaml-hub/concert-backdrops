@@ -41,7 +41,7 @@ Hits (onset peaks, seconds): 22.62, 25.33, 52.04, 191.47, 205.11. The coordinato
 | 1:30.2 to 1:41.8 | C | INCLUSIVENESS, two women embrace (the concert note: love that embraces). Words readable 1:31.6 to 1:41. Green comet. | medium shot, held |
 | 1:42 to 1:51 | C | wide: lights warming all over the lake, rings spreading | slow move out |
 | 1:57 to 2:07.8 | C (soft section) | ENCOURAGEMENT, one kneels in prayer, her friend lays a hand on her shoulder and prays with her. Words readable 1:58.5 to 2:07. Violet comet. | medium shot, held |
-| 2:07 to 2:32 | D, peace across the world | the camera rises high and wide; all nine comets weave a web across the whole lake; every remaining light warms in a wave from the middle out; the water calms; gold motes rise; a deep gold band on the horizon | slow crane up (8.4 s), then a slow drift |
+| 2:07 to 2:32 | D, peace across the world | the camera rises high and wide; from 2:11.5 (once the camera is high) all nine comets weave a web across the whole lake; every remaining light warms in a wave from the middle out; the water calms; gold motes rise; a deep gold band on the horizon | slow crane up (8.4 s), then a slow drift |
 | 2:32 to 2:40 | | down toward the water road | slow descent (9 s) |
 | 2:38.5 to 3:38 | E | six people of light form on the water road, facing the lamp (seen from behind), gently swaying | low, behind them, slow drift |
 | 3:12 to 3:23.4 | E | GRATITUDE, two women: a small light given from hand to hand, a hand laid on the heart. Words readable 3:13.6 to 3:22.6. Gold comet. | medium shot, held |

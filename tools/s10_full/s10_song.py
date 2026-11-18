@@ -19,7 +19,7 @@ THE STORY ON THE MUSIC
            0:57.5 GREETING (two men bow to each other), 1:14 CONSIDERATION (a man helps another to his feet),
            1:31.5 INCLUSIVENESS (two women embrace), 1:58.5 ENCOURAGEMENT (one prays for her friend).
   1:43.5   wide: lights warming all over the lake, rings spreading.
-  2:07     peace across the world: the camera rises high; the nine comets weave a web across the whole lake,
+  2:07     peace across the world: the camera rises high; from 2:11.5 the nine comets weave a web across the whole lake,
            every light gold, the water calming, gold motes rising, the horizon a deep gold band.
   2:30     soft: down again toward the shore.
   2:40     the people of light gather on the water road facing the lamp (seen from behind).
@@ -399,7 +399,7 @@ class LakeLights:
 # ---------------------------------------------------------------------------------------------------------
 BIRTH = LOUDEST
 RISE_T0, RISE_T1 = 203.6, 209.0
-WEB_T0, WEB_T1 = 128.5, 152.0
+WEB_T0, WEB_T1 = 136.5, 154.0
 
 
 def _ring(k, t):
@@ -420,8 +420,8 @@ def _web(k, t):
     w = 0.23 + 0.03 * k
     ph = 1.1 * k
     x = 52.0 * np.sin(w * t + ph)
-    z = -25.0 + 42.0 * np.sin(0.5 * w * t + 2.0 * ph + 0.7)
-    return _v(x, 4.0 + 2.5 * np.sin(0.9 * t + k), z)
+    z = -48.0 + 30.0 * np.sin(0.5 * w * t + 2.0 * ph + 0.7)
+    return _v(x, 6.0 + 2.5 * np.sin(0.9 * t + k), z)
 
 
 def _circle(m):
