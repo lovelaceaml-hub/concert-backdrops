@@ -214,12 +214,12 @@ def _bodies():
     # then offers his hand and helps him rise
     helper, tired = pairs.helped_up(
         RISE_T, at=PAIR_AT, facing=270.0, rise=2.0, reach=1.2,
-        a=dict(shape="man", garment="tunic", look=dict(name="glitter", seams=0.6), color="#f4a838",
-               color2="#ffd890", bright=1.45, points=56000, seed=50.0, show=(153.0, TOTAL + 5.0), fade=0.8,
+        a=dict(shape="man", garment="tunic", look=dict(name="glitter", seams=0.6), color="#ee9424",
+               color2="#ffc860", bright=2.0, points=92000, seed=50.0, show=(153.0, TOTAL + 5.0), fade=0.8,
                gesture=[(158.0, 163.2, "comfort", dict(side="L", to=lambda t: _BODIES["tired"].where(t, "shoulder.R")))],
                effects=[dict(kind="form", t=153.0, dur=2.2)]),
-        b=dict(shape="man", garment="tunic", look=dict(name="glitter", seams=0.6), color="#ec9a30",
-               color2="#ffd080", bright=1.4, points=56000, seed=51.0, show=(153.0, TOTAL + 5.0), fade=0.8,
+        b=dict(shape="man", garment="tunic", look=dict(name="glitter", seams=0.6), color="#e88a20",
+               color2="#ffc458", bright=1.95, points=92000, seed=51.0, show=(153.0, TOTAL + 5.0), fade=0.8,
                effects=[dict(kind="form", t=153.2, dur=2.2)]))
     _BODIES["helper"], _BODIES["tired"] = helper, tired
     # the morning companions round them (back again after the walk), torches low, lifted on the fanfare
@@ -233,7 +233,7 @@ def _bodies():
             kw.update(garment="tunic")
         _BODIES[name] = Body(shape, at=(x, z), facing=facing, motion="stand",
                              hair="bun" if shape == "woman" else "default",
-                             color=["#f6b04a", "#f2a63c", "#eea040", "#ea9a34"][i], color2="#ffd890", bright=1.4,
+                             color=["#f0a034", "#ec9628", "#ea942c", "#e68e24"][i], color2="#ffc860", bright=1.8, points=72000,
                              seed=60.0 + i, show=(152.0 + 0.5 * i, TOTAL + 5.0),
                              gesture=[(153.0, 165.0, "offer", dict(side="R")),
                                       (165.0, 176.6, "soft_raise", dict(side="R", period=6.0 + i)),
@@ -360,7 +360,7 @@ def _lane_words():
     homes = arch_homes()
     # the morning sky behind Arise and Encouragement is bright: keep the letters' colour, a deeper glow and
     # a stronger halo so they stand out from the pale sky (see also the deeper morning looks below)
-    style = {"Arise": dict(color="#ffb347", glow="#c85a10", tint=.85, bright=1.0, halo=1.9),
+    style = {"Arise": dict(color="#f39a2a", glow="#a8480a", tint=.92, bright=.95, halo=2.0),
              "Encouragement": dict(tint=.85, bright=1.0, halo=1.9)}
     return mod.build(camera=_LAYOUT, stars={"Compliment": tuple(homes[COMP]), "Encouragement": tuple(homes[ENC])},
                      style=style, centre_y=.36, widths={"Compliment": .42, "Encouragement": .54})
@@ -742,7 +742,7 @@ def _setup(scene):
     scene.add("beams", Clear(Beams(), WORDS), reflect=False)
     scene.add("lightfall", LightFall(), reflect=False)
     scene.add("net", Clear(GoldenNet(), WORDS), reflect=False)
-    scene.add("dew", DewDrops(), reflect=False)
+    scene.add("dew", Clear(DewDrops(), WORDS), reflect=False)
     scene.add("tree", Clear(GrowingTree(), WORDS), reflect=False)
     scene.add("blossoms", Clear(Blossoms(), WORDS), reflect=False)
     scene.add("hearts", Clear(ExprHearts(), WORDS), reflect=False)
@@ -779,14 +779,14 @@ LOOKS = dict(
     sunrise=dict(base="sunrise", sky_top="#12306c", sky_mid="#64528a", sky_hor="#f2a060", sun_el=1.0,
                  sun_int=0.7, sun_glow=0.45, clouds=0.25, haze_color="#d0906a", mist_color="#c09080", ripple=0.25,
                  exposure=0.85),
-    morning=dict(base="golden", sky_top="#12306c", sky_mid="#5e5c98", sky_hor="#f4b070", sun_el=5.5,
+    morning=dict(base="golden", sky_top="#12306c", sky_mid="#5e5c98", sky_hor="#f4b070", sun_el=2.2,
                  sun_int=0.42, sun_glow=0.22, sun_disc=2.6, sun_color="#ffe8c0", clouds=0.2, haze=0.28, haze_color="#c89070",
                  mist=0.10, mist_color="#d0a080", water="#141c3a", ripple=0.25, rays=0.15, dust=0.6,
-                 dust_color="#fff0d0", dust_color2="#ffd8a0", exposure=0.82),
-    still=dict(base="golden", sky_top="#173a74", sky_mid="#8c7282", sky_hor="#ffc47c", sun_el=6.5,
+                 dust_color="#fff0d0", dust_color2="#ffd8a0", exposure=0.76),
+    still=dict(base="golden", sky_top="#173a74", sky_mid="#8c7282", sky_hor="#ffc47c", sun_el=3.2,
                sun_int=0.42, sun_glow=0.24, sun_disc=2.6, sun_color="#ffe8c0", clouds=0.2, haze=0.28, haze_color="#c89070",
                mist=0.10, mist_color="#d0a080", water="#141c3a", ripple=0.05, rays=0.15, dust=0.45,
-               dust_color="#fff0d0", dust_color2="#ffd8a0", exposure=0.82),
+               dust_color="#fff0d0", dust_color2="#ffd8a0", exposure=0.78),
 )
 
 def _toward_white(hexs, k):
