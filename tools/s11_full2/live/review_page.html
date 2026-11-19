@@ -1,0 +1,320 @@
+<title>Song 11 Sections</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;1,500&family=Inter:wght@400;500;600&display=swap">
+<style>
+/* Layout: one column. Live render panel, then the song's sections in running order; each has its player,
+   progress, my findings to approve or decline, and a box to request changes. */
+:root{
+  --bg:#f3f1f8;--surface:#ffffff;--sunk:#f7f5fc;--fg:#1e1a33;--muted:#615b7c;--line:#dcd7ea;--accent:#7a52d6;--accent-fg:#ffffff;
+  --fresh:#1f8a5b;--old:#a8641c;--warn:#b23a48;
+  --display:"Cormorant Garamond",Georgia,"Times New Roman",serif;--body:"Inter",system-ui,-apple-system,sans-serif;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#110e1d;--surface:#1b1730;--sunk:#161227;--fg:#eeeaf8;--muted:#a7a0c4;--line:#2d2747;--accent:#b49cff;--accent-fg:#160f2e;--fresh:#5fd39b;--old:#f0b469;--warn:#ff8a98;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#110e1d;--surface:#1b1730;--sunk:#161227;--fg:#eeeaf8;--muted:#a7a0c4;--line:#2d2747;--accent:#b49cff;--accent-fg:#160f2e;--fresh:#5fd39b;--old:#f0b469;--warn:#ff8a98;color-scheme:dark}
+body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:13px;padding-block:18px 32px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+main{max-width:780px;margin:0 auto;display:grid;gap:14px}
+header{display:grid;gap:4px}
+h1{font-family:var(--display);font-weight:600;font-size:28px;line-height:1.1;margin:0;text-wrap:balance}
+h2{font-family:var(--display);font-weight:600;font-size:20px;margin:0}
+h3{font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin:0}
+.sub{margin:0;color:var(--muted);line-height:1.5;max-width:62ch}
+.bar{display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center;font-size:13px;color:var(--muted)}
+.bar label{display:flex;gap:8px;align-items:center;cursor:pointer;color:var(--fg)}
+input[type=checkbox]{accent-color:var(--accent);width:16px;height:16px}
+.panel{display:grid;gap:8px;padding:10px 12px;background:var(--surface);border:1px solid var(--line);border-radius:10px}
+.row{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:6px 12px;font-size:13px}
+.track{flex:1 1 160px;min-width:120px;height:6px;border-radius:3px;background:var(--line);overflow:hidden}
+.fill{height:100%;width:0;background:var(--accent);transition:width .6s ease}
+.fill.done{background:var(--fresh)}
+.pct{font-variant-numeric:tabular-nums;font-weight:600;color:var(--fg);min-width:4ch;text-align:right}
+.live{display:inline-flex;gap:6px;align-items:center;color:var(--muted)}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--muted)}
+.dot.on{background:var(--fresh);animation:pulse 2s ease-in-out infinite}
+@keyframes pulse{50%{opacity:.35}}
+.jobs{display:grid;gap:8px;margin:0;padding:0;list-style:none}
+.job{display:grid;grid-template-columns:minmax(0,9rem) minmax(0,1fr) auto;gap:4px 12px;align-items:center;font-size:13px}
+.job b{font-weight:600}
+.job .what{color:var(--muted);min-width:0}
+.job .track{grid-column:1/-1;height:4px}
+.machines{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,11rem),1fr));gap:6px;margin:0;padding:0;list-style:none}
+.mach{font-size:12px;display:grid;gap:2px;padding:7px 10px;border:1px solid var(--line);border-radius:8px;background:var(--sunk);font-size:13px;min-width:0}
+.mach .top{display:flex;justify-content:space-between;gap:8px;align-items:baseline}
+.mach p{margin:0;color:var(--muted);line-height:1.4}
+.c-working2{color:var(--fresh)}.c-idle{color:var(--muted)}.c-blocked{color:var(--warn)}.c-busy{color:var(--old)}
+ol.sections{list-style:none;margin:0;padding:0;display:grid;gap:12px}
+.sec{background:var(--surface);border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.head{display:flex;flex-wrap:wrap;justify-content:space-between;gap:4px 12px;align-items:baseline;padding:8px 12px 6px}
+.name{display:flex;gap:10px;align-items:baseline;min-width:0}
+.no{font-size:12px;font-weight:600;color:var(--muted);font-variant-numeric:tabular-nums;letter-spacing:.04em}
+.span{font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums}
+.meta{display:flex;gap:10px;align-items:center;font-size:12px}
+.chip{padding:2px 8px;border-radius:999px;border:1px solid currentColor;font-size:12px;font-weight:500;white-space:nowrap}
+.c-new,.c-done,.c-approved{color:var(--fresh)}.c-prev,.c-working{color:var(--old)}.c-wait,.c-open,.c-declined{color:var(--muted)}.c-request{color:var(--accent)}
+.ago{color:var(--muted);font-variant-numeric:tabular-nums;white-space:nowrap}
+video{display:block;width:100%;max-width:100%;aspect-ratio:16/9;background:#000}
+.pending{aspect-ratio:16/9;max-width:100%;display:grid;place-items:center;color:var(--muted);font-size:14px;background:repeating-linear-gradient(135deg,transparent 0 12px,var(--line) 12px 13px)}
+.status{display:flex;flex-wrap:wrap;gap:4px 10px;align-items:center;padding:6px 12px;font-size:12px;color:var(--muted)}
+.note{padding:0 12px 8px;font-size:12px;color:var(--muted);line-height:1.4}
+.box{border-top:1px solid var(--line);background:var(--sunk)}
+.box>summary{cursor:pointer;padding:6px 12px;font-size:12px;font-weight:600;color:var(--muted);list-style-position:inside}
+.box>.inner{display:grid;gap:8px;padding:0 12px 10px}
+.items{display:grid;gap:6px;margin:0;padding:0;list-style:none}
+.item{display:grid;gap:4px;padding:7px 10px;background:var(--surface);border:1px solid var(--line);border-radius:7px;font-size:12px;line-height:1.4}
+.item .top{display:flex;flex-wrap:wrap;gap:6px 10px;align-items:baseline;justify-content:space-between}
+.item .t{font-weight:600}
+.item p{margin:0;color:var(--muted)}
+.item .reply{color:var(--fg);border-left:2px solid var(--accent);padding-left:8px}
+.acts{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+button{font:inherit;font-size:12px;font-weight:500;padding:4px 10px;border-radius:7px;border:1px solid var(--line);background:var(--surface);color:var(--fg);cursor:pointer}
+button.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-fg)}
+button:disabled{opacity:.5;cursor:default}
+button:focus-visible,textarea:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+textarea,input[type=text]{font:inherit;font-size:12px;width:100%;box-sizing:border-box;padding:6px 8px;border-radius:7px;border:1px solid var(--line);background:var(--surface);color:var(--fg)}
+textarea{min-height:44px;resize:vertical}
+.form{display:grid;gap:8px}
+.hint{font-size:12px;color:var(--muted)}
+.empty{font-size:13px;color:var(--muted)}
+@media (max-width:480px){.job{grid-template-columns:minmax(0,1fr) auto}.job .what{grid-column:1/-1;order:3}}
+@media (prefers-reduced-motion:reduce){.dot.on{animation:none}.fill{transition:none}*{scroll-behavior:auto!important}}
+</style>
+<main>
+<header>
+  <h1>Almighty God Who Knows the Future</h1>
+  <p class="sub">Song 11 backdrop drafts (540p, with the recording): newest version of each section, live render status, findings and requests.</p>
+  <div class="bar">
+    <label for="through"><input type="checkbox" id="through" checked> Play straight through</label>
+    <span id="clock"></span>
+  </div>
+</header>
+
+<section class="panel" aria-label="Render progress">
+  <div class="row"><strong id="ovTitle">Grand pass render</strong><span class="live"><span class="dot" id="dot"></span><span id="ovWhen">Status loading</span></span></div>
+  <div class="row"><div class="track"><div class="fill" id="ovFill"></div></div><span class="pct" id="ovPct"></span></div>
+  <div class="hint" id="ovText"></div>
+  <h3>Machines</h3>
+  <ul class="machines" id="machines"></ul>
+  <h3>Now working on</h3>
+  <ul class="jobs" id="jobs"><li class="empty">Nothing rendering right now.</li></ul>
+</section>
+
+<section class="panel" aria-label="Request a change to the whole film">
+  <h3>Whole film</h3>
+  <ul class="items" id="globalFinds"></ul>
+  <details class="box" style="border:0;background:none"><summary style="padding:2px 0">Request a change to the whole film</summary><div class="form" id="globalForm" style="padding-top:6px"></div></details>
+  <ul class="items" id="globalReqs"></ul>
+</section>
+
+<ol class="sections" id="list"></ol>
+<p class="hint">Requests and decisions save here; I pick them up at each status update.</p>
+</main>
+<script>
+// Fallback shown until the live status arrives.
+let SECTIONS = [
+  {name:"Intro", span:"0:00 to 0:40", pass:"grand", url:"/_blob/12eac57a54eb43dc126bec1bcea25109", updated:"2026-11-19T04:48:58Z", state:"ready", pct:100, where:"", note:"Church of light, the flight down the cloud canyon, Father's pulse."},
+  {name:"Verse 1", span:"0:40 to 1:22", pass:"grand", url:"/_blob/0b09e7c3c889b8d23a388f5babe7b4e6", updated:"2026-11-19T04:56:39Z", state:"ready", pct:100, where:"", note:"Crown over Zion, the city fills with gold, the nations stream in."},
+  {name:"Chorus 1", span:"1:22 to 2:01", pass:"prev", url:"/_blob/b933a3b2b6d52f77d6059f5bf40f721d", updated:"2026-11-19T04:24:44Z", state:"rendering", pct:90, where:"Machine A", note:"Showing the earlier pass until the grand pass is ready."},
+  {name:"Verse 2", span:"2:01 to 2:40", pass:"prev", url:"/_blob/5dba40070ca2746c05de2e8cca4f44ea", updated:"2026-11-19T04:24:33Z", state:"rendering", pct:90, where:"Machine A", note:"Showing the earlier pass until the grand pass is ready."},
+  {name:"Chorus 2", span:"2:40 to 3:21", pass:"prev", url:"/_blob/52a300607308b02d24b2e6b44bce1e30", updated:"2026-11-19T04:30:03Z", state:"rendering", pct:90, where:"Machine A and this machine", note:"Showing the earlier pass until the grand pass is ready."},
+  {name:"Coda", span:"3:21 to 3:59", pass:"grand", url:"/_blob/8797025c7bcfb9104dba676cc7d7b1d0", updated:"2026-11-19T05:04:18Z", state:"ready", pct:100, where:"", note:"Sunrise over Zion, hearts and lanterns, the canyon flight, the sky orchestra, the world finale."},
+  {name:"Ending", span:"3:59 to 4:35", pass:"grand", url:"/_blob/b5f06fe6f31cfa1e8a3e21ab43101262", updated:"2026-11-19T05:04:18Z", state:"ready", pct:100, where:"", note:"Back to everyone on Mount Zion, the held breath, the end card on the last chord."}
+];
+let STATUS = {updated:"", title:"Grand pass render", text:"", active:false, jobs:[], machines:[]};
+let FINDINGS = [], REQUESTS = [];
+let db = null;
+
+const LABEL = {grand:"Grand pass", prev:"Earlier pass", wait:"Not rendered yet"};
+const STATE = {ready:"Ready", rendering:"Rendering", queued:"Queued", joining:"Joining parts"};
+const REQ = {new:"Sent", working:"Working on it", done:"Done", declined:"Not doing"};
+const FIND = {open:"Waiting for you", approved:"Approved", declined:"Declined", working:"Working on it", done:"Done"};
+
+function agoText(iso){
+  const m = Math.max(0, Math.floor((Date.now() - Date.parse(iso)) / 60000));
+  if (!iso || isNaN(m)) return "";
+  if (m < 1) return "just now";
+  if (m < 120) return m + (m === 1 ? " minute" : " minutes") + " ago";
+  return Math.floor(m / 60) + " hours ago";
+}
+function el(tag, cls, text){ const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; }
+function chip(kind, text){ return el("span", "chip c-" + kind, text); }
+
+// ---------- request form (one per section, one for the whole film)
+function makeForm(holder, section){
+  const id = "req-" + (section < 0 ? "all" : section);
+  const ta = el("textarea"); ta.id = id; ta.placeholder = section < 0 ? "For example: make the comets brighter everywhere" : "What should change in this section? You can name a time, like 1:45.";
+  const lab = el("label", "hint", "Your request"); lab.htmlFor = id;
+  const acts = el("div", "acts"), send = el("button", "primary", "Send request"), msg = el("span", "hint");
+  send.type = "button";
+  send.addEventListener("click", async () => {
+    const text = ta.value.trim();
+    if (!text) { msg.textContent = "Type what you want changed first."; return; }
+    if (!db) { msg.textContent = "Requests can only be saved when you open this page signed in as its owner."; return; }
+    send.disabled = true; msg.textContent = "Sending";
+    try {
+      await db.collection("requests").add({text, section, created: new Date().toISOString(), state: "new", reply: ""});
+      ta.value = ""; msg.textContent = "Sent. I will pick it up at the next update.";
+    } catch (e) { msg.textContent = "Could not send: " + (e && (e.message || e.code) || e) + ". Try again."; }
+    send.disabled = false;
+  });
+  acts.append(send, msg); holder.append(lab, ta, acts);
+}
+
+function reqItem(r){
+  const li = el("li", "item"), top = el("div", "top");
+  top.append(el("span", "t", r.text || ""), chip(r.state === "new" ? "request" : r.state, REQ[r.state] || r.state));
+  li.append(top);
+  li.append(el("p", "", "Sent " + agoText(r.created)));
+  if (r.reply) li.append(el("p", "reply", r.reply));
+  return li;
+}
+
+function findItem(f){
+  const li = el("li", "item"), top = el("div", "top");
+  top.append(el("span", "t", (f.kind === "suggestion" ? "Suggestion: " : "Finding: ") + (f.title || "")), chip(f.state, FIND[f.state] || f.state));
+  li.append(top);
+  if (f.at) li.append(el("p", "", "At " + f.at));
+  if (f.detail) li.append(el("p", "", f.detail));
+  if (f.reply) li.append(el("p", "reply", f.reply));
+  if (f.state === "open") {
+    const nid = "note-" + f.id, note = el("input"); note.type = "text"; note.id = nid; note.placeholder = "Optional note (for example: yes, but keep it subtle)";
+    const nl = el("label", "hint", "Note to Claude"); nl.htmlFor = nid;
+    const acts = el("div", "acts"), yes = el("button", "primary", "Approve"), no = el("button", "", "Decline"), msg = el("span", "hint");
+    yes.type = no.type = "button";
+    const decide = async (state) => {
+      if (!db) { msg.textContent = "Decisions can only be saved when you open this page signed in as its owner."; return; }
+      yes.disabled = no.disabled = true; msg.textContent = "Saving";
+      try { await db.doc("findings/" + f.id).update({state, note: note.value.trim(), decided: new Date().toISOString()}); msg.textContent = "Saved"; }
+      catch (e) { msg.textContent = "Could not save: " + (e && (e.message || e.code) || e) + ". Try again."; yes.disabled = no.disabled = false; }
+    };
+    yes.addEventListener("click", () => decide("approved")); no.addEventListener("click", () => decide("declined"));
+    acts.append(yes, no, msg); li.append(nl, note, acts);
+  } else if (f.note) li.append(el("p", "", "Your note: " + f.note));
+  return li;
+}
+
+// ---------- sections
+const list = document.getElementById("list");
+const rows = [];
+function build(i){
+  const li = el("li", "sec"); li.id = "s" + (i + 1);
+  const head = el("div", "head"), name = el("div", "name"), h2 = el("h2"), span = el("span", "span");
+  name.append(el("span", "no", String(i + 1).padStart(2, "0")), h2, span);
+  const meta = el("div", "meta"), pass = el("span"), ago = el("span", "ago");
+  meta.append(pass, ago); head.append(name, meta);
+  const media = el("div");
+  const status = el("div", "status"), stateText = el("span"), track = el("div", "track"), fill = el("div", "fill"), pct = el("span", "pct");
+  track.append(fill); status.append(stateText, track, pct);
+  const note = el("div", "note");
+  const fbox = el("details", "box"), fh = el("summary", "", "Findings"), fin = el("div", "inner"), flist = el("ul", "items");
+  fin.append(flist); fbox.append(fh, fin);
+  const rbox = el("details", "box"), rh = el("summary", "", "Request a change"), rin = el("div", "inner"), rlist = el("ul", "items"), form = el("div", "form");
+  rin.append(rlist, form); rbox.append(rh, rin); makeForm(form, i);
+  li.append(head, media, status, note, fbox, rbox); list.append(li);
+  return {h2, span, pass, ago, media, video:null, url:"", stateText, fill, pct, note, fbox, fh, flist, rh, rlist};
+}
+function playNext(v){
+  if (!document.getElementById("through").checked) return;
+  const vids = rows.map(r => r.video).filter(Boolean), next = vids[vids.indexOf(v) + 1];
+  if (next) { next.closest("li").scrollIntoView({behavior:"smooth", block:"start"}); next.currentTime = 0; next.play().catch(() => {}); }
+}
+function setVideo(r, url){
+  if (r.url === url) return;
+  if (r.video && !r.video.paused && !r.video.ended) { r.pendingUrl = url; return; }   // never cut a section off while it plays
+  r.url = url; r.media.textContent = "";
+  if (!url) { r.video = null; r.media.append(el("div", "pending", "Rendering")); return; }
+  const v = document.createElement("video");
+  v.controls = true; v.preload = "metadata"; v.playsInline = true; v.src = url;
+  v.addEventListener("play", () => rows.forEach(o => { if (o.video && o.video !== v) o.video.pause(); }));
+  const swap = () => { if (r.pendingUrl) { const u = r.pendingUrl; r.pendingUrl = null; setVideo(r, u); } };
+  v.addEventListener("pause", swap);
+  v.addEventListener("ended", () => { playNext(v); swap(); });
+  r.video = v; r.media.append(v);
+}
+function fillList(ul, items, make, emptyText){
+  ul.textContent = "";
+  if (!items.length) { if (emptyText) ul.append(el("li", "empty", emptyText)); return; }
+  items.forEach(x => ul.append(make(x)));
+}
+
+function render(){
+  SECTIONS.forEach((s, i) => {
+    const r = rows[i] || (rows[i] = build(i));
+    r.h2.textContent = s.name; r.span.textContent = s.span;
+    r.pass.replaceWith(r.pass = chip(s.pass === "grand" ? "new" : s.pass === "prev" ? "prev" : "wait", LABEL[s.pass] || s.pass));
+    r.ago.dataset.t = s.updated || "";
+    setVideo(r, s.url || "");
+    const p = Math.max(0, Math.min(100, Math.round(s.pct || 0)));
+    r.fill.style.width = p + "%"; r.fill.classList.toggle("done", s.state === "ready"); r.pct.textContent = p + "%";
+    r.stateText.textContent = (STATE[s.state] || s.state) + (s.state !== "ready" && s.where ? " on " + s.where : "");
+    r.note.textContent = s.note || "";
+    const fs = FINDINGS.filter(f => f.section === i), open = fs.filter(f => f.state === "open").length;
+    r.fbox.hidden = !fs.length; fillList(r.flist, fs, findItem);
+    r.fh.textContent = "Findings (" + fs.length + (open ? ", " + open + " waiting for you" : "") + ")";
+    if (open && !r.fbox.dataset.seen) { r.fbox.open = true; r.fbox.dataset.seen = "1"; }
+    const rq = REQUESTS.filter(q => q.section === i);
+    fillList(r.rlist, rq, reqItem, "");
+    r.rh.textContent = rq.length ? "Your requests (" + rq.length + ") and request a change" : "Request a change";
+  });
+  fillList(document.getElementById("globalReqs"), REQUESTS.filter(q => q.section < 0), reqItem, "");
+  fillList(document.getElementById("globalFinds"), FINDINGS.filter(f => f.section < 0), findItem, "");
+  const total = SECTIONS.reduce((a, s) => a + (s.pct || 0), 0) / Math.max(1, SECTIONS.length);
+  document.getElementById("ovTitle").textContent = STATUS.title || "Render";
+  document.getElementById("ovFill").style.width = Math.round(total) + "%";
+  document.getElementById("ovFill").classList.toggle("done", total >= 99.5);
+  document.getElementById("ovPct").textContent = Math.round(total) + "%";
+  document.getElementById("ovText").textContent = STATUS.text || "";
+  document.getElementById("dot").classList.toggle("on", !!STATUS.active);
+  const MS = {rendering:["working2","Rendering"], idle:["idle","Idle"], blocked:["blocked","Needs you"], starting:["busy","Starting"], uploading:["busy","Uploading"]};
+  const ml = document.getElementById("machines"); ml.textContent = "";
+  if (!STATUS.machines.length) ml.append(el("li", "empty", "Machine status appears with the next update."));
+  STATUS.machines.forEach(m => {
+    const li = el("li", "mach"), top = el("div", "top"), st = MS[m.state] || ["idle", m.state || ""];
+    top.append(el("b", "", m.name || ""), chip(st[0], st[1]));
+    li.append(top);
+    if (m.doing) li.append(el("p", "", m.doing));
+    if (m.parts) li.append(el("p", "", m.parts));
+    if (m.note) li.append(el("p", "", m.note));
+    if (m.last) li.append(el("p", "", "Last heard from " + agoText(m.last)));
+    ml.append(li);
+  });
+  const jobs = document.getElementById("jobs"); jobs.textContent = "";
+  if (!STATUS.jobs || !STATUS.jobs.length) jobs.append(el("li", "empty", "Nothing rendering right now."));
+  else STATUS.jobs.forEach(j => {
+    const li = el("li", "job"), t = el("div", "track"), f = el("div", "fill");
+    f.style.width = Math.max(0, Math.min(100, j.pct || 0)) + "%"; t.append(f);
+    li.append(el("b", "", j.machine || ""), el("span", "what", j.what || ""), el("span", "pct", Math.round(j.pct || 0) + "%"), t);
+    jobs.append(li);
+  });
+  tick();
+}
+function tick(){
+  rows.forEach(r => { r.ago.textContent = r.ago.dataset.t ? "Updated " + agoText(r.ago.dataset.t) : ""; });
+  document.getElementById("ovWhen").textContent = STATUS.updated ? "Status updated " + agoText(STATUS.updated) : "Showing the last saved status";
+  const newest = SECTIONS.filter(s => s.updated).map(s => Date.parse(s.updated)).sort((a, b) => b - a)[0];
+  document.getElementById("clock").textContent = newest ? "Newest video: " + agoText(new Date(newest).toISOString()) : "";
+}
+
+makeForm(document.getElementById("globalForm"), -1);
+render(); setInterval(tick, 20000);
+
+// Live data: the coordinating session writes status/now and findings; requests and decisions come from this page.
+(async () => {
+  db = window.claude ? await window.claude.use("db") : null;
+  if (!db) { document.getElementById("ovWhen").textContent = "Live status needs this page opened signed in as its owner"; return; }
+  const fail = () => { document.getElementById("ovWhen").textContent = "Live status paused; reload the page to reconnect"; };
+  db.doc("status/now").onSnapshot(snap => {
+    if (!snap.exists) return;
+    const d = snap.data() || {};
+    if (Array.isArray(d.sections) && d.sections.length) SECTIONS = d.sections;
+    STATUS = {updated: d.updated || "", title: d.title || "", text: d.text || "", active: !!d.active, jobs: Array.isArray(d.jobs) ? d.jobs : [], machines: Array.isArray(d.machines) ? d.machines : []};
+    render();
+  }, fail);
+  db.collection("findings").onSnapshot(qs => {
+    FINDINGS = qs.docs.map(d => Object.assign({id: d.id}, d.data())).sort((a, b) => String(a.created).localeCompare(String(b.created)));
+    render();
+  }, fail);
+  db.collection("requests").onSnapshot(qs => {
+    REQUESTS = qs.docs.map(d => Object.assign({id: d.id}, d.data())).sort((a, b) => String(b.created).localeCompare(String(a.created)));
+    render();
+  }, fail);
+})();
+</script>

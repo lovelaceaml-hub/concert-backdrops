@@ -1,10 +1,22 @@
 # 11 Almighty God Who Knows the Future: status (backdrop version 2)
 
-**On hold: Anthony is designing song 11 in the planner session.** The coordinator stopped this build on 2026-11-18 (about 23:30 UTC) before any full render. No PR is open. Anthony's own direction (a journey across the Earth to the Church of God, lyrics from what the choir sings on the recording, a new phrase list) overrides the brief this build followed.
+Updated 2026-11-19 06:20 UTC by the coordinating Claude Code session.
 
-## Where this build stopped (so it can be resumed or reused)
-- Branch `backdrop2/s11-full` (from tag `film10-revision3-approved-2026-11-16`). Code in `tools/s11_full2/`: `s11_prepare.py` (audio conform), `s11v2_song.py` (song module), `titles_s11v2.py` (opening, signature, navy reading text, call to action, end card with tagline), `render.py` (stills and frame ranges, 60 fps).
-- Audio: the Drive file in the brief, SHA-256 70464dff370f7187d12029970c1fa1ef3e91c6957180aa685b64cead830f7004, verified. First sound 0.60 s, last chord rung out 262.60 s (268.2 s file, silence after). That 262.0 s span conformed to the live length 260.0 s (atempo 1.00769, pitch kept), then a 15 s hold: 275.0 s, 16,500 frames. An estimate until a rehearsal recording exists.
-- Built and checked in half-size stills: hand-off night opening with the lockup on sky; sunrise into a radiant sky-blue and white-gold morning; the promised city filling with gold; rivers of nine colours; waves of praise; navy reading text with soft white glow for the 5 fragments and the 2 expressions (Gratitude, two men clasping hands; Encouragement, Heavenly Mother from behind with two women, one kneeling in prayer); relights of stars 2 and 7 only; the arch descending onto the city gate; the sun rising inside the gate with Heavenly Mother (from behind, arms opening); the call to action; the official end card with "Where a mother's love reaches, peace settles." (readable about 15 s).
-- Not done: motion strip, CHECKLIST.md, TIMELINE.md, CUES.md, the full render and the three deliverables.
-- Measured speed: about 1.5 s of wall time per full-size frame with people on screen (4 cores, 1 range). Full render estimate about 2 to 3 hours on 4 parallel ranges.
+## Where it is
+- Branch `backdrop2/s11-full`. Latest film code: 41ce754 (dancers of light and waves of raised arms) on top of the requests below.
+- Drafts at 960x540, 30 fps, reviewed section by section on the private review page (claude.ai artifact 1SAvCedZLDEPTJzr1kChaj, owner only).
+- Every section has a reviewed draft with Anthony's requests: logo-only corner with periodic titles, blue-sparkle choir and orchestra with gold instruments and song books, deliberate clouds, the night-to-day Earth, the church name and the glowing traced emblem.
+- In progress: the pass with the dancers and the arm waves (parts 16 to 50) across 8 machines.
+
+## Decisions and design
+See DESIGN.md (decisions with Anthony's words, open findings, the reusable kit) and PIPELINE.md (render fleet, review page, scripts). The briefs given to the scene threads are kept as BRIEF-*.md.
+
+## Next
+1. Finish and publish the dancers and arm waves pass; Anthony reviews.
+2. Act on approved findings and new requests from the review page.
+3. Final render at 1920x1080, 60 fps across the fleet; deliverables (video with the recording, silent stage file, 720p phone copy); checks (frame count, sync on three hits, no black or frozen frames).
+4. Records: TIMELINE.md and CUES.md from the edit, CHECKLIST.md against the rules; then a pull request.
+
+## History
+- 2026-11-18: planned with Anthony in the planner artifact (music measured, lyrics as sung on the recording, phrase list, 85 design questions answered).
+- 2026-11-18 to 19: built on the promo engine by scene threads (church, stage, Zion, procession, coda, then dance and arms), passes: music-video pace, heavenly, references, grand, requests.

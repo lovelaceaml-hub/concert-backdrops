@@ -126,3 +126,13 @@ Star history this produces: 01 lights 9 and 7. 02 relights 7. 03 lights 3, relig
 8. Concert title on screen: the poster's "The Words of Mother's Love Healing Concert" or "The Words of Mother's Love That Bring Peace".
 9. People made of light (section 8).
 10. Song 03 direction "The Lake of Memory" and its recording; rehearsal recordings for 01, 02, 05, 08, 09; recordings and lyrics for 02 and 10; where the backdrops play (TV, projector or LED wall).
+
+## 13. Learned on song 11 v2 (Anthony, 2026-11-18 to 19): use for every song unless its own design says otherwise
+Details, quotes and the code to reuse: project-docs/backdrops/s11-full2/DESIGN.md and PIPELINE.md (branch backdrop2/s11-full).
+- Feel: "beautiful, gracious, and heavenly", matching the approved promo's lights, "very, very interactive", and grand: "Do not bound yourself or limit yourself." Music-video pace with strong intensity: cuts on big downbeats hidden in flashes, flowing banking flights between, colour, brightness and speed driven by the measured music.
+- Promo vocabulary: nine comets in the nine colours, rays and shafts, clouds of light, pillars of light onto a mirror sea, comets out of the sea, dancers of light with ribbons (Anthony's favourite), waves of raised arms on the hits.
+- Corner: the logo alone, bottom left, all film; the song title and "The Words of Mother's Love That Bring Peace" beside it for about 8 s every 40 s. No date, time or place in the corner (the end card has them).
+- Clouds placed deliberately (shaped banks, symmetric framing, never random clutter, never over performers or words).
+- Performers: choir and orchestra as glowing blue sparkles with gold instruments; the choir holds open gold song books.
+- Church buildings: the World Mission Society Church of God name and the church emblem, traced exactly from the emblem image (never redrawn by guess), glowing sky-blue.
+- Review: drafts at 540p 30 fps shown section by section on a live review page (videos in order, status per machine, findings to approve, request boxes); the final at 1080p 60 fps.
