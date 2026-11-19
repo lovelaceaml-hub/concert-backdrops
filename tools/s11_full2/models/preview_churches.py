@@ -154,7 +154,7 @@ def segments(p):
 
 def main():
     out = sys.argv[1] if len(sys.argv) > 1 else "churches_sheet.png"
-    blds = all_buildings()
+    blds = [b for b in all_buildings() if b["parts"]]
     first = int(sys.argv[2]) if len(sys.argv) > 2 else 0
     count = int(sys.argv[3]) if len(sys.argv) > 3 else len(blds) - first
     blds = blds[first:first + count]
