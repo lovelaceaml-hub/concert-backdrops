@@ -121,6 +121,9 @@ WONJU26 = W_SRC + "church-dedication-service-wonju/"
 ASAN23 = W_SRC + "church-dedication-service-asan/"
 EN = "https://english.watv.org/news/print.asp?idx="
 SEOUL23 = W_SRC + "church-dedication-service-seoul/"
+NAMYANG = W_SRC + "church-dedication-service-hwaseong-namyang/"
+JIPHYEON = W_SRC + "church-dedication-service-sejong-jiphyeon/"
+YEONGNAM = W_SRC + "church-dedication-service-yeongnam/"
 
 BUILDINGS = [
     # ---- batch 1 ----------------------------------------------------------------------------------------
@@ -972,6 +975,129 @@ BUILDINGS = [
          wins(8, -5, 10, 9, 3, 3, "white", y0=2),
          box(-10, -9, 3, 2, 3, "white"),
          arches(-10, -10, 2.4, 3, 1, 1, "glass"),
+     ]},
+    # ---- batch 6 ----------------------------------------------------------------------------------------
+    {"id": "kr_boryeong", "name": "Boryeong church", "city": "Boryeong", "country": "Korea",
+     "source": EN + "41443", "year": 2016,
+     "note": "a cream block fronted by a blue glass curtain wall, with a slim stone tower at the side",
+     "parts": [
+         box(0, 0, 20, 16, 14, "pearl"),
+         box(-2, -6, 12, 6, 14, "glass"),
+         box(10, 0, 3, 3, 20, "stone"),
+         canopy(0, -10, 14, 2, "warm", y0=3),
+     ]},
+    {"id": "kr_jungchon_daejeon", "name": "Jungchon church", "city": "Daejeon", "country": "Korea",
+     "source": EN + "41917", "year": 2016,
+     "note": "two buildings: a long low white hall under a shallow gable, and a grey block with a glass front on a brick base",
+     "parts": [
+         box(-12, 0, 26, 14, 6, "white"),
+         gable(-12, 0, 27, 15, 2, "grey", y0=6, axis="x"),
+         wins(-12, -7, 22, 3, 7, 1, "glass", y0=1.5),
+         box(12, 0, 10, 12, 11, "grey"),
+         band(12, -6, 8, 6, y0=4),
+         box(14, -3, 12, 10, 3, "warm"),
+         steps(8, -8, 3, 4, 3, 8),
+     ]},
+    {"id": "kr_hyoja_jeonju", "name": "Hyoja church", "city": "Jeonju", "country": "Korea",
+     "source": EN + "51661", "year": 2018,
+     "note": "a white front with two tall round arched dark windows between tall slits, a lower white wing",
+     "parts": [
+         box(0, 0, 24, 18, 15, "white"),
+         arches(-2, -9, 8, 12, 2, 1, "glass", y0=1),
+         band(-9, -9, 1.5, 12, y0=1),
+         band(5, -9, 1.5, 12, y0=1),
+         box(16, 0, 10, 14, 9, "white"),
+         wins(16, -7, 8, 5, 3, 2, "glass", y0=2),
+     ]},
+    {"id": "kr_hoseong_jeonju", "name": "Hoseong church", "city": "Jeonju", "country": "Korea",
+     "source": EN + "51661", "year": 2018,
+     "note": "a grey stone block with a taller angled tower, a projecting bay of green glass, a low brick wing",
+     "parts": [
+         box(0, 0, 22, 16, 12, "stone"),
+         box(-3, -2, 6, 12, 16, "stone"),
+         gable(-3, -2, 6, 12, 2.5, "stone", y0=16, axis="z"),
+         box(5, -6, 8, 5, 10, "teal"),
+         wins(-9, -8, 6, 8, 3, 2, "teal", y0=2),
+         box(-14, 2, 6, 10, 5, "warm"),
+     ]},
+    {"id": "kr_shingi_yeosu", "name": "Shingi church", "city": "Yeosu", "country": "Korea",
+     "source": GANGWON, "year": 2023,
+     "note": "a white block with a big gridded glass window over a gabled glass porch, a brown slab and a curved glass side",
+     "parts": [
+         box(0, 0, 22, 18, 17, "white"),
+         box(-10, -2, 2, 14, 18, "warm"),
+         band(0, -9, 8, 8, y0=5),
+         box(0, -11, 8, 4, 4, "glass"),
+         gable(0, -11, 9, 4, 1.5, "grey", y0=4, axis="z"),
+         cyl(10, 0, 6, 15, "glass"),
+     ]},
+    {"id": "kr_namyang_hwaseong", "name": "Namyang church", "city": "Hwaseong", "country": "Korea",
+     "source": NAMYANG, "year": 2025,
+     "note": "a white tower with a glass strip beside a white block wrapped at the top by a big golden box",
+     "parts": [
+         box(-9, 0, 6, 12, 20, "white"),
+         band(-9, -6, 1.2, 16, y0=2),
+         box(3, 0, 18, 16, 15, "white"),
+         box(5, -1, 16, 17, 6, "gold", y0=9),
+         wins(5, -9.5, 14, 4, 6, 2, "white", y0=10),
+         band(0, -8, 6, 7, y0=2),
+         box(0, -8.3, 6, 0.6, 2.5, "warm"),
+     ]},
+    {"id": "kr_jiphyeon_sejong", "name": "Jiphyeon church", "city": "Sejong", "country": "Korea",
+     "source": JIPHYEON, "year": 2025,
+     "note": "a white four storey box with a dark glass stair shaft, strips of windows and a teal glazed ground floor",
+     "parts": [
+         box(2, 0, 22, 16, 15, "white"),
+         box(-10, 0, 3, 14, 16, "glass"),
+         band(2, -8, 20, 3, "teal", y0=0.5),
+         wins(2, -8, 18, 7, 4, 2, "glass", y0=6),
+     ]},
+    {"id": "kr_jaeun_changwon", "name": "Jaeun church", "city": "Changwon", "country": "Korea",
+     "source": YEONGNAM, "year": 2024,
+     "note": "a white block with rows of tall windows, a glass slit tower, and a cream drum ringed with glass on the roof "
+             "(named by the order of the post)",
+     "parts": [
+         box(-12, 0, 6, 10, 24, "white"),
+         band(-12, -5, 2, 22, y0=1),
+         box(4, 0, 26, 18, 12, "white"),
+         wins(4, -9, 22, 5, 10, 1, "glass", y0=6),
+         cyl(-2, 0, 10, 4, "pearl", y0=12),
+         cyl(-2, 0, 10, 1.5, "glass", y0=16),
+     ]},
+    {"id": "kr_donghae", "name": "Donghae church", "city": "Donghae", "country": "Korea",
+     "source": YEONGNAM, "year": 2024,
+     "note": "a white block with a tall tower under a steep slanting roof, a glass grid front and a band of slim windows "
+             "(named by the order of the post)",
+     "parts": [
+         box(0, 0, 26, 18, 15, "white"),
+         box(-11, 0, 6, 10, 22, "white"),
+         gable(-11, 0, 6, 10, 3, "grey", y0=22, axis="z"),
+         wins(2, -9, 12, 3, 10, 1, "glass", y0=10),
+         box(2, -11, 14, 4, 8, "white"),
+         band(2, -13, 12, 5, y0=2),
+     ]},
+    {"id": "kr_yeongcheon", "name": "Yeongcheon church", "city": "Yeongcheon", "country": "Korea",
+     "source": YEONGNAM, "year": 2024,
+     "note": "a brick block with three dark fins rising above its roof, a white wing with a glass grid, a slim white tower "
+             "(named by the order of the post)",
+     "parts": [
+         box(4, 0, 18, 16, 15, "warm"),
+         fins(4, -8, 12, 17, 3, 1.0, "grey"),
+         wins(4, -8, 14, 3, 6, 1, "white", y0=6),
+         box(-9, 0, 10, 16, 13, "white"),
+         band(-9, -8, 6, 10, y0=1),
+         box(-15, 0, 2, 8, 16, "white"),
+     ]},
+    {"id": "kr_yeongdeok", "name": "Yeongdeok church", "city": "Yeongdeok", "country": "Korea",
+     "source": YEONGNAM, "year": 2024,
+     "note": "a cream three storey block ruled by white pilasters into a grid of windows, a canopy over the door "
+             "(named by the order of the post)",
+     "parts": [
+         box(0, 0, 30, 14, 11, "pearl"),
+         fins(0, -7, 28, 11, 9, 0.5, "white"),
+         wins(0, -7, 28, 9, 8, 3, "glass", y0=1),
+         canopy(0, -9, 8, 3, "white", y0=3),
+         box(0, 0, 6, 4, 2, "white", y0=11),
      ]},
 ]
 
