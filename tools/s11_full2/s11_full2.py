@@ -1442,7 +1442,7 @@ def _stage_calm(t):
     for _l, (a, b, c, d), *_x in PHRASE_LIST:
         if a - 0.6 <= t <= d + 0.6:
             r = max(r, _sc(a - 0.6, b, t) * (1.0 - _sc(c, d + 0.6, t)))
-    return 1.0 - (0.40 if stage_view(t) else 0.22) * r
+    return 1.0 - (0.25 if stage_view(t) else 0.12) * r
 
 
 WORLD["exposure"] = lambda t: _stage_calm(t) * S_MUSIC.choir_swell(t)
@@ -1513,46 +1513,7 @@ def _setup(scene):
     scene.add("earth", GLOBE, reflect=False)
     scene.add("earth fx", GlobeFX(), reflect=False)
     WORDS.add_to(scene)
-    # round 8: the words themselves are never dimmed by the calm region set up behind them (P3D "clear")
-    for w in WORDS:
-        e = scene._entries.get("word " + w.name)
-        if e is not None:
-            e.pointset.sample = _unclear(e.pointset.sample)
     WORDS.check(CAMERA, need_all=False)
-
-
-def _unclear(sample):
-    def wrapped(*a, **k):
-        out = sample(*a, **k)
-        if out is None:
-            return out
-        for b in (out if isinstance(out, (list, tuple)) else [out]):
-            if isinstance(b, dict):
-                b["clear"] = False
-        return out
-    return wrapped
-
-
-# Round 8 (Anthony: "The text looks terrible"; the promo's words sit on calm dark sky): while a phrase arrives
-# and reads, everything behind its frame region (feathered) is held to about half, and comets keep out of it
-# entirely (Comet). Two regions at once at most (the engine's two keep-clear boxes).
-CALM = 0.92
-CALM_FEATHER = 0.06
-
-
-def _calm_item(i):
-    def box(t):
-        b = word_boxes(t)
-        if i >= len(b):
-            return (0.0, 0.0, 0.0, 0.0)
-        x0, y0, x1, y1, k = b[i]
-        f = CALM_FEATHER
-        return (x0 - f, y0 - f, x1 + f, y1 + f)
-
-    def amount(t):
-        b = word_boxes(t)
-        return CALM * b[i][4] if i < len(b) else 0.0
-    return dict(box=box, amount=amount, soft=CALM_FEATHER)
 
 
 def _reading_k(t):
@@ -1608,8 +1569,7 @@ def _bursts():
     return sorted(out, key=lambda d: d["t"])
 
 
-P3D = dict(camera=CAMERA, world=WORDS.world(WORLD), setup=_setup, bursts=_bursts(), motion_blur=0.35,
-           clear=[_calm_item(0), _calm_item(1)])
+P3D = dict(camera=CAMERA, world=WORDS.world(WORLD), setup=_setup, bursts=_bursts(), motion_blur=0.35)
 
 
 # Anthony (2026-11-19): the logo stays bottom left all film; the song title and the event title appear beside it
