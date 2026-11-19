@@ -906,7 +906,8 @@ def _near(P, K, shot):
 
 
 def nations_k(t):
-    return local_k(t) if t < 254.07 else 0.0
+    """(round 8, from STAGE) never drawn through the close stage shots (they burned through the choir)."""
+    return local_k(t) * (not stage_view(t)) if t < 254.07 else 0.0
 
 
 # =========================================================================================================
@@ -1590,7 +1591,7 @@ def add(scene):
     # the nine colours of the people read against them in the wide views
     scene.add("zion walls", Static(walls, lambda t: glow_k(t) * form_k(t) * (1.0 - 0.28 * grow_k(t))
                                    * (1.0 - 0.4 * _win(t, 161.55, 162.95, 0.15, 0.25)) * (1.0 + mx(t, low=0.18))))
-    scene.add("zion dim", Static(dim, glow_k))
+    scene.add("zion dim", Static(dim, lambda t: glow_k(t) * (not stage_view(t))))     # (round 8) not through the choir
     scene.add("zion gold", Static(gold, glow_k))
     # round 6: the city grows section by section, and the rivers of people stream to it
     gates, gardens, towers, mist = _city_parts()

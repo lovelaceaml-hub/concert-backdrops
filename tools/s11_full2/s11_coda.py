@@ -334,12 +334,12 @@ def _coda_clouds():
         return 0.0 if globe_view(t) else _sc(187.8, 188.5, t) * (1.0 - _sc(196.6, 197.2, t)) * (0.9 + 0.3 * beat_pulse(t))
 
     def g_canyon(t):
-        return 0.0 if globe_view(t) else _sc(196.8, 197.2, t) * (1.0 - _sc(199.4, 199.62, t)) * (0.8 + 0.3 * beat_pulse(t))
+        return 0.0 if globe_view(t) or stage_view(t) else _sc(196.8, 197.2, t) * (1.0 - _sc(199.4, 199.62, t)) * (0.8 + 0.3 * beat_pulse(t))
 
 
 
     def g_rise(t):
-        return 0.0 if globe_view(t) else _sc(201.6, 202.2, t) * (1.0 - _sc(205.6, 206.0, t))
+        return 0.0 if globe_view(t) or stage_view(t) else _sc(201.6, 202.2, t) * (1.0 - _sc(205.6, 206.0, t))
 
     out = []
     for i, az in enumerate((-50.0, 50.0)):          # one tower each side, framing Zion
