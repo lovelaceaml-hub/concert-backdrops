@@ -227,6 +227,66 @@ def phrase_on(t):
     return 0.0
 
 
+def phrase_k(t):
+    """0..1, eased: how much a phrase is reading at t (in 0.3 s before the words arrive, out 0.3 s after)."""
+    import songs.s11_full2 as H
+    k = 0.0
+    for _l, (ti, _r0, _r1, to), *_x in H.PHRASE_LIST:
+        if ti - 0.8 <= t <= to + 0.8:
+            k = max(k, _sc(ti - 0.7, ti - 0.3, t) * (1.0 - _sc(to + 0.3, to + 0.7, t)))
+    return k
+
+
+WORD_BOX = (0.15, 0.85, 0.52, 0.75)     # x0, x1, y0, y1 of the words on screen (0..1, y up)
+
+
+class BoxGuard:
+    """Keeps a point set's light out of the words while a phrase reads (Anthony's rule: nothing bright crosses
+    a phrase): every point whose glow, as the camera sees it, reaches into the word box fades out there, with
+    a feathered edge, and comes back as the phrase leaves. Everything else of the wrapped set is unchanged."""
+    wants_camera = True
+
+    def __init__(self, ps, keep=0.06, box=WORD_BOX):
+        self.ps, self.keep, self.box = ps, keep, box
+        self.inner_camera = bool(getattr(ps, "wants_camera", False))
+        if hasattr(ps, "gain"):
+            self.gain = ps.gain
+
+    def _fade(self, cam, P, size):
+        xy, z = cam.project(P)
+        fl = 1.0 / np.tan(np.radians(cam.fov) * 0.5)
+        r = 0.5 * np.asarray(size, np.float64) * fl / np.maximum(z, 0.05)      # glow radius, screen heights
+        x0, x1, y0, y1 = self.box
+        dx = np.minimum(xy[:, 0] - x0, x1 - xy[:, 0]) * cam.aspect
+        dy = np.minimum(xy[:, 1] - y0, y1 - xy[:, 1])
+        d = np.minimum(dx, dy) + r                       # > 0: the glow reaches into the box
+        inside = np.clip(d / 0.06 + 0.5, 0.0, 1.0) * (z > 0.0)
+        return inside
+
+    def sample(self, t, cam=None):
+        out = self.ps.sample(t, cam) if self.inner_camera else self.ps.sample(t)
+        k = phrase_k(t)
+        if not out or cam is None or k <= 0.0:
+            return out
+        one = isinstance(out, dict)
+        res = []
+        for b in ([out] if one else out):
+            if b is None or "pos" not in b or len(b["pos"]) == 0:
+                res.append(b)
+                continue
+            b = dict(b)
+            P = np.asarray(b["pos"], np.float64).reshape(-1, 3)
+            size = b.get("size", 0.0)
+            f = self._fade(cam, P, size)
+            if "pos2" in b:
+                f = np.maximum(f, self._fade(cam, np.asarray(b["pos2"], np.float64).reshape(-1, 3), size))
+                f = np.maximum(f, self._fade(cam, 0.5 * (P + np.asarray(b["pos2"], np.float64).reshape(-1, 3)), size))
+            a = np.broadcast_to(np.asarray(b.get("alpha", 1.0), np.float64), (len(P),))
+            b["alpha"] = a * (1.0 - (1.0 - self.keep) * k * f)
+            res.append(b)
+        return res[0] if one else res
+
+
 CHOIR_C = _v(0.0, SUMMIT + 2.0, FACADE_Z + 2.5)
 ORCH_C = _v(0.0, SUMMIT + 1.0, FACADE_Z + 20.0)
 
@@ -670,7 +730,9 @@ class Players(Crowd):
         self.rate[:] = 0.0
 
     def gain(self, t):
-        return float(self.g(t)) * (1.0 - (0.2 if t < SLAM3 else 0.0) * _far(t, ORCH_C))
+        # slam 2's shot runs low through the players: they glow a third less there, so it does not white out
+        s2 = 0.33 * _sc(SLAM2 - 0.1, SLAM2, t) * (1.0 - _sc(SLAM2 + 1.6, SLAM2 + 2.3, t))
+        return float(self.g(t)) * (1.0 - (0.2 if t < SLAM3 else 0.0) * _far(t, ORCH_C)) * (1.0 - s2)
 
     def sample(self, t):
         if self.g(t) <= 0.0:
@@ -1147,7 +1209,8 @@ def blaze(t):
     """The choir and orchestra as a great light on the slams and the coda hit."""
     if not stage_view(t):
         return 0.0
-    return min(0.45, 0.4 * hit_pulse(t, [SLAM1, SLAM2, HIT["coda"]], rise=0.05, fall=0.8)
+    return min(0.45, 0.4 * hit_pulse(t, [SLAM1, HIT["coda"]], rise=0.05, fall=0.8)
+               + 0.22 * hit_pulse(t, [SLAM2], rise=0.05, fall=0.6)          # slam 2 was washed with glare
                + 0.12 * hit_pulse(t, KICKS, fall=0.4))
 
 
@@ -1305,7 +1368,7 @@ def pillar_k(t):
     for h in BURSTS:
         k = max(k, _sc(h - 0.05, h + 0.25, t) * (1.0 - _sc(h + 2.5, h + 4.2, t)))
     k = max(k, 0.7 * _sc(247.5, 249.0, t) * (1.0 - _sc(252.0, 254.0, t)))
-    return 0.55 * k
+    return 0.55 * k * (1.0 - 0.4 * _sc(SLAM2 - 0.1, SLAM2, t) * (1.0 - _sc(SLAM2 + 2.0, SLAM2 + 2.5, t)))
 
 
 def cloud_k(t):
@@ -1335,21 +1398,23 @@ def add(scene):
     scene.add("baton", Baton())
     for i, f in enumerate(COMET_PATHS):
         col = COL9[(2 * i + 1) % 9]
-        scene.add("stage comet %d" % i, StageComet(f, col, 0.0, 260.0, trail=1.3, width=0.22, bright=1.0,
-                                                   fade=0.5, n=70, seed=60 + i))
+        scene.add("stage comet %d" % i, BoxGuard(StageComet(f, col, 0.0, 260.0, trail=1.3, width=0.22, bright=1.0,
+                                                            fade=0.5, n=70, seed=60 + i)))
     for j, ts in enumerate(BURSTS):
         for i in range(9):
-            scene.add("slam rocket %d %d" % (j, i), StageComet(_rocket(ts, i), COL9[i], ts - 0.05, ts + 3.6,
-                                                               trail=1.2, width=0.9, bright=1.3, fade=0.3, n=60,
-                                                               sparks=False, seed=100 + 9 * j + i))
-    scene.add("loop conductor", StageComet(_loop_conductor, COL9[6], 0.0, 260.0, trail=1.6, width=0.18, n=80,
-                                           seed=131))
-    scene.add("loop heroes", StageComet(_loop_heroes, COL9[3], 0.0, 260.0, trail=1.8, width=0.2, n=80, seed=132))
+            scene.add("slam rocket %d %d" % (j, i), BoxGuard(StageComet(
+                _rocket(ts, i), COL9[i], ts - 0.05, ts + 3.6, trail=1.2, width=0.9 if j != 1 else 0.6,
+                bright=1.3 if j != 1 else 0.8, fade=0.3, n=60, sparks=False, seed=100 + 9 * j + i)))
+    scene.add("loop conductor", BoxGuard(StageComet(_loop_conductor, COL9[6], 0.0, 260.0, trail=1.6, width=0.18, n=80,
+                                           seed=131)))
+    scene.add("loop heroes", BoxGuard(StageComet(_loop_heroes, COL9[3], 0.0, 260.0, trail=1.8, width=0.2, n=80,
+                                                 seed=132)))
     scene.add("lens streak", StageComet(_lens_streak, COL9[5], 121.32, 125.92, trail=0.5, width=0.35, n=50,
                                         fade=0.2, seed=133))
     bases = [(-20.0, FACADE_Z + 6.0), (20.0, FACADE_Z + 6.0), (-17.0, FACADE_Z + 24.0), (17.0, FACADE_Z + 24.0),
              (-9.0, FACADE_Z + 36.0), (9.0, FACADE_Z + 36.0)]
-    scene.add("stage pillars", StagePillars(bases, top=160.0, color="#ffe6c0", width=1.6, gain=pillar_k))
+    scene.add("stage pillars", BoxGuard(StagePillars(bases, top=160.0, color="#ffe6c0", width=1.6, gain=pillar_k),
+                                        keep=0.15))
     for i, (x, z) in enumerate(()):          # no clouds at the stage: they crowded the choir and orchestra
         scene.add("stage clouds %d" % i, CloudBank(_v(x, SUMMIT - 4.0, z), size=(26.0, 16.0, 30.0), puffs=14,
                                                    seed=70 + i, gain=cloud_k, bright=0.8))

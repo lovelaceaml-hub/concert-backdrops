@@ -132,10 +132,11 @@ SHOTS = [
     # the strings: wide and low from his right, rising; the comets fly off toward the city
     _shot("dance_strings", 121.32, 125.92, 50.0, [(0.0, _D(5.6, 0.6, 2.4), _D(-0.6, 2.0, -3.5)),
                                                   (1.0, _D(4.2, 1.3, 5.2), _D(-0.4, 2.4, -5.0))], roll=(2.0, -1.0)),
-    # wondrous love: low behind him, he at the left edge, the phrase in the middle, the heart drawn in the sky
-    # over the sea on the right (nothing crosses the phrase)
-    _shot("dance_heart", 185.92, 188.27, 54.0, [(0.0, _D(-0.7, 0.55, 5.0), _D(10.2, 2.6, -4.8)),
-                                                (1.0, _D(-0.6, 0.5, 4.8), _D(10.2, 2.7, -4.8))]),
+    # wondrous love: low in front of him on a long lens (between him and the city), looking up at him against
+    # the dark sky over the sea and the light behind him; he stands tall at the right edge (screen x 0.86 to
+    # 0.98, clear of the phrase), the phrase in the middle, the heart drawn in the sky above it
+    _shot("dance_heart", 185.92, 188.27, 38.0, [(0.0, _D(3.0, 0.45, -7.5), _D(3.9, 4.0, 8.0)),
+                                                (1.0, _D(2.9, 0.42, -7.1), _D(3.9, 4.1, 8.0))], pace="linear"),
     # the held breath: low in front of him, looking up against the light; tilting up as the comet flies on
     _shot("dance_held", 247.5, 249.43, 46.0, [(0.0, _D(1.6, 0.45, -4.6), _D(0.0, 1.75, 0.0)),
                                               (0.8, _D(1.3, 0.42, -4.1), _D(0.0, 1.9, 0.0)),
@@ -196,6 +197,7 @@ def _heart_xy(s):
 
 HEART_T = (185.92, 186.97)                  # drawn from the big hit to the next downbeat
 HAND_HEART_C = np.array([0.0, 1.62, 0.50])  # the heart his hands draw (his frame)
+HAND_HEART_S = 0.38                         # its half width (kept narrow so he stands clear of the phrase)
 
 
 def _heart_prog(t):
@@ -228,14 +230,14 @@ def _hands(t):
             return top + np.array([-0.08, 0.3, 0.0]), top + np.array([0.08, 0.3, 0.0])
         if t <= HEART_T[1]:
             x, y = _heart_xy(_heart_prog(t))
-            sc = 0.48
+            sc = HAND_HEART_S
             r = HAND_HEART_C + np.array([-x * sc, y * sc, 0.0])
             return r, _mirror(r)
         w = _sc(HEART_T[1], HEART_T[1] + 0.35, t)
         x, y = _heart_xy(1.0)
-        bot = HAND_HEART_C + np.array([0.0, y * 0.48, 0.0])
-        r = _pattern(p, 0.8, "legato") + np.array([0.12, 0.0, 0.0])
-        l = L_HOLD + np.array([0.12, 0.25 + 0.15 * _sc(187.4, 188.2, t), -0.05])
+        bot = HAND_HEART_C + np.array([0.0, y * HAND_HEART_S, 0.0])
+        r = _pattern(p, 0.62, "legato") + np.array([0.10, 0.06, 0.0])
+        l = L_HOLD + np.array([-0.04, 0.30 + 0.15 * _sc(187.4, 188.2, t), -0.02])
         return bot * (1 - w) + r * w, bot * (1 - w) + l * w
     # the held breath: the fermata, poised high, barely breathing; the dip on beat 4, then up on the final rise
     breath = 0.012 * np.sin(2.0 * np.pi * (t - 247.5) / 1.9)
@@ -277,7 +279,10 @@ def tip_L(t):
 # The conductor (p3d Body: a man in a tailcoat of light, glitter look, both arms driven to the hand places)
 # =========================================================================================================
 _BODIES = {}
-BODY_BRIGHT = 3.0
+BODY_BRIGHT = 2.4
+# rim lit against the light (round 8): a bright edge round the silhouette as the camera sees it, the inside a dim
+# warm glitter, so he reads as a figure standing against the light rather than a white shape
+LOOK = [dict(name="rim", bright=1.25, power=2.4), dict(name="glitter", bright=0.32)]
 LIGHT_AT = DANCE_C + _v(0.0, 3.5, 4.0)
 
 
@@ -298,7 +303,7 @@ def _bodies():
     g.append((185.4, 188.6, "look_up", dict(amount=10.0, ease=0.4)))
     _BODIES["cond"] = Body(
         "man", height=HEIGHT, at=(c[0], c[2]), facing=180.0, motion="stand", gesture=g,
-        garment="coat", look="glitter", color="#ffe4b8", color2="#ffffff", points=90000, bright=BODY_BRIGHT,
+        garment="coat", look=LOOK, color="#ffd49a", color2="#fff4e2", points=90000, bright=BODY_BRIGHT,
         size=1.35, light=LIGHT_AT, show=(97.0, 250.2), fade=0.2, seed=8.0)
     return _BODIES
 
@@ -421,18 +426,26 @@ class CondComet(Comet):
         return super().k(t) * dance_k(t)
 
 
-def _braid(i, n):
-    """The summons: comet i of n leaves the tip and joins one spiral climbing into the sky before him."""
+BRAID_AXIS = _D(-0.4, 0.0, -14.0)          # the braid climbs round this upright line, before him toward the city
+BRAID_TOP = (99.35, 15.0)                  # every strand reaches the rope's crown together as his arms go up
+
+
+def _braid(i, n, ts):
+    """The summons: comet i of n leaves the tip on its beat (ts) and joins the rope at its own strand. All the
+    strands turn together round one axis (evenly spaced in angle) and the later ones climb faster, so their
+    trails wind round each other into one braided rope that reaches its crown on the last beat."""
     a0 = 2.0 * np.pi * i / n
+    dur = BRAID_TOP[0] - ts
 
     def f(u, p0):
-        axis = _D(0.0, 0.0, -14.0)
-        y = p0[1] + 34.0 * (u / 1.6) ** 1.5
-        r = 3.2 * (1.0 - 0.75 * min(u / 1.6, 1.0) ** 0.7) + 0.4
-        a = a0 + 2.6 * u
-        sp = axis + _v(r * np.sin(a), y, r * np.cos(a))
-        w = _sc(0.0, 0.45, u)
-        lead = p0 + _v(0.0, 3.0 * u, -16.0 * u)
+        t = ts + u
+        q = u / dur
+        y = 1.2 + (BRAID_TOP[1] - 1.2) * q ** 1.25
+        r = 1.6 * (1.0 - 0.45 * min(q, 1.0) ** 2) + 0.2
+        a = a0 + 4.6 * (t - 97.55)
+        sp = BRAID_AXIS + _v(r * np.sin(a), y, r * np.cos(a))
+        w = _sc(0.0, 0.32, u)
+        lead = p0 + _v(0.0, 2.5 * u, -12.0 * u)
         return lead * (1.0 - w) + sp * w
     return f
 
@@ -449,9 +462,9 @@ def _final_rise(u, p0):
     return p0 + _v(-0.6 * u, 26.0 * u * (0.35 + u), 3.0 * u)
 
 
-SKY_HEART_C = _D(29.6, 13.7, 2.1)          # high in the right corner, clear of the phrase (x 0.15 to 0.85)
-SKY_HEART_S = 3.0
-_HX = _unit(_v(0.669, 0.0, 0.744))          # the heart's plane faces the camera of the "dance_heart" shot
+SKY_HEART_C = _D(-0.20, 17.67, 25.96)     # in the sky above the phrase (screen x 0.58 to 0.70, y 0.77 to 0.96)
+SKY_HEART_S = 2.56
+_HX = _unit(_v(-0.9981, 0.0, 0.0619))       # the heart's plane faces the camera of the "dance_heart" shot
 
 
 def _sky_heart_point(s, side):
@@ -459,14 +472,25 @@ def _sky_heart_point(s, side):
     return SKY_HEART_C + _HX * (side * x * SKY_HEART_S) + _v(0.0, y * SKY_HEART_S, 0.0)
 
 
+HEART_EYE = _D(2.95, 0.43, -7.3)          # where the "dance_heart" camera stands (the comets fly in its view)
+
+
+def _azel(d):
+    return np.arctan2(d[0], -d[2]), np.arctan2(d[1], np.hypot(d[0], d[2])), float(np.linalg.norm(d))
+
+
 def _heart_fly(side):
-    """The heart: the comet leaves the hand at the hit and draws its half of the heart huge in the sky."""
+    """The heart: the comet leaves the hand at the hit, rises straight up beside him (as the camera sees it),
+    turns over above the phrase and draws its half of the heart huge in the sky; it never crosses the phrase."""
     def f(u, p0):
         t = HEART_T[0] + u
-        s = _heart_prog(t)
-        hp = _sky_heart_point(s, side)
-        w = _sc(0.0, 0.26, u)
-        return p0 * (1.0 - w) + hp * w + _v(0.0, 4.0 * np.sin(np.pi * w), 0.0)
+        hp = _sky_heart_point(_heart_prog(t), side)
+        a0, e0, r0 = _azel(p0 - HEART_EYE)
+        a1, e1, r1 = _azel(hp - HEART_EYE)
+        wy = _sc(0.0, 0.16, u)
+        wh = _sc(0.07, 0.30, u)
+        a, e, r = a0 + (a1 - a0) * wh, e0 + (e1 - e0) * wy, r0 + (r1 - r0) * wh
+        return HEART_EYE + r * _v(np.cos(e) * np.sin(a), np.sin(e), -np.cos(e) * np.cos(a))
     return f
 
 
@@ -685,8 +709,8 @@ def add(scene):
     # the summons: a comet off the tip on each beat, braiding into one spiral climbing to the sky
     bt = beat_times(97.55, 99.2)[:4]
     for i, ts in enumerate(bt):
-        scene.add("conductor comet summons %d" % i, CondComet(ts, _braid(i, len(bt)), RING_COL[(2 * i) % 7], 99.45,
-                                                              trail=0.8, width=0.30, fade=0.12, n=70, seed=400 + i))
+        scene.add("conductor comet summons %d" % i, CondComet(ts, _braid(i, len(bt), ts), RING_COL[(2 * i) % 7], 99.45,
+                                                              trail=1.3, width=0.24, fade=0.12, n=70, seed=400 + i))
     # the strings: a comet flicked off over the sea on each strings pulse
     for i, ts in enumerate(STRINGS[:2]):
         scene.add("conductor comet strings %d" % i, CondComet(ts + 0.03, _string_shot(1.0 - 2.0 * i),
@@ -694,9 +718,9 @@ def add(scene):
                                                               width=0.28, fade=0.15, n=60, seed=410 + i))
     # wondrous love: two comets (the baton tip and the left fingertips) draw the heart huge in the sky
     scene.add("conductor comet heart R", CondComet(HEART_T[0], _heart_fly(1.0), PW.COLORS["Gratitude"], 188.4,
-                                                   src=tip, trail=0.6, width=0.34, fade=0.1, n=70, seed=420))
+                                                   src=tip, trail=0.6, width=0.16, bright=0.8, fade=0.1, n=70, seed=420))
     scene.add("conductor comet heart L", CondComet(HEART_T[0], _heart_fly(-1.0), PW.COLORS["Inclusiveness"], 188.4,
-                                                   src=tip_L, trail=0.6, width=0.34, fade=0.1, n=70, seed=421))
+                                                   src=tip_L, trail=0.6, width=0.16, bright=0.8, fade=0.1, n=70, seed=421))
     scene.add("conductor sky heart", SkyHeart())
     # the held breath: on the final rise the comet flies up and on
     scene.add("conductor comet final", CondComet(249.12, _final_rise, LAV, 249.9, trail=0.7, width=0.36, fade=0.1,
@@ -707,7 +731,7 @@ def add(scene):
         (97.0, 99.6, _D(0.0, 26.0, -60.0), 40.0, "#ffe2b8", lambda t: 0.6 + 0.9 * _sc(99.0, 99.35, t)),
         (116.5, 121.4, _D(0.0, 6.0, -70.0), 34.0, "#e8d8ff", lambda t: 0.5 + 0.25 * downbeat(t, 0.5)),
         (121.3, 126.0, _D(-8.0, 10.0, -70.0), 34.0, "#ffe2b8", lambda t: 0.45 + 0.4 * upbeat(t)),
-        (185.5, 188.4, _D(0.0, 9.0, -60.0), 30.0, "#ffd8c8", lambda t: 0.4 + 0.3 * upbeat(t)),
+        (185.5, 188.4, _D(-22.3, 8.7, 55.3), 18.0, "#ffd8c8", lambda t: 0.4 + 0.3 * upbeat(t)),
         (247.0, 249.6, _D(-1.0, 7.0, 40.0), 34.0, "#fff0dc",
          lambda t: 0.45 + 0.35 * _sc(247.5, 249.0, t) + 0.8 * _sc(249.0, 249.4, t))]))
     # the light he carries and the rays that open when he raises both arms
