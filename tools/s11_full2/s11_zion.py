@@ -114,6 +114,7 @@ FILL_T = [64.2, 64.2, 64.2, 65.94, 65.94, 69.4, 69.4]     # "being fulfilled": t
 
 # Round 6 (Anthony: "so many of the same colors that it's hard to see and distinguish things since it's all gold"):
 # each part of the city has its own palette. Gold only for the great stairways (and the crown).
+LAMP_K = 0.6               # (round 8, prepared for CORE's bloom finding) parapet lamps and gate outlines: density and light
 PEARL = "#f6f0ff"          # the walls and the gates: pearl white
 PEARL_LO = "#5a3f8c"       # the foot of each wall: deep violet (the light falls from the parapet down)
 PEARL_RAIL = "#eef2ff"     # the parapets and their lamps: cool white
@@ -184,13 +185,13 @@ def _mountain():
         a = _az(n, r, 0.95)
         spark.append(_xz(R0 + 0.1, a, y0 + h * r.random(n) ** 0.6))
         # the parapet (a rail on posts, lamps along it)
-        q = _ring(ZC, R0 + 0.1, y + 1.0, 1.4)
+        q = _ring(ZC, R0 + 0.1, y + 1.0, 1.4 / LAMP_K)        # (round 8, prepared: 60 percent density)
         par.append(q)
         par_k.append(np.full(len(q), k))
-        q = _ring(ZC, R0 + 0.1, y, 4.0)
+        q = _ring(ZC, R0 + 0.1, y, 4.0 / LAMP_K)
         post_a.append(q)
         post_b.append(q + np.array([0.0, 1.0, 0.0]))
-        lamp.append(_ring(ZC, R0 + 0.1, y + 1.4, 12.0))
+        lamp.append(_ring(ZC, R0 + 0.1, y + 1.4, 12.0 / LAMP_K))
         # pilasters every 7 m on the seen side (a sense of scale), a lit niche between each pair
         m = int(2 * FRONT * R0 / 7.0)
         a = np.linspace(-FRONT, FRONT, m)
@@ -244,10 +245,10 @@ def _mountain():
     ]
     # the lights and paths: parapets, their lamps, the golden stairways (there from the first frame)
     dim = [
-        _batch(PA, 0.45, lin(PEARL_RAIL) * 0.75, 0.5, emit=1.0, reflect=False),
-        dict(pos=PO_a, pos2=PO_b, size=0.22, color=lin(PEARL_RAIL) * 0.6, alpha=0.6, kind="line", emit=1.0,
+        _batch(PA, 0.45, lin(PEARL_RAIL) * 0.75, 0.5 * LAMP_K, emit=1.0, reflect=False),
+        dict(pos=PO_a, pos2=PO_b, size=0.22, color=lin(PEARL_RAIL) * 0.6, alpha=0.6 * LAMP_K, kind="line", emit=1.0,
              reflect=False),
-        _batch(LP, 0.8, lin("#e6f2ff"), 0.9, emit=2.0, twinkle=0.3, reflect=False),
+        _batch(LP, 0.8, lin("#e6f2ff"), 0.9 * LAMP_K, emit=2.0, twinkle=0.3, reflect=False),
         _batch(ST, 0.40, lin(GOLD2) * 0.5, 0.8, emit=1.0, reflect=False),
         _batch(RA, 0.35, lin("#ffe6b8") * 0.5, 0.8, emit=1.0, reflect=False),
         _batch(LA, 0.9, lin("#ffdca0"), 0.9, emit=2.2, twinkle=0.3, reflect=False),
@@ -272,7 +273,7 @@ def _mountain():
         _batch(FL, 6.0, lin("#bfe2ff"), 0.07, kind="soft", emit=1.0, birth=FB, fade=0.7, flash=2.0, reflect=False),
         _batch(F[upper], 2.6, FC[upper] * 0.40, FA[upper] * 0.70, kind="soft", emit=1.3, birth=fb[upper], fade=0.6,
                flash=1.5, reflect=False),
-        _batch(PA, 0.55, lin(PEARL_RAIL) * 0.8, 0.45, emit=1.3, birth=FT[PK] + 0.45, fade=0.4, flash=3.0, twinkle=0.4,
+        _batch(PA, 0.55, lin(PEARL_RAIL) * 0.8, 0.45 * LAMP_K, emit=1.3, birth=FT[PK] + 0.45, fade=0.4, flash=3.0, twinkle=0.4,
                reflect=False),
         _batch(ST, 0.45, lin(GOLD), 0.7, emit=1.4, birth=FT[SK] + 0.2, fade=0.6, flash=2.0, reflect=False),
     ]
@@ -601,12 +602,12 @@ def _gate(T, c, d, hw, h, b, k=0):
         for o in (-0.7, 0.7):
             for f in (-0.7, 0.7):
                 p = c + sd * s * (w + o) + d * f
-                T.line(p, p + up * h, tint * 0.72, 0.9, b + 0.0)
-    e = np.linspace(0.0, np.pi, 25)
+                T.line(p, p + up * h, tint * 0.72, 0.9 * LAMP_K, b + 0.0)
+    e = np.linspace(0.0, np.pi, int(25 * LAMP_K))
     for rr, br, k in ((w, 1.0, 0.0), (w - 1.1, 0.7, 0.15)):
         A = c[None] + sd[None] * (rr * np.cos(e))[:, None] + up[None] * (h + rr * 0.55 * np.sin(e))[:, None]
         pearl = np.where((np.cos(e) > 0)[:, None], lin("#ffd6ec"), lin("#d6ecff")) * 0.4 + tint * 0.6
-        T.line(A[:-1], A[1:], pearl[:-1] * br, 0.95, b + 0.25 + k + 0.3 * e[1:] / np.pi)
+        T.line(A[:-1], A[1:], pearl[:-1] * br, 0.95 * LAMP_K, b + 0.25 + k + 0.3 * e[1:] / np.pi)
     key = c + up * (h + w * 0.55 + 0.6)
     T.soft(c + up * (h * 0.8), tint * 0.5, 0.12, b + 0.3)
     T.spark(key, lin("#fff6ff"), b + 0.6)
