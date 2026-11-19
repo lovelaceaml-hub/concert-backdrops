@@ -316,7 +316,7 @@ class Cards(cards.Cards):
         ctx.disable(mgl.BLEND)
         return True
 
-    def _night_sky(self):
+    def _night_sky(self, opaque=False):
         """The end card's deep night sky (premultiplied, full frame): navy to a deep violet near the bottom, a
         faint blue glow low in the middle where the Earth shows through, and stars."""
         W, H = self.w, self.h
@@ -328,6 +328,8 @@ class Cards(cards.Cards):
         glow = np.exp(-((x / 0.55) ** 2) - (((y - 1.05) / 0.32) ** 2))
         col = col + (np.array((40, 70, 140), np.float32) / 255.0)[None, None, :] * (0.35 * glow)[..., None]
         a = (0.92 - 0.14 * glow).astype(np.float32)          # the Earth's glow comes faintly through, low down
+        if opaque:
+            a = np.ones_like(a)
         rng = np.random.default_rng(23)
         n = int(900 * W * H / (1920.0 * 1080.0)) + 60
         sx, sy = rng.random(n) * W, rng.random(n) ** 1.2 * H
@@ -355,25 +357,33 @@ class Cards(cards.Cards):
             pad = n // 3
             N = n + 2 * pad
 
-            def layer(cls):                                   # each part scaled smoothly, on the padded canvas
-                a = Image.fromarray(((m == cls) * 255).astype(np.uint8)).resize((n, n), Image.LANCZOS)
-                c = Image.new("L", (N, N), 0)
-                c.paste(a, (pad, pad))
-                return np.asarray(c, np.float32) / 255.0
-            blue, white, ring = layer(1), layer(2), layer(3)
+            def layer(cls, soft=0.75):
+                """Each part with smooth contours: the 128 grid softened, scaled up, then re-sharpened round its
+                middle (so the lettering and the globe's lines have clean edges, not pixel steps)."""
+                sel = (m > 0) if cls == 0 else (m == cls)
+                a = Image.fromarray((sel * 255).astype(np.uint8)).filter(ImageFilter.GaussianBlur(soft))
+                a = np.asarray(a.resize((n, n), Image.BICUBIC), np.float32) / 255.0
+                w = max(0.06, 1.2 * 128.0 / n * 0.25)
+                a = np.clip((a - (0.5 - w)) / (2.0 * w), 0.0, 1.0)
+                a = a * a * (3.0 - 2.0 * a)
+                c = np.zeros((N, N), np.float32)
+                c[pad:pad + n, pad:pad + n] = a
+                return c
+            base, white, ring = layer(0, 1.3), layer(2), layer(3)      # one smooth disc, the whites laid over it
             u = np.clip((np.arange(N, dtype=np.float32)[:, None, None] - pad) / n, 0.0, 1.0)
             sky = np.array((0.53, 0.83, 1.0), np.float32) * (1 - u) + np.array((0.24, 0.62, 0.94), np.float32) * u
-            allm = np.clip(blue + white + ring, 0, 1)
+            allm = base
             A8 = Image.fromarray((allm * 255).astype(np.uint8))
             g1 = np.asarray(A8.filter(ImageFilter.GaussianBlur(n / 16.0)), np.float32) / 255.0
             g2 = np.asarray(A8.filter(ImageFilter.GaussianBlur(n / 6.0)), np.float32) / 255.0
             full = np.zeros((N, N, 4), np.float32)
-            full[..., :3] = (sky * blue[..., None] + white[..., None]
-                             + np.array((0.93, 0.97, 1.0), np.float32) * (0.7 * ring)[..., None]
+            wr = np.clip(white + ring, 0.0, 1.0)
+            full[..., :3] = (sky * (base * (1.0 - wr))[..., None] + (white * base)[..., None]
+                             + np.array((0.82, 0.93, 1.0), np.float32) * (ring * base)[..., None]
                              + np.array((0.25, 0.55, 1.0), np.float32) * (0.35 * g1)[..., None]
                              + np.array((0.15, 0.35, 0.8), np.float32) * (0.3 * g2)[..., None])
             full[..., :3] = np.clip(full[..., :3], 0, 1)
-            full[..., 3] = np.clip(np.maximum(blue, np.maximum(white, ring)), 0, 1)
+            full[..., 3] = base
             self.emb_tex = self._tex(full)
             self.emb_px = N
         return self.emb_tex
@@ -381,12 +391,13 @@ class Cards(cards.Cards):
     def _draw_last_emblem(self, t):
         """The last image (round 7): after the card, in the silence, the church's emblem alone on the night sky,
         rising gently into its glow and breathing slowly to the end."""
-        if self.ec is None or t < self.EMB_IN - 0.2:
+        if self.ec is None or t < self.EMB_IN - 0.4:
             return False
         k = float(_ss(self.EMB_IN, self.EMB_IN + 1.6, t)) * (0.94 + 0.06 * np.sin(1.3 * (t - self.EMB_IN)))
-        if k <= 0.003:
-            return False
         tex = self._emblem_tex()
+        if not hasattr(self, "sky_full"):                 # the night sky, opaque: nothing of the scene behind
+            self.sky_full = self._night_sky(opaque=True)
+        ks = float(_ss(self.EMB_IN - 0.4, self.EMB_IN + 0.6, t))   # with the card's fade
         hh = self.emb_px / self.h
         ww = self.emb_px / self.w
         y = 0.47 - 0.015 * float(_ss(self.EMB_IN, self.EMB_IN + 3.0, t))
@@ -394,8 +405,11 @@ class Cards(cards.Cards):
         self.R.f_out.use()
         ctx.enable(mgl.BLEND)
         ctx.blend_func = mgl.ONE, mgl.ONE_MINUS_SRC_ALPHA
-        self._quad(self.p_ovl, self.v_ovl, dict(tex=tex, rect=(0.5 - ww / 2.0, y - hh / 2.0, ww, hh)), -1.0,
-                   uAlpha=k, uDis=(-1.0, 0.0, 0.0, 0.0))
+        if ks > 0.002:                                    # the Earth's ghost behind gives way to clear sky
+            self._quad(self.p_ovl, self.v_ovl, self.sky_full, -1.0, uAlpha=ks, uDis=(-1.0, 0.0, 0.0, 0.0))
+        if k > 0.003:
+            self._quad(self.p_ovl, self.v_ovl, dict(tex=tex, rect=(0.5 - ww / 2.0, y - hh / 2.0, ww, hh)), -1.0,
+                       uAlpha=k, uDis=(-1.0, 0.0, 0.0, 0.0))
         ctx.blend_func = mgl.ONE, mgl.ONE
         ctx.disable(mgl.BLEND)
         return True
