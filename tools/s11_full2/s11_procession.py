@@ -33,7 +33,8 @@ HALT = DROP2               # 156.0: the held breath, everyone stands still
 MOTHER_Z0 = -55.0          # where Mother's light comes down on the sea, ahead of everyone
 M_H = 4.2                  # how high her light rides over the sea
 WALK = 1.3                 # metres per second toward Zion, from "march ahead"
-AISLE = 4.0                # the aisle down the middle (the kings walk and kneel in it)
+AISLE = 5.5                # the aisle down the middle (the kings walk and kneel in it; MARCH round 1: wider,
+                           # so the camera can walk in it with everyone and the kings have room for their trains)
 KNEEL = HIT["kings1"]      # 154.2
 RISE = HIT["kings2"]       # 155.34
 K_STOP = KNEEL - 0.05      # the kings stop walking and go down
@@ -109,9 +110,11 @@ def _plan(t0, t1):
                  (135.4, (10.0, 20.0, 6.0), (-4.0, -6.0, -26.0)), (136.6, (17.0, 29.0, -2.0 - w(136.6)),
                                                                    (-5.0, -3.0, -26.0 - w(136.6))),
                  (t1, (21.0, 36.0, -6.0 - w(t1)), (-6.0, -3.0, -32.0 - w(t1)))), "linear"
-    if t0 == 141.5:       # a low tracking shot beside the marchers at their pace, the nations joining from the side
-        return _track(t0, t1, 12, lambda t: ((18.2, 1.35, -14.0 - walked(t) - 0.3 * (t - t0)),
-                                             (8.0, -0.8, -34.0 - walked(t) - 0.3 * (t - t0)))), "linear"
+    if t0 == 141.5:       # (MARCH round 1) walking with them: eye level in the aisle at their pace, a little faster
+        # so we pass between the rows; everyone on both sides walks the one way we look, toward her light ahead
+        # (a little above their heads, looking down the rows, so they stand out against the dark sea, not Zion's glow)
+        return _track(t0, t1, 12, lambda t: ((1.1 - 0.15 * (t - t0), 3.3, _mz(t) + 30.0 - 0.45 * (t - t0)),
+                                             (-0.4, 0.2, _mz(t) + 6.0))), "linear"
     if t0 == 144.4:       # fulfilled: the comets dive back through the walkers toward us, lighting hearts, while a
         # slow crane rises from among them over the whole river of people toward her light
         def crane(t):
@@ -235,7 +238,10 @@ def _edge(z):
 
 # The nations joining from the sides (round 6): from "march ahead" streams of people of light, each nation in its
 # own colour, walk in on a slant from both sides and merge into the procession (each one joins at the edge)
-SLANT = np.radians(35.0)
+# (MARCH round 1, Anthony: "The close up scene has people going in all directions. Don't do that. They should
+# be going to Mother.") The nations now come in on a shallow slant, so in every view they walk the same way as
+# everyone, toward her light, closing in on the procession as they go (was 35 degrees, which read as crossing).
+SLANT = np.radians(16.0)
 NATIONS = [(-1.0, -40.0, 1), (-1.0, -6.0, 6), (-1.0, 26.0, 3), (1.0, -36.0, 2), (1.0, -2.0, 4), (1.0, 30.0, 7)]
 
 
@@ -892,6 +898,7 @@ class MarchBeat:
         # (round 8, f29) from overhead the path runs straight up through "This hope was engraved" (2:14.5): it
         # calms to a faint trace while those words read
         a = a * (1.0 - 0.8 * _win(t, 134.7, 138.9, 0.4, 0.6) * (block_t0(t) == 134.54))
+        a = a * (0.45 if block_t0(t) == 141.5 else 1.0)       # (MARCH round 1) walking in the aisle: a calm path
         P = np.stack([self.xr + self.jit[:, 0], np.full(len(zr), 0.05), m[2] + 3.0 + zr + self.jit[:, 1]], 1)
         warm = lin("#ffe2b0")
         out.append(dict(pos=P, size=0.55, color=warm, alpha=0.20 * a, emit=1.8, kind="soft", reflect=False))
@@ -934,6 +941,14 @@ SHAFTS = [
 ]
 
 
+def _toward_mother(crowd, deg=None):
+    """Everyone faces exactly the way they walk, toward her light: the engine gives each person a random turn of
+    up to 6 degrees, which over the march made the close views look like people walking every way."""
+    f = np.full(crowd.n, 180.0) if deg is None else np.broadcast_to(np.asarray(deg, np.float64), (crowd.n,))
+    crowd.facing[:] = np.radians(f)
+    return crowd
+
+
 def _tint_nations(crowd, cols=None):
     """Each nation in its own colour: a coloured robe of light with pale glints."""
     cols = NAT_C if cols is None else cols
@@ -958,6 +973,7 @@ def add(scene):
                      fade=0.3, flash=1.4, **look)
     walkers = GCrowd(gain=crowd_k, places=PROC_P, facing=180.0, kinds=("walk",), start=MARCH, walk=WALK,
                      until=HALT, fade=0.3, flash=0.0, **look)
+    _toward_mother(walkers)
     wait.facing[:] = walkers.facing
     held = WaveCrowd(waves=[(159.4, 1.4, 6.0, 0.6, 0.6)], delay=back, gain=crowd_k,
                      places=PROC_P + _ahead(walkers) * walked(HALT), facing=180.0,
@@ -966,24 +982,28 @@ def add(scene):
     # the nations joining from the sides, each in its own colour (clothed in light, the same bodies as everyone)
     nations = GCrowd(gain=crowd_k, places=NAT_P, facing=NAT_F, kinds=("walk",), start=MARCH - 0.1, walk=WALK,
                      until=np.minimum(NAT_J, HALT), fade=0.45, flash=1.2, **look)
+    _toward_mother(nations, NAT_F)
     _tint_nations(nations)
     gone = NAT_J < HALT                       # those still on their way at the held breath stand still there
     still = NAT_P[~gone] + _ahead(nations)[~gone] * walked(HALT)
     nat_held = WaveCrowd(waves=[(159.4, 1.4, 6.0, 0.6, 0.6)], delay=np.full(len(still), 0.5), gain=crowd_k,
                          places=still, facing=NAT_F[~gone], kinds=(("raise", 2.0), ("open", 1.0)), start=HALT - 0.3,
                          fade=0.3, flash=0.0, **look)
+    _toward_mother(nat_held, NAT_F[~gone])
     _tint_nations(nat_held, NAT_C[~gone])
     scene.add("proc nations", nations, reflect=False)
     scene.add("proc nations held", nat_held, reflect=False)
     # round 7: more nations come in from both sides later in the march (each in its own colour)
     late = GCrowd(gain=crowd_k, places=LATE_P, facing=LATE_F, kinds=("walk",), start=LATE_T0 - 0.2, walk=WALK,
                   until=np.minimum(LATE_J, HALT), fade=0.6, flash=1.4, **look)
+    _toward_mother(late, LATE_F)
     _tint_nations(late, LATE_C)
     lgone = LATE_J < HALT
     lstill = LATE_P[~lgone] + _ahead(late)[~lgone] * (WALK * (HALT - LATE_T0[~lgone]))[:, None]
     late_held = WaveCrowd(waves=[(159.4, 1.4, 6.0, 0.6, 0.6)], delay=np.full(len(lstill), 0.5), gain=crowd_k,
                           places=lstill, facing=LATE_F[~lgone], kinds=(("raise", 2.0), ("open", 1.0)),
                           start=HALT - 0.3, fade=0.3, flash=0.0, **look)
+    _toward_mother(late_held, LATE_F[~lgone])
     _tint_nations(late_held, LATE_C[~lgone])
     scene.add("proc nations late", late, reflect=False)
     scene.add("proc nations late held", late_held, reflect=False)
@@ -999,6 +1019,7 @@ def add(scene):
     jheld = WaveCrowd(waves=[(159.4, 1.4, 6.0, 0.6, 0.6)], delay=np.full(len(JP), 0.5), gain=crowd_k,
                       places=JP + _ahead(joined) * (WALK * (HALT - JT + 0.3))[:, None], facing=180.0,
                       kinds=(("raise", 2.0), ("open", 1.0)), start=HALT - 0.3, fade=0.3, flash=0.0, **look)
+    _toward_mother(joined)
     jheld.facing[:] = joined.facing
     _tint_nations(jheld, JC)
     scene.add("proc joined", joined, reflect=False)
