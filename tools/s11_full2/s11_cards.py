@@ -403,8 +403,11 @@ class Cards(cards.Cards):
         L = Image.new("RGBA", (W, H), (0, 0, 0, 0))
         d = ImageDraw.Draw(L)
         cx, cy = W / 2.0, self.op["y"] * H
-        d.text((cx, cy - 58 * s), SONG_TITLE, font=CG(600, 104 * s), fill=col + (255,), anchor="ma")
-        d.line((cx - 80 * s, cy + 78 * s, cx + 80 * s, cy + 78 * s), fill=acc + (210,), width=max(1, int(round(2 * s))))
+        # Anthony: "The song title can be two lines" (like the concert title: upright, then italic)
+        l1, l2 = "Almighty God", "Who Knows the Future"
+        d.text((cx, cy - 128 * s), l1, font=CG(600, 132 * s), fill=col + (255,), anchor="ma")
+        d.text((cx, cy + 14 * s), l2, font=CG(500, 100 * s, it=True), fill=col + (255,), anchor="ma")
+        d.line((cx - 80 * s, cy + 146 * s, cx + 80 * s, cy + 146 * s), fill=acc + (210,), width=max(1, int(round(2 * s))))
         return self._finish(L, 14, 0.55, pal, noise=True, prot=getattr(self, "op_prot", (40.0, 16.0)))
 
     def _signature(self, corner, pal):
