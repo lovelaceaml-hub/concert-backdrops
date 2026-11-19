@@ -29,9 +29,9 @@ SHOTS = [
                (82.08, _v(-2.2, Y + 2.1, FZ + 10.8), _v(-0.4, Y + 2.0, FZ + 2.0))]),
     # E. the first slam: the full choir and orchestra before the church, the sunrise jumps behind them
     dict(name="slam1_stage", kind="stage", t0=82.08, t1=86.70, fov=46.0, aperture=0.01,
-         focus=_v(0.0, SUMMIT + 1.0, FACADE_Z + 14.0),
-         keys=[(82.08, _v(0.0, Y + 3.6, FZ + 36.0), _v(0.0, Y + 4.6, FZ + 4.0)),
-               (86.70, _v(0.0, Y + 3.9, FZ + 31.0), _v(0.0, Y + 4.8, FZ + 4.0))]),
+         focus=_v(0.0, SUMMIT + 1.0, FACADE_Z + 16.0),
+         keys=[(82.08, _v(0.0, Y + 3.8, FZ + 41.0), _v(0.0, Y + 4.4, FZ + 6.0)),
+               (86.70, _v(0.0, Y + 4.1, FZ + 36.0), _v(0.0, Y + 4.7, FZ + 6.0))]),
     # the breath: the choir still and glowing, light falling like snow (a slow arc)
     dict(name="choir_snow", kind="stage", t0=117.0, t1=121.32, fov=32.0, aperture=0.02,
          focus=_v(0.0, SUMMIT + 2.0, FACADE_Z + 3.4),
@@ -40,25 +40,25 @@ SHOTS = [
                (121.32, _v(2.2, Y + 2.1, FZ + 11.0), _v(0.2, Y + 2.1, FZ + 2.4))]),
     # verse 2 opens: the strings pulse (cut-in on the violins)
     dict(name="strings", kind="stage", t0=121.32, t1=125.92, fov=34.0, aperture=0.02,
-         focus=_v(-2.8, SUMMIT + 1.2, FACADE_Z + 17.4),
-         keys=[(121.32, _v(-6.4, Y + 1.7, FZ + 24.4), _v(-2.6, Y + 1.15, FZ + 16.8)),
-               (125.92, _v(-5.4, Y + 1.65, FZ + 23.2), _v(-2.3, Y + 1.15, FZ + 16.8))]),
+         focus=_v(-2.8, SUMMIT + 1.2, FACADE_Z + 20.9),
+         keys=[(121.32, _v(-6.4, Y + 1.7, FZ + 27.9), _v(-2.6, Y + 1.15, FZ + 20.3)),
+               (125.92, _v(-5.4, Y + 1.65, FZ + 26.7), _v(-2.3, Y + 1.15, FZ + 20.3))]),
     # the second slam: brass and timpani blaze (over the cellos to the trombones and the timpani)
     dict(name="brass2", kind="stage", t0=162.86, t1=165.16, fov=32.0, aperture=0.015,
-         focus=_v(2.4, SUMMIT + 2.0, FACADE_Z + 12.5),
-         keys=[(162.86, _v(3.6, Y + 2.7, FZ + 25.0), _v(2.6, Y + 1.9, FZ + 12.0)),
-               (165.16, _v(3.2, Y + 2.6, FZ + 23.8), _v(2.4, Y + 1.9, FZ + 12.0))]),
+         focus=_v(2.4, SUMMIT + 2.0, FACADE_Z + 16.0),
+         keys=[(162.86, _v(3.6, Y + 2.7, FZ + 28.5), _v(2.6, Y + 2.9, FZ + 15.5)),
+               (165.16, _v(3.2, Y + 2.6, FZ + 27.3), _v(2.4, Y + 2.9, FZ + 15.5))]),
     # "wondrous love": brass and timpani (over the violins to the trumpets and the timpani)
     dict(name="brass_love", kind="stage", t0=185.92, t1=188.27, fov=32.0, aperture=0.015,
-         focus=_v(-2.8, SUMMIT + 2.0, FACADE_Z + 12.5),
-         keys=[(185.92, _v(-4.0, Y + 2.7, FZ + 25.0), _v(-2.8, Y + 1.9, FZ + 12.0)),
-               (188.27, _v(-3.6, Y + 2.6, FZ + 23.8), _v(-2.6, Y + 1.9, FZ + 12.0))]),
+         focus=_v(-2.8, SUMMIT + 2.0, FACADE_Z + 16.0),
+         keys=[(185.92, _v(-4.0, Y + 2.7, FZ + 28.5), _v(-2.8, Y + 2.9, FZ + 15.5)),
+               (188.27, _v(-3.6, Y + 2.6, FZ + 27.3), _v(-2.6, Y + 2.9, FZ + 15.5))]),
     # home to everyone on Mount Zion: the final calls, the held breath, the last chord
     dict(name="home_stage", kind="stage", t0=238.8, t1=254.07, fov=44.0, aperture=0.01,
-         focus=_v(0.0, SUMMIT + 1.5, FACADE_Z + 12.0),
-         keys=[(238.8, _v(-5.0, Y + 3.0, FZ + 36.0), _v(-0.8, Y + 3.8, FZ + 5.0)),
-               (247.5, _v(-1.6, Y + 3.3, FZ + 30.0), _v(-0.2, Y + 4.6, FZ + 4.0)),
-               (254.07, _v(0.0, Y + 3.6, FZ + 26.0), _v(0.0, Y + 6.4, FZ + 4.0))]),
+         focus=_v(0.0, SUMMIT + 1.5, FACADE_Z + 16.0),
+         keys=[(238.8, _v(-6.0, Y + 3.2, FZ + 42.0), _v(-0.8, Y + 3.8, FZ + 6.0)),
+               (247.5, _v(-2.0, Y + 3.5, FZ + 36.0), _v(-0.2, Y + 4.6, FZ + 5.0)),
+               (254.07, _v(0.0, Y + 3.8, FZ + 32.0), _v(0.0, Y + 6.4, FZ + 4.0))]),
 ]
 
 # =========================================================================================================
@@ -188,7 +188,7 @@ class ChoirHearts:
 # =========================================================================================================
 # The orchestra: where everyone sits
 # =========================================================================================================
-PODIUM = _v(0.0, SUMMIT, FACADE_Z + 22.0)     # the conductor's place: the arcs open round it toward +z
+PODIUM = _v(0.0, SUMMIT, FACADE_Z + 25.5)     # the conductor's place: the arcs open round it toward +z
 RISERS = ((7.3, 0.30), (9.3, 0.60))            # (radius, height) of the two risers at the back
 
 VIOLIN, VIOLA, CELLO, HARP, TIMPANI, TRUMPET, TROMBONE = range(7)
@@ -755,7 +755,7 @@ class Risers:
         self.P = np.concatenate(pts)
 
     def sample(self, t):
-        return dict(pos=self.P, size=0.035, color=lin("#cfe4ff") * 0.5, alpha=0.6, emit=1.0, kind="spark",
+        return dict(pos=self.P, size=0.02, color=lin("#cfe4ff") * 0.35, alpha=0.5, emit=1.0, kind="spark",
                     twinkle=0.2)
 
     def gain(self, t):
@@ -818,13 +818,13 @@ class Snow:
 def add(scene):
     choir = Choir(places=CHOIR_P, facing=0.0, kinds=CHOIR_KINDS,
                   start=dict(t=21.3, center=(0.0, FACADE_Z), speed=9.0), color="#ffb84a", color2="#ffe9b8",
-                  bright=1.25, points=3200, size=0.8, flash=1.2, glints=0.004, dof=0.35, seed=3.0,
+                  bright=2.6, points=4200, size=1.1, flash=1.2, glints=0.004, dof=0.35, seed=3.0,
                   light="#ffd890", lamp=(0.20, 1.0), scale=(0.97, 1.03))
-    scene.add("choir", choir, mask=Mask("dark", strength=0.85, grow=0.04))
+    scene.add("choir", choir, mask=Mask("dark", strength=0.85, grow=0.02))
     scene.add("choir hearts", ChoirHearts(choir))
-    orch = Players(start=dict(t=2.2, dur=7.0), color=CRYSTAL, color2="#ffffff", bright=1.0, points=3000,
-                   size=0.8, glints=0.006, dof=0.35, seed=4.0)
-    scene.add("orchestra", orch, mask=Mask("dark", strength=0.7, grow=0.04))
+    orch = Players(start=dict(t=2.2, dur=7.0), color=CRYSTAL, color2="#ffffff", bright=3.0, points=3400,
+                   size=1.2, glints=0.006, dof=0.35, seed=4.0)
+    scene.add("orchestra", orch, mask=Mask("dark", strength=0.45, grow=0.02))
     scene.add("risers", Risers())
     scene.add("instruments", Instruments())
     scene.add("choir light", ChoirLight(CHOIR_P))

@@ -289,13 +289,19 @@ class Crown:
         grow = np.clip((u - self.d) / 0.35, 0.0, 1.0)
         calm = 1.0 - 0.35 * _win(t, 55.4, 60.0, 0.6, 0.8)           # calmer while the words are read
         k = (0.6 + 0.4 * np.exp(-u / 2.0)) * calm * (1.0 - _sc(69.6, 70.5, t))
-        k *= 1.0 + 0.35 * hit_pulse(t, FILL_T[::2] + [65.94], fall=0.5)
-        out = [dict(pos=self.P, size=0.75, color=lin("#ffe7b0"), alpha=grow * k, emit=2.4 + 3.0 * np.exp(-u / 0.6),
+        k *= 1.0 + 0.35 * hit_pulse(t, [64.2, 65.94, 69.4], fall=0.5)
+        # after the words, the crown comes down and settles round the city ("as Father prophesied")
+        dn = _sc(61.0, 64.2, t)
+        sc = np.array([1.0 + 0.28 * dn, 1.0, 1.0 + 0.28 * dn])
+        off = np.array([0.0, -98.0 * dn, 0.0])
+        P = self.c + (self.P - self.c) * sc + off
+        G = self.c + (self.G - self.c) * sc + off
+        out = [dict(pos=P, size=0.75, color=lin("#ffe7b0"), alpha=grow * k, emit=2.4 + 3.0 * np.exp(-u / 0.6),
                     kind="spark", twinkle=0.5, seed=self.s, reflect=False),
-               dict(pos=self.P[::6], size=5.0, color=lin("#ffcf8a"), alpha=0.05 * grow[::6] * k, emit=1.0,
+               dict(pos=P[::6], size=5.0, color=lin("#ffcf8a"), alpha=0.05 * grow[::6] * k, emit=1.0,
                     kind="soft", reflect=False)]
         g = np.clip((u - self.gd) / 0.3, 0.0, 1.0)
-        out.append(dict(pos=self.G, size=2.6, color=self.GC, alpha=g * k, emit=3.5, kind="spark", twinkle=0.4,
+        out.append(dict(pos=G, size=2.6, color=self.GC, alpha=g * k, emit=3.5, kind="spark", twinkle=0.4,
                         reflect=False))
         return out
 
@@ -303,7 +309,9 @@ class Crown:
 # =========================================================================================================
 # The nations on Mount Zion
 # =========================================================================================================
-NEAR_X = 30.0          # the climbs pass up the middle of the front: here the people are true figures
+# The climbs pass up the middle of the front: there the people are true figures (one crowd per climb, each on
+# only in its own shot; a glitter stands in for them in every other view). (tiers, half width in x)
+NEAR = dict(zion_wide=(range(0, 3), 62.0), zion_full=(range(2, 6), 52.0))
 
 
 def _places(tiers, density, seed, front_share=0.9):
@@ -323,70 +331,49 @@ def _places(tiers, density, seed, front_share=0.9):
     return np.concatenate(out), np.concatenate(kk)
 
 
-def _glitter_people(P, K, born, seed, raise_share=0.14):
-    """Tiny standing figures of light (a body stroke and a bright head; some with raised hands): from afar a
-    glitter that reads as countless people. The nations stand together: each block of the terraces has its own
-    colour among the nine, mixed with warm white."""
+def _glitter_people(P, K, born, seed, gain=1.0):
+    """Tiny standing figures of light: one stroke each, dim at the feet and bright at the head, so from afar
+    they glitter and read as countless people. The nations stand together: each block of the terraces has its
+    own colour among the nine, mixed with warm white."""
     r = np.random.default_rng(seed)
     n = len(P)
-    h = r.uniform(0.92, 1.08, n)
-    foot = P + np.array([0.0, 0.15, 0.0])
-    sh = P + np.stack([np.zeros(n), 1.32 * h, np.zeros(n)], 1)
-    head = P + np.stack([np.zeros(n), 1.58 * h, np.zeros(n)], 1)
+    h = r.uniform(0.9, 1.1, n)
+    foot = P + np.array([0.0, 0.2, 0.0])
+    head = P + np.stack([np.zeros(n), 1.6 * h, np.zeros(n)], 1)
     az = np.arctan2(P[:, 0] - ZC[0], P[:, 2] - ZC[2])
     block = (np.floor(az / np.radians(11.0)).astype(int) * 5 + K * 4) % 9
     nine = np.asarray([lin(c) for c in COL9])
     j = r.random(n)
-    col = np.where((j < 0.55)[:, None], nine[block] * 0.7 + lin(WHITE) * 0.3,
-                   np.where((j < 0.8)[:, None], lin("#ffd9a0")[None, :], lin("#fff0dc")[None, :]))
-    up = r.random(n) < raise_share
-    ru = head[up] + np.array([0.0, 0.55, 0.0])
-    out = [
-        dict(pos=foot, pos2=sh, size=0.40, color=col * 0.6, alpha=0.32, kind="line", emit=1.0, birth=born,
-             fade=0.7, flash=1.5, reflect=False),
-        _batch(head, 0.30, col * 0.5 + lin("#fff2dc") * 0.5, 0.6, emit=1.6, birth=born, fade=0.7, flash=2.0,
-               twinkle=0.8, reflect=False),
-        dict(pos=sh[up], pos2=ru, size=0.2, color=col[up] * 0.6, alpha=0.32, kind="line", emit=1.0,
-             birth=born[up] + 0.4, fade=0.8, reflect=False),
-    ]
-    return out
+    col = np.where((j < 0.62)[:, None], nine[block] * 0.65 + lin(WHITE) * 0.35,
+                   np.where((j < 0.85)[:, None], lin("#ffd9a0")[None, :], lin("#fff0dc")[None, :]))
+    return [dict(pos=foot, pos2=head, size=0.36, color=col * 0.85, alpha=0.18 * gain, alpha2=0.75 * gain,
+                 kind="line", emit=1.3, birth=born, fade=0.7, flash=1.5, reflect=False)]
 
 
 def _nations():
     """The two populations: the first climb (1:30.7) fills the lower four terraces and dots the upper ones; the
     second climb (2:51.5) fills the whole mountain. They come up from the sea, terrace after terrace."""
     r = np.random.default_rng(171)
-    P1, K1 = _places(range(0, 4), 0.34, 61)
-    P1b, K1b = _places(range(4, 6), 0.10, 62)
-    P2, K2 = _places(range(4, 6), 0.26, 63)
-    P3, K3 = _places(range(0, 6), 0.14, 64)
+    P1, K1 = _places(range(0, 4), 0.15, 61)
+    P1b, K1b = _places(range(4, 6), 0.05, 62)
+    P2, K2 = _places(range(4, 6), 0.12, 63)
+    P3, K3 = _places(range(0, 6), 0.07, 64)
     P = np.concatenate([P1, P1b, P2, P3])
     K = np.concatenate([K1, K1b, K2, K3])
     born = np.concatenate([90.4 + 1.1 * K1 + 1.2 * r.random(len(P1)),
                            93.5 + 0.9 * (K1b - 4) + 2.0 * r.random(len(P1b)),
                            171.2 + 0.5 * (K2 - 4) + 1.0 * r.random(len(P2)),
                            170.9 + 0.45 * K3 + 1.2 * r.random(len(P3))])
-    near = (np.abs(P[:, 0] - ZC[0]) < NEAR_X) & (P[:, 2] > ZC[2])
-    return P, K, born, near
+    return P, K, born
 
 
-def near_k(t):
-    """The true figures in the middle of the front: on while the camera climbs past them."""
-    if shot_name(t) in ("zion_wide", "zion_full"):
-        return 1.0
-    return 0.0
+def _near(P, K, shot):
+    tiers, w = NEAR[shot]
+    return np.isin(K, list(tiers)) & (np.abs(P[:, 0] - ZC[0]) < w) & (P[:, 2] > ZC[2])
 
 
 def nations_k(t):
     return local_k(t) if t < 254.07 else 0.0
-
-
-def _near_places(P, K, born, sel):
-    """The figures' places: the people of the middle front, thinned to a crowd the frame can afford."""
-    i = np.where(sel)[0]
-    r = np.random.default_rng(9)
-    i = i[r.random(len(i)) < 0.55]
-    return P[i], born[i]
 
 
 # =========================================================================================================
@@ -507,24 +494,28 @@ def add(scene):
     scene.add("zion dim", Static(dim, local_k))
     scene.add("zion gold", Static(gold, local_k))
     for k in range(N_TIER):
-        ring = _ring(ZC, tier_r(k) + 0.1, tier_y(k) + 0.9, 0.5)
+        ring = _ring(ZC, tier_r(k) + 0.1, tier_y(k) + 0.9, 1.0)
         scene.add(f"zion ripple {k}", Static([_batch(ring, 0.9, lin("#fff0d0"), 1.0, emit=2.5, reflect=False)],
                                              _ripple_k(k)))
     scene.add("crown", Crown())
-    # the nations on Mount Zion
-    P, K, born, near = _nations()
-    far = _glitter_people(P[~near], K[~near], born[~near], 3)
-    mid = _glitter_people(P[near], K[near], born[near], 4)
-    scene.add("nations", Static(far, nations_k))
-    scene.add("nations mid", Static(mid, lambda t: nations_k(t) * (1.0 - near_k(t))))
-    lit = [dict(b, color=lin("#ffe6b8"), alpha=0.8) for b in far[:2]]
-    scene.add("nations lit", Static(lit, pour_k))
-    NP, NB = _near_places(P, K, born, near)
-    scene.add("nations near", GCrowd(gain=lambda t: nations_k(t) * near_k(t), places=NP,
-                                     facing=lambda x, z: float(np.degrees(np.arctan2(ZC[0] - x, ZC[2] - z))),
-                                     kinds=(("stand", 3.0), ("raise", 1.2), ("open", 0.6)),
-                                     people=dict(woman=1.0, man=1.0, elder=0.2, child=0.15),
-                                     start=NB, color="#ffcf7a", color2="#fff0d0", bright=1.3, points=150, size=7.0,
-                                     flash=1.5, seed=11.0))
+    # the nations on Mount Zion: a glitter of countless people; true figures where the camera climbs past them
+    P, K, born = _nations()
+    nw, nf = _near(P, K, "zion_wide"), _near(P, K, "zion_full")
+    rest = ~(nw | nf)
+    scene.add("nations", Static(_glitter_people(P[rest], K[rest], born[rest], 3), nations_k))
+    scene.add("nations lit", Static(_glitter_people(P[rest], K[rest], born[rest], 3, 0.5), pour_k))
+    rng = np.random.default_rng(9)
+    for shot, sel, seed in (("zion_wide", nw & ~nf, 4), ("zion_full", nf, 5)):
+        on = (lambda s: (lambda t: float(shot_name(t) == s)))(shot)
+        scene.add(f"nations mid {shot}", Static(_glitter_people(P[sel], K[sel], born[sel], seed),
+                                                (lambda f: (lambda t: nations_k(t) * (1.0 - f(t))))(on)))
+        i = np.where(sel)[0]
+        i = i[rng.random(len(i)) < 0.5]
+        scene.add(f"nations near {shot}", GCrowd(
+            gain=(lambda f: (lambda t: nations_k(t) * f(t)))(on), places=P[i],
+            facing=lambda x, z: float(np.degrees(np.arctan2(ZC[0] - x, ZC[2] - z))),
+            kinds=(("stand", 3.0), ("raise", 1.2), ("open", 0.6)),
+            people=dict(woman=1.0, man=1.0, elder=0.2, child=0.15), start=born[i], color="#ffcf7a",
+            color2="#fff0d0", bright=1.3, points=70, size=9.0, flash=1.5, seed=float(seed)))
     scene.add("pour", Pour())
     scene.add("rings", Rings())

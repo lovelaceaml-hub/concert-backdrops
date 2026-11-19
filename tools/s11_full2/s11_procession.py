@@ -55,18 +55,18 @@ def _keys():
     "This hope was engraved"; down among the walkers for the hearts; close behind the kings; then all but still
     for the held breath."""
     k = [(125.92, (7.0, 24.0, 52.0), (0.0, 16.0, -160.0)),
-         (129.5, (4.0, 21.0, 32.0), (0.0, 6.0, -150.0)),
+         (129.5, (3.0, 15.0, 18.0), (0.0, 4.0, -140.0)),
          (132.5, (2.0, 28.5, 20.0), (0.0, -6.0, -60.0)),
-         (135.0, (0.5, 30.0, 4.4), (0.0, 0.0, -31.4)),
-         (138.0, (0.0, 30.0, 0.5), (0.0, 0.0, -35.3)),
-         (141.0, (0.0, 29.5, -3.4), (0.0, 0.0, -38.6)),
+         (135.0, (0.5, 30.0, 4.4), (-4.5, 0.0, -31.4)),
+         (138.0, (0.5, 30.0, 0.5), (-5.0, 0.0, -35.3)),
+         (141.0, (0.5, 29.5, -3.4), (-5.0, 0.0, -38.6)),
          (143.8, (-2.0, 12.0, -36.0), (0.0, 1.0, -105.0)),
          (147.0, (-2.5, 9.0, -44.0), (0.0, 0.0, -95.0)),
-         (150.4, (-4.0, 18.0, -48.0), (0.0, -6.0, -74.0)),
-         (154.2, (-3.5, 17.0, -53.0), (0.0, -7.0, -78.0)),
-         (156.0, (-3.3, 16.8, -54.0), (0.0, -7.0, -79.5)),
-         (160.3, (-3.0, 16.5, -55.5), (0.0, -6.0, -80.5)),
-         (162.86, (-2.8, 16.0, -57.0), (0.0, -2.5, -84.0))]
+         (150.4, (0.5, 18.0, -48.0), (-4.5, -6.0, -74.0)),
+         (154.2, (0.8, 17.0, -53.0), (-4.5, -7.0, -78.0)),
+         (156.0, (0.9, 16.8, -54.0), (-4.5, -7.0, -79.5)),
+         (160.3, (1.0, 16.5, -55.5), (-4.5, -6.0, -80.5)),
+         (162.86, (1.0, 16.0, -57.0), (-4.0, -2.5, -84.0))]
     return [(t, _v(*p), _v(*q)) for t, p, q in k]
 
 
@@ -155,22 +155,36 @@ class MotherLight:
                  + 0.08 * held * np.sin(2.0 * np.pi * 0.45 * t) + 1.0 * g)
         s = self.s
         ang = 2 * np.pi * s[:, 0] + 0.35 * t * (0.5 + s[:, 1])
-        rad = (1.0 + 2.8 * s[:, 2]) * (1.0 - 0.45 * g)
+        rad = (1.2 + 3.4 * s[:, 2]) * (1.0 - 0.45 * g)
         halo = m[None, :] + np.stack([rad * np.cos(ang), 1.3 * (s[:, 3] - 0.5) * rad, rad * np.sin(ang)], 1)
         warm = lin("#ffe2b4")
-        out = [dict(pos=m[None, :], size=20.0 + 6.0 * g, color=warm, alpha=0.06 * k * pulse, kind="soft", emit=1.5),
-               dict(pos=m[None, :], size=8.0, color=lin("#ffe8c8"), alpha=0.28 * k * pulse, kind="soft", emit=2.0),
-               dict(pos=m[None, :], size=2.4, color=lin(WHITE), alpha=0.9 * k, kind="soft", emit=3.5 * pulse),
+        big = 1.0 + 1.2 * (1.0 - _sc(LAND - 0.6, LAND + 0.4, t))       # coming down she is a blazing star
+        out = [dict(pos=m[None, :], size=(20.0 + 6.0 * g) * big, color=warm, alpha=0.06 * k * pulse, kind="soft", emit=1.5),
+               dict(pos=m[None, :], size=10.0, color=lin("#ffe8c8"), alpha=0.28 * k * pulse, kind="soft", emit=2.0),
+               dict(pos=m[None, :], size=3.2, color=lin(WHITE), alpha=0.95 * k, kind="soft", emit=4.0 * pulse),
                dict(pos=m[None, :], size=0.45, color=lin(WHITE), alpha=k, kind="spark", emit=7.0 * pulse),
                dict(pos=halo, size=0.07, color=lin("#ffe6b8"), alpha=0.75 * k, kind="spark", emit=2.6, twinkle=0.8,
                     seed=s[:, 0])]
+        out[1]["size"] *= big
+        out[2]["size"] *= big
+        # her mirror image in the sea, only in the views along the sea (from high above it would sit in the words)
+        rk = shaft_k(t)
+        if rk > 0.0:
+            for b in out[:4]:
+                r = dict(b)
+                r["pos"] = b["pos"] * _v(1.0, -1.0, 1.0)[None, :]
+                r["alpha"] = b["alpha"] * 0.3 * rk
+                out.append(r)
         # coming down: a trail of light behind it
         if t < LAND + 0.4:
-            back = np.linspace(0.02, 0.9, 60)
+            back = np.linspace(0.02, 1.2, 90)
             P = np.stack([mother_pos(t - b) for b in back])
-            a = np.exp(-back / 0.3) * (1.0 - _sc(LAND - 0.1, LAND + 0.4, t))
-            out.append(dict(pos=P, size=0.5 * (1.0 - 0.6 * back), color=lin("#fff0d8"), alpha=0.8 * k * a,
-                            kind="soft", emit=2.5, reflect=False))
+            a = np.exp(-back / 0.45) * (1.0 - _sc(LAND - 0.1, LAND + 0.4, t))
+            out.append(dict(pos=P, size=1.2 * (1.0 - 0.6 * back), color=lin("#fff0d8"), alpha=0.7 * k * a,
+                            kind="soft", emit=2.5))
+            out.append(dict(pos=P, size=0.12, color=lin(WHITE), alpha=k * a, kind="spark", emit=4.0))
+        for b in out:
+            b["reflect"] = False
         # touching the sea: rings of light run out over it (the people gather inside them)
         for t0, v, a0 in ((LAND, 16.0, 0.9), (LAND + 0.55, 11.0, 0.5)):
             u = t - t0
@@ -226,7 +240,8 @@ class Gather:
         a = _sc(0.0, 0.15, uu) * (0.6 + 0.8 * uu)
         col = lin("#fff0d6")
         return [dict(pos=p, pos2=q, size=0.10, color=col, alpha=0.6 * a, emit=2.4, kind="line", reflect=False),
-                dict(pos=p, size=0.28, color=col, alpha=a, emit=3.2, kind="spark", seed=self.seed[self.on])]
+                dict(pos=p, size=1.2, color=col, alpha=0.25 * a, emit=1.8, kind="soft", reflect=False),
+                dict(pos=p, size=0.35, color=col, alpha=a, emit=3.4, kind="spark", seed=self.seed[self.on])]
 
 
 # ---------------------------------------------------------------------------------------------------------
@@ -338,7 +353,7 @@ class Crowns:
         self.C = np.concatenate([ring, ring + _v(0, 0.045, 0)] + tips)
         self.J = np.asarray(jewels)
         n = len(KINGS_STOP)
-        self.s = r.random((n, 110, 4))
+        self.s = r.random((n, len(self.C) + len(self.J), 4))
         self.cache = (None, None)
 
     def heads(self, t):
@@ -369,43 +384,47 @@ class Crowns:
             for i, h in enumerate(hd):
                 ground = KINGS_STOP[i] + _v(0.0, 0.05, -0.85)
                 c = h * (1 - lay) + ground * lay + _v(0.0, 0.35 * np.sin(np.pi * lay), 0.0)
-                out.append(dict(pos=self.C + c, size=0.026, color=gold, alpha=a, emit=3.6, kind="spark"))
-                out.append(dict(pos=self.J + c, size=0.045, color=pale, alpha=a, emit=5.0, kind="spark"))
-                out.append(dict(pos=(c + _v(0, 0.07, 0))[None, :], size=0.55, color=gold, alpha=0.22 * a, emit=2.0,
-                                kind="soft"))
+                out.append(dict(pos=self.C + c, size=0.026, color=gold, alpha=a, emit=3.6, kind="spark",
+                                reflect=False))
+                out.append(dict(pos=self.J + c, size=0.04, color=pale, alpha=a, emit=4.5, kind="spark", reflect=False))
+                out.append(dict(pos=(c + _v(0, 0.07, 0))[None, :], size=0.36, color=gold, alpha=0.12 * a, emit=2.0,
+                                kind="soft", reflect=False))
             if t > RISE - 0.25:
                 f = _sc(RISE - 0.25, RISE, t)
                 P = KINGS_STOP + _v(0.0, 0.12, -0.85)
-                out.append(dict(pos=P, size=1.1, color=gold, alpha=0.45 * f, emit=2.4, kind="soft"))
+                out.append(dict(pos=P, size=0.8, color=gold, alpha=0.3 * f, emit=2.2, kind="soft", reflect=False))
             return out
         u = t - RISE
         aim = CHURCH + _v(0.0, 60.0, 0.0)
+        CJ = np.concatenate([self.C, self.J])
+        f = np.exp(-u / 2.0) * _sc(0.0, 0.08, u)
         for i, p in enumerate(KINGS_STOP):
             s = self.s[i]
-            c = p + _v(0.0, 0.1, -0.85)
+            c = p + _v(0.0, 0.05, -0.85)
             d0 = _unit(aim - c)
-            spread = np.stack([s[:, 0] - 0.5, 0.6 * (s[:, 1] - 0.5), s[:, 2] - 0.5], 1) * 0.55
-            d = d0[None, :] + spread
-            d = d / np.linalg.norm(d, axis=1, keepdims=True)
-            sp = 0.7 + 0.6 * s[:, 3]
-            dist = (2.0 * u + 10.0 * u * u) * sp
-            dist2 = (2.0 * np.maximum(u - 0.07, 0) + 10.0 * np.maximum(u - 0.07, 0) ** 2) * sp
-            sw = 0.25 * np.stack([np.sin(3.0 * u + 9 * s[:, 0]), np.zeros(len(s)), np.cos(3.0 * u + 9 * s[:, 1])], 1)
-            P = c + d * dist[:, None] + sw
-            Q = c + d * dist2[:, None] + sw
-            f = np.exp(-u / 1.8) * _sc(0.0, 0.05, u)
-            out.append(dict(pos=P, pos2=Q, size=0.03, color=pale, alpha=0.5 * f, emit=2.6, kind="line"))
-            out.append(dict(pos=P, size=0.06, color=pale, alpha=f, emit=3.4, kind="spark", twinkle=0.6, seed=s[:, 3]))
-        f = np.exp(-u / 0.35)
-        out.append(dict(pos=KINGS_STOP + _v(0.0, 0.3, -0.85), size=1.6, color=gold, alpha=0.5 * f, emit=2.4,
-                        kind="soft"))
+            lift = (1.2 * u + 2.6 * u * u) * (0.75 + 0.5 * s[:, 0])
+            fwd = 3.5 * u * u * (0.6 + 0.8 * s[:, 1])
+            open_ = 1.0 + 6.0 * u * s[:, 2]
+            sw = 0.5 * u * np.stack([np.sin(2.0 * u + 9 * s[:, 3]), np.zeros(len(s)), np.cos(2.0 * u + 7 * s[:, 0])], 1)
+            P = c + CJ * open_[:, None] + lift[:, None] * _v(0.0, 1.0, 0.0) + fwd[:, None] * d0 + sw
+            out.append(dict(pos=P, size=0.03 + 0.02 * s[:, 1], color=pale, alpha=0.9 * f, emit=2.8, kind="spark",
+                            twinkle=0.5, seed=s[:, 3], reflect=False))
+        g = np.exp(-u / 0.3)
+        out.append(dict(pos=KINGS_STOP + _v(0.0, 0.2, -0.85), size=0.8, color=gold, alpha=0.3 * g, emit=2.0,
+                        kind="soft", reflect=False))
         return out
+
+
+def shaft_k(t):
+    """The shaft over her shows in the views along the sea (its mirror image would cross the words in the
+    views from high above)."""
+    return 1.0 - _sc(132.0, 133.4, t) + _sc(142.0, 143.5, t) * (1.0 - _sc(147.5, 148.8, t))
 
 
 SHAFTS = [
     # Mother's light: a soft shaft from above onto the sea where she leads
     dict(base=lambda t: (0.0, float(mother_pos(t)[2])), radius=3.5, top=140.0, spread=-0.5, color="#ffe9c8",
-         strength=lambda t: proc_k(t) * _sc(LAND - 0.5, LAND + 1.5, t) * (0.10 + 0.06 * gather_k(t))),
+         strength=lambda t: proc_k(t) * _sc(LAND - 0.5, LAND + 1.5, t) * shaft_k(t) * 0.10),
 ]
 
 
@@ -425,7 +444,7 @@ def add(scene):
     scene.add("procession", walkers)
     scene.add("procession held", held)
     scene.add("fulfil hearts", FulfilHearts(walkers))
-    king = dict(people=dict(man=1.0), color=GOLD, color2=GOLD2, bright=2.1, points=1300, seed=31.0)
+    king = dict(people=dict(man=1.0), color="#ffd27a", color2=GOLD2, bright=3.0, points=1300, seed=31.0)
     kings_w = _robed(GCrowd(gain=proc_k, places=KINGS_P, facing=180.0, kinds=("walk",), start=K_IN, walk=WALK,
                             until=K_STOP, fade=0.25, flash=1.2, **king))
     kings_k = _robed(GCrowd(gain=proc_k, places=KINGS_STOP, facing=180.0, kinds=("kneel",), start=K_STOP - 0.25,
