@@ -130,8 +130,8 @@ def _keys():
     # chorus 1: a slow respectful half circle (about 25 degrees) round the two, never closer than full length
     # (a little farther back and lower than the stills of round 4, so their feet stay above the bottom third)
     add(58.0, (-0.52, 1.22, 1.1), (0.6, 1.08, -6.5))
-    add(68.0, (-2.29, 1.22, 0.79), (0.6, 1.08, -6.5))
-    add(77.0, (-2.6, 1.40, 0.6), (0.0, 1.20, -16.0))
+    add(68.0, (-3.20, 1.22, 3.08), (0.6, 1.41, -6.5))     # farther back: heads stay under the two lines
+    add(77.0, (-2.9, 1.30, 2.4), (0.0, 1.35, -16.0))
     add(83.0, (-2.3, 1.55, -0.8), (-0.3, 1.30, -30.0))
     # verse 2: glide up behind Heavenly Mother, Her lamp in the centre of the frame
     add(89.0, (-0.4, 2.0, -8.0), (-0.6, 1.5, -60.0))
