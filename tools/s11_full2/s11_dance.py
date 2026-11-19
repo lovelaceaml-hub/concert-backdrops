@@ -725,7 +725,7 @@ def add(scene):
     scene.add("conductor baton", Baton())
     # the baton's trail: long and soft in the breath and the hold, short and bright in the strokes
     scene.add("conductor trail strokes", Ribbon(tip, None, "#ffe6b0", [WINDOWS["ring"], WINDOWS["heart"]],
-                                                trail=0.55, width=0.10, n=70, seed=1))
+                                                trail=0.55, width=0.10, n=70, seed=1, sparks=70))
     scene.add("conductor trail breath", Ribbon(tip, None, LAV, [(117.0, 121.32), WINDOWS["held"]], trail=1.4,
                                                width=0.12, n=90, seed=2, sparks=90))
     scene.add("conductor trail strings", Ribbon(tip, None, PW.COLORS["Gratitude"], [(121.32, 125.92)], trail=0.35,
@@ -734,7 +734,8 @@ def add(scene):
     bt = beat_times(97.55, 99.2)[:4]
     for i, ts in enumerate(bt):
         scene.add("conductor comet summons %d" % i, CondComet(ts, _braid(i, len(bt), ts), RING_COL[(2 * i) % 7], 99.45,
-                                                              trail=1.3, width=0.24, fade=0.12, n=70, seed=400 + i))
+                                                              trail=1.3, width=0.32, bright=1.15, fade=0.12, n=90,
+                                                              sparks=False, seed=400 + i))
     # the strings: a comet flicked off over the sea on each strings pulse
     for i, ts in enumerate(STRINGS[:2]):
         scene.add("conductor comet strings %d" % i, CondComet(ts + 0.03, _string_shot(1.0 - 2.0 * i),
