@@ -424,9 +424,9 @@ def _dawn_edge(t, c, R, zw, cam):
         face = np.clip((vv * v).sum(1) / np.maximum(np.linalg.norm(vv, axis=1), 1e-6), 0.0, 1.0)
         fk = (0.1 + 0.9 * _ss(0.05, 0.5, face)).astype(np.float32)
         if f.any():
-            out.append(dict(pos=p[f], size=R * (0.035 + 0.035 * small), color=lin("#ffb060"), alpha=0.035 * gone * pul * small * fk[f], kind="soft",
+            out.append(dict(pos=p[f], size=R * (0.06 + 0.04 * small), color=lin("#ffb060"), alpha=0.022 * gone * pul * small * fk[f], kind="soft",
                             emit=1.8, dof=0.0, fog=0.0, reflect=False))
-            out.append(dict(pos=p[f], size=R * 0.012, color=lin("#ffe0a8"), alpha=0.26 * gone * pul * small * fk[f], kind="spark",
+            out.append(dict(pos=p[f], size=R * 0.012, color=lin("#ffd49a"), alpha=0.08 * gone * pul * small * fk[f], kind="spark",
                             emit=2.6, twinkle=0.7, dof=0.0, fog=0.0, reflect=False))
     zp = c + R * 1.02 * zw
     if ((eye - zp) @ zw) > 0.0:
@@ -490,14 +490,14 @@ def _night_side(sample):
                     night = col * 0.04 + LAND_NIGHT[None, :]
                 dawn = np.array([0.95, 0.62, 0.30])[None, :]
                 cc = col * d[:, None] + night * (1 - d[:, None])
-                b["color"] = np.clip(cc + (dawn - cc) * (0.35 * edge)[:, None], 0, 1)
+                b["color"] = np.clip(cc + (dawn - cc) * (0.22 * edge)[:, None], 0, 1)
             else:                                         # the land glow, its warm halo and the clouds dim at night
                 al = b["alpha"]
                 al = np.full(len(pos), float(al)) if not np.ndim(al) else np.asarray(al, np.float64)
                 # round 7 (task: Korea's dawn at 0:45 glowed as one big halo over the first city lights): while the
                 # dawn is young its lit land and clouds glow low, so the lights read; full glow once the world is lit
                 young = 0.3 + 0.7 * _sc(0.32, 0.95, p)
-                b["alpha"] = (al * (0.05 + 0.95 * d * young) * (1.0 + 0.3 * edge)).astype(np.float32)
+                b["alpha"] = (al * (0.05 + 0.95 * d * young) * (1.0 + 0.15 * edge)).astype(np.float32)
         out = list(out) + _dawn_edge(t, c, R, zw, cam)
         return out
     return wrapped
@@ -571,6 +571,8 @@ class GlobeFX:
     MORE = [(40.7, -74.0), (19.4, -99.1), (-23.5, -46.6), (51.5, -0.1), (6.5, 3.4), (28.6, 77.2),
             (-34.6, -58.4), (-1.3, 36.8), (35.7, 139.7), (-33.9, 151.2), (30.0, 31.2), (14.6, 121.0)]
     RIVER_N = 700
+    NINE = [(40.7, -74.0, 0.42), (-23.5, -46.6, -0.38), (51.5, -0.1, 0.30), (6.5, 3.4, -0.34), (-1.3, 36.8, 0.36),
+            (28.6, 77.2, -0.30), (-33.9, 151.2, 0.40), (55.7, 37.6, -0.36), (19.4, -99.1, 0.34)]   # (lat, lon, bend)
     # (round 7) the cities: gold and white lights on the emerald land, thickest where people live
     METROS = [(40, -75, 1.0, 6), (34, -118, 0.7, 4), (42, -88, 0.6, 5), (32, -90, 0.4, 7), (46, -122, 0.3, 4),
               (19, -99, 0.8, 5), (5, -74, 0.4, 5), (-12, -77, 0.3, 4), (-23, -46, 0.9, 6), (-34, -58, 0.5, 4),
@@ -585,6 +587,10 @@ class GlobeFX:
         r = np.random.default_rng(23)
         self.src = list(self.STARTS) + list(self.MORE)
         self.s = r.random((len(self.src), self.RIVER_N, 6))
+        # review f27 (approved): the 24 straight rivers met in a white star as rainbow spokes. Now nine slow
+        # curved arcs, one per colour, from every continent toward Korea (more people in each)
+        self.nine = list(self.NINE)
+        self.s9 = r.random((9, 2 * self.RIVER_N, 6))
         self.city = None
 
     # how full the rivers of people are (1: every river, every lane; past 1 the finale's rivers widen)
@@ -641,11 +647,11 @@ class GlobeFX:
             if 41.6 <= t < 53.78 and 0.0 < u < 7.0:
                 ang = np.radians(4.0 + 26.0 * u)
                 if ang < np.pi * 0.95:
-                    v = _sphere_ring(zv, ang, 900) @ T.T
+                    v = _sphere_ring(zv, ang, int(160 + 740 * np.sin(ang))) @ T.T     # even spacing: no hard small ring
                     p = c + R * 1.01 * v
                     f = front(p)
-                    a = np.exp(-u / 3.0) * (0.7 if t0 == 41.6 else 0.4)
-                    out.append(dict(pos=p[f], size=0.55, color=lin("#ffe6b8"), alpha=a, emit=3.0, kind="spark",
+                    a = np.exp(-u / 2.2) * (0.38 if t0 == 41.6 else 0.22)
+                    out.append(dict(pos=p[f], size=0.45, color=lin("#ffd8a0"), alpha=a, emit=2.4, kind="spark",
                                     dof=0.0, reflect=False))
         # Zion itself: a warm light on Korea
         zp = c + R * 1.01 * (zv @ T.T)
@@ -684,34 +690,44 @@ class GlobeFX:
             kk = min(k, 1.0)
             wid = 0.005 + 0.013 * min(k, 1.3)
             br = (0.35 + 0.35 * kk) * (1.0 + 0.6 * hit + 0.2 * beat_pulse(t))
-            for i, (la, lo) in enumerate(self.src):
+            up = np.asarray(cam.basis()[1], np.float64)
+            rd = _earth_reading(t)
+            n_on = 3.0 + 6.0 * float(np.clip((k - 0.08) / 0.62, 0.0, 1.0))
+            for i, (la, lo, bend) in enumerate(self.nine):
                 on_i = float(np.clip(n_on - i, 0.0, 1.0))
                 if on_i <= 0.0:
                     continue
                 sv = _earth(la, lo)
-                s = self.s[i]
-                f = np.mod(s[:, 1] + 0.11 * t * (0.75 + 0.5 * s[:, 2]), 1.0)
+                s = self.s9[i]
+                f = np.mod(s[:, 1] + 0.055 * t * (0.8 + 0.4 * s[:, 2]), 1.0)      # slow: people walking
                 om = np.arccos(np.clip(sv @ zv, -1, 1))
                 w0 = np.sin((1 - f) * om) / np.sin(om)
                 w1 = np.sin(f * om) / np.sin(om)
                 v = w0[:, None] * sv[None, :] + w1[:, None] * zv[None, :]
                 v = v / np.linalg.norm(v, axis=1, keepdims=True)
-                v = v + wid * (1.0 - 0.7 * f[:, None]) * (s[:, 3:6] - 0.5)      # the river narrows into Zion
+                side = np.cross(sv, zv)
+                side = side / max(np.linalg.norm(side), 1e-9)
+                v = v + (bend * np.sin(np.pi * f))[:, None] * side[None, :]          # a curved arc, not a spoke
+                v = v / np.linalg.norm(v, axis=1, keepdims=True)
+                v = v + wid * (1.0 - 0.6 * f[:, None]) * (s[:, 3:6] - 0.5)
                 v = v / np.linalg.norm(v, axis=1, keepdims=True)
                 lift = 1.010 + 0.006 * np.sin(np.pi * f)
                 p = c + R * lift[:, None] * (v @ T.T)
                 vis = (s[:, 0] < kk * on_i) & front(p)
                 if not vis.any():
                     continue
-                fa = _ss(0.0, 0.08, f[vis]) * (1.0 - _ss(0.72, 0.95, f[vis]))
+                # they fade in from the edge and out before they meet, so Korea is no white star
+                fa = _ss(0.0, 0.10, f[vis]) * (1.0 - _ss(0.62, 0.88, f[vis]))
+                sup = ((p[vis] - c[None, :]) @ up) / R                              # kept below the words
+                fa = fa * (1.0 - 0.85 * rd * _ss(-0.05, 0.35, sup))
                 col = lin(COL9[i % 9]) * 0.88 + lin(WHITE) * 0.12
                 out.append(dict(pos=p[vis], size=0.14 + 0.10 * kk + 0.12 * s[vis, 2], color=col,
-                                alpha=(0.6 * br * fa).astype(np.float32), emit=2.6, kind="spark", dof=0.0,
+                                alpha=(0.8 * br * fa).astype(np.float32), emit=2.4, kind="spark", dof=0.0,
                                 reflect=False, twinkle=0.5, seed=s[vis, 1]))
-                g = vis & (np.arange(len(f)) % 5 == 0)
-                if g.any():
-                    fg = _ss(0.0, 0.08, f[g]) * (1.0 - _ss(0.72, 0.95, f[g]))
-                    out.append(dict(pos=p[g], size=1.0 + 0.6 * kk, color=col, alpha=(0.03 * br * fg).astype(np.float32),
+                g = np.where(vis)[0][::5]
+                if len(g):
+                    fg = fa[::5][:len(g)]
+                    out.append(dict(pos=p[g], size=1.0 + 0.6 * kk, color=col, alpha=(0.035 * br * fg).astype(np.float32),
                                     emit=1.5, kind="soft", dof=0.0, reflect=False))
         # the build (1:15.2): the Earth's rim glows brighter as if the sun were coming
         if 74.0 <= t < 77.46:
@@ -945,14 +961,58 @@ def ray_light():
     return dict(pos=pos, strength=strength, color=color, size=0.6, rays=1.0)
 
 
+_WBOX = {}
+
+
+def word_boxes(t):
+    """Review f19 (approved): the screen boxes (x0, y0, x1, y1, strength) of the phrases arriving or being read
+    at t, so comets keep out of them from the first stroke of the writing to the end of the reading."""
+    key = round(float(t), 4)
+    if key in _WBOX:
+        return _WBOX[key]
+    out = []
+    try:
+        cam = CAMERA.state(t)
+        for w in WORDS:
+            if not (w.t_in - 0.4 <= t <= w.t_out):
+                continue
+            k = _sc(w.t_in - 0.4, w.t_in, t) * (1.0 - _sc(w.t_read1, w.t_out, t))
+            if k <= 0.0:
+                continue
+            xy, z = cam.project(w.corners(t, cam, pad=0.5 * w.metres_per_em()))
+            if np.all(z > 0.1):
+                out.append((float(xy[:, 0].min()), float(xy[:, 1].min()), float(xy[:, 0].max()),
+                            float(xy[:, 1].max()), float(k)))
+    except NameError:          # (before the words exist)
+        pass
+    if len(_WBOX) > 64:
+        _WBOX.clear()
+    _WBOX[key] = out
+    return out
+
+
+def keep_out_of_words(t, pos, soft=0.04):
+    """1 where a point may show, falling to 0 inside the box of a phrase on screen (soft edge, screen units)."""
+    boxes = word_boxes(t)
+    if not boxes:
+        return None
+    xy, z = CAMERA.state(t).project(np.asarray(pos, np.float64))
+    m = np.ones(len(xy))
+    for x0, y0, x1, y1, k in boxes:
+        d = np.minimum(np.minimum(xy[:, 0] - x0, x1 - xy[:, 0]), np.minimum(xy[:, 1] - y0, y1 - xy[:, 1]))
+        m *= 1.0 - k * _ss(-soft, soft, d)
+    return np.where(z > 0.1, m, 1.0)
+
+
 class Comet:
     """A comet of light: a bright head with a long glowing trail that follows head(t) back in time, like the
     promo's nine comets. head(t) -> position; t0/t1 when it flies (it fades in and out over `fade` s);
     trail in seconds; width in metres. It can carry a moving light (light=True) that colours the mist."""
 
     def __init__(self, head, color, t0, t1, trail=1.4, width=0.35, bright=1.0, fade=0.6, light=False, n=90,
-                 sparks=True, seed=0):
+                 sparks=True, seed=0, clear=True):
         self.head, self.color, self.t0, self.t1 = head, color, float(t0), float(t1)
+        self.clear = bool(clear)          # False for a comet that writes a phrase
         self.trail, self.width, self.bright, self.fade, self.n = float(trail), float(width), float(bright), float(fade), n
         r = np.random.default_rng(int(seed * 97) + 5)
         self.s = r.random((240, 4))
@@ -972,6 +1032,11 @@ class Comet:
         col = lin(self.color) if isinstance(self.color, str) else np.asarray(self.color)
         pulse = 1.0 + 0.5 * beat_pulse(t) * intensity(t) + 0.8 * hit_pulse(t, KICKS, fall=0.4)
         a = k * (1.0 - u) ** 1.4
+        m = keep_out_of_words(t, P) if self.clear else None
+        if m is not None:
+            a = a * m
+            if m[0] < 0.999:
+                k = k * float(m[0])
         w = self.width * (1.0 - 0.85 * u)
         out = [dict(pos=P, size=w * 2.2, color=col, alpha=0.30 * a * self.bright, kind="soft", emit=2.0, dof=0.4),
                dict(pos=P, size=w * 0.5, color=col * 0.5 + lin(WHITE) * 0.5, alpha=a * self.bright, kind="spark",
@@ -983,8 +1048,9 @@ class Comet:
             idx = (s[:, 0] * (self.n - 1)).astype(int)
             age = s[:, 0] * self.trail
             drift = (s[:, 1:4] - 0.5) * (0.4 + 2.2 * s[:, :1]) * self.width * 6.0
+            sa = k * (1.0 - s[:, 0]) ** 2 * (m[idx] if m is not None else 1.0)
             out.append(dict(pos=P[idx] + drift, size=0.05 + 0.08 * s[:, 2], color=col * 0.6 + lin(WHITE) * 0.4,
-                            alpha=k * (1.0 - s[:, 0]) ** 2, kind="spark", emit=2.5, twinkle=0.8, seed=s[:, 3]))
+                            alpha=sa, kind="spark", emit=2.5, twinkle=0.8, seed=s[:, 3]))
         return out
 
 
@@ -1122,12 +1188,13 @@ class CloudBank:
     above), like the promo's clouds. center (3,), size (w, h, d) metres; gain(t) its strength (0 hides it)."""
     static = True
 
-    def __init__(self, center, size=(300.0, 90.0, 120.0), puffs=40, seed=1, gain=None, bright=1.0, colors=None):
+    def __init__(self, center, size=(300.0, 90.0, 120.0), puffs=40, seed=1, gain=None, bright=1.0, colors=None,
+                 look="glow"):
         r = np.random.default_rng(int(seed * 101) + 3)
         c = np.asarray(center, np.float64)
         w, h, d = size
         cols = [lin(x) for x in (colors or CLOUD_COLORS)]
-        P, S, C = [], [], []
+        P, S, C, HG = [], [], [], []
         # Anthony (2026-11-19): clouds placed thoughtfully, not random: each bank is one shaped cloud with a flat
         # base, its puffs set in order along its length, tallest in the middle and tapering to the ends
         span = max(w, d)
@@ -1148,8 +1215,22 @@ class CloudBank:
             P.append(q)
             S.append(rad * (0.35 + 0.5 * r.random(m)))
             C.append(col)
-        P, S, C = np.concatenate(P), np.concatenate(S), np.concatenate(C)
+            HG.append(np.clip((q[:, 1] - c[1]) / max(np.max(q[:, 1]) - c[1], 1.0), 0.0, 1.0))
+        P, S, C, HG = np.concatenate(P), np.concatenate(S), np.concatenate(C), np.concatenate(HG)
         g = r.random(len(P)) < 0.35
+        if look == "rim":
+            # review f31 (approved): a body of lavender-grey cloud at about half the light, and only the upper
+            # rims of each puff lit gold, so a bank frames the view instead of glowing near white
+            body = lin("#7c74a0") * 0.55 + C * 0.25
+            top = _ss(0.55, 0.95, HG)
+            gold = lin("#ffcc88")
+            Cb = body * (1.0 - top[:, None]) + gold[None, :] * 0.8 * top[:, None]
+            rim = g & (HG > 0.6)
+            self.b = [_batch(P, S, Cb * bright * 0.5, 0.02, kind="soft", emit=1.2, dof=0.2),
+                      _batch(P[rim], 0.45 + 0.004 * S[rim] * 10, gold * 0.7 + lin(WHITE) * 0.3, 0.45 * bright,
+                             kind="spark", emit=2.2, twinkle=0.7, dof=0.2)]
+            self.g = gain or (lambda t: sky_gain(t))
+            return
         self.b = [_batch(P, S, C * bright, 0.02, kind="soft", emit=1.4, dof=0.2),   # larger puffs: thinner
                   _batch(P[g], 0.5 + 0.004 * S[g] * 10, C[g] * 0.5 + lin(WHITE) * 0.5, 0.7 * bright, kind="spark",
                          emit=2.5, twinkle=0.9, dof=0.2)]
