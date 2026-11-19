@@ -425,6 +425,49 @@ class GlobeComets:
         return out or None
 
 
+def _emblem_template(stride=4):
+    """(Round 8, Anthony: "Instead of having hearts use the church logo") the church emblem as a sprite of points
+    in its own colours, traced from EMBLEM_MASK (read-only from s11_church): the sky-blue band and globe, lighter
+    toward the top, the white lettering and globe lines, the soft white ring. Unit size (x, y in -0.5..0.5).
+    Returns (xy, colour, size factor)."""
+    cache = getattr(_emblem_template, "cache", {})
+    if stride in cache:
+        return cache[stride]
+    from songs.s11_church import emblem_mask
+    m = emblem_mask()[::stride, ::stride]
+    n = m.shape[0]
+    out_xy, out_c, out_s = [], [], []
+    for cls, sz in ((1, 0.45), (3, 0.6), (2, 1.0)):            # (size factor doubles as the class's strength)
+        r, c = np.nonzero(m == cls)
+        xy = np.stack([(c - (n - 1) / 2.0) / n, -(r - (n - 1) / 2.0) / n], 1)
+        if cls == 1:
+            u = np.clip(xy[:, 1] + 0.5, 0.0, 1.0)[:, None]
+            col = lin("#3c9ff0") * (1.0 - u) + lin("#86d4ff") * u
+        elif cls == 2:
+            col = np.broadcast_to(lin("#ffffff"), (len(xy), 3))
+        else:
+            col = np.broadcast_to(lin("#dcefff") * 0.8, (len(xy), 3))
+        out_xy.append(xy)
+        out_c.append(np.asarray(col))
+        out_s.append(np.full(len(xy), sz))
+    cache[stride] = tuple(np.concatenate(x) for x in (out_xy, out_c, out_s))
+    _emblem_template.cache = cache
+    return cache[stride]
+
+
+def _emblem_sprites(c, sz, a, cam, glow=1.0, stride=4):
+    """Glowing church emblems facing the camera at centres c (N, 3), sizes sz (N,), strength a (N,)."""
+    xy, col, f = _emblem_template(stride)
+    rgt, up, _f = cam.basis()
+    m = len(xy)
+    P = c[:, None, :] + sz[:, None, None] * (xy[None, :, 0, None] * rgt[None, None, :] + xy[None, :, 1, None] * up[None, None, :])
+    step = 0.9 * stride / 128.0
+    return [dict(pos=P.reshape(-1, 3), size=(sz[:, None] * step * np.ones(m)[None, :]).ravel(),
+                 color=np.tile(col, (len(c), 1)), alpha=(a[:, None] * f[None, :]).ravel(), emit=1.6 * glow,
+                 kind="spark"),
+            dict(pos=c, size=1.0 * sz, color=lin("#5fb4ff"), alpha=0.05 * a, emit=1.2 * glow, kind="soft")]
+
+
 class RisingHearts:
     """Thanks to Mother (3:09.5 to 3:17): hearts in the nine colours rise from everyone on the mountain."""
     wants_camera = True
@@ -461,13 +504,9 @@ class RisingHearts:
         beat = beat_pulse(t)
         glow = 0.75 + 0.5 * intensity(t) + 0.9 * kick
         sz = self.sz[on] * (1.0 + 0.16 * beat + 0.25 * kick)
-        hx, hy = self.h[:, 0], self.h[:, 1]
-        P = (c[:, None, :] + sz[:, None, None] * (hx[None, :, None] * rgt[None, None, :] + hy[None, :, None] * up[None, None, :]))
-        m = len(self.h)
-        return [dict(pos=P.reshape(-1, 3), size=np.repeat(0.09 * sz, m), color=np.repeat(self.col[on], m, axis=0),
-                     alpha=np.repeat(a, m), emit=3.0 * glow, kind="spark"),
-                dict(pos=c, size=2.2 * sz, color=self.col[on], alpha=(0.14 + 0.12 * beat + 0.2 * kick) * a,
-                     emit=1.6 * glow, kind="soft")]
+        # (round 8) the church emblem rises, glowing, instead of hearts (every other one: fewer, larger)
+        keep = np.arange(len(c)) % 2 == 0
+        return _emblem_sprites(c[keep], 1.7 * sz[keep], a[keep], cam, glow, stride=2)
 
 
 class Horizon:
@@ -836,7 +875,22 @@ def _patch_globe_hearts():
 
     def hearts(t, cam, *a, **kw):
         out = orig(t, cam, *a, **kw)
-        return [(_heart_sprites(b, cam) if b.get("kind") == "heart" else b) for b in out]
+        res = []
+        for b in out:
+            if b.get("kind") != "heart":
+                res.append(b)
+            elif t >= 188.0:      # (round 8, "instead of having hearts use the church logo"): the coda's are emblems
+                pos = np.asarray(b["pos"], np.float64)
+                n = len(pos)
+                sz = np.broadcast_to(np.asarray(b["size"], np.float64), (n,)) * 1.3
+                al = np.broadcast_to(np.asarray(b["alpha"], np.float64), (n,))
+                for e in _emblem_sprites(pos, sz, al, cam, 1.0, stride=2):
+                    e["dof"] = b.get("dof", 0.0)
+                    e["reflect"] = False
+                    res.append(e)
+            else:
+                res.append(_heart_sprites(b, cam))
+        return res
     GLOBE._hearts = hearts
     GLOBE._coda_hearts = True
     # the world finale: the Earth turns so that Zion (Korea) faces us while the light of every land flows to it
