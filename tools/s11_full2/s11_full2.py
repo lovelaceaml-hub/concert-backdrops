@@ -369,7 +369,15 @@ def _globe_amount(t):
     return 1.0
 
 
-GLOBE = Globe(pos=tuple(GLOBE_C), radius=GLOBE_R, face="camera", camera=None, look="night", spin=1.2,
+# Round 7 (Anthony: "The earth land can be a different color than gold so it's easier to see the lights"; he chose
+# deep emerald land and navy oceans): the land is painted deep emerald (it adds no light of its own), the oceans
+# navy, so the cities' gold and white lights (GlobeFX) and the rivers of people stand out on it, by day and night.
+EARTH_LOOK = dict(ocean_c="#173c86", ocean_e="#0a1d52", land="#0f8a58", land2="#2fb47a", land_base="#0c6a45",
+                  rim="#8fd6ff", cloud="#d6e6ff", paint_land=True, rim_k=0.5, cloud_k=0.16, glow_k=0.0, land_k=1.0)
+LAND_NIGHT = np.array([0.004, 0.030, 0.020])       # the emerald land on the night side: just a dim green
+
+
+GLOBE = Globe(pos=tuple(GLOBE_C), radius=GLOBE_R, face="camera", camera=None, look=EARTH_LOOK, spin=1.2,
               front=ZION_LL[1] - 1.2 * 60.0 - 18.0, tilt=24.0, amount=_globe_amount,
               hearts=dict(t0=226.0, t1=236.5, n=64, size=0.11, start=ZION_LL, colors="nine", pulse=1.0),
               arcs=True, n=70000, bright=1.1)
@@ -471,6 +479,8 @@ def _night_side(sample):
                 col = np.repeat(col[None, :], len(pos), axis=0)
             if b["kind"] == "disc":                       # the ocean: deep navy at night, gold on the dawn's edge
                 night = col * 0.05 + np.array([0.001, 0.003, 0.012])[None, :]
+                if abs(float(np.max(b["size"])) - R * GLOBE.cell * 1.8) < 1e-6 * R:   # (round 7) the emerald land
+                    night = col * 0.04 + LAND_NIGHT[None, :]
                 dawn = np.array([0.95, 0.62, 0.30])[None, :]
                 cc = col * d[:, None] + night * (1 - d[:, None])
                 b["color"] = np.clip(cc + (dawn - cc) * (0.45 * edge)[:, None], 0, 1)
@@ -500,10 +510,57 @@ class GlobeFX:
     wants_camera = True
     STARTS = [(42.0, -100.0), (-12.0, -55.0), (50.0, 8.0), (6.0, 20.0), (-28.0, 25.0), (28.0, 46.0),
               (22.0, 78.0), (-25.0, 134.0), (60.0, 95.0), (14.0, 101.0), (-6.0, 110.0), (55.0, 40.0)]
+    # round 7: more and more people going to Zion: more rivers join as the film goes on (every continent)
+    MORE = [(40.7, -74.0), (19.4, -99.1), (-23.5, -46.6), (51.5, -0.1), (6.5, 3.4), (28.6, 77.2),
+            (-34.6, -58.4), (-1.3, 36.8), (35.7, 139.7), (-33.9, 151.2), (30.0, 31.2), (14.6, 121.0)]
+    RIVER_N = 700
+    # (round 7) the cities: gold and white lights on the emerald land, thickest where people live
+    METROS = [(40, -75, 1.0, 6), (34, -118, 0.7, 4), (42, -88, 0.6, 5), (32, -90, 0.4, 7), (46, -122, 0.3, 4),
+              (19, -99, 0.8, 5), (5, -74, 0.4, 5), (-12, -77, 0.3, 4), (-23, -46, 0.9, 6), (-34, -58, 0.5, 4),
+              (51, 0, 0.9, 6), (49, 8, 0.9, 7), (52, 20, 0.5, 6), (42, 13, 0.6, 5), (40, -4, 0.5, 5), (55, 37, 0.5, 6),
+              (30, 31, 0.6, 4), (7, 4, 0.8, 5), (-1, 37, 0.4, 5), (-26, 28, 0.5, 4), (25, 46, 0.3, 5),
+              (35, 51, 0.4, 5), (25, 68, 0.4, 4), (28, 77, 1.0, 7), (19, 73, 0.8, 5), (13, 80, 0.6, 5),
+              (23, 90, 0.8, 4), (31, 121, 1.0, 6), (39, 116, 0.9, 6), (23, 113, 0.9, 5), (30, 104, 0.6, 5),
+              (37.5, 127, 1.0, 3), (35, 137, 0.9, 5), (14, 121, 0.6, 4), (-6, 107, 0.8, 5), (13, 100, 0.5, 4),
+              (10, 106, 0.5, 4), (-34, 151, 0.4, 3), (-38, 145, 0.3, 3), (1, 104, 0.4, 2)]
 
     def __init__(self):
         r = np.random.default_rng(23)
-        self.s = r.random((len(self.STARTS), 360, 3))
+        self.src = list(self.STARTS) + list(self.MORE)
+        self.s = r.random((len(self.src), self.RIVER_N, 6))
+        self.city = None
+
+    # how full the rivers of people are (1: every river, every lane; past 1 the finale's rivers widen)
+    RIVER_KEYS = [(41.6, 0.10), (47.5, 0.17), (53.78, 0.26), (70.3, 0.34), (70.54, 0.58), (74.3, 0.72),
+                  (74.56, 0.97), (77.46, 1.05), (224.03, 1.1), (236.0, 1.3), (238.8, 1.3)]
+
+    @classmethod
+    def river_k(cls, t):
+        if not (41.6 <= t < 77.46 or 224.03 <= t < 238.8):
+            return 0.0
+        return float(np.interp(t, [x[0] for x in cls.RIVER_KEYS], [x[1] for x in cls.RIVER_KEYS]))
+
+    def _cities(self):
+        """Land points chosen as city lights (Earth frame unit vectors, colours, sizes, seeds), made once."""
+        if self.city is None:
+            r = np.random.default_rng(29)
+            lat, lon = GLOBE.l_lat, GLOBE.l_lon
+            w = np.full(len(lat), 0.05)
+            for la, lo, k, rad in self.METROS:
+                cosd = (np.sin(np.radians(lat)) * np.sin(np.radians(la))
+                        + np.cos(np.radians(lat)) * np.cos(np.radians(la)) * np.cos(np.radians(lon - lo)))
+                d = np.degrees(np.arccos(np.clip(cosd, -1.0, 1.0)))
+                w += k * np.exp(-(d / rad) ** 2)
+            w = w * (np.abs(lat) < 66.0)
+            pick = r.random(len(lat)) < np.clip(0.3 * w, 0.0, 0.5)
+            v = GLOBE.l_v[pick]
+            ww = w[pick]
+            m = len(v)
+            white = r.random(m) < 0.35
+            col = np.where(white[:, None], lin("#fff6e6")[None, :], lin("#ffc95e")[None, :])
+            self.city = dict(v=v, col=col, size=0.16 + 0.22 * np.clip(ww, 0, 1.2) * r.random(m),
+                             seed=r.random(m), big=(ww > 0.65) & (r.random(m) < 0.25))
+        return self.city
 
     def _frame(self, t, cam):
         c, M, R = GLOBE._view(t, cam)
@@ -541,29 +598,64 @@ class GlobeFX:
                             reflect=False))
             out.append(dict(pos=zp[None, :], size=0.9, color=lin(WHITE), alpha=min(k, 1.5), kind="spark", emit=5.0,
                             reflect=False))
-        # the rivers of people (1:10.5 to 1:17.5): streams of light along the Earth to Zion, meeting on 1:14.56
-        if 70.0 <= t < 77.46 or 226.0 <= t < 238.8:
-            meet = HIT["stream"] if t < 100 else 236.0
-            start = 70.3 if t < 100 else 226.0
-            for i, (la, lo) in enumerate(self.STARTS):
+        # (round 7) the cities: gold and white lights on the emerald land, brighter on the night side
+        cy = self._cities()
+        cv = cy["v"] @ T.T
+        cp = c + R * 1.006 * cv
+        cf = front(cp)
+        if cf.any():
+            zw = _unit(T @ zv)
+            da = np.arccos(np.clip(cv[cf] @ zw, -1.0, 1.0))
+            nt = 1.0 - np.clip((dawn_angle(t) - da) / np.radians(DAWN_SOFT) + 0.5, 0.0, 1.0)   # 1 on the night side
+            a = (0.75 + 0.55 * nt) * (1.0 + 0.2 * beat_pulse(t))
+            out.append(dict(pos=cp[cf], size=cy["size"][cf], color=cy["col"][cf], alpha=a, emit=2.4, kind="spark",
+                            twinkle=0.35, seed=cy["seed"][cf], dof=0.0, reflect=False))
+            bg = cf & cy["big"]
+            if bg.any():
+                nb = 1.0 - np.clip((dawn_angle(t) - np.arccos(np.clip(cv[bg] @ zw, -1.0, 1.0)))
+                                   / np.radians(DAWN_SOFT) + 0.5, 0.0, 1.0)
+                out.append(dict(pos=cp[bg], size=1.1, color=lin("#ffcf7a"), alpha=0.07 + 0.08 * nb, kind="soft",
+                                emit=1.6, dof=0.0, reflect=False))
+        # the rivers of people (round 7: "more and more people going to Zion"): streams of people of light from
+        # every continent flowing along the Earth to Zion, from Father's pulse on; a few thin rivers at first,
+        # more rivers, more people and wider and brighter in every Earth view, jumping on "all nations" (1:10.54)
+        # and on the strongest onset (1:14.56); in the world finale the whole Earth flows to Zion
+        k = self.river_k(t)
+        if k > 0.0:
+            hit = hit_pulse(t, [HIT["nations"], HIT["stream"]], rise=0.03, fall=0.9)
+            n_on = 5.0 + 19.0 * float(np.clip((k - 0.08) / 0.62, 0.0, 1.0))
+            kk = min(k, 1.0)
+            wid = 0.005 + 0.013 * min(k, 1.3)
+            br = (0.5 + 0.5 * kk) * (1.0 + 0.9 * hit + 0.2 * beat_pulse(t))
+            for i, (la, lo) in enumerate(self.src):
+                on_i = float(np.clip(n_on - i, 0.0, 1.0))
+                if on_i <= 0.0:
+                    continue
                 sv = _earth(la, lo)
                 s = self.s[i]
-                prog = np.clip((t - start) / (meet - start), 0.0, 1.0)
-                f = np.clip(prog * (1.0 + 0.6 * s[:, 0]) - 0.6 * s[:, 0], 0.0, 1.0)
-                f = f * 0.98 + 0.02 * s[:, 1]
+                f = np.mod(s[:, 1] + 0.11 * t * (0.75 + 0.5 * s[:, 2]), 1.0)
                 om = np.arccos(np.clip(sv @ zv, -1, 1))
                 w0 = np.sin((1 - f) * om) / np.sin(om)
                 w1 = np.sin(f * om) / np.sin(om)
                 v = w0[:, None] * sv[None, :] + w1[:, None] * zv[None, :]
                 v = v / np.linalg.norm(v, axis=1, keepdims=True)
-                v = v + 0.012 * (s - 0.5)
-                lift = 1.012 + 0.05 * np.sin(np.pi * f)
+                v = v + wid * (1.0 - 0.7 * f[:, None]) * (s[:, 3:6] - 0.5)      # the river narrows into Zion
+                v = v / np.linalg.norm(v, axis=1, keepdims=True)
+                lift = 1.012 + 0.035 * np.sin(np.pi * f)
                 p = c + R * lift[:, None] * (v @ T.T)
-                on = (f > 0.0) & front(p)
-                col = lin(COL9[i % 9]) * 0.6 + lin(WHITE) * 0.4
-                a = 0.9 * (1.0 - _sc(meet + 0.3, meet + 1.6, t))
-                out.append(dict(pos=p[on], size=0.30 + 0.25 * s[on, 2], color=col, alpha=a, emit=2.6,
-                                kind="spark", dof=0.0, reflect=False, twinkle=0.6, seed=s[on, 1]))
+                vis = (s[:, 0] < kk * on_i) & front(p)
+                if not vis.any():
+                    continue
+                fa = _ss(0.0, 0.08, f[vis]) * (1.0 - _ss(0.94, 1.0, f[vis]))
+                col = lin(COL9[i % 9]) * 0.72 + lin(WHITE) * 0.28
+                out.append(dict(pos=p[vis], size=0.24 + 0.16 * kk + 0.22 * s[vis, 2], color=col,
+                                alpha=(0.95 * br * fa).astype(np.float32), emit=2.6, kind="spark", dof=0.0,
+                                reflect=False, twinkle=0.5, seed=s[vis, 1]))
+                g = vis & (np.arange(len(f)) % 5 == 0)
+                if g.any():
+                    fg = _ss(0.0, 0.08, f[g]) * (1.0 - _ss(0.94, 1.0, f[g]))
+                    out.append(dict(pos=p[g], size=1.3 + 0.8 * kk, color=col, alpha=(0.05 * br * fg).astype(np.float32),
+                                    emit=1.5, kind="soft", dof=0.0, reflect=False))
         # the build (1:15.2): the Earth's rim glows brighter as if the sun were coming
         if 74.0 <= t < 77.46:
             k = _sc(75.2, 77.4, t)

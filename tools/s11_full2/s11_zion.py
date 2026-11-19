@@ -597,34 +597,58 @@ def stream_k(t):
     the dancers' own scenes, nor in the close shots of the choir); they swell with the music."""
     if local_k(t) <= 0.0 or stage_view(t) or t >= LAST_CHORD or _owner(t) in ("proc", "dance"):
         return 0.0
-    return _sc(61.0, 70.5, t) * (0.8 + 0.3 * intensity(t)) * (1.0 + 0.25 * intensity(t) * beat_pulse(t, 0.12))
+    return _sc(60.6, 62.0, t) * (0.85 + 0.3 * intensity(t)) * (1.0 + 0.25 * intensity(t) * beat_pulse(t, 0.12))
+
+
+# Round 7 (Anthony: "The theme should be more and more people going to Zion"): how full the rivers are, section
+# by section: a few thin lines of people at "as Father prophesied" (1:01), more at each section, the sea and the
+# stairways full by chorus 2 and the coda. Past each step the rivers also widen (more lanes) and take on more of
+# the nine colours. A step lands on its section's first hit and fills in over a few seconds.
+GROW_KEYS = [(61.0, 0.07), (64.2, 0.12), (70.54, 0.2), (82.08, 0.24), (84.5, 0.38), (90.72, 0.44),
+             (99.4, 0.5), (117.0, 0.56), (162.86, 0.6), (165.5, 0.8), (171.48, 0.86), (199.62, 0.9),
+             (203.5, 1.0)]
+
+
+def grow_k(t):
+    return float(np.interp(t, [k[0] for k in GROW_KEYS], [k[1] for k in GROW_KEYS]))
 
 
 class Streams:
     """Rivers of people of light walking to Zion and climbing its stairways (one stroke and a bright head each,
-    a soft glow on some, so from afar they read as rivers of light)."""
+    a soft glow on some, so from afar they read as rivers of light). Round 7: they grow through the film
+    (grow_k): each person has a place in the order of joining; the first to come walk in the middle lanes in a
+    few colours, those who join later widen the rivers (on the sea most of all) and bring the other colours."""
 
     def __init__(self):
         r = np.random.default_rng(616)
-        self.paths, sa, lat, off, v, h, col, ph = [], [], [], [], [], [], [], []
+        self.paths, sa, lat, off, v, h, col, ph, q = [], [], [], [], [], [], [], [], []
         nine = np.asarray([lin(c) for c in COL9])
+        order = r.permutation(9)                 # the colours in the order they join
         for i, s in enumerate(STAIRS_AZ):
             main = s == 0.0
             L, P = _climb_profile(1500.0 if main else 760.0)
             self.paths.append((L, P))
-            n = 3600 if main else 1000
+            n = 8000 if main else 2400
             hw = 7.0 if main else 4.2
+            qq = r.random(n)                       # the order of joining (0 first)
+            q.append(qq)
             sa.append(np.full(n, i))
-            lat.append(r.uniform(-hw, hw, n))
+            u = np.clip((0.3 + 0.7 * qq) * r.random(n), 0.0, 1.0)
+            lat.append(hw * u * np.where(r.random(n) < 0.5, -1.0, 1.0))
             off.append(r.random(n) * L[-1])
             v.append(r.uniform(3.2, 4.2, n))
             h.append(r.uniform(0.9, 1.1, n))
-            c = r.integers(0, 9, n)
-            col.append(nine[c] * 0.8 + lin(WHITE) * 0.2)
+            # the nations walk together: bands of one colour along the way; the first bands in three colours
+            band = np.floor(off[-1] / 16.0).astype(int) + 3 * i
+            ncol = (3 + np.floor(6.0 * qq + 0.5)).astype(int)
+            c = order[(band * 4 + r.integers(0, 2, n)) % ncol]
+            w = 0.06 + 0.10 * r.random(n)
+            col.append(nine[c] * (1.0 - w)[:, None] + lin(WHITE)[None, :] * w[:, None])
             ph.append(r.uniform(0, 2 * np.pi, n))
-        self.sa, self.lat, self.off, self.v, self.h, self.col, self.ph = (
-            np.concatenate(x) for x in (sa, lat, off, v, h, col, ph))
+        self.sa, self.lat, self.off, self.v, self.h, self.col, self.ph, self.q = (
+            np.concatenate(x) for x in (sa, lat, off, v, h, col, ph, q))
         self.seed = r.random(len(self.sa))
+        self.sea0 = tier_r(0) + 14.0
 
     def gain(self, t):
         return float(stream_k(t))
@@ -633,19 +657,28 @@ class Streams:
         k = stream_k(t)
         if k <= 0.0:
             return None
+        g = grow_k(t)
+        spread = 0.6 + 3.4 * _ss(0.3, 1.0, g)      # on the sea the rivers widen as more people come
         foot, head, alpha, idx = [], [], [], []
         for i, (L, P) in enumerate(self.paths):
-            sel = np.where(self.sa == i)[0]
+            sel = np.where((self.sa == i) & (self.q < g))[0]
+            if len(sel) == 0:
+                continue
             d = np.mod(self.off[sel] + self.v[sel] * t, L[-1])
             rr = np.interp(d, L, P[:, 0])
             yy = np.interp(d, L, P[:, 1])
-            a = STAIRS_AZ[i] + self.lat[sel] / rr
+            sea = _ss(self.sea0, self.sea0 + 90.0, rr)
+            a = STAIRS_AZ[i] + self.lat[sel] * (1.0 + spread * sea) / rr
             p = np.stack([ZC[0] + rr * np.sin(a), yy + 0.15, ZC[2] + rr * np.cos(a)], 1)
             bob = 0.06 * np.abs(np.sin(6.0 * t + self.ph[sel]))
             foot.append(p)
             head.append(p + np.stack([np.zeros(len(sel)), 1.55 * self.h[sel] + bob, np.zeros(len(sel))], 1))
-            alpha.append(_ss(0.0, 60.0, d) * (1.0 - _ss(L[-1] - 10.0, L[-1], d)))
+            # each newcomer fades in as the river fills (no pop)
+            alpha.append(_ss(0.0, 60.0, d) * (1.0 - _ss(L[-1] - 10.0, L[-1], d))
+                         * np.clip((g - self.q[sel]) / 0.03, 0.0, 1.0))
             idx.append(sel)
+        if not idx:
+            return None
         F, Hh, A, I = (np.concatenate(x) for x in (foot, head, alpha, idx))
         cam = np.asarray(H.CAMERA.state(t).pos, np.float64)
         A = A * _ss(30.0, 90.0, np.linalg.norm(Hh - cam[None], axis=1))     # never big strokes at the lens
@@ -654,11 +687,11 @@ class Streams:
         if len(I) == 0:
             return None
         C = self.col[I]
-        return [dict(pos=F, pos2=Hh, size=0.30, color=C * 0.9, alpha=0.30 * A, alpha2=0.85 * A, kind="line", emit=1.5,
+        return [dict(pos=F, pos2=Hh, size=0.30, color=C * 0.95, alpha=0.30 * A, alpha2=0.85 * A, kind="line", emit=1.5,
                      reflect=True),
-                dict(pos=Hh, size=0.55, color=C * 0.7 + lin(WHITE) * 0.3, alpha=0.9 * A, kind="spark", emit=2.6,
+                dict(pos=Hh, size=0.55, color=C * 0.85 + lin(WHITE) * 0.15, alpha=0.9 * A, kind="spark", emit=2.6,
                      twinkle=0.3, seed=self.seed[I], reflect=False),
-                dict(pos=Hh[::4], size=2.2, color=C[::4] * 0.6, alpha=0.08 * A[::4], kind="soft", emit=1.2,
+                dict(pos=Hh[::4], size=2.6, color=C[::4] * 0.75, alpha=0.10 * A[::4], kind="soft", emit=1.2,
                      reflect=False)]
 
 
@@ -785,13 +818,24 @@ def _nations():
     P1b, K1b = _places(range(4, 6), 0.05, 62)
     P2, K2 = _places(range(4, 6), 0.12, 63)
     P3, K3 = _places(range(0, 6), 0.07, 64)
-    P = np.concatenate([P1, P1b, P2, P3])
-    K = np.concatenate([K1, K1b, K2, K3])
+    # round 7 (more and more people going to Zion): the first few arrive with the first rivers (1:01 to 1:10),
+    # more keep coming through chorus 1 (one by one, 1:39 to 1:57), and in the coda the last terraces fill to the
+    # brim (from SLAM 3, 3:21.7)
+    P0, K0 = _places(range(0, 3), 0.03, 65)
+    Pm, Km = _places(range(0, 6), 0.04, 66)
+    P4, K4 = _places(range(0, 6), 0.06, 67)
+    P = np.concatenate([P1, P1b, P2, P3, P0, Pm, P4])
+    K = np.concatenate([K1, K1b, K2, K3, K0, Km, K4])
     born = np.concatenate([90.4 + 1.1 * K1 + 1.2 * r.random(len(P1)),
                            93.5 + 0.9 * (K1b - 4) + 2.0 * r.random(len(P1b)),
                            171.2 + 0.5 * (K2 - 4) + 1.0 * r.random(len(P2)),
-                           170.9 + 0.45 * K3 + 1.2 * r.random(len(P3))])
-    return P, K, born
+                           170.9 + 0.45 * K3 + 1.2 * r.random(len(P3)),
+                           61.5 + 2.5 * K0 + 6.0 * r.random(len(P0)),
+                           99.4 + 17.0 * r.random(len(Pm)),
+                           201.6 + 0.5 * K4 + 2.5 * r.random(len(P4))])
+    late = np.concatenate([np.zeros(len(P1) + len(P1b) + len(P2) + len(P3), bool),
+                           np.ones(len(P0) + len(Pm) + len(P4), bool)])
+    return P, K, born, late
 
 
 def _near(P, K, shot):
@@ -1476,8 +1520,8 @@ def add(scene):
                                              _ripple_k(k)))
     scene.add("crown", Crown())
     # the nations on Mount Zion: a glitter of countless people; true figures where the camera climbs past them
-    P, K, born = _nations()
-    nw, nf = _near(P, K, "zion_wide"), _near(P, K, "zion_full")
+    P, K, born, late = _nations()
+    nw, nf = _near(P, K, "zion_wide") & ~late, _near(P, K, "zion_full") & ~late
     rest = ~(nw | nf)
     scene.add("nations", Static(_glitter_people(P[rest], K[rest], born[rest], 3), crowd_k))
     scene.add("nations arms", Arms(P[rest], born[rest], 3, crowd_k))     # the waves of raised arms
