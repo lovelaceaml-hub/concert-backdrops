@@ -4,8 +4,8 @@
 # own audio clip CLIP (which already starts at T0). Writes work/s11_full2/deliver/NAME.mp4, small enough for the
 # review page (crf 25). The audio clip never goes into git.
 set -e
+TAG=$1; NAME=$2; T0=$3; T1=$4; CLIP=$(realpath "$5")   # resolve before changing folder, so a relative path works
 cd "$(git rev-parse --show-toplevel)/work/s11_full2"
-TAG=$1; NAME=$2; T0=$3; T1=$4; CLIP=$5
 A=$(python3 -c "print(int($T0//5))"); B=$(python3 -c "import math;print(min(54,int(math.ceil($T1/5))-1))")
 mkdir -p deliver; L=$(mktemp -p "$PWD/$TAG" sec_XXXXXX.txt)   # a private list per run: parallel builds must never share one
 trap 'rm -f "$L"' EXIT
