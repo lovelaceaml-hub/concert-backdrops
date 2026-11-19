@@ -831,7 +831,7 @@ def add(scene):
     # the great sweeps: his strokes drawn huge round him in long streams of the nine colours (the promo's
     # lights of colour); kept out of the words while a phrase reads
     from songs.s11_stage import BoxGuard
-    sweeps = [((97.6, 99.45), (3.6, 0.06), (5.6, 0.14), (7.4, 0.22)),
+    sweeps = [((97.6, 99.45), (3.6, 0.06), (5.2, 0.14), (6.2, 0.22)),
               ((121.32, 125.92), (3.5, 0.05), (5.5, 0.12), (7.5, 0.20)),
               ((185.92, 188.27), (2.6, 0.06), (3.6, 0.12), (4.6, 0.18))]
     for j, (win, *arms) in enumerate(sweeps):
@@ -864,9 +864,9 @@ def add(scene):
     scene.add("conductor ripples", SeaRipple(), reflect=False)
     scene.add("conductor snow", Snow())
     scene.add("conductor backlight", BackLight([
-        (97.0, 99.6, _D(0.0, 26.0, -60.0), 30.0, "#ffe2b8", lambda t: 0.3 + 0.6 * _sc(99.0, 99.35, t)),
+        (97.0, 99.6, _D(0.0, 26.0, -60.0), 44.0, "#c98cff", lambda t: 0.45 + 0.6 * _sc(99.0, 99.35, t)),
         (116.5, 121.4, _D(0.0, 6.0, -70.0), 34.0, "#e8d8ff", lambda t: 0.5 + 0.25 * downbeat(t, 0.5)),
-        (121.3, 126.0, _D(-8.0, 10.0, -70.0), 34.0, "#ffe2b8", lambda t: 0.45 + 0.4 * upbeat(t)),
+        (121.3, 126.0, _D(-8.0, 10.0, -70.0), 44.0, "#ff9ec8", lambda t: 0.55 + 0.4 * upbeat(t)),
         (185.5, 188.4, _D(-22.3, 8.7, 55.3), 18.0, "#ffd8c8", lambda t: 0.4 + 0.3 * upbeat(t)),
         (247.0, 249.6, _D(-1.0, 7.0, 40.0), 34.0, "#fff0dc",
          lambda t: 0.45 + 0.35 * _sc(247.5, 249.0, t) + 0.8 * _sc(249.0, 249.4, t))]))
