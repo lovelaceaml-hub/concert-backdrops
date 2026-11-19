@@ -743,8 +743,8 @@ def _city_parts():
 
 class PlotGardens:
     """(Round 8) gardens of light on the terrace plots no Korean church stands on (s11_churches._EMPTY, known only
-    once the churches are laid out, so built on the first frame): three gardens across each empty plot, blooming
-    when the plot's building would have risen. The rings on the sea are left to the models thread."""
+    once the churches are laid out, so built on the first frame): three gardens across each empty plot, on the
+    terraces and on the rings on the sea, blooming when the plot's building would have risen."""
 
     def __init__(self, gain):
         self.g = gain
@@ -753,7 +753,7 @@ class PlotGardens:
     def _build(self):
         try:
             import songs.s11_churches as C
-            empty = [q for q in C._EMPTY if q.get("terrace", -1) >= 0 and not q.get("summit")]
+            empty = [q for q in C._EMPTY if not q.get("summit")]       # (the empty sea-ring plots too)
         except Exception:
             empty = []
         r = np.random.default_rng(717)
@@ -1620,7 +1620,9 @@ def crowd_k(t):
     """The nations breathe with the music: brighter with it, a lift on every beat, (round 8) their light rising
     with the choir."""
     return (nations_k(t) * (0.75 + 0.35 * intensity(t)) * (1.0 + 0.3 * intensity(t) * beat_pulse(t, 0.12))
-            * (1.0 + mx(t, choir=0.35)))
+            * (1.0 + mx(t, choir=0.35))
+            # (round 8, f18: white runs at 2:51.6 and 3:12.2) in those two wide views the crowds shine a third less
+            * (1.0 - 0.35 * max(_win(t, 171.3, 175.6, 0.3, 0.6), _win(t, 190.4, 194.6, 0.3, 0.6))))
 
 
 def _flare_k(c):

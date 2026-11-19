@@ -417,21 +417,21 @@ class EpicSun:
         swell = 1.0 + 0.25 * beat + 0.4 * kick + mx(t, brass=0.5)
         # (f35) over the summit at 3:33.5 to 3:39.5 the sun burns at half, swelling only on the beats
         q = _win(t, 213.5, 219.5, 0.6, 0.6)
-        k = k * (1.0 - q * (0.55 - 0.35 * beat - 0.3 * kick))
+        k = k * (1.0 - q * (0.85 - 0.35 * beat - 0.3 * kick))      # (CORE bisected the 3:35 glare: it was this sun)
+        # (round 8) round the slam the sun stands behind "Joy of salvation!": all of it calms while the words read
+        k = k * (1.0 - 0.65 * reading(t) * _win(t, 201.0, 207.0, 0.3, 0.5))
+        qg = 1.0 - 0.9 * q                                        # its wide glow and disc, much lower at 3:34
         rd = reading(t)
 
         def guard(P):
-            """Fade what falls in the words' band (the middle of the frame) while a phrase reads."""
-            if rd <= 0.0:
-                return np.ones(len(P))
-            xy, z = cam.project(P)
-            band = _ss(0.24, 0.32, xy[:, 1]) * (1.0 - _ss(0.72, 0.8, xy[:, 1]))
-            return 1.0 - 0.85 * rd * band * (z > 0.0)
+            """Nothing of the sun on the words: the core's mask of the phrases on screen (0 inside their boxes)."""
+            m = _CORE.keep_out_of_words(t, P, soft=0.08, pad=0.06)
+            return np.ones(len(P)) if m is None else m
         out = []
         P = c + R * (self.disc[:, :1] * sx + self.disc[:, 1:] * sy)
-        out.append(dict(pos=P, size=R * 0.22, color=self.disc_c, alpha=k * guard(P) ** 0.5, emit=6.0 + 3.0 * slam,
+        out.append(dict(pos=P, size=R * 0.22, color=self.disc_c, alpha=k * guard(P) ** 0.5, emit=(6.0 + 3.0 * slam) * qg,
                         kind="soft", fog=False, dof=0.0, reflect=False))
-        out.append(dict(pos=c[None], size=R * 3.2, color=lin("#ffd9a0"), alpha=np.array([0.35 * k * swell]),
+        out.append(dict(pos=c[None], size=R * 3.2, color=lin("#ffd9a0"), alpha=np.array([0.35 * k * swell * qg]),
                         emit=2.5, kind="soft", fog=False, dof=0.0, reflect=False))
         for i, (f, col, a0) in enumerate(self.ring):        # the corona
             rr = R * f * (1.0 + 0.06 * np.sin(2.0 * t + i) + 0.08 * beat) * self.jit
