@@ -413,23 +413,29 @@ def _dawn_edge(t, c, R, zw, cam):
     eye = np.asarray(cam.pos if hasattr(cam, "pos") else cam["pos"], np.float64)
     gone = 1.0 - _sc(np.radians(170.0), np.radians(DAWN_MAX), ang)
     pul = 1.0 + 0.45 * beat_pulse(t)
+    small = 0.2 + 0.8 * _sc(np.radians(10.0), np.radians(70.0), ang)   # round 7: a small circle stacks its glows
     if 0.02 < ang and gone > 0.0:
-        n = int(np.clip(1600 * np.sin(min(ang, np.pi / 2)) + 200, 200, 1800))
+        n = int(np.clip(1600 * np.sin(min(ang, np.pi / 2)) + 60, 60, 1800))
         v = _sphere_ring(zw, ang, n)
         p = c + R * 1.012 * v
         f = ((eye[None, :] - p) * v).sum(1) > 0.0
+        # round 7 (review f21): seen edge-on at the Earth's limb the glows stack into a white band: fade them there
+        vv = eye[None, :] - p
+        face = np.clip((vv * v).sum(1) / np.maximum(np.linalg.norm(vv, axis=1), 1e-6), 0.0, 1.0)
+        fk = (0.1 + 0.9 * _ss(0.05, 0.5, face)).astype(np.float32)
         if f.any():
-            out.append(dict(pos=p[f], size=R * 0.07, color=lin("#ffb060"), alpha=0.10 * gone * pul, kind="soft",
+            out.append(dict(pos=p[f], size=R * (0.035 + 0.035 * small), color=lin("#ffb060"), alpha=0.035 * gone * pul * small * fk[f], kind="soft",
                             emit=1.8, dof=0.0, fog=0.0, reflect=False))
-            out.append(dict(pos=p[f], size=R * 0.012, color=lin("#ffe0a8"), alpha=0.35 * gone * pul, kind="spark",
+            out.append(dict(pos=p[f], size=R * 0.012, color=lin("#ffe0a8"), alpha=0.26 * gone * pul * small * fk[f], kind="spark",
                             emit=2.6, twinkle=0.7, dof=0.0, fog=0.0, reflect=False))
     zp = c + R * 1.02 * zw
     if ((eye - zp) @ zw) > 0.0:
         # the sun rising on Korea: it ignites as the camera arrives on the Earth, then glows on as the source
-        k = (1.6 * hit_pulse(t, [41.6], rise=0.05, fall=1.4) + 0.55 * gone + 0.6 * hit_pulse(t, [70.54], fall=1.0)) * pul
-        out.append(dict(pos=zp[None, :], size=R * 0.3, color=lin("#ffc680"), alpha=0.055 * k, kind="soft", emit=2.0,
+        # round 7 (task: the glow at 0:45 hid the first lights): a small warm sun, a short ignition, no big halo
+        k = (1.0 * hit_pulse(t, [41.6], rise=0.05, fall=0.9) + 0.45 * gone + 0.5 * hit_pulse(t, [70.54], fall=1.0)) * pul
+        out.append(dict(pos=zp[None, :], size=R * 0.13, color=lin("#ffc680"), alpha=0.05 * k, kind="soft", emit=1.8,
                         dof=0.0, fog=0.0, reflect=False))
-        out.append(dict(pos=zp[None, :], size=R * 0.09, color=lin("#fff0d8"), alpha=0.2 * k, kind="soft", emit=2.6,
+        out.append(dict(pos=zp[None, :], size=R * 0.035, color=lin("#fff0d8"), alpha=0.22 * k, kind="soft", emit=2.4,
                         dof=0.0, fog=0.0, reflect=False))
     return out
 
@@ -470,6 +476,7 @@ def _night_side(sample):
             d = d * (1 - full) + full
             d = np.where(on, d, 1.0)
             edge = np.exp(-((da - ang) / soft) ** 2) * (1.0 - full) * (ang > 0.01)
+            edge = edge * (0.25 + 0.75 * _sc(np.radians(12.0), np.radians(60.0), ang))   # round 7: a young dawn is no gold disc
             if b["kind"] == "spark":                      # city lights: brighter on the night side
                 m = 1.0 + 0.6 * (1.0 - d)
                 b["alpha"] = np.asarray(b["alpha"], np.float64) * m if np.ndim(b["alpha"]) else b["alpha"] * m
@@ -483,11 +490,14 @@ def _night_side(sample):
                     night = col * 0.04 + LAND_NIGHT[None, :]
                 dawn = np.array([0.95, 0.62, 0.30])[None, :]
                 cc = col * d[:, None] + night * (1 - d[:, None])
-                b["color"] = np.clip(cc + (dawn - cc) * (0.45 * edge)[:, None], 0, 1)
+                b["color"] = np.clip(cc + (dawn - cc) * (0.35 * edge)[:, None], 0, 1)
             else:                                         # the land glow, its warm halo and the clouds dim at night
                 al = b["alpha"]
                 al = np.full(len(pos), float(al)) if not np.ndim(al) else np.asarray(al, np.float64)
-                b["alpha"] = (al * (0.05 + 0.95 * d) * (1.0 + 0.8 * edge)).astype(np.float32)
+                # round 7 (task: Korea's dawn at 0:45 glowed as one big halo over the first city lights): while the
+                # dawn is young its lit land and clouds glow low, so the lights read; full glow once the world is lit
+                young = 0.3 + 0.7 * _sc(0.32, 0.95, p)
+                b["alpha"] = (al * (0.05 + 0.95 * d * young) * (1.0 + 0.3 * edge)).astype(np.float32)
         out = list(out) + _dawn_edge(t, c, R, zw, cam)
         return out
     return wrapped
@@ -641,9 +651,9 @@ class GlobeFX:
         zp = c + R * 1.01 * (zv @ T.T)
         if ((eye - zp) @ (zp - c)) > 0:
             k = 0.8 + 1.4 * hit_pulse(t, [HIT["stream"]], fall=1.5) + 0.4 * beat_pulse(t)
-            out.append(dict(pos=zp[None, :], size=3.0, color=lin("#ffe2a8"), alpha=0.35 * k, kind="soft", emit=2.0,
+            out.append(dict(pos=zp[None, :], size=1.8, color=lin("#ffe2a8"), alpha=0.22 * k, kind="soft", emit=1.8,
                             reflect=False))
-            out.append(dict(pos=zp[None, :], size=0.9, color=lin(WHITE), alpha=min(k, 1.5), kind="spark", emit=5.0,
+            out.append(dict(pos=zp[None, :], size=0.6, color=lin(WHITE), alpha=0.8 * min(k, 1.3), kind="spark", emit=4.0,
                             reflect=False))
         # (round 7) the cities: gold and white lights on the emerald land, brighter on the night side
         cy = self._cities()
@@ -708,7 +718,7 @@ class GlobeFX:
             k = _sc(75.2, 77.4, t)
             rim = _sphere_ring(_unit(np.linalg.inv(T) @ _unit(eye - c)), np.pi / 2 * 0.985, 1600) @ T.T
             p = c + R * 1.03 * rim
-            out.append(dict(pos=p, size=1.2, color=lin("#ffd9a0"), alpha=0.35 * k, kind="soft", emit=2.0,
+            out.append(dict(pos=p, size=0.7, color=lin("#ffd9a0"), alpha=0.16 * k, kind="soft", emit=1.6,
                             reflect=False))
         return _veil(t, out, cam, c, R) or None
 
@@ -1387,6 +1397,11 @@ def _bursts():
     out = []
     for c in CUTS:
         strong = any(abs(c - s) < 0.05 for s in SLAMS)
+        if abs(c - SLAM2) < 0.05:
+            # round 7 (task: slam 2 at 2:42.86 washed with glare): a warm, shorter flash under the white stage,
+            # gone before "Joy of salvation!" starts to read 0.4 s later
+            out.append(dict(t=c, strength=0.42, rise=0.03, fall=0.14, color="#ffe6bc"))
+            continue
         out.append(dict(t=c, strength=0.95 if strong else 0.16 + 0.12 * intensity(c), rise=0.04 if strong else 0.04,
                         fall=0.26 if strong else 0.22, color="#fff4e0"))      # a slam flash, gone within a third of a second (round 6: no white-out)
     for i, h in enumerate(KICKS):

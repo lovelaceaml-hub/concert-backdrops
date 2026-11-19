@@ -103,6 +103,9 @@ def specs(plist, width):
             spec["_ground"] = True
         elif style == "blaze":
             spec.update(arrive="rays", color=H.GOLD, glow="#ffb347", tint=0.8, n=90000)
+            if _stage_read(r0, r1):
+                # over the white stage the shade is light (see add()): a deeper, warmer gold carries the contrast
+                spec.update(color="#f5a02a", glow="#d8661a", tint=1.0, halo=1.0, bright=1.0)
         else:
             spec.update(arrive="reveal", edge="out", soft=0.10, edge_glow=2.2)
         if prev_leave == "morph":
@@ -132,25 +135,37 @@ def _style(i):
     return H.PHRASE_LIST[i][3]
 
 
+def _stage_read(r0, r1):
+    ts = np.linspace(r0, r1 - 0.1, 7)          # (a reading often ends right on the next cut)
+    return sum(H.shot_kind(float(x)) == "stage" for x in ts) >= 5
+
+
+def _on_stage(i):
+    """True when phrase i is read over the white stage (the choir and orchestra shots)."""
+    a, b, c, d = H.PHRASE_LIST[i][1]
+    return _stage_read(b, c)
+
+
 # ------------------------------------------------------------------------------------------- companions
 class _Shade:
     """The dark glow behind a phrase: its letters (a share of them), 2 m behind, never drawn as light; their
     silhouette, grown and softened, holds the light behind the text box down while the phrase is read."""
     wants_camera = True
 
-    def __init__(self, word):
+    def __init__(self, word, k=1.0, size=0.10, veil=False):
         self.w = word
         self.sub = None
+        self.k, self.size, self.veil = float(k), float(size), bool(veil)
 
     def gain(self, t):
-        return 0.0
+        return 1.0 if self.veil else 0.0      # the veil is painted, never light (paint_light 0)
 
     def strength(self, t):
         w = self.w
         # behind the letters only once they are (nearly) whole, gone early in the leaving (a flown-through
         # word comes right up to the lens: its shade must not), the comet's writing is shaded as it goes
         a0 = w.t_in if w.arrive == "pen" else max(w.t_in, w.t_read0 - 0.3)
-        return _e(a0, w.t_read0, t) * (1.0 - _e(w.t_read1, w.t_read1 + 0.3, t))
+        return self.k * _e(a0, w.t_read0, t) * (1.0 - _e(w.t_read1, w.t_read1 + 0.3, t))
 
     def sample(self, t, cam=None):
         w = self.w
@@ -170,7 +185,11 @@ class _Shade:
         d = tg[sub] - eye[None, :]
         dist = np.linalg.norm(d, axis=1, keepdims=True)
         p = eye[None, :] + d * ((dist + 2.0) / np.maximum(dist, 1e-3))     # 2 m further along each ray
-        return [dict(pos=p.astype(np.float32), size=np.full(len(p), 0.10 * w.metres_per_em(), np.float32),
+        if self.veil:       # a painted veil: dims only what lies behind the letters, not every dark mask in view
+            return [dict(pos=p.astype(np.float32), size=np.full(len(p), self.size * w.metres_per_em(), np.float32),
+                         color=np.array([0.03, 0.018, 0.045], np.float32), alpha=0.10 * self.strength(t),
+                         kind="disc", paint=1.0, paint_light=0.0, emit=1.0, dof=0.0, fog=0.0, streak=0.0)]
+        return [dict(pos=p.astype(np.float32), size=np.full(len(p), self.size * w.metres_per_em(), np.float32),
                      color=np.zeros(3, np.float32), alpha=1.0, kind="soft")]
 
 
@@ -259,9 +278,22 @@ def add(scene):
     fix_ground(H.WORDS, H._SPECS)
     for i, w in enumerate(H.WORDS):
         st = _style(i)
-        sh = _Shade(w)
-        scene.add(f"word shade {w.name}", sh, reflect=False,
-                  mask=Mask("dark", strength=sh.strength, grow=0.8 if st in ("blaze", "fly") else 0.5, soft=4.0))
+        if _on_stage(i):
+            # round 7 (task: "Devotion" at 1:46, its dark glow read as a rounded plate on the white stage): over
+            # the stage the shade hugs the letters (smaller, tighter, much softer edge) and holds the light down
+            # by about half, a dark breath round the word rather than a plate
+            # (the engine shares one dark strength per frame among all dark masks: the choir's own silhouettes,
+            # off in the wide stage shots, darken with it, which is what read as a plate; so the shade stays light)
+            # so here the shade is a soft painted veil instead of a dark mask
+            sh = _Shade(w, k=1.0, size=0.30, veil=True)
+            mask = None
+        else:
+            sh = _Shade(w)
+            mask = Mask("dark", strength=sh.strength, grow=0.8 if st in ("blaze", "fly") else 0.5, soft=4.0)
+        if mask is None:
+            scene.add(f"word shade {w.name}", sh, reflect=False)
+        else:
+            scene.add(f"word shade {w.name}", sh, reflect=False, mask=mask)
         if st == "light":
             scene.add(f"word comet {w.name}", _writer(w), reflect=False)
         elif st == "blaze":

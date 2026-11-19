@@ -252,9 +252,10 @@ class EarthPulse:
         c, M, R = GLOBE._view(t, cam)
         e = np.asarray(cam.pos, np.float64)
         v = _unit(e - c)
-        rim = _sphere_ring(v, np.pi / 2 * 0.99, 900)
-        return [dict(pos=c + R * 1.035 * rim, size=1.1, color=lin("#bcc8ff"), alpha=0.16 * min(k, 1.2), kind="soft",
-                     emit=1.8, reflect=False, dof=0.0)]
+        # round 7 (review f21: no blown-out Earth): a thin cool line just outside the edge, never over the face
+        rim = _sphere_ring(v, np.pi / 2 * 0.995, 700)
+        return [dict(pos=c + R * 1.045 * rim, size=0.55, color=lin("#9fb4ff"), alpha=0.07 * min(k, 1.0), kind="soft",
+                     emit=1.4, reflect=False, dof=0.0)]
 
 
 # =========================================================================================================
