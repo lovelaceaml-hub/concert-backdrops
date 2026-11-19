@@ -108,9 +108,53 @@ def _writer(word):
                  sparks=True, seed=hash(word.name) % 97, clear=False)
 
 
+class _GlyphShadow:
+    """Round 8 (Anthony: "The texts should not have a box covering up what's behind it"): a tight glow-shadow
+    hugging each letter's own shape, a few pixels wide, painted (it darkens only what lies right behind the
+    strokes, never a region, and never touches anyone else's dark mask). No box, band or panel."""
+    wants_camera = True
+
+    def __init__(self, word, k=1.0):
+        self.w, self.k = word, float(k)
+        self.sub = None
+
+    def gain(self, t):
+        return 1.0
+
+    def strength(self, t):
+        w = self.w
+        a0 = w.t_in if w.arrive == "pen" else max(w.t_in, w.t_read0 - 0.3)
+        return self.k * _e(a0, w.t_read0, t) * (1.0 - _e(w.t_read1, w.t_read1 + 0.3, t))
+
+    def sample(self, t, cam=None):
+        k = self.strength(t)
+        if k <= 0.001:
+            return None
+        w = self.w
+        tg = w.targets(t, cam)
+        if self.sub is None:
+            self.sub = np.arange(0, len(tg), max(len(tg) // 6000, 1))
+        sub = self.sub
+        if w.arrive == "pen" and t < w.t_read0:          # only behind what the comet has written so far
+            a = (t - w.t_in) / max(w.t_read0 - w.t_in, 1e-6)
+            sub = sub[(0.04 + 0.88 * w.worder[sub]) < a]
+            if not len(sub):
+                return None
+        cam = w._cam(t, cam)
+        eye = np.asarray(cam.pos, np.float32)
+        d = tg[sub] - eye[None, :]
+        dist = np.linalg.norm(d, axis=1, keepdims=True)
+        p = eye[None, :] + d * ((dist + 1.0) / np.maximum(dist, 1e-3))     # 1 m behind each stroke
+        return [dict(pos=p.astype(np.float32), size=np.full(len(p), 0.055 * w.metres_per_em(), np.float32),
+                     color=np.array([0.02, 0.012, 0.035], np.float32), alpha=0.16 * k, kind="disc", paint=1.0,
+                     paint_light=0.0, emit=1.0, dof=0.0, fog=0.0, streak=0.0)]
+
+
 def add(scene):
-    """The words' companions (the core's _setup runs this after H.WORDS exists). Round 8: no dark plate (shade
-    or veil) and no shockwave; the writing comet stays for the pen entrances."""
+    """The words' companions (the core's _setup runs this after H.WORDS exists). Round 8: no box, plate or
+    veil behind a phrase; a tight glow-shadow follows each letter's shape; the writing comet stays for the pen
+    entrances."""
     for i, w in enumerate(H.WORDS):
+        scene.add(f"word glyph shadow {w.name}", _GlyphShadow(w), reflect=False)
         if _style(i) == "light":
             scene.add(f"word comet {w.name}", _writer(w), reflect=False)
