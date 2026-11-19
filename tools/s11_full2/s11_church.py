@@ -859,6 +859,14 @@ def _far(t):
     return float(_sc(90.0, 200.0, _dist(t)))
 
 
+def _wide(t):
+    """0..1: how far off the camera is in another thread's wide view of the summit (0 in the church's own
+    shots and the stage shots)."""
+    if shot_name(t) in ("city", "church_cut") or stage_view(t):
+        return 0.0
+    return _far(t)
+
+
 def _stage_calm(t, quiet=0.5):
     """In the choir and orchestra shots (round 7, STAGE and ZION): the church and the city behind the singers stay
     a calm backdrop (times `quiet`), and dim further while a phrase reads, so the words and the singers stand
@@ -953,7 +961,7 @@ class MusicCity:
         return out or None
 
     def gain(self, t):
-        return city_k(t) * _stage_calm(t, 0.4)
+        return city_k(t) * _stage_calm(t, 0.4) * (1.0 - 0.6 * _wide(t))
 
 
 class Church:
@@ -983,7 +991,7 @@ class Church:
             if t > 200.0:
                 # others' sunrise views (the coda summit): calm close by, never white; from afar, among the
                 # churches of the world round Zion, the one great building again (round 7)
-                k *= 0.5 + 0.55 * f
+                k *= 0.5 + (0.3 if self.part == "soft" else 0.55) * f
             elif shot_name(t) == "procession":
                 # MARCH's flight to the church (2:41.7 to 2:42.9): blue glass, the name and emblem clear, no
                 # white-out as it fills the frame (round 7)
@@ -991,7 +999,7 @@ class Church:
             elif self.part in ("soft", "crisp"):
                 # the wide views over Zion (round 7): from afar the glass glows and the bands shine, so the
                 # church of light reads as the brightest building on the summit, never a dark slab
-                k *= 1.0 + {"soft": 1.4, "crisp": 0.5}[self.part] * f
+                k *= 1.0 + {"soft": 0.7, "crisp": 0.4}[self.part] * f
         k *= _music(t, self.part)
         if 40.0 < t < 41.3:                     # Father's pulse (0:40.54): the facade eases so the moment glows
             k *= 1.0 - 0.5 * _env(t, 40.3, 41.0, 0.15, 0.25)     # rather than whiting out the centre (round 7)
@@ -1150,7 +1158,7 @@ def body_k(t):
     if k <= 0.0:
         return 0.0
     if shot_name(t) not in ("city", "church_cut", "procession") and not stage_view(t):
-        k *= 1.0 - 0.75 * _far(t)                         # from afar the glass glows instead (round 7)
+        k *= 1.0 - 0.45 * _far(t)                         # from afar the glass glows (blue, with its body)
     # the phrases ride 30 m in front of the camera: when the front is nearer than that they would fall behind
     # the silhouette and be hidden, so the body fades out in near views while a phrase is on screen
     c = np.asarray(H.CAMERA.state(t).pos, np.float64)
@@ -1453,9 +1461,10 @@ add_rays(lambda t: EMB_C if t > 251.7 else _ROOF, _ray_k, color="#fff0d2", size=
 
 def add(scene):
     cdim, cgold = _city()
-    scene.add("city dim", Static(cdim, lambda t: city_k(t) * _stage_calm(t, 0.45) * (0.8 + 0.3 * beat_pulse(t) * max(_sc(20, 22, t),
+    # (round 7: from afar in others' wide views the streets and lamps calm to points of warm light, never a band)
+    scene.add("city dim", Static(cdim, lambda t: city_k(t) * _stage_calm(t, 0.45) * (1.0 - 0.65 * _wide(t)) * (0.8 + 0.3 * beat_pulse(t) * max(_sc(20, 22, t),
                                                                                          0.8 * (t < 12.0)))))
-    scene.add("city gold", Static(cgold, lambda t: city_k(t) * _stage_calm(t, 0.45)))
+    scene.add("city gold", Static(cgold, lambda t: city_k(t) * _stage_calm(t, 0.45) * (1.0 - 0.8 * _wide(t))))
     scene.add("church", Church("soft"))
     scene.add("church lines", Church("crisp"))
     scene.add("church steps", Church("steps"))
