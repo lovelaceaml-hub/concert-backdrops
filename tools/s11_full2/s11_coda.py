@@ -837,7 +837,9 @@ def add(scene):
     scene.add("clouds", Clouds())
     scene.add("sky orchestra", GCrowd(gain=sky_gain, places=ORCH_P + SKY_OFF, facing=0.0, kinds=("sit",),
                                       people=dict(woman=1.0, man=1.0), start=0.0, color="#6cb2ff", color2="#d2e8ff",
-                                      bright=2.6, size=1.7, points=1600, glints=0.012, seed=4.0))
+                                      # (round 8, f28) a filled soft glowing blue body like the stage's players
+                                      # (they read as dark hooded shapes of loose glitter before)
+                                      bright=4.4, size=1.25, points=3400, glints=0.006, seed=4.0))
     scene.add("sky instruments", Instruments(offset=SKY_OFF, gain=sky_k))
     # everyone on the summit, from the coda's sunrise to the last chord
     # their arms go up as each wave of praise rolls up the mountain and reaches them (the coda hit's wave
