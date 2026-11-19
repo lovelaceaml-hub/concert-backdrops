@@ -27,8 +27,8 @@ SHOTS = [
     # C. Mount Zion across the sea at dawn: the crown of light ignites high over the city (the words between
     # the city and the crown); then the terraces fill with gold, step by step
     dict(name="zion_crown", kind="local", t0=53.78, t1=70.54, fov=46.0, aperture=0.0,
-         keys=[(53.78, _v(70.0, 112.0, ZZ + 640.0), ZC + _v(-24.0, Y + 34.0, 0.0)),
-               (61.2, _v(52.0, 106.0, ZZ + 600.0), ZC + _v(-16.0, Y + 30.0, 0.0)),
+         keys=[(53.78, _v(70.0, 112.0, ZZ + 640.0), ZC + _v(-40.0, Y + 34.0, 0.0)),
+               (61.2, _v(52.0, 106.0, ZZ + 600.0), ZC + _v(-46.0, Y + 30.0, 0.0)),
                (70.54, _v(20.0, 96.0, ZZ + 520.0), ZC + _v(0.0, Y + 12.0, 0.0))]),
     # waves of praise: the whole land ripples with light (high, so the rings roll out over the sea)
     dict(name="praise_ripples", kind="local", t0=86.70, t1=90.72, fov=50.0, aperture=0.0,
@@ -253,7 +253,7 @@ class Crown:
     def __init__(self):
         r = np.random.default_rng(31)
         c = ZC + _v(0.0, SUMMIT + 122.0, -10.0)
-        R = 78.0
+        R = 70.0
         pts, gem, gem_c = [], [], []
         for dy in (0.0, 2.2, 5.0):
             pts.append(_ring(c, R, c[1] + dy, 0.45))
@@ -299,7 +299,7 @@ class Crown:
         k *= 1.0 + 0.35 * hit_pulse(t, [64.2, 65.94, 69.4], fall=0.5)
         # after the words, the crown comes down and settles round the city ("as Father prophesied")
         dn = _sc(61.0, 64.2, t)
-        sc = np.array([1.0 + 0.28 * dn, 1.0, 1.0 + 0.28 * dn])
+        sc = np.array([1.0 + 0.43 * dn, 1.0, 1.0 + 0.43 * dn])
         off = np.array([0.0, -88.0 * dn, 0.0])
         P = self.c + (self.P - self.c) * sc + off
         G = self.c + (self.G - self.c) * sc + off
