@@ -1011,6 +1011,203 @@ class MarchBeat:
         return out
 
 
+# ---------------------------------------------------------------------------------------------------------
+# (MARCH round 3, Anthony: "add flag bearers from many different nations marching with the crowds.")
+# ---------------------------------------------------------------------------------------------------------
+_FW, _FH = 1.5, 1.0            # a flag's size (metres): u runs from the pole (0) to the fly (1), v from the top (0)
+
+
+def _disc(u, v, cu, cv, r):
+    return ((u - cu) * _FW) ** 2 + ((v - cv) * _FH) ** 2 < r * r
+
+
+def _flag_korea(u, v):
+    s = 0.5 + 0.06 * np.sin((u - 0.5) * _FW / 0.25 * np.pi)           # the taegeuk: red over blue in an S
+    d1, d2 = (u - 0.5) * _FW + (v - 0.5) * _FH, (u - 0.5) * _FW - (v - 0.5) * _FH
+    bars = ((np.abs(d1) > 0.38) & (np.abs(d1) < 0.55) & (np.abs(d2) < 0.16)) | \
+           ((np.abs(d2) > 0.38) & (np.abs(d2) < 0.55) & (np.abs(d1) < 0.16))
+    return np.where(_disc(u, v, 0.5, 0.5, 0.25), np.where(v < s, 0, 1), np.where(bars, -1, 2))   # trigrams dark
+
+
+def _flag_usa(u, v):
+    canton = (u < 0.4) & (v < 7 / 13)
+    star = canton & (np.round(u * 14) % 2 == 0) & (np.round(v * 18) % 2 == 0)
+    stripe = (np.floor(v * 13) % 2 == 0)
+    return np.where(canton, np.where(star, 2, 1), np.where(stripe, 0, 2))
+
+
+def _flag_uk(u, v):
+    x, y = (u - 0.5) * 2.0, (v - 0.5) * 2.0
+    diag = (np.abs(x * 0.667 - y) < 0.2) | (np.abs(x * 0.667 + y) < 0.2)
+    cross_w = (np.abs(x) < 0.2) | (np.abs(y) < 0.3)
+    cross_r = (np.abs(x) < 0.12) | (np.abs(y) < 0.18)
+    return np.where(cross_r, 0, np.where(cross_w | diag, 2, 1))
+
+
+def _flag_brazil(u, v):
+    x, y = (u - 0.5) * 2.0, (v - 0.5) * 2.0
+    return np.where(x * x + y * y * 2.25 < 0.25, 1, np.where(np.abs(x) * 0.85 + np.abs(y) < 0.85, 3, 4))
+
+
+def _flag_philippines(u, v):
+    tri = u * _FW < 0.866 * (1.0 - np.abs(v - 0.5) * 2.0) * _FH
+    sun = _disc(u, v, 0.18, 0.5, 0.1)
+    return np.where(sun & tri, 3, np.where(tri, 2, np.where(v < 0.5, 1, 0)))
+
+
+def _flag_canada(u, v):
+    leaf = _disc(u, v, 0.5, 0.52, 0.22) & ~(_disc(u, v, 0.5, 0.95, 0.2))
+    return np.where((u < 0.25) | (u > 0.75) | leaf, 0, 2)
+
+
+def _flag_india(u, v):
+    ring = np.abs(np.sqrt(((u - 0.5) * _FW) ** 2 + ((v - 0.5) * _FH) ** 2) - 0.13) < 0.025
+    return np.where(ring, 1, np.where(v < 1 / 3, 5, np.where(v < 2 / 3, 2, 4)))
+
+
+def _tri(a, b, c, vertical=True):
+    def f(u, v):
+        w = u if vertical else v
+        return np.where(w < 1 / 3, a, np.where(w < 2 / 3, b, c))
+    return f
+
+
+def _flag_japan(u, v):
+    return np.where(_disc(u, v, 0.5, 0.5, 0.3), 0, 2)
+
+
+def _flag_argentina(u, v):
+    return np.where(_disc(u, v, 0.5, 0.5, 0.1), 3, np.where(np.abs(v - 0.5) < 1 / 6, 2, 6))
+
+
+def _flag_colombia(u, v):
+    return np.where(v < 0.5, 3, np.where(v < 0.75, 1, 0))
+
+
+def _flag_spain(u, v):
+    return np.where(np.abs(v - 0.5) < 0.25, 3, 0)
+
+
+def _flag_ghana(u, v):
+    x, y = (u - 0.5) * _FW, (v - 0.5) * _FH
+    star = (np.abs(x) < 0.12) & (np.abs(y) < 0.12) & (np.abs(x) + np.abs(y) < 0.15)
+    return np.where(star, -1, np.where(v < 1 / 3, 0, np.where(v < 2 / 3, 3, 4)))
+
+
+# palette: 0 red, 1 blue, 2 white, 3 gold, 4 green, 5 saffron, 6 sky blue; -1 dark (no light)
+FLAG_PAL = ["#ff4a5e", "#3f6dff", "#fff6ec", "#ffd24a", "#2fd47a", "#ff9a3c", "#7cc4ff"]
+FLAGS = [_flag_korea, _flag_usa, _flag_brazil, _flag_philippines, _flag_india, _flag_uk, _flag_japan,
+         _tri(1, 2, 0), _tri(4, 2, 0), _flag_canada, _tri(-1, 0, 3, False), _flag_argentina, _tri(4, 2, 4),
+         _flag_colombia, _tri(0, 2, 1, False), _flag_spain, _flag_ghana, _tri(0, 2, 0), _tri(4, 2, 0)]
+# (France, Italy, Germany, Nigeria, Netherlands, Peru, Mexico among the tricolours)
+
+
+def _bearers():
+    """Who carries a flag: people of the procession a row or two in from the aisle, spread from front to back,
+    and the first person of each nation's stream (who leads it in)."""
+    out = []
+    zr = PROC_P[:, 2] - MOTHER_Z0
+    for k, z in enumerate(np.arange(7.0, 98.0, 4.3)):
+        for side in (-1.0, 1.0):
+            want_x = side * (AISLE + 1.75 * (1 + (k + (side > 0)) % 4))
+            i = int(np.argmin(np.abs(zr - z - 0.9 * side) * 2.0 + np.abs(PROC_P[:, 0] - want_x)))
+            out.append(("walk", i))
+    return out
+
+
+class FlagBearers:
+    """Flag bearers of light marching with the crowds, each flag in a nation's colours (simple, recognisable
+    patterns drawn in light), on a pole of light, waving with the march beat and the strings. They step back
+    near the lens while a phrase reads, so nothing bright crosses the words."""
+    wants_camera = True
+    NU, NV = 30, 20
+
+    def __init__(self, walkers, nations, joined_at):
+        self.w, self.nat, self.jt = walkers, nations, joined_at
+        u, v = np.meshgrid(np.linspace(0.0, 1.0, self.NU), np.linspace(0.0, 1.0, self.NV), indexing="ij")
+        self.u, self.v = u.ravel(), v.ravel()
+        pal = np.asarray([lin(c) for c in FLAG_PAL])
+        self.who = _bearers()
+        # the leader of each nation's stream (the one nearest the procession) carries its flag too
+        lead = []
+        for c in np.unique(NAT_C):                                # each stream has its own colour
+            ii = np.where(NAT_C == c)[0]
+            if len(ii):
+                lead.append(("nation", int(ii[np.argmin(NAT_J[ii])])))
+        self.who += lead
+        self.cols, self.lit = [], []
+        for k in range(len(self.who)):
+            idx = np.asarray(FLAGS[k % len(FLAGS)](self.u, self.v))
+            idx = np.broadcast_to(idx, self.u.shape)
+            self.lit.append(idx >= 0)
+            self.cols.append(pal[np.maximum(idx, 0)])
+        self.edge = (self.u < 0.02) | (self.u > 0.98) | (self.v < 0.03) | (self.v > 0.97)
+        self.seed = np.random.default_rng(91).random(len(self.u))
+        self.pole = np.linspace(0.0, 1.0, 40)
+
+    def _where(self, kind, i, t):
+        """Feet of bearer i (world) at t, and the walking direction."""
+        if kind == "walk":
+            w = self.w
+            return w.place[i] + _ahead(w)[i] * WALK * max(min(t, HALT) - MARCH, 0.0), _ahead(w)[i]
+        n = self.nat
+        d = _ahead(n)[i]
+        j = float(NAT_J[i])
+        if t < j:
+            return n.place[i] + d * WALK * max(t - MARCH + 0.1, 0.0), d
+        p = n.place[i] + d * WALK * (j - MARCH + 0.1)
+        return p + _v(0.0, 0.0, -1.0) * WALK * max(min(t, HALT) - j, 0.0), _v(0.0, 0.0, -1.0)
+
+    def sample(self, t, cam=None):
+        k = proc_k(t) * _sc(MARCH - 0.2, MARCH + 0.4, t)
+        if k <= 0.0:
+            return None
+        MF = _mfx()
+        read = MF._reading(t)
+        wave_amp = (0.10 + 0.06 * mx(t, strings=1.0)) * (1.0 - 0.6 * _sc(HALT, HALT + 1.0, t))
+        bp = _beat_phase(t)
+        out = []
+        for n, (kind, i) in enumerate(self.who):
+            if kind == "nation" and t < MARCH - 0.1:
+                continue
+            p, d = self._where(kind, i, t)
+            right = _v(-d[2], 0.0, d[0])
+            back = -d
+            bob = 0.04 * abs(np.sin(np.pi * bp))                # the pole lifts a little with each step
+            base = p + right * 0.3 + _v(0.0, 0.9 + bob, 0.0)
+            top = base + _v(0.0, 2.75, 0.0)
+            near = 1.0
+            if cam is not None and read > 0.0:                  # step back near the lens while words read
+                dist = float(np.linalg.norm(top - np.asarray(cam.pos)))
+                near = 1.0 - read * (1.0 - float(np.clip((dist - 7.0) / 6.0, 0.0, 1.0)))
+            a = k * near * (1.0 - 0.5 * read) * (1.0 + 0.25 * beat_pulse(t))     # calm behind the words
+            if a <= 0.01:
+                continue
+            ph = 2.0 * np.pi * (self.u * 1.1 - 1.25 * t) + n
+            off = wave_amp * self.u * np.sin(ph)
+            P = (top[None, :] + back[None, :] * (self.u * _FW)[:, None] - _v(0.0, 1.0, 0.0)[None, :] * (self.v * _FH)[:, None]
+                 + right[None, :] * off[:, None] - _v(0.0, 1.0, 0.0)[None, :] * (0.08 * self.u ** 2)[:, None])
+            lit = self.lit[n]
+            col = self.cols[n]
+            shade = 0.8 + 0.35 * np.cos(ph)[lit]                # the folds catch the light as it waves
+            out.append(dict(pos=P[lit], size=0.075, color=col[lit] * shade[:, None], alpha=0.5 * a, emit=1.9,
+                            kind="soft", reflect=False))
+            sel = lit & ((np.arange(len(self.u)) % 3 == 0) | self.edge)
+            out.append(dict(pos=P[sel], size=0.022, color=col[sel] * 0.6 + lin(WHITE) * 0.4, alpha=0.75 * a,
+                            emit=2.6, kind="spark", twinkle=0.4, seed=self.seed[sel], reflect=False))
+            pole = base[None, :] + (top - base)[None, :] * self.pole[:, None]
+            out.append(dict(pos=pole, size=0.025, color=lin(GOLD), alpha=0.9 * a, emit=3.0, kind="spark",
+                            reflect=False))
+            out.append(dict(pos=(top + _v(0.0, 0.06, 0.0))[None, :], size=0.07, color=lin("#fff1c8"), alpha=a,
+                            emit=4.0, kind="spark", reflect=False))
+        return out or None
+
+
+def _mfx():
+    import songs.s11_music_fx as MF
+    return MF
+
+
 def ray_k(t):
     """How strongly her rays fan out (gentle while words are on screen, so they never burn through them)."""
     b = block_t0(t)
@@ -1124,6 +1321,7 @@ def add(scene):
     scene.add("proc joined", joined, reflect=False)
     scene.add("proc joined held", jheld, reflect=False)
     scene.add("march beat", MarchBeat([walkers, nations, late, joined]))
+    scene.add("flag bearers", FlagBearers(walkers, nations, NAT_J))
     scene.add("procession wait", wait, reflect=False)
     scene.add("procession", walkers, reflect=False)
     scene.add("procession held", held, reflect=False)
