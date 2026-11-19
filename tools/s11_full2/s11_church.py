@@ -327,6 +327,7 @@ def _church():
     zb = zs - CH_DEPTH                          # the back face
     glass, teal, pglass, warm = _Ribbons(), _Ribbons(), _Ribbons(), _Ribbons()
     bands, stoneR, plinth = _Ribbons(), _Ribbons(), _Ribbons()
+    base, low = _Ribbons(), _Lines()          # the lowest band and the podium's top edge: behind the singers
     mull, white, fine, stone, side, tower = _Lines(), _Lines(), _Lines(), _Lines(), _Lines(), _Lines()
     BW = 1.4                                    # mullion bay
 
@@ -372,7 +373,7 @@ def _church():
             left = P[P[:, 0] < PORTAL_X - PORTAL_W2]
             right = P[P[:, 0] > PORTAL_X + PORTAL_W2]
             for Q in (left, right):
-                bands.add(Q, 0.34 if k else 0.5, lin("#f6f9ff"), 1.0)
+                (bands if k else base).add(Q, 0.34 if k else 0.5, lin("#f6f9ff"), 1.0)
         else:
             bands.add(P, 0.34 if k < NF else 0.7, lin("#f6f9ff"), 1.0)
     xs = np.linspace(-CH_W2, CH_W2, 160)
@@ -384,9 +385,9 @@ def _church():
     for (xa, xb) in ((-CH_W2 - 9.0, -13.6), (13.6, CH_W2 + 3.0)):
         P = _arc_pts(SUMMIT + 1.15, 0.6, xa, xb, out=1.4)
         plinth.add(P, 2.0, lin("#e8eef8"), 0.14)
-        white.poly(_arc_pts(y0 - 0.05, 0.6, xa, xb, out=1.4))
+        low.poly(_arc_pts(y0 - 0.05, 0.6, xa, xb, out=1.4))
         fine.poly(_arc_pts(SUMMIT + 0.05, 0.6, xa, xb, out=1.4))
-    white.poly(_arc_pts(y0 - 0.05, 0.6, -13.6, 13.6, out=0.9))
+    low.poly(_arc_pts(y0 - 0.05, 0.6, -13.6, 13.6, out=0.9))
     # -- the crisp white column at the right end, and the slimmer edge at the left end of the glass
     edgeL = _Lines()
     edgeL.add((CH_W2 + 0.5, SUMMIT, zs + 0.3), (CH_W2 + 0.5, top + 2.4, zs + 0.3))
@@ -535,7 +536,7 @@ def _church():
     ]
     soft = [b for b in soft if b is not None]
     crisp = [b for b in crisp if b is not None]
-    stepb = [steps.batch(0.10, lin("#eef2fa"), 0.6, 1.3)]
+    stepb = [steps.batch(0.10, lin("#eef2fa"), 0.6, 1.3), low.batch(0.22, WH, 1.0, 2.0), base.batch(2.4)]
     for b in soft + crisp + stepb:
         b["fog"] = 0.35                         # keep its blue and white clear from far away
         b["reflect"] = False                    # no stray copy of it in the sea below the mountain
@@ -551,8 +552,8 @@ def church_glow(t):
 
 
 class Church:
-    """The church's glass, stone and warm light (part "soft") or its white bands, frames, blade and fins (part
-    "crisp"). In the close shots of the choir and orchestra the white lines step back further than the glass,
+    """The church's glass, stone and warm light (part "soft"), its white bands, frames, blade, fins and name
+    (part "crisp"), or the steps, podium edge and lowest band right behind the singers (part "steps"). In the close shots of the choir and orchestra the white lines step back further than the glass,
     so the bright bands never cut across the gold choir or the words."""
     static = True
     _parts = None
