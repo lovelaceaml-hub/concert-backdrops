@@ -849,6 +849,97 @@ def sky_gain(t):
     return 0.0 if globe_view(t) else glory(t)
 
 
+# =========================================================================================================
+# GRAND (round 4, the promo's scenes): billowing clouds of light, pillars of light from the clouds to the sea.
+# CloudBank and Pillars are helpers any thread can place in its own scenes (canyons of cloud to fly through,
+# pillars round Zion); the core keeps banks of cloud on the horizon all film, growing with glory.
+# =========================================================================================================
+CLOUD_COLORS = ("#ffd2a8", "#f4a8c8", "#c0a4f4", "#fff0e0")
+
+
+class CloudBank:
+    """A billowing cloud of light (soft glowing puffs with glitter inside, gold below, rose and lavender
+    above), like the promo's clouds. center (3,), size (w, h, d) metres; gain(t) its strength (0 hides it)."""
+    static = True
+
+    def __init__(self, center, size=(300.0, 90.0, 120.0), puffs=40, seed=1, gain=None, bright=1.0, colors=None):
+        r = np.random.default_rng(int(seed * 101) + 3)
+        c = np.asarray(center, np.float64)
+        w, h, d = size
+        cols = [lin(x) for x in (colors or CLOUD_COLORS)]
+        P, S, C = [], [], []
+        for k in range(puffs):
+            pc = c + np.array([r.uniform(-0.5, 0.5) * w, r.uniform(0.0, 1.0) ** 1.4 * h, r.uniform(-0.5, 0.5) * d])
+            rad = (0.10 + 0.16 * r.random()) * min(w, 2.5 * h)
+            m = 160
+            q = pc + r.normal(0.0, rad * 0.45, (m, 3)) * np.array([1.0, 0.65, 1.0])
+            q[:, 1] = np.maximum(q[:, 1], c[1] + 2.0)
+            hgt = np.clip((q[:, 1] - c[1]) / max(h, 1.0), 0.0, 1.0)
+            col = (cols[0][None, :] * (1 - hgt[:, None]) + cols[1 + k % 2][None, :] * hgt[:, None])
+            P.append(q)
+            S.append(rad * (0.35 + 0.5 * r.random(m)))
+            C.append(col)
+        P, S, C = np.concatenate(P), np.concatenate(S), np.concatenate(C)
+        g = r.random(len(P)) < 0.35
+        self.b = [_batch(P, S, C * bright, 0.055, kind="soft", emit=1.4, dof=0.2),
+                  _batch(P[g], 0.5 + 0.004 * S[g] * 10, C[g] * 0.5 + lin(WHITE) * 0.5, 0.7 * bright, kind="spark",
+                         emit=2.5, twinkle=0.9, dof=0.2)]
+        self.g = gain or (lambda t: sky_gain(t))
+
+    def sample(self, t):
+        return self.b
+
+    def gain(self, t):
+        return float(self.g(t))
+
+
+class Pillars:
+    """Pillars of light falling from the sky (or a cloud) onto the sea, like the promo's: bright cores with
+    soft glowing columns and pools of light where they land; they pulse with the beat.
+    bases: list of (x, z); top: height; gain(t) their strength."""
+
+    def __init__(self, bases, top=300.0, color="#ffe2b8", width=3.0, gain=None, seed=2):
+        self.bases = np.asarray(bases, np.float64)
+        self.top, self.width = float(top), float(width)
+        self.col = lin(color)
+        self.g = gain or (lambda t: 0.0)
+        r = np.random.default_rng(seed)
+        self.ph = r.random(len(self.bases))
+        n = 90
+        self.u = np.linspace(0.0, 1.0, n)
+
+    def sample(self, t):
+        g = float(self.g(t))
+        if g <= 0.0 or globe_view(t):
+            return None
+        out = []
+        k = g * (0.8 + 0.3 * beat_pulse(t) + 0.5 * hit_pulse(t, KICKS, fall=0.4))
+        for i, (x, z) in enumerate(self.bases):
+            y = self.u * self.top
+            P = np.stack([np.full_like(y, x), y, np.full_like(y, z)], 1)
+            a = k * (0.35 + 0.65 * self.u ** 0.3) * (0.85 + 0.15 * np.sin(2.0 * t + 6.0 * self.ph[i]))
+            out.append(dict(pos=P, size=self.width * (1.6 + 0.8 * self.u), color=self.col, alpha=0.10 * a,
+                            kind="soft", emit=1.8, dof=0.3))
+            out.append(dict(pos=P, size=self.width * 0.25, color=self.col * 0.5 + lin(WHITE) * 0.5, alpha=0.5 * a,
+                            kind="soft", emit=3.0, dof=0.3))
+            out.append(dict(pos=np.array([[x, 0.3, z]]), size=self.width * 9.0, color=self.col, alpha=0.35 * k,
+                            kind="soft", emit=2.0, reflect=False))
+        return out
+
+
+def _horizon_clouds():
+    """Banks of cloud of light along the horizon all round (the promo's glowing horizon clouds)."""
+    out = []
+    r = np.random.default_rng(77)
+    for k in range(16):
+        az = 2 * np.pi * k / 16.0 + r.uniform(-0.1, 0.1)
+        d = r.uniform(900.0, 1500.0)
+        c = _v(d * np.sin(az), 0.0, -200.0 + d * np.cos(az))
+        out.append(CloudBank(c, size=(r.uniform(260, 420), r.uniform(50, 110), r.uniform(100, 180)), puffs=26,
+                             seed=k, gain=lambda t: 0.25 * sky_gain(t) + 0.75 * sky_gain(t) * _sc(40.0, 82.0, t)))
+    return out
+
+
 __all__ = [k for k in list(globals()) if not k.startswith("__")]
 import songs.s11_church as S_CHURCH  # noqa: E402
 import songs.s11_stage as S_STAGE  # noqa: E402
@@ -931,7 +1022,8 @@ def _rig():
             pace = s.get("pace", "music")
             kw = dict(pace=music_pace(s["t0"], s["t1"])) if pace == "music" else (
                 dict(pace=pace) if pace not in (None, "linear") else dict(ease="linear"))
-            mv = fly(keys, blend=float(s.get("blend", 0.0)), fov=s["fov"], aperture=s["aperture"], focus=foc, **kw)
+            mv = fly(keys, blend=float(s.get("blend", 0.0)), fov=s["fov"], aperture=s["aperture"], focus=foc,
+                     roll=s.get("roll", 0.0), **kw)                 # roll: degrees, a pair or a function (banking)
         moves.append(mv)
     return MusicRig(moves, blend=0.0, fov=50.0, aperture=0.0, handheld=0.12, min_height=0.4, shake=cam_shake)
 
@@ -1025,6 +1117,8 @@ WORDS = PW.Words(_phrase_specs(), camera=CAMERA)
 def _setup(scene):
     scene.add("sea glitter", Static(_sea_glitter(), sky_gain))
     scene.add("constellations", Static(_constellations(), sky_gain))
+    for k, cb in enumerate(_horizon_clouds()):
+        scene.add(f"horizon clouds {k}", cb)
     for k in range(3):
         scene.add(f"sky ribbon {k}", Comet(_ribbon_head(k), COL9[(3 * k + 1) % 9], 0.0, TOTAL, trail=12.0, width=16.0,
                                            bright=0.35, fade=3.0, n=120, sparks=False, seed=50 + k))
