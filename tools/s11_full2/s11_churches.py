@@ -693,13 +693,25 @@ TOWN_BANDS = (900.0, 3100.0)          # the international towns: from the sea ou
 def _city_slots():
     """Plots of the heavenly city: dicts (x, y, z, facing (radians, azimuth the front looks toward, from +z),
     max_w, max_d, terrace, born or None)."""
-    try:
-        import songs.s11_zion as S_ZION
-        slots = getattr(S_ZION, "CITY_SLOTS", None)
-        if slots:
-            return [dict(s) for s in slots]
+    real = []
+    try:                                     # the summit round the church of light (ENDS; facing in radians)
+        import songs.s11_church as S_CHURCH
+        for q in getattr(S_CHURCH, "SUMMIT_SLOTS", None) or []:
+            q = dict(q)
+            q.update(terrace=6, summit=True)
+            real.append(q)
     except Exception:
         pass
+    try:                                     # the terraces and the sea rings (ZION; facing in degrees)
+        import songs.s11_zion as S_ZION
+        for q in getattr(S_ZION, "CITY_SLOTS", None) or []:
+            q = dict(q)
+            q["facing"] = float(np.radians(q["facing"]))
+            real.append(q)
+    except Exception:
+        pass
+    if real:
+        return real
     out = []
     for k in range(N_TIER - 1):                       # terrace k's floor runs from tier_r(k + 1) to tier_r(k)
         rb = tier_r(k + 1) + 0.55 * TIER_STEP
@@ -711,6 +723,9 @@ def _city_slots():
                             z=float(ZC[2] + rb * np.cos(a)), facing=float(a), max_w=0.85 * CITY_STEP,
                             max_d=0.6 * TIER_STEP, terrace=k, born=None))
     return out
+
+
+_EMPTY = []
 
 
 def _layout():
@@ -748,10 +763,24 @@ def _layout():
     kr = [i for i in rng.permutation(len(BUILDINGS)) if BUILDINGS[i]["country"] == "Korea"]
     other = [i for i in rng.permutation(len(BUILDINGS)) if BUILDINGS[i]["country"] != "Korea"]
     # 1) the heavenly city: the biggest Korean churches on the widest plots, each scaled to fit its plot
-    slots = sorted(_city_slots(), key=lambda q: -q["max_w"] * q["max_d"])
+    # the plots to fill (one Korean church each): the summit first, then the terraces from the front of the
+    # mountain round to its sides, then the rings on the sea; the biggest buildings on the widest of them
+    allp = _city_slots()
+
+    def prio(q):
+        t = q.get("terrace", 0)
+        side = abs(np.angle(np.exp(1j * q["facing"]))) if t >= 0 and t < 6 else 0.0
+        return (0 if t == 6 else (1 if t >= 0 else 2), side)
+    allp.sort(key=prio)
+    chosen = allp[:len(kr)]
     mods = {i: _model(BUILDINGS[i], 0.6) for i in kr}
     size = {i: float(np.ptp(mods[i]["pos"][:, 0])) * float(np.ptp(mods[i]["pos"][:, 2])) for i in kr}
-    kr_big = sorted(kr, key=lambda i: -size[i])
+    # the summit's small plots take the smallest churches, the rest the biggest on the widest
+    summit = [q for q in chosen if q.get("summit")]
+    small = sorted(kr, key=lambda i: size[i] * max(1.0, mods[i]["h"] / 16.0))[:len(summit)]
+    rest = sorted([i for i in kr if i not in small], key=lambda i: -size[i])
+    kr_big = small + rest
+    slots = summit + sorted([q for q in chosen if not q.get("summit")], key=lambda q: -q["max_w"] * q["max_d"])
     left = []
     for i in kr_big:
         m = mods[i]
@@ -759,11 +788,13 @@ def _layout():
         done = False
         for q in list(slots):
             k = min(1.0, q["max_w"] / max(w, 1.0), q["max_d"] / max(d, 1.0))
-            if k < 0.42:                                            # too big for this plot (kept for the shore)
+            if "max_h" in q:
+                k = min(k, q["max_h"] / max(m["h"], 1.0))
+            if k < 0.3:                                             # too big for this plot (kept for the shore)
                 continue
             base = _v(q["x"], q["y"], q["z"])
             fp = 0.5 * max(w, d) * k
-            if not free(base, 0.5 * min(w, q["max_w"]), m["h"] * k, cam_r=6.0, gap=-6.0):          # (near cameras fade it out anyway)
+            if not free(base, 0.5 * min(w, q["max_w"]), m["h"] * k, cam_r=6.0, gap=-6.0):   # (near cameras fade it)
                 continue
             slots.remove(q)
             a = q["facing"]
@@ -771,11 +802,14 @@ def _layout():
             key = (q["born"] if q.get("born") is not None else None)
             put(BUILDINGS[i], m, base, face, k, 0, 0.6,
                 ("t", key) if key is not None else (0.0 + 0.12 * q["terrace"] + abs(np.angle(np.exp(1j * a))) / 30.0))
+            out[-1]["city"] = True
+            out[-1]["summit"] = bool(q.get("summit"))
             placed.append((base, fp))
             done = True
             break
         if not done:
             left.append(i)
+    _EMPTY[:] = [q for q in allp if q not in chosen] + slots     # plots no Korean church stands on
     # 2) Korean churches beyond the plots: on the near shore, in arcs round the foot of the mountain
     n_near = len(left)
     for j, i in enumerate(left):
@@ -1001,7 +1035,10 @@ class ChurchLight:
     def gain(self, t):
         if t < self.t0 - 0.05:
             return 0.0
-        g = _base_gain(t)
+        if CHURCHES[self.i].get("summit"):      # round the church of light: its city's light (city_k)
+            g = city_k(t) * (1.0 - 0.45 * _reading(t)) * (0.85 + 0.25 * beat_pulse(t))
+        else:
+            g = _base_gain(t)
         if g <= 0.0:
             return 0.0
         g *= float(_visible(t)[self.i]) * float(_phrase_guard(t)[self.i])
@@ -1097,7 +1134,7 @@ EMBLEMS_ON = True
 
 
 def _has_emblem(c):
-    return EMBLEMS_ON and float(c["base"][1]) < 1.0
+    return EMBLEMS_ON and not c.get("city")
 
 
 class Emblems:
