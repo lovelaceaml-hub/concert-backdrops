@@ -1,13 +1,13 @@
 # 11 Almighty God Who Knows the Future: status (backdrop version 2)
 
-Updated 2026-11-19 07:00 UTC by the coordinating Claude Code session.
+Updated 2026-11-19 07:10 UTC by the coordinating Claude Code session.
 
 ## Where it is
 - Branch `backdrop2/s11-full`. Latest film code: 41ce754 (dancers of light and waves of raised arms) on top of the requests below.
 - Drafts at 960x540, 30 fps, reviewed section by section on the private review page (claude.ai artifact 1SAvCedZLDEPTJzr1kChaj, owner only).
 - Every section has a reviewed draft with Anthony's requests: logo-only corner with periodic titles, blue-sparkle choir and orchestra with gold instruments and song books, deliberate clouds, the night-to-day Earth, the church name and the glowing traced emblem.
 - Done: the dancers and arm waves pass (h8).
-- In progress: round 6 (h9, commit af0c478): music-driven light, the intro buildup with the sunrise from Korea, Zion growing in many colours with rivers of people, the cinematic march and the approved fixes. Each machine renders one section with its audio (see PIPELINE.md).
+- Done and on the page, all 7 sections checked: round 6 (h9, commit af0c478): music-driven light, the intro buildup with the sunrise from Korea, Zion growing in many colours with rivers of people, the cinematic march and the approved fixes. Each machine rendered one section with its audio (see PIPELINE.md), about 13 minutes for the whole film. Open findings: f17 (bright stage under "For Your devotion" at 1:46), f18 (Zion reads mostly white in wide shots).
 
 ## Decisions and design
 See DESIGN.md (decisions with Anthony's words, open findings, the reusable kit) and PIPELINE.md (render fleet, review page, scripts). The briefs given to the scene threads are kept as BRIEF-*.md.
