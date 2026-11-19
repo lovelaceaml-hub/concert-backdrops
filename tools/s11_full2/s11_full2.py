@@ -1507,7 +1507,7 @@ def _unclear(sample):
 # Round 8 (Anthony: "The text looks terrible"; the promo's words sit on calm dark sky): while a phrase arrives
 # and reads, everything behind its frame region (feathered) is held to about half, and comets keep out of it
 # entirely (Comet). Two regions at once at most (the engine's two keep-clear boxes).
-CALM = 0.6
+CALM = 0.92
 CALM_FEATHER = 0.06
 
 
@@ -1524,6 +1524,15 @@ def _calm_item(i):
         b = word_boxes(t)
         return CALM * b[i][4] if i < len(b) else 0.0
     return dict(box=box, amount=amount, soft=CALM_FEATHER)
+
+
+def _reading_k(t):
+    """1 while a phrase lands or is read (from 0.3 s before its reading starts to its reading's end)."""
+    v = 0.0
+    for _l, (a, b, c, d), *_x in PHRASE_LIST:
+        if b - 0.6 <= t <= c:
+            v = max(v, _sc(b - 0.6, b - 0.3, t))
+    return v
 
 
 def _bursts():
@@ -1556,6 +1565,12 @@ def _bursts():
             k += 1
     out.append(dict(t=HIT["father"], strength=0.45, rise=0.08, fall=0.6, color="#ffeccc",
                     at=tuple(CHURCH + _v(0.0, 20.0, 0.0))))
+    # round 8 (relayed from STAGE: the cut flash at 3:05.92 covered "Wondrous love" as it landed): every flash
+    # that falls while a phrase lands or is read is held low (the slams keep their own settings above)
+    for d in out:
+        k = _reading_k(d["t"])
+        if k > 0.0 and not any(abs(d["t"] - s) < 0.05 for s in SLAMS):
+            d["strength"] *= 1.0 - 0.75 * k
     return sorted(out, key=lambda d: d["t"])
 
 

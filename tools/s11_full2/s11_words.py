@@ -35,11 +35,10 @@ def _e(a, b, x):
 NEON = dict(crimson="#EA5A5E", gold="#F2B25E", sky="#62B2FA", lavender="#9E6AF6", rose="#EE62A6",
             violet="#667AF6", green="#5ABA5A")
 # the neon glow round the white cores: the same hues, deeper and more saturated so they read as colour
-NEON_GLOW = dict(crimson="#ff2a4a", gold="#ff9a1a", sky="#2b8cff", lavender="#8a46ff", rose="#ff3d98",
-                 violet="#4a5cff", green="#2fc84a")
+NEON_GLOW = dict(crimson="#ff1438", gold="#ff8a00", sky="#1478ff", lavender="#7a2cff", rose="#ff2288",
+                 violet="#3a3cff", green="#14c040")
 PHRASE_GLOW = ["gold", "sky", "lavender", "gold", "crimson", "violet", "sky", "gold", "lavender",
                "gold", "crimson", "rose", "gold", "rose", "crimson", "lavender", "gold", "sky"]
-BRIGHT = {17}          # phrases read over another bright picture (the white church at 4:00): coloured letters
 # style (PHRASE_LIST field 4, kept for the other threads) -> the promo-like entrance
 ARRIVE = dict(light="pen", people="shaft", blaze="rays", fly="reveal")
 
@@ -66,11 +65,8 @@ def specs(plist, width):
         hexc, hexg = NEON[key], NEON_GLOW[key]
         spec = dict(label="", lines=lines, ride=ride, face="screen", width=width(ts, depth, frac),
                     t_in=ti, t_read0=r0, t_read1=r1, t_out=to, name=name, leave="rise",
-                    color=hexc, glow=hexg, tint=0.45, bright=1.1 if strong else 1.0,
-                    halo=3.6 if strong else 3.0, sparkle=1.2, n=110000 if strong else 80000, reflect=False)
-        if _stage_read(r0, r1) or i in BRIGHT:
-            # over the white stage white cores vanish: the letters keep their colour, the glow deepens
-            spec.update(color=hexg, tint=0.85, bright=0.95, halo=3.2)
+                    color=hexc, glow=hexg, tint=0.22, bright=1.2 if strong else 1.1,
+                    halo=4.6 if strong else 4.0, sparkle=1.2, n=110000 if strong else 80000, reflect=False)
         arr = ARRIVE[style]
         if arr == "pen":
             spec.update(arrive="pen", nib=False, flow=0.09)
@@ -82,12 +78,6 @@ def specs(plist, width):
             spec.update(arrive="shaft")                    # glitter flakes come down and settle into the letters
         out.append(spec)
     return out
-
-
-def _stage_read(r0, r1):
-    """True when most of a phrase's reading is over a stage shot (the white stage)."""
-    ts = np.linspace(r0, r1 - 0.1, 7)          # (a reading often ends right on the next cut)
-    return sum(H.shot_kind(float(x)) == "stage" for x in ts) >= 4
 
 
 def _style(i):
