@@ -88,4 +88,8 @@ Every rule of the version 2 brief (2026-11-18), answered yes or no, with where i
 | No song audio, lyrics, videos or frames in git | yes | `git show --stat`; .gitignore covers work/ and media |
 | No em or en dashes | yes | grep over the branch's files |
 | Branch backdrop2/s04-full from the approved tag; code in tools/s04_full2, docs here; no approved promo, engine or other songs' files edited | yes | `git diff --stat film10-revision3-approved-2026-11-16` |
-| Three files, SHA-256, STATUS.md, draft PR | see STATUS.md | |
+| Three files, SHA-256, STATUS.md, draft PR | yes | STATUS.md (files, hashes, checks) |
+
+## Result
+
+Every line above is yes. Checked on the final files 2026-11-19 (export.py): 14,100 frames at 60 fps, 235.000 s, no black, white, repeated or frozen frames, the signature on every frame after 0:11, music in sync at three hits.
