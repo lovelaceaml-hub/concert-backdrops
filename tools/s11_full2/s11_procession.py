@@ -160,10 +160,10 @@ def _plan(t0, t1):
                                              (-0.4, 0.2, _mz(t) + 6.0))), "linear"
     if t0 == 144.4:       # fulfilled: the comets dive back through the walkers toward us, lighting hearts, while a
         # slow crane rises from among them over the whole river of people toward her light
-        def crane(t):
+        def crane(t):          # (MARCH round 4) rising higher and further back: the whole river, growing wider
             u = _sc(t0, t1, t)
-            return ((-9.0 + 6.0 * u, 2.2 + 24.0 * u ** 1.3, _mz(t) + 66.0 - 10.0 * u),
-                    (0.0, 2.0 - 4.0 * u, _mz(t) + 20.0 - 26.0 * u))
+            return ((-9.0 + 7.0 * u, 2.2 + 40.0 * u ** 1.3, _mz(t) + 66.0 + 22.0 * u ** 1.5),
+                    (0.0, 2.0 - 4.0 * u, _mz(t) + 20.0 - 6.0 * u))
         return _track(t0, t1, 12, crane), "linear"
     if t0 == 148.6:       # (MARCH round 2) the kings: a low hero angle in front of them, backing away at their pace,
         # looking up at the front pair as pair after pair of kings comes on down the aisle between the multitude;
@@ -331,6 +331,84 @@ LATE_F = np.concatenate([x[1] for x in _late])
 LATE_C = np.concatenate([x[2] for x in _late])
 LATE_J = np.concatenate([x[3] for x in _late])
 LATE_T0 = np.concatenate([np.full(len(x[0]), t0) for x, (t0, _g) in zip(_late, LATE)])
+
+
+# (MARCH round 4, Anthony: "Also there should be more and more and more people.") On the music's accents through
+# the march, new people of light flare in and take their places: new rows behind (the river grows longer) and a new
+# column along both outer edges (it grows wider), each wave rolling from her light back. They walk on with
+# everyone toward her light and stand with them in the held breath.
+GROW_T = [135.9, 137.9, 141.5, 143.4, 145.0, 146.7, 148.6, 150.2]
+
+
+def _grow_places(seed=95):
+    r = np.random.default_rng(seed)
+    P, S = [], []
+    for w, tw in enumerate(GROW_T):
+        rel = []
+        for z in np.arange(100.0 + 7.6 * w, 100.0 + 7.6 * (w + 1), 1.9):          # new rows behind
+            half = _edge(MOTHER_Z0 + 100.0) + 1.0 * w
+            xs = np.arange(AISLE, half, 1.75) + 0.85 * (int(z / 1.9) % 2)
+            for s in (-1.0, 1.0):
+                for x in xs:
+                    if r.random() > 0.15:
+                        rel.append((s * (x + r.uniform(-0.3, 0.3)), z + r.uniform(-0.4, 0.4)))
+        for z in np.arange(12.0, 100.0 + 7.6 * w, 2.4):                             # a new column on each edge
+            x = _edge(MOTHER_Z0 + min(z, 100.0)) + 1.9 * (w + 1) + 0.6
+            for s in (-1.0, 1.0):
+                if r.random() > 0.2:
+                    rel.append((s * (x + r.uniform(-0.35, 0.35)), z + r.uniform(-0.5, 0.5)))
+        rel = np.asarray(rel)
+        ts = tw + 0.9 * np.clip(rel[:, 1] / 140.0, 0.0, 1.0) + r.uniform(0.0, 0.25, len(rel))   # from her light back
+        # where they stand when they appear (world): in formation behind her light at that moment
+        world = np.stack([rel[:, 0], np.zeros(len(rel)), MOTHER_Z0 + rel[:, 1] - WALK * (ts - MARCH)], 1)
+        P.append(world)
+        S.append(ts)
+    return np.concatenate(P), np.concatenate(S)
+
+
+GROW_P, GROW_S = _grow_places()
+
+
+class GrowSparks:
+    """(MARCH round 4) Each newcomer streams in as a spark of light from far out over the sea (from the side they
+    join, or from behind), arcing in to their place in the procession and becoming them as they flare in."""
+
+    def __init__(self):
+        r = np.random.default_rng(96)
+        n = len(GROW_P)
+        out = np.stack([np.sign(GROW_P[:, 0]), np.zeros(n), np.zeros(n)], 1)
+        back = GROW_P[:, 2] - (MOTHER_Z0 - WALK * (GROW_S - MARCH)) > 100.0
+        out[back] = _v(0.0, 0.0, 1.0)
+        out = out + 0.35 * np.stack([r.normal(0, 1, n), np.zeros(n), r.normal(0, 1, n)], 1)
+        out /= np.maximum(np.linalg.norm(out, axis=1, keepdims=True), 1e-6)
+        self.end = GROW_P + _v(0.0, 1.1, 0.0)
+        self.beg = self.end + out * r.uniform(28.0, 60.0, n)[:, None] + np.stack(
+            [np.zeros(n), r.uniform(4.0, 12.0, n), np.zeros(n)], 1)
+        self.mid = 0.5 * (self.beg + self.end) + np.stack([np.zeros(n), r.uniform(4.0, 9.0, n), np.zeros(n)], 1)
+        self.dur = r.uniform(1.0, 1.6, n)
+        self.seed = r.random(n)
+
+    def sample(self, t):
+        k = proc_k(t)
+        if k <= 0.0 or t < GROW_S.min() - 2.0 or t > GROW_S.max() + 0.2:
+            return None
+        u = (t - (GROW_S - self.dur)) / self.dur
+        on = (u > 0.0) & (u < 1.0)
+        if not on.any():
+            return None
+        uu = u[on][:, None]
+        e = 1.0 - (1.0 - uu) ** 1.6
+        drift = _v(0.0, 0.0, -WALK)[None, :] * (t - GROW_S[on])[:, None]      # their place walks on with everyone
+        b, m, d = self.beg[on], self.mid[on], self.end[on]
+
+        def at(x):
+            return (1 - x) ** 2 * b + 2 * x * (1 - x) * m + x * x * d + drift
+        p, q = at(e), at(np.maximum(e - 0.08, 0.0))
+        a = np.clip(uu[:, 0] / 0.15, 0.0, 1.0) * (0.5 + 0.7 * uu[:, 0]) * k * (1.0 - 0.6 * _mfx()._reading(t))
+        col = lin("#fff0d6")
+        return [dict(pos=p, pos2=q, size=0.09, color=col, alpha=0.55 * a, emit=2.4, kind="line", reflect=False),
+                dict(pos=p, size=0.3, color=col, alpha=0.9 * a, emit=3.2, kind="spark", seed=self.seed[on],
+                     reflect=False)]
 
 
 def _joined(P, F, J, start):
@@ -1320,7 +1398,18 @@ def add(scene):
     _tint_nations(jheld, JC)
     scene.add("proc joined", joined, reflect=False)
     scene.add("proc joined held", jheld, reflect=False)
-    scene.add("march beat", MarchBeat([walkers, nations, late, joined]))
+    grow = GCrowd(gain=crowd_k, places=GROW_P, facing=180.0, kinds=("walk",), start=GROW_S, walk=WALK, until=HALT,
+                  fade=0.35, flash=1.3, **dict(look, points=330))
+    _toward_mother(grow)
+    ghold = WaveCrowd(waves=[(159.4, 1.4, 6.0, 0.6, 0.6)], delay=np.full(len(GROW_P), 0.5), gain=crowd_k,
+                      places=GROW_P + _ahead(grow) * (WALK * (HALT - GROW_S))[:, None], facing=180.0,
+                      kinds=(("raise", 2.0), ("open", 1.0)), start=HALT - 0.3, fade=0.3, flash=0.0,
+                      **dict(look, points=330))
+    ghold.facing[:] = grow.facing
+    scene.add("proc growing", grow, reflect=False)
+    scene.add("proc growing held", ghold, reflect=False)
+    scene.add("proc growing sparks", GrowSparks())
+    scene.add("march beat", MarchBeat([walkers, nations, late, joined, grow]))
     scene.add("flag bearers", FlagBearers(walkers, nations, NAT_J))
     scene.add("procession wait", wait, reflect=False)
     scene.add("procession", walkers, reflect=False)
