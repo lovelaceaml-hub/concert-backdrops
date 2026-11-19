@@ -931,9 +931,18 @@ class CloudBank:
         w, h, d = size
         cols = [lin(x) for x in (colors or CLOUD_COLORS)]
         P, S, C = [], [], []
+        # Anthony (2026-11-19): clouds placed thoughtfully, not random: each bank is one shaped cloud with a flat
+        # base, its puffs set in order along its length, tallest in the middle and tapering to the ends
+        span = max(w, d)
+        along = np.array([1.0, 0.0, 0.0]) if w >= d else np.array([0.0, 0.0, 1.0])
+        across = np.array([0.0, 0.0, 1.0]) if w >= d else np.array([1.0, 0.0, 0.0])
+        thick = min(w, d)
         for k in range(puffs):
-            pc = c + np.array([r.uniform(-0.5, 0.5) * w, r.uniform(0.0, 1.0) ** 1.4 * h, r.uniform(-0.5, 0.5) * d])
-            rad = (0.10 + 0.16 * r.random()) * min(w, 2.5 * h)
+            x = (k + 0.5) / puffs - 0.5 + r.uniform(-0.25, 0.25) / puffs
+            env = max(0.0, 1.0 - (2.0 * x) ** 2) ** 0.6
+            pc = (c + along * x * span + across * r.uniform(-0.25, 0.25) * thick
+                  + np.array([0.0, (0.1 + 0.55 * r.random() ** 1.6) * env * h, 0.0]))
+            rad = (0.7 + 0.3 * env) * (0.35 + 0.25 * r.random()) * min(thick, 0.7 * h)
             m = 160
             q = pc + r.normal(0.0, rad * 0.45, (m, 3)) * np.array([1.0, 0.65, 1.0])
             q[:, 1] = np.maximum(q[:, 1], c[1] + 2.0)
@@ -944,7 +953,7 @@ class CloudBank:
             C.append(col)
         P, S, C = np.concatenate(P), np.concatenate(S), np.concatenate(C)
         g = r.random(len(P)) < 0.35
-        self.b = [_batch(P, S, C * bright, 0.055, kind="soft", emit=1.4, dof=0.2),
+        self.b = [_batch(P, S, C * bright, 0.02, kind="soft", emit=1.4, dof=0.2),   # larger puffs: thinner
                   _batch(P[g], 0.5 + 0.004 * S[g] * 10, C[g] * 0.5 + lin(WHITE) * 0.5, 0.7 * bright, kind="spark",
                          emit=2.5, twinkle=0.9, dof=0.2)]
         self.g = gain or (lambda t: sky_gain(t))
@@ -994,11 +1003,15 @@ def _horizon_clouds():
     """Banks of cloud of light along the horizon all round (the promo's glowing horizon clouds)."""
     out = []
     r = np.random.default_rng(77)
-    for k in range(16):
-        az = 2 * np.pi * k / 16.0 + r.uniform(-0.1, 0.1)
-        d = r.uniform(900.0, 1500.0)
+    # in symmetric pairs, framing Zion (straight ahead down the avenue, -z) with its sky left clear above it,
+    # and two long low banks out to the sides for the flights; none behind the camera's usual side
+    layout = [(180.0 + s * a, d, wd, ht) for a, d, wd, ht in ((24.0, 1450.0, 380.0, 70.0), (46.0, 1300.0, 420.0, 90.0),
+                                                         (72.0, 1200.0, 360.0, 60.0), (105.0, 1250.0, 460.0, 45.0))
+              for s in (-1.0, 1.0)]
+    for k, (azd, d, wd, ht) in enumerate(layout):
+        az = np.radians(azd)
         c = _v(d * np.sin(az), 0.0, -200.0 + d * np.cos(az))
-        out.append(CloudBank(c, size=(r.uniform(260, 420), r.uniform(50, 110), r.uniform(100, 180)), puffs=26,
+        out.append(CloudBank(c, size=(wd, ht, 120.0), puffs=22,
                              seed=k, gain=lambda t: (0.25 + 0.75 * _sc(40.0, 82.0, t)) * sky_gain(t)
                              * (0.3 if stage_view(t) else 1.0)))   # a low white band behind the choir otherwise
     return out

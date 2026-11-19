@@ -282,7 +282,7 @@ def _coda_clouds():
         return 0.0 if globe_view(t) else _sc(201.6, 202.2, t) * (1.0 - _sc(205.6, 206.0, t))
 
     out = []
-    for i, az in enumerate((-60.0, -25.0, 20.0, 55.0)):
+    for i, az in enumerate((-50.0, 50.0)):          # one tower each side, framing Zion
         c = ZC + 380.0 * _dir(az, 0.0) + _v(0.0, 4.0, 0.0)
         out.append(CloudBank(c, size=(260.0, 210.0, 120.0), puffs=34, seed=80 + i, gain=g_hearts, bright=1.0))
     for i, x in enumerate((190.0, 470.0)):                  # the canyon of the last build
@@ -625,8 +625,8 @@ def add(scene):
     # the orchestra on clouds of light round the rising sun
     scene.add("clouds", Clouds())
     scene.add("sky orchestra", GCrowd(gain=sky_gain, places=ORCH_P + SKY_OFF, facing=0.0, kinds=("sit",),
-                                      people=dict(woman=1.0, man=1.0), start=0.0, color=CRYSTAL, color2="#ffffff",
-                                      bright=2.3, size=1.7, points=1600, glints=0.012, seed=4.0))
+                                      people=dict(woman=1.0, man=1.0), start=0.0, color="#6cb2ff", color2="#d2e8ff",
+                                      bright=2.6, size=1.7, points=1600, glints=0.012, seed=4.0))
     scene.add("sky instruments", Instruments(offset=SKY_OFF, gain=sky_k))
     # everyone on the summit, from the coda's sunrise to the last chord
     scene.add("summit", GCrowd(gain=summit_gain, places=_summit_places(), facing=180.0,

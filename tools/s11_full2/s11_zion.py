@@ -827,7 +827,7 @@ def _grand(scene):
         return lambda t: local_k(t) * (not stage_view(t)) * _env(t, a, b, fi, fo)
     for i, x in enumerate((-150.0, 150.0)):
         scene.add(f"zion canyon {i}", CloudBank(ZC + _v(x, 0.0, 900.0), size=(90.0, 190.0, 900.0), puffs=90,
-                                                seed=40 + i, gain=win(86.4, 90.9, 0.3, 0.3), bright=1.1),
+                                                seed=40 + i, gain=win(86.4, 90.9, 0.3, 0.3), bright=0.55),
                   reflect=True)
     k_pour = win(99.2, 109.8, 0.8, 1.0)
     for i, x in enumerate((-230.0, 230.0)):

@@ -248,7 +248,7 @@ def choir_mask(t):
 
 def orch_mask(t):
     f = _far(t, ORCH_C)
-    k = (0.45 if t < SLAM3 else 0.6) * (1.0 - f) + (0.55 if t >= SLAM3 else 0.0) * f
+    k = (0.0 if t < SLAM3 else 0.2) * (1.0 - f) + (0.45 if t >= SLAM3 else 0.0) * f   # none close: the players glow
     return k
 
 
@@ -350,6 +350,74 @@ class Choir(Crowd):
         if getattr(self, "_last", (None,))[0] != t:
             self.sample(t)
         return [dict(b, pos=b["pos"] + _v(0.0, 0.0, 0.22)) for b in self._last[1]]
+
+
+# Anthony (2026-11-19): choir and orchestra as glowing blue sparkles; the instruments stay gold; every singer holds
+# an open song book of gold light, like the instruments.
+FIG_BLUE, FIG_BLUE2 = "#6cb2ff", "#d2e8ff"
+BOOK_COL = "#ffc76e"
+
+
+def _book_local(rng, n=120):
+    """An open book in the singer's frame (x right, y up, z forward), held at the chest: two pages in a
+    shallow V, tipped toward the singer's eyes. Points on the page edges, a few on the pages, the spine."""
+    w, h, open_deg, tip = 0.15, 0.22, 22.0, np.radians(52.0)
+    pts = []
+    for side in (-1.0, 1.0):
+        a = np.radians(open_deg) * side
+        u = np.array([side * np.cos(a), 0.0, -abs(np.sin(a))])     # across the page, away from the spine
+        v = np.array([0.0, 1.0, 0.0])                                 # up the page
+        # outline (the page's three free edges) and a light fill of lines of text
+        t = np.linspace(0.0, 1.0, 14)
+        rim = [np.outer(t * w, u) + 0.0 * v, np.outer(t * w, u) + h * v, w * u + np.outer(t * h, v)]
+        lines = [np.outer(np.linspace(0.18, 0.88, 8) * w, u) + (0.25 + 0.1 * j) * h * v for j in range(6)]
+        pts.append(np.concatenate(rim + lines))
+    spine = np.outer(np.linspace(0.0, 1.0, 10) * h, np.array([0.0, 1.0, 0.0]))
+    P = np.concatenate(pts + [spine]) - np.array([0.0, h / 2.0, 0.0])
+    # tip the book back toward the singer (rotate about x)
+    c, s_ = np.cos(tip), np.sin(tip)
+    Rx = np.array([[1, 0, 0], [0, c, -s_], [0, s_, c]])
+    return P @ Rx.T
+
+
+class SongBooks:
+    """An open gold song book in front of every singer of the choir (not the three soloists, whose hands
+    gesture), at chest height, swaying with them and appearing as each singer forms."""
+
+    def __init__(self, choir, height=1.16, ahead=0.27):
+        self.choir = choir
+        rng = np.random.default_rng(77)
+        B = _book_local(rng)
+        self.nb = len(B)
+        P = CHOIR_P
+        self.base = P[:, None, :] + _v(0.0, height, ahead)[None, None, :] + B[None, :, :]
+        self.h = height
+        d = np.hypot(P[:, 0] - 0.0, P[:, 2] - FACADE_Z)
+        self.t_in = 21.3 + d / 9.0 + 0.4
+        self.seed = rng.random(self.base.shape[:2])
+        self.col = lin(BOOK_COL)
+
+    def gain(self, t):
+        return self.choir.gain(t)
+
+    def sample(self, t):
+        g = float(self.choir.g(t))
+        if g <= 0.0:
+            return []
+        k = np.clip((t - self.t_in) / 0.8, 0.0, 1.0)
+        if not k.any():
+            return []
+        P = self.base.copy()
+        sw = getattr(self.choir, "_sw", None)
+        if sw is not None and len(sw) == len(P):
+            P[:, :, 0] += (sw * min(self.h / 1.7, 1.2) ** 2)[:, None]
+        pos = P.reshape(-1, 3)
+        a = np.repeat(k, self.nb) * 0.9
+        glow = 0.85 + 0.25 * choir_glow(t)
+        return [dict(pos=pos, size=0.011, color=self.col * 1.3 * glow, alpha=a.astype(np.float32), kind="spark",
+                     emit=1.4, twinkle=0.25, seed=self.seed.reshape(-1), dof=0.35),
+                dict(pos=pos[:: 3], size=0.05, color=self.col * 0.5 * glow, alpha=(a[:: 3] * 0.35).astype(np.float32),
+                     kind="soft", dof=0.35)]
 
 
 class ChoirHearts:
@@ -1105,7 +1173,7 @@ def _heroes():
         until = np.repeat([b for _h, _a, b in acts], n)
         act = np.repeat([h - 0.08 for h, _a, _b in acts], n)
         c = GCrowd(gain=stage_k, places=pl, facing=0.0, kinds=(kind,), people=dict(woman=1.0), start=start,
-                   until=until, act=act, fade=0.03, flash=0.0, color=CRYSTAL, color2="#ffffff", bright=1.3,
+                   until=until, act=act, fade=0.03, flash=0.0, color=FIG_BLUE, color2=FIG_BLUE2, bright=1.3,
                    points=22000, size=0.55, glints=0.01, dof=0.35, seed=31.0 + len(out), mirror=False,
                    scale=1.0)
         out.append(c)
@@ -1120,8 +1188,8 @@ def _heroes():
     until = np.repeat([g[1] for g in gaps], n)
     sing = [dict(CHOIR_KINDS[0])]
     c = GCrowd(gain=stage_k, places=pl, facing=0.0, kinds=sing, start=start, until=until, fade=0.03, flash=0.0,
-               color=CRYSTAL, color2="#ffffff", bright=1.3, points=22000, size=0.55, glints=0.01, dof=0.35,
-               seed=41.0, mirror=False, scale=1.0, light="#e4f0ff", lamp=(0.18, 1.0))
+               color=FIG_BLUE, color2=FIG_BLUE2, bright=1.3, points=22000, size=0.55, glints=0.01, dof=0.35,
+               seed=41.0, mirror=False, scale=1.0, light="#9fd0ff", lamp=(0.18, 1.0))
     out.append(c)
     return out
 
@@ -1246,12 +1314,13 @@ def cloud_k(t):
 
 def add(scene):
     choir = Choir(places=CHOIR_P, facing=0.0, kinds=CHOIR_KINDS,
-                  start=dict(t=21.3, center=(0.0, FACADE_Z), speed=9.0), color=CRYSTAL, color2="#ffffff",
+                  start=dict(t=21.3, center=(0.0, FACADE_Z), speed=9.0), color=FIG_BLUE, color2=FIG_BLUE2,
                   bright=3.2, points=3200, size=1.1, flash=1.2, glints=0.004, dof=0.35, seed=3.0,
-                  light="#e4f0ff", lamp=(0.20, 1.0), scale=(0.97, 1.03))
+                  light="#9fd0ff", lamp=(0.20, 1.0), scale=(0.97, 1.03))
     scene.add("choir", choir, mask=Mask("dark", strength=choir_mask, grow=0.03, source=MaskSource(choir)))
     scene.add("choir hearts", ChoirHearts(choir))
-    orch = Players(start=dict(t=2.2, dur=7.0), color=CRYSTAL, color2="#ffffff", bright=3.5, points=2800,
+    scene.add("song books", SongBooks(choir))
+    orch = Players(start=dict(t=2.2, dur=7.0), color=FIG_BLUE, color2=FIG_BLUE2, bright=6.0, points=3400,
                    size=1.2, glints=0.006, dof=0.35, seed=4.0)
     scene.add("orchestra", orch, mask=Mask("dark", strength=orch_mask, grow=0.03, source=MaskSource(orch)))
     scene.add("risers", Risers())
@@ -1260,7 +1329,7 @@ def add(scene):
     scene.add("snow", Snow())
     for i, c in enumerate(_heroes()):
         scene.add("hero singers %d" % i, c)
-    cond = Conductor(start=dict(t=2.2, dur=0.5), color=CRYSTAL, color2="#ffffff", bright=1.4, points=20000,
+    cond = Conductor(start=dict(t=2.2, dur=0.5), color=FIG_BLUE, color2=FIG_BLUE2, bright=1.4, points=20000,
                      size=0.6, glints=0.01, dof=0.35, seed=51.0)
     scene.add("conductor", cond)
     scene.add("baton", Baton())
@@ -1281,7 +1350,7 @@ def add(scene):
     bases = [(-20.0, FACADE_Z + 6.0), (20.0, FACADE_Z + 6.0), (-17.0, FACADE_Z + 24.0), (17.0, FACADE_Z + 24.0),
              (-9.0, FACADE_Z + 36.0), (9.0, FACADE_Z + 36.0)]
     scene.add("stage pillars", StagePillars(bases, top=160.0, color="#ffe6c0", width=1.6, gain=pillar_k))
-    for i, (x, z) in enumerate(((-34.0, FACADE_Z + 14.0), (34.0, FACADE_Z + 14.0))):
+    for i, (x, z) in enumerate(()):          # no clouds at the stage: they crowded the choir and orchestra
         scene.add("stage clouds %d" % i, CloudBank(_v(x, SUMMIT - 4.0, z), size=(26.0, 16.0, 30.0), puffs=14,
                                                    seed=70 + i, gain=cloud_k, bright=0.8))
     add_light(COMET_PATHS[0], COL9[1], lambda t: 1.1 * stage_view(t) * (0.8 + 0.4 * beat_pulse(t)), radius=5.0)
