@@ -258,7 +258,21 @@ _SM_W = np.exp(-0.5 * _SM_OFF ** 2)
 _SM_W = _SM_W / _SM_W.sum()
 
 
+_HCACHE = {}
+
+
 def _hands(t, lag=0.0):
+    """Cached (many streams ask for the same moments of his hands every frame)."""
+    key = (int(round(t * 2000.0)), lag)
+    v = _HCACHE.get(key)
+    if v is None:
+        if len(_HCACHE) > 200000:
+            _HCACHE.clear()
+        v = _HCACHE[key] = _hands_s(t, lag)
+    return v
+
+
+def _hands_s(t, lag=0.0):
     """The hands, smoothed (round 8, Anthony: "the conductor's animation is so choppy"): a gaussian over the
     raw poses (0.07 s; 0.045 s in the quick strokes of the summons and the strings) taken a little in the
     past, so every stroke eases in and out, nothing snaps, and the arms follow through behind the beat."""
@@ -492,6 +506,7 @@ class Stream:
             return None
         u = np.linspace(0.0, 1.0, self.n)
         tt = t - self.trail * u
+        tt[1:] = np.round(tt[1:] * 480.0) / 480.0     # the trail on a fine time grid: shared between frames and streams
         P = np.array([self.head(x) for x in tt])
         if callable(self.color):
             C = np.array([self.color(x) for x in tt])
