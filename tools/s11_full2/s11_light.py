@@ -56,10 +56,10 @@ LOOKS = dict(
                      sky_hor="#ffbe80", sun_color="#ffe6b0", haze=0.26, haze_color="#7a5c84", mist=0.05,
                      mist_color="#8a6a8a", water="#0c1030", ripple=0.3, sun_glow=0.32, sun_disc=4.5,
                      exposure=0.78, dust_color="#fff0d0", dust_color2="#ffd0b8"),
-    coda_home=dict(base="sunrise", hills=0.0, clouds=0.25, stars=0.0, sky_top="#1c3a80", sky_mid="#6f78b8",
-                   sky_hor="#ffc890", sun_color="#fff0cc", haze=0.28, haze_color="#8a7898", mist=0.06,
-                   mist_color="#9a8aa0", water="#0c1434", ripple=0.3, sun_glow=0.26, sun_disc=4.0, exposure=0.74,
-                   dust_color="#fff0d0", dust_color2="#ffd8c0"),
+    coda_home=dict(base="sunrise", hills=0.0, clouds=0.25, stars=0.25, sky_top="#0a1640", sky_mid="#3a3a80",
+                   sky_hor="#d08a7a", sun_color="#fff0cc", haze=0.25, haze_color="#3a2a58", mist=0.2,
+                   mist_color="#4a3a68", water="#050818", ripple=0.3, sun_glow=0.26, sun_disc=4.0, exposure=0.8,
+                   dust=0.9, bokeh=0.9, dust_color="#fff0d0", dust_color2="#ffd8c0"),
     space_finale=dict(base="night", hills=0.0, stars=1.0, milky=0.6, clouds=0.0, sky_top="#02040f",
                       sky_mid="#0a1238", sky_hor="#24265e", sun_color="#ffd89c", sun_glow=0.26, sun_disc=5.0,
                       sun_size=1.6, mist=0.0, haze=0.12, haze_color="#24265e", water="#03061a", ripple=0.15,
@@ -167,7 +167,7 @@ def sun_int(t):
         k = {"sky_stage": 0.72, "summit": 0.66}.get(shot_name(t), 0.82)
         return k + 0.10 * loud(t) + 0.15 * hit_pulse(t, [SLAM3], fall=1.0)
     if 238.8 <= t < 254.07:      # home to everyone on Mount Zion: the sun high, its glare kept small
-        return 0.45 + 0.08 * loud(t) + 0.2 * hit_pulse(t, [HIT["final"]], fall=1.2)
+        return 0.20 + 0.05 * loud(t) + 0.15 * hit_pulse(t, [HIT["final"]], fall=1.2)
     k = (0.22 + 0.12 * _sc(53.0, 82.08, t) + 0.16 * _sc(160.0, 201.73, t) + 0.06 * loud(t))   # a low dawn sun
     return k * (0.45 if stage_view(t) and t >= 160.0 else 1.0)
 

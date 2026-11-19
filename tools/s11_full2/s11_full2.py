@@ -742,6 +742,101 @@ def lantern_amount(t):
     return max([_sc(a, a + 1.5, t) * (1.0 - _sc(b - 1.0, b, t)) for a, b in LANTERN_SPANS] + [0.0])
 
 
+# =========================================================================================================
+# THE HEAVENLY BACKGROUND (Anthony's reference: the song 02 backdrop): misty lavender mountains on the horizon,
+# a mirror sea full of glittering lights, rich stars, constellations of hearts in the nine colours and soft
+# comet ribbons far off in the sky. It starts dim and quiet and grows brighter and more glorious at each
+# point of the song (glory(t), 0.2 to 1).
+# =========================================================================================================
+GLORY = [(0.0, 0.18), (11.9, 0.25), (21.5, 0.32), (40.54, 0.40), (53.78, 0.48), (75.2, 0.50), (82.08, 0.68),
+         (110.0, 0.72), (117.0, 0.55), (121.32, 0.58), (134.54, 0.66), (156.0, 0.62), (162.86, 0.82),
+         (188.27, 0.80), (197.2, 0.86), (201.73, 1.0), (238.8, 0.92), (247.5, 0.80), (249.43, 0.95),
+         (254.07, 0.90), (275.0, 0.85)]
+
+
+def glory(t):
+    ts, vs = zip(*GLORY)
+    return float(np.interp(t, ts, vs))
+
+
+def _mix_hex(a, b, k):
+    a = np.array([int(a[i:i + 2], 16) for i in (1, 3, 5)], np.float64)
+    b = np.array([int(b[i:i + 2], 16) for i in (1, 3, 5)], np.float64)
+    c = np.clip(a + (b - a) * float(k), 0, 255).astype(int)
+    return "#%02x%02x%02x" % tuple(c)
+
+
+def hill_color(t):
+    """The far mountains: deep violet in the dark, misty lavender as the light grows (rose-gold at sunrise)."""
+    g = glory(t)
+    c = _mix_hex("#0c0a22", "#3a2c66", min(1.0, g * 1.15))
+    return _mix_hex(c, "#6a4a6a", _sc(197.0, 204.0, t) * 0.6)
+
+
+def _sea_glitter():
+    r = np.random.default_rng(2002)
+    n = 16000
+    rr = 120.0 + 2400.0 * r.random(n) ** 1.6
+    a = 2 * np.pi * r.random(n)
+    x = rr * np.sin(a)
+    z = -200.0 + rr * np.cos(a)
+    keep = np.hypot(x - ZC[0], z - ZC[2]) > tier_r(0) + 8.0          # not on the mountain
+    x, z, rr = x[keep], z[keep], rr[keep]
+    m = len(x)
+    P = np.stack([x, np.full(m, 0.12), z], 1)
+    k = r.random(m)
+    col = np.where(k[:, None] < 0.55, lin("#ffd9a0")[None, :],
+                   np.where(k[:, None] < 0.8, lin("#c9b3ff")[None, :],
+                            np.asarray([lin(COL9[i]) for i in r.integers(0, 9, m)])))
+    size = 0.12 + 0.0016 * rr
+    return [_batch(P, size, col, 0.75, kind="spark", emit=2.0, twinkle=1.0, reflect=False),
+            _batch(P[::6], size[::6] * 5.0, col[::6] * 0.6, 0.10, kind="soft", emit=1.0, reflect=False)]
+
+
+def _constellations():
+    from p3d.brand_hearts import heart_points
+    r = np.random.default_rng(909)
+    stars, lines_a, lines_b, cols, births = [], [], [], [], []
+    when = [11.9, 21.5, 40.54, 53.78, 82.08, 121.32, 162.86, 201.73, 224.03]
+    for k in range(9):
+        az = np.radians(150.0 + 70.0 * ((k * 5) % 9) / 8.0 - 35.0 + (180.0 if k in (2, 6) else 0.0))
+        el = np.radians(9.0 + 20.0 * r.random())
+        d = 2600.0
+        c = _v(d * np.cos(el) * np.sin(az), d * np.sin(el), d * np.cos(el) * np.cos(az))
+        right = _unit(_v(np.cos(az), 0.0, -np.sin(az)))
+        up = _unit(np.cross(right, c / np.linalg.norm(c))) * -1.0
+        h = heart_points(11)
+        s = 170.0 + 90.0 * r.random()
+        P = c[None, :] + s * (h[:, 0:1] * right[None, :] + h[:, 1:2] * up[None, :])
+        P += r.normal(0.0, 6.0, P.shape)
+        stars.append(P)
+        lines_a.append(P)
+        lines_b.append(np.roll(P, -1, axis=0))
+        cols.append(np.repeat(lin(COL9[k])[None, :], len(P), 0))
+        births.append(np.full(len(P), when[k]) + 0.12 * np.arange(len(P)))
+    S, A, B = np.concatenate(stars), np.concatenate(lines_a), np.concatenate(lines_b)
+    C, BI = np.concatenate(cols), np.concatenate(births)
+    return [_batch(S, 26.0, C * 0.5 + lin(WHITE) * 0.5, 1.0, kind="spark", emit=4.0, birth=BI, fade=1.2, flash=3.0,
+                   twinkle=0.8, dof=0.0),
+            _batch(S, 110.0, C, 0.22, kind="soft", emit=1.8, birth=BI, fade=1.2, dof=0.0),
+            _batch(A, 5.0, C, 0.55, kind="line", pos2=B, emit=2.0, birth=BI + 0.6, fade=1.5, dof=0.0)]
+
+
+def _ribbon_head(k):
+    """Soft comet ribbons drifting far off in the sky (like the reference's faint sky comets)."""
+    az0 = np.radians(120.0 + 45.0 * k)
+    def head(t):
+        a = az0 + 0.035 * t
+        el = np.radians(22.0 + 9.0 * np.sin(0.05 * t + k))
+        d = 2200.0
+        return _v(d * np.cos(el) * np.sin(a), d * np.sin(el), d * np.cos(el) * np.cos(a))
+    return head
+
+
+def sky_gain(t):
+    return 0.0 if globe_view(t) else glory(t)
+
+
 __all__ = [k for k in list(globals()) if not k.startswith("__")]
 import songs.s11_church as S_CHURCH  # noqa: E402
 import songs.s11_stage as S_STAGE  # noqa: E402
@@ -836,6 +931,12 @@ WORLD["light"] = ray_light()
 WORLD["lantern_field"] = dict(count=320, center=(float(ZC[0]), float(ZC[2]) + 120.0), radius=(60.0, 420.0))
 WORLD["lanterns"] = lantern_amount
 WORLD["lantern_color"] = GOLD
+# the heavenly background (Anthony's reference): misty mountains, lights floating on the sea, growing with glory
+WORLD["hills"] = lambda t: 0.0 if globe_view(t) else 1.0
+WORLD["hill_height"] = 0.8
+WORLD["hill_color"] = hill_color
+WORLD["floats"] = lambda t: 0.0 if globe_view(t) else 0.15 + 0.85 * glory(t)
+WORLD["float_field"] = dict(count=2400, center=(float(ZC[0]), float(ZC[2]) + 300.0), radius=(300.0, 1400.0), size=0.9)
 WORLD["shafts"] = [sh for m in THREADS for sh in getattr(m, "SHAFTS", [])][:4]
 
 # =========================================================================================================
@@ -910,6 +1011,11 @@ WORDS = PW.Words(_phrase_specs(), camera=CAMERA)
 # Putting it together
 # =========================================================================================================
 def _setup(scene):
+    scene.add("sea glitter", Static(_sea_glitter(), sky_gain))
+    scene.add("constellations", Static(_constellations(), sky_gain))
+    for k in range(3):
+        scene.add(f"sky ribbon {k}", Comet(_ribbon_head(k), COL9[(3 * k + 1) % 9], 0.0, TOTAL, trail=12.0, width=16.0,
+                                           bright=0.35, fade=3.0, n=120, sparks=False, seed=50 + k))
     for m in THREADS:
         m.add(scene)
     scene.add("earth", GLOBE, reflect=False)
