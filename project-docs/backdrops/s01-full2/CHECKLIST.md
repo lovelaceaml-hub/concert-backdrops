@@ -95,7 +95,10 @@ Every rule of the version 2 brief (coordinator, 2026-11-18, quoting AGENTS.md, D
 
 | Rule | Yes/No | Where checked |
 |---|---|---|
-| Stage: silent, H.264 CRF 16, yuv420p, faststart, 203.0 s | see STATUS.md | export.py --check |
-| Review: the same picture with the reference music (untouched, within 1 s), AAC 320k, CRF 20 | see STATUS.md | export.py --check |
-| Phone: 720p60 with music, under 25 MB | see STATUS.md | export.py --check |
-| No dropped, repeated, frozen or black frames; sync on 3 hit points | see STATUS.md | export.py --check |
+| Stage: silent, H.264 CRF 16, yuv420p, faststart, 203.0 s | yes | export.py --check: 203.000 s, 12180 frames, no audio |
+| Review: the same picture with the reference music (untouched, within 1 s), AAC 320k, CRF 20 | yes | export.py --check: 203.000 s video and audio |
+| Phone: 720p60 with music, under 25 MB | yes | 18.9 MB, 1280x720, 60 fps |
+| No dropped, repeated, frozen or black frames; sync on 3 hit points | yes | 12180 frames; blackdetect and freezedetect empty; 0.0 ms at 7.11, 147.77, 177.35 |
+| Signature on every frame after the opening | yes | 388 samples, 0:08.8 to the end |
+
+Result: every rule yes. Weak points that are not rule failures are listed in STATUS.md.
