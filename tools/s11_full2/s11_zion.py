@@ -741,6 +741,43 @@ def _city_parts():
             T.batches(lsize=0.22, ssize=2.6, ksize=1.0), M.batches(ssize=10.0))
 
 
+class PlotGardens:
+    """(Round 8) gardens of light on the terrace plots no Korean church stands on (s11_churches._EMPTY, known only
+    once the churches are laid out, so built on the first frame): three gardens across each empty plot, blooming
+    when the plot's building would have risen. The rings on the sea are left to the models thread."""
+
+    def __init__(self, gain):
+        self.g = gain
+        self.b = None
+
+    def _build(self):
+        try:
+            import songs.s11_churches as C
+            empty = [q for q in C._EMPTY if q.get("terrace", -1) >= 0 and not q.get("summit")]
+        except Exception:
+            empty = []
+        r = np.random.default_rng(717)
+        Gd = _Parts()
+        for q in empty:
+            a = float(q["facing"])
+            if abs(a) > 2 * np.pi:                     # (degrees, as CITY_SLOTS gives it)
+                a = np.radians(a)
+            sd = np.array([np.cos(a), 0.0, -np.sin(a)])
+            c = np.array([q["x"], q["y"], q["z"]])
+            b = float(q["born"]) if q.get("born") is not None else 100.0
+            for j, x in enumerate((-5.5, 0.0, 5.5)):
+                _garden(Gd, c + sd * x + r.uniform(-0.8, 0.8, 3) * np.array([1.0, 0.0, 1.0]), r, b + 0.15 * j)
+        self.b = Gd.batches(lsize=0.18, ssize=2.6, ksize=0.55) if empty else []
+
+    def gain(self, t):
+        return float(self.g(t))
+
+    def sample(self, t):
+        if self.b is None:
+            self._build()
+        return self.b if self.b and self.g(t) > 0.0 else None
+
+
 def form_k(t):
     """The walls come up through the intro (a few lights and paths first)."""
     return 0.35 + 0.65 * _sc(HIT["call2"], HIT["glory"], t)
@@ -1808,6 +1845,7 @@ def add(scene):
     # sparkle with the high voices, the towers flare on the brass
     scene.add("zion gates", Static(gates, lambda t: calm(t) * fly(t) * (1.0 + mx(t, timp=0.9))))
     scene.add("zion gardens", Static(gardens, lambda t: calm(t) * (1.0 + mx(t, high=0.45))))
+    scene.add("zion plot gardens", PlotGardens(lambda t: calm(t) * (1.0 + mx(t, high=0.45))), reflect=False)
     scene.add("zion towers", Static(towers, lambda t: calm(t) * (1.0 + 0.25 * intensity(t) * beat_pulse(t, 0.12))
                                     * (1.0 + mx(t, brass=0.5))))
     scene.add("zion mist", Static(mist, lambda t: local_k(t) * (0.7 + 0.3 * intensity(t))
