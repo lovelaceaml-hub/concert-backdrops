@@ -642,8 +642,10 @@ class Streams:
             main = s == 0.0
             L, P = _climb_profile(1500.0 if main else 760.0)
             self.paths.append((L, P))
-            n = 8000 if main else 2400
-            hw = 7.0 if main else 4.2
+            # (round 8, "more and more people going to Zion") fuller rivers; the side rivers wider, inside the clear
+            # corridors MODELS keeps round each lane (about 35 m either side)
+            n = 12000 if main else 4000
+            hw = 7.0 if main else 6.0
             qq = r.random(n)                       # the order of joining (0 first)
             q.append(qq)
             sa.append(np.full(n, i))
@@ -726,7 +728,7 @@ class Streams:
                      size=0.24, color=C2 * 0.95, alpha=0.6 * A2, alpha2=0.85 * A2, kind="line", emit=1.5, reflect=False),
                 dict(pos=Hh, size=0.42, color=C * 0.55 + lin(WHITE) * 0.45, alpha=0.9 * A, kind="spark", emit=2.4,
                      twinkle=0.2, seed=self.seed[I], reflect=False),
-                dict(pos=Hh[::4], size=2.6, color=C[::4] * 0.75, alpha=0.10 * A[::4], kind="soft", emit=1.2,
+                dict(pos=Hh[::4], size=2.6, color=C[::4] * 0.75, alpha=0.13 * A[::4], kind="soft", emit=1.2,
                      reflect=False)]
 
 
