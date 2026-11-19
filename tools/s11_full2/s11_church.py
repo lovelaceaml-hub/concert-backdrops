@@ -124,9 +124,12 @@ SHOTS = [
     # 4:11.7 the last swell (round 7, Anthony approved): the camera rises from the steps and pulls back as the
     # nine comets of the whole film circle the church once in a widening ring, and settles square on the glowing
     # emblem, where they meet exactly on the last chord (4:14.07); its flare carries into the end card
+    # (round 7 polish, the reviewer: the sunrise's sun top right competed with the emblem and the church was
+    # small; the camera now swings in from the right so the sun stays out of frame, and pushes in on the chord)
     _shot(251.7, "church_cut", [(0.0, (-6.0, Y + 8.0, FZ + 66.0), (0.0, Y + 34.0, FZ - 16.0)),
-                             (0.45, (-16.0, Y + 30.0, FZ + 104.0), (0.0, EMB_C[1] - 6.0, FZ - 12.0)),
-                             (1.0, (4.0, EMB_C[1] + 2.0, FZ + 128.0), tuple(EMB_C))], fov=56.0,
+                             (0.45, (46.0, Y + 30.0, FZ + 104.0), (0.0, EMB_C[1] - 6.0, FZ - 12.0)),
+                             (0.8, (66.0, EMB_C[1] + 3.0, FZ + 104.0), tuple(EMB_C)),
+                             (1.0, (60.0, EMB_C[1] + 1.0, FZ + 72.0), tuple(EMB_C))], fov=56.0,
           roll=lambda t: 7.0 * np.sin(np.pi * _sc(251.7, 254.07, t))),
 ]
 SHOTS = [sh for sh in SHOTS if sh is not None]
@@ -1208,7 +1211,8 @@ def _comets():
         out.append(Comet(_rise(i, ts), COL9[(i * 4) % 9], ts, ts + 3.2, trail=1.0, width=1.1, bright=1.5, fade=0.25,
                          light=(i in (1, 5)), seed=90 + i))
     # comets racing past the lens into the church in the bold swoops
-    for j, at in enumerate((178.4, 222.0)):            # (1:37.7 went to the dancers; 4:11.7 is the finale's)
+    for j, at in enumerate((222.0,)):                  # (1:37.7 went to the dancers; 4:11.7 is the finale's;
+        #                                               2:58.4 none: they blew up into huge blurs at the lens, f32)
         bl = [b for b in _B if abs(b[0] - at) < 1e-3]
         if bl:
             for i in range(4):
