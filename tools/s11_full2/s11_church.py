@@ -993,6 +993,8 @@ class Church:
                 # church of light reads as the brightest building on the summit, never a dark slab
                 k *= 1.0 + {"soft": 1.4, "crisp": 0.5}[self.part] * f
         k *= _music(t, self.part)
+        if 40.0 < t < 41.3:                     # Father's pulse (0:40.54): the facade eases so the moment glows
+            k *= 1.0 - 0.5 * _env(t, 40.3, 41.0, 0.15, 0.25)     # rather than whiting out the centre (round 7)
         if 252.5 < t < LAST_CHORD:              # round 7: the glass steps back as the comets close in, so the
             k *= 1.0 - 0.4 * _sc(252.6, 253.9, t)   # emblem's flare is the brightest thing on the last chord
         i = intensity(t)
@@ -1038,6 +1040,7 @@ class BandWave:
 
     def gain(self, t):
         k = city_k(t) * church_glow(t) * church_reveal(t) * (0.5 + 0.7 * intensity(t))
+        k *= 1.0 - 0.5 * _env(t, 40.3, 41.0, 0.15, 0.25)          # (Father's pulse, as the facade)
         if shot_name(t) == "church_cut":
             k *= 0.6
         return k * (0.35 * _stage_calm(t, 0.5) if stage_view(t) else 1.0)
