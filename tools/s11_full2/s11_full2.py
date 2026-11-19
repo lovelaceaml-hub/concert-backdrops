@@ -375,6 +375,69 @@ GLOBE = Globe(pos=tuple(GLOBE_C), radius=GLOBE_R, face="camera", camera=None, lo
               arcs=True, n=70000, bright=1.1)
 
 
+# Anthony (page request, 2026-11-19): the Earth in verse 1 opens on its night side (deep ocean, city lights) and
+# daylight sweeps across it as the music builds: half lit by the end of the first Earth shots (0:53.78), fully lit
+# by the end of the second (1:17.46); the world finale stays fully lit.
+DAY_KEYS = [(41.6, 0.0), (53.78, 0.55), (70.54, 0.55), (77.46, 1.0)]
+
+
+def earth_day(t):
+    return float(np.interp(t, [k[0] for k in DAY_KEYS], [k[1] for k in DAY_KEYS]))
+
+
+def _night_side(sample):
+    def wrapped(t, cam=None):
+        out = sample(t, cam)
+        p = earth_day(t)
+        if out is None or p >= 0.999:
+            return out
+        if cam is None:
+            cam = CAMERA.state(t)
+        c, M, R = GLOBE._view(t, cam)
+        a = np.radians(-165.0 + 165.0 * p)               # the sun from behind the Earth round to the camera side
+        sun = M @ _unit(_v(np.sin(a), 0.25, np.cos(a)))
+        full = float(np.clip((p - 0.85) / 0.15, 0.0, 1.0))
+        face = full + (1 - full) * float(np.clip((np.dot(sun, _unit(np.asarray(cam.pos if hasattr(cam, "pos") else cam["pos"], np.float64) - c)) + 0.6) / 1.4, 0.0, 1.0))
+        for b in out:
+            pos = np.asarray(b.get("pos"), np.float64)
+            if pos.ndim != 2 or len(pos) == 0 or b.get("kind") not in ("disc", "soft", "spark"):
+                continue
+            rel = pos - c[None, :]
+            rr = np.linalg.norm(rel, axis=1) / R
+            on = (rr > 0.97) & (rr < 1.03)
+            if not on.any():
+                continue
+            if b["kind"] == "soft" and on.mean() < 0.9:      # the air's halo, laid flat over the face: dim it at night
+                al = b["alpha"]
+                al = np.full(len(pos), float(al)) if not np.ndim(al) else np.asarray(al, np.float64)
+                b["alpha"] = (al * (0.08 + 0.92 * face)).astype(np.float32)
+                continue
+            n = rel / np.maximum(np.linalg.norm(rel, axis=1, keepdims=True), 1e-9)
+            d = np.clip((n @ sun + 0.12) / 0.32, 0.0, 1.0)
+            d = d * d * (3 - 2 * d)
+            d = d * (1 - full) + full
+            d = np.where(on, d, 1.0)
+            if b["kind"] == "spark":                      # city lights: brighter on the night side
+                m = 1.0 + 0.6 * (1.0 - d)
+                b["alpha"] = np.asarray(b["alpha"], np.float64) * m if np.ndim(b["alpha"]) else b["alpha"] * m
+                continue
+            col = np.asarray(b["color"], np.float64)
+            if col.ndim == 1:
+                col = np.repeat(col[None, :], len(pos), axis=0)
+            if b["kind"] == "disc":                       # the ocean: deep navy at night
+                night = col * 0.05 + np.array([0.001, 0.003, 0.012])[None, :]
+                b["color"] = np.clip(col * d[:, None] + night * (1 - d[:, None]), 0, 1)
+            else:                                         # the land glow, its warm halo and the clouds dim at night
+                al = b["alpha"]
+                al = np.full(len(pos), float(al)) if not np.ndim(al) else np.asarray(al, np.float64)
+                b["alpha"] = (al * (0.15 + 0.85 * d)).astype(np.float32)
+        return out
+    return wrapped
+
+
+GLOBE.sample = _night_side(GLOBE.sample)
+
+
 def _sphere_ring(cv, ang, n):
     """n points on the unit sphere at angle `ang` (radians) round the unit vector cv."""
     a = _unit(np.cross(cv, _v(0.0, 1.0, 0.0)) if abs(cv[1]) < 0.95 else np.cross(cv, _v(1.0, 0.0, 0.0)))
