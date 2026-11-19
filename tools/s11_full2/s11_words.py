@@ -67,6 +67,9 @@ def specs(plist, width):
                     t_in=ti, t_read0=r0, t_read1=r1, t_out=to, name=name, leave="rise",
                     color=hexc, glow=hexg, tint=0.22, bright=1.2 if strong else 1.1,
                     halo=4.6 if strong else 4.0, sparkle=1.2, n=110000 if strong else 80000, reflect=False)
+        if _bright(r0, r1):
+            # over a bright scene (the lit terraces, the white stage): a purer white core, a brighter word
+            spec.update(tint=0.12, bright=1.3 if strong else 1.2)
         arr = ARRIVE[style]
         if arr == "pen":
             spec.update(arrive="pen", nib=False, flow=0.09)
@@ -78,6 +81,11 @@ def specs(plist, width):
             spec.update(arrive="shaft")                    # glitter flakes come down and settle into the letters
         out.append(spec)
     return out
+
+
+def _bright(r0, r1):
+    """A phrase read over a bright scene: any local shot from the first slam on (not the Earth, not space)."""
+    return r0 >= 82.0 and not H.globe_view(0.5 * (r0 + r1))
 
 
 def _style(i):
@@ -114,8 +122,8 @@ class _GlyphShadow:
     strokes, never a region, and never touches anyone else's dark mask). No box, band or panel."""
     wants_camera = True
 
-    def __init__(self, word, k=1.0):
-        self.w, self.k = word, float(k)
+    def __init__(self, word, k=1.0, size=0.055):
+        self.w, self.k, self.size = word, float(k), float(size)
         self.sub = None
 
     def gain(self, t):
@@ -145,8 +153,8 @@ class _GlyphShadow:
         d = tg[sub] - eye[None, :]
         dist = np.linalg.norm(d, axis=1, keepdims=True)
         p = eye[None, :] + d * ((dist + 1.0) / np.maximum(dist, 1e-3))     # 1 m behind each stroke
-        return [dict(pos=p.astype(np.float32), size=np.full(len(p), 0.055 * w.metres_per_em(), np.float32),
-                     color=np.array([0.02, 0.012, 0.035], np.float32), alpha=0.16 * k, kind="disc", paint=1.0,
+        return [dict(pos=p.astype(np.float32), size=np.full(len(p), self.size * w.metres_per_em(), np.float32),
+                     color=np.array([0.02, 0.012, 0.035], np.float32), alpha=min(0.16 * k, 0.6), kind="disc", paint=1.0,
                      paint_light=0.0, emit=1.0, dof=0.0, fog=0.0, streak=0.0)]
 
 
@@ -155,6 +163,9 @@ def add(scene):
     veil behind a phrase; a tight glow-shadow follows each letter's shape; the writing comet stays for the pen
     entrances."""
     for i, w in enumerate(H.WORDS):
-        scene.add(f"word glyph shadow {w.name}", _GlyphShadow(w), reflect=False)
+        b = _bright(w.t_read0, w.t_read1)
+        # in bright frames only: a slightly stronger, slightly wider shadow hugging the letter edges
+        scene.add(f"word glyph shadow {w.name}", _GlyphShadow(w, k=2.4 if b else 1.0, size=0.075 if b else 0.055),
+                  reflect=False)
         if _style(i) == "light":
             scene.add(f"word comet {w.name}", _writer(w), reflect=False)

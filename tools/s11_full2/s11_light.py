@@ -56,8 +56,8 @@ LOOKS = dict(
                   water="#0c0a26", ripple=0.4, sun_glow=0.30, sun_disc=4.5, exposure=0.84,
                   dust_color="#ffe2b0", dust_color2="#ffc8d8"),
     coda_summit=dict(base="sunrise", hills=0.0, clouds=0.28, stars=0.0, sky_top="#1a3478", sky_mid="#8a6ca4",
-                     sky_hor="#ffbe80", sun_color="#ffe6b0", haze=0.26, haze_color="#7a5c84", mist=0.05,
-                     mist_color="#8a6a8a", water="#0c1030", ripple=0.3, sun_glow=0.32, sun_disc=4.5,
+                     sky_hor="#ffbe80", sun_color="#ffe6b0", haze=0.18, haze_color="#6a4c80", mist=0.05,
+                     mist_color="#8a6a8a", water="#0c1030", ripple=0.3, sun_glow=0.16, sun_disc=3.0,   # f35
                      exposure=0.78, dust_color="#fff0d0", dust_color2="#ffd0b8"),
     coda_home=dict(base="sunrise", hills=0.0, clouds=0.25, stars=0.25, sky_top="#0a1640", sky_mid="#3a3a80",
                    sky_hor="#d08a7a", sun_color="#fff0cc", haze=0.25, haze_color="#3a2a58", mist=0.2,
@@ -187,11 +187,30 @@ def rays(t):
     return r * (0.25 if stage_view(t) and t >= 160.0 else 1.0)    # the brass cut-ins face the sun: no wash
 
 
+def _win(a, b, t, f=0.4):
+    return float(_sc(a - f, a, t) * (1.0 - _sc(b, b + f, t)))
+
+
+def glare_calm(t):
+    """Round 8: the sun's glow and rays held down where they paled the picture: by half over the coda summit
+    3:33.5 to 3:39.5 (f35), swelling back only on the beats; by 40 percent in the slam-2 aftermath 2:51.5 to
+    2:54 (f18) so the second climb keeps its colour."""
+    b = float(H.beat_pulse(t))
+    return (1.0 - 0.5 * _win(213.5, 219.5, t) * (1.0 - 0.8 * b)) * (1.0 - 0.4 * _win(171.5, 174.0, t))
+
+
+def _rise_aside(t):
+    """Round 8 (ZION's epic sun disc, 3:21.73 to 3:26): the coda sun stands higher and to the side of the words."""
+    return _win(201.73, 206.0, t, 0.6)
+
+
 def world():
     """The P3D world settings (built after the core has gathered every thread's shots)."""
     return dict(
         looks=LOOKS,
         look=_look_keys(),
-        sun_el=sun_el, sun_az=sun_az, sun_int=sun_int, rays=rays,
+        sun_el=lambda t: max(sun_el(t), 12.0 * _rise_aside(t)) if _rise_aside(t) > 0.0 else sun_el(t),
+        sun_az=lambda t: sun_az(t) + (178.0 - sun_az(t)) * _rise_aside(t),
+        sun_int=lambda t: sun_int(t) * glare_calm(t), rays=lambda t: rays(t) * glare_calm(t),
         react=dict(beat=0.25, level=0.25),
     )
