@@ -278,8 +278,9 @@ PILLAR = 1.3                        # the granite frame's width
 # large in two lines across the top two storeys of the curved front, upper middle right, each line inside its
 # storey between the white bands; and small in one line across the top of the stone portal.
 NAME_LINES = ("World Mission Society", "Church of God")
-NAME_CAP = 2.0                      # cap height of the large name (metres)
-NAME_RIGHT = CH_W2 - 5.0            # its right edge (clear of the fins in threes at the right edge)
+NAME_CAP = 2.5                      # cap height of the large name (metres; Anthony: bigger)
+NAME_MID = 2.0                      # the name's centre line on the front; the emblem sits centred below it
+NAME_RIGHT = CH_W2 - 5.0            # (kept for reference: the old right edge)
 NAME_STOREYS = (14, 13)             # the storey of each line (0 is the ground floor)
 PORTAL_NAME = "WORLD MISSION SOCIETY CHURCH OF GOD"
 PORTAL_CAP = 0.32
@@ -290,7 +291,9 @@ _FONT = "jost-latin-600-normal.ttf"
 # width in metres. To add it: make emblem_points() return (N, 2) points (x, y) inside the slot (for example
 # from the emblem image: `_raster_points` maps an image's lit pixels into the slot); they are lifted onto the
 # curved glass and drawn with the name's light.
-EMBLEM_SLOT = ((-10.4, CH_Y0 + 14.0 * FH), 6.4)
+# Anthony (2026-11-19): bigger, with the name above it
+EMBLEM_SIZE = 9.0
+EMBLEM_SLOT = ((NAME_MID, CH_Y0 + 13.0 * FH - 0.6 - EMBLEM_SIZE / 2.0), EMBLEM_SIZE)
 
 
 # The emblem as Anthony sent it (2026-11-19), traced from his image at 128 x 128: 0 none, 1 the blue (the ring
@@ -355,7 +358,7 @@ def emblem_batches():
     u = np.clip((B[:, 1] - (cy - size / 2.0)) / size, 0.0, 1.0)[:, None]        # 0 bottom .. 1 top
     sky = lin("#3c9ff0") * (1.0 - u) + lin("#86d4ff") * u
     pb = lift(B)
-    out.append(_batch(pb, step * 3.0, sky * 0.42, 1.0, kind="soft", emit=1.0, twinkle=0.05))
+    out.append(_batch(pb, step * 3.0, sky * 0.6, 1.0, kind="soft", emit=1.0, twinkle=0.05))
     out.append(_batch(pb, step * 1.2, sky * 0.7, 0.55, kind="spark", emit=1.2, twinkle=0.1))
     # the soft light round the ring
     r = np.hypot(B[:, 0] - cx, B[:, 1] - cy) / (size / 2.0)
@@ -364,7 +367,7 @@ def emblem_batches():
     W = lift(_emblem_xy(2))
     out.append(_batch(W, step * 1.25, lin("#ffffff"), 0.95, kind="spark", emit=1.9, twinkle=0.05))
     G = lift(_emblem_xy(3))
-    out.append(_batch(G, step * 1.4, lin("#eef6ff"), 0.3, kind="spark", emit=1.1, twinkle=0.05))
+    out.append(_batch(G, step * 1.4, lin("#eef6ff"), 0.18, kind="spark", emit=1.0, twinkle=0.05))
     return out
 
 
@@ -404,7 +407,7 @@ def _name_segments():
     # the large name, each line centred on the block, the block's right edge at NAME_RIGHT
     runs = [_text_runs(t, NAME_CAP, 0.05) for t in NAME_LINES]
     wmax = max(r[3] for r in runs)
-    mid = NAME_RIGHT - wmax / 2.0
+    mid = NAME_MID
     for (u0, u1, v, w), k in zip(runs, NAME_STOREYS):
         top = CH_Y0 + (k + 1) * FH - 0.72
         x0, x1 = mid - w / 2.0 + u0, mid - w / 2.0 + u1
