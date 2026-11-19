@@ -962,10 +962,16 @@ class Church:
             k *= {"soft": 0.75, "crisp": 0.4, "steps": 0.12, "glory": 0.5}[self.part] * _stage_calm(t, 0.5)
         if shot_name(t) == "church_cut":       # the church's own cut-ins: full frame of it, so less light
             k *= 0.5
-        elif shot_name(t) != "city" and not stage_view(t) and t > 200.0:
-            # others' sunrise views (the coda summit): calm close by, never white; from afar, among the churches
-            # of the world round Zion, the one great building again (round 7)
-            k *= 0.5 + 0.55 * _far(t)
+        elif shot_name(t) != "city" and not stage_view(t):
+            f = _far(t)
+            if t > 200.0:
+                # others' sunrise views (the coda summit): calm close by, never white; from afar, among the
+                # churches of the world round Zion, the one great building again (round 7)
+                k *= 0.5 + 0.55 * f
+            elif self.part in ("soft", "crisp"):
+                # the wide views over Zion (round 7): from afar the glass glows and the bands shine, so the
+                # church of light reads as the brightest building on the summit, never a dark slab
+                k *= 1.0 + {"soft": 1.4, "crisp": 0.5}[self.part] * f
         k *= _music(t, self.part)
         if 252.5 < t < LAST_CHORD:              # round 7: the glass steps back as the comets close in, so the
             k *= 1.0 - 0.4 * _sc(252.6, 253.9, t)   # emblem's flare is the brightest thing on the last chord
@@ -1120,6 +1126,8 @@ def body_k(t):
     k = local_k(t) * min(1.0, 1.5 * church_reveal(t))     # no black body while the church is still a ghost
     if k <= 0.0:
         return 0.0
+    if shot_name(t) not in ("city", "church_cut") and not stage_view(t):
+        k *= 1.0 - 0.75 * _far(t)                         # from afar the glass glows instead (round 7)
     # the phrases ride 30 m in front of the camera: when the front is nearer than that they would fall behind
     # the silhouette and be hidden, so the body fades out in near views while a phrase is on screen
     c = np.asarray(H.CAMERA.state(t).pos, np.float64)
