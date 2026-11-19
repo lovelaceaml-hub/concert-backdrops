@@ -161,7 +161,7 @@ def crown_build(t):
     """Call 2 to Father's pulse: the church gathers glory beat by beat (0 to 1), released on the pulse."""
     if t < 31.0 or t > 42.0:
         return 0.0
-    return _stair(t, 31.2, 40.3) * (1.0 - _sc(40.9, 41.6, t))
+    return _stair(t, 31.2, 40.3) * (1.0 - 0.6 * _sc(40.3, 40.7, t)) * (1.0 - _sc(40.9, 41.6, t))
 
 
 # =========================================================================================================
@@ -791,7 +791,7 @@ class Church:
             k *= 0.5 + 0.3 * i
         elif self.part == "glory":              # crystal and gold in the choruses, and gathering beat by beat
             b = crown_build(t)                  # from call 2 into Father's pulse (round 6)
-            k *= 0.9 * max(i - 0.5, 0.0) + 0.55 * b * (1.0 + 0.5 * beat_pulse(t))
+            k *= 0.9 * max(i - 0.5, 0.0) + 0.45 * b * (1.0 + 0.5 * beat_pulse(t))
         else:                                   # the white bands and the name pulse on the beat
             k *= 1.0 + 0.35 * beat_pulse(t) * (0.3 + 0.7 * i)
         return k
@@ -875,7 +875,7 @@ def beacon_k(t):
     the roof, beat by beat, into Father's pulse (0:40.54), where the rays take over."""
     k = 0.0
     if 2.0 < t < 22.5:
-        k = (_sc(2.25, 2.4, t) * (0.35 + 0.55 * _stair(t, 2.4, 11.7) + 0.25 * _stair(t, 12.0, 19.0))
+        k = (_sc(2.25, 2.4, t) * (0.5 + 0.5 * _stair(t, 2.4, 11.7) + 0.25 * _stair(t, 12.0, 19.0))
              + 1.4 * hit_pulse(t, [HIT["first"]], rise=0.05, fall=0.9) + 0.5 * hit_pulse(t, [11.9], rise=0.05, fall=0.8))
         k *= 1.0 - _sc(19.5, 21.6, t)
     elif 31.0 < t < 41.6:
@@ -896,10 +896,10 @@ class Beacon:
         cam = H.CAMERA.state(t)
         d = float(np.linalg.norm(np.asarray(cam.pos, np.float64) - _CROWN))
         P = _CROWN[None, :]
-        core = max(0.0026 * d, 1.0)
-        halo = max(0.011 * d, 5.0)
+        core = max(0.016 * d, 1.0)
+        halo = max(0.03 * d, 5.0)
         warm, white = lin("#ffe2b0"), lin(WHITE)
-        return [dict(pos=P, size=halo * 2.2, color=warm, alpha=0.10 * k, kind="soft", emit=1.6, fog=0.0, dof=0.0),
+        return [dict(pos=P, size=halo * 2.2, color=warm, alpha=0.08 * k, kind="soft", emit=1.6, fog=0.0, dof=0.0),
                 dict(pos=P, size=halo, color=warm, alpha=0.35 * k, kind="soft", emit=2.2, fog=0.0, dof=0.0),
                 dict(pos=P, size=core, color=white, alpha=min(k, 1.6), kind="spark", emit=5.0, fog=0.0, dof=0.0)]
 
@@ -929,7 +929,7 @@ class _Body:
 
 def body_k(t):
     """How strongly the church's body hides what is behind it."""
-    k = local_k(t)
+    k = local_k(t) * min(1.0, 1.5 * church_reveal(t))     # no black body while the church is still a ghost
     if k <= 0.0:
         return 0.0
     # the phrases ride 30 m in front of the camera: when the front is nearer than that they would fall behind
@@ -1126,7 +1126,7 @@ FATHER_PILLARS = Pillars([(ZC[0] + 340.0 * np.sin(a), ZC[2] + 340.0 * np.cos(a))
 def _ray_k(t):
     if local_k(t) <= 0.0:
         return 0.0
-    k = (1.9 * hit_pulse(t, [HIT["father"]], rise=0.6, fall=1.2) * _env(t, 37.0, 41.6, 0.5, 0.15)
+    k = (1.25 * hit_pulse(t, [HIT["father"]], rise=0.6, fall=1.2) * _env(t, 37.0, 41.6, 0.5, 0.15)
          + 0.9 * _env(t, 74.56, 75.2, 0.1, 0.1) + 0.7 * _env(t, 222.0, 224.03, 0.3, 0.2)
          + 1.2 * _sc(251.7, 253.6, t) * (1.0 - _sc(253.8, 254.07, t)))
     return k * (1.0 + 0.3 * beat_pulse(t) * intensity(t))

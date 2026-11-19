@@ -104,13 +104,13 @@ def _plan(t0, t1):
         # once (the words land on the dark sea, never over the mountain), then a slow crane high over the river
         # of people: overhead, the procession draws its path of light toward Zion along the bottom of the frame
         w = walked
-        return K((t0, (2.0, 2.6, 30.0), (0.0, 3.0, -60.0)), (134.9, (4.0, 8.5, 18.0), (-1.0, -1.0, -40.0)),
-                 (135.4, (10.0, 20.0, 6.0), (-4.0, -2.0, -26.0)), (136.6, (17.0, 29.0, -2.0 - w(136.6)),
+        return K((t0, (2.0, 7.0, 26.0), (0.0, -9.0, -26.0)), (134.9, (4.5, 12.0, 17.0), (-1.5, -10.0, -24.0)),
+                 (135.4, (10.0, 20.0, 6.0), (-4.0, -6.0, -26.0)), (136.6, (17.0, 29.0, -2.0 - w(136.6)),
                                                                    (-5.0, -3.0, -26.0 - w(136.6))),
                  (t1, (21.0, 36.0, -6.0 - w(t1)), (-6.0, -3.0, -32.0 - w(t1)))), "linear"
     if t0 == 141.5:       # a low tracking shot beside the marchers at their pace, the nations joining from the side
-        return _track(t0, t1, 12, lambda t: ((21.0, 1.25, -14.0 - walked(t) - 0.35 * (t - t0)),
-                                             (9.5, 1.6, -36.0 - walked(t) - 0.35 * (t - t0)))), "linear"
+        return _track(t0, t1, 12, lambda t: ((18.2, 1.35, -14.0 - walked(t) - 0.3 * (t - t0)),
+                                             (8.0, -0.8, -34.0 - walked(t) - 0.3 * (t - t0)))), "linear"
     if t0 == 144.4:       # fulfilled: the comets dive back through the walkers toward us, lighting hearts, while a
         # slow crane rises from among them over the whole river of people toward her light
         def crane(t):
@@ -121,8 +121,8 @@ def _plan(t0, t1):
     if t0 == 148.6:       # from in front, low, backing away at their pace as the kings and the multitude come on;
         # then rising and swinging over them to behind for the words
         kf = _kings_front
-        return K((t0, (0.8, 1.5, kf(t0) - 6.5), (0.0, 2.6, kf(t0) + 24.0)),
-                 (149.7, (1.2, 1.9, kf(149.7) - 6.8), (0.0, 2.4, kf(149.7) + 22.0)),
+        return K((t0, (0.8, 2.7, kf(t0) - 12.5), (0.0, 0.8, kf(t0) + 22.0)),
+                 (149.7, (1.4, 3.2, kf(149.7) - 12.8), (0.0, 0.8, kf(149.7) + 20.0)),
                  (150.9, (9.0, 14.0, -62.0), (-1.0, 0.0, -66.0)), (152.2, (3.5, 17.5, -50.5), (-4.0, -6.5, -76.5)),
                  (t1, (1.0, 17.0, -53.0), (-4.5, -7.0, -78.0))), "linear"
     if t0 == 154.2:       # the kings kneel; we look up after the crowns as they rise toward Zion
@@ -481,7 +481,7 @@ def _comet_head(j, phase):
 
 # (phase, t0, t1, brightness, trail, fade out)
 COMET_PHASES = [("burst", LAND, 130.29, 1.0, 1.4, 0.05), ("ring", 130.29, 134.54, 0.8, 1.6, 0.05),
-                ("march", 134.54, 139.2, 0.8, 0.8, 0.05), ("weave", 141.5, 144.4, 1.0, 1.2, 0.05),
+                ("march", 134.54, 135.5, 0.8, 0.8, 0.3), ("weave", 141.5, 144.4, 1.0, 1.2, 0.05),
                 ("dive", 144.4, 148.6, 1.1, 0.9, 0.05), ("kings", 148.6, 154.2, 0.35, 1.2, 0.05),
                 ("rise", RISE + 0.35, 156.0, 0.7, 0.6, 0.05), ("home", 156.0, 160.6, 0.4, 1.2, 0.5)]
 
@@ -705,10 +705,10 @@ class KingBeams:
     (two on each side of them, never over the whole view), with a small pool where each lands; they pulse
     with the beat and burst on the two kings' hits. No wide glow, so the low view stays clear."""
 
-    BASES = np.asarray([(-4.4, -67.4), (-4.6, -63.4), (4.6, -63.0), (4.4, -60.6)])
+    BASES = np.asarray([(-4.4, -67.4), (-4.6, -63.4), (-1.2, -60.4), (2.6, -59.8)])   # clear of the lens
 
     def __init__(self):
-        self.u = np.linspace(0.0, 1.0, 160)
+        self.u = np.linspace(0.0, 1.0, 900) ** 1.8      # dense low down: a solid beam, not a dotted line
         self.col = lin("#ffe9c4")
         self.ph = np.random.default_rng(83).random(len(self.BASES))
 
@@ -810,7 +810,7 @@ def ray_k(t):
     if b == 130.29:
         return 0.9
     if b == 134.54:
-        return 0.45 + 1.0 * hit_pulse(t, [MARCH], fall=0.6)
+        return 0.35 + 0.6 * hit_pulse(t, [MARCH], fall=0.5)     # softer: the words are arriving over it
     if b == 141.5:
         return 0.7
     if b == 144.4:
@@ -868,8 +868,8 @@ def add(scene):
                          places=still, facing=NAT_F[~gone], kinds=(("raise", 2.0), ("open", 1.0)), start=HALT - 0.3,
                          fade=0.3, flash=0.0, **look)
     _tint_nations(nat_held, NAT_C[~gone])
-    scene.add("nations", nations, reflect=False)
-    scene.add("nations held", nat_held, reflect=False)
+    scene.add("proc nations", nations, reflect=False)
+    scene.add("proc nations held", nat_held, reflect=False)
     scene.add("march beat", MarchBeat([walkers, nations]))
     scene.add("procession wait", wait, reflect=False)
     scene.add("procession", walkers, reflect=False)
@@ -898,10 +898,7 @@ def add(scene):
     for i, c in enumerate([(-55.0, 40.0, -85.0), (55.0, 40.0, -85.0)]):     # clouds parting round her light
         scene.add(f"proc parting cloud {i}", CloudBank(c, size=(50.0, 30.0, 60.0), puffs=20, seed=40 + i,
                                                        gain=sky(125.92, 130.29), bright=0.35), reflect=True)
-    canyon = lambda t: sky(134.54, 135.7)(t) + sky(141.5, 148.6)(t)            # noqa: E731
-    for i, x in enumerate((-82.0, 82.0)):          # the canyon of cloud the procession walks through
-        scene.add(f"proc canyon {i}", CloudBank((x, 0.0, -40.0), size=(40.0, 45.0, 260.0), puffs=40, seed=50 + i,
-                                                gain=canyon, bright=0.35), reflect=True)
+    # (round 6: no canyon of cloud over the march any more; it hazed the words and the low views of the walkers)
     scene.add("kings beams", KingBeams())
     add_rays(mother_pos, lambda t: proc_k(t) * ray_k(t), color="#fff1d8", size=0.6)
     add_light(mother_pos, "#ffe8c8", lambda t: 0.15 * proc_k(t) * (1.0 + 0.5 * hit_pulse(t, KICKS + FULFIL, fall=0.5)),

@@ -64,10 +64,10 @@ SHOTS = [
     # the orchestra on clouds of light round the sun: a swooping orbit round the players, chasing the comets
     # that weave round them; the sun swings in behind them, then out to the right edge before the words
     dict(name="sky_stage", kind="sky", t0=205.98, t1=210.3, fov=52.0, aperture=0.0, blend=0.35, roll=(14.0, 0.0),
-         keys=[(205.98, _orb(SKY_C, 26.0, 78.0, 10.0), SKY_C + _v(0.0, 0.8, 0.0)),
-               (207.4, _orb(SKY_C, 18.0, 44.0, 4.5), SKY_C + _v(0.0, 1.0, -1.0)),
-               (208.8, _orb(SKY_C, 15.0, 10.0, 2.6), SKY_C + _v(0.0, 1.4, -1.5)),
-               (210.3, _orb(SKY_C, 18.0, 26.0, 3.6), SKY_C + _v(-2.0, 1.6, -2.0))]),
+         keys=[(205.98, _orb(SKY_C, 28.0, 78.0, 13.0), SKY_C + _v(0.0, 0.6, 2.0)),
+               (207.4, _orb(SKY_C, 21.0, 44.0, 8.0), SKY_C + _v(0.0, 0.8, 2.0)),
+               (208.8, _orb(SKY_C, 18.0, 10.0, 6.5), SKY_C + _v(0.0, 1.0, 1.5)),
+               (210.3, _orb(SKY_C, 20.0, 26.0, 7.0), SKY_C + _v(-2.0, 1.2, 1.0))]),
     # the third climb: in from far and high over the whole mountain (the words on the sky, the church below
     # them), then down over everyone on the avenue, arms raised, the comets circling above them
     dict(name="summit", kind="local", t0=211.6, t1=218.1, fov=54.0, aperture=0.0,
@@ -131,7 +131,7 @@ def sun_rays(t):
     if 201.73 <= t < 206.0:
         # round 6: the burst blazes on the slam itself, then settles within half a second to a steady glory
         # behind the words ("Joy of salvation!" reads from the slam), swelling a little on the beat
-        return 0.72 + 1.3 * hit_pulse(t, [SLAM3], rise=0.02, fall=0.35) + 0.15 * beat_pulse(t)
+        return 0.72 + 1.3 * hit_pulse(t, [SLAM3], rise=0.02, fall=0.22) + 0.15 * beat_pulse(t)
     if 206.0 <= t < 211.6 and shot_name(t) == "sky_stage":
         return 0.75 + 0.3 * kick + 0.15 * beat_pulse(t)
     if 211.6 <= t < 224.03 and shot_name(t) == "summit":
@@ -260,6 +260,7 @@ class SummitPillars(Pillars):
     beat a band of brighter light runs down the beam and lands in its pool on the plateau."""
 
     N = 420
+    wants_camera = True
 
     def __init__(self, bases, top=300.0, color="#ffe2b8", width=3.0, gain=None, seed=2):
         super().__init__(bases, top=top, color=color, width=width, gain=gain, seed=seed)
@@ -273,10 +274,11 @@ class SummitPillars(Pillars):
         self.glow_w = np.clip(dy / (0.5 * self.glow_s), 0.0, 1.0)
         self.core_w = np.clip(dy / (0.5 * self.core_s), 0.0, 1.0)
 
-    def sample(self, t):
+    def sample(self, t, cam=None):
         g = float(self.g(t))
         if g <= 0.0 or globe_view(t):
             return None
+        eye = np.asarray(cam.pos, np.float64) if cam is not None else _v(0.0, 1e4, 0.0)
         beat = beat_pulse(t, 0.12)
         kick = hit_pulse(t, KICKS, rise=0.02, fall=0.45)
         k = g * (0.62 + 0.38 * beat + 0.75 * kick)
@@ -290,17 +292,19 @@ class SummitPillars(Pillars):
         land = sum(np.exp(-(t - (b + self.top / 220.0)) / 0.25) for b in BEATS[max(i - 4, 0):i + 1]
                    if 0.0 <= t - (b + self.top / 220.0) < 1.5)
         # bright where they fall among the people, fading up into the sky (the words read over the upper sky)
-        prof = (0.04 + 0.96 * np.exp(-self.y / 55.0)) * (1.0 + 0.9 * band)
+        prof = (0.02 + 0.98 * np.exp(-self.y / 38.0)) * (1.0 + 0.9 * band)
         out = []
         for j, (x, z) in enumerate(self.bases):
             P = np.stack([np.full(self.N, x), self.y + SUMMIT - 0.2, np.full(self.N, z)], 1)
-            br = k * (0.88 + 0.12 * np.sin(2.0 * t + 6.0 * self.ph[j]))
+            # a beam the camera flies right beside softens, so it never fills the frame with white
+            near = _sc(6.0, 26.0, float(np.hypot(eye[0] - x, eye[2] - z)))
+            br = k * (0.88 + 0.12 * np.sin(2.0 * t + 6.0 * self.ph[j])) * (0.25 + 0.75 * near)
             out.append(dict(pos=P, size=self.glow_s, color=self.col, alpha=0.11 * br * prof * self.glow_w,
                             kind="soft", emit=1.8, dof=0.0))
             out.append(dict(pos=P, size=self.core_s, color=self.col * 0.6 + lin(WHITE) * 0.4,
-                            alpha=0.22 * br * prof * self.core_w, kind="soft", emit=2.4, dof=0.0))
+                            alpha=0.18 * br * prof * self.core_w, kind="soft", emit=2.4, dof=0.0))
             out.append(dict(pos=np.array([[x, SUMMIT + 0.15, z]]), size=self.width * (6.0 + 2.0 * land),
-                            color=self.col, alpha=(0.22 + 0.25 * land) * k, kind="soft", emit=2.0, reflect=False))
+                            color=self.col, alpha=(0.12 + 0.2 * land) * k, kind="soft", emit=2.0, reflect=False))
         return out
 
 
@@ -319,11 +323,7 @@ def _coda_clouds():
     def g_canyon(t):
         return 0.0 if globe_view(t) else _sc(196.8, 197.2, t) * (1.0 - _sc(199.4, 199.62, t)) * (0.8 + 0.3 * beat_pulse(t))
 
-    def g_sky(t):
-        import os
-        if "cb" in os.environ.get("CODA_DBG", ""):
-            return 0.0
-        return sky_k(t) * (0.9 + 0.25 * beat_pulse(t))
+
 
     def g_rise(t):
         return 0.0 if globe_view(t) else _sc(201.6, 202.2, t) * (1.0 - _sc(205.6, 206.0, t))
@@ -335,9 +335,8 @@ def _coda_clouds():
     for i, x in enumerate((190.0, 470.0)):                  # the canyon of the last build
         c = _v(x, 2.0, -760.0)
         out.append(CloudBank(c, size=(80.0, 170.0, 1100.0), puffs=46, seed=90 + i, gain=g_canyon, bright=0.65))
-    for i in range(3):                                      # under and behind the sky orchestra
-        c = SKY_STAGE + _v(-320.0 + 320.0 * i, -150.0, -420.0 - 80.0 * i)
-        out.append(CloudBank(c, size=(320.0, 120.0, 160.0), puffs=30, seed=100 + i, gain=g_sky, bright=0.3))
+    # (round 6: the three banks under and behind the sky orchestra are gone: seen from beside the players they
+    # lay as a white band across them; the sea of cloud far below (Clouds) gives the depth)
     for i, da in enumerate((-14.0, 13.0)):                  # banks either side of the rising sun, far behind Zion
         c = ZC + 1000.0 * _dir(163.0 + da, 0.0)
         c[1] = 2.0
@@ -518,7 +517,7 @@ class Clouds:
         m = 2600
         a = 2 * np.pi * r.random(m)
         rr = 80.0 + 520.0 * np.sqrt(r.random(m))
-        self.F = np.stack([SKY_STAGE[0] + rr * np.sin(a), SKY_STAGE[1] - 40.0 - 30.0 * r.random(m),
+        self.F = np.stack([SKY_STAGE[0] + rr * np.sin(a), SKY_STAGE[1] - 70.0 - 40.0 * r.random(m),
                            SKY_STAGE[2] + rr * np.cos(a)], 1)
         sd = _sun_dir_coda()
         toward = np.clip((np.sin(a) * sd[0] + np.cos(a) * sd[2]), -1.0, 1.0)
@@ -543,26 +542,12 @@ class Clouds:
         drift = _v(0.4 * np.sin(0.2 * t), 0.0, 0.0)
         pulse = 1.0 + 0.25 * beat_pulse(t)
         rim = 0.5 + 0.5 * self.pu ** 2
-        import os
-        dbg = os.environ.get("CODA_DBG", "")
-        if dbg:
-            out = []
-            if "floor" not in dbg:
-                out += [dict(pos=self.P + drift, size=0.5 + 0.7 * self.s, color=self.pc, alpha=0.016 * rim, emit=1.0,
-                     kind="soft", seed=self.s, dof=0.0)]
-            if "sea" not in dbg:
-                out += [dict(pos=self.F, size=self.fs, color=self.fc, alpha=0.03, emit=1.0, kind="soft", dof=0.0,
-                     reflect=False)]
-            if "banks" not in dbg:
-                out += [dict(pos=self.B, size=self.bs, color=self.bc, alpha=0.045, emit=1.2, kind="soft", dof=0.0,
-                     reflect=False)]
-            return out or None
         # the floor: a thin glow (small puffs, low alpha) and a glitter of gold on it that sparkles on the beat
-        return [dict(pos=self.P + drift, size=0.5 + 0.7 * self.s, color=self.pc, alpha=0.016 * rim, emit=1.0,
+        return [dict(pos=self.P + drift, size=0.4 + 0.5 * self.s, color=self.pc, alpha=0.009 * rim, emit=1.0,
                      kind="soft", seed=self.s, dof=0.0),
-                dict(pos=self.P[::3] + drift, size=0.045, color=lin(GOLD2), alpha=0.5 * pulse, emit=2.0,
-                     kind="spark", twinkle=0.8, seed=self.s[::3]),
-                dict(pos=self.F, size=self.fs, color=self.fc, alpha=0.03, emit=1.0, kind="soft", dof=0.0,
+                dict(pos=self.P[::5] + drift, size=0.045, color=lin(GOLD2), alpha=0.42 * pulse, emit=2.0,
+                     kind="spark", twinkle=0.8, seed=self.s[::5]),
+                dict(pos=self.F, size=self.fs, color=self.fc, alpha=0.022, emit=1.0, kind="soft", dof=0.0,
                      reflect=False),
                 dict(pos=self.B, size=self.bs, color=self.bc, alpha=0.045, emit=1.2, kind="soft", dof=0.0,
                      reflect=False)]
@@ -597,7 +582,7 @@ def _summit_places(n=700, seed=151):
     while len(pts) < n_av:
         x = r.uniform(-13.0, 13.0)
         z = r.uniform(FACADE_Z + 22.0, FACADE_Z + 80.0)
-        if abs(x) < 1.2 or np.hypot(x - ZC[0], z - ZC[2]) > R_TOP - 9.0:
+        if abs(x) < 3.0 or np.hypot(x - ZC[0], z - ZC[2]) > R_TOP - 9.0:     # an aisle up the middle
             continue
         pts.append((x, SUMMIT, z))
     while len(pts) < n:
@@ -617,20 +602,24 @@ def _nine_tints(n, seed, white=0.3, group=1):
     return nine[k] * (1.0 - w)[:, None] + lin("#fff0d8")[None, :] * w[:, None]
 
 
-def _stair_path():
+def _stair_path(avenue=False):
     """The way up one of the great stairways, from the sea to the summit's edge: (length, r, y) knots (the
-    same steps as the mountain's: one flight against each wall, then across the terrace above)."""
-    pts = [(tier_r(0) + 60.0, 0.4), (tier_r(0) + 14.0, 1.2), (tier_r(0), tier_y(0) + 1.5)]
+    same steps as the mountain's: one flight against each wall, then across the terrace above). The front
+    one (avenue=True) goes on up the great avenue to the square before the church."""
+    pts = [(tier_r(0) + 60.0, 0.1), (tier_r(0) + 14.0, 0.1), (tier_r(0), tier_y(0) + 0.1)]
     for k in range(1, N_TIER):
-        pts.append((tier_r(k) + 14.0, tier_y(k - 1) + 1.5))
-        pts.append((tier_r(k), tier_y(k) + 1.5))
-    pts.append((R_TOP - 6.0, SUMMIT + 0.1))
+        pts.append((tier_r(k) + 14.0, tier_y(k - 1) + 0.1))
+        pts.append((tier_r(k), tier_y(k) + 0.1))
+    pts.append((R_TOP - 6.0, SUMMIT + 0.05))
+    if avenue:
+        pts.append((FACADE_Z + 34.0 - float(ZC[2]), SUMMIT + 0.05))    # to the orchestra's square
     pts = np.asarray(pts)
     L = np.concatenate([[0.0], np.cumsum(np.hypot(*np.diff(pts, axis=0).T))])
     return L, pts
 
 
 STAIRS = np.radians([0.0, -36.0, 36.0, -72.0, 72.0])     # the great stairways (azimuth from +z), as Zion's
+STAIR_HW = (8.0, 5.0, 5.0, 5.0, 5.0)                     # their half widths
 
 
 def stream_k(t):
@@ -643,36 +632,45 @@ def stream_k(t):
 
 class Streams:
     """Round 6 (Anthony: "more scenes where the people are streaming to Zion ... the church of God"): the
-    multitude streaming up the five great stairways of Zion to the summit and the church, four abreast, the
-    nations walking together in bands of the nine colours. Each person is a small figure of light (a stroke,
-    dim at the feet and bright at the head, with a head spark) that walks up, bobbing with each step; they
-    come up out of the sea and are taken into the crowd on the summit. With the music: on every beat a wave
-    of light runs up each stream to the summit, the hits flare them, and the waves of raised arms (ARM_WAVES)
-    reach them too."""
+    multitude streaming up the five great stairways of Zion to the summit, and up the great avenue to the
+    church, filling each stairway, the nations walking together in bands of the nine colours. Each person is
+    a small figure of light (a stroke, dim at the feet and bright at the head, with a head spark) that walks
+    up, bobbing with each step; they come up out of the sea and are taken into the crowd on the summit (the
+    front stream walks on up the aisle of the avenue, between everyone standing there, to the church). With
+    the music: on every beat a wave of light runs up each stream to the summit, the hits flare them, and the
+    waves of raised arms (ARM_WAVES) reach them too."""
 
     SPEED = 1.5           # walking, metres per second
     WAVE = 42.0           # the beat's wave of light up the stream, metres per second
+    AISLE = 2.2           # the half width of the aisle up the avenue
 
-    def __init__(self, gain=stream_k, gap=1.15, lanes=4, seed=181):
+    def __init__(self, gain=stream_k, gap=1.2, seed=181):
         r = np.random.default_rng(seed)
-        self.L, self.pts = _stair_path()
-        self.Lt = float(self.L[-1])
-        ns = int(self.Lt / gap)
-        per = ns * lanes
-        az, l0, lane = [], [], []
-        for s in STAIRS:
-            az.append(np.full(per, s))
-            l0.append(np.repeat(np.arange(ns) * gap, lanes) + r.uniform(-0.35, 0.35, per))
-            lane.append(np.tile((np.arange(lanes) - 0.5 * (lanes - 1)) * 1.5, ns) + r.uniform(-0.25, 0.25, per))
-        self.az, self.l0, self.lane = np.concatenate(az), np.concatenate(l0), np.concatenate(lane)
-        n = len(self.az)
+        self.paths = [_stair_path(avenue=(i == 0)) for i in range(len(STAIRS))]
+        grp, l0, lane = [], [], []
+        for i, (L, _p) in enumerate(self.paths):
+            hw = STAIR_HW[i] - 1.0
+            lanes = int(round(2.0 * hw / 1.4)) + 1
+            ns = int(L[-1] / gap)
+            m = ns * lanes
+            grp.append(np.full(m, i))
+            l0.append(np.repeat(np.arange(ns) * gap, lanes) + r.uniform(-0.4, 0.4, m))
+            lane.append(np.tile(np.linspace(-1.0, 1.0, lanes), ns) * hw + r.uniform(-0.3, 0.3, m))
+        self.grp, self.l0, self.lane = np.concatenate(grp), np.concatenate(l0), np.concatenate(lane)
+        self.Lt = np.asarray([self.paths[i][0][-1] for i in self.grp])
+        # of the front stream only the middle lanes walk on up the avenue's aisle; the rest join the crowd at
+        # the top of the stairs
+        edge = self.paths[0][0][-2]
+        self.Lt = np.where((self.grp == 0) & (np.abs(self.lane) > self.AISLE), edge, self.Lt)
+        self.az = STAIRS[self.grp]
+        n = len(self.grp)
         self.n = n
         self.h = r.uniform(0.85, 1.08, n)
         self.ph = r.random(n) * 2.0 * np.pi
         self.sp = self.SPEED * r.uniform(0.92, 1.08, n)
-        band = (np.floor(self.l0 / 9.0).astype(int) + 3 * np.round(np.degrees(self.az) / 36.0).astype(int)) % 9
+        band = (np.floor(self.l0 / 9.0).astype(int) * 4 + 2 * self.grp) % 9
         nine = np.asarray([lin(c) for c in COL9])
-        w = 0.28 + 0.2 * r.random(n)
+        w = 0.08 + 0.17 * r.random(n)
         self.col = nine[band] * (1.0 - w)[:, None] + lin("#fff0d8")[None, :] * w[:, None]
         self.s = r.random(n)
         self.g = gain
@@ -688,46 +686,51 @@ class Streams:
         return float(self.g(t))
 
     def where(self, t):
-        """Where everyone is at t: positions (n, 3), their distance along the way, and how far they are in."""
+        """Where everyone is at t: positions (n, 3), their distance along the way, their azimuth, and how far
+        up the way they are (0..1)."""
         l = np.mod(self.l0 + self.sp * t, self.Lt)
-        rr = np.interp(l, self.L, self.pts[:, 0])
-        y = np.interp(l, self.L, self.pts[:, 1])
-        a = self.az + self.lane / rr
+        rr, y = np.zeros(self.n), np.zeros(self.n)
+        for i, (L, p) in enumerate(self.paths):
+            m = self.grp == i
+            rr[m] = np.interp(l[m], L, p[:, 0])
+            y[m] = np.interp(l[m], L, p[:, 1])
+        a = self.az + self.lane / np.maximum(rr, 8.0)
         P = np.stack([ZC[0] + rr * np.sin(a), y, ZC[2] + rr * np.cos(a)], 1)
-        return P, l
+        return P, l, a
 
     def sample(self, t):
         g = self.g(t)
         if g <= 0.0:
             return None
-        P, l = self.where(t)
-        step = np.abs(np.sin(2.0 * np.pi * 1.0 * t * self.sp / self.SPEED + self.ph))
+        P, l, a = self.where(t)
+        step = np.abs(np.sin(2.0 * np.pi * t * self.sp / self.SPEED + self.ph))
         foot = P + np.array([0.0, 0.15, 0.0])
         head = P + np.stack([0.0 * self.h, 1.6 * self.h + 0.06 * step, 0.0 * self.h], 1)
-        # in out of the sea at the foot, taken into the crowd at the summit
+        # in out of the sea at the foot, taken into the crowd at the top of the way
         fade = _ss(0.0, 12.0, l) * (1.0 - _ss(self.Lt - 6.0, self.Lt, l))
         # the beat's waves of light running up the streams, the hits, the swell
         i = int(np.searchsorted(BEATS, t))
         wave = np.zeros(self.n)
-        for b in BEATS[max(i - 16, 0):i]:
+        for b in BEATS[max(i - 18, 0):i]:
             lf = self.WAVE * (t - b)
-            if lf < self.Lt + 10.0:
+            if lf < 400.0:
                 wave = np.maximum(wave, np.exp(-((l - lf) / 7.0) ** 2))
         kick = hit_pulse(t, KICKS, rise=0.02, fall=0.45)
         br = (0.7 + 0.35 * intensity(t) + 0.55 * kick) * (1.0 + 0.9 * wave) * fade
-        out = [dict(pos=foot, pos2=head, size=0.26, color=self.col * 0.8, alpha=0.12 * br, alpha2=0.45 * br,
-                    kind="line", emit=1.2, reflect=False),
-               dict(pos=head + np.array([0.0, 0.12, 0.0]), size=0.22, color=self.col * 0.75 + lin(WHITE) * 0.25,
-                    alpha=0.55 * br, kind="spark", emit=2.2, twinkle=0.25, seed=self.s, reflect=False)]
+        out = [dict(pos=foot, pos2=head, size=0.28, color=self.col * 0.9, alpha=0.14 * br, alpha2=0.6 * br,
+                    kind="line", emit=1.3, reflect=False),
+               dict(pos=head + np.array([0.0, 0.12, 0.0]), size=0.36, color=self.col * 0.9 + lin(WHITE) * 0.1,
+                    alpha=0.62 * br, kind="spark", emit=2.2, twinkle=0.25, seed=self.s, reflect=False),
+               dict(pos=head[::3], size=2.0, color=self.col[::3], alpha=0.03 * br[::3] * wave[::3],
+                    kind="soft", emit=1.3, reflect=False)]
         if self.arms is not None:
-            a = self.az + self.lane / np.interp(l, self.L, self.pts[:, 0])
             self.arms.P = P
+            self.arms.u = np.clip(l / self.Lt, 0.0, 1.05)
             self.arms.side = np.stack([np.cos(a), 0.0 * a, -np.sin(a)], 1)
             self.arms.out = np.stack([np.sin(a), 0.0 * a, np.cos(a)], 1)
-            self.arms.u = np.clip(1.0 - (self.Lt - l) / self.Lt, 0.0, 1.05)
-            a = self.arms.sample(t)
-            if a:
-                out += a
+            arms = self.arms.sample(t)
+            if arms:
+                out += arms
         return out
 
 
@@ -813,8 +816,20 @@ def _patch_globe_hearts():
 SHAFTS = []
 
 
+def _quiet_horizon_in_sky(scene):
+    """From the orchestra on the clouds (230 m up) the core's banks of cloud on the horizon lie below the
+    players and show as stray white puffs round them; the coda hides them in its sky shot only, until the core
+    does (request in the round 6 report)."""
+    for name in scene.names():
+        if name.startswith("horizon clouds "):
+            cb = scene.get(name)
+            g = cb.g
+            cb.g = (lambda g0: (lambda t: 0.0 if sky_k(t) > 0.0 else g0(t)))(g)
+
+
 def add(scene):
     _patch_globe_hearts()
+    _quiet_horizon_in_sky(scene)
     scene.add("rising hearts", RisingHearts())
     scene.add("horizon", Horizon())
     # the orchestra on clouds of light round the rising sun

@@ -254,9 +254,9 @@ def _mountain():
     # (round 6) the walls fill with pearl light, the floors with a pale glass light; only the stairways are gold
     gold = [
         _batch(FL, 6.0, lin("#bfe2ff"), 0.07, kind="soft", emit=1.0, birth=FB, fade=0.7, flash=2.0, reflect=False),
-        _batch(F[upper], 2.6, lin(PEARL) * 0.62, FA[upper] * 0.80, kind="soft", emit=1.3, birth=fb[upper], fade=0.6,
+        _batch(F[upper], 2.6, lin("#e2d8ff") * 0.40, FA[upper] * 0.70, kind="soft", emit=1.3, birth=fb[upper], fade=0.6,
                flash=1.5, reflect=False),
-        _batch(PA, 0.55, lin(PEARL_RAIL), 0.6, emit=1.3, birth=FT[PK] + 0.45, fade=0.4, flash=3.0, twinkle=0.4,
+        _batch(PA, 0.55, lin(PEARL_RAIL) * 0.8, 0.45, emit=1.3, birth=FT[PK] + 0.45, fade=0.4, flash=3.0, twinkle=0.4,
                reflect=False),
         _batch(ST, 0.45, lin(GOLD), 0.7, emit=1.4, birth=FT[SK] + 0.2, fade=0.6, flash=2.0, reflect=False),
     ]
@@ -386,7 +386,8 @@ def _tower(T, c, rw, hs, bs, gi, jewel, spire=True):
     def ring(y):
         rr = rw * (1.0 - 0.28 * y / max(H, 1.0))
         return np.stack([c[0] + rr * np.cos(ang), np.full(n, c[1] + y), c[2] + rr * np.sin(ang)], 1)
-    edge, glass = lin(GLASS_EDGE[gi]), lin(GLASS[gi])
+    glass = lin(GLASS[gi])
+    edge = glass * 0.65 + lin(GLASS_EDGE[gi]) * 0.35
     ys = np.arange(0.0, H - 1e-6, 2.0)
     ys = np.append(ys, H)
     for y0, y1 in zip(ys[:-1], ys[1:]):
@@ -403,7 +404,7 @@ def _tower(T, c, rw, hs, bs, gi, jewel, spire=True):
     aa = r.uniform(0, 2 * np.pi, m)
     rr = rw * (1.0 - 0.28 * yy / max(H, 1.0)) * 0.8
     P = np.stack([c[0] + rr * np.cos(aa), c[1] + yy, c[2] + rr * np.sin(aa)], 1)
-    T.soft(P, glass * 0.7, 0.16, _rise_birth(yy, hs, bs))
+    T.soft(P, glass * 0.8, 0.22, _rise_birth(yy, hs, bs))
     if spire:
         tip = np.asarray(c, np.float64) + np.array([0.0, H + 2.8 * rw, 0.0])
         R = ring(H)
@@ -646,6 +647,12 @@ class Streams:
             alpha.append(_ss(0.0, 60.0, d) * (1.0 - _ss(L[-1] - 10.0, L[-1], d)))
             idx.append(sel)
         F, Hh, A, I = (np.concatenate(x) for x in (foot, head, alpha, idx))
+        cam = np.asarray(H.CAMERA.state(t).pos, np.float64)
+        A = A * _ss(30.0, 90.0, np.linalg.norm(Hh - cam[None], axis=1))     # never big strokes at the lens
+        keep = A > 0.01
+        F, Hh, A, I = F[keep], Hh[keep], A[keep], I[keep]
+        if len(I) == 0:
+            return None
         C = self.col[I]
         return [dict(pos=F, pos2=Hh, size=0.30, color=C * 0.9, alpha=0.30 * A, alpha2=0.85 * A, kind="line", emit=1.5,
                      reflect=True),
@@ -763,8 +770,9 @@ def _glitter_people(P, K, born, seed, gain=1.0):
     block = (np.floor(az / np.radians(11.0)).astype(int) * 5 + K * 4) % 9
     nine = np.asarray([lin(c) for c in COL9])
     j = r.random(n)
-    col = np.where((j < 0.62)[:, None], nine[block] * 0.65 + lin(WHITE) * 0.35,
-                   np.where((j < 0.85)[:, None], lin("#ffd9a0")[None, :], lin("#fff0dc")[None, :]))
+    # (round 6) the people in the nine colours, so they stand out from the pearl and glass of the city
+    col = np.where((j < 0.85)[:, None], nine[block] * 0.80 + lin(WHITE) * 0.20,
+                   nine[r.integers(0, 9, n)] * 0.55 + lin(WHITE) * 0.45)
     return [dict(pos=foot, pos2=head, size=0.28, color=col * 0.85, alpha=0.18 * gain, alpha2=0.75 * gain,
                  kind="line", emit=1.3, birth=born, fade=0.7, flash=1.5, reflect=False)]
 
@@ -1227,9 +1235,18 @@ def _downbeats():
 DOWNBEATS = _downbeats()
 
 
+def reading(t):
+    """1 while a phrase reads on screen (the city calms behind it so the words keep their contrast)."""
+    v = 0.0
+    for _lines, (a, b, c, d), *_rest in H.PHRASE_LIST:      # (the core defines it after this file loads)
+        if a - 0.5 <= t <= d + 0.5:
+            v = max(v, _sc(a - 0.5, b, t) * (1.0 - _sc(c, d, t)))
+    return v
+
+
 def glow_k(t):
-    """The mountain's light follows the music: brighter as it grows."""
-    return local_k(t) * (0.78 + 0.32 * intensity(t))
+    """The mountain's light follows the music: brighter as it grows; calmer behind a phrase."""
+    return local_k(t) * (0.78 + 0.32 * intensity(t)) * (1.0 - 0.28 * reading(t))
 
 
 def edge_k(t):
@@ -1438,10 +1455,19 @@ def _grand(scene):
 
 
 def add(scene):
-    dim, gold = _mountain()
+    walls, dim, gold = _mountain()
     scene.add("zion body", _Off(_body()), mask=Mask("dark", strength=body_k, grow=1.9, soft=4.0), reflect=False)
+    scene.add("zion walls", Static(walls, lambda t: glow_k(t) * form_k(t)))
     scene.add("zion dim", Static(dim, glow_k))
     scene.add("zion gold", Static(gold, glow_k))
+    # round 6: the city grows section by section, and the rivers of people stream to it
+    gates, gardens, towers, mist = _city_parts()
+    calm = (lambda t: glow_k(t) * (1.0 - 0.25 * reading(t)))
+    scene.add("zion gates", Static(gates, calm))
+    scene.add("zion gardens", Static(gardens, calm))
+    scene.add("zion towers", Static(towers, lambda t: calm(t) * (1.0 + 0.25 * intensity(t) * beat_pulse(t, 0.12))))
+    scene.add("zion mist", Static(mist, lambda t: local_k(t) * (0.7 + 0.5 * intensity(t))))
+    scene.add("zion streams", Streams())
     edges = np.concatenate([_ring(ZC, tier_r(k) + 0.1, tier_y(k) + 1.0, 1.4) for k in range(N_TIER)])
     scene.add("zion beat", Static([_batch(edges, 0.6, lin("#ffe8c0"), 0.8, emit=1.8, reflect=False)], edge_k))
     for k in range(N_TIER):
@@ -1474,12 +1500,16 @@ def add(scene):
         scene.add(f"nations mid arms {shot}", Arms(P[sel], born[sel], seed, mid_k))
         i = np.where(sel)[0]
         i = i[rng.random(len(i)) < 0.26]
-        scene.add(f"nations near {shot}", WaveCrowd(
+        crowd = WaveCrowd(
             delay=wave_u(P[i]), gain=(lambda f: (lambda t: nations_k(t) * f(t)))(on), places=P[i],
             facing=lambda x, z: float(np.degrees(np.arctan2(ZC[0] - x, ZC[2] - z))),
             kinds=(("raise", 3.0), ("open", 1.0), ("stand", 0.6)),
             people=dict(woman=1.0, man=1.0, elder=0.2, child=0.15), start=born[i], color="#ffcf7a",
-            color2="#fff0d0", bright=1.35, points=48, size=10.5, flash=1.5, seed=float(seed)))
+            color2="#fff0d0", bright=1.35, points=48, size=10.5, flash=1.5, seed=float(seed))
+        # (round 6) each true figure in one of the nine colours (they stood gold against gold before)
+        nine = np.asarray([lin(c) for c in COL9])
+        crowd.tint = nine[np.arange(crowd.n) % 9] * 0.75 + lin(WHITE) * 0.25
+        scene.add(f"nations near {shot}", crowd)
     for name, c in _comets():
         scene.add(name, c, reflect=False)
     _grand(scene)

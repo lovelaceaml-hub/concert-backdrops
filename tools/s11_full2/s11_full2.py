@@ -383,7 +383,7 @@ GLOBE = Globe(pos=tuple(GLOBE_C), radius=GLOBE_R, face="camera", camera=None, lo
 # a glowing golden edge: Korea ignites first (0:41.6, on Father's pulse rolling out), the dawn spreads through
 # the first Earth shots, again through the second, and the whole world is in day by 1:17.46; the world finale
 # stays lit. earth_day(t) is the progress 0..1; the dawn's angular radius is DAWN_MAX * progress.
-DAY_KEYS = [(41.6, 0.0), (42.4, 0.03), (53.78, 0.40), (70.54, 0.40), (76.9, 1.0)]
+DAY_KEYS = [(41.6, 0.0), (42.6, 0.02), (53.78, 0.30), (70.54, 0.30), (76.9, 1.0)]
 DAWN_MAX = 200.0                                     # degrees: past 180 + the edge's width the world is all day
 DAWN_SOFT = 11.0                                     # degrees: the width of the dawn's edge
 
@@ -411,17 +411,17 @@ def _dawn_edge(t, c, R, zw, cam):
         p = c + R * 1.012 * v
         f = ((eye[None, :] - p) * v).sum(1) > 0.0
         if f.any():
-            out.append(dict(pos=p[f], size=R * 0.09, color=lin("#ffc68a"), alpha=0.16 * gone * pul, kind="soft",
+            out.append(dict(pos=p[f], size=R * 0.10, color=lin("#ffb060"), alpha=0.22 * gone * pul, kind="soft",
                             emit=1.8, dof=0.0, fog=0.0, reflect=False))
-            out.append(dict(pos=p[f], size=R * 0.012, color=lin("#fff0d0"), alpha=0.7 * gone * pul, kind="spark",
+            out.append(dict(pos=p[f], size=R * 0.012, color=lin("#ffe0a8"), alpha=0.7 * gone * pul, kind="spark",
                             emit=2.6, twinkle=0.7, dof=0.0, fog=0.0, reflect=False))
     zp = c + R * 1.02 * zw
     if ((eye - zp) @ zw) > 0.0:
         # the sun rising on Korea: it ignites as the camera arrives on the Earth, then glows on as the source
         k = (1.6 * hit_pulse(t, [41.6], rise=0.05, fall=1.4) + 0.55 * gone + 0.6 * hit_pulse(t, [70.54], fall=1.0)) * pul
-        out.append(dict(pos=zp[None, :], size=R * 0.5, color=lin("#ffd9a0"), alpha=0.10 * k, kind="soft", emit=2.0,
+        out.append(dict(pos=zp[None, :], size=R * 0.3, color=lin("#ffc680"), alpha=0.09 * k, kind="soft", emit=2.0,
                         dof=0.0, fog=0.0, reflect=False))
-        out.append(dict(pos=zp[None, :], size=R * 0.16, color=lin("#fff0d8"), alpha=0.35 * k, kind="soft", emit=2.6,
+        out.append(dict(pos=zp[None, :], size=R * 0.09, color=lin("#fff0d8"), alpha=0.32 * k, kind="soft", emit=2.6,
                         dof=0.0, fog=0.0, reflect=False))
     return out
 
@@ -477,7 +477,7 @@ def _night_side(sample):
             else:                                         # the land glow, its warm halo and the clouds dim at night
                 al = b["alpha"]
                 al = np.full(len(pos), float(al)) if not np.ndim(al) else np.asarray(al, np.float64)
-                b["alpha"] = (al * (0.12 + 0.88 * d) * (1.0 + 0.6 * edge)).astype(np.float32)
+                b["alpha"] = (al * (0.05 + 0.95 * d) * (1.0 + 0.8 * edge)).astype(np.float32)
         out = list(out) + _dawn_edge(t, c, R, zw, cam)
         return out
     return wrapped
@@ -1073,8 +1073,9 @@ import songs.s11_procession as S_PROC  # noqa: E402
 import songs.s11_coda as S_CODA  # noqa: E402
 import songs.s11_light as S_LIGHT  # noqa: E402
 import songs.s11_dance as S_DANCE  # noqa: E402
+import songs.s11_music_fx as S_MUSIC  # noqa: E402  (last: it lifts what the others placed)
 
-THREADS = [S_CHURCH, S_STAGE, S_ZION, S_PROC, S_CODA, S_DANCE]
+THREADS = [S_CHURCH, S_STAGE, S_ZION, S_PROC, S_CODA, S_DANCE, S_MUSIC]
 Y, FZ, G = SUMMIT, FACADE_Z, GLOBE_C
 CORE_SHOTS = [
     # Father's pulse rolls out over the whole Earth: a long graceful pull-back from close over Korea (round 6: the
@@ -1263,10 +1264,13 @@ def _bursts():
     out = []
     for c in CUTS:
         strong = any(abs(c - s) < 0.05 for s in SLAMS)
-        out.append(dict(t=c, strength=1.5 if strong else 0.16 + 0.12 * intensity(c), rise=0.04 if strong else 0.04,
-                        fall=0.35 if strong else 0.22, color="#fff4e0"))      # a big slam flash, gone within half a second
+        out.append(dict(t=c, strength=0.95 if strong else 0.16 + 0.12 * intensity(c), rise=0.04 if strong else 0.04,
+                        fall=0.26 if strong else 0.22, color="#fff4e0"))      # a slam flash, gone within a third of a second (round 6: no white-out)
     for i, h in enumerate(KICKS):
         if any(abs(h - s) < 0.05 for s in SLAMS):
+            continue
+        if i == 0:      # the first chord: a warm gold glow as the star ignites over the title (not a red wash)
+            out.append(dict(t=h + 0.01, strength=0.22, rise=0.05, fall=0.6, color="#ffd27a"))
             continue
         out.append(dict(t=h + 0.01, strength=0.35 + 0.45 * intensity(h), rise=0.03, fall=0.5, color=COL9[i % 9]))
     for a, b in ((82.08, 117.0), (162.86, 201.73), (201.73, 238.8)):
@@ -1277,7 +1281,7 @@ def _bursts():
             out.append(dict(t=x, strength=0.10, rise=0.03, fall=0.3, color=COL9[(k * 4) % 9]))
             x += bar
             k += 1
-    out.append(dict(t=HIT["father"], strength=0.8, rise=0.08, fall=0.6, color="#ffeccc",
+    out.append(dict(t=HIT["father"], strength=0.45, rise=0.08, fall=0.6, color="#ffeccc",
                     at=tuple(CHURCH + _v(0.0, 20.0, 0.0))))
     return sorted(out, key=lambda d: d["t"])
 

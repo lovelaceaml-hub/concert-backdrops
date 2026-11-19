@@ -95,6 +95,7 @@ textarea{min-height:44px;resize:vertical}
   <ul class="machines" id="machines"></ul>
   <h3>Now working on</h3>
   <ul class="jobs" id="jobs"><li class="empty">Nothing rendering right now.</li></ul>
+  <div class="row" id="storeRow" hidden style="margin-top:8px"><span class="hint" id="storeText"></span><button type="button" id="storeBtn">Clear old files</button></div>
 </section>
 
 <section class="panel" aria-label="Request a change to the whole film">
@@ -330,5 +331,59 @@ render(); setInterval(tick, 20000);
     REQUESTS = qs.docs.map(d => Object.assign({id: d.id}, d.data())).sort((a, b) => String(b.created).localeCompare(String(a.created)));
     render();
   }, fail);
+})();
+
+// Storage: keep only the newest section videos and the files the machines need; remove the rest (Anthony, 2026-11-19).
+(async () => {
+  const assets = window.claude ? await window.claude.use("assets") : null;
+  if (!assets) return;
+  const row = document.getElementById("storeRow"), txt = document.getElementById("storeText"), btn = document.getElementById("storeBtn");
+  const mb = n => (n / 1048576).toFixed(0) + " MB";
+  const idOf = u => String(u || "").split("/_blob/")[1] || "";
+  async function listAll(){
+    let out = [], usage = null, after;
+    for (let i = 0; i < 20; i++){
+      const r = await assets.list(after ? {after} : undefined);
+      out = out.concat(r.assets || []); usage = r.usage || usage;
+      after = r.next || r.after || r.cursor;
+      if (!after || !(r.assets || []).length) break;
+    }
+    return {list: out, usage};
+  }
+  async function keepSet(){
+    const keep = new Set(SECTIONS.map(s => idOf(s.url)).filter(Boolean));
+    try { const d = db || await window.claude.use("db"); const k = await d.doc("keep/now").get(); if (k.exists) (k.data().ids || []).forEach(x => keep.add(String(x))); } catch (e) {}
+    return keep;
+  }
+  async function show(){
+    try {
+      const {list, usage} = await listAll();
+      const used = usage && (usage.bytes || usage.usedBytes || usage.used), cap = usage && (usage.limitBytes || usage.limit || usage.capacity);
+      const keep = await keepSet();
+      const old = list.filter(a => !keep.has(a.id));
+      txt.textContent = (used ? "Storage " + mb(used) + (cap ? " of " + mb(cap) : "") + ". " : "") + list.length + " files, " + old.length + " old.";
+      btn.disabled = !old.length;
+      row.hidden = false;
+    } catch (e) { row.hidden = true; }
+  }
+  btn.addEventListener("click", async () => {
+    btn.disabled = true; btn.textContent = "Clearing";
+    let gone = 0;
+    try {
+      const keep = await keepSet();
+      const fresh = Date.now() - 30 * 60000;
+      const {list} = await listAll();
+      for (const a of list){
+        if (keep.has(a.id)) continue;
+        const t = Date.parse(a.createdAt || a.created || a.uploadedAt || "");
+        if (t && t > fresh) continue;        // a machine may still be handing this one over
+        try { await assets.delete(a.id); gone++; txt.textContent = "Removed " + gone + " old files"; } catch (e) {}
+      }
+    } catch (e) {}
+    btn.textContent = "Clear old files";
+    await show();
+    txt.textContent = "Removed " + gone + " old files. " + txt.textContent;
+  });
+  setTimeout(show, 1500);
 })();
 </script>
