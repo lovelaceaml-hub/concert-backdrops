@@ -98,7 +98,8 @@ SHOTS = [
           fov=50.0, roll=(8.0, -8.0)),
     # standing firm, the second climb: a bigger banking spiral, far higher than the first
     _shot("zion_full", 171.48, 178.4,
-          _orbit(171.48, 178.4, -40.0, 80.0, 380.0, 230.0, 40.0, 190.0, ZC + _v(0, 40, 0), ZC + _v(0, 60, 0), 8),
+          # (round 8, f18) it starts farther out and higher, so the near terraces do not bloom white at the lens
+          _orbit(171.48, 178.4, -40.0, 80.0, 440.0, 230.0, 78.0, 190.0, ZC + _v(0, 40, 0), ZC + _v(0, 60, 0), 8),
           fov=54.0, roll=(-14.0, 10.0)),
     # sacrifice: the mountain blazing, a high helicopter orbit
     _shot("zion_full", 180.7, 183.0,
@@ -519,7 +520,7 @@ def _building(T, c, a, kind, bs, gi, k=0, s=1.0):
     needle. Walls in the district's pearl, roofs and domes in rose, lavender, sky, teal or amber, windows lit."""
     sd = np.array([np.cos(a), 0.0, -np.sin(a)])
     fw = np.array([np.sin(a), 0.0, np.cos(a)])
-    wall = _district_tint(a, k, 0.38)[0] * 0.85
+    wall = _district_tint(a, k, 0.45)[0] * 0.68               # (f18) not white walls in the wide views
     roof = lin(ROOF[gi % len(ROOF)])
     b1, b2, b3 = (list(bs) + [bs[-1]] * 3)[:3]
     c = np.asarray(c, np.float64)
@@ -990,10 +991,12 @@ def _glitter_people(P, K, born, seed, gain=1.0):
     kd = np.interp(np.asarray(K, np.float64), [0, 1, 2, 3, 4, 5], [1.0, 0.92, 0.78, 0.62, 0.5, 0.46])
     g2 = np.concatenate([kd, kd]) * gain
     robe = dict(pos=np.concatenate([hem - w, hem + w]), pos2=np.concatenate([neck, neck]), size=0.24,
-                color=np.concatenate([col, col]) * 0.8, alpha=0.30 * g2, alpha2=0.80 * g2, kind="line", emit=1.3,
-                birth=np.concatenate([born, born]), fade=0.7, flash=1.5, reflect=False)
+                color=np.concatenate([col, col]) * 0.8, alpha=0.26 * g2, alpha2=0.70 * g2, kind="line", emit=1.3,
+                birth=np.concatenate([born, born]), fade=1.2, flash=0.3, reflect=False)
     face = dict(pos=head, size=0.40, color=col * 0.8 + lin(WHITE) * 0.2, alpha=0.9 * kd * gain, kind="spark",
-                emit=1.8, birth=born, fade=0.7, flash=1.5, twinkle=0.15, seed=r.random(n), reflect=False)
+                emit=1.8, birth=born, fade=1.2, flash=0.3, twinkle=0.15, seed=r.random(n), reflect=False)
+    # (round 8, f18: the whole mountain whitened at 2:51 as thousands were born at once with a flash each) each
+    # person now comes softly
     return [robe, face]
 
 
@@ -1137,7 +1140,7 @@ class Arms:
         if len(ii) == 0:
             return None
         L = lift[ii]
-        a = _ss(0.03, 0.35, L) * self.kd[ii]
+        a = 0.7 * _ss(0.03, 0.35, L) * self.kd[ii]          # (round 8, f18) the waves a little softer
         col = self.col[ii]
         arms = self._hands(ii, L)                 # [(shoulder, hand) left, (shoulder, hand) right]
         A = np.concatenate([a, a])
