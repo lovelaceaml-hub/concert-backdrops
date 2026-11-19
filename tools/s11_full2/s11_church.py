@@ -800,6 +800,8 @@ class Church:
             k *= 0.5
         elif shot_name(t) != "city" and not stage_view(t) and t > 200.0:
             k *= 0.5                            # others' sunrise views (the coda summit): calm, never white
+        if 252.5 < t < LAST_CHORD:              # round 7: the glass steps back as the comets close in, so the
+            k *= 1.0 - 0.4 * _sc(252.6, 253.9, t)   # emblem's flare is the brightest thing on the last chord
         i = intensity(t)
         if self.part == "soft":                 # deeper blue in the quiet, brighter as the music grows
             k *= 0.5 + 0.3 * i
@@ -1223,7 +1225,7 @@ def _ray_k(t):
         return 0.0
     k = (1.25 * hit_pulse(t, [HIT["father"]], rise=0.6, fall=1.2) * _env(t, 37.0, 41.6, 0.5, 0.15)
          + 0.9 * _env(t, 74.56, 75.2, 0.1, 0.1) + 0.7 * _env(t, 222.0, 224.03, 0.3, 0.2)
-         + 0.5 * _sc(251.7, 253.0, t) + 0.5 * _sc(253.35, LAST_CHORD, t) ** 2)
+         + 0.45 * _sc(251.7, 253.0, t) + 0.35 * _sc(253.35, LAST_CHORD, t) ** 2)
     return k * (1.0 + 0.3 * beat_pulse(t) * intensity(t))
 
 
