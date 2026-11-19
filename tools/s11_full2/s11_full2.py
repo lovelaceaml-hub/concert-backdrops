@@ -547,9 +547,11 @@ def _wordcam(t):
     return CAMERA
 
 
-def _width(t, depth, frac):
-    cam = CAMERA.state(t)
-    return float(2.0 * depth * np.tan(np.radians(cam.fov) * 0.5) * cam.aspect * frac)
+def _width(ts, depth, frac):
+    """The words' width so they fill `frac` of the frame at the narrowest lens they are seen through."""
+    fov = min(CAMERA.state(float(t)).fov for t in ts)
+    cam = CAMERA.state(float(ts[0]))
+    return float(2.0 * depth * np.tan(np.radians(fov) * 0.5) * cam.aspect * frac)
 
 
 def _phrase_specs():
@@ -563,8 +565,7 @@ def _phrase_specs():
         else:
             frac = min(0.56, 0.026 * long + 0.05)
             ride = (0.5, 0.63 if len(lines) == 1 else 0.60, depth)
-        mid = 0.5 * (r0 + r1)
-        spec = dict(label="", lines=lines, ride=ride, face="screen", width=_width(mid, depth, frac),
+        spec = dict(label="", lines=lines, ride=ride, face="screen", width=_width(np.linspace(ti, to, 12), depth, frac),
                     t_in=ti, t_read0=r0, t_read1=r1, t_out=to, arrive=arr, leave=lv, name=f"phrase{i:02d}",
                     color=GOLD if strong else "#ffe6c0", glow=GOLD if strong else "#ffd59a",
                     tint=0.75 if strong else 0.35, bright=1.15 if strong else 1.0,
@@ -617,13 +618,12 @@ def _sig_windows():
         a = max(t0, 11.6)
         if t1 <= a or t0 >= 254.07:
             continue
-        pal = "night" if (s["kind"] == "globe" or t0 < 162.86) else "day"
+        pal = "night" if (s["kind"] == "globe" or t0 < 162.86 or s["name"] == "hearts_rise") else "day"
         if w and w[-1][3] == pal and abs(w[-1][1] - a) < 1e-6:
             w[-1] = (w[-1][0], t1, w[-1][2], pal)
         else:
             w.append((a, t1, "tl", pal))
-    w.append((254.07, TOTAL + 1.0, "tl", "day"))
-    return w
+    return w                     # from the last chord the end card carries its own lockup
 
 
 TITLES = dict(
