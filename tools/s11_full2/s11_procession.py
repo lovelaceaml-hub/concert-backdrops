@@ -395,8 +395,8 @@ class GrowSparks:
         self.seed = r.random(n)
 
     def sample(self, t):
-        k = proc_k(t)
-        if k <= 0.0 or t < GROW_S.min() - 2.0 or t > GROW_S.max() + 0.2:
+        k = proc_k(t) * (0.0 if block_t0(t) == 148.6 else 1.0)    # (not in the kings' low view: they arc across its
+        if k <= 0.0 or t < GROW_S.min() - 2.0 or t > GROW_S.max() + 0.2:       # sky where the words arrive)
             return None
         u = (t - (GROW_S - self.dur)) / self.dur
         on = (u > 0.0) & (u < 1.0)
