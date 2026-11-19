@@ -133,6 +133,16 @@ def _xz(rr, a, y):
                      ZC[2] + rr * np.cos(a)], 1)
 
 
+def _district_tint(a, k, share=0.5):
+    """(round 8, the wide view read as a white mass) the colour of a wall or gate at azimuth a on terrace k: pearl
+    mixed with its district's hue among the nine (the same districts as the people), so from afar the city reads
+    as bands of colour, terrace over terrace, instead of one white mass."""
+    a = np.atleast_1d(np.asarray(a, np.float64))
+    hue = (np.floor(a / np.radians(40.0) + 0.5).astype(int) * 2 + int(k) * 4) % 9
+    nine = np.asarray([lin(c) for c in COL9])
+    return nine[hue] * share + lin(PEARL)[None, :] * (1.0 - share)
+
+
 def _stair_mask(p, w=9.0):
     """True where a point (x, z) lies on one of the great stairways (kept clear of people and trees)."""
     a = np.arctan2(p[:, 0] - ZC[0], p[:, 2] - ZC[2])
@@ -161,8 +171,9 @@ def _mountain():
         a = _az(n, r, 0.9)
         u = r.random(n) ** 0.7                        # more light high on the wall
         face.append(_xz(R0 + 0.05, a, y0 + h * u))
-        face_c.append(lo[None, :] * (1 - u[:, None]) + hi[None, :] * u[:, None])
-        face_a.append(0.06 + 0.30 * u ** 2.0)
+        hd = _district_tint(a, k)                    # (round 8) each district of each wall its own pastel
+        face_c.append(lo[None, :] * (1 - u[:, None]) + hd * u[:, None])
+        face_a.append((0.06 + 0.30 * u ** 2.0) * (1.0 if k < 4 else 0.78))
         face_k.append(np.full(n, k))
         n = int(R0 * 2 * np.pi * h * 0.035)
         a = _az(n, r, 0.95)
@@ -254,7 +265,7 @@ def _mountain():
     # (round 6) the walls fill with pearl light, the floors with a pale glass light; only the stairways are gold
     gold = [
         _batch(FL, 6.0, lin("#bfe2ff"), 0.07, kind="soft", emit=1.0, birth=FB, fade=0.7, flash=2.0, reflect=False),
-        _batch(F[upper], 2.6, lin("#e2d8ff") * 0.40, FA[upper] * 0.70, kind="soft", emit=1.3, birth=fb[upper], fade=0.6,
+        _batch(F[upper], 2.6, FC[upper] * 0.40, FA[upper] * 0.70, kind="soft", emit=1.3, birth=fb[upper], fade=0.6,
                flash=1.5, reflect=False),
         _batch(PA, 0.55, lin(PEARL_RAIL) * 0.8, 0.45, emit=1.3, birth=FT[PK] + 0.45, fade=0.4, flash=3.0, twinkle=0.4,
                reflect=False),
@@ -419,7 +430,7 @@ def _pavilion(T, c, i, b):
     a = np.arange(n) * 2 * np.pi / n
     base = np.stack([c[0] + R * np.cos(a), np.full(n, c[1]), c[2] + R * np.sin(a)], 1)
     top = base + np.array([0.0, h, 0.0])
-    w = lin("#f8f4ff")
+    w = lin("#f8f4ff") * 0.5 + lin(DOME[i % 3]) * 0.3      # (round 8) columns tinted by the dome, not pure white
     T.line(base, top, w * 0.9, 0.9, b + 0.4 * np.arange(n) / n)
     T.line(top, np.roll(top, -1, 0), w, 1.0, b + 0.45)
     T.line(base, np.roll(base, -1, 0), w * 0.6, 0.7, b)
@@ -449,9 +460,10 @@ def _garden(T, c, r, b):
         T.spark(bl, np.asarray([lin(BLOSSOM[x]) for x in r.integers(0, 4, 9)]), bb + 0.5 + 0.3 * r.random(9))
 
 
-def _gate(T, c, d, hw, h, b):
+def _gate(T, c, d, hw, h, b, k=0):
     """A pearl gate over a stairway head: two pylons, a round arch, an inner arch, a jewel at the keystone,
-    shimmering from rose to sky like mother-of-pearl."""
+    shimmering from rose to sky like mother-of-pearl. (Round 8) tinted with its district's colour."""
+    tint = _district_tint(np.arctan2(d[0], d[2]), k, 0.42)[0]
     sd = np.array([d[2], 0.0, -d[0]])
     up = np.array([0.0, 1.0, 0.0])
     w = hw + 1.6
@@ -459,14 +471,14 @@ def _gate(T, c, d, hw, h, b):
         for o in (-0.7, 0.7):
             for f in (-0.7, 0.7):
                 p = c + sd * s * (w + o) + d * f
-                T.line(p, p + up * h, lin(PEARL) * 0.8, 0.9, b + 0.0)
+                T.line(p, p + up * h, tint * 0.72, 0.9, b + 0.0)
     e = np.linspace(0.0, np.pi, 25)
     for rr, br, k in ((w, 1.0, 0.0), (w - 1.1, 0.7, 0.15)):
         A = c[None] + sd[None] * (rr * np.cos(e))[:, None] + up[None] * (h + rr * 0.55 * np.sin(e))[:, None]
-        pearl = np.where((np.cos(e) > 0)[:, None], lin("#ffd6ec"), lin("#d6ecff")) * 0.5 + lin(PEARL) * 0.5
+        pearl = np.where((np.cos(e) > 0)[:, None], lin("#ffd6ec"), lin("#d6ecff")) * 0.4 + tint * 0.6
         T.line(A[:-1], A[1:], pearl[:-1] * br, 0.95, b + 0.25 + k + 0.3 * e[1:] / np.pi)
     key = c + up * (h + w * 0.55 + 0.6)
-    T.soft(c + up * (h * 0.8), lin("#f0e8ff") * 0.6, 0.18, b + 0.3)
+    T.soft(c + up * (h * 0.8), tint * 0.5, 0.12, b + 0.3)
     T.spark(key, lin("#fff6ff"), b + 0.6)
 
 
@@ -490,7 +502,7 @@ def _city_parts():
         for k in range(N_TIER):
             c = ZC + d * (tier_r(k) - 3.0) + np.array([0.0, tier_y(k), 0.0])
             b = HIT["glory"] + 0.35 * (N_TIER - 1 - k) + 0.1 * abs(s) if k >= 5 else FILL_T[k] + 0.35 + 0.1 * abs(s)
-            _gate(G, c, d, hw, 9.0 if s == 0.0 else 7.0, float(_snap(b)))
+            _gate(G, c, d, hw, 9.0 if s == 0.0 else 7.0, float(_snap(b)), k)
     # the terraces' back bands: gardens, towers and pavilions in a pattern (groups, never a uniform row)
     gen1 = {0: 90.72, 1: 91.6, 2: 92.6, 3: 99.4, 4: 101.5, 5: 109.8}
     pat = "GTGPGt"
@@ -523,7 +535,7 @@ def _city_parts():
         m = int(2 * FRONT * R0 / 7.0)
         a = np.linspace(-FRONT, FRONT, m) + r.uniform(-0.01, 0.01, m)
         P = _xz(R0 + 5.0 + r.uniform(0, 5, m), a, y0 + 1.0 + r.uniform(0, 1.5, m))
-        M.soft(P, lin("#8f86d8") * 0.55, 0.05, 0.0)
+        M.soft(P, lin("#7a6fd0") * 0.5, 0.036, 0.0)       # (round 8) thinner: it whitened the near terraces
     # the new rings of the city rising out of the sea (low pearl walls with gates, then gardens and towers)
     for ri, (R, t0) in enumerate(zip(R_RING, RING_T)):
         front = np.radians(100.0)
@@ -661,7 +673,7 @@ class Streams:
             return None
         g = grow_k(t)
         spread = 0.6 + 3.4 * _ss(0.3, 1.0, g)      # on the sea the rivers widen as more people come
-        foot, head, alpha, idx = [], [], [], []
+        foot, head, alpha, idx, sides, fwd = [], [], [], [], [], []
         for i, (L, P) in enumerate(self.paths):
             sel = np.where((self.sa == i) & (self.q < g))[0]
             if len(sel) == 0:
@@ -675,24 +687,40 @@ class Streams:
             bob = 0.06 * np.abs(np.sin(6.0 * t + self.ph[sel]))
             foot.append(p)
             head.append(p + np.stack([np.zeros(len(sel)), 1.55 * self.h[sel] + bob, np.zeros(len(sel))], 1))
+            sides.append(np.stack([np.cos(a), np.zeros(len(sel)), -np.sin(a)], 1))
+            fwd.append(-np.stack([np.sin(a), np.zeros(len(sel)), np.cos(a)], 1))
             # each newcomer fades in as the river fills (no pop)
             alpha.append(_ss(0.0, 60.0, d) * (1.0 - _ss(L[-1] - 10.0, L[-1], d))
                          * np.clip((g - self.q[sel]) / 0.03, 0.0, 1.0))
             idx.append(sel)
         if not idx:
             return None
-        F, Hh, A, I = (np.concatenate(x) for x in (foot, head, alpha, idx))
+        F, Hh, A, I, SD, FW = (np.concatenate(x) for x in (foot, head, alpha, idx, sides, fwd))
         cam = np.asarray(H.CAMERA.state(t).pos, np.float64)
         A = A * _ss(30.0, 90.0, np.linalg.norm(Hh - cam[None], axis=1))     # never big strokes at the lens
         keep = A > 0.01
-        F, Hh, A, I = F[keep], Hh[keep], A[keep], I[keep]
+        F, Hh, A, I, SD, FW = F[keep], Hh[keep], A[keep], I[keep], SD[keep], FW[keep]
         if len(I) == 0:
             return None
         C = self.col[I]
-        return [dict(pos=F, pos2=Hh, size=0.30, color=C * 0.95, alpha=0.30 * A, alpha2=0.85 * A, kind="line", emit=1.5,
-                     reflect=True),
-                dict(pos=Hh, size=0.55, color=C * 0.85 + lin(WHITE) * 0.15, alpha=0.9 * A, kind="spark", emit=2.6,
-                     twinkle=0.3, seed=self.seed[I], reflect=False),
+        # (round 8, "the people read as lines of dots") each walker a small figure: two legs of light from the hips
+        # that scissor with the step, a robe up to the shoulders, the head apart above the neck
+        hh = self.h[I][:, None]
+        up = np.array([0.0, 1.0, 0.0])
+        hip = F + up * (0.78 * hh)
+        neck = F + up * (1.24 * hh)
+        st = np.sin(6.0 * t + self.ph[I])[:, None] * 0.26 * hh
+        fl = F + SD * 0.10 * hh + FW * st
+        fr = F - SD * 0.10 * hh - FW * st
+        hem = hip - up * (0.10 * hh)
+        A2 = np.concatenate([A, A])
+        C2 = np.concatenate([C, C])
+        return [dict(pos=np.concatenate([fl, fr]), pos2=np.concatenate([hip, hip]), size=0.22, color=C2 * 0.8,
+                     alpha=0.35 * A2, alpha2=0.7 * A2, kind="line", emit=1.4, reflect=True),
+                dict(pos=np.concatenate([hem - SD * 0.2 * hh, hem + SD * 0.2 * hh]), pos2=np.concatenate([neck, neck]),
+                     size=0.24, color=C2 * 0.95, alpha=0.6 * A2, alpha2=0.85 * A2, kind="line", emit=1.5, reflect=False),
+                dict(pos=Hh, size=0.42, color=C * 0.55 + lin(WHITE) * 0.45, alpha=0.9 * A, kind="spark", emit=2.4,
+                     twinkle=0.2, seed=self.seed[I], reflect=False),
                 dict(pos=Hh[::4], size=2.6, color=C[::4] * 0.75, alpha=0.10 * A[::4], kind="soft", emit=1.2,
                      reflect=False)]
 
@@ -806,17 +834,33 @@ def _glitter_people(P, K, born, seed, gain=1.0):
     r = np.random.default_rng(seed)
     n = len(P)
     h = r.uniform(0.9, 1.1, n)
-    foot = P + np.array([0.0, 0.2, 0.0])
-    head = P + np.stack([np.zeros(n), 1.6 * h, np.zeros(n)], 1)
+    # (round 8, "the people read as lines of dots") each person a small figure: a robe of light widening from
+    # the shoulders to the feet, and the head apart from it above the neck, so even far off the shape reads as
+    # a person standing, not a stroke with a dot
+    az = np.arctan2(P[:, 0] - ZC[0], P[:, 2] - ZC[2])
+    side = np.stack([np.cos(az), np.zeros(n), -np.sin(az)], 1)
+    up = np.array([0.0, 1.0, 0.0])
+    neck = P + up * (1.22 * h)[:, None]
+    head = P + up * (1.56 * h)[:, None]
+    hem = P + up * 0.12
     block = _place_hue(P, K)
     nine = np.asarray([lin(c) for c in COL9])
     j = r.random(n)
     # (round 6) the people in the nine colours, so they stand out from the pearl and glass of the city; (round 7,
     # review f23: confetti close up, white from afar) one calm colour per district of each terrace
-    col = np.where((j < 0.95)[:, None], nine[block] * 0.86 + lin(WHITE) * 0.14,
-                   nine[r.integers(0, 9, n)] * 0.6 + lin(WHITE) * 0.4)
-    return [dict(pos=foot, pos2=head, size=0.28, color=col * 0.85, alpha=0.18 * gain, alpha2=0.75 * gain,
-                 kind="line", emit=1.3, birth=born, fade=0.7, flash=1.5, reflect=False)]
+    col = np.where((j < 0.95)[:, None], nine[block] * 0.92 + lin(WHITE) * 0.08,
+                   nine[r.integers(0, 9, n)] * 0.7 + lin(WHITE) * 0.3)
+    w = (0.24 * h)[:, None] * side
+    # (round 8, 2:55 "a white mass at the upper terraces and summit") the upper terraces are seen edge on from the
+    # wide views, so their crowds pile up in few pixels and added up to white: each person there shines less
+    kd = np.interp(np.asarray(K, np.float64), [0, 1, 2, 3, 4, 5], [1.0, 0.92, 0.78, 0.62, 0.5, 0.46])
+    g2 = np.concatenate([kd, kd]) * gain
+    robe = dict(pos=np.concatenate([hem - w, hem + w]), pos2=np.concatenate([neck, neck]), size=0.24,
+                color=np.concatenate([col, col]) * 0.8, alpha=0.30 * g2, alpha2=0.80 * g2, kind="line", emit=1.3,
+                birth=np.concatenate([born, born]), fade=0.7, flash=1.5, reflect=False)
+    face = dict(pos=head, size=0.40, color=col * 0.8 + lin(WHITE) * 0.2, alpha=0.9 * kd * gain, kind="spark",
+                emit=1.8, birth=born, fade=0.7, flash=1.5, twinkle=0.15, seed=r.random(n), reflect=False)
+    return [robe, face]
 
 
 def _nations():
@@ -920,6 +964,7 @@ class Arms:
         nine = np.asarray([lin(c) for c in COL9])
         self.col = nine[r2.integers(0, 9, n)] * 0.55 + lin(WHITE) * 0.45
         self.s = r2.random(n)
+        self.kd = np.ones(n)                             # each person's brightness (round 8: upper terraces dimmer)
 
     def lift(self, t, ii=None):
         ii = slice(None) if ii is None else ii
@@ -957,7 +1002,7 @@ class Arms:
         if len(ii) == 0:
             return None
         L = lift[ii]
-        a = _ss(0.03, 0.35, L)
+        a = _ss(0.03, 0.35, L) * self.kd[ii]
         col = self.col[ii]
         arms = self._hands(ii, L)                 # [(shoulder, hand) left, (shoulder, hand) right]
         A = np.concatenate([a, a])
@@ -968,11 +1013,12 @@ class Arms:
                         reflect=False))
         HP = np.concatenate([arms[0][1], arms[1][1]])
         sd = np.concatenate([self.s[ii], self.s[ii]])
-        out.append(dict(pos=HP, size=0.6, color=C * 0.6 + lin(GOLD2) * 0.5, alpha=A, kind="spark", emit=3.2,
+        # (round 8: at 2:55 the wave's gold-white hands added up to a white mass) the hands keep the person's colour
+        out.append(dict(pos=HP, size=0.48, color=C * 0.85 + lin(GOLD2) * 0.2, alpha=A, kind="spark", emit=2.6,
                         twinkle=0.3, seed=sd, reflect=False))
-        # a soft glow round the raised hands: from afar the wave reads as a band of light rolling up the mountain
-        out.append(dict(pos=HP[::2], size=2.4, color=C[::2] * 0.5 + lin(GOLD2) * 0.4, alpha=0.10 * A[::2] * A[::2],
-                        kind="soft", emit=1.4, reflect=False))
+        # a soft glow round the raised hands: from afar the wave reads as a band of colour rolling up the mountain
+        out.append(dict(pos=HP[::3], size=2.4, color=C[::3] * 0.7, alpha=0.06 * A[::3] * A[::3],
+                        kind="soft", emit=1.2, reflect=False))
         # the trails: where the hands were a moment ago, fading behind them (only while the arms move)
         prev = HP
         for j in range(1, self.TRAIL + 1):
@@ -982,8 +1028,8 @@ class Arms:
             f = (1.0 - j / (self.TRAIL + 1.0)) ** 1.3
             mv = np.linalg.norm(Q - prev, axis=1) > 0.02
             if mv.any():
-                out.append(dict(pos=prev[mv], pos2=Q[mv], size=0.3 * f + 0.08, color=C[mv] * 0.75 + lin(GOLD2) * 0.3,
-                                alpha=0.75 * f * A[mv], alpha2=0.75 * f * f * A[mv], kind="line", emit=2.2,
+                out.append(dict(pos=prev[mv], pos2=Q[mv], size=0.24 * f + 0.06, color=C[mv] * 0.85 + lin(GOLD2) * 0.1,
+                                alpha=0.6 * f * A[mv], alpha2=0.6 * f * f * A[mv], kind="line", emit=1.8,
                                 reflect=False))
             prev = Q
         return out
@@ -1512,16 +1558,20 @@ def add(scene):
     scene.add("zion body", _Off(_body()), mask=Mask("dark", strength=body_k, grow=1.9, soft=4.0), reflect=False)
     # (round 7: from afar Zion read pearl white) the walls step back a little as the people fill the terraces, so
     # the nine colours of the people read against them in the wide views
-    scene.add("zion walls", Static(walls, lambda t: glow_k(t) * form_k(t) * (1.0 - 0.28 * grow_k(t))))
+    scene.add("zion walls", Static(walls, lambda t: glow_k(t) * form_k(t) * (1.0 - 0.28 * grow_k(t))
+                                   * (1.0 - 0.4 * _win(t, 161.55, 162.95, 0.15, 0.25))))
     scene.add("zion dim", Static(dim, glow_k))
     scene.add("zion gold", Static(gold, glow_k))
     # round 6: the city grows section by section, and the rivers of people stream to it
     gates, gardens, towers, mist = _city_parts()
     calm = (lambda t: glow_k(t) * (1.0 - 0.25 * reading(t)))
-    scene.add("zion gates", Static(gates, calm))
+    # (round 8) in the fly-in to the church of light (2:41.7) Zion's main gate stood right behind the church's
+    # outline on the same axis, both white, and the two arches merged: the gates step back for that flight
+    fly = (lambda t: 1.0 - 0.88 * _win(t, 161.55, 162.95, 0.15, 0.25))
+    scene.add("zion gates", Static(gates, lambda t: calm(t) * fly(t)))
     scene.add("zion gardens", Static(gardens, calm))
     scene.add("zion towers", Static(towers, lambda t: calm(t) * (1.0 + 0.25 * intensity(t) * beat_pulse(t, 0.12))))
-    scene.add("zion mist", Static(mist, lambda t: local_k(t) * (0.7 + 0.5 * intensity(t))))
+    scene.add("zion mist", Static(mist, lambda t: local_k(t) * (0.7 + 0.3 * intensity(t))))
     scene.add("zion streams", Streams())
     edges = np.concatenate([_ring(ZC, tier_r(k) + 0.1, tier_y(k) + 1.0, 1.4) for k in range(N_TIER)])
     scene.add("zion beat", Static([_batch(edges, 0.6, lin("#ffe8c0"), 0.8, emit=1.8, reflect=False)], edge_k))
@@ -1536,7 +1586,8 @@ def add(scene):
     rest = ~(nw | nf)
     scene.add("nations", Static(_glitter_people(P[rest], K[rest], born[rest], 3), crowd_k))
     na = Arms(P[rest], born[rest], 3, crowd_k)                            # the waves of raised arms
-    na.col = np.asarray([lin(c) for c in COL9])[_place_hue(P[rest], K[rest])] * 0.6 + lin(WHITE) * 0.4
+    na.col = np.asarray([lin(c) for c in COL9])[_place_hue(P[rest], K[rest])] * 0.7 + lin(WHITE) * 0.3
+    na.kd = np.interp(K[rest].astype(np.float64), [0, 1, 2, 3, 4, 5], [1.0, 0.92, 0.78, 0.62, 0.5, 0.46])
     scene.add("nations arms", na)
     # on each downbeat of the choruses the nations' lights flare in one of the nine colours (one set a colour)
     rf = np.random.default_rng(13)
@@ -1554,7 +1605,10 @@ def add(scene):
         on = (lambda s, a: (lambda t: float(shot_name(t) == s) * _sc(a, a + 1.5, t)))(shot, t_on)
         mid_k = (lambda f: (lambda t: crowd_k(t) * (1.0 - f(t))))(on)
         scene.add(f"nations mid {shot}", Static(_glitter_people(P[sel], K[sel], born[sel], seed), mid_k))
-        scene.add(f"nations mid arms {shot}", Arms(P[sel], born[sel], seed, mid_k))
+        ma = Arms(P[sel], born[sel], seed, mid_k)
+        ma.col = np.asarray([lin(c) for c in COL9])[_place_hue(P[sel], K[sel])] * 0.7 + lin(WHITE) * 0.3
+        ma.kd = np.interp(K[sel].astype(np.float64), [0, 1, 2, 3, 4, 5], [1.0, 0.92, 0.78, 0.62, 0.5, 0.46])
+        scene.add(f"nations mid arms {shot}", ma)
         i = np.where(sel)[0]
         i = i[rng.random(len(i)) < 0.26]
         crowd = WaveCrowd(

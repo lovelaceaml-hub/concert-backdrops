@@ -782,7 +782,10 @@ class ChurchRise:
         m = _ss(self.T_FORM, self.T_DONE, t)                    # the ring resolves into the church
         m = np.clip(m * 1.4 - 0.4 * self.s, 0.0, 1.0)[:, None]
         P = ring * (1.0 - m) + church * m
-        col = self.ring_col * (1.0 - 0.7 * m) + lin("#ffe2b0") * (0.7 * m)
+        # (round 8) after the cut, flown into in front of Zion: a deeper gold, so its outline never merges with
+        # the pearl of Zion's gates and walls behind it
+        gold = lin("#ffe2b0") if t < 160.6 else lin("#ffc070")
+        col = self.ring_col * (1.0 - 0.7 * m) + gold * (0.7 * m)
         fly = _sc(161.7, 162.86, t)
         a = (0.75 - 0.3 * m[:, 0]) * _sc(self.T_RING, self.T_RING + 0.4, t) * (1.0 + 0.15 * beat_pulse(t))
         a = a * (1.0 + 0.8 * fly) * (1.0 if t < 160.6 else 2.2)      # bright enough to fly into after the cut
