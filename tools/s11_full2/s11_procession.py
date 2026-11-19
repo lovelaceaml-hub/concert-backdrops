@@ -157,7 +157,7 @@ def _plan(t0, t1):
         # so we pass between the rows; everyone on both sides walks the one way we look, toward her light ahead
         # (a little above their heads, looking down the rows, so they stand out against the dark sea, not Zion's glow)
         return _track(t0, t1, 12, lambda t: ((1.1 - 0.15 * (t - t0), 3.3, _mz(t) + 30.0 - 0.45 * (t - t0)),
-                                             (-0.4, 0.2, _mz(t) + 6.0))), "linear"
+                                             (-0.4, -0.6, _mz(t) + 6.0))), "linear"    # (round 6: less of Zion's face)
     if t0 == 144.4:       # fulfilled: the comets dive back through the walkers toward us, lighting hearts, while a
         # slow crane rises from among them over the whole river of people toward her light
         def crane(t):          # (MARCH round 4) rising higher and further back: the whole river, growing wider
@@ -245,8 +245,17 @@ def glow(t):
     return (0.75 + 0.4 * intensity(t)) * (1.0 + 0.16 * (1.0 - held) * beat_pulse(t))
 
 
+def rest(t):
+    """(MARCH round 6, Anthony: "Not everything needs to be so washed out and bright all the time. Key timings
+    should be highlighted. Do not saturate everything. Do not wash out.") The march's light: it rests calm and
+    darker as her light comes down and everyone walks, builds through "fulfilled" and the kings, and is full only
+    when the kings' crowns blaze (2:35.34), stream into the church and the camera flies into it (2:41.7)."""
+    return (0.42 + 0.16 * _sc(144.4, 148.6, t) + 0.17 * _sc(148.6, 154.2, t) + 0.25 * _sc(155.0, 155.34, t)
+            - 0.15 * _sc(159.4, 160.6, t))
+
+
 def crowd_k(t):
-    k = proc_k(t) * glow(t) * (1.0 + mx(t, choir=0.3, strings=0.15))     # (round 8) they glow with the choir
+    k = proc_k(t) * rest(t) * glow(t) * (1.0 + mx(t, choir=0.3, strings=0.15))     # (round 8) they glow with the choir
     if block_t0(t) == 141.5:                 # (MARCH round 5) walking among them: they stand out against the sea
         k *= 1.6
     if block_t0(t) == 154.2:                 # (MARCH) looking down on them, the words arrive over the multitude
@@ -395,7 +404,7 @@ class GrowSparks:
         self.seed = r.random(n)
 
     def sample(self, t):
-        k = proc_k(t) * (0.0 if block_t0(t) == 148.6 else 1.0)    # (not in the kings' low view: they arc across its
+        k = proc_k(t) * rest(t) * (0.0 if block_t0(t) == 148.6 else 1.0)    # (not in the kings' low view: they arc across its
         if k <= 0.0 or t < GROW_S.min() - 2.0 or t > GROW_S.max() + 0.2:       # sky where the words arrive)
             return None
         u = (t - (GROW_S - self.dur)) / self.dur
@@ -464,7 +473,7 @@ class MotherLight:
         self.rs = r.random(1400)
 
     def sample(self, t, cam=None):
-        k = proc_k(t) * (0.8 + 0.3 * intensity(t))
+        k = proc_k(t) * (0.8 + 0.3 * intensity(t)) * (0.55 + 0.45 * rest(t))      # (round 6) calmer at rest
         if k <= 0.0:
             return None
         m = mother_pos(t)
@@ -760,7 +769,7 @@ class Ripples:
         if not on.any():
             return None
         c = col[on] / a[on, None]
-        aa = np.minimum(a[on], 1.0) * proc_k(t)
+        aa = np.minimum(a[on], 1.0) * proc_k(t) * rest(t)
         P = base[on] + _v(0.0, 1.1, 0.0)
         return [dict(pos=P, size=1.5, color=c, alpha=0.26 * aa, emit=1.8, kind="soft", reflect=False),
                 dict(pos=P + _v(0.0, 0.55, 0.0), size=0.12, color=c, alpha=0.9 * aa, emit=3.0, kind="spark",
@@ -901,7 +910,8 @@ class KingTrains:
         emb = (~edge) & (row % 5 == 2) & (col % 3 == 0) & (row > 8)          # a lattice of gold embroidery
         self.edge, self.emb, self.field = edge, emb, ~(edge | emb)
         self.seed = np.random.default_rng(84).random(len(self.S))
-        self.col = [lin(K_COL[(i // 2 + i % 2 * 3) % len(K_COL)]) for i in range(K_N)]
+        # (round 6: colour restrained, a royal tint in gold light rather than full saturation)
+        self.col = [0.7 * lin(K_COL[(i // 2 + i % 2 * 3) % len(K_COL)]) + 0.3 * lin("#ffe6b8") for i in range(K_N)]
         # (MARCH) the cloth's points scattered within their cells, so the train glows like cloth, not a grid of lamps
         jr = np.random.default_rng(85)
         f = self.field
@@ -931,7 +941,7 @@ class KingTrains:
         out = []
         gold = lin(GOLD)
         beat = 1.0 + 0.2 * beat_pulse(t)
-        k = proc_k(t) * beat * (1.0 + 0.5 * hit_pulse(t, [KNEEL, RISE], fall=0.5))
+        k = proc_k(t) * rest(t) * beat * (1.0 + 0.5 * hit_pulse(t, [KNEEL, RISE], fall=0.5))
         for i in range(K_N):
             a = _sc(KING_T[i], KING_T[i] + 0.45, t) * k
             if a <= 0.0:
@@ -1063,7 +1073,7 @@ class MarchBeat:
         self.jit = r.uniform(-0.2, 0.2, (len(self.zr), 2))
 
     def sample(self, t):
-        k = proc_k(t) * _sc(MARCH - 0.05, MARCH + 0.3, t) * (1.0 - _sc(HALT - 0.2, HALT + 0.4, t))
+        k = proc_k(t) * rest(t) * _sc(MARCH - 0.05, MARCH + 0.3, t) * (1.0 - _sc(HALT - 0.2, HALT + 0.4, t))
         if k <= 0.0:
             return None
         bp = _beat_phase(t)
@@ -1264,7 +1274,7 @@ class FlagBearers:
         return p + _v(0.0, 0.0, -1.0) * WALK * max(min(t, HALT) - j, 0.0), _v(0.0, 0.0, -1.0)
 
     def sample(self, t, cam=None):
-        k = proc_k(t) * _sc(MARCH - 0.2, MARCH + 0.4, t)
+        k = proc_k(t) * rest(t) * _sc(MARCH - 0.2, MARCH + 0.4, t)
         if k <= 0.0:
             return None
         MF = _mfx()
@@ -1481,6 +1491,6 @@ def add(scene):
     # (round 6: no canyon of cloud over the march any more; it hazed the words and the low views of the walkers)
     scene.add("kings beams", KingBeams())
     scene.add("church emblem", EmblemArrive())
-    add_rays(mother_pos, lambda t: proc_k(t) * ray_k(t), color="#fff1d8", size=0.6)
-    add_light(mother_pos, "#ffe8c8", lambda t: 0.15 * proc_k(t) * (1.0 + 0.5 * hit_pulse(t, KICKS + FULFIL, fall=0.5)),
+    add_rays(mother_pos, lambda t: proc_k(t) * ray_k(t) * rest(t), color="#fff1d8", size=0.6)
+    add_light(mother_pos, "#ffe8c8", lambda t: 0.15 * proc_k(t) * rest(t) * (1.0 + 0.5 * hit_pulse(t, KICKS + FULFIL, fall=0.5)),
               radius=9.0)
