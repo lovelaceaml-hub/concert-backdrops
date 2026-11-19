@@ -663,7 +663,7 @@ class Streams:
     WAVE = 42.0           # the beat's wave of light up the stream, metres per second
     AISLE = 2.2           # the half width of the aisle up the avenue
 
-    def __init__(self, gain=stream_k, gap=1.2, seed=181):
+    def __init__(self, gain=stream_k, gap=2.6, seed=181):     # (round 8) 2.6 m apart (1.2 packed into white bands)
         r = np.random.default_rng(seed)
         self.paths = [_stair_path(avenue=(i == 0)) for i in range(len(STAIRS))]
         grp, l0, lane = [], [], []
@@ -736,10 +736,27 @@ class Streams:
             if lf < 400.0:
                 wave = np.maximum(wave, np.exp(-((l - lf) / 7.0) ** 2))
         kick = hit_pulse(t, KICKS, rise=0.02, fall=0.45)
-        br = (0.7 + 0.35 * intensity(t) + 0.55 * kick) * (1.0 + 0.9 * wave) * fade
-        out = [dict(pos=foot, pos2=head, size=0.28, color=self.col * 0.9, alpha=0.14 * br, alpha2=0.6 * br,
-                    kind="line", emit=1.3, reflect=False),
-               dict(pos=head + np.array([0.0, 0.12, 0.0]), size=0.36, color=self.col * 0.9 + lin(WHITE) * 0.1,
+        # (round 8) with the strings a shimmer runs up the streams too, as on Zion's rivers
+        shim = mx(t, strings=1.0, swell=0.5) * (0.5 + 0.5 * np.sin(0.06 * l - 5.0 * t)) ** 4
+        # (round 8) the packed streams added up to white bands on the stairways: each walker shines less, so the
+        # rivers keep the colours of their lanes
+        br = 0.6 * (0.7 + 0.35 * intensity(t) + 0.55 * kick) * (1.0 + 0.6 * wave + shim) * fade
+        # (round 8, "the people read as lines of dots") each walker a small figure, as on Zion's rivers: two legs
+        # of light that scissor with the step, a robe up to the shoulders, the head apart above the neck
+        hh = self.h[:, None]
+        up = np.array([0.0, 1.0, 0.0])
+        sd = np.stack([np.cos(a), 0.0 * a, -np.sin(a)], 1)
+        fw = -np.stack([np.sin(a), 0.0 * a, np.cos(a)], 1)
+        st = np.sin(2.0 * np.pi * t * self.sp / self.SPEED * 0.5 + self.ph)[:, None] * 0.26 * hh
+        hip, neck = P + up * (0.78 * hh), P + up * (1.24 * hh)
+        hem = hip - up * (0.10 * hh)
+        fl, fr = P + sd * 0.10 * hh + fw * st, P - sd * 0.10 * hh - fw * st
+        b2, c2 = np.concatenate([br, br]), np.concatenate([self.col, self.col])
+        out = [dict(pos=np.concatenate([fl, fr]), pos2=np.concatenate([hip, hip]), size=0.22, color=c2 * 0.8,
+                    alpha=0.2 * b2, alpha2=0.45 * b2, kind="line", emit=1.3, reflect=False),
+               dict(pos=np.concatenate([hem - sd * 0.2 * hh, hem + sd * 0.2 * hh]), pos2=np.concatenate([neck, neck]),
+                    size=0.24, color=c2 * 0.9, alpha=0.4 * b2, alpha2=0.6 * b2, kind="line", emit=1.4, reflect=False),
+               dict(pos=head + np.array([0.0, 0.02, 0.0]), size=0.36, color=self.col * 0.92 + lin(WHITE) * 0.08,
                     alpha=0.62 * br, kind="spark", emit=2.2, twinkle=0.25, seed=self.s, reflect=False),
                dict(pos=head[::3], size=2.0, color=self.col[::3], alpha=0.03 * br[::3] * wave[::3],
                     kind="soft", emit=1.3, reflect=False)]
