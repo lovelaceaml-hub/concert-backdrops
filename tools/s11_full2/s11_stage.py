@@ -1572,7 +1572,7 @@ def add(scene):
         for i in range(9):
             scene.add("slam rocket %d %d" % (j, i), BoxGuard(StageComet(
                 _rocket(ts, i), COL9[i], ts - 0.05 if j == 0 else ts + 0.22, ts + 3.6,   # slam 2, coda hit: after the flash
-                trail=1.2, width=0.9 if j == 0 else 0.6, bright=1.3 if j == 0 else 0.8, fade=0.3, n=170, sparks=False,
+                trail=1.2, width=0.62 if j == 0 else 0.5, bright=0.85 if j == 0 else 0.55, fade=0.3, n=170, sparks=False,
                 seed=100 + 9 * j + i)))
     scene.add("loop conductor", BoxGuard(StageComet(_loop_conductor, COL9[6], 0.0, 260.0, trail=1.6, width=0.18, n=80,
                                            seed=131)))
