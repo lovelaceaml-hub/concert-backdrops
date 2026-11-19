@@ -192,7 +192,7 @@ def _plan(t0, t1):
     if t0 == 161.7:       # (MARCH round 2) the camera flies to the church of light and its emblem for slam 2
         e = _emblem_c()
         return K((t0, (0.0, 64.0, -240.0), e + _v(0.0, 0.5, 0.0)),
-                 (t1, (0.6, 113.0, -352.0), e)), "music"
+                 (t1, (0.5, 113.0, -366.0), e)), "music"      # (a little closer: the emblem reads large)
     raise ValueError(f"no procession shot planned for the block at {t0}")
 
 
@@ -961,6 +961,14 @@ class EmblemArrive:
     def __init__(self):
         self.emb = CH.emblem_batches()
         self.crisp = CH.Church("crisp").b
+        # (coordinator, 2:42.8: the emblem read pale) its blue ring and globe redrawn in a saturated sky blue, lighter
+        # toward the top like the reference; the white lettering stays the church's own (nothing white added here)
+        B = CH._emblem_xy(1)
+        (cx, cy), size = CH.EMBLEM_SLOT
+        u = np.clip((B[:, 1] - (cy - size / 2.0)) / size, 0.0, 1.0)[:, None]
+        self.blue_p = np.stack([B[:, 0], B[:, 1], CH.front_z(B[:, 0]) + 0.16], 1)
+        self.blue_c = lin("#1677ff") * (1.0 - u) + lin("#3fb0ff") * u
+        self.blue_s = size / 128.0
         self.c = _emblem_c()[None, :] + np.array([[0.0, 0.0, 0.4]])
 
     def gain(self, t):
@@ -970,13 +978,19 @@ class EmblemArrive:
         calm = 1.0 - 0.5 * _win(t, 154.9, 160.3, 0.4, 0.6)       # the words read just above the church
         k = 0.35 + 0.5 * _sc(RISE, CROWN_HOME, t) + 0.9 * hit_pulse(t, [CROWN_HOME], fall=1.0) * calm
         if b == 161.7:          # (ENDS, via the coordinator) capped so the blue ring, lettering and globe read
-            return min(0.6 + 0.15 * _sc(161.7, 162.86, t) + 0.05 * beat_pulse(t), 0.8)
+            return -min(0.6 + 0.15 * _sc(161.7, 162.86, t) + 0.05 * beat_pulse(t), 0.8)     # (negative: blue only)
         return k * (1.0 + 0.2 * beat_pulse(t) * calm)
 
     def sample(self, t):
         g = self.gain(t)
-        if g <= 0.0:
+        if g == 0.0:
             return None
+        if g < 0.0:             # the flight into it: only the saturated blue of the ring and globe, no added white
+            g = -g
+            return [dict(pos=self.blue_p, size=self.blue_s * 2.6, color=self.blue_c, alpha=0.9 * g, kind="soft",
+                         emit=1.3, fog=0.2, reflect=False),
+                    dict(pos=self.blue_p[::2], size=self.blue_s * 1.3, color=self.blue_c[::2], alpha=0.6 * g, kind="spark",
+                         emit=1.6, fog=0.2, reflect=False)]
         out = []
         for b in self.emb:
             d = dict(b)
