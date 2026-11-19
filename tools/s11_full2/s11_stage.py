@@ -1205,6 +1205,7 @@ class StageComet(Comet):
     """A comet that flies only while the camera is on the choir and orchestra. Near the lens it fades (it blew
     up into a white blur when a path passed within a few metres of the camera)."""
     wants_camera = True
+    near = (1.5, 6.0)                                # gone within near[0] metres, whole beyond near[1]
 
     def sample(self, t, cam=None):
         if not stage_view(t):
@@ -1216,8 +1217,8 @@ class StageComet(Comet):
         for b in out:
             P = np.asarray(b["pos"], np.float64).reshape(-1, 3)
             _xy, z = cam.project(P)
-            f = np.clip((z - 1.5) / 4.5, 0.0, 1.0)
-            f = f * f * (3.0 - 2.0 * f)              # gone within 1.5 m, whole beyond 6 m
+            f = np.clip((z - self.near[0]) / (self.near[1] - self.near[0]), 0.0, 1.0)
+            f = f * f * (3.0 - 2.0 * f)
             b = dict(b, alpha=np.broadcast_to(np.asarray(b["alpha"], np.float64), (len(P),)) * f)
             res.append(b)
         return res
@@ -1436,8 +1437,9 @@ def add(scene):
                 seed=100 + 9 * j + i)))
     scene.add("loop conductor", BoxGuard(StageComet(_loop_conductor, COL9[6], 0.0, 260.0, trail=1.6, width=0.18, n=80,
                                            seed=131)))
-    scene.add("loop heroes", BoxGuard(StageComet(_loop_heroes, COL9[3], 0.0, 260.0, trail=1.8, width=0.2, n=80,
-                                                 seed=132)))
+    heroes = StageComet(_loop_heroes, COL9[3], 0.0, 260.0, trail=1.8, width=0.2, n=80, seed=132)
+    heroes.near = (5.0, 14.0)        # it circles the soloists the close choir shots sit beside (white burst 1:19.5)
+    scene.add("loop heroes", BoxGuard(heroes))
     scene.add("lens streak", StageComet(_lens_streak, COL9[5], 121.32, 125.92, trail=0.5, width=0.35, n=50,
                                         fade=0.2, seed=133))
     bases = [(-20.0, FACADE_Z + 6.0), (20.0, FACADE_Z + 6.0), (-17.0, FACADE_Z + 24.0), (17.0, FACADE_Z + 24.0),
