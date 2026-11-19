@@ -31,7 +31,7 @@ def load():
                       LIBGL_ALWAYS_SOFTWARE='1', LP_NUM_THREADS=os.environ.get('LP_NUM_THREADS', '1'),
                       OPENBLAS_NUM_THREADS='1', OMP_NUM_THREADS='1',
                       NUMBA_CACHE_DIR=str(WORK / 'numba'), MESA_SHADER_CACHE_DIR=str(WORK / 'mesa'),
-                      P3D_CACHE=str(WORK / 'p3dcache'))
+                      P3D_CACHE=os.environ.get('S11_CACHE', str(WORK / 'p3dcache')))
     sys.path.insert(0, str(snap / 'engine'))
     import songs
     songs.__path__.append(str(HERE))            # songs.s11_full2 is tools/s11_full2/s11_full2.py
