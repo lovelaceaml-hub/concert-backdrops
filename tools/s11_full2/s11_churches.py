@@ -16,7 +16,7 @@ touching the placement. Photographs from the dedication-service pages of watv.or
    3 Moran Church, Seongnam, Korea: https://watv.org/church-dedication-service-moran/
    4 Bitgaram Church, Naju, Korea: https://watv.org/church-dedication-service-gangwon/
    5 Sydney Church, Sydney, Australia: https://watv.org/church-dedication-service-australia/
-   6 Brasilia Church, Brasilia, Brazil: https://watv.org/church-dedication-service-brazil/
+   6 Brasilia Church (or Manaus: the page shows one exterior), Brazil: https://watv.org/church-dedication-service-brazil/
    7 Gwanjeo Church, Daejeon, Korea: https://watv.org/?p=92800
    8 the training institute in the introduction photograph, Korea: https://watv.org/church-intro/
    9 Jangjae Church, Asan, Korea: https://watv.org/church-dedication-service-asan/
@@ -81,22 +81,23 @@ touching the placement. Photographs from the dedication-service pages of watv.or
   arched-window block with the glass shaft is Yuseong, the curved sail tower is Bitgaram in Naju, the golden
   arch tower is Gwanjeo in Daejeon.
 
-WHAT IT DOES: around Mount Zion, churches of light are established one after another until the near shore, the
-sea, the far shore and the hills are full of them as far as the eye can see (every building in the list, each once, by the coda).
-  Where   in clusters (several churches each, varied in size, turn, mirror and colour accents) in four widening
-          bands round Zion: the near shore (360 to 700 m from the foot of the mountain, with clusters flanking the
-          march route), the sea (750 to 1300 m), the far shore (1350 to 2200 m) and the hills (2400 to 3400 m).
-          No church stands on a camera path (every shot's camera is sampled; a church keeps its distance from
-          all of them), on the great avenue or the march corridor, or on the mountain.
-  When    from the first Zion view (0:55.4): a handful in verse 1, a steady stream on the beats that quickens
-          through chorus 1, verse 2, chorus 2 and the coda, with waves of several at once on every big hit and
-          whole clusters on the three slams. Each church is born from the ground up in half a second with a small
-          flash and a column of light, then keeps a soft breath on the beat.
-  Calm    dimmed while a phrase reads; flashes held down where the music already blazes; hidden on the Earth;
-          softer in the choir shots. Churches behind Mount Zion as the camera sees it fade out (each cluster
-          is tested against the mountain's cone every frame), so no light shows through the terraces.
-  Cost    each cluster is a static point set on the graphics card (born by `birth`); only the cluster's
-          strength and the few columns of the churches being born are computed per frame.
+WHAT IT DOES: around Mount Zion the churches of God are established one after another, each a different real
+church, until the near shore, the sea, the far shore and the foot of the hills hold every building in the list.
+  Where   four widening bands round Zion: the near shore (380 to 700 m from the foot of the mountain; the four
+          nearest flank the march route), the sea (760 to 1300 m), the far shore (1360 to 2200 m) and the foot of
+          the hills (2400 to 3200 m), larger and drawn more simply the farther out they stand. Each faces Zion,
+          turned a little. No church stands on a camera path (every shot's camera is sampled every quarter
+          second; a church keeps its distance from all of them), on the great avenue and march corridor, or on
+          the mountain.
+  When    WAVES: from the first Zion view (0:55.4) a handful in verse 1, then more and more through chorus 1,
+          verse 2, chorus 2 and the coda, on the beats and hits, several at once on the big hits (3, 4 and 5 on
+          the three slams). Each is born from the ground up in half a second with a small flash and a column of
+          light, then keeps a soft breath on the beat.
+  Calm    dimmed while a phrase reads; the columns held down where the music already blazes; hidden on the
+          Earth; softer in the choir shots. Mount Zion hides what stands behind it: every frame each church is
+          tested at three heights against the terraces as the camera sees it, so no light shows through them.
+  Cost    each church is a static point set on the graphics card (born by `birth`); per frame only its strength
+          (the occlusion test) and the columns of the churches being born are computed.
 """
 from songs.s11_full2 import *  # noqa: F401,F403
 import songs.s11_full2 as H
@@ -435,7 +436,7 @@ BUILDINGS = [
     _b("Moran Church", "Seongnam", "Korea", _U + "moran/", _moran),
     _b("Bitgaram Church", "Naju", "Korea", _U + "gangwon/", _sail),
     _b("Sydney Church", "Sydney", "Australia", _U + "australia/", _sydney),
-    _b("Brasilia Church", "Brasilia", "Brazil", _U + "brazil/", _brazil),
+    _b("Brasilia Church (or Manaus: the page shows one exterior)", "Brasilia", "Brazil", _U + "brazil/", _brazil),
     _b("Gwanjeo Church", "Daejeon", "Korea", "https://watv.org/?p=92800", _goldarch),
     _b("the training institute in the introduction photograph", "Korea", "Korea", "https://watv.org/church-intro/",
        _institute),
