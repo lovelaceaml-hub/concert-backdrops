@@ -598,6 +598,18 @@ class CameraMusic:
         return (np.asarray(cam.pos, np.float64)[None, :] + f[None, :] * d
                 + r[None, :] * ((x - 0.5) * 2.0 * half * cam.aspect)[:, None] + u[None, :] * ((y - 0.5) * 2.0 * half)[:, None])
 
+    def _globe_disc(self, t, cam):
+        """The Earth's disc on screen: centre (x, y) and radius in frame heights."""
+        try:
+            c, M, R = GLOBE._view(t, cam)
+        except Exception:
+            return None
+        xy, z = cam.project(np.asarray(c, np.float64)[None, :])
+        dep = float(np.dot(np.asarray(c, np.float64) - np.asarray(cam.pos, np.float64), np.asarray(cam.basis()[2], np.float64)))
+        if dep <= 1.0:
+            return None
+        return float(xy[0, 0]), float(xy[0, 1]), float(R / (2.0 * dep * np.tan(np.radians(cam.fov) * 0.5)))
+
     def _unit(self, cam, d=None):
         d = self.D if d is None else d
         return 2.0 * np.tan(np.radians(cam.fov) * 0.5) * d          # metres per frame height
@@ -699,10 +711,15 @@ class CameraMusic:
                             alpha=np.full(4, 0.06 * lo * room_k), kind="soft", emit=1.3))
         if not out:
             return None
-        for b in out:            # never across a phrase
+        disc = self._globe_disc(t, cam) if globe_view(t) else None
+        for b in out:            # never across a phrase, never over the Earth's face
             m_ = H.keep_out_of_words(t, b["pos"])
             if m_ is not None:
                 b["alpha"] = np.asarray(b["alpha"], np.float64) * m_
+            if disc is not None:
+                xy, z = cam.project(np.asarray(b["pos"], np.float64))
+                d = np.hypot((xy[:, 0] - disc[0]) * cam.aspect, xy[:, 1] - disc[1]) / max(disc[2], 1e-6)
+                b["alpha"] = np.asarray(b["alpha"], np.float64) * _ss(1.0, 1.15, d)
             b["alpha"] = np.asarray(b["alpha"], np.float32)
             b.update(reflect=False, dof=0.0, fog=0.0, streak=0.0)
         return out
