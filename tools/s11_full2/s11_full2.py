@@ -1453,7 +1453,7 @@ def _stage_calm(t):
     for _l, (a, b, c, d), *_x in PHRASE_LIST:
         if a - 0.6 <= t <= d + 0.6:
             r = max(r, _sc(a - 0.6, b, t) * (1.0 - _sc(c, d + 0.6, t)))
-    return (1.0 - (0.25 if stage_view(t) else 0.12) * r) * (1.0 - 0.10 * S_LIGHT._win(171.5, 174.0, t))   # f18
+    return (1.0 - (0.33 if stage_view(t) else 0.18) * r) * (1.0 - 0.10 * S_LIGHT._win(171.5, 174.0, t))   # f18
 
 
 WORLD["exposure"] = lambda t: _stage_calm(t) * S_MUSIC.choir_swell(t)
