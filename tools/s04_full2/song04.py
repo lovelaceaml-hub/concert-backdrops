@@ -217,12 +217,12 @@ def _kk(t, x, y, z, lx, lz, up=0.0):
 CAM_KEYS = [
     _kk(0.0, 0.0, 2.6, 26.0, 0.0, 0.0, up=0.24),         # the opening: the lockup on calm sky
     _kk(8.0, 0.0, 2.6, 25.0, 0.0, 0.0, up=0.22),
-    _kk(18.0, -0.2, 2.4, 14.5, 0.0, 0.0),                 # the frozen lake; the two far apart
-    _kk(27.0, -0.4, 2.3, 11.5, -0.1, 0.0),
-    _kk(38.0, -0.3, 2.2, 10.0, 0.2, 0.0),                 # she crosses, kneels; the heart opens
-    _kk(50.0, 0.2, 2.2, 9.2, 0.7, 0.0),
-    _kk(62.0, 0.6, 2.2, 9.0, 0.98, 0.0),                  # the embrace
-    _kk(74.0, 0.6, 2.4, 10.0, 0.8, -0.2),
+    _kk(18.0, -0.2, 2.4, 15.3, 0.0, 0.0, up=0.012),                 # the frozen lake; the two far apart
+    _kk(27.0, -0.4, 2.3, 12.3, -0.1, 0.0, up=0.012),
+    _kk(38.0, -0.3, 2.2, 10.8, 0.2, 0.0, up=0.012),                 # she crosses, kneels; the heart opens
+    _kk(50.0, 0.2, 2.2, 10.0, 0.7, 0.0, up=0.012),
+    _kk(62.0, 0.6, 2.2, 9.8, 0.98, 0.0, up=0.012),                  # the embrace
+    _kk(74.0, 0.6, 2.4, 10.8, 0.8, -0.2, up=0.012),
     _kk(88.0, 0.6, 2.9, 12.5, 0.45, -0.6, up=-0.04),                # chorus 1: rise and pull back, the breath
     _kk(102.0, 0.4, 3.0, 12.5, 0.4, -0.6, up=-0.05),
     _kk(116.0, -0.9, 2.9, 11.0, 0.45, -0.4, up=-0.05),              # interlude: a slow glide round
@@ -230,8 +230,8 @@ CAM_KEYS = [
     _kk(152.0, -0.3, 3.9, 14.5, 0.0, -1.0, up=-0.10),               # verse 3, chorus 2: rising, centred
     _kk(176.0, 0.0, 4.2, 14.0, 0.0, -1.0, up=-0.11),
     _kk(198.0, 0.0, 4.0, 13.5, 0.0, -1.0, up=-0.105),                # the ring
-    _kk(MUSIC_END, 0.0, 3.9, 14.0, 0.0, -1.2, up=-0.05),
-    _kk(TOTAL, 0.0, 3.85, 14.4, 0.0, -1.2, up=-0.05),
+    _kk(MUSIC_END, 0.0, 3.9, 14.0, 0.0, -1.2, up=-0.09),
+    _kk(TOTAL, 0.0, 3.85, 14.4, 0.0, -1.2, up=-0.09),
 ]
 
 CAMERA = Rig([Path(_glide(CAM_KEYS), 0.0, TOTAL, blend=0.0, fov=40.0, aperture=0.008, focus="target")],
@@ -329,7 +329,7 @@ class Clear:
         got = self.inner.sample(t, cam) if getattr(self.inner, "wants_camera", False) else self.inner.sample(t)
         if got is None:
             return None
-        boxes = text_boxes(t, 0.035)
+        boxes = text_boxes(t, 0.05)
         out = []
         for src in got if isinstance(got, (list, tuple)) else [got]:
             if src is None:
@@ -338,7 +338,7 @@ class Clear:
             p = np.asarray(b["pos"]).reshape(-1, 3)
             xy, z = cam.project(p)
             gain = np.ones(len(p))
-            gain = np.minimum(gain, np.clip((xy[:, 1] - 0.27) / 0.07, 0.0, 1.0))
+            gain = np.minimum(gain, np.clip((xy[:, 1] - 0.34) / 0.06, 0.0, 1.0))
             sig = np.clip(np.minimum((0.36 - xy[:, 0]) / 0.03, (xy[:, 1] - 0.80) / 0.03), 0.0, 1.0)
             gain = np.minimum(gain, 1.0 - 0.9 * sig)
             ends = [xy]
@@ -713,14 +713,14 @@ LOOKS = dict(
     frost=_look("#a7c6e4", "#dbe4ee", "#f1e6e0", "#fff2e4", "#e6ecf2", "#a9bad0", "#6f8db8", "#e8eef4",
                 sun_el=2.6, sun_int=0.55, sun_glow=0.7, haze=0.6, mist=0.2, mirror=0.3, mirror_min=0.2,
                 rays=0.05, clouds=0.25, dust_color="#f4f8ff", dust_color2="#ffe8d0"),
-    warm=_look("#92bce6", "#e8dcd8", "#f6c8a0", "#ffe2b8", "#ecd2c4", "#a0a8c4", "#5f80b2", "#ecdcd2",
-               sun_el=3.6, sun_int=0.8, sun_glow=0.6, haze=0.45, mist=0.15, mirror=0.55, mirror_min=0.3,
+    warm=_look("#84b2e2", "#e6d2cc", "#f4bc90", "#ffe2b8", "#e6c6b6", "#949cbc", "#52739f", "#e6d2c8",
+               sun_el=3.6, sun_int=0.8, sun_glow=0.6, haze=0.40, mist=0.12, mirror=0.55, mirror_min=0.12,
                rays=0.35, clouds=0.3, dust_color="#fff0d8", dust_color2="#ffd8a8"),
-    glory=_look("#80b2e6", "#f0d2bc", "#f7ac74", "#ffdcaa", "#ebc4ac", "#9ea2c0", "#4f74ad", "#ecd4c4",
-                sun_el=5.0, sun_int=0.9, sun_glow=0.55, haze=0.42, mist=0.12, mirror=0.7, mirror_min=0.35,
+    glory=_look("#6ea6e0", "#ecc2a6", "#f59c5e", "#ffdcaa", "#e4b49a", "#8e92b4", "#3f62a0", "#e6c4b0",
+                sun_el=5.0, sun_int=0.9, sun_glow=0.55, haze=0.34, mist=0.10, mirror=0.7, mirror_min=0.05,
                 rays=0.6, clouds=0.35, dust_color="#fff0d0", dust_color2="#ffcfa0"),
-    hold=_look("#86b6e8", "#f0d4c0", "#f7b07a", "#ffdeb0", "#ecc8b2", "#a0a6c2", "#5276ae", "#ecd6c8",
-               sun_el=3.6, sun_int=0.85, sun_glow=0.55, haze=0.42, mist=0.12, mirror=0.7, mirror_min=0.35,
+    hold=_look("#74aae2", "#ecc6ac", "#f5a266", "#ffdeb0", "#e4b8a0", "#9096b6", "#4266a2", "#e6c8b4",
+               sun_el=3.6, sun_int=0.85, sun_glow=0.55, haze=0.34, mist=0.10, mirror=0.7, mirror_min=0.05,
                rays=0.4, clouds=0.3, dust_color="#fff0d0", dust_color2="#ffd2a4"),
 )
 
@@ -728,9 +728,11 @@ WORLD = dict(
     looks=LOOKS,
     look=[(0.0, "frost"), (T["seam"][0], "frost"), (T["chorus1"] + 2.0, "warm", 14.0),
           (T["chorus2"], "glory", 14.0), (MUSIC_END - 6.0, "hold", 10.0)],
-    light=dict(pos=tuple(PAIR + _v(0, 2.2, 1.5)), color="#ffe2b0",
-               strength=Track([(0.0, 0.10), (T["chorus1"], 0.14), (85.0, 0.32), (100.0, 0.2), (T["chorus2"], 0.24),
-                               (170.0, 0.32), (MUSIC_END, 0.2), (TOTAL, 0.2)]), size=0.5, rays=0.0),
+    # the warm light over the sisters (it lays a soft pool on the water round them); it fades before the
+    # wide last section, where its pool would reach the bottom of the picture
+    light=dict(pos=tuple(PAIR + _v(0, 2.2, -1.0)), color="#ffe2b0",
+               strength=Track([(0.0, 0.10), (T["chorus1"], 0.14), (85.0, 0.30), (100.0, 0.2), (122.0, 0.16),
+                               (130.0, 0.0), (TOTAL, 0.0)]), size=0.5, rays=0.0),
     lantern_field=dict(count=200, center=(0.0, -34.0), radius=(8.0, 28.0)),
     lanterns=Track([(0.0, 0.0), (T["lanterns"][0], 0.0), (T["lanterns"][0] + 6.0, 0.8),
                     (T["lanterns"][1] - 6.0, 0.8), (T["lanterns"][1] + 4.0, 0.2), (MUSIC_END + 4.0, 0.15),
@@ -744,10 +746,18 @@ WORLD = dict(
 # The scene
 # ---------------------------------------------------------------------------------------------------------
 def _setup(scene):
+    import os
     import people
+    # the world's own floating dust, lights on the water and lanterns keep out of the bottom third, the
+    # reading boxes and the signature too, and leave no reflections in the near water
+    for name in ("_dust", "_floats", "_lanterns"):
+        if name in scene.names():
+            e = scene._entries[name]
+            scene.add(name, Clear(e.pointset), reflect=False, depth_of_field=e.depth_of_field, fog=e.fog,
+                      lod=e.lod)
     scene.add("frost", Clear(Frost()), reflect=False)
-    scene.add("seam", Seam(), reflect=False)
-    scene.add("footprints", Footprints(), reflect=False)
+    scene.add("seam", Clear(Seam()), reflect=False)
+    scene.add("footprints", Clear(Footprints()), reflect=False)
     scene.add("petals", Clear(Petals()), reflect=False)
     scene.add("gold path", Clear(GoldPath()), reflect=False)
     scene.add("beam", Clear(Beam()), reflect=False)
@@ -764,7 +774,10 @@ def _setup(scene):
               reflect=False)
     scene.add("hearts apology", HeartDrift("Apology", PW.COLORS["Apology"]), reflect=False)
     scene.add("hearts inclusiveness", HeartDrift("Inclusiveness", PW.COLORS["Inclusiveness"], seed=5), reflect=False)
-    scene.add("ember", Ember(), reflect=False)
+    scene.add("ember", Clear(Ember()), reflect=False)
+    for name in os.environ.get("S04_DROP", "").split(","):      # for checks only: leave sets out
+        if name:
+            scene.remove(name)
 
 
 P3D = dict(
