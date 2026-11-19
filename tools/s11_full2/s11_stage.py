@@ -431,7 +431,7 @@ class Choir(Crowd):
 
 # Anthony (2026-11-19): choir and orchestra as glowing blue sparkles; the instruments stay gold; every singer holds
 # an open song book of gold light, like the instruments.
-FIG_BLUE, FIG_BLUE2 = "#6cb2ff", "#d2e8ff"
+FIG_BLUE, FIG_BLUE2 = "#2f7dff", "#74b4ff"    # a clear saturated blue (round 9: "an easily distinguished blue")
 BOOK_COL = "#ffb43c"                 # deep gold, apart from the blue singers (round 8)
 
 
@@ -1445,13 +1445,13 @@ def cloud_k(t):
 def add(scene):
     choir = Choir(places=CHOIR_P, facing=0.0, kinds=CHOIR_KINDS,
                   start=dict(t=21.3, center=(0.0, FACADE_Z), speed=9.0), color=FIG_BLUE, color2=FIG_BLUE2,
-                  bright=3.2, points=3200, size=1.1, flash=1.2, glints=0.004, dof=0.35, seed=3.0,
+                  bright=2.7, points=3200, size=1.1, flash=1.2, glints=0.004, dof=0.35, seed=3.0,
                   light="#9fd0ff", lamp=(0.20, 1.0), scale=(0.97, 1.03))
     # no dark mask: the singers always glow (f28, f33); behind a phrase they glow softer (f17)
     scene.add("choir", BoxGuard(choir, keep=0.35))
     scene.add("choir hearts", BoxGuard(ChoirHearts(choir), keep=0.4))
     scene.add("song books", SongBooks(choir))
-    orch = Players(start=dict(t=2.2, dur=7.0), color=FIG_BLUE, color2=FIG_BLUE2, bright=4.3, points=3400,
+    orch = Players(start=dict(t=2.2, dur=7.0), color=FIG_BLUE, color2=FIG_BLUE2, bright=3.6, points=3400,
                    size=1.2, glints=0.006, dof=0.35, seed=4.0)
     scene.add("orchestra", BoxGuard(orch, keep=0.35))     # no dark mask: the players always glow
     scene.add("risers", Risers())
