@@ -49,6 +49,9 @@ def load():
     import p3d
     p3d.__path__.append(str(ROOT / 'engine/p3d'))
     import song
+    if os.environ.get('S10_FIX1', '1') == '1':      # fix 1: a calm bottom third, and a faster pose cache
+        import fix1
+        fix1.apply()
     spec = importlib.util.spec_from_file_location('reference_renderer', SNAPSHOT / 'engine/render.py')
     old = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(old)
@@ -112,7 +115,7 @@ def main():
     try:
         for i in range(*args.range):
             ff.stdin.write(frame(i / FPS))
-            if (i - args.range[0]) % 60 == 0:
+            if (i - args.range[0]) % int(os.environ.get("S10_LOG_EVERY", "60")) == 0:
                 print(f'frame {i}: {time.time() - start:.0f} s', flush=True)
     finally:
         ff.stdin.close()

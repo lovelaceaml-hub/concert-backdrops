@@ -134,7 +134,8 @@ ARCH = dict(span=84.0, height=34.0, z=-70.0)
 # the expression moments: stage (where the two stand), words (in, read, read end, out), act (t0, t1)
 MOMENTS = [
     dict(expr="Greeting", k=GREET, at=_v(-14.0, 0.0, 8.0), yaw=24.0, words=(56.0, 57.5, 66.8, 69.0)),
-    dict(expr="Consideration", k=CONS, at=_v(13.0, 0.0, -2.0), yaw=-22.0, words=(72.6, 74.0, 83.3, 85.5)),
+    dict(expr="Consideration", k=CONS, at=_v(13.0, 0.0, -2.0), yaw=-22.0, words=(72.6, 74.0, 83.3, 85.5),
+         med=(14.0, 1.92)),                  # fix 1: the helped man stands up to full height: framed wider and lower
     dict(expr="Inclusiveness", k=INCL, at=_v(-9.0, 0.0, -16.0), yaw=22.0, words=(90.2, 91.6, 101.0, 103.2)),
     dict(expr="Encouragement", k=ENC, at=_v(8.0, 0.0, 14.0), yaw=-24.0, words=(117.0, 118.5, 127.5, 129.7)),
     dict(expr="Gratitude", k=GRAT, at=_v(-10.5, 0.0, 21.0), yaw=22.0, words=(192.0, 193.6, 202.6, 204.8)),
@@ -147,7 +148,7 @@ LINE_X = [-6.6, -4.4, -2.2, 2.2, 4.4, 6.6]
 # ---------------------------------------------------------------------------------------------------------
 # The camera: held shots joined by slow eased moves (performers stand in front: never fast, no orbits)
 # ---------------------------------------------------------------------------------------------------------
-MED_D, MED_H, MED_TY, MED_FOV = 9.6, 1.9, 1.32, 36.0     # people about 30 percent of the height, under the words
+MED_D, MED_H, MED_TY, MED_FOV = 12.0, 1.9, 1.6, 36.0      # fix 1: people about 25 percent of the height, heads clearly under the words
 
 
 def _medium(m):
@@ -155,8 +156,9 @@ def _medium(m):
     the words are seen streaming into it (and the lamp sits off to the side, not behind the words)."""
     a = np.radians(m["yaw"])
     back = _v(np.sin(a), 0.0, np.cos(a))
-    pos = m["at"] + back * MED_D + _v(0.0, MED_H, 0.0)
-    tgt = m["at"] + _v(0.0, MED_TY, 0.0)
+    d, ty = m.get("med", (MED_D, MED_TY))
+    pos = m["at"] + back * d + _v(0.0, MED_H, 0.0)
+    tgt = m["at"] + _v(0.0, ty, 0.0)
     return pos, tgt, MED_FOV
 
 

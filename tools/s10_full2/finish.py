@@ -10,6 +10,7 @@ the signature present on every frame after the opening, audio length, and three 
 times. Prints a report; writes out/s10_full2/CHECKS.txt.
 No em dash or en dash anywhere in this file.
 """
+import os
 import glob
 import hashlib
 import json
@@ -19,7 +20,7 @@ import subprocess
 import numpy as np
 
 ROOT = Path(__file__).resolve().parents[2]
-OUT = ROOT / 'out/s10_full2'
+OUT = ROOT / os.environ.get('S10_OUT', 'out/s10_full2')       # fix 1: out/s10_full2/fix1
 WORK = ROOT / 'work/s10_full2'
 NF, FPS = 13560, 60
 NAME = '10 Our Mother Saves the World - Backdrop v2'
@@ -54,9 +55,10 @@ def main():
     phone = OUT / f'{NAME} - phone 720p60.mp4'
     color = ['-color_primaries', 'bt709', '-color_trc', 'bt709', '-colorspace', 'bt709', '-color_range', 'tv']
     dur = f'{NF / FPS:.6f}'
-    run(['ffmpeg', '-v', 'error', '-y', '-f', 'concat', '-safe', '0', '-i', str(lst), '-map', '0:v',
-         '-c:v', 'libx264', '-preset', 'slow', '-crf', '16', '-pix_fmt', 'yuv420p', '-r', str(FPS), '-g', '120']
-        + color + ['-an', '-t', dur, '-movflags', '+faststart', str(stage)])
+    if not (stage.exists() and frames_of(stage) == NF):     # a complete stage file from an earlier run is kept
+      run(['ffmpeg', '-v', 'error', '-y', '-f', 'concat', '-safe', '0', '-i', str(lst), '-map', '0:v',
+           '-c:v', 'libx264', '-preset', 'slow', '-crf', '16', '-pix_fmt', 'yuv420p', '-r', str(FPS), '-g', '120']
+          + color + ['-an', '-t', dur, '-movflags', '+faststart', str(stage)])
     run(['ffmpeg', '-v', 'error', '-y', '-i', str(stage), '-i', str(WORK / 'score.wav'), '-map', '0:v', '-map', '1:a',
          '-c:v', 'libx264', '-preset', 'slow', '-crf', '20', '-pix_fmt', 'yuv420p', '-g', '120'] + color
         + ['-c:a', 'aac', '-b:a', '320k', '-ar', '48000', '-t', dur, '-movflags', '+faststart', str(review)])
