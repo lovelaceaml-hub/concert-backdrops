@@ -474,115 +474,71 @@ class GlobeFX:
 # shot of that owner, clipped, until it does). Owners: church, stage, zion, proc, coda, core (the Earth).
 # =========================================================================================================
 EDIT = [
-    (0.0, "church", "title over the waiting city"),
-    (11.9, "church", "paths of light reach out; glide toward the city"),
-    (16.7, "church", "down the great avenue toward the church"),
-    (21.52, "church", "call 1: the choir forms out of the light on the steps"),
-    (26.33, "stage", "the orchestra wakes at dawn, choir behind (D minor)"),
-    (31.11, "church", "call 2: the church of light, the choir before it"),
-    (35.9, "stage", "harps and strings, low F pedal"),
-    (38.24, "church", "brightest moment of the intro; rise toward the sky"),
-    (40.54, "church", "Father's bell-like pulse from the church"),
+    (0.0, "church", "title over the waiting city, night and mist, comets far off"),
+    (11.9, "church", "one long flight in from the plateau edge down the great avenue, the comets lead"),
+    (21.52, "church", "call 1: the choir forms out of shafts of light on the steps"),
+    (26.33, "stage", "the orchestra wakes, the comets weave through it"),
+    (31.11, "church", "call 2: a long rise up the church of light with the comets"),
+    (38.24, "church", "brightest moment; Father's bell-like pulse from the church (40.54), rays fan out"),
     (41.6, "core", "the whole Earth: Father's pulse rolls out"),
-    (45.6, "core", "closer on the Earth, echoes of the pulse"),
-    (49.8, "core", "the Earth turns toward Zion"),
-    (53.78, "zion", "glory: the crown of light ignites"),
-    (56.7, "zion", "G lift: the crown seen closer"),
+    (47.5, "core", "the Earth turns toward Zion, the comets streak down to Korea"),
+    (53.78, "zion", "glory: the crown of light ignites, rays fan from it"),
     (58.4, "church", "the church under the crown"),
-    (61.3, "zion", "the city on the summit"),
-    (64.2, "zion", "fulfilled: step 1, the terraces fill with gold"),
-    (65.94, "zion", "step 2"),
-    (67.6, "stage", "timpani and strings"),
-    (69.4, "zion", "step 3: the city full of gold"),
+    (61.3, "zion", "as Father prophesied: flight over the city"),
+    (64.2, "zion", "fulfilled: the terraces fill with gold step by step (64.2, 65.94, 69.4)"),
+    (69.4, "zion", "the city full of gold"),
     (70.54, "core", "all nations: rivers of light on the Earth"),
-    (72.84, "core", "the rivers closer"),
     (74.56, "church", "streaming: the church of light shines out"),
     (75.2, "core", "the drop: the Earth's rim glows"),
-    (77.46, "stage", "the choir breathes in"),
-    (78.62, "stage", "light gathering in the choir"),
-    (79.78, "stage", "the orchestra holds its breath"),
+    (77.46, "stage", "the choir breathes in, light gathering, the comets spiral in"),
     (80.94, "church", "the church gathering light"),
     (81.51, "stage", "the last half bar into the slam"),
-    (82.08, "stage", "SLAM 1: the full choir and orchestra"),
-    (84.4, "stage", "the choir in full voice"),
-    (86.7, "zion", "waves of praise ripple over the land"),
-    (88.0, "stage", "brass and strings"),
-    (89.3, "zion", "waves of praise, closer"),
+    (82.08, "stage", "SLAM 1: the full choir and orchestra blaze, rays and a huge burst"),
+    (86.7, "zion", "waves of praise roll over the land"),
     (90.72, "zion", "standing firm: the first climb, the nations on Zion"),
-    (93.0, "stage", "the choir"),
-    (95.4, "zion", "the nations on the terraces"),
     (97.7, "church", "the church above the nations"),
     (99.4, "zion", "sacrifice: light pours over the people"),
-    (101.7, "stage", "the orchestra in full"),
     (103.6, "zion", "devotion: the golden waterfall"),
     (105.14, "stage", "the brass and timpani blaze"),
-    (106.5, "zion", "the people lit by the pouring light"),
     (108.4, "church", "the church glowing"),
-    (109.8, "zion", "thanks to Father: the column of light rises"),
-    (112.1, "church", "the column from the church"),
-    (114.4, "zion", "the column to heaven over Zion"),
+    (109.8, "zion", "thanks to Father: the column of light rises, lanterns rise all round"),
     (117.0, "stage", "the breath: the choir still, light falling like snow"),
     (121.32, "stage", "verse 2: the strings pulse"),
-    (124.18, "stage", "strings and harp"),
-    (125.92, "proc", "Mother: her light comes down out of the sky"),
-    (127.64, "proc", "her light touches the sea; everyone gathers"),
-    (130.29, "proc", "let's trust Father"),
-    (132.5, "proc", "everyone ready behind her light"),
+    (125.92, "proc", "Mother: her light comes down out of the sky, rays fan from it"),
+    (130.29, "proc", "let's trust Father: everyone gathered behind her light"),
     (134.54, "proc", "march ahead: everyone steps out together"),
-    (136.9, "proc", "the procession from above"),
     (139.2, "church", "the church waiting for them"),
     (141.5, "proc", "among the walkers"),
     (144.4, "proc", "fulfilled: hearts light in every person"),
-    (146.7, "proc", "the hearts in the nine colours"),
     (148.6, "proc", "the kings walk in the aisle"),
-    (150.4, "stage", "the choir: all kings worship You"),
-    (152.0, "proc", "the kings before Zion"),
-    (154.2, "proc", "the kings kneel"),
-    (155.34, "proc", "the crowns rise as sparks"),
-    (156.0, "proc", "the held breath: everyone still"),
-    (159.0, "proc", "sparks gather into her light"),
+    (154.2, "proc", "the kings kneel; the crowns rise as sparks"),
+    (156.0, "proc", "the held breath: everyone still, sparks gather into her light"),
     (160.6, "stage", "the choir draws breath"),
-    (161.7, "proc", "her light grows"),
-    (162.3, "stage", "the last half bar"),
-    (162.86, "stage", "SLAM 2: brass and timpani blaze"),
-    (165.16, "zion", "the shockwave across the land"),
-    (167.5, "stage", "the choir"),
-    (169.2, "zion", "the shockwave reaches the sea"),
+    (161.7, "proc", "her light grows into the slam"),
+    (162.86, "stage", "SLAM 2: brass and timpani blaze, rays and a huge burst"),
+    (165.16, "zion", "the shockwave across the land and sea"),
     (171.48, "zion", "standing firm: the whole mountain full of people"),
-    (173.8, "stage", "the orchestra"),
-    (176.1, "zion", "the nations, closer"),
     (178.4, "church", "the church over the crowds"),
     (180.7, "zion", "sacrifice: the mountain blazing"),
     (183.0, "stage", "the brass rising"),
     (185.92, "stage", "wondrous love: brass and timpani"),
-    (188.27, "coda", "thanks to Mother: hearts rise"),
-    (190.6, "stage", "the choir"),
-    (192.9, "coda", "hearts rising over Zion"),
+    (188.27, "coda", "thanks to Mother: hearts and lanterns rise"),
     (195.2, "church", "the church in the gathering glow"),
     (197.2, "coda", "the last build: light gathers at the horizon"),
-    (198.5, "coda", "the horizon brightens"),
     (199.62, "stage", "the coda hit: the choir"),
     (200.7, "coda", "the last moment before the sun"),
-    (201.73, "coda", "SLAM 3: the sun rises over Zion"),
-    (203.9, "stage", "the choir and orchestra in the sunrise"),
-    (205.98, "coda", "the orchestra on clouds of light"),
-    (208.1, "coda", "the clouds round the sun"),
-    (210.3, "stage", "the choir"),
-    (211.6, "coda", "the third climb: the summit, everyone"),
-    (213.8, "church", "the church in the sunrise"),
-    (215.9, "coda", "the summit crowd, arms raised"),
+    (201.73, "coda", "SLAM 3: the sun rises over Zion, the biggest burst"),
+    (205.98, "coda", "the orchestra on clouds of light round the sun"),
+    (210.3, "stage", "the choir in the sunrise"),
+    (211.6, "coda", "the third climb: the summit, everyone, arms raised"),
     (218.1, "stage", "sacrifice: the brass"),
     (220.2, "coda", "the summit and the sun"),
     (222.0, "church", "the church blazing"),
-    (224.03, "coda", "devotion: the world finale, the Earth"),
-    (226.3, "coda", "light from every land flows to Zion"),
-    (228.6, "coda", "the glory line over the Earth"),
-    (231.0, "coda", "hearts across the continents"),
-    (233.3, "coda", "the Earth's edge brightens"),
+    (224.03, "coda", "devotion: the world finale, light from every land flows to Zion"),
+    (228.6, "coda", "the glory line over the Earth, hearts across the continents"),
     (235.6, "coda", "the peak: sunrise over the Earth's edge"),
-    (238.8, "stage", "home: Oh, the Church of God"),
-    (240.19, "stage", "the step down, hymn-like"),
-    (242.5, "church", "the church at peace"),
+    (238.8, "stage", "home: Oh, the Church of God; the step down, hymn-like"),
+    (242.5, "church", "the church at peace, lanterns"),
     (244.8, "stage", "the choir"),
     (247.5, "stage", "the held breath: sparks gather"),
     (249.43, "stage", "the final rise"),
@@ -645,6 +601,147 @@ def fov_punch(t):
             - 0.012 * intensity(t) * beat_pulse(t))
 
 
+# =========================================================================================================
+# HEAVENLY LIGHT (round 3, like the approved promo): comets of light in the nine colours, moving coloured
+# lights that tint the mist and the people, one great light whose rays fan out, lanterns, big bursts.
+# Threads register their own light sources; the core hands them to the world at render time.
+# =========================================================================================================
+MOVING_LIGHTS = []        # dicts: pos(t) -> (3,), color (hex or fn), strength(t) -> 0.., radius
+RAY_SOURCES = []          # dicts: pos(t) -> (3,), color, strength(t) -> 0.., size (metres)
+
+
+def add_light(pos, color, strength, radius=4.0):
+    """A moving coloured light (comet heads, Mother's light, a glowing instrument). It glows in the mist,
+    lays a pool on the sea and colours points that take `lit`. The world shows the 4 strongest at a time."""
+    MOVING_LIGHTS.append(dict(pos=pos, color=color, strength=strength, radius=radius))
+
+
+def add_rays(pos, strength, color="#fff1d8", size=0.6):
+    """A great light whose rays fan out over everything (Mother's light, the church crown, the choir's
+    blaze). The world shows the strongest one at each moment."""
+    RAY_SOURCES.append(dict(pos=pos, strength=strength, color=color, size=size))
+
+
+def _val_at(v, t):
+    return v(t) if callable(v) else v
+
+
+def _active_lights(t):
+    out = []
+    for L in MOVING_LIGHTS:
+        k = float(_val_at(L["strength"], t))
+        if k > 0.002:
+            out.append((k, L))
+    out.sort(key=lambda kl: -kl[0])
+    return out[:4]
+
+
+def _light_slot(i):
+    def pick(t):
+        a = _active_lights(t)
+        return a[i] if i < len(a) else None
+
+    def pos(t):
+        p = pick(t)
+        return np.asarray(_val_at(p[1]["pos"], t), np.float64) if p else np.array([0.0, -1000.0, 0.0])
+
+    def col(t):
+        p = pick(t)
+        return _val_at(p[1]["color"], t) if p else "#000000"
+
+    def strength(t):
+        p = pick(t)
+        return float(p[0]) if p else 0.0
+
+    def radius(t):
+        p = pick(t)
+        return float(_val_at(p[1]["radius"], t)) if p else 1.0
+
+    return dict(pos=pos, color=col, strength=strength, radius=radius)
+
+
+def _ray_pick(t):
+    best, bk = None, 0.0
+    for R in RAY_SOURCES:
+        k = float(_val_at(R["strength"], t))
+        if k > bk:
+            best, bk = R, k
+    return best, bk
+
+
+def ray_light():
+    """The world's one light with rays: the strongest registered ray source at each moment."""
+    def pos(t):
+        R, k = _ray_pick(t)
+        return np.asarray(_val_at(R["pos"], t), np.float64) if R else np.array([0.0, -1000.0, 0.0])
+
+    def strength(t):
+        return _ray_pick(t)[1]
+
+    def color(t):
+        R, k = _ray_pick(t)
+        return _val_at(R["color"], t) if R else "#fff1d8"
+
+    return dict(pos=pos, strength=strength, color=color, size=0.6, rays=1.0)
+
+
+class Comet:
+    """A comet of light: a bright head with a long glowing trail that follows head(t) back in time, like the
+    promo's nine comets. head(t) -> position; t0/t1 when it flies (it fades in and out over `fade` s);
+    trail in seconds; width in metres. It can carry a moving light (light=True) that colours the mist."""
+
+    def __init__(self, head, color, t0, t1, trail=1.4, width=0.35, bright=1.0, fade=0.6, light=False, n=90,
+                 sparks=True, seed=0):
+        self.head, self.color, self.t0, self.t1 = head, color, float(t0), float(t1)
+        self.trail, self.width, self.bright, self.fade, self.n = float(trail), float(width), float(bright), float(fade), n
+        r = np.random.default_rng(int(seed * 97) + 5)
+        self.s = r.random((240, 4))
+        self.sparks = sparks
+        if light:
+            add_light(head, color, lambda t: 1.4 * self.k(t) * (0.8 + 0.4 * beat_pulse(t)), radius=5.0)
+
+    def k(self, t):
+        return _sc(self.t0, self.t0 + self.fade, t) * (1.0 - _sc(self.t1 - self.fade, self.t1, t))
+
+    def sample(self, t):
+        k = self.k(t)
+        if k <= 0.0 or local_k(t) <= 0.0:
+            return None
+        u = np.linspace(0.0, 1.0, self.n)
+        P = np.array([self.head(t - self.trail * x) for x in u])
+        col = lin(self.color) if isinstance(self.color, str) else np.asarray(self.color)
+        pulse = 1.0 + 0.5 * beat_pulse(t) * intensity(t) + 0.8 * hit_pulse(t, KICKS, fall=0.4)
+        a = k * (1.0 - u) ** 1.4
+        w = self.width * (1.0 - 0.85 * u)
+        out = [dict(pos=P, size=w * 2.2, color=col, alpha=0.30 * a * self.bright, kind="soft", emit=2.0, dof=0.4),
+               dict(pos=P, size=w * 0.5, color=col * 0.5 + lin(WHITE) * 0.5, alpha=a * self.bright, kind="spark",
+                    emit=3.0 * pulse, dof=0.4),
+               dict(pos=P[:1], size=self.width * 5.0, color=col, alpha=0.45 * k * pulse, kind="soft", emit=3.0),
+               dict(pos=P[:1], size=self.width * 1.2, color=lin(WHITE), alpha=k, kind="spark", emit=6.0 * pulse)]
+        if self.sparks:
+            s = self.s
+            idx = (s[:, 0] * (self.n - 1)).astype(int)
+            age = s[:, 0] * self.trail
+            drift = (s[:, 1:4] - 0.5) * (0.4 + 2.2 * s[:, :1]) * self.width * 6.0
+            out.append(dict(pos=P[idx] + drift, size=0.05 + 0.08 * s[:, 2], color=col * 0.6 + lin(WHITE) * 0.4,
+                            alpha=k * (1.0 - s[:, 0]) ** 2, kind="spark", emit=2.5, twinkle=0.8, seed=s[:, 3]))
+        return out
+
+
+def comet_colors():
+    return list(COL9)
+
+
+# the lanterns of thanks: they rise all round Zion on the thanks lines (like the promo's sea of lanterns)
+LANTERN_SPANS = [(109.8, 117.5), (188.27, 197.2), (238.8, 254.07)]
+
+
+def lantern_amount(t):
+    if globe_view(t):
+        return 0.0
+    return max([_sc(a, a + 1.5, t) * (1.0 - _sc(b - 1.0, b, t)) for a, b in LANTERN_SPANS] + [0.0])
+
+
 __all__ = [k for k in list(globals()) if not k.startswith("__")]
 import songs.s11_church as S_CHURCH  # noqa: E402
 import songs.s11_stage as S_STAGE  # noqa: E402
@@ -656,21 +753,17 @@ import songs.s11_light as S_LIGHT  # noqa: E402
 THREADS = [S_CHURCH, S_STAGE, S_ZION, S_PROC, S_CODA]
 Y, FZ, G = SUMMIT, FACADE_Z, GLOBE_C
 CORE_SHOTS = [
-    # Father's pulse rolls out over the whole Earth: a fast pull-back from close over Korea to the whole globe
-    dict(name="earth_father", kind="globe", t0=41.6, t1=45.6, fov=46.0, aperture=0.0,
-         keys=[(41.6, _gcam(95.0, 10.0, -14.0), G + _v(0, 8, 0)), (45.6, _gcam(170.0, 4.0, 6.0), G)]),
-    # closer, from below, the echoes of the pulse crossing the oceans
-    dict(name="earth_father", kind="globe", t0=45.6, t1=49.8, fov=44.0, aperture=0.0,
-         keys=[(45.6, _gcam(120.0, -34.0, 30.0), G + _v(0, 6, 0)), (49.8, _gcam(112.0, -20.0, 10.0), G + _v(0, 8, 0))]),
-    # the Earth turns toward Zion: a swing over the top
-    dict(name="earth_father", kind="globe", t0=49.8, t1=53.78, fov=46.0, aperture=0.0,
-         keys=[(49.8, _gcam(130.0, 40.0, -30.0), G + _v(0, 4, 0)), (53.78, _gcam(100.0, 24.0, 4.0), G + _v(0, 10, 0))]),
-    # all nations: rivers of light from every continent, the camera racing round
-    dict(name="earth_rivers", kind="globe", t0=70.54, t1=72.84, fov=46.0, aperture=0.0,
-         keys=[(70.54, _gcam(140.0, 10.0, 40.0), G + _v(0, 6, 0)), (72.84, _gcam(118.0, 14.0, -10.0), G + _v(0, 8, 0))]),
-    # the rivers closer, skimming over the land toward Korea
-    dict(name="earth_rivers", kind="globe", t0=72.84, t1=74.56, fov=40.0, aperture=0.0,
-         keys=[(72.84, _gcam(92.0, 22.0, -20.0), G + _v(0, 14, 0)), (74.56, _gcam(84.0, 18.0, 6.0), G + _v(0, 16, 0))]),
+    # Father's pulse rolls out over the whole Earth: a long graceful pull-back from close over Korea
+    dict(name="earth_father", kind="globe", t0=41.6, t1=47.5, fov=46.0, aperture=0.0,
+         keys=[(41.6, _gcam(92.0, 10.0, -14.0), G + _v(0, 8, 0)), (44.5, _gcam(140.0, -12.0, 18.0), G + _v(0, 4, 0)),
+               (47.5, _gcam(175.0, 6.0, 8.0), G)]),
+    # the Earth turns toward Zion: a swing over the top and down toward Korea
+    dict(name="earth_father", kind="globe", t0=47.5, t1=53.78, fov=46.0, aperture=0.0,
+         keys=[(47.5, _gcam(140.0, 44.0, -30.0), G + _v(0, 4, 0)), (53.78, _gcam(96.0, 22.0, 4.0), G + _v(0, 10, 0))]),
+    # all nations: rivers of light from every continent, the camera sweeping round and in
+    dict(name="earth_rivers", kind="globe", t0=70.54, t1=74.56, fov=44.0, aperture=0.0,
+         keys=[(70.54, _gcam(140.0, 10.0, 40.0), G + _v(0, 6, 0)), (72.6, _gcam(112.0, 16.0, -6.0), G + _v(0, 10, 0)),
+               (74.56, _gcam(86.0, 18.0, 6.0), G + _v(0, 16, 0))]),
     # the drop: the Earth's rim glows, the camera rising over it
     dict(name="earth_rivers", kind="globe", t0=75.2, t1=77.46, fov=46.0, aperture=0.0,
          keys=[(75.2, _gcam(132.0, 8.0), G + _v(0, 8, 0)), (77.46, _gcam(126.0, 34.0), G + _v(0, 18, 0))]),
@@ -738,6 +831,11 @@ def _rig():
 
 CAMERA = _rig()
 WORLD = S_LIGHT.world()
+WORLD["lights"] = [_light_slot(i) for i in range(4)]
+WORLD["light"] = ray_light()
+WORLD["lantern_field"] = dict(count=320, center=(float(ZC[0]), float(ZC[2]) + 120.0), radius=(60.0, 420.0))
+WORLD["lanterns"] = lantern_amount
+WORLD["lantern_color"] = GOLD
 WORLD["shafts"] = [sh for m in THREADS for sh in getattr(m, "SHAFTS", [])][:4]
 
 # =========================================================================================================
@@ -826,12 +924,12 @@ def _bursts():
     out = []
     for c in CUTS:
         strong = any(abs(c - s) < 0.05 for s in SLAMS)
-        out.append(dict(t=c, strength=0.75 if strong else 0.16 + 0.12 * intensity(c), rise=0.04,
-                        fall=0.45 if strong else 0.22, color="#fff3dc"))
+        out.append(dict(t=c, strength=2.6 if strong else 0.16 + 0.12 * intensity(c), rise=0.05 if strong else 0.04,
+                        fall=0.55 if strong else 0.22, color="#fff4e0"))      # the promo's huge slam bursts
     for i, h in enumerate(KICKS):
         if any(abs(h - s) < 0.05 for s in SLAMS):
             continue
-        out.append(dict(t=h + 0.01, strength=0.22 + 0.2 * intensity(h), rise=0.03, fall=0.5, color=COL9[i % 9]))
+        out.append(dict(t=h + 0.01, strength=0.35 + 0.45 * intensity(h), rise=0.03, fall=0.5, color=COL9[i % 9]))
     for a, b in ((82.08, 117.0), (162.86, 201.73), (201.73, 238.8)):
         bar = 2.30 if a < 201 else 2.16
         k = 0

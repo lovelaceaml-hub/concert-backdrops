@@ -14,20 +14,26 @@ import songs.s11_full2 as H
 
 
 LOOKS = dict(
-    city=dict(base="predawn", hills=0.0, stars=0.55, milky=0.25, clouds=0.18, haze=0.45, mist=0.10,
-              sky_top="#0a1236", sky_mid="#3a2c6a", sky_hor="#c4786e", water="#05061a", ripple=0.25),
+    # Round 3: the heavenly night of the approved promo. Deep skies and glowing mist so every light blazes;
+    # dawn builds slowly through the choruses; the full gold sunrise is saved for the coda (3:21.73).
+    city=dict(base="night", hills=0.0, stars=0.9, milky=0.6, clouds=0.12, haze=0.35, haze_color="#1a1238",
+              mist=0.30, mist_color="#241a48", sky_top="#03030c", sky_mid="#0e0a2a", sky_hor="#3a2450",
+              water="#02020a", ripple=0.25, dust=0.9, bokeh=0.9, rays=0.25),
     space=dict(base="night", hills=0.0, stars=1.0, milky=0.75, clouds=0.0, sky_top="#02040f",
                sky_mid="#081236", sky_hor="#1a2a5e", sun_int=0.0, mist=0.02, haze=0.15, haze_color="#1a2a5e",
                water="#03061a", ripple=0.15, rays=0.0),
-    zion=dict(base="dawn", hills=0.0, clouds=0.25, mist=0.2, ripple=0.3, water="#0a0a1e"),
-    sunrise=dict(base="sunrise", hills=0.0, clouds=0.30, mist=0.12, ripple=0.35, sky_top="#0f2560",
-                 sky_mid="#5a3f86", sky_hor="#f09a5c", rays=0.6, exposure=0.82, water="#0a0820", haze=0.4, sun_glow=0.45, sun_disc=5.0),
-    golden=dict(base="golden", hills=0.0, clouds=0.25, sky_top="#123a86", sky_mid="#4f6fb4",
-                sky_hor="#f2b27a", rays=0.5, sun_glow=0.45, sun_disc=5.0, mist=0.12, ripple=0.3, exposure=0.8,
-                water="#0b1838", haze=0.35, haze_color="#b8907a"),
-    glory=dict(base="golden", hills=0.0, clouds=0.15, sky_top="#1a4ea6", sky_mid="#5f8fd0",
-               sky_hor="#ffcf8f", sun_color="#fff2d6", rays=0.6, sun_glow=0.5, sun_disc=5.5, mist=0.10,
-               ripple=0.3, water="#0e2148", haze=0.3, haze_color="#d8b090", exposure=0.8),
+    zion=dict(base="night", hills=0.0, stars=0.8, milky=0.5, clouds=0.15, haze=0.3, haze_color="#1e1640",
+              mist=0.30, mist_color="#2a1e4a", sky_top="#04030f", sky_mid="#140c30", sky_hor="#4a2a58",
+              water="#02020a", ripple=0.3, dust=0.9, bokeh=0.9, rays=0.3),
+    sunrise=dict(base="night", hills=0.0, stars=0.55, milky=0.3, clouds=0.2, haze=0.3, haze_color="#2a1a44",
+                 mist=0.30, mist_color="#3a2244", sky_top="#060a24", sky_mid="#24164a", sky_hor="#7a3a5a",
+                 water="#04040e", ripple=0.35, dust=0.9, bokeh=0.9, rays=0.45, sun_glow=0.35, sun_disc=4.0),
+    golden=dict(base="dusk", hills=0.0, stars=0.3, clouds=0.25, haze=0.3, haze_color="#3a2240", mist=0.28,
+                mist_color="#4a2a50", sky_top="#0a1030", sky_mid="#3a2260", sky_hor="#b0566a", water="#05040f",
+                ripple=0.3, dust=0.9, bokeh=0.9, rays=0.5, sun_glow=0.35, sun_disc=4.0),
+    glory=dict(base="dusk", hills=0.0, stars=0.2, clouds=0.2, haze=0.3, haze_color="#4a2a48", mist=0.25,
+               mist_color="#5a3050", sky_top="#0c1236", sky_mid="#4a2a66", sky_hor="#d07a6a", water="#06050f",
+               ripple=0.3, dust=0.9, bokeh=0.9, rays=0.55, sun_glow=0.4, sun_disc=4.5),
     # the coda (owned by the coda thread, from 3:08.27 on): pre-dawn hush, the sunrise in rose and violet folding
     # into gold, the sky stage, the summit, the Earth finale
     coda_dawn=dict(base="dawn", hills=0.0, clouds=0.30, stars=0.22, milky=0.05, sky_top="#0c1240",
@@ -58,9 +64,9 @@ LOOKS = dict(
                       sky_mid="#0a1238", sky_hor="#24265e", sun_color="#ffd89c", sun_glow=0.26, sun_disc=5.0,
                       sun_size=1.6, mist=0.0, haze=0.12, haze_color="#24265e", water="#03061a", ripple=0.15,
                       exposure=0.95),
-    brass=dict(base="sunrise", hills=0.0, clouds=0.15, sky_top="#0b1a4a", sky_mid="#2e2a6a", sky_hor="#8a4f74",
-               haze=0.15, haze_color="#2e2a5a", mist=0.0, exposure=0.78, water="#080718", sun_glow=0.3,
-               sun_disc=4.0, rays=0.2),
+    brass=dict(base="night", hills=0.0, stars=0.4, clouds=0.15, sky_top="#060a26", sky_mid="#22184c",
+               sky_hor="#6a3462", haze=0.2, haze_color="#22184c", mist=0.2, mist_color="#30204c", water="#04040e",
+               sun_glow=0.3, sun_disc=4.0, rays=0.3, dust=0.9, bokeh=0.9),
     pastel_card=dict(base="day", hills=0.0, sky_top="#9bdbf6", sky_mid="#efcfeb", sky_hor="#ffd9b6",
                      sun_int=0.3, sun_glow=0.3, mist=0.14, haze=0.14, stars=0.2, water="#8ab4e0"),
 )
@@ -162,7 +168,7 @@ def sun_int(t):
         return k + 0.10 * loud(t) + 0.15 * hit_pulse(t, [SLAM3], fall=1.0)
     if 238.8 <= t < 254.07:      # home to everyone on Mount Zion: the sun high, its glare kept small
         return 0.45 + 0.08 * loud(t) + 0.2 * hit_pulse(t, [HIT["final"]], fall=1.2)
-    k = 0.40 + 0.25 * _sc(53.0, 82.08, t) + 0.15 * _sc(160.0, 201.73, t) + 0.08 * loud(t)
+    k = (0.22 + 0.12 * _sc(53.0, 82.08, t) + 0.16 * _sc(160.0, 201.73, t) + 0.06 * loud(t))   # a low dawn sun
     return k * (0.45 if stage_view(t) and t >= 160.0 else 1.0)
 
 
