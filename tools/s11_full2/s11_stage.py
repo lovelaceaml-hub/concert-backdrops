@@ -36,120 +36,75 @@ def _P(x, h, z):
     return _v(x, Y + h, FZ + z)
 
 
-# one shot per block of the core's EDIT (blocks_of("stage")), every one a different angle
+# one shot per block of the core's EDIT (blocks_of("stage")): each a flowing flight through several keys
 SHOTS = [
-    # the orchestra wakes at dawn, the choir behind: a low crane rising from the audience's floor
-    _S("st_dawn", 26.33, 31.11, 46.0, [(0.0, _P(-8.0, 1.0, 40.0), _P(-1.0, 1.8, 12.0)),
-                                       (1.0, _P(-5.0, 2.4, 36.0), _P(-1.0, 2.0, 12.0))], ap=0.012),
-    # harps and strings over the low F pedal: close on the first harp's strings, sliding along them
-    _S("st_harp", 35.9, 38.24, 40.0, [(0.0, _P(-8.4, 1.3, 27.2), _P(-9.0, 1.15, 24.1)),
-                                      (1.0, _P(-9.5, 1.55, 26.7), _P(-9.1, 1.25, 24.1))], ap=0.03,
-       focus=_P(-9.0, 1.2, 24.15)),
-    # timpani and strings: down the centre aisle onto the kettles, the mallets falling
-    _S("st_timp", 67.6, 69.4, 46.0, [(0.0, _P(0.25, 2.0, 18.6), _P(0.2, 1.3, 15.2)),
-                                     (1.0, _P(0.25, 1.85, 17.6), _P(0.2, 1.35, 15.2))], ap=0.03,
-       focus=_P(0.2, 1.4, 15.5)),
-    # the build into slam 1, faster and faster: low up at the singers breathing in
-    _S("st_build1", 77.46, 78.62, 44.0, [(0.0, _P(2.0, 1.0, 10.2), _P(0.5, 3.0, 2.5)),
-                                         (1.0, _P(1.4, 1.1, 9.0), _P(0.4, 3.0, 2.5))], focus=_P(0.4, 2.0, 4.0)),
-    # light gathering in the choir: close on the front row's hearts
-    _S("st_build2", 78.62, 79.78, 40.0, [(0.0, _P(-1.6, 2.5, 8.0), _P(-1.0, 2.2, 3.0)),
-                                         (1.0, _P(-1.2, 2.5, 6.4), _P(-1.0, 2.2, 3.0))], focus=_P(-1.0, 1.9, 4.3)),
-    # the orchestra holds its breath: a fast dolly along the violins
-    _S("st_build3", 79.78, 80.94, 42.0, [(0.0, _P(-10.0, 1.7, 27.5), _P(-6.0, 1.1, 20.0)),
-                                         (1.0, _P(-3.5, 1.7, 27.5), _P(-1.5, 1.1, 20.0))], focus=_P(-4.0, 1.1, 21.0)),
+    # the orchestra wakes, the comets weave through it: a long low flight over the strings toward the choir
+    _S("st_dawn", 26.33, 31.11, 46.0, [(0.0, _P(-9.0, 1.2, 40.0), _P(-2.0, 1.5, 20.0)),
+                                       (0.5, _P(-5.0, 2.2, 31.0), _P(0.0, 1.6, 18.0)),
+                                       (1.0, _P(0.0, 3.4, 27.0), _P(0.0, 2.2, 8.0))], ap=0.012),
+    # the choir breathes in, the comets spiral in: an orbit in front of the singers
+    _S("st_breath_in", 77.46, 80.94, 42.0, [(0.0, _P(-7.0, 2.2, 11.5), _P(-1.0, 2.4, 2.5)),
+                                            (0.5, _P(-3.0, 2.0, 9.8), _P(0.0, 2.5, 2.5)),
+                                            (1.0, _P(1.5, 1.8, 8.4), _P(0.0, 2.6, 2.5))], focus=_P(0.0, 2.0, 4.0)),
     # the last half bar: a hard push into the choir
-    _S("st_build4", 81.51, 82.08, 46.0, [(0.0, _P(0.0, 2.4, 13.5), _P(0.0, 2.7, 2.0)),
-                                         (1.0, _P(0.0, 2.6, 8.0), _P(0.0, 2.7, 2.0))], focus=_P(0.0, 2.2, 4.0)),
-    # SLAM 1: the whole stage from high, craning down onto it
-    _S("st_slam1", 82.08, 84.4, 50.0, [(0.0, _P(0.0, 12.0, 46.0), _P(0.0, 2.0, 10.0)),
-                                       (1.0, _P(0.0, 7.5, 39.0), _P(0.0, 2.6, 10.0))], ap=0.01),
-    # the choir in full voice: crane over the orchestra to the choir
-    _S("st_fullvoice", 84.4, 86.7, 44.0, [(0.0, _P(3.0, 6.0, 25.0), _P(0.0, 2.4, 2.5)),
-                                          (1.0, _P(1.5, 4.2, 13.0), _P(0.0, 2.6, 2.5))], ap=0.015),
-    # brass and strings: over a trumpeter's shoulder, past the bell, out over the orchestra
-    _S("st_trumpet", 88.0, 89.3, 50.0, [(0.0, _P(-2.55, 2.55, 14.55), _P(-1.9, 2.1, 18.5)),
-                                        (1.0, _P(-2.4, 2.45, 14.85), _P(-1.6, 2.05, 18.5))], ap=0.03,
-       focus=_P(-2.06, 2.2, 16.1)),
-    # the choir: an arc along the rows
-    _S("st_choir_arc", 93.0, 95.4, 42.0, [(0.0, _P(-7.5, 2.5, 10.0), _P(-1.5, 2.4, 2.5)),
-                                          (0.5, _P(-5.4, 2.5, 11.2), _P(-1.0, 2.4, 2.5)),
-                                          (1.0, _P(-3.0, 2.5, 11.8), _P(-0.5, 2.4, 2.5))], ap=0.015),
-    # the orchestra in full: high from the side, sweeping round
-    _S("st_orch_high", 101.7, 103.6, 46.0, [(0.0, _P(15.0, 9.0, 39.0), _P(0.0, 1.5, 17.0)),
-                                            (1.0, _P(9.0, 8.0, 37.5), _P(0.0, 1.5, 17.0))], ap=0.01),
-    # brass and timpani blaze: low among the violas onto the trombones' bells
-    _S("st_blaze1", 105.14, 106.5, 46.0, [(0.0, _P(3.2, 2.3, 21.6), _P(4.2, 2.1, 16.5)),
-                                          (1.0, _P(3.0, 2.5, 20.2), _P(4.2, 2.2, 16.5))], ap=0.025,
-       focus=_P(4.4, 2.1, 17.0)),
-    # the breath: the choir still, light falling like snow (a slow drift)
-    _S("st_snow", 117.0, 121.32, 36.0, [(0.0, _P(3.6, 2.3, 9.6), _P(0.5, 2.6, 2.5)),
-                                        (1.0, _P(2.0, 2.4, 9.0), _P(0.3, 2.6, 2.5))], focus=_P(0.5, 2.0, 4.0)),
-    # verse 2: the strings pulse, a low dolly along the violin section
-    _S("st_strings", 121.32, 124.18, 38.0, [(0.0, _P(-8.0, 1.3, 27.6), _P(-5.5, 1.2, 21.0)),
-                                            (1.0, _P(-3.6, 1.3, 27.4), _P(-2.5, 1.2, 20.5))], ap=0.025,
-       focus=_P(-4.0, 1.2, 22.0)),
-    # strings and harp: past a violinist's bow to the harps
-    _S("st_strings_harp", 124.18, 125.92, 42.0, [(0.0, _P(-5.6, 1.5, 26.0), _P(-9.4, 1.1, 23.2)),
-                                                 (1.0, _P(-6.3, 1.6, 25.4), _P(-9.6, 1.1, 23.0))], ap=0.025,
-       focus=_P(-9.0, 1.2, 24.0)),
-    # all kings worship You: crane up from the orchestra to the choir
-    _S("st_kings", 150.4, 152.0, 44.0, [(0.0, _P(-2.0, 1.8, 12.5), _P(0.0, 2.8, 2.0)),
-                                        (1.0, _P(-1.0, 4.6, 10.5), _P(0.0, 2.8, 2.0))], ap=0.015),
-    # the build into slam 2: the choir draws breath
-    _S("st_build5", 160.6, 161.7, 42.0, [(0.0, _P(4.2, 2.2, 10.8), _P(0.5, 2.4, 2.5)),
-                                         (1.0, _P(2.4, 2.3, 8.4), _P(0.5, 2.4, 2.5))], focus=_P(0.8, 2.0, 4.0)),
-    # the last half bar: a fast push to a trumpet's bell
-    _S("st_build6", 162.3, 162.86, 48.0, [(0.0, _P(-3.0, 2.4, 21.5), _P(-2.06, 2.2, 16.1)),
-                                          (1.0, _P(-2.2, 2.3, 18.0), _P(-2.06, 2.2, 16.1))], ap=0.03,
-       focus=_P(-2.06, 2.2, 16.2)),
-    # SLAM 2: low and wide from the front of the stage up at the blazing brass and timpani
+    _S("st_build4", 81.51, 82.08, 46.0, [(0.0, _P(2.0, 2.4, 12.5), _P(0.0, 2.7, 2.0)),
+                                         (1.0, _P(0.5, 2.6, 7.5), _P(0.0, 2.7, 2.0))], focus=_P(0.0, 2.2, 4.0)),
+    # SLAM 1: close in the blaze, then a great crane up and back over the whole stage
+    _S("st_slam1", 82.08, 86.7, 50.0, [(0.0, _P(0.0, 2.5, 12.0), _P(0.0, 3.0, 2.0)),
+                                       (0.4, _P(0.0, 6.0, 24.0), _P(0.0, 2.6, 8.0)),
+                                       (1.0, _P(0.0, 10.0, 42.0), _P(0.0, 3.0, 10.0))], ap=0.01),
+    # the brass and timpani blaze: a crane low over the strings up to the back rows
+    _S("st_blaze1", 105.14, 108.4, 46.0, [(0.0, _P(4.0, 1.5, 28.0), _P(3.0, 2.0, 16.0)),
+                                          (0.5, _P(3.5, 2.6, 23.0), _P(3.0, 2.2, 16.0)),
+                                          (1.0, _P(1.0, 3.6, 20.0), _P(0.0, 2.0, 15.0))], ap=0.015),
+    # the breath: a slow orbit round the still choir in the falling light
+    _S("st_snow", 117.0, 121.32, 38.0, [(0.0, _P(6.0, 2.4, 10.0), _P(0.5, 2.5, 2.5)),
+                                        (0.5, _P(3.0, 2.6, 11.0), _P(0.3, 2.5, 2.5)),
+                                        (1.0, _P(0.0, 2.8, 11.5), _P(0.0, 2.6, 2.5))], focus=_P(0.3, 2.0, 4.0)),
+    # verse 2: flying low along the strings to the harps
+    _S("st_strings", 121.32, 125.92, 40.0, [(0.0, _P(4.0, 1.3, 27.5), _P(1.0, 1.1, 21.0)),
+                                            (0.5, _P(-2.0, 1.3, 27.8), _P(-3.0, 1.1, 21.0)),
+                                            (1.0, _P(-7.0, 1.5, 27.5), _P(-9.2, 1.2, 23.5))], ap=0.02),
+    # the choir draws breath: a push in from the side
+    _S("st_build5", 160.6, 161.7, 42.0, [(0.0, _P(6.0, 2.4, 11.0), _P(0.5, 2.5, 2.5)),
+                                         (1.0, _P(3.0, 2.4, 8.5), _P(0.5, 2.5, 2.5))], focus=_P(0.8, 2.0, 4.0)),
+    # SLAM 2: low and wide up at the blazing brass, rising
     _S("st_slam2", 162.86, 165.16, 52.0, [(0.0, _P(0.0, 1.2, 29.5), _P(0.0, 3.4, 14.0)),
-                                          (1.0, _P(0.0, 1.6, 26.0), _P(0.0, 3.4, 14.0))], ap=0.012),
-    # the choir: along the rows from the side
-    _S("st_choir_side", 167.5, 169.2, 44.0, [(0.0, _P(12.5, 3.0, 6.5), _P(0.0, 2.2, 2.5)),
-                                             (1.0, _P(11.0, 3.3, 4.8), _P(0.0, 2.2, 2.5))], ap=0.015),
-    # the orchestra: an arc round the conductor's podium
-    _S("st_podium", 173.8, 176.1, 50.0, [(0.0, _P(3.2, 2.2, 28.2), _P(0.0, 1.2, 20.0)),
-                                         (0.5, _P(0.0, 2.3, 29.6), _P(0.0, 1.2, 20.0)),
-                                         (1.0, _P(-3.2, 2.2, 28.2), _P(0.0, 1.2, 20.0))], ap=0.015),
-    # the brass rising: a crane up past the trombones
-    _S("st_brass_rise", 183.0, 185.92, 46.0, [(0.0, _P(5.2, 1.8, 24.0), _P(4.5, 2.2, 16.5)),
-                                              (1.0, _P(4.2, 4.6, 22.0), _P(4.2, 2.0, 16.5))], ap=0.02),
-    # wondrous love: the trumpets and timpani blaze, from the front
-    _S("st_love", 185.92, 188.27, 46.0, [(0.0, _P(-4.5, 3.6, 33.0), _P(-3.0, 2.4, 15.0)),
-                                         (1.0, _P(-4.0, 3.2, 30.0), _P(-3.0, 2.4, 15.0))], ap=0.012),
-    # the choir: from high above, looking down on the rows
-    _S("st_choir_high", 190.6, 192.9, 44.0, [(0.0, _P(-6.0, 9.0, 12.5), _P(0.0, 1.8, 2.0)),
-                                             (1.0, _P(-3.0, 8.0, 10.5), _P(0.0, 1.8, 2.0))], ap=0.012),
-    # the coda hit: a fast push into the choir
-    _S("st_coda_hit", 199.62, 200.7, 46.0, [(0.0, _P(0.0, 2.6, 12.5), _P(0.0, 2.7, 2.0)),
-                                            (1.0, _P(0.0, 2.6, 8.4), _P(0.0, 2.7, 2.0))], focus=_P(0.0, 2.2, 4.0)),
-    # the choir and orchestra in the sunrise: high and diagonal over everyone
-    _S("st_sunrise", 203.9, 205.98, 50.0, [(0.0, _P(-17.0, 12.0, 40.0), _P(0.0, 2.0, 12.0)),
-                                           (1.0, _P(-10.0, 10.0, 38.0), _P(0.0, 2.0, 12.0))], ap=0.01),
-    # the choir: low from the right, up at the singers
-    _S("st_choir_low", 210.3, 211.6, 46.0, [(0.0, _P(5.0, 1.0, 9.6), _P(1.0, 3.4, 2.0)),
-                                            (1.0, _P(3.4, 1.2, 9.0), _P(0.8, 3.4, 2.0))], focus=_P(1.5, 2.0, 4.0)),
+                                          (0.5, _P(0.0, 2.0, 26.5), _P(0.0, 3.6, 14.0)),
+                                          (1.0, _P(0.0, 4.5, 24.0), _P(0.0, 3.0, 12.0))], ap=0.012),
+    # the brass rising: a crane past the trombones
+    _S("st_brass_rise", 183.0, 185.92, 46.0, [(0.0, _P(6.0, 1.6, 24.0), _P(4.5, 2.1, 16.5)),
+                                              (0.5, _P(5.0, 3.0, 22.5), _P(4.2, 2.2, 16.5)),
+                                              (1.0, _P(3.0, 5.0, 21.0), _P(2.0, 2.0, 15.0))], ap=0.02),
+    # wondrous love: an arc from the front round the trumpets and timpani
+    _S("st_love", 185.92, 188.27, 46.0, [(0.0, _P(-6.0, 3.4, 32.0), _P(-3.0, 2.4, 15.0)),
+                                         (0.5, _P(-4.0, 3.2, 31.0), _P(-3.0, 2.4, 15.0)),
+                                         (1.0, _P(-2.0, 3.0, 30.0), _P(-2.5, 2.4, 15.0))], ap=0.012),
+    # the coda hit: a push into the choir as it blazes
+    _S("st_coda_hit", 199.62, 200.7, 46.0, [(0.0, _P(-1.0, 2.5, 13.0), _P(0.0, 2.7, 2.0)),
+                                            (1.0, _P(0.0, 2.6, 8.2), _P(0.0, 2.7, 2.0))], focus=_P(0.0, 2.2, 4.0)),
+    # the choir in the sunrise: low from the right, up at the singers
+    _S("st_choir_low", 210.3, 211.6, 46.0, [(0.0, _P(5.5, 1.0, 10.0), _P(1.0, 3.4, 2.0)),
+                                            (1.0, _P(3.0, 1.3, 9.0), _P(0.8, 3.4, 2.0))], focus=_P(1.5, 2.0, 4.0)),
     # sacrifice: low under the trumpets' bells
-    _S("st_sacrifice", 218.1, 220.2, 48.0, [(0.0, _P(-4.6, 1.8, 22.2), _P(-4.6, 2.5, 16.5)),
-                                            (1.0, _P(-4.3, 2.0, 20.4), _P(-4.4, 2.5, 16.5))], ap=0.025,
+    _S("st_sacrifice", 218.1, 220.2, 48.0, [(0.0, _P(-5.0, 1.7, 22.5), _P(-4.6, 2.5, 16.5)),
+                                            (1.0, _P(-3.6, 2.2, 20.0), _P(-4.2, 2.5, 16.5))], ap=0.025,
        focus=_P(-4.5, 2.2, 16.8)),
-    # home: Oh, the Church of God, the whole stage from the audience
-    _S("st_home", 238.8, 240.19, 46.0, [(0.0, _P(-5.0, 3.2, 42.0), _P(-0.5, 3.6, 6.0)),
-                                        (1.0, _P(-3.6, 3.4, 39.5), _P(-0.5, 3.6, 6.0))], ap=0.01),
-    # the step down, hymn-like: a gentle arc toward the choir
-    _S("st_stepdown", 240.19, 242.5, 44.0, [(0.0, _P(6.5, 3.0, 15.0), _P(0.0, 2.5, 3.0)),
-                                            (1.0, _P(3.2, 3.2, 14.0), _P(0.0, 2.5, 3.0))], ap=0.015),
-    # the choir: a slow push
-    _S("st_home_choir", 244.8, 247.5, 42.0, [(0.0, _P(-2.6, 2.2, 11.2), _P(-0.5, 2.6, 2.5)),
-                                             (1.0, _P(-1.8, 2.3, 9.6), _P(-0.5, 2.6, 2.5))], focus=_P(-0.5, 2.0, 4.0)),
+    # home: Oh, the Church of God; a long flight in from the audience over the orchestra
+    _S("st_home", 238.8, 242.5, 46.0, [(0.0, _P(-6.0, 3.2, 42.0), _P(-0.5, 3.6, 6.0)),
+                                       (0.5, _P(-3.0, 3.6, 36.0), _P(0.0, 3.4, 6.0)),
+                                       (1.0, _P(0.0, 4.5, 28.0), _P(0.0, 3.0, 5.0))], ap=0.01),
+    # the choir: a close orbit along the front row
+    _S("st_home_choir", 244.8, 247.5, 42.0, [(0.0, _P(-5.0, 2.3, 11.0), _P(-0.5, 2.6, 2.5)),
+                                             (0.5, _P(-2.0, 2.3, 10.0), _P(0.0, 2.6, 2.5)),
+                                             (1.0, _P(1.0, 2.4, 9.5), _P(0.0, 2.6, 2.5))], focus=_P(0.0, 2.0, 4.0)),
     # the held breath: still, looking up past the choir to the sparks gathering above
-    _S("st_held", 247.5, 249.43, 50.0, [(0.0, _P(0.0, 2.0, 16.0), _P(0.0, 6.5, 3.0)),
-                                        (1.0, _P(0.0, 2.1, 15.3), _P(0.0, 6.6, 3.0))], ap=0.012, pace="linear"),
+    _S("st_held", 247.5, 249.43, 50.0, [(0.0, _P(0.0, 2.0, 16.0), _P(0.0, 5.0, 3.0)),
+                                        (1.0, _P(0.0, 2.2, 15.0), _P(0.0, 6.0, 3.0))], ap=0.012, pace="linear"),
     # the final rise: a crane up and back over everyone
-    _S("st_final", 249.43, 251.7, 52.0, [(0.0, _P(0.0, 2.6, 14.0), _P(0.0, 4.5, 3.0)),
-                                         (1.0, _P(0.0, 9.5, 25.0), _P(0.0, 3.6, 3.0))], ap=0.01),
+    _S("st_final", 249.43, 251.7, 52.0, [(0.0, _P(0.0, 2.6, 13.0), _P(0.0, 4.0, 3.0)),
+                                         (0.5, _P(0.0, 5.5, 18.0), _P(0.0, 3.6, 3.0)),
+                                         (1.0, _P(0.0, 9.5, 26.0), _P(0.0, 3.4, 3.0))], ap=0.01),
 ]
 
 # =========================================================================================================
@@ -215,7 +170,10 @@ def _choir_places():
     return np.asarray(pts, np.float64)
 
 
-CHOIR_P = _choir_places()
+CHOIR_ALL = _choir_places()
+HERO_I = [8, 10, 12]                       # three singers in the middle of the front row, finely detailed
+HERO_P = CHOIR_ALL[HERO_I]
+CHOIR_P = np.delete(CHOIR_ALL, HERO_I, axis=0)
 CHOIR_H = 1.66
 # the singers hold their music before them (cup), the light of their singing gathers at the heart
 _SING = [("cup", dict(height=0.16, out=0.02))]
@@ -241,6 +199,11 @@ def choir_glow(t):
     k += 0.9 * _sc(247.5, 249.43, t) * (1.0 - _sc(250.5, 253.0, t)) + 1.2 * hit_pulse(t, [HIT["final"], LAST_CHORD], fall=0.9)
     k += 1.1 * chorus_flare(t)
     return k
+
+
+def end_glow(t):
+    """The choir blazes gold at the end (home, the held breath, the final rise)."""
+    return 1.0 + 0.4 * _sc(243.0, 245.0, t) + 0.7 * _sc(247.5, 249.43, t) * (1.0 - _sc(252.0, 254.0, t))
 
 
 def chorus_flare(t):
@@ -279,12 +242,12 @@ def _far(t, p):
 def choir_mask(t):
     f = _far(t, CHOIR_C)
     k = (0.85 if t < SLAM3 else 0.45) * (1.0 - f) + (0.35 if t >= SLAM3 else 0.0) * f
-    return k
+    return k * (1.0 - _sc(243.0, 244.8, t))
 
 
 def orch_mask(t):
     f = _far(t, ORCH_C)
-    k = 0.45 * (1.0 - f) + (0.55 if t >= SLAM3 else 0.0) * f
+    k = (0.45 if t < SLAM3 else 0.6) * (1.0 - f) + (0.55 if t >= SLAM3 else 0.0) * f
     return k
 
 
@@ -346,7 +309,7 @@ class Choir(Crowd):
         self._sw = np.zeros(self.n)
 
     def gain(self, t):
-        return float(self.g(t)) * (1.0 + 1.2 * _far(t, CHOIR_C)) * (1.0 + 0.5 * _sc(160.0, 205.0, t))
+        return float(self.g(t)) * (1.0 + 1.2 * _far(t, CHOIR_C)) * (1.0 + 0.5 * _sc(160.0, 205.0, t)) * end_glow(t)
 
     def _place(self, P, ii, age, pr):
         sw = self._sw[ii]
@@ -1064,6 +1027,157 @@ class Snow:
                     emit=1.8, kind="spark", twinkle=0.5, seed=s[:, 4], dof=0.8)
 
 
+# =========================================================================================================
+# Comets that weave through the orchestra and spiral round the choir; the slams as a ray source
+# =========================================================================================================
+def _cphase(t):
+    """A clock that runs with the music (beats, a little faster in loud passages)."""
+    return beat_f(t) * _BP
+
+
+def _comet_paths():
+    O = PODIUM + _v(0.0, 0.0, -5.0)
+    C = _v(0.0, SUMMIT, FACADE_Z + 2.5)
+
+    def weave(t):        # an S through the orchestra, low over the players
+        u = 0.32 * _cphase(t)
+        return O + _v(10.0 * np.sin(u), 1.6 + 0.7 * np.sin(3.0 * u), 4.0 * np.sin(2.0 * u))
+
+    def strings(t):      # low along the strings, back and forth
+        u = 0.27 * _cphase(t) + 1.3
+        return O + _v(9.5 * np.sin(u), 1.15 + 0.25 * np.sin(5.0 * u), 2.5 + 2.0 * np.cos(u))
+
+    def choir_ring(t):   # round the choir, in front of the singers and behind them
+        u = 0.36 * _cphase(t) + 2.0
+        return C + _v(12.5 * np.cos(u), 2.4 + 1.2 * np.sin(2.0 * u), 4.2 * np.sin(u))
+
+    def helix(t):        # a rising helix over the choir
+        u = 0.55 * _cphase(t)
+        h = np.mod(0.09 * _cphase(t), 1.0)
+        return C + _v(6.0 * np.cos(u), 1.0 + 7.0 * h, 2.0 + 3.0 * np.sin(u))
+
+    def brass(t):        # round the back rows, over the bells and the drums
+        u = 0.4 * _cphase(t) + 4.0
+        return PODIUM + _v(8.0 * np.sin(u), 3.0 + 0.6 * np.sin(2.0 * u), -10.6 + 2.0 * np.cos(u))
+    return [weave, strings, choir_ring, helix, brass]
+
+
+COMET_PATHS = _comet_paths()
+
+
+class StageComet(Comet):
+    """A comet that flies only while the camera is on the choir and orchestra."""
+
+    def sample(self, t):
+        if not stage_view(t):
+            return None
+        return super().sample(t)
+
+
+def blaze(t):
+    """The choir and orchestra as a great light on the slams and the coda hit."""
+    if not stage_view(t):
+        return 0.0
+    return min(1.6, 1.4 * hit_pulse(t, [SLAM1, SLAM2, HIT["coda"]], rise=0.05, fall=1.4)
+               + 0.35 * hit_pulse(t, KICKS, fall=0.5))
+
+
+# =========================================================================================================
+# The hero singers (finely detailed, in the middle of the front row) and the conductor on the podium
+# =========================================================================================================
+HERO_ACTS = [("raise", SLAM1, 82.08, 86.7), ("raise", SLAM2, 162.86, 165.16), ("open", HIT["love"], 185.92, 188.27),
+             ("raise", HIT["coda"], 199.62, 200.7), ("raise", HIT["final"], 249.43, 251.7)]
+
+
+def _heroes():
+    """Crowds of the hero singers: one acted crowd per gesture, each person shown only in its windows, and a
+    singing crowd for the rest of the time."""
+    n = len(HERO_P)
+    out = []
+    win = sorted((a, b) for _k, _h, a, b in HERO_ACTS)
+    for kind in ("raise", "open"):
+        acts = [(h, a, b) for k, h, a, b in HERO_ACTS if k == kind]
+        if not acts:
+            continue
+        pl = np.concatenate([HERO_P for _ in acts])
+        start = np.repeat([a - 0.02 for _h, a, _b in acts], n)
+        until = np.repeat([b for _h, _a, b in acts], n)
+        act = np.repeat([h - 0.08 for h, _a, _b in acts], n)
+        c = GCrowd(gain=stage_k, places=pl, facing=0.0, kinds=(kind,), people=dict(woman=1.0), start=start,
+                   until=until, act=act, fade=0.03, flash=0.0, color="#ffb84a", color2="#fff0c8", bright=1.3,
+                   points=22000, size=0.55, glints=0.01, dof=0.35, seed=31.0 + len(out), mirror=False,
+                   scale=1.0)
+        out.append(c)
+    # singing: shown between the gesture windows
+    gaps, t = [], 21.3
+    for a, b in win:
+        gaps.append((t, a))
+        t = b
+    gaps.append((t, 275.0))
+    pl = np.concatenate([HERO_P for _ in gaps])
+    start = np.repeat([g[0] for g in gaps], n)
+    until = np.repeat([g[1] for g in gaps], n)
+    sing = [dict(CHOIR_KINDS[0])]
+    c = GCrowd(gain=stage_k, places=pl, facing=0.0, kinds=sing, start=start, until=until, fade=0.03, flash=0.0,
+               color="#ffb84a", color2="#fff0c8", bright=1.3, points=22000, size=0.55, glints=0.01, dof=0.35,
+               seed=41.0, mirror=False, scale=1.0, light="#ffd890", lamp=(0.18, 1.0))
+    out.append(c)
+    return out
+
+
+COND_P = PODIUM + _v(0.0, 0.25, 0.0)
+
+
+def _beat_pattern(ph):
+    """The conductor's right hand: a four-beat pattern (down, in, out, up) in the conductor's frame."""
+    q = np.mod(ph, 1.0) * 4.0
+    k = int(np.floor(q)) % 4
+    f = q - np.floor(q)
+    P = [_v(-0.05, 1.10, 0.42), _v(0.18, 1.22, 0.40), _v(-0.34, 1.22, 0.40), _v(-0.12, 1.48, 0.38)]
+    a, b = P[k], P[(k + 1) % 4]
+    e = f * f * (3.0 - 2.0 * f)
+    return a + (b - a) * e + _v(0.0, 0.06 * np.sin(np.pi * f), 0.0)
+
+
+class Conductor(Crowd):
+    """The conductor on the podium, facing the orchestra, beating time on the beat with a baton of light."""
+
+    def __init__(self, gain=None, **kw):
+        kinds = [dict(shape="man", height=1.74, garment="coat", hair="short", motion="stand", loop=LOOP,
+                      gest=[_gest("cdr", "R", _beat_pattern, palm=(0.0, -1.0, 0.3), fingers="pinch", look=True),
+                            _gest("cdl", "L", lambda ph: _v(0.22, 1.20 + 0.04 * np.sin(2 * np.pi * ph), 0.30),
+                                  palm=(-0.3, -0.2, 1.0), fingers="open")])]
+        super().__init__(places=COND_P[None], kinds=kinds, facing=180.0, mirror=False, scale=1.0, **kw)
+        self.facing[:] = np.radians(180.0)
+        self.rate[:] = 0.0
+        self.g = gain or stage_k
+
+    def gain(self, t):
+        return float(self.g(t))
+
+    def sample(self, t):
+        if self.g(t) <= 0.0:
+            return []
+        self.phase[:] = (beat_f(t) / 4.0) % 1.0
+        return super().sample(t)
+
+
+class Baton:
+    """The conductor's baton, a line of light from the hand."""
+
+    def sample(self, t):
+        if stage_k(t) <= 0.0:
+            return None
+        h = _beat_pattern((beat_f(t) / 4.0) % 1.0)
+        tip = h + _unit(_v(-0.1, 0.45, 0.9)) * 0.42
+        w = lambda q: COND_P + _v(-q[0], q[1], -q[2])          # the conductor faces -z
+        a, b = w(h), w(tip)
+        return [dict(pos=a[None], pos2=b[None], size=0.008, color=lin("#fff6e6") * 1.5, alpha=1.0, emit=2.4,
+                     kind="line", dof=0.5),
+                dict(pos=b[None], size=0.05 + 0.08 * beat_pulse(t), color=lin("#fff1d8"), alpha=0.9, emit=3.0,
+                     kind="soft", dof=0.5)]
+
+
 def add(scene):
     choir = Choir(places=CHOIR_P, facing=0.0, kinds=CHOIR_KINDS,
                   start=dict(t=21.3, center=(0.0, FACADE_Z), speed=9.0), color="#ffb84a", color2="#ffe9b8",
@@ -1076,5 +1190,17 @@ def add(scene):
     scene.add("orchestra", orch, mask=Mask("dark", strength=orch_mask, grow=0.03, source=MaskSource(orch)))
     scene.add("risers", Risers())
     scene.add("instruments", Instruments())
-    scene.add("choir light", ChoirLight(CHOIR_P))
+    scene.add("choir light", ChoirLight(CHOIR_ALL))
     scene.add("snow", Snow())
+    for i, c in enumerate(_heroes()):
+        scene.add("hero singers %d" % i, c)
+    cond = Conductor(start=dict(t=2.2, dur=0.5), color=CRYSTAL, color2="#ffffff", bright=1.4, points=20000,
+                     size=0.6, glints=0.01, dof=0.35, seed=51.0)
+    scene.add("conductor", cond)
+    scene.add("baton", Baton())
+    for i, f in enumerate(COMET_PATHS):
+        col = COL9[(2 * i + 1) % 9]
+        scene.add("stage comet %d" % i, StageComet(f, col, 0.0, 260.0, trail=1.3, width=0.22, bright=1.0,
+                                                   fade=0.5, n=70, seed=60 + i))
+    add_light(COMET_PATHS[0], COL9[1], lambda t: 1.1 * stage_view(t) * (0.8 + 0.4 * beat_pulse(t)), radius=5.0)
+    add_rays(lambda t: _v(0.0, SUMMIT + 3.2, FACADE_Z + 1.0), blaze, color="#ffe8c0", size=0.7)

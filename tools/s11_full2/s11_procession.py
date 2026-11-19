@@ -390,23 +390,23 @@ def _comet_head(j, phase):
 
     def kings(t):            # round the kings as they walk
         a = a0 + 1.1 * t
-        r = 6.0 + 1.5 * np.sin(0.7 * t + j)
-        return _v(r * np.sin(a), 2.5 + 1.8 * np.sin(1.3 * t + j), _kz(t) + r * np.cos(a))
+        r = 5.0 + 1.0 * np.sin(0.7 * t + j)
+        return _v(r * np.sin(a), 2.0 + 1.0 * np.sin(1.3 * t + j), _kz(t) + r * np.cos(a))
 
     def rise(t):             # the crowns rise: the comets spiral up round them and stream toward Zion
         u = max(t - 154.2, 0.0)
         v = max(t - RISE, 0.0)
         a = a0 + 1.1 * 154.2 + 2.2 * u
-        r = 5.0 + 2.0 * u
+        r = 3.2 + 1.5 * u
         return _v(r * np.sin(a), 2.5 + 2.0 * u + 9.0 * v * v, _kz(t) + r * np.cos(a) - 16.0 * v * v)
 
     def home(t):             # the held breath: drawn back into her light, spinning faster
         q = _sc(156.0, 160.4, t)
         m = mother_pos(t)
         a = a0 + 0.4 * (t - 156.0) + 9.0 * q * q
-        r = 12.0 * (1.0 - q) ** 1.3 + 0.2
-        return m + _v(r * np.sin(a), (6.0 + 1.5 * np.sin(1.1 * t + j)) * (1.0 - q),
-                      -6.0 * (1.0 - q) + r * np.cos(a))
+        r = 8.0 * (1.0 - q) ** 1.3 + 0.2
+        return m + _v(r * np.sin(a), (7.0 + 1.5 * np.sin(1.1 * t + j)) * (1.0 - q),
+                      -12.0 * (1.0 - q) + r * np.cos(a))
 
     return dict(burst=burst, ring=ring, march=march, weave=weave, dive=dive, kings=kings, rise=rise,
                 home=home)[phase]
@@ -415,8 +415,8 @@ def _comet_head(j, phase):
 # (phase, t0, t1, brightness, trail, fade out)
 COMET_PHASES = [("burst", LAND, 130.29, 1.0, 1.4, 0.05), ("ring", 130.29, 134.54, 0.8, 1.6, 0.05),
                 ("march", 134.54, 139.2, 0.6, 1.4, 0.05), ("weave", 141.5, 144.4, 1.0, 1.2, 0.05),
-                ("dive", 144.4, 148.6, 1.1, 0.9, 0.05), ("kings", 148.6, 154.2, 0.6, 1.4, 0.05),
-                ("rise", 154.2, 156.0, 1.0, 1.2, 0.05), ("home", 156.0, 160.6, 0.6, 1.4, 0.5)]
+                ("dive", 144.4, 148.6, 1.1, 0.9, 0.05), ("kings", 148.6, 154.2, 0.35, 1.2, 0.05),
+                ("rise", 154.2, 156.0, 0.7, 1.0, 0.05), ("home", 156.0, 160.6, 0.4, 1.2, 0.5)]
 
 
 # ---------------------------------------------------------------------------------------------------------
@@ -690,10 +690,12 @@ def add(scene):
     for ph, a, b, br, tr, fo in COMET_PHASES:
         for j in range(9):
             c = Comet(_comet_head(j, ph), COL9[j], a, b, trail=tr, width=0.32, bright=br, fade=0.05,
-                      light=(j in (0, 5)), seed=j + 11.0 * len(ph))
+                      light=False, seed=j + 11.0 * len(ph))
             c.k = (lambda c_, a_, b_, fo_: lambda t: _sc(a_, a_ + 0.05, t) * (1.0 - _sc(b_ - fo_, b_, t))
                    * (proc_k(t) > 0.0))(c, a, b, fo)
             scene.add(f"comet {ph} {j}", c, reflect=True)
+            if j in (0, 5):
+                add_light(c.head, COL9[j], (lambda c_: lambda t: 0.08 * c_.k(t))(c), radius=4.0)
     add_rays(mother_pos, lambda t: proc_k(t) * ray_k(t), color="#fff1d8", size=0.6)
-    add_light(mother_pos, "#ffe8c8", lambda t: proc_k(t) * (1.4 + 0.6 * hit_pulse(t, KICKS + FULFIL, fall=0.5)),
+    add_light(mother_pos, "#ffe8c8", lambda t: 0.15 * proc_k(t) * (1.0 + 0.5 * hit_pulse(t, KICKS + FULFIL, fall=0.5)),
               radius=9.0)
