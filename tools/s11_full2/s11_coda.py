@@ -11,7 +11,7 @@ import numpy as np
 
 from songs.s11_full2 import *  # noqa: F401,F403
 import songs.s11_full2 as _CORE  # noqa: E402  (the camera, for f19)
-from songs.s11_stage import Instruments, ORCH_P  # noqa: E402
+from songs.s11_stage import Instruments, ORCH_P, Players  # noqa: E402
 from songs.s11_zion import WaveCrowd, mx, wave_u  # noqa: E402  (the waves of raised arms; the music map)
 
 Y, FZ, G = SUMMIT, FACADE_Z, GLOBE_C
@@ -871,11 +871,10 @@ def add(scene):
     scene.add("horizon", Horizon())
     # the orchestra on clouds of light round the rising sun
     scene.add("clouds", Clouds())
-    scene.add("sky orchestra", GCrowd(gain=sky_gain, places=ORCH_P + SKY_OFF, facing=0.0, kinds=("sit",),
-                                      people=dict(woman=1.0, man=1.0), start=0.0, color="#6cb2ff", color2="#d2e8ff",
-                                      # (round 8, f28) a filled soft glowing blue body like the stage's players
-                                      # (they read as dark hooded shapes of loose glitter before)
-                                      bright=4.4, size=1.25, points=3400, glints=0.006, seed=4.0))
+    # (round 8, Anthony: "the orchestra is playing but also bowing down. Do not have them bow") the stage's own
+    # players, upright, playing in time with their gold instruments (the generic sitting crowd leaned forward)
+    scene.add("sky orchestra", Players(gain=sky_gain, offset=SKY_OFF, start=0.0, color="#6cb2ff", color2="#d2e8ff",
+                                       bright=3.6, points=3400, size=1.2, glints=0.006, dof=0.35, seed=4.0))
     scene.add("sky instruments", Instruments(offset=SKY_OFF, gain=sky_k))
     # everyone on the summit, from the coda's sunrise to the last chord
     # their arms go up as each wave of praise rolls up the mountain and reaches them (the coda hit's wave
