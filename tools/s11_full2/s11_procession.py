@@ -173,7 +173,8 @@ def _plan(t0, t1):
         def hero(t):
             u = _sc(t0, t1, t)
             # (looking up at them: the front crowns sit well under the words, the kings tower against the sky)
-            return ((1.9 + 1.6 * u, 0.5 + 0.2 * u, kf(t) - 8.2 + 0.9 * u), (0.0 - 0.3 * u, 3.3 + 0.1 * u, kf(t) + 6.5))
+            # (from the side of the aisle, so the two files of kings open out on a diagonal instead of overlapping)
+            return ((4.3 + 0.4 * u, 0.55 + 0.2 * u, kf(t) - 7.6 + 0.9 * u), (-1.6 - 0.3 * u, 3.3 + 0.1 * u, kf(t) + 6.5))
         return _track(t0, t1, 14, hero), "linear"
     if t0 == 154.2:       # (MARCH round 2) the kings kneel (2:34.2): close behind them, their trains spread on the sea
         # toward us; the crowns are laid down before them and on 2:35.34 rise and stream away over the sea to Zion
@@ -1084,7 +1085,8 @@ class MarchBeat:
         # (round 8, f29) from overhead the path runs straight up through "This hope was engraved" (2:14.5): it
         # calms to a faint trace while those words read
         a = a * (1.0 - 0.8 * _win(t, 134.7, 138.9, 0.4, 0.6) * (block_t0(t) == 134.54))
-        a = a * (0.45 if block_t0(t) == 141.5 else 1.0)       # (MARCH round 1) walking in the aisle: a calm path
+        a = a * {141.5: 0.45, 148.6: 0.2}.get(block_t0(t), 1.0)   # (MARCH) a calm path in the aisle views (the kings
+        # walk on it in the low view: edge on it was a haze round their feet)
         P = np.stack([self.xr + self.jit[:, 0], np.full(len(zr), 0.05), m[2] + 3.0 + zr + self.jit[:, 1]], 1)
         warm = lin("#ffe2b0")
         out.append(dict(pos=P, size=0.55, color=warm, alpha=0.20 * a, emit=1.8, kind="soft", reflect=False))
@@ -1267,7 +1269,8 @@ class FlagBearers:
             if cam is not None and read > 0.0:                  # step back near the lens while words read
                 dist = float(np.linalg.norm(top - np.asarray(cam.pos)))
                 near = 1.0 - read * (1.0 - float(np.clip((dist - 7.0) / 6.0, 0.0, 1.0)))
-            a = k * near * (1.0 - 0.5 * read) * (1.0 + 0.25 * beat_pulse(t))     # calm behind the words
+            calm = 0.8 if block_t0(t) == 148.6 else 0.5      # beside "All kings worship You" in the low view: calmer
+            a = k * near * (1.0 - calm * read) * (1.0 + 0.25 * beat_pulse(t))     # calm behind the words
             if a <= 0.01:
                 continue
             ph = 2.0 * np.pi * (self.u * 1.1 - 1.25 * t) + n
@@ -1426,7 +1429,7 @@ def add(scene):
     scene.add("fulfil hearts", FulfilHearts(walkers))
     scene.add("colour ripples", Ripples(walkers))
     # (MARCH round 2) twelve kings, larger than life and drawn in finer light, appearing pair by pair on the beat
-    king = dict(people=dict(man=1.0), color="#ffd27a", color2=GOLD2, bright=4.4, points=5200, seed=31.0,
+    king = dict(people=dict(man=1.0), color="#ffd27a", color2=GOLD2, bright=3.6, points=5200, seed=31.0,
                 scale=KING_SCALE, dof=0.25)
     kings_w = _robed(GCrowd(gain=crowd_k, places=KINGS_P, facing=180.0, kinds=("walk",), start=KING_T, walk=WALK,
                             until=K_STOP, fade=0.25, flash=1.0, **king))
