@@ -70,7 +70,7 @@ class RisingHearts:
         u = u[on]
         c = self.p0[on] + up[None, :] * 0.0 + _v(0.0, 1.0, 0.0) * (self.v[on] * u)[:, None]
         c = c + rgt[None, :] * (1.5 * np.sin(0.9 * u + self.ph[on]))[:, None]
-        a = _sc(0.0, 0.5, u) * (1.0 - _sc(5.0, 9.0, u)) * (1.0 - _sc(200.5, 201.7, t))
+        a = _ss(0.0, 0.5, u) * (1.0 - _ss(5.0, 9.0, u)) * (1.0 - _sc(200.5, 201.7, t))
         sz = self.sz[on]
         hx, hy = self.h[:, 0], self.h[:, 1]
         P = (c[:, None, :] + sz[:, None, None] * (hx[None, :, None] * rgt[None, None, :] + hy[None, :, None] * up[None, None, :]))
