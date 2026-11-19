@@ -826,7 +826,39 @@ def _layout():
             continue
         put(BUILDINGS[i], m, base, _unit(_v(ZC[0] - base[0], 0.0, ZC[2] - base[2])), k, 0, 0.8, 1.0 + j / max(n_near, 1))
         placed.append((base, fp))
-    # 3) the other nations: towns scattered over the sea, the far shores and the hills
+    # 3a) the city's rings on the sea (the plots no Korean church took): churches of the nations, a mix of
+    # countries round each ring, with their emblems (the coordinator, after Anthony: "the international churches
+    # should be scattered throughout, outside of the mountain")
+    ring = sorted([q for q in _EMPTY if q.get("terrace", 0) < 0], key=lambda q: (q["terrace"], q["facing"]))
+    by_c = {}
+    for i in other:
+        by_c.setdefault(BUILDINGS[i]["country"], []).append(i)
+    mix = []
+    while any(by_c.values()):                                       # round robin over the countries
+        for cn in sorted(by_c, key=lambda c: -len(by_c[c])):
+            if by_c[cn]:
+                mix.append(by_c[cn].pop())
+    on_ring = set()
+    for q in ring:
+        for i in mix:
+            if i in on_ring:
+                continue
+            m = _model(BUILDINGS[i], 0.8)
+            w, d = float(np.ptp(m["pos"][:, 0])), float(np.ptp(m["pos"][:, 2]))
+            k = min(1.0, q["max_w"] / max(w, 1.0), q["max_d"] / max(d, 1.0))
+            if k < 0.35:
+                continue
+            base = _v(q["x"], q["y"], q["z"])
+            if not free(base, 0.5 * min(w, q["max_w"]), m["h"] * k, cam_r=6.0, gap=-6.0):
+                break
+            a = q["facing"]
+            put(BUILDINGS[i], m, base, _v(np.sin(a), 0.0, np.cos(a)), k, 1, 0.8, ("t", q["born"]))
+            placed.append((base, 0.5 * max(w, d) * k))
+            on_ring.add(i)
+            _EMPTY.remove(q)
+            break
+    other = [i for i in mix if i not in on_ring]
+    # 3b) the other nations: towns scattered over the sea, the far shores and the hills
     n_town = max(8, len(other) // 4)
     towns = []
     while len(towns) < n_town:
