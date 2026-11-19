@@ -968,8 +968,8 @@ class EmblemArrive:
             return 0.0
         calm = 1.0 - 0.5 * _win(t, 154.9, 160.3, 0.4, 0.6)       # the words read just above the church
         k = 0.35 + 0.5 * _sc(RISE, CROWN_HOME, t) + 0.9 * hit_pulse(t, [CROWN_HOME], fall=1.0) * calm
-        if b == 161.7:
-            k = 1.1 + 0.6 * _sc(161.7, 162.86, t) + 0.35 * beat_pulse(t)
+        if b == 161.7:          # (ENDS, via the coordinator) capped so the blue ring, lettering and globe read
+            return min(0.6 + 0.15 * _sc(161.7, 162.86, t) + 0.05 * beat_pulse(t), 0.8)
         return k * (1.0 + 0.2 * beat_pulse(t) * calm)
 
     def sample(self, t):
@@ -979,7 +979,7 @@ class EmblemArrive:
         out = []
         for b in self.emb:
             d = dict(b)
-            d["alpha"] = b["alpha"] * (0.6 * g)
+            d["alpha"] = b["alpha"] * (0.6 * g)          # at most about 0.5 times its own light
             d["reflect"] = False
             out.append(d)
         for b in self.crisp:
@@ -987,7 +987,7 @@ class EmblemArrive:
             d["alpha"] = b["alpha"] * (0.1 * g)
             d["reflect"] = False
             out.append(d)
-        out.append(dict(pos=self.c, size=CH.EMBLEM_SIZE * 2.2, color=lin("#5fb0ff"), alpha=0.10 * g, kind="soft",
+        out.append(dict(pos=self.c, size=CH.EMBLEM_SIZE * 1.4, color=lin("#5fb0ff"), alpha=0.05 * g, kind="soft",
                         emit=1.4, fog=0.3, reflect=False))
         return out
 
