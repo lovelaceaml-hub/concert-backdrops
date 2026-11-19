@@ -26,11 +26,11 @@ elif [ "$1" = finish ]; then
     -movflags +faststart "$out/$name - stage 1080p60.mp4"
   # review: same picture with the reference music conformed to the live length (atempo, pitch kept)
   ffmpeg -v error -y -i "$out/$name - stage 1080p60.mp4" -i "$root/work/s07v2/review.wav" -map 0:v -map 1:a \
-    -af "volume=-1.5dB" -c:v libx264 -preset slow -crf 20 -pix_fmt yuv420p -c:a aac -b:a 320k -ar 48000 \
+    -af "volume=-1.5dB,alimiter=limit=0.89:level=false" -c:v libx264 -preset slow -crf 20 -pix_fmt yuv420p -c:a aac -b:a 320k -ar 48000 \
     -t 253.0 -movflags +faststart "$out/$name - review 1080p60.mp4"
   # phone: 720p60 with music, under 25 MB
   ffmpeg -v error -y -i "$out/$name - stage 1080p60.mp4" -i "$root/work/s07v2/review.wav" -map 0:v -map 1:a \
-    -af "volume=-1.5dB" -vf scale=1280:720 -c:v libx264 -preset slow -b:v 600k -maxrate 900k -bufsize 1800k \
+    -af "volume=-1.5dB,alimiter=limit=0.89:level=false" -vf scale=1280:720 -c:v libx264 -preset slow -b:v 600k -maxrate 900k -bufsize 1800k \
     -pix_fmt yuv420p -r 60 -c:a aac -b:a 96k -ar 48000 -t 253.0 -movflags +faststart "$out/$name - phone 720p60.mp4"
   ls -l "$out"/*.mp4
   (cd "$out" && sha256sum *.mp4)
