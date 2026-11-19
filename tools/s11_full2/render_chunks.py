@@ -2,7 +2,7 @@
 
     python tools/s11_full2/render_chunks.py --order 15-26,0-14,27-54 --parts work/s11_full2/parts
 
-Each chunk c covers frames 300c to 300c+299 (the last chunk ends at frame 16499). A process claims a chunk by
+Each chunk c covers 5 s: frames 5*fps*c onward (at 60 fps 300c to 300c+299; the last ends at 16499). A process claims a chunk by
 creating the folder <parts>/locks/cNN (atomic), renders it to <parts>/cNN.mp4 (written as .tmp first, then
 renamed), and moves on. A chunk whose part or lock exists is skipped, so start as many processes as there are
 cores. To hand chunks to another machine, create their lock folders here first. Join the parts in order with
@@ -15,9 +15,9 @@ import subprocess
 import sys
 
 HERE = Path(__file__).resolve().parent
-CHUNK = 300
-NFRAMES = 16500
-NCHUNK = (NFRAMES + CHUNK - 1) // CHUNK
+SECONDS = 5                         # each chunk is 5 s of film
+TOTAL = 275.0
+NCHUNK = 55
 
 
 def order(spec):
@@ -33,6 +33,7 @@ def main():
     ap.add_argument('--order', default=f'0-{NCHUNK - 1}')
     ap.add_argument('--parts', type=Path, required=True)
     ap.add_argument('--scale', default='1')
+    ap.add_argument('--fps', type=int, default=60)
     args = ap.parse_args()
     (args.parts / 'locks').mkdir(parents=True, exist_ok=True)
     for c in order(args.order):
@@ -43,11 +44,12 @@ def main():
             os.mkdir(args.parts / 'locks' / f'c{c:02d}')
         except FileExistsError:
             continue
-        a, b = c * CHUNK, min((c + 1) * CHUNK, NFRAMES)
+        chunk, nframes = SECONDS * args.fps, int(round(TOTAL * args.fps))
+        a, b = c * chunk, min((c + 1) * chunk, nframes)
         tmp = args.parts / f'c{c:02d}.tmp.mp4'
         print(f'chunk {c}: frames {a} to {b - 1}', flush=True)
         r = subprocess.run([sys.executable, str(HERE / 'render.py'), '--range', str(a), str(b), '--out', str(tmp),
-                            '--scale', args.scale])
+                            '--scale', args.scale, '--fps', str(args.fps)])
         if r.returncode != 0:
             print(f'chunk {c} FAILED', flush=True)
             os.rmdir(args.parts / 'locks' / f'c{c:02d}')

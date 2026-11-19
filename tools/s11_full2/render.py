@@ -22,11 +22,11 @@ from s11_prepare import WORK, FPS, TOTAL  # noqa: E402
 from s11_prepare import r3  # noqa: E402
 
 
-def load():
+def load(fps=FPS):
     snap = r3.SNAPSHOT
     if not (snap / 'engine/render.py').exists() or not (WORK / 'features.npz').exists():
         raise SystemExit('Run tools/s11_full2/s11_prepare.py first.')
-    os.environ.update(SONG='s11_full2', OUT_FPS=str(FPS), OUT_RES='1080p',
+    os.environ.update(SONG='s11_full2', OUT_FPS=str(fps), OUT_RES='1080p',
                       FEATURES=str(WORK / 'features.npz'), AUDIO=str(WORK / 'score.wav'),
                       LIBGL_ALWAYS_SOFTWARE='1', LP_NUM_THREADS=os.environ.get('LP_NUM_THREADS', '1'),
                       OPENBLAS_NUM_THREADS='1', OMP_NUM_THREADS='1',
@@ -69,13 +69,15 @@ def main():
     ap.add_argument('--out', type=Path)
     ap.add_argument('--scale', type=float, default=1)
     ap.add_argument('--crf', default='14')
+    ap.add_argument('--fps', type=int, default=FPS, help='60 for the final, 30 for drafts')
     args = ap.parse_args()
-    Renderer = load()
+    fps = args.fps
+    Renderer = load(fps)
     w, h = int(1920 * args.scale) // 2 * 2, int(1080 * args.scale) // 2 * 2
     renderer = Renderer(w, h)
 
     def frame(t):
-        return renderer.out.frame(t, int(round(t * FPS)))
+        return renderer.out.frame(t, int(round(t * fps)))
 
     if args.stills:
         from PIL import Image
@@ -90,16 +92,16 @@ def main():
         ap.error('Use --stills or --range A B --out file.mp4')
     args.out.parent.mkdir(parents=True, exist_ok=True)
     cmd = ['ffmpeg', '-v', 'error', '-y', '-f', 'rawvideo', '-pix_fmt', 'rgb24',
-           '-s', f'{w}x{h}', '-r', str(FPS), '-i', '-', '-vf', 'scale=out_color_matrix=bt709:out_range=tv',
+           '-s', f'{w}x{h}', '-r', str(fps), '-i', '-', '-vf', 'scale=out_color_matrix=bt709:out_range=tv',
            '-c:v', 'libx264', '-threads', '1', '-preset', 'medium', '-crf', args.crf,
-           '-pix_fmt', 'yuv420p', '-g', str(FPS * 2), '-color_primaries', 'bt709',
+           '-pix_fmt', 'yuv420p', '-g', str(fps * 2), '-color_primaries', 'bt709',
            '-color_trc', 'bt709', '-colorspace', 'bt709', '-color_range', 'tv', str(args.out)]
     ff = subprocess.Popen(cmd, stdin=subprocess.PIPE)
     start = time.time()
     try:
         for i in range(*args.range):
-            ff.stdin.write(frame(i / FPS))
-            if (i - args.range[0]) % 300 == 0:
+            ff.stdin.write(frame(i / fps))
+            if (i - args.range[0]) % (5 * fps) == 0:
                 print(f'frame {i}: {time.time() - start:.1f} s', flush=True)
     finally:
         ff.stdin.close()

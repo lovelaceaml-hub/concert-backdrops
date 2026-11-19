@@ -466,6 +466,185 @@ class GlobeFX:
 # =========================================================================================================
 # The threads' scenes (each in its own file; see the docstring of each)
 # =========================================================================================================
+# =========================================================================================================
+# THE EDIT: music-video pace. Every cut lands on a measured bar or hit; quiet parts hold 2 to 4 bars, builds
+# cut every bar and speed up into the slam, choruses and the coda cut every bar with intercuts of choir and
+# orchestra, Mount Zion, the church, the procession and the Earth. (start time, owner, what the block shows)
+# Each thread gives one shot per block it owns, with exactly that t0 and t1 (core falls back to an older
+# shot of that owner, clipped, until it does). Owners: church, stage, zion, proc, coda, core (the Earth).
+# =========================================================================================================
+EDIT = [
+    (0.0, "church", "title over the waiting city"),
+    (11.9, "church", "paths of light reach out; glide toward the city"),
+    (16.7, "church", "down the great avenue toward the church"),
+    (21.52, "church", "call 1: the choir forms out of the light on the steps"),
+    (26.33, "stage", "the orchestra wakes at dawn, choir behind (D minor)"),
+    (31.11, "church", "call 2: the church of light, the choir before it"),
+    (35.9, "stage", "harps and strings, low F pedal"),
+    (38.24, "church", "brightest moment of the intro; rise toward the sky"),
+    (40.54, "church", "Father's bell-like pulse from the church"),
+    (41.6, "core", "the whole Earth: Father's pulse rolls out"),
+    (45.6, "core", "closer on the Earth, echoes of the pulse"),
+    (49.8, "core", "the Earth turns toward Zion"),
+    (53.78, "zion", "glory: the crown of light ignites"),
+    (56.7, "zion", "G lift: the crown seen closer"),
+    (58.4, "church", "the church under the crown"),
+    (61.3, "zion", "the city on the summit"),
+    (64.2, "zion", "fulfilled: step 1, the terraces fill with gold"),
+    (65.94, "zion", "step 2"),
+    (67.6, "stage", "timpani and strings"),
+    (69.4, "zion", "step 3: the city full of gold"),
+    (70.54, "core", "all nations: rivers of light on the Earth"),
+    (72.84, "core", "the rivers closer"),
+    (74.56, "church", "streaming: the church of light shines out"),
+    (75.2, "core", "the drop: the Earth's rim glows"),
+    (77.46, "stage", "the choir breathes in"),
+    (78.62, "stage", "light gathering in the choir"),
+    (79.78, "stage", "the orchestra holds its breath"),
+    (80.94, "church", "the church gathering light"),
+    (81.51, "stage", "the last half bar into the slam"),
+    (82.08, "stage", "SLAM 1: the full choir and orchestra"),
+    (84.4, "stage", "the choir in full voice"),
+    (86.7, "zion", "waves of praise ripple over the land"),
+    (88.0, "stage", "brass and strings"),
+    (89.3, "zion", "waves of praise, closer"),
+    (90.72, "zion", "standing firm: the first climb, the nations on Zion"),
+    (93.0, "stage", "the choir"),
+    (95.4, "zion", "the nations on the terraces"),
+    (97.7, "church", "the church above the nations"),
+    (99.4, "zion", "sacrifice: light pours over the people"),
+    (101.7, "stage", "the orchestra in full"),
+    (103.6, "zion", "devotion: the golden waterfall"),
+    (105.14, "stage", "the brass and timpani blaze"),
+    (106.5, "zion", "the people lit by the pouring light"),
+    (108.4, "church", "the church glowing"),
+    (109.8, "zion", "thanks to Father: the column of light rises"),
+    (112.1, "church", "the column from the church"),
+    (114.4, "zion", "the column to heaven over Zion"),
+    (117.0, "stage", "the breath: the choir still, light falling like snow"),
+    (121.32, "stage", "verse 2: the strings pulse"),
+    (124.18, "stage", "strings and harp"),
+    (125.92, "proc", "Mother: her light comes down out of the sky"),
+    (127.64, "proc", "her light touches the sea; everyone gathers"),
+    (130.29, "proc", "let's trust Father"),
+    (132.5, "proc", "everyone ready behind her light"),
+    (134.54, "proc", "march ahead: everyone steps out together"),
+    (136.9, "proc", "the procession from above"),
+    (139.2, "church", "the church waiting for them"),
+    (141.5, "proc", "among the walkers"),
+    (144.4, "proc", "fulfilled: hearts light in every person"),
+    (146.7, "proc", "the hearts in the nine colours"),
+    (148.6, "proc", "the kings walk in the aisle"),
+    (150.4, "stage", "the choir: all kings worship You"),
+    (152.0, "proc", "the kings before Zion"),
+    (154.2, "proc", "the kings kneel"),
+    (155.34, "proc", "the crowns rise as sparks"),
+    (156.0, "proc", "the held breath: everyone still"),
+    (159.0, "proc", "sparks gather into her light"),
+    (160.6, "stage", "the choir draws breath"),
+    (161.7, "proc", "her light grows"),
+    (162.3, "stage", "the last half bar"),
+    (162.86, "stage", "SLAM 2: brass and timpani blaze"),
+    (165.16, "zion", "the shockwave across the land"),
+    (167.5, "stage", "the choir"),
+    (169.2, "zion", "the shockwave reaches the sea"),
+    (171.48, "zion", "standing firm: the whole mountain full of people"),
+    (173.8, "stage", "the orchestra"),
+    (176.1, "zion", "the nations, closer"),
+    (178.4, "church", "the church over the crowds"),
+    (180.7, "zion", "sacrifice: the mountain blazing"),
+    (183.0, "stage", "the brass rising"),
+    (185.92, "stage", "wondrous love: brass and timpani"),
+    (188.27, "coda", "thanks to Mother: hearts rise"),
+    (190.6, "stage", "the choir"),
+    (192.9, "coda", "hearts rising over Zion"),
+    (195.2, "church", "the church in the gathering glow"),
+    (197.2, "coda", "the last build: light gathers at the horizon"),
+    (198.5, "coda", "the horizon brightens"),
+    (199.62, "stage", "the coda hit: the choir"),
+    (200.7, "coda", "the last moment before the sun"),
+    (201.73, "coda", "SLAM 3: the sun rises over Zion"),
+    (203.9, "stage", "the choir and orchestra in the sunrise"),
+    (205.98, "coda", "the orchestra on clouds of light"),
+    (208.1, "coda", "the clouds round the sun"),
+    (210.3, "stage", "the choir"),
+    (211.6, "coda", "the third climb: the summit, everyone"),
+    (213.8, "church", "the church in the sunrise"),
+    (215.9, "coda", "the summit crowd, arms raised"),
+    (218.1, "stage", "sacrifice: the brass"),
+    (220.2, "coda", "the summit and the sun"),
+    (222.0, "church", "the church blazing"),
+    (224.03, "coda", "devotion: the world finale, the Earth"),
+    (226.3, "coda", "light from every land flows to Zion"),
+    (228.6, "coda", "the glory line over the Earth"),
+    (231.0, "coda", "hearts across the continents"),
+    (233.3, "coda", "the Earth's edge brightens"),
+    (235.6, "coda", "the peak: sunrise over the Earth's edge"),
+    (238.8, "stage", "home: Oh, the Church of God"),
+    (240.19, "stage", "the step down, hymn-like"),
+    (242.5, "church", "the church at peace"),
+    (244.8, "stage", "the choir"),
+    (247.5, "stage", "the held breath: sparks gather"),
+    (249.43, "stage", "the final rise"),
+    (251.7, "church", "the church on the last swell"),
+    (254.07, "coda", "the last chord: the whole Earth, the end card"),
+]
+EDIT_T = [e[0] for e in EDIT] + [TOTAL + 1.0]
+BLOCKS = [dict(t0=e[0], t1=EDIT_T[i + 1], owner=e[1], note=e[2]) for i, e in enumerate(EDIT)]
+
+
+def blocks_of(owner):
+    """The blocks a thread owns: [(t0, t1, note)]."""
+    return [(b["t0"], b["t1"], b["note"]) for b in BLOCKS if b["owner"] == owner]
+
+
+# The music's intensity, 0..1 (sections from the measured map; loudness on top)
+LEVELS = [(0.0, 0.10), (11.9, 0.20), (21.5, 0.30), (40.5, 0.35), (52.1, 0.55), (75.2, 0.62), (82.08, 0.85),
+          (117.0, 0.15), (121.32, 0.40), (130.0, 0.55), (156.0, 0.45), (162.86, 0.88), (197.2, 0.70),
+          (201.73, 1.0), (238.8, 0.55), (247.5, 0.15), (249.43, 0.75), (254.07, 0.20), (260.0, 0.05)]
+
+
+def intensity(t):
+    ts, vs = zip(*LEVELS)
+    i = int(np.searchsorted(ts, t, side="right")) - 1
+    return float(min(1.0, 0.75 * vs[max(i, 0)] + 0.35 * loud(t)))
+
+
+SLAMS = [SLAM1, SLAM2, SLAM3]
+KICKS = sorted(set(SLAMS + [HIT[k] for k in ("first", "call1", "call2", "father", "glory", "step1", "step2",
+                                             "step3", "nations", "stream", "firm1", "sacrifice", "thanks",
+                                             "mother", "trust", "march", "fulfilled", "kings1", "kings2",
+                                             "firm2", "love", "thanks2", "coda", "devotion", "peak", "final")]
+                   + [LAST_CHORD]))
+
+
+def cam_speed(t):
+    """How fast the camera travels at t (relative): slow drifts in the quiet, fast in builds and choruses,
+    a surge on every hit."""
+    return 0.25 + 1.6 * intensity(t) ** 1.6 + 1.2 * hit_pulse(t, KICKS, rise=0.02, fall=0.45)
+
+
+def music_pace(t0, t1, n=240):
+    """A pace for a camera move from t0 to t1: progress 0..1, fast where the music is strong."""
+    ts = np.linspace(t0, t1, n)
+    v = np.array([cam_speed(x) for x in ts])
+    c = np.concatenate([[0.0], np.cumsum(0.5 * (v[1:] + v[:-1]) * np.diff(ts))])
+    c /= max(c[-1], 1e-9)
+    return lambda t: float(np.interp(t, ts, c))
+
+
+def cam_shake(t):
+    """A hard shake on the slams and a small kick on the big hits, a breath of it on the beat in choruses."""
+    return (0.9 * hit_pulse(t, SLAMS, rise=0.01, fall=0.35) + 0.35 * hit_pulse(t, KICKS, rise=0.01, fall=0.25)
+            + 0.10 * intensity(t) * beat_pulse(t))
+
+
+def fov_punch(t):
+    """The lens punches in on the slams and hits, and breathes with the beat when the music is strong."""
+    return (1.0 - 0.10 * hit_pulse(t, SLAMS, rise=0.02, fall=0.6) - 0.04 * hit_pulse(t, KICKS, rise=0.02, fall=0.4)
+            - 0.012 * intensity(t) * beat_pulse(t))
+
+
 __all__ = [k for k in list(globals()) if not k.startswith("__")]
 import songs.s11_church as S_CHURCH  # noqa: E402
 import songs.s11_stage as S_STAGE  # noqa: E402
@@ -488,12 +667,30 @@ CORE_SHOTS = [
 
 
 def _gather_shots():
-    shots = sorted(CORE_SHOTS + [s for m in THREADS for s in m.SHOTS], key=lambda s: s["t0"])
-    for a, b in zip(shots, shots[1:]):
-        if abs(a["t1"] - b["t0"]) > 1e-6:
-            raise ValueError(f"shots {a['name']} and {b['name']} do not meet: {a['t1']} vs {b['t0']}")
-    if shots[0]["t0"] != 0.0 or shots[-1]["t1"] < TOTAL:
-        raise ValueError("the shots must cover 0 to TOTAL")
+    """One shot per edit block: the owner's shot with exactly the block's times; until a thread has one, its
+    older shot that covers the block, clipped to it; else a held wide view (so the film always renders)."""
+    pool = {"core": CORE_SHOTS, "church": S_CHURCH.SHOTS, "stage": S_STAGE.SHOTS, "zion": S_ZION.SHOTS,
+            "proc": S_PROC.SHOTS, "coda": S_CODA.SHOTS}
+    shots, missing = [], []
+    for b in BLOCKS:
+        own = pool[b["owner"]]
+        hit = [s for s in own if abs(s["t0"] - b["t0"]) < 1e-3 and abs(s["t1"] - b["t1"]) < 1e-3]
+        if hit:
+            s = dict(hit[0])
+        else:
+            cover = [s for s in own if s["t0"] - 1e-3 <= b["t0"] < s["t1"]] or [s for s in own if s["t0"] < b["t1"]]
+            missing.append(b)
+            if cover:
+                s = dict(cover[-1], t0=b["t0"], t1=b["t1"], clipped=True)
+            else:
+                s = dict(name="hold_" + b["owner"], kind="local", t0=b["t0"], t1=b["t1"], fov=50.0, aperture=0.0,
+                         keys=[(b["t0"], _v(0.0, 40.0, 120.0), ZC + _v(0.0, 50.0, 0.0)),
+                               (b["t1"], _v(0.0, 42.0, 110.0), ZC + _v(0.0, 50.0, 0.0))], clipped=True)
+        s["block"] = b
+        shots.append(s)
+    if missing and os.environ.get("S11_EDIT_REPORT"):
+        print(f"edit: {len(missing)} of {len(BLOCKS)} blocks have no exact shot yet (owners: "
+              + ", ".join(sorted({m['owner'] for m in missing})) + ")", flush=True)
     return shots
 
 
@@ -502,12 +699,30 @@ _SHOT_T0[:] = [s["t0"] for s in SHOTS]
 CUTS = [s["t0"] for s in SHOTS[1:]]
 
 
+class MusicRig(Rig):
+    """The rig with the music in it: the lens punches in on the slams and hits and breathes with the beat."""
+
+    def state(self, t, aspect=16.0 / 9.0):
+        st = super().state(t, aspect)
+        st.fov = float(st.fov * fov_punch(t))
+        return st
+
+
 def _rig():
     moves = []
     for s in SHOTS:
         foc = s.get("focus", "target")
-        moves.append(fly(s["keys"], blend=0.0, ease="linear", fov=s["fov"], aperture=s["aperture"], focus=foc))
-    return Rig(moves, blend=0.0, fov=50.0, aperture=0.0, handheld=0.12, min_height=0.4)
+        keys = s["keys"]
+        if s.get("clipped"):
+            mv = fly(keys, blend=0.0, ease="linear", fov=s["fov"], aperture=s["aperture"], focus=foc)
+            mv.t0, mv.t1 = s["t0"], s["t1"]          # an older shot cut down to its block: as it was, no pace
+        else:
+            pace = s.get("pace", "music")
+            kw = dict(pace=music_pace(s["t0"], s["t1"])) if pace == "music" else (
+                dict(pace=pace) if pace not in (None, "linear") else dict(ease="linear"))
+            mv = fly(keys, blend=float(s.get("blend", 0.0)), fov=s["fov"], aperture=s["aperture"], focus=foc, **kw)
+        moves.append(mv)
+    return MusicRig(moves, blend=0.0, fov=50.0, aperture=0.0, handheld=0.12, min_height=0.4, shake=cam_shake)
 
 
 CAMERA = _rig()
@@ -595,17 +810,28 @@ def _setup(scene):
 
 
 def _bursts():
+    """Light that follows the music: a soft flash hides each cut (bright on the slams), every big hit flashes
+    in one of the nine colours, and in the choruses and the coda each bar's downbeat glows faintly."""
     out = []
     for c in CUTS:
-        strong = c in (SLAM1, SLAM2, SLAM3)
-        out.append(dict(t=c, strength=0.7 if strong else 0.45, rise=0.06, fall=0.4 if strong else 0.3,
-                        color="#fff3dc"))
+        strong = any(abs(c - s) < 0.05 for s in SLAMS)
+        out.append(dict(t=c, strength=0.75 if strong else 0.16 + 0.12 * intensity(c), rise=0.04,
+                        fall=0.45 if strong else 0.22, color="#fff3dc"))
+    for i, h in enumerate(KICKS):
+        if any(abs(h - s) < 0.05 for s in SLAMS):
+            continue
+        out.append(dict(t=h + 0.01, strength=0.22 + 0.2 * intensity(h), rise=0.03, fall=0.5, color=COL9[i % 9]))
+    for a, b in ((82.08, 117.0), (162.86, 201.73), (201.73, 238.8)):
+        bar = 2.30 if a < 201 else 2.16
+        k = 0
+        x = a + bar
+        while x < b - 0.3:
+            out.append(dict(t=x, strength=0.10, rise=0.03, fall=0.3, color=COL9[(k * 4) % 9]))
+            x += bar
+            k += 1
     out.append(dict(t=HIT["father"], strength=0.8, rise=0.08, fall=0.6, color="#ffeccc",
                     at=tuple(CHURCH + _v(0.0, 20.0, 0.0))))
-    out.append(dict(t=HIT["glory"] + 0.02, strength=0.4, rise=0.05, fall=0.6, color="#ffe6b8"))
-    return out
-
-
+    return sorted(out, key=lambda d: d["t"])
 
 
 P3D = dict(camera=CAMERA, world=WORDS.world(WORLD), setup=_setup, bursts=_bursts(), motion_blur=0.35)
