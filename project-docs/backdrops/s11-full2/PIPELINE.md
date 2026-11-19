@@ -5,6 +5,7 @@
 - Stills: `python tools/s11_full2/render.py --stills 95,120.5 --scale 0.25 --outdir <dir>` (first frame of a process bakes crowds and cloth: 1 to 3 minutes; then about 1 to 3 CPU s a frame at quarter size, 2 to 7 at half).
 - Parts: the film is 55 parts of 5 s (`render_chunks.py --order <list> --parts work/s11_full2/<tag> --scale 0.5 --fps 30`). One worker per core; workers share a queue through lock folders in `<parts>/locks/cNN` (creating a lock folder hands that part to another machine).
 - A section video: `tools/s11_full2/section_preview.sh <tag> <name> <t0> <t1>` joins the parts, trims and adds the recording's audio (into work/s11_full2/deliver/, never in git).
+- Each join writes its own private part list (mktemp). Never build sections from one shared list: on 2026-11-19 parallel builds sharing `<tag>/sec.txt` gave every h8 section another section's pictures over its own music. After any join, check a frame sheet (the right scenes at the right times) and that a known hit's flash lands on the audio onset.
 - Freeze code for an in-flight render with a separate worktree (`git worktree add ../wt-render <sha>`, then symlink `work` and `fonts` into it) so edits in the main tree do not change parts mid-render. A part picks up new code only when its process starts.
 
 ## The render fleet (cloud machines)
