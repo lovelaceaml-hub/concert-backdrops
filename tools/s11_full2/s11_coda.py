@@ -270,7 +270,10 @@ def _coda_clouds():
     """Towering clouds of light: round Zion for the hearts and lanterns, the canyon of the last build, banks
     under the sky orchestra and round the sun."""
     def g_hearts(t):
-        return 0.0 if globe_view(t) else _sc(187.8, 188.5, t) * (1.0 - _sc(201.2, 202.4, t)) * (0.9 + 0.3 * beat_pulse(t))
+        return 0.0 if globe_view(t) else _sc(187.8, 188.5, t) * (1.0 - _sc(196.6, 197.2, t)) * (0.9 + 0.3 * beat_pulse(t))
+
+    def g_canyon(t):
+        return 0.0 if globe_view(t) else _sc(196.8, 197.2, t) * (1.0 - _sc(199.4, 199.62, t)) * (0.8 + 0.3 * beat_pulse(t))
 
     def g_sky(t):
         return sky_k(t) * (0.9 + 0.25 * beat_pulse(t))
@@ -282,16 +285,16 @@ def _coda_clouds():
     for i, az in enumerate((-60.0, -25.0, 20.0, 55.0)):
         c = ZC + 380.0 * _dir(az, 0.0) + _v(0.0, 4.0, 0.0)
         out.append(CloudBank(c, size=(260.0, 210.0, 120.0), puffs=34, seed=80 + i, gain=g_hearts, bright=1.0))
-    for i, x in enumerate((240.0, 420.0)):                  # the canyon of the last build
-        c = _v(x, 2.0, -700.0)
-        out.append(CloudBank(c, size=(70.0, 150.0, 1100.0), puffs=46, seed=90 + i, gain=g_hearts, bright=1.1))
+    for i, x in enumerate((190.0, 470.0)):                  # the canyon of the last build
+        c = _v(x, 2.0, -760.0)
+        out.append(CloudBank(c, size=(80.0, 170.0, 1100.0), puffs=46, seed=90 + i, gain=g_canyon, bright=0.65))
     for i in range(3):                                      # under and behind the sky orchestra
-        c = SKY_STAGE + _v(-260.0 + 260.0 * i, -70.0, -260.0 - 60.0 * i)
-        out.append(CloudBank(c, size=(320.0, 110.0, 160.0), puffs=30, seed=100 + i, gain=g_sky, bright=1.0))
-    for i, x in enumerate((-180.0, 260.0)):                 # banks either side of the rising sun
-        c = SUNRISE_P * _v(0.3, 0.0, 0.3) + _v(x, 0.0, 0.0)
+        c = SKY_STAGE + _v(-320.0 + 320.0 * i, -150.0, -420.0 - 80.0 * i)
+        out.append(CloudBank(c, size=(320.0, 120.0, 160.0), puffs=30, seed=100 + i, gain=g_sky, bright=0.3))
+    for i, da in enumerate((-14.0, 13.0)):                  # banks either side of the rising sun, far behind Zion
+        c = ZC + 1000.0 * _dir(163.0 + da, 0.0)
         c[1] = 2.0
-        out.append(CloudBank(c, size=(300.0, 140.0, 150.0), puffs=34, seed=110 + i, gain=g_rise, bright=1.1))
+        out.append(CloudBank(c, size=(420.0, 170.0, 160.0), puffs=34, seed=110 + i, gain=g_rise, bright=0.9))
     return out
 
 

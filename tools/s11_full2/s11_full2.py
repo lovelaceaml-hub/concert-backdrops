@@ -936,7 +936,8 @@ def _horizon_clouds():
         d = r.uniform(900.0, 1500.0)
         c = _v(d * np.sin(az), 0.0, -200.0 + d * np.cos(az))
         out.append(CloudBank(c, size=(r.uniform(260, 420), r.uniform(50, 110), r.uniform(100, 180)), puffs=26,
-                             seed=k, gain=lambda t: 0.25 * sky_gain(t) + 0.75 * sky_gain(t) * _sc(40.0, 82.0, t)))
+                             seed=k, gain=lambda t: (0.25 + 0.75 * _sc(40.0, 82.0, t)) * sky_gain(t)
+                             * (0.3 if stage_view(t) else 1.0)))   # a low white band behind the choir otherwise
     return out
 
 
@@ -1158,18 +1159,30 @@ def _bursts():
 P3D = dict(camera=CAMERA, world=WORDS.world(WORLD), setup=_setup, bursts=_bursts(), motion_blur=0.35)
 
 
+# Anthony (2026-11-19): the logo stays bottom left all film; the song title and the event title appear beside it
+# now and then (about every 40 s, 8 s each), never under the opening title or the end card.
+SIG_CORNER = "bl"
+SIG_TEXT = [(41.6, 49.6), (86.0, 94.0), (122.5, 130.5), (166.0, 174.0), (205.0, 213.0), (240.0, 248.0)]
+
+
 def _sig_windows():
-    w = []
+    logo = []
     for s in SHOTS:
         t0, t1 = s["t0"], s["t1"]
         a = max(t0, 11.6)
         if t1 <= a or t0 >= 254.07:
             continue
         pal = "night" if (s["kind"] in ("globe", "stage") or t0 < 162.86 or s["name"] == "hearts_rise") else "day"
-        if w and w[-1][3] == pal and abs(w[-1][1] - a) < 1e-6:
-            w[-1] = (w[-1][0], t1, w[-1][2], pal)
+        if logo and logo[-1][3] == pal and abs(logo[-1][1] - a) < 1e-6:
+            logo[-1] = (logo[-1][0], t1, SIG_CORNER, pal)
         else:
-            w.append((a, t1, "tl", pal))
+            logo.append((a, t1, SIG_CORNER, pal))
+    w = [(a, b, c, p + ":logo") for a, b, c, p in logo]
+    for ta, tb in SIG_TEXT:               # the title lines, cut at the palette changes (quick fade there only)
+        for a, b, c, p in logo:
+            x0, x1 = max(a, ta), min(b, tb)
+            if x1 - x0 > 0.05:
+                w.append((x0, x1, c, p + ":text", 0.9 if x0 == ta else 0.12, 0.9 if x1 == tb else 0.12))
     return w                     # from the last chord the end card carries its own lockup
 
 

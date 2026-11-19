@@ -86,15 +86,15 @@ def _plan(t0, t1):
     if t0 == 125.92:      # follow her light down out of the sky; as it touches the sea, sweep round it
         k = _track(t0, LAND, 5, lambda t: ((11.0 - 1.8 * (t - t0), 2.6 - 0.2 * (t - t0), -20.0 - 3.5 * (t - t0)),
                                            tuple(mother_pos(t) + _v(0.0, -1.5, 0.0))))
-        return k + K((128.9, (15.0, 4.5, -37.0), (0.0, 3.5, -55.0)), (t1, (24.0, 9.0, -42.0), (0.0, 3.0, -48.0))), \
-            "linear"
+        return k + K((128.6, (16.0, 3.0, -30.0), (0.0, 14.0, -55.0)), (129.5, (22.0, 5.0, -34.0), (0.0, 18.0, -52.0)),
+                     (t1, (30.0, 9.0, -38.0), (0.0, 8.0, -48.0))), "linear"
     if t0 == 130.29:      # trust Father: an orbit from the side round to the front, high, the comets circling
         return K((t0, (40.0, 14.0, -30.0), (0.0, 2.0, -35.0)), (131.8, (34.0, 18.0, -62.0), (0.0, 2.0, -35.0)),
                  (133.2, (14.0, 17.0, -78.0), (0.0, 1.0, -32.0)), (t1, (5.0, 16.0, -76.0), (0.0, 1.0, -28.0))), "music"
     if t0 == 134.54:      # march ahead: a crane up from low in front as everyone steps out toward us
-        return K((t0, (2.0, 3.0, -68.0), (0.0, 2.5, -40.0)), (135.5, (1.0, 24.0, -82.0), (0.0, 4.0, -36.0)),
-                 (137.2, (-2.0, 33.0, -89.0), (0.0, 3.0, -39.0)), (t1, (-5.0, 36.0, -92.0), (0.0, 3.0, -42.0))), \
-            "music"
+        return K((t0, (0.6, 4.2, 40.0), (0.0, 4.0, -80.0)), (135.0, (0.3, 3.8, 12.0), (-1.0, 3.5, -100.0)),
+                 (135.6, (0.0, 12.0, -6.0), (0.0, -6.0, -50.0)), (136.6, (2.0, 30.0, -6.0), (-4.5, 0.0, -36.0)),
+                 (t1, (0.0, 33.0, -12.0), (-5.0, 0.0, -40.0))), "music"
     if t0 == 141.5:       # among the walkers, chasing the comets weaving through them
         return _track(t0, t1, 4, lambda t: ((-2.2, 3.2, -36.5 - walked(t) - 0.6 * (t - t0)),
                                             (9.0, 0.9, -44.0 - walked(t) - 0.6 * (t - t0)))), "music"
@@ -110,11 +110,21 @@ def _plan(t0, t1):
         return K((t0, (6.0, 4.5, -71.0), (0.0, 0.8, -65.0)), (155.0, (5.0, 3.0, -70.0), (0.0, 1.5, -66.0)),
                  (155.6, (4.5, 1.2, -69.0), (0.0, 3.0, -68.5)), (t1, (4.5, 1.0, -69.0), (0.0, 4.5, -69.0))), "music"
     if t0 == 156.0:       # the held breath: a slow tense push; the comets drawn back into her light
-        return K((t0, (1.6, 17.6, -52.0), (-4.5, -7.0, -79.5)), (158.3, (1.2, 16.8, -54.5), (-4.5, -6.5, -80.0)),
-                 (t1, (0.8, 15.8, -57.0), (-4.5, -5.5, -81.0))), "music"
+        return K((t0, (4.0, 1.4, -77.0), (0.0, 30.0, -86.0)), (158.3, (3.6, 1.3, -77.5), (0.0, 32.0, -85.0)),
+                 (159.4, (3.4, 1.4, -77.6), (0.0, 30.0, -84.0)), (160.1, (3.6, 3.0, -74.5), (0.0, 7.0, -83.0)),
+                 (t1, (2.8, 3.6, -72.0), (0.0, 4.5, -83.0))), "music"
     if t0 == 161.7:       # her light grows: a push in toward it, faster into the slam
         return K((t0, (1.6, 3.4, -93.0), (0.0, 8.0, -70.0)), (t1, (0.8, 3.9, -90.0), (0.0, 6.5, -70.0))), "music"
     raise ValueError(f"no procession shot planned for the block at {t0}")
+
+
+# banking: the horizon tilts in the big turns and the racing flight (degrees)
+ROLL = {125.92: lambda t: -6.0 * _sc(127.4, 128.6, t) * (1.0 - _sc(129.4, 130.29, t)),
+        130.29: lambda t: 9.0 * np.sin(np.pi * _sc(130.29, 134.54, t)),
+        134.54: lambda t: 12.0 * np.sin(2.0 * np.pi * _sc(134.54, 135.6, t)) * (1.0 - _sc(135.3, 135.9, t)),
+        141.5: lambda t: 4.0 * np.sin(1.3 * (t - 141.5)),
+        144.4: lambda t: -7.0 * np.sin(np.pi * _sc(144.4, 148.6, t)),
+        148.6: lambda t: 8.0 * np.sin(np.pi * _sc(149.0, 151.3, t))}
 
 
 def _shots():
@@ -122,7 +132,7 @@ def _shots():
     for t0, t1, note in blocks_of("proc"):
         keys, pace = _plan(t0, t1)
         out.append(dict(name="procession", kind="local", t0=t0, t1=t1, fov=50.0, aperture=0.0, keys=keys,
-                        pace=pace, note=note))
+                        pace=pace, note=note, roll=ROLL.get(t0, 0.0)))
     return out
 
 
@@ -349,14 +359,13 @@ def _kz(t):
 def _comet_head(j, phase):
     a0 = 2.0 * np.pi * j / 9.0
 
-    def burst(t):            # 127.64: out of her light, circling out over everyone as they gather
+    def burst(t):            # 127.64: they shoot up out of the sea round her light, then fan out over everyone
         u = max(t - LAND, 0.0)
-        if t <= LAND:
-            return mother_pos(t)
-        r = 32.0 * (1.0 - np.exp(-u / 0.9))
-        cz = MOTHER_Z0 + 22.0 * (1.0 - np.exp(-u / 1.5))
-        a = a0 + 0.55 * u
-        y = M_H + 1.5 + 5.0 * (1.0 - np.exp(-u / 0.6)) + 1.5 * np.sin(1.7 * u + j)
+        r = 7.0 + 26.0 * (1.0 - np.exp(-max(u - 0.6, 0.0) / 1.0))
+        cz = MOTHER_Z0 + 20.0 * (1.0 - np.exp(-max(u - 0.6, 0.0) / 1.5))
+        a = a0 + 0.5 * max(u - 0.6, 0.0)
+        up = 46.0 * (1.0 - np.exp(-u / 0.45)) * np.exp(-max(u - 0.9, 0.0) / 0.9)
+        y = -0.6 + up + 8.0 * (1.0 - np.exp(-max(u - 0.6, 0.0) / 1.2)) + 1.2 * np.sin(1.7 * u + j)
         return _v(r * np.sin(a), y, cz + r * np.cos(a))
 
     def ring(t):             # trust Father: a ring of comets over the gathered people
@@ -364,11 +373,11 @@ def _comet_head(j, phase):
         r = 26.0 + 4.0 * np.sin(0.8 * t + j)
         return _v(r * np.sin(a), 7.0 + 3.0 * np.sin(0.9 * t + 2.0 * j), MOTHER_Z0 + 30.0 + r * np.cos(a))
 
-    def march(t):            # march ahead: they burst forward toward Zion, then weave over the procession
-        u = max(t - MARCH, 0.0)
-        b = -55.0 * (1.0 - np.exp(-u / 0.35)) * np.exp(-u / 2.0)
-        return _v(0.8 * LANE_X[j] + 3.0 * np.sin(1.1 * t + j), 5.0 + 2.5 * np.sin(0.8 * t + 1.3 * j),
-                  MOTHER_Z0 - walked(t) + 8.0 + 40.0 * (0.5 + 0.5 * np.sin(0.5 * t + 0.7 * j)) + b)
+    def march(t):            # march ahead: they streak forward past the lens over the river toward Zion
+        u = t - MARCH - 0.08 * j
+        x = (0.35 * LANE_X[j] + (2.5 if j % 2 else -2.5)) * (1.0 + 0.3 * max(u, 0.0))
+        return _v(x + 1.5 * np.sin(1.4 * t + j), 3.0 + 1.5 * np.sin(1.1 * t + j) + 4.0 * max(u - 1.5, 0.0),
+                  70.0 - 55.0 * u - 10.0 * u * abs(u))
 
     def weave(t):            # among the walkers, at their height
         return _v(LANE_X[j] + 1.2 * np.sin(2.2 * t + j), 1.9 + 0.9 * np.sin(1.6 * t + j),
@@ -393,21 +402,20 @@ def _comet_head(j, phase):
         r = 5.0 + 1.0 * np.sin(0.7 * t + j)
         return _v(r * np.sin(a), 2.0 + 1.0 * np.sin(1.3 * t + j), _kz(t) + r * np.cos(a))
 
-    def rise(t):             # the crowns rise: the comets wait high ahead over the sea, then stream on to Zion
-        u = max(t - 154.2, 0.0)
-        v = max(t - RISE, 0.0)
-        a = a0 + 1.6 * u
-        r = 14.0 + 2.0 * np.sin(u + j)
-        return _v(r * np.sin(a), 30.0 + 3.0 * np.sin(1.3 * u + j) + 10.0 * v * v,
-                  -112.0 + 0.5 * r * np.cos(a) - 40.0 * v * v)
+    def rise(t):             # the crowns rise and become comets: up in spirals, then on toward Zion
+        v = max(t - RISE - 0.35, 0.0)
+        c = KINGS_STOP[j % 7] + _v(0.0, 0.05 + 1.6 * 0.35 + 3.0 * 0.35 ** 2, -0.85)
+        a = a0 + 4.0 * v
+        r = 1.5 * v
+        return c + _v(r * np.sin(a), 4.0 * v + 6.0 * v * v, r * np.cos(a) - 20.0 * v * v)
 
     def home(t):             # the held breath: drawn back into her light, spinning faster
         q = _sc(156.0, 160.4, t)
         m = mother_pos(t)
         a = a0 + 0.4 * (t - 156.0) + 9.0 * q * q
-        r = 8.0 * (1.0 - q) ** 1.3 + 0.2
-        return m + _v(r * np.sin(a), (7.0 + 1.5 * np.sin(1.1 * t + j)) * (1.0 - q),
-                      -12.0 * (1.0 - q) + r * np.cos(a))
+        r = 16.0 * (1.0 - q) ** 1.5 + 0.2
+        return m + _v(r * np.sin(a), (14.0 + 2.0 * np.sin(1.1 * t + j)) * (1.0 - q),
+                      -4.0 * (1.0 - q) + r * np.cos(a))
 
     return dict(burst=burst, ring=ring, march=march, weave=weave, dive=dive, kings=kings, rise=rise,
                 home=home)[phase]
@@ -415,9 +423,9 @@ def _comet_head(j, phase):
 
 # (phase, t0, t1, brightness, trail, fade out)
 COMET_PHASES = [("burst", LAND, 130.29, 1.0, 1.4, 0.05), ("ring", 130.29, 134.54, 0.8, 1.6, 0.05),
-                ("march", 134.54, 139.2, 0.6, 1.4, 0.05), ("weave", 141.5, 144.4, 1.0, 1.2, 0.05),
+                ("march", 134.54, 139.2, 0.8, 0.8, 0.05), ("weave", 141.5, 144.4, 1.0, 1.2, 0.05),
                 ("dive", 144.4, 148.6, 1.1, 0.9, 0.05), ("kings", 148.6, 154.2, 0.35, 1.2, 0.05),
-                ("rise", 154.2, 156.0, 0.6, 1.0, 0.05), ("home", 156.0, 160.6, 0.4, 1.2, 0.5)]
+                ("rise", RISE + 0.35, 156.0, 0.7, 0.6, 0.05), ("home", 156.0, 160.6, 0.4, 1.2, 0.5)]
 
 
 # ---------------------------------------------------------------------------------------------------------
@@ -640,7 +648,7 @@ def ray_k(t):
     if b is None:
         return 0.0
     if b == 125.92:
-        return 1.0 + 0.9 * hit_pulse(t, [LAND], fall=1.2)
+        return 1.8 - 0.6 * _sc(LAND, 129.0, t) + 0.9 * hit_pulse(t, [LAND], fall=1.2)
     if b == 130.29:
         return 0.9
     if b == 134.54:
@@ -650,9 +658,9 @@ def ray_k(t):
     if b == 144.4:
         return 0.8 + 0.5 * hit_pulse(t, FULFIL, fall=0.5)
     if b == 161.7:
-        return 1.2 + 0.8 * _sc(161.7, 162.3, t)
+        return 1.0 + 0.8 * _sc(161.7, 162.3, t)
     if b == 156.0:
-        return 0.4 + 0.5 * gather_k(t)
+        return 0.6 + 0.6 * gather_k(t)
     return 0.45
 
 
@@ -690,13 +698,25 @@ def add(scene):
     scene.add("crowns", Crowns(kings_w, kings_k))
     for ph, a, b, br, tr, fo in COMET_PHASES:
         for j in range(9):
-            c = Comet(_comet_head(j, ph), COL9[j], a, b, trail=tr, width=0.32, bright=br, fade=0.05,
+            c = Comet(_comet_head(j, ph), COL9[j], a, b, trail=tr, width=dict(march=0.7, burst=0.55).get(ph, 0.32),
+                      bright=br, fade=0.05,
                       light=False, seed=j + 11.0 * len(ph))
             c.k = (lambda c_, a_, b_, fo_: lambda t: _sc(a_, a_ + 0.05, t) * (1.0 - _sc(b_ - fo_, b_, t))
                    * (proc_k(t) > 0.0))(c, a, b, fo)
             scene.add(f"comet {ph} {j}", c, reflect=True)
             if j in (0, 5):
                 add_light(c.head, COL9[j], (lambda c_: lambda t: 0.08 * c_.k(t))(c), radius=4.0)
+    sky = lambda a_, b_: (lambda t: proc_k(t) * _sc(a_ - 0.01, a_, t) * (1.0 - _sc(b_, b_ + 0.01, t)))  # noqa: E731
+    for i, c in enumerate([(-55.0, 40.0, -85.0), (55.0, 40.0, -85.0)]):     # clouds parting round her light
+        scene.add(f"proc parting cloud {i}", CloudBank(c, size=(50.0, 30.0, 60.0), puffs=20, seed=40 + i,
+                                                       gain=sky(125.92, 130.29), bright=0.35), reflect=True)
+    canyon = lambda t: sky(134.54, 135.7)(t) + sky(141.5, 148.6)(t)            # noqa: E731
+    for i, x in enumerate((-82.0, 82.0)):          # the canyon of cloud the procession walks through
+        scene.add(f"proc canyon {i}", CloudBank((x, 0.0, -40.0), size=(40.0, 45.0, 260.0), puffs=40, seed=50 + i,
+                                                gain=canyon, bright=0.35), reflect=True)
+    scene.add("kings pillars", Pillars([(float(p[0]), float(p[2])) for p in KINGS_STOP], top=220.0, color="#ffe6c0",
+                                       width=0.9, gain=lambda t: proc_k(t) * _sc(153.95, 154.35, t)
+                                       * (1.0 - _sc(154.85, 155.25, t)) * 0.35))
     add_rays(mother_pos, lambda t: proc_k(t) * ray_k(t), color="#fff1d8", size=0.6)
     add_light(mother_pos, "#ffe8c8", lambda t: 0.15 * proc_k(t) * (1.0 + 0.5 * hit_pulse(t, KICKS + FULFIL, fall=0.5)),
               radius=9.0)

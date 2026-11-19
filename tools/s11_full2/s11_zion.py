@@ -807,13 +807,13 @@ def _rays():
              * (0.75 + 0.5 * hit_pulse(t, [53.78, 64.2, 65.94, 69.4], fall=0.6)), color="#ffe9c4", size=30.0)
     add_rays(lambda t: ZC + _v(-60.0, 520.0, -120.0) + _v(0.0, 0.0, 0.0),
              lambda t: local_k(t) * (not stage_view(t)) * _env(t, 99.4, 109.4, 0.6, 1.0)
-             * (0.55 + 0.25 * intensity(t) + 0.3 * hit_pulse(t, KICKS, fall=0.5)), color="#fff0d4", size=40.0)
+             * (0.35 + 0.2 * intensity(t) + 0.3 * hit_pulse(t, KICKS, fall=0.5)), color="#fff0d4", size=40.0)
     add_rays(lambda t: CHURCH + _v(0.0, 80.0 + 200.0 * _sc(109.8, 112.0, t), 0.0),
              lambda t: local_k(t) * (not stage_view(t)) * _env(t, 109.8, 117.0, 0.5, 0.5)
              * (1.0 + 0.4 * hit_pulse(t, KICKS, fall=0.5)), color="#fff4e0", size=50.0)
     add_rays(lambda t: ZC + _v(0.0, SUMMIT + 60.0, 0.0),
              lambda t: local_k(t) * (not stage_view(t)) * _env(t, 180.7, 183.4, 0.4, 0.6)
-             * (0.7 + 0.3 * intensity(t)), color="#ffe6c0", size=40.0)
+             * (0.35 + 0.2 * intensity(t)), color="#ffe6c0", size=40.0)
 
 
 _rays()
@@ -826,22 +826,23 @@ def _grand(scene):
     def win(a, b, fi=0.6, fo=0.6):
         return lambda t: local_k(t) * (not stage_view(t)) * _env(t, a, b, fi, fo)
     for i, x in enumerate((-150.0, 150.0)):
-        scene.add(f"zion canyon {i}", CloudBank(ZC + _v(x, 0.0, 900.0), size=(70.0, 160.0, 900.0), puffs=46,
+        scene.add(f"zion canyon {i}", CloudBank(ZC + _v(x, 0.0, 900.0), size=(90.0, 190.0, 900.0), puffs=90,
                                                 seed=40 + i, gain=win(86.4, 90.9, 0.3, 0.3), bright=1.1),
                   reflect=True)
     k_pour = win(99.2, 109.8, 0.8, 1.0)
-    scene.add("zion pour clouds", CloudBank(ZC + _v(-30.0, 300.0, 120.0), size=(520.0, 80.0, 220.0), puffs=40,
-                                            seed=44, gain=k_pour, bright=0.9), reflect=False)
+    for i, x in enumerate((-230.0, 230.0)):
+        scene.add(f"zion pour clouds {i}", CloudBank(ZC + _v(x, 300.0, 120.0), size=(260.0, 80.0, 220.0), puffs=24,
+                                                     seed=44 + i, gain=k_pour, bright=0.6), reflect=False)
     bases = []
-    for a, k in zip((-62.0, -44.0, -28.0, -12.0, 12.0, 28.0, 44.0, 62.0), (1, 2, 0, 3, 3, 1, 2, 0)):
+    for a, k in zip((-72.0, -58.0, -44.0, -32.0, 32.0, 44.0, 58.0, 72.0), (1, 2, 0, 3, 3, 1, 2, 0)):
         rr = 0.5 * (tier_r(k) + tier_r(k + 1))
         bases.append((ZC[0] + rr * np.sin(np.radians(a)), ZC[2] + rr * np.cos(np.radians(a))))
     scene.add("zion pillars", Pillars(bases, top=300.0, color="#ffe4bc", width=4.5,
-                                      gain=lambda t: k_pour(t) * (0.6 + 0.3 * intensity(t))), reflect=False)
+                                      gain=lambda t: k_pour(t) * (0.45 + 0.25 * intensity(t))), reflect=False)
     k_col = win(109.8, 117.0, 0.8, 0.3)
     scene.add("zion column", Pillars([(float(CHURCH[0]), float(CHURCH[2]))], top=1400.0, color="#fff4e2", width=12.0,
                                      gain=lambda t: k_col(t) * _sc(109.8, 111.0, t) * 1.2), reflect=False)
-    for i, (x, z) in enumerate(((-260.0, -60.0), (260.0, 40.0), (-120.0, 220.0), (140.0, -240.0))):
+    for i, (x, z) in enumerate(((60.0, -330.0), (260.0, 40.0), (-150.0, -260.0), (140.0, -240.0))):
         scene.add(f"zion heaven {i}", CloudBank(CHURCH + _v(x, 340.0 - CHURCH[1], z), size=(300.0, 90.0, 220.0),
                                                 puffs=30, seed=50 + i, gain=k_col, bright=1.0), reflect=False)
 

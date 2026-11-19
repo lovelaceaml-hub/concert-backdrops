@@ -36,34 +36,39 @@ def _shot(i, name, keys, fov=50.0, aperture=0.02, **kw):
 _STEPS_FOCUS = _v(0.0, Y + 2.2, FZ + 3.0)
 _ROOF = _v(0.0, SUMMIT + 2.3 + 54.0 + 4.0, FACADE_Z - 14.0)     # over the middle of the roof canopy
 SHOTS = [
-    # 0:00 the title over the waiting city at night, in mist, the comets drifting far off: a slow wide drift,
-    # the roof always under the title's last line
-    _shot(0, "city", [(0.0, (-14.0, Y + 41.0, FZ + 276.0), (0.0, Y + 116.0, FZ - 13.0)),
-                      (0.5, (-6.0, Y + 39.0, FZ + 262.0), (0.0, Y + 114.0, FZ - 13.0)),
-                      (0.88, (0.0, Y + 37.0, FZ + 250.0), (0.0, Y + 111.0, FZ - 13.0)),
-                      (1.0, (2.0, Y + 35.0, FZ + 244.0), (0.0, Y + 102.0, FZ - 13.0))], pace="linear"),
-    # 0:11.9 one long flight: in over the plateau's edge, down and low along the great avenue behind the
-    # comets, rising a little at the end as they climb the glass
-    _shot(1, "city", [(0.0, (-46.0, Y + 26.0, FZ + 214.0), (0.0, Y + 30.0, FZ - 13.0)),
-                      (0.25, (-22.0, Y + 12.0, FZ + 160.0), (0.0, Y + 22.0, FZ - 13.0)),
-                      (0.55, (-4.0, Y + 3.2, FZ + 112.0), (0.0, Y + 26.0, FZ - 13.0)),
-                      (0.85, (0.0, Y + 3.6, FZ + 64.0), (0.0, Y + 30.0, FZ - 13.0)),
-                      (1.0, (0.0, Y + 6.0, FZ + 50.0), (0.0, Y + 34.0, FZ - 13.0))], fov=54.0),
+    # 0:00 the title: a huge starry sky over the mirror sea, Mount Zion and its city far off between two low
+    # walls of cloud of light (a canyon opening onto it), the roof always under the title's last line
+    _shot(0, "city", [(0.0, (-6.0, 10.0, 540.0), (0.0, 290.0, -420.0)),
+                      (0.5, (-2.0, 10.5, 522.0), (0.0, 288.0, -420.0)),
+                      (1.0, (2.0, 10.0, 500.0), (0.0, 262.0, -420.0))], fov=50.0, pace="linear", roll=(-1.5, 1.0)),
+    # 0:11.9 one long banking flight: skimming the mirror sea down the canyon of cloud as comets shoot up out
+    # of the water, a swoop up the front of Zion over the terraces, and down the great avenue to the church
+    _shot(1, "city", [(0.0, (2.0, 9.0, 480.0), (0.0, 120.0, -420.0)),
+                      (0.16, (-14.0, 5.0, 330.0), (0.0, 100.0, -420.0)),
+                      (0.32, (10.0, 5.0, 170.0), (0.0, 100.0, -420.0)),
+                      (0.48, (-4.0, 9.0, 10.0), (0.0, 110.0, -420.0)),
+                      (0.64, (0.0, 42.0, -170.0), (0.0, Y + 40.0, FZ - 13.0)),
+                      (0.8, (0.0, Y + 6.0, -300.0), (0.0, Y + 34.0, FZ - 13.0)),
+                      (1.0, (0.0, Y + 6.0, FZ + 50.0), (0.0, Y + 34.0, FZ - 13.0))], fov=56.0,
+          roll=lambda t: 9.0 * np.sin(1.1 * (t - 11.9)) * (1.0 - _sc(19.0, 21.5, t))),
     # 0:21.52 call 1: a low orbit round the steps from the right as the choir forms out of the light
-    _shot(2, "city", [(0.0, (20.0, Y + 1.5, FZ + 32.0), (-1.0, Y + 9.0, FZ)),
+    _shot(2, "city", [(0.0, (22.0, Y + 1.5, FZ + 34.0), (-1.0, Y + 9.0, FZ)),
                       (0.5, (8.0, Y + 2.0, FZ + 24.0), (-1.0, Y + 10.0, FZ)),
-                      (1.0, (-6.0, Y + 2.6, FZ + 24.0), (-1.0, Y + 11.0, FZ))], fov=52.0, aperture=0.04,
-          focus=_STEPS_FOCUS),
-    # 0:31.11 call 2: a long rising orbit up the church of light, chasing the comets' helix round it
-    _shot(3, "city", [(0.0, (-26.0, Y + 3.0, FZ + 30.0), (0.0, Y + 8.0, FZ)),
-                      (0.33, (-14.0, Y + 18.0, FZ + 42.0), (0.0, Y + 24.0, FZ - 4.0)),
-                      (0.66, (8.0, Y + 38.0, FZ + 46.0), (2.0, Y + 44.0, FZ - 8.0)),
-                      (1.0, (26.0, Y + 60.0, FZ + 38.0), (0.0, Y + 62.0, FZ - 14.0))], fov=50.0),
-    # 0:38.24 the brightest moment; Father's pulse (0:40.54): up over the roof, the comets crowning it, then
-    # flung out over the city as the rays fan out
-    _shot(4, "church_cut", [(0.0, (-30.0, Y + 62.0, FZ + 34.0), (0.0, Y + 60.0, FZ - 14.0)),
-                            (0.6, (-12.0, Y + 76.0, FZ + 52.0), (0.0, Y + 60.0, FZ - 14.0)),
-                            (1.0, (0.0, Y + 104.0, FZ + 84.0), (0.0, Y + 58.0, FZ - 20.0))], fov=56.0),
+                      (1.0, (-8.0, Y + 2.6, FZ + 25.0), (-1.0, Y + 11.0, FZ))], fov=52.0, aperture=0.04,
+          focus=_STEPS_FOCUS, roll=(3.0, -3.0)),
+    # 0:31.11 call 2: a corkscrew up round the church of light chasing the comets' giant helix to the crown
+    _shot(3, "city", [(0.0, (-40.0, Y + 3.0, FZ + 40.0), (0.0, Y + 8.0, FZ - 6.0)),
+                      (0.25, (-58.0, Y + 14.0, FZ - 4.0), (0.0, Y + 20.0, FZ - 14.0)),
+                      (0.5, (-20.0, Y + 28.0, FZ + 58.0), (0.0, Y + 34.0, FZ - 12.0)),
+                      (0.75, (34.0, Y + 46.0, FZ + 50.0), (0.0, Y + 50.0, FZ - 14.0)),
+                      (1.0, (48.0, Y + 66.0, FZ + 4.0), (0.0, Y + 62.0, FZ - 16.0))], fov=54.0,
+          roll=lambda t: -10.0 * np.sin(0.9 * (t - 31.11))),
+    # 0:38.24 the brightest moment; Father's pulse (0:40.54): a blazing light over the roof with great rays,
+    # pillars of light falling all round the city, the comets flung out; the camera soars up and back
+    _shot(4, "church_cut", [(0.0, (-20.0, Y + 64.0, FZ + 40.0), (0.0, Y + 62.0, FZ - 14.0)),
+                            (0.5, (-8.0, Y + 84.0, FZ + 80.0), (0.0, Y + 60.0, FZ - 14.0)),
+                            (1.0, (0.0, Y + 150.0, FZ + 280.0), (0.0, Y + 40.0, FZ - 30.0))], fov=58.0,
+          roll=(-6.0, 0.0)),
     # 0:58.4 the church under the crown (the words between them): far, low, an arc from the right
     _shot(5, "church_cut", [(0.0, (44.0, Y + 8.0, FZ + 112.0), (0.0, Y + 86.0, FZ - 13.0)),
                             (0.5, (32.0, Y + 9.0, FZ + 106.0), (0.0, Y + 86.0, FZ - 13.0)),
@@ -71,41 +76,41 @@ SHOTS = [
     # 1:14.56 streaming: the church shines out (a whip into a wide from the left, rays behind it)
     _shot(6, "church_cut", [(0.0, (-60.0, Y + 4.0, FZ + 124.0), (0.0, Y + 68.0, FZ - 13.0)),
                             (1.0, (-46.0, Y + 6.0, FZ + 112.0), (0.0, Y + 68.0, FZ - 13.0))], fov=52.0,
-          blend=0.35),
+          blend=0.35, roll=(-12.0, 0.0)),
     # 1:20.94 gathering light before the slam: a push in on the name (low in the frame, under the words)
     _shot(7, "church_cut", [(0.0, (8.0, Y + 44.0, FZ + 66.0), (8.0, Y + 60.0, FZ - 5.0)),
-                            (1.0, (8.0, Y + 50.0, FZ + 42.0), (8.0, Y + 61.0, FZ - 5.0))], fov=46.0),
+                            (1.0, (8.0, Y + 50.0, FZ + 42.0), (8.0, Y + 61.0, FZ - 5.0))], fov=46.0, roll=(5.0, 0.0)),
     # 1:37.7 the church above the nations: a sweeping arc low over the terrace below, the comets circling
     _shot(8, "church_cut", [(0.0, (-48.0, Y - 6.0, FZ + 106.0), (0.0, Y + 34.0, FZ - 10.0)),
                             (0.5, (-8.0, Y - 4.0, FZ + 116.0), (0.0, Y + 34.0, FZ - 10.0)),
-                            (1.0, (36.0, Y - 3.0, FZ + 108.0), (0.0, Y + 34.0, FZ - 10.0))], fov=56.0),
+                            (1.0, (36.0, Y - 3.0, FZ + 108.0), (0.0, Y + 34.0, FZ - 10.0))], fov=56.0, roll=(-12.0, 9.0)),
     # 1:48.4 the church glowing: high over the roof canopy, turning, the comets ringing it below
     _shot(9, "church_cut", [(0.0, (-26.0, Y + 98.0, FZ + 26.0), (-2.0, Y + 56.0, FZ - 12.0)),
                             (0.5, (-4.0, Y + 102.0, FZ + 34.0), (0.0, Y + 56.0, FZ - 12.0)),
-                            (1.0, (18.0, Y + 104.0, FZ + 22.0), (2.0, Y + 56.0, FZ - 12.0))], fov=54.0),
+                            (1.0, (18.0, Y + 104.0, FZ + 22.0), (2.0, Y + 56.0, FZ - 12.0))], fov=54.0, roll=(0.0, 40.0)),
     # 2:19.2 the church waiting for them: gliding between the city's towers on the left (words over the sky)
     _shot(10, "church_cut", [(0.0, (-68.0, Y + 12.0, FZ + 48.0), (6.0, Y + 74.0, FZ - 13.0)),
                              (0.5, (-62.0, Y + 13.5, FZ + 36.0), (6.0, Y + 75.0, FZ - 13.0)),
-                             (1.0, (-54.0, Y + 15.0, FZ + 26.0), (6.0, Y + 76.0, FZ - 13.0))], fov=52.0),
+                             (1.0, (-54.0, Y + 15.0, FZ + 26.0), (6.0, Y + 76.0, FZ - 13.0))], fov=52.0, roll=(-4.0, 2.0)),
     # 2:58.4 the church over the crowds: high and wide, an arc from the right (the words over the sky)
     _shot(11, "church_cut", [(0.0, (66.0, Y + 30.0, FZ + 102.0), (0.0, Y + 68.0, FZ - 13.0)),
                              (0.5, (46.0, Y + 33.0, FZ + 116.0), (0.0, Y + 68.0, FZ - 13.0)),
-                             (1.0, (22.0, Y + 36.0, FZ + 122.0), (0.0, Y + 68.0, FZ - 13.0))], fov=54.0),
+                             (1.0, (22.0, Y + 36.0, FZ + 122.0), (0.0, Y + 68.0, FZ - 13.0))], fov=54.0, roll=(8.0, -4.0)),
     # 3:15.2 the gathering glow, lanterns rising: low hero angle from the left, the light behind the church
     _shot(12, "church_cut", [(0.0, (-34.0, Y + 1.5, FZ + 64.0), (8.0, Y + 40.0, FZ - 60.0)),
                              (0.5, (-26.0, Y + 1.8, FZ + 57.0), (8.0, Y + 42.0, FZ - 60.0)),
-                             (1.0, (-18.0, Y + 2.2, FZ + 50.0), (8.0, Y + 44.0, FZ - 60.0))], fov=56.0),
+                             (1.0, (-18.0, Y + 2.2, FZ + 50.0), (8.0, Y + 44.0, FZ - 60.0))], fov=56.0, roll=(-6.0, 4.0)),
     # 3:42 the church blazing: a fast low push in from the avenue (the words over the sky above it)
     _shot(13, "church_cut", [(0.0, (12.0, Y + 3.0, FZ + 120.0), (0.0, Y + 70.0, FZ - 13.0)),
                              (0.5, (7.0, Y + 4.0, FZ + 98.0), (0.0, Y + 73.0, FZ - 13.0)),
-                             (1.0, (3.0, Y + 5.0, FZ + 76.0), (0.0, Y + 76.0, FZ - 13.0))], fov=54.0),
+                             (1.0, (3.0, Y + 5.0, FZ + 76.0), (0.0, Y + 76.0, FZ - 13.0))], fov=54.0, roll=(10.0, -6.0)),
     # 4:02.5 the church at peace, lanterns: a slow drift toward the name, low in the frame under the words
     _shot(14, "church_cut", [(0.0, (10.0, Y + 46.0, FZ + 86.0), (8.0, Y + 68.0, FZ - 10.0)),
                              (1.0, (7.0, Y + 48.0, FZ + 74.0), (8.0, Y + 68.0, FZ - 10.0))], fov=46.0),
     # 4:11.7 the last swell: a great crane from the steps up over the roof, the comets spiralling up with it
     _shot(15, "church_cut", [(0.0, (0.0, Y + 6.0, FZ + 58.0), (0.0, Y + 36.0, FZ - 20.0)),
                              (0.4, (-10.0, Y + 30.0, FZ + 64.0), (0.0, Y + 46.0, FZ - 22.0)),
-                             (1.0, (0.0, Y + 76.0, FZ + 64.0), (0.0, Y + 56.0, FZ - 30.0))], fov=56.0),
+                             (1.0, (0.0, Y + 76.0, FZ + 64.0), (0.0, Y + 56.0, FZ - 30.0))], fov=56.0, roll=lambda t: 14.0 * _sc(251.7, 254.07, t)),
 ]
 SHOTS = [sh for sh in SHOTS if sh is not None]
 
@@ -777,11 +782,11 @@ def _avenue(i):
     x = (i - 4) * 4.2
 
     def head(t):
-        u = np.clip((t - 11.9) / 8.0, 0.0, 1.0)
-        z = FACADE_Z + 175.0 - 168.0 * u ** 0.9
+        u = np.clip((t - 17.2) / 3.1, 0.0, 1.0)
+        z = FACADE_Z + 100.0 - 93.0 * u ** 0.9
         p = np.array([x * u ** 0.5 + 3.0 * np.sin(1.3 * t + i), SUMMIT + 7.0 + 3.0 * np.sin(0.9 * t + 2 * i), z])
-        if t > 19.9:                                    # up the glass, fanning out
-            v = t - 19.9
+        if t > 20.3:                                    # up the glass, fanning out
+            v = t - 20.3
             p = np.array([x * (1.0 + 0.35 * v), SUMMIT + 4.0 + 26.0 * v, FACADE_Z + 7.0 + 3.0 * v])
         return p
     return head
@@ -794,10 +799,10 @@ def _helix(i):
     def head(t):
         u = t - 31.11
         if t < 38.24:
-            a = a0 + 0.95 * u
+            a = a0 + 1.6 * u
             y = SUMMIT + 2.0 + 8.6 * u
             return np.array([_HC[0] + 38.0 * np.sin(a), y, _HC[2] + 26.0 * np.cos(a)])
-        a = a0 + 0.95 * (38.24 - 31.11) + 1.3 * (t - 38.24)
+        a = a0 + 1.6 * (38.24 - 31.11) + 1.3 * (t - 38.24)
         y = SUMMIT + 63.4 + 2.0 * (t - 38.24)
         rr = 1.0 - 0.45 * _sc(38.24, 40.4, t)          # the ring tightens over the roof
         out = 0.0 if t < _CROWN_T else 95.0 * (t - _CROWN_T) ** 0.8   # Father's pulse flings them out
@@ -822,9 +827,9 @@ def _comets():
     for i in range(9):
         col = COL9[i]
         out.append(Comet(_far_drift(i), col, 0.0, 12.4, trail=2.8, width=1.4, bright=0.9, fade=1.5, seed=i))
-        out.append(Comet(_avenue(i), col, 11.9, 21.9, trail=1.3, width=0.55, bright=1.4, fade=0.5,
+        out.append(Comet(_avenue(i), col, 17.2, 21.9, trail=1.3, width=0.7, bright=1.5, fade=0.5,
                          light=(i in (2, 6)), seed=10 + i))
-        out.append(Comet(_helix(i), col, 31.11, 41.6, trail=1.6, width=0.7, bright=1.4, fade=0.6,
+        out.append(Comet(_helix(i), col, 31.11, 41.6, trail=1.8, width=1.2, bright=1.5, fade=0.6,
                          light=(i in (0, 5)), seed=20 + i))
     # rings in the church's cut-ins (t0, t1, from height, to height)
     for j, (t0, t1, ya, yb) in enumerate(((58.4, 61.3, 8.0, 20.0), (97.7, 99.4, 10.0, 40.0), (108.4, 109.8, 60.0, 64.0),
@@ -836,7 +841,79 @@ def _comets():
             out.append(Comet(_orbit(i, t0, SUMMIT + ya, SUMMIT + yb, r=44.0 + 3.0 * (i % 3), w=0.5 + 0.35 * (j % 3)),
                              COL9[i], t0 - 0.3, t1 + 0.3, trail=1.4, width=0.6, bright=1.1, fade=0.35,
                              seed=40 + 9 * j + i))
+    # comets shooting up out of the mirror sea along the long flight (0:12 to 0:17.5)
+    for i in range(9):
+        ts = 12.2 + 0.58 * i
+        out.append(Comet(_rise(i, ts), COL9[(i * 4) % 9], ts, ts + 3.2, trail=1.0, width=1.1, bright=1.5, fade=0.25,
+                         light=(i in (1, 5)), seed=90 + i))
+    # comets racing past the lens into the church in the bold swoops
+    for j, bi in enumerate((8, 11, 13, 15)):
+        if bi < len(_B):
+            for i in range(4):
+                out.append(Comet(_past_lens(bi, i), COL9[(2 * j + 3 * i) % 9], _B[bi][0], _B[bi][1] + 0.4, trail=0.9,
+                                 width=1.6, bright=1.3, fade=0.2, seed=150 + 4 * j + i))
     return out
+
+
+def _flight_z(t):
+    """Roughly where the long flight is over the sea at t (for the comets that rise ahead of it)."""
+    return float(np.interp(t, [11.9, 13.4, 15.0, 16.6], [480.0, 330.0, 170.0, 10.0]))
+
+
+def _rise(i, ts):
+    """A comet shooting up out of the sea ahead of the camera, to one side of its path, curving inward."""
+    side = -1.0 if i % 2 else 1.0
+    x0 = side * (14.0 + 9.0 * (i % 3))
+    z0 = _flight_z(ts) - 110.0 - 25.0 * (i % 3)
+
+    def head(t):
+        v = max(t - ts, 0.0)
+        y = -2.0 + 85.0 * v + 6.0 * v * v
+        return np.array([x0 - side * 6.0 * v, y, z0 - 18.0 * v])
+    return head
+
+
+def _past_lens(bi, i):
+    """A comet that starts beside the camera's opening position in block bi and races to the church's crown."""
+    t0, t1, _n = _B[bi]
+    sh = [x for x in SHOTS if abs(x["t0"] - t0) < 1e-6][0]
+    c0 = np.asarray(sh["keys"][0][1], np.float64)
+    off = np.array([(-1.0) ** i * (3.0 + 2.0 * i), -1.5 + 1.2 * i, -2.0 - 2.0 * i])
+    end = np.asarray(_ROOF, np.float64) + np.array([(-1.0) ** i * 14.0, 6.0 * i, 0.0])
+    dur = max(t1 - t0, 0.6) * 0.9
+
+    def head(t):
+        u = np.clip((t - t0 - 0.12 * i) / dur, 0.0, 1.2)
+        q = c0 + off + (end - c0 - off) * u ** 1.4
+        q[1] += 18.0 * np.sin(np.pi * min(u, 1.0))
+        return q
+    return head
+
+
+def _mine(t):
+    return 1.0 if shot_name(t) in ("city", "church_cut") else 0.0
+
+
+def _clouds():
+    """The church's own clouds of light: the low canyon over the sea that the long flight runs down (it
+    frames Zion under the title), and a great bank behind the church in its own shots."""
+    out = []
+    canyon = lambda t: sky_gain(t) * (0.55 + 0.45 * _sc(10.4, 12.4, t)) * (1.0 - _sc(16.5, 18.0, t))
+    for side in (-1.0, 1.0):
+        for k, z in enumerate((420.0, 300.0, 180.0, 60.0)):
+            c = _v(side * (100.0 + 14.0 * k), 0.0, z)
+            out.append(CloudBank(c, size=(70.0, 46.0 + 8.0 * k, 130.0), puffs=14, seed=30 + k + (side > 0) * 10,
+                                 gain=canyon, bright=1.1))
+    out.append(CloudBank(ZC + _v(0.0, 0.0, -520.0), size=(900.0, 110.0, 160.0), puffs=30, seed=61,
+                         gain=lambda t: sky_gain(t) * _mine(t) * (0.12 + 0.18 * intensity(t)), bright=0.9))
+    return out
+
+
+# Father's pulse: pillars of light fall all round the city onto the sea
+FATHER_PILLARS = Pillars([(ZC[0] + 340.0 * np.sin(a), ZC[2] + 340.0 * np.cos(a))
+                          for a in np.linspace(0.0, 2.0 * np.pi, 14, endpoint=False)],
+                         top=520.0, color="#ffe8c4", width=6.0,
+                         gain=lambda t: 0.8 * _sc(39.9, 40.6, t) * (1.0 - _sc(41.5, 41.6, t)) * local_k(t))
 
 
 # the church's crown light: rays fan out from over its roof on Father's pulse, as it shines out (1:14.56), as
@@ -844,7 +921,7 @@ def _comets():
 def _ray_k(t):
     if local_k(t) <= 0.0:
         return 0.0
-    k = (1.6 * hit_pulse(t, [HIT["father"]], rise=0.6, fall=1.0) * _env(t, 37.0, 41.6, 0.5, 0.15)
+    k = (1.9 * hit_pulse(t, [HIT["father"]], rise=0.6, fall=1.2) * _env(t, 37.0, 41.6, 0.5, 0.15)
          + 0.9 * _env(t, 74.56, 75.2, 0.1, 0.1) + 0.7 * _env(t, 222.0, 224.03, 0.3, 0.2)
          + 1.2 * _sc(251.7, 253.6, t) * (1.0 - _sc(253.8, 254.07, t)))
     return k * (1.0 + 0.3 * beat_pulse(t) * intensity(t))
@@ -862,6 +939,9 @@ def add(scene):
     scene.add("church steps", Church("steps"))
     scene.add("church glory", Church("glory"))
     scene.add("church wave", BandWave(), reflect=False)
+    for i, c in enumerate(_clouds()):
+        scene.add(f"church cloud {i}", c, reflect=True)
+    scene.add("father pillars", FATHER_PILLARS, reflect=True)
     for i, c in enumerate(_comets()):
         scene.add(f"church comet {i}", c, reflect=False)
     scene.add("church body", _Body(), mask=Mask("dark", strength=body_k, grow=0.6, soft=2.5), reflect=False)

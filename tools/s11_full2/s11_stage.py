@@ -105,7 +105,7 @@ SHOTS = [
     _S("st_final", 249.43, 251.7, 54.0, roll=(0.0, 14.0), keys=[(0.0, _P(0.0, 2.6, 13.0), _P(0.0, 4.0, 3.0)),
                                          (0.35, _P(8.0, 5.0, 11.0), _P(0.0, 4.5, 3.0)),
                                          (0.7, _P(7.0, 10.0, 17.0), _P(0.0, 7.0, 3.0)),
-                                         (1.0, _P(-2.0, 15.0, 21.0), _P(0.0, 34.0, 0.0))], ap=0.0),
+                                         (1.0, _P(-3.0, 12.0, 24.0), _P(0.0, 40.0, 45.0))], ap=0.0),
 ]
 
 # =========================================================================================================
@@ -1105,7 +1105,7 @@ def _heroes():
         until = np.repeat([b for _h, _a, b in acts], n)
         act = np.repeat([h - 0.08 for h, _a, _b in acts], n)
         c = GCrowd(gain=stage_k, places=pl, facing=0.0, kinds=(kind,), people=dict(woman=1.0), start=start,
-                   until=until, act=act, fade=0.03, flash=0.0, color="#ffb84a", color2="#fff0c8", bright=1.3,
+                   until=until, act=act, fade=0.03, flash=0.0, color=CRYSTAL, color2="#ffffff", bright=1.3,
                    points=22000, size=0.55, glints=0.01, dof=0.35, seed=31.0 + len(out), mirror=False,
                    scale=1.0)
         out.append(c)
@@ -1120,8 +1120,8 @@ def _heroes():
     until = np.repeat([g[1] for g in gaps], n)
     sing = [dict(CHOIR_KINDS[0])]
     c = GCrowd(gain=stage_k, places=pl, facing=0.0, kinds=sing, start=start, until=until, fade=0.03, flash=0.0,
-               color="#ffb84a", color2="#fff0c8", bright=1.3, points=22000, size=0.55, glints=0.01, dof=0.35,
-               seed=41.0, mirror=False, scale=1.0, light="#ffd890", lamp=(0.18, 1.0))
+               color=CRYSTAL, color2="#ffffff", bright=1.3, points=22000, size=0.55, glints=0.01, dof=0.35,
+               seed=41.0, mirror=False, scale=1.0, light="#e4f0ff", lamp=(0.18, 1.0))
     out.append(c)
     return out
 
@@ -1190,11 +1190,11 @@ def _rocket(ts, i):
     """A comet shooting up out of the orchestra at ts, fanning out (i of nine)."""
     a = 2.0 * np.pi * i / 9.0
     base = PODIUM + _v(6.0 * np.sin(a) * 1.3, 2.0, -6.0 + 3.0 * np.cos(a))
-    d = _unit(_v(0.35 * np.sin(a), 1.0, 0.18 * np.cos(a) + 0.12))
+    d = _unit(_v(0.6 * np.sin(a), 1.0, 0.25 * np.cos(a) + 0.15))
 
     def head(t):
         u = max(t - ts, 0.0)
-        return base + d * (40.0 * (1.0 - np.exp(-u / 0.9)) + 6.0 * u) + _v(0.0, -2.0 * np.exp(-u / 0.2), 0.0)
+        return base + d * (16.0 * (1.0 - np.exp(-u / 0.7)) + 4.0 * u) + _v(0.0, -2.0 * np.exp(-u / 0.2), 0.0)
     return head
 
 
@@ -1246,9 +1246,9 @@ def cloud_k(t):
 
 def add(scene):
     choir = Choir(places=CHOIR_P, facing=0.0, kinds=CHOIR_KINDS,
-                  start=dict(t=21.3, center=(0.0, FACADE_Z), speed=9.0), color="#ffb84a", color2="#ffe9b8",
+                  start=dict(t=21.3, center=(0.0, FACADE_Z), speed=9.0), color=CRYSTAL, color2="#ffffff",
                   bright=3.2, points=3200, size=1.1, flash=1.2, glints=0.004, dof=0.35, seed=3.0,
-                  light="#ffd890", lamp=(0.20, 1.0), scale=(0.97, 1.03))
+                  light="#e4f0ff", lamp=(0.20, 1.0), scale=(0.97, 1.03))
     scene.add("choir", choir, mask=Mask("dark", strength=choir_mask, grow=0.03, source=MaskSource(choir)))
     scene.add("choir hearts", ChoirHearts(choir))
     orch = Players(start=dict(t=2.2, dur=7.0), color=CRYSTAL, color2="#ffffff", bright=3.5, points=2800,
@@ -1271,7 +1271,7 @@ def add(scene):
     for j, ts in enumerate(BURSTS):
         for i in range(9):
             scene.add("slam rocket %d %d" % (j, i), StageComet(_rocket(ts, i), COL9[i], ts - 0.05, ts + 3.6,
-                                                               trail=0.9, width=0.7, bright=1.0, fade=0.3, n=60,
+                                                               trail=1.2, width=0.9, bright=1.3, fade=0.3, n=60,
                                                                sparks=False, seed=100 + 9 * j + i))
     scene.add("loop conductor", StageComet(_loop_conductor, COL9[6], 0.0, 260.0, trail=1.6, width=0.18, n=80,
                                            seed=131))
