@@ -43,7 +43,7 @@ T = dict(
 )
 SEG = (13.5, 50.0, 80.5, 106.9, 151.0, 175.0)     # still moments where a body is renewed
 JOIN = 0.6
-LOOK = dict(name="glitter", seams=0.6)
+LOOK = dict(name="glitter", seams=0.9, glints=0.004, size=1.25)
 STYLE = dict(
     A=dict(shape="man", hair="short", garment="coat", color="#f6b042", color2="#ffd88a", height=1.72, build=.98,
            seed=51.0),
@@ -113,7 +113,7 @@ class Person:
 
 
 class Cast:
-    def __init__(self, points=50000):
+    def __init__(self, points=80000):
         self.points = points
         self.p = {k: Person(k) for k in "ABCD"}
         self.keys = self._plan()
@@ -300,7 +300,7 @@ class Cast:
                                                      motion=mk, seed=st["seed"], rig=rig, start=show[0])))
             b = Body(st["shape"], height=st["height"], at=at_arg, facing=keys["facing"], motion=mk, gesture=gest,
                      garment=st["garment"], hair=st["hair"], look=LOOK, color=st["color"], color2=st["color2"],
-                     bright=3.0, points=self.points, seed=st["seed"], build=st["build"], show=show,
+                     bright=4.0, points=self.points, seed=st["seed"], build=st["build"], show=show,
                      fade=(0.5 if i == 0 else JOIN * 0.5), effects=effects, wind=(0.25, 0.0, -0.1),
                      detail=dict(hand=2), wash=self._wash(k))
             person.bodies.append((s0, s1, b))
@@ -337,7 +337,7 @@ class Cast:
         for k in "ABCD":
             for i, (s0, s1, b) in enumerate(self.p[k].bodies):
                 # a gentle warm glow inside the shape (light seen through glass), the painted glitter over it
-                m = Mask(mode="sky", sky="world", look=INSIDE, edge=0.7, strength=0.55,
+                m = Mask(mode="sky", sky="world", look=INSIDE, edge=1.0, strength=0.3,
                          grow=0.008 * b.k * b.scale, source=_Shape(b))
                 scene.add(f"person {k}{i}", Painted(b), mask=m)
 

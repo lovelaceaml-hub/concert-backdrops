@@ -249,6 +249,16 @@ class Overlay:
         row = np.median(soft.mean(axis=2), axis=1)[:, None, None]
         over2 = np.maximum(out.mean(axis=2, keepdims=True) - (row + 0.07), 0.0)
         out = out - over2 * (0.9 * _ss(0.69, 0.78, yy))
+        # below two thirds of the height the water keeps only its soft colour: no reflection of a person, the
+        # tree or a light reaches into the performers' third (Never 9)
+        tiny = Image.fromarray((np.clip(out, 0, 1) * 255).astype(np.uint8)).resize(
+            (max(W // 160, 2), max((H - y0) // 6, 2)), Image.BOX)
+        flat = np.asarray(tiny.resize((W, H - y0), Image.BICUBIC), np.float32) / 255.0
+        lum_f = flat.mean(axis=2, keepdims=True)
+        row = np.median(lum_f, axis=1, keepdims=True)
+        flat = flat - np.maximum(lum_f - (row + 0.03), 0.0)
+        w2 = 0.94 * _ss(0.668, 0.705, yy)
+        out = out * (1 - w2) + flat * w2
         reg[:] = np.clip(out, 0, 1)
 
     # ------------------------------------------------------------------ the words

@@ -238,7 +238,7 @@ def _setup(scene):
     scene.add("s05 halos", WORDS.clear(FX.Halos(lambda t: CAST.where("D", t, "head"), _neck("B", 0.1),
                                                 108.4, 122.0)), reflect=False)
     scene.add("s05 petals", WORDS.clear(FX.Petals(_petal_amount)))
-    scene.add("s05 shores", FX.Shores())
+    scene.add("s05 shores", FX.Shores(), reflect=False)
     scene.add("s05 road", WORDS.clear(FX.Road(TREE_FX.tip_top(), arch_point(4, 150.0) + _v(0, -2.0, 0))), reflect=False)
     scene.add("s05 drift", FX.Drift(FRUITS))
     for i, fx in enumerate(_symbols()):
@@ -295,9 +295,9 @@ LOOKS = dict(
     bright=_spring(sky_top=_day("#5aa4e4", 0.88), sky_hor=_day("#faeed4", 0.64), clouds=0.28, rays=0.28,
                    dust_color2="#ffc8d8"),
     # the climax: the sun breaks through the haze, a warm gold bloom on a visible scene (never a white-out)
-    glory=_spring(sky_top=_day("#5c9ede", 0.88), sky_mid=_day("#c4dcee", 0.82), sky_hor=_day("#fbe2b0", 0.66),
-                  sun_color=_day("#ffe6b0", 0.30), sun_int=1.15, sun_el=20.0, sun_glow=0.9, rays=0.55,
-                  haze_color=_day("#f6e2be", 0.50)),
+    glory=_spring(sky_top=_day("#4a88d4", 0.86), sky_mid=_day("#e9c08c", 0.72), sky_hor=_day("#f2ae5a", 0.60),
+                  sun_color=_day("#ffd99a", 0.28), sun_int=0.95, sun_el=20.0, sun_glow=0.7, rays=0.5,
+                  haze=0.22, haze_color=_day("#eebc7c", 0.44), hill_color=_day("#4a7c58", 0.34), exposure=0.92),
     # the hold: warm late afternoon, the hand-off to song 06 (the design's #2b5a98, #8fa8c8, #efd3a0)
     late=_spring(sky_top=_day("#3a6cb0", 0.92), sky_mid=_day("#9ab4d4", 0.86), sky_hor=_day("#efd3a0", 0.66),
                  sun_color=_day("#ffe4b0", 0.28), sun_el=12.0, sun_glow=0.8, rays=0.35, ripple=0.15,

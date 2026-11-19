@@ -464,7 +464,7 @@ class Shores:
         self.s = np.array(sd)
 
     def sample(self, t):
-        return dict(pos=self.p, size=0.22 + 0.2 * self.s, color=lin("#ffd890") * 1.4, alpha=0.9, emit=2.0,
+        return dict(pos=self.p, size=0.22 + 0.2 * self.s, color=lin("#ffc874") * 1.0, alpha=0.7, emit=1.6,
                     kind="spark", twinkle=0.6, seed=self.s, birth=self.b, fade=1.0, flash=1.5)
 
     def gain(self, t):
