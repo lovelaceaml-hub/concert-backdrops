@@ -777,6 +777,9 @@ class Crown:
             return None
         grow = np.clip((u - self.d) / 0.35, 0.0, 1.0)
         calm = 1.0 - 0.35 * _win(t, 55.4, 60.0, 0.6, 0.8)           # calmer while the words are read
+        # (round 8, f19) while "The glory of Jerusalem / Mother shines!" reads (0:58.4 to 1:01.2) the rim framed
+        # and crossed the words: down to about 40 percent, back after
+        calm *= 1.0 - 0.6 * _win(t, 58.15, 61.2, 0.25, 0.35) / max(1.0 - 0.35 * _win(t, 55.4, 60.0, 0.6, 0.8), 0.3)
         k = (0.6 + 0.4 * np.exp(-u / 2.0)) * calm * (1.0 - _sc(69.6, 70.5, t))
         k *= 1.0 + 0.35 * hit_pulse(t, [64.2, 65.94, 69.4], fall=0.5)
         # after the words, the crown comes down and settles round the city ("as Father prophesied")
@@ -1499,9 +1502,17 @@ def _comets():
     ]
     for si, (t0, t1, mk, tr, w) in enumerate(plan):
         for i in range(9):
-            out.append((f"comet {si} {i}", Comet(mk(i), COL9[i], t0, t1, trail=tr, width=w, bright=1.1, fade=0.4,
-                                                 light=(i in (0, 4)), n=60, seed=si * 9 + i)))
+            c = Comet(mk(i), COL9[i], t0, t1, trail=tr, width=w, bright=1.1, fade=0.4, light=(i in (0, 4)), n=60,
+                      seed=si * 9 + i)
+            if si == 1:
+                c.k = _quiet_k(c.k)
+            out.append((f"comet {si} {i}", c))
     return out
+
+
+def _quiet_k(k0):
+    """(round 8, f19) the comets circling the crown fade while the glory line reads (0:58.4 to 1:01.2)."""
+    return lambda t: k0(t) * (1.0 - 0.92 * _win(t, 58.15, 61.2, 0.25, 0.35))
 
 
 def _rays():

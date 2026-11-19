@@ -808,7 +808,8 @@ class KingBeams:
         self.ph = np.random.default_rng(83).random(len(self.BASES))
 
     def gain(self, t):
-        return proc_k(t) * _sc(153.95, 154.3, t) * (1.0 - _sc(154.95, 155.3, t))
+        # (round 8) they fall only once "All kings worship You" has left (gone 154.55), so they never cross it
+        return proc_k(t) * _sc(154.5, 154.75, t) * (1.0 - _sc(155.0, 155.25, t))   # gone before "to the great Church"
 
     def sample(self, t):
         g = self.gain(t)
@@ -818,7 +819,7 @@ class KingBeams:
         out = []
         top = 60.0
         for i, (x, z) in enumerate(self.BASES):
-            fall = _sc(153.95 + 0.06 * i, 154.25 + 0.06 * i, t)      # each beam falls from the sky in turn
+            fall = _sc(154.5 + 0.06 * i, 154.75 + 0.06 * i, t)       # each beam falls from the sky in turn
             y = top * (1.0 - fall * (1.0 - self.u))
             P = np.stack([np.full_like(y, x), y, np.full_like(y, z)], 1)
             a = k * (0.5 + 0.5 * self.u ** 0.4) * (0.9 + 0.1 * np.sin(9.0 * t + 6.0 * self.ph[i]))
