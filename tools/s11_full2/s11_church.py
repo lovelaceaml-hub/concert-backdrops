@@ -13,6 +13,7 @@ from PIL import Image, ImageDraw, ImageFont
 
 from songs.s11_full2 import *  # noqa: F401,F403
 from p3d.api import Mask
+import songs.s11_full2 as H
 
 Y, FZ, G = SUMMIT, FACADE_Z, GLOBE_C
 
@@ -525,7 +526,6 @@ def _church():
         edgeL.batch(0.9, WH, 1.0, 2.2),
         blade.batch(0.55, WH, 1.0, 2.2),
         fins.batch(0.28, WH, 1.0, 2.2),
-        steps.batch(0.10, lin("#eef2fa"), 0.6, 1.3),
         fine.batch(0.08, lin("#e6eeff"), 0.8, 1.4),
         stone.batch(0.10, lin("#ffe2bc"), 0.9, 1.6),
         side.batch(0.12, lin("#cfdcff") * 0.8, 0.6, 1.2),
@@ -535,10 +535,11 @@ def _church():
     ]
     soft = [b for b in soft if b is not None]
     crisp = [b for b in crisp if b is not None]
-    for b in soft + crisp:
+    stepb = [steps.batch(0.10, lin("#eef2fa"), 0.6, 1.3)]
+    for b in soft + crisp + stepb:
         b["fog"] = 0.35                         # keep its blue and white clear from far away
         b["reflect"] = False                    # no stray copy of it in the sea below the mountain
-    return soft, crisp
+    return soft, crisp, stepb
 
 
 def church_glow(t):
@@ -560,7 +561,7 @@ class Church:
         if Church._parts is None:
             Church._parts = _church()
         self.part = part
-        self.b = Church._parts[0 if part == "soft" else 1]
+        self.b = Church._parts[{"soft": 0, "crisp": 1, "steps": 2}[part]]
 
     def sample(self, t):
         return self.b
@@ -568,7 +569,7 @@ class Church:
     def gain(self, t):
         k = city_k(t) * church_glow(t)
         if stage_view(t):
-            k *= 0.75 if self.part == "soft" else 0.4
+            k *= {"soft": 0.75, "crisp": 0.4, "steps": 0.12}[self.part]
         return k
 
 
@@ -594,7 +595,16 @@ class _Body:
 
 def body_k(t):
     """How strongly the church's body hides what is behind it."""
-    return local_k(t)
+    k = local_k(t)
+    if k <= 0.0:
+        return 0.0
+    # the phrases ride 30 m in front of the camera: when the front is nearer than that they would fall behind
+    # the silhouette and be hidden, so the body fades out in near views while a phrase is on screen
+    c = np.asarray(H.CAMERA.state(t).pos, np.float64)
+    near = 1.0 - _sc(34.0, 44.0, float(c[2] - FACADE_Z))
+    if near > 0.0 and any(ti - 0.6 <= t <= to + 0.6 for _, (ti, _r0, _r1, to), *_ in H.PHRASE_LIST):
+        k *= 1.0 - near
+    return k
 
 
 def _paths():
@@ -622,5 +632,6 @@ def add(scene):
     scene.add("city gold", Static(cgold, city_k))
     scene.add("church", Church("soft"))
     scene.add("church lines", Church("crisp"))
+    scene.add("church steps", Church("steps"))
     scene.add("church body", _Body(), mask=Mask("dark", strength=body_k, grow=0.6, soft=2.5), reflect=False)
     scene.add("paths", Static(_paths(), lambda t: local_k(t) * (1.0 - 0.75 * _sc(40.0, 42.0, t))))
