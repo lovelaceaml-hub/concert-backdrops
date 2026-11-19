@@ -37,7 +37,7 @@ NEON = dict(crimson="#EA5A5E", gold="#F2B25E", sky="#62B2FA", lavender="#9E6AF6"
 # the neon glow round the white cores: the same hues, deeper and more saturated so they read as colour
 NEON_GLOW = dict(crimson="#ff1438", gold="#ff8a00", sky="#1478ff", lavender="#7a2cff", rose="#ff2288",
                  violet="#3a3cff", green="#14c040")
-PHRASE_GLOW = ["gold", "sky", "lavender", "gold", "crimson", "violet", "sky", "gold", "lavender",
+PHRASE_GLOW = ["gold", "sky", "lavender", "gold", "crimson", "gold", "sky", "gold", "lavender",
                "gold", "crimson", "rose", "gold", "rose", "crimson", "lavender", "gold", "sky"]
 # style (PHRASE_LIST field 4, kept for the other threads) -> the promo-like entrance
 ARRIVE = dict(light="pen", people="shaft", blaze="rays", fly="reveal")
@@ -69,7 +69,7 @@ def specs(plist, width):
                     halo=4.6 if strong else 4.0, sparkle=1.2, n=110000 if strong else 80000, reflect=False)
         if _bright(r0, r1):
             # over a bright scene (the lit terraces, the white stage): a purer white core, a brighter word
-            spec.update(tint=0.12, bright=1.3 if strong else 1.2)
+            spec.update(tint=0.10, bright=1.3 if strong else 1.2, halo=6.0 if strong else 5.0)
         arr = ARRIVE[style]
         if arr == "pen":
             spec.update(arrive="pen", nib=False, flow=0.09)
