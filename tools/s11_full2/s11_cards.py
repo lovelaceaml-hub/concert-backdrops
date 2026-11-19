@@ -43,6 +43,7 @@ class Cards(cards.Cards):
         self.C, self.H = C, H
         if self.ec is not None:
             self.ec["fade"] = 1.1                     # the text sweeps in through the flare in about a second
+            self.ec["t_out"] = self.EMB_IN + 0.4      # then it fades for the last image: the church's emblem
         self._hide_op = False
         if self.op is not None:
             self.opA = self._finish_concert()
@@ -342,6 +343,63 @@ class Cards(cards.Cards):
         out[..., 3] = a
         return dict(tex=self._tex(out), rect=(0.0, 0.0, 1.0, 1.0))
 
+    EMB_IN = 270.1                               # the card gives way to the emblem in the silent hold (to 275)
+
+    def _emblem_tex(self):
+        """The church's emblem (traced from Anthony's image, s11_church.emblem_mask) as a glowing picture: the
+        blue ring and globe in sky blue (paler toward the top), the lettering and the globe's lines in white, the
+        white ring between them soft, over a soft blue glow."""
+        if not hasattr(self, "emb_tex"):
+            m = self.C.emblem_mask()
+            n = int(max(64, round(0.34 * self.h)))
+            pad = n // 3
+            N = n + 2 * pad
+
+            def layer(cls):                                   # each part scaled smoothly, on the padded canvas
+                a = Image.fromarray(((m == cls) * 255).astype(np.uint8)).resize((n, n), Image.LANCZOS)
+                c = Image.new("L", (N, N), 0)
+                c.paste(a, (pad, pad))
+                return np.asarray(c, np.float32) / 255.0
+            blue, white, ring = layer(1), layer(2), layer(3)
+            u = np.clip((np.arange(N, dtype=np.float32)[:, None, None] - pad) / n, 0.0, 1.0)
+            sky = np.array((0.53, 0.83, 1.0), np.float32) * (1 - u) + np.array((0.24, 0.62, 0.94), np.float32) * u
+            allm = np.clip(blue + white + ring, 0, 1)
+            A8 = Image.fromarray((allm * 255).astype(np.uint8))
+            g1 = np.asarray(A8.filter(ImageFilter.GaussianBlur(n / 16.0)), np.float32) / 255.0
+            g2 = np.asarray(A8.filter(ImageFilter.GaussianBlur(n / 6.0)), np.float32) / 255.0
+            full = np.zeros((N, N, 4), np.float32)
+            full[..., :3] = (sky * blue[..., None] + white[..., None]
+                             + np.array((0.93, 0.97, 1.0), np.float32) * (0.7 * ring)[..., None]
+                             + np.array((0.25, 0.55, 1.0), np.float32) * (0.35 * g1)[..., None]
+                             + np.array((0.15, 0.35, 0.8), np.float32) * (0.3 * g2)[..., None])
+            full[..., :3] = np.clip(full[..., :3], 0, 1)
+            full[..., 3] = np.clip(np.maximum(blue, np.maximum(white, ring)), 0, 1)
+            self.emb_tex = self._tex(full)
+            self.emb_px = N
+        return self.emb_tex
+
+    def _draw_last_emblem(self, t):
+        """The last image (round 7): after the card, in the silence, the church's emblem alone on the night sky,
+        rising gently into its glow and breathing slowly to the end."""
+        if self.ec is None or t < self.EMB_IN - 0.2:
+            return False
+        k = float(_ss(self.EMB_IN, self.EMB_IN + 1.6, t)) * (0.94 + 0.06 * np.sin(1.3 * (t - self.EMB_IN)))
+        if k <= 0.003:
+            return False
+        tex = self._emblem_tex()
+        hh = self.emb_px / self.h
+        ww = self.emb_px / self.w
+        y = 0.47 - 0.015 * float(_ss(self.EMB_IN, self.EMB_IN + 3.0, t))
+        ctx, mgl = self.ctx, self.mgl
+        self.R.f_out.use()
+        ctx.enable(mgl.BLEND)
+        ctx.blend_func = mgl.ONE, mgl.ONE_MINUS_SRC_ALPHA
+        self._quad(self.p_ovl, self.v_ovl, dict(tex=tex, rect=(0.5 - ww / 2.0, y - hh / 2.0, ww, hh)), -1.0,
+                   uAlpha=k, uDis=(-1.0, 0.0, 0.0, 0.0))
+        ctx.blend_func = mgl.ONE, mgl.ONE
+        ctx.disable(mgl.BLEND)
+        return True
+
     def _backdrop_k(self, t):
         """The night sky comes in through the flare: it starts to fall over the church as the flare gathers, is
         mostly in on the cut itself (so the bright Earth view under it never shows), and whole a second later."""
@@ -358,7 +416,8 @@ class Cards(cards.Cards):
             drew = super().overlay(t) or drew
         finally:
             self._hide_op = False
-        return self._draw_flare(t) or drew         # over the night sky as it comes in, dying away in a second
+        drew = self._draw_flare(t) or drew         # over the night sky as it comes in, dying away in a second
+        return self._draw_last_emblem(t) or drew
 
     def _opening_concert(self, pal):
         """N4 without the song title (Anthony, round 7: "Title card should start with just the concert. Then it
