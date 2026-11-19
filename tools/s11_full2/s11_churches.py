@@ -972,7 +972,7 @@ class Ignitions:
 # here), in the same glowing sky-blue look as on the church of light: a blue ring and globe, the white lettering
 # and globe lines over them, the soft white ring between. Each floats centred above its church's roof, always
 # facing the camera, about 0.42 of the building's width (at least about 3.5 percent of the frame's height, so
-# far ones still read); near ones are drawn in full, far ones from a coarser trace (the ring, the globe and its white ring). It lights a beat after
+# far ones still read: at least about 5.5 percent of the frame height, every other one dropped past 2300 m); crisp flat dots that take no lens blur, the white lettering and globe lines brightest; near ones are drawn in full, far ones from a coarser trace (the ring, the globe and its white ring). It lights a beat after
 # its church rises (a soft flash), then breathes with the choir; calmed with its church (under a phrase, in the
 # stage views, behind the mountain, near the camera) and hidden behind the words like it.
 # =========================================================================================================
@@ -1030,7 +1030,7 @@ class Emblems:
                 continue
             q = c["base"] + _v(0.0, c["h"], 0.0)
             dist = float(np.linalg.norm(q - eye))
-            S = max(c["es"], 0.07 * ty * dist)                     # at least about 3.5 percent of the frame
+            S = max(c["es"], 0.11 * ty * dist)                     # at least about 5.5 percent of the frame
             ctr = q + _v(0.0, 0.7 * S + 2.0, 0.0)
             if float((ctr - eye) @ f) < 5.0:
                 continue
@@ -1038,6 +1038,8 @@ class Emblems:
             flash = hit_pulse(t, [te], rise=0.03, fall=0.6)
             a = g * rise * (breathe + 1.2 * flash)
             lod = "full" if dist < 900.0 else "far"
+            if dist > 2300.0 and i % 2:                            # fewer, clearer emblems on the farthest rings
+                continue
             for cls, key in ((1, "blue"), (2, "white"), (3, "ring")):
                 P, cell = sets[lod][cls]
                 W = ctr[None, :] + S * (P[:, :1] * r[None, :] + P[:, 1:2] * u[None, :])
@@ -1049,17 +1051,19 @@ class Emblems:
                     acc["blue_soft"][1].append(np.full(len(W[::3]), S * cell * 3.0))
                     acc["blue_soft"][2].append(np.full(len(W[::3]), a))
         out = []
-        look = {"blue_soft": ("#2a86ea", 0.5, 0.1, "soft", 1.0, 1.0),
-                "blue": ("#2f8ff0", 1.1, 0.75, "spark", 1.1, 1.0),
-                "white": ("#ffffff", 1.0, 0.85, "spark", 1.6, 1.0),
-                "ring": ("#eef6ff", 1.2, 0.45, "spark", 1.2, 1.0)}
+        # crisp: the blue is flat dots (a disc with an edge, no glow); the white lettering and globe lines are the
+        # brightest; none of it takes the lens blur, so it reads at half size
+        look = {"blue_soft": ("#2a86ea", 0.5, 0.04, "soft", 1.0, 1.0),
+                "blue": ("#1f6fd6", 0.95, 0.8, "disc", 0.75, 1.0),
+                "white": ("#ffffff", 0.75, 0.75, "disc", 1.1, 1.0),
+                "ring": ("#ffffff", 0.7, 0.3, "disc", 0.7, 1.0)}
         for key, (P, Sz, A) in acc.items():
             if not P:
                 continue
             col, sk, al, kind, emit, cm = look[key]
             out.append(dict(pos=np.concatenate(P), size=np.concatenate(Sz) * sk, color=lin(col) * cm,
                             alpha=np.clip(np.concatenate(A) * al, 0, 1).astype(np.float32), kind=kind, emit=emit,
-                            fog=0.35, reflect=False))
+                            fog=0.2, reflect=False, dof=0, twinkle=0.0))
         return out or None
 
 
