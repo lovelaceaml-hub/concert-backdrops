@@ -74,7 +74,8 @@ SHOTS = [
            (90.72, ZC + _v(10.0, 6.0, 470.0), ZC + _v(0.0, 50.0, 0.0))], fov=58.0, roll=(-6.0, 5.0)),
     # standing firm, the first climb: a huge banking spiral up the mountain, comets corkscrewing ahead
     _shot("zion_wide", 90.72, 97.7,
-          _orbit(90.72, 97.7, -64.0, 58.0, 420.0, 240.0, 14.0, 112.0, ZC + _v(0, 34, 0), ZC + _v(0, 80, 0), 8),
+          # (round 8, f18) it starts farther out and higher, so the near terraces do not bloom white at the lens
+          _orbit(90.72, 97.7, -64.0, 58.0, 470.0, 240.0, 46.0, 112.0, ZC + _v(0, 34, 0), ZC + _v(0, 80, 0), 8),
           fov=54.0, roll=(14.0, -10.0)),
     # sacrifice: pillars of light fall from the clouds onto the people; a slow crane over the upper terraces
     _shot("zion_wide", 99.4, 103.6,
@@ -1616,13 +1617,20 @@ def edge_k(t):
     return local_k(t) * (not stage_view(t)) * (intensity(t) * beat_pulse(t, 0.12) + mx(t, kick=0.7))
 
 
+def wide_calm(t):
+    """(Round 8, f18) the wide climbs where the whole mountain filled the frame and read white (1:30.7, 2:51.5,
+    3:10.4): 1 there, 0 elsewhere."""
+    return max(_win(t, 90.6, 97.8, 0.3, 0.6), _win(t, 171.3, 175.6, 0.3, 0.6), _win(t, 190.4, 194.6, 0.3, 0.6))
+
+
 def crowd_k(t):
     """The nations breathe with the music: brighter with it, a lift on every beat, (round 8) their light rising
     with the choir."""
     return (nations_k(t) * (0.75 + 0.35 * intensity(t)) * (1.0 + 0.3 * intensity(t) * beat_pulse(t, 0.12))
             * (1.0 + mx(t, choir=0.35))
             # (round 8, f18: white runs at 2:51.6 and 3:12.2) in those two wide views the crowds shine a third less
-            * (1.0 - 0.35 * max(_win(t, 171.3, 175.6, 0.3, 0.6), _win(t, 190.4, 194.6, 0.3, 0.6))))
+            * (1.0 - 0.35 * max(_win(t, 171.3, 175.6, 0.3, 0.6), _win(t, 190.4, 194.6, 0.3, 0.6),
+                                _win(t, 90.6, 97.8, 0.3, 0.6))))
 
 
 def _flare_k(c):
@@ -1834,8 +1842,9 @@ def add(scene):
     # (round 7: from afar Zion read pearl white) the walls step back a little as the people fill the terraces, so
     # the nine colours of the people read against them in the wide views
     scene.add("zion walls", Static(walls, lambda t: glow_k(t) * form_k(t) * (1.0 - 0.28 * grow_k(t))
-                                   * (1.0 - 0.4 * _win(t, 161.55, 162.95, 0.15, 0.25)) * (1.0 + mx(t, low=0.18))))
-    scene.add("zion dim", Static(dim, lambda t: glow_k(t) * (not stage_view(t))))     # (round 8) not through the choir
+                                   * (1.0 - 0.4 * _win(t, 161.55, 162.95, 0.15, 0.25)) * (1.0 + mx(t, low=0.18))
+                                   * (1.0 - 0.2 * wide_calm(t))))
+    scene.add("zion dim", Static(dim, lambda t: glow_k(t) * (not stage_view(t)) * (1.0 - 0.2 * wide_calm(t))))     # (round 8) not through the choir
     scene.add("zion gold", Static(gold, glow_k))
     # round 6: the city grows section by section, and the rivers of people stream to it
     gates, gardens, towers, mist = _city_parts()
