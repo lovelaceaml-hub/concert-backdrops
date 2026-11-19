@@ -260,6 +260,12 @@ function viewOf(s, i){
   const m = FLEET.filter(f => f.section === i).sort((a, b) => String(b.updated).localeCompare(String(a.updated)))[0];
   if (!m) return v;
   const busy = ["starting", "rendering", "uploading"].includes(m.state);
+  // the newest finished video stays on show while the machine renders the next one (or is blocked)
+  if (m.url && Date.parse(m.updated || 0) > Date.parse(s.updated || 0)){
+    v.url = m.url; v.updated = m.updated; v.pass = "grand"; if (m.note && m.state === "ready") v.note = m.note;
+    v.state = "ready"; v.pct = 100;
+  }
+  if (m.state === "blocked"){ v.where = "Machine " + m.name + " (waiting for a code fix)"; }
   if (busy){
     v.state = m.state === "uploading" ? "joining" : "rendering"; v.where = "Machine " + m.name;
     v.pct = m.total ? Math.round(100 * Math.min(m.done || 0, m.total) / m.total) : 0;
