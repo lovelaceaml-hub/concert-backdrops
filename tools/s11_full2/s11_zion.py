@@ -1764,7 +1764,8 @@ def add(scene):
     scene.add("zion gardens", Static(gardens, lambda t: calm(t) * (1.0 + mx(t, high=0.45))))
     scene.add("zion towers", Static(towers, lambda t: calm(t) * (1.0 + 0.25 * intensity(t) * beat_pulse(t, 0.12))
                                     * (1.0 + mx(t, brass=0.5))))
-    scene.add("zion mist", Static(mist, lambda t: local_k(t) * (0.7 + 0.3 * intensity(t))))
+    scene.add("zion mist", Static(mist, lambda t: local_k(t) * (0.7 + 0.3 * intensity(t))
+                                  * (1.0 - 0.5 * _win(t, 213.5, 219.5, 0.6, 0.6))))      # (f35) thinner at 3:34
     scene.add("zion streams", Streams())
     edges = np.concatenate([_ring(ZC, tier_r(k) + 0.1, tier_y(k) + 1.0, 1.4) for k in range(N_TIER)])
     scene.add("zion beat", Static([_batch(edges, 0.6, lin("#ffe8c0"), 0.8, emit=1.8, reflect=False)], edge_k))

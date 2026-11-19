@@ -136,7 +136,9 @@ def sun_rays(t):
     if 206.0 <= t < 211.6 and shot_name(t) == "sky_stage":
         return 0.75 + 0.3 * kick + 0.15 * beat_pulse(t)
     if 211.6 <= t < 224.03 and shot_name(t) == "summit":
-        return 0.55 + 0.3 * kick
+        # (round 8, f35: 3:34 to 3:39.5 stayed pale) half the steady glory, the light swells only on the beats
+        q = _win(t, 213.5, 219.5, 0.6, 0.6)
+        return (0.55 - 0.32 * q) + (0.3 + 0.1 * q) * kick + 0.12 * q * beat_pulse(t)
     if 235.0 <= t < 238.8 and globe_view(t):
         return 0.35 + 0.85 * _sc(235.0, 235.8, t) + 0.5 * hit_pulse(t, [HIT["peak"]], fall=1.0)
     return 0.0
@@ -329,7 +331,9 @@ class SummitPillars(Pillars):
 def _pillar_gain(t):
     if globe_view(t) or not (211.0 <= t < 224.1):
         return 0.0
-    return (_sc(211.0, 212.2, t) * (1.0 - _sc(223.4, 224.1, t))) * (0.75 + 0.35 * intensity(t))
+    q = _win(t, 213.5, 219.5, 0.6, 0.6)          # (f35) half, swelling only on the beats, through the pale stretch
+    return ((_sc(211.0, 212.2, t) * (1.0 - _sc(223.4, 224.1, t))) * (0.75 + 0.35 * intensity(t))
+            * (1.0 - q * (0.5 - 0.4 * beat_pulse(t))))
 
 
 def _coda_clouds():
@@ -410,6 +414,9 @@ class EpicSun:
         slam = hit_pulse(t, [SLAM3], rise=0.02, fall=0.6)
         beat = beat_pulse(t)
         swell = 1.0 + 0.25 * beat + 0.4 * kick + mx(t, brass=0.5)
+        # (f35) over the summit at 3:33.5 to 3:39.5 the sun burns at half, swelling only on the beats
+        q = _win(t, 213.5, 219.5, 0.6, 0.6)
+        k = k * (1.0 - q * (0.55 - 0.35 * beat - 0.3 * kick))
         rd = reading(t)
 
         def guard(P):
