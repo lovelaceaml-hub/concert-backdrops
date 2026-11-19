@@ -698,7 +698,10 @@ class Streams:
             # the river toward Zion, a band of brighter walkers after another
             alpha.append(_ss(0.0, 60.0, d) * (1.0 - _ss(L[-1] - 10.0, L[-1], d))
                          * np.clip((g - self.q[sel]) / 0.03, 0.0, 1.0)
-                         * (1.0 + shim * (0.5 + 0.5 * np.sin(0.05 * d - 5.0 * t)) ** 4))
+                         * (1.0 + shim * (0.5 + 0.5 * np.sin(0.05 * d - 5.0 * t)) ** 4)
+                         # (round 8) on the stairways the whole river narrows into a few metres and piled up into
+                         # white bands (coda, 3:10): there each walker shines less, so the lanes keep their colours
+                         * (0.3 + 0.7 * sea))
             idx.append(sel)
         if not idx:
             return None
