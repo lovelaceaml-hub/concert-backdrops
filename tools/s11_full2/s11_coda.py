@@ -314,8 +314,13 @@ class SummitPillars(Pillars):
             br = k * (0.88 + 0.12 * np.sin(2.0 * t + 6.0 * self.ph[j])) * (0.25 + 0.75 * near)
             out.append(dict(pos=P, size=self.glow_s, color=self.col, alpha=0.11 * br * prof * self.glow_w,
                             kind="soft", emit=1.8, dof=0.0))
+            # (round 8, from STAGE: dotted columns close up) the bright core is one continuous line of light, a
+            # chain of segments with no gaps, like the stage's pillars; a fainter soft core keeps its width
+            ac = np.minimum(0.55 * br * prof, 1.0)
+            out.append(dict(pos=P[:-1], pos2=P[1:], size=self.width * 0.10, color=self.col * 0.6 + lin(WHITE) * 0.4,
+                            alpha=ac[:-1], alpha2=ac[1:], kind="line", emit=2.6, dof=0.0))
             out.append(dict(pos=P, size=self.core_s, color=self.col * 0.6 + lin(WHITE) * 0.4,
-                            alpha=0.18 * br * prof * self.core_w, kind="soft", emit=2.4, dof=0.0))
+                            alpha=0.07 * br * prof * self.core_w, kind="soft", emit=2.4, dof=0.0))
             out.append(dict(pos=np.array([[x, SUMMIT + 0.15, z]]), size=self.width * (6.0 + 2.0 * land),
                             color=self.col, alpha=(0.12 + 0.2 * land) * k, kind="soft", emit=2.0, reflect=False))
         return out
