@@ -1048,18 +1048,34 @@ class ChurchLight:
         P = _place(m, c["base"], c["ex"], c["ey"], c["ez"], k)[keep]
         size = np.array([0.85 * st, 0.75 * st, 1.5, 0.95 * st])[role[keep]] * k
         alpha = np.array([0.22, 0.5, 1.0, 0.8])[role[keep]]   # outlines quiet: glass, windows, materials lead
+        emit = 1.8
+        city = bool(c.get("city"))
+        if city:
+            # the heavenly city reads as buildings first, over the coloured crowds (ZION): firmer outlines, warm
+            # lit windows that hold their size however small the building is scaled, a gentle glow on the front
+            size = np.maximum(size, np.array([0.34, 0.32, 1.1, 0.36])[role[keep]])
+            alpha = np.array([0.5, 0.75, 1.0, 0.9])[role[keep]]
+            emit = 2.3
         birth = (self.t0 + 0.5 * m["pos"][keep, 1] / m["h"]).astype(np.float32)
         fog = (0.6, 0.45, 0.35, 0.25)[c["band"]]
         h = c["h"]
         self.b = []
         if len(P):
             self.b.append(dict(pos=P, size=size, color=m["col"][keep], alpha=alpha.astype(np.float32), kind="spark",
-                               emit=1.8, birth=birth, fade=0.25, flash=2.0, fog=fog, twinkle=0.2))
+                               emit=emit, birth=birth, fade=0.25, flash=2.0, fog=fog, twinkle=0.2))
         if part == "frame":
             G = np.array([c["base"] + _v(0, 0.45 * h, 0), c["base"] + _v(0, 0.08 * h, 0)])
             self.b.append(dict(pos=G, size=np.array([2.2 * h, 3.4 * h]), color=lin("#a9ccff"),
                                alpha=np.array([0.035, 0.02], np.float32), kind="soft", emit=1.4,
                                birth=np.full(2, self.t0 + 0.3, np.float32), fade=0.6, fog=fog))
+            if city:                                      # the facade's gentle warm glow, a little in front of it
+                fw = max(c["w"], 4.0)
+                u = np.linspace(-0.35, 0.35, 4)
+                F = c["base"][None, :] + u[:, None] * fw * c["ex"][None, :] + 0.4 * h * _v(0, 1, 0)[None, :] \
+                    + 1.5 * c["ez"][None, :]
+                self.b.append(dict(pos=F, size=np.full(4, 0.55 * max(h, fw / 3.0)), color=lin("#ffd9a8"),
+                                   alpha=np.full(4, 0.07, np.float32), kind="soft", emit=1.2,
+                                   birth=np.full(4, self.t0 + 0.4, np.float32), fade=0.6, fog=fog))
 
     def sample(self, t):
         return self.b or None
