@@ -1564,7 +1564,7 @@ def _bursts():
             out.append(dict(t=x, strength=0.10, rise=0.03, fall=0.3, color=COL9[(k * 4) % 9]))
             x += bar
             k += 1
-    out.append(dict(t=HIT["father"], strength=0.45, rise=0.08, fall=0.6, color="#ffeccc",
+    out.append(dict(t=HIT["father"], strength=0.24, rise=0.10, fall=0.5, color="#ffd9a8",   # (round 8: no white-out)
                     at=tuple(CHURCH + _v(0.0, 20.0, 0.0))))
     # round 8 (Anthony: "The world should have no light at first"): the cut onto the dark Earth at 0:41.6 opens
     # without a flash; the first light is Korea's own
