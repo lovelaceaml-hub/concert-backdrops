@@ -130,16 +130,16 @@ class Cards(cards.Cards):
         s = self.s
         warm = np.array((1.0, 0.93, 0.80), np.float32)
         x, y = self._light_xy(t)
-        sh = 1.0 - 0.45 * float(_ss(C.OPEN_POINT, C.OPEN_LAND, t))     # smaller as it goes far off
+        sh = 1.0 - 0.3 * float(_ss(C.OPEN_POINT, C.OPEN_LAND, t))      # a little smaller as it goes far off
         xy = np.array([[x, y]] * 3, np.float32)
-        out = [((xy, np.array([110.0, 34.0, 9.0], np.float32) * s * sh,
-                 _rgba(warm, np.array([0.10, 0.38, 1.0]) * m, False)), True)]
+        out = [((xy, np.array([300.0, 90.0, 26.0], np.float32) * s * sh,
+                 _rgba(warm, np.array([0.16, 0.55, 1.5]) * m, False)), True)]
         if t > C.OPEN_POINT:                                        # the wake
-            js = np.arange(1, 16)
-            tw = np.maximum(t - 0.028 * js, C.OPEN_POINT)
+            js = np.arange(1, 31)
+            tw = np.maximum(t - 0.02 * js, C.OPEN_POINT)
             P = np.array([self._light_xy(a) for a in tw], np.float32)
-            k = m * 0.55 * (1.0 - js / 16.0) ** 1.5
-            out.append(((P, (4.0 * s * sh) * (1.0 - js / 20.0), _rgba(warm, k, False)), True))
+            k = m * 0.8 * (1.0 - js / 31.0) ** 1.5
+            out.append(((P, (12.0 * s * sh) * (1.0 - js / 40.0), _rgba(warm, k, False)), True))
         return out
 
     def _draw_opening(self, t):
@@ -200,7 +200,7 @@ class Cards(cards.Cards):
             g = _gauss(256, 0.55, 0.55)                       # the great soft halo: light, and a cover over the cut
             halo = np.zeros((256, 256, 4), np.float32)
             halo[..., :3] = blue * (0.42 * g)[..., None]
-            halo[..., 3] = 0.6 * g
+            halo[..., 3] = 0.0                            # added as light (the night sky does the covering)
             c = _gauss(128, 0.35, 0.35)                       # the white heart
             core = np.zeros((128, 128, 4), np.float32)
             core[..., :3] = np.array((1.0, 0.97, 0.9), np.float32) * c[..., None]
@@ -264,20 +264,22 @@ class Cards(cards.Cards):
         return dict(tex=self._tex(out), rect=(0.0, 0.0, 1.0, 1.0))
 
     def _backdrop_k(self, t):
-        """The night sky comes in through the flare over about a second from the last chord."""
-        if self.ec is None:
+        """The night sky comes in through the flare: it starts to fall over the church as the flare gathers, is
+        mostly in on the cut itself (so the bright Earth view under it never shows), and whole a second later."""
+        if self.ec is None or t < self.LC - 0.45:
             return 0.0
-        return float(_ss(self.LC - 0.15, self.LC + 0.9, t))
+        if t < self.LC:
+            return 0.3 * float(_ss(self.LC - 0.45, self.LC, t))
+        return 0.9 + 0.1 * float(_ss(self.LC, self.LC + 0.9, t))
 
     def overlay(self, t):
         drew = self._draw_opening(t)
-        drew = self._draw_flare(t) or drew
         self._hide_op = True                       # the opening is drawn above; the base draws the rest
         try:
             drew = super().overlay(t) or drew
         finally:
             self._hide_op = False
-        return drew
+        return self._draw_flare(t) or drew         # over the night sky as it comes in, dying away in a second
 
     def _opening(self, pal):
         """N4: the logo, HEALING CONCERT, the title (its second line in italic), a gold hairline, the date line,
@@ -439,7 +441,7 @@ class Cards(cards.Cards):
         vo = np.zeros(va.shape + (4,), np.float32)
         vo[..., :3] = (np.asarray((70, 100, 190), np.float32) / 255.0)[None, None, :] * (0.35 * va)[..., None]
         vo[..., 3] = 0.0
-        (vo,), (x0, y0, x1, y1) = _crop([vo])
+        (_va, vo), (x0, y0, x1, y1) = _crop([va, vo])
         V = dict(tex=self._tex(vo), rect=(x0 / W, y0 / H, (x1 - x0) / W, (y1 - y0) / H), box=(x0, y0, x1, y1))
         self.ec_back = self._night_sky()
         return T, V
