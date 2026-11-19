@@ -74,5 +74,16 @@ Checked before the full render on landmark stills (full size and quarter size) a
 | 10 Calm camera, never frozen | yes | slow eased moves, breathing drift; finish.py frozen check |
 | 11 Only the campaign logo; no realistic faces | yes | stills |
 
-## Render checks (from out/s10_full2/CHECKS.txt)
-To be filled in after the render: frame count, length, black frames, repeated or frozen frames, first and last frame, signature on every frame after the opening, sync on 3 hits.
+## Render checks (from out/s10_full2/CHECKS.txt, version 2 as first delivered, 2026-11-19)
+| Check | Result |
+|---|---|
+| Frames and length | 13,560 frames decoded in each of the three files; 226.000 s; audio 226.005 s |
+| Parts joined without gap or overlap | yes (finish.py asserts every part starts where the last ended) |
+| Black frames | 0 (darkest frame mean 31.7 of 255, at 0:54.1) |
+| Repeated or frozen frames | 0 identical neighbours; longest frozen run 0.0 s |
+| First and last frame | frame 0 is the whole opening lockup (mean 38.2); last frame is the calm hold with the signature (mean 36.7), never black |
+| Signature on every frame after the opening | yes: its brightest pixel stays at 255 on every frame from 0:10 (0 dim frames) |
+| Sync on 3 hits | 0:25.26 found 0:25.09; 0:51.89 found 0:51.58; 3:24.52 found 3:24.57 (onset of the conformed music; the picture is timed to the same clock) |
+| Phone file under 25 MB | 22.6 MB |
+
+Fix 1 render checks are added below when it is delivered.
