@@ -426,6 +426,131 @@ def _tower(T, c, rw, hs, bs, gi, jewel, spire=True):
         T.spark(tip + np.array([0.0, 0.4, 0.0]), lin(jewel), b + 0.25)
 
 
+ROOF = ("#ff9fbf", "#b9a3ff", "#8fd0ff", "#7fe0c8", "#ffc98a")   # (round 8) the roofs and domes of the city
+WINDOW = "#ffe2b0"                                                  # its lit windows
+
+
+def _frame(sd, fw):
+    """A building's own axes: across its front (sd), out of its front (fw), up."""
+    return np.asarray(sd, np.float64), np.asarray(fw, np.float64), np.array([0.0, 1.0, 0.0])
+
+
+def _box(T, c, sd, fw, w, d, y0, y1, col, b, windows=True):
+    """A storey of light: the edges of a box (w across, d deep, from y0 to y1 over c), its front windows lit."""
+    sd, fw, up = _frame(sd, fw)
+    q = [np.asarray(c) + sd * x + fw * z for x, z in ((-w / 2, -d / 2), (w / 2, -d / 2), (w / 2, d / 2), (-w / 2, d / 2))]
+    lo = np.stack([p + up * y0 for p in q])
+    hi = np.stack([p + up * y1 for p in q])
+    T.line(lo, np.roll(lo, -1, 0), col * 0.6, 0.7, b)
+    T.line(lo, hi, col * 0.85, 0.85, b + 0.15)
+    T.line(hi, np.roll(hi, -1, 0), col, 0.95, b + 0.35)
+    # a soft fill of light in the walls, so the building has mass and is not a wire box
+    m = max(int(w * (y1 - y0) / 6.0), 3)
+    rr = np.random.default_rng(int(abs(c[0] * 13 + c[2] * 7 + y0)) % 100000)
+    for z, ww in ((d / 2, w), (-d / 2, w)):
+        P = (np.asarray(c) + sd * rr.uniform(-ww / 2, ww / 2, m)[:, None] + fw * z
+             + up * rr.uniform(y0, y1, m)[:, None])
+        T.soft(P, col * 0.5, 0.07, b + 0.3)
+    if windows:
+        xs = np.arange(-w / 2 + 1.4, w / 2 - 0.9, 2.2)
+        ys = np.arange(y0 + 1.5, y1 - 0.6, 2.6)
+        X, Yy = np.meshgrid(xs, ys)
+        P = np.asarray(c) + sd * X.ravel()[:, None] + fw * (d / 2 + 0.05) + up * Yy.ravel()[:, None]
+        if len(P):
+            T.soft(P, lin(WINDOW) * 0.9, 0.45, b + 0.45 + 0.05 * np.arange(len(P)) % 0.4)
+
+
+def _gable(T, c, sd, fw, w, d, y, h, col, b):
+    """A pitched roof over a box (its ridge along the front)."""
+    sd, fw, up = _frame(sd, fw)
+    c = np.asarray(c)
+    r0, r1 = c - sd * w / 2 + up * (y + h), c + sd * w / 2 + up * (y + h)
+    T.line(r0, r1, col, 0.95, b + 0.3)
+    for x, r in ((-w / 2, r0), (w / 2, r1)):
+        for z in (-d / 2, d / 2):
+            T.line(c + sd * x + fw * z + up * y, r, col * 0.85, 0.9, b + 0.2)
+    rr = np.random.default_rng(int(abs(c[0] * 11 + c[2] * 5 + y)) % 100000)      # the roof's surface, filled
+    m = max(int(w * d / 4.0), 4)
+    x, v = rr.uniform(-w / 2, w / 2, m), rr.uniform(-1.0, 1.0, m)
+    P = c + sd * x[:, None] + fw * (v * d / 2)[:, None] + up * (y + h * (1.0 - np.abs(v)))[:, None]
+    T.soft(P, col * 0.95, 0.5, b + 0.4)
+    for z in (-d / 2, d / 2):                      # rafters along the roof
+        for x in np.linspace(-w / 2, w / 2, max(int(w / 2.4), 2) + 1)[1:-1]:
+            T.line(c + sd * x + fw * z + up * y, c + sd * x + up * (y + h), col * 0.6, 0.6, b + 0.35)
+
+
+def _dome(T, c, r, y, col, b, finial=None):
+    """A dome of light on a ring at height y (meridians and a ring), a jewel on top."""
+    c = np.asarray(c)
+    n = 10
+    a = np.arange(n) * 2 * np.pi / n
+    e = np.linspace(0.0, 1.0, 7)
+    ring = np.stack([c[0] + r * np.cos(a), np.full(n, c[1] + y), c[2] + r * np.sin(a)], 1)
+    T.line(ring, np.roll(ring, -1, 0), col, 0.95, b)
+    for k in range(n):
+        rr, yy = r * np.cos(e * np.pi / 2), y + 0.85 * r * np.sin(e * np.pi / 2)
+        Q = np.stack([c[0] + rr * np.cos(a[k]), c[1] + yy, c[2] + rr * np.sin(a[k])], 1)
+        T.line(Q[:-1], Q[1:], col, 0.9, b + 0.15 + 0.3 * e[1:])
+    rr = np.random.default_rng(int(abs(c[0] * 3 + c[2] * 17 + y)) % 100000)       # the dome's surface, filled
+    m = max(int(r * r * 3.0), 8)
+    th, ph = rr.uniform(0, 2 * np.pi, m), np.arcsin(rr.random(m))
+    P = c + np.stack([r * np.cos(ph) * np.cos(th), y + 0.85 * r * np.sin(ph), r * np.cos(ph) * np.sin(th)], 1)
+    T.soft(P, col * 0.95, 0.5, b + 0.4)
+    if finial is not None:
+        T.spark(c + np.array([0.0, y + 0.85 * r + 0.6, 0.0]), lin(finial), b + 0.6)
+
+
+def _colonnade(T, c, sd, fw, w, d, h, col, b):
+    """A row of columns before a front, with its beam."""
+    sd, fw, up = _frame(sd, fw)
+    c = np.asarray(c)
+    xs = np.linspace(-w / 2, w / 2, max(int(w / 1.8), 3))
+    base = np.stack([c + sd * x + fw * (d / 2 + 1.6) for x in xs])
+    T.line(base, base + up * h, col, 0.9, b + 0.25 * np.arange(len(xs)) / len(xs))
+    T.line(base[0] + up * h, base[-1] + up * h, col, 0.95, b + 0.3)
+
+
+def _building(T, c, a, kind, bs, gi, k=0, s=1.0):
+    """(Round 8, Anthony: "There should be no obelisk looking figures on Zion. It is supposed to start looking like
+    the heavenly city being built up as Zion.") A building of the heavenly city facing out from the mountain at
+    azimuth a: kind "hall" (a long hall with a colonnade, its gabled roof, then a cupola), "domed" (a square house,
+    then a drum, then its dome), "houses" (a row of terraced houses with pitched roofs, then upper storeys). It is
+    built up in steps at the times bs (each step adds to it; nothing is ever taken away), low and broad, never a
+    needle. Walls in the district's pearl, roofs and domes in rose, lavender, sky, teal or amber, windows lit."""
+    sd = np.array([np.cos(a), 0.0, -np.sin(a)])
+    fw = np.array([np.sin(a), 0.0, np.cos(a)])
+    wall = _district_tint(a, k, 0.38)[0] * 0.85
+    roof = lin(ROOF[gi % len(ROOF)])
+    b1, b2, b3 = (list(bs) + [bs[-1]] * 3)[:3]
+    c = np.asarray(c, np.float64)
+    if kind == "hall":
+        w, d, h = 12.0 * s, 7.0 * s, 5.0 * s
+        _box(T, c, sd, fw, w, d, 0.0, h, wall, b1)
+        _colonnade(T, c, sd, fw, w, d, h, wall * 1.1, b1 + 0.3)
+        _gable(T, c, sd, fw, w + 0.6, d + 0.6, h, 2.8 * s, roof, b2)
+        _dome(T, c + np.array([0.0, 0.0, 0.0]), 1.4 * s, h + 2.8 * s, roof * 0.9 + lin(WHITE) * 0.1, b3, finial=COL9[gi % 9])
+    elif kind == "domed":
+        w = 8.0 * s
+        _box(T, c, sd, fw, w, w, 0.0, 5.0 * s, wall, b1)
+        n = 12
+        aa = np.arange(n) * 2 * np.pi / n
+        R = 3.2 * s
+        lo = np.stack([c[0] + R * np.cos(aa), np.full(n, c[1] + 5.0 * s), c[2] + R * np.sin(aa)], 1)
+        hi = lo + np.array([0.0, 2.4 * s, 0.0])
+        T.line(lo, hi, wall, 0.85, b2)
+        T.line(hi, np.roll(hi, -1, 0), wall, 0.9, b2 + 0.2)
+        _dome(T, c, R, 7.4 * s, roof, b3, finial=COL9[gi % 9])
+    else:   # "houses": three terraced houses stepping down the slope, then upper storeys on two of them
+        for j, (x, h, dd) in enumerate(((-4.6, 3.6, 5.0), (0.0, 4.4, 5.5), (4.6, 3.2, 5.0))):
+            p = c + sd * x * s - fw * (0.6 * j % 2) * s
+            _box(T, p, sd, fw, 4.2 * s, dd * s, 0.0, h * s, wall, b1 + 0.15 * j)
+            if j != 2:
+                _box(T, p, sd, fw, 3.6 * s, dd * 0.8 * s, h * s, (h + 3.0) * s, wall, b2 + 0.15 * j)
+                _gable(T, p, sd, fw, 4.0 * s, dd * 0.9 * s, (h + 3.0) * s, 1.8 * s, roof, b2 + 0.4 + 0.15 * j)
+            else:
+                _gable(T, p, sd, fw, 4.6 * s, dd * 1.05 * s, h * s, 1.8 * s, roof, b1 + 0.5)
+
+
 def _pavilion(T, c, i, b):
     """A round pavilion of light: eight white columns, a dome in rose, lavender or sky, a finial."""
     n, R, h = 8, 3.4, 5.0
@@ -521,16 +646,13 @@ def _city_parts():
                 _pavilion(T, p, j, float(_snap(HIT["thanks"] + 0.5 * k + 2.4 * u)) if k < 5
                           else float(_snap(171.48 + 1.5 * u)))
             else:
-                tall = kind == "t"
-                h1 = r.uniform(9.0, 13.0)
-                h2 = h1 + (r.uniform(12.0, 16.0) if tall else r.uniform(5.0, 8.0))
-                h3 = h2 + (r.uniform(8.0, 12.0) if tall else 0.0)
+                # (round 8) buildings of the heavenly city, not towers: built up in three steps (first climb or
+                # the sacrifice and thanks, behind the shockwave, the sacrifice or slam 3)
                 b1 = float(_snap(gen1[k] + 2.2 * u))
                 b2 = float(_snap(SLAM2 + 2.3 + 0.6 * k + 2.4 * u))
                 b3 = float(_snap((180.7 + 0.5 * k if k < 3 else SLAM3 + 0.5 * (k - 3)) + 1.6 * u))
-                hs, bs = ([h1, h2, h3], [b1, b2, b3]) if tall else ([h1, h2], [b1, b2])
-                _tower(T, p, r.uniform(2.2, 2.8) if tall else r.uniform(1.8, 2.3), hs, bs, (j + k) % 3,
-                       COL9[(j * 4 + k) % 9], spire=True)
+                bk = "domed" if kind == "t" else ("hall", "houses")[(j + k) % 2]
+                _building(T, p, a, bk, [b1, b2, b3], j + k, k, r.uniform(1.25, 1.5))
     # mist at the foot of each wall: the terraces stand apart in depth
     for k in range(N_TIER):
         R0, y0 = tier_r(k), (tier_y(k - 1) if k else 0.0)
@@ -570,8 +692,7 @@ def _city_parts():
             elif kind == "P":
                 _pavilion(T, p, j, b)
             else:
-                h = r.uniform(10.0, 16.0)
-                _tower(T, p, 2.2, [h], [b], j % 3, COL9[j % 9])
+                _building(T, p, a, ("houses", "hall", "domed")[j % 3], [b, b + 1.5, b + 3.0], j, 0, r.uniform(1.2, 1.45))
     return (G.batches(lsize=0.26, ssize=4.0, ksize=1.1), Gd.batches(lsize=0.18, ssize=2.6, ksize=0.55),
             T.batches(lsize=0.22, ssize=2.6, ksize=1.0), M.batches(ssize=10.0))
 
