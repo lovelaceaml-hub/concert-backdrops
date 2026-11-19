@@ -1299,6 +1299,7 @@ def _stair_profile():
     pts.append((tier_r(0), tier_y(0) + 1.5))
     pts.append((tier_r(0) + 14.0, 1.2))
     pts.append((tier_r(0) + 60.0, 0.4))
+    pts.append((tier_r(0) + 240.0, 0.3))           # (round 8) the river runs on out across the sea
     pts = np.asarray(pts)
     L = np.concatenate([[0.0], np.cumsum(np.hypot(*np.diff(pts, axis=0).T))])
     return L, pts
@@ -1323,8 +1324,23 @@ class Pour:
 
     def __init__(self):
         r = np.random.default_rng(91)
-        n = 6000
-        self.st = r.random(n) < 0.6                        # most of the light runs down the great stairways
+        n = 7000
+        # (round 8, Anthony: "The rivers coming down Zion need to be distinct and feel like a river, they should be
+        # blue") nearly all of it runs down the great stairways as rivers of blue light, glinting, out over the sea
+        self.st = r.random(n) < 0.92
+        blues = np.asarray([lin(x) for x in ("#3f8cff", "#5fb0ff", "#8fd0ff", "#4fd6ff", "#2f6bff")])
+        self.col = blues[r.integers(0, len(blues), n)]
+        glint = r.random(n) < 0.14
+        self.col[glint] = self.col[glint] * 0.3 + lin("#f2fbff") * 0.7
+        # the body of each river: a band of soft light along the stairway, its ripples running down
+        bl, bw, ba = [], [], []
+        for i, sa in enumerate(STAIRS_AZ):
+            Ls = np.arange(0.0, STAIR_L[-1], 1.6)
+            for w in np.linspace(-1.0, 1.0, 5):
+                bl.append(Ls)
+                bw.append(np.full(len(Ls), w * (7.0 if sa == 0.0 else 4.2)))
+                ba.append(np.full(len(Ls), sa))
+        self.bl, self.bw, self.ba = (np.concatenate(x) for x in (bl, bw, ba))
         self.a = np.where(r.random(n) < 0.85, r.uniform(-1.85, 1.85, n), r.uniform(-np.pi, np.pi, n))
         self.sa = STAIRS_AZ[r.integers(0, len(STAIRS_AZ), n)]
         self.sw = r.uniform(-1.0, 1.0, n) * np.where(self.sa == 0.0, 7.5, 4.5)
@@ -1359,9 +1375,26 @@ class Pour:
                 vel = np.stack([dr * np.sin(a), dy, dr * np.cos(a)], 1) * v[:, None] * 0.5
                 lead = np.exp(-np.maximum(front * LL[-1] / PROF_L[-1] - L, 0.0) / 30.0)
                 fade = 1.0 - _ss(LL[-1] - 70.0, LL[-1], L)
-                out.append(dict(pos=p, vel=vel, size=0.7 if stair else 0.55, color=lin("#ffe6b4"),
+                out.append(dict(pos=p, vel=vel, size=0.7 if stair else 0.55, color=self.col[sel][on],
                                 alpha=k * (0.55 + 0.45 * lead) * fade, emit=2.2 + 1.5 * lead, kind="spark",
                                 twinkle=0.5, seed=sd, reflect=False, streak=0.6))
+            # the river's body: deep blue, its ripples running down with the current (and with the strings)
+            reach = front * STAIR_L[-1] / PROF_L[-1]
+            on = self.bl < reach
+            if np.any(on):
+                L, w, sa = self.bl[on], self.bw[on], self.ba[on]
+                rr = np.interp(L, STAIR_L, STAIR_P[:, 0])
+                yy = np.interp(L, STAIR_L, STAIR_P[:, 1]) - 0.6
+                a = sa + w / rr
+                p = np.stack([ZC[0] + rr * np.sin(a), yy, ZC[2] + rr * np.cos(a)], 1)
+                rip = 0.55 + 0.45 * np.sin(0.22 * (L - POUR_V * 0.9 * t)) ** 2
+                edge = 1.0 - 0.5 * np.abs(w) / (np.abs(w).max() + 1e-6)
+                fade = (1.0 - _ss(STAIR_L[-1] - 90.0, STAIR_L[-1], L)) * _ss(0.0, 12.0, reach - L)
+                ab = k * 0.24 * rip * edge * fade * (1.0 + mx(t, strings=0.5))
+                out.append(dict(pos=p, size=3.4, color=lin("#2f7bff"), alpha=ab, emit=1.6, kind="soft",
+                                reflect=True))
+                out.append(dict(pos=p[::3], size=1.2, color=lin("#9fe0ff"), alpha=1.6 * ab[::3] * rip[::3], emit=2.2,
+                                kind="soft", reflect=False))
         k = _env(t, 109.8, 117.0, 0.6, 0.3)
         if k > 0.0:
             u = t - 109.8
@@ -1401,8 +1434,8 @@ def _pour_sheen():
             V.append(_xz(rr, a, y + 2.6 + r.random(m)))
             VB.append(pour_arrive(rr))
     W, WB, V, VB = (np.concatenate(x) for x in (W, WB, V, VB))
-    return [_batch(W, 2.4, lin("#fff0d0"), 0.30, kind="soft", emit=1.2, birth=WB, fade=0.5, flash=2.5, reflect=False),
-            _batch(V, 7.0, lin("#ffe6bc"), 0.07, kind="soft", emit=1.0, birth=VB, fade=0.8, flash=2.0, reflect=False)]
+    return [_batch(W, 2.4, lin("#cfe8ff"), 0.26, kind="soft", emit=1.2, birth=WB, fade=0.5, flash=2.5, reflect=False),
+            _batch(V, 7.0, lin("#bfe0ff"), 0.06, kind="soft", emit=1.0, birth=VB, fade=0.8, flash=2.0, reflect=False)]
 
 
 def pour_k(t):
