@@ -9,93 +9,189 @@ and focus). Point sets: add(scene). No em dash or en dash anywhere in this file.
 import numpy as np
 
 from songs.s11_full2 import *  # noqa: F401,F403
+from p3d.api import Mask
 
 Y, FZ, G = SUMMIT, FACADE_Z, GLOBE_C
 
 SHOTS = [
-    # (t0, t1, keys [(t, pos, target)], fov, aperture)
-    # A. the waiting city: wide over its edge (the title on the calm sky), down the avenue, close on the steps
-    dict(name="city", kind="local", t0=0.0, t1=41.6, fov=50.0, aperture=0.02,
-         keys=[(0.0, _v(0.0, Y + 16.0, FZ + 150.0), _v(0.0, Y + 34.0, CHURCH[2])),
-                     (11.9, _v(0.0, Y + 11.0, FZ + 118.0), _v(0.0, Y + 22.0, CHURCH[2])),
-                     (21.3, _v(0.0, Y + 3.4, FZ + 40.0), _v(0.0, Y + 6.0, FACADE_Z)),
-                     (31.0, _v(-2.0, Y + 3.0, FZ + 22.0), _v(0.0, Y + 3.2, FACADE_Z)),
-                     (38.8, _v(-1.0, Y + 3.2, FZ + 19.0), _v(0.0, Y + 4.0, FACADE_Z)),
-                     (40.54, _v(0.0, Y + 7.0, FZ + 22.0), _v(0.0, Y + 30.0, FACADE_Z + 10.0)),
-                     (41.6, _v(0.0, Y + 40.0, FZ + 50.0), _v(0.0, Y + 140.0, FZ + 10.0))]),
+    # A. the waiting city. 0 to 11.9: wide and low over the city's edge, the title on the calm sky above the
+    # church (its roof stays under the title's last line); 11.9: the paths of light reach out and the camera
+    # glides down the great avenue; 21.5: close on the steps as the choir forms out of the light; 40.54
+    # (Father's bell): the camera lifts toward the sky before the cut to the Earth at 41.6.
+    dict(name="city", kind="local", t0=0.0, t1=41.6, fov=50.0, aperture=0.04, focus=_v(0.0, Y + 2.2, FZ + 3.0),
+         keys=[(0.0, _v(0.0, Y + 40.0, FZ + 270.0), _v(0.0, Y + 116.0, FZ - 13.0)),
+                     (10.4, _v(0.0, Y + 37.0, FZ + 250.0), _v(0.0, Y + 111.0, FZ - 13.0)),
+                     (11.9, _v(0.0, Y + 35.5, FZ + 244.0), _v(0.0, Y + 100.0, FZ - 13.0)),
+                     (14.0, _v(0.0, Y + 30.0, FZ + 220.0), _v(0.0, Y + 78.0, FZ - 13.0)),
+                     (17.0, _v(0.0, Y + 18.0, FZ + 154.0), _v(0.0, Y + 36.0, FZ - 13.0)),
+                     (20.0, _v(0.0, Y + 9.0, FZ + 88.0), _v(0.0, Y + 24.0, FZ)),
+                     (22.5, _v(0.0, Y + 5.5, FZ + 56.0), _v(0.0, Y + 16.0, FZ)),
+                     (26.0, _v(-1.2, Y + 4.2, FZ + 42.0), _v(-0.3, Y + 11.0, FZ)),
+                     (31.1, _v(-3.0, Y + 3.3, FZ + 30.0), _v(-0.6, Y + 7.5, FZ)),
+                     (38.8, _v(-1.2, Y + 3.0, FZ + 23.0), _v(0.0, Y + 7.0, FZ)),
+                     (40.54, _v(0.0, Y + 3.6, FZ + 22.0), _v(0.0, Y + 10.0, FZ)),
+                     (41.6, _v(0.0, Y + 28.0, FZ + 56.0), _v(0.0, Y + 110.0, FZ - 40.0))]),
 ]
 
 
+# =========================================================================================================
+# Small builders: crisp lines ("line" kind, one batch for many segments) and soft bands ("ribbon" kind)
+# =========================================================================================================
+class _Lines:
+    """Many straight segments gathered into one "line" batch per look."""
+
+    def __init__(self):
+        self.a, self.b = [], []
+
+    def add(self, a, b):
+        self.a.append(np.asarray(a, np.float64))
+        self.b.append(np.asarray(b, np.float64))
+
+    def poly(self, P):
+        P = np.asarray(P, np.float64)
+        for i in range(len(P) - 1):
+            self.add(P[i], P[i + 1])
+
+    def batch(self, width, color, alpha, emit, **kw):
+        if not self.a:
+            return None
+        A, B = np.asarray(self.a), np.asarray(self.b)
+        return _batch(A, width, color, alpha, kind="line", emit=emit, pos2=B, **kw)
+
+
+class _Ribbons:
+    """Soft bands along polylines, gathered into one "ribbon" batch (width, alpha and colour per point,
+    and a place u per point for the travelling sheen)."""
+
+    def __init__(self):
+        self.parts = []
+
+    def add(self, P, width, color, alpha=1.0, u=None):
+        P = np.asarray(P, np.float64)
+        m = len(P)
+        if m < 2:
+            return
+        w = np.broadcast_to(np.asarray(width, np.float64), (m,))
+        a = np.broadcast_to(np.asarray(alpha, np.float64), (m,))
+        c = np.asarray(color, np.float64)
+        c = np.broadcast_to(c, (m, 3)) if c.ndim == 1 else c
+        if u is None:
+            u = np.concatenate([[0.0], np.cumsum(np.linalg.norm(np.diff(P, axis=0), axis=1))])
+        u = np.broadcast_to(np.asarray(u, np.float64), (m,))
+        self.parts.append((P[:-1], P[1:], w[:-1], w[1:], a[:-1], a[1:], 0.5 * (c[:-1] + c[1:]), u[:-1], u[1:]))
+
+    def batch(self, emit=1.0, **kw):
+        if not self.parts:
+            return None
+        cols = [np.concatenate(x) for x in zip(*self.parts)]
+        p, p2, w, w2, a, a2, c, u, u2 = cols
+        return _batch(p, w, c, a, kind="ribbon", emit=emit, pos2=p2, size2=w2, alpha2=a2, u=u, u2=u2, **kw)
+
+
+def _box_lines(L, c, w, d, h):
+    x0, x1, z0, z1, y0, y1 = c[0] - w / 2, c[0] + w / 2, c[2] - d / 2, c[2] + d / 2, c[1], c[1] + h
+    P = [(x0, z0), (x1, z0), (x1, z1), (x0, z1)]
+    for i in range(4):
+        (ax, az), (bx, bz) = P[i], P[(i + 1) % 4]
+        L.add((ax, y0, az), (bx, y0, bz))
+        L.add((ax, y1, az), (bx, y1, bz))
+        L.add((ax, y0, az), (ax, y1, az))
+
+
+# =========================================================================================================
+# The city of light on the summit plateau: towers banded in gold and white like the church, domes, the
+# great avenue (toward +z) with its lamps, the square left open before the church.
+# =========================================================================================================
 def _city():
-    """Buildings of light on the summit plateau, the great avenue (toward +z) and the square left open."""
     r = np.random.default_rng(11)
-    edges, wins, domes = [], [], []
+    E, Bd = _Lines(), _Lines()
+    wins, domes = [], []
     for gx in np.arange(-84.0, 85.0, 15.0):
         for gz in np.arange(-84.0, 85.0, 15.0):
             x, z = gx + r.uniform(-2.5, 2.5), gz + r.uniform(-2.5, 2.5)
             rad = np.hypot(x, z)
             if rad > 84.0:
                 continue
-            if abs(x) < 15.0 and z > -12.0:                       # the avenue and the square
+            if abs(x) < 16.0 and z > -12.0:                       # the avenue and the square
                 continue
-            if abs(x) < 40.0 and -48.0 < z < 24.0:                # the church and its square
+            if abs(x) < 46.0 and z > -50.0:                       # the church, its blade, its square, the plaza
                 continue
             w, d = r.uniform(7, 11), r.uniform(7, 11)
-            h = r.uniform(7, 13) + 16.0 * np.exp(-rad / 45.0) * r.random()
+            h = r.uniform(7, 13) + 14.0 * np.exp(-rad / 45.0) * r.random()
             c = ZC + _v(x, SUMMIT, z)
-            edges.append(_box(c, w, d, h, 0.35))
+            _box_lines(E, c, w, d, h)
+            # floor bands on the face toward the avenue and the camera (+z), as on the church
+            for y in np.arange(c[1] + 3.4, c[1] + h - 0.5, 3.4):
+                Bd.add((c[0] - w / 2, y, c[2] + d / 2), (c[0] + w / 2, y, c[2] + d / 2))
             wins.append(_windows(c, w, d, h))
             if r.random() < 0.18:
                 domes.append(_dome(c + _v(0, h, 0), min(w, d) * 0.45, 0.4))
-    E, W, D = np.concatenate(edges), np.concatenate(wins), np.concatenate(domes)
-    pave = []
-    for x in np.arange(-84.0, 85.0, 6.0):
+    W, D = np.concatenate(wins), np.concatenate(domes)
+    # the paving: a few long faint lines (the old dotted grid was busy behind the choir)
+    P = _Lines()
+    for x in np.arange(-84.0, 85.0, 12.0):
+        if abs(x) < 13.0:
+            continue
         h = np.sqrt(max(86.0 ** 2 - x * x, 0.0))
-        pave.append(_seg(ZC + _v(x, SUMMIT + 0.02, -h), ZC + _v(x, SUMMIT + 0.02, h), 0.6))
-    for z in np.arange(-84.0, 85.0, 6.0):
+        P.add(ZC + _v(x, SUMMIT + 0.02, -h), ZC + _v(x, SUMMIT + 0.02, h))
+    for z in np.arange(-84.0, 85.0, 12.0):
         h = np.sqrt(max(86.0 ** 2 - z * z, 0.0))
-        pave.append(_seg(ZC + _v(-h, SUMMIT + 0.02, z), ZC + _v(h, SUMMIT + 0.02, z), 0.6))
-    PV = np.concatenate(pave)
-    edge = []
+        P.add(ZC + _v(-h, SUMMIT + 0.02, z), ZC + _v(h, SUMMIT + 0.02, z))
+    # the avenue's edges and the square's rings
+    Ed = _Lines()
     for sx in (-12.0, 12.0):
-        edge.append(_seg((sx, SUMMIT + 0.05, FACADE_Z + 30.0), (sx, SUMMIT + 0.05, ZC[2] + R_TOP), 0.25))
-    edge.append(_ring(SQUARE, 24.0, SUMMIT + 0.05, 0.25, -np.pi / 2, np.pi / 2))
-    edge.append(_ring(SQUARE, 16.0, SUMMIT + 0.05, 0.3, -np.pi / 2, np.pi / 2))
-    ED = np.concatenate(edge)
+        Ed.add((sx, SUMMIT + 0.05, FACADE_Z + 30.0), (sx, SUMMIT + 0.05, ZC[2] + R_TOP))
+    for rr in (24.0, 16.0):
+        Ed.poly(_ring(SQUARE, rr, SUMMIT + 0.05, 1.0, -np.pi / 2, np.pi / 2))
     lamps = []
     for z in np.arange(FACADE_Z + 24.0, ZC[2] + R_TOP, 7.0):
         lamps += [(-10.0, SUMMIT + 4.2, z), (10.0, SUMMIT + 4.2, z)]
     lamps = np.asarray(lamps)
-    poles = np.concatenate([_seg((p[0], SUMMIT, p[2]), (p[0], SUMMIT + 4.0, p[2]), 0.2) for p in lamps])
+    Po = _Lines()
+    for p in lamps:
+        Po.add((p[0], SUMMIT, p[2]), (p[0], SUMMIT + 4.0, p[2]))
     dimk = 0.55
-    return [
-        _batch(E, 0.16, lin("#f2c27a") * dimk, 0.8, emit=0.8),
+    dim = [
+        E.batch(0.10, lin("#f2c27a") * dimk, 0.75, 1.1),
+        Bd.batch(0.08, lin("#fff0d8") * dimk, 0.45, 1.1),
         _batch(W, 0.30, lin("#ffcf86") * dimk, 0.8, kind="soft", emit=0.9, twinkle=0.2),
         _batch(D, 0.16, lin("#ffe0a8") * dimk, 0.8, emit=0.8),
-        _batch(lamps, 0.9, lin("#ffcf8a"), 1.0, kind="soft", emit=2.5),
-        _batch(lamps, 0.25, lin("#fff2d6"), 1.0, emit=4.0),
-        _batch(poles, 0.12, lin("#e8c08a") * 0.6, 0.8, emit=1.0),
-        _batch(PV, 0.10, lin("#e8b870") * 0.35, 0.7, emit=0.8),
-        _batch(ED, 0.16, lin(GOLD2) * 0.8, 0.9, emit=1.6),
-    ], [
-        _batch(E, 0.22, lin(GOLD), 0.8, emit=1.2, birth=np.full(len(E), 69.4), fade=0.6, flash=3.0),
+        _batch(lamps, 0.9, lin("#ffcf8a"), 1.0, kind="soft", emit=2.0),
+        _batch(lamps, 0.25, lin("#fff2d6"), 1.0, emit=3.5),
+        Po.batch(0.08, lin("#e8c08a") * 0.6, 0.8, 1.0),
+        P.batch(0.06, lin("#e8b870") * 0.35, 0.6, 0.9),
+        Ed.batch(0.12, lin(GOLD2) * 0.8, 0.9, 1.4),
+    ]
+    gold = [
+        E.batch(0.14, lin(GOLD), 0.8, 1.3, birth=np.full(len(E.a), 69.4), fade=0.6, flash=3.0),
         _batch(W, 0.36, lin("#ffe6b0"), 0.8, kind="soft", emit=1.2, birth=np.full(len(W), 69.6), fade=0.8, flash=2.0),
     ]
+    return [b for b in dim if b is not None], gold
 
 
+# =========================================================================================================
 # The church of light: the main temple in Korea (from Anthony's photographs), modelled in light.
-# A tall curved front of blue glass (fifteen storeys) banded in white at every floor, a teal glass base that
-# sweeps up toward the right, a stone entrance portal (left of centre) with steps, the tall white ladder blade
-# standing at the left end with its slanted top, short white fins in threes on both edges, a white column at
-# the right edge, a louvred canopy on the roof with a mast, the plain white tower behind, pines in front.
-# No lettering or logos are drawn.
+# A tall gently curved front of deep blue reflective glass (fifteen storeys) ruled by bright white bands at
+# every floor and fine mullions, paler toward the top where it mirrors the sky, with a slow sheen travelling
+# across it; a teal glass base of two storeys whose top sweeps lower toward the left; a white podium; a warm
+# granite entrance portal four storeys tall left of centre (glass and a grid within, a flat canopy, the doors
+# lit warm) with broad steps; the tall white ladder blade at the left end, rising above the roof with its top
+# slanting up to the left; short white fins in threes at both edges; a crisp white column at the right end;
+# a white louvred canopy on the roof following the curve, with a mast; the plain white tower behind; Korean
+# pines in front. No lettering or logos are drawn (their places stay glass or stone).
+# Only what is seen from the front half (+z) is drawn: every view of it in the film is from there.
+# =========================================================================================================
 NF, FH = 15, 3.6                    # storeys and storey height (metres)
-CH_HT = NF * FH                     # 54 m
+CH_HT = NF * FH                     # 54 m of glass
+CH_Y0 = SUMMIT + 2.3                # the ground floor stands on the white podium (the top of the choir steps)
 CH_W2 = 28.0                        # half the width of the curved front
 CH_SAG = 5.0                        # how far the middle of the front bulges forward
 CH_RC = (CH_W2 ** 2 + CH_SAG ** 2) / (2.0 * CH_SAG)
 CH_DEPTH = 22.0
 PORTAL_X = -5.6                     # the entrance portal stands left of centre, as on the real building
+PORTAL_W2 = 5.4                     # its half width
+PORTAL_H = 4.0 * FH + 1.2           # four storeys and a little
+PILLAR = 1.3                        # the granite frame's width
 
 
 def front_z(x):
@@ -112,420 +208,295 @@ def _arc_pts(y, step, x0=-CH_W2, x1=CH_W2, out=0.0):
 def _base_top(x):
     """Top of the teal glass base: two storeys on the right, sweeping down toward the left end."""
     u = np.clip((np.asarray(x) + CH_W2) / (2 * CH_W2), 0.0, 1.0)
-    return SUMMIT + FH * (0.9 + 1.1 * np.sin(0.5 * np.pi * u) ** 0.7)
+    return CH_Y0 + FH * (0.95 + 1.05 * np.sin(0.5 * np.pi * u) ** 0.8)
+
+
+def _in_portal(x, y):
+    return (abs(x - PORTAL_X) < PORTAL_W2 + 0.2) and (y < CH_Y0 + PORTAL_H)
+
+
+def _sky_in_glass(x, y):
+    """How much bright sky and cloud the glass mirrors at (x, y): soft cloud shapes, stronger higher up."""
+    h = np.clip((y - CH_Y0) / CH_HT, 0.0, 1.0)
+    c = (0.5 + 0.5 * np.sin(0.13 * x + 0.21 * y + 0.7) * np.sin(0.061 * x - 0.11 * y + 2.1)
+         + 0.25 * np.sin(0.31 * x - 0.05 * y + 4.0))
+    return np.clip(0.15 + 0.85 * h ** 1.3, 0.0, 1.0), np.clip(c, 0.0, 1.0) * (0.3 + 0.7 * h)
+
+
+def _glass_color(x, y):
+    """Deep blue low down, paler crystal blue toward the top where it mirrors the sky, with soft clouds."""
+    h, cl = _sky_in_glass(x, y)
+    h, cl = np.asarray(h)[:, None], np.asarray(cl)[:, None]
+    deep, mid, pale, cloud = lin("#16319e"), lin("#3170ea"), lin("#b4d4ff"), lin("#eef4ff")
+    c = np.where(h < 0.45, deep + (mid - deep) * (h / 0.45), mid + (pale - mid) * ((h - 0.45) / 0.55))
+    cl = cl * cl * (3.0 - 2.0 * cl)
+    return c + (cloud - c) * 0.5 * cl
 
 
 def _church():
     r = np.random.default_rng(13)
-    y0 = SUMMIT
-    zb = FACADE_Z - CH_SAG - CH_DEPTH           # the back face
+    y0, top = CH_Y0, CH_Y0 + CH_HT
     zs = FACADE_Z - CH_SAG                      # where the sides meet the front
-    lines, white, glass, gcol, stone, warm, green, trunk = [], [], [], [], [], [], [], []
-    # -- the floor bands, all round (bright white on the front)
+    zb = zs - CH_DEPTH                          # the back face
+    glass, teal, pglass, warm = _Ribbons(), _Ribbons(), _Ribbons(), _Ribbons()
+    bands, stoneR, plinth = _Ribbons(), _Ribbons(), _Ribbons()
+    mull, white, fine, stone, side, tower = _Lines(), _Lines(), _Lines(), _Lines(), _Lines(), _Lines()
+    BW = 1.4                                    # mullion bay
+
+    # -- the curved glass: one soft vertical band per bay, coloured by height (sky reflection), the place u
+    # runs diagonally so a slow sheen sweeps across the whole front
+    for x in np.arange(-CH_W2 + BW / 2, CH_W2, BW):
+        z = float(front_z(x)) - 0.05
+        bt = float(_base_top(x))
+        inside = abs(x - PORTAL_X) < PORTAL_W2 - PILLAR + 0.2
+        under = abs(x - PORTAL_X) < PORTAL_W2 + 0.3
+        ys = np.linspace(y0 + PORTAL_H if under else bt, top, 40)
+        P = np.stack([np.full(len(ys), x), ys, np.full(len(ys), z)], 1)
+        glass.add(P, 2.1, _glass_color(np.full(len(ys), x), ys), 0.62, u=x * 0.85 + (ys - y0) * 0.55)
+        if not under:
+            ys = np.linspace(y0 + 0.1, bt, 6)
+            P = np.stack([np.full(len(ys), x), ys, np.full(len(ys), z)], 1)
+            k = (ys - y0) / (2 * FH)
+            col = lin("#2fb8a8")[None, :] * (0.8 + 0.25 * k[:, None]) + lin("#9ff0e0")[None, :] * 0.12
+            teal.add(P, 2.1, col, 0.42, u=x * 0.85 + (ys - y0) * 0.55)
+        elif inside:
+            # within the portal: lighter aqua glass behind the granite frame (above the doors)
+            ys = np.linspace(y0 + 5.0, y0 + PORTAL_H - PILLAR, 10)
+            P = np.stack([np.full(len(ys), x), ys, np.full(len(ys), z + 0.3)], 1)
+            pglass.add(P, 2.0, lin("#58b8e0") * 0.9 + lin("#d8f0ff") * 0.1, 0.55)
+    # mullions (fine, pale): they rule the glass into narrow panes
+    for x in np.arange(-CH_W2 + BW, CH_W2 - 0.1, BW):
+        z = float(front_z(x)) + 0.04
+        ya = y0 + PORTAL_H if abs(x - PORTAL_X) < PORTAL_W2 + 0.1 else y0 + 0.2
+        mull.add((x, ya, z), (x, top, z))
+    # -- the white floor bands across the whole curved front (crisp, evenly ruled), and the sweep line where
+    # the teal base meets the blue
     for k in range(NF + 1):
-        y = y0 + k * FH + (1.2 if k == 0 else 0.0)
-        white.append(_arc_pts(y, 0.07, out=0.08))
-        for sx in (-CH_W2, CH_W2):
-            lines.append(_seg((sx, y, zs), (sx, y, zb), 0.12))
-        lines.append(_seg((-CH_W2, y, zb), (CH_W2, y, zb), 0.2))
-    # -- mullions on the curved front and the sides
-    for x in np.arange(-CH_W2, CH_W2 + 0.01, 1.4):
-        z = float(front_z(x))
-        lines.append(_seg((x, y0 + 1.2, z + 0.05), (x, y0 + CH_HT, z + 0.05), 0.11))
-    for sx in (-CH_W2, CH_W2):
-        for z in np.arange(zb, zs + 0.01, 1.4):
-            lines.append(_seg((sx, y0 + 1.2, z), (sx, y0 + CH_HT, z), 0.16))
-    # -- the glass: blue panes, teal at the base, a few panes lit warm from within
-    for k in range(NF):
-        for x in np.arange(-CH_W2 + 0.7, CH_W2, 1.4):
-            for sub in range(3):
-                px = x + r.uniform(-0.55, 0.55)
-                py = y0 + k * FH + 0.4 + r.uniform(0.0, FH - 0.6)
-                if py < y0 + 1.2:
-                    continue
-                glass.append((px, py, float(front_z(px)) - 0.02))
-                teal = py < _base_top(px)
-                hi = (py - y0) / CH_HT
-                c = lin("#4fd8c8") if teal else lin("#3f7cff") * (0.75 + 0.5 * hi) + lin("#a8c8ff") * 0.25 * hi
-                if not teal and r.random() < 0.07:
-                    c = lin("#ffd590")
-                gcol.append(c)
-    # the line where the teal base meets the blue (the sweep)
-    xs = np.linspace(-CH_W2, CH_W2, 500)
-    white.append(np.stack([xs, _base_top(xs), front_z(xs) + 0.09], 1))
-    # side glass (fewer: seen at an angle)
-    for sx in (-CH_W2, CH_W2):
-        for k in range(NF):
-            for z in np.arange(zb + 0.7, zs, 1.4):
-                py = y0 + k * FH + r.uniform(0.6, FH - 0.4)
-                glass.append((sx + 0.02 * np.sign(sx), py, z + r.uniform(-0.5, 0.5)))
-                gcol.append(lin("#3f6fe0") * 0.8)
-    # -- the white podium along the foot
-    white.append(_arc_pts(y0 + 0.6, 0.12, out=0.4))
-    white.append(_arc_pts(y0 + 0.05, 0.12, out=0.6))
-    # -- the white column at the right edge (and a slimmer one at the left end of the glass)
-    for dx in (0.0, 0.5, 1.0):
-        white.append(_seg((CH_W2 + dx, y0, zs + 0.3), (CH_W2 + dx, y0 + CH_HT + 2.0, zs + 0.3), 0.07))
-    white.append(_seg((-CH_W2, y0, zs + 0.2), (-CH_W2, y0 + CH_HT, zs + 0.2), 0.07))
-    # -- the tall white ladder blade at the left end, its top slanting up to the left
-    bx0, bx1, bz = -CH_W2 - 7.5, -CH_W2 - 2.0, zs - 1.0
-    top0, top1 = y0 + CH_HT + 14.0, y0 + CH_HT + 4.0
-    for dz in (-0.7, 0.7):
-        white.append(_seg((bx0, y0, bz + dz), (bx0, top0, bz + dz), 0.07))
-        white.append(_seg((bx1, y0, bz + dz), (bx1, top1, bz + dz), 0.07))
-        white.append(_seg((bx0, top0, bz + dz), (bx1, top1, bz + dz), 0.07))
-        white.append(_seg((bx0 + 0.6, y0 + 4.0, bz + dz), (bx0 + 0.6, top0 - 2.0, bz + dz), 0.12))
-        white.append(_seg((bx1 - 0.6, y0 + 4.0, bz + dz), (bx1 - 0.6, top1 - 1.0, bz + dz), 0.12))
+        y = y0 + k * FH
+        P = _arc_pts(y, 0.5, out=0.10)
+        if y < y0 + PORTAL_H:                    # the portal stands proud: the bands pass behind it
+            left = P[P[:, 0] < PORTAL_X - PORTAL_W2]
+            right = P[P[:, 0] > PORTAL_X + PORTAL_W2]
+            for Q in (left, right):
+                bands.add(Q, 0.34 if k else 0.5, lin("#f6f9ff"), 1.0)
+        else:
+            bands.add(P, 0.34 if k < NF else 0.7, lin("#f6f9ff"), 1.0)
+    xs = np.linspace(-CH_W2, CH_W2, 160)
+    xs = xs[(xs < PORTAL_X - PORTAL_W2) | (xs > PORTAL_X + PORTAL_W2)]
+    for seg in np.split(xs, np.where(np.diff(xs) > 1.0)[0] + 1):
+        P = np.stack([seg, _base_top(seg), front_z(seg) + 0.12], 1)
+        bands.add(P, 0.26, lin("#e8fff8"), 0.9)
+    # -- the white podium along the foot (its face; the choir steps stand before its middle)
+    for (xa, xb) in ((-CH_W2 - 9.0, -13.6), (13.6, CH_W2 + 3.0)):
+        P = _arc_pts(SUMMIT + 1.15, 0.6, xa, xb, out=1.4)
+        plinth.add(P, 2.0, lin("#e8eef8"), 0.14)
+        white.poly(_arc_pts(y0 - 0.05, 0.6, xa, xb, out=1.4))
+        fine.poly(_arc_pts(SUMMIT + 0.05, 0.6, xa, xb, out=1.4))
+    white.poly(_arc_pts(y0 - 0.05, 0.6, -13.6, 13.6, out=0.9))
+    # -- the crisp white column at the right end, and the slimmer edge at the left end of the glass
+    edgeL = _Lines()
+    edgeL.add((CH_W2 + 0.5, SUMMIT, zs + 0.3), (CH_W2 + 0.5, top + 2.4, zs + 0.3))
+    edgeL.add((-CH_W2 - 0.2, y0, zs + 0.2), (-CH_W2 - 0.2, top, zs + 0.2))
+    # -- the tall white ladder blade at the left end: two posts and rungs, its top slanting up to the left
+    bx0, bx1, bz = -CH_W2 - 7.2, -CH_W2 - 2.2, zs - 0.6
+    top0, top1 = top + 15.0, top + 5.0
+    blade = _Lines()
+    for dz in (-0.5, 0.5):
+        blade.add((bx0, SUMMIT, bz + dz), (bx0, top0, bz + dz))
+        blade.add((bx1, SUMMIT, bz + dz), (bx1, top1, bz + dz))
+        blade.add((bx0, top0, bz + dz), (bx1, top1, bz + dz))
         for y in np.arange(y0 + 2.0 * FH, top1 - 1.0, 2.0 * FH):
-            white.append(_seg((bx0, y, bz + dz), (bx1, y, bz + dz), 0.07))
-            white.append(_seg((bx0, y + 0.5, bz + dz), (bx1, y + 0.5, bz + dz), 0.09))
-    # the blade's link to the building at each rung
-    for y in np.arange(y0 + 2.0 * FH, top1 - 1.0, 2.0 * FH):
-        white.append(_seg((bx1, y, bz), (-CH_W2, y, bz + 0.6), 0.1))
-    # -- short white fins in threes, standing out from both edges at several storeys
-    for side, floors in ((-1.0, (3, 6, 9, 12)), (1.0, (2, 5, 8, 11, 13))):
+            blade.add((bx0, y, bz + dz), (bx1, y, bz + dz))
+    for y in np.arange(y0 + 2.0 * FH, top1 - 1.0, 2.0 * FH):        # the arms that tie it to the building
+        fine.add((bx1, y, bz), (-CH_W2, y, zs))
+    # -- short white fins in threes standing out from both edges at several storeys
+    fins = _Lines()
+    for sgn, floors in ((-1.0, (3, 7, 11)), (1.0, (2, 5, 8, 11, 13))):
         for f in floors:
             for j in range(3):
-                y = y0 + f * FH + 0.6 + 0.55 * j
-                x0 = side * (CH_W2 - 3.0)
-                x1 = side * (CH_W2 + 2.6)
-                z = float(front_z(x0)) + 0.4
-                white.append(_seg((x0, y, z), (x1, y, z - 0.6), 0.06))
-    # -- the roof: a louvred white canopy following the curve, on posts, and a mast
-    yr = y0 + CH_HT + 3.4
-    white.append(_arc_pts(yr, 0.1, x0=-CH_W2 - 1.0, x1=CH_W2 + 1.0, out=1.2))
-    white.append(_seg((-CH_W2 - 1.0, yr, zb + 3.0), (CH_W2 + 1.0, yr, zb + 3.0), 0.1))
-    for x in np.arange(-CH_W2, CH_W2 + 0.1, 1.1):
-        z = float(front_z(x)) + 1.2
-        white.append(_seg((x, yr, z), (x, yr, zb + 3.0), 0.16))
+                y = y0 + f * FH + 0.7 + 0.75 * j
+                xa, xb = sgn * (CH_W2 - 3.2), sgn * (CH_W2 + 3.2)
+                za = float(front_z(xa)) + 0.35
+                fins.add((xa, y, za), (xb, y, za - 0.9))
+    # -- the roof: a white louvred canopy following the curve, slightly overhanging, on posts, and a mast
+    yr = top + 3.4
+    canopy = _Ribbons()
+    canopy.add(_arc_pts(yr, 0.5, -CH_W2 - 1.2, CH_W2 + 1.2, out=1.6), 0.55, lin("#f6f9ff"), 1.0)
+    canopy.add(_arc_pts(yr - 0.7, 0.5, -CH_W2 - 1.0, CH_W2 + 1.0, out=1.4), 0.25, lin("#f6f9ff"), 0.7)
+    for x in np.arange(-CH_W2 - 0.6, CH_W2 + 0.7, 1.0):
+        z = float(front_z(x)) + 1.6
+        fine.add((x, yr, z), (x, yr - 0.4, zb + 4.0))
     for x in np.arange(-CH_W2, CH_W2 + 0.1, 7.0):
-        z = float(front_z(x)) + 0.6
-        white.append(_seg((x, y0 + CH_HT, z), (x, yr, z), 0.1))
-    lines.append(_seg((-CH_W2, y0 + CH_HT + 1.2, zs), (CH_W2, y0 + CH_HT + 1.2, zs), 0.1))
-    white.append(_seg((4.0, yr, zb + 6.0), (4.0, yr + 9.0, zb + 6.0), 0.06))
-    # -- the stone entrance portal: a tall frame of four storeys standing out from the glass, glass within,
-    # a canopy over the doors, the doors lit warm, steps down to the square
-    pw, ph = 6.2, 4.0 * FH + 0.8
-    pz = float(front_z(PORTAL_X)) + 1.6
-    for dx in np.linspace(-pw, pw, 34):
-        for yy in np.linspace(y0, y0 + ph, 70):
-            edge = abs(abs(dx) - pw) < 1.4 or yy > y0 + ph - 1.6
-            if edge:
-                stone.append((PORTAL_X + dx + r.uniform(-0.1, 0.1), yy + r.uniform(-0.1, 0.1), pz + r.uniform(0, 0.2)))
-    for dx in (-pw, -pw + 1.4, pw - 1.4, pw):
-        lines.append(_seg((PORTAL_X + dx, y0, pz + 0.25), (PORTAL_X + dx, y0 + ph, pz + 0.25), 0.08))
-    lines.append(_seg((PORTAL_X - pw, y0 + ph, pz + 0.25), (PORTAL_X + pw, y0 + ph, pz + 0.25), 0.08))
-    lines.append(_seg((PORTAL_X - pw + 1.4, y0 + ph - 1.6, pz + 0.25), (PORTAL_X + pw - 1.4, y0 + ph - 1.6, pz + 0.25), 0.08))
-    for x in np.arange(PORTAL_X - pw + 1.4, PORTAL_X + pw - 1.3, 1.2):
-        white.append(_seg((x, y0 + 5.2, pz - 0.6), (x, y0 + ph - 1.6, pz - 0.6), 0.1))
-    for y in np.arange(y0 + 5.2, y0 + ph - 1.5, 1.8):
-        white.append(_seg((PORTAL_X - pw + 1.4, y, pz - 0.6), (PORTAL_X + pw - 1.4, y, pz - 0.6), 0.1))
-    white.append(_seg((PORTAL_X - pw + 1.0, y0 + 4.8, pz + 1.6), (PORTAL_X + pw - 1.0, y0 + 4.8, pz + 1.6), 0.06))
-    white.append(_seg((PORTAL_X - pw + 1.0, y0 + 4.8, pz - 0.6), (PORTAL_X - pw + 1.0, y0 + 4.8, pz + 1.6), 0.06))
-    white.append(_seg((PORTAL_X + pw - 1.0, y0 + 4.8, pz - 0.6), (PORTAL_X + pw - 1.0, y0 + 4.8, pz + 1.6), 0.06))
-    for dx in np.linspace(-3.4, 3.4, 30):
-        for yy in np.linspace(y0 + 0.4, y0 + 4.2, 18):
-            warm.append((PORTAL_X + dx, yy, pz - 0.7))
-    # -- the steps where the choir stands (broad white stone steps before the front)
+        z = float(front_z(x)) + 0.8
+        fine.add((x, top, z), (x, yr - 0.7, z))
+    fine.add((-CH_W2 - 1.0, yr - 0.4, zb + 4.0), (CH_W2 + 1.0, yr - 0.4, zb + 4.0))
+    white.add((5.0, yr, zb + 9.0), (5.0, yr + 11.0, zb + 9.0))
+    fine.add((3.6, yr + 7.5, zb + 9.0), (6.4, yr + 7.5, zb + 9.0))
+    # the sides (seen only at an angle): their floor lines and the corner, no back face
+    for sx in (-CH_W2, CH_W2):
+        for k in range(0, NF + 1, 1):
+            side.add((sx, y0 + k * FH, zs), (sx, y0 + k * FH, zb))
+        side.add((sx, y0, zb), (sx, top, zb))
+    # -- the granite entrance portal: a tall frame standing proud of the glass, glass and a grid within, a
+    # flat canopy over the glass doors (lit warm from inside), the steps below it
+    px0, px1 = PORTAL_X - PORTAL_W2, PORTAL_X + PORTAL_W2
+    pz = float(front_z(PORTAL_X)) + 0.45
+    ph = y0 + PORTAL_H
+    sc = lin("#d9b088")
+    for xx in (px0 + PILLAR / 2, px1 - PILLAR / 2):
+        P = np.stack([np.full(12, xx), np.linspace(SUMMIT + 0.2, ph, 12), np.full(12, pz)], 1)
+        stoneR.add(P, PILLAR * 1.25, sc, 0.9)
+    P = np.stack([np.linspace(px0, px1, 12), np.full(12, ph - PILLAR / 2), np.full(12, pz)], 1)
+    stoneR.add(P, PILLAR * 1.25, sc, 0.9)
+    for xx in (px0, px0 + PILLAR, px1 - PILLAR, px1):
+        stone.add((xx, SUMMIT + 0.2, pz + 0.05), (xx, ph if xx in (px0, px1) else ph - PILLAR, pz + 0.05))
+    stone.add((px0, ph, pz + 0.05), (px1, ph, pz + 0.05))
+    stone.add((px0 + PILLAR, ph - PILLAR, pz + 0.05), (px1 - PILLAR, ph - PILLAR, pz + 0.05))
+    for xx in (px0, px1):                                    # its depth (it stands out from the glass)
+        stone.add((xx, ph, pz), (xx, ph, pz - 1.4))
+    # the grid in the portal's glass
+    gx0, gx1 = px0 + PILLAR + 0.05, px1 - PILLAR - 0.05
+    for xx in np.linspace(gx0, gx1, 7)[1:-1]:
+        fine.add((xx, y0 + 5.2, pz - 0.4), (xx, ph - PILLAR, pz - 0.4))
+    for yy in np.arange(y0 + 5.2, ph - PILLAR - 0.3, 1.8):
+        fine.add((gx0, yy, pz - 0.4), (gx1, yy, pz - 0.4))
+    # the flat canopy over the doors
+    for dz in np.linspace(-0.4, 2.2, 6):
+        white.add((gx0 - 0.3, y0 + 4.8, pz + dz), (gx1 + 0.3, y0 + 4.8, pz + dz))
+    # the glass doors, lit warm from inside
+    for xx in np.arange(gx0 + 0.6, gx1 - 0.3, 1.0):
+        ys = np.linspace(y0 - 1.2, y0 + 4.5, 6)
+        warm.add(np.stack([np.full(6, xx), ys, np.full(6, pz - 0.5)], 1), 1.5,
+                 lin("#ffd8a0"), np.linspace(0.45, 0.2, 6))
+    for xx in np.linspace(gx0, gx1, 6):
+        fine.add((xx, y0 - 1.2, pz - 0.35), (xx, y0 + 4.6, pz - 0.35))
+    # -- the broad white stone steps before the front (the choir stands on them)
     for i, (yy, zz) in enumerate(CHOIR_STEPS):
-        white.append(_seg((-13.0, yy - 0.05, zz + 0.65), (13.0, yy - 0.05, zz + 0.65), 0.12))
-        white.append(_seg((-13.0, yy - 0.6, zz + 0.66), (-13.0, yy - 0.05, zz + 0.66), 0.1))
-        white.append(_seg((13.0, yy - 0.6, zz + 0.66), (13.0, yy - 0.05, zz + 0.66), 0.1))
-    # -- the plain white tower behind, with its window strips and a box on top
-    tx0, tx1, tz1 = -12.0, 15.0, zb - 1.0
-    tz0 = tz1 - 15.0
-    th = CH_HT + 9.0
-    c = _v((tx0 + tx1) / 2.0, y0, (tz0 + tz1) / 2.0)
-    lines.append(_box(c, tx1 - tx0, tz1 - tz0, th, 0.2))
-    for k in range(1, 17):
-        y = y0 + k * th / 17.0
-        lines.append(_seg((tx0, y, tz1 + 0.05), (tx1, y, tz1 + 0.05), 0.35))
-        for z in (tz0, tz1):
-            pass
-        for sx in (tx0, tx1):
-            lines.append(_seg((sx, y, tz0), (sx, y, tz1), 0.35))
-    lines.append(_box(_v(c[0] + 3.0, y0 + th, c[2]), 9.0, 7.0, 5.0, 0.2))
-    # -- pines of light before the building (gently curving trunks, flat layered crowns)
-    for (px, pzz, h, lean) in ((-21.0, FACADE_Z + 9.0, 9.0, -0.25), (-15.0, FACADE_Z + 12.0, 7.0, 0.2),
-                               (20.0, FACADE_Z + 8.0, 10.0, 0.3), (25.0, FACADE_Z + 12.0, 7.5, -0.2)):
-        u = np.linspace(0.0, 1.0, 120)
-        tx = px + lean * h * u ** 1.5 + 0.4 * np.sin(3.0 * u)
-        trunk.append(np.stack([tx, y0 + h * u, np.full(120, pzz)], 1))
-        for j, (fu, fr) in enumerate(((0.55, 2.2), (0.72, 2.8), (0.86, 2.4), (1.0, 1.7))):
-            cx = px + lean * h * fu ** 1.5 + (1.2 if j % 2 else -1.0)
-            n = 260
+        white.add((-13.0, yy - 0.05, zz + 0.65), (13.0, yy - 0.05, zz + 0.65))
+        fine.add((-13.0, yy - 0.6, zz + 0.66), (13.0, yy - 0.6, zz + 0.66))
+        fine.add((-13.0, yy - 0.6, zz + 0.66), (-13.0, yy - 0.05, zz + 0.66))
+        fine.add((13.0, yy - 0.6, zz + 0.66), (13.0, yy - 0.05, zz + 0.66))
+        plinth.add([(-13.0, yy - 0.32, zz + 0.66), (13.0, yy - 0.32, zz + 0.66)], 0.5, lin("#e8eef8"), 0.07)
+    # -- the plain white tower behind (right of middle), its window strips and a box on top; drawn where it
+    # shows above the church
+    tx0, tx1 = 1.0, 23.0
+    tz1 = zb - 2.0
+    tz0 = tz1 - 16.0
+    th = top + 17.0
+    ty = top + 3.0
+    for (xx, zz) in ((tx0, tz1), (tx1, tz1), (tx0, tz0), (tx1, tz0)):
+        tower.add((xx, ty, zz), (xx, th, zz))
+    for (a, b) in (((tx0, tz1), (tx1, tz1)), ((tx0, tz0), (tx1, tz0)), ((tx0, tz0), (tx0, tz1)), ((tx1, tz0), (tx1, tz1))):
+        tower.add((a[0], th, a[1]), (b[0], th, b[1]))
+    strips = _Ribbons()
+    for yy in np.arange(ty + 1.2, th - 0.8, 3.0):
+        strips.add([(tx0 + 0.6, yy, tz1 + 0.05), (tx1 - 0.6, yy, tz1 + 0.05)], 0.9, lin("#cfe0ff"), 0.30)
+        strips.add([(tx1 + 0.05, yy, tz1 - 0.6), (tx1 + 0.05, yy, tz0 + 0.6)], 0.9, lin("#cfe0ff"), 0.18)
+    _box_lines(tower, _v(tx0 + 8.0, th, (tz0 + tz1) / 2.0), 8.0, 7.0, 4.0)
+    # -- Korean pines of light before the building (curving trunks, flat layered crowns), clear of the
+    # orchestra on the square
+    trunk = _Ribbons()
+    green = []
+    for (px, pzz, h, lean) in ((-33.0, FACADE_Z + 6.0, 10.0, -0.30), (-25.5, FACADE_Z + 9.0, 7.5, 0.25),
+                               (26.0, FACADE_Z + 8.0, 9.5, 0.30), (33.0, FACADE_Z + 5.0, 7.0, -0.25)):
+        u = np.linspace(0.0, 1.0, 16)
+        tx = px + lean * h * u ** 1.5 + 0.35 * np.sin(4.0 * u)
+        trunk.add(np.stack([tx, SUMMIT + h * u, np.full(16, pzz)], 1), 0.45 * (1.0 - 0.6 * u), lin("#d8a874"), 0.8)
+        for j, (fu, fr) in enumerate(((0.52, 2.0), (0.68, 2.9), (0.84, 2.6), (1.0, 1.8))):
+            cx = px + lean * h * fu ** 1.5 + (1.3 if j % 2 else -1.1) * np.sign(lean)
+            n = 320
             a = r.random(n) * 2 * np.pi
             rr = fr * np.sqrt(r.random(n))
-            green.append(np.stack([cx + rr * np.cos(a), y0 + h * fu + 0.5 * r.random(n), pzz + 0.7 * rr * np.sin(a)], 1))
-    W = np.concatenate(white)
-    L = np.concatenate(lines)
-    G = np.asarray(glass)
-    GC = np.asarray(gcol)
-    S = np.asarray(stone)
-    WM = np.asarray(warm)
+            green.append(np.stack([cx + rr * np.cos(a), SUMMIT + h * fu + 0.45 * r.random(n) * (1 - rr / fr),
+                                   pzz + 0.8 * rr * np.sin(a)], 1))
     GR = np.concatenate(green)
-    TR = np.concatenate(trunk)
-    return [
-        _batch(W, 0.07, lin("#f4f8ff"), 1.0, emit=2.0, twinkle=0.15),
-        _batch(L, 0.06, lin("#cfdcff") * 0.8, 0.9, emit=1.3),
-        _batch(G, 0.85, GC, 0.33, kind="soft", emit=1.2),
-        _batch(G[::2], 0.05, GC[::2] * 1.4, 0.8, emit=1.8, twinkle=0.4),
-        _batch(S, 0.18, lin("#e8c49a"), 0.6, kind="soft", emit=1.2),
-        _batch(WM, 0.35, lin("#ffcf80"), 0.5, kind="soft", emit=2.0),
-        _batch(GR, 0.12, lin("#9fe0a0") * 0.7 + lin(GOLD) * 0.3, 0.8, emit=1.4, twinkle=0.5),
-        _batch(TR, 0.08, lin("#e0b080"), 0.9, emit=1.3),
+    WH = lin("#f6f9ff")
+    soft = [
+        glass.batch(1.0, pulse=(4.0, 7.0, 0.55, 120.0)),
+        teal.batch(1.0, pulse=(4.0, 7.0, 0.45, 120.0)),
+        pglass.batch(1.0),
+        warm.batch(1.6),
+        stoneR.batch(1.0),
+        plinth.batch(1.2),
+        bands.batch(2.4),
+        canopy.batch(2.2),
+        strips.batch(1.0),
+        trunk.batch(1.2),
+        _batch(GR, 0.16, lin("#7fd8a0") * 0.6 + lin(GOLD) * 0.25, 0.7, emit=1.3, twinkle=0.4),
     ]
+    crisp = [
+        mull.batch(0.06, lin("#bcd4ff"), 0.5, 1.2),
+        white.batch(0.22, WH, 1.0, 2.0),
+        edgeL.batch(0.9, WH, 1.0, 2.2),
+        blade.batch(0.55, WH, 1.0, 2.2),
+        fins.batch(0.28, WH, 1.0, 2.2),
+        fine.batch(0.08, lin("#e6eeff"), 0.8, 1.4),
+        stone.batch(0.10, lin("#ffe2bc"), 0.9, 1.6),
+        side.batch(0.12, lin("#cfdcff") * 0.8, 0.6, 1.2),
+        tower.batch(0.25, lin("#eef3ff"), 0.85, 1.6),
+    ]
+    soft = [b for b in soft if b is not None]
+    crisp = [b for b in crisp if b is not None]
+    for b in soft + crisp:
+        b["fog"] = 0.35                         # keep its blue and white clear from far away
+        b["reflect"] = False                    # no stray copy of it in the sea below the mountain
+    return soft, crisp
 
 
 def church_glow(t):
-    """The church of light: soft in the waiting dawn, shining out on "to the great Church of God!"."""
-    return (0.45 + 0.2 * _sc(20.0, 24.0, t) + 0.8 * hit_pulse(t, [HIT["stream"]], fall=2.5)
-            + 0.5 * _sc(70.0, 75.0, t) + 0.2 * beat_pulse(t))
+    """The church of light: softly glowing in the waiting dawn (a little lower under the opening title),
+    awake as the paths reach out (0:11.9), shining out on "to the great Church of God!" (1:14.56)."""
+    return (0.5 + 0.25 * _sc(10.4, 13.0, t) + 0.1 * _sc(16.0, 21.5, t)
+            + 0.8 * hit_pulse(t, [HIT["stream"]], fall=2.5) + 0.25 * hit_pulse(t, [HIT["father"]], fall=1.2)
+            + 0.4 * _sc(70.0, 75.0, t) + 0.12 * beat_pulse(t))
 
 
 class Church:
+    """The church's glass, stone and warm light (part "soft") or its white bands, frames, blade and fins (part
+    "crisp"). In the close shots of the choir and orchestra the white lines step back further than the glass,
+    so the bright bands never cut across the gold choir or the words."""
     static = True
+    _parts = None
 
-    def __init__(self):
-        self.b = _church()
+    def __init__(self, part):
+        if Church._parts is None:
+            Church._parts = _church()
+        self.part = part
+        self.b = Church._parts[0 if part == "soft" else 1]
 
     def sample(self, t):
         return self.b
 
     def gain(self, t):
-        return city_k(t) * church_glow(t)
+        k = city_k(t) * church_glow(t)
+        if stage_view(t):
+            k *= 0.75 if self.part == "soft" else 0.4
+        return k
 
 
-def _paths():
-    """Paths of light reaching out from the waiting city toward every horizon (from 0:11.9)."""
-    out, birth = [], []
-    for k, az in enumerate(np.radians([0, 40, 80, 125, 165, 200, 240, 280, 320])):
-        d = _v(np.sin(az), 0.0, np.cos(az))
+class _Body:
+    """The church's body as a silhouette only (never drawn as light): it hides the sky glow and the city
+    behind the glass, so the front reads as a solid building of glowing blue glass, not a wire frame."""
+    static = True
+
+    def __init__(self):
         pts = []
-        p = ZC + d * R_TOP + _v(0, SUMMIT, 0)
-        q = ZC + d * (tier_r(0) + 6.0) + _v(0, 0.3, 0)
-        pts.append(_seg(p, q, 0.45))
-        p = q
-        pts.append(_seg(p, p + d * 2400.0, 0.9))
+        for y in np.arange(SUMMIT + 0.4, CH_Y0 + CH_HT + 0.2, 1.0):
+            x = np.arange(-CH_W2 + 0.4, CH_W2 - 0.3, 1.0)
+            pts.append(np.stack([x, np.full(len(x), y), front_z(x) - 1.6], 1))
         P = np.concatenate(pts)
-        L = np.concatenate([[0.0], np.cumsum(np.linalg.norm(np.diff(P, axis=0), axis=1))])
-        out.append(P)
-        birth.append(11.9 + 1.2 * k / 9.0 + L / 70.0)
-    P, B = np.concatenate(out), np.concatenate(birth)
-    return [_batch(P, 0.30, lin(GOLD2), 0.85, emit=2.0, birth=B, fade=0.35, flash=3.0, twinkle=0.4)]
-
-
-# The church of light: the main temple in Korea (from Anthony's photographs), modelled in light.
-# A tall curved front of blue glass (fifteen storeys) banded in white at every floor, a teal glass base that
-# sweeps up toward the right, a stone entrance portal (left of centre) with steps, the tall white ladder blade
-# standing at the left end with its slanted top, short white fins in threes on both edges, a white column at
-# the right edge, a louvred canopy on the roof with a mast, the plain white tower behind, pines in front.
-# No lettering or logos are drawn.
-NF, FH = 15, 3.6                    # storeys and storey height (metres)
-CH_HT = NF * FH                     # 54 m
-CH_W2 = 28.0                        # half the width of the curved front
-CH_SAG = 5.0                        # how far the middle of the front bulges forward
-CH_RC = (CH_W2 ** 2 + CH_SAG ** 2) / (2.0 * CH_SAG)
-CH_DEPTH = 22.0
-PORTAL_X = -5.6                     # the entrance portal stands left of centre, as on the real building
-
-
-def front_z(x):
-    """z of the curved glass front at x (its middle is FACADE_Z)."""
-    return FACADE_Z - CH_RC + np.sqrt(np.maximum(CH_RC ** 2 - np.asarray(x, np.float64) ** 2, 0.0))
-
-
-def _arc_pts(y, step, x0=-CH_W2, x1=CH_W2, out=0.0):
-    n = max(int((x1 - x0) / step), 2)
-    x = np.linspace(x0, x1, n)
-    return np.stack([x, np.full(n, y), front_z(x) + out], 1)
-
-
-def _base_top(x):
-    """Top of the teal glass base: two storeys on the right, sweeping down toward the left end."""
-    u = np.clip((np.asarray(x) + CH_W2) / (2 * CH_W2), 0.0, 1.0)
-    return SUMMIT + FH * (0.9 + 1.1 * np.sin(0.5 * np.pi * u) ** 0.7)
-
-
-def _church():
-    r = np.random.default_rng(13)
-    y0 = SUMMIT
-    zb = FACADE_Z - CH_SAG - CH_DEPTH           # the back face
-    zs = FACADE_Z - CH_SAG                      # where the sides meet the front
-    lines, white, glass, gcol, stone, warm, green, trunk = [], [], [], [], [], [], [], []
-    # -- the floor bands, all round (bright white on the front)
-    for k in range(NF + 1):
-        y = y0 + k * FH + (1.2 if k == 0 else 0.0)
-        white.append(_arc_pts(y, 0.07, out=0.08))
-        for sx in (-CH_W2, CH_W2):
-            lines.append(_seg((sx, y, zs), (sx, y, zb), 0.12))
-        lines.append(_seg((-CH_W2, y, zb), (CH_W2, y, zb), 0.2))
-    # -- mullions on the curved front and the sides
-    for x in np.arange(-CH_W2, CH_W2 + 0.01, 1.4):
-        z = float(front_z(x))
-        lines.append(_seg((x, y0 + 1.2, z + 0.05), (x, y0 + CH_HT, z + 0.05), 0.11))
-    for sx in (-CH_W2, CH_W2):
-        for z in np.arange(zb, zs + 0.01, 1.4):
-            lines.append(_seg((sx, y0 + 1.2, z), (sx, y0 + CH_HT, z), 0.16))
-    # -- the glass: blue panes, teal at the base, a few panes lit warm from within
-    for k in range(NF):
-        for x in np.arange(-CH_W2 + 0.7, CH_W2, 1.4):
-            for sub in range(3):
-                px = x + r.uniform(-0.55, 0.55)
-                py = y0 + k * FH + 0.4 + r.uniform(0.0, FH - 0.6)
-                if py < y0 + 1.2:
-                    continue
-                glass.append((px, py, float(front_z(px)) - 0.02))
-                teal = py < _base_top(px)
-                hi = (py - y0) / CH_HT
-                c = lin("#4fd8c8") if teal else lin("#3f7cff") * (0.75 + 0.5 * hi) + lin("#a8c8ff") * 0.25 * hi
-                if not teal and r.random() < 0.07:
-                    c = lin("#ffd590")
-                gcol.append(c)
-    # the line where the teal base meets the blue (the sweep)
-    xs = np.linspace(-CH_W2, CH_W2, 500)
-    white.append(np.stack([xs, _base_top(xs), front_z(xs) + 0.09], 1))
-    # side glass (fewer: seen at an angle)
-    for sx in (-CH_W2, CH_W2):
-        for k in range(NF):
-            for z in np.arange(zb + 0.7, zs, 1.4):
-                py = y0 + k * FH + r.uniform(0.6, FH - 0.4)
-                glass.append((sx + 0.02 * np.sign(sx), py, z + r.uniform(-0.5, 0.5)))
-                gcol.append(lin("#3f6fe0") * 0.8)
-    # -- the white podium along the foot
-    white.append(_arc_pts(y0 + 0.6, 0.12, out=0.4))
-    white.append(_arc_pts(y0 + 0.05, 0.12, out=0.6))
-    # -- the white column at the right edge (and a slimmer one at the left end of the glass)
-    for dx in (0.0, 0.5, 1.0):
-        white.append(_seg((CH_W2 + dx, y0, zs + 0.3), (CH_W2 + dx, y0 + CH_HT + 2.0, zs + 0.3), 0.07))
-    white.append(_seg((-CH_W2, y0, zs + 0.2), (-CH_W2, y0 + CH_HT, zs + 0.2), 0.07))
-    # -- the tall white ladder blade at the left end, its top slanting up to the left
-    bx0, bx1, bz = -CH_W2 - 7.5, -CH_W2 - 2.0, zs - 1.0
-    top0, top1 = y0 + CH_HT + 14.0, y0 + CH_HT + 4.0
-    for dz in (-0.7, 0.7):
-        white.append(_seg((bx0, y0, bz + dz), (bx0, top0, bz + dz), 0.07))
-        white.append(_seg((bx1, y0, bz + dz), (bx1, top1, bz + dz), 0.07))
-        white.append(_seg((bx0, top0, bz + dz), (bx1, top1, bz + dz), 0.07))
-        white.append(_seg((bx0 + 0.6, y0 + 4.0, bz + dz), (bx0 + 0.6, top0 - 2.0, bz + dz), 0.12))
-        white.append(_seg((bx1 - 0.6, y0 + 4.0, bz + dz), (bx1 - 0.6, top1 - 1.0, bz + dz), 0.12))
-        for y in np.arange(y0 + 2.0 * FH, top1 - 1.0, 2.0 * FH):
-            white.append(_seg((bx0, y, bz + dz), (bx1, y, bz + dz), 0.07))
-            white.append(_seg((bx0, y + 0.5, bz + dz), (bx1, y + 0.5, bz + dz), 0.09))
-    # the blade's link to the building at each rung
-    for y in np.arange(y0 + 2.0 * FH, top1 - 1.0, 2.0 * FH):
-        white.append(_seg((bx1, y, bz), (-CH_W2, y, bz + 0.6), 0.1))
-    # -- short white fins in threes, standing out from both edges at several storeys
-    for side, floors in ((-1.0, (3, 6, 9, 12)), (1.0, (2, 5, 8, 11, 13))):
-        for f in floors:
-            for j in range(3):
-                y = y0 + f * FH + 0.6 + 0.55 * j
-                x0 = side * (CH_W2 - 3.0)
-                x1 = side * (CH_W2 + 2.6)
-                z = float(front_z(x0)) + 0.4
-                white.append(_seg((x0, y, z), (x1, y, z - 0.6), 0.06))
-    # -- the roof: a louvred white canopy following the curve, on posts, and a mast
-    yr = y0 + CH_HT + 3.4
-    white.append(_arc_pts(yr, 0.1, x0=-CH_W2 - 1.0, x1=CH_W2 + 1.0, out=1.2))
-    white.append(_seg((-CH_W2 - 1.0, yr, zb + 3.0), (CH_W2 + 1.0, yr, zb + 3.0), 0.1))
-    for x in np.arange(-CH_W2, CH_W2 + 0.1, 1.1):
-        z = float(front_z(x)) + 1.2
-        white.append(_seg((x, yr, z), (x, yr, zb + 3.0), 0.16))
-    for x in np.arange(-CH_W2, CH_W2 + 0.1, 7.0):
-        z = float(front_z(x)) + 0.6
-        white.append(_seg((x, y0 + CH_HT, z), (x, yr, z), 0.1))
-    lines.append(_seg((-CH_W2, y0 + CH_HT + 1.2, zs), (CH_W2, y0 + CH_HT + 1.2, zs), 0.1))
-    white.append(_seg((4.0, yr, zb + 6.0), (4.0, yr + 9.0, zb + 6.0), 0.06))
-    # -- the stone entrance portal: a tall frame of four storeys standing out from the glass, glass within,
-    # a canopy over the doors, the doors lit warm, steps down to the square
-    pw, ph = 6.2, 4.0 * FH + 0.8
-    pz = float(front_z(PORTAL_X)) + 1.6
-    for dx in np.linspace(-pw, pw, 34):
-        for yy in np.linspace(y0, y0 + ph, 70):
-            edge = abs(abs(dx) - pw) < 1.4 or yy > y0 + ph - 1.6
-            if edge:
-                stone.append((PORTAL_X + dx + r.uniform(-0.1, 0.1), yy + r.uniform(-0.1, 0.1), pz + r.uniform(0, 0.2)))
-    for dx in (-pw, -pw + 1.4, pw - 1.4, pw):
-        lines.append(_seg((PORTAL_X + dx, y0, pz + 0.25), (PORTAL_X + dx, y0 + ph, pz + 0.25), 0.08))
-    lines.append(_seg((PORTAL_X - pw, y0 + ph, pz + 0.25), (PORTAL_X + pw, y0 + ph, pz + 0.25), 0.08))
-    lines.append(_seg((PORTAL_X - pw + 1.4, y0 + ph - 1.6, pz + 0.25), (PORTAL_X + pw - 1.4, y0 + ph - 1.6, pz + 0.25), 0.08))
-    for x in np.arange(PORTAL_X - pw + 1.4, PORTAL_X + pw - 1.3, 1.2):
-        white.append(_seg((x, y0 + 5.2, pz - 0.6), (x, y0 + ph - 1.6, pz - 0.6), 0.1))
-    for y in np.arange(y0 + 5.2, y0 + ph - 1.5, 1.8):
-        white.append(_seg((PORTAL_X - pw + 1.4, y, pz - 0.6), (PORTAL_X + pw - 1.4, y, pz - 0.6), 0.1))
-    white.append(_seg((PORTAL_X - pw + 1.0, y0 + 4.8, pz + 1.6), (PORTAL_X + pw - 1.0, y0 + 4.8, pz + 1.6), 0.06))
-    white.append(_seg((PORTAL_X - pw + 1.0, y0 + 4.8, pz - 0.6), (PORTAL_X - pw + 1.0, y0 + 4.8, pz + 1.6), 0.06))
-    white.append(_seg((PORTAL_X + pw - 1.0, y0 + 4.8, pz - 0.6), (PORTAL_X + pw - 1.0, y0 + 4.8, pz + 1.6), 0.06))
-    for dx in np.linspace(-3.4, 3.4, 30):
-        for yy in np.linspace(y0 + 0.4, y0 + 4.2, 18):
-            warm.append((PORTAL_X + dx, yy, pz - 0.7))
-    # -- the steps where the choir stands (broad white stone steps before the front)
-    for i, (yy, zz) in enumerate(CHOIR_STEPS):
-        white.append(_seg((-13.0, yy - 0.05, zz + 0.65), (13.0, yy - 0.05, zz + 0.65), 0.12))
-        white.append(_seg((-13.0, yy - 0.6, zz + 0.66), (-13.0, yy - 0.05, zz + 0.66), 0.1))
-        white.append(_seg((13.0, yy - 0.6, zz + 0.66), (13.0, yy - 0.05, zz + 0.66), 0.1))
-    # -- the plain white tower behind, with its window strips and a box on top
-    tx0, tx1, tz1 = -12.0, 15.0, zb - 1.0
-    tz0 = tz1 - 15.0
-    th = CH_HT + 9.0
-    c = _v((tx0 + tx1) / 2.0, y0, (tz0 + tz1) / 2.0)
-    lines.append(_box(c, tx1 - tx0, tz1 - tz0, th, 0.2))
-    for k in range(1, 17):
-        y = y0 + k * th / 17.0
-        lines.append(_seg((tx0, y, tz1 + 0.05), (tx1, y, tz1 + 0.05), 0.35))
-        for z in (tz0, tz1):
-            pass
-        for sx in (tx0, tx1):
-            lines.append(_seg((sx, y, tz0), (sx, y, tz1), 0.35))
-    lines.append(_box(_v(c[0] + 3.0, y0 + th, c[2]), 9.0, 7.0, 5.0, 0.2))
-    # -- pines of light before the building (gently curving trunks, flat layered crowns)
-    for (px, pzz, h, lean) in ((-21.0, FACADE_Z + 9.0, 9.0, -0.25), (-15.0, FACADE_Z + 12.0, 7.0, 0.2),
-                               (20.0, FACADE_Z + 8.0, 10.0, 0.3), (25.0, FACADE_Z + 12.0, 7.5, -0.2)):
-        u = np.linspace(0.0, 1.0, 120)
-        tx = px + lean * h * u ** 1.5 + 0.4 * np.sin(3.0 * u)
-        trunk.append(np.stack([tx, y0 + h * u, np.full(120, pzz)], 1))
-        for j, (fu, fr) in enumerate(((0.55, 2.2), (0.72, 2.8), (0.86, 2.4), (1.0, 1.7))):
-            cx = px + lean * h * fu ** 1.5 + (1.2 if j % 2 else -1.0)
-            n = 260
-            a = r.random(n) * 2 * np.pi
-            rr = fr * np.sqrt(r.random(n))
-            green.append(np.stack([cx + rr * np.cos(a), y0 + h * fu + 0.5 * r.random(n), pzz + 0.7 * rr * np.sin(a)], 1))
-    W = np.concatenate(white)
-    L = np.concatenate(lines)
-    G = np.asarray(glass)
-    GC = np.asarray(gcol)
-    S = np.asarray(stone)
-    WM = np.asarray(warm)
-    GR = np.concatenate(green)
-    TR = np.concatenate(trunk)
-    return [
-        _batch(W, 0.07, lin("#f4f8ff"), 1.0, emit=2.0, twinkle=0.15),
-        _batch(L, 0.06, lin("#cfdcff") * 0.8, 0.9, emit=1.3),
-        _batch(G, 0.85, GC, 0.33, kind="soft", emit=1.2),
-        _batch(G[::2], 0.05, GC[::2] * 1.4, 0.8, emit=1.8, twinkle=0.4),
-        _batch(S, 0.18, lin("#e8c49a"), 0.6, kind="soft", emit=1.2),
-        _batch(WM, 0.35, lin("#ffcf80"), 0.5, kind="soft", emit=2.0),
-        _batch(GR, 0.12, lin("#9fe0a0") * 0.7 + lin(GOLD) * 0.3, 0.8, emit=1.4, twinkle=0.5),
-        _batch(TR, 0.08, lin("#e0b080"), 0.9, emit=1.3),
-    ]
-
-
-def church_glow(t):
-    """The church of light: soft in the waiting dawn, shining out on "to the great Church of God!"."""
-    return (0.45 + 0.2 * _sc(20.0, 24.0, t) + 0.8 * hit_pulse(t, [HIT["stream"]], fall=2.5)
-            + 0.5 * _sc(70.0, 75.0, t) + 0.2 * beat_pulse(t))
-
-
-class Church:
-    static = True
-
-    def __init__(self):
-        self.b = _church()
+        self.b = [dict(pos=P, size=1.1, color=(0.0, 0.0, 0.0), alpha=1.0, kind="soft", reflect=False)]
 
     def sample(self, t):
         return self.b
 
     def gain(self, t):
-        return city_k(t) * church_glow(t)
+        return 0.0
+
+
+def body_k(t):
+    """How strongly the church's body hides what is behind it."""
+    return 0.9 * local_k(t)
 
 
 def _paths():
@@ -551,5 +522,7 @@ def add(scene):
     cdim, cgold = _city()
     scene.add("city dim", Static(cdim, lambda t: city_k(t) * (0.8 + 0.3 * beat_pulse(t) * _sc(20, 22, t))))
     scene.add("city gold", Static(cgold, city_k))
-    scene.add("church", Church())
+    scene.add("church", Church("soft"))
+    scene.add("church lines", Church("crisp"))
+    scene.add("church body", _Body(), mask=Mask("dark", strength=body_k, grow=0.6, soft=2.5), reflect=False)
     scene.add("paths", Static(_paths(), lambda t: local_k(t) * (1.0 - 0.75 * _sc(40.0, 42.0, t))))
