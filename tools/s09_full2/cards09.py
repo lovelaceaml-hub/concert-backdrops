@@ -142,7 +142,7 @@ class Cards09(titles.Titles):
         jobs = [(name, S.frag_alpha(name, t)) for name in S.FRAG_TEXT]
         jobs = [(n, a) for n, a in jobs if a > 0.002]
         r0, r1 = S.ENC_READ
-        ea = float(S._ss(r0 - 0.4, r0 + 0.2, t) * (1.0 - S._ss(r1 + 0.5, r1 + 1.4, t)))
+        ea = float(S._ss(r0 - 0.4, r0 + 0.2, t) * (1.0 - S._ss(r1 + 1.0, r1 + 2.1, t)))
         if ea > 0.002:
             jobs.append(("__enc__", ea))
         if jobs:

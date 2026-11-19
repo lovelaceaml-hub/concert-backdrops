@@ -69,10 +69,10 @@ Where the brief and the Drive files differ: DESIGN-SYSTEM 4 still says 30 fps an
 |---|---|---|
 | Opening readable from frame 0, held at least 7 s: logo, HEALING CONCERT, title lines (second italic), song title large, R3 lockup style, on calm sky | yes | cards09.py; stills 0:00 and 0:07.5 (readable to 7.6 s) |
 | Signature top left from the end of the opening to the last frame, never flashing, same lines as all songs | yes | windows 7.9 s to the end, one slow fade in; stills from 0:10 to 4:50.98 |
-| Date line capitals at least about 22 px at 1080p | yes | Jost 600 at 34 px: capitals about 24 px |
+| Date line capitals at least about 22 px at 1080p | yes | Jost 600 at 34 px: capitals about 24 px; fix 1: the last line (HEALING CONCERT · LAS VEGAS) navy, readable on every sky |
 | Nothing covers the signature; 40 px from any expression box | yes | lights dimmed in its corner; still 3:02 (label clear of it by more than 100 px) |
 | 3 to 6 short fragments, each its own effect, never with an expression, never full lyrics | yes | 4 fragments: pen, gather, forge stitch, net weave |
-| Navy #1f2a6b with soft white glow on bright skies; warm white on darker skies | yes | fragments and lockups navy on the bright skies; the Encouragement keeps the R3 cream phrase over the deeper teal twilight |
+| Navy #1f2a6b with soft white glow on bright skies; warm white on darker skies | yes | fragments, lockups, the Encouragement (fix 1) and all four signature lines navy on the bright skies |
 | No end card (song 11 only) | yes | ends on its calm hold with the signature |
 
 ## Never list
@@ -80,14 +80,14 @@ Where the brief and the Drive files differ: DESIGN-SYSTEM 4 still says 30 fps an
 | Rule | Yes/No | Where |
 |---|---|---|
 | 1 No white-outs | yes | brightest frame mean 174 of 255; the cast net's soft white blob (3:49) found in the motion strip and fixed; render check |
-| 2 No white text on pale skies | yes, one note | fragments navy; the Encouragement cream phrase sits on a mid teal sky with a violet halo (weak point listed) |
-| 3 Nothing crossing a reading box or the signature | yes | code Clear wrapper; stills |
+| 2 No white text on pale skies | yes | fix 1: the Encouragement is navy and stays navy until its letters break up; motion strip 3:08 to 3:10.4 |
+| 3 Nothing crossing a reading box or the signature | yes | code Clear wrapper; fix 1: the pair now stands below the Encouragement box; stills 3:02 to 3:06 |
 | 4 One expression at a time | yes | only one |
 | 5 No garbled letters while words form or leave | yes, one note | motion strips: letters assemble from light for about half a second before they settle; no broken letters once readable |
 | 6 No words mirrored in water | yes | reflect=False on all words |
 | 7 No dark, brown, solid or mannequin people; big enough | yes | stills (Encouragement pair about a fifth of the frame height) |
 | 8 No mushy blur, jitter, popping or sliding | yes | motion strip |
-| 9 Bottom third calm | yes | code: lights fade out below about a third of the height, BOTTOM_CALM, people not mirrored, rings small and far out |
+| 9 Bottom third calm | yes, one note | code: lights fade out below about a third of the height, BOTTOM_CALM, people not mirrored, rings small and far out; fix 1: the shore line of grains dimmed to faint and steady; the Encouragement pair's feet reach the top of the bottom third |
 | 10 Calm camera, never frozen | yes | eased camera keys, slow drift |
 | 11 No other logos or watermarks; no realistic faces | yes | only the campaign logo |
 
@@ -103,4 +103,4 @@ Where the brief and the Drive files differ: DESIGN-SYSTEM 4 still says 30 fps an
 
 ## Render checks (after the render)
 
-Stage and review files pass every check (17,460 frames, 291.0 s, 0 black, 0 repeated, signature on every frame after the opening, sync 0 ms at all three hit points). The phone copy has 33 near-repeated frames in the quietest interlude (bitrate limit); see STATUS.md for the file names, SHA-256, length, frame counts, black, frozen and repeated frame checks, signature presence and the sync check at 0:59.5, 2:28.8 and 4:02.
+After fix 1 (2026-11-19): all three files have 17,460 frames, 291.0 s, 0 black frames, the signature on every frame after the opening, and sync 0 ms at all three hit points. Stage and review each have one near-repeated frame pair at 3:38.27 (mean change 0.018 of 255 against the 0.02 limit; invisible; accepted by the coordinator), so verify.py reports ok false. The phone copy has 38 near-repeats from its bitrate limit. Before fix 1: Stage and review files pass every check (17,460 frames, 291.0 s, 0 black, 0 repeated, signature on every frame after the opening, sync 0 ms at all three hit points). The phone copy has 33 near-repeated frames in the quietest interlude (bitrate limit); see STATUS.md for the file names, SHA-256, length, frame counts, black, frozen and repeated frame checks, signature presence and the sync check at 0:59.5, 2:28.8 and 4:02.
