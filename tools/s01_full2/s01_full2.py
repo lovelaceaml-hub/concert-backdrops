@@ -366,7 +366,7 @@ def _lane_words():
     style = {"Arise": dict(color="#e8861a", glow="#8a3806", tint=1.0, bright=.85, halo=1.0),
              "Encouragement": dict(tint=.85, bright=1.0, halo=1.9)}
     return mod.build(camera=_LAYOUT, stars={"Compliment": tuple(homes[COMP]), "Encouragement": tuple(homes[ENC])},
-                     style=style, centre_y=.36, widths={"Compliment": .42, "Encouragement": .54})
+                     style=style, centre_y=.33, widths={"Compliment": .42, "Encouragement": .54})
 
 
 _LANE = _lane_words()
