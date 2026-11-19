@@ -105,7 +105,11 @@ textarea{min-height:44px;resize:vertical}
 </section>
 
 <ol class="sections" id="list"></ol>
-<p class="hint">Requests and decisions save here; I pick them up at each status update.</p>
+<section class="panel" aria-label="Done">
+  <h3>Done and closed</h3>
+  <ul class="items" id="doneList"><li class="empty">Nothing closed yet.</li></ul>
+</section>
+<p class="hint">Requests and decisions save here; I pick them up at each status update. Open items stay in their sections; finished and declined ones move here.</p>
 </main>
 <script>
 // Fallback shown until the live status arrives.
@@ -229,6 +233,8 @@ function setVideo(r, url){
   v.addEventListener("ended", () => { playNext(v); swap(); });
   r.video = v; r.media.append(v);
 }
+const CLOSED = new Set(["done", "declined"]);
+function isOpen(x){ return !CLOSED.has(x.state); }
 function fillList(ul, items, make, emptyText){
   ul.textContent = "";
   if (!items.length) { if (emptyText) ul.append(el("li", "empty", emptyText)); return; }
@@ -246,16 +252,24 @@ function render(){
     r.fill.style.width = p + "%"; r.fill.classList.toggle("done", s.state === "ready"); r.pct.textContent = p + "%";
     r.stateText.textContent = (STATE[s.state] || s.state) + (s.state !== "ready" && s.where ? " on " + s.where : "");
     r.note.textContent = s.note || "";
-    const fs = FINDINGS.filter(f => f.section === i), open = fs.filter(f => f.state === "open").length;
+    const fs = FINDINGS.filter(f => f.section === i && isOpen(f)), open = fs.filter(f => f.state === "open").length;
     r.fbox.hidden = !fs.length; fillList(r.flist, fs, findItem);
     r.fh.textContent = "Findings (" + fs.length + (open ? ", " + open + " waiting for you" : "") + ")";
     if (open && !r.fbox.dataset.seen) { r.fbox.open = true; r.fbox.dataset.seen = "1"; }
-    const rq = REQUESTS.filter(q => q.section === i);
+    const rq = REQUESTS.filter(q => q.section === i && isOpen(q));
     fillList(r.rlist, rq, reqItem, "");
     r.rh.textContent = rq.length ? "Your requests (" + rq.length + ") and request a change" : "Request a change";
   });
-  fillList(document.getElementById("globalReqs"), REQUESTS.filter(q => q.section < 0), reqItem, "");
-  fillList(document.getElementById("globalFinds"), FINDINGS.filter(f => f.section < 0), findItem, "");
+  fillList(document.getElementById("globalReqs"), REQUESTS.filter(q => q.section < 0 && isOpen(q)), reqItem, "");
+  fillList(document.getElementById("globalFinds"), FINDINGS.filter(f => f.section < 0 && isOpen(f)), findItem, "");
+  const where = i => i < 0 ? "Whole film" : (SECTIONS[i] ? SECTIONS[i].name : "");
+  const closed = FINDINGS.filter(f => !isOpen(f)).map(f => ({k: "f", x: f})).concat(REQUESTS.filter(q => !isOpen(q)).map(q => ({k: "r", x: q})))
+    .sort((a, b) => String(b.x.decided || b.x.created).localeCompare(String(a.x.decided || a.x.created)));
+  fillList(document.getElementById("doneList"), closed, c => {
+    const li = c.k === "f" ? findItem(c.x) : reqItem(c.x);
+    li.prepend(el("span", "hint", where(c.x.section)));
+    return li;
+  }, "Nothing closed yet.");
   const total = SECTIONS.reduce((a, s) => a + (s.pct || 0), 0) / Math.max(1, SECTIONS.length);
   document.getElementById("ovTitle").textContent = STATUS.title || "Render";
   document.getElementById("ovFill").style.width = Math.round(total) + "%";
