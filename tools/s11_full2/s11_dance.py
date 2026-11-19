@@ -449,9 +449,9 @@ def _final_rise(u, p0):
     return p0 + _v(-0.6 * u, 26.0 * u * (0.35 + u), 3.0 * u)
 
 
-SKY_HEART_C = _D(30.4, 8.0, 0.5)
-SKY_HEART_S = 3.6
-_HX = _unit(_v(0.25, 0.0, 0.968))           # the heart's plane faces the camera of the "dance_heart" shot
+SKY_HEART_C = _D(29.6, 13.7, 2.1)          # high in the right corner, clear of the phrase (x 0.15 to 0.85)
+SKY_HEART_S = 3.0
+_HX = _unit(_v(0.669, 0.0, 0.744))          # the heart's plane faces the camera of the "dance_heart" shot
 
 
 def _sky_heart_point(s, side):
@@ -517,7 +517,7 @@ def _ripple_times():
         a, b = WINDOWS[name]
         for d in down_times(a - 1.9, b):
             out.append((d, s))
-    out.append((HIT["love"], 1.3))
+    out.append((HIT["love"], 0.9))
     out += [(x, 0.7) for x in STRINGS[:2]]
     return sorted(out)
 
