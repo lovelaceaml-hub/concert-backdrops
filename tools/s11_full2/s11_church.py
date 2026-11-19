@@ -36,18 +36,22 @@ def _shot(i, name, keys, fov=50.0, aperture=0.02, **kw):
 _STEPS_FOCUS = _v(0.0, Y + 2.2, FZ + 3.0)
 _ROOF = _v(0.0, SUMMIT + 2.3 + 54.0 + 4.0, FACADE_Z - 14.0)     # over the middle of the roof canopy
 SHOTS = [
-    # 0:00 the title: a huge starry sky over the mirror sea, Mount Zion and its city far off between two low
-    # walls of cloud of light (a canyon opening onto it), the roof always under the title's last line
-    _shot(0, "city", [(0.0, (-6.0, 10.0, 540.0), (0.0, 290.0, -420.0)),
-                      (0.5, (-2.0, 10.5, 522.0), (0.0, 288.0, -420.0)),
-                      (1.0, (2.0, 10.0, 500.0), (0.0, 262.0, -420.0))], fov=50.0, pace="linear", roll=(-1.5, 1.0)),
-    # 0:11.9 one long banking flight: skimming the mirror sea down the canyon of cloud as comets shoot up out
-    # of the water, a swoop up the front of Zion over the terraces, and down the great avenue to the church
-    _shot(1, "city", [(0.0, (2.0, 9.0, 480.0), (0.0, 120.0, -420.0)),
-                      (0.16, (-14.0, 5.0, 330.0), (0.0, 100.0, -420.0)),
-                      (0.32, (10.0, 5.0, 170.0), (0.0, 100.0, -420.0)),
-                      (0.48, (-4.0, 9.0, 10.0), (0.0, 110.0, -420.0)),
-                      (0.64, (0.0, 42.0, -170.0), (0.0, Y + 40.0, FZ - 13.0)),
+    # 0:00 the title (Anthony, round 6: "a buildup for the intro instead of just starting in front of the church"):
+    # far out over the mirror sea in the dark heavenly night, Zion only a dark line on the horizon under the
+    # title's last line; on the first hit (0:02.32) one light ignites on its summit, and with every beat after
+    # it grows and the city's lights come on round it, ring by ring outward. A slow, steady drift in (the title
+    # stays readable until 0:11.9)
+    _shot(0, "city", [(0.0, (-8.0, 12.0, 1500.0), (0.0, 573.0, -420.0)),
+                      (0.5, (-2.0, 11.5, 1290.0), (0.0, 502.0, -420.0)),
+                      (1.0, (2.0, 11.0, 1080.0), (0.0, 421.0, -420.0))], fov=50.0, pace="linear", roll=(-1.0, 0.8)),
+    # 0:11.9 the second stage of the approach: one long banking flight, skimming the mirror sea down the canyon
+    # of cloud as comets shoot up out of the water, while the church ignites storey by storey on the beats; a
+    # swoop up the front of Zion over the terraces, and down the great avenue to the church
+    _shot(1, "city", [(0.0, (2.0, 9.0, 760.0), (0.0, 140.0, -420.0)),
+                      (0.14, (-14.0, 5.0, 480.0), (0.0, 110.0, -420.0)),
+                      (0.3, (10.0, 5.0, 230.0), (0.0, 100.0, -420.0)),
+                      (0.46, (-4.0, 9.0, 10.0), (0.0, 110.0, -420.0)),
+                      (0.63, (0.0, 42.0, -170.0), (0.0, Y + 40.0, FZ - 13.0)),
                       (0.8, (0.0, Y + 6.0, -300.0), (0.0, Y + 34.0, FZ - 13.0)),
                       (1.0, (0.0, Y + 6.0, FZ + 50.0), (0.0, Y + 34.0, FZ - 13.0))], fov=56.0,
           roll=lambda t: 9.0 * np.sin(1.1 * (t - 11.9)) * (1.0 - _sc(19.0, 21.5, t))),
@@ -113,6 +117,51 @@ SHOTS = [
                              (1.0, (0.0, Y + 76.0, FZ + 64.0), (0.0, Y + 56.0, FZ - 30.0))], fov=56.0, roll=lambda t: 14.0 * _sc(251.7, 254.07, t)),
 ]
 SHOTS = [sh for sh in SHOTS if sh is not None]
+
+
+# =========================================================================================================
+# The intro's build (round 6): light gathers on every beat. _stair climbs one step on each beat between t0
+# and t1 (0 before the first, 1 after the last), each step a quick rise, so the light grows with the music.
+# =========================================================================================================
+def _beats_in(t0, t1):
+    return BEATS[(BEATS >= t0) & (BEATS <= t1)]
+
+
+def _stair(t, t0, t1, rise=0.09):
+    bs = _beats_in(t0, t1)
+    if not len(bs):
+        return _sc(t0, t1, t)
+    return float(np.clip((t - bs) / rise, 0.0, 1.0).sum()) / len(bs)
+
+
+_BB0 = _beats_in(2.4, 11.7)                    # the title's beats: the city's lights come on ring by ring
+
+
+def _born(P, c=None):
+    """A birth time per point: the beat of the title on which it lights, nearest the church first."""
+    c = _v(0.0, 0.0, FACADE_Z - 16.0) if c is None else c
+    P = np.asarray(P, np.float64)
+    d = np.hypot(P[:, 0] - c[0], P[:, 2] - c[2])
+    u = np.clip((d - 20.0) / 75.0, 0.0, 1.0)
+    return _BB0[np.round(u * (len(_BB0) - 1)).astype(int)]
+
+
+def church_reveal(t):
+    """How far the church of light has come out of the night: nothing before the first hit; a ghost of its
+    glass growing on each beat under the title; storey by storey on the beats of the long flight; whole on
+    call 1 (0:21.52)."""
+    if t >= 21.52:
+        return 1.0
+    a = 0.2 * _sc(2.25, 2.45, t) * (0.3 + 0.7 * _stair(t, 2.4, 11.7))
+    b = _stair(t, 12.0, 21.3)
+    return a + (1.0 - a) * b ** 1.2
+
+
+def crown_build(t):
+    """Call 2 to Father's pulse: the church gathers glory beat by beat (0 to 1), released on the pulse."""
+    if t < 31.0 or t > 42.0:
+        return 0.0
+    return _stair(t, 31.2, 40.3) * (1.0 - _sc(40.9, 41.6, t))
 
 
 # =========================================================================================================
@@ -232,16 +281,22 @@ def _city():
     for p in lamps:
         Po.add((p[0], SUMMIT, p[2]), (p[0], SUMMIT + 4.0, p[2]))
     dimk = 0.55
+
+    def mid(L):                                 # the middle of each segment (for its birth)
+        return 0.5 * (np.asarray(L.a) + np.asarray(L.b))
+    # round 6: under the title the city's lights come on beat by beat, ring by ring outward from the church
+    # (each with a little flash as it lights), so the light gathers with the music before the flight in
+    on = dict(fade=0.25, flash=2.5)
     dim = [
-        E.batch(0.10, lin("#f2c27a") * dimk, 0.75, 1.1),
-        Bd.batch(0.08, lin("#fff0d8") * dimk, 0.45, 1.1),
-        _batch(W, 0.30, lin("#ffcf86") * dimk, 0.8, kind="soft", emit=0.9, twinkle=0.2),
-        _batch(D, 0.16, lin("#ffe0a8") * dimk, 0.8, emit=0.8),
-        _batch(lamps, 0.9, lin("#ffcf8a"), 1.0, kind="soft", emit=2.0),
-        _batch(lamps, 0.25, lin("#fff2d6"), 1.0, emit=3.5),
-        Po.batch(0.08, lin("#e8c08a") * 0.6, 0.8, 1.0),
-        P.batch(0.06, lin("#e8b870") * 0.35, 0.6, 0.9),
-        Ed.batch(0.12, lin(GOLD2) * 0.8, 0.9, 1.4),
+        E.batch(0.10, lin("#f2c27a") * dimk, 0.75, 1.1, birth=_born(mid(E)), **on),
+        Bd.batch(0.08, lin("#fff0d8") * dimk, 0.45, 1.1, birth=_born(mid(Bd)), **on),
+        _batch(W, 0.30, lin("#ffcf86") * dimk, 0.8, kind="soft", emit=0.9, twinkle=0.2, birth=_born(W), **on),
+        _batch(D, 0.16, lin("#ffe0a8") * dimk, 0.8, emit=0.8, birth=_born(D), **on),
+        _batch(lamps, 0.9, lin("#ffcf8a"), 1.0, kind="soft", emit=2.0, birth=_born(lamps), **on),
+        _batch(lamps, 0.25, lin("#fff2d6"), 1.0, emit=3.5, birth=_born(lamps), **on),
+        Po.batch(0.08, lin("#e8c08a") * 0.6, 0.8, 1.0, birth=_born(mid(Po)), **on),
+        P.batch(0.06, lin("#e8b870") * 0.35, 0.6, 0.9, birth=np.full(len(P.a), _BB0[-1]), fade=1.5),
+        Ed.batch(0.12, lin(GOLD2) * 0.8, 0.9, 1.4, birth=_born(mid(Ed)), **on),
     ]
     gold = [
         E.batch(0.14, lin(GOLD), 0.8, 1.3, birth=np.full(len(E.a), 69.4), fade=0.6, flash=3.0),

@@ -105,7 +105,19 @@ SHOTS = [
 ]
 
 
-FILL_T = [64.2, 64.2, 64.2, 65.94, 65.94, 69.4, 69.4]     # "being fulfilled": the terraces fill with gold
+FILL_T = [64.2, 64.2, 64.2, 65.94, 65.94, 69.4, 69.4]     # "being fulfilled": the terraces fill with light
+
+# Round 6 (Anthony: "so many of the same colors that it's hard to see and distinguish things since it's all gold"):
+# each part of the city has its own palette. Gold only for the great stairways (and the crown).
+PEARL = "#f6f0ff"          # the walls and the gates: pearl white
+PEARL_LO = "#5a3f8c"       # the foot of each wall: deep violet (the light falls from the parapet down)
+PEARL_RAIL = "#eef2ff"     # the parapets and their lamps: cool white
+GLASS = ("#8fd0ff", "#5fe3cf", "#a9b8ff")       # the towers: sky blue, teal, periwinkle glass
+GLASS_EDGE = ("#e6f6ff", "#dcfff8", "#eef0ff")
+LEAF = ("#5fd27f", "#8fe6a0", "#3fbf8f")        # the gardens
+BLOSSOM = ("#ffb3c4", "#c9b3ff", "#fff2fa", "#ff9fc8")
+DOME = ("#ffb3c4", "#c9b3ff", "#9fd8ff")         # the pavilions' domes: rose, lavender, sky
+NICHE = ("#ff9fc8", "#9fd8ff", "#c9b3ff")        # the lit niches: stained glass
 FRONT = np.radians(118.0)          # the side of the mountain the cameras see (azimuth from +z): full detail
 STAIRS_AZ = np.radians([0.0, -36.0, 36.0, -72.0, 72.0])    # the great stairways (azimuth from +z)
 
@@ -139,7 +151,7 @@ def _mountain():
     face, face_c, face_a, face_k, spark = [], [], [], [], []
     par, par_k, pil_a, pil_b, niche, tread, trees, tree_c = [], [], [], [], [], [], [], []
     post_a, post_b, lamp = [], [], []
-    hi, lo = lin("#ffd79a"), lin("#7a3f6a")
+    hi, lo = lin(PEARL), lin(PEARL_LO)
     for k in range(N_TIER):
         R0, y = tier_r(k), tier_y(k)
         y0 = tier_y(k - 1) if k > 0 else 0.0
