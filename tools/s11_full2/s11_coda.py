@@ -12,7 +12,7 @@ import numpy as np
 from songs.s11_full2 import *  # noqa: F401,F403
 import songs.s11_full2 as _CORE  # noqa: E402  (the camera, for f19)
 from songs.s11_stage import Instruments, ORCH_P, Players  # noqa: E402
-from songs.s11_zion import WaveCrowd, mx, wave_u  # noqa: E402  (the waves of raised arms; the music map)
+from songs.s11_zion import WaveCrowd, mx, reading, wave_u  # noqa: E402  (the waves of raised arms; the music map)
 
 Y, FZ, G = SUMMIT, FACADE_Z, GLOBE_C
 
@@ -360,6 +360,99 @@ def _coda_clouds():
         c[1] = 2.0
         out.append(CloudBank(c, size=(420.0, 170.0, 160.0), puffs=34, seed=110 + i, gain=g_rise, bright=0.9))
     return out
+
+
+class EpicSun:
+    """(Round 8, Anthony: "the sun needs to be way more epic looking") the coda's sunrise (3:19.6 on, over Zion) as a
+    huge radiant sun on the core's sun direction: a blazing disc, white-gold at its heart; a layered corona in gold,
+    rose and lavender that breathes on the beats; long rays, long and short in turn, turning slowly and reaching
+    further on the brass and the kicks; and a band of light breaking along the horizon. Nothing of it crosses the
+    words: while a phrase reads, whatever falls in its band of the frame fades (the disc keeps low by the horizon)."""
+    wants_camera = True
+    D = 3000.0
+
+    def __init__(self):
+        r = np.random.default_rng(203)
+        n = 1400
+        rr = np.sqrt(r.random(n))
+        a = r.uniform(0, 2 * np.pi, n)
+        self.disc = np.stack([rr * np.cos(a), rr * np.sin(a)], 1)
+        self.disc_c = lin("#fff6e0") * (1.0 - rr[:, None] ** 2) + lin("#ffc070") * rr[:, None] ** 2
+        self.ring = [(1.5, "#ffe2a0", 0.10), (2.3, "#ffb0a0", 0.07), (3.4, "#d8b0ff", 0.05), (5.0, "#ffd0e8", 0.035)]
+        m = 260
+        a = np.linspace(0, 2 * np.pi, m, endpoint=False)
+        self.cs = np.stack([np.cos(a), np.sin(a)], 1)
+        self.jit = r.uniform(0.85, 1.15, m)
+        self.nray = 28
+        self.ray_len = np.where(np.arange(self.nray) % 2 == 0, 16.0, 8.5) * r.uniform(0.85, 1.15, self.nray)
+        self.ray_ph = r.random(self.nray)
+        self.hz = r.normal(0.0, 1.0, (900, 2))
+
+    def k(self, t):
+        if globe_view(t) or stage_view(t) or local_k(t) <= 0.0 or not (199.6 <= t < 224.03):
+            return 0.0
+        return _sc(199.6, 201.73, t) * (1.0 - _sc(223.4, 224.03, t))
+
+    def sample(self, t, cam=None):
+        k = self.k(t)
+        if k <= 0.0 or cam is None:
+            return None
+        import songs.s11_light as L
+        e = np.asarray(cam.pos, np.float64)
+        d = _dir(L.sun_az(t), L.sun_el(t))
+        c = e + self.D * d
+        rgt, up, _f = cam.basis()
+        # the sun's own axes in the sky (right along the horizon, up toward the zenith)
+        sx = _unit(np.cross(d, _v(0.0, 1.0, 0.0)) * -1.0)
+        sy = _unit(np.cross(sx, d))
+        R = self.D * np.tan(np.radians(2.4))                   # the disc: about 5 degrees across
+        kick = hit_pulse(t, KICKS, rise=0.02, fall=0.45)
+        slam = hit_pulse(t, [SLAM3], rise=0.02, fall=0.6)
+        beat = beat_pulse(t)
+        swell = 1.0 + 0.25 * beat + 0.4 * kick + mx(t, brass=0.5)
+        rd = reading(t)
+
+        def guard(P):
+            """Fade what falls in the words' band (the middle of the frame) while a phrase reads."""
+            if rd <= 0.0:
+                return np.ones(len(P))
+            xy, z = cam.project(P)
+            band = _ss(0.24, 0.32, xy[:, 1]) * (1.0 - _ss(0.72, 0.8, xy[:, 1]))
+            return 1.0 - 0.85 * rd * band * (z > 0.0)
+        out = []
+        P = c + R * (self.disc[:, :1] * sx + self.disc[:, 1:] * sy)
+        out.append(dict(pos=P, size=R * 0.22, color=self.disc_c, alpha=k * guard(P) ** 0.5, emit=6.0 + 3.0 * slam,
+                        kind="soft", fog=False, dof=0.0, reflect=False))
+        out.append(dict(pos=c[None], size=R * 3.2, color=lin("#ffd9a0"), alpha=np.array([0.35 * k * swell]),
+                        emit=2.5, kind="soft", fog=False, dof=0.0, reflect=False))
+        for i, (f, col, a0) in enumerate(self.ring):        # the corona
+            rr = R * f * (1.0 + 0.06 * np.sin(2.0 * t + i) + 0.08 * beat) * self.jit
+            P = c + rr[:, None] * (self.cs[:, :1] * sx + self.cs[:, 1:] * sy)
+            out.append(dict(pos=P, size=R * (0.5 + 0.35 * f), color=lin(col), alpha=3.0 * a0 * k * swell * guard(P),
+                            emit=2.2, kind="soft", fog=False, dof=0.0, reflect=False))
+        # the rays: long and short in turn, turning slowly, reaching further on the brass and the kicks
+        u = np.linspace(0.0, 1.0, 70)
+        for j in range(self.nray):
+            ang = 2 * np.pi * j / self.nray + 0.03 * t + 0.02 * np.sin(1.3 * t + 6.0 * self.ray_ph[j])
+            ln = self.ray_len[j] * (0.8 + 0.35 * swell + 0.6 * slam)
+            rr = R * (1.1 + ln * u)
+            dv = np.cos(ang) * sx + np.sin(ang) * sy
+            P = c + rr[:, None] * dv[None, :]
+            a = k * (1.0 - u) ** 1.6 * (0.55 + 0.45 * np.sin(np.pi * self.ray_ph[j] + 0.7 * t) ** 2)
+            a = a * (0.6 if np.sin(ang) > 0.0 else 1.0)              # the upward rays a little softer
+            g = guard(P)
+            out.append(dict(pos=P[:-1], pos2=P[1:], size=R * (0.05 + 0.03 * u[:-1]), color=lin("#fff0cc"),
+                            alpha=np.minimum(0.9 * a[:-1] * g[:-1], 1.0), alpha2=np.minimum(0.9 * a[1:] * g[1:], 1.0),
+                            emit=2.6 + 1.5 * slam, kind="line", fog=False, dof=0.0, reflect=False))
+            out.append(dict(pos=P[::3], size=R * 0.35, color=lin("#ffd9a8"), alpha=0.10 * a[::3] * g[::3],
+                            emit=1.5, kind="soft", fog=False, dof=0.0, reflect=False))
+        # light breaking along the horizon on either side of the sun
+        hz = self.hz
+        P = c + R * (hz[:, :1] * 14.0 * sx + hz[:, 1:] * 0.35 * sy) - R * 0.8 * sy
+        w = np.exp(-np.abs(hz[:, 0]) / 1.4)
+        out.append(dict(pos=P, size=R * 0.9, color=lin("#ffc890") * 0.9 + lin("#ff9ab0") * 0.1,
+                        alpha=0.18 * k * w * swell * guard(P), emit=1.8, kind="soft", fog=False, dof=0.0, reflect=False))
+        return out
 
 
 class GlobeComets:
@@ -923,6 +1016,7 @@ def add(scene):
     _quiet_horizon_in_sky(scene)
     scene.add("rising hearts", RisingHearts())
     scene.add("horizon", Horizon())
+    scene.add("epic sun", EpicSun(), reflect=False)
     # the orchestra on clouds of light round the rising sun
     scene.add("clouds", Clouds())
     # (round 8, Anthony: "the orchestra is playing but also bowing down. Do not have them bow") the stage's own
