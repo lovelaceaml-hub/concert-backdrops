@@ -11,7 +11,7 @@ import numpy as np
 
 from songs.s11_full2 import *  # noqa: F401,F403
 from songs.s11_stage import Instruments, ORCH_P  # noqa: E402
-from songs.s11_zion import WaveCrowd, wave_u  # noqa: E402  (the waves of raised arms)
+from songs.s11_zion import WaveCrowd, mx, wave_u  # noqa: E402  (the waves of raised arms; the music map)
 
 Y, FZ, G = SUMMIT, FACADE_Z, GLOBE_C
 
@@ -559,11 +559,11 @@ def _music_gain(t):
 
 
 def sky_gain(t):
-    return sky_k(t) * _music_gain(t)
+    return sky_k(t) * _music_gain(t) * (1.0 + mx(t, strings=0.25, brass=0.2))    # (round 8) the players glow as they play
 
 
 def summit_gain(t):
-    return summit_k(t) * _music_gain(t)
+    return summit_k(t) * _music_gain(t) * (1.0 + mx(t, choir=0.3))             # (round 8) everyone shines with the choir
 
 
 def summit_k(t):

@@ -22,7 +22,7 @@ The story (125.92 to 162.3, with cut-ins of the church and the choir owned by ot
 import numpy as np
 
 from songs.s11_full2 import *  # noqa: F401,F403
-from songs.s11_zion import WaveCrowd  # noqa: E402  (the waves of raised arms)
+from songs.s11_zion import WaveCrowd, mx  # noqa: E402  (the waves of raised arms; the music map)
 
 Y, FZ, G = SUMMIT, FACADE_Z, GLOBE_C
 
@@ -198,7 +198,7 @@ def glow(t):
 
 
 def crowd_k(t):
-    return proc_k(t) * glow(t)
+    return proc_k(t) * glow(t) * (1.0 + mx(t, choir=0.3, strings=0.15))     # (round 8) they glow with the choir
 
 
 # ---------------------------------------------------------------------------------------------------------
@@ -337,6 +337,7 @@ class MotherLight:
         held = _sc(HALT, HALT + 1.0, t)
         g = gather_k(t)
         pulse = (1.0 + 0.8 * hit_pulse(t, hits, fall=0.6) + 0.12 * (1.0 - held) * beat_pulse(t)
+                 + mx(t, strings=0.18, choir=0.12)                  # (round 8) her light breathes with the music
                  + 0.08 * held * np.sin(2.0 * np.pi * 0.45 * t) + 1.0 * g)
         s = self.s
         ang = 2 * np.pi * s[:, 0] + 0.35 * t * (0.5 + s[:, 1])
@@ -876,7 +877,8 @@ class MarchBeat:
             P[:, 1] = 0.04
             col = cr.tint[ii] * 0.6 + lin(WHITE)[None, :] * 0.4
             sd = self.seed[ii % len(self.seed)]
-            out.append(dict(pos=P, size=0.09 + 0.05 * (1.0 - land), color=col, alpha=0.9 * land * k, emit=3.0,
+            kk = k * (1.0 + mx(t, kick=0.6))                          # (round 8) the steps land harder on the kick
+            out.append(dict(pos=P, size=0.09 + 0.05 * (1.0 - land), color=col, alpha=min(0.9 * land * kk, 1.0), emit=3.0,
                             kind="spark", seed=sd, reflect=False))
             out.append(dict(pos=P, size=0.5 + 0.5 * (1.0 - land), color=col, alpha=0.10 * land * k, emit=1.6,
                             kind="soft", reflect=False))

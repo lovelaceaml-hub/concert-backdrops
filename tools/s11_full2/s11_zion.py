@@ -14,6 +14,8 @@ terraces mirror in the sea, so the mountain stands on the water instead of doubl
 The nations: countless people of light on the terraces (far ones a glitter of tiny standing figures, near ones,
 where the camera climbs past them, true figures), filling tier by tier at each "standing firm" climb.
 """
+import sys
+
 import numpy as np
 
 from p3d.api import Mask
@@ -674,6 +676,7 @@ class Streams:
         g = grow_k(t)
         spread = 0.6 + 3.4 * _ss(0.3, 1.0, g)      # on the sea the rivers widen as more people come
         foot, head, alpha, idx, sides, fwd = [], [], [], [], [], []
+        shim = mx(t, strings=1.2, swell=0.6)
         for i, (L, P) in enumerate(self.paths):
             sel = np.where((self.sa == i) & (self.q < g))[0]
             if len(sel) == 0:
@@ -689,9 +692,11 @@ class Streams:
             head.append(p + np.stack([np.zeros(len(sel)), 1.55 * self.h[sel] + bob, np.zeros(len(sel))], 1))
             sides.append(np.stack([np.cos(a), np.zeros(len(sel)), -np.sin(a)], 1))
             fwd.append(-np.stack([np.sin(a), np.zeros(len(sel)), np.cos(a)], 1))
-            # each newcomer fades in as the river fills (no pop)
+            # each newcomer fades in as the river fills (no pop); (round 8) with the strings a shimmer runs along
+            # the river toward Zion, a band of brighter walkers after another
             alpha.append(_ss(0.0, 60.0, d) * (1.0 - _ss(L[-1] - 10.0, L[-1], d))
-                         * np.clip((g - self.q[sel]) / 0.03, 0.0, 1.0))
+                         * np.clip((g - self.q[sel]) / 0.03, 0.0, 1.0)
+                         * (1.0 + shim * (0.5 + 0.5 * np.sin(0.05 * d - 5.0 * t)) ** 4))
             idx.append(sel)
         if not idx:
             return None
@@ -1346,6 +1351,18 @@ def reading(t):
     return v
 
 
+def mx(t, **w):
+    """(Round 8, Anthony: "way more effects consistently happening to match each different sound in the song")
+    a weighted sum of the music map's instruments at t (names as in s11_music_fx: pulse, kick, bass, timp,
+    strings, swell, brass, choir, high, low), calmer while a phrase reads so nothing flares across the words.
+    The map is read lazily (s11_music_fx loads after this file); 0 when it is missing."""
+    m = sys.modules.get("songs.s11_music_fx")
+    if m is None or not m.fx_on():
+        return 0.0
+    v = sum(float(k) * float(getattr(m, "fx_" + n)(t)) for n, k in w.items())
+    return v * (1.0 - 0.65 * reading(t))
+
+
 def glow_k(t):
     """The mountain's light follows the music: brighter as it grows; calmer behind a phrase."""
     return local_k(t) * (0.78 + 0.32 * intensity(t)) * (1.0 - 0.28 * reading(t))
@@ -1353,12 +1370,14 @@ def glow_k(t):
 
 def edge_k(t):
     """The terrace edges pulse on every beat (strongly when the music is strong)."""
-    return local_k(t) * (not stage_view(t)) * intensity(t) * beat_pulse(t, 0.12)
+    return local_k(t) * (not stage_view(t)) * (intensity(t) * beat_pulse(t, 0.12) + mx(t, kick=0.7))
 
 
 def crowd_k(t):
-    """The nations breathe with the music: brighter with it, a lift on every beat."""
-    return nations_k(t) * (0.75 + 0.35 * intensity(t)) * (1.0 + 0.3 * intensity(t) * beat_pulse(t, 0.12))
+    """The nations breathe with the music: brighter with it, a lift on every beat, (round 8) their light rising
+    with the choir."""
+    return (nations_k(t) * (0.75 + 0.35 * intensity(t)) * (1.0 + 0.3 * intensity(t) * beat_pulse(t, 0.12))
+            * (1.0 + mx(t, choir=0.35)))
 
 
 def _flare_k(c):
@@ -1570,7 +1589,7 @@ def add(scene):
     # (round 7: from afar Zion read pearl white) the walls step back a little as the people fill the terraces, so
     # the nine colours of the people read against them in the wide views
     scene.add("zion walls", Static(walls, lambda t: glow_k(t) * form_k(t) * (1.0 - 0.28 * grow_k(t))
-                                   * (1.0 - 0.4 * _win(t, 161.55, 162.95, 0.15, 0.25))))
+                                   * (1.0 - 0.4 * _win(t, 161.55, 162.95, 0.15, 0.25)) * (1.0 + mx(t, low=0.18))))
     scene.add("zion dim", Static(dim, glow_k))
     scene.add("zion gold", Static(gold, glow_k))
     # round 6: the city grows section by section, and the rivers of people stream to it
@@ -1579,9 +1598,12 @@ def add(scene):
     # (round 8) in the fly-in to the church of light (2:41.7) Zion's main gate stood right behind the church's
     # outline on the same axis, both white, and the two arches merged: the gates step back for that flight
     fly = (lambda t: 1.0 - 0.88 * _win(t, 161.55, 162.95, 0.15, 0.25))
-    scene.add("zion gates", Static(gates, lambda t: calm(t) * fly(t)))
-    scene.add("zion gardens", Static(gardens, calm))
-    scene.add("zion towers", Static(towers, lambda t: calm(t) * (1.0 + 0.25 * intensity(t) * beat_pulse(t, 0.12))))
+    # (round 8) each part of the city answers its own sound: the gates ring on the timpani, the gardens
+    # sparkle with the high voices, the towers flare on the brass
+    scene.add("zion gates", Static(gates, lambda t: calm(t) * fly(t) * (1.0 + mx(t, timp=0.9))))
+    scene.add("zion gardens", Static(gardens, lambda t: calm(t) * (1.0 + mx(t, high=0.45))))
+    scene.add("zion towers", Static(towers, lambda t: calm(t) * (1.0 + 0.25 * intensity(t) * beat_pulse(t, 0.12))
+                                    * (1.0 + mx(t, brass=0.5))))
     scene.add("zion mist", Static(mist, lambda t: local_k(t) * (0.7 + 0.3 * intensity(t))))
     scene.add("zion streams", Streams())
     edges = np.concatenate([_ring(ZC, tier_r(k) + 0.1, tier_y(k) + 1.0, 1.4) for k in range(N_TIER)])
