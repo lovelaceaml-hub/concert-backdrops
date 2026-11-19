@@ -411,6 +411,7 @@ class EpicSun:
         sx = _unit(np.cross(d, _v(0.0, 1.0, 0.0)) * -1.0)
         sy = _unit(np.cross(sx, d))
         R = self.D * np.tan(np.radians(2.4))                   # the disc: about 5 degrees across
+        R = R * (1.0 - 0.45 * _win(t, 213.5, 219.5, 0.6, 0.6))   # (f35) smaller over the summit at 3:34
         kick = hit_pulse(t, KICKS, rise=0.02, fall=0.45)
         slam = hit_pulse(t, [SLAM3], rise=0.02, fall=0.6)
         beat = beat_pulse(t)
@@ -429,15 +430,18 @@ class EpicSun:
             return np.ones(len(P)) if m is None else m
         out = []
         P = c + R * (self.disc[:, :1] * sx + self.disc[:, 1:] * sy)
-        out.append(dict(pos=P, size=R * 0.22, color=self.disc_c, alpha=k * guard(P) ** 0.5, emit=(6.0 + 3.0 * slam) * qg,
+        # (round 8: 1400 soft points at full alpha piled up to a flat white blob) a disc with its colour: low alpha
+        # per point, white gold at the heart, amber at the rim
+        out.append(dict(pos=P, size=R * 0.16, color=self.disc_c, alpha=0.07 * k * guard(P) ** 0.5,
+                        emit=(2.4 + 1.2 * slam) * (0.5 + 0.5 * qg),
                         kind="soft", fog=False, dof=0.0, reflect=False))
-        out.append(dict(pos=c[None], size=R * 3.2, color=lin("#ffd9a0"), alpha=np.array([0.35 * k * swell * qg]),
+        out.append(dict(pos=c[None], size=R * 1.8, color=lin("#ffc890"), alpha=np.array([0.10 * k * swell * qg]),
                         emit=2.5, kind="soft", fog=False, dof=0.0, reflect=False))
         for i, (f, col, a0) in enumerate(self.ring):        # the corona
             rr = R * f * (1.0 + 0.06 * np.sin(2.0 * t + i) + 0.08 * beat) * self.jit
             P = c + rr[:, None] * (self.cs[:, :1] * sx + self.cs[:, 1:] * sy)
-            out.append(dict(pos=P, size=R * (0.5 + 0.35 * f), color=lin(col), alpha=3.0 * a0 * k * swell * guard(P),
-                            emit=2.2, kind="soft", fog=False, dof=0.0, reflect=False))
+            out.append(dict(pos=P, size=R * (0.3 + 0.2 * f), color=lin(col), alpha=0.35 * a0 * k * swell * guard(P),
+                            emit=1.8, kind="soft", fog=False, dof=0.0, reflect=False))
         # the rays: long and short in turn, turning slowly, reaching further on the brass and the kicks
         u = np.linspace(0.0, 1.0, 70)
         for j in range(self.nray):
@@ -450,16 +454,16 @@ class EpicSun:
             a = a * (0.6 if np.sin(ang) > 0.0 else 1.0)              # the upward rays a little softer
             g = guard(P)
             out.append(dict(pos=P[:-1], pos2=P[1:], size=R * (0.05 + 0.03 * u[:-1]), color=lin("#fff0cc"),
-                            alpha=np.minimum(0.9 * a[:-1] * g[:-1], 1.0), alpha2=np.minimum(0.9 * a[1:] * g[1:], 1.0),
-                            emit=2.6 + 1.5 * slam, kind="line", fog=False, dof=0.0, reflect=False))
-            out.append(dict(pos=P[::3], size=R * 0.35, color=lin("#ffd9a8"), alpha=0.10 * a[::3] * g[::3],
+                            alpha=np.minimum(0.7 * a[:-1] * g[:-1], 1.0), alpha2=np.minimum(0.7 * a[1:] * g[1:], 1.0),
+                            emit=2.0 + 1.2 * slam, kind="line", fog=False, dof=0.0, reflect=False))
+            out.append(dict(pos=P[::3], size=R * 0.25, color=lin("#ffd9a8"), alpha=0.03 * a[::3] * g[::3],
                             emit=1.5, kind="soft", fog=False, dof=0.0, reflect=False))
         # light breaking along the horizon on either side of the sun
         hz = self.hz
         P = c + R * (hz[:, :1] * 14.0 * sx + hz[:, 1:] * 0.35 * sy) - R * 0.8 * sy
         w = np.exp(-np.abs(hz[:, 0]) / 1.4)
         out.append(dict(pos=P, size=R * 0.9, color=lin("#ffc890") * 0.9 + lin("#ff9ab0") * 0.1,
-                        alpha=0.18 * k * w * swell * guard(P), emit=1.8, kind="soft", fog=False, dof=0.0, reflect=False))
+                        alpha=0.05 * k * w * swell * guard(P), emit=1.6, kind="soft", fog=False, dof=0.0, reflect=False))
         return out
 
 
