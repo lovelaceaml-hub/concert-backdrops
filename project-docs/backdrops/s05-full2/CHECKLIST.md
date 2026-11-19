@@ -88,7 +88,19 @@ Every rule of the version 2 brief, yes or no, and where it was checked. Written 
 | No song audio, lyrics, videos or frames in git | yes | git status; outputs outside the repo |
 | No em dash or en dash anywhere | yes | grep of every new file |
 | Branch backdrop2/s05-full from the approved tag; code and docs in the given folders; approved, engine and other songs' files untouched | yes | git diff --stat against the tag |
-| 60 fps 1920x1080 | see results | verify05 |
+| 60 fps 1920x1080 | yes | verify05 (see results) |
 
-## Render results
-(filled in after the render)
+## Render results (verify05.py on the delivered files, 2026-11-19)
+| Check | Result |
+|---|---|
+| Length | stage, review and phone all 174.000 s, 10,440 frames, 60/1 fps; stage and review 1920x1080 yuv420p, phone 1280x720 |
+| Dropped, repeated, frozen frames | 0 identical neighbouring frames; smallest change between frames 0.024 (always gently alive) |
+| Black frames | none (darkest frame mean 185.6/255) |
+| White-out | brightest frame (2:35.85, climax) mean 213/255, only 0.16 percent of pixels near white: a warm gold bloom on a visible scene |
+| Sync, music against the conformed music at the three hits | 53.39 s, 115.74 s, 142.93 s: offset 0.0 ms each |
+| Picture reacting to the music near the hits | best lag -250, -83 and -450 ms (a soft measure: the scene reacts gently to loudness; the scene is driven by the same reference analysis at r = t / K by construction) |
+| Silence after the music | -120 dBFS from 159.4 s |
+| Signature | present from frame 541 (9.0 s) to the last frame, lowest match 0.931 after 10.0 s: never covered, never flashing |
+| First and last frames | first: the whole opening card on the spring sky; last: the calm late afternoon hold with the signature (contact sheet) |
+| Phone file under 25 MB | 23.2 MB |
+| No em or en dash in new files | checked by grep |
