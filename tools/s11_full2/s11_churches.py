@@ -835,37 +835,96 @@ def _base_gain(t):
     return (1.0 - 0.45 * rd) * (0.85 + 0.25 * beat_pulse(t))
 
 
+def _fx(name, t):
+    try:
+        import songs.s11_music_fx as S_MUSIC
+        return float(getattr(S_MUSIC, "fx_" + name)(t))
+    except Exception:
+        return 0.0
+
+
+def _ripple(i, t):
+    """A ring of light running outward from Zion through the churches on each big hit (the three slams and the
+    strongest timpani): 0..1 for church i as the ring's front passes it (about 900 m a second)."""
+    hits = _RIPPLE_HITS()
+    c = CHURCHES[i]
+    r = float(np.hypot(*(c["base"] - ZC)[[0, 2]]))
+    v = 0.0
+    for th, s in hits:
+        dt = t - th
+        if 0.0 <= dt < 4.0:
+            v = max(v, s * float(np.exp(-((r - 900.0 * dt) / 140.0) ** 2)) * (1.0 - dt / 4.0))
+    return v
+
+
+_RH = []
+
+
+def _RIPPLE_HITS():
+    if not _RH:
+        _RH.append(0)
+        hits = [(float(x), 1.0) for x in SLAMS]
+        try:
+            import songs.s11_music_fx as S_MUSIC
+            hits += [(a, 0.6 * s) for a, s in S_MUSIC.timp_hits(0.85)]
+        except Exception:
+            pass
+        _RH.extend(sorted(hits))
+    return _RH[1:]
+
+
 class ChurchLight:
-    """One real church in light: its outline, glass and windows and a soft glow, kept on the graphics card;
-    every point is born at the church's beat, from the ground up over half a second, with a small flash."""
+    """One real church in light, in two parts kept on the graphics card, each with its own life on the music
+    (Anthony: "way more effects ... each different sound"):
+      "frame"   its outline, glass and materials and a soft glow: a pulse on every kick, a flare on the brass for
+                the towers (tall slim churches), and the ring of light that runs out from Zion on the big hits;
+      "win"     its warm windows: they warm up and glow with the choir, and catch the ring too.
+    Every point is born at the church's beat, from the ground up over half a second, with a small flash.
+    All of it eases right down while a phrase reads."""
     static = True
 
-    def __init__(self, i):
+    def __init__(self, i, part):
         c = CHURCHES[i]
-        self.i, self.t0 = i, c["t"]
+        self.i, self.t0, self.part = i, c["t"], part
+        self.tower = c["h"] > 1.15 * max(c["w"], 1.0)
         m, k, st = c["m"], c["k"], c["step"]
-        P = _place(m, c["base"], c["ex"], c["ey"], c["ez"], k)
         role = m["role"]
-        size = np.array([0.85 * st, 0.75 * st, 1.5, 0.95 * st])[role] * k
-        alpha = np.array([0.22, 0.5, 1.0, 0.8])[role]   # outlines quiet: glass, windows, materials lead
-        birth = (self.t0 + 0.5 * m["pos"][:, 1] / m["h"]).astype(np.float32)
+        keep = (role == 2) if part == "win" else (role != 2)
+        P = _place(m, c["base"], c["ex"], c["ey"], c["ez"], k)[keep]
+        size = np.array([0.85 * st, 0.75 * st, 1.5, 0.95 * st])[role[keep]] * k
+        alpha = np.array([0.22, 0.5, 1.0, 0.8])[role[keep]]   # outlines quiet: glass, windows, materials lead
+        birth = (self.t0 + 0.5 * m["pos"][keep, 1] / m["h"]).astype(np.float32)
         fog = (0.6, 0.45, 0.35, 0.25)[c["band"]]
         h = c["h"]
-        G = np.array([c["base"] + _v(0, 0.45 * h, 0), c["base"] + _v(0, 0.08 * h, 0)])
-        self.b = [dict(pos=P, size=size, color=m["col"], alpha=alpha.astype(np.float32), kind="spark", emit=1.8,
-                       birth=birth, fade=0.25, flash=2.0, fog=fog, twinkle=0.2),
-                  dict(pos=G, size=np.array([2.2 * h, 3.4 * h]), color=lin("#a9ccff"),
-                       alpha=np.array([0.035, 0.02], np.float32), kind="soft", emit=1.4,
-                       birth=np.full(2, self.t0 + 0.3, np.float32), fade=0.6, fog=fog)]
+        self.b = []
+        if len(P):
+            self.b.append(dict(pos=P, size=size, color=m["col"][keep], alpha=alpha.astype(np.float32), kind="spark",
+                               emit=1.8, birth=birth, fade=0.25, flash=2.0, fog=fog, twinkle=0.2))
+        if part == "frame":
+            G = np.array([c["base"] + _v(0, 0.45 * h, 0), c["base"] + _v(0, 0.08 * h, 0)])
+            self.b.append(dict(pos=G, size=np.array([2.2 * h, 3.4 * h]), color=lin("#a9ccff"),
+                               alpha=np.array([0.035, 0.02], np.float32), kind="soft", emit=1.4,
+                               birth=np.full(2, self.t0 + 0.3, np.float32), fade=0.6, fog=fog))
 
     def sample(self, t):
-        return self.b
+        return self.b or None
 
     def gain(self, t):
         if t < self.t0 - 0.05:
             return 0.0
         g = _base_gain(t)
-        return g * float(_visible(t)[self.i]) * float(_phrase_guard(t)[self.i]) if g > 0.0 else 0.0
+        if g <= 0.0:
+            return 0.0
+        g *= float(_visible(t)[self.i]) * float(_phrase_guard(t)[self.i])
+        if g <= 0.0:
+            return 0.0
+        rp = _ripple(self.i, t)
+        if self.part == "win":
+            mod = 0.65 + 0.75 * _fx("choir", t) + 0.6 * rp
+        else:
+            mod = 0.85 + 0.35 * _fx("kick", t) + (0.7 * _fx("brass", t) if self.tower else 0.0) + 0.8 * rp
+        calm = 1.0 - 0.8 * _reading(t)
+        return g * (1.0 + (mod - 1.0) * calm)
 
 
 class Ignitions:
@@ -1004,6 +1063,7 @@ def add(scene):
         return
     CHURCHES[:] = _layout()
     for i, c in enumerate(CHURCHES):
-        scene.add(f"church of God {i:02d}", ChurchLight(i))
+        scene.add(f"church of God {i:02d}", ChurchLight(i, "frame"))
+        scene.add(f"church of God {i:02d} windows", ChurchLight(i, "win"))
     scene.add("churches established", Ignitions())
     scene.add("church emblems", Emblems())
