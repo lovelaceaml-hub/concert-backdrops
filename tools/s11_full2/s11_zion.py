@@ -815,7 +815,8 @@ def stream_k(t):
     the dancers' own scenes, nor in the close shots of the choir); they swell with the music."""
     if local_k(t) <= 0.0 or stage_view(t) or t >= LAST_CHORD or _owner(t) in ("proc", "dance"):
         return 0.0
-    return _sc(60.6, 62.0, t) * (0.85 + 0.3 * intensity(t)) * (1.0 + 0.25 * intensity(t) * beat_pulse(t, 0.12))
+    return (_sc(60.6, 62.0, t) * (0.85 + 0.3 * intensity(t)) * (1.0 + 0.25 * intensity(t) * beat_pulse(t, 0.12))
+            * zion_light(t))
 
 
 # Round 7 (Anthony: "The theme should be more and more people going to Zion"): how full the rivers are, section
@@ -1608,9 +1609,35 @@ def mx(t, **w):
     return v * (1.0 - 0.65 * reading(t))
 
 
+# (Round 8, Anthony: "Not everything needs to be so washed out and bright all the time. Key timings should be
+# highlighted. Do not saturate everything. Do not wash out.") Zion rests deep and calm and blazes only on the key
+# moments: (time, how long the light takes to settle, seconds)
+ZION_KEYS = [(82.08, 1.6), (100.26, 1.4), (105.14, 1.4), (109.8, 2.4), (162.86, 1.8), (180.7, 1.4), (184.65, 1.6),
+             (201.73, 2.2), (218.1, 1.4), (224.0, 1.6)]
+ZION_REST = 0.3
+
+
+def zion_light(t):
+    """ZION_REST at rest, 1 on the key moments (a quick swell, then a slow settle); the core's shared
+    light_budget on top when it exists."""
+    v = 0.0
+    for tk, fall in ZION_KEYS:
+        d = t - tk
+        if -0.3 < d < 4.0 * fall:
+            v = max(v, _sc(-0.3, 0.0, d) if d < 0 else float(np.exp(-d / fall)))
+    k = ZION_REST + (1.0 - ZION_REST) * v
+    lb = getattr(H, "light_budget", None)
+    if callable(lb):
+        try:
+            k *= float(lb(t))
+        except Exception:
+            pass
+    return k
+
+
 def glow_k(t):
     """The mountain's light follows the music: brighter as it grows; calmer behind a phrase."""
-    return local_k(t) * (0.78 + 0.32 * intensity(t)) * (1.0 - 0.28 * reading(t))
+    return local_k(t) * (0.78 + 0.32 * intensity(t)) * (1.0 - 0.28 * reading(t)) * zion_light(t)
 
 
 def edge_k(t):
@@ -1629,7 +1656,7 @@ def wide_calm(t):
 def crowd_k(t):
     """The nations breathe with the music: brighter with it, a lift on every beat, (round 8) their light rising
     with the choir."""
-    return (nations_k(t) * (0.75 + 0.35 * intensity(t)) * (1.0 + 0.3 * intensity(t) * beat_pulse(t, 0.12))
+    return (nations_k(t) * zion_light(t) * (0.75 + 0.35 * intensity(t)) * (1.0 + 0.3 * intensity(t) * beat_pulse(t, 0.12))
             * (1.0 + mx(t, choir=0.35))
             # (round 8, f18: white runs at 2:51.6 and 3:12.2) in those two wide views the crowds shine a third less
             * (1.0 - 0.35 * max(_win(t, 171.3, 175.6, 0.3, 0.6), _win(t, 190.4, 194.6, 0.3, 0.6),
@@ -1904,7 +1931,7 @@ def add(scene):
     scene.add("zion plot gardens", PlotGardens(lambda t: calm(t) * (1.0 + mx(t, high=0.45))), reflect=False)
     scene.add("zion towers", Static(towers, lambda t: calm(t) * (1.0 + 0.25 * intensity(t) * beat_pulse(t, 0.12))
                                     * (1.0 + mx(t, brass=0.5))))
-    scene.add("zion mist", Static(mist, lambda t: local_k(t) * (0.7 + 0.3 * intensity(t))
+    scene.add("zion mist", Static(mist, lambda t: local_k(t) * zion_light(t) * (0.7 + 0.3 * intensity(t))
                                   * (1.0 - 0.5 * _win(t, 213.5, 219.5, 0.6, 0.6))))      # (f35) thinner at 3:34
     scene.add("zion streams", Streams())
     edges = np.concatenate([_ring(ZC, tier_r(k) + 0.1, tier_y(k) + 1.0, 1.4) for k in range(N_TIER)])
