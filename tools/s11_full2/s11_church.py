@@ -838,6 +838,15 @@ def _calm(t):
     return (1.0 - 0.85 * MF._reading(t)) * (1.0 - 0.35 * intensity(t) ** 2)
 
 
+def _stage_calm(t, quiet=0.5):
+    """In the choir and orchestra shots (round 7, STAGE and ZION): the church and the city behind the singers stay
+    a calm backdrop (times `quiet`), and dim further while a phrase reads, so the words and the singers stand
+    clear of the window grid and the light bars."""
+    if not stage_view(t):
+        return 1.0
+    return quiet * (1.0 - 0.65 * _mfx()._reading(t))
+
+
 def _music(t, part):
     """The music's lift for a part of the church (round 7, Anthony: "way more effects consistently happening to
     match each different sound in the song"): the white floor bands pulse with the kick and the bass, the glass
@@ -882,7 +891,7 @@ class EmblemSings:
                      emit=2.6, fog=0.3, reflect=False)]
 
     def gain(self, t):
-        return city_k(t) * (0.5 if stage_view(t) else 1.0)
+        return city_k(t) * _stage_calm(t, 0.4)
 
 
 class MusicCity:
@@ -915,7 +924,7 @@ class MusicCity:
         return out or None
 
     def gain(self, t):
-        return city_k(t)
+        return city_k(t) * _stage_calm(t, 0.4)
 
 
 class Church:
@@ -937,7 +946,7 @@ class Church:
     def gain(self, t):
         k = city_k(t) * church_glow(t) * church_reveal(t)
         if stage_view(t):
-            k *= {"soft": 0.75, "crisp": 0.4, "steps": 0.12, "glory": 0.5}[self.part]
+            k *= {"soft": 0.75, "crisp": 0.4, "steps": 0.12, "glory": 0.5}[self.part] * _stage_calm(t, 0.5)
         if shot_name(t) == "church_cut":       # the church's own cut-ins: full frame of it, so less light
             k *= 0.5
         elif shot_name(t) != "city" and not stage_view(t) and t > 200.0:
@@ -990,7 +999,7 @@ class BandWave:
         k = city_k(t) * church_glow(t) * church_reveal(t) * (0.5 + 0.7 * intensity(t))
         if shot_name(t) == "church_cut":
             k *= 0.6
-        return k * (0.35 if stage_view(t) else 1.0)
+        return k * (0.35 * _stage_calm(t, 0.5) if stage_view(t) else 1.0)
 
 
 class Ignite:
@@ -1351,7 +1360,8 @@ def _clouds():
             out.append(CloudBank(c, size=(70.0, 46.0 + 8.0 * k, 130.0), puffs=14, seed=30 + k + (side > 0) * 10,
                                  gain=canyon, bright=1.1))
     out.append(CloudBank(ZC + _v(0.0, 0.0, -520.0), size=(900.0, 110.0, 160.0), puffs=30, seed=61,
-                         gain=lambda t: sky_gain(t) * _mine(t) * (0.12 + 0.18 * intensity(t)), bright=0.9))
+                         gain=lambda t: sky_gain(t) * _mine(t) * (0.12 + 0.18 * intensity(t)) * _stage_calm(t, 0.35),
+                         bright=0.9))
     return out
 
 
@@ -1397,9 +1407,9 @@ add_rays(lambda t: EMB_C if t > 251.7 else _ROOF, _ray_k, color="#fff0d2", size=
 
 def add(scene):
     cdim, cgold = _city()
-    scene.add("city dim", Static(cdim, lambda t: city_k(t) * (0.8 + 0.3 * beat_pulse(t) * max(_sc(20, 22, t),
+    scene.add("city dim", Static(cdim, lambda t: city_k(t) * _stage_calm(t, 0.45) * (0.8 + 0.3 * beat_pulse(t) * max(_sc(20, 22, t),
                                                                                          0.8 * (t < 12.0)))))
-    scene.add("city gold", Static(cgold, city_k))
+    scene.add("city gold", Static(cgold, lambda t: city_k(t) * _stage_calm(t, 0.45)))
     scene.add("church", Church("soft"))
     scene.add("church lines", Church("crisp"))
     scene.add("church steps", Church("steps"))
