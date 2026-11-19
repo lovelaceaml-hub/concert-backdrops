@@ -845,20 +845,25 @@ def add(scene):
     # the great sweeps: his strokes drawn huge round him in long streams of the nine colours (the promo's
     # lights of colour); kept out of the words while a phrase reads
     from songs.s11_stage import BoxGuard, CORNER_BOX, corner_k
-    sweeps = [((97.6, 99.45), (3.6, 0.06), (5.2, 0.14), (6.2, 0.22)),
+    LOWER_THIRD = (-0.05, 1.05, -0.05, 0.36)
+    sweeps = [((97.6, 99.45), (2.4, 0.06), (3.2, 0.14), (4.0, 0.22)),
               ((121.32, 125.92), (3.5, 0.05), (5.5, 0.12), (7.5, 0.20)),
               ((185.92, 188.27), (2.6, 0.06), (3.6, 0.12), (4.6, 0.18))]
     for j, (win, *arms) in enumerate(sweeps):
         for i, (gain, lag) in enumerate(arms):
-            st = Stream(_sweep(gain, lag), _rainbow_from(1.5 * i), [win], trail=1.3 + 0.2 * i, width=0.16 + 0.06 * i,
-                        fade=0.25, bright=1.1, seed=600 + 10 * j + i)
+            sm = j == 0                          # the summons (f37): thinner, softer, climbing above his head
+            st = Stream(_sweep(gain, lag, lift=1.1 if sm else 0.35), _rainbow_from(1.5 * i), [win],
+                        trail=1.3 + 0.2 * i, width=(0.08 + 0.03 * i) if sm else (0.16 + 0.06 * i), fade=0.25,
+                        bright=0.55 if sm else 1.1, seed=600 + 10 * j + i)
             corner = BoxGuard(st, keep=0.1, box=CORNER_BOX, when=corner_k)     # off the corner titles too
+            if sm:                               # the lower third stays clear: he is the bright figure there
+                corner = BoxGuard(corner, keep=0.08, box=LOWER_THIRD, when=lambda t: 1.0)
             scene.add("conductor sweep %d %d" % (j, i), BoxGuard(corner, keep=0.0))
     # the summons: a stream off the tip on each beat, the four winding into one braided rope to the sky
     bt = beat_times(97.55, 99.2)[:4]
     for i, ts in enumerate(bt):
         scene.add("conductor stream summons %d" % i, Stream(tip, RING_COL[(2 * i) % 7], [(ts, 99.45)], trail=2.2,
-                                                            width=0.26, fly=_braid(i, len(bt), ts), ts=ts,
+                                                            width=0.13, bright=0.6, fly=_braid(i, len(bt), ts), ts=ts,
                                                             fade=0.1, seed=400 + i))
     # the strings: a stream flicked off over the sea toward the city on each strings pulse
     for i, ts in enumerate(STRINGS[:2]):
