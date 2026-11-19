@@ -80,47 +80,40 @@ def _mz(t):
     return float(mother_pos(t)[2])
 
 
-# One shot per block of the edit (core EDIT, owner "proc"), each a different angle. (t0: keys(t0, t1), pace)
+# One flight per block of the edit (core EDIT, owner "proc"): (t0: keys, pace)
 def _plan(t0, t1):
-    if t0 == 125.92:      # her light streaks down out of the sky: we follow it down from low on the sea
-        return _track(t0, t1, 8, lambda t: ((11.0 - 1.5 * (t - t0), 2.6, -20.0 - 2.0 * (t - t0)),
-                                             tuple(mother_pos(t) + _v(0.0, -2.0, 0.0)))), "linear"
-    if t0 == 127.64:      # low across the sea of glass as she touches it; people appear on both sides
-        return _lin(t0, t1, (-1.2, 1.3, -22.0), (0.0, 2.8, -56.0), (-0.6, 1.7, -30.0), (0.0, 3.2, -56.0)), "music"
-    if t0 == 130.29:      # let's trust Father: wide from the side, everyone gathered behind her light
-        return _lin(t0, t1, (50.0, 15.0, -6.0), (0.0, 2.0, -28.0), (44.0, 19.0, -24.0), (0.0, 1.0, -36.0)), "music"
-    if t0 == 132.5:       # everyone ready: from in front of her, high, looking back over them
-        return _lin(t0, t1, (7.0, 14.0, -76.0), (0.0, 1.0, -30.0), (3.0, 16.0, -73.0), (0.0, 1.0, -27.0)), "music"
-    if t0 == 134.54:      # march ahead: a fast crane up from low in front as everyone steps out toward us
-        return _lin(t0, t1, (2.0, 3.0, -68.0), (0.0, 2.5, -40.0), (0.0, 34.0, -88.0), (0.0, 3.0, -38.0),
-                    mid=(135.5, (1.0, 24.0, -82.0), (0.0, 4.0, -36.0))), "music"
-    if t0 == 136.9:       # the procession from above: drifting down the river of people after her light
-        return _track(t0, t1, 4, lambda t: ((4.0 - 2.5 * (t - t0), 36.0, _mz(t) + 47.0 - 0.8 * (t - t0)),
-                                            (-4.0, 0.0, _mz(t) + 19.0 - 0.8 * (t - t0)))), "linear"
-    if t0 == 141.5:       # among the walkers: tracking alongside them at their height
-        return _track(t0, t1, 4, lambda t: ((-2.2, 2.6, -36.5 - walked(t) - 0.5 * (t - t0)),
-                                            (9.0, 0.9, -44.0 - walked(t) - 0.5 * (t - t0)))), "linear"
-    if t0 == 144.4:       # fulfilled: close behind people as the hearts light inside them
-        return _track(t0, t1, 4, lambda t: ((-2.6, 4.2, _mz(t) + 21.0 - 0.6 * (t - t0)),
-                                            (-6.0, 0.6, _mz(t) + 9.0 - 0.6 * (t - t0)))), "linear"
-    if t0 == 146.7:       # the hearts in the nine colours: the whole procession from the side, rising
-        return _track(t0, t1, 4, lambda t: ((-36.0 + 2.0 * (t - t0), 9.0 + 2.5 * (t - t0), -44.0 - walked(t)),
-                                            (0.0, 1.0, -56.0 - walked(t)))), "linear"
-    if t0 == 148.6:       # the kings walk in the aisle: from in front of them, backing away as they come
-        return _track(t0, t1, 4, lambda t: ((0.6, 3.4, _kings_front(t) - 7.5),
-                                            (0.0, 0.7, _kings_front(t) + 2.0))), "linear"
-    if t0 == 152.0:       # the kings before Zion, from high behind (the words on the sea between them and her)
-        return _lin(t0, t1, (3.5, 17.5, -50.5), (-4.0, -6.5, -76.5), (1.0, 17.0, -53.0), (-4.5, -7.0, -78.0)), "music"
-    if t0 == 154.2:       # the kings kneel: low, from in front of them
-        return _lin(t0, t1, (1.2, 3.6, -73.6), (0.0, 0.5, -63.0), (0.7, 3.2, -72.6), (0.0, 0.4, -63.0)), "music"
-    if t0 == 155.34:      # the crowns rise as sparks: we look up after them toward Zion
-        return _lin(t0, t1, (-2.0, 1.0, -57.0), (0.0, 8.0, -75.0), (-2.0, 1.4, -58.0), (0.0, 15.5, -80.0)), "music"
-    if t0 == 156.0:       # the held breath: a slow tense push over everyone standing still
-        return _lin(t0, t1, (1.6, 17.6, -52.0), (-4.5, -7.0, -79.5), (0.7, 16.4, -56.5), (-4.5, -6.0, -80.5)), "music"
-    if t0 == 159.0:       # sparks gather into her light: low in front of her, the people beyond
-        return _lin(t0, t1, (2.6, 3.0, -96.5), (0.0, 9.0, -70.0), (2.0, 3.2, -95.0), (0.0, 8.6, -70.0)), "music"
+    K = lambda *k: [(t, _v(*p), _v(*q)) for t, p, q in k]       # noqa: E731
+    if t0 == 125.92:      # follow her light down out of the sky; as it touches the sea, sweep round it
+        k = _track(t0, LAND, 5, lambda t: ((11.0 - 1.8 * (t - t0), 2.6 - 0.2 * (t - t0), -20.0 - 3.5 * (t - t0)),
+                                           tuple(mother_pos(t) + _v(0.0, -1.5, 0.0))))
+        return k + K((128.9, (15.0, 4.5, -37.0), (0.0, 3.5, -55.0)), (t1, (24.0, 9.0, -42.0), (0.0, 3.0, -48.0))), \
+            "linear"
+    if t0 == 130.29:      # trust Father: an orbit from the side round to the front, high, the comets circling
+        return K((t0, (40.0, 14.0, -30.0), (0.0, 2.0, -35.0)), (131.8, (34.0, 18.0, -62.0), (0.0, 2.0, -35.0)),
+                 (133.2, (14.0, 17.0, -78.0), (0.0, 1.0, -32.0)), (t1, (5.0, 16.0, -76.0), (0.0, 1.0, -28.0))), "music"
+    if t0 == 134.54:      # march ahead: a crane up from low in front as everyone steps out toward us
+        return K((t0, (2.0, 3.0, -68.0), (0.0, 2.5, -40.0)), (135.5, (1.0, 24.0, -82.0), (0.0, 4.0, -36.0)),
+                 (137.2, (-2.0, 33.0, -89.0), (0.0, 3.0, -39.0)), (t1, (-5.0, 36.0, -92.0), (0.0, 3.0, -42.0))), \
+            "music"
+    if t0 == 141.5:       # among the walkers, chasing the comets weaving through them
+        return _track(t0, t1, 4, lambda t: ((-2.2, 3.2, -36.5 - walked(t) - 0.6 * (t - t0)),
+                                            (9.0, 0.9, -44.0 - walked(t) - 0.6 * (t - t0)))), "music"
+    if t0 == 144.4:       # fulfilled: the comets dive through the walkers toward us, lighting hearts; we rise
+        return _track(t0, t1, 4, lambda t: ((-5.0 - 1.7 * (t - t0), 8.0 + 2.9 * (t - t0), _mz(t) + 58.0 + 3.8 * (t - t0)),
+                                            (0.0, 1.0, _mz(t) + 14.0 + 2.4 * (t - t0)))), "music"
+    if t0 == 148.6:       # the kings from in front, rising and swinging over them to behind for the words
+        kf = _kings_front
+        return K((t0, (0.6, 3.4, kf(t0) - 7.5), (0.0, 0.7, kf(t0) + 2.0)), (149.8, (3.5, 6.0, -70.0), (0.0, 1.0, -60.0)),
+                 (150.9, (9.0, 14.0, -62.0), (-1.0, 0.0, -66.0)), (152.2, (3.5, 17.5, -50.5), (-4.0, -6.5, -76.5)),
+                 (t1, (1.0, 17.0, -53.0), (-4.5, -7.0, -78.0))), "music"
+    if t0 == 154.2:       # the kings kneel; we look up after the crowns as they rise toward Zion
+        return K((t0, (6.0, 1.6, -71.0), (0.0, 1.0, -65.0)), (155.0, (5.0, 1.2, -70.0), (0.0, 2.5, -66.0)),
+                 (155.6, (4.0, 1.0, -68.0), (0.0, 9.0, -72.0)), (t1, (3.5, 1.0, -67.0), (0.0, 15.0, -76.0))), "music"
+    if t0 == 156.0:       # the held breath: a slow tense push; the comets drawn back into her light
+        return K((t0, (1.6, 17.6, -52.0), (-4.5, -7.0, -79.5)), (158.3, (1.2, 16.8, -54.5), (-4.5, -6.5, -80.0)),
+                 (t1, (0.8, 15.8, -57.0), (-4.5, -5.5, -81.0))), "music"
     if t0 == 161.7:       # her light grows: a push in toward it, faster into the slam
-        return _lin(t0, t1, (1.6, 3.4, -93.0), (0.0, 8.0, -70.0), (0.8, 3.9, -90.0), (0.0, 6.5, -70.0)), "music"
+        return K((t0, (1.6, 3.4, -93.0), (0.0, 8.0, -70.0)), (t1, (0.8, 3.9, -90.0), (0.0, 6.5, -70.0))), "music"
     raise ValueError(f"no procession shot planned for the block at {t0}")
 
 
@@ -150,12 +143,12 @@ def proc_k(t):
 def shaft_k(t):
     """Her shaft shows in the views along the sea (not from above, where its mirror image would cross the
     words, nor looking up past her)."""
-    return 1.0 if block_t0(t) in (125.92, 127.64, 130.29, 141.5, 144.4, 146.7, 148.6) else 0.0
+    return 1.0 if block_t0(t) in (125.92, 130.29, 141.5, 144.4) else 0.0
 
 
 def mirror_k(t):
     """Her mirror image in the sea shows except in the views from high behind (it would sit in the words)."""
-    return 0.0 if block_t0(t) in (136.9, 152.0, 156.0, 155.34) else 1.0
+    return 0.0 if block_t0(t) in (134.54, 148.6, 154.2, 156.0) else 1.0
 
 
 def glow(t):
@@ -337,21 +330,110 @@ class Gather:
 
 
 # ---------------------------------------------------------------------------------------------------------
+# The nine comets: they come out of her light as it touches the sea and lead everyone toward Zion
+# ---------------------------------------------------------------------------------------------------------
+_order = np.argsort(PROC_P[:, 0])
+LANE = np.zeros(len(PROC_P), int)
+LANE[_order] = np.minimum((np.arange(len(PROC_P)) * 9) // len(PROC_P), 8)
+LANE_X = np.array([np.median(PROC_P[LANE == j, 0]) for j in range(9)])
+DIVE_V = 40.0                                                   # metres per second back through the procession
+DIVE_T = np.array([(144.4, 145.0)[j % 2] + 0.12 * j for j in range(9)])
+ZREL = PROC_P[:, 2] - MOTHER_Z0                                 # each person's place behind her light
+
+
+def _kz(t):
+    """The middle of the kings (z)."""
+    return float(KINGS_STOP[:, 2].mean() + WALK * max(K_STOP - t, 0.0))
+
+
+def _comet_head(j, phase):
+    a0 = 2.0 * np.pi * j / 9.0
+
+    def burst(t):            # 127.64: out of her light, circling out over everyone as they gather
+        u = max(t - LAND, 0.0)
+        if t <= LAND:
+            return mother_pos(t)
+        r = 32.0 * (1.0 - np.exp(-u / 0.9))
+        cz = MOTHER_Z0 + 22.0 * (1.0 - np.exp(-u / 1.5))
+        a = a0 + 0.55 * u
+        y = M_H + 1.5 + 5.0 * (1.0 - np.exp(-u / 0.6)) + 1.5 * np.sin(1.7 * u + j)
+        return _v(r * np.sin(a), y, cz + r * np.cos(a))
+
+    def ring(t):             # trust Father: a ring of comets over the gathered people
+        a = a0 + 0.5 * t
+        r = 26.0 + 4.0 * np.sin(0.8 * t + j)
+        return _v(r * np.sin(a), 7.0 + 3.0 * np.sin(0.9 * t + 2.0 * j), MOTHER_Z0 + 30.0 + r * np.cos(a))
+
+    def march(t):            # march ahead: they burst forward toward Zion, then weave over the procession
+        u = max(t - MARCH, 0.0)
+        b = -55.0 * (1.0 - np.exp(-u / 0.35)) * np.exp(-u / 2.0)
+        return _v(0.8 * LANE_X[j] + 3.0 * np.sin(1.1 * t + j), 5.0 + 2.5 * np.sin(0.8 * t + 1.3 * j),
+                  MOTHER_Z0 - walked(t) + 8.0 + 40.0 * (0.5 + 0.5 * np.sin(0.5 * t + 0.7 * j)) + b)
+
+    def weave(t):            # among the walkers, at their height
+        return _v(LANE_X[j] + 1.2 * np.sin(2.2 * t + j), 1.9 + 0.9 * np.sin(1.6 * t + j),
+                  MOTHER_Z0 - walked(t) + 10.0 + 35.0 * (0.5 + 0.5 * np.sin(0.7 * t + 0.8 * j)))
+
+    def dive(t):             # fulfilled: down from over her light and back through its lane, lighting hearts
+        s0, m = DIVE_T[j], MOTHER_Z0 - walked(t)
+        hover = _v(0.4 * LANE_X[j] + 2.0 * np.sin(t + j), 10.0 + np.sin(1.3 * t + j), m + 2.0)
+        low = _v(LANE_X[j], 1.4, m + 4.0)
+        if t < s0 - 0.5:
+            return hover
+        if t < s0:
+            e = _sc(s0 - 0.5, s0, t)
+            return hover * (1.0 - e) + low * e
+        zr = 4.0 + DIVE_V * (t - s0)
+        up = max(zr - 104.0, 0.0) / DIVE_V
+        return _v(LANE_X[j] + 0.5 * np.sin(3.0 * t + j), 1.4 + 0.3 * np.sin(5.0 * t) + 14.0 * up * up + 4.0 * up,
+                  m + min(zr, 104.0) + 8.0 * up)
+
+    def kings(t):            # round the kings as they walk
+        a = a0 + 1.1 * t
+        r = 6.0 + 1.5 * np.sin(0.7 * t + j)
+        return _v(r * np.sin(a), 2.5 + 1.8 * np.sin(1.3 * t + j), _kz(t) + r * np.cos(a))
+
+    def rise(t):             # the crowns rise: the comets spiral up round them and stream toward Zion
+        u = max(t - 154.2, 0.0)
+        v = max(t - RISE, 0.0)
+        a = a0 + 1.1 * 154.2 + 2.2 * u
+        r = 5.0 + 2.0 * u
+        return _v(r * np.sin(a), 2.5 + 2.0 * u + 9.0 * v * v, _kz(t) + r * np.cos(a) - 16.0 * v * v)
+
+    def home(t):             # the held breath: drawn back into her light, spinning faster
+        q = _sc(156.0, 160.4, t)
+        m = mother_pos(t)
+        a = a0 + 0.4 * (t - 156.0) + 9.0 * q * q
+        r = 12.0 * (1.0 - q) ** 1.3 + 0.2
+        return m + _v(r * np.sin(a), (6.0 + 1.5 * np.sin(1.1 * t + j)) * (1.0 - q),
+                      -6.0 * (1.0 - q) + r * np.cos(a))
+
+    return dict(burst=burst, ring=ring, march=march, weave=weave, dive=dive, kings=kings, rise=rise,
+                home=home)[phase]
+
+
+# (phase, t0, t1, brightness, trail, fade out)
+COMET_PHASES = [("burst", LAND, 130.29, 1.0, 1.4, 0.05), ("ring", 130.29, 134.54, 0.8, 1.6, 0.05),
+                ("march", 134.54, 139.2, 0.6, 1.4, 0.05), ("weave", 141.5, 144.4, 1.0, 1.2, 0.05),
+                ("dive", 144.4, 148.6, 1.1, 0.9, 0.05), ("kings", 148.6, 154.2, 0.6, 1.4, 0.05),
+                ("rise", 154.2, 156.0, 1.0, 1.2, 0.05), ("home", 156.0, 160.6, 0.6, 1.4, 0.5)]
+
+
+# ---------------------------------------------------------------------------------------------------------
 # Hearts lighting in everyone ("fulfilled") and the light gathering to her (the held breath)
 # ---------------------------------------------------------------------------------------------------------
 class FulfilHearts:
     """Verse 2 "fulfilled" (2:24.4 to 2:30.2): on each accent of the quickening heartbeat, hearts light up in
     the people walking behind Mother's light, in the nine colours: a wave from her light back through the
-    procession. In the held breath they breathe together, and from 159 a spark leaves each heart for her."""
+    procession. Each heart lights as the comet of its lane dives past, in that comet's colour. In the held
+    breath they breathe together, and from 159 a spark leaves each heart for her."""
 
     def __init__(self, walkers):
         self.w = walkers
         r = np.random.default_rng(71)
         n = walkers.n
-        rank = np.argsort(np.argsort(_D0 + r.uniform(0.0, 12.0, n))) / n
-        acc = np.minimum((rank * len(FULFIL)).astype(int), len(FULFIL) - 1)
-        self.when = np.asarray(FULFIL)[acc] + r.uniform(0.0, 0.10, n)
-        self.col = np.asarray([lin(COL9[i]) for i in r.integers(0, 9, n)])
+        self.when = DIVE_T[LANE] + (ZREL - 4.0) / DIVE_V               # as the comet of their lane passes them
+        self.col = np.asarray([lin(COL9[i]) for i in LANE])
         from p3d.brand_hearts import heart_points
         self.h = np.concatenate([heart_points(26), 0.55 * heart_points(8, fill=True)])
         self.chest = None
@@ -528,22 +610,49 @@ class Crowns:
         u = t - RISE
         aim = CHURCH + _v(0.0, 60.0, 0.0)
         CJ = np.concatenate([self.C, self.J])
-        f = np.exp(-u / 2.0) * _sc(0.0, 0.08, u)
+        q = _sc(0.55, 1.4, u)                                    # whole crowns first, then they break into sparks
+        f = _sc(0.0, 0.06, u) * (1.0 - _sc(1.2, 3.2, u))
+        spin = 2.5 * u
+        cs, sn = np.cos(spin), np.sin(spin)
+        R = CJ * _v(1.0, 1.0, 1.0)[None, :]
+        R = np.stack([R[:, 0] * cs + R[:, 2] * sn, R[:, 1], -R[:, 0] * sn + R[:, 2] * cs], 1)
+        grow = 1.0 + 1.2 * _sc(0.0, 0.6, u)
         for i, p in enumerate(KINGS_STOP):
             s = self.s[i]
-            c = p + _v(0.0, 0.05, -0.85)
-            d0 = _unit(aim - c)
-            lift = (3.0 * u + 12.0 * u * u) * (0.75 + 0.5 * s[:, 0])
-            fwd = 9.0 * u * u * (0.6 + 0.8 * s[:, 1])
-            open_ = 1.0 + 3.0 * u * s[:, 2]
-            sw = 0.5 * u * np.stack([np.sin(2.0 * u + 9 * s[:, 3]), np.zeros(len(s)), np.cos(2.0 * u + 7 * s[:, 0])], 1)
-            P = c + CJ * open_[:, None] + lift[:, None] * _v(0.0, 1.0, 0.0) + fwd[:, None] * d0 + sw
-            out.append(dict(pos=P, size=0.05 + 0.05 * s[:, 1], color=pale, alpha=f, emit=3.2, kind="spark",
-                            twinkle=0.5, seed=s[:, 3], reflect=False))
+            c = p + _v(0.0, 0.05, -0.85) + _v(0.0, 2.0 * u + 7.0 * u * u, 0.0)
+            c = c + _unit(aim - c) * 14.0 * max(u - 0.5, 0.0) ** 2
+            sp = (s[:, :3] - 0.5) * (6.0 * q * (0.3 + s[:, 3:4]))
+            P = c + R * grow + sp
+            out.append(dict(pos=P, size=0.035 + 0.04 * q * s[:, 1], color=gold * (1.0 - q) + pale * q,
+                            alpha=f, emit=3.6, kind="spark", twinkle=0.3 + 0.5 * q, seed=s[:, 3], reflect=False))
+            out.append(dict(pos=c[None, :] + _v(0.0, 0.08, 0.0), size=0.7 * grow, color=gold,
+                            alpha=0.10 * f * (1.0 - q), emit=2.0, kind="soft", reflect=False))
         g = np.exp(-u / 0.3)
         out.append(dict(pos=KINGS_STOP + _v(0.0, 0.2, -0.85), size=0.8, color=gold, alpha=0.3 * g, emit=2.0,
                         kind="soft", reflect=False))
         return out
+
+
+def ray_k(t):
+    """How strongly her rays fan out (gentle while words are on screen, so they never burn through them)."""
+    b = block_t0(t)
+    if b is None:
+        return 0.0
+    if b == 125.92:
+        return 1.0 + 0.9 * hit_pulse(t, [LAND], fall=1.2)
+    if b == 130.29:
+        return 0.9
+    if b == 134.54:
+        return 0.45 + 1.0 * hit_pulse(t, [MARCH], fall=0.6)
+    if b == 141.5:
+        return 0.7
+    if b == 144.4:
+        return 0.8 + 0.5 * hit_pulse(t, FULFIL, fall=0.5)
+    if b == 161.7:
+        return 1.2 + 0.8 * _sc(161.7, 162.3, t)
+    if b == 156.0:
+        return 0.4 + 0.5 * gather_k(t)
+    return 0.45
 
 
 SHAFTS = [
@@ -565,9 +674,9 @@ def add(scene):
     held = GCrowd(gain=crowd_k, places=PROC_P + _ahead(walkers) * walked(HALT), facing=180.0, kinds=("stand",),
                   start=HALT - 0.3, fade=0.3, flash=0.0, **look)
     held.facing[:] = walkers.facing
-    scene.add("procession wait", wait)
-    scene.add("procession", walkers)
-    scene.add("procession held", held)
+    scene.add("procession wait", wait, reflect=False)
+    scene.add("procession", walkers, reflect=False)
+    scene.add("procession held", held, reflect=False)
     scene.add("fulfil hearts", FulfilHearts(walkers))
     scene.add("colour ripples", Ripples(walkers))
     king = dict(people=dict(man=1.0), color="#ffd27a", color2=GOLD2, bright=3.0, points=1300, seed=31.0)
@@ -575,6 +684,16 @@ def add(scene):
                             until=K_STOP, fade=0.25, flash=1.2, **king))
     kings_k = _robed(GCrowd(gain=crowd_k, places=KINGS_STOP, facing=180.0, kinds=("kneel",), start=K_STOP - 0.25,
                             act=dict(t=KNEEL, dur=0.3), fade=0.25, flash=0.0, **king))
-    scene.add("kings", kings_w)
-    scene.add("kings kneel", kings_k)
+    scene.add("kings", kings_w, reflect=False)
+    scene.add("kings kneel", kings_k, reflect=False)
     scene.add("crowns", Crowns(kings_w, kings_k))
+    for ph, a, b, br, tr, fo in COMET_PHASES:
+        for j in range(9):
+            c = Comet(_comet_head(j, ph), COL9[j], a, b, trail=tr, width=0.32, bright=br, fade=0.05,
+                      light=(j in (0, 5)), seed=j + 11.0 * len(ph))
+            c.k = (lambda c_, a_, b_, fo_: lambda t: _sc(a_, a_ + 0.05, t) * (1.0 - _sc(b_ - fo_, b_, t))
+                   * (proc_k(t) > 0.0))(c, a, b, fo)
+            scene.add(f"comet {ph} {j}", c, reflect=True)
+    add_rays(mother_pos, lambda t: proc_k(t) * ray_k(t), color="#fff1d8", size=0.6)
+    add_light(mother_pos, "#ffe8c8", lambda t: proc_k(t) * (1.4 + 0.6 * hit_pulse(t, KICKS + FULFIL, fall=0.5)),
+              radius=9.0)
