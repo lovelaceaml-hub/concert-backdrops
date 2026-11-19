@@ -185,7 +185,7 @@ def _mountain():
         a = _az(n, r, 0.95)
         spark.append(_xz(R0 + 0.1, a, y0 + h * r.random(n) ** 0.6))
         # the parapet (a rail on posts, lamps along it)
-        q = _ring(ZC, R0 + 0.1, y + 1.0, 1.4 / LAMP_K)        # (round 8, prepared: 60 percent density)
+        q = _ring(ZC, R0 + 0.1, y + 1.0, 3.2)         # (round 8) the rail as separate beads of light, not a band
         par.append(q)
         par_k.append(np.full(len(q), k))
         q = _ring(ZC, R0 + 0.1, y, 4.0 / LAMP_K)
@@ -245,7 +245,7 @@ def _mountain():
     ]
     # the lights and paths: parapets, their lamps, the golden stairways (there from the first frame)
     dim = [
-        _batch(PA, 0.45, lin(PEARL_RAIL) * 0.75, 0.5 * LAMP_K, emit=1.0, reflect=False),
+        _batch(PA, 0.26, lin(PEARL_RAIL) * 0.75, 0.5 * LAMP_K, emit=1.0, reflect=False),
         dict(pos=PO_a, pos2=PO_b, size=0.22, color=lin(PEARL_RAIL) * 0.6, alpha=0.6 * LAMP_K, kind="line", emit=1.0,
              reflect=False),
         _batch(LP, 0.8, lin("#e6f2ff"), 0.9 * LAMP_K, emit=2.0, twinkle=0.3, reflect=False),
@@ -273,7 +273,7 @@ def _mountain():
         _batch(FL, 6.0, lin("#bfe2ff"), 0.07, kind="soft", emit=1.0, birth=FB, fade=0.7, flash=2.0, reflect=False),
         _batch(F[upper], 2.6, FC[upper] * 0.40, FA[upper] * 0.70, kind="soft", emit=1.3, birth=fb[upper], fade=0.6,
                flash=1.5, reflect=False),
-        _batch(PA, 0.55, lin(PEARL_RAIL) * 0.8, 0.45 * LAMP_K, emit=1.3, birth=FT[PK] + 0.45, fade=0.4, flash=3.0, twinkle=0.4,
+        _batch(PA, 0.3, lin(PEARL_RAIL) * 0.8, 0.45 * LAMP_K, emit=1.3, birth=FT[PK] + 0.45, fade=0.4, flash=3.0, twinkle=0.4,
                reflect=False),
         _batch(ST, 0.45, lin(GOLD), 0.7, emit=1.4, birth=FT[SK] + 0.2, fade=0.6, flash=2.0, reflect=False),
     ]
@@ -1615,13 +1615,15 @@ def glow_k(t):
 
 def edge_k(t):
     """The terrace edges pulse on every beat (strongly when the music is strong)."""
-    return local_k(t) * (not stage_view(t)) * (intensity(t) * beat_pulse(t, 0.12) + mx(t, kick=0.7))
+    return (local_k(t) * (not stage_view(t)) * (intensity(t) * beat_pulse(t, 0.12) + mx(t, kick=0.7))
+            * (1.0 - 0.6 * wide_calm(t)))
 
 
 def wide_calm(t):
     """(Round 8, f18) the wide climbs where the whole mountain filled the frame and read white (1:30.7, 2:51.5,
     3:10.4): 1 there, 0 elsewhere."""
-    return max(_win(t, 90.6, 97.8, 0.3, 0.6), _win(t, 171.3, 175.6, 0.3, 0.6), _win(t, 190.4, 194.6, 0.3, 0.6))
+    return max(_win(t, 90.6, 97.8, 0.3, 0.6), _win(t, 171.3, 175.6, 0.3, 0.6), _win(t, 190.4, 194.6, 0.3, 0.6),
+               _win(t, 212.8, 220.4, 0.3, 0.6))
 
 
 def crowd_k(t):
@@ -1837,8 +1839,46 @@ def _grand(scene):
                                                 puffs=30, seed=50 + i, gain=k_col, bright=1.0, look="rim"), reflect=False)
 
 
+def _split_rim(batches):
+    """(Round 8) splits batches into (the rest, the rims of the two top terraces): points within a few metres of
+    their edges (the summit plateau's and the terrace below it), from their walls up."""
+    rest, rim = [], []
+    for b in batches:
+        P = np.asarray(b["pos"], np.float64)
+        n = len(P)
+        rr = np.hypot(P[:, 0] - ZC[0], P[:, 2] - ZC[2])
+        sel = (((np.abs(rr - R_TOP) < 6.0) & (P[:, 1] > tier_y(N_TIER - 2) + 0.5))
+               | ((np.abs(rr - tier_r(N_TIER - 2)) < 6.0) & (P[:, 1] > tier_y(N_TIER - 3) + 0.5)))
+        if not sel.any():
+            rest.append(b)
+            continue
+        for keep, out in ((~sel, rest), (sel, rim)):
+            if not keep.any():
+                continue
+            c = {}
+            for key, v in b.items():
+                a = np.asarray(v) if not isinstance(v, str) else v
+                c[key] = a[keep] if (not isinstance(a, str) and np.ndim(a) >= 1 and len(a) == n) else v
+            out.append(c)
+    return rest, rim
+
+
+def rim_k(t):
+    """The summit plateau's rim calms while the camera is on or just over the plateau (the coda's summit shots,
+    the close flights over the city): seen from there it ran right across the frame as one thick white band."""
+    if local_k(t) <= 0.0:
+        return 0.0
+    c = np.asarray(H.CAMERA.state(t).pos, np.float64)
+    d = float(np.hypot(c[0] - ZC[0], c[2] - ZC[2]))
+    near = (1.0 - _sc(R_TOP + 140.0, R_TOP + 220.0, d)) * _sc(SUMMIT - 10.0, SUMMIT + 10.0, c[1])
+    return 1.0 - 0.85 * near
+
+
 def add(scene):
     walls, dim, gold = _mountain()
+    walls, walls_rim = _split_rim(walls)
+    dim, dim_rim = _split_rim(dim)
+    gold, gold_rim = _split_rim(gold)
     scene.add("zion body", _Off(_body()), mask=Mask("dark", strength=body_k, grow=1.9, soft=4.0), reflect=False)
     # (round 7: from afar Zion read pearl white) the walls step back a little as the people fill the terraces, so
     # the nine colours of the people read against them in the wide views
@@ -1847,6 +1887,8 @@ def add(scene):
                                    * (1.0 - 0.2 * wide_calm(t))))
     scene.add("zion dim", Static(dim, lambda t: glow_k(t) * (not stage_view(t)) * (1.0 - 0.2 * wide_calm(t))))     # (round 8) not through the choir
     scene.add("zion gold", Static(gold, glow_k))
+    scene.add("zion rim", Static(walls_rim + dim_rim + gold_rim,
+                                 lambda t: glow_k(t) * (not stage_view(t)) * rim_k(t)), reflect=False)
     # round 6: the city grows section by section, and the rivers of people stream to it
     gates, gardens, towers, mist = _city_parts()
     calm = (lambda t: glow_k(t) * (1.0 - 0.25 * reading(t)))
@@ -1855,7 +1897,9 @@ def add(scene):
     fly = (lambda t: 1.0 - 0.88 * _win(t, 161.55, 162.95, 0.15, 0.25))
     # (round 8) each part of the city answers its own sound: the gates ring on the timpani, the gardens
     # sparkle with the high voices, the towers flare on the brass
+    gates, gates_rim = _split_rim(gates)
     scene.add("zion gates", Static(gates, lambda t: calm(t) * fly(t) * (1.0 + mx(t, timp=0.9))))
+    scene.add("zion gates rim", Static(gates_rim, lambda t: calm(t) * fly(t) * (1.0 + mx(t, timp=0.9)) * rim_k(t)))
     scene.add("zion gardens", Static(gardens, lambda t: calm(t) * (1.0 + mx(t, high=0.45))))
     scene.add("zion plot gardens", PlotGardens(lambda t: calm(t) * (1.0 + mx(t, high=0.45))), reflect=False)
     scene.add("zion towers", Static(towers, lambda t: calm(t) * (1.0 + 0.25 * intensity(t) * beat_pulse(t, 0.12))
@@ -1867,15 +1911,22 @@ def add(scene):
     scene.add("zion beat", Static([_batch(edges, 0.6, lin("#ffe8c0"), 0.8, emit=1.8, reflect=False)], edge_k))
     for k in range(N_TIER):
         ring = _ring(ZC, tier_r(k) + 0.1, tier_y(k) + 0.9, 1.0)
-        scene.add(f"zion ripple {k}", Static([_batch(ring, 0.9, lin("#fff0d0"), 1.0, emit=2.5, reflect=False)],
-                                             _ripple_k(k)))
+        rk = _ripple_k(k)
+        g = (lambda f: (lambda t: f(t) * rim_k(t)))(rk) if k == N_TIER - 1 else rk
+        scene.add(f"zion ripple {k}", Static([_batch(ring, 0.9, lin("#fff0d0"), 1.0, emit=2.5, reflect=False)], g))
     scene.add("crown", Crown())
     # the nations on Mount Zion: a glitter of countless people; true figures where the camera climbs past them
     P, K, born, late = _nations()
     nw, nf = _near(P, K, "zion_wide") & ~late, _near(P, K, "zion_full") & ~late
     rest = ~(nw | nf)
-    scene.add("nations", Static(_glitter_people(P[rest], K[rest], born[rest], 3), crowd_k))
-    na = Arms(P[rest], born[rest], 3, crowd_k)                            # the waves of raised arms
+    # (round 8) the two top terraces' people, seen edge on from the summit shots, stacked into a white band with
+    # the rims: they calm with the rims while the camera is on or just over the summit
+    top = K >= N_TIER - 3
+    crowd_top = lambda t: crowd_k(t) * rim_k(t)                           # noqa: E731
+    lo, hi = rest & ~top, rest & top
+    scene.add("nations", Static(_glitter_people(P[lo], K[lo], born[lo], 3), crowd_k))
+    scene.add("nations top", Static(_glitter_people(P[hi], K[hi], born[hi], 3), crowd_top))
+    na = Arms(P[rest], born[rest], 3, lambda t: crowd_k(t) * (0.5 + 0.5 * rim_k(t)))   # the waves of raised arms
     na.col = np.asarray([lin(c) for c in COL9])[_place_hue(P[rest], K[rest])] * 0.7 + lin(WHITE) * 0.3
     na.kd = np.interp(K[rest].astype(np.float64), [0, 1, 2, 3, 4, 5], [1.0, 0.92, 0.78, 0.62, 0.5, 0.46])
     scene.add("nations arms", na)
