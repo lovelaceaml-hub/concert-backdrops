@@ -32,15 +32,15 @@ SHOTS = [
                (70.54, _v(20.0, 96.0, ZZ + 520.0), ZC + _v(0.0, Y + 12.0, 0.0))]),
     # waves of praise: the whole land ripples with light (high, so the rings roll out over the sea)
     dict(name="praise_ripples", kind="local", t0=86.70, t1=90.72, fov=50.0, aperture=0.0,
-         keys=[(86.70, _v(-150.0, 190.0, ZZ + 560.0), ZC + _v(0.0, 10.0, 40.0)),
-               (90.72, _v(-120.0, 176.0, ZZ + 520.0), ZC + _v(0.0, 14.0, 40.0))]),
+         keys=[(86.70, _v(190.0, 140.0, ZZ + 600.0), ZC + _v(0.0, 6.0, 60.0)),
+               (90.72, _v(170.0, 132.0, ZZ + 560.0), ZC + _v(0.0, 10.0, 50.0))]),
     # first climb: Mount Zion wide across the sea, then up over the lowest terraces, the nations standing on
     # them; sacrifice, devotion (light pours down on the people); thanks (a column of light to heaven)
     dict(name="zion_wide", kind="local", t0=90.72, t1=117.0, fov=50.0, aperture=0.0,
          keys=[(90.72, _v(150.0, 52.0, ZZ + 520.0), ZC + _v(0.0, 36.0, 0.0)),
                (99.4, _v(122.0, 64.0, ZZ + 432.0), ZC + _v(0.0, 44.0, 0.0)),
-               (109.8, _v(84.0, 72.0, ZZ + 304.0), ZC + _v(0.0, 58.0, 0.0)),
-               (117.0, _v(64.0, 78.0, ZZ + 252.0), ZC + _v(0.0, 92.0, 0.0))]),
+               (109.8, _v(84.0, 72.0, ZZ + 304.0), ZC + _v(-22.0, 60.0, 0.0)),
+               (117.0, _v(64.0, 78.0, ZZ + 252.0), ZC + _v(-30.0, 92.0, 0.0))]),
     # the shockwave across the land; second climb (2:51.48): higher, over the middle terraces, the whole
     # mountain full of people (from the right, so the low sun stays clear of the words)
     dict(name="zion_full", kind="local", t0=165.16, t1=185.92, fov=52.0, aperture=0.0,
@@ -311,7 +311,7 @@ class Crown:
 # =========================================================================================================
 # The climbs pass up the middle of the front: there the people are true figures (one crowd per climb, each on
 # only in its own shot; a glitter stands in for them in every other view). (tiers, x from, x to)
-NEAR = dict(zion_wide=(range(0, 3), -5.0, 135.0), zion_full=(range(2, 6), -15.0, 110.0))
+NEAR = dict(zion_wide=(range(0, 3), -5.0, 135.0), zion_full=(range(3, 6), 0.0, 105.0))
 
 
 def _places(tiers, density, seed, front_share=0.9):
@@ -380,54 +380,73 @@ def nations_k(t):
 # =========================================================================================================
 # Light pouring down, the column of light
 # =========================================================================================================
+POUR0 = 99.4          # "For Your sacrifice": light pours out of the city and down over the people
+
+
+def _profile():
+    """The path down the front of the mountain, from the summit's edge to the sea: (length, r, y) knots."""
+    pts = [(R_TOP, SUMMIT + 2.5)]
+    for k in range(N_TIER - 1, 0, -1):
+        r0, y = tier_r(k), tier_y(k - 1)
+        pts.append((r0 + 1.5, y + 2.5))              # down the wall (just in front of it), over the heads below
+        pts.append((tier_r(k - 1), y + 2.5))         # out across the terrace
+    pts.append((tier_r(0) + 1.5, 0.4))
+    pts.append((tier_r(0) + 60.0, 0.4))
+    pts = np.asarray(pts)
+    L = np.concatenate([[0.0], np.cumsum(np.hypot(*np.diff(pts, axis=0).T))])
+    return L, pts
+
+
+PROF_L, PROF_P = _profile()
+POUR_V = 30.0                                       # how fast the front of the light runs down (m/s)
+
+
+def pour_arrive(r):
+    """When the pouring light reaches the people standing at radius r."""
+    Lr = np.interp(-np.asarray(r, np.float64), -PROF_P[:, 0][::-1], PROF_L[::-1])
+    return POUR0 + 0.6 + Lr / POUR_V
+
+
 class Pour:
-    """For Your sacrifice, for Your devotion (1:39.4 to 1:49.4): beams of light pour down from heaven onto the
-    people on the terraces (left and right of the words), one after another, gold dust drifting slowly down in
-    them; the people shine brighter. Thanks to Father (1:49.8): a column of light rises from the church to heaven."""
+    """For Your sacrifice, for Your devotion (1:39.4 to 1:49.4): light pours out of the city and down Mount Zion
+    like a golden waterfall, over each wall and out across each terrace, over the heads of the people, who
+    shine as it reaches them, and out onto the sea. Thanks to Father (1:49.8): a column of light rises from the
+    church to heaven."""
 
     def __init__(self):
         r = np.random.default_rng(91)
-        az = np.radians([-58.0, -44.0, -31.0, -20.0, 20.0, 31.0, 44.0, 58.0, 70.0, -70.0])
-        tk = [1, 0, 2, 1, 0, 2, 1, 0, 2, 2]
-        rf = [0.9, 0.95, 0.85, 0.92, 0.95, 0.85, 0.9, 0.95, 0.9, 0.9]
-        self.land = np.stack([ZC + _v(tier_r(k) * f * np.sin(a), tier_y(k) + 1.0, tier_r(k) * f * np.cos(a))
-                              for a, k, f in zip(az, tk, rf)])
-        self.dir = _unit(_v(-0.22, 1.0, -0.30))
-        self.w = np.array([12.0, 14.0, 10.0, 9.0, 11.0, 10.0, 14.0, 12.0, 10.0, 10.0])
-        self.on = np.array([99.4, 100.1, 100.6, 101.3, 99.8, 100.4, 101.0, 101.6, 103.6, 104.2])
-        self.f = r.random((700, 4))
+        n = 5200
+        self.a = np.where(r.random(n) < 0.85, r.uniform(-1.85, 1.85, n), r.uniform(-np.pi, np.pi, n))
+        self.v = r.uniform(0.75, 1.15, n) * POUR_V
+        self.o = r.random(n) * PROF_L[-1]
+        self.j = r.normal(0.0, 1.0, (n, 2))
+        self.s = r.random(n)
         self.c = r.random((1400, 4))
 
     def sample(self, t):
         if local_k(t) <= 0.0 or shot_name(t) != "zion_wide":
             return None
         out = []
-        k = _env(t, 99.0, 110.0, 0.4, 1.6)
+        k = _env(t, POUR0 - 0.2, 110.2, 0.5, 1.8)
         if k > 0.0:
-            p = np.clip((t - self.on) / 1.6, 0.0, 1.0)            # each beam pours down from the sky
-            p = p * p * (3.0 - 2.0 * p)
-            top = self.land + self.dir[None, :] * 560.0
-            bot = top + (self.land - top) * p[:, None]
-            kb = k * (p > 0.0) * (0.85 + 0.15 * beat_pulse(t, 0.25))
-            mid = 0.5 * (top + bot)
-            out.append(dict(pos=np.concatenate([top, mid]), pos2=np.concatenate([mid, bot]),
-                            size=np.concatenate([self.w * 0.7, self.w * 0.85]),
-                            size2=np.concatenate([self.w * 0.85, self.w]),
-                            alpha=np.concatenate([0.0 * kb, 0.07 * kb]), alpha2=np.concatenate([0.07 * kb, 0.24 * kb]),
-                            color=lin("#ffe2b0"), emit=1.2, kind="ribbon", reflect=False, dof=0.0))
-            # where a beam has landed, a pool of light on the people
-            land = k * np.clip((t - self.on - 1.4) / 0.6, 0.0, 1.0)
-            out.append(dict(pos=self.land, size=self.w * 2.2, color=lin("#ffd89a"), alpha=0.16 * land, emit=1.0,
-                            kind="soft", reflect=False))
-            # gold dust drifting slowly down in the beams
-            s = self.f
-            i = (s[:, 0] * len(self.land)).astype(int)
-            fall = np.mod(t * (0.03 + 0.03 * s[:, 1]) + s[:, 2], 1.0)
-            q = self.land[i] + self.dir[None, :] * (260.0 * (1.0 - fall))[:, None]
-            q += np.stack([(s[:, 3] - 0.5) * self.w[i] * 0.8, np.zeros(len(s)), (s[:, 2] - 0.5) * self.w[i] * 0.8], 1)
-            vis = np.clip((t - self.on[i] - 1.6 * (1.0 - fall)) / 0.5, 0.0, 1.0)
-            out.append(dict(pos=q, size=0.6, color=lin("#ffe8c0"), alpha=0.8 * k * vis * np.sin(np.pi * fall),
-                            emit=2.0, kind="spark", twinkle=0.8, seed=s[:, 3], reflect=False))
+            front = (t - POUR0 - 0.2) * POUR_V
+            L = np.mod(self.v * t + self.o, PROF_L[-1])
+            on = L < front
+            if np.any(on):
+                L, a, j, sd, v = L[on], self.a[on], self.j[on], self.s[on], self.v[on]
+                rr = np.interp(L, PROF_L, PROF_P[:, 0]) + 0.8 * j[:, 0]
+                yy = np.interp(L, PROF_L, PROF_P[:, 1]) + 0.6 * np.abs(j[:, 1])
+                p = np.stack([ZC[0] + rr * np.sin(a), yy, ZC[2] + rr * np.cos(a)], 1)
+                dl = 1.0
+                r2 = np.interp(L + dl, PROF_L, PROF_P[:, 0])
+                y2 = np.interp(L + dl, PROF_L, PROF_P[:, 1])
+                dr, dy = (r2 - rr + 0.8 * j[:, 0]), (y2 - yy + 0.6 * np.abs(j[:, 1]))
+                vel = np.stack([dr * np.sin(a), dy, dr * np.cos(a)], 1) * (v / dl)[:, None] * 0.5
+                lead = np.exp(-np.maximum(front - L, 0.0) / 25.0)       # the leading edge is brightest
+                fade = 1.0 - _sc(PROF_L[-1] - 70.0, PROF_L[-1], L)
+                out.append(dict(pos=p, vel=vel, size=0.55, color=lin("#ffe2a8"),
+                                alpha=k * (0.35 + 0.65 * lead) * fade, emit=1.8 + 1.5 * lead, kind="spark",
+                                twinkle=0.5, seed=sd, reflect=False, streak=0.6))
         k = _env(t, 109.8, 117.0, 0.6, 0.3)
         if k > 0.0:
             u = t - 109.8
@@ -441,14 +460,14 @@ class Pour:
                             kind="spark", twinkle=0.6, seed=s[:, 3], reflect=False))
             ys = np.linspace(SUMMIT + 50.0, SUMMIT + 950.0, 120)
             q = np.stack([np.full(120, CHURCH[0]), ys, np.full(120, CHURCH[2])], 1)
-            out.append(dict(pos=q, size=16.0, color=lin("#fff0d0"), alpha=0.05 * k * (ys < reach)
+            out.append(dict(pos=q, size=20.0, color=lin("#fff0d0"), alpha=0.08 * k * (ys < reach)
                             * (1.0 - 0.6 * (ys - ys[0]) / 900.0), emit=1.0, kind="soft", reflect=False))
         return out or None
 
 
 def pour_k(t):
     """The people shine brighter while the light pours down on them."""
-    return local_k(t) * (shot_name(t) == "zion_wide") * _env(t, 99.6, 110.0, 1.5, 1.6)
+    return local_k(t) * (shot_name(t) == "zion_wide") * (1.0 - _sc(108.6, 110.6, t))
 
 
 # =========================================================================================================
@@ -515,19 +534,20 @@ def add(scene):
     nw, nf = _near(P, K, "zion_wide"), _near(P, K, "zion_full")
     rest = ~(nw | nf)
     scene.add("nations", Static(_glitter_people(P[rest], K[rest], born[rest], 3), nations_k))
-    scene.add("nations lit", Static(_glitter_people(P[rest], K[rest], born[rest], 3, 0.5), pour_k))
+    arrive = np.maximum(born, pour_arrive(np.hypot(P[:, 0] - ZC[0], P[:, 2] - ZC[2])))
+    scene.add("nations lit", Static(_glitter_people(P[rest], K[rest], arrive[rest], 3, 0.6), pour_k))
     rng = np.random.default_rng(9)
-    for shot, sel, seed in (("zion_wide", nw & ~nf, 4), ("zion_full", nf, 5)):
-        on = (lambda s: (lambda t: float(shot_name(t) == s)))(shot)
+    for shot, sel, seed, t_on in (("zion_wide", nw & ~nf, 4, 97.5), ("zion_full", nf, 5, 176.5)):
+        on = (lambda s, a: (lambda t: float(shot_name(t) == s) * _sc(a, a + 1.5, t)))(shot, t_on)
         scene.add(f"nations mid {shot}", Static(_glitter_people(P[sel], K[sel], born[sel], seed),
                                                 (lambda f: (lambda t: nations_k(t) * (1.0 - f(t))))(on)))
         i = np.where(sel)[0]
-        i = i[rng.random(len(i)) < 0.5]
+        i = i[rng.random(len(i)) < 0.4]
         scene.add(f"nations near {shot}", GCrowd(
             gain=(lambda f: (lambda t: nations_k(t) * f(t)))(on), places=P[i],
             facing=lambda x, z: float(np.degrees(np.arctan2(ZC[0] - x, ZC[2] - z))),
             kinds=(("stand", 3.0), ("raise", 1.2), ("open", 0.6)),
             people=dict(woman=1.0, man=1.0, elder=0.2, child=0.15), start=born[i], color="#ffcf7a",
-            color2="#fff0d0", bright=1.3, points=70, size=9.0, flash=1.5, seed=float(seed)))
+            color2="#fff0d0", bright=1.3, points=60, size=9.5, flash=1.5, seed=float(seed)))
     scene.add("pour", Pour())
     scene.add("rings", Rings())

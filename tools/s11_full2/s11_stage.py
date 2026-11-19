@@ -23,10 +23,10 @@ Y, FZ, G = SUMMIT, FACADE_Z, GLOBE_C
 
 SHOTS = [
     # the choir breathes in (cut-in): close on the singers, a slow push, light gathering in them
-    dict(name="choir_breath_in", kind="stage", t0=77.46, t1=82.08, fov=32.0, aperture=0.02,
-         focus=_v(0.0, SUMMIT + 2.0, FACADE_Z + 3.4),
-         keys=[(77.46, _v(-3.4, Y + 2.0, FZ + 12.8), _v(-0.6, Y + 3.5, FZ + 2.0)),
-               (82.08, _v(-2.2, Y + 2.0, FZ + 11.2), _v(-0.4, Y + 3.5, FZ + 2.0))]),
+    dict(name="choir_breath_in", kind="stage", t0=77.46, t1=82.08, fov=40.0, aperture=0.02,
+         focus=_v(0.0, SUMMIT + 2.0, FACADE_Z + 3.0),
+         keys=[(77.46, _v(-3.0, Y + 2.0, FZ + 11.2), _v(-0.6, Y + 3.0, FZ + 2.0)),
+               (82.08, _v(-1.8, Y + 2.0, FZ + 9.8), _v(-0.4, Y + 3.0, FZ + 2.0))]),
     # E. the first slam: the full choir and orchestra before the church, the sunrise jumps behind them
     dict(name="slam1_stage", kind="stage", t0=82.08, t1=86.70, fov=46.0, aperture=0.01,
          focus=_v(0.0, SUMMIT + 1.0, FACADE_Z + 16.0),
@@ -44,15 +44,15 @@ SHOTS = [
          keys=[(121.32, _v(-6.4, Y + 1.7, FZ + 27.9), _v(-2.6, Y + 1.15, FZ + 20.3)),
                (125.92, _v(-5.4, Y + 1.65, FZ + 26.7), _v(-2.3, Y + 1.15, FZ + 20.3))]),
     # the second slam: brass and timpani blaze (over the cellos to the trombones and the timpani)
-    dict(name="brass2", kind="stage", t0=162.86, t1=165.16, fov=32.0, aperture=0.015,
-         focus=_v(2.4, SUMMIT + 2.0, FACADE_Z + 16.0),
-         keys=[(162.86, _v(3.6, Y + 2.7, FZ + 28.5), _v(2.6, Y + 2.9, FZ + 15.5)),
-               (165.16, _v(3.2, Y + 2.6, FZ + 27.3), _v(2.4, Y + 2.9, FZ + 15.5))]),
-    # "wondrous love": brass and timpani (over the violins to the trumpets and the timpani)
-    dict(name="brass_love", kind="stage", t0=185.92, t1=188.27, fov=32.0, aperture=0.015,
-         focus=_v(-2.8, SUMMIT + 2.0, FACADE_Z + 16.0),
-         keys=[(185.92, _v(-4.0, Y + 2.7, FZ + 28.5), _v(-2.8, Y + 2.9, FZ + 15.5)),
-               (188.27, _v(-3.6, Y + 2.6, FZ + 27.3), _v(-2.6, Y + 2.9, FZ + 15.5))]),
+    dict(name="brass2", kind="stage", t0=162.86, t1=165.16, fov=40.0, aperture=0.02,
+         focus=_v(4.0, SUMMIT + 2.0, FACADE_Z + 16.0),
+         keys=[(162.86, _v(15.5, Y + 3.2, FZ + 31.0), _v(2.5, Y + 2.4, FZ + 14.5)),
+               (165.16, _v(14.5, Y + 3.1, FZ + 30.0), _v(2.5, Y + 2.4, FZ + 14.5))]),
+    # "wondrous love": brass and timpani (across the violins to the trumpets and the timpani)
+    dict(name="brass_love", kind="stage", t0=185.92, t1=188.27, fov=40.0, aperture=0.02,
+         focus=_v(-4.0, SUMMIT + 2.0, FACADE_Z + 16.0),
+         keys=[(185.92, _v(-15.5, Y + 3.2, FZ + 31.0), _v(-2.5, Y + 2.4, FZ + 14.5)),
+               (188.27, _v(-14.5, Y + 3.1, FZ + 30.0), _v(-2.5, Y + 2.4, FZ + 14.5))]),
     # home to everyone on Mount Zion: the final calls, the held breath, the last chord
     dict(name="home_stage", kind="stage", t0=238.8, t1=254.07, fov=44.0, aperture=0.01,
          focus=_v(0.0, SUMMIT + 1.5, FACADE_Z + 16.0),
@@ -195,7 +195,7 @@ class Choir(Crowd):
     def lamps(self, t):
         if getattr(self, "_last", (None,))[0] != t:
             self.sample(t)
-        return self._last[1]
+        return [dict(b, pos=b["pos"] + _v(0.0, 0.0, 0.22)) for b in self._last[1]]
 
 
 class ChoirHearts:
@@ -803,6 +803,8 @@ class ChoirLight:
         self.p = places
         r = np.random.default_rng(9)
         self.s = r.random((len(places) * 4, 4))
+        d = r.normal(0.0, 1.0, (len(self.s), 3))
+        self.d = d / np.linalg.norm(d, axis=1, keepdims=True)
         self.g = gain or stage_k
 
     def sample(self, t):
@@ -812,14 +814,34 @@ class ChoirLight:
             if a <= t < b and w.startswith("Choir"):
                 sing = 1.0
         k = g * sing * _sc(21.4, 22.6, t) * (0.25 + 0.5 * loud(t))
-        if k <= 0.01:
-            return None
+        out = []
         s = self.s
-        base = np.repeat(self.p, 4, axis=0) + _v(0.0, 1.62, 0.18)
-        age = np.mod(t * (0.22 + 0.18 * s[:, 0]) + s[:, 1], 1.0)
-        pos = base + np.stack([0.35 * (s[:, 2] - 0.5) * (0.4 + age), 3.2 * age, 0.25 * (s[:, 3] - 0.5)], 1)
-        return dict(pos=pos, size=0.022 + 0.02 * s[:, 2], color=lin("#ffe6b0"),
-                    alpha=k * np.sin(np.pi * age) ** 1.5, emit=2.2, kind="spark", twinkle=0.7, seed=s[:, 3], dof=0.5)
+        if k > 0.01:
+            base = np.repeat(self.p, 4, axis=0) + _v(0.0, 1.62, 0.18)
+            age = np.mod(t * (0.22 + 0.18 * s[:, 0]) + s[:, 1], 1.0)
+            pos = base + np.stack([0.35 * (s[:, 2] - 0.5) * (0.4 + age), 3.2 * age, 0.25 * (s[:, 3] - 0.5)], 1)
+            out.append(dict(pos=pos, size=0.022 + 0.02 * s[:, 2], color=lin("#ffe6b0"),
+                            alpha=k * np.sin(np.pi * age) ** 1.5, emit=2.2, kind="spark", twinkle=0.7, seed=s[:, 3],
+                            dof=0.5))
+        # the breath in (1:17.5 to 1:22): light streams in from the air round each singer and gathers at the
+        # heart; on the slam it bursts out again
+        if 77.0 <= t < 84.0 and g > 0.0:
+            heart = np.repeat(self.p, 4, axis=0) + _v(0.0, 1.20, 0.30)
+            d = self.d
+            if t < SLAM1:
+                ramp = _sc(77.2, 81.6, t)
+                cyc = np.mod(t * (0.55 + 0.35 * s[:, 0]) + s[:, 1], 1.0)
+                r = (0.25 + 1.6 * s[:, 2]) * (1.0 - cyc) ** 1.6
+                a = g * (0.25 + 0.75 * ramp) * np.sin(np.pi * cyc) ** 0.7
+                pos = heart + d * r[:, None] + _v(0.0, 0.5, 0.0) * (r[:, None] * 0.4)
+            else:
+                u = t - SLAM1
+                r = (0.1 + 4.0 * (1.0 - np.exp(-u / 0.5))) * (0.4 + 0.6 * s[:, 2])
+                a = g * np.exp(-u / 0.6) * np.ones(len(s))
+                pos = heart + d * r[:, None]
+            out.append(dict(pos=pos, size=0.02 + 0.02 * s[:, 3], color=lin("#fff0cf"), alpha=a, emit=2.6,
+                            kind="spark", twinkle=0.4, seed=s[:, 0], dof=0.5))
+        return out or None
 
 
 class Snow:
