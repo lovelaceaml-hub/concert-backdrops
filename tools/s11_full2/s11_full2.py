@@ -395,8 +395,10 @@ GLOBE = Globe(pos=tuple(GLOBE_C), radius=GLOBE_R, face="camera", camera=None, lo
 # then the world brightens starting from Korea."): the first Earth shot (0:41.6 to 0:53.78) stays on the night
 # side while the city lights switch on from Korea outward, a step on every beat (light_angle); the daylight
 # waits for the second Earth shot and spreads from Korea from 1:10.54 until the whole world is lit at 1:16.9.
-DAY_KEYS = [(41.6, 0.0), (70.54, 0.0), (70.9, 0.03), (76.9, 1.0)]
-LIGHTS_T0, LIGHTS_BEAT, LIGHTS_STEP = 41.6, 0.575, 10.5      # s, s, degrees per beat
+# (f36: the dawn from Korea must still be under way in the first Earth shot: the lights spread a little faster,
+# whole world by about 0:48, then the daylight rises from Korea, half the world lit by 0:53.78, all by 1:16.9)
+DAY_KEYS = [(41.6, 0.0), (47.8, 0.0), (48.4, 0.04), (53.78, 0.45), (70.54, 0.50), (76.9, 1.0)]
+LIGHTS_T0, LIGHTS_BEAT, LIGHTS_STEP = 41.6, 0.575, 18.0      # s, s, degrees per beat
 
 
 def light_angle(t):
@@ -981,7 +983,15 @@ def ray_light():
         return np.asarray(_val_at(R["pos"], t), np.float64) if R else np.array([0.0, -1000.0, 0.0])
 
     def strength(t):
-        return _ray_pick(t)[1]
+        R, k = _ray_pick(t)
+        if R is None or k <= 0.0:
+            return k
+        # round 8 (f35, f18): calmed where it paled the picture; never blazing from behind a phrase
+        k *= S_LIGHT.glare_calm(t)
+        m = keep_out_of_words(t, np.asarray(_val_at(R["pos"], t), np.float64)[None, :], soft=0.10)
+        if m is not None:
+            k *= 0.3 + 0.7 * float(m[0])
+        return k
 
     def color(t):
         R, k = _ray_pick(t)
@@ -1020,7 +1030,7 @@ def word_boxes(t):
     return out
 
 
-def keep_out_of_words(t, pos, soft=0.04):
+def keep_out_of_words(t, pos, soft=0.06, pad=0.04):
     """1 where a point may show, falling to 0 inside the box of a phrase on screen (soft edge, screen units)."""
     boxes = word_boxes(t)
     if not boxes:
@@ -1028,6 +1038,7 @@ def keep_out_of_words(t, pos, soft=0.04):
     xy, z = CAMERA.state(t).project(np.asarray(pos, np.float64))
     m = np.ones(len(xy))
     for x0, y0, x1, y1, k in boxes:
+        x0, y0, x1, y1 = x0 - pad, y0 - pad, x1 + pad, y1 + pad
         d = np.minimum(np.minimum(xy[:, 0] - x0, x1 - xy[:, 0]), np.minimum(xy[:, 1] - y0, y1 - xy[:, 1]))
         m *= 1.0 - k * _ss(-soft, soft, d)
     return np.where(z > 0.1, m, 1.0)
@@ -1442,7 +1453,7 @@ def _stage_calm(t):
     for _l, (a, b, c, d), *_x in PHRASE_LIST:
         if a - 0.6 <= t <= d + 0.6:
             r = max(r, _sc(a - 0.6, b, t) * (1.0 - _sc(c, d + 0.6, t)))
-    return 1.0 - (0.25 if stage_view(t) else 0.12) * r
+    return (1.0 - (0.25 if stage_view(t) else 0.12) * r) * (1.0 - 0.10 * S_LIGHT._win(171.5, 174.0, t))   # f18
 
 
 WORLD["exposure"] = lambda t: _stage_calm(t) * S_MUSIC.choir_swell(t)
