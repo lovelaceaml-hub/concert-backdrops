@@ -1196,7 +1196,9 @@ def _clouds():
     """The church's own clouds of light: the low canyon over the sea that the long flight runs down (it
     frames Zion under the title), and a great bank behind the church in its own shots."""
     out = []
-    canyon = lambda t: sky_gain(t) * (0.2 + 0.3 * _stair(t, 2.4, 11.7) + 0.5 * _sc(10.4, 12.4, t)) * (1.0 - _sc(16.5, 18.0, t))
+    # round 7: from far out under the title the near pair glared as two white blobs beside Zion; they now stay
+    # a soft frame until the flight reaches them (0:11.9) and only then fill out round the camera
+    canyon = lambda t: sky_gain(t) * (0.1 + 0.12 * _stair(t, 2.4, 11.7) + 0.78 * _sc(11.9, 13.2, t)) * (1.0 - _sc(16.5, 18.0, t))
     for side in (-1.0, 1.0):
         for k, z in enumerate((420.0, 300.0, 180.0, 60.0)):
             c = _v(side * (100.0 + 14.0 * k), 0.0, z)
