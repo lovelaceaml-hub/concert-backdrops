@@ -1086,14 +1086,21 @@ class ChurchLight:
             # the heavenly city reads as buildings first, over the coloured crowds (ZION): firmer outlines, warm
             # lit windows that hold their size however small the building is scaled, a gentle glow on the front
             size = np.maximum(size, np.array([0.34, 0.32, 1.1, 0.36])[role[keep]])
-            alpha = np.array([0.5, 0.75, 1.0, 0.9])[role[keep]]
-            emit = 2.3
+            # (CORE's deeper grade) the outlines softer, warmer and a little coloured, not pure white, so the
+            # windows and glass lead and the buildings are never the brightest thing at rest
+            alpha = np.array([0.3, 0.6, 1.0, 0.8])[role[keep]]
+            emit = 1.9
         birth = (self.t0 + 0.5 * m["pos"][keep, 1] / m["h"]).astype(np.float32)
         fog = (0.6, 0.45, 0.35, 0.25)[c["band"]]
         h = c["h"]
         self.b = []
+        col = m["col"][keep]
+        if city:
+            out = role[keep] == 0
+            col = col.copy()
+            col[out] = 0.45 * col[out] + 0.55 * lin("#e9b48a")[None, :]
         if len(P):
-            self.b.append(dict(pos=P, size=size, color=m["col"][keep], alpha=alpha.astype(np.float32), kind="spark",
+            self.b.append(dict(pos=P, size=size, color=col, alpha=alpha.astype(np.float32), kind="spark",
                                emit=emit, birth=birth, fade=0.25, flash=2.0, fog=fog, twinkle=0.2))
         if part == "frame":
             G = np.array([c["base"] + _v(0, 0.45 * h, 0), c["base"] + _v(0, 0.08 * h, 0)])
