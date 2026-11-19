@@ -47,7 +47,7 @@ Each machine owns one section (see PIPELINE.md). The full standing order a machi
        `python tools/s11_full2/render_chunks.py --order {CH} --parts work/s11_full2/<tag> --scale 0.5 --fps 30`
        Use a monitor that wakes you each time a new `work/s11_full2/<tag>/cNN.mp4` appears.
     5. Progress on the page (ArtifactData tool, url https://claude.ai/artifact/1SAvCedZLDEPTJzr1kChaj, collection `fleet`, doc_id `{X}`):
-       - At the start, create or replace the doc with `{"section": {I}, "tag": "<tag>", "state": "rendering", "done": 0, "total": {NP}, "updated": "<UTC ISO time>", "note": ""}`. If the doc already exists, `get` it first and pass its version as if_version.
+       - At the start, update the doc (create it only if it does not exist) with `{"section": {I}, "tag": "<tag>", "state": "rendering", "done": 0, "total": {NP}, "updated": "<UTC ISO time>", "note": ""}`. Never replace it: the `url` and `video_at` of the last finished video must stay, so the page keeps showing it while you render. `get` it first and pass its version as if_version. Write every time as a full UTC timestamp from `date -u +%Y-%m-%dT%H:%M:%SZ`.
        - On every new part, update `done` and `updated` (pin if_version to the version from your last write).
        - Do NOT message the coordinator per part.
     6. When all {NP} parts exist:
@@ -55,7 +55,9 @@ Each machine owns one section (see PIPELINE.md). The full standing order a machi
        - Run `bash tools/s11_full2/section_build.sh <tag> "11 <tag> - {FILE}" {T0} {T1} work/s11_full2/audio/s{N}.mp4`.
        - Look at 2 frames from the result with ffmpeg + Read: a quick sanity check, not black or broken.
        - Upload `work/s11_full2/deliver/11 <tag> - {FILE}.mp4` to the page (Artifact tool, url above, asset: true). If the path is outside your working directory, copy it into it first.
-       - Update the fleet doc to `{"state": "ready", "url": "/_blob/<asset id>", "done": {NP}, "updated": "<UTC ISO time>"}`. The page then shows it at once.
+       - Update the fleet doc to `{"state": "ready", "url": "/_blob/<asset id>", "done": {NP}, "updated": "<UTC ISO time>", "video_at": "<UTC time the upload finished>"}`. The page then shows it at once, with the real time the video was made.
     7. Send the coordinator (session_01DSHsMgq59yAPPQ2ZCifhgv) ONE message: `SECTION DONE {X} tag=<tag> asset=<id> cpu=<total CPU s if known>`. If anything fails, set the fleet state to `blocked` with a short note and message the coordinator the exact error.
     
+    Final and stop orders: `FINAL {X}` (or `FINAL2 {X}`) names the last film code: stop any older render, render that tag once, add note "FINAL" to the fleet doc, send `SECTION DONE {X} tag=<tag> asset=<id> FINAL`, then stop looping. `STOP {X}` means stop at once: kill any render or encode processes (`pkill -f render_chunks; pkill -f render.py; pkill -f ffmpeg`), upload nothing, send nothing more.
+
     Rules as before: no git commits or pushes, no repo edits, no em or en dashes, no paid services, never dispatch GitHub workflows. Upload only your section video. Never upload audio or put it in git.

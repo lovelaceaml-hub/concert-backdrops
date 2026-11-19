@@ -40,3 +40,13 @@
 - Data: `status/now` (written by the coordinator from `tools/s11_full2/live/status_gen.py`, which reads the parts folder, the running renders and sections.json / machines.json), `findings/*` (coordinator writes; Anthony approves or declines on the page), `requests/*` (Anthony writes on the page; the coordinator replies and sets Working on it / Done).
 - Cadence (Anthony's choice): status updated on every finished part during a render (`live/wait_change.sh` wakes the coordinator), requests and decisions picked up at each update.
 - Section videos are re-encoded smaller (crf 25) and uploaded as assets; their urls go in sections.json.
+- Real video times (Anthony: "The actual time stamp for updated videos needs to be on the artifact"): each section shows "Video made <date, time> (<n> minutes ago)" from the upload time of its file in the page's asset store (refreshed every 90 s), else the fleet doc's `video_at`. The fleet docs are only ever updated, never replaced, so the newest finished video stays on show while the next one renders.
+- Findings and requests: the review page's database is the live list; FINDINGS.md is the exported final record (song phrases replaced by "the phrase").
+
+## Finishing and stopping (2026-11-19)
+Anthony: "We need to finish up all the videos with all the updates from here to come to a stopping point." Then: "Stop all of them ... No more reviews."
+1. Each builder pushes one last change (`LAST BUILT <KEY>`), with a fresh-process still check, then stops.
+2. The coordinator merges once more, checks stills from a cold cache (`S11_CACHE` on a new folder) and sends every machine `FINAL <X>` with the final code; each renders its section once, marks its fleet doc "FINAL" and stops.
+3. To stop at once: interrupt each session (Claude Code Remote `interrupt_session`), then send `STOP <X>` so any background render or encode is killed and nothing is uploaded. Interrupt the reviewer too and tell it no more reviews.
+4. The full film: download the seven newest section videos (Artifact read, `path` = asset id, one per call) and join them with `tools/s11_full2/live/join_sections.sh <out> <intro> ... <ending>` (video copied, audio re-encoded once; it checks the formats match, prints the frame count and any silences at the joins). Check a frame each side of every join. The result is about 66 MB for 4:35 at 960x540: give it to Anthony directly; it is too big for the page's asset limit and for Drive uploads from a session, and it never goes in git.
+5. Record everything: the page's findings and requests set to their final states, FINDINGS.md exported, STATUS.md and DESIGN.md updated, pushed, and copies on Drive.
