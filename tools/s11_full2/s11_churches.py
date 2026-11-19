@@ -7,93 +7,27 @@ Anthony (2026-11-19): "more and more churches are being established (reference r
 different ones)". Then: "The churches don't need to be on the earth. Many, many, many more churches should start
 to appear around Zion." The main temple is already the church of light (s11_church.py) and is not repeated here.
 
-THE BUILDINGS: 63 different real churches, each modelled once from its own published photograph (reference
-only: a silhouette in light; no sign, emblem, lettering or picture copied; no AI image). The shapes are in the
-BUILDINGS list below (one entry each: name, city, country, page, shape), so more can be added there without
-touching the placement. Photographs from the dedication-service pages of watv.org:
-   1 Homaesil Church, Suwon, Korea: https://watv.org/?p=158263
-   2 Yuseong Church, Daejeon, Korea: https://watv.org/church-dedication-service-sejong/
-   3 Moran Church, Seongnam, Korea: https://watv.org/church-dedication-service-moran/
-   4 Bitgaram Church, Naju, Korea: https://watv.org/church-dedication-service-gangwon/
-   5 Sydney Church, Sydney, Australia: https://watv.org/church-dedication-service-australia/
-   6 Brasilia Church (or Manaus: the page shows one exterior), Brazil: https://watv.org/church-dedication-service-brazil/
-   7 Gwanjeo Church, Daejeon, Korea: https://watv.org/?p=92800
-   8 the training institute in the introduction photograph, Korea: https://watv.org/church-intro/
-   9 Jangjae Church, Asan, Korea: https://watv.org/church-dedication-service-asan/
-  10 Dangjin Church, Dangjin, Korea: https://watv.org/church-dedication-service-asan/
-  11 Adelaide Church, Adelaide, Australia: https://watv.org/church-dedication-service-australia/
-  12 Asan Church, Asan, Korea: https://watv.org/church-dedication-service-cheonan/
-  13 Seongjeong Church, Cheonan, Korea: https://watv.org/church-dedication-service-cheonan/
-  14 Yullyang Church, Cheongju, Korea: https://watv.org/church-dedication-service-cheongju/
-  15 Seonghwa Church, Cheongju, Korea: https://watv.org/church-dedication-service-cheongju/
-  16 Hongcheon Church, Hongcheon, Korea: https://watv.org/church-dedication-service-gangwon/
-  17 a church in an industrial city, Gangwon and Honam series (five storeys), Honam region, Korea: https://watv.org/church-dedication-service-gangwon/
-  18 Yeosu Church, Yeosu, Korea: https://watv.org/church-dedication-service-gangwon/
-  19 Shingi Church, Yeosu, Korea: https://watv.org/church-dedication-service-gangwon/
-  20 Maegok Church, Suncheon, Korea: https://watv.org/church-dedication-service-gangwon/
-  21 Seonun Church, Gwangju, Korea: https://watv.org/church-dedication-service-gangwon/
-  22 Namyang Church, Hwaseong, Korea: https://watv.org/church-dedication-service-hwaseong-namyang/
-  23 Hyangnam Church, Hwaseong, Korea: https://watv.org/church-dedication-service-hwaseong/
-  24 Jangji Church, Hwaseong, Korea: https://watv.org/church-dedication-service-hwaseong/
-  25 Majang Church, Icheon, Korea: https://watv.org/church-dedication-service-hwaseong/
-  26 Janghowon Church, Icheon, Korea: https://watv.org/church-dedication-service-hwaseong/
-  27 Eunhaeng Church, Siheung, Korea: https://watv.org/church-dedication-service-hwaseong/
-  28 Banghwa Church, Seoul, Korea: https://watv.org/church-dedication-service-hwaseong/
-  29 Jinju Church, Jinju, Korea: https://watv.org/church-dedication-service-jinju/
-  30 Dalseong Church, Daegu, Korea: https://watv.org/church-dedication-service-jinju/
-  31 Puebla Church, Puebla, Mexico: https://watv.org/church-dedication-service-jinju/
-  32 Atlixco Church, Atlixco, Mexico: https://watv.org/church-dedication-service-jinju/
-  33 Gwanggyo Church, Suwon, Korea: https://watv.org/church-dedication-service-metropolitan-area/
-  34 Yeongjongdo Church, Incheon, Korea: https://watv.org/church-dedication-service-metropolitan-area/
-  35 Janggi Church, Gimpo, Korea: https://watv.org/church-dedication-service-metropolitan-area/
-  36 Jungang Church, Dongducheon, Korea: https://watv.org/church-dedication-service-metropolitan-area/
-  37 Byeolgaram Church, Namyangju, Korea: https://watv.org/church-dedication-service-metropolitan-area/
-  38 Cheoin Church, Yongin, Korea: https://watv.org/church-dedication-service-moran/
-  39 Sejong Church, Sejong, Korea: https://watv.org/church-dedication-service-sejong/
-  40 Deokyang Church, Goyang, Korea: https://watv.org/church-dedication-service-sejong/
-  41 Samsong Church, Goyang, Korea: https://watv.org/church-dedication-service-sejong/
-  42 Eungwang Church, Seoul, Korea: https://watv.org/?p=92800
-  43 Gwonseon Church, Suwon, Korea: https://watv.org/church-dedication-service-suwon/
-  44 Seryu Church, Suwon, Korea: https://watv.org/church-dedication-service-suwon/
-  45 Uiwang Church, Uiwang, Korea: https://watv.org/church-dedication-service-uiwang/
-  46 Seongnam Jungang Church, Seongnam, Korea: https://watv.org/church-dedication-service-uiwang/
-  47 Taejang Church, Wonju, Korea: https://watv.org/church-dedication-service-wonju/
-  48 Sasong Church, Yangsan, Korea: https://watv.org/church-dedication-service-yangsan-busan-ulsan/
-  49 Gangseo Church, Busan, Korea: https://watv.org/church-dedication-service-yangsan-busan-ulsan/
-  50 Buk-gu Church, Ulsan, Korea: https://watv.org/church-dedication-service-yangsan-busan-ulsan/
-  51 Woongsang Church, Yangsan, Korea: https://watv.org/church-dedication-service-yangsan/
-  52 Yulha Church, Gimhae, Korea: https://watv.org/church-dedication-service-yangsan/
-  53 Miryang Church, Miryang, Korea: https://watv.org/church-dedication-service-yangsan/
-  54 Jaeun Church, Changwon, Korea: https://watv.org/church-dedication-service-yeongnam/
-  55 Donghae Church, Donghae, Korea: https://watv.org/church-dedication-service-yeongnam/
-  56 Yeongcheon Church, Yeongcheon, Korea: https://watv.org/church-dedication-service-yeongnam/
-  57 Yeongdeok Church, Yeongdeok, Korea: https://watv.org/church-dedication-service-yeongnam/
-  58 Yesan Church, Yesan, Korea: https://watv.org/church-dedication-service-yesan-pyeongtaek-incheon/
-  59 Godeok Church, Pyeongtaek, Korea: https://watv.org/church-dedication-service-yesan-pyeongtaek-incheon/
-  60 Dong-gu Church, Incheon, Korea: https://watv.org/church-dedication-service-yesan-pyeongtaek-incheon/
-  61 Songdo Church, Incheon, Korea: https://watv.org/church-dedication-service-yesan-pyeongtaek-incheon/
-  62 Giheung Church, Yongin, Korea: https://watv.org/church-dedication-service-moran/
-  63 Jiphyeon Church, Sejong, Korea: https://watv.org/church-dedication-service-sejong-jiphyeon/
-  The main temple (New Jerusalem Pangyo) is already the church of light and is not repeated. Pages read for the
-  floors and materials: https://english.watv.org/news/print.asp?idx=38397 (Pangyo) and
-  https://english.watv.org/news/print.asp?idx=891 (Lima, Peru: no photograph found, so not modelled).
-  The eight first models (round 7 first pass) were renamed to the churches their photographs show: the
-  arched-window block with the glass shaft is Yuseong, the curved sail tower is Bitgaram in Naju, the golden
-  arch tower is Gwanjeo in Daejeon.
+THE BUILDINGS: every church comes from the catalogue tools/s11_full2/models/wmscog_churches.py (one source of
+truth; each entry a different real building with its own published page, modelled from its photograph as a
+silhouette in light: no sign, emblem, lettering or picture copied; no AI image). The catalogue's batch 0 is the
+nineteen drawn by hand here first (LEGACY_SHAPES); all others are drawn from their parts by _parts. Duplicates
+between the two first lists were merged (one model per building). The main temple (New Jerusalem Pangyo) is the
+church of light and is not repeated.
 
 WHAT IT DOES: around Mount Zion the churches of God are established one after another, each a different real
 church, until the near shore, the sea, the far shore and the foot of the hills hold every building in the list.
-  Where   four widening bands round Zion: the near shore (380 to 700 m from the foot of the mountain; the four
-          nearest flank the march route), the sea (760 to 1300 m), the far shore (1360 to 2200 m) and the foot of
-          the hills (2400 to 3200 m), larger and drawn more simply the farther out they stand. Each faces Zion,
-          turned a little. No church stands on a camera path (every shot's camera is sampled every quarter
+  Where   rings round Zion in four bands: the near shore (rings at 430, 560, 680 m from the foot of the
+          mountain; the first four flank the march route), the sea of glass (820 to 1300 m), the far shore (1450
+          to 2120 m) and the foot of the hills (2450 to 3050 m), larger and drawn more simply the farther out.
+          Every church stands on the ground (y = 0) and faces Zion squarely, evenly spaced along its ring (rings
+          staggered), so they read as rows and arcs, never scattered or floating. No church stands on a camera path (every shot's camera is sampled every quarter
           second; a church keeps its distance from all of them), on the great avenue and march corridor, or on
           the mountain.
   When    WAVES: from the first Zion view (0:55.4) a handful in verse 1, then more and more through chorus 1,
           verse 2, chorus 2 and the coda, on the beats and hits, several at once on the big hits (3, 4 and 5 on
           the three slams). Each is born from the ground up in half a second with a small flash and a column of
           light, then keeps a soft breath on the beat.
-  Calm    dimmed while a phrase reads; the columns held down where the music already blazes; hidden on the
+  Calm    dimmed while a phrase reads, and hidden while it reads if it stands behind the words on screen; the columns held down where the music already blazes; hidden on the
           Earth; softer in the choir shots, hidden from the orchestra on the clouds (3:26). Mount Zion hides what stands behind it: every frame each church is
           tested at three heights against the terraces as the camera sees it, so no light shows through them.
   Cost    each church is a static point set on the graphics card (born by `birth`); per frame only its strength
@@ -419,226 +353,225 @@ def _shape(spec, s):
 
 
 # =========================================================================================================
-# THE BUILDINGS: one entry per real church, each used exactly once around Zion. A model thread may add
-# entries here (name, city, country, the published page with its photograph, and the shape list or a function
-# of the drawing step); the placement below takes whatever is listed.
+# THE BUILDINGS: one source of truth, the catalogue in models/wmscog_churches.py (one entry per real church, its
+# page and its parts); each is used exactly once around Zion. The first nineteen drawn before the catalogue
+# existed keep their hand drawings here (LEGACY_SHAPES, keyed by the catalogue id); every other church is drawn
+# from its parts by _parts below, in its own materials (glass grids, warm lit windows, golden, brick, stone).
 # =========================================================================================================
-_U = "https://watv.org/church-dedication-service-"
-
-
-def _b(name, city, country, url, shape):
-    return dict(name=name, city=city, country=country, url=url, shape=shape)
-
-
-BUILDINGS = [
-    _b("Homaesil Church", "Suwon", "Korea", "https://watv.org/?p=158263", _homaesil),
-    _b("Yuseong Church", "Daejeon", "Korea", _U + "sejong/", _sejong),
-    _b("Moran Church", "Seongnam", "Korea", _U + "moran/", _moran),
-    _b("Bitgaram Church", "Naju", "Korea", _U + "gangwon/", _sail),
-    _b("Sydney Church", "Sydney", "Australia", _U + "australia/", _sydney),
-    _b("Brasilia Church (or Manaus: the page shows one exterior)", "Brasilia", "Brazil", _U + "brazil/", _brazil),
-    _b("Gwanjeo Church", "Daejeon", "Korea", "https://watv.org/?p=92800", _goldarch),
-    _b("the training institute in the introduction photograph", "Korea", "Korea", "https://watv.org/church-intro/",
-       _institute),
-    _b("Jangjae Church", "Asan", "Korea", _U + "asan/", [
-        ("box", -26, -2, 0, 16, 16), ("glass", -25, -3, 1, 6, 8, 1), ("win", -24, -4, 9, 14, 6, 1),
-        ("box", -2, 6, 0, 30, 10), ("v", 1, 3, 3, 28, 2, GLASS),
-        ("box", 6, 22, 0, 22, 14), ("win", 8, 20, 8, 19, 4, 3),
-        ("box", 22, 30, 0, 12, 12)]),
-    _b("Dangjin Church", "Dangjin", "Korea", _U + "asan/", [
-        ("box", -14, 6, 0, 22, 16), ("win", -12, 4, 17, 20, 6, 1), ("win", -12, 4, 8, 13, 5, 1),
-        ("box", 6, 14, 0, 24, 14), ("glass", 6, 14, 1, 24, 3, 8),
-        ("box", 14, 18, 0, 20, 12, TEAL), ("v", 14.5, 17.5, 2, 18, 3, TEAL),
-        ("box", 18, 32, 0, 14, 14, ROSE), ("h", 18, 32, 3, 12, 4, ROSE)]),
-    _b("Adelaide Church", "Adelaide", "Australia", _U + "australia/", [
+LEGACY_SHAPES = {
+    "kr_homaesil": _homaesil,
+    "kr_yuseong_daejeon": _sejong,
+    "kr_moran_seongnam": _moran,
+    "kr_bitgaram_naju": _sail,
+    "au_sydney": _sydney,
+    "br_brasilia": _brazil,
+    "kr_gwanjeo_daejeon": _goldarch,
+    "kr_training_institute": _institute,
+    "au_adelaide": [
         ("box", -6, 14, 0, 18, 18, ROSE), ("h", -6, 14, 3, 15, 4, ROSE),
         ("box", -22, 10, 0, 7, 12, ROSE), ("hip", -24, 12, 7, 14, 3, SLATE), ("win", -18, -12, 2, 5, 2, 1),
-        ("box", 14, 24, 0, 9, 10, ROSE)]),
-    _b("Asan Church", "Asan", "Korea", _U + "cheonan/", [
-        ("box", -28, 20, 0, 20, 16), ("glass", -24, 16, 8, 16, 8, 2), ("v", -22, 12, 2, 7, 7, GLASS),
-        ("glass", 16, 20, 2, 20, 1, 6), ("h", -28, 20, 18.5, 18.5, 1)]),
-    _b("Seongjeong Church", "Cheonan", "Korea", _U + "cheonan/", [
-        ("box", -8, 8, 0, 26, 10), ("glass", -8, 8, 2, 24, 4, 8),
-        ("cyl", -10, 4, 3.5, 0, 24, 6, GLASS), ("cyl", 10, 4, 3.5, 0, 24, 6, GLASS),
-        ("box", -20, -12, 0, 28, 12), ("box", 12, 20, 0, 28, 12), ("canopy", -9, 9, 5, 4)]),
-    _b("Yullyang Church", "Cheongju", "Korea", _U + "cheongju/", [
-        ("box", -14, -4, 0, 22, 12), ("glass", -7, -5, 2, 20, 1, 7),
-        ("box", -4, 22, 0, 16, 16), ("win", -2, 20, 5, 14, 6, 3), ("h", -4, 22, 2, 2, 1, GLASS)]),
-    _b("Seonghwa Church", "Cheongju", "Korea", _U + "cheongju/", [
-        ("box", -26, 4, 0, 18, 14), ("v", -24, 2, 3, 16, 9, GLASS),
-        ("box", 4, 18, 0, 24, 14), ("v", 6, 16, 2, 22, 4, GLASS),
-        ("box", 18, 24, 0, 22, 10), ("glass", 18, 24, 2, 22, 2, 6)]),
-    _b("Hongcheon Church", "Hongcheon", "Korea", _U + "gangwon/", [
-        ("box", -20, 4, 0, 16, 14), ("glass", -19, 3, 2, 14, 6, 4),
-        ("box", 4, 10, 0, 12, 12), ("box", 10, 18, 0, 22, 10), ("glass", 10, 18, 1, 22, 2, 8),
-        ("box", 6, 12, 0, 5, 16)]),
-    _b("a church in an industrial city, Gangwon and Honam series (five storeys)", "Honam region", "Korea",
-       _U + "gangwon/", [
-        ("box", -10, 26, 0, 10, 16), ("glass", -9, 25, 2, 9, 12, 1), ("curve", -10, 10, 26, 14, 2.0, GLASS),
-        ("box", -24, -10, 0, 20, 14), ("h", -24, -10, 3, 19, 5, TEAL), ("box", -12, -4, 0, 9, 18)]),
-    _b("Yeosu Church", "Yeosu", "Korea", _U + "gangwon/", [
-        ("box", -30, 22, 0, 14, 16), ("v", -14, 20, 2, 13, 8), ("glass", -26, -20, 2, 12, 2, 4),
-        ("box", -40, -30, 0, 10, 12), ("win", -39, -31, 3, 8, 3, 2), ("box", -34, -24, 14, 18, 10)]),
-    _b("Shingi Church", "Yeosu", "Korea", _U + "gangwon/", [
-        ("box", -12, 12, 0, 22, 14), ("gable", -12, 12, 22, 14, 6), ("glass", -6, 6, 6, 20, 4, 5),
-        ("box", -5, 5, 0, 6, 18), ("gable", -5, 5, 6, 18, 2), ("box", -18, -12, 0, 26, 10, ROSE)]),
-    _b("Maegok Church", "Suncheon", "Korea", _U + "gangwon/", [
-        ("box", -12, 14, 0, 26, 16, SAND), ("glass", -4, 6, 2, 18, 3, 6), ("arc", 1, 18, 5, 4, GLASS),
-        ("win", -10, -6, 4, 22, 1, 5), ("win", 8, 12, 4, 22, 1, 5),
-        ("box", -22, -12, 0, 22, 12), ("glass", -22, -12, 2, 20, 2, 6), ("box", 14, 20, 0, 24, 10)]),
-    _b("Seonun Church", "Gwangju", "Korea", _U + "gangwon/", [
-        ("box", -26, 0, 0, 18, 16, SAND), ("glass", -24, -2, 3, 15, 6, 3),
-        ("box", 0, 8, 0, 24, 12, SAND), ("v", 3, 5, 4, 22, 2, GLASS),
-        ("box", 8, 22, 0, 20, 14, SAND), ("win", 10, 20, 5, 18, 3, 3), ("box", 22, 32, 0, 14, 12)]),
-    _b("Namyang Church", "Hwaseong", "Korea", _U + "hwaseong-namyang/", [
-        ("box", -16, -8, 0, 28, 10), ("ring", -12, 25, 2.4, GLASS), ("v", -13, -11, 2, 20, 2, GLASS),
-        ("box", -8, 14, 14, 20, 14, GOLDA), ("win", -6, 12, 15, 18, 6, 1),
-        ("box", -8, 8, 0, 14, 15), ("glass", -6, 6, 2, 12, 4, 3), ("box", 14, 18, 0, 22, 10, GOLDA)]),
-    _b("Hyangnam Church", "Hwaseong", "Korea", _U + "hwaseong/", [
-        ("box", -16, 24, 0, 20, 16), ("box", -14, -2, 0, 18, 17, GOLDA), ("v", -12, -4, 4, 16, 5, WARM),
-        ("glass", 4, 22, 2, 18, 6, 5), ("box", 24, 28, 0, 22, 10)]),
-    _b("Jangji Church", "Hwaseong", "Korea", _U + "hwaseong/", [
-        ("box", -20, 10, 0, 24, 14), ("glass", -14, 8, 4, 22, 6, 5), ("v", -14, 8, 4, 22, 4, SLATE),
-        ("box", -26, -20, 0, 28, 10), ("box", 2, 22, 0, 14, 14, ROSE), ("box", 10, 22, 14, 20, 12, SLATE)]),
-    _b("Majang Church", "Icheon", "Korea", _U + "hwaseong/", [
-        ("box", -14, 16, 0, 20, 14), ("glass", -14, 16, 1, 18, 10, 5),
-        ("box", -12, 12, 20, 26, 10, GOLDA), ("v", -10, 10, 21, 25, 10, GOLDA),
-        ("box", -24, -14, 0, 16, 10), ("glass", -24, -14, 1, 16, 3, 4),
-        ("box", 16, 22, 0, 30, 10), ("glass", 17, 21, 2, 28, 1, 8)]),
-    _b("Janghowon Church", "Icheon", "Korea", _U + "hwaseong/", [
-        ("box", -30, 20, 0, 10, 14), ("v", -28, 18, 1, 9, 16, ROSE), ("box", -30, -6, 10, 14, 14),
-        ("box", 14, 22, 0, 12, 16, SLATE), ("win", 15, 21, 3, 9, 2, 2)]),
-    _b("Eunhaeng Church", "Siheung", "Korea", _U + "hwaseong/", [
-        ("box", -20, 0, 0, 16, 14), ("win", -18, -2, 5, 13, 5, 3),
-        ("box", 0, 10, 0, 24, 12), ("gable", 0, 10, 24, 12, 6), ("glass", 3, 7, 3, 26, 1, 8),
-        ("box", 10, 18, 0, 20, 12), ("glass", 10, 14, 2, 18, 1, 5)]),
-    _b("Banghwa Church", "Seoul", "Korea", _U + "hwaseong/", [
-        ("box", -24, 4, 0, 14, 14), ("win", -22, 2, 3, 12, 7, 3), ("box", -16, 4, 14, 18, 12),
-        ("box", 4, 12, 0, 26, 12), ("glass", 6, 8, 2, 24, 1, 8), ("box", 5, 11, 26, 30, 8, SLATE),
-        ("box", 12, 20, 0, 20, 12)]),
-    _b("Jinju Church", "Jinju", "Korea", _U + "jinju/", [
-        ("drum", 0, 6, 7, 0, 22, 12), ("box", -22, -7, 0, 20, 14, ROSE), ("v", -20, -8, 1, 19, 5),
-        ("box", 7, 22, 0, 20, 14, ROSE), ("v", 8, 20, 1, 19, 5), ("box", -2, 2, 20, 34, 4, ROSE),
-        ("canopy", -8, 8, 4, 6)]),
-    _b("Dalseong Church", "Daegu", "Korea", _U + "jinju/", [
-        ("box", -20, 4, 0, 22, 16), ("glass", -19, 3, 2, 18, 8, 4), ("hip", -20, 4, 22, 16, 3, SLATE),
-        ("box", 4, 16, 0, 34, 14), ("win", 6, 14, 4, 30, 3, 6), ("box", -20, -6, 0, 6, 20),
-        ("glass", -20, -6, 0.5, 6, 4, 1)]),
-    _b("Puebla Church", "Puebla", "Mexico", _U + "jinju/", [
-        ("box", -24, 0, 0, 14, 12), ("win", -22, -2, 3, 12, 4, 3), ("box", -14, -11, 0, 18, 13, SLATE),
-        ("box", 0, 12, 0, 15, 12), ("win", 2, 10, 3, 12, 3, 3), ("box", 12, 24, 0, 18, 14),
-        ("win", 14, 22, 12, 16, 2, 1)]),
-    _b("Atlixco Church", "Atlixco", "Mexico", _U + "jinju/", [
-        ("box", -28, 28, 0, 13, 12), ("curve", -28, 15, 28, 15, -3.0), ("glass", -26, 26, 7, 9, 14, 1),
-        ("glass", -26, 26, 10.5, 12.5, 14, 1), ("gable", -4, 4, 7, 13, 1.5), ("box", 18, 28, 0, 7, 14)]),
-    _b("Gwanggyo Church", "Suwon", "Korea", _U + "metropolitan-area/", [
+        ("box", 14, 24, 0, 9, 10, ROSE)],
+    "kr_gwanggyo_suwon": [
         ("box", -20, 10, 0, 24, 16), ("glass", -16, -2, 6, 18, 6, 2), ("glass", -20, -18, 0, 24, 1, 8),
         ("glass", 2, 6, 0, 24, 1, 8), ("win", -18, 8, 2, 4, 8, 1),
-        ("box", 10, 26, 0, 14, 14), ("curve", 10, 14, 26, 14, 2.0)]),
-    _b("Yeongjongdo Church", "Incheon", "Korea", _U + "metropolitan-area/", [
+        ("box", 10, 26, 0, 14, 14), ("curve", 10, 14, 26, 14, 2.0)],
+    "kr_yeongjongdo_incheon": [
         ("box", -14, 8, 0, 22, 14), ("glass", -14, 8, 1, 20, 8, 7), ("box", -18, -14, 0, 22, 14),
-        ("box", 8, 16, 0, 30, 14), ("glass", 8, 10, 2, 28, 1, 8)]),
-    _b("Janggi Church", "Gimpo", "Korea", _U + "metropolitan-area/", [
+        ("box", 8, 16, 0, 30, 14), ("glass", 8, 10, 2, 28, 1, 8)],
+    "kr_janggi_gimpo": [
         ("box", -28, -8, 0, 18, 14), ("arch", -26, -10, 3, 13, 5, 1.6),
         ("box", -8, 10, 0, 24, 16), ("glass", -8, -5, 2, 22, 1, 7),
         ("box", 10, 26, 0, 22, 14), ("gable", 10, 26, 22, 14, 3), ("arch", 12, 24, 3, 15, 4, 1.6),
-        ("canopy", 12, 22, 4, 4)]),
-    _b("Jungang Church", "Dongducheon", "Korea", _U + "metropolitan-area/", [
+        ("canopy", 12, 22, 4, 4)],
+    "kr_jungang_dongducheon": [
         ("box", -24, 14, 0, 12, 16), ("v", -22, 12, 1, 11, 12), ("hip", -24, 14, 12, 16, 3, GLASS),
-        ("box", -30, -24, 0, 15, 10), ("glass", -29, -25, 2, 8, 2, 2)]),
-    _b("Byeolgaram Church", "Namyangju", "Korea", _U + "metropolitan-area/", [
+        ("box", -30, -24, 0, 15, 10), ("glass", -29, -25, 2, 8, 2, 2)],
+    "kr_byeolgaram_namyangju": [
         ("box", -22, -14, 0, 26, 10), ("glass", -22, -14, 1, 25, 3, 10),
         ("box", -14, 4, 0, 26, 14), ("arch", -12, 0, 10, 20, 3, 2.4), ("v", -14, 4, 8, 24, 4),
-        ("canopy", -8, 2, 4, 5), ("glass", 4, 8, 2, 22, 1, 7), ("box", 8, 24, 0, 22, 14)]),
-    _b("Cheoin Church", "Yongin", "Korea", _U + "moran/", [
+        ("canopy", -8, 2, 4, 5), ("glass", 4, 8, 2, 22, 1, 7), ("box", 8, 24, 0, 22, 14)],
+    "kr_cheoin_yongin": [
         ("box", -5, 5, 0, 38, 8), ("ln", -5, 38, 5, 41), ("ln", 5, 41, 5, 38), ("glass", -1, 1, 4, 34, 1, 9),
         ("box", -18, -5, 0, 20, 14), ("arch", -14, -8, 6, 16, 2, 1.8),
-        ("box", 5, 18, 0, 20, 14), ("arch", 8, 14, 6, 16, 2, 1.8)]),
-    _b("Sejong Church", "Sejong", "Korea", _U + "sejong/", [
+        ("box", 5, 18, 0, 20, 14), ("arch", 8, 14, 6, 16, 2, 1.8)],
+    "kr_sejong": [
         ("box", -20, 16, 0, 26, 16), ("glass", -16, 8, 6, 24, 10, 7), ("v", 10, 15, 4, 25, 4),
-        ("box", -24, -20, 0, 24, 10), ("canopy", -16, 0, 4, 4)]),
-    _b("Deokyang Church", "Goyang", "Korea", _U + "sejong/", [
-        ("box", -10, 22, 0, 34, 16), ("glass", -10, 10, 1, 26, 6, 8), ("box", -18, -10, 0, 32, 10)]),
-    _b("Samsong Church", "Goyang", "Korea", _U + "sejong/", [
+        ("box", -24, -20, 0, 24, 10), ("canopy", -16, 0, 4, 4)],
+    "kr_deokyang_goyang": [
+        ("box", -10, 22, 0, 34, 16), ("glass", -10, 10, 1, 26, 6, 8), ("box", -18, -10, 0, 32, 10)],
+    "kr_samsong_goyang": [
         ("box", -24, -4, 0, 24, 14), ("v", -22, -6, 2, 22, 5, GLASS), ("box", -4, 4, 0, 30, 12),
         ("glass", -4, 4, 1, 30, 2, 10), ("box", 4, 12, 0, 32, 12), ("glass", 6, 10, 4, 30, 1, 8),
-        ("box", 12, 22, 0, 22, 12)]),
-    _b("Eungwang Church", "Seoul", "Korea", "https://watv.org/?p=92800", [
-        ("box", -22, 6, 0, 22, 14, ROSE), ("win", -20, 4, 4, 20, 6, 4), ("hip", -22, 6, 22, 14, 3, TEAL),
-        ("box", 6, 24, 0, 16, 12, ROSE), ("win", 8, 22, 4, 14, 5, 3), ("hip", 6, 24, 16, 12, 2.5, TEAL),
-        ("arch", -10, -6, 0, 3, 1, 3)]),
-    _b("Gwonseon Church", "Suwon", "Korea", _U + "suwon/", [
-        ("drum", 6, 4, 14, 0, 14, 16), ("h", -8, 20, 14.5, 14.5, 1, GLASS),
-        ("box", -18, -8, 0, 30, 10), ("ring", -13, 27, 2, GLASS), ("v", -15, -11, 2, 22, 2, GLASS)]),
-    _b("Seryu Church", "Suwon", "Korea", _U + "suwon/", [
-        ("box", -22, 4, 0, 26, 16), ("win", -18, 0, 8, 12, 6, 1), ("glass", -14, -4, 16, 22, 3, 2),
-        ("glass", -22, -20, 2, 24, 1, 8), ("box", 4, 12, 0, 32, 14, GOLDA), ("win", 5, 11, 4, 30, 2, 8),
-        ("glass", 7.2, 8.8, 0, 32, 1, 10), ("box", 12, 20, 0, 28, 12), ("glass", 16, 18, 2, 26, 1, 8)]),
-    _b("Uiwang Church", "Uiwang", "Korea", _U + "uiwang/", [
-        ("box", -36, 6, 0, 9, 14), ("hip", -36, 6, 9, 14, 2, ROSE), ("win", -34, 4, 3, 7, 10, 1),
-        ("box", 4, 32, 0, 10, 12), ("win", 6, 30, 2, 8, 8, 2)]),
-    _b("Seongnam Jungang Church", "Seongnam", "Korea", _U + "uiwang/", [
-        ("box", -10, 18, 0, 30, 16), ("win", -6, 16, 22, 28, 3, 1), ("box", -8, 16, 6, 18, 18, SLATE),
-        ("glass", -6, 14, 7, 17, 6, 3), ("box", -16, -10, 0, 32, 12), ("glass", -15, -11, 1, 32, 2, 10)]),
-    _b("Taejang Church", "Wonju", "Korea", "https://watv.org/church-dedication-service-wonju/", [
-        ("box", -22, 4, 0, 26, 16), ("win", -20, 2, 4, 8, 6, 1), ("win", -16, -10, 22, 24, 3, 1),
-        ("box", 4, 10, 0, 32, 14, ROSE), ("v", 5, 9, 1, 31, 3, ROSE), ("glass", 10, 13, 2, 28, 1, 8),
-        ("box", 13, 22, 0, 26, 14)]),
-    _b("Sasong Church", "Yangsan", "Korea", _U + "yangsan-busan-ulsan/", [
-        ("box", -20, 20, 10, 24, 18), ("glass", -14, 18, 12, 23, 10, 3), ("box", -10, 14, 0, 10, 14),
-        ("glass", -10, 14, 1, 9, 8, 2), ("v", -18, 18, 0, 10, 3), ("box", -24, -18, 0, 26, 10, SLATE),
-        ("v", -23, -19, 2, 24, 4)]),
-    _b("Gangseo Church", "Busan", "Korea", _U + "yangsan-busan-ulsan/", [
-        ("box", -6, 22, 0, 26, 16), ("arch", 4, 20, 8, 20, 4, 1.8), ("box", -14, -6, 0, 30, 12),
-        ("glass", -14, -6, 1, 30, 3, 10), ("box", -24, -14, 0, 24, 12), ("glass", -22, -16, 2, 22, 2, 7)]),
-    _b("Buk-gu Church", "Ulsan", "Korea", _U + "yangsan-busan-ulsan/", [
-        ("box", -30, -6, 0, 18, 16), ("glass", -28, -8, 2, 16, 8, 3), ("box", -32, -28, 0, 18, 4),
-        ("box", -6, 0, 0, 22, 10, SLATE), ("box", 0, 26, 0, 18, 16), ("glass", 2, 24, 4, 15, 7, 1)]),
-    _b("Woongsang Church", "Yangsan", "Korea", "https://watv.org/church-dedication-service-yangsan/", [
-        ("box", -10, -2, 0, 36, 10), ("archtop", -10, -2, 36, 4), ("glass", -7, -5, 2, 34, 1, 9),
-        ("box", -2, 18, 0, 26, 16), ("waves", 4, 18, 0, 26, 7, GLASS), ("box", -20, -10, 0, 18, 12)]),
-    _b("Yulha Church", "Gimhae", "Korea", "https://watv.org/church-dedication-service-yangsan/", [
-        ("box", -10, 0, 0, 30, 12), ("glass", -10, 0, 1, 28, 3, 9), ("box", 0, 14, 0, 26, 14),
-        ("win", 2, 12, 4, 12, 3, 2), ("box", 4, 14, 14, 26, 14, SLATE), ("box", 14, 20, 0, 30, 12),
-        ("glass", 14, 20, 1, 30, 2, 10), ("box", -16, -10, 0, 32, 10)]),
-    _b("Miryang Church", "Miryang", "Korea", "https://watv.org/church-dedication-service-yangsan/", [
-        ("box", -28, 24, 0, 18, 16), ("hip", -28, 24, 18, 16, 4, SLATE), ("arch", -26, -14, 4, 15, 3, 1.8),
-        ("arch", -12, 22, 9, 15, 7, 1.6), ("win", -12, 22, 2, 6, 7, 1), ("gable", -10, -2, 6, 18, 1.5)]),
-    _b("Jaeun Church", "Changwon", "Korea", _U + "yeongnam/", [
-        ("box", -22, -14, 0, 36, 10), ("glass", -19, -16, 2, 34, 1, 10), ("drum", -4, 2, 8, 14, 24, 10),
-        ("box", -14, 20, 0, 16, 16), ("win", -10, 18, 6, 14, 8, 1), ("box", -14, 4, 16, 22, 14)]),
-    _b("Donghae Church", "Donghae", "Korea", _U + "yeongnam/", [
-        ("box", -20, -10, 0, 30, 14), ("ln", -20, 30, -14, 38), ("ln", -14, 38, -10, 32),
-        ("box", -10, 22, 0, 26, 16), ("win", -6, 20, 14, 20, 8, 1), ("glass", -4, 14, 2, 12, 6, 2),
-        ("box", 16, 22, 26, 30, 16)]),
-    _b("Yeongcheon Church", "Yeongcheon", "Korea", _U + "yeongnam/", [
-        ("box", -20, 0, 0, 24, 14), ("glass", -18, -8, 2, 20, 3, 6), ("h", -18, -8, 4, 20, 4),
-        ("box", 0, 18, 0, 22, 16, ROSE), ("v", 2, 16, 14, 22, 3, SLATE), ("win", 2, 16, 6, 12, 5, 1)]),
-    _b("Yeongdeok Church", "Yeongdeok", "Korea", _U + "yeongnam/", [
-        ("box", -26, 26, 0, 16, 14, SAND), ("win", -24, 24, 3, 14, 10, 3), ("v", -26, 26, 1, 15, 8),
-        ("canopy", -8, 8, 4, 6), ("box", -3, 3, 16, 20, 4)]),
-    _b("Yesan Church", "Yesan", "Korea", _U + "yesan-pyeongtaek-incheon/", [
-        ("box", -16, 22, 0, 18, 16), ("win", -12, 20, 12, 16, 8, 1), ("glass", -4, 4, 1, 18, 3, 6),
-        ("box", -20, 24, 18, 19, 18, ROSE), ("box", -20, -18, 0, 19, 4, ROSE), ("box", 4, 22, 0, 4, 17, ROSE)]),
-    _b("Godeok Church", "Pyeongtaek", "Korea", _U + "yesan-pyeongtaek-incheon/", [
-        ("box", -26, -12, 0, 18, 14), ("v", -21, -19, 3, 16, 1, GLASS), ("box", -12, -4, 0, 22, 12),
-        ("glass", -12, -4, 1, 22, 3, 8), ("box", -4, 4, 0, 20, 14), ("v", -3, 3, 4, 18, 3, GLASS),
-        ("box", 4, 18, 0, 20, 14), ("glass", 4, 18, 1, 20, 5, 5)]),
-    _b("Dong-gu Church", "Incheon", "Korea", _U + "yesan-pyeongtaek-incheon/", [
-        ("box", -10, 6, 0, 30, 14), ("glass", -10, 6, 1, 28, 5, 9), ("box", -16, -10, 0, 32, 10),
-        ("win", -15, -11, 4, 30, 1, 7), ("box", 10, 24, 0, 14, 12, ROSE), ("win", 12, 22, 3, 12, 4, 3)]),
-    _b("Songdo Church", "Incheon", "Korea", _U + "yesan-pyeongtaek-incheon/", [
-        ("box", -20, 8, 0, 22, 16, SAND), ("glass", -12, -2, 10, 18, 3, 2), ("box", 8, 22, 0, 22, 14),
-        ("glass", 8, 22, 1, 22, 5, 7), ("box", -20, 8, 0, 3, 17, ROSE), ("glass", 4, 6, 4, 20, 1, 6)]),
-    _b("Giheung Church", "Yongin", "Korea", _U + "moran/", [
+        ("box", 12, 22, 0, 22, 12)],
+    "kr_giheung_yongin": [
         ("box", -26, -8, 0, 16, 14), ("glass", -24, -10, 4, 14, 4, 3), ("box", -8, 2, 0, 24, 12),
         ("glass", -6, 0, 2, 22, 2, 7), ("box", -6, 0, 24, 28, 8), ("box", 2, 22, 0, 22, 14),
-        ("glass", 2, 22, 1, 22, 6, 7, TEAL)]),
-    _b("Jiphyeon Church", "Sejong", "Korea", "https://watv.org/church-dedication-service-sejong-jiphyeon/", [
-        ("box", -16, 18, 0, 22, 16), ("win", -10, 14, 14, 20, 3, 1), ("win", -10, 14, 8, 12, 2, 1),
-        ("box", -16, -12, 0, 22, 12, SLATE), ("glass", -15, -13, 2, 20, 1, 7), ("box", -12, 18, 0, 6, 17, SLATE),
-        ("glass", 2, 18, 1, 5, 4, 1, TEAL)]),
-]
+        ("glass", 2, 22, 1, 22, 6, 7, TEAL)],
+}
+
+
+def _load_catalogue():
+    import importlib.util
+    path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "models", "wmscog_churches.py")
+    spec = importlib.util.spec_from_file_location("s11_wmscog_churches", path)
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    return mod.all_buildings()
+
+
+# the catalogue's materials as light: (colour, role) with role 0 outline, 1 glass, 2 window, 3 accent
+_MAT = {"pearl": (PEARL, 0), "white": ("#f4f6ff", 0), "glass": (GLASS, 1), "teal": (TEAL, 1), "gold": (GOLDA, 3),
+        "rose": (ROSE, 3), "warm": ("#f3b98e", 3), "stone": ("#e9dfcc", 0), "grey": (SLATE, 3)}
+
+
+def _parts(parts, s):
+    """A building from its catalogue parts (catalogue metres: x across, y up, the front faces -z). The pen's
+    front faces +z, so z is turned round (z -> -z) and x keeps its side."""
+    p = _Pen(s)
+
+    def W(x, y, z):
+        return (x, y, -z)
+
+    def L(a, b, c, r):
+        p.line(W(*a), W(*b), c, r)
+
+    for q in parts:
+        k = q["kind"]
+        x, z, y0 = q["x"], q["z"], q["y0"]
+        w, d, h = q.get("w", 0.0), q.get("d", 0.0), q.get("h", 0.0)
+        c, r = _MAT.get(q.get("col", "pearl"), (PEARL, 0))
+        ang = np.radians(q.get("rot", 0.0))
+
+        def rl(u, v):
+            return x + u * np.cos(ang) - v * np.sin(ang), z + u * np.sin(ang) + v * np.cos(ang)
+
+        if k in ("box", "canopy", "gable", "hip", "spire", "steps"):
+            cs = [rl(sx * w / 2, sz * d / 2) for sx, sz in ((-1, -1), (1, -1), (1, 1), (-1, 1))]
+        if k in ("box", "canopy"):
+            for i in range(4):
+                (xa, za), (xb, zb) = cs[i], cs[(i + 1) % 4]
+                L((xa, y0 + h, za), (xb, y0 + h, zb), c, r)
+                L((xa, y0, za), (xb, y0, zb), c, r)
+                if k == "box":
+                    L((xa, y0, za), (xa, y0 + h, za), c, r)
+            if k == "box" and r == 1:                          # a glass block shows its floors
+                for yy in np.arange(y0 + 3.5, y0 + h - 0.5, 3.5):
+                    L((cs[0][0], yy, cs[0][1]), (cs[1][0], yy, cs[1][1]), c, r)
+        elif k in ("gable", "hip"):
+            for i in range(4):
+                (xa, za), (xb, zb) = cs[i], cs[(i + 1) % 4]
+                L((xa, y0, za), (xb, y0, zb), c, r)
+            along_x = (q.get("axis", "x") == "x") if k == "gable" else w >= d
+            inset = 0.0 if k == "gable" else min(w, d) / 2.0
+            if along_x:
+                t1, t2 = rl(-w / 2 + inset, 0.0), rl(w / 2 - inset, 0.0)
+                pairs = ((0, t1), (3, t1), (1, t2), (2, t2))
+            else:
+                t1, t2 = rl(0.0, -d / 2 + inset), rl(0.0, d / 2 - inset)
+                pairs = ((0, t1), (1, t1), (3, t2), (2, t2))
+            L((t1[0], y0 + h, t1[1]), (t2[0], y0 + h, t2[1]), c, r)
+            for i, t in pairs:
+                L((cs[i][0], y0, cs[i][1]), (t[0], y0 + h, t[1]), c, r)
+        elif k == "spire":
+            for i in range(4):
+                (xa, za), (xb, zb) = cs[i], cs[(i + 1) % 4]
+                L((xa, y0, za), (xb, y0, zb), c, r)
+                L((xa, y0, za), (x, y0 + h, z), c, r)
+        elif k == "steps":
+            n = int(q.get("n", 6))
+            for i in range(n + 1):
+                v = -d / 2 + d * i / n
+                yy = y0 + h * min(i + 1, n) / n
+                a_, b_ = rl(-w / 2, v), rl(w / 2, v)
+                L((a_[0], yy, a_[1]), (b_[0], yy, b_[1]), c, r)
+        elif k in ("cyl", "dome"):
+            rr = w / 2.0
+            m = max(int(2 * np.pi * rr / s), 10)
+            aa = np.linspace(0.0, 2 * np.pi, m)
+            if k == "cyl":
+                rings = [(y0 + h * f, rr) for f in np.linspace(0.0, 1.0, max(2, int(h / 4.0) + 1))]
+            else:
+                rings = [(y0 + h * np.sin(np.pi / 2 * f), rr * np.cos(np.pi / 2 * f)) for f in (0.0, 0.35, 0.7)]
+                L((x - rr, y0, z), (x, y0 + h, z), c, r)
+                L((x, y0 + h, z), (x + rr, y0, z), c, r)
+            for yy, ra in rings:
+                p._put(np.stack([x + ra * np.cos(aa), np.full(m, yy), -(z + ra * np.sin(aa))], 1), c, r)
+            if k == "cyl":
+                for g in np.radians([200, 250, 290, 340]):
+                    L((x + rr * np.cos(g), y0, z + rr * np.sin(g)), (x + rr * np.cos(g), y0 + h, z + rr * np.sin(g)), c, r)
+        elif k == "cross":
+            L((x, y0, z), (x, y0 + h, z), c, r)
+            L((x - w / 2, y0 + 0.7 * h, z), (x + w / 2, y0 + 0.7 * h, z), c, r)
+        else:                                                  # the parts drawn on a face
+            f = q.get("face", "front")
+            out = {"front": -0.15, "back": 0.15}.get(f, 0.0)
+
+            def F(u, yy, o=0.0):
+                if f == "front":
+                    return (x + u, yy, z + out - o)
+                if f == "back":
+                    return (x - u, yy, z + out + o)
+                if f == "left":
+                    return (x - 0.15 - o, yy, z - u)
+                return (x + 0.15 + o, yy, z + u)
+
+            if k in ("windows", "arch_windows"):
+                n, rows = int(q.get("n", 1)), int(q.get("rows", 1))
+                cw, ch = w / n, h / rows
+                ww, wh = 0.62 * cw, 0.72 * ch
+                for i in range(n):
+                    for j in range(rows):
+                        u0, v0 = -w / 2 + cw * (i + 0.5), y0 + ch * (j + 0.5)
+                        if k == "windows":
+                            pts = [(u0 - ww / 2, v0 - wh / 2), (u0 + ww / 2, v0 - wh / 2), (u0 + ww / 2, v0 + wh / 2),
+                                   (u0 - ww / 2, v0 + wh / 2), (u0 - ww / 2, v0 - wh / 2)]
+                        else:
+                            ra = ww / 2.0
+                            top = v0 + wh / 2 - ra
+                            pts = [(u0 - ra, top), (u0 - ra, v0 - wh / 2), (u0 + ra, v0 - wh / 2), (u0 + ra, top)]
+                            pts += [(u0 + ra * np.cos(np.pi * t / 8), top + ra * np.sin(np.pi * t / 8)) for t in range(9)]
+                        wc, wr = (c, r) if r == 1 else (WARM, 3)
+                        for (ua, va), (ub, vb) in zip(pts[:-1], pts[1:]):
+                            L(F(ua, va), F(ub, vb), wc, wr)
+                        p._put([W(*F(u0, v0))], WARM, 2)       # a warm light in every window
+            elif k == "glass_band":
+                sh = np.tan(np.radians(q.get("angle", 0.0))) * h
+                pts = [(-w / 2, y0), (w / 2, y0), (w / 2 + sh, y0 + h), (-w / 2 + sh, y0 + h), (-w / 2, y0)]
+                for (ua, va), (ub, vb) in zip(pts[:-1], pts[1:]):
+                    L(F(ua, va), F(ub, vb), c, 1)
+                nm = max(1, int(w / 2.5))
+                for i in range(1, nm):
+                    u = -w / 2 + w * i / nm
+                    L(F(u, y0), F(u + sh, y0 + h), c, 1)
+                for yy in np.arange(y0 + 3.5, y0 + h - 0.5, 3.5):
+                    u = sh * (yy - y0) / max(h, 1e-6)
+                    L(F(-w / 2 + u, yy), F(w / 2 + u, yy), c, 1)
+            elif k == "fin_row":
+                n = int(q.get("n", 5))
+                for i in range(n):
+                    u = -w / 2 + w * (i + 0.5) / n
+                    L(F(u, y0, d), F(u, y0 + h, d), c, r if r else 3)
+            elif k == "disc":
+                ra = w / 2.0
+                pts = [F(ra * np.cos(2 * np.pi * i / 20), y0 + ra * np.sin(2 * np.pi * i / 20)) for i in range(21)]
+                for a_, b_ in zip(pts[:-1], pts[1:]):
+                    L(a_, b_, c, 3)
+            else:
+                raise ValueError(f"unknown part kind {k}")
+    return p.done()
+
+
+def _entry(b):
+    shape = LEGACY_SHAPES.get(b["id"])
+    if shape is None:
+        parts = b["parts"]
+        shape = (lambda step, parts=parts: _parts(parts, step))
+    return dict(id=b["id"], name=b["name"], city=b["city"], country=b["country"], url=b["source"], shape=shape)
+
+
+BUILDINGS = [_entry(b) for b in _load_catalogue()]
+assert len({b["id"] for b in BUILDINGS}) == len(BUILDINGS)
+assert all(b["parts"] or b["id"] in LEGACY_SHAPES for b in _load_catalogue())
 
 
 def _model(b, step):
@@ -690,22 +623,36 @@ WAVES = [
 
 
 def _birth_times(n):
+    """One birth time per church. Verse 1 keeps its handful; every later wave grows in proportion, so however
+    many churches the catalogue holds, they are all established by the coda's last wave, more and more on the
+    big hits (chorus 2 and the coda)."""
+    head, rest = WAVES[:4], WAVES[4:]
+    need = max(n - sum(c for _, c in head), 0)
+    w = np.array([c * (1.6 if t >= 160.0 else 1.0) for t, c in rest], np.float64)
+    want = need * w / w.sum()
+    cnt = np.floor(want).astype(int)
+    for i in np.argsort(-(want - cnt))[: need - cnt.sum()]:
+        cnt[i] += 1
     out = []
-    for t, c in WAVES:
+    for t, c in head:
         out += [_snap(t)] * c
-    while len(out) < n:                      # more buildings than waves: one per beat after the last wave
-        out.append(_snap(out[-1] + 0.6))
-    return out[:n]
+    for (t, _), c in zip(rest, cnt):
+        # a big wave is spread over the beats right after its hit (at most 4 on one beat), so it reads as a
+        # ripple of new churches, not one flash
+        for j in range(int(c)):
+            out.append(_snap(t + 0.42 * (j // 4)))
+    return sorted(out)[:n]
 
 
 # =========================================================================================================
 # WHERE: four widening bands round Mount Zion; the order of the bands is the order of growth
 # (inner radius, outer radius from the foot of the mountain, share of the churches, world scale, drawing step)
 # =========================================================================================================
-BANDS = [(380.0, 700.0, 0.26, (1.15, 1.45), 0.8),      # the near shore (with churches flanking the march)
-         (760.0, 1300.0, 0.32, (1.55, 1.95), 1.0),     # out on the sea
-         (1360.0, 2200.0, 0.26, (2.1, 2.6), 1.3),      # the far shore
-         (2400.0, 3200.0, 0.16, (2.8, 3.4), 1.6)]      # the hills
+BANDS = [((430.0, 560.0, 680.0), 0.24, 1.3, 0.8),                   # the near shore (four flank the march)
+         ((820.0, 980.0, 1140.0, 1300.0), 0.32, 1.85, 1.0),         # out on the sea of glass
+         ((1450.0, 1660.0, 1880.0, 2120.0), 0.27, 2.35, 1.3),      # the far shore
+         ((2450.0, 2750.0, 3050.0), 0.17, 3.0, 1.6)]               # the foot of the hills
+FLANK = [(20.0, 470.0), (-20.0, 470.0), (29.0, 590.0), (-29.0, 590.0)]   # (azimuth, radius) of the first four
 
 
 def _mount_y(x, z):
@@ -726,51 +673,75 @@ def _camera_samples():
 
 
 def _layout():
-    """Each building gets a place, a turn, a scale and a birth time (deterministic)."""
+    """Each building gets a place, a turn, a scale and a birth time (deterministic). Every church stands on the
+    ground (the sea of glass, y = 0) and faces Mount Zion squarely, in rings round the mountain: on each ring the
+    churches stand evenly spaced, so they read as deliberate rows and arcs, never scattered."""
     rng = np.random.default_rng(1907)
     n = len(BUILDINGS)
     cams = _camera_samples()
-    counts = [int(round(f * n)) for _, _, f, _, _ in BANDS]
+    counts = [int(round(f * n)) for _, f, _, _ in BANDS]
     counts[1] += n - sum(counts)
-    order = rng.permutation(n)
-    out, placed, i = [], [], 0
-    for bi, ((r0, r1, _, (k0, k1), step), cnt) in enumerate(zip(BANDS, counts)):
-        az0 = rng.random() * 360.0
-        for j in range(cnt):
-            b = BUILDINGS[order[i]]
-            i += 1
-            m = _model(b, step)
-            k = k0 + (k1 - k0) * rng.random()
-            h = m["h"] * k
-            fp = 0.5 * float(np.ptp(m["pos"][:, 0])) * k + 6.0
-            for tries in range(400):
-                if bi == 0 and j < 4:          # the four nearest flank the march route, left and right
-                    az = (24.0 + 14.0 * (j // 2) + 8.0 * rng.random()) * (1 if j % 2 == 0 else -1)
-                    r = 430.0 + 180.0 * rng.random()
-                else:
-                    az = az0 + 360.0 * (j + 0.8 * rng.random()) / cnt + (tries * 37.0 if tries else 0.0)
-                    r = r0 + (r1 - r0) * rng.random()
-                a = np.radians(az)
-                base = ZC + _v(r * np.sin(a), 0.0, r * np.cos(a))
-                if base[2] > ZC[2] and abs(base[0]) < 70.0 + fp:        # the avenue and the march corridor
+    order = list(rng.permutation(n))
+    out, placed = [], []
+
+    def free(base, fp, h):
+        if base[2] > ZC[2] and abs(base[0]) < 70.0 + fp:          # the avenue and the march corridor
+            return False
+        if any(np.hypot(*(base - q)[[0, 2]]) < fp + qf + 10.0 for q, qf in placed):
+            return False
+        d = np.hypot(cams[:, 0] - base[0], cams[:, 2] - base[2])
+        return not np.any((d < fp + 90.0) & (cams[:, 1] < h + 80.0))   # no church on (or crowding) a camera's path
+
+    def put(b, m, base, k, bi, step, key):
+        h = m["h"] * k
+        face = _unit(_v(ZC[0] - base[0], 0.0, ZC[2] - base[2]))
+        ey = _v(0.0, 1.0, 0.0)
+        ex = np.cross(ey, face)
+        out.append(dict(b=b, m=m, base=base, ex=ex, ey=ey, ez=face, k=k, h=h, band=bi, step=step, key=key))
+
+    for bi, ((radii, _, k, step), cnt) in enumerate(zip(BANDS, counts)):
+        circ = np.array([2 * np.pi * r for r in radii])
+        per = np.floor(cnt * circ / circ.sum()).astype(int)
+        per[-1] += cnt - per.sum()
+        left = []
+        for ri, (r, m_) in enumerate(zip(radii, per)):
+            todo = left + [order.pop() for _ in range(m_)]
+            left = []
+            if not todo:
+                continue
+            slots = 360.0 / max(len(todo), 1)
+            az0 = (ri % 2) * 0.5 * slots                              # rings staggered, so rows interleave
+            cand = sorted(set(round(c, 3) for c in (az0 + slots * j / 3.0 for j in range(len(todo) * 3))))
+            cand = sorted(((c + 180.0) % 360.0 - 180.0 for c in cand), key=abs)
+            for idx in todo:
+                b = BUILDINGS[idx]
+                m = _model(b, step)
+                fp = 0.5 * float(np.ptp(m["pos"][:, 0])) * k + 6.0
+                h = m["h"] * k
+                if bi == 0 and len(out) < len(FLANK):              # the first four flank the march route
+                    az, rr = FLANK[len(out)]
+                    kk = 1.9
+                    base = ZC + _v(rr * np.sin(np.radians(az)), 0.0, rr * np.cos(np.radians(az)))
+                    put(b, m, base, kk, bi, step, -1.0 + 0.1 * len(out))
+                    placed.append((base, 0.5 * float(np.ptp(m["pos"][:, 0])) * kk + 6.0))
                     continue
-                if any(np.hypot(*(base - q)[[0, 2]]) < fp + qf + 12.0 for q, qf in placed):
-                    continue
-                d = np.hypot(cams[:, 0] - base[0], cams[:, 2] - base[2])
-                if np.any((d < fp + 45.0) & (cams[:, 1] < h + 60.0)):   # no church on a camera's path
-                    continue
-                break
-            if bi == 3:
-                base = base + _v(0.0, 10.0 + 30.0 * rng.random(), 0.0)   # up on the foot of the hills
-            placed.append((base, fp))
-            face = _unit(_v(ZC[0] - base[0], 0.0, ZC[2] - base[2]))
-            yaw = np.radians(-35.0 + 70.0 * rng.random())
-            ez = _unit(face * np.cos(yaw) + np.cross(_v(0.0, 1.0, 0.0), face) * np.sin(yaw))
-            ey = _v(0.0, 1.0, 0.0)
-            ex = np.cross(ey, ez)
-            out.append(dict(b=b, m=m, base=base, ex=ex, ey=ey, ez=ez, k=k, h=h, band=bi, step=step,
-                            key=bi + 0.9 * rng.random()))
-    out.sort(key=lambda c: c["key"])               # growth: from the near shore outward, a little mixed
+                ok = False
+                for c in list(cand):
+                    a = np.radians(c)
+                    base = ZC + _v(r * np.sin(a), 0.0, r * np.cos(a))
+                    if free(base, fp, h):
+                        cand.remove(c)
+                        put(b, m, base, k, bi, step, bi + ri * 0.2 + abs(c) / 3600.0)
+                        placed.append((base, fp))
+                        ok = True
+                        break
+                if not ok:
+                    left.append(idx)                                # carried out to the next ring
+        if left:                                                    # (the last ring of a band was full)
+            order += left
+    if order:
+        raise RuntimeError(f"{len(order)} churches found no free place round Zion")
+    out.sort(key=lambda c: c["key"])               # growth: from the march route outward, front first
     for c, tb in zip(out, _birth_times(len(out))):
         c["t"] = tb
     return out
@@ -802,6 +773,39 @@ def _visible(t):
     return v
 
 
+_GUARD = {"t": None, "v": None}
+
+
+def _phrase_guard(t):
+    """Per church, 1 normally and toward 0 while a phrase reads if the church stands behind the words on
+    screen (the phrases sit in the middle of the frame), so no church shows through or above a phrase."""
+    if _GUARD["t"] == t:
+        return _GUARD["v"]
+    rd = _reading(t)
+    v = np.ones(len(CHURCHES))
+    if rd > 0.0 and CHURCHES:
+        st = H.CAMERA.state(t)
+        r, u, f = st.basis()
+        eye = np.asarray(st.pos, np.float64)
+        ty = np.tan(np.radians(st.fov) * 0.5)
+        tx = ty * st.aspect
+        for i, c in enumerate(CHURCHES):
+            hit = False
+            for fr in (0.1, 0.5, 1.0):
+                q = c["base"] + _v(0.0, fr * c["h"], 0.0) - eye
+                z = float(q @ f)
+                if z <= 1.0:
+                    continue
+                x, y = float(q @ r) / (z * tx), float(q @ u) / (z * ty)
+                if abs(x) < 0.62 and -0.42 < y < 0.62:
+                    hit = True
+                    break
+            if hit:
+                v[i] = 1.0 - 0.97 * min(1.0, 1.6 * rd)
+    _GUARD["t"], _GUARD["v"] = t, v
+    return v
+
+
 def _base_gain(t):
     if globe_view(t) or shot_kind(t) == "sky":      # (from the orchestra on the clouds they read as clutter below)
         return 0.0
@@ -821,15 +825,15 @@ class ChurchLight:
         P = _place(m, c["base"], c["ex"], c["ey"], c["ez"], k)
         role = m["role"]
         size = np.array([0.85 * st, 0.75 * st, 1.5, 0.95 * st])[role] * k
-        alpha = np.array([0.5, 0.6, 1.0, 0.85])[role]
+        alpha = np.array([0.22, 0.5, 1.0, 0.8])[role]   # outlines quiet: glass, windows, materials lead
         birth = (self.t0 + 0.5 * m["pos"][:, 1] / m["h"]).astype(np.float32)
         fog = (0.6, 0.45, 0.35, 0.25)[c["band"]]
         h = c["h"]
         G = np.array([c["base"] + _v(0, 0.45 * h, 0), c["base"] + _v(0, 0.08 * h, 0)])
-        self.b = [dict(pos=P, size=size, color=m["col"], alpha=alpha.astype(np.float32), kind="spark", emit=2.3,
+        self.b = [dict(pos=P, size=size, color=m["col"], alpha=alpha.astype(np.float32), kind="spark", emit=1.8,
                        birth=birth, fade=0.25, flash=2.0, fog=fog, twinkle=0.2),
                   dict(pos=G, size=np.array([2.2 * h, 3.4 * h]), color=lin("#a9ccff"),
-                       alpha=np.array([0.07, 0.04], np.float32), kind="soft", emit=1.4,
+                       alpha=np.array([0.035, 0.02], np.float32), kind="soft", emit=1.4,
                        birth=np.full(2, self.t0 + 0.3, np.float32), fade=0.6, fog=fog)]
 
     def sample(self, t):
@@ -839,7 +843,7 @@ class ChurchLight:
         if t < self.t0 - 0.05:
             return 0.0
         g = _base_gain(t)
-        return g * float(_visible(t)[self.i]) if g > 0.0 else 0.0
+        return g * float(_visible(t)[self.i]) * float(_phrase_guard(t)[self.i]) if g > 0.0 else 0.0
 
 
 class Ignitions:
@@ -861,7 +865,7 @@ class Ignitions:
         P, A, S = [], [], []
         for i in live:
             c = CHURCHES[i]
-            fl = hit_pulse(t, [c["t"]], rise=0.02, fall=0.7) * calm * vis[i]
+            fl = hit_pulse(t, [c["t"]], rise=0.02, fall=0.7) * calm * vis[i] * _phrase_guard(t)[i]
             if fl < 0.01:
                 continue
             h = c["h"]

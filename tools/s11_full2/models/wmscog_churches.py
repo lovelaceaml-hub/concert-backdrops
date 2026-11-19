@@ -6,9 +6,10 @@ posts on watv.org and english.watv.org). Reference only: the silhouette and char
 towers, glass bands, arched windows, roofs, fins, canopies) is modelled by hand from the published photograph.
 No sign, emblem, logo or lettering is copied, no photograph is stored in the repo, and no AI image is used.
 
-Not repeated here (already modelled by the placement helper in s11_churches.py): Homaesil (Suwon), Sejong,
-Moran (Seongnam), the Bitgaram sail tower (Naju, from the Gangwon post), Sydney, Manaus and Brasilia, the golden
-arch tower (Seoul and Daejeon post), the training institute, and the New Jerusalem Pangyo Temple.
+This catalogue is the one source of truth for the churches round Zion (s11_churches.py places every entry once).
+Batch 0 lists the nineteen drawn by hand in s11_churches.py before the catalogue existed ("legacy": True, no parts
+here; their drawings are LEGACY_SHAPES there, keyed by id). The New Jerusalem Pangyo Temple is the church of light
+(s11_church.py) and is not listed.
 
 Overseas churches come from the church's own event posts (Passover, Pentecost, Resurrection) where a photograph
 of the members in front of the building carries a caption naming that church; only buildings clearly visible are used.
@@ -121,11 +122,81 @@ WONJU26 = W_SRC + "church-dedication-service-wonju/"
 ASAN23 = W_SRC + "church-dedication-service-asan/"
 EN = "https://english.watv.org/news/print.asp?idx="
 SEOUL23 = W_SRC + "church-dedication-service-seoul/"
+GAL = {"africa": W_SRC + "africa/", "asia": W_SRC + "asia/", "europe": W_SRC + "europe/",
+       "north": W_SRC + "north-america/", "south": W_SRC + "south-america/", "oceania": W_SRC + "oceania/"}
+CONT = {"africa": "Africa", "asia": "Asia", "europe": "Europe", "north": "North America", "south": "South America",
+        "oceania": "Oceania"}
+
+
+def gal(region, num, note, parts, city="unnamed", country=None):
+    """A church from the church's own continent gallery (watv.org/<continent>/): the photograph carries no
+    caption, so the city is left unnamed unless its own sign names it; id from the gallery file number."""
+    return {"id": f"gal_{region}_{num}", "name": f"A church in {CONT[region]} (gallery photo {num})",
+            "city": city, "country": country or CONT[region], "source": GAL[region], "year": None,
+            "note": note, "parts": parts}
 NAMYANG = W_SRC + "church-dedication-service-hwaseong-namyang/"
 JIPHYEON = W_SRC + "church-dedication-service-sejong-jiphyeon/"
 YEONGNAM = W_SRC + "church-dedication-service-yeongnam/"
 
 BUILDINGS = [
+    # ---- batch 0: the first churches, drawn by hand in s11_churches.py before this catalogue existed -----
+    {"id": "kr_homaesil", "name": "Homaesil church", "city": "Suwon", "country": "Korea", "source": "https://watv.org/?p=158263", "year": 2022,
+     "legacy": True, "size": (54, 24, 42), "parts": [],
+     "note": "drawn by hand in s11_churches.py (LEGACY_SHAPES) before this catalogue existed"},
+    {"id": "kr_yuseong_daejeon", "name": "Yuseong church", "city": "Daejeon", "country": "Korea", "source": W_SRC + "church-dedication-service-sejong/", "year": 2022,
+     "legacy": True, "size": (52, 20, 33), "parts": [],
+     "note": "drawn by hand in s11_churches.py (LEGACY_SHAPES) before this catalogue existed"},
+    {"id": "kr_moran_seongnam", "name": "Moran church", "city": "Seongnam", "country": "Korea", "source": W_SRC + "church-dedication-service-moran/", "year": 2022,
+     "legacy": True, "size": (43, 20, 44), "parts": [],
+     "note": "drawn by hand in s11_churches.py (LEGACY_SHAPES) before this catalogue existed"},
+    {"id": "kr_bitgaram_naju", "name": "Bitgaram church", "city": "Naju", "country": "Korea", "source": GANGWON, "year": 2023,
+     "legacy": True, "size": (53, 22, 40), "parts": [],
+     "note": "drawn by hand in s11_churches.py (LEGACY_SHAPES) before this catalogue existed"},
+    {"id": "au_sydney", "name": "Sydney church", "city": "Sydney", "country": "Australia", "source": W_SRC + "church-dedication-service-australia/", "year": 2024,
+     "legacy": True, "size": (54, 28, 16), "parts": [],
+     "note": "drawn by hand in s11_churches.py (LEGACY_SHAPES) before this catalogue existed"},
+    {"id": "br_brasilia", "name": "Brasilia church", "city": "Brasilia", "country": "Brazil", "source": W_SRC + "church-dedication-service-brazil/", "year": 2026,
+     "legacy": True, "size": (54, 24, 25), "parts": [],
+     "note": "drawn by hand in s11_churches.py (LEGACY_SHAPES) before this catalogue existed"},
+    {"id": "kr_gwanjeo_daejeon", "name": "Gwanjeo church", "city": "Daejeon", "country": "Korea", "source": "https://watv.org/?p=92800", "year": 2023,
+     "legacy": True, "size": (48, 18, 32), "parts": [],
+     "note": "drawn by hand in s11_churches.py (LEGACY_SHAPES) before this catalogue existed"},
+    {"id": "kr_training_institute", "name": "Training institute (the church introduction photograph)", "city": "Korea", "country": "Korea", "source": "https://watv.org/church-intro/", "year": None,
+     "legacy": True, "size": (140, 24, 23), "parts": [],
+     "note": "drawn by hand in s11_churches.py (LEGACY_SHAPES) before this catalogue existed"},
+    {"id": "au_adelaide", "name": "Adelaide church", "city": "Adelaide", "country": "Australia", "source": W_SRC + "church-dedication-service-australia/", "year": 2024,
+     "legacy": True, "size": (48, 18, 18), "parts": [],
+     "note": "drawn by hand in s11_churches.py (LEGACY_SHAPES) before this catalogue existed"},
+    {"id": "kr_gwanggyo_suwon", "name": "Gwanggyo church", "city": "Suwon", "country": "Korea", "source": W_SRC + "church-dedication-service-metropolitan-area/", "year": 2022,
+     "legacy": True, "size": (46, 16, 24), "parts": [],
+     "note": "drawn by hand in s11_churches.py (LEGACY_SHAPES) before this catalogue existed"},
+    {"id": "kr_yeongjongdo_incheon", "name": "Yeongjongdo church", "city": "Incheon", "country": "Korea", "source": W_SRC + "church-dedication-service-metropolitan-area/", "year": 2022,
+     "legacy": True, "size": (34, 14, 30), "parts": [],
+     "note": "drawn by hand in s11_churches.py (LEGACY_SHAPES) before this catalogue existed"},
+    {"id": "kr_janggi_gimpo", "name": "Janggi church", "city": "Gimpo", "country": "Korea", "source": W_SRC + "church-dedication-service-metropolitan-area/", "year": 2022,
+     "legacy": True, "size": (54, 16, 25), "parts": [],
+     "note": "drawn by hand in s11_churches.py (LEGACY_SHAPES) before this catalogue existed"},
+    {"id": "kr_jungang_dongducheon", "name": "Jungang church", "city": "Dongducheon", "country": "Korea", "source": W_SRC + "church-dedication-service-metropolitan-area/", "year": 2022,
+     "legacy": True, "size": (44, 16, 15), "parts": [],
+     "note": "drawn by hand in s11_churches.py (LEGACY_SHAPES) before this catalogue existed"},
+    {"id": "kr_byeolgaram_namyangju", "name": "Byeolgaram church", "city": "Namyangju", "country": "Korea", "source": W_SRC + "church-dedication-service-metropolitan-area/", "year": 2022,
+     "legacy": True, "size": (46, 14, 26), "parts": [],
+     "note": "drawn by hand in s11_churches.py (LEGACY_SHAPES) before this catalogue existed"},
+    {"id": "kr_cheoin_yongin", "name": "Cheoin church", "city": "Yongin", "country": "Korea", "source": W_SRC + "church-dedication-service-moran/", "year": 2022,
+     "legacy": True, "size": (36, 14, 41), "parts": [],
+     "note": "drawn by hand in s11_churches.py (LEGACY_SHAPES) before this catalogue existed"},
+    {"id": "kr_sejong", "name": "Sejong church", "city": "Sejong", "country": "Korea", "source": W_SRC + "church-dedication-service-sejong/", "year": 2022,
+     "legacy": True, "size": (46, 16, 26), "parts": [],
+     "note": "drawn by hand in s11_churches.py (LEGACY_SHAPES) before this catalogue existed"},
+    {"id": "kr_deokyang_goyang", "name": "Deokyang church", "city": "Goyang", "country": "Korea", "source": W_SRC + "church-dedication-service-sejong/", "year": 2022,
+     "legacy": True, "size": (40, 16, 34), "parts": [],
+     "note": "drawn by hand in s11_churches.py (LEGACY_SHAPES) before this catalogue existed"},
+    {"id": "kr_samsong_goyang", "name": "Samsong church", "city": "Goyang", "country": "Korea", "source": W_SRC + "church-dedication-service-sejong/", "year": 2022,
+     "legacy": True, "size": (46, 14, 32), "parts": [],
+     "note": "drawn by hand in s11_churches.py (LEGACY_SHAPES) before this catalogue existed"},
+    {"id": "kr_giheung_yongin", "name": "Giheung church", "city": "Yongin", "country": "Korea", "source": W_SRC + "church-dedication-service-moran/", "year": 2022,
+     "legacy": True, "size": (48, 14, 28), "parts": [],
+     "note": "drawn by hand in s11_churches.py (LEGACY_SHAPES) before this catalogue existed"},
     # ---- batch 1 ----------------------------------------------------------------------------------------
     {"id": "kr_hongcheon", "name": "Hongcheon church", "city": "Hongcheon", "country": "Korea",
      "source": GANGWON, "year": 2023,
@@ -1259,6 +1330,117 @@ BUILDINGS = [
          band(0, -7, 30, 1.6, y0=9),
          box(-18, 0, 4, 12, 13, "white"),
      ]},
+    # ---- batch 8: the church's continent galleries (uncaptioned photographs; one model per distinct building) --
+    gal("africa", "001", "a cream hall fronted by a row of small white gables on square piers, a two storey gabled wing", [
+        box(-6, 2, 30, 16, 6, "pearl"),
+        gable(-6, 2, 30, 16, 2.5, "grey", y0=6, axis="x"),
+        fins(-8, -6, 24, 5, 7, 1.2, "white"),
+        gable(-8, -7, 24, 2, 1.5, "white", y0=5, axis="x"),
+        box(14, 0, 10, 14, 9, "pearl"),
+        gable(14, 0, 10, 14, 3, "white", y0=9, axis="z"),
+        wins(14, -7, 8, 6, 3, 2, "glass", y0=1),
+    ]),
+    gal("africa", "018", "a long low cream block with a raised parapet, a glass shopfront at the corner", [
+        box(0, 0, 36, 14, 7, "pearl"),
+        box(12, 0, 12, 14, 8.5, "stone"),
+        band(12, -7, 10, 4, y0=0.5),
+        wins(-6, -7, 20, 3, 6, 1, "glass", y0=2.5),
+    ]),
+    gal("africa", "019", "a single storey colonial house under a broad hipped roof with a long row of windows", [
+        box(0, 0, 30, 12, 4, "white"),
+        hip(0, 0, 32, 14, 3, "grey", y0=4),
+        wins(0, -6, 28, 2.5, 10, 1, "glass", y0=1),
+    ]),
+    gal("asia", "005", "a white five storey block with a curved parapet crest and a blue glass strip, red roofs below", [
+        box(0, 0, 18, 14, 17, "white"),
+        band(-3, -7, 1.5, 15, y0=1),
+        wins(3, -7, 10, 14, 3, 5, "glass", y0=1.5),
+        wins(-7, -7, 4, 14, 1, 5, "glass", y0=1.5),
+        cyl(-2, -2, 6, 1, "white", y0=17),
+    ]),
+    gal("asia", "006", "a white tower front with a stepped gable, tall pilasters and a round arched entrance", [
+        box(0, 0, 16, 22, 22, "white"),
+        gable(0, -10, 16, 2, 3, "white", y0=22, axis="z"),
+        fins(0, -11, 14, 21, 5, 0.8, "white"),
+        band(0, -11, 6, 12, y0=6),
+        arches(0, -11.2, 4, 5, 1, 1, "glass"),
+        box(8, 4, 6, 16, 18, "white"),
+    ]),
+    gal("asia", "007", "a broad white two storey colonial building with arched windows below and a gabled portico", [
+        box(0, 0, 40, 18, 11, "white"),
+        hip(0, 0, 42, 20, 3, "grey", y0=11),
+        arches(-4, -9, 30, 4, 9, 1, "glass", y0=1),
+        wins(-4, -9, 30, 3, 9, 1, "glass", y0=6.5),
+        box(16, -11, 6, 4, 5, "white"),
+        gable(16, -11, 7, 4, 2, "white", y0=5, axis="z"),
+    ]),
+    gal("europe", "001", "a red brick two storey hall with a gabled porch, a metal clad shed behind", [
+        box(-2, 0, 22, 14, 9, "warm"),
+        wins(-2, -7, 18, 2, 6, 1, "glass", y0=4.5),
+        box(-6, -8, 3, 2, 3, "warm"),
+        gable(-6, -8, 3.5, 2.5, 1.5, "grey", y0=3, axis="z"),
+        box(14, 4, 10, 14, 7, "grey"),
+    ]),
+    gal("europe", "012", "a pale wooden house with a steep front gable and a round turret with a green pointed roof", [
+        box(-2, 0, 10, 10, 7, "pearl"),
+        gable(-2, 0, 10, 10, 5, "pearl", y0=7, axis="z"),
+        cyl(4, -3, 5, 9, "pearl"),
+        spire(4, -3, 5.5, 4, "teal", y0=9),
+        wins(-2, -5, 6, 4, 2, 2, "glass", y0=1.5),
+        steps(6, -7, 2, 5, 3, 8, "white"),
+    ]),
+    gal("europe", "026", "a brick cube with a recessed dark glass front, a glass stair tower and a broad stair up to the door", [
+        box(0, 2, 18, 16, 14, "warm"),
+        box(-8, 0, 3, 14, 12, "glass"),
+        box(9, 0, 4, 14, 13, "glass"),
+        box(0, -6.5, 6, 1, 6, "rose"),
+        steps(0, -10, 10, 6, 2, 8),
+    ]),
+    gal("north", "010", "a tall gable of glass in a beige clad church, a lower nave and a columned entrance", [
+        box(0, 0, 14, 20, 12, "stone"),
+        gable(0, 0, 14, 20, 6, "grey", y0=12, axis="z"),
+        band(0, -10, 5, 8, y0=8),
+        box(-12, 4, 10, 20, 6, "pearl"),
+        gable(-12, 4, 10, 20, 3, "grey", y0=6, axis="z"),
+        box(2, -12, 6, 4, 4, "pearl"),
+        steps(2, -15, 4, 3, 1.2, 4),
+    ], city="Edmonton", country="Canada"),
+    gal("north", "028", "a steep A frame church whose roof sweeps down to the ground, a slit of glass up the gable, a long porch", [
+        gable(0, 4, 16, 22, 18, "warm", y0=0, axis="z"),
+        band(0, -7.2, 1.5, 14, y0=1),
+        canopy(4, -9, 30, 4, "white", y0=3),
+        fins(4, -11, 28, 3, 9, 0.2, "white"),
+        box(26, 8, 22, 10, 4, "pearl"),
+    ]),
+    gal("north", "029", "a red brick temple front with four white columns, a white pediment and a fanlight door", [
+        box(0, 2, 22, 22, 11, "warm"),
+        gable(0, -8, 22, 4, 4, "white", y0=11, axis="z"),
+        fins(0, -10, 16, 11, 4, 1.5, "white"),
+        canopy(0, -8, 22, 4, "white", y0=11, h=0.8),
+        arches(0, -9, 3, 4.5, 1, 1, "glass"),
+        wins(0, -9, 18, 3, 4, 1, "glass", y0=5),
+    ]),
+    gal("oceania", "024", "a Victorian red brick church with white trim, a front gable with lancet windows and a belfry", [
+        box(0, 0, 14, 24, 8, "warm"),
+        gable(0, 0, 14, 24, 8, "grey", y0=8, axis="z"),
+        arches(0, -12, 8, 6, 3, 1, "glass", y0=1),
+        box(-9, -6, 4, 4, 14, "warm"),
+        spire(-9, -6, 4.5, 6, "white", y0=14),
+        box(10, 6, 10, 12, 8, "warm"),
+        gable(10, 6, 10, 12, 6, "grey", y0=8, axis="x"),
+    ]),
+    gal("south", "005", "a white block whose front is one great pointed arch shell over a ribbon of dark glass", [
+        box(4, 2, 20, 22, 10, "white"),
+        box(-8, 0, 12, 22, 14, "white"),
+        arches(-8, -11, 11, 13, 1, 1, "white"),
+        band(-8, -11, 9, 1, y0=3),
+        wins(6, -9, 14, 5, 5, 2, "glass", y0=3),
+    ]),
+    gal("south", "006", "a long hall whose whole front is striped in blue and white vertical bands", [
+        box(0, 0, 40, 22, 11, "white"),
+        fins(0, -11, 38, 10, 14, 0.4, "glass", y0=0.5),
+        band(0, -11, 38, 1, "glass", y0=10),
+    ]),
 ]
 
 
