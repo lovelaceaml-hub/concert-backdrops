@@ -25,6 +25,8 @@
 ## The reviewer (Anthony, 2026-11-19: "create another thread that's specifically for reviewing and giving suggestions and findings")
 - A dedicated cloud session (the "Song 11 reviewer") reviews every pass against DESIGN.md and Anthony's requests: frames every 1 to 2 s, every phrase and hit, sync, glare, clutter, colour, cinematic quality. It posts its findings and creative suggestions straight to the review page (`findings/*`, state open, by "reviewer") for Anthony to approve or decline, then tells the coordinator `REVIEW DONE pass=<tag> findings=<ids>`. It never edits code or renders.
 - The coordinator orders a review with `REVIEW pass=<tag>` after each pass and acts on approved findings in the next round.
+- Anthony: "the findings that you give should have a suggestion. It shouldn't just be a statement." Every finding has title, at (time), detail (what was seen) and suggestion (the concrete change); the page shows the suggestion on its own line.
+- Builders: standing cloud threads own the files and keep improving them (BUILDER-PROMPT.md). The coordinator only orchestrates: it routes approved findings and requests to the owning builder (`TASK <KEY>: ...`), merges their branches, orders renders, relays requests between threads and keeps the page and records current.
 
 ## The review page (Anthony's live dashboard)
 - A private claude.ai artifact (source `tools/s11_full2/live/review_page.html`) with the `db` and `assets` capabilities.

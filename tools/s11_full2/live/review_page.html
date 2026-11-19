@@ -65,6 +65,7 @@ video{display:block;width:100%;max-width:100%;aspect-ratio:16/9;background:#000}
 .item p{margin:0;color:var(--muted)}
 .item .reply{color:var(--fg);border-left:2px solid var(--accent);padding-left:8px}
 .acts{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.sugg{border-left:3px solid var(--accent, #7c6cf0);padding:4px 8px;margin:4px 0;background:color-mix(in srgb, var(--accent, #7c6cf0) 10%, transparent);border-radius:4px}
 button{font:inherit;font-size:12px;font-weight:500;padding:4px 10px;border-radius:7px;border:1px solid var(--line);background:var(--surface);color:var(--fg);cursor:pointer}
 button.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-fg)}
 button:disabled{opacity:.5;cursor:default}
@@ -177,7 +178,13 @@ function findItem(f){
   top.append(el("span", "t", (f.kind === "suggestion" ? "Suggestion: " : "Finding: ") + (f.title || "")), chip(f.state, FIND[f.state] || f.state));
   li.append(top);
   if (f.at) li.append(el("p", "", "At " + f.at));
-  if (f.detail) li.append(el("p", "", f.detail));
+  const said = f.detail || f.text || "";
+  // Anthony: a finding must carry a suggestion, not just a statement. Show it on its own line.
+  let sug = f.suggestion || "";
+  let body = said;
+  if (!sug) { const k = said.search(/Suggestion:\s*/i); if (k >= 0) { sug = said.slice(k).replace(/^Suggestion:\s*/i, ""); body = said.slice(0, k).trim(); } }
+  if (body) li.append(el("p", "", body));
+  if (sug) { const p = el("p", "sugg"); p.append(el("b", "", "Suggestion: "), document.createTextNode(sug)); li.append(p); }
   if (f.reply) li.append(el("p", "reply", f.reply));
   if (f.state === "open") {
     const nid = "note-" + f.id, note = el("input"); note.type = "text"; note.id = nid; note.placeholder = "Optional note (for example: yes, but keep it subtle)";
