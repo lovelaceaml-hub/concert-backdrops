@@ -12,7 +12,7 @@ import numpy as np
 from songs.s11_full2 import *  # noqa: F401,F403
 import songs.s11_full2 as _CORE  # noqa: E402  (the camera, for f19)
 from songs.s11_stage import Instruments, ORCH_P, Players  # noqa: E402
-from songs.s11_zion import WaveCrowd, mx, reading, wave_u  # noqa: E402  (the waves of raised arms; the music map)
+from songs.s11_zion import WaveCrowd, mx, reading, wave_u, zion_light  # noqa: E402  (arms; music map; key light)
 
 Y, FZ, G = SUMMIT, FACADE_Z, GLOBE_C
 
@@ -333,7 +333,7 @@ def _pillar_gain(t):
         return 0.0
     q = _win(t, 213.5, 219.5, 0.6, 0.6)          # (f35) half, swelling only on the beats, through the pale stretch
     return ((_sc(211.0, 212.2, t) * (1.0 - _sc(223.4, 224.1, t))) * (0.75 + 0.35 * intensity(t))
-            * (1.0 - q * (0.5 - 0.4 * beat_pulse(t))))
+            * (1.0 - q * (0.5 - 0.4 * beat_pulse(t))) * zion_light(t))
 
 
 def _coda_clouds():
@@ -416,6 +416,7 @@ class EpicSun:
         slam = hit_pulse(t, [SLAM3], rise=0.02, fall=0.6)
         beat = beat_pulse(t)
         swell = 1.0 + 0.25 * beat + 0.4 * kick + mx(t, brass=0.5)
+        k = k * zion_light(t)                                       # (round 8) calm at rest, blazing on the keys
         # (f35) over the summit at 3:33.5 to 3:39.5 the sun burns at half, swelling only on the beats
         q = _win(t, 213.5, 219.5, 0.6, 0.6)
         k = k * (1.0 - q * (0.85 - 0.35 * beat - 0.3 * kick))      # (CORE bisected the 3:35 glare: it was this sun)
@@ -739,11 +740,11 @@ def _music_gain(t):
 
 
 def sky_gain(t):
-    return sky_k(t) * _music_gain(t) * (1.0 + mx(t, strings=0.25, brass=0.2))    # (round 8) the players glow as they play
+    return sky_k(t) * _music_gain(t) * (1.0 + mx(t, strings=0.25, brass=0.2)) * (0.3 + 0.7 * zion_light(t))    # (round 8) the players glow as they play
 
 
 def summit_gain(t):
-    return summit_k(t) * _music_gain(t) * (1.0 + mx(t, choir=0.3))             # (round 8) everyone shines with the choir
+    return summit_k(t) * _music_gain(t) * (1.0 + mx(t, choir=0.3)) * zion_light(t)             # (round 8) everyone shines with the choir
 
 
 def summit_k(t):
@@ -807,7 +808,7 @@ def stream_k(t):
     the Earth), from thanks to Mother to the world finale."""
     if globe_view(t) or stage_view(t) or not (188.0 <= t < 224.1):
         return 0.0
-    return _sc(188.0, 189.0, t) * (1.0 - _sc(223.6, 224.1, t))
+    return _sc(188.0, 189.0, t) * (1.0 - _sc(223.6, 224.1, t)) * zion_light(t)
 
 
 class Streams:
