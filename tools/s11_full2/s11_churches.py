@@ -835,7 +835,16 @@ def _layout():
     # births: the city plots that carry their own time keep it; the rest in order of growth (the city terrace by
     # terrace from the front, then the near shore, then the towns)
     fixed = [c for c in out if isinstance(c["key"], tuple)]
-    grow = sorted([c for c in out if not isinstance(c["key"], tuple)], key=lambda c: c["key"])
+    grow = [c for c in out if not isinstance(c["key"], tuple)]
+    # the city and the nations grow together: the city from verse 1, the nations' towns joining from a quarter
+    # of the way in, both spread to the end (each keeps its own order)
+    city = sorted([c for c in grow if c["key"] < 2.0], key=lambda c: c["key"])
+    town = sorted([c for c in grow if c["key"] >= 2.0], key=lambda c: c["key"])
+    for j, c in enumerate(city):
+        c["key"] = j / max(len(city), 1)
+    for j, c in enumerate(town):
+        c["key"] = 0.25 + 0.75 * j / max(len(town), 1)
+    grow = sorted(grow, key=lambda c: c["key"])
     for c, tb in zip(grow, _birth_times(len(grow))):
         c["t"] = tb
     for c in fixed:
@@ -891,7 +900,7 @@ def _phrase_guard(t):
         tx = ty * st.aspect
         for i, c in enumerate(CHURCHES):
             hit = False
-            for fr in ((0.1, 0.5, 1.0, 1.0 + (1.2 * c["es"] + 2.0) / c["h"]) if EMBLEMS_ON else (0.1, 0.5, 1.0)):
+            for fr in ((0.1, 0.5, 1.0, 1.0 + (1.2 * c["es"] + 2.0) / c["h"]) if _has_emblem(c) else (0.1, 0.5, 1.0)):
                 q = c["base"] + _v(0.0, fr * c["h"], 0.0) - eye
                 z = float(q @ f)
                 if z <= 1.0:
@@ -1081,13 +1090,18 @@ def _choir(t):
         return 0.0
 
 
-# Anthony (2026-11-19, later): "The Korean churches don't need the church emblem above it. Just have one
-# prominently showing on the Main church." The class stays, switched off.
-EMBLEMS_ON = False
+# Anthony (2026-11-19, later): "I want the original instructions about the emblems above the churches and on the
+# earth. Only the Korean churches on the terraces don't need the emblem above them." So every church has its
+# emblem except the heavenly city's (the churches standing on Zion's terraces, base above the sea).
+EMBLEMS_ON = True
+
+
+def _has_emblem(c):
+    return EMBLEMS_ON and float(c["base"][1]) < 1.0
 
 
 class Emblems:
-    """Every church's emblem in light, facing the camera each frame (see the note above). Off (EMBLEMS_ON)."""
+    """Every church's emblem in light, facing the camera each frame (see the note above); none on the terraces."""
     wants_camera = True
 
     def sample(self, t, cam=None):
@@ -1103,7 +1117,10 @@ class Emblems:
         ty = np.tan(np.radians(cam.fov) * 0.5)
         breathe = 0.82 + 0.3 * _choir(t)
         acc = {k: ([], [], []) for k in ("blue_soft", "blue", "white", "ring")}
+        shown = []
         for i, c in enumerate(CHURCHES):
+            if not _has_emblem(c):
+                continue
             te = c["t"] + 0.55
             if t < te:
                 continue
@@ -1112,10 +1129,15 @@ class Emblems:
                 continue
             q = c["base"] + _v(0.0, c["h"], 0.0)
             dist = float(np.linalg.norm(q - eye))
-            S = max(c["es"], 0.11 * ty * dist)                     # at least about 5.5 percent of the frame
+            S = max(c["es"], 0.09 * ty * dist)                     # at least about 4.5 percent of the frame
             ctr = q + _v(0.0, 0.7 * S + 2.0, 0.0)
-            if float((ctr - eye) @ f) < 5.0:
+            zf = float((ctr - eye) @ f)
+            if zf < 5.0:
                 continue
+            sx, sy, sr = float((ctr - eye) @ r) / zf, float((ctr - eye) @ u) / zf, 0.5 * S / zf
+            if any((sx - ax) ** 2 + (sy - ay) ** 2 < (1.1 * (sr + ar)) ** 2 for ax, ay, ar in shown):
+                continue                                           # a town's emblems never pile up: one per spot
+            shown.append((sx, sy, sr))
             rise = _sc(te, te + 0.5, t)
             flash = hit_pulse(t, [te], rise=0.03, fall=0.6)
             a = g * rise * (breathe + 1.2 * flash)
