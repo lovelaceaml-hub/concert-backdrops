@@ -424,9 +424,9 @@ def _dawn_edge(t, c, R, zw, cam):
         face = np.clip((vv * v).sum(1) / np.maximum(np.linalg.norm(vv, axis=1), 1e-6), 0.0, 1.0)
         fk = (0.1 + 0.9 * _ss(0.05, 0.5, face)).astype(np.float32)
         if f.any():
-            out.append(dict(pos=p[f], size=R * (0.06 + 0.04 * small), color=lin("#ffb060"), alpha=0.022 * gone * pul * small * fk[f], kind="soft",
+            out.append(dict(pos=p[f], size=R * (0.06 + 0.04 * small), color=lin("#ffb060"), alpha=0.010 * gone * pul * small * fk[f], kind="soft",
                             emit=1.8, dof=0.0, fog=0.0, reflect=False))
-            out.append(dict(pos=p[f], size=R * 0.012, color=lin("#ffd49a"), alpha=0.08 * gone * pul * small * fk[f], kind="spark",
+            out.append(dict(pos=p[f], size=R * 0.012, color=lin("#ffd49a"), alpha=0.05 * gone * pul * small * fk[f], kind="spark",
                             emit=2.6, twinkle=0.7, dof=0.0, fog=0.0, reflect=False))
     zp = c + R * 1.02 * zw
     if ((eye - zp) @ zw) > 0.0:
@@ -490,7 +490,7 @@ def _night_side(sample):
                     night = col * 0.04 + LAND_NIGHT[None, :]
                 dawn = np.array([0.95, 0.62, 0.30])[None, :]
                 cc = col * d[:, None] + night * (1 - d[:, None])
-                b["color"] = np.clip(cc + (dawn - cc) * (0.22 * edge)[:, None], 0, 1)
+                b["color"] = np.clip(cc + (dawn - cc) * (0.07 * edge)[:, None], 0, 1)    # f21: a hint, no gold band
             else:                                         # the land glow, its warm halo and the clouds dim at night
                 al = b["alpha"]
                 al = np.full(len(pos), float(al)) if not np.ndim(al) else np.asarray(al, np.float64)
