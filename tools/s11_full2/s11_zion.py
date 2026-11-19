@@ -209,6 +209,11 @@ def _mountain():
     F, FC, FA, FK, SP = (np.concatenate(v) for v in (face, face_c, face_a, face_k, spark))
     PA, PK, NI, TR = (np.concatenate(v) for v in (par, par_k, niche, tread))
     NIC = np.asarray([lin(NICHE[i % 3]) for i in range(len(NI))])
+    # (round 8, final: white line light dominated the wide views) the rails and their lamps take their district's
+    # colour, at about two thirds of their light
+    PAK = PA[:, 0] * 0 + PK
+    RAILC = np.asarray([_district_tint(np.arctan2(p[0] - ZC[0], p[2] - ZC[2]), int(k), 0.6)[0]
+                        for p, k in zip(PA, PAK)]) * 0.65
     PB_a, PB_b = np.concatenate(pil_a), np.concatenate(pil_b)
     PO_a, PO_b, LP = np.concatenate(post_a), np.concatenate(post_b), np.concatenate(lamp)
     # the great stairways: one flight against each wall, from the terrace (or the sea) below to the one above
@@ -245,10 +250,10 @@ def _mountain():
     ]
     # the lights and paths: parapets, their lamps, the golden stairways (there from the first frame)
     dim = [
-        _batch(PA, 0.26, lin(PEARL_RAIL) * 0.75, 0.5 * LAMP_K, emit=1.0, reflect=False),
-        dict(pos=PO_a, pos2=PO_b, size=0.22, color=lin(PEARL_RAIL) * 0.6, alpha=0.6 * LAMP_K, kind="line", emit=1.0,
+        _batch(PA, 0.26, RAILC * 0.75, 0.5 * LAMP_K, emit=1.0, reflect=False),
+        dict(pos=PO_a, pos2=PO_b, size=0.22, color=lin("#ffd890") * 0.4, alpha=0.6 * LAMP_K, kind="line", emit=1.0,
              reflect=False),
-        _batch(LP, 0.8, lin("#e6f2ff"), 0.9 * LAMP_K, emit=2.0, twinkle=0.3, reflect=False),
+        _batch(LP, 0.8, lin("#ffd890") * 0.65, 0.9 * LAMP_K, emit=2.0, twinkle=0.3, reflect=False),
         _batch(ST, 0.40, lin(GOLD2) * 0.5, 0.8, emit=1.0, reflect=False),
         _batch(RA, 0.35, lin("#ffe6b8") * 0.5, 0.8, emit=1.0, reflect=False),
         _batch(LA, 0.9, lin("#ffdca0"), 0.9, emit=2.2, twinkle=0.3, reflect=False),
@@ -273,7 +278,7 @@ def _mountain():
         _batch(FL, 6.0, lin("#bfe2ff"), 0.07, kind="soft", emit=1.0, birth=FB, fade=0.7, flash=2.0, reflect=False),
         _batch(F[upper], 2.6, FC[upper] * 0.40, FA[upper] * 0.70, kind="soft", emit=1.3, birth=fb[upper], fade=0.6,
                flash=1.5, reflect=False),
-        _batch(PA, 0.3, lin(PEARL_RAIL) * 0.8, 0.45 * LAMP_K, emit=1.3, birth=FT[PK] + 0.45, fade=0.4, flash=3.0, twinkle=0.4,
+        _batch(PA, 0.3, RAILC * 0.8, 0.45 * LAMP_K, emit=1.3, birth=FT[PK] + 0.45, fade=0.4, flash=3.0, twinkle=0.4,
                reflect=False),
         _batch(ST, 0.45, lin(GOLD), 0.7, emit=1.4, birth=FT[SK] + 0.2, fade=0.6, flash=2.0, reflect=False),
     ]
@@ -1898,7 +1903,8 @@ def rim_k(t):
     c = np.asarray(H.CAMERA.state(t).pos, np.float64)
     d = float(np.hypot(c[0] - ZC[0], c[2] - ZC[2]))
     near = (1.0 - _sc(R_TOP + 140.0, R_TOP + 220.0, d)) * _sc(SUMMIT - 10.0, SUMMIT + 10.0, c[1])
-    return 1.0 - 0.85 * near
+    # (round 8, final) in the coda's summit shot the rims and the top terraces' people go almost dark
+    return (1.0 - 0.85 * near) * (1.0 - 0.95 * _win(t, 212.8, 220.4, 0.3, 0.4))
 
 
 def add(scene):
@@ -1935,12 +1941,12 @@ def add(scene):
                                   * (1.0 - 0.5 * _win(t, 213.5, 219.5, 0.6, 0.6))))      # (f35) thinner at 3:34
     scene.add("zion streams", Streams())
     edges = np.concatenate([_ring(ZC, tier_r(k) + 0.1, tier_y(k) + 1.0, 1.4) for k in range(N_TIER)])
-    scene.add("zion beat", Static([_batch(edges, 0.6, lin("#ffe8c0"), 0.8, emit=1.8, reflect=False)], edge_k))
+    scene.add("zion beat", Static([_batch(edges, 0.6, lin(GOLD) * 0.65, 0.8, emit=1.8, reflect=False)], edge_k))
     for k in range(N_TIER):
         ring = _ring(ZC, tier_r(k) + 0.1, tier_y(k) + 0.9, 1.0)
         rk = _ripple_k(k)
         g = (lambda f: (lambda t: f(t) * rim_k(t)))(rk) if k == N_TIER - 1 else rk
-        scene.add(f"zion ripple {k}", Static([_batch(ring, 0.9, lin("#fff0d0"), 1.0, emit=2.5, reflect=False)], g))
+        scene.add(f"zion ripple {k}", Static([_batch(ring, 0.9, lin(GOLD) * 0.7, 1.0, emit=2.5, reflect=False)], g))
     scene.add("crown", Crown())
     # the nations on Mount Zion: a glitter of countless people; true figures where the camera climbs past them
     P, K, born, late = _nations()
