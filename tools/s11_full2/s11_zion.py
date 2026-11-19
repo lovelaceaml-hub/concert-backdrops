@@ -46,64 +46,62 @@ def _shot(name, t0, t1, keys, fov=50.0, **kw):
 CR = ZC + _v(0.0, SUMMIT + 124.0, -10.0)      # the crown, high over the city (before it settles round it)
 CH = ZC + _v(0.0, SUMMIT + 30.0, -10.0)       # the church's middle
 SHOTS = [
-    # the crown of light ignites, its rays fan over the night: from high above, sweeping down and round
-    # until the crown sits low in the frame under the words
+    # the crown of light ignites as a blazing light, comets fanning out of it: from high above, banking down
+    # and round until the crown sits low under the words
     _shot("zion_crown", 53.78, 58.4,
           [(53.78, ZC + _v(30.0, 560.0, 190.0), CR + _v(0.0, 0.0, -120.0)),
            (56.0, _at(34.0, 320.0, 300.0), CR + _v(0.0, 30.0, -40.0)),
-           (58.4, _at(18.0, 226.0, 236.0), CR + _v(0.0, 48.0, 0.0))], fov=48.0),
-    # as Father prophesied: a flight over the city as the crown comes down round it
+           (58.4, _at(18.0, 226.0, 236.0), CR + _v(0.0, 48.0, 0.0))], fov=50.0, roll=(14.0, -3.0)),
+    # as Father prophesied: a banking flight over the city as the crown comes down round it
     _shot("zion_crown", 61.3, 64.2,
           [(61.3, _at(-42.0, 320.0, 150.0), CH + _v(0.0, 40.0, 0.0)), (62.8, _at(-20.0, 250.0, 122.0), CH + _v(0.0, 24.0, 0.0)),
-           (64.2, _at(4.0, 180.0, 102.0), CH + _v(0.0, 6.0, 0.0))], fov=52.0),
-    # fulfilled: a long rising orbit as the comets stream up the stairways and the terraces fill with gold
+           (64.2, _at(4.0, 180.0, 102.0), CH + _v(0.0, 6.0, 0.0))], fov=52.0, roll=(-10.0, 6.0)),
+    # fulfilled: a great banking spiral round the mountain as the comets stream up the stairways and the
+    # terraces fill with gold
     _shot("zion_crown", 64.2, 69.4,
-          _orbit(64.2, 69.4, -48.0, 30.0, 470.0, 400.0, 30.0, 120.0, ZC + _v(0, 28, 0), ZC + _v(0, 46, 0), 6),
-          fov=50.0),
+          _orbit(64.2, 69.4, -70.0, 50.0, 480.0, 360.0, 24.0, 130.0, ZC + _v(0, 28, 0), ZC + _v(0, 52, 0), 7),
+          fov=52.0, roll=(12.0, -6.0)),
     # the city full of gold: pulling back fast and high
     _shot("zion_crown", 69.4, 70.54,
           [(69.4, ZC + _v(10.0, 104.0, 250.0), ZC + _v(0.0, 70.0, 0.0)),
-           (70.54, ZC + _v(40.0, 190.0, 560.0), ZC + _v(0.0, 40.0, 0.0))], fov=50.0),
-    # waves of praise: high over the land, then diving to skim the sea with the comets and the rings
+           (70.54, ZC + _v(40.0, 190.0, 560.0), ZC + _v(0.0, 40.0, 0.0))], fov=50.0, roll=(-4.0, 4.0)),
+    # waves of praise: racing low over the sea between two walls of cloud toward Zion, the rings and the
+    # comets rushing under and past the camera
     _shot("praise_ripples", 86.7, 90.72,
-          [(86.7, _at(72.0, 760.0, 300.0), ZC + _v(0.0, 0.0, 60.0)), (88.4, _at(52.0, 620.0, 120.0), ZC + _v(0.0, 20.0, 40.0)),
-           (90.72, _at(30.0, 430.0, 9.0), ZC + _v(0.0, 46.0, 0.0))], fov=54.0),
-    # standing firm, the first climb: a long rising flight up the great stairway, the comets spiralling ahead
+          [(86.7, ZC + _v(0.0, 9.0, 1320.0), ZC + _v(0.0, 40.0, 0.0)), (88.7, ZC + _v(-6.0, 7.0, 900.0), ZC + _v(0.0, 44.0, 0.0)),
+           (90.72, ZC + _v(10.0, 6.0, 470.0), ZC + _v(0.0, 50.0, 0.0))], fov=58.0, roll=(-6.0, 5.0)),
+    # standing firm, the first climb: a huge banking spiral up the mountain, comets corkscrewing ahead
     _shot("zion_wide", 90.72, 97.7,
-          [(90.72, ZC + _v(4.0, 6.0, 360.0), ZC + _v(0.0, 40.0, 140.0)),
-           (93.0, ZC + _v(2.0, 28.0, 286.0), ZC + _v(0.0, 58.0, 90.0)),
-           (95.4, ZC + _v(-8.0, 58.0, 214.0), ZC + _v(0.0, 76.0, 30.0)),
-           (97.7, ZC + _v(-30.0, 96.0, 150.0), ZC + _v(0.0, 90.0, -20.0))], fov=56.0),
-    # sacrifice: rays of light pour down from heaven over the people; a slow crane over the upper terraces
+          _orbit(90.72, 97.7, -64.0, 58.0, 420.0, 240.0, 14.0, 112.0, ZC + _v(0, 34, 0), ZC + _v(0, 80, 0), 8),
+          fov=54.0, roll=(14.0, -10.0)),
+    # sacrifice: pillars of light fall from the clouds onto the people; a slow crane over the upper terraces
     _shot("zion_wide", 99.4, 103.6,
-          [(99.4, ZC + _v(100.0, 156.0, 290.0), ZC + _v(0.0, 56.0, 80.0)),
-           (101.5, ZC + _v(72.0, 132.0, 246.0), ZC + _v(0.0, 52.0, 86.0)),
-           (103.6, ZC + _v(40.0, 116.0, 212.0), ZC + _v(0.0, 48.0, 90.0))], fov=50.0),
+          [(99.4, ZC + _v(110.0, 150.0, 330.0), ZC + _v(0.0, 70.0, 60.0)),
+           (101.5, ZC + _v(80.0, 132.0, 280.0), ZC + _v(0.0, 66.0, 70.0)),
+           (103.6, ZC + _v(46.0, 118.0, 236.0), ZC + _v(0.0, 60.0, 80.0))], fov=54.0, roll=(-4.0, 3.0)),
     # devotion: diving down the great stairway with the golden waterfall
     _shot("zion_wide", 103.6, 105.14,
           [(103.6, ZC + _v(6.0, 86.0, 130.0), ZC + _v(0.0, 10.0, 340.0)),
-           (105.14, ZC + _v(2.0, 52.0, 236.0), ZC + _v(0.0, -10.0, 440.0))], fov=56.0),
-    # thanks to Father: the column of light rises with comets spiralling up it, lanterns rise all round
+           (105.14, ZC + _v(2.0, 52.0, 236.0), ZC + _v(0.0, -10.0, 440.0))], fov=58.0, roll=(0.0, 12.0)),
+    # thanks to Father: the grandest pillar, the column to heaven, clouds parting round it, lanterns rising
     _shot("zion_wide", 109.8, 117.0,
           [(109.8, _at(45.0, 360.0, 60.0), CH + _v(-30.0, 10.0, 25.0)),
            (112.4, _at(36.0, 390.0, 96.0), CH + _v(-50.0, 96.0, 36.0)),
-           (114.8, _at(20.0, 450.0, 150.0), CH + _v(-56.0, 110.0, 20.0)),
-           (117.0, _at(4.0, 520.0, 210.0), CH + _v(-60.0, 104.0, 4.0))], fov=52.0),
-    # the shockwave across the land and sea: racing out with it, then far and low on the water
+           (114.8, _at(20.0, 450.0, 150.0), CH + _v(-56.0, 130.0, 20.0)),
+           (117.0, _at(4.0, 520.0, 210.0), CH + _v(-60.0, 130.0, 4.0))], fov=54.0, roll=(-6.0, 4.0)),
+    # the shockwave across the land and sea, chased low over the water
     _shot("zion_full", 165.16, 171.48,
-          [(165.16, _at(30.0, 320.0, 16.0), ZC + _v(0.0, 40.0, 0.0)), (167.5, _at(34.0, 520.0, 26.0), ZC + _v(0.0, 46.0, 0.0)),
-           (169.5, _at(26.0, 780.0, 14.0), ZC + _v(0.0, 50.0, 0.0)), (171.48, _at(18.0, 880.0, 10.0), ZC + _v(0.0, 52.0, 0.0))],
-          fov=46.0),
-    # standing firm, the second climb: straight up the mountain face far higher than before, then gliding in
-    # over the upper terraces full of people
+          [(165.16, _at(30.0, 320.0, 12.0), ZC + _v(0.0, 40.0, 0.0)), (167.5, _at(34.0, 540.0, 9.0), ZC + _v(0.0, 46.0, 0.0)),
+           (169.5, _at(26.0, 800.0, 7.0), ZC + _v(0.0, 50.0, 0.0)), (171.48, _at(18.0, 900.0, 6.0), ZC + _v(0.0, 52.0, 0.0))],
+          fov=50.0, roll=(8.0, -8.0)),
+    # standing firm, the second climb: a bigger banking spiral, far higher than the first
     _shot("zion_full", 171.48, 178.4,
-          [(171.48, _at(24.0, 320.0, 30.0), ZC + _v(0.0, 40.0, 0.0)), (173.6, _at(24.0, 336.0, 150.0), ZC + _v(0.0, 30.0, 0.0)),
-           (176.0, _at(40.0, 240.0, 140.0), ZC + _v(0.0, 50.0, 0.0)),
-           (178.4, _at(30.0, 176.0, 80.0), _at(-6.0, 90.0, 74.0))], fov=54.0),
+          _orbit(171.48, 178.4, -40.0, 80.0, 380.0, 230.0, 40.0, 190.0, ZC + _v(0, 40, 0), ZC + _v(0, 60, 0), 8),
+          fov=54.0, roll=(-14.0, 10.0)),
     # sacrifice: the mountain blazing, a high helicopter orbit
     _shot("zion_full", 180.7, 183.0,
           _orbit(180.7, 183.0, 76.0, 48.0, 400.0, 380.0, 180.0, 168.0, ZC + _v(0, 36, 0), ZC + _v(0, 40, 0), 4),
-          fov=50.0),
+          fov=50.0, roll=(6.0, -4.0)),
 ]
 
 
@@ -732,6 +730,17 @@ def _race_out(i, t0, v):
     return head
 
 
+def _race_lane(i):
+    """Comet i streaks low over the sea down the canyon of cloud, toward the camera and past it."""
+    x = -70.0 + 140.0 * (i + 0.5) / 9
+
+    def head(t):
+        z = 300.0 + 260.0 * (t - 86.7) + 140.0 * i
+        z = 300.0 + np.mod(z - 300.0, 1100.0)
+        return ZC + _v(x + 6.0 * np.sin(2.0 * t + i), 2.0 + 1.5 * np.sin(3.0 * t + i), z)
+    return head
+
+
 def _pour_down(i):
     """Comet i pours down from heaven onto the terraces, again and again (sacrifice, devotion)."""
     a = np.radians(-70.0 + 140.0 * i / 8)
@@ -758,17 +767,29 @@ def _column(i):
     return head
 
 
+def _fan(i):
+    """Comet i bursts out of the blazing crown, fanning out and arcing down over the night."""
+    a = 2 * np.pi * i / 9 + 0.3
+    d = _v(np.sin(a), 0.35 + 0.25 * (i % 3), np.cos(a))
+
+    def head(t):
+        u = max(t - 53.78, -0.2)
+        return CR + d * 140.0 * u + _v(0.0, -18.0 * u * u, 0.0)
+    return head
+
+
 def _comets():
     out = []
     plan = [  # (t0, t1, head maker, trail, width)
-        (53.78, 64.4, lambda i: _crown_ring(i), 1.0, 1.8),
-        (64.2, 70.54, lambda i: _stair_run(i, 64.2 + 0.18 * i), 1.0, 2.2),
-        (86.7, 90.72, lambda i: _race_out(i, 86.7 + 0.15 * i, 95.0), 1.2, 2.4),
-        (90.72, 99.2, lambda i: _spiral(i, 90.72, 7.5, 1.6, tier_r(0) + 20.0, R_TOP, 8.0), 1.3, 2.4),
+        (53.78, 56.4, lambda i: _fan(i), 0.9, 3.0),
+        (55.6, 64.4, lambda i: _crown_ring(i), 1.0, 2.0),
+        (64.2, 70.54, lambda i: _stair_run(i, 64.2 + 0.18 * i), 1.1, 2.8),
+        (86.7, 90.72, lambda i: _race_lane(i), 0.8, 2.0),
+        (90.72, 99.2, lambda i: _spiral(i, 90.72, 7.5, 2.2, tier_r(0) + 20.0, R_TOP, 10.0), 1.3, 3.0),
         (99.4, 109.6, lambda i: _pour_down(i), 0.9, 2.6),
         (109.8, 117.0, lambda i: _column(i), 1.4, 3.0),
         (165.16, 171.48, lambda i: _race_out(i, 165.16 + 0.1 * i, 70.0), 1.4, 3.0),
-        (171.48, 183.5, lambda i: _spiral(i, 171.48, 9.0, 2.2, tier_r(0) + 30.0, R_TOP + 10.0, 14.0, -1.0), 1.3, 2.6),
+        (171.48, 183.5, lambda i: _spiral(i, 171.48, 9.0, 3.0, tier_r(0) + 30.0, R_TOP + 10.0, 18.0, -1.0), 1.3, 3.2),
     ]
     for si, (t0, t1, mk, tr, w) in enumerate(plan):
         for i in range(9):
@@ -796,6 +817,33 @@ def _rays():
 
 
 _rays()
+
+
+def _grand(scene):
+    """The promo's grand scenes at Zion: a canyon of cloud over the sea for the waves of praise, pillars of
+    light falling from clouds onto the terraces (sacrifice, devotion), the column to heaven as the grandest
+    pillar with clouds parting round it."""
+    def win(a, b, fi=0.6, fo=0.6):
+        return lambda t: local_k(t) * (not stage_view(t)) * _env(t, a, b, fi, fo)
+    for i, x in enumerate((-150.0, 150.0)):
+        scene.add(f"zion canyon {i}", CloudBank(ZC + _v(x, 0.0, 900.0), size=(70.0, 160.0, 900.0), puffs=46,
+                                                seed=40 + i, gain=win(86.4, 90.9, 0.3, 0.3), bright=1.1),
+                  reflect=True)
+    k_pour = win(99.2, 109.8, 0.8, 1.0)
+    scene.add("zion pour clouds", CloudBank(ZC + _v(-30.0, 300.0, 120.0), size=(520.0, 80.0, 220.0), puffs=40,
+                                            seed=44, gain=k_pour, bright=0.9), reflect=False)
+    bases = []
+    for a, k in zip((-62.0, -44.0, -28.0, -12.0, 12.0, 28.0, 44.0, 62.0), (1, 2, 0, 3, 3, 1, 2, 0)):
+        rr = 0.5 * (tier_r(k) + tier_r(k + 1))
+        bases.append((ZC[0] + rr * np.sin(np.radians(a)), ZC[2] + rr * np.cos(np.radians(a))))
+    scene.add("zion pillars", Pillars(bases, top=300.0, color="#ffe4bc", width=4.5,
+                                      gain=lambda t: k_pour(t) * (0.6 + 0.3 * intensity(t))), reflect=False)
+    k_col = win(109.8, 117.0, 0.8, 0.3)
+    scene.add("zion column", Pillars([(float(CHURCH[0]), float(CHURCH[2]))], top=1400.0, color="#fff4e2", width=12.0,
+                                     gain=lambda t: k_col(t) * _sc(109.8, 111.0, t) * 1.2), reflect=False)
+    for i, (x, z) in enumerate(((-260.0, -60.0), (260.0, 40.0), (-120.0, 220.0), (140.0, -240.0))):
+        scene.add(f"zion heaven {i}", CloudBank(CHURCH + _v(x, 340.0 - CHURCH[1], z), size=(300.0, 90.0, 220.0),
+                                                puffs=30, seed=50 + i, gain=k_col, bright=1.0), reflect=False)
 
 
 def add(scene):
@@ -841,6 +889,7 @@ def add(scene):
             color2="#fff0d0", bright=1.35, points=48, size=10.5, flash=1.5, seed=float(seed)))
     for name, c in _comets():
         scene.add(name, c, reflect=False)
+    _grand(scene)
     scene.add("pour", Pour())
     scene.add("pour sheen", Static(_pour_sheen(), pour_k))
     scene.add("rings", Rings())

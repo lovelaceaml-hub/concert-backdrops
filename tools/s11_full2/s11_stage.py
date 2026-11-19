@@ -21,7 +21,7 @@ from p3d.api import Mask
 
 Y, FZ, G = SUMMIT, FACADE_Z, GLOBE_C
 
-def _S(name, t0, t1, fov, keys, ap=0.02, focus=None, **kw):
+def _S(name, t0, t1, fov, keys=None, ap=0.02, focus=None, **kw):
     """One shot of the edit: keys are (fraction of the block, camera place, target); the core paces the move
     with the music (fast on hits and loud passages)."""
     d = dict(name=name, kind="stage", t0=t0, t1=t1, fov=fov, aperture=ap,
@@ -39,7 +39,7 @@ def _P(x, h, z):
 # one shot per block of the core's EDIT (blocks_of("stage")): each a flowing flight through several keys
 SHOTS = [
     # the orchestra wakes, the comets weave through it: a long low flight over the strings toward the choir
-    _S("st_dawn", 26.33, 31.11, 46.0, [(0.0, _P(-9.0, 1.2, 40.0), _P(-2.0, 1.5, 20.0)),
+    _S("st_dawn", 26.33, 31.11, 46.0, roll=(-7.0, 3.0), keys=[(0.0, _P(-9.0, 1.2, 40.0), _P(-2.0, 1.5, 20.0)),
                                        (0.5, _P(-5.0, 2.2, 31.0), _P(0.0, 1.6, 18.0)),
                                        (1.0, _P(0.0, 3.4, 27.0), _P(0.0, 2.2, 8.0))], ap=0.012),
     # the choir breathes in, the comets spiral in: an orbit in front of the singers
@@ -50,9 +50,9 @@ SHOTS = [
     _S("st_build4", 81.51, 82.08, 46.0, [(0.0, _P(2.0, 2.4, 12.5), _P(0.0, 2.7, 2.0)),
                                          (1.0, _P(0.5, 2.6, 7.5), _P(0.0, 2.7, 2.0))], focus=_P(0.0, 2.2, 4.0)),
     # SLAM 1: close in the blaze, then a great crane up and back over the whole stage
-    _S("st_slam1", 82.08, 86.7, 50.0, [(0.0, _P(0.0, 2.5, 12.0), _P(0.0, 3.0, 2.0)),
-                                       (0.4, _P(0.0, 6.0, 24.0), _P(0.0, 2.6, 8.0)),
-                                       (1.0, _P(0.0, 10.0, 42.0), _P(0.0, 3.0, 10.0))], ap=0.01),
+    _S("st_slam1", 82.08, 86.7, 52.0, roll=(9.0, -4.0), keys=[(0.0, _P(-6.0, 2.0, 30.0), _P(0.0, 4.0, 10.0)),
+                                       (0.4, _P(-3.0, 8.0, 36.0), _P(0.0, 7.0, 10.0)),
+                                       (1.0, _P(4.0, 16.0, 46.0), _P(0.0, 9.0, 8.0))], ap=0.01),
     # the brass and timpani blaze: a crane low over the strings up to the back rows
     _S("st_blaze1", 105.14, 108.4, 46.0, [(0.0, _P(4.0, 1.5, 28.0), _P(3.0, 2.0, 16.0)),
                                           (0.5, _P(3.5, 2.6, 23.0), _P(3.0, 2.2, 16.0)),
@@ -62,18 +62,18 @@ SHOTS = [
                                         (0.5, _P(3.0, 2.6, 11.0), _P(0.3, 2.5, 2.5)),
                                         (1.0, _P(0.0, 2.8, 11.5), _P(0.0, 2.6, 2.5))], focus=_P(0.3, 2.0, 4.0)),
     # verse 2: flying low along the strings to the harps
-    _S("st_strings", 121.32, 125.92, 40.0, [(0.0, _P(4.0, 1.3, 27.5), _P(1.0, 1.1, 21.0)),
+    _S("st_strings", 121.32, 125.92, 40.0, roll=(-5.0, 5.0), keys=[(0.0, _P(4.0, 1.3, 27.5), _P(1.0, 1.1, 21.0)),
                                             (0.5, _P(-2.0, 1.3, 27.8), _P(-3.0, 1.1, 21.0)),
                                             (1.0, _P(-7.0, 1.5, 27.5), _P(-9.2, 1.2, 23.5))], ap=0.02),
     # the choir draws breath: a push in from the side
     _S("st_build5", 160.6, 161.7, 42.0, [(0.0, _P(6.0, 2.4, 11.0), _P(0.5, 2.5, 2.5)),
                                          (1.0, _P(3.0, 2.4, 8.5), _P(0.5, 2.5, 2.5))], focus=_P(0.8, 2.0, 4.0)),
     # SLAM 2: low and wide up at the blazing brass, rising
-    _S("st_slam2", 162.86, 165.16, 52.0, [(0.0, _P(0.0, 1.2, 29.5), _P(0.0, 3.4, 14.0)),
-                                          (0.5, _P(0.0, 2.0, 26.5), _P(0.0, 3.6, 14.0)),
-                                          (1.0, _P(0.0, 4.5, 24.0), _P(0.0, 3.0, 12.0))], ap=0.012),
+    _S("st_slam2", 162.86, 165.16, 54.0, roll=(-10.0, 4.0), keys=[(0.0, _P(5.0, 1.2, 31.0), _P(0.0, 4.0, 14.0)),
+                                          (0.5, _P(1.0, 5.0, 30.0), _P(0.0, 7.0, 12.0)),
+                                          (1.0, _P(-4.0, 11.0, 32.0), _P(0.0, 10.0, 10.0))], ap=0.012),
     # the brass rising: a crane past the trombones
-    _S("st_brass_rise", 183.0, 185.92, 46.0, [(0.0, _P(6.0, 1.6, 24.0), _P(4.5, 2.1, 16.5)),
+    _S("st_brass_rise", 183.0, 185.92, 46.0, roll=(4.0, -3.0), keys=[(0.0, _P(6.0, 1.6, 24.0), _P(4.5, 2.1, 16.5)),
                                               (0.5, _P(5.0, 3.0, 22.5), _P(4.2, 2.2, 16.5)),
                                               (1.0, _P(3.0, 5.0, 21.0), _P(2.0, 2.0, 15.0))], ap=0.02),
     # wondrous love: an arc from the front round the trumpets and timpani
@@ -81,7 +81,7 @@ SHOTS = [
                                          (0.5, _P(-4.0, 3.2, 31.0), _P(-3.0, 2.4, 15.0)),
                                          (1.0, _P(-2.0, 3.0, 30.0), _P(-2.5, 2.4, 15.0))], ap=0.012),
     # the coda hit: a push into the choir as it blazes
-    _S("st_coda_hit", 199.62, 200.7, 46.0, [(0.0, _P(-1.0, 2.5, 13.0), _P(0.0, 2.7, 2.0)),
+    _S("st_coda_hit", 199.62, 200.7, 46.0, roll=(6.0, -2.0), keys=[(0.0, _P(-1.0, 2.5, 13.0), _P(0.0, 2.7, 2.0)),
                                             (1.0, _P(0.0, 2.6, 8.2), _P(0.0, 2.7, 2.0))], focus=_P(0.0, 2.2, 4.0)),
     # the choir in the sunrise: low from the right, up at the singers
     _S("st_choir_low", 210.3, 211.6, 46.0, [(0.0, _P(5.5, 1.0, 10.0), _P(1.0, 3.4, 2.0)),
@@ -91,7 +91,7 @@ SHOTS = [
                                             (1.0, _P(-3.6, 2.2, 20.0), _P(-4.2, 2.5, 16.5))], ap=0.025,
        focus=_P(-4.5, 2.2, 16.8)),
     # home: Oh, the Church of God; a long flight in from the audience over the orchestra
-    _S("st_home", 238.8, 242.5, 46.0, [(0.0, _P(-6.0, 3.2, 42.0), _P(-0.5, 3.6, 6.0)),
+    _S("st_home", 238.8, 242.5, 46.0, roll=(-4.0, 2.0), keys=[(0.0, _P(-6.0, 3.2, 42.0), _P(-0.5, 3.6, 6.0)),
                                        (0.5, _P(-3.0, 3.6, 36.0), _P(0.0, 3.4, 6.0)),
                                        (1.0, _P(0.0, 4.5, 28.0), _P(0.0, 3.0, 5.0))], ap=0.01),
     # the choir: a close orbit along the front row
@@ -102,9 +102,10 @@ SHOTS = [
     _S("st_held", 247.5, 249.43, 50.0, [(0.0, _P(0.0, 2.0, 16.0), _P(0.0, 5.0, 3.0)),
                                         (1.0, _P(0.0, 2.2, 15.0), _P(0.0, 6.0, 3.0))], ap=0.012, pace="linear"),
     # the final rise: a crane up and back over everyone
-    _S("st_final", 249.43, 251.7, 52.0, [(0.0, _P(0.0, 2.6, 13.0), _P(0.0, 4.0, 3.0)),
-                                         (0.5, _P(0.0, 5.5, 18.0), _P(0.0, 3.6, 3.0)),
-                                         (1.0, _P(0.0, 9.5, 26.0), _P(0.0, 3.4, 3.0))], ap=0.01),
+    _S("st_final", 249.43, 251.7, 54.0, roll=(0.0, 14.0), keys=[(0.0, _P(0.0, 2.6, 13.0), _P(0.0, 4.0, 3.0)),
+                                         (0.35, _P(8.0, 5.0, 11.0), _P(0.0, 4.5, 3.0)),
+                                         (0.7, _P(7.0, 10.0, 17.0), _P(0.0, 7.0, 3.0)),
+                                         (1.0, _P(-2.0, 15.0, 21.0), _P(0.0, 34.0, 0.0))], ap=0.0),
 ]
 
 # =========================================================================================================
@@ -194,7 +195,7 @@ def choir_glow(t):
     on the slam, steady and warm in the breath, and gathering again for the last chord."""
     k = 0.35 + 0.25 * loud(t) + 0.25 * beat_pulse(t, 0.12)
     k += 1.4 * _sc(77.46, 82.0, t) ** 1.6 * (1.0 - _sc(82.1, 84.5, t))
-    k += 1.2 * hit_pulse(t, [SLAM1], fall=0.8)
+    k += 0.6 * hit_pulse(t, [SLAM1], fall=0.8)
     k += 0.7 * _win(t, 117.0, 121.2, 0.6, 0.4)
     k += 0.9 * _sc(247.5, 249.43, t) * (1.0 - _sc(250.5, 253.0, t)) + 1.2 * hit_pulse(t, [HIT["final"], LAST_CHORD], fall=0.9)
     k += 1.1 * chorus_flare(t)
@@ -1078,8 +1079,8 @@ def blaze(t):
     """The choir and orchestra as a great light on the slams and the coda hit."""
     if not stage_view(t):
         return 0.0
-    return min(0.8, 0.7 * hit_pulse(t, [SLAM1, SLAM2, HIT["coda"]], rise=0.05, fall=1.0)
-               + 0.2 * hit_pulse(t, KICKS, fall=0.4))
+    return min(0.45, 0.4 * hit_pulse(t, [SLAM1, SLAM2, HIT["coda"]], rise=0.05, fall=0.8)
+               + 0.12 * hit_pulse(t, KICKS, fall=0.4))
 
 
 # =========================================================================================================
@@ -1178,6 +1179,71 @@ class Baton:
                      kind="soft", dof=0.5)]
 
 
+# =========================================================================================================
+# Grand: comets shooting up out of the orchestra on the slams, loops round the conductor and the heroes, a
+# comet streaking past the lens along the strings, pillars of light round the stage, clouds banked beside it
+# =========================================================================================================
+BURSTS = [SLAM1, SLAM2, HIT["coda"]]
+
+
+def _rocket(ts, i):
+    """A comet shooting up out of the orchestra at ts, fanning out (i of nine)."""
+    a = 2.0 * np.pi * i / 9.0
+    base = PODIUM + _v(6.0 * np.sin(a) * 1.3, 2.0, -6.0 + 3.0 * np.cos(a))
+    d = _unit(_v(0.35 * np.sin(a), 1.0, 0.18 * np.cos(a) + 0.12))
+
+    def head(t):
+        u = max(t - ts, 0.0)
+        return base + d * (40.0 * (1.0 - np.exp(-u / 0.9)) + 6.0 * u) + _v(0.0, -2.0 * np.exp(-u / 0.2), 0.0)
+    return head
+
+
+def _loop_conductor(t):
+    """Great loops of light round the conductor, like the promo's dancer's ribbon."""
+    u = 0.9 * _cphase(t)
+    return COND_P + _v(1.6 * np.cos(u), 1.3 + 1.0 * np.sin(2.0 * u), 1.6 * np.sin(u))
+
+
+def _loop_heroes(t):
+    """A figure of eight round the three hero singers."""
+    u = 0.75 * _cphase(t) + 1.0
+    c = HERO_P.mean(0)
+    return c + _v(2.6 * np.sin(u), 1.4 + 0.8 * np.sin(3.0 * u), 0.9 + 0.9 * np.sin(2.0 * u))
+
+
+def _lens_streak(t):
+    """Low along the strings, past the lens of the strings' flight (verse 2)."""
+    u = (t - 121.32) / 4.6
+    return _v(14.0 - 30.0 * u, SUMMIT + 1.5 + 0.3 * np.sin(9.0 * u), FACADE_Z + 26.6 - 0.8 * np.sin(3.0 * u))
+
+
+class StagePillars(Pillars):
+    """Pillars of light that stand on the summit round the stage."""
+
+    def sample(self, t):
+        out = super().sample(t)
+        if not out:
+            return out
+        for b in out:
+            b["pos"] = b["pos"] + _v(0.0, SUMMIT, 0.0)
+        return out
+
+
+def pillar_k(t):
+    """Pillars slam down round the stage on the slams, and stand through the held breath and the final rise."""
+    if not stage_view(t):
+        return 0.0
+    k = 0.0
+    for h in BURSTS:
+        k = max(k, _sc(h - 0.05, h + 0.25, t) * (1.0 - _sc(h + 2.5, h + 4.2, t)))
+    k = max(k, 0.7 * _sc(247.5, 249.0, t) * (1.0 - _sc(252.0, 254.0, t)))
+    return 0.55 * k
+
+
+def cloud_k(t):
+    return 0.55 * stage_view(t) * (0.6 + 0.4 * intensity(t))
+
+
 def add(scene):
     choir = Choir(places=CHOIR_P, facing=0.0, kinds=CHOIR_KINDS,
                   start=dict(t=21.3, center=(0.0, FACADE_Z), speed=9.0), color="#ffb84a", color2="#ffe9b8",
@@ -1202,5 +1268,21 @@ def add(scene):
         col = COL9[(2 * i + 1) % 9]
         scene.add("stage comet %d" % i, StageComet(f, col, 0.0, 260.0, trail=1.3, width=0.22, bright=1.0,
                                                    fade=0.5, n=70, seed=60 + i))
+    for j, ts in enumerate(BURSTS):
+        for i in range(9):
+            scene.add("slam rocket %d %d" % (j, i), StageComet(_rocket(ts, i), COL9[i], ts - 0.05, ts + 3.6,
+                                                               trail=0.9, width=0.7, bright=1.0, fade=0.3, n=60,
+                                                               sparks=False, seed=100 + 9 * j + i))
+    scene.add("loop conductor", StageComet(_loop_conductor, COL9[6], 0.0, 260.0, trail=1.6, width=0.18, n=80,
+                                           seed=131))
+    scene.add("loop heroes", StageComet(_loop_heroes, COL9[3], 0.0, 260.0, trail=1.8, width=0.2, n=80, seed=132))
+    scene.add("lens streak", StageComet(_lens_streak, COL9[5], 121.32, 125.92, trail=0.5, width=0.35, n=50,
+                                        fade=0.2, seed=133))
+    bases = [(-20.0, FACADE_Z + 6.0), (20.0, FACADE_Z + 6.0), (-17.0, FACADE_Z + 24.0), (17.0, FACADE_Z + 24.0),
+             (-9.0, FACADE_Z + 36.0), (9.0, FACADE_Z + 36.0)]
+    scene.add("stage pillars", StagePillars(bases, top=160.0, color="#ffe6c0", width=1.6, gain=pillar_k))
+    for i, (x, z) in enumerate(((-34.0, FACADE_Z + 14.0), (34.0, FACADE_Z + 14.0))):
+        scene.add("stage clouds %d" % i, CloudBank(_v(x, SUMMIT - 4.0, z), size=(26.0, 16.0, 30.0), puffs=14,
+                                                   seed=70 + i, gain=cloud_k, bright=0.8))
     add_light(COMET_PATHS[0], COL9[1], lambda t: 1.1 * stage_view(t) * (0.8 + 0.4 * beat_pulse(t)), radius=5.0)
     add_rays(lambda t: _v(0.0, SUMMIT + 3.2, FACADE_Z + 1.0), blaze, color="#ffe8c0", size=0.7)
