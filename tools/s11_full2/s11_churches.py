@@ -652,7 +652,12 @@ BANDS = [((430.0, 560.0, 680.0), 0.24, 1.3, 0.8),                   # the near s
          ((820.0, 980.0, 1140.0, 1300.0), 0.32, 1.85, 1.0),         # out on the sea of glass
          ((1450.0, 1660.0, 1880.0, 2120.0), 0.27, 2.35, 1.3),      # the far shore
          ((2450.0, 2750.0, 3050.0), 0.17, 3.0, 1.6)]               # the foot of the hills
-FLANK = [(20.0, 470.0), (-20.0, 470.0), (29.0, 590.0), (-29.0, 590.0)]   # (azimuth, radius) of the first four
+# the five lanes of the rivers of people (azimuth round Zion from +z toward +x, how far out they reach); a clear
+# corridor of about 35 m either side of each (the widened river is up to 30 m across, plus 20 m each side)
+LANES = [(0.0, 1500.0), (-36.0, 760.0), (36.0, 760.0), (-72.0, 760.0), (72.0, 760.0)]
+# world boxes (x0, x1, z0, z1) a low camera crosses: the shockwave chase over the sea at 2:46.5 to 2:50.5
+KEEP_CLEAR = [(100.0, 300.0, -100.0, 500.0)]
+FLANK = [(18.0, 470.0), (-18.0, 470.0), (22.0, 600.0), (-22.0, 600.0)]   # (azimuth, radius) of the first four
 
 
 def _mount_y(x, z):
@@ -687,6 +692,16 @@ def _layout():
     def free(base, fp, h):
         if base[2] > ZC[2] and abs(base[0]) < 70.0 + fp:          # the avenue and the march corridor
             return False
+        rel = base - ZC
+        rr = float(np.hypot(rel[0], rel[2]))
+        az = np.degrees(np.arctan2(rel[0], rel[2]))
+        for lane, reach in LANES:                                   # the rivers of people walking to Zion
+            da = np.radians(abs((az - lane + 180.0) % 360.0 - 180.0))
+            if da < np.pi / 2 and rr * np.sin(da) < fp + 35.0 and rr * np.cos(da) < reach + fp:
+                return False
+        for x0, x1, z0, z1 in KEEP_CLEAR:                           # low camera chases over the sea
+            if x0 - fp < base[0] < x1 + fp and z0 - fp < base[2] < z1 + fp:
+                return False
         if any(np.hypot(*(base - q)[[0, 2]]) < fp + qf + 10.0 for q, qf in placed):
             return False
         d = np.hypot(cams[:, 0] - base[0], cams[:, 2] - base[2])
@@ -768,7 +783,10 @@ def _visible(t):
             P = eye[None, :] + (q - eye)[None, :] * u[:, None]
             blocked = np.any(P[:, 1] < _mount_y(P[:, 0], P[:, 2]) - 0.5)
             seen += 0.0 if blocked else 1.0 / 3.0
-        v[i] = seen
+        # never a close wireframe filling the frame: a church fades out as the camera comes within a few of
+        # its own heights of it (low chases over the sea)
+        dist = float(np.hypot(*(c["base"] - eye)[[0, 2]]))
+        v[i] = seen * _sc(3.0 * c["h"] + 40.0, 6.0 * c["h"] + 80.0, dist)
     _OCC["t"], _OCC["v"] = t, v
     return v
 
