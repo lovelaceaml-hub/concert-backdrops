@@ -35,6 +35,23 @@ SONG_NAME = "All You Stars of Zion"
 OPEN_HOLD = 7.0           # the opening is whole and still from frame 0 to here
 OPEN_MOVE = (7.0, 8.8)    # then it glides into the top left corner and becomes the signature
 SIG_X, SIG_Y = 0.034, 0.042   # the signature's top left corner (fractions of 1920 x 1080), as song 02 v2
+# fix 1 (coordinator, Never 9): the bottom third stays calm for the performers standing in front of it. A soft
+# floor dims the finished picture from 0.60 of the height down (to 0.45 at the bottom edge), under the words.
+FLOOR = (0.60, 0.72, 0.50, 0.45)   # start, full, dim at "full", dim at the bottom edge
+FLOOR_FS = """
+#version 330
+out vec4 o;
+uniform float uH, uTop0;
+uniform vec4 uFloor;
+void main(){
+  float y = gl_FragCoord.y / uH;
+  if(uTop0 < 0.5) y = 1.0 - y;            // y: 0 at the top of the picture, 1 at the bottom
+  float k = 1.0 - (1.0 - uFloor.z) * smoothstep(uFloor.x, uFloor.y, y)
+                - (uFloor.z - uFloor.w) * smoothstep(uFloor.y, 1.0, y);
+  o = vec4(vec3(k), 1.0);
+}
+"""
+TOP0 = float(os.environ.get("S01_TOP0", "1"))   # f_out rows: the first row read back is the top
 
 
 def _ss(a, b, x):
@@ -74,6 +91,9 @@ def load():
             self.op_logo = None
             self.op_layer = self._open_layer()
             self.sig_layer = self._sig_layer("night")
+            self.p_floor = self.ctx.program(vertex_shader=titles.FULL_VS, fragment_shader=FLOOR_FS)
+            quad = self.ctx.buffer(np.array([-1, -1, 1, -1, -1, 1, 1, 1], "f4").tobytes())
+            self.v_floor = self.ctx.vertex_array(self.p_floor, [(quad, "2f", "aPos")])
 
         def _open_layer(self):
             s, W, H = self.s, self.w, self.h
@@ -150,6 +170,12 @@ def load():
             ctx, mgl = self.ctx, self.mgl
             self.R.f_out.use()
             ctx.enable(mgl.BLEND)
+            ctx.blend_func = (mgl.ZERO, mgl.SRC_COLOR)          # the calm floor multiplies the picture
+            self.p_floor["uFlip"].value = 1.0
+            self.p_floor["uH"].value = float(self.h)
+            self.p_floor["uTop0"].value = TOP0
+            self.p_floor["uFloor"].value = FLOOR
+            self.v_floor.render(mgl.TRIANGLE_STRIP)
             ctx.blend_func = (mgl.ONE, mgl.ONE_MINUS_SRC_ALPHA)
             m = self._move(ts)
             if m < 1.0:

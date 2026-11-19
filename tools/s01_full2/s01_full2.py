@@ -236,8 +236,8 @@ def _bodies():
                              hair="bun" if shape == "woman" else "default",
                              color=["#f0a034", "#ec9628", "#ea942c", "#e68e24"][i], color2="#ffc860", bright=1.8, points=72000,
                              seed=60.0 + i, show=(152.0 + 0.5 * i, TOTAL + 5.0),
-                             gesture=[(153.0, 165.0, "offer", dict(side="R")),
-                                      (165.0, 176.6, "soft_raise", dict(side="R", period=6.0 + i)),
+                             gesture=[(153.0, 171.5, "offer", dict(side="R")),     # torches low while read
+                                      (171.5, 176.6, "soft_raise", dict(side="R", period=6.0 + i)),
                                       (176.6, TOTAL + 5.0, "soft_raise", dict(side="R", period=7.5 + 0.5 * i))],
                              effects=[dict(kind="form", t=152.0 + 0.5 * i, dur=2.0)], **kw)
     return _BODIES
@@ -281,14 +281,16 @@ SKYQ = _v(0.0, 14.0, -60.0)
 CAM_KEYS = [
     (0.0, _v(0.0, 1.30, 19.0), _v(0.0, 13.4, -60.0)),
     (19.0, _v(0.0, 1.30, 17.2), _v(0.0, 12.6, -60.0)),
-    (25.0, _v(0.3, 1.30, 12.6), _v(0.0, 10.2, -60.0)),
-    (38.0, _v(0.4, 1.30, 8.6), _v(0.0, 9.8, -60.0)),
-    (55.0, _v(0.1, 1.30, 8.4), _v(0.0, 9.8, -60.0)),
-    (58.0, _v(0.0, 1.30, 9.0), _v(0.0, 10.0, -60.0)),
-    (84.0, _v(-0.6, 1.35, 10.6), _v(0.0, 10.4, -60.0)),
-    (87.3, _v(-0.6, 1.40, 10.6), _v(0.0, 10.4, -60.0)),
-    (104.0, _v(0.0, 1.9, -3.8), _v(0.0, 10.0, -60.0)),
-    (112.8, _v(0.4, 1.9, -4.4), _v(0.0, 10.0, -60.0)),
+    # fix 1: lower and a little further back, so the people stand in the middle band of the picture with
+    # their feet near two thirds of the height, and nothing bright reaches the bottom third
+    (25.0, _v(0.3, 0.90, 13.2), _v(0.0, 5.6, -60.0)),
+    (38.0, _v(0.4, 0.80, 10.6), _v(0.0, 5.2, -60.0)),
+    (55.0, _v(0.1, 0.80, 10.4), _v(0.0, 5.2, -60.0)),
+    (58.0, _v(0.0, 0.80, 10.8), _v(0.0, 5.3, -60.0)),
+    (84.0, _v(-0.6, 0.85, 11.6), _v(0.0, 5.4, -60.0)),
+    (87.3, _v(-0.6, 0.85, 11.6), _v(0.0, 5.4, -60.0)),
+    (104.0, _v(0.0, 0.85, 0.4), _v(0.0, 5.2, -60.0)),
+    (112.8, _v(0.4, 0.85, -0.2), _v(0.0, 5.2, -60.0)),
 ]
 CAM_CLOSE = [
     (113.0, _v(-6.6, 0.70, -6.0), _v(-9.0, 2.6, -24.0)),
@@ -298,10 +300,10 @@ CAM_CLOSE = [
 ]
 CAM_MORNING = [
     (147.5, _v(0.0, 1.30, 15.0), _v(0.0, 11.8, -60.0)),
-    (156.0, _v(0.5, 2.30, 6.6), _v(0.4, 6.0, -60.0)),     # a little higher: the people stand against the
-    (175.0, _v(0.6, 2.30, 6.0), _v(0.4, 6.0, -60.0)),     # deep water, not the bright horizon (v2)
-    (188.0, _v(0.4, 2.25, 7.6), _v(0.3, 6.4, -60.0)),
-    (TOTAL, _v(0.2, 2.25, 8.4), _v(0.1, 6.6, -60.0)),
+    (156.0, _v(0.5, 0.85, 8.6), _v(0.4, 5.3, -60.0)),     # fix 1: low and back, the people in the middle
+    (175.0, _v(0.6, 0.85, 8.2), _v(0.4, 5.3, -60.0)),     # band, their feet near two thirds of the height
+    (188.0, _v(0.4, 0.85, 8.8), _v(0.3, 5.5, -60.0)),
+    (TOTAL, _v(0.2, 0.85, 9.4), _v(0.1, 5.6, -60.0)),
 ]
 
 
@@ -361,7 +363,7 @@ def _lane_words():
     homes = arch_homes()
     # the morning sky behind Arise and Encouragement is bright: keep the letters' colour, a deeper glow and
     # a stronger halo so they stand out from the pale sky (see also the deeper morning looks below)
-    style = {"Arise": dict(color="#f39a2a", glow="#a8480a", tint=.92, bright=.95, halo=2.0),
+    style = {"Arise": dict(color="#e8861a", glow="#8a3806", tint=1.0, bright=.85, halo=1.0),
              "Encouragement": dict(tint=.85, bright=1.0, halo=1.9)}
     return mod.build(camera=_LAYOUT, stars={"Compliment": tuple(homes[COMP]), "Encouragement": tuple(homes[ENC])},
                      style=style, centre_y=.36, widths={"Compliment": .42, "Encouragement": .54})
@@ -776,10 +778,11 @@ LOOKS = dict(
                   milky=0.0, clouds=0.15, water="#0a1030", dust=0.6, dust_color="#e8eeff", dust_color2="#ffe0c0",
                   ripple=0.15, rays=0.0),
     dawnwarm=dict(base="dawn", sky_top="#1a2a64", sky_mid="#6a5a9a", sky_hor="#f0a07a", sun_el=-1.5,
-                  sun_int=0.8, clouds=0.2, stars=0.15, mist=0.45, mist_color="#b08090", ripple=0.15),
-    sunrise=dict(base="sunrise", sky_top="#12306c", sky_mid="#64528a", sky_hor="#f2a060", sun_el=1.0,
-                 sun_int=0.7, sun_glow=0.45, clouds=0.25, haze_color="#d0906a", mist_color="#c09080", ripple=0.25,
-                 exposure=0.85),
+                  sun_int=0.6, clouds=0.2, stars=0.15, mist=0.3, mist_color="#a07080", ripple=0.15,
+                  exposure=0.88),
+    sunrise=dict(base="sunrise", sky_top="#12306c", sky_mid="#5a4a86", sky_hor="#ec9850", sun_el=1.0,
+                 sun_int=0.42, sun_glow=0.2, clouds=0.25, haze=0.25, haze_color="#b07048", mist=0.12,
+                 mist_color="#a07060", ripple=0.25, exposure=0.72),
     morning=dict(base="golden", sky_top="#12306c", sky_mid="#5e5c98", sky_hor="#f4b070", sun_el=2.2,
                  sun_int=0.42, sun_glow=0.22, sun_disc=2.6, sun_color="#ffe8c0", clouds=0.2, haze=0.28, haze_color="#c89070",
                  mist=0.10, mist_color="#d0a080", water="#141c3a", ripple=0.25, rays=0.15, dust=0.6,
@@ -822,7 +825,7 @@ P3D = dict(
     bursts=[dict(t=HIT["open"], strength=0.12, rise=0.25, fall=1.0, color="#ffc470", at=tuple(MSTAR)),
             dict(t=HIT["lift"], strength=0.25, rise=0.15, fall=0.9, color="#ffe2a0", at=tuple(MSTAR)),
             dict(t=99.0, strength=0.14, rise=0.5, fall=1.5, color="#ffc870"),
-            dict(t=HIT["sun"], strength=0.22, rise=0.6, fall=1.6, color="#ffe8c0")],
+            dict(t=HIT["sun"], strength=0.07, rise=0.6, fall=1.6, color="#ffb050")],
     motion_blur=0.25,
 )
 
