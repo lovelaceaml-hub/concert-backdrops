@@ -555,6 +555,166 @@ def _wrap_gain(scene, name, f):
     ps.gain = lambda t, g0=g0: float(g0(t)) * f(t)
 
 
+# =========================================================================================================
+# Round 8 (Anthony: "there needs to be way more effects consistently happening to match each different sound in
+# the song"): a layer that rides with the camera, so every sound answers visibly in every kind of shot (stage,
+# Zion, procession, Earth, sky, church), not only where the world effects above happen to be in view. Kept to
+# the frame's edges and lower band, out of every phrase's region (keep_out_of_words, and the calm boxes), held
+# down where the music already blazes (room) so nothing whites out.
+#   bass and kick   a row of soft lights along the bottom of the frame pulses; sparks flick on each kick
+#   timpani         a ring of sparks opens in the lower frame on each hit (left and right in turn)
+#   strings         three streams of fine glitter flow across the lower frame, faster on the swells
+#   brass           rays burst from the upper corners on each brass onset
+#   high voices     sparkles twinkle across the top of the frame
+#   low voices      a warm low glow rises from the bottom corners
+#   choir           (the core's exposure) the whole picture swells a little with the choir
+# =========================================================================================================
+class CameraMusic:
+    wants_camera = True
+    D = 70.0                                   # metres ahead: behind the words (30 m), in front of the world
+
+    def __init__(self):
+        r = np.random.default_rng(808)
+        self.h = r.random((900, 4))
+        self.hits = timp_hits(0.45)
+        self.ht = np.array([h[0] for h in self.hits]) if self.hits else np.zeros(0)
+        self.bo = []                       # brass onsets
+        if _M is not None and "brass_hit" in _M:
+            b = _M["brass_hit"]
+            on = np.where((b[1:-1] > 0.45) & (b[1:-1] >= b[:-2]) & (b[1:-1] > b[2:]))[0] + 1
+            last = -9.0
+            for i in on:
+                if _T[i] - last > 0.35 and _T[i] < LIVE:
+                    self.bo.append(float(_T[i]))
+                    last = _T[i]
+        self.bo = np.array(self.bo)
+        self.col9 = np.array([lin(c) for c in COL9])
+
+    def _pts(self, cam, x, y, d=None):
+        d = self.D if d is None else d
+        r, u, f = (np.asarray(v, np.float64) for v in cam.basis())
+        half = np.tan(np.radians(cam.fov) * 0.5) * d
+        x, y = np.asarray(x, np.float64), np.asarray(y, np.float64)
+        return (np.asarray(cam.pos, np.float64)[None, :] + f[None, :] * d
+                + r[None, :] * ((x - 0.5) * 2.0 * half * cam.aspect)[:, None] + u[None, :] * ((y - 0.5) * 2.0 * half)[:, None])
+
+    def _unit(self, cam, d=None):
+        d = self.D if d is None else d
+        return 2.0 * np.tan(np.radians(cam.fov) * 0.5) * d          # metres per frame height
+
+    def sample(self, t, cam=None):
+        if _M is None or cam is None or t > LIVE:
+            return None
+        room_k = room(t)
+        if room_k <= 0.02:
+            return None
+        U = self._unit(cam)
+        h = self.h
+        out = []
+        # bass and kick: a row of soft lights along the bottom, sparks on the kicks
+        k = fx_pulse(t)
+        if k > 0.02:
+            n = 26
+            x = (np.arange(n) + 0.5) / n
+            y = 0.035 + 0.02 * np.sin(np.pi * x)
+            c = self.col9[(np.arange(n) + int(t * 0.5)) % 9] * 0.6 + lin(WHITE) * 0.4
+            out.append(dict(pos=self._pts(cam, x, y), size=np.full(n, 0.07 * U), color=c,
+                            alpha=np.full(n, 0.11 * k * room_k), kind="soft", emit=1.6))
+            kk = fx_kick(t)
+            if kk > 0.05:
+                m = 120
+                xs, ys = h[:m, 0], 0.01 + 0.10 * h[:m, 1] ** 2
+                out.append(dict(pos=self._pts(cam, xs, ys), size=0.0045 * U * (0.6 + h[:m, 2]),
+                                color=lin("#fff0d8"), alpha=(0.9 * kk * room_k * (h[:m, 3] < 0.6 + 0.4 * kk)),
+                                kind="spark", emit=2.6, twinkle=0.6, seed=h[:m, 3]))
+        # timpani: a ring of sparks opening in the lower frame
+        if len(self.ht):
+            i = int(np.searchsorted(self.ht, t)) - 1
+            if i >= 0 and t - self.ht[i] < 1.3:
+                u_ = t - self.ht[i]
+                s_ = self.hits[i][1]
+                cx = 0.28 if i % 2 == 0 else 0.72
+                hh = h[:220]
+                ang = 2 * np.pi * hh[:, 0]
+                # a burst of sparks thrown outward, not a drawn ring: each its own speed, a little gravity
+                rad = (0.02 + (0.16 + 0.14 * hh[:, 1]) * (1.0 - np.exp(-u_ / 0.32)))
+                xs = cx + rad * np.cos(ang) / cam.aspect
+                ys = 0.20 + 0.75 * rad * np.sin(ang) - 0.05 * u_ * u_
+                a = s_ * np.exp(-u_ / 0.45) * room_k
+                vis = (ys > -0.02).astype(np.float64)
+                col = self.col9[i % 9] * 0.5 + lin(WHITE) * 0.5
+                out.append(dict(pos=self._pts(cam, xs, ys), size=0.004 * U * (0.6 + hh[:, 2]), color=col,
+                                alpha=0.95 * a * vis, kind="spark", emit=2.8, twinkle=0.5, seed=hh[:, 3]))
+                out.append(dict(pos=self._pts(cam, xs[::6], ys[::6]), size=np.full(len(ang[::6]), 0.03 * U),
+                                color=col, alpha=0.05 * a * vis[::6], kind="soft", emit=1.4))
+        # strings: three streams of glitter flowing across the lower frame
+        st = fx_strings(t)
+        if st > 0.04:
+            sw = fx_swell(t)
+            m = 300
+            out_p, out_a, out_c = [], [], []
+            for j in range(3):
+                hh = h[j * m:(j + 1) * m]
+                ph = np.mod(hh[:, 0] + t * (0.035 + 0.06 * sw) * (1 if j % 2 == 0 else -1), 1.0)
+                xs = ph * 1.2 - 0.1
+                ys = 0.12 + 0.07 * j + 0.035 * np.sin(2 * np.pi * (ph * 1.3 + 0.21 * t + j * 0.33)) + 0.012 * (hh[:, 1] - 0.5)
+                out_p.append(self._pts(cam, xs, ys))
+                out_a.append(st * room_k * (0.4 + 0.6 * hh[:, 2]) * np.sin(np.pi * np.clip(ph, 0, 1)))
+                out_c.append(np.repeat((lin(CRYSTAL) * 0.6 + self.col9[(2 + 3 * j) % 9] * 0.4)[None, :], m, 0))
+            out.append(dict(pos=np.concatenate(out_p), size=0.0042 * U * (0.6 + h[:3 * m, 3]),
+                            color=np.concatenate(out_c), alpha=0.95 * np.concatenate(out_a), kind="spark", emit=2.6,
+                            twinkle=0.5, seed=h[:3 * m, 3]))
+        # brass: rays burst from the upper corners
+        if len(self.bo):
+            i = int(np.searchsorted(self.bo, t)) - 1
+            if i >= 0 and t - self.bo[i] < 0.9:
+                u_ = t - self.bo[i]
+                a = np.exp(-u_ / 0.3) * min(1.0, 0.5 + fx_brass(self.bo[i])) * room_k
+                pts, al = [], []
+                for side in (0.0, 1.0):
+                    for j in range(6):
+                        ang = np.radians(-18.0 - 11.0 * j)
+                        dx = np.cos(ang) * (1 if side == 0.0 else -1) / cam.aspect
+                        dy = np.sin(ang)
+                        q = np.linspace(0.0, 0.25 + 0.35 * (1.0 - np.exp(-u_ / 0.12)), 40)
+                        pts.append(np.stack([side + dx * q, 1.0 + dy * q], 1))
+                        al.append((1.0 - q / q[-1]) ** 1.5)
+                P2 = np.concatenate(pts)
+                out.append(dict(pos=self._pts(cam, P2[:, 0], P2[:, 1]), size=np.full(len(P2), 0.010 * U),
+                                color=lin("#ffd9a0"), alpha=0.45 * a * np.concatenate(al), kind="soft", emit=2.0))
+        # high voices: sparkles across the top of the frame
+        hi = fx_high(t)
+        if hi > 0.05:
+            m = 160
+            hh = h[400:400 + m]
+            tw = 0.5 + 0.5 * np.sin(2 * np.pi * (hh[:, 2] * 3.0 + 1.7 * t))
+            out.append(dict(pos=self._pts(cam, hh[:, 0], 0.86 + 0.13 * hh[:, 1]), size=0.0045 * U * (0.6 + hh[:, 3]),
+                            color=lin("#f4f0ff"), alpha=1.0 * hi * room_k * tw, kind="spark", emit=2.6, twinkle=0.8,
+                            seed=hh[:, 3]))
+        # low voices: a warm low glow rising from the bottom corners
+        lo = fx_low(t)
+        if lo > 0.05:
+            xs, ys = np.array([0.06, 0.16, 0.84, 0.94]), np.array([0.05, 0.02, 0.02, 0.05])
+            out.append(dict(pos=self._pts(cam, xs, ys), size=np.full(4, 0.16 * U), color=lin("#ffb070"),
+                            alpha=np.full(4, 0.06 * lo * room_k), kind="soft", emit=1.3))
+        if not out:
+            return None
+        for b in out:            # never across a phrase
+            m_ = H.keep_out_of_words(t, b["pos"])
+            if m_ is not None:
+                b["alpha"] = np.asarray(b["alpha"], np.float64) * m_
+            b["alpha"] = np.asarray(b["alpha"], np.float32)
+            b.update(reflect=False, dof=0.0, fog=0.0, streak=0.0)
+        return out
+
+
+def choir_swell(t):
+    """The whole picture swells a little with the choir (the core multiplies its exposure by this)."""
+    if _M is None:
+        return 1.0
+    return 1.0 + 0.08 * fx_choir(t) * (1.0 - 0.6 * intensity(t)) * (1.0 - 0.5 * _reading(t))
+
+
 def add(scene):
     if _M is None:
         return
@@ -577,5 +737,6 @@ def add(scene):
     scene.add("music comet flares", CometFlares(comets))
     scene.add("music high voices", HighSparkles(), reflect=False, fog=False)
     scene.add("music low voices", LowGlow(), reflect=False)
+    scene.add("music in frame", CameraMusic(), reflect=False, depth_of_field=False, fog=False)
     add_rays(_flare_pos, _flare_strength, color=_flare_col)
     RAY_SOURCES[-1]["music_fx"] = True
