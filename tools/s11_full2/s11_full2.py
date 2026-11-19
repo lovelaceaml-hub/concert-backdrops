@@ -1456,7 +1456,13 @@ def _stage_calm(t):
     return (1.0 - (0.33 if stage_view(t) else 0.18) * r) * (1.0 - 0.10 * S_LIGHT._win(171.5, 174.0, t))   # f18
 
 
-WORLD["exposure"] = lambda t: _stage_calm(t) * S_MUSIC.choir_swell(t)
+def _deep(t):
+    """Round 8 (the wide Zion views read milky): the local, non-stage shots a little lower, so the dark between
+    the lights stays deep (the promo's look); the Earth and the stage keep their own levels."""
+    return 1.0 if (globe_view(t) or stage_view(t)) else 0.85
+
+
+WORLD["exposure"] = lambda t: _stage_calm(t) * S_MUSIC.choir_swell(t) * _deep(t)
 
 # =========================================================================================================
 # The phrases on screen: Anthony's list, timed to where each is sung on this recording. Round 7 (Anthony: "The
