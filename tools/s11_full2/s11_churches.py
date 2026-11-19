@@ -816,7 +816,7 @@ def _phrase_guard(t):
         tx = ty * st.aspect
         for i, c in enumerate(CHURCHES):
             hit = False
-            for fr in (0.1, 0.5, 1.0, 1.0 + (1.2 * c["es"] + 2.0) / c["h"]):   # the church and its emblem
+            for fr in ((0.1, 0.5, 1.0, 1.0 + (1.2 * c["es"] + 2.0) / c["h"]) if EMBLEMS_ON else (0.1, 0.5, 1.0)):
                 q = c["base"] + _v(0.0, fr * c["h"], 0.0) - eye
                 z = float(q @ f)
                 if z <= 1.0:
@@ -1006,11 +1006,18 @@ def _choir(t):
         return 0.0
 
 
+# Anthony (2026-11-19, later): "The Korean churches don't need the church emblem above it. Just have one
+# prominently showing on the Main church." The class stays, switched off.
+EMBLEMS_ON = False
+
+
 class Emblems:
-    """Every church's emblem in light, facing the camera each frame (see the note above)."""
+    """Every church's emblem in light, facing the camera each frame (see the note above). Off (EMBLEMS_ON)."""
     wants_camera = True
 
     def sample(self, t, cam=None):
+        if not EMBLEMS_ON:
+            return None
         g0 = _base_gain(t)
         if g0 <= 0.0 or cam is None or not CHURCHES:
             return None
@@ -1075,4 +1082,5 @@ def add(scene):
         scene.add(f"church of God {i:02d}", ChurchLight(i, "frame"))
         scene.add(f"church of God {i:02d} windows", ChurchLight(i, "win"))
     scene.add("churches established", Ignitions())
-    scene.add("church emblems", Emblems())
+    if EMBLEMS_ON:
+        scene.add("church emblems", Emblems())
