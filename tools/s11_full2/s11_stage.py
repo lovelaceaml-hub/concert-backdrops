@@ -244,6 +244,27 @@ def _room(t):
         return 1.0
 
 
+# Key moments in the stage and conductor shots (round 10, Anthony: "Not everything needs to be so washed out
+# and bright all the time. Key timings should be highlighted. Do not saturate everything. Do not wash out."):
+# the stage rests calmer and darker, and only these get the full light and colour
+KEY_WINDOWS = [(82.08, 84.6), (97.7, 99.45), (104.9, 107.6), (121.32, 123.8), (162.86, 165.1), (184.65, 188.3),
+               (199.62, 201.0), (213.0, 224.0), (247.5, 251.7)]
+
+
+def key_k(t):
+    """0 at rest, 1 inside a key moment (eased in 0.35 s, out 0.6 s)."""
+    k = 0.0
+    for a, b in KEY_WINDOWS:
+        if a - 0.4 <= t <= b + 0.7:
+            k = max(k, _sc(a - 0.35, a, t) * (1.0 - _sc(b, b + 0.6, t)))
+    return k
+
+
+def rest(t, lo):
+    """A set's level: lo at rest, 1 in the key moments."""
+    return lo + (1.0 - lo) * key_k(t)
+
+
 def phrase_k(t):
     """0..1, eased: how much a phrase is reading at t (in 0.3 s before the words arrive, out 0.3 s after)."""
     import songs.s11_full2 as H
@@ -400,7 +421,8 @@ class Choir(Crowd):
         self._sw = np.zeros(self.n)
 
     def gain(self, t):
-        return float(self.g(t)) * (1.0 + 1.2 * _far(t, CHOIR_C)) * (1.0 + 0.5 * _sc(160.0, 205.0, t)) * end_glow(t)
+        return (float(self.g(t)) * (1.0 + 1.2 * _far(t, CHOIR_C)) * (1.0 + 0.5 * _sc(160.0, 205.0, t)) * end_glow(t)
+                * rest(t, 0.62))
 
     def _place(self, P, ii, age, pr):
         sw = self._sw[ii]
@@ -765,7 +787,7 @@ class Players(Crowd):
     def gain(self, t):
         # slam 2's shot runs low through the players: they glow a third less there, so it does not white out
         s2 = 0.33 * _sc(SLAM2 - 0.1, SLAM2, t) * (1.0 - _sc(SLAM2 + 1.6, SLAM2 + 2.3, t))
-        return float(self.g(t)) * (1.0 - (0.2 if t < SLAM3 else 0.0) * _far(t, ORCH_C)) * (1.0 - s2)
+        return float(self.g(t)) * (1.0 - (0.2 if t < SLAM3 else 0.0) * _far(t, ORCH_C)) * (1.0 - s2) * rest(t, 0.62)
 
     def sample(self, t):
         if self.g(t) <= 0.0:
@@ -1126,7 +1148,7 @@ class Risers:
                     twinkle=0.2)
 
     def gain(self, t):
-        return stage_k(t)
+        return stage_k(t) * rest(t, 0.5)
 
 
 # =========================================================================================================
@@ -1141,7 +1163,7 @@ class ChoirLight:
     """Light rising from the choir as they sing: more with the loudness, nothing while they are silent."""
 
     def gain(self, t):
-        return 0.55 + 0.45 * _far(t, CHOIR_C)          # softer close up (no white haze over the singers)
+        return (0.55 + 0.45 * _far(t, CHOIR_C)) * rest(t, 0.55)     # softer close up and at rest
 
     def __init__(self, places, gain=None):
         self.p = places
@@ -1259,6 +1281,9 @@ class StageComet(Comet):
     up into a white blur when a path passed within a few metres of the camera)."""
     wants_camera = True
     near = (1.5, 6.0)                                # gone within near[0] metres, whole beyond near[1]
+
+    def gain(self, t):
+        return rest(t, 0.55)
 
     def sample(self, t, cam=None):
         if not stage_view(t):
@@ -1476,7 +1501,7 @@ class SoundAnswers:
         self.hits = None
 
     def gain(self, t):
-        return stage_k(t)
+        return stage_k(t) * rest(t, 0.6)
 
     def sample(self, t):
         if not stage_view(t) or stage_k(t) <= 0.0:

@@ -365,7 +365,8 @@ class Gate:
         return self.b.sample(t, cam)
 
     def gain(self, t):
-        return self.b.gain(t) * dance_k(t)
+        quiet = 1.0 - 0.22 * _env(t, 117.0, 121.32, 0.4, 0.3)       # the breath rests calmer (round 10)
+        return self.b.gain(t) * dance_k(t) * quiet
 
 
 # =========================================================================================================
@@ -885,7 +886,7 @@ def add(scene):
     scene.add("conductor snow", Snow())
     scene.add("conductor backlight", BackLight([
         (97.0, 99.6, _D(0.0, 26.0, -60.0), 44.0, "#c98cff", lambda t: 0.40 + 0.35 * downbeat(t, 0.4) + 0.6 * _sc(99.0, 99.35, t)),
-        (116.5, 121.4, _D(0.0, 6.0, -70.0), 34.0, "#e8d8ff", lambda t: 0.5 + 0.25 * downbeat(t, 0.5)),
+        (116.5, 121.4, _D(0.0, 6.0, -70.0), 34.0, "#e8d8ff", lambda t: 0.3 + 0.2 * downbeat(t, 0.5)),
         (121.3, 126.0, _D(-8.0, 10.0, -70.0), 44.0, "#ff9ec8", lambda t: 0.50 + 0.3 * upbeat(t) + 0.35 * downbeat(t, 0.4)),
         (185.5, 188.4, _D(-22.3, 8.7, 55.3), 18.0, "#ffd8c8", lambda t: 0.4 + 0.3 * upbeat(t)),
         (247.0, 249.6, _D(-1.0, 7.0, 40.0), 34.0, "#fff0dc",
