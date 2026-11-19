@@ -44,6 +44,63 @@ class Cards(cards.Cards):
         if self.ec is not None:
             self.ec["fade"] = 1.1                     # the text sweeps in through the flare in about a second
         self._hide_op = False
+        if self.op is not None:
+            self.opA = self._finish_concert()
+
+    # ------------------------------------------------------------------ the swap (round 7, Anthony)
+    SWAP_OUT, SWAP_IN, SWAP_DUR = 4.88, 5.36, 0.95   # on the beats: the concert leaves, the song title sweeps in
+
+    def _finish_concert(self):
+        L = self._opening_concert(self.op["palette"])
+        rng = np.random.default_rng(6)
+        a = L["a"]
+        ys, xs = np.nonzero(a > 0.35)
+        n = int(min(20000 * self.s * self.s, len(xs)))
+        pick = rng.choice(len(xs), size=n, replace=False, p=a[ys, xs] / a[ys, xs].sum())
+        ys, xs = ys[pick], xs[pick]
+        x0, y0 = L["box"][:2]
+        L["pts"] = dict(x=(xs + x0).astype(np.float32), y=(ys + y0).astype(np.float32),
+                        d=(0.62 * L["noise"][ys, xs] + 0.38 * xs / max(a.shape[1] - 1, 1)).astype(np.float32),
+                        col=L["rgb"][ys, xs].astype(np.float32), r=rng.random((n, 4)).astype(np.float32))
+        return L
+
+    def _sweep(self, t, t0):
+        """The dissolve front of a swap that starts at t0."""
+        u = (t - t0) / self.SWAP_DUR
+        e = 0.06
+        return -e + (1.0 + 2.0 * e) * min(max(u, 0.0), 1.2)
+
+    def _concert_dust(self, t):
+        """As the concert title leaves, its letters crumble into glowing dust that drifts up and fades."""
+        p = self.opA["pts"]
+        e = 0.06
+        rel = self.SWAP_OUT + self.SWAP_DUR * (p["d"] - 0.5 * e + e) / (1.0 + 2.0 * e)
+        age = t - rel
+        r = p["r"]
+        life = 0.8 + 0.8 * r[:, 0]
+        on = (age > 0.0) & (age < life)
+        if not on.any():
+            return []
+        ag, rr = age[on], r[on]
+        s = self.s
+        x = p["x"][on] + (10.0 + 30.0 * rr[:, 1]) * s * ag
+        y = p["y"][on] - (30.0 + 70.0 * rr[:, 2]) * s * ag
+        lf = ag / life[on]
+        k = np.exp(-lf * 2.0) * (1.0 - _ss(0.7, 1.0, lf))
+        size = (1.5 + 2.0 * rr[:, 3]) * s * (1.0 - 0.4 * lf)
+        xy = np.stack([x, y], axis=1).astype(np.float32)
+        return [((xy, size, _rgba(p["col"][on], k * 1.3, False)), True)]
+
+    def protect(self, t):
+        """The text protection follows whichever title is on screen."""
+        if self.op is not None and t < self.SWAP_OUT + 0.6:
+            L = self.op_layer
+            self.op_layer = self.opA
+            try:
+                return super().protect(t)
+            finally:
+                self.op_layer = L
+        return super().protect(t)
 
     # ------------------------------------------------------------------ the camera, for the lights that cross
     def _screen(self, t, P):
@@ -160,12 +217,31 @@ class Cards(cards.Cards):
             L["t_noise"].use(location=1)
             self.p_ovl["uNoise"].value = 1
             base, swell = self._op_bright(t)
-            dis = (float(front) if front is not None else -1.0, 0.06, 0.38, 0.0)
-            self._quad(self.p_ovl, self.v_ovl, L, -1.0, uAlpha=base, uDis=dis)
-            if swell > 0.002:                                       # the gentle brightening, added as light
-                ctx.blend_func = mgl.ONE, mgl.ONE
-                self._quad(self.p_ovl, self.v_ovl, L, -1.0, uAlpha=swell, uDis=dis)
-                ctx.blend_func = mgl.ONE, mgl.ONE_MINUS_SRC_ALPHA
+            if t < self.SWAP_OUT + self.SWAP_DUR * 1.2:             # the concert title, until the swap
+                A = self.opA
+                A["t_noise"].use(location=1)
+                fa = self._sweep(t, self.SWAP_OUT) if t > self.SWAP_OUT else -1.0
+                disA = (float(fa), 0.06, 0.38, 0.0)
+                self._quad(self.p_ovl, self.v_ovl, A, -1.0, uAlpha=base, uDis=disA)
+                if swell > 0.002:                                   # the gentle brightening, added as light
+                    ctx.blend_func = mgl.ONE, mgl.ONE
+                    self._quad(self.p_ovl, self.v_ovl, A, -1.0, uAlpha=swell, uDis=disA)
+                    ctx.blend_func = mgl.ONE, mgl.ONE_MINUS_SRC_ALPHA
+            if t > self.SWAP_IN:                                    # the song title sweeps in out of glints
+                L["t_noise"].use(location=1)
+                if front is not None:
+                    dis = (float(front), 0.06, 0.38, 0.0)
+                elif t < self.SWAP_IN + self.SWAP_DUR:
+                    dis = (float(self._sweep(t, self.SWAP_IN)), 0.12, 0.6, 1.0)
+                else:
+                    dis = (-1.0, 0.06, 0.38, 0.0)
+                self._quad(self.p_ovl, self.v_ovl, L, -1.0, uAlpha=1.0, uDis=dis)
+                glint = float(np.exp(-max(t - self.SWAP_IN - self.SWAP_DUR * 0.6, 0.0) / 0.6)) * float(
+                    _ss(self.SWAP_IN, self.SWAP_IN + 0.4, t))
+                if glint > 0.01 and front is None:                  # a soft flash of light as it arrives
+                    ctx.blend_func = mgl.ONE, mgl.ONE
+                    self._quad(self.p_ovl, self.v_ovl, L, -1.0, uAlpha=0.35 * glint, uDis=dis)
+                    ctx.blend_func = mgl.ONE, mgl.ONE_MINUS_SRC_ALPHA
             tr = self._trace(t)
             if tr is not None:
                 img, (x, y, w, h) = tr
@@ -177,6 +253,8 @@ class Cards(cards.Cards):
                                                                                 h / self.h)),
                            -1.0, uAlpha=1.0, uDis=(-1.0, 0.0, 0.0, 0.0))
         pts = (self._op_gather_points(t, front) if front is not None else []) + self._light_points(t)
+        if self.SWAP_OUT < t < self.SWAP_OUT + self.SWAP_DUR + 1.8:
+            pts += self._concert_dust(t)
         for batch, additive in pts:
             ctx.blend_func = (mgl.ONE, mgl.ONE) if additive else (mgl.ONE, mgl.ONE_MINUS_SRC_ALPHA)
             self._points(batch)
@@ -282,16 +360,17 @@ class Cards(cards.Cards):
             self._hide_op = False
         return self._draw_flare(t) or drew         # over the night sky as it comes in, dying away in a second
 
-    def _opening(self, pal):
-        """N4: the logo, HEALING CONCERT, the title (its second line in italic), a gold hairline, the date line,
-        LAS VEGAS, all centred. The logo's slot is kept free when there is no logo, so the lockup never moves."""
+    def _opening_concert(self, pal):
+        """N4 without the song title (Anthony, round 7: "Title card should start with just the concert. Then it
+        should be swapped out with the song title."): the logo, HEALING CONCERT, the title (its second line in
+        italic), a gold hairline, the date line, LAS VEGAS, all centred on the opening's height."""
         s, W, H = self.s, self.w, self.h
         P = PALETTES[pal]
         col, acc = P["col"], P["acc"]
         lines = self._title_lines()
         lh = 130.0                                         # the logo slot (1080p pixels), then a gap of 28
         two = len(lines) > 1
-        total = lh + 28 + 320 + 30 - (0 if two else 102) + 150
+        total = lh + 28 + 350 - (0 if two else 102)
         L = Image.new("RGBA", (W, H), (0, 0, 0, 0))
         d = ImageDraw.Draw(L)
         cx = W / 2.0
@@ -311,11 +390,23 @@ class Cards(cards.Cards):
         else:
             y -= 102 * s
         d.line((cx - 60 * s, y + 242 * s, cx + 60 * s, y + 242 * s), fill=acc + (200,), width=max(1, int(round(2 * s))))
-        d.text((cx, y + 262 * s), SONG_TITLE, font=CG(600, 112 * s), fill=col + (255,), anchor="ma")
-        y += 150 * s                                       # (round 7: scaled, so drafts match the 1080p lockup)
         _tracked(d, (cx, y + 262 * s), "SUNDAY, DECEMBER 6" + SEP + "4:30 PM", JO(500, 40 * s), col + (255,), 6 * s)
         _tracked(d, (cx, y + 320 * s), "LAS VEGAS", JO(400, 26 * s), acc + (235,), 8 * s)
         return self._finish(L, 14, 0.55, pal, noise=True, prot=getattr(self, "op_prot", (40.0, 16.0)))
+
+    def _opening(self, pal):
+        """The song title on its own, after the swap (SONG_TITLE), with a gold hairline beneath; it is the title
+        that draws together into the star (the engine's opening layer, so the gather uses its letters)."""
+        s, W, H = self.s, self.w, self.h
+        P = PALETTES[pal]
+        col, acc = P["col"], P["acc"]
+        L = Image.new("RGBA", (W, H), (0, 0, 0, 0))
+        d = ImageDraw.Draw(L)
+        cx, cy = W / 2.0, self.op["y"] * H
+        d.text((cx, cy - 58 * s), SONG_TITLE, font=CG(600, 104 * s), fill=col + (255,), anchor="ma")
+        d.line((cx - 80 * s, cy + 78 * s, cx + 80 * s, cy + 78 * s), fill=acc + (210,), width=max(1, int(round(2 * s))))
+        return self._finish(L, 14, 0.55, pal, noise=True, prot=getattr(self, "op_prot", (40.0, 16.0)))
+
     def _signature(self, corner, pal):
         """Anthony (2026-11-19): the logo alone stays in the corner all film; the song title and the event title
         ("The Words of Mother's Love That Bring Peace") appear beside it now and then, with no date or place.
