@@ -301,15 +301,14 @@ def _far(t, p):
 
 
 def choir_mask(t):
-    f = _far(t, CHOIR_C)
-    k = (0.85 if t < SLAM3 else 0.45) * (1.0 - f) + (0.35 if t >= SLAM3 else 0.0) * f
-    return k * (1.0 - _sc(247.0, 247.5, t))
+    """The choir's dark silhouette mask: off everywhere (round 8, Anthony: "choir still turns dark sometimes";
+    f33: in far views the masks drew a dark slab at the church entrance). The singers always read as light."""
+    return 0.0
 
 
 def orch_mask(t):
-    f = _far(t, ORCH_C)
-    k = (0.0 if t < SLAM3 else 0.2) * (1.0 - f) + (0.45 if t >= SLAM3 else 0.0) * f   # none close: the players glow
-    return k
+    """The players' dark mask: off everywhere, as the choir's (they always glow)."""
+    return 0.0
 
 
 class MaskSource:
@@ -415,7 +414,7 @@ class Choir(Crowd):
 # Anthony (2026-11-19): choir and orchestra as glowing blue sparkles; the instruments stay gold; every singer holds
 # an open song book of gold light, like the instruments.
 FIG_BLUE, FIG_BLUE2 = "#6cb2ff", "#d2e8ff"
-BOOK_COL = "#ffc76e"
+BOOK_COL = "#ffb43c"                 # deep gold, apart from the blue singers (round 8)
 
 
 def _book_local(rng, n=120):
@@ -474,9 +473,9 @@ class SongBooks:
         pos = P.reshape(-1, 3)
         a = np.repeat(k, self.nb) * 0.9
         glow = 0.85 + 0.25 * choir_glow(t)
-        return [dict(pos=pos, size=0.011, color=self.col * 1.3 * glow, alpha=a.astype(np.float32), kind="spark",
-                     emit=1.4, twinkle=0.25, seed=self.seed.reshape(-1), dof=0.35),
-                dict(pos=pos[:: 3], size=0.05, color=self.col * 0.5 * glow, alpha=(a[:: 3] * 0.35).astype(np.float32),
+        return [dict(pos=pos, size=0.013, color=self.col * 1.7 * glow, alpha=np.minimum(a * 1.1, 1.0).astype(np.float32),
+                     kind="spark", emit=1.9, twinkle=0.2, seed=self.seed.reshape(-1), dof=0.35),
+                dict(pos=pos[:: 3], size=0.045, color=self.col * 0.45 * glow, alpha=(a[:: 3] * 0.30).astype(np.float32),
                      kind="soft", dof=0.35)]
 
 
@@ -920,8 +919,10 @@ def _to_world(P, k, offset):
     return np.stack([x + base[0], P[:, 1] + base[1], z + base[2]], 1)
 
 
-INSTR_COL = {VIOLIN: "#ffc98a", VIOLA: "#ffc07a", CELLO: "#ffb870", HARP: "#ffd88c", TIMPANI: "#f0a066",
-             TRUMPET: "#ffd77a", TROMBONE: "#ffd77a"}
+# deep, saturated gold (round 8, Anthony: "hard to distinguish the instruments and books from the orchestra and
+# choir"): pale amber went white beside the blue players; these stay gold at any brightness
+INSTR_COL = {VIOLIN: "#ffab36", VIOLA: "#ffa22e", CELLO: "#ff9a2a", HARP: "#ffbe44", TIMPANI: "#ec8a3a",
+             TRUMPET: "#ffc23e", TROMBONE: "#ffc23e"}
 
 
 def _hitters_local():
@@ -955,7 +956,7 @@ class Instruments:
             for a, b in lines:
                 la.append(_to_world(a, k, self.off)[0])
                 lb.append(_to_world(b, k, self.off)[0])
-                lc.append(lin("#fff4e0") if sec != HARP else lin("#f4f8ff"))
+                lc.append(lin("#ffd98e") if sec != HARP else lin("#ffe6b0"))
         self.P, self.C = np.concatenate(pts), np.concatenate(cols)
         self.F, self.FC = np.concatenate(fill), np.concatenate(fcol)
         self.LA, self.LB, self.LC = np.asarray(la), np.asarray(lb), np.asarray(lc)
@@ -997,8 +998,8 @@ class Instruments:
         ph = play_ph(t)
         acc = hit_pulse(t, STRINGS, fall=0.5) + 0.35 * beat_pulse(t, 0.1)
         hk, last = self._hit(t)
-        out = [dict(pos=self.P, size=0.016, color=self.C * (1.0 + 0.6 * acc + 0.8 * hk), alpha=0.85 * g,
-                    emit=1.6, kind="spark", twinkle=0.25, dof=0.6, fog=0.6),
+        out = [dict(pos=self.P, size=0.018, color=self.C * (1.35 + 0.6 * acc + 0.8 * hk), alpha=0.95 * g,
+                    emit=1.9, kind="spark", twinkle=0.2, dof=0.6, fog=0.6),
                dict(pos=self.F, size=0.03, color=self.FC, alpha=(0.30 + 0.25 * acc) * g, kind="soft", emit=1.0,
                     twinkle=0.4, seed=self.rs, dof=0.6, fog=0.6),
                dict(pos=self.LA, pos2=self.LB, size=0.0035, color=self.LC * (1.0 + 0.8 * acc), alpha=0.75 * g,
@@ -1380,15 +1381,16 @@ def add(scene):
                   start=dict(t=21.3, center=(0.0, FACADE_Z), speed=9.0), color=FIG_BLUE, color2=FIG_BLUE2,
                   bright=3.2, points=3200, size=1.1, flash=1.2, glints=0.004, dof=0.35, seed=3.0,
                   light="#9fd0ff", lamp=(0.20, 1.0), scale=(0.97, 1.03))
-    scene.add("choir", choir, mask=Mask("dark", strength=choir_mask, grow=0.03, source=MaskSource(choir)))
-    scene.add("choir hearts", ChoirHearts(choir))
+    # no dark mask: the singers always glow (f28, f33); behind a phrase they glow softer (f17)
+    scene.add("choir", BoxGuard(choir, keep=0.35))
+    scene.add("choir hearts", BoxGuard(ChoirHearts(choir), keep=0.4))
     scene.add("song books", SongBooks(choir))
-    orch = Players(start=dict(t=2.2, dur=7.0), color=FIG_BLUE, color2=FIG_BLUE2, bright=6.0, points=3400,
+    orch = Players(start=dict(t=2.2, dur=7.0), color=FIG_BLUE, color2=FIG_BLUE2, bright=4.3, points=3400,
                    size=1.2, glints=0.006, dof=0.35, seed=4.0)
-    scene.add("orchestra", orch, mask=Mask("dark", strength=orch_mask, grow=0.03, source=MaskSource(orch)))
+    scene.add("orchestra", BoxGuard(orch, keep=0.35))     # no dark mask: the players always glow
     scene.add("risers", Risers())
     scene.add("instruments", Instruments())
-    scene.add("choir light", ChoirLight(CHOIR_ALL))
+    scene.add("choir light", BoxGuard(ChoirLight(CHOIR_ALL), keep=0.2))
     scene.add("snow", Snow())
     for i, c in enumerate(_heroes()):
         scene.add("hero singers %d" % i, c)
@@ -1403,7 +1405,7 @@ def add(scene):
     for j, ts in enumerate(BURSTS):
         for i in range(9):
             scene.add("slam rocket %d %d" % (j, i), BoxGuard(StageComet(
-                _rocket(ts, i), COL9[i], ts - 0.05, ts + 3.6, trail=1.2, width=0.9 if j != 1 else 0.6,
+                _rocket(ts, i), COL9[i], ts - 0.05 if j != 1 else ts + 0.22, ts + 3.6,     # slam 2: after its flash trail=1.2, width=0.9 if j != 1 else 0.6,
                 bright=1.3 if j != 1 else 0.8, fade=0.3, n=60, sparks=False, seed=100 + 9 * j + i)))
     scene.add("loop conductor", BoxGuard(StageComet(_loop_conductor, COL9[6], 0.0, 260.0, trail=1.6, width=0.18, n=80,
                                            seed=131)))

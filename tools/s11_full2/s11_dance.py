@@ -170,7 +170,7 @@ def _pattern(p, amp=1.0, style="legato"):
     k = int(np.floor(p)) % 4
     s = p - np.floor(p)
     if style == "staccato":                  # a flick away from the ictus, then still until the next
-        s = 1.0 - (1.0 - min(s * 1.35, 1.0)) ** 3
+        s = 1.0 - (1.0 - min(s * 1.15, 1.0)) ** 2.2
     a, c, b = np.array(_ICT[k]), np.array(_REB[k]), np.array(_ICT[(k + 1) % 4])
     q = (1.0 - s) ** 2 * a + 2.0 * s * (1.0 - s) * c + s * s * b
     z = R_CEN[2] + 0.07 * amp * (1.0 - np.sin(np.pi * s))
@@ -205,8 +205,8 @@ def _heart_prog(t):
     return u ** 0.8 * (1.6 - 0.6 * u ** 0.8) if u < 1.0 else 1.0      # fast off the hit, easing in at the bottom
 
 
-def _hands(t):
-    """(right, left) hand places in his frame at t."""
+def _hands_raw(t):
+    """(right, left) hand places in his frame at t, before smoothing (the poses the music asks for)."""
     p = bar_pos(t)
     if t < 110.0:                            # the summons: big, marcato; both arms up on the last beat
         r = _pattern(p, 1.35, "legato")
@@ -225,9 +225,12 @@ def _hands(t):
         l = L_HOLD + np.array([0.28, 0.30, -0.06]) * min(cue, 1.0)
         return r, l
     if t < 220.0:                            # wondrous love: overhead, the heart on the hit, then the next bar
-        top = HAND_HEART_C + np.array([0.0, 0.40, 0.0])
-        if t < HEART_T[0]:
-            return top + np.array([-0.08, 0.3, 0.0]), top + np.array([0.08, 0.3, 0.0])
+        x0, y0 = _heart_xy(0.0)
+        top = HAND_HEART_C + np.array([0.0, y0 * HAND_HEART_S, 0.0])
+        if t < HEART_T[0]:                   # poised at the heart's top, lifting into the hit
+            lift = _sc(HEART_T[0] - 1.2, HEART_T[0] - 0.12, t)
+            return (top + np.array([-0.06, 0.10 + 0.22 * lift, -0.04]),
+                    top + np.array([0.06, 0.10 + 0.22 * lift, -0.04]))
         if t <= HEART_T[1]:
             x, y = _heart_xy(_heart_prog(t))
             sc = HAND_HEART_S
@@ -250,6 +253,26 @@ def _hands(t):
     return r * (1 - up) + np.array([-0.22, 2.22, 0.20]) * up, l * (1 - up) + L_UP * up
 
 
+_SM_OFF = np.linspace(-2.2, 2.2, 13)
+_SM_W = np.exp(-0.5 * _SM_OFF ** 2)
+_SM_W = _SM_W / _SM_W.sum()
+
+
+def _hands(t, lag=0.0):
+    """The hands, smoothed (round 8, Anthony: "the conductor's animation is so choppy"): a gaussian over the
+    raw poses (0.07 s; 0.045 s in the quick strokes of the summons and the strings) taken a little in the
+    past, so every stroke eases in and out, nothing snaps, and the arms follow through behind the beat."""
+    sig = 0.045 if (t < 110.0 or 121.32 <= t < 140.0) else 0.07
+    c = t - 0.025 - lag
+    R = np.zeros(3)
+    L = np.zeros(3)
+    for o, w in zip(_SM_OFF, _SM_W):
+        r, l = _hands_raw(c + o * sig)
+        R += w * r
+        L += w * l
+    return R, L
+
+
 def hand_R(t):
     return _W(_hands(t)[0])
 
@@ -264,7 +287,8 @@ _SH_R = np.array([-0.19, 1.50, 0.02])
 def tip(t):
     """The baton's white-hot tip: along the arm from the shoulder through the hand, lifted forward and up."""
     h = _hands(t)[0]
-    d = _unit(h - _SH_R + np.array([0.0, 0.22, 0.30]))
+    hl = _hands(t, lag=0.06)[0]              # the baton trails the hand: follow-through on every stroke
+    d = _unit(h - _SH_R + np.array([0.0, 0.22, 0.30]) + 1.6 * (hl - h))
     return _W(h + d * BATON)
 
 
@@ -743,8 +767,10 @@ def add(scene):
     # the world answers him: the city lights and the clouds swell on his upbeat; the sea glitter and the
     # constellations ripple with his downbeats
     for name in ("city dim", "city gold", "zion dim", "zion gold", "zion gardens", "zion towers", "zion gates",
-                 "paths", "church"):
+                 "church"):
         _wrap(scene, name, lambda t: 1.0 + _swell_amt(t) * upbeat(t))
+    # Zion's paths of light ran as a bright white streak low across the sea through his frames: faint there
+    _wrap(scene, "paths", lambda t: 0.2)
     for k in range(8):
         _wrap(scene, "horizon clouds %d" % k, lambda t: 1.0 + 0.8 * _swell_amt(t) * upbeat(t))
     _wrap(scene, "sea glitter", lambda t: 1.0 + 0.9 * downbeat(t, 0.3))
