@@ -98,7 +98,8 @@ SHOTS = [
           fov=50.0, roll=(8.0, -8.0)),
     # standing firm, the second climb: a bigger banking spiral, far higher than the first
     _shot("zion_full", 171.48, 178.4,
-          _orbit(171.48, 178.4, -40.0, 80.0, 380.0, 230.0, 40.0, 190.0, ZC + _v(0, 40, 0), ZC + _v(0, 60, 0), 8),
+          # (round 8, f18) it starts farther out and higher, so the near terraces do not bloom white at the lens
+          _orbit(171.48, 178.4, -40.0, 80.0, 440.0, 230.0, 78.0, 190.0, ZC + _v(0, 40, 0), ZC + _v(0, 60, 0), 8),
           fov=54.0, roll=(-14.0, 10.0)),
     # sacrifice: the mountain blazing, a high helicopter orbit
     _shot("zion_full", 180.7, 183.0,
@@ -519,7 +520,7 @@ def _building(T, c, a, kind, bs, gi, k=0, s=1.0):
     needle. Walls in the district's pearl, roofs and domes in rose, lavender, sky, teal or amber, windows lit."""
     sd = np.array([np.cos(a), 0.0, -np.sin(a)])
     fw = np.array([np.sin(a), 0.0, np.cos(a)])
-    wall = _district_tint(a, k, 0.38)[0] * 0.85
+    wall = _district_tint(a, k, 0.45)[0] * 0.68               # (f18) not white walls in the wide views
     roof = lin(ROOF[gi % len(ROOF)])
     b1, b2, b3 = (list(bs) + [bs[-1]] * 3)[:3]
     c = np.asarray(c, np.float64)
@@ -618,6 +619,44 @@ def _band_slots(rb, step, y, front=FRONT):
     return p[keep], a[keep]
 
 
+CITY_PAT = "GTGPGt"          # along each terrace's back band: gardens (G) between building plots (T, P, t)
+RING_PAT = "GTGPG"           # along the new rings of the city on the sea
+CITY_GEN1 = {0: 90.72, 1: 91.6, 2: 92.6, 3: 99.4, 4: 101.5, 5: 109.8}
+
+
+def _city_slots():
+    """(Round 8, Anthony: "The heavenly city buildings are the real church buildings in Korea.") The building
+    plots of Zion's city, for the models thread to place a real Korean church on each (largest on the widest):
+    dicts with x, y (the floor), z, facing (degrees, azimuth from +z toward +x: the front looks out from the
+    mountain, down over the terrace below), max_w, max_d (the free footprint in metres: across, deep), terrace
+    (0 the lowest terrace .. 5; -1 and -2 the first and second new rings on the sea), born (when the building
+    rises: on the beats, ring by ring up the mountain through the song, the rings on the sea behind the
+    shockwave and on slam 3). The summit plateau (terrace 6) is left to the church of light and its city."""
+    out = []
+    for k in range(N_TIER - 1):
+        rb = tier_r(k + 1) + 8.0
+        P, A = _band_slots(rb, 13.0, tier_y(k))
+        for j, (p, a) in enumerate(zip(P, A)):
+            if CITY_PAT[(j + k) % len(CITY_PAT)] == "G":
+                continue
+            u = abs(a) / FRONT
+            out.append(dict(x=float(p[0]), y=float(tier_y(k)), z=float(p[2]), facing=float(np.degrees(a)),
+                            max_w=18.0, max_d=12.0, terrace=k, born=float(_snap(CITY_GEN1[k] + 2.2 * u))))
+    front = np.radians(100.0)
+    for ri, (R, t0) in enumerate(zip(R_RING, RING_T)):
+        P, A = _band_slots(R - 12.0, 15.0, 0.0, front)
+        for j, (p, a) in enumerate(zip(P, A)):
+            if RING_PAT[j % len(RING_PAT)] == "G":
+                continue
+            u = abs(a) / front
+            out.append(dict(x=float(p[0]), y=0.0, z=float(p[2]), facing=float(np.degrees(a)), max_w=22.0,
+                            max_d=14.0, terrace=-1 - ri, born=float(_snap(t0 + (6.3 if ri == 0 else 4.3) + 2.2 * u))))
+    return out
+
+
+CITY_SLOTS = _city_slots()
+
+
 def _city_parts():
     """The growing city: (gates, gardens, towers and pavilions, mist, the new rings on the sea) as batches."""
     r = np.random.default_rng(606)
@@ -642,6 +681,8 @@ def _city_parts():
             p = p + r.uniform(-1.0, 1.0, 3) * np.array([1.0, 0.0, 1.0])
             if kind == "G":
                 _garden(Gd, p, r, float(_snap(FILL_T[k] + 0.6 + 1.6 * u)))
+            elif CITY_SLOTS is not None:
+                continue           # (round 8) a building plot: a real Korean church stands here (s11_churches)
             elif kind == "P":
                 _pavilion(T, p, j, float(_snap(HIT["thanks"] + 0.5 * k + 2.4 * u)) if k < 5
                           else float(_snap(171.48 + 1.5 * u)))
@@ -689,6 +730,8 @@ def _city_parts():
             kind = "GTGPG"[j % 5]
             if kind == "G":
                 _garden(Gd, p, r, b)
+            elif CITY_SLOTS is not None:
+                continue           # (round 8) a building plot on the ring (CITY_SLOTS)
             elif kind == "P":
                 _pavilion(T, p, j, b)
             else:
@@ -943,7 +986,7 @@ def _places(tiers, density, seed, front_share=0.9):
     r = np.random.default_rng(seed)
     out, kk = [], []
     for k in tiers:
-        R0, Ri = tier_r(k) - 1.6, tier_r(k + 1) + 8.0
+        R0, Ri = tier_r(k) - 1.6, tier_r(k + 1) + 15.0      # (round 8) clear of the building plots (CITY_SLOTS)
         n = int(np.pi * (R0 ** 2 - Ri ** 2) * density)
         a = _az(n, r, front_share)
         rr = np.sqrt(Ri ** 2 + (R0 ** 2 - Ri ** 2) * r.random(n))
@@ -990,10 +1033,12 @@ def _glitter_people(P, K, born, seed, gain=1.0):
     kd = np.interp(np.asarray(K, np.float64), [0, 1, 2, 3, 4, 5], [1.0, 0.92, 0.78, 0.62, 0.5, 0.46])
     g2 = np.concatenate([kd, kd]) * gain
     robe = dict(pos=np.concatenate([hem - w, hem + w]), pos2=np.concatenate([neck, neck]), size=0.24,
-                color=np.concatenate([col, col]) * 0.8, alpha=0.30 * g2, alpha2=0.80 * g2, kind="line", emit=1.3,
-                birth=np.concatenate([born, born]), fade=0.7, flash=1.5, reflect=False)
+                color=np.concatenate([col, col]) * 0.8, alpha=0.26 * g2, alpha2=0.70 * g2, kind="line", emit=1.3,
+                birth=np.concatenate([born, born]), fade=1.2, flash=0.3, reflect=False)
     face = dict(pos=head, size=0.40, color=col * 0.8 + lin(WHITE) * 0.2, alpha=0.9 * kd * gain, kind="spark",
-                emit=1.8, birth=born, fade=0.7, flash=1.5, twinkle=0.15, seed=r.random(n), reflect=False)
+                emit=1.8, birth=born, fade=1.2, flash=0.3, twinkle=0.15, seed=r.random(n), reflect=False)
+    # (round 8, f18: the whole mountain whitened at 2:51 as thousands were born at once with a flash each) each
+    # person now comes softly
     return [robe, face]
 
 
@@ -1137,7 +1182,7 @@ class Arms:
         if len(ii) == 0:
             return None
         L = lift[ii]
-        a = _ss(0.03, 0.35, L) * self.kd[ii]
+        a = 0.7 * _ss(0.03, 0.35, L) * self.kd[ii]          # (round 8, f18) the waves a little softer
         col = self.col[ii]
         arms = self._hands(ii, L)                 # [(shoulder, hand) left, (shoulder, hand) right]
         A = np.concatenate([a, a])
@@ -1764,7 +1809,8 @@ def add(scene):
     scene.add("zion gardens", Static(gardens, lambda t: calm(t) * (1.0 + mx(t, high=0.45))))
     scene.add("zion towers", Static(towers, lambda t: calm(t) * (1.0 + 0.25 * intensity(t) * beat_pulse(t, 0.12))
                                     * (1.0 + mx(t, brass=0.5))))
-    scene.add("zion mist", Static(mist, lambda t: local_k(t) * (0.7 + 0.3 * intensity(t))))
+    scene.add("zion mist", Static(mist, lambda t: local_k(t) * (0.7 + 0.3 * intensity(t))
+                                  * (1.0 - 0.5 * _win(t, 213.5, 219.5, 0.6, 0.6))))      # (f35) thinner at 3:34
     scene.add("zion streams", Streams())
     edges = np.concatenate([_ring(ZC, tier_r(k) + 0.1, tier_y(k) + 1.0, 1.4) for k in range(N_TIER)])
     scene.add("zion beat", Static([_batch(edges, 0.6, lin("#ffe8c0"), 0.8, emit=1.8, reflect=False)], edge_k))

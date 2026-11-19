@@ -12,7 +12,7 @@ import numpy as np
 from songs.s11_full2 import *  # noqa: F401,F403
 import songs.s11_full2 as _CORE  # noqa: E402  (the camera, for f19)
 from songs.s11_stage import Instruments, ORCH_P, Players  # noqa: E402
-from songs.s11_zion import WaveCrowd, mx, wave_u  # noqa: E402  (the waves of raised arms; the music map)
+from songs.s11_zion import WaveCrowd, mx, reading, wave_u  # noqa: E402  (the waves of raised arms; the music map)
 
 Y, FZ, G = SUMMIT, FACADE_Z, GLOBE_C
 
@@ -136,7 +136,9 @@ def sun_rays(t):
     if 206.0 <= t < 211.6 and shot_name(t) == "sky_stage":
         return 0.75 + 0.3 * kick + 0.15 * beat_pulse(t)
     if 211.6 <= t < 224.03 and shot_name(t) == "summit":
-        return 0.55 + 0.3 * kick
+        # (round 8, f35: 3:34 to 3:39.5 stayed pale) half the steady glory, the light swells only on the beats
+        q = _win(t, 213.5, 219.5, 0.6, 0.6)
+        return (0.55 - 0.32 * q) + (0.3 + 0.1 * q) * kick + 0.12 * q * beat_pulse(t)
     if 235.0 <= t < 238.8 and globe_view(t):
         return 0.35 + 0.85 * _sc(235.0, 235.8, t) + 0.5 * hit_pulse(t, [HIT["peak"]], fall=1.0)
     return 0.0
@@ -329,7 +331,9 @@ class SummitPillars(Pillars):
 def _pillar_gain(t):
     if globe_view(t) or not (211.0 <= t < 224.1):
         return 0.0
-    return (_sc(211.0, 212.2, t) * (1.0 - _sc(223.4, 224.1, t))) * (0.75 + 0.35 * intensity(t))
+    q = _win(t, 213.5, 219.5, 0.6, 0.6)          # (f35) half, swelling only on the beats, through the pale stretch
+    return ((_sc(211.0, 212.2, t) * (1.0 - _sc(223.4, 224.1, t))) * (0.75 + 0.35 * intensity(t))
+            * (1.0 - q * (0.5 - 0.4 * beat_pulse(t))))
 
 
 def _coda_clouds():
@@ -352,7 +356,8 @@ def _coda_clouds():
         out.append(CloudBank(c, size=(260.0, 210.0, 120.0), puffs=34, seed=80 + i, gain=g_hearts, bright=1.0))
     for i, x in enumerate((190.0, 470.0)):                  # the canyon of the last build
         c = _v(x, 2.0, -760.0)
-        out.append(CloudBank(c, size=(80.0, 170.0, 1100.0), puffs=46, seed=90 + i, gain=g_canyon, bright=0.65))
+        out.append(CloudBank(c, size=(80.0, 170.0, 1100.0), puffs=46, seed=90 + i, gain=g_canyon, bright=0.65,
+                             look="rim"))         # (round 8: the canyon glared white at 3:17, like f31)
     # (round 6: the three banks under and behind the sky orchestra are gone: seen from beside the players they
     # lay as a white band across them; the sea of cloud far below (Clouds) gives the depth)
     for i, da in enumerate((-14.0, 13.0)):                  # banks either side of the rising sun, far behind Zion
@@ -360,6 +365,102 @@ def _coda_clouds():
         c[1] = 2.0
         out.append(CloudBank(c, size=(420.0, 170.0, 160.0), puffs=34, seed=110 + i, gain=g_rise, bright=0.9))
     return out
+
+
+class EpicSun:
+    """(Round 8, Anthony: "the sun needs to be way more epic looking") the coda's sunrise (3:19.6 on, over Zion) as a
+    huge radiant sun on the core's sun direction: a blazing disc, white-gold at its heart; a layered corona in gold,
+    rose and lavender that breathes on the beats; long rays, long and short in turn, turning slowly and reaching
+    further on the brass and the kicks; and a band of light breaking along the horizon. Nothing of it crosses the
+    words: while a phrase reads, whatever falls in its band of the frame fades (the disc keeps low by the horizon)."""
+    wants_camera = True
+    D = 3000.0
+
+    def __init__(self):
+        r = np.random.default_rng(203)
+        n = 1400
+        rr = np.sqrt(r.random(n))
+        a = r.uniform(0, 2 * np.pi, n)
+        self.disc = np.stack([rr * np.cos(a), rr * np.sin(a)], 1)
+        self.disc_c = lin("#fff6e0") * (1.0 - rr[:, None] ** 2) + lin("#ffc070") * rr[:, None] ** 2
+        self.ring = [(1.5, "#ffe2a0", 0.10), (2.3, "#ffb0a0", 0.07), (3.4, "#d8b0ff", 0.05), (5.0, "#ffd0e8", 0.035)]
+        m = 260
+        a = np.linspace(0, 2 * np.pi, m, endpoint=False)
+        self.cs = np.stack([np.cos(a), np.sin(a)], 1)
+        self.jit = r.uniform(0.85, 1.15, m)
+        self.nray = 28
+        self.ray_len = np.where(np.arange(self.nray) % 2 == 0, 16.0, 8.5) * r.uniform(0.85, 1.15, self.nray)
+        self.ray_ph = r.random(self.nray)
+        self.hz = r.normal(0.0, 1.0, (900, 2))
+
+    def k(self, t):
+        if globe_view(t) or stage_view(t) or local_k(t) <= 0.0 or not (199.6 <= t < 224.03):
+            return 0.0
+        return _sc(199.6, 201.73, t) * (1.0 - _sc(223.4, 224.03, t))
+
+    def sample(self, t, cam=None):
+        k = self.k(t)
+        if k <= 0.0 or cam is None:
+            return None
+        import songs.s11_light as L
+        e = np.asarray(cam.pos, np.float64)
+        d = _dir(L.sun_az(t), L.sun_el(t))
+        c = e + self.D * d
+        rgt, up, _f = cam.basis()
+        # the sun's own axes in the sky (right along the horizon, up toward the zenith)
+        sx = _unit(np.cross(d, _v(0.0, 1.0, 0.0)) * -1.0)
+        sy = _unit(np.cross(sx, d))
+        R = self.D * np.tan(np.radians(2.4))                   # the disc: about 5 degrees across
+        kick = hit_pulse(t, KICKS, rise=0.02, fall=0.45)
+        slam = hit_pulse(t, [SLAM3], rise=0.02, fall=0.6)
+        beat = beat_pulse(t)
+        swell = 1.0 + 0.25 * beat + 0.4 * kick + mx(t, brass=0.5)
+        # (f35) over the summit at 3:33.5 to 3:39.5 the sun burns at half, swelling only on the beats
+        q = _win(t, 213.5, 219.5, 0.6, 0.6)
+        k = k * (1.0 - q * (0.55 - 0.35 * beat - 0.3 * kick))
+        rd = reading(t)
+
+        def guard(P):
+            """Fade what falls in the words' band (the middle of the frame) while a phrase reads."""
+            if rd <= 0.0:
+                return np.ones(len(P))
+            xy, z = cam.project(P)
+            band = _ss(0.24, 0.32, xy[:, 1]) * (1.0 - _ss(0.72, 0.8, xy[:, 1]))
+            return 1.0 - 0.85 * rd * band * (z > 0.0)
+        out = []
+        P = c + R * (self.disc[:, :1] * sx + self.disc[:, 1:] * sy)
+        out.append(dict(pos=P, size=R * 0.22, color=self.disc_c, alpha=k * guard(P) ** 0.5, emit=6.0 + 3.0 * slam,
+                        kind="soft", fog=False, dof=0.0, reflect=False))
+        out.append(dict(pos=c[None], size=R * 3.2, color=lin("#ffd9a0"), alpha=np.array([0.35 * k * swell]),
+                        emit=2.5, kind="soft", fog=False, dof=0.0, reflect=False))
+        for i, (f, col, a0) in enumerate(self.ring):        # the corona
+            rr = R * f * (1.0 + 0.06 * np.sin(2.0 * t + i) + 0.08 * beat) * self.jit
+            P = c + rr[:, None] * (self.cs[:, :1] * sx + self.cs[:, 1:] * sy)
+            out.append(dict(pos=P, size=R * (0.5 + 0.35 * f), color=lin(col), alpha=3.0 * a0 * k * swell * guard(P),
+                            emit=2.2, kind="soft", fog=False, dof=0.0, reflect=False))
+        # the rays: long and short in turn, turning slowly, reaching further on the brass and the kicks
+        u = np.linspace(0.0, 1.0, 70)
+        for j in range(self.nray):
+            ang = 2 * np.pi * j / self.nray + 0.03 * t + 0.02 * np.sin(1.3 * t + 6.0 * self.ray_ph[j])
+            ln = self.ray_len[j] * (0.8 + 0.35 * swell + 0.6 * slam)
+            rr = R * (1.1 + ln * u)
+            dv = np.cos(ang) * sx + np.sin(ang) * sy
+            P = c + rr[:, None] * dv[None, :]
+            a = k * (1.0 - u) ** 1.6 * (0.55 + 0.45 * np.sin(np.pi * self.ray_ph[j] + 0.7 * t) ** 2)
+            a = a * (0.6 if np.sin(ang) > 0.0 else 1.0)              # the upward rays a little softer
+            g = guard(P)
+            out.append(dict(pos=P[:-1], pos2=P[1:], size=R * (0.05 + 0.03 * u[:-1]), color=lin("#fff0cc"),
+                            alpha=np.minimum(0.9 * a[:-1] * g[:-1], 1.0), alpha2=np.minimum(0.9 * a[1:] * g[1:], 1.0),
+                            emit=2.6 + 1.5 * slam, kind="line", fog=False, dof=0.0, reflect=False))
+            out.append(dict(pos=P[::3], size=R * 0.35, color=lin("#ffd9a8"), alpha=0.10 * a[::3] * g[::3],
+                            emit=1.5, kind="soft", fog=False, dof=0.0, reflect=False))
+        # light breaking along the horizon on either side of the sun
+        hz = self.hz
+        P = c + R * (hz[:, :1] * 14.0 * sx + hz[:, 1:] * 0.35 * sy) - R * 0.8 * sy
+        w = np.exp(-np.abs(hz[:, 0]) / 1.4)
+        out.append(dict(pos=P, size=R * 0.9, color=lin("#ffc890") * 0.9 + lin("#ff9ab0") * 0.1,
+                        alpha=0.18 * k * w * swell * guard(P), emit=1.8, kind="soft", fog=False, dof=0.0, reflect=False))
+        return out
 
 
 class GlobeComets:
@@ -425,49 +526,6 @@ class GlobeComets:
         return out or None
 
 
-def _emblem_template(stride=4):
-    """(Round 8, Anthony: "Instead of having hearts use the church logo") the church emblem as a sprite of points
-    in its own colours, traced from EMBLEM_MASK (read-only from s11_church): the sky-blue band and globe, lighter
-    toward the top, the white lettering and globe lines, the soft white ring. Unit size (x, y in -0.5..0.5).
-    Returns (xy, colour, size factor)."""
-    cache = getattr(_emblem_template, "cache", {})
-    if stride in cache:
-        return cache[stride]
-    from songs.s11_church import emblem_mask
-    m = emblem_mask()[::stride, ::stride]
-    n = m.shape[0]
-    out_xy, out_c, out_s = [], [], []
-    for cls, sz in ((1, 0.45), (3, 0.6), (2, 1.0)):            # (size factor doubles as the class's strength)
-        r, c = np.nonzero(m == cls)
-        xy = np.stack([(c - (n - 1) / 2.0) / n, -(r - (n - 1) / 2.0) / n], 1)
-        if cls == 1:
-            u = np.clip(xy[:, 1] + 0.5, 0.0, 1.0)[:, None]
-            col = lin("#3c9ff0") * (1.0 - u) + lin("#86d4ff") * u
-        elif cls == 2:
-            col = np.broadcast_to(lin("#ffffff"), (len(xy), 3))
-        else:
-            col = np.broadcast_to(lin("#dcefff") * 0.8, (len(xy), 3))
-        out_xy.append(xy)
-        out_c.append(np.asarray(col))
-        out_s.append(np.full(len(xy), sz))
-    cache[stride] = tuple(np.concatenate(x) for x in (out_xy, out_c, out_s))
-    _emblem_template.cache = cache
-    return cache[stride]
-
-
-def _emblem_sprites(c, sz, a, cam, glow=1.0, stride=4):
-    """Glowing church emblems facing the camera at centres c (N, 3), sizes sz (N,), strength a (N,)."""
-    xy, col, f = _emblem_template(stride)
-    rgt, up, _f = cam.basis()
-    m = len(xy)
-    P = c[:, None, :] + sz[:, None, None] * (xy[None, :, 0, None] * rgt[None, None, :] + xy[None, :, 1, None] * up[None, None, :])
-    step = 0.9 * stride / 128.0
-    return [dict(pos=P.reshape(-1, 3), size=(sz[:, None] * step * np.ones(m)[None, :]).ravel(),
-                 color=np.tile(col, (len(c), 1)), alpha=(a[:, None] * f[None, :]).ravel(), emit=1.6 * glow,
-                 kind="spark"),
-            dict(pos=c, size=1.0 * sz, color=lin("#5fb4ff"), alpha=0.05 * a, emit=1.2 * glow, kind="soft")]
-
-
 class RisingHearts:
     """Thanks to Mother (3:09.5 to 3:17): hearts in the nine colours rise from everyone on the mountain."""
     wants_camera = True
@@ -504,9 +562,13 @@ class RisingHearts:
         beat = beat_pulse(t)
         glow = 0.75 + 0.5 * intensity(t) + 0.9 * kick
         sz = self.sz[on] * (1.0 + 0.16 * beat + 0.25 * kick)
-        # (round 8) the church emblem rises, glowing, instead of hearts (every other one: fewer, larger)
-        keep = np.arange(len(c)) % 2 == 0
-        return _emblem_sprites(c[keep], 1.7 * sz[keep], a[keep], cam, glow, stride=2)
+        hx, hy = self.h[:, 0], self.h[:, 1]
+        P = (c[:, None, :] + sz[:, None, None] * (hx[None, :, None] * rgt[None, None, :] + hy[None, :, None] * up[None, None, :]))
+        m = len(self.h)
+        return [dict(pos=P.reshape(-1, 3), size=np.repeat(0.09 * sz, m), color=np.repeat(self.col[on], m, axis=0),
+                     alpha=np.repeat(a, m), emit=3.0 * glow, kind="spark"),
+                dict(pos=c, size=2.2 * sz, color=self.col[on], alpha=(0.14 + 0.12 * beat + 0.2 * kick) * a,
+                     emit=1.6 * glow, kind="soft")]
 
 
 class Horizon:
@@ -879,15 +941,8 @@ def _patch_globe_hearts():
         for b in out:
             if b.get("kind") != "heart":
                 res.append(b)
-            elif t >= 188.0:      # (round 8, "instead of having hearts use the church logo"): the coda's are emblems
-                pos = np.asarray(b["pos"], np.float64)
-                n = len(pos)
-                sz = np.broadcast_to(np.asarray(b["size"], np.float64), (n,)) * 1.3
-                al = np.broadcast_to(np.asarray(b["alpha"], np.float64), (n,))
-                for e in _emblem_sprites(pos, sz, al, cam, 1.0, stride=2):
-                    e["dof"] = b.get("dof", 0.0)
-                    e["reflect"] = False
-                    res.append(e)
+            elif t >= 188.0:      # (round 8, Anthony: the coda's hearts go; the one emblem is the main church's)
+                continue
             else:
                 res.append(_heart_sprites(b, cam))
         return res
@@ -921,8 +976,9 @@ def _quiet_horizon_in_sky(scene):
 def add(scene):
     _patch_globe_hearts()
     _quiet_horizon_in_sky(scene)
-    scene.add("rising hearts", RisingHearts())
+    # (round 8, Anthony: no hearts in the coda; the church emblem only on the main church) no rising hearts
     scene.add("horizon", Horizon())
+    scene.add("epic sun", EpicSun(), reflect=False)
     # the orchestra on clouds of light round the rising sun
     scene.add("clouds", Clouds())
     # (round 8, Anthony: "the orchestra is playing but also bowing down. Do not have them bow") the stage's own
