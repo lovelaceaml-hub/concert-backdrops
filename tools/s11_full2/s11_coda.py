@@ -668,9 +668,10 @@ class Streams:
         self.h = r.uniform(0.85, 1.08, n)
         self.ph = r.random(n) * 2.0 * np.pi
         self.sp = self.SPEED * r.uniform(0.92, 1.08, n)
-        band = (np.floor(self.l0 / 9.0).astype(int) * 4 + 2 * self.grp) % 9
+        # (round 7, review f23: the rivers of people as clear coloured lines) one colour per lane, side by side
+        band = (np.floor((self.lane + 8.0) / 2.8).astype(int) * 4 + 2 * self.grp) % 9
         nine = np.asarray([lin(c) for c in COL9])
-        w = 0.08 + 0.17 * r.random(n)
+        w = 0.06 + 0.08 * r.random(n)
         self.col = nine[band] * (1.0 - w)[:, None] + lin("#fff0d8")[None, :] * w[:, None]
         self.s = r.random(n)
         self.g = gain

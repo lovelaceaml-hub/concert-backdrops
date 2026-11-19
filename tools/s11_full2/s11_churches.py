@@ -354,7 +354,7 @@ class EarthChurches:
             C.append(m["col"][keep])
             A.append(a)
             # the column of light: a flare on the beat, then a soft standing glow
-            top = 0.55 * R * (0.35 + 0.65 * _sc(ti, ti + 0.6, t))
+            top = R * (0.10 + 0.24 * _sc(ti, ti + 0.6, t)) * (1.0 - 0.4 * _reading(t))   # shorter under a phrase
             u = np.linspace(0.0, 1.0, 14)
             col_p = base[None, :] + (k * m["h"] * 0.6 + top * u)[:, None] * ey[None, :]
             ka = (0.34 + 0.14 * bp + 1.2 * fl * quiet) * fk

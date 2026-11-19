@@ -132,9 +132,18 @@ def _plan(t0, t1):
         return K((t0, (4.0, 1.4, -77.0), (0.0, 30.0, -86.0)), (158.3, (3.6, 1.3, -77.5), (0.0, 32.0, -85.0)),
                  (159.4, (3.4, 1.4, -77.6), (0.0, 30.0, -84.0)), (160.1, (3.6, 3.0, -74.5), (0.0, 7.0, -83.0)),
                  (t1, (2.8, 3.6, -72.0), (0.0, 4.5, -83.0))), "music"
-    if t0 == 161.7:       # her light grows: a push in toward it, faster into the slam
-        return K((t0, (1.6, 3.4, -93.0), (0.0, 8.0, -70.0)), (t1, (0.8, 3.9, -90.0), (0.0, 6.5, -70.0))), "music"
+    if t0 == 161.7:       # (round 7, f26) past her light, the camera flies into the church of light for the slam
+        return K((t0, (2.6, 4.6, -92.0), CH_FAR + _v(0.0, 1.0, 0.0)),
+                 (t1, (0.6, 10.5, -128.0), CH_FAR + _v(0.0, 0.5, -4.0))), "music"
     raise ValueError(f"no procession shot planned for the block at {t0}")
+
+
+# Round 7 (review f26, approved by Anthony): as "to the great Church of God!" begins, the ring of the kings' light
+# rises into the sky and resolves into the outline of a church of light, small and dim far below the words; for
+# the cut to slam 2 the camera flies into it. Where it stands: in the held breath, high in the sky ahead (below the
+# words in the upward view); after the choir's cut, on the sea ahead toward Zion (the flight into it).
+CH_SKY = _v(0.0, 54.0, -123.0)
+CH_FAR = _v(0.0, 12.0, -142.0)
 
 
 # banking: the horizon tilts in the big turns and the racing flight (degrees)
@@ -723,6 +732,62 @@ class Crowns:
         return out
 
 
+class ChurchRise:
+    """f26: the ring of the kings' light rises (2:35.3), resolves into the outline of a church of light (2:36.6
+    to 2:38.2) small and dim below the words, holds calm while they read, and is flown into for slam 2. The
+    outline: the hall with its gabled roof and a row of arched windows, the door, and a tower with a pointed roof
+    (no cross: the Church of God's buildings carry none)."""
+
+    T_RING, T_FORM, T_DONE = RISE, 156.6, 158.2
+
+    def __init__(self):
+        segs = [((-0.8, 0.0), (0.8, 0.0)), ((-0.8, 0.0), (-0.8, 0.6)), ((0.8, 0.0), (0.8, 0.6)),
+                ((-0.85, 0.6), (0.0, 0.88)), ((0.0, 0.88), (0.85, 0.6)), ((-0.85, 0.6), (0.85, 0.6)),
+                ((0.48, 0.6), (0.48, 1.25)), ((0.78, 0.6), (0.78, 1.25)), ((0.48, 1.25), (0.78, 1.25)),
+                ((0.45, 1.25), (0.63, 1.62)), ((0.63, 1.62), (0.81, 1.25)),
+                ((-0.12, 0.0), (-0.12, 0.26)), ((0.12, 0.0), (0.12, 0.26))]
+        pts = [_seg((a[0], a[1], 0.0), (b[0], b[1], 0.0), 0.012) for a, b in segs]
+        a = np.linspace(0.0, np.pi, 24)
+        pts.append(np.stack([0.12 * np.cos(a), 0.26 + 0.12 * np.sin(a), 0.0 * a], 1))     # the door's arch
+        for x in np.linspace(-0.62, 0.28, 5):                                              # arched windows
+            pts.append(np.stack([x + 0.05 * np.cos(a), 0.38 + 0.05 * np.sin(a), 0.0 * a], 1))
+            pts.append(_seg((x - 0.05, 0.2, 0.0), (x - 0.05, 0.38, 0.0), 0.012))
+            pts.append(_seg((x + 0.05, 0.2, 0.0), (x + 0.05, 0.38, 0.0), 0.012))
+        self.Q = np.concatenate(pts) - np.array([0.0, 0.8, 0.0])        # centred on its middle
+        n = len(self.Q)
+        r = np.random.default_rng(97)
+        self.ang = np.arctan2(self.Q[:, 1], self.Q[:, 0]) + r.normal(0.0, 0.15, n)   # its place on the ring
+        nine = np.asarray([lin(c) for c in COL9])
+        self.ring_col = nine[((self.ang + np.pi) / (2 * np.pi) * 9).astype(int) % 9]
+        self.s = r.random(n)
+
+    def where(self, t):
+        """(centre, size in metres) of the church at t."""
+        return (CH_SKY, 12.0) if t < 160.6 else (CH_FAR, 24.0)
+
+    def sample(self, t):
+        if proc_k(t) <= 0.0 or not (self.T_RING <= t < 162.9):
+            return None
+        C, S = self.where(t)
+        church = C[None, :] + S * self.Q
+        u = _sc(self.T_RING, self.T_FORM, t)                    # the ring rising from the kings into the sky
+        ring_c = _v(0.0, 1.0, -65.6) * (1.0 - u) + C * u
+        rad = 3.2 + (0.55 * S - 3.2) * u
+        ring = ring_c[None, :] + rad * np.stack([np.cos(self.ang), np.sin(self.ang) * u + 0.0 * self.ang,
+                                                 np.sin(self.ang) * (1.0 - u)], 1)
+        m = _ss(self.T_FORM, self.T_DONE, t)                    # the ring resolves into the church
+        m = np.clip(m * 1.4 - 0.4 * self.s, 0.0, 1.0)[:, None]
+        P = ring * (1.0 - m) + church * m
+        col = self.ring_col * (1.0 - 0.7 * m) + lin("#ffe2b0") * (0.7 * m)
+        fly = _sc(161.7, 162.86, t)
+        a = (0.75 - 0.3 * m[:, 0]) * _sc(self.T_RING, self.T_RING + 0.4, t) * (1.0 + 0.15 * beat_pulse(t))
+        a = a * (1.0 + 0.8 * fly)
+        return [dict(pos=P, size=0.09 * S / 12.0, color=col, alpha=a.astype(np.float32), emit=2.2, kind="spark",
+                     twinkle=0.25, seed=self.s, dof=0.0, reflect=False),
+                dict(pos=P[::6], size=0.5 * S / 12.0, color=col[::6] * 0.8, alpha=(0.05 * a[::6]).astype(np.float32),
+                     emit=1.3, kind="soft", dof=0.0, reflect=False)]
+
+
 class KingBeams:
     """The kings' pillars of light (2:34): narrow bright beams falling from the sky beside the kneeling kings
     (two on each side of them, never over the whole view), with a small pool where each lands; they pulse
@@ -951,6 +1016,7 @@ def add(scene):
                                                        gain=sky(125.92, 130.29), bright=0.35), reflect=True)
     # (round 6: no canyon of cloud over the march any more; it hazed the words and the low views of the walkers)
     scene.add("kings beams", KingBeams())
+    scene.add("church rise", ChurchRise())
     add_rays(mother_pos, lambda t: proc_k(t) * ray_k(t), color="#fff1d8", size=0.6)
     add_light(mother_pos, "#ffe8c8", lambda t: 0.15 * proc_k(t) * (1.0 + 0.5 * hit_pulse(t, KICKS + FULFIL, fall=0.5)),
               radius=9.0)
