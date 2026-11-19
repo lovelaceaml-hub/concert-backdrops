@@ -1416,7 +1416,7 @@ def _stage_calm(t):
     return 1.0 - (0.40 if stage_view(t) else 0.22) * r
 
 
-WORLD["exposure"] = _stage_calm
+WORLD["exposure"] = lambda t: _stage_calm(t) * S_MUSIC.choir_swell(t)
 
 # =========================================================================================================
 # The phrases on screen: Anthony's list, timed to where each is sung on this recording. Round 7 (Anthony: "The
