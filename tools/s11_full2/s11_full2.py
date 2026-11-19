@@ -698,7 +698,7 @@ class Comet:
         self.s = r.random((240, 4))
         self.sparks = sparks
         if light:
-            add_light(head, color, lambda t: 1.4 * self.k(t) * (0.8 + 0.4 * beat_pulse(t)), radius=5.0)
+            add_light(head, color, lambda t: 0.12 * self.k(t) * (0.8 + 0.4 * beat_pulse(t)), radius=5.0)
 
     def k(self, t):
         return _sc(self.t0, self.t0 + self.fade, t) * (1.0 - _sc(self.t1 - self.fade, self.t1, t))
@@ -924,8 +924,8 @@ def _bursts():
     out = []
     for c in CUTS:
         strong = any(abs(c - s) < 0.05 for s in SLAMS)
-        out.append(dict(t=c, strength=2.6 if strong else 0.16 + 0.12 * intensity(c), rise=0.05 if strong else 0.04,
-                        fall=0.55 if strong else 0.22, color="#fff4e0"))      # the promo's huge slam bursts
+        out.append(dict(t=c, strength=1.5 if strong else 0.16 + 0.12 * intensity(c), rise=0.04 if strong else 0.04,
+                        fall=0.35 if strong else 0.22, color="#fff4e0"))      # a big slam flash, gone within half a second
     for i, h in enumerate(KICKS):
         if any(abs(h - s) < 0.05 for s in SLAMS):
             continue

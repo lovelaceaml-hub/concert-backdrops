@@ -107,8 +107,8 @@ def _plan(t0, t1):
                  (150.9, (9.0, 14.0, -62.0), (-1.0, 0.0, -66.0)), (152.2, (3.5, 17.5, -50.5), (-4.0, -6.5, -76.5)),
                  (t1, (1.0, 17.0, -53.0), (-4.5, -7.0, -78.0))), "music"
     if t0 == 154.2:       # the kings kneel; we look up after the crowns as they rise toward Zion
-        return K((t0, (6.0, 1.6, -71.0), (0.0, 1.0, -65.0)), (155.0, (5.0, 1.2, -70.0), (0.0, 2.5, -66.0)),
-                 (155.6, (4.0, 1.0, -68.0), (0.0, 9.0, -72.0)), (t1, (3.5, 1.0, -67.0), (0.0, 15.0, -76.0))), "music"
+        return K((t0, (6.0, 4.5, -71.0), (0.0, 0.8, -65.0)), (155.0, (5.0, 3.0, -70.0), (0.0, 1.5, -66.0)),
+                 (155.6, (4.5, 1.2, -69.0), (0.0, 3.0, -68.5)), (t1, (4.5, 1.0, -69.0), (0.0, 4.5, -69.0))), "music"
     if t0 == 156.0:       # the held breath: a slow tense push; the comets drawn back into her light
         return K((t0, (1.6, 17.6, -52.0), (-4.5, -7.0, -79.5)), (158.3, (1.2, 16.8, -54.5), (-4.5, -6.5, -80.0)),
                  (t1, (0.8, 15.8, -57.0), (-4.5, -5.5, -81.0))), "music"
@@ -393,12 +393,13 @@ def _comet_head(j, phase):
         r = 5.0 + 1.0 * np.sin(0.7 * t + j)
         return _v(r * np.sin(a), 2.0 + 1.0 * np.sin(1.3 * t + j), _kz(t) + r * np.cos(a))
 
-    def rise(t):             # the crowns rise: the comets spiral up round them and stream toward Zion
+    def rise(t):             # the crowns rise: the comets wait high ahead over the sea, then stream on to Zion
         u = max(t - 154.2, 0.0)
         v = max(t - RISE, 0.0)
-        a = a0 + 1.1 * 154.2 + 2.2 * u
-        r = 3.2 + 1.5 * u
-        return _v(r * np.sin(a), 2.5 + 2.0 * u + 9.0 * v * v, _kz(t) + r * np.cos(a) - 16.0 * v * v)
+        a = a0 + 1.6 * u
+        r = 14.0 + 2.0 * np.sin(u + j)
+        return _v(r * np.sin(a), 30.0 + 3.0 * np.sin(1.3 * u + j) + 10.0 * v * v,
+                  -112.0 + 0.5 * r * np.cos(a) - 40.0 * v * v)
 
     def home(t):             # the held breath: drawn back into her light, spinning faster
         q = _sc(156.0, 160.4, t)
@@ -416,7 +417,7 @@ def _comet_head(j, phase):
 COMET_PHASES = [("burst", LAND, 130.29, 1.0, 1.4, 0.05), ("ring", 130.29, 134.54, 0.8, 1.6, 0.05),
                 ("march", 134.54, 139.2, 0.6, 1.4, 0.05), ("weave", 141.5, 144.4, 1.0, 1.2, 0.05),
                 ("dive", 144.4, 148.6, 1.1, 0.9, 0.05), ("kings", 148.6, 154.2, 0.35, 1.2, 0.05),
-                ("rise", 154.2, 156.0, 0.7, 1.0, 0.05), ("home", 156.0, 160.6, 0.4, 1.2, 0.5)]
+                ("rise", 154.2, 156.0, 0.6, 1.0, 0.05), ("home", 156.0, 160.6, 0.4, 1.2, 0.5)]
 
 
 # ---------------------------------------------------------------------------------------------------------
@@ -619,7 +620,7 @@ class Crowns:
         grow = 1.0 + 1.2 * _sc(0.0, 0.6, u)
         for i, p in enumerate(KINGS_STOP):
             s = self.s[i]
-            c = p + _v(0.0, 0.05, -0.85) + _v(0.0, 2.0 * u + 7.0 * u * u, 0.0)
+            c = p + _v(0.0, 0.05, -0.85) + _v(0.0, 1.6 * u + 3.0 * u * u, 0.0)
             c = c + _unit(aim - c) * 14.0 * max(u - 0.5, 0.0) ** 2
             sp = (s[:, :3] - 0.5) * (6.0 * q * (0.3 + s[:, 3:4]))
             P = c + R * grow + sp

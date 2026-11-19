@@ -203,7 +203,7 @@ def choir_glow(t):
 
 def end_glow(t):
     """The choir blazes gold at the end (home, the held breath, the final rise)."""
-    return 1.0 + 0.4 * _sc(243.0, 245.0, t) + 0.7 * _sc(247.5, 249.43, t) * (1.0 - _sc(252.0, 254.0, t))
+    return 1.0 + 0.9 * _sc(247.0, 247.5, t) * (1.0 - _sc(252.0, 254.0, t))
 
 
 def chorus_flare(t):
@@ -242,7 +242,7 @@ def _far(t, p):
 def choir_mask(t):
     f = _far(t, CHOIR_C)
     k = (0.85 if t < SLAM3 else 0.45) * (1.0 - f) + (0.35 if t >= SLAM3 else 0.0) * f
-    return k * (1.0 - _sc(243.0, 244.8, t))
+    return k * (1.0 - _sc(247.0, 247.5, t))
 
 
 def orch_mask(t):
@@ -1078,8 +1078,8 @@ def blaze(t):
     """The choir and orchestra as a great light on the slams and the coda hit."""
     if not stage_view(t):
         return 0.0
-    return min(1.6, 1.4 * hit_pulse(t, [SLAM1, SLAM2, HIT["coda"]], rise=0.05, fall=1.4)
-               + 0.35 * hit_pulse(t, KICKS, fall=0.5))
+    return min(0.8, 0.7 * hit_pulse(t, [SLAM1, SLAM2, HIT["coda"]], rise=0.05, fall=1.0)
+               + 0.2 * hit_pulse(t, KICKS, fall=0.4))
 
 
 # =========================================================================================================
