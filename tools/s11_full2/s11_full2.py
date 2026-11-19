@@ -376,13 +376,54 @@ GLOBE = Globe(pos=tuple(GLOBE_C), radius=GLOBE_R, face="camera", camera=None, lo
 
 
 # Anthony (page request, 2026-11-19): the Earth in verse 1 opens on its night side (deep ocean, city lights) and
-# daylight sweeps across it as the music builds: half lit by the end of the first Earth shots (0:53.78), fully lit
-# by the end of the second (1:17.46); the world finale stays fully lit.
-DAY_KEYS = [(41.6, 0.0), (53.78, 0.55), (70.54, 0.55), (77.46, 1.0)]
+# lights up as the music builds. Round 6 (his words): "the earth should be dark, and then the sun should rise
+# from the east, which is where Korea is. The point is, the light is supposed to come from Jerusalem, which is
+# heavenly Jerusalem in Korea. As the lights begin to light up the rest of the world, the world will turn to
+# daytime." So the day is a circle of dawn centred on Korea (ZION_LL) that spreads outward over the sphere with
+# a glowing golden edge: Korea ignites first (0:41.6, on Father's pulse rolling out), the dawn spreads through
+# the first Earth shots, again through the second, and the whole world is in day by 1:17.46; the world finale
+# stays lit. earth_day(t) is the progress 0..1; the dawn's angular radius is DAWN_MAX * progress.
+DAY_KEYS = [(41.6, 0.0), (42.4, 0.03), (53.78, 0.40), (70.54, 0.40), (76.9, 1.0)]
+DAWN_MAX = 200.0                                     # degrees: past 180 + the edge's width the world is all day
+DAWN_SOFT = 11.0                                     # degrees: the width of the dawn's edge
 
 
 def earth_day(t):
     return float(np.interp(t, [k[0] for k in DAY_KEYS], [k[1] for k in DAY_KEYS]))
+
+
+def dawn_angle(t):
+    """The dawn circle's angular radius round Korea at t (radians)."""
+    return np.radians(DAWN_MAX * earth_day(t))
+
+
+def _dawn_edge(t, c, R, zw, cam):
+    """The glowing edge of the dawn: a soft golden band and glitter on the circle round Korea, only on the face
+    toward the camera; it breathes on the beat. And Korea itself: a sun igniting on it."""
+    out = []
+    ang = dawn_angle(t)
+    eye = np.asarray(cam.pos if hasattr(cam, "pos") else cam["pos"], np.float64)
+    gone = 1.0 - _sc(np.radians(170.0), np.radians(DAWN_MAX), ang)
+    pul = 1.0 + 0.45 * beat_pulse(t)
+    if 0.02 < ang and gone > 0.0:
+        n = int(np.clip(1600 * np.sin(min(ang, np.pi / 2)) + 200, 200, 1800))
+        v = _sphere_ring(zw, ang, n)
+        p = c + R * 1.012 * v
+        f = ((eye[None, :] - p) * v).sum(1) > 0.0
+        if f.any():
+            out.append(dict(pos=p[f], size=R * 0.09, color=lin("#ffc68a"), alpha=0.16 * gone * pul, kind="soft",
+                            emit=1.8, dof=0.0, fog=0.0, reflect=False))
+            out.append(dict(pos=p[f], size=R * 0.012, color=lin("#fff0d0"), alpha=0.7 * gone * pul, kind="spark",
+                            emit=2.6, twinkle=0.7, dof=0.0, fog=0.0, reflect=False))
+    zp = c + R * 1.02 * zw
+    if ((eye - zp) @ zw) > 0.0:
+        # the sun rising on Korea: it ignites as the camera arrives on the Earth, then glows on as the source
+        k = (1.6 * hit_pulse(t, [41.6], rise=0.05, fall=1.4) + 0.55 * gone + 0.6 * hit_pulse(t, [70.54], fall=1.0)) * pul
+        out.append(dict(pos=zp[None, :], size=R * 0.5, color=lin("#ffd9a0"), alpha=0.10 * k, kind="soft", emit=2.0,
+                        dof=0.0, fog=0.0, reflect=False))
+        out.append(dict(pos=zp[None, :], size=R * 0.16, color=lin("#fff0d8"), alpha=0.35 * k, kind="soft", emit=2.6,
+                        dof=0.0, fog=0.0, reflect=False))
+    return out
 
 
 def _night_side(sample):
@@ -394,10 +435,12 @@ def _night_side(sample):
         if cam is None:
             cam = CAMERA.state(t)
         c, M, R = GLOBE._view(t, cam)
-        a = np.radians(-165.0 + 165.0 * p)               # the sun from behind the Earth round to the camera side
-        sun = M @ _unit(_v(np.sin(a), 0.25, np.cos(a)))
-        full = float(np.clip((p - 0.85) / 0.15, 0.0, 1.0))
-        face = full + (1 - full) * float(np.clip((np.dot(sun, _unit(np.asarray(cam.pos if hasattr(cam, "pos") else cam["pos"], np.float64) - c)) + 0.6) / 1.4, 0.0, 1.0))
+        zw = (M @ GLOBE.turn(t)) @ _earth(*ZION_LL)      # Korea's direction from the Earth's centre (world)
+        zw = zw / np.linalg.norm(zw)
+        ang = dawn_angle(t)
+        soft = np.radians(DAWN_SOFT)
+        full = float(_sc(np.radians(170.0), np.radians(DAWN_MAX), ang))
+        face = float(np.clip(ang / np.radians(150.0), 0.0, 1.0))      # how much of the world is in day
         for b in out:
             pos = np.asarray(b.get("pos"), np.float64)
             if pos.ndim != 2 or len(pos) == 0 or b.get("kind") not in ("disc", "soft", "spark"):
@@ -407,16 +450,18 @@ def _night_side(sample):
             on = (rr > 0.97) & (rr < 1.03)
             if not on.any():
                 continue
-            if b["kind"] == "soft" and on.mean() < 0.9:      # the air's halo, laid flat over the face: dim it at night
+            if b["kind"] == "soft" and on.mean() < 0.9:      # the air's halo, laid flat over the face: dim at night
                 al = b["alpha"]
                 al = np.full(len(pos), float(al)) if not np.ndim(al) else np.asarray(al, np.float64)
                 b["alpha"] = (al * (0.08 + 0.92 * face)).astype(np.float32)
                 continue
             n = rel / np.maximum(np.linalg.norm(rel, axis=1, keepdims=True), 1e-9)
-            d = np.clip((n @ sun + 0.12) / 0.32, 0.0, 1.0)
+            da = np.arccos(np.clip(n @ zw, -1.0, 1.0))     # angle from Korea
+            d = np.clip((ang - da) / soft + 0.5, 0.0, 1.0)
             d = d * d * (3 - 2 * d)
             d = d * (1 - full) + full
             d = np.where(on, d, 1.0)
+            edge = np.exp(-((da - ang) / soft) ** 2) * (1.0 - full) * (ang > 0.01)
             if b["kind"] == "spark":                      # city lights: brighter on the night side
                 m = 1.0 + 0.6 * (1.0 - d)
                 b["alpha"] = np.asarray(b["alpha"], np.float64) * m if np.ndim(b["alpha"]) else b["alpha"] * m
@@ -424,13 +469,16 @@ def _night_side(sample):
             col = np.asarray(b["color"], np.float64)
             if col.ndim == 1:
                 col = np.repeat(col[None, :], len(pos), axis=0)
-            if b["kind"] == "disc":                       # the ocean: deep navy at night
+            if b["kind"] == "disc":                       # the ocean: deep navy at night, gold on the dawn's edge
                 night = col * 0.05 + np.array([0.001, 0.003, 0.012])[None, :]
-                b["color"] = np.clip(col * d[:, None] + night * (1 - d[:, None]), 0, 1)
+                dawn = np.array([0.95, 0.62, 0.30])[None, :]
+                cc = col * d[:, None] + night * (1 - d[:, None])
+                b["color"] = np.clip(cc + (dawn - cc) * (0.45 * edge)[:, None], 0, 1)
             else:                                         # the land glow, its warm halo and the clouds dim at night
                 al = b["alpha"]
                 al = np.full(len(pos), float(al)) if not np.ndim(al) else np.asarray(al, np.float64)
-                b["alpha"] = (al * (0.15 + 0.85 * d)).astype(np.float32)
+                b["alpha"] = (al * (0.12 + 0.88 * d) * (1.0 + 0.6 * edge)).astype(np.float32)
+        out = list(out) + _dawn_edge(t, c, R, zw, cam)
         return out
     return wrapped
 
@@ -1029,9 +1077,10 @@ import songs.s11_dance as S_DANCE  # noqa: E402
 THREADS = [S_CHURCH, S_STAGE, S_ZION, S_PROC, S_CODA, S_DANCE]
 Y, FZ, G = SUMMIT, FACADE_Z, GLOBE_C
 CORE_SHOTS = [
-    # Father's pulse rolls out over the whole Earth: a long graceful pull-back from close over Korea
+    # Father's pulse rolls out over the whole Earth: a long graceful pull-back from close over Korea (round 6: the
+    # opening view turned a little toward Korea, right of centre, where the dawn ignites)
     dict(name="earth_father", kind="globe", t0=41.6, t1=47.5, fov=46.0, aperture=0.0,
-         keys=[(41.6, _gcam(92.0, 10.0, -14.0), G + _v(0, 8, 0)), (44.5, _gcam(140.0, -12.0, 18.0), G + _v(0, 4, 0)),
+         keys=[(41.6, _gcam(92.0, 10.0, -14.0), G + _v(-9, 8, 0)), (44.5, _gcam(140.0, -12.0, 18.0), G + _v(0, 4, 0)),
                (47.5, _gcam(175.0, 6.0, 8.0), G)]),
     # the Earth turns toward Zion: a swing over the top and down toward Korea
     dict(name="earth_father", kind="globe", t0=47.5, t1=53.78, fov=46.0, aperture=0.0,

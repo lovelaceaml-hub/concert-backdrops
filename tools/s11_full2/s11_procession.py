@@ -49,6 +49,14 @@ def walked(t):
     return WALK * float(np.clip(t - MARCH, 0.0, HALT - MARCH))
 
 
+def _beat_phase(t):
+    """Where t sits in the march beat: the beat count plus the fraction to the next beat (each beat a step)."""
+    i = int(np.searchsorted(BEATS, t, side="right")) - 1
+    if i < 0 or i >= len(BEATS) - 1:
+        return 0.0
+    return i + (t - BEATS[i]) / max(BEATS[i + 1] - BEATS[i], 1e-3)
+
+
 def mother_pos(t):
     e = float(np.clip((t - T0) / (LAND - T0), 0.0, 1.0))
     d = (1.0 - e) ** 2                                  # comes down fast, settles gently
@@ -207,6 +215,45 @@ PROC_P = _proc_places()
 _R0 = np.random.default_rng(52)
 _D0 = np.hypot(PROC_P[:, 0], PROC_P[:, 2] - MOTHER_Z0)
 ARRIVE = LAND + 0.5 + 2.6 * (_D0 / _D0.max()) ** 0.85 + _R0.uniform(0.0, 0.6, len(PROC_P))
+
+
+def _edge(z):
+    """Half the width of the procession at z (in its own frame, at the moment of "march ahead")."""
+    return 7.5 + 19.0 * max((z - MOTHER_Z0) / 100.0, 0.0) ** 0.8
+
+
+# The nations joining from the sides (round 6): from "march ahead" streams of people of light, each nation in its
+# own colour, walk in on a slant from both sides and merge into the procession (each one joins at the edge)
+SLANT = np.radians(35.0)
+NATIONS = [(-1.0, -40.0, 1), (-1.0, -6.0, 6), (-1.0, 26.0, 3), (1.0, -36.0, 2), (1.0, -2.0, 4), (1.0, 30.0, 7)]
+
+
+def _nation_places(seed=57):
+    r = np.random.default_rng(seed)
+    P, F, C, J = [], [], [], []
+    for s, za, col in NATIONS:
+        back = np.array([s * np.sin(SLANT), 0.0, np.cos(SLANT)])     # out from the procession and back
+        side = np.array([np.cos(SLANT), 0.0, -s * np.sin(SLANT)])
+        a = np.array([s * (_edge(za) + 0.8), 0.0, za])
+        for d in np.arange(1.2, 46.0, 1.55):
+            for w in (-1.6, 0.0, 1.6):
+                if r.random() < 0.12:
+                    continue
+                dd = d + r.uniform(-0.35, 0.35)
+                p = a + back * dd + side * (w + r.uniform(-0.3, 0.3))
+                P.append(p)
+                F.append(180.0 + s * np.degrees(SLANT))
+                C.append(col)
+                # they walk until they reach the procession's edge (in its own frame, which walks on ahead)
+                u = np.linspace(0.0, 40.0, 401)
+                x = p[0] - s * np.sin(SLANT) * WALK * u
+                zr = p[2] + (1.0 - np.cos(SLANT)) * WALK * u
+                inside = np.abs(x) <= np.array([_edge(z) for z in zr]) - 0.3
+                J.append(MARCH + (u[np.argmax(inside)] if inside.any() else 40.0))
+    return np.asarray(P), np.asarray(F), np.asarray(C, int), np.asarray(J)
+
+
+NAT_P, NAT_F, NAT_C, NAT_J = _nation_places()
 
 
 def _ahead(crowd):
@@ -653,6 +700,106 @@ class Crowns:
         return out
 
 
+class KingBeams:
+    """The kings' pillars of light (2:34): narrow bright beams falling from the sky beside the kneeling kings
+    (two on each side of them, never over the whole view), with a small pool where each lands; they pulse
+    with the beat and burst on the two kings' hits. No wide glow, so the low view stays clear."""
+
+    BASES = np.asarray([(-4.4, -67.4), (-4.6, -63.4), (4.6, -63.0), (4.4, -60.6)])
+
+    def __init__(self):
+        self.u = np.linspace(0.0, 1.0, 160)
+        self.col = lin("#ffe9c4")
+        self.ph = np.random.default_rng(83).random(len(self.BASES))
+
+    def gain(self, t):
+        return proc_k(t) * _sc(153.95, 154.3, t) * (1.0 - _sc(154.95, 155.3, t))
+
+    def sample(self, t):
+        g = self.gain(t)
+        if g <= 0.0:
+            return None
+        k = g * (0.85 + 0.35 * beat_pulse(t) + 0.6 * hit_pulse(t, [KNEEL, RISE], fall=0.35))
+        out = []
+        top = 60.0
+        for i, (x, z) in enumerate(self.BASES):
+            fall = _sc(153.95 + 0.06 * i, 154.25 + 0.06 * i, t)      # each beam falls from the sky in turn
+            y = top * (1.0 - fall * (1.0 - self.u))
+            P = np.stack([np.full_like(y, x), y, np.full_like(y, z)], 1)
+            a = k * (0.5 + 0.5 * self.u ** 0.4) * (0.9 + 0.1 * np.sin(9.0 * t + 6.0 * self.ph[i]))
+            out.append(dict(pos=P, size=0.10, color=lin(WHITE), alpha=0.9 * a, kind="soft", emit=4.0, dof=0.2,
+                            reflect=False))
+            out.append(dict(pos=P, size=0.42, color=self.col, alpha=0.22 * a, kind="soft", emit=2.6, dof=0.2,
+                            reflect=False))
+            if fall > 0.95:
+                out.append(dict(pos=np.array([[x, 0.08, z]]), size=1.6, color=self.col, alpha=0.35 * k, kind="soft",
+                                emit=2.2, reflect=False))
+        return out
+
+
+class MarchBeat:
+    """The march beat in their steps (2:14.5 to 2:36): on every beat each walker's foot lands on the sea of glass
+    with a small spark of light (left, right, left), and a pulse of light runs forward up the aisle from the back
+    of the procession to her light: the procession drawing its path of light toward Zion."""
+
+    def __init__(self, crowds):
+        self.cr = crowds
+        self.seed = np.random.default_rng(87).random(4000)
+        z = np.arange(0.0, 104.0, 0.45)
+        xs = np.linspace(-2.6, 2.6, 7)
+        Z, X = np.meshgrid(z, xs)
+        self.zr, self.xr = Z.ravel(), X.ravel()                      # the path behind her light (her frame)
+        r = np.random.default_rng(88)
+        self.jit = r.uniform(-0.2, 0.2, (len(self.zr), 2))
+
+    def sample(self, t):
+        k = proc_k(t) * _sc(MARCH - 0.05, MARCH + 0.3, t) * (1.0 - _sc(HALT - 0.2, HALT + 0.4, t))
+        if k <= 0.0:
+            return None
+        bp = _beat_phase(t)
+        i, fr = int(bp), bp - int(bp)
+        land = np.exp(-fr / 0.22)                                     # the foot lands on the beat
+        side = 1.0 if i % 2 else -1.0
+        out = []
+        for cr in self.cr:
+            live = t >= cr.start
+            if cr.until is not None:
+                live &= t <= cr.until
+            if not live.any():
+                continue
+            ii = np.where(live)[0]
+            f = cr.facing[ii]
+            age = np.maximum(t - cr.start[ii], 0.0)
+            ahead = np.stack([np.sin(f), np.zeros(len(f)), np.cos(f)], 1)
+            right = np.stack([np.cos(f), np.zeros(len(f)), -np.sin(f)], 1)
+            P = cr.place[ii] + ahead * (WALK * age)[:, None] + right * (0.11 * side) + ahead * 0.25
+            P[:, 1] = 0.04
+            col = cr.tint[ii] * 0.6 + lin(WHITE)[None, :] * 0.4
+            sd = self.seed[ii % len(self.seed)]
+            out.append(dict(pos=P, size=0.09 + 0.05 * (1.0 - land), color=col, alpha=0.9 * land * k, emit=3.0,
+                            kind="spark", seed=sd, reflect=False))
+            out.append(dict(pos=P, size=0.5 + 0.5 * (1.0 - land), color=col, alpha=0.10 * land * k, emit=1.6,
+                            kind="soft", reflect=False))
+        # the path of light up the aisle: a pulse on every beat runs forward to her light
+        m = mother_pos(t)
+        zr = self.zr
+        front = 104.0 * (1.0 - fr / 0.6)                              # from the back to her in 0.6 s
+        pulse = np.exp(-((zr - front) / 5.0) ** 2) * (fr < 0.6)
+        base = 0.10 + 0.08 * np.exp(-zr / 25.0)
+        a = (base + 0.45 * pulse) * k * (1.0 - _sc(K_IN - 0.3, K_IN + 0.5, t) * 0.5)
+        P = np.stack([self.xr + self.jit[:, 0], np.full(len(zr), 0.05), m[2] + 3.0 + zr + self.jit[:, 1]], 1)
+        warm = lin("#ffe2b0")
+        out.append(dict(pos=P, size=0.55, color=warm, alpha=0.20 * a, emit=1.8, kind="soft", reflect=False))
+        out.append(dict(pos=P, size=0.06, color=lin(WHITE), alpha=0.8 * a, emit=2.8, kind="spark", twinkle=0.6,
+                        seed=self.seed[np.arange(len(zr)) % len(self.seed)], reflect=False))
+        # a short way of light ahead of her toward Zion (dim and short, so it never reaches the words)
+        ah = np.linspace(0.0, 14.0, 60)
+        A = np.stack([np.zeros(60), np.full(60, 0.05), m[2] - ah], 1)
+        out.append(dict(pos=A, size=1.2, color=warm, alpha=0.08 * k * np.exp(-ah / 6.0), emit=1.8, kind="soft",
+                        reflect=False))
+        return out
+
+
 def ray_k(t):
     """How strongly her rays fan out (gentle while words are on screen, so they never burn through them)."""
     b = block_t0(t)
@@ -682,6 +829,17 @@ SHAFTS = [
 ]
 
 
+def _tint_nations(crowd, cols=None):
+    """Each nation in its own colour: a coloured robe of light with pale glints."""
+    cols = NAT_C if cols is None else cols
+    r = np.random.default_rng(58)
+    for i, c in enumerate(cols):
+        c1 = lin(COL9[c])
+        mix = r.uniform(0.15, 0.45)
+        crowd.tint[i] = c1 * (1.0 - mix) + lin(WHITE) * mix
+    return crowd
+
+
 def add(scene):
     look = dict(color="#fff0dc", color2="#dce8ff", bright=3.2, size=1.35, points=420, seed=21.0)
     scene.add("mother", MotherLight())
@@ -700,6 +858,19 @@ def add(scene):
                      places=PROC_P + _ahead(walkers) * walked(HALT), facing=180.0,
                      kinds=(("raise", 2.0), ("open", 1.0)), start=HALT - 0.3, fade=0.3, flash=0.0, **look)
     held.facing[:] = walkers.facing
+    # the nations joining from the sides, each in its own colour (clothed in light, the same bodies as everyone)
+    nations = GCrowd(gain=crowd_k, places=NAT_P, facing=NAT_F, kinds=("walk",), start=MARCH - 0.1, walk=WALK,
+                     until=np.minimum(NAT_J, HALT), fade=0.45, flash=1.2, **look)
+    _tint_nations(nations)
+    gone = NAT_J < HALT                       # those still on their way at the held breath stand still there
+    still = NAT_P[~gone] + _ahead(nations)[~gone] * walked(HALT)
+    nat_held = WaveCrowd(waves=[(159.4, 1.4, 6.0, 0.6, 0.6)], delay=np.full(len(still), 0.5), gain=crowd_k,
+                         places=still, facing=NAT_F[~gone], kinds=(("raise", 2.0), ("open", 1.0)), start=HALT - 0.3,
+                         fade=0.3, flash=0.0, **look)
+    _tint_nations(nat_held, NAT_C[~gone])
+    scene.add("nations", nations, reflect=False)
+    scene.add("nations held", nat_held, reflect=False)
+    scene.add("march beat", MarchBeat([walkers, nations]))
     scene.add("procession wait", wait, reflect=False)
     scene.add("procession", walkers, reflect=False)
     scene.add("procession held", held, reflect=False)
@@ -731,9 +902,7 @@ def add(scene):
     for i, x in enumerate((-82.0, 82.0)):          # the canyon of cloud the procession walks through
         scene.add(f"proc canyon {i}", CloudBank((x, 0.0, -40.0), size=(40.0, 45.0, 260.0), puffs=40, seed=50 + i,
                                                 gain=canyon, bright=0.35), reflect=True)
-    scene.add("kings pillars", Pillars([(float(p[0]), float(p[2])) for p in KINGS_STOP], top=220.0, color="#ffe6c0",
-                                       width=0.9, gain=lambda t: proc_k(t) * _sc(153.95, 154.35, t)
-                                       * (1.0 - _sc(154.85, 155.25, t)) * 0.35))
+    scene.add("kings beams", KingBeams())
     add_rays(mother_pos, lambda t: proc_k(t) * ray_k(t), color="#fff1d8", size=0.6)
     add_light(mother_pos, "#ffe8c8", lambda t: 0.15 * proc_k(t) * (1.0 + 0.5 * hit_pulse(t, KICKS + FULFIL, fall=0.5)),
               radius=9.0)

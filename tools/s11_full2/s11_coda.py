@@ -129,7 +129,9 @@ def sun_rays(t):
     if 199.0 <= t < 201.73:
         return 0.25 + 0.45 * _sc(199.0, 201.6, t)          # the horizon glows before the sun
     if 201.73 <= t < 206.0:
-        return 1.05 + 1.1 * hit_pulse(t, [SLAM3], rise=0.02, fall=1.2) + 0.25 * beat_pulse(t)
+        # round 6: the burst blazes on the slam itself, then settles within half a second to a steady glory
+        # behind the words ("Joy of salvation!" reads from the slam), swelling a little on the beat
+        return 0.72 + 1.3 * hit_pulse(t, [SLAM3], rise=0.02, fall=0.35) + 0.15 * beat_pulse(t)
     if 206.0 <= t < 211.6 and shot_name(t) == "sky_stage":
         return 0.75 + 0.3 * kick + 0.15 * beat_pulse(t)
     if 211.6 <= t < 224.03 and shot_name(t) == "summit":
@@ -287,15 +289,16 @@ class SummitPillars(Pillars):
                 band = band + np.exp(-((self.y - yb) / 26.0) ** 2) * np.exp(-(t - b) / 1.2)
         land = sum(np.exp(-(t - (b + self.top / 220.0)) / 0.25) for b in BEATS[max(i - 4, 0):i + 1]
                    if 0.0 <= t - (b + self.top / 220.0) < 1.5)
-        prof = (0.45 + 0.55 * np.clip(1.0 - self.uu, 0.0, 1.0) ** 0.6) * (1.0 + 0.9 * band)
+        # bright where they fall among the people, fading up into the sky (the words read over the upper sky)
+        prof = (0.04 + 0.96 * np.exp(-self.y / 55.0)) * (1.0 + 0.9 * band)
         out = []
         for j, (x, z) in enumerate(self.bases):
             P = np.stack([np.full(self.N, x), self.y + SUMMIT - 0.2, np.full(self.N, z)], 1)
             br = k * (0.88 + 0.12 * np.sin(2.0 * t + 6.0 * self.ph[j]))
-            out.append(dict(pos=P, size=self.glow_s, color=self.col, alpha=0.20 * br * prof * self.glow_w,
+            out.append(dict(pos=P, size=self.glow_s, color=self.col, alpha=0.11 * br * prof * self.glow_w,
                             kind="soft", emit=1.8, dof=0.0))
-            out.append(dict(pos=P, size=self.core_s, color=self.col * 0.45 + lin(WHITE) * 0.55,
-                            alpha=0.55 * br * prof * self.core_w, kind="soft", emit=2.6, dof=0.0))
+            out.append(dict(pos=P, size=self.core_s, color=self.col * 0.6 + lin(WHITE) * 0.4,
+                            alpha=0.22 * br * prof * self.core_w, kind="soft", emit=2.4, dof=0.0))
             out.append(dict(pos=np.array([[x, SUMMIT + 0.15, z]]), size=self.width * (6.0 + 2.0 * land),
                             color=self.col, alpha=(0.22 + 0.25 * land) * k, kind="soft", emit=2.0, reflect=False))
         return out
@@ -317,6 +320,9 @@ def _coda_clouds():
         return 0.0 if globe_view(t) else _sc(196.8, 197.2, t) * (1.0 - _sc(199.4, 199.62, t)) * (0.8 + 0.3 * beat_pulse(t))
 
     def g_sky(t):
+        import os
+        if "cb" in os.environ.get("CODA_DBG", ""):
+            return 0.0
         return sky_k(t) * (0.9 + 0.25 * beat_pulse(t))
 
     def g_rise(t):
@@ -537,6 +543,20 @@ class Clouds:
         drift = _v(0.4 * np.sin(0.2 * t), 0.0, 0.0)
         pulse = 1.0 + 0.25 * beat_pulse(t)
         rim = 0.5 + 0.5 * self.pu ** 2
+        import os
+        dbg = os.environ.get("CODA_DBG", "")
+        if dbg:
+            out = []
+            if "floor" not in dbg:
+                out += [dict(pos=self.P + drift, size=0.5 + 0.7 * self.s, color=self.pc, alpha=0.016 * rim, emit=1.0,
+                     kind="soft", seed=self.s, dof=0.0)]
+            if "sea" not in dbg:
+                out += [dict(pos=self.F, size=self.fs, color=self.fc, alpha=0.03, emit=1.0, kind="soft", dof=0.0,
+                     reflect=False)]
+            if "banks" not in dbg:
+                out += [dict(pos=self.B, size=self.bs, color=self.bc, alpha=0.045, emit=1.2, kind="soft", dof=0.0,
+                     reflect=False)]
+            return out or None
         # the floor: a thin glow (small puffs, low alpha) and a glitter of gold on it that sparkles on the beat
         return [dict(pos=self.P + drift, size=0.5 + 0.7 * self.s, color=self.pc, alpha=0.016 * rim, emit=1.0,
                      kind="soft", seed=self.s, dof=0.0),
@@ -695,12 +715,10 @@ class Streams:
                 wave = np.maximum(wave, np.exp(-((l - lf) / 7.0) ** 2))
         kick = hit_pulse(t, KICKS, rise=0.02, fall=0.45)
         br = (0.7 + 0.35 * intensity(t) + 0.55 * kick) * (1.0 + 0.9 * wave) * fade
-        out = [dict(pos=foot, pos2=head, size=0.30, color=self.col * 0.85, alpha=0.20 * br, alpha2=0.8 * br,
-                    kind="line", emit=1.4, reflect=False),
-               dict(pos=head + np.array([0.0, 0.12, 0.0]), size=0.5, color=self.col * 0.6 + lin(WHITE) * 0.4,
-                    alpha=0.85 * br, kind="spark", emit=2.6, twinkle=0.25, seed=self.s, reflect=False),
-               dict(pos=head[::3], size=2.2, color=self.col[::3], alpha=0.05 * br[::3] * (0.5 + wave[::3]),
-                    kind="soft", emit=1.3, reflect=False)]
+        out = [dict(pos=foot, pos2=head, size=0.26, color=self.col * 0.8, alpha=0.12 * br, alpha2=0.45 * br,
+                    kind="line", emit=1.2, reflect=False),
+               dict(pos=head + np.array([0.0, 0.12, 0.0]), size=0.22, color=self.col * 0.75 + lin(WHITE) * 0.25,
+                    alpha=0.55 * br, kind="spark", emit=2.2, twinkle=0.25, seed=self.s, reflect=False)]
         if self.arms is not None:
             a = self.az + self.lane / np.interp(l, self.L, self.pts[:, 0])
             self.arms.P = P

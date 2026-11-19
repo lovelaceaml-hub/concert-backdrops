@@ -779,7 +779,7 @@ class Church:
         return self.b
 
     def gain(self, t):
-        k = city_k(t) * church_glow(t)
+        k = city_k(t) * church_glow(t) * church_reveal(t)
         if stage_view(t):
             k *= {"soft": 0.75, "crisp": 0.4, "steps": 0.12, "glory": 0.5}[self.part]
         if shot_name(t) == "church_cut":       # the church's own cut-ins: full frame of it, so less light
@@ -789,8 +789,9 @@ class Church:
         i = intensity(t)
         if self.part == "soft":                 # deeper blue in the quiet, brighter as the music grows
             k *= 0.5 + 0.3 * i
-        elif self.part == "glory":              # crystal and gold in the choruses
-            k *= 0.9 * max(i - 0.5, 0.0)
+        elif self.part == "glory":              # crystal and gold in the choruses, and gathering beat by beat
+            b = crown_build(t)                  # from call 2 into Father's pulse (round 6)
+            k *= 0.9 * max(i - 0.5, 0.0) + 0.55 * b * (1.0 + 0.5 * beat_pulse(t))
         else:                                   # the white bands and the name pulse on the beat
             k *= 1.0 + 0.35 * beat_pulse(t) * (0.3 + 0.7 * i)
         return k
@@ -827,10 +828,83 @@ class BandWave:
         return b
 
     def gain(self, t):
-        k = city_k(t) * church_glow(t) * (0.5 + 0.7 * intensity(t))
+        k = city_k(t) * church_glow(t) * church_reveal(t) * (0.5 + 0.7 * intensity(t))
         if shot_name(t) == "church_cut":
             k *= 0.6
         return k * (0.35 if stage_view(t) else 1.0)
+
+
+class Ignite:
+    """Round 6, the long flight in (0:12 to 0:21.5): the church lights storey by storey, one white floor band
+    on each beat from the foot to the roof, each flashing as it lights and then glowing while the glass fills
+    in behind it; whole on call 1."""
+    T0, T1 = 12.8, 21.3
+
+    def __init__(self):
+        self.ys = np.array([CH_Y0 + k * FH for k in range(NF + 1)])
+        self.P = [_arc_pts(y, 0.5, out=0.18) for y in self.ys]
+        bs = _beats_in(self.T0, self.T1)
+        self.tb = bs[np.round(np.linspace(0, len(bs) - 1, len(self.ys))).astype(int)]
+
+    def sample(self, t):
+        if t < self.T0 - 0.1 or t > 22.6 or local_k(t) <= 0.0:
+            return None
+        rib = _Ribbons()
+        for y, P, tb in zip(self.ys, self.P, self.tb):
+            u = t - tb
+            if u < -0.02:
+                continue
+            a = 0.55 + 1.6 * np.exp(-max(u, 0.0) / 0.35)          # the flash, then a steady glow
+            rib.add(P, 0.6, lin("#fff2d6"), a)
+        b = rib.batch(3.0)
+        if b is None:
+            return None
+        b.update(fog=0.2, reflect=False)
+        return b
+
+    def gain(self, t):
+        return city_k(t) * (1.0 + 0.4 * beat_pulse(t)) * (1.0 - _sc(21.52, 22.5, t))
+
+
+_CROWN = _ROOF + _v(0.0, 7.0, 0.0)
+
+
+def beacon_k(t):
+    """The light on Zion's summit: it ignites on the first hit (0:02.32) far off in the night and grows on every
+    beat under the title, leads the flight in, rests while the choir forms, and from call 2 gathers again over
+    the roof, beat by beat, into Father's pulse (0:40.54), where the rays take over."""
+    k = 0.0
+    if 2.0 < t < 22.5:
+        k = (_sc(2.25, 2.4, t) * (0.35 + 0.55 * _stair(t, 2.4, 11.7) + 0.25 * _stair(t, 12.0, 19.0))
+             + 1.4 * hit_pulse(t, [HIT["first"]], rise=0.05, fall=0.9) + 0.5 * hit_pulse(t, [11.9], rise=0.05, fall=0.8))
+        k *= 1.0 - _sc(19.5, 21.6, t)
+    elif 31.0 < t < 41.6:
+        k = 0.25 + 0.85 * crown_build(t) + 0.8 * hit_pulse(t, [HIT["call2"], 38.24], rise=0.05, fall=0.7)
+        k *= _sc(31.11, 31.5, t) * (1.0 - _sc(40.6, 41.3, t))
+    return k * (1.0 + 0.45 * beat_pulse(t))
+
+
+class Beacon:
+    """The beacon itself: a star of light over the church's crown, a soft halo round it, its glitter in the
+    mirror sea. Kept a steady size on screen far off (a star on the horizon under the title's last line), and
+    a few metres across close by."""
+
+    def sample(self, t):
+        k = beacon_k(t)
+        if k <= 0.003 or local_k(t) <= 0.0:
+            return None
+        cam = H.CAMERA.state(t)
+        d = float(np.linalg.norm(np.asarray(cam.pos, np.float64) - _CROWN))
+        P = _CROWN[None, :]
+        core = max(0.0026 * d, 1.0)
+        halo = max(0.011 * d, 5.0)
+        warm, white = lin("#ffe2b0"), lin(WHITE)
+        return [dict(pos=P, size=halo * 2.2, color=warm, alpha=0.10 * k, kind="soft", emit=1.6, fog=0.0, dof=0.0),
+                dict(pos=P, size=halo, color=warm, alpha=0.35 * k, kind="soft", emit=2.2, fog=0.0, dof=0.0),
+                dict(pos=P, size=core, color=white, alpha=min(k, 1.6), kind="spark", emit=5.0, fog=0.0, dof=0.0)]
+
+    def gain(self, t):
+        return 1.0
 
 
 class _Body:
@@ -985,20 +1059,22 @@ def _comets():
 
 
 def _flight_z(t):
-    """Roughly where the long flight is over the sea at t (for the comets that rise ahead of it)."""
-    return float(np.interp(t, [11.9, 13.4, 15.0, 16.6], [480.0, 330.0, 170.0, 10.0]))
+    """Where the long flight is over the sea at t (for the comets that rise ahead of it)."""
+    return float(np.asarray(H.CAMERA.state(t).pos, np.float64)[2])
 
 
 def _rise(i, ts):
     """A comet shooting up out of the sea ahead of the camera, to one side of its path, curving inward."""
     side = -1.0 if i % 2 else 1.0
     x0 = side * (14.0 + 9.0 * (i % 3))
-    z0 = _flight_z(ts) - 110.0 - 25.0 * (i % 3)
+    z0 = []
 
     def head(t):
+        if not z0:                              # the camera is made after the scenes import: ask it lazily
+            z0.append(_flight_z(ts) - 110.0 - 25.0 * (i % 3))
         v = max(t - ts, 0.0)
         y = -2.0 + 85.0 * v + 6.0 * v * v
-        return np.array([x0 - side * 6.0 * v, y, z0 - 18.0 * v])
+        return np.array([x0 - side * 6.0 * v, y, z0[0] - 18.0 * v])
     return head
 
 
@@ -1027,7 +1103,7 @@ def _clouds():
     """The church's own clouds of light: the low canyon over the sea that the long flight runs down (it
     frames Zion under the title), and a great bank behind the church in its own shots."""
     out = []
-    canyon = lambda t: sky_gain(t) * (0.55 + 0.45 * _sc(10.4, 12.4, t)) * (1.0 - _sc(16.5, 18.0, t))
+    canyon = lambda t: sky_gain(t) * (0.2 + 0.3 * _stair(t, 2.4, 11.7) + 0.5 * _sc(10.4, 12.4, t)) * (1.0 - _sc(16.5, 18.0, t))
     for side in (-1.0, 1.0):
         for k, z in enumerate((420.0, 300.0, 180.0, 60.0)):
             c = _v(side * (100.0 + 14.0 * k), 0.0, z)
@@ -1061,13 +1137,16 @@ add_rays(lambda t: _ROOF, _ray_k, color="#fff0d2", size=0.7)
 
 def add(scene):
     cdim, cgold = _city()
-    scene.add("city dim", Static(cdim, lambda t: city_k(t) * (0.8 + 0.3 * beat_pulse(t) * _sc(20, 22, t))))
+    scene.add("city dim", Static(cdim, lambda t: city_k(t) * (0.8 + 0.3 * beat_pulse(t) * max(_sc(20, 22, t),
+                                                                                         0.8 * (t < 12.0)))))
     scene.add("city gold", Static(cgold, city_k))
     scene.add("church", Church("soft"))
     scene.add("church lines", Church("crisp"))
     scene.add("church steps", Church("steps"))
     scene.add("church glory", Church("glory"))
     scene.add("church wave", BandWave(), reflect=False)
+    scene.add("church ignite", Ignite(), reflect=False)
+    scene.add("church beacon", Beacon(), reflect=True)
     for i, c in enumerate(_clouds()):
         scene.add(f"church cloud {i}", c, reflect=True)
     scene.add("father pillars", FATHER_PILLARS, reflect=True)

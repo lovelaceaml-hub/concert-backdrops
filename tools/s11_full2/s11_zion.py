@@ -149,7 +149,7 @@ def _stair_mask(p, w=9.0):
 def _mountain():
     r = np.random.default_rng(7)
     face, face_c, face_a, face_k, spark = [], [], [], [], []
-    par, par_k, pil_a, pil_b, niche, tread, trees, tree_c = [], [], [], [], [], [], [], []
+    par, par_k, pil_a, pil_b, niche, tread = [], [], [], [], [], []
     post_a, post_b, lamp = [], [], []
     hi, lo = lin(PEARL), lin(PEARL_LO)
     for k in range(N_TIER):
@@ -189,19 +189,9 @@ def _mountain():
             a = _az(m, r)
             rr = np.sqrt(Ri ** 2 + (R0 ** 2 - Ri ** 2) * r.random(m))
             tread.append(_xz(rr, a, y + 0.05))
-            nt = int(2 * FRONT * (Ri + 4.0) / 11.0)
-            a = np.linspace(-FRONT, FRONT, nt) + r.uniform(-0.004, 0.004, nt)
-            c = _xz(Ri + 4.5 + r.uniform(-0.8, 0.8, nt), a, y)
-            c = c[~_stair_mask(c, 11.0)]
-            for j in range(len(c)):
-                q = r.normal(0.0, 1.0, (13, 3)) * np.array([1.6, 1.2, 1.6]) + c[j] + np.array([0.0, 3.8, 0.0])
-                trunk = _seg(c[j], c[j] + np.array([0.0, 2.6, 0.0]), 0.9)
-                trees.append(np.concatenate([q, trunk]))
-                g = r.random()
-                col = lin("#bfe8a8") if g < 0.55 else (lin("#ffe2a8") if g < 0.85 else lin(COL9[r.integers(0, 9)]))
-                tree_c.append(np.repeat(col[None, :], len(q) + len(trunk), 0))
     F, FC, FA, FK, SP = (np.concatenate(v) for v in (face, face_c, face_a, face_k, spark))
-    PA, PK, NI, TR, TT, TC = (np.concatenate(v) for v in (par, par_k, niche, tread, trees, tree_c))
+    PA, PK, NI, TR = (np.concatenate(v) for v in (par, par_k, niche, tread))
+    NIC = np.asarray([lin(NICHE[i % 3]) for i in range(len(NI))])
     PB_a, PB_b = np.concatenate(pil_a), np.concatenate(pil_b)
     PO_a, PO_b, LP = np.concatenate(post_a), np.concatenate(post_b), np.concatenate(lamp)
     # the great stairways: one flight against each wall, from the terrace (or the sea) below to the one above
@@ -226,19 +216,22 @@ def _mountain():
                 lamps.append(np.stack([a0, 0.5 * (a0 + a1), a1]) + np.array([0.0, 0.8, 0.0]))
     ST, SK, RA, LA = np.concatenate(st), np.concatenate(st_k), np.concatenate(rail), np.concatenate(lamps)
     low = FK <= 1                                            # only the lowest walls mirror in the sea
-    dim = [
+    # the walls (they form through the intro: a few lights and paths first, the walls coming up behind them)
+    walls = [
         _batch(F[low], 2.2, FC[low] * 0.5, FA[low], kind="soft", emit=1.0),
         _batch(F[~low], 2.2, FC[~low] * 0.5, FA[~low], kind="soft", emit=1.0, reflect=False),
-        _batch(SP, 0.30, lin("#ffe6c0"), 0.8, emit=1.4, twinkle=0.7, reflect=False),
-        _batch(PA, 0.45, lin("#ffe0a8") * 0.75, 0.5, emit=1.0, reflect=False),
-        dict(pos=PO_a, pos2=PO_b, size=0.22, color=lin("#ffe0a8") * 0.6, alpha=0.6, kind="line", emit=1.0,
-             reflect=False),
-        _batch(LP, 0.8, lin("#ffe2b0"), 0.9, emit=2.0, twinkle=0.3, reflect=False),
-        dict(pos=PB_a, pos2=PB_b, size=0.35, color=lin("#ffd6a0") * 0.45, alpha=0.3, alpha2=0.8, kind="line",
+        _batch(SP, 0.30, lin("#f2eeff"), 0.8, emit=1.4, twinkle=0.7, reflect=False),
+        dict(pos=PB_a, pos2=PB_b, size=0.35, color=lin("#d8ccff") * 0.45, alpha=0.3, alpha2=0.8, kind="line",
              emit=1.0, reflect=False),
-        _batch(NI, 1.3, lin("#ffc98a") * 0.8, 0.85, kind="soft", emit=1.6, reflect=False),
-        _batch(TR, 0.6, lin("#e6b88a") * 0.35, 0.45, kind="soft", emit=0.8, reflect=False),
-        _batch(TT, 0.75, TC * 0.6, 0.7, emit=1.2, twinkle=0.5, reflect=False),
+        _batch(NI, 1.3, NIC * 0.8, 0.85, kind="soft", emit=1.6, reflect=False),
+        _batch(TR, 0.6, lin("#bcdcff") * 0.30, 0.40, kind="soft", emit=0.8, reflect=False),
+    ]
+    # the lights and paths: parapets, their lamps, the golden stairways (there from the first frame)
+    dim = [
+        _batch(PA, 0.45, lin(PEARL_RAIL) * 0.75, 0.5, emit=1.0, reflect=False),
+        dict(pos=PO_a, pos2=PO_b, size=0.22, color=lin(PEARL_RAIL) * 0.6, alpha=0.6, kind="line", emit=1.0,
+             reflect=False),
+        _batch(LP, 0.8, lin("#e6f2ff"), 0.9, emit=2.0, twinkle=0.3, reflect=False),
         _batch(ST, 0.40, lin(GOLD2) * 0.5, 0.8, emit=1.0, reflect=False),
         _batch(RA, 0.35, lin("#ffe6b8") * 0.5, 0.8, emit=1.0, reflect=False),
         _batch(LA, 0.9, lin("#ffdca0"), 0.9, emit=2.2, twinkle=0.3, reflect=False),
@@ -258,15 +251,16 @@ def _mountain():
         fl.append(_xz(rr, a, tier_y(k) + 0.6))
         fl_b.append(FT[k] + 0.3 + 0.5 * (R0 - rr) / (R0 - Ri) + 0.2 * r.random(m))
     FL, FB = np.concatenate(fl), np.concatenate(fl_b)
+    # (round 6) the walls fill with pearl light, the floors with a pale glass light; only the stairways are gold
     gold = [
-        _batch(FL, 6.0, lin("#ffcf7a"), 0.10, kind="soft", emit=1.0, birth=FB, fade=0.7, flash=2.0, reflect=False),
-        _batch(F[upper], 2.6, lin(GOLD) * 0.85, FA[upper] * 0.95, kind="soft", emit=1.4, birth=fb[upper], fade=0.6,
+        _batch(FL, 6.0, lin("#bfe2ff"), 0.07, kind="soft", emit=1.0, birth=FB, fade=0.7, flash=2.0, reflect=False),
+        _batch(F[upper], 2.6, lin(PEARL) * 0.62, FA[upper] * 0.80, kind="soft", emit=1.3, birth=fb[upper], fade=0.6,
                flash=1.5, reflect=False),
-        _batch(PA, 0.55, lin(GOLD2), 0.6, emit=1.3, birth=FT[PK] + 0.45, fade=0.4, flash=3.0, twinkle=0.4,
+        _batch(PA, 0.55, lin(PEARL_RAIL), 0.6, emit=1.3, birth=FT[PK] + 0.45, fade=0.4, flash=3.0, twinkle=0.4,
                reflect=False),
         _batch(ST, 0.45, lin(GOLD), 0.7, emit=1.4, birth=FT[SK] + 0.2, fade=0.6, flash=2.0, reflect=False),
     ]
-    return dim, gold
+    return walls, dim, gold
 
 
 def _body():
@@ -307,6 +301,358 @@ class _Off:
 
     def gain(self, t):
         return 0.0
+
+
+# =========================================================================================================
+# Round 6: the city grows (Anthony: "the mountain of Zion, a city, can start to form and continue to grow larger
+# and larger"). At first only lights and paths (the parapet lamps, the golden stairways); the walls come up
+# through the intro; on the glory the pearl gates light at the summit, on "fulfilled" down every stairway, and
+# the gardens bloom terrace by terrace; on the first climb glass towers rise on the lower terraces, on the
+# sacrifice and thanks the upper ones, pavilions on thanks to Father; on the second slam every tower grows
+# taller and a new ring of the city rises out of the sea behind the shockwave; on the sacrifice and the third
+# slam the towers take their spires and a second ring rises. Everything rises on the beats (static point sets
+# with birth times: a tower draws itself upward with a flash at its growing top). Each part has its palette
+# (pearl gates and walls, sky-blue and teal glass towers, green gardens with rose and lavender blossoms, white
+# pavilions with coloured domes; gold only for the stairways and the crown); mist lies at the foot of each wall
+# so the terraces stand apart in depth.
+# =========================================================================================================
+RISE_S = 1.1                     # how long a tower takes to draw itself up (seconds)
+R_RING = (tier_r(0) + 40.0, tier_r(0) + 82.0)    # the new rings of the city on the sea (radius)
+RING_T = (SLAM2 + 2.3, SLAM3)                      # when they rise: behind the shockwave (165.16), on slam 3
+
+
+def _snap(t):
+    """The first beat at or after t (things rise on the beat)."""
+    t = np.asarray(t, np.float64)
+    i = np.clip(np.searchsorted(BEATS, t - 0.02), 0, len(BEATS) - 1)
+    return np.where(BEATS[i] >= t - 0.02, BEATS[i], t)
+
+
+class _Parts:
+    """Collects lines, soft glows and sparks with their birth times, and makes the batches."""
+
+    def __init__(self):
+        self.L, self.S, self.K = [], [], []
+
+    def line(self, a, b, col, alpha, birth):
+        a, b = np.atleast_2d(a), np.atleast_2d(b)
+        n = len(a)
+        self.L.append((a, b, np.broadcast_to(col, (n, 3)), np.broadcast_to(alpha, (n,)), np.broadcast_to(birth, (n,))))
+
+    def soft(self, p, col, alpha, birth):
+        p = np.atleast_2d(p)
+        n = len(p)
+        self.S.append((p, np.broadcast_to(col, (n, 3)), np.broadcast_to(alpha, (n,)), np.broadcast_to(birth, (n,))))
+
+    def spark(self, p, col, birth):
+        p = np.atleast_2d(p)
+        n = len(p)
+        self.K.append((p, np.broadcast_to(col, (n, 3)), np.broadcast_to(birth, (n,))))
+
+    def batches(self, lsize=0.22, ssize=2.4, ksize=0.7, flash=2.5):
+        out = []
+        if self.L:
+            A, B, C, Al, Bi = (np.concatenate(x) for x in zip(*self.L))
+            out.append(dict(pos=A, pos2=B, size=lsize, color=C, alpha=Al, alpha2=Al, kind="line", emit=1.5,
+                            birth=Bi, fade=0.35, flash=flash, reflect=False, seed=np.random.default_rng(1).random(len(A))))
+        if self.S:
+            P, C, Al, Bi = (np.concatenate(x) for x in zip(*self.S))
+            out.append(_batch(P, ssize, C, Al, kind="soft", emit=1.0, birth=Bi, fade=0.6, flash=1.0, reflect=False))
+        if self.K:
+            P, C, Bi = (np.concatenate(x) for x in zip(*self.K))
+            out.append(_batch(P, ksize, C, 0.95, emit=3.0, birth=Bi, fade=0.3, flash=3.0, twinkle=0.4, reflect=False))
+        return out
+
+
+def _rise_birth(y, hs, bs):
+    """Birth of a point at height y of a tower that grows to heights hs (cumulative) at the times bs."""
+    y = np.asarray(y, np.float64)
+    out = np.full(y.shape, np.nan)
+    h0 = 0.0
+    for h, b in zip(hs, bs):
+        sel = np.isnan(out) & (y <= h + 1e-6)
+        out = np.where(sel, b + RISE_S * np.clip((y - h0) / max(h - h0, 1e-6), 0.0, 1.0), out)
+        h0 = h
+    return np.where(np.isnan(out), bs[-1] + RISE_S, out)
+
+
+def _tower(T, c, rw, hs, bs, gi, jewel, spire=True):
+    """A slender glass tower of light: six edges, floor bands, glass glowing inside, a bright band at the top of
+    each growth, a spire with a jewel when it is finished. It draws itself upward at each growth."""
+    H = hs[-1]
+    n = 6
+    ang = np.arange(n) * 2 * np.pi / n + 0.3
+
+    def ring(y):
+        rr = rw * (1.0 - 0.28 * y / max(H, 1.0))
+        return np.stack([c[0] + rr * np.cos(ang), np.full(n, c[1] + y), c[2] + rr * np.sin(ang)], 1)
+    edge, glass = lin(GLASS_EDGE[gi]), lin(GLASS[gi])
+    ys = np.arange(0.0, H - 1e-6, 2.0)
+    ys = np.append(ys, H)
+    for y0, y1 in zip(ys[:-1], ys[1:]):
+        T.line(ring(y0), ring(y1), edge * 0.8, 0.85, _rise_birth(np.full(n, y1), hs, bs))
+    for y in np.arange(3.6, H - 0.5, 3.6):
+        R = ring(y)
+        T.line(R, np.roll(R, -1, 0), glass * 0.9, 0.55, _rise_birth(np.full(n, y), hs, bs))
+    for h in hs:
+        R = ring(h)
+        T.line(R, np.roll(R, -1, 0), edge * 1.3, 1.0, _rise_birth(np.full(n, h), hs, bs))
+    r = np.random.default_rng(int(abs(c[0] * 7 + c[2] * 3)) % 100000)
+    m = int(H * 2.2)
+    yy = H * r.random(m) ** 0.9
+    aa = r.uniform(0, 2 * np.pi, m)
+    rr = rw * (1.0 - 0.28 * yy / max(H, 1.0)) * 0.8
+    P = np.stack([c[0] + rr * np.cos(aa), c[1] + yy, c[2] + rr * np.sin(aa)], 1)
+    T.soft(P, glass * 0.7, 0.16, _rise_birth(yy, hs, bs))
+    if spire:
+        tip = np.asarray(c, np.float64) + np.array([0.0, H + 2.8 * rw, 0.0])
+        R = ring(H)
+        b = bs[-1] + RISE_S + 0.05
+        T.line(R, np.repeat(tip[None], n, 0), edge, 0.95, b)
+        T.spark(tip + np.array([0.0, 0.4, 0.0]), lin(jewel), b + 0.25)
+
+
+def _pavilion(T, c, i, b):
+    """A round pavilion of light: eight white columns, a dome in rose, lavender or sky, a finial."""
+    n, R, h = 8, 3.4, 5.0
+    a = np.arange(n) * 2 * np.pi / n
+    base = np.stack([c[0] + R * np.cos(a), np.full(n, c[1]), c[2] + R * np.sin(a)], 1)
+    top = base + np.array([0.0, h, 0.0])
+    w = lin("#f8f4ff")
+    T.line(base, top, w * 0.9, 0.9, b + 0.4 * np.arange(n) / n)
+    T.line(top, np.roll(top, -1, 0), w, 1.0, b + 0.45)
+    T.line(base, np.roll(base, -1, 0), w * 0.6, 0.7, b)
+    dc = lin(DOME[i % 3])
+    for k in range(n):
+        e = np.linspace(0.0, 1.0, 6)
+        rr, yy = R * np.cos(e * np.pi / 2), h + 3.0 * np.sin(e * np.pi / 2)
+        Q = np.stack([c[0] + rr * np.cos(a[k]), c[1] + yy, c[2] + rr * np.sin(a[k])], 1)
+        T.line(Q[:-1], Q[1:], dc, 0.95, b + 0.55 + 0.25 * e[1:])
+    T.soft(np.asarray(c) + np.array([0.0, h + 1.2, 0.0]), dc * 0.8, 0.22, b + 0.6)
+    T.soft(np.asarray(c) + np.array([0.0, 2.2, 0.0]), lin("#fff2e0") * 0.6, 0.18, b + 0.3)
+    T.spark(np.asarray(c) + np.array([0.0, h + 3.5, 0.0]), lin("#fff6e6"), b + 0.9)
+
+
+def _garden(T, c, r, b):
+    """A garden of light: three trees with green crowns and rose, lavender and white blossoms."""
+    for j in range(3):
+        a = 2 * np.pi * j / 3 + r.uniform(0, 1)
+        p = np.asarray(c) + np.array([2.4 * np.cos(a), 0.0, 2.4 * np.sin(a)])
+        hh = r.uniform(3.2, 4.6)
+        bb = b + 0.12 * j
+        T.line(p, p + np.array([0.0, hh * 0.65, 0.0]), lin("#cfe9c0") * 0.5, 0.7, bb)
+        q = r.normal(0.0, 1.0, (16, 3)) * np.array([1.5, 1.1, 1.5]) + p + np.array([0.0, hh, 0.0])
+        T.soft(q[:6], lin(LEAF[r.integers(0, 3)]) * 0.8, 0.30, bb + 0.1)
+        T.spark(q[6:], lin(LEAF[r.integers(0, 3)]) * 0.9, bb + 0.1)
+        bl = q[:9] + r.normal(0.0, 0.5, (9, 3))
+        T.spark(bl, np.asarray([lin(BLOSSOM[x]) for x in r.integers(0, 4, 9)]), bb + 0.5 + 0.3 * r.random(9))
+
+
+def _gate(T, c, d, hw, h, b):
+    """A pearl gate over a stairway head: two pylons, a round arch, an inner arch, a jewel at the keystone,
+    shimmering from rose to sky like mother-of-pearl."""
+    sd = np.array([d[2], 0.0, -d[0]])
+    up = np.array([0.0, 1.0, 0.0])
+    w = hw + 1.6
+    for s in (-1, 1):
+        for o in (-0.7, 0.7):
+            for f in (-0.7, 0.7):
+                p = c + sd * s * (w + o) + d * f
+                T.line(p, p + up * h, lin(PEARL) * 0.8, 0.9, b + 0.0)
+    e = np.linspace(0.0, np.pi, 25)
+    for rr, br, k in ((w, 1.0, 0.0), (w - 1.1, 0.7, 0.15)):
+        A = c[None] + sd[None] * (rr * np.cos(e))[:, None] + up[None] * (h + rr * 0.55 * np.sin(e))[:, None]
+        pearl = np.where((np.cos(e) > 0)[:, None], lin("#ffd6ec"), lin("#d6ecff")) * 0.5 + lin(PEARL) * 0.5
+        T.line(A[:-1], A[1:], pearl[:-1] * br, 0.95, b + 0.25 + k + 0.3 * e[1:] / np.pi)
+    key = c + up * (h + w * 0.55 + 0.6)
+    T.soft(c + up * (h * 0.8), lin("#f0e8ff") * 0.6, 0.18, b + 0.3)
+    T.spark(key, lin("#fff6ff"), b + 0.6)
+
+
+def _band_slots(rb, step, y, front=FRONT):
+    """Places along a ring of radius rb (a terrace's back band), clear of the stairways."""
+    m = int(2 * front * rb / step)
+    a = np.linspace(-front, front, m)
+    p = _xz(rb, a, y)
+    keep = ~_stair_mask(p, 13.0)
+    return p[keep], a[keep]
+
+
+def _city_parts():
+    """The growing city: (gates, gardens, towers and pavilions, mist, the new rings on the sea) as batches."""
+    r = np.random.default_rng(606)
+    G, Gd, T, M = _Parts(), _Parts(), _Parts(), _Parts()
+    # the pearl gates over every stairway head: the summit's on the glory, then down the mountain on "fulfilled"
+    for s in STAIRS_AZ:
+        d = np.array([np.sin(s), 0.0, np.cos(s)])
+        hw = 8.0 if s == 0.0 else 5.0
+        for k in range(N_TIER):
+            c = ZC + d * (tier_r(k) - 3.0) + np.array([0.0, tier_y(k), 0.0])
+            b = HIT["glory"] + 0.35 * (N_TIER - 1 - k) + 0.1 * abs(s) if k >= 5 else FILL_T[k] + 0.35 + 0.1 * abs(s)
+            _gate(G, c, d, hw, 9.0 if s == 0.0 else 7.0, float(_snap(b)))
+    # the terraces' back bands: gardens, towers and pavilions in a pattern (groups, never a uniform row)
+    gen1 = {0: 90.72, 1: 91.6, 2: 92.6, 3: 99.4, 4: 101.5, 5: 109.8}
+    pat = "GTGPGt"
+    for k in range(N_TIER - 1):
+        rb = tier_r(k + 1) + 6.0
+        P, A = _band_slots(rb, 13.0, tier_y(k))
+        for j, (p, a) in enumerate(zip(P, A)):
+            kind = pat[(j + k) % len(pat)]
+            u = abs(a) / FRONT
+            p = p + r.uniform(-1.0, 1.0, 3) * np.array([1.0, 0.0, 1.0])
+            if kind == "G":
+                _garden(Gd, p, r, float(_snap(FILL_T[k] + 0.6 + 1.6 * u)))
+            elif kind == "P":
+                _pavilion(T, p, j, float(_snap(HIT["thanks"] + 0.5 * k + 2.4 * u)) if k < 5
+                          else float(_snap(171.48 + 1.5 * u)))
+            else:
+                tall = kind == "t"
+                h1 = r.uniform(9.0, 13.0)
+                h2 = h1 + (r.uniform(12.0, 16.0) if tall else r.uniform(5.0, 8.0))
+                h3 = h2 + (r.uniform(8.0, 12.0) if tall else 0.0)
+                b1 = float(_snap(gen1[k] + 2.2 * u))
+                b2 = float(_snap(SLAM2 + 2.3 + 0.6 * k + 2.4 * u))
+                b3 = float(_snap((180.7 + 0.5 * k if k < 3 else SLAM3 + 0.5 * (k - 3)) + 1.6 * u))
+                hs, bs = ([h1, h2, h3], [b1, b2, b3]) if tall else ([h1, h2], [b1, b2])
+                _tower(T, p, r.uniform(2.2, 2.8) if tall else r.uniform(1.8, 2.3), hs, bs, (j + k) % 3,
+                       COL9[(j * 4 + k) % 9], spire=True)
+    # mist at the foot of each wall: the terraces stand apart in depth
+    for k in range(N_TIER):
+        R0, y0 = tier_r(k), (tier_y(k - 1) if k else 0.0)
+        m = int(2 * FRONT * R0 / 7.0)
+        a = np.linspace(-FRONT, FRONT, m) + r.uniform(-0.01, 0.01, m)
+        P = _xz(R0 + 5.0 + r.uniform(0, 5, m), a, y0 + 1.0 + r.uniform(0, 1.5, m))
+        M.soft(P, lin("#8f86d8") * 0.55, 0.05, 0.0)
+    # the new rings of the city rising out of the sea (low pearl walls with gates, then gardens and towers)
+    for ri, (R, t0) in enumerate(zip(R_RING, RING_T)):
+        front = np.radians(100.0)
+        m = int(2 * front * R * 4.0 * 0.35)
+        a = r.uniform(-front, front, m)
+        u = r.random(m) ** 0.7
+        P = _xz(R, a, 4.0 * u)
+        keep = ~_stair_mask(P, 7.0)
+        P, u, a = P[keep], u[keep], a[keep]
+        arrive = t0 + (R - tier_r(0) - 4.0) / (75.0 if ri == 0 else 90.0)
+        col = lin(PEARL_LO)[None] * (1 - u[:, None]) + lin(PEARL)[None] * u[:, None]
+        T.soft(P, col * 0.55, 0.10 + 0.25 * u ** 2, arrive + 0.5 * u + 0.25 * np.abs(a))
+        q = _ring(ZC, R, 4.2, 1.6)
+        aq = np.arctan2(q[:, 0] - ZC[0], q[:, 2] - ZC[2])
+        q = q[(np.abs(aq) < front) & ~_stair_mask(q, 7.0)]
+        aq = np.arctan2(q[:, 0] - ZC[0], q[:, 2] - ZC[2])
+        T.spark(q[::5], lin("#e6f2ff"), arrive + 0.6 + 0.25 * np.abs(aq[::5]))
+        T.soft(q[::2], lin(PEARL_RAIL) * 0.6, 0.30, arrive + 0.6 + 0.25 * np.abs(aq[::2]))
+        for s in STAIRS_AZ:
+            d = np.array([np.sin(s), 0.0, np.cos(s)])
+            _gate(G, ZC + d * R, d, 8.0 if s == 0.0 else 5.0, 8.0 if s == 0.0 else 6.5,
+                  float(_snap(arrive + 0.8 + 0.2 * abs(s))))
+        P, A = _band_slots(R - 12.0, 15.0, 0.0, front)
+        for j, (p, a) in enumerate(zip(P, A)):
+            u = abs(a) / front
+            b = float(_snap(t0 + (6.3 if ri == 0 else 4.3) + 2.2 * u))
+            kind = "GTGPG"[j % 5]
+            if kind == "G":
+                _garden(Gd, p, r, b)
+            elif kind == "P":
+                _pavilion(T, p, j, b)
+            else:
+                h = r.uniform(10.0, 16.0)
+                _tower(T, p, 2.2, [h], [b], j % 3, COL9[j % 9])
+    return (G.batches(lsize=0.26, ssize=4.0, ksize=1.1), Gd.batches(lsize=0.18, ssize=2.6, ksize=0.55),
+            T.batches(lsize=0.22, ssize=2.6, ksize=1.0), M.batches(ssize=10.0))
+
+
+def form_k(t):
+    """The walls come up through the intro (a few lights and paths first)."""
+    return 0.35 + 0.65 * _sc(HIT["call2"], HIT["glory"], t)
+
+
+# =========================================================================================================
+# Round 6: the people streaming to Zion (Anthony: "more scenes where the people are streaming to Zion, to
+# Heavenly Mother's glory, the church of God"). Rivers of people of light walk across the sea of glass toward
+# the mountain, in through the pearl gates and up every great stairway to the summit, in the nine colours so
+# they stand out from the pearl and glass of the city. The longest river comes in along the great avenue from
+# far over the sea (the waves-of-praise flight passes low over it).
+# =========================================================================================================
+def _climb_profile(r_far):
+    pts = [(r_far, 0.0), (tier_r(0) + 14.0, 0.0)]
+    for k in range(N_TIER):
+        y0 = tier_y(k - 1) if k else 0.0
+        if k:
+            pts.append((tier_r(k) + 14.0, y0))
+        pts.append((tier_r(k), tier_y(k)))
+    pts.append((R_TOP - 10.0, SUMMIT))
+    pts = np.asarray(pts)
+    L = np.concatenate([[0.0], np.cumsum(np.hypot(*np.diff(pts, axis=0).T))])
+    return L, pts
+
+
+def _owner(t):
+    i = int(np.searchsorted(EDIT_T, t, side="right")) - 1
+    return BLOCKS[max(min(i, len(BLOCKS) - 1), 0)]["owner"]
+
+
+def stream_k(t):
+    """The rivers of people: from "as Father prophesied" on, wherever Zion is seen (not in the procession's and
+    the dancers' own scenes, nor in the close shots of the choir); they swell with the music."""
+    if local_k(t) <= 0.0 or stage_view(t) or t >= LAST_CHORD or _owner(t) in ("proc", "dance"):
+        return 0.0
+    return _sc(61.0, 70.5, t) * (0.8 + 0.3 * intensity(t)) * (1.0 + 0.25 * intensity(t) * beat_pulse(t, 0.12))
+
+
+class Streams:
+    """Rivers of people of light walking to Zion and climbing its stairways (one stroke and a bright head each,
+    a soft glow on some, so from afar they read as rivers of light)."""
+
+    def __init__(self):
+        r = np.random.default_rng(616)
+        self.paths, sa, lat, off, v, h, col, ph = [], [], [], [], [], [], [], []
+        nine = np.asarray([lin(c) for c in COL9])
+        for i, s in enumerate(STAIRS_AZ):
+            main = s == 0.0
+            L, P = _climb_profile(1500.0 if main else 760.0)
+            self.paths.append((L, P))
+            n = 3600 if main else 1000
+            hw = 7.0 if main else 4.2
+            sa.append(np.full(n, i))
+            lat.append(r.uniform(-hw, hw, n))
+            off.append(r.random(n) * L[-1])
+            v.append(r.uniform(3.2, 4.2, n))
+            h.append(r.uniform(0.9, 1.1, n))
+            c = r.integers(0, 9, n)
+            col.append(nine[c] * 0.8 + lin(WHITE) * 0.2)
+            ph.append(r.uniform(0, 2 * np.pi, n))
+        self.sa, self.lat, self.off, self.v, self.h, self.col, self.ph = (
+            np.concatenate(x) for x in (sa, lat, off, v, h, col, ph))
+        self.seed = r.random(len(self.sa))
+
+    def gain(self, t):
+        return float(stream_k(t))
+
+    def sample(self, t):
+        k = stream_k(t)
+        if k <= 0.0:
+            return None
+        foot, head, alpha, idx = [], [], [], []
+        for i, (L, P) in enumerate(self.paths):
+            sel = np.where(self.sa == i)[0]
+            d = np.mod(self.off[sel] + self.v[sel] * t, L[-1])
+            rr = np.interp(d, L, P[:, 0])
+            yy = np.interp(d, L, P[:, 1])
+            a = STAIRS_AZ[i] + self.lat[sel] / rr
+            p = np.stack([ZC[0] + rr * np.sin(a), yy + 0.15, ZC[2] + rr * np.cos(a)], 1)
+            bob = 0.06 * np.abs(np.sin(6.0 * t + self.ph[sel]))
+            foot.append(p)
+            head.append(p + np.stack([np.zeros(len(sel)), 1.55 * self.h[sel] + bob, np.zeros(len(sel))], 1))
+            alpha.append(_ss(0.0, 60.0, d) * (1.0 - _ss(L[-1] - 10.0, L[-1], d)))
+            idx.append(sel)
+        F, Hh, A, I = (np.concatenate(x) for x in (foot, head, alpha, idx))
+        C = self.col[I]
+        return [dict(pos=F, pos2=Hh, size=0.30, color=C * 0.9, alpha=0.30 * A, alpha2=0.85 * A, kind="line", emit=1.5,
+                     reflect=True),
+                dict(pos=Hh, size=0.55, color=C * 0.7 + lin(WHITE) * 0.3, alpha=0.9 * A, kind="spark", emit=2.6,
+                     twinkle=0.3, seed=self.seed[I], reflect=False),
+                dict(pos=Hh[::4], size=2.2, color=C[::4] * 0.6, alpha=0.08 * A[::4], kind="soft", emit=1.2,
+                     reflect=False)]
 
 
 # =========================================================================================================
