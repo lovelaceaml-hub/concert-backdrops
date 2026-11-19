@@ -519,7 +519,8 @@ class Stream:
         else:
             C = np.repeat(lin(self.color)[None], self.n, 0)
         C = np.clip(C * 1.25 - 0.12 * C.mean(1, keepdims=True), 0.0, None)        # deep, saturated colour
-        pulse = 1.0 + 0.35 * beat_pulse(t) * intensity(t) + 0.5 * hit_pulse(t, KICKS, fall=0.4)
+        pulse = (1.0 + 0.35 * beat_pulse(t) * intensity(t) + 0.5 * hit_pulse(t, KICKS, fall=0.4)
+                 + 0.7 * _mf("strings", t))        # the strings run as light along his streams
         fall = (1.0 - u) ** 0.9
         taper = 0.25 + 0.75 * (1.0 - u) ** 0.5
         w = self.width
@@ -667,6 +668,13 @@ def _ripple_times():
         for d in down_times(a - 1.9, b):
             out.append((d, s))
     out.append((HIT["love"], 0.9))
+    try:                                         # the timpani: a ring runs out across the sea from his feet
+        import songs.s11_music_fx as MF
+        for th, st in MF.timp_hits(0.5):
+            if any(a - 0.6 <= th <= b for a, b in WINDOWS.values()):
+                out.append((th, 0.5 + 0.5 * st))
+    except Exception:  # noqa: BLE001
+        pass
     out += [(x, 0.7) for x in STRINGS[:2]]
     return sorted(out)
 
@@ -792,7 +800,7 @@ class BackLight:
         out = []
         for a, b, p, sz, col, f in self.spots:
             if a <= t <= b:
-                k = float(f(t))
+                k = float(f(t)) * (1.0 + 0.6 * _mf("brass", t))     # the brass flares the light behind him
                 if k > 0.0:
                     out.append(dict(pos=p[None], size=sz, color=lin(col), alpha=0.10 * k, kind="soft", emit=1.5,
                                     reflect=False))
@@ -836,15 +844,16 @@ def add(scene):
                                                  width=0.08, seed=3))
     # the great sweeps: his strokes drawn huge round him in long streams of the nine colours (the promo's
     # lights of colour); kept out of the words while a phrase reads
-    from songs.s11_stage import BoxGuard
+    from songs.s11_stage import BoxGuard, CORNER_BOX, corner_k
     sweeps = [((97.6, 99.45), (3.6, 0.06), (5.2, 0.14), (6.2, 0.22)),
               ((121.32, 125.92), (3.5, 0.05), (5.5, 0.12), (7.5, 0.20)),
               ((185.92, 188.27), (2.6, 0.06), (3.6, 0.12), (4.6, 0.18))]
     for j, (win, *arms) in enumerate(sweeps):
         for i, (gain, lag) in enumerate(arms):
-            scene.add("conductor sweep %d %d" % (j, i), BoxGuard(Stream(
-                _sweep(gain, lag), _rainbow_from(1.5 * i), [win], trail=1.3 + 0.2 * i, width=0.16 + 0.06 * i,
-                fade=0.25, bright=1.1, seed=600 + 10 * j + i), keep=0.0))
+            st = Stream(_sweep(gain, lag), _rainbow_from(1.5 * i), [win], trail=1.3 + 0.2 * i, width=0.16 + 0.06 * i,
+                        fade=0.25, bright=1.1, seed=600 + 10 * j + i)
+            corner = BoxGuard(st, keep=0.1, box=CORNER_BOX, when=corner_k)     # off the corner titles too
+            scene.add("conductor sweep %d %d" % (j, i), BoxGuard(corner, keep=0.0))
     # the summons: a stream off the tip on each beat, the four winding into one braided rope to the sky
     bt = beat_times(97.55, 99.2)[:4]
     for i, ts in enumerate(bt):

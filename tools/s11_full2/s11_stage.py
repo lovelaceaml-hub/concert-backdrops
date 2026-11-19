@@ -257,14 +257,28 @@ def phrase_k(t):
 WORD_BOX = (0.15, 0.85, 0.52, 0.75)     # x0, x1, y0, y1 of the words on screen (0..1, y up)
 
 
+CORNER_BOX = (-0.05, 0.42, -0.05, 0.14)  # the logo and the periodic titles, bottom left
+
+
+def corner_k(t):
+    """0..1 while the corner titles show beside the logo (SIG_TEXT windows)."""
+    import songs.s11_full2 as H
+    k = 0.0
+    for a, b in getattr(H, "SIG_TEXT", []):
+        if a - 0.6 <= t <= b + 0.6:
+            k = max(k, _sc(a - 0.6, a, t) * (1.0 - _sc(b, b + 0.6, t)))
+    return k
+
+
 class BoxGuard:
     """Keeps a point set's light out of the words while a phrase reads (Anthony's rule: nothing bright crosses
     a phrase): every point whose glow, as the camera sees it, reaches into the word box fades out there, with
     a feathered edge, and comes back as the phrase leaves. Everything else of the wrapped set is unchanged."""
     wants_camera = True
 
-    def __init__(self, ps, keep=0.06, box=WORD_BOX):
+    def __init__(self, ps, keep=0.06, box=WORD_BOX, when=None):
         self.ps, self.keep, self.box = ps, keep, box
+        self.when = when or phrase_k
         self.inner_camera = bool(getattr(ps, "wants_camera", False))
         if hasattr(ps, "gain"):
             self.gain = ps.gain
@@ -282,7 +296,7 @@ class BoxGuard:
 
     def sample(self, t, cam=None):
         out = self.ps.sample(t, cam) if self.inner_camera else self.ps.sample(t)
-        k = phrase_k(t)
+        k = self.when(t)
         if not out or cam is None or k <= 0.0:
             return out
         one = isinstance(out, dict)
@@ -1442,6 +1456,65 @@ def cloud_k(t):
     return 0.55 * stage_view(t) * (0.6 + 0.4 * intensity(t))
 
 
+class SoundAnswers:
+    """Each sound of the music answered by its own light in the stage shots (round 9, Anthony: "way more effects
+    consistently happening to match each different sound"): the timpani as low gold shock rings running across
+    the stage floor from the drums, the high voices as fine sparkles above the front rows (the sopranos), the low
+    voices as a deep blue swell round the back rows (the basses). (The strings along the bows, the brass flares
+    off the bells and the choir's rising breath of light are in Instruments, SongBooks and ChoirLight.)"""
+
+    def __init__(self, inst):
+        self.tc = inst.hp[inst.hf == 2].mean(0) if (inst.hf == 2).any() else PODIUM + _v(0.0, 0.0, -10.0)
+        self.tc = np.array([self.tc[0], SUMMIT + 0.06, self.tc[2]])
+        z = CHOIR_P[:, 2]
+        self.hi = CHOIR_P[z >= np.quantile(z, 0.65)]
+        self.lo = CHOIR_P[z <= np.quantile(z, 0.35)]
+        r = np.random.default_rng(81)
+        self.hs = r.random((len(self.hi) * 3, 4))
+        self.ang = np.linspace(0.0, 2.0 * np.pi, 360, endpoint=False)
+        self.rs = r.random(360)
+        self.hits = None
+
+    def gain(self, t):
+        return stage_k(t)
+
+    def sample(self, t):
+        if not stage_view(t) or stage_k(t) <= 0.0:
+            return None
+        rm = _room(t)
+        out = []
+        if self.hits is None:
+            try:
+                import songs.s11_music_fx as MF
+                self.hits = MF.timp_hits(0.5)
+            except Exception:  # noqa: BLE001
+                self.hits = []
+        for th, st in self.hits:                     # timpani: a gold ring runs out across the floor
+            u = t - th
+            if 0.0 <= u < 1.4:
+                rad = 0.6 + 11.0 * (1.0 - np.exp(-u / 0.45))
+                P = self.tc[None, :] + np.stack([rad * np.sin(self.ang), np.zeros(360), rad * np.cos(self.ang)], 1)
+                a = st * np.exp(-u / 0.45) * (1.0 - _sc(1.0, 1.4, u)) * (0.5 + 0.5 * rm)
+                out.append(dict(pos=P, size=0.07 + 0.008 * rad, color=lin("#ffc062"), alpha=0.7 * a, kind="spark",
+                                emit=2.4, twinkle=0.3, seed=self.rs, reflect=False))
+                out.append(dict(pos=P[::8], size=0.9, color=lin("#ff9e3a"), alpha=0.06 * a, kind="soft", emit=1.4,
+                                reflect=False))
+        fh = _mx("high", t) * rm                     # high voices: sparkles above the front rows
+        if fh > 0.03:
+            hs = self.hs
+            base = np.repeat(self.hi, 3, axis=0)
+            ph = np.mod(t * (0.6 + 0.5 * hs[:, 0]) + hs[:, 1], 1.0)
+            pos = base + np.stack([0.5 * (hs[:, 2] - 0.5), 2.0 + 0.9 * ph, 0.4 * (hs[:, 3] - 0.5)], 1)
+            out.append(dict(pos=pos, size=0.02 + 0.02 * hs[:, 2], color=lin("#eaf4ff"),
+                            alpha=fh * np.sin(np.pi * ph) ** 2, emit=2.6, kind="spark", twinkle=1.0, seed=hs[:, 3]))
+        fl = _mx("low", t) * rm                      # low voices: a deep blue swell round the back rows
+        if fl > 0.03:
+            pos = self.lo + _v(0.0, 1.0, 0.0)
+            out.append(dict(pos=pos, size=1.5 + 0.6 * fl, color=lin("#2457ff"), alpha=0.10 * fl, kind="soft",
+                            emit=1.5))
+        return out or None
+
+
 def add(scene):
     choir = Choir(places=CHOIR_P, facing=0.0, kinds=CHOIR_KINDS,
                   start=dict(t=21.3, center=(0.0, FACADE_Z), speed=9.0), color=FIG_BLUE, color2=FIG_BLUE2,
@@ -1455,7 +1528,9 @@ def add(scene):
                    size=1.2, glints=0.006, dof=0.35, seed=4.0)
     scene.add("orchestra", BoxGuard(orch, keep=0.35))     # no dark mask: the players always glow
     scene.add("risers", Risers())
-    scene.add("instruments", Instruments())
+    inst = Instruments()
+    scene.add("instruments", inst)
+    scene.add("sound answers", BoxGuard(SoundAnswers(inst), keep=0.1), reflect=False)
     scene.add("choir light", BoxGuard(ChoirLight(CHOIR_ALL), keep=0.2))
     scene.add("snow", Snow())
     for i, c in enumerate(_heroes()):
