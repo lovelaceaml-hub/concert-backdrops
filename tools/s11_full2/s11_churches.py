@@ -1028,6 +1028,38 @@ def _RIPPLE_HITS():
     return _RH[1:]
 
 
+# =========================================================================================================
+# LIGHT AS AN EVENT (Anthony, 2026-11-19): "Not everything needs to be so washed out and bright all the time.
+# Key timings should be highlighted. Do not saturate everything. Do not wash out." The churches rest at a calm
+# glow (readable as buildings) and swell to full only on the key moments (DESIGN.md): the slams, Sacrifice,
+# Devotion, the thanks, the church of God moments, Wondrous love. The core's shared light budget is used when it
+# exists (light_budget(t) in songs.s11_full2), on top of this.
+# =========================================================================================================
+REST = 0.55
+KEYS = [(40.54, 3.0), (82.08, 5.0), (100.26, 3.0), (105.14, 3.0), (109.8, 3.0), (162.86, 5.0), (180.7, 3.0),
+        (184.65, 3.0), (201.73, 5.0), (218.1, 3.0), (224.03, 3.0), (238.93, 5.0), (254.0, 3.0)]
+SPANS = [(159.0, 162.86)]                     # the church of God, 2:39 to 2:42.86 (rising into slam 2)
+
+
+def key_light(t):
+    """REST at rest, 1 on the key moments (a quick swell, then a slow settle)."""
+    v = 0.0
+    for tk, fall in KEYS:
+        d = t - tk
+        if -0.3 < d < 3.0 * fall:
+            v = max(v, (_sc(-0.3, 0.0, d) if d < 0 else float(np.exp(-d / fall))))
+    for a, b in SPANS:
+        v = max(v, _sc(a, a + 1.0, t) * (1.0 - _sc(b, b + 3.0, t)) if a - 0.1 < t < b + 3.0 else 0.0)
+    k = REST + (1.0 - REST) * v
+    lb = getattr(H, "light_budget", None)
+    if callable(lb):
+        try:
+            k *= float(lb(t))
+        except Exception:
+            pass
+    return k
+
+
 class ChurchLight:
     """One real church in light, in two parts kept on the graphics card, each with its own life on the music
     (Anthony: "way more effects ... each different sound"):
@@ -1098,7 +1130,7 @@ class ChurchLight:
         else:
             mod = 0.85 + 0.35 * _fx("kick", t) + (0.7 * _fx("brass", t) if self.tower else 0.0) + 0.8 * rp
         calm = 1.0 - 0.8 * _reading(t)
-        return g * (1.0 + (mod - 1.0) * calm)
+        return g * key_light(t) * (1.0 + (mod - 1.0) * calm)
 
 
 class Ignitions:
@@ -1126,7 +1158,7 @@ class Ignitions:
             h = c["h"]
             top = h * (1.0 + 4.0 * _sc(c["t"], c["t"] + 0.5, t))
             P.append(c["base"][None, :] + (h + top * self.u)[:, None] * _v(0, 1, 0)[None, :])
-            A.append(0.8 * fl * g * (1.0 - self.u) ** 1.6)
+            A.append(0.8 * fl * g * key_light(t) * (1.0 - self.u) ** 1.6)
             S.append(np.full(len(self.u), 0.18 * h))
         if not P:
             return None
@@ -1200,7 +1232,7 @@ class Emblems:
         r, u, f = cam.basis()
         eye = np.asarray(cam.pos, np.float64)
         ty = np.tan(np.radians(cam.fov) * 0.5)
-        breathe = 0.82 + 0.3 * _choir(t)
+        breathe = (0.82 + 0.3 * _choir(t)) * (0.5 + 0.5 * max(0.0, (key_light(t) - REST) / (1.0 - REST)))
         acc = {k: ([], [], []) for k in ("blue_soft", "blue", "white", "ring")}
         shown = []
         for i, c in enumerate(CHURCHES):
