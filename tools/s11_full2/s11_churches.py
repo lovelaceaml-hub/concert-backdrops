@@ -343,13 +343,13 @@ class EarthChurches:
             ex = np.cross(ey, d)
             ez = 0.15 * d
             m = self.m[mk]
-            k = R * 0.075 / max(m["h"], 1.0)                 # each church about a thirteenth of the Earth's radius
+            k = R * 0.058 / max(m["h"], 1.0)                 # each church about a sixteenth of the Earth's radius
             up = _rise(t, ti, 0.45)
             q = m["pos"]
             keep = q[:, 1] <= up * m["h"] + 1e-6
             pts = _place(m, base, ex, ey, ez, k)[keep]
             fl = hit_pulse(t, [ti], rise=0.02, fall=0.5)
-            a = np.where(m["role"][keep] == 1, 0.55, 0.95) * fk * (1.0 + 0.8 * fl * quiet + 0.25 * bp)
+            a = np.array([0.42, 0.6, 1.0, 0.8])[m["role"][keep]] * fk * (1.0 + 0.8 * fl * quiet + 0.25 * bp)
             P.append(pts)
             C.append(m["col"][keep])
             A.append(a)
@@ -357,14 +357,14 @@ class EarthChurches:
             top = 0.55 * R * (0.35 + 0.65 * _sc(ti, ti + 0.6, t))
             u = np.linspace(0.0, 1.0, 14)
             col_p = base[None, :] + (k * m["h"] * 0.6 + top * u)[:, None] * ey[None, :]
-            ka = (0.22 + 0.10 * bp + 1.1 * fl * quiet) * fk
+            ka = (0.34 + 0.14 * bp + 1.2 * fl * quiet) * fk
             cols.append(col_p)
             cola.append(ka * (1.0 - u) ** 1.5)
             cols_s.append(np.full(14, R * 0.035))
-            colb.append(dict(base=base, k=ka, size=k * m["h"] * 2.6))
+            colb.append(dict(base=base, k=ka, size=k * m["h"] * 2.6, top=col_p[-1], bot=col_p[0]))
         if not P:
             return None
-        out = [dict(pos=np.concatenate(P), size=R * 0.0042, color=np.concatenate(C),
+        out = [dict(pos=np.concatenate(P), size=R * 0.0034, color=np.concatenate(C),
                     alpha=np.clip(np.concatenate(A), 0, 1.6).astype(np.float32), kind="spark", emit=2.6, dof=0.0,
                     fog=0.0, reflect=False, twinkle=0.25),
                dict(pos=np.concatenate(cols), size=np.concatenate(cols_s), color=lin("#cfe6ff"),
@@ -374,6 +374,9 @@ class EarthChurches:
         out.append(dict(pos=gp, size=np.array([b["size"] for b in colb]), color=lin("#bfe0ff"),
                         alpha=np.array([0.16 * b["k"] for b in colb], np.float32), kind="soft", emit=1.6, dof=0.0,
                         fog=0.0, reflect=False))
+        out.append(dict(pos=np.array([b["bot"] for b in colb]), pos2=np.array([b["top"] for b in colb]),
+                        size=R * 0.004, color=lin("#e4f0ff"), alpha=np.array([min(b["k"], 1.0) for b in colb], np.float32),
+                        alpha2=np.zeros(len(colb), np.float32), kind="line", emit=2.2, dof=0.0, fog=0.0, reflect=False))
         return out
 
 
@@ -479,8 +482,9 @@ class RingGlow:
 def add(scene):
     if os.environ.get("S11_CHURCHES_OFF"):      # (for cost checks only)
         return
-    scene.add("churches ring lines", _RingStatic([0, 3], 2.0, 0.85, 2.4))
-    scene.add("churches ring glass", _RingStatic([1], 1.6, 0.5, 2.0))
+    scene.add("churches ring lines", _RingStatic([0], 1.7, 0.5, 2.0))
+    scene.add("churches ring accents", _RingStatic([3], 1.9, 0.85, 2.4))
+    scene.add("churches ring glass", _RingStatic([1], 1.6, 0.6, 2.2))
     scene.add("churches ring windows", _RingStatic([2], 3.0, 0.95, 2.8))
     scene.add("churches ring glow", RingGlow())
     scene.add("churches earth", EarthChurches(), reflect=False)
