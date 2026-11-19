@@ -23,31 +23,95 @@ import songs.s11_full2 as H
 Y, FZ, G = SUMMIT, FACADE_Z, GLOBE_C
 ZZ = float(ZC[2])
 
+def _at(az, r, y):
+    """A place round Mount Zion: azimuth in degrees from the front (+z) toward +x, r metres from its axis."""
+    a = np.radians(az)
+    return ZC + _v(r * np.sin(a), y, r * np.cos(a))
+
+
+def _orbit(t0, t1, az0, az1, r0, r1, y0, y1, tgt0, tgt1, n=5):
+    """Keys for a helicopter move round the mountain (azimuth, radius and height eased together)."""
+    out = []
+    for i in range(n):
+        u = i / (n - 1)
+        out.append((t0 + (t1 - t0) * u, _at(az0 + (az1 - az0) * u, r0 + (r1 - r0) * u, y0 + (y1 - y0) * u),
+                    tgt0 + (tgt1 - tgt0) * u))
+    return out
+
+
+def _shot(name, t0, t1, keys, fov=50.0, **kw):
+    return dict(name=name, kind="local", t0=t0, t1=t1, fov=fov, aperture=0.0, keys=keys, **kw)
+
+
+CR = ZC + _v(0.0, SUMMIT + 124.0, -10.0)      # the crown, high over the city (before it settles round it)
+CH = ZC + _v(0.0, SUMMIT + 30.0, -10.0)       # the church's middle
 SHOTS = [
-    # C. Mount Zion across the sea at dawn: the crown of light ignites high over the city (the words between
-    # the city and the crown); then the terraces fill with gold, step by step
-    dict(name="zion_crown", kind="local", t0=53.78, t1=70.54, fov=46.0, aperture=0.0,
-         keys=[(53.78, _v(70.0, 112.0, ZZ + 640.0), ZC + _v(-40.0, Y + 34.0, 0.0)),
-               (61.2, _v(52.0, 106.0, ZZ + 600.0), ZC + _v(-46.0, Y + 30.0, 0.0)),
-               (70.54, _v(20.0, 96.0, ZZ + 520.0), ZC + _v(0.0, Y + 12.0, 0.0))]),
-    # waves of praise: the whole land ripples with light (high, so the rings roll out over the sea)
-    dict(name="praise_ripples", kind="local", t0=86.70, t1=90.72, fov=50.0, aperture=0.0,
-         keys=[(86.70, _v(190.0, 140.0, ZZ + 600.0), ZC + _v(0.0, 6.0, 60.0)),
-               (90.72, _v(170.0, 132.0, ZZ + 560.0), ZC + _v(0.0, 10.0, 50.0))]),
-    # first climb: Mount Zion wide across the sea, then up over the lowest terraces, the nations standing on
-    # them; sacrifice, devotion (light pours down on the people); thanks (a column of light to heaven)
-    dict(name="zion_wide", kind="local", t0=90.72, t1=117.0, fov=50.0, aperture=0.0,
-         keys=[(90.72, _v(150.0, 52.0, ZZ + 520.0), ZC + _v(0.0, 36.0, 0.0)),
-               (99.4, _v(122.0, 64.0, ZZ + 432.0), ZC + _v(0.0, 44.0, 0.0)),
-               (109.8, _v(84.0, 72.0, ZZ + 304.0), ZC + _v(-22.0, 60.0, 0.0)),
-               (117.0, _v(64.0, 78.0, ZZ + 252.0), ZC + _v(-30.0, 92.0, 0.0))]),
-    # the shockwave across the land; second climb (2:51.48): higher, over the middle terraces, the whole
-    # mountain full of people (from the right, so the low sun stays clear of the words)
-    dict(name="zion_full", kind="local", t0=165.16, t1=185.92, fov=52.0, aperture=0.0,
-         keys=[(165.16, _v(170.0, 124.0, ZZ + 540.0), ZC + _v(0.0, 24.0, 20.0)),
-               (171.48, _v(150.0, 116.0, ZZ + 470.0), ZC + _v(0.0, 30.0, 10.0)),
-               (179.2, _v(110.0, 108.0, ZZ + 320.0), ZC + _v(0.0, 50.0, 0.0)),
-               (185.92, _v(72.0, 104.0, ZZ + 200.0), ZC + _v(0.0, 70.0, 0.0))]),
+    # the crown and the gold filling (0:53.78 to 1:10.54). The low sun stands behind Zion's right shoulder
+    # (azimuth 163): every view keeps it out of the words.
+    _shot("zion_crown", 53.78, 56.7,           # glory: the crown ignites, seen from high above
+          [(53.78, ZC + _v(30.0, 560.0, 190.0), CR + _v(0.0, 0.0, -120.0)),
+           (56.7, ZC + _v(70.0, 470.0, 230.0), CR + _v(10.0, -10.0, -110.0))],
+          fov=48.0),
+    _shot("zion_crown", 56.7, 58.4,            # G lift: the crown closer, seen from above it, low in the frame
+          _orbit(56.7, 58.4, 40.0, 22.0, 240.0, 215.0, 232.0, 236.0, CR + _v(0, 46, 0), CR + _v(0, 48, 0), 3),
+          fov=46.0),
+    _shot("zion_crown", 61.3, 64.2,            # the city on the summit: skimming in as the crown comes down
+          [(61.3, ZC + _v(-70.0, 92.0, 210.0), CH + _v(0, 10, 0)), (62.8, ZC + _v(-50.0, 86.0, 160.0), CH),
+           (64.2, ZC + _v(-30.0, 82.0, 128.0), CH + _v(0, -4, 0))], fov=50.0),
+    _shot("zion_crown", 64.2, 65.94,           # step 1: rising up the face of the lowest walls as they turn gold
+          [(64.2, _at(-28.0, 345.0, 4.0), ZC + _v(0.0, 18.0, 0.0)),
+           (65.94, _at(-22.0, 330.0, 46.0), ZC + _v(0.0, 50.0, 0.0))], fov=54.0),
+    _shot("zion_crown", 65.94, 67.6,           # step 2: a fast helicopter orbit
+          _orbit(65.94, 67.6, 52.0, 22.0, 440.0, 400.0, 96.0, 88.0, ZC + _v(0, 34, 0), ZC + _v(0, 40, 0), 4),
+          fov=48.0),
+    _shot("zion_crown", 69.4, 70.54,           # step 3: pulling back fast, the whole city full of gold
+          [(69.4, ZC + _v(10.0, 104.0, 250.0), ZC + _v(0.0, 70.0, 0.0)),
+           (70.54, ZC + _v(40.0, 190.0, 560.0), ZC + _v(0.0, 40.0, 0.0))], fov=50.0),
+    # waves of praise (1:26.7 to 1:30.72)
+    _shot("praise_ripples", 86.7, 88.0,        # high: the rings roll out over the whole land
+          _orbit(86.7, 88.0, 72.0, 58.0, 760.0, 700.0, 300.0, 270.0, ZC + _v(0, 0, 60), ZC + _v(0, 0, 40), 3),
+          fov=52.0),
+    _shot("praise_ripples", 89.3, 90.72,       # skimming the water as a ring rushes under the camera
+          [(89.3, _at(32.0, 470.0, 7.0), ZC + _v(0.0, 40.0, 0.0)), (90.72, _at(26.0, 400.0, 9.0), ZC + _v(0.0, 46.0, 0.0))],
+          fov=56.0),
+    # the first climb (1:30.72 to 1:57)
+    _shot("zion_wide", 90.72, 93.0,            # standing firm: straight up the great stairway, the nations either side
+          [(90.72, ZC + _v(4.0, 6.0, 330.0), ZC + _v(0.0, 40.0, 120.0)),
+           (91.9, ZC + _v(2.0, 22.0, 290.0), ZC + _v(0.0, 56.0, 90.0)),
+           (93.0, ZC + _v(0.0, 46.0, 252.0), ZC + _v(0.0, 74.0, 40.0))], fov=56.0),
+    _shot("zion_wide", 95.4, 97.7,             # the nations on the terraces: a high orbit over the crowds
+          _orbit(95.4, 97.7, 62.0, 36.0, 430.0, 400.0, 150.0, 140.0, ZC + _v(0, 30, 40), ZC + _v(0, 34, 20), 4),
+          fov=48.0),
+    _shot("zion_wide", 99.4, 101.7,            # sacrifice: light pours from the city over the people
+          [(99.4, ZC + _v(80.0, 132.0, 250.0), ZC + _v(0.0, 52.0, 80.0)),
+           (101.7, ZC + _v(56.0, 120.0, 214.0), ZC + _v(0.0, 48.0, 90.0))], fov=50.0),
+    _shot("zion_wide", 103.6, 105.14,          # devotion: diving down the great stairway with the waterfall
+          [(103.6, ZC + _v(6.0, 86.0, 130.0), ZC + _v(0.0, 10.0, 340.0)),
+           (105.14, ZC + _v(2.0, 52.0, 236.0), ZC + _v(0.0, -10.0, 440.0))], fov=56.0),
+    _shot("zion_wide", 106.5, 108.4,           # the people lit: skimming along a terrace past the crowds
+          [(106.5, _at(46.0, 212.0, 37.0), _at(20.0, 160.0, 52.0)), (107.45, _at(34.0, 210.0, 36.0), _at(8.0, 150.0, 54.0)),
+           (108.4, _at(22.0, 208.0, 36.0), _at(-4.0, 140.0, 56.0))], fov=54.0),
+    _shot("zion_wide", 109.8, 112.1,           # thanks to Father: tilting up with the column as it rises
+          [(109.8, _at(45.0, 360.0, 60.0), CH), (112.1, _at(41.0, 330.0, 74.0), CH + _v(0.0, 190.0, 0.0))], fov=52.0),
+    _shot("zion_wide", 114.4, 117.0,           # the column to heaven over Zion, far and high
+          _orbit(114.4, 117.0, 64.0, 54.0, 520.0, 500.0, 230.0, 240.0, ZC + _v(0, 170, 0), ZC + _v(0, 190, 0), 3),
+          fov=50.0),
+    # the shockwave and the second climb (2:45.16 to 3:03)
+    _shot("zion_full", 165.16, 167.5,          # racing out across the sea with the shockwave
+          [(165.16, _at(30.0, 320.0, 16.0), ZC + _v(0.0, 40.0, 0.0)),
+           (167.5, _at(34.0, 500.0, 26.0), ZC + _v(0.0, 46.0, 0.0))], fov=56.0),
+    _shot("zion_full", 169.2, 171.48,          # far out, low on the water: the wave rushes in under the camera
+          [(169.2, _at(18.0, 930.0, 9.0), ZC + _v(0.0, 50.0, 0.0)), (171.48, _at(16.0, 860.0, 11.0), ZC + _v(0.0, 52.0, 0.0))],
+          fov=40.0),
+    _shot("zion_full", 171.48, 173.8,          # standing firm: straight up the mountain face, far higher than before
+          [(171.48, _at(24.0, 320.0, 30.0), ZC + _v(0.0, 40.0, 0.0)), (172.6, _at(24.0, 330.0, 92.0), ZC + _v(0.0, 40.0, 0.0)),
+           (173.8, _at(24.0, 345.0, 170.0), ZC + _v(0.0, 30.0, 0.0))], fov=54.0),
+    _shot("zion_full", 176.1, 178.4,           # the nations closer: skimming the upper terraces
+          [(176.1, _at(50.0, 176.0, 78.0), _at(16.0, 100.0, 70.0)), (177.25, _at(38.0, 172.0, 76.0), _at(4.0, 94.0, 72.0)),
+           (178.4, _at(26.0, 170.0, 75.0), _at(-8.0, 90.0, 74.0))], fov=54.0),
+    _shot("zion_full", 180.7, 183.0,           # sacrifice: the mountain blazing, a high helicopter orbit
+          _orbit(180.7, 183.0, 76.0, 48.0, 400.0, 380.0, 180.0, 168.0, ZC + _v(0, 36, 0), ZC + _v(0, 40, 0), 4),
+          fov=50.0),
 ]
 
 
@@ -318,7 +382,7 @@ class Crown:
 # =========================================================================================================
 # The climbs pass up the middle of the front: there the people are true figures (one crowd per climb, each on
 # only in its own shot; a glitter stands in for them in every other view). (tiers, x from, x to)
-NEAR = dict(zion_wide=(range(0, 3), -5.0, 135.0), zion_full=(range(3, 6), 0.0, 105.0))
+NEAR = dict(zion_wide=(range(0, 3), -35.0, 160.0), zion_full=(range(3, 6), 0.0, 125.0))
 
 
 def _places(tiers, density, seed, front_share=0.9):
@@ -449,7 +513,7 @@ class Pour:
         self.c = r.random((1400, 4))
 
     def sample(self, t):
-        if local_k(t) <= 0.0 or shot_name(t) != "zion_wide":
+        if local_k(t) <= 0.0 or stage_view(t) or not (99.0 <= t < 117.0):
             return None
         out = []
         k = _env(t, POUR0 - 0.2, 110.2, 0.5, 1.8)
@@ -521,7 +585,7 @@ def _pour_sheen():
 
 def pour_k(t):
     """The people shine brighter while the light pours down on them."""
-    return local_k(t) * (shot_name(t) == "zion_wide") * (1.0 - _sc(108.6, 110.6, t))
+    return local_k(t) * (not stage_view(t)) * (99.0 <= t) * (1.0 - _sc(108.6, 110.6, t))
 
 
 # =========================================================================================================
@@ -557,25 +621,66 @@ class Rings:
 
 
 def _ripple_k(k):
-    """A pulse of light running down the parapets from the summit at each ring (the land ripples)."""
+    """A pulse of light running down the parapets from the summit at each ring (the land ripples), and a ring
+    of light racing UP the terraces on every big hit of the music."""
     times = [t0 + 0.12 * (N_TIER - 1 - k) for t0, _, _ in RINGS]
     fill = [FILL_T[k] + 0.45]                      # and a flash along each parapet as its terrace fills with gold
+    up = [h + 0.065 * k for h in KICKS]
     return lambda t: local_k(t) * (not stage_view(t)) * min(hit_pulse(t, times, rise=0.05, fall=0.7)
-                                                            + 0.8 * hit_pulse(t, fill, rise=0.05, fall=0.9), 1.2)
+                                                            + 0.8 * hit_pulse(t, fill, rise=0.05, fall=0.9)
+                                                            + (0.5 + 0.5 * intensity(t))
+                                                            * hit_pulse(t, up, rise=0.03, fall=0.35), 1.2)
+
+
+def _downbeats():
+    """Each bar's downbeat in the choruses, with its colour among the nine (as the core's bursts)."""
+    out = []
+    for a, b in ((82.08, 117.0), (162.86, 201.73)):
+        x, k = a + 2.30, 0
+        while x < b - 0.3:
+            out.append((x, (k * 4) % 9))
+            x += 2.30
+            k += 1
+    return out
+
+
+DOWNBEATS = _downbeats()
+
+
+def glow_k(t):
+    """The mountain's light follows the music: brighter as it grows."""
+    return local_k(t) * (0.78 + 0.32 * intensity(t))
+
+
+def edge_k(t):
+    """The terrace edges pulse on every beat (strongly when the music is strong)."""
+    return local_k(t) * (not stage_view(t)) * intensity(t) * beat_pulse(t, 0.12)
+
+
+def crowd_k(t):
+    """The nations breathe with the music: brighter with it, a lift on every beat."""
+    return nations_k(t) * (0.75 + 0.35 * intensity(t)) * (1.0 + 0.3 * intensity(t) * beat_pulse(t, 0.12))
+
+
+def _flare_k(c):
+    ts = [x for x, i in DOWNBEATS if i == c]
+    return lambda t: nations_k(t) * (not stage_view(t)) * hit_pulse(t, ts, rise=0.03, fall=0.45)
 
 
 SHAFTS = [
     # thanks to Father (1:49.8 to 1:57): a column of light rises from the church to heaven
     dict(base=(float(CHURCH[0]), float(CHURCH[2])), radius=12.0, top=2400.0, spread=-0.2, color="#fff2d8",
-         strength=lambda t: local_k(t) * (shot_name(t) == "zion_wide") * _env(t, 109.8, 117.0, 1.6, 0.3) * 0.05),
+         strength=lambda t: local_k(t) * (not stage_view(t)) * _env(t, 109.8, 117.0, 1.6, 0.3) * 0.05),
 ]
 
 
 def add(scene):
     dim, gold = _mountain()
     scene.add("zion body", _Off(_body()), mask=Mask("dark", strength=body_k, grow=1.9, soft=4.0), reflect=False)
-    scene.add("zion dim", Static(dim, local_k))
-    scene.add("zion gold", Static(gold, local_k))
+    scene.add("zion dim", Static(dim, glow_k))
+    scene.add("zion gold", Static(gold, glow_k))
+    edges = np.concatenate([_ring(ZC, tier_r(k) + 0.1, tier_y(k) + 1.0, 1.4) for k in range(N_TIER)])
+    scene.add("zion beat", Static([_batch(edges, 0.6, lin("#ffe8c0"), 0.8, emit=1.8, reflect=False)], edge_k))
     for k in range(N_TIER):
         ring = _ring(ZC, tier_r(k) + 0.1, tier_y(k) + 0.9, 1.0)
         scene.add(f"zion ripple {k}", Static([_batch(ring, 0.9, lin("#fff0d0"), 1.0, emit=2.5, reflect=False)],
@@ -585,16 +690,25 @@ def add(scene):
     P, K, born = _nations()
     nw, nf = _near(P, K, "zion_wide"), _near(P, K, "zion_full")
     rest = ~(nw | nf)
-    scene.add("nations", Static(_glitter_people(P[rest], K[rest], born[rest], 3), nations_k))
+    scene.add("nations", Static(_glitter_people(P[rest], K[rest], born[rest], 3), crowd_k))
+    # on each downbeat of the choruses the nations' lights flare in one of the nine colours (one set a colour)
+    rf = np.random.default_rng(13)
+    pick = np.where(rf.random(len(P)) < 0.2)[0]
+    heads = P[pick] + np.array([0.0, 1.7, 0.0])
+    for c in range(9):
+        sel = pick % 9 == c
+        scene.add(f"nations flare {c}", Static([_batch(heads[sel], 0.7, lin(COL9[c]) * 0.7 + lin(WHITE) * 0.3, 0.9,
+                                                       emit=2.6, birth=born[pick][sel], twinkle=0.4, reflect=False)],
+                                               _flare_k(c)))
     arrive = np.maximum(born, pour_arrive(np.hypot(P[:, 0] - ZC[0], P[:, 2] - ZC[2])))
     scene.add("nations lit", Static(_glitter_people(P[rest], K[rest], arrive[rest], 3, 0.6), pour_k))
     rng = np.random.default_rng(9)
-    for shot, sel, seed, t_on in (("zion_wide", nw & ~nf, 4, 97.5), ("zion_full", nf, 5, 176.5)):
+    for shot, sel, seed, t_on in (("zion_wide", nw & ~nf, 4, 90.0), ("zion_full", nf, 5, 175.0)):
         on = (lambda s, a: (lambda t: float(shot_name(t) == s) * _sc(a, a + 1.5, t)))(shot, t_on)
         scene.add(f"nations mid {shot}", Static(_glitter_people(P[sel], K[sel], born[sel], seed),
-                                                (lambda f: (lambda t: nations_k(t) * (1.0 - f(t))))(on)))
+                                                (lambda f: (lambda t: crowd_k(t) * (1.0 - f(t))))(on)))
         i = np.where(sel)[0]
-        i = i[rng.random(len(i)) < 0.32]
+        i = i[rng.random(len(i)) < 0.26]
         scene.add(f"nations near {shot}", GCrowd(
             gain=(lambda f: (lambda t: nations_k(t) * f(t)))(on), places=P[i],
             facing=lambda x, z: float(np.degrees(np.arctan2(ZC[0] - x, ZC[2] - z))),

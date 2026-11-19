@@ -656,13 +656,24 @@ import songs.s11_light as S_LIGHT  # noqa: E402
 THREADS = [S_CHURCH, S_STAGE, S_ZION, S_PROC, S_CODA]
 Y, FZ, G = SUMMIT, FACADE_Z, GLOBE_C
 CORE_SHOTS = [
-    # B. the whole Earth: Father's pulse rolls out over it
-    dict(name="earth_father", kind="globe", t0=41.6, t1=53.78, fov=46.0, aperture=0.0,
-         keys=[(41.6, _gcam(175.0, 6.0), G), (53.78, _gcam(150.0, 14.0, 10.0), G + _v(0, 4, 0))]),
-    # D. the Earth again: rivers of people from every continent; the camera rises as the horizon glows
-    dict(name="earth_rivers", kind="globe", t0=70.54, t1=77.46, fov=46.0, aperture=0.0,
-         keys=[(70.54, _gcam(140.0, 10.0), G + _v(0, 6, 0)), (75.2, _gcam(132.0, 12.0), G + _v(0, 8, 0)),
-                        (77.46, _gcam(128.0, 30.0), G + _v(0, 16, 0))]),
+    # Father's pulse rolls out over the whole Earth: a fast pull-back from close over Korea to the whole globe
+    dict(name="earth_father", kind="globe", t0=41.6, t1=45.6, fov=46.0, aperture=0.0,
+         keys=[(41.6, _gcam(95.0, 10.0, -14.0), G + _v(0, 8, 0)), (45.6, _gcam(170.0, 4.0, 6.0), G)]),
+    # closer, from below, the echoes of the pulse crossing the oceans
+    dict(name="earth_father", kind="globe", t0=45.6, t1=49.8, fov=44.0, aperture=0.0,
+         keys=[(45.6, _gcam(120.0, -34.0, 30.0), G + _v(0, 6, 0)), (49.8, _gcam(112.0, -20.0, 10.0), G + _v(0, 8, 0))]),
+    # the Earth turns toward Zion: a swing over the top
+    dict(name="earth_father", kind="globe", t0=49.8, t1=53.78, fov=46.0, aperture=0.0,
+         keys=[(49.8, _gcam(130.0, 40.0, -30.0), G + _v(0, 4, 0)), (53.78, _gcam(100.0, 24.0, 4.0), G + _v(0, 10, 0))]),
+    # all nations: rivers of light from every continent, the camera racing round
+    dict(name="earth_rivers", kind="globe", t0=70.54, t1=72.84, fov=46.0, aperture=0.0,
+         keys=[(70.54, _gcam(140.0, 10.0, 40.0), G + _v(0, 6, 0)), (72.84, _gcam(118.0, 14.0, -10.0), G + _v(0, 8, 0))]),
+    # the rivers closer, skimming over the land toward Korea
+    dict(name="earth_rivers", kind="globe", t0=72.84, t1=74.56, fov=40.0, aperture=0.0,
+         keys=[(72.84, _gcam(92.0, 22.0, -20.0), G + _v(0, 14, 0)), (74.56, _gcam(84.0, 18.0, 6.0), G + _v(0, 16, 0))]),
+    # the drop: the Earth's rim glows, the camera rising over it
+    dict(name="earth_rivers", kind="globe", t0=75.2, t1=77.46, fov=46.0, aperture=0.0,
+         keys=[(75.2, _gcam(132.0, 8.0), G + _v(0, 8, 0)), (77.46, _gcam(126.0, 34.0), G + _v(0, 18, 0))]),
 ]
 
 

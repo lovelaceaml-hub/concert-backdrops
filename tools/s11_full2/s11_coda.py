@@ -25,29 +25,90 @@ for _d, _ks in ((_B.TITLE, ("form", "hold", "star")), (_B.TAGLINE, ("t0", "t1"))
 
 SKY_C = SKY_STAGE + _v(0.0, 1.0, -5.0)       # the middle of the sky orchestra
 
+def _orb(c, r, az, h):
+    """A camera place on a circle round c: radius r, azimuth az (degrees, from +z toward +x), height h above c."""
+    a = np.radians(az)
+    return c + _v(r * np.sin(a), h, r * np.cos(a))
+
+
+SHOULDER = ZC + _v(95.0, 46.0, -110.0)     # Zion's right shoulder as seen from the sea, where the sun comes
+H_SUN = _v(2600.0 * np.sin(np.radians(163.0)), 30.0, ZC[2] + 2600.0 * np.cos(np.radians(163.0)))
+
+# One shot per edit block the coda owns (blocks_of("coda")): exact block times; the core paces each move with
+# the music (fast on hits and loud bars), shakes on slams and punches the lens on hits.
 SHOTS = [
-    # thanks to Mother: hearts rise; the last build: light gathers at the horizon behind Zion
-    dict(name="hearts_rise", kind="local", t0=188.27, t1=201.73, fov=52.0, aperture=0.0,
-         keys=[(188.27, _v(34.0, 74.0, -120.0), ZC + _v(0.0, Y + 6.0, 0.0)),
-                          (201.73, _v(14.0, 58.0, -36.0), ZC + _v(0.0, Y + 12.0, -60.0))]),
-    # the coda: the sun rises over Mount Zion (the camera cranes up as it comes)
-    dict(name="sunrise", kind="local", t0=201.73, t1=205.98, fov=54.0, aperture=0.0,
-         keys=[(201.73, _v(0.0, 14.0, 110.0), ZC + _v(0.0, Y + 6.0, -40.0)),
-                          (205.98, _v(0.0, 30.0, 86.0), ZC + _v(0.0, Y + 12.0, -40.0))]),
-    # the orchestra on clouds of light round the rising sun (the sun at the right edge, clear of the words)
-    dict(name="sky_stage", kind="sky", t0=205.98, t1=211.6, fov=50.0, aperture=0.0,
-         keys=[(205.98, SKY_C + _v(6.0, 2.8, 15.0), SKY_C + _v(0.0, 1.1, -1.5)),
-                         (211.6, SKY_C + _v(4.0, 2.4, 12.0), SKY_C + _v(0.0, 1.4, -1.5))]),
-    # third climb: the summit, everyone, the church of light, the sun (at the right edge)
-    dict(name="summit", kind="local", t0=211.6, t1=224.03, fov=54.0, aperture=0.0,
-         keys=[(211.6, _v(8.0, Y + 9.0, FZ + 100.0), _v(0.0, Y + 18.0, FZ - 13.0)),
-                         (224.03, _v(5.0, Y + 7.0, FZ + 90.0), _v(0.0, Y + 21.0, FZ - 13.0))]),
-    # the world finale
-    dict(name="earth_finale", kind="globe", t0=224.03, t1=238.8, fov=48.0, aperture=0.0,
-         keys=[(224.03, _gcam(150.0, 30.0), G + _v(0, 10, 0)), (226.6, _gcam(146.0, 27.0), G + _v(0, 16, 0)),
-                (228.6, _gcam(142.0, 24.0), G + _v(0, 50, 0)), (238.8, _gcam(156.0, 12.0), G + _v(0, 48, 0))]),
-    # the last chord: out to the whole Earth glowing, the end card
-    dict(name="earth_end", kind="globe", t0=254.07, t1=TOTAL + 1.0, fov=46.0, aperture=0.0,
+    # 3:08.27 thanks to Mother: rising with the hearts off the sea up the front of the mountain
+    dict(name="hearts_rise", kind="local", t0=188.27, t1=190.6, fov=50.0, aperture=0.0,
+         keys=[(188.27, _v(70.0, 10.0, -95.0), ZC + _v(0.0, 30.0, 0.0)),
+               (189.4, _v(58.0, 34.0, -110.0), ZC + _v(0.0, 48.0, 0.0)),
+               (190.6, _v(40.0, 66.0, -128.0), ZC + _v(0.0, 70.0, 0.0))]),
+    # hearts rising over Zion: high above, they rise toward the lens over the terraces of colour
+    dict(name="hearts_rise", kind="local", t0=192.9, t1=195.2, fov=54.0, aperture=0.0,
+         keys=[(192.9, _v(-120.0, 150.0, -150.0), ZC + _v(0.0, 50.0, 110.0)),
+               (195.2, _v(-40.0, 185.0, -190.0), ZC + _v(10.0, 45.0, 120.0))]),
+    # the last build: racing low over the sea past Zion toward the horizon where the light gathers
+    dict(name="hearts_rise", kind="local", t0=197.2, t1=198.5, fov=56.0, aperture=0.0,
+         keys=[(197.2, _v(330.0, 5.0, -150.0), H_SUN), (198.5, _v(320.0, 7.0, -420.0), H_SUN)]),
+    # the horizon brightens: Zion dark against the glow, from out on the sea, pushing in
+    dict(name="hearts_rise", kind="local", t0=198.5, t1=199.62, fov=46.0, aperture=0.0,
+         keys=[(198.5, _v(-90.0, 30.0, 330.0), ZC + _v(40.0, 50.0, -200.0)),
+               (199.62, _v(-70.0, 34.0, 250.0), ZC + _v(40.0, 52.0, -200.0))]),
+    # the last moment before the sun: a rush up toward Zion's right shoulder
+    dict(name="hearts_rise", kind="local", t0=200.7, t1=201.73, fov=50.0, aperture=0.0,
+         keys=[(200.7, _v(150.0, 20.0, 120.0), SHOULDER), (201.73, _v(130.0, 44.0, 30.0), SHOULDER + _v(0, 8, 0))]),
+    # SLAM 3: the sun bursts over Zion's shoulder: low on the sea, craning up and in
+    dict(name="sunrise", kind="local", t0=201.73, t1=203.9, fov=54.0, aperture=0.0,
+         keys=[(201.73, _v(-30.0, 8.0, 150.0), ZC + _v(10.0, Y + 2.0, -40.0)),
+               (203.9, _v(-12.0, 34.0, 84.0), ZC + _v(10.0, Y + 14.0, -40.0))]),
+    # the orchestra on clouds of light: a swooping orbit round the players, the sun swinging in behind them
+    dict(name="sky_stage", kind="sky", t0=205.98, t1=208.1, fov=50.0, aperture=0.0, blend=0.35,
+         keys=[(205.98, _orb(SKY_C, 22.0, 62.0, 9.0), SKY_C + _v(0.0, 0.8, 0.0)),
+               (207.0, _orb(SKY_C, 17.0, 38.0, 4.5), SKY_C + _v(0.0, 1.0, -1.0)),
+               (208.1, _orb(SKY_C, 14.0, 14.0, 2.6), SKY_C + _v(0.0, 1.3, -1.5))]),
+    # the clouds round the sun: rising up out of the cloud sea beside the players (the sun at the right edge)
+    dict(name="sky_stage", kind="sky", t0=208.1, t1=210.3, fov=52.0, aperture=0.0,
+         keys=[(208.1, _orb(SKY_C, 30.0, 26.0, -3.0), SKY_C + _v(-4.0, 3.0, -10.0)),
+               (210.3, _orb(SKY_C, 24.0, 20.0, 6.0), SKY_C + _v(-3.0, 2.0, -10.0))]),
+    # the third climb: flying in over everyone on the avenue toward the church (the sun at the right edge)
+    dict(name="summit", kind="local", t0=211.6, t1=213.8, fov=54.0, aperture=0.0,
+         keys=[(211.6, _v(14.0, 168.0, FZ + 270.0), _v(0.0, 92.0, FZ - 13.0)),
+               (213.8, _v(6.0, 140.0, FZ + 196.0), _v(0.0, 96.0, FZ - 13.0))]),
+    # the summit crowd, arms raised: low among them, tracking across the avenue
+    dict(name="summit", kind="local", t0=215.9, t1=218.1, fov=50.0, aperture=0.0,
+         keys=[(215.9, _v(-14.0, Y + 10.0, FZ + 98.0), _v(0.0, Y + 2.0, FZ + 42.0)),
+               (218.1, _v(10.0, Y + 7.5, FZ + 88.0), _v(0.0, Y + 3.5, FZ + 36.0))]),
+    # the summit and the sun: a crane up from the wing of the square over the crowd
+    dict(name="summit", kind="local", t0=220.2, t1=222.0, fov=54.0, aperture=0.0,
+         keys=[(220.2, _v(160.0, 125.0, FZ + 130.0), _v(0.0, 88.0, FZ - 13.0)),
+               (221.1, _v(110.0, 132.0, FZ + 200.0), _v(0.0, 90.0, FZ - 13.0)),
+               (222.0, _v(40.0, 138.0, FZ + 235.0), _v(0.0, 92.0, FZ - 13.0))]),
+    # devotion: the world finale: a fast pull back from Zion (Korea) to the whole Earth
+    dict(name="earth_finale", kind="globe", t0=224.03, t1=226.3, fov=48.0, aperture=0.0,
+         keys=[(224.03, G + _v(6.0, 34.0, -74.0), G + _v(0.0, 40.0, 0.0)),
+               (226.3, G + _v(0.0, 24.0, -150.0), G + _v(0.0, 32.0, 0.0))]),
+    # light from every land flows to Zion: a spiral round the Earth
+    dict(name="earth_finale", kind="globe", t0=226.3, t1=228.6, fov=48.0, aperture=0.0,
+         keys=[(226.3, G + _v(-80.0, 6.0, -112.0), G + _v(0.0, 30.0, 0.0)),
+               (227.45, G + _v(-22.0, 16.0, -138.0), G + _v(0.0, 40.0, 0.0)),
+               (228.6, G + _v(34.0, 22.0, -134.0), G + _v(0.0, 48.0, 0.0))]),
+    # the glory line over the Earth: the Earth low, the words over space, a slow rise
+    dict(name="earth_finale", kind="globe", t0=228.6, t1=231.0, fov=48.0, aperture=0.0,
+         keys=[(228.6, G + _v(12.0, 18.0, -152.0), G + _v(0.0, 50.0, 0.0)),
+               (231.0, G + _v(-4.0, 28.0, -142.0), G + _v(0.0, 55.0, 0.0))]),
+    # hearts across the continents: from low beside the Earth, it fills the lower frame
+    dict(name="earth_finale", kind="globe", t0=231.0, t1=233.3, fov=48.0, aperture=0.0,
+         keys=[(231.0, G + _v(-44.0, 2.0, -118.0), G + _v(-6.0, 50.0, 0.0)),
+               (233.3, G + _v(-60.0, 10.0, -100.0), G + _v(-8.0, 54.0, 0.0))]),
+    # the Earth's edge brightens: skimming close over the top of the Earth toward its edge
+    dict(name="earth_finale", kind="globe", t0=233.3, t1=235.6, fov=50.0, aperture=0.0,
+         keys=[(233.3, G + _v(0.0, 30.0, -74.0), G + _v(0.0, 62.0, 60.0)),
+               (235.6, G + _v(0.0, 38.0, -64.0), G + _v(0.0, 64.0, 60.0))]),
+    # the peak: the sunrise over the Earth's edge, the camera rising and drawing back
+    dict(name="earth_finale", kind="globe", t0=235.6, t1=238.8, fov=50.0, aperture=0.0,
+         keys=[(235.6, G + _v(-18.0, 16.0, -70.0), G + _v(0.0, 56.0, 80.0)),
+               (238.8, G + _v(-8.0, 30.0, -110.0), G + _v(0.0, 58.0, 40.0))]),
+    # the last chord: the slow pull-out to the whole Earth glowing under the end card (calm)
+    dict(name="earth_end", kind="globe", t0=254.07, t1=TOTAL + 1.0, fov=46.0, aperture=0.0, pace="linear",
          keys=[(254.07, _gcam(150.0, 6.0), G), (TOTAL + 1.0, _gcam(185.0, 8.0), G)]),
 ]
 
@@ -63,7 +124,7 @@ class RisingHearts:
         a = np.radians(r.uniform(-75.0, 75.0, n))
         rr = np.asarray([tier_r(i) - 3.0 - 20.0 * r.random() for i in k])
         self.p0 = np.stack([ZC[0] + rr * np.sin(a), np.asarray([tier_y(i) for i in k]) + 2.0, ZC[2] + rr * np.cos(a)], 1)
-        self.t0 = 189.5 + 7.0 * r.random(n)
+        self.t0 = 188.3 + 7.6 * r.random(n) ** 1.4
         self.sz = 2.2 + 2.6 * r.random(n)
         self.v = 5.0 + 4.0 * r.random(n)
         self.col = np.asarray([lin(COL9[i % 9]) for i in range(n)])
@@ -83,13 +144,18 @@ class RisingHearts:
         c = self.p0[on] + up[None, :] * 0.0 + _v(0.0, 1.0, 0.0) * (self.v[on] * u)[:, None]
         c = c + rgt[None, :] * (1.5 * np.sin(0.9 * u + self.ph[on]))[:, None]
         a = _ss(0.0, 0.5, u) * (1.0 - _ss(5.0, 9.0, u)) * (1.0 - _sc(200.5, 201.7, t))
-        sz = self.sz[on]
+        # the music: the hearts beat with the pulse, flare on the hits, burn brighter as the music grows
+        kick = hit_pulse(t, KICKS, rise=0.02, fall=0.4)
+        beat = beat_pulse(t)
+        glow = 0.75 + 0.5 * intensity(t) + 0.9 * kick
+        sz = self.sz[on] * (1.0 + 0.16 * beat + 0.25 * kick)
         hx, hy = self.h[:, 0], self.h[:, 1]
         P = (c[:, None, :] + sz[:, None, None] * (hx[None, :, None] * rgt[None, None, :] + hy[None, :, None] * up[None, None, :]))
         m = len(self.h)
         return [dict(pos=P.reshape(-1, 3), size=np.repeat(0.09 * sz, m), color=np.repeat(self.col[on], m, axis=0),
-                     alpha=np.repeat(a, m), emit=3.0, kind="spark"),
-                dict(pos=c, size=2.2 * sz, color=self.col[on], alpha=0.18 * a, emit=1.6, kind="soft")]
+                     alpha=np.repeat(a, m), emit=3.0 * glow, kind="spark"),
+                dict(pos=c, size=2.2 * sz, color=self.col[on], alpha=(0.14 + 0.12 * beat + 0.2 * kick) * a,
+                     emit=1.6 * glow, kind="soft")]
 
 
 class Horizon:
@@ -106,7 +172,7 @@ class Horizon:
     def sample(self, t):
         if local_k(t) <= 0.0 or not (195.0 <= t < 206.0) or stage_view(t):
             return None
-        k = _sc(196.5, 201.6, t) * (1.0 - 0.6 * _sc(202.0, 206.0, t))
+        k = _sc(196.5, 201.6, t) * (1.0 - 0.6 * _sc(202.0, 206.0, t)) * (0.85 + 0.3 * beat_pulse(t))
         return [dict(pos=self.P, size=7.0, color=lin("#ffd29a"), alpha=0.35 * k, emit=2.0, kind="soft", dof=0.0),
                 dict(pos=self.P[::3], size=2.2, color=lin("#fff0d0"), alpha=0.7 * k, emit=3.0, kind="spark",
                      twinkle=0.6, seed=self.s[::3], dof=0.0)]
@@ -182,6 +248,19 @@ class Clouds:
                      reflect=False),
                 dict(pos=self.B, size=self.bs, color=self.bc, alpha=0.06, emit=1.2, kind="soft", dof=0.0,
                      reflect=False)]
+
+
+def _music_gain(t):
+    """Brightness of the people of light with the music: the beat, the hits, the swell."""
+    return 0.8 + 0.3 * intensity(t) + 0.18 * beat_pulse(t) + 0.45 * hit_pulse(t, KICKS, rise=0.02, fall=0.4)
+
+
+def sky_gain(t):
+    return sky_k(t) * _music_gain(t)
+
+
+def summit_gain(t):
+    return summit_k(t) * _music_gain(t)
 
 
 def summit_k(t):
@@ -284,7 +363,7 @@ def _patch_globe_hearts():
 
     def front_at(t):
         if 224.03 <= t < 254.0:
-            return ZION_LL[1] - 25.0 + 1.2 * (t - 231.0)
+            return ZION_LL[1] - 4.0 - 2.6 * (t - 224.03)     # Korea at the front, then turning away right
         return front(t)
     GLOBE._front_at = front_at
 
@@ -298,14 +377,14 @@ def add(scene):
     scene.add("horizon", Horizon())
     # the orchestra on clouds of light round the rising sun
     scene.add("clouds", Clouds())
-    scene.add("sky orchestra", GCrowd(gain=sky_k, places=ORCH_P + SKY_OFF, facing=0.0, kinds=("sit",),
+    scene.add("sky orchestra", GCrowd(gain=sky_gain, places=ORCH_P + SKY_OFF, facing=0.0, kinds=("sit",),
                                       people=dict(woman=1.0, man=1.0), start=0.0, color=CRYSTAL, color2="#ffffff",
                                       bright=2.3, size=1.7, points=1600, glints=0.012, seed=4.0))
     scene.add("sky instruments", Instruments(offset=SKY_OFF, gain=sky_k))
     # everyone on the summit, from the coda's sunrise to the last chord
-    scene.add("summit", GCrowd(gain=summit_k, places=_summit_places(), facing=180.0,
+    scene.add("summit", GCrowd(gain=summit_gain, places=_summit_places(), facing=180.0,
                                kinds=(("raise", 3.0), ("stand", 1.0), ("cheer", 1.5)),
                                people=dict(woman=1.0, man=1.0, child=0.2),
                                start=dict(t=201.0, center=(0.0, FACADE_Z), speed=40.0), color="#ffc870",
-                               color2="#fff2d8", bright=1.6, size=2.6, points=500, glints=0.012, seed=41.0))
+                               color2="#fff2d8", bright=1.9, size=2.8, points=500, glints=0.012, seed=41.0))
     scene.add("gather", Gather())

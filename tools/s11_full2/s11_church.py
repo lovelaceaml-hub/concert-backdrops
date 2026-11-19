@@ -17,25 +17,90 @@ import songs.s11_full2 as H
 
 Y, FZ, G = SUMMIT, FACADE_Z, GLOBE_C
 
+# The music-video edit: one shot per block the church owns (the core's EDIT; times taken from it so they
+# always match). Each block a different, striking angle; the core paces every move with the music (fast on
+# hits and loud passages), shakes it on the slams and punches the lens on the hits. While a phrase is on
+# screen the church sits low in the frame so the words ride over calm sky.
+_B = blocks_of("church")
+
+
+def _shot(i, name, keys, fov=50.0, aperture=0.02, **kw):
+    """Block i's shot; keys [(fraction of the block 0..1, camera, target)]."""
+    if i >= len(_B):
+        return None
+    t0, t1, _note = _B[i]
+    return dict(name=name, kind="local", t0=t0, t1=t1, fov=fov, aperture=aperture,
+                keys=[(t0 + f * (t1 - t0), _v(*p), _v(*q)) for f, p, q in keys], **kw)
+
+
+_STEPS_FOCUS = _v(0.0, Y + 2.2, FZ + 3.0)
 SHOTS = [
-    # A. the waiting city. 0 to 11.9: wide and low over the city's edge, the title on the calm sky above the
-    # church (its roof stays under the title's last line); 11.9: the paths of light reach out and the camera
-    # glides down the great avenue; 21.5: close on the steps as the choir forms out of the light; 40.54
-    # (Father's bell): the camera lifts toward the sky before the cut to the Earth at 41.6.
-    dict(name="city", kind="local", t0=0.0, t1=41.6, fov=50.0, aperture=0.04, focus=_v(0.0, Y + 2.2, FZ + 3.0),
-         keys=[(0.0, _v(0.0, Y + 40.0, FZ + 270.0), _v(0.0, Y + 116.0, FZ - 13.0)),
-                     (10.4, _v(0.0, Y + 37.0, FZ + 250.0), _v(0.0, Y + 111.0, FZ - 13.0)),
-                     (11.9, _v(0.0, Y + 35.5, FZ + 244.0), _v(0.0, Y + 100.0, FZ - 13.0)),
-                     (14.0, _v(0.0, Y + 30.0, FZ + 220.0), _v(0.0, Y + 78.0, FZ - 13.0)),
-                     (17.0, _v(0.0, Y + 18.0, FZ + 154.0), _v(0.0, Y + 36.0, FZ - 13.0)),
-                     (20.0, _v(0.0, Y + 9.0, FZ + 88.0), _v(0.0, Y + 28.0, FZ)),
-                     (22.5, _v(0.0, Y + 5.5, FZ + 56.0), _v(0.0, Y + 24.0, FZ)),
-                     (26.0, _v(-1.2, Y + 4.2, FZ + 42.0), _v(-0.3, Y + 11.0, FZ)),
-                     (31.1, _v(-3.0, Y + 3.3, FZ + 30.0), _v(-0.6, Y + 5.6, FZ)),
-                     (38.8, _v(-1.2, Y + 3.0, FZ + 23.0), _v(0.0, Y + 5.4, FZ)),
-                     (40.54, _v(0.0, Y + 3.4, FZ + 22.0), _v(0.0, Y + 8.0, FZ)),
-                     (41.6, _v(0.0, Y + 28.0, FZ + 56.0), _v(0.0, Y + 110.0, FZ - 40.0))]),
+    # 0:00 the title over the waiting city: wide and far, the roof under the title's last line (quiet: a drift)
+    _shot(0, "city", [(0.0, (0.0, Y + 40.0, FZ + 270.0), (0.0, Y + 116.0, FZ - 13.0)),
+                      (0.87, (0.0, Y + 37.0, FZ + 250.0), (0.0, Y + 111.0, FZ - 13.0)),
+                      (1.0, (0.0, Y + 36.0, FZ + 246.0), (0.0, Y + 104.0, FZ - 13.0))], pace="linear"),
+    # 0:11.9 the paths reach out: low over the plateau's edge, sweeping in from the left toward the city
+    _shot(1, "city", [(0.0, (-75.0, Y + 14.0, FZ + 160.0), (0.0, Y + 30.0, FZ - 13.0)),
+                      (1.0, (-30.0, Y + 9.0, FZ + 118.0), (0.0, Y + 28.0, FZ - 13.0))], fov=56.0),
+    # 0:16.7 down the great avenue: skimming low between the lamps, looking up at the church
+    _shot(2, "city", [(0.0, (0.0, Y + 2.2, FZ + 140.0), (0.0, Y + 30.0, FZ - 13.0)),
+                      (1.0, (0.0, Y + 3.2, FZ + 72.0), (0.0, Y + 34.0, FZ - 13.0))], fov=54.0),
+    # 0:21.52 call 1: low from the right of the steps as the choir forms out of the light, the glass above
+    _shot(3, "city", [(0.0, (16.0, Y + 1.4, FZ + 32.0), (-1.0, Y + 9.0, FZ)),
+                      (1.0, (7.0, Y + 2.4, FZ + 24.0), (-1.0, Y + 11.0, FZ))], fov=52.0, aperture=0.04,
+          focus=_STEPS_FOCUS),
+    # 0:31.11 call 2: from the choir a crane rises past the white floor bands toward the name
+    _shot(4, "city", [(0.0, (-4.0, Y + 3.0, FZ + 28.0), (-1.0, Y + 6.0, FZ)),
+                      (1.0, (2.0, Y + 34.0, FZ + 40.0), (6.0, Y + 46.0, FZ))], fov=48.0),
+    # 0:38.24 the brightest moment: a low hero angle up the curved glass from its left end, rising with it
+    _shot(5, "church_cut", [(0.0, (-21.0, Y + 1.6, FZ + 9.0), (10.0, Y + 42.0, FZ - 4.0)),
+                            (1.0, (-16.0, Y + 22.0, FZ + 12.0), (8.0, Y + 82.0, FZ - 10.0))], fov=58.0),
+    # 0:40.54 Father's bell-like pulse: straight down over the roof canopy, pulling away fast
+    _shot(6, "church_cut", [(0.0, (4.0, Y + 78.0, FZ + 6.0), (2.0, Y + 56.0, FZ - 13.0)),
+                            (1.0, (4.0, Y + 125.0, FZ + 22.0), (2.0, Y + 56.0, FZ - 13.0))], fov=56.0,
+          pace="linear"),
+    # 0:58.4 the church under the crown (the words between them): far, low, an arc from the right
+    _shot(7, "church_cut", [(0.0, (42.0, Y + 8.0, FZ + 112.0), (0.0, Y + 86.0, FZ - 13.0)),
+                            (1.0, (22.0, Y + 10.0, FZ + 102.0), (0.0, Y + 86.0, FZ - 13.0))], fov=54.0),
+    # 1:14.56 streaming: the church shines out (a whip into a wide from the left)
+    _shot(8, "church_cut", [(0.0, (-60.0, Y + 4.0, FZ + 124.0), (0.0, Y + 66.0, FZ - 13.0)),
+                            (1.0, (-48.0, Y + 6.0, FZ + 114.0), (0.0, Y + 66.0, FZ - 13.0))], fov=52.0,
+          blend=0.35),
+    # 1:20.94 gathering light before the slam: a push in on the name (low in the frame, under the words)
+    _shot(9, "church_cut", [(0.0, (8.0, Y + 44.0, FZ + 64.0), (8.0, Y + 60.0, FZ - 5.0)),
+                            (1.0, (8.0, Y + 50.0, FZ + 42.0), (8.0, Y + 61.0, FZ - 5.0))], fov=46.0),
+    # 1:37.7 the church above the nations: a sweeping arc low over the terrace below the summit
+    _shot(10, "church_cut", [(0.0, (-46.0, Y - 6.0, FZ + 108.0), (0.0, Y + 34.0, FZ - 10.0)),
+                             (1.0, (34.0, Y - 3.0, FZ + 110.0), (0.0, Y + 34.0, FZ - 10.0))], fov=56.0),
+    # 1:48.4 the church glowing: top down over the roof canopy, drifting across it
+    _shot(11, "church_cut", [(0.0, (-24.0, Y + 96.0, FZ + 24.0), (-2.0, Y + 56.0, FZ - 12.0)),
+                             (1.0, (14.0, Y + 102.0, FZ + 16.0), (2.0, Y + 56.0, FZ - 12.0))], fov=54.0),
+    # 1:52.1 the column of light from the church: a fast crane up the glass toward the column above
+    _shot(12, "church_cut", [(0.0, (-7.0, Y + 4.0, FZ + 13.0), (0.0, Y + 60.0, FZ - 10.0)),
+                             (1.0, (-7.0, Y + 52.0, FZ + 16.0), (0.0, Y + 140.0, FZ - 10.0))], fov=60.0),
+    # 2:19.2 the church waiting for them: through the city's towers on the left (the words over the sky)
+    _shot(13, "church_cut", [(0.0, (-66.0, Y + 12.0, FZ + 46.0), (6.0, Y + 74.0, FZ - 13.0)),
+                             (1.0, (-54.0, Y + 15.0, FZ + 26.0), (6.0, Y + 76.0, FZ - 13.0))], fov=52.0),
+    # 2:58.4 the church over the crowds: high and wide, an arc from the right (the words over the sky)
+    _shot(14, "church_cut", [(0.0, (64.0, Y + 30.0, FZ + 104.0), (0.0, Y + 66.0, FZ - 13.0)),
+                             (1.0, (22.0, Y + 36.0, FZ + 122.0), (0.0, Y + 66.0, FZ - 13.0))], fov=54.0),
+    # 3:15.2 the gathering glow: low hero angle from the left, the light rising behind the church
+    _shot(15, "church_cut", [(0.0, (-32.0, Y + 1.5, FZ + 62.0), (8.0, Y + 40.0, FZ - 60.0)),
+                             (1.0, (-18.0, Y + 2.2, FZ + 50.0), (8.0, Y + 44.0, FZ - 60.0))], fov=56.0),
+    # 3:33.8 the church in the sunrise: a sweeping arc round the front from the right
+    _shot(16, "church_cut", [(0.0, (48.0, Y + 8.0, FZ + 52.0), (0.0, Y + 46.0, FZ - 8.0)),
+                             (1.0, (18.0, Y + 14.0, FZ + 70.0), (0.0, Y + 48.0, FZ - 8.0))], fov=56.0),
+    # 3:42 the church blazing: a fast low push in from the avenue (the words over the sky above it)
+    _shot(17, "church_cut", [(0.0, (10.0, Y + 3.0, FZ + 118.0), (0.0, Y + 70.0, FZ - 13.0)),
+                             (1.0, (3.0, Y + 5.0, FZ + 76.0), (0.0, Y + 76.0, FZ - 13.0))], fov=54.0),
+    # 4:02.5 the church at peace: a slow drift toward the name, low in the frame under the words
+    _shot(18, "church_cut", [(0.0, (8.0, Y + 46.0, FZ + 84.0), (8.0, Y + 68.0, FZ - 10.0)),
+                             (1.0, (8.0, Y + 48.0, FZ + 74.0), (8.0, Y + 68.0, FZ - 10.0))], fov=46.0),
+    # 4:11.7 the last swell: a great crane from the steps up over the roof, tilting down onto the canopy
+    _shot(19, "church_cut", [(0.0, (0.0, Y + 6.0, FZ + 58.0), (0.0, Y + 36.0, FZ - 20.0)),
+                             (1.0, (0.0, Y + 74.0, FZ + 62.0), (0.0, Y + 54.0, FZ - 30.0))], fov=56.0),
 ]
+SHOTS = [sh for sh in SHOTS if sh is not None]
 
 
 # =========================================================================================================
@@ -326,6 +391,7 @@ def _church():
     zs = FACADE_Z - CH_SAG                      # where the sides meet the front
     zb = zs - CH_DEPTH                          # the back face
     glass, teal, pglass, warm = _Ribbons(), _Ribbons(), _Ribbons(), _Ribbons()
+    glory = _Ribbons()                          # the same glass in crystal and gold, for the choruses
     bands, stoneR, plinth = _Ribbons(), _Ribbons(), _Ribbons()
     base, low = _Ribbons(), _Lines()          # the lowest band and the podium's top edge: behind the singers
     mull, white, fine, stone, side, tower = _Lines(), _Lines(), _Lines(), _Lines(), _Lines(), _Lines()
@@ -348,6 +414,9 @@ def _church():
         if nx0 - 1.0 < x < NAME_RIGHT + 1.0:
             col = col * (1.0 - 0.32 * np.asarray(_ss(y0 + 12.9 * FH, y0 + 13.2 * FH, ys), np.float64)[:, None])
         glass.add(P, 2.1, col, 0.62, u=x * 0.85 + (ys - y0) * 0.55)
+        h = ((ys - y0) / CH_HT)[:, None]
+        glory.add(P, 2.1, (lin("#ffb24a") * (1.0 - h) + lin("#fff4e2") * h) * pane[:, None], 0.30,
+                  u=x * 0.85 + (ys - y0) * 0.55)
         if not under:
             ys = np.linspace(y0 + 0.1, bt, 6)
             P = np.stack([np.full(len(ys), x), ys, np.full(len(ys), z)], 1)
@@ -537,10 +606,11 @@ def _church():
     soft = [b for b in soft if b is not None]
     crisp = [b for b in crisp if b is not None]
     stepb = [steps.batch(0.10, lin("#eef2fa"), 0.6, 1.3), low.batch(0.22, WH, 1.0, 2.0), base.batch(2.4)]
-    for b in soft + crisp + stepb:
+    gloryb = [glory.batch(1.0, pulse=(6.0, 6.0, 0.8, 90.0))]
+    for b in soft + crisp + stepb + gloryb:
         b["fog"] = 0.35                         # keep its blue and white clear from far away
         b["reflect"] = False                    # no stray copy of it in the sea below the mountain
-    return soft, crisp, stepb
+    return soft, crisp, stepb, gloryb
 
 
 def church_glow(t):
@@ -548,7 +618,7 @@ def church_glow(t):
     awake as the paths reach out (0:11.9), shining out on "to the great Church of God!" (1:14.56)."""
     return (0.5 + 0.25 * _sc(10.4, 13.0, t) + 0.1 * _sc(16.0, 21.5, t)
             + 0.8 * hit_pulse(t, [HIT["stream"]], fall=2.5) + 0.25 * hit_pulse(t, [HIT["father"]], fall=1.2)
-            + 0.4 * _sc(70.0, 75.0, t) + 0.12 * beat_pulse(t))
+            + 0.15 * _sc(70.0, 75.0, t) + 0.10 * beat_pulse(t))
 
 
 class Church:
@@ -562,7 +632,7 @@ class Church:
         if Church._parts is None:
             Church._parts = _church()
         self.part = part
-        self.b = Church._parts[{"soft": 0, "crisp": 1, "steps": 2}[part]]
+        self.b = Church._parts[{"soft": 0, "crisp": 1, "steps": 2, "glory": 3}[part]]
 
     def sample(self, t):
         return self.b
@@ -570,8 +640,54 @@ class Church:
     def gain(self, t):
         k = city_k(t) * church_glow(t)
         if stage_view(t):
-            k *= {"soft": 0.75, "crisp": 0.4, "steps": 0.12}[self.part]
+            k *= {"soft": 0.75, "crisp": 0.4, "steps": 0.12, "glory": 0.5}[self.part]
+        if shot_name(t) == "church_cut":       # the church's own cut-ins: full frame of it, so less light
+            k *= 0.5
+        i = intensity(t)
+        if self.part == "soft":                 # deeper blue in the quiet, brighter as the music grows
+            k *= 0.5 + 0.3 * i
+        elif self.part == "glory":              # crystal and gold in the choruses
+            k *= 0.9 * max(i - 0.5, 0.0)
+        else:                                   # the white bands and the name pulse on the beat
+            k *= 1.0 + 0.35 * beat_pulse(t) * (0.3 + 0.7 * i)
         return k
+
+
+class BandWave:
+    """On every hit a wave of light runs up the white floor bands, bottom to top (one band after another)."""
+
+    def __init__(self):
+        self.ys = np.array([CH_Y0 + k * FH for k in range(NF + 1)])
+        self.P = [_arc_pts(y, 0.5, out=0.16) for y in self.ys]
+        self.kicks = np.asarray(KICKS, np.float64)
+
+    def sample(self, t):
+        if local_k(t) <= 0.0:
+            return None
+        i = int(np.searchsorted(self.kicks, t, side="right")) - 1
+        if i < 0:
+            return None
+        u = t - self.kicks[i]
+        if u > 1.8:
+            return None
+        front = CH_Y0 - 6.0 + 48.0 * u                    # the wave climbs about 48 m a second
+        fade = 1.0 - _sc(0.9, 1.8, u)
+        rib = _Ribbons()
+        for y, P in zip(self.ys, self.P):
+            a = float(np.exp(-((y - front) / 4.5) ** 2)) * fade
+            if a > 0.02:
+                rib.add(P, 0.75, lin("#fff2d6"), a)
+        b = rib.batch(3.0)
+        if b is None:
+            return None
+        b.update(fog=0.35, reflect=False)
+        return b
+
+    def gain(self, t):
+        k = city_k(t) * church_glow(t) * (0.5 + 0.7 * intensity(t))
+        if shot_name(t) == "church_cut":
+            k *= 0.6
+        return k * (0.35 if stage_view(t) else 1.0)
 
 
 class _Body:
@@ -634,5 +750,7 @@ def add(scene):
     scene.add("church", Church("soft"))
     scene.add("church lines", Church("crisp"))
     scene.add("church steps", Church("steps"))
+    scene.add("church glory", Church("glory"))
+    scene.add("church wave", BandWave(), reflect=False)
     scene.add("church body", _Body(), mask=Mask("dark", strength=body_k, grow=0.6, soft=2.5), reflect=False)
     scene.add("paths", Static(_paths(), lambda t: local_k(t) * (1.0 - 0.75 * _sc(40.0, 42.0, t))))

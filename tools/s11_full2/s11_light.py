@@ -88,6 +88,10 @@ def _look_keys():
         t0 = s["t0"]
         if s["name"] in CODA_LOOKS:
             name = CODA_LOOKS[s["name"]]
+        elif t0 >= CODA0 and s["kind"] != "globe":
+            # the choir and church cut-ins inside the coda take the coda's light around them
+            name = ("coda_dawn" if t0 < 201.73 else "coda_rise" if t0 < 205.98 else "coda_sky" if t0 < 211.6
+                    else "coda_summit" if t0 < 238.8 else "coda_home")
         elif s["kind"] == "globe":
             name = "pastel_card" if t0 >= 254.0 else "space"
         elif s["kind"] == "stage" and 160.0 <= t0 < CODA0:
