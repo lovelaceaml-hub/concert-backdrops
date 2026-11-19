@@ -1286,6 +1286,12 @@ class FlagBearers:
                 dist = float(np.linalg.norm(top - np.asarray(cam.pos)))
                 near = 1.0 - read * (1.0 - float(np.clip((dist - 7.0) / 6.0, 0.0, 1.0)))
             calm = 0.8 if block_t0(t) == 148.6 else 0.5      # beside "All kings worship You" in the low view: calmer
+            if cam is not None and read > 0.0:                  # (MARCH) gone wherever it would pass behind the words
+                corners = np.stack([top, top - _v(0.0, _FH, 0.0), top + back * _FW, top + back * _FW - _v(0.0, _FH, 0.0)])
+                xy, z = cam.project(corners)
+                inside = (z > 0.0) & (xy[:, 0] > 0.1) & (xy[:, 0] < 0.9) & (xy[:, 1] > 0.48) & (xy[:, 1] < 0.97)
+                if inside.any():
+                    near = near * (1.0 - read)
             a = k * near * (1.0 - calm * read) * (1.0 + 0.25 * beat_pulse(t))     # calm behind the words
             if a <= 0.01:
                 continue
