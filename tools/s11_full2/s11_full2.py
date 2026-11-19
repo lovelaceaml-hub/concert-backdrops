@@ -152,7 +152,7 @@ def beat_pulse(t, width=0.09):
 LIGHT_REST = 0.5
 # (start, hold): Father's pulse, slam 1, Sacrifice, Devotion, thanks to Father, the church of God arrival into
 # slam 2, Sacrifice, Wondrous love, slam 3, Sacrifice, Devotion, "Oh, the Church of God", the comets and emblem
-KEY_MOMENTS = [(40.54, 2.0), (82.08, 2.2), (100.26, 2.6), (105.14, 2.6), (109.8, 2.0), (159.0, 6.0),
+KEY_MOMENTS = [(40.54, 2.0), (53.78, 1.8), (82.08, 2.2), (100.26, 2.6), (105.14, 2.6), (109.8, 2.0), (159.0, 6.0),
                (180.7, 2.6), (184.65, 2.8), (201.73, 2.8), (218.1, 2.6), (224.03, 2.6), (238.93, 2.8),
                (254.0, 3.0)]
 
