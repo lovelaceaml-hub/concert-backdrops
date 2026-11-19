@@ -97,9 +97,10 @@ def _plan(t0, t1):
                                            tuple(mother_pos(t) + _v(0.0, -1.5, 0.0))))
         return k + K((128.6, (16.0, 3.0, -30.0), (0.0, 14.0, -55.0)), (129.5, (22.0, 5.0, -34.0), (0.0, 18.0, -52.0)),
                      (t1, (30.0, 9.0, -38.0), (0.0, 8.0, -48.0))), "linear"
-    if t0 == 130.29:      # trust Father: an orbit from the side round to the front, high, the comets circling
-        return K((t0, (40.0, 14.0, -30.0), (0.0, 2.0, -35.0)), (131.8, (34.0, 18.0, -62.0), (0.0, 2.0, -35.0)),
-                 (133.2, (14.0, 17.0, -78.0), (0.0, 1.0, -32.0)), (t1, (5.0, 16.0, -76.0), (0.0, 1.0, -28.0))), "music"
+    if t0 == 130.29:      # trust Father: an orbit from the side round to the front, a little lower than before
+        # (f29), the three comets circling, her light one soft distant glow
+        return K((t0, (36.0, 10.0, -30.0), (0.0, 1.5, -35.0)), (131.8, (31.0, 12.5, -60.0), (0.0, 1.5, -35.0)),
+                 (133.2, (13.0, 12.0, -75.0), (0.0, 1.0, -32.0)), (t1, (5.0, 11.5, -73.0), (0.0, 1.0, -28.0))), "music"
     if t0 == 134.54:      # march ahead: from low behind the multitude as they step out, the swoop up starts at
         # once (the words land on the dark sea, never over the mountain), then a slow crane high over the river
         # of people: overhead, the procession draws its path of light toward Zion along the bottom of the frame
@@ -182,12 +183,12 @@ def proc_k(t):
 def shaft_k(t):
     """Her shaft shows in the views along the sea (not from above, where its mirror image would cross the
     words, nor looking up past her)."""
-    return 1.0 if block_t0(t) in (125.92, 130.29, 141.5, 144.4) else 0.0
+    return 1.0 if block_t0(t) in (125.92, 141.5, 144.4) else 0.0      # (f29: none over the gathering)
 
 
 def mirror_k(t):
     """Her mirror image in the sea shows except in the views from high behind (it would sit in the words)."""
-    return 0.0 if block_t0(t) in (134.54, 148.6, 154.2, 156.0) else 1.0
+    return 0.0 if block_t0(t) in (130.29, 134.54, 148.6, 154.2, 156.0) else 1.0    # (f29: one light, not two)
 
 
 def glow(t):
@@ -343,6 +344,9 @@ class MotherLight:
         halo = m[None, :] + np.stack([rad * np.cos(ang), 1.3 * (s[:, 3] - 0.5) * rad, rad * np.sin(ang)], 1)
         warm = lin("#ffe2b4")
         big = 1.0 + 1.2 * (1.0 - _sc(LAND - 0.6, LAND + 0.4, t))       # coming down she is a blazing star
+        # (round 8, f29) through the gathering and the march (2:10 to 2:20) one soft distant light, not a glare
+        soft = 1.0 - 0.55 * _win(t, 130.29, 141.5, 0.4, 0.6)
+        k = k * soft
         out = [dict(pos=m[None, :], size=(20.0 + 6.0 * g) * big, color=warm, alpha=0.06 * k * pulse, kind="soft", emit=1.5),
                dict(pos=m[None, :], size=10.0, color=lin("#ffe8c8"), alpha=0.28 * k * pulse, kind="soft", emit=2.0),
                dict(pos=m[None, :], size=3.2, color=lin(WHITE), alpha=0.95 * k, kind="soft", emit=4.0 * pulse),
@@ -883,6 +887,9 @@ class MarchBeat:
         pulse = np.exp(-((zr - front) / 5.0) ** 2) * (fr < 0.6)
         base = 0.10 + 0.08 * np.exp(-zr / 25.0)
         a = (base + 0.45 * pulse) * k * (1.0 - _sc(K_IN - 0.3, K_IN + 0.5, t) * 0.5)
+        # (round 8, f29) from overhead the path runs straight up through "This hope was engraved" (2:14.5): it
+        # calms to a faint trace while those words read
+        a = a * (1.0 - 0.8 * _win(t, 134.7, 138.9, 0.4, 0.6) * (block_t0(t) == 134.54))
         P = np.stack([self.xr + self.jit[:, 0], np.full(len(zr), 0.05), m[2] + 3.0 + zr + self.jit[:, 1]], 1)
         warm = lin("#ffe2b0")
         out.append(dict(pos=P, size=0.55, color=warm, alpha=0.20 * a, emit=1.8, kind="soft", reflect=False))
@@ -904,9 +911,9 @@ def ray_k(t):
     if b == 125.92:
         return 1.8 - 0.6 * _sc(LAND, 129.0, t) + 0.9 * hit_pulse(t, [LAND], fall=1.2)
     if b == 130.29:
-        return 0.9
+        return 0.25                                              # (f29) no hard beams over the gathering
     if b == 134.54:
-        return 0.35 + 0.6 * hit_pulse(t, [MARCH], fall=0.5)     # softer: the words are arriving over it
+        return 0.12 + 0.25 * hit_pulse(t, [MARCH], fall=0.5)    # (f29) the words arrive over it: barely any
     if b == 141.5:
         return 0.7
     if b == 144.4:
@@ -1013,8 +1020,9 @@ def add(scene):
             c = Comet(_comet_head(j, ph), COL9[j], a, b, trail=tr, width=dict(march=0.7, burst=0.55).get(ph, 0.32),
                       bright=br, fade=0.05,
                       light=False, seed=j + 11.0 * len(ph))
-            c.k = (lambda c_, a_, b_, fo_: lambda t: _sc(a_, a_ + 0.05, t) * (1.0 - _sc(b_ - fo_, b_, t))
-                   * (proc_k(t) > 0.0))(c, a, b, fo)
+            few = 0.0 if (ph in ("ring", "march") and j not in (1, 4, 7)) else 1.0     # (f29) three loops only
+            c.k = (lambda c_, a_, b_, fo_, f_: lambda t: f_ * _sc(a_, a_ + 0.05, t) * (1.0 - _sc(b_ - fo_, b_, t))
+                   * (proc_k(t) > 0.0))(c, a, b, fo, few)
             scene.add(f"comet {ph} {j}", c, reflect=True)
             if j in (0, 5):
                 add_light(c.head, COL9[j], (lambda c_: lambda t: 0.08 * c_.k(t))(c), radius=4.0)
