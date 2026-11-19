@@ -398,7 +398,7 @@ def _tower(T, c, rw, hs, bs, gi, jewel, spire=True):
         rr = rw * (1.0 - 0.28 * y / max(H, 1.0))
         return np.stack([c[0] + rr * np.cos(ang), np.full(n, c[1] + y), c[2] + rr * np.sin(ang)], 1)
     glass = lin(GLASS[gi])
-    edge = glass * 0.65 + lin(GLASS_EDGE[gi]) * 0.35
+    edge = glass * 0.82 + lin(GLASS_EDGE[gi]) * 0.18      # (round 8) less white: edge-on, they whitened the wide views
     ys = np.arange(0.0, H - 1e-6, 2.0)
     ys = np.append(ys, H)
     for y0, y1 in zip(ys[:-1], ys[1:]):
@@ -408,14 +408,14 @@ def _tower(T, c, rw, hs, bs, gi, jewel, spire=True):
         T.line(R, np.roll(R, -1, 0), glass * 0.9, 0.55, _rise_birth(np.full(n, y), hs, bs))
     for h in hs:
         R = ring(h)
-        T.line(R, np.roll(R, -1, 0), edge * 1.3, 1.0, _rise_birth(np.full(n, h), hs, bs))
+        T.line(R, np.roll(R, -1, 0), edge * 1.15, 1.0, _rise_birth(np.full(n, h), hs, bs))
     r = np.random.default_rng(int(abs(c[0] * 7 + c[2] * 3)) % 100000)
     m = int(H * 2.2)
     yy = H * r.random(m) ** 0.9
     aa = r.uniform(0, 2 * np.pi, m)
     rr = rw * (1.0 - 0.28 * yy / max(H, 1.0)) * 0.8
     P = np.stack([c[0] + rr * np.cos(aa), c[1] + yy, c[2] + rr * np.sin(aa)], 1)
-    T.soft(P, glass * 0.8, 0.22, _rise_birth(yy, hs, bs))
+    T.soft(P, glass * 0.8, 0.14, _rise_birth(yy, hs, bs))
     if spire:
         tip = np.asarray(c, np.float64) + np.array([0.0, H + 2.8 * rw, 0.0])
         R = ring(H)
