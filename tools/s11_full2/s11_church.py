@@ -6,7 +6,10 @@ everything the core defined before the scene imports (music, places, helpers, sh
 star import. Camera shots: SHOTS below (cut times are locked to the music; change only keys, fov, aperture
 and focus). Point sets: add(scene). No em dash or en dash anywhere in this file.
 """
+import pathlib
+
 import numpy as np
+from PIL import Image, ImageDraw, ImageFont
 
 from songs.s11_full2 import *  # noqa: F401,F403
 from p3d.api import Mask
@@ -24,8 +27,8 @@ SHOTS = [
                      (11.9, _v(0.0, Y + 35.5, FZ + 244.0), _v(0.0, Y + 100.0, FZ - 13.0)),
                      (14.0, _v(0.0, Y + 30.0, FZ + 220.0), _v(0.0, Y + 78.0, FZ - 13.0)),
                      (17.0, _v(0.0, Y + 18.0, FZ + 154.0), _v(0.0, Y + 36.0, FZ - 13.0)),
-                     (20.0, _v(0.0, Y + 9.0, FZ + 88.0), _v(0.0, Y + 24.0, FZ)),
-                     (22.5, _v(0.0, Y + 5.5, FZ + 56.0), _v(0.0, Y + 16.0, FZ)),
+                     (20.0, _v(0.0, Y + 9.0, FZ + 88.0), _v(0.0, Y + 28.0, FZ)),
+                     (22.5, _v(0.0, Y + 5.5, FZ + 56.0), _v(0.0, Y + 24.0, FZ)),
                      (26.0, _v(-1.2, Y + 4.2, FZ + 42.0), _v(-0.3, Y + 11.0, FZ)),
                      (31.1, _v(-3.0, Y + 3.3, FZ + 30.0), _v(-0.6, Y + 5.6, FZ)),
                      (38.8, _v(-1.2, Y + 3.0, FZ + 23.0), _v(0.0, Y + 5.4, FZ)),
@@ -193,6 +196,89 @@ PORTAL_W2 = 5.4                     # its half width
 PORTAL_H = 4.0 * FH + 1.2           # four storeys and a little
 PILLAR = 1.3                        # the granite frame's width
 
+# The church's name in light, placed as on the real temple (Anthony's request; the only lettering drawn):
+# large in two lines across the top two storeys of the curved front, upper middle right, each line inside its
+# storey between the white bands; and small in one line across the top of the stone portal.
+NAME_LINES = ("World Mission Society", "Church of God")
+NAME_CAP = 2.0                      # cap height of the large name (metres)
+NAME_RIGHT = CH_W2 - 5.0            # its right edge (clear of the fins in threes at the right edge)
+NAME_STOREYS = (14, 13)             # the storey of each line (0 is the ground floor)
+PORTAL_NAME = "WORLD MISSION SOCIETY CHURCH OF GOD"
+PORTAL_CAP = 0.32
+_FONT = "jost-latin-600-normal.ttf"
+
+# The church's emblem: an empty slot beside the large name, kept clear for it. Anthony is sending the emblem;
+# until then nothing is drawn. center (x, y) on the curved front (z is front_z(x)), size: its height and
+# width in metres. To add it: make emblem_points() return (N, 2) points (x, y) inside the slot (for example
+# from the emblem image: `_raster_points` maps an image's lit pixels into the slot); they are lifted onto the
+# curved glass and drawn with the name's light.
+EMBLEM_SLOT = ((-10.4, CH_Y0 + 14.0 * FH), 6.4)
+
+
+def emblem_points():
+    """The emblem's points (N, 2) in metres (x, y) on the front, or None while it is not drawn yet."""
+    return None
+
+
+def _font(px):
+    for d in (REPO / "fonts", pathlib.Path("/home/user/work/fs/fontsource-jost-5.3.0/package/files")):
+        if (d / _FONT).exists():
+            return ImageFont.truetype(str(d / _FONT), px)
+    raise FileNotFoundError(f"font {_FONT} (repo fonts folder)")
+
+
+def _text_runs(text, cap, step):
+    """The text rasterized at `step` metres per pixel, as horizontal runs of lit pixels.
+    Returns (u0, u1, v, width): run ends from the left edge and depth below the cap line, in metres."""
+    F = _font(max(int(round(cap / step / 0.7)), 8))
+    hb = F.getbbox("H")
+    tb = F.getbbox(text)
+    pad = 4
+    w, h = tb[2] - tb[0] + 2 * pad, tb[3] - hb[1] + 2 * pad
+    img = Image.new("L", (w, h), 0)
+    ImageDraw.Draw(img).text((pad - tb[0], pad - hb[1]), text, font=F, fill=255)
+    on = np.asarray(img) > 127
+    u0, u1, v = [], [], []
+    for r in range(h):
+        row = np.concatenate([[False], on[r], [False]]).astype(np.int8)
+        d = np.diff(row)
+        starts, ends = np.where(d == 1)[0], np.where(d == -1)[0]
+        for a, b in zip(starts, ends):
+            u0.append((a - pad + 0.5) * step)
+            u1.append(max((b - pad - 0.5) * step, (a - pad + 0.5) * step + 0.002))
+            v.append((r - pad + 0.5) * step)
+    return np.asarray(u0), np.asarray(u1), np.asarray(v), (tb[2] - tb[0]) * step
+
+
+def _name_segments():
+    """The name in light as short horizontal line segments (pos, pos2) on the curved front and the portal."""
+    A, B = [], []
+    # the large name, each line centred on the block, the block's right edge at NAME_RIGHT
+    runs = [_text_runs(t, NAME_CAP, 0.05) for t in NAME_LINES]
+    wmax = max(r[3] for r in runs)
+    mid = NAME_RIGHT - wmax / 2.0
+    for (u0, u1, v, w), k in zip(runs, NAME_STOREYS):
+        top = CH_Y0 + (k + 1) * FH - 0.72
+        x0, x1 = mid - w / 2.0 + u0, mid - w / 2.0 + u1
+        y = top - v
+        A.append(np.stack([x0, y, front_z(x0) + 0.14], 1))
+        B.append(np.stack([x1, y, front_z(x1) + 0.14], 1))
+    # the emblem, once it is given
+    E = emblem_points()
+    if E is not None and len(E):
+        E = np.asarray(E, np.float64)
+        e = np.stack([E[:, 0], E[:, 1], front_z(E[:, 0]) + 0.14], 1)
+        A.append(e)
+        B.append(e + np.array([0.002, 0.0, 0.0]))
+    big = (np.concatenate(A), np.concatenate(B))
+    # the small name across the top of the portal (on the granite lintel)
+    u0, u1, v, w = _text_runs(PORTAL_NAME, PORTAL_CAP, 0.016)
+    pz = float(front_z(PORTAL_X)) + 0.45 + 0.08
+    top = CH_Y0 + PORTAL_H - PILLAR / 2.0 + PORTAL_CAP / 2.0
+    x0, x1 = PORTAL_X - w / 2.0 + u0, PORTAL_X - w / 2.0 + u1
+    small = (np.stack([x0, top - v, np.full(len(v), pz)], 1), np.stack([x1, top - v, np.full(len(v), pz)], 1))
+    return big, small
+
 
 def front_z(x):
     """z of the curved glass front at x (its middle is FACADE_Z)."""
@@ -255,6 +341,10 @@ def _church():
         # each pane mirrors the sky a little differently (real glass is never quite flat)
         pane = 1.0 + 0.07 * np.sin(x * 12.9898 + np.floor((ys - y0) / FH) * 78.233) + 0.05 * r.standard_normal()
         col = _glass_color(np.full(len(ys), x), ys) * pane[:, None]
+        # a little deeper behind the large name, so its white letters stand out as on the real glass
+        nx0 = NAME_RIGHT - 30.0
+        if nx0 - 1.0 < x < NAME_RIGHT + 1.0:
+            col = col * (1.0 - 0.32 * np.asarray(_ss(y0 + 12.9 * FH, y0 + 13.2 * FH, ys), np.float64)[:, None])
         glass.add(P, 2.1, col, 0.62, u=x * 0.85 + (ys - y0) * 0.55)
         if not under:
             ys = np.linspace(y0 + 0.1, bt, 6)
@@ -414,6 +504,7 @@ def _church():
             green.append(np.stack([cx + rr * np.cos(a), SUMMIT + h * fu + 0.45 * r.random(n) * (1 - rr / fr),
                                    pzz + 0.8 * rr * np.sin(a)], 1))
     GR = np.concatenate(green)
+    nbig, nsmall = _name_segments()
     WH = lin("#f6f9ff")
     soft = [
         glass.batch(1.0, pulse=(4.0, 7.0, 0.55, 120.0)),
@@ -439,6 +530,8 @@ def _church():
         stone.batch(0.10, lin("#ffe2bc"), 0.9, 1.6),
         side.batch(0.12, lin("#cfdcff") * 0.8, 0.6, 1.2),
         tower.batch(0.25, lin("#eef3ff"), 0.85, 1.6),
+        _batch(nbig[0], 0.058, lin("#f8fbff"), 1.0, kind="line", emit=2.9, pos2=nbig[1], twinkle=0.0),
+        _batch(nsmall[0], 0.019, lin("#fbfcff"), 1.0, kind="line", emit=2.0, pos2=nsmall[1], twinkle=0.0),
     ]
     soft = [b for b in soft if b is not None]
     crisp = [b for b in crisp if b is not None]

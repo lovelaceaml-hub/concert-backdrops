@@ -27,8 +27,8 @@ SHOTS = [
     # C. Mount Zion across the sea at dawn: the crown of light ignites high over the city (the words between
     # the city and the crown); then the terraces fill with gold, step by step
     dict(name="zion_crown", kind="local", t0=53.78, t1=70.54, fov=46.0, aperture=0.0,
-         keys=[(53.78, _v(70.0, 112.0, ZZ + 640.0), ZC + _v(0.0, Y + 34.0, 0.0)),
-               (61.2, _v(52.0, 106.0, ZZ + 600.0), ZC + _v(0.0, Y + 30.0, 0.0)),
+         keys=[(53.78, _v(70.0, 112.0, ZZ + 640.0), ZC + _v(-24.0, Y + 34.0, 0.0)),
+               (61.2, _v(52.0, 106.0, ZZ + 600.0), ZC + _v(-16.0, Y + 30.0, 0.0)),
                (70.54, _v(20.0, 96.0, ZZ + 520.0), ZC + _v(0.0, Y + 12.0, 0.0))]),
     # waves of praise: the whole land ripples with light (high, so the rings roll out over the sea)
     dict(name="praise_ripples", kind="local", t0=86.70, t1=90.72, fov=50.0, aperture=0.0,
@@ -182,8 +182,19 @@ def _mountain():
     y0s = np.asarray([tier_y(k - 1) if k else 0.0 for k in FK])
     fb = FT[FK] + 0.45 * (F[:, 1] - y0s) / 10.0
     upper = FA > 0.16
+    # and the terraces' floors fill with a warm golden light, from the front edge back
+    fl, fl_b = [], []
+    for k in range(N_TIER - 1):
+        R0, Ri = tier_r(k), tier_r(k + 1)
+        m = int((R0 ** 2 - Ri ** 2) * FRONT * 0.5 / 26.0)
+        a = _az(m, r, 0.92)
+        rr = np.sqrt(Ri ** 2 + (R0 ** 2 - Ri ** 2) * r.random(m))
+        fl.append(_xz(rr, a, tier_y(k) + 0.6))
+        fl_b.append(FT[k] + 0.3 + 0.5 * (R0 - rr) / (R0 - Ri) + 0.2 * r.random(m))
+    FL, FB = np.concatenate(fl), np.concatenate(fl_b)
     gold = [
-        _batch(F[upper], 2.6, lin(GOLD) * 0.8, FA[upper] * 0.75, kind="soft", emit=1.3, birth=fb[upper], fade=0.6,
+        _batch(FL, 6.0, lin("#ffcf7a"), 0.10, kind="soft", emit=1.0, birth=FB, fade=0.7, flash=2.0, reflect=False),
+        _batch(F[upper], 2.6, lin(GOLD) * 0.85, FA[upper] * 0.95, kind="soft", emit=1.4, birth=fb[upper], fade=0.6,
                flash=1.5, reflect=False),
         _batch(PA, 0.55, lin(GOLD2), 0.6, emit=1.3, birth=FT[PK] + 0.45, fade=0.4, flash=3.0, twinkle=0.4,
                reflect=False),
@@ -206,10 +217,6 @@ def _body():
             P.append(_ring(ZC, rr, y - 4.0, 4.6))
     P = np.concatenate(P)
     return [_batch(P, 3.4, lin("#000000"), 1.0, kind="soft", emit=0.0, reflect=False)]
-
-
-def _cam():
-    return H.CAMERA.state
 
 
 def body_k(t):
@@ -245,7 +252,7 @@ class Crown:
 
     def __init__(self):
         r = np.random.default_rng(31)
-        c = ZC + _v(0.0, SUMMIT + 132.0, -10.0)
+        c = ZC + _v(0.0, SUMMIT + 122.0, -10.0)
         R = 78.0
         pts, gem, gem_c = [], [], []
         for dy in (0.0, 2.2, 5.0):
@@ -293,7 +300,7 @@ class Crown:
         # after the words, the crown comes down and settles round the city ("as Father prophesied")
         dn = _sc(61.0, 64.2, t)
         sc = np.array([1.0 + 0.28 * dn, 1.0, 1.0 + 0.28 * dn])
-        off = np.array([0.0, -98.0 * dn, 0.0])
+        off = np.array([0.0, -88.0 * dn, 0.0])
         P = self.c + (self.P - self.c) * sc + off
         G = self.c + (self.G - self.c) * sc + off
         out = [dict(pos=P, size=0.75, color=lin("#ffe7b0"), alpha=grow * k, emit=2.4 + 3.0 * np.exp(-u / 0.6),
@@ -397,7 +404,22 @@ def _profile():
     return L, pts
 
 
+def _stair_profile():
+    """The same path down the great stairways (the light runs down the steps)."""
+    pts = [(R_TOP - 6.0, SUMMIT + 1.5)]
+    for k in range(N_TIER - 1, 0, -1):
+        pts.append((tier_r(k), tier_y(k) + 1.5))
+        pts.append((tier_r(k) + 14.0, tier_y(k - 1) + 1.5))
+    pts.append((tier_r(0), tier_y(0) + 1.5))
+    pts.append((tier_r(0) + 14.0, 1.2))
+    pts.append((tier_r(0) + 60.0, 0.4))
+    pts = np.asarray(pts)
+    L = np.concatenate([[0.0], np.cumsum(np.hypot(*np.diff(pts, axis=0).T))])
+    return L, pts
+
+
 PROF_L, PROF_P = _profile()
+STAIR_L, STAIR_P = _stair_profile()
 POUR_V = 30.0                                       # how fast the front of the light runs down (m/s)
 
 
@@ -415,8 +437,11 @@ class Pour:
 
     def __init__(self):
         r = np.random.default_rng(91)
-        n = 5200
+        n = 6000
+        self.st = r.random(n) < 0.6                        # most of the light runs down the great stairways
         self.a = np.where(r.random(n) < 0.85, r.uniform(-1.85, 1.85, n), r.uniform(-np.pi, np.pi, n))
+        self.sa = STAIRS_AZ[r.integers(0, len(STAIRS_AZ), n)]
+        self.sw = r.uniform(-1.0, 1.0, n) * np.where(self.sa == 0.0, 7.5, 4.5)
         self.v = r.uniform(0.75, 1.15, n) * POUR_V
         self.o = r.random(n) * PROF_L[-1]
         self.j = r.normal(0.0, 1.0, (n, 2))
@@ -430,22 +455,26 @@ class Pour:
         k = _env(t, POUR0 - 0.2, 110.2, 0.5, 1.8)
         if k > 0.0:
             front = (t - POUR0 - 0.2) * POUR_V
-            L = np.mod(self.v * t + self.o, PROF_L[-1])
-            on = L < front
-            if np.any(on):
-                L, a, j, sd, v = L[on], self.a[on], self.j[on], self.s[on], self.v[on]
-                rr = np.interp(L, PROF_L, PROF_P[:, 0]) + 0.8 * j[:, 0]
-                yy = np.interp(L, PROF_L, PROF_P[:, 1]) + 0.6 * np.abs(j[:, 1])
+            for stair in (False, True):
+                LL, PP = (STAIR_L, STAIR_P) if stair else (PROF_L, PROF_P)
+                sel = self.st == stair
+                L = np.mod(self.v[sel] * t + self.o[sel], LL[-1])
+                on = L < front * LL[-1] / PROF_L[-1]
+                if not np.any(on):
+                    continue
+                L, j, sd, v = L[on], self.j[sel][on], self.s[sel][on], self.v[sel][on]
+                rr = np.interp(L, LL, PP[:, 0]) + (0.0 if stair else 0.8) * j[:, 0]
+                yy = np.interp(L, LL, PP[:, 1]) + 0.5 * np.abs(j[:, 1])
+                a = (self.sa[sel][on] + self.sw[sel][on] / rr) if stair else self.a[sel][on]
                 p = np.stack([ZC[0] + rr * np.sin(a), yy, ZC[2] + rr * np.cos(a)], 1)
-                dl = 1.0
-                r2 = np.interp(L + dl, PROF_L, PROF_P[:, 0])
-                y2 = np.interp(L + dl, PROF_L, PROF_P[:, 1])
-                dr, dy = (r2 - rr + 0.8 * j[:, 0]), (y2 - yy + 0.6 * np.abs(j[:, 1]))
-                vel = np.stack([dr * np.sin(a), dy, dr * np.cos(a)], 1) * (v / dl)[:, None] * 0.5
-                lead = np.exp(-np.maximum(front - L, 0.0) / 25.0)       # the leading edge is brightest
-                fade = 1.0 - _sc(PROF_L[-1] - 70.0, PROF_L[-1], L)
-                out.append(dict(pos=p, vel=vel, size=0.55, color=lin("#ffe2a8"),
-                                alpha=k * (0.35 + 0.65 * lead) * fade, emit=1.8 + 1.5 * lead, kind="spark",
+                r2 = np.interp(L + 1.0, LL, PP[:, 0])
+                y2 = np.interp(L + 1.0, LL, PP[:, 1])
+                dr, dy = r2 - np.interp(L, LL, PP[:, 0]), y2 - np.interp(L, LL, PP[:, 1])
+                vel = np.stack([dr * np.sin(a), dy, dr * np.cos(a)], 1) * v[:, None] * 0.5
+                lead = np.exp(-np.maximum(front * LL[-1] / PROF_L[-1] - L, 0.0) / 30.0)
+                fade = 1.0 - _ss(LL[-1] - 70.0, LL[-1], L)
+                out.append(dict(pos=p, vel=vel, size=0.7 if stair else 0.55, color=lin("#ffe6b4"),
+                                alpha=k * (0.55 + 0.45 * lead) * fade, emit=2.2 + 1.5 * lead, kind="spark",
                                 twinkle=0.5, seed=sd, reflect=False, streak=0.6))
         k = _env(t, 109.8, 117.0, 0.6, 0.3)
         if k > 0.0:
@@ -463,6 +492,31 @@ class Pour:
             out.append(dict(pos=q, size=20.0, color=lin("#fff0d0"), alpha=0.08 * k * (ys < reach)
                             * (1.0 - 0.6 * (ys - ys[0]) / 900.0), emit=1.0, kind="soft", reflect=False))
         return out or None
+
+
+def _pour_sheen():
+    """The light that the pouring leaves on the mountain: the walls and a veil of light over the heads of the
+    people brighten as it runs down past them (born as the light reaches them)."""
+    r = np.random.default_rng(97)
+    W, WB, V, VB = [], [], [], []
+    for k in range(N_TIER):
+        R0, y = tier_r(k), tier_y(k)
+        y0 = tier_y(k - 1) if k > 0 else 0.0
+        n = int(R0 * 2 * FRONT * 10.0 * 0.07)
+        a = r.uniform(-FRONT, FRONT, n)
+        yy = y0 + 10.0 * r.random(n) ** 0.6
+        W.append(_xz(R0 + 0.3, a, yy))
+        WB.append(pour_arrive(R0 - 0.01) + (y - yy) / POUR_V)
+        if k < N_TIER - 1:
+            Ri = tier_r(k + 1)
+            m = int((R0 ** 2 - Ri ** 2) * FRONT * 0.0016)
+            a = r.uniform(-FRONT, FRONT, m)
+            rr = np.sqrt(Ri ** 2 + (R0 ** 2 - Ri ** 2) * r.random(m))
+            V.append(_xz(rr, a, y + 2.6 + r.random(m)))
+            VB.append(pour_arrive(rr))
+    W, WB, V, VB = (np.concatenate(x) for x in (W, WB, V, VB))
+    return [_batch(W, 2.4, lin("#fff0d0"), 0.30, kind="soft", emit=1.2, birth=WB, fade=0.5, flash=2.5, reflect=False),
+            _batch(V, 7.0, lin("#ffe6bc"), 0.07, kind="soft", emit=1.0, birth=VB, fade=0.8, flash=2.0, reflect=False)]
 
 
 def pour_k(t):
@@ -505,7 +559,9 @@ class Rings:
 def _ripple_k(k):
     """A pulse of light running down the parapets from the summit at each ring (the land ripples)."""
     times = [t0 + 0.12 * (N_TIER - 1 - k) for t0, _, _ in RINGS]
-    return lambda t: local_k(t) * (not stage_view(t)) * min(hit_pulse(t, times, rise=0.05, fall=0.7), 1.2)
+    fill = [FILL_T[k] + 0.45]                      # and a flash along each parapet as its terrace fills with gold
+    return lambda t: local_k(t) * (not stage_view(t)) * min(hit_pulse(t, times, rise=0.05, fall=0.7)
+                                                            + 0.8 * hit_pulse(t, fill, rise=0.05, fall=0.9), 1.2)
 
 
 SHAFTS = [
@@ -516,10 +572,6 @@ SHAFTS = [
 
 
 def add(scene):
-    import os
-    skip = os.environ.get("ZION_SKIP", "").split(",")
-    _add = scene.add
-    scene = type("S", (), {"add": staticmethod(lambda n, *a, **k: None if n in skip else _add(n, *a, **k))})
     dim, gold = _mountain()
     scene.add("zion body", _Off(_body()), mask=Mask("dark", strength=body_k, grow=1.9, soft=4.0), reflect=False)
     scene.add("zion dim", Static(dim, local_k))
@@ -542,12 +594,13 @@ def add(scene):
         scene.add(f"nations mid {shot}", Static(_glitter_people(P[sel], K[sel], born[sel], seed),
                                                 (lambda f: (lambda t: nations_k(t) * (1.0 - f(t))))(on)))
         i = np.where(sel)[0]
-        i = i[rng.random(len(i)) < 0.4]
+        i = i[rng.random(len(i)) < 0.32]
         scene.add(f"nations near {shot}", GCrowd(
             gain=(lambda f: (lambda t: nations_k(t) * f(t)))(on), places=P[i],
             facing=lambda x, z: float(np.degrees(np.arctan2(ZC[0] - x, ZC[2] - z))),
             kinds=(("stand", 3.0), ("raise", 1.2), ("open", 0.6)),
             people=dict(woman=1.0, man=1.0, elder=0.2, child=0.15), start=born[i], color="#ffcf7a",
-            color2="#fff0d0", bright=1.3, points=60, size=9.5, flash=1.5, seed=float(seed)))
+            color2="#fff0d0", bright=1.35, points=48, size=10.5, flash=1.5, seed=float(seed)))
     scene.add("pour", Pour())
+    scene.add("pour sheen", Static(_pour_sheen(), pour_k))
     scene.add("rings", Rings())
