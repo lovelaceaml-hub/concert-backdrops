@@ -1363,15 +1363,24 @@ def _lens_streak(t):
 
 
 class StagePillars(Pillars):
-    """Pillars of light that stand on the summit round the stage."""
+    """Pillars of light that stand on the summit round the stage. The bright core is one continuous line of
+    light (the shared pillar draws it as a row of soft dots 1.8 m apart, which read as dotted columns close
+    up); the soft column and the pool stay as they are."""
 
     def sample(self, t):
         out = super().sample(t)
         if not out:
             return out
-        for b in out:
-            b["pos"] = b["pos"] + _v(0.0, SUMMIT, 0.0)
-        return out
+        res = []
+        for j, b in enumerate(out):
+            b = dict(b, pos=b["pos"] + _v(0.0, SUMMIT, 0.0))
+            if j % 3 == 1 and len(b["pos"]) > 1:      # the core: a chain of line segments, no gaps
+                P = b["pos"]
+                a = np.broadcast_to(np.asarray(b["alpha"], np.float64), (len(P),))
+                b = dict(pos=P[:-1], pos2=P[1:], size=self.width * 0.07, color=b["color"],
+                         alpha=np.minimum(1.6 * 0.5 * (a[:-1] + a[1:]), 1.0), emit=2.6, kind="line", dof=0.3)
+            res.append(b)
+        return res
 
 
 def pillar_k(t):
@@ -1419,7 +1428,7 @@ def add(scene):
         for i in range(9):
             scene.add("slam rocket %d %d" % (j, i), BoxGuard(StageComet(
                 _rocket(ts, i), COL9[i], ts - 0.05 if j != 1 else ts + 0.22, ts + 3.6,     # slam 2: after its flash trail=1.2, width=0.9 if j != 1 else 0.6,
-                bright=1.3 if j != 1 else 0.8, fade=0.3, n=60, sparks=False, seed=100 + 9 * j + i)))
+                bright=1.3 if j != 1 else 0.8, fade=0.3, n=170, sparks=False, seed=100 + 9 * j + i)))
     scene.add("loop conductor", BoxGuard(StageComet(_loop_conductor, COL9[6], 0.0, 260.0, trail=1.6, width=0.18, n=80,
                                            seed=131)))
     scene.add("loop heroes", BoxGuard(StageComet(_loop_heroes, COL9[3], 0.0, 260.0, trail=1.8, width=0.2, n=80,
