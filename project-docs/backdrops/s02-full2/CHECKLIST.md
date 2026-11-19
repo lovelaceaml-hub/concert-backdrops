@@ -82,3 +82,18 @@ The Drive rule files (read in this session, last changed 2026-11-14 to 2026-11-1
 | Native 60 fps, 1920x1080 | yes | video check |
 | No song audio, lyrics, videos or frames in git | yes | git status; media outside the repository |
 | No em dash or en dash anywhere | yes | grep of the branch |
+
+## Final results (full render, 2026-11-19)
+
+| Check | Result | How |
+|---|---|---|
+| Exact length | yes: 15300 frames, 255.000 s, 60/1 fps, 1920x1080 yuv420p (stage and review), 1280x720 (phone) | export.py --check (ffprobe count_frames) |
+| No dropped or repeated frames | yes: 15300 decoded frames, none identical to the one before | frame by frame difference of the stage file |
+| No frozen or black frames | yes: none | ffmpeg freezedetect and blackdetect |
+| No pops | yes: largest frame to frame change 3.6 (ordinary motion); the first full render had 6 jumps (light hand-offs, ribbon pour, word box edges), fixed and rendered again | frame by frame difference against its local median |
+| First and last frames | yes: frame 0 is the whole opening lockup; the last frame is the calm night lake with the rose and the signature, never black | contact sheet |
+| Signature on every frame after the opening | yes: present on every frame from 0:09.6 to the end | contrast of the signature corner, every frame |
+| Sync on 3 hit points (conformed music) | yes, within 0.5 s: the star lands 0:50.0 (accent 0:50.26); star 7 flares 2:42.1 (accent 2:41.56); the music ends at 4:00.0 and the hold begins at 4:00.0 | onset strength of the conformed score against the picture's largest change |
+| No white-out at the brightest moment | yes: the star 7 flare (2:42.2) is a violet bloom; 0.1 % of pixels near white, the scene stays visible | frame measurement |
+| Motion strip (12 fps) through every word arrival and leave and the busy moves | yes: letters form and leave cleanly; nothing crosses the words or the signature | 10 strips |
+| Phone copy under 25 MB | yes: 23.7 MB | file size |
