@@ -247,6 +247,8 @@ def glow(t):
 
 def crowd_k(t):
     k = proc_k(t) * glow(t) * (1.0 + mx(t, choir=0.3, strings=0.15))     # (round 8) they glow with the choir
+    if block_t0(t) == 141.5:                 # (MARCH round 5) walking among them: they stand out against the sea
+        k *= 1.6
     if block_t0(t) == 154.2:                 # (MARCH) looking down on them, the words arrive over the multitude
         k *= 1.0 - 0.35 * _mfx()._reading(t)
     return k
@@ -393,8 +395,8 @@ class GrowSparks:
         self.seed = r.random(n)
 
     def sample(self, t):
-        k = proc_k(t)
-        if k <= 0.0 or t < GROW_S.min() - 2.0 or t > GROW_S.max() + 0.2:
+        k = proc_k(t) * (0.0 if block_t0(t) == 148.6 else 1.0)    # (not in the kings' low view: they arc across its
+        if k <= 0.0 or t < GROW_S.min() - 2.0 or t > GROW_S.max() + 0.2:       # sky where the words arrive)
             return None
         u = (t - (GROW_S - self.dur)) / self.dur
         on = (u > 0.0) & (u < 1.0)
@@ -1361,7 +1363,9 @@ def _tint_nations(crowd, cols=None):
 
 
 def add(scene):
-    look = dict(color="#fff0dc", color2="#dce8ff", bright=3.2, size=1.35, points=420, seed=21.0)
+    # (MARCH round 5) finer, denser light so each reads as a person (head, shoulders, swinging arms, robe hem)
+    look = dict(color="#fff0dc", color2="#dce8ff", bright=3.8, size=1.0, points=900, seed=21.0, dof=0.25, glints=0.15,
+                scale=(1.06, 1.16))
     scene.add("mother", MotherLight())
     scene.add("gather", Gather())
     # the waves of raised arms: on "let's trust Father" (2:10.29) a wave of raised arms runs back through
@@ -1425,12 +1429,12 @@ def add(scene):
     scene.add("proc joined", joined, reflect=False)
     scene.add("proc joined held", jheld, reflect=False)
     grow = GCrowd(gain=crowd_k, places=GROW_P, facing=180.0, kinds=("walk",), start=GROW_S, walk=WALK, until=HALT,
-                  fade=0.35, flash=1.3, **dict(look, points=330))
+                  fade=0.35, flash=1.3, **dict(look, points=600))
     _toward_mother(grow)
     ghold = WaveCrowd(waves=[(159.4, 1.4, 6.0, 0.6, 0.6)], delay=np.full(len(GROW_P), 0.5), gain=crowd_k,
                       places=GROW_P + _ahead(grow) * (WALK * (HALT - GROW_S))[:, None], facing=180.0,
                       kinds=(("raise", 2.0), ("open", 1.0)), start=HALT - 0.3, fade=0.3, flash=0.0,
-                      **dict(look, points=330))
+                      **dict(look, points=600))
     ghold.facing[:] = grow.facing
     scene.add("proc growing", grow, reflect=False)
     scene.add("proc growing held", ghold, reflect=False)
