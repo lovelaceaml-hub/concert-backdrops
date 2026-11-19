@@ -246,76 +246,107 @@ def _box_lines(L, c, w, d, h):
 # great avenue (toward +z) with its lamps, the square left open before the church.
 # =========================================================================================================
 def _city():
+    """The heavenly city on the summit round the church of light (round 7, rebuilt; Anthony: the white boxes were
+    "just squares and empty spaces... so many of the same colors that it's hard to see and distinguish things").
+    In the terraces' language (the Zion builder's own towers, pavilions and gardens and its palette, imported):
+    four districts, each in one calm hue (sky blue, teal, periwinkle and teal glass towers with their domes in
+    sky, rose, lavender and rose), gardens with blossoms between them, lit streets with lamps. Low beside the
+    church and the avenue so the church stays the one great building and its name reads; taller toward the
+    back and sides. Under the title every building lights on its beat, ring by ring outward from the church;
+    the streets fill with gold when the city does (1:09.4). Returns (dim batches, gold batches)."""
+    from songs.s11_zion import _Parts, _tower, _pavilion, _garden, DOME, PEARL_RAIL
     r = np.random.default_rng(11)
-    E, Bd = _Lines(), _Lines()
-    wins, domes = [], []
-    for gx in np.arange(-84.0, 85.0, 15.0):
-        for gz in np.arange(-84.0, 85.0, 15.0):
+    T, Gd = _Parts(), _Parts()
+    # (glass hue, dome hue) of each district: front left, front right, back right, back left
+    DIST = ((0, 2), (1, 0), (2, 1), (1, 0))
+    tops, bases = [], []
+    for gx in np.arange(-84.0, 85.0, 14.0):
+        for gz in np.arange(-84.0, 85.0, 14.0):
             x, z = gx + r.uniform(-2.5, 2.5), gz + r.uniform(-2.5, 2.5)
             rad = np.hypot(x, z)
-            if rad > 84.0:
+            if rad > 82.0 or rad < 20.0:
                 continue
-            if abs(x) < 16.0 and z > -12.0:                       # the avenue and the square
+            if abs(x) < 17.0 and z > -14.0:                       # the avenue and the square
                 continue
-            if abs(x) < 46.0 and z > -50.0:                       # the church, its blade, its square, the plaza
+            if abs(x) < 44.0 and z > -50.0:                       # the church, its blade, its square, the plaza
                 continue
-            w, d = r.uniform(7, 11), r.uniform(7, 11)
-            h = r.uniform(7, 13) + 14.0 * np.exp(-rad / 45.0) * r.random()
             c = ZC + _v(x, SUMMIT, z)
-            _box_lines(E, c, w, d, h)
-            # floor bands on the face toward the avenue and the camera (+z), as on the church
-            for y in np.arange(c[1] + 3.4, c[1] + h - 0.5, 3.4):
-                Bd.add((c[0] - w / 2, y, c[2] + d / 2), (c[0] + w / 2, y, c[2] + d / 2))
-            wins.append(_windows(c, w, d, h))
-            if r.random() < 0.18:
-                domes.append(_dome(c + _v(0, h, 0), min(w, d) * 0.45, 0.4))
-    W, D = np.concatenate(wins), np.concatenate(domes)
-    # the paving: a few long faint lines (the old dotted grid was busy behind the choir)
-    P = _Lines()
-    for x in np.arange(-84.0, 85.0, 12.0):
-        if abs(x) < 13.0:
-            continue
-        h = np.sqrt(max(86.0 ** 2 - x * x, 0.0))
-        P.add(ZC + _v(x, SUMMIT + 0.02, -h), ZC + _v(x, SUMMIT + 0.02, h))
-    for z in np.arange(-84.0, 85.0, 12.0):
-        h = np.sqrt(max(86.0 ** 2 - z * z, 0.0))
-        P.add(ZC + _v(-h, SUMMIT + 0.02, z), ZC + _v(h, SUMMIT + 0.02, z))
-    # the avenue's edges and the square's rings
-    Ed = _Lines()
+            q = (0 if z >= 0 else 3) if x < 0 else (1 if z >= 0 else 2)
+            gi, di = DIST[q]
+            b = float(_born(c[None, :])[0]) + 0.05 * r.random()
+            near = abs(x) < 64.0 and z > -66.0                    # beside the church: low, so it stays dominant
+            u = r.random()
+            if u < (0.25 if near else 0.45):
+                kind = "T"
+            elif u < (0.6 if near else 0.72):
+                kind = "P"
+            else:
+                kind = "G"
+            if kind == "T":
+                h = r.uniform(9.0, 14.0) + (0.0 if near else 12.0 * r.random() * (rad / 82.0))
+                _tower(T, c, r.uniform(2.0, 2.8), [h], [b], gi, DOME[di], spire=True)
+                tops.append(c + _v(0.0, h, 0.0))
+            elif kind == "P":
+                _pavilion(T, c, di, b)
+            else:
+                _garden(Gd, c, r, b)
+                if r.random() < 0.5:                              # a second little grove beside it
+                    _garden(Gd, c + _v(r.uniform(-5, 5), 0.0, r.uniform(-5, 5)), r, b + 0.1)
+            bases.append(c + _v(0.0, 0.3, 0.0))
+    # the lit streets: the great avenue, three more streets out to the plateau's rim between the districts, and
+    # a ring street; lamps along them, warm
+    St, lamps = _Lines(), []
     for sx in (-12.0, 12.0):
-        Ed.add((sx, SUMMIT + 0.05, FACADE_Z + 30.0), (sx, SUMMIT + 0.05, ZC[2] + R_TOP))
-    for rr in (24.0, 16.0):
-        Ed.poly(_ring(SQUARE, rr, SUMMIT + 0.05, 1.0, -np.pi / 2, np.pi / 2))
-    lamps = []
+        St.add((sx, SUMMIT + 0.05, FACADE_Z + 30.0), (sx, SUMMIT + 0.05, ZC[2] + R_TOP))
     for z in np.arange(FACADE_Z + 24.0, ZC[2] + R_TOP, 7.0):
         lamps += [(-10.0, SUMMIT + 4.2, z), (10.0, SUMMIT + 4.2, z)]
-    lamps = np.asarray(lamps)
+    for az in (np.pi / 2, -np.pi / 2, np.pi):
+        d = _v(np.sin(az), 0.0, np.cos(az))
+        n = _v(d[2], 0.0, -d[0])
+        for o in (-4.0, 4.0):
+            St.add(ZC + d * 48.0 + n * o + _v(0, SUMMIT + 0.05, 0), ZC + d * 86.0 + n * o + _v(0, SUMMIT + 0.05, 0))
+        for k in np.arange(50.0, 86.0, 6.0):
+            for o in (-3.2, 3.2):
+                lamps.append(ZC + d * k + n * o + _v(0, SUMMIT + 3.6, 0))
+    ring = _ring(ZC + _v(0, 0, 0), 66.0, SUMMIT + 0.05, 1.5)
+    ang = np.arctan2(ring[:, 0] - ZC[0], ring[:, 2] - ZC[2])
+    keep = ~((np.abs(ang) < 0.35) | ((np.abs(ring[:, 0]) < 44.0) & (ring[:, 2] > ZC[2] - 50.0)))
+    ring = ring[keep]
+    St.a += list(ring[:-1]); St.b += list(ring[1:])
+    jump = np.linalg.norm(np.asarray(St.b) - np.asarray(St.a), axis=1) < 4.0      # drop the gaps' long jumps
+    St.a = [a for a, k in zip(St.a, jump) if k]; St.b = [b for b, k in zip(St.b, jump) if k]
+    lamps += list(ring[::5] + np.array([0.0, 3.4, 0.0]))
+    lamps = np.asarray(lamps, np.float64)
     Po = _Lines()
-    for p in lamps:
-        Po.add((p[0], SUMMIT, p[2]), (p[0], SUMMIT + 4.0, p[2]))
-    dimk = 0.55
+    for q in lamps:
+        Po.add((q[0], SUMMIT, q[2]), (q[0], q[1] - 0.2, q[2]))
+    # the square's rings in front of the church
+    Ed = _Lines()
+    for rr in (24.0, 16.0):
+        Ed.poly(_ring(SQUARE, rr, SUMMIT + 0.05, 1.0, -np.pi / 2, np.pi / 2))
 
     def mid(L):                                 # the middle of each segment (for its birth)
         return 0.5 * (np.asarray(L.a) + np.asarray(L.b))
-    # round 6: under the title the city's lights come on beat by beat, ring by ring outward from the church
-    # (each with a little flash as it lights), so the light gathers with the music before the flight in
     on = dict(fade=0.25, flash=2.5)
-    dim = [
-        E.batch(0.10, lin("#f2c27a") * dimk, 0.75, 1.1, birth=_born(mid(E)), **on),
-        Bd.batch(0.08, lin("#fff0d8") * dimk, 0.45, 1.1, birth=_born(mid(Bd)), **on),
-        _batch(W, 0.30, lin("#ffcf86") * dimk, 0.8, kind="soft", emit=0.9, twinkle=0.2, birth=_born(W), **on),
-        _batch(D, 0.16, lin("#ffe0a8") * dimk, 0.8, emit=0.8, birth=_born(D), **on),
-        _batch(lamps, 0.9, lin("#ffcf8a"), 1.0, kind="soft", emit=2.0, birth=_born(lamps), **on),
-        _batch(lamps, 0.25, lin("#fff2d6"), 1.0, emit=3.5, birth=_born(lamps), **on),
-        Po.batch(0.08, lin("#e8c08a") * 0.6, 0.8, 1.0, birth=_born(mid(Po)), **on),
-        P.batch(0.06, lin("#e8b870") * 0.35, 0.6, 0.9, birth=np.full(len(P.a), _BB0[-1]), fade=1.5),
+    dim = (T.batches(lsize=0.2, ssize=2.4, ksize=0.9) + Gd.batches(lsize=0.16, ssize=2.4, ksize=0.5) + [
+        St.batch(0.10, lin("#e8c08a") * 0.45, 0.8, 1.0, birth=_born(mid(St)), **on),
+        _batch(lamps, 0.9, lin("#ffcf8a"), 0.9, kind="soft", emit=1.8, birth=_born(lamps), **on),
+        _batch(lamps, 0.22, lin("#fff2d6"), 1.0, emit=3.0, birth=_born(lamps), **on),
+        Po.batch(0.07, lin(PEARL_RAIL) * 0.4, 0.8, 1.0, birth=_born(mid(Po)), **on),
         Ed.batch(0.12, lin(GOLD2) * 0.8, 0.9, 1.4, birth=_born(mid(Ed)), **on),
-    ]
+    ])
+    # 1:09.4 the city fills with gold: the streets run gold out from the church, every building's foot glows
+    B = np.asarray(bases)
+    dz = np.hypot(B[:, 0] - ZC[0], B[:, 2] - ZC[2])
+    sm = mid(St)
+    ds = np.hypot(sm[:, 0] - ZC[0], sm[:, 2] - ZC[2])
     gold = [
-        E.batch(0.14, lin(GOLD), 0.8, 1.3, birth=np.full(len(E.a), 69.4), fade=0.6, flash=3.0),
-        _batch(W, 0.36, lin("#ffe6b0"), 0.8, kind="soft", emit=1.2, birth=np.full(len(W), 69.6), fade=0.8, flash=2.0),
+        St.batch(0.16, lin(GOLD), 0.85, 1.4, birth=69.4 + ds / 90.0, fade=0.6, flash=3.0),
+        _batch(B, 4.0, lin("#ffd890") * 0.6, 0.22, kind="soft", emit=1.2, birth=69.6 + dz / 90.0, fade=0.8, flash=2.0),
+        _batch(np.asarray(tops), 0.6, lin("#ffe6b0"), 1.0, emit=3.0, birth=69.8 + 0.01 * np.arange(len(tops)),
+               fade=0.5, flash=3.0),
     ]
-    return [b for b in dim if b is not None], gold
+    return [b for b in dim if b is not None], [b for b in gold if b is not None]
 
 
 # =========================================================================================================
