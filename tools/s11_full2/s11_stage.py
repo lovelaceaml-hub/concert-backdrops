@@ -44,21 +44,22 @@ SHOTS = [
          keys=[(121.32, _v(-6.4, Y + 1.7, FZ + 27.9), _v(-2.6, Y + 1.15, FZ + 20.3)),
                (125.92, _v(-5.4, Y + 1.65, FZ + 26.7), _v(-2.3, Y + 1.15, FZ + 20.3))]),
     # the second slam: brass and timpani blaze (over the cellos to the trombones and the timpani)
-    dict(name="brass2", kind="stage", t0=162.86, t1=165.16, fov=40.0, aperture=0.02,
+    dict(name="brass2", kind="stage", t0=162.86, t1=165.16, fov=38.0, aperture=0.02,
          focus=_v(4.0, SUMMIT + 2.0, FACADE_Z + 16.0),
-         keys=[(162.86, _v(15.5, Y + 3.2, FZ + 31.0), _v(2.5, Y + 2.4, FZ + 14.5)),
-               (165.16, _v(14.5, Y + 3.1, FZ + 30.0), _v(2.5, Y + 2.4, FZ + 14.5))]),
+         keys=[(162.86, _v(5.6, Y + 3.5, FZ + 33.0), _v(3.6, Y + 2.5, FZ + 15.0)),
+               (165.16, _v(5.0, Y + 3.4, FZ + 32.0), _v(3.4, Y + 2.5, FZ + 15.0))]),
     # "wondrous love": brass and timpani (across the violins to the trumpets and the timpani)
-    dict(name="brass_love", kind="stage", t0=185.92, t1=188.27, fov=40.0, aperture=0.02,
+    dict(name="brass_love", kind="stage", t0=185.92, t1=188.27, fov=38.0, aperture=0.02,
          focus=_v(-4.0, SUMMIT + 2.0, FACADE_Z + 16.0),
-         keys=[(185.92, _v(-15.5, Y + 3.2, FZ + 31.0), _v(-2.5, Y + 2.4, FZ + 14.5)),
-               (188.27, _v(-14.5, Y + 3.1, FZ + 30.0), _v(-2.5, Y + 2.4, FZ + 14.5))]),
+         keys=[(185.92, _v(-5.6, Y + 3.5, FZ + 33.0), _v(-3.6, Y + 2.5, FZ + 15.0)),
+               (188.27, _v(-5.0, Y + 3.4, FZ + 32.0), _v(-3.4, Y + 2.5, FZ + 15.0))]),
     # home to everyone on Mount Zion: the final calls, the held breath, the last chord
     dict(name="home_stage", kind="stage", t0=238.8, t1=254.07, fov=44.0, aperture=0.01,
          focus=_v(0.0, SUMMIT + 1.5, FACADE_Z + 16.0),
          keys=[(238.8, _v(-6.0, Y + 3.2, FZ + 42.0), _v(-0.8, Y + 3.8, FZ + 6.0)),
-               (247.5, _v(-2.0, Y + 3.5, FZ + 36.0), _v(-0.2, Y + 4.6, FZ + 5.0)),
-               (254.07, _v(0.0, Y + 3.8, FZ + 32.0), _v(0.0, Y + 6.4, FZ + 4.0))]),
+               (245.8, _v(-2.6, Y + 3.4, FZ + 37.0), _v(-0.3, Y + 4.3, FZ + 5.0)),
+               (249.43, _v(-0.8, Y + 3.5, FZ + 32.0), _v(0.0, Y + 5.0, FZ + 4.0)),
+               (254.07, _v(0.0, Y + 3.4, FZ + 25.5), _v(0.0, Y + 4.7, FZ + 4.0))]),
 ]
 
 # =========================================================================================================
@@ -133,15 +134,21 @@ def choir_mask(t):
     n = _shot(t)
     if n in OVER_WORDS:
         return 0.15
+    if n == "home_stage":
+        return 0.35          # the bright glory light: a soft silhouette keeps them clear of the pale floor
     if n in WIDE:
-        return 0.45
+        return 0.0
     return 0.85
 
 
 def orch_mask(t):
     n = _shot(t)
     if n in OVER_WORDS:
-        return 0.25
+        return 0.3
+    if n == "home_stage":
+        return 0.55
+    if n in WIDE:
+        return 0.0
     return 0.45
 
 
@@ -166,7 +173,7 @@ class Choir(Crowd):
         self._sw = np.zeros(self.n)
 
     def gain(self, t):
-        return float(self.g(t)) * (1.5 if _shot(t) in WIDE else 1.0)
+        return float(self.g(t)) * (2.2 if _shot(t) in WIDE else 1.0)
 
     def _place(self, P, ii, age, pr):
         sw = self._sw[ii]
@@ -448,7 +455,7 @@ class Players(Crowd):
         self.rate[:] = 0.0
 
     def gain(self, t):
-        return float(self.g(t)) * (1.4 if _shot(t) in WIDE else 1.0)
+        return float(self.g(t)) * (0.8 if _shot(t) == "slam1_stage" else 1.0)
 
     def sample(self, t):
         if self.g(t) <= 0.0:
@@ -748,21 +755,24 @@ class Instruments:
                             alpha=0.9 * g, emit=1.8, kind="line", dof=0.6))
         # the drum heads breathe on the beat; light bursts from the bells and heads on the hits
         bp = beat_pulse(t, 0.1)
-        out.append(dict(pos=self.hp, size=0.30, color=lin(GOLD), alpha=(0.10 + 0.12 * bp + 0.9 * hk) * g,
+        out.append(dict(pos=self.hp, size=0.35 + 1.4 * hk, color=lin(GOLD), alpha=(0.10 + 0.12 * bp + 0.8 * hk) * g,
                         kind="soft", emit=1.5, dof=0.6))
         if hk > 0.01:
-            u = t - last
+            u = max(t - last, 0.0)
             s = self.s
-            d = self.hd[:, None, :] * 1.0 + (s[..., :3] - 0.5) * 1.1
+            d = self.hd[:, None, :] * 1.2 + (s[..., :3] - 0.5) * 1.2
             d /= np.linalg.norm(d, axis=2, keepdims=True)
-            reach = (0.3 + 3.2 * (1.0 - np.exp(-max(u, 0.0) / 0.5))) * (0.5 + 0.5 * s[..., 3:4])
+            reach = (0.3 + 4.5 * (1.0 - np.exp(-u / 0.6))) * (0.4 + 0.6 * s[..., 3:4])
             pos = self.hp[:, None, :] + d * reach
-            out.append(dict(pos=pos.reshape(-1, 3), size=0.035, color=lin("#fff1cf"), alpha=hk * g, emit=3.0,
+            out.append(dict(pos=pos.reshape(-1, 3), size=0.05, color=lin("#fff1cf"), alpha=hk * g, emit=3.2,
                             kind="spark", twinkle=0.5, dof=0.6))
-            a = self.hp
-            b = self.hp + self.hd * (1.5 + 3.0 * (1.0 - np.exp(-max(u, 0.0) / 0.4)))
-            out.append(dict(pos=a, pos2=b, alpha2=np.zeros(len(a)), size=0.10, color=lin("#ffe6b0"),
-                            alpha=0.6 * hk * g, emit=2.0, kind="line", dof=0.6))
+            # beams of light out of the bells and up from the drum heads
+            a = np.repeat(self.hp, 3, axis=0)
+            dd = np.repeat(self.hd, 3, axis=0) + (self.s[:, :3, :3].reshape(-1, 3) - 0.5) * 0.25
+            dd /= np.linalg.norm(dd, axis=1, keepdims=True)
+            b = a + dd * (2.0 + 7.0 * (1.0 - np.exp(-u / 0.35)))
+            out.append(dict(pos=a, pos2=b, alpha2=np.zeros(len(a)), size=0.10, size2=0.35, color=lin("#ffe2a6"),
+                            alpha=0.5 * hk * g, emit=2.2, kind="ribbon", dof=0.6))
         return out
 
 
@@ -866,11 +876,11 @@ class Snow:
 def add(scene):
     choir = Choir(places=CHOIR_P, facing=0.0, kinds=CHOIR_KINDS,
                   start=dict(t=21.3, center=(0.0, FACADE_Z), speed=9.0), color="#ffb84a", color2="#ffe9b8",
-                  bright=2.6, points=4200, size=1.1, flash=1.2, glints=0.004, dof=0.35, seed=3.0,
+                  bright=3.2, points=3200, size=1.1, flash=1.2, glints=0.004, dof=0.35, seed=3.0,
                   light="#ffd890", lamp=(0.20, 1.0), scale=(0.97, 1.03))
     scene.add("choir", choir, mask=Mask("dark", strength=choir_mask, grow=0.02))
     scene.add("choir hearts", ChoirHearts(choir))
-    orch = Players(start=dict(t=2.2, dur=7.0), color=CRYSTAL, color2="#ffffff", bright=3.0, points=3400,
+    orch = Players(start=dict(t=2.2, dur=7.0), color=CRYSTAL, color2="#ffffff", bright=3.5, points=2800,
                    size=1.2, glints=0.006, dof=0.35, seed=4.0)
     scene.add("orchestra", orch, mask=Mask("dark", strength=orch_mask, grow=0.02))
     scene.add("risers", Risers())
