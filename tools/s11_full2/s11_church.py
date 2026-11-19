@@ -27,9 +27,9 @@ SHOTS = [
                      (20.0, _v(0.0, Y + 9.0, FZ + 88.0), _v(0.0, Y + 24.0, FZ)),
                      (22.5, _v(0.0, Y + 5.5, FZ + 56.0), _v(0.0, Y + 16.0, FZ)),
                      (26.0, _v(-1.2, Y + 4.2, FZ + 42.0), _v(-0.3, Y + 11.0, FZ)),
-                     (31.1, _v(-3.0, Y + 3.3, FZ + 30.0), _v(-0.6, Y + 7.5, FZ)),
-                     (38.8, _v(-1.2, Y + 3.0, FZ + 23.0), _v(0.0, Y + 7.0, FZ)),
-                     (40.54, _v(0.0, Y + 3.6, FZ + 22.0), _v(0.0, Y + 10.0, FZ)),
+                     (31.1, _v(-3.0, Y + 3.3, FZ + 30.0), _v(-0.6, Y + 5.6, FZ)),
+                     (38.8, _v(-1.2, Y + 3.0, FZ + 23.0), _v(0.0, Y + 5.4, FZ)),
+                     (40.54, _v(0.0, Y + 3.4, FZ + 22.0), _v(0.0, Y + 8.0, FZ)),
                      (41.6, _v(0.0, Y + 28.0, FZ + 56.0), _v(0.0, Y + 110.0, FZ - 40.0))]),
 ]
 
@@ -250,9 +250,12 @@ def _church():
         bt = float(_base_top(x))
         inside = abs(x - PORTAL_X) < PORTAL_W2 - PILLAR + 0.2
         under = abs(x - PORTAL_X) < PORTAL_W2 + 0.3
-        ys = np.linspace(y0 + PORTAL_H if under else bt, top, 40)
+        ys = np.linspace(y0 + PORTAL_H if under else bt, top, 60)
         P = np.stack([np.full(len(ys), x), ys, np.full(len(ys), z)], 1)
-        glass.add(P, 2.1, _glass_color(np.full(len(ys), x), ys), 0.62, u=x * 0.85 + (ys - y0) * 0.55)
+        # each pane mirrors the sky a little differently (real glass is never quite flat)
+        pane = 1.0 + 0.07 * np.sin(x * 12.9898 + np.floor((ys - y0) / FH) * 78.233) + 0.05 * r.standard_normal()
+        col = _glass_color(np.full(len(ys), x), ys) * pane[:, None]
+        glass.add(P, 2.1, col, 0.62, u=x * 0.85 + (ys - y0) * 0.55)
         if not under:
             ys = np.linspace(y0 + 0.1, bt, 6)
             P = np.stack([np.full(len(ys), x), ys, np.full(len(ys), z)], 1)
@@ -371,11 +374,12 @@ def _church():
     for xx in np.linspace(gx0, gx1, 6):
         fine.add((xx, y0 - 1.2, pz - 0.35), (xx, y0 + 4.6, pz - 0.35))
     # -- the broad white stone steps before the front (the choir stands on them)
+    steps = _Lines()                            # kept soft: the gold choir stands on them
     for i, (yy, zz) in enumerate(CHOIR_STEPS):
-        white.add((-13.0, yy - 0.05, zz + 0.65), (13.0, yy - 0.05, zz + 0.65))
-        fine.add((-13.0, yy - 0.6, zz + 0.66), (13.0, yy - 0.6, zz + 0.66))
-        fine.add((-13.0, yy - 0.6, zz + 0.66), (-13.0, yy - 0.05, zz + 0.66))
-        fine.add((13.0, yy - 0.6, zz + 0.66), (13.0, yy - 0.05, zz + 0.66))
+        steps.add((-13.0, yy - 0.05, zz + 0.65), (13.0, yy - 0.05, zz + 0.65))
+        steps.add((-13.0, yy - 0.6, zz + 0.66), (13.0, yy - 0.6, zz + 0.66))
+        steps.add((-13.0, yy - 0.6, zz + 0.66), (-13.0, yy - 0.05, zz + 0.66))
+        steps.add((13.0, yy - 0.6, zz + 0.66), (13.0, yy - 0.05, zz + 0.66))
         plinth.add([(-13.0, yy - 0.32, zz + 0.66), (13.0, yy - 0.32, zz + 0.66)], 0.5, lin("#e8eef8"), 0.07)
     # -- the plain white tower behind (right of middle), its window strips and a box on top; drawn where it
     # shows above the church
@@ -417,19 +421,20 @@ def _church():
         pglass.batch(1.0),
         warm.batch(1.6),
         stoneR.batch(1.0),
-        plinth.batch(1.2),
-        bands.batch(2.4),
-        canopy.batch(2.2),
         strips.batch(1.0),
         trunk.batch(1.2),
         _batch(GR, 0.16, lin("#7fd8a0") * 0.6 + lin(GOLD) * 0.25, 0.7, emit=1.3, twinkle=0.4),
     ]
     crisp = [
+        plinth.batch(1.2),
+        bands.batch(2.4),
+        canopy.batch(2.2),
         mull.batch(0.06, lin("#bcd4ff"), 0.5, 1.2),
         white.batch(0.22, WH, 1.0, 2.0),
         edgeL.batch(0.9, WH, 1.0, 2.2),
         blade.batch(0.55, WH, 1.0, 2.2),
         fins.batch(0.28, WH, 1.0, 2.2),
+        steps.batch(0.10, lin("#eef2fa"), 0.6, 1.3),
         fine.batch(0.08, lin("#e6eeff"), 0.8, 1.4),
         stone.batch(0.10, lin("#ffe2bc"), 0.9, 1.6),
         side.batch(0.12, lin("#cfdcff") * 0.8, 0.6, 1.2),
@@ -496,7 +501,7 @@ class _Body:
 
 def body_k(t):
     """How strongly the church's body hides what is behind it."""
-    return 0.9 * local_k(t)
+    return local_k(t)
 
 
 def _paths():
