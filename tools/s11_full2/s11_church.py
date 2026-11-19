@@ -245,6 +245,9 @@ def _box_lines(L, c, w, d, h):
 # The city of light on the summit plateau: towers banded in gold and white like the church, domes, the
 # great avenue (toward +z) with its lamps, the square left open before the church.
 # =========================================================================================================
+_CITY_FX = {}
+
+
 def _city():
     """The heavenly city on the summit round the church of light (round 7, rebuilt; Anthony: the white boxes were
     "just squares and empty spaces... so many of the same colors that it's hard to see and distinguish things").
@@ -317,6 +320,15 @@ def _city():
     St.a = [a for a, k in zip(St.a, jump) if k]; St.b = [b for b, k in zip(St.b, jump) if k]
     lamps += list(ring[::5] + np.array([0.0, 3.4, 0.0]))
     lamps = np.asarray(lamps, np.float64)
+    # kept for the music (MusicCity): the street points with their distance out from the church, the lamps,
+    # the towers' spire tips
+    SP = []
+    for a, b in zip(St.a, St.b):
+        n = max(int(np.linalg.norm(b - a) / 1.2), 1)
+        SP.append(a[None, :] + (b - a)[None, :] * ((np.arange(n) + 0.5) / n)[:, None])
+    SP = np.concatenate(SP)
+    _CITY_FX.update(streets=SP + np.array([0.0, 0.12, 0.0]), dist=np.hypot(SP[:, 0] - ZC[0], SP[:, 2] - ZC[2]),
+                    lamps=lamps, tops=np.asarray(tops, np.float64))
     Po = _Lines()
     for q in lamps:
         Po.add((q[0], SUMMIT, q[2]), (q[0], q[1] - 0.2, q[2]))
@@ -807,6 +819,99 @@ def church_glow(t):
             + 0.15 * _sc(70.0, 75.0, t) + 0.10 * beat_pulse(t))
 
 
+def _mfx():
+    """The music map helpers (s11_music_fx loads after this file, so it is looked up when first needed)."""
+    import songs.s11_music_fx as MF
+    return MF
+
+
+def _calm(t):
+    """How much the music may move my sets: held down while a phrase is on screen (nothing bright across the
+    words) and where the music already blazes (no white-out)."""
+    MF = _mfx()
+    return (1.0 - 0.85 * MF._reading(t)) * (1.0 - 0.35 * intensity(t) ** 2)
+
+
+def _music(t, part):
+    """The music's lift for a part of the church (round 7, Anthony: "way more effects consistently happening to
+    match each different sound in the song"): the white floor bands pulse with the kick and the bass, the glass
+    breathes with the low voices and swells with the strings, the glory with the brass."""
+    MF = _mfx()
+    c = _calm(t)
+    if part == "crisp":
+        return 1.0 + 0.55 * MF.fx_pulse(t) * c
+    if part == "soft":
+        return 1.0 + (0.25 * MF.fx_low(t) + 0.15 * MF.fx_swell(t)) * c
+    if part == "glory":
+        return 1.0 + 0.6 * MF.fx_brass(t) * c
+    return 1.0 + 0.3 * MF.fx_pulse(t) * c
+
+
+class EmblemSings:
+    """The emblem answers the voices: a soft sky-blue glow behind it that swells with the choir, and a ring of
+    fine sparkles round its rim that twinkles with the high voices (sopranos and altos). Soft and behind the
+    lettering, so the emblem always reads."""
+
+    def __init__(self):
+        (cx, cy), size = EMBLEM_SLOT
+        a = np.linspace(0.0, 2.0 * np.pi, 72, endpoint=False)
+        r = 0.56 * size
+        x = cx + r * np.cos(a)
+        self.ring = np.stack([x, cy + r * np.sin(a), front_z(x) + 0.35], 1)
+        self.seed = np.random.default_rng(7).random(len(a))
+        self.c = np.asarray(EMB_C, np.float64)[None, :] + np.array([[0.0, 0.0, 0.2]])
+
+    def sample(self, t):
+        if local_k(t) <= 0.0 or church_reveal(t) < 0.5 or t > LAST_CHORD - 2.4:
+            return None
+        MF = _mfx()
+        k = _calm(t) * church_reveal(t)
+        ch, hi = MF.fx_choir(t) * k, MF.fx_high(t) * k
+        if ch + hi < 0.02:
+            return None
+        tw = 0.5 + 0.5 * np.sin(9.0 * t + 6.28 * self.seed)
+        return [dict(pos=self.c, size=EMBLEM_SIZE * 1.5, color=lin("#5fb0ff"), alpha=0.16 * ch, kind="soft",
+                     emit=1.4, fog=0.3, reflect=False),
+                dict(pos=self.ring, size=0.22, color=lin("#dff1ff"), alpha=(0.25 + 0.75 * tw) * hi, kind="spark",
+                     emit=2.6, fog=0.3, reflect=False)]
+
+    def gain(self, t):
+        return city_k(t) * (0.5 if stage_view(t) else 1.0)
+
+
+class MusicCity:
+    """The summit city answers the music: light runs out along the streets from the church with the strings
+    (faster on their swells), the lamps flicker with the bass and the kick, the towers' spire tips flare on
+    the brass."""
+
+    def sample(self, t):
+        if local_k(t) <= 0.0 or not _CITY_FX or t < 12.0:
+            return None
+        MF = _mfx()
+        k = _calm(t)
+        st, sw, pu, br = MF.fx_strings(t) * k, MF.fx_swell(t), MF.fx_pulse(t) * k, MF.fx_brass(t) * k
+        out = []
+        if st > 0.03:
+            ph = (_CITY_FX["dist"] / 22.0 - t * (0.5 + 1.3 * sw)) % 1.0
+            a = st * np.exp(-((ph - 0.5) / 0.08) ** 2)
+            sel = a > 0.02
+            if sel.any():
+                out.append(dict(pos=_CITY_FX["streets"][sel], size=0.5, color=lin("#e4f0ff"), alpha=a[sel],
+                                kind="soft", emit=2.2, reflect=False))
+        if pu > 0.03:
+            out.append(dict(pos=_CITY_FX["lamps"], size=1.3, color=lin("#ffcf8a"), alpha=0.5 * pu, kind="soft",
+                            emit=2.0, reflect=False))
+        if br > 0.05 and len(_CITY_FX["tops"]):
+            P = _CITY_FX["tops"] + np.array([0.0, 2.0, 0.0])
+            out.append(dict(pos=P, size=2.6, color=lin("#ffe6b0"), alpha=0.35 * br, kind="soft", emit=2.2,
+                            reflect=False))
+            out.append(dict(pos=P, size=0.5, color=lin(WHITE), alpha=br, kind="spark", emit=3.5, reflect=False))
+        return out or None
+
+    def gain(self, t):
+        return city_k(t)
+
+
 class Church:
     """The church's glass, stone and warm light (part "soft"), its white bands, frames, blade, fins and name
     (part "crisp"), or the steps, podium edge and lowest band right behind the singers (part "steps"). In the close shots of the choir and orchestra the white lines step back further than the glass,
@@ -831,6 +936,7 @@ class Church:
             k *= 0.5
         elif shot_name(t) != "city" and not stage_view(t) and t > 200.0:
             k *= 0.5                            # others' sunrise views (the coda summit): calm, never white
+        k *= _music(t, self.part)
         if 252.5 < t < LAST_CHORD:              # round 7: the glass steps back as the comets close in, so the
             k *= 1.0 - 0.4 * _sc(252.6, 253.9, t)   # emblem's flare is the brightest thing on the last chord
         i = intensity(t)
@@ -1276,6 +1382,8 @@ def add(scene):
     scene.add("church ignite", Ignite(), reflect=False)
     scene.add("church beacon", Beacon(), reflect=True)
     scene.add("emblem flare", EmblemFlare(), reflect=False)
+    scene.add("emblem sings", EmblemSings(), reflect=False)
+    scene.add("city music", MusicCity(), reflect=False)
     for i, c in enumerate(_clouds()):
         scene.add(f"church cloud {i}", c, reflect=True)
     scene.add("father pillars", FATHER_PILLARS, reflect=True)
