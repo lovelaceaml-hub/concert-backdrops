@@ -490,6 +490,9 @@ class Cards(cards.Cards):
         title lines beside it (two layers, so the logo never blinks when the words come and go)."""
         pal, _, part = pal.partition(":")
         part = part or "logo"
+        # (fix, after CORE's light budget: the scene is dark at rest all film, so the corner always takes the
+        # night palette, warm white with a soft glow; the "day" navy no longer reads on it)
+        pal = "night"
         s, W, H = self.s * 1.1, self.w, self.h
         P = PALETTES[pal]
         col, acc = P["col"], P["acc"]
