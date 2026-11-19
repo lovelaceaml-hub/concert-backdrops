@@ -245,7 +245,10 @@ def glow(t):
 
 
 def crowd_k(t):
-    return proc_k(t) * glow(t) * (1.0 + mx(t, choir=0.3, strings=0.15))     # (round 8) they glow with the choir
+    k = proc_k(t) * glow(t) * (1.0 + mx(t, choir=0.3, strings=0.15))     # (round 8) they glow with the choir
+    if block_t0(t) == 154.2:                 # (MARCH) looking down on them, the words arrive over the multitude
+        k *= 1.0 - 0.35 * _mfx()._reading(t)
+    return k
 
 
 # ---------------------------------------------------------------------------------------------------------
@@ -403,12 +406,13 @@ class GrowSparks:
 
         def at(x):
             return (1 - x) ** 2 * b + 2 * x * (1 - x) * m + x * x * d + drift
-        p, q = at(e), at(np.maximum(e - 0.08, 0.0))
+        p, q = at(e), at(np.maximum(e - 0.04, 0.0))
         a = np.clip(uu[:, 0] / 0.15, 0.0, 1.0) * (0.5 + 0.7 * uu[:, 0]) * k * (1.0 - 0.6 * _mfx()._reading(t))
         col = lin("#fff0d6")
-        return [dict(pos=p, pos2=q, size=0.09, color=col, alpha=0.55 * a, emit=2.4, kind="line", reflect=False),
+        return [dict(pos=p, pos2=q, size=0.06, color=col, alpha=0.3 * a, emit=2.2, kind="line", reflect=False),
+                dict(pos=p, size=0.9, color=col, alpha=0.12 * a, emit=1.8, kind="soft", reflect=False),
                 dict(pos=p, size=0.3, color=col, alpha=0.9 * a, emit=3.2, kind="spark", seed=self.seed[on],
-                     reflect=False)]
+                     twinkle=0.4, reflect=False)]
 
 
 def _joined(P, F, J, start):
@@ -645,7 +649,7 @@ def _comet_head(j, phase):
 COMET_PHASES = [("burst", LAND, 130.29, 1.0, 1.4, 0.05), ("ring", 130.29, 134.54, 0.8, 1.6, 0.05),
                 ("march", 134.54, 135.5, 0.8, 0.8, 0.3), ("weave", 141.5, 144.4, 1.0, 1.2, 0.05),
                 ("dive", 144.4, 148.6, 1.1, 0.9, 0.05),
-                ("rise", RISE + 0.5, CROWN_HOME + 0.1, 0.55, 0.9, 0.3)]   # (MARCH round 2: no "home" comets)
+                ("rise", 156.0, CROWN_HOME + 0.1, 0.55, 0.9, 0.3)]     # (from the cut: never by the lens)   # (MARCH round 2: no "home" comets)
 
 
 # ---------------------------------------------------------------------------------------------------------
@@ -895,6 +899,11 @@ class KingTrains:
         self.edge, self.emb, self.field = edge, emb, ~(edge | emb)
         self.seed = np.random.default_rng(84).random(len(self.S))
         self.col = [lin(K_COL[(i // 2 + i % 2 * 3) % len(K_COL)]) for i in range(K_N)]
+        # (MARCH) the cloth's points scattered within their cells, so the train glows like cloth, not a grid of lamps
+        jr = np.random.default_rng(85)
+        f = self.field
+        self.S = self.S + f * jr.uniform(-0.45, 0.45, len(self.S)) / (self.NS - 1)
+        self.W = self.W + f * jr.uniform(-0.45, 0.45, len(self.W)) * 2.0 / (self.NW - 1)
 
     def _shape(self, i, t):
         """World points of king i's mantle and train."""
@@ -928,7 +937,7 @@ class KingTrains:
             grow = _sc(KING_T[i], KING_T[i] + 0.6, t)            # the train unrolls behind the king as they appear
             vis = self.S <= grow + 1e-6
             f, e, m = self.field & vis, self.edge & vis, self.emb & vis
-            out.append(dict(pos=P[f], size=0.07, color=self.col[i], alpha=0.42 * a, emit=1.8, kind="soft",
+            out.append(dict(pos=P[f], size=0.11, color=self.col[i], alpha=0.3 * a, emit=1.8, kind="soft",
                             reflect=False))
             out.append(dict(pos=P[f][::3], size=0.022, color=self.col[i] * 0.6 + lin(WHITE) * 0.4, alpha=0.6 * a,
                             emit=2.4, kind="spark", twinkle=0.5, seed=self.seed[f][::3], reflect=False))
