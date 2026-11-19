@@ -25,3 +25,37 @@ For each order:
 3. As soon as each part finishes: copy it to `work/s11_full2/drop/<tag>_cNN.mp4`, upload it to the drop page (Artifact tool, `url` https://claude.ai/artifact/1SAvCedZLDEPTJzr1kChaj, `file_path` that copy, `asset: true`), and send the coordinator one short message: `PART {NAME} tag=<tag> cNN=<asset id>` (several parts in one message is fine if they finished together).
 4. When all parts of the order are uploaded, send `DONE {NAME} tag=<tag> chunks=<list>` and wait for the next order.
 If an order says `CODE UPDATE`, do what it says without stopping the workers. If it says `STOP`, kill the workers and reply `STOPPED {NAME}`. If an order says to create lock folders for some chunks, do that (it hands those chunks to another machine).
+
+## 3. Section orders (from round 6, the usual way)
+Each machine owns one section (see PIPELINE.md). The full standing order a machine receives is below, with its letter, section index, times, parts, audio asset and file name filled in.
+
+    SECTION ORDER {X} (new way of working, from Anthony): you now OWN one section of the film. You render only its parts, add its own audio, and upload the finished section video. You also write your progress straight onto the review page. Keep this standing order: future passes for your section will only say `SECTION {X} commit=<sha> tag=<tag>`.
+    
+    Your section: index {I}, "{NAME}", film time {T0} to {T1} s, parts {CH}.
+    Pass: commit=af0c4783ce8c1e9c5935644e375dfdd0a88693c3, tag=h9, fps=30, scale=0.5.
+    
+    1. Run `git fetch origin backdrop2/s11-full && git checkout --detach <commit>`. Never edit files.
+    2. Once only, the music-effects analysis:
+       - Read (with the Artifact tool) asset 68f04674373168585829d2e85cd47af1 from https://claude.ai/artifact/1SAvCedZLDEPTJzr1kChaj.
+       - Run `base64 -d <saved file> > work/s11_full2/music_fx.npz`.
+       - Check that `sha256sum` gives fa1ea7afa11d3161eec8819f007d9802ff9e5c452337586798a92501d7a7c2ea.
+    3. Your audio clip:
+       - Read asset {AUD} from the same page.
+       - Copy the saved file to `work/s11_full2/audio/s{N}.mp4`.
+       - `work/` is ignored by git. Never commit, push or upload audio anywhere.
+    4. Start 4 workers (one per core) with nohup, all running:
+       `python tools/s11_full2/render_chunks.py --order {CH} --parts work/s11_full2/<tag> --scale 0.5 --fps 30`
+       Use a monitor that wakes you each time a new `work/s11_full2/<tag>/cNN.mp4` appears.
+    5. Progress on the page (ArtifactData tool, url https://claude.ai/artifact/1SAvCedZLDEPTJzr1kChaj, collection `fleet`, doc_id `{X}`):
+       - At the start, create or replace the doc with `{"section": {I}, "tag": "<tag>", "state": "rendering", "done": 0, "total": {NP}, "updated": "<UTC ISO time>", "note": ""}`. If the doc already exists, `get` it first and pass its version as if_version.
+       - On every new part, update `done` and `updated` (pin if_version to the version from your last write).
+       - Do NOT message the coordinator per part.
+    6. When all {NP} parts exist:
+       - Set state to `uploading`.
+       - Run `bash tools/s11_full2/section_build.sh <tag> "11 <tag> - {FILE}" {T0} {T1} work/s11_full2/audio/s{N}.mp4`.
+       - Look at 2 frames from the result with ffmpeg + Read: a quick sanity check, not black or broken.
+       - Upload `work/s11_full2/deliver/11 <tag> - {FILE}.mp4` to the page (Artifact tool, url above, asset: true). If the path is outside your working directory, copy it into it first.
+       - Update the fleet doc to `{"state": "ready", "url": "/_blob/<asset id>", "done": {NP}, "updated": "<UTC ISO time>"}`. The page then shows it at once.
+    7. Send the coordinator (session_01DSHsMgq59yAPPQ2ZCifhgv) ONE message: `SECTION DONE {X} tag=<tag> asset=<id> cpu=<total CPU s if known>`. If anything fails, set the fleet state to `blocked` with a short note and message the coordinator the exact error.
+    
+    Rules as before: no git commits or pushes, no repo edits, no em or en dashes, no paid services, never dispatch GitHub workflows. Upload only your section video. Never upload audio or put it in git.

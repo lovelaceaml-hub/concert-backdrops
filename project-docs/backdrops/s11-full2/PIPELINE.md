@@ -13,6 +13,14 @@
 - Song 11 fleet (2026-11-19): A, B, C, D, E, F, G plus the coordinator's own 4 cores: about 32 cores, a full pass in roughly 12 to 15 minutes.
 - The coordinator downloads each asset (Artifact read with `path` = asset id, one per call), copies it into the parts folder (`tools/s11_full2/live/place.sh`), joins sections as they complete and publishes them.
 
+## One section per machine (Anthony, 2026-11-19, from round 6 on)
+"Make it so that each of those machines has specific parts that they work on, and then they can have the audio. That way, you don't have to keep splicing it and cutting it. You just have to put it together."
+- Standing assignment: A Intro (parts 0 to 7), B Verse 1 (8 to 16), C Chorus 1 (16 to 24), D Verse 2 (24 to 31), E Chorus 2 (32 to 40), F Coda (40 to 47), G Ending (47 to 54). A pass is ordered with `SECTION X commit=<sha> tag=<tag>`.
+- Each machine renders its own parts on its 4 cores, then `tools/s11_full2/section_build.sh <tag> <name> <t0> <t1> <clip>` joins them, cuts exactly t0..t1 and adds that section's own audio clip (crf 25, ready for the page). It uploads the section video to the review page and writes its progress itself to the page's `fleet/<letter>` doc (section, state, done, total, url, updated); the page shows the progress live and swaps in the new video the moment it is ready.
+- The audio clips (one per section, cut from the recording) and the music analysis (music_fx.npz, as base64 text) are private assets on the review page, listed in its `keep/now` doc. Never in git.
+- The coordinator only checks each finished section, assembles the full film, answers Anthony's requests and keeps the records.
+- Storage: the review page keeps only the newest section videos and the files in `keep/now`; its "Clear old files" button removes the rest (old versions are not archived: Drive uploads from a session are limited to about 3 MB).
+
 ## The review page (Anthony's live dashboard)
 - A private claude.ai artifact (source `tools/s11_full2/live/review_page.html`) with the `db` and `assets` capabilities.
 - Shows: each section's newest video in order with "Updated # minutes ago" and play straight through; live status (overall progress, a card per machine, what each is rendering); findings and suggestions with Approve and Decline; request boxes per section and for the whole film. Compact; findings and requests fold.

@@ -124,7 +124,7 @@ let SECTIONS = [
   {name:"Ending", span:"3:59 to 4:35", pass:"grand", url:"/_blob/b5f06fe6f31cfa1e8a3e21ab43101262", updated:"2026-11-19T05:04:18Z", state:"ready", pct:100, where:"", note:"Back to everyone on Mount Zion, the held breath, the end card on the last chord."}
 ];
 let STATUS = {updated:"", title:"Grand pass render", text:"", active:false, jobs:[], machines:[]};
-let FINDINGS = [], REQUESTS = [];
+let FINDINGS = [], REQUESTS = [], FLEET = [];
 let db = null;
 
 const LABEL = {grand:"Grand pass", prev:"Earlier pass", wait:"Not rendered yet"};
@@ -242,8 +242,24 @@ function fillList(ul, items, make, emptyText){
   items.forEach(x => ul.append(make(x)));
 }
 
+// Each machine owns one section and writes its own progress to fleet/<letter> (Anthony, 2026-11-19).
+function viewOf(s, i){
+  const v = Object.assign({}, s);
+  const m = FLEET.filter(f => f.section === i).sort((a, b) => String(b.updated).localeCompare(String(a.updated)))[0];
+  if (!m) return v;
+  const busy = ["starting", "rendering", "uploading"].includes(m.state);
+  if (busy){
+    v.state = m.state === "uploading" ? "joining" : "rendering"; v.where = "Machine " + m.name;
+    v.pct = m.total ? Math.round(100 * Math.min(m.done || 0, m.total) / m.total) : 0;
+  } else if (m.state === "ready" && m.url && Date.parse(m.updated || 0) > Date.parse(s.updated || 0)){
+    v.url = m.url; v.updated = m.updated; v.state = "ready"; v.pct = 100; v.pass = "grand"; v.where = "";
+    if (m.note) v.note = m.note;
+  }
+  return v;
+}
 function render(){
-  SECTIONS.forEach((s, i) => {
+  const VIEW = SECTIONS.map(viewOf);
+  VIEW.forEach((s, i) => {
     const r = rows[i] || (rows[i] = build(i));
     r.h2.textContent = s.name; r.span.textContent = s.span;
     r.pass.replaceWith(r.pass = chip(s.pass === "grand" ? "new" : s.pass === "prev" ? "prev" : "wait", LABEL[s.pass] || s.pass));
@@ -271,7 +287,7 @@ function render(){
     li.prepend(el("span", "hint", where(c.x.section)));
     return li;
   }, "Nothing closed yet.");
-  const total = SECTIONS.reduce((a, s) => a + (s.pct || 0), 0) / Math.max(1, SECTIONS.length);
+  const total = VIEW.reduce((a, s) => a + (s.pct || 0), 0) / Math.max(1, VIEW.length);
   document.getElementById("ovTitle").textContent = STATUS.title || "Render";
   document.getElementById("ovFill").style.width = Math.round(total) + "%";
   document.getElementById("ovFill").classList.toggle("done", total >= 99.5);
@@ -280,8 +296,13 @@ function render(){
   document.getElementById("dot").classList.toggle("on", !!STATUS.active);
   const MS = {rendering:["working2","Rendering"], idle:["idle","Idle"], blocked:["blocked","Needs you"], starting:["busy","Starting"], uploading:["busy","Uploading"]};
   const ml = document.getElementById("machines"); ml.textContent = "";
-  if (!STATUS.machines.length) ml.append(el("li", "empty", "Machine status appears with the next update."));
-  STATUS.machines.forEach(m => {
+  const MACH = STATUS.machines.filter(m => !FLEET.some(f => "Machine " + f.name === m.name || f.name === m.name))
+    .concat(FLEET.map(f => ({name: "Machine " + f.name, state: f.state === "ready" ? "idle" : f.state,
+      doing: SECTIONS[f.section] ? SECTIONS[f.section].name + (f.total ? ": part " + Math.min(f.done || 0, f.total) + " of " + f.total : "") : "",
+      note: f.state === "ready" ? "Section uploaded" : (f.note || ""), last: f.updated})))
+    .sort((a, b) => String(a.name).localeCompare(String(b.name)));
+  if (!MACH.length) ml.append(el("li", "empty", "Machine status appears with the next update."));
+  MACH.forEach(m => {
     const li = el("li", "mach"), top = el("div", "top"), st = MS[m.state] || ["idle", m.state || ""];
     top.append(el("b", "", m.name || ""), chip(st[0], st[1]));
     li.append(top);
@@ -292,8 +313,11 @@ function render(){
     ml.append(li);
   });
   const jobs = document.getElementById("jobs"); jobs.textContent = "";
-  if (!STATUS.jobs || !STATUS.jobs.length) jobs.append(el("li", "empty", "Nothing rendering right now."));
-  else STATUS.jobs.forEach(j => {
+  const JOBS = (STATUS.jobs || []).concat(FLEET.filter(f => ["starting", "rendering", "uploading"].includes(f.state)).map(f => ({
+    machine: "Machine " + f.name, what: SECTIONS[f.section] ? SECTIONS[f.section].name + " " + SECTIONS[f.section].span : "",
+    pct: f.total ? 100 * Math.min(f.done || 0, f.total) / f.total : 0})));
+  if (!JOBS.length) jobs.append(el("li", "empty", "Nothing rendering right now."));
+  else JOBS.forEach(j => {
     const li = el("li", "job"), t = el("div", "track"), f = el("div", "fill");
     f.style.width = Math.max(0, Math.min(100, j.pct || 0)) + "%"; t.append(f);
     li.append(el("b", "", j.machine || ""), el("span", "what", j.what || ""), el("span", "pct", Math.round(j.pct || 0) + "%"), t);
@@ -327,6 +351,10 @@ render(); setInterval(tick, 20000);
     FINDINGS = qs.docs.map(d => Object.assign({id: d.id}, d.data())).sort((a, b) => String(a.created).localeCompare(String(b.created)));
     render();
   }, fail);
+  db.collection("fleet").onSnapshot(qs => {
+    FLEET = qs.docs.map(d => Object.assign({name: d.id}, d.data()));
+    render();
+  }, fail);
   db.collection("requests").onSnapshot(qs => {
     REQUESTS = qs.docs.map(d => Object.assign({id: d.id}, d.data())).sort((a, b) => String(b.created).localeCompare(String(a.created)));
     render();
@@ -351,7 +379,7 @@ render(); setInterval(tick, 20000);
     return {list: out, usage};
   }
   async function keepSet(){
-    const keep = new Set(SECTIONS.map(s => idOf(s.url)).filter(Boolean));
+    const keep = new Set(SECTIONS.map(s => idOf(s.url)).concat(FLEET.map(f => idOf(f.url))).filter(Boolean));
     try { const d = db || await window.claude.use("db"); const k = await d.doc("keep/now").get(); if (k.exists) (k.data().ids || []).forEach(x => keep.add(String(x))); } catch (e) {}
     return keep;
   }
