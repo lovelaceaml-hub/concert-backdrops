@@ -26,7 +26,7 @@ FPS = 60
 SONG_NAME = "The Rose"
 OPEN_END = 8.6            # the opening is whole from frame 0 to 7.0 s, then dissolves (gone by 8.6 s)
 SIG_IN = (8.0, 9.6)       # the signature fades in once as the opening leaves, then stays to the last frame
-DAY = (199.0, 244.0)      # the pale dawn: the signature turns navy over 3 s, and back to warm white for the night
+DAY = (183.0, 239.5)      # the pale dawn (measured sky behind the signature): navy over 3 s, back to warm white before dusk
 SIG_X, SIG_Y = 0.034, 0.042   # its top left corner (fractions of 1920 x 1080)
 
 

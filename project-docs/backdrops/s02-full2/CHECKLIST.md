@@ -51,7 +51,7 @@ The Drive rule files (read in this session, last changed 2026-11-14 to 2026-11-1
 |---|---|---|
 | Opening readable from frame 0, held at least 7 s: logo, HEALING CONCERT, "The Words of Mother's Love" / "That Bring Peace" (italic), song title large; on calm sky | yes | stills 0:00 and 0:07; whole 0:00 to 0:07.0, gone by 0:08.6; navy because song 01's morning sky is pale |
 | Signature from the end of the opening to the last frame, top left: logo mark, song title, concert title, DEC 6 · 4:30 PM (brightest), HEALING CONCERT · LAS VEGAS | yes | render.py Lockups; on every frame from 0:09.6 to the end (fade in 8.0 to 9.6) |
-| Signature never flashes | yes | one constant layer; during the pale dawn (3:19 to 4:04) it turns navy over 3 s and back to warm white over 3 s (never white on a pale sky) |
+| Signature never flashes | yes | one constant layer; during the pale dawn (3:03 to 3:59.5, set from the measured sky brightness behind it) the letters change colour to navy over 3 s and back to warm white over 3 s; navy is laid over the whole white layer, so the sky never shows through the letters |
 | Nothing covers the signature; 40 px clear from any expression box | yes | particles fade in its corner (SIG_BOX); stills: about 50 px between it and the ENCOURAGEMENT capsule |
 | Date line capitals at least about 22 px at 1080p | yes | Jost 500 at 32 px: capitals about 23 px |
 | 3 to 6 short fragments with their own effects, never with an expression | yes, 3 | TIMELINE fragments |
