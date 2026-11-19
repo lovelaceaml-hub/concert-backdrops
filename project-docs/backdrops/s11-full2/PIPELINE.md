@@ -22,6 +22,12 @@
 - The coordinator only checks each finished section, assembles the full film, answers Anthony's requests and keeps the records.
 - Storage: the review page keeps only the newest section videos and the files in `keep/now`; its "Clear old files" button removes the rest (old versions are not archived: Drive uploads from a session are limited to about 3 MB).
 
+## Continuous mode (Anthony, 2026-11-19: "keep all the machines and threads working as quickly as possible, continuously updating again and again and again, working on their sections")
+- Builders deliver small finished improvements often (about every 20 to 30 minutes) on their own branches and report `BUILT <KEY>`; when their task list is empty they pick the next improvement in their area themselves.
+- The coordinator merges every reported branch at once with `tools/s11_full2/live/merge_builders.sh` (fetch, merge each builder branch, push).
+- Each render machine loops on its own section: whenever origin/backdrop2/s11-full changes in tools/s11_full2 (not live/), it renders its section at that commit with tag `r<sha7>`, uploads it, sets its fleet doc ready (the page shows it at once) and reports `SECTION DONE`.
+- The reviewer reviews each new section version as it lands (at most 3 findings each, always with a suggestion) and reports `REVIEWED`.
+
 ## The reviewer (Anthony, 2026-11-19: "create another thread that's specifically for reviewing and giving suggestions and findings")
 - A dedicated cloud session (the "Song 11 reviewer") reviews every pass against DESIGN.md and Anthony's requests: frames every 1 to 2 s, every phrase and hit, sync, glare, clutter, colour, cinematic quality. It posts its findings and creative suggestions straight to the review page (`findings/*`, state open, by "reviewer") for Anthony to approve or decline, then tells the coordinator `REVIEW DONE pass=<tag> findings=<ids>`. It never edits code or renders.
 - The coordinator orders a review with `REVIEW pass=<tag>` after each pass and acts on approved findings in the next round.
