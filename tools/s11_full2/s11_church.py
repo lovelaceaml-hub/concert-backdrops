@@ -34,16 +34,22 @@ def _shot(i, name, keys, fov=50.0, aperture=0.02, **kw):
 
 
 _STEPS_FOCUS = _v(0.0, Y + 2.2, FZ + 3.0)
+# the middle of the church's emblem on the glass (EMBLEM_SLOT below: x 2.0, the 13th storey less the margin and
+# half its 9 m; checked there), where the nine comets meet on the last chord
+EMB_C = _v(2.0, Y + 2.3 + 13.0 * 3.6 - 0.6 - 4.5, FZ + 0.2)
 _ROOF = _v(0.0, SUMMIT + 2.3 + 54.0 + 4.0, FACADE_Z - 14.0)     # over the middle of the roof canopy
 SHOTS = [
-    # 0:00 the title (Anthony, round 6: "a buildup for the intro instead of just starting in front of the church"):
-    # far out over the mirror sea in the dark heavenly night, Zion only a dark line on the horizon under the
-    # title's last line; on the first hit (0:02.32) one light ignites on its summit, and with every beat after
-    # it grows and the city's lights come on round it, ring by ring outward. A slow, steady drift in (the title
-    # stays readable until 0:11.9)
-    _shot(0, "city", [(0.0, (-8.0, 12.0, 1500.0), (0.0, 573.0, -420.0)),
-                      (0.5, (-2.0, 11.5, 1290.0), (0.0, 502.0, -420.0)),
-                      (1.0, (2.0, 11.0, 1080.0), (0.0, 421.0, -420.0))], fov=50.0, pace="linear", roll=(-1.0, 0.8)),
+    # 0:00 the title (Anthony, round 6: "a buildup for the intro instead of just starting in front of the church";
+    # round 7: one continuous journey): far out over the mirror sea in the dark heavenly night, Zion only a dark
+    # line on the horizon under the title's last line; the push across the sea starts on frame 0 and gathers
+    # speed all through the title; on the first hit (0:02.32) one light ignites on Zion's summit, and with every
+    # beat after it grows and the city's lights come on round it, ring by ring outward. From 0:10 the title draws
+    # together into one point of light that drifts down onto that star (s11_cards.py), and the camera tilts down
+    # with it, skimming the water, straight into the long flight (0:11.9) at the same speed
+    _shot(0, "city", [(0.0, (-8.0, 12.5, 1640.0), (0.0, 573.0, -420.0)),
+                      (0.45, (-3.0, 11.8, 1430.0), (0.0, 520.0, -420.0)),
+                      (0.8, (1.0, 10.6, 1170.0), (0.0, 430.0, -420.0)),
+                      (1.0, (2.0, 9.2, 800.0), (0.0, 175.0, -420.0))], fov=50.0, pace="linear", roll=(-1.0, 0.8)),
     # 0:11.9 the second stage of the approach: one long banking flight, skimming the mirror sea down the canyon
     # of cloud as comets shoot up out of the water, while the church ignites storey by storey on the beats; a
     # swoop up the front of Zion over the terraces, and down the great avenue to the church
@@ -111,10 +117,13 @@ SHOTS = [
     # 4:02.5 the church at peace, lanterns: a slow drift toward the name, low in the frame under the words
     _shot(14, "church_cut", [(0.0, (10.0, Y + 46.0, FZ + 86.0), (8.0, Y + 68.0, FZ - 10.0)),
                              (1.0, (7.0, Y + 48.0, FZ + 74.0), (8.0, Y + 68.0, FZ - 10.0))], fov=46.0),
-    # 4:11.7 the last swell: a great crane from the steps up over the roof, the comets spiralling up with it
-    _shot(15, "church_cut", [(0.0, (0.0, Y + 6.0, FZ + 58.0), (0.0, Y + 36.0, FZ - 20.0)),
-                             (0.4, (-10.0, Y + 30.0, FZ + 64.0), (0.0, Y + 46.0, FZ - 22.0)),
-                             (1.0, (0.0, Y + 76.0, FZ + 64.0), (0.0, Y + 56.0, FZ - 30.0))], fov=56.0, roll=lambda t: 14.0 * _sc(251.7, 254.07, t)),
+    # 4:11.7 the last swell (round 7, Anthony approved): the camera rises from the steps and pulls back as the
+    # nine comets of the whole film circle the church once in a widening ring, and settles square on the glowing
+    # emblem, where they meet exactly on the last chord (4:14.07); its flare carries into the end card
+    _shot(15, "church_cut", [(0.0, (-6.0, Y + 8.0, FZ + 66.0), (0.0, Y + 34.0, FZ - 16.0)),
+                             (0.45, (-16.0, Y + 30.0, FZ + 104.0), (0.0, EMB_C[1] - 6.0, FZ - 12.0)),
+                             (1.0, (4.0, EMB_C[1] + 2.0, FZ + 128.0), tuple(EMB_C))], fov=56.0,
+          roll=lambda t: 7.0 * np.sin(np.pi * _sc(251.7, 254.07, t))),
 ]
 SHOTS = [sh for sh in SHOTS if sh is not None]
 
@@ -349,6 +358,7 @@ _FONT = "jost-latin-600-normal.ttf"
 # Anthony (2026-11-19): bigger, with the name above it
 EMBLEM_SIZE = 9.0
 EMBLEM_SLOT = ((NAME_MID, CH_Y0 + 13.0 * FH - 0.6 - EMBLEM_SIZE / 2.0), EMBLEM_SIZE)
+assert abs(EMBLEM_SLOT[0][0] - EMB_C[0]) < 1e-6 and abs(EMBLEM_SLOT[0][1] - EMB_C[1]) < 1e-6, "EMB_C moved"
 
 
 # The emblem as Anthony sent it (2026-11-19), traced from his image at 128 x 128: 0 none, 1 the blue (the ring
@@ -868,6 +878,10 @@ class Ignite:
 
 _CROWN = _ROOF + _v(0.0, 7.0, 0.0)
 
+# Round 7 (Anthony approved): the title draws together into one point of light from 0:10 (s11_cards.py) and
+# it drifts down onto the star on Zion, landing at OPEN_LAND, where the star flares once
+OPEN_GATHER, OPEN_POINT, OPEN_LAND = 9.9, 10.75, 11.65
+
 
 def beacon_k(t):
     """The light on Zion's summit: it ignites on the first hit (0:02.32) far off in the night and grows on every
@@ -876,7 +890,8 @@ def beacon_k(t):
     k = 0.0
     if 2.0 < t < 22.5:
         k = (_sc(2.25, 2.4, t) * (0.5 + 0.5 * _stair(t, 2.4, 11.7) + 0.25 * _stair(t, 12.0, 19.0))
-             + 1.4 * hit_pulse(t, [HIT["first"]], rise=0.05, fall=0.9) + 0.5 * hit_pulse(t, [11.9], rise=0.05, fall=0.8))
+             + 1.4 * hit_pulse(t, [HIT["first"]], rise=0.05, fall=0.9) + 1.1 * hit_pulse(t, [OPEN_LAND], rise=0.12, fall=0.9)
+             + 0.3 * hit_pulse(t, [11.9], rise=0.05, fall=0.8))
         k *= 1.0 - _sc(19.5, 21.6, t)
     elif 31.0 < t < 41.6:
         k = 0.25 + 0.85 * crown_build(t) + 0.8 * hit_pulse(t, [HIT["call2"], 38.24], rise=0.05, fall=0.7)
@@ -1038,7 +1053,7 @@ def _comets():
     for j, (t0, t1, ya, yb) in enumerate(((58.4, 61.3, 8.0, 20.0), (97.7, 99.4, 10.0, 40.0), (108.4, 109.8, 60.0, 64.0),
                                          (139.2, 141.5, 6.0, 18.0), (178.4, 180.7, 20.0, 46.0),
                                          (195.2, 197.2, 4.0, 30.0), (222.0, 224.03, 10.0, 50.0),
-                                         (242.5, 244.8, 6.0, 14.0), (251.7, 254.07, 4.0, 72.0))):
+                                         (242.5, 244.8, 6.0, 14.0))):
         n = 6 if j in (0, 3, 7) else 9                  # fewer and calmer while words are read
         for i in range(n):
             out.append(Comet(_orbit(i, t0, SUMMIT + ya, SUMMIT + yb, r=44.0 + 3.0 * (i % 3), w=0.5 + 0.35 * (j % 3)),
@@ -1050,12 +1065,85 @@ def _comets():
         out.append(Comet(_rise(i, ts), COL9[(i * 4) % 9], ts, ts + 3.2, trail=1.0, width=1.1, bright=1.5, fade=0.25,
                          light=(i in (1, 5)), seed=90 + i))
     # comets racing past the lens into the church in the bold swoops
-    for j, bi in enumerate((8, 11, 13, 15)):
+    for j, bi in enumerate((8, 11, 13)):
         if bi < len(_B):
             for i in range(4):
                 out.append(Comet(_past_lens(bi, i), COL9[(2 * j + 3 * i) % 9], _B[bi][0], _B[bi][1] + 0.4, trail=0.9,
                                  width=1.6, bright=1.3, fade=0.2, seed=150 + 4 * j + i))
+    # the last chord (round 7): the nine comets of the whole film fly in from every direction, circle the church
+    # once in a widening ring and meet in the emblem exactly on the chord
+    for i in range(9):
+        out.append(Comet(_finale(i), COL9[i], FIN_IN, LAST_CHORD + 0.45, trail=1.5, width=1.0, bright=1.4, fade=0.4,
+                         light=(i in (1, 4, 7)), seed=200 + i))
     return out
+
+
+# The finale's times: the comets set out (4:08), reach the ring round the church, close in on the emblem, meet
+FIN_IN, FIN_RING, FIN_CLOSE = 248.0, 251.1, 253.35
+
+
+def _finale(i):
+    """One of the nine comets of the last chord: from far off in its own direction (high over the sky, low over
+    the sea), in to a ring round the church; once round it as the ring widens and climbs to the emblem's height;
+    then straight into the emblem, all nine together on LAST_CHORD."""
+    rng = np.random.default_rng(300 + i)
+    az0 = 2.0 * np.pi * i / 9.0 + 0.25 * rng.standard_normal()
+    r0 = 560.0 + 160.0 * rng.random()
+    h0 = SUMMIT + (-60.0 if i % 3 == 0 else (220.0 if i % 3 == 1 else 70.0)) + 30.0 * rng.random()
+    a_ring = 2.0 * np.pi * i / 9.0 + 0.9             # where it joins the ring (a quarter turn of swirl on the way)
+    E = np.asarray(EMB_C, np.float64)
+
+    def ring(t):
+        u = float(np.clip((t - FIN_RING) / (FIN_CLOSE - FIN_RING), 0.0, 1.0))
+        e = u * u * (3.0 - 2.0 * u)
+        a = a_ring + 2.0 * np.pi * e                  # once round
+        r = 42.0 + 34.0 * e                           # the ring widens
+        y = SUMMIT + 26.0 + (E[1] - SUMMIT - 26.0) * e + 2.0 * np.sin(2.0 * t + i)
+        return np.array([_HC[0] + r * np.sin(a), y, _HC[2] + r * np.cos(a)])
+
+    def head(t):
+        if t < FIN_RING:                              # flying in, curving toward its place on the ring
+            u = float(np.clip((t - FIN_IN) / (FIN_RING - FIN_IN), 0.0, 1.0))
+            e = 1.0 - (1.0 - u) ** 2.2
+            a = az0 + (a_ring - az0) * e
+            r = r0 + (42.0 - r0) * e
+            y = h0 + (SUMMIT + 26.0 - h0) * (1.0 - (1.0 - u) ** 1.6)
+            return np.array([_HC[0] + r * np.sin(a), y, _HC[2] + r * np.cos(a)])
+        p = ring(t)
+        if t <= FIN_CLOSE:
+            return p
+        u = float(np.clip((t - FIN_CLOSE) / (LAST_CHORD - FIN_CLOSE), 0.0, 1.0))
+        q = ring(FIN_CLOSE)
+        e = u ** 1.7                                  # gathering speed into the emblem
+        c = q + (E - q) * e
+        c[1] += 6.0 * np.sin(np.pi * u) * (1.0 if i % 2 else -1.0) * (1.0 - u)
+        return c
+    return head
+
+
+class EmblemFlare:
+    """The emblem glowing as the comets come round, and flaring as they meet in it on the last chord (the flare
+    carries on over the cut into the end card: s11_cards.py)."""
+
+    def sample(self, t):
+        if not (FIN_RING - 0.5 < t < LAST_CHORD + 0.05) or local_k(t) <= 0.0:
+            return None
+        k = self.k(t)
+        P = np.asarray(EMB_C, np.float64)[None, :] + np.array([[0.0, 0.0, 0.6]])
+        blue, white = lin("#7cc8ff"), lin(WHITE)
+        return [dict(pos=P, size=11.0 + 10.0 * k, color=blue, alpha=0.10 + 0.22 * k, kind="soft", emit=1.6, fog=0.0,
+                     dof=0.0, reflect=False),
+                dict(pos=P, size=3.0 + 4.0 * k, color=lin("#d8f0ff"), alpha=0.25 + 0.5 * k, kind="soft", emit=2.4,
+                     fog=0.0, dof=0.0, reflect=False),
+                dict(pos=P, size=0.6 + 1.6 * k, color=white, alpha=min(0.3 + k, 1.2), kind="spark", emit=5.0, fog=0.0,
+                     dof=0.0, reflect=False)]
+
+    @staticmethod
+    def k(t):
+        return 0.25 * _sc(FIN_RING, FIN_CLOSE, t) + 0.9 * _sc(FIN_CLOSE, LAST_CHORD, t) ** 2.5
+
+    def gain(self, t):
+        return 1.0
 
 
 def _flight_z(t):
@@ -1128,11 +1216,11 @@ def _ray_k(t):
         return 0.0
     k = (1.25 * hit_pulse(t, [HIT["father"]], rise=0.6, fall=1.2) * _env(t, 37.0, 41.6, 0.5, 0.15)
          + 0.9 * _env(t, 74.56, 75.2, 0.1, 0.1) + 0.7 * _env(t, 222.0, 224.03, 0.3, 0.2)
-         + 1.2 * _sc(251.7, 253.6, t) * (1.0 - _sc(253.8, 254.07, t)))
+         + 0.5 * _sc(251.7, 253.0, t) + 0.5 * _sc(253.35, LAST_CHORD, t) ** 2)
     return k * (1.0 + 0.3 * beat_pulse(t) * intensity(t))
 
 
-add_rays(lambda t: _ROOF, _ray_k, color="#fff0d2", size=0.7)
+add_rays(lambda t: EMB_C if t > 251.7 else _ROOF, _ray_k, color="#fff0d2", size=0.7)
 
 
 def add(scene):
@@ -1147,6 +1235,7 @@ def add(scene):
     scene.add("church wave", BandWave(), reflect=False)
     scene.add("church ignite", Ignite(), reflect=False)
     scene.add("church beacon", Beacon(), reflect=True)
+    scene.add("emblem flare", EmblemFlare(), reflect=False)
     for i, c in enumerate(_clouds()):
         scene.add(f"church cloud {i}", c, reflect=True)
     scene.add("father pillars", FATHER_PILLARS, reflect=True)
