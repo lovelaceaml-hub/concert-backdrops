@@ -657,7 +657,6 @@ BANDS = [((430.0, 560.0, 680.0), 0.24, 1.3, 0.8),                   # the near s
 LANES = [(0.0, 1500.0), (-36.0, 760.0), (36.0, 760.0), (-72.0, 760.0), (72.0, 760.0)]
 # world boxes (x0, x1, z0, z1) a low camera crosses: the shockwave chase over the sea at 2:46.5 to 2:50.5
 KEEP_CLEAR = [(100.0, 300.0, -100.0, 500.0)]
-FLANK = [(18.0, 470.0), (-18.0, 470.0), (22.0, 600.0), (-22.0, 600.0)]   # (azimuth, radius) of the first four
 
 
 def _mount_y(x, z):
@@ -677,95 +676,171 @@ def _camera_samples():
     return np.array(pts)
 
 
+# Anthony (2026-11-19, later): "The heavenly city buildings are the real church buildings in Korea. The
+# international churches should be scattered throughout, outside of the mountain."
+#   The Korean churches stand on Mount Zion's terraces as the heavenly city, one on each city plot: the ZION
+#   builder's CITY_SLOTS (s11_zion.py, read only) when it exposes them, else the stand-in plots below (the back
+#   band of each terrace, on the seen side of the mountain, clear of the great stairways). Biggest buildings on
+#   the widest plots, scaled to fit, standing on the terrace floor, facing out from the mountain. Korean churches
+#   beyond the plots stand on the near shore.
+#   The churches of the other nations are scattered like towns over the sea, the far shores and the hills: small
+#   clusters, each church facing Zion, still on the ground, clear of the river lanes and the camera paths.
+CITY_STEP = 27.0                      # stand-in plots: spacing along a terrace's back band (metres)
+CITY_FRONT = np.radians(118.0)        # the seen side of the mountain (azimuth either side of the avenue)
+TOWN_BANDS = (900.0, 3100.0)          # the international towns: from the sea out to the foot of the hills
+
+
+def _city_slots():
+    """Plots of the heavenly city: dicts (x, y, z, facing (radians, azimuth the front looks toward, from +z),
+    max_w, max_d, terrace, born or None)."""
+    try:
+        import songs.s11_zion as S_ZION
+        slots = getattr(S_ZION, "CITY_SLOTS", None)
+        if slots:
+            return [dict(s) for s in slots]
+    except Exception:
+        pass
+    out = []
+    for k in range(N_TIER - 1):                       # terrace k's floor runs from tier_r(k + 1) to tier_r(k)
+        rb = tier_r(k + 1) + 0.55 * TIER_STEP
+        m = int(2 * CITY_FRONT * rb / CITY_STEP)
+        for a in np.linspace(-CITY_FRONT, CITY_FRONT, m):
+            if min(abs(np.angle(np.exp(1j * (a - sa)))) for sa in np.radians([0.0, -36.0, 36.0, -72.0, 72.0])) * rb < 16.0:
+                continue                                # the great stairways stay clear
+            out.append(dict(x=float(ZC[0] + rb * np.sin(a)), y=float(SUMMIT * (k + 1) / N_TIER),
+                            z=float(ZC[2] + rb * np.cos(a)), facing=float(a), max_w=0.85 * CITY_STEP,
+                            max_d=0.6 * TIER_STEP, terrace=k, born=None))
+    return out
+
+
 def _layout():
-    """Each building gets a place, a turn, a scale and a birth time (deterministic). Every church stands on the
-    ground (the sea of glass, y = 0) and faces Mount Zion squarely, in rings round the mountain: on each ring the
-    churches stand evenly spaced, so they read as deliberate rows and arcs, never scattered."""
+    """Each building gets a place, a turn, a scale and a birth time (deterministic)."""
     rng = np.random.default_rng(1907)
-    n = len(BUILDINGS)
     cams = _camera_samples()
-    counts = [int(round(f * n)) for _, f, _, _ in BANDS]
-    counts[1] += n - sum(counts)
-    # Anthony: "For building up Zion, have more and more churches from Korea appear": the Korean churches fill
-    # the rings nearest Zion first (in a shuffled order), the churches of the other nations the rings beyond.
-    perm = list(rng.permutation(n))
-    kr = [i for i in perm if BUILDINGS[i]["country"] == "Korea"]
-    other = [i for i in perm if BUILDINGS[i]["country"] != "Korea"]
-    order = other[::-1] + kr[::-1]                                  # (taken from the end: Korea first)
     out, placed = [], []
 
-    def free(base, fp, h):
-        if base[2] > ZC[2] and abs(base[0]) < 70.0 + fp:          # the avenue and the march corridor
+    def free(base, fp, h, cam_r=90.0, gap=8.0):
+        if base[2] > ZC[2] and abs(base[0]) < 70.0 + fp and base[1] < 1.0:     # the avenue and march corridor
             return False
         rel = base - ZC
         rr = float(np.hypot(rel[0], rel[2]))
         az = np.degrees(np.arctan2(rel[0], rel[2]))
-        for lane, reach in LANES:                                   # the rivers of people walking to Zion
-            da = np.radians(abs((az - lane + 180.0) % 360.0 - 180.0))
-            if da < np.pi / 2 and rr * np.sin(da) < fp + 35.0 and rr * np.cos(da) < reach + fp:
-                return False
-        for x0, x1, z0, z1 in KEEP_CLEAR:                           # low camera chases over the sea
-            if x0 - fp < base[0] < x1 + fp and z0 - fp < base[2] < z1 + fp:
-                return False
-        if any(np.hypot(*(base - q)[[0, 2]]) < fp + qf + 10.0 for q, qf in placed):
+        if base[1] < 1.0:
+            for lane, reach in LANES:                               # the rivers of people walking to Zion
+                da = np.radians(abs((az - lane + 180.0) % 360.0 - 180.0))
+                if da < np.pi / 2 and rr * np.sin(da) < fp + 35.0 and rr * np.cos(da) < reach + fp:
+                    return False
+            for x0, x1, z0, z1 in KEEP_CLEAR:                       # low camera chases over the sea
+                if x0 - fp < base[0] < x1 + fp and z0 - fp < base[2] < z1 + fp:
+                    return False
+        if any(np.linalg.norm((base - q)[[0, 2]]) < fp + qf + gap for q, qf in placed):
             return False
         d = np.hypot(cams[:, 0] - base[0], cams[:, 2] - base[2])
-        return not np.any((d < fp + 90.0) & (cams[:, 1] < h + 80.0))   # no church on (or crowding) a camera's path
+        return not np.any((d < fp + cam_r) & (cams[:, 1] < base[1] + h + 0.6 * cam_r))
 
-    def put(b, m, base, k, bi, step, key):
-        h = m["h"] * k
-        face = _unit(_v(ZC[0] - base[0], 0.0, ZC[2] - base[2]))
+    def put(b, m, base, face, k, bi, step, key):
         ey = _v(0.0, 1.0, 0.0)
         ex = np.cross(ey, face)
         w = float(np.ptp(m["pos"][:, 0])) * k
-        out.append(dict(b=b, m=m, base=base, ex=ex, ey=ey, ez=face, k=k, h=h, w=w, band=bi, step=step, key=key,
-                        es=float(np.clip(0.42 * w, 8.0, 30.0))))
+        out.append(dict(b=b, m=m, base=base, ex=ex, ey=ey, ez=face, k=k, h=m["h"] * k, w=w, band=bi, step=step,
+                        key=key, es=float(np.clip(0.42 * w, 8.0, 30.0))))
 
-    for bi, ((radii, _, k, step), cnt) in enumerate(zip(BANDS, counts)):
-        circ = np.array([2 * np.pi * r for r in radii])
-        per = np.floor(cnt * circ / circ.sum()).astype(int)
-        per[-1] += cnt - per.sum()
-        left = []
-        for ri, (r, m_) in enumerate(zip(radii, per)):
-            todo = left + [order.pop() for _ in range(m_)]
-            left = []
-            if not todo:
+    kr = [i for i in rng.permutation(len(BUILDINGS)) if BUILDINGS[i]["country"] == "Korea"]
+    other = [i for i in rng.permutation(len(BUILDINGS)) if BUILDINGS[i]["country"] != "Korea"]
+    # 1) the heavenly city: the biggest Korean churches on the widest plots, each scaled to fit its plot
+    slots = sorted(_city_slots(), key=lambda q: -q["max_w"] * q["max_d"])
+    mods = {i: _model(BUILDINGS[i], 0.6) for i in kr}
+    size = {i: float(np.ptp(mods[i]["pos"][:, 0])) * float(np.ptp(mods[i]["pos"][:, 2])) for i in kr}
+    kr_big = sorted(kr, key=lambda i: -size[i])
+    left = []
+    for i in kr_big:
+        m = mods[i]
+        w, d = float(np.ptp(m["pos"][:, 0])), float(np.ptp(m["pos"][:, 2]))
+        done = False
+        for q in list(slots):
+            k = min(1.0, q["max_w"] / max(w, 1.0), q["max_d"] / max(d, 1.0))
+            if k < 0.42:                                            # too big for this plot (kept for the shore)
                 continue
-            slots = 360.0 / max(len(todo), 1)
-            az0 = (ri % 2) * 0.5 * slots                              # rings staggered, so rows interleave
-            cand = sorted(set(round(c, 3) for c in (az0 + slots * j / 3.0 for j in range(len(todo) * 3))))
-            cand = sorted(((c + 180.0) % 360.0 - 180.0 for c in cand), key=abs)
-            for idx in todo:
-                b = BUILDINGS[idx]
-                m = _model(b, step)
-                fp = 0.5 * float(np.ptp(m["pos"][:, 0])) * k + 6.0
-                h = m["h"] * k
-                if bi == 0 and len(out) < len(FLANK):              # the first four flank the march route
-                    az, rr = FLANK[len(out)]
-                    kk = 1.9
-                    base = ZC + _v(rr * np.sin(np.radians(az)), 0.0, rr * np.cos(np.radians(az)))
-                    put(b, m, base, kk, bi, step, -1.0 + 0.1 * len(out))
-                    placed.append((base, 0.5 * float(np.ptp(m["pos"][:, 0])) * kk + 6.0))
-                    continue
-                ok = False
-                for c in list(cand):
-                    a = np.radians(c)
-                    base = ZC + _v(r * np.sin(a), 0.0, r * np.cos(a))
-                    if free(base, fp, h):
-                        cand.remove(c)
-                        put(b, m, base, k, bi, step, bi + ri * 0.2 + abs(c) / 3600.0)
-                        placed.append((base, fp))
-                        ok = True
-                        break
-                if not ok:
-                    left.append(idx)                                # carried out to the next ring
-        if left:                                                    # (the last ring of a band was full)
-            order += left
-    if order:
-        raise RuntimeError(f"{len(order)} churches found no free place round Zion")
-    out.sort(key=lambda c: c["key"])               # growth: from the march route outward, front first
-    for c, tb in zip(out, _birth_times(len(out))):
+            base = _v(q["x"], q["y"], q["z"])
+            fp = 0.5 * max(w, d) * k
+            if not free(base, 0.5 * min(w, q["max_w"]), m["h"] * k, cam_r=6.0, gap=-6.0):          # (near cameras fade it out anyway)
+                continue
+            slots.remove(q)
+            a = q["facing"]
+            face = _v(np.sin(a), 0.0, np.cos(a))
+            key = (q["born"] if q.get("born") is not None else None)
+            put(BUILDINGS[i], m, base, face, k, 0, 0.6,
+                ("t", key) if key is not None else (0.0 + 0.12 * q["terrace"] + abs(np.angle(np.exp(1j * a))) / 30.0))
+            placed.append((base, fp))
+            done = True
+            break
+        if not done:
+            left.append(i)
+    # 2) Korean churches beyond the plots: on the near shore, in arcs round the foot of the mountain
+    n_near = len(left)
+    for j, i in enumerate(left):
+        m = _model(BUILDINGS[i], 0.8)
+        k = 1.3
+        fp = 0.5 * float(np.ptp(m["pos"][:, 0])) * k + 6.0
+        for tries in range(600):
+            r = 420.0 + 260.0 * rng.random()
+            a = np.radians(-150.0 + 300.0 * rng.random())
+            base = ZC + _v(r * np.sin(a), 0.0, r * np.cos(a))
+            if free(base, fp, m["h"] * k):
+                break
+        else:
+            continue
+        put(BUILDINGS[i], m, base, _unit(_v(ZC[0] - base[0], 0.0, ZC[2] - base[2])), k, 0, 0.8, 1.0 + j / max(n_near, 1))
+        placed.append((base, fp))
+    # 3) the other nations: towns scattered over the sea, the far shores and the hills
+    n_town = max(8, len(other) // 4)
+    towns = []
+    while len(towns) < n_town:
+        r = TOWN_BANDS[0] + (TOWN_BANDS[1] - TOWN_BANDS[0]) * rng.random() ** 0.8
+        a = rng.uniform(-np.pi, np.pi)
+        c = ZC + _v(r * np.sin(a), 0.0, r * np.cos(a))
+        if all(np.linalg.norm((c - t)[[0, 2]]) > 260.0 for t in towns):
+            towns.append(c)
+    towns.sort(key=lambda c: np.linalg.norm((c - ZC)[[0, 2]]))
+    for j, i in enumerate(other):
+        tc = towns[j % len(towns)]
+        rr = float(np.linalg.norm((tc - ZC)[[0, 2]]))
+        bi = 1 if rr < 1350.0 else (2 if rr < 2300.0 else 3)
+        step = (0.8, 1.0, 1.3, 1.6)[bi]
+        k = (1.3, 1.85, 2.35, 3.0)[bi]
+        m = _model(BUILDINGS[i], step)
+        fp = 0.5 * float(np.ptp(m["pos"][:, 0])) * k + 6.0
+        ok = False
+        for tries in range(300):
+            off = rng.normal(0.0, 70.0 + 25.0 * (tries // 60), 2)
+            base = tc + _v(off[0], 0.0, off[1])
+            if free(base, fp, m["h"] * k):
+                ok = True
+                break
+        if not ok:
+            for tries in range(600):
+                r = TOWN_BANDS[0] + (TOWN_BANDS[1] - TOWN_BANDS[0]) * rng.random()
+                a = rng.uniform(-np.pi, np.pi)
+                base = ZC + _v(r * np.sin(a), 0.0, r * np.cos(a))
+                if free(base, fp, m["h"] * k):
+                    ok = True
+                    break
+        if not ok:
+            raise RuntimeError(f"no free place for {BUILDINGS[i]['name']}")
+        yaw = np.radians(rng.uniform(-30.0, 30.0))                 # towns: each turned a little its own way
+        face = _unit(_v(ZC[0] - base[0], 0.0, ZC[2] - base[2]))
+        face = _unit(face * np.cos(yaw) + np.cross(_v(0.0, 1.0, 0.0), face) * np.sin(yaw))
+        put(BUILDINGS[i], m, base, face, k, bi, step, 2.0 + 0.6 * (j % len(towns)) / len(towns) + 0.4 * rng.random())
+        placed.append((base, fp))
+    # births: the city plots that carry their own time keep it; the rest in order of growth (the city terrace by
+    # terrace from the front, then the near shore, then the towns)
+    fixed = [c for c in out if isinstance(c["key"], tuple)]
+    grow = sorted([c for c in out if not isinstance(c["key"], tuple)], key=lambda c: c["key"])
+    for c, tb in zip(grow, _birth_times(len(grow))):
         c["t"] = tb
+    for c in fixed:
+        c["t"] = float(_snap(c["key"][1]))
+    out.sort(key=lambda c: c["t"])
     return out
 
 
