@@ -66,7 +66,7 @@ def _keys():
          (154.2, (0.8, 17.0, -53.0), (-4.5, -7.0, -78.0)),
          (156.0, (0.9, 16.8, -54.0), (-4.5, -7.0, -79.5)),
          (160.3, (1.0, 16.5, -55.5), (-4.5, -6.0, -80.5)),
-         (162.86, (1.0, 16.0, -57.0), (-4.0, -2.5, -84.0))]
+         (162.86, (1.0, 16.2, -56.8), (-4.5, -6.0, -81.2))]
     return [(t, _v(*p), _v(*q)) for t, p, q in k]
 
 
@@ -266,7 +266,7 @@ class FulfilHearts:
         self.go = 159.0 + r.uniform(0.0, 2.3, n)           # sparks leave for her light
         self.fly = r.uniform(1.0, 1.6, n)
         self.bend = r.normal(0.0, 1.0, (n, 3)) * _v(2.5, 1.5, 0.0)
-        self.sub = r.random(n) < 0.55
+        self.sub = r.random(n) < 0.8
 
     def centres(self, t):
         w = self.w
@@ -310,8 +310,11 @@ class FulfilHearts:
                 p = (1 - ee) ** 2 * c0 + 2 * ee * (1 - ee) * mid + ee * ee * m[None, :]
                 live = v < 0.98
                 col = 0.5 * self.col[sel] + 0.5 * lin(WHITE)[None, :]
-                out.append(dict(pos=p[live], size=0.09, color=col[live], alpha=0.9 * np.sin(np.pi * v[live]) + 0.1,
-                                emit=2.6, kind="spark", reflect=False))
+                al = 0.9 * np.sin(np.pi * v[live]) + 0.1
+                out.append(dict(pos=p[live], size=0.13, color=col[live], alpha=al, emit=3.0, kind="spark",
+                                reflect=False))
+                out.append(dict(pos=p[live], size=0.7, color=col[live], alpha=0.18 * al, emit=1.6, kind="soft",
+                                reflect=False))
         return out
 
 
@@ -340,14 +343,14 @@ class Crowns:
     def __init__(self, walking, kneeling):
         self.wk, self.kn = walking, kneeling
         r = np.random.default_rng(81)
-        R = 0.115
-        a = np.linspace(0, 2 * np.pi, 46, endpoint=False)
-        ring = np.stack([R * np.cos(a), np.zeros(46), R * np.sin(a)], 1)
+        R = 0.14
+        a = np.linspace(0, 2 * np.pi, 56, endpoint=False)
+        ring = np.stack([R * np.cos(a), np.zeros(56), R * np.sin(a)], 1)
         tips, jewels = [], []
         for i in range(8):
             b = 2 * np.pi * i / 8
             base = _v(R * np.cos(b), 0.04, R * np.sin(b))
-            top = _v(1.18 * R * np.cos(b), 0.15, 1.18 * R * np.sin(b))
+            top = _v(1.2 * R * np.cos(b), 0.19, 1.2 * R * np.sin(b))
             tips.append(_seg(base, top, 0.016))
             jewels.append(top)
         self.C = np.concatenate([ring, ring + _v(0, 0.045, 0)] + tips)
@@ -386,8 +389,8 @@ class Crowns:
                 c = h * (1 - lay) + ground * lay + _v(0.0, 0.35 * np.sin(np.pi * lay), 0.0)
                 out.append(dict(pos=self.C + c, size=0.026, color=gold, alpha=a, emit=3.6, kind="spark",
                                 reflect=False))
-                out.append(dict(pos=self.J + c, size=0.04, color=pale, alpha=a, emit=4.5, kind="spark", reflect=False))
-                out.append(dict(pos=(c + _v(0, 0.07, 0))[None, :], size=0.36, color=gold, alpha=0.12 * a, emit=2.0,
+                out.append(dict(pos=self.J + c, size=0.035, color=pale, alpha=a, emit=4.0, kind="spark", reflect=False))
+                out.append(dict(pos=(c + _v(0, 0.07, 0))[None, :], size=0.36, color=gold, alpha=0.06 * a, emit=2.0,
                                 kind="soft", reflect=False))
             if t > RISE - 0.25:
                 f = _sc(RISE - 0.25, RISE, t)
@@ -403,8 +406,8 @@ class Crowns:
             c = p + _v(0.0, 0.05, -0.85)
             d0 = _unit(aim - c)
             lift = (1.2 * u + 2.6 * u * u) * (0.75 + 0.5 * s[:, 0])
-            fwd = 3.5 * u * u * (0.6 + 0.8 * s[:, 1])
-            open_ = 1.0 + 6.0 * u * s[:, 2]
+            fwd = 9.0 * u * u * (0.6 + 0.8 * s[:, 1])
+            open_ = 1.0 + 3.0 * u * s[:, 2]
             sw = 0.5 * u * np.stack([np.sin(2.0 * u + 9 * s[:, 3]), np.zeros(len(s)), np.cos(2.0 * u + 7 * s[:, 0])], 1)
             P = c + CJ * open_[:, None] + lift[:, None] * _v(0.0, 1.0, 0.0) + fwd[:, None] * d0 + sw
             out.append(dict(pos=P, size=0.03 + 0.02 * s[:, 1], color=pale, alpha=0.9 * f, emit=2.8, kind="spark",
