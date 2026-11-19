@@ -95,7 +95,11 @@ def main():
     if "--audio" in sys.argv:
         a = audio(path)
         sr = 8000
-        print(f"audio {len(a) / sr:.3f} s, peak {20 * np.log10(np.abs(a).max() + 1e-9):.1f} dBFS")
+        # the peak is measured on the file's own audio (the 8 kHz mono copy used for the hits overshoots)
+        st = subprocess.run(["ffmpeg", "-hide_banner", "-i", path, "-map", "0:a", "-af",
+                             "astats=measure_perchannel=none", "-f", "null", "-"], capture_output=True, text=True).stderr
+        peak = [ln.split(":")[-1].strip() for ln in st.splitlines() if "Peak level dB" in ln]
+        print(f"audio {len(a) / sr:.3f} s, peak {peak[-1] if peak else '?'} dBFS")
         for h in HITS_REF:
             hl = clock.live(h)
             seg = a[int((hl - 0.6) * sr):int((hl + 0.6) * sr)]
