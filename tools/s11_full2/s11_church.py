@@ -1418,4 +1418,7 @@ def add(scene):
     for i, c in enumerate(_comets()):
         scene.add(f"church comet {i}", c, reflect=False)
     scene.add("church body", _Body(), mask=Mask("dark", strength=body_k, grow=0.6, soft=2.5), reflect=False)
-    scene.add("paths", Static(_paths(), lambda t: local_k(t) * (1.0 - 0.75 * _sc(40.0, 42.0, t))))
+    # (round 7, finding f29: the paths cut a hard white diagonal across the march; hidden while the procession
+    # owns the picture, 2:05.92 to 2:42.9, fading over half a second each side)
+    scene.add("paths", Static(_paths(), lambda t: local_k(t) * (1.0 - 0.75 * _sc(40.0, 42.0, t))
+                              * (1.0 - _sc(125.42, 125.92, t) * (1.0 - _sc(162.9, 163.4, t)))))
