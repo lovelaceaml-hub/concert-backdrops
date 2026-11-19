@@ -50,10 +50,13 @@ SHOTS = [
     # beat after it grows and the city's lights come on round it, ring by ring outward. From 0:10 the title draws
     # together into one point of light that drifts down onto that star (s11_cards.py), and the camera tilts down
     # with it, skimming the water, straight into the long flight (0:11.9) at the same speed
-    _shot(0.0, "city", [(0.0, (-8.0, 12.5, 1640.0), (0.0, 573.0, -420.0)),
-                      (0.45, (-3.0, 11.8, 1430.0), (0.0, 520.0, -420.0)),
-                      (0.8, (1.0, 10.6, 1170.0), (0.0, 430.0, -420.0)),
-                      (1.0, (2.0, 9.2, 800.0), (0.0, 175.0, -420.0))], fov=50.0, pace="linear", roll=(-1.0, 0.8)),
+    # (round 7 review: the first push was too slow to feel from 2 km out; now a clear glide low over the water,
+    # gathering speed, so the sea's glitter streams by and Zion grows by about 1.7 times before the gather)
+    _shot(0.0, "city", [(0.0, (-10.0, 18.0, 2150.0), (0.0, 600.0, -420.0)),
+                      (0.4, (-4.0, 14.0, 1720.0), (0.0, 540.0, -420.0)),
+                      (0.82, (1.0, 9.5, 1080.0), (0.0, 420.0, -420.0)),
+                      (1.0, (2.0, 8.6, 800.0), (0.0, 175.0, -420.0))], fov=50.0, pace="linear",
+          roll=lambda t: -1.5 + 2.3 * _sc(0.0, 11.9, t) + 0.8 * np.sin(0.55 * t)),
     # 0:11.9 the second stage of the approach: one long banking flight, skimming the mirror sea down the canyon
     # of cloud as comets shoot up out of the water, while the church ignites storey by storey on the beats; a
     # swoop up the front of Zion over the terraces, and down the great avenue to the church
@@ -1352,6 +1355,25 @@ def _clouds():
     return out
 
 
+def _sea_lights():
+    """Round 7 review (the opening must feel like a journey): small lights floating just over the mirror sea
+    along the glide under the title, near and far on both sides, so they stream past the camera and the
+    movement is felt; mostly warm gold, a few in the nine colours, each doubled in the water."""
+    r = np.random.default_rng(77)
+    n = 900
+    x = r.uniform(-170.0, 170.0, n)
+    x = np.where(np.abs(x) < 7.0, np.sign(x + 1e-9) * (7.0 + r.uniform(0, 6, n)), x)
+    z = r.uniform(820.0, 2300.0, n)
+    y = 0.5 + 1.2 * r.random(n)
+    P = np.stack([x, y, z], 1)
+    warm = lin("#ffd9a0")
+    pick = r.random(n) < 0.22
+    cols = np.array([warm if not k else lin(COL9[int(j) % 9]) for k, j in zip(pick, r.integers(0, 9, n))])
+    a = 0.35 + 0.65 * r.random(n) ** 2
+    return [_batch(P, 2.2 + 1.6 * r.random(n), cols * 0.8, 0.45 * a, kind="soft", emit=1.6, twinkle=0.3),
+            _batch(P, 0.35, cols * 0.5 + lin(WHITE) * 0.5, a, emit=3.2, twinkle=0.4)]
+
+
 # Father's pulse: pillars of light fall all round the city onto the sea
 FATHER_PILLARS = Pillars([(ZC[0] + 340.0 * np.sin(a), ZC[2] + 340.0 * np.cos(a))
                           for a in np.linspace(0.0, 2.0 * np.pi, 14, endpoint=False)],
@@ -1391,6 +1413,8 @@ def add(scene):
     for i, c in enumerate(_clouds()):
         scene.add(f"church cloud {i}", c, reflect=True)
     scene.add("father pillars", FATHER_PILLARS, reflect=True)
+    scene.add("sea lights", Static(_sea_lights(), lambda t: local_k(t) * _sc(-1.0, 0.2, t) * (1.0 - _sc(11.4, 12.6, t))
+                                   * (0.8 + 0.4 * _mfx().fx_pulse(t))), reflect=True)
     for i, c in enumerate(_comets()):
         scene.add(f"church comet {i}", c, reflect=False)
     scene.add("church body", _Body(), mask=Mask("dark", strength=body_k, grow=0.6, soft=2.5), reflect=False)

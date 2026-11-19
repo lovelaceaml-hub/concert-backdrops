@@ -67,8 +67,9 @@ class Cards(cards.Cards):
     def _op_bright(self, t):
         """The title's light: resting a little dim, it brightens gently on the first chord (0:02.32)."""
         hit = 2.32
-        base = 0.8 + 0.2 * float(_ss(hit - 0.05, hit + 1.4, t))
-        swell = 0.16 * float(_ss(hit - 0.05, hit + 0.25, t)) * float(np.exp(-max(t - hit - 0.25, 0.0) / 1.6))
+        base = 0.66 + 0.34 * float(_ss(hit - 0.05, hit + 1.2, t))
+        swell = (0.32 * float(_ss(hit - 0.05, hit + 0.25, t)) * float(np.exp(-max(t - hit - 0.25, 0.0) / 1.4))
+                 + 0.06 * float(_ss(hit, hit + 2.0, t)))
         return base, swell
 
     def _gather_pt(self):
@@ -311,7 +312,7 @@ class Cards(cards.Cards):
             y -= 102 * s
         d.line((cx - 60 * s, y + 242 * s, cx + 60 * s, y + 242 * s), fill=acc + (200,), width=max(1, int(round(2 * s))))
         d.text((cx, y + 262 * s), SONG_TITLE, font=CG(600, 112 * s), fill=col + (255,), anchor="ma")
-        y += 150
+        y += 150 * s                                       # (round 7: scaled, so drafts match the 1080p lockup)
         _tracked(d, (cx, y + 262 * s), "SUNDAY, DECEMBER 6" + SEP + "4:30 PM", JO(500, 40 * s), col + (255,), 6 * s)
         _tracked(d, (cx, y + 320 * s), "LAS VEGAS", JO(400, 26 * s), acc + (235,), 8 * s)
         return self._finish(L, 14, 0.55, pal, noise=True, prot=getattr(self, "op_prot", (40.0, 16.0)))
