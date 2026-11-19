@@ -712,7 +712,9 @@ def _layout():
         face = _unit(_v(ZC[0] - base[0], 0.0, ZC[2] - base[2]))
         ey = _v(0.0, 1.0, 0.0)
         ex = np.cross(ey, face)
-        out.append(dict(b=b, m=m, base=base, ex=ex, ey=ey, ez=face, k=k, h=h, band=bi, step=step, key=key))
+        w = float(np.ptp(m["pos"][:, 0])) * k
+        out.append(dict(b=b, m=m, base=base, ex=ex, ey=ey, ez=face, k=k, h=h, w=w, band=bi, step=step, key=key,
+                        es=float(np.clip(0.42 * w, 8.0, 30.0))))
 
     for bi, ((radii, _, k, step), cnt) in enumerate(zip(BANDS, counts)):
         circ = np.array([2 * np.pi * r for r in radii])
@@ -809,7 +811,7 @@ def _phrase_guard(t):
         tx = ty * st.aspect
         for i, c in enumerate(CHURCHES):
             hit = False
-            for fr in (0.1, 0.5, 1.0):
+            for fr in (0.1, 0.5, 1.0, 1.0 + (1.2 * c["es"] + 2.0) / c["h"]):   # the church and its emblem
                 q = c["base"] + _v(0.0, fr * c["h"], 0.0) - eye
                 z = float(q @ f)
                 if z <= 1.0:
@@ -900,6 +902,103 @@ class Ignitions:
                      reflect=False)]
 
 
+# =========================================================================================================
+# THE EMBLEM above every church (Anthony, 2026-11-19: "Have the Church of God symbol above the churches").
+# The emblem is the one traced from Anthony's image in s11_church.py (emblem_mask, read only; never redrawn
+# here), in the same glowing sky-blue look as on the church of light: a blue ring and globe, the white lettering
+# and globe lines over them, the soft white ring between. Each floats centred above its church's roof, always
+# facing the camera, about 0.42 of the building's width (at least about 3.5 percent of the frame's height, so
+# far ones still read); near ones are drawn in full, far ones from a coarser trace (the ring, the globe and its white ring). It lights a beat after
+# its church rises (a soft flash), then breathes with the choir; calmed with its church (under a phrase, in the
+# stage views, behind the mountain, near the camera) and hidden behind the words like it.
+# =========================================================================================================
+_EMB = {}
+
+
+def _emblem_sets():
+    """Unit emblem points (x, y in -0.5..0.5, y up) by class, a full and a simple level, from the traced mask."""
+    if _EMB:
+        return _EMB
+    import songs.s11_church as S_CHURCH
+    m = S_CHURCH.emblem_mask()
+    n = m.shape[0]
+
+    def pts(cls, st):
+        sub = m[::st, ::st]
+        r, c = np.nonzero(sub == cls)
+        k = sub.shape[0]
+        return np.stack([(c - (k - 1) / 2.0) / k, -(r - (k - 1) / 2.0) / k], 1), st / n
+
+    for lod, st in (("full", 2), ("far", 4)):
+        _EMB[lod] = {cls: pts(cls, st) for cls in (1, 2, 3)}
+    return _EMB
+
+
+def _choir(t):
+    try:
+        import songs.s11_music_fx as S_MUSIC
+        return float(S_MUSIC.fx_choir(t))
+    except Exception:
+        return 0.0
+
+
+class Emblems:
+    """Every church's emblem in light, facing the camera each frame (see the note above)."""
+    wants_camera = True
+
+    def sample(self, t, cam=None):
+        g0 = _base_gain(t)
+        if g0 <= 0.0 or cam is None or not CHURCHES:
+            return None
+        sets = _emblem_sets()
+        vis, guard = _visible(t), _phrase_guard(t)
+        r, u, f = cam.basis()
+        eye = np.asarray(cam.pos, np.float64)
+        ty = np.tan(np.radians(cam.fov) * 0.5)
+        breathe = 0.82 + 0.3 * _choir(t)
+        acc = {k: ([], [], []) for k in ("blue_soft", "blue", "white", "ring")}
+        for i, c in enumerate(CHURCHES):
+            te = c["t"] + 0.55
+            if t < te:
+                continue
+            g = g0 * float(vis[i]) * float(guard[i])
+            if g < 0.01:
+                continue
+            q = c["base"] + _v(0.0, c["h"], 0.0)
+            dist = float(np.linalg.norm(q - eye))
+            S = max(c["es"], 0.07 * ty * dist)                     # at least about 3.5 percent of the frame
+            ctr = q + _v(0.0, 0.7 * S + 2.0, 0.0)
+            if float((ctr - eye) @ f) < 5.0:
+                continue
+            rise = _sc(te, te + 0.5, t)
+            flash = hit_pulse(t, [te], rise=0.03, fall=0.6)
+            a = g * rise * (breathe + 1.2 * flash)
+            lod = "full" if dist < 900.0 else "far"
+            for cls, key in ((1, "blue"), (2, "white"), (3, "ring")):
+                P, cell = sets[lod][cls]
+                W = ctr[None, :] + S * (P[:, :1] * r[None, :] + P[:, 1:2] * u[None, :])
+                acc[key][0].append(W)
+                acc[key][1].append(np.full(len(W), S * cell))
+                acc[key][2].append(np.full(len(W), a))
+                if cls == 1:
+                    acc["blue_soft"][0].append(W[::3])
+                    acc["blue_soft"][1].append(np.full(len(W[::3]), S * cell * 3.0))
+                    acc["blue_soft"][2].append(np.full(len(W[::3]), a))
+        out = []
+        look = {"blue_soft": ("#2a86ea", 0.5, 0.1, "soft", 1.0, 1.0),
+                "blue": ("#2f8ff0", 1.1, 0.75, "spark", 1.1, 1.0),
+                "white": ("#ffffff", 1.0, 0.85, "spark", 1.6, 1.0),
+                "ring": ("#eef6ff", 1.2, 0.45, "spark", 1.2, 1.0)}
+        for key, (P, Sz, A) in acc.items():
+            if not P:
+                continue
+            col, sk, al, kind, emit, cm = look[key]
+            out.append(dict(pos=np.concatenate(P), size=np.concatenate(Sz) * sk, color=lin(col) * cm,
+                            alpha=np.clip(np.concatenate(A) * al, 0, 1).astype(np.float32), kind=kind, emit=emit,
+                            fog=0.35, reflect=False))
+        return out or None
+
+
 def add(scene):
     if os.environ.get("S11_CHURCHES_OFF"):      # (for cost checks only)
         return
@@ -907,3 +1006,4 @@ def add(scene):
     for i, c in enumerate(CHURCHES):
         scene.add(f"church of God {i:02d}", ChurchLight(i))
     scene.add("churches established", Ignitions())
+    scene.add("church emblems", Emblems())
