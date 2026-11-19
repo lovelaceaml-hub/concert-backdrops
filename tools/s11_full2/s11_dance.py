@@ -124,14 +124,20 @@ def _shot(name, t0, t1, fov, keys, ap=0.03, **kw):
 
 SHOTS = [
     # the summons: low behind his right shoulder, looking up past him to the sky the comets braid into
-    _shot("dance_ring", 97.7, 99.4, 56.0, [(0.0, _D(1.9, 0.55, 4.4), _D(-0.3, 2.3, -6.0)),
-                                           (1.0, _D(1.3, 0.42, 3.6), _D(-0.2, 5.2, -9.0))], roll=(-3.0, 2.0)),
+    # (round 9: a slow push in that settles as both his arms go up on the last beat)
+    _shot("dance_ring", 97.7, 99.4, 56.0, [(0.0, _D(2.6, 0.70, 6.2), _D(-0.3, 2.2, -6.0)),
+                                           (0.82, _D(1.35, 0.44, 3.7), _D(-0.2, 4.9, -9.0)),
+                                           (1.0, _D(1.30, 0.42, 3.6), _D(-0.2, 5.2, -9.0))], roll=(-3.0, 2.0),
+          pace="linear"),
     # the breath: low behind and to his left, a slow drift round him; the city glows in the mist beyond
     _shot("dance_breath", 117.0, 121.32, 44.0, [(0.0, _D(-2.7, 0.6, 3.4), _D(0.3, 1.55, -2.0)),
                                                 (1.0, _D(-1.6, 0.5, 3.9), _D(0.3, 1.6, -2.0))], pace="linear"),
     # the strings: wide and low from his right, rising; the comets fly off toward the city
-    _shot("dance_strings", 121.32, 125.92, 50.0, [(0.0, _D(5.6, 0.6, 2.4), _D(-0.6, 2.0, -3.5)),
-                                                  (1.0, _D(4.2, 1.3, 5.2), _D(-0.4, 2.4, -5.0))], roll=(2.0, -1.0)),
+    # (round 9: a slow push in from wide over the sea, settling on him as he cues the strings open)
+    _shot("dance_strings", 121.32, 125.92, 50.0, [(0.0, _D(7.4, 1.0, 4.6), _D(-0.6, 2.1, -4.0)),
+                                                  (0.85, _D(4.5, 0.8, 2.7), _D(-0.5, 2.2, -4.2)),
+                                                  (1.0, _D(4.4, 0.8, 2.6), _D(-0.5, 2.2, -4.2))], roll=(2.0, -1.0),
+          pace="linear"),
     # wondrous love: low in front of him on a long lens (between him and the city), looking up at him against
     # the dark sky over the sea and the light behind him; he stands tall at the right edge (screen x 0.86 to
     # 0.98, clear of the phrase), the phrase in the middle, the heart drawn in the sky above it
@@ -864,9 +870,9 @@ def add(scene):
     scene.add("conductor ripples", SeaRipple(), reflect=False)
     scene.add("conductor snow", Snow())
     scene.add("conductor backlight", BackLight([
-        (97.0, 99.6, _D(0.0, 26.0, -60.0), 44.0, "#c98cff", lambda t: 0.45 + 0.6 * _sc(99.0, 99.35, t)),
+        (97.0, 99.6, _D(0.0, 26.0, -60.0), 44.0, "#c98cff", lambda t: 0.40 + 0.35 * downbeat(t, 0.4) + 0.6 * _sc(99.0, 99.35, t)),
         (116.5, 121.4, _D(0.0, 6.0, -70.0), 34.0, "#e8d8ff", lambda t: 0.5 + 0.25 * downbeat(t, 0.5)),
-        (121.3, 126.0, _D(-8.0, 10.0, -70.0), 44.0, "#ff9ec8", lambda t: 0.55 + 0.4 * upbeat(t)),
+        (121.3, 126.0, _D(-8.0, 10.0, -70.0), 44.0, "#ff9ec8", lambda t: 0.50 + 0.3 * upbeat(t) + 0.35 * downbeat(t, 0.4)),
         (185.5, 188.4, _D(-22.3, 8.7, 55.3), 18.0, "#ffd8c8", lambda t: 0.4 + 0.3 * upbeat(t)),
         (247.0, 249.6, _D(-1.0, 7.0, 40.0), 34.0, "#fff0dc",
          lambda t: 0.45 + 0.35 * _sc(247.5, 249.0, t) + 0.8 * _sc(249.0, 249.4, t))]))
