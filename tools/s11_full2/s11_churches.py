@@ -686,7 +686,12 @@ def _layout():
     cams = _camera_samples()
     counts = [int(round(f * n)) for _, f, _, _ in BANDS]
     counts[1] += n - sum(counts)
-    order = list(rng.permutation(n))
+    # Anthony: "For building up Zion, have more and more churches from Korea appear": the Korean churches fill
+    # the rings nearest Zion first (in a shuffled order), the churches of the other nations the rings beyond.
+    perm = list(rng.permutation(n))
+    kr = [i for i in perm if BUILDINGS[i]["country"] == "Korea"]
+    other = [i for i in perm if BUILDINGS[i]["country"] != "Korea"]
+    order = other[::-1] + kr[::-1]                                  # (taken from the end: Korea first)
     out, placed = [], []
 
     def free(base, fp, h):
