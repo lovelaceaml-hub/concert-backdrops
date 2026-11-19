@@ -54,3 +54,9 @@ All in `tools/s11_full2/` on branch `backdrop2/s11-full`:
 - Corner signature: logo alone plus periodic titles (`s11_cards.py` `_signature`/`_sig_windows`).
 - The church of light with the name and the traced emblem (`s11_church.py`).
 - The render fleet, the live review page and the helper scripts: see PIPELINE.md.
+
+## Light as an event, not a constant (Anthony, 2026-11-19)
+"Not everything needs to be so washed out and bright all the time. Key timings should be highlighted. Do not saturate everything. Do not wash out."
+- A darker, calmer base everywhere: deep near-black violet between the lights, blacks not lifted, little bloom or haze at rest, colour restrained.
+- Full light and full colour only on the key moments: Father's pulse 0:40.54, slam 1 1:22.08, Sacrifice 1:40.26, Devotion 1:45.14, thanks to Father 1:49.8, the church of God 2:39 to 2:42.86 and slam 2, Sacrifice 3:00.7, Wondrous love 3:04.65, slam 3 3:21.73, Sacrifice 3:38.1, Devotion 3:44, "Oh, the Church of God" 3:58.9, the comets meeting the emblem 4:14.
+- The core provides one shared light-budget helper; every set scales its resting light by it.
