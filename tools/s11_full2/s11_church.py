@@ -859,6 +859,14 @@ def _far(t):
     return float(_sc(90.0, 200.0, _dist(t)))
 
 
+def moment_k(t):
+    """0..1: the church of light's own moments (round 7, Anthony: "Not everything needs to be so washed out and
+    bright all the time. Key timings should be highlighted."): Father's pulse, "streaming" (1:14.56), the
+    arrival of everyone at 2:39 to 2:42.86, "Oh, the Church of God" (3:58.9), the comets meeting the emblem."""
+    return max(_env(t, 39.6, 41.3, 0.3, 0.3), _env(t, 74.56, 76.2, 0.1, 0.8), _env(t, 159.0, 162.86, 0.8, 0.3),
+               _env(t, 238.9, 245.8, 0.6, 0.8), _env(t, 251.7, 254.07, 0.6, 0.05))
+
+
 def _wide(t):
     """0..1: how far off the camera is in another thread's wide view of the summit (0 in the church's own
     shots and the stage shots)."""
@@ -987,6 +995,7 @@ class Church:
         if shot_name(t) == "church_cut":       # the church's own cut-ins: full frame of it, so less light
             k *= 0.5
         elif shot_name(t) != "city" and not stage_view(t):
+            k *= 0.65 + 0.35 * moment_k(t)      # calm and blue at rest in others' views, bright at its moments
             f = _far(t)
             if t > 200.0:
                 # others' sunrise views (the coda summit): calm close by, never white; from afar, among the
@@ -1462,7 +1471,8 @@ add_rays(lambda t: EMB_C if t > 251.7 else _ROOF, _ray_k, color="#fff0d2", size=
 def add(scene):
     cdim, cgold = _city()
     # (round 7: from afar in others' wide views the streets and lamps calm to points of warm light, never a band)
-    scene.add("city dim", Static(cdim, lambda t: city_k(t) * _stage_calm(t, 0.45) * (1.0 - 0.65 * _wide(t)) * (0.8 + 0.3 * beat_pulse(t) * max(_sc(20, 22, t),
+    scene.add("city dim", Static(cdim, lambda t: city_k(t) * _stage_calm(t, 0.45) * (1.0 - 0.65 * _wide(t))
+                                 * (1.0 if t < 22.0 else 0.75 + 0.25 * moment_k(t)) * (0.8 + 0.3 * beat_pulse(t) * max(_sc(20, 22, t),
                                                                                          0.8 * (t < 12.0)))))
     scene.add("city gold", Static(cgold, lambda t: city_k(t) * _stage_calm(t, 0.45) * (1.0 - 0.8 * _wide(t))))
     scene.add("church", Church("soft"))
