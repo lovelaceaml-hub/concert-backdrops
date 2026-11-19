@@ -908,6 +908,9 @@ class EmblemSings:
         if ch + hi < 0.02:
             return None
         tw = 0.5 + 0.5 * np.sin(9.0 * t + 6.28 * self.seed)
+        if shot_name(t) == "procession":       # (the flight to it: a calm glow, the emblem itself reads)
+            k *= 0.35
+            ch *= 0.35
         f = 0.0 if stage_view(t) else _far(t)  # from afar a wider halo, so the one emblem still marks the church
         return [dict(pos=self.c, size=EMBLEM_SIZE * (1.5 + 1.2 * f), color=lin("#5fb0ff"), alpha=0.16 * ch * (1.0 + 0.8 * f),
                      kind="soft", emit=1.4, fog=0.15, reflect=False),
@@ -981,6 +984,10 @@ class Church:
                 # others' sunrise views (the coda summit): calm close by, never white; from afar, among the
                 # churches of the world round Zion, the one great building again (round 7)
                 k *= 0.5 + 0.55 * f
+            elif shot_name(t) == "procession":
+                # MARCH's flight to the church (2:41.7 to 2:42.9): blue glass, the name and emblem clear, no
+                # white-out as it fills the frame (round 7)
+                k *= {"soft": 0.3, "crisp": 0.45, "steps": 0.5, "glory": 0.3}[self.part]
             elif self.part in ("soft", "crisp"):
                 # the wide views over Zion (round 7): from afar the glass glows and the bands shine, so the
                 # church of light reads as the brightest building on the summit, never a dark slab
@@ -1139,7 +1146,7 @@ def body_k(t):
     k = local_k(t) * min(1.0, 1.5 * church_reveal(t))     # no black body while the church is still a ghost
     if k <= 0.0:
         return 0.0
-    if shot_name(t) not in ("city", "church_cut") and not stage_view(t):
+    if shot_name(t) not in ("city", "church_cut", "procession") and not stage_view(t):
         k *= 1.0 - 0.75 * _far(t)                         # from afar the glass glows instead (round 7)
     # the phrases ride 30 m in front of the camera: when the front is nearer than that they would fall behind
     # the silhouette and be hidden, so the body fades out in near views while a phrase is on screen
