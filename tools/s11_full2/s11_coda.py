@@ -10,6 +10,7 @@ and focus). Point sets: add(scene). No em dash or en dash anywhere in this file.
 import numpy as np
 
 from songs.s11_full2 import *  # noqa: F401,F403
+import songs.s11_full2 as _CORE  # noqa: E402  (the camera, for f19)
 from songs.s11_stage import Instruments, ORCH_P  # noqa: E402
 from songs.s11_zion import WaveCrowd, mx, wave_u  # noqa: E402  (the waves of raised arms; the music map)
 
@@ -223,6 +224,16 @@ def _sun_comets():
                   seed=60 + i) for i in range(7)]
 
 
+def _under_thanks(P, t):
+    """(round 8, f19) while the thanks line reads in the top third (3:47.0 to 3:56) the comets' streaks keep
+    below it: points high in the frame fade out. 1 elsewhere."""
+    w = _win(t, 226.8, 236.4, 0.3, 0.4)
+    if w <= 0.0 or len(P) == 0:
+        return np.ones(len(P))
+    xy, z = _CORE.CAMERA.state(t).project(P)
+    return 1.0 - w * _ss(0.46, 0.53, xy[:, 1]) * (z > 0.0)
+
+
 class SpaceComet(Comet):
     """A comet in space round the Earth of light (the core's Comet stays on Zion's side of the film)."""
 
@@ -235,12 +246,14 @@ class SpaceComet(Comet):
         col = lin(self.color)
         pulse = 1.0 + 0.5 * beat_pulse(t) * intensity(t) + 0.8 * hit_pulse(t, KICKS, fall=0.4)
         a = k * (1.0 - u) ** 1.4
+        q = _under_thanks(P, t)
+        a = a * q
         w = self.width * (1.0 - 0.85 * u)
         return [dict(pos=P, size=w * 2.2, color=col, alpha=0.30 * a * self.bright, kind="soft", emit=2.0, dof=0.0),
                 dict(pos=P, size=w * 0.5, color=col * 0.5 + lin(WHITE) * 0.5, alpha=a * self.bright, kind="spark",
                      emit=3.0 * pulse, dof=0.0),
-                dict(pos=P[:1], size=self.width * 5.0, color=col, alpha=0.45 * k * pulse, kind="soft", emit=3.0),
-                dict(pos=P[:1], size=self.width * 1.2, color=lin(WHITE), alpha=k, kind="spark", emit=6.0 * pulse)]
+                dict(pos=P[:1], size=self.width * 5.0, color=col, alpha=0.45 * k * pulse * q[0], kind="soft", emit=3.0),
+                dict(pos=P[:1], size=self.width * 1.2, color=lin(WHITE), alpha=k * q[0], kind="spark", emit=6.0 * pulse)]
 
 
 def _space_comets():
@@ -385,7 +398,7 @@ class GlobeComets:
             vis = live & ((((eye[None, :] - P) * nrm).sum(1) > -0.15 * R) | (lift > 1.08))
             if not vis.any():
                 continue
-            a = k * (1.0 - u) ** 1.3
+            a = k * (1.0 - u) ** 1.3 * _under_thanks(P, t)
             col = self.cols[i]
             Pv, av, uv = P[vis], a[vis], u[vis]
             w = 1.1 * (1.0 - 0.8 * uv)
@@ -393,9 +406,10 @@ class GlobeComets:
                     dict(pos=Pv, size=w * 0.45, color=col * 0.5 + lin(WHITE) * 0.5, alpha=av, kind="spark",
                          emit=3.0 * pulse, dof=0.0, reflect=False)]
             if vis[0]:
-                out += [dict(pos=P[:1], size=6.0, color=col, alpha=0.5 * k * pulse, kind="soft", emit=3.0, dof=0.0,
+                kh = k * float(_under_thanks(P[:1], t)[0])
+                out += [dict(pos=P[:1], size=6.0, color=col, alpha=0.5 * kh * pulse, kind="soft", emit=3.0, dof=0.0,
                              reflect=False),
-                        dict(pos=P[:1], size=1.4, color=lin(WHITE), alpha=k, kind="spark", emit=6.0 * pulse, dof=0.0,
+                        dict(pos=P[:1], size=1.4, color=lin(WHITE), alpha=kh, kind="spark", emit=6.0 * pulse, dof=0.0,
                              reflect=False)]
             # the arrival: a flash of its colour on Zion
             d = t - (self.L[i] + self.fly)

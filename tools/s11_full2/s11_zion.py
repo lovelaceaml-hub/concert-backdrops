@@ -1563,12 +1563,12 @@ def _grand(scene):
         return lambda t: local_k(t) * (not stage_view(t)) * _env(t, a, b, fi, fo)
     for i, x in enumerate((-150.0, 150.0)):
         scene.add(f"zion canyon {i}", CloudBank(ZC + _v(x, 0.0, 900.0), size=(90.0, 190.0, 900.0), puffs=90,
-                                                seed=40 + i, gain=win(86.4, 90.9, 0.3, 0.3), bright=0.55),
+                                                seed=40 + i, gain=win(86.4, 90.9, 0.3, 0.3), bright=0.55, look="rim"),
                   reflect=True)
     k_pour = win(99.2, 109.8, 0.8, 1.0)
     for i, x in enumerate((-230.0, 230.0)):
         scene.add(f"zion pour clouds {i}", CloudBank(ZC + _v(x, 300.0, 120.0), size=(260.0, 80.0, 220.0), puffs=24,
-                                                     seed=44 + i, gain=k_pour, bright=0.6), reflect=False)
+                                                     seed=44 + i, gain=k_pour, bright=0.6, look="rim"), reflect=False)
     bases = []
     for a, k in zip((-72.0, -58.0, -44.0, -32.0, 32.0, 44.0, 58.0, 72.0), (1, 2, 0, 3, 3, 1, 2, 0)):
         rr = 0.5 * (tier_r(k) + tier_r(k + 1))
@@ -1580,7 +1580,7 @@ def _grand(scene):
                                      gain=lambda t: k_col(t) * _sc(109.8, 111.0, t) * 1.2), reflect=False)
     for i, (x, z) in enumerate(((60.0, -330.0), (260.0, 40.0), (-150.0, -260.0), (140.0, -240.0))):
         scene.add(f"zion heaven {i}", CloudBank(CHURCH + _v(x, 340.0 - CHURCH[1], z), size=(300.0, 90.0, 220.0),
-                                                puffs=30, seed=50 + i, gain=k_col, bright=1.0), reflect=False)
+                                                puffs=30, seed=50 + i, gain=k_col, bright=1.0, look="rim"), reflect=False)
 
 
 def add(scene):
