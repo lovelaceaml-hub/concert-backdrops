@@ -794,32 +794,44 @@ def _sea_glitter():
 
 
 def _constellations():
-    from p3d.brand_hearts import heart_points
+    """The nine expression symbols as constellations in the sky (as in Anthony's references), each in its
+    colour, appearing one by one at the song's turning points: bright stars joined by fine lines."""
+    from p3d import brand_symbols as BS
     r = np.random.default_rng(909)
-    stars, lines_a, lines_b, cols, births = [], [], [], [], []
+    stars, scol, sbirth, la, lb, lcol, lbirth = [], [], [], [], [], [], []
     when = [11.9, 21.5, 40.54, 53.78, 82.08, 121.32, 162.86, 201.73, 224.03]
-    for k in range(9):
+    for k, name in enumerate(BS.SYMBOLS):
         az = np.radians(150.0 + 70.0 * ((k * 5) % 9) / 8.0 - 35.0 + (180.0 if k in (2, 6) else 0.0))
-        el = np.radians(9.0 + 20.0 * r.random())
+        el = np.radians(10.0 + 18.0 * r.random())
         d = 2600.0
         c = _v(d * np.cos(el) * np.sin(az), d * np.sin(el), d * np.cos(el) * np.cos(az))
         right = _unit(_v(np.cos(az), 0.0, -np.sin(az)))
-        up = _unit(np.cross(right, c / np.linalg.norm(c))) * -1.0
-        h = heart_points(11)
-        s = 170.0 + 90.0 * r.random()
-        P = c[None, :] + s * (h[:, 0:1] * right[None, :] + h[:, 1:2] * up[None, :])
-        P += r.normal(0.0, 6.0, P.shape)
-        stars.append(P)
-        lines_a.append(P)
-        lines_b.append(np.roll(P, -1, axis=0))
-        cols.append(np.repeat(lin(COL9[k])[None, :], len(P), 0))
-        births.append(np.full(len(P), when[k]) + 0.12 * np.arange(len(P)))
-    S, A, B = np.concatenate(stars), np.concatenate(lines_a), np.concatenate(lines_b)
-    C, BI = np.concatenate(cols), np.concatenate(births)
-    return [_batch(S, 26.0, C * 0.5 + lin(WHITE) * 0.5, 1.0, kind="spark", emit=4.0, birth=BI, fade=1.2, flash=3.0,
-                   twinkle=0.8, dof=0.0),
-            _batch(S, 110.0, C, 0.22, kind="soft", emit=1.8, birth=BI, fade=1.2, dof=0.0),
-            _batch(A, 5.0, C, 0.55, kind="line", pos2=B, emit=2.0, birth=BI + 0.6, fade=1.5, dof=0.0)]
+        up = -_unit(np.cross(right, c / np.linalg.norm(c)))
+        s = 150.0 + 50.0 * r.random()
+        col = lin(COL9[k])
+
+        def to3(p2):
+            return c[None, :] + s * (p2[:, 0:1] * right[None, :] + p2[:, 1:2] * up[None, :])
+        for stroke in BS.strokes(name):
+            st = np.asarray(stroke, np.float64)
+            L = np.concatenate([[0.0], np.cumsum(np.linalg.norm(np.diff(st, axis=0), axis=1))])
+            m = max(2, int(L[-1] / 0.30) + 1)
+            u = np.linspace(0.0, L[-1], m)
+            q = np.stack([np.interp(u, L, st[:, 0]), np.interp(u, L, st[:, 1])], 1)
+            P = to3(q)
+            stars.append(P)
+            scol.append(np.repeat(col[None, :], len(P), 0))
+            sbirth.append(when[k] + 0.08 * np.arange(len(P)))
+            la.append(P[:-1])
+            lb.append(P[1:])
+            lcol.append(np.repeat(col[None, :], len(P) - 1, 0))
+            lbirth.append(when[k] + 0.4 + 0.08 * np.arange(len(P) - 1))
+    S, SC, SB = np.concatenate(stars), np.concatenate(scol), np.concatenate(sbirth)
+    A, B2, LC, LB = np.concatenate(la), np.concatenate(lb), np.concatenate(lcol), np.concatenate(lbirth)
+    return [_batch(S, 11.0, SC * 0.4 + lin(WHITE) * 0.6, 0.9, kind="spark", emit=3.0, birth=SB, fade=1.2, flash=2.0,
+                   twinkle=0.9, dof=0.0),
+            _batch(S, 34.0, SC, 0.10, kind="soft", emit=1.2, birth=SB, fade=1.2, dof=0.0),
+            _batch(A, 2.5, LC, 0.22, kind="line", pos2=B2, emit=1.4, birth=LB, fade=1.5, dof=0.0)]
 
 
 def _ribbon_head(k):
@@ -936,7 +948,7 @@ WORLD["hills"] = lambda t: 0.0 if globe_view(t) else 1.0
 WORLD["hill_height"] = 0.8
 WORLD["hill_color"] = hill_color
 WORLD["floats"] = lambda t: 0.0 if globe_view(t) else 0.15 + 0.85 * glory(t)
-WORLD["float_field"] = dict(count=2400, center=(float(ZC[0]), float(ZC[2]) + 300.0), radius=(300.0, 1400.0), size=0.9)
+WORLD["float_field"] = dict(count=4200, center=(float(ZC[0]), float(ZC[2]) + 300.0), radius=(300.0, 2600.0), size=1.1)
 WORLD["shafts"] = [sh for m in THREADS for sh in getattr(m, "SHAFTS", [])][:4]
 
 # =========================================================================================================
