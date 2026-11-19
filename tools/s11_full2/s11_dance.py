@@ -753,7 +753,7 @@ def add(scene):
     scene.add("conductor ripples", SeaRipple(), reflect=False)
     scene.add("conductor snow", Snow())
     scene.add("conductor backlight", BackLight([
-        (97.0, 99.6, _D(0.0, 26.0, -60.0), 40.0, "#ffe2b8", lambda t: 0.6 + 0.9 * _sc(99.0, 99.35, t)),
+        (97.0, 99.6, _D(0.0, 26.0, -60.0), 30.0, "#ffe2b8", lambda t: 0.3 + 0.6 * _sc(99.0, 99.35, t)),
         (116.5, 121.4, _D(0.0, 6.0, -70.0), 34.0, "#e8d8ff", lambda t: 0.5 + 0.25 * downbeat(t, 0.5)),
         (121.3, 126.0, _D(-8.0, 10.0, -70.0), 34.0, "#ffe2b8", lambda t: 0.45 + 0.4 * upbeat(t)),
         (185.5, 188.4, _D(-22.3, 8.7, 55.3), 18.0, "#ffd8c8", lambda t: 0.4 + 0.3 * upbeat(t)),

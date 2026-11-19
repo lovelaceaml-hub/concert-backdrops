@@ -392,7 +392,8 @@ class Choir(Crowd):
             k = choir_glow(t)
             fl = chorus_flare(t)
             tint = (1.0 - 0.45 * fl) * np.ones(3) + 0.45 * fl * bar_colour(t) / max(float(bar_colour(t).max()), 1e-6)
-            lamps = [dict(b[-2], alpha=b[-2]["alpha"] * min(0.7 * k, 1.8),
+            near = 0.5 + 0.5 * _far(t, CHOIR_C)        # close up the lamps' glows pile into a white haze
+            lamps = [dict(b[-2], alpha=b[-2]["alpha"] * min(0.7 * k, 1.8) * near,
                           color=b[-2]["color"] * (0.8 + 0.2 * k) * tint),
                      dict(b[-1], alpha=b[-1]["alpha"] * min(0.5 + 0.5 * k, 1.6))]
             b = b[:-2]
@@ -1095,6 +1096,9 @@ PERFORM = [(0.0, 21.5, "Orchestra (faint choir hum)"), (21.5, 29.8, "Choir and o
 class ChoirLight:
     """Light rising from the choir as they sing: more with the loudness, nothing while they are silent."""
 
+    def gain(self, t):
+        return 0.55 + 0.45 * _far(t, CHOIR_C)          # softer close up (no white haze over the singers)
+
     def __init__(self, places, gain=None):
         self.p = places
         r = np.random.default_rng(9)
@@ -1223,8 +1227,8 @@ def blaze(t):
     """The choir and orchestra as a great light on the slams and the coda hit."""
     if not stage_view(t):
         return 0.0
-    return min(0.45, 0.4 * hit_pulse(t, [SLAM1, HIT["coda"]], rise=0.05, fall=0.8)
-               + 0.22 * hit_pulse(t, [SLAM2], rise=0.05, fall=0.6)          # slam 2 was washed with glare
+    return min(0.45, 0.4 * hit_pulse(t, [SLAM1], rise=0.05, fall=0.8)
+               + 0.22 * hit_pulse(t, [SLAM2, HIT["coda"]], rise=0.05, fall=0.6)   # slam 2, coda hit: washed with glare
                + 0.12 * hit_pulse(t, KICKS, fall=0.4))
 
 
@@ -1427,8 +1431,9 @@ def add(scene):
     for j, ts in enumerate(BURSTS):
         for i in range(9):
             scene.add("slam rocket %d %d" % (j, i), BoxGuard(StageComet(
-                _rocket(ts, i), COL9[i], ts - 0.05 if j != 1 else ts + 0.22, ts + 3.6,     # slam 2: after its flash trail=1.2, width=0.9 if j != 1 else 0.6,
-                bright=1.3 if j != 1 else 0.8, fade=0.3, n=170, sparks=False, seed=100 + 9 * j + i)))
+                _rocket(ts, i), COL9[i], ts - 0.05 if j == 0 else ts + 0.22, ts + 3.6,   # slam 2, coda hit: after the flash
+                trail=1.2, width=0.9 if j == 0 else 0.6, bright=1.3 if j == 0 else 0.8, fade=0.3, n=170, sparks=False,
+                seed=100 + 9 * j + i)))
     scene.add("loop conductor", BoxGuard(StageComet(_loop_conductor, COL9[6], 0.0, 260.0, trail=1.6, width=0.18, n=80,
                                            seed=131)))
     scene.add("loop heroes", BoxGuard(StageComet(_loop_heroes, COL9[3], 0.0, 260.0, trail=1.8, width=0.2, n=80,
