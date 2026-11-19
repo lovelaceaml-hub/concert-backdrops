@@ -638,11 +638,13 @@ class Streams:
             off.append(r.random(n) * L[-1])
             v.append(r.uniform(3.2, 4.2, n))
             h.append(r.uniform(0.9, 1.1, n))
-            # the nations walk together: bands of one colour along the way; the first bands in three colours
-            band = np.floor(off[-1] / 16.0).astype(int) + 3 * i
-            ncol = (3 + np.floor(6.0 * qq + 0.5)).astype(int)
-            c = order[(band * 4 + r.integers(0, 2, n)) % ncol]
-            w = 0.06 + 0.10 * r.random(n)
+            # (round 7, review f23: "the rivers of people as clear coloured lines") colour by lane: each lane of a
+            # river one calm colour, side by side; the first comers walk the middle lanes (few colours), the later
+            # ones the outer lanes, so each new lane brings a new colour
+            nl = 4 if main else 2
+            lane = np.minimum(np.floor(u * nl), nl - 1).astype(int) * 2 + (lat[-1] > 0)
+            c = order[(lane + 2 * i) % 9]
+            w = 0.05 + 0.05 * r.random(n)
             col.append(nine[c] * (1.0 - w)[:, None] + lin(WHITE)[None, :] * w[:, None])
             ph.append(r.uniform(0, 2 * np.pi, n))
         self.sa, self.lat, self.off, self.v, self.h, self.col, self.ph, self.q = (
@@ -790,6 +792,13 @@ def _places(tiers, density, seed, front_share=0.9):
     return np.concatenate(out), np.concatenate(kk)
 
 
+def _place_hue(P, K):
+    """Round 7: the colour (index among the nine) of a place on the terraces: one calm hue per district (about
+    40 degrees round the mountain) of each terrace, so the people read as broad bands of colour, not confetti."""
+    az = np.arctan2(P[:, 0] - ZC[0], P[:, 2] - ZC[2])
+    return (np.floor(az / np.radians(40.0) + 0.5).astype(int) * 2 + np.asarray(K, int) * 4) % 9
+
+
 def _glitter_people(P, K, born, seed, gain=1.0):
     """Tiny standing figures of light: one stroke each, dim at the feet and bright at the head, so from afar
     they glitter and read as countless people. The nations stand together: each block of the terraces has its
@@ -799,13 +808,13 @@ def _glitter_people(P, K, born, seed, gain=1.0):
     h = r.uniform(0.9, 1.1, n)
     foot = P + np.array([0.0, 0.2, 0.0])
     head = P + np.stack([np.zeros(n), 1.6 * h, np.zeros(n)], 1)
-    az = np.arctan2(P[:, 0] - ZC[0], P[:, 2] - ZC[2])
-    block = (np.floor(az / np.radians(11.0)).astype(int) * 5 + K * 4) % 9
+    block = _place_hue(P, K)
     nine = np.asarray([lin(c) for c in COL9])
     j = r.random(n)
-    # (round 6) the people in the nine colours, so they stand out from the pearl and glass of the city
-    col = np.where((j < 0.85)[:, None], nine[block] * 0.80 + lin(WHITE) * 0.20,
-                   nine[r.integers(0, 9, n)] * 0.55 + lin(WHITE) * 0.45)
+    # (round 6) the people in the nine colours, so they stand out from the pearl and glass of the city; (round 7,
+    # review f23: confetti close up, white from afar) one calm colour per district of each terrace
+    col = np.where((j < 0.95)[:, None], nine[block] * 0.86 + lin(WHITE) * 0.14,
+                   nine[r.integers(0, 9, n)] * 0.6 + lin(WHITE) * 0.4)
     return [dict(pos=foot, pos2=head, size=0.28, color=col * 0.85, alpha=0.18 * gain, alpha2=0.75 * gain,
                  kind="line", emit=1.3, birth=born, fade=0.7, flash=1.5, reflect=False)]
 
@@ -1524,7 +1533,9 @@ def add(scene):
     nw, nf = _near(P, K, "zion_wide") & ~late, _near(P, K, "zion_full") & ~late
     rest = ~(nw | nf)
     scene.add("nations", Static(_glitter_people(P[rest], K[rest], born[rest], 3), crowd_k))
-    scene.add("nations arms", Arms(P[rest], born[rest], 3, crowd_k))     # the waves of raised arms
+    na = Arms(P[rest], born[rest], 3, crowd_k)                            # the waves of raised arms
+    na.col = np.asarray([lin(c) for c in COL9])[_place_hue(P[rest], K[rest])] * 0.6 + lin(WHITE) * 0.4
+    scene.add("nations arms", na)
     # on each downbeat of the choruses the nations' lights flare in one of the nine colours (one set a colour)
     rf = np.random.default_rng(13)
     pick = np.where(rf.random(len(P)) < 0.2)[0]
@@ -1552,7 +1563,7 @@ def add(scene):
             color2="#fff0d0", bright=1.35, points=48, size=10.5, flash=1.5, seed=float(seed))
         # (round 6) each true figure in one of the nine colours (they stood gold against gold before)
         nine = np.asarray([lin(c) for c in COL9])
-        crowd.tint = nine[np.arange(crowd.n) % 9] * 0.75 + lin(WHITE) * 0.25
+        crowd.tint = nine[_place_hue(P[i], K[i])] * 0.8 + lin(WHITE) * 0.2     # (round 7) by district
         scene.add(f"nations near {shot}", crowd)
     for name, c in _comets():
         scene.add(name, c, reflect=False)

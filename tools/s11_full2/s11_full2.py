@@ -372,8 +372,8 @@ def _globe_amount(t):
 # Round 7 (Anthony: "The earth land can be a different color than gold so it's easier to see the lights"; he chose
 # deep emerald land and navy oceans): the land is painted deep emerald (it adds no light of its own), the oceans
 # navy, so the cities' gold and white lights (GlobeFX) and the rivers of people stand out on it, by day and night.
-EARTH_LOOK = dict(ocean_c="#173c86", ocean_e="#0a1d52", land="#0f8a58", land2="#2fb47a", land_base="#0c6a45",
-                  rim="#8fd6ff", cloud="#d6e6ff", paint_land=True, rim_k=0.5, cloud_k=0.16, glow_k=0.0, land_k=1.0)
+EARTH_LOOK = dict(ocean_c="#132f6c", ocean_e="#081843", land="#0b6e46", land2="#1f9a66", land_base="#0a5a3a",
+                  rim="#8fd6ff", cloud="#d6e6ff", paint_land=True, rim_k=0.3, cloud_k=0.16, glow_k=0.0, land_k=1.0)
 LAND_NIGHT = np.array([0.004, 0.030, 0.020])       # the emerald land on the night side: just a dim green
 
 
@@ -419,17 +419,17 @@ def _dawn_edge(t, c, R, zw, cam):
         p = c + R * 1.012 * v
         f = ((eye[None, :] - p) * v).sum(1) > 0.0
         if f.any():
-            out.append(dict(pos=p[f], size=R * 0.10, color=lin("#ffb060"), alpha=0.22 * gone * pul, kind="soft",
+            out.append(dict(pos=p[f], size=R * 0.07, color=lin("#ffb060"), alpha=0.10 * gone * pul, kind="soft",
                             emit=1.8, dof=0.0, fog=0.0, reflect=False))
-            out.append(dict(pos=p[f], size=R * 0.012, color=lin("#ffe0a8"), alpha=0.7 * gone * pul, kind="spark",
+            out.append(dict(pos=p[f], size=R * 0.012, color=lin("#ffe0a8"), alpha=0.35 * gone * pul, kind="spark",
                             emit=2.6, twinkle=0.7, dof=0.0, fog=0.0, reflect=False))
     zp = c + R * 1.02 * zw
     if ((eye - zp) @ zw) > 0.0:
         # the sun rising on Korea: it ignites as the camera arrives on the Earth, then glows on as the source
         k = (1.6 * hit_pulse(t, [41.6], rise=0.05, fall=1.4) + 0.55 * gone + 0.6 * hit_pulse(t, [70.54], fall=1.0)) * pul
-        out.append(dict(pos=zp[None, :], size=R * 0.3, color=lin("#ffc680"), alpha=0.09 * k, kind="soft", emit=2.0,
+        out.append(dict(pos=zp[None, :], size=R * 0.3, color=lin("#ffc680"), alpha=0.055 * k, kind="soft", emit=2.0,
                         dof=0.0, fog=0.0, reflect=False))
-        out.append(dict(pos=zp[None, :], size=R * 0.09, color=lin("#fff0d8"), alpha=0.32 * k, kind="soft", emit=2.6,
+        out.append(dict(pos=zp[None, :], size=R * 0.09, color=lin("#fff0d8"), alpha=0.2 * k, kind="soft", emit=2.6,
                         dof=0.0, fog=0.0, reflect=False))
     return out
 
@@ -493,7 +493,54 @@ def _night_side(sample):
     return wrapped
 
 
-GLOBE.sample = _night_side(GLOBE.sample)
+def _earth_reading(t):
+    """Round 7 (review f21: phrases sat light on light over the Earth): 1 while a phrase reads over an Earth view."""
+    v = 0.0
+    try:
+        for _lines, (a, b, c, d), *_rest in PHRASE_LIST:      # (defined further down this file)
+            if a - 0.5 <= t <= d + 0.5:
+                v = max(v, _sc(a - 0.5, b, t) * (1.0 - _sc(c, d, t)))
+    except Exception:
+        return 0.0
+    return v
+
+
+def _veil(t, out, cam, c, R, k=0.55):
+    """Darken the upper part of the Earth (where the words sit) while a phrase reads: painted colours dim, lights
+    and glows lose alpha; the lower part and the rim stay as they are."""
+    r = _earth_reading(t)
+    if r <= 0.0 or not out:
+        return out
+    up = np.asarray(cam.basis()[1] if hasattr(cam, "basis") else (0.0, 1.0, 0.0), np.float64)
+    for b in out:
+        pos = np.asarray(b.get("pos"), np.float64)
+        if pos.ndim != 2 or len(pos) == 0 or b.get("kind") not in ("disc", "soft", "spark", "line"):
+            continue
+        s = ((pos - c[None, :]) @ up) / R
+        m = 1.0 - k * r * _ss(-0.45, 0.25, s)
+        if b["kind"] == "disc":
+            col = np.asarray(b["color"], np.float64)
+            col = np.repeat(col[None, :], len(pos), axis=0) if col.ndim == 1 else col
+            b["color"] = col * m[:, None]
+        else:
+            al = b["alpha"]
+            al = np.full(len(pos), float(al)) if not np.ndim(al) else np.asarray(al, np.float64)
+            b["alpha"] = (al * m).astype(np.float32)
+    return out
+
+
+def _word_veil(sample):
+    def wrapped(t, cam=None):
+        out = sample(t, cam)
+        if out is None:
+            return out
+        cam = cam if cam is not None else CAMERA.state(t)
+        c, _M, R = GLOBE._view(t, cam)
+        return _veil(t, list(out), cam, c, R)
+    return wrapped
+
+
+GLOBE.sample = _word_veil(_night_side(GLOBE.sample))
 
 
 def _sphere_ring(cv, ang, n):
@@ -587,7 +634,7 @@ class GlobeFX:
                     v = _sphere_ring(zv, ang, 900) @ T.T
                     p = c + R * 1.01 * v
                     f = front(p)
-                    a = np.exp(-u / 3.0) * (1.0 if t0 == 41.6 else 0.55)
+                    a = np.exp(-u / 3.0) * (0.7 if t0 == 41.6 else 0.4)
                     out.append(dict(pos=p[f], size=0.55, color=lin("#ffe6b8"), alpha=a, emit=3.0, kind="spark",
                                     dof=0.0, reflect=False))
         # Zion itself: a warm light on Korea
@@ -626,7 +673,7 @@ class GlobeFX:
             n_on = 5.0 + 19.0 * float(np.clip((k - 0.08) / 0.62, 0.0, 1.0))
             kk = min(k, 1.0)
             wid = 0.005 + 0.013 * min(k, 1.3)
-            br = (0.5 + 0.5 * kk) * (1.0 + 0.9 * hit + 0.2 * beat_pulse(t))
+            br = (0.35 + 0.35 * kk) * (1.0 + 0.6 * hit + 0.2 * beat_pulse(t))
             for i, (la, lo) in enumerate(self.src):
                 on_i = float(np.clip(n_on - i, 0.0, 1.0))
                 if on_i <= 0.0:
@@ -641,20 +688,20 @@ class GlobeFX:
                 v = v / np.linalg.norm(v, axis=1, keepdims=True)
                 v = v + wid * (1.0 - 0.7 * f[:, None]) * (s[:, 3:6] - 0.5)      # the river narrows into Zion
                 v = v / np.linalg.norm(v, axis=1, keepdims=True)
-                lift = 1.012 + 0.035 * np.sin(np.pi * f)
+                lift = 1.010 + 0.006 * np.sin(np.pi * f)
                 p = c + R * lift[:, None] * (v @ T.T)
                 vis = (s[:, 0] < kk * on_i) & front(p)
                 if not vis.any():
                     continue
-                fa = _ss(0.0, 0.08, f[vis]) * (1.0 - _ss(0.94, 1.0, f[vis]))
-                col = lin(COL9[i % 9]) * 0.72 + lin(WHITE) * 0.28
-                out.append(dict(pos=p[vis], size=0.24 + 0.16 * kk + 0.22 * s[vis, 2], color=col,
-                                alpha=(0.95 * br * fa).astype(np.float32), emit=2.6, kind="spark", dof=0.0,
+                fa = _ss(0.0, 0.08, f[vis]) * (1.0 - _ss(0.72, 0.95, f[vis]))
+                col = lin(COL9[i % 9]) * 0.88 + lin(WHITE) * 0.12
+                out.append(dict(pos=p[vis], size=0.14 + 0.10 * kk + 0.12 * s[vis, 2], color=col,
+                                alpha=(0.6 * br * fa).astype(np.float32), emit=2.6, kind="spark", dof=0.0,
                                 reflect=False, twinkle=0.5, seed=s[vis, 1]))
                 g = vis & (np.arange(len(f)) % 5 == 0)
                 if g.any():
-                    fg = _ss(0.0, 0.08, f[g]) * (1.0 - _ss(0.94, 1.0, f[g]))
-                    out.append(dict(pos=p[g], size=1.3 + 0.8 * kk, color=col, alpha=(0.05 * br * fg).astype(np.float32),
+                    fg = _ss(0.0, 0.08, f[g]) * (1.0 - _ss(0.72, 0.95, f[g]))
+                    out.append(dict(pos=p[g], size=1.0 + 0.6 * kk, color=col, alpha=(0.03 * br * fg).astype(np.float32),
                                     emit=1.5, kind="soft", dof=0.0, reflect=False))
         # the build (1:15.2): the Earth's rim glows brighter as if the sun were coming
         if 74.0 <= t < 77.46:
@@ -663,7 +710,7 @@ class GlobeFX:
             p = c + R * 1.03 * rim
             out.append(dict(pos=p, size=1.2, color=lin("#ffd9a0"), alpha=0.35 * k, kind="soft", emit=2.0,
                             reflect=False))
-        return out or None
+        return _veil(t, out, cam, c, R) or None
 
 
 # =========================================================================================================
@@ -1166,9 +1213,10 @@ import songs.s11_coda as S_CODA  # noqa: E402
 import songs.s11_light as S_LIGHT  # noqa: E402
 import songs.s11_dance as S_DANCE  # noqa: E402
 import songs.s11_churches as S_CHURCHES  # noqa: E402  (round 7: churches established around the world)
+import songs.s11_words as S_WORDS  # noqa: E402  (round 7: the four entrances of the words and their companions)
 import songs.s11_music_fx as S_MUSIC  # noqa: E402  (last: it lifts what the others placed)
 
-THREADS = [S_CHURCH, S_STAGE, S_ZION, S_PROC, S_CODA, S_DANCE, S_CHURCHES, S_MUSIC]
+THREADS = [S_CHURCH, S_STAGE, S_ZION, S_PROC, S_CODA, S_DANCE, S_CHURCHES, S_WORDS, S_MUSIC]
 Y, FZ, G = SUMMIT, FACADE_Z, GLOBE_C
 CORE_SHOTS = [
     # Father's pulse rolls out over the whole Earth: a long graceful pull-back from close over Korea (round 6: the
@@ -1265,31 +1313,33 @@ WORLD["float_field"] = dict(count=4200, center=(float(ZC[0]), float(ZC[2]) + 300
 WORLD["shafts"] = [sh for m in THREADS for sh in getattr(m, "SHAFTS", [])][:4]
 
 # =========================================================================================================
-# The phrases on screen: Anthony's list, timed to where each is sung on this recording.
-# Strong and powerful ones are huge and blaze in gold (rays burn them out of the light); the gentle ones are
-# written by light. (t_in, t_read0, t_read1, t_out)
+# The phrases on screen: Anthony's list, timed to where each is sung on this recording. Round 7 (Anthony: "The
+# words that appear can definitely enter and be designed way better"): each phrase takes the entrance that fits
+# its music and picture (s11_words.py): "light" (a comet writes it), "people" (lights of the nations walk in
+# and become it), "blaze" (the hit's flash lands, the word burns in 0.4 s later with a shockwave across the
+# sea), "fly" (large letters ahead; the camera flies through them). Entrances snap to the measured hits/beats.
+# (lines, (t_in, t_read0, t_read1, t_out), strong, style, leave)
 # =========================================================================================================
 PHRASE_LIST = [
-    # text lines, times, strong, arrive, leave
-    (["The glory of Jerusalem", "Mother shines!"], (53.9, 55.4, 60.0, 61.2), False, "gather", "rise"),
-    (["All nations and all peoples"], (70.6, 71.4, 74.0, 74.5), False, "weave", "wind"),
-    (["to the great Church of God!"], (74.56, 75.7, 79.0, 79.9), False, "pen", "rise"),
-    (["Joy of salvation!"], (80.3, 82.08, 85.6, 86.6), True, "rays", "bokeh"),
-    (["For Your sacrifice"], (99.4, 100.3, 103.0, 103.6), True, "rays", "rise"),
-    (["For Your devotion"], (103.6, 105.14, 108.4, 109.4), True, "rays", "rise"),
-    (["This hope was engraved", "deep in all our hearts"], (133.6, 135.6, 140.6, 141.6), False, "reveal", "rise"),
-    (["All kings worship You"], (150.4, 151.5, 154.0, 154.8), False, "pen", "wind"),
-    (["to the great Church of God!"], (154.9, 156.0, 159.4, 160.3), False, "pen", "rise"),
-    (["Joy of salvation!"], (161.0, 162.86, 166.6, 167.6), True, "rays", "bokeh"),
-    (["Your sacrifice"], (179.2, 180.2, 182.8, 183.5), True, "rays", "rise"),
-    (["Your wondrous love"], (183.6, 185.4, 188.2, 188.9), True, "rays", "rise"),
-    (["Joy of salvation!"], (199.9, 201.73, 205.4, 206.2), True, "rays", "bokeh"),
-    (["Joy of salvation!"], (209.4, 210.4, 213.6, 214.4), True, "rays", "rise"),
-    (["Your sacrifice"], (218.4, 219.3, 222.4, 223.1), True, "rays", "rise"),
-    (["For Your devotion"], (223.2, 223.9, 226.5, 226.95), True, "rays", "rise"),
+    (["The glory of Jerusalem", "Mother shines!"], (53.94, 55.8, 60.0, 61.2), False, "light", "rise"),
+    (["All nations and all peoples"], (70.54, 71.73, 74.56, 75.2), False, "people", "morph"),
+    (["to the great Church of God!"], (74.56, 75.63, 79.0, 79.9), False, "people", "scatter"),
+    (["Joy of salvation!"], (82.08, 82.48, 85.6, 86.6), True, "blaze", "bokeh"),
+    (["Sacrifice"], (100.26, 100.66, 103.25, 103.75), True, "blaze", "rise"),
+    (["Devotion"], (105.14, 105.54, 108.4, 109.4), True, "blaze", "rise"),
+    (["This hope was engraved", "deep in all our hearts"], (133.77, 135.19, 138.4, 139.2), False, "fly", "doors"),
+    (["All kings worship You"], (150.23, 151.21, 153.9, 154.55), False, "people", "scatter"),
+    (["to the great Church of God!"], (154.9, 156.41, 159.4, 160.3), False, "light", "unravel"),
+    (["Joy of salvation!"], (162.86, 163.26, 166.6, 167.6), True, "blaze", "bokeh"),
+    (["Sacrifice"], (180.7, 181.1, 183.65, 184.2), True, "blaze", "rise"),
+    (["Wondrous love"], (184.65, 185.92, 188.5, 189.1), True, "light", "rise"),
+    (["Joy of salvation!"], (201.73, 202.13, 205.4, 206.2), True, "blaze", "bokeh"),
+    (["Joy of salvation!"], (209.42, 210.37, 213.2, 214.0), True, "fly", "doors"),
+    (["Sacrifice"], (218.1, 218.5, 222.4, 223.0), True, "blaze", "rise"),
+    (["Devotion"], (224.03, 224.43, 226.95, 227.4), True, "blaze", "rise"),
     (["We give eternal glory, praise, and thanks", "to Our Father Ahnsahnghong and Mother!"],
-     (227.0, 228.8, 234.8, 236.0), True, "rays", "rise"),
-    (["Oh, the Church of God"], (239.0, 240.2, 244.6, 245.8), False, "pen", "rise"),
+     (227.0, 228.79, 234.8, 236.0), True, "people", "scatter"),
+    (["Oh, the Church of God"], (238.93, 240.35, 244.6, 245.8), False, "light", "rise"),
 ]
 
 
@@ -1305,31 +1355,11 @@ def _width(ts, depth, frac):
 
 
 def _phrase_specs():
-    specs = []
-    for i, (lines, (ti, r0, r1, to), strong, arr, lv) in enumerate(PHRASE_LIST):
-        depth = 30.0
-        long = max(len(s) for s in lines)
-        if strong:
-            frac = 0.66 if long > 30 else min(0.66, 0.040 * long + 0.06)
-            ride = (0.5, 0.62 if len(lines) == 1 else 0.60, depth)
-        else:
-            frac = min(0.56, 0.026 * long + 0.05)
-            ride = (0.5, 0.63 if len(lines) == 1 else 0.60, depth)
-        spec = dict(label="", lines=lines, ride=ride, face="screen", width=_width(np.linspace(ti, to, 12), depth, frac),
-                    t_in=ti, t_read0=r0, t_read1=r1, t_out=to, arrive=arr, leave=lv, name=f"phrase{i:02d}",
-                    color=GOLD if strong else "#ffe6c0", glow=GOLD if strong else "#ffd59a",
-                    tint=0.75 if strong else 0.35, bright=1.15 if strong else 1.0,
-                    halo=1.3 if strong else 1.0, n=90000 if strong else 60000, reflect=False)
-        if strong:
-            spec["font"] = "title"
+    return S_WORDS.specs(PHRASE_LIST, _width)
 
-        if arr == "reveal":
-            spec["edge"] = "right"
-        if arr == "pen":
-            spec["nib"] = True
-        specs.append(spec)
-    return specs
-WORDS = PW.Words(_phrase_specs(), camera=CAMERA)
+
+_SPECS = _phrase_specs()
+WORDS = PW.Words(_SPECS, camera=CAMERA)
 
 
 # =========================================================================================================

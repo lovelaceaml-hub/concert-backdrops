@@ -107,7 +107,7 @@ textarea{min-height:44px;resize:vertical}
 
 <ol class="sections" id="list"></ol>
 <section class="panel" aria-label="Done">
-  <h3>Done and closed</h3>
+  <div class="row"><h3>Done and closed <span id="doneCount"></span></h3><button type="button" id="doneToggle" aria-expanded="true">Hide</button></div>
   <ul class="items" id="doneList"><li class="empty">Nothing closed yet.</li></ul>
 </section>
 <p class="hint">Requests and decisions save here; I pick them up at each status update. Open items stay in their sections; finished and declined ones move here.</p>
@@ -287,6 +287,7 @@ function render(){
     li.prepend(el("span", "hint", where(c.x.section)));
     return li;
   }, "Nothing closed yet.");
+  document.getElementById("doneCount").textContent = closed.length ? "(" + closed.length + ")" : "";
   const total = VIEW.reduce((a, s) => a + (s.pct || 0), 0) / Math.max(1, VIEW.length);
   document.getElementById("ovTitle").textContent = STATUS.title || "Render";
   document.getElementById("ovFill").style.width = Math.round(total) + "%";
@@ -332,6 +333,14 @@ function tick(){
   document.getElementById("clock").textContent = newest ? "Newest video: " + agoText(new Date(newest).toISOString()) : "";
 }
 
+// Hide or show the Done and closed list (Anthony, 2026-11-19); remembered on this device.
+(() => {
+  const btn = document.getElementById("doneToggle"), ul = document.getElementById("doneList");
+  const apply = hide => { ul.hidden = hide; btn.textContent = hide ? "Show" : "Hide"; btn.setAttribute("aria-expanded", String(!hide)); };
+  let hide = false; try { hide = localStorage.getItem("s11_done_hidden") === "1"; } catch (e) {}
+  apply(hide);
+  btn.addEventListener("click", () => { hide = !hide; apply(hide); try { localStorage.setItem("s11_done_hidden", hide ? "1" : "0"); } catch (e) {} });
+})();
 makeForm(document.getElementById("globalForm"), -1);
 render(); setInterval(tick, 20000);
 

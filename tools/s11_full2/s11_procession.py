@@ -228,20 +228,24 @@ SLANT = np.radians(35.0)
 NATIONS = [(-1.0, -40.0, 1), (-1.0, -6.0, 6), (-1.0, 26.0, 3), (1.0, -36.0, 2), (1.0, -2.0, 4), (1.0, 30.0, 7)]
 
 
-def _nation_places(seed=57):
+def _nation_places(seed=57, groups=None, t0=None, dmax=46.0):
+    """Where each nation's people start (world, at t0), their facing, colour and when they reach the procession's
+    edge. Round 7: later groups (t0 after "march ahead") start beside where the procession has walked to."""
+    groups = NATIONS if groups is None else groups
+    t0 = MARCH if t0 is None else t0
     r = np.random.default_rng(seed)
     P, F, C, J = [], [], [], []
-    for s, za, col in NATIONS:
+    for s, za, col in groups:
         back = np.array([s * np.sin(SLANT), 0.0, np.cos(SLANT)])     # out from the procession and back
         side = np.array([np.cos(SLANT), 0.0, -s * np.sin(SLANT)])
         a = np.array([s * (_edge(za) + 0.8), 0.0, za])
-        for d in np.arange(1.2, 46.0, 1.55):
+        for d in np.arange(1.2, dmax, 1.55):
             for w in (-1.6, 0.0, 1.6):
                 if r.random() < 0.12:
                     continue
                 dd = d + r.uniform(-0.35, 0.35)
                 p = a + back * dd + side * (w + r.uniform(-0.3, 0.3))
-                P.append(p)
+                P.append(p - np.array([0.0, 0.0, walked(t0)]))
                 F.append(180.0 + s * np.degrees(SLANT))
                 C.append(col)
                 # they walk until they reach the procession's edge (in its own frame, which walks on ahead)
@@ -249,11 +253,30 @@ def _nation_places(seed=57):
                 x = p[0] - s * np.sin(SLANT) * WALK * u
                 zr = p[2] + (1.0 - np.cos(SLANT)) * WALK * u
                 inside = np.abs(x) <= np.array([_edge(z) for z in zr]) - 0.3
-                J.append(MARCH + (u[np.argmax(inside)] if inside.any() else 40.0))
+                J.append(t0 + (u[np.argmax(inside)] if inside.any() else 40.0))
     return np.asarray(P), np.asarray(F), np.asarray(C, int), np.asarray(J)
 
 
 NAT_P, NAT_F, NAT_C, NAT_J = _nation_places()
+
+# Round 7 (Anthony: "The theme should be more and more people going to Zion"): more nations come in from both
+# sides as the march goes on, a new wave on the third accent of "fulfilled" (2:21.5) and as the kings come in
+# (2:28.6), and everyone who reaches the procession walks on in it at its edge, so it visibly grows.
+LATE = [(141.5, [(-1.0, -22.0, 0), (1.0, -18.0, 5), (-1.0, 42.0, 8), (1.0, 46.0, 0)]),
+        (148.6, [(-1.0, -54.0, 5), (1.0, -50.0, 8), (-1.0, 10.0, 2), (1.0, 14.0, 6)])]
+_late = [_nation_places(59 + i, g, t0, 26.0) for i, (t0, g) in enumerate(LATE)]
+LATE_P = np.concatenate([x[0] for x in _late])
+LATE_F = np.concatenate([x[1] for x in _late])
+LATE_C = np.concatenate([x[2] for x in _late])
+LATE_J = np.concatenate([x[3] for x in _late])
+LATE_T0 = np.concatenate([np.full(len(x[0]), t0) for x, (t0, _g) in zip(_late, LATE)])
+
+
+def _joined(P, F, J, start):
+    """Where each joiner reaches the procession's edge (world), for those who reach it before the held breath."""
+    f = np.radians(np.asarray(F, np.float64))
+    d = np.stack([np.sin(f), np.zeros(len(f)), np.cos(f)], 1)
+    return P + d * (WALK * np.maximum(J - start, 0.0))[:, None]
 
 
 def _ahead(crowd):
@@ -870,7 +893,35 @@ def add(scene):
     _tint_nations(nat_held, NAT_C[~gone])
     scene.add("proc nations", nations, reflect=False)
     scene.add("proc nations held", nat_held, reflect=False)
-    scene.add("march beat", MarchBeat([walkers, nations]))
+    # round 7: more nations come in from both sides later in the march (each in its own colour)
+    late = GCrowd(gain=crowd_k, places=LATE_P, facing=LATE_F, kinds=("walk",), start=LATE_T0 - 0.2, walk=WALK,
+                  until=np.minimum(LATE_J, HALT), fade=0.6, flash=1.4, **look)
+    _tint_nations(late, LATE_C)
+    lgone = LATE_J < HALT
+    lstill = LATE_P[~lgone] + _ahead(late)[~lgone] * (WALK * (HALT - LATE_T0[~lgone]))[:, None]
+    late_held = WaveCrowd(waves=[(159.4, 1.4, 6.0, 0.6, 0.6)], delay=np.full(len(lstill), 0.5), gain=crowd_k,
+                          places=lstill, facing=LATE_F[~lgone], kinds=(("raise", 2.0), ("open", 1.0)),
+                          start=HALT - 0.3, fade=0.3, flash=0.0, **look)
+    _tint_nations(late_held, LATE_C[~lgone])
+    scene.add("proc nations late", late, reflect=False)
+    scene.add("proc nations late held", late_held, reflect=False)
+    # round 7: everyone who reaches the procession walks on in it at its edge, so it visibly grows as it marches
+    # (and stands with it in the held breath)
+    JP = np.concatenate([NAT_P[gone] + _ahead(nations)[gone] * (WALK * (NAT_J[gone] - MARCH + 0.1))[:, None],
+                         LATE_P[lgone] + _ahead(late)[lgone] * (WALK * (LATE_J[lgone] - LATE_T0[lgone] + 0.2))[:, None]])
+    JT = np.concatenate([NAT_J[gone], LATE_J[lgone]])
+    JC = np.concatenate([NAT_C[gone], LATE_C[lgone]])
+    joined = GCrowd(gain=crowd_k, places=JP, facing=180.0, kinds=("walk",), start=JT - 0.3, walk=WALK, until=HALT,
+                    fade=0.45, flash=0.0, **look)
+    _tint_nations(joined, JC)
+    jheld = WaveCrowd(waves=[(159.4, 1.4, 6.0, 0.6, 0.6)], delay=np.full(len(JP), 0.5), gain=crowd_k,
+                      places=JP + _ahead(joined) * (WALK * (HALT - JT + 0.3))[:, None], facing=180.0,
+                      kinds=(("raise", 2.0), ("open", 1.0)), start=HALT - 0.3, fade=0.3, flash=0.0, **look)
+    jheld.facing[:] = joined.facing
+    _tint_nations(jheld, JC)
+    scene.add("proc joined", joined, reflect=False)
+    scene.add("proc joined held", jheld, reflect=False)
+    scene.add("march beat", MarchBeat([walkers, nations, late, joined]))
     scene.add("procession wait", wait, reflect=False)
     scene.add("procession", walkers, reflect=False)
     scene.add("procession held", held, reflect=False)

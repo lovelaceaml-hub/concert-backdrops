@@ -22,6 +22,12 @@ from s11_prepare import WORK, FPS, TOTAL  # noqa: E402
 from s11_prepare import r3  # noqa: E402
 
 
+
+# Review finding f20 (approved 2026-11-19): every hit was 3 to 4 frames ahead of the sound, because the measured
+# hit times sit about 0.1 s before the audible attack. The picture is drawn 0.1 s later in film time so flashes
+# and cuts land with the sound. Stills keep the exact cue times.
+PICTURE_DELAY = 0.1
+
 def load(fps=FPS):
     snap = r3.SNAPSHOT
     if not (snap / 'engine/render.py').exists() or not (WORK / 'features.npz').exists():
@@ -100,7 +106,7 @@ def main():
     start = time.time()
     try:
         for i in range(*args.range):
-            ff.stdin.write(frame(i / fps))
+            ff.stdin.write(frame(max(0.0, i / fps - PICTURE_DELAY)))
             if (i - args.range[0]) % (5 * fps) == 0:
                 print(f'frame {i}: {time.time() - start:.1f} s', flush=True)
     finally:
