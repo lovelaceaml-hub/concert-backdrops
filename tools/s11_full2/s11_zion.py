@@ -99,7 +99,8 @@ SHOTS = [
     # standing firm, the second climb: a bigger banking spiral, far higher than the first
     _shot("zion_full", 171.48, 178.4,
           # (round 8, f18) it starts farther out and higher, so the near terraces do not bloom white at the lens
-          _orbit(171.48, 178.4, -40.0, 80.0, 440.0, 230.0, 78.0, 190.0, ZC + _v(0, 40, 0), ZC + _v(0, 60, 0), 8),
+          # (round 8, from ENDS) the sweep ends in front of the church of light, so its front and emblem face us
+          _orbit(171.48, 178.4, -55.0, 25.0, 440.0, 230.0, 78.0, 190.0, ZC + _v(0, 40, 0), ZC + _v(0, 60, 0), 8),
           fov=54.0, roll=(-14.0, 10.0)),
     # sacrifice: the mountain blazing, a high helicopter orbit
     _shot("zion_full", 180.7, 183.0,
