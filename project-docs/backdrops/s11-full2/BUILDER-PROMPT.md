@@ -6,10 +6,11 @@ Each builder is a Claude Code cloud session started with a short prompt naming i
 
 | Key | Area | Files | Branch |
 |---|---|---|---|
-| ZION | Zion and people | s11_zion.py, s11_procession.py, s11_coda.py | backdrop2/s11-b-zion |
+| ZION | Zion and people | s11_zion.py, s11_coda.py | backdrop2/s11-b-zion |
 | STAGE | Stage and conductor | s11_stage.py, s11_dance.py | backdrop2/s11-b-stage |
 | CORE | Words, light, music, Earth, edit | s11_full2.py, s11_words.py, s11_light.py, s11_music_fx.py, s11_music_map.py, render.py | backdrop2/s11-b-core |
 | ENDS | Opening and closing, the church of light | s11_church.py, s11_cards.py | backdrop2/s11-r7-ends |
+| MARCH | The march, the nations to Mother, the kings, flag bearers | s11_procession.py (from ZION) | backdrop2/s11-b-march |
 | MODELS | Real churches (models and their placement around Zion) | models/, s11_churches.py | backdrop2/s11-models |
 
 Other standing threads: the reviewer (findings on the review page) and render machines A to G (MACHINE-PROMPT.md). The coordinator merges builder branches (their files never overlap), orders renders, relays requests between threads, and keeps the review page and records current.

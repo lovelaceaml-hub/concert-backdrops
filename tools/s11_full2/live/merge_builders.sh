@@ -6,7 +6,7 @@ cd "$(git rev-parse --show-toplevel)"
 git fetch -q origin
 git checkout -q backdrop2/s11-full
 git merge -q --ff-only origin/backdrop2/s11-full 2>/dev/null || true
-for b in s11-b-zion s11-b-stage s11-b-core s11-r7-ends s11-models; do
+for b in s11-b-zion s11-b-stage s11-b-core s11-r7-ends s11-models s11-b-march; do
   if git rev-parse -q --verify "origin/backdrop2/$b" >/dev/null; then
     if [ -n "$(git log --oneline HEAD..origin/backdrop2/$b)" ]; then
       git merge -q --no-edit -m "Merge builder branch backdrop2/$b" "origin/backdrop2/$b" && echo "merged $b"
