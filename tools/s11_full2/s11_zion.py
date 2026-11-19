@@ -619,6 +619,44 @@ def _band_slots(rb, step, y, front=FRONT):
     return p[keep], a[keep]
 
 
+CITY_PAT = "GTGPGt"          # along each terrace's back band: gardens (G) between building plots (T, P, t)
+RING_PAT = "GTGPG"           # along the new rings of the city on the sea
+CITY_GEN1 = {0: 90.72, 1: 91.6, 2: 92.6, 3: 99.4, 4: 101.5, 5: 109.8}
+
+
+def _city_slots():
+    """(Round 8, Anthony: "The heavenly city buildings are the real church buildings in Korea.") The building
+    plots of Zion's city, for the models thread to place a real Korean church on each (largest on the widest):
+    dicts with x, y (the floor), z, facing (degrees, azimuth from +z toward +x: the front looks out from the
+    mountain, down over the terrace below), max_w, max_d (the free footprint in metres: across, deep), terrace
+    (0 the lowest terrace .. 5; -1 and -2 the first and second new rings on the sea), born (when the building
+    rises: on the beats, ring by ring up the mountain through the song, the rings on the sea behind the
+    shockwave and on slam 3). The summit plateau (terrace 6) is left to the church of light and its city."""
+    out = []
+    for k in range(N_TIER - 1):
+        rb = tier_r(k + 1) + 8.0
+        P, A = _band_slots(rb, 13.0, tier_y(k))
+        for j, (p, a) in enumerate(zip(P, A)):
+            if CITY_PAT[(j + k) % len(CITY_PAT)] == "G":
+                continue
+            u = abs(a) / FRONT
+            out.append(dict(x=float(p[0]), y=float(tier_y(k)), z=float(p[2]), facing=float(np.degrees(a)),
+                            max_w=18.0, max_d=12.0, terrace=k, born=float(_snap(CITY_GEN1[k] + 2.2 * u))))
+    front = np.radians(100.0)
+    for ri, (R, t0) in enumerate(zip(R_RING, RING_T)):
+        P, A = _band_slots(R - 12.0, 15.0, 0.0, front)
+        for j, (p, a) in enumerate(zip(P, A)):
+            if RING_PAT[j % len(RING_PAT)] == "G":
+                continue
+            u = abs(a) / front
+            out.append(dict(x=float(p[0]), y=0.0, z=float(p[2]), facing=float(np.degrees(a)), max_w=22.0,
+                            max_d=14.0, terrace=-1 - ri, born=float(_snap(t0 + (6.3 if ri == 0 else 4.3) + 2.2 * u))))
+    return out
+
+
+CITY_SLOTS = _city_slots()
+
+
 def _city_parts():
     """The growing city: (gates, gardens, towers and pavilions, mist, the new rings on the sea) as batches."""
     r = np.random.default_rng(606)
@@ -643,6 +681,8 @@ def _city_parts():
             p = p + r.uniform(-1.0, 1.0, 3) * np.array([1.0, 0.0, 1.0])
             if kind == "G":
                 _garden(Gd, p, r, float(_snap(FILL_T[k] + 0.6 + 1.6 * u)))
+            elif CITY_SLOTS is not None:
+                continue           # (round 8) a building plot: a real Korean church stands here (s11_churches)
             elif kind == "P":
                 _pavilion(T, p, j, float(_snap(HIT["thanks"] + 0.5 * k + 2.4 * u)) if k < 5
                           else float(_snap(171.48 + 1.5 * u)))
@@ -690,6 +730,8 @@ def _city_parts():
             kind = "GTGPG"[j % 5]
             if kind == "G":
                 _garden(Gd, p, r, b)
+            elif CITY_SLOTS is not None:
+                continue           # (round 8) a building plot on the ring (CITY_SLOTS)
             elif kind == "P":
                 _pavilion(T, p, j, b)
             else:
@@ -944,7 +986,7 @@ def _places(tiers, density, seed, front_share=0.9):
     r = np.random.default_rng(seed)
     out, kk = [], []
     for k in tiers:
-        R0, Ri = tier_r(k) - 1.6, tier_r(k + 1) + 8.0
+        R0, Ri = tier_r(k) - 1.6, tier_r(k + 1) + 15.0      # (round 8) clear of the building plots (CITY_SLOTS)
         n = int(np.pi * (R0 ** 2 - Ri ** 2) * density)
         a = _az(n, r, front_share)
         rr = np.sqrt(Ri ** 2 + (R0 ** 2 - Ri ** 2) * r.random(n))
