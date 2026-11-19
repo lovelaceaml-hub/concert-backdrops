@@ -755,7 +755,7 @@ class Instruments:
                             alpha=0.9 * g, emit=1.8, kind="line", dof=0.6))
         # the drum heads breathe on the beat; light bursts from the bells and heads on the hits
         bp = beat_pulse(t, 0.1)
-        out.append(dict(pos=self.hp, size=0.35 + 1.4 * hk, color=lin(GOLD), alpha=(0.10 + 0.12 * bp + 0.8 * hk) * g,
+        out.append(dict(pos=self.hp, size=0.35 + 0.5 * hk, color=lin(GOLD), alpha=(0.10 + 0.12 * bp + 0.35 * hk) * g,
                         kind="soft", emit=1.5, dof=0.6))
         if hk > 0.01:
             u = max(t - last, 0.0)
@@ -772,7 +772,7 @@ class Instruments:
             dd /= np.linalg.norm(dd, axis=1, keepdims=True)
             b = a + dd * (2.0 + 7.0 * (1.0 - np.exp(-u / 0.35)))
             out.append(dict(pos=a, pos2=b, alpha2=np.zeros(len(a)), size=0.10, size2=0.35, color=lin("#ffe2a6"),
-                            alpha=0.5 * hk * g, emit=2.2, kind="ribbon", dof=0.6))
+                            alpha=0.3 * hk * g, emit=2.0, kind="ribbon", dof=0.6))
         return out
 
 

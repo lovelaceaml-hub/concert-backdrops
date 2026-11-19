@@ -58,6 +58,9 @@ LOOKS = dict(
                       sky_mid="#0a1238", sky_hor="#24265e", sun_color="#ffd89c", sun_glow=0.26, sun_disc=5.0,
                       sun_size=1.6, mist=0.0, haze=0.12, haze_color="#24265e", water="#03061a", ripple=0.15,
                       exposure=0.95),
+    brass=dict(base="sunrise", hills=0.0, clouds=0.15, sky_top="#0b1a4a", sky_mid="#2e2a6a", sky_hor="#8a4f74",
+               haze=0.15, haze_color="#2e2a5a", mist=0.0, exposure=0.78, water="#080718", sun_glow=0.3,
+               sun_disc=4.0, rays=0.2),
     pastel_card=dict(base="day", hills=0.0, sky_top="#9bdbf6", sky_mid="#efcfeb", sky_hor="#ffd9b6",
                      sun_int=0.3, sun_glow=0.3, mist=0.14, haze=0.14, stars=0.2, water="#8ab4e0"),
 )
@@ -87,6 +90,8 @@ def _look_keys():
             name = CODA_LOOKS[s["name"]]
         elif s["kind"] == "globe":
             name = "pastel_card" if t0 >= 254.0 else "space"
+        elif s["kind"] == "stage" and 160.0 <= t0 < CODA0:
+            name = "brass"            # the brass cut-ins face the sunrise: a deeper sky so the words stay clear
         else:
             name = _local_look(t0)
         keys.append((t0, name, 0.0))
@@ -153,7 +158,8 @@ def sun_int(t):
         return k + 0.10 * loud(t) + 0.15 * hit_pulse(t, [SLAM3], fall=1.0)
     if 238.8 <= t < 254.07:      # home to everyone on Mount Zion: the sun high, its glare kept small
         return 0.45 + 0.08 * loud(t) + 0.2 * hit_pulse(t, [HIT["final"]], fall=1.2)
-    return 0.40 + 0.25 * _sc(53.0, 82.08, t) + 0.15 * _sc(160.0, 201.73, t) + 0.08 * loud(t)
+    k = 0.40 + 0.25 * _sc(53.0, 82.08, t) + 0.15 * _sc(160.0, 201.73, t) + 0.08 * loud(t)
+    return k * (0.45 if stage_view(t) and t >= 160.0 else 1.0)
 
 
 def rays(t):
@@ -164,7 +170,8 @@ def rays(t):
             return 0.12 + 0.30 * _sc(196.5, 201.6, t)
         return 0.38 + 0.08 * loud(t) + 0.25 * hit_pulse(t, [SLAM3], fall=1.2)
     base = 0.12 + 0.35 * _sc(80.0, 83.0, t) + 0.2 * _sc(197.0, 202.0, t)
-    return base * (0.85 + 0.3 * loud(t)) + 0.2 * hit_pulse(t, [SLAM1, SLAM2, SLAM3], fall=1.2)
+    r = base * (0.85 + 0.3 * loud(t)) + 0.2 * hit_pulse(t, [SLAM1, SLAM2, SLAM3], fall=1.2)
+    return r * (0.25 if stage_view(t) and t >= 160.0 else 1.0)    # the brass cut-ins face the sun: no wash
 
 
 def world():

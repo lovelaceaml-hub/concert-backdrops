@@ -618,7 +618,7 @@ def _sig_windows():
         a = max(t0, 11.6)
         if t1 <= a or t0 >= 254.07:
             continue
-        pal = "night" if (s["kind"] == "globe" or t0 < 162.86 or s["name"] == "hearts_rise") else "day"
+        pal = "night" if (s["kind"] in ("globe", "stage") or t0 < 162.86 or s["name"] == "hearts_rise") else "day"
         if w and w[-1][3] == pal and abs(w[-1][1] - a) < 1e-6:
             w[-1] = (w[-1][0], t1, w[-1][2], pal)
         else:
