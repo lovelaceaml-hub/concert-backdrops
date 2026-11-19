@@ -193,7 +193,7 @@ CHOIR_KINDS = [
 def choir_glow(t):
     """The light inside the singers: a calm glow, gathering through the breath in (1:17.5 to 1:22), bursting
     on the slam, steady and warm in the breath, and gathering again for the last chord."""
-    k = 0.35 + 0.25 * loud(t) + 0.25 * beat_pulse(t, 0.12)
+    k = 0.35 + 0.25 * loud(t) + 0.25 * beat_pulse(t, 0.12) + 0.35 * _mx("choir", t) * _room(t)
     k += 1.4 * _sc(77.46, 82.0, t) ** 1.6 * (1.0 - _sc(82.1, 84.5, t))
     k += 0.6 * hit_pulse(t, [SLAM1], fall=0.8)
     k += 0.7 * _win(t, 117.0, 121.2, 0.6, 0.4)
@@ -225,6 +225,23 @@ def phrase_on(t):
         if ti - 0.4 <= t <= to + 0.4:
             return 1.0
     return 0.0
+
+
+def _mx(name, t):
+    """A music-map channel (s11_music_fx), 0 when the map is missing."""
+    try:
+        import songs.s11_music_fx as MF
+        return float(getattr(MF, "fx_" + name)(t))
+    except Exception:  # noqa: BLE001
+        return 0.0
+
+
+def _room(t):
+    try:
+        import songs.s11_music_fx as MF
+        return float(MF.room(t))
+    except Exception:  # noqa: BLE001
+        return 1.0
 
 
 def phrase_k(t):
@@ -471,9 +488,11 @@ class SongBooks:
         sw = getattr(self.choir, "_sw", None)
         if sw is not None and len(sw) == len(P):
             P[:, :, 0] += (sw * min(self.h / 1.7, 1.2) ** 2)[:, None]
+        ch = _mx("choir", t) * _room(t)          # the books lift and brighten as the choir sings
+        P[:, :, 1] += 0.035 * ch
         pos = P.reshape(-1, 3)
         a = np.repeat(k, self.nb) * 0.9
-        glow = 0.85 + 0.25 * choir_glow(t)
+        glow = 0.85 + 0.25 * choir_glow(t) + 0.5 * ch
         return [dict(pos=pos, size=0.013, color=self.col * 1.7 * glow, alpha=np.minimum(a * 1.1, 1.0).astype(np.float32),
                      kind="spark", emit=1.9, twinkle=0.2, seed=self.seed.reshape(-1), dof=0.35),
                 dict(pos=pos[:: 3], size=0.045, color=self.col * 0.45 * glow, alpha=(a[:: 3] * 0.30).astype(np.float32),
@@ -959,6 +978,8 @@ class Instruments:
                 lb.append(_to_world(b, k, self.off)[0])
                 lc.append(lin("#ffd98e") if sec != HARP else lin("#ffe6b0"))
         self.P, self.C = np.concatenate(pts), np.concatenate(cols)
+        fam = {VIOLIN: 0, VIOLA: 0, CELLO: 0, HARP: 0, TRUMPET: 1, TROMBONE: 1, TIMPANI: 2}
+        self.fam = np.concatenate([np.full(len(p), fam[sec]) for p, sec in zip(pts, ORCH_SEC)])
         self.F, self.FC = np.concatenate(fill), np.concatenate(fcol)
         self.LA, self.LB, self.LC = np.asarray(la), np.asarray(lb), np.asarray(lc)
         self.sec = ORCH_SEC
@@ -967,16 +988,17 @@ class Instruments:
         self.timp = [k for k, s in enumerate(ORCH_SEC) if s == TIMPANI]
         self.bones = [k for k, s in enumerate(ORCH_SEC) if s == TROMBONE]
         hl = _hitters_local()
-        hp, hd = [], []
+        hp, hd, hf = [], [], []
         for k, s in enumerate(ORCH_SEC):
             for q in hl.get(s, []):
                 hp.append(_to_world(q, k, self.off)[0])
+                hf.append(2 if s == TIMPANI else 1)
                 if s == TIMPANI:
                     hd.append(_v(0.0, 1.0, 0.0))
                 else:
                     a = np.radians(ORCH_FACE[k])
                     hd.append(_u(np.sin(a), 0.12, np.cos(a)))
-        self.hp, self.hd = np.asarray(hp), np.asarray(hd)
+        self.hp, self.hd, self.hf = np.asarray(hp), np.asarray(hd), np.asarray(hf)
         r = np.random.default_rng(5)
         self.s = r.random((len(self.hp), 70, 4))
         self.rs = r.random(len(self.F))
@@ -999,7 +1021,13 @@ class Instruments:
         ph = play_ph(t)
         acc = hit_pulse(t, STRINGS, fall=0.5) + 0.35 * beat_pulse(t, 0.1)
         hk, last = self._hit(t)
-        out = [dict(pos=self.P, size=0.018, color=self.C * (1.35 + 0.6 * acc + 0.8 * hk), alpha=0.95 * g,
+        # each family answers its own sound: strings (and harps) glow with the strings, the brass with the brass
+        # and its hits, the timpani flash on the timpani; held back under a phrase and where the music blazes
+        rm = _room(t)
+        m_str, m_bra, m_tim = _mx("strings", t) * rm, _mx("brass", t) * rm, _mx("timp", t) * rm
+        lvl = np.array([1.0 + 0.9 * m_str, 1.0 + 1.1 * m_bra, 1.0 + 1.3 * m_tim])
+        famk = lvl[self.fam][:, None]
+        out = [dict(pos=self.P, size=0.018, color=self.C * famk * (1.35 + 0.6 * acc + 0.8 * hk), alpha=0.95 * g,
                     emit=1.9, kind="spark", twinkle=0.2, dof=0.6, fog=0.6),
                dict(pos=self.F, size=0.03, color=self.FC, alpha=(0.30 + 0.25 * acc) * g, kind="soft", emit=1.0,
                     twinkle=0.4, seed=self.rs, dof=0.6, fog=0.6),
@@ -1012,7 +1040,7 @@ class Instruments:
             fa.append(_to_world(frog, k, self.off)[0])
             fb.append(_to_world(tip, k, self.off)[0])
         fa, fb = np.asarray(fa), np.asarray(fb)
-        out.append(dict(pos=fa, pos2=fb, size=0.007, color=lin("#fff6ea") * (1.2 + 0.8 * acc), alpha=0.95 * g,
+        out.append(dict(pos=fa, pos2=fb, size=0.007, color=lin("#ffe8c4") * (1.2 + 0.8 * acc + 1.0 * m_str), alpha=0.95 * g,
                         emit=2.0, kind="line", dof=0.6, fog=0.6))
         out.append(dict(pos=fa, size=0.03, color=lin("#fff1d8"), alpha=0.8 * g, emit=2.0, kind="spark", dof=0.6))
         # the mallets
@@ -1041,7 +1069,9 @@ class Instruments:
                             alpha=0.9 * g, emit=1.8, kind="line", dof=0.6))
         # the drum heads breathe on the beat; light bursts from the bells and heads on the hits
         bp = beat_pulse(t, 0.1)
-        out.append(dict(pos=self.hp, size=0.35 + 0.5 * hk, color=lin(GOLD), alpha=(0.10 + 0.12 * bp + 0.35 * hk) * g,
+        own = np.where(self.hf == 2, 0.45 * m_tim, 0.40 * m_bra)        # the bells flare with the brass, the heads with the timpani
+        out.append(dict(pos=self.hp, size=0.35 + 0.5 * hk + 0.4 * own, color=lin(GOLD),
+                        alpha=(0.10 + 0.12 * bp + 0.35 * hk + own) * g,
                         kind="soft", emit=1.5, dof=0.6))
         if hk > 0.01:
             u = max(t - last, 0.0)
@@ -1116,13 +1146,22 @@ class ChoirLight:
         k = g * sing * _sc(21.4, 22.6, t) * (0.25 + 0.5 * loud(t))
         out = []
         s = self.s
+        k *= 1.0 + 0.8 * _mx("choir", t) * _room(t)
         if k > 0.01:
+            # every singer sends up four lights: two high, fine and sparkling, that climb higher with the high
+            # voices; two low, warm and soft, that glow lower with the low voices
+            hi = (np.arange(len(s)) % 2) == 0
+            fh, fl = _mx("high", t) * _room(t), _mx("low", t) * _room(t)
             base = np.repeat(self.p, 4, axis=0) + _v(0.0, 1.62, 0.18)
             age = np.mod(t * (0.22 + 0.18 * s[:, 0]) + s[:, 1], 1.0)
-            pos = base + np.stack([0.35 * (s[:, 2] - 0.5) * (0.4 + age), 3.2 * age, 0.25 * (s[:, 3] - 0.5)], 1)
-            out.append(dict(pos=pos, size=0.022 + 0.02 * s[:, 2], color=lin("#ffe6b0"),
-                            alpha=k * np.sin(np.pi * age) ** 1.5, emit=2.2, kind="spark", twinkle=0.7, seed=s[:, 3],
-                            dof=0.5))
+            rise = np.where(hi, 3.2 * (1.0 + 0.7 * fh), 1.5)
+            base = base - np.where(hi, 0.0, 0.55)[:, None] * _v(0.0, 1.0, 0.0)
+            pos = base + np.stack([0.35 * (s[:, 2] - 0.5) * (0.4 + age), rise * age, 0.25 * (s[:, 3] - 0.5)], 1)
+            amp = np.where(hi, 1.0 + 0.9 * fh, 0.7 + 1.0 * fl)
+            col = np.where(hi[:, None], lin("#fff4dc")[None], lin("#ffc98a")[None])
+            out.append(dict(pos=pos, size=np.where(hi, 0.018 + 0.014 * s[:, 2], 0.03 + 0.03 * s[:, 2]), color=col,
+                            alpha=k * amp * np.sin(np.pi * age) ** 1.5, emit=2.2, kind="spark",
+                            twinkle=0.7, seed=s[:, 3], dof=0.5))
         # the breath in (1:17.5 to 1:22): light streams in from the air round each singer and gathers at the
         # heart; on the slam it bursts out again
         if 77.0 <= t < 84.0 and g > 0.0:
