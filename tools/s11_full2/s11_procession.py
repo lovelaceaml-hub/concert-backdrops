@@ -22,6 +22,7 @@ The story (125.92 to 162.3, with cut-ins of the church and the choir owned by ot
 import numpy as np
 
 from songs.s11_full2 import *  # noqa: F401,F403
+from songs.s11_zion import WaveCrowd  # noqa: E402  (the waves of raised arms)
 
 Y, FZ, G = SUMMIT, FACADE_Z, GLOBE_C
 
@@ -675,13 +676,19 @@ def add(scene):
     look = dict(color="#fff0dc", color2="#dce8ff", bright=3.2, size=1.35, points=420, seed=21.0)
     scene.add("mother", MotherLight())
     scene.add("gather", Gather())
-    wait = GCrowd(gain=crowd_k, places=PROC_P, facing=180.0, kinds=("stand",), start=ARRIVE, until=MARCH,
-                  fade=0.3, flash=1.4, **look)
+    # the waves of raised arms: on "let's trust Father" (2:10.29) a wave of raised arms runs back through
+    # everyone from her light (down again before they step out); in the held breath they stand still, then
+    # lift their arms slowly toward her light as it grows into the slam
+    back = _D0 / _D0.max()
+    wait = WaveCrowd(waves=[(HIT["trust"], 1.3, 0.35, 1.0, 1.45)], delay=back, gain=crowd_k, places=PROC_P,
+                     facing=180.0, kinds=(("raise", 2.0), ("open", 1.0)), start=ARRIVE, until=MARCH,
+                     fade=0.3, flash=1.4, **look)
     walkers = GCrowd(gain=crowd_k, places=PROC_P, facing=180.0, kinds=("walk",), start=MARCH, walk=WALK,
                      until=HALT, fade=0.3, flash=0.0, **look)
     wait.facing[:] = walkers.facing
-    held = GCrowd(gain=crowd_k, places=PROC_P + _ahead(walkers) * walked(HALT), facing=180.0, kinds=("stand",),
-                  start=HALT - 0.3, fade=0.3, flash=0.0, **look)
+    held = WaveCrowd(waves=[(159.4, 1.4, 6.0, 0.6, 0.6)], delay=back, gain=crowd_k,
+                     places=PROC_P + _ahead(walkers) * walked(HALT), facing=180.0,
+                     kinds=(("raise", 2.0), ("open", 1.0)), start=HALT - 0.3, fade=0.3, flash=0.0, **look)
     held.facing[:] = walkers.facing
     scene.add("procession wait", wait, reflect=False)
     scene.add("procession", walkers, reflect=False)

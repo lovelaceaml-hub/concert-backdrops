@@ -439,6 +439,235 @@ def nations_k(t):
 
 
 # =========================================================================================================
+# Waves of raised arms: on the slams and the hits a wave of raised arms rolls from the foot of Zion up to the
+# summit, terrace by terrace (each person's arms go up as it reaches them, hold, and come down softly); in the
+# waves of praise and in the coda's praise the waves come again and again on the beat, like a stadium wave.
+# Each hand leaves a short trail of light as it sweeps up. Used here and by the coda (the summit) and the
+# procession (the gathered nations behind her light).
+# =========================================================================================================
+def _beats(a, b, every=4):
+    s = BEATS[(BEATS >= a - 0.01) & (BEATS < b)]
+    return [float(x) for x in s[::every]]
+
+
+def _arm_waves():
+    """(start, seconds from the foot to the summit, hold up, strength, gesture tempo for the true figures)."""
+    big = [(SLAM1, 4.4, 1.6, 1.0, 1.0), (SLAM2, 4.4, 1.6, 1.0, 1.0),
+           (CODA, 2.3, 3.4, 1.0, 1.1)]                     # the coda hit's wave reaches the summit on SLAM 3
+    near = [SLAM1, SLAM2, CODA, SLAM3]
+    hits = [(h, 3.4, 0.9, 0.85, 1.25) for h in KICKS
+            if 88.0 < h < 254.0 and min(abs(h - s) for s in near) > 1.5 and not (125.0 < h < 162.0)]
+    praise = [(b, 2.8, 0.25, 0.8, 2.4) for b in _beats(86.98, 96.0, 4) + _beats(205.2, 218.0, 4)]
+    return sorted(big + hits + praise)
+
+
+ARM_WAVES = _arm_waves()
+RISE, FALL = 0.30, 0.75            # the glitter people's arms: up quickly, down softly (seconds)
+
+
+def wave_u(P):
+    """How far up the mountain each place lies for the waves (0 at the foot, about 1 at the church)."""
+    rr = np.hypot(P[:, 0] - ZC[0], P[:, 2] - ZC[2])
+    return np.clip((tier_r(0) + 4.0 - rr) / (tier_r(0) - 16.0), 0.0, 1.05)
+
+
+def _bump(x, hold):
+    """A person's arms through one wave: 0 down, 1 fully raised (x: seconds since the wave reached them)."""
+    up = _ss(0.0, RISE, x)
+    down = _ss(RISE + hold, RISE + hold + FALL, x)
+    return up * (1.0 - down)
+
+
+class Arms:
+    """The raised arms of the glitter people (one stroke each): two strokes of light from the shoulders that
+    swing out and up as each wave reaches the person, a spark at each hand and a short trail of light behind it.
+    Nothing is drawn while the arms are down, so the people look as before between the waves."""
+
+    TRAIL, TDT = 5, 0.055
+
+    def __init__(self, P, born, seed, gain, waves=None, u=None):
+        r = np.random.default_rng(seed)
+        n = len(P)
+        self.h = r.uniform(0.9, 1.1, n)                  # the same heights as _glitter_people(seed)
+        r2 = np.random.default_rng(seed + 500)
+        self.P, self.born, self.k = P, born, gain
+        az = np.arctan2(P[:, 0] - ZC[0], P[:, 2] - ZC[2])
+        self.side = np.stack([np.cos(az), np.zeros(n), -np.sin(az)], 1)
+        self.out = np.stack([np.sin(az), np.zeros(n), np.cos(az)], 1)
+        self.u = wave_u(P) if u is None else u
+        self.jit = r2.uniform(-0.08, 0.14, n)
+        self.reach = r2.uniform(0.75, 1.0, n)            # not everyone lifts as high
+        self.waves = ARM_WAVES if waves is None else waves
+        nine = np.asarray([lin(c) for c in COL9])
+        self.col = nine[r2.integers(0, 9, n)] * 0.55 + lin(WHITE) * 0.45
+        self.s = r2.random(n)
+
+    def lift(self, t, ii=None):
+        ii = slice(None) if ii is None else ii
+        u, jit = self.u[ii], self.jit[ii]
+        out = np.zeros(len(u))
+        for t0, travel, hold, s, _rt in self.waves:
+            if t0 > t:
+                break
+            if t > t0 + travel * 1.1 + hold + RISE + FALL + 0.3:
+                continue
+            out = np.maximum(out, s * _bump(t - (t0 + travel * u + jit), hold))
+        return out * self.reach[ii]
+
+    def _hands(self, ii, lift):
+        h = self.h[ii][:, None]
+        up = np.array([0.0, 1.0, 0.0])
+        sh = self.P[ii] + up * (1.36 * h)
+        phi = np.radians(152.0) * lift[:, None]
+        out = []
+        for s in (-1.0, 1.0):
+            S = sh + s * 0.19 * h * self.side[ii]
+            Hd = S + 0.66 * h * (np.sin(phi) * s * 0.85 * self.side[ii] - np.sin(phi) * 0.25 * self.out[ii]
+                                  - np.cos(phi) * up)
+            out.append((S, Hd))
+        return out
+
+    def gain(self, t):
+        return float(self.k(t))
+
+    def sample(self, t):
+        if self.k(t) <= 0.0 or not self.waves or t < self.waves[0][0]:
+            return None
+        lift = self.lift(t)
+        ii = np.where((lift > 0.03) & (t >= self.born + 0.5))[0]
+        if len(ii) == 0:
+            return None
+        L = lift[ii]
+        a = _ss(0.03, 0.35, L)
+        col = self.col[ii]
+        arms = self._hands(ii, L)                 # [(shoulder, hand) left, (shoulder, hand) right]
+        A = np.concatenate([a, a])
+        C = np.concatenate([col, col])
+        out = []
+        out.append(dict(pos=np.concatenate([arms[0][0], arms[1][0]]), pos2=np.concatenate([arms[0][1], arms[1][1]]),
+                        size=0.22, color=C * 0.9, alpha=0.35 * A, alpha2=0.8 * A, kind="line", emit=1.4,
+                        reflect=False))
+        HP = np.concatenate([arms[0][1], arms[1][1]])
+        sd = np.concatenate([self.s[ii], self.s[ii]])
+        out.append(dict(pos=HP, size=0.42, color=C * 0.6 + lin(GOLD2) * 0.5, alpha=A, kind="spark", emit=2.6,
+                        twinkle=0.3, seed=sd, reflect=False))
+        # the trails: where the hands were a moment ago, fading behind them (only while the arms move)
+        prev = HP
+        for j in range(1, self.TRAIL + 1):
+            Lj = self.lift(t - j * self.TDT, ii)
+            q = self._hands(ii, Lj)
+            Q = np.concatenate([q[0][1], q[1][1]])
+            f = (1.0 - j / (self.TRAIL + 1.0)) ** 1.3
+            mv = np.linalg.norm(Q - prev, axis=1) > 0.02
+            if mv.any():
+                out.append(dict(pos=prev[mv], pos2=Q[mv], size=0.3 * f + 0.08, color=C[mv] * 0.75 + lin(GOLD2) * 0.3,
+                                alpha=0.75 * f * A[mv], alpha2=0.75 * f * f * A[mv], kind="line", emit=2.2,
+                                reflect=False))
+            prev = Q
+        return out
+
+
+class WaveCrowd(GCrowd):
+    """True figures that raise their arms as each wave reaches them (the engine's acted gestures: from rest into
+    the kind's gesture, hold it alive, back to rest), at the wave's own tempo. `delay` is each person's place
+    along the wave (0..1, times the wave's travel). A wave that reaches someone still up keeps them up; one
+    that reaches them while their arms are coming down passes them by (no jumps)."""
+
+    def __init__(self, waves=None, delay=None, trails=1.0, **kw):
+        kw.setdefault("act", 1e9)
+        self.trails = float(trails)                 # the hands' trails of light (their width; 0: none)
+        super().__init__(**kw)
+        self.waves = ARM_WAVES if waves is None else waves
+        self.delay = np.zeros(self.n) if delay is None else np.asarray(delay, np.float64)
+        r = np.random.default_rng(int(self.seed * 1000) + 99)
+        self.jit = r.uniform(-0.08, 0.16, self.n)
+        self.irate0 = self.irate.copy()
+
+    def _acts(self, t):
+        n = self.n
+        act, end = np.full(n, 1e9), np.full(n, 1e9)
+        ir = self.irate0.copy()
+        on = np.zeros(n, bool)
+        from nine_reference_p3d.crowd import INTRO, OUTRO, B_BACK
+        for t0, travel, hold, _s, rt in self.waves:
+            if t0 > t:
+                break
+            if t0 < t - 40.0:
+                continue
+            a = t0 + travel * self.delay + self.jit
+            reach = a <= t
+            if not reach.any():
+                continue
+            irw = self.irate0 * rt
+            e = a + INTRO / irw + hold
+            still_up = on & (a <= end + 0.05)
+            back = (~on) | (a >= end + OUTRO / ir + B_BACK)
+            m_ext = reach & still_up
+            m_new = reach & back & ~still_up
+            end = np.where(m_ext, np.maximum(end, e), end)
+            act = np.where(m_new, a, act)
+            end = np.where(m_new, e, end)
+            ir = np.where(m_new, irw, ir)
+            on |= m_new
+        return act, end, ir
+
+    TRAIL, TDT = 5, 0.06
+
+    def _tips(self, t, ii, acts):
+        """World positions (I, 2, 3) of both hands of people ii (the body's highest points out to each side)
+        and whether each is raised above the head."""
+        act, end, ir = acts
+        tips = np.zeros((len(ii), 2, 3))
+        up = np.zeros((len(ii), 2), bool)
+        for k, pr in enumerate(self.protos):
+            m = self.kind[ii] == k
+            if not m.any() or not pr.acted:
+                continue
+            jj = ii[m]
+            pr.bake()
+            age = np.maximum(t - self.start[jj], 0.0)
+            P = pr.frames(t, age, self.rate[jj], self.phase[jj], act[jj], end[jj], ir[jj]).astype(np.float64)
+            x, y = P[..., 0], P[..., 1]
+            for s in (0, 1):
+                sc = y + (0.45 if s else -0.45) * x
+                j = np.argmax(sc, axis=1)
+                q = P[np.arange(len(jj)), j]
+                tips[m, s] = self._place(q[:, None, :], jj, age, pr)[:, 0]
+                up[m, s] = q[:, 1] > 1.04 * pr.height
+        return tips, up
+
+    def sample(self, t):
+        if self.g(t) <= 0.0:
+            return []
+        acts = self._acts(t)
+        self.act, self.act_end, self.irate = acts
+        out = super().sample(t)
+        if not self.trails or not out:
+            return out
+        from nine_reference_p3d.crowd import OUTRO
+        act, end, ir = acts
+        ii = np.where((t >= act) & (t <= end + OUTRO / ir) & (t >= self.start))[0]
+        if len(ii) == 0:
+            return out
+        tips, up = self._tips(t, ii, acts)
+        hp = tips[up]
+        if len(hp):
+            out.append(dict(pos=hp, size=0.09 * self.trails, color=lin(GOLD2), alpha=0.9, kind="spark", emit=2.6,
+                            twinkle=0.3, dof=self.dof))
+        prev, pu = tips, up
+        for j in range(1, self.TRAIL + 1):
+            q, qu = self._tips(t - j * self.TDT, ii, acts)
+            f = (1.0 - j / (self.TRAIL + 1.0)) ** 1.3
+            m = pu & qu & (np.linalg.norm(q - prev, axis=2) > 0.01)
+            if m.any():
+                c = self.tint[ii][:, None, :].repeat(2, 1)[m] * 0.6 + lin(GOLD2) * 0.5
+                out.append(dict(pos=prev[m], pos2=q[m], size=(0.07 * f + 0.02) * self.trails, color=c,
+                                alpha=0.8 * f, alpha2=0.8 * f * f, kind="line", emit=2.2, dof=self.dof))
+            prev, pu = q, qu
+        return out
+
+
+# =========================================================================================================
 # Light pouring down, the column of light
 # =========================================================================================================
 POUR0 = 99.4          # "For Your sacrifice": light pours out of the city and down over the people
@@ -864,6 +1093,7 @@ def add(scene):
     nw, nf = _near(P, K, "zion_wide"), _near(P, K, "zion_full")
     rest = ~(nw | nf)
     scene.add("nations", Static(_glitter_people(P[rest], K[rest], born[rest], 3), crowd_k))
+    scene.add("nations arms", Arms(P[rest], born[rest], 3, crowd_k))     # the waves of raised arms
     # on each downbeat of the choruses the nations' lights flare in one of the nine colours (one set a colour)
     rf = np.random.default_rng(13)
     pick = np.where(rf.random(len(P)) < 0.2)[0]
@@ -878,14 +1108,15 @@ def add(scene):
     rng = np.random.default_rng(9)
     for shot, sel, seed, t_on in (("zion_wide", nw & ~nf, 4, 90.0), ("zion_full", nf, 5, 175.0)):
         on = (lambda s, a: (lambda t: float(shot_name(t) == s) * _sc(a, a + 1.5, t)))(shot, t_on)
-        scene.add(f"nations mid {shot}", Static(_glitter_people(P[sel], K[sel], born[sel], seed),
-                                                (lambda f: (lambda t: crowd_k(t) * (1.0 - f(t))))(on)))
+        mid_k = (lambda f: (lambda t: crowd_k(t) * (1.0 - f(t))))(on)
+        scene.add(f"nations mid {shot}", Static(_glitter_people(P[sel], K[sel], born[sel], seed), mid_k))
+        scene.add(f"nations mid arms {shot}", Arms(P[sel], born[sel], seed, mid_k))
         i = np.where(sel)[0]
         i = i[rng.random(len(i)) < 0.26]
-        scene.add(f"nations near {shot}", GCrowd(
-            gain=(lambda f: (lambda t: nations_k(t) * f(t)))(on), places=P[i],
+        scene.add(f"nations near {shot}", WaveCrowd(
+            delay=wave_u(P[i]), gain=(lambda f: (lambda t: nations_k(t) * f(t)))(on), places=P[i],
             facing=lambda x, z: float(np.degrees(np.arctan2(ZC[0] - x, ZC[2] - z))),
-            kinds=(("stand", 3.0), ("raise", 1.2), ("open", 0.6)),
+            kinds=(("raise", 3.0), ("open", 1.0), ("stand", 0.6)),
             people=dict(woman=1.0, man=1.0, elder=0.2, child=0.15), start=born[i], color="#ffcf7a",
             color2="#fff0d0", bright=1.35, points=48, size=10.5, flash=1.5, seed=float(seed)))
     for name, c in _comets():

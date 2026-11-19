@@ -559,14 +559,14 @@ EDIT = [
     (82.08, "stage", "SLAM 1: the full choir and orchestra blaze, rays and a huge burst"),
     (86.7, "zion", "waves of praise roll over the land"),
     (90.72, "zion", "standing firm: the first climb, the nations on Zion"),
-    (97.7, "church", "the church above the nations"),
+    (97.7, "dance", "the ring of dancers: their ribbons braid into one spiral climbing to the sky"),
     (99.4, "zion", "sacrifice: light pours over the people"),
     (103.6, "zion", "devotion: the golden waterfall"),
     (105.14, "stage", "the brass and timpani blaze"),
     (108.4, "church", "the church glowing"),
     (109.8, "zion", "thanks to Father: the column of light rises, lanterns rise all round"),
-    (117.0, "stage", "the breath: the choir still, light falling like snow"),
-    (121.32, "stage", "verse 2: the strings pulse"),
+    (117.0, "dance", "the breath: one dancer of light, slow, her ribbon a slow spiral, light falling like snow"),
+    (121.32, "dance", "verse 2: the dancer quickens, her ribbon flicks up on the strings' pulses"),
     (125.92, "proc", "Mother: her light comes down out of the sky, rays fan from it"),
     (130.29, "proc", "let's trust Father: everyone gathered behind her light"),
     (134.54, "proc", "march ahead: everyone steps out together"),
@@ -584,7 +584,7 @@ EDIT = [
     (178.4, "church", "the church over the crowds"),
     (180.7, "zion", "sacrifice: the mountain blazing"),
     (183.0, "stage", "the brass rising"),
-    (185.92, "stage", "wondrous love: brass and timpani"),
+    (185.92, "dance", "wondrous love: two dancers, their ribbons cross and draw a heart of light"),
     (188.27, "coda", "thanks to Mother: hearts and lanterns rise"),
     (195.2, "church", "the church in the gathering glow"),
     (197.2, "coda", "the last build: light gathers at the horizon"),
@@ -603,7 +603,7 @@ EDIT = [
     (238.8, "stage", "home: Oh, the Church of God; the step down, hymn-like"),
     (242.5, "church", "the church at peace, lanterns"),
     (244.8, "stage", "the choir"),
-    (247.5, "stage", "the held breath: sparks gather"),
+    (247.5, "dance", "the held breath: the dancer still, sparks gather into her, her ribbon flies up"),
     (249.43, "stage", "the final rise"),
     (251.7, "church", "the church on the last swell"),
     (254.07, "coda", "the last chord: the whole Earth, the end card"),
@@ -1024,8 +1024,9 @@ import songs.s11_zion as S_ZION  # noqa: E402
 import songs.s11_procession as S_PROC  # noqa: E402
 import songs.s11_coda as S_CODA  # noqa: E402
 import songs.s11_light as S_LIGHT  # noqa: E402
+import songs.s11_dance as S_DANCE  # noqa: E402
 
-THREADS = [S_CHURCH, S_STAGE, S_ZION, S_PROC, S_CODA]
+THREADS = [S_CHURCH, S_STAGE, S_ZION, S_PROC, S_CODA, S_DANCE]
 Y, FZ, G = SUMMIT, FACADE_Z, GLOBE_C
 CORE_SHOTS = [
     # Father's pulse rolls out over the whole Earth: a long graceful pull-back from close over Korea
@@ -1049,7 +1050,7 @@ def _gather_shots():
     """One shot per edit block: the owner's shot with exactly the block's times; until a thread has one, its
     older shot that covers the block, clipped to it; else a held wide view (so the film always renders)."""
     pool = {"core": CORE_SHOTS, "church": S_CHURCH.SHOTS, "stage": S_STAGE.SHOTS, "zion": S_ZION.SHOTS,
-            "proc": S_PROC.SHOTS, "coda": S_CODA.SHOTS}
+            "proc": S_PROC.SHOTS, "coda": S_CODA.SHOTS, "dance": S_DANCE.SHOTS}
     shots, missing = [], []
     for b in BLOCKS:
         own = pool[b["owner"]]

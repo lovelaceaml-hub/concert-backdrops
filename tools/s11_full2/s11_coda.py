@@ -11,6 +11,7 @@ import numpy as np
 
 from songs.s11_full2 import *  # noqa: F401,F403
 from songs.s11_stage import Instruments, ORCH_P  # noqa: E402
+from songs.s11_zion import WaveCrowd, wave_u  # noqa: E402  (the waves of raised arms)
 
 Y, FZ, G = SUMMIT, FACADE_Z, GLOBE_C
 
@@ -629,8 +630,11 @@ def add(scene):
                                       bright=2.6, size=1.7, points=1600, glints=0.012, seed=4.0))
     scene.add("sky instruments", Instruments(offset=SKY_OFF, gain=sky_k))
     # everyone on the summit, from the coda's sunrise to the last chord
-    scene.add("summit", GCrowd(gain=summit_gain, places=_summit_places(), facing=180.0,
-                               kinds=(("raise", 3.0), ("stand", 1.0), ("cheer", 1.5)),
+    # their arms go up as each wave of praise rolls up the mountain and reaches them (the coda hit's wave
+    # arrives on SLAM 3, then the waves of praise on the beat, the hits)
+    sp = _summit_places()
+    scene.add("summit", WaveCrowd(delay=wave_u(sp), gain=summit_gain, places=sp, facing=180.0,
+                               kinds=(("raise", 3.0), ("stand", 0.5), ("cheer", 1.5)),
                                people=dict(woman=1.0, man=1.0, child=0.2),
                                start=dict(t=201.0, center=(0.0, FACADE_Z), speed=40.0), color="#ffc870",
                                color2="#fff2d8", bright=1.9, size=2.8, points=500, glints=0.012, seed=41.0))
