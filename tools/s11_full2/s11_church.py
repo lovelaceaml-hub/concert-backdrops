@@ -839,10 +839,14 @@ def _calm(t):
     return (1.0 - 0.85 * MF._reading(t)) * (1.0 - 0.35 * intensity(t) ** 2)
 
 
+def _dist(t):
+    """The camera's distance from the emblem (metres)."""
+    return float(np.linalg.norm(np.asarray(H.CAMERA.state(t).pos, np.float64) - np.asarray(EMB_C, np.float64)))
+
+
 def _far(t):
     """0 near the church, 1 from 200 m out and more (the wide views of the summit)."""
-    d = float(np.linalg.norm(np.asarray(H.CAMERA.state(t).pos, np.float64) - np.asarray(EMB_C, np.float64)))
-    return float(_sc(90.0, 200.0, d))
+    return float(_sc(90.0, 200.0, _dist(t)))
 
 
 def _stage_calm(t, quiet=0.5):
@@ -860,8 +864,8 @@ def _music(t, part):
     breathes with the low voices and swells with the strings, the glory with the brass."""
     MF = _mfx()
     c = _calm(t)
-    if part == "crisp":
-        return 1.0 + 0.55 * MF.fx_pulse(t) * c
+    if part == "crisp":                         # (calmer close by, where the bands fill the frame)
+        return 1.0 + (0.25 + 0.3 * _sc(50.0, 120.0, _dist(t))) * MF.fx_pulse(t) * c
     if part == "soft":
         return 1.0 + (0.25 * MF.fx_low(t) + 0.15 * MF.fx_swell(t)) * c
     if part == "glory":
