@@ -101,10 +101,11 @@ SHOTS = [
     _shot(97.7, "church_cut", [(0.0, (-48.0, Y - 6.0, FZ + 106.0), (0.0, Y + 34.0, FZ - 10.0)),
                             (0.5, (-8.0, Y - 4.0, FZ + 116.0), (0.0, Y + 34.0, FZ - 10.0)),
                             (1.0, (36.0, Y - 3.0, FZ + 108.0), (0.0, Y + 34.0, FZ - 10.0))], fov=56.0, roll=(-12.0, 9.0)),
-    # 1:48.4 the church glowing: high over the roof canopy, turning, the comets ringing it below
-    _shot(108.4, "church_cut", [(0.0, (-26.0, Y + 98.0, FZ + 26.0), (-2.0, Y + 56.0, FZ - 12.0)),
-                            (0.5, (-4.0, Y + 102.0, FZ + 34.0), (0.0, Y + 56.0, FZ - 12.0)),
-                            (1.0, (18.0, Y + 104.0, FZ + 22.0), (2.0, Y + 56.0, FZ - 12.0))], fov=54.0, roll=(0.0, 40.0)),
+    # 1:48.4 the church glowing: a low glide looking up past its glass into open sky, so the church sits below
+    # "Devotion" while it fades (round 7 review; the old high view over the roof put the roof lines in the words)
+    _shot(108.4, "church_cut", [(0.0, (-34.0, Y + 6.0, FZ + 92.0), (-4.0, Y + 74.0, FZ - 12.0)),
+                             (0.5, (-22.0, Y + 7.0, FZ + 88.0), (-2.0, Y + 76.0, FZ - 12.0)),
+                             (1.0, (-10.0, Y + 8.0, FZ + 84.0), (0.0, Y + 78.0, FZ - 12.0))], fov=54.0, roll=(-4.0, 3.0)),
     # 2:19.2 the church waiting for them: gliding between the city's towers on the left (words over the sky)
     _shot(139.2, "church_cut", [(0.0, (-68.0, Y + 12.0, FZ + 48.0), (6.0, Y + 74.0, FZ - 13.0)),
                              (0.5, (-62.0, Y + 13.5, FZ + 36.0), (6.0, Y + 75.0, FZ - 13.0)),
