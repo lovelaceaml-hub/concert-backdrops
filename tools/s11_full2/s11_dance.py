@@ -454,6 +454,86 @@ BRAID_AXIS = _D(-0.4, 0.0, -14.0)          # the braid climbs round this upright
 BRAID_TOP = (99.35, 15.0)                  # every strand reaches the rope's crown together as his arms go up
 
 
+def rainbow(t):
+    """The nine colours flowing one into the next along a trail, a colour every half beat (linear rgb)."""
+    x = (t - 90.0) / 0.5
+    k = int(np.floor(x))
+    f = x - k
+    return lin(COL9[k % 9]) * (1.0 - f) + lin(COL9[(k + 1) % 9]) * f
+
+
+class Stream:
+    """A stream of coloured light like the promo's (round 9, Anthony: "It looks like he is shooting glowing balls
+    of light. I don't want that ... more dramatic like the lights of color from the promo video"): a long thin
+    neon line, a white-hot core inside a coloured glow, fizzing with fine sparks along its length, that follows
+    its head back in time and sweeps and curves with his gestures. No ball at the head, only a bright point.
+    head(t) -> position; launch ts with fly(u, p0) as CondComet (before ts the stream is the tip's own path);
+    color: a hex colour or a function of time (the colour each part of the trail had when it was drawn)."""
+
+    def __init__(self, head, color, win, trail=1.6, width=0.16, n=160, seed=0, fly=None, ts=None, src=None,
+                 fade=0.2, bright=1.0, fizz=260):
+        self.src = src or head
+        self.fly, self.ts = fly, ts
+        self.color, self.win, self.trail, self.width, self.n = color, win, float(trail), float(width), n
+        self.fade, self.bright = float(fade), float(bright)
+        self.sp = np.random.default_rng(500 + seed).random((fizz, 4))
+
+    def head(self, t):
+        if self.fly is None or t <= self.ts:
+            return self.src(t)
+        return self.fly(t - self.ts, self.src(self.ts))
+
+    def k(self, t):
+        return max(_env(t, a, b, self.fade, self.fade) for a, b in self.win) * dance_k(t)
+
+    def sample(self, t):
+        k = self.k(t)
+        if k <= 0.0:
+            return None
+        u = np.linspace(0.0, 1.0, self.n)
+        tt = t - self.trail * u
+        P = np.array([self.head(x) for x in tt])
+        if callable(self.color):
+            C = np.array([self.color(x) for x in tt])
+        else:
+            C = np.repeat(lin(self.color)[None], self.n, 0)
+        C = np.clip(C * 1.25 - 0.12 * C.mean(1, keepdims=True), 0.0, None)        # deep, saturated colour
+        pulse = 1.0 + 0.35 * beat_pulse(t) * intensity(t) + 0.5 * hit_pulse(t, KICKS, fall=0.4)
+        fall = (1.0 - u) ** 0.9
+        taper = 0.25 + 0.75 * (1.0 - u) ** 0.5
+        w = self.width
+        core = 0.35 * C + 0.65 * lin(WHITE)
+        out = [ribbon(P, width=w * 3.2 * taper, color=C, alpha=k * 0.10 * fall * self.bright, emit=1.6, dof=0.2),
+               ribbon(P, width=w * taper, color=C, alpha=k * 0.55 * fall * self.bright, emit=2.2, dof=0.2),
+               ribbon(P, width=w * 0.22 * taper, color=core, alpha=k * 0.95 * fall, emit=3.0 * pulse * self.bright,
+                      dof=0.2)]
+        sp = self.sp                                    # the fizz: fine sparks crackling off the line
+        idx = np.minimum((sp[:, 0] ** 1.4 * (self.n - 1)).astype(int), self.n - 1)
+        off = (sp[:, 1:4] - 0.5) * w * (1.5 + 5.0 * u[idx, None])
+        out.append(dict(pos=P[idx] + off, size=w * (0.10 + 0.12 * sp[:, 2]), color=0.6 * C[idx] + 0.4 * lin(WHITE),
+                        alpha=k * 0.9 * (1.0 - u[idx]) ** 1.3, emit=2.4, kind="spark", twinkle=0.9, seed=sp[:, 3]))
+        out.append(dict(pos=P[:1], size=w * 0.9, color=lin(WHITE), alpha=k, emit=3.5 * pulse, kind="spark"))
+        return [b for b in out if b is not None]
+
+
+SWEEP_ANCHOR = R_CEN + np.array([0.0, 0.30, 0.40])     # the middle of his baton's pattern (his frame)
+
+
+def _sweep(gain, lag, lift=0.35):
+    """A head that draws his baton's strokes huge in the air round him: the tip's motion about the middle of
+    its pattern, scaled up by gain (a 30 cm stroke becomes a 2 to 3 m arc of light), a moment behind the tip."""
+    anc = _W(SWEEP_ANCHOR)
+
+    def f(t):
+        p = tip(t - lag)
+        return anc + (p - anc) * gain + _v(0.0, lift * (gain - 1.0), 0.0)
+    return f
+
+
+def _rainbow_from(off):
+    return lambda t: rainbow(t + off)
+
+
 def _braid(i, n, ts):
     """The summons: comet i of n leaves the tip on its beat (ts) and joins the rope at its own strand. All the
     strands turn together round one axis (evenly spaced in angle) and the later ones climb faster, so their
@@ -723,33 +803,49 @@ def add(scene):
     scene.add("conductor halo", Halo("cond", "#ffd9a0"))
     scene.add("conductor disc", Disc())
     scene.add("conductor baton", Baton())
-    # the baton's trail: long and soft in the breath and the hold, short and bright in the strokes
-    scene.add("conductor trail strokes", Ribbon(tip, None, "#ffe6b0", [WINDOWS["ring"], WINDOWS["heart"]],
-                                                trail=0.55, width=0.10, n=70, seed=1, sparks=70))
-    scene.add("conductor trail breath", Ribbon(tip, None, LAV, [(117.0, 121.32), WINDOWS["held"]], trail=1.4,
-                                               width=0.12, n=90, seed=2, sparks=90))
-    scene.add("conductor trail strings", Ribbon(tip, None, PW.COLORS["Gratitude"], [(121.32, 125.92)], trail=0.35,
-                                                width=0.08, n=50, seed=3))
-    # the summons: a comet off the tip on each beat, braiding into one spiral climbing to the sky
+    # the baton draws streams of coloured light (no balls): the nine colours flowing along a long trail in the
+    # strokes, a soft lavender line in the breath and the hold, gratitude in the strings
+    scene.add("conductor stream strokes", Stream(tip, rainbow, [WINDOWS["ring"], WINDOWS["heart"]], trail=1.1,
+                                                 width=0.09, seed=1))
+    scene.add("conductor stream left", Stream(tip_L, rainbow, [WINDOWS["heart"]], trail=0.9, width=0.07, seed=5,
+                                              bright=0.8))
+    scene.add("conductor stream breath", Stream(tip, LAV, [(117.0, 121.32), WINDOWS["held"]], trail=1.8,
+                                                width=0.07, seed=2, bright=0.8))
+    scene.add("conductor stream strings", Stream(tip, PW.COLORS["Gratitude"], [(121.32, 125.92)], trail=0.9,
+                                                 width=0.08, seed=3))
+    # the great sweeps: his strokes drawn huge round him in long streams of the nine colours (the promo's
+    # lights of colour); kept out of the words while a phrase reads
+    from songs.s11_stage import BoxGuard
+    sweeps = [((97.6, 99.45), (3.6, 0.06), (5.6, 0.14), (7.4, 0.22)),
+              ((121.32, 125.92), (3.5, 0.05), (5.5, 0.12), (7.5, 0.20)),
+              ((185.92, 188.27), (2.6, 0.06), (3.6, 0.12), (4.6, 0.18))]
+    for j, (win, *arms) in enumerate(sweeps):
+        for i, (gain, lag) in enumerate(arms):
+            scene.add("conductor sweep %d %d" % (j, i), BoxGuard(Stream(
+                _sweep(gain, lag), _rainbow_from(1.5 * i), [win], trail=1.3 + 0.2 * i, width=0.16 + 0.06 * i,
+                fade=0.25, bright=1.1, seed=600 + 10 * j + i), keep=0.0))
+    # the summons: a stream off the tip on each beat, the four winding into one braided rope to the sky
     bt = beat_times(97.55, 99.2)[:4]
     for i, ts in enumerate(bt):
-        scene.add("conductor comet summons %d" % i, CondComet(ts, _braid(i, len(bt), ts), RING_COL[(2 * i) % 7], 99.45,
-                                                              trail=1.3, width=0.32, bright=1.15, fade=0.12, n=90,
-                                                              sparks=False, seed=400 + i))
-    # the strings: a comet flicked off over the sea on each strings pulse
+        scene.add("conductor stream summons %d" % i, Stream(tip, RING_COL[(2 * i) % 7], [(ts, 99.45)], trail=2.2,
+                                                            width=0.26, fly=_braid(i, len(bt), ts), ts=ts,
+                                                            fade=0.1, seed=400 + i))
+    # the strings: a stream flicked off over the sea toward the city on each strings pulse
     for i, ts in enumerate(STRINGS[:2]):
-        scene.add("conductor comet strings %d" % i, CondComet(ts + 0.03, _string_shot(1.0 - 2.0 * i),
-                                                              COL9[(5 + 3 * i) % 9], ts + 2.6, trail=0.7,
-                                                              width=0.28, fade=0.15, n=60, seed=410 + i))
-    # wondrous love: two comets (the baton tip and the left fingertips) draw the heart huge in the sky
-    scene.add("conductor comet heart R", CondComet(HEART_T[0], _heart_fly(1.0), PW.COLORS["Gratitude"], 188.4,
-                                                   src=tip, trail=0.6, width=0.16, bright=0.8, fade=0.1, n=70, seed=420))
-    scene.add("conductor comet heart L", CondComet(HEART_T[0], _heart_fly(-1.0), PW.COLORS["Inclusiveness"], 188.4,
-                                                   src=tip_L, trail=0.6, width=0.16, bright=0.8, fade=0.1, n=70, seed=421))
+        scene.add("conductor stream flick %d" % i, Stream(tip, COL9[(5 + 3 * i) % 9], [(ts + 0.03, ts + 2.6)],
+                                                          trail=1.8, width=0.24, fly=_string_shot(1.0 - 2.0 * i),
+                                                          ts=ts + 0.03, fade=0.15, seed=410 + i))
+    # wondrous love: two streams (the baton tip and the left fingertips) draw the heart huge in the sky
+    scene.add("conductor stream heart R", Stream(tip, PW.COLORS["Gratitude"], [(HEART_T[0], 188.4)], trail=1.4,
+                                                 width=0.16, fly=_heart_fly(1.0), ts=HEART_T[0], fade=0.1,
+                                                 bright=0.85, seed=420))
+    scene.add("conductor stream heart L", Stream(tip_L, PW.COLORS["Inclusiveness"], [(HEART_T[0], 188.4)],
+                                                 trail=1.4, width=0.16, fly=_heart_fly(-1.0), ts=HEART_T[0],
+                                                 fade=0.1, bright=0.85, seed=421))
     scene.add("conductor sky heart", SkyHeart())
     # the held breath: on the final rise the comet flies up and on
-    scene.add("conductor comet final", CondComet(249.12, _final_rise, LAV, 249.9, trail=0.7, width=0.36, fade=0.1,
-                                                 n=70, seed=430))
+    scene.add("conductor stream final", Stream(tip, rainbow, [(248.6, 249.9)], trail=2.0, width=0.26,
+                                               fly=_final_rise, ts=249.12, fade=0.12, seed=430))
     scene.add("conductor ripples", SeaRipple(), reflect=False)
     scene.add("conductor snow", Snow())
     scene.add("conductor backlight", BackLight([
