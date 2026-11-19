@@ -1,6 +1,6 @@
 # Song 04 backdrop v2: checklist
 
-Every rule of the version 2 brief (2026-11-18), answered yes or no, with where it was checked. "Stills" means the landmark stills rendered in this session (`work/s04v2/st*`, contact sheet "04 backdrop v2 stills.jpg"); "checks" means `work/s04v2/out/checks.txt` from `tools/s04_full2/export.py` on the final files.
+Every rule of the version 2 brief (2026-11-18), answered yes or no, with where it was checked. "Stills" means the landmark stills rendered in this session (`work/s04v2/st*`, contact sheet "04 backdrop v2 stills.jpg", after fix 1 "04 backdrop v2 stills fix1.jpg"); "checks" means `work/s04v2/out/checks.txt` from `tools/s04_full2/export.py` on the final files.
 
 ## Length, timing, format
 
@@ -71,13 +71,13 @@ Every rule of the version 2 brief (2026-11-18), answered yes or no, with where i
 |---|---|---|
 | 1. No white-outs | yes | checks: no frame with mean above 235 |
 | 2. No white text on pale skies | yes | all text navy |
-| 3. Nothing crossing a reading box or the signature | yes | Clear(); stills |
+| 3. Nothing crossing a reading box or the signature | yes | fix 1: the dividing line / gold path, footprints and the closing light also pass Clear() (box padding 0.05); the verse 1 camera sits the sisters lower, below the words; fix 1 stills |
 | 4. One expression at a time | yes | T |
 | 5. No garbled letters while forming or leaving | yes | the letters are crisp pictures that reveal and dissolve with a soft front; motion strip |
 | 6. No words mirrored in water | yes | text is drawn over the finished picture, never reflected |
 | 7. No dark, brown, solid or mannequin people; big enough for the back of a hall | yes | stills (about a quarter of the picture height in verse 1) |
 | 8. No mushy blur, jitter, popping or sliding | yes | motion strip; eased camera keys (Catmull-Rom) |
-| 9. Bottom third calm | yes | Clear() fades particles below 0.34 of the height; people kept in the middle band; stills |
+| 9. Bottom third calm | yes | fix 1: every particle set, including the world's dust, floats and lanterns, passes Clear(): nothing below 0.34 of the height, full only from 0.40; no reflections of particles; the near water mirrors little of the sun's glow; people kept in the middle band; fix 1 stills |
 | 10. Calm but never frozen camera | yes | camera always moving slowly; checks (frozen stretches) |
 | 11. No other logos or watermarks; no realistic faces | yes | |
 
@@ -92,4 +92,4 @@ Every rule of the version 2 brief (2026-11-18), answered yes or no, with where i
 
 ## Result
 
-Every line above is yes. Checked on the final files 2026-11-19 (export.py): 14,100 frames at 60 fps, 235.000 s, no black, white, repeated or frozen frames, the signature on every frame after 0:11, music in sync at three hits.
+Every line above is yes. Checked again on the fix 1 files 2026-11-19 (export.py): 14,100 frames at 60 fps, 235.000 s, no black, white, repeated or frozen frames, the signature on every frame after 0:11, music in sync at three hits.
