@@ -1510,7 +1510,9 @@ def _grand(scene):
 def add(scene):
     walls, dim, gold = _mountain()
     scene.add("zion body", _Off(_body()), mask=Mask("dark", strength=body_k, grow=1.9, soft=4.0), reflect=False)
-    scene.add("zion walls", Static(walls, lambda t: glow_k(t) * form_k(t)))
+    # (round 7: from afar Zion read pearl white) the walls step back a little as the people fill the terraces, so
+    # the nine colours of the people read against them in the wide views
+    scene.add("zion walls", Static(walls, lambda t: glow_k(t) * form_k(t) * (1.0 - 0.28 * grow_k(t))))
     scene.add("zion dim", Static(dim, glow_k))
     scene.add("zion gold", Static(gold, glow_k))
     # round 6: the city grows section by section, and the rivers of people stream to it

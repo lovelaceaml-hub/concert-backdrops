@@ -516,7 +516,7 @@ def _comet_head(j, phase):
 COMET_PHASES = [("burst", LAND, 130.29, 1.0, 1.4, 0.05), ("ring", 130.29, 134.54, 0.8, 1.6, 0.05),
                 ("march", 134.54, 135.5, 0.8, 0.8, 0.3), ("weave", 141.5, 144.4, 1.0, 1.2, 0.05),
                 ("dive", 144.4, 148.6, 1.1, 0.9, 0.05), ("kings", 148.6, 154.2, 0.35, 1.2, 0.05),
-                ("rise", RISE + 0.35, 156.0, 0.7, 0.6, 0.05), ("home", 156.0, 160.6, 0.4, 1.2, 0.5)]
+                ("rise", RISE + 0.35, 156.0, 0.7, 0.6, 0.05), ("home", 156.0, 158.9, 0.4, 1.2, 1.1)]   # (round 7, f26: they fade as the church forms)
 
 
 # ---------------------------------------------------------------------------------------------------------
@@ -785,7 +785,7 @@ class ChurchRise:
         col = self.ring_col * (1.0 - 0.7 * m) + lin("#ffe2b0") * (0.7 * m)
         fly = _sc(161.7, 162.86, t)
         a = (0.75 - 0.3 * m[:, 0]) * _sc(self.T_RING, self.T_RING + 0.4, t) * (1.0 + 0.15 * beat_pulse(t))
-        a = a * (1.0 + 0.8 * fly)
+        a = a * (1.0 + 0.8 * fly) * (1.0 if t < 160.6 else 2.2)      # bright enough to fly into after the cut
         return [dict(pos=P, size=0.09 * S / 12.0, color=col, alpha=a.astype(np.float32), emit=2.2, kind="spark",
                      twinkle=0.25, seed=self.s, dof=0.0, reflect=False),
                 dict(pos=P[::6], size=0.5 * S / 12.0, color=col[::6] * 0.8, alpha=(0.05 * a[::6]).astype(np.float32),
