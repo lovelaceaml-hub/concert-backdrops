@@ -341,17 +341,30 @@ def emblem_points():
 
 
 def emblem_batches():
-    """The emblem on the curved glass: its blue as a soft saturated glow (bright light would bloom to white),
-    the white lettering and globe lines as fine light over it, the white ring between them softly."""
+    """The emblem on the curved glass, glowing like Anthony's reference (2026-11-19): a bright sky-blue, lighter
+    toward the top, with a soft light round the ring; the white lettering and globe lines crisp over it; the white
+    ring between band and globe softly lit."""
     out = []
-    step = EMBLEM_SLOT[1] / 128.0
-    for cls, col, a, sz, kind, em in ((1, lin(EMBLEM_BLUE) * 0.6, 1.0, 3.0, "soft", 1.0),
-                                      (1, lin(EMBLEM_BLUE) * 0.8, 0.5, 1.2, "spark", 1.2),
-                                      (2, lin("#f4f8ff"), 0.85, 1.25, "spark", 1.5),
-                                      (3, lin("#e8f0ff"), 0.22, 1.4, "spark", 1.0)):
-        E = _emblem_xy(cls)
-        p = np.stack([E[:, 0], E[:, 1], front_z(E[:, 0]) + 0.13], 1)
-        out.append(_batch(p, step * sz, col, a, kind=kind, emit=em, twinkle=0.05))
+    (cx, cy), size = EMBLEM_SLOT
+    step = size / 128.0
+
+    def lift(E):
+        return np.stack([E[:, 0], E[:, 1], front_z(E[:, 0]) + 0.13], 1)
+
+    B = _emblem_xy(1)
+    u = np.clip((B[:, 1] - (cy - size / 2.0)) / size, 0.0, 1.0)[:, None]        # 0 bottom .. 1 top
+    sky = lin("#3c9ff0") * (1.0 - u) + lin("#86d4ff") * u
+    pb = lift(B)
+    out.append(_batch(pb, step * 3.0, sky * 0.42, 1.0, kind="soft", emit=1.0, twinkle=0.05))
+    out.append(_batch(pb, step * 1.2, sky * 0.7, 0.55, kind="spark", emit=1.2, twinkle=0.1))
+    # the soft light round the ring
+    r = np.hypot(B[:, 0] - cx, B[:, 1] - cy) / (size / 2.0)
+    rim = r > 0.9
+    out.append(_batch(pb[rim][::3], step * 7.0, lin("#7cc8ff") * 0.35, 0.07, kind="soft", emit=1.0))
+    W = lift(_emblem_xy(2))
+    out.append(_batch(W, step * 1.25, lin("#ffffff"), 0.95, kind="spark", emit=1.9, twinkle=0.05))
+    G = lift(_emblem_xy(3))
+    out.append(_batch(G, step * 1.4, lin("#eef6ff"), 0.3, kind="spark", emit=1.1, twinkle=0.05))
     return out
 
 
