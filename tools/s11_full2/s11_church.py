@@ -1039,7 +1039,7 @@ _CROWN = _ROOF + _v(0.0, 7.0, 0.0)
 
 # Round 7 (Anthony approved): the title draws together into one point of light from 0:10 (s11_cards.py) and
 # it drifts down onto the star on Zion, landing at OPEN_LAND, where the star flares once
-OPEN_GATHER, OPEN_POINT, OPEN_LAND = 9.9, 10.75, 11.65
+OPEN_GATHER, OPEN_POINT, OPEN_LAND = 9.68, 10.66, 11.61     # on the beats (the music is quiet here)
 
 
 def beacon_k(t):
@@ -1240,7 +1240,7 @@ def _comets():
 
 
 # The finale's times: the comets set out (4:08), reach the ring round the church, close in on the emblem, meet
-FIN_IN, FIN_RING, FIN_CLOSE = 248.0, 251.1, 253.35
+FIN_IN, FIN_RING, FIN_CLOSE = 248.15, 251.36, 253.14   # on the beats
 
 
 def _finale(i):
