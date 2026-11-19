@@ -70,13 +70,13 @@ Every rule of the v2 brief, yes or no, and where it was checked. "Stills" = land
 |---|---|---|
 | 1 No white-outs | yes | brightest stills: mean 125 to 148 of 255, 0.1 percent of pixels above 245 |
 | 2 No white text on pale skies | yes | frame 0: the camera tilts up so the title is on the blue sky, the sun below it |
-| 3 Nothing crossing a reading box or the signature | yes | overlap; Calm; strips |
+| 3 Nothing crossing a reading box or the signature | yes | overlap; Calm; strips; fix 1: while a word reads, the horizon band of lights just under its box sinks to faint across the full width (stills 77.6 to 92 s) |
 | 4 Only one expression at a time | yes | strips |
 | 5 No garbled letters while words form or leave | yes | strips: the approved clean leave restored |
 | 6 No words mirrored in water | yes | words reflect=False |
 | 7 No dark, brown or mannequin people | yes | stills |
 | 8 No mushy blur, jitter, popping or sliding | yes | strips; the first run's per-frame random spring (jitter at 60 fps) replaced by smooth motion |
-| 9 Bottom third calm | yes | every light fades below 0.37 of the height (Calm), no reflections of people or lanterns, the rings under the people removed; overlap: feet at 0.62 to 0.66 (one second at 0.68 as the young woman appears) |
+| 9 Bottom third calm | yes | fix 1: every grain light and sparkle is gone below 0.345 of the height and fades in by 0.42 (Calm), and no light draws a mirror image in the lake; scan of every frame of the stage video: no grain sparkle in the bottom third (v1: bright pixels there on 4,666 frames; fix 1: only the smooth mirror of the bright opening sky, 0 to 15 s, and a few soft edge pixels at 17 and 32 s); overlap: feet at 0.62 to 0.66 (one second at 0.68 as the young woman appears) |
 | 10 Calmer camera, never frozen | yes | eased keys; verify freezedetect |
 | 11 No other logos or watermarks, no realistic faces | yes | |
 
@@ -95,4 +95,5 @@ Rendered in this cloud session only (software OpenGL, 16 parts on 4 cores, nativ
 | Sync at 3 hits against the conformed music | yes | review file: 18.49 s (-35.9 to -22.1 dB), 81.89 s (-25.5 to -18.6 dB), 128.32 s (-15.3 to -14.4 dB); the music ends at 136.50 s and the hold is silent (-91 dB) |
 | Review: conformed music from 0, AAC (set to 320k), CRF 20 | yes | verify: audio starts at 0.000, 152.000 s; the encoder's measured average is about 200 kbit/s because of quiet passages and the silent hold |
 | Phone: 1280x720, 60 fps, under 25 MB | yes | verify: 22.9 MB (21.9 MiB) |
-| Contact sheet under 3 MB, from the finished video | yes | 20 frames, 0.58 MB, uploaded to Drive Status as "06 backdrop v2 stills.jpg" |
+| Contact sheet under 3 MB, from the finished video | yes | 20 frames, 0.58 MB, uploaded to Drive Status as "06 backdrop v2 stills.jpg"; fix 1: 0.55 MB, a new file "06 backdrop v2 stills fix1.jpg" |
+| Fix 1 (coordinator notes: bottom third, band under the words) | yes | all 16 parts rendered again (the change reaches every part, so a partial re-render would pop at the joins); verify PASS again: 9,120 frames, 152.000 s, no black, frozen or repeated frames, the signature on every frame after the opening, sync on 3 hits; phone 22.9 MB |
