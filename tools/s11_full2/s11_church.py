@@ -40,7 +40,7 @@ def _shot(at, name, keys, fov=50.0, aperture=0.02, **kw):
 _STEPS_FOCUS = _v(0.0, Y + 2.2, FZ + 3.0)
 # the middle of the church's emblem on the glass (EMBLEM_SLOT below: x 2.0, the 13th storey less the margin and
 # half its 9 m; checked there), where the nine comets meet on the last chord
-EMB_C = _v(2.0, Y + 2.3 + 13.0 * 3.6 - 0.6 - 4.5, FZ + 0.2)
+EMB_C = _v(2.0, Y + 2.3 + 13.0 * 3.6 - 0.6 - 5.75, FZ + 0.2)
 _ROOF = _v(0.0, SUMMIT + 2.3 + 54.0 + 4.0, FACADE_Z - 14.0)     # over the middle of the roof canopy
 SHOTS = [
     # 0:00 the title (Anthony, round 6: "a buildup for the intro instead of just starting in front of the church";
@@ -252,24 +252,17 @@ def _box_lines(L, c, w, d, h):
 # The city of light on the summit plateau: towers banded in gold and white like the church, domes, the
 # great avenue (toward +z) with its lamps, the square left open before the church.
 # =========================================================================================================
+_HC_XZ = (0.0, FACADE_Z - 16.0)                  # the middle of the church's footprint (x, z)
 _CITY_FX = {}
 
 
-def _city():
-    """The heavenly city on the summit round the church of light (round 7, rebuilt; Anthony: the white boxes were
-    "just squares and empty spaces... so many of the same colors that it's hard to see and distinguish things").
-    In the terraces' language (the Zion builder's own towers, pavilions and gardens and its palette, imported):
-    four districts, each in one calm hue (sky blue, teal, periwinkle and teal glass towers with their domes in
-    sky, rose, lavender and rose), gardens with blossoms between them, lit streets with lamps. Low beside the
-    church and the avenue so the church stays the one great building and its name reads; taller toward the
-    back and sides. Under the title every building lights on its beat, ring by ring outward from the church;
-    the streets fill with gold when the city does (1:09.4). Returns (dim batches, gold batches)."""
-    from songs.s11_zion import _Parts, _tower, _pavilion, _garden, DOME, PEARL_RAIL
+def _summit_plan():
+    """The summit's plots round the church of light (round 7, Anthony: "There should be no obelisk looking figures
+    on Zion"; "The heavenly city buildings are the real church buildings in Korea"): about three in five are
+    plots for the real churches (SUMMIT_SLOTS, placed by the MODELS thread), the rest gardens. Clear of the
+    avenue, the square and the church. [(centre, "S" or "G", birth on the title's beats, near the church)]"""
     r = np.random.default_rng(11)
-    T, Gd = _Parts(), _Parts()
-    # (glass hue, dome hue) of each district: front left, front right, back right, back left
-    DIST = ((0, 2), (1, 0), (2, 1), (1, 0))
-    tops, bases = [], []
+    out = []
     for gx in np.arange(-84.0, 85.0, 14.0):
         for gz in np.arange(-84.0, 85.0, 14.0):
             x, z = gx + r.uniform(-2.5, 2.5), gz + r.uniform(-2.5, 2.5)
@@ -281,28 +274,45 @@ def _city():
             if abs(x) < 44.0 and z > -50.0:                       # the church, its blade, its square, the plaza
                 continue
             c = ZC + _v(x, SUMMIT, z)
-            q = (0 if z >= 0 else 3) if x < 0 else (1 if z >= 0 else 2)
-            gi, di = DIST[q]
             b = float(_born(c[None, :])[0]) + 0.05 * r.random()
-            near = abs(x) < 64.0 and z > -66.0                    # beside the church: low, so it stays dominant
-            u = r.random()
-            if u < (0.25 if near else 0.45):
-                kind = "T"
-            elif u < (0.6 if near else 0.72):
-                kind = "P"
-            else:
-                kind = "G"
-            if kind == "T":
-                h = r.uniform(9.0, 14.0) + (0.0 if near else 12.0 * r.random() * (rad / 82.0))
-                _tower(T, c, r.uniform(2.0, 2.8), [h], [b], gi, DOME[di], spire=True)
-                tops.append(c + _v(0.0, h, 0.0))
-            elif kind == "P":
-                _pavilion(T, c, di, b)
-            else:
-                _garden(Gd, c, r, b)
-                if r.random() < 0.5:                              # a second little grove beside it
-                    _garden(Gd, c + _v(r.uniform(-5, 5), 0.0, r.uniform(-5, 5)), r, b + 0.1)
-            bases.append(c + _v(0.0, 0.3, 0.0))
+            near = bool(abs(x) < 64.0 and z > -66.0)              # beside the church: low, so it stays dominant
+            out.append((c, "S" if r.random() < 0.6 else "G", b, near))
+    return out
+
+
+_SUMMIT_PLAN = _summit_plan()
+# For MODELS (round 7): where real churches stand on the summit round the church of light. x, y, z: the middle
+# of the plot's ground (metres, world); facing: radians about +y, 0 = the front faces +z, here turned toward the
+# church of light; max_w, max_d: the plot's footprint; max_h: keep under it so the church of light (54 m of
+# glass) stays the one great building; born: the beat on which the plot lights under the title (0:02.4 to
+# 0:11.7, ring by ring out from the church) and the building may draw itself in.
+SUMMIT_SLOTS = [dict(x=float(c[0]), y=float(c[1]), z=float(c[2]),
+                     facing=float(np.arctan2(_HC_XZ[0] - c[0], _HC_XZ[1] - c[2])),
+                     max_w=10.0 if near else 11.5, max_d=10.0 if near else 11.5, max_h=16.0 if near else 26.0,
+                     born=float(b))
+                for c, kind, b, near in _SUMMIT_PLAN if kind == "S"]
+
+
+def _city():
+    """The heavenly city on the summit round the church of light (round 7, rebuilt; Anthony: the white boxes were
+    "just squares and empty spaces... so many of the same colors that it's hard to see and distinguish things").
+    In the terraces' language (the Zion builder's own towers, pavilions and gardens and its palette, imported):
+    four districts, each in one calm hue (sky blue, teal, periwinkle and teal glass towers with their domes in
+    sky, rose, lavender and rose), gardens with blossoms between them, lit streets with lamps. Low beside the
+    church and the avenue so the church stays the one great building and its name reads; taller toward the
+    back and sides. Under the title every building lights on its beat, ring by ring outward from the church;
+    the streets fill with gold when the city does (1:09.4). Returns (dim batches, gold batches)."""
+    from songs.s11_zion import _Parts, _garden, PEARL_RAIL
+    r = np.random.default_rng(11)
+    Gd = _Parts()
+    # (glass hue, dome hue) of each district: front left, front right, back right, back left
+    tops, bases = [], []
+    for c, kind, b, near in _SUMMIT_PLAN:
+        if kind == "G":
+            _garden(Gd, c, r, b)
+            if r.random() < 0.5:                                  # a second little grove beside it
+                _garden(Gd, c + _v(r.uniform(-5, 5), 0.0, r.uniform(-5, 5)), r, b + 0.1)
+        bases.append(c + _v(0.0, 0.3, 0.0))
     # the lit streets: the great avenue, three more streets out to the plateau's rim between the districts, and
     # a ring street; lamps along them, warm
     St, lamps = _Lines(), []
@@ -347,7 +357,7 @@ def _city():
     def mid(L):                                 # the middle of each segment (for its birth)
         return 0.5 * (np.asarray(L.a) + np.asarray(L.b))
     on = dict(fade=0.25, flash=2.5)
-    dim = (T.batches(lsize=0.2, ssize=2.4, ksize=0.9) + Gd.batches(lsize=0.16, ssize=2.4, ksize=0.5) + [
+    dim = (Gd.batches(lsize=0.16, ssize=2.4, ksize=0.5) + [
         St.batch(0.10, lin("#e8c08a") * 0.45, 0.8, 1.0, birth=_born(mid(St)), **on),
         _batch(lamps, 0.9, lin("#ffcf8a"), 0.9, kind="soft", emit=1.8, birth=_born(lamps), **on),
         _batch(lamps, 0.22, lin("#fff2d6"), 1.0, emit=3.0, birth=_born(lamps), **on),
@@ -363,7 +373,7 @@ def _city():
         St.batch(0.16, lin(GOLD), 0.85, 1.4, birth=69.4 + ds / 90.0, fade=0.6, flash=3.0),
         _batch(B, 4.0, lin("#ffd890") * 0.6, 0.22, kind="soft", emit=1.2, birth=69.6 + dz / 90.0, fade=0.8, flash=2.0),
         _batch(np.asarray(tops), 0.6, lin("#ffe6b0"), 1.0, emit=3.0, birth=69.8 + 0.01 * np.arange(len(tops)),
-               fade=0.5, flash=3.0),
+               fade=0.5, flash=3.0) if tops else None,
     ]
     return [b for b in dim if b is not None], [b for b in gold if b is not None]
 
@@ -410,7 +420,7 @@ _FONT = "jost-latin-600-normal.ttf"
 # from the emblem image: `_raster_points` maps an image's lit pixels into the slot); they are lifted onto the
 # curved glass and drawn with the name's light.
 # Anthony (2026-11-19): bigger, with the name above it
-EMBLEM_SIZE = 9.0
+EMBLEM_SIZE = 11.5                  # round 7 (Anthony: "Just have one prominently showing on the Main church")
 EMBLEM_SLOT = ((NAME_MID, CH_Y0 + 13.0 * FH - 0.6 - EMBLEM_SIZE / 2.0), EMBLEM_SIZE)
 assert abs(EMBLEM_SLOT[0][0] - EMB_C[0]) < 1e-6 and abs(EMBLEM_SLOT[0][1] - EMB_C[1]) < 1e-6, "EMB_C moved"
 
@@ -893,13 +903,16 @@ class EmblemSings:
         MF = _mfx()
         k = _calm(t) * church_reveal(t)
         ch, hi = MF.fx_choir(t) * k, MF.fx_high(t) * k
-        if t > 200.0 and not stage_view(t):    # from afar in the coda: the emblem keeps a steady glow, the clearest
-            ch += 0.9 * _far(t) * church_reveal(t)   # mark on the summit among the churches of the world
+        if not stage_view(t):                   # the one emblem of the film (round 7): a steady glow always, more from
+            ch += (0.3 + 0.9 * _far(t)) * church_reveal(t) * k  # afar, the clearest mark on the summit
         if ch + hi < 0.02:
             return None
         tw = 0.5 + 0.5 * np.sin(9.0 * t + 6.28 * self.seed)
-        return [dict(pos=self.c, size=EMBLEM_SIZE * 1.5, color=lin("#5fb0ff"), alpha=0.16 * ch, kind="soft",
-                     emit=1.4, fog=0.3, reflect=False),
+        f = 0.0 if stage_view(t) else _far(t)  # from afar a wider halo, so the one emblem still marks the church
+        return [dict(pos=self.c, size=EMBLEM_SIZE * (1.5 + 1.2 * f), color=lin("#5fb0ff"), alpha=0.16 * ch * (1.0 + 0.8 * f),
+                     kind="soft", emit=1.4, fog=0.15, reflect=False),
+                dict(pos=self.c, size=EMBLEM_SIZE * 0.55, color=lin("#cfeaff"), alpha=0.22 * f * k, kind="soft",
+                     emit=2.0, fog=0.15, reflect=False),
                 dict(pos=self.ring, size=0.22, color=lin("#dff1ff"), alpha=(0.25 + 0.75 * tw) * hi, kind="spark",
                      emit=2.6, fog=0.3, reflect=False)]
 
