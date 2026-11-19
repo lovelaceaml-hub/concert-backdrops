@@ -1198,12 +1198,25 @@ COMET_PATHS = _comet_paths()
 
 
 class StageComet(Comet):
-    """A comet that flies only while the camera is on the choir and orchestra."""
+    """A comet that flies only while the camera is on the choir and orchestra. Near the lens it fades (it blew
+    up into a white blur when a path passed within a few metres of the camera)."""
+    wants_camera = True
 
-    def sample(self, t):
+    def sample(self, t, cam=None):
         if not stage_view(t):
             return None
-        return super().sample(t)
+        out = super().sample(t)
+        if not out or cam is None:
+            return out
+        res = []
+        for b in out:
+            P = np.asarray(b["pos"], np.float64).reshape(-1, 3)
+            _xy, z = cam.project(P)
+            f = np.clip((z - 1.5) / 4.5, 0.0, 1.0)
+            f = f * f * (3.0 - 2.0 * f)              # gone within 1.5 m, whole beyond 6 m
+            b = dict(b, alpha=np.broadcast_to(np.asarray(b["alpha"], np.float64), (len(P),)) * f)
+            res.append(b)
+        return res
 
 
 def blaze(t):
