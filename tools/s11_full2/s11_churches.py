@@ -94,7 +94,7 @@ church, until the near shore, the sea, the far shore and the foot of the hills h
           the three slams). Each is born from the ground up in half a second with a small flash and a column of
           light, then keeps a soft breath on the beat.
   Calm    dimmed while a phrase reads; the columns held down where the music already blazes; hidden on the
-          Earth; softer in the choir shots. Mount Zion hides what stands behind it: every frame each church is
+          Earth; softer in the choir shots, hidden from the orchestra on the clouds (3:26). Mount Zion hides what stands behind it: every frame each church is
           tested at three heights against the terraces as the camera sees it, so no light shows through them.
   Cost    each church is a static point set on the graphics card (born by `birth`); per frame only its strength
           (the occlusion test) and the columns of the churches being born are computed.
@@ -803,7 +803,7 @@ def _visible(t):
 
 
 def _base_gain(t):
-    if globe_view(t):
+    if globe_view(t) or shot_kind(t) == "sky":      # (from the orchestra on the clouds they read as clutter below)
         return 0.0
     k = 0.55 if stage_view(t) else 1.0
     return k * (1.0 - 0.45 * _reading(t)) * (0.85 + 0.25 * beat_pulse(t))
