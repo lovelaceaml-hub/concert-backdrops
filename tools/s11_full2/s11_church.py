@@ -839,6 +839,16 @@ def _calm(t):
     return (1.0 - 0.85 * MF._reading(t)) * (1.0 - 0.35 * intensity(t) ** 2)
 
 
+def _dist(t):
+    """The camera's distance from the emblem (metres)."""
+    return float(np.linalg.norm(np.asarray(H.CAMERA.state(t).pos, np.float64) - np.asarray(EMB_C, np.float64)))
+
+
+def _far(t):
+    """0 near the church, 1 from 200 m out and more (the wide views of the summit)."""
+    return float(_sc(90.0, 200.0, _dist(t)))
+
+
 def _stage_calm(t, quiet=0.5):
     """In the choir and orchestra shots (round 7, STAGE and ZION): the church and the city behind the singers stay
     a calm backdrop (times `quiet`), and dim further while a phrase reads, so the words and the singers stand
@@ -854,8 +864,8 @@ def _music(t, part):
     breathes with the low voices and swells with the strings, the glory with the brass."""
     MF = _mfx()
     c = _calm(t)
-    if part == "crisp":
-        return 1.0 + 0.55 * MF.fx_pulse(t) * c
+    if part == "crisp":                         # (calmer close by, where the bands fill the frame)
+        return 1.0 + (0.25 + 0.3 * _sc(50.0, 120.0, _dist(t))) * MF.fx_pulse(t) * c
     if part == "soft":
         return 1.0 + (0.25 * MF.fx_low(t) + 0.15 * MF.fx_swell(t)) * c
     if part == "glory":
@@ -883,6 +893,8 @@ class EmblemSings:
         MF = _mfx()
         k = _calm(t) * church_reveal(t)
         ch, hi = MF.fx_choir(t) * k, MF.fx_high(t) * k
+        if t > 200.0 and not stage_view(t):    # from afar in the coda: the emblem keeps a steady glow, the clearest
+            ch += 0.9 * _far(t) * church_reveal(t)   # mark on the summit among the churches of the world
         if ch + hi < 0.02:
             return None
         tw = 0.5 + 0.5 * np.sin(9.0 * t + 6.28 * self.seed)
@@ -951,7 +963,9 @@ class Church:
         if shot_name(t) == "church_cut":       # the church's own cut-ins: full frame of it, so less light
             k *= 0.5
         elif shot_name(t) != "city" and not stage_view(t) and t > 200.0:
-            k *= 0.5                            # others' sunrise views (the coda summit): calm, never white
+            # others' sunrise views (the coda summit): calm close by, never white; from afar, among the churches
+            # of the world round Zion, the one great building again (round 7)
+            k *= 0.5 + 0.55 * _far(t)
         k *= _music(t, self.part)
         if 252.5 < t < LAST_CHORD:              # round 7: the glass steps back as the comets close in, so the
             k *= 1.0 - 0.4 * _sc(252.6, 253.9, t)   # emblem's flare is the brightest thing on the last chord
