@@ -1073,9 +1073,10 @@ import songs.s11_procession as S_PROC  # noqa: E402
 import songs.s11_coda as S_CODA  # noqa: E402
 import songs.s11_light as S_LIGHT  # noqa: E402
 import songs.s11_dance as S_DANCE  # noqa: E402
+import songs.s11_churches as S_CHURCHES  # noqa: E402  (round 7: churches established around the world)
 import songs.s11_music_fx as S_MUSIC  # noqa: E402  (last: it lifts what the others placed)
 
-THREADS = [S_CHURCH, S_STAGE, S_ZION, S_PROC, S_CODA, S_DANCE, S_MUSIC]
+THREADS = [S_CHURCH, S_STAGE, S_ZION, S_PROC, S_CODA, S_DANCE, S_CHURCHES, S_MUSIC]
 Y, FZ, G = SUMMIT, FACADE_Z, GLOBE_C
 CORE_SHOTS = [
     # Father's pulse rolls out over the whole Earth: a long graceful pull-back from close over Korea (round 6: the

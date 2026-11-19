@@ -22,6 +22,10 @@
 - The coordinator only checks each finished section, assembles the full film, answers Anthony's requests and keeps the records.
 - Storage: the review page keeps only the newest section videos and the files in `keep/now`; its "Clear old files" button removes the rest (old versions are not archived: Drive uploads from a session are limited to about 3 MB).
 
+## The reviewer (Anthony, 2026-11-19: "create another thread that's specifically for reviewing and giving suggestions and findings")
+- A dedicated cloud session (the "Song 11 reviewer") reviews every pass against DESIGN.md and Anthony's requests: frames every 1 to 2 s, every phrase and hit, sync, glare, clutter, colour, cinematic quality. It posts its findings and creative suggestions straight to the review page (`findings/*`, state open, by "reviewer") for Anthony to approve or decline, then tells the coordinator `REVIEW DONE pass=<tag> findings=<ids>`. It never edits code or renders.
+- The coordinator orders a review with `REVIEW pass=<tag>` after each pass and acts on approved findings in the next round.
+
 ## The review page (Anthony's live dashboard)
 - A private claude.ai artifact (source `tools/s11_full2/live/review_page.html`) with the `db` and `assets` capabilities.
 - Shows: each section's newest video in order with "Updated # minutes ago" and play straight through; live status (overall progress, a card per machine, what each is rendering); findings and suggestions with Approve and Decline; request boxes per section and for the whole film. Compact; findings and requests fold.
