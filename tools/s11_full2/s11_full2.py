@@ -374,7 +374,7 @@ def _globe_amount(t):
 # navy, so the cities' gold and white lights (GlobeFX) and the rivers of people stand out on it, by day and night.
 EARTH_LOOK = dict(ocean_c="#132f6c", ocean_e="#081843", land="#0b6e46", land2="#1f9a66", land_base="#0a5a3a",
                   rim="#8fd6ff", cloud="#d6e6ff", paint_land=True, rim_k=0.3, cloud_k=0.16, glow_k=0.0, land_k=1.0)
-LAND_NIGHT = np.array([0.004, 0.030, 0.020])       # the emerald land on the night side: just a dim green
+LAND_NIGHT = np.array([0.0005, 0.006, 0.004])       # the emerald land on the night side: just a dim green
 
 
 GLOBE = Globe(pos=tuple(GLOBE_C), radius=GLOBE_R, face="camera", camera=None, look=EARTH_LOOK, spin=1.2,
@@ -391,7 +391,34 @@ GLOBE = Globe(pos=tuple(GLOBE_C), radius=GLOBE_R, face="camera", camera=None, lo
 # a glowing golden edge: Korea ignites first (0:41.6, on Father's pulse rolling out), the dawn spreads through
 # the first Earth shots, again through the second, and the whole world is in day by 1:17.46; the world finale
 # stays lit. earth_day(t) is the progress 0..1; the dawn's angular radius is DAWN_MAX * progress.
-DAY_KEYS = [(41.6, 0.0), (42.6, 0.02), (53.78, 0.30), (70.54, 0.30), (76.9, 1.0)]
+# Round 8 (Anthony: "The world should have no light at first. Then the lights appear starting from Korea. And
+# then the world brightens starting from Korea."): the first Earth shot (0:41.6 to 0:53.78) stays on the night
+# side while the city lights switch on from Korea outward, a step on every beat (light_angle); the daylight
+# waits for the second Earth shot and spreads from Korea from 1:10.54 until the whole world is lit at 1:16.9.
+DAY_KEYS = [(41.6, 0.0), (70.54, 0.0), (70.9, 0.03), (76.9, 1.0)]
+LIGHTS_T0, LIGHTS_BEAT, LIGHTS_STEP = 41.6, 0.575, 10.5      # s, s, degrees per beat
+
+
+def light_angle(t):
+    """How far round Korea the city lights are on at t (radians): Korea alone at 0:41.6, then one step outward
+    on every beat until the whole world is lit (about 0:52); all on afterwards."""
+    if t < LIGHTS_T0:
+        return 0.0
+    if t >= 53.78:
+        return np.pi * 1.1
+    n = (t - LIGHTS_T0) / LIGHTS_BEAT
+    k = np.floor(n) + _ss(0.0, 0.35, n - np.floor(n))
+    return float(np.radians(min(200.0, 3.0 + LIGHTS_STEP * k)))
+
+
+def lights_on(da, t, soft=4.0):
+    """0..1 for points da radians from Korea: on inside the lights' circle; a flare as the edge passes."""
+    L = light_angle(t)
+    on = np.clip((L - da) / np.radians(soft) + 0.5, 0.0, 1.0)
+    if L >= np.pi:
+        return on
+    edge = np.exp(-((da - L) / np.radians(3.0)) ** 2)
+    return on * (1.0 + 1.2 * edge)
 DAWN_MAX = 200.0                                     # degrees: past 180 + the edge's width the world is all day
 DAWN_SOFT = 11.0                                     # degrees: the width of the dawn's edge
 
@@ -670,14 +697,15 @@ class GlobeFX:
             zw = _unit(T @ zv)
             da = np.arccos(np.clip(cv[cf] @ zw, -1.0, 1.0))
             nt = 1.0 - np.clip((dawn_angle(t) - da) / np.radians(DAWN_SOFT) + 0.5, 0.0, 1.0)   # 1 on the night side
-            a = (0.75 + 0.55 * nt) * (1.0 + 0.2 * beat_pulse(t))
+            a = (0.75 + 0.55 * nt) * (1.0 + 0.2 * beat_pulse(t)) * lights_on(da, t)
             out.append(dict(pos=cp[cf], size=cy["size"][cf], color=cy["col"][cf], alpha=a, emit=2.4, kind="spark",
                             twinkle=0.35, seed=cy["seed"][cf], dof=0.0, reflect=False))
             bg = cf & cy["big"]
             if bg.any():
                 nb = 1.0 - np.clip((dawn_angle(t) - np.arccos(np.clip(cv[bg] @ zw, -1.0, 1.0)))
                                    / np.radians(DAWN_SOFT) + 0.5, 0.0, 1.0)
-                out.append(dict(pos=cp[bg], size=1.1, color=lin("#ffcf7a"), alpha=0.07 + 0.08 * nb, kind="soft",
+                lb = lights_on(np.arccos(np.clip(cv[bg] @ zw, -1.0, 1.0)), t)
+                out.append(dict(pos=cp[bg], size=1.1, color=lin("#ffcf7a"), alpha=(0.07 + 0.08 * nb) * lb, kind="soft",
                                 emit=1.6, dof=0.0, reflect=False))
         # the rivers of people (round 7: "more and more people going to Zion"): streams of people of light from
         # every continent flowing along the Earth to Zion, from Father's pulse on; a few thin rivers at first,
@@ -720,6 +748,7 @@ class GlobeFX:
                 fa = _ss(0.0, 0.10, f[vis]) * (1.0 - _ss(0.62, 0.88, f[vis]))
                 sup = ((p[vis] - c[None, :]) @ up) / R                              # kept below the words
                 fa = fa * (1.0 - 0.85 * rd * _ss(-0.05, 0.35, sup))
+                fa = fa * np.minimum(lights_on(np.arccos(np.clip(v[vis] @ zv, -1.0, 1.0)), t), 1.0)   # (round 8)
                 col = lin(COL9[i % 9]) * 0.88 + lin(WHITE) * 0.12
                 out.append(dict(pos=p[vis], size=0.14 + 0.10 * kk + 0.12 * s[vis, 2], color=col,
                                 alpha=(0.8 * br * fa).astype(np.float32), emit=2.4, kind="spark", dof=0.0,
@@ -1565,6 +1594,11 @@ def _bursts():
             k += 1
     out.append(dict(t=HIT["father"], strength=0.45, rise=0.08, fall=0.6, color="#ffeccc",
                     at=tuple(CHURCH + _v(0.0, 20.0, 0.0))))
+    # round 8 (Anthony: "The world should have no light at first"): the cut onto the dark Earth at 0:41.6 opens
+    # without a flash; the first light is Korea's own
+    for d in out:
+        if abs(d["t"] - 41.6) < 0.06 and "at" not in d:
+            d["strength"] *= 0.15
     # round 8 (relayed from STAGE: the cut flash at 3:05.92 covered "Wondrous love" as it landed): every flash
     # that falls while a phrase lands or is read is held low (the slams keep their own settings above)
     for d in out:
