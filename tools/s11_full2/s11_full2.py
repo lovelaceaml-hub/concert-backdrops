@@ -142,6 +142,38 @@ def beat_pulse(t, width=0.09):
     return float(np.exp(-d / width))
 
 
+# =========================================================================================================
+# The light budget (round 8, Anthony: "Not everything needs to be so washed out and bright all the time. Key
+# timings should be highlighted. Do not saturate everything. Do not wash out."): a calm, darker baseline, and
+# the big light kept for the key moments. light_budget(t) is 1 on a key moment and LIGHT_REST between them;
+# every thread may multiply its own sets by it (or by a mix such as 0.6 + 0.4 * light_budget(t)). The core
+# drives the picture's exposure with it on every local shot (the intro's build and the Earth keep their own).
+# =========================================================================================================
+LIGHT_REST = 0.5
+# (start, hold): Father's pulse, slam 1, Sacrifice, Devotion, thanks to Father, the church of God arrival into
+# slam 2, Sacrifice, Wondrous love, slam 3, Sacrifice, Devotion, "Oh, the Church of God", the comets and emblem
+KEY_MOMENTS = [(40.54, 2.0), (82.08, 2.2), (100.26, 2.6), (105.14, 2.6), (109.8, 2.0), (159.0, 6.0),
+               (180.7, 2.6), (184.65, 2.8), (201.73, 2.8), (218.1, 2.6), (224.03, 2.6), (238.93, 2.8),
+               (254.0, 3.0)]
+
+
+def key_moment(t):
+    """0..1: how much t is inside a key moment (a quick rise just before it, a 1.2 s release after its hold)."""
+    v = 0.0
+    for k, d in KEY_MOMENTS:
+        if k - 0.3 <= t <= k + d + 1.2:
+            v = max(v, _sc(k - 0.3, k, t) * (1.0 - _sc(k + d, k + d + 1.2, t)))
+    return v
+
+
+def light_budget(t):
+    """LIGHT_REST (0.5) at rest, rising to 1 on the key moments; 1 before Father's pulse (the intro builds on
+    its own) and from the end card on."""
+    if t < 40.0 or t >= 256.0:
+        return 1.0
+    return LIGHT_REST + (1.0 - LIGHT_REST) * key_moment(t)
+
+
 def hit_pulse(t, times, rise=0.03, fall=0.6):
     """Sum of sharp pulses at the given times."""
     v = 0.0
@@ -1457,9 +1489,14 @@ def _stage_calm(t):
 
 
 def _deep(t):
-    """Round 8 (the wide Zion views read milky): the local, non-stage shots a little lower, so the dark between
-    the lights stays deep (the promo's look); the Earth and the stage keep their own levels."""
-    return 1.0 if (globe_view(t) or stage_view(t)) else 0.85
+    """Round 8: the picture's exposure follows the light budget on every local shot (calm and darker between the
+    key moments, full on them); the Earth keeps its own (the Verse 1 night and dawn, the finale)."""
+    if globe_view(t):
+        return 1.0
+    if t < 40.0:
+        return 1.0 if stage_view(t) else 0.85          # the intro's build as it was
+    slam = 1.0 - 0.5 * hit_pulse(t, SLAMS, rise=0.02, fall=0.7)    # a burst of colour, not a white frame
+    return (0.02 + 0.98 * light_budget(t) ** 1.6) * slam
 
 
 WORLD["exposure"] = lambda t: _stage_calm(t) * S_MUSIC.choir_swell(t) * _deep(t)
@@ -1553,8 +1590,9 @@ def _bursts():
             # gone before "Joy of salvation!" starts to read 0.4 s later
             out.append(dict(t=c, strength=0.42, rise=0.03, fall=0.14, color="#ffe6bc"))
             continue
-        out.append(dict(t=c, strength=0.95 if strong else 0.16 + 0.12 * intensity(c), rise=0.04 if strong else 0.04,
-                        fall=0.26 if strong else 0.22, color="#fff4e0"))      # a slam flash, gone within a third of a second (round 6: no white-out)
+        # round 8 (reviewer: slam 1 was 0.87 s of glare, 35 percent near white): a burst of warm light, short
+        out.append(dict(t=c, strength=0.45 if strong else 0.16 + 0.12 * intensity(c), rise=0.03 if strong else 0.04,
+                        fall=0.15 if strong else 0.22, color="#ffd9a8" if strong else "#fff4e0"))      # a slam flash, gone within a third of a second (round 6: no white-out)
     for i, h in enumerate(KICKS):
         if any(abs(h - s) < 0.05 for s in SLAMS):
             continue
