@@ -36,10 +36,10 @@ LOOKS = dict(
                ripple=0.3, dust=0.9, bokeh=0.9, rays=0.55, sun_glow=0.4, sun_disc=4.5),
     # the coda (owned by the coda thread, from 3:08.27 on): pre-dawn hush, the sunrise in rose and violet folding
     # into gold, the sky stage, the summit, the Earth finale
-    coda_dawn=dict(base="dawn", hills=0.0, clouds=0.30, stars=0.22, milky=0.05, sky_top="#0c1240",
-                   sky_mid="#43306e", sky_hor="#d8806e", sun_color="#ffc48e", haze=0.5, haze_color="#8a5070",
-                   mist=0.16, mist_color="#7a4c6c", water="#06051a", ripple=0.3, sun_glow=0.45, sun_disc=4.0,
-                   exposure=0.9, dust_color="#ffd2b0", dust_color2="#e8b0d8"),
+    coda_dawn=dict(base="night", hills=0.0, clouds=0.25, stars=0.45, milky=0.2, sky_top="#05061a",
+                   sky_mid="#24164a", sky_hor="#a04a62", sun_color="#ffc48e", haze=0.35, haze_color="#3a2048",
+                   mist=0.30, mist_color="#4a2650", water="#04040e", ripple=0.3, sun_glow=0.4, sun_disc=4.0,
+                   dust=0.9, bokeh=0.9, dust_color="#ffd2b0", dust_color2="#e8b0d8", rays=0.4),
     coda_rise=dict(base="sunrise", hills=0.0, clouds=0.32, stars=0.04, sky_top="#121c58", sky_mid="#6e3c84",
                    sky_hor="#f48a66", sun_color="#ffd296", haze=0.45, haze_color="#a8587a", mist=0.12,
                    mist_color="#9a5a76", water="#090720", ripple=0.35, sun_glow=0.32, sun_disc=4.0,
