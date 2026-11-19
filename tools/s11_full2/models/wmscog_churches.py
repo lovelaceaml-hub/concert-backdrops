@@ -10,6 +10,9 @@ Not repeated here (already modelled by the placement helper in s11_churches.py):
 Moran (Seongnam), the Bitgaram sail tower (Naju, from the Gangwon post), Sydney, Manaus and Brasilia, the golden
 arch tower (Seoul and Daejeon post), the training institute, and the New Jerusalem Pangyo Temple.
 
+Overseas churches come from the church's own event posts (Passover, Pentecost, Resurrection) where a photograph
+of the members in front of the building carries a caption naming that church; only buildings clearly visible are used.
+
 Where one post shows several churches without a caption on each photograph, the name follows the order in which
 the post introduces the churches and shows the photographs; such entries say so in "note".
 
@@ -106,6 +109,11 @@ HWASEONG = W_SRC + "church-dedication-service-hwaseong/"
 JINJU = W_SRC + "church-dedication-service-jinju/"
 YANGSAN26 = W_SRC + "church-dedication-service-yangsan/"
 SUWON24 = W_SRC + "church-dedication-service-suwon/"
+RES25 = W_SRC + "resurrection-assemblies-2025/"
+ASC26 = W_SRC + "2026-ascension-day-pentecost/"
+PASS26 = W_SRC + "passover-2026/"
+YESAN = W_SRC + "church-dedication-service-yesan-pyeongtaek-incheon/"
+YBU = W_SRC + "church-dedication-service-yangsan-busan-ulsan/"
 
 BUILDINGS = [
     # ---- batch 1 ----------------------------------------------------------------------------------------
@@ -284,6 +292,180 @@ BUILDINGS = [
          box(12, 0, 6, 14, 14, "white"),
          band(12, -7, 1.5, 12, y0=1),
      ]},
+    # ---- batch 2 ----------------------------------------------------------------------------------------
+    {"id": "za_pretoria", "name": "Pretoria church", "city": "Pretoria", "country": "South Africa",
+     "source": RES25, "year": None,
+     "note": "a brick hall under one steep pitched roof, its tall front gable filled with white fins and glass, "
+             "a slim white bell slab to the right",
+     "parts": [
+         box(0, 0, 24, 36, 6, "warm"),
+         gable(0, 0, 24, 36, 12, "grey", y0=6, axis="z"),
+         band(0, -18, 14, 10, y0=1),
+         fins(0, -18, 16, 13, 9, 0.8, "white"),
+         box(18, -6, 3, 2, 24, "white"),
+         box(-16, 0, 8, 20, 4, "warm"),
+     ]},
+    {"id": "us_atlanta", "name": "Atlanta church", "city": "Atlanta, Georgia", "country": "U.S.",
+     "source": RES25, "year": None,
+     "note": "long brick halls under grey gable roofs, a front gable wing, and a white steeple on the ridge",
+     "parts": [
+         box(4, 0, 36, 22, 7, "warm"),
+         gable(4, 0, 36, 22, 6, "grey", y0=7, axis="x"),
+         box(14, -6, 12, 26, 7, "warm"),
+         gable(14, -6, 12, 26, 6, "grey", y0=7, axis="z"),
+         wins(14, -19, 9, 4, 3, 1, "glass", y0=1.5),
+         box(4, 0, 2.5, 2.5, 4, "white", y0=13),
+         spire(4, 0, 2.5, 8, "white", y0=17),
+         box(-20, 2, 14, 14, 4.5, "warm"),
+         hip(-20, 2, 14, 14, 2, "grey", y0=4.5),
+     ]},
+    {"id": "us_miami", "name": "Miami church", "city": "Miami, Florida", "country": "U.S.",
+     "source": RES25, "year": None,
+     "note": "a very steep pointed A frame roof with a glass slit up its gable, behind a long white arcade of round arches",
+     "parts": [
+         box(0, -14, 40, 4, 5, "white"),
+         arches(0, -16, 38, 4.5, 8, 1, "white"),
+         box(0, 6, 18, 30, 4, "warm"),
+         gable(0, 6, 18, 30, 20, "grey", y0=4, axis="z"),
+         band(0, -9, 1.5, 18, y0=3),
+     ]},
+    {"id": "us_chicago", "name": "Chicago church", "city": "Chicago, Illinois", "country": "U.S.",
+     "source": ASC26, "year": None,
+     "note": "a two storey red brick block with a white pediment, beside a long low brick wing under a grey gable",
+     "parts": [
+         box(-12, 0, 18, 20, 10, "warm"),
+         gable(-12, 0, 18, 20, 4, "white", y0=10, axis="z"),
+         wins(-12, -10, 14, 7, 4, 2, "white", y0=1.5),
+         box(8, 2, 26, 14, 4.5, "warm"),
+         gable(8, 2, 26, 14, 3, "grey", y0=4.5, axis="x"),
+         wins(8, -5, 22, 2.5, 6, 1, "glass", y0=1),
+     ]},
+    {"id": "za_durban", "name": "Durban church", "city": "Durban", "country": "South Africa",
+     "source": ASC26, "year": None,
+     "note": "a single storey face brick hall under a broad hipped roof, a white gabled entrance porch and white fins",
+     "parts": [
+         box(0, 0, 26, 18, 4, "warm"),
+         hip(0, 0, 28, 20, 4, "grey", y0=4),
+         box(0, -10, 8, 4, 4, "white"),
+         gable(0, -10, 9, 4, 2.5, "grey", y0=4, axis="z"),
+         fins(7, -9, 10, 3.5, 4, 0.3, "white"),
+         wins(-8, -9, 8, 2, 2, 1, "glass", y0=1),
+     ]},
+    {"id": "cr_san_jose", "name": "San Jose church", "city": "San Jose", "country": "Costa Rica",
+     "source": ASC26, "year": None,
+     "note": "a white two storey house with a steep red hipped roof and a gabled dormer, a modern glass block beside it",
+     "parts": [
+         box(2, 0, 14, 12, 6.5, "white"),
+         hip(2, 0, 15, 13, 4, "rose", y0=6.5),
+         gable(2, -6, 6, 2, 3, "rose", y0=6.5, axis="z"),
+         wins(2, -6, 10, 4, 3, 1, "glass", y0=2),
+         box(6, -8, 4, 4, 3, "white"),
+         steps(6, -11, 4, 2, 1, 4),
+         box(-10, 0, 10, 12, 9, "grey"),
+         wins(-10, -6, 8, 7, 3, 2, "glass", y0=1),
+     ]},
+    {"id": "np_itahari", "name": "Itahari church", "city": "Itahari", "country": "Nepal",
+     "source": ASC26, "year": None,
+     "note": "a white three storey building with long balconies, and a small pitched roof pavilion on the roof",
+     "parts": [
+         box(0, 0, 28, 14, 10, "white"),
+         canopy(-4, -7.5, 12, 2, "white", y0=3.5, h=0.3),
+         canopy(-4, -7.5, 12, 2, "white", y0=7, h=0.3),
+         wins(-4, -7, 10, 6, 3, 2, "glass", y0=1),
+         wins(7, -7, 12, 7, 4, 2, "glass", y0=1.5),
+         box(11, -3, 6, 6, 3, "white", y0=10),
+         gable(11, -3, 7, 7, 2, "rose", y0=13, axis="x"),
+     ]},
+    {"id": "nz_auckland2", "name": "Auckland 2nd church", "city": "Auckland", "country": "New Zealand",
+     "source": ASC26, "year": None,
+     "note": "a grey metal clad block with a glass top storey, and a round entrance portico of tall white fins",
+     "parts": [
+         box(-8, 0, 24, 20, 12, "grey"),
+         band(-8, -10, 22, 3, y0=9),
+         cyl(6, -6, 8, 10, "glass"),
+         fins(6, -10, 8, 10, 7, 1.0, "white"),
+         box(14, 0, 6, 10, 5, "grey"),
+     ]},
+    {"id": "na_windhoek", "name": "Windhoek church", "city": "Windhoek", "country": "Namibia",
+     "source": PASS26, "year": None,
+     "note": "a white two storey building with a flat roof, wide windows and an outside stair up to the upper hall",
+     "parts": [
+         box(0, 0, 20, 12, 7, "white"),
+         canopy(0, 0, 21, 13, "white", y0=7, h=0.5),
+         wins(2, -6, 12, 2.5, 3, 1, "glass", y0=4),
+         wins(2, -6, 12, 2.5, 4, 1, "glass", y0=0.8),
+         steps(-8, -9, 2, 6, 3.5, 8, "white"),
+         canopy(-8, -6.5, 3, 1.5, "white", y0=3.5, h=0.3),
+     ]},
+    {"id": "kr_yulha_gimhae", "name": "Yulha church", "city": "Gimhae", "country": "Korea",
+     "source": YANGSAN26, "year": 2026,
+     "note": "slim blocks side by side: white, blue glass, a dark slab, white and a tall glass corner",
+     "parts": [
+         box(-8, 0, 8, 16, 16, "white"),
+         wins(-8, -8, 6, 3, 3, 1, "glass", y0=6),
+         box(-2, 0, 6, 16, 18, "glass"),
+         box(3, -2, 5, 12, 17, "grey"),
+         box(7, 0, 3, 16, 20, "white"),
+         box(10, 0, 4, 16, 20, "glass"),
+         canopy(-4, -9, 10, 2, "rose", y0=3),
+     ]},
+    {"id": "kr_yesan", "name": "Yesan church", "city": "Yesan (Naepo)", "country": "Korea",
+     "source": YESAN, "year": 2025,
+     "note": "a white block under a floating roof plane edged in warm brown, with a glass corner bay",
+     "parts": [
+         box(0, 0, 30, 20, 14, "white"),
+         canopy(0, 0, 34, 22, "warm", y0=14.5, h=0.8),
+         box(-15.5, 0, 1.2, 22, 15, "warm"),
+         box(8, -8, 8, 6, 14, "glass"),
+         wins(-4, -10, 18, 10, 7, 3, "glass", y0=2),
+         box(14, -6, 6, 8, 4, "warm"),
+         steps(12, -14, 8, 4, 1.2, 4),
+     ]},
+    {"id": "kr_pyeongtaek_godeok", "name": "Pyeongtaek Godeok church", "city": "Pyeongtaek", "country": "Korea",
+     "source": YESAN, "year": 2025,
+     "note": "a grey stone block, a taller glass stair tower, and a white block with a glass curtain wall",
+     "parts": [
+         box(-10, 0, 12, 16, 10, "stone"),
+         box(-2, 0, 6, 10, 14, "glass"),
+         box(8, 0, 16, 18, 11, "white"),
+         band(8, -9, 12, 9, y0=1),
+         canopy(4, -10, 8, 2, "grey", y0=3.5),
+     ]},
+    {"id": "kr_incheon_donggu", "name": "Incheon Dong-gu church", "city": "Incheon", "country": "Korea",
+     "source": YESAN, "year": 2025,
+     "note": "a slim pale stone tower with a projecting bay of blue glass and an open frame on the roof",
+     "parts": [
+         box(0, 0, 10, 12, 18, "pearl"),
+         box(-1, -6.5, 6, 1.5, 15, "glass", y0=2),
+         box(6.5, 0, 4, 12, 14, "glass"),
+         box(-1, 0, 8, 8, 2, "white", y0=18),
+         fins(-1, -4, 8, 2, 6, 0.2, "white", y0=18),
+         steps(-9, -6, 3, 10, 3, 10),
+     ]},
+    {"id": "kr_songdo", "name": "Songdo church", "city": "Incheon (Songdo)", "country": "Korea",
+     "source": YESAN, "year": 2025,
+     "note": "pale stone with a rounded corner and louvres, a glass curtain wall screened by vertical fins, a brick base",
+     "parts": [
+         box(-4, 0, 20, 18, 13, "stone"),
+         cyl(-14, 0, 8, 12, "stone"),
+         box(8, 0, 8, 16, 14, "glass"),
+         fins(10, -8, 4, 12, 6, 0.5, "grey"),
+         box(-4, -9.2, 8, 0.6, 3, "warm"),
+         wins(-4, -9, 6, 3, 2, 1, "glass", y0=6),
+     ]},
+    {"id": "kr_sasong_yangsan", "name": "Sasong church", "city": "Yangsan", "country": "Korea",
+     "source": YBU, "year": 2025,
+     "note": "a white box lifted on columns with a great dark glass upper wall, and a side tower of white fins",
+     "parts": [
+         box(2, 0, 26, 20, 10, "white", y0=5),
+         band(4, -10, 20, 6, y0=9),
+         box(2, 2, 20, 14, 5, "glass"),
+         box(-10, -9, 1, 1, 5, "white"),
+         box(14, -9, 1, 1, 5, "white"),
+         box(-13, 0, 5, 14, 15, "white"),
+         fins(-13, -7, 4, 14, 6, 0.3, "white"),
+         box(-16, 0, 1.5, 12, 15, "glass"),
+     ]},
 ]
 
 
@@ -303,6 +485,9 @@ def _fill_size(b):
 for _b in BUILDINGS:
     _b.setdefault("note", "")
     _fill_size(_b)
+
+
+assert len({b["id"] for b in BUILDINGS}) == len(BUILDINGS), "duplicate building id"
 
 
 def all_buildings():
