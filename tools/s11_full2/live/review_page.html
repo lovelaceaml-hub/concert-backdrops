@@ -65,6 +65,7 @@ video{display:block;width:100%;max-width:100%;aspect-ratio:16/9;background:#000}
 .item p{margin:0;color:var(--muted)}
 .item .reply{color:var(--fg);border-left:2px solid var(--accent);padding-left:8px}
 .acts{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.model{margin:8px 0}.model img{width:100%;height:auto;border-radius:6px;border:1px solid var(--line);display:block}.model figcaption{font-size:12px;margin-top:4px}
 .sugg{border-left:3px solid var(--accent, #7c6cf0);padding:4px 8px;margin:4px 0;background:color-mix(in srgb, var(--accent, #7c6cf0) 10%, transparent);border-radius:4px}
 button{font:inherit;font-size:12px;font-weight:500;padding:4px 10px;border-radius:7px;border:1px solid var(--line);background:var(--surface);color:var(--fg);cursor:pointer}
 button.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-fg)}
@@ -107,6 +108,10 @@ textarea{min-height:44px;resize:vertical}
 </section>
 
 <ol class="sections" id="list"></ol>
+<section class="panel" aria-label="Models">
+  <div class="row"><h3>Models <span id="modelsCount"></span></h3><button type="button" id="modelsToggle">Hide</button></div>
+  <div id="modelsList"><p class="hint">New models from the models thread appear here in batches.</p></div>
+</section>
 <section class="panel" aria-label="Done">
   <div class="row"><h3>Done and closed <span id="doneCount"></span></h3><button type="button" id="doneToggle" aria-expanded="true">Hide</button></div>
   <ul class="items" id="doneList"><li class="empty">Nothing closed yet.</li></ul>
@@ -348,6 +353,13 @@ function tick(){
   apply(hide);
   btn.addEventListener("click", () => { hide = !hide; apply(hide); try { localStorage.setItem("s11_done_hidden", hide ? "1" : "0"); } catch (e) {} });
 })();
+(() => {
+  const btn = document.getElementById("modelsToggle"), box = document.getElementById("modelsList");
+  const apply = hide => { box.hidden = hide; btn.textContent = hide ? "Show" : "Hide"; };
+  let hide = false; try { hide = localStorage.getItem("s11_models_hidden") === "1"; } catch (e) {}
+  apply(hide);
+  btn.addEventListener("click", () => { hide = !hide; apply(hide); try { localStorage.setItem("s11_models_hidden", hide ? "1" : "0"); } catch (e) {} });
+})();
 makeForm(document.getElementById("globalForm"), -1);
 render(); setInterval(tick, 20000);
 
@@ -370,6 +382,21 @@ render(); setInterval(tick, 20000);
   db.collection("fleet").onSnapshot(qs => {
     FLEET = qs.docs.map(d => Object.assign({name: d.id}, d.data()));
     render();
+  }, fail);
+  db.collection("models").onSnapshot(qs => {
+    const ms = qs.docs.map(d => Object.assign({id: d.id}, d.data())).sort((x, y) => String(y.created).localeCompare(String(x.created)));
+    const box = document.getElementById("modelsList"); box.textContent = "";
+    let n = 0;
+    ms.forEach(m => {
+      n += m.count || 0;
+      const fig = el("figure", "model");
+      if (m.url) { const im = document.createElement("img"); im.src = m.url; im.alt = m.title || "Model sheet"; im.loading = "lazy"; fig.append(im); }
+      const cap = el("figcaption", ""); cap.append(el("b", "", m.title || ""), el("span", "hint", (m.created ? " " + agoText(m.created) : "")));
+      if (m.note) cap.append(el("p", "", m.note));
+      fig.append(cap); box.append(fig);
+    });
+    if (!ms.length) box.append(el("p", "hint", "New models from the models thread appear here in batches."));
+    document.getElementById("modelsCount").textContent = n ? "(" + n + " so far)" : "";
   }, fail);
   db.collection("requests").onSnapshot(qs => {
     REQUESTS = qs.docs.map(d => Object.assign({id: d.id}, d.data())).sort((a, b) => String(b.created).localeCompare(String(a.created)));
@@ -396,6 +423,7 @@ render(); setInterval(tick, 20000);
   }
   async function keepSet(){
     const keep = new Set(SECTIONS.map(s => idOf(s.url)).concat(FLEET.map(f => idOf(f.url))).filter(Boolean));
+    try { const d = db || await window.claude.use("db"); const ms = await d.collection("models").get(); (ms.docs || []).forEach(x => { const u = idOf((x.data() || {}).url); if (u) keep.add(u); }); } catch (e) {}
     try { const d = db || await window.claude.use("db"); const k = await d.doc("keep/now").get(); if (k.exists) (k.data().ids || []).forEach(x => keep.add(String(x))); } catch (e) {}
     return keep;
   }
