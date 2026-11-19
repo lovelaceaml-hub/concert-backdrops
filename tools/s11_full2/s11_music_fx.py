@@ -141,7 +141,8 @@ def _reading(t):
 
 def room(t):
     """How much the effects may show: less under a phrase and where the music already blazes."""
-    return (1.0 - 0.55 * _reading(t)) * (1.0 - 0.40 * intensity(t) ** 2)
+    # (round 8: the light budget, calmer between the key moments)
+    return (1.0 - 0.55 * _reading(t)) * (1.0 - 0.40 * intensity(t) ** 2) * (0.55 + 0.45 * light_budget(t))
 
 
 # =========================================================================================================
@@ -320,9 +321,9 @@ class Shockwaves:
             P = np.stack([x, y, z], 1)[on]
             a = s * np.exp(-u / 0.5) * room(t) * quiet * (1.0 - _sc(1.2, 1.6, u))
             w = 0.18 + 0.004 * d
-            out.append(dict(pos=P, size=w, color=lin("#fff0d8") * 0.6 + lin(CRYSTAL) * 0.4, alpha=0.40 * a,
+            out.append(dict(pos=P, size=w, color=lin("#ffd8a8") * 0.6 + lin("#b8a8ff") * 0.4, alpha=0.22 * a,
                             kind="spark", emit=2.4, seed=self.seed[on], twinkle=0.3, reflect=False))
-            out.append(dict(pos=P[::4], size=w * 8.0, color=lin("#c8b8ff"), alpha=0.035 * a, kind="soft", emit=1.3,
+            out.append(dict(pos=P[::4], size=w * 8.0, color=lin("#b8a8ff"), alpha=0.02 * a, kind="soft", emit=1.3,
                             reflect=False))
         return out or None
 
