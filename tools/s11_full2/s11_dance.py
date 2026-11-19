@@ -134,8 +134,8 @@ SHOTS = [
                                                   (1.0, _D(4.2, 1.3, 5.2), _D(-0.4, 2.4, -5.0))], roll=(2.0, -1.0)),
     # wondrous love: low behind him, he at the left edge, the phrase in the middle, the heart drawn in the sky
     # over the sea on the right (nothing crosses the phrase)
-    _shot("dance_heart", 185.92, 188.27, 54.0, [(0.0, _D(-0.6, 0.55, 5.0), _D(9.0, 2.6, -6.0)),
-                                                (1.0, _D(-0.5, 0.5, 4.7), _D(9.0, 2.7, -6.0))]),
+    _shot("dance_heart", 185.92, 188.27, 54.0, [(0.0, _D(-0.7, 0.55, 5.0), _D(10.2, 2.6, -4.8)),
+                                                (1.0, _D(-0.6, 0.5, 4.8), _D(10.2, 2.7, -4.8))]),
     # the held breath: low in front of him, looking up against the light; tilting up as the comet flies on
     _shot("dance_held", 247.5, 249.43, 46.0, [(0.0, _D(1.6, 0.45, -4.6), _D(0.0, 1.75, 0.0)),
                                               (0.8, _D(1.3, 0.42, -4.1), _D(0.0, 1.9, 0.0)),
@@ -228,13 +228,13 @@ def _hands(t):
             return top + np.array([-0.08, 0.3, 0.0]), top + np.array([0.08, 0.3, 0.0])
         if t <= HEART_T[1]:
             x, y = _heart_xy(_heart_prog(t))
-            sc = 0.62
+            sc = 0.48
             r = HAND_HEART_C + np.array([-x * sc, y * sc, 0.0])
             return r, _mirror(r)
         w = _sc(HEART_T[1], HEART_T[1] + 0.35, t)
         x, y = _heart_xy(1.0)
-        bot = HAND_HEART_C + np.array([0.0, y * 0.62, 0.0])
-        r = _pattern(p, 1.1, "legato")
+        bot = HAND_HEART_C + np.array([0.0, y * 0.48, 0.0])
+        r = _pattern(p, 0.8, "legato") + np.array([0.12, 0.0, 0.0])
         l = L_HOLD + np.array([0.12, 0.25 + 0.15 * _sc(187.4, 188.2, t), -0.05])
         return bot * (1 - w) + r * w, bot * (1 - w) + l * w
     # the held breath: the fermata, poised high, barely breathing; the dip on beat 4, then up on the final rise
@@ -410,7 +410,7 @@ class CondComet(Comet):
 
     def __init__(self, ts, fly, color, t1, src=None, **kw):
         self.ts, self.fly, self.src = float(ts), fly, (src or tip)
-        super().__init__(self._head, color, ts - 0.35, t1, **kw)
+        super().__init__(self._head, color, ts, t1, **kw)
 
     def _head(self, t):
         if t <= self.ts:
@@ -449,13 +449,14 @@ def _final_rise(u, p0):
     return p0 + _v(-0.6 * u, 26.0 * u * (0.35 + u), 3.0 * u)
 
 
-SKY_HEART_C = _D(28.5, 7.4, -2.5)
-SKY_HEART_S = 4.4
+SKY_HEART_C = _D(30.4, 8.0, 0.5)
+SKY_HEART_S = 3.6
+_HX = _unit(_v(0.25, 0.0, 0.968))           # the heart's plane faces the camera of the "dance_heart" shot
 
 
 def _sky_heart_point(s, side):
     x, y = _heart_xy(s)
-    return SKY_HEART_C + _v(side * x * SKY_HEART_S, y * SKY_HEART_S, 0.0)
+    return SKY_HEART_C + _HX * (side * x * SKY_HEART_S) + _v(0.0, y * SKY_HEART_S, 0.0)
 
 
 def _heart_fly(side):
@@ -465,7 +466,7 @@ def _heart_fly(side):
         s = _heart_prog(t)
         hp = _sky_heart_point(s, side)
         w = _sc(0.0, 0.26, u)
-        return p0 * (1.0 - w) + hp * w + _v(0.0, 3.0 * np.sin(np.pi * w), 0.0)
+        return p0 * (1.0 - w) + hp * w + _v(0.0, 4.0 * np.sin(np.pi * w), 0.0)
     return f
 
 
@@ -609,7 +610,7 @@ class Snow:
             d = d / np.maximum(np.linalg.norm(d, axis=1, keepdims=True), 1e-6)
             P = c[None, :] + d * (0.8 + 2.4 * s[:, 4:5]) * (1.0 - u)[:, None]
             col = np.array([lin(COL9[int(x * 9) % 9]) for x in s[:, 0]]) * 0.5 + lin(WHITE) * 0.5
-            out.append(dict(pos=P, size=0.006 + 0.008 * s[:, 4], color=col, alpha=kh * (0.3 + 0.7 * (1.0 - u) ** 0.5),
+            out.append(dict(pos=P, size=0.006 + 0.008 * s[:, 4], color=col, alpha=kh * 0.9 * (1.0 - u) ** 0.7,
                             emit=2.2, kind="spark", twinkle=0.6, seed=s[:, 4], dof=0.0))
         return out or None
 
@@ -685,7 +686,7 @@ def add(scene):
     bt = beat_times(97.55, 99.2)[:4]
     for i, ts in enumerate(bt):
         scene.add("conductor comet summons %d" % i, CondComet(ts, _braid(i, len(bt)), RING_COL[(2 * i) % 7], 99.45,
-                                                              trail=0.8, width=0.42, fade=0.12, n=70, seed=400 + i))
+                                                              trail=0.8, width=0.30, fade=0.12, n=70, seed=400 + i))
     # the strings: a comet flicked off over the sea on each strings pulse
     for i, ts in enumerate(STRINGS[:2]):
         scene.add("conductor comet strings %d" % i, CondComet(ts + 0.03, _string_shot(1.0 - 2.0 * i),

@@ -142,7 +142,8 @@ def _plan(t0, t1):
 # rises into the sky and resolves into the outline of a church of light, small and dim far below the words; for
 # the cut to slam 2 the camera flies into it. Where it stands: in the held breath, high in the sky ahead (below the
 # words in the upward view); after the choir's cut, on the sea ahead toward Zion (the flight into it).
-CH_SKY = _v(0.0, 54.0, -123.0)
+CH_SKY = _v(-15.7, 62.4, -110.3)           # (low in the frame of the upward view, below the words)
+CH_SKY_BASIS = (_v(0.904, 0.0, -0.428), _v(0.412, 0.271, 0.87))     # its facade turned to face that view
 CH_FAR = _v(0.0, 12.0, -142.0)
 
 
@@ -762,19 +763,22 @@ class ChurchRise:
         self.s = r.random(n)
 
     def where(self, t):
-        """(centre, size in metres) of the church at t."""
-        return (CH_SKY, 12.0) if t < 160.6 else (CH_FAR, 24.0)
+        """(centre, size in metres, facade right and up) of the church at t."""
+        if t < 160.6:
+            return CH_SKY, 12.0, CH_SKY_BASIS[0], CH_SKY_BASIS[1]
+        return CH_FAR, 24.0, _v(1.0, 0.0, 0.0), _v(0.0, 1.0, 0.0)
 
     def sample(self, t):
         if proc_k(t) <= 0.0 or not (self.T_RING <= t < 162.9):
             return None
-        C, S = self.where(t)
-        church = C[None, :] + S * self.Q
+        C, S, Rb, Ub = self.where(t)
+        church = C[None, :] + S * (self.Q[:, :1] * Rb[None, :] + self.Q[:, 1:2] * Ub[None, :])
         u = _sc(self.T_RING, self.T_FORM, t)                    # the ring rising from the kings into the sky
         ring_c = _v(0.0, 1.0, -65.6) * (1.0 - u) + C * u
         rad = 3.2 + (0.55 * S - 3.2) * u
-        ring = ring_c[None, :] + rad * np.stack([np.cos(self.ang), np.sin(self.ang) * u + 0.0 * self.ang,
-                                                 np.sin(self.ang) * (1.0 - u)], 1)
+        flat = np.stack([np.cos(self.ang), 0.0 * self.ang, np.sin(self.ang)], 1)
+        up = np.cos(self.ang)[:, None] * Rb[None, :] + np.sin(self.ang)[:, None] * Ub[None, :]
+        ring = ring_c[None, :] + rad * (flat * (1.0 - u) + up * u)
         m = _ss(self.T_FORM, self.T_DONE, t)                    # the ring resolves into the church
         m = np.clip(m * 1.4 - 0.4 * self.s, 0.0, 1.0)[:, None]
         P = ring * (1.0 - m) + church * m
