@@ -92,21 +92,31 @@ def _plan(t0, t1):
     if t0 == 130.29:      # trust Father: an orbit from the side round to the front, high, the comets circling
         return K((t0, (40.0, 14.0, -30.0), (0.0, 2.0, -35.0)), (131.8, (34.0, 18.0, -62.0), (0.0, 2.0, -35.0)),
                  (133.2, (14.0, 17.0, -78.0), (0.0, 1.0, -32.0)), (t1, (5.0, 16.0, -76.0), (0.0, 1.0, -28.0))), "music"
-    if t0 == 134.54:      # march ahead: a crane up from low in front as everyone steps out toward us
-        return K((t0, (0.6, 4.2, 40.0), (0.0, 4.0, -80.0)), (135.0, (0.3, 3.8, 12.0), (-1.0, 3.5, -100.0)),
-                 (135.6, (0.0, 12.0, -6.0), (0.0, -6.0, -50.0)), (136.6, (2.0, 30.0, -6.0), (-4.5, 0.0, -36.0)),
-                 (t1, (0.0, 33.0, -12.0), (-5.0, 0.0, -40.0))), "music"
-    if t0 == 141.5:       # among the walkers, chasing the comets weaving through them
-        return _track(t0, t1, 4, lambda t: ((-2.2, 3.2, -36.5 - walked(t) - 0.6 * (t - t0)),
-                                            (9.0, 0.9, -44.0 - walked(t) - 0.6 * (t - t0)))), "music"
-    if t0 == 144.4:       # fulfilled: the comets dive through the walkers toward us, lighting hearts; we rise
-        return _track(t0, t1, 4, lambda t: ((-5.0 - 1.7 * (t - t0), 8.0 + 2.9 * (t - t0), _mz(t) + 58.0 + 3.8 * (t - t0)),
-                                            (0.0, 1.0, _mz(t) + 14.0 + 2.4 * (t - t0)))), "music"
-    if t0 == 148.6:       # the kings from in front, rising and swinging over them to behind for the words
+    if t0 == 134.54:      # march ahead: from low behind the multitude as they step out, the swoop up starts at
+        # once (the words land on the dark sea, never over the mountain), then a slow crane high over the river
+        # of people: overhead, the procession draws its path of light toward Zion along the bottom of the frame
+        w = walked
+        return K((t0, (2.0, 2.6, 30.0), (0.0, 3.0, -60.0)), (134.9, (4.0, 8.5, 18.0), (-1.0, -1.0, -40.0)),
+                 (135.4, (10.0, 20.0, 6.0), (-4.0, -2.0, -26.0)), (136.6, (17.0, 29.0, -2.0 - w(136.6)),
+                                                                   (-5.0, -3.0, -26.0 - w(136.6))),
+                 (t1, (21.0, 36.0, -6.0 - w(t1)), (-6.0, -3.0, -32.0 - w(t1)))), "linear"
+    if t0 == 141.5:       # a low tracking shot beside the marchers at their pace, the nations joining from the side
+        return _track(t0, t1, 12, lambda t: ((21.0, 1.25, -14.0 - walked(t) - 0.35 * (t - t0)),
+                                             (9.5, 1.6, -36.0 - walked(t) - 0.35 * (t - t0)))), "linear"
+    if t0 == 144.4:       # fulfilled: the comets dive back through the walkers toward us, lighting hearts, while a
+        # slow crane rises from among them over the whole river of people toward her light
+        def crane(t):
+            u = _sc(t0, t1, t)
+            return ((-9.0 + 6.0 * u, 2.2 + 24.0 * u ** 1.3, _mz(t) + 66.0 - 10.0 * u),
+                    (0.0, 2.0 - 4.0 * u, _mz(t) + 20.0 - 26.0 * u))
+        return _track(t0, t1, 12, crane), "linear"
+    if t0 == 148.6:       # from in front, low, backing away at their pace as the kings and the multitude come on;
+        # then rising and swinging over them to behind for the words
         kf = _kings_front
-        return K((t0, (0.6, 3.4, kf(t0) - 7.5), (0.0, 0.7, kf(t0) + 2.0)), (149.8, (3.5, 6.0, -70.0), (0.0, 1.0, -60.0)),
+        return K((t0, (0.8, 1.5, kf(t0) - 6.5), (0.0, 2.6, kf(t0) + 24.0)),
+                 (149.7, (1.2, 1.9, kf(149.7) - 6.8), (0.0, 2.4, kf(149.7) + 22.0)),
                  (150.9, (9.0, 14.0, -62.0), (-1.0, 0.0, -66.0)), (152.2, (3.5, 17.5, -50.5), (-4.0, -6.5, -76.5)),
-                 (t1, (1.0, 17.0, -53.0), (-4.5, -7.0, -78.0))), "music"
+                 (t1, (1.0, 17.0, -53.0), (-4.5, -7.0, -78.0))), "linear"
     if t0 == 154.2:       # the kings kneel; we look up after the crowns as they rise toward Zion
         return K((t0, (6.0, 4.5, -71.0), (0.0, 0.8, -65.0)), (155.0, (5.0, 3.0, -70.0), (0.0, 1.5, -66.0)),
                  (155.6, (4.5, 1.2, -69.0), (0.0, 3.0, -68.5)), (t1, (4.5, 1.0, -69.0), (0.0, 4.5, -69.0))), "music"
@@ -122,9 +132,9 @@ def _plan(t0, t1):
 # banking: the horizon tilts in the big turns and the racing flight (degrees)
 ROLL = {125.92: lambda t: -6.0 * _sc(127.4, 128.6, t) * (1.0 - _sc(129.4, 130.29, t)),
         130.29: lambda t: 9.0 * np.sin(np.pi * _sc(130.29, 134.54, t)),
-        134.54: lambda t: 12.0 * np.sin(2.0 * np.pi * _sc(134.54, 135.6, t)) * (1.0 - _sc(135.3, 135.9, t)),
-        141.5: lambda t: 4.0 * np.sin(1.3 * (t - 141.5)),
-        144.4: lambda t: -7.0 * np.sin(np.pi * _sc(144.4, 148.6, t)),
+        134.54: lambda t: -8.0 * np.sin(np.pi * _sc(134.54, 135.5, t)),
+        141.5: lambda t: 1.2 * np.sin(np.pi * _beat_phase(t)),        # the march beat: the lens sways with each step
+        144.4: lambda t: -5.0 * np.sin(np.pi * _sc(144.4, 148.6, t)),
         148.6: lambda t: 8.0 * np.sin(np.pi * _sc(149.0, 151.3, t))}
 
 
