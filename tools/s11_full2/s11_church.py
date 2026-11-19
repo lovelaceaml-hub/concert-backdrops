@@ -259,7 +259,7 @@ def _city():
 # lit warm) with broad steps; the tall white ladder blade at the left end, rising above the roof with its top
 # slanting up to the left; short white fins in threes at both edges; a crisp white column at the right end;
 # a white louvred canopy on the roof following the curve, with a mast; the plain white tower behind; Korean
-# pines in front. No lettering or logos are drawn (their places stay glass or stone).
+# pines in front. The only lettering and logo are the church's name and its emblem (Anthony's request).
 # Only what is seen from the front half (+z) is drawn: every view of it in the film is from there.
 # =========================================================================================================
 NF, FH = 15, 3.6                    # storeys and storey height (metres)
@@ -293,9 +293,66 @@ _FONT = "jost-latin-600-normal.ttf"
 EMBLEM_SLOT = ((-10.4, CH_Y0 + 14.0 * FH), 6.4)
 
 
+# The emblem as Anthony sent it (2026-11-19), traced from his image at 128 x 128: 0 none, 1 the blue (the ring
+# and the globe), 2 the white inside them (the lettering round the ring, the globe's lines), 3 the white ring
+# between the band and the globe. zlib + base64 of the uint8 grid, row by row from the top.
+EMBLEM_MASK = (
+    "eNrdm9t24yAMRc3J//9zV6axrcsRCCw7XcNDm7SJtwAhhCS2bbm1o23Ptha0L6IfEaIl21fh94jQptvtdAC/v++WoEX4fwL8SrG/"
+    "q5egh33/+LzgArTqvr8hO3H/y/5GjkeNBAatni4HYtcExr8gQWN8iJ7vbME//3hZANp3NdFJfrvaebixb6rv+xrYB6VgDpzS7/2T"
+    "HZX6f0hE+W0Vj4OlsWIFGG2sWIm267qrocUzS1PLeGXsP2PaIe+fVlAzFIvLDodOjfnN6mmbFoA8DofmpRqctZwQgHYHwPwODLFi"
+    "8gLw8QTf/84W6uLkKiCa657+5r1MIzJIy4SkALp3dj4//3kFzYiA0yhkBYjWsXjmq9vUVw6zpZZBFk+W24hOBoE8LD/5djxfqWYE"
+    "yPOdb6kt/CvdzCzYvmR3XPGVGbqRgOxWabO7ipcCgBiwpKN7vI40DdwY/P6bdyXi97YRruTSD2BCIHYdW8hnhjQwde4XRsbgnIb8"
+    "0rNPPXth/CB4CfT6UY/tO1zh4EPxrMhwH4edzYBPHA6GZ1j7IlLCrhWKVB/2Yejzwb7D+t+o8lm7B9N549y14E9cgM4apO5iEj8h"
+    "gBoC1v33P+UIW3yC7wTwToEbAOXo8cnveUXsJbVDgScSOJoen+LHAtj5JdoHPvvEEwwcxPN1XgPo6BC8AbGtQn6EzoAcosD2OD6Y"
+    "Ixy/Jg+A9dqlADSqNu4+ZfYHQJ3ZLT+cfSw3NwBniODkU7Nfggf8AOhDqbJ9geF/iq+3CerFBFNuvDu6hsTKM46oWpKeH0I6/PMd"
+    "G4BG+UH/cY0PagIOjlI/KYbv/hq/cRskFIC6PZP8VsDnti8wcvl3fCJB+NTxiDo84JMBgAmbaD4Cjz/Nz06AyZp8+Ii2vnK+WwAV"
+    "6rfA3w0A3Xy5+q3x0eXzffkBPglVddV/md8iJyg67Gf7j/jrIwtMg4XU/BS0wAfiOvA1/rz+4YL+wcXouPP1nP5x+3vj+u+Zgwft"
+    "z9bl329/F/mtno/n+CD8hAGu8D9cOiStNGX+F+dfUsDV6S/i4wJ/y1qA0vOHO/+EsYPa8xepjKAu0IXzJzrnT5us9Od/IkDp+Rsu"
+    "DWA21Dv5IlVgAyA+mn5D/MUyNslvEb8s/uSyAV1+ffxNF+7oAKCqp5odgJnwm/iCin+62H99/FXVckT8dl/82RoZEn+PQqBF8Xc1"
+    "C8PsT23+Qfr3QQLEngQr8y+uTiTK/mE2AZTFm6dvQQIqzkBdyL+5pCXL/8ngeHH+0Y8aSYCe+dwwAbqaf3X8bZSAbaX55yGfLAF0"
+    "8u+YzL9b896vOES0kSzWHwjdDPk2BxtlAlfqL2LLy/jUpVyuP5EdissfrB/gAxRX8HZrz9YfaZdlufjGut354jsdSVuovxJrM1ED"
+    "6KWerwBjB0NkK/CY1JipAuPFb7LyJlMAqNx0uFhnuvQuYfeDRQCN99HaRP0lVeRcAShMmTXtWaf+1LkEPcOz9UthwOxBGwbzexn3"
+    "ueprzPFBouEp3QvqEEXhGDCWo/eRlep3W0cbP12Zumsl+OqReg74LRchm/GfFujGEDk/h2glBJWP0pXLJxl+4GUv4ofFuIhcYD73"
+    "V27A9PiN82vuQLlNxBs/ehZCwfWfsDIIY37D7KWH9C0ke+mO+zlr114yV3FMmQYihayis8tAjN/oPnjbDcjoBhTuoNPi8OGm/H/d"
+    "v/3+/eM/cP/6D9w/L79//wPjqkzA"
+)
+EMBLEM_BLUE = "#2a86ea"
+
+
+def emblem_mask():
+    import base64
+    import zlib
+    raw = zlib.decompress(base64.b64decode("".join(EMBLEM_MASK)))
+    return np.frombuffer(raw, np.uint8).reshape(128, 128)
+
+
+def _emblem_xy(cls):
+    """Centres (N, 2) in metres on the front of the mask cells of class `cls`."""
+    (cx, cy), size = EMBLEM_SLOT
+    m = emblem_mask()
+    r, c = np.nonzero(m == cls)
+    step = size / m.shape[0]
+    return np.stack([cx + (c - (m.shape[1] - 1) / 2.0) * step, cy - (r - (m.shape[0] - 1) / 2.0) * step], 1)
+
+
 def emblem_points():
-    """The emblem's points (N, 2) in metres (x, y) on the front, or None while it is not drawn yet."""
+    """Kept for the name's pipeline: the emblem draws itself (emblem_batches), so nothing here."""
     return None
+
+
+def emblem_batches():
+    """The emblem on the curved glass: its blue as a soft saturated glow (bright light would bloom to white),
+    the white lettering and globe lines as fine light over it, the white ring between them softly."""
+    out = []
+    step = EMBLEM_SLOT[1] / 128.0
+    for cls, col, a, sz, kind, em in ((1, lin(EMBLEM_BLUE) * 0.6, 1.0, 3.0, "soft", 1.0),
+                                      (1, lin(EMBLEM_BLUE) * 0.8, 0.5, 1.2, "spark", 1.2),
+                                      (2, lin("#f4f8ff"), 0.85, 1.25, "spark", 1.5),
+                                      (3, lin("#e8f0ff"), 0.22, 1.4, "spark", 1.0)):
+        E = _emblem_xy(cls)
+        p = np.stack([E[:, 0], E[:, 1], front_z(E[:, 0]) + 0.13], 1)
+        out.append(_batch(p, step * sz, col, a, kind=kind, emit=em, twinkle=0.05))
+    return out
 
 
 def _font(px):
@@ -614,6 +671,7 @@ def _church():
         tower.batch(0.25, lin("#eef3ff"), 0.85, 1.6),
         _batch(nbig[0], 0.058, lin("#f8fbff"), 1.0, kind="line", emit=2.9, pos2=nbig[1], twinkle=0.0),
         _batch(nsmall[0], 0.019, lin("#fbfcff"), 1.0, kind="line", emit=2.0, pos2=nsmall[1], twinkle=0.0),
+        *emblem_batches(),
     ]
     soft = [b for b in soft if b is not None]
     crisp = [b for b in crisp if b is not None]
