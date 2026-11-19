@@ -25,8 +25,8 @@ SHOTS = [
     # the choir breathes in (cut-in): close on the singers, a slow push, light gathering in them
     dict(name="choir_breath_in", kind="stage", t0=77.46, t1=82.08, fov=32.0, aperture=0.02,
          focus=_v(0.0, SUMMIT + 2.0, FACADE_Z + 3.4),
-         keys=[(77.46, _v(-3.4, Y + 2.1, FZ + 12.4), _v(-0.6, Y + 2.0, FZ + 2.0)),
-               (82.08, _v(-2.2, Y + 2.1, FZ + 10.8), _v(-0.4, Y + 2.0, FZ + 2.0))]),
+         keys=[(77.46, _v(-3.4, Y + 2.0, FZ + 12.8), _v(-0.6, Y + 3.5, FZ + 2.0)),
+               (82.08, _v(-2.2, Y + 2.0, FZ + 11.2), _v(-0.4, Y + 3.5, FZ + 2.0))]),
     # E. the first slam: the full choir and orchestra before the church, the sunrise jumps behind them
     dict(name="slam1_stage", kind="stage", t0=82.08, t1=86.70, fov=46.0, aperture=0.01,
          focus=_v(0.0, SUMMIT + 1.0, FACADE_Z + 16.0),
@@ -119,6 +119,32 @@ def choir_glow(t):
     return k
 
 
+WIDE = ("slam1_stage", "home_stage")
+OVER_WORDS = ("brass2", "brass_love")      # close on the orchestra with words on screen: the choir behind the
+#                                            players stands nearer than the words (30 m), so its dark silhouette
+#                                            must not hide them
+
+
+def _shot(t):
+    return shot_name(t) if stage_view(t) else ""
+
+
+def choir_mask(t):
+    n = _shot(t)
+    if n in OVER_WORDS:
+        return 0.15
+    if n in WIDE:
+        return 0.45
+    return 0.85
+
+
+def orch_mask(t):
+    n = _shot(t)
+    if n in OVER_WORDS:
+        return 0.25
+    return 0.45
+
+
 def choir_sway(t):
     """How much the singers sway (metres at the crown): gently with the beat, still in the breath and the held
     breath."""
@@ -140,7 +166,7 @@ class Choir(Crowd):
         self._sw = np.zeros(self.n)
 
     def gain(self, t):
-        return float(self.g(t))
+        return float(self.g(t)) * (1.5 if _shot(t) in WIDE else 1.0)
 
     def _place(self, P, ii, age, pr):
         sw = self._sw[ii]
@@ -422,7 +448,7 @@ class Players(Crowd):
         self.rate[:] = 0.0
 
     def gain(self, t):
-        return float(self.g(t))
+        return float(self.g(t)) * (1.4 if _shot(t) in WIDE else 1.0)
 
     def sample(self, t):
         if self.g(t) <= 0.0:
@@ -820,11 +846,11 @@ def add(scene):
                   start=dict(t=21.3, center=(0.0, FACADE_Z), speed=9.0), color="#ffb84a", color2="#ffe9b8",
                   bright=2.6, points=4200, size=1.1, flash=1.2, glints=0.004, dof=0.35, seed=3.0,
                   light="#ffd890", lamp=(0.20, 1.0), scale=(0.97, 1.03))
-    scene.add("choir", choir, mask=Mask("dark", strength=0.85, grow=0.02))
+    scene.add("choir", choir, mask=Mask("dark", strength=choir_mask, grow=0.02))
     scene.add("choir hearts", ChoirHearts(choir))
     orch = Players(start=dict(t=2.2, dur=7.0), color=CRYSTAL, color2="#ffffff", bright=3.0, points=3400,
                    size=1.2, glints=0.006, dof=0.35, seed=4.0)
-    scene.add("orchestra", orch, mask=Mask("dark", strength=0.45, grow=0.02))
+    scene.add("orchestra", orch, mask=Mask("dark", strength=orch_mask, grow=0.02))
     scene.add("risers", Risers())
     scene.add("instruments", Instruments())
     scene.add("choir light", ChoirLight(CHOIR_P))
