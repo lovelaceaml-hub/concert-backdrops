@@ -15,14 +15,16 @@ The story (125.92 to 162.3, with cut-ins of the church and the choir owned by ot
           light gather behind it from every side (sparks fly in and become people)
   134.54  "march ahead": everyone steps out together behind her light toward Mount Zion
   144.4   "fulfilled": hearts light up in every person, a wave from her light back through the procession
-  148.6   kings in gold walk in the aisle, crowns of light on their heads
-  154.2   the kings kneel and lay their crowns down; 155.34 the crowns rise as sparks toward Zion
-  156.0   the held breath: everyone stands still, the light gathers to her, then the slam cuts away
+  148.6   twelve kings in gold, pair after pair on the beat, walk in the aisle: crowns of light, royal trains
+  154.2   the kings kneel and lay their crowns down; 155.34 the crowns rise and hover over them
+  156.0   the held breath: the crowns stream as nine comets over the sea into the emblem of the church of light
+          on Mount Zion (2:39.2); 161.7 the camera flies to the church and its emblem for slam 2
 """
 import numpy as np
 
 from songs.s11_full2 import *  # noqa: F401,F403
 from songs.s11_zion import WaveCrowd, mx  # noqa: E402  (the waves of raised arms; the music map)
+import songs.s11_church as CH  # noqa: E402  (read only: the church of light and its traced emblem, ENDS thread)
 
 Y, FZ, G = SUMMIT, FACADE_Z, GLOBE_C
 
@@ -40,9 +42,16 @@ RISE = HIT["kings2"]       # 155.34
 K_STOP = KNEEL - 0.05      # the kings stop walking and go down
 K_IN = 148.6               # the kings appear in the aisle
 LAY0, LAY1 = 154.75, 155.28   # the crowns go from the heads down onto the sea before the kings
-KINGS_STOP = np.asarray([(-2.55, 0.0, -66.0), (-0.85, 0.0, -66.3), (0.85, 0.0, -66.3), (2.55, 0.0, -66.0),
-                         (-1.7, 0.0, -64.1), (0.0, 0.0, -64.3), (1.7, 0.0, -64.1)])
-KINGS_P = KINGS_STOP + _v(0.0, 0.0, WALK * (K_STOP - K_IN))
+# (MARCH round 2, Anthony: "The kings part needs to be very very clear, detailed and epic to really make us feel the
+# grandness of kings coming to mother.") Twelve kings in six pairs down the aisle, larger than life, each pair
+# appearing on the music's eighth notes from the front back, so they keep coming.
+K_ROWS, K_GAP, K_X = 6, 2.7, 1.55
+KINGS_STOP = np.asarray([(sx * K_X, 0.0, -66.0 + K_GAP * r) for r in range(K_ROWS) for sx in (-1.0, 1.0)])
+K_N = len(KINGS_STOP)
+KING_T = np.repeat(np.asarray([148.6, 148.79, 149.03, 149.26, 149.5, 149.75]), 2)      # each pair's entrance
+KING_SCALE = 1.12
+KINGS_P = KINGS_STOP + np.stack([np.zeros(K_N), np.zeros(K_N), WALK * (K_STOP - KING_T)], 1)
+K_COL = ["#ff5a7a", "#a77bff", "#5b8cff", "#3fd6a0", "#ffb347", "#ff86c8"]     # the royal colours of the trains
 
 
 def walked(t):
@@ -68,6 +77,40 @@ def mother_pos(t):
 def _kings_front(t):
     """z of the kings' front row while they walk (they stop at K_STOP)."""
     return float(KINGS_STOP[0, 2] + WALK * max(K_STOP - t, 0.0))
+
+
+def king_base(i, t):
+    """Where king i stands (feet, world) at t."""
+    return KINGS_STOP[i] + _v(0.0, 0.0, WALK * max(K_STOP - max(t, KING_T[i]), 0.0))
+
+
+# The crowns' flight to the church (2:35.34): each crown lifts from the sea before its king, then streams over the
+# sea and up the mountain into the church's emblem, arriving at CROWN_HOME.
+CROWN_LIFT, CROWN_FLY = 0.66, 3.2       # they rise and hover over the kings on the hit, then fly in the next shot
+CROWN_HOME = RISE + CROWN_LIFT + CROWN_FLY          # 158.59: the crowns reach the emblem
+
+
+def crown_ground(i):
+    return KINGS_STOP[i] + _v(0.0, 0.05, -0.85)
+
+
+def crown_path(i, t):
+    """The centre of crown i after it rises (t >= RISE)."""
+    u = max(t - RISE, 0.0)
+    g = crown_ground(i) + _v(0.0, 0.75 * _ss(0.0, CROWN_LIFT, u), 0.0)
+    s = _ss(0.0, 1.0, (u - CROWN_LIFT) / CROWN_FLY)
+    aim = _emblem_c() + _v(0.35 * (KINGS_STOP[i, 0]), 0.0, 1.0)
+    p = g * (1.0 - s) + aim * s
+    fan = (i - (K_N - 1) / 2.0) / ((K_N - 1) / 2.0)      # -1 .. 1: they fan out across the view and meet in the emblem
+    p[0] += 34.0 * fan * np.sin(np.pi * s)
+    p[1] += (6.0 + 6.0 * abs(fan)) * np.sin(np.pi * s)    # a gentle arc into the emblem (under the words in the view)
+    a = 2.0 * np.pi * i / K_N + 7.0 * s
+    r = 0.9 * np.sin(np.pi * s)
+    return p + _v(r * np.cos(a), 0.6 * r * np.sin(a), 0.0)
+
+
+def _emblem_c():
+    return np.asarray(CH.EMB_C, np.float64)
 
 
 def _track(t0, t1, n, f):
@@ -122,33 +165,34 @@ def _plan(t0, t1):
             return ((-9.0 + 6.0 * u, 2.2 + 24.0 * u ** 1.3, _mz(t) + 66.0 - 10.0 * u),
                     (0.0, 2.0 - 4.0 * u, _mz(t) + 20.0 - 26.0 * u))
         return _track(t0, t1, 12, crane), "linear"
-    if t0 == 148.6:       # from in front, low, backing away at their pace as the kings and the multitude come on;
-        # then rising and swinging over them to behind for the words
+    if t0 == 148.6:       # (MARCH round 2) the kings: a low hero angle in front of them, backing away at their pace,
+        # looking up at the front pair as pair after pair of kings comes on down the aisle between the multitude;
+        # "All kings worship You" reads in the dark sky above their crowns
         kf = _kings_front
-        return K((t0, (0.8, 2.7, kf(t0) - 12.5), (0.0, 0.8, kf(t0) + 22.0)),
-                 (149.7, (1.4, 3.2, kf(149.7) - 12.8), (0.0, 0.8, kf(149.7) + 20.0)),
-                 (150.9, (9.0, 14.0, -62.0), (-1.0, 0.0, -66.0)), (152.2, (3.5, 17.5, -50.5), (-4.0, -6.5, -76.5)),
-                 (t1, (1.0, 17.0, -53.0), (-4.5, -7.0, -78.0))), "linear"
-    if t0 == 154.2:       # the kings kneel; we look up after the crowns as they rise toward Zion
-        return K((t0, (6.0, 4.5, -71.0), (0.0, 0.8, -65.0)), (155.0, (5.0, 3.0, -70.0), (0.0, 1.5, -66.0)),
-                 (155.6, (4.5, 1.2, -69.0), (0.0, 3.0, -68.5)), (t1, (4.5, 1.0, -69.0), (0.0, 4.5, -69.0))), "music"
-    if t0 == 156.0:       # the held breath: a slow tense push; the comets drawn back into her light
-        return K((t0, (4.0, 1.4, -77.0), (0.0, 30.0, -86.0)), (158.3, (3.6, 1.3, -77.5), (0.0, 32.0, -85.0)),
-                 (159.4, (3.4, 1.4, -77.6), (0.0, 30.0, -84.0)), (160.1, (3.6, 3.0, -74.5), (0.0, 7.0, -83.0)),
-                 (t1, (2.8, 3.6, -72.0), (0.0, 4.5, -83.0))), "music"
-    if t0 == 161.7:       # (round 7, f26) past her light, the camera flies into the church of light for the slam
-        return K((t0, (2.6, 4.6, -92.0), CH_FAR + _v(0.0, 1.0, 0.0)),
-                 (t1, (0.6, 10.5, -128.0), CH_FAR + _v(0.0, 0.5, -4.0))), "music"
+
+        def hero(t):
+            u = _sc(t0, t1, t)
+            # (looking up at them: the front crowns sit well under the words, the kings tower against the sky)
+            return ((1.9 + 1.6 * u, 0.5 + 0.2 * u, kf(t) - 8.2 + 0.9 * u), (0.0 - 0.3 * u, 3.3 + 0.1 * u, kf(t) + 6.5))
+        return _track(t0, t1, 14, hero), "linear"
+    if t0 == 154.2:       # (MARCH round 2) the kings kneel (2:34.2): close behind them, their trains spread on the sea
+        # toward us; the crowns are laid down before them and on 2:35.34 rise and stream away over the sea to Zion
+        zb = float(KINGS_STOP[-1, 2])
+        # (from a little above, looking down onto them, so Zion's bright city stays above the frame while the words
+        # arrive; the crowns rise on the hit and hover glowing over the kings until the cut)
+        return K((t0, (4.4, 5.2, zb + 6.5), (-0.3, 0.3, zb - 6.5)), (155.3, (4.0, 4.9, zb + 5.6), (-0.2, 0.4, zb - 7.0)),
+                 (t1, (3.6, 4.8, zb + 5.0), (0.0, 0.6, zb - 7.5))), "music"
+    if t0 == 156.0:       # (MARCH round 2, Anthony: "the main church from Korea should be shown and the church logo")
+        # the held breath: after the crowns, a slow push over the multitude and the sea toward Zion; the church of
+        # light stands centred on the summit below the words, and its emblem lights as the crowns reach it
+        e = _emblem_c()
+        return K((t0, (2.0, 44.0, -48.0), e + _v(0.0, 2.0, 0.0)), (158.3, (1.2, 56.0, -95.0), e + _v(0.0, 3.0, 0.0)),
+                 (t1, (0.6, 66.0, -150.0), e + _v(0.0, 3.0, 0.0))), "music"
+    if t0 == 161.7:       # (MARCH round 2) the camera flies to the church of light and its emblem for slam 2
+        e = _emblem_c()
+        return K((t0, (0.0, 64.0, -240.0), e + _v(0.0, 0.5, 0.0)),
+                 (t1, (0.6, 113.0, -352.0), e)), "music"
     raise ValueError(f"no procession shot planned for the block at {t0}")
-
-
-# Round 7 (review f26, approved by Anthony): as "to the great Church of God!" begins, the ring of the kings' light
-# rises into the sky and resolves into the outline of a church of light, small and dim far below the words; for
-# the cut to slam 2 the camera flies into it. Where it stands: in the held breath, high in the sky ahead (below the
-# words in the upward view); after the choir's cut, on the sea ahead toward Zion (the flight into it).
-CH_SKY = _v(-15.7, 62.4, -110.3)           # (low in the frame of the upward view, below the words)
-CH_SKY_BASIS = (_v(0.904, 0.0, -0.428), _v(0.412, 0.271, 0.87))     # its facade turned to face that view
-CH_FAR = _v(0.0, 12.0, -142.0)
 
 
 # banking: the horizon tilts in the big turns and the racing flight (degrees)
@@ -157,7 +201,7 @@ ROLL = {125.92: lambda t: -6.0 * _sc(127.4, 128.6, t) * (1.0 - _sc(129.4, 130.29
         134.54: lambda t: -8.0 * np.sin(np.pi * _sc(134.54, 135.5, t)),
         141.5: lambda t: 1.2 * np.sin(np.pi * _beat_phase(t)),        # the march beat: the lens sways with each step
         144.4: lambda t: -5.0 * np.sin(np.pi * _sc(144.4, 148.6, t)),
-        148.6: lambda t: 8.0 * np.sin(np.pi * _sc(149.0, 151.3, t))}
+        148.6: lambda t: 2.0 * np.sin(np.pi * _sc(148.6, 154.2, t))}
 
 
 def _shots():
@@ -353,7 +397,7 @@ class MotherLight:
         big = 1.0 + 1.2 * (1.0 - _sc(LAND - 0.6, LAND + 0.4, t))       # coming down she is a blazing star
         # (round 8, f29) through the gathering and the march (2:10 to 2:20) one soft distant light, not a glare
         soft = 1.0 - 0.55 * _win(t, 130.29, 141.5, 0.4, 0.6)
-        k = k * soft
+        k = k * soft * (0.35 if block_t0(t) == 154.2 else 1.0)    # (MARCH round 2) calm beside the arriving words
         out = [dict(pos=m[None, :], size=(20.0 + 6.0 * g) * big, color=warm, alpha=0.06 * k * pulse, kind="soft", emit=1.5),
                dict(pos=m[None, :], size=10.0, color=lin("#ffe8c8"), alpha=0.28 * k * pulse, kind="soft", emit=2.0),
                dict(pos=m[None, :], size=3.2, color=lin(WHITE), alpha=0.95 * k, kind="soft", emit=4.0 * pulse),
@@ -499,24 +543,20 @@ def _comet_head(j, phase):
         return _v(LANE_X[j] + 0.5 * np.sin(3.0 * t + j), 1.4 + 0.3 * np.sin(5.0 * t) + 14.0 * up * up + 4.0 * up,
                   m + min(zr, 104.0) + 8.0 * up)
 
-    def kings(t):            # round the kings as they walk
+    def kings(t):            # (MARCH round 2) round the kings' feet as they walk, low, under the words
         a = a0 + 1.1 * t
-        r = 5.0 + 1.0 * np.sin(0.7 * t + j)
-        return _v(r * np.sin(a), 2.0 + 1.0 * np.sin(1.3 * t + j), _kz(t) + r * np.cos(a))
+        r = 4.6 + 0.6 * np.sin(0.7 * t + j)
+        return _v(r * np.sin(a), 0.45 + 0.25 * np.sin(1.3 * t + j), _kz(t) + 1.6 * r * np.cos(a))
 
-    def rise(t):             # the crowns rise and become comets: up in spirals, then on toward Zion
-        v = max(t - RISE - 0.35, 0.0)
-        c = KINGS_STOP[j % 7] + _v(0.0, 0.05 + 1.6 * 0.35 + 3.0 * 0.35 ** 2, -0.85)
-        a = a0 + 4.0 * v
-        r = 1.5 * v
-        return c + _v(r * np.sin(a), 4.0 * v + 6.0 * v * v, r * np.cos(a) - 20.0 * v * v)
+    def rise(t):             # (MARCH round 2) the crowns become comets streaming to the church's emblem
+        return crown_path((j * 4 + j // 3) % K_N, t)      # nine different crowns
 
     def home(t):             # the held breath: drawn back into her light, spinning faster
         q = _sc(156.0, 160.4, t)
         m = mother_pos(t)
         a = a0 + 0.4 * (t - 156.0) + 9.0 * q * q
         r = 16.0 * (1.0 - q) ** 1.5 + 0.2
-        return m + _v(r * np.sin(a), (14.0 + 2.0 * np.sin(1.1 * t + j)) * (1.0 - q),
+        return m + _v(r * np.sin(a), (7.0 + 1.5 * np.sin(1.1 * t + j)) * (1.0 - q),
                       -4.0 * (1.0 - q) + r * np.cos(a))
 
     return dict(burst=burst, ring=ring, march=march, weave=weave, dive=dive, kings=kings, rise=rise,
@@ -526,8 +566,8 @@ def _comet_head(j, phase):
 # (phase, t0, t1, brightness, trail, fade out)
 COMET_PHASES = [("burst", LAND, 130.29, 1.0, 1.4, 0.05), ("ring", 130.29, 134.54, 0.8, 1.6, 0.05),
                 ("march", 134.54, 135.5, 0.8, 0.8, 0.3), ("weave", 141.5, 144.4, 1.0, 1.2, 0.05),
-                ("dive", 144.4, 148.6, 1.1, 0.9, 0.05), ("kings", 148.6, 154.2, 0.35, 1.2, 0.05),
-                ("rise", RISE + 0.35, 156.0, 0.7, 0.6, 0.05), ("home", 156.0, 158.9, 0.4, 1.2, 1.1)]   # (round 7, f26: they fade as the church forms)
+                ("dive", 144.4, 148.6, 1.1, 0.9, 0.05),
+                ("rise", RISE + 0.5, CROWN_HOME + 0.1, 0.55, 0.9, 0.3)]   # (MARCH round 2: no "home" comets)
 
 
 # ---------------------------------------------------------------------------------------------------------
@@ -584,7 +624,7 @@ class FulfilHearts:
                     kind="spark", reflect=False),
                dict(pos=c, size=0.45, color=self.col[on], alpha=0.22 * a, emit=1.8, kind="soft")]
         # the held breath: light leaves the hearts and gathers to her
-        if t > 159.0:
+        if t > 159.0 and block_t0(t) != 156.0:          # (MARCH round 2) not over the view of the church
             m = mother_pos(t)
             sel = on & self.sub & (t > self.go)
             if sel.any():
@@ -657,27 +697,39 @@ def _robed(crowd):
 
 
 class Crowns:
-    """Crowns of gold light on the kings' heads (they follow each head as the kings walk and kneel); as the
-    kings go down the crowns are laid on the sea before them (2:34.75), and on 2:35.34 they rise as sparks
-    toward Zion."""
+    """(MARCH round 2) Crowns of gold light on the kings' heads: a jewelled band (jewels in the nine colours), eight
+    points with pearls, four arches meeting over an orb (no cross). They follow each head as the kings walk and
+    kneel; as the kings go down the crowns are laid on the sea before them (2:34.75), and on 2:35.34 they rise,
+    blaze, and stream away over the sea and up Mount Zion into the church's emblem (crown_path)."""
 
     def __init__(self, walking, kneeling):
         self.wk, self.kn = walking, kneeling
         r = np.random.default_rng(81)
-        R = 0.14
-        a = np.linspace(0, 2 * np.pi, 56, endpoint=False)
-        ring = np.stack([R * np.cos(a), np.zeros(56), R * np.sin(a)], 1)
-        tips, jewels = [], []
-        for i in range(8):
-            b = 2 * np.pi * i / 8
-            base = _v(R * np.cos(b), 0.04, R * np.sin(b))
-            top = _v(1.2 * R * np.cos(b), 0.19, 1.2 * R * np.sin(b))
-            tips.append(_seg(base, top, 0.016))
-            jewels.append(top)
-        self.C = np.concatenate([ring, ring + _v(0, 0.045, 0)] + tips)
-        self.J = np.asarray(jewels)
-        n = len(KINGS_STOP)
-        self.s = r.random((n, len(self.C) + len(self.J), 4))
+        R = 0.135
+        a = np.linspace(0, 2 * np.pi, 72, endpoint=False)
+        ring = np.stack([R * np.cos(a), np.zeros(72), R * np.sin(a)], 1)
+        parts, tips, jew, jc = [ring, ring + _v(0, 0.05, 0), 1.04 * ring + _v(0, 0.025, 0)], [], [], []
+        for k in range(8):
+            b = 2 * np.pi * k / 8
+            base = _v(R * np.cos(b), 0.05, R * np.sin(b))
+            top = _v(1.18 * R * np.cos(b), 0.15, 1.18 * R * np.sin(b))
+            for c in (b - 0.2, b + 0.2):                       # each point a little gable of light
+                parts.append(_seg(_v(R * np.cos(c), 0.05, R * np.sin(c)), top, 0.012))
+            tips.append(top + _v(0, 0.012, 0))
+            c = b + np.pi / 8                                  # a jewel on the band between the points
+            jew.append(_v(1.05 * R * np.cos(c), 0.025, 1.05 * R * np.sin(c)))
+            jc.append(lin(COL9[k % 9]))
+        for k in range(4):                                     # the arches, meeting over the orb
+            b = 2 * np.pi * k / 4 + np.pi / 8
+            v = np.linspace(0.0, 1.0, 22)
+            rr = R * np.cos(0.5 * np.pi * v)
+            parts.append(np.stack([rr * np.cos(b), 0.05 + 0.2 * np.sin(0.5 * np.pi * v), rr * np.sin(b)], 1))
+        o = r.normal(0.0, 1.0, (40, 3))
+        orb = 0.028 * o / np.linalg.norm(o, axis=1, keepdims=True) + _v(0, 0.285, 0)
+        self.C = np.concatenate(parts + [orb])
+        self.T = np.asarray(tips)
+        self.J, self.JC = np.asarray(jew), np.asarray(jc)
+        self.s = r.random((K_N, len(self.C) + len(self.T) + len(self.J), 4))
         self.cache = (None, None)
 
     def heads(self, t):
@@ -691,119 +743,166 @@ class Crowns:
             y = Q[:, 1]
             top = y.max()
             sel = y > top - 0.09
-            out.append(_v(Q[sel, 0].mean(), top - 0.06, Q[sel, 2].mean()))
+            out.append(_v(Q[sel, 0].mean(), top - 0.07, Q[sel, 2].mean()))
         out = np.asarray(out)
         self.cache = (t, out)
         return out
 
+    def _one(self, c, a, gold, pale, spin=0.0, grow=1.0, burst=0.0, s=None):
+        cs, sn = np.cos(spin), np.sin(spin)
+
+        def rot(X):
+            X = X * grow
+            return np.stack([X[:, 0] * cs + X[:, 2] * sn, X[:, 1], -X[:, 0] * sn + X[:, 2] * cs], 1)
+        C, T, J = rot(self.C), rot(self.T), rot(self.J)
+        if burst > 0.0 and s is not None:                      # breaking into sparks as it flies
+            nC, nT = len(C), len(T)
+            sp = (s[:, :3] - 0.5) * (1.6 * burst * (0.3 + s[:, 3:4]))
+            C, T, J = C + sp[:nC], T + sp[nC:nC + nT], J + sp[nC + nT:]
+        return [dict(pos=C + c, size=0.022, color=gold, alpha=a, emit=3.6, kind="spark", reflect=False),
+                dict(pos=T + c, size=0.034, color=pale, alpha=a, emit=4.2, kind="spark", reflect=False),
+                dict(pos=J + c, size=0.04, color=self.JC, alpha=a, emit=4.0, kind="spark", reflect=False),
+                dict(pos=(c + _v(0, 0.12 * grow, 0))[None, :], size=0.45 * grow, color=gold, alpha=0.07 * a,
+                     emit=2.0, kind="soft", reflect=False)]
+
     def sample(self, t):
-        if proc_k(t) <= 0.0 or not (K_IN - 0.2 <= t < RISE + 6.0):
+        if proc_k(t) <= 0.0 or not (K_IN - 0.2 <= t < CROWN_HOME + 0.6):
             return None
         out = []
-        gold, pale = lin(GOLD), lin("#ffe6a8")
+        gold, pale = lin(GOLD), lin("#fff1c8")
+        beat = 1.0 + 0.25 * beat_pulse(t)
         if t < RISE:
             hd = self.heads(t)
-            a = _sc(K_IN, K_IN + 0.7, t)
             lay = _sc(LAY0, LAY1, t)
             for i, h in enumerate(hd):
-                ground = KINGS_STOP[i] + _v(0.0, 0.05, -0.85)
-                c = h * (1 - lay) + ground * lay + _v(0.0, 0.35 * np.sin(np.pi * lay), 0.0)
-                out.append(dict(pos=self.C + c, size=0.026, color=gold, alpha=a, emit=3.6, kind="spark",
-                                reflect=False))
-                out.append(dict(pos=self.J + c, size=0.035, color=pale, alpha=a, emit=4.0, kind="spark", reflect=False))
-                out.append(dict(pos=(c + _v(0, 0.07, 0))[None, :], size=0.36, color=gold, alpha=0.06 * a, emit=2.0,
-                                kind="soft", reflect=False))
-            if t > RISE - 0.25:
+                a = _sc(KING_T[i], KING_T[i] + 0.4, t) * beat * (1.0 + 0.8 * hit_pulse(t, [KNEEL], fall=0.5))
+                c = h * (1 - lay) + crown_ground(i) * lay + _v(0.0, 0.35 * np.sin(np.pi * lay), 0.0)
+                out += self._one(c, a, gold, pale)
+            if t > RISE - 0.25:                                 # they glow on the sea just before they rise
                 f = _sc(RISE - 0.25, RISE, t)
-                P = KINGS_STOP + _v(0.0, 0.12, -0.85)
-                out.append(dict(pos=P, size=0.8, color=gold, alpha=0.3 * f, emit=2.2, kind="soft", reflect=False))
+                P = np.asarray([crown_ground(i) for i in range(K_N)]) + _v(0.0, 0.08, 0.0)
+                out.append(dict(pos=P, size=0.9, color=gold, alpha=0.3 * f, emit=2.2, kind="soft", reflect=False))
             return out
         u = t - RISE
-        aim = CHURCH + _v(0.0, 60.0, 0.0)
-        CJ = np.concatenate([self.C, self.J])
-        q = _sc(0.55, 1.4, u)                                    # whole crowns first, then they break into sparks
-        f = _sc(0.0, 0.06, u) * (1.0 - _sc(1.2, 3.2, u))
-        spin = 2.5 * u
-        cs, sn = np.cos(spin), np.sin(spin)
-        R = CJ * _v(1.0, 1.0, 1.0)[None, :]
-        R = np.stack([R[:, 0] * cs + R[:, 2] * sn, R[:, 1], -R[:, 0] * sn + R[:, 2] * cs], 1)
-        grow = 1.0 + 1.2 * _sc(0.0, 0.6, u)
-        for i, p in enumerate(KINGS_STOP):
-            s = self.s[i]
-            c = p + _v(0.0, 0.05, -0.85) + _v(0.0, 1.6 * u + 3.0 * u * u, 0.0)
-            c = c + _unit(aim - c) * 14.0 * max(u - 0.5, 0.0) ** 2
-            sp = (s[:, :3] - 0.5) * (6.0 * q * (0.3 + s[:, 3:4]))
-            P = c + R * grow + sp
-            out.append(dict(pos=P, size=0.035 + 0.04 * q * s[:, 1], color=gold * (1.0 - q) + pale * q,
-                            alpha=f, emit=3.6, kind="spark", twinkle=0.3 + 0.5 * q, seed=s[:, 3], reflect=False))
-            out.append(dict(pos=c[None, :] + _v(0.0, 0.08, 0.0), size=0.7 * grow, color=gold,
-                            alpha=0.10 * f * (1.0 - q), emit=2.0, kind="soft", reflect=False))
-        g = np.exp(-u / 0.3)
-        out.append(dict(pos=KINGS_STOP + _v(0.0, 0.2, -0.85), size=0.8, color=gold, alpha=0.3 * g, emit=2.0,
-                        kind="soft", reflect=False))
+        f = _sc(0.0, 0.05, u) * (1.0 - _sc(CROWN_LIFT + CROWN_FLY - 0.15, CROWN_LIFT + CROWN_FLY + 0.4, u))
+        blaze = 1.0 + 1.2 * hit_pulse(t, [RISE], fall=0.5)
+        q = _sc(0.6, 1.8, u)
+        for i in range(K_N):
+            c = crown_path(i, t)
+            out += self._one(c, f * blaze, gold * (1.0 - 0.5 * q) + pale * (0.5 * q), pale, spin=3.0 * u,
+                             grow=1.0 + 1.5 * _sc(0.0, 0.5, u) + 9.0 * _sc(CROWN_LIFT, CROWN_LIFT + CROWN_FLY, u),
+                             burst=q, s=self.s[i])     # (larger as they fly, so they read far over the sea)
+        g = np.exp(-u / 0.35)                                   # the flash where they leave the sea
+        P = np.asarray([crown_ground(i) for i in range(K_N)]) + _v(0.0, 0.2, 0.0)
+        out.append(dict(pos=P, size=1.0, color=gold, alpha=0.35 * g, emit=2.2, kind="soft", reflect=False))
         return out
 
 
-class ChurchRise:
-    """f26: the ring of the kings' light rises (2:35.3), resolves into the outline of a church of light (2:36.6
-    to 2:38.2) small and dim below the words, holds calm while they read, and is flown into for slam 2. The
-    outline: the hall with its gabled roof and a row of arched windows, the door, and a tower with a pointed roof
-    (no cross: the Church of God's buildings carry none)."""
+class KingTrains:
+    """(MARCH round 2) The kings' robes of state: from each king's shoulders a mantle of light falls down the back
+    and spreads behind them on the sea as a long train, each in its royal colour, edged and embroidered in gold,
+    rippling as they walk; when they kneel it lies spread on the sea behind them."""
 
-    T_RING, T_FORM, T_DONE = RISE, 156.6, 158.2
+    NS, NW, L = 44, 13, 3.6
 
     def __init__(self):
-        segs = [((-0.8, 0.0), (0.8, 0.0)), ((-0.8, 0.0), (-0.8, 0.6)), ((0.8, 0.0), (0.8, 0.6)),
-                ((-0.85, 0.6), (0.0, 0.88)), ((0.0, 0.88), (0.85, 0.6)), ((-0.85, 0.6), (0.85, 0.6)),
-                ((0.48, 0.6), (0.48, 1.25)), ((0.78, 0.6), (0.78, 1.25)), ((0.48, 1.25), (0.78, 1.25)),
-                ((0.45, 1.25), (0.63, 1.62)), ((0.63, 1.62), (0.81, 1.25)),
-                ((-0.12, 0.0), (-0.12, 0.26)), ((0.12, 0.0), (0.12, 0.26))]
-        pts = [_seg((a[0], a[1], 0.0), (b[0], b[1], 0.0), 0.012) for a, b in segs]
-        a = np.linspace(0.0, np.pi, 24)
-        pts.append(np.stack([0.12 * np.cos(a), 0.26 + 0.12 * np.sin(a), 0.0 * a], 1))     # the door's arch
-        for x in np.linspace(-0.62, 0.28, 5):                                              # arched windows
-            pts.append(np.stack([x + 0.05 * np.cos(a), 0.38 + 0.05 * np.sin(a), 0.0 * a], 1))
-            pts.append(_seg((x - 0.05, 0.2, 0.0), (x - 0.05, 0.38, 0.0), 0.012))
-            pts.append(_seg((x + 0.05, 0.2, 0.0), (x + 0.05, 0.38, 0.0), 0.012))
-        self.Q = np.concatenate(pts) - np.array([0.0, 0.8, 0.0])        # centred on its middle
-        n = len(self.Q)
-        r = np.random.default_rng(97)
-        self.ang = np.arctan2(self.Q[:, 1], self.Q[:, 0]) + r.normal(0.0, 0.15, n)   # its place on the ring
-        nine = np.asarray([lin(c) for c in COL9])
-        self.ring_col = nine[((self.ang + np.pi) / (2 * np.pi) * 9).astype(int) % 9]
-        self.s = r.random(n)
+        s = np.linspace(0.0, 1.0, self.NS)
+        w = np.linspace(-1.0, 1.0, self.NW)
+        S, W = np.meshgrid(s, w, indexing="ij")
+        self.S, self.W = S.ravel(), W.ravel()
+        edge = (np.abs(self.W) > 0.95) | (self.S > 0.985)
+        row = np.round(self.S * (self.NS - 1)).astype(int)
+        col = np.round((self.W + 1.0) * 0.5 * (self.NW - 1)).astype(int)
+        emb = (~edge) & (row % 5 == 2) & (col % 3 == 0) & (row > 8)          # a lattice of gold embroidery
+        self.edge, self.emb, self.field = edge, emb, ~(edge | emb)
+        self.seed = np.random.default_rng(84).random(len(self.S))
+        self.col = [lin(K_COL[(i // 2 + i % 2 * 3) % len(K_COL)]) for i in range(K_N)]
 
-    def where(self, t):
-        """(centre, size in metres, facade right and up) of the church at t."""
-        if t < 160.6:
-            return CH_SKY, 12.0, CH_SKY_BASIS[0], CH_SKY_BASIS[1]
-        return CH_FAR, 24.0, _v(1.0, 0.0, 0.0), _v(0.0, 1.0, 0.0)
+    def _shape(self, i, t):
+        """World points of king i's mantle and train."""
+        base = king_base(i, t)
+        kneel = _sc(KNEEL, KNEEL + 0.3, t)
+        sh = KING_SCALE * (1.42 - 0.42 * kneel)                 # the shoulders (lower when kneeling)
+        S, W = self.S, self.W
+        d = 0.3                                                 # the drape reaches the sea at S = d
+        hang = np.clip(S / d, 0.0, 1.0)
+        y = sh * (1.0 - hang ** 1.6) + 0.03
+        back = 0.16 + 0.32 * hang + np.clip((S - d) / (1.0 - d), 0.0, 1.0) * self.L * (1.0 + 0.12 * kneel)
+        half = 0.22 + 0.4 * hang + 0.45 * np.clip((S - d) / (1.0 - d), 0.0, 1.0) * (1.0 + 0.25 * kneel)
+        walking = 1.0 - kneel
+        on = S > d
+        y = y + on * (0.035 * walking * np.sin(9.0 * S - 7.0 * t) + 0.01)
+        x = W * half + on * 0.05 * walking * np.sin(6.0 * S - 5.0 * t + i)
+        return np.stack([base[0] + x, y, base[2] + back], 1)    # they walk toward -z, so the train lies at +z
 
     def sample(self, t):
-        if proc_k(t) <= 0.0 or not (self.T_RING <= t < 162.9):
+        if proc_k(t) <= 0.0 or not (K_IN - 0.1 <= t < 160.6):
             return None
-        C, S, Rb, Ub = self.where(t)
-        church = C[None, :] + S * (self.Q[:, :1] * Rb[None, :] + self.Q[:, 1:2] * Ub[None, :])
-        u = _sc(self.T_RING, self.T_FORM, t)                    # the ring rising from the kings into the sky
-        ring_c = _v(0.0, 1.0, -65.6) * (1.0 - u) + C * u
-        rad = 3.2 + (0.55 * S - 3.2) * u
-        flat = np.stack([np.cos(self.ang), 0.0 * self.ang, np.sin(self.ang)], 1)
-        up = np.cos(self.ang)[:, None] * Rb[None, :] + np.sin(self.ang)[:, None] * Ub[None, :]
-        ring = ring_c[None, :] + rad * (flat * (1.0 - u) + up * u)
-        m = _ss(self.T_FORM, self.T_DONE, t)                    # the ring resolves into the church
-        m = np.clip(m * 1.4 - 0.4 * self.s, 0.0, 1.0)[:, None]
-        P = ring * (1.0 - m) + church * m
-        # (round 8) after the cut, flown into in front of Zion: a deeper gold, so its outline never merges with
-        # the pearl of Zion's gates and walls behind it
-        gold = lin("#ffe2b0") if t < 160.6 else lin("#ffc070")
-        col = self.ring_col * (1.0 - 0.7 * m) + gold * (0.7 * m)
-        fly = _sc(161.7, 162.86, t)
-        a = (0.75 - 0.3 * m[:, 0]) * _sc(self.T_RING, self.T_RING + 0.4, t) * (1.0 + 0.15 * beat_pulse(t))
-        a = a * (1.0 + 0.8 * fly) * (1.0 if t < 160.6 else 2.2)      # bright enough to fly into after the cut
-        return [dict(pos=P, size=0.09 * S / 12.0, color=col, alpha=a.astype(np.float32), emit=2.2, kind="spark",
-                     twinkle=0.25, seed=self.s, dof=0.0, reflect=False),
-                dict(pos=P[::6], size=0.5 * S / 12.0, color=col[::6] * 0.8, alpha=(0.05 * a[::6]).astype(np.float32),
-                     emit=1.3, kind="soft", dof=0.0, reflect=False)]
+        out = []
+        gold = lin(GOLD)
+        beat = 1.0 + 0.2 * beat_pulse(t)
+        k = proc_k(t) * beat * (1.0 + 0.5 * hit_pulse(t, [KNEEL, RISE], fall=0.5))
+        for i in range(K_N):
+            a = _sc(KING_T[i], KING_T[i] + 0.45, t) * k
+            if a <= 0.0:
+                continue
+            P = self._shape(i, t)
+            grow = _sc(KING_T[i], KING_T[i] + 0.6, t)            # the train unrolls behind the king as they appear
+            vis = self.S <= grow + 1e-6
+            f, e, m = self.field & vis, self.edge & vis, self.emb & vis
+            out.append(dict(pos=P[f], size=0.07, color=self.col[i], alpha=0.42 * a, emit=1.8, kind="soft",
+                            reflect=False))
+            out.append(dict(pos=P[f][::3], size=0.022, color=self.col[i] * 0.6 + lin(WHITE) * 0.4, alpha=0.6 * a,
+                            emit=2.4, kind="spark", twinkle=0.5, seed=self.seed[f][::3], reflect=False))
+            out.append(dict(pos=P[e], size=0.03, color=gold, alpha=0.95 * a, emit=3.4, kind="spark", reflect=False))
+            out.append(dict(pos=P[m], size=0.026, color=lin("#ffe6a8"), alpha=0.8 * a, emit=3.0, kind="spark",
+                            twinkle=0.3, seed=self.seed[m], reflect=False))
+            b = king_base(i, t)                                 # a pool of gold light under each king
+            out.append(dict(pos=_v(b[0], 0.05, b[2] + 0.3)[None, :], size=1.2, color=gold, alpha=0.04 * a,
+                            emit=1.8, kind="soft", reflect=False))
+        return out
+
+
+class EmblemArrive:
+    """(MARCH round 2, Anthony: "the main church from Korea should be shown and the church logo. Not that church
+    outline in the sky.") The real church of light on Mount Zion (s11_church, read only) answers the march: its
+    traced emblem (emblem_batches) and white lines glow brighter as the crowns stream to it, flare as they arrive
+    (2:38.6), and blaze on the beat as the camera flies into it for slam 2. Calm (no flare) while the words read
+    above it."""
+
+    def __init__(self):
+        self.emb = CH.emblem_batches()
+        self.crisp = CH.Church("crisp").b
+        self.c = _emblem_c()[None, :] + np.array([[0.0, 0.0, 0.4]])
+
+    def gain(self, t):
+        b = block_t0(t)
+        if b not in (154.2, 156.0, 161.7) or proc_k(t) <= 0.0:
+            return 0.0
+        calm = 1.0 - 0.5 * _win(t, 154.9, 160.3, 0.4, 0.6)       # the words read just above the church
+        k = 0.35 + 0.5 * _sc(RISE, CROWN_HOME, t) + 0.9 * hit_pulse(t, [CROWN_HOME], fall=1.0) * calm
+        if b == 161.7:
+            k = 1.1 + 0.6 * _sc(161.7, 162.86, t) + 0.35 * beat_pulse(t)
+        return k * (1.0 + 0.2 * beat_pulse(t) * calm)
+
+    def sample(self, t):
+        g = self.gain(t)
+        if g <= 0.0:
+            return None
+        out = []
+        for b in self.emb:
+            d = dict(b)
+            d["alpha"] = b["alpha"] * (0.6 * g)
+            d["reflect"] = False
+            out.append(d)
+        for b in self.crisp:
+            d = dict(b)
+            d["alpha"] = b["alpha"] * (0.1 * g)
+            d["reflect"] = False
+            out.append(d)
+        out.append(dict(pos=self.c, size=CH.EMBLEM_SIZE * 2.2, color=lin("#5fb0ff"), alpha=0.10 * g, kind="soft",
+                        emit=1.4, fog=0.3, reflect=False))
+        return out
 
 
 class KingBeams:
@@ -811,7 +910,7 @@ class KingBeams:
     (two on each side of them, never over the whole view), with a small pool where each lands; they pulse
     with the beat and burst on the two kings' hits. No wide glow, so the low view stays clear."""
 
-    BASES = np.asarray([(-4.4, -67.4), (-4.6, -63.4), (-1.2, -60.4), (2.6, -59.8)])   # clear of the lens
+    BASES = np.asarray([(-4.3, -67.0), (-4.3, -60.5), (4.3, -67.0), (-4.3, -55.0)])   # beside the kings, clear of the lens
 
     def __init__(self):
         self.u = np.linspace(0.0, 1.0, 900) ** 1.8      # dense low down: a solid beam, not a dotted line
@@ -1030,17 +1129,20 @@ def add(scene):
     scene.add("procession held", held, reflect=False)
     scene.add("fulfil hearts", FulfilHearts(walkers))
     scene.add("colour ripples", Ripples(walkers))
-    king = dict(people=dict(man=1.0), color="#ffd27a", color2=GOLD2, bright=3.0, points=1300, seed=31.0)
-    kings_w = _robed(GCrowd(gain=crowd_k, places=KINGS_P, facing=180.0, kinds=("walk",), start=K_IN, walk=WALK,
-                            until=K_STOP, fade=0.25, flash=1.2, **king))
+    # (MARCH round 2) twelve kings, larger than life and drawn in finer light, appearing pair by pair on the beat
+    king = dict(people=dict(man=1.0), color="#ffd27a", color2=GOLD2, bright=4.4, points=5200, seed=31.0,
+                scale=KING_SCALE, dof=0.25)
+    kings_w = _robed(GCrowd(gain=crowd_k, places=KINGS_P, facing=180.0, kinds=("walk",), start=KING_T, walk=WALK,
+                            until=K_STOP, fade=0.25, flash=1.0, **king))
     kings_k = _robed(GCrowd(gain=crowd_k, places=KINGS_STOP, facing=180.0, kinds=("kneel",), start=K_STOP - 0.25,
                             act=dict(t=KNEEL, dur=0.3), fade=0.25, flash=0.0, **king))
     scene.add("kings", kings_w, reflect=False)
     scene.add("kings kneel", kings_k, reflect=False)
     scene.add("crowns", Crowns(kings_w, kings_k))
+    scene.add("king trains", KingTrains())
     for ph, a, b, br, tr, fo in COMET_PHASES:
         for j in range(9):
-            c = Comet(_comet_head(j, ph), COL9[j], a, b, trail=tr, width=dict(march=0.7, burst=0.55).get(ph, 0.32),
+            c = Comet(_comet_head(j, ph), COL9[j], a, b, trail=tr, width=dict(march=0.7, burst=0.55, rise=1.4).get(ph, 0.32),
                       bright=br, fade=0.05,
                       light=False, seed=j + 11.0 * len(ph))
             few = 0.0 if (ph in ("ring", "march") and j not in (1, 4, 7)) else 1.0     # (f29) three loops only
@@ -1055,7 +1157,7 @@ def add(scene):
                                                        gain=sky(125.92, 130.29), bright=0.35), reflect=True)
     # (round 6: no canyon of cloud over the march any more; it hazed the words and the low views of the walkers)
     scene.add("kings beams", KingBeams())
-    scene.add("church rise", ChurchRise())
+    scene.add("church emblem", EmblemArrive())
     add_rays(mother_pos, lambda t: proc_k(t) * ray_k(t), color="#fff1d8", size=0.6)
     add_light(mother_pos, "#ffe8c8", lambda t: 0.15 * proc_k(t) * (1.0 + 0.5 * hit_pulse(t, KICKS + FULFIL, fall=0.5)),
               radius=9.0)
