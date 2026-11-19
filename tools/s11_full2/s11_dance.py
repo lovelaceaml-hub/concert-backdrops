@@ -23,7 +23,7 @@ import numpy as np
 
 from songs.s11_full2 import *  # noqa: F401,F403
 
-DANCE_C = _v(0.0, 0.0, -48.0)          # the dancers' floor on the mirror sea (Zion's foot is 82 m beyond)
+DANCE_C = _v(0.0, 0.0, 160.0)          # the dancers' floor on the mirror sea (Zion's foot is 290 m beyond)
 LAV = PW.COLORS["Compliment"]
 WINDOWS = dict(ring=(97.7, 99.4), solo=(117.0, 125.92), heart=(185.92, 188.27), held=(247.5, 249.43))
 
@@ -63,8 +63,8 @@ SHOTS = [
     _shot("dance_strings", 121.32, 125.92, 46.0, [(0.0, _D(-6.5, 0.9, 7.0), _D(0.0, 1.9, 0.0)),
                                                   (1.0, _D(-2.5, 1.6, 8.4), _D(0.0, 2.1, 0.0))], roll=(-2.0, 1.0)),
     # wondrous love: straight on, the heart between them, low (the phrase reads above)
-    _shot("dance_heart", 185.92, 188.27, 44.0, [(0.0, _D(0.0, 1.0, 9.0), _D(0.0, 2.4, 0.0)),
-                                                (1.0, _D(0.0, 1.2, 7.6), _D(0.0, 2.4, 0.0))]),
+    _shot("dance_heart", 185.92, 188.27, 44.0, [(0.0, _D(0.0, 0.8, 10.6), _D(0.0, 3.7, 0.0)),
+                                                (1.0, _D(0.0, 0.9, 9.6), _D(0.0, 3.6, 0.0))]),
     # the held breath: almost still, a slow push in, tilting up as the ribbon flies off
     _shot("dance_held", 247.5, 249.43, 42.0, [(0.0, _D(-2.0, 1.2, 6.8), _D(0.0, 1.5, 0.0)),
                                               (0.8, _D(-1.5, 1.2, 6.0), _D(0.0, 1.8, 0.0)),
@@ -90,20 +90,23 @@ def _bodies():
     c = DANCE_C
     # the lavender dancer: the breath, verse 2, the held breath
     _BODIES["solo"] = Body(
-        "woman", at=(c[0], c[2]), facing=[(116.8, 30.0), (121.32, 150.0), (125.92, 330.0), (247.3, 20.0), (249.6, 70.0)],
-        motion=[(116.6, "dance_a", dict(speed=0.42)), (121.2, "dance_a", dict(speed=1.0)),
-                (247.0, "dance_b", dict(speed=0.22))],
-        garment="dress", hair=True, look="glitter", color=LAV, color2="#f4ecff", points=60000, bright=1.3,
-        show=(116.4, 249.9), fade=0.3, seed=6.0,
+        "woman", at=(c[0], c[2]), facing=[(116.8, 30.0), (121.32, 150.0), (125.92, 330.0)],
+        motion=[(116.6, "dance_a", dict(speed=0.42)), (121.2, "dance_a", dict(speed=1.0))],
+        garment="dress", hair=True, look="glitter", color=LAV, color2="#ffffff", points=70000, bright=BODY_BRIGHT, size=1.5,
+        light=LIGHT_AT, show=(116.4, 126.2), fade=0.3, seed=6.0,
         effects=[dict(kind="shed", t=117.2)])
+    _BODIES["held"] = Body(
+        "woman", at=(c[0], c[2]), facing=[(247.3, 20.0), (249.6, 70.0)], motion=[(247.0, "dance_b", dict(speed=0.22))],
+        garment="dress", hair=True, look="glitter", color=LAV, color2="#ffffff", points=70000, bright=BODY_BRIGHT, size=1.5,
+        light=LIGHT_AT, show=(247.2, 249.9), fade=0.3, seed=6.0, effects=[dict(kind="shed", t=247.4)])
     # the two of the heart: rose and gold, face to face
     _BODIES["heartL"] = Body("woman", at=(c[0] - 1.6, c[2]), facing=[(185.5, 60.0), (188.3, 100.0)],
                              motion=[(185.4, "dance_b", dict(speed=0.8))], garment="dress", hair=True, look="glitter",
-                             color=PW.COLORS["Inclusiveness"], color2="#ffe6f0", points=45000, bright=1.3,
+                             color=PW.COLORS["Inclusiveness"], color2="#ffffff", points=50000, bright=BODY_BRIGHT, size=1.5, light=LIGHT_AT,
                              show=(185.6, 188.6), fade=0.2, seed=11.0)
     _BODIES["heartR"] = Body("woman", at=(c[0] + 1.6, c[2]), facing=[(185.5, 300.0), (188.3, 260.0)],
                              motion=[(185.4, "dance_a", dict(speed=0.8))], garment="dress", hair=True, look="glitter",
-                             color=PW.COLORS["Gratitude"], color2="#fff4d8", points=45000, bright=1.3,
+                             color=PW.COLORS["Gratitude"], color2="#ffffff", points=50000, bright=BODY_BRIGHT, size=1.5, light=LIGHT_AT,
                              show=(185.6, 188.6), fade=0.2, seed=12.0)
     # the ring of seven: spinning, facing out a little
     for i in range(RING_N):
@@ -112,12 +115,15 @@ def _bodies():
         _BODIES["ring%d" % i] = Body("woman", at=(x, z), facing=np.degrees(a) + 90.0,
                                      motion=[(97.2, "spin" if i % 2 == 0 else "dance_a", dict(speed=1.0))],
                                      garment="dress", hair=i % 2 == 1, look="glitter", color=RING_COL[i],
-                                     color2="#fff6ec", points=24000, bright=1.4, show=(97.4, 99.7), fade=0.2,
+                                     color2="#ffffff", points=16000, bright=BODY_BRIGHT, size=1.8, light=LIGHT_AT, show=(97.4, 99.7), fade=0.2,
                                      seed=20.0 + i)
     return _BODIES
 
 
 RING_N = 7
+BODY_BRIGHT = 5.0
+LIGHT_AT = DANCE_C + _v(0.0, 4.0, 5.0)
+HALO_COL = dict(solo=LAV, held=LAV, heartL=PW.COLORS["Inclusiveness"], heartR=PW.COLORS["Gratitude"])
 RING_R = 4.2
 RING_COL = [COL9[k] for k in (0, 2, 4, 6, 8, 1, 3)]
 
@@ -147,8 +153,12 @@ def _hand(name, t, side="R"):
 # =========================================================================================================
 # The ribbons' heads: led by the hand, drawing loops and spirals with the beat
 # =========================================================================================================
+def _solo_hand(t):
+    return _hand("solo" if t < 200.0 else "held", t)
+
+
 def _solo_head(t):
-    h = _hand("solo", t)
+    h = _solo_hand(t)
     if t < 140.0:
         if t < 121.32:          # the breath: a slow wide spiral (no beat: the music is still)
             a = 1.15 * (t - 117.0)
@@ -172,10 +182,10 @@ def _heart_curve(s):
     th = np.pi * (1.0 - s)                  # pi (bottom) to 0 (top dip): the left half
     x = -16.0 * np.sin(th) ** 3
     y = 13.0 * np.cos(th) - 5.0 * np.cos(2 * th) - 2.0 * np.cos(3 * th) - np.cos(4 * th)
-    return x * 0.075, y * 0.075
+    return x * 0.07, y * 0.07
 
 
-HEART_C = DANCE_C + _v(0.0, 2.5, 0.25)
+HEART_C = DANCE_C + _v(0.0, 2.85, 0.25)
 HEART_T = (186.0, 187.15)                   # the heart is drawn in this time
 
 
@@ -215,9 +225,9 @@ def _ring_head(i):
         # the braid: round the ring's axis, climbing and closing in; all seven meet in one spiral
         y = 1.6 + 30.0 * u ** 1.6
         r = RING_R * (1.0 - 0.9 * u ** 0.7) + 0.3
-        a = a0 + 2.2 * np.pi * u + 0.6 * np.pi * _bi(t)
+        a = a0 + 2.2 * np.pi * u + 0.6 * np.pi * (_bi(t) - _bi(97.7))
         braid = DANCE_C + _v(r * np.sin(a), y, r * np.cos(a))
-        w = float(_ss(97.55, 97.95, t))
+        w = float(_ss(97.0, 97.7, t))
         return h * (1.0 - w) + braid * w
     return f
 
@@ -259,13 +269,15 @@ class Ribbon:
         P, v = self.points(t)
         c = lin(self.color)
         deep = _deep(self.color)
-        core = 0.35 * c + 0.65 * lin(WHITE)
+        core = 0.5 * c + 0.5 * lin(WHITE)
         pulse = 1.0 + 0.35 * beat_pulse(t) * intensity(t) + 0.6 * hit_pulse(t, KICKS, fall=0.4)
         kk = 1.0 - v
         w = self.width
-        out = [ribbon(P, width=w * (0.15 + 0.85 * kk), color=deep, alpha=k * 0.55 * np.clip(kk * 1.4, 0, 1),
-                      emit=1.6, dof=0.2),
-               ribbon(P, width=w * 0.24 * (0.15 + 0.85 * kk), color=core, alpha=k * 0.95 * np.clip(kk * 1.6, 0, 1),
+        out = [ribbon(P, width=w * 2.2 * (0.15 + 0.85 * kk), color=c, alpha=k * 0.16 * np.clip(kk * 1.4, 0, 1),
+                      emit=1.4, dof=0.2),
+               ribbon(P, width=w * (0.15 + 0.85 * kk), color=deep, alpha=k * 0.7 * np.clip(kk * 1.4, 0, 1),
+                      emit=2.0, dof=0.2),
+               ribbon(P, width=w * 0.16 * (0.15 + 0.85 * kk), color=core, alpha=k * 0.95 * np.clip(kk * 1.6, 0, 1),
                       emit=2.6 * pulse, dof=0.2)]
         head = self.head(t)[None, :]
         out.append(dict(pos=head, size=w * 0.7, color=core, alpha=k, emit=6.0 * pulse, kind="spark"))
@@ -343,16 +355,34 @@ class Snow:
                             alpha=0.7 * kb, emit=1.8, kind="spark", twinkle=0.5, seed=s[:, 4], dof=0.6))
         kh = _env(t, 247.5, 249.43, 0.3, 0.1)
         if kh > 0.0:                          # sparks from all round gathering into her heart
-            heart = _bodies()["solo"].where(min(t, 249.8), "heart")
+            heart = _bodies()["held"].where(min(t, 249.8), "heart")
             u = np.clip((t - 247.5 - 1.0 * s[:, 0]) / 0.9, 0.0, 1.0)
             u = u * u * (3.0 - 2.0 * u)
             d = np.stack([s[:, 1] - 0.5, 0.6 * (s[:, 2] - 0.3), s[:, 3] - 0.5], 1)
             d = d / np.maximum(np.linalg.norm(d, axis=1, keepdims=True), 1e-6)
-            P = heart[None, :] + d * (2.5 + 3.5 * s[:, 4:5]) * (1.0 - u)[:, None]
+            P = heart[None, :] + d * (0.8 + 1.6 * s[:, 4:5]) * (1.0 - u)[:, None]
             col = np.array([lin(COL9[int(x * 9) % 9]) for x in s[:, 0]]) * 0.5 + lin(WHITE) * 0.5
-            out.append(dict(pos=P, size=0.03 + 0.03 * s[:, 4], color=col, alpha=kh * (0.3 + 0.7 * (1.0 - u) ** 0.5),
+            out.append(dict(pos=P, size=0.012 + 0.016 * s[:, 4], color=col, alpha=kh * (0.3 + 0.7 * (1.0 - u) ** 0.5),
                             emit=2.6, kind="spark", twinkle=0.6, seed=s[:, 4], dof=0.5))
         return out or None
+
+
+class Halo:
+    """A soft glow of each dancer's colour round her: she reads as a figure of light from afar."""
+
+    def __init__(self, name, color):
+        self.name, self.col = name, lin(color)
+
+    def sample(self, t):
+        b = _bodies()[self.name]
+        if dance_k(t) <= 0.0 or not (b.show[0] < t < b.show[1]):
+            return None
+        k = b.gain(t) * (1.0 + 0.3 * beat_pulse(t) * intensity(t))
+        c = b.where(t, "chest")
+        p = np.stack([c, 0.5 * (c + b.where(t, "pelvis")), b.where(t, "knee.L") * 0.5 + b.where(t, "knee.R") * 0.5])
+        return [dict(pos=p, size=np.array([1.6, 1.5, 1.3]), color=self.col, alpha=0.10 * k, kind="soft", emit=1.6),
+                dict(pos=b.where(t, "ground")[None, :] + _v(0.0, 0.05, 0.0), size=2.6, color=self.col, alpha=0.12 * k,
+                     kind="soft", emit=1.5, reflect=False)]
 
 
 def _solo_strength(t):
@@ -364,14 +394,16 @@ def add(scene):
     for name, body in b.items():
         scene.add("dancer " + name, Gate(body))
     solo = WINDOWS["solo"], WINDOWS["held"]
-    scene.add("dance ribbon solo", Ribbon(_solo_head, lambda t: _hand("solo", t), LAV, solo, trail=2.0, width=0.20,
+    scene.add("dance ribbon solo", Ribbon(_solo_head, _solo_hand, LAV, solo, trail=2.0, width=0.34,
                                           n=110, seed=1))
     for side, nm, col in ((-1.0, "heartL", PW.COLORS["Inclusiveness"]), (1.0, "heartR", PW.COLORS["Gratitude"])):
         scene.add("dance ribbon " + nm, Ribbon(_heart_head(side), (lambda t, nm=nm, s=side: _hand(nm, t, "R" if s < 0 else "L")),
-                                               col, [WINDOWS["heart"]], trail=1.0, width=0.17, n=80, seed=2 + int(side > 0)))
+                                               col, [WINDOWS["heart"]], trail=1.0, width=0.26, n=80, seed=2 + int(side > 0)))
     for i in range(RING_N):
         scene.add("dance ribbon ring %d" % i, Ribbon(_ring_head(i), (lambda t, i=i: _hand("ring%d" % i, t)), RING_COL[i],
-                                                     [WINDOWS["ring"]], trail=0.9, width=0.24, n=70, seed=10 + i))
+                                                     [WINDOWS["ring"]], trail=0.9, width=0.34, n=70, seed=10 + i))
+    for name, body in b.items():
+        scene.add("dance halo " + name, Halo(name, HALO_COL.get(name) or RING_COL[int(name[4:])]))
     scene.add("dance heart", Heart())
     scene.add("dance snow", Snow())
     add_light(_solo_head, LAV, _solo_strength, radius=4.0)

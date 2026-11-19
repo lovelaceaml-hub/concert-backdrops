@@ -549,8 +549,11 @@ class Arms:
                         reflect=False))
         HP = np.concatenate([arms[0][1], arms[1][1]])
         sd = np.concatenate([self.s[ii], self.s[ii]])
-        out.append(dict(pos=HP, size=0.42, color=C * 0.6 + lin(GOLD2) * 0.5, alpha=A, kind="spark", emit=2.6,
+        out.append(dict(pos=HP, size=0.6, color=C * 0.6 + lin(GOLD2) * 0.5, alpha=A, kind="spark", emit=3.2,
                         twinkle=0.3, seed=sd, reflect=False))
+        # a soft glow round the raised hands: from afar the wave reads as a band of light rolling up the mountain
+        out.append(dict(pos=HP[::2], size=2.4, color=C[::2] * 0.5 + lin(GOLD2) * 0.4, alpha=0.10 * A[::2] * A[::2],
+                        kind="soft", emit=1.4, reflect=False))
         # the trails: where the hands were a moment ago, fading behind them (only while the arms move)
         prev = HP
         for j in range(1, self.TRAIL + 1):

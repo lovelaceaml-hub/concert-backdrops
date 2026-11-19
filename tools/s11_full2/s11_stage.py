@@ -1354,4 +1354,5 @@ def add(scene):
         scene.add("stage clouds %d" % i, CloudBank(_v(x, SUMMIT - 4.0, z), size=(26.0, 16.0, 30.0), puffs=14,
                                                    seed=70 + i, gain=cloud_k, bright=0.8))
     add_light(COMET_PATHS[0], COL9[1], lambda t: 1.1 * stage_view(t) * (0.8 + 0.4 * beat_pulse(t)), radius=5.0)
-    add_rays(lambda t: _v(0.0, SUMMIT + 3.2, FACADE_Z + 1.0), blaze, color="#ffe8c0", size=0.7)
+    add_rays(lambda t: _v(0.0, SUMMIT + 3.2, FACADE_Z + 1.0), lambda t: blaze(t) * (1.0 if stage_view(t) else 0.0),
+             color="#ffe8c0", size=0.7)          # only in stage shots (it glared over the dancers)
