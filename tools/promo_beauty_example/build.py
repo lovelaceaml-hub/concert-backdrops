@@ -129,6 +129,8 @@ def main() -> int:
     parser.add_argument("--source-start", type=float, default=SOURCE_START)
     parser.add_argument("--fade-in", type=float, default=0.12, help="Excerpt audio entry fade in seconds; 0 disables it.")
     parser.add_argument("--fade-out", type=float, default=0.25, help="Excerpt audio exit fade in seconds; 0 disables it.")
+    parser.add_argument("--audio-gain-db", type=float, default=-0.5,
+                        help="Excerpt headroom before AAC encoding, in dB; 0 preserves the original level.")
     parser.add_argument("--keep-grain", action="store_true")
     parser.add_argument("--directory", type=Path, default=ROOT / "work/promo-beauty-rebuild/final")
     parser.add_argument("--plan", action="store_true", help="Inspect the plan without rendering or writing output files.")
@@ -143,6 +145,8 @@ def main() -> int:
         parser.error("The excerpt must start at or after the original picture delay.")
     if any(not math.isfinite(v) or not 0 <= v <= DURATION / 2 for v in (args.fade_in, args.fade_out)):
         parser.error("Audio fades must be finite and between 0 and half the excerpt duration.")
+    if not math.isfinite(args.audio_gain_db) or not -12 <= args.audio_gain_db <= 0:
+        parser.error("Audio gain must be finite and between -12 and 0 dB.")
     os.environ.update(PYTHONHASHSEED="0", OPENBLAS_NUM_THREADS="1", OMP_NUM_THREADS="1",
                       LIBGL_ALWAYS_SOFTWARE="1", LP_NUM_THREADS="2", DRAFT="0")
     started = time.monotonic()
@@ -179,6 +183,7 @@ def main() -> int:
             "render_queue": [job["part"] for job in schedule],
             "parameters": parameters, "audio_trim": [args.source_start, args.source_start + DURATION],
             "audio_fades_seconds": {"in": args.fade_in, "out": args.fade_out}, "audio_retimed": False,
+            "audio_gain_db": args.audio_gain_db,
             "color_contract": COLOR_CONTRACT, "declared_cuts": cuts, "shots": shots,
             "prepared_inputs": preparation,
             "source_inputs_fingerprint": hashlib.sha256(json.dumps(inputs, sort_keys=True).encode()).hexdigest(),
@@ -240,6 +245,8 @@ def main() -> int:
     audio = folder / "score-30s.wav"
     audio_temporary = folder / "score-30s.assembling.wav"
     filters = [f"atrim=start={args.source_start:.9f}:end={args.source_start + DURATION:.9f}", "asetpts=PTS-STARTPTS"]
+    if args.audio_gain_db:
+        filters.append(f"volume={args.audio_gain_db:.9f}dB")
     if args.fade_in:
         filters.append(f"afade=t=in:st=0:d={args.fade_in:.9f}")
     if args.fade_out:
@@ -273,6 +280,7 @@ def main() -> int:
                         "original_recording_sha256": EXPECTED_AUDIO,
                         "trim_seconds": [args.source_start, args.source_start + DURATION],
                         "entry_fade_seconds": args.fade_in, "exit_fade_seconds": args.fade_out,
+                        "gain_db": args.audio_gain_db,
                         "retimed": False, "excerpt": str(audio), "excerpt_sha256": digest(audio),
                         "codec": "aac", "bitrate": "320k", "sample_rate": 48000, "channels": 2},
               "color_contract": COLOR_CONTRACT, "declared_cuts": cuts, "shots": shots,

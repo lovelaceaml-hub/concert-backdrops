@@ -2,7 +2,7 @@
 
 A thirty-second native render of the actual Song 11 world, with isolated lens and delivery improvements. This replaces the previous example's sparse presentation stage with the original production's conductor, orchestra, responsive light, Zion, reflections and cinematic cameras.
 
-Read [DESIGN-REVIEW.md](DESIGN-REVIEW.md) for the artistic diagnosis. Read [VERIFICATION.md](VERIFICATION.md) for the delivered artifact and measured results once the render is complete.
+Read [DESIGN-REVIEW.md](DESIGN-REVIEW.md) for the artistic diagnosis. Read [VERIFICATION.md](VERIFICATION.md) for the delivered artifact, measured results and the precise scope of the visual review.
 
 ## What this example is
 
@@ -61,7 +61,7 @@ Build the complete example with two workers. The first four-worker attempt on th
 PYTHONHASHSEED=0 uv run --frozen --extra legacy python tools/promo_beauty_example/build.py --workers 2
 ```
 
-The build creates six independently rendered chunks. It reuses a chunk only when the source hashes, runtime, dimensions, temporal samples, exact frame range and movie checksum match. A failed worker stops its siblings. Audio is trimmed without retiming, with a 0.12 second entry fade and 0.25 second exit fade. Assembly copies the encoded pictures and adds AAC audio.
+The build creates six independently rendered chunks. It reuses a chunk only when the source hashes, runtime, dimensions, temporal samples, exact frame range and movie checksum match. A failed worker stops its siblings. Audio is trimmed without retiming, with a 0.12 second entry fade, 0.25 second exit fade and 0.5 dB of headroom before AAC encoding. `--audio-gain-db 0` preserves the original excerpt level. The original recording and prepared score remain unchanged. Assembly copies the encoded pictures and adds AAC audio.
 
 Longer expected jobs run first, while assembly always uses chronological frame order. Workers check a `STOP` marker in the output directory before initialization and between frames. Stop the coordinator too if cancellation arrives during final audio or movie assembly. Remove that marker only when intentionally resuming the requested round.
 
@@ -72,6 +72,12 @@ uv run --frozen --extra legacy python tools/promo_beauty_example/verify.py --mov
 ```
 
 The verifier checks the native dimensions, frame count, timestamps, color tags and audio; decodes every frame; saves full-size evidence and a contact sheet; and measures clipping and cut-aware changes. Its motion and flicker measurements are review aids. They do not certify expressive acting or aesthetic approval.
+
+### Static assets and derived caches
+
+Future source manifests include both pinned `body_v1.npz` files and the land map at `assets/p3d/brand/land_2048.png`. Missing files stop rendering. Crowd prototypes use a fresh cache namespace derived from both body digests, in addition to the original prototype keys. Changing a body asset therefore cannot silently reuse prototypes made from different body bytes. The renderer rejects `P3D_BODY_ASSET` overrides before loading either engine.
+
+The delivered movie's pictures were rendered from commit `a7d68836c4fdc7156bbc9b839380cd65180ca2bb`, before this integrity follow-up. The three asset files were independently checked against pinned Git blobs and remained unchanged through completion. The follow-up does not retroactively strengthen that historical manifest. Its native-frame comparison is recorded in [VERIFICATION.md](VERIFICATION.md).
 
 ## Native 4K
 

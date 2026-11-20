@@ -29,6 +29,12 @@ PEOPLE_COMMIT = "f43f4514e4bc42dc25166e90160d98219f5a0db4"
 ACCOUNT_COMMIT = "34f835206dcb26cfa0bd7e321171d3d224e3aa7d"
 PICTURE_DELAY = 0.1
 GRAIN_LINE = "col += (n1+n2-1.0)*(1.15/255.0);"
+BODY_ASSETS = (
+    "work/nine_colours_minor/render1/assets/p3d/body_v1.npz",
+    "work/nine_colours_revision3/claude-final/assets/p3d/body_v1.npz",
+)
+STATIC_ASSETS = (*BODY_ASSETS, "assets/p3d/brand/land_2048.png")
+CROWD_CACHE_SCHEMA = "s11-body-pair-v1"
 
 
 def digest(path):
@@ -46,7 +52,44 @@ def atomic_json(path, value):
     temporary.replace(path)
 
 
+def required_asset_hashes():
+    missing = [name for name in STATIC_ASSETS if not (ROOT / name).is_file()]
+    if missing:
+        raise RuntimeError("Restore the required pinned assets before rendering: " + ", ".join(missing))
+    return {name: digest(ROOT / name) for name in STATIC_ASSETS}
+
+
+def body_cache_identity(body_sha256=None):
+    """Pure identity from supplied digests, or the two required files on disk."""
+    if body_sha256 is None:
+        assets = required_asset_hashes()
+        body_sha256 = {name: assets[name] for name in BODY_ASSETS}
+    if not isinstance(body_sha256, dict) or set(body_sha256) != set(BODY_ASSETS):
+        raise ValueError("Cache identity requires exactly the two pinned body asset paths.")
+    if any(not isinstance(value, str) or len(value) != 64
+           or any(char not in "0123456789abcdef" for char in value)
+           for value in body_sha256.values()):
+        raise ValueError("Body asset identities must be lowercase SHA256 hex digests.")
+    material = {"schema": CROWD_CACHE_SCHEMA,
+                "body_sha256": {name: body_sha256[name] for name in BODY_ASSETS}}
+    key = hashlib.sha256(json.dumps(material, sort_keys=True, separators=(",", ":")).encode()).hexdigest()
+    namespace = WORK.relative_to(ROOT) / "derived-cache" / f"{CROWD_CACHE_SCHEMA}-{key}"
+    return {**material, "namespace": str(namespace)}
+
+
+def configure_asset_cache():
+    # assets.load() treats even an empty environment value as an override.
+    # Check before importing the original scene, not inside runtime_identity:
+    # that identity is also evaluated after the loader changes its environment.
+    if "P3D_BODY_ASSET" in os.environ:
+        raise RuntimeError("P3D_BODY_ASSET overrides are unsupported; unset it to use both pinned body assets.")
+    identity = body_cache_identity()
+    os.environ["S11_CACHE"] = str(ROOT / identity["namespace"])
+    return identity
+
+
 def source_hashes():
+    assets = required_asset_hashes()
     paths = set()
     for folder in ("tools/promo_beauty_example", "tools/s11_full2", "tools/nine_colours_minor", "engine/p3d",
                    "work/nine_colours_minor/render1/engine", "work/nine_colours_revision3/claude-final/engine"):
@@ -54,7 +97,9 @@ def source_hashes():
     paths.update((ROOT / "fonts").glob("*.ttf"))
     paths.update(ROOT / p for p in ("engine/titles.py", "uv.lock", "pyproject.toml"))
     paths.update((ROOT / "work/s11_full2" / name) for name in ("features.npz", "music_fx.npz", "score.wav"))
-    return {str(p.relative_to(ROOT)): digest(p) for p in sorted(paths) if p.is_file()}
+    result = {str(p.relative_to(ROOT)): digest(p) for p in sorted(paths) if p.is_file()}
+    result.update(assets)
+    return result
 
 
 def runtime_identity():
@@ -67,7 +112,8 @@ def runtime_identity():
     return {"python": sys.version.split()[0], "packages": packages,
             "engine_commit": ENGINE_COMMIT, "people_commit": PEOPLE_COMMIT,
             "hash_seed": os.environ.get("PYTHONHASHSEED"),
-            "software_threads": os.environ.get("LP_NUM_THREADS", "1"), "renderer": "cloud CPU llvmpipe"}
+            "software_threads": os.environ.get("LP_NUM_THREADS", "1"), "renderer": "cloud CPU llvmpipe",
+            "crowd_cache": body_cache_identity()}
 
 
 def validate_analysis():
@@ -91,11 +137,14 @@ def make_renderer(width=1920, height=1080, samples=2, keep_grain=False):
     if os.environ.get("PYTHONHASHSEED") != "0":
         raise RuntimeError("Set PYTHONHASHSEED=0 before starting Python for reproducible word scatter.")
     validate_analysis()
+    cache_identity = configure_asset_cache()
     sys.path.insert(0, str(ROOT / "tools/s11_full2"))
     spec = importlib.util.spec_from_file_location("beauty_s11_renderer", ROOT / "tools/s11_full2/render.py")
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
     Renderer = module.load(FPS)
+    if os.environ.get("P3D_CACHE") != str(ROOT / cache_identity["namespace"]):
+        raise RuntimeError("The original loader did not use the verified body cache namespace.")
     import shaders
     if not keep_grain:
         if shaders.COMP_FS.count(GRAIN_LINE) != 1:

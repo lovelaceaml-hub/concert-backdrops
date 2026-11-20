@@ -267,7 +267,7 @@ def make_contact_sheet(images: dict[int, Path], folder: Path, fps: int, source_s
             sheet.paste(picture.convert("RGB").resize((480, 270), Image.Resampling.LANCZOS), (x, y))
         suffix = " | CUT" if frame in cut_frames else " | before cut" if frame + 1 in cut_frames else ""
         draw.text((x + 8, y + 273), f"Frame {frame:04d} | example {frame / fps:.3f}s{suffix}", font=font, fill=(242, 235, 224))
-        draw.text((x + 8, y + 291), f"Source film {source_start + frame / fps:.3f}s", font=font, fill=(176, 188, 211))
+        draw.text((x + 8, y + 291), f"Source audio {source_start + frame / fps:.3f}s", font=font, fill=(176, 188, 211))
     target = folder / "contact-sheet-independent.jpg"
     sheet.save(target, quality=94)
     return target

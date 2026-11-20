@@ -1,6 +1,6 @@
 # Design review: clarity, movement and beauty
 
-20 November 2026. This review explains why the previous 30-second example did not meet the creative standard, and establishes gates for its replacement. It does not claim that a new video is finished, inspected or approved.
+20 November 2026. This review explains why the previous 30-second example did not meet the creative standard, and documents the completed replacement study and the next acting improvements. [VERIFICATION.md](VERIFICATION.md) records the actual export checks and review scope. Creative approval remains the owner's decision.
 
 ## Evidence and scope
 
@@ -156,13 +156,17 @@ The music map also needs accurate language. Channels named strings, brass, choir
 
 Use those channels to suggest texture and emphasis. Verify major attacks, phrase boundaries and tempo changes by listening and measuring the exact excerpt. The account records an unresolved early cut of about 0.14 seconds; automatic timing therefore cannot be treated as exact. Neither this review nor a still comparison proves synchronization of the replacement video.
 
-## Selected demonstration, motion review pending
+## Rendered demonstration and observed limits
 
 The selected study uses picture time 97.7 to 127.7 seconds and audio time 97.8 to 127.8 seconds from Song 11, retaining the production's 0.1-second relationship. Its nine existing shot blocks show the conductor's braid, two Zion views, the ensemble, the church, a rising light column, the conductor's breath, his string response and the beginning of the sky-light procession. The original performance, world, camera trajectories and musical responses are reused. This is not newly authored human animation.
 
-The isolated lens adjustment keeps the conductor framing but focuses on his chest with aperture 0.012. Native still comparisons at source times 98.45 and 118.3 show clearer body points, head contours and garment edges while preserving the surrounding scene. A bounded stage adjustment reduces sun and rays to 65 percent, sun glow and bloom to 75 percent, and caps aperture at 0.008. At source 106.05, this reduces the warm veil and improves blue-body and gold-instrument separation while retaining the bright musical crest. Peak duration and continuity still need motion review.
+The isolated lens adjustment keeps the conductor framing but focuses on his chest with aperture 0.012. Native still comparisons at source times 98.45 and 118.3 show clearer body points, head contours and garment edges while preserving the surrounding scene. A bounded stage adjustment reduces sun and rays to 65 percent, sun glow and bloom to 75 percent, and caps aperture at 0.008. At source 106.05, this reduces the warm veil and improves blue-body and gold-instrument separation while retaining the bright musical crest.
 
-This contiguous excerpt starts within the song and ends during a procession entry, so it does not claim a newly resolved 30-second story. Selected stills have been inspected; they do not establish motion smoothness, sound synchronization or completion of an encoded preview. Record those results beside the implementation when actually verified.
+The complete encoded movie contains 1,800 native 1080p frames at 60 fps. Every frame and presentation timestamp was decoded and checked. The coordinator and an independent reviewer inspected the full-sequence contact sheet, native frames and neighboring frames at six within-shot render joins. Those joins showed no visible camera, geometry, exposure or performer reset. The automated cut-aware scan found no large-jump, brightness-reversal or prolonged-static candidates under its stated thresholds. These are bounded continuity findings, not proof of natural acting.
+
+The images retain clear limits. The stage's pale entrance veil recedes in the sampled sequence, but large source text and warm haze still compete with the choir. The authored architectural flash around output 12.1 seconds strongly veils the building. Bright ribbon intersections sometimes obscure fine hand detail. This contiguous excerpt starts within the song and ends during a procession entry, so it does not provide a newly designed conclusion.
+
+The focused conductor, traveling light and changes of scale make the source's cinematic structure more readable than the previous sparse platform. A more expressive new performance still requires the acting work described above. Real-time playback, complete perceptual musical synchronization and aesthetic approval are not claimed by the image review or numerical checks.
 
 [account]: https://github.com/lovelaceaml-hub/concert-backdrops/blob/34f835206dcb26cfa0bd7e321171d3d224e3aa7d/project-docs/backdrops/s11-full2/HOW-IT-WAS-MADE.md
 [previous]: https://github.com/lovelaceaml-hub/concert-backdrops/blob/e46c149fb50908e7f5e87832701346f67b5f0201/tools/promo_people_example/README.md
