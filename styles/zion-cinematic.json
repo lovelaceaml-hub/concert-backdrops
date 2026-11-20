@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "name": "Zion cinematic lighting",
+  "intent": "Warm, gracious, heavenly light with legible detail and controlled highlights.",
+  "palette": {"gold": "#F2B25E", "cream": "#FFF1D6", "sky": "#A5CBEA", "navy": "#272751", "rose": "#EEA9A7"},
+  "bloom": {"intensity": 0.45, "threshold": 1.0, "smoothing": 0.2},
+  "motion": {"camera_easing": "smoothstep", "minimum_transition_seconds": 0.8, "random_seed_required": true},
+  "review": {"near_white_warning_fraction": 0.08, "preserve_logo_colors": true, "human_review_required": true},
+  "guidance": [
+    "This preset guides new projects and does not override approved film-specific art direction.",
+    "Avoid white-outs, flashing text, harsh camera snaps and bright effects across words.",
+    "Typography and official emblems should use approved assets with unchanged wording and proportions.",
+    "Blender and Three.js view transforms are different; judge matched full-resolution reference frames.",
+    "Record parameters in each renderer, since guidance fields are not automatically shader uniforms."
+  ]
+}

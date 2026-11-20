@@ -1,0 +1,28 @@
+{
+  "name": "concert-video-pipeline",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Frame-driven browser scenes and finishing for the concert production pipeline",
+  "type": "module",
+  "workspaces": [
+    "apps/scene-preview",
+    "apps/editor"
+  ],
+  "engines": {
+    "node": ">=22.12 <25"
+  },
+  "scripts": {
+    "preview": "npm run dev --workspace=@concert/scene-preview",
+    "editor": "npm run studio --workspace=@concert/editor",
+    "typecheck": "npm run typecheck --workspaces",
+    "build": "npm run build --workspaces",
+    "capture": "node apps/scene-preview/capture.mjs",
+    "finish": "node apps/editor/render.mjs",
+    "test:browser": "node apps/scene-preview/test-capture.mjs"
+  },
+  "dependencies": {
+    "@fontsource/cormorant-garamond": "5.3.0",
+    "@fontsource/jost": "5.3.0",
+    "@fontsource/outfit": "5.3.0"
+  }
+}

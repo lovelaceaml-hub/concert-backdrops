@@ -1,0 +1,24 @@
+# Optional CPU worker recipe. Record/pin its built image digest before production.
+# The current execution workspace has no Docker daemon; see the validation record.
+FROM node:24-trixie-slim
+
+ENV PYTHONUNBUFFERED=1 \
+    UV_PYTHON_DOWNLOADS=never \
+    BLENDER_BIN=/app/.tools/blender-5.2.4-linux-x64/blender \
+    CHROMIUM_PATH=/usr/bin/chromium \
+    LIBGL_ALWAYS_SOFTWARE=1
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    python3 python3-venv python3-pip ffmpeg chromium git curl ca-certificates \
+    libegl1 libgl1 libgl1-mesa-dri libx11-6 libxfixes3 libxi6 libxrender1 \
+    libxkbcommon0 libsm6 libice6 libgomp1 xvfb xauth \
+    && rm -rf /var/lib/apt/lists/*
+RUN python3 -m venv /opt/uv && /opt/uv/bin/pip install --no-cache-dir uv==0.13.9
+ENV PATH=/opt/uv/bin:$PATH
+
+WORKDIR /app
+COPY . /app
+RUN python3 scripts/bootstrap.py --skip-browser-install
+
+# This container intentionally contains no GPU provider SDK, account, or key.
+CMD ["uv", "run", "--frozen", "--extra", "legacy", "video", "doctor"]

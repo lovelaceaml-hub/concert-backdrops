@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "project_id": "pipeline-demo",
+  "title": "Heavenly Light: Pipeline Demonstration",
+  "description": "A four-second engineering demonstration, not a revision of an approved concert film.",
+  "video": {"width": 1920, "height": 1080, "fps": 30},
+  "audio": {"source": null, "offset_seconds": 0},
+  "production": {
+    "cloud_gpu_provider": null,
+    "allow_local_gpu": false,
+    "allow_paid_services": false,
+    "allow_ai_generated_visuals": false,
+    "allow_stock_footage": false,
+    "random_seed": 2026
+  },
+  "quality": {
+    "draft": {"width": 320, "height": 180, "samples": 8},
+    "review": {"width": 1920, "height": 1080, "samples": 32},
+    "final": {"width": 1920, "height": 1080, "samples": 64}
+  },
+  "style": "styles/zion-cinematic.json",
+  "timing": "projects/pipeline-demo/timing.json",
+  "shots": [
+    {
+      "id": "light-ribbons",
+      "name": "Light ribbons over a calm sea",
+      "renderer": "threejs",
+      "start_frame": 0,
+      "end_frame_exclusive": 60,
+      "scene": "apps/scene-preview/src/scenes/Heavenly.tsx",
+      "params": {"bloom": true}
+    },
+    {
+      "id": "sanctuary",
+      "name": "Procedural sanctuary and warm lighting",
+      "renderer": "blender",
+      "start_frame": 60,
+      "end_frame_exclusive": 120,
+      "scene": "scenes/blender/heavenly.py",
+      "params": {}
+    }
+  ]
+}

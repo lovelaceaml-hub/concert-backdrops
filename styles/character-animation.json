@@ -1,0 +1,11 @@
+{
+  "schema_version": 1,
+  "name": "Character animation review guide",
+  "guidance": [
+    "Use skeletal rigs and authored gesture curves for important close-ups.",
+    "Use relaxed shoulders, softly bent elbows, gentle hands and weight shifts.",
+    "Check eye targets, instrument contact, limb intersections and continuity in motion.",
+    "Bake stateful simulations before distributed rendering.",
+    "The setup does not automatically create finished Joy and Peace rigs or conductor performances."
+  ]
+}

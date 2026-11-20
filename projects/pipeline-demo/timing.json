@@ -1,0 +1,11 @@
+{
+  "schema_version": 1,
+  "fps": 30,
+  "manually_verified": false,
+  "visual_only": true,
+  "events": [
+    {"frame": 0, "kind": "shot_start", "label": "Light ribbons"},
+    {"frame": 60, "kind": "shot_start", "label": "Sanctuary"}
+  ],
+  "note": "No music is used by this workflow test. Replace with verified song hits in a real project."
+}

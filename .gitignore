@@ -16,3 +16,19 @@ __pycache__/
 !assets/**/*.png
 !assets/**/*.jpg
 !assets/p3d/*.npz
+
+# Repeatable video pipeline tooling and generated media
+.venv/
+.tools/
+node_modules/
+apps/*/node_modules/
+apps/*/dist/
+apps/*/build/
+apps/*/public/generated/
+.pytest_cache/
+.mypy_cache/
+*.egg-info/
+*.blend
+*.blend1
+.env
+.env.local

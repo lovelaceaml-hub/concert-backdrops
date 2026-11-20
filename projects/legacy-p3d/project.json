@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "project_id": "legacy-p3d",
+  "title": "Existing p3d Renderer Integration Check",
+  "description": "A two-second excerpt of an existing technical demo. Does not edit or reproduce the approved master.",
+  "video": {"width": 1920, "height": 1080, "fps": 30},
+  "audio": {"source": "audio/promo/s01.mp3", "offset_seconds": 0},
+  "production": {
+    "cloud_gpu_provider": null,
+    "allow_local_gpu": false,
+    "allow_paid_services": false,
+    "allow_ai_generated_visuals": false,
+    "allow_stock_footage": false,
+    "random_seed": 2026
+  },
+  "quality": {
+    "draft": {"width": 320, "height": 180, "samples": 8},
+    "review": {"width": 1920, "height": 1080, "samples": 32},
+    "final": {"width": 1920, "height": 1080, "samples": 64}
+  },
+  "style": "styles/zion-cinematic.json",
+  "timing": {"schema_version": 1, "fps": 30, "manually_verified": false, "events": []},
+  "shots": [
+    {
+      "id": "legacy-light",
+      "name": "Existing particle world",
+      "renderer": "p3d",
+      "start_frame": 0,
+      "end_frame_exclusive": 60,
+      "scene": "engine/songs/demo_p3d_words.py",
+      "params": {"source_time_seconds": 0}
+    }
+  ]
+}
