@@ -6,6 +6,10 @@ Cloud GPU provisioning is intentionally absent. The default workers use the CPU.
 
 Read [the verification record](VIDEO-PIPELINE-VALIDATION.md) before relying on a renderer in a new workspace. Installation, compilation, a real rendered frame, and a finished movie are different verification stages.
 
+The [native 4K and animation extension](4K-AND-MOTION.md) adds the current default
+project template, high-bit-depth export profiles and reusable motion tools. See
+[its verification record](4K-MOTION-VALIDATION.md) for the newer checks.
+
 ## 1. What is installed
 
 | Part | Role | Project location |
@@ -63,22 +67,23 @@ The manual GitHub workflow `Video pipeline checks (manual CPU only)` validates t
 
 Each project has `projects/<project-id>/project.json`. It identifies the recording, frame rate, style reference, manually reviewed timing and shots. Each shot names a renderer, a source scene, a start frame, an exclusive end frame, parameters and any additional asset dependencies.
 
-Three included examples cover different paths:
+Included examples cover different paths:
 
 | Project | Contents | Purpose |
 | --- | --- | --- |
 | `cpu-demo` | Two seconds of the original Blender pavilion at 30 fps, silent | Small complete workflow proof without Chromium |
 | `pipeline-demo` | Two seconds of Three.js followed by two seconds of Blender at 30 fps, silent | Mixed-renderer integration check on a browser-capable worker |
 | `legacy-p3d` | Two seconds of an existing p3d technical scene and the existing short test recording | Compatibility check without editing the approved engine |
+| `motion-study` | Ten seconds of a procedural conductor and camera track at 60 fps | Native 4K presets, baked motion blur and reusable rig foundation |
 
-The short examples use 320 x 180 drafts to keep verification inexpensive. New projects default to 640 x 360 drafts and 1920 x 1080 review/final images. Quality presets change dimensions and sample counts, never the project frame rate. Select 60 fps when creating a film intended for 60 fps delivery, and keep that timing throughout its reviews.
+The original short examples use 320 x 180 drafts to keep verification inexpensive. New cinematic projects default to 960 x 540 drafts, 1920 x 1080 reviews, and 3840 x 2160 final images with 16-bit Blender PNG sources. Quality presets change dimensions and sample counts, never the project frame rate. Select 60 fps when creating a film intended for 60 fps delivery, and keep that timing throughout its reviews.
 
 ```bash
 ./scripts/video new "Next Concert Film" --fps 60 --seconds 10
 ./scripts/video validate next-concert-film
 ```
 
-The new-project template starts with the registered Three.js example. Replace its scene and shot table with the intended production design. To begin with Blender, follow `projects/cpu-demo/project.json`. Adding a new browser scene requires registering its component and path as described in [apps/README.md](../apps/README.md).
+The default new-project template starts with the Blender camera and character study. Replace its scene and shot table with the intended production design. Use `video new TITLE --template browser` to start with the registered Three.js example and its original 1080p settings. Adding a new browser scene requires registering its component and path as described in [apps/README.md](../apps/README.md).
 
 Frame intervals are half-open. A 60-frame shot starting at frame 120 covers frames 120 through 179, and the next shot starts at 180. Timelines must be contiguous, with no gaps or overlaps. Renderers evaluate the requested absolute frame and a fixed random seed. They do not depend on playback speed or wall-clock time.
 

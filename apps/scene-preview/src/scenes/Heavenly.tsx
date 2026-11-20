@@ -1,5 +1,7 @@
 import {useMemo} from 'react';
 import * as THREE from 'three';
+import {frameSeconds,sampleMusicEnvelope,secondaryMotion,smootherstep} from '../../../shared/motion.mjs';
+import type {CompiledMusicEvent} from '../../../shared/motion.mjs';
 
 function seeded(seed: number) {
   let value = seed >>> 0;
@@ -36,33 +38,36 @@ function Pavilion() {
   </group>;
 }
 
-function Ribbon({time,index}:{time:number;index:number}) {
+function Ribbon({time,index,seed,motionAmount,accent}:{time:number;index:number;seed:number;motionAmount:number;accent:number}) {
   const curve=useMemo(() => {
     const points=Array.from({length:65}, (_,i)=>{
       const u=i/64;
-      const theta=u*Math.PI*2.5+index*Math.PI/3+time*0.16;
+      const follow=secondaryMotion(time-u*0.65,seed,`ribbon-${index}`,0.09*motionAmount);
+      const theta=u*Math.PI*2.5+index*Math.PI/3+time*0.12*motionAmount+follow;
       const radius=4.1+Math.sin(u*Math.PI)*0.8+index*0.18;
-      return new THREE.Vector3(Math.cos(theta)*radius,0.9+u*4.2+Math.sin(theta*1.8+time*0.2)*0.22,Math.sin(theta)*radius-1.5);
+      return new THREE.Vector3(Math.cos(theta)*radius,0.9+u*4.2+Math.sin(theta*1.8+time*0.2)*0.15*motionAmount+accent*Math.sin(u*Math.PI)*0.22,Math.sin(theta)*radius-1.5);
     });
     return new THREE.CatmullRomCurve3(points);
-  },[time,index]);
+  },[time,index,seed,motionAmount,accent]);
   return <mesh><tubeGeometry args={[curve,96,0.018+index*0.002,5,false]}/><meshStandardMaterial color={colors[index]} emissive={colors[index]} emissiveIntensity={1.8} roughness={0.4} toneMapped={false}/></mesh>;
 }
 
-function Stars({time,seed}:{time:number;seed:number}) {
+function Stars({time,seed,motionAmount}:{time:number;seed:number;motionAmount:number}) {
   const base=useMemo(()=>{
     const rand=seeded(seed);
     return Array.from({length:260},()=>({x:(rand()-0.5)*26,y:0.6+rand()*11,z:(rand()-0.5)*20,phase:rand()*Math.PI*2}));
   },[seed]);
-  const positions=useMemo(()=>new Float32Array(base.flatMap(p=>[p.x+0.15*Math.sin(time*0.22+p.phase),p.y+0.14*Math.sin(time*0.31+p.phase),p.z])),[base,time]);
+  const positions=useMemo(()=>new Float32Array(base.flatMap((p,i)=>[p.x+secondaryMotion(time,seed,`star-x-${i}`,0.12*motionAmount),p.y+secondaryMotion(time,seed,`star-y-${i}`,0.1*motionAmount),p.z])),[base,time,seed,motionAmount]);
   return <points>
     <bufferGeometry><bufferAttribute attach="attributes-position" args={[positions,3]}/></bufferGeometry>
     <pointsMaterial color="#ffe1a1" size={0.035} sizeAttenuation transparent opacity={0.7} depthWrite={false}/>
   </points>;
 }
 
-export function Heavenly({frame,fps,seed,startFrame=0}:{frame:number;fps:number;seed:number;startFrame?:number}) {
-  const time=(frame-startFrame)/fps;
+export function Heavenly({frame,fps,seed,startFrame=0,endFrame,events,motionAmount=1,musicAmount=0.15}:{frame:number;fps:number;seed:number;startFrame?:number;endFrame:number;events:CompiledMusicEvent[];motionAmount?:number;musicAmount?:number}) {
+  const duration=frameSeconds(endFrame,fps,startFrame);
+  const time=duration*smootherstep(frameSeconds(frame,fps,startFrame)/duration);
+  const accent=musicAmount*sampleMusicEnvelope(events,frame,{kinds:['accent','phrase','swell'],cap:1});
   return <>
     <color attach="background" args={['#e9d7bb']}/>
     <fog attach="fog" args={['#ead9bf',16,56]}/>
@@ -73,12 +78,12 @@ export function Heavenly({frame,fps,seed,startFrame=0}:{frame:number;fps:number;
     <mesh rotation={[-Math.PI/2,0,0]} position={[0,-0.04,0]}>
       <planeGeometry args={[180,180]}/><meshStandardMaterial color="#a4bec0" roughness={0.23} metalness={0.45}/>
     </mesh>
-    {[5.2,7.3,9.6,12.0,15.4,19.2].map((radius,index)=><mesh key={radius} rotation={[-Math.PI/2,0,0]} position={[0,0,-1.5]} scale={1+0.014*Math.sin(time*0.6+index)}>
+    {[5.2,7.3,9.6,12.0,15.4,19.2].map((radius,index)=><mesh key={radius} rotation={[-Math.PI/2,0,0]} position={[0,0,-1.5]} scale={1+secondaryMotion(time,seed,`ring-${index}`,0.012*motionAmount)+accent*0.012}>
       <torusGeometry args={[radius,0.019,6,120]}/><meshBasicMaterial color="#f9d48f" transparent opacity={0.3}/>
     </mesh>)}
     <mesh position={[0,6.5,-17]}><sphereGeometry args={[1.2,24,16]}/><meshBasicMaterial color="#ffe7ad" toneMapped={false}/></mesh>
     <Pavilion/>
-    {colors.map((_,i)=><Ribbon key={i} time={time} index={i}/>)}
-    <Stars time={time} seed={seed}/>
+    {colors.map((_,i)=><Ribbon key={i} time={time} index={i} seed={seed} motionAmount={motionAmount} accent={accent}/>)}
+    <Stars time={time} seed={seed} motionAmount={motionAmount}/>
   </>;
 }

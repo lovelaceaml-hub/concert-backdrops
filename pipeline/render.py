@@ -113,18 +113,27 @@ def dependency_files(project: Project, shot: dict) -> list[Path]:
                     if all_files or child.suffix in SOURCE_SUFFIXES:
                         add(child)
 
-    add(root / "pipeline")
+    # Finishing/review changes must not invalidate expensive 3D frames. Hash the
+    # renderer's actual shared modules; additional scene imports belong in its
+    # explicit dependency list. Assembly records its own finishing inputs.
+    add(root / "pipeline/project.py")
+    add(root / "pipeline/render.py")
     add(safe_path(root, shot["scene"]))
     for name in ("uv.lock", "package-lock.json", "package.json", "infra/toolchain.lock.json"):
         if (root / name).is_file():
             add(root / name)
     if shot["renderer"] == "threejs":
         add(root / "apps/scene-preview")
+        add(root / "apps/shared")
+        add(root / "apps/motion")
         add(root / "apps/browser-path.mjs")
         add(root / "scenes/three")
     elif shot["renderer"] == "blender":
+        add(root / "pipeline/motion")
         add(root / "scenes/blender")
     else:
+        add(root / "pipeline/legacy.py")
+        add(root / "pipeline/audio.py")
         add(root / "engine")
         add(root / "assets", all_files=True)
         add(root / "fonts", all_files=True)
@@ -152,10 +161,16 @@ def fingerprint(project: Project, shot: dict, quality: str, runtime: dict | None
     return json_hash(value), value
 
 
-def valid_frame(path: Path, size: tuple[int, int], checksum: str | None = None) -> bool:
+def valid_frame(path: Path, size: tuple[int, int], checksum: str | None = None, bit_depth: int | None = None) -> bool:
     try:
         if checksum and file_hash(path) != checksum:
             return False
+        if bit_depth is not None:
+            # Pillow exposes RGB16 PNGs as RGB8; read the PNG IHDR before decoding.
+            with path.open("rb") as stream:
+                header = stream.read(29)
+            if len(header) < 29 or header[:8] != b"\x89PNG\r\n\x1a\n" or header[12:16] != b"IHDR" or header[24] != bit_depth:
+                return False
         with Image.open(path) as frame:
             if frame.size != size:
                 return False
@@ -191,6 +206,7 @@ def render_shot(project: Project, quality: str, shot: dict, frames: list[int], *
     output.mkdir(parents=True, exist_ok=True)
     settings = project.settings(quality)
     size = (settings["width"], settings["height"])
+    depth = settings.get("image_bit_depth", 8)
     key, provenance = fingerprint(project, shot, quality)
     receipt_path = directory / "receipt.json"
     try:
@@ -202,7 +218,7 @@ def render_shot(project: Project, quality: str, shot: dict, frames: list[int], *
     retained = {}
     for frame, checksum in previous.items():
         filename = f"frame_{int(frame):06d}.png"
-        if valid_frame(output / filename, size, checksum):
+        if valid_frame(output / filename, size, checksum, depth):
             retained[frame] = checksum
     if not same:
         # Only this shot's owned products are invalidated, never approved source media.
@@ -211,12 +227,42 @@ def render_shot(project: Project, quality: str, shot: dict, frames: list[int], *
         receipt_path.unlink(missing_ok=True)
     pending = [f for f in frames if str(f) not in retained]
     before = time.monotonic()
-    if pending:
+    policy = project.data["production"]
+    chunk_size = policy.get("render_chunk_frames", 30)
+    threads = policy.get("threads", 4)
+    rendered_count = 0
+
+    def checkpoint():
+        current = {
+            "fingerprint": key, "provenance": provenance, "frames": retained,
+            "complete": all(str(f) in retained for f in range(shot["start_frame"], shot["end_frame_exclusive"])),
+            "shot_id": shot["id"], "width": size[0], "height": size[1], "fps": project.fps,
+            "image_bit_depth": depth, "last_render_seconds": round(time.monotonic() - before, 3),
+            "last_rendered_frames": rendered_count,
+        }
+        write_json(receipt_path, current)
+        return current
+
+    def check_sources():
+        if any(not (project.root / name).is_file() or file_hash(project.root / name) != digest
+               for name, digest in provenance["inputs"].items()):
+            raise PipelineError("Source changed during rendering. Freeze the round, then run render again; earlier receipts will be checked for staleness.")
+
+    for offset in range(0, len(pending), chunk_size):
+        check_sources()
+        chunk = pending[offset:offset + chunk_size]
+        # Remove any unverified leftovers before starting this chunk. Partial files
+        # are never adopted from a different job or an interrupted previous job.
+        for frame in chunk:
+            (output / f"frame_{frame:06d}.png").unlink(missing_ok=True)
         job = {
             "project_id": project.id, "shot": shot,
             "video": {k: settings[k] for k in ("width", "height", "fps")},
-            "seed": project.data["production"]["random_seed"], "frames": pending,
+            "seed": policy["random_seed"], "frames": chunk,
             "out_dir": str(output), "samples": settings["samples"], "repo_root": str(project.root),
+            "image_bit_depth": depth, "motion_blur": settings.get("motion_blur", {"enabled": False}),
+            "threads": threads, "quality": quality,
+            "source_inputs": provenance["inputs"],
             "timing": project.related_data("timing"), "style": project.related_data("style"),
             "audio": project.data.get("audio", {}), "features_dir": str(directory / "audio"),
             "allow_local_render": allow_local,
@@ -225,31 +271,35 @@ def render_shot(project: Project, quality: str, shot: dict, frames: list[int], *
         write_json(job_path, job)
         renderer = shot["renderer"]
         if renderer == "blender":
-            command = [blender_binary(project.root), "-b", "--factory-startup", "-t", "4", "--python-exit-code", "1", "--python", str(project.root / "scenes/blender/render.py"), "--", "--job", str(job_path)]
+            command = [blender_binary(project.root), "-b", "--factory-startup", "-t", str(threads), "--python-exit-code", "1", "--python", str(project.root / "scenes/blender/render.py"), "--", "--job", str(job_path)]
         elif renderer == "threejs":
             command = ["node", "apps/scene-preview/capture.mjs", "--job", str(job_path)]
             if allow_local:
                 command.append("--allow-local-render")
         else:
             command = [sys.executable, "-m", "pipeline.legacy", "--job", str(job_path)]
-        print(f"Rendering {shot['id']}: {len(pending)} frames with {renderer}", flush=True)
+        print(f"Rendering {shot['id']}: frames {chunk[0]} to {chunk[-1]} ({len(chunk)} of {len(pending)} pending) with {renderer}", flush=True)
         env = os.environ.copy()
         env.setdefault("LIBGL_ALWAYS_SOFTWARE", "1")
-        env.setdefault("OMP_NUM_THREADS", "4")
-        run(command, cwd=project.root, log=directory / "render.log", env=env)
-        invalid = [f for f in pending if not valid_frame(output / f"frame_{f:06d}.png", size)]
+        env.setdefault("OMP_NUM_THREADS", str(threads))
+        try:
+            run(command, cwd=project.root, log=directory / "render.log", env=env, timeout=policy.get("render_timeout_seconds", 1800))
+        finally:
+            check_sources()
+            # Even if the worker times out, preserve frames it finished atomically.
+            # Re-running verifies their checksums, then resumes the missing frames.
+            for frame in chunk:
+                path = output / f"frame_{frame:06d}.png"
+                if valid_frame(path, size, bit_depth=depth):
+                    retained[str(frame)] = file_hash(path)
+                    rendered_count += 1
+            if retained:
+                checkpoint()
+        invalid = [f for f in chunk if str(f) not in retained]
         if invalid:
             raise PipelineError(f"Renderer did not write valid frames for shot {shot['id']}: {invalid[:10]}")
-        for frame in pending:
-            retained[str(frame)] = file_hash(output / f"frame_{frame:06d}.png")
-    complete = all(str(f) in retained for f in range(shot["start_frame"], shot["end_frame_exclusive"]))
-    receipt = {
-        "fingerprint": key, "provenance": provenance, "frames": retained, "complete": complete,
-        "shot_id": shot["id"], "width": size[0], "height": size[1], "fps": project.fps,
-        "last_render_seconds": round(time.monotonic() - before, 3), "last_rendered_frames": len(pending),
-    }
-    write_json(receipt_path, receipt)
-    print(f"{shot['id']}: {len(pending)} rendered, {len(frames) - len(pending)} reused, complete={complete}", flush=True)
+    receipt = checkpoint()
+    print(f"{shot['id']}: {rendered_count} rendered, {len(frames) - len(pending)} reused, complete={receipt['complete']}", flush=True)
     return receipt
 
 
@@ -284,7 +334,7 @@ def verify_complete(project: Project, quality: str) -> list[dict]:
         settings = project.settings(quality)
         for frame in range(shot["start_frame"], shot["end_frame_exclusive"]):
             checksum = receipt.get("frames", {}).get(str(frame))
-            if not checksum or not valid_frame(directory / "frames" / f"frame_{frame:06d}.png", (settings["width"], settings["height"]), checksum):
+            if not checksum or not valid_frame(directory / "frames" / f"frame_{frame:06d}.png", (settings["width"], settings["height"]), checksum, settings.get("image_bit_depth", 8)):
                 raise PipelineError(f"Shot {shot['id']} frame {frame} is missing or changed. Run video render to repair it.")
         receipts.append(receipt)
     return receipts

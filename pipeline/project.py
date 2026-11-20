@@ -169,6 +169,10 @@ def validate(project: Project, *, check_files: bool = True) -> None:
     if policy.get("allow_paid_services", False):
         raise PipelineError("This setup does not dispatch paid services.")
     positive_int(policy.get("random_seed"), "production.random_seed", zero=True)
+    for field, default, maximum in (("render_chunk_frames", 30, 600), ("render_timeout_seconds", 1800, 86400), ("threads", 4, 64)):
+        number = positive_int(policy.get(field, default), f"production.{field}")
+        if number > maximum:
+            raise PipelineError(f"production.{field} must be at most {maximum}.")
     presets = data.get("quality")
     if not isinstance(presets, dict) or not all(q in presets for q in ("draft", "review", "final")):
         raise PipelineError("quality must define draft, review and final presets.")
@@ -183,6 +187,30 @@ def validate(project: Project, *, check_files: bool = True) -> None:
             raise PipelineError(f"quality.{name} dimensions must be even.")
         if preset["width"] * video["height"] != preset["height"] * video["width"]:
             raise PipelineError(f"quality.{name} must preserve the project aspect ratio.")
+        if type(preset.get("image_bit_depth", 8)) is not int or preset.get("image_bit_depth", 8) not in (8, 16):
+            raise PipelineError(f"quality.{name}.image_bit_depth must be 8 or 16.")
+        blur = preset.get("motion_blur", {})
+        if not isinstance(blur, dict) or type(blur.get("enabled", False)) is not bool:
+            raise PipelineError(f"quality.{name}.motion_blur must be an object with boolean enabled.")
+        shutter = blur.get("shutter", .5)
+        if isinstance(shutter, bool) or not isinstance(shutter, (int, float)) or not math.isfinite(shutter) or not 0 < shutter <= 1:
+            raise PipelineError(f"quality.{name}.motion_blur.shutter must be greater than 0 and at most 1 frame.")
+        substeps = positive_int(blur.get("substeps", 2), f"quality.{name}.motion_blur.substeps")
+        if not 2 <= substeps <= 8:
+            raise PipelineError(f"quality.{name}.motion_blur.substeps must be 2 to 8.")
+    delivery = data.get("delivery", {})
+    profiles = {"h264", "hevc10", "prores422hq"}
+    if not isinstance(delivery, dict) or not isinstance(delivery.get("profile", "h264"), str) or delivery.get("profile", "h264") not in profiles:
+        raise PipelineError("delivery.profile must be h264, hevc10, or prores422hq.")
+    if delivery.get("source_transfer", "srgb") != "srgb" or delivery.get("color_space", "rec709") != "rec709":
+        raise PipelineError("This workflow expects display-referred sRGB PNG inputs and Rec.709 SDR delivery.")
+    overrides = delivery.get("profiles_by_quality", {})
+    if not isinstance(overrides, dict) or any(k not in presets or not isinstance(v, str) or v not in profiles for k, v in overrides.items()):
+        raise PipelineError("delivery.profiles_by_quality must map existing quality names to supported profiles.")
+    for name, preset in presets.items():
+        profile = overrides.get(name, delivery.get("profile", "h264") if name == "final" else "h264")
+        if profile in ("hevc10", "prores422hq") and preset.get("image_bit_depth", 8) != 16:
+            raise PipelineError(f"quality.{name}.image_bit_depth must be 16 for the selected {profile} delivery profile.")
     shots = data.get("shots")
     if not isinstance(shots, list) or not shots:
         raise PipelineError("shots must be a nonempty list.")
@@ -211,6 +239,15 @@ def validate(project: Project, *, check_files: bool = True) -> None:
         renderer = shot.get("renderer")
         if renderer not in ("blender", "threejs", "p3d"):
             raise PipelineError(f"Unsupported renderer for {sid}: {renderer!r}")
+        if renderer == "threejs":
+            if video["fps"] > 120:
+                raise PipelineError("The browser capture adapter supports at most 120 fps.")
+            if any(not 16 <= p["width"] <= 7680 or not 16 <= p["height"] <= 4320 for p in presets.values()):
+                raise PipelineError("Browser render presets must be 16..7680 pixels wide and 16..4320 pixels high.")
+        if renderer != "blender" and any(p.get("image_bit_depth", 8) == 16 for p in presets.values()):
+            raise PipelineError("16-bit render inputs currently require Blender for every shot; browser and p3d outputs are 8-bit.")
+        if renderer != "blender" and any(p.get("motion_blur", {}).get("enabled", False) for p in presets.values()):
+            raise PipelineError("Baked physical motion blur is supported by the Blender adapter only.")
         scene = safe_path(root, shot.get("scene"), exists=check_files)
         if check_files and not scene.is_file():
             raise PipelineError(f"The scene for {sid} must be a file.")
@@ -221,6 +258,42 @@ def validate(project: Project, *, check_files: bool = True) -> None:
                 raise PipelineError("The existing p3d engine supports 30 or 60 fps.")
         if not isinstance(shot.get("params", {}), dict):
             raise PipelineError(f"{sid}.params must be an object.")
+        limits = shot.get("params", {}).get("motion_limits", {})
+        if not isinstance(limits, dict) or set(limits) - {"speed", "acceleration", "jerk"}:
+            raise PipelineError(f"{sid}.params.motion_limits accepts speed, acceleration, and jerk.")
+        for label, value in limits.items():
+            if isinstance(value, bool) or not isinstance(value, (int, float)) or not math.isfinite(value) or value <= 0:
+                raise PipelineError(f"{sid}.params.motion_limits.{label} must be finite and positive.")
+        camera_path = shot.get("params", {}).get("camera_path")
+        if camera_path is not None:
+            from .motion import CameraTrack
+            try:
+                if not isinstance(camera_path, dict):
+                    raise ValueError("camera_path must be an object")
+                spec = dict(camera_path)
+                count = len(spec.get("points", []))
+                if "seconds" not in spec and count > 1:
+                    spec["seconds"] = [(end - start) / video["fps"] * i / (count - 1) for i in range(count)]
+                spec.setdefault("targets", [[0, 2.2, -1.3]] if renderer == "threejs" else [[0, 0, 0]])
+                track = CameraTrack.from_dict(spec)
+                for i in range(129):
+                    sample = track.sample(track.seconds[0] + (track.seconds[-1] - track.seconds[0]) * i / 128)
+                    direction = tuple(b - a for a, b in zip(sample.position, sample.target))
+                    distance = math.sqrt(sum(v * v for v in direction))
+                    up = 2 if renderer == "blender" else 1
+                    limit = .9999 if renderer == "blender" else .999
+                    if abs(direction[up]) / distance > limit:
+                        raise ValueError("camera look direction is too close to the world-up axis; choose a target with a stable horizon")
+            except (ValueError, TypeError, KeyError, AttributeError) as exc:
+                raise PipelineError(f"{sid}.params.camera_path: {exc}") from exc
+        if renderer == "threejs":
+            params = shot.get("params", {})
+            if params.get("camera", "orbit") not in ("orbit", "push-in", "locked", "fly-through"):
+                raise PipelineError(f"{sid}.params.camera must name a supported browser camera.")
+            for field, maximum in (("motion_amount", 2), ("music_amount", 1)):
+                value = params.get(field, 0)
+                if isinstance(value, bool) or not isinstance(value, (int, float)) or not math.isfinite(value) or not 0 <= value <= maximum:
+                    raise PipelineError(f"{sid}.params.{field} must be between 0 and {maximum}.")
         if renderer == "p3d" and shot.get("params", {}).get("features"):
             safe_path(root, shot["params"]["features"], exists=check_files)
         dependencies(shot.get("dependencies", []), f"{sid}.dependencies")
@@ -240,8 +313,16 @@ def validate(project: Project, *, check_files: bool = True) -> None:
         if not isinstance(event, dict):
             raise PipelineError("Each timing event must be an object.")
         frame = positive_int(event.get("frame"), "timing event frame", zero=True)
+        if not isinstance(event.get("kind"), str) or not event["kind"]:
+            raise PipelineError("Each timing event needs a nonempty string kind.")
         if frame >= cursor:
             raise PipelineError(f"Timing event frame {frame} is outside the timeline.")
+        for key in ("attack_frames", "release_frames"):
+            if key in event:
+                positive_int(event[key], f"timing event {key}")
+        amplitude = event.get("amplitude", 1)
+        if isinstance(amplitude, bool) or not isinstance(amplitude, (int, float)) or not math.isfinite(amplitude) or amplitude < 0:
+            raise PipelineError("timing event amplitude must be a finite nonnegative number.")
     audio = data.get("audio", {})
     if not isinstance(audio, dict):
         raise PipelineError("audio must be an object.")

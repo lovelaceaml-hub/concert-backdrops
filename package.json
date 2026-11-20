@@ -18,7 +18,8 @@
     "build": "npm run build --workspaces",
     "capture": "node apps/scene-preview/capture.mjs",
     "finish": "node apps/editor/render.mjs",
-    "test:browser": "node apps/scene-preview/test-capture.mjs"
+    "test:browser": "node apps/scene-preview/test-capture.mjs",
+    "test:motion": "node --test apps/shared/motion.test.mjs apps/editor/delivery.test.mjs"
   },
   "dependencies": {
     "@fontsource/cormorant-garamond": "5.3.0",

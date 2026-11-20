@@ -1,0 +1,25 @@
+export type Vec3 = [number, number, number];
+export type CameraPathSpec = {
+  points: Vec3[];
+  targets?: Vec3[];
+  seconds?: number[];
+  easing?: 'linear' | 'smootherstep';
+  pacing?: 'waypoints';
+  roll_degrees?: [number, number];
+};
+export type NaturalSpline = {points: Vec3[]; seconds: number[]; second: Vec3[]};
+export type CameraTrack = {position: NaturalSpline; target: NaturalSpline | Vec3; easing: 'linear' | 'smootherstep'; roll: [number, number]};
+export type MusicEvent = {frame: number; kind: string; amplitude?: number; attack_frames?: number; release_frames?: number};
+export type CompiledMusicEvent = MusicEvent & {amplitude: number; attack_frames: number; release_frames: number};
+export function clamp01(value: number): number;
+export function smootherstep(value: number): number;
+export function frameSeconds(frame: number, fps: number, startFrame?: number): number;
+export function shotProgress(frame: number, startFrame: number, endFrameExclusive: number): number;
+export function createNaturalSpline(points: Vec3[], seconds: number[]): NaturalSpline;
+export function sampleNaturalSpline(spline: NaturalSpline, seconds: number): {position: Vec3; velocity: Vec3; acceleration: Vec3};
+export function createCameraTrack(spec: CameraPathSpec, durationSeconds?: number): CameraTrack;
+export function sampleCameraTrack(track: CameraTrack, seconds: number): {position: Vec3; target: Vec3; up: Vec3; roll_degrees: number; progress: number};
+export function compileMusicEvents(events?: MusicEvent[], fps?: number): CompiledMusicEvent[];
+export function sampleMusicEnvelope(events: CompiledMusicEvent[], frame: number, options?: {kinds?: string[]; cap?: number}): number;
+export function secondaryMotion(seconds: number, seed: number, channel: string | number, amplitude?: number): number;
+export function titleSettle(seconds: number, options?: {delay?: number; duration?: number; distance?: number}): {progress: number; offset: number; opacity: number};

@@ -38,9 +38,12 @@ jobs:
       - name: Validate contracts
         run: |
           uv run --frozen --extra legacy python -m unittest discover -s tests/pipeline -v
+          npm run test:motion
           ./scripts/video validate pipeline-demo
           ./scripts/video validate cpu-demo
           ./scripts/video validate legacy-p3d
+          ./scripts/video validate motion-study
+          ./scripts/video motion-qa motion-study
       - name: Optional CPU rendering proof
         if: inputs.render_smoke
         run: ./scripts/video preview pipeline-demo

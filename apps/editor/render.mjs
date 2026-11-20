@@ -7,6 +7,7 @@ import {fileURLToPath} from 'node:url';
 import {bundle} from '@remotion/bundler';
 import {selectComposition,renderMedia} from '@remotion/renderer';
 import {browserPath} from '../browser-path.mjs';
+import {deliveryFfmpegArgs} from './delivery.mjs';
 
 const appRoot=path.dirname(fileURLToPath(import.meta.url));
 const option=name=>{const index=process.argv.indexOf(name);return index>=0?process.argv[index+1]:undefined;};
@@ -69,9 +70,9 @@ export async function finish(inputPath,outputPath,{allowLocalRender=false}={}) {
     const composition=await selectComposition({serveUrl,id:'ConcertFilm',inputProps,browserExecutable,chromiumOptions});
     await mkdir(path.dirname(outputPath),{recursive:true});
     const partial=`${outputPath}.partial.mp4`;
-    await renderMedia({serveUrl,composition,inputProps,outputLocation:partial,codec:'h264',crf:18,pixelFormat:'yuv420p',concurrency:1,browserExecutable,chromiumOptions,overwrite:true,logLevel:'warn'});
+    await renderMedia({serveUrl,composition,inputProps,outputLocation:partial,codec:'h264',crf:18,pixelFormat:'yuv420p',colorSpace:'bt709',imageFormat:'png',hardwareAcceleration:'disable',audioCodec:'aac',sampleRate:48000,audioBitrate:'320k',ffmpegOverride:deliveryFfmpegArgs,concurrency:1,browserExecutable,chromiumOptions,overwrite:true,logLevel:'warn'});
     await rename(partial,outputPath);
-    await writeFile(`${outputPath}.json`,JSON.stringify({renderer:'remotion',version:'4.0.484',width:props.width,height:props.height,fps:props.fps,durationInFrames:props.durationInFrames,clips:props.clips.length,audio:Boolean(props.audio_src),output:outputPath},null,2)+'\n');
+    await writeFile(`${outputPath}.json`,JSON.stringify({renderer:'remotion',version:'4.0.484',width:props.width,height:props.height,fps:props.fps,durationInFrames:props.durationInFrames,clips:props.clips.length,audio:Boolean(props.audio_src),color_space:'rec709',pixel_format:'yuv420p',profile:'High',audio_sample_rate:props.audio_src?48000:null,output:outputPath},null,2)+'\n');
     return outputPath;
   } finally {await rm(scratch,{recursive:true,force:true});}
 }

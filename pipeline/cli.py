@@ -13,8 +13,8 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 from .audio import analyze
-from .media import assemble, qa, storyboard
-from .project import PipelineError, file_hash, load_project, repo_root, write_json
+from .media import assemble, current_master_path, finishing_input_hashes, qa, storyboard
+from .project import PipelineError, Project, file_hash, load_project, repo_root, validate, write_json
 from .render import blender_binary, command_version, render, verify_complete
 
 
@@ -69,7 +69,18 @@ def doctor(root: Path, *, probe_browser: bool = False, allow_local: bool = False
         warnings.append("Legacy p3d dependencies are optional; install with uv sync --extra legacy.")
     if platform.system() == "Darwin":
         warnings.append("Local Mac rendering is disabled by default; no render was started.")
-    return {"dependencies_ready": not errors, "full_pipeline_runtime_verified": False, "runtime_validation": {"browser": browser, "blender_render": "not_probed", "p3d_render": "not_probed", "remotion_finish": "not_probed"}, "platform": platform.system(), "binaries": binaries, "versions": versions, "python_packages": packages, "cloud_gpu_provider": None, "paid_dispatch": "disabled", "local_mac_render": "explicit invocation only", "errors": errors, "warnings": warnings, "checks": "Installed dependencies and optional browser launch only. A complete preview render plus QA verifies a project and its selected renderers."}
+    from .delivery import encoder_capabilities
+    try:
+        delivery = encoder_capabilities()
+        if not delivery.get("zscale") or "libx264" not in delivery.get("encoders", []):
+            errors.append("FFmpeg needs zscale and libx264 for the default delivery path.")
+        for encoder in ("libx265", "prores_ks"):
+            if encoder not in delivery.get("encoders", []):
+                warnings.append(f"FFmpeg lacks optional {encoder}; its high-quality profile is unavailable.")
+    except PipelineError as exc:
+        delivery = {"error": str(exc)}
+        errors.append(str(exc))
+    return {"dependencies_ready": not errors, "full_pipeline_runtime_verified": False, "runtime_validation": {"browser": browser, "blender_render": "not_probed", "p3d_render": "not_probed", "remotion_finish": "not_probed"}, "platform": platform.system(), "binaries": binaries, "versions": versions, "python_packages": packages, "delivery_capabilities": delivery, "cloud_gpu_provider": None, "paid_dispatch": "disabled", "local_mac_render": "explicit invocation only", "errors": errors, "warnings": warnings, "checks": "Installed dependencies and optional browser launch only. A complete preview render plus QA verifies a project and its selected renderers."}
 
 
 def frame_list(value: str) -> list[int]:
@@ -90,7 +101,7 @@ def frame_list(value: str) -> list[int]:
     return sorted(result)
 
 
-def create_project(root: Path, title: str, fps: int, seconds: int) -> Path:
+def create_project(root: Path, title: str, fps: int, seconds: int, template: str = "cinematic") -> Path:
     project_id = re.sub(r"[^a-z0-9]+", "-", title.lower()).strip("-")[:80]
     if not project_id:
         raise PipelineError("The title must contain letters or numbers.")
@@ -108,6 +119,10 @@ def create_project(root: Path, title: str, fps: int, seconds: int) -> Path:
         "style": "styles/zion-cinematic.json", "timing": {"fps": fps, "events": [], "manually_verified": False},
         "shots": [{"id": "opening", "name": "Opening", "renderer": "threejs", "start_frame": 0, "end_frame_exclusive": seconds * fps, "scene": "apps/scene-preview/src/scenes/Heavenly.tsx", "params": {}}],
     }
+    if template == "cinematic":
+        from .presets import cinematic_project
+        data = cinematic_project(project_id, title, fps, seconds)
+    validate(Project(root, target, data), check_files=False)
     write_json(target, data)
     return target
 
@@ -115,7 +130,7 @@ def create_project(root: Path, title: str, fps: int, seconds: int) -> Path:
 def archive(project, quality: str, destination: str) -> Path:
     directory = project.output(quality)
     qa_path = directory / "qa.json"
-    master = directory / "master.mp4"
+    master = current_master_path(project, quality)
     if not qa_path.is_file() or not master.is_file():
         raise PipelineError("Run video finalize or video qa before archiving.")
     report = json.loads(qa_path.read_text())
@@ -124,6 +139,8 @@ def archive(project, quality: str, destination: str) -> Path:
     manifest = json.loads((directory / "master.json").read_text())
     if manifest["project_identity"] != project.identity():
         raise PipelineError("Project changed after assembly. Re-render and finalize before archiving.")
+    if "finishing_inputs" in manifest and manifest["finishing_inputs"] != finishing_input_hashes(project.root, manifest.get("editor", "ffmpeg")):
+        raise PipelineError("Finishing code changed after assembly. Finalize and check the current master before archiving.")
     current = verify_complete(project, quality)
     if manifest.get("shot_fingerprints") != {r["shot_id"]: r["fingerprint"] for r in current}:
         raise PipelineError("Rendered shots changed after assembly. Finalize again before archiving.")
@@ -131,7 +148,7 @@ def archive(project, quality: str, destination: str) -> Path:
     if target.exists():
         raise PipelineError(f"Archive target exists: {target}")
     target.mkdir(parents=True)
-    filenames = ["master.mp4", "master.json", "qa.json", "contact-sheet.jpg"]
+    filenames = [master.name, "master.json", "qa.json", "contact-sheet.jpg"]
     for filename in filenames:
         if (directory / filename).is_file():
             shutil.copy2(directory / filename, target / filename)
@@ -172,10 +189,18 @@ def parser() -> argparse.ArgumentParser:
     new.add_argument("title")
     new.add_argument("--fps", type=int, default=60)
     new.add_argument("--seconds", type=int, default=10)
+    new.add_argument("--template", choices=("cinematic", "browser"), default="cinematic", help="Cinematic creates a Blender 4K60-capable project; browser creates the original Three.js study")
+    bench = sub.add_parser("benchmark", help="Measure selected native frames at review and final quality without rendering a whole film")
+    bench.add_argument("project")
+    bench.add_argument("--qualities", nargs="+", help="Defaults to review and 4k-check when present, otherwise review and final")
+    bench.add_argument("--frames", type=frame_list)
+    bench.add_argument("--allow-local-render", action="store_true")
+    motion = sub.add_parser("motion-qa", help="Inspect camera speed, acceleration and sampled jerk before rendering")
+    motion.add_argument("project")
     for command in ("validate", "analyze", "storyboard", "render", "preview", "assemble", "finalize", "qa", "review", "approve", "archive"):
         q = sub.add_parser(command)
         q.add_argument("project", help="Project id or a repository-relative manifest path")
-        q.add_argument("--quality", choices=("draft", "review", "final"), default="draft" if command in ("preview", "storyboard", "review") else "final")
+        q.add_argument("--quality", default="draft" if command in ("preview", "storyboard", "review") else "final", help="A quality preset from this project's manifest")
         if command in ("render", "preview"):
             q.add_argument("--frames", type=frame_list, help="Render selected global frames or half-open ranges")
             q.add_argument("--shot", action="append", help="Render only this shot id (repeatable)")
@@ -184,6 +209,7 @@ def parser() -> argparse.ArgumentParser:
             q.add_argument("--allow-local-render", action="store_true", help="Explicitly permit rendering on this Mac for this invocation")
         if command in ("assemble", "finalize", "preview"):
             q.add_argument("--editor", choices=("ffmpeg", "remotion"), default="ffmpeg")
+            q.add_argument("--profile", choices=("h264", "hevc10", "prores422hq"), help="Override the project's delivery profile for this output")
         if command == "storyboard":
             q.add_argument("--render", action="store_true", help="Render beginning/middle/end frames for each shot")
         if command == "approve":
@@ -205,9 +231,18 @@ def main(argv: list[str] | None = None) -> int:
             passed = report["dependencies_ready"] and (not args.probe_browser or report["runtime_validation"]["browser"].get("runtime_validated") is True)
             return 0 if passed else 2
         if args.command == "new":
-            print(create_project(root, args.title, args.fps, args.seconds))
+            print(create_project(root, args.title, args.fps, args.seconds, args.template))
             return 0
         project = load_project(root, args.project)
+        if args.command == "motion-qa":
+            from .motion_review import motion_review
+            print(json.dumps(motion_review(project), indent=2))
+            return 0
+        if args.command == "benchmark":
+            from .benchmark import benchmark
+            qualities = args.qualities or ["review", "4k-check" if "4k-check" in project.data["quality"] else "final"]
+            print(json.dumps(benchmark(project, qualities, args.frames, allow_local=args.allow_local_render), indent=2))
+            return 0
         quality = args.quality
         if args.command == "validate":
             print(json.dumps({"valid": True, "project": project.id, "frames": project.frames, "fps": project.fps, "seconds": project.seconds, "renderers": sorted({s["renderer"] for s in project.shots})}, indent=2))
@@ -223,13 +258,13 @@ def main(argv: list[str] | None = None) -> int:
         elif args.command == "preview":
             render(project, quality, selected=args.frames, shot_ids=args.shot, force=args.force, allow_local=args.allow_local_render)
             if args.frames is None and args.shot is None:
-                print(assemble(project, quality, editor=args.editor, allow_local=args.allow_local_render))
+                print(assemble(project, quality, editor=args.editor, allow_local=args.allow_local_render, profile=args.profile))
                 report = qa(project, quality)
                 print(json.dumps(report, indent=2))
                 return 0 if report["technical_passed"] else 2
             print(storyboard(project, quality))
         elif args.command in ("assemble", "finalize"):
-            print(assemble(project, quality, editor=args.editor, allow_local=args.allow_local_render))
+            print(assemble(project, quality, editor=args.editor, allow_local=args.allow_local_render, profile=args.profile))
             if args.command == "finalize":
                 report = qa(project, quality)
                 print(json.dumps(report, indent=2))

@@ -1,5 +1,8 @@
 # Video pipeline setup verification
 
+Historical setup verification is preserved below. The newer native 4K and motion
+extension is recorded in [4K-MOTION-VALIDATION.md](4K-MOTION-VALIDATION.md).
+
 Verified in the cloud workspace on November 19, 2026 (America/Los_Angeles). Work is on `setup/repeatable-video-pipeline`, based on `08b63fb3dd62ab0fdad7dcc5a86ca4bcf271f811`. It is an additive setup, not an update to an approved film.
 
 ## Outcome
