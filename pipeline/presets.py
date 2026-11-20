@@ -12,7 +12,7 @@ def cinematic_project(project_id: str, title: str, fps: int = 60, seconds: int =
         "production": {"cloud_gpu_provider": None, "allow_local_gpu": False,
             "allow_paid_services": False, "allow_ai_generated_visuals": False,
             "allow_stock_footage": False, "random_seed": 2026,
-            "threads": 4, "render_chunk_frames": 30, "render_timeout_seconds": 1800},
+            "threads": 4, "render_chunk_frames": 1, "render_timeout_seconds": 7200},
         "delivery": {"profile": "hevc10", "source_transfer": "srgb", "color_space": "rec709",
             "profiles_by_quality": {"draft": "h264", "review": "h264", "4k-check": "hevc10", "final": "hevc10"}},
         "quality": {

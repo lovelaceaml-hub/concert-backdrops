@@ -179,10 +179,20 @@ exposure. Keep typography stable and readable.
 
 ## Recovering long CPU renders
 
-The production manifest defaults to 30-frame chunks, four CPU threads, and an
-1800-second timeout per chunk. Set `render_chunk_frames`, `threads`, and
-`render_timeout_seconds` under `production` for the worker's measured capacity.
-Decrease chunk size when 4K frames are slow. No GPU provider is selected.
+New cinematic projects use one-frame chunks, four CPU threads, and a 7200-second
+timeout per chunk. This conservative starting point avoids requiring a batch of
+30 slow 4K frames to finish within a short worker limit. Set
+`render_chunk_frames`, `threads`, and `render_timeout_seconds` under `production`
+for the worker's measured capacity. Larger chunks can reduce startup overhead
+for lightweight previews after benchmarking. No GPU provider is selected.
+
+The included `motion-study` verification project retains its recorded preview
+settings of 30-frame chunks and 1800 seconds. Its native-size checks requested
+only one frame. Before using that existing project for a full 1080p or 4K CPU
+sequence, use one-frame chunks and the longer timeout from the new-project
+template. The measured 4K check took about 217 seconds for one frame, so 30 such
+frames would exceed 1800 seconds. A timeout cannot guarantee success for every
+scene; size it from the actual final-preset benchmark.
 
 Every finished PNG is written atomically and verified for dimensions, expected
 bit depth and checksum. Even when a worker fails, valid completed frames in that

@@ -34,6 +34,8 @@ class CinematicTests(unittest.TestCase):
         self.assertEqual(project.settings("final")["image_bit_depth"], 16)
         self.assertEqual({project.settings(q)["fps"] for q in data["quality"]}, {60})
         self.assertIsNone(data["production"]["cloud_gpu_provider"])
+        self.assertEqual(data["production"]["render_chunk_frames"], 1)
+        self.assertEqual(data["production"]["render_timeout_seconds"], 7200)
 
     def test_valid_rgb8_file_cannot_pass_as_rgb16(self):
         frame = self.root / "eight.png"

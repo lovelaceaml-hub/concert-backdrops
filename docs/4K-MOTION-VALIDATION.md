@@ -62,6 +62,13 @@ individual measurements, not a controlled resolution-only speed comparison.
 Only frame 299 was rendered at each native size in this check. The full final
 preset uses 64 samples and has not been rendered as a complete movie.
 
+Those measurements also showed that the original 30-frame/1800-second worker
+budget was too short for a full native-size sequence on these CPUs. New cinematic
+projects therefore start with one-frame chunks and a 7200-second timeout. The
+recorded example manifest and its verified frame cache remain unchanged. This
+factory-default change was checked with the focused cinematic contract tests;
+it changes worker scheduling, not the verified scene or image generation.
+
 The original native 4K PNG is 27,007,155 bytes. Its PNG IHDR identifies 16-bit RGB
 pixels; this was checked directly rather than inferred from a filename or an
 8-bit image viewer. The actual file was then encoded once with each delivery
