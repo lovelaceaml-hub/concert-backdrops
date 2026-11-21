@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import contextlib
+from concurrent.futures import FIRST_COMPLETED, ThreadPoolExecutor, wait
 import importlib.metadata
 import json
 import os
@@ -10,6 +11,7 @@ import shutil
 import subprocess
 import sys
 import time
+import uuid
 from pathlib import Path
 
 from PIL import Image
@@ -246,12 +248,18 @@ def render_shot(project: Project, quality: str, shot: dict, frames: list[int], *
         for path in output.glob("frame_*.png"):
             path.unlink()
         receipt_path.unlink(missing_ok=True)
+    # One job owns each requested frame, including callers that repeat or reorder
+    # selected frames. Execution order must not become part of image identity.
+    frames = sorted(set(frames))
     pending = [f for f in frames if str(f) not in retained]
     before = time.monotonic()
     policy = project.data["production"]
     chunk_size = policy.get("render_chunk_frames", 30)
     threads = policy.get("threads", 4)
+    workers = policy.get("render_workers", 1)
     rendered_count = 0
+    stop_file = project.output(quality) / "STOP"
+    invocation = directory / "workers" / uuid.uuid4().hex
 
     def checkpoint():
         current = {
@@ -269,11 +277,11 @@ def render_shot(project: Project, quality: str, shot: dict, frames: list[int], *
                for name, digest in provenance["inputs"].items()):
             raise PipelineError("Source changed during rendering. Freeze the round, then run render again; earlier receipts will be checked for staleness.")
 
-    for offset in range(0, len(pending), chunk_size):
-        if (project.output(quality) / "STOP").exists():
-            raise PipelineError("This production round has a STOP marker. Remove it only when intentionally resuming.")
-        check_sources()
+    def prepare_job(offset):
         chunk = pending[offset:offset + chunk_size]
+        work = invocation / f"chunk_{offset // chunk_size:06d}"
+        staging = work / "frames"
+        staging.mkdir(parents=True, exist_ok=True)
         # Remove any unverified leftovers before starting this chunk. Partial files
         # are never adopted from a different job or an interrupted previous job.
         for frame in chunk:
@@ -282,17 +290,17 @@ def render_shot(project: Project, quality: str, shot: dict, frames: list[int], *
             "project_id": project.id, "shot": shot,
             "video": {k: settings[k] for k in ("width", "height", "fps")},
             "seed": policy["random_seed"], "frames": chunk,
-            "out_dir": str(output), "samples": settings.get("samples", 1), "repo_root": str(project.root),
+            "out_dir": str(staging), "samples": settings.get("samples", 1), "repo_root": str(project.root),
             "temporal_samples": settings.get("temporal_samples"),
             "image_bit_depth": depth, "motion_blur": settings.get("motion_blur", {"enabled": False}),
             "threads": threads, "quality": quality,
             "source_inputs": provenance["inputs"],
             "timing": project.related_data("timing"), "style": project.related_data("style"),
-            "audio": project.data.get("audio", {}), "features_dir": str(directory / "audio"),
+            "audio": project.data.get("audio", {}), "features_dir": str(work / "audio"),
             "allow_local_render": allow_local,
-            "stop_file": str(project.output(quality) / "STOP"),
+            "stop_file": str(stop_file),
         }
-        job_path = directory / "job.json"
+        job_path = work / "job.json"
         write_json(job_path, job)
         renderer = shot["renderer"]
         if renderer == "blender":
@@ -309,22 +317,81 @@ def render_shot(project: Project, quality: str, shot: dict, frames: list[int], *
             command = [sys.executable, "-m", "pipeline.legacy", "--job", str(job_path)]
         print(f"Rendering {shot['id']}: frames {chunk[0]} to {chunk[-1]} ({len(chunk)} of {len(pending)} pending) with {renderer}", flush=True)
         env = worker_environment(renderer, threads)
-        try:
-            run(command, cwd=project.root, log=directory / "render.log", env=env, timeout=policy.get("render_timeout_seconds", 1800))
-        finally:
-            check_sources()
-            # Even if the worker times out, preserve frames it finished atomically.
-            # Re-running verifies their checksums, then resumes the missing frames.
-            for frame in chunk:
-                path = output / f"frame_{frame:06d}.png"
-                if valid_frame(path, size, bit_depth=depth):
-                    retained[str(frame)] = file_hash(path)
-                    rendered_count += 1
-            if retained:
-                checkpoint()
+        return chunk, staging, command, work / "render.log", env
+
+    def preserve_completed(chunk, staging):
+        nonlocal rendered_count
+        check_sources()
+        completed = []
+        for frame in chunk:
+            path = staging / f"frame_{frame:06d}.png"
+            if valid_frame(path, size, bit_depth=depth):
+                completed.append((frame, path, file_hash(path)))
+        check_sources()
+        # Workers never write canonical frames or receipts. Private staging also
+        # protects a restarted coordinator from an orphan of a killed invocation.
+        for frame, path, checksum in completed:
+            path.replace(output / path.name)
+            retained[str(frame)] = checksum
+            rendered_count += 1
+        if retained:
+            checkpoint()
         invalid = [f for f in chunk if str(f) not in retained]
         if invalid:
             raise PipelineError(f"Renderer did not write valid frames for shot {shot['id']}: {invalid[:10]}")
+
+    error = None
+    sources_changed = False
+    next_offset = 0
+    active = {}
+    # Threads only wait on isolated renderer subprocesses. Keep the queue bounded
+    # so a failure or STOP cannot launch the remainder of an expensive production.
+    with ThreadPoolExecutor(max_workers=workers, thread_name_prefix="render-worker") as executor:
+        while active or (next_offset < len(pending) and error is None):
+            if not sources_changed:
+                try:
+                    check_sources()
+                except PipelineError as exc:
+                    error, sources_changed = exc, True
+            if stop_file.exists() and error is None:
+                error = PipelineError("This production round has a STOP marker. Remove it only when intentionally resuming.")
+            while error is None and len(active) < workers and next_offset < len(pending):
+                try:
+                    check_sources()
+                    if stop_file.exists():
+                        raise PipelineError("This production round has a STOP marker. Remove it only when intentionally resuming.")
+                    chunk, staging, command, log, env = prepare_job(next_offset)
+                    future = executor.submit(run, command, cwd=project.root, log=log, env=env,
+                                             timeout=policy.get("render_timeout_seconds", 1800))
+                    active[future] = (chunk, staging)
+                    next_offset += chunk_size
+                except Exception as exc:
+                    error = exc
+            if not active:
+                break
+            completed, _ = wait(active, timeout=1, return_when=FIRST_COMPLETED)
+            # Collect the whole completed batch before dispatching any replacement.
+            # Receipt serialization happens only here, on the coordinator thread.
+            for future in sorted(completed, key=lambda item: active[item][0][0]):
+                chunk, staging = active.pop(future)
+                try:
+                    future.result()
+                except Exception as exc:
+                    if error is None:
+                        error = exc
+                if not sources_changed:
+                    try:
+                        preserve_completed(chunk, staging)
+                    except Exception as exc:
+                        if error is None:
+                            error = exc
+            # Drain already launched jobs on failure. Their atomically finished
+            # frames still become reusable unless the source fingerprint changed.
+    check_sources()
+    if stop_file.exists() and error is None:
+        error = PipelineError("This production round has a STOP marker. Remove it only when intentionally resuming.")
+    if error is not None:
+        raise error
     receipt = checkpoint()
     print(f"{shot['id']}: {rendered_count} rendered, {len(frames) - len(pending)} reused, complete={receipt['complete']}", flush=True)
     return receipt

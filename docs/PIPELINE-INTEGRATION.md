@@ -13,6 +13,7 @@ provider, paid dispatch, GitHub render dispatch, or automatic user approval.
 | `approved-light-s11` | `p3d-approved` | Original source scene 97.7 to 127.7 seconds, with the existing 0.1 second picture delay applied once | 1920 x 1080, 60 fps, 2 temporal samples |
 | `concert-kit-consideration` | `p3d-kit` | Historical 18 second authored visual scene, from output frame zero | 1920 x 1080, 60 fps, 2 temporal samples |
 | `concert-kit-consideration-v2` | `p3d-kit` | 15 seconds, output frames 0..899 map to original scene frames 180..1079 | 1920 x 1080, 60 fps, 2 temporal samples |
+| `concert-dance-study` | `p3d-kit` | 18 seconds, one continuous captured dance and settlement, output frames 0..1079 | 1920 x 1080, 60 fps, 2 temporal samples |
 
 The first project retains the established choreography. The historical kit study
 contains models and performance work in `tools/concert_kit`. The revision wraps
@@ -24,7 +25,13 @@ original recording time 140.5 to 155.5 seconds. It adds no fade or time stretch.
 Attaching that recording does not automatically create instrument-specific
 gestures or certify musical synchronization.
 
-All three registrations produce RGB8 SDR frames using the established filmic display treatment.
+The dance study uses the same canonical eighteen-second score at offset zero.
+Its new performance wrapper preserves captured travel and measured sole support;
+its scene and renderer live in `tools/concert_dance`. See that directory's README
+for reproduction, capture provenance and explicit motion limits. It retains the
+approved engine and earlier scene modules unchanged.
+
+All four registrations produce RGB8 SDR frames using the established filmic display treatment.
 They explicitly select `delivery.source_transfer="legacy_display_gamma"`.
 FFmpeg therefore preserves the original RGB-to-YUV matrix/range conversion.
 The separate sRGB conversion used by Blender and browser projects remains intact.

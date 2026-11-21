@@ -25,7 +25,7 @@ def plan(project: Project, quality: str, *, selected=None, shot_ids=None, editor
             "audio_offset_seconds": audio.get("offset_seconds", 0),
             "picture_delay_seconds": 0.1 if "p3d-approved" in backends else 0.0,
             "stages": ["prepare", "render", "gallery"] if partial else ["prepare", "render", "assemble", "qa", "gallery"],
-            "output": str(project.output(quality)), "workers": 1,
+            "output": str(project.output(quality)), "workers": project.data["production"].get("render_workers", 1),
             "checkpoint": "Checksummed atomic PNGs; matching frames are reused after interruption.",
             "plan_only": True, "cloud_gpu_provider": None,
             "creative_approval": "No automatic user approval is recorded."}

@@ -19,7 +19,7 @@
   "audio_sources_verified": 11,
   "full_rehearsal_recordings_verified": 0,
   "current_increment": "Shared production system, nine native model families, original Consideration baseline and isolated response/camera revision",
-  "increment_status": "media_and_log_delivered_exact_reconstructed_handoff_approval_pending",
+  "increment_status": "rendered_verified_saved_prior_drive_delivery_complete",
   "cloud_gpu_provider": null,
   "mac_rendering_used": false,
   "new_study_creative_approval": "not_recorded",
@@ -58,7 +58,7 @@
   "active_render_processes": 0,
   "integration_authority": "https://github.com/lovelaceaml-hub/concert-backdrops/pull/102",
   "portable_handoff": {
-    "status": "saved_reconstruction_pending_exact_replacement_approval",
+    "status": "uploaded_and_raw_bytes_verified",
     "filename": "Concert-Production-System-Handoff-2026-11-20.zip",
     "bytes": 350534,
     "sha256": "eb8bba933a37179fa970c84aecc67cbc0b493809d1e2b2e7863c3900b9606537",
@@ -80,12 +80,19 @@
       "sha256": "eb8bba933a37179fa970c84aecc67cbc0b493809d1e2b2e7863c3900b9606537"
     },
     "drive": {
-      "status": "automatic_review_rejected_pending_exact_replacement_approval",
-      "uploaded": false,
-      "destination_folder_id": "1QDGGqqkJlbovBLCthX-QChqfD8zSmK8X"
+      "status": "uploaded_and_raw_bytes_verified",
+      "uploaded": true,
+      "file_id": "1gp0x2dnj06eIPDuq6vSGpGtKn_bvKrML",
+      "url": "https://drive.google.com/file/d/1gp0x2dnj06eIPDuq6vSGpGtKn_bvKrML/view",
+      "destination_folder_id": "1QDGGqqkJlbovBLCthX-QChqfD8zSmK8X",
+      "mime_type": "application/zip",
+      "bytes": 350534,
+      "sha256": "eb8bba933a37179fa970c84aecc67cbc0b493809d1e2b2e7863c3900b9606537",
+      "modified_time": "2026-11-21T07:52:29.363Z",
+      "raw_bytes_verified": true,
+      "evidence": "project-docs/production-system/evidence/drive-handoff-completion.json"
     },
-    "evidence": "project-docs/production-system/evidence/handoff-reconstruction.json",
-    "rejection_evidence": "project-docs/production-system/evidence/drive-handoff-replacement-block.json",
+    "evidence": "project-docs/production-system/evidence/drive-handoff-completion.json",
     "original_export": {
       "status": "automatic_review_rejected_pending_exact_archive_destination_confirmation",
       "filename": "Concert-Production-System-Handoff-2026-11-20.zip",
@@ -100,13 +107,13 @@
       "historical_record": true,
       "original_bytes_recovered": false
     },
-    "retry_instruction": "After exact replacement approval, recover Library file libfile_0d7ab1c2d83c8191a3badd389c6dc483 version 0, verify 350534 bytes and SHA256 eb8bba933a37179fa970c84aecc67cbc0b493809d1e2b2e7863c3900b9606537, then upload to folder 1QDGGqqkJlbovBLCthX-QChqfD8zSmK8X. Do not re-export or substitute another ZIP."
+    "reconstruction_evidence": "project-docs/production-system/evidence/handoff-reconstruction.json",
+    "historical_replacement_rejection_evidence": "project-docs/production-system/evidence/drive-handoff-replacement-block.json",
+    "recovery_instruction": "This exact archive is already uploaded and verified. Recover it from its recorded Drive file ID or pinned saved backup, then verify 350534 bytes and the recorded SHA256. Do not repeat the completed upload or rebuild a different container under the same identity."
   },
   "drive_production_log": "requested_entry_appended_once_and_raw_bytes_verified",
   "drive_production_log_evidence": "project-docs/production-system/evidence/drive-delivery-completion.json",
-  "remaining_drive_actions": [
-    "After exact replacement approval, recover Library file libfile_0d7ab1c2d83c8191a3badd389c6dc483 version 0, verify 350534 bytes and SHA256 eb8bba933a37179fa970c84aecc67cbc0b493809d1e2b2e7863c3900b9606537, then upload to folder 1QDGGqqkJlbovBLCthX-QChqfD8zSmK8X. Do not re-export or substitute another ZIP."
-  ],
+  "remaining_drive_actions": [],
   "drive_media_files_uploaded_and_verified": 8,
   "drive_delivery_evidence": "project-docs/production-system/evidence/drive-delivery-completion.json",
   "drive_production_log_summary": {
@@ -121,7 +128,10 @@
   "historical_drive_rejection_evidence": [
     "project-docs/production-system/evidence/drive-upload-block.json",
     "project-docs/production-system/evidence/drive-production-log-block.json",
-    "project-docs/production-system/evidence/drive-handoff-upload-block.json"
+    "project-docs/production-system/evidence/drive-handoff-upload-block.json",
+    "project-docs/production-system/evidence/drive-handoff-replacement-block.json"
   ],
-  "pending_delivery_retention_rule": "Before ending a turn with an upload pending, save the exact intended archive bytes durably and record file identity, version, byte count and SHA256. A source commit preserves document contents but cannot recreate the exact ZIP container timestamps and export receipt."
+  "pending_delivery_retention_rule": "Before ending a turn with an upload pending, save the exact intended archive bytes durably and record file identity, version, byte count and SHA256. A source commit preserves document contents but cannot recreate the exact ZIP container timestamps and export receipt.",
+  "drive_handoff_completion_evidence": "project-docs/production-system/evidence/drive-handoff-completion.json",
+  "prior_drive_delivery_complete": true
 }

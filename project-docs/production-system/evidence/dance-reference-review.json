@@ -1,0 +1,252 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-11-21T00:00:19.320966-08:00",
+  "reviewer": "reference_performance_review",
+  "status": "ordered_decoded_image_review_complete_not_owner_approval",
+  "purpose": "Identify the actual approved visual language for a new natural whole-body and ribbon-dance study.",
+  "sources": [
+    {
+      "sha256": "ad4b4e7fe861ae34eb80e8b921ee747efc477c08bb89ec981f1b588a0b3c0af5",
+      "bytes": 22278585,
+      "width": 1280,
+      "height": 720,
+      "fps": "60/1",
+      "duration": "66.000000",
+      "nb_frames": "3960",
+      "id": "approved-promo-comparison",
+      "filename": "approved-promo-720p60.mp4",
+      "drive_file_id": "1CBQ4OtpLW3Kp3zBWsEMkjXYiAWUwhDQw",
+      "role": "720p comparison copy of the approved 66-second Film10 Nine Colours Revision3; original master was not reviewed here."
+    },
+    {
+      "sha256": "d3412fb96a65d8355df21eb1e56d8e35262f1b66c23d293029f19f6056d4ead5",
+      "bytes": 67876653,
+      "width": 1920,
+      "height": 1080,
+      "fps": "60/1",
+      "duration": "30.000000",
+      "nb_frames": "1800",
+      "id": "approved-song11-viewing",
+      "filename": "approved-song11-1080p60.mp4",
+      "drive_file_id": "1lPhp8_3FpXy5SFHqhMtgwBLYKCbMoFAc",
+      "role": "Separately compressed 1080p viewing derivative of the approved 30-second Song11 beauty study; original master bytes were not reviewed here."
+    }
+  ],
+  "method": {
+    "decoder": "FFmpeg",
+    "overview": "Selected timestamp seeks decoded to 480x270 overviews; nominal file times are recorded below.",
+    "passages": "Exact zero-based decoded source-frame selection with FFmpeg select; context images scaled to 640x360.",
+    "dense_dancer": "Exact source frames cropped at native pixel scale to x=400, y=300, width=480, height=420 in the 1280x720 promo comparison.",
+    "temporary_artifacts_directory": "work/natural-performance/reference-review",
+    "real_time_playback": false,
+    "audio_listened_or_sync_measured": false,
+    "new_scene_rendered": false,
+    "approved_sources_modified": false
+  },
+  "samples": [
+    {
+      "source": "approved-promo-comparison",
+      "kind": "overview",
+      "times_seconds": [
+        0,
+        4,
+        8,
+        12,
+        16,
+        20,
+        24,
+        28,
+        32,
+        36,
+        40,
+        44,
+        48,
+        52,
+        56,
+        60,
+        63,
+        65.5
+      ],
+      "sample_count": 18,
+      "sheet": "approved-promo-720p60-overview.png"
+    },
+    {
+      "source": "approved-song11-viewing",
+      "kind": "overview",
+      "times_seconds": [
+        0,
+        3,
+        6,
+        9,
+        12,
+        15,
+        18,
+        21,
+        24,
+        27,
+        29.5
+      ],
+      "sample_count": 11,
+      "sheet": "approved-song11-1080p60-overview.png"
+    },
+    {
+      "source": "approved-promo-comparison",
+      "kind": "context",
+      "start_frame": 720,
+      "end_frame_inclusive": 1170,
+      "step_frames": 30,
+      "sample_count": 16,
+      "times_seconds": [
+        12.0,
+        19.5
+      ],
+      "sheet": "promo-12-to-19.png"
+    },
+    {
+      "source": "approved-promo-comparison",
+      "kind": "context",
+      "start_frame": 1200,
+      "end_frame_inclusive": 1650,
+      "step_frames": 30,
+      "sample_count": 16,
+      "times_seconds": [
+        20.0,
+        27.5
+      ],
+      "sheet": "promo-20-to-27.png"
+    },
+    {
+      "source": "approved-promo-comparison",
+      "kind": "context",
+      "start_frame": 1680,
+      "end_frame_inclusive": 2130,
+      "step_frames": 30,
+      "sample_count": 16,
+      "times_seconds": [
+        28.0,
+        35.5
+      ],
+      "sheet": "promo-28-to-35.png"
+    },
+    {
+      "source": "approved-song11-viewing",
+      "kind": "context",
+      "start_frame": 1170,
+      "end_frame_inclusive": 1470,
+      "step_frames": 20,
+      "sample_count": 16,
+      "times_seconds": [
+        19.5,
+        24.5
+      ],
+      "sheet": "song11-19-to-24.png"
+    },
+    {
+      "source": "approved-promo-comparison",
+      "kind": "dense_native_crop",
+      "start_frame": 1680,
+      "end_frame_inclusive": 1860,
+      "step_frames": 6,
+      "sample_count": 31,
+      "times_seconds": [
+        28.0,
+        31.0
+      ],
+      "crop_xywh": [
+        400,
+        300,
+        480,
+        420
+      ],
+      "sheet": "promo-dancer-dense.png"
+    }
+  ],
+  "observations": [
+    {
+      "source": "approved-promo-comparison",
+      "times_seconds": [
+        14.5,
+        19.0
+      ],
+      "body": "A small blue figure is visible toward the right, but its support and joint motion are too small in these samples to assess.",
+      "environment_and_camera": "Large blue spirals and long streaks dominate the composition. The horizon tilts and its placement changes while coils grow and pass across the foreground. The sense of travel therefore includes substantial environmental and viewpoint contributions.",
+      "inference": "Use this passage as a spatial-flow reference, not evidence of natural footwork."
+    },
+    {
+      "source": "approved-promo-comparison",
+      "times_seconds": [
+        20.0,
+        25.5
+      ],
+      "body": "A lower gold figure and taller pale figure become visible between broad flares; their silhouettes and large gesture relationship carry the interaction.",
+      "environment_and_camera": "Orange and pink illumination, orbiting bright trails and haze frequently cover parts of the figures.",
+      "limitation": "This passage cannot establish exact partner contact or load transfer."
+    },
+    {
+      "source": "approved-promo-comparison",
+      "times_seconds": [
+        28.0,
+        31.0
+      ],
+      "body": "The lavender dancer visibly changes the whole line of action. Ordered 0.1-second samples show an upright reach near 28.0, a side/forward lowering around 28.2 to 28.5, recovery and reopening around 28.6 to 28.8, another dip around 29.0 to 29.3, a higher reach around 29.4 to 29.6, lowering around 29.9 to 30.1, and another opening then bend through 30.4 to 30.9. Head, torso and arm silhouettes change together. This is visible body articulation, not only viewpoint movement.",
+      "environment_and_camera": "The large lavender ribbon follows broad curls above and across the figure. Mist, reflected body/light, sparkles and occasional foreground streaks amplify the body phrase. The horizon is comparatively steady during the main sampled dancer phrase.",
+      "limitation": "Feet, supporting contact, precise finger poses and exact ribbon-to-hand attachment are often not distinguishable under glow, mist and trails. The samples do not establish joint acceleration, physical balance or motion-capture provenance."
+    },
+    {
+      "source": "approved-promo-comparison",
+      "times_seconds": [
+        31.5,
+        32.5
+      ],
+      "body": "The dancer becomes small relative to the image as the passage resolves.",
+      "environment_and_camera": "A close bright ribbon and defocused particles briefly fill the view, followed by a wider spatial composition.",
+      "inference": "The transition adds scale, but a new performance proof should first allow its visible physical phrase to finish."
+    },
+    {
+      "source": "approved-song11-viewing",
+      "times_seconds": [
+        19.5,
+        23.5
+      ],
+      "body": "The conductor remains legible in a mostly held upright stance with comparatively small hand and forearm changes.",
+      "environment_and_camera": "The illuminated platform, rings, reflection, city layers and changing viewpoint provide substantial visual activity and depth.",
+      "inference": "Use the clear full-body staging and environment depth; this passage is not a complex dance reference."
+    },
+    {
+      "source": "approved-song11-viewing",
+      "times_seconds": [
+        23.833333,
+        24.5
+      ],
+      "body": "The conductor is smaller in the widened composition.",
+      "environment_and_camera": "Multiple curved colored light paths expand outward while the person establishes scale.",
+      "inference": "Preserve the individual-to-world response, but protect the action release and follow-through before expanding effects."
+    }
+  ],
+  "design_priorities": [
+    {
+      "priority": 1,
+      "direction": "Preserve the dancer's pronounced whole-body line of action, then add readable weight and support.",
+      "implementation_target": "Author or retarget a connected phrase containing a reach, torso arc, recovery, deliberate support change and final settle. A small step-touch with rigid chest would miss the approved dancer's appeal.",
+      "proof": "Uninterrupted full-body encoded view through the main phrase; independently visible feet, planted-contact checks and stable limb lengths, plus actual visual review."
+    },
+    {
+      "priority": 2,
+      "direction": "Make the flowing ribbon causally follow the final solved wrist while keeping anatomy readable.",
+      "implementation_target": "Use deterministic time-sampled wrist history for the ribbon, broad controlled curls, a narrower luminous core and delayed fading particles. Keep the brightest crossings away from the head, support foot and important hand action.",
+      "proof": "Review the emitter-to-hand relation and the entire ribbon path at dense samples through the deepest bend, turn and release. Do not use a flare to hide discontinuity."
+    },
+    {
+      "priority": 3,
+      "direction": "Combine a clear performance floor with the approved spatial reveal.",
+      "implementation_target": "Protect the performers' swept movement area and screen-space silhouettes from vegetation. Hold a restrained three-quarter full-body camera through support changes, then widen after the phrase settles as the environment answers.",
+      "proof": "Native-size early, middle and ending frames plus a complete encoded clip, with action, reflection, light path and environment all legible. Keep natural-motion assessment separate from frame-rate, resolution and technical QA."
+    }
+  ],
+  "limitations": [
+    "Ordered decoded-image inspection only; no real-time playback or audio listening was performed.",
+    "Overviews and context sheets are spatially reduced. The dense dancer sheet preserves its selected crop at the native 720p comparison scale, not the original promo master resolution.",
+    "No claim that the sampled approved dance has physically correct support, zero foot slip or verified human motion-capture provenance.",
+    "The review establishes design observations and priorities; it does not approve any new model, choreography or output."
+  ]
+}

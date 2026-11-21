@@ -2,7 +2,7 @@
   "schema_version": 1,
   "updated_local_date": "2026-11-20",
   "timezone": "America/Los_Angeles",
-  "status": "eight_media_saved_and_drive_verified_log_appended_replacement_handoff_approval_pending",
+  "status": "eight_media_and_handoff_uploaded_and_raw_bytes_verified",
   "approved_references_catalog": "project-docs/production-system/catalogs/references.json",
   "historical_baseline_source_commit": "673f68785c36b57d55d05129ee5549efe6352c60",
   "current_integration_pr": 102,
@@ -255,12 +255,12 @@
   "limits": [
     "No full 4K movie is represented by a native 4K still.",
     "New studies and models do not inherit owner approval from the approved references.",
-    "All eight media copies are uploaded and verified. The saved reconstructed handoff ZIP still requires exact replacement approval before Drive upload.",
-    "The original and reconstructed ZIP identities differ; preserve both and retry only the pinned saved replacement bytes."
+    "All eight prior media copies and the exact confirmed reconstructed handoff ZIP are uploaded and verified.",
+    "The original and reconstructed ZIP identities differ. Preserve both identities and recover the delivered archive from its recorded Drive file or saved backup."
   ],
   "recorded_at_utc": "2026-11-21T02:50:40.942426+00:00",
   "portable_handoff": {
-    "status": "saved_reconstruction_pending_exact_replacement_approval",
+    "status": "uploaded_and_raw_bytes_verified",
     "filename": "Concert-Production-System-Handoff-2026-11-20.zip",
     "bytes": 350534,
     "sha256": "eb8bba933a37179fa970c84aecc67cbc0b493809d1e2b2e7863c3900b9606537",
@@ -282,12 +282,19 @@
       "sha256": "eb8bba933a37179fa970c84aecc67cbc0b493809d1e2b2e7863c3900b9606537"
     },
     "drive": {
-      "status": "automatic_review_rejected_pending_exact_replacement_approval",
-      "uploaded": false,
-      "destination_folder_id": "1QDGGqqkJlbovBLCthX-QChqfD8zSmK8X"
+      "status": "uploaded_and_raw_bytes_verified",
+      "uploaded": true,
+      "file_id": "1gp0x2dnj06eIPDuq6vSGpGtKn_bvKrML",
+      "url": "https://drive.google.com/file/d/1gp0x2dnj06eIPDuq6vSGpGtKn_bvKrML/view",
+      "destination_folder_id": "1QDGGqqkJlbovBLCthX-QChqfD8zSmK8X",
+      "mime_type": "application/zip",
+      "bytes": 350534,
+      "sha256": "eb8bba933a37179fa970c84aecc67cbc0b493809d1e2b2e7863c3900b9606537",
+      "modified_time": "2026-11-21T07:52:29.363Z",
+      "raw_bytes_verified": true,
+      "evidence": "project-docs/production-system/evidence/drive-handoff-completion.json"
     },
-    "evidence": "project-docs/production-system/evidence/handoff-reconstruction.json",
-    "rejection_evidence": "project-docs/production-system/evidence/drive-handoff-replacement-block.json",
+    "evidence": "project-docs/production-system/evidence/drive-handoff-completion.json",
     "original_export": {
       "status": "automatic_review_rejected_pending_exact_archive_destination_confirmation",
       "filename": "Concert-Production-System-Handoff-2026-11-20.zip",
@@ -302,8 +309,12 @@
       "historical_record": true,
       "original_bytes_recovered": false
     },
-    "retry_instruction": "After exact replacement approval, recover Library file libfile_0d7ab1c2d83c8191a3badd389c6dc483 version 0, verify 350534 bytes and SHA256 eb8bba933a37179fa970c84aecc67cbc0b493809d1e2b2e7863c3900b9606537, then upload to folder 1QDGGqqkJlbovBLCthX-QChqfD8zSmK8X. Do not re-export or substitute another ZIP."
+    "reconstruction_evidence": "project-docs/production-system/evidence/handoff-reconstruction.json",
+    "historical_replacement_rejection_evidence": "project-docs/production-system/evidence/drive-handoff-replacement-block.json",
+    "recovery_instruction": "This exact archive is already uploaded and verified. Recover it from its recorded Drive file ID or pinned saved backup, then verify 350534 bytes and the recorded SHA256. Do not repeat the completed upload or rebuild a different container under the same identity."
   },
   "drive_completion_recorded_at_utc": "2026-11-21T07:39:34.868145+00:00",
-  "drive_completion_evidence": "project-docs/production-system/evidence/drive-delivery-completion.json"
+  "drive_completion_evidence": "project-docs/production-system/evidence/drive-delivery-completion.json",
+  "handoff_completion_recorded_at_utc": "2026-11-21T08:05:03.822755+00:00",
+  "handoff_completion_evidence": "project-docs/production-system/evidence/drive-handoff-completion.json"
 }
