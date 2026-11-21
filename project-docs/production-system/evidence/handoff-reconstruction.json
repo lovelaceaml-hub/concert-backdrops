@@ -1,0 +1,483 @@
+{
+  "schema_version": 1,
+  "recovered_at_utc": "2026-11-21T07:32:18.411425+00:00",
+  "status": "content_verified_reconstruction_saved_replacement_drive_upload_pending",
+  "filename": "Concert-Production-System-Handoff-2026-11-20.zip",
+  "bytes": 350534,
+  "sha256": "eb8bba933a37179fa970c84aecc67cbc0b493809d1e2b2e7863c3900b9606537",
+  "source_commit": "94dd897c6fdeb287561c5dd2772b770c43ab94b7",
+  "source_worktree_clean": true,
+  "original_expected_zip": {
+    "bytes": 350548,
+    "sha256": "605b7be8ca59987651a642727a9babef88e01986c87d8ea7e3ca076e84a2e158",
+    "export_receipt_sha256": "83826f9fb4f7ba408ce3fe22f951a5d03d2c54a00eb5f4f62b2ba001de9a5a20"
+  },
+  "original_zip_bytes_recovered": false,
+  "byte_identical_to_original_zip": false,
+  "reconstructed_with_original_committed_exporter": true,
+  "approved_source_payload_files": 89,
+  "all_payload_members_match_source_commit_git_blobs": true,
+  "all_payload_member_sizes_and_sha256_match_current_export_receipt": true,
+  "payload_mapping_sha256": "4e6fe845e1f08b5731be68b909296bdab2b6c86749ff339d42f75f482033e733",
+  "new_export_receipt_sha256": "a8383220bc1a38e2b0b99286d0a122e9a5001031a183bb6fa24ba62cb0254723",
+  "new_exported_at_utc": "2026-11-21T07:31:59.481217+00:00",
+  "new_producing_branch": "",
+  "container_differences": "New ZIP file timestamps and a new truthful export receipt are present. The 89 source-document payloads are exact Git blobs from the original 94dd897 snapshot. No claim of original ZIP byte identity.",
+  "payload_files": {
+    "AGENTS.md": {
+      "bytes": 4504,
+      "sha256": "0a10cb3a9d6f9ce496c9f277c01d7ff527725248ce149e40744a306abab7d2af",
+      "git_blob_sha1": "c09b0a963f612012fcd419a3a784ab2dd781528f"
+    },
+    "CLAUDE.md": {
+      "bytes": 11,
+      "sha256": "336cc4fbf19beaada7ccf9986414fa91851a8d7a07dfb3ccbe800a69eed0ab49",
+      "git_blob_sha1": "43c994c2d3617f947bcb5adf1933e21dabe46bb5"
+    },
+    "GEMINI.md": {
+      "bytes": 691,
+      "sha256": "f683bf93c0ed8df7efadc064ae9846f66622871645b71eca5c5342500f5a245e",
+      "git_blob_sha1": "7aa158e6562db8f6bd2881bab3a3e097f091f604"
+    },
+    "README.md": {
+      "bytes": 3549,
+      "sha256": "66133ee64f567e0f26d56b6a83188477ad52adf0971dfe5d0d109b3c66e7f64e",
+      "git_blob_sha1": "41f91d907c257c3f1f26c184b8c9b104e2ec9eef"
+    },
+    "apps/README.md": {
+      "bytes": 10128,
+      "sha256": "60a6156cdd8b0f5b5f6442e592ee620903168ee0f554e1a06938792e89dd70de",
+      "git_blob_sha1": "d3c98ef5848277152ec21152620d9d513a33f1e2"
+    },
+    "docs/4K-AND-MOTION.md": {
+      "bytes": 12454,
+      "sha256": "0247d331dadd656ac423f0339b53a2235e881c3343a12687f4b3a8ca03635cc5",
+      "git_blob_sha1": "b6396482190a69d29a243f0430511e7baaf1c1f5"
+    },
+    "docs/4K-MOTION-VALIDATION.md": {
+      "bytes": 8955,
+      "sha256": "e2ab5015c9e61f5f939413bb50bb8b17dbb24cd12ea7d6395631e07648cb5ecd",
+      "git_blob_sha1": "6198c9748039aa52c077a47d924274bd613dc1d4"
+    },
+    "docs/ASTRA-COMPARISON.md": {
+      "bytes": 5769,
+      "sha256": "7c94fcf799ac7529d6128d40f7bcf134ece79faa56fe45ec73c7f85f058e8846",
+      "git_blob_sha1": "9621513238308fd921e681dcd58ed894359a34b1"
+    },
+    "docs/ENGINE-HANDOFF-2026-11-13.md": {
+      "bytes": 3359,
+      "sha256": "5baa56b74cd957dd8ab112b3b728906e031dddf0a39e410d8fc5e848e0619ceb",
+      "git_blob_sha1": "ffba4fd50339d4016b075627c53795fd7f5f475b"
+    },
+    "docs/HANDOFF.md": {
+      "bytes": 4422,
+      "sha256": "0f65a6663c8da83965ebd2b23b3bb5019ad80b1c2fa3e9bb09f114677fb56987",
+      "git_blob_sha1": "8a3449e7db837535edbf1b495c161976c6c9f2d7"
+    },
+    "docs/PIPELINE-INTEGRATION.md": {
+      "bytes": 10900,
+      "sha256": "aa823f264c2cab2a78ceeef785d05bbedf01163d36228997ac525641d3ce1d6c",
+      "git_blob_sha1": "41b9236038a85502dc694cc6ed1275ce53a74b88"
+    },
+    "docs/PROCESS-AND-TOOLS.md": {
+      "bytes": 1344,
+      "sha256": "728d455ca9bbfc78691cdc0676e39b8b2dad55945350c80888669277b4a89933",
+      "git_blob_sha1": "cfa03e8dbb5816896d8faa90f91ff0d54b92c50d"
+    },
+    "docs/REFERENCE-FONTS.md": {
+      "bytes": 3497,
+      "sha256": "aefb9deead7cbf7c12f4e563bb19429d789367e39f435f1ef45a9b411b54a1be",
+      "git_blob_sha1": "abe0389a21ac250826b2ec0fee472569cd96adf0"
+    },
+    "docs/VIDEO-DELIVERY.md": {
+      "bytes": 8809,
+      "sha256": "6629df2d053e10da8e86358c7740e570254d1e0369aa265794a45d96020f7f8f",
+      "git_blob_sha1": "4b445b4d9811f8cd9f0925ee4ac2d2aa8cc3900d"
+    },
+    "docs/VIDEO-PIPELINE-VALIDATION.md": {
+      "bytes": 8849,
+      "sha256": "3676298fdf31f936562d071010522e4c8356186d435531f9b219d222843e2ce8",
+      "git_blob_sha1": "6f57d6679eb5957bd3f20339c990b4750704afab"
+    },
+    "docs/VIDEO-PIPELINE.md": {
+      "bytes": 17971,
+      "sha256": "871a3e169136da2983fc765240f3607252ec099e2a064fe937d082a040d82e56",
+      "git_blob_sha1": "c7ddf13342e50b204535af9c48f228cf5d76ef0b"
+    },
+    "project-docs/AGENTS.md": {
+      "bytes": 5309,
+      "sha256": "04e337c152cc288eb35ddebeb15e03710f12585979d230a881304075aa2decbb",
+      "git_blob_sha1": "00a37c9fc5a3f90150dfeca8258b732ef4f80d74"
+    },
+    "project-docs/production-system/AI-HANDOFF.md": {
+      "bytes": 6544,
+      "sha256": "146ba741a31aa2f6b8ba76488c60d66ca866fda79cf41db7cb0199121dab41ff",
+      "git_blob_sha1": "3a6265cda9361e9f1374c5c4958b6a12fad361c9"
+    },
+    "project-docs/production-system/AUTHORING-NEXT-SONG.md": {
+      "bytes": 9497,
+      "sha256": "394d961a99c5b3b6a1509e0b12b9792a67f17b695e4e72542f575f15d93e594f",
+      "git_blob_sha1": "e2bc63d0177d0f926c25d87fc821232d38af3caa"
+    },
+    "project-docs/production-system/CONSIDERATION-CAMERA-NEXT.md": {
+      "bytes": 5891,
+      "sha256": "6ab1f2fc9a67a68cf89c53884514d481ea5cb7f27c42c358394d6914e19ea6df",
+      "git_blob_sha1": "87347bf8509e84775e95c0d7e52ed210d9e59c41"
+    },
+    "project-docs/production-system/CREATIVE-RULES.md": {
+      "bytes": 7586,
+      "sha256": "8d6538e447b740eebf678fc1257205875fdbbedf75b565a79cf1bdda97978aec",
+      "git_blob_sha1": "7a5002f4bf5359c17b21ab80c8eecb2ee7c5847d"
+    },
+    "project-docs/production-system/DELIVERIES.md": {
+      "bytes": 4054,
+      "sha256": "79ceef95efcb59d70434b460d7e3a1f5128872bcf7426d1c707d827c10f2d822",
+      "git_blob_sha1": "f300d9fbb09f3a57b412207efebd7dd4ff693dcf"
+    },
+    "project-docs/production-system/IMPROVEMENT-QUEUE.md": {
+      "bytes": 6682,
+      "sha256": "16cfd3a5253a2c07a207fc8f5c225c7e81e9b93daaabc20c16d55f5c0444d8da",
+      "git_blob_sha1": "78ca1a5ae8ba54bf1a328fe27598f836d8513c0a"
+    },
+    "project-docs/production-system/REFERENCE-MOTION-REVIEW.md": {
+      "bytes": 5878,
+      "sha256": "bbfa1250688c2912aeea502a2b0fc50a22018ee96fcec17d1fe23ecbd99c8679",
+      "git_blob_sha1": "e9d7d5178bf84110862cd34a9c8fea8f92da32a6"
+    },
+    "project-docs/production-system/SONG-AUDIO-AUDIT.md": {
+      "bytes": 14455,
+      "sha256": "0e245b1df940f8d43ab503491d681665cbdd14eb0199081cec0220a694192d98",
+      "git_blob_sha1": "c376665528aae67b3576404db8aae3a37e7d62fc"
+    },
+    "project-docs/production-system/START-HERE.md": {
+      "bytes": 16952,
+      "sha256": "2339afc5a8874f34a1675573171d6cc98400bb1daa6108f899ac439decf36b93",
+      "git_blob_sha1": "e524c1e1d934835506a13ac37c6f6cf5d4fd93c6"
+    },
+    "project-docs/production-system/STATE.json": {
+      "bytes": 3429,
+      "sha256": "db6e6c41227cab40c9f27e939b41e82dcc8386f7e71ff8dde33769d90029deae",
+      "git_blob_sha1": "b9b4c804e5f96fdeb11e2291949061e2bd187e35"
+    },
+    "project-docs/production-system/catalogs/deliveries.json": {
+      "bytes": 9778,
+      "sha256": "b55da47fc0b5eafac9f9c77e9762911f983a714afd7a3b2ae50f019cbf35b926",
+      "git_blob_sha1": "accf5e405122696777a517127385c32508edd308"
+    },
+    "project-docs/production-system/catalogs/expressions.json": {
+      "bytes": 1796,
+      "sha256": "0f0afb195d9421f5f43ecba2680c43a8f31a053481e0636740e403a4413d4854",
+      "git_blob_sha1": "b861c17e70a11b88cd1e074e55638e2af580741e"
+    },
+    "project-docs/production-system/catalogs/models.json": {
+      "bytes": 23915,
+      "sha256": "d1c48c388118afa470d177bd27eb3845b295a208cae0a88d491df2f45c0d65c2",
+      "git_blob_sha1": "605b124b5078d31f51aa6cbe034242af8c214aeb"
+    },
+    "project-docs/production-system/catalogs/references.json": {
+      "bytes": 4436,
+      "sha256": "aa2224a115cf117913a493c9a9d6fa3a4e173c2a1efa8e5d052ac53ece59a36f",
+      "git_blob_sha1": "073b588ee6ceeda0596d82f05eb99f9757f7b735"
+    },
+    "project-docs/production-system/catalogs/song11-master-parts.json": {
+      "bytes": 1208,
+      "sha256": "340f9a57db64722dabc1e42404d676225ede5e88c652b33d97d1a3f5d3d16a3f",
+      "git_blob_sha1": "4acb64b4f1f3ce6f7bad93a2a577e1565feae481"
+    },
+    "project-docs/production-system/catalogs/songs.json": {
+      "bytes": 79543,
+      "sha256": "bec143cde3f77a83b564e8624d4da72545d5f45e5db1e431a13f4cd2a520247f",
+      "git_blob_sha1": "8370d37ee80a4eb185bc42bca3ae67e46acf3cde"
+    },
+    "project-docs/production-system/catalogs/study-fonts.json": {
+      "bytes": 31482,
+      "sha256": "44e8c577dbcd1598f0b1514fda88236cba54d3dd33fcd524ce5526b366931137",
+      "git_blob_sha1": "5bc0bb1b36e8182c37aaac2a8be17ef8fd144510"
+    },
+    "project-docs/production-system/drive-updates/AGENTS.header.md": {
+      "bytes": 3338,
+      "sha256": "0dcf2f0107ec4799487f685c8cf91e95a627b195ce19d6d633cff6db15653ab3",
+      "git_blob_sha1": "069e92143bda84df51e781c919391d82e7afbcf2"
+    },
+    "project-docs/production-system/drive-updates/AUTONOMOUS-RUN.header.md": {
+      "bytes": 3113,
+      "sha256": "cbd7bd609f23e34231cf07088c2b16246fd6b323a9eb89844c47c158c0fbfebd",
+      "git_blob_sha1": "a11db9aeff95587185834ff47aa4d903ca640c17"
+    },
+    "project-docs/production-system/drive-updates/DESIGN-SYSTEM.header.md": {
+      "bytes": 3361,
+      "sha256": "d2de30ed3f78ed2f55a5803d4792f5e732143f2d877bc1d5cbf8d69f7844a13b",
+      "git_blob_sha1": "b710804eac09f02ecb6e0b029b9617e8f76fe3a9"
+    },
+    "project-docs/production-system/drive-updates/README.header.md": {
+      "bytes": 3146,
+      "sha256": "bfdd2c114674a1c864cdc816a345be8ee98eff366c36a1efe9e4315b08a27ae9",
+      "git_blob_sha1": "11ac5c430f1b842142816196adc573b4621289a3"
+    },
+    "project-docs/production-system/drive-updates/VIDEO-HANDOFF.header.md": {
+      "bytes": 3384,
+      "sha256": "825162513d63ef5ffdc098d632075e5f3096856174bbf56ce29753fcc0b11143",
+      "git_blob_sha1": "1f1e92d8b89ed63eb3135e1de4279e65914d4a8f"
+    },
+    "project-docs/production-system/drive-updates/updates.json": {
+      "bytes": 4703,
+      "sha256": "fb9dedb0ad420ca2149cb400a1233d9624c07806379ac42d55423017bb403820",
+      "git_blob_sha1": "25683f26144c7a55d952b45bf782f5849f4e3fc2"
+    },
+    "project-docs/production-system/evidence/addon-geometry-checks.json": {
+      "bytes": 1413,
+      "sha256": "491d775ec64523fe230bbf3b0672516c083c752c5786c6aa05600e7d802f65be",
+      "git_blob_sha1": "ac6b37ecd775557f5fc163224b14bdb24f3ddf25"
+    },
+    "project-docs/production-system/evidence/addon-picture-inputs.json": {
+      "bytes": 20006,
+      "sha256": "977bff51b1b68a5622fa69aaa9a1f78ee2df5081895a0521f7d25ded1f257f41",
+      "git_blob_sha1": "cf2fad2138d7f44e3b6feead517eef793066c8eb"
+    },
+    "project-docs/production-system/evidence/approved-adapter-native.json": {
+      "bytes": 1112,
+      "sha256": "611f614699dbcc06636f02ff50d1bc79b08ec36509a2bcd8cdc2063fd806fe69",
+      "git_blob_sha1": "4e454a92bd9cef2c62e1f7dcfad3ff242200a7d3"
+    },
+    "project-docs/production-system/evidence/approved-reference-archive.json": {
+      "bytes": 5883,
+      "sha256": "4b2e2790c276ba718002a34fc52dc6dca5d23861807daf24fad4c788edfd9f76",
+      "git_blob_sha1": "51923d0df37f659a391c2bd448725ec123feec3a"
+    },
+    "project-docs/production-system/evidence/consideration-baseline-delivery-qa.json": {
+      "bytes": 34946,
+      "sha256": "af6142c96bce3f995c324918d9640f0fbe579193c39294c18264210f8896acc0",
+      "git_blob_sha1": "9108b9f1de57f67a5795ad8d95f53cd23b92f9e6"
+    },
+    "project-docs/production-system/evidence/consideration-baseline-frozen-inputs.json": {
+      "bytes": 47603,
+      "sha256": "ab16b1743421088fe31f421b84a6d0a73bdf9360c99e0eb582335fc8aeefcd63",
+      "git_blob_sha1": "3c5de3e2f52d9bfb19f97c3aae81003fce739409"
+    },
+    "project-docs/production-system/evidence/consideration-camera-plan.json": {
+      "bytes": 8041,
+      "sha256": "520872b6e8a6a6b9f818590b9fadf15fc7bce6c89d68f361cea5a701e7ed195f",
+      "git_blob_sha1": "5a573fed564608147c8a4b8f3ac63cab7ad452cd"
+    },
+    "project-docs/production-system/evidence/consideration-native-4k.json": {
+      "bytes": 610,
+      "sha256": "cbbe7fb55a83d76f883a7f2a847db8e5b33c8e6b2fdcb9a975316a74a39fab17",
+      "git_blob_sha1": "e5686f26f49714a7a5894fad1dc3b5cd76f9fc98"
+    },
+    "project-docs/production-system/evidence/consideration-order-check.json": {
+      "bytes": 1806,
+      "sha256": "6d79e8eb33e088c6ae7c51adffcc6478fd5d62052990f55c8ceb09034dbc9e86",
+      "git_blob_sha1": "81ca09a40cecd5426e79668cc0a68efa0bd50bca"
+    },
+    "project-docs/production-system/evidence/consideration-picture-inputs.json": {
+      "bytes": 20103,
+      "sha256": "464054fb31c6d07079bbe31d32490d3c75ba7f1ce9d10bf153efd5b8245d653b",
+      "git_blob_sha1": "f4b774e6d3ae04ed2e8923ceb21f48dccabbeca8"
+    },
+    "project-docs/production-system/evidence/consideration-v2-delivery-qa.json": {
+      "bytes": 37790,
+      "sha256": "4fa711315af0b2b6323e5135a7f6a945d9744786fc30ffc7293b414445010c41",
+      "git_blob_sha1": "9633ba7c9f06c17211415407a1b314b2e75cfba9"
+    },
+    "project-docs/production-system/evidence/consideration-v2-frozen-inputs.json": {
+      "bytes": 50193,
+      "sha256": "f3f9de16551d9235a6a381b316b22562c8b307201ebd3fa4dd19d4deb3f81541",
+      "git_blob_sha1": "4f229215a5e53c83c90fda6794a8a0fdeef79dc0"
+    },
+    "project-docs/production-system/evidence/consideration-v2-native-4k.json": {
+      "bytes": 1487,
+      "sha256": "c768a19060fa6671a8d69d58d3d0372d058a77039c65c80614bd32e14cd51aa6",
+      "git_blob_sha1": "fe0ac5b4d9c2747d3bcd8d9ada6367dc7a5292c5"
+    },
+    "project-docs/production-system/evidence/consideration-v2-native-probes.json": {
+      "bytes": 23527,
+      "sha256": "dd37e27c5b499d9c5afcf802ed96919492b08b22fc2e2e064392894d70222629",
+      "git_blob_sha1": "45ffd5ab75e834a6077993b879b0199b2a858b37"
+    },
+    "project-docs/production-system/evidence/consideration-v2-picture-inputs.json": {
+      "bytes": 23304,
+      "sha256": "3580a54ee6f456541fcbbac7790bdb887c2348420f50090c19f0e1ab8c7f2181",
+      "git_blob_sha1": "7e99298d972e20b31a8ef18a41d85c2e7665ab11"
+    },
+    "project-docs/production-system/evidence/consideration-v2-projected-separation.json": {
+      "bytes": 48918,
+      "sha256": "d2a5918287dff5bb7958ac95f518740403453d084d4f9ff3f047c198b8c657a8",
+      "git_blob_sha1": "fa85cfaab0df034452dc8c0ea2d1f7d74e6cb826"
+    },
+    "project-docs/production-system/evidence/consideration-v2-response-continuity.json": {
+      "bytes": 42196,
+      "sha256": "2217b2423ea2f901da43a3ae148021616701c832d880d679d0c34ed9e55d9165",
+      "git_blob_sha1": "71d9626175f5dfa27046e050c2325d554a1286ae"
+    },
+    "project-docs/production-system/evidence/consideration-v2-visual-review.json": {
+      "bytes": 9765,
+      "sha256": "978ed98fde158d7ffddf143c7e63067608dc72f5890e229e4c1e203553f325af",
+      "git_blob_sha1": "56688daeae66afcb316105188eebe06cd1b6cfd0"
+    },
+    "project-docs/production-system/evidence/deterministic-fonts.json": {
+      "bytes": 5859,
+      "sha256": "2a700b99a42a43ce154a9c12e5c9300e3f3339056c1e674d4ec60de042b79dd1",
+      "git_blob_sha1": "8120460d324815149f250981469c7fb6a731bea9"
+    },
+    "project-docs/production-system/evidence/dove-v2-delivery-qa.json": {
+      "bytes": 5147,
+      "sha256": "c744c0031823ac82b5b974c829eafdd735992548d57a1152584cce67d8bd187d",
+      "git_blob_sha1": "4f3cd2843def47453021d0cf07ee94cb0d7a2607"
+    },
+    "project-docs/production-system/evidence/drive-instruction-updates.json": {
+      "bytes": 3094,
+      "sha256": "c0bfbc3272c44fcc5c8f00d9a1041a3be294eb14768ac8cd8ee30095da7ca139",
+      "git_blob_sha1": "c405388c22d04a0cbbc70d4eda56e59d361d128e"
+    },
+    "project-docs/production-system/evidence/drive-production-log-block.json": {
+      "bytes": 1482,
+      "sha256": "d51f4f72e4940c83cc54e5c4522adce81e81fdea6a98d5bcc3337e5a48775dc1",
+      "git_blob_sha1": "77139f13f01a74dfa6f97c3edc766fc8deaf6834"
+    },
+    "project-docs/production-system/evidence/drive-upload-block.json": {
+      "bytes": 1669,
+      "sha256": "042016978e6c78fef154929a7375cbb322db2251b2fc8fe656d1be018bfac6a5",
+      "git_blob_sha1": "3b3917e2663020e756e754d125ad675352480bf6"
+    },
+    "project-docs/production-system/evidence/fresh-checkout-reference.json": {
+      "bytes": 8244,
+      "sha256": "506701c0fb0eec6469d100dcc8f6fa08d3e27a3ac155604f7ede924d9b694161",
+      "git_blob_sha1": "465d2afd5d21f81ec041afda889ce02237c748fa"
+    },
+    "project-docs/production-system/evidence/legacy-color-tag-repair.json": {
+      "bytes": 1596,
+      "sha256": "e0ab105256524e22551921bd381f1e41f97ab2db5f6e712328330eee86859d67",
+      "git_blob_sha1": "4d1219d076f81d151e64947825e807178be0c9a0"
+    },
+    "project-docs/production-system/evidence/library-deliveries.json": {
+      "bytes": 2849,
+      "sha256": "ee68d219e010958e37f1097528f5582e772742643ba92761c0590fb380f1ea72",
+      "git_blob_sha1": "08125618efcffa504f5468a236273e5c0e30706a"
+    },
+    "project-docs/production-system/evidence/model-atlas.json": {
+      "bytes": 21955,
+      "sha256": "ab7f5cd64607cdec5a523ccd5ee7389fb534c25d74c32dbf4899db4ef21ae504",
+      "git_blob_sha1": "946e86f8a75fc2e08dbf97f03482daba104d8426"
+    },
+    "project-docs/production-system/evidence/model-geometry-checks.json": {
+      "bytes": 2331,
+      "sha256": "7987ee8ac0f4e6d009f122299bbabb3c3c008105491fb5495c905cc0bc7fc8d3",
+      "git_blob_sha1": "1ca40be5727295d6a122aaae7bf80d9dfd5fb4de"
+    },
+    "project-docs/production-system/evidence/production-environment.json": {
+      "bytes": 1307,
+      "sha256": "15f937ccdb5e0d2e68f6ea48e8d7c6104ddcb581dbbb230b0c642ec5fa7bfc3d",
+      "git_blob_sha1": "71daeff4c9519554f4406fdbefb78a9694112e36"
+    },
+    "project-docs/production-system/evidence/reference-font-reconstruction.json": {
+      "bytes": 1073,
+      "sha256": "be55f1af20526d7248e9cfb6793c02c38b9a1753fa0f93ec46485ea250e22de4",
+      "git_blob_sha1": "4eebcd8912e72238bd1e3c92c93a0e07a56799ea"
+    },
+    "project-docs/production-system/evidence/reference-font-table-proof.json": {
+      "bytes": 33408,
+      "sha256": "c414ea68354a64aa48760a31863a0362f57148462c617498a7df9c7fb2c112e3",
+      "git_blob_sha1": "a9cb36d7b5c97c0a73337aca4e67df0e47203c17"
+    },
+    "project-docs/production-system/evidence/reference-motion-samples.json": {
+      "bytes": 4218,
+      "sha256": "ec9ec1d27eaacfb629c0c0d7b6342765f380c59c1b24b57ed70398eebd2fb778",
+      "git_blob_sha1": "68d80fb88b18d3ef5f6852909af04a4e4e731e0c"
+    },
+    "projects/approved-light-s11/project.json": {
+      "bytes": 5657,
+      "sha256": "da199773f71729040c5de14e1aaba33eeb7ef04d97d1c83b9b94f85c681473f3",
+      "git_blob_sha1": "69b41fd95994802120472c61f24630aa65b5b3e7"
+    },
+    "projects/concert-kit-consideration/project.json": {
+      "bytes": 2654,
+      "sha256": "80a8b01f8fb3a11d3b96589281c1137a154bd24c155abd973d2cfa951a114841",
+      "git_blob_sha1": "38d76d809572cb9ec738ce5554c9f20c1498823d"
+    },
+    "projects/concert-kit-consideration-v2/project.json": {
+      "bytes": 2966,
+      "sha256": "481c8c0d316cc6fead5f2e6eb7b50634e10e36fe0e12b19f64846a5efa4fe8a6",
+      "git_blob_sha1": "aeca92cce450bcd775e2fcd89d7cfebcabf9ca99"
+    },
+    "scripts/concert": {
+      "bytes": 169,
+      "sha256": "936cc7a641bd112f255fce7dab3098118532241c55e8ae01872ab75b644ade84",
+      "git_blob_sha1": "b921907eba956a8b17fba20589b3cd0ef98eab03"
+    },
+    "tools/concert_addons/README.md": {
+      "bytes": 7609,
+      "sha256": "30b854fa348bbdf403e27f444b9af0a6051eb437b19ab450ae06b922baf60b8c",
+      "git_blob_sha1": "c442591cd5f695ce637ef055d8e4adf55c17f3c3"
+    },
+    "tools/concert_addons/VERIFICATION.md": {
+      "bytes": 9517,
+      "sha256": "ffef0fb36f92ac9d45fac14981a8d124ff7ac79bad6669c32e92d0d1ff2740ba",
+      "git_blob_sha1": "670598d1a2c3118de76bb31307136a25f9d1cece"
+    },
+    "tools/concert_kit/MODEL-CATALOG.md": {
+      "bytes": 5751,
+      "sha256": "5a07093c31a79e4eadd78edd65abb0ba42e98f4851223f8efe506f5b0d34be28",
+      "git_blob_sha1": "01874dcd6da5301adb453eff1dde1ac83c338a21"
+    },
+    "tools/concert_kit/README.md": {
+      "bytes": 5764,
+      "sha256": "a9cbbfea84561f1b414c06fc780afdfa265572640c329e0f340ee5b1ca5b45e6",
+      "git_blob_sha1": "c37f0365529186f62f623d80437bc1ed8dcc36fc"
+    },
+    "tools/concert_kit/REVIEW-NOTES.md": {
+      "bytes": 4763,
+      "sha256": "42a5f5496b3037a0258072b737c8950a8dc8bee8a6de1bd67b53a14b8680d69c",
+      "git_blob_sha1": "bcd7710a6d085234c80ac4a22af8977b1cb0d93f"
+    },
+    "tools/concert_kit/VERIFICATION.md": {
+      "bytes": 11831,
+      "sha256": "86155416d6189566fbf8751d05bf757b05e46eeac1d5f15bcfd8b84bf428e16a",
+      "git_blob_sha1": "72341ec89f070c203b313cf222ddde4053d61e15"
+    },
+    "tools/concert_motion_revision/README.md": {
+      "bytes": 6494,
+      "sha256": "c830957b7371a5d8c042e5ffc60570e2f9ab87f2bd8fec6bfe8b35a8f8fde56d",
+      "git_blob_sha1": "b0957d9c0c2c92dc54d9ec84eb39c84cd518c453"
+    },
+    "tools/concert_motion_revision/VERIFICATION.md": {
+      "bytes": 15150,
+      "sha256": "8df4f18c9c3327fe51828bbcb0f5a8eaf9f0c7ffa7a59170c3a7184b35dae8c5",
+      "git_blob_sha1": "df4db58b1704000de4a9bfcf1720a363fcc8539a"
+    },
+    "tools/concert_review/README.md": {
+      "bytes": 9885,
+      "sha256": "c0b673344f8069dc9d6ac3a73e2053c55a1f36064877f499ede3857655ccb30d",
+      "git_blob_sha1": "7990f861753f09d19a2995019417d4977b596ee7"
+    },
+    "tools/production_system.py": {
+      "bytes": 16695,
+      "sha256": "ec32d8fad117e246a648b3f612ec3cd8b5862fdd4fb44091533f245f6cff11a5",
+      "git_blob_sha1": "703d9934967c4640d82b4c032af5b37c4f718efe"
+    },
+    "tools/promo_beauty_example/DESIGN-REVIEW.md": {
+      "bytes": 24358,
+      "sha256": "d2bb6ed6d9c0cceca8ea0e7a2ffc299664667ee0fc447f1b927fca340c333e0f",
+      "git_blob_sha1": "999c8056c87f4740b396222b21fbc1b5253673cb"
+    },
+    "tools/promo_beauty_example/README.md": {
+      "bytes": 9896,
+      "sha256": "a0f2b46f56944eff8a0d45a663b75e3b189ff4843a4120290a46fbcdbd08d5e2",
+      "git_blob_sha1": "66d9460276beffc04a33578e9d14b08afdef33d3"
+    },
+    "tools/promo_beauty_example/VERIFICATION.md": {
+      "bytes": 11094,
+      "sha256": "a188d21f17305aff9207ac599965024e73de1b27c1b9a7c807c853f71e249a91",
+      "git_blob_sha1": "580d034304980432cb6e4ce1e6221871757b3ca9"
+    }
+  },
+  "library": {
+    "status": "saved",
+    "library_file_id": "libfile_0d7ab1c2d83c8191a3badd389c6dc483",
+    "file_id": "file_00000000356481fd982a7d39a046118f",
+    "file_name": "Concert-Production-System-Handoff-2026-11-20.zip",
+    "version": 0,
+    "url": "https://chatgpt.com/library?file_id=libfile_0d7ab1c2d83c8191a3badd389c6dc483&account_id=personal",
+    "bytes": 350534,
+    "sha256": "eb8bba933a37179fa970c84aecc67cbc0b493809d1e2b2e7863c3900b9606537"
+  }
+}

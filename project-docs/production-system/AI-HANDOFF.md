@@ -46,10 +46,22 @@ Leave a self-contained record of the branch/commit, owned files, selected audio 
 
 Full audio, copied lyrics, finished videos, frames, generated caches, temporary downloads, access tokens, signed download links and personal data. Short historical repo clips remain as inherited exceptions; do not extend that exception to the full concert. Store durable media in the existing shared Drive home. The `.gitignore` work paths are intended for reacquirable private working copies.
 
-## Current delivered media
+## Current delivered media and remaining Drive action
 
-Read [DELIVERIES.md](DELIVERIES.md) and `catalogs/deliveries.json` for the eight saved files from this increment. The corrected fifteen-second movie has independent technical QA and sampled encoded review; it has not inherited the owner approval of the two references. New private Drive media copies remain pending the recorded exact-file/destination confirmation. Do not retry that rejected transfer through a different route or substitute a media payload into an existing file. The permitted existing Drive instruction updates are already complete. Use current `STATE.json` and PR 102 for the later handoff archive and integration outcome.
+Read [DELIVERIES.md](DELIVERIES.md) and `catalogs/deliveries.json` for the eight saved media files and their verified Drive links. All eight exact files were uploaded after the owner confirmed the named files and destination, then checked by raw-byte readback. The requested delivery event was appended once to the existing Drive log, preserving its 106 original entries and producing 107 entries. Its original event timestamp and historical statuses were retained as requested. Current transfer completion is established by `evidence/drive-delivery-completion.json`; do not repeat these completed operations because the historical event or earlier rejection records say pending. The five existing Drive instruction updates remain complete.
 
-The final Drive production-log append was separately rejected by automatic review. Its prepared delivery event is already in the repository log, with exact target and payload evidence in `evidence/drive-production-log-block.json`. Do not mark the Drive log updated or retry through another route without the required confirmation.
+The corrected fifteen-second movie has independent technical QA and sampled encoded review. The new studies and models still await their own creative approval; copying them to Drive does not confer that approval.
 
-The versioned handoff ZIP was subsequently exported and verified from clean commit `94dd897c6fdeb287561c5dd2772b770c43ab94b7`; its new Drive upload was also rejected. Read `evidence/handoff-export.json` and `evidence/drive-handoff-upload-block.json`. The Git source and instructions are saved, and the eight new media files are saved. The outstanding Drive operations are the media copies, this exact archive and the log append. Do not describe any of them as uploaded.
+The original handoff ZIP was not retained in a recoverable form when its workspace expired. Its historical size, SHA256 and source checkpoint remain in `evidence/handoff-export.json`. A replacement was reconstructed from the same clean source checkpoint `94dd897c6fdeb287561c5dd2772b770c43ab94b7`; all 89 source-document payloads match the Git blobs exactly. The new ZIP timestamps and export receipt change the archive bytes, as recorded in `evidence/handoff-reconstruction.json`.
+
+**Only the exact reconstructed ZIP upload remains pending.** Automatic review rejected that replacement and requires explicit approval of its changed payload and the Production System destination. The exact saved replacement is:
+
+- Filename: `Concert-Production-System-Handoff-2026-11-20.zip`.
+- Saved file: [open the exact ZIP](https://chatgpt.com/library?file_id=libfile_0d7ab1c2d83c8191a3badd389c6dc483&account_id=personal), file ID `libfile_0d7ab1c2d83c8191a3badd389c6dc483`, backing file `file_00000000356481fd982a7d39a046118f`, version 0.
+- Size: 350,534 bytes.
+- SHA256: `eb8bba933a37179fa970c84aecc67cbc0b493809d1e2b2e7863c3900b9606537`.
+- Destination: Production System, folder `1QDGGqqkJlbovBLCthX-QChqfD8zSmK8X`.
+
+After exact replacement confirmation, recover that pinned saved version, verify its size and checksum, upload it and verify the Drive bytes. **Do not re-export, rename another package as this payload, or retry the rejected upload through another route.** Read `evidence/drive-handoff-replacement-block.json` for the current rejection. The earlier original-archive rejection and SHA256 `605b7be8ca59987651a642727a9babef88e01986c87d8ea7e3ca076e84a2e158` remain historical evidence.
+
+For every future pending delivery, preserve the exact payload bytes durably before ending the turn and record the saved file identity, version, size and SHA256. A source commit can reproduce document contents while a new ZIP container and receipt have different bytes. Recover the saved approved version on a retry instead of creating a new package.
