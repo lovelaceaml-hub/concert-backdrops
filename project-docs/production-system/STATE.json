@@ -47,5 +47,8 @@
   "fresh_checkout_scope": "New detached source checkout and exact reconstructed fonts, using existing locked Python and host tools; one native frame matched exactly.",
   "pipeline_unit_tests_passed": 107,
   "independent_auditor_unit_tests_passed": 8,
-  "response_regression_checks_passed": 10
+  "response_regression_checks_passed": 10,
+  "drive_instruction_files_updated_and_verified": 5,
+  "drive_instruction_evidence": "project-docs/production-system/evidence/drive-instruction-updates.json",
+  "private_drive_media_copies": "pending_exact_file_and_destination_confirmation"
 }
