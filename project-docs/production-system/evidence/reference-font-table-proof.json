@@ -1,0 +1,982 @@
+{
+  "count": 74,
+  "exact_matches": 74,
+  "failures": [],
+  "table_difference_sets": [
+    [
+      "head"
+    ]
+  ],
+  "active_fonts_unchanged": true,
+  "active_snapshot_before": {
+    "cormorant-garamond-latin-300-italic.ttf": {
+      "sha256": "714923d90d68cbaa4bb5ee14f9f0eab744ddde932e27188b07f85657ce1d8204",
+      "bytes": 79052,
+      "mtime_ns": 1795196983400710341
+    },
+    "cormorant-garamond-latin-300-normal.ttf": {
+      "sha256": "b3c9c979336c0b5d305ae579b9daf49d64c93d20f35674bf434e38ca25c0b45b",
+      "bytes": 76472,
+      "mtime_ns": 1795196982765621919
+    },
+    "cormorant-garamond-latin-400-italic.ttf": {
+      "sha256": "e6fb1eb438e7d01a7e29c94d59cd2a5d6d153e44545cec4dd5c53e1a2e73efc5",
+      "bytes": 78956,
+      "mtime_ns": 1795196982479953948
+    },
+    "cormorant-garamond-latin-400-normal.ttf": {
+      "sha256": "ebfa1f25fd4bb91e88e7270fea57c0d07ed7b625279d90acd2073a983dfdd0c7",
+      "bytes": 76648,
+      "mtime_ns": 1795196983021068657
+    },
+    "cormorant-garamond-latin-500-italic.ttf": {
+      "sha256": "0c6ec9271239e264ad86d37d960ab97b0d29f51c44450fec0036ac897c39b608",
+      "bytes": 79152,
+      "mtime_ns": 1795196983272857566
+    },
+    "cormorant-garamond-latin-500-normal.ttf": {
+      "sha256": "e4020e0fe87f8f68837f4d54c1cf3d860ad728fe47780ca4ea01af2a646d31cd",
+      "bytes": 76756,
+      "mtime_ns": 1795196982822960546
+    },
+    "cormorant-garamond-latin-600-italic.ttf": {
+      "sha256": "07c95ec5b103192b1adaa54137a693230b01edf0ef14d611dbea154f8da9367c",
+      "bytes": 79148,
+      "mtime_ns": 1795196982289702492
+    },
+    "cormorant-garamond-latin-600-normal.ttf": {
+      "sha256": "4e5ab3e8e9ae8dc6832e55fb24350395da38b24ced5761266eef92c3c2d15463",
+      "bytes": 76748,
+      "mtime_ns": 1795196983457308488
+    },
+    "cormorant-garamond-latin-700-italic.ttf": {
+      "sha256": "d6fbc70a359e63ab8e3c7e24fb8d87640f7a403894d3cca8ad90bb1eec86b52c",
+      "bytes": 79016,
+      "mtime_ns": 1795196982705652219
+    },
+    "cormorant-garamond-latin-700-normal.ttf": {
+      "sha256": "495b6f53ae74eff487d07ea4b2961f839792f53eeb805341b6730d2039ea43f0",
+      "bytes": 76604,
+      "mtime_ns": 1795196983150760000
+    },
+    "cormorant-garamond-latin-ext-300-italic.ttf": {
+      "sha256": "eb3650befc133e097750128aa95967442f4236787313a1fdac66f40cf82f1892",
+      "bytes": 82832,
+      "mtime_ns": 1795196983542291712
+    },
+    "cormorant-garamond-latin-ext-300-normal.ttf": {
+      "sha256": "2ea557d5dab22a62597f77121fd58d297403bd0314bff98b5e0195b6d88af14c",
+      "bytes": 83720,
+      "mtime_ns": 1795196983091583995
+    },
+    "cormorant-garamond-latin-ext-400-italic.ttf": {
+      "sha256": "b442ddde09b3cfd6c1612be37a8d235b0086f5172a016b00f20317c1d3ae8716",
+      "bytes": 82756,
+      "mtime_ns": 1795196982555272504
+    },
+    "cormorant-garamond-latin-ext-400-normal.ttf": {
+      "sha256": "23348b12af3b5df88012330d7bbd9f3a3280caa023328591dd70d7a190bf6240",
+      "bytes": 83816,
+      "mtime_ns": 1795196982358294435
+    },
+    "cormorant-garamond-latin-ext-500-italic.ttf": {
+      "sha256": "d93ab385825d7fd0ae6a88d1aba6844db5a264371ca84f937ce77a9e1ec48fe2",
+      "bytes": 82984,
+      "mtime_ns": 1795196983339303784
+    },
+    "cormorant-garamond-latin-ext-500-normal.ttf": {
+      "sha256": "05d754a8bde4af53f76b706b342e125879ca102b0cbbd637bd9928d5f1450a7a",
+      "bytes": 83888,
+      "mtime_ns": 1795196982418430663
+    },
+    "cormorant-garamond-latin-ext-600-italic.ttf": {
+      "sha256": "79aa48b7eb3f08e21e76832e14796ed14e34c6d13396e534cd26b5563af37d15",
+      "bytes": 83036,
+      "mtime_ns": 1795196983214518497
+    },
+    "cormorant-garamond-latin-ext-600-normal.ttf": {
+      "sha256": "07c1bacbf6647017feb625514b58a4225905355c911840996ec7b66b156b6214",
+      "bytes": 83940,
+      "mtime_ns": 1795196982900798287
+    },
+    "cormorant-garamond-latin-ext-700-italic.ttf": {
+      "sha256": "772a448570a8b2f4216db1233eb52106faef4b7f23eada10c430c4617d9c6dda",
+      "bytes": 82880,
+      "mtime_ns": 1795196982615201608
+    },
+    "cormorant-garamond-latin-ext-700-normal.ttf": {
+      "sha256": "d6089d456e567645d25b77c2d952183bf3c4d6c63a2c0725a7e31ffa02f81365",
+      "bytes": 83732,
+      "mtime_ns": 1795196982966926988
+    },
+    "jost-latin-100-italic.ttf": {
+      "sha256": "434dba7347b706bd0bcae74c4cfbee067c0795a8c4a4f42f5fb1f42e64936a71",
+      "bytes": 26952,
+      "mtime_ns": 1795196981709202316
+    },
+    "jost-latin-100-normal.ttf": {
+      "sha256": "2c3318f85f5043a7de11b3467d242e09808c5058b2bdfcae21432154168a8fc0",
+      "bytes": 25540,
+      "mtime_ns": 1795196982098756869
+    },
+    "jost-latin-200-italic.ttf": {
+      "sha256": "79f0f05fc848007fb62e3b892ab49808f10af4fd36a86d4b054d4f7e596f88db",
+      "bytes": 27104,
+      "mtime_ns": 1795196981484450199
+    },
+    "jost-latin-200-normal.ttf": {
+      "sha256": "77c9002d2281a6dfb334a02ff45574d913464361e6868b788b7b6570a9b19bf0",
+      "bytes": 25616,
+      "mtime_ns": 1795196981384622702
+    },
+    "jost-latin-300-italic.ttf": {
+      "sha256": "d8eef27559f65397ea182c01f34921df30d86ee25af8a24dd559c39a7232d05c",
+      "bytes": 27140,
+      "mtime_ns": 1795196982227773103
+    },
+    "jost-latin-300-normal.ttf": {
+      "sha256": "6f8f1448fcf16f53e3fe5f00c64e6fec788ec90f266c36fc0df9420f0d02f193",
+      "bytes": 25556,
+      "mtime_ns": 1795196981866756583
+    },
+    "jost-latin-400-italic.ttf": {
+      "sha256": "a60d2a1a790e6144f9fa114870190183d4b5d90cbe758ef5d78fb53dd71faaa6",
+      "bytes": 27064,
+      "mtime_ns": 1795196982075134890
+    },
+    "jost-latin-400-normal.ttf": {
+      "sha256": "2cde2019631e1a4140c3d6a2113d46757ae33966c828cbac13f4dade4ee5ae3f",
+      "bytes": 25472,
+      "mtime_ns": 1795196981614937958
+    },
+    "jost-latin-500-italic.ttf": {
+      "sha256": "bc6745a8e096ea402c12e17f54043d4e125f51f811ecbb969fe19cb846449850",
+      "bytes": 27172,
+      "mtime_ns": 1795196982163940478
+    },
+    "jost-latin-500-normal.ttf": {
+      "sha256": "622cd297dd822e4ecc6b5fda898815fcbabc61c0eda84418bd6489bfa6b3e264",
+      "bytes": 25560,
+      "mtime_ns": 1795196981640157934
+    },
+    "jost-latin-600-italic.ttf": {
+      "sha256": "170f3abbbf047b4f3d212a7385de7042115e2a5546ced8c5dd8e01f45db4162b",
+      "bytes": 27168,
+      "mtime_ns": 1795196981817891150
+    },
+    "jost-latin-600-normal.ttf": {
+      "sha256": "857c6baf2d41437ac099413d163d651b69cf2a9f6000a5453c217fa48fb7d259",
+      "bytes": 25576,
+      "mtime_ns": 1795196982122689769
+    },
+    "jost-latin-700-italic.ttf": {
+      "sha256": "75749390c774309634f164344bcfc8ace8a45fbb9b372e6bae2eb0cc1a52ef74",
+      "bytes": 27064,
+      "mtime_ns": 1795196981663067494
+    },
+    "jost-latin-700-normal.ttf": {
+      "sha256": "74490e0aa5ccd4be78a446bef88892fdd20ef820e35688158ca441c714025991",
+      "bytes": 25516,
+      "mtime_ns": 1795196981737351048
+    },
+    "jost-latin-800-italic.ttf": {
+      "sha256": "841d6ba8be7050fba39836c296ca47379df0f5e9f83093dcda9046a021977561",
+      "bytes": 27164,
+      "mtime_ns": 1795196981990997584
+    },
+    "jost-latin-800-normal.ttf": {
+      "sha256": "4eaa87f87f0254845ee39757f997872c3b51f9baf9db29e68dae251dee652c90",
+      "bytes": 25628,
+      "mtime_ns": 1795196981791162855
+    },
+    "jost-latin-900-italic.ttf": {
+      "sha256": "91fd5c32096b8c87ae69e82395a65c57d292d54c365b5ffc91c38051ade1fb13",
+      "bytes": 27116,
+      "mtime_ns": 1795196981543124886
+    },
+    "jost-latin-900-normal.ttf": {
+      "sha256": "392fda8a4a64736e71d382325285913d9b5b7d61c0fd2a7d6b44fbc5453f2088",
+      "bytes": 25596,
+      "mtime_ns": 1795196981896177197
+    },
+    "jost-latin-ext-100-italic.ttf": {
+      "sha256": "8033b06cfb549a96b63d560a2cc5279ab3196d6f5bdbb196ec7539d76075a308",
+      "bytes": 20904,
+      "mtime_ns": 1795196981840879901
+    },
+    "jost-latin-ext-100-normal.ttf": {
+      "sha256": "044e2c752ad5132661ea1a193627161d40a657364f81c9389ac8c9f94742cb9f",
+      "bytes": 19948,
+      "mtime_ns": 1795196982141811947
+    },
+    "jost-latin-ext-200-italic.ttf": {
+      "sha256": "08796ad67e8b9f6af0bb6ccb3e49f174b1d3c3087316042921b9ee3eb134a26b",
+      "bytes": 21028,
+      "mtime_ns": 1795196981683610213
+    },
+    "jost-latin-ext-200-normal.ttf": {
+      "sha256": "265769e25ff768dcf0aeb49489419b26e818324a32fbcdded6a327471421590f",
+      "bytes": 20008,
+      "mtime_ns": 1795196981951738503
+    },
+    "jost-latin-ext-300-italic.ttf": {
+      "sha256": "fe0b6c8634339e3a674f97355c7f035fe436fa5ee0842da3c26c4498b9fbded7",
+      "bytes": 21044,
+      "mtime_ns": 1795196981970098345
+    },
+    "jost-latin-ext-300-normal.ttf": {
+      "sha256": "b305efd239ae24ad9f02b2feff7d7c2a3ebc244bf8272ffe13241a81d432d3ed",
+      "bytes": 19980,
+      "mtime_ns": 1795196981765047080
+    },
+    "jost-latin-ext-400-italic.ttf": {
+      "sha256": "1e1040d97b239429f7b726fed02ff0a1ddf16528dc008840c1949ad9d9a56dd9",
+      "bytes": 20964,
+      "mtime_ns": 1795196981935375054
+    },
+    "jost-latin-ext-400-normal.ttf": {
+      "sha256": "52c38cb31131a397d759b0159f28881b2aa565b3acc30628273e78dcba6fb21e",
+      "bytes": 19948,
+      "mtime_ns": 1795196982045736931
+    },
+    "jost-latin-ext-500-italic.ttf": {
+      "sha256": "c7933ab2530317a06fb88625089f5d07bea1853aa09b7c8eabd1b44152fa3eda",
+      "bytes": 21080,
+      "mtime_ns": 1795196981579109753
+    },
+    "jost-latin-ext-500-normal.ttf": {
+      "sha256": "11b414e4d3debe8858a8fafa4fd50879c5677e94b027f18ddbd136f7b6c06332",
+      "bytes": 20000,
+      "mtime_ns": 1795196982006855088
+    },
+    "jost-latin-ext-600-italic.ttf": {
+      "sha256": "6dbaf7e170a6c0fcb8bd460216ce48018adf01341132150e771206567caa8eeb",
+      "bytes": 21084,
+      "mtime_ns": 1795196981505617247
+    },
+    "jost-latin-ext-600-normal.ttf": {
+      "sha256": "c4d12cbfe46f4c6bf43d7a7c51b77ccd4b0b4faee2f2f0c0597f9869b9212fb2",
+      "bytes": 20008,
+      "mtime_ns": 1795196981425422693
+    },
+    "jost-latin-ext-700-italic.ttf": {
+      "sha256": "56bd04fde9133ffe4a825d2c5b407f3910c485c2b1bb1c5189b6016860fa5eaf",
+      "bytes": 20996,
+      "mtime_ns": 1795196981915840644
+    },
+    "jost-latin-ext-700-normal.ttf": {
+      "sha256": "c29ce4ed57906a085560f7d34436f3344a5a68ce0a342b134d145238477dc243",
+      "bytes": 19940,
+      "mtime_ns": 1795196981446501644
+    },
+    "jost-latin-ext-800-italic.ttf": {
+      "sha256": "2de1bc394d395f8515977477a8b2ccb4e9da197c6e7e7171a47b8e3c15a45f32",
+      "bytes": 21100,
+      "mtime_ns": 1795196981562673726
+    },
+    "jost-latin-ext-800-normal.ttf": {
+      "sha256": "d24b9a0616daed03e6f29cb82cb890a9ddc992024dcafc7b579f313ec887c3cb",
+      "bytes": 20016,
+      "mtime_ns": 1795196982202992941
+    },
+    "jost-latin-ext-900-italic.ttf": {
+      "sha256": "5e461918f99ef2c380b7e9e7085537239573dfe6661a08f2a6b49f90f94eb9df",
+      "bytes": 21052,
+      "mtime_ns": 1795196982187538815
+    },
+    "jost-latin-ext-900-normal.ttf": {
+      "sha256": "75bdfe98724b4535ed8e7503fc1b3cbd4d71bcb1741b1bc2f7d3dc3e01740fd1",
+      "bytes": 19984,
+      "mtime_ns": 1795196982026277963
+    },
+    "outfit-latin-100-normal.ttf": {
+      "sha256": "afc37dd2e3c6fc43a17351b587ead4be846aef9bdba410cacb4f0b01b7593012",
+      "bytes": 32736,
+      "mtime_ns": 1795196983806162593
+    },
+    "outfit-latin-200-normal.ttf": {
+      "sha256": "aec46fe88d592bd7505115d3688ab2c51881ad4cee4593f0f6477f830815dc99",
+      "bytes": 32924,
+      "mtime_ns": 1795196983765018782
+    },
+    "outfit-latin-300-normal.ttf": {
+      "sha256": "0423ae7cb6dfd9b83796d87a258b9f45842264d8553342ffb4e779343960faac",
+      "bytes": 32876,
+      "mtime_ns": 1795196983731793537
+    },
+    "outfit-latin-400-normal.ttf": {
+      "sha256": "3b0375d34fb9da4d5a851839a0fd7cb39e074bedc3dc3e40a6544f00d457d7e3",
+      "bytes": 32848,
+      "mtime_ns": 1795196983600709722
+    },
+    "outfit-latin-500-normal.ttf": {
+      "sha256": "119c581600b9987105d276c787eccd43b114b6bb499a5c834aaf743d5491f13e",
+      "bytes": 32832,
+      "mtime_ns": 1795196983667021804
+    },
+    "outfit-latin-600-normal.ttf": {
+      "sha256": "b48486590b56ebb319be64fae81b7c456c682f92a2a16ed3847da3689282fba8",
+      "bytes": 33324,
+      "mtime_ns": 1795196983562797212
+    },
+    "outfit-latin-700-normal.ttf": {
+      "sha256": "102651d2307fba4e98e39a8b2f8227053ffd52c0f9dfbdaf370f9c6ac5b1a1b7",
+      "bytes": 33240,
+      "mtime_ns": 1795196983827504023
+    },
+    "outfit-latin-800-normal.ttf": {
+      "sha256": "3c6cdd1b3732fe9ae85b9a994d3aa28890ef1378324ce5834be70dac4029afd6",
+      "bytes": 33236,
+      "mtime_ns": 1795196983706115133
+    },
+    "outfit-latin-900-normal.ttf": {
+      "sha256": "f77fafc68ed48a0a5eb24895c8c40b807dd94c6b5b42de3010d347dca2fd2493",
+      "bytes": 33268,
+      "mtime_ns": 1795196983633695181
+    },
+    "outfit-latin-ext-100-normal.ttf": {
+      "sha256": "7dc956a39a60e606d1b04e5939c87f214d0c78916082f601df20d15b0625b008",
+      "bytes": 15684,
+      "mtime_ns": 1795196983850577546
+    },
+    "outfit-latin-ext-200-normal.ttf": {
+      "sha256": "dab57c04269a00bd7e0dc314a55ca6351cf046da96d9753b868aa3244a471ee0",
+      "bytes": 15892,
+      "mtime_ns": 1795196983838371909
+    },
+    "outfit-latin-ext-300-normal.ttf": {
+      "sha256": "162fb9da2c8ce31b12c1245f5dd30d112882a98c7573808058208fbd551580fe",
+      "bytes": 15804,
+      "mtime_ns": 1795196983577725049
+    },
+    "outfit-latin-ext-400-normal.ttf": {
+      "sha256": "ebe9d7da94757020de549c7cc1c47db854d86fc46345a75c153f99ded92f98d0",
+      "bytes": 15824,
+      "mtime_ns": 1795196983874988584
+    },
+    "outfit-latin-ext-500-normal.ttf": {
+      "sha256": "86a7760a7c0ab796611af9bf2cc617c43b0a875521c839fb1e26a422b132d403",
+      "bytes": 15832,
+      "mtime_ns": 1795196983744951398
+    },
+    "outfit-latin-ext-600-normal.ttf": {
+      "sha256": "6a8eea87ff80c34a60af1d7c2cc66b1bbda0049504c5839fe405ee8ab12b2297",
+      "bytes": 16104,
+      "mtime_ns": 1795196983782585875
+    },
+    "outfit-latin-ext-700-normal.ttf": {
+      "sha256": "81508d72e8af26e2c0085676b7d3a3a866c6f5c5b5ee20bac4914f7a5e0c46c0",
+      "bytes": 16036,
+      "mtime_ns": 1795196983646651194
+    },
+    "outfit-latin-ext-800-normal.ttf": {
+      "sha256": "869a0b41bbb4deb17f9d4e7e335ddf7bb47819d1e04b993cee626733f9bbb374",
+      "bytes": 16008,
+      "mtime_ns": 1795196983862162509
+    },
+    "outfit-latin-ext-900-normal.ttf": {
+      "sha256": "7967ed9092363603da5c90b3aac37e60eed77b95444d1b6d3f2f2a759a907443",
+      "bytes": 16036,
+      "mtime_ns": 1795196983681106592
+    }
+  },
+  "active_snapshot_after": {
+    "cormorant-garamond-latin-300-italic.ttf": {
+      "sha256": "714923d90d68cbaa4bb5ee14f9f0eab744ddde932e27188b07f85657ce1d8204",
+      "bytes": 79052,
+      "mtime_ns": 1795196983400710341
+    },
+    "cormorant-garamond-latin-300-normal.ttf": {
+      "sha256": "b3c9c979336c0b5d305ae579b9daf49d64c93d20f35674bf434e38ca25c0b45b",
+      "bytes": 76472,
+      "mtime_ns": 1795196982765621919
+    },
+    "cormorant-garamond-latin-400-italic.ttf": {
+      "sha256": "e6fb1eb438e7d01a7e29c94d59cd2a5d6d153e44545cec4dd5c53e1a2e73efc5",
+      "bytes": 78956,
+      "mtime_ns": 1795196982479953948
+    },
+    "cormorant-garamond-latin-400-normal.ttf": {
+      "sha256": "ebfa1f25fd4bb91e88e7270fea57c0d07ed7b625279d90acd2073a983dfdd0c7",
+      "bytes": 76648,
+      "mtime_ns": 1795196983021068657
+    },
+    "cormorant-garamond-latin-500-italic.ttf": {
+      "sha256": "0c6ec9271239e264ad86d37d960ab97b0d29f51c44450fec0036ac897c39b608",
+      "bytes": 79152,
+      "mtime_ns": 1795196983272857566
+    },
+    "cormorant-garamond-latin-500-normal.ttf": {
+      "sha256": "e4020e0fe87f8f68837f4d54c1cf3d860ad728fe47780ca4ea01af2a646d31cd",
+      "bytes": 76756,
+      "mtime_ns": 1795196982822960546
+    },
+    "cormorant-garamond-latin-600-italic.ttf": {
+      "sha256": "07c95ec5b103192b1adaa54137a693230b01edf0ef14d611dbea154f8da9367c",
+      "bytes": 79148,
+      "mtime_ns": 1795196982289702492
+    },
+    "cormorant-garamond-latin-600-normal.ttf": {
+      "sha256": "4e5ab3e8e9ae8dc6832e55fb24350395da38b24ced5761266eef92c3c2d15463",
+      "bytes": 76748,
+      "mtime_ns": 1795196983457308488
+    },
+    "cormorant-garamond-latin-700-italic.ttf": {
+      "sha256": "d6fbc70a359e63ab8e3c7e24fb8d87640f7a403894d3cca8ad90bb1eec86b52c",
+      "bytes": 79016,
+      "mtime_ns": 1795196982705652219
+    },
+    "cormorant-garamond-latin-700-normal.ttf": {
+      "sha256": "495b6f53ae74eff487d07ea4b2961f839792f53eeb805341b6730d2039ea43f0",
+      "bytes": 76604,
+      "mtime_ns": 1795196983150760000
+    },
+    "cormorant-garamond-latin-ext-300-italic.ttf": {
+      "sha256": "eb3650befc133e097750128aa95967442f4236787313a1fdac66f40cf82f1892",
+      "bytes": 82832,
+      "mtime_ns": 1795196983542291712
+    },
+    "cormorant-garamond-latin-ext-300-normal.ttf": {
+      "sha256": "2ea557d5dab22a62597f77121fd58d297403bd0314bff98b5e0195b6d88af14c",
+      "bytes": 83720,
+      "mtime_ns": 1795196983091583995
+    },
+    "cormorant-garamond-latin-ext-400-italic.ttf": {
+      "sha256": "b442ddde09b3cfd6c1612be37a8d235b0086f5172a016b00f20317c1d3ae8716",
+      "bytes": 82756,
+      "mtime_ns": 1795196982555272504
+    },
+    "cormorant-garamond-latin-ext-400-normal.ttf": {
+      "sha256": "23348b12af3b5df88012330d7bbd9f3a3280caa023328591dd70d7a190bf6240",
+      "bytes": 83816,
+      "mtime_ns": 1795196982358294435
+    },
+    "cormorant-garamond-latin-ext-500-italic.ttf": {
+      "sha256": "d93ab385825d7fd0ae6a88d1aba6844db5a264371ca84f937ce77a9e1ec48fe2",
+      "bytes": 82984,
+      "mtime_ns": 1795196983339303784
+    },
+    "cormorant-garamond-latin-ext-500-normal.ttf": {
+      "sha256": "05d754a8bde4af53f76b706b342e125879ca102b0cbbd637bd9928d5f1450a7a",
+      "bytes": 83888,
+      "mtime_ns": 1795196982418430663
+    },
+    "cormorant-garamond-latin-ext-600-italic.ttf": {
+      "sha256": "79aa48b7eb3f08e21e76832e14796ed14e34c6d13396e534cd26b5563af37d15",
+      "bytes": 83036,
+      "mtime_ns": 1795196983214518497
+    },
+    "cormorant-garamond-latin-ext-600-normal.ttf": {
+      "sha256": "07c1bacbf6647017feb625514b58a4225905355c911840996ec7b66b156b6214",
+      "bytes": 83940,
+      "mtime_ns": 1795196982900798287
+    },
+    "cormorant-garamond-latin-ext-700-italic.ttf": {
+      "sha256": "772a448570a8b2f4216db1233eb52106faef4b7f23eada10c430c4617d9c6dda",
+      "bytes": 82880,
+      "mtime_ns": 1795196982615201608
+    },
+    "cormorant-garamond-latin-ext-700-normal.ttf": {
+      "sha256": "d6089d456e567645d25b77c2d952183bf3c4d6c63a2c0725a7e31ffa02f81365",
+      "bytes": 83732,
+      "mtime_ns": 1795196982966926988
+    },
+    "jost-latin-100-italic.ttf": {
+      "sha256": "434dba7347b706bd0bcae74c4cfbee067c0795a8c4a4f42f5fb1f42e64936a71",
+      "bytes": 26952,
+      "mtime_ns": 1795196981709202316
+    },
+    "jost-latin-100-normal.ttf": {
+      "sha256": "2c3318f85f5043a7de11b3467d242e09808c5058b2bdfcae21432154168a8fc0",
+      "bytes": 25540,
+      "mtime_ns": 1795196982098756869
+    },
+    "jost-latin-200-italic.ttf": {
+      "sha256": "79f0f05fc848007fb62e3b892ab49808f10af4fd36a86d4b054d4f7e596f88db",
+      "bytes": 27104,
+      "mtime_ns": 1795196981484450199
+    },
+    "jost-latin-200-normal.ttf": {
+      "sha256": "77c9002d2281a6dfb334a02ff45574d913464361e6868b788b7b6570a9b19bf0",
+      "bytes": 25616,
+      "mtime_ns": 1795196981384622702
+    },
+    "jost-latin-300-italic.ttf": {
+      "sha256": "d8eef27559f65397ea182c01f34921df30d86ee25af8a24dd559c39a7232d05c",
+      "bytes": 27140,
+      "mtime_ns": 1795196982227773103
+    },
+    "jost-latin-300-normal.ttf": {
+      "sha256": "6f8f1448fcf16f53e3fe5f00c64e6fec788ec90f266c36fc0df9420f0d02f193",
+      "bytes": 25556,
+      "mtime_ns": 1795196981866756583
+    },
+    "jost-latin-400-italic.ttf": {
+      "sha256": "a60d2a1a790e6144f9fa114870190183d4b5d90cbe758ef5d78fb53dd71faaa6",
+      "bytes": 27064,
+      "mtime_ns": 1795196982075134890
+    },
+    "jost-latin-400-normal.ttf": {
+      "sha256": "2cde2019631e1a4140c3d6a2113d46757ae33966c828cbac13f4dade4ee5ae3f",
+      "bytes": 25472,
+      "mtime_ns": 1795196981614937958
+    },
+    "jost-latin-500-italic.ttf": {
+      "sha256": "bc6745a8e096ea402c12e17f54043d4e125f51f811ecbb969fe19cb846449850",
+      "bytes": 27172,
+      "mtime_ns": 1795196982163940478
+    },
+    "jost-latin-500-normal.ttf": {
+      "sha256": "622cd297dd822e4ecc6b5fda898815fcbabc61c0eda84418bd6489bfa6b3e264",
+      "bytes": 25560,
+      "mtime_ns": 1795196981640157934
+    },
+    "jost-latin-600-italic.ttf": {
+      "sha256": "170f3abbbf047b4f3d212a7385de7042115e2a5546ced8c5dd8e01f45db4162b",
+      "bytes": 27168,
+      "mtime_ns": 1795196981817891150
+    },
+    "jost-latin-600-normal.ttf": {
+      "sha256": "857c6baf2d41437ac099413d163d651b69cf2a9f6000a5453c217fa48fb7d259",
+      "bytes": 25576,
+      "mtime_ns": 1795196982122689769
+    },
+    "jost-latin-700-italic.ttf": {
+      "sha256": "75749390c774309634f164344bcfc8ace8a45fbb9b372e6bae2eb0cc1a52ef74",
+      "bytes": 27064,
+      "mtime_ns": 1795196981663067494
+    },
+    "jost-latin-700-normal.ttf": {
+      "sha256": "74490e0aa5ccd4be78a446bef88892fdd20ef820e35688158ca441c714025991",
+      "bytes": 25516,
+      "mtime_ns": 1795196981737351048
+    },
+    "jost-latin-800-italic.ttf": {
+      "sha256": "841d6ba8be7050fba39836c296ca47379df0f5e9f83093dcda9046a021977561",
+      "bytes": 27164,
+      "mtime_ns": 1795196981990997584
+    },
+    "jost-latin-800-normal.ttf": {
+      "sha256": "4eaa87f87f0254845ee39757f997872c3b51f9baf9db29e68dae251dee652c90",
+      "bytes": 25628,
+      "mtime_ns": 1795196981791162855
+    },
+    "jost-latin-900-italic.ttf": {
+      "sha256": "91fd5c32096b8c87ae69e82395a65c57d292d54c365b5ffc91c38051ade1fb13",
+      "bytes": 27116,
+      "mtime_ns": 1795196981543124886
+    },
+    "jost-latin-900-normal.ttf": {
+      "sha256": "392fda8a4a64736e71d382325285913d9b5b7d61c0fd2a7d6b44fbc5453f2088",
+      "bytes": 25596,
+      "mtime_ns": 1795196981896177197
+    },
+    "jost-latin-ext-100-italic.ttf": {
+      "sha256": "8033b06cfb549a96b63d560a2cc5279ab3196d6f5bdbb196ec7539d76075a308",
+      "bytes": 20904,
+      "mtime_ns": 1795196981840879901
+    },
+    "jost-latin-ext-100-normal.ttf": {
+      "sha256": "044e2c752ad5132661ea1a193627161d40a657364f81c9389ac8c9f94742cb9f",
+      "bytes": 19948,
+      "mtime_ns": 1795196982141811947
+    },
+    "jost-latin-ext-200-italic.ttf": {
+      "sha256": "08796ad67e8b9f6af0bb6ccb3e49f174b1d3c3087316042921b9ee3eb134a26b",
+      "bytes": 21028,
+      "mtime_ns": 1795196981683610213
+    },
+    "jost-latin-ext-200-normal.ttf": {
+      "sha256": "265769e25ff768dcf0aeb49489419b26e818324a32fbcdded6a327471421590f",
+      "bytes": 20008,
+      "mtime_ns": 1795196981951738503
+    },
+    "jost-latin-ext-300-italic.ttf": {
+      "sha256": "fe0b6c8634339e3a674f97355c7f035fe436fa5ee0842da3c26c4498b9fbded7",
+      "bytes": 21044,
+      "mtime_ns": 1795196981970098345
+    },
+    "jost-latin-ext-300-normal.ttf": {
+      "sha256": "b305efd239ae24ad9f02b2feff7d7c2a3ebc244bf8272ffe13241a81d432d3ed",
+      "bytes": 19980,
+      "mtime_ns": 1795196981765047080
+    },
+    "jost-latin-ext-400-italic.ttf": {
+      "sha256": "1e1040d97b239429f7b726fed02ff0a1ddf16528dc008840c1949ad9d9a56dd9",
+      "bytes": 20964,
+      "mtime_ns": 1795196981935375054
+    },
+    "jost-latin-ext-400-normal.ttf": {
+      "sha256": "52c38cb31131a397d759b0159f28881b2aa565b3acc30628273e78dcba6fb21e",
+      "bytes": 19948,
+      "mtime_ns": 1795196982045736931
+    },
+    "jost-latin-ext-500-italic.ttf": {
+      "sha256": "c7933ab2530317a06fb88625089f5d07bea1853aa09b7c8eabd1b44152fa3eda",
+      "bytes": 21080,
+      "mtime_ns": 1795196981579109753
+    },
+    "jost-latin-ext-500-normal.ttf": {
+      "sha256": "11b414e4d3debe8858a8fafa4fd50879c5677e94b027f18ddbd136f7b6c06332",
+      "bytes": 20000,
+      "mtime_ns": 1795196982006855088
+    },
+    "jost-latin-ext-600-italic.ttf": {
+      "sha256": "6dbaf7e170a6c0fcb8bd460216ce48018adf01341132150e771206567caa8eeb",
+      "bytes": 21084,
+      "mtime_ns": 1795196981505617247
+    },
+    "jost-latin-ext-600-normal.ttf": {
+      "sha256": "c4d12cbfe46f4c6bf43d7a7c51b77ccd4b0b4faee2f2f0c0597f9869b9212fb2",
+      "bytes": 20008,
+      "mtime_ns": 1795196981425422693
+    },
+    "jost-latin-ext-700-italic.ttf": {
+      "sha256": "56bd04fde9133ffe4a825d2c5b407f3910c485c2b1bb1c5189b6016860fa5eaf",
+      "bytes": 20996,
+      "mtime_ns": 1795196981915840644
+    },
+    "jost-latin-ext-700-normal.ttf": {
+      "sha256": "c29ce4ed57906a085560f7d34436f3344a5a68ce0a342b134d145238477dc243",
+      "bytes": 19940,
+      "mtime_ns": 1795196981446501644
+    },
+    "jost-latin-ext-800-italic.ttf": {
+      "sha256": "2de1bc394d395f8515977477a8b2ccb4e9da197c6e7e7171a47b8e3c15a45f32",
+      "bytes": 21100,
+      "mtime_ns": 1795196981562673726
+    },
+    "jost-latin-ext-800-normal.ttf": {
+      "sha256": "d24b9a0616daed03e6f29cb82cb890a9ddc992024dcafc7b579f313ec887c3cb",
+      "bytes": 20016,
+      "mtime_ns": 1795196982202992941
+    },
+    "jost-latin-ext-900-italic.ttf": {
+      "sha256": "5e461918f99ef2c380b7e9e7085537239573dfe6661a08f2a6b49f90f94eb9df",
+      "bytes": 21052,
+      "mtime_ns": 1795196982187538815
+    },
+    "jost-latin-ext-900-normal.ttf": {
+      "sha256": "75bdfe98724b4535ed8e7503fc1b3cbd4d71bcb1741b1bc2f7d3dc3e01740fd1",
+      "bytes": 19984,
+      "mtime_ns": 1795196982026277963
+    },
+    "outfit-latin-100-normal.ttf": {
+      "sha256": "afc37dd2e3c6fc43a17351b587ead4be846aef9bdba410cacb4f0b01b7593012",
+      "bytes": 32736,
+      "mtime_ns": 1795196983806162593
+    },
+    "outfit-latin-200-normal.ttf": {
+      "sha256": "aec46fe88d592bd7505115d3688ab2c51881ad4cee4593f0f6477f830815dc99",
+      "bytes": 32924,
+      "mtime_ns": 1795196983765018782
+    },
+    "outfit-latin-300-normal.ttf": {
+      "sha256": "0423ae7cb6dfd9b83796d87a258b9f45842264d8553342ffb4e779343960faac",
+      "bytes": 32876,
+      "mtime_ns": 1795196983731793537
+    },
+    "outfit-latin-400-normal.ttf": {
+      "sha256": "3b0375d34fb9da4d5a851839a0fd7cb39e074bedc3dc3e40a6544f00d457d7e3",
+      "bytes": 32848,
+      "mtime_ns": 1795196983600709722
+    },
+    "outfit-latin-500-normal.ttf": {
+      "sha256": "119c581600b9987105d276c787eccd43b114b6bb499a5c834aaf743d5491f13e",
+      "bytes": 32832,
+      "mtime_ns": 1795196983667021804
+    },
+    "outfit-latin-600-normal.ttf": {
+      "sha256": "b48486590b56ebb319be64fae81b7c456c682f92a2a16ed3847da3689282fba8",
+      "bytes": 33324,
+      "mtime_ns": 1795196983562797212
+    },
+    "outfit-latin-700-normal.ttf": {
+      "sha256": "102651d2307fba4e98e39a8b2f8227053ffd52c0f9dfbdaf370f9c6ac5b1a1b7",
+      "bytes": 33240,
+      "mtime_ns": 1795196983827504023
+    },
+    "outfit-latin-800-normal.ttf": {
+      "sha256": "3c6cdd1b3732fe9ae85b9a994d3aa28890ef1378324ce5834be70dac4029afd6",
+      "bytes": 33236,
+      "mtime_ns": 1795196983706115133
+    },
+    "outfit-latin-900-normal.ttf": {
+      "sha256": "f77fafc68ed48a0a5eb24895c8c40b807dd94c6b5b42de3010d347dca2fd2493",
+      "bytes": 33268,
+      "mtime_ns": 1795196983633695181
+    },
+    "outfit-latin-ext-100-normal.ttf": {
+      "sha256": "7dc956a39a60e606d1b04e5939c87f214d0c78916082f601df20d15b0625b008",
+      "bytes": 15684,
+      "mtime_ns": 1795196983850577546
+    },
+    "outfit-latin-ext-200-normal.ttf": {
+      "sha256": "dab57c04269a00bd7e0dc314a55ca6351cf046da96d9753b868aa3244a471ee0",
+      "bytes": 15892,
+      "mtime_ns": 1795196983838371909
+    },
+    "outfit-latin-ext-300-normal.ttf": {
+      "sha256": "162fb9da2c8ce31b12c1245f5dd30d112882a98c7573808058208fbd551580fe",
+      "bytes": 15804,
+      "mtime_ns": 1795196983577725049
+    },
+    "outfit-latin-ext-400-normal.ttf": {
+      "sha256": "ebe9d7da94757020de549c7cc1c47db854d86fc46345a75c153f99ded92f98d0",
+      "bytes": 15824,
+      "mtime_ns": 1795196983874988584
+    },
+    "outfit-latin-ext-500-normal.ttf": {
+      "sha256": "86a7760a7c0ab796611af9bf2cc617c43b0a875521c839fb1e26a422b132d403",
+      "bytes": 15832,
+      "mtime_ns": 1795196983744951398
+    },
+    "outfit-latin-ext-600-normal.ttf": {
+      "sha256": "6a8eea87ff80c34a60af1d7c2cc66b1bbda0049504c5839fe405ee8ab12b2297",
+      "bytes": 16104,
+      "mtime_ns": 1795196983782585875
+    },
+    "outfit-latin-ext-700-normal.ttf": {
+      "sha256": "81508d72e8af26e2c0085676b7d3a3a866c6f5c5b5ee20bac4914f7a5e0c46c0",
+      "bytes": 16036,
+      "mtime_ns": 1795196983646651194
+    },
+    "outfit-latin-ext-800-normal.ttf": {
+      "sha256": "869a0b41bbb4deb17f9d4e7e335ddf7bb47819d1e04b993cee626733f9bbb374",
+      "bytes": 16008,
+      "mtime_ns": 1795196983862162509
+    },
+    "outfit-latin-ext-900-normal.ttf": {
+      "sha256": "7967ed9092363603da5c90b3aac37e60eed77b95444d1b6d3f2f2a759a907443",
+      "bytes": 16036,
+      "mtime_ns": 1795196983681106592
+    }
+  },
+  "per_font_table_differences": {
+    "cormorant-garamond-latin-300-italic.ttf": [
+      "head"
+    ],
+    "cormorant-garamond-latin-300-normal.ttf": [
+      "head"
+    ],
+    "cormorant-garamond-latin-400-italic.ttf": [
+      "head"
+    ],
+    "cormorant-garamond-latin-400-normal.ttf": [
+      "head"
+    ],
+    "cormorant-garamond-latin-500-italic.ttf": [
+      "head"
+    ],
+    "cormorant-garamond-latin-500-normal.ttf": [
+      "head"
+    ],
+    "cormorant-garamond-latin-600-italic.ttf": [
+      "head"
+    ],
+    "cormorant-garamond-latin-600-normal.ttf": [
+      "head"
+    ],
+    "cormorant-garamond-latin-700-italic.ttf": [
+      "head"
+    ],
+    "cormorant-garamond-latin-700-normal.ttf": [
+      "head"
+    ],
+    "cormorant-garamond-latin-ext-300-italic.ttf": [
+      "head"
+    ],
+    "cormorant-garamond-latin-ext-300-normal.ttf": [
+      "head"
+    ],
+    "cormorant-garamond-latin-ext-400-italic.ttf": [
+      "head"
+    ],
+    "cormorant-garamond-latin-ext-400-normal.ttf": [
+      "head"
+    ],
+    "cormorant-garamond-latin-ext-500-italic.ttf": [
+      "head"
+    ],
+    "cormorant-garamond-latin-ext-500-normal.ttf": [
+      "head"
+    ],
+    "cormorant-garamond-latin-ext-600-italic.ttf": [
+      "head"
+    ],
+    "cormorant-garamond-latin-ext-600-normal.ttf": [
+      "head"
+    ],
+    "cormorant-garamond-latin-ext-700-italic.ttf": [
+      "head"
+    ],
+    "cormorant-garamond-latin-ext-700-normal.ttf": [
+      "head"
+    ],
+    "jost-latin-100-italic.ttf": [
+      "head"
+    ],
+    "jost-latin-100-normal.ttf": [
+      "head"
+    ],
+    "jost-latin-200-italic.ttf": [
+      "head"
+    ],
+    "jost-latin-200-normal.ttf": [
+      "head"
+    ],
+    "jost-latin-300-italic.ttf": [
+      "head"
+    ],
+    "jost-latin-300-normal.ttf": [
+      "head"
+    ],
+    "jost-latin-400-italic.ttf": [
+      "head"
+    ],
+    "jost-latin-400-normal.ttf": [
+      "head"
+    ],
+    "jost-latin-500-italic.ttf": [
+      "head"
+    ],
+    "jost-latin-500-normal.ttf": [
+      "head"
+    ],
+    "jost-latin-600-italic.ttf": [
+      "head"
+    ],
+    "jost-latin-600-normal.ttf": [
+      "head"
+    ],
+    "jost-latin-700-italic.ttf": [
+      "head"
+    ],
+    "jost-latin-700-normal.ttf": [
+      "head"
+    ],
+    "jost-latin-800-italic.ttf": [
+      "head"
+    ],
+    "jost-latin-800-normal.ttf": [
+      "head"
+    ],
+    "jost-latin-900-italic.ttf": [
+      "head"
+    ],
+    "jost-latin-900-normal.ttf": [
+      "head"
+    ],
+    "jost-latin-ext-100-italic.ttf": [
+      "head"
+    ],
+    "jost-latin-ext-100-normal.ttf": [
+      "head"
+    ],
+    "jost-latin-ext-200-italic.ttf": [
+      "head"
+    ],
+    "jost-latin-ext-200-normal.ttf": [
+      "head"
+    ],
+    "jost-latin-ext-300-italic.ttf": [
+      "head"
+    ],
+    "jost-latin-ext-300-normal.ttf": [
+      "head"
+    ],
+    "jost-latin-ext-400-italic.ttf": [
+      "head"
+    ],
+    "jost-latin-ext-400-normal.ttf": [
+      "head"
+    ],
+    "jost-latin-ext-500-italic.ttf": [
+      "head"
+    ],
+    "jost-latin-ext-500-normal.ttf": [
+      "head"
+    ],
+    "jost-latin-ext-600-italic.ttf": [
+      "head"
+    ],
+    "jost-latin-ext-600-normal.ttf": [
+      "head"
+    ],
+    "jost-latin-ext-700-italic.ttf": [
+      "head"
+    ],
+    "jost-latin-ext-700-normal.ttf": [
+      "head"
+    ],
+    "jost-latin-ext-800-italic.ttf": [
+      "head"
+    ],
+    "jost-latin-ext-800-normal.ttf": [
+      "head"
+    ],
+    "jost-latin-ext-900-italic.ttf": [
+      "head"
+    ],
+    "jost-latin-ext-900-normal.ttf": [
+      "head"
+    ],
+    "outfit-latin-100-normal.ttf": [
+      "head"
+    ],
+    "outfit-latin-200-normal.ttf": [
+      "head"
+    ],
+    "outfit-latin-300-normal.ttf": [
+      "head"
+    ],
+    "outfit-latin-400-normal.ttf": [
+      "head"
+    ],
+    "outfit-latin-500-normal.ttf": [
+      "head"
+    ],
+    "outfit-latin-600-normal.ttf": [
+      "head"
+    ],
+    "outfit-latin-700-normal.ttf": [
+      "head"
+    ],
+    "outfit-latin-800-normal.ttf": [
+      "head"
+    ],
+    "outfit-latin-900-normal.ttf": [
+      "head"
+    ],
+    "outfit-latin-ext-100-normal.ttf": [
+      "head"
+    ],
+    "outfit-latin-ext-200-normal.ttf": [
+      "head"
+    ],
+    "outfit-latin-ext-300-normal.ttf": [
+      "head"
+    ],
+    "outfit-latin-ext-400-normal.ttf": [
+      "head"
+    ],
+    "outfit-latin-ext-500-normal.ttf": [
+      "head"
+    ],
+    "outfit-latin-ext-600-normal.ttf": [
+      "head"
+    ],
+    "outfit-latin-ext-700-normal.ttf": [
+      "head"
+    ],
+    "outfit-latin-ext-800-normal.ttf": [
+      "head"
+    ],
+    "outfit-latin-ext-900-normal.ttf": [
+      "head"
+    ]
+  },
+  "fonttools_version": "4.68.0",
+  "elapsed_seconds": 2.294680637001875,
+  "catalog_sha256": "ddaba4a5175b2c4f8da8d313a325512f8ef9c3b093aabb25f932d7f471ab630e"
+}

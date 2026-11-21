@@ -23,6 +23,7 @@ def main():
     parser.add_argument("--skip-integrations", action="store_true")
     parser.add_argument("--skip-browser-install", action="store_true")
     parser.add_argument("--p3d-only", action="store_true", help="Set up locked Python and fonts for cloud CPU p3d without Blender, browser, app builds or optional integrations.")
+    parser.add_argument("--reference-fonts", action="store_true", help="Reconstruct the exact historical TTF bytes required by the registered concert studies.")
     args = parser.parse_args()
     if not (3, 11) <= sys.version_info[:2] < (3, 14):
         raise SystemExit("Use Python 3.11, 3.12, or 3.13")
@@ -35,7 +36,10 @@ def main():
         run(sys.executable, "scripts/install-blender.py")
     if not args.p3d_only and not args.skip_browser_install and not os.environ.get("CHROMIUM_PATH"):
         run("npx", "--no-install", "playwright", "install", "chromium", "--only-shell")
-    run("uv", "run", "--frozen", "--extra", "legacy", "python", "tools/setup_fonts.py", "node_modules/@fontsource", "fonts")
+    font_command = ["uv", "run", "--frozen", "--extra", "legacy", "python", "tools/setup_fonts.py", "node_modules/@fontsource", "fonts"]
+    if args.reference_fonts:
+        font_command.append("--reference-fonts")
+    run(*font_command)
     if not args.p3d_only and not args.skip_integrations:
         run(sys.executable, "scripts/install-integrations.py")
     if args.p3d_only:
