@@ -34,53 +34,76 @@ def browser_probe(root: Path, *, launch: bool = False, allow_local: bool = False
         return {"installed": False, "runtime_validated": False, "status": "probe_unavailable", "executable": None, "error": str(exc)}
 
 
-def doctor(root: Path, *, probe_browser: bool = False, allow_local: bool = False) -> dict:
-    browser = browser_probe(root, launch=probe_browser, allow_local=allow_local)
-    binaries = {
-        "python": sys.executable, "node": shutil.which("node"), "ffmpeg": shutil.which("ffmpeg"),
-        "ffprobe": shutil.which("ffprobe"), "blender": blender_binary(root),
-        "chromium": browser.get("executable"),
-    }
-    versions = {}
-    for name, path in binaries.items():
-        if path:
-            versions[name] = command_version([path, "-version" if name in ("ffmpeg", "ffprobe") else "--version"])
-        else:
-            versions[name] = "missing"
+def doctor(root: Path, *, probe_browser: bool = False, allow_local: bool = False,
+           renderers: list[str] | None = None, editor: str = "ffmpeg") -> dict:
+    """Check only the selected production backends; installation is not render proof."""
+    selected = sorted(set(renderers or ("blender", "threejs", "p3d")))
+    allowed = {"blender", "threejs", "p3d", "p3d-approved", "p3d-kit"}
+    if set(selected) - allowed or editor not in ("ffmpeg", "remotion"):
+        raise PipelineError("Select a supported renderer and finishing backend.")
+    browser_needed = "threejs" in selected or editor == "remotion"
+    legacy_needed = any(name.startswith("p3d") for name in selected)
+    browser = (browser_probe(root, launch=probe_browser, allow_local=allow_local)
+               if browser_needed else {"status": "not_required", "installed": None,
+                                       "runtime_validated": False, "executable": None})
+    binaries = {"python": sys.executable, "ffmpeg": shutil.which("ffmpeg"),
+                "ffprobe": shutil.which("ffprobe")}
+    required = {"ffmpeg", "ffprobe"}
+    if "blender" in selected:
+        binaries["blender"] = blender_binary(root)
+        required.add("blender")
+    if browser_needed:
+        binaries.update(node=shutil.which("node"), chromium=browser.get("executable"))
+        required.add("node")
+    versions = {name: command_version([path, "-version" if name in ("ffmpeg", "ffprobe") else "--version"])
+                if path else "missing" for name, path in binaries.items()}
     packages = {}
     for name in ("concert-video-pipeline", "PyYAML", "numpy", "Pillow", "scipy", "moderngl", "librosa", "fonttools", "brotli", "soundfile"):
         try:
             packages[name] = importlib.metadata.version(name)
         except importlib.metadata.PackageNotFoundError:
             packages[name] = "not installed"
-    errors = [f"Missing {name}." for name in ("node", "ffmpeg", "ffprobe", "blender") if versions[name] in ("missing", "unavailable")]
+    errors = [f"Missing {name}." for name in sorted(required) if versions[name] in ("missing", "unavailable")]
     warnings = []
-    if not (root / "node_modules").is_dir():
-        errors.append("JavaScript dependencies are missing. Run npm ci.")
-    if not browser.get("installed"):
-        errors.append(browser.get("error") or "The configured headless browser is missing.")
-    elif probe_browser and not browser.get("runtime_validated"):
-        warnings.append("The browser is installed but its runtime check did not pass: " + (browser.get("error") or browser.get("status", "unknown")))
-    required_fonts = ["cormorant-garamond-latin-700-italic.ttf", "cormorant-garamond-latin-700-normal.ttf", "jost-latin-500-normal.ttf", "cormorant-garamond-latin-600-italic.ttf"]
-    missing_fonts = [f for f in required_fonts if not (root / "fonts" / f).is_file()]
-    if missing_fonts:
-        warnings.append("Legacy p3d fonts are not ready; run the setup-fonts step before legacy rendering.")
-    if packages["moderngl"] == "not installed":
-        warnings.append("Legacy p3d dependencies are optional; install with uv sync --extra legacy.")
+    if browser_needed:
+        if not (root / "node_modules").is_dir():
+            errors.append("JavaScript dependencies are missing. Run npm ci.")
+        if not browser.get("installed"):
+            errors.append(browser.get("error") or "The configured headless browser is missing.")
+        elif probe_browser and not browser.get("runtime_validated"):
+            warnings.append("The browser is installed but its runtime check did not pass: " +
+                            (browser.get("error") or browser.get("status", "unknown")))
+    if legacy_needed:
+        required_fonts = ["cormorant-garamond-latin-700-italic.ttf", "cormorant-garamond-latin-700-normal.ttf",
+                          "jost-latin-500-normal.ttf", "cormorant-garamond-latin-600-italic.ttf"]
+        missing_fonts = [name for name in required_fonts if not (root / "fonts" / name).is_file()]
+        if missing_fonts:
+            (errors if renderers is not None else warnings).append("Legacy p3d fonts are missing. Run the setup-fonts step: " + ", ".join(missing_fonts))
+        for name in ("numpy", "Pillow", "scipy", "moderngl", "librosa", "fonttools", "brotli", "soundfile"):
+            if packages[name] == "not installed":
+                (errors if renderers is not None else warnings).append(f"Missing legacy dependency {name}. Run uv sync --frozen --extra legacy.")
     if platform.system() == "Darwin":
         warnings.append("Local Mac rendering is disabled by default; no render was started.")
     from .delivery import encoder_capabilities
     try:
         delivery = encoder_capabilities()
-        if not delivery.get("zscale") or "libx264" not in delivery.get("encoders", []):
-            errors.append("FFmpeg needs zscale and libx264 for the default delivery path.")
-        for encoder in ("libx265", "prores_ks"):
-            if encoder not in delivery.get("encoders", []):
-                warnings.append(f"FFmpeg lacks optional {encoder}; its high-quality profile is unavailable.")
+        if "libx264" not in delivery.get("encoders", []):
+            errors.append("FFmpeg needs libx264 for H.264 delivery.")
+        if set(selected) - {"p3d-approved", "p3d-kit"} and not delivery.get("zscale"):
+            errors.append("The selected sRGB delivery path needs FFmpeg zscale.")
     except PipelineError as exc:
         delivery = {"error": str(exc)}
         errors.append(str(exc))
-    return {"dependencies_ready": not errors, "full_pipeline_runtime_verified": False, "runtime_validation": {"browser": browser, "blender_render": "not_probed", "p3d_render": "not_probed", "remotion_finish": "not_probed"}, "platform": platform.system(), "binaries": binaries, "versions": versions, "python_packages": packages, "delivery_capabilities": delivery, "cloud_gpu_provider": None, "paid_dispatch": "disabled", "local_mac_render": "explicit invocation only", "errors": errors, "warnings": warnings, "checks": "Installed dependencies and optional browser launch only. A complete preview render plus QA verifies a project and its selected renderers."}
+    return {"dependencies_ready": not errors, "selected_renderers": selected, "editor": editor,
+            "full_pipeline_runtime_verified": False,
+            "runtime_validation": {"browser": browser, "blender_render": "not_probed" if "blender" in selected else "not_required",
+                                   "p3d_render": "not_probed" if legacy_needed else "not_required",
+                                   "remotion_finish": "not_probed" if editor == "remotion" else "not_required"},
+            "platform": platform.system(), "binaries": binaries, "versions": versions,
+            "python_packages": packages, "delivery_capabilities": delivery,
+            "cloud_gpu_provider": None, "paid_dispatch": "disabled", "local_mac_render": "disabled by default",
+            "errors": errors, "warnings": warnings,
+            "checks": "Selected backend dependencies only. Private audio, prepared assets and actual pixels are checked during production."}
 
 
 def frame_list(value: str) -> list[int]:
@@ -185,6 +208,10 @@ def parser() -> argparse.ArgumentParser:
     diagnostic = sub.add_parser("doctor", help="Distinguish installed dependencies from tested runtime capabilities")
     diagnostic.add_argument("--probe-browser", action="store_true", help="Explicitly launch the selected browser and test WebGL2, without rendering a video")
     diagnostic.add_argument("--allow-local-render", action="store_true", help="Permit the optional browser probe on this Mac")
+    doctor_selection = diagnostic.add_mutually_exclusive_group()
+    doctor_selection.add_argument("--project", help="Check only this project's renderers; private audio need not be present")
+    doctor_selection.add_argument("--backend", action="append", choices=("blender", "threejs", "p3d", "p3d-approved", "p3d-kit"), help="Check this renderer only (repeatable)")
+    diagnostic.add_argument("--editor", choices=("ffmpeg", "remotion"), default="ffmpeg")
     new = sub.add_parser("new", help="Create a project from the shared template")
     new.add_argument("title")
     new.add_argument("--fps", type=int, default=60)
@@ -197,21 +224,23 @@ def parser() -> argparse.ArgumentParser:
     bench.add_argument("--allow-local-render", action="store_true")
     motion = sub.add_parser("motion-qa", help="Inspect camera speed, acceleration and sampled jerk before rendering")
     motion.add_argument("project")
-    for command in ("validate", "analyze", "storyboard", "render", "preview", "assemble", "finalize", "qa", "review", "approve", "archive"):
+    for command in ("validate", "analyze", "prepare", "produce", "storyboard", "render", "preview", "assemble", "finalize", "qa", "review", "approve", "archive"):
         q = sub.add_parser(command)
         q.add_argument("project", help="Project id or a repository-relative manifest path")
-        q.add_argument("--quality", default="draft" if command in ("preview", "storyboard", "review") else "final", help="A quality preset from this project's manifest")
-        if command in ("render", "preview"):
+        q.add_argument("--quality", default="draft" if command in ("preview", "produce", "storyboard", "review") else "final", help="A quality preset from this project's manifest")
+        if command in ("render", "preview", "produce"):
             q.add_argument("--frames", type=frame_list, help="Render selected global frames or half-open ranges")
             q.add_argument("--shot", action="append", help="Render only this shot id (repeatable)")
             q.add_argument("--force", action="store_true", help="Rerender the selected shots instead of reusing matching frames")
-        if command in ("render", "preview", "assemble", "finalize", "storyboard"):
+        if command in ("render", "preview", "produce", "assemble", "finalize", "storyboard"):
             q.add_argument("--allow-local-render", action="store_true", help="Explicitly permit rendering on this Mac for this invocation")
-        if command in ("assemble", "finalize", "preview"):
+        if command in ("assemble", "finalize", "preview", "produce"):
             q.add_argument("--editor", choices=("ffmpeg", "remotion"), default="ffmpeg")
             q.add_argument("--profile", choices=("h264", "hevc10", "prores422hq"), help="Override the project's delivery profile for this output")
         if command == "storyboard":
             q.add_argument("--render", action="store_true", help="Render beginning/middle/end frames for each shot")
+        if command == "produce":
+            q.add_argument("--plan", action="store_true", help="Describe the production stages without preparing, rendering or writing files")
         if command == "approve":
             q.add_argument("--reviewer", required=True)
             q.add_argument("--note", required=True)
@@ -226,14 +255,20 @@ def main(argv: list[str] | None = None) -> int:
     try:
         root = args.root.resolve() if args.root else repo_root()
         if args.command == "doctor":
-            report = doctor(root, probe_browser=args.probe_browser, allow_local=args.allow_local_render)
+            renderers = args.backend
+            if args.project:
+                inspected = load_project(root, args.project, check_files=False)
+                renderers = sorted({shot["renderer"] for shot in inspected.shots})
+            report = doctor(root, probe_browser=args.probe_browser, allow_local=args.allow_local_render,
+                            renderers=renderers, editor=args.editor)
             print(json.dumps(report, indent=2))
-            passed = report["dependencies_ready"] and (not args.probe_browser or report["runtime_validation"]["browser"].get("runtime_validated") is True)
+            browser = report["runtime_validation"]["browser"]
+            passed = report["dependencies_ready"] and (not args.probe_browser or browser.get("status") == "not_required" or browser.get("runtime_validated") is True)
             return 0 if passed else 2
         if args.command == "new":
             print(create_project(root, args.title, args.fps, args.seconds, args.template))
             return 0
-        project = load_project(root, args.project)
+        project = load_project(root, args.project, check_files=not (args.command == "produce" and args.plan))
         if args.command == "motion-qa":
             from .motion_review import motion_review
             print(json.dumps(motion_review(project), indent=2))
@@ -248,6 +283,18 @@ def main(argv: list[str] | None = None) -> int:
             print(json.dumps({"valid": True, "project": project.id, "frames": project.frames, "fps": project.fps, "seconds": project.seconds, "renderers": sorted({s["renderer"] for s in project.shots})}, indent=2))
         elif args.command == "analyze":
             print(analyze(project))
+        elif args.command == "prepare":
+            from .production import prepare
+            print(json.dumps(prepare(project), indent=2))
+        elif args.command == "produce":
+            from .production import plan, produce
+            if args.plan:
+                print(json.dumps(plan(project, quality, selected=args.frames, shot_ids=args.shot, editor=args.editor), indent=2))
+            else:
+                result = produce(project, quality, selected=args.frames, shot_ids=args.shot, force=args.force,
+                                 allow_local=args.allow_local_render, editor=args.editor, profile=args.profile)
+                print(json.dumps(result, indent=2))
+                return 0 if result.get("qa", {}).get("technical_passed", True) else 2
         elif args.command == "render":
             render(project, quality, selected=args.frames, shot_ids=args.shot, force=args.force, allow_local=args.allow_local_render)
         elif args.command in ("review", "storyboard"):

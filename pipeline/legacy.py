@@ -24,7 +24,7 @@ def main() -> None:
     scene = safe_path(root, shot["scene"])
     os.environ["SONG"] = scene.stem
     os.environ["OUT_FPS"] = str(job["video"]["fps"])
-    os.environ["OUT_RES"] = "1080p"
+    os.environ["OUT_RES"] = "4k" if (job["video"]["width"], job["video"]["height"]) == (3840, 2160) else "1080p"
     os.environ["FEATURES"] = str(legacy_features(job))
     os.environ["LIBGL_ALWAYS_SOFTWARE"] = "1"
     np.random.seed(job["seed"])

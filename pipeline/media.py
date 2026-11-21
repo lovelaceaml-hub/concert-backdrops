@@ -18,7 +18,7 @@ from .delivery import (
     stream_validation_errors, validate_source_frames, video_encoding_args,
 )
 from .project import PipelineError, Project, file_hash, safe_path, write_json
-from .render import EXCLUDED_DIRS, SOURCE_SUFFIXES, guard_render, production_lock, run, shot_directory, verify_complete
+from .render import EXCLUDED_DIRS, SOURCE_SUFFIXES, fingerprint, guard_render, production_lock, run, shot_directory, valid_frame, verify_complete
 from .temporal import scan_motion
 
 
@@ -55,7 +55,11 @@ def source_audio(project: Project, directory: Path) -> Path | None:
     spec = project.data.get("audio", {})
     if not spec.get("source"):
         return None
-    audio = safe_path(project.root, spec["source"])
+    if any(shot["renderer"] == "p3d-approved" for shot in project.shots):
+        from .approved import delivery_audio
+        audio = delivery_audio(project)
+    else:
+        audio = safe_path(project.root, spec["source"])
     metadata = probe(audio)
     if not any(s["codec_type"] == "audio" for s in metadata["streams"]):
         raise PipelineError("The configured audio source has no audio stream.")
@@ -63,9 +67,20 @@ def source_audio(project: Project, directory: Path) -> Path | None:
     duration = float(metadata["format"].get("duration", 0))
     if duration - offset + 0.02 < project.seconds:
         raise PipelineError(f"Audio has {duration - offset:.3f}s after the offset, but the timeline needs {project.seconds:.3f}s. Fix the source or timeline; no silent truncation is performed.")
-    if offset:
+    fade_in, fade_out, gain = (float(spec.get(name, 0)) for name in ("fade_in_seconds", "fade_out_seconds", "gain_db"))
+    if offset or fade_in or fade_out or gain:
         trimmed = directory / "audio-offset.wav"
-        run(["ffmpeg", "-v", "error", "-y", "-ss", str(offset), "-i", str(audio), "-t", str(project.seconds), "-vn", "-c:a", "pcm_s24le", str(trimmed)], cwd=project.root, log=directory / "assemble.log")
+        filters = []
+        if fade_in:
+            filters.append(f"afade=t=in:st=0:d={fade_in}")
+        if fade_out:
+            filters.append(f"afade=t=out:st={project.seconds - fade_out}:d={fade_out}")
+        if gain:
+            filters.append(f"volume={gain}dB")
+        command = ["ffmpeg", "-v", "error", "-y", "-ss", str(offset), "-i", str(audio), "-t", str(project.seconds), "-vn"]
+        if filters:
+            command += ["-af", ",".join(filters)]
+        run([*command, "-c:a", "pcm_s24le", str(trimmed)], cwd=project.root, log=directory / "assemble.log")
         return trimmed
     return audio
 
@@ -113,9 +128,12 @@ def assemble(project: Project, quality: str, *, editor: str = "ffmpeg", allow_lo
     if editor not in ("ffmpeg", "remotion"):
         raise PipelineError("editor must be ffmpeg or remotion.")
     delivery = resolve_profile(project, quality, profile)
+    transfer = project.data.get("delivery", {}).get("source_transfer", "srgb")
+    if editor == "remotion" and transfer != "srgb":
+        raise PipelineError("Use FFmpeg for the approved legacy display convention; Remotion expects sRGB sources.")
     if editor == "remotion" and delivery.name != "h264":
         raise PipelineError("The current Remotion compositor is an 8-bit H.264 path. Use --editor ffmpeg with rendered-in-scene titles for a real 10-bit master, or choose --profile h264 for Remotion.")
-    capabilities = require_encoder(delivery)
+    capabilities = require_encoder(delivery, source_transfer=transfer)
     directory = project.output(quality)
     with production_lock(directory / ".production.lock"):
         finishing_inputs = finishing_input_hashes(project.root, editor)
@@ -127,7 +145,7 @@ def assemble(project: Project, quality: str, *, editor: str = "ffmpeg", allow_lo
             shot_dir = shot_directory(project, quality, shot)
             clip = shot_dir / f"clip-{delivery.name}.{delivery.extension}"
             temporary = shot_dir / f"clip-{delivery.name}.partial.{delivery.extension}"
-            run(["ffmpeg", "-v", "error", "-y", "-filter_threads", "4", "-framerate", str(project.fps), "-start_number", str(shot["start_frame"]), "-i", str(shot_dir / "frames/frame_%06d.png"), "-frames:v", str(shot["end_frame_exclusive"] - shot["start_frame"]), *video_encoding_args(project.fps, delivery), "-an", str(temporary)], cwd=project.root, log=log)
+            run(["ffmpeg", "-v", "error", "-y", "-filter_threads", "4", "-framerate", str(project.fps), "-start_number", str(shot["start_frame"]), "-i", str(shot_dir / "frames/frame_%06d.png"), "-frames:v", str(shot["end_frame_exclusive"] - shot["start_frame"]), *video_encoding_args(project.fps, delivery, source_transfer=transfer), "-an", str(temporary)], cwd=project.root, log=log)
             temporary.replace(clip)
             clips.append({"src": str(clip), "start_frame": shot["start_frame"], "end_frame_exclusive": shot["end_frame_exclusive"]})
         audio = source_audio(project, directory)
@@ -169,6 +187,7 @@ def assemble(project: Project, quality: str, *, editor: str = "ffmpeg", allow_lo
             "source_frames": source_frames, "encoder_capabilities": capabilities,
             "finishing_inputs": finishing_inputs,
             "color": {"space": "rec709", "transfer": "bt709", "range": "limited", "hdr": False,
+                      "source_convention": transfer,
                       "pixel_format": delivery.pixel_format, "range_metadata": "implicit_for_prores" if delivery.name == "prores422hq" else "tv"},
             "shot_fingerprints": {r["shot_id"]: r["fingerprint"] for r in receipts},
             "source": git_state(project.root), "created_utc": datetime.now(timezone.utc).isoformat(),
@@ -190,21 +209,55 @@ def storyboard(project: Project, quality: str) -> Path:
     directory = project.output(quality)
     directory.mkdir(parents=True, exist_ok=True)
     rows = []
+    settings = project.settings(quality)
     for shot in project.shots:
         images = []
-        for frame in sorted({shot["start_frame"], (shot["start_frame"] + shot["end_frame_exclusive"] - 1) // 2, shot["end_frame_exclusive"] - 1}):
+        receipt = {}
+        state = "Unverified"
+        try:
+            receipt = json.loads((shot_directory(project, quality, shot) / "receipt.json").read_text())
+            key, _ = fingerprint(project, shot, quality)
+            state = "Current" if isinstance(receipt, dict) and receipt.get("fingerprint") == key else "Stale"
+        except (OSError, ValueError, TypeError, KeyError, PipelineError, RuntimeError):
+            state = "Unverified"
+        recorded = receipt.get("frames", {}) if isinstance(receipt, dict) else {}
+        if not isinstance(recorded, dict):
+            recorded = {}
+        review_frames = {shot["start_frame"], (shot["start_frame"] + shot["end_frame_exclusive"] - 1) // 2, shot["end_frame_exclusive"] - 1}
+        if not isinstance(receipt, dict) or not receipt.get("complete", False):
+            available = sorted(int(key) for key in recorded if isinstance(key, str) and key.isdigit()
+                               and shot["start_frame"] <= int(key) < shot["end_frame_exclusive"])
+            if available:
+                review_frames.update(available[index] for index in np.linspace(0, len(available) - 1, min(9, len(available)), dtype=int))
+        for frame in sorted(review_frames):
             relative = f"shots/{shot['id']}/frames/frame_{frame:06d}.png"
-            if (directory / relative).is_file():
-                images.append(f'<figure><img src="{html.escape(relative)}"><figcaption>Frame {frame} / {frame / project.fps:.3f}s</figcaption></figure>')
+            image_path = directory / relative
+            checksum = recorded.get(str(frame))
+            current = (state == "Current" and isinstance(checksum, str) and len(checksum) == 64
+                       and valid_frame(image_path, (settings["width"], settings["height"]), checksum,
+                                       settings.get("image_bit_depth", 8)))
+            if current:
+                escaped = html.escape(relative)
+                images.append(f'<figure><a href="{escaped}"><img src="{escaped}" alt="Current frame {frame}"></a><figcaption>Current: frame {frame} / {frame / project.fps:.3f}s</figcaption></figure>')
             else:
-                images.append(f'<figure class="missing">Frame {frame}<small>Not rendered</small></figure>')
+                reason = "Missing" if not image_path.is_file() else (state if state != "Current" else "Changed or unverified")
+                images.append(f'<figure class="missing">Frame {frame}<small>{reason}; render this frame to review it.</small></figure>')
         rows.append(f'<section><h2>{html.escape(shot["id"])}: {html.escape(shot.get("name", ""))}</h2><p>{shot["renderer"]} | Frames {shot["start_frame"]} to {shot["end_frame_exclusive"] - 1}</p><div class="frames">{"".join(images)}</div></section>')
     path = directory / "review.html"
-    master = current_master_path(project, quality)
     video = ""
-    if master.is_file():
-        link = f'<p><a href="{html.escape(master.name)}" download>Download {html.escape(master.name)}</a></p>'
-        video = link + (f'<video controls preload="metadata" src="{html.escape(master.name)}"></video>' if master.name == "master.mp4" else '<p>This 10-bit master needs a compatible video player or editing application.</p>')
+    try:
+        master = current_master_path(project, quality)
+        if master.is_file():
+            manifest = json.loads((directory / "master.json").read_text())
+            current = verify_complete(project, quality)
+            if (manifest.get("project_identity") != project.identity() or manifest.get("sha256") != file_hash(master)
+                    or manifest.get("shot_fingerprints") != {r["shot_id"]: r["fingerprint"] for r in current}
+                    or manifest.get("finishing_inputs") != finishing_input_hashes(project.root, manifest.get("editor", "ffmpeg"))):
+                raise PipelineError("The master does not match the current project and sources.")
+            link = f'<p><a href="{html.escape(master.name)}" download>Download current {html.escape(master.name)}</a></p>'
+            video = link + (f'<video controls preload="metadata" src="{html.escape(master.name)}"></video>' if master.name == "master.mp4" else '<p>This 10-bit master needs a compatible video player or editing application.</p>')
+    except (OSError, ValueError, TypeError, KeyError, PipelineError, RuntimeError):
+        video = '<p>Existing master is stale or unverified. Produce or finalize this revision before reviewing its video.</p>'
     path.write_text('<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Video review</title><style>body{margin:0;background:#f8f3eb;color:#25334e;font:16px system-ui;padding:32px;max-width:1300px;margin:auto}h1{font-size:36px}section{background:white;border-radius:16px;padding:20px;margin:20px 0}video{width:100%;max-height:70vh}.frames{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}figure{margin:0}img{width:100%;border-radius:8px}figcaption,small{display:block;padding:8px;color:#596579}.missing{aspect-ratio:16/9;display:grid;place-content:center;background:#edf0f5}a{color:#375a9a}@media(max-width:700px){.frames{grid-template-columns:1fr}body{padding:16px}}</style><h1>' + html.escape(project.data.get("title", project.id)) + '</h1><p>Technical review workspace. Creative approval is recorded separately. ' + f'{project.frames} frames at {project.fps} fps, {project.seconds:.3f}s.</p>' + video + "".join(rows) + '</html>')
     return path
 

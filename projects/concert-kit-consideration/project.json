@@ -1,0 +1,104 @@
+{
+  "schema_version": 1,
+  "video": {
+    "width": 1920,
+    "height": 1080,
+    "fps": 60
+  },
+  "production": {
+    "cloud_gpu_provider": null,
+    "allow_local_gpu": false,
+    "allow_paid_services": false,
+    "allow_ai_generated_visuals": false,
+    "allow_stock_footage": false,
+    "random_seed": 2026,
+    "threads": 1,
+    "render_chunk_frames": 120,
+    "render_timeout_seconds": 7200
+  },
+  "quality": {
+    "draft": {
+      "width": 960,
+      "height": 540,
+      "temporal_samples": 1,
+      "image_bit_depth": 8
+    },
+    "review": {
+      "width": 1920,
+      "height": 1080,
+      "temporal_samples": 2,
+      "image_bit_depth": 8
+    },
+    "4k-check": {
+      "width": 3840,
+      "height": 2160,
+      "temporal_samples": 2,
+      "image_bit_depth": 8
+    },
+    "final": {
+      "width": 1920,
+      "height": 1080,
+      "temporal_samples": 2,
+      "image_bit_depth": 8
+    }
+  },
+  "delivery": {
+    "profile": "h264",
+    "source_transfer": "legacy_display_gamma",
+    "color_space": "rec709"
+  },
+  "style": "styles/zion-cinematic.json",
+  "project_id": "concert-kit-consideration",
+  "title": "Consideration model and performance study",
+  "description": "An original eighteen-second world-space performance study. Supplied audio is an unchanged-speed excerpt; no new instrument separation or inferred musical timing is claimed.",
+  "audio": {
+    "source": "work/concert-kit/consideration-score.wav",
+    "source_sha256": "0f43061d674dae3467a6a76867f8599d241532c131e7e7654502bc29f2d66f7b",
+    "offset_seconds": 0
+  },
+  "timing": {
+    "fps": 60,
+    "visual_only": true,
+    "manually_verified": false,
+    "note": "Authored visual action times. Audio is attached separately; the scene uses neutral analysis controls.",
+    "events": [
+      {
+        "frame": 180,
+        "kind": "authored_cut"
+      },
+      {
+        "frame": 720,
+        "kind": "authored_cut"
+      }
+    ]
+  },
+  "shots": [
+    {
+      "id": "approach",
+      "name": "Approach through the garden",
+      "renderer": "p3d-kit",
+      "start_frame": 0,
+      "end_frame_exclusive": 180,
+      "scene": "tools/concert_kit/consideration.py",
+      "params": {}
+    },
+    {
+      "id": "help",
+      "name": "Reach, contact and helping",
+      "renderer": "p3d-kit",
+      "start_frame": 180,
+      "end_frame_exclusive": 720,
+      "scene": "tools/concert_kit/consideration.py",
+      "params": {}
+    },
+    {
+      "id": "resolve",
+      "name": "Shared light and resolve",
+      "renderer": "p3d-kit",
+      "start_frame": 720,
+      "end_frame_exclusive": 1080,
+      "scene": "tools/concert_kit/consideration.py",
+      "params": {}
+    }
+  ]
+}

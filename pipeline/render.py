@@ -14,6 +14,7 @@ from pathlib import Path
 
 from PIL import Image
 
+from .environment import worker_environment
 from .project import PipelineError, Project, file_hash, json_hash, safe_path, write_json
 
 
@@ -76,7 +77,7 @@ def browser_binary(root: Path) -> tuple[str | None, str | None]:
 
 
 def runtime_identity(renderer: str, root: Path | None = None) -> dict:
-    info = {"platform": platform.system(), "machine": platform.machine(), "python": platform.python_version()}
+    info = {"platform": platform.system(), "machine": platform.machine(), "python": platform.python_version(), "python_hash_seed": "0"}
     for package in ("numpy", "Pillow", "moderngl"):
         try:
             info[package] = importlib.metadata.version(package)
@@ -91,8 +92,12 @@ def runtime_identity(renderer: str, root: Path | None = None) -> dict:
         info["browser_executable"] = browser
         if error:
             info["browser_selection_error"] = error
-    if renderer == "p3d":
+    if renderer in ("p3d", "p3d-approved", "p3d-kit"):
         info["graphics"] = "software-egl"
+        info["software_threads"] = 1
+    if renderer == "p3d-approved":
+        from .approved import runtime_identity as reference_runtime
+        info["reference"] = reference_runtime(root or Path.cwd())
     return info
 
 
@@ -118,6 +123,7 @@ def dependency_files(project: Project, shot: dict) -> list[Path]:
     # explicit dependency list. Assembly records its own finishing inputs.
     add(root / "pipeline/project.py")
     add(root / "pipeline/render.py")
+    add(root / "pipeline/environment.py")
     add(safe_path(root, shot["scene"]))
     for name in ("uv.lock", "package-lock.json", "package.json", "infra/toolchain.lock.json"):
         if (root / name).is_file():
@@ -131,6 +137,14 @@ def dependency_files(project: Project, shot: dict) -> list[Path]:
     elif shot["renderer"] == "blender":
         add(root / "pipeline/motion")
         add(root / "scenes/blender")
+    elif shot["renderer"] == "p3d-approved":
+        from .approved import dependency_files as reference_dependencies
+        for path in reference_dependencies(project):
+            add(path)
+    elif shot["renderer"] == "p3d-kit":
+        from .kit import dependency_files as kit_dependencies
+        for path in kit_dependencies(project):
+            add(path)
     else:
         add(root / "pipeline/legacy.py")
         add(root / "pipeline/audio.py")
@@ -144,18 +158,25 @@ def dependency_files(project: Project, shot: dict) -> list[Path]:
     for field in ("timing", "style"):
         if isinstance(project.data.get(field), str):
             add(safe_path(root, project.data[field]))
-    if project.data.get("audio", {}).get("source"):
+    if project.data.get("audio", {}).get("source") and shot["renderer"] != "p3d-kit":
         add(safe_path(root, project.data["audio"]["source"]))
     return sorted(files)
 
 
 def fingerprint(project: Project, shot: dict, quality: str, runtime: dict | None = None) -> tuple[str, dict]:
     inputs = {str(p.relative_to(project.root)): file_hash(p) for p in dependency_files(project, shot)}
+    audio = project.data.get("audio", {})
+    if shot["renderer"] == "p3d-approved":
+        audio = {key: value for key, value in audio.items() if key in ("source", "source_sha256", "offset_seconds")}
+    elif shot["renderer"] == "p3d-kit":
+        # This registered scene has an authored visual clock and neutral audio
+        # controls. Attached music is an assembly input, not a pose input.
+        audio = {}
     value = {
         "cache_version": 1, "shot": shot, "settings": project.settings(quality),
         "seed": project.data["production"]["random_seed"],
         "timing": project.related_data("timing"), "style": project.related_data("style"),
-        "audio": project.data.get("audio", {}), "inputs": inputs,
+        "audio": audio, "inputs": inputs,
         "runtime": runtime if runtime is not None else runtime_identity(shot["renderer"], project.root),
     }
     return json_hash(value), value
@@ -249,6 +270,8 @@ def render_shot(project: Project, quality: str, shot: dict, frames: list[int], *
             raise PipelineError("Source changed during rendering. Freeze the round, then run render again; earlier receipts will be checked for staleness.")
 
     for offset in range(0, len(pending), chunk_size):
+        if (project.output(quality) / "STOP").exists():
+            raise PipelineError("This production round has a STOP marker. Remove it only when intentionally resuming.")
         check_sources()
         chunk = pending[offset:offset + chunk_size]
         # Remove any unverified leftovers before starting this chunk. Partial files
@@ -259,13 +282,15 @@ def render_shot(project: Project, quality: str, shot: dict, frames: list[int], *
             "project_id": project.id, "shot": shot,
             "video": {k: settings[k] for k in ("width", "height", "fps")},
             "seed": policy["random_seed"], "frames": chunk,
-            "out_dir": str(output), "samples": settings["samples"], "repo_root": str(project.root),
+            "out_dir": str(output), "samples": settings.get("samples", 1), "repo_root": str(project.root),
+            "temporal_samples": settings.get("temporal_samples"),
             "image_bit_depth": depth, "motion_blur": settings.get("motion_blur", {"enabled": False}),
             "threads": threads, "quality": quality,
             "source_inputs": provenance["inputs"],
             "timing": project.related_data("timing"), "style": project.related_data("style"),
             "audio": project.data.get("audio", {}), "features_dir": str(directory / "audio"),
             "allow_local_render": allow_local,
+            "stop_file": str(project.output(quality) / "STOP"),
         }
         job_path = directory / "job.json"
         write_json(job_path, job)
@@ -276,12 +301,14 @@ def render_shot(project: Project, quality: str, shot: dict, frames: list[int], *
             command = ["node", "apps/scene-preview/capture.mjs", "--job", str(job_path)]
             if allow_local:
                 command.append("--allow-local-render")
+        elif renderer == "p3d-approved":
+            command = [sys.executable, "-m", "pipeline.approved", "--job", str(job_path)]
+        elif renderer == "p3d-kit":
+            command = [sys.executable, "-m", "pipeline.kit", "--job", str(job_path)]
         else:
             command = [sys.executable, "-m", "pipeline.legacy", "--job", str(job_path)]
         print(f"Rendering {shot['id']}: frames {chunk[0]} to {chunk[-1]} ({len(chunk)} of {len(pending)} pending) with {renderer}", flush=True)
-        env = os.environ.copy()
-        env.setdefault("LIBGL_ALWAYS_SOFTWARE", "1")
-        env.setdefault("OMP_NUM_THREADS", str(threads))
+        env = worker_environment(renderer, threads)
         try:
             run(command, cwd=project.root, log=directory / "render.log", env=env, timeout=policy.get("render_timeout_seconds", 1800))
         finally:
@@ -305,6 +332,8 @@ def render_shot(project: Project, quality: str, shot: dict, frames: list[int], *
 
 def render(project: Project, quality: str, *, selected: list[int] | None = None, shot_ids: list[str] | None = None, force: bool = False, allow_local: bool = False) -> list[dict]:
     guard_render(project, allow_local)
+    if (project.output(quality) / "STOP").exists():
+        raise PipelineError("This production round has a STOP marker. Remove it only when intentionally resuming.")
     if selected is not None and any(f < 0 or f >= project.frames for f in selected):
         raise PipelineError(f"Selected frames must be between 0 and {project.frames - 1}.")
     if shot_ids and set(shot_ids) - {s["id"] for s in project.shots}:

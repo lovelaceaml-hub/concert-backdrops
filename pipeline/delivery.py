@@ -53,11 +53,15 @@ def resolve_profile(project: Project, quality: str, override: str | None = None)
     """Draft/review stay compatible unless a quality or invocation overrides them."""
     project.settings(quality)
     delivery = project.data.get("delivery", {})
-    if delivery.get("source_transfer", "srgb") != "srgb" or delivery.get("color_space", "rec709") != "rec709":
-        raise PipelineError("This finishing path accepts display-referred sRGB PNGs and exports Rec.709 SDR only.")
+    transfer = delivery.get("source_transfer", "srgb")
+    if transfer not in ("srgb", "legacy_display_gamma") or delivery.get("color_space", "rec709") != "rec709":
+        raise PipelineError("Select sRGB or the explicit legacy display convention for Rec.709 SDR delivery.")
     default = delivery.get("profile", "h264") if quality == "final" else "h264"
     selected = override or delivery.get("profiles_by_quality", {}).get(quality, default)
-    return get_profile(selected)
+    profile = get_profile(selected)
+    if transfer == "legacy_display_gamma" and profile.name != "h264":
+        raise PipelineError("The legacy display convention is an RGB8 to H.264 SDR path.")
+    return profile
 
 
 @lru_cache(maxsize=1)
@@ -76,16 +80,16 @@ def encoder_capabilities() -> dict:
     }
 
 
-def require_encoder(profile: DeliveryProfile) -> dict:
+def require_encoder(profile: DeliveryProfile, *, source_transfer: str = "srgb") -> dict:
     capabilities = encoder_capabilities()
     if profile.encoder not in capabilities["encoders"]:
         raise PipelineError(f"The installed FFmpeg lacks {profile.encoder}, required by {profile.name}. Install a build with that CPU encoder.")
-    if not capabilities["zscale"]:
+    if source_transfer == "srgb" and not capabilities["zscale"]:
         raise PipelineError("The installed FFmpeg lacks zscale. This pipeline requires it for the explicit sRGB to Rec.709 conversion.")
     return capabilities
 
 
-def video_encoding_args(fps: int, profile: DeliveryProfile) -> list[str]:
+def video_encoding_args(fps: int, profile: DeliveryProfile, *, source_transfer: str = "srgb") -> list[str]:
     # PNGs are display-referred sRGB, including Blender's AgX display output.
     # zimg's display-referred BT.709 uses the BT.1886 gamma-2.4 display EOTF.
     # A real transfer conversion is required; changing metadata alone is wrong.
@@ -94,6 +98,14 @@ def video_encoding_args(fps: int, profile: DeliveryProfile) -> list[str]:
         "primariesin=bt709:rangein=full:matrix=bt709:transfer=bt709:"
         "primaries=bt709:range=limited:dither=error_diffusion,format=" + profile.pixel_format
     )
+    if source_transfer == "legacy_display_gamma":
+        if profile.name != "h264":
+            raise PipelineError("Legacy display pixels require the H.264 SDR profile.")
+        # Preserve the production's filmic/gamma treatment. Do not apply the
+        # sRGB transfer conversion used for Blender and browser PNGs.
+        conversion = "scale=out_color_matrix=bt709:out_range=tv,format=yuv420p"
+    elif source_transfer != "srgb":
+        raise PipelineError("Unsupported source transfer convention.")
     return [
         "-vf", conversion, "-c:v", profile.encoder, *profile.codec_args,
         "-threads", "4", "-pix_fmt", profile.pixel_format, "-r", str(fps), "-fps_mode", "cfr",
@@ -145,7 +157,8 @@ def validate_source_frames(project: Project, quality: str, profile: DeliveryProf
             depths.add(header["bit_depth"])
             colors.add(header["color_type"])
             count += 1
-    return {"frame_count": count, "png_bit_depths": sorted(depths), "png_color_types": sorted(colors), "source_transfer": "srgb"}
+    return {"frame_count": count, "png_bit_depths": sorted(depths), "png_color_types": sorted(colors),
+            "source_transfer": project.data.get("delivery", {}).get("source_transfer", "srgb")}
 
 
 def stream_validation_errors(metadata: dict, profile: DeliveryProfile, *, width: int, height: int, fps: int, frames: int, wanted_audio: bool) -> list[str]:

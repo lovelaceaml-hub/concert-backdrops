@@ -171,7 +171,7 @@ class DeliveryProfileTests(unittest.TestCase):
             approval_bytes = approval_path.read_bytes()
             # Perform a real second encode with an intentionally wrong clock.
             # Validation must reject its bytes before replacing the active master.
-            with patch("pipeline.media.video_encoding_args", side_effect=lambda fps, profile: video_encoding_args(30, profile)):
+            with patch("pipeline.media.video_encoding_args", side_effect=lambda fps, profile, **kwargs: video_encoding_args(30, profile, **kwargs)):
                 with self.assertRaisesRegex(PipelineError, "previous master is preserved"):
                     assemble(self.project, "final", profile="h264")
             self.assertEqual(master.read_bytes(), master_bytes)

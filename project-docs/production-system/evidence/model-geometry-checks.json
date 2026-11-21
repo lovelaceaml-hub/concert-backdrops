@@ -1,0 +1,92 @@
+{
+  "source_identity": "2fa9e0fce212be765d639fbb85acf8cdb755e5a92d995dae418fa66fbd7eae6e",
+  "models": [
+    {
+      "family": "seat",
+      "variant": "stone",
+      "finite": true,
+      "same_time_after_random_seek": true,
+      "same_seed_fresh_instance": true
+    },
+    {
+      "family": "seat",
+      "variant": "garden",
+      "finite": true,
+      "same_time_after_random_seek": true,
+      "same_seed_fresh_instance": true
+    },
+    {
+      "family": "path",
+      "variant": "shore",
+      "finite": true,
+      "same_time_after_random_seek": true,
+      "same_seed_fresh_instance": true
+    },
+    {
+      "family": "path",
+      "variant": "bridge",
+      "finite": true,
+      "same_time_after_random_seek": true,
+      "same_seed_fresh_instance": true
+    },
+    {
+      "family": "reeds",
+      "variant": "reed",
+      "finite": true,
+      "same_time_after_random_seek": true,
+      "same_seed_fresh_instance": true
+    },
+    {
+      "family": "reeds",
+      "variant": "grain",
+      "finite": true,
+      "same_time_after_random_seek": true,
+      "same_seed_fresh_instance": true
+    },
+    {
+      "family": "flowers",
+      "variant": "lotus",
+      "finite": true,
+      "same_time_after_random_seek": true,
+      "same_seed_fresh_instance": true
+    },
+    {
+      "family": "flowers",
+      "variant": "star",
+      "finite": true,
+      "same_time_after_random_seek": true,
+      "same_seed_fresh_instance": true
+    },
+    {
+      "family": "willow",
+      "variant": "willow",
+      "finite": true,
+      "same_time_after_random_seek": true,
+      "same_seed_fresh_instance": true
+    },
+    {
+      "family": "willow",
+      "variant": "blossom",
+      "finite": true,
+      "same_time_after_random_seek": true,
+      "same_seed_fresh_instance": true
+    },
+    {
+      "family": "lantern",
+      "variant": "hanging",
+      "finite": true,
+      "same_time_after_random_seek": true,
+      "same_seed_fresh_instance": true
+    },
+    {
+      "family": "lantern",
+      "variant": "cup",
+      "finite": true,
+      "same_time_after_random_seek": true,
+      "same_seed_fresh_instance": true
+    }
+  ],
+  "invalid_variants_rejected": 6,
+  "atlas_identity_matches": true,
+  "notes": "Geometry-level random-seek determinism and finite values only; does not assert whole-render or visual acceptance."
+}
