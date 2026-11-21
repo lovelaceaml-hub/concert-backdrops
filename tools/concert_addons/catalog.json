@@ -1,0 +1,74 @@
+{
+  "schema_version": 1,
+  "pack": "concert-addons-native-prototypes-v2",
+  "appearance_revision": 2,
+  "constructor_api_revision": 1,
+  "status": "prototype_owner_review_pending",
+  "current_evidence": {
+    "source_map_sha256": "b5f44f3626d1bf6685dbe24cbf1e20b3bc31759e99d9983b28a2beba0d4710f2",
+    "native_stills": "work/concert-addons/art-v2/final-native",
+    "contact_sheet": "work/concert-addons/art-v2/model-contact-sheet-v2.png",
+    "contact_sheet_sha256": "10f9fff181445728fb9dd4e84818130b63650b0a0fbd19555c26c63c234ec231",
+    "motion_proof": "work/concert-addons/art-v2/dove-flight-v2-6s-1080p60.mp4",
+    "motion_proof_sha256": "d213912ae9321b5bb43cc941eb570ece9f369ca605647b901bedeb7f598835a7",
+    "motion_proof_duration_seconds": 6.0,
+    "motion_proof_fps": "60/1",
+    "motion_proof_frames": 360,
+    "technical_qa": "passed",
+    "visual_review": "native stills plus 14 sampled decoded frames inspected",
+    "owner_approval": "pending"
+  },
+  "superseded_rig_baseline": {
+    "appearance_revision": 1,
+    "source_map_sha256": "96254c1535a952629efde164f3fb254a826649ba3b520ba6594369c0db598d36",
+    "movie_sha256": "c548f4030416023815a44e862f2ffe30b10e4f11d755ee47d39a7718c4bbd810",
+    "source_archive": "work/concert-addons/rig-baseline-v1/rig-baseline-source-and-receipts.zip",
+    "presentation": "private superseded evidence; not current visual proof"
+  },
+  "coordinates": {"units": "metres", "up": "+Y", "dove_forward": "+Z"},
+  "protocol": "p3d PointSet.sample(absolute_seconds) -> list[batch_dict]",
+  "provenance": {
+    "geometry": "Original procedural code authored for this repository from mathematical primitives",
+    "external_visual_assets": [],
+    "ai_generated_rasters": false,
+    "stock_footage": false,
+    "photo_tracing": false,
+    "motion_capture": false,
+    "license_scope": "Existing private project terms; no separate public license grant. Existing engine and pinned font dependency licenses remain applicable."
+  },
+  "models": [
+    {
+      "id": "dove-articulated-v1",
+      "appearance_revision": 2,
+      "constructor": "tools.concert_addons.Dove",
+      "source": "tools/concert_addons/models.py:Dove",
+      "suggested_songs": ["s09"],
+      "variants": ["ivory"],
+      "anchors": ["root", "feet[0:2]", "wings.left.shoulder", "wings.left.elbow", "wings.left.wrist", "wings.right.shoulder", "wings.right.elbow", "wings.right.wrist"],
+      "animation": ["anticipatory head turn", "crouch", "articulated flap", "climb", "glide", "landing flare", "foot contact", "wing fold"],
+      "limitations": ["Stylized anatomy", "Authored flight curve, no aerodynamic simulation", "One launch and landing per instance", "Not approved for a concert song"]
+    },
+    {
+      "id": "rose-layered-v1",
+      "appearance_revision": 1,
+      "constructor": "tools.concert_addons.Rose",
+      "source": "tools/concert_addons/models.py:Rose",
+      "suggested_songs": ["s02"],
+      "variants": ["blush", "crimson", "golden"],
+      "anchors": ["root", "flower"],
+      "animation": ["three-second opening", "coherent wind", "attached leaves and flower head"],
+      "limitations": ["Stylized petal anatomy", "Palette variants are not cultivar claims", "Not approved for a concert song"]
+    },
+    {
+      "id": "wheat-spikelet-v1",
+      "appearance_revision": 1,
+      "constructor": "tools.concert_addons.Wheat",
+      "source": "tools/concert_addons/models.py:Wheat",
+      "suggested_songs": ["s06"],
+      "variants": ["ripe", "green"],
+      "anchors": ["roots", "heads"],
+      "animation": ["coherent wind with fixed roots", "attached paired grains and awns"],
+      "limitations": ["Stylized geometry", "No physical plant simulation", "No agricultural species claim", "Not approved for a concert song"]
+    }
+  ]
+}

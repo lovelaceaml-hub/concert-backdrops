@@ -181,8 +181,10 @@ def validate(project: Project, *, check_files: bool = True) -> None:
             raise PipelineError(f"quality.{name} must be an object.")
         if "fps" in preset:
             raise PipelineError("Quality presets cannot change fps; the project clock stays fixed.")
-        for field in ("width", "height", "samples"):
+        for field in ("width", "height"):
             positive_int(preset.get(field), f"quality.{name}.{field}")
+        if "samples" in preset:
+            positive_int(preset["samples"], f"quality.{name}.samples")
         if preset["width"] % 2 or preset["height"] % 2:
             raise PipelineError(f"quality.{name} dimensions must be even.")
         if preset["width"] * video["height"] != preset["height"] * video["width"]:
@@ -202,8 +204,9 @@ def validate(project: Project, *, check_files: bool = True) -> None:
     profiles = {"h264", "hevc10", "prores422hq"}
     if not isinstance(delivery, dict) or not isinstance(delivery.get("profile", "h264"), str) or delivery.get("profile", "h264") not in profiles:
         raise PipelineError("delivery.profile must be h264, hevc10, or prores422hq.")
-    if delivery.get("source_transfer", "srgb") != "srgb" or delivery.get("color_space", "rec709") != "rec709":
-        raise PipelineError("This workflow expects display-referred sRGB PNG inputs and Rec.709 SDR delivery.")
+    transfer = delivery.get("source_transfer", "srgb")
+    if transfer not in ("srgb", "legacy_display_gamma") or delivery.get("color_space", "rec709") != "rec709":
+        raise PipelineError("This workflow accepts sRGB or explicit legacy display pixels and Rec.709 SDR delivery.")
     overrides = delivery.get("profiles_by_quality", {})
     if not isinstance(overrides, dict) or any(k not in presets or not isinstance(v, str) or v not in profiles for k, v in overrides.items()):
         raise PipelineError("delivery.profiles_by_quality must map existing quality names to supported profiles.")
@@ -237,8 +240,22 @@ def validate(project: Project, *, check_files: bool = True) -> None:
             raise PipelineError(f"Shot {sid} must start at frame {cursor} and end after its start; no gaps or overlaps.")
         cursor = end
         renderer = shot.get("renderer")
-        if renderer not in ("blender", "threejs", "p3d"):
+        if renderer not in ("blender", "threejs", "p3d", "p3d-approved", "p3d-kit"):
             raise PipelineError(f"Unsupported renderer for {sid}: {renderer!r}")
+        if transfer == "legacy_display_gamma":
+            if not renderer.startswith("p3d") or delivery.get("profile", "h264") != "h264" or any(v != "h264" for v in overrides.values()):
+                raise PipelineError("The legacy display convention requires p3d scenes and H.264 SDR delivery.")
+        for name, preset in presets.items():
+            if renderer in ("p3d-approved", "p3d-kit"):
+                if "samples" in preset:
+                    raise PipelineError(f"quality.{name}: use temporal_samples for the approved p3d adapter, not Blender samples.")
+                count = positive_int(preset.get("temporal_samples"), f"quality.{name}.temporal_samples")
+                if count > 4:
+                    raise PipelineError("Approved p3d temporal_samples must be 1 to 4.")
+            else:
+                positive_int(preset.get("samples"), f"quality.{name}.samples")
+                if "temporal_samples" in preset:
+                    raise PipelineError("temporal_samples requires the approved p3d adapter.")
         if renderer == "threejs":
             if video["fps"] > 120:
                 raise PipelineError("The browser capture adapter supports at most 120 fps.")
@@ -258,6 +275,12 @@ def validate(project: Project, *, check_files: bool = True) -> None:
                 raise PipelineError("The existing p3d engine supports 30 or 60 fps.")
         if not isinstance(shot.get("params", {}), dict):
             raise PipelineError(f"{sid}.params must be an object.")
+        if renderer in ("p3d-approved", "p3d-kit"):
+            if renderer == "p3d-approved":
+                from .approved import validate_shot
+            else:
+                from .kit import validate_shot
+            validate_shot(project, shot)
         limits = shot.get("params", {}).get("motion_limits", {})
         if not isinstance(limits, dict) or set(limits) - {"speed", "acceleration", "jerk"}:
             raise PipelineError(f"{sid}.params.motion_limits accepts speed, acceleration, and jerk.")
@@ -298,6 +321,9 @@ def validate(project: Project, *, check_files: bool = True) -> None:
             safe_path(root, shot["params"]["features"], exists=check_files)
         dependencies(shot.get("dependencies", []), f"{sid}.dependencies")
     dependencies(data.get("dependencies", []), "dependencies")
+    renderers = {shot["renderer"] for shot in shots}
+    if renderers & {"p3d-approved", "p3d-kit"} and len(renderers) > 1:
+        raise PipelineError("Registered p3d studies require a separate project for each adapter.")
     for key in ("timing", "style"):
         if key in data and not isinstance(data[key], (str, dict)):
             raise PipelineError(f"{key} must be a relative file path or an object.")
@@ -330,7 +356,20 @@ def validate(project: Project, *, check_files: bool = True) -> None:
         source = safe_path(root, audio["source"], exists=check_files)
         if check_files and not source.is_file():
             raise PipelineError("audio.source must be a file.")
+        expected_audio = audio.get("source_sha256")
+        if expected_audio is not None:
+            if not isinstance(expected_audio, str) or not re.fullmatch(r"[0-9a-f]{64}", expected_audio):
+                raise PipelineError("audio.source_sha256 must be a lowercase SHA256 digest.")
+            if check_files and file_hash(source) != expected_audio:
+                raise PipelineError("audio.source bytes do not match audio.source_sha256.")
     offset = audio.get("offset_seconds", 0)
     if isinstance(offset, bool) or not isinstance(offset, (int, float)) or not math.isfinite(offset) or offset < 0:
         raise PipelineError("audio.offset_seconds must be a finite nonnegative number.")
+    for field in ("fade_in_seconds", "fade_out_seconds"):
+        value = audio.get(field, 0)
+        if isinstance(value, bool) or not isinstance(value, (int, float)) or not math.isfinite(value) or not 0 <= value <= project.seconds / 2:
+            raise PipelineError(f"audio.{field} must be finite and between zero and half the timeline.")
+    gain = audio.get("gain_db", 0)
+    if isinstance(gain, bool) or not isinstance(gain, (int, float)) or not math.isfinite(gain) or not -12 <= gain <= 0:
+        raise PipelineError("audio.gain_db must be finite and between -12 and 0 dB.")
     json_hash(data)  # Reject nonfinite and non-JSON YAML objects before jobs are created.

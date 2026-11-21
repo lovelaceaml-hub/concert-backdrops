@@ -1,0 +1,87 @@
+{
+  "schema_version": 1,
+  "canonical_source": "engine/p3d/words.py:EXPRESSIONS",
+  "copy_policy": "Generated from the existing approved source. Onscreen code imports the canonical source directly.",
+  "expressions": [
+    {
+      "id": 1,
+      "label": "Greeting",
+      "lines": [
+        "“How are you?”"
+      ],
+      "color": "#EA5A5E"
+    },
+    {
+      "id": 2,
+      "label": "Gratitude",
+      "lines": [
+        "“Thank you. It’s all thanks to you.",
+        "You’ve worked hard.”"
+      ],
+      "color": "#F2B25E"
+    },
+    {
+      "id": 3,
+      "label": "Apology",
+      "lines": [
+        "“I’m sorry.",
+        "It must have been hard on you.”"
+      ],
+      "color": "#F6CE46"
+    },
+    {
+      "id": 4,
+      "label": "Inclusiveness",
+      "lines": [
+        "“It’s okay. I understand.”"
+      ],
+      "color": "#5ABA5A"
+    },
+    {
+      "id": 5,
+      "label": "Concession",
+      "lines": [
+        "“Please, after you.”"
+      ],
+      "color": "#62B2FA"
+    },
+    {
+      "id": 6,
+      "label": "Respect",
+      "lines": [
+        "“I’d love to hear more",
+        "about your thoughts.”"
+      ],
+      "color": "#667AF6",
+      "glow": "#97A5FA"
+    },
+    {
+      "id": 7,
+      "label": "Encouragement",
+      "lines": [
+        "“I’ll pray (or root) for you.",
+        "Everything will go well.”"
+      ],
+      "color": "#9E6AF6"
+    },
+    {
+      "id": 8,
+      "label": "Consideration",
+      "lines": [
+        "“Can I give you a hand",
+        "with anything?”"
+      ],
+      "color": "#EE62A6"
+    },
+    {
+      "id": 9,
+      "label": "Compliment",
+      "lines": [
+        "“You’re amazing.",
+        "You’re doing great!”"
+      ],
+      "color": "#364E96",
+      "glow": "#8C9FEA"
+    }
+  ]
+}

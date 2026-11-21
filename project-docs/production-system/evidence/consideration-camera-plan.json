@@ -1,0 +1,280 @@
+{
+  "schema_version": 1,
+  "status": "Private single-frame planning evidence; current movie unchanged; no approved fix or full-shot validation.",
+  "base_picture_source_identity": "2fa9e0fce212be765d639fbb85acf8cdb755e5a92d995dae418fa66fbd7eae6e",
+  "identity_method": "SHA256 of sorted compact JSON from tools.concert_kit.render.source_hashes(); overrides are separately identified below and are not production inputs.",
+  "frame": 450,
+  "scene_seconds": 7.5,
+  "fps": 60,
+  "native_size": [
+    1920,
+    1080
+  ],
+  "temporal_samples": 2,
+  "graphics_threads": 1,
+  "renderer": "llvmpipe LLVM 19.1.7",
+  "variants": [
+    {
+      "name": "baseline",
+      "position": [
+        1.35,
+        1.5,
+        5.9
+      ],
+      "target": [
+        -0.09,
+        1.025,
+        1.685
+      ],
+      "fov_vertical_degrees": 35,
+      "aperture_m": 0.009,
+      "head_horizontal_separation_px": 59.16699412937746,
+      "pelvis_horizontal_separation_px": 77.26869468795925,
+      "path": "work/pipeline/concert-kit-consideration/review/shots/help/frames/frame_000450.png",
+      "sha256": "83ff79d82ecd93b6db757106b08b88b70473faf173adf186b19ca302e8a359e2",
+      "native_size": [
+        1920,
+        1080
+      ],
+      "source_image_sha256_reverified": "83ff79d82ecd93b6db757106b08b88b70473faf173adf186b19ca302e8a359e2",
+      "camera_rig": {
+        "type": "current moving shot sampled at 7.5s",
+        "position_at_7_5": [
+          1.35,
+          1.5,
+          5.9
+        ],
+        "target_at_7_5": [
+          -0.09,
+          1.025,
+          1.685
+        ],
+        "vertical_fov_degrees": 35,
+        "aperture_m": 0.009,
+        "focus": "target",
+        "roll_degrees": 0,
+        "near_m": 0.1,
+        "handheld": 0,
+        "shutter_share_of_frame": 0.3,
+        "up_world_vector": [
+          0,
+          1,
+          0
+        ],
+        "blend_seconds": 0,
+        "min_height_m": 0.25,
+        "shake": 0,
+        "free": false,
+        "aspect_ratio": [
+          16,
+          9
+        ],
+        "far_m": 5000
+      },
+      "active_move": {
+        "type": "dolly",
+        "t0": 3.0,
+        "t1": 12.0,
+        "position_start": [
+          1.6,
+          1.45,
+          5.8
+        ],
+        "position_end": [
+          1.1,
+          1.55,
+          6.0
+        ],
+        "look_start": [
+          -0.18,
+          1.0,
+          1.52
+        ],
+        "look_end": [
+          0.0,
+          1.05,
+          1.85
+        ],
+        "ease": "smooth",
+        "blend_seconds": 0
+      }
+    },
+    {
+      "name": "west45",
+      "position": [
+        -3.2,
+        1.65,
+        5.1
+      ],
+      "target": [
+        0.002,
+        1.02,
+        1.944
+      ],
+      "fov_vertical_degrees": 35,
+      "aperture_m": 0.009,
+      "head_horizontal_separation_px": 177.0674141454054,
+      "pelvis_horizontal_separation_px": 264.77482284164785,
+      "path": "work/production-system/consideration-motion-review/camera-plan/plan-only-west45-frame-0450.png",
+      "sha256": "b449ece32405e018c59f79a4b8d97df086a81db7589ee7516687027e198f120f",
+      "native_size": [
+        1920,
+        1080
+      ],
+      "source_image_sha256_reverified": "b449ece32405e018c59f79a4b8d97df086a81db7589ee7516687027e198f120f",
+      "camera_rig": {
+        "type": "isolated constant hold for one planning frame",
+        "position_at_7_5": [
+          -3.2,
+          1.65,
+          5.1
+        ],
+        "target_at_7_5": [
+          0.002,
+          1.02,
+          1.944
+        ],
+        "vertical_fov_degrees": 35,
+        "aperture_m": 0.009,
+        "focus": "target",
+        "roll_degrees": 0,
+        "near_m": 0.1,
+        "handheld": 0,
+        "shutter_share_of_frame": 0.3,
+        "up_world_vector": [
+          0,
+          1,
+          0
+        ],
+        "blend_seconds": 0,
+        "min_height_m": 0.25,
+        "shake": 0,
+        "free": false,
+        "aspect_ratio": [
+          16,
+          9
+        ],
+        "far_m": 5000
+      },
+      "hold_interval_in_test_seconds": [
+        0,
+        18
+      ]
+    },
+    {
+      "name": "west69",
+      "position": [
+        -4.25,
+        1.85,
+        3.6
+      ],
+      "target": [
+        0.002,
+        1.02,
+        1.944
+      ],
+      "fov_vertical_degrees": 35,
+      "aperture_m": 0.009,
+      "head_horizontal_separation_px": 170.08937918365314,
+      "pelvis_horizontal_separation_px": 256.7317190470931,
+      "path": "work/production-system/consideration-motion-review/camera-plan/plan-only-west69-frame-0450.png",
+      "sha256": "545fe5b46b79094a4b153cd91d0c1d223eeeb5ecfc913f8d389d8ed39488a631",
+      "native_size": [
+        1920,
+        1080
+      ],
+      "source_image_sha256_reverified": "545fe5b46b79094a4b153cd91d0c1d223eeeb5ecfc913f8d389d8ed39488a631",
+      "camera_rig": {
+        "type": "isolated constant hold for one planning frame",
+        "position_at_7_5": [
+          -4.25,
+          1.85,
+          3.6
+        ],
+        "target_at_7_5": [
+          0.002,
+          1.02,
+          1.944
+        ],
+        "vertical_fov_degrees": 35,
+        "aperture_m": 0.009,
+        "focus": "target",
+        "roll_degrees": 0,
+        "near_m": 0.1,
+        "handheld": 0,
+        "shutter_share_of_frame": 0.3,
+        "up_world_vector": [
+          0,
+          1,
+          0
+        ],
+        "blend_seconds": 0,
+        "min_height_m": 0.25,
+        "shake": 0,
+        "free": false,
+        "aspect_ratio": [
+          16,
+          9
+        ],
+        "far_m": 5000
+      },
+      "hold_interval_in_test_seconds": [
+        0,
+        18
+      ]
+    }
+  ],
+  "override_scripts": [
+    {
+      "path": "work/production-system/consideration-motion-review/camera-plan/test_angles.py",
+      "sha256": "de41ab89b88d562b2780d1f30ab8fd74c3dcadb093d0ddb45f98817f7fbbefba",
+      "result": "Produced west45, then stopped on strict marker-list equality before a second render; difference size was not saved."
+    },
+    {
+      "path": "work/production-system/consideration-motion-review/camera-plan/test_angle_b.py",
+      "sha256": "bf1fb2e8988e85a47c6df07cf405976f48a9165651157e284876f6e2936b4892",
+      "result": "Produced west69 and saved full before/after diagnostic."
+    }
+  ],
+  "second_run_pose_evidence": {
+    "full_bone_matrix_maximum_absolute_difference_per_actor": [
+      0.0,
+      0.0
+    ],
+    "markers_exactly_equal": false,
+    "maximum_marker_difference_m": 7.771561172376096e-16,
+    "only_changed_marker": "helper foot.L",
+    "interpretation": "Full bone matrices exactly equal; the marker delta is numerical recomputation at floating-point precision, not an authored pose change. This measured diagnostic belongs to the second run."
+  },
+  "camera_planning_inference": "West45 is the preferred next-revision starting point: separate heads/torsos/shared hand, retained willow framing, and less intrusive lower-body vegetation than west69.",
+  "required_next_validation": [
+    "Create an explicit reviewed camera revision rather than adopting private images as current production frames.",
+    "Review approach, grip, rise, release and settle through the entire shot, especially 5.0 to 9.5 seconds.",
+    "Check both shot boundaries at 3.0 and 12.0 seconds, gaze direction, feet, hand contact and background plant/stool clearance.",
+    "Recheck actual encoded motion and audio before claiming a polished or approved result."
+  ],
+  "comparison": {
+    "path": "work/concert-kit/camera-planning/Consideration-Camera-Planning-Frame450.png",
+    "sha256": "d5ed875cd6398c4ccd018aaeb9ad5c4b6f78daab9a5fe3e96ea48d59e5706a95",
+    "size": [
+      1920,
+      680
+    ],
+    "source_size_each": [
+      1920,
+      1080
+    ],
+    "display_size_each": [
+      960,
+      540
+    ],
+    "scale_each": 0.5,
+    "source_image_order": [
+      "baseline",
+      "west45"
+    ],
+    "proposed_angle_label": "PROPOSED WEST45: single-frame plan; not the current movie or an approved fix."
+  },
+  "no_additional_render_for_this_document": true,
+  "frozen_picture_source_unchanged_after_planning": true
+}

@@ -1,0 +1,139 @@
+{
+  "schema_version": 1,
+  "status": "passed",
+  "verified_at_utc": "2026-11-21T00:38:35.987171+00:00",
+  "date_display": "2026-11-20",
+  "date_display_timezone": "America/Los_Angeles",
+  "scope": "Read-only Google Drive downloads with exact-byte verification, ordered master reconstruction, viewing-file stream/frame/decode QA and PNG integrity. No upload, source edit, render or artistic re-approval.",
+  "files": [
+    {
+      "role": "master_part01",
+      "drive_file_id": "1_-DZan6ugDbLIUZfXWsD5lcVgUoJI1jG",
+      "drive_url": "https://drive.google.com/file/d/1_-DZan6ugDbLIUZfXWsD5lcVgUoJI1jG/view?usp=drivesdk",
+      "local_path": "/workspace/scratch/b9b2dfde708d/concert-system/work/production-system/drive-verification/master.part01",
+      "bytes": 83886080,
+      "sha256": "89db121817e11f95bc2b6b2b21e844be1b937a179995db2d9c6ee01ad9d1ec61",
+      "expected_sha256": "89db121817e11f95bc2b6b2b21e844be1b937a179995db2d9c6ee01ad9d1ec61",
+      "sha256_match": true,
+      "expected_bytes": 83886080,
+      "expected_bytes_match": true,
+      "drive_metadata_bytes": 83886080,
+      "drive_metadata_bytes_match": true,
+      "drive_modified_time": "2026-11-21T00:32:14.968Z"
+    },
+    {
+      "role": "master_part02",
+      "drive_file_id": "1wTbDgZDELlfoB6TgjGLw8__MFv8ND0dw",
+      "drive_url": "https://drive.google.com/file/d/1wTbDgZDELlfoB6TgjGLw8__MFv8ND0dw/view?usp=drivesdk",
+      "local_path": "/workspace/scratch/b9b2dfde708d/concert-system/work/production-system/drive-verification/master.part02",
+      "bytes": 26979563,
+      "sha256": "7c1b10ca8a332e4f416fbe4e5619475fa7b444b9723eda2786a25ad302dad0f3",
+      "expected_sha256": "7c1b10ca8a332e4f416fbe4e5619475fa7b444b9723eda2786a25ad302dad0f3",
+      "sha256_match": true,
+      "expected_bytes": 26979563,
+      "expected_bytes_match": true,
+      "drive_metadata_bytes": 26979563,
+      "drive_metadata_bytes_match": true,
+      "drive_modified_time": "2026-11-21T00:32:53.663Z"
+    },
+    {
+      "role": "viewing_video",
+      "drive_file_id": "1lPhp8_3FpXy5SFHqhMtgwBLYKCbMoFAc",
+      "drive_url": "https://drive.google.com/file/d/1lPhp8_3FpXy5SFHqhMtgwBLYKCbMoFAc/view?usp=drivesdk",
+      "local_path": "/workspace/scratch/b9b2dfde708d/concert-system/work/production-system/drive-verification/Song11-Beauty-Study-30s-1080p60-viewing.mp4",
+      "bytes": 67876653,
+      "sha256": "d3412fb96a65d8355df21eb1e56d8e35262f1b66c23d293029f19f6056d4ead5",
+      "expected_sha256": "d3412fb96a65d8355df21eb1e56d8e35262f1b66c23d293029f19f6056d4ead5",
+      "sha256_match": true,
+      "expected_bytes": 67876653,
+      "expected_bytes_match": true,
+      "drive_metadata_bytes": 67876653,
+      "drive_metadata_bytes_match": true,
+      "drive_modified_time": "2026-11-21T00:34:50.287Z"
+    },
+    {
+      "role": "native_4k_still",
+      "drive_file_id": "1YHmZ_QIV20XClsAMgBrCLXB5jk3LnzHU",
+      "drive_url": "https://drive.google.com/file/d/1YHmZ_QIV20XClsAMgBrCLXB5jk3LnzHU/view?usp=drivesdk",
+      "local_path": "/workspace/scratch/b9b2dfde708d/concert-system/work/production-system/drive-verification/Song11-Conductor-Native-4K.png",
+      "bytes": 4723709,
+      "sha256": "76ccd2c942db1228969b0f020f577a4c14304c0afa298857576a4a825d2c10bd",
+      "expected_sha256": "76ccd2c942db1228969b0f020f577a4c14304c0afa298857576a4a825d2c10bd",
+      "sha256_match": true,
+      "expected_bytes": null,
+      "expected_bytes_match": true,
+      "drive_metadata_bytes": 4723709,
+      "drive_metadata_bytes_match": true,
+      "drive_modified_time": "2026-11-21T00:31:30.015Z"
+    }
+  ],
+  "reconstructed_original": {
+    "path": "/workspace/scratch/b9b2dfde708d/concert-system/work/production-system/drive-verification/Song11-Beauty-Study-30s-1080p60-restored.mp4",
+    "bytes": 110865643,
+    "sha256": "6e4533c4527dfb81c750f8ba907e86392f0c87dca638c3daac768ece8edae82a",
+    "expected_sha256": "6e4533c4527dfb81c750f8ba907e86392f0c87dca638c3daac768ece8edae82a",
+    "sha256_match": true,
+    "ordered_parts": [
+      "master_part01",
+      "master_part02"
+    ],
+    "method": "binary concatenation; no encode or audio modification"
+  },
+  "viewing_video": {
+    "checks": {
+      "one_video_one_audio": true,
+      "width_1920": true,
+      "height_1080": true,
+      "fps_60": true,
+      "video_frames_1800": true,
+      "video_duration_30s": true,
+      "audio_duration_30s": true,
+      "container_duration_30s": true,
+      "full_decode_no_errors": true
+    },
+    "decoded_video_frames": 1800,
+    "format": {
+      "duration": "30.000000",
+      "size": "67876653",
+      "format_name": "mov,mp4,m4a,3gp,3g2,mj2"
+    },
+    "video": {
+      "codec_name": "h264",
+      "profile": "High",
+      "width": 1920,
+      "height": 1080,
+      "pix_fmt": "yuv420p",
+      "r_frame_rate": "60/1",
+      "avg_frame_rate": "60/1",
+      "duration": "30.000000",
+      "nb_frames": "1800",
+      "color_range": "tv",
+      "color_space": "bt709",
+      "color_transfer": "bt709",
+      "color_primaries": "bt709"
+    },
+    "audio": {
+      "codec_name": "aac",
+      "sample_rate": "48000",
+      "channels": 2,
+      "channel_layout": "stereo",
+      "duration": "30.000000",
+      "nb_frames": "1408"
+    },
+    "decode_returncode": 0,
+    "decode_error_output": ""
+  },
+  "native_4k_still": {
+    "format": "PNG",
+    "width": 3840,
+    "height": 2160,
+    "mode": "RGB",
+    "matches_3840x2160": true
+  },
+  "interpretation": [
+    "Master is exactly the previously approved final file because the reconstructed bytes match its SHA-256.",
+    "Viewing file is the separately encoded viewing copy; its distinct hash is expected and matches the supplied viewing fingerprint.",
+    "The4K PNG matches the known native-render fingerprint; no upscaling or new render was performed in this audit.",
+    "This is transfer integrity and technical media QA, not a new real-time viewing or creative approval."
+  ]
+}

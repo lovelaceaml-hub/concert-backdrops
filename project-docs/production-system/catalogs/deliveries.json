@@ -1,0 +1,217 @@
+{
+  "schema_version": 1,
+  "updated_local_date": "2026-11-20",
+  "timezone": "America/Los_Angeles",
+  "status": "eight_media_saved_technical_and_sampled_visual_review_complete_private_drive_copies_pending",
+  "approved_references_catalog": "project-docs/production-system/catalogs/references.json",
+  "historical_baseline_source_commit": "673f68785c36b57d55d05129ee5549efe6352c60",
+  "current_integration_pr": 102,
+  "items": [
+    {
+      "id": "consideration-revised-15s",
+      "filename": "Consideration-Revised-15s-1080p60.mp4",
+      "kind": "corrected_performance_study",
+      "description": "Native 15s 1080p60, 900 frames, two temporal samples. Separate camera coverage and complete-pose arm response, followed by the full garden ending. Technical QA passed; 67 encoded frames were visually reviewed.",
+      "bytes": 29912818,
+      "sha256": "ab25085451f99ac8c674fa4e9bd03824d45747855707e5962e91fab7a6f8527f",
+      "width": 1920,
+      "height": 1080,
+      "fps": 60,
+      "frames": 900,
+      "seconds": 15,
+      "original_scene_seconds": [
+        3,
+        18
+      ],
+      "original_recording_seconds": [
+        140.5,
+        155.5
+      ],
+      "picture_source_commit": "33a7d87e2848bf8a42e6d8132c34544d61259350",
+      "picture_source_identity": "8b091b1940221a8f21a4bd2f8a7ab0cdd1510a90ea559c6ded9afdaf0f5e8876",
+      "pipeline_input_mapping_sha256": "34bcaa95787e030d817f96d0280bf721545397ca04aa60ab97e2373bb894f46a",
+      "project_id": "concert-kit-consideration-v2",
+      "production_command": "./scripts/video produce concert-kit-consideration-v2 --quality review",
+      "technical_evidence": "project-docs/production-system/evidence/consideration-v2-delivery-qa.json",
+      "visual_evidence": "project-docs/production-system/evidence/consideration-v2-visual-review.json",
+      "creative_approval": "not_recorded",
+      "known_limits": [
+        "Sampled encoded review, not real-time playback or owner approval.",
+        "Vegetation remains visible through or across parts of the translucent figures.",
+        "This excerpt is not a completed full Song 07 film or a 4K movie."
+      ],
+      "library": {
+        "status": "saved",
+        "library_file_id": "libfile_31f8c88406648191acc3aecbcb5d90b6",
+        "version": 0,
+        "url": "https://chatgpt.com/library?file_id=libfile_31f8c88406648191acc3aecbcb5d90b6&account_id=personal"
+      },
+      "drive": {
+        "status": "pending_exact_file_and_destination_confirmation",
+        "folder_id": "1hrk62bFIOHv2NwXvYl2bNSmp0cwBoXrr"
+      }
+    },
+    {
+      "id": "consideration-baseline-18s",
+      "filename": "Consideration-Baseline-18s-1080p60.mp4",
+      "kind": "historical_performance_baseline",
+      "description": "Native 18s 1080p60, 1080 frames. Technical delivery passed. Camera overlap and arm return defect are recorded.",
+      "bytes": 32559734,
+      "sha256": "0ae54467e7f2bdcf8528f734ed77f9f9656db1bc00aef7cadccfe43b9a6c231d",
+      "technical_evidence": "project-docs/production-system/evidence/consideration-baseline-delivery-qa.json",
+      "creative_approval": "not_recorded",
+      "library": {
+        "status": "saved",
+        "library_file_id": "libfile_f504ec5b3a1c8191afbb265631d3f4dc",
+        "version": 0,
+        "url": "https://chatgpt.com/library?file_id=libfile_f504ec5b3a1c8191afbb265631d3f4dc&account_id=personal"
+      },
+      "drive": {
+        "status": "pending_exact_file_and_destination_confirmation",
+        "folder_id": "1hrk62bFIOHv2NwXvYl2bNSmp0cwBoXrr"
+      }
+    },
+    {
+      "id": "consideration-revised-garden-4k",
+      "filename": "Consideration-Revised-Garden-Native-4K.png",
+      "kind": "native_4k_still",
+      "description": "Corrected study ending, rendered natively at 3840x2160 with two temporal samples. Output frame 870, source frame 1050. RGB8 SDR.",
+      "bytes": 5048251,
+      "sha256": "1ac66c796b1c9a732de252532eae90c9e55242a55033bd91cdd363cdb089422b",
+      "technical_evidence": "project-docs/production-system/evidence/consideration-v2-native-4k.json",
+      "picture_source_commit": "33a7d87e2848bf8a42e6d8132c34544d61259350",
+      "picture_source_identity": "8b091b1940221a8f21a4bd2f8a7ab0cdd1510a90ea559c6ded9afdaf0f5e8876",
+      "creative_approval": "not_recorded",
+      "library": {
+        "status": "saved",
+        "library_file_id": "libfile_569034d32eb88191ab759f319e93ca20",
+        "version": 0,
+        "url": "https://chatgpt.com/library?file_id=libfile_569034d32eb88191ab759f319e93ca20&account_id=personal"
+      },
+      "drive": {
+        "status": "pending_exact_file_and_destination_confirmation",
+        "folder_id": "1hrk62bFIOHv2NwXvYl2bNSmp0cwBoXrr"
+      }
+    },
+    {
+      "id": "native-model-atlas",
+      "filename": "Concert-Native-Models-12-Variants.jpg",
+      "kind": "model_atlas",
+      "description": "Six native model families and twelve variants, 1920x1200 sheet with twelve native 960x540 tiles.",
+      "bytes": 306145,
+      "sha256": "0faadc1b42dab94f4c36a050295bfad790d2e5a08f7a72b9a91739246d6ef784",
+      "technical_evidence": "project-docs/production-system/evidence/model-atlas.json",
+      "creative_approval": "not_recorded",
+      "library": {
+        "status": "saved",
+        "library_file_id": "libfile_71459f58cc3c819195726ec04fe8f0b8",
+        "version": 0,
+        "url": "https://chatgpt.com/library?file_id=libfile_71459f58cc3c819195726ec04fe8f0b8&account_id=personal"
+      },
+      "drive": {
+        "status": "pending_exact_file_and_destination_confirmation",
+        "folder_id": "1hrk62bFIOHv2NwXvYl2bNSmp0cwBoXrr"
+      }
+    },
+    {
+      "id": "dove-flight-v2",
+      "filename": "Dove-Flight-Prototype-v2-6s-1080p60.mp4",
+      "kind": "silent_motion_prototype",
+      "description": "Six-second native 1080p60 flight, 360 unique decoded frames. Prototype requiring its own creative review.",
+      "bytes": 1211878,
+      "sha256": "d213912ae9321b5bb43cc941eb570ece9f369ca605647b901bedeb7f598835a7",
+      "technical_evidence": "project-docs/production-system/evidence/dove-v2-delivery-qa.json",
+      "creative_approval": "not_recorded",
+      "library": {
+        "status": "saved",
+        "library_file_id": "libfile_4c7ffe51339c8191b5c18480b3bb48e9",
+        "version": 0,
+        "url": "https://chatgpt.com/library?file_id=libfile_4c7ffe51339c8191b5c18480b3bb48e9&account_id=personal"
+      },
+      "drive": {
+        "status": "pending_exact_file_and_destination_confirmation",
+        "folder_id": "1hrk62bFIOHv2NwXvYl2bNSmp0cwBoXrr"
+      }
+    },
+    {
+      "id": "addon-model-sheet-v2",
+      "filename": "Concert-Model-Prototypes-v2.png",
+      "kind": "model_contact_sheet",
+      "description": "Articulated dove, layered rose and wheat prototypes. Three families and six variants in the pack.",
+      "bytes": 491308,
+      "sha256": "10f9fff181445728fb9dd4e84818130b63650b0a0fbd19555c26c63c234ec231",
+      "technical_evidence": "tools/concert_addons/VERIFICATION.md",
+      "creative_approval": "not_recorded",
+      "library": {
+        "status": "saved",
+        "library_file_id": "libfile_ced33414414481919b6698fab562f1db",
+        "version": 0,
+        "url": "https://chatgpt.com/library?file_id=libfile_ced33414414481919b6698fab562f1db&account_id=personal"
+      },
+      "drive": {
+        "status": "pending_exact_file_and_destination_confirmation",
+        "folder_id": "1hrk62bFIOHv2NwXvYl2bNSmp0cwBoXrr"
+      }
+    },
+    {
+      "id": "consideration-motion-comparison",
+      "filename": "Consideration-Motion-Before-After.png",
+      "kind": "matched_encoded_motion_comparison",
+      "description": "Two matched moments from the actual encoded 18s baseline and corrected 15s movie, with equal scaling and explicit source/output clocks. A still compares poses; the films show continuous motion.",
+      "bytes": 2268796,
+      "sha256": "ed78ac05a88e612b54c1340d1bc05c2da83285a2e6940d3ad18a471a2b0043e4",
+      "width": 1920,
+      "height": 1276,
+      "technical_evidence": "project-docs/production-system/evidence/consideration-v2-visual-review.json",
+      "creative_approval": "not_recorded",
+      "library": {
+        "status": "saved",
+        "library_file_id": "libfile_9be31f98637481918c172270b10c547b",
+        "version": 0,
+        "url": "https://chatgpt.com/library?file_id=libfile_9be31f98637481918c172270b10c547b&account_id=personal"
+      },
+      "drive": {
+        "status": "pending_exact_file_and_destination_confirmation",
+        "folder_id": "1hrk62bFIOHv2NwXvYl2bNSmp0cwBoXrr"
+      }
+    },
+    {
+      "id": "consideration-camera-plan",
+      "filename": "Consideration-Camera-Planning-Comparison.png",
+      "kind": "historical_camera_comparison",
+      "description": "Labeled single-frame comparison at source 7.5s. The proposed angle is planning evidence, not a complete revised film.",
+      "bytes": 1141946,
+      "sha256": "d5ed875cd6398c4ccd018aaeb9ad5c4b6f78daab9a5fe3e96ea48d59e5706a95",
+      "technical_evidence": "project-docs/production-system/evidence/consideration-camera-plan.json",
+      "creative_approval": "not_recorded",
+      "library": {
+        "status": "saved",
+        "library_file_id": "libfile_18523aa7406c8191bf988490affed4d4",
+        "version": 0,
+        "url": "https://chatgpt.com/library?file_id=libfile_18523aa7406c8191bf988490affed4d4&account_id=personal"
+      },
+      "drive": {
+        "status": "pending_exact_file_and_destination_confirmation",
+        "folder_id": "1hrk62bFIOHv2NwXvYl2bNSmp0cwBoXrr"
+      }
+    }
+  ],
+  "limits": [
+    "No full 4K movie is represented by a native 4K still.",
+    "New studies and models do not inherit owner approval from the approved references.",
+    "Pending Drive copies must not be treated as uploaded."
+  ],
+  "recorded_at_utc": "2026-11-21T02:50:40.942426+00:00",
+  "portable_handoff": {
+    "status": "automatic_review_rejected_pending_exact_archive_destination_confirmation",
+    "filename": "Concert-Production-System-Handoff-2026-11-20.zip",
+    "bytes": 350548,
+    "sha256": "605b7be8ca59987651a642727a9babef88e01986c87d8ea7e3ca076e84a2e158",
+    "producing_commit": "94dd897c6fdeb287561c5dd2772b770c43ab94b7",
+    "included_files": 89,
+    "working_tree_dirty_at_export": false,
+    "destination_folder_id": "1QDGGqqkJlbovBLCthX-QChqfD8zSmK8X",
+    "evidence": "project-docs/production-system/evidence/handoff-export.json",
+    "rejection_evidence": "project-docs/production-system/evidence/drive-handoff-upload-block.json"
+  }
+}

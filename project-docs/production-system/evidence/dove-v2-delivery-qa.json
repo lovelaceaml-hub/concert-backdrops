@@ -1,0 +1,197 @@
+{
+  "status": "passed",
+  "pack": "concert-addons-native-prototypes-v2",
+  "source_sha256": "b5f44f3626d1bf6685dbe24cbf1e20b3bc31759e99d9983b28a2beba0d4710f2",
+  "movie": "work/concert-addons/art-v2/dove-flight-v2-6s-1080p60.mp4",
+  "sha256": "d213912ae9321b5bb43cc941eb570ece9f369ca605647b901bedeb7f598835a7",
+  "bytes": 1211878,
+  "duration": 6.0,
+  "width": 1920,
+  "height": 1080,
+  "fps": "60/1",
+  "decoded_frames": 360,
+  "declared_frames": 360,
+  "unique_decoded_frames": 360,
+  "first_pts": 0.0,
+  "last_pts": 5.983333,
+  "minimum_pts_delta": 0.016665999999999848,
+  "maximum_pts_delta": 0.0166670000000001,
+  "color": {
+    "color_range": "tv",
+    "color_space": "bt709",
+    "color_transfer": "bt709",
+    "color_primaries": "bt709"
+  },
+  "full_decode_errors": "",
+  "source_matches_receipt": true,
+  "audio": "silent prototype; no synchronization claim",
+  "owner_approval": "pending",
+  "render_seconds": 434.182,
+  "renderer_maxrss_kib": 479148,
+  "encoded_frame168_vs_native": {
+    "rmse_rgb8": 1.3047085880543587,
+    "psnr_db": 45.8205331871868,
+    "mean_absolute_error_rgb8": 1.0334006880144033
+  },
+  "sampled_visual_frames": [
+    {
+      "index": 0,
+      "path": "work/concert-addons/art-v2/decoded-motion/frame-001.png",
+      "sha256": "ae37c502b3da158b9027781f9accc0339cb750770df50c2e754f660b24463750",
+      "crop": [
+        586,
+        445,
+        824,
+        578
+      ]
+    },
+    {
+      "index": 30,
+      "path": "work/concert-addons/art-v2/decoded-motion/frame-002.png",
+      "sha256": "1db8dea3da28bf7a5c7cb44c0a5197796401fd647981cb58e3501428fd70c5bf",
+      "crop": [
+        587,
+        449,
+        826,
+        578
+      ]
+    },
+    {
+      "index": 48,
+      "path": "work/concert-addons/art-v2/decoded-motion/frame-003.png",
+      "sha256": "46175608db666c62247fbf2f9f5e2e2564bc58452494dad5f399621c10ce973d",
+      "crop": [
+        583,
+        442,
+        822,
+        643
+      ]
+    },
+    {
+      "index": 60,
+      "path": "work/concert-addons/art-v2/decoded-motion/frame-004.png",
+      "sha256": "c7cea98982892e1ce49dbac86b8964f3a4a4476197f65b10410bfd013a8e95be",
+      "crop": [
+        582,
+        435,
+        816,
+        672
+      ]
+    },
+    {
+      "index": 99,
+      "path": "work/concert-addons/art-v2/decoded-motion/frame-005.png",
+      "sha256": "11ea2958c4117f12f621827e71c862aa0832416fb77c626e435c017aec77a0f2",
+      "crop": [
+        547,
+        253,
+        829,
+        475
+      ]
+    },
+    {
+      "index": 130,
+      "path": "work/concert-addons/art-v2/decoded-motion/frame-006.png",
+      "sha256": "f4832fc4d8af404115110973a16c26b16d6c56dc6f5fdbd35e0dd5b5932214c3",
+      "crop": [
+        586,
+        242,
+        910,
+        409
+      ]
+    },
+    {
+      "index": 168,
+      "path": "work/concert-addons/art-v2/decoded-motion/frame-007.png",
+      "sha256": "cac51895f00a643d6e042eb017def3791d9edc34ebe2c637a8b977262223791d",
+      "crop": [
+        742,
+        160,
+        1101,
+        309
+      ]
+    },
+    {
+      "index": 210,
+      "path": "work/concert-addons/art-v2/decoded-motion/frame-008.png",
+      "sha256": "d6a412bdef2e487350da5c2c9d88374234420857db203cded70e27537e37ed51",
+      "crop": [
+        1034,
+        373,
+        1385,
+        592
+      ]
+    },
+    {
+      "index": 250,
+      "path": "work/concert-addons/art-v2/decoded-motion/frame-009.png",
+      "sha256": "a62bfa77e5e76335b1466feb5521a2a98e410e3fe20154f9136b4927b6258211",
+      "crop": [
+        1178,
+        627,
+        1510,
+        904
+      ]
+    },
+    {
+      "index": 273,
+      "path": "work/concert-addons/art-v2/decoded-motion/frame-010.png",
+      "sha256": "6c5799d96719ded6ed3e5833743588f4022654b042a878b0323ffbfd70784b4c",
+      "crop": [
+        1187,
+        498,
+        1509,
+        817
+      ]
+    },
+    {
+      "index": 294,
+      "path": "work/concert-addons/art-v2/decoded-motion/frame-011.png",
+      "sha256": "7d16568f09d6c4a4acc05348b9e301af3d66fcc9b9b3c21371c2178ed1a820b3",
+      "crop": [
+        1188,
+        644,
+        1510,
+        945
+      ]
+    },
+    {
+      "index": 310,
+      "path": "work/concert-addons/art-v2/decoded-motion/frame-012.png",
+      "sha256": "37afd33b40302405653f5d53832972aa65c27a0ef4b61afc879eb76068d56933",
+      "crop": [
+        1202,
+        688,
+        1518,
+        891
+      ]
+    },
+    {
+      "index": 342,
+      "path": "work/concert-addons/art-v2/decoded-motion/frame-013.png",
+      "sha256": "aa73360b14e3e2fd70c438418d01ec0cd79ad06987eebdd550cdd6029e36c090",
+      "crop": [
+        1203,
+        692,
+        1512,
+        840
+      ]
+    },
+    {
+      "index": 359,
+      "path": "work/concert-addons/art-v2/decoded-motion/frame-014.png",
+      "sha256": "2a0d8ac7f06d9ec695131bda6d78019e0bec8ca1418c861c2992ba174af36bbb",
+      "crop": [
+        1203,
+        692,
+        1512,
+        840
+      ]
+    }
+  ],
+  "decoded_sheet": {
+    "path": "work/concert-addons/art-v2/decoded-motion-contact-sheet.png",
+    "sha256": "8254b14492e774f62cd9fbd9bdcbe38d38a0472c25d1a4c21a0695a6455ec311",
+    "note": "Cropped inspection views; full native decoded PNGs are retained separately"
+  }
+}

@@ -61,6 +61,34 @@ docker build -f infra/docker/Dockerfile.cpu -t concert-video-cpu .
 
 It is a supplied recipe, not a verified image from this task. No Docker daemon is available in the setup workspace. Before production use, build and test it on an approved CPU host and record the resulting image digest. Its base-image tag and distribution packages are not immutable pins. It contains no GPU provider configuration.
 
+### Native p3d worker only
+
+The current concert studies can run without installing Blender or a browser.
+On a Debian or Ubuntu Linux x64 worker, the software OpenGL path needs these
+distribution libraries in addition to the host tools listed above:
+
+```bash
+apt-get update
+apt-get install -y --no-install-recommends libegl1 libgl1 libgl1-mesa-dri libgomp1
+python3 scripts/bootstrap.py --p3d-only --reference-fonts
+./scripts/video doctor --project concert-kit-consideration-v2
+```
+
+Use the host's normal administrator mechanism for package installation. The
+package list is drawn from the supplied CPU container recipe; distribution
+package versions are not locked. The p3d-only bootstrap recreates the locked
+Python environment, installs locked Node packages used for font sources, and
+reconstructs the exact reference fonts when `--reference-fonts` is selected.
+See [REFERENCE-FONTS.md](REFERENCE-FONTS.md) for the checked 74-font recipe and
+normal deterministic conversion mode. Node and npm are needed for that setup step even though the
+native renderer itself does not use a browser. Git, uv, FFmpeg and FFprobe must
+already be available.
+
+The doctor checks dependencies; it does not create an EGL context or prove that
+a frame can render. After restoring the private audio input, run one selected
+frame through the commands in [PIPELINE-INTEGRATION.md](PIPELINE-INTEGRATION.md)
+and inspect the result. Do not rerun font setup during a frozen render round.
+
 The manual GitHub workflow `Video pipeline checks (manual CPU only)` validates the core workflow. Its optional render test uses runner minutes and must be started deliberately. It was not dispatched during setup. It does not run on pushes and it does not replace the existing concert Render workflow.
 
 ## 3. The shared project contract

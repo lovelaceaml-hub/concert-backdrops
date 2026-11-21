@@ -1,0 +1,102 @@
+{
+  "schema_version": 1,
+  "updated_local_date": "2026-11-20",
+  "references": [
+    {
+      "id": "promo-nine-colours-r3",
+      "title": "Film10 Nine Colours Revision3",
+      "status": "owner_approved",
+      "role": "creative_reference",
+      "approval_evidence": "Existing project-docs/promo/APPROVED-NINE-COLOURS-R3.md and owner reaffirmation in current conversation.",
+      "duration_seconds": 66,
+      "fps": 60,
+      "source_commit": "46df53b98a43f58e51a78d40ee5794108a68e13c",
+      "master": {
+        "drive_file_id": "1gcxnb4Oyexq5Kbb8LvFWqOrikF-BVSht",
+        "url": "https://drive.google.com/file/d/1gcxnb4Oyexq5Kbb8LvFWqOrikF-BVSht/view",
+        "sha256": "508c5518bced94b21f96e8727d2b7ffd0da0ee69de9da164e7e5e824e80eda7b",
+        "hash_evidence": "reported approved master record, not re-downloaded this audit"
+      },
+      "comparison_copy": {
+        "drive_file_id": "1CBQ4OtpLW3Kp3zBWsEMkjXYiAWUwhDQw",
+        "url": "https://drive.google.com/file/d/1CBQ4OtpLW3Kp3zBWsEMkjXYiAWUwhDQw/view",
+        "sha256": "ad4b4e7fe861ae34eb80e8b921ee747efc477c08bb89ec981f1b588a0b3c0af5",
+        "hash_evidence": "independently verified local720p60 file",
+        "width": 1280,
+        "height": 720
+      }
+    },
+    {
+      "id": "song11-beauty-30s",
+      "title": "Song11 Beauty Study",
+      "status": "owner_approved",
+      "role": "clarity_and_production_reference",
+      "approval_evidence": "Owner in current chat: yes thats looking great; then explicitly requested setup, saving, documentation, upload, push and merge.",
+      "approval_local_date": "2026-11-20",
+      "duration_seconds": 30,
+      "width": 1920,
+      "height": 1080,
+      "fps": 60,
+      "frames": 1800,
+      "sha256": "6e4533c4527dfb81c750f8ba907e86392f0c87dca638c3daac768ece8edae82a",
+      "bytes": 110865643,
+      "source_commit": "23c9307608291a99702d687933c8d2092d1fd01d",
+      "picture_render_commit": "a7d68836c4fdc7156bbc9b839380cd65180ca2bb",
+      "renderer_commit": "d928ff9eafe02ac3150f0c646bdcc497fe5a7278",
+      "people_words_commit": "f43f4514e4bc42dc25166e90160d98219f5a0db4",
+      "song11_source_commit": "34f835206dcb26cfa0bd7e321171d3d224e3aa7d",
+      "source_picture_interval_seconds": [
+        97.7,
+        127.7
+      ],
+      "source_audio_interval_seconds": [
+        97.8,
+        127.8
+      ],
+      "picture_delay_seconds": 0.1,
+      "library_file_id": "libfile_b037de14edb881918c760cdf71700c55",
+      "library_url": "https://chatgpt.com/library?file_id=libfile_b037de14edb881918c760cdf71700c55&account_id=personal",
+      "drive_master_parts": "project-docs/production-system/catalogs/song11-master-parts.json",
+      "viewing_copy": {
+        "drive_file_id": "1lPhp8_3FpXy5SFHqhMtgwBLYKCbMoFAc",
+        "url": "https://drive.google.com/file/d/1lPhp8_3FpXy5SFHqhMtgwBLYKCbMoFAc/view",
+        "sha256": "d3412fb96a65d8355df21eb1e56d8e35262f1b66c23d293029f19f6056d4ead5",
+        "bytes": 67876653,
+        "width": 1920,
+        "height": 1080,
+        "fps": 60,
+        "note": "Separately compressed viewing derivative; exact original preserved in checked parts."
+      },
+      "verification": "tools/promo_beauty_example/VERIFICATION.md",
+      "limitations": [
+        "Retains existing Song11 choreography; not a newly animated full song.",
+        "Excerpt ends during an arrival.",
+        "Full4K movie of this excerpt has not been rendered."
+      ]
+    },
+    {
+      "id": "song11-native-4k-still",
+      "title": "Song11 Conductor Native4K",
+      "status": "technically_and_visually_reviewed",
+      "role": "native_resolution_evidence",
+      "width": 3840,
+      "height": 2160,
+      "sha256": "76ccd2c942db1228969b0f020f577a4c14304c0afa298857576a4a825d2c10bd",
+      "bytes": 4723709,
+      "drive_file_id": "1YHmZ_QIV20XClsAMgBrCLXB5jk3LnzHU",
+      "url": "https://drive.google.com/file/d/1YHmZ_QIV20XClsAMgBrCLXB5jk3LnzHU/view",
+      "library_file_id": "libfile_288f21e5e73c8191b58fa830355087fb"
+    },
+    {
+      "id": "earlier-people-demo",
+      "title": "Earlier30second people animation",
+      "status": "engineering_experiment",
+      "role": "superseded_creative_direction",
+      "source_commit": "e46c149fb50908e7f5e87832701346f67b5f0201",
+      "owner_feedback": "Sharper and clearer, but animation was less compelling than the approved promo.",
+      "limitations": [
+        "Do not use as the creative reference for the concert."
+      ]
+    }
+  ]
+}

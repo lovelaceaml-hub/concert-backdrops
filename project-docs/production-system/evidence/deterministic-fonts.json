@@ -1,0 +1,146 @@
+{
+  "schema_version": 1,
+  "checked_at_utc": "2026-11-21T00:54:50.069160+00:00",
+  "started_at_utc": "2026-11-21T00:54:42.622206+00:00",
+  "converter": "tools/setup_fonts.py",
+  "converter_sha256": "3d317e54d4f6a63270fa7be8199271f6bd4a87419d72079613ac8800b12999cb",
+  "source_directory": "/workspace/scratch/b9b2dfde708d/cinematic-motion/node_modules/@fontsource",
+  "source_packages": {
+    "cormorant-garamond": "5.3.0",
+    "jost": "5.3.0",
+    "outfit": "5.3.0"
+  },
+  "runtime": {
+    "python": "3.12.14",
+    "fonttools": "4.68.0",
+    "pillow": "12.3.0",
+    "freetype": "2.14.3"
+  },
+  "runs": [
+    {
+      "directory": "work/production-system/font-check/run-01",
+      "started_epoch": 1795222482.6222217,
+      "elapsed_seconds": 2.525417,
+      "stdout": "fonts converted: 74"
+    },
+    {
+      "directory": "work/production-system/font-check/run-02",
+      "started_epoch": 1795222486.3479862,
+      "elapsed_seconds": 2.453382,
+      "stdout": "fonts converted: 74"
+    }
+  ],
+  "font_count": 74,
+  "identical_output_hashes": true,
+  "output_filename_sha256_mapping_sha256": "90367b53735c76f649b20e971173f72a1c4c92b6091bba2911f836a078b1e4a0",
+  "input_relative_path_sha256_mapping_sha256": "d2b902222253260303bf94e6c96f3cc02e7417652f52b39c0c5b608e4b0730fa",
+  "source_head_timestamp_mismatches": [],
+  "installed_byte_identical_count": 0,
+  "installed_table_difference_sets": [
+    "head"
+  ],
+  "glyph_check": {
+    "font_count": 74,
+    "pixel_size": 48,
+    "sample": "First 64 available Unicode letters or numbers per font cmap",
+    "pixel_mismatch_count": 0,
+    "metrics_mismatch_count": 0,
+    "per_font_result_mapping_sha256": "2e0f2349d8de9b091344b6f35477826caeb88cb68a5e5378cd8cc7a8a41c9aa2"
+  },
+  "installed_fonts_unchanged": true,
+  "installed_hash_size_mtime_manifest_sha256": "19f02b9b44c0ad54e927e8f4cc52740534ccd8836f1088562190910a39e37511",
+  "representative_fonts": {
+    "cormorant-garamond-latin-400-normal.ttf": {
+      "source_woff2_sha256": "8048ac209bec741e1c29cd0cfac5aac1c0c2ba8c3ddbd4a58fa9bd92ef5c63c2",
+      "converted_sha256": "b261a29a3bb7ce74361de84aed5a08365c1c87d2e950a68d7384753ff85f6502",
+      "installed_sha256": "ebfa1f25fd4bb91e88e7270fea57c0d07ed7b625279d90acd2073a983dfdd0c7",
+      "source_head_timestamps": [
+        3783687705,
+        3819257109
+      ],
+      "converted_head_timestamps": [
+        3783687705,
+        3819257109
+      ],
+      "different_tables": [
+        "head"
+      ],
+      "glyph_pixel_sha256": "d7b6e4c25f6a32f3f3ed3cabd481135050427c95ded2485c49584376c60552fe",
+      "pixel_and_metrics_equal": true
+    },
+    "cormorant-garamond-latin-700-italic.ttf": {
+      "source_woff2_sha256": "365e35e77095813205cf30a40acf3443ed05d95ffa31d1504e14213e87a3e4dc",
+      "converted_sha256": "7f6aa1da7ab2951311f0ae61b762a89218212dabe9470fac5c1a626206423ab6",
+      "installed_sha256": "d6fbc70a359e63ab8e3c7e24fb8d87640f7a403894d3cca8ad90bb1eec86b52c",
+      "source_head_timestamps": [
+        3747903118,
+        3819257109
+      ],
+      "converted_head_timestamps": [
+        3747903118,
+        3819257109
+      ],
+      "different_tables": [
+        "head"
+      ],
+      "glyph_pixel_sha256": "89c4139e7c3ca2834149b9572a265d709175e98712e45e8cbc03a2159e8c391c",
+      "pixel_and_metrics_equal": true
+    },
+    "jost-latin-500-normal.ttf": {
+      "source_woff2_sha256": "98dce4f076fe71a123a7cd44470e6f05e969cb6d7c9b2717766ad103e3597297",
+      "converted_sha256": "8ff888b565a6321736b130adaeac92d1d67a1de11775fd51c916ffa03393348f",
+      "installed_sha256": "622cd297dd822e4ecc6b5fda898815fcbabc61c0eda84418bd6489bfa6b3e264",
+      "source_head_timestamps": [
+        3548455289,
+        3714133075
+      ],
+      "converted_head_timestamps": [
+        3548455289,
+        3714133075
+      ],
+      "different_tables": [
+        "head"
+      ],
+      "glyph_pixel_sha256": "71e8a41b72fb3e5151632e42d6d4caae203d032bebb1ece41d80a946acad28ec",
+      "pixel_and_metrics_equal": true
+    },
+    "jost-latin-ext-500-normal.ttf": {
+      "source_woff2_sha256": "a8b3af72a02fff5a20dc96316070ca95ce4a278b93a9b3a22ef8fe36abf3b442",
+      "converted_sha256": "74311cdd5233745c6a69c59c408d9263d4727a67f7eb346d3ad6b72d65042053",
+      "installed_sha256": "11b414e4d3debe8858a8fafa4fd50879c5677e94b027f18ddbd136f7b6c06332",
+      "source_head_timestamps": [
+        3548455289,
+        3714133075
+      ],
+      "converted_head_timestamps": [
+        3548455289,
+        3714133075
+      ],
+      "different_tables": [
+        "head"
+      ],
+      "glyph_pixel_sha256": "cc2042996939621f61090503e772f654e78b3645a9d5cc86a98a77a07daff12e",
+      "pixel_and_metrics_equal": true
+    },
+    "outfit-latin-400-normal.ttf": {
+      "source_woff2_sha256": "71f028fd2349990b3f8aa643abe767e82e0f596be407ae66f0004ff164121bdb",
+      "converted_sha256": "ce69d9dd15271e3adf26c3b93562d53d820f266af80ecd67e1681312e02c4790",
+      "installed_sha256": "3b0375d34fb9da4d5a851839a0fd7cb39e074bedc3dc3e40a6544f00d457d7e3",
+      "source_head_timestamps": [
+        3705398782,
+        3761903402
+      ],
+      "converted_head_timestamps": [
+        3705398782,
+        3761903402
+      ],
+      "different_tables": [
+        "head"
+      ],
+      "glyph_pixel_sha256": "2959f13d9ab3144d9e43431886832bf8c7d661287f018d1db10ef189cbd4f8cc",
+      "pixel_and_metrics_equal": true
+    }
+  },
+  "scope": "Two independent pinned-runtime conversions separated by 1.2 seconds, all output hashes compared, source head timestamps preserved, all installed font glyph samples compared. No installed font or active render input was modified.",
+  "compatibility_note": "Font file hashes intentionally differ from historical timestamp-recalculated conversions. Visible glyph pixels and metrics were tested under the recorded Pillow and FreeType runtime; arbitrary future font libraries are not claimed byte-identical."
+}

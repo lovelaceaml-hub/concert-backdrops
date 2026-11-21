@@ -1,0 +1,1837 @@
+{
+  "schema_version": 1,
+  "updated_at": "2026-11-21",
+  "title": "Concert song, audio and visual-source catalog",
+  "repository_snapshot_audited": "23c9307608291a99702d687933c8d2092d1fd01d",
+  "scope": "Reference index and proposals. No lyrics, audio, video or raw private documents are embedded.",
+  "evidence_policy": [
+    "Metadata access proves file identity and availability to the connector, not a completed download or valid decoded audio.",
+    "Reported durations, digests and film checks are attributed to prior builders; they are not independent verification by this audit.",
+    "All11 selected full sources were independently hashed, probed and completely decoded without FFmpeg errors. The11 repository promo clips were probed;02 and10 decode to complete silence.",
+    "A source ID or hash must never be guessed. Preserve null when unresolved and verify full bytes before analysis or final rendering.",
+    "A newer source record supersedes an older missing-source note without deleting that historical note.",
+    "All live arrangement mappings remain estimates until rehearsal or an explicit performance timing decision confirms them.",
+    "Historical full-song deliveries and code-ahead fixes must be treated separately. Proposed enhancements are not blanket approval.",
+    "This catalog contains no authorization to retime music, alter lyrics, spend money, or start all full-song renders."
+  ],
+  "reference_sources": {
+    "drive_song_folder": "https://drive.google.com/drive/folders/1xyNZn4ZA6bjPcvKjGfgSWQIs9aAp2PPd",
+    "drive_status_folder": "https://drive.google.com/drive/folders/1MLgeSeYNvV8Zwqh_YksAwLrZvjfKCSzi",
+    "program_doc": "https://docs.google.com/document/d/1bRl4WbeKucr-EUpEhe_9uVop0C-ozCMRxiPmzFvCoD0",
+    "official_campaign_about": "https://heavenlymotherslove.org/en/about",
+    "official_campaign_checklist": "https://heavenlymotherslove.org/en/checklist",
+    "owner_campaign_app": "https://mothers-love.vercel.app/expressions",
+    "drive_s11_lessons": "https://drive.google.com/file/d/1Q6ilWF8TtZRaltZZNzhtUXCsLOISHLS8/view",
+    "approved_promo_record": "https://drive.google.com/file/d/1IwhQMsGrQTG9I5wMCIgSRTPtM8jkdcTL/view"
+  },
+  "campaign_practices": [
+    {
+      "id": 1,
+      "label": "Greeting",
+      "meaning": "Notice someone and begin a warm connection."
+    },
+    {
+      "id": 2,
+      "label": "Gratitude",
+      "meaning": "Acknowledge another person's effort and help."
+    },
+    {
+      "id": 3,
+      "label": "Apology",
+      "meaning": "Recognize hurt and take a humble first step to repair it."
+    },
+    {
+      "id": 4,
+      "label": "Inclusiveness",
+      "meaning": "Respond to mistakes with understanding and forgiveness."
+    },
+    {
+      "id": 5,
+      "label": "Concession",
+      "meaning": "Yield patiently and let another person go first."
+    },
+    {
+      "id": 6,
+      "label": "Respect",
+      "meaning": "Listen carefully when another person's view differs."
+    },
+    {
+      "id": 7,
+      "label": "Encouragement",
+      "meaning": "Offer sincere support when someone is struggling."
+    },
+    {
+      "id": 8,
+      "label": "Consideration",
+      "meaning": "Notice a need and offer practical help."
+    },
+    {
+      "id": 9,
+      "label": "Compliment",
+      "meaning": "Recognize another person's effort, growth and strengths."
+    }
+  ],
+  "campaign_scope": "Practice meanings are paraphrases from the official campaign. The precise approved onscreen wording and palette belong to the shared expression registry, not this inventory.",
+  "gaps": {
+    "recordings_confirmed_missing": [],
+    "statement": "All11 selected full references are locally available and byte-verified against prior full or abbreviated source fingerprints. No full reference is confirmed missing. Live arrangement and rehearsal matching remain unresolved.",
+    "source_fingerprint_incomplete": [],
+    "source_copy_identity_needs_confirmation": [],
+    "full_rehearsal_recordings_verified": [],
+    "full_v2_movies_independently_retrieved_in_this_audit": []
+  },
+  "priority_shared_models": [
+    {
+      "priority": 1,
+      "name": "Natural two-person interaction rig",
+      "serves": [
+        "s02",
+        "s03",
+        "s04",
+        "s05",
+        "s06",
+        "s07",
+        "s10"
+      ],
+      "needs": [
+        "planted feet and weight transfer",
+        "aligned hands and shoulder contact",
+        "anticipation and recovery",
+        "stable cloth silhouette",
+        "look direction without facial detail"
+      ]
+    },
+    {
+      "priority": 2,
+      "name": "Performer motion library",
+      "serves": [
+        "s01",
+        "s03",
+        "s05",
+        "s07",
+        "s08",
+        "s11"
+      ],
+      "needs": [
+        "conductor and baton",
+        "choir breathing and book grips",
+        "strings and brass role-specific gestures",
+        "rhythmic variation without random shaking"
+      ]
+    },
+    {
+      "priority": 3,
+      "name": "Reusable community and walking system",
+      "serves": [
+        "s03",
+        "s05",
+        "s06",
+        "s07",
+        "s10",
+        "s11"
+      ],
+      "needs": [
+        "varied phase and body scale",
+        "path following with foot contact",
+        "paired walking and respectful spacing",
+        "controlled raised-arm waves"
+      ]
+    },
+    {
+      "priority": 4,
+      "name": "Song-specific procedural hero objects",
+      "serves": [
+        "s02",
+        "s04",
+        "s05",
+        "s06",
+        "s08",
+        "s09",
+        "s10"
+      ],
+      "needs": [
+        "rose opening",
+        "ice thaw",
+        "tree and fruit growth",
+        "wheat in coherent wind",
+        "embroidered curtains",
+        "boat and cast net",
+        "lamp"
+      ]
+    },
+    {
+      "priority": 5,
+      "name": "Selective architecture detail",
+      "serves": [
+        "s10",
+        "s11"
+      ],
+      "needs": [
+        "detail only for near-field churches and skyline focal points",
+        "reuse the existing226-church catalog",
+        "preserve exact supplied emblem geometry"
+      ]
+    }
+  ],
+  "generation_policy": "Default proposals extend the approved code-drawn world and rigged/procedural assets. Do not substitute AI-restyled footage or new realistic people for the approved visual language.",
+  "songs": [
+    {
+      "id": "s01",
+      "order": 1,
+      "title": "All You Stars of Zion",
+      "live_instrumentation_reported": "Brass ensemble; no singing live",
+      "duration": {
+        "live_target_seconds": 188,
+        "hold_seconds": 15,
+        "stage_target_seconds": 203,
+        "source_seconds_reported": 187.97,
+        "source_seconds_independently_probed": 187.96554166666667,
+        "duration_evidence": "Full source bytes hashed, ffprobe container inspected, first audio stream fully decoded to float PCM and samples counted. Reported source duration is retained separately.",
+        "timing_map_reported": "Historical v2: use reference at original speed; pad 0.03 s to 188 s, then 15 s hold.",
+        "live_rehearsal_verified": false,
+        "source_container_seconds_independently_probed": 187.992
+      },
+      "audio": {
+        "source": {
+          "provider": "google_drive",
+          "file_id": "1wmWrkUIuIU_zE1Hogp_hPUFYBH0J5YJR",
+          "url": "https://drive.google.com/file/d/1wmWrkUIuIU_zE1Hogp_hPUFYBH0J5YJR/view",
+          "title": "01 All You Stars of Zion (brass ensemble 3m08, backdrop timing).mp3",
+          "mime_type": "audio/mpeg",
+          "bytes": 6404205,
+          "modified_time": "2026-11-18T09:14:26.696Z",
+          "metadata_observed_at": "2026-11-21",
+          "metadata_access": "successful connector metadata or folder listing",
+          "role": "selected concert reference, byte identity verified",
+          "sha256": "2ef650dcf9b2fab141c72a2ce9a3301265326d2b6fe2ec807dcbe3dddd177a01",
+          "sha256_scope": "independently verified exact local bytes; matches prior full or abbreviated expected digest",
+          "reported_abbreviated_sha256": null,
+          "content_status": "downloaded or copied from verified original; fully decoded with no FFmpeg errors",
+          "expected_sha256_reported": "2ef650dcf9b2fab141c72a2ce9a3301265326d2b6fe2ec807dcbe3dddd177a01",
+          "local_path": "work/song-sources/s01.mp3",
+          "probe": {
+            "container_seconds": 187.992,
+            "decoded_seconds": 187.96554166666667,
+            "decoded_sample_frames": 9022346,
+            "sample_rate": 48000,
+            "channels": 2,
+            "codec": "mp3",
+            "decode_errors": false,
+            "observed_at": "2026-11-21"
+          }
+        },
+        "youtube_reference": "https://youtu.be/YuBYZDgmf0I",
+        "historical_guides": [
+          {
+            "file_id": "1gC0dUv2R841AHiNeRPG5Rhc6rfnCa6GA",
+            "url": "https://drive.google.com/file/d/1gC0dUv2R841AHiNeRPG5Rhc6rfnCa6GA/view",
+            "role": "older sung studio guide",
+            "seconds_reported": 243,
+            "content_verified": false
+          }
+        ],
+        "repo_promo_clip": {
+          "path": "audio/promo/s01.mp3",
+          "container_seconds_probed": 60.029388,
+          "role": "60-second historical excerpt, not full recording",
+          "decoded_zero_samples_only": null
+        }
+      },
+      "expressions": {
+        "mapping_status": "historical concert continuity",
+        "lit_at_start": [],
+        "first_lit": [
+          9,
+          7
+        ],
+        "relit": [],
+        "lit_at_end": [
+          7,
+          9
+        ]
+      },
+      "historical_world": "Starlight to gold sunrise; deep navy and violet, low horizon, torches and a tree of light.",
+      "enhancement_proposal": {
+        "status": "proposal; not a new creative approval",
+        "message": "Make the opening an invitation to practice kindness together.",
+        "acting_and_camera": "Brass players breathe, lift and settle instruments together; two people acknowledge effort, then help a kneeling companion rise.",
+        "model_and_motion_needs": "Reusable brass instruments, torch grips, a natural assist-to-stand interaction and a warm sunrise camera flight."
+      },
+      "existing_film": {
+        "status": "reported delivery; not independently retrieved or watched in this catalog audit",
+        "version": "v2",
+        "branch": "backdrop2/s01-full",
+        "native_resolution_reported": [
+          1920,
+          1080
+        ],
+        "fps_reported": 60,
+        "duration_seconds_reported": 203,
+        "stage_filename_reported": "01 All You Stars of Zion - Backdrop v2 - stage 1080p60.mp4",
+        "stage_sha256_reported": "b6b482a652591a481da23f1ee6b457f7cddd4cebfd2fbb8bf635fab143a26b1c",
+        "stage_bytes_reported": 152956265,
+        "review_sha256_reported": "f1e0dd40670655855888e1e51e3286707f806ee4e5cf2228e839e7edd19a1f03",
+        "location_reported": "Prior build/coordinator chat; stills in Drive Status; full movie URL not verified",
+        "owner_approval_inferred": false
+      },
+      "records": {
+        "drive_status": {
+          "id": "1ZygqI7nqZey9PPCcY0i1CC07G9K6D1Cn",
+          "url": "https://docs.google.com/document/d/1ZygqI7nqZey9PPCcY0i1CC07G9K6D1Cn/edit?usp=drivesdk&ouid=113038373524763352759&rtpof=true&sd=true",
+          "modified_time": "2026-11-19T03:14:46.395Z",
+          "authority": "newer v2 status observed on2026-11-21"
+        },
+        "branch_timeline": {
+          "url": "https://github.com/lovelaceaml-hub/concert-backdrops/blob/backdrop2/s01-full/project-docs/backdrops/s01-full2/TIMELINE.md",
+          "git_blob_sha": "2ff7de7556a97c50d2c0a94f6d791c94865ba4b5",
+          "ref_is_mutable": true
+        },
+        "legacy_repo_status": "project-docs/status/01.md",
+        "legacy_status_is_stale": true
+      },
+      "unresolved": [
+        "Rehearsal timing not confirmed.",
+        "Full v2 master is reported delivered in prior chat, not retrieved or independently inspected in this audit."
+      ]
+    },
+    {
+      "id": "s02",
+      "order": 2,
+      "title": "The Rose",
+      "live_instrumentation_reported": "Female trio, female choir and piano",
+      "duration": {
+        "live_target_seconds": 240,
+        "hold_seconds": 15,
+        "stage_target_seconds": 255,
+        "source_seconds_reported": 212.29,
+        "source_seconds_independently_probed": 212.244,
+        "duration_evidence": "Full source bytes hashed, ffprobe container inspected, first audio stream fully decoded to float PCM and samples counted. Reported source duration is retained separately.",
+        "timing_map_reported": "Historical v2: uniform stretch 240 / 212.29 = about 1.1305; review uses atempo 0.884533. Live section lengths are not confirmed.",
+        "live_rehearsal_verified": false,
+        "source_container_seconds_independently_probed": 212.288
+      },
+      "audio": {
+        "source": {
+          "provider": "google_drive",
+          "file_id": "1UoGwToBnpl-jlEJDRfqMnHMfluupGOhO",
+          "url": "https://drive.google.com/file/d/1UoGwToBnpl-jlEJDRfqMnHMfluupGOhO/view",
+          "title": "The Rose.m4a",
+          "mime_type": "audio/x-m4a",
+          "bytes": 3570538,
+          "modified_time": "2026-11-15T20:06:34.591Z",
+          "metadata_observed_at": "2026-11-21",
+          "metadata_access": "successful connector metadata or folder listing",
+          "role": "selected concert reference, byte identity verified",
+          "sha256": "45ba01babded6297abef3ea531154c7e3c6a75a690af370461457a5e82cb19f9",
+          "sha256_scope": "independently verified exact local bytes; matches prior full or abbreviated expected digest",
+          "reported_abbreviated_sha256": "45ba01ba...19f9",
+          "content_status": "downloaded or copied from verified original; fully decoded with no FFmpeg errors",
+          "expected_sha256_reported": null,
+          "local_path": "work/song-sources/s02.m4a",
+          "probe": {
+            "container_seconds": 212.288,
+            "decoded_seconds": 212.244,
+            "decoded_sample_frames": 10187712,
+            "sample_rate": 48000,
+            "channels": 2,
+            "codec": "aac",
+            "decode_errors": false,
+            "observed_at": "2026-11-21"
+          }
+        },
+        "youtube_reference": null,
+        "historical_guides": [],
+        "repo_promo_clip": {
+          "path": "audio/promo/s02.mp3",
+          "container_seconds_probed": 60.029388,
+          "role": "silent historical placeholder",
+          "decoded_zero_samples_only": true
+        }
+      },
+      "expressions": {
+        "mapping_status": "historical concert continuity",
+        "lit_at_start": [
+          7,
+          9
+        ],
+        "first_lit": [],
+        "relit": [
+          7
+        ],
+        "lit_at_end": [
+          7,
+          9
+        ]
+      },
+      "historical_world": "Winter seed to a rose opening in blush dawn; silver blue, frost, snow and an intimate lake.",
+      "enhancement_proposal": {
+        "status": "proposal; not a new creative approval",
+        "message": "Show patient care giving someone courage to begin again.",
+        "acting_and_camera": "A woman notices another, approaches at a natural pace and offers support; the rose unfolds after the interaction has read.",
+        "model_and_motion_needs": "Procedural rose with opening petals, restrained snow and frost, kneel-to-stand motion with planted feet."
+      },
+      "existing_film": {
+        "status": "reported delivery; not independently retrieved or watched in this catalog audit",
+        "version": "v2",
+        "branch": "backdrop2/s02-full",
+        "native_resolution_reported": [
+          1920,
+          1080
+        ],
+        "fps_reported": 60,
+        "duration_seconds_reported": 255,
+        "stage_filename_reported": "02 The Rose - Backdrop v2 - stage 1080p60.mp4",
+        "stage_sha256_reported": "03b7f5d5b391e5cb778c410bc9f5e32ea917fb03852e45a823b6d110dc29edcd",
+        "stage_bytes_reported": null,
+        "review_sha256_reported": "4635a1c74695671999750061c100a634120cd6f6a2577d6c98e66dc1332ac9bb",
+        "location_reported": "Prior build/coordinator chat; stills in Drive Status; full movie URL not verified",
+        "owner_approval_inferred": false
+      },
+      "records": {
+        "drive_status": {
+          "id": "1VRDQRUC4Ip0ZbYvomqeZ31wYWxSPJaGr",
+          "url": "https://docs.google.com/document/d/1VRDQRUC4Ip0ZbYvomqeZ31wYWxSPJaGr/edit?usp=drivesdk&ouid=113038373524763352759&rtpof=true&sd=true",
+          "modified_time": "2026-11-19T03:14:46.449Z",
+          "authority": "newer v2 status observed on2026-11-21"
+        },
+        "branch_timeline": {
+          "url": "https://github.com/lovelaceaml-hub/concert-backdrops/blob/backdrop2/s02-full/project-docs/backdrops/s02-full2/TIMELINE.md",
+          "git_blob_sha": "7d1fb11fc8d6f3273f0fab82daff6bfaa01ffb25",
+          "ref_is_mutable": true
+        },
+        "legacy_repo_status": "project-docs/status/02.md",
+        "legacy_status_is_stale": true
+      },
+      "unresolved": [
+        "Full recording exists; the local s02 promo is a silent historical placeholder.",
+        "The 13.05 percent time stretch assumes where the live trio adds time; no rehearsal evidence confirms that assumption."
+      ]
+    },
+    {
+      "id": "s03",
+      "order": 3,
+      "title": "I Reminisce About Your Love",
+      "live_instrumentation_reported": "Choir and orchestra",
+      "duration": {
+        "live_target_seconds": 313,
+        "hold_seconds": 15,
+        "stage_target_seconds": 328,
+        "source_seconds_reported": 355.09,
+        "source_seconds_independently_probed": 355.09116666666665,
+        "duration_evidence": "Full source bytes hashed, ffprobe container inspected, first audio stream fully decoded to float PCM and samples counted. Reported source duration is retained separately.",
+        "timing_map_reported": "Historical v2: remove reference 272.74 to 314.79 s with a 40 ms crossfade, then trim about 0.04 s of silent tail to 313 s. No tempo change. The assumed repeated passage needs rehearsal confirmation.",
+        "live_rehearsal_verified": false,
+        "source_container_seconds_independently_probed": 355.128
+      },
+      "audio": {
+        "source": {
+          "provider": "google_drive",
+          "file_id": "1XMKLgAG0s22AbWpo5nruwEQ-DPRQH8PM",
+          "url": "https://drive.google.com/file/d/1XMKLgAG0s22AbWpo5nruwEQ-DPRQH8PM/view",
+          "title": "03 I Reminisce About Your Love (YouTube reference, backdrop timing).mp3",
+          "mime_type": "audio/mpeg",
+          "bytes": 11374125,
+          "modified_time": "2026-11-18T09:52:59.077Z",
+          "metadata_observed_at": "2026-11-21",
+          "metadata_access": "successful connector metadata or folder listing",
+          "role": "selected concert reference, byte identity verified",
+          "sha256": "c86a81c76aef1af7ae351b0b02eb2109bba78b43beaa3e8f9b329b4e49f9f485",
+          "sha256_scope": "independently verified exact local bytes; matches prior full or abbreviated expected digest",
+          "reported_abbreviated_sha256": null,
+          "content_status": "downloaded or copied from verified original; fully decoded with no FFmpeg errors",
+          "expected_sha256_reported": "c86a81c76aef1af7ae351b0b02eb2109bba78b43beaa3e8f9b329b4e49f9f485",
+          "local_path": "work/song-sources/s03.mp3",
+          "probe": {
+            "container_seconds": 355.128,
+            "decoded_seconds": 355.09116666666665,
+            "decoded_sample_frames": 17044376,
+            "sample_rate": 48000,
+            "channels": 2,
+            "codec": "mp3",
+            "decode_errors": false,
+            "observed_at": "2026-11-21"
+          }
+        },
+        "youtube_reference": "https://youtu.be/TH_p9g7Eu30",
+        "historical_guides": [
+          {
+            "file_id": "1RFFKNZTcmLo4cyObPRXcIZQcZupuQjbu",
+            "url": "https://drive.google.com/file/d/1RFFKNZTcmLo4cyObPRXcIZQcZupuQjbu/view",
+            "role": "older studio guide",
+            "seconds_reported": 354,
+            "content_verified": false
+          }
+        ],
+        "repo_promo_clip": {
+          "path": "audio/promo/s03.mp3",
+          "container_seconds_probed": 60.024,
+          "role": "60-second historical excerpt, not full recording",
+          "decoded_zero_samples_only": null
+        }
+      },
+      "expressions": {
+        "mapping_status": "historical concert continuity",
+        "lit_at_start": [
+          7,
+          9
+        ],
+        "first_lit": [
+          3
+        ],
+        "relit": [
+          7
+        ],
+        "lit_at_end": [
+          3,
+          7,
+          9
+        ]
+      },
+      "historical_world": "Memory lake; indigo rain and lanterns, a mended moon, aurora and rose dawn.",
+      "enhancement_proposal": {
+        "status": "proposal; not a new creative approval",
+        "message": "Show remembered care becoming care offered to another person.",
+        "acting_and_camera": "A small comforting gesture leads the camera from intimate figures to a wider community; rain and light respond after the action.",
+        "model_and_motion_needs": "Hand-on-shoulder contact rig, seated and kneeling poses, lantern carry, mended-moon geometry and rain layers."
+      },
+      "existing_film": {
+        "status": "reported delivery; not independently retrieved or watched in this catalog audit",
+        "version": "v2 fix 1",
+        "branch": "backdrop2/s03-full",
+        "native_resolution_reported": [
+          1920,
+          1080
+        ],
+        "fps_reported": 60,
+        "duration_seconds_reported": 328,
+        "stage_filename_reported": "03 I Reminisce About Your Love - Backdrop v2 - stage 1080p60.mp4",
+        "stage_sha256_reported": "7c389faf8b5e6cbc14fd53d9d6058149fd7e9bb113be55535a4014aa3bff7f25",
+        "stage_bytes_reported": null,
+        "review_sha256_reported": "c8832427d55953c383e6f9b9f9a20fbc8b29944ed8322f8c7aed2aed071d2403",
+        "location_reported": "Prior build/coordinator chat; stills in Drive Status; full movie URL not verified",
+        "owner_approval_inferred": false
+      },
+      "records": {
+        "drive_status": {
+          "id": "13ZBkAOBOon1aObvU4YQ2Gs5d5ddodaMM",
+          "url": "https://docs.google.com/document/d/13ZBkAOBOon1aObvU4YQ2Gs5d5ddodaMM/edit?usp=drivesdk&ouid=113038373524763352759&rtpof=true&sd=true",
+          "modified_time": "2026-11-19T03:14:46.495Z",
+          "authority": "newer v2 status observed on2026-11-21"
+        },
+        "branch_timeline": {
+          "url": "https://github.com/lovelaceaml-hub/concert-backdrops/blob/backdrop2/s03-full/project-docs/backdrops/s03-full2/TIMELINE.md",
+          "git_blob_sha": "a56e48e007fdcc24e8982747cbe72802149419c1",
+          "ref_is_mutable": true
+        },
+        "legacy_repo_status": "project-docs/status/03.md",
+        "legacy_status_is_stale": true
+      },
+      "unresolved": [
+        "The cut assumes the live arrangement omits one repeated passage; rehearsal must confirm it."
+      ]
+    },
+    {
+      "id": "s04",
+      "order": 4,
+      "title": "I'm Sorry, Please Forgive Me",
+      "live_instrumentation_reported": "Unresolved: historical set list says choir and orchestra; v2 TIMELINE says choir only, a cappella",
+      "duration": {
+        "live_target_seconds": 220,
+        "hold_seconds": 15,
+        "stage_target_seconds": 235,
+        "source_seconds_reported": 219.435,
+        "source_seconds_independently_probed": 219.43466666666666,
+        "duration_evidence": "Full source bytes hashed, ffprobe container inspected, first audio stream fully decoded to float PCM and samples counted. Reported source duration is retained separately.",
+        "timing_map_reported": "Historical v2: conform 219.435 s to 220 s with atempo 0.997430. Source identity is now byte-verified; resolve the a cappella arrangement before final live timing.",
+        "live_rehearsal_verified": false,
+        "source_container_seconds_independently_probed": 219.48
+      },
+      "audio": {
+        "source": {
+          "provider": "google_drive",
+          "file_id": "1zdEjaTvRAA-Xvx5TxAKZRd-cxgCId-Fr",
+          "url": "https://drive.google.com/file/d/1zdEjaTvRAA-Xvx5TxAKZRd-cxgCId-Fr/view",
+          "title": "04 I'm Sorry, Please Forgive Me (YouTube melody reference, backdrop timing).mp3",
+          "mime_type": "audio/mpeg",
+          "bytes": 7477389,
+          "modified_time": "2026-11-18T09:52:59.085Z",
+          "metadata_observed_at": "2026-11-21",
+          "metadata_access": "successful connector metadata or folder listing",
+          "role": "selected concert reference, byte identity verified",
+          "sha256": "a1fa529d6f6dd5f477a429f7c8587c017ed94efebabe669fa8e05e1dd32e7220",
+          "sha256_scope": "independently verified exact local bytes; matches prior full or abbreviated expected digest",
+          "reported_abbreviated_sha256": null,
+          "content_status": "downloaded or copied from verified original; fully decoded with no FFmpeg errors",
+          "expected_sha256_reported": "a1fa529d6f6dd5f477a429f7c8587c017ed94efebabe669fa8e05e1dd32e7220",
+          "local_path": "work/song-sources/s04.mp3",
+          "probe": {
+            "container_seconds": 219.48,
+            "decoded_seconds": 219.43466666666666,
+            "decoded_sample_frames": 10532864,
+            "sample_rate": 48000,
+            "channels": 2,
+            "codec": "mp3",
+            "decode_errors": false,
+            "observed_at": "2026-11-21"
+          }
+        },
+        "youtube_reference": "https://youtu.be/43seZJ9fTgw",
+        "historical_guides": [
+          {
+            "file_id": "1pinP4Q0xkriWu-q0UqRI1WoQmwUYJJld",
+            "url": "https://drive.google.com/file/d/1pinP4Q0xkriWu-q0UqRI1WoQmwUYJJld/view",
+            "role": "older studio guide",
+            "seconds_reported": 221.5,
+            "content_verified": false
+          }
+        ],
+        "repo_promo_clip": {
+          "path": "audio/promo/s04.mp3",
+          "container_seconds_probed": 60.029388,
+          "role": "60-second historical excerpt, not full recording",
+          "decoded_zero_samples_only": null
+        }
+      },
+      "expressions": {
+        "mapping_status": "historical concert continuity",
+        "lit_at_start": [
+          3,
+          7,
+          9
+        ],
+        "first_lit": [
+          4
+        ],
+        "relit": [
+          3
+        ],
+        "lit_at_end": [
+          3,
+          4,
+          7,
+          9
+        ]
+      },
+      "historical_world": "Frozen pearl lake thawing into apricot warmth; a dividing line becomes a shared path.",
+      "enhancement_proposal": {
+        "status": "proposal; not a new creative approval",
+        "message": "Show apology and forgiveness changing a relationship.",
+        "acting_and_camera": "Two sisters move from separation to eye-line acknowledgement, a careful offered hand and a balanced embrace; the lake thaws after the reconciliation.",
+        "model_and_motion_needs": "Two-person hand alignment, weight transfer, embrace rig, robe deformation and procedural ice-thaw boundary."
+      },
+      "existing_film": {
+        "status": "reported delivery; not independently retrieved or watched in this catalog audit",
+        "version": "v2 fix 1",
+        "branch": "backdrop2/s04-full",
+        "native_resolution_reported": [
+          1920,
+          1080
+        ],
+        "fps_reported": 60,
+        "duration_seconds_reported": 235,
+        "stage_filename_reported": "04 I'm Sorry, Please Forgive Me - Backdrop v2 - stage 1080p60.mp4",
+        "stage_sha256_reported": "39cc492e64df84d9de4eb054199bf678ff6dd9bbc13fcb8d88b0f0ee36814666",
+        "stage_bytes_reported": null,
+        "review_sha256_reported": "059e3a38a94bc20b82c8aecbed043994d3164f6d0238f4464a68c84a3480e5b7",
+        "location_reported": "Prior build/coordinator chat; stills in Drive Status; full movie URL not verified",
+        "owner_approval_inferred": false
+      },
+      "records": {
+        "drive_status": {
+          "id": "1VTlAdH_ZkCRmHVmm0ZwI8KVB3yE4MByx",
+          "url": "https://docs.google.com/document/d/1VTlAdH_ZkCRmHVmm0ZwI8KVB3yE4MByx/edit?usp=drivesdk&ouid=113038373524763352759&rtpof=true&sd=true",
+          "modified_time": "2026-11-19T03:14:46.542Z",
+          "authority": "newer v2 status observed on2026-11-21"
+        },
+        "branch_timeline": {
+          "url": "https://github.com/lovelaceaml-hub/concert-backdrops/blob/backdrop2/s04-full/project-docs/backdrops/s04-full2/TIMELINE.md",
+          "git_blob_sha": "c60c86bc5222a880a44f558ae4ed7168c96d45f4",
+          "ref_is_mutable": true
+        },
+        "legacy_repo_status": "project-docs/status/04.md",
+        "legacy_status_is_stale": true
+      },
+      "unresolved": [
+        "Historical instrumentation conflicts with the v2 a cappella note.",
+        "The current v2 reference includes verse 3 according to its builder; the old status saying verse 3 is missing is superseded for that reference, not proof of the live set."
+      ]
+    },
+    {
+      "id": "s05",
+      "order": 5,
+      "title": "God Bless You!",
+      "live_instrumentation_reported": "Choir and orchestra",
+      "duration": {
+        "live_target_seconds": 159,
+        "hold_seconds": 15,
+        "stage_target_seconds": 174,
+        "source_seconds_reported": 153.152,
+        "source_seconds_independently_probed": 153.108,
+        "duration_evidence": "Full source bytes hashed, ffprobe container inspected, first audio stream fully decoded to float PCM and samples counted. Reported source duration is retained separately.",
+        "timing_map_reported": "Historical v2: uniform scale 159 / 153.152 = about 1.03818; pitch preserved. Section timing and expression placements remain estimates.",
+        "live_rehearsal_verified": false,
+        "source_container_seconds_independently_probed": 153.152
+      },
+      "audio": {
+        "source": {
+          "provider": "google_drive",
+          "file_id": "1sc19zSxMPDEI5bxaaoiCVx7rndRY-F_D",
+          "url": "https://drive.google.com/file/d/1sc19zSxMPDEI5bxaaoiCVx7rndRY-F_D/view",
+          "title": "God bless you.m4a",
+          "mime_type": "audio/x-m4a",
+          "bytes": 1310700,
+          "modified_time": "2026-11-15T20:05:37.267Z",
+          "metadata_observed_at": "2026-11-21",
+          "metadata_access": "successful connector metadata or folder listing",
+          "role": "selected concert reference, byte identity verified",
+          "sha256": "dbfc1a9f5b8118ab76bcabf16d9b0e30bfe07bea140d4405ff4087b6d2ea8781",
+          "sha256_scope": "independently verified exact local bytes; matches prior full or abbreviated expected digest",
+          "reported_abbreviated_sha256": "dbfc1a9f...8781",
+          "content_status": "downloaded or copied from verified original; fully decoded with no FFmpeg errors",
+          "expected_sha256_reported": null,
+          "local_path": "work/song-sources/s05.m4a",
+          "probe": {
+            "container_seconds": 153.152,
+            "decoded_seconds": 153.108,
+            "decoded_sample_frames": 7349184,
+            "sample_rate": 48000,
+            "channels": 1,
+            "codec": "aac",
+            "decode_errors": false,
+            "observed_at": "2026-11-21"
+          }
+        },
+        "youtube_reference": null,
+        "historical_guides": [
+          {
+            "file_id": "1HX7gvhrKkltVQnkQTTFv7_1LcMEZaiPY",
+            "url": "https://drive.google.com/file/d/1HX7gvhrKkltVQnkQTTFv7_1LcMEZaiPY/view",
+            "role": "older instrumental; not the sung source",
+            "seconds_reported": 208,
+            "content_verified": false
+          },
+          {
+            "file_id": "16rzw_OCdkWqrK3AVWvolXReSqzoD_Y0f",
+            "url": "https://drive.google.com/file/d/16rzw_OCdkWqrK3AVWvolXReSqzoD_Y0f/view",
+            "role": "sung guide for phrase timing",
+            "seconds_reported": 142,
+            "content_verified": false
+          }
+        ],
+        "repo_promo_clip": {
+          "path": "audio/promo/s05.mp3",
+          "container_seconds_probed": 60.029388,
+          "role": "60-second historical excerpt, not full recording",
+          "decoded_zero_samples_only": null
+        }
+      },
+      "expressions": {
+        "mapping_status": "historical mapping includes provisional exception",
+        "lit_at_start": [
+          3,
+          4,
+          7,
+          9
+        ],
+        "first_lit": [
+          8,
+          6
+        ],
+        "relit": [
+          7,
+          8
+        ],
+        "lit_at_end": [
+          3,
+          4,
+          6,
+          7,
+          8,
+          9
+        ]
+      },
+      "historical_world": "Spring afternoon and a tree of blessing; stepping stones, blossoms and nine coloured fruits.",
+      "enhancement_proposal": {
+        "status": "proposal; not a new creative approval",
+        "message": "Connect prayer, attentive listening and practical help to a growing community.",
+        "acting_and_camera": "A listener pauses and turns toward the speaker; another person helps someone stand; the tree grows in response to these acts.",
+        "model_and_motion_needs": "Listening gesture library, shared load/hand prop, stepping-stone foot placement and a tree with nine distinguishable fruits."
+      },
+      "existing_film": {
+        "status": "reported delivery; not independently retrieved or watched in this catalog audit",
+        "version": "v2 before unrendered fix 1",
+        "branch": "backdrop2/s05-full",
+        "native_resolution_reported": [
+          1920,
+          1080
+        ],
+        "fps_reported": 60,
+        "duration_seconds_reported": 174,
+        "stage_filename_reported": "05 God Bless You! - Backdrop v2 - stage 1080p60.mp4",
+        "stage_sha256_reported": "543ede1a091086c9f49ed44a87bafffcf816e1ad302f26e26249869a97b3ad46",
+        "stage_bytes_reported": 87983477,
+        "review_sha256_reported": "ada1d356ba08cb63d4e1727fdd665b2c46d852663ceedec63461d90a4142f399",
+        "location_reported": "Prior build/coordinator chat; stills in Drive Status; full movie URL not verified",
+        "owner_approval_inferred": false
+      },
+      "records": {
+        "drive_status": {
+          "id": "1i-qxgouZma1b2aZqcYaGfkvrB3PjXhSL",
+          "url": "https://docs.google.com/document/d/1i-qxgouZma1b2aZqcYaGfkvrB3PjXhSL/edit?usp=drivesdk&ouid=113038373524763352759&rtpof=true&sd=true",
+          "modified_time": "2026-11-19T03:14:46.588Z",
+          "authority": "newer v2 status observed on2026-11-21"
+        },
+        "branch_timeline": {
+          "url": "https://github.com/lovelaceaml-hub/concert-backdrops/blob/backdrop2/s05-full/project-docs/backdrops/s05-full2/TIMELINE.md",
+          "git_blob_sha": "e0b5a8abf2ca80b9ee0d11e7926f1a133f582d9f",
+          "ref_is_mutable": true
+        },
+        "legacy_repo_status": "project-docs/status/05.md",
+        "legacy_status_is_stale": true
+      },
+      "unresolved": [
+        "Respect is a provisional thematic exception, not a confirmed exact correspondence to the song.",
+        "Delivered v2 is code 106c2b8; fix faf3009 was committed and tested in stills but not rendered.",
+        "Some word placement was measured from structure and not confirmed by ear."
+      ]
+    },
+    {
+      "id": "s06",
+      "order": 6,
+      "title": "Heavenly Mother Tells Us to Be Grains",
+      "live_instrumentation_reported": "Choir and orchestra",
+      "duration": {
+        "live_target_seconds": 137,
+        "hold_seconds": 15,
+        "stage_target_seconds": 152,
+        "source_seconds_reported": 134.847,
+        "source_seconds_independently_probed": 134.84666666666666,
+        "duration_evidence": "Full source bytes hashed, ffprobe container inspected, first audio stream fully decoded to float PCM and samples counted. Reported source duration is retained separately.",
+        "timing_map_reported": "Historical v2: uniform scale 137 / 134.847 = about 1.01597; review atempo 0.984285. Reference stops abruptly near its end.",
+        "live_rehearsal_verified": false,
+        "source_container_seconds_independently_probed": 134.890667
+      },
+      "audio": {
+        "source": {
+          "provider": "google_drive",
+          "file_id": "1YqFkD3lQprvotC32xRfC8Dqno0I24hqs",
+          "url": "https://drive.google.com/file/d/1YqFkD3lQprvotC32xRfC8Dqno0I24hqs/view",
+          "title": "Heavenly Mother Tells us to be Grains.m4a",
+          "mime_type": "audio/x-m4a",
+          "bytes": 1159428,
+          "modified_time": "2026-11-15T20:05:52.160Z",
+          "metadata_observed_at": "2026-11-21",
+          "metadata_access": "successful connector metadata or folder listing",
+          "role": "selected concert reference, byte identity verified",
+          "sha256": "b0b0de6a6f29a6dfc9dbdab935f8049360f05e77896f89cb52b68365f6f61d71",
+          "sha256_scope": "independently verified exact local bytes; matches prior full or abbreviated expected digest",
+          "reported_abbreviated_sha256": null,
+          "content_status": "downloaded or copied from verified original; fully decoded with no FFmpeg errors",
+          "expected_sha256_reported": "b0b0de6a6f29a6dfc9dbdab935f8049360f05e77896f89cb52b68365f6f61d71",
+          "local_path": "work/song-sources/s06.m4a",
+          "probe": {
+            "container_seconds": 134.890667,
+            "decoded_seconds": 134.84666666666666,
+            "decoded_sample_frames": 6472640,
+            "sample_rate": 48000,
+            "channels": 1,
+            "codec": "aac",
+            "decode_errors": false,
+            "observed_at": "2026-11-21"
+          }
+        },
+        "youtube_reference": null,
+        "historical_guides": [
+          {
+            "file_id": "1czsiQ1uirj6Akvcd11WDSXKMOrAxdmH1",
+            "url": "https://drive.google.com/file/d/1czsiQ1uirj6Akvcd11WDSXKMOrAxdmH1/view",
+            "role": "older sung guide",
+            "seconds_reported": 126,
+            "content_verified": false
+          }
+        ],
+        "repo_promo_clip": {
+          "path": "audio/promo/s06.mp3",
+          "container_seconds_probed": 60.029388,
+          "role": "60-second historical excerpt, not full recording",
+          "decoded_zero_samples_only": null
+        }
+      },
+      "expressions": {
+        "mapping_status": "historical mapping includes provisional exception",
+        "lit_at_start": [
+          3,
+          4,
+          6,
+          7,
+          8,
+          9
+        ],
+        "first_lit": [
+          5
+        ],
+        "relit": [
+          4
+        ],
+        "lit_at_end": [
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9
+        ]
+      },
+      "historical_world": "Amber harvest evening; one grain becomes a field, homes brighten, wheat bends in waves.",
+      "enhancement_proposal": {
+        "status": "proposal; not a new creative approval",
+        "message": "Make everyday patience and shared care visible within the harvest.",
+        "acting_and_camera": "One person checks their hurry and steps aside; the other passes with acknowledgement. A separate pair restores a lantern and embraces.",
+        "model_and_motion_needs": "Step-aside and pass interaction, stable basket/sheaf grips, wheat instancing with coherent wind and lantern handoff."
+      },
+      "existing_film": {
+        "status": "reported delivery; not independently retrieved or watched in this catalog audit",
+        "version": "v2 fix 1",
+        "branch": "backdrop2/s06-full",
+        "native_resolution_reported": [
+          1920,
+          1080
+        ],
+        "fps_reported": 60,
+        "duration_seconds_reported": 152,
+        "stage_filename_reported": "06 Heavenly Mother Tells Us to Be Grains - Backdrop v2 - stage 1080p60.mp4",
+        "stage_sha256_reported": "e86d642e83f3f64610c11a5bf606158fc0a0cc03d5e8a21f4f121df02bdb716f",
+        "stage_bytes_reported": null,
+        "review_sha256_reported": "218f7d0cf9a146669719e141d9b2c99719819321b0010bbb3775be00ddfe50fa",
+        "location_reported": "Prior build/coordinator chat; stills in Drive Status; full movie URL not verified",
+        "owner_approval_inferred": false
+      },
+      "records": {
+        "drive_status": {
+          "id": "1PNzNtfitFYEJXRaubk7m6Pb66rLcFruF",
+          "url": "https://docs.google.com/document/d/1PNzNtfitFYEJXRaubk7m6Pb66rLcFruF/edit?usp=drivesdk&ouid=113038373524763352759&rtpof=true&sd=true",
+          "modified_time": "2026-11-19T03:14:46.637Z",
+          "authority": "newer v2 status observed on2026-11-21"
+        },
+        "branch_timeline": {
+          "url": "https://github.com/lovelaceaml-hub/concert-backdrops/blob/backdrop2/s06-full/project-docs/backdrops/s06-full2/TIMELINE.md",
+          "git_blob_sha": "908a7d82a24971e8ca4a04e2a22e390c31d4b863",
+          "ref_is_mutable": true
+        },
+        "legacy_repo_status": "project-docs/status/06.md",
+        "legacy_status_is_stale": true
+      },
+      "unresolved": [
+        "Concession remains a provisional thematic exception.",
+        "Reference has an abrupt ending; do not assume the live choir shares it.",
+        "Live timing remains an estimated uniform conform."
+      ]
+    },
+    {
+      "id": "s07",
+      "order": 7,
+      "title": "May No One Ever Feel Lonely",
+      "live_instrumentation_reported": "Male duet or quartet, choir and orchestra; exact singer count unresolved",
+      "duration": {
+        "live_target_seconds": 238,
+        "hold_seconds": 15,
+        "stage_target_seconds": 253,
+        "source_seconds_reported": 246.53,
+        "source_seconds_independently_probed": 246.528,
+        "duration_evidence": "Full source bytes hashed, ffprobe container inspected, first audio stream fully decoded to float PCM and samples counted. Reported source duration is retained separately.",
+        "timing_map_reported": "Historical v2: trim reference music to 0..243.5 s, then map evenly to 238 s; review atempo 1.023109. Full file is reported 246.53 s.",
+        "live_rehearsal_verified": false,
+        "source_container_seconds_independently_probed": 246.552
+      },
+      "audio": {
+        "source": {
+          "provider": "google_drive",
+          "file_id": "1wL9dyLETDn3q9ECkIXKrDb3UIt_eAgEA",
+          "url": "https://drive.google.com/file/d/1wL9dyLETDn3q9ECkIXKrDb3UIt_eAgEA/view",
+          "title": "07 May No One Ever Feel Lonely (YouTube reference, backdrop timing).mp3",
+          "mime_type": "audio/mpeg",
+          "bytes": 8493981,
+          "modified_time": "2026-11-18T09:52:59.093Z",
+          "metadata_observed_at": "2026-11-21",
+          "metadata_access": "successful connector metadata or folder listing",
+          "role": "selected concert reference, byte identity verified",
+          "sha256": "2fea173b63d4086703927a0e6048b5026d0440d151c99c90f3129c37fea6266a",
+          "sha256_scope": "independently verified exact local bytes; matches prior full or abbreviated expected digest",
+          "reported_abbreviated_sha256": "2fea173b...6266a",
+          "content_status": "downloaded or copied from verified original; fully decoded with no FFmpeg errors",
+          "expected_sha256_reported": null,
+          "local_path": "work/song-sources/s07.mp3",
+          "probe": {
+            "container_seconds": 246.552,
+            "decoded_seconds": 246.528,
+            "decoded_sample_frames": 11833344,
+            "sample_rate": 48000,
+            "channels": 2,
+            "codec": "mp3",
+            "decode_errors": false,
+            "observed_at": "2026-11-21"
+          }
+        },
+        "youtube_reference": "https://youtu.be/7piuHaCYnFM",
+        "historical_guides": [
+          {
+            "file_id": "1zuNrIaXi81AA_-RKIZKK4UgOcW0DisuD",
+            "url": "https://drive.google.com/file/d/1zuNrIaXi81AA_-RKIZKK4UgOcW0DisuD/view",
+            "role": "older studio guide",
+            "seconds_reported": 246,
+            "content_verified": false
+          }
+        ],
+        "repo_promo_clip": {
+          "path": "audio/promo/s07.mp3",
+          "container_seconds_probed": 60.029388,
+          "role": "60-second historical excerpt, not full recording",
+          "decoded_zero_samples_only": null
+        }
+      },
+      "expressions": {
+        "mapping_status": "historical concert continuity",
+        "lit_at_start": [
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9
+        ],
+        "first_lit": [
+          1
+        ],
+        "relit": [
+          8
+        ],
+        "lit_at_end": [
+          1,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9
+        ]
+      },
+      "historical_world": "Blue dusk path home; lanterns, companions, a welcoming village and a gate.",
+      "enhancement_proposal": {
+        "status": "proposal; not a new creative approval",
+        "message": "Give isolation a visible, tender resolution.",
+        "acting_and_camera": "A greeting is noticed, returned and followed by a shared walk; the camera opens to reveal companions joining at different depths.",
+        "model_and_motion_needs": "Two-man greeting, varied walk cycles with foot contacts, group spacing and turns, lantern carry and village modules."
+      },
+      "existing_film": {
+        "status": "reported delivery; not independently retrieved or watched in this catalog audit",
+        "version": "v2 before unrendered framing fix",
+        "branch": "backdrop2/s07-full",
+        "native_resolution_reported": [
+          1920,
+          1080
+        ],
+        "fps_reported": 60,
+        "duration_seconds_reported": 253,
+        "stage_filename_reported": "07 May No One Ever Feel Lonely - Backdrop v2 - stage 1080p60.mp4",
+        "stage_sha256_reported": "2ae667a714d65bf68c458161a1f8b4840bbbc3b8262d5fd1d99b278c175622bb",
+        "stage_bytes_reported": null,
+        "review_sha256_reported": "7f87fcc6e503e2bd919716099d0b2cfee914985a3e47887c87e7e071fcef9996",
+        "location_reported": "Prior build/coordinator chat; stills in Drive Status; full movie URL not verified",
+        "owner_approval_inferred": false
+      },
+      "records": {
+        "drive_status": {
+          "id": "171cII5SpKY-ivHwVGHCt0ZP9RFfNblL2",
+          "url": "https://docs.google.com/document/d/171cII5SpKY-ivHwVGHCt0ZP9RFfNblL2/edit?usp=drivesdk&ouid=113038373524763352759&rtpof=true&sd=true",
+          "modified_time": "2026-11-19T03:14:46.685Z",
+          "authority": "newer v2 status observed on2026-11-21"
+        },
+        "branch_timeline": {
+          "url": "https://github.com/lovelaceaml-hub/concert-backdrops/blob/backdrop2/s07-full/project-docs/backdrops/s07-full2/TIMELINE.md",
+          "git_blob_sha": "72c333ffbc9aba09e1cea7508f37de368dea74d0",
+          "ref_is_mutable": true
+        },
+        "legacy_repo_status": "project-docs/status/07.md",
+        "legacy_status_is_stale": true
+      },
+      "unresolved": [
+        "Fix 57b2714 is ahead of the delivered picture and was not rendered.",
+        "Delivered Consideration scene has a reported head/text overlap around 69..74 s.",
+        "Male duet versus quartet remains unresolved."
+      ],
+      "reference_cues_reported": [
+        {
+          "name": "quiet intro",
+          "source_interval_seconds": [
+            0,
+            14
+          ]
+        },
+        {
+          "name": "first soft entry",
+          "source_interval_seconds": [
+            14,
+            53
+          ]
+        },
+        {
+          "name": "first lift",
+          "source_interval_seconds": [
+            53,
+            77.5
+          ]
+        },
+        {
+          "name": "soft second section",
+          "source_interval_seconds": [
+            77.5,
+            98
+          ]
+        },
+        {
+          "name": "second lift",
+          "source_interval_seconds": [
+            98,
+            137.5
+          ]
+        },
+        {
+          "name": "tender hush",
+          "source_interval_seconds": [
+            137.5,
+            149
+          ]
+        },
+        {
+          "name": "third section builds",
+          "source_interval_seconds": [
+            149,
+            174.5
+          ]
+        },
+        {
+          "name": "final lift",
+          "source_interval_seconds": [
+            174.5,
+            230.5
+          ]
+        },
+        {
+          "name": "ending fade",
+          "source_interval_seconds": [
+            230.5,
+            243.5
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s08",
+      "order": 8,
+      "title": "Out of Heaven, Favor From God",
+      "live_instrumentation_reported": "Orchestra only; no singing live",
+      "duration": {
+        "live_target_seconds": 210,
+        "hold_seconds": 15,
+        "stage_target_seconds": 225,
+        "source_seconds_reported": 209.08,
+        "source_seconds_independently_probed": 209.08408333333333,
+        "duration_evidence": "Full source bytes hashed, ffprobe container inspected, first audio stream fully decoded to float PCM and samples counted. Reported source duration is retained separately.",
+        "timing_map_reported": "Historical v2: use reference at original speed and pad 0.92 s to 210 s, then 15 s hold.",
+        "live_rehearsal_verified": false,
+        "source_container_seconds_independently_probed": 209.112
+      },
+      "audio": {
+        "source": {
+          "provider": "google_drive",
+          "file_id": "11x03zfwMq51wk7T8Z6sL25QGlrunU1Xn",
+          "url": "https://drive.google.com/file/d/11x03zfwMq51wk7T8Z6sL25QGlrunU1Xn/view",
+          "title": "08 Out of Heaven, Favor From God (ensemble, backdrop timing).mp3",
+          "mime_type": "audio/mpeg",
+          "bytes": 6847533,
+          "modified_time": "2026-11-18T09:52:59.099Z",
+          "metadata_observed_at": "2026-11-21",
+          "metadata_access": "successful connector metadata or folder listing",
+          "role": "selected concert reference, byte identity verified",
+          "sha256": "7ae86d29fcda41c42f89f960fde0fe8f4573f7b73b2249e327bdbf174db7c81c",
+          "sha256_scope": "independently verified exact local bytes; matches prior full or abbreviated expected digest",
+          "reported_abbreviated_sha256": null,
+          "content_status": "downloaded or copied from verified original; fully decoded with no FFmpeg errors",
+          "expected_sha256_reported": "7ae86d29fcda41c42f89f960fde0fe8f4573f7b73b2249e327bdbf174db7c81c",
+          "local_path": "work/song-sources/s08.mp3",
+          "probe": {
+            "container_seconds": 209.112,
+            "decoded_seconds": 209.08408333333333,
+            "decoded_sample_frames": 10036036,
+            "sample_rate": 48000,
+            "channels": 2,
+            "codec": "mp3",
+            "decode_errors": false,
+            "observed_at": "2026-11-21"
+          }
+        },
+        "youtube_reference": "https://youtu.be/veJ7ra4Fjck",
+        "historical_guides": [
+          {
+            "file_id": "1dyUCLoZZFQQ0HlFTCrs5qJpQ7NqLM0zC",
+            "url": "https://drive.google.com/file/d/1dyUCLoZZFQQ0HlFTCrs5qJpQ7NqLM0zC/view",
+            "role": "older sung guide; live item is instrumental",
+            "seconds_reported": 158,
+            "content_verified": false
+          }
+        ],
+        "repo_promo_clip": {
+          "path": "audio/promo/s08.mp3",
+          "container_seconds_probed": 60.029388,
+          "role": "60-second historical excerpt, not full recording",
+          "decoded_zero_samples_only": null
+        }
+      },
+      "expressions": {
+        "mapping_status": "historical concert continuity",
+        "lit_at_start": [
+          1,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9
+        ],
+        "first_lit": [
+          2
+        ],
+        "relit": [
+          9
+        ],
+        "lit_at_end": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9
+        ]
+      },
+      "historical_world": "Royal purple, crimson and gold; embroidered sky, light seam, curtain and gate.",
+      "enhancement_proposal": {
+        "status": "proposal; not a new creative approval",
+        "message": "Let music, gratitude and recognition open a generous space.",
+        "acting_and_camera": "Measured applause and a hand to the heart precede a small bow; the grand reveal waits until the expression can be read.",
+        "model_and_motion_needs": "Applause motion with phased timing, bow with balance, swan glide if retained, embroidered ribbon surfaces and curtain geometry."
+      },
+      "existing_film": {
+        "status": "reported delivery; not independently retrieved or watched in this catalog audit",
+        "version": "v2 fix 1",
+        "branch": "backdrop2/s08-full",
+        "native_resolution_reported": [
+          1920,
+          1080
+        ],
+        "fps_reported": 60,
+        "duration_seconds_reported": 225,
+        "stage_filename_reported": "08 Out of Heaven, Favor From God - Backdrop v2 - stage 1080p60.mp4",
+        "stage_sha256_reported": null,
+        "stage_bytes_reported": null,
+        "review_sha256_reported": null,
+        "location_reported": "Prior build/coordinator chat; stills in Drive Status; full movie URL not verified",
+        "owner_approval_inferred": false
+      },
+      "records": {
+        "drive_status": {
+          "id": "179RJhLglS3Ci4YOYfjCFeHXF5UBuc_wJ",
+          "url": "https://docs.google.com/document/d/179RJhLglS3Ci4YOYfjCFeHXF5UBuc_wJ/edit?usp=drivesdk&ouid=113038373524763352759&rtpof=true&sd=true",
+          "modified_time": "2026-11-19T03:14:46.735Z",
+          "authority": "newer v2 status observed on2026-11-21"
+        },
+        "branch_timeline": {
+          "url": "https://github.com/lovelaceaml-hub/concert-backdrops/blob/backdrop2/s08-full/project-docs/backdrops/s08-full2/TIMELINE.md",
+          "git_blob_sha": "2ddd1ed3c7362cdd9d2702266d1376b0b009729f",
+          "ref_is_mutable": true
+        },
+        "legacy_repo_status": "project-docs/status/08.md",
+        "legacy_status_is_stale": true
+      },
+      "unresolved": [
+        "Full v2 stage/review hashes were not present in the retrieved status/checklist; retrieve and fingerprint actual files.",
+        "Reference timing still needs rehearsal confirmation."
+      ]
+    },
+    {
+      "id": "s09",
+      "order": 9,
+      "title": "Let's Save the World",
+      "live_instrumentation_reported": "Piano solo; no singing live",
+      "duration": {
+        "live_target_seconds": 276,
+        "hold_seconds": 15,
+        "stage_target_seconds": 291,
+        "source_seconds_reported": 275.736,
+        "source_seconds_independently_probed": 275.712,
+        "duration_evidence": "Full source bytes hashed, ffprobe container inspected, first audio stream fully decoded to float PCM and samples counted. Reported source duration is retained separately.",
+        "timing_map_reported": "Historical v2: use reference at original speed and pad 0.264 s to 276 s, then 15 s hold.",
+        "live_rehearsal_verified": false,
+        "source_container_seconds_independently_probed": 275.736
+      },
+      "audio": {
+        "source": {
+          "provider": "google_drive",
+          "file_id": "1u4LgRODeqrMaKpdMDjkAVinLjF9QW2-l",
+          "url": "https://drive.google.com/file/d/1u4LgRODeqrMaKpdMDjkAVinLjF9QW2-l/view",
+          "title": "09 Let's Save the World (soloist, backdrop timing).mp3",
+          "mime_type": "audio/mpeg",
+          "bytes": 9031533,
+          "modified_time": "2026-11-18T09:52:59.107Z",
+          "metadata_observed_at": "2026-11-21",
+          "metadata_access": "successful connector metadata or folder listing",
+          "role": "selected concert reference, byte identity verified",
+          "sha256": "0b276d665905dfc32ef6509035246fa94f81760bf72daad299bce050ed5b7e97",
+          "sha256_scope": "independently verified exact local bytes; matches prior full or abbreviated expected digest",
+          "reported_abbreviated_sha256": null,
+          "content_status": "downloaded or copied from verified original; fully decoded with no FFmpeg errors",
+          "expected_sha256_reported": "0b276d665905dfc32ef6509035246fa94f81760bf72daad299bce050ed5b7e97",
+          "local_path": "work/song-sources/s09.mp3",
+          "probe": {
+            "container_seconds": 275.736,
+            "decoded_seconds": 275.712,
+            "decoded_sample_frames": 13234176,
+            "sample_rate": 48000,
+            "channels": 2,
+            "codec": "mp3",
+            "decode_errors": false,
+            "observed_at": "2026-11-21"
+          }
+        },
+        "youtube_reference": "https://youtu.be/O_Ym8-sy9xo",
+        "historical_guides": [
+          {
+            "file_id": "1FW9okeSAMl7lFfd8htAbUpZV_hZkQEms",
+            "url": "https://drive.google.com/file/d/1FW9okeSAMl7lFfd8htAbUpZV_hZkQEms/view",
+            "role": "older official instrumental",
+            "seconds_reported": 274,
+            "content_verified": false
+          },
+          {
+            "file_id": "1J3sY2GVDJPvKlD9KhlWS6xWY7mTtnvd4",
+            "url": "https://drive.google.com/file/d/1J3sY2GVDJPvKlD9KhlWS6xWY7mTtnvd4/view",
+            "role": "sung guide for phrase timing",
+            "seconds_reported": 186,
+            "content_verified": false
+          }
+        ],
+        "repo_promo_clip": {
+          "path": "audio/promo/s09.mp3",
+          "container_seconds_probed": 60.029388,
+          "role": "60-second historical excerpt, not full recording",
+          "decoded_zero_samples_only": null
+        }
+      },
+      "expressions": {
+        "mapping_status": "historical concert continuity",
+        "lit_at_start": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9
+        ],
+        "first_lit": [],
+        "relit": [
+          7
+        ],
+        "lit_at_end": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9
+        ]
+      },
+      "historical_world": "Teal sea dawn; boats, lamps, a cast net of light and a distant city.",
+      "enhancement_proposal": {
+        "status": "proposal; not a new creative approval",
+        "message": "Let the solo carry a purposeful journey toward shared hope.",
+        "acting_and_camera": "Boat and rower motion follows a believable rhythm; a net opens from a hand action rather than appearing as a glowing blob.",
+        "model_and_motion_needs": "Boat buoyancy and oar contacts, net-cast rig, readable net mesh, pianist hands only if the chosen framing can support them."
+      },
+      "existing_film": {
+        "status": "reported delivery; not independently retrieved or watched in this catalog audit",
+        "version": "v2 fix 1 with accepted QA exception",
+        "branch": "backdrop2/s09-full",
+        "native_resolution_reported": [
+          1920,
+          1080
+        ],
+        "fps_reported": 60,
+        "duration_seconds_reported": 291,
+        "stage_filename_reported": "09 Let's Save the World - Backdrop v2 - stage 1080p60.mp4",
+        "stage_sha256_reported": "9056bad49e853be44f9f2333842c931787422407dde158722d6222e05e8be378",
+        "stage_bytes_reported": 194685985,
+        "review_sha256_reported": "ffb26d69b640663bfd2a116ec577c5e1ec4502609e83ab3aae8275e06ff78297",
+        "location_reported": "Prior build/coordinator chat; stills in Drive Status; full movie URL not verified",
+        "owner_approval_inferred": false
+      },
+      "records": {
+        "drive_status": {
+          "id": "1B4CtKh2wMSxK-qJ4CXDbRLNSwhYrNRn_",
+          "url": "https://docs.google.com/document/d/1B4CtKh2wMSxK-qJ4CXDbRLNSwhYrNRn_/edit?usp=drivesdk&ouid=113038373524763352759&rtpof=true&sd=true",
+          "modified_time": "2026-11-19T03:14:46.784Z",
+          "authority": "newer v2 status observed on2026-11-21"
+        },
+        "branch_timeline": {
+          "url": "https://github.com/lovelaceaml-hub/concert-backdrops/blob/backdrop2/s09-full/project-docs/backdrops/s09-full2/TIMELINE.md",
+          "git_blob_sha": "ac39133bb62de2a5c81a872b4dab348b4f349db3",
+          "ref_is_mutable": true
+        },
+        "legacy_repo_status": "project-docs/status/09.md",
+        "legacy_status_is_stale": true
+      },
+      "unresolved": [
+        "Prior verify.py returned ok=false for a near-identical pair at about218.27 s; coordinator accepted that exception. Do not report an unconditional automated PASS.",
+        "Phone preview has additional encoder holds and is not the quality master.",
+        "Its warm dawn ending differs from the older agreed dark handoff into song10."
+      ]
+    },
+    {
+      "id": "s10",
+      "order": 10,
+      "title": "Our Mother Saves the World",
+      "live_instrumentation_reported": "Choir and orchestra",
+      "duration": {
+        "live_target_seconds": 211,
+        "hold_seconds": 15,
+        "stage_target_seconds": 226,
+        "source_seconds_reported": 211.605,
+        "source_seconds_independently_probed": 211.60533333333333,
+        "duration_evidence": "Full source bytes hashed, ffprobe container inspected, first audio stream fully decoded to float PCM and samples counted. Reported source duration is retained separately.",
+        "timing_map_reported": "Historical v2: uniform conform 211.605 s to 211 s with atempo 1.002869, pitch preserved.",
+        "live_rehearsal_verified": false,
+        "source_container_seconds_independently_probed": 211.605333
+      },
+      "audio": {
+        "source": {
+          "provider": "google_drive",
+          "file_id": "1NbsvsPQO_wMWEl9OzJNFH6ZQAs_qg6WG",
+          "url": "https://drive.google.com/file/d/1NbsvsPQO_wMWEl9OzJNFH6ZQAs_qg6WG/view",
+          "title": "Our Mother Saves the world.m4a",
+          "mime_type": "audio/x-m4a",
+          "bytes": 1707969,
+          "modified_time": "2026-11-15T20:06:09.363Z",
+          "metadata_observed_at": "2026-11-21",
+          "metadata_access": "successful connector metadata or folder listing",
+          "role": "selected concert reference, byte identity verified",
+          "sha256": "9c0ad27bfc0cabe1e1881098539649fc0d24ffc81acce3d4d4a13e061f1f991b",
+          "sha256_scope": "independently verified exact local bytes; matches prior full or abbreviated expected digest",
+          "reported_abbreviated_sha256": null,
+          "content_status": "downloaded or copied from verified original; fully decoded with no FFmpeg errors",
+          "expected_sha256_reported": "9c0ad27bfc0cabe1e1881098539649fc0d24ffc81acce3d4d4a13e061f1f991b",
+          "local_path": "work/song-sources/s10.m4a",
+          "probe": {
+            "container_seconds": 211.605333,
+            "decoded_seconds": 211.60533333333333,
+            "decoded_sample_frames": 10157056,
+            "sample_rate": 48000,
+            "channels": 1,
+            "codec": "aac",
+            "decode_errors": false,
+            "observed_at": "2026-11-21"
+          }
+        },
+        "youtube_reference": null,
+        "historical_guides": [],
+        "repo_promo_clip": {
+          "path": "audio/promo/s10.mp3",
+          "container_seconds_probed": 60.029388,
+          "role": "silent historical placeholder",
+          "decoded_zero_samples_only": true
+        }
+      },
+      "expressions": {
+        "mapping_status": "historical illustrative mapping, not song-meaning verified",
+        "lit_at_start": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9
+        ],
+        "first_lit": [],
+        "relit": [
+          1,
+          8,
+          4,
+          7,
+          2
+        ],
+        "lit_at_end": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9
+        ]
+      },
+      "historical_world": "Midnight blue and deep gold; a great lamp carries care across the Earth.",
+      "enhancement_proposal": {
+        "status": "proposal; not a new creative approval",
+        "message": "Show care spreading outward from concrete acts to communities.",
+        "acting_and_camera": "Begin with a greeting or helping gesture, then follow light between homes and continents. Expression placement stays illustrative until the song meaning is verified.",
+        "model_and_motion_needs": "Lamp and robe handling, rescue/help interaction, city-window and Earth connection modules."
+      },
+      "existing_film": {
+        "status": "reported delivery; not independently retrieved or watched in this catalog audit",
+        "version": "v2 before incomplete fix 1",
+        "branch": "backdrop2/s10-full",
+        "native_resolution_reported": [
+          1920,
+          1080
+        ],
+        "fps_reported": 60,
+        "duration_seconds_reported": 226,
+        "stage_filename_reported": "10 Our Mother Saves the World - Backdrop v2 - stage 1080p60.mp4",
+        "stage_sha256_reported": "5b9e5c47bf10fb6ddfc58f052185371590450909b6739d2f1b3aefd05114cd8d",
+        "stage_bytes_reported": null,
+        "review_sha256_reported": "cf5bdf8d35a76d65f3ab3b3595f7eff2ea5cbb58e28b0f4ba89d7b7f782a02d1",
+        "location_reported": "Prior build/coordinator chat; stills in Drive Status; full movie URL not verified",
+        "owner_approval_inferred": false
+      },
+      "records": {
+        "drive_status": {
+          "id": "14MUE14Ws2HjXv9IY5q2kAjSqm3x9d8vQ",
+          "url": "https://docs.google.com/document/d/14MUE14Ws2HjXv9IY5q2kAjSqm3x9d8vQ/edit?usp=drivesdk&ouid=113038373524763352759&rtpof=true&sd=true",
+          "modified_time": "2026-11-19T03:14:46.838Z",
+          "authority": "newer v2 status observed on2026-11-21"
+        },
+        "branch_timeline": {
+          "url": "https://github.com/lovelaceaml-hub/concert-backdrops/blob/backdrop2/s10-full/project-docs/backdrops/s10-full2/TIMELINE.md",
+          "git_blob_sha": "2cab2fceada61e7724d9df53d72f7c5cb067335c",
+          "ref_is_mutable": true
+        },
+        "legacy_repo_status": "project-docs/status/10.md",
+        "legacy_status_is_stale": true
+      },
+      "unresolved": [
+        "Full recording exists; the local s10 promo is a silent historical placeholder.",
+        "Five expression placements are explicitly illustrative until the meaning and lyric cues are verified; no lyric fragments should be inferred.",
+        "Fix1 stopped after13 of53 ranges; delivered originalv2 remains the baseline."
+      ]
+    },
+    {
+      "id": "s11",
+      "order": 11,
+      "title": "Almighty God Who Knows the Future",
+      "live_instrumentation_reported": "Choir and orchestra",
+      "duration": {
+        "live_target_seconds": 260,
+        "hold_seconds": 15,
+        "stage_target_seconds": 275,
+        "source_seconds_reported": 268.224,
+        "source_seconds_independently_probed": 268.1813333333333,
+        "duration_evidence": "Full source bytes hashed, ffprobe container inspected, first audio stream fully decoded to float PCM and samples counted. Reported source duration is retained separately.",
+        "timing_map_reported": "Authoritative S11 music-video preparation: preserve original clock 0..260 s, fade the final 0.05 s and append 15 s silence. This supersedes the paused early S11 v2 conform. The approved 30 s study uses score 97.8..127.8 s without retiming.",
+        "live_rehearsal_verified": false,
+        "source_container_seconds_independently_probed": 268.224
+      },
+      "audio": {
+        "source": {
+          "provider": "google_drive",
+          "file_id": "108zDtdB4X189DOwsZn-K9p548nERubLG",
+          "url": "https://drive.google.com/file/d/108zDtdB4X189DOwsZn-K9p548nERubLG/view",
+          "title": "11 Almighty God Who Knows the Future (choir, backdrop timing).mp3",
+          "mime_type": "audio/mpeg",
+          "bytes": 9073677,
+          "modified_time": "2026-11-18T09:52:59.115Z",
+          "metadata_observed_at": "2026-11-21",
+          "metadata_access": "successful connector metadata or folder listing",
+          "role": "selected concert reference, byte identity verified",
+          "sha256": "70464dff370f7187d12029970c1fa1ef3e91c6957180aa685b64cead830f7004",
+          "sha256_scope": "independently verified exact local bytes; matches prior full or abbreviated expected digest",
+          "reported_abbreviated_sha256": null,
+          "content_status": "downloaded or copied from verified original; fully decoded with no FFmpeg errors",
+          "expected_sha256_reported": "70464dff370f7187d12029970c1fa1ef3e91c6957180aa685b64cead830f7004",
+          "local_path": "work/song-sources/s11.mp3",
+          "probe": {
+            "container_seconds": 268.224,
+            "decoded_seconds": 268.1813333333333,
+            "decoded_sample_frames": 12872704,
+            "sample_rate": 48000,
+            "channels": 2,
+            "codec": "mp3",
+            "decode_errors": false,
+            "observed_at": "2026-11-21"
+          }
+        },
+        "youtube_reference": "https://youtu.be/tdiD_qDWuWI",
+        "historical_guides": [
+          {
+            "file_id": "1tESu4rGGlTJwVpiMXiEA2UC0wA6r2Rf7",
+            "url": "https://drive.google.com/file/d/1tESu4rGGlTJwVpiMXiEA2UC0wA6r2Rf7/view",
+            "role": "older studio guide",
+            "seconds_reported": 263,
+            "content_verified": false
+          }
+        ],
+        "repo_promo_clip": {
+          "path": "audio/promo/s11.mp3",
+          "container_seconds_probed": 60.029388,
+          "role": "60-second historical excerpt, not full recording",
+          "decoded_zero_samples_only": null
+        },
+        "local_verification": {
+          "source_path_observed": "/workspace/scratch/b9b2dfde708d/concert-system/work/song-sources/s11.mp3",
+          "source_probe": {
+            "codec": "mp3",
+            "sample_rate": 48000,
+            "channels": 2,
+            "bytes": 9073677,
+            "container_duration_seconds": 268.224,
+            "decoded_seconds": 268.1813333333333
+          },
+          "prepared_score_path_observed": "/workspace/scratch/b9b2dfde708d/cinematic-beauty/work/s11_full2/score.wav",
+          "prepared_score": {
+            "sha256": "fa488e4805cdc43b1f0f38915d67044ef92a9e659a59ac916d4b75b4cbb6d29b",
+            "codec": "pcm_s24le",
+            "sample_rate": 48000,
+            "channels": 2,
+            "duration_seconds": 275,
+            "bytes": 79200102
+          },
+          "path_scope": "Observed scratch paths, not portable inputs; reacquire or prepare into the active worktree before running."
+        }
+      },
+      "expressions": {
+        "mapping_status": "historical concert continuity, subject to current S11 authored cut",
+        "lit_at_start": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9
+        ],
+        "first_lit": [],
+        "relit": [
+          2,
+          7
+        ],
+        "lit_at_end": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9
+        ]
+      },
+      "historical_world": "Current S11: emerald Earth, Zion terraces and 226 churches, rivers of people, blue sparkling choir and orchestra, gold instruments, conductor and coloured light.",
+      "enhancement_proposal": {
+        "status": "proposal; not a new creative approval",
+        "message": "Preserve the approved study's richness while improving readability and human motion.",
+        "acting_and_camera": "Keep conductor, choir and orchestra as a coordinated performance; let gestures lead ribbons, crowds and light on authored musical accents.",
+        "model_and_motion_needs": "Reusable conductor rig and baton, choir books and breathing, role-specific instruments, near-field church detail, varied marching and raised-arm waves."
+      },
+      "existing_film": {
+        "status": "reported delivery; not independently retrieved or watched in this catalog audit",
+        "version": "completed 540p30 music-video draft; newer approved 1080p60 study is 30 s only",
+        "branch": "backdrop2/s11-full",
+        "native_resolution_reported": [
+          960,
+          540
+        ],
+        "fps_reported": 30,
+        "duration_seconds_reported": 275,
+        "stage_filename_reported": null,
+        "stage_sha256_reported": null,
+        "stage_bytes_reported": null,
+        "review_sha256_reported": null,
+        "location_reported": "Prior coordinating chat; sections on owner-only Claude artifact",
+        "owner_approval_inferred": false,
+        "section_assets_reported": [
+          {
+            "section": "intro",
+            "source_seconds": [
+              0,
+              40
+            ],
+            "asset_id": "00b8ff753ed6bf78a1dee20c43873e76",
+            "render_commit_abbrev": "17db6e6"
+          },
+          {
+            "section": "verse1",
+            "source_seconds": [
+              40,
+              82.08
+            ],
+            "asset_id": "4f4e7bb2dd51658e6f3f11948d0b5f65",
+            "render_commit_abbrev": "17db6e6"
+          },
+          {
+            "section": "chorus1",
+            "source_seconds": [
+              82.08,
+              121.32
+            ],
+            "asset_id": "a394c7739932676815ced512e3e0cbe5",
+            "render_commit_abbrev": "17db6e6"
+          },
+          {
+            "section": "verse2",
+            "source_seconds": [
+              121.32,
+              160
+            ],
+            "asset_id": "ad9713d435bb18d64a0debb6c8a7a3e3",
+            "render_commit_abbrev": "17db6e6"
+          },
+          {
+            "section": "chorus2",
+            "source_seconds": [
+              160,
+              201.73
+            ],
+            "asset_id": "f556b4f004a43260aa623b126673d94f",
+            "render_commit_abbrev": "294b29a"
+          },
+          {
+            "section": "coda",
+            "source_seconds": [
+              201.73,
+              238.8
+            ],
+            "asset_id": "b5f1167b732465751d6190430872ded5",
+            "render_commit_abbrev": "17db6e6"
+          },
+          {
+            "section": "ending",
+            "source_seconds": [
+              238.8,
+              275
+            ],
+            "asset_id": "a7ff23d32a03a2279c31dd6bdacb5664",
+            "render_commit_abbrev": "17db6e6"
+          }
+        ]
+      },
+      "records": {
+        "drive_status": {
+          "id": "1-kwEkhwrc8hfKAc8qKHjtvpF7pIP8UJh",
+          "url": "https://docs.google.com/document/d/1-kwEkhwrc8hfKAc8qKHjtvpF7pIP8UJh/edit?usp=drivesdk&ouid=113038373524763352759&rtpof=true&sd=true",
+          "modified_time": "2026-11-19T03:14:46.906Z",
+          "authority": "superseded paused build; see later repo account"
+        },
+        "branch_timeline": null,
+        "legacy_repo_status": "project-docs/status/11.md",
+        "legacy_status_is_stale": true,
+        "authoritative_account": {
+          "url": "https://github.com/lovelaceaml-hub/concert-backdrops/blob/34f835206dcb26cfa0bd7e321171d3d224e3aa7d/project-docs/backdrops/s11-full2/HOW-IT-WAS-MADE.md",
+          "commit": "34f835206dcb26cfa0bd7e321171d3d224e3aa7d"
+        }
+      },
+      "unresolved": [
+        "Drive Status/11 describes a paused early build and is superseded by the later S11 source/account.",
+        "The completed full540p draft comprises sections from different commits; two later fixes were code-only.",
+        "The full1080p60 master remains distinct from the approved30s study.",
+        "Remaining recorded full-film issues: cut74.56s about0.14s early and terrace lines crossing words near165.8s."
+      ],
+      "approved_study": {
+        "status": "approved by owner in current session",
+        "seconds": 30,
+        "width": 1920,
+        "height": 1080,
+        "fps": 60,
+        "frames": 1800,
+        "source_start_seconds": 97.8,
+        "sha256": "6e4533c4527dfb81c750f8ba907e86392f0c87dca638c3daac768ece8edae82a",
+        "bytes": 110865643,
+        "picture_commit": "a7d68836c4fdc7156bbc9b839380cd65180ca2bb",
+        "library_file_id": "libfile_b037de14edb881918c760cdf71700c55",
+        "verification": "tools/promo_beauty_example/VERIFICATION.md",
+        "scope": "30-second quality and animation study; not approval of every full-song film"
+      }
+    }
+  ],
+  "audio_acquisition": {
+    "observed_at": "2026-11-21",
+    "directory": "work/song-sources",
+    "git_ignored": true,
+    "method": "Authenticated Google Drive fetch with fresh provider-signed download URL for01..10; exact locally verified original copied for11. No audio modified or transcoded on disk. Full-source decode was read-only.",
+    "probe_receipt": "work/song-sources/probe-results.json",
+    "duration_note": "Container duration includes codec/container timing that may differ from decoded samples by tens of milliseconds. Use decoded audio and explicit clock anchors; never infer beat alignment from rounded total duration."
+  },
+  "approved_visual_references": [
+    {
+      "name": "Film10 Nine Colours Revision3",
+      "scope": "Approved66-second promo; the durable creative reference",
+      "source_commit": "46df53b98a43f58e51a78d40ee5794108a68e13c",
+      "source_tag": "film10-revision3-approved-2026-11-16",
+      "seconds": 66,
+      "fps": 60,
+      "frames": 3960,
+      "master": {
+        "drive_file_id": "1gcxnb4Oyexq5Kbb8LvFWqOrikF-BVSht",
+        "url": "https://drive.google.com/file/d/1gcxnb4Oyexq5Kbb8LvFWqOrikF-BVSht/view",
+        "width": 1920,
+        "height": 1080,
+        "bytes": 94541396,
+        "sha256_reported": "508c5518bced94b21f96e8727d2b7ffd0da0ee69de9da164e7e5e824e80eda7b",
+        "verification": "Drive metadata and approval record verified; master not re-downloaded in this audit"
+      },
+      "phone": {
+        "drive_file_id": "1CBQ4OtpLW3Kp3zBWsEMkjXYiAWUwhDQw",
+        "url": "https://drive.google.com/file/d/1CBQ4OtpLW3Kp3zBWsEMkjXYiAWUwhDQw/view",
+        "width": 1280,
+        "height": 720,
+        "bytes": 22278585,
+        "sha256": "ad4b4e7fe861ae34eb80e8b921ee747efc477c08bb89ec981f1b588a0b3c0af5",
+        "verification": "Existing local comparison copy independently hashed and probed; matches approved record exactly",
+        "path_observed": "/workspace/scratch/b9b2dfde708d/cinematic-motion/work/promo-design-example/reference/approved-promo-720p60.mp4"
+      },
+      "interpretation": "The66-second duration includes an intentional6-second lead-in; this is not the earlier60-second edit."
+    }
+  ],
+  "current_shared_style": {
+    "source": "https://drive.google.com/file/d/1Q6ilWF8TtZRaltZZNzhtUXCsLOISHLS8/view",
+    "source_date": "2026-11-19",
+    "scope": "Applies to all songs unless their own newer design or owner decision says otherwise; the latest approved study also governs its scoped work.",
+    "ordinary_people": "Warm gold, whole, clothed and naturally moving; no realistic faces.",
+    "choir_and_orchestra": "Blue sparkling performers with gold instruments and open gold song books; do not apply blue to every ordinary person.",
+    "vocabulary": [
+      "music-led camera flights and meaningful downbeat cuts",
+      "nine coloured comets",
+      "ribbon dancers and raised-arm waves",
+      "deliberately composed light-cloud banks",
+      "exact supplied church emblem"
+    ],
+    "corner": "Bottom-left logo; song and campaign titles recur briefly; event details belong to the end card.",
+    "quality": "Use the approved native1080p60 study and approved66-second promo as comparison references. More light is not automatically better."
+  }
+}

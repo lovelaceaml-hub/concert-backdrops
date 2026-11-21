@@ -22,6 +22,8 @@ def main():
     parser.add_argument("--skip-blender", action="store_true", help="Use an already installed Blender instead of downloading the pinned runtime.")
     parser.add_argument("--skip-integrations", action="store_true")
     parser.add_argument("--skip-browser-install", action="store_true")
+    parser.add_argument("--p3d-only", action="store_true", help="Set up locked Python and fonts for cloud CPU p3d without Blender, browser, app builds or optional integrations.")
+    parser.add_argument("--reference-fonts", action="store_true", help="Reconstruct the exact historical TTF bytes required by the registered concert studies.")
     args = parser.parse_args()
     if not (3, 11) <= sys.version_info[:2] < (3, 14):
         raise SystemExit("Use Python 3.11, 3.12, or 3.13")
@@ -30,16 +32,22 @@ def main():
         raise SystemExit("Install these host tools first: " + ", ".join(missing) + ". See docs/VIDEO-PIPELINE.md or use the supplied CPU container recipe.")
     run("uv", "sync", "--frozen", "--extra", "legacy")
     run("npm", "ci", "--no-audit", "--no-fund")
-    if not args.skip_blender and platform.system() == "Linux":
+    if not args.p3d_only and not args.skip_blender and platform.system() == "Linux":
         run(sys.executable, "scripts/install-blender.py")
-    if not args.skip_browser_install and not os.environ.get("CHROMIUM_PATH"):
+    if not args.p3d_only and not args.skip_browser_install and not os.environ.get("CHROMIUM_PATH"):
         run("npx", "--no-install", "playwright", "install", "chromium", "--only-shell")
-    run("uv", "run", "--frozen", "--extra", "legacy", "python", "tools/setup_fonts.py", "node_modules/@fontsource", "fonts")
-    if not args.skip_integrations:
+    font_command = ["uv", "run", "--frozen", "--extra", "legacy", "python", "tools/setup_fonts.py", "node_modules/@fontsource", "fonts"]
+    if args.reference_fonts:
+        font_command.append("--reference-fonts")
+    run(*font_command)
+    if not args.p3d_only and not args.skip_integrations:
         run(sys.executable, "scripts/install-integrations.py")
-    run("npm", "run", "typecheck")
-    run("npm", "run", "build")
-    run("uv", "run", "--frozen", "--extra", "legacy", "video", "doctor")
+    if args.p3d_only:
+        run("uv", "run", "--frozen", "--extra", "legacy", "video", "doctor", "--backend", "p3d")
+    else:
+        run("npm", "run", "typecheck")
+        run("npm", "run", "build")
+        run("uv", "run", "--frozen", "--extra", "legacy", "video", "doctor")
     print("Dependency setup complete. Run the documented runtime checks before rendering a full film.")
     print("No render jobs, GPU services, publishing, or Mac rendering were started.")
 

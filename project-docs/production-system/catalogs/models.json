@@ -1,0 +1,743 @@
+{
+  "schema_version": 1,
+  "updated_local_date": "2026-11-20",
+  "status_policy": "source_available, implemented_study_in_review and owner_approved are distinct. Approval belongs to a versioned output, not an entire family.",
+  "source_revision_policy": "Current checkout source is hashed in each render. Approved reference source pins are in references.json.",
+  "generated_raster_exclusions": [
+    "assets/figures",
+    "assets/plates",
+    "assets/song_figures"
+  ],
+  "models": [
+    {
+      "id": "people.body",
+      "family": "people",
+      "source_paths": [
+        "engine/p3d/body.py",
+        "engine/p3d/actor.py",
+        "assets/p3d/body_v1.npz",
+        "assets/p3d/README.md"
+      ],
+      "entry_point": "p3d.body.Body / p3d.actor.Actor",
+      "provenance": "licensed_base_geometry_and_motion",
+      "code_only_eligible": true,
+      "reuse_scope": "native_world_space",
+      "status": "source_available",
+      "coordinates": {
+        "units": "metres",
+        "up_axis": "+Y"
+      },
+      "known_limits": [
+        "Hero pose evaluation and cheaper crowd caches are different tiers.",
+        "Do not override body asset or mix cached bodies from another hash."
+      ],
+      "variants": [
+        "man",
+        "woman",
+        "child"
+      ],
+      "anchors": [
+        "feet",
+        "hands",
+        "head",
+        "chest"
+      ],
+      "license_record": "assets/p3d/README.md"
+    },
+    {
+      "id": "people.expression-performances",
+      "family": "acting",
+      "source_paths": [
+        "engine/p3d/acting.py",
+        "engine/p3d/pairs.py"
+      ],
+      "entry_point": "p3d.acting.perform / p3d.acting.add",
+      "provenance": "procedural_performance_with_licensed_base_motion",
+      "code_only_eligible": true,
+      "reuse_scope": "native_world_space",
+      "status": "source_available",
+      "coordinates": {
+        "units": "metres",
+        "up_axis": "+Y"
+      },
+      "known_limits": [
+        "26 authored variants exist in source; do not label every variant visually approved.",
+        "Explicitly choose casting and inspect contact at the selected camera."
+      ],
+      "expressions": [
+        "Greeting",
+        "Gratitude",
+        "Apology",
+        "Inclusiveness",
+        "Concession",
+        "Respect",
+        "Encouragement",
+        "Consideration",
+        "Compliment"
+      ]
+    },
+    {
+      "id": "people.paired-help",
+      "family": "acting",
+      "source_paths": [
+        "engine/p3d/pairs.py",
+        "assets/p3d/README.md"
+      ],
+      "entry_point": "p3d.pairs.pull_up",
+      "provenance": "licensed_base_geometry_and_motion",
+      "code_only_eligible": true,
+      "reuse_scope": "native_world_space",
+      "status": "source_available",
+      "coordinates": {
+        "units": "metres",
+        "up_axis": "+Y"
+      },
+      "known_limits": [
+        "6.5-second paired CMU capture; retargeted grip and final settling need scene-specific review."
+      ]
+    },
+    {
+      "id": "ensemble.choir",
+      "family": "ensemble",
+      "source_paths": [
+        "tools/s11_full2/s11_stage.py"
+      ],
+      "entry_point": "Choir / SongBooks / ChoirHearts",
+      "provenance": "procedural_geometry",
+      "code_only_eligible": true,
+      "reuse_scope": "scene_bound",
+      "status": "source_available",
+      "coordinates": {
+        "units": "metres",
+        "up_axis": "+Y"
+      },
+      "known_limits": [
+        "Song11-bound integration; blue ensemble with gold books.",
+        "Book contact is a priority for final-pose attachment improvement."
+      ]
+    },
+    {
+      "id": "ensemble.orchestra",
+      "family": "ensemble",
+      "source_paths": [
+        "tools/s11_full2/s11_stage.py"
+      ],
+      "entry_point": "Players / Instruments / Bowing",
+      "provenance": "procedural_geometry",
+      "code_only_eligible": true,
+      "reuse_scope": "scene_bound",
+      "status": "source_available",
+      "coordinates": {
+        "units": "metres",
+        "up_axis": "+Y"
+      },
+      "known_limits": [
+        "Song11-bound integration; model detail and contact vary across instruments.",
+        "Instrument presence does not prove a complete realistic playing performance."
+      ],
+      "variants": [
+        "violin",
+        "viola",
+        "cello",
+        "harp",
+        "trumpet",
+        "trombone",
+        "timpani"
+      ]
+    },
+    {
+      "id": "ensemble.conductor",
+      "family": "ensemble",
+      "source_paths": [
+        "tools/s11_full2/s11_stage.py",
+        "tools/s11_full2/s11_dance.py"
+      ],
+      "entry_point": "Conductor / Baton / hero dance bodies",
+      "provenance": "procedural_geometry",
+      "code_only_eligible": true,
+      "reuse_scope": "scene_bound",
+      "status": "source_available",
+      "coordinates": {
+        "units": "metres",
+        "up_axis": "+Y"
+      },
+      "known_limits": [
+        "The approved excerpt uses its pinned original choreography.",
+        "Baton and trails should be moved to final solved hand anchors in an isolated improvement."
+      ]
+    },
+    {
+      "id": "architecture.church-of-light",
+      "family": "architecture",
+      "source_paths": [
+        "tools/s11_full2/s11_church.py"
+      ],
+      "entry_point": "Church / EmblemSings",
+      "provenance": "procedural_geometry",
+      "code_only_eligible": true,
+      "reuse_scope": "scene_bound",
+      "status": "source_available",
+      "coordinates": {
+        "units": "metres",
+        "up_axis": "+Y"
+      },
+      "known_limits": [
+        "Preserve the exact supplied emblem and approved proportions.",
+        "Song11 timing and dependencies must be wrapped before reuse elsewhere."
+      ]
+    },
+    {
+      "id": "architecture.church-catalog",
+      "family": "architecture",
+      "source_paths": [
+        "tools/s11_full2/models/wmscog_churches.py",
+        "tools/s11_full2/s11_churches.py"
+      ],
+      "entry_point": "BUILDINGS / _model",
+      "provenance": "hand_modelled_reference_geometry",
+      "code_only_eligible": true,
+      "reuse_scope": "scene_bound",
+      "status": "source_available",
+      "coordinates": {
+        "units": "metres",
+        "up_axis": "+Y"
+      },
+      "known_limits": [
+        "226 simplified reference-based church models; foreground detail is uneven.",
+        "Public dedication photos informed geometry; photos are not imported into the scene."
+      ],
+      "catalog_count": 226
+    },
+    {
+      "id": "architecture.zion",
+      "family": "architecture",
+      "source_paths": [
+        "tools/s11_full2/s11_zion.py"
+      ],
+      "entry_point": "_building / _pavilion / _gate / PlotGardens",
+      "provenance": "procedural_geometry",
+      "code_only_eligible": true,
+      "reuse_scope": "scene_bound",
+      "status": "source_available",
+      "coordinates": {
+        "units": "metres",
+        "up_axis": "+Y"
+      },
+      "known_limits": [
+        "Metre-based terraces, gardens, gates and buildings are currently part of the Song11 world.",
+        "Extract into versioned wrappers without editing the approved frozen source."
+      ]
+    },
+    {
+      "id": "light.river",
+      "family": "light",
+      "source_paths": [
+        "engine/p3d/master_fx.py"
+      ],
+      "entry_point": "p3d.master_fx.LightRiver",
+      "provenance": "procedural_geometry",
+      "code_only_eligible": true,
+      "reuse_scope": "native_world_space",
+      "status": "source_available",
+      "coordinates": {
+        "units": "metres",
+        "up_axis": "+Y"
+      },
+      "known_limits": [
+        "Use world-space paths with an authored arrival and destination."
+      ]
+    },
+    {
+      "id": "light.ripples",
+      "family": "light",
+      "source_paths": [
+        "engine/p3d/master_fx.py"
+      ],
+      "entry_point": "p3d.master_fx.Drop / Splash / RingWave",
+      "provenance": "procedural_geometry",
+      "code_only_eligible": true,
+      "reuse_scope": "native_world_space",
+      "status": "source_available",
+      "coordinates": {
+        "units": "metres",
+        "up_axis": "+Y"
+      },
+      "known_limits": [
+        "Contact-driven placement must come from solved feet or objects."
+      ]
+    },
+    {
+      "id": "light.lantern-rise",
+      "family": "light",
+      "source_paths": [
+        "engine/p3d/master_fx.py"
+      ],
+      "entry_point": "p3d.master_fx.RisingLights",
+      "provenance": "procedural_geometry",
+      "code_only_eligible": true,
+      "reuse_scope": "native_world_space",
+      "status": "source_available",
+      "coordinates": {
+        "units": "metres",
+        "up_axis": "+Y"
+      },
+      "known_limits": [
+        "A rising particle effect is different from a held physical lantern model."
+      ]
+    },
+    {
+      "id": "light.petals",
+      "family": "light",
+      "source_paths": [
+        "engine/p3d/master_fx.py"
+      ],
+      "entry_point": "p3d.master_fx.PetalStream",
+      "provenance": "procedural_geometry",
+      "code_only_eligible": true,
+      "reuse_scope": "native_world_space",
+      "status": "source_available",
+      "coordinates": {
+        "units": "metres",
+        "up_axis": "+Y"
+      },
+      "known_limits": [
+        "Keep close petals legible and separate from body silhouettes."
+      ]
+    },
+    {
+      "id": "nature.tree-of-light",
+      "family": "nature",
+      "source_paths": [
+        "engine/p3d/master_fx.py"
+      ],
+      "entry_point": "p3d.master_fx.TreeOfLight",
+      "provenance": "procedural_geometry",
+      "code_only_eligible": true,
+      "reuse_scope": "native_world_space",
+      "status": "source_available",
+      "coordinates": {
+        "units": "metres",
+        "up_axis": "+Y"
+      },
+      "known_limits": [
+        "Existing branch geometry is static; timed blossom and petal states are animated."
+      ]
+    },
+    {
+      "id": "light.gather",
+      "family": "light",
+      "source_paths": [
+        "engine/p3d/master_fx.py"
+      ],
+      "entry_point": "p3d.master_fx.Gather / Door / LightColumns",
+      "provenance": "procedural_geometry",
+      "code_only_eligible": true,
+      "reuse_scope": "native_world_space",
+      "status": "source_available",
+      "coordinates": {
+        "units": "metres",
+        "up_axis": "+Y"
+      },
+      "known_limits": [
+        "Use one dominant arrival and an explicit resolved state."
+      ]
+    },
+    {
+      "id": "campaign.words",
+      "family": "identity",
+      "source_paths": [
+        "engine/p3d/words.py"
+      ],
+      "entry_point": "EXPRESSIONS / Word",
+      "provenance": "code_typeset_campaign_text",
+      "code_only_eligible": true,
+      "reuse_scope": "native_world_space",
+      "status": "source_available",
+      "coordinates": {
+        "units": "metres",
+        "up_axis": "+Y"
+      },
+      "known_limits": [
+        "Use the exact source wording, paint and lighter glow values; do not retype."
+      ]
+    },
+    {
+      "id": "campaign.brand",
+      "family": "identity",
+      "source_paths": [
+        "engine/p3d/brand.py",
+        "assets/p3d/brand/README.md"
+      ],
+      "entry_point": "p3d.brand",
+      "provenance": "approved_supplied_brand",
+      "code_only_eligible": true,
+      "reuse_scope": "native_world_space",
+      "status": "source_available",
+      "coordinates": {
+        "units": "metres",
+        "up_axis": "+Y"
+      },
+      "known_limits": [
+        "Preserve approved artwork and symbol shapes.",
+        "This permitted supplied emblem/identity asset is distinct from generated scene imagery."
+      ]
+    },
+    {
+      "id": "kit.seat",
+      "family": "environment",
+      "source_paths": [
+        "tools/concert_kit/models.py"
+      ],
+      "entry_point": "tools.concert_kit.models.Seat",
+      "provenance": "procedural_geometry",
+      "code_only_eligible": true,
+      "reuse_scope": "native_world_space",
+      "status": "implemented_study_in_review",
+      "coordinates": {
+        "units": "metres",
+        "up_axis": "+Y"
+      },
+      "known_limits": [
+        "Place the support from the actual seated pelvis and foot positions; source-ready model is not a contact approval."
+      ],
+      "variants_documentation": "tools/concert_kit/README.md"
+    },
+    {
+      "id": "kit.path",
+      "family": "environment",
+      "source_paths": [
+        "tools/concert_kit/models.py"
+      ],
+      "entry_point": "tools.concert_kit.models.Path",
+      "provenance": "procedural_geometry",
+      "code_only_eligible": true,
+      "reuse_scope": "native_world_space",
+      "status": "implemented_study_in_review",
+      "coordinates": {
+        "units": "metres",
+        "up_axis": "+Y"
+      },
+      "known_limits": [
+        "Bridge/path variants provide visual geometry; callers must keep character contacts on the intended surface."
+      ],
+      "variants_documentation": "tools/concert_kit/README.md"
+    },
+    {
+      "id": "kit.reeds",
+      "family": "environment",
+      "source_paths": [
+        "tools/concert_kit/models.py"
+      ],
+      "entry_point": "tools.concert_kit.models.Reeds",
+      "provenance": "procedural_geometry",
+      "code_only_eligible": true,
+      "reuse_scope": "native_world_space",
+      "status": "implemented_study_in_review",
+      "coordinates": {
+        "units": "metres",
+        "up_axis": "+Y"
+      },
+      "known_limits": [
+        "Clear foreground human silhouettes and use seeded offsets."
+      ],
+      "variants_documentation": "tools/concert_kit/README.md"
+    },
+    {
+      "id": "kit.flowers",
+      "family": "environment",
+      "source_paths": [
+        "tools/concert_kit/models.py"
+      ],
+      "entry_point": "tools.concert_kit.models.Flowers",
+      "provenance": "procedural_geometry",
+      "code_only_eligible": true,
+      "reuse_scope": "native_world_space",
+      "status": "implemented_study_in_review",
+      "coordinates": {
+        "units": "metres",
+        "up_axis": "+Y"
+      },
+      "known_limits": [
+        "Animated opening follows absolute time; preserve readable delay from the human action."
+      ],
+      "variants_documentation": "tools/concert_kit/README.md"
+    },
+    {
+      "id": "kit.willow",
+      "family": "environment",
+      "source_paths": [
+        "tools/concert_kit/models.py"
+      ],
+      "entry_point": "tools.concert_kit.models.Willow",
+      "provenance": "procedural_geometry",
+      "code_only_eligible": true,
+      "reuse_scope": "native_world_space",
+      "status": "implemented_study_in_review",
+      "coordinates": {
+        "units": "metres",
+        "up_axis": "+Y"
+      },
+      "known_limits": [
+        "Native branches and hanging leaves have deterministic wind; detail level must suit camera distance."
+      ],
+      "variants_documentation": "tools/concert_kit/README.md"
+    },
+    {
+      "id": "kit.lantern",
+      "family": "environment",
+      "source_paths": [
+        "tools/concert_kit/models.py"
+      ],
+      "entry_point": "tools.concert_kit.models.Lantern",
+      "provenance": "procedural_geometry",
+      "code_only_eligible": true,
+      "reuse_scope": "native_world_space",
+      "status": "implemented_study_in_review",
+      "coordinates": {
+        "units": "metres",
+        "up_axis": "+Y"
+      },
+      "known_limits": [
+        "Geometric lantern variants; holding/releasing needs a final-pose attachment in the scene."
+      ],
+      "variants_documentation": "tools/concert_kit/README.md"
+    },
+    {
+      "id": "kit.consideration",
+      "family": "acting",
+      "source_paths": [
+        "tools/concert_kit/people.py",
+        "tools/concert_kit/consideration.py",
+        "tools/concert_kit/render.py"
+      ],
+      "entry_point": "tools.concert_kit.consideration",
+      "provenance": "procedural_scene_with_licensed_base_motion",
+      "code_only_eligible": true,
+      "reuse_scope": "native_world_space",
+      "status": "historical_baseline_technically_verified_creative_defects_recorded",
+      "coordinates": {
+        "units": "metres",
+        "up_axis": "+Y"
+      },
+      "known_limits": [
+        "Original eighteen-second study, preserved at finishing checkpoint 673f68785c36b57d55d05129ee5549efe6352c60. Not owner-approved.",
+        "Captured paired action uses an independent grip reference and an authored final settle.",
+        "Camera merges figures in projection at original time 7.2 to 8.1 seconds. The original left arm return also jumps 0.3436 metres between two 60 fps samples near 11.52 seconds.",
+        "Use the separate kit.consideration-v2 performance for the camera and complete-pose response correction; preserve this baseline as evidence."
+      ]
+    },
+    {
+      "id": "legacy.generated-figures",
+      "family": "historical_raster",
+      "source_paths": [
+        "assets/figures/README.md"
+      ],
+      "entry_point": null,
+      "provenance": "generated_raster",
+      "code_only_eligible": false,
+      "reuse_scope": "historical_archive_only",
+      "status": "excluded",
+      "coordinates": {
+        "units": "metres",
+        "up_axis": "+Y"
+      },
+      "known_limits": [
+        "Retained for provenance. Excluded from the current code-only workflow."
+      ]
+    },
+    {
+      "id": "legacy.generated-song-assets",
+      "family": "historical_raster",
+      "source_paths": [
+        "assets/README-song-assets.md"
+      ],
+      "entry_point": null,
+      "provenance": "generated_raster",
+      "code_only_eligible": false,
+      "reuse_scope": "historical_archive_only",
+      "status": "excluded",
+      "coordinates": {
+        "units": "metres",
+        "up_axis": "+Y"
+      },
+      "known_limits": [
+        "Retained for provenance. Excluded from the current code-only workflow."
+      ]
+    },
+    {
+      "id": "concert-addons.dove-articulated-v1",
+      "family": "birds",
+      "source_paths": [
+        "tools/concert_addons/models.py",
+        "tools/concert_addons/geometry.py",
+        "tools/concert_addons/catalog.json",
+        "tools/concert_addons/README.md",
+        "tools/concert_addons/VERIFICATION.md"
+      ],
+      "entry_point": "tools.concert_addons.Dove",
+      "provenance": "procedural_geometry_and_authored_motion",
+      "code_only_eligible": true,
+      "reuse_scope": "native_world_space",
+      "status": "implemented_prototype_in_review",
+      "coordinates": {
+        "units": "metres",
+        "up_axis": "+Y"
+      },
+      "variants": [
+        "ivory"
+      ],
+      "anchors": [
+        "root",
+        "feet[0:2]",
+        "wings.left.shoulder",
+        "wings.left.elbow",
+        "wings.left.wrist",
+        "wings.right.shoulder",
+        "wings.right.elbow",
+        "wings.right.wrist"
+      ],
+      "animation": [
+        "anticipatory head turn",
+        "crouch",
+        "articulated flap",
+        "climb",
+        "glide",
+        "landing flare",
+        "foot contact",
+        "wing fold"
+      ],
+      "suggested_songs": [
+        "s09"
+      ],
+      "known_limits": [
+        "Stylized anatomy",
+        "Authored flight curve, no aerodynamic simulation",
+        "One launch and landing per instance",
+        "Not approved for a concert song",
+        "Current appearance refinement and earlier rig-baseline movie have distinct source identities.",
+        "Wing anatomy, folding, silhouette and scene integration need further artistic review."
+      ],
+      "verification": "tools/concert_addons/VERIFICATION.md"
+    },
+    {
+      "id": "concert-addons.rose-layered-v1",
+      "family": "vegetation",
+      "source_paths": [
+        "tools/concert_addons/models.py",
+        "tools/concert_addons/geometry.py",
+        "tools/concert_addons/catalog.json",
+        "tools/concert_addons/README.md",
+        "tools/concert_addons/VERIFICATION.md"
+      ],
+      "entry_point": "tools.concert_addons.Rose",
+      "provenance": "procedural_geometry_and_authored_motion",
+      "code_only_eligible": true,
+      "reuse_scope": "native_world_space",
+      "status": "implemented_prototype_in_review",
+      "coordinates": {
+        "units": "metres",
+        "up_axis": "+Y"
+      },
+      "variants": [
+        "blush",
+        "crimson",
+        "golden"
+      ],
+      "anchors": [
+        "root",
+        "flower"
+      ],
+      "animation": [
+        "three-second opening",
+        "coherent wind",
+        "attached leaves and flower head"
+      ],
+      "suggested_songs": [
+        "s02"
+      ],
+      "known_limits": [
+        "Stylized petal anatomy",
+        "Palette variants are not cultivar claims",
+        "Not approved for a concert song",
+        "Reviewed blossoms still read as tiered light flowers more than a botanical rose whorl."
+      ],
+      "verification": "tools/concert_addons/VERIFICATION.md"
+    },
+    {
+      "id": "concert-addons.wheat-spikelet-v1",
+      "family": "vegetation",
+      "source_paths": [
+        "tools/concert_addons/models.py",
+        "tools/concert_addons/geometry.py",
+        "tools/concert_addons/catalog.json",
+        "tools/concert_addons/README.md",
+        "tools/concert_addons/VERIFICATION.md"
+      ],
+      "entry_point": "tools.concert_addons.Wheat",
+      "provenance": "procedural_geometry_and_authored_motion",
+      "code_only_eligible": true,
+      "reuse_scope": "native_world_space",
+      "status": "implemented_prototype_in_review",
+      "coordinates": {
+        "units": "metres",
+        "up_axis": "+Y"
+      },
+      "variants": [
+        "ripe",
+        "green"
+      ],
+      "anchors": [
+        "roots",
+        "heads"
+      ],
+      "animation": [
+        "coherent wind with fixed roots",
+        "attached paired grains and awns"
+      ],
+      "suggested_songs": [
+        "s06"
+      ],
+      "known_limits": [
+        "Stylized geometry",
+        "No physical plant simulation",
+        "No agricultural species claim",
+        "Not approved for a concert song",
+        "Most legible at middle or distant scale; close leaves and repeated stalk proportions need refinement."
+      ],
+      "verification": "tools/concert_addons/VERIFICATION.md"
+    },
+    {
+      "id": "kit.consideration-v2",
+      "family": "acting",
+      "source_paths": [
+        "tools/concert_motion_revision/render.py",
+        "tools/concert_motion_revision/response.py",
+        "tools/concert_motion_revision/verify.py",
+        "tools/concert_motion_revision/README.md"
+      ],
+      "entry_point": "tools.concert_motion_revision.render",
+      "provenance": "isolated_procedural_wrapper_with_licensed_base_motion",
+      "code_only_eligible": true,
+      "reuse_scope": "explicit_registered_scene_wrapper",
+      "status": "technically_verified_sampled_encoded_review_owner_approval_pending",
+      "coordinates": {
+        "units": "metres",
+        "up_axis": "+Y"
+      },
+      "known_limits": [
+        "Fifteen-second excerpt of original scene time 3 to 18, not a complete Song 07 film or an owner-approved output.",
+        "Uses an instance-specific complete-pose response blend, preserving prior shared contact, living hands and the original engine source.",
+        "Native camera coverage preserves contact through source6.9, then separates the rise and response. Original background transparency remains part of the established style.",
+        "Geometry/contact checks do not certify finger interlock, real-time playback or stage arrangement conformity."
+      ],
+      "project_id": "concert-kit-consideration-v2",
+      "verification": "tools/concert_motion_revision/VERIFICATION.md",
+      "continuity_evidence": "project-docs/production-system/evidence/consideration-v2-response-continuity.json",
+      "source_commit": "33a7d87e2848bf8a42e6d8132c34544d61259350",
+      "source_identity": "8b091b1940221a8f21a4bd2f8a7ab0cdd1510a90ea559c6ded9afdaf0f5e8876",
+      "delivery_id": "consideration-revised-15s",
+      "technical_evidence": "project-docs/production-system/evidence/consideration-v2-delivery-qa.json",
+      "visual_evidence": "project-docs/production-system/evidence/consideration-v2-visual-review.json"
+    }
+  ]
+}

@@ -1,5 +1,13 @@
 # Handoff: Concert Backdrops engine
 
+## Current entry point, November 20, 2026
+
+The shared production workflow, approved references, eleven verified full recording sources, model registry and next work are now in [START-HERE](../project-docs/production-system/START-HERE.md) and [AI-HANDOFF](../project-docs/production-system/AI-HANDOFF.md). Use those records for new work. The foundation and approved beauty study were integrated through PRs97,98,99 and101. The older status below is preserved as history; its claims that02/10 have no recordings and full-song videos have not been built are superseded by the live catalog.
+
+## Historical November 14 handoff
+
+The following handoff is retained in its historical context. Use the current entry point above to resolve later changes.
+
 Current status, decisions and next steps live in the project's home folder on Google Drive: "Concert Backdrops - Songs", file VIDEO-HANDOFF.md (status) and DESIGN-SYSTEM.md (rules and decisions waiting for Anthony). Read those first.
 
 ## State of this repo (2026-11-14)

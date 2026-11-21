@@ -1,0 +1,79 @@
+{
+  "schema_version": 1,
+  "updated_local_date": "2026-11-20",
+  "timezone": "America/Los_Angeles",
+  "message": "The Words of Mother's Love bring peace",
+  "repository": "lovelaceaml-hub/concert-backdrops",
+  "foundation_main_commit": "271639bc5ac72f5af5e1426d355e46b4238fdd5c",
+  "foundation_prs_merged": [
+    97,
+    98,
+    99,
+    101
+  ],
+  "making_of_pr_already_merged": 100,
+  "approved_reference_ids": [
+    "promo-nine-colours-r3",
+    "song11-beauty-30s"
+  ],
+  "audio_sources_verified": 11,
+  "full_rehearsal_recordings_verified": 0,
+  "current_increment": "Shared production system, nine native model families, original Consideration baseline and isolated response/camera revision",
+  "increment_status": "rendered_verified_saved_remaining_drive_operations_require_exact_confirmation",
+  "cloud_gpu_provider": null,
+  "mac_rendering_used": false,
+  "new_study_creative_approval": "not_recorded",
+  "shared_folders": {
+    "home": "https://drive.google.com/drive/folders/1xyNZn4ZA6bjPcvKjGfgSWQIs9aAp2PPd",
+    "handoff": "https://drive.google.com/drive/folders/1QDGGqqkJlbovBLCthX-QChqfD8zSmK8X",
+    "media": "https://drive.google.com/drive/folders/1hrk62bFIOHv2NwXvYl2bNSmp0cwBoXrr"
+  },
+  "next_work": "Clear vegetation from human silhouettes, then extend Song 07 from helping into an accompanied walk and lantern carry. Preserve this delivered study as evidence.",
+  "background_service_configured": false,
+  "historical_baseline_checkpoint": "673f68785c36b57d55d05129ee5549efe6352c60",
+  "render_projects": [
+    "approved-light-s11",
+    "concert-kit-consideration",
+    "concert-kit-consideration-v2"
+  ],
+  "new_model_family_count": 9,
+  "new_model_variant_count": 18,
+  "current_increment_pr": 102,
+  "revised_picture_source_commit": "33a7d87e2848bf8a42e6d8132c34544d61259350",
+  "revised_scene_identity": "8b091b1940221a8f21a4bd2f8a7ab0cdd1510a90ea559c6ded9afdaf0f5e8876",
+  "revised_pipeline_input_mapping_sha256": "34bcaa95787e030d817f96d0280bf721545397ca04aa60ab97e2373bb894f46a",
+  "setup_font_reconstruction_commit": "3aaa7c5d75a01704c984b60c33cfc2a0bb807b5f",
+  "fresh_checkout_native_frame_verified": true,
+  "fresh_checkout_scope": "New detached source checkout and exact reconstructed fonts, using existing locked Python and host tools; one native frame matched exactly.",
+  "pipeline_unit_tests_passed": 107,
+  "independent_auditor_unit_tests_passed": 8,
+  "response_regression_checks_passed": 10,
+  "drive_instruction_files_updated_and_verified": 5,
+  "drive_instruction_evidence": "project-docs/production-system/evidence/drive-instruction-updates.json",
+  "private_drive_media_copies": "pending_exact_file_and_destination_confirmation",
+  "revised_movie_technical_passed": true,
+  "revised_movie_encoded_frames_reviewed": 67,
+  "new_media_files_saved": 8,
+  "new_media_catalog": "project-docs/production-system/catalogs/deliveries.json",
+  "active_render_processes": 0,
+  "integration_authority": "https://github.com/lovelaceaml-hub/concert-backdrops/pull/102",
+  "portable_handoff": {
+    "status": "automatic_review_rejected_pending_exact_archive_destination_confirmation",
+    "filename": "Concert-Production-System-Handoff-2026-11-20.zip",
+    "bytes": 350548,
+    "sha256": "605b7be8ca59987651a642727a9babef88e01986c87d8ea7e3ca076e84a2e158",
+    "producing_commit": "94dd897c6fdeb287561c5dd2772b770c43ab94b7",
+    "included_files": 89,
+    "working_tree_dirty_at_export": false,
+    "destination_folder_id": "1QDGGqqkJlbovBLCthX-QChqfD8zSmK8X",
+    "evidence": "project-docs/production-system/evidence/handoff-export.json",
+    "rejection_evidence": "project-docs/production-system/evidence/drive-handoff-upload-block.json"
+  },
+  "drive_production_log": "pending_exact_payload_destination_confirmation_after_automatic_review_rejection",
+  "drive_production_log_evidence": "project-docs/production-system/evidence/drive-production-log-block.json",
+  "remaining_drive_actions": [
+    "Copy the eight exact media files in catalogs/deliveries.json to Production Studies.",
+    "Upload the exact versioned handoff ZIP to Production System.",
+    "Append the prepared delivery event to the existing production-log.jsonl, preserving all current entries."
+  ]
+}

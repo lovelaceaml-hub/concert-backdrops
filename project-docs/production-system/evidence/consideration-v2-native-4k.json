@@ -1,0 +1,40 @@
+{
+  "bytes": 5048251,
+  "file": "/workspace/scratch/b9b2dfde708d/deliverables/Consideration-Revised-Garden-Native-4K.png",
+  "fps_clock": 60,
+  "height": 2160,
+  "image_bit_depth": 8,
+  "mode": "RGB",
+  "native_render": true,
+  "output_frame": 870,
+  "output_seconds": 14.5,
+  "picture_source_identity": "8b091b1940221a8f21a4bd2f8a7ab0cdd1510a90ea559c6ded9afdaf0f5e8876",
+  "project_id": "concert-kit-consideration-v2",
+  "quality": "4k-check",
+  "receipt": "work/pipeline/concert-kit-consideration-v2/4k-check/shots/garden/receipt.json",
+  "receipt_fingerprint": "3ae07acc7628214233bc3717df565e3b64fb4f0c3a522727e1a145a76a87c61b",
+  "sha256": "1ac66c796b1c9a732de252532eae90c9e55242a55033bd91cdd363cdb089422b",
+  "source_and_frame_recheck": true,
+  "source_frame": 1050,
+  "source_input_count": 202,
+  "source_seconds": 17.5,
+  "temporal_samples": 2,
+  "timing": {
+    "child_system_seconds": 4.403529,
+    "child_user_seconds": 74.819739,
+    "command": [
+      "./scripts/video",
+      "produce",
+      "concert-kit-consideration-v2",
+      "--quality",
+      "4k-check",
+      "--frames",
+      "870"
+    ],
+    "exit_code": 0,
+    "largest_child_maxrss_kib": 1485916,
+    "wall_seconds": 76.31105990799915
+  },
+  "visual_review": "Inspected actual native PNG. Both heads clear, complete title/logo legible, world and flowers remain visible. Foreground flowers still overlap one torso below the face. This is a reviewed still, not full4K movie or owner approval.",
+  "width": 3840
+}

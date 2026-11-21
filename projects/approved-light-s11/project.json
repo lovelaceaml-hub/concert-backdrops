@@ -1,0 +1,225 @@
+{
+  "schema_version": 1,
+  "video": {
+    "width": 1920,
+    "height": 1080,
+    "fps": 60
+  },
+  "production": {
+    "cloud_gpu_provider": null,
+    "allow_local_gpu": false,
+    "allow_paid_services": false,
+    "allow_ai_generated_visuals": false,
+    "allow_stock_footage": false,
+    "random_seed": 2026,
+    "threads": 1,
+    "render_chunk_frames": 120,
+    "render_timeout_seconds": 7200
+  },
+  "quality": {
+    "draft": {
+      "width": 960,
+      "height": 540,
+      "temporal_samples": 1,
+      "image_bit_depth": 8
+    },
+    "review": {
+      "width": 1920,
+      "height": 1080,
+      "temporal_samples": 2,
+      "image_bit_depth": 8
+    },
+    "4k-check": {
+      "width": 3840,
+      "height": 2160,
+      "temporal_samples": 2,
+      "image_bit_depth": 8
+    },
+    "final": {
+      "width": 1920,
+      "height": 1080,
+      "temporal_samples": 2,
+      "image_bit_depth": 8
+    }
+  },
+  "delivery": {
+    "profile": "h264",
+    "source_transfer": "legacy_display_gamma",
+    "color_space": "rec709"
+  },
+  "style": "styles/zion-cinematic.json",
+  "project_id": "approved-light-s11",
+  "title": "Approved Song 11 light study",
+  "description": "Registered source reconstruction of the approved thirty-second design study. Original choreography is retained.",
+  "audio": {
+    "source": "work/song-inputs/s11-original.mp3",
+    "source_sha256": "70464dff370f7187d12029970c1fa1ef3e91c6957180aa685b64cead830f7004",
+    "offset_seconds": 97.8,
+    "fade_in_seconds": 0.12,
+    "fade_out_seconds": 0.25,
+    "gain_db": -0.5
+  },
+  "timing": {
+    "fps": 60,
+    "manually_verified": false,
+    "source_audio_sha256": "70464dff370f7187d12029970c1fa1ef3e91c6957180aa685b64cead830f7004",
+    "origin": "Existing authored production cuts, retained without retiming. Regenerated analysis is separate from authored cue truth.",
+    "events": [
+      {
+        "frame": 0,
+        "kind": "authored_cut",
+        "source_scene_seconds": 97.7
+      },
+      {
+        "frame": 102,
+        "kind": "authored_cut",
+        "source_scene_seconds": 99.4
+      },
+      {
+        "frame": 354,
+        "kind": "authored_cut",
+        "source_scene_seconds": 103.6
+      },
+      {
+        "frame": 447,
+        "kind": "authored_cut",
+        "source_scene_seconds": 105.14
+      },
+      {
+        "frame": 642,
+        "kind": "authored_cut",
+        "source_scene_seconds": 108.4
+      },
+      {
+        "frame": 726,
+        "kind": "authored_cut",
+        "source_scene_seconds": 109.8
+      },
+      {
+        "frame": 1158,
+        "kind": "authored_cut",
+        "source_scene_seconds": 117.0
+      },
+      {
+        "frame": 1418,
+        "kind": "authored_cut",
+        "source_scene_seconds": 121.32
+      },
+      {
+        "frame": 1694,
+        "kind": "authored_cut",
+        "source_scene_seconds": 125.92
+      }
+    ]
+  },
+  "shots": [
+    {
+      "id": "shot-00-dance",
+      "name": "Hero conductor",
+      "renderer": "p3d-approved",
+      "start_frame": 0,
+      "end_frame_exclusive": 102,
+      "scene": "tools/s11_full2/s11_full2.py",
+      "params": {
+        "reference": "song11-beauty-v1",
+        "keep_grain": false
+      }
+    },
+    {
+      "id": "shot-01-zion",
+      "name": "Zion and light",
+      "renderer": "p3d-approved",
+      "start_frame": 102,
+      "end_frame_exclusive": 354,
+      "scene": "tools/s11_full2/s11_full2.py",
+      "params": {
+        "reference": "song11-beauty-v1",
+        "keep_grain": false
+      }
+    },
+    {
+      "id": "shot-02-zion",
+      "name": "Zion and light",
+      "renderer": "p3d-approved",
+      "start_frame": 354,
+      "end_frame_exclusive": 447,
+      "scene": "tools/s11_full2/s11_full2.py",
+      "params": {
+        "reference": "song11-beauty-v1",
+        "keep_grain": false
+      }
+    },
+    {
+      "id": "shot-03-stage",
+      "name": "Choir and orchestra",
+      "renderer": "p3d-approved",
+      "start_frame": 447,
+      "end_frame_exclusive": 642,
+      "scene": "tools/s11_full2/s11_full2.py",
+      "params": {
+        "reference": "song11-beauty-v1",
+        "keep_grain": false
+      }
+    },
+    {
+      "id": "shot-04-church",
+      "name": "Church of light",
+      "renderer": "p3d-approved",
+      "start_frame": 642,
+      "end_frame_exclusive": 726,
+      "scene": "tools/s11_full2/s11_full2.py",
+      "params": {
+        "reference": "song11-beauty-v1",
+        "keep_grain": false
+      }
+    },
+    {
+      "id": "shot-05-zion",
+      "name": "Zion and light",
+      "renderer": "p3d-approved",
+      "start_frame": 726,
+      "end_frame_exclusive": 1158,
+      "scene": "tools/s11_full2/s11_full2.py",
+      "params": {
+        "reference": "song11-beauty-v1",
+        "keep_grain": false
+      }
+    },
+    {
+      "id": "shot-06-dance",
+      "name": "Hero conductor",
+      "renderer": "p3d-approved",
+      "start_frame": 1158,
+      "end_frame_exclusive": 1418,
+      "scene": "tools/s11_full2/s11_full2.py",
+      "params": {
+        "reference": "song11-beauty-v1",
+        "keep_grain": false
+      }
+    },
+    {
+      "id": "shot-07-dance",
+      "name": "Hero conductor",
+      "renderer": "p3d-approved",
+      "start_frame": 1418,
+      "end_frame_exclusive": 1694,
+      "scene": "tools/s11_full2/s11_full2.py",
+      "params": {
+        "reference": "song11-beauty-v1",
+        "keep_grain": false
+      }
+    },
+    {
+      "id": "shot-08-proc",
+      "name": "Procession",
+      "renderer": "p3d-approved",
+      "start_frame": 1694,
+      "end_frame_exclusive": 1800,
+      "scene": "tools/s11_full2/s11_full2.py",
+      "params": {
+        "reference": "song11-beauty-v1",
+        "keep_grain": false
+      }
+    }
+  ]
+}

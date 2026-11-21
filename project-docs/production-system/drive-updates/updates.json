@@ -1,0 +1,91 @@
+{
+  "schema_version": 1,
+  "status": "five_instruction_files_updated_media_log_and_archive_confirmation_pending",
+  "reason": "Five in-place Markdown instruction updates succeeded and were verified. Separate new media uploads, the production-log append and the versioned handoff ZIP upload were rejected by automatic review. Each rejected operation remains pending exact scope confirmation and was not retried.",
+  "rule_updates": [
+    {
+      "file_id": "195oEBBMyi14jY9lKSPfYB5fqpEZN4axj",
+      "existing_name": "AGENTS.md",
+      "header_path": "project-docs/production-system/drive-updates/AGENTS.header.md",
+      "operation": "prepend_current_header_preserving_latest_original_body",
+      "status": "updated_and_raw_bytes_verified",
+      "applied_modified_time": "2026-11-21T02:16:01.119Z",
+      "applied_sha256": "61a57aa1be19940d77d71e3f7d1ca165da6a06589678df6955336c340ca5e068",
+      "historical_body_sha256": "46ee4d138f33f4abf9f547f2809358f875fa8fb0456ec672c1f02aefb8ebfc1f",
+      "historical_body_preserved_exactly": true
+    },
+    {
+      "file_id": "1dReBFenaOzt-NT4lLvGkIsGMed8YYs4W",
+      "existing_name": "VIDEO-HANDOFF.md",
+      "header_path": "project-docs/production-system/drive-updates/VIDEO-HANDOFF.header.md",
+      "operation": "prepend_current_header_preserving_latest_original_body",
+      "status": "updated_and_raw_bytes_verified",
+      "applied_modified_time": "2026-11-21T02:16:17.810Z",
+      "applied_sha256": "7c0f920f4e2d3e6aad2de87fa7c244f8ea147c3afaf24fd2c85dca1bf681d850",
+      "historical_body_sha256": "ce11446ac595c10a81a2529dcff57d57094b69a7a5fd6630d09bd19970bbd691",
+      "historical_body_preserved_exactly": true
+    },
+    {
+      "file_id": "1SyL4I0hetGZHMHqlB6_zsyigJ8xA-9oC",
+      "existing_name": "AUTONOMOUS-RUN.md",
+      "header_path": "project-docs/production-system/drive-updates/AUTONOMOUS-RUN.header.md",
+      "operation": "prepend_current_header_preserving_latest_original_body",
+      "status": "updated_and_raw_bytes_verified",
+      "applied_modified_time": "2026-11-21T02:16:24.268Z",
+      "applied_sha256": "a34f8e06a1ebb15417f45091e6e0c236c8e7876303056b0fe3258217e8816d21",
+      "historical_body_sha256": "0d689bcb831bac0cfdfde6ff26528eb690fbbef201b29648efefb1ea43c41855",
+      "historical_body_preserved_exactly": true
+    },
+    {
+      "file_id": "1pXulIOhdV66tXC_lDQPLJUp9th_kF4s1",
+      "existing_name": "DESIGN-SYSTEM.md",
+      "header_path": "project-docs/production-system/drive-updates/DESIGN-SYSTEM.header.md",
+      "operation": "prepend_current_header_preserving_latest_original_body",
+      "status": "updated_and_raw_bytes_verified",
+      "applied_modified_time": "2026-11-21T02:16:31.117Z",
+      "applied_sha256": "17724a3f701a9f8d8f7c0f1e2b25755177a5ecf12d763d9178965c40315698ac",
+      "historical_body_sha256": "5aaefe083987c2a27b0695d2ed83048d4cab7b07e986531d4ac013587e9fd4a0",
+      "historical_body_preserved_exactly": true
+    },
+    {
+      "file_id": "1wSbLBI8Bx_Efv4foKNUG520SCclRRBVc",
+      "existing_name": "README.md",
+      "header_path": "project-docs/production-system/drive-updates/README.header.md",
+      "operation": "prepend_current_header_preserving_latest_original_body",
+      "status": "updated_and_raw_bytes_verified",
+      "applied_modified_time": "2026-11-21T02:16:36.178Z",
+      "applied_sha256": "9d1e3a8876452ec87d43b6f0b8b4fd374415e189538eb2f1d31bd327de4c7e34",
+      "historical_body_sha256": "10bdd40705f98bf37c84a513df34347d7869830adc78978dac6ca8f26ce86d9c",
+      "historical_body_preserved_exactly": true
+    }
+  ],
+  "production_log": {
+    "file_id": "16F00sMLXIxP77F2bvffPJ9754eR93wtb",
+    "operation": "append_current_delivery_entry_preserving_latest_original_bytes",
+    "status": "automatic_review_rejected_pending_exact_payload_destination_confirmation",
+    "evidence": "project-docs/production-system/evidence/drive-production-log-block.json",
+    "prepared_payload_sha256": "4f01a3c40ec8b07da8b07c6f16d3f32d6f7fab70530fb8ed58307d5ee36e7bda"
+  },
+  "apply_instructions": [
+    "Use current user authorization and the approved exact file/destination scope.",
+    "Fetch each current Drive file and its modified time again; use its current body, not an old work copy.",
+    "If the current header already exists, update that header deliberately instead of duplicating it.",
+    "Preserve the historical body. Check metadata again immediately before a write; rebase if changed.",
+    "Use the normal connected Drive update tool, preserving the existing file ID.",
+    "Read back the updated text and verify the intended header plus preserved body.",
+    "Record actual upload/update IDs, times and verification before changing pending status."
+  ],
+  "evidence": "project-docs/production-system/evidence/drive-instruction-updates.json",
+  "handoff_archive": {
+    "status": "automatic_review_rejected_pending_exact_archive_destination_confirmation",
+    "filename": "Concert-Production-System-Handoff-2026-11-20.zip",
+    "bytes": 350548,
+    "sha256": "605b7be8ca59987651a642727a9babef88e01986c87d8ea7e3ca076e84a2e158",
+    "producing_commit": "94dd897c6fdeb287561c5dd2772b770c43ab94b7",
+    "included_files": 89,
+    "working_tree_dirty_at_export": false,
+    "destination_folder_id": "1QDGGqqkJlbovBLCthX-QChqfD8zSmK8X",
+    "evidence": "project-docs/production-system/evidence/handoff-export.json",
+    "rejection_evidence": "project-docs/production-system/evidence/drive-handoff-upload-block.json"
+  }
+}

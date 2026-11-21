@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "project": "approved-light-s11",
+  "quality": "review",
+  "native_fps": 60,
+  "temporal_samples": 2,
+  "source_reference": "song11-beauty-v1",
+  "comparison": "New registered pipeline PNGs against the verified historical native45/501 PNGs.",
+  "frames": [
+    {
+      "frame": 45,
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "pixel_identical": true,
+      "max_channel_difference": 0,
+      "new_sha256": "e5084a0d5981972feed79cd4e83eeef9dd759a41886d4dd5597c488cb27bbc8a",
+      "reference_sha256": "e5084a0d5981972feed79cd4e83eeef9dd759a41886d4dd5597c488cb27bbc8a"
+    },
+    {
+      "frame": 501,
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "pixel_identical": true,
+      "max_channel_difference": 0,
+      "new_sha256": "4ae30785b176fab7c13611f951b64538307e469adda8e84f204cd626c2cc40ed",
+      "reference_sha256": "4ae30785b176fab7c13611f951b64538307e469adda8e84f204cd626c2cc40ed"
+    }
+  ],
+  "passed": true,
+  "scope": "Two actual native frames on this cloud software renderer; not a new full movie or a guarantee across other hardware."
+}

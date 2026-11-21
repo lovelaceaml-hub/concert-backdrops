@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+set -euo pipefail
+concert_root="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)"
+exec python3 "$concert_root/tools/production_system.py" "$@"
