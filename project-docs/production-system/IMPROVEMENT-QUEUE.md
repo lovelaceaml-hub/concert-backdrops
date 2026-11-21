@@ -2,7 +2,13 @@
 
 This is a bounded work queue for future chats, not an automatically running service. Continue the first item whose prerequisites are available, with the current user's directions taking priority. Preserve the approved references and isolate each change.
 
-## Current increment
+## Current priority: the owner's three performance references
+
+Read [REFERENCE-PERFORMANCE-PLAN.md](REFERENCE-PERFORMANCE-PLAN.md) and the separate [reference catalog](catalogs/performance-references.json). The latest request is to recreate selected dance/theatre passages in the campaign's luminous style. Their pages were identified, but actual movement could not be inspected. The immediate input is the three videos or selected continuous excerpts. Do not infer choreography from titles or a thumbnail.
+
+The new [local-video intake tool](../../tools/performance_reference/README.md) prepares hashed, timecoded reference packages. Follow with a source-specific breakdown and the [proposed sixteen-second trio](REFERENCE-CREATIVE-TREATMENT.md): distinct invitation, answer and welcome roles, changing formation, one held fan with actual silk, and a completed recovery. The [authoring contract](PERFORMANCE-AUTHORING.md) defines the next implementation work. Sequence/export, new performance assets and cloth bakes remain proposed until built and reviewed. The approved renderer already supports fingers, IK, head targeting and cloth; use those existing foundations deliberately.
+
+## Completed production foundation
 
 The production foundation and approved study are merged. All eleven full audio sources are verified. The current increment adds registered p3d production commands, a shared catalog/handoff, six native model families, an original Consideration baseline and its isolated camera/response revision, plus a separate dove, rose and wheat prototype pack. The additions total nine model families and eighteen variants, separate from the acting studies. See `STATE.json` and the kit verification for final evidence and creative review status. The [dense reference motion review](REFERENCE-MOTION-REVIEW.md) identifies precise acting and reveal improvements from the actual approved films.
 

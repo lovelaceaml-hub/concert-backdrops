@@ -4,7 +4,13 @@ Current handoff: the natural dance increment in PR #104. The prior November 20, 
 
 **The Words of Mother's Love bring peace.** Build every film around that message. The owner approved the sharper Song 11 beauty study and requested that its setup, source, instructions and references be saved, uploaded and merged for every AI to reuse. The owner also authorized continued model, acting and workflow improvement across the concert songs.
 
-## Newest increment: natural dance, PR #104
+## Current development: reference performance adaptation
+
+The owner supplied three dance and theatrical-performance references and requested adaptations in the approved luminous style. Start with [REFERENCE-PERFORMANCE-PLAN.md](REFERENCE-PERFORMANCE-PLAN.md), [the creative treatment](REFERENCE-CREATIVE-TREATMENT.md), [the authoring contract](PERFORMANCE-AUTHORING.md), and [the reference intake tool](../../tools/performance_reference/README.md). The separate [performance reference catalog](catalogs/performance-references.json) records exact URLs and review coverage.
+
+YouTube pages were identified, but moving footage was not obtained; only the first thumbnail was visually inspected. Source MP4s or excerpts are needed before an accurate motion breakdown and recreation. The proposed sixteen-second trio is an original treatment, not a rendered reconstruction. The intake tool prepares timecoded stills and a manifest from local videos; it does not estimate 3D motion or confer visual approval. Current delivery records below remain unchanged.
+
+## Latest delivered increment: natural dance, PR #104
 
 The latest direction prioritizes fluid, expressive whole-body movement and dancing. The isolated `concert-dance-study` adds stable support intervals, preserved root travel, an eased preparation and settlement, and trails attached to solved wrists. Its picture source is frozen at `0c42f4422a6b67464cb9cd84aac32008d45d4f4c`. The full eighteen-second, 1,080-frame native 1080p60 movie is complete, independently verified, saved and copied to Production Studies with raw-byte readback. The final movie received 89 targeted independent decoded-frame samples and a separate 15-frame overview; the earlier silent proof received 62 samples. Creative approval remains unrecorded. Read [STATE.json](STATE.json), [DELIVERIES.md](DELIVERIES.md) and their evidence for exact outputs, scoped findings and remaining pacing and settling work.
 
