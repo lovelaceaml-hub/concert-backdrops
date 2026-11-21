@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "recorded_at_utc": "2026-11-21T17:09:23.596859+00:00",
+  "files": [
+    {
+      "filename": "Fan-Silk-Trio-20s-1080p60.mp4",
+      "bytes": 22982924,
+      "sha256": "36166e43ae67a0ea9e7d52313bf223ca0ee373ed555c69728ccab0e3cfb62afe",
+      "library": {
+        "status": "saved",
+        "library_file_id": "libfile_5d95a136726c8191a7eacbf8509a9bec",
+        "file_id": "file_00000000f4088211848fb985d07f0b7d",
+        "version": 0,
+        "url": "https://chatgpt.com/library?file_id=libfile_5d95a136726c8191a7eacbf8509a9bec&account_id=personal"
+      }
+    },
+    {
+      "filename": "Fan-Silk-Trio-Native-4K.png",
+      "bytes": 4765896,
+      "sha256": "4326d32a479bd585ccc5de24a5e7a523e79008b092d7c2332f0909d7052fd98f",
+      "library": {
+        "status": "saved",
+        "library_file_id": "libfile_401345b49ea88191a3d6ba7e0c794939",
+        "file_id": "file_000000005ae0821193ea36def6de55a1",
+        "version": 0,
+        "url": "https://chatgpt.com/library?file_id=libfile_401345b49ea88191a3d6ba7e0c794939&account_id=personal"
+      }
+    },
+    {
+      "filename": "Fan-Silk-Trio-Motion-Review.jpg",
+      "bytes": 683850,
+      "sha256": "7e5cf9b314132dc3d716d0c5b94805c1d60b10c44aca5ee042e4bbec73c83e5c",
+      "library": {
+        "status": "saved",
+        "library_file_id": "libfile_0a92fd2387848191a628133b595d7be6",
+        "file_id": "file_00000000e0248211929c046fcae8ce44",
+        "version": 0,
+        "url": "https://chatgpt.com/library?file_id=libfile_0a92fd2387848191a628133b595d7be6&account_id=personal"
+      }
+    }
+  ]
+}

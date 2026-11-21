@@ -1,0 +1,357 @@
+{
+  "schema_version": 1,
+  "reviewed_utc": "2026-11-21T17:05:53.973774+00:00",
+  "reviewer": "fan_trio_performance agent, final encoded visual reviewer",
+  "artifact": {
+    "path": "/workspace/scratch/b9b2dfde708d/concert-fan-silk/work/pipeline/concert-fan-trio/review/master.mp4",
+    "sha256": "36166e43ae67a0ea9e7d52313bf223ca0ee373ed555c69728ccab0e3cfb62afe",
+    "width": 1920,
+    "height": 1080,
+    "fps": 60,
+    "frame_count": 1200,
+    "duration_seconds": 20.0
+  },
+  "review_method": {
+    "type": "sampled_ordered_decoded_frame_review",
+    "source": "Decoded PNG frames extracted directly from the final encoded H.264 master with ffmpeg, using exact zero-based frame selection.",
+    "display": "Ordered contact sheets plus individual native-resolution decoded frames at indices 384, 444, 504 and 1199.",
+    "real_time_playback_reviewed": false,
+    "all_encoded_frames_visually_reviewed": false,
+    "audio_reviewed": false,
+    "reference_choreography_verified": false,
+    "source_or_scene_modified": false
+  },
+  "coverage": {
+    "visually_reviewed_sample_count": 37,
+    "zero_based_frame_indices": [
+      0,
+      30,
+      84,
+      180,
+      199,
+      200,
+      240,
+      300,
+      328,
+      329,
+      348,
+      360,
+      368,
+      369,
+      384,
+      399,
+      400,
+      420,
+      444,
+      468,
+      504,
+      599,
+      600,
+      799,
+      800,
+      864,
+      999,
+      1000,
+      1128,
+      1140,
+      1152,
+      1164,
+      1176,
+      1188,
+      1197,
+      1198,
+      1199
+    ],
+    "time_seconds": [
+      0.0,
+      0.5,
+      1.4,
+      3.0,
+      3.316667,
+      3.333333,
+      4.0,
+      5.0,
+      5.466667,
+      5.483333,
+      5.8,
+      6.0,
+      6.133333,
+      6.15,
+      6.4,
+      6.65,
+      6.666667,
+      7.0,
+      7.4,
+      7.8,
+      8.4,
+      9.983333,
+      10.0,
+      13.316667,
+      13.333333,
+      14.4,
+      16.65,
+      16.666667,
+      18.8,
+      19.0,
+      19.2,
+      19.4,
+      19.6,
+      19.8,
+      19.95,
+      19.966667,
+      19.983333
+    ],
+    "requested_chunk_boundary_pairs": [
+      [
+        199,
+        200
+      ],
+      [
+        328,
+        329
+      ],
+      [
+        368,
+        369
+      ],
+      [
+        399,
+        400
+      ],
+      [
+        599,
+        600
+      ],
+      [
+        799,
+        800
+      ],
+      [
+        999,
+        1000
+      ]
+    ],
+    "turn_and_bank_phrase_indices": [
+      180,
+      240,
+      300,
+      348,
+      360,
+      368,
+      369,
+      384,
+      399,
+      400,
+      420,
+      444,
+      468,
+      504,
+      864
+    ],
+    "ending_indices": [
+      1128,
+      1140,
+      1152,
+      1164,
+      1176,
+      1188,
+      1197,
+      1198,
+      1199
+    ],
+    "ending_coverage_seconds": [
+      18.8,
+      19.983333
+    ],
+    "ending_note": "The 20-second file ends after frame 1199 at 19.983333 seconds. There is no encoded frame at exactly 20.0 seconds."
+  },
+  "status": "sampled_review_found_no_blocking_flaw",
+  "blocking_findings": [],
+  "boundary_findings": [
+    {
+      "frames": [
+        199,
+        200
+      ],
+      "times_seconds": [
+        3.316667,
+        3.333333
+      ],
+      "finding": "No visible abrupt pose, camera, cloth, fan attachment or brightness discontinuity between this consecutive decoded-frame pair."
+    },
+    {
+      "frames": [
+        328,
+        329
+      ],
+      "times_seconds": [
+        5.466667,
+        5.483333
+      ],
+      "finding": "No visible abrupt pose, camera, cloth, fan attachment or brightness discontinuity between this consecutive decoded-frame pair."
+    },
+    {
+      "frames": [
+        368,
+        369
+      ],
+      "times_seconds": [
+        6.133333,
+        6.15
+      ],
+      "finding": "No visible abrupt pose, camera, cloth, fan attachment or brightness discontinuity between this consecutive decoded-frame pair."
+    },
+    {
+      "frames": [
+        399,
+        400
+      ],
+      "times_seconds": [
+        6.65,
+        6.666667
+      ],
+      "finding": "No visible abrupt pose, camera, cloth, fan attachment or brightness discontinuity between this consecutive decoded-frame pair."
+    },
+    {
+      "frames": [
+        599,
+        600
+      ],
+      "times_seconds": [
+        9.983333,
+        10.0
+      ],
+      "finding": "No visible abrupt pose, camera, cloth, fan attachment or brightness discontinuity between this consecutive decoded-frame pair."
+    },
+    {
+      "frames": [
+        799,
+        800
+      ],
+      "times_seconds": [
+        13.316667,
+        13.333333
+      ],
+      "finding": "No visible abrupt pose, camera, cloth, fan attachment or brightness discontinuity between this consecutive decoded-frame pair."
+    },
+    {
+      "frames": [
+        999,
+        1000
+      ],
+      "times_seconds": [
+        16.65,
+        16.666667
+      ],
+      "finding": "No visible abrupt pose, camera, cloth, fan attachment or brightness discontinuity between this consecutive decoded-frame pair."
+    }
+  ],
+  "positive_observations": [
+    {
+      "area": "fan_attachment",
+      "finding": "Visible fan pivots remain joined to the held hands in the reviewed images; no detached fan was observed."
+    },
+    {
+      "area": "arm_and_fan_continuity",
+      "finding": "The lead fan narrows as it turns edge-on and opens visually toward the camera again. The sampled arm and fan changes are coherent, with no visible wrist flip or elbow inversion."
+    },
+    {
+      "area": "cloth_continuity",
+      "finding": "The requested boundary pairs do not show a visible cloth reset or sudden sheet-shape jump."
+    },
+    {
+      "area": "performer_separation",
+      "finding": "The three body silhouettes remain separate and readable in the reviewed samples."
+    },
+    {
+      "area": "framing",
+      "finding": "All three figures and their lower dress hems remain within the picture in the reviewed samples. Reflections extend toward the lower edge."
+    },
+    {
+      "area": "opening",
+      "finding": "Decoded samples at frames 0, 30 and 84 show progressive arm/fan changes rather than a held opening pose."
+    },
+    {
+      "area": "ending",
+      "finding": "The nine ordered ending samples show the fans lowering into a calm final pose. Frames 1197, 1198 and 1199 do not show a visible pose reset, detachment or blank final image."
+    }
+  ],
+  "nonblocking_findings": [
+    {
+      "id": "silk_body_occlusion",
+      "severity": "creative_limitation",
+      "examples_frames": [
+        300,
+        328,
+        329,
+        348,
+        468,
+        504
+      ],
+      "finding": "Silk overlaps the head, raised arm or upper torso in some bank poses. The figures remain identifiable, but the layering reduces separation of the arm and cloth silhouette. This visual review does not establish collision-free cloth/body interaction."
+    },
+    {
+      "id": "panel_like_drape",
+      "severity": "creative_limitation",
+      "examples_frames": [
+        199,
+        200,
+        599,
+        600,
+        1128,
+        1199
+      ],
+      "finding": "The silk mostly drapes as a long finite panel with a changing fold or curl. The reviewed evidence does not show large flowing loops or reference-level athletic dance dynamics."
+    },
+    {
+      "id": "hidden_foot_articulation",
+      "severity": "review_limitation",
+      "finding": "Long skirts obscure most foot articulation. The images establish framing, not a visual proof of exact foot contact or absence of sliding; those require the separate rig/contact diagnostics."
+    }
+  ],
+  "limitations": [
+    "Only the listed ordered samples were visually inspected. Problems between these samples or elsewhere in the file may remain.",
+    "No claim is made to real-time playback review, musical synchronization review, performance approval or verification against the linked reference choreography.",
+    "The review concerns the final encoded pictures. It does not prove cloth/body collision safety, whole-body force balance or captured human motion.",
+    "The performance is original authored ceremonial fan choreography, not motion reconstructed from the linked videos."
+  ],
+  "automated_qa_context": {
+    "source": "work/fan-silk-performance/recovery-production-result.json",
+    "technical_passed": true,
+    "errors": [],
+    "warnings": [],
+    "note": "Existing automated technical QA is recorded as context; it is separate from this sampled visual assessment."
+  },
+  "evidence": {
+    "sample_manifest": "work/fan-silk-performance/encoded-review-samples/samples.json",
+    "contact_sheets": [
+      "work/fan-silk-performance/encoded-review-samples/boundaries-a.jpg",
+      "work/fan-silk-performance/encoded-review-samples/boundaries-b.jpg",
+      "work/fan-silk-performance/encoded-review-samples/turn-and-bank.jpg",
+      "work/fan-silk-performance/encoded-review-samples/ending.jpg",
+      "work/fan-silk-performance/encoded-review-samples/opening.jpg"
+    ],
+    "native_individual_frames": [
+      "work/fan-silk-performance/encoded-review-samples/frame-0384.png",
+      "work/fan-silk-performance/encoded-review-samples/frame-0444.png",
+      "work/fan-silk-performance/encoded-review-samples/frame-0504.png",
+      "work/fan-silk-performance/encoded-review-samples/frame-1199.png"
+    ]
+  },
+  "coordinator_review": {
+    "encoded_overview_frames": [
+      30,
+      180,
+      348,
+      420,
+      504,
+      660,
+      864,
+      1020,
+      1188
+    ],
+    "native_4k_frame": 864,
+    "real_time_playback_reviewed": false,
+    "summary": "Three distinct figures remain readable; brightness separates people from the dark lake. Silk is still panel-like and crosses the upper body in some bank poses. This is gentle ceremonial choreography, not professional captured dance."
+  }
+}

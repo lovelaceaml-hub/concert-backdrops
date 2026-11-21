@@ -18,6 +18,7 @@ SCENE = "tools/concert_kit/consideration.py"
 MODULE = "tools/concert_kit/render.py"
 REVISION_SCENE = "tools/concert_motion_revision/render.py"
 DANCE_SCENE = "tools/concert_dance/scene.py"
+FAN_SCENE = "tools/concert_fan/fan_trio.py"
 REGISTERED_SCENES = {
     SCENE: {"id": "consideration-v1", "module": MODULE, "seconds": 18,
             "fps": 60, "source_start_frame": 0, "cut_frames": (180, 720)},
@@ -27,6 +28,9 @@ REGISTERED_SCENES = {
     DANCE_SCENE: {"id": "natural-dance-v1", "module": "tools/concert_dance/render.py",
                   "seconds": 18, "fps": 60, "source_start_frame": 0,
                   "cut_frames": ()},
+    FAN_SCENE: {"id": "fan-silk-trio-v1", "module": "tools/concert_fan/render.py",
+                "seconds": 20, "fps": 60, "source_start_frame": 0,
+                "cut_frames": ()},
 }
 
 

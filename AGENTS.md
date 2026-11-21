@@ -1,10 +1,10 @@
 # Current instructions for every AI
 
-Current system handoff: November 20, 2026, America/Los_Angeles.
+Current system handoff: November 21, 2026, America/Los_Angeles.
 
 Start with `project-docs/production-system/START-HERE.md` and `AI-HANDOFF.md` in the same folder. The owner approved the Song 11 beauty study and explicitly requested setup, saving, documentation, uploads, push and merge, followed by continued model and animation improvements for the concert songs. Use the current user's authorization; do not repeat permission questions for work already authorized.
 
-Latest development, November 21: read `project-docs/production-system/REFERENCE-PERFORMANCE-PLAN.md` for the three owner-supplied dance/theatre references, the local-video intake tool and the proposed performance-authoring path. The linked videos' moving footage has not been acquired or inspected; metadata and the first thumbnail are not choreography evidence. No reference recreation is delivered. Preserve that boundary and continue from the recorded missing source files rather than inventing a source-specific breakdown.
+Latest development, November 21: the owner said to try the references as well as possible without waiting for more uploads. Read `project-docs/production-system/FAN-SILK-PERFORMANCE.md` and `tools/concert_fan/README.md`. The new registered `concert-fan-trio` is an original twenty-second authored performance with three distinct roles and two held fans with finite silk. Its picture source is `dffe8f165944c627ae39a8bb7d47bc5a9e703305`. Use the delivery catalog for exact media and approval status. The first two reference posters were inspected, but moving reference footage remains unavailable. Do not claim reconstructed choreography or stop useful original work solely for that missing input.
 
 The main message is that Mother's Words of Love bring peace. The approved 66-second Film10 Nine Colours Revision3 is the creative reference. The approved 30-second native1080p60 Song11 beauty study is the clarity and production reference. Exact media hashes, source pins and durable links are in `project-docs/production-system/catalogs/references.json`.
 

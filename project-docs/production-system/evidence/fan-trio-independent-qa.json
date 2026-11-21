@@ -1,0 +1,140 @@
+{
+  "schema_version": 1,
+  "project": "concert-fan-trio",
+  "started_at_utc": "2026-11-21T17:03:42.997638+00:00",
+  "errors": [],
+  "warnings": [],
+  "scope": "independent_completed_movie_audit",
+  "inputs_passed": true,
+  "technical_passed": true,
+  "creative_approval": "not_assessed",
+  "limits": "Technical source, decode, timestamp and audio evidence only. No certification of natural movement, contact, cloth, musical sync, artistic quality or a 4K movie.",
+  "auditor_sha256": "0a709d6d5508a95b37ecd2ca608babad410b5463c9403ac14e484f438b014283",
+  "helper_sha256": "499a2d052dfa53008bb404c109166439433c28ab60003e81de29a27e4027bb7f",
+  "sources": {
+    "baseline": "/workspace/scratch/b9b2dfde708d/concert-fan-silk/project-docs/production-system/evidence/fan-trio-frozen-inputs.json",
+    "baseline_sha256": "18e43356d07f1fae732e8d318ae74de926f4eb2d0f0f9c7fc2f9f085533e34e3",
+    "fingerprint": "03c27268d4804da74d09818801fdedc93c7367c7ca22f4ee82069a83423dfd24",
+    "input_count": 201,
+    "mapping_sha256": "2fe6c395dba21927c34838ac0f7823274fae4833273381c6472447cfb0400a1e",
+    "project_identity": "15a66684335f03f0eab2f02c60a2a408046ff0f7a10f80bff0968891d5605dfa",
+    "canonical_pcm_s16le_sha256": "71448af7573d9ace0ec8103e3c01fd9d7bf7f2d1af36d5a4d43c1febf445363f",
+    "source_commit": "dffe8f165944c627ae39a8bb7d47bc5a9e703305"
+  },
+  "movie": {
+    "path": "/workspace/scratch/b9b2dfde708d/concert-fan-silk/work/pipeline/concert-fan-trio/review/master.mp4",
+    "sha256": "36166e43ae67a0ea9e7d52313bf223ca0ee373ed555c69728ccab0e3cfb62afe",
+    "bytes": 22982924
+  },
+  "receipts": {
+    "matching_frozen_provenance": true,
+    "checksummed_source_frames": 1200,
+    "hashes": {
+      "/workspace/scratch/b9b2dfde708d/concert-fan-silk/work/pipeline/concert-fan-trio/review/shots/performance/receipt.json": "b22685b2299ee04df4a2c99c5b47ba381ccd4ebcff341de27581f3dd4bc01f0c",
+      "/workspace/scratch/b9b2dfde708d/concert-fan-silk/work/pipeline/concert-fan-trio/review/master.json": "05c70798d49aa7afbb4e55b170780048314c1352bf54a40f26862558912f6961"
+    },
+    "scope": "Receipt coverage verified; pipeline QA owns full source PNG checksum revalidation."
+  },
+  "video": {
+    "width": 1920,
+    "height": 1080,
+    "fps": 60,
+    "frames": 1200,
+    "seconds": 20,
+    "complete_decode": true,
+    "exact_presentation_timestamps": true,
+    "first_seconds": 0,
+    "last_seconds": 19.983333333333334,
+    "time_base": "1/15360",
+    "color": {
+      "color_primaries": "bt709",
+      "color_transfer": "bt709",
+      "color_space": "bt709",
+      "color_range": "tv"
+    },
+    "frame_hash_log": "/workspace/scratch/b9b2dfde708d/concert-fan-silk/work/fan-silk-performance/independent-final-qa/decoded-video.framemd5",
+    "frame_hash_log_sha256": "eca60684e342fd7d370427eb862c56491f150ea4749e043c598f38442ab0e338"
+  },
+  "audio": {
+    "rate": 48000,
+    "channels": 2,
+    "seconds": 20,
+    "canonical_wav_sha256": "b26b7ec1dd00a4c91330df5c83a47afc8c40791861a722dd91408eb246f0cd0b",
+    "logical_samples_per_channel": 960000,
+    "decoded_samples_per_channel": 960512,
+    "trailing_padding_samples_per_channel": 512,
+    "full_program_correlation": 0.9998555754946792,
+    "fitted_gain_db": -0.022578754241294772,
+    "alignment_windows": [
+      {
+        "start_seconds": 1.75,
+        "end_seconds": 3.75,
+        "source_rms": 0.13454774842095124,
+        "zero_lag_correlation": 0.9999014225414261,
+        "best_lag_samples": 0,
+        "best_lag_seconds": 0.0,
+        "best_correlation": 0.9999014225414261,
+        "fitted_gain": 0.9979889126474755,
+        "fitted_gain_db": -0.017485671302032522,
+        "gain_fitted_residual_rms": 0.001710141279052717
+      },
+      {
+        "start_seconds": 10.666666666666666,
+        "end_seconds": 12.666666666666666,
+        "source_rms": 0.16197013297659144,
+        "zero_lag_correlation": 0.9997146962972637,
+        "best_lag_samples": 0,
+        "best_lag_seconds": 0.0,
+        "best_correlation": 0.9997146962972637,
+        "fitted_gain": 0.9962335863307579,
+        "fitted_gain_db": -0.03277641705492969,
+        "gain_fitted_residual_rms": 0.0036935121155047277
+      },
+      {
+        "start_seconds": 14.083333333333334,
+        "end_seconds": 16.083333333333332,
+        "source_rms": 0.19090013623865082,
+        "zero_lag_correlation": 0.999833414188475,
+        "best_lag_samples": 0,
+        "best_lag_seconds": 0.0,
+        "best_correlation": 0.999833414188475,
+        "fitted_gain": 0.9964922122185141,
+        "fitted_gain_db": -0.030521820930519764,
+        "gain_fitted_residual_rms": 0.003993429605153076
+      }
+    ],
+    "peak": 0.8886886239051819,
+    "samples_at_or_above_full_scale": 0,
+    "priming": "FFmpeg applies MP4 edit lists and skip-sample metadata; trailing AAC padding is reported separately."
+  },
+  "contact_sheet": {
+    "path": "/workspace/scratch/b9b2dfde708d/concert-fan-silk/work/fan-silk-performance/independent-final-qa/encoded-seconds.jpg",
+    "sha256": "ee0cfc2c717f289dcdea397dcdc1af9321e38fe0e17543e197d77fd99cd0e9c0",
+    "source_frames": [
+      0,
+      60,
+      120,
+      180,
+      240,
+      300,
+      360,
+      420,
+      480,
+      540,
+      600,
+      660,
+      720,
+      780,
+      840,
+      900,
+      960,
+      1020,
+      1080,
+      1140,
+      1199
+    ],
+    "scope": "Decoded per-second samples and final frame; not continuous motion review or artistic approval."
+  },
+  "inputs_unchanged_during_audit": true,
+  "elapsed_seconds": 21.213
+}

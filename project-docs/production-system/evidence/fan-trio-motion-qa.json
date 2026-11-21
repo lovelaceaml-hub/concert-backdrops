@@ -1,0 +1,150 @@
+{
+  "scene": "tools.concert_fan.fan_trio",
+  "duration_seconds": 20.0,
+  "source_hashes": {
+    "tools/concert_fan/fan_trio.py": "7a5f3928a820d3e8d3ac98ac1a8cb96baa91b21240c8c5b05628b316cb4e4460",
+    "tools/concert_fan/performance.py": "a22751adb1afdc21dd8751357cb2c1a461327b274be8ec2c76d17aa0cba74035",
+    "tools/concert_fan/props.py": "7d3f0c775cb5a26875f2df784937f1f0edb269a6ac80fafb2aa19a5aea42a9f5",
+    "engine/p3d/body.py": "fe7a584519549c025ed37e5fe92d1716f1a98e19d8b9e09943fff9fb9f774391",
+    "engine/p3d/actor.py": "987676f811fd6675f1aec6450e74878998efc83e3f6b963540d6af1577281a8a"
+  },
+  "performers": [
+    {
+      "role_index": 0,
+      "body_height_m": 1.65,
+      "body_color_linear": [
+        0.8433697303921693,
+        0.5859729839496614,
+        0.267358060183772
+      ],
+      "elapsed_seconds": 6.723,
+      "contact": {
+        "role": "lead",
+        "samples": 241,
+        "duration_seconds": 20.0,
+        "authored_steps": 12,
+        "max_ankle_target_error_m": 1.8698409531177825e-07,
+        "max_planted_ankle_step_m": 1.3463600052204709e-15,
+        "minimum_foot_vertex_height_m": 1.7462298274040222e-10,
+        "max_wrist_step_m": 0.04861452526867835,
+        "max_wrist_angle_step_deg": 4.862057619921917,
+        "max_root_step_m": 0.03177313137323006,
+        "sample_interval_seconds": 0.08333333333333333,
+        "provenance": "Original authored score; not reconstructed reference motion",
+        "limits": "Kinematic authored steps and IK, not captured dance or force-driven balance"
+      }
+    },
+    {
+      "role_index": 1,
+      "body_height_m": 1.6899999999999997,
+      "body_color_linear": [
+        0.8433697303921693,
+        0.5859729839496614,
+        0.267358060183772
+      ],
+      "elapsed_seconds": 5.471,
+      "contact": {
+        "role": "answer",
+        "samples": 241,
+        "duration_seconds": 20.0,
+        "authored_steps": 12,
+        "max_ankle_target_error_m": 1.3178697395463948e-07,
+        "max_planted_ankle_step_m": 7.348678496207199e-16,
+        "minimum_foot_vertex_height_m": -7.275957614183426e-11,
+        "max_wrist_step_m": 0.041121755790853316,
+        "max_wrist_angle_step_deg": 4.230474710805234,
+        "max_root_step_m": 0.02747090920168395,
+        "sample_interval_seconds": 0.08333333333333333,
+        "provenance": "Original authored score; not reconstructed reference motion",
+        "limits": "Kinematic authored steps and IK, not captured dance or force-driven balance"
+      }
+    },
+    {
+      "role_index": 2,
+      "body_height_m": 1.62,
+      "body_color_linear": [
+        0.8433697303921693,
+        0.5859729839496614,
+        0.267358060183772
+      ],
+      "elapsed_seconds": 5.48,
+      "contact": {
+        "role": "welcome",
+        "samples": 241,
+        "duration_seconds": 20.0,
+        "authored_steps": 12,
+        "max_ankle_target_error_m": 1.5898430669551761e-07,
+        "max_planted_ankle_step_m": 9.243065094059318e-16,
+        "minimum_foot_vertex_height_m": -7.275957614183426e-12,
+        "max_wrist_step_m": 0.03927367090380059,
+        "max_wrist_angle_step_deg": 0.8946663939500588,
+        "max_root_step_m": 0.023256153950911067,
+        "sample_interval_seconds": 0.08333333333333333,
+        "provenance": "Original authored score; not reconstructed reference motion",
+        "limits": "Kinematic authored steps and IK, not captured dance or force-driven balance"
+      }
+    }
+  ],
+  "props": [
+    {
+      "prop_index": 0,
+      "elapsed_seconds": 30.892,
+      "diagnostics": {
+        "identity": "da46588995daebbb2436fb440877b1e934396ecd0b1c2c73539bc007f6384a28",
+        "cache_hit": true,
+        "bake_seconds": 30.799,
+        "simulation_nodes": 319,
+        "saved_samples": 1201,
+        "simulation_hz": 120,
+        "saved_sample_hz": 60,
+        "surface_points": 6800,
+        "fan_leaf_points": 1050,
+        "max_pin_error_m": 1.6855315977405736e-07,
+        "p99_structural_strain": 0.1101874419971132,
+        "max_structural_strain": 0.2884585371316335,
+        "floor_penetration_m": 0.0,
+        "limitations": [
+          "no cloth self collision",
+          "no other performer collision",
+          "body capsules do not model the costume surface",
+          "art-directed position based dynamics, not measured silk"
+        ]
+      }
+    },
+    {
+      "prop_index": 1,
+      "elapsed_seconds": 52.189,
+      "diagnostics": {
+        "identity": "960815c1f70d8704c2c32e3c06fd70e6996c664e5c1689a047804f8ee1353e9c",
+        "cache_hit": true,
+        "bake_seconds": 52.122,
+        "simulation_nodes": 319,
+        "saved_samples": 1201,
+        "simulation_hz": 120,
+        "saved_sample_hz": 60,
+        "surface_points": 6800,
+        "fan_leaf_points": 1050,
+        "max_pin_error_m": 1.317645032648847e-07,
+        "p99_structural_strain": 0.11669683388905938,
+        "max_structural_strain": 0.2208679025425082,
+        "floor_penetration_m": 0.0,
+        "limitations": [
+          "no cloth self collision",
+          "no other performer collision",
+          "body capsules do not model the costume surface",
+          "art-directed position based dynamics, not measured silk"
+        ]
+      }
+    }
+  ],
+  "limitations": [
+    "Support measurements use 241 final solved poses across the 20-second scene.",
+    "Cloth diagnostics retain their documented approximation and collision limits."
+  ],
+  "maximum_ankle_target_error_m": 1.8698409531177825e-07,
+  "maximum_planted_ankle_step_m": 1.3463600052204709e-15,
+  "minimum_foot_vertex_height_m": -7.275957614183426e-11,
+  "all_prop_cache_hits": true,
+  "source_unchanged_during_check": true,
+  "elapsed_seconds": 105.084
+}

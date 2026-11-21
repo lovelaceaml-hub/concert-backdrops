@@ -7,7 +7,7 @@
     "promo-nine-colours-r3",
     "song11-beauty-30s"
   ],
-  "review_boundary": "Titles and channel metadata were inspected. Playback stalled at 0 seconds; no decoded moving source frames were obtained. Only the first video's thumbnail was visually inspected. No source choreography, shot timing or motion reconstruction is verified.",
+  "review_boundary": "The latest retry inspected titles/channel metadata and the first two posters. All three players stalled at time zero, with no decoded moving source frames. No source choreography, shot timing or motion reconstruction is verified. The owner authorized a best-effort original adaptation; missing source video does not block that labeled original work.",
   "sources": [
     {
       "id": "upwards-to-the-moon-fei-tian",
@@ -20,9 +20,11 @@
       "page_reported_duration_seconds": 84,
       "observation_scope": "page_metadata_and_thumbnail_only",
       "observed_thumbnail": [
-        "Three women wearing long white dresses with lavender or purple outer layers.",
-        "Open fans with long pastel pink, aqua and lavender fabric.",
-        "Black curtain or studio background."
+        "Three performers in asymmetrical triangular staging, one closer to the camera.",
+        "Open fans with wide attached fabric sheets and irregular free edges.",
+        "Lavender outer layers over flowing white lower garments; the available still does not establish that every performer wears a skirt.",
+        "An asymmetrical open arm line, softly shaped wrist and extended foot/toe on the foreground performer.",
+        "Fabric rises above and behind the people against a black backdrop."
       ],
       "motion_review": "not_reviewed",
       "acquisition": "source_video_not_acquired",
@@ -42,7 +44,7 @@
       "owner_url": "https://youtu.be/3nhf2A8L0v0?is=a-ZudE4tnbem7Eis",
       "title": "The Beatles LOVE by Cirque du Soleil | Official Trailer | Cirque du Soleil",
       "channel": "Cirque du Soleil",
-      "observation_scope": "page_metadata_only",
+      "observation_scope": "page_metadata_and_poster_only",
       "motion_review": "not_reviewed",
       "acquisition": "source_video_not_acquired",
       "source_sha256": null,
@@ -51,7 +53,12 @@
         "Develop theatrical scale through a small hero ensemble, changing formations and controlled depth.",
         "Extend to aerial or partner-supported actions only when an inspected passage supplies the required attachment, support, release and landing references."
       ],
-      "proposal_basis": "Original staging proposal; no specific action or shot from the trailer has been verified."
+      "proposal_basis": "Original staging proposal; no specific action or shot from the trailer has been verified.",
+      "page_reported_duration_seconds": 30,
+      "observed_poster": [
+        "Bright yellow car with performers at multiple elevations around or on it.",
+        "Saturated light, black stage, separated silhouettes and a concentrated ensemble."
+      ]
     },
     {
       "id": "song-dien-yen-tuan-pilinh",
@@ -71,6 +78,13 @@
     }
   ],
   "reference_intake_tool": "tools/performance_reference",
-  "next_input": "The three MP4 files or selected continuous full-body excerpts, preferably including entry and recovery; optional costume front/side/back references.",
-  "use_boundary": "Store reference media and derived review frames in private ignored work paths. Record provenance and terms per acquired source. Use original concert audio for the adaptation; source songs or video pixels are not final render assets."
+  "next_input": "Source MP4s or selected full-body excerpts remain useful for faithful choreography analysis, but are optional for continuing the owner-authorized original studies.",
+  "use_boundary": "Store reference media and derived review frames in private ignored work paths. Record provenance and terms per acquired source. Use original concert audio for the adaptation; source songs or video pixels are not final render assets.",
+  "current_original_adaptation": {
+    "project_id": "concert-fan-trio",
+    "source_commit": "dffe8f165944c627ae39a8bb7d47bc5a9e703305",
+    "handoff": "project-docs/production-system/FAN-SILK-PERFORMANCE.md",
+    "seconds": 20,
+    "basis": "Distinct authored trio, held fan and finite silk informed by available poster details; not reconstructed source motion."
+  }
 }

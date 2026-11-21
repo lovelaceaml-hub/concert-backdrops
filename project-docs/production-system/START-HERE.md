@@ -1,16 +1,16 @@
 # Concert production system
 
-Current handoff: the natural dance increment in PR #104. The prior November 20, 2026 handoff uses America/Los_Angeles; machine observations dated November 21 in the source catalog use UTC.
+Current handoff: the original fan and silk increment following PR #105. The prior November 20, 2026 handoff uses America/Los_Angeles; machine observations dated November 21 in the source catalog use UTC.
 
 **The Words of Mother's Love bring peace.** Build every film around that message. The owner approved the sharper Song 11 beauty study and requested that its setup, source, instructions and references be saved, uploaded and merged for every AI to reuse. The owner also authorized continued model, acting and workflow improvement across the concert songs.
 
-## Current development: reference performance adaptation
+## Current delivered increment: original fan and silk trio
 
-The owner supplied three dance and theatrical-performance references and requested adaptations in the approved luminous style. Start with [REFERENCE-PERFORMANCE-PLAN.md](REFERENCE-PERFORMANCE-PLAN.md), [the creative treatment](REFERENCE-CREATIVE-TREATMENT.md), [the authoring contract](PERFORMANCE-AUTHORING.md), and [the reference intake tool](../../tools/performance_reference/README.md). The separate [performance reference catalog](catalogs/performance-references.json) records exact URLs and review coverage.
+The owner explicitly asked for a best-effort attempt using the available reference material. [FAN-SILK-PERFORMANCE.md](FAN-SILK-PERFORMANCE.md) and [the executable module README](../../tools/concert_fan/README.md) describe the new twenty-second `concert-fan-trio`: three different authored scores, grounded stepping, final-palm fan grips and finite silk. Its frozen picture source is `dffe8f165944c627ae39a8bb7d47bc5a9e703305`. Read [DELIVERIES.md](DELIVERIES.md), [STATE.json](STATE.json) and the delivery catalog for the exact completed outputs and review status.
 
-YouTube pages were identified, but moving footage was not obtained; only the first thumbnail was visually inspected. Source MP4s or excerpts are needed before an accurate motion breakdown and recreation. The proposed sixteen-second trio is an original treatment, not a rendered reconstruction. The intake tool prepares timecoded stills and a manifest from local videos; it does not estimate 3D motion or confer visual approval. Current delivery records below remain unchanged.
+The first two reference posters were inspected on retry; actual reference motion remains unavailable. The new scene is an original adaptation, not a reconstruction of those performances. Do not repeat a blocking request for uploads when continuing original work. The [reference intake tool](../../tools/performance_reference/README.md) remains available for faithful choreography analysis when actual footage is accessible. Earlier sixteen-second treatment documents are planning history; the implemented project has an explicit twenty-second clock.
 
-## Latest delivered increment: natural dance, PR #104
+## Previous delivered increment: natural dance, PR #104
 
 The latest direction prioritizes fluid, expressive whole-body movement and dancing. The isolated `concert-dance-study` adds stable support intervals, preserved root travel, an eased preparation and settlement, and trails attached to solved wrists. Its picture source is frozen at `0c42f4422a6b67464cb9cd84aac32008d45d4f4c`. The full eighteen-second, 1,080-frame native 1080p60 movie is complete, independently verified, saved and copied to Production Studies with raw-byte readback. The final movie received 89 targeted independent decoded-frame samples and a separate 15-frame overview; the earlier silent proof received 62 samples. Creative approval remains unrecorded. Read [STATE.json](STATE.json), [DELIVERIES.md](DELIVERIES.md) and their evidence for exact outputs, scoped findings and remaining pacing and settling work.
 
@@ -28,7 +28,7 @@ The original 350,548-byte handoff ZIP could not be recovered after the prior wor
 
 The owner explicitly confirmed the exact saved replacement. It is now [uploaded to Production System](https://drive.google.com/file/d/1gp0x2dnj06eIPDuq6vSGpGtKn_bvKrML/view) and verified by downloaded raw-byte readback against the saved source: 350,534 bytes with the SHA256 above. The [saved version 0 backup](https://chatgpt.com/library?file_id=libfile_0d7ab1c2d83c8191a3badd389c6dc483&account_id=personal) remains available. **All three prior Drive operations are complete:** the eight media copies, the requested single log append and this exact ZIP upload. See [the archive completion evidence](evidence/drive-handoff-completion.json). The [replacement rejection record](evidence/drive-handoff-replacement-block.json) is historical; do not repeat the completed upload or ask for its confirmation again.
 
-That exact delivered ZIP remains an immutable historical snapshot. Current Git source and versioned handoffs, including the source and delivery records in PR #104, carry the latest setup. Do not overwrite the confirmed archive to make it appear current.
+That exact delivered ZIP remains an immutable historical snapshot. Current Git source and versioned handoffs, including the source and delivery records in PR #106, carry the latest setup. Do not overwrite the confirmed archive to make it appear current.
 
 Read this file, [AI-HANDOFF.md](AI-HANDOFF.md), [CREATIVE-RULES.md](CREATIVE-RULES.md), and the current song record before changing anything. Read the current Drive AGENTS, DESIGN-SYSTEM, VIDEO-HANDOFF, AUTONOMOUS-RUN and November 19 lessons addendum. Older instructions remain historical evidence; the latest owner's directions and later dated corrections govern current work.
 

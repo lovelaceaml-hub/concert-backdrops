@@ -2,11 +2,13 @@
 
 This is a bounded work queue for future chats, not an automatically running service. Continue the first item whose prerequisites are available, with the current user's directions taking priority. Preserve the approved references and isolate each change.
 
-## Current priority: the owner's three performance references
+## Current priority: improve the actual fan and silk performance
 
-Read [REFERENCE-PERFORMANCE-PLAN.md](REFERENCE-PERFORMANCE-PLAN.md) and the separate [reference catalog](catalogs/performance-references.json). The latest request is to recreate selected dance/theatre passages in the campaign's luminous style. Their pages were identified, but actual movement could not be inspected. The immediate input is the three videos or selected continuous excerpts. Do not infer choreography from titles or a thumbnail.
+The owner's best-effort instruction supersedes waiting for reference uploads before any work. The new [fan and silk study](FAN-SILK-PERFORMANCE.md) implements three distinct scores, support-aware travel, final-palm fan grips, finite silk, closer framing and a complete original twenty-second scene. Use its exact delivered movie and review evidence as the next comparison; do not treat the earlier sixteen-second proposal as the implemented clock.
 
-The new [local-video intake tool](../../tools/performance_reference/README.md) prepares hashed, timecoded reference packages. Follow with a source-specific breakdown and the [proposed sixteen-second trio](REFERENCE-CREATIVE-TREATMENT.md): distinct invitation, answer and welcome roles, changing formation, one held fan with actual silk, and a completed recovery. The [authoring contract](PERFORMANCE-AUTHORING.md) defines the next implementation work. Sequence/export, new performance assets and cloth bakes remain proposed until built and reviewed. The approved renderer already supports fingers, IK, head targeting and cloth; use those existing foundations deliberately.
+The next visible improvement is a richer complete dance phrase with a clearer change of level, turn, arrival and recovery. Refine skirt articulation and silk reversals so the cloth makes broader flowing shapes without passing across the face. Then expand ensemble scale and song-specific choreography. The current silk remains a stretched cloth approximation without self/partner/actual-garment collision, and the long skirts hide much of the foot articulation. Scheduled contacts and IK are useful foundations, not proof of professional captured dance.
+
+When source footage is accessible, the [intake tool](../../tools/performance_reference/README.md) prepares timecoded evidence for faithful adaptations. Never infer source choreography from a title or poster. Missing footage remains a limitation on source fidelity, not a reason to stop explicitly labeled original studies.
 
 ## Completed production foundation
 

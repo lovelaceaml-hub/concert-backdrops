@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "recorded_at_utc": "2026-11-21T17:10:34.435757+00:00",
+  "files": [
+    {
+      "key": "agents",
+      "id": "195oEBBMyi14jY9lKSPfYB5fqpEZN4axj",
+      "filename": "AGENTS.md",
+      "bytes": 14129,
+      "mime_type": "text/markdown",
+      "modified_time": "2026-11-21T17:10:01.996Z",
+      "url": "https://docs.google.com/document/d/195oEBBMyi14jY9lKSPfYB5fqpEZN4axj/edit?usp=drivesdk&ouid=113038373524763352759&rtpof=true&sd=true",
+      "parents": [
+        "1xyNZn4ZA6bjPcvKjGfgSWQIs9aAp2PPd"
+      ],
+      "sha256": "8c45fb1e5244784ccfbca96244afc9194dc943a5b4bab7e98cbfe66ced6255f2",
+      "raw_bytes_verified": true,
+      "before_bytes": 10543,
+      "before_sha256": "91d7e187b0f40b0fe5d3aa5c1925c24bfd165ec904a592390505704bab611a71",
+      "preserved_original_bytes": true,
+      "appended_bytes": 3586
+    },
+    {
+      "key": "handoff",
+      "id": "1dReBFenaOzt-NT4lLvGkIsGMed8YYs4W",
+      "filename": "VIDEO-HANDOFF.md",
+      "bytes": 21764,
+      "mime_type": "text/markdown",
+      "modified_time": "2026-11-21T17:10:08.008Z",
+      "url": "https://docs.google.com/document/d/1dReBFenaOzt-NT4lLvGkIsGMed8YYs4W/edit?usp=drivesdk&rtpof=true&sd=true",
+      "parents": [
+        "1xyNZn4ZA6bjPcvKjGfgSWQIs9aAp2PPd"
+      ],
+      "sha256": "4bfb162285cd0b910d9347a8fa88553a8ac5c5b80da31a315e20fb837014b99f",
+      "raw_bytes_verified": true,
+      "before_bytes": 18178,
+      "before_sha256": "89bebd8f88410a65a4e3ea18ac34c581ff59cb8536ec0e140586446405a53824",
+      "preserved_original_bytes": true,
+      "appended_bytes": 3586
+    }
+  ],
+  "all_raw_bytes_verified": true
+}
