@@ -1,0 +1,103 @@
+{
+  "schema_version": 1,
+  "created_at_utc": "2026-11-21T09:26:54.197509+00:00",
+  "scope": "Local reference intake tool only; no scene, renderer, source capture or external mutation",
+  "source_files": {
+    "tools/performance_reference/__init__.py": "1d9f9381a72c8731c1ad8cdf0fcf619041d1eb12b967c0d82e78a88d0b456f92",
+    "tools/performance_reference/__main__.py": "c8df33f79b3a09d81f0a7962f9991c148ba61392ae5e2cad3a371c72602a29bf",
+    "tools/performance_reference/intake.py": "efaab48027aa72e30c6ae18a0976b517c4438c203a95ac880c5c55c2f8863064",
+    "tools/performance_reference/test_intake.py": "ff1c45a16cbff92ce83a2bac26c9c1756d2534e759205d7f7afee14a5f38f0ef",
+    "tools/performance_reference/README.md": "e5a38fe3239d39bae89a36e8c04beb5f5cbd008823ef8dbdd7029272019a1ac2"
+  },
+  "suite": {
+    "command": [
+      "/workspace/scratch/b9b2dfde708d/concert-performance/.venv/bin/python",
+      "-m",
+      "unittest",
+      "tools.performance_reference.test_intake",
+      "-v"
+    ],
+    "result": "passed",
+    "test_count": 9,
+    "exit_code": 0,
+    "reported_elapsed_seconds": 1.814,
+    "evidence": "Observed completed process session 95211, final output: Ran 9 tests in 1.814s; OK",
+    "portable_command": ".venv/bin/python -m unittest tools.performance_reference.test_intake -v"
+  },
+  "fixture": {
+    "purpose": "pipeline_fixture",
+    "source_sha256": "96b0f75464fd093ad5ba4a318f8d923de7fa33e2fd01115b5d49b42f3baaec66",
+    "manifest_path": "work/reference-intake/natural-dance-fixture-v2/manifest.json",
+    "manifest_sha256": "656c2a15bb61d9e08badd75c2e67909b02cdd868c236cef8fe85346072560e96",
+    "decoded_source_frames": 1080,
+    "sample_count": 12,
+    "requested_segment": {
+      "clock": "seconds_relative_to_first_decoded_video_frame",
+      "start_seconds": 0.0,
+      "end_seconds": 18.0,
+      "start_seconds_exact": "0",
+      "end_seconds_exact": "18",
+      "interval": "start_inclusive_end_exclusive"
+    },
+    "actual_times_seconds": [
+      0.75,
+      2.25,
+      3.75,
+      5.25,
+      6.75,
+      8.25,
+      9.75,
+      11.25,
+      12.75,
+      14.25,
+      15.75,
+      17.25
+    ],
+    "technical_status": "passed",
+    "visual_review": "not_reviewed",
+    "owner_approval": "unrecorded",
+    "pixel_geometry_policy": "caller_asserted_square_pixels_for_unspecified_stream",
+    "contact_sheet_path": "work/reference-intake/natural-dance-fixture-v2/contact-sheet.jpg",
+    "contact_sheet_sha256": "dc0b433aa3224402fcc5ae7c14fcf0041e7f6952b486948b245ca5850f08b872",
+    "contact_sheet_dimensions": [
+      1680,
+      1092
+    ],
+    "contact_sheet_identical_to_visually_inspected_v1": true
+  },
+  "direct_path_cli_help": "passed; observed exit code 0",
+  "external_downloads": false,
+  "limitations": [
+    "Fixture is the existing 18-second study, not any of the three new reference videos.",
+    "The known native fixture omits SAR; the command explicitly asserted square pixels and the manifest records that assertion.",
+    "Passing extraction does not establish movement quality or owner approval."
+  ],
+  "integration_baseline": "fc337b3612f3a1d63e8f32c36c1e4c99304620c6",
+  "coordinator_verification": {
+    "tests_rerun": 9,
+    "tests_passed": 9,
+    "exit_code": 0,
+    "catalog_errors": [],
+    "all_five_source_file_hashes_verified": true,
+    "fixture_manifest_and_sheet_hashes_verified": true,
+    "contact_sheet_layout_inspected": true,
+    "contact_sheet_layout_finding": "All 12 frame/time labels readable; PIPELINE FIXTURE and pending review labels visible. Final v2 sheet matches inspected v1 bytes.",
+    "visual_scope": "Intake sheet layout only; no new performance naturalness claim or source-reference movement review.",
+    "approved_engine_assets_projects_and_delivery_catalogs_unchanged": true,
+    "repository_link_and_json_checks": "passed",
+    "source_video_files_for_new_references_acquired": 0,
+    "reference_recreations_rendered": 0
+  },
+  "independent_review": {
+    "scope": "Read-only code and documentation review; no additional tests in the final review.",
+    "initial_findings": [
+      "Unknown final-frame duration allowed unproven endpoints",
+      "Playlist input could reference unhashed media dependencies",
+      "Non-square source pixels could distort proportions",
+      "Unbounded full-source enumeration"
+    ],
+    "final_result": "No material remaining blockers for documented short self-contained local-video scope.",
+    "resolution": "Endpoint bounds, file-only protocols/container allowlist, SAR policy and bounded/documented enumeration are implemented.",
+    "creative_record_review": "No material inaccuracies or contradictions found; source observation, proposed work and delivered films remain distinct."
+  }
+}

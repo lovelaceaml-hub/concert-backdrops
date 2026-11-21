@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "observed_local_date": "2026-11-21",
+  "timezone": "America/Los_Angeles",
+  "urls": [
+    {
+      "id": "upwards-to-the-moon-fei-tian",
+      "url": "https://www.youtube.com/watch?v=lFUQP-J31RI",
+      "scope": "page_metadata_and_thumbnail_only"
+    },
+    {
+      "id": "beatles-love-cirque-trailer",
+      "url": "https://www.youtube.com/watch?v=3nhf2A8L0v0",
+      "scope": "page_metadata_only"
+    },
+    {
+      "id": "song-dien-yen-tuan-pilinh",
+      "url": "https://www.youtube.com/watch?v=jPdgbrFmNyg",
+      "scope": "page_metadata_only"
+    }
+  ],
+  "attempts": {
+    "web_fetch": "Failed or throttled for the YouTube watch pages.",
+    "local_browser": "Unavailable because originating browser context was not connected.",
+    "cloud_browser": "All three watch pages loaded enough to identify titles/channels. Main video playback was not obtained.",
+    "first_reference_media": {
+      "currentTime": 0,
+      "duration": 84,
+      "readyState": 0,
+      "videoWidth": 0,
+      "videoHeight": 0
+    },
+    "supported_media_export": "One first-reference downloadMedia attempt was canceled; no video file was acquired."
+  },
+  "conclusion": "No timed motion or shot breakdown has been performed. First-reference thumbnail supports costume/prop observations only. The other references have metadata-only coverage.",
+  "not_observed": [
+    "Full-speed playback",
+    "Source decoded movement frames",
+    "Source beat timing",
+    "Performer root paths",
+    "Contact or support states",
+    "Choreography reconstruction"
+  ],
+  "next_step": "Ingest uploaded MP4s/excerpts with the reference intake tool; inspect moving footage and timed samples before writing source-specific choreography.",
+  "source_baseline": "fc337b3612f3a1d63e8f32c36c1e4c99304620c6"
+}

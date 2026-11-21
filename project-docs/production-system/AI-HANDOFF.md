@@ -17,7 +17,13 @@ Do not restart the old promo, regenerate approved art or re-open a completed rep
 
 Use [AUTHORING-NEXT-SONG.md](AUTHORING-NEXT-SONG.md) when moving from a study to a new complete song. The current kit adapter explicitly accepts the historical Consideration scene, its separate camera and response revision, and the new natural dance scene. Together with the approved Song 11 adapter, the system has four scene registrations across five configured projects; the two dance projects share one registration. A new audio source or a renamed project is not a new authored film; add and verify its explicit scene registration while preserving the approved projects. Prefer `concert-kit-consideration-v2` when studying the corrected hand return and clearer rise; retain the original 18-second file as evidence of what needed repair.
 
-## Newest work: natural dance, PR #104
+## Current development: reference performance adaptation
+
+The owner's three new YouTube references are cataloged separately in `catalogs/performance-references.json`. Read [REFERENCE-PERFORMANCE-PLAN.md](REFERENCE-PERFORMANCE-PLAN.md), [REFERENCE-CREATIVE-TREATMENT.md](REFERENCE-CREATIVE-TREATMENT.md), and [PERFORMANCE-AUTHORING.md](PERFORMANCE-AUTHORING.md). The source pages were identified; actual moving footage was unavailable. Only the first thumbnail supports costume/prop observations. No reference recreation, source pose extraction or Blender performance exporter is completed.
+
+The working local-video intake utility in `tools/performance_reference/` preserves source hashes, requested ranges and actual decoded timestamps, then creates review samples and an annotation manifest. It leaves motion review and approval unrecorded. Feed it uploaded source files or selected excerpts, inspect actual movement, then build distinct roles, support-aware transitions, authored hands/attention, and a purpose-built fan/silk asset. The sixteen-second trio treatment is a proposal, not source-measured choreography. Existing approved engine snapshots and delivered film identities remain intact.
+
+## Latest delivered work: natural dance, PR #104
 
 The current dance picture is frozen at `0c42f4422a6b67464cb9cd84aac32008d45d4f4c`. Its full eighteen-second native 1080p60 movie is complete, saved and copied to Production Studies with verified raw bytes. Both technical auditors passed; targeted visual inspection found no confirmed blocker, while preserving the slow preparation and prolonged settling as creative issues. Owner approval remains unrecorded. Read [STATE.json](STATE.json), [DELIVERIES.md](DELIVERIES.md) and their evidence before starting another coordinator or changing picture inputs.
 

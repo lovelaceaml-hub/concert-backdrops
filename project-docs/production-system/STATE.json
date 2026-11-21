@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_local_date": "2026-11-20",
+  "updated_local_date": "2026-11-21",
   "timezone": "America/Los_Angeles",
   "message": "The Words of Mother's Love bring peace",
   "repository": "lovelaceaml-hub/concert-backdrops",
@@ -28,7 +28,7 @@
     "handoff": "https://drive.google.com/drive/folders/1QDGGqqkJlbovBLCthX-QChqfD8zSmK8X",
     "media": "https://drive.google.com/drive/folders/1hrk62bFIOHv2NwXvYl2bNSmp0cwBoXrr"
   },
-  "next_work": "Tighten preparation pacing, add a genuinely distinct answering dance phrase, author hands, and test costume silhouettes during turns before building the next song scene.",
+  "next_work": "Ingest and inspect the three source performance clips, annotate complete phrases, then author the distinct trio and real fan/silk feature. Reference media is still needed; see active_development.",
   "background_service_configured": false,
   "historical_baseline_checkpoint": "673f68785c36b57d55d05129ee5549efe6352c60",
   "render_projects": [
@@ -195,5 +195,27 @@
     "append_count": 1,
     "sha256": "4f01a3c40ec8b07da8b07c6f16d3f32d6f7fab70530fb8ed58307d5ee36e7bda",
     "url": "https://drive.google.com/file/d/16F00sMLXIxP77F2bvffPJ9754eR93wtb/view"
+  },
+  "active_development": {
+    "name": "Reference performance adaptation",
+    "status": "intake_implemented_verified_and_documented_source_reference_media_needed",
+    "owner_request": "Recreate the three supplied dance and theatrical-performance references in the approved concert style.",
+    "references": "project-docs/production-system/catalogs/performance-references.json",
+    "plan": "project-docs/production-system/REFERENCE-PERFORMANCE-PLAN.md",
+    "creative_treatment": "project-docs/production-system/REFERENCE-CREATIVE-TREATMENT.md",
+    "authoring_contract": "project-docs/production-system/PERFORMANCE-AUTHORING.md",
+    "reference_intake_tool": "tools/performance_reference",
+    "source_video_files_acquired": 0,
+    "source_moving_footage_reviewed": 0,
+    "reference_recreations_rendered": 0,
+    "next_input": "Three MP4s or selected continuous excerpts including full bodies, entry and recovery.",
+    "proposed_first_proof": "Sixteen-second continuous trio with distinct invitation, answer and welcome roles, a formation change, and a held fan with simulated silk.",
+    "blender_motion_exporter_implemented": false,
+    "performance_bundle_adapter_implemented": false,
+    "intake_validation_evidence": "project-docs/production-system/evidence/performance-reference-intake-qa.json",
+    "source_baseline": "fc337b3612f3a1d63e8f32c36c1e4c99304620c6",
+    "last_delivered_increment": "Natural dance PR 104; the existing current_increment and natural_performance fields retain its completion evidence.",
+    "focused_tests_passed": 9,
+    "integration_branch": "creative/reference-performances-20261121"
   }
 }
