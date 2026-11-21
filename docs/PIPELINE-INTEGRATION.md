@@ -53,6 +53,11 @@ the exact PCM24 payload and writes a canonical WAV header without a
 host-specific FFmpeg encoder tag. The sample payload SHA256 is
 `493d1fa5efeaea437edcfecb241fb536439ec832d6f899750c4282c0d6895f84`.
 The project manifests identify these inputs; neither recording is committed.
+The successful canonical preparation used FFmpeg 7.1.5-0+deb13u1. The observed
+host and package versions are recorded in the production-system environment
+evidence. If a different decoder or filter build produces different PCM, keep
+the rejected output and investigate the environment; do not replace the expected
+hash merely to make a new file pass.
 
 Before the first frozen preparation, the two original Git objects must exist:
 
@@ -97,8 +102,11 @@ This composes preparation, the existing resumable renderer, FFmpeg assembly,
 technical QA and the review gallery. It does not introduce a second scheduler.
 The outputs live under `work/pipeline/PROJECT/QUALITY/`, including `master.mp4`,
 `master.json`, `qa.json`, `review.html`, shot receipts and atomic PNG frames.
-Use the existing `archive` command or the production-system archive entrypoint
-after the current delivery has passed its checks.
+Use `./scripts/video archive PROJECT --quality QUALITY --destination PATH`
+after the current delivery has passed its checks. It copies an archive to local
+or mounted storage; the connected Drive tool performs the separate upload.
+`scripts/concert export-handoff` packages instructions and catalogs, while
+`scripts/concert restore-master` verifies and restores split reference media.
 
 The registered presets use `temporal_samples`, from 1 to 4. This is the number of
 motion samples in the p3d light pass, not a Cycles sampling budget. Supplying a
@@ -154,3 +162,11 @@ possible frame history is pixel-identical. Native comparison renders and motion
 inspection provide that separate visual evidence. New song production still
 requires an authored scene and cue file; the registered Song 11 adapter refuses
 to substitute another recording or silently retime its choreography.
+
+The deeper, separately implemented auditor for the exact Consideration study is
+documented in [tools/concert_review/README.md](../tools/concert_review/README.md).
+It records a source baseline after a selected native frame, then checks the final
+movie's full decode, presentation times, audio alignment and peaks, color tags,
+source identity and encoded cut/batch boundary pictures. It writes only ignored
+audit evidence and never re-renders or alters a production output. Its fixed
+18-second study contract must not be advertised as an all-song audit.

@@ -53,6 +53,16 @@ Decoded frames at 6.000, 6.500 and 6.9833 seconds are in `work/concert-kit/pilot
 
 Palm distance does not establish interlocked fingers, realistic muscle force, or good acting. The full motion still needs review across offer, grip, rise, release, the authored 1.2-second standing settle, and the two camera cuts. The settle follows the complete capture and is new scene work; it is not recorded performance from CMU.
 
+Later dense review of the actual production frames identified a material creative
+limitation: the two gold silhouettes overlap heavily around 7.2 to 8.1 seconds,
+obscuring part of the release. This is an unfinished hero-shot issue, not a
+technical pass or proof of a physical collision. A smaller foot/shin overlap
+around 5.0 to 5.6 seconds clears in projection by 6.0. The held hand remains
+readable from approximately 5.3 through 7.0. An isolated camera planning review
+tests alternative views at 7.5 seconds without changing this frozen movie.
+Its promising single-frame results still require complete shot and transition
+review before becoming a new production version.
+
 ## Native render cost and delivery checks
 
 The one-second benchmark decoded to exactly 60 frames, 1920x1080, at 60/1 fps, with duration 1.000 seconds and YUV420P output. It used llvmpipe LLVM 19.1.7 with one software graphics thread and two HDR samples. Initialization took 6.101 seconds, and total elapsed time was 184.336 seconds. The first frame completed at 33.84 seconds including warmup; subsequent frames averaged approximately 2.55 seconds each. This suggested roughly 45 minutes for 1080 frames on one comparable worker, before additional shared-machine effects.

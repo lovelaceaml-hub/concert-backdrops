@@ -4,21 +4,21 @@ This is a bounded work queue for future chats, not an automatically running serv
 
 ## Current increment
 
-The production foundation and approved study are merged. All eleven full audio sources are verified. The current increment adds registered p3d production commands, a shared catalog/handoff, six native model families and one original Consideration motion study. See `STATE.json` and the kit verification for its final evidence and creative review status.
+The production foundation and approved study are merged. All eleven full audio sources are verified. The current increment adds registered p3d production commands, a shared catalog/handoff, six native model families and one original Consideration motion study, plus a separate dove, rose and wheat prototype pack. See `STATE.json` and the kit verification for final evidence and creative review status. The [dense reference motion review](REFERENCE-MOTION-REVIEW.md) identifies precise acting and reveal improvements from the actual approved films.
 
 ## Model and performance work
 
 | Priority | Work | Concrete proof needed |
 | --- | --- | --- |
-| 1 | Refine helping, greeting and giving as complete two-person performances | Readable anticipation, shared grip, weight transfer, release, final acknowledgment; native motion strip plus full clip |
+| 1 | Give the receiver a visible response, then refine helping, greeting and giving as complete two-person performances | Readable anticipation, shared grip, weight transfer, release, delayed acknowledgment and final settling; native motion strip plus full clip |
 | 2 | Attach baton, bow, mallet and book to final solved hands | Close conductor/string/percussion shots; measure contact drift at representative frames |
 | 3 | Build hero adult, child and elder variants in the established style | Consistent scale, clothing, silhouette and hands; close/medium/distant model atlas |
-| 4 | Add a true articulated dove family and purposeful flock response | Wing articulation at native frame times, takeoff/landing contact and direction through depth |
-| 5 | Extend the new living vegetation into rose, wheat and flowering branch variants | Shared wind without synchronized oscillation, readable growth and near/mid/far detail |
+| 4 | Refine the new articulated dove prototype's silhouette and integrate purposeful flight or flock response | Review head, neck, torso, feather continuity and folding; retain tested wing lengths and contact, then prove direction through a designed environment |
+| 5 | Refine the new rose and wheat prototypes and add flowering branch variants | Overlapping rose petals, readable middle/near detail, varied wheat silhouettes and shared wind without synchronized oscillation |
 | 6 | Improve the few churches and entrances closest to the camera | Preserve reference silhouette; add recessed windows/doors, roof edges, stairs and grounds; before/after native frames |
 | 7 | Add reusable garden, bridge, gate and village modules | Walkable surfaces, coherent scale, contact anchors and at least one moving-camera example |
 | 8 | Improve listening, encouragement and group responses | Small authored response groups and breathing/attention cues; no distracting crowd loops |
-| 9 | Build transition recipes between completed scenes | Matching direction, subject scale, exposure, source clock and completed arrivals across the cut |
+| 9 | Build transitions that retain the visible release and follow-through of an action | Matching direction, subject scale, exposure, source clock and completed arrivals across the cut; preserve the physical cause before the wide reveal |
 
 An entry becomes reviewed only after its specific output is inspected. The existence of a Python constructor is source readiness, not creative approval. Architecture and ensemble modules currently tied to Song 11 should be extracted carefully into new wrappers before being advertised as drop-in models for any scene.
 
@@ -42,7 +42,7 @@ These are proposals derived from the current catalog, not replacements for histo
 
 ## Workflow improvements after this increment
 
-1. Review the new hand-helping clip with the owner and promote only the approved exact media and model versions.
+1. Refine the Consideration middle shot using [CONSIDERATION-CAMERA-NEXT.md](CONSIDERATION-CAMERA-NEXT.md). The current 7.2 to 8.1 second overlap obscures the release; the tested west45 view is a promising single-frame plan. Check the entire action and both cuts, render a new version, then seek creative review of that exact output. Preserve this study's original source and media.
 2. Select one full song for the first upgraded production, retaining its source timing and current arrangement caveats.
 3. Obtain or verify rehearsal/live arrangements before promising exact stage conformance. Historical uniform stretching and cuts remain historical choices, not defaults for new recordings.
 4. Record measured render memory and frame times for each model tier; select workers from evidence, not CPU count alone.

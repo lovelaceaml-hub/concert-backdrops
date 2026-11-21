@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "observed_at_utc": "2026-11-21 01:12:26 UTC",
+  "action": "New private project media upload to Google Drive",
+  "status": "rejected_by_automatic_approval_review",
+  "destination": {
+    "id": "1hrk62bFIOHv2NwXvYl2bNSmp0cwBoXrr",
+    "name": "Videos / Production Studies",
+    "url": "https://drive.google.com/drive/folders/1hrk62bFIOHv2NwXvYl2bNSmp0cwBoXrr"
+  },
+  "files": [
+    {
+      "name": "Consideration-Garden-Native-4K.png",
+      "sha256": "a398076408d0c02d53ad8e553d42ac15cbb2cbe5ff70f0935e5235cc5ff383d4"
+    },
+    {
+      "name": "Concert-Native-Models-12-Variants.jpg",
+      "sha256": "0faadc1b42dab94f4c36a050295bfad790d2e5a08f7a72b9a91739246d6ef784"
+    }
+  ],
+  "reason": "The review required explicit user-authored identification of the exact files and destination for the private project media transfer. It also said the connector metadata did not establish destination ownership or trust.",
+  "ownership_check": {
+    "current_user_can_share": true,
+    "source_visibility_status": "access_not_verified",
+    "owner_identity_exposed": false
+  },
+  "same_upload_retried": false,
+  "alternate_transfer_route_used": false,
+  "unaffected_work": "Local rendering, technical verification, code and documentation integration continue. Existing approved reference archive remains saved.",
+  "required_followup": "After all deliverables are concrete and saved, request confirmation of the exact pending media files and destination. Check separately whether existing in-place instruction updates and non-media handoff writes are permitted; do not treat the image rejection as an unattempted result for those different actions."
+}

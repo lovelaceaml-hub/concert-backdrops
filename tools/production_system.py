@@ -276,9 +276,14 @@ def export_handoff(output):
     output.parent.mkdir(parents=True, exist_ok=True)
     if output.exists():
         raise ValueError("Handoff already exists; use a versioned output name.")
-    files = [ROOT / "AGENTS.md", ROOT / "CLAUDE.md", ROOT / "GEMINI.md", ROOT / "README.md", ROOT / "docs/VIDEO-PIPELINE.md",
-             ROOT / "docs/PIPELINE-INTEGRATION.md", ROOT / "tools/production_system.py",
-             ROOT / "tools/concert_kit/README.md", ROOT / "scripts/concert"]
+    files = [ROOT / "AGENTS.md", ROOT / "CLAUDE.md", ROOT / "GEMINI.md", ROOT / "README.md",
+             ROOT / "project-docs/AGENTS.md", ROOT / "apps/README.md",
+             ROOT / "tools/production_system.py", ROOT / "scripts/concert"]
+    files += list((ROOT / "docs").rglob("*.md"))
+    for directory in ("tools/concert_kit", "tools/concert_addons", "tools/concert_review", "tools/promo_beauty_example"):
+        files += list((ROOT / directory).glob("*.md"))
+    for project in ("approved-light-s11", "concert-kit-consideration"):
+        files.append(ROOT / "projects" / project / "project.json")
     files += [p for p in SYSTEM.rglob("*") if p.is_file() and p.suffix in {".md", ".json"}]
     files = sorted({path for path in files if path.is_file()})
     git = lambda *args: subprocess.check_output(["git", *args], cwd=ROOT, text=True).strip()

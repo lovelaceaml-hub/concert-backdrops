@@ -6,7 +6,9 @@ Current handoff: November 20, 2026, America/Los_Angeles. Machine observations da
 
 ## The shared starting point
 
-The code, reusable scene tools and versioned instructions are in [concert-backdrops](https://github.com/lovelaceaml-hub/concert-backdrops). The shared project home remains [Concert Backdrops - Songs](https://drive.google.com/drive/folders/1xyNZn4ZA6bjPcvKjGfgSWQIs9aAp2PPd). Its [Production System folder](https://drive.google.com/drive/folders/1QDGGqqkJlbovBLCthX-QChqfD8zSmK8X) carries a portable handoff for chats without a checkout. Media is in [Videos / Production Studies](https://drive.google.com/drive/folders/1hrk62bFIOHv2NwXvYl2bNSmp0cwBoXrr).
+The code, reusable scene tools and versioned instructions are in [concert-backdrops](https://github.com/lovelaceaml-hub/concert-backdrops). The shared project home remains [Concert Backdrops - Songs](https://drive.google.com/drive/folders/1xyNZn4ZA6bjPcvKjGfgSWQIs9aAp2PPd). Its [Production System folder](https://drive.google.com/drive/folders/1QDGGqqkJlbovBLCthX-QChqfD8zSmK8X) is the intended portable handoff destination. The approved study archive is in [Videos / Production Studies](https://drive.google.com/drive/folders/1hrk62bFIOHv2NwXvYl2bNSmp0cwBoXrr).
+
+The automatic approval review blocked new Drive image uploads because it requires exact file and destination confirmation; the connector did not expose ownership sufficient to resolve that requirement. New media uploads, the portable Drive copy and live Drive rule updates remain pending that confirmation. Use the current Git instructions now. Prepared historical-body-preserving rule headers and the blocked action record are in [drive-updates/updates.json](drive-updates/updates.json). Do not assume a prepared file was uploaded.
 
 Read this file, [AI-HANDOFF.md](AI-HANDOFF.md), [CREATIVE-RULES.md](CREATIVE-RULES.md), and the current song record before changing anything. Read the current Drive AGENTS, DESIGN-SYSTEM, VIDEO-HANDOFF, AUTONOMOUS-RUN and November 19 lessons addendum. Older instructions remain historical evidence; the latest owner's directions and later dated corrections govern current work.
 
@@ -17,6 +19,9 @@ Read this file, [AI-HANDOFF.md](AI-HANDOFF.md), [CREATIVE-RULES.md](CREATIVE-RUL
 | [Model catalog](catalogs/models.json) | Existing native models and performances, new model families, eligibility and limitations |
 | [Audio audit](SONG-AUDIO-AUDIT.md) | What was independently downloaded/decoded, what earlier builders reported, and stale records corrected |
 | [Improvement queue](IMPROVEMENT-QUEUE.md) | Concrete next work by model family and song, with evidence required for completion |
+| [Authoring the next song](AUTHORING-NEXT-SONG.md) | Performance, model reuse, scene registration, cue clocks and honest review boundaries |
+| [Reference motion review](REFERENCE-MOTION-REVIEW.md) | Dense temporal samples from the actual approved films and three specific next improvements |
+| [Next Consideration camera revision](CONSIDERATION-CAMERA-NEXT.md) | A measured, visibly clearer candidate angle for the remaining middle-shot overlap |
 | [Pipeline integration](../../docs/PIPELINE-INTEGRATION.md) | Registered renderers, source clocks, color handling, resume and CLI commands |
 | [Current state](STATE.json) | Delivery, integration and open work status; never substitute it for a render receipt |
 
@@ -89,6 +94,8 @@ The reusable scene connects helping someone stand to a wave of light opening the
 The audio is the original Song 07 interval 137.5 to 155.5 seconds, without time stretching. The preparation command verifies the original hash and produces the recorded 18-second WAV. It includes a small gain reduction and short fades. The world response at study time 11.5 seconds follows the documented transition out of a quiet passage; an exact ear-verified transient alignment is not claimed.
 
 Check `projects/concert-kit-consideration/project.json` for the current frame rate, samples and frame count before choosing a frame number. The direct scene tool also offers second-based still selection. Every rendered variant must carry its own source fingerprint; changing the camera, action, audio, fonts or model invalidates affected output.
+
+The separate [Consideration auditor](../../tools/concert_review/README.md) repeats the deeper delivery checks: complete decode and presentation times, audio alignment and peaks, source identity, and encoded pictures at cuts and worker boundaries. It is scoped to this exact study. Capture its baseline after an inspected frame 0 and before a full production round; run the auditor after assembly and pipeline QA. Preserve an earlier baseline instead of overwriting it to conceal a source change.
 
 ## The production cycle for every song
 

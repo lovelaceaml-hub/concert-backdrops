@@ -15,6 +15,8 @@ Copy the following instruction into a new working chat. The files it references 
 
 Do not restart the old promo, regenerate approved art or re-open a completed repair because an old handoff says it is pending. The source catalog records that all eleven recordings exist. Several full-song delivery records refer to prior chats and have not been independently watched in this audit; do not claim those videos were visually verified just because their status pages were read.
 
+Use [AUTHORING-NEXT-SONG.md](AUTHORING-NEXT-SONG.md) when moving from a study to a new complete song. The current registered kit adapter accepts the Consideration scene only. A new audio source or a renamed project is not a new authored film; add and verify its explicit scene registration while preserving the approved projects.
+
 ## Coordination
 
 - One scene/model writer per file group. One coordinator owns shared lighting, timing, status and final assembly.

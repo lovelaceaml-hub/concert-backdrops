@@ -1,0 +1,109 @@
+{
+  "schema_version": 1,
+  "scope": "Ordered decoded image review, including one 24-frame consecutive interval. No real-time playback, audio review, sync measurement or full-film approval.",
+  "frame_numbering": "Zero-based; time = frame / 60; sample i = first_frame + i * step_frames.",
+  "thumbnail_size": [
+    480,
+    270
+  ],
+  "decode": "Inverse BT.709 matrix/range conversion, no added transfer conversion.",
+  "sources": [
+    {
+      "id": "approved-promo",
+      "filename": "approved-promo-720p60.mp4",
+      "observed_local_path": "/workspace/scratch/b9b2dfde708d/cinematic-motion/work/promo-design-example/reference/approved-promo-720p60.mp4",
+      "sha256": "ad4b4e7fe861ae34eb80e8b921ee747efc477c08bb89ec981f1b588a0b3c0af5",
+      "video": {
+        "width": 1280,
+        "height": 720,
+        "fps_numerator": 60,
+        "fps_denominator": 1,
+        "stream_duration_seconds": 66.0
+      }
+    },
+    {
+      "id": "song11-beauty-study",
+      "filename": "Song11-Beauty-Study-30s-1080p60.mp4",
+      "observed_local_path": "/workspace/scratch/b9b2dfde708d/deliverables/Song11-Beauty-Study-30s-1080p60.mp4",
+      "sha256": "6e4533c4527dfb81c750f8ba907e86392f0c87dca638c3daac768ece8edae82a",
+      "video": {
+        "width": 1920,
+        "height": 1080,
+        "fps_numerator": 60,
+        "fps_denominator": 1,
+        "stream_duration_seconds": 30.0
+      }
+    }
+  ],
+  "passages": [
+    {
+      "id": "promo-entry",
+      "source_id": "approved-promo",
+      "first_frame": 2340,
+      "last_frame_inclusive": 2412,
+      "step_frames": 4,
+      "sample_count": 19,
+      "first_time_seconds": 39.0,
+      "last_time_seconds": 40.2,
+      "contact_sheet_ignored_path": "work/production-system/reference-review/promo-respect-entry-temporal.jpg"
+    },
+    {
+      "id": "promo-conversation",
+      "source_id": "approved-promo",
+      "first_frame": 2400,
+      "last_frame_inclusive": 2640,
+      "step_frames": 8,
+      "sample_count": 31,
+      "first_time_seconds": 40.0,
+      "last_time_seconds": 44.0,
+      "contact_sheet_ignored_path": "work/production-system/reference-review/promo-respect-temporal.jpg"
+    },
+    {
+      "id": "conductor",
+      "source_id": "song11-beauty-study",
+      "first_frame": 1170,
+      "last_frame_inclusive": 1466,
+      "step_frames": 8,
+      "sample_count": 38,
+      "first_time_seconds": 19.5,
+      "last_time_seconds": 24.433333333333334,
+      "contact_sheet_ignored_path": "work/production-system/reference-review/s11-conductor-temporal.jpg"
+    },
+    {
+      "id": "reveal-transition",
+      "source_id": "song11-beauty-study",
+      "first_frame": 1410,
+      "last_frame_inclusive": 1433,
+      "step_frames": 1,
+      "sample_count": 24,
+      "first_time_seconds": 23.5,
+      "last_time_seconds": 23.883333333333333,
+      "contact_sheet_ignored_path": "work/production-system/reference-review/s11-reveal-cut-temporal.jpg"
+    }
+  ],
+  "findings": [
+    {
+      "source_id": "approved-promo",
+      "observations": [
+        "Closer view present by 39.400 s; prior title faded by 39.600 s.",
+        "Speaker hand opens around 39.933 to 40.133 s, then is largely held through 44.000 s.",
+        "Listener response is small; moving light, lanterns, reflections and viewpoint continue."
+      ],
+      "inference": "Preserve clear human intention and surrounding motion; add one delayed receiving response and a relaxed return."
+    },
+    {
+      "source_id": "song11-beauty-study",
+      "observations": [
+        "Outward arm opening more visible at 23.600 s.",
+        "Blue flare at frame 1417 (23.6166666667 s), wide cut at frame 1418 (23.6333333333 s).",
+        "Distinct expanding curves appear from 23.650 to 23.733 s, followed by larger trails and reflections."
+      ],
+      "inference": "Make the physical arrival and follow-through readable before the large flare and wide reveal; the sampled images do not establish musical accuracy."
+    }
+  ],
+  "next_priorities": [
+    "Authored receiving response in a paired actor recipe.",
+    "One shared-prop lift and set-down with common hand targets and visible weight transfer.",
+    "Hand-origin light release with visible follow-through across the camera reveal."
+  ]
+}

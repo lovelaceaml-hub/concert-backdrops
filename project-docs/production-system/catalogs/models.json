@@ -521,7 +521,8 @@
       },
       "known_limits": [
         "New original eighteen-second study; not owner-approved yet.",
-        "Captured paired action uses an independent grip reference and a purposeful final settle."
+        "Captured paired action uses an independent grip reference and a purposeful final settle.",
+        "Current camera merges the figures in projection around 7.2 to 8.1 seconds. See CONSIDERATION-CAMERA-NEXT.md before promoting this to a polished hero shot."
       ]
     },
     {
@@ -561,6 +562,148 @@
       "known_limits": [
         "Retained for provenance. Excluded from the current code-only workflow."
       ]
+    },
+    {
+      "id": "concert-addons.dove-articulated-v1",
+      "family": "birds",
+      "source_paths": [
+        "tools/concert_addons/models.py",
+        "tools/concert_addons/geometry.py",
+        "tools/concert_addons/catalog.json",
+        "tools/concert_addons/README.md",
+        "tools/concert_addons/VERIFICATION.md"
+      ],
+      "entry_point": "tools.concert_addons.Dove",
+      "provenance": "procedural_geometry_and_authored_motion",
+      "code_only_eligible": true,
+      "reuse_scope": "native_world_space",
+      "status": "implemented_prototype_in_review",
+      "coordinates": {
+        "units": "metres",
+        "up_axis": "+Y"
+      },
+      "variants": [
+        "ivory"
+      ],
+      "anchors": [
+        "root",
+        "feet[0:2]",
+        "wings.left.shoulder",
+        "wings.left.elbow",
+        "wings.left.wrist",
+        "wings.right.shoulder",
+        "wings.right.elbow",
+        "wings.right.wrist"
+      ],
+      "animation": [
+        "anticipatory head turn",
+        "crouch",
+        "articulated flap",
+        "climb",
+        "glide",
+        "landing flare",
+        "foot contact",
+        "wing fold"
+      ],
+      "suggested_songs": [
+        "s09"
+      ],
+      "known_limits": [
+        "Stylized anatomy",
+        "Authored flight curve, no aerodynamic simulation",
+        "One launch and landing per instance",
+        "Not approved for a concert song",
+        "Current appearance refinement and earlier rig-baseline movie have distinct source identities.",
+        "Wing anatomy, folding, silhouette and scene integration need further artistic review."
+      ],
+      "verification": "tools/concert_addons/VERIFICATION.md"
+    },
+    {
+      "id": "concert-addons.rose-layered-v1",
+      "family": "vegetation",
+      "source_paths": [
+        "tools/concert_addons/models.py",
+        "tools/concert_addons/geometry.py",
+        "tools/concert_addons/catalog.json",
+        "tools/concert_addons/README.md",
+        "tools/concert_addons/VERIFICATION.md"
+      ],
+      "entry_point": "tools.concert_addons.Rose",
+      "provenance": "procedural_geometry_and_authored_motion",
+      "code_only_eligible": true,
+      "reuse_scope": "native_world_space",
+      "status": "implemented_prototype_in_review",
+      "coordinates": {
+        "units": "metres",
+        "up_axis": "+Y"
+      },
+      "variants": [
+        "blush",
+        "crimson",
+        "golden"
+      ],
+      "anchors": [
+        "root",
+        "flower"
+      ],
+      "animation": [
+        "three-second opening",
+        "coherent wind",
+        "attached leaves and flower head"
+      ],
+      "suggested_songs": [
+        "s02"
+      ],
+      "known_limits": [
+        "Stylized petal anatomy",
+        "Palette variants are not cultivar claims",
+        "Not approved for a concert song",
+        "Reviewed blossoms still read as tiered light flowers more than a botanical rose whorl."
+      ],
+      "verification": "tools/concert_addons/VERIFICATION.md"
+    },
+    {
+      "id": "concert-addons.wheat-spikelet-v1",
+      "family": "vegetation",
+      "source_paths": [
+        "tools/concert_addons/models.py",
+        "tools/concert_addons/geometry.py",
+        "tools/concert_addons/catalog.json",
+        "tools/concert_addons/README.md",
+        "tools/concert_addons/VERIFICATION.md"
+      ],
+      "entry_point": "tools.concert_addons.Wheat",
+      "provenance": "procedural_geometry_and_authored_motion",
+      "code_only_eligible": true,
+      "reuse_scope": "native_world_space",
+      "status": "implemented_prototype_in_review",
+      "coordinates": {
+        "units": "metres",
+        "up_axis": "+Y"
+      },
+      "variants": [
+        "ripe",
+        "green"
+      ],
+      "anchors": [
+        "roots",
+        "heads"
+      ],
+      "animation": [
+        "coherent wind with fixed roots",
+        "attached paired grains and awns"
+      ],
+      "suggested_songs": [
+        "s06"
+      ],
+      "known_limits": [
+        "Stylized geometry",
+        "No physical plant simulation",
+        "No agricultural species claim",
+        "Not approved for a concert song",
+        "Most legible at middle or distant scale; close leaves and repeated stalk proportions need refinement."
+      ],
+      "verification": "tools/concert_addons/VERIFICATION.md"
     }
   ]
 }

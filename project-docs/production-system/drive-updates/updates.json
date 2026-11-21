@@ -1,0 +1,56 @@
+{
+  "schema_version": 1,
+  "status": "awaiting_explicit_Drive_file_and_destination_confirmation",
+  "reason": "Automatic approval review rejected new private project uploads because exact files and destination were not explicitly named in user-authored text and ownership was not established by connector metadata. No retry or alternate transfer route was attempted.",
+  "rule_updates": [
+    {
+      "file_id": "195oEBBMyi14jY9lKSPfYB5fqpEZN4axj",
+      "existing_name": "AGENTS.md",
+      "header_path": "project-docs/production-system/drive-updates/AGENTS.header.md",
+      "operation": "prepend_current_header_preserving_latest_original_body",
+      "status": "prepared_not_applied"
+    },
+    {
+      "file_id": "1dReBFenaOzt-NT4lLvGkIsGMed8YYs4W",
+      "existing_name": "VIDEO-HANDOFF.md",
+      "header_path": "project-docs/production-system/drive-updates/VIDEO-HANDOFF.header.md",
+      "operation": "prepend_current_header_preserving_latest_original_body",
+      "status": "prepared_not_applied"
+    },
+    {
+      "file_id": "1SyL4I0hetGZHMHqlB6_zsyigJ8xA-9oC",
+      "existing_name": "AUTONOMOUS-RUN.md",
+      "header_path": "project-docs/production-system/drive-updates/AUTONOMOUS-RUN.header.md",
+      "operation": "prepend_current_header_preserving_latest_original_body",
+      "status": "prepared_not_applied"
+    },
+    {
+      "file_id": "1pXulIOhdV66tXC_lDQPLJUp9th_kF4s1",
+      "existing_name": "DESIGN-SYSTEM.md",
+      "header_path": "project-docs/production-system/drive-updates/DESIGN-SYSTEM.header.md",
+      "operation": "prepend_current_header_preserving_latest_original_body",
+      "status": "prepared_not_applied"
+    },
+    {
+      "file_id": "1wSbLBI8Bx_Efv4foKNUG520SCclRRBVc",
+      "existing_name": "README.md",
+      "header_path": "project-docs/production-system/drive-updates/README.header.md",
+      "operation": "prepend_current_header_preserving_latest_original_body",
+      "status": "prepared_not_applied"
+    }
+  ],
+  "production_log": {
+    "file_id": "16F00sMLXIxP77F2bvffPJ9754eR93wtb",
+    "operation": "append_current_delivery_entry_preserving_latest_original_bytes",
+    "status": "prepared_not_applied"
+  },
+  "apply_instructions": [
+    "Use current user authorization and the approved exact file/destination scope.",
+    "Fetch each current Drive file and its modified time again; use its current body, not an old work copy.",
+    "If the current header already exists, update that header deliberately instead of duplicating it.",
+    "Preserve the historical body. Check metadata again immediately before a write; rebase if changed.",
+    "Use the normal connected Drive update tool, preserving the existing file ID.",
+    "Read back the updated text and verify the intended header plus preserved body.",
+    "Record actual upload/update IDs, times and verification before changing pending status."
+  ]
+}
