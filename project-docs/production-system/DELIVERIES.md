@@ -28,3 +28,5 @@ The approved 66-second promo remains the creative reference, and the approved 30
 ## Portable instructions
 
 The versioned handoff archive contains instructions, catalogs and evidence. The Git repository supplies executable source and is the authority for current state. Its export receipt identifies the producing commit and every included file. The archive's later transfer outcome is recorded in current `STATE.json`; an export cannot contain its own final upload receipt.
+
+The prepared archive is `Concert-Production-System-Handoff-2026-11-20.zip`, 350,548 bytes, SHA256 `605b7be8ca59987651a642727a9babef88e01986c87d8ea7e3ca076e84a2e158`. It contains 89 checked files from clean commit `94dd897c6fdeb287561c5dd2772b770c43ab94b7`. Its Drive copy was rejected by automatic review and remains pending exact archive/folder confirmation. [Export evidence](evidence/handoff-export.json) records its identity; [the rejection record](evidence/drive-handoff-upload-block.json) records the actual outcome. The eight media saves above succeeded independently.

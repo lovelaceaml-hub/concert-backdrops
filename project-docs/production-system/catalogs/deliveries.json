@@ -201,5 +201,17 @@
     "New studies and models do not inherit owner approval from the approved references.",
     "Pending Drive copies must not be treated as uploaded."
   ],
-  "recorded_at_utc": "2026-11-21T02:50:40.942426+00:00"
+  "recorded_at_utc": "2026-11-21T02:50:40.942426+00:00",
+  "portable_handoff": {
+    "status": "automatic_review_rejected_pending_exact_archive_destination_confirmation",
+    "filename": "Concert-Production-System-Handoff-2026-11-20.zip",
+    "bytes": 350548,
+    "sha256": "605b7be8ca59987651a642727a9babef88e01986c87d8ea7e3ca076e84a2e158",
+    "producing_commit": "94dd897c6fdeb287561c5dd2772b770c43ab94b7",
+    "included_files": 89,
+    "working_tree_dirty_at_export": false,
+    "destination_folder_id": "1QDGGqqkJlbovBLCthX-QChqfD8zSmK8X",
+    "evidence": "project-docs/production-system/evidence/handoff-export.json",
+    "rejection_evidence": "project-docs/production-system/evidence/drive-handoff-upload-block.json"
+  }
 }

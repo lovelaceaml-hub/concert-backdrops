@@ -19,7 +19,7 @@
   "audio_sources_verified": 11,
   "full_rehearsal_recordings_verified": 0,
   "current_increment": "Shared production system, nine native model families, original Consideration baseline and isolated response/camera revision",
-  "increment_status": "rendered_verified_saved_private_drive_media_copies_pending",
+  "increment_status": "rendered_verified_saved_remaining_drive_operations_require_exact_confirmation",
   "cloud_gpu_provider": null,
   "mac_rendering_used": false,
   "new_study_creative_approval": "not_recorded",
@@ -58,9 +58,22 @@
   "active_render_processes": 0,
   "integration_authority": "https://github.com/lovelaceaml-hub/concert-backdrops/pull/102",
   "portable_handoff": {
-    "status": "ready_for_versioned_export",
-    "note": "The export receipt identifies its producing commit. The actual archive transfer outcome is recorded in current main after the archive exists."
+    "status": "automatic_review_rejected_pending_exact_archive_destination_confirmation",
+    "filename": "Concert-Production-System-Handoff-2026-11-20.zip",
+    "bytes": 350548,
+    "sha256": "605b7be8ca59987651a642727a9babef88e01986c87d8ea7e3ca076e84a2e158",
+    "producing_commit": "94dd897c6fdeb287561c5dd2772b770c43ab94b7",
+    "included_files": 89,
+    "working_tree_dirty_at_export": false,
+    "destination_folder_id": "1QDGGqqkJlbovBLCthX-QChqfD8zSmK8X",
+    "evidence": "project-docs/production-system/evidence/handoff-export.json",
+    "rejection_evidence": "project-docs/production-system/evidence/drive-handoff-upload-block.json"
   },
   "drive_production_log": "pending_exact_payload_destination_confirmation_after_automatic_review_rejection",
-  "drive_production_log_evidence": "project-docs/production-system/evidence/drive-production-log-block.json"
+  "drive_production_log_evidence": "project-docs/production-system/evidence/drive-production-log-block.json",
+  "remaining_drive_actions": [
+    "Copy the eight exact media files in catalogs/deliveries.json to Production Studies.",
+    "Upload the exact versioned handoff ZIP to Production System.",
+    "Append the prepared delivery event to the existing production-log.jsonl, preserving all current entries."
+  ]
 }

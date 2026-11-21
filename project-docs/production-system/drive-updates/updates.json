@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "status": "five_instruction_files_updated_media_and_log_confirmation_pending",
-  "reason": "Five in-place Markdown instruction updates succeeded and were verified. Separate new private media uploads and the production-log append were rejected by automatic review; those exact actions were not retried.",
+  "status": "five_instruction_files_updated_media_log_and_archive_confirmation_pending",
+  "reason": "Five in-place Markdown instruction updates succeeded and were verified. Separate new media uploads, the production-log append and the versioned handoff ZIP upload were rejected by automatic review. Each rejected operation remains pending exact scope confirmation and was not retried.",
   "rule_updates": [
     {
       "file_id": "195oEBBMyi14jY9lKSPfYB5fqpEZN4axj",
@@ -75,5 +75,17 @@
     "Read back the updated text and verify the intended header plus preserved body.",
     "Record actual upload/update IDs, times and verification before changing pending status."
   ],
-  "evidence": "project-docs/production-system/evidence/drive-instruction-updates.json"
+  "evidence": "project-docs/production-system/evidence/drive-instruction-updates.json",
+  "handoff_archive": {
+    "status": "automatic_review_rejected_pending_exact_archive_destination_confirmation",
+    "filename": "Concert-Production-System-Handoff-2026-11-20.zip",
+    "bytes": 350548,
+    "sha256": "605b7be8ca59987651a642727a9babef88e01986c87d8ea7e3ca076e84a2e158",
+    "producing_commit": "94dd897c6fdeb287561c5dd2772b770c43ab94b7",
+    "included_files": 89,
+    "working_tree_dirty_at_export": false,
+    "destination_folder_id": "1QDGGqqkJlbovBLCthX-QChqfD8zSmK8X",
+    "evidence": "project-docs/production-system/evidence/handoff-export.json",
+    "rejection_evidence": "project-docs/production-system/evidence/drive-handoff-upload-block.json"
+  }
 }

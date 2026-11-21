@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "verified_at_utc": "2026-11-21T02:54:52.732171+00:00",
+  "filename": "Concert-Production-System-Handoff-2026-11-20.zip",
+  "bytes": 350548,
+  "sha256": "605b7be8ca59987651a642727a9babef88e01986c87d8ea7e3ca076e84a2e158",
+  "producing_commit": "94dd897c6fdeb287561c5dd2772b770c43ab94b7",
+  "producing_branch": "system/concert-production-kit",
+  "working_tree_dirty": false,
+  "included_files": 89,
+  "all_member_bytes_and_hashes_verified": true,
+  "export_receipt_sha256": "83826f9fb4f7ba408ce3fe22f951a5d03d2c54a00eb5f4f62b2ba001de9a5a20",
+  "drive_status": "automatic_review_rejected_pending_exact_archive_destination_confirmation",
+  "scope": "Versioned instructions, catalogs, selected source entry points and evidence; executable scene source remains in Git. No full songs, lyrics, video/image payloads or production-log replacement payload included.",
+  "drive_folder_id": "1QDGGqqkJlbovBLCthX-QChqfD8zSmK8X",
+  "current_source_authority": "https://github.com/lovelaceaml-hub/concert-backdrops",
+  "note": "This ZIP is the verified clean94dd897 snapshot. Subsequent metadata records the attempted transfer outcome; the Git repository remains authoritative for current state."
+}
