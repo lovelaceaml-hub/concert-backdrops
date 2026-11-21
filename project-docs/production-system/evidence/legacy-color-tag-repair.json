@@ -1,0 +1,34 @@
+{
+  "recorded_at_utc": "2026-11-21T01:46:55.218020+00:00",
+  "failure_record": "work/production-system/final-qa/color-tag-failure.json",
+  "scope": "Finishing-only repair for source_transfer=legacy_display_gamma with H264; no scene re-render or second transfer conversion.",
+  "files": {
+    "pipeline/delivery.py": "24400dd6f9808514ca925aca930358457d2e6509757402c41befb3f98f23fd23",
+    "tests/pipeline/test_delivery_profiles.py": "40d73fcb2d1c337ada8318894e357fc307547cec64113fb2f3509527b89c75fa"
+  },
+  "filter_metadata": "setparams=range=limited:color_primaries=bt709:color_trc=bt709:colorspace=bt709",
+  "h264_vui": "colorprim=bt709:transfer=bt709:colormatrix=bt709:fullrange=off",
+  "regression": {
+    "fixture": "four 64x36 RGB8 PNG frames, gray plus colored patches",
+    "old_encoder_failed": [
+      "missing color_primaries",
+      "missing color_transfer"
+    ],
+    "repaired_tags_pass": true,
+    "decoded_rgb_byte_equal_to_established_matrix_only_encode": true,
+    "midgray_without_extra_transfer_pass": true
+  },
+  "full_pipeline_suite": {
+    "tests": 88,
+    "duration_seconds": 11.168,
+    "passed": true,
+    "log": "work/production-system/final-qa/color-repair-pipeline-tests.log",
+    "log_sha256": "613b679cca51b986aa529eb7ed4be87948891165c004050032c3ad0d53320584"
+  },
+  "picture_source_inputs": {
+    "count": 198,
+    "mapping_sha256": "e0464a84c258d5746a14d1d2a252144c7aed6dc748e52894487e1bbeef9d184a",
+    "all_unchanged": true
+  },
+  "reassembly": "All 1080 PNGs reused: approach180, help540, resolve360. Production command is rebuilding encode/QA/gallery only."
+}

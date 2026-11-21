@@ -106,6 +106,44 @@ class DeliveryProfileTests(unittest.TestCase):
         expected_luma = 16 + 219 * linear_light ** (1 / 2.4)
         self.assertAlmostEqual(sum(raw[:64 * 36]) / (64 * 36), expected_luma, delta=1.5)
 
+    def test_legacy_png_sequence_preserves_color_tags_and_display_pixels(self):
+        from PIL import Image, ImageDraw
+
+        for frame in range(4):
+            picture = Image.new("RGB", (64, 36), (128, 128, 128))
+            draw = ImageDraw.Draw(picture)
+            draw.rectangle((32, 0, 47, 35), fill=(220, 80 + frame * 5, 45))
+            draw.rectangle((48, 0, 63, 35), fill=(35, 65, 180 + frame * 5))
+            picture.save(self.root / f"legacy_{frame:03d}.png")
+        profile = PROFILES["h264"]
+        output, reference = self.root / "legacy.mp4", self.root / "matrix-reference.mp4"
+        prefix = ["ffmpeg", "-v", "error", "-y", "-filter_threads", "1", "-framerate", "60",
+                  "-i", str(self.root / "legacy_%03d.png"), "-frames:v", "4"]
+        subprocess.run([*prefix, *video_encoding_args(60, profile, source_transfer="legacy_display_gamma"),
+                        "-an", str(output)], check=True, capture_output=True, timeout=30)
+        metadata = probe(output)
+        self.assertEqual(stream_validation_errors(metadata, profile, width=64, height=36,
+                                                 fps=60, frames=4, wanted_audio=False), [])
+        # This independent reference retains the established matrix/range-only
+        # conversion and codec settings. Added metadata must not change pixels.
+        subprocess.run([*prefix, "-vf", "scale=out_color_matrix=bt709:out_range=tv,format=yuv420p",
+                        "-c:v", profile.encoder, *profile.codec_args, "-threads", "4",
+                        "-pix_fmt", profile.pixel_format, "-r", "60", "-fps_mode", "cfr",
+                        "-an", str(reference)], check=True, capture_output=True, timeout=30)
+
+        def decoded(path):
+            return subprocess.check_output([
+                "ffmpeg", "-v", "error", "-i", str(path), "-vf",
+                "scale=in_color_matrix=bt709:in_range=tv:out_range=pc",
+                "-f", "rawvideo", "-pix_fmt", "rgb24", "-"], timeout=30)
+
+        pixels = decoded(output)
+        self.assertEqual(pixels, decoded(reference))
+        self.assertEqual(len(pixels), 4 * 64 * 36 * 3)
+        center = (18 * 64 + 16) * 3
+        for channel in pixels[center:center + 3]:
+            self.assertAlmostEqual(channel, 128, delta=2)
+
     def test_high_bit_profile_checks_every_source_frame(self):
         from PIL import Image
         path = self.project.output("final") / "shots/b/frames/frame_000007.png"

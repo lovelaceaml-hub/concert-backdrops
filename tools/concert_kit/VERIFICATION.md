@@ -1,6 +1,6 @@
 # Consideration proof: recorded verification
 
-This record separates evidence that exists from work still in progress. The twelve-model atlas, final native key frames and a one-second native motion benchmark have been rendered and inspected. The complete eighteen-second master is being rendered through the registered production pipeline; this document does not yet claim its completion, continuous playback review or final approval.
+The complete eighteen-second baseline is rendered and passed both pipeline and independent technical QA. The twelve-model atlas, native key frames and dense motion samples were inspected. This is a working study with two recorded acting/camera defects, not an owner-approved hero scene. A separate revision addresses them while this original source and movie remain preserved.
 
 ## Frozen picture identity
 
@@ -63,6 +63,15 @@ tests alternative views at 7.5 seconds without changing this frozen movie.
 Its promising single-frame results still require complete shot and transition
 review before becoming a new production version.
 
+Consecutive native crops also exposed an actual hand-return excursion: the palm
+is on the chest at frame 690, rises beside the face by frame 692, then returns
+across the chest and down. A separate numerical investigation measured a
+0.3436 metre palm displacement in one frame between source 11.5167 and 11.5333
+seconds. Disabling secondary living-hand motion did not remove it. This is an
+acting defect that a metadata, resolution or frame-rate check cannot fix. The
+new isolated motion revision is being validated separately; this baseline is
+not silently changed or relabeled as that revision.
+
 ## Native render cost and delivery checks
 
 The one-second benchmark decoded to exactly 60 frames, 1920x1080, at 60/1 fps, with duration 1.000 seconds and YUV420P output. It used llvmpipe LLVM 19.1.7 with one software graphics thread and two HDR samples. Initialization took 6.101 seconds, and total elapsed time was 184.336 seconds. The first frame completed at 33.84 seconds including warmup; subsequent frames averaged approximately 2.55 seconds each. This suggested roughly 45 minutes for 1080 frames on one comparable worker, before additional shared-machine effects.
@@ -72,3 +81,43 @@ The direct benchmark encoder reports limited range and BT.709 matrix, but its in
 The chosen sound is the original Song 07 interval 137.5 to 155.5 seconds, with no time stretch. The prepared canonical eighteen-second WAV has SHA-256 `0f43061d674dae3467a6a76867f8599d241532c131e7e7654502bc29f2d66f7b`. Its gain is reduced by 1 dB, with an 0.08-second entry fade and 0.35-second exit fade. Audio preparation and the private source manifest belong to the production package. The relative 11.5-second build cue is informed by the existing song timeline, not claimed as an ear-verified transient.
 
 Native 4K frame dimensions are supported by the adapter. No complete 4K movie from this kit has been rendered or accepted. Native size, frame count and checksums establish delivery facts; the actual action, composition, restraint and emotional resolution remain artistic review questions.
+
+## Completed baseline delivery and recovery
+
+The master has SHA256
+`0ae54467e7f2bdcf8528f734ed77f9f9656db1bc00aef7cadccfe43b9a6c231d`
+and contains 32,559,734 bytes. Independent inspection decoded all 1080 frames,
+verified exact 60-fps presentation times, native 1920x1080 dimensions, exactly
+18-second video/audio program duration, and BT.709 primaries, transfer, matrix
+and limited-range tags. It reported no technical errors or warnings.
+
+The original execution session ended with 960 valid frames saved. The same
+production command reused those images and rendered the final 120. The cause of
+the lost execution session was not established. Recovery preserved the source
+identity and did not require starting the picture again.
+
+The first assembly was correctly rejected because primaries and transfer tags
+were missing. The finishing-only repair adds explicit filtered-frame metadata
+and H.264 VUI values. A real PNG-sequence regression reproduced the failure and
+then passed with all required tags and byte-identical decoded RGB pixels to the
+established matrix-only reference. All 88 pipeline tests passed. Reassembly
+reused all 1080 PNGs, with no second transfer conversion.
+
+Final audio is 48 kHz stereo, with a decoded peak of -1.120022 dBFS and no
+full-scale exceedances. Three nonsilent windows have zero samples of best-fit
+lag against the canonical source WAV. The logical program contains 864000
+samples per channel; the decoder also reports 256 trailing AAC padding samples.
+
+All 198 recorded picture inputs remained unchanged through the final audit.
+Thirty-five native encoded/source comparisons had a minimum PSNR of 38.02668 dB
+and maximum mean absolute channel error of 1.82037 on the 0 to 255 scale. Seven
+worker boundaries and both cuts were checked; no encoding seam or flash was
+identified in the sampled boundary sheet. This is not real-time playback review.
+
+Durable evidence is under `project-docs/production-system/evidence/` in
+`consideration-baseline-delivery-qa.json`,
+`consideration-baseline-frozen-inputs.json`, and `legacy-color-tag-repair.json`.
+The historical adapter is preserved in commit
+`bb4cb85fe9080e1d0affd2398eec60fddf97ff96`; later source registrations may correctly
+invalidate the old working receipts. Preserve the delivered master and its
+recorded inputs rather than changing old fingerprints to pass a new version.

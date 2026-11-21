@@ -1,0 +1,54 @@
+{
+  "status": "passed",
+  "owner_approval": "pending",
+  "models": [
+    {
+      "constructor": "Dove",
+      "variant": "ivory",
+      "points_and_segments": 11125,
+      "out_of_order_deterministic": true,
+      "subframe_positions_change": true
+    },
+    {
+      "constructor": "Rose",
+      "variant": "blush",
+      "points_and_segments": 8806,
+      "out_of_order_deterministic": true,
+      "subframe_positions_change": true
+    },
+    {
+      "constructor": "Rose",
+      "variant": "crimson",
+      "points_and_segments": 8806,
+      "out_of_order_deterministic": true,
+      "subframe_positions_change": true
+    },
+    {
+      "constructor": "Rose",
+      "variant": "golden",
+      "points_and_segments": 8806,
+      "out_of_order_deterministic": true,
+      "subframe_positions_change": true
+    },
+    {
+      "constructor": "Wheat",
+      "variant": "ripe",
+      "points_and_segments": 8679,
+      "out_of_order_deterministic": true,
+      "subframe_positions_change": true
+    },
+    {
+      "constructor": "Wheat",
+      "variant": "green",
+      "points_and_segments": 8679,
+      "out_of_order_deterministic": true,
+      "subframe_positions_change": true
+    }
+  ],
+  "contacts": {
+    "launch_foot_drift_metres": 0.0,
+    "landing_foot_drift_metres": 0.0,
+    "maximum_boundary_jump_metres": 1.1102230246251565e-16,
+    "maximum_wing_bone_length_error_metres": 2.7755575615628914e-16
+  }
+}

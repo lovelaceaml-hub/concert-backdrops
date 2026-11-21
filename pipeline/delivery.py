@@ -98,16 +98,23 @@ def video_encoding_args(fps: int, profile: DeliveryProfile, *, source_transfer: 
         "primariesin=bt709:rangein=full:matrix=bt709:transfer=bt709:"
         "primaries=bt709:range=limited:dither=error_diffusion,format=" + profile.pixel_format
     )
+    codec_metadata = []
     if source_transfer == "legacy_display_gamma":
         if profile.name != "h264":
             raise PipelineError("Legacy display pixels require the H.264 SDR profile.")
         # Preserve the production's filmic/gamma treatment. Do not apply the
         # sRGB transfer conversion used for Blender and browser PNGs.
-        conversion = "scale=out_color_matrix=bt709:out_range=tv,format=yuv420p"
+        conversion = (
+            "scale=out_color_matrix=bt709:out_range=tv,format=yuv420p,"
+            "setparams=range=limited:color_primaries=bt709:color_trc=bt709:colorspace=bt709"
+        )
+        # PNG frame metadata can override output color flags in FFmpeg 7.1.
+        # Set filtered-frame metadata and H.264 VUI without changing samples.
+        codec_metadata = ["-x264-params", "colorprim=bt709:transfer=bt709:colormatrix=bt709:fullrange=off"]
     elif source_transfer != "srgb":
         raise PipelineError("Unsupported source transfer convention.")
     return [
-        "-vf", conversion, "-c:v", profile.encoder, *profile.codec_args,
+        "-vf", conversion, "-c:v", profile.encoder, *profile.codec_args, *codec_metadata,
         "-threads", "4", "-pix_fmt", profile.pixel_format, "-r", str(fps), "-fps_mode", "cfr",
         "-color_primaries", "bt709", "-color_trc", "bt709", "-colorspace", "bt709",
         "-color_range", "tv", "-movflags", "+faststart+write_colr",
