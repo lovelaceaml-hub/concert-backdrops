@@ -1,6 +1,24 @@
 # Delivered studies and model previews
 
-## Newest delivery: natural dance performance
+## Newest delivery: original fan and silk trio
+
+The twenty-second native 1080p60 movie is complete, together with a separately rendered native 4K still and a nine-frame motion sheet. All three files are saved and copied to Videos / Production Studies, with raw downloaded bytes matching their originals. Picture source: `dffe8f165944c627ae39a8bb7d47bc5a9e703305`. Integration record: [PR #106](https://github.com/lovelaceaml-hub/concert-backdrops/pull/106).
+
+| Saved file | Verified Drive copy | Contents |
+| --- | --- | --- |
+| [Fan-Silk-Trio-20s-1080p60.mp4](https://chatgpt.com/library?file_id=libfile_5d95a136726c8191a7eacbf8509a9bec&account_id=personal) | [Open in Drive](https://drive.google.com/file/d/1e4p1pwcjfhZN35lD-ducwa_mU2_M5dsh/view?usp=drivesdk) | Original continuous trio with distinct authored roles, grounded steps, held fans, finite silk, mirror lake and a gentle closing pose. Not reconstructed source choreography. |
+| [Fan-Silk-Trio-Native-4K.png](https://chatgpt.com/library?file_id=libfile_401345b49ea88191a3d6ba7e0c794939&account_id=personal) | [Open in Drive](https://drive.google.com/file/d/1r3NL97rDqXL1waC_gKflb7cODqh7n0dV/view?usp=drivesdk) | One separately rendered native 3840 x 2160 frame. No upscaling; a full 4K movie is not included. |
+| [Fan-Silk-Trio-Motion-Review.jpg](https://chatgpt.com/library?file_id=libfile_0a92fd2387848191a628133b595d7be6&account_id=personal) | [Open in Drive](https://drive.google.com/file/d/1x418ePl741G1Ooo0cZHzwwYirYxFQXG3/view?usp=drivesdk) | Nine labeled frames decoded from the final movie, with uniform scaling and no brightness or content edits. |
+
+Both technical audits passed with no errors or warnings: 1,200 decoded frames, exact 60 fps presentation times, an unchanged 201-file picture mapping, and three zero-lag audio windows. Seven fan motion/prop checks and seven regression checks for the prior dance registration passed. The independent final auditor separately verifies the fan trio clock and provenance. The original Song 07 excerpt runs from 137.5 to 157.5 seconds with unchanged playback speed. This verifies encoding alignment, not ear-verified choreographic sync.
+
+The independent visual reviewer inspected 37 exact encoded frames, including seven consecutive render-boundary pairs, fan banking and nine ending samples. The coordinator inspected nine final movie samples and the native 4K image. No blocking flaw was found in the covered samples. Silk sometimes overlaps the head or upper torso and mostly reads as a long draped panel. Long skirts conceal much of the foot articulation. This was ordered-frame review, not real-time playback or owner approval.
+
+This is an original best-effort ceremonial performance informed by the first two accessible reference posters and the approved promo. No moving reference footage was decoded; none of the three source choreographies was reconstructed. The next work is a stronger complete whole-body phrase, readable weight transfer and turns, followed by more expressive skirt and silk response. Read [FAN-SILK-PERFORMANCE.md](FAN-SILK-PERFORMANCE.md), [the reproduction commands](../../tools/concert_fan/README.md), [technical QA](evidence/fan-trio-independent-qa.json), [visual review](evidence/fan-trio-visual-review.json) and [the next upgrades](NEXT-PERFORMANCE-UPGRADES.md).
+
+The standalone [fan and silk production guide](https://docs.google.com/document/d/1I-7hrmx6lKv5RAvS3gzXoZZFMgSYnfvQ/edit?usp=drivesdk&ouid=113038373524763352759&rtpof=true&sd=true) is uploaded to Production System and verified by raw-byte readback. The shared Drive AGENTS and VIDEO-HANDOFF files received append-only updates. Exactly one new event was appended to the existing production log, preserving its 109 entries and producing 110. See [instruction evidence](evidence/fan-trio-drive-instructions.json), [guide evidence](evidence/fan-trio-drive-guide.json) and [log evidence](evidence/fan-trio-drive-log.json).
+
+## Previous delivery: natural dance performance
 
 The new eighteen-second study is complete at native 1920 x 1080, 60 fps and two temporal samples. All three files below are saved and copied to Videos / Production Studies, with their raw downloaded bytes matching the originals. Picture source: `0c42f4422a6b67464cb9cd84aac32008d45d4f4c`; integration record: [PR #104](https://github.com/lovelaceaml-hub/concert-backdrops/pull/104).
 

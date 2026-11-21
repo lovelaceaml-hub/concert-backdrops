@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "recorded_at_utc": "2026-11-21T17:10:34.435757+00:00",
+  "files": [
+    {
+      "key": "log",
+      "id": "16F00sMLXIxP77F2bvffPJ9754eR93wtb",
+      "filename": "production-log.jsonl",
+      "bytes": 56678,
+      "mime_type": "application/octet-stream",
+      "modified_time": "2026-11-21T17:10:14.389Z",
+      "url": "https://drive.google.com/file/d/16F00sMLXIxP77F2bvffPJ9754eR93wtb/view?usp=drivesdk",
+      "parents": [
+        "1xyNZn4ZA6bjPcvKjGfgSWQIs9aAp2PPd"
+      ],
+      "sha256": "201be26f0f0ce2c17ac1b28fb9a835a6174385acd51b3ab91c9ac2f923454828",
+      "raw_bytes_verified": true,
+      "before_bytes": 53915,
+      "before_sha256": "001d1889d56ec115570c809a038537aa54ccab9611320af125c587e3917daeb1",
+      "preserved_original_bytes": true,
+      "appended_bytes": 2763,
+      "before_lines": 109,
+      "after_lines": 110,
+      "append_count": 1,
+      "event_occurrences": 1,
+      "event_id": "fan-silk-trio-delivery-20261121",
+      "download_filename": "production-log.jsonl.bin"
+    }
+  ],
+  "all_raw_bytes_verified": true
+}

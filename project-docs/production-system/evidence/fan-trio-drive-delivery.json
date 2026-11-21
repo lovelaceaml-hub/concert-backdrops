@@ -1,0 +1,62 @@
+{
+  "schema_version": 1,
+  "recorded_at_utc": "2026-11-21T17:09:23.596859+00:00",
+  "folder_id": "1hrk62bFIOHv2NwXvYl2bNSmp0cwBoXrr",
+  "source_commit": "dffe8f165944c627ae39a8bb7d47bc5a9e703305",
+  "files": [
+    {
+      "filename": "Fan-Silk-Trio-20s-1080p60.mp4",
+      "bytes": 22982924,
+      "sha256": "36166e43ae67a0ea9e7d52313bf223ca0ee373ed555c69728ccab0e3cfb62afe",
+      "drive": {
+        "status": "uploaded_and_raw_bytes_verified",
+        "file_id": "1e4p1pwcjfhZN35lD-ducwa_mU2_M5dsh",
+        "url": "https://drive.google.com/file/d/1e4p1pwcjfhZN35lD-ducwa_mU2_M5dsh/view?usp=drivesdk",
+        "folder_id": "1hrk62bFIOHv2NwXvYl2bNSmp0cwBoXrr",
+        "mime_type": "video/mp4",
+        "modified_time": "2026-11-21T17:06:09.381Z",
+        "bytes": 22982924,
+        "sha256": "36166e43ae67a0ea9e7d52313bf223ca0ee373ed555c69728ccab0e3cfb62afe",
+        "raw_bytes_verified": true,
+        "evidence": "project-docs/production-system/evidence/fan-trio-drive-delivery.json"
+      }
+    },
+    {
+      "filename": "Fan-Silk-Trio-Native-4K.png",
+      "bytes": 4765896,
+      "sha256": "4326d32a479bd585ccc5de24a5e7a523e79008b092d7c2332f0909d7052fd98f",
+      "drive": {
+        "status": "uploaded_and_raw_bytes_verified",
+        "file_id": "1r3NL97rDqXL1waC_gKflb7cODqh7n0dV",
+        "url": "https://drive.google.com/file/d/1r3NL97rDqXL1waC_gKflb7cODqh7n0dV/view?usp=drivesdk",
+        "folder_id": "1hrk62bFIOHv2NwXvYl2bNSmp0cwBoXrr",
+        "mime_type": "image/png",
+        "modified_time": "2026-11-21T17:07:35.069Z",
+        "bytes": 4765896,
+        "sha256": "4326d32a479bd585ccc5de24a5e7a523e79008b092d7c2332f0909d7052fd98f",
+        "raw_bytes_verified": true,
+        "evidence": "project-docs/production-system/evidence/fan-trio-drive-delivery.json"
+      }
+    },
+    {
+      "filename": "Fan-Silk-Trio-Motion-Review.jpg",
+      "bytes": 683850,
+      "sha256": "7e5cf9b314132dc3d716d0c5b94805c1d60b10c44aca5ee042e4bbec73c83e5c",
+      "drive": {
+        "status": "uploaded_and_raw_bytes_verified",
+        "file_id": "1x418ePl741G1Ooo0cZHzwwYirYxFQXG3",
+        "url": "https://drive.google.com/file/d/1x418ePl741G1Ooo0cZHzwwYirYxFQXG3/view?usp=drivesdk",
+        "folder_id": "1hrk62bFIOHv2NwXvYl2bNSmp0cwBoXrr",
+        "mime_type": "image/jpeg",
+        "modified_time": "2026-11-21T17:06:16.225Z",
+        "bytes": 683850,
+        "sha256": "7e5cf9b314132dc3d716d0c5b94805c1d60b10c44aca5ee042e4bbec73c83e5c",
+        "raw_bytes_verified": true,
+        "evidence": "project-docs/production-system/evidence/fan-trio-drive-delivery.json"
+      }
+    }
+  ],
+  "all_raw_bytes_verified": true,
+  "sharing_changes": false,
+  "prior_confirmed_zip_replaced": false
+}

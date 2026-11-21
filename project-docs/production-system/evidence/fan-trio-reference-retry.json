@@ -1,0 +1,50 @@
+{
+  "schema_version": 1,
+  "recorded_at_utc": "2026-11-21T16:37:07.762428+00:00",
+  "owner_direction": "Try the three references as best as possible without waiting for more model inputs.",
+  "attempt": "Cloud browser retry, one reload and one supported media-download attempt; download canceled after stalled playback.",
+  "moving_source_acquired": false,
+  "moving_source_reviewed": false,
+  "player_observations": {
+    "currentTime": 0,
+    "readyState": 0,
+    "videoWidth": 0,
+    "videoHeight": 0
+  },
+  "observed_signin_wall": false,
+  "observed_captcha_or_bot_denial": false,
+  "sources": [
+    {
+      "youtube_id": "lFUQP-J31RI",
+      "scope": "metadata and poster",
+      "page_reported_seconds": 84
+    },
+    {
+      "youtube_id": "3nhf2A8L0v0",
+      "scope": "metadata and poster",
+      "page_reported_seconds": 30
+    },
+    {
+      "youtube_id": "jPdgbrFmNyg",
+      "scope": "metadata only",
+      "page_reported_seconds": 83
+    }
+  ],
+  "result": "Proceed with an explicitly original fan/silk trio, grounded in available poster details and approved concert style. No source motion or shot timing is claimed.",
+  "approved_promo_comparison": {
+    "sha256": "ad4b4e7fe861ae34eb80e8b921ee747efc477c08bb89ec981f1b588a0b3c0af5",
+    "bytes": 22278585,
+    "sample_seconds": [
+      2,
+      9,
+      16,
+      23,
+      30,
+      37,
+      44,
+      51,
+      59
+    ],
+    "scope": "decoded stills only"
+  }
+}

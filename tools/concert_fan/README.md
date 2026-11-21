@@ -40,10 +40,23 @@ The committed baseline belongs to the exact source round that produced its deliv
 Native 4K is supported by the same geometry and renderer:
 
 ```bash
-./scripts/video render concert-fan-trio --quality 4k-check --frames 420
+./scripts/video render concert-fan-trio --quality 4k-check --frames 864
 ```
 
-That command renders one native frame at 3840 x 2160. A full 4K film is a distinct production and delivery operation, not a label to place on the 1080p movie. Benchmark memory and elapsed time before the full run. This round uses six single-thread CPU workers and 200-frame chunks for its 1080p movie, reducing repeated garment-history initialization.
+That command renders the delivered 14.4-second frame at 3840 x 2160. Run it after the 1080p pool has finished. A full 4K film is a distinct production and delivery operation, not a label to place on the 1080p movie. Benchmark memory and elapsed time before the full run.
+
+The original manifest has six single-thread CPU workers and 200-frame chunks. On the roughly 10 GB host used for this study, one 1080p worker terminated during the first full run, and a concurrent 4K attempt also terminated. Their logs do not establish the kill cause. The existing checkpoint system preserved 1,129 1080p frames; the missing 71 were successfully recovered with two workers and 40-frame chunks, without changing the frozen picture fingerprint. The final movie and independent audit both passed.
+
+For a memory-constrained host, this safer sequence preserves the exact manifest and source identity while scheduling at most two 200-frame workers at once:
+
+```bash
+for frames in 0:400 400:800 800:1200; do
+  ./scripts/video render concert-fan-trio --quality review --frames "$frames" || exit 1
+done
+./scripts/video produce concert-fan-trio --quality review
+```
+
+Use 200-frame ranges for one worker at a time if necessary. Rendered frames are validated and reused on resumption. Do not start a native 4K check concurrently with the 1080p pool.
 
 ## The modules
 

@@ -798,6 +798,101 @@
       "license_record": "assets/p3d/README.md",
       "configured_4k_project_id": "concert-dance-study-4k",
       "configured_4k_scope": "Three CPU workers and native 3840x2160 settings; one 4K frame verified in the base project, full 4K movie unrendered at this handoff. Delivery catalog remains authoritative."
+    },
+    {
+      "source_commit": "dffe8f165944c627ae39a8bb7d47bc5a9e703305",
+      "code_only_eligible": true,
+      "status": "implemented_study_in_review",
+      "coordinates": {
+        "units": "metres",
+        "up_axis": "+Y"
+      },
+      "project_id": "concert-fan-trio",
+      "delivery_id": "fan-silk-trio-20s",
+      "creative_approval": "not_recorded",
+      "handoff": "project-docs/production-system/FAN-SILK-PERFORMANCE.md",
+      "technical_evidence": "project-docs/production-system/evidence/fan-trio-independent-qa.json",
+      "motion_evidence": "project-docs/production-system/evidence/fan-trio-motion-qa.json",
+      "visual_evidence": "project-docs/production-system/evidence/fan-trio-visual-review.json",
+      "delivery_status_authority": "project-docs/production-system/catalogs/deliveries.json",
+      "id": "people.fan-trio",
+      "family": "acting",
+      "source_paths": [
+        "tools/concert_fan/performance.py",
+        "tools/concert_fan/fan_trio.py",
+        "tools/concert_fan/render.py",
+        "tools/concert_fan/README.md",
+        "projects/concert-fan-trio/project.json",
+        "assets/p3d/body_v1.npz",
+        "assets/p3d/README.md"
+      ],
+      "entry_point": "tools.concert_fan.performance.install_performance",
+      "provenance": "original_authored_scores_using_existing_approved_body_asset",
+      "reuse_scope": "distinct_absolute_time_performance_with_support_targets_and_final_palm_controls",
+      "roles": [
+        "lead",
+        "answer",
+        "welcome"
+      ],
+      "animation": [
+        "Twelve explicit steps per role with fixed world-space support targets",
+        "Distinct root travel, torso/head direction and free-hand phrases",
+        "Authored fingers, fan grips and staggered fan-bank curves"
+      ],
+      "known_limits": [
+        "Gentle ceremonial choreography, not professional motion capture or reconstructed reference performance.",
+        "Kinematic support and IK do not constitute a force-based whole-body balance simulation.",
+        "Long skirts obscure the detailed foot articulation in the delivered scene.",
+        "This performance addition does not change the historical nine geometry-family and eighteen-variant preview-pack counts."
+      ]
+    },
+    {
+      "source_commit": "dffe8f165944c627ae39a8bb7d47bc5a9e703305",
+      "code_only_eligible": true,
+      "status": "implemented_study_in_review",
+      "coordinates": {
+        "units": "metres",
+        "up_axis": "+Y"
+      },
+      "project_id": "concert-fan-trio",
+      "delivery_id": "fan-silk-trio-20s",
+      "creative_approval": "not_recorded",
+      "handoff": "project-docs/production-system/FAN-SILK-PERFORMANCE.md",
+      "technical_evidence": "project-docs/production-system/evidence/fan-trio-independent-qa.json",
+      "motion_evidence": "project-docs/production-system/evidence/fan-trio-motion-qa.json",
+      "visual_evidence": "project-docs/production-system/evidence/fan-trio-visual-review.json",
+      "delivery_status_authority": "project-docs/production-system/catalogs/deliveries.json",
+      "id": "props.fan-silk",
+      "family": "props",
+      "source_paths": [
+        "tools/concert_fan/props.py",
+        "tools/concert_fan/test_props.py",
+        "tools/concert_fan/README.md"
+      ],
+      "entry_point": "tools.concert_fan.props.FanSilk",
+      "provenance": "original_code_drawn_fan_and_finite_position_based_silk",
+      "reuse_scope": "held_fan_attached_to_final_solved_hand_with_cached_finite_cloth",
+      "parameters": {
+        "fan_radius_m": 0.34,
+        "fan_spread_deg": 150,
+        "ribs": 13,
+        "silk_nodes": 319,
+        "solve_hz": 120,
+        "baked_hz": 60
+      },
+      "animation": [
+        "Exact fan pivot follows the solved palm at each rendered subframe",
+        "Finite sheet responds to gravity, drag and surface-normal air force",
+        "Structural, shear and bend constraints with floor and body-capsule contact",
+        "Immutable cache identity includes actual grip/collider tracks and solver source"
+      ],
+      "known_limits": [
+        "No self collision, partner collision or exact garment-surface collision.",
+        "Measured structural strain is recorded; this is an art-directed approximation, not calibrated real silk.",
+        "Silk remains mostly panel-like and can overlap the head or torso.",
+        "No partner handoff or collapsing fan mechanism is implemented.",
+        "This separate prop addition does not revise the historical geometry-preview pack counts."
+      ]
     }
   ]
 }

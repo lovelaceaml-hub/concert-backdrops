@@ -2,7 +2,11 @@
 
 Updated November 21, 2026, America/Los_Angeles.
 
-## Current result and exact boundary
+## Update: best-effort original performance
+
+The owner subsequently asked to try the supplied references as well as possible. The new [twenty-second fan and silk study](FAN-SILK-PERFORMANCE.md) implements distinct roles and actual held cloth in an original adaptation. A retry exposed the first two posters but no moving reference footage. Use the current handoff and delivery catalog for its implementation and outputs. The earlier source-first plan below is preserved as history and does not block further original work.
+
+## Earlier result and exact boundary
 
 The owner supplied three dance and theatrical-performance links and requested adaptations in the approved concert style. The three pages were identified, but their moving footage could not be decoded in this environment. The first thumbnail was visible; the other two have metadata-only coverage. [The reference catalog](catalogs/performance-references.json) preserves the exact URLs, identities, observed scope and separate original proposals. [The access record](evidence/performance-reference-access.json) records what happened.
 

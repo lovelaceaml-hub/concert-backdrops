@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "recorded_at_utc": "2026-11-21T17:10:34.435757+00:00",
+  "files": [
+    {
+      "key": "guide",
+      "id": "1I-7hrmx6lKv5RAvS3gzXoZZFMgSYnfvQ",
+      "filename": "Fan-Silk-Performance-2026-11-21.md",
+      "bytes": 15138,
+      "mime_type": "text/markdown",
+      "modified_time": "2026-11-21T17:09:53.673Z",
+      "url": "https://docs.google.com/document/d/1I-7hrmx6lKv5RAvS3gzXoZZFMgSYnfvQ/edit?usp=drivesdk&ouid=113038373524763352759&rtpof=true&sd=true",
+      "parents": [
+        "1QDGGqqkJlbovBLCthX-QChqfD8zSmK8X"
+      ],
+      "sha256": "105a6b8f69c58a1d8e06f26fd31761925e176e66e60d3fc198250248692358d2",
+      "raw_bytes_verified": true
+    }
+  ],
+  "all_raw_bytes_verified": true
+}

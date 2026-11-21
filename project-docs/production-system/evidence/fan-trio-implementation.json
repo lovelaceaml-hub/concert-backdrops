@@ -1,0 +1,122 @@
+{
+  "schema_version": 1,
+  "source_commit": "dffe8f165944c627ae39a8bb7d47bc5a9e703305",
+  "source_tree": "815432e9b94c28cfa97a2048c51176f831062400",
+  "picture_fingerprint": "03c27268d4804da74d09818801fdedc93c7367c7ca22f4ee82069a83423dfd24",
+  "frozen_picture_files": 201,
+  "runtime": {
+    "renderer": "llvmpipe (LLVM 19.1.7, 256 bits)",
+    "mode": "cloud CPU software EGL",
+    "python": "3.12.14",
+    "ffmpeg": "7.1.5",
+    "reference_fonts": 74,
+    "local_mac_used": false,
+    "cloud_gpu_provider": null,
+    "paid_service_used": false
+  },
+  "model_source": "Existing approved MakeHuman-derived body asset and rig; no new captured dance or generated raster assets.",
+  "body_asset_sha256": "0a72159f84b7008dcb135c79f82ae3b05df5f7361197e99ab9ca4af148c91189",
+  "choreography": {
+    "duration_seconds": 20,
+    "roles": [
+      "lead",
+      "answer",
+      "welcome"
+    ],
+    "authored_steps_per_role": 12,
+    "fps": 60,
+    "motion_capture_source": null,
+    "source_reconstruction": false,
+    "controls": [
+      "explicit support targets",
+      "arm and leg IK",
+      "root travel",
+      "head and torso direction",
+      "authored free fingers and fan grips",
+      "staggered fan banking"
+    ]
+  },
+  "props": {
+    "fans": 2,
+    "fan_radius_m": 0.34,
+    "fan_spread_deg": 150,
+    "fan_ribs": 13,
+    "silk_simulation_nodes_per_prop": 319,
+    "solver_hz": 120,
+    "baked_hz": 60,
+    "saved_samples": 1201,
+    "rendered_silk_points": 6800,
+    "rendered_fan_leaf_points": 1050,
+    "physical_scope": "Art-directed position based cloth, body capsule and floor contact; no self/partner/actual-costume collision."
+  },
+  "focused_tests": {
+    "command": "PYTHONHASHSEED=0 PYTHONPATH=engine:. .venv/bin/python -m unittest tools.concert_fan.test_performance tools.concert_fan.test_props",
+    "count": 7,
+    "passed": true,
+    "seconds": 19.284,
+    "log_sha256": "fd0bd40c05ff2696cf87bdacd04aba7e57f6bb5964f9b102b6ef4486bcda734c"
+  },
+  "exact_scene_evidence": "project-docs/production-system/evidence/fan-trio-motion-qa.json",
+  "audio": {
+    "recording_id": "s07",
+    "source_sha256": "2fea173b63d4086703927a0e6048b5026d0440d151c99c90f3129c37fea6266a",
+    "source_interval_seconds": [
+      137.5,
+      157.5
+    ],
+    "score_sha256": "b26b7ec1dd00a4c91330df5c83a47afc8c40791861a722dd91408eb246f0cd0b",
+    "source_speed_unchanged": true,
+    "fade_in_seconds": 0.08,
+    "fade_out_seconds": 0.6,
+    "gain_db": -1,
+    "ear_verified_transient_alignment": false
+  },
+  "initial_4k_attempt": {
+    "result": "worker terminated with exit -9 during concurrent six-worker 1080p render",
+    "completed_frame": false,
+    "cause": "Not established by the worker log; high concurrent memory pressure was observed.",
+    "next_action": "Completed by the separate one-frame 4K retry recorded below."
+  },
+  "technical_delivery_passed": true,
+  "owner_creative_approval": "not_recorded",
+  "registration_regression_tests": {
+    "command": "PYTHONHASHSEED=0 PYTHONPATH=. .venv/bin/python -m unittest tests.test_dance_registration",
+    "count": 7,
+    "passed": true,
+    "seconds": 0.022,
+    "scope": "Regression coverage for the prior 18-second natural-dance registration, not seven new fan-trio registration tests. The independent final auditor verifies the fan-trio clock, manifest and provenance."
+  },
+  "frame_recovery": {
+    "first_invocation": "One worker terminated; the other jobs finished, preserving 1,129 validated native frames.",
+    "failed_chunk_start": 200,
+    "failed_chunk_end_exclusive": 400,
+    "saved_in_failed_chunk": 129,
+    "missing_count": 71,
+    "recovery_workers": 2,
+    "recovery_chunk_frames": 40,
+    "same_frozen_picture_fingerprint": true,
+    "quality_change": false,
+    "recovery_status": "completed",
+    "missing_global_frames_inclusive": [
+      329,
+      399
+    ],
+    "rendered_in_recovery": 71,
+    "final_validated_frames": 1200,
+    "movie_sha256": "36166e43ae67a0ea9e7d52313bf223ca0ee373ed555c69728ccab0e3cfb62afe"
+  },
+  "independent_technical_passed": true,
+  "safe_cpu_reproduction": "On memory-constrained hosts, render 0:400, 400:800 and 800:1200 as separate invocations, then produce. Each range schedules at most two 200-frame workers; the frame identity and manifest remain unchanged. Run native 4K checks separately.",
+  "native_4k_retry": {
+    "completed": true,
+    "frame": 864,
+    "width": 3840,
+    "height": 2160,
+    "temporal_samples": 2,
+    "bytes": 4765896,
+    "sha256": "4326d32a479bd585ccc5de24a5e7a523e79008b092d7c2332f0909d7052fd98f",
+    "receipt_total_seconds": 151.017,
+    "peak_rss_kib": 1798012,
+    "full_4k_movie_rendered": false
+  }
+}
