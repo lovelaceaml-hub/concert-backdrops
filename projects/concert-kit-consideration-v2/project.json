@@ -1,0 +1,104 @@
+{
+  "schema_version": 1,
+  "video": {
+    "width": 1920,
+    "height": 1080,
+    "fps": 60
+  },
+  "production": {
+    "cloud_gpu_provider": null,
+    "allow_local_gpu": false,
+    "allow_paid_services": false,
+    "allow_ai_generated_visuals": false,
+    "allow_stock_footage": false,
+    "random_seed": 2026,
+    "threads": 1,
+    "render_chunk_frames": 120,
+    "render_timeout_seconds": 7200
+  },
+  "quality": {
+    "draft": {
+      "width": 960,
+      "height": 540,
+      "temporal_samples": 1,
+      "image_bit_depth": 8
+    },
+    "review": {
+      "width": 1920,
+      "height": 1080,
+      "temporal_samples": 2,
+      "image_bit_depth": 8
+    },
+    "4k-check": {
+      "width": 3840,
+      "height": 2160,
+      "temporal_samples": 2,
+      "image_bit_depth": 8
+    },
+    "final": {
+      "width": 1920,
+      "height": 1080,
+      "temporal_samples": 2,
+      "image_bit_depth": 8
+    }
+  },
+  "delivery": {
+    "profile": "h264",
+    "source_transfer": "legacy_display_gamma",
+    "color_space": "rec709"
+  },
+  "style": "styles/zion-cinematic.json",
+  "project_id": "concert-kit-consideration-v2",
+  "title": "Consideration revised contact and response study",
+  "description": "A fifteen-second original performance revision with clearer camera coverage and a continuous complete-pose hand return. Output time zero is original visual time three seconds. Supplied audio keeps the original speed; no new instrument separation or exact transient alignment is claimed.",
+  "audio": {
+    "source": "work/concert-kit/consideration-score.wav",
+    "source_sha256": "0f43061d674dae3467a6a76867f8599d241532c131e7e7654502bc29f2d66f7b",
+    "offset_seconds": 3
+  },
+  "timing": {
+    "fps": 60,
+    "visual_only": true,
+    "manually_verified": false,
+    "note": "Output-relative authored camera cuts. The renderer maps each output frame to original visual frame plus 180. Audio uses the same three-second offset within the canonical eighteen-second excerpt, without stretching or an extra fade.",
+    "events": [
+      {
+        "frame": 234,
+        "kind": "authored_cut"
+      },
+      {
+        "frame": 540,
+        "kind": "authored_cut"
+      }
+    ]
+  },
+  "shots": [
+    {
+      "id": "contact",
+      "name": "Reach and sustained contact",
+      "renderer": "p3d-kit",
+      "start_frame": 0,
+      "end_frame_exclusive": 234,
+      "scene": "tools/concert_motion_revision/render.py",
+      "params": {}
+    },
+    {
+      "id": "rise-response",
+      "name": "Rise, acknowledgement and continuous hand return",
+      "renderer": "p3d-kit",
+      "start_frame": 234,
+      "end_frame_exclusive": 540,
+      "scene": "tools/concert_motion_revision/render.py",
+      "params": {}
+    },
+    {
+      "id": "garden",
+      "name": "Shared light and complete garden ending",
+      "renderer": "p3d-kit",
+      "start_frame": 540,
+      "end_frame_exclusive": 900,
+      "scene": "tools/concert_motion_revision/render.py",
+      "params": {}
+    }
+  ]
+}
