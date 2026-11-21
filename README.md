@@ -5,6 +5,10 @@ Code for the video backdrops of "The Words of Mother's Love Healing Concert" (LV
 **The project's official home is Anthony's Google Drive folder "Concert Backdrops - Songs"** (lovelace.aml account). The designs, rules, status, songs, lyrics, storyboards and finished videos all live there. This repo holds only the graphics engine, so cloud machines can clone it and render.
 
 ## Quick links
+- Native 4K and smoother animation: [docs/4K-AND-MOTION.md](docs/4K-AND-MOTION.md)
+- 4K and motion verification: [docs/4K-MOTION-VALIDATION.md](docs/4K-MOTION-VALIDATION.md)
+- Repeatable video workflow: [docs/VIDEO-PIPELINE.md](docs/VIDEO-PIPELINE.md)
+- Setup verification and remaining environment limits: [docs/VIDEO-PIPELINE-VALIDATION.md](docs/VIDEO-PIPELINE-VALIDATION.md)
 - Project home: Google Drive, My Drive / Concert Backdrops - Songs (README.md, DESIGN-SYSTEM.md, VIDEO-HANDOFF.md inside)
 - Handoff: [docs/HANDOFF.md](docs/HANDOFF.md)
 - How song 3 was made: [docs/PROCESS-AND-TOOLS.md](docs/PROCESS-AND-TOOLS.md)

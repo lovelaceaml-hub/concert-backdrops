@@ -1,0 +1,16 @@
+{
+  "mcpServers": {
+    "blender": {
+      "type": "stdio",
+      "command": "python3",
+      "args": ["integrations/blender/launch_mcp.py"],
+      "env": {
+        "BLENDER_HOST": "localhost",
+        "BLENDER_PORT": "9876",
+        "BLENDER_MCP_SAFE_MODE": "1",
+        "DISABLE_TELEMETRY": "true",
+        "BLENDERMCP_NO_UPDATE_CHECK": "1"
+      }
+    }
+  }
+}

@@ -1,0 +1,15 @@
+# Open Codex at the repository root. The server uses only this checkout's env.
+# Codex loads project MCP settings when this project is trusted by the user.
+[mcp_servers.blender]
+command = "python3"
+args = ["integrations/blender/launch_mcp.py"]
+startup_timeout_sec = 30
+tool_timeout_sec = 180
+enabled_tools = ["get_addon_status", "get_scene_info", "execute_blender_code", "look", "disable_telemetry"]
+
+[mcp_servers.blender.env]
+BLENDER_HOST = "localhost"
+BLENDER_PORT = "9876"
+BLENDER_MCP_SAFE_MODE = "1"
+DISABLE_TELEMETRY = "true"
+BLENDERMCP_NO_UPDATE_CHECK = "1"

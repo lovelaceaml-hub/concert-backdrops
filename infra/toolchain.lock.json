@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "blender": {
+    "version": "5.2.4",
+    "platform": "linux-x64",
+    "archive": "blender-5.2.4-linux-x64.tar.xz",
+    "url": "https://download.blender.org/release/Blender5.2/blender-5.2.4-linux-x64.tar.xz",
+    "sha256": "2fd14c50987426897ba60237ee996edf2b4151f4b1a72a460ca20be58c1d2d86",
+    "checksums_url": "https://download.blender.org/release/Blender5.2/blender-5.2.4.sha256"
+  },
+  "uv": "0.13.9",
+  "python": "3.11 to 3.13; exact packages are in uv.lock",
+  "node": "22.12 to 24; exact packages are in package-lock.json",
+  "cloud_gpu_provider": null,
+  "paid_services": false
+}

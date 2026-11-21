@@ -1,0 +1,15 @@
+.git
+.tools
+.venv
+node_modules
+**/node_modules
+work
+out
+frames
+fonts
+**/__pycache__
+**/dist
+**/build
+.env*
+*.mp4
+*.mov
