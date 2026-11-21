@@ -1,0 +1,183 @@
+{
+  "schema": "concert.reference-motion.v1",
+  "captured_at": "2026-11-21",
+  "status": "annotated-reference-only",
+  "timebase": "screen-recording-seconds",
+  "coordinate_note": "Source 2 appears sideways; rotate 90 degrees counterclockwise when reviewing. Screen recordings contain cuts and UI.",
+  "sources": [
+    {
+      "id": "R1",
+      "filename": "ScreenRecording_11-21-2026 12-19-51_1.mp4",
+      "duration_s": 34.466667,
+      "sha256": "5228a501e9633aa194ed09d1c60e5d6038c02dd593bba99d7542984b11dbe0b2",
+      "active_windows": [
+        [
+          0,
+          20
+        ],
+        [
+          24,
+          29
+        ]
+      ],
+      "artifacts": "Notification and video-player overlays; hidden feet"
+    },
+    {
+      "id": "R2",
+      "filename": "ScreenRecording_11-21-2026 12-20-32_1.mp4",
+      "duration_s": 53.833333,
+      "sha256": "cd3f1e4826b580a237d6ef04bce8025faf94677bebf8ee858a96ff38a3f58a3b",
+      "active_windows": [
+        [
+          4,
+          42
+        ]
+      ],
+      "rotation_for_review_deg": -90,
+      "artifacts": "Phone recording rotates; video controls and cuts"
+    },
+    {
+      "id": "R3",
+      "filename": "ScreenRecording_11-21-2026 12-24-09_1.mp4",
+      "duration_s": 37.433333,
+      "sha256": "60c97ee2cd30f3c93208eb71710ae03360e7fa8bb375a2ccb6744dcfe6b1a1a7",
+      "active_windows": [
+        [
+          0,
+          34
+        ]
+      ],
+      "artifacts": "Edited footage, subtitles, phone overlays"
+    }
+  ],
+  "phrases": [
+    {
+      "id": "fan-lead-overhead",
+      "source": "R1",
+      "window_s": [
+        4,
+        8
+      ],
+      "mechanism": [
+        "fan attached to hand",
+        "arm elevation",
+        "torso rotation",
+        "costume lag"
+      ],
+      "visibility": "good for hands, poor for feet",
+      "ready_for_3d": false
+    },
+    {
+      "id": "traveling-fan-sweep",
+      "source": "R1",
+      "window_s": [
+        12,
+        20
+      ],
+      "mechanism": [
+        "lead and supporters",
+        "lateral path",
+        "high-low fan reversal",
+        "flowing gown"
+      ],
+      "visibility": "mixed cuts/partial occlusion",
+      "ready_for_3d": false
+    },
+    {
+      "id": "ensemble-flower-build",
+      "source": "R2",
+      "window_s": [
+        16,
+        27
+      ],
+      "mechanism": [
+        "individual actor fan arcs",
+        "larger petal silhouette",
+        "group spacing and facing"
+      ],
+      "visibility": "intermittent close and wide",
+      "ready_for_3d": false
+    },
+    {
+      "id": "ensemble-ripple-peel",
+      "source": "R2",
+      "window_s": [
+        29,
+        42
+      ],
+      "mechanism": [
+        "temporal canon",
+        "separation",
+        "travel",
+        "rejoin"
+      ],
+      "visibility": "occluded dancers",
+      "ready_for_3d": false
+    },
+    {
+      "id": "globe-africa-illumination",
+      "source": "R3",
+      "window_s": [
+        0,
+        11
+      ],
+      "mechanism": [
+        "3D Earth lighting",
+        "regional sparkle clusters",
+        "atmospheric glow",
+        "camera push"
+      ],
+      "visibility": "good for composition, no true 3D camera data",
+      "ready_for_3d": false
+    },
+    {
+      "id": "bright-landscape-bridge",
+      "source": "R3",
+      "window_s": [
+        11,
+        16
+      ],
+      "mechanism": [
+        "edit to sunrise",
+        "sweeping landscape shot",
+        "tonal bridge"
+      ],
+      "visibility": "edited sequence; seamless dive is unverified",
+      "ready_for_3d": false
+    },
+    {
+      "id": "people-on-land",
+      "source": "R3",
+      "window_s": [
+        16,
+        34
+      ],
+      "mechanism": [
+        "crowd walking",
+        "groups interacting",
+        "montage composition"
+      ],
+      "visibility": "different edited shots, not one shared action track",
+      "ready_for_3d": false
+    }
+  ],
+  "quality_gates": [
+    "validate stage and camera cuts",
+    "annotate source certainty",
+    "full-body support verification",
+    "hands and props attached to solved bones",
+    "costume proof with cloth reversal",
+    "ten different visual-purpose proofs",
+    "owner approval"
+  ],
+  "separate_previews": {
+    "count": 10,
+    "duration_s": 20,
+    "frame_rate": 24,
+    "width": 960,
+    "height": 540,
+    "render_style": "original 2D motion animatics",
+    "media_in_repository": false,
+    "final_3d_completed": false
+  }
+}
