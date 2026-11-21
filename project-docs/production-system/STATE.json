@@ -19,7 +19,7 @@
   "audio_sources_verified": 11,
   "full_rehearsal_recordings_verified": 0,
   "current_increment": "Shared production system, nine native model families, original Consideration baseline and isolated response/camera revision",
-  "increment_status": "corrected_native_study_rendering_and_final_handoff",
+  "increment_status": "rendered_verified_saved_private_drive_media_copies_pending",
   "cloud_gpu_provider": null,
   "mac_rendering_used": false,
   "new_study_creative_approval": "not_recorded",
@@ -28,7 +28,7 @@
     "handoff": "https://drive.google.com/drive/folders/1QDGGqqkJlbovBLCthX-QChqfD8zSmK8X",
     "media": "https://drive.google.com/drive/folders/1hrk62bFIOHv2NwXvYl2bNSmp0cwBoXrr"
   },
-  "next_work": "Finish and independently review the corrected 15-second study, save exact delivery identities, then continue the bounded song-specific queue.",
+  "next_work": "Clear vegetation from human silhouettes, then extend Song 07 from helping into an accompanied walk and lantern carry. Preserve this delivered study as evidence.",
   "background_service_configured": false,
   "historical_baseline_checkpoint": "673f68785c36b57d55d05129ee5549efe6352c60",
   "render_projects": [
@@ -50,5 +50,17 @@
   "response_regression_checks_passed": 10,
   "drive_instruction_files_updated_and_verified": 5,
   "drive_instruction_evidence": "project-docs/production-system/evidence/drive-instruction-updates.json",
-  "private_drive_media_copies": "pending_exact_file_and_destination_confirmation"
+  "private_drive_media_copies": "pending_exact_file_and_destination_confirmation",
+  "revised_movie_technical_passed": true,
+  "revised_movie_encoded_frames_reviewed": 67,
+  "new_media_files_saved": 8,
+  "new_media_catalog": "project-docs/production-system/catalogs/deliveries.json",
+  "active_render_processes": 0,
+  "integration_authority": "https://github.com/lovelaceaml-hub/concert-backdrops/pull/102",
+  "portable_handoff": {
+    "status": "ready_for_versioned_export",
+    "note": "The export receipt identifies its producing commit. The actual archive transfer outcome is recorded in current main after the archive exists."
+  },
+  "drive_production_log": "pending_exact_payload_destination_confirmation_after_automatic_review_rejection",
+  "drive_production_log_evidence": "project-docs/production-system/evidence/drive-production-log-block.json"
 }

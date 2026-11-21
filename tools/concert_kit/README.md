@@ -20,6 +20,8 @@ The chosen source audio is original Song 07 from 137.5 to 155.5 seconds, without
 
 Use the repository's locked legacy Python environment and project fonts. Rendering is configured for cloud CPU execution. No Mac, external GPU service, stock footage or AI raster generation is needed. The repeatable production route is the registered `p3d-kit` adapter in [`projects/concert-kit-consideration/project.json`](../../projects/concert-kit-consideration/project.json); the direct commands below are useful for model development and bounded inspection.
 
+This package preserves the original eighteen-second baseline. For the separate corrected camera and response study, use `concert-kit-consideration-v2` and read [the revision instructions](../concert_motion_revision/README.md). The original source and its recorded defects remain available for comparison.
+
 ```bash
 PYTHONHASHSEED=0 uv run --frozen --extra legacy python tools/concert_kit/render.py --stills 0,6,11,16.5 --out work/concert-kit/review
 PYTHONHASHSEED=0 uv run --frozen --extra legacy python tools/concert_kit/render.py --fps 60 --range 0 1080 --out work/concert-kit/final/consideration-picture.mp4
@@ -28,7 +30,7 @@ PYTHONHASHSEED=0 uv run --frozen --extra legacy python tools/concert_kit/atlas.p
 
 `--width` and `--height` allocate the native frame size. Defaults are 1920x1080. The renderer also accepts native 3840x2160. A format being supported does not mean a complete movie at that format has been rendered or reviewed. `--fps 30` renders 540 distinct frames; `--fps 60` renders 1080 distinct frames. `--samples 2` evaluates two HDR moments inside the shutter, with the shutter disabled at camera cuts to avoid blending unrelated views.
 
-Set `CONCERT_KIT_FONTS` if project fonts are not at the default path. The current shared workspace can read the already-prepared project fonts; portable setup should prepare the same files through the standard font bootstrap. Font bytes enter source identity.
+Set `CONCERT_KIT_FONTS` if project fonts are not at the default path. In a fresh checkout of current source, run `python3 scripts/bootstrap.py --p3d-only --reference-fonts` to reconstruct the exact reference files. See [REFERENCE-FONTS.md](../../docs/REFERENCE-FONTS.md). Font bytes enter source identity; default conversion produces different bytes. Do not run font setup during a frozen render.
 
 ## Integration API
 

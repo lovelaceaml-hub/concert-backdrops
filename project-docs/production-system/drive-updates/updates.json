@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "status": "five_instruction_files_updated_private_media_confirmation_pending",
-  "reason": "The automatic review rejected new private media uploads. Separate in-place Markdown instruction updates were permitted and all five were verified by raw-byte readback, preserving their original bodies.",
+  "status": "five_instruction_files_updated_media_and_log_confirmation_pending",
+  "reason": "Five in-place Markdown instruction updates succeeded and were verified. Separate new private media uploads and the production-log append were rejected by automatic review; those exact actions were not retried.",
   "rule_updates": [
     {
       "file_id": "195oEBBMyi14jY9lKSPfYB5fqpEZN4axj",
@@ -62,7 +62,9 @@
   "production_log": {
     "file_id": "16F00sMLXIxP77F2bvffPJ9754eR93wtb",
     "operation": "append_current_delivery_entry_preserving_latest_original_bytes",
-    "status": "pending_final_delivery_append"
+    "status": "automatic_review_rejected_pending_exact_payload_destination_confirmation",
+    "evidence": "project-docs/production-system/evidence/drive-production-log-block.json",
+    "prepared_payload_sha256": "4f01a3c40ec8b07da8b07c6f16d3f32d6f7fab70530fb8ed58307d5ee36e7bda"
   },
   "apply_instructions": [
     "Use current user authorization and the approved exact file/destination scope.",

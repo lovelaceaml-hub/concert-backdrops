@@ -1,0 +1,80 @@
+{
+  "schema_version": 1,
+  "recorded_at_utc": "2026-11-21T02:50:40.942426+00:00",
+  "status": "all_eight_succeeded",
+  "ordered_batch": true,
+  "items": [
+    {
+      "filename": "Consideration-Revised-15s-1080p60.mp4",
+      "bytes": 29912818,
+      "sha256": "ab25085451f99ac8c674fa4e9bd03824d45747855707e5962e91fab7a6f8527f",
+      "status": "succeeded",
+      "library_file_id": "libfile_31f8c88406648191acc3aecbcb5d90b6",
+      "version": 0,
+      "local_metadata_applied": true
+    },
+    {
+      "filename": "Consideration-Baseline-18s-1080p60.mp4",
+      "bytes": 32559734,
+      "sha256": "0ae54467e7f2bdcf8528f734ed77f9f9656db1bc00aef7cadccfe43b9a6c231d",
+      "status": "succeeded",
+      "library_file_id": "libfile_f504ec5b3a1c8191afbb265631d3f4dc",
+      "version": 0,
+      "local_metadata_applied": true
+    },
+    {
+      "filename": "Consideration-Revised-Garden-Native-4K.png",
+      "bytes": 5048251,
+      "sha256": "1ac66c796b1c9a732de252532eae90c9e55242a55033bd91cdd363cdb089422b",
+      "status": "succeeded",
+      "library_file_id": "libfile_569034d32eb88191ab759f319e93ca20",
+      "version": 0,
+      "local_metadata_applied": true
+    },
+    {
+      "filename": "Concert-Native-Models-12-Variants.jpg",
+      "bytes": 306145,
+      "sha256": "0faadc1b42dab94f4c36a050295bfad790d2e5a08f7a72b9a91739246d6ef784",
+      "status": "succeeded",
+      "library_file_id": "libfile_71459f58cc3c819195726ec04fe8f0b8",
+      "version": 0,
+      "local_metadata_applied": true
+    },
+    {
+      "filename": "Dove-Flight-Prototype-v2-6s-1080p60.mp4",
+      "bytes": 1211878,
+      "sha256": "d213912ae9321b5bb43cc941eb570ece9f369ca605647b901bedeb7f598835a7",
+      "status": "succeeded",
+      "library_file_id": "libfile_4c7ffe51339c8191b5c18480b3bb48e9",
+      "version": 0,
+      "local_metadata_applied": true
+    },
+    {
+      "filename": "Concert-Model-Prototypes-v2.png",
+      "bytes": 491308,
+      "sha256": "10f9fff181445728fb9dd4e84818130b63650b0a0fbd19555c26c63c234ec231",
+      "status": "succeeded",
+      "library_file_id": "libfile_ced33414414481919b6698fab562f1db",
+      "version": 0,
+      "local_metadata_applied": true
+    },
+    {
+      "filename": "Consideration-Motion-Before-After.png",
+      "bytes": 2268796,
+      "sha256": "ed78ac05a88e612b54c1340d1bc05c2da83285a2e6940d3ad18a471a2b0043e4",
+      "status": "succeeded",
+      "library_file_id": "libfile_9be31f98637481918c172270b10c547b",
+      "version": 0,
+      "local_metadata_applied": true
+    },
+    {
+      "filename": "Consideration-Camera-Planning-Comparison.png",
+      "bytes": 1141946,
+      "sha256": "d5ed875cd6398c4ccd018aaeb9ad5c4b6f78daab9a5fe3e96ea48d59e5706a95",
+      "status": "succeeded",
+      "library_file_id": "libfile_18523aa7406c8191bf988490affed4d4",
+      "version": 0,
+      "local_metadata_applied": true
+    }
+  ]
+}

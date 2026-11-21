@@ -2,7 +2,7 @@
 
 Code for the video backdrops of "The Words of Mother's Love Healing Concert" (LV Zion, Sunday December 6, 2026). The concert's message: the Words of Mother's Love bring peace.
 
-**The project's official home is Anthony's Google Drive folder "Concert Backdrops - Songs"** (lovelace.aml account). The designs, rules, status, songs, lyrics, storyboards and finished videos live there. This repository holds the graphics engine, production workflow, catalogs and versioned instructions so cloud machines and new AI chats can reproduce the work.
+**The project's official home is the Google Drive folder "Concert Backdrops - Songs"**. The designs, rules, status, songs, lyrics, storyboards and finished videos live there. This repository holds the graphics engine, production workflow, catalogs and versioned instructions so cloud machines and new AI chats can reproduce the work.
 
 ## Current production system
 

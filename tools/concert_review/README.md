@@ -165,10 +165,19 @@ They neither render scenes nor substitute for the completed movie audit.
 ## Font bytes and historical receipts
 
 Exact historical receipt reuse requires the matching source checkout, recorded
-runtime and original font bytes. In a fresh checkout, use
+runtime and original font bytes. In a fresh checkout of current source, use
 `python3 scripts/bootstrap.py --p3d-only --reference-fonts` to reconstruct the
 exact 74 study TTFs from the pinned WOFF2 files and checked metadata. See
 [REFERENCE-FONTS.md](../../docs/REFERENCE-FONTS.md). Normal deterministic
 conversion retains source timestamps and therefore has different file hashes.
+
+The original baseline checkpoint `673f68785c36b57d55d05129ee5549efe6352c60`
+predates this bootstrap flag. To reproduce that historical checkout, first
+reconstruct and verify the fonts in a separate checkout of setup checkpoint
+`3aaa7c5d75a01704c984b60c33cfc2a0bb807b5f` or current source, then copy those
+verified TTF files unchanged into the historical checkout's `fonts/` directory.
+Keep the recorded runtime and matching source there; do not apply the new
+bootstrap flag to the older script or modify its guards.
+
 Create and verify a new render receipt and audit baseline in each new working
 round; never substitute historical fingerprints to conceal different inputs.

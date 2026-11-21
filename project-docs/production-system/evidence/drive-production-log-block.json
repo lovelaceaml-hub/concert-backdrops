@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "recorded_at_utc": "2026-11-21T02:53:04.440726+00:00",
+  "status": "automatic_review_rejected",
+  "operation": "append_delivery_event_using_in_place_raw_file_update",
+  "file_id": "16F00sMLXIxP77F2bvffPJ9754eR93wtb",
+  "file_name": "production-log.jsonl",
+  "parent_folder_id": "1xyNZn4ZA6bjPcvKjGfgSWQIs9aAp2PPd",
+  "prepared_payload_bytes": 50645,
+  "prepared_payload_sha256": "4f01a3c40ec8b07da8b07c6f16d3f32d6f7fab70530fb8ed58307d5ee36e7bda",
+  "prepared_payload_lines": 107,
+  "preserved_original_bytes": 47248,
+  "preserved_original_lines": 106,
+  "original_sha256": "ced8c19d7576f4511756944cdea1c9ede96f0671b00123ff8a228b86041aab82",
+  "last_observed_modified_time": "2026-11-19T03:14:55.114Z",
+  "reason": "Automatic review treated replacing raw bytes with the private production log as sensitive egress and a potentially irreversible in-place mutation. It required explicit authorization for the exact payload and destination; destination ownership was not verified.",
+  "attempt_retried": false,
+  "safer_saved_record": "project-docs/production-log.jsonl",
+  "new_entry_event": "Complete and save the corrected Consideration study and reusable model previews",
+  "instructions": "After exact confirmation, refetch the current log and metadata, preserve every current entry, append the recorded event once, check metadata again, update the same ID and verify raw bytes. Rebase onto changed current content rather than replacing newer entries."
+}

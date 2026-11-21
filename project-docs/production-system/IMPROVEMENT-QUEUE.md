@@ -42,7 +42,7 @@ These are proposals derived from the current catalog, not replacements for histo
 
 ## Workflow improvements after this increment
 
-1. Finish and review the separate `concert-kit-consideration-v2` revision, then carry its complete-pose response and coverage lessons into a longer Song 07 performance. The historical [camera investigation](CONSIDERATION-CAMERA-NEXT.md) led to an explicit cut at source6.9, not one side angle for the whole action. Preserve the old baseline. The next visual refinement is clearance between translucent people and vegetation, followed by a shared walk and lantern carry.
+1. The separate `concert-kit-consideration-v2` revision is rendered, technically verified, reviewed in 67 encoded frames and saved. Clear vegetation from the people, then carry its complete-pose response and coverage lessons into a longer Song 07 performance. The historical [camera investigation](CONSIDERATION-CAMERA-NEXT.md) led to an explicit cut at source6.9, not one side angle for the whole action. Preserve the old baseline. The next visual refinement is clearance between translucent people and vegetation, followed by a shared walk and lantern carry.
 2. Select one full song for the first upgraded production, retaining its source timing and current arrangement caveats.
 3. Obtain or verify rehearsal/live arrangements before promising exact stage conformance. Historical uniform stretching and cuts remain historical choices, not defaults for new recordings.
 4. Record measured render memory and frame times for each model tier; select workers from evidence, not CPU count alone.

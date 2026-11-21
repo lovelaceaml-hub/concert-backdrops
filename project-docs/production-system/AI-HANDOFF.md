@@ -45,3 +45,9 @@ Leave a self-contained record of the branch/commit, owned files, selected audio 
 ## What should stay out of Git
 
 Full audio, copied lyrics, finished videos, frames, generated caches, temporary downloads, access tokens, signed download links and personal data. Short historical repo clips remain as inherited exceptions; do not extend that exception to the full concert. Store durable media in the existing shared Drive home. The `.gitignore` work paths are intended for reacquirable private working copies.
+
+## Current delivered media
+
+Read [DELIVERIES.md](DELIVERIES.md) and `catalogs/deliveries.json` for the eight saved files from this increment. The corrected fifteen-second movie has independent technical QA and sampled encoded review; it has not inherited the owner approval of the two references. New private Drive media copies remain pending the recorded exact-file/destination confirmation. Do not retry that rejected transfer through a different route or substitute a media payload into an existing file. The permitted existing Drive instruction updates are already complete. Use current `STATE.json` and PR 102 for the later handoff archive and integration outcome.
+
+The final Drive production-log append was separately rejected by automatic review. Its prepared delivery event is already in the repository log, with exact target and payload evidence in `evidence/drive-production-log-block.json`. Do not mark the Drive log updated or retry through another route without the required confirmation.

@@ -8,7 +8,7 @@ Current handoff: November 20, 2026, America/Los_Angeles. Machine observations da
 
 The code, reusable scene tools and versioned instructions are in [concert-backdrops](https://github.com/lovelaceaml-hub/concert-backdrops). The shared project home remains [Concert Backdrops - Songs](https://drive.google.com/drive/folders/1xyNZn4ZA6bjPcvKjGfgSWQIs9aAp2PPd). Its [Production System folder](https://drive.google.com/drive/folders/1QDGGqqkJlbovBLCthX-QChqfD8zSmK8X) is the intended portable handoff destination. The approved study archive is in [Videos / Production Studies](https://drive.google.com/drive/folders/1hrk62bFIOHv2NwXvYl2bNSmp0cwBoXrr).
 
-The automatic approval review blocked new private Drive media uploads because it requires exact file and destination confirmation; the connector did not expose ownership sufficient to resolve that requirement. Those media copies remain pending. The five existing shared Markdown instruction files were updated in place and verified by raw-byte readback, preserving their full historical bodies. Their recorded outcomes are in [drive-updates/updates.json](drive-updates/updates.json). The portable handoff is a separate versioned export; its actual archive outcome belongs in the current state and delivery records. Do not assume a prepared file was uploaded.
+The automatic approval review blocked new private Drive media uploads because it requires exact file and destination confirmation; the connector did not expose ownership sufficient to resolve that requirement. Those media copies remain pending. A later attempt to append the delivery event to the existing Drive production log was also rejected because exact payload/destination confirmation was required; the same entry is preserved in the repository log. See [the production-log rejection record](evidence/drive-production-log-block.json). The five existing shared Markdown instruction files were updated in place and verified by raw-byte readback, preserving their full historical bodies. Their recorded outcomes are in [drive-updates/updates.json](drive-updates/updates.json). The portable handoff is a separate versioned export; its actual archive outcome belongs in the current state and delivery records. Do not assume a prepared file was uploaded.
 
 Read this file, [AI-HANDOFF.md](AI-HANDOFF.md), [CREATIVE-RULES.md](CREATIVE-RULES.md), and the current song record before changing anything. Read the current Drive AGENTS, DESIGN-SYSTEM, VIDEO-HANDOFF, AUTONOMOUS-RUN and November 19 lessons addendum. Older instructions remain historical evidence; the latest owner's directions and later dated corrections govern current work.
 
@@ -25,6 +25,12 @@ Read this file, [AI-HANDOFF.md](AI-HANDOFF.md), [CREATIVE-RULES.md](CREATIVE-RUL
 | [Delivery catalog](catalogs/deliveries.json) | Exact current studies, native stills, model sheets, hashes, review status and durable links |
 | [Pipeline integration](../../docs/PIPELINE-INTEGRATION.md) | Registered renderers, source clocks, color handling, resume and CLI commands |
 | [Current state](STATE.json) | Delivery, integration and open work status; never substitute it for a render receipt |
+
+## Completed delivery from this increment
+
+The corrected fifteen-second study is complete: 900 native 1080p60 frames, two temporal samples, exact source identity, complete decode and presentation-time checks, and audio correlation at zero measured lag in three windows. A separate reviewer inspected 67 encoded frames covering rise, response, cuts and ending. All eight new media files are saved with exact hashes and durable links in [DELIVERIES.md](DELIVERIES.md) and the delivery catalog. The new study and model prototypes await their own owner review. Vegetation overlapping the translucent people remains the next visual refinement.
+
+The registered render and independent auditor both passed without errors or warnings. The 4K ending is a separately rendered native still; this delivery does not include a full 4K movie. See the [technical receipt](evidence/consideration-v2-delivery-qa.json) and [encoded visual review](evidence/consideration-v2-visual-review.json).
 
 ## Two approved references, with different jobs
 
