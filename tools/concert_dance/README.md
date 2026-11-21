@@ -43,9 +43,18 @@ For a genuine native 4K composition check:
 ./scripts/video produce concert-dance-study --quality 4k-check --frames 480
 ```
 
-This renders a 3840 x 2160 frame. A full 4K movie requires all 1080 frames in
-that preset followed by assembly and review; a single 4K still does not certify
-a full 4K delivery. Use fewer workers at 4K when measured memory requires it.
+This renders a 3840 x 2160 frame. The separate full-film preset uses three CPU
+workers to leave memory headroom at 4K:
+
+```bash
+./scripts/video produce concert-dance-study-4k --quality final --plan
+./scripts/video produce concert-dance-study-4k --quality final
+```
+
+It requires all 1080 native frames followed by assembly and review. A single
+4K still does not certify a full 4K delivery. The measured one-frame 4K worker
+peaked at about 1.65 GiB; check the target host and retain headroom. The 1080p
+project uses six workers. Neither preset dispatches a GPU or paid service.
 
 ## Reuse the motion layer
 
@@ -111,6 +120,18 @@ Run the focused regressions after changing the performance or registration:
 .venv/bin/python -m unittest discover -s tests -p test_concert_dance_performance.py -v
 .venv/bin/python -m unittest discover -s tests -p test_dance_registration.py -v
 ```
+
+After full assembly, run the independent native movie auditor:
+
+```bash
+env PYTHONHASHSEED=0 .venv/bin/python tools/concert_review/dance.py
+```
+
+It checks the exact registered eighteen-second profile, all decoded frames and
+presentation timestamps, unchanged frozen sources, canonical audio alignment
+and available native reference frames. Read `tools/concert_review/README.md`
+for baseline handling and scoped results. This command does not validate the
+separate full 4K preset; that requires a matching completed 4K audit profile.
 
 Inspect the actual encoded movie around preparation, toe pivots, airborne
 moments, landing, the dance-to-settle transition and ending. Inspect hands and

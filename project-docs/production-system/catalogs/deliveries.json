@@ -2,10 +2,10 @@
   "schema_version": 1,
   "updated_local_date": "2026-11-20",
   "timezone": "America/Los_Angeles",
-  "status": "eight_media_and_handoff_uploaded_and_raw_bytes_verified",
+  "status": "eleven_media_and_exact_handoff_uploaded_and_raw_bytes_verified",
   "approved_references_catalog": "project-docs/production-system/catalogs/references.json",
   "historical_baseline_source_commit": "673f68785c36b57d55d05129ee5549efe6352c60",
-  "current_integration_pr": 102,
+  "current_integration_pr": 104,
   "items": [
     {
       "id": "consideration-revised-15s",
@@ -250,6 +250,146 @@
         "sha256": "d5ed875cd6398c4ccd018aaeb9ad5c4b6f78daab9a5fe3e96ea48d59e5706a95",
         "evidence": "project-docs/production-system/evidence/drive-delivery-completion.json"
       }
+    },
+    {
+      "id": "natural-dance-duet-18s",
+      "filename": "Natural-Dance-Duet-18s-1080p60.mp4",
+      "kind": "natural_performance_study",
+      "width": 1920,
+      "height": 1080,
+      "fps": 60,
+      "frames": 1080,
+      "seconds": 18,
+      "temporal_samples": 2,
+      "description": "Continuous captured dance study with retained travel, bounded support cleanup, palm-following light trails and a closing acknowledgment. Full decode, exact presentation clock and canonical audio alignment passed.",
+      "technical_evidence": "project-docs/production-system/evidence/natural-dance-independent-qa.json",
+      "visual_evidence": "project-docs/production-system/evidence/natural-dance-visual-review.json",
+      "project_id": "concert-dance-study",
+      "production_command": "./scripts/video produce concert-dance-study --quality review",
+      "canonical_score_seconds": [
+        0,
+        18
+      ],
+      "original_recording_seconds": [
+        137.5,
+        155.5
+      ],
+      "known_limits": [
+        "The first five seconds are restrained; pacing needs further creative development.",
+        "Both performers reuse CMU 05_02 with a 0.6-second offset; complementary choreography remains future work.",
+        "Stored 30 Hz poses are interpolated for 60 fps. Fingers are not captured performance.",
+        "A raised-foot settling pose remains visible before the final coda.",
+        "Sampled visual review does not establish real-time naturalness or owner approval."
+      ],
+      "bytes": 20308106,
+      "sha256": "96b0f75464fd093ad5ba4a318f8d923de7fa33e2fd01115b5d49b42f3baaec66",
+      "picture_source_commit": "0c42f4422a6b67464cb9cd84aac32008d45d4f4c",
+      "pipeline_input_mapping_sha256": "3b4e9bce5176b976d1c8040f75fae699fa11b83455bcbb57dfa178449dcc28f9",
+      "creative_approval": "not_recorded",
+      "library": {
+        "status": "saved",
+        "library_file_id": "libfile_94dd1e528d8c8191964b6de7f6c012e7",
+        "file_id": "file_000000002a2081f5971b72f7349c4cbe",
+        "version": 0,
+        "url": "https://chatgpt.com/library?file_id=libfile_94dd1e528d8c8191964b6de7f6c012e7&account_id=personal"
+      },
+      "drive": {
+        "filename": "Natural-Dance-Duet-18s-1080p60.mp4",
+        "file_id": "1IImU7ohiNhI86WHtIPNB_3S0iFD2HgAH",
+        "url": "https://drive.google.com/file/d/1IImU7ohiNhI86WHtIPNB_3S0iFD2HgAH/view",
+        "folder_id": "1hrk62bFIOHv2NwXvYl2bNSmp0cwBoXrr",
+        "mime_type": "video/mp4",
+        "modified_time": "2026-11-21T08:42:41.172Z",
+        "bytes": 20308106,
+        "sha256": "96b0f75464fd093ad5ba4a318f8d923de7fa33e2fd01115b5d49b42f3baaec66",
+        "raw_bytes_verified": true,
+        "status": "uploaded_and_raw_bytes_verified",
+        "evidence": "project-docs/production-system/evidence/natural-dance-drive-delivery.json"
+      }
+    },
+    {
+      "id": "natural-dance-duet-4k",
+      "filename": "Natural-Dance-Duet-Native-4K.png",
+      "kind": "native_4k_still",
+      "width": 3840,
+      "height": 2160,
+      "frame": 480,
+      "time_seconds": 8.0,
+      "temporal_samples": 2,
+      "source_precision": "RGB8 SDR",
+      "description": "One native 3840x2160 frame from the dance turning passage; not upscaled. Full 4K movie remains unrendered.",
+      "technical_evidence": "project-docs/production-system/evidence/natural-dance-native-4k.json",
+      "whole_4k_movie_rendered": false,
+      "bytes": 3504314,
+      "sha256": "ae5743f6dd55c57a34c830642355f4b0e2e9dc2d4408a443ccb420bc7b8e7a67",
+      "picture_source_commit": "0c42f4422a6b67464cb9cd84aac32008d45d4f4c",
+      "pipeline_input_mapping_sha256": "3b4e9bce5176b976d1c8040f75fae699fa11b83455bcbb57dfa178449dcc28f9",
+      "creative_approval": "not_recorded",
+      "library": {
+        "status": "saved",
+        "library_file_id": "libfile_8c22ca84cbcc8191a484bed9662cb252",
+        "file_id": "file_00000000665881f5a8104c2810d136a2",
+        "version": 0,
+        "url": "https://chatgpt.com/library?file_id=libfile_8c22ca84cbcc8191a484bed9662cb252&account_id=personal"
+      },
+      "drive": {
+        "filename": "Natural-Dance-Duet-Native-4K.png",
+        "file_id": "1nB2MjshQhFJHe7c-KyjxcuWBBPGvFYyq",
+        "url": "https://drive.google.com/file/d/1nB2MjshQhFJHe7c-KyjxcuWBBPGvFYyq/view",
+        "folder_id": "1hrk62bFIOHv2NwXvYl2bNSmp0cwBoXrr",
+        "mime_type": "image/png",
+        "modified_time": "2026-11-21T08:42:52.283Z",
+        "bytes": 3504314,
+        "sha256": "ae5743f6dd55c57a34c830642355f4b0e2e9dc2d4408a443ccb420bc7b8e7a67",
+        "raw_bytes_verified": true,
+        "status": "uploaded_and_raw_bytes_verified",
+        "evidence": "project-docs/production-system/evidence/natural-dance-drive-delivery.json"
+      }
+    },
+    {
+      "id": "natural-dance-duet-review",
+      "filename": "Natural-Dance-Duet-Motion-Review.jpg",
+      "kind": "encoded_motion_contact_sheet",
+      "width": 1920,
+      "height": 1164,
+      "sampled_frames": [
+        0,
+        330,
+        390,
+        492,
+        570,
+        660,
+        810,
+        948,
+        1068
+      ],
+      "description": "Nine labeled samples decoded from the actual final movie, with equal scaling and no brightness or content edits.",
+      "technical_evidence": "project-docs/production-system/evidence/natural-dance-visual-review.json",
+      "bytes": 681227,
+      "sha256": "7ba73a497107be3065380d48abd64bbafdd17e0e9e8cdd3c5dc747abca5555af",
+      "picture_source_commit": "0c42f4422a6b67464cb9cd84aac32008d45d4f4c",
+      "pipeline_input_mapping_sha256": "3b4e9bce5176b976d1c8040f75fae699fa11b83455bcbb57dfa178449dcc28f9",
+      "creative_approval": "not_recorded",
+      "library": {
+        "status": "saved",
+        "library_file_id": "libfile_f75ba5b1fec08191bc69db96dd16fbcd",
+        "file_id": "file_0000000005f881f5bb4213be48b8e478",
+        "version": 0,
+        "url": "https://chatgpt.com/library?file_id=libfile_f75ba5b1fec08191bc69db96dd16fbcd&account_id=personal"
+      },
+      "drive": {
+        "filename": "Natural-Dance-Duet-Motion-Review.jpg",
+        "file_id": "1AmBWnRldfLNjbL9Vh31WzMEhAPby12Vm",
+        "url": "https://drive.google.com/file/d/1AmBWnRldfLNjbL9Vh31WzMEhAPby12Vm/view",
+        "folder_id": "1hrk62bFIOHv2NwXvYl2bNSmp0cwBoXrr",
+        "mime_type": "image/jpeg",
+        "modified_time": "2026-11-21T08:42:57.622Z",
+        "bytes": 681227,
+        "sha256": "7ba73a497107be3065380d48abd64bbafdd17e0e9e8cdd3c5dc747abca5555af",
+        "raw_bytes_verified": true,
+        "status": "uploaded_and_raw_bytes_verified",
+        "evidence": "project-docs/production-system/evidence/natural-dance-drive-delivery.json"
+      }
     }
   ],
   "limits": [
@@ -316,5 +456,7 @@
   "drive_completion_recorded_at_utc": "2026-11-21T07:39:34.868145+00:00",
   "drive_completion_evidence": "project-docs/production-system/evidence/drive-delivery-completion.json",
   "handoff_completion_recorded_at_utc": "2026-11-21T08:05:03.822755+00:00",
-  "handoff_completion_evidence": "project-docs/production-system/evidence/drive-handoff-completion.json"
+  "handoff_completion_evidence": "project-docs/production-system/evidence/drive-handoff-completion.json",
+  "natural_dance_completion_recorded_at_utc": "2026-11-21T08:44:55.274489+00:00",
+  "natural_dance_completion_evidence": "project-docs/production-system/evidence/natural-dance-drive-delivery.json"
 }

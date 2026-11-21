@@ -14,6 +14,7 @@ provider, paid dispatch, GitHub render dispatch, or automatic user approval.
 | `concert-kit-consideration` | `p3d-kit` | Historical 18 second authored visual scene, from output frame zero | 1920 x 1080, 60 fps, 2 temporal samples |
 | `concert-kit-consideration-v2` | `p3d-kit` | 15 seconds, output frames 0..899 map to original scene frames 180..1079 | 1920 x 1080, 60 fps, 2 temporal samples |
 | `concert-dance-study` | `p3d-kit` | 18 seconds, one continuous captured dance and settlement, output frames 0..1079 | 1920 x 1080, 60 fps, 2 temporal samples |
+| `concert-dance-study-4k` | `p3d-kit` | Same continuous eighteen-second clock, with a lower CPU worker count | 3840 x 2160, 60 fps, 2 temporal samples; full movie not yet rendered |
 
 The first project retains the established choreography. The historical kit study
 contains models and performance work in `tools/concert_kit`. The revision wraps
@@ -31,7 +32,7 @@ its scene and renderer live in `tools/concert_dance`. See that directory's READM
 for reproduction, capture provenance and explicit motion limits. It retains the
 approved engine and earlier scene modules unchanged.
 
-All four registrations produce RGB8 SDR frames using the established filmic display treatment.
+All listed projects produce RGB8 SDR frames using the established filmic display treatment.
 They explicitly select `delivery.source_transfer="legacy_display_gamma"`.
 FFmpeg therefore preserves the original RGB-to-YUV matrix/range conversion.
 The separate sRGB conversion used by Blender and browser projects remains intact.

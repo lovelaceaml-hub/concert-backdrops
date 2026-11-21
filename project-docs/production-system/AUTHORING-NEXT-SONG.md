@@ -1,6 +1,6 @@
 # Authoring the next concert film
 
-The shared system provides three explicit render registrations, native models, reference identities, audio verification, planning, frame recovery, encoding and technical review. The registrations are the approved Song 11 clarity study, the historical 18-second Consideration baseline and its separate 15-second camera and response revision. A new complete song still needs authored acting, cameras, musical cues and scene integration. This guide explains where that work belongs without changing an approved reference.
+The shared system provides four explicit render registrations, native models, reference identities, audio verification, planning, frame recovery, encoding and technical review. The registrations are the approved Song 11 clarity study, the historical 18-second Consideration baseline, its separate 15-second camera and response revision, and the new 18-second natural dance study. Registration establishes a repeatable scene contract; the delivery catalog records the actual output and owner review status. A new complete song still needs authored acting, cameras, musical cues and scene integration. This guide explains where that work belongs without changing an approved reference.
 
 ## 1. Start from the actual song record
 
@@ -21,6 +21,8 @@ Keep four clocks explicit: original recording time, any approved live arrangemen
 For each major passage, write a short sentence describing what someone notices, chooses, does, receives and changes. Tie that action to the selected campaign expression, using the exact wording and color already in `engine/p3d/words.py`. The historical expression mapping is in the song catalog. A new mapping is a deliberate design change, not an automatic consequence of changing the soundtrack.
 
 The Consideration study demonstrates the sequence: notice a seated person, offer a hand, establish shared contact, brace and rise, release, acknowledge, then let the caring action illuminate the shore. Its timing is specific to that study. Do not paste an identical 18-second performance through all eleven songs.
+
+For dance, begin with a complete inspected phrase and its support changes, turn, travel and settlement. The reusable `people.natural-dance` entry installs `tools.concert_dance.performance.install_dance` on a Body before sampling it or its cloth. It keeps the captured final location, calculates stable support intervals and evaluates poses at absolute time. Read [NATURAL-PERFORMANCE.md](NATURAL-PERFORMANCE.md), the [source and licensing research](NATURAL-PERFORMANCE-RESEARCH.md), and [the study README](../../tools/concert_dance/README.md) before reusing it. The current duet uses the same captured phrase twice with a 0.6-second offset. A new song or a complementary duet needs new authored phrasing and review; no additional capture collection is implied.
 
 Record these decisions in the ignored work plan:
 
@@ -61,9 +63,9 @@ Some existing models are explicitly `scene_bound` in the shared catalog. The Son
 
 ## 4. Register a new scene deliberately
 
-The current registered projects are `approved-light-s11`, `concert-kit-consideration` and `concert-kit-consideration-v2`. The approved adapter rejects a different recording or source identity. The kit adapter has an explicit scene registry: the historical scene has 18-second bounds; the revised scene has 15-second bounds and a three-second source offset. Both require 60 fps, empty shot parameters and exact authored cuts. Renaming a project or replacing its audio does not author another song.
+The current registered projects are `approved-light-s11`, `concert-kit-consideration`, `concert-kit-consideration-v2`, `concert-dance-study` and `concert-dance-study-4k`. The last two share one scene registration and authored clock; the 4K project changes delivery resolution and CPU concurrency. The approved adapter rejects a different recording or source identity. The kit adapter has an explicit scene registry: the historical scene has 18-second bounds; the revised scene has 15-second bounds and a three-second source offset; the dance scene covers 18 seconds from source time zero in one uninterrupted 1,080-frame shot. The kit studies require 60 fps, empty shot parameters and their exact authored cuts, including no cuts for dance. Renaming a project or replacing its audio does not author another song.
 
-For a new production, add a separate scene module and project directory. Use `tools/concert_motion_revision/README.md`, its renderer wrapper and `docs/PIPELINE-INTEGRATION.md` as implementation references, while preserving the existing registered behavior. Extend the adapter's explicit scene registration, validation and dependency collection to cover the new module. Keep the following contracts intact:
+For a new production, add a separate scene module and project directory. Use `tools/concert_motion_revision/README.md`, `tools/concert_dance/README.md`, their isolated renderer wrappers and `docs/PIPELINE-INTEGRATION.md` as implementation references, while preserving the existing registered behavior. Extend the adapter's explicit scene registration, validation and dependency collection to cover the new module. Keep the following contracts intact:
 
 - `make_renderer` creates an explicit native size, frame rate, temporal sample count and isolated cache identity.
 - `frame` evaluates the requested absolute output time, with shutter samples confined to its current shot.
@@ -76,6 +78,8 @@ Test a meaningful new adapter boundary with a small real render: wrong source re
 
 Do not edit any dependency while a frozen production round is rendering. A source change should invalidate output honestly. Finish or stop that round, record why, and begin a new identity when the picture changes.
 
+Use the pipeline's optional `production.render_workers` for bounded CPU parallelism. One coordinator validates staged frames and writes receipts; worker count does not change the picture identity. Select concurrency from measured memory at the intended resolution, keeping room for variation and other jobs. The 1080p dance configuration uses six single-thread workers and 90-frame chunks; the separate native 4K project uses three workers. The representative 876.9 MiB 1080p measurement covered two native frames and observed a source change, so it is not a frozen full-film maximum. The actual native 4K frame worker subsequently peaked at 1,734,260 KiB, about 1.65 GiB. Neither short-run measurement establishes a whole-film maximum. The complete 4K project is configured but its full movie remains unrendered at this handoff; use the exact commands in [NATURAL-PERFORMANCE.md](NATURAL-PERFORMANCE.md), then inspect live memory and completed worker logs. Remeasure for another scene or host. See [VIDEO-PIPELINE.md](../../docs/VIDEO-PIPELINE.md).
+
 ## 5. Review motion at the scale where it matters
 
 First render native 1080p close, wide and ending frames. Then render the complete human exchange at 60 fps. Evaluate anticipation, hand approach, shared grip, balance, foot planting, weight transfer, release, cloth overlap and settling. Review camera acceleration and the moment at which the world responds.
@@ -83,6 +87,8 @@ First render native 1080p close, wide and ending frames. Then render the complet
 Use consecutive temporal samples as well as spaced keyframes. Spaced stills can hide a sliding foot, a sudden wrist change, a repeated pose or a flash at a batch boundary. Inspect frames immediately before and after every cut and renderer chunk boundary. Review the encoded result as well as the source PNGs.
 
 Machine evidence should name what it actually measured. Palm-center distance does not certify finger interlock. Stable wing length does not certify aerodynamic realism. A sixty-fps file does not prove sixty distinct evaluated poses. A motion-capture source sampled at 30 Hz can be interpolated at output times, but should not be described as a native 60-Hz capture.
+
+For the dance layer, inspect toe pivots separately from stationary flat support, retain intended airborne intervals, and review landing compression and costume turns. The bounded support correction is kinematic cleanup, not a force or balance simulation. Fingers require their own authored layer and close review. A native 4K frame checks composition and detail at that resolution; a full 4K movie requires its complete frame sequence, assembly and encoded review.
 
 For the established style, protect one important action at a time. Keep the hands and faces clear of reeds, bright trajectories and text. Reserve larger light travel for a visible consequence. Let the final response finish before the scene ends.
 

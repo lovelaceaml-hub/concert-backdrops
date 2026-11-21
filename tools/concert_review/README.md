@@ -152,6 +152,54 @@ rendering. Its numerical regression result does not establish natural acting
 or replace inspection of the encoded movie. See its recorded method and source
 identities before comparing different revisions.
 
+## Independent natural dance audit
+
+`dance.py` audits the registered `concert-dance-study` review master: one
+continuous eighteen-second shot, 1080 native 1920 x 1080 frames at 60 fps, and
+the complete canonical eighteen-second WAV at offset zero. It uses an empty
+authored-cut list and the dance registration's own clock.
+
+After `master.mp4`, `master.json` and the complete `performance` shot receipt
+exist, run from the repository root:
+
+```bash
+env PYTHONHASHSEED=0 .venv/bin/python tools/concert_review/dance.py --movie work/pipeline/concert-dance-study/review/master.mp4 --audio work/concert-kit/consideration-score.wav --baseline project-docs/production-system/evidence/natural-dance-frozen-inputs.json
+```
+
+The tracked baseline is the existing frozen picture round, with its 197 source
+hashes. `--baseline work/natural-performance/frozen-round.json` can select the
+equivalent working record explicitly. A deliberately changed scene needs a
+new frozen round and new receipts; do not replace a baseline to hide a source
+mismatch. The auditor never creates or repairs a baseline.
+
+To check restored sources and the canonical score before the movie exists:
+
+```bash
+env PYTHONHASHSEED=0 .venv/bin/python tools/concert_review/dance.py --inputs-only --baseline project-docs/production-system/evidence/natural-dance-frozen-inputs.json
+```
+
+This limited mode reports `technical_passed: null` and `movie_audited: false`.
+It does not establish a completed movie audit. Both modes return nonzero on
+their technical errors and create a new timestamped directory under
+`work/production-system/final-qa/concert-dance-study/`. `--out-dir` can choose a
+new directory explicitly; existing directories are not overwritten. Keep the
+printed `independent-qa.json` and accompanying frame-decode evidence.
+
+The full audit checks the frozen source mapping before and after review,
+registered clock, completed shot coverage, assembly/movie identity, finishing
+inputs, every presentation timestamp and a complete native FFmpeg decode of
+all 1080 frames. It verifies the canonical PCM payload, full-program AAC
+correlation and three nonsilent alignment windows spread across the score,
+including lag and gain. Normal AAC priming handling and trailing padding are
+reported separately. Native source PNGs for frames 360 and 480 are checked
+against their receipt hashes and compared with decoded RGB when available.
+Missing reference PNGs are reported, never silently treated as comparisons.
+
+The tool imports no renderer and starts no render. It does not certify natural
+acting, physical contact, fingers, cloth, artistic synchronization or owner
+approval. Its 1080p result does not establish a full 4K movie. Read the JSON's
+limitations and inspect the encoded performance even when technical checks pass.
+
 ## Narrow auditor tests
 
 ```bash

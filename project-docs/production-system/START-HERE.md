@@ -1,8 +1,16 @@
 # Concert production system
 
-Current handoff: November 20, 2026, America/Los_Angeles. Machine observations dated November 21 in the source catalog use UTC.
+Current handoff: the natural dance increment in PR #104. The prior November 20, 2026 handoff uses America/Los_Angeles; machine observations dated November 21 in the source catalog use UTC.
 
 **The Words of Mother's Love bring peace.** Build every film around that message. The owner approved the sharper Song 11 beauty study and requested that its setup, source, instructions and references be saved, uploaded and merged for every AI to reuse. The owner also authorized continued model, acting and workflow improvement across the concert songs.
+
+## Newest increment: natural dance, PR #104
+
+The latest direction prioritizes fluid, expressive whole-body movement and dancing. The isolated `concert-dance-study` adds stable support intervals, preserved root travel, an eased preparation and settlement, and trails attached to solved wrists. Its picture source is frozen at `0c42f4422a6b67464cb9cd84aac32008d45d4f4c`. The full eighteen-second, 1,080-frame native 1080p60 movie is complete, independently verified, saved and copied to Production Studies with raw-byte readback. The final movie received 89 targeted independent decoded-frame samples and a separate 15-frame overview; the earlier silent proof received 62 samples. Creative approval remains unrecorded. Read [STATE.json](STATE.json), [DELIVERIES.md](DELIVERIES.md) and their evidence for exact outputs, scoped findings and remaining pacing and settling work.
+
+Start with [NATURAL-PERFORMANCE.md](NATURAL-PERFORMANCE.md) for exact commands and reuse, [MOTION-LIBRARY.md](MOTION-LIBRARY.md) for available clips and the acquisition workflow, and [catalogs/motions.json](catalogs/motions.json) for their machine-readable identities. The 1080p project uses six single-thread CPU workers. The separate `concert-dance-study-4k` project uses three workers for native 3840 x 2160 output. One native 4K frame has rendered; the full 4K movie is configured but remains unrendered. These are two projects sharing one dance scene registration.
+
+Both performers currently reuse CMU 05_02 with a 0.6-second offset. The prepared whole-body capture is 30 Hz, interpolated for 60 fps output. Its phrase and pacing limit sustained movement and variety; this is not a new capture library or a complementary duet. Finger and thumb performance was not captured. Support correction is bounded kinematic cleanup, not a balance or force simulation. Keep those limits visible while expanding reviewed phrases, authored hands and costume motion through [the improvement queue](IMPROVEMENT-QUEUE.md).
 
 ## The shared starting point
 
@@ -13,6 +21,8 @@ The owner subsequently confirmed the exact listed media and log operations. All 
 The original 350,548-byte handoff ZIP could not be recovered after the prior workspace expired. A replacement was reconstructed with the original exporter from clean commit `94dd897c6fdeb287561c5dd2772b770c43ab94b7`. All 89 source-document payloads match that commit exactly; fresh ZIP timestamps and a new truthful export receipt changed the container to 350,534 bytes and SHA256 `eb8bba933a37179fa970c84aecc67cbc0b493809d1e2b2e7863c3900b9606537`. The original SHA256 `605b7be8ca59987651a642727a9babef88e01986c87d8ea7e3ca076e84a2e158` remains historical evidence. Read [the reconstruction record](evidence/handoff-reconstruction.json).
 
 The owner explicitly confirmed the exact saved replacement. It is now [uploaded to Production System](https://drive.google.com/file/d/1gp0x2dnj06eIPDuq6vSGpGtKn_bvKrML/view) and verified by downloaded raw-byte readback against the saved source: 350,534 bytes with the SHA256 above. The [saved version 0 backup](https://chatgpt.com/library?file_id=libfile_0d7ab1c2d83c8191a3badd389c6dc483&account_id=personal) remains available. **All three prior Drive operations are complete:** the eight media copies, the requested single log append and this exact ZIP upload. See [the archive completion evidence](evidence/drive-handoff-completion.json). The [replacement rejection record](evidence/drive-handoff-replacement-block.json) is historical; do not repeat the completed upload or ask for its confirmation again.
+
+That exact delivered ZIP remains an immutable historical snapshot. Current Git source and versioned handoffs, including the source and delivery records in PR #104, carry the latest setup. Do not overwrite the confirmed archive to make it appear current.
 
 Read this file, [AI-HANDOFF.md](AI-HANDOFF.md), [CREATIVE-RULES.md](CREATIVE-RULES.md), and the current song record before changing anything. Read the current Drive AGENTS, DESIGN-SYSTEM, VIDEO-HANDOFF, AUTONOMOUS-RUN and November 19 lessons addendum. Older instructions remain historical evidence; the latest owner's directions and later dated corrections govern current work.
 
@@ -26,13 +36,15 @@ Read this file, [AI-HANDOFF.md](AI-HANDOFF.md), [CREATIVE-RULES.md](CREATIVE-RUL
 | [Authoring the next song](AUTHORING-NEXT-SONG.md) | Performance, model reuse, scene registration, cue clocks and honest review boundaries |
 | [Reference motion review](REFERENCE-MOTION-REVIEW.md) | Dense temporal samples from the actual approved films and three specific next improvements |
 | [Natural performance research](NATURAL-PERFORMANCE-RESEARCH.md) | Primary sources and the contract for captured dance, travel, foot support and expressive staging |
+| [Natural performance handoff](NATURAL-PERFORMANCE.md) | Current dance setup, 1080p and 4K commands, tests, memory evidence and honest limits |
+| [Motion library](MOTION-LIBRARY.md) and [motion catalog](catalogs/motions.json) | Actual prepared clips, source identity and proposed acquisitions kept distinct |
 | [Dance study setup](../../tools/concert_dance/README.md) | Repeatable native render commands, reusable performance API and explicit capture limits |
 | [Consideration camera investigation](CONSIDERATION-CAMERA-NEXT.md) | Historical single-frame evidence that led to the separate camera and response revision |
 | [Delivery catalog](catalogs/deliveries.json) | Exact current studies, native stills, model sheets, hashes, review status and durable links |
 | [Pipeline integration](../../docs/PIPELINE-INTEGRATION.md) | Registered renderers, source clocks, color handling, resume and CLI commands |
 | [Current state](STATE.json) | Delivery, integration and open work status; never substitute it for a render receipt |
 
-## Completed delivery from this increment
+## Completed previous increment: Consideration and model studies
 
 The corrected fifteen-second study is complete: 900 native 1080p60 frames, two temporal samples, exact source identity, complete decode and presentation-time checks, and audio correlation at zero measured lag in three windows. A separate reviewer inspected 67 encoded frames covering rise, response, cuts and ending. All eight new media files are saved, copied to Drive and verified with exact hashes and links in [DELIVERIES.md](DELIVERIES.md) and the delivery catalog. The new study and model prototypes await their own owner review. Vegetation overlapping the translucent people remains the next visual refinement.
 
@@ -139,6 +151,8 @@ The [Consideration auditor](../../tools/concert_review/README.md) has explicit 1
 ## Native 4K and smooth motion
 
 Native 4K is supported where the selected adapter exposes a 3840 by 2160 quality preset. It requires new native frames, fonts and render receipts. Do not rename an upscaled 1080p output as native 4K. The approved 30-second beauty study is 1080p60; its conductor still is native 4K. A full 4K version of that excerpt has not been delivered.
+
+For the newest dance, use `concert-dance-study-4k` for the separately configured three-worker full-film route. The six-worker `concert-dance-study` remains the 1080p route; its `4k-check` preset produced the single native detail frame. Consult [NATURAL-PERFORMANCE.md](NATURAL-PERFORMANCE.md) and current delivery evidence before describing either movie as complete.
 
 Smooth animation comes from authored acceleration, weight, contact, overlap, camera paths and subframe evaluation. More frames do not fix skating feet or hands that miss. Keep close figures evaluated at the real output times; do not mistake a lower-rate crowd cache for a hero performance. Keep motion blur within a shot and preserve the final pose long enough to read.
 

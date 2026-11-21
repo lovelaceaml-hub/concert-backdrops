@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_local_date": "2026-11-20",
+  "updated_local_date": "2026-11-21",
   "status_policy": "source_available, implemented_study_in_review and owner_approved are distinct. Approval belongs to a versioned output, not an entire family.",
   "source_revision_policy": "Current checkout source is hashed in each render. Approved reference source pins are in references.json.",
   "generated_raster_exclusions": [
@@ -738,6 +738,66 @@
       "delivery_id": "consideration-revised-15s",
       "technical_evidence": "project-docs/production-system/evidence/consideration-v2-delivery-qa.json",
       "visual_evidence": "project-docs/production-system/evidence/consideration-v2-visual-review.json"
+    },
+    {
+      "id": "people.natural-dance",
+      "family": "acting",
+      "source_paths": [
+        "tools/concert_dance/performance.py",
+        "tools/concert_dance/scene.py",
+        "tools/concert_dance/render.py",
+        "tools/concert_dance/README.md",
+        "projects/concert-dance-study/project.json",
+        "projects/concert-dance-study-4k/project.json",
+        "assets/p3d/body_v1.npz",
+        "assets/p3d/README.md"
+      ],
+      "entry_point": "tools.concert_dance.performance.install_dance",
+      "provenance": "isolated_performance_conditioning_with_existing_licensed_capture",
+      "code_only_eligible": true,
+      "reuse_scope": "native_world_space_performance_with_explicit_registered_study",
+      "status": "implemented_study_in_review",
+      "coordinates": {
+        "units": "metres",
+        "up_axis": "+Y"
+      },
+      "project_id": "concert-dance-study",
+      "source_commit": "0c42f4422a6b67464cb9cd84aac32008d45d4f4c",
+      "motion_source": {
+        "capture": "CMU 05_02",
+        "prepared_asset_sha256": "0a72159f84b7008dcb135c79f82ae3b05df5f7361197e99ab9ca4af148c91189",
+        "prepared_pose_count": 281,
+        "prepared_fps": 30,
+        "render_fps": 60,
+        "new_capture_acquired": false
+      },
+      "animation": [
+        "complete captured phrase with eased source-clock edges",
+        "stable support intervals with bounded heel or toe pivot correction",
+        "root travel and facing retained through settlement",
+        "absolute-time solved poses and wrist-driven light trails"
+      ],
+      "known_limits": [
+        "Both study performers use the same capture with a 0.6-second offset; no expanded motion library or complementary duet is claimed.",
+        "The stored 30 Hz poses are interpolated for 60 fps output; no new captured finger or thumb motion is present.",
+        "Support cleanup is kinematic and bounded, not a physical balance or force solver.",
+        "Wrist-history light trails use analytic drift, not physical silk simulation.",
+        "The canonical score is unchanged; visual timing is authored and not ear-verified against musical transients.",
+        "Movie completion, native 4K evidence and exact-output owner review must be read from the delivery catalog.",
+        "This acting entry does not change the existing nine new geometry-family and eighteen-variant counts."
+      ],
+      "focused_tests_passed": {
+        "captured_performance": 4,
+        "registration": 7,
+        "parallel_render": 7,
+        "existing_cache": 11
+      },
+      "handoff": "project-docs/production-system/NATURAL-PERFORMANCE.md",
+      "research": "project-docs/production-system/NATURAL-PERFORMANCE-RESEARCH.md",
+      "delivery_status_authority": "project-docs/production-system/catalogs/deliveries.json",
+      "license_record": "assets/p3d/README.md",
+      "configured_4k_project_id": "concert-dance-study-4k",
+      "configured_4k_scope": "Three CPU workers and native 3840x2160 settings; one 4K frame verified in the base project, full 4K movie unrendered at this handoff. Delivery catalog remains authoritative."
     }
   ]
 }

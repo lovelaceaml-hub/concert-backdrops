@@ -1,5 +1,23 @@
 # Delivered studies and model previews
 
+## Newest delivery: natural dance performance
+
+The new eighteen-second study is complete at native 1920 x 1080, 60 fps and two temporal samples. All three files below are saved and copied to Videos / Production Studies, with their raw downloaded bytes matching the originals. Picture source: `0c42f4422a6b67464cb9cd84aac32008d45d4f4c`; integration record: [PR #104](https://github.com/lovelaceaml-hub/concert-backdrops/pull/104).
+
+| Saved file | Verified Drive copy | What it contains |
+| --- | --- | --- |
+| [Natural-Dance-Duet-18s-1080p60.mp4](https://chatgpt.com/library?file_id=libfile_94dd1e528d8c8191964b6de7f6c012e7&account_id=personal) | [Open in Drive](https://drive.google.com/file/d/1IImU7ohiNhI86WHtIPNB_3S0iFD2HgAH/view) | Continuous captured dance study with retained travel, bounded support cleanup, palm-following light trails and a closing acknowledgment. Full decode, exact presentation clock and canonical audio alignment passed. |
+| [Natural-Dance-Duet-Native-4K.png](https://chatgpt.com/library?file_id=libfile_8c22ca84cbcc8191a484bed9662cb252&account_id=personal) | [Open in Drive](https://drive.google.com/file/d/1nB2MjshQhFJHe7c-KyjxcuWBBPGvFYyq/view) | One native 3840x2160 frame from the dance turning passage; not upscaled. Full 4K movie remains unrendered. |
+| [Natural-Dance-Duet-Motion-Review.jpg](https://chatgpt.com/library?file_id=libfile_f75ba5b1fec08191bc69db96dd16fbcd&account_id=personal) | [Open in Drive](https://drive.google.com/file/d/1AmBWnRldfLNjbL9Vh31WzMEhAPby12Vm/view) | Nine labeled samples decoded from the actual final movie, with equal scaling and no brightness or content edits. |
+
+Both technical audits passed without errors or warnings. All 1,080 frames decoded, presentation times match the exact 60 fps clock, all 197 frozen picture inputs remained unchanged, and three distributed audio windows match the unchanged canonical score at zero-sample lag. The original Song 07 excerpt is 137.5 to 155.5 seconds, with its existing gain and fades preserved. This establishes technical audio alignment, not ear-verified choreographic sync. Read the [independent audit](evidence/natural-dance-independent-qa.json), [implementation evidence](evidence/natural-dance-implementation.json) and [Drive readback evidence](evidence/natural-dance-drive-delivery.json).
+
+The independent final-film review inspected 89 exact decoded samples through the return, settlement and ending. An earlier silent nine-second proof received 62 targeted samples, and the coordinator inspected a separate 15-frame final overview. The [visual review](evidence/natural-dance-visual-review.json) found no confirmed sampled blocker but records slow opening preparation, a prolonged raised-foot settle and a substantially held ending. This was ordered-frame review, not real-time playback or owner approval. Both figures reuse the same existing 30 Hz capture with a 0.6-second offset, so complementary choreography and authored hands remain concrete next work.
+
+The 4K image is one native 3840 x 2160 RGB8 SDR frame. The separate three-worker full-4K project is configured but its complete movie remains unrendered. Current reproduction commands, resources and capture limitations are in [NATURAL-PERFORMANCE.md](NATURAL-PERFORMANCE.md).
+
+## Previous Consideration and model delivery
+
 Recorded November 20, 2026, America/Los_Angeles. Exact hashes, technical evidence and saved-file identities are in [the delivery catalog](catalogs/deliveries.json). The eight files below were saved successfully and, after the owner confirmed their exact names and destination, uploaded to Production Studies. Every Drive copy was read back and matched by byte count and SHA256. The requested log entry was also appended once with its existing 106-entry prefix preserved. See [the completion evidence](evidence/drive-delivery-completion.json). The exact confirmed reconstructed handoff ZIP is also uploaded and verified, completing all three prior Drive operations.
 
 | Saved file | Verified Drive copy | What it contains |

@@ -1,0 +1,23 @@
+{
+  "recorded_at_utc": "2026-11-21T08:48:13.286612+00:00",
+  "name": "production-log.jsonl",
+  "before_bytes": 50645,
+  "after_bytes": 53915,
+  "before_entries": 107,
+  "after_entries": 109,
+  "before_sha256": "4f01a3c40ec8b07da8b07c6f16d3f32d6f7fab70530fb8ed58307d5ee36e7bda",
+  "after_sha256": "001d1889d56ec115570c809a038537aa54ccab9611320af125c587e3917daeb1",
+  "original_byte_prefix_preserved": true,
+  "file_id": "16F00sMLXIxP77F2bvffPJ9754eR93wtb",
+  "modified_time": "2026-11-21T08:47:41.263Z",
+  "url": "https://drive.google.com/file/d/16F00sMLXIxP77F2bvffPJ9754eR93wtb/view",
+  "raw_bytes_verified": true,
+  "same_file_id": true,
+  "natural_event_occurrences": 1,
+  "archive_completion_occurrences": 1,
+  "appended_events": [
+    "exact_confirmed_replacement_zip_completed",
+    "natural-dance-study-v1-delivery-20261121"
+  ],
+  "appended_count": 2
+}
