@@ -3,8 +3,11 @@ from __future__ import annotations
 
 import argparse
 import importlib.util
+import json
 import os
 from pathlib import Path
+import resource
+import time
 
 from PIL import Image
 
@@ -14,12 +17,16 @@ from .project import PipelineError, Project, file_hash, read_data, safe_path, wr
 SCENE = "tools/concert_kit/consideration.py"
 MODULE = "tools/concert_kit/render.py"
 REVISION_SCENE = "tools/concert_motion_revision/render.py"
+DANCE_SCENE = "tools/concert_dance/scene.py"
 REGISTERED_SCENES = {
     SCENE: {"id": "consideration-v1", "module": MODULE, "seconds": 18,
             "fps": 60, "source_start_frame": 0, "cut_frames": (180, 720)},
     REVISION_SCENE: {"id": "consideration-v2", "module": REVISION_SCENE,
                      "seconds": 15, "fps": 60, "source_start_frame": 180,
                      "cut_frames": (234, 540)},
+    DANCE_SCENE: {"id": "natural-dance-v1", "module": "tools/concert_dance/render.py",
+                  "seconds": 18, "fps": 60, "source_start_frame": 0,
+                  "cut_frames": ()},
 }
 
 
@@ -139,7 +146,9 @@ def render_job(job: dict) -> None:
         raise PipelineError("temporal_samples must be an integer from 1 to 4.")
     source_identity(root, scene)
     module = scene_module(root, scene)
+    began = time.monotonic()
     renderer = module.make_renderer(job["video"]["width"], job["video"]["height"], temporal_samples=samples, fps=spec["fps"])
+    initialized = time.monotonic()
     output = Path(job["out_dir"])
     output.mkdir(parents=True, exist_ok=True)
     for frame in job["frames"]:
@@ -152,6 +161,11 @@ def render_job(job: dict) -> None:
         Image.frombytes("RGB", (renderer.w, renderer.h), data).save(temporary)
         temporary.replace(output / f"frame_{frame:06d}.png")
         print(f"concert kit frame {frame}, temporal samples {samples}", flush=True)
+    print(json.dumps({"event": "worker_complete", "frames": len(job["frames"]),
+                      "initialization_seconds": round(initialized - began, 3),
+                      "frame_seconds": round(time.monotonic() - initialized, 3),
+                      "peak_rss_kib": resource.getrusage(resource.RUSAGE_SELF).ru_maxrss}),
+          flush=True)
 
 
 def main() -> None:

@@ -1,0 +1,32 @@
+{
+  "recorded_at_utc": "2026-11-21T08:48:13.286612+00:00",
+  "updates": [
+    {
+      "name": "AGENTS.md",
+      "before_bytes": 7492,
+      "after_bytes": 10543,
+      "before_sha256": "61a57aa1be19940d77d71e3f7d1ca165da6a06589678df6955336c340ca5e068",
+      "after_sha256": "91d7e187b0f40b0fe5d3aa5c1925c24bfd165ec904a592390505704bab611a71",
+      "original_byte_prefix_preserved": true,
+      "file_id": "195oEBBMyi14jY9lKSPfYB5fqpEZN4axj",
+      "modified_time": "2026-11-21T08:47:29.474Z",
+      "url": "https://drive.google.com/file/d/195oEBBMyi14jY9lKSPfYB5fqpEZN4axj/view",
+      "raw_bytes_verified": true,
+      "same_file_id": true
+    },
+    {
+      "name": "VIDEO-HANDOFF.md",
+      "before_bytes": 14390,
+      "after_bytes": 18178,
+      "before_sha256": "7c0f920f4e2d3e6aad2de87fa7c244f8ea147c3afaf24fd2c85dca1bf681d850",
+      "after_sha256": "89bebd8f88410a65a4e3ea18ac34c581ff59cb8536ec0e140586446405a53824",
+      "original_byte_prefix_preserved": true,
+      "file_id": "1dReBFenaOzt-NT4lLvGkIsGMed8YYs4W",
+      "modified_time": "2026-11-21T08:47:34.423Z",
+      "url": "https://drive.google.com/file/d/1dReBFenaOzt-NT4lLvGkIsGMed8YYs4W/view",
+      "raw_bytes_verified": true,
+      "same_file_id": true
+    }
+  ],
+  "original_byte_prefixes_preserved": true
+}

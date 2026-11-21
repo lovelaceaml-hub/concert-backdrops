@@ -6,7 +6,25 @@ This is a bounded work queue for future chats, not an automatically running serv
 
 The production foundation and approved study are merged. All eleven full audio sources are verified. The current increment adds registered p3d production commands, a shared catalog/handoff, six native model families, an original Consideration baseline and its isolated camera/response revision, plus a separate dove, rose and wheat prototype pack. The additions total nine model families and eighteen variants, separate from the acting studies. See `STATE.json` and the kit verification for final evidence and creative review status. The [dense reference motion review](REFERENCE-MOTION-REVIEW.md) identifies precise acting and reveal improvements from the actual approved films.
 
-## Model and performance work
+The next isolated acting increment is `concert-dance-study`: a continuous eighteen-second duet using the existing CMU 05_02 phrase with stable support, preserved root travel and wrist-driven light trails. It adds a reusable acting entry, not a tenth geometry family or a new capture library. The picture source is frozen at `0c42f4422a6b67464cb9cd84aac32008d45d4f4c` for PR #104. Use [NATURAL-PERFORMANCE.md](NATURAL-PERFORMANCE.md) for commands and limitations; completed media and review status belong to the delivery catalog and evidence.
+
+## Latest priority: natural, fluid performance
+
+The owner's latest direction makes expressive movement and dancing the immediate priority. Continue through bounded moving studies, using the approved promo's warmth and visual language. Preserve the song-specific queue below.
+
+| Order | Next improvement | Concrete proof needed |
+| --- | --- | --- |
+| 1 | Review the complete new dance and its preparation, supported turns, flight, landings and ending | Native encoded motion, dense transition and chunk-boundary inspection, actual contact residuals, costume clearance and separate owner review status |
+| 2 | Build a richer set of independently reviewed source phrases | Inspect each complete phrase before acquisition or retargeting; record its permission, source identity, prepared rate, travel, support intervals and usable transitions; preserve approved asset versions |
+| 3 | Author hands for meaningful gestures | Relaxed, open, gathered and offering finger groups with wrist follow-through; close moving proof without claiming captured finger motion |
+| 4 | Refine costumes during turns and reversals | Clear shoulder and hem silhouettes, delayed fabric response, collision checks and a settled finish in close and wide movement |
+| 5 | Create a complementary duet | One performer initiates and another answers with a distinct action, attention and support change; the current shared phrase with a 0.6-second offset is an initial study, not this finished choreography |
+
+Read [NATURAL-PERFORMANCE-RESEARCH.md](NATURAL-PERFORMANCE-RESEARCH.md) before selecting further motion. The stored capture is 30 Hz; 60 fps rendering interpolates it. A higher source rate is a new asset revision, with fresh review and provenance. Natural performance needs purposeful phrasing, support and follow-through as well as smooth sampling.
+
+## Preserved model and performance backlog
+
+These existing priorities remain available after the current dance increment or when their prerequisites become available.
 
 | Priority | Work | Concrete proof needed |
 | --- | --- | --- |

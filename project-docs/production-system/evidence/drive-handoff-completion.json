@@ -1,0 +1,62 @@
+{
+  "schema_version": 1,
+  "recorded_at_utc": "2026-11-21T08:05:03.822755+00:00",
+  "delivery_local_date": "2026-11-20",
+  "timezone": "America/Los_Angeles",
+  "status": "uploaded_and_raw_bytes_verified",
+  "operation": "upload_exact_confirmed_saved_reconstructed_handoff_zip",
+  "authorization": "The owner explicitly confirmed uploading this exact saved replacement ZIP to Production System.",
+  "filename": "Concert-Production-System-Handoff-2026-11-20.zip",
+  "bytes": 350534,
+  "sha256": "eb8bba933a37179fa970c84aecc67cbc0b493809d1e2b2e7863c3900b9606537",
+  "source_commit": "94dd897c6fdeb287561c5dd2772b770c43ab94b7",
+  "source_document_count": 89,
+  "drive": {
+    "status": "uploaded_and_raw_bytes_verified",
+    "uploaded": true,
+    "file_id": "1gp0x2dnj06eIPDuq6vSGpGtKn_bvKrML",
+    "url": "https://drive.google.com/file/d/1gp0x2dnj06eIPDuq6vSGpGtKn_bvKrML/view",
+    "destination_folder_id": "1QDGGqqkJlbovBLCthX-QChqfD8zSmK8X",
+    "mime_type": "application/zip",
+    "bytes": 350534,
+    "sha256": "eb8bba933a37179fa970c84aecc67cbc0b493809d1e2b2e7863c3900b9606537",
+    "modified_time": "2026-11-21T07:52:29.363Z",
+    "raw_bytes_verified": true,
+    "evidence": "project-docs/production-system/evidence/drive-handoff-completion.json"
+  },
+  "saved_backup": {
+    "status": "saved",
+    "library_file_id": "libfile_0d7ab1c2d83c8191a3badd389c6dc483",
+    "file_id": "file_00000000356481fd982a7d39a046118f",
+    "file_name": "Concert-Production-System-Handoff-2026-11-20.zip",
+    "version": 0,
+    "url": "https://chatgpt.com/library?file_id=libfile_0d7ab1c2d83c8191a3badd389c6dc483&account_id=personal",
+    "bytes": 350534,
+    "sha256": "eb8bba933a37179fa970c84aecc67cbc0b493809d1e2b2e7863c3900b9606537"
+  },
+  "verification": {
+    "local_source_bytes": 350534,
+    "downloaded_readback_bytes": 350534,
+    "local_source_sha256": "eb8bba933a37179fa970c84aecc67cbc0b493809d1e2b2e7863c3900b9606537",
+    "downloaded_readback_sha256": "eb8bba933a37179fa970c84aecc67cbc0b493809d1e2b2e7863c3900b9606537",
+    "local_source_and_drive_readback_match_exactly": true,
+    "working_download_verification": "work/natural-performance/references/download-verification.json"
+  },
+  "original_expected_zip": {
+    "bytes": 350548,
+    "sha256": "605b7be8ca59987651a642727a9babef88e01986c87d8ea7e3ca076e84a2e158",
+    "historical_record": true,
+    "original_bytes_recovered": false
+  },
+  "historical_reconstruction_evidence": "project-docs/production-system/evidence/handoff-reconstruction.json",
+  "historical_rejection_evidence": "project-docs/production-system/evidence/drive-handoff-replacement-block.json",
+  "previous_completed_operations": {
+    "media_copies": 8,
+    "media_status": "uploaded_and_raw_bytes_verified",
+    "drive_log_entries": 107,
+    "drive_log_original_entries_preserved": 106,
+    "requested_log_entry_appended_once": true,
+    "evidence": "project-docs/production-system/evidence/drive-delivery-completion.json"
+  },
+  "remaining_prior_drive_actions": []
+}

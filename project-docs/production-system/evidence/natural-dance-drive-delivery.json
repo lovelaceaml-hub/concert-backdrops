@@ -1,0 +1,43 @@
+{
+  "recorded_at_utc": "2026-11-21T08:43:29.316212+00:00",
+  "destination_folder_id": "1hrk62bFIOHv2NwXvYl2bNSmp0cwBoXrr",
+  "count": 3,
+  "files": [
+    {
+      "filename": "Natural-Dance-Duet-18s-1080p60.mp4",
+      "file_id": "1IImU7ohiNhI86WHtIPNB_3S0iFD2HgAH",
+      "url": "https://drive.google.com/file/d/1IImU7ohiNhI86WHtIPNB_3S0iFD2HgAH/view",
+      "folder_id": "1hrk62bFIOHv2NwXvYl2bNSmp0cwBoXrr",
+      "mime_type": "video/mp4",
+      "modified_time": "2026-11-21T08:42:41.172Z",
+      "bytes": 20308106,
+      "sha256": "96b0f75464fd093ad5ba4a318f8d923de7fa33e2fd01115b5d49b42f3baaec66",
+      "raw_bytes_verified": true,
+      "status": "uploaded_and_raw_bytes_verified"
+    },
+    {
+      "filename": "Natural-Dance-Duet-Native-4K.png",
+      "file_id": "1nB2MjshQhFJHe7c-KyjxcuWBBPGvFYyq",
+      "url": "https://drive.google.com/file/d/1nB2MjshQhFJHe7c-KyjxcuWBBPGvFYyq/view",
+      "folder_id": "1hrk62bFIOHv2NwXvYl2bNSmp0cwBoXrr",
+      "mime_type": "image/png",
+      "modified_time": "2026-11-21T08:42:52.283Z",
+      "bytes": 3504314,
+      "sha256": "ae5743f6dd55c57a34c830642355f4b0e2e9dc2d4408a443ccb420bc7b8e7a67",
+      "raw_bytes_verified": true,
+      "status": "uploaded_and_raw_bytes_verified"
+    },
+    {
+      "filename": "Natural-Dance-Duet-Motion-Review.jpg",
+      "file_id": "1AmBWnRldfLNjbL9Vh31WzMEhAPby12Vm",
+      "url": "https://drive.google.com/file/d/1AmBWnRldfLNjbL9Vh31WzMEhAPby12Vm/view",
+      "folder_id": "1hrk62bFIOHv2NwXvYl2bNSmp0cwBoXrr",
+      "mime_type": "image/jpeg",
+      "modified_time": "2026-11-21T08:42:57.622Z",
+      "bytes": 681227,
+      "sha256": "7ba73a497107be3065380d48abd64bbafdd17e0e9e8cdd3c5dc747abca5555af",
+      "raw_bytes_verified": true,
+      "status": "uploaded_and_raw_bytes_verified"
+    }
+  ]
+}

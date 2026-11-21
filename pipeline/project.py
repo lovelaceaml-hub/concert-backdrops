@@ -169,7 +169,7 @@ def validate(project: Project, *, check_files: bool = True) -> None:
     if policy.get("allow_paid_services", False):
         raise PipelineError("This setup does not dispatch paid services.")
     positive_int(policy.get("random_seed"), "production.random_seed", zero=True)
-    for field, default, maximum in (("render_chunk_frames", 30, 600), ("render_timeout_seconds", 1800, 86400), ("threads", 4, 64)):
+    for field, default, maximum in (("render_chunk_frames", 30, 600), ("render_timeout_seconds", 1800, 86400), ("threads", 4, 64), ("render_workers", 1, 32)):
         number = positive_int(policy.get(field, default), f"production.{field}")
         if number > maximum:
             raise PipelineError(f"production.{field} must be at most {maximum}.")

@@ -173,7 +173,11 @@ To render one shot or a range:
 ./scripts/video render next-concert-film --quality draft --frames 0:60
 ```
 
-One process owns a project/quality output directory at a time. This prevents two builders from overwriting the same products. Distributed farm dispatch is not implemented. The frame contract permits independent frame evaluation, but a future worker scheduler must also preserve the receipts and ownership rules.
+One coordinator owns a project/quality output directory at a time. This prevents two builders from overwriting the same products. Optional `production.render_workers` sets the maximum renderer subprocesses per shot, from 1 to 32; the default remains 1. `production.threads` controls threads inside each process. Start conservatively and measure peak memory at the intended resolution before increasing workers. A 4K run needs a separate memory check.
+
+Each chunk gets a unique job file, log, frame staging directory and audio feature directory under `shots/<shot>/workers/<invocation>/`. Frame ownership is disjoint. Only the coordinator validates PNG dimensions, bit depth and checksum, promotes completed frames into the canonical `frames` directory, and writes the receipt. Changing worker count does not change image identity. A failed worker stops further dispatch; already launched workers finish or reach their timeout, and their valid completed frames remain reusable. A `STOP` marker also stops dispatch; registered p3d workers check it between frames. Other backends can finish their current bounded chunk. A changed source fingerprint prevents promotion of that chunk. Keep sources frozen throughout the round.
+
+The project lock and private staging protect a resumed run from an old worker that survived a killed coordinator. Unreceipted staging frames are never reused. This is bounded parallel rendering on one CPU host; distributed farm dispatch is not implemented.
 
 FFmpeg is the default finishing path and needs no browser. It combines rendered clips and the supplied audio without silently adding or re-timing titles. If the project includes separate captions, use the Remotion path on a verified browser worker:
 

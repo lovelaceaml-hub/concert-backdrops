@@ -1,0 +1,622 @@
+{
+  "schema_version": 1,
+  "inventory_date": "2026-11-21",
+  "scope": "Prepared motion inventory, provenance and review routing. Availability is not approval of a rendered performance.",
+  "document": "project-docs/production-system/MOTION-LIBRARY.md",
+  "review_authorities": [
+    "project-docs/production-system/STATE.json",
+    "project-docs/production-system/catalogs/deliveries.json",
+    "project-docs/production-system/catalogs/models.json"
+  ],
+  "asset": {
+    "path": "assets/p3d/body_v1.npz",
+    "bytes": 777053,
+    "sha256": "0a72159f84b7008dcb135c79f82ae3b05df5f7361197e99ab9ca4af148c91189",
+    "audited_source_commit": "0c42f4422a6b67464cb9cd84aac32008d45d4f4c",
+    "prepared_clip_count": 8,
+    "distinct_source_capture_count": 7,
+    "inventory_checks": [
+      "Declared frame counts match q, rot, root and contact array shapes.",
+      "All stored motion arrays contain finite values.",
+      "All stored foot contact confidence values lie in [0, 1]."
+    ]
+  },
+  "provenance": {
+    "body": {
+      "source": "MakeHuman hm08 base mesh, default rig and weights, MPFB2 data in anny 0.6.2",
+      "license_recorded_in_asset_readme": "CC0 1.0",
+      "recipe": "tools/build_p3d_body.py"
+    },
+    "motion": {
+      "source": "CMU Graphics Lab Motion Capture Database",
+      "conversion": "Bruce Hahne / cgspeed BVH conversion, 2010",
+      "recipe": "tools/build_p3d_motion.py:CLIPS and bake",
+      "readme": "assets/p3d/README.md",
+      "terms_url": "https://mocap.cs.cmu.edu/",
+      "faq_url": "https://mocap.cs.cmu.edu/faqs.php",
+      "acknowledgement": "The data used in this project was obtained from mocap.cs.cmu.edu. The database was created with funding from NSF EIA-0196217.",
+      "raw_source_audit_limit": "Original BVH files were not reacquired or fingerprinted during this inventory audit. Capture identities come from the committed import recipe and asset README."
+    },
+    "code_only_meaning": "The engine draws the pictures from geometry and motion data. This does not mean the underlying body geometry or captured choreography was invented entirely by project code."
+  },
+  "stored_format": {
+    "bones": [
+      "spine05",
+      "spine04",
+      "spine03",
+      "spine02",
+      "spine01",
+      "neck01",
+      "neck02",
+      "neck03",
+      "head",
+      "clavicle.L",
+      "upperarm01.L",
+      "lowerarm01.L",
+      "lowerarm02.L",
+      "wrist.L",
+      "clavicle.R",
+      "upperarm01.R",
+      "lowerarm01.R",
+      "lowerarm02.R",
+      "wrist.R",
+      "upperleg01.L",
+      "lowerleg01.L",
+      "foot.L",
+      "upperleg01.R",
+      "lowerleg01.R",
+      "foot.R"
+    ],
+    "local_rotation_array": "mclip_<id>_q: [frame, 25 driven bones, quaternion wxyz], float16",
+    "root_orientation_array": "mclip_<id>_rot: [frame, quaternion wxyz], float32",
+    "root_translation_array": "mclip_<id>_root: [frame, xyz], float32; metres at stored reference leg length, scaled by runtime body leg length",
+    "contact_array": "mclip_<id>_contact: [frame, left/right confidence], float32; heuristic, not measured force or a reviewed event annotation",
+    "info_array_order": [
+      "fps",
+      "loop",
+      "reference_leg_chain_m",
+      "frame_count",
+      "cycle_travel_m"
+    ],
+    "coordinate_system": {
+      "up": "+Y",
+      "prepared_forward": "+Z",
+      "units": "metres"
+    }
+  },
+  "timing": {
+    "runtime_authority": "engine/p3d/motion.py:Clip.__init__, Clip.sample",
+    "cycle_period": "N / fps, including interpolation from the last sample back to the first with root travel.",
+    "one_shot_span": "(N - 1) / fps; single clips hold their endpoint outside the sample span.",
+    "native_output_fps": "Independent of prepared motion rate. Rendering at 60 fps interpolates the stored 30 Hz poses.",
+    "original_capture_rate": "Not retained as a per-clip field in this bundle. The official CMU subject 5 catalog, cited in NATURAL-PERFORMANCE-RESEARCH.md, separately lists 05_02 at 120 Hz."
+  },
+  "available_clips": [
+    {
+      "id": "walk",
+      "availability": "prepared_in_committed_asset",
+      "asset_key_prefix": "mclip_walk_",
+      "source": {
+        "dataset": "CMU Graphics Lab Motion Capture Database",
+        "capture_id": "35_01",
+        "subject_id": 35,
+        "description_from_import_recipe": "walk (subject 35)",
+        "catalog_url": "https://mocap.cs.cmu.edu/search.php?subjectnumber=35",
+        "bvh_conversion": "Bruce Hahne / cgspeed, 2010",
+        "import_recipe_mirror_url": "https://raw.githubusercontent.com/una-dinosauria/cmu-mocap/master/data/035/35_01.bvh",
+        "raw_bvh_sha256": null,
+        "raw_bvh_fps_verified_in_this_audit": null,
+        "selection": {
+          "kind": "cycle_selected_by_importer",
+          "start_seconds_after_t_pose": null,
+          "end_seconds_after_t_pose": null
+        }
+      },
+      "stored": {
+        "fps": 30.0,
+        "frame_count": 34,
+        "loop": true,
+        "last_sample_time_seconds": 1.1,
+        "duration_seconds": 1.1333333333333333,
+        "duration_basis": "frame_count / fps",
+        "reference_leg_chain_m": 0.8537825345993042,
+        "cycle_travel_m": 1.4288184642791748,
+        "rotation_dtype": "float16",
+        "driven_bone_count": 25,
+        "contact_channels": [
+          "left_foot_confidence",
+          "right_foot_confidence"
+        ]
+      },
+      "suitable_action_categories": [
+        "procession",
+        "approach",
+        "departure",
+        "continuous walking"
+      ],
+      "known_limits": [
+        "A short prepared cycle; repeated use can be visibly repetitive.",
+        "Match stage travel to the scaled stride and review starts, stops and turns."
+      ],
+      "review": {
+        "inventory": "metadata_shapes_finite_arrays_and_contact_range_verified_2026_11_21",
+        "isolated_plain_floor_proof": "not_recorded_by_this_inventory_audit",
+        "scene_costume_and_contact_approval": "requires_versioned_scene_evidence",
+        "owner_approval": "consult_versioned_delivery_catalog"
+      }
+    },
+    {
+      "id": "run",
+      "availability": "prepared_in_committed_asset",
+      "asset_key_prefix": "mclip_run_",
+      "source": {
+        "dataset": "CMU Graphics Lab Motion Capture Database",
+        "capture_id": "35_17",
+        "subject_id": 35,
+        "description_from_import_recipe": "run, a light jog (subject 35)",
+        "catalog_url": "https://mocap.cs.cmu.edu/search.php?subjectnumber=35",
+        "bvh_conversion": "Bruce Hahne / cgspeed, 2010",
+        "import_recipe_mirror_url": "https://raw.githubusercontent.com/una-dinosauria/cmu-mocap/master/data/035/35_17.bvh",
+        "raw_bvh_sha256": null,
+        "raw_bvh_fps_verified_in_this_audit": null,
+        "selection": {
+          "kind": "cycle_selected_by_importer",
+          "start_seconds_after_t_pose": null,
+          "end_seconds_after_t_pose": null
+        }
+      },
+      "stored": {
+        "fps": 30.0,
+        "frame_count": 22,
+        "loop": true,
+        "last_sample_time_seconds": 0.7,
+        "duration_seconds": 0.7333333333333333,
+        "duration_basis": "frame_count / fps",
+        "reference_leg_chain_m": 0.8537825345993042,
+        "cycle_travel_m": 2.314558506011963,
+        "rotation_dtype": "float16",
+        "driven_bone_count": 25,
+        "contact_channels": [
+          "left_foot_confidence",
+          "right_foot_confidence"
+        ]
+      },
+      "suitable_action_categories": [
+        "running approach",
+        "energetic travel",
+        "continuous jogging"
+      ],
+      "known_limits": [
+        "A short prepared cycle; it does not supply a separately captured acceleration or stop.",
+        "Match stage travel to the scaled stride and review landing contacts."
+      ],
+      "review": {
+        "inventory": "metadata_shapes_finite_arrays_and_contact_range_verified_2026_11_21",
+        "isolated_plain_floor_proof": "not_recorded_by_this_inventory_audit",
+        "scene_costume_and_contact_approval": "requires_versioned_scene_evidence",
+        "owner_approval": "consult_versioned_delivery_catalog"
+      }
+    },
+    {
+      "id": "jump",
+      "availability": "prepared_in_committed_asset",
+      "asset_key_prefix": "mclip_jump_",
+      "source": {
+        "dataset": "CMU Graphics Lab Motion Capture Database",
+        "capture_id": "13_11",
+        "subject_id": 13,
+        "description_from_import_recipe": "a forward jump from standing (subject 13)",
+        "catalog_url": "https://mocap.cs.cmu.edu/search.php?subjectnumber=13",
+        "bvh_conversion": "Bruce Hahne / cgspeed, 2010",
+        "import_recipe_mirror_url": "https://raw.githubusercontent.com/una-dinosauria/cmu-mocap/master/data/013/13_11.bvh",
+        "raw_bvh_sha256": null,
+        "raw_bvh_fps_verified_in_this_audit": null,
+        "selection": {
+          "kind": "whole_usable_capture",
+          "start_seconds_after_t_pose": null,
+          "end_seconds_after_t_pose": null
+        }
+      },
+      "stored": {
+        "fps": 30.0,
+        "frame_count": 104,
+        "loop": false,
+        "last_sample_time_seconds": 3.433333333333333,
+        "duration_seconds": 3.433333333333333,
+        "duration_basis": "(frame_count - 1) / fps",
+        "reference_leg_chain_m": 0.8537825345993042,
+        "cycle_travel_m": null,
+        "rotation_dtype": "float16",
+        "driven_bone_count": 25,
+        "contact_channels": [
+          "left_foot_confidence",
+          "right_foot_confidence"
+        ]
+      },
+      "suitable_action_categories": [
+        "single forward jump",
+        "takeoff and landing"
+      ],
+      "known_limits": [
+        "A non-looping forward jump; airborne phases must remain free.",
+        "Review takeoff, floor clearance, landing compression and final root continuity for the actual body."
+      ],
+      "review": {
+        "inventory": "metadata_shapes_finite_arrays_and_contact_range_verified_2026_11_21",
+        "isolated_plain_floor_proof": "not_recorded_by_this_inventory_audit",
+        "scene_costume_and_contact_approval": "requires_versioned_scene_evidence",
+        "owner_approval": "consult_versioned_delivery_catalog"
+      }
+    },
+    {
+      "id": "dance",
+      "availability": "prepared_in_committed_asset",
+      "asset_key_prefix": "mclip_dance_",
+      "source": {
+        "dataset": "CMU Graphics Lab Motion Capture Database",
+        "capture_id": "05_02",
+        "subject_id": 5,
+        "description_from_import_recipe": "modern dance: expressive arms, a pirouette (subject 5)",
+        "catalog_url": "https://mocap.cs.cmu.edu/search.php?subjectnumber=5",
+        "bvh_conversion": "Bruce Hahne / cgspeed, 2010",
+        "import_recipe_mirror_url": "https://raw.githubusercontent.com/una-dinosauria/cmu-mocap/master/data/005/05_02.bvh",
+        "raw_bvh_sha256": null,
+        "raw_bvh_fps_verified_in_this_audit": null,
+        "selection": {
+          "kind": "whole_usable_capture",
+          "start_seconds_after_t_pose": null,
+          "end_seconds_after_t_pose": null
+        }
+      },
+      "stored": {
+        "fps": 30.0,
+        "frame_count": 281,
+        "loop": false,
+        "last_sample_time_seconds": 9.333333333333334,
+        "duration_seconds": 9.333333333333334,
+        "duration_basis": "(frame_count - 1) / fps",
+        "reference_leg_chain_m": 0.8537825345993042,
+        "cycle_travel_m": null,
+        "rotation_dtype": "float16",
+        "driven_bone_count": 25,
+        "contact_channels": [
+          "left_foot_confidence",
+          "right_foot_confidence"
+        ]
+      },
+      "suitable_action_categories": [
+        "expressive whole-body phrase",
+        "traveling turn",
+        "large arm arcs"
+      ],
+      "known_limits": [
+        "A single non-looping phrase, not an expanded dance library.",
+        "The current duet reuses this same capture with a 0.6-second offset; it is not an independently captured duet.",
+        "The new support wrapper is specific to this dance clip and does not validate all other clips."
+      ],
+      "review": {
+        "inventory": "metadata_shapes_finite_arrays_and_contact_range_verified_2026_11_21",
+        "isolated_plain_floor_proof": "not_recorded_by_this_inventory_audit",
+        "scene_costume_and_contact_approval": "requires_versioned_scene_evidence",
+        "owner_approval": "consult_versioned_delivery_catalog"
+      },
+      "integration": {
+        "entry_point": "tools.concert_dance.performance.install_dance",
+        "model_catalog_id": "people.natural-dance",
+        "project_id": "concert-dance-study",
+        "status": "registered_study_in_review",
+        "implementation_tests": "tests/test_concert_dance_performance.py",
+        "documentation": "project-docs/production-system/NATURAL-PERFORMANCE.md"
+      }
+    },
+    {
+      "id": "twirl",
+      "availability": "prepared_in_committed_asset",
+      "asset_key_prefix": "mclip_twirl_",
+      "source": {
+        "dataset": "CMU Graphics Lab Motion Capture Database",
+        "capture_id": "05_02",
+        "subject_id": 5,
+        "description_from_import_recipe": "the pirouette of the dance above, arms raised (subject 5)",
+        "catalog_url": "https://mocap.cs.cmu.edu/search.php?subjectnumber=5",
+        "bvh_conversion": "Bruce Hahne / cgspeed, 2010",
+        "import_recipe_mirror_url": "https://raw.githubusercontent.com/una-dinosauria/cmu-mocap/master/data/005/05_02.bvh",
+        "raw_bvh_sha256": null,
+        "raw_bvh_fps_verified_in_this_audit": null,
+        "selection": {
+          "kind": "explicit_crop",
+          "start_seconds_after_t_pose": 3.0,
+          "end_seconds_after_t_pose": 6.2
+        }
+      },
+      "stored": {
+        "fps": 30.0,
+        "frame_count": 96,
+        "loop": false,
+        "last_sample_time_seconds": 3.1666666666666665,
+        "duration_seconds": 3.1666666666666665,
+        "duration_basis": "(frame_count - 1) / fps",
+        "reference_leg_chain_m": 0.8537825345993042,
+        "cycle_travel_m": null,
+        "rotation_dtype": "float16",
+        "driven_bone_count": 25,
+        "contact_channels": [
+          "left_foot_confidence",
+          "right_foot_confidence"
+        ]
+      },
+      "suitable_action_categories": [
+        "short raised-arm turn",
+        "pirouette excerpt"
+      ],
+      "known_limits": [
+        "A crop of dance source 05_02, not an independent capture.",
+        "The importer selects source seconds 3.0 to 6.2, but the stored one-shot span is 95/30 seconds.",
+        "Review entry, exit, supporting toe and retained final heading; this clip is not a seamless loop."
+      ],
+      "review": {
+        "inventory": "metadata_shapes_finite_arrays_and_contact_range_verified_2026_11_21",
+        "isolated_plain_floor_proof": "not_recorded_by_this_inventory_audit",
+        "scene_costume_and_contact_approval": "requires_versioned_scene_evidence",
+        "owner_approval": "consult_versioned_delivery_catalog"
+      }
+    },
+    {
+      "id": "pull_up",
+      "availability": "prepared_in_committed_asset",
+      "asset_key_prefix": "mclip_pull_up_",
+      "source": {
+        "dataset": "CMU Graphics Lab Motion Capture Database",
+        "capture_id": "22_01",
+        "subject_id": 22,
+        "description_from_import_recipe": "pulls a sitting person up by the hands (subject 22)",
+        "catalog_url": "https://mocap.cs.cmu.edu/search.php?subjectnumber=22",
+        "bvh_conversion": "Bruce Hahne / cgspeed, 2010",
+        "import_recipe_mirror_url": "https://raw.githubusercontent.com/una-dinosauria/cmu-mocap/master/data/022/22_01.bvh",
+        "raw_bvh_sha256": null,
+        "raw_bvh_fps_verified_in_this_audit": null,
+        "selection": {
+          "kind": "paired_capture",
+          "start_seconds_after_t_pose": null,
+          "end_seconds_after_t_pose": null
+        }
+      },
+      "stored": {
+        "fps": 30.0,
+        "frame_count": 196,
+        "loop": false,
+        "last_sample_time_seconds": 6.5,
+        "duration_seconds": 6.5,
+        "duration_basis": "(frame_count - 1) / fps",
+        "reference_leg_chain_m": 0.8537825345993042,
+        "cycle_travel_m": null,
+        "rotation_dtype": "float16",
+        "driven_bone_count": 25,
+        "contact_channels": [
+          "left_foot_confidence",
+          "right_foot_confidence"
+        ]
+      },
+      "suitable_action_categories": [
+        "offering physical help",
+        "paired rise",
+        "supporting another person"
+      ],
+      "known_limits": [
+        "Use with helped_up and preserve the pair relationship established by the importer.",
+        "Hand grip, changing body scale, floor clearance and final settlement need scene-specific review."
+      ],
+      "review": {
+        "inventory": "metadata_shapes_finite_arrays_and_contact_range_verified_2026_11_21",
+        "isolated_plain_floor_proof": "not_recorded_by_this_inventory_audit",
+        "scene_costume_and_contact_approval": "requires_versioned_scene_evidence",
+        "owner_approval": "consult_versioned_delivery_catalog"
+      },
+      "paired_with": "helped_up",
+      "integration": {
+        "entry_point": "p3d.pairs.pull_up",
+        "model_catalog_id": "people.paired-help",
+        "existing_study_projects": [
+          "concert-kit-consideration",
+          "concert-kit-consideration-v2"
+        ]
+      }
+    },
+    {
+      "id": "helped_up",
+      "availability": "prepared_in_committed_asset",
+      "asset_key_prefix": "mclip_helped_up_",
+      "source": {
+        "dataset": "CMU Graphics Lab Motion Capture Database",
+        "capture_id": "23_01",
+        "subject_id": 23,
+        "description_from_import_recipe": "sits on the ground and is pulled up (subject 23)",
+        "catalog_url": "https://mocap.cs.cmu.edu/search.php?subjectnumber=23",
+        "bvh_conversion": "Bruce Hahne / cgspeed, 2010",
+        "import_recipe_mirror_url": "https://raw.githubusercontent.com/una-dinosauria/cmu-mocap/master/data/023/23_01.bvh",
+        "raw_bvh_sha256": null,
+        "raw_bvh_fps_verified_in_this_audit": null,
+        "selection": {
+          "kind": "paired_capture",
+          "start_seconds_after_t_pose": null,
+          "end_seconds_after_t_pose": null
+        }
+      },
+      "stored": {
+        "fps": 30.0,
+        "frame_count": 196,
+        "loop": false,
+        "last_sample_time_seconds": 6.5,
+        "duration_seconds": 6.5,
+        "duration_basis": "(frame_count - 1) / fps",
+        "reference_leg_chain_m": 0.8537825345993042,
+        "cycle_travel_m": null,
+        "rotation_dtype": "float16",
+        "driven_bone_count": 25,
+        "contact_channels": [
+          "left_foot_confidence",
+          "right_foot_confidence"
+        ]
+      },
+      "suitable_action_categories": [
+        "receiving physical help",
+        "paired rise from sitting"
+      ],
+      "known_limits": [
+        "Use with pull_up and preserve the pair relationship established by the importer.",
+        "The bundle has foot confidence curves only; hand, pelvis and other ground contacts are not annotated."
+      ],
+      "review": {
+        "inventory": "metadata_shapes_finite_arrays_and_contact_range_verified_2026_11_21",
+        "isolated_plain_floor_proof": "not_recorded_by_this_inventory_audit",
+        "scene_costume_and_contact_approval": "requires_versioned_scene_evidence",
+        "owner_approval": "consult_versioned_delivery_catalog"
+      },
+      "paired_with": "pull_up",
+      "integration": {
+        "entry_point": "p3d.pairs.pull_up",
+        "model_catalog_id": "people.paired-help",
+        "existing_study_projects": [
+          "concert-kit-consideration",
+          "concert-kit-consideration-v2"
+        ]
+      }
+    },
+    {
+      "id": "get_up",
+      "availability": "prepared_in_committed_asset",
+      "asset_key_prefix": "mclip_get_up_",
+      "source": {
+        "dataset": "CMU Graphics Lab Motion Capture Database",
+        "capture_id": "140_08",
+        "subject_id": 140,
+        "description_from_import_recipe": "gets up from lying on the back (subject 140)",
+        "catalog_url": "https://mocap.cs.cmu.edu/search.php?subjectnumber=140",
+        "bvh_conversion": "Bruce Hahne / cgspeed, 2010",
+        "import_recipe_mirror_url": "https://raw.githubusercontent.com/una-dinosauria/cmu-mocap/master/data/140/140_08.bvh",
+        "raw_bvh_sha256": null,
+        "raw_bvh_fps_verified_in_this_audit": null,
+        "selection": {
+          "kind": "whole_usable_capture",
+          "start_seconds_after_t_pose": null,
+          "end_seconds_after_t_pose": null
+        }
+      },
+      "stored": {
+        "fps": 30.0,
+        "frame_count": 225,
+        "loop": false,
+        "last_sample_time_seconds": 7.466666666666667,
+        "duration_seconds": 7.466666666666667,
+        "duration_basis": "(frame_count - 1) / fps",
+        "reference_leg_chain_m": 0.8537825345993042,
+        "cycle_travel_m": null,
+        "rotation_dtype": "float16",
+        "driven_bone_count": 25,
+        "contact_channels": [
+          "left_foot_confidence",
+          "right_foot_confidence"
+        ]
+      },
+      "suitable_action_categories": [
+        "rising from lying on the back",
+        "recovery from the floor"
+      ],
+      "known_limits": [
+        "The bundle has foot confidence curves only; hands and body contacts during the floor action are not annotated.",
+        "Review garment penetration, body clearance, hand support and the final standing transition."
+      ],
+      "review": {
+        "inventory": "metadata_shapes_finite_arrays_and_contact_range_verified_2026_11_21",
+        "isolated_plain_floor_proof": "not_recorded_by_this_inventory_audit",
+        "scene_costume_and_contact_approval": "requires_versioned_scene_evidence",
+        "owner_approval": "consult_versioned_delivery_catalog"
+      }
+    }
+  ],
+  "compatibility_aliases": [
+    {
+      "name": "spin",
+      "target_clip": "twirl",
+      "default_phase_fraction": 0.0
+    },
+    {
+      "name": "dance_a",
+      "target_clip": "dance",
+      "default_phase_fraction": 0.0
+    },
+    {
+      "name": "dance_b",
+      "target_clip": "dance",
+      "default_phase_fraction": 0.45
+    }
+  ],
+  "other_motion_sources": {
+    "procedural_whole_body_states": [
+      "stand",
+      "kneel",
+      "sit",
+      "shuffle",
+      "rise",
+      "held"
+    ],
+    "authority": [
+      "engine/p3d/motion.py:MOTIONS",
+      "engine/p3d/gestures.py:MORE_MOTIONS, MORE_GESTURES, HAND_POSES"
+    ],
+    "note": "Procedural states, hand shapes and gestures are authored code, not extra captured clips. Aliases also add no new capture."
+  },
+  "common_limits": [
+    "Twenty-five driven bones and float16 local rotations are a prepared retargeted representation, not original optical capture.",
+    "Finger and thumb performance is not captured; current hand shapes and gestures are procedural or authored.",
+    "Foot confidence is inferred from low/slow foot trajectories and is not proof of stable support, force balance or exact floor contact.",
+    "Retargeting, body proportions, arm clearance, root placement, garment motion and camera staging can change the visible result.",
+    "Source motion, body geometry, retargeting, procedural additions and final encoded movie need separate provenance and review records."
+  ],
+  "proposed_candidates": [
+    {
+      "id": "05_03",
+      "source": "CMU",
+      "catalog_url": "https://mocap.cs.cmu.edu/search.php?subjectnumber=5",
+      "status": "candidate_not_acquired",
+      "source_acquired": false,
+      "prepared_clip_available": false,
+      "motion_review_complete": false,
+      "intended_review": "Inspect the original performance and entry/exit support before assigning choreography or suitability."
+    },
+    {
+      "id": "05_11",
+      "source": "CMU",
+      "catalog_url": "https://mocap.cs.cmu.edu/search.php?subjectnumber=5",
+      "status": "candidate_not_acquired",
+      "source_acquired": false,
+      "prepared_clip_available": false,
+      "motion_review_complete": false,
+      "intended_review": "Inspect the original performance and entry/exit support before assigning choreography or suitability."
+    },
+    {
+      "id": "05_12",
+      "source": "CMU",
+      "catalog_url": "https://mocap.cs.cmu.edu/search.php?subjectnumber=5",
+      "status": "candidate_not_acquired",
+      "source_acquired": false,
+      "prepared_clip_available": false,
+      "motion_review_complete": false,
+      "intended_review": "Inspect the original performance and entry/exit support before assigning choreography or suitability."
+    },
+    {
+      "id": "subject_49",
+      "source": "CMU",
+      "catalog_url": "https://mocap.cs.cmu.edu/search.php?subjectnumber=49",
+      "status": "candidate_collection_not_acquired",
+      "source_acquired": false,
+      "prepared_clip_available": false,
+      "motion_review_complete": false,
+      "candidate_clip_ids": [
+        "49_09"
+      ],
+      "intended_review": "Inspect modern dance material. Subject 49 is a collection, not one prepared performance."
+    }
+  ],
+  "acquisition_policy": "No candidate dataset was downloaded for this inventory. A future addition needs source terms and hashes, a versioned import recipe, retargeting, reviewed contacts, a plain-floor motion proof, a costume proof and a registered scene before it is advertised as ready."
+}

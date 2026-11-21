@@ -1,0 +1,664 @@
+{
+  "status": "sampled_review_complete_no_confirmed_blocker",
+  "creative_approval": "not_recorded",
+  "real_time_playback": false,
+  "final_movie_sha256": "96b0f75464fd093ad5ba4a318f8d923de7fa33e2fd01115b5d49b42f3baaec66",
+  "independent_final_sample_count": 89,
+  "earlier_silent_proof_sample_count": 62,
+  "root_final_sample_count": 15,
+  "independent_final": {
+    "schema_version": 1,
+    "review_id": "concert-dance-study-final-independent-sampled-visual-review",
+    "date_utc": "2026-11-21",
+    "reviewer": "reference_performance_review",
+    "status": "sampled-visual-review-complete-no-confirmed-blocker",
+    "owner_approval": false,
+    "naturalness_approval": false,
+    "source": {
+      "path": "work/pipeline/concert-dance-study/review/master.mp4",
+      "sha256": "96b0f75464fd093ad5ba4a318f8d923de7fa33e2fd01115b5d49b42f3baaec66",
+      "bytes": 20308106,
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "fps": "60/1",
+      "frame_count": 1080,
+      "duration_seconds": 18.0,
+      "audio_present": true,
+      "audio_reviewed": false,
+      "frozen_source_commit_reported_by_root": "0c42f4422a6b67464cb9cd84aac32008d45d4f4c"
+    },
+    "method": {
+      "kind": "ordered exact decoded-frame visual inspection",
+      "real_time_playback": false,
+      "new_unique_samples": 89,
+      "groups": {
+        "landing_return": [
+          528,
+          532,
+          536,
+          540,
+          544,
+          548,
+          552,
+          556,
+          560,
+          564,
+          568,
+          572,
+          576,
+          580,
+          584,
+          588,
+          592,
+          596,
+          600,
+          604,
+          608,
+          612
+        ],
+        "capture_settle_gesture": [
+          678,
+          684,
+          690,
+          696,
+          702,
+          708,
+          714,
+          720,
+          726,
+          732,
+          738,
+          744,
+          750,
+          756,
+          762,
+          768,
+          774,
+          780,
+          786,
+          792,
+          798,
+          804,
+          810,
+          816,
+          822,
+          828,
+          834,
+          840,
+          846,
+          852,
+          858,
+          864,
+          870,
+          876,
+          882,
+          888
+        ],
+        "acknowledgment_ending": [
+          900,
+          906,
+          912,
+          918,
+          924,
+          930,
+          936,
+          942,
+          948,
+          954,
+          960,
+          966,
+          972,
+          978,
+          984,
+          990,
+          996,
+          1002,
+          1008,
+          1014,
+          1020,
+          1026,
+          1032,
+          1038,
+          1044,
+          1050,
+          1056,
+          1062,
+          1068,
+          1074,
+          1079
+        ]
+      },
+      "contact_sheet_crop_xywh": [
+        340,
+        280,
+        1240,
+        680
+      ],
+      "contact_sheet_display_wh": [
+        868,
+        476
+      ],
+      "all_contact_sheets_inspected": true,
+      "contact_sheets": [
+        {
+          "file": "landing_return-01.png",
+          "frames": [
+            528,
+            532,
+            536,
+            540,
+            544,
+            548
+          ]
+        },
+        {
+          "file": "landing_return-02.png",
+          "frames": [
+            552,
+            556,
+            560,
+            564,
+            568,
+            572
+          ]
+        },
+        {
+          "file": "landing_return-03.png",
+          "frames": [
+            576,
+            580,
+            584,
+            588,
+            592,
+            596
+          ]
+        },
+        {
+          "file": "landing_return-04.png",
+          "frames": [
+            600,
+            604,
+            608,
+            612
+          ]
+        },
+        {
+          "file": "capture_settle_gesture-01.png",
+          "frames": [
+            678,
+            684,
+            690,
+            696,
+            702,
+            708
+          ]
+        },
+        {
+          "file": "capture_settle_gesture-02.png",
+          "frames": [
+            714,
+            720,
+            726,
+            732,
+            738,
+            744
+          ]
+        },
+        {
+          "file": "capture_settle_gesture-03.png",
+          "frames": [
+            750,
+            756,
+            762,
+            768,
+            774,
+            780
+          ]
+        },
+        {
+          "file": "capture_settle_gesture-04.png",
+          "frames": [
+            786,
+            792,
+            798,
+            804,
+            810,
+            816
+          ]
+        },
+        {
+          "file": "capture_settle_gesture-05.png",
+          "frames": [
+            822,
+            828,
+            834,
+            840,
+            846,
+            852
+          ]
+        },
+        {
+          "file": "capture_settle_gesture-06.png",
+          "frames": [
+            858,
+            864,
+            870,
+            876,
+            882,
+            888
+          ]
+        },
+        {
+          "file": "acknowledgment_ending-01.png",
+          "frames": [
+            900,
+            906,
+            912,
+            918,
+            924,
+            930
+          ]
+        },
+        {
+          "file": "acknowledgment_ending-02.png",
+          "frames": [
+            936,
+            942,
+            948,
+            954,
+            960,
+            966
+          ]
+        },
+        {
+          "file": "acknowledgment_ending-03.png",
+          "frames": [
+            972,
+            978,
+            984,
+            990,
+            996,
+            1002
+          ]
+        },
+        {
+          "file": "acknowledgment_ending-04.png",
+          "frames": [
+            1008,
+            1014,
+            1020,
+            1026,
+            1032,
+            1038
+          ]
+        },
+        {
+          "file": "acknowledgment_ending-05.png",
+          "frames": [
+            1044,
+            1050,
+            1056,
+            1062,
+            1068,
+            1074
+          ]
+        },
+        {
+          "file": "acknowledgment_ending-06.png",
+          "frames": [
+            1079
+          ]
+        }
+      ],
+      "wide_context_frames": [
+        528,
+        678,
+        900,
+        1079
+      ],
+      "additional_native_pixel_foot_crops": {
+        "frames": [
+          732,
+          756,
+          780,
+          804,
+          840,
+          948
+        ],
+        "crop_xywh": [
+          1160,
+          720,
+          400,
+          300
+        ],
+        "file": "work/natural-performance/final-review-samples/right-foot-settle-native.png"
+      },
+      "extraction": "FFmpeg select expressions addressed exact decoded frame numbers, with no timestamp seeking approximation. Each selected source frame was saved at 1920x1080 before contact-sheet cropping.",
+      "sampling_artifacts": "work/natural-performance/final-review-samples/"
+    },
+    "preserved_first9s_review": {
+      "path": "work/natural-performance/motion-proof/first9s-independent-review.json",
+      "file_sha256": "9f347483933611f2d571c19ba105f6e27fa52dde42936d357e503fe2e708e20b",
+      "prior_source_sha256": "bf473c67d8f45a856a4b6b60c1fe971e3e50c4fc58b6235ca4a52a98c53e7165",
+      "prior_sample_count": 62,
+      "source_scope": "Earlier silent proof, canonical frames 0 through 539. That record was left unchanged. New samples for this review came from the actual final movie.",
+      "findings_retained": [
+        "No concrete joint, ribbon attachment or width-change blocker was identified in its targeted 62 samples.",
+        "The 2-3 second preparation was nearly held. Root also reports low activity in its wider 0-5 second overview. This remains a creative pacing limitation.",
+        "The left hand and violet path partially crossed the head around 5.55-6.05 seconds, then cleared; the head outline remained readable.",
+        "The sampled turn progressed through body and foot pose changes. A visible free-phase gap alone was not treated as a grounding defect.",
+        "The prior proof ended before completed support return and coda could be inspected; the present final-movie samples address those later intervals."
+      ]
+    },
+    "observations": [
+      {
+        "interval_seconds": [
+          8.8,
+          10.2
+        ],
+        "topic": "turn return and landing",
+        "finding": "The right performer lowers and uncrosses through a succession of distinct foot and leg positions while the arm phrase continues. There is no visible reset at the 9-second boundary. The large turn-phase separation from the reflection does not remain unchanged through the rest of this interval.",
+        "detail": "The supported-looking stance is more stable in the 9.6-10.2 second samples while the arms continue to articulate. No sudden lateral jump of a foot or whole body was identified.",
+        "limits": "This is a visual continuity finding. It does not independently certify physical support, small foot slide, or contact-solver metrics.",
+        "severity": "no confirmed sampled blocker"
+      },
+      {
+        "interval_seconds": [
+          11.3,
+          14.8
+        ],
+        "topic": "capture to settle and coda preparation",
+        "finding": "The final captured positions transition progressively into the upright closing stance. Arms and garment settle, and the feet change position gradually. No return to the opening pose by an abrupt snap was observed.",
+        "detail": "The right performer has an extended settling pose: the foot on image-left stays visibly raised around 12.2-13.4 seconds while the other foot lowers toward its reflection. By about 14 seconds the foot/reflection separation has closed visually. This does not present as a persistent hover in the finished coda.",
+        "limits": "Native-pixel crops were inspected at 12.2,12.6,13.0,13.4,14.0 and15.8 seconds. A small reflection gap does not by itself identify the exact physical support condition. The prolonged settle should be judged at normal speed before calling the motion fully natural.",
+        "severity": "no confirmed blocker; extended settling is a creative readability limitation"
+      },
+      {
+        "interval_seconds": [
+          14.7,
+          15.8
+        ],
+        "topic": "acknowledgment gesture",
+        "finding": "The left performer raises the arm through a visible arc and brings the hand to the chest by about 15.2 seconds. The right performer then raises the arm and turns an open palm into the space between them around 15.4-15.8 seconds.",
+        "detail": "The fingers and hand shapes remain separated from the head and torso enough to read the intended gestures. They do not become the bright hand clusters seen in the earlier composition pass. No abrupt joint or orientation reversal was identified in these samples.",
+        "limits": "There is a 0.2-second sampling gap between the 14.8 and15.0 second groups. The judgment concerns the sampled trajectory and silhouette, not every rendered frame.",
+        "severity": "clearer designed ending, no sampled blocker"
+      },
+      {
+        "interval_seconds": [
+          15.0,
+          17.983333333333334
+        ],
+        "topic": "ribbon fade, closing hold and camera pullback",
+        "finding": "The violet trails fade while the acknowledgment and open-palm poses remain readable. The camera pulls back progressively and preserves both figures through the final frame. The closing hold remains stable rather than reverting to neutral.",
+        "detail": "No ribbon detachment or sudden width change was identified. The bodies become smaller during the pullback, and the closing poses are substantially held after about 15.8 seconds. The surrounding garden and expanding floor rings provide most of the later movement.",
+        "limits": "The reduction in figure size and long held pose are art-direction choices. They should not be described as continued complex dance articulation.",
+        "severity": "no sampled visual blocker; next improvement can add restrained body and head follow-through"
+      }
+    ],
+    "decision": {
+      "confirmed_blockers": [],
+      "recommendation": "Ready to show as a reviewed performance study, with owner judgment still required for normal-speed naturalness, musical fit and whether the art direction reaches the approved promo standard.",
+      "claims_supported": "The targeted later samples show coherent turn return, a continuous transition into the closing stance, legible acknowledgment gestures, and stable final framing.",
+      "claims_not_supported": "This inspection does not prove zero foot sliding, perfect physical contact, full 60-fps temporal smoothness, musical synchronization, owner approval, or superiority to the promo."
+    },
+    "next_creative_priorities": [
+      "Shorten or enrich the nearly still preparation so the first seconds demonstrate expressive movement sooner.",
+      "Refine the long settle with clearly readable weight transfer and gentle head, torso and wrist follow-through, then judge it at normal speed.",
+      "Retain the quieter stage, clear full-body silhouettes and broader ribbons while developing a longer connected dance phrase for the next study."
+    ],
+    "limits": [
+      "Ordered still-frame inspection only; no real-time video playback or audio listening was performed by this reviewer.",
+      "The final movie was not inspected frame by frame across all 1080 frames. New review intervals are exactly enumerated above.",
+      "Camera motion, luminous transparent geometry, the long garment and reflections limit visual measurement of subtle contact drift.",
+      "Earlier source contact diagnostics were read as reported context and were not independently recomputed in this visual review.",
+      "Technical completeness, sampled visual review and user approval remain separate statuses."
+    ],
+    "changes_made": "Temporary decoded samples and this review evidence only. No scene source, catalog, approved snapshot or remote files changed."
+  },
+  "earlier_silent_proof": {
+    "schema_version": 1,
+    "review_id": "natural-performance-first9s-independent-sampled-motion-review",
+    "review_date_utc": "2026-11-21",
+    "reviewer": "reference_performance_review",
+    "source": {
+      "path": "work/natural-performance/motion-proof/first9s.mp4",
+      "sha256": "bf473c67d8f45a856a4b6b60c1fe971e3e50c4fc58b6235ca4a52a98c53e7165",
+      "bytes": 6455209,
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "fps": "60/1",
+      "frame_count": 540,
+      "duration_seconds": 9.0,
+      "audio_present": false,
+      "canonical_source_frame_range_inclusive": [
+        0,
+        539
+      ],
+      "frozen_source_commit": "0c42f4422a6b67464cb9cd84aac32008d45d4f4c"
+    },
+    "method": {
+      "type": "ordered exact-frame visual inspection of decoded proof",
+      "realtime_playback": false,
+      "sample_count": 62,
+      "frame_groups": {
+        "preparation": [
+          120,
+          125,
+          130,
+          135,
+          140,
+          145,
+          150,
+          155,
+          160,
+          165,
+          170,
+          175,
+          180
+        ],
+        "head-ribbon-a": [
+          330,
+          333,
+          336,
+          339,
+          342,
+          345,
+          348,
+          351,
+          354,
+          357,
+          360
+        ],
+        "head-ribbon-b": [
+          363,
+          366,
+          369,
+          372,
+          375,
+          378,
+          381,
+          384,
+          387,
+          390
+        ],
+        "turn-free-a": [
+          432,
+          436,
+          440,
+          444,
+          448,
+          452,
+          456,
+          460,
+          464,
+          468,
+          472,
+          476,
+          480,
+          484
+        ],
+        "turn-free-b": [
+          488,
+          492,
+          496,
+          500,
+          504,
+          508,
+          512,
+          516,
+          520,
+          524,
+          528,
+          532,
+          536,
+          539
+        ]
+      },
+      "contact_sheet_crop_xywh": [
+        420,
+        300,
+        1100,
+        560
+      ],
+      "contact_sheet_display_wh": [
+        880,
+        448
+      ],
+      "sheets_inspected": [
+        "preparation.png",
+        "head-ribbon-a.png",
+        "head-ribbon-b.png",
+        "turn-free-a.png",
+        "turn-free-b.png"
+      ],
+      "presentation": "Each sheet was split into pairs of rows for readable inspection. All 62 tiles were inspected in temporal order. Original decoded 1920x1080 samples are retained in decoded-review.",
+      "independent_support_metric_calculation": false
+    },
+    "decision": {
+      "confirmed_blockers_in_sampled_intervals": [],
+      "recommendation": "Continue to complete 18-second proof and review the return to support and coda. This sampled review does not constitute owner approval or certify final naturalness.",
+      "scope": "First 9 seconds only, with three targeted intervals. No audio or full-rate playback review."
+    },
+    "observations": [
+      {
+        "time_range_seconds": [
+          2.0,
+          3.0
+        ],
+        "category": "preparation and pacing",
+        "observation": "Both figures remain close to the opening pose. Small head and body changes occur continuously between the sampled frames. No sampled pose jump is visible at the preparation transition.",
+        "limitation": "This is a restrained preparation rather than a large dance phrase. Root reports similarly low activity in its overview of 0-5 seconds; this review independently inspected only 2-3 seconds of that early passage.",
+        "severity": "creative pacing limitation, not render blocker"
+      },
+      {
+        "time_range_seconds": [
+          5.5,
+          6.5
+        ],
+        "category": "head path and articulation",
+        "observation": "The left hand rises beside and over the head, then descends while the other arm opens. The right performer follows with a later hand rise. Shoulder, elbow, wrist and torso poses progress coherently at the 0.05-second sampling interval.",
+        "detail": "Left hand and violet trail partially cross the head region around 5.55-6.05 seconds. The outline remains visible and the path clears as the left arms open. The right hand and trail similarly pass the head later in the interval. No complete sustained head disappearance was observed.",
+        "severity": "no sampled blocker"
+      },
+      {
+        "time_range_seconds": [
+          5.5,
+          8.983333333333333
+        ],
+        "category": "ribbon continuity",
+        "observation": "In the inspected intervals, thin leading strands remain visually connected to the moving hands while the broader violet path follows behind. The broad tails and rounded tips evolve across adjacent sampled frames. No detached leading endpoint or abrupt change of thickness was identified.",
+        "detail": "Some violet tail bends are conspicuous and tightly curved. Their sampled evolution is continuous. Gold and violet paths cross the torso at points, but the full-body silhouette stays readable.",
+        "limitation": "The 6.5-7.2 second gap was not inspected in this targeted pass, so this observation applies only to the sampled groups.",
+        "severity": "no sampled blocker"
+      },
+      {
+        "time_range_seconds": [
+          7.2,
+          8.983333333333333
+        ],
+        "category": "turn, free phase and support return",
+        "observation": "The turn develops through changing head, torso, arm, garment and foot orientations. Feet and reflections separate during the free phase, with progressive pose changes rather than an isolated one-frame lift. The left performer approaches support before the right; the right support return is near the end of this proof.",
+        "detail": "No abrupt limb teleport or sudden lateral foot jump during an obvious planted pose was identified from these views. The left garment partly masks the feet. Camera motion, translucent feet and reflection make small support drift difficult to measure visually.",
+        "limitation": "The free phase remains buoyant in appearance. Grounding quality is not certified from these images. Complete landing and settling must be inspected after 9 seconds. Reported source contact labels are context, not an independent measurement by this reviewer.",
+        "severity": "full-sequence review pending, no isolated gap treated as a defect"
+      }
+    ],
+    "reported_context_not_independently_recomputed": {
+      "t8_right_performer": "Root reports original contact confidence L=0.0657 and R=0, new weights both 0, sole minima 7.65 and 9.25 cm, unchanged with correction disabled, and a pelvis rise/fall in surrounding source poses. This review therefore does not infer an IK failure solely from visible separation.",
+      "support_audit_files_read": [
+        "work/natural-performance/profile/actual-performer-support.json",
+        "work/natural-performance/profile/t8-support-detail.json"
+      ],
+      "reported_max_supported_horizontal_residual_m": [
+        0.0011927640087874007,
+        0.001746088902434329
+      ]
+    },
+    "remaining_review": [
+      "Inspect 9 seconds onward to see completed support return and whether the turn resolves without a snap.",
+      "Inspect the capture-to-coda transition and the acknowledgment gesture through the final frame.",
+      "Evaluate preparation length and dance energy in normal playback with the intended audio before claiming the result matches or surpasses the approved promo."
+    ],
+    "changes_made": "Temporary evidence and decoded review images only. No scene, catalog, tracked source or remote file edits."
+  },
+  "root_final": {
+    "movie_sha256": "96b0f75464fd093ad5ba4a318f8d923de7fa33e2fd01115b5d49b42f3baaec66",
+    "method": "Actual decoded final movie frames, equal scaling, no brightness or content edits.",
+    "sampled_frames": [
+      0,
+      330,
+      390,
+      492,
+      540,
+      570,
+      576,
+      660,
+      720,
+      810,
+      840,
+      948,
+      960,
+      1068,
+      1079
+    ],
+    "overview_frames": [
+      0,
+      330,
+      390,
+      492,
+      570,
+      660,
+      810,
+      948,
+      1068
+    ],
+    "closing_frames": [
+      540,
+      576,
+      720,
+      840,
+      960,
+      1079
+    ],
+    "real_time_playback": false,
+    "root_observations": [
+      "The performers remain separate from perimeter vegetation through the final frame.",
+      "The decoded samples show successive torso and arm turns, then a held hand-on-heart and open acknowledgment gesture.",
+      "The final widening keeps both full bodies and their floor relationship visible.",
+      "The first five seconds have restrained movement; this remains a creative pacing concern.",
+      "No sampled finishing-frame composition blocker was found; dense landing and coda review is recorded separately."
+    ],
+    "root_review_completed": true,
+    "creative_approval": "not_recorded"
+  },
+  "next_improvements": [
+    "Shorten or enrich the nearly still preparation.",
+    "Refine the long settle with readable weight transfer and restrained head, torso and wrist follow-through.",
+    "Develop complementary captured or authored phrases rather than using a delayed copy of one performance."
+  ]
+}
