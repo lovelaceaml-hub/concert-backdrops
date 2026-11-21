@@ -1,7 +1,8 @@
 # Production commands for the approved light system
 
-The shared `video` command now runs both the frozen Song 11 beauty reference and
-the new concert model study through the existing frame checkpoint pipeline.
+The shared `video` command runs the frozen Song 11 beauty reference, the
+historical Consideration baseline and its separate camera and response revision
+through the existing frame checkpoint pipeline.
 It preserves the historical study scripts and production engine. It adds no GPU
 provider, paid dispatch, GitHub render dispatch, or automatic user approval.
 
@@ -10,15 +11,20 @@ provider, paid dispatch, GitHub render dispatch, or automatic user approval.
 | Project ID | Renderer | Picture clock | Native review |
 | --- | --- | --- | --- |
 | `approved-light-s11` | `p3d-approved` | Original source scene 97.7 to 127.7 seconds, with the existing 0.1 second picture delay applied once | 1920 x 1080, 60 fps, 2 temporal samples |
-| `concert-kit-consideration` | `p3d-kit` | Original 18 second authored visual scene, from output frame zero | 1920 x 1080, 60 fps, 2 temporal samples |
+| `concert-kit-consideration` | `p3d-kit` | Historical 18 second authored visual scene, from output frame zero | 1920 x 1080, 60 fps, 2 temporal samples |
+| `concert-kit-consideration-v2` | `p3d-kit` | 15 seconds, output frames 0..899 map to original scene frames 180..1079 | 1920 x 1080, 60 fps, 2 temporal samples |
 
-The first project retains the established choreography. The second contains new
-models and performance work in `tools/concert_kit`. Its supplied recording is a
-prepared Song 7 excerpt; the scene currently uses neutral analysis controls.
+The first project retains the established choreography. The historical kit study
+contains models and performance work in `tools/concert_kit`. The revision wraps
+that source in `tools/concert_motion_revision`, preserving the original engine
+and baseline. Its output cuts are frames 234 and 540, at 3.9 and 9.0 seconds.
+Both kit scenes use a prepared Song 7 excerpt and neutral analysis controls.
+The revision consumes seconds 3 to 18 of that canonical WAV, corresponding to
+original recording time 140.5 to 155.5 seconds. It adds no fade or time stretch.
 Attaching that recording does not automatically create instrument-specific
 gestures or certify musical synchronization.
 
-Both paths produce RGB8 SDR frames using the established filmic display treatment.
+All three registrations produce RGB8 SDR frames using the established filmic display treatment.
 They explicitly select `delivery.source_transfer="legacy_display_gamma"`.
 FFmpeg therefore preserves the original RGB-to-YUV matrix/range conversion.
 The separate sRGB conversion used by Blender and browser projects remains intact.
@@ -26,8 +32,10 @@ These registered paths do not claim 16-bit source precision, 10-bit delivery or 
 
 ## Environment and inputs
 
-Use the existing cloud Linux bootstrap and locked dependencies. Install fonts
-inside this checkout. The pipeline hashes the actual font bytes and rejects
+Use the existing cloud Linux bootstrap and locked dependencies. For the registered
+studies, run `python3 scripts/bootstrap.py --p3d-only --reference-fonts` in an
+isolated checkout. [REFERENCE-FONTS.md](REFERENCE-FONTS.md) explains the exact
+74-font reconstruction and runtime qualification. Install fonts inside this checkout. The pipeline hashes the actual font bytes and rejects
 dependencies that resolve outside the checkout. See `VIDEO-PIPELINE.md` for the
 complete bootstrap and supported system dependencies.
 
@@ -35,7 +43,7 @@ Check only the selected backend:
 
 ```bash
 ./scripts/video doctor --project approved-light-s11
-./scripts/video doctor --project concert-kit-consideration
+./scripts/video doctor --project concert-kit-consideration-v2
 ```
 
 These p3d checks require the Python renderer, fonts and FFmpeg. They do not require
@@ -78,14 +86,14 @@ Inspect the plan first. This command does not prepare, render or write files and
 can describe the project before its private recording has been restored:
 
 ```bash
-./scripts/video produce concert-kit-consideration --quality review --plan
+./scripts/video produce concert-kit-consideration-v2 --quality review --plan
 ./scripts/video produce approved-light-s11 --quality review --plan
 ```
 
 Render selected native frames for visual inspection:
 
 ```bash
-./scripts/video produce concert-kit-consideration --quality review --frames 0,180,450,720,1000
+./scripts/video produce concert-kit-consideration-v2 --quality review --frames 0,138,233,234,270,512,539,540,870
 ./scripts/video produce approved-light-s11 --quality review --frames 45,501,900,1236,1476,1740
 ```
 
@@ -94,7 +102,7 @@ writes the gallery. It does not assemble an incomplete movie. For a complete
 production round:
 
 ```bash
-./scripts/video produce concert-kit-consideration --quality review
+./scripts/video produce concert-kit-consideration-v2 --quality review
 ./scripts/video produce approved-light-s11 --quality review
 ```
 
@@ -163,10 +171,22 @@ inspection provide that separate visual evidence. New song production still
 requires an authored scene and cue file; the registered Song 11 adapter refuses
 to substitute another recording or silently retime its choreography.
 
-The deeper, separately implemented auditor for the exact Consideration study is
+The deeper, separately implemented auditor for the explicit Consideration registrations is
 documented in [tools/concert_review/README.md](../tools/concert_review/README.md).
 It records a source baseline after a selected native frame, then checks the final
 movie's full decode, presentation times, audio alignment and peaks, color tags,
 source identity and encoded cut/batch boundary pictures. It writes only ignored
-audit evidence and never re-renders or alters a production output. Its fixed
-18-second study contract must not be advertised as an all-song audit.
+audit evidence and never re-renders or alters a production output. Its explicit
+18-second and 15-second profile contracts must not be advertised as an all-song audit.
+
+## Historical receipt compatibility
+
+The complete 18-second baseline was finished and independently verified at
+commit `673f68785c36b57d55d05129ee5549efe6352c60`. Registering the later wrapper
+changes the kit adapter hash, so older working receipts become stale on current
+source even though the original scene is preserved. Reproduce that historical
+receipt with its exact checkpoint, recorded runtime and original font bytes.
+The explicit reference-font mode reconstructs those bytes. A fresh checkout still
+creates and verifies its own render receipts and audit baseline. Do not edit
+fingerprints or reuse the old receipt under a newer adapter identity. A fresh render of the
+historical project on current source must receive a new honest receipt.

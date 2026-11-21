@@ -10,6 +10,6 @@ All eleven selected full original recordings were downloaded, hashed and decoded
 
 ## Current rendering routes
 
-`approved-light-s11` reproduces the pinned 30-second clarity reference. `concert-kit-consideration` renders the original 18-second helping study at native 1080p60. Both use the existing resumable frame scheduler, explicit source fingerprints, cut-safe temporal samples, finishing and technical QA. The Consideration scene is not automatically retimed by attaching another song.
+`approved-light-s11` reproduces the pinned 30-second clarity reference. `concert-kit-consideration` preserves the original 18-second helping study. `concert-kit-consideration-v2` renders the separate 15-second camera and hand-response revision. All three use the existing resumable frame scheduler, explicit source fingerprints, cut-safe temporal samples, finishing and technical QA at native 1080p60. The revision maps output 0..899 to original frames 180..1079 and takes canonical audio seconds 3..18; cuts are output 234 and 540. These scenes are not automatically retimed by attaching another song. Read the current delivery catalog for exact rendered and archived status.
 
 Read the registered project manifest and the pipeline integration guide before rendering. A full new song needs authored scene integration and cue timing. Native 4K stills and full 4K movies have separate completion states. The current reference catalogs distinguish what exists from planned output.

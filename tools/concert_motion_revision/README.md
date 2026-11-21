@@ -22,7 +22,11 @@ The world light still launches from the actual left palm sampled at scene time 1
 
 Use the existing pinned p3d environment and fonts. Keep the canonical eighteen-second prepared score at `work/concert-kit/consideration-score.wav`, SHA-256 `0f43061d674dae3467a6a76867f8599d241532c131e7e7654502bc29f2d66f7b`.
 
+For a fresh checkout, use `python3 scripts/bootstrap.py --p3d-only --reference-fonts`. The [reference-font instructions](../../docs/REFERENCE-FONTS.md) explain how pinned source fonts and their recorded metadata reconstruct the exact historical bytes required by the guard. A normal deterministic conversion with different font-header timestamps has matching glyphs but a different source identity, and is intentionally rejected by this study. Do not work around that rejection by relabeling a receipt.
+
 ```bash
+python3 scripts/bootstrap.py --p3d-only --reference-fonts
+
 PYTHONHASHSEED=0 LP_NUM_THREADS=1 .venv/bin/python -m tools.concert_motion_revision.render \
   --stills 3,5.3,6.883333333333,6.9,7.5,10.7,11.533333333333,11.983333333333,12,12.3,17.5 \
   --out work/concert-motion-revision/native-probes

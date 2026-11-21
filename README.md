@@ -6,17 +6,17 @@ Code for the video backdrops of "The Words of Mother's Love Healing Concert" (LV
 
 ## Current production system
 
-Start with [START-HERE](project-docs/production-system/START-HERE.md) and the [handoff for any AI](project-docs/production-system/AI-HANDOFF.md). The repository now includes the graphics engine, registered production commands, catalogs, verification and repeatable instructions. The shared [Production System folder](https://drive.google.com/drive/folders/1QDGGqqkJlbovBLCthX-QChqfD8zSmK8X) provides a portable handoff; full audio and finished movies remain in the existing Drive home.
+Start with [START-HERE](project-docs/production-system/START-HERE.md) and the [handoff for any AI](project-docs/production-system/AI-HANDOFF.md). The repository includes the graphics engine, registered production commands, catalogs, verification and repeatable instructions. The shared [Production System folder](https://drive.google.com/drive/folders/1QDGGqqkJlbovBLCthX-QChqfD8zSmK8X) is the portable handoff destination. Full audio and the approved study archive are in the existing Drive home. Check the [delivery catalog](project-docs/production-system/catalogs/deliveries.json) for the exact new media links and any pending shared copies.
 
 ```bash
 ./scripts/concert status
 ./scripts/concert song s07
-python3 scripts/bootstrap.py --p3d-only
-./scripts/video doctor --project concert-kit-consideration
-./scripts/video produce concert-kit-consideration --quality review --plan
+python3 scripts/bootstrap.py --p3d-only --reference-fonts
+./scripts/video doctor --project concert-kit-consideration-v2
+./scripts/video produce concert-kit-consideration-v2 --quality review --plan
 ```
 
-The approved 66-second promo supplies the creative language. The approved 30-second Song11 study supplies the native1080p60 clarity reference. All eleven full recording sources are indexed and byte-verified. The new [native model kit](tools/concert_kit/README.md) and [improvement queue](project-docs/production-system/IMPROVEMENT-QUEUE.md) extend those references through small reviewed performances.
+The approved 66-second promo supplies the creative language. The approved 30-second Song 11 study supplies the native 1080p60 clarity reference. All eleven full recording sources are indexed and byte-verified. The [native model kit](tools/concert_kit/README.md), [dove, rose and wheat prototypes](tools/concert_addons/README.md), and [camera and response revision](tools/concert_motion_revision/README.md) extend those references through small reviewable performances. The [improvement queue](project-docs/production-system/IMPROVEMENT-QUEUE.md) records the next concrete work.
 
 ## Quick links
 - Native 4K and smoother animation: [docs/4K-AND-MOTION.md](docs/4K-AND-MOTION.md)

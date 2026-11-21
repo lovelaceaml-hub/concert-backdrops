@@ -21,7 +21,8 @@ Read this file, [AI-HANDOFF.md](AI-HANDOFF.md), [CREATIVE-RULES.md](CREATIVE-RUL
 | [Improvement queue](IMPROVEMENT-QUEUE.md) | Concrete next work by model family and song, with evidence required for completion |
 | [Authoring the next song](AUTHORING-NEXT-SONG.md) | Performance, model reuse, scene registration, cue clocks and honest review boundaries |
 | [Reference motion review](REFERENCE-MOTION-REVIEW.md) | Dense temporal samples from the actual approved films and three specific next improvements |
-| [Next Consideration camera revision](CONSIDERATION-CAMERA-NEXT.md) | A measured, visibly clearer candidate angle for the remaining middle-shot overlap |
+| [Consideration camera investigation](CONSIDERATION-CAMERA-NEXT.md) | Historical single-frame evidence that led to the separate camera and response revision |
+| [Delivery catalog](catalogs/deliveries.json) | Exact current studies, native stills, model sheets, hashes, review status and durable links |
 | [Pipeline integration](../../docs/PIPELINE-INTEGRATION.md) | Registered renderers, source clocks, color handling, resume and CLI commands |
 | [Current state](STATE.json) | Delivery, integration and open work status; never substitute it for a render receipt |
 
@@ -51,10 +52,12 @@ cd ../concert-song07
 Recreate dependencies with the existing pinned bootstrap:
 
 ```bash
-python3 scripts/bootstrap.py --p3d-only
+python3 scripts/bootstrap.py --p3d-only --reference-fonts
 ```
 
-For a p3d worker, install the host tools and software EGL/Mesa libraries documented in the pipeline guide, then use this mode to recreate locked Python packages and pinned fonts. It skips Blender, browser installation, app builds and optional integrations. The backend-specific doctor checks the requested route. The optional browser/Blender/Shotcraft integrations retain their own readiness states; use the full bootstrap when those are needed. See the installation and environment limits in [VIDEO-PIPELINE.md](../../docs/VIDEO-PIPELINE.md) and [VIDEO-PIPELINE-VALIDATION.md](../../docs/VIDEO-PIPELINE-VALIDATION.md).
+For a p3d worker, install the host tools and software EGL/Mesa libraries documented in the pipeline guide, then use this mode to recreate locked Python packages and the exact 74 reference fonts. The explicit `--reference-fonts` flag reconstructs historical TTF bytes from pinned WOFF2 files and checked metadata; normal deterministic conversion has different checksums. See [REFERENCE-FONTS.md](../../docs/REFERENCE-FONTS.md). It skips Blender, browser installation, app builds and optional integrations. The backend-specific doctor checks the requested route. The optional browser/Blender/Shotcraft integrations retain their own readiness states; use the full bootstrap when those are needed. See the installation and environment limits in [VIDEO-PIPELINE.md](../../docs/VIDEO-PIPELINE.md) and [VIDEO-PIPELINE-VALIDATION.md](../../docs/VIDEO-PIPELINE-VALIDATION.md).
+
+The setup was independently exercised in a fresh detached source checkout: all 74 reference fonts reconstructed exactly, the source guard and project doctor passed, and one native 1080p frame matched the primary render byte for byte. That check reused the installed locked Python environment and host FFmpeg/Mesa; it does not claim a new operating-system installation or whole-film equality across different drivers. See [the fresh-checkout evidence](evidence/fresh-checkout-reference.json).
 
 Full recordings are private inputs. Use the connected Drive tool to download each cataloged file into its specified `work/song-sources/` path, then verify the bytes:
 
@@ -78,24 +81,37 @@ Place the verified original also at `work/song-inputs/s11-original.mp3`, as requ
 
 The registered adapter checks the historical source and assets, prepares the known Song 11 audio, and uses the existing frame checkpoint scheduler. It rejects unsupported recording or scene identities. The original historical script remains available in `tools/promo_beauty_example/`; its own README and verification describe the delivered movie exactly.
 
-## Build and review the new Consideration study
+## Build and review the corrected Consideration study
 
-The reusable scene connects helping someone stand to a wave of light opening the shore. It uses two warm gold men, a captured paired action, explicit hand contact, native 3D shore models and an authored ending. It is a new study awaiting the owner's creative review, not an automatically approved extension of the reference film.
+The study connects helping someone stand to a wave of light opening the shore. It uses two warm gold men, a captured paired action, explicit hand contact, native 3D shore models and an authored ending. The original 18-second baseline exposed overlapping silhouettes and a sudden hand return. It is preserved as a historical comparison. The separate 15-second revision keeps the readable contact view, cuts to a clearer rise view, blends complete arm poses during the recipient's response, and includes the complete garden ending.
 
 ```bash
 ./scripts/concert verify-audio s07
 ./scripts/concert prepare-study-audio
-./scripts/video doctor --project concert-kit-consideration
-./scripts/video produce concert-kit-consideration --quality review --plan
-./scripts/video produce concert-kit-consideration --quality review --frames 0,180,450,720,1000
-./scripts/video produce concert-kit-consideration --quality review
+./scripts/video doctor --project concert-kit-consideration-v2
+./scripts/video produce concert-kit-consideration-v2 --quality review --plan
+./scripts/video produce concert-kit-consideration-v2 --quality review --frames 0,138,233,234,270,512,539,540,870
 ```
 
-The audio is the original Song 07 interval 137.5 to 155.5 seconds, without time stretching. The preparation command verifies the original hash and produces the recorded 18-second WAV. It includes a small gain reduction and short fades. The world response at study time 11.5 seconds follows the documented transition out of a quiet passage; an exact ear-verified transient alignment is not claimed.
+Inspect those native frames before freezing a new round. Capture the independent source baseline and then render the complete study:
 
-Check `projects/concert-kit-consideration/project.json` for the current frame rate, samples and frame count before choosing a frame number. The direct scene tool also offers second-based still selection. Every rendered variant must carry its own source fingerprint; changing the camera, action, audio, fonts or model invalidates affected output.
+```bash
+uv run --frozen --extra legacy python tools/concert_review/consideration.py --project concert-kit-consideration-v2 --freeze-only
+./scripts/video produce concert-kit-consideration-v2 --quality review
+uv run --frozen --extra legacy python tools/concert_review/consideration.py --project concert-kit-consideration-v2
+```
 
-The separate [Consideration auditor](../../tools/concert_review/README.md) repeats the deeper delivery checks: complete decode and presentation times, audio alignment and peaks, source identity, and encoded pictures at cuts and worker boundaries. It is scoped to this exact study. Capture its baseline after an inspected frame 0 and before a full production round; run the auditor after assembly and pipeline QA. Preserve an earlier baseline instead of overwriting it to conceal a source change.
+The revision evaluates 900 native frames at 60 fps with two temporal samples. Output frames 0 to 899 map to original visual frames 180 to 1079. Its camera cuts are output frames 234 and 540, at 3.9 and 9.0 seconds. The audio uses seconds 3 to 18 of the canonical 18-second WAV, or original Song 07 time 140.5 to 155.5 seconds. There is no time stretching or additional fade; the canonical excerpt's recorded gain and ending fade are retained. The world response at output time 8.5 seconds follows the documented transition out of a quiet passage. Exact ear-verified transient or instrument alignment is not claimed.
+
+Read `tools/concert_motion_revision/README.md` and `VERIFICATION.md` for the actual response, camera, source and review evidence. These are new studies awaiting their own creative approval. The original registration `concert-kit-consideration` remains available. Its complete baseline was finished and independently verified at commit `673f68785c36b57d55d05129ee5549efe6352c60`; exact historical receipt reuse requires that checkpoint, the recorded runtime and the original font bytes. The new reference-font mode reconstructs those bytes exactly. A fresh render still creates and verifies its own receipt and audit baseline; do not copy a historical fingerprint over a mismatch. The newer registry changes the kit adapter hash, so old working receipts correctly appear stale on current source.
+
+A native 4K ending frame is a separate operation:
+
+```bash
+./scripts/video produce concert-kit-consideration-v2 --quality 4k-check --frames 870
+```
+
+The [Consideration auditor](../../tools/concert_review/README.md) has explicit 18-second and 15-second profiles. It checks complete decode and presentation times, audio alignment and peaks, source identity, and encoded pictures at cuts and worker boundaries. It does not certify natural acting or owner approval. Preserve each frozen baseline instead of overwriting it to conceal a source change.
 
 ## The production cycle for every song
 

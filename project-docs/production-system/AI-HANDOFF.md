@@ -15,7 +15,7 @@ Copy the following instruction into a new working chat. The files it references 
 
 Do not restart the old promo, regenerate approved art or re-open a completed repair because an old handoff says it is pending. The source catalog records that all eleven recordings exist. Several full-song delivery records refer to prior chats and have not been independently watched in this audit; do not claim those videos were visually verified just because their status pages were read.
 
-Use [AUTHORING-NEXT-SONG.md](AUTHORING-NEXT-SONG.md) when moving from a study to a new complete song. The current registered kit adapter accepts the Consideration scene only. A new audio source or a renamed project is not a new authored film; add and verify its explicit scene registration while preserving the approved projects.
+Use [AUTHORING-NEXT-SONG.md](AUTHORING-NEXT-SONG.md) when moving from a study to a new complete song. The current kit adapter explicitly accepts the historical Consideration scene and its separate camera and response revision. A new audio source or a renamed project is not a new authored film; add and verify its explicit scene registration while preserving the approved projects. Prefer `concert-kit-consideration-v2` when studying the corrected hand return and clearer rise; retain the original 18-second file as evidence of what needed repair.
 
 ## Coordination
 

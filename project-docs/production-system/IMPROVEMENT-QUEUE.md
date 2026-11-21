@@ -4,7 +4,7 @@ This is a bounded work queue for future chats, not an automatically running serv
 
 ## Current increment
 
-The production foundation and approved study are merged. All eleven full audio sources are verified. The current increment adds registered p3d production commands, a shared catalog/handoff, six native model families and one original Consideration motion study, plus a separate dove, rose and wheat prototype pack. See `STATE.json` and the kit verification for final evidence and creative review status. The [dense reference motion review](REFERENCE-MOTION-REVIEW.md) identifies precise acting and reveal improvements from the actual approved films.
+The production foundation and approved study are merged. All eleven full audio sources are verified. The current increment adds registered p3d production commands, a shared catalog/handoff, six native model families, an original Consideration baseline and its isolated camera/response revision, plus a separate dove, rose and wheat prototype pack. The additions total nine model families and eighteen variants, separate from the acting studies. See `STATE.json` and the kit verification for final evidence and creative review status. The [dense reference motion review](REFERENCE-MOTION-REVIEW.md) identifies precise acting and reveal improvements from the actual approved films.
 
 ## Model and performance work
 
@@ -42,7 +42,7 @@ These are proposals derived from the current catalog, not replacements for histo
 
 ## Workflow improvements after this increment
 
-1. Refine the Consideration middle shot using [CONSIDERATION-CAMERA-NEXT.md](CONSIDERATION-CAMERA-NEXT.md). The current 7.2 to 8.1 second overlap obscures the release; the tested west45 view is a promising single-frame plan. Check the entire action and both cuts, render a new version, then seek creative review of that exact output. Preserve this study's original source and media.
+1. Finish and review the separate `concert-kit-consideration-v2` revision, then carry its complete-pose response and coverage lessons into a longer Song 07 performance. The historical [camera investigation](CONSIDERATION-CAMERA-NEXT.md) led to an explicit cut at source6.9, not one side angle for the whole action. Preserve the old baseline. The next visual refinement is clearance between translucent people and vegetation, followed by a shared walk and lantern carry.
 2. Select one full song for the first upgraded production, retaining its source timing and current arrangement caveats.
 3. Obtain or verify rehearsal/live arrangements before promising exact stage conformance. Historical uniform stretching and cuts remain historical choices, not defaults for new recordings.
 4. Record measured render memory and frame times for each model tier; select workers from evidence, not CPU count alone.

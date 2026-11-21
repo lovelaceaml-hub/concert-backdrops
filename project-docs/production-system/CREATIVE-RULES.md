@@ -25,6 +25,12 @@ The next Consideration scene gives the human exchange more screen space. The han
 - Drive props and contact light from the final solved pose. Root travel, stride and planted feet must agree. A shared hand target needs a non-recursive evaluation path and a tested release.
 - Use native evaluated foreground bodies; cheaper crowd caches are a separate detail tier. Crowd variation should create attentive groups, not random activity competing with the main event.
 
+## Lessons from the new helping study
+
+The original response solved a partly applied hand-on-heart gesture repeatedly. During its return, the left palm moved about 34.4 cm between two 60 fps samples. The isolated revision solves the complete endpoint, then blends complete poses through a smooth arrival, hold and return. The maximum return step in the measured interval is about 2.39 cm; prior shared contact is unchanged. This is evidence that a specific discontinuity was removed, not a universal natural-motion score. Repeat the numeric check with `tools/concert_review/response.py` and review the actual encoded movement.
+
+A camera that clarifies the middle of an action can hide its beginning. The side-view probe separated the rising figures but concealed the helper during the initial contact. The revision retains the readable contact view, then changes view at original time 6.9 seconds while preserving screen order. Inspect the end of a camera move too: an otherwise good garden view put a bright flower patch across a head. The final endpoint was corrected before freezing.
+
 ## Camera and composition
 
 - Establish who is acting and where they stand. Keep hands, heads and feet visible during help, greeting, giving and accepting.

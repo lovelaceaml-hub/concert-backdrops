@@ -1,10 +1,27 @@
-# Independent review of the Consideration study
+# Independent review of the Consideration studies
 
-`consideration.py` independently checks the registered
-`concert-kit-consideration` review master. Its scope is this exact **18-second,
-1920 x 1080, 60 fps, 1080-frame study**, with the established RGB8 SDR color
-contract and canonical Song 07 excerpt. It is not a generic auditor for all
-concert songs or alternate quality presets.
+`consideration.py` checks two explicitly registered review masters. The profile
+is selected by project ID, not inferred from the movie's duration. Both require
+native 1920 x 1080, 60 fps, two temporal samples, RGB8 source frames, and the
+established legacy display gamma SDR color contract.
+
+| Project ID | Output | Visual source clock | Canonical WAV interval | Authored cuts |
+| --- | --- | --- | --- | --- |
+| `concert-kit-consideration` | 18 seconds, 1080 frames | Original frames 0 through 1079 | 0 through 18 seconds | Output frames 180 and 720 |
+| `concert-kit-consideration-v2` | 15 seconds, 900 frames | Revised performance, original frames 180 through 1079 | 3 through 18 seconds | Output frames 234 and 540 |
+
+Time intervals are start-inclusive and end-exclusive; listed frame ranges
+include both endpoint frames. The v2 picture uses the
+separate corrected motion wrapper; it is not just a trim of the old movie.
+Its audio is a trim of the exact canonical WAV at unchanged speed, with no
+additional gain or fades. That WAV already contains the documented original
+gain and ending fade. V2 covers original Song 07 from 140.5 to 155.5 seconds;
+v1 covers 137.5 to 155.5 seconds.
+
+This is not a generic auditor for all concert songs, alternate durations or
+other quality presets. A different contract needs an explicit profile and
+appropriate source evidence. Unsupported scene, cut, audio or finishing
+changes are rejected.
 
 The tool reads sources, receipts, audio and media. It imports no scene renderer,
 creates no graphics context, and does not rerender, re-encode, repair or replace
@@ -15,95 +32,143 @@ production output. Its new files stay under ignored
 
 Use the repository's locked Python environment, including NumPy, SciPy and
 Pillow, and working host FFmpeg and FFprobe executables. The script uses
-FFmpeg's `-fps_mode passthrough` and the software `scale` filter. No GPU,
-Blender, browser or connected account is required to run the audit once the
-private inputs exist locally.
+FFmpeg's `-fps_mode passthrough` and software `scale` filter. No GPU, Blender,
+browser or connected account is required once private inputs exist locally.
+It decodes the complete movie and several selected native frames, so allow
+tens of seconds on a prepared cloud CPU machine. This is not a render job.
 
 The full original recording and the prepared WAV are private inputs, not Git
-files. Restore Song 07 and run `./scripts/concert prepare-study-audio` as described
-in `project-docs/production-system/START-HERE.md`. The audit requires:
+files. Restore Song 07 and run `./scripts/concert prepare-study-audio` as
+described in [START-HERE](../../project-docs/production-system/START-HERE.md).
+Required inputs include:
 
 - `work/concert-kit/consideration-score.wav`, canonical PCM24, 48 kHz stereo,
   864000 samples per channel. Expected file SHA256:
   `0f43061d674dae3467a6a76867f8599d241532c131e7e7654502bc29f2d66f7b`.
-- `work/concert-kit/audio-provenance.json`, identifying original Song 07 from
-  137.5 to 155.5 seconds at unchanged speed. The prepared excerpt already includes
-  its documented gain and fades.
-- Registered shot receipts and their source PNGs under
-  `work/pipeline/concert-kit-consideration/review/shots/`.
+- `work/concert-kit/audio-provenance.json`, identifying the original Song 07
+  source interval and unchanged playback speed.
+- The selected registered project, its preparation record, shot receipts and
+  checksummed source PNGs under `work/pipeline/<project-id>/`.
 
-The final check additionally requires completed `master.mp4`, `master.json` and
-`qa.json` in `work/pipeline/concert-kit-consideration/review/`. It does not poll
-for a running production to finish.
+The final check also requires completed `master.mp4`, `master.json` and
+`qa.json` in `work/pipeline/<project-id>/review/`. It does not poll for a
+running production to finish.
 
-## Before the full render
+## Freeze before the full render
 
-First inspect the normal native preview. The baseline command uses the existing
-`approach` receipt to record the actual sources used by a render, so a completely
-fresh checkout needs at least one registered preview frame before freezing:
+For the corrected 15-second study, first produce and inspect the normal native
+preview, then capture a baseline from its actual `contact` receipt:
 
 ```bash
-./scripts/video produce concert-kit-consideration --quality review --frames 0
-uv run --frozen --extra legacy python tools/concert_review/consideration.py --freeze-only
+./scripts/video produce concert-kit-consideration-v2 --quality review --frames 0
+uv run --frozen --extra legacy python tools/concert_review/consideration.py --project concert-kit-consideration-v2 --freeze-only
 ```
 
-`--freeze-only` checks that the receipt fingerprint is internally consistent,
-that its recorded source files still have the same bytes, and that the canonical
-WAV matches. It writes `work/production-system/final-qa/frozen-inputs.json` once
-and refuses to overwrite an existing baseline. It captures the picture contract,
-common provenance and source mapping separately from the finished movie.
+This checks the exact project and audio contract, receipt fingerprint,
+recorded source file bytes, and the prepared module's source clock. It writes
+`work/production-system/final-qa/concert-kit-consideration-v2/frozen-inputs.json`
+once and refuses to overwrite an existing baseline. The baseline captures
+picture inputs, common provenance and the manifest's picture contract before
+final assembly.
 
-For the first production-system study, this baseline was captured while the
-already-frozen production was running and matched its earlier `approach` receipt.
-That historical baseline is preserved. Future rounds should capture theirs
-before the full render as shown above.
+For a new reproduction of the original 18-second profile, use its project ID
+in both commands. Omitting `--project` also selects that original profile.
+Its baseline remains at `work/production-system/final-qa/frozen-inputs.json`.
+The new profile never replaces the historical baseline or its audit runs.
 
-Do not regenerate a baseline to hide a source mismatch. When starting an
-intentional new round, first finish or stop the current round, preserve its audit
-directory under a distinct ignored name, and create the new baseline from a
-current preview receipt. Do not run font setup or change any frozen dependency
-during rendering.
+The original completed 18-second movie and its audit belong to historical
+source checkpoint `673f68785c36b57d55d05129ee5549efe6352c60`. Later changes to
+the registered adapter intentionally make that old baseline fail against the
+current tree. Use the matching checkout for historical reproduction, or an
+isolated, newly frozen round. Do not relabel old receipts as current.
 
-## After the full render and pipeline QA
+Do not regenerate a baseline to hide a source mismatch. For an intentional new
+round, finish or stop the current round, preserve its audit directory under a
+distinct ignored name, and create a fresh baseline from a current preview
+receipt. Do not run font setup or change any frozen dependency during rendering.
+
+## Audit the completed movie
 
 ```bash
-./scripts/video produce concert-kit-consideration --quality review
-uv run --frozen --extra legacy python tools/concert_review/consideration.py
+./scripts/video produce concert-kit-consideration-v2 --quality review
+uv run --frozen --extra legacy python tools/concert_review/consideration.py --project concert-kit-consideration-v2
 ```
 
 The first command is the existing resumable production route. If the movie and
-its pipeline QA are already complete, run only the second command. In an already
-prepared checkout, `.venv/bin/python` can replace `uv run --frozen --extra legacy
-python` without synchronizing the environment.
+pipeline QA are already complete, run only the second command. In an already
+prepared checkout, `.venv/bin/python` can replace `uv run --frozen --extra
+legacy python` without synchronizing the environment.
 
-Each independent audit creates a unique `run-<UTC timestamp>/` directory
-containing `independent-qa.json`, selected native decoded PNGs, a cut and batch
-boundary contact sheet, and the decoder error log. The process exits with a
-nonzero status for a failed check. Review warnings and the actual pictures even
-when technical checks pass.
+Each audit creates a unique `run-<UTC timestamp>/` inside the profile's audit
+directory. It contains `independent-qa.json`, selected native decoded PNGs, a
+cut and batch boundary contact sheet, and the decoder error log. A failed
+technical check returns a nonzero exit status. Review warnings and actual
+pictures even when technical checks pass.
 
 ## What the evidence means
 
-The audit checks complete video decoding, 1080 presentation timestamps at exact
-1/60-second spacing, native dimensions, stream duration, H.264 pixel format and
-BT.709 primaries, transfer, matrix and limited-range tags. It verifies the master
-hash, assembly identity, shot receipts, frozen sources and finishing inputs.
+The audit checks full video decoding, every presentation timestamp at exact
+1/60-second spacing, native dimensions, exact profile frame count and duration,
+H.264 pixel format, and BT.709 primaries, transfer, matrix and limited-range
+tags. It verifies the master hash, assembly identity, shot receipt coverage,
+frozen source mapping and finishing inputs.
 
-Audio checks include 48 kHz stereo, exact 18-second stream program duration,
-decoded full-scale exceedances, the canonical PCM payload, and correlation in
-three nonsilent windows spread across the excerpt. AAC priming is handled by the
-normal FFmpeg demuxer and decoder. Any trailing partial AAC frame is recorded
-separately from the logical program sample count. Sample alignment is technical
-evidence; it does not establish artistic or musical synchronization.
+Audio checks include 48 kHz stereo, exact stream program duration, decoded
+full-scale exceedances, the canonical 24-bit PCM payload, the profile's exact
+sample offset, and correlation in three nonsilent windows spread across the
+excerpt. They also bound amplitude differences from the unchanged canonical
+excerpt. AAC priming is handled by normal FFmpeg demuxing and decoding; trailing
+partial-frame padding is recorded separately from the logical sample count.
+Sample alignment is technical evidence, not artistic or musical sync approval.
 
-Selected decoded frames are compared with their checksummed source PNGs using
-the inverse limited-range BT.709 matrix and range conversion only. No second
-gamma or transfer conversion is applied. The generous mismatch bounds detect
-gross identity or encoding errors; they are not a beauty score. Worker boundaries
-come from actual render logs and are distinguished from authored camera cuts.
+Selected encoded frames are compared with their checksummed source PNGs using
+the inverse limited-range BT.709 matrix and range conversion only. No extra
+gamma or transfer conversion is applied. Selection includes fixed performance
+moments, eight repeatable random frames, and neighbors of actual cuts and
+worker-batch boundaries. The generous mismatch bounds catch gross identity or
+encoding errors; they are not a beauty score. Batch boundaries come from render
+logs and remain distinguished from authored camera cuts.
 
 The audit does not claim real-time playback, natural acting, distinct native
-motion-capture samples at every output frame, exact finger interlock, complete
-visual review or owner approval. It does not independently rehash every rendered
-PNG; it checks selected source PNGs and the full shot receipt coverage, and also
-reads the existing pipeline QA, which verifies the complete source sequence.
+motion capture samples at every output frame, exact finger interlock, complete
+visual review or owner approval. It rehashes selected source PNGs and verifies
+full receipt coverage; the separate pipeline QA verifies the complete source
+sequence.
+
+## Separate numerical response regression
+
+The motion change has an additional focused checker, owned separately from
+the media auditor:
+
+```bash
+env PYTHONHASHSEED=0 uv run --frozen --extra legacy python tools/concert_review/response.py --out work/concert-motion-review/response-qa.json
+```
+
+It samples the actual paired skeleton and installed response at 120 Hz and
+60 Hz, checks the release transition, earlier contact, order independence and
+duplicate-install protection, and saves compact metrics plus separate full raw
+data. It uses one CPU for roughly 80 seconds, without OpenGL, cloth or picture
+rendering. Its numerical regression result does not establish natural acting
+or replace inspection of the encoded movie. See its recorded method and source
+identities before comparing different revisions.
+
+## Narrow auditor tests
+
+```bash
+uv run --frozen --extra legacy python -m unittest discover -s tools/concert_review -p 'test_*.py' -v
+```
+
+These cover explicit project clocks, rejected source/offset/finishing changes,
+separate baseline paths, repeatable sample selection and measured lag sign.
+They neither render scenes nor substitute for the completed movie audit.
+
+## Font bytes and historical receipts
+
+Exact historical receipt reuse requires the matching source checkout, recorded
+runtime and original font bytes. In a fresh checkout, use
+`python3 scripts/bootstrap.py --p3d-only --reference-fonts` to reconstruct the
+exact 74 study TTFs from the pinned WOFF2 files and checked metadata. See
+[REFERENCE-FONTS.md](../../docs/REFERENCE-FONTS.md). Normal deterministic
+conversion retains source timestamps and therefore has different file hashes.
+Create and verify a new render receipt and audit baseline in each new working
+round; never substitute historical fingerprints to conceal different inputs.

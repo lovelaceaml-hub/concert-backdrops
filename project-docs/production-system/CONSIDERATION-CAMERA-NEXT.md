@@ -1,5 +1,9 @@
 # Consideration: camera plan for the next revision
 
+## Historical planning record
+
+This page preserves the original single-frame investigation. Its "current" movie is the 18-second baseline, preserved with finishing at commit `673f68785c36b57d55d05129ee5549efe6352c60`. The subsequent camera and hand-response work lives in `tools/concert_motion_revision/` and the registered `concert-kit-consideration-v2` project. Read that package's verification and the current delivery catalog for the later outcome. The west45 angle did not work for the whole action: its starting view hid the helper, so the revision retains the original contact view and cuts to the clearer side view at original time 6.9 seconds.
+
 ## Current creative issue
 
 **The current movie is still a performance proof, not a polished hero shot. Around 7.2 to 8.1 seconds, the two translucent gold figures overlap so strongly that their torsos, heads and arms briefly read as one figure. The release becomes hard to follow.** This is a projected silhouette and camera-coverage problem. The reviewed images do not establish a physical body collision.

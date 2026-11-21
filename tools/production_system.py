@@ -128,7 +128,7 @@ def status(as_json=False):
                      "live_rehearsal_verified": song["duration"]["live_rehearsal_verified"]})
     result = {"catalog_errors": validate_catalogs(), "songs": rows,
               "start_here": "project-docs/production-system/START-HERE.md",
-              "render_projects": ["approved-light-s11", "concert-kit-consideration"],
+              "render_projects": ["approved-light-s11", "concert-kit-consideration", "concert-kit-consideration-v2"],
               "note": "Presence is not a fresh hash check. Run verify-audio before analysis or rendering."}
     if as_json:
         print(json.dumps(result, indent=2))
@@ -280,9 +280,9 @@ def export_handoff(output):
              ROOT / "project-docs/AGENTS.md", ROOT / "apps/README.md",
              ROOT / "tools/production_system.py", ROOT / "scripts/concert"]
     files += list((ROOT / "docs").rglob("*.md"))
-    for directory in ("tools/concert_kit", "tools/concert_addons", "tools/concert_review", "tools/promo_beauty_example"):
+    for directory in ("tools/concert_kit", "tools/concert_addons", "tools/concert_motion_revision", "tools/concert_review", "tools/promo_beauty_example"):
         files += list((ROOT / directory).glob("*.md"))
-    for project in ("approved-light-s11", "concert-kit-consideration"):
+    for project in ("approved-light-s11", "concert-kit-consideration", "concert-kit-consideration-v2"):
         files.append(ROOT / "projects" / project / "project.json")
     files += [p for p in SYSTEM.rglob("*") if p.is_file() and p.suffix in {".md", ".json"}]
     files = sorted({path for path in files if path.is_file()})

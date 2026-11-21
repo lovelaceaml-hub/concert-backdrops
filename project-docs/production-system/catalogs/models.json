@@ -514,15 +514,16 @@
       "provenance": "procedural_scene_with_licensed_base_motion",
       "code_only_eligible": true,
       "reuse_scope": "native_world_space",
-      "status": "implemented_study_in_review",
+      "status": "historical_baseline_technically_verified_creative_defects_recorded",
       "coordinates": {
         "units": "metres",
         "up_axis": "+Y"
       },
       "known_limits": [
-        "New original eighteen-second study; not owner-approved yet.",
-        "Captured paired action uses an independent grip reference and a purposeful final settle.",
-        "Current camera merges the figures in projection around 7.2 to 8.1 seconds. See CONSIDERATION-CAMERA-NEXT.md before promoting this to a polished hero shot."
+        "Original eighteen-second study, preserved at finishing checkpoint 673f68785c36b57d55d05129ee5549efe6352c60. Not owner-approved.",
+        "Captured paired action uses an independent grip reference and an authored final settle.",
+        "Camera merges figures in projection at original time 7.2 to 8.1 seconds. The original left arm return also jumps 0.3436 metres between two 60 fps samples near 11.52 seconds.",
+        "Use the separate kit.consideration-v2 performance for the camera and complete-pose response correction; preserve this baseline as evidence."
       ]
     },
     {
@@ -704,6 +705,36 @@
         "Most legible at middle or distant scale; close leaves and repeated stalk proportions need refinement."
       ],
       "verification": "tools/concert_addons/VERIFICATION.md"
+    },
+    {
+      "id": "kit.consideration-v2",
+      "family": "acting",
+      "source_paths": [
+        "tools/concert_motion_revision/render.py",
+        "tools/concert_motion_revision/response.py",
+        "tools/concert_motion_revision/verify.py",
+        "tools/concert_motion_revision/README.md"
+      ],
+      "entry_point": "tools.concert_motion_revision.render",
+      "provenance": "isolated_procedural_wrapper_with_licensed_base_motion",
+      "code_only_eligible": true,
+      "reuse_scope": "explicit_registered_scene_wrapper",
+      "status": "native_probe_and_numeric_checks_passed_full_render_running",
+      "coordinates": {
+        "units": "metres",
+        "up_axis": "+Y"
+      },
+      "known_limits": [
+        "Fifteen-second excerpt of original scene time 3 to 18, not a complete Song 07 film or an owner-approved output.",
+        "Uses an instance-specific complete-pose response blend, preserving prior shared contact, living hands and the original engine source.",
+        "Native camera coverage preserves contact through source6.9, then separates the rise and response. Original background transparency remains part of the established style.",
+        "Geometry/contact checks do not certify finger interlock, real-time playback or stage arrangement conformity."
+      ],
+      "project_id": "concert-kit-consideration-v2",
+      "verification": "tools/concert_motion_revision/VERIFICATION.md",
+      "continuity_evidence": "project-docs/production-system/evidence/consideration-v2-response-continuity.json",
+      "source_commit": "33a7d87e2848bf8a42e6d8132c34544d61259350",
+      "source_identity": "8b091b1940221a8f21a4bd2f8a7ab0cdd1510a90ea559c6ded9afdaf0f5e8876"
     }
   ]
 }

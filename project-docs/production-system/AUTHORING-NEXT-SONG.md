@@ -1,6 +1,6 @@
 # Authoring the next concert film
 
-The shared system can reproduce two registered studies and can provide native models, reference identities, audio verification, planning, frame recovery, encoding and technical review. A new complete song still needs authored acting, cameras, musical cues and scene integration. This guide explains where that work belongs without changing an approved reference.
+The shared system provides three explicit render registrations, native models, reference identities, audio verification, planning, frame recovery, encoding and technical review. The registrations are the approved Song 11 clarity study, the historical 18-second Consideration baseline and its separate 15-second camera and response revision. A new complete song still needs authored acting, cameras, musical cues and scene integration. This guide explains where that work belongs without changing an approved reference.
 
 ## 1. Start from the actual song record
 
@@ -61,9 +61,9 @@ Some existing models are explicitly `scene_bound` in the shared catalog. The Son
 
 ## 4. Register a new scene deliberately
 
-The two current registered projects are `approved-light-s11` and `concert-kit-consideration`. The approved adapter rejects a different recording or source identity. The current kit adapter accepts only the Consideration scene, empty shot parameters and its 18-second, 60-fps bounds. Renaming a project or replacing its audio does not author another song.
+The current registered projects are `approved-light-s11`, `concert-kit-consideration` and `concert-kit-consideration-v2`. The approved adapter rejects a different recording or source identity. The kit adapter has an explicit scene registry: the historical scene has 18-second bounds; the revised scene has 15-second bounds and a three-second source offset. Both require 60 fps, empty shot parameters and exact authored cuts. Renaming a project or replacing its audio does not author another song.
 
-For a new production, add a separate scene module and project directory. Use the current Consideration source and `docs/PIPELINE-INTEGRATION.md` as implementation references, while preserving their existing registered behavior. Extend the adapter's explicit scene registration, validation and dependency collection to cover the new module. Keep the following contracts intact:
+For a new production, add a separate scene module and project directory. Use `tools/concert_motion_revision/README.md`, its renderer wrapper and `docs/PIPELINE-INTEGRATION.md` as implementation references, while preserving the existing registered behavior. Extend the adapter's explicit scene registration, validation and dependency collection to cover the new module. Keep the following contracts intact:
 
 - `make_renderer` creates an explicit native size, frame rate, temporal sample count and isolated cache identity.
 - `frame` evaluates the requested absolute output time, with shutter samples confined to its current shot.

@@ -70,15 +70,17 @@ distribution libraries in addition to the host tools listed above:
 ```bash
 apt-get update
 apt-get install -y --no-install-recommends libegl1 libgl1 libgl1-mesa-dri libgomp1
-python3 scripts/bootstrap.py --p3d-only
-./scripts/video doctor --project concert-kit-consideration
+python3 scripts/bootstrap.py --p3d-only --reference-fonts
+./scripts/video doctor --project concert-kit-consideration-v2
 ```
 
 Use the host's normal administrator mechanism for package installation. The
 package list is drawn from the supplied CPU container recipe; distribution
 package versions are not locked. The p3d-only bootstrap recreates the locked
 Python environment, installs locked Node packages used for font sources, and
-converts the fonts. Node and npm are needed for that setup step even though the
+reconstructs the exact reference fonts when `--reference-fonts` is selected.
+See [REFERENCE-FONTS.md](REFERENCE-FONTS.md) for the checked 74-font recipe and
+normal deterministic conversion mode. Node and npm are needed for that setup step even though the
 native renderer itself does not use a browser. Git, uv, FFmpeg and FFprobe must
 already be available.
 

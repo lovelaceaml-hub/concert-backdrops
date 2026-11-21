@@ -1,0 +1,196 @@
+{
+  "schema_version": 1,
+  "checked_at_utc": "2026-11-21T02:11:27.501475+00:00",
+  "technical_passed": true,
+  "errors": [],
+  "scope": "Independent new detached checkout, newly reconstructed exact fonts, real native registered preview and direct comparison. Existing locked Python packages, host runtime and pinned WOFF2 input bytes were reused. No full bootstrap, dependency download, new-machine OS setup, second movie or artistic approval is claimed.",
+  "source": {
+    "commit": "3aaa7c5d75a01704c984b60c33cfc2a0bb807b5f",
+    "checkout": "/workspace/scratch/b9b2dfde708d/concert-repeatability-check",
+    "detached_head": true,
+    "tracked_checkout_unchanged": true,
+    "scene_identity": "8b091b1940221a8f21a4bd2f8a7ab0cdd1510a90ea559c6ded9afdaf0f5e8876",
+    "scene_source_count": 194,
+    "pipeline_input_count": 202,
+    "pipeline_input_mapping_sha256": "34bcaa95787e030d817f96d0280bf721545397ca04aa60ab97e2373bb894f46a",
+    "matches_primary_frozen_input_mapping": true,
+    "actual_cli_module": "/workspace/scratch/b9b2dfde708d/concert-repeatability-check/pipeline/cli.py",
+    "actual_scene_module": "/workspace/scratch/b9b2dfde708d/concert-repeatability-check/tools/concert_motion_revision/render.py"
+  },
+  "environment_reuse": {
+    "python_executable": "/workspace/scratch/b9b2dfde708d/concert-system/.venv/bin/python",
+    "python_version": "3.12.14",
+    "fonttools_version": "4.68.0",
+    "uv_lock_sha256": "8b765586a12c9f314c588550209634a465b825650026762fc12dc84e2ecef6fe",
+    "primary_uv_lock_sha256": "8b765586a12c9f314c588550209634a465b825650026762fc12dc84e2ecef6fe",
+    "woff2_source_directory": "/workspace/scratch/b9b2dfde708d/cinematic-motion/node_modules/@fontsource",
+    "host_ffmpeg_and_mesa_reused": true,
+    "dependency_installers_run": false
+  },
+  "fonts": {
+    "command": [
+      "/workspace/scratch/b9b2dfde708d/concert-system/.venv/bin/python",
+      "tools/setup_fonts.py",
+      "/workspace/scratch/b9b2dfde708d/cinematic-motion/node_modules/@fontsource",
+      "fonts",
+      "--reference-fonts"
+    ],
+    "catalog": "project-docs/production-system/catalogs/study-fonts.json",
+    "catalog_sha256": "44e8c577dbcd1598f0b1514fda88236cba54d3dd33fcd524ce5526b366931137",
+    "new_files_reconstructed": 74,
+    "all_expected_hashes_verified": true,
+    "font_mapping_sha256": "9c36e3a0c4fd4610696142646de9833525e6a48dadf5e2daf43b173c9b9bc09d",
+    "active_primary_fonts_unchanged_in_hash_size_and_mtime_ns": true,
+    "primary_font_manifest_before_sha256": "19f02b9b44c0ad54e927e8f4cc52740534ccd8836f1088562190910a39e37511",
+    "primary_font_manifest_after_sha256": "19f02b9b44c0ad54e927e8f4cc52740534ccd8836f1088562190910a39e37511"
+  },
+  "audio": {
+    "path": "work/concert-kit/consideration-score.wav",
+    "sha256": "0f43061d674dae3467a6a76867f8599d241532c131e7e7654502bc29f2d66f7b",
+    "bytes": 5184044,
+    "preparation": "Copied exact already-verified canonical private WAV; no decoding, gain, fades or retiming in this proof."
+  },
+  "doctor": {
+    "dependencies_ready": true,
+    "selected_renderers": [
+      "p3d-kit"
+    ],
+    "editor": "ffmpeg",
+    "full_pipeline_runtime_verified": false,
+    "runtime_validation": {
+      "browser": {
+        "status": "not_required",
+        "installed": null,
+        "runtime_validated": false,
+        "executable": null
+      },
+      "blender_render": "not_required",
+      "p3d_render": "not_probed",
+      "remotion_finish": "not_required"
+    },
+    "platform": "Linux",
+    "binaries": {
+      "python": "/workspace/scratch/b9b2dfde708d/concert-system/.venv/bin/python",
+      "ffmpeg": "/usr/bin/ffmpeg",
+      "ffprobe": "/usr/bin/ffprobe"
+    },
+    "versions": {
+      "python": "Python 3.12.14",
+      "ffmpeg": "ffmpeg version 7.1.5-0+deb13u1 Copyright (c) 2000-2026 the FFmpeg developers",
+      "ffprobe": "ffprobe version 7.1.5-0+deb13u1 Copyright (c) 2007-2026 the FFmpeg developers"
+    },
+    "python_packages": {
+      "concert-video-pipeline": "0.1.0",
+      "PyYAML": "6.0.3",
+      "numpy": "2.5.5",
+      "Pillow": "12.3.0",
+      "scipy": "1.18.1",
+      "moderngl": "5.13.0",
+      "librosa": "0.11.0",
+      "fonttools": "4.68.0",
+      "brotli": "1.2.1",
+      "soundfile": "0.13.1"
+    },
+    "delivery_capabilities": {
+      "encoders": [
+        "libx264",
+        "libx265",
+        "prores_ks"
+      ],
+      "zscale": true
+    },
+    "cloud_gpu_provider": null,
+    "paid_dispatch": "disabled",
+    "local_mac_render": "disabled by default",
+    "errors": [],
+    "warnings": [],
+    "checks": "Selected backend dependencies only. Private audio, prepared assets and actual pixels are checked during production."
+  },
+  "plan": {
+    "project_id": "concert-kit-consideration-v2",
+    "quality": "review",
+    "settings": {
+      "width": 1920,
+      "height": 1080,
+      "fps": 60,
+      "temporal_samples": 2,
+      "image_bit_depth": 8
+    },
+    "renderers": [
+      "p3d-kit"
+    ],
+    "editor": "ffmpeg",
+    "frames": 900,
+    "selected_frames": null,
+    "selected_shots": null,
+    "duration_seconds": 15.0,
+    "source_audio": "work/concert-kit/consideration-score.wav",
+    "audio_present": true,
+    "source_audio_sha256_expected": "0f43061d674dae3467a6a76867f8599d241532c131e7e7654502bc29f2d66f7b",
+    "audio_offset_seconds": 3,
+    "picture_delay_seconds": 0.0,
+    "stages": [
+      "prepare",
+      "render",
+      "assemble",
+      "qa",
+      "gallery"
+    ],
+    "output": "/workspace/scratch/b9b2dfde708d/concert-repeatability-check/work/pipeline/concert-kit-consideration-v2/review",
+    "workers": 1,
+    "checkpoint": "Checksummed atomic PNGs; matching frames are reused after interruption.",
+    "plan_only": true,
+    "cloud_gpu_provider": null,
+    "creative_approval": "No automatic user approval is recorded."
+  },
+  "native_render": {
+    "command": [
+      "/workspace/scratch/b9b2dfde708d/concert-system/.venv/bin/python",
+      "-m",
+      "pipeline.cli",
+      "--root",
+      "/workspace/scratch/b9b2dfde708d/concert-repeatability-check",
+      "produce",
+      "concert-kit-consideration-v2",
+      "--quality",
+      "review",
+      "--frames",
+      "0"
+    ],
+    "elapsed_seconds": 32.19824747900566,
+    "started_at_utc": "2026-11-21T02:10:18.172840+00:00",
+    "completed_at_utc": "2026-11-21T02:10:50.371024+00:00",
+    "exit_code": 0,
+    "frames_rendered": 1,
+    "output_frame": 0,
+    "original_visual_frame": 180,
+    "temporal_samples": 2,
+    "width": 1920,
+    "height": 1080,
+    "rgb_mode": "RGB",
+    "fresh_png": "/workspace/scratch/b9b2dfde708d/concert-repeatability-check/work/pipeline/concert-kit-consideration-v2/review/shots/contact/frames/frame_000000.png",
+    "primary_png": "/workspace/scratch/b9b2dfde708d/concert-system/work/pipeline/concert-kit-consideration-v2/review/shots/contact/frames/frame_000000.png",
+    "fresh_png_sha256": "0ebe8ac843959fd842cab8a964cb251548270eb8924a059ddf43141a88dc9e40",
+    "primary_png_sha256": "0ebe8ac843959fd842cab8a964cb251548270eb8924a059ddf43141a88dc9e40",
+    "file_bytes_identical": true,
+    "rgb_pixels_identical": true,
+    "rgb_max_absolute_error_8bit": 0,
+    "rgb_mean_absolute_error_8bit": 0.0,
+    "raw_rgb_sha256": "8ba0cd5a44c6237a02b2f32a77774f58dcec2a4401caeefd9cca5f3bb0721463",
+    "receipt_fingerprint": "a9b7330e2e301f0a385d749b1388bb28564229a0ae3a571aed8c4af44ee719f2",
+    "primary_receipt_fingerprint": "a9b7330e2e301f0a385d749b1388bb28564229a0ae3a571aed8c4af44ee719f2",
+    "receipt_sha256": "1c3ca39ae802215e00964532d4702ea23fadaf4b779c0ec8c69277943049f42b",
+    "fresh_derived_caches": "Created by this render in the new checkout; no existing derived caches were copied.",
+    "log_sha256": "8fddd40d9884133a752f392cd42ed5b199db076255805347a1da7bed60b6e0cf",
+    "worker_log_sha256": "552e812777abf155c9fa19aff3480a48c1f82a239ba955dccf75eee9b8627af2"
+  },
+  "primary_unchanged": {
+    "frozen_source_mapping_unchanged": true,
+    "font_metadata_unchanged": true
+  },
+  "limits": [
+    "One native frame does not prove every timeline time or future host is pixel-identical.",
+    "The reference font repair does not change the current movie source identity.",
+    "Fresh setup still requires the documented host tools, software EGL/Mesa and exact private source recording."
+  ]
+}
