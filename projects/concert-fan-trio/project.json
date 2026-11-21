@@ -1,0 +1,78 @@
+{
+  "schema_version": 1,
+  "project_id": "concert-fan-trio",
+  "title": "Fan and silk trio performance study",
+  "description": "Twenty seconds of original authored fan and silk performance. Available reference poster details inform broad fabric and asymmetrical staging. Reference moving footage was unavailable; this is not captured or reconstructed source choreography.",
+  "video": {
+    "width": 1920,
+    "height": 1080,
+    "fps": 60
+  },
+  "production": {
+    "cloud_gpu_provider": null,
+    "allow_local_gpu": false,
+    "allow_paid_services": false,
+    "allow_ai_generated_visuals": false,
+    "allow_stock_footage": false,
+    "random_seed": 2026,
+    "threads": 1,
+    "render_workers": 6,
+    "render_chunk_frames": 200,
+    "render_timeout_seconds": 7200
+  },
+  "quality": {
+    "draft": {
+      "width": 960,
+      "height": 540,
+      "temporal_samples": 1,
+      "image_bit_depth": 8
+    },
+    "review": {
+      "width": 1920,
+      "height": 1080,
+      "temporal_samples": 2,
+      "image_bit_depth": 8
+    },
+    "4k-check": {
+      "width": 3840,
+      "height": 2160,
+      "temporal_samples": 2,
+      "image_bit_depth": 8
+    },
+    "final": {
+      "width": 1920,
+      "height": 1080,
+      "temporal_samples": 2,
+      "image_bit_depth": 8
+    }
+  },
+  "delivery": {
+    "profile": "h264",
+    "source_transfer": "legacy_display_gamma",
+    "color_space": "rec709"
+  },
+  "style": "styles/zion-cinematic.json",
+  "audio": {
+    "source": "work/song-sources/fan-trio-score.wav",
+    "source_sha256": "b26b7ec1dd00a4c91330df5c83a47afc8c40791861a722dd91408eb246f0cd0b",
+    "offset_seconds": 0
+  },
+  "timing": {
+    "fps": 60,
+    "visual_only": true,
+    "manually_verified": false,
+    "note": "One continuous authored visual clock, frames 0 through 1199. Song 07 source interval 137.5 to 157.5 seconds, original speed, 80 ms opening and 600 ms ending fades, -1 dB gain. No ear-verified transient or instrument alignment is claimed.",
+    "events": []
+  },
+  "shots": [
+    {
+      "id": "performance",
+      "name": "Invitation, fan response and shared resolution",
+      "renderer": "p3d-kit",
+      "start_frame": 0,
+      "end_frame_exclusive": 1200,
+      "scene": "tools/concert_fan/fan_trio.py",
+      "params": {}
+    }
+  ]
+}
