@@ -81,6 +81,40 @@
     1080
   ],
   "schema_version": 1,
-  "status": "three_worker_short_batch_ensemble_continuation",
-  "temporal_samples": 2
+  "status": "three_worker_final_native_ensemble_render",
+  "temporal_samples": 2,
+  "final_master_run": {
+    "observed_utc": "2026-11-22T09:39:09.772092+00:00",
+    "session_id": 47879,
+    "schema_version": 1,
+    "mode": "ensemble",
+    "status": "running",
+    "started_utc": "2026-11-22T09:35:13.251082+00:00",
+    "command": [
+      "./scripts/video",
+      "produce",
+      "work/advanced-dance/execution/ensemble-three-workers.json",
+      "--quality",
+      "final"
+    ],
+    "execution_manifest_sha256": "a7e6f990e278fd8d37f8977e48f8f7593a7074e38cf1fbda8cd21bff83be9b8a",
+    "coordinator_wrapper_pid": 5,
+    "source_fingerprint": "ec76277c753ba288fb9a2d6634a1f45e4741747f33baad3d237e7be5ff1f272d",
+    "render_workers": 3,
+    "render_chunk_frames": 64,
+    "reused_even_frames": 960,
+    "reused_odd_frames": 2,
+    "missing_native_frames_at_start": 958,
+    "log": "work/advanced-dance/ensemble-final-render.log",
+    "scope": "Complete native 1080p60 ensemble using identical frozen picture inputs and exact existing frames."
+  },
+  "ensemble_even_proof": {
+    "status": "technical_passed",
+    "sha256": "aff63be8d82e43321449aba5dfcabc82446deea4e99cc3715e316fa6c1c9c323",
+    "bytes": 65514710,
+    "frames": 960,
+    "fps": 30,
+    "duration_seconds": 32,
+    "source_fingerprint": "ec76277c753ba288fb9a2d6634a1f45e4741747f33baad3d237e7be5ff1f272d"
+  }
 }

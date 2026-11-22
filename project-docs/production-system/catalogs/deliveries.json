@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_local_date": "2026-11-21",
+  "updated_local_date": "2026-11-22",
   "timezone": "America/Los_Angeles",
   "status": "all_ten_final_movies_and_five_support_artifacts_checked_and_saved",
   "approved_references_catalog": "project-docs/production-system/catalogs/references.json",
@@ -1161,6 +1161,16 @@
       "advanced-dance-ensemble"
     ],
     "package_status": "pending",
-    "owner_approval": "not_recorded"
+    "owner_approval": "not_recorded",
+    "ensemble_proof_review": {
+      "path": "project-docs/production-system/evidence/advanced-dance-ensemble-proof-review.json",
+      "sha256": "55fb9763b892d0f5079a6a051d63aa9fca9976ebe539f33a5dc896ea390d2483",
+      "native_window_frames": 257,
+      "decoded_overview_samples": 65,
+      "sampled_visual_blockers": 0,
+      "continuous_perceptual_review_claimed": false,
+      "owner_approval": false
+    },
+    "status": "solo_saved_ensemble_final_master_rendering"
   }
 }

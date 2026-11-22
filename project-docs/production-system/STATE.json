@@ -28,7 +28,7 @@
     "handoff": "https://drive.google.com/drive/folders/1QDGGqqkJlbovBLCthX-QChqfD8zSmK8X",
     "media": "https://drive.google.com/drive/folders/1hrk62bFIOHv2NwXvYl2bNSmp0cwBoXrr"
   },
-  "next_work": "Finish native moving proofs, inspect the recorded fast support and fan passages, render missing frames for both 1080p60 masters, save the exact revised movies and updated ten-film ZIP, then close the source and handoff through PR109.",
+  "next_work": "Finish the active ensemble final-master render, review its exact encoded cuts and fast hand passages, save the ensemble and complete updated ten-film package, and close the source and handoff through PR109. Recover the saved solo without rerendering.",
   "background_service_configured": false,
   "historical_baseline_checkpoint": "673f68785c36b57d55d05129ee5549efe6352c60",
   "render_projects": [
@@ -232,7 +232,7 @@
   },
   "active_development": {
     "name": "Advanced Dance",
-    "status": "solo_delivered_ensemble_rendering",
+    "status": "solo_saved_ensemble_final_master_rendering",
     "owner_request": "Extremely advanced high quality high pace choreography with sparkles and lights; correct awkward hand positions, anatomy and movement.",
     "integration_branch": "creative/advanced-choreography-20261121",
     "checkpoint_source_commit": "eec83de733cf89f74209b6fdb48fba9cb1b98e2d",
@@ -249,9 +249,9 @@
     "observed_remaining_repairs": [],
     "delivery_scope": "Replace films 01 and 02 in a newly named ten-film package; preserve exact delivered 03 through 10 bytes.",
     "validation_pending": [
-      "Complete ensemble proof review and its 1080p60 master",
-      "Save ensemble and complete ten-film package",
-      "Update exact saved identities and normally merge PR109"
+      "Complete missing native ensemble frames and final encoded review",
+      "Save ensemble and updated complete ten-film package",
+      "Record saved identities and normally merge PR109"
     ],
     "source_commit": "254414bc0356171f7d5ad89361c75d45fd01a407",
     "numeric_motion_sample_count": 26484,
@@ -270,9 +270,84 @@
       "blocking_visual_defects_found": false,
       "method": "Ordered native-pixel frame review across the full 32-second proof plus all 30 fps proof frames in three flagged windows. Not continuous perceptual or final60fps review."
     },
-    "progress_checkpoint_utc": "2026-11-22T09:09:57.280359+00:00",
+    "progress_checkpoint_utc": "2026-11-22T09:39:09.772092+00:00",
     "completed_films": {
       "advanced-dance-solo": "project-docs/production-system/evidence/advanced-dance-solo-delivery.json"
+    },
+    "ensemble_proof_review": {
+      "path": "project-docs/production-system/evidence/advanced-dance-ensemble-proof-review.json",
+      "sha256": "55fb9763b892d0f5079a6a051d63aa9fca9976ebe539f33a5dc896ea390d2483",
+      "native_window_frames": 257,
+      "decoded_overview_samples": 65,
+      "sampled_visual_blockers": 0,
+      "continuous_perceptual_review_claimed": false,
+      "owner_approval": false
+    },
+    "render_checkpoint": {
+      "session_id": 47879,
+      "schema_version": 1,
+      "mode": "ensemble",
+      "status": "running",
+      "started_utc": "2026-11-22T09:35:13.251082+00:00",
+      "command": [
+        "./scripts/video",
+        "produce",
+        "work/advanced-dance/execution/ensemble-three-workers.json",
+        "--quality",
+        "final"
+      ],
+      "execution_manifest_sha256": "a7e6f990e278fd8d37f8977e48f8f7593a7074e38cf1fbda8cd21bff83be9b8a",
+      "coordinator_wrapper_pid": 5,
+      "source_fingerprint": "ec76277c753ba288fb9a2d6634a1f45e4741747f33baad3d237e7be5ff1f272d",
+      "render_workers": 3,
+      "render_chunk_frames": 64,
+      "reused_even_frames": 960,
+      "reused_odd_frames": 2,
+      "missing_native_frames_at_start": 958,
+      "log": "work/advanced-dance/ensemble-final-render.log",
+      "scope": "Complete native 1080p60 ensemble using identical frozen picture inputs and exact existing frames.",
+      "observed_frames": {
+        "native_frames_written": 1059,
+        "even_frames": 960,
+        "odd_frames": 99,
+        "target": 1920,
+        "master_exists": false,
+        "stop_marker": false,
+        "current_invocation": "308c615d366e430598b8e1787845226b",
+        "current_chunks": [
+          {
+            "invocation": "308c615d366e430598b8e1787845226b",
+            "chunk": "chunk_000001",
+            "rendered": 33,
+            "requested": 64,
+            "staged": 34,
+            "last": "concert kit frame 193, temporal samples 2",
+            "log_age_seconds": 5.3,
+            "complete": false
+          },
+          {
+            "invocation": "308c615d366e430598b8e1787845226b",
+            "chunk": "chunk_000002",
+            "rendered": 31,
+            "requested": 64,
+            "staged": 31,
+            "last": "concert kit frame 317, temporal samples 2",
+            "log_age_seconds": 3.6,
+            "complete": false
+          },
+          {
+            "invocation": "308c615d366e430598b8e1787845226b",
+            "chunk": "chunk_000000",
+            "rendered": 33,
+            "requested": 64,
+            "staged": 33,
+            "last": "concert kit frame 65, temporal samples 2",
+            "log_age_seconds": 0.7,
+            "complete": false
+          }
+        ]
+      },
+      "observations_are_not_live_telemetry": true
     }
   },
   "historical_increments": [
