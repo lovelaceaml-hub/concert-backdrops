@@ -18,8 +18,8 @@
   ],
   "audio_sources_verified": 11,
   "full_rehearsal_recordings_verified": 0,
-  "current_increment": "Original fan and silk trio, distinct authored roles, finite cloth, native 4K still and repeatable CPU delivery",
-  "increment_status": "rendered_verified_saved_and_drive_readback_verified",
+  "current_increment": "Cinematic Ten: ten original twenty-second cinematic films in the established native concert p3d style",
+  "increment_status": "picture_source_frozen_film09_final_passed_and_saved_other_finals_rendering_or_queued",
   "cloud_gpu_provider": null,
   "mac_rendering_used": false,
   "new_study_creative_approval": "not_recorded",
@@ -28,7 +28,7 @@
     "handoff": "https://drive.google.com/drive/folders/1QDGGqqkJlbovBLCthX-QChqfD8zSmK8X",
     "media": "https://drive.google.com/drive/folders/1hrk62bFIOHv2NwXvYl2bNSmp0cwBoXrr"
   },
-  "next_work": "Author and review a six-second complete dance phrase with deliberate travel, weight transfer, level change, turn and recovery; improve garment/silk response and silhouette separation before crowd scale. Moving reference media can improve fidelity but is not a blocker for original work.",
+  "next_work": "Finish the other nine registered 1,200-frame finals, inspect their encoded pictures and boundaries, save exact master bytes and QA, then update delivery catalogs and the production log. Preserve the frozen picture source and valid checkpoints. No Cinematic Ten owner approval is recorded.",
   "background_service_configured": false,
   "historical_baseline_checkpoint": "673f68785c36b57d55d05129ee5549efe6352c60",
   "render_projects": [
@@ -37,21 +37,31 @@
     "concert-kit-consideration-v2",
     "concert-dance-study",
     "concert-dance-study-4k",
-    "concert-fan-trio"
+    "concert-fan-trio",
+    "cinematic-ten-01",
+    "cinematic-ten-02",
+    "cinematic-ten-03",
+    "cinematic-ten-04",
+    "cinematic-ten-05",
+    "cinematic-ten-06",
+    "cinematic-ten-07",
+    "cinematic-ten-08",
+    "cinematic-ten-09",
+    "cinematic-ten-10"
   ],
   "new_model_family_count": 9,
   "new_model_variant_count": 18,
-  "current_increment_pr": 106,
+  "current_increment_pr": 108,
   "setup_font_reconstruction_commit": "3aaa7c5d75a01704c984b60c33cfc2a0bb807b5f",
   "fresh_checkout_native_frame_verified": true,
   "fresh_checkout_scope": "New detached source checkout and exact reconstructed fonts, using existing locked Python and host tools; one native frame matched exactly.",
   "drive_instruction_files_updated_and_verified": 5,
   "drive_instruction_evidence": "project-docs/production-system/evidence/drive-instruction-updates.json",
   "private_drive_media_copies": "fourteen_cataloged_media_uploaded_and_raw_bytes_verified",
-  "new_media_files_saved": 3,
+  "new_media_files_saved": 1,
   "new_media_catalog": "project-docs/production-system/catalogs/deliveries.json",
-  "active_render_processes": 0,
-  "integration_authority": "https://github.com/lovelaceaml-hub/concert-backdrops/pull/106",
+  "active_render_processes": null,
+  "integration_authority": "https://github.com/lovelaceaml-hub/concert-backdrops/pull/108",
   "portable_handoff": {
     "status": "uploaded_and_raw_bytes_verified",
     "filename": "Concert-Production-System-Handoff-2026-11-20.zip",
@@ -130,12 +140,41 @@
   "drive_handoff_completion_evidence": "project-docs/production-system/evidence/drive-handoff-completion.json",
   "prior_drive_delivery_complete": true,
   "previous_increment": {
-    "current_increment": "Natural whole-body dance study, motion inventory, native 4K proof and resumable CPU production",
+    "current_increment": "Original fan and silk trio, distinct authored roles, finite cloth, native 4K still and repeatable CPU delivery",
     "increment_status": "rendered_verified_saved_and_drive_readback_verified",
-    "current_increment_pr": 104,
-    "integration_authority": "https://github.com/lovelaceaml-hub/concert-backdrops/pull/104",
+    "current_increment_pr": 106,
+    "integration_authority": "https://github.com/lovelaceaml-hub/concert-backdrops/pull/106",
+    "next_work": "Author and review a six-second complete dance phrase with deliberate travel, weight transfer, level change, turn and recovery; improve garment/silk response and silhouette separation before crowd scale. Moving reference media can improve fidelity but is not a blocker for original work.",
     "new_media_files_saved": 3,
-    "natural_performance_evidence": "project-docs/production-system/evidence/natural-dance-independent-qa.json"
+    "active_render_processes": 0,
+    "active_development": {
+      "name": "Original fan and silk performance adaptation",
+      "status": "original_study_rendered_reviewed_saved_and_drive_verified",
+      "owner_request": "Recreate the three supplied dance and theatrical-performance references in the approved concert style.",
+      "references": "project-docs/production-system/catalogs/performance-references.json",
+      "plan": "project-docs/production-system/REFERENCE-PERFORMANCE-PLAN.md",
+      "creative_treatment": "project-docs/production-system/REFERENCE-CREATIVE-TREATMENT.md",
+      "authoring_contract": "project-docs/production-system/PERFORMANCE-AUTHORING.md",
+      "reference_intake_tool": "tools/performance_reference",
+      "source_video_files_acquired": 0,
+      "source_moving_footage_reviewed": 0,
+      "reference_recreations_rendered": 0,
+      "next_input": "Optional continuous full-body footage for faithful source adaptation; not a requirement for continuing original work.",
+      "blender_motion_exporter_implemented": false,
+      "performance_bundle_adapter_implemented": false,
+      "intake_validation_evidence": "project-docs/production-system/evidence/performance-reference-intake-qa.json",
+      "last_delivered_increment": "Fan and silk trio PR 106; see current_increment, fan_performance and the delivery catalog.",
+      "integration_branch": "creative/fan-silk-trio-20261121",
+      "original_adaptations_rendered": 1,
+      "implemented_first_proof": "Twenty-second continuous trio with three distinct authored roles, formation travel, two held fans and simulated finite silk.",
+      "current_handoff": "project-docs/production-system/FAN-SILK-PERFORMANCE.md",
+      "next_quality_plan": "project-docs/production-system/NEXT-PERFORMANCE-UPGRADES.md",
+      "historical_proposed_first_proof": "Sixteen-second continuous trio with distinct invitation, answer and welcome roles, a formation change, and a held fan with simulated silk.",
+      "historical_intake_source_baseline": "fc337b3612f3a1d63e8f32c36c1e4c99304620c6",
+      "historical_intake_focused_tests_passed": 9
+    },
+    "historical_record": true,
+    "reference_availability_scope": "Poster-only and missing-moving-footage statements describe the earlier fan-trio increment. The three supplied screen recordings were recovered and sampled during Cinematic Ten."
   },
   "total_new_media_catalog_count": 14,
   "natural_performance": {
@@ -190,30 +229,51 @@
     "url": "https://drive.google.com/file/d/16F00sMLXIxP77F2bvffPJ9754eR93wtb/view"
   },
   "active_development": {
-    "name": "Original fan and silk performance adaptation",
-    "status": "original_study_rendered_reviewed_saved_and_drive_verified",
-    "owner_request": "Recreate the three supplied dance and theatrical-performance references in the approved concert style.",
-    "references": "project-docs/production-system/catalogs/performance-references.json",
-    "plan": "project-docs/production-system/REFERENCE-PERFORMANCE-PLAN.md",
-    "creative_treatment": "project-docs/production-system/REFERENCE-CREATIVE-TREATMENT.md",
-    "authoring_contract": "project-docs/production-system/PERFORMANCE-AUTHORING.md",
-    "reference_intake_tool": "tools/performance_reference",
-    "source_video_files_acquired": 0,
-    "source_moving_footage_reviewed": 0,
-    "reference_recreations_rendered": 0,
-    "next_input": "Optional continuous full-body footage for faithful source adaptation; not a requirement for continuing original work.",
+    "name": "Cinematic Ten",
+    "status": "picture_source_frozen_film09_final_passed_and_saved_other_finals_rendering_or_queued",
+    "owner_request": "Finish the ten cinematic quality films in the existing concert project and approved visual style; the earlier rough motion studies were rejected.",
+    "integration_branch": "creative/cinematic-ten-films",
+    "source_commit": "df4fc478116d3f0e34a85d2166097fbda55911bf",
+    "pull_request": 108,
+    "picture_source_frozen": true,
+    "project_ids": [
+      "cinematic-ten-01",
+      "cinematic-ten-02",
+      "cinematic-ten-03",
+      "cinematic-ten-04",
+      "cinematic-ten-05",
+      "cinematic-ten-06",
+      "cinematic-ten-07",
+      "cinematic-ten-08",
+      "cinematic-ten-09",
+      "cinematic-ten-10"
+    ],
+    "current_handoff": "project-docs/production-system/AI-HANDOFF.md",
+    "motion_handoff": "project-docs/production-system/CINEMATIC-TEN-MOTION.md",
+    "reference_recordings_acquired": 3,
+    "reference_recordings_sampled": 3,
+    "reference_recordings": [
+      {
+        "filename": "ScreenRecording_11-21-2026 12-19-51_1.mp4",
+        "role": "close solo fan"
+      },
+      {
+        "filename": "ScreenRecording_11-21-2026 12-20-32_1.mp4",
+        "role": "wider ensemble fan"
+      },
+      {
+        "filename": "ScreenRecording_11-21-2026 12-24-09_1.mp4",
+        "role": "illuminated globe, not dancer choreography input"
+      }
+    ],
+    "reference_provenance": "Exact source hashes and saved identities are in catalogs/motions.json authored_scores.reference_inputs and CINEMATIC-TEN-MOTION.md.",
+    "motion_provenance": "Solo and ensemble scores are original authored kinematics informed by sampled dance recordings. Calligraphy is independently authored from its brief. Native processions integrate the existing Body/Actor gait system; wing flight reuses documented articulated model helpers.",
+    "new_captured_motion_sources": 0,
+    "reference_choreographies_reconstructed": 0,
+    "previous_automatic_covered_feet_estimates_verified_this_round": false,
     "blender_motion_exporter_implemented": false,
     "performance_bundle_adapter_implemented": false,
-    "intake_validation_evidence": "project-docs/production-system/evidence/performance-reference-intake-qa.json",
-    "last_delivered_increment": "Fan and silk trio PR 106; see current_increment, fan_performance and the delivery catalog.",
-    "integration_branch": "creative/fan-silk-trio-20261121",
-    "original_adaptations_rendered": 1,
-    "implemented_first_proof": "Twenty-second continuous trio with three distinct authored roles, formation travel, two held fans and simulated finite silk.",
-    "current_handoff": "project-docs/production-system/FAN-SILK-PERFORMANCE.md",
-    "next_quality_plan": "project-docs/production-system/NEXT-PERFORMANCE-UPGRADES.md",
-    "historical_proposed_first_proof": "Sixteen-second continuous trio with distinct invitation, answer and welcome roles, a formation change, and a held fan with simulated silk.",
-    "historical_intake_source_baseline": "fc337b3612f3a1d63e8f32c36c1e4c99304620c6",
-    "historical_intake_focused_tests_passed": 9
+    "owner_approval": "not_recorded"
   },
   "historical_increments": [
     {
@@ -231,6 +291,14 @@
       "revised_pipeline_input_mapping_sha256": "34bcaa95787e030d817f96d0280bf721545397ca04aa60ab97e2373bb894f46a",
       "revised_movie_technical_passed": true,
       "revised_movie_encoded_frames_reviewed": 67
+    },
+    {
+      "current_increment": "Natural whole-body dance study, motion inventory, native 4K proof and resumable CPU production",
+      "increment_status": "rendered_verified_saved_and_drive_readback_verified",
+      "current_increment_pr": 104,
+      "integration_authority": "https://github.com/lovelaceaml-hub/concert-backdrops/pull/104",
+      "new_media_files_saved": 3,
+      "natural_performance_evidence": "project-docs/production-system/evidence/natural-dance-independent-qa.json"
     }
   ],
   "latest_drive_delivery_evidence": "project-docs/production-system/evidence/fan-trio-drive-delivery.json",
@@ -290,5 +358,111 @@
       "sha256": "4f01a3c40ec8b07da8b07c6f16d3f32d6f7fab70530fb8ed58307d5ee36e7bda",
       "url": "https://drive.google.com/file/d/16F00sMLXIxP77F2bvffPJ9754eR93wtb/view"
     }
-  ]
+  ],
+  "active_render_status": "Explicit in-session coordinator queues are running; exact process count is not inventoried in this static handoff. Consult per-film receipts and logs before resuming.",
+  "historical_delivery_fields_scope": "Existing Drive aggregate fields and their evidence retain completed earlier deliveries. Current Cinematic Ten output status is recorded separately below; its saved film09 has no new Drive-copy claim.",
+  "cinematic_ten": {
+    "source_commit": "df4fc478116d3f0e34a85d2166097fbda55911bf",
+    "pull_request": 108,
+    "project_ids": [
+      "cinematic-ten-01",
+      "cinematic-ten-02",
+      "cinematic-ten-03",
+      "cinematic-ten-04",
+      "cinematic-ten-05",
+      "cinematic-ten-06",
+      "cinematic-ten-07",
+      "cinematic-ten-08",
+      "cinematic-ten-09",
+      "cinematic-ten-10"
+    ],
+    "film_count": 10,
+    "seconds_per_film": 20,
+    "frames_per_film": 1200,
+    "width": 1920,
+    "height": 1080,
+    "fps": 60,
+    "temporal_samples": 2,
+    "delivery_profile": "h264",
+    "color": "Rec.709 SDR, limited range; existing legacy display convention",
+    "picture_source_frozen": true,
+    "completed_final_film_ids": [
+      9
+    ],
+    "rendering_or_queued_film_ids": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      10
+    ],
+    "owner_approval": "not_recorded",
+    "working_queue": "work/cinematic-ten/active-render-queue.json",
+    "working_delivery_receipt": "work/cinematic-ten/library-delivery.json",
+    "working_master_pattern": "work/pipeline/cinematic-ten-{film:02d}/final/master.mp4",
+    "working_queue_scope": "Configured coordinator lanes, not live process telemetry. Inspect per-film receipts and logs; run_suite receipts can be overwritten by another invocation.",
+    "configured_lanes": [
+      {
+        "first": [
+          9
+        ],
+        "then": [
+          1,
+          2,
+          4
+        ],
+        "gate": "film09 master and film01 proof frames 0..119 complete"
+      },
+      {
+        "first": [
+          5
+        ],
+        "then": [
+          3,
+          10
+        ],
+        "gate": "film05 master complete"
+      },
+      {
+        "sequence": [
+          6,
+          8,
+          7
+        ]
+      }
+    ],
+    "queue_policy": "Base queue has three full-film lanes with two single-thread workers each. Coordinator also started one spare-capacity single-worker bird opening job. Do not duplicate existing jobs; inspect current receipts before resuming.",
+    "review_scope": "Native keyframes and limited motion proofs were inspected, including film01 first two seconds, film03 transition and film07 flight proof. Those checks do not establish complete-film creative review for unfinished movies.",
+    "film09": {
+      "project_id": "cinematic-ten-09",
+      "title": "Celestial Clockwork",
+      "status": "final_complete_technical_passed_and_saved",
+      "pipeline_technical_passed": true,
+      "independent_technical_passed": true,
+      "owner_approval": "not_recorded",
+      "pipeline_qa": "work/pipeline/cinematic-ten-09/final/qa.json",
+      "independent_qa": "work/cinematic-ten/qa/final-masters/film09/report.json",
+      "saved_file": {
+        "filename": "09_Celestial_Clockwork_1080p60.mp4",
+        "bytes": 23457102,
+        "sha256": "b4c4956e5401ce5fe3283037a0cd7d6ca9f3f042a104d599fa94f50d6e5254b4",
+        "library_file_id": "libfile_b5e1f83e34b0819184f426415648399d",
+        "file_id": "file_000000000a1481f5a5d8fe96547b6436",
+        "version": 0,
+        "status": "saved",
+        "url": "https://chatgpt.com/library?file_id=libfile_b5e1f83e34b0819184f426415648399d&account_id=personal"
+      }
+    },
+    "additional_partial_job": {
+      "project_id": "cinematic-ten-07",
+      "frames": "0:300",
+      "workers": 1,
+      "status": "started_by_coordinator_completion_not_asserted",
+      "purpose": "Reuse the first 300 final bird frames when its full-film lane begins."
+    }
+  }
 }

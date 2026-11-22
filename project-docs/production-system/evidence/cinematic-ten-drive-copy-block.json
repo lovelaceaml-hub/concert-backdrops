@@ -1,0 +1,13 @@
+{
+  "attempted_action": "Copy completed film09 to the existing Production Studies Drive folder",
+  "filename": "09_Celestial_Clockwork_1080p60.mp4",
+  "sha256": "b4c4956e5401ce5fe3283037a0cd7d6ca9f3f042a104d599fa94f50d6e5254b4",
+  "destination_folder_id": "1hrk62bFIOHv2NwXvYl2bNSmp0cwBoXrr",
+  "outcome": "automatic_approval_review_rejected",
+  "reason": "The review could not verify destination ownership/sharing and did not find explicit user authorization for disclosing this final movie to that Drive destination.",
+  "drive_file_created": false,
+  "retry_attempted": false,
+  "safer_delivery": "Completed movies are preserved as exact saved ChatGPT files and provided as direct downloads. Rendering and the ten-film package continue.",
+  "library_file_id": "libfile_b5e1f83e34b0819184f426415648399d",
+  "scope": "Only film09 was attempted; no new film was uploaded to Drive in this round."
+}
