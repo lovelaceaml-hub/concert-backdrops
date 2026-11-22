@@ -1416,5 +1416,96 @@
         }
       }
     }
+  },
+  "advanced_dance": {
+    "source_commit": "254414bc0356171f7d5ad89361c75d45fd01a407",
+    "document": "project-docs/production-system/ADVANCED-DANCE.md",
+    "module_guide": "tools/advanced_dance/README.md",
+    "scope": "Two complete original dance performances, based on inspected moving reference pace and gesture, with authored feet and finger articulation.",
+    "entries": [
+      {
+        "id": "advanced-dance-solo",
+        "film_number": 1,
+        "name": "Silk in Light",
+        "cast_count": 1
+      },
+      {
+        "id": "advanced-dance-ensemble",
+        "film_number": 2,
+        "name": "Petals in Motion",
+        "cast_count": 5
+      }
+    ],
+    "per_performer": {
+      "duration_seconds": 32,
+      "frame_count": 1920,
+      "fps": 60,
+      "musical_counts": 64,
+      "authored_step_events": 96,
+      "connected_phrases": 8,
+      "complete_turns": 6,
+      "turning_runs": 2,
+      "active_coda": true
+    },
+    "repair_sources": [
+      "tools/advanced_dance/score.py",
+      "tools/advanced_dance/anatomy.py",
+      "tools/advanced_dance/costume.py"
+    ],
+    "audit_sources": [
+      "tools/advanced_dance/qa.py",
+      "tools/advanced_dance/cast_qa.py",
+      "tools/advanced_dance/cloth_qa.py"
+    ],
+    "numeric_status": "zero_errors; six_intentional_fast_hand_review_flags_retained",
+    "visual_status": "scoped_native_proof_and_final_encoded_reviews_complete",
+    "delivery_status": "both_movies_and_complete_ten_film_package_saved",
+    "creative_approval": "not_recorded",
+    "reference_motion_reconstructed": false,
+    "covered_reference_feet_measured": false,
+    "live_rehearsal_conformance_verified": false,
+    "final_movie_evidence": {
+      "solo": {
+        "mode": "solo",
+        "master_sha256": "8f02ee2a72a128198771cfb8f3d3dabc0b90716abdb4c028d19fa462b6a6edac",
+        "bytes": 57396334,
+        "source_fingerprint": "437e7420ab538baf3608b879ca371a335ffbbaa09e77444cce7103485b5801ed",
+        "technical_passed": true,
+        "native_frames": 1920,
+        "duration_seconds": 32,
+        "fps": 60,
+        "final_review": {
+          "path": "work/advanced-dance/qa/final/independent-solo-final-encoded-review.json",
+          "sha256": "d923351a3dd1390d6bb0f05abebe6dba4600aec87746b92ecd9ddf627e34a4b2",
+          "bytes": 8935,
+          "include_full_json_in_final_package": true
+        },
+        "distinct_decoded_frames": 150,
+        "inspected_sheets": 29,
+        "sampled_visual_blockers": 0,
+        "owner_approval": false
+      },
+      "ensemble": {
+        "mode": "ensemble",
+        "master_sha256": "8bedc48bc2586d903f5aefcb8bfea89ecad58359326ffdc27f5988b0f573540d",
+        "bytes": 76939037,
+        "source_fingerprint": "ec76277c753ba288fb9a2d6634a1f45e4741747f33baad3d237e7be5ff1f272d",
+        "technical_passed": true,
+        "native_frames": 1920,
+        "duration_seconds": 32,
+        "fps": 60,
+        "final_review": {
+          "path": "work/advanced-dance/qa/final/independent-ensemble-final-encoded-review.json",
+          "sha256": "4da1581fee14ac24821327c1e254ad6217352be061c6ea6bcd54f07859204bb0",
+          "bytes": 25441,
+          "include_full_json_in_final_package": true
+        },
+        "distinct_decoded_frames": 135,
+        "inspected_sheets": 22,
+        "sampled_visual_blockers": 0,
+        "owner_approval": false
+      }
+    },
+    "saved_delivery_evidence": "project-docs/production-system/evidence/advanced-dance-final-delivery.json"
   }
 }

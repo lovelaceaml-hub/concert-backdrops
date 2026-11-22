@@ -1,0 +1,1600 @@
+{
+  "schema_version": 1,
+  "recorded_utc": "2026-11-22T10:15:17.909206+00:00",
+  "increment": "advanced-dance",
+  "status": "numeric_checks_and_scoped_final_movie_reviews_complete",
+  "picture_source": {
+    "commit": "254414bc0356171f7d5ad89361c75d45fd01a407",
+    "frozen_inputs_report": "frozen_picture_inputs",
+    "input_count": 236,
+    "source_map_sha256": "86bfa6a183ea85bef15fa6e986f257ae9b69b844c458156aa25c82cc30b01f8b",
+    "actual_frozen_file_bytes_verified": true,
+    "selected_source_sha256": {
+      "tools/advanced_dance/score.py": "88f17b2e21aa7520edab5bb2ff29aa0a87c50fa854bbf33ed3864797258ace5d",
+      "tools/advanced_dance/anatomy.py": "759b90615a18ae51582e6d5269d321bfb40db2ec15af211abe4a8e9b0b59e43b",
+      "tools/advanced_dance/costume.py": "2a7bfd24a4b899a281a66bc7f8ca72017b23dafcfea095be6f2534daf0baa931",
+      "tools/advanced_dance/props.py": "1f9cf399193aca21574fed947d654d4d66b3777b50d0ae2c656431c96727010c",
+      "tools/advanced_dance/cache.py": "6a2c7f5c287ce3c8f9e770b6259911de74251a758e5de0969c8908dbb83c668f",
+      "tools/advanced_dance/clock.json": "67634ee9841878f7030a3482d195fd218dcc0eacd5b1a5d18bc6fd7c723aa9a9"
+    },
+    "kinematic_input_count": 30,
+    "kinematic_source_map_sha256": "d343671c7f5d8b9d118091b99dad4c8bb15cd04eaedbbf76eed4c42e59e26185"
+  },
+  "outcome": {
+    "performers": 6,
+    "duration_seconds_per_film": 32,
+    "fps": 60,
+    "output_frames_per_film": 1920,
+    "kinematic_samples": 26484,
+    "numeric_motion_errors": 0,
+    "retained_motion_review_flags": 6,
+    "cloth_snapshot_states": 5772,
+    "cloth_render_interpolation_samples": 26484,
+    "cloth_numeric_failures": 0,
+    "ensemble_body_proxy_issues": 0,
+    "ensemble_fan_other_body_proxy_issues": 0,
+    "native_cache_frame_comparison": "passed",
+    "exact_fan_trail_caches": 2,
+    "full_motion_visual_review": "Dense ordered windows and full-duration sampled overviews complete",
+    "final_movie_completion_claimed": true,
+    "final_encoded_movie_validation": "Both exact 1080p60 masters technically passed and sampled visually",
+    "owner_approval": false,
+    "final_movies": {
+      "solo": {
+        "mode": "solo",
+        "master_sha256": "8f02ee2a72a128198771cfb8f3d3dabc0b90716abdb4c028d19fa462b6a6edac",
+        "bytes": 57396334,
+        "source_fingerprint": "437e7420ab538baf3608b879ca371a335ffbbaa09e77444cce7103485b5801ed",
+        "technical_passed": true,
+        "native_frames": 1920,
+        "duration_seconds": 32,
+        "fps": 60,
+        "final_review": {
+          "path": "work/advanced-dance/qa/final/independent-solo-final-encoded-review.json",
+          "sha256": "d923351a3dd1390d6bb0f05abebe6dba4600aec87746b92ecd9ddf627e34a4b2",
+          "bytes": 8935,
+          "include_full_json_in_final_package": true
+        },
+        "distinct_decoded_frames": 150,
+        "inspected_sheets": 29,
+        "sampled_visual_blockers": 0,
+        "owner_approval": false
+      },
+      "ensemble": {
+        "mode": "ensemble",
+        "master_sha256": "8bedc48bc2586d903f5aefcb8bfea89ecad58359326ffdc27f5988b0f573540d",
+        "bytes": 76939037,
+        "source_fingerprint": "ec76277c753ba288fb9a2d6634a1f45e4741747f33baad3d237e7be5ff1f272d",
+        "technical_passed": true,
+        "native_frames": 1920,
+        "duration_seconds": 32,
+        "fps": 60,
+        "final_review": {
+          "path": "work/advanced-dance/qa/final/independent-ensemble-final-encoded-review.json",
+          "sha256": "4da1581fee14ac24821327c1e254ad6217352be061c6ea6bcd54f07859204bb0",
+          "bytes": 25441,
+          "include_full_json_in_final_package": true
+        },
+        "distinct_decoded_frames": 135,
+        "inspected_sheets": 22,
+        "sampled_visual_blockers": 0,
+        "owner_approval": false
+      }
+    }
+  },
+  "source_scope": {
+    "kinematics": "The six source-hash maps and startup costume hashes are retained exactly as recorded. The kinematic audit evaluates score, anatomy, clock, rig asset and engine final FK, and does not simulate cloth. No startup hash was replaced with a later file hash in this ledger.",
+    "cloth": "All six final cloth reports and their summary match the complete frozen 236-input picture source map. Saved cloth states and actual renderer-time interpolations are separately checked.",
+    "anatomy_history": "Historical repair results retain their original earlier score hash and limited sample scope. They are regression evidence, not claims about every final film frame.",
+    "numeric_pass": "All blocking numeric checks passed. The original per-role status remains review_required for deliberately fast authored hand motion until visual assessment is recorded."
+  },
+  "kinematics": {
+    "summary_report": "kinematic_summary",
+    "status_as_recorded": "review_required",
+    "sampling": "Every frame plus backward p3d shutter samples, endpoint and declared boundary probes.",
+    "samples_per_performer": 4414,
+    "temporal_samples": 2,
+    "shutter_fraction": 0.35,
+    "endpoint_capture_states": 1921,
+    "units": "Distances in meters, angles in degrees; each extremum retains its own reported units.",
+    "repair_tolerances": {
+      "ankle_error_m": 0.004,
+      "support_drift_m": 0.001,
+      "support_rotation_deg": 0.5,
+      "floor_penetration_m": 0.003,
+      "support_sole_gap_m": 0.015,
+      "bone_length_error_m": 2e-05,
+      "hinge_reversal_deg": 0.5,
+      "elbow_flex_deg": 150.0,
+      "knee_flex_deg": 155.0,
+      "wrist_local_rotation_deg": 55.0,
+      "prop_attachment_error_m": 0.002,
+      "palm_speed_review_m_s": 4.5,
+      "wrist_speed_review_deg_s": 900.0,
+      "wrist_acceleration_review_deg_s2": 22000.0,
+      "bend_normal_step_review_deg": 38.0,
+      "capsule_penetration_review_m": 0.012,
+      "authored_palm_error_review_m": 0.02,
+      "ankle_axial_twist_review_deg": 45.0,
+      "support_pelvis_yaw_review_deg": 75.0
+    },
+    "aggregate_extrema": {
+      "ankle_target_error": {
+        "performance": "solo0",
+        "aggregation": "maximum",
+        "value": 1.4063045318619816e-06,
+        "units": "m",
+        "time_seconds": 17.3166666667,
+        "part": "L"
+      },
+      "support_drift": {
+        "performance": "ensemble4",
+        "aggregation": "maximum",
+        "value": 2.391654643720554e-15,
+        "units": "m",
+        "time_seconds": 9.8315209001,
+        "part": "R"
+      },
+      "support_rotation": {
+        "performance": "solo0",
+        "aggregation": "maximum",
+        "value": 2.4148365394514667e-06,
+        "units": "deg",
+        "time_seconds": 8.9677672312,
+        "part": "R"
+      },
+      "support_sole_gap": {
+        "performance": "ensemble1",
+        "aggregation": "maximum",
+        "value": 2.6193447411060333e-10,
+        "units": "m",
+        "time_seconds": -0.0029166667,
+        "part": "L"
+      },
+      "bone_length_error": {
+        "performance": "ensemble3",
+        "aggregation": "maximum",
+        "value": 1.5265566588595902e-15,
+        "units": "m",
+        "time_seconds": 23.7,
+        "part": "lowerarm01.L"
+      },
+      "elbow_flex_max": {
+        "performance": "ensemble2",
+        "aggregation": "maximum",
+        "value": 137.0270936789237,
+        "units": "deg",
+        "time_seconds": 13.11375,
+        "part": "L"
+      },
+      "knee_flex_max": {
+        "performance": "ensemble0",
+        "aggregation": "maximum",
+        "value": 123.85430815741294,
+        "units": "deg",
+        "time_seconds": 13.05,
+        "part": "L"
+      },
+      "wrist_local_rotation": {
+        "performance": "ensemble2",
+        "aggregation": "maximum",
+        "value": 9.63610676038332,
+        "units": "deg",
+        "time_seconds": 1.4166666667,
+        "part": "L"
+      },
+      "authored_palm_error": {
+        "performance": "ensemble4",
+        "aggregation": "maximum",
+        "value": 0.0008651753448451012,
+        "units": "m",
+        "time_seconds": 22.4333333333,
+        "part": "L"
+      },
+      "prop_attachment_error": {
+        "performance": "ensemble4",
+        "aggregation": "maximum",
+        "value": 1.4224725733355617e-14,
+        "units": "m",
+        "time_seconds": 4.5,
+        "part": "R-fan"
+      },
+      "gesture_envelope_correction": {
+        "performance": "ensemble2",
+        "aggregation": "maximum",
+        "value": 0.12135555792452032,
+        "units": "m",
+        "time_seconds": 15.7804166667,
+        "part": "R"
+      },
+      "wrist_rotation_speed": {
+        "performance": "solo0",
+        "aggregation": "maximum",
+        "value": 834.0109426978436,
+        "units": "deg/s",
+        "time_seconds": 23.95,
+        "part": "L"
+      },
+      "wrist_rotation_acceleration": {
+        "performance": "ensemble4",
+        "aggregation": "maximum",
+        "value": 7166.113426697808,
+        "units": "deg/s2",
+        "time_seconds": 21.9333333333,
+        "part": "R"
+      },
+      "foot_sole_height": {
+        "performance": "ensemble2",
+        "aggregation": "minimum",
+        "value": -1.0186340659856796e-10,
+        "units": "m",
+        "time_seconds": -0.0029166667,
+        "part": "L"
+      },
+      "hand_body_clearance": {
+        "performance": "solo0",
+        "aggregation": "minimum",
+        "value": 0.08222233179499959,
+        "units": "m",
+        "time_seconds": 12.8833333333,
+        "part": "L"
+      },
+      "prop_body_clearance": {
+        "performance": "ensemble0",
+        "aggregation": "minimum",
+        "value": -0.0037594534631644333,
+        "units": "m",
+        "time_seconds": 20.2166666667,
+        "part": "R-fan"
+      }
+    },
+    "performers": [
+      {
+        "performance": "solo0",
+        "report": "motion_solo0",
+        "status_as_recorded": "review_required",
+        "samples": 4414,
+        "numeric_errors": 0,
+        "review_flags": 1,
+        "actor_as_recorded": {
+          "height_m": 1.6600000000000001,
+          "build": 0.96,
+          "origin": [
+            0.0,
+            0.0,
+            0.14
+          ],
+          "seed": 2401.0,
+          "mode": "solo",
+          "role": 0
+        },
+        "fk_capture": "capture_solo0",
+        "fk_capture_states": 1921,
+        "observed_costume_sha256_at_audit_startup": "2a7bfd24a4b899a281a66bc7f8ca72017b23dafcfea095be6f2534daf0baa931",
+        "source_observation_as_recorded": "Audit startup, before cast creation; not relabeled to later files.",
+        "captured_source_manifest_sha256": "bffdbc2974b52dad3dce363983acafc05b7b8eea7133671319243d8def575774",
+        "kinematic_inputs_match_frozen_picture": true,
+        "maximum_final_palm_error_m": 0.0005844927162313133,
+        "maximum_local_wrist_rotation_deg": 9.627585595660985
+      },
+      {
+        "performance": "ensemble0",
+        "report": "motion_ensemble0",
+        "status_as_recorded": "review_required",
+        "samples": 4414,
+        "numeric_errors": 0,
+        "review_flags": 1,
+        "actor_as_recorded": {
+          "height_m": 1.6600000000000001,
+          "build": 0.96,
+          "origin": [
+            -3.3,
+            0.0,
+            -2.9
+          ],
+          "seed": 2401.0,
+          "mode": "ensemble",
+          "role": 0,
+          "scale": 1.0,
+          "frame_is_none": true,
+          "stoop": 0.0,
+          "life": false,
+          "rig_arrays_sha256": "65a7b947027d6f9c47bb9b9576c10b5c07075ce4a12524149c6905f738bfefd4"
+        },
+        "fk_capture": "capture_ensemble0",
+        "fk_capture_states": 1921,
+        "observed_costume_sha256_at_audit_startup": "2a7bfd24a4b899a281a66bc7f8ca72017b23dafcfea095be6f2534daf0baa931",
+        "source_observation_as_recorded": "Audit startup, before cast creation; not relabeled to later files.",
+        "captured_source_manifest_sha256": "2968f8cc43f2bf22ea696ccedd633c6b44ae9e9ee79e454ebfc6c52eb24f8f36",
+        "kinematic_inputs_match_frozen_picture": true,
+        "maximum_final_palm_error_m": 0.0008307128681162005,
+        "maximum_local_wrist_rotation_deg": 9.627752320360132
+      },
+      {
+        "performance": "ensemble1",
+        "report": "motion_ensemble1",
+        "status_as_recorded": "review_required",
+        "samples": 4414,
+        "numeric_errors": 0,
+        "review_flags": 1,
+        "actor_as_recorded": {
+          "height_m": 1.6720000000000002,
+          "build": 0.968,
+          "origin": [
+            -1.65,
+            0.0,
+            -1.1
+          ],
+          "seed": 2442.0,
+          "mode": "ensemble",
+          "role": 1
+        },
+        "fk_capture": "capture_ensemble1",
+        "fk_capture_states": 1921,
+        "observed_costume_sha256_at_audit_startup": "2a7bfd24a4b899a281a66bc7f8ca72017b23dafcfea095be6f2534daf0baa931",
+        "source_observation_as_recorded": "Audit startup, before cast creation; not relabeled to later files.",
+        "captured_source_manifest_sha256": "bffdbc2974b52dad3dce363983acafc05b7b8eea7133671319243d8def575774",
+        "kinematic_inputs_match_frozen_picture": true,
+        "maximum_final_palm_error_m": 0.0005872345443061242,
+        "maximum_local_wrist_rotation_deg": 9.621354084265679
+      },
+      {
+        "performance": "ensemble2",
+        "report": "motion_ensemble2",
+        "status_as_recorded": "review_required",
+        "samples": 4414,
+        "numeric_errors": 0,
+        "review_flags": 1,
+        "actor_as_recorded": {
+          "height_m": 1.6840000000000002,
+          "build": 0.976,
+          "origin": [
+            0.0,
+            0.0,
+            0.4
+          ],
+          "seed": 2483.0,
+          "mode": "ensemble",
+          "role": 2,
+          "scale": 1.0,
+          "frame_is_none": true,
+          "stoop": 0.0,
+          "life": false,
+          "rig_arrays_sha256": "00d1dda77df4a0286c2f15664e52f672789e5fba02df41cbe38a50e28a7a76e1"
+        },
+        "fk_capture": "capture_ensemble2",
+        "fk_capture_states": 1921,
+        "observed_costume_sha256_at_audit_startup": "2a7bfd24a4b899a281a66bc7f8ca72017b23dafcfea095be6f2534daf0baa931",
+        "source_observation_as_recorded": "Audit startup, before cast creation; not relabeled to later files.",
+        "captured_source_manifest_sha256": "73f344c6c0f61449861b04c19f5429cc0ce7d590f0b1feeb6e6a4b6eb1b1fa94",
+        "kinematic_inputs_match_frozen_picture": true,
+        "maximum_final_palm_error_m": 0.0005965951967456555,
+        "maximum_local_wrist_rotation_deg": 9.63610676038332
+      },
+      {
+        "performance": "ensemble3",
+        "report": "motion_ensemble3",
+        "status_as_recorded": "review_required",
+        "samples": 4414,
+        "numeric_errors": 0,
+        "review_flags": 1,
+        "actor_as_recorded": {
+          "height_m": 1.6600000000000001,
+          "build": 0.984,
+          "origin": [
+            1.65,
+            0.0,
+            -1.1
+          ],
+          "seed": 2524.0,
+          "mode": "ensemble",
+          "role": 3
+        },
+        "fk_capture": "capture_ensemble3",
+        "fk_capture_states": 1921,
+        "observed_costume_sha256_at_audit_startup": "2a7bfd24a4b899a281a66bc7f8ca72017b23dafcfea095be6f2534daf0baa931",
+        "source_observation_as_recorded": "Audit startup, before cast creation; not relabeled to later files.",
+        "captured_source_manifest_sha256": "bffdbc2974b52dad3dce363983acafc05b7b8eea7133671319243d8def575774",
+        "kinematic_inputs_match_frozen_picture": true,
+        "maximum_final_palm_error_m": 0.0005824496641947735,
+        "maximum_local_wrist_rotation_deg": 9.62109679830264
+      },
+      {
+        "performance": "ensemble4",
+        "report": "motion_ensemble4",
+        "status_as_recorded": "review_required",
+        "samples": 4414,
+        "numeric_errors": 0,
+        "review_flags": 1,
+        "actor_as_recorded": {
+          "height_m": 1.6720000000000002,
+          "build": 0.992,
+          "origin": [
+            3.3,
+            0.0,
+            -2.9
+          ],
+          "seed": 2565.0,
+          "mode": "ensemble",
+          "role": 4
+        },
+        "fk_capture": "capture_ensemble4",
+        "fk_capture_states": 1921,
+        "observed_costume_sha256_at_audit_startup": "2a7bfd24a4b899a281a66bc7f8ca72017b23dafcfea095be6f2534daf0baa931",
+        "source_observation_as_recorded": "Audit startup, before cast creation; not relabeled to later files.",
+        "captured_source_manifest_sha256": "bffdbc2974b52dad3dce363983acafc05b7b8eea7133671319243d8def575774",
+        "kinematic_inputs_match_frozen_picture": true,
+        "maximum_final_palm_error_m": 0.0008651753448451012,
+        "maximum_local_wrist_rotation_deg": 9.627681805586883
+      }
+    ],
+    "review_flags": [
+      {
+        "performance": "solo0",
+        "severity": "review",
+        "check": "palm_speed",
+        "time_seconds": 9.4833333333,
+        "part": "L",
+        "value": 6.884069249443202,
+        "threshold": 4.5,
+        "units": "m/s",
+        "message": "Inspect the fastest hand passage at full speed.",
+        "disposition": "pending_visual_review_of_authored_fast_motion"
+      },
+      {
+        "performance": "ensemble0",
+        "severity": "review",
+        "check": "palm_speed",
+        "time_seconds": 24.4666666667,
+        "part": "L",
+        "value": 6.185167743171342,
+        "threshold": 4.5,
+        "units": "m/s",
+        "message": "Inspect the fastest hand passage at full speed.",
+        "disposition": "pending_visual_review_of_authored_fast_motion"
+      },
+      {
+        "performance": "ensemble1",
+        "severity": "review",
+        "check": "palm_speed",
+        "time_seconds": 24.4666666667,
+        "part": "L",
+        "value": 6.212033015572131,
+        "threshold": 4.5,
+        "units": "m/s",
+        "message": "Inspect the fastest hand passage at full speed.",
+        "disposition": "pending_visual_review_of_authored_fast_motion"
+      },
+      {
+        "performance": "ensemble2",
+        "severity": "review",
+        "check": "palm_speed",
+        "time_seconds": 25.1833333333,
+        "part": "R",
+        "value": 6.889610026229614,
+        "threshold": 4.5,
+        "units": "m/s",
+        "message": "Inspect the fastest hand passage at full speed.",
+        "disposition": "pending_visual_review_of_authored_fast_motion"
+      },
+      {
+        "performance": "ensemble3",
+        "severity": "review",
+        "check": "palm_speed",
+        "time_seconds": 25.1833333333,
+        "part": "R",
+        "value": 6.868941178930143,
+        "threshold": 4.5,
+        "units": "m/s",
+        "message": "Inspect the fastest hand passage at full speed.",
+        "disposition": "pending_visual_review_of_authored_fast_motion"
+      },
+      {
+        "performance": "ensemble4",
+        "severity": "review",
+        "check": "palm_speed",
+        "time_seconds": 25.1833333333,
+        "part": "R",
+        "value": 6.934944931153914,
+        "threshold": 4.5,
+        "units": "m/s",
+        "message": "Inspect the fastest hand passage at full speed.",
+        "disposition": "pending_visual_review_of_authored_fast_motion"
+      }
+    ],
+    "metric_interpretation": {
+      "authored_palm_error": "Actual final solved palm miss relative to the fitted reachable cue.",
+      "gesture_envelope_correction": "Distance from the raw directional cue to its smooth fitted reach envelope; not a final palm miss.",
+      "ik_wrist_goal_projection": "Internal virtual iterative wrist-goal projection, not a physical hand displacement; not used as the final hand-error claim."
+    },
+    "reported_regression_suite": {
+      "module": "tests.test_advanced_dance_qa",
+      "count": 13,
+      "passed": true
+    }
+  },
+  "ensemble_clearance": {
+    "report": "cast_clearance",
+    "status": "proxy_clearance_pass",
+    "captured_states": 1921,
+    "body_proxy_pairs": 10,
+    "fan_other_body_pairs": 40,
+    "body_issues": 0,
+    "fan_other_body_issues": 0,
+    "minimum_body_proxy_clearance": {
+      "value": 0.5738883089828071,
+      "units": "m",
+      "time_seconds": 10.7833333333,
+      "part": "hand / hand",
+      "performers": [
+        "ensemble1",
+        "ensemble2"
+      ]
+    },
+    "minimum_fan_other_body_clearance": {
+      "source_performer": "ensemble2",
+      "side": "R",
+      "target_performer": "ensemble1",
+      "minimum_clearance_m": 0.20434494656163454,
+      "time_seconds": 10.7833333333,
+      "body_group": "hand"
+    },
+    "scope": [
+      "Every captured frame, conservative body capsules, not full mesh or cloth collision.",
+      "Actual diagnostic fan surface against other bodies' existing capsule proxies on every captured frame."
+    ],
+    "fan_to_fan_overlap_checked": false,
+    "cloth_interaction_checked": false,
+    "dense_own_fan_probe": {
+      "report": "dense_own_fan_probe",
+      "probe_count": 12,
+      "scope": "Actual rendered pleated fan particle surface, sampled at the coarser full-clip audit minimum, against torso/head capsule proxies. This is not full body mesh collision validation.",
+      "minimum_observed_signed_clearance": {
+        "role": "ensemble0",
+        "side": "R",
+        "time_seconds": 20.2166666667,
+        "rendered_surface_points": 6500,
+        "minimum_clearance_m": -0.004870042463928109,
+        "body_group": "head"
+      },
+      "interpretation": "The small negative owner-head capsule distance remains below the 12 mm automatic review trigger. Capsule proxies do not establish mesh intersection; this time remains a visual-review target."
+    }
+  },
+  "cloth": {
+    "summary_report": "cloth_summary",
+    "status": "passed",
+    "snapshot_rate_hz": 30,
+    "solver_rate_hz": 120,
+    "simulated_vertices_per_performer": 640,
+    "snapshot_states_per_performer": 962,
+    "renderer_time_samples_per_performer": 4414,
+    "limits": {
+      "p99_edge_extension": 0.15,
+      "maximum_edge_extension": 0.35,
+      "minimum_height_m": -0.001
+    },
+    "extension_units": "Dimensionless fractional increase from the cloth solver rest-edge length; 0.15 means 15 percent extension.",
+    "maximum_snapshot_p99_extension": 0.10265178206666256,
+    "maximum_rendered_p99_extension": 0.11598832663473371,
+    "maximum_edge_extension": 0.25415636725809554,
+    "minimum_height_m": 0.011999999172985554,
+    "new_physics_steps_during_audit": 0,
+    "performers": [
+      {
+        "performance": "solo0",
+        "report": "cloth_solo0",
+        "status": "passed",
+        "cache": "cloth_cache_solo0",
+        "motion_key": "093e49bfeeabaddda7a85b2e32c2d3c0de7bd0e79bcd2c129ecf86e0d4fd24f5",
+        "snapshot_count": 962,
+        "snapshot_failures": 0,
+        "snapshot_maximum_p99_edge_extension": 0.10265178206666256,
+        "snapshot_maximum_edge_extension": 0.25415636725809554,
+        "render_sample_count": 4414,
+        "render_sample_failures": 0,
+        "render_maximum_p99_edge_extension": 0.10778094057213433,
+        "render_maximum_edge_extension": 0.25415636725809554,
+        "minimum_height_m": 0.012000000104308128,
+        "full_picture_source_map_matches_frozen_inputs": true
+      },
+      {
+        "performance": "ensemble0",
+        "report": "cloth_ensemble0",
+        "status": "passed",
+        "cache": "cloth_cache_ensemble0",
+        "motion_key": "b9305c23317e8a5f881c4b001d5eb566f679600a3c0f50336f0a1c9fa8dc3e30",
+        "snapshot_count": 962,
+        "snapshot_failures": 0,
+        "snapshot_maximum_p99_edge_extension": 0.09999411542835605,
+        "snapshot_maximum_edge_extension": 0.249944843249283,
+        "render_sample_count": 4414,
+        "render_sample_failures": 0,
+        "render_maximum_p99_edge_extension": 0.10800520426917883,
+        "render_maximum_edge_extension": 0.249944843249283,
+        "minimum_height_m": 0.012000000104308128,
+        "full_picture_source_map_matches_frozen_inputs": true
+      },
+      {
+        "performance": "ensemble1",
+        "report": "cloth_ensemble1",
+        "status": "passed",
+        "cache": "cloth_cache_ensemble1",
+        "motion_key": "e63f17c2519041a6d10b235ac96cdab1bcbf4f7caa9638e5aa6f08019db65aa9",
+        "snapshot_count": 962,
+        "snapshot_failures": 0,
+        "snapshot_maximum_p99_edge_extension": 0.09999729903551006,
+        "snapshot_maximum_edge_extension": 0.249942257236216,
+        "render_sample_count": 4414,
+        "render_sample_failures": 0,
+        "render_maximum_p99_edge_extension": 0.1068952776802038,
+        "render_maximum_edge_extension": 0.249942257236216,
+        "minimum_height_m": 0.012000000104308128,
+        "full_picture_source_map_matches_frozen_inputs": true
+      },
+      {
+        "performance": "ensemble2",
+        "report": "cloth_ensemble2",
+        "status": "passed",
+        "cache": "cloth_cache_ensemble2",
+        "motion_key": "2e89ecd322464466966906961358a4fbafe75bb40de5225b2d5d275313a9e688",
+        "snapshot_count": 962,
+        "snapshot_failures": 0,
+        "snapshot_maximum_p99_edge_extension": 0.10168358865921504,
+        "snapshot_maximum_edge_extension": 0.24987283708184704,
+        "render_sample_count": 4414,
+        "render_sample_failures": 0,
+        "render_maximum_p99_edge_extension": 0.11598832663473371,
+        "render_maximum_edge_extension": 0.24987283708184704,
+        "minimum_height_m": 0.011999999172985554,
+        "full_picture_source_map_matches_frozen_inputs": true
+      },
+      {
+        "performance": "ensemble3",
+        "report": "cloth_ensemble3",
+        "status": "passed",
+        "cache": "cloth_cache_ensemble3",
+        "motion_key": "ac0dc0213c16a5d08669c769cbd052c50c5ccdc98297bccc0548a30aa28ed080",
+        "snapshot_count": 962,
+        "snapshot_failures": 0,
+        "snapshot_maximum_p99_edge_extension": 0.09996760179708211,
+        "snapshot_maximum_edge_extension": 0.24995902600274955,
+        "render_sample_count": 4414,
+        "render_sample_failures": 0,
+        "render_maximum_p99_edge_extension": 0.10918171176895276,
+        "render_maximum_edge_extension": 0.24995902600274955,
+        "minimum_height_m": 0.011999999172985554,
+        "full_picture_source_map_matches_frozen_inputs": true
+      },
+      {
+        "performance": "ensemble4",
+        "report": "cloth_ensemble4",
+        "status": "passed",
+        "cache": "cloth_cache_ensemble4",
+        "motion_key": "1e8696196397308619f1d3d843c7881c3c90a9cc243be2b562c1af734286a807",
+        "snapshot_count": 962,
+        "snapshot_failures": 0,
+        "snapshot_maximum_p99_edge_extension": 0.10056119702882113,
+        "snapshot_maximum_edge_extension": 0.24872394806267217,
+        "render_sample_count": 4414,
+        "render_sample_failures": 0,
+        "render_maximum_p99_edge_extension": 0.10287698205009542,
+        "render_maximum_edge_extension": 0.24872394806267217,
+        "minimum_height_m": 0.011999999172985554,
+        "full_picture_source_map_matches_frozen_inputs": true
+      }
+    ],
+    "limitations": [
+      "Geometric authoring checks, not physical textile certification.",
+      "Cloth self-collision and interaction between performers are not simulated.",
+      "Continuous native motion and encoded-film review remain separate."
+    ]
+  },
+  "cache_verification": {
+    "report": "native_cache_comparison",
+    "passed": true,
+    "mode": "solo",
+    "frame": 891,
+    "time_seconds": 14.85,
+    "resolution": [
+      1920,
+      1080
+    ],
+    "temporal_samples": 2,
+    "scope": "One native 1080p60 frame with two shutter samples; fresh process in each mode; same environment",
+    "saved_png_rgb_independently_rehashed": true,
+    "records": {
+      "cached": {
+        "image": "native_cached_png",
+        "raw_rgb_sha256": "1c20951bc058004f6f9e7757ad0cb0829dd110377941730bd7b6acf803740453",
+        "elapsed_seconds": 15.823,
+        "observed_cloth": [
+          {
+            "role": 0,
+            "loaded": true,
+            "cache": "work/advanced-dance/cloth-cache/093e49bfeeabaddda7a85b2e32c2d3c0de7bd0e79bcd2c129ecf86e0d4fd24f5.npy",
+            "sha256": "15ce1390253af10b9fe9fde8e977be468c96fecf38b6fee97000b65328bb0b96"
+          }
+        ]
+      },
+      "fresh": {
+        "image": "native_fresh_png",
+        "raw_rgb_sha256": "1c20951bc058004f6f9e7757ad0cb0829dd110377941730bd7b6acf803740453",
+        "elapsed_seconds": 94.254,
+        "observed_cloth": [
+          {
+            "role": 0,
+            "loaded": false
+          }
+        ]
+      }
+    },
+    "interpretation": "One same-environment native frame proves identical cloth-cache reuse at this frame. Both processes use the separately verified fan trajectory cache. This is not full-film visual review."
+  },
+  "fan_trails": {
+    "status": "exact_capture_cache_verified",
+    "modes": [
+      {
+        "mode": "solo",
+        "report": "trail_solo",
+        "cache": "trail_cache_solo",
+        "status": "exact_capture_cache_verified",
+        "shape": [
+          2,
+          1921,
+          3
+        ],
+        "dtype": "float64",
+        "duration_seconds": 32.0,
+        "trajectory_rate_hz": 60,
+        "endpoint_included": true,
+        "live_bit_exact_probe_counts": {
+          "solo0": 31
+        },
+        "elapsed_seconds": 3.876,
+        "scope": "All canonical states use captured final FK and the unchanged real fan.tip. Fresh FK, grip and diagnostic surface match bit-for-bit at recorded probes. No resampling or geometry approximation."
+      },
+      {
+        "mode": "ensemble",
+        "report": "trail_ensemble",
+        "cache": "trail_cache_ensemble",
+        "status": "exact_capture_cache_verified",
+        "shape": [
+          10,
+          1921,
+          3
+        ],
+        "dtype": "float64",
+        "duration_seconds": 32.0,
+        "trajectory_rate_hz": 60,
+        "endpoint_included": true,
+        "live_bit_exact_probe_counts": {
+          "ensemble0": 32,
+          "ensemble1": 32,
+          "ensemble2": 32,
+          "ensemble3": 32,
+          "ensemble4": 32
+        },
+        "elapsed_seconds": 17.957,
+        "scope": "All canonical states use captured final FK and the unchanged real fan.tip. Fresh FK, grip and diagnostic surface match bit-for-bit at recorded probes. No resampling or geometry approximation."
+      }
+    ],
+    "verification": "All captured states use the unchanged real fan.tip. Sampled fresh solves match final FK, grips, diagnostic fan surfaces and tips byte-for-byte. The unchanged GestureLight consumer loads the exact tracks with live-tip fallback disabled during validation."
+  },
+  "repair_history": [
+    {
+      "id": "wrist_alignment_and_fan_grip",
+      "evidence": "historical_anatomy_repair",
+      "change": "Use a forearm-relative bounded wrist, continuously chosen elbow solution, articulated finger cascade and opposed thumb; derive the held prop from the final solved grip frame.",
+      "historical_scope": "26 selected hands, not all historical movie frames; identical observed palm positions, authored new grip and wrist",
+      "selected_hands": 26,
+      "maximum_before_wrist_rotation_deg": 146.6774354558426,
+      "maximum_after_wrist_rotation_deg": 8.958211681428098,
+      "maximum_selected_palm_target_error_m": 0.007873610130086974,
+      "thumb_pad_target_residual_m": {
+        "L": 0.0016047855498870925,
+        "R": 0.0016047855498870925
+      },
+      "source_sha256_as_recorded": {
+        "tools/advanced_dance/anatomy.py": "759b90615a18ae51582e6d5269d321bfb40db2ec15af211abe4a8e9b0b59e43b",
+        "tools/advanced_dance/score.py": "2d4b0313925b2dbd96d787cf4d179c4cb181107da3a525ba5cd729000aba3595",
+        "tools/advanced_dance/clock.json": "67634ee9841878f7030a3482d195fd218dcc0eacd5b1a5d18bc6fd7c723aa9a9",
+        "tests/test_advanced_dance_anatomy.py": "8423dbc6706b554fa867fb7174772bc443d822e09911e99de88c3816baf19245"
+      },
+      "tests_as_recorded": {
+        "command": "OPENBLAS_NUM_THREADS=1 .venv/bin/python -m unittest discover -s tests -p test_advanced_dance_anatomy.py -v",
+        "passed": 8,
+        "failed": 0
+      },
+      "static_inspection_image": "historical_hand_clay_image",
+      "static_scope": "Actual skinned left hand, old fixed curl, corrected grip and released hand, each at two static inspection angles"
+    },
+    {
+      "id": "forearm_pronation_singularity",
+      "evidence": "historical_anatomy_repair",
+      "change": "Keep the desired normal projection magnitude near the forearm-parallel singularity and use a smooth bounded orientation preference, avoiding the angular branch flip.",
+      "measured_recheck_as_recorded": {
+        "start": 14.65,
+        "end": 15.15,
+        "sample_hz": 120,
+        "pre_fix_left_peak_deg_s": 11666.81,
+        "post_fix_peaks": {
+          "L": {
+            "speed_deg_s": 522.7149429973738,
+            "t": 14.866666666666655
+          },
+          "R": {
+            "speed_deg_s": 142.83305810863803,
+            "t": 14.958333333333316
+          }
+        },
+        "scope": "Exact previously failing left-forearm transition in new solo; full score audit is separate"
+      },
+      "interpretation": "This was the exact early-score failing transition at 120 Hz. The final six-actor full-clock audit is separate."
+    },
+    {
+      "id": "reachable_targets_and_grounded_support",
+      "evidence": [
+        "frozen_picture_inputs",
+        "kinematic_summary"
+      ],
+      "change": "Fit arm cues smoothly to actual posed-shoulder reach, apply breathing before final IK, anticipate planted-foot heading, direct knees with the feet and enforce swing-sole clearance.",
+      "validated_by": [
+        "ankle_target_error",
+        "support_drift",
+        "support_rotation",
+        "foot_sole_height",
+        "wrist_local_rotation",
+        "authored_palm_error",
+        "prop_attachment_error"
+      ],
+      "scope": "Authored kinematic controls and final geometric checks, not reconstructed hidden-foot reference motion or a force/balance simulation."
+    },
+    {
+      "id": "inner_role_canon_clearance",
+      "change": "Replace the Y-only exchange with complete mirrored arm cue paths so inner-role answers preserve reach and head clearance.",
+      "comparison_scope": "Before and after full-clip extrema at the same 4,414-sample audit schedule and unchanged tolerances; extrema can occur at different frames.",
+      "performers": [
+        {
+          "performance": "ensemble1",
+          "before_report": "historical_canon_ensemble1",
+          "after_report": "motion_ensemble1",
+          "before_score_sha256": "29fdfeebcc33168f6c85c42153af7d539aed5a3a55211b8505276a137fe157df",
+          "after_score_sha256": "88f17b2e21aa7520edab5bb2ff29aa0a87c50fa854bbf33ed3864797258ace5d",
+          "before_maximum_final_palm_error_m": 0.031032871779202213,
+          "after_maximum_final_palm_error_m": 0.0005872345443061242,
+          "before_minimum_fan_body_proxy_clearance_m": -0.039553670413045625,
+          "after_minimum_fan_body_proxy_clearance_m": 0.015091911711215336,
+          "remaining_review_checks": [
+            "palm_speed"
+          ]
+        },
+        {
+          "performance": "ensemble3",
+          "before_report": "historical_canon_ensemble3",
+          "after_report": "motion_ensemble3",
+          "before_score_sha256": "29fdfeebcc33168f6c85c42153af7d539aed5a3a55211b8505276a137fe157df",
+          "after_score_sha256": "88f17b2e21aa7520edab5bb2ff29aa0a87c50fa854bbf33ed3864797258ace5d",
+          "before_maximum_final_palm_error_m": 0.03638800513742468,
+          "after_maximum_final_palm_error_m": 0.0005824496641947735,
+          "before_minimum_fan_body_proxy_clearance_m": -0.05552456888779367,
+          "after_minimum_fan_body_proxy_clearance_m": 0.005921993186100677,
+          "remaining_review_checks": [
+            "palm_speed"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "cloth_constraint_convergence",
+      "change": "Apply eight soft shape passes, then converge hard edge and body constraints without reintroducing shape forces after hard-edge convergence.",
+      "before_costume_sha256": "f2579ab5108966d5f457d52667a22971e567d3ee0879df06f3533cd0ec796d9a",
+      "after_costume_sha256": "2a7bfd24a4b899a281a66bc7f8ca72017b23dafcfea095be6f2534daf0baa931",
+      "unchanged_numeric_tolerances": true,
+      "before_failed_saved_states": 437,
+      "after_failed_saved_states": 0,
+      "comparison_scope": "Exact earlier and final production cache reports, each with 962 states per performer. This is a saved-round comparison, not an isolated one-variable physical textile experiment.",
+      "performers": [
+        {
+          "performance": "solo0",
+          "before_report": "historical_cloth_solo0",
+          "after_report": "cloth_solo0",
+          "before_snapshot_failures": 79,
+          "after_snapshot_failures": 0,
+          "before_maximum_p99_edge_extension": 0.23897980461627807,
+          "after_maximum_p99_edge_extension": 0.10265178206666256,
+          "before_maximum_edge_extension": 0.517095941820279,
+          "after_maximum_edge_extension": 0.25415636725809554
+        },
+        {
+          "performance": "ensemble0",
+          "before_report": "historical_cloth_ensemble0",
+          "after_report": "cloth_ensemble0",
+          "before_snapshot_failures": 119,
+          "after_snapshot_failures": 0,
+          "before_maximum_p99_edge_extension": 0.19678794743541742,
+          "after_maximum_p99_edge_extension": 0.09999411542835605,
+          "before_maximum_edge_extension": 0.4437582698177698,
+          "after_maximum_edge_extension": 0.249944843249283
+        },
+        {
+          "performance": "ensemble1",
+          "before_report": "historical_cloth_ensemble1",
+          "after_report": "cloth_ensemble1",
+          "before_snapshot_failures": 47,
+          "after_snapshot_failures": 0,
+          "before_maximum_p99_edge_extension": 0.22094297782693448,
+          "after_maximum_p99_edge_extension": 0.09999729903551006,
+          "before_maximum_edge_extension": 0.45638966328907493,
+          "after_maximum_edge_extension": 0.249942257236216
+        },
+        {
+          "performance": "ensemble2",
+          "before_report": "historical_cloth_ensemble2",
+          "after_report": "cloth_ensemble2",
+          "before_snapshot_failures": 129,
+          "after_snapshot_failures": 0,
+          "before_maximum_p99_edge_extension": 0.1963801035646388,
+          "after_maximum_p99_edge_extension": 0.10168358865921504,
+          "before_maximum_edge_extension": 0.46967333328876837,
+          "after_maximum_edge_extension": 0.24987283708184704
+        },
+        {
+          "performance": "ensemble3",
+          "before_report": "historical_cloth_ensemble3",
+          "after_report": "cloth_ensemble3",
+          "before_snapshot_failures": 7,
+          "after_snapshot_failures": 0,
+          "before_maximum_p99_edge_extension": 0.18884715785778516,
+          "after_maximum_p99_edge_extension": 0.09996760179708211,
+          "before_maximum_edge_extension": 0.3962048081492868,
+          "after_maximum_edge_extension": 0.24995902600274955
+        },
+        {
+          "performance": "ensemble4",
+          "before_report": "historical_cloth_ensemble4",
+          "after_report": "cloth_ensemble4",
+          "before_snapshot_failures": 56,
+          "after_snapshot_failures": 0,
+          "before_maximum_p99_edge_extension": 0.2137457691188943,
+          "after_maximum_p99_edge_extension": 0.10056119702882113,
+          "before_maximum_edge_extension": 0.456992643602842,
+          "after_maximum_edge_extension": 0.24872394806267217
+        }
+      ]
+    }
+  ],
+  "visual_review": {
+    "full_continuous_motion": "Desktop playback spot observations plus ordered native/decoded windows; no claim of continuous every-frame perceptual inspection",
+    "final_encoded_movies": {
+      "solo": {
+        "mode": "solo",
+        "master_sha256": "8f02ee2a72a128198771cfb8f3d3dabc0b90716abdb4c028d19fa462b6a6edac",
+        "bytes": 57396334,
+        "source_fingerprint": "437e7420ab538baf3608b879ca371a335ffbbaa09e77444cce7103485b5801ed",
+        "technical_passed": true,
+        "native_frames": 1920,
+        "duration_seconds": 32,
+        "fps": 60,
+        "final_review": {
+          "path": "work/advanced-dance/qa/final/independent-solo-final-encoded-review.json",
+          "sha256": "d923351a3dd1390d6bb0f05abebe6dba4600aec87746b92ecd9ddf627e34a4b2",
+          "bytes": 8935,
+          "include_full_json_in_final_package": true
+        },
+        "distinct_decoded_frames": 150,
+        "inspected_sheets": 29,
+        "sampled_visual_blockers": 0,
+        "owner_approval": false
+      },
+      "ensemble": {
+        "mode": "ensemble",
+        "master_sha256": "8bedc48bc2586d903f5aefcb8bfea89ecad58359326ffdc27f5988b0f573540d",
+        "bytes": 76939037,
+        "source_fingerprint": "ec76277c753ba288fb9a2d6634a1f45e4741747f33baad3d237e7be5ff1f272d",
+        "technical_passed": true,
+        "native_frames": 1920,
+        "duration_seconds": 32,
+        "fps": 60,
+        "final_review": {
+          "path": "work/advanced-dance/qa/final/independent-ensemble-final-encoded-review.json",
+          "sha256": "4da1581fee14ac24821327c1e254ad6217352be061c6ea6bcd54f07859204bb0",
+          "bytes": 25441,
+          "include_full_json_in_final_package": true
+        },
+        "distinct_decoded_frames": 135,
+        "inspected_sheets": 22,
+        "sampled_visual_blockers": 0,
+        "owner_approval": false
+      }
+    },
+    "scoped_static_review": {
+      "report": "scoped_static_costume_review",
+      "status_as_recorded": "scoped_native_review_pass",
+      "reviewer_as_recorded": "reference_choreography",
+      "scope": "Five native1920x1080 static images viewed: the four requested stress poses plus the independently viewed cache-verification image. This is a composition and costume silhouette review, not continuous playback.",
+      "frames": [
+        570,
+        790,
+        960,
+        1742,
+        891
+      ],
+      "frame_file_hashes_verified": true,
+      "continuous_playback_reviewed": false,
+      "owner_approval": false
+    },
+    "targeted_times": [
+      {
+        "performance": "solo0",
+        "time_seconds": 9.4833333333,
+        "reason": "Authored fast hand movement exceeds the numeric review trigger; inspect full-speed continuity."
+      },
+      {
+        "performance": "ensemble0",
+        "time_seconds": 24.4666666667,
+        "reason": "Authored fast hand movement exceeds the numeric review trigger; inspect full-speed continuity."
+      },
+      {
+        "performance": "ensemble1",
+        "time_seconds": 24.4666666667,
+        "reason": "Authored fast hand movement exceeds the numeric review trigger; inspect full-speed continuity."
+      },
+      {
+        "performance": "ensemble2",
+        "time_seconds": 25.1833333333,
+        "reason": "Authored fast hand movement exceeds the numeric review trigger; inspect full-speed continuity."
+      },
+      {
+        "performance": "ensemble3",
+        "time_seconds": 25.1833333333,
+        "reason": "Authored fast hand movement exceeds the numeric review trigger; inspect full-speed continuity."
+      },
+      {
+        "performance": "ensemble4",
+        "time_seconds": 25.1833333333,
+        "reason": "Authored fast hand movement exceeds the numeric review trigger; inspect full-speed continuity."
+      },
+      {
+        "performance": "ensemble0",
+        "time_seconds": 20.2166666667,
+        "reason": "Dense real fan surface has a small signed overlap with its owner head capsule proxy; inspect the actual silhouette.",
+        "side": "R",
+        "signed_proxy_clearance_m": -0.004870042463928109
+      }
+    ],
+    "other_required_observations": [
+      "Continuous turn and canon transitions",
+      "Hands and fan grip in native details",
+      "Foot contact and costume motion",
+      "Fan-to-fan visual overlap",
+      "Final encoded picture and sound"
+    ],
+    "owner_approval": false,
+    "independent_native_images": {
+      "report": "independent_native_review",
+      "solo_count": 10,
+      "ensemble_count": 12,
+      "total_count": 22,
+      "scope": "Static native composition, hand, costume and foot details. No continuous playback or final encoded review claimed.",
+      "sampled_image_blockers": 0
+    },
+    "solo_proof_review": {
+      "native_or_decoded_samples": 99,
+      "report": "solo_proof_review"
+    },
+    "ensemble_proof_review": {
+      "native_window_frames": 257,
+      "decoded_overview_samples": 65,
+      "report": "ensemble_proof_review"
+    },
+    "desktop_playback": "desktop_playback",
+    "audio_assessment": "Technical decoding, stream, cadence and peak checks; no listening review claimed"
+  },
+  "reproduction": {
+    "guide": "repair_process_readme",
+    "motion": "PYTHONPATH=engine:. .venv/bin/python -m tools.advanced_dance.qa --mode solo --out work/advanced-dance/qa/final; repeat with --mode ensemble",
+    "cast": "PYTHONPATH=engine:. .venv/bin/python -m tools.advanced_dance.cast_qa --captures work/advanced-dance/qa/final --out work/advanced-dance/qa/final/cast.json",
+    "cloth": "PYTHONPATH=engine:. OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 .venv/bin/python -m tools.advanced_dance.cloth_qa --out work/advanced-dance/cloth-qa/final",
+    "trails": ".venv/bin/python -m tools.advanced_dance.prepare trails --mode all --captures work/advanced-dance/qa/final",
+    "native_cache": "PYTHONHASHSEED=0 .venv/bin/python -m tools.advanced_dance.prepare verify-frame --mode solo --frame 891",
+    "proof": ".venv/bin/python -m tools.advanced_dance.prepare proof --mode solo; repeat with --mode ensemble after the verified final even frames exist",
+    "repair_loop": [
+      "Find the exact recorded time and body part",
+      "Fix the score, anatomy, contact or cloth cause",
+      "Rerun unchanged numeric tolerances",
+      "Review continuous motion and native details",
+      "Freeze picture inputs and validate exact caches",
+      "Render and review the final encoded output"
+    ]
+  },
+  "limitations": [
+    "Authored choreography informed by visible references; no source choreography reconstruction or hidden-foot motion capture claimed.",
+    "Numeric geometry checks do not validate physical balance or forces.",
+    "Capsule clearance is an approximation and does not certify complete mesh self-collision.",
+    "Cloth self-collision and cloth interaction between performers are not simulated.",
+    "Numeric passes, scoped static review, continuous playback, final encoded review and owner approval remain distinct."
+  ],
+  "package_evidence": {
+    "status": "ready_for_verified_packaging",
+    "policy": "Embed the original full JSON report content, retaining its recorded source-byte hash, in the final delivery evidence. Keep large NPZ/NPY captures and per-time data out of Git; this ledger summarizes their measured results and exact identities.",
+    "full_json_reports": [
+      "frozen_picture_inputs",
+      "motion_solo0",
+      "motion_ensemble0",
+      "motion_ensemble1",
+      "motion_ensemble2",
+      "motion_ensemble3",
+      "motion_ensemble4",
+      "kinematic_summary",
+      "cast_clearance",
+      "dense_own_fan_probe",
+      "cloth_solo0",
+      "cloth_ensemble0",
+      "cloth_ensemble1",
+      "cloth_ensemble2",
+      "cloth_ensemble3",
+      "cloth_ensemble4",
+      "cloth_summary",
+      "historical_anatomy_repair",
+      "scoped_static_costume_review",
+      "native_cache_comparison",
+      "trail_solo",
+      "trail_ensemble",
+      "historical_canon_ensemble1",
+      "historical_canon_ensemble3",
+      "historical_cloth_solo0",
+      "historical_cloth_ensemble0",
+      "historical_cloth_ensemble1",
+      "historical_cloth_ensemble2",
+      "historical_cloth_ensemble3",
+      "historical_cloth_ensemble4",
+      "independent_native_review",
+      "solo_assembly",
+      "solo_pipeline",
+      "solo_render",
+      "solo_final_encoded_review",
+      "solo_even_proof",
+      "ensemble_assembly",
+      "ensemble_pipeline",
+      "ensemble_render",
+      "ensemble_final_encoded_review",
+      "ensemble_even_proof",
+      "solo_proof_review",
+      "ensemble_proof_review",
+      "desktop_playback",
+      "solo_desktop_playback",
+      "execution_policy",
+      "final_ensemble_execution",
+      "render_completion"
+    ],
+    "record_scope": "Validated inputs immediately before packaging. The subsequent packaging and save receipts record the resulting archive and download identities."
+  },
+  "artifacts": {
+    "frozen_picture_inputs": {
+      "path": "project-docs/production-system/evidence/advanced-dance-frozen-inputs.json",
+      "sha256": "80bf8f1d4381d83379efed7b528cf28537e7f3e19131a4c262b92066df76f8d7",
+      "bytes": 25609,
+      "include_full_json_in_final_package": true
+    },
+    "motion_solo0": {
+      "path": "work/advanced-dance/qa/final/solo0.json",
+      "sha256": "9d314e8cbbd4d39f76f7b1f72c0f5b930219e0f960020c3bc3b34e1acf5d1f14",
+      "bytes": 12968,
+      "include_full_json_in_final_package": true
+    },
+    "motion_ensemble0": {
+      "path": "work/advanced-dance/qa/final/ensemble0.json",
+      "sha256": "0a3f9fcd2fb09210ae2c2f1b9e1d47b05b71882afd77c3aeb684761e284fd9de",
+      "bytes": 13785,
+      "include_full_json_in_final_package": true
+    },
+    "motion_ensemble1": {
+      "path": "work/advanced-dance/qa/final/ensemble1.json",
+      "sha256": "11e00c67145e4f4f1d325fddc0311c7331f53536565eebb708e30d8148f9d15a",
+      "bytes": 12969,
+      "include_full_json_in_final_package": true
+    },
+    "motion_ensemble2": {
+      "path": "work/advanced-dance/qa/final/ensemble2.json",
+      "sha256": "b9602015a39eec85a098006d24c8b51e11ab2af8a6f5d61e298ce80178eb5cd1",
+      "bytes": 13785,
+      "include_full_json_in_final_package": true
+    },
+    "motion_ensemble3": {
+      "path": "work/advanced-dance/qa/final/ensemble3.json",
+      "sha256": "44f5c7fbd547777929361f1dc0e860d243eafe400c9c85aa8b8daf8a5795a161",
+      "bytes": 12985,
+      "include_full_json_in_final_package": true
+    },
+    "motion_ensemble4": {
+      "path": "work/advanced-dance/qa/final/ensemble4.json",
+      "sha256": "7fdca15df6ae592045170332e5de5731bba83886c01b0330b6a2b74bf3b953f4",
+      "bytes": 12932,
+      "include_full_json_in_final_package": true
+    },
+    "kinematic_summary": {
+      "path": "work/advanced-dance/qa/final/kinematic-summary.json",
+      "sha256": "c5d01705303185a47c31a48f15f576c2afb91749b5e5adb754a7cb91f2d822c0",
+      "bytes": 15481,
+      "include_full_json_in_final_package": true
+    },
+    "cast_clearance": {
+      "path": "work/advanced-dance/qa/final/cast.json",
+      "sha256": "b089db6b816cb8d36f89811c96ca1356a719abd6c4307fb40428ef286387b9d0",
+      "bytes": 15804,
+      "include_full_json_in_final_package": true
+    },
+    "dense_own_fan_probe": {
+      "path": "work/advanced-dance/qa/final/dense-own-fan-probe.json",
+      "sha256": "748aa6a3e57ec1af2c57b06de8eeb2d1b3847377176778c8d661777363f47b11",
+      "bytes": 3052,
+      "include_full_json_in_final_package": true
+    },
+    "cloth_solo0": {
+      "path": "work/advanced-dance/cloth-qa/final/solo0.json",
+      "sha256": "73fdfe99b0f6d399dfcc1bfabff9c1055297ce3c7b43e32beaab84a5f37e752b",
+      "bytes": 1151348,
+      "include_full_json_in_final_package": true
+    },
+    "cloth_ensemble0": {
+      "path": "work/advanced-dance/cloth-qa/final/ensemble0.json",
+      "sha256": "97088f5b871c82b0e6e7dff42570ef84b9c587e2c8cb2e3fdd64af9e21010d92",
+      "bytes": 1151197,
+      "include_full_json_in_final_package": true
+    },
+    "cloth_ensemble1": {
+      "path": "work/advanced-dance/cloth-qa/final/ensemble1.json",
+      "sha256": "8938b3fbe6f012b735a31842f37dfa7adadc637612111bb8868c6f965b4a989a",
+      "bytes": 1151092,
+      "include_full_json_in_final_package": true
+    },
+    "cloth_ensemble2": {
+      "path": "work/advanced-dance/cloth-qa/final/ensemble2.json",
+      "sha256": "58f7656d3b470812d4efef4f90d4411e76b86ece66ba145019f4017a5130d3c3",
+      "bytes": 1151194,
+      "include_full_json_in_final_package": true
+    },
+    "cloth_ensemble3": {
+      "path": "work/advanced-dance/cloth-qa/final/ensemble3.json",
+      "sha256": "0e68e3867301deb07f2a899283fb399c3dd50bd9d3f8d813142fe9b90cfb3ce5",
+      "bytes": 1151262,
+      "include_full_json_in_final_package": true
+    },
+    "cloth_ensemble4": {
+      "path": "work/advanced-dance/cloth-qa/final/ensemble4.json",
+      "sha256": "a0da20c7db950b9493c7e5df71613e8aa09bd74c649e9c32309b4f43419736f4",
+      "bytes": 1151221,
+      "include_full_json_in_final_package": true
+    },
+    "cloth_summary": {
+      "path": "work/advanced-dance/cloth-qa/final/summary.json",
+      "sha256": "083367ced03fa429db2adade9851dc72f8a6b1628d266ea331f7ee082c79066c",
+      "bytes": 29673,
+      "include_full_json_in_final_package": true
+    },
+    "historical_anatomy_repair": {
+      "path": "work/advanced-dance/anatomy-review/receipt.json",
+      "sha256": "45dfbde339e74e653c44bf2d5a916833123e2872f5b761e5207c836a00442b3a",
+      "bytes": 19540,
+      "include_full_json_in_final_package": true
+    },
+    "scoped_static_costume_review": {
+      "path": "work/advanced-dance/cloth-qa/final/native_review.json",
+      "sha256": "3ee7f46075e8fb31b1e2cae7748362503ae5e1738aa22000d23352b98adcc80d",
+      "bytes": 3051,
+      "include_full_json_in_final_package": true
+    },
+    "native_cache_comparison": {
+      "path": "work/advanced-dance/cache-verification/solo-7f4aaca5e379-0891/comparison.json",
+      "sha256": "a464008d1cfc9df31458dafaa7b54d03d2ed6317b0a4d436c08bbda9be934a7a",
+      "bytes": 53153,
+      "include_full_json_in_final_package": true
+    },
+    "trail_solo": {
+      "path": "work/advanced-dance/trail-cache/65ea4df77f9bbf59c1982b322e272271cc720571595ce585253de7e3d31febb7.json",
+      "sha256": "8dfadf1f1edf4ac49f58367681d73eca3f5c3d91ac7082ebb8d275b87bcc4fb7",
+      "bytes": 30388,
+      "include_full_json_in_final_package": true
+    },
+    "trail_ensemble": {
+      "path": "work/advanced-dance/trail-cache/3030e2fa7f26e630a0ca1e98427d9539bd578460b63d054717e9487a4e2c415b.json",
+      "sha256": "79880b1841b1172946db5ad3758f57f4359ed37060ec364d06192388ea54590c",
+      "bytes": 36584,
+      "include_full_json_in_final_package": true
+    },
+    "capture_solo0": {
+      "path": "work/advanced-dance/qa/final/solo0.npz",
+      "sha256": "23b6d5d73d4c4c6983baf75b271155c0a90eb1e7ce31f61e24cfe4923bc21b58",
+      "bytes": 10906008,
+      "include_full_json_in_final_package": false
+    },
+    "capture_ensemble0": {
+      "path": "work/advanced-dance/qa/final/ensemble0.npz",
+      "sha256": "0e5b82fa9b3128fe8ab8b58f1f4585709114fb151d9ee451719d5962391047d0",
+      "bytes": 10955982,
+      "include_full_json_in_final_package": false
+    },
+    "capture_ensemble1": {
+      "path": "work/advanced-dance/qa/final/ensemble1.npz",
+      "sha256": "74dc0e480aecb188fbf96ef0d7b65fdcd6e3ae4a74c5565e104fdc04d06641e3",
+      "bytes": 10975052,
+      "include_full_json_in_final_package": false
+    },
+    "capture_ensemble2": {
+      "path": "work/advanced-dance/qa/final/ensemble2.npz",
+      "sha256": "cfb066a281e1a833af83fb9a18d1b263fd5f2b6f464c244ea8d516af9c211c82",
+      "bytes": 10975170,
+      "include_full_json_in_final_package": false
+    },
+    "capture_ensemble3": {
+      "path": "work/advanced-dance/qa/final/ensemble3.npz",
+      "sha256": "3063371bc5d5deb96967ed606ed4d2343e3702948f60ce089d3bafd268e9089f",
+      "bytes": 10964564,
+      "include_full_json_in_final_package": false
+    },
+    "capture_ensemble4": {
+      "path": "work/advanced-dance/qa/final/ensemble4.npz",
+      "sha256": "50f7da6b5a8de871c3c9d22baa87ca6acf246eb04c1e6f8e7eb83b3283d17895",
+      "bytes": 10983955,
+      "include_full_json_in_final_package": false
+    },
+    "cloth_cache_solo0": {
+      "path": "work/advanced-dance/cloth-cache/093e49bfeeabaddda7a85b2e32c2d3c0de7bd0e79bcd2c129ecf86e0d4fd24f5.npy",
+      "sha256": "15ce1390253af10b9fe9fde8e977be468c96fecf38b6fee97000b65328bb0b96",
+      "bytes": 7388288,
+      "include_full_json_in_final_package": false
+    },
+    "cloth_cache_ensemble0": {
+      "path": "work/advanced-dance/cloth-cache/b9305c23317e8a5f881c4b001d5eb566f679600a3c0f50336f0a1c9fa8dc3e30.npy",
+      "sha256": "5fbd6bbf2ddfdb78f94b3ad8427b3a90bac0713c7d78222e5129b3f94546342c",
+      "bytes": 7388288,
+      "include_full_json_in_final_package": false
+    },
+    "cloth_cache_ensemble1": {
+      "path": "work/advanced-dance/cloth-cache/e63f17c2519041a6d10b235ac96cdab1bcbf4f7caa9638e5aa6f08019db65aa9.npy",
+      "sha256": "f8b3ba7b070c60d74a8df33cd18b6d97abc6faae0f6fd026c67ce9fc888fd462",
+      "bytes": 7388288,
+      "include_full_json_in_final_package": false
+    },
+    "cloth_cache_ensemble2": {
+      "path": "work/advanced-dance/cloth-cache/2e89ecd322464466966906961358a4fbafe75bb40de5225b2d5d275313a9e688.npy",
+      "sha256": "37d8187a97d18d6f23ebf1bf5caff63864958a5638fde55d20702d822c67dcd0",
+      "bytes": 7388288,
+      "include_full_json_in_final_package": false
+    },
+    "cloth_cache_ensemble3": {
+      "path": "work/advanced-dance/cloth-cache/ac0dc0213c16a5d08669c769cbd052c50c5ccdc98297bccc0548a30aa28ed080.npy",
+      "sha256": "7bf15e4e80d9653ce50e32c3ee6860fd4c8f1224e874c60b619396583114e128",
+      "bytes": 7388288,
+      "include_full_json_in_final_package": false
+    },
+    "cloth_cache_ensemble4": {
+      "path": "work/advanced-dance/cloth-cache/1e8696196397308619f1d3d843c7881c3c90a9cc243be2b562c1af734286a807.npy",
+      "sha256": "6face315a6594555606a7322c545e14ce73814434b4163df3365a4a99f9b82f2",
+      "bytes": 7388288,
+      "include_full_json_in_final_package": false
+    },
+    "native_cached_png": {
+      "path": "work/advanced-dance/cache-verification/solo-7f4aaca5e379-0891/cached.png",
+      "sha256": "8ff61381c9da256f7751df2f2c49727ccfe6e72b0c8cff73ad239e5b092d73a1",
+      "bytes": 1594869,
+      "include_full_json_in_final_package": false
+    },
+    "native_fresh_png": {
+      "path": "work/advanced-dance/cache-verification/solo-7f4aaca5e379-0891/fresh.png",
+      "sha256": "8ff61381c9da256f7751df2f2c49727ccfe6e72b0c8cff73ad239e5b092d73a1",
+      "bytes": 1594869,
+      "include_full_json_in_final_package": false
+    },
+    "trail_cache_solo": {
+      "path": "work/advanced-dance/trail-cache/65ea4df77f9bbf59c1982b322e272271cc720571595ce585253de7e3d31febb7.npy",
+      "sha256": "a6debc60c0444650a358086000cb7b0ba845de9cfee50b3c53a657c21a1ea1f7",
+      "bytes": 92336,
+      "include_full_json_in_final_package": false
+    },
+    "trail_cache_ensemble": {
+      "path": "work/advanced-dance/trail-cache/3030e2fa7f26e630a0ca1e98427d9539bd578460b63d054717e9487a4e2c415b.npy",
+      "sha256": "867f8bee714517db25026172e9831ce757a1f1069ddd3324049539b4a93078d5",
+      "bytes": 461168,
+      "include_full_json_in_final_package": false
+    },
+    "historical_canon_ensemble1": {
+      "path": "work/advanced-dance/qa/failed-baseline-v1/ensemble1.json",
+      "sha256": "48902621cb7b0c0c8a29f91371fe8bd2969cb7d451c9c01c34d8df13684d02eb",
+      "bytes": 12837,
+      "include_full_json_in_final_package": true
+    },
+    "historical_canon_ensemble3": {
+      "path": "work/advanced-dance/qa/failed-baseline-v1/ensemble3.json",
+      "sha256": "45fb2600d6628a5d351a8ba14074349dd0850efd4dcd09d66e733a2d1344eeb7",
+      "bytes": 12871,
+      "include_full_json_in_final_package": true
+    },
+    "historical_cloth_solo0": {
+      "path": "work/advanced-dance/cloth-qa/solo0.json",
+      "sha256": "a8ccdf5c09ae7ea7b2a55b5e35e25665d0f728981fea912969f3995b5683da13",
+      "bytes": 227502,
+      "include_full_json_in_final_package": true
+    },
+    "historical_cloth_ensemble0": {
+      "path": "work/advanced-dance/cloth-qa/ensemble0.json",
+      "sha256": "13aefa920ae1717cb8da4e73e58857f53e061f40fa457390c2dd1b8499561a99",
+      "bytes": 236253,
+      "include_full_json_in_final_package": true
+    },
+    "historical_cloth_ensemble1": {
+      "path": "work/advanced-dance/cloth-qa/ensemble1.json",
+      "sha256": "d7f2093eb50626cdf34d114de697f5be13942444b10cd0ddf9a09d71c7237e0b",
+      "bytes": 220653,
+      "include_full_json_in_final_package": true
+    },
+    "historical_cloth_ensemble2": {
+      "path": "work/advanced-dance/cloth-qa/ensemble2.json",
+      "sha256": "e83208965ae7729584a425bd9264489a70449ec8b5fdb9ab0ab4bcded63ec7e7",
+      "bytes": 238574,
+      "include_full_json_in_final_package": true
+    },
+    "historical_cloth_ensemble3": {
+      "path": "work/advanced-dance/cloth-qa/ensemble3.json",
+      "sha256": "07bc54adae268c0d0cba6319c31ad099c93eb490e223c3e320ca1cabf5b07bee",
+      "bytes": 212050,
+      "include_full_json_in_final_package": true
+    },
+    "historical_cloth_ensemble4": {
+      "path": "work/advanced-dance/cloth-qa/ensemble4.json",
+      "sha256": "1b68fa921ed7c8aeaf733d2386146a6e9589372886c5aa9fff04abf803348db0",
+      "bytes": 222674,
+      "include_full_json_in_final_package": true
+    },
+    "historical_hand_clay_image": {
+      "path": "work/advanced-dance/anatomy-review/clay_hands.png",
+      "sha256": "77be48cbcbddb1ee3368e662f56885a385cf9ab7163e14e323a34c3a7c992c14",
+      "bytes": 389432,
+      "include_full_json_in_final_package": false
+    },
+    "static_native_frame_570": {
+      "path": "work/pipeline/advanced-dance-solo/final/shots/performance/frames/frame_000570.png",
+      "sha256": "9f2a9f0d42efbbaab9018c1cda788be64307a8e8b90e817dddd624e63ed13f27",
+      "bytes": 1585585,
+      "include_full_json_in_final_package": false
+    },
+    "static_native_frame_790": {
+      "path": "work/pipeline/advanced-dance-solo/final/shots/performance/frames/frame_000790.png",
+      "sha256": "bde3c441eb43b2887c2d82fa34cf93b4e386787818cebe07b70dcd8a947c9d6b",
+      "bytes": 1723348,
+      "include_full_json_in_final_package": false
+    },
+    "static_native_frame_960": {
+      "path": "work/pipeline/advanced-dance-solo/final/shots/performance/frames/frame_000960.png",
+      "sha256": "9c6b5ddab095f2d2dcaa7ab7d2fa89537bce27aa39c54cba4a54242aa1dce8dc",
+      "bytes": 1348567,
+      "include_full_json_in_final_package": false
+    },
+    "static_native_frame_1742": {
+      "path": "work/pipeline/advanced-dance-solo/final/shots/performance/frames/frame_001742.png",
+      "sha256": "eb8159a4b9518c0331d3c298268fc26bc4aaee22b384d0e7b4e3ea640bca9bc4",
+      "bytes": 1694629,
+      "include_full_json_in_final_package": false
+    },
+    "static_native_frame_891": {
+      "path": "work/advanced-dance/cache-verification/solo-7f4aaca5e379-0891/cached.png",
+      "sha256": "8ff61381c9da256f7751df2f2c49727ccfe6e72b0c8cff73ad239e5b092d73a1",
+      "bytes": 1594869,
+      "include_full_json_in_final_package": false
+    },
+    "repair_process_readme": {
+      "path": "tools/advanced_dance/README.md",
+      "sha256": "01f2ea2160ea676fe4542e83cc6217f5cc2e4ab6377b1004846294942d6c3411",
+      "bytes": 17134,
+      "include_full_json_in_final_package": false
+    },
+    "independent_native_review": {
+      "path": "work/advanced-dance/qa/final/independent-visual-review.json",
+      "sha256": "f01f3f02c4c0c71fb2877ed4f6ee1736fee160e943a65c6d63e08ff11273013b",
+      "bytes": 15458,
+      "include_full_json_in_final_package": true
+    },
+    "solo_assembly": {
+      "path": "work/pipeline/advanced-dance-solo/final/master.json",
+      "sha256": "fda4d396287f3f0f2962886155033aec74624ab52d8f8242398903d2bc855a17",
+      "bytes": 2271,
+      "include_full_json_in_final_package": true
+    },
+    "solo_pipeline": {
+      "path": "work/pipeline/advanced-dance-solo/final/qa.json",
+      "sha256": "c4d97db89fbcb790ad565942500d156824606074936fdbdc0a55b443431ca099",
+      "bytes": 15160,
+      "include_full_json_in_final_package": true
+    },
+    "solo_render": {
+      "path": "work/pipeline/advanced-dance-solo/final/shots/performance/receipt.json",
+      "sha256": "ace3dda5aabb95dcc5000f7c6164a54a3c036d3690fe155d0486849495001fae",
+      "bytes": 192661,
+      "include_full_json_in_final_package": true
+    },
+    "solo_final_encoded_review": {
+      "path": "work/advanced-dance/qa/final/independent-solo-final-encoded-review.json",
+      "sha256": "d923351a3dd1390d6bb0f05abebe6dba4600aec87746b92ecd9ddf627e34a4b2",
+      "bytes": 8935,
+      "include_full_json_in_final_package": true
+    },
+    "solo_even_proof": {
+      "path": "work/advanced-dance/proofs/solo-437e7420ab53/Even_Frame_Proof_1080p30.json",
+      "sha256": "8d6c40aade1910e2d5e108c1bdb1856b01b4e3fd7cf4b5c5b13a9fb23cdb367a",
+      "bytes": 152503,
+      "include_full_json_in_final_package": true
+    },
+    "ensemble_assembly": {
+      "path": "work/pipeline/advanced-dance-ensemble/final/master.json",
+      "sha256": "57ca201fe331484e8b2fe2092cf5d39dce31f91f7d5c7cb2f7964d75d3a04719",
+      "bytes": 2276,
+      "include_full_json_in_final_package": true
+    },
+    "ensemble_pipeline": {
+      "path": "work/pipeline/advanced-dance-ensemble/final/qa.json",
+      "sha256": "310713ce8e2534abe448e820d61279ce14fc260060275864108565b9a0f2dc61",
+      "bytes": 15154,
+      "include_full_json_in_final_package": true
+    },
+    "ensemble_render": {
+      "path": "work/pipeline/advanced-dance-ensemble/final/shots/performance/receipt.json",
+      "sha256": "c362a9292a1113db2bfc38439b9a226f800c189677904fc63a5d09a5bc436a7b",
+      "bytes": 192661,
+      "include_full_json_in_final_package": true
+    },
+    "ensemble_final_encoded_review": {
+      "path": "work/advanced-dance/qa/final/independent-ensemble-final-encoded-review.json",
+      "sha256": "4da1581fee14ac24821327c1e254ad6217352be061c6ea6bcd54f07859204bb0",
+      "bytes": 25441,
+      "include_full_json_in_final_package": true
+    },
+    "ensemble_even_proof": {
+      "path": "work/advanced-dance/proofs/ensemble-ec76277c753b/Even_Frame_Proof_1080p30.json",
+      "sha256": "15a27dc9dbf3875cd212b20dd092c373854f25a0dd642af8377ca553941f96e8",
+      "bytes": 152506,
+      "include_full_json_in_final_package": true
+    },
+    "solo_proof_review": {
+      "path": "work/advanced-dance/qa/final/independent-moving-review.json",
+      "sha256": "0c1edddad1a7de4b25c8fc6496e9996600c2ebea37c42764c3f4e6b8eeba9a04",
+      "bytes": 36494,
+      "include_full_json_in_final_package": true
+    },
+    "ensemble_proof_review": {
+      "path": "work/advanced-dance/qa/final/ensemble-moving-review.json",
+      "sha256": "55fb9763b892d0f5079a6a051d63aa9fca9976ebe539f33a5dc896ea390d2483",
+      "bytes": 408232,
+      "include_full_json_in_final_package": true
+    },
+    "desktop_playback": {
+      "path": "work/advanced-dance/qa/final/desktop-playback-notes.json",
+      "sha256": "334fa6a16da79525c4255a5676aeb1dcb99d5216610df7430d09f40e42fbb6d3",
+      "bytes": 6393,
+      "include_full_json_in_final_package": true
+    },
+    "solo_desktop_playback": {
+      "path": "work/advanced-dance/qa/final/solo-desktop-playback-review.json",
+      "sha256": "d122d7d8063bf5bac058555c9ada18ad1b4e98e62da7accad07a0dc4410d5aa3",
+      "bytes": 3346,
+      "include_full_json_in_final_package": true
+    },
+    "execution_policy": {
+      "path": "project-docs/production-system/evidence/advanced-dance-execution-policy.json",
+      "sha256": "356a5c7595b52a7159e1dc8955671ab6ffb79f48601bbba735ab532f74cd927c",
+      "bytes": 6214,
+      "include_full_json_in_final_package": true
+    },
+    "final_ensemble_execution": {
+      "path": "work/advanced-dance/execution/ensemble-final-run.json",
+      "sha256": "b3bcd5b630d80268ae90549dbd31318ee67fd353d7f9035f503a2c55cd834526",
+      "bytes": 923,
+      "include_full_json_in_final_package": true
+    },
+    "render_completion": {
+      "path": "project-docs/production-system/evidence/advanced-dance-render-completion.json",
+      "sha256": "76cd607e02661f302e20772f94f0db40f00e1cd2a9d9c92513f67b9c80eb9e0e",
+      "bytes": 2329,
+      "include_full_json_in_final_package": true
+    }
+  }
+}

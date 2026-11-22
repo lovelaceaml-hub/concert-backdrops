@@ -1,10 +1,18 @@
 # Concert production system
 
+## Latest delivery: Advanced Dance, PR #109
+
+Both revised dance films are complete, technically passed, reviewed within the recorded scope and saved. Each is a 32-second native 1920 x 1080 movie at 60 fps. The new complete ten-film package contains these two revisions and the exact previous films 03 through 10. The overview, README, full motion/anatomy evidence, technical report, checksums and packaging receipt are saved. No new exact-output owner approval is recorded.
+
+[Solo film](https://chatgpt.com/library?file_id=libfile_5efbae79a5d88191b729f3726b94d117&account_id=personal) | [Five-person ensemble](https://chatgpt.com/library?file_id=libfile_bdf3a9b4e1f481918e768953be62a279&account_id=personal) | [Complete ten-film package](https://chatgpt.com/library?file_id=libfile_02d1b9fcefdc8191ab72741639bd1fb2&account_id=personal)
+
+Frozen picture source: `254414bc0356171f7d5ad89361c75d45fd01a407`. Integration authority: [PR #109](https://github.com/lovelaceaml-hub/concert-backdrops/pull/109). Read `project-docs/production-system/evidence/advanced-dance-final-delivery.json`, current `STATE.json` and `ADVANCED-DANCE.md` for exact identities and review limits. The repair and reproduction commands are in `tools/advanced_dance/README.md`. Recover the saved masters; do not restart this completed render queue. Historical records below retain their original scope.
+
 Current handoff: Cinematic Ten final delivery, 2026-11-21, America/Los_Angeles. Machine observations use UTC.
 
 **The Words of Mother's Love bring peace.** Build every film around that message. The owner approved the sharper Song 11 beauty study and requested that its setup, source, instructions and references be saved, uploaded and merged for every AI to reuse. The owner also authorized continued model, acting and workflow improvement across the concert songs.
 
-## Current delivery: ten final cinematic films
+## Previous delivery: ten final cinematic films
 
 All ten twenty-second films are complete, technically passed, reviewed within the recorded sample scope, and saved. The overview, README, technical records, checksums and complete ZIP are also saved. No Cinematic Ten owner approval is recorded.
 

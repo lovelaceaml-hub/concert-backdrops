@@ -1,0 +1,377 @@
+{
+  "schema_version": 1,
+  "status": "both_revised_films_and_complete_ten_film_package_saved",
+  "recorded_utc": "2026-11-22T10:21:38.162872+00:00",
+  "source_picture_commit": "254414bc0356171f7d5ad89361c75d45fd01a407",
+  "integration_pr": "https://github.com/lovelaceaml-hub/concert-backdrops/pull/109",
+  "new_movie_count": 2,
+  "retained_movie_count": 8,
+  "film_count": 10,
+  "new_saved_artifact_count": 9,
+  "new_saved_support_count": 7,
+  "combined_duration_seconds": 224,
+  "films": [
+    {
+      "film_id": 1,
+      "title": "Silk in Light",
+      "duration_seconds": 32,
+      "frames": 1920,
+      "revision": "advanced_dance",
+      "saved_file": {
+        "filename": "01_Silk_in_Light_Advanced_Dance_1080p60.mp4",
+        "path": "work/advanced-dance/delivery/01_Silk_in_Light_Advanced_Dance_1080p60.mp4",
+        "sha256": "8f02ee2a72a128198771cfb8f3d3dabc0b90716abdb4c028d19fa462b6a6edac",
+        "bytes": 57396334,
+        "status": "saved",
+        "library_file_id": "libfile_5efbae79a5d88191b729f3726b94d117",
+        "file_id": "file_000000003f7c81f5b33ed8b9816ae379",
+        "version": 0,
+        "url": "https://chatgpt.com/library?file_id=libfile_5efbae79a5d88191b729f3726b94d117&account_id=personal"
+      },
+      "owner_approval": "not_recorded"
+    },
+    {
+      "film_id": 2,
+      "title": "Petals in Motion",
+      "duration_seconds": 32,
+      "frames": 1920,
+      "revision": "advanced_dance",
+      "saved_file": {
+        "filename": "02_Petals_in_Motion_Advanced_Dance_1080p60.mp4",
+        "path": "work/advanced-dance/delivery/02_Petals_in_Motion_Advanced_Dance_1080p60.mp4",
+        "bytes": 76939037,
+        "sha256": "8bedc48bc2586d903f5aefcb8bfea89ecad58359326ffdc27f5988b0f573540d",
+        "status": "saved",
+        "library_file_id": "libfile_bdf3a9b4e1f481918e768953be62a279",
+        "file_id": "file_00000000e4c0822f8aeacb6abe26103c",
+        "version": 0,
+        "url": "https://chatgpt.com/library?file_id=libfile_bdf3a9b4e1f481918e768953be62a279&account_id=personal"
+      },
+      "owner_approval": "not_recorded"
+    },
+    {
+      "film_id": 3,
+      "title": "One World, Many Hearts",
+      "duration_seconds": 20,
+      "frames": 1200,
+      "revision": "original_picture_retained",
+      "saved_file": {
+        "filename": "03_One_World_Many_Hearts_1080p60.mp4",
+        "bytes": 30585104,
+        "sha256": "753080691767d6935311def4c84cb00542eff5321cbe785b7394fcd206899455",
+        "library_file_id": "libfile_c7f33c7ed65c8191bf2ca8b5868607f0",
+        "file_id": "file_00000000b32c81f69cfa4b17f58060d6",
+        "version": 0,
+        "status": "saved",
+        "url": "https://chatgpt.com/library?file_id=libfile_c7f33c7ed65c8191bf2ca8b5868607f0&account_id=personal"
+      },
+      "owner_approval": "not_recorded"
+    },
+    {
+      "film_id": 4,
+      "title": "The Written Light",
+      "duration_seconds": 20,
+      "frames": 1200,
+      "revision": "original_picture_retained",
+      "saved_file": {
+        "filename": "04_The_Written_Light_1080p60.mp4",
+        "bytes": 27369572,
+        "sha256": "f90fe7b96eb3d1164c3056713e9553d1b9ccf1919002e307c7d4406ee81af70e",
+        "library_file_id": "libfile_1b901203e3788191a56b51d623a4e986",
+        "file_id": "file_000000000d6881f78d7b7e22b4516c35",
+        "version": 0,
+        "status": "saved",
+        "url": "https://chatgpt.com/library?file_id=libfile_1b901203e3788191a56b51d623a4e986&account_id=personal"
+      },
+      "owner_approval": "not_recorded"
+    },
+    {
+      "film_id": 5,
+      "title": "Procession of Lanterns",
+      "duration_seconds": 20,
+      "frames": 1200,
+      "revision": "original_picture_retained",
+      "saved_file": {
+        "filename": "05_Procession_of_Lanterns_1080p60.mp4",
+        "bytes": 44205575,
+        "sha256": "25c8959c1ef906b6587cefd4deae48efb44ba870ba16a7031b3b2b5bbf051b9d",
+        "library_file_id": "libfile_6b97089123b4819194218560c357ce8c",
+        "file_id": "file_00000000d6508212b2a18c604ec6e447",
+        "version": 0,
+        "status": "saved",
+        "url": "https://chatgpt.com/library?file_id=libfile_6b97089123b4819194218560c357ce8c&account_id=personal"
+      },
+      "owner_approval": "not_recorded"
+    },
+    {
+      "film_id": 6,
+      "title": "A Garden Awakens",
+      "duration_seconds": 20,
+      "frames": 1200,
+      "revision": "original_picture_retained",
+      "saved_file": {
+        "filename": "06_A_Garden_Awakens_1080p60.mp4",
+        "bytes": 51061569,
+        "sha256": "2d3bdc8e8903b13b5d60a442f8b533d6aab57516c449ecb4a41210e03f2cf3d8",
+        "library_file_id": "libfile_8fcaa552e044819191bd992d593e52c8",
+        "file_id": "file_000000002978822fb5856c03126f8f31",
+        "version": 0,
+        "status": "saved",
+        "url": "https://chatgpt.com/library?file_id=libfile_8fcaa552e044819191bd992d593e52c8&account_id=personal"
+      },
+      "owner_approval": "not_recorded"
+    },
+    {
+      "film_id": 7,
+      "title": "Wings of Peace",
+      "duration_seconds": 20,
+      "frames": 1200,
+      "revision": "original_picture_retained",
+      "saved_file": {
+        "filename": "07_Wings_of_Peace_1080p60.mp4",
+        "bytes": 21902494,
+        "sha256": "30880be109c9da3de5e96037f397ac8c8c8c72c101d7cda4776accc2633d2b6f",
+        "library_file_id": "libfile_821bfd25f004819193badf599d094903",
+        "file_id": "file_00000000c7f481f5b0c02f83b6d50fff",
+        "version": 0,
+        "status": "saved",
+        "url": "https://chatgpt.com/library?file_id=libfile_821bfd25f004819193badf599d094903&account_id=personal"
+      },
+      "owner_approval": "not_recorded"
+    },
+    {
+      "film_id": 8,
+      "title": "Ocean of Light",
+      "duration_seconds": 20,
+      "frames": 1200,
+      "revision": "original_picture_retained",
+      "saved_file": {
+        "filename": "08_Ocean_of_Light_1080p60.mp4",
+        "bytes": 37434533,
+        "sha256": "da076670eb36a52b087bee26128bee0eab4baab8a9ae08ff5fc197b2a0052fc6",
+        "library_file_id": "libfile_a306fcad0d588191b4c4626bd36e2867",
+        "file_id": "file_00000000361081f5af59afd0c29328f7",
+        "version": 0,
+        "status": "saved",
+        "url": "https://chatgpt.com/library?file_id=libfile_a306fcad0d588191b4c4626bd36e2867&account_id=personal"
+      },
+      "owner_approval": "not_recorded"
+    },
+    {
+      "film_id": 9,
+      "title": "Celestial Clockwork",
+      "duration_seconds": 20,
+      "frames": 1200,
+      "revision": "original_picture_retained",
+      "saved_file": {
+        "filename": "09_Celestial_Clockwork_1080p60.mp4",
+        "bytes": 23457102,
+        "sha256": "b4c4956e5401ce5fe3283037a0cd7d6ca9f3f042a104d599fa94f50d6e5254b4",
+        "library_file_id": "libfile_b5e1f83e34b0819184f426415648399d",
+        "file_id": "file_000000000a1481f5a5d8fe96547b6436",
+        "version": 0,
+        "status": "saved",
+        "url": "https://chatgpt.com/library?file_id=libfile_b5e1f83e34b0819184f426415648399d&account_id=personal"
+      },
+      "owner_approval": "not_recorded"
+    },
+    {
+      "film_id": 10,
+      "title": "Together in the Light",
+      "duration_seconds": 20,
+      "frames": 1200,
+      "revision": "original_picture_retained",
+      "saved_file": {
+        "filename": "10_Together_in_the_Light_1080p60.mp4",
+        "bytes": 34430368,
+        "sha256": "e62b7ef360cc1ef29df6cf8221a2ce72c29ba9f22ddfbd7b749e64a4cbbc939f",
+        "library_file_id": "libfile_e3c5f7bacecc8191a9b271ea8f3d4943",
+        "file_id": "file_000000006fc881f5bb9bc2ac0da9eba4",
+        "version": 0,
+        "status": "saved",
+        "url": "https://chatgpt.com/library?file_id=libfile_e3c5f7bacecc8191a9b271ea8f3d4943&account_id=personal"
+      },
+      "owner_approval": "not_recorded"
+    }
+  ],
+  "files": [
+    {
+      "filename": "02_Petals_in_Motion_Advanced_Dance_1080p60.mp4",
+      "path": "work/advanced-dance/delivery/02_Petals_in_Motion_Advanced_Dance_1080p60.mp4",
+      "bytes": 76939037,
+      "sha256": "8bedc48bc2586d903f5aefcb8bfea89ecad58359326ffdc27f5988b0f573540d",
+      "status": "saved",
+      "library_file_id": "libfile_bdf3a9b4e1f481918e768953be62a279",
+      "file_id": "file_00000000e4c0822f8aeacb6abe26103c",
+      "version": 0,
+      "url": "https://chatgpt.com/library?file_id=libfile_bdf3a9b4e1f481918e768953be62a279&account_id=personal"
+    },
+    {
+      "filename": "Ten_Cinematic_Films_Advanced_Dance_1080p60.zip",
+      "path": "work/advanced-dance/delivery/Ten_Cinematic_Films_Advanced_Dance_1080p60.zip",
+      "bytes": 410134925,
+      "sha256": "73fcccc8e659b4f8a40604945509163944be4ca13bec660d350637aa7dca336c",
+      "status": "saved",
+      "library_file_id": "libfile_02d1b9fcefdc8191ab72741639bd1fb2",
+      "file_id": "file_000000005280822f87ea4b2a22505135",
+      "version": 0,
+      "url": "https://chatgpt.com/library?file_id=libfile_02d1b9fcefdc8191ab72741639bd1fb2&account_id=personal"
+    },
+    {
+      "filename": "Ten_Cinematic_Films_Advanced_Dance_Overview.jpg",
+      "path": "work/advanced-dance/delivery/Ten_Cinematic_Films_Advanced_Dance_Overview.jpg",
+      "bytes": 3244143,
+      "sha256": "c8a2c8be415c95a6ce71362feab63d491c44b4cedff6271ba0818153695c4b81",
+      "status": "saved",
+      "library_file_id": "libfile_0c18dc44f6e0819182a087eaef6d669a",
+      "file_id": "file_000000001744822fb8ecd0765ec6246a",
+      "version": 0,
+      "url": "https://chatgpt.com/library?file_id=libfile_0c18dc44f6e0819182a087eaef6d669a&account_id=personal"
+    },
+    {
+      "filename": "Ten_Cinematic_Films_Advanced_Dance_Technical.json",
+      "path": "work/advanced-dance/delivery/Ten_Cinematic_Films_Advanced_Dance_Technical.json",
+      "bytes": 482657,
+      "sha256": "867cf8da1ddc6b9e43a9bd5c120d8fe69ac2cd3921dc8169def75129ce1cb6b9",
+      "status": "saved",
+      "library_file_id": "libfile_9cedecf92e288191bc354b9f5fcd1a4d",
+      "file_id": "file_00000000bf4c822f93d57169a757e804",
+      "version": 0,
+      "url": "https://chatgpt.com/library?file_id=libfile_9cedecf92e288191bc354b9f5fcd1a4d&account_id=personal"
+    },
+    {
+      "filename": "Advanced_Dance_QA.json",
+      "path": "work/advanced-dance/delivery/Advanced_Dance_QA.json",
+      "bytes": 11659942,
+      "sha256": "37132a066833deb91829de442aeda2700a0b77ef18fec4f1fb3389a46c2c04fc",
+      "status": "saved",
+      "library_file_id": "libfile_cccbc0cf6fd08191b09dd484c91a9fcd",
+      "file_id": "file_000000002fd4822f9cfc5a597c790695",
+      "version": 0,
+      "url": "https://chatgpt.com/library?file_id=libfile_cccbc0cf6fd08191b09dd484c91a9fcd&account_id=personal"
+    },
+    {
+      "filename": "README.txt",
+      "path": "work/advanced-dance/delivery/README.txt",
+      "bytes": 3377,
+      "sha256": "8daf78bb6ae589400e30aa8e678329bfc09924e5adb3768eb1ce83d2a1ebff8a",
+      "status": "saved",
+      "library_file_id": "libfile_b0385f1023bc8191b39bcd0f6e72cbd7",
+      "file_id": "file_000000004294822fb9420fbc57d8c5ca",
+      "version": 0,
+      "url": "https://chatgpt.com/library?file_id=libfile_b0385f1023bc8191b39bcd0f6e72cbd7&account_id=personal"
+    },
+    {
+      "filename": "SHA256SUMS.txt",
+      "path": "work/advanced-dance/delivery/SHA256SUMS.txt",
+      "bytes": 1419,
+      "sha256": "98f7774374aaf5f271215fab10a021193e31acd9a5e9162ea522647f1ffc5613",
+      "status": "saved",
+      "library_file_id": "libfile_3ede63b34878819188d32f74e4132f78",
+      "file_id": "file_000000009544822fa93d5e2fc0b80295",
+      "version": 0,
+      "url": "https://chatgpt.com/library?file_id=libfile_3ede63b34878819188d32f74e4132f78&account_id=personal"
+    },
+    {
+      "filename": "Packaging_Receipt.json",
+      "path": "work/advanced-dance/delivery/Packaging_Receipt.json",
+      "bytes": 3440,
+      "sha256": "2f6f7ad0a534e7651cccc1dcde17b3af11724d8c4b9cfeeac04b1989c0c0b3e5",
+      "status": "saved",
+      "library_file_id": "libfile_6dd899b883fc81919acb2641264c72ec",
+      "file_id": "file_00000000dc40822f8547587fa84df4e7",
+      "version": 0,
+      "url": "https://chatgpt.com/library?file_id=libfile_6dd899b883fc81919acb2641264c72ec&account_id=personal"
+    },
+    {
+      "filename": "01_Silk_in_Light_Advanced_Dance_1080p60.mp4",
+      "path": "work/advanced-dance/delivery/01_Silk_in_Light_Advanced_Dance_1080p60.mp4",
+      "sha256": "8f02ee2a72a128198771cfb8f3d3dabc0b90716abdb4c028d19fa462b6a6edac",
+      "bytes": 57396334,
+      "status": "saved",
+      "library_file_id": "libfile_5efbae79a5d88191b729f3726b94d117",
+      "file_id": "file_000000003f7c81f5b33ed8b9816ae379",
+      "version": 0,
+      "url": "https://chatgpt.com/library?file_id=libfile_5efbae79a5d88191b729f3726b94d117&account_id=personal"
+    }
+  ],
+  "archive": {
+    "filename": "Ten_Cinematic_Films_Advanced_Dance_1080p60.zip",
+    "path": "work/advanced-dance/delivery/Ten_Cinematic_Films_Advanced_Dance_1080p60.zip",
+    "bytes": 410134925,
+    "sha256": "73fcccc8e659b4f8a40604945509163944be4ca13bec660d350637aa7dca336c",
+    "status": "saved",
+    "library_file_id": "libfile_02d1b9fcefdc8191ab72741639bd1fb2",
+    "file_id": "file_000000005280822f87ea4b2a22505135",
+    "version": 0,
+    "url": "https://chatgpt.com/library?file_id=libfile_02d1b9fcefdc8191ab72741639bd1fb2&account_id=personal"
+  },
+  "packaging_receipt": {
+    "path": "work/advanced-dance/delivery/Packaging_Receipt.json",
+    "bytes": 3440,
+    "sha256": "2f6f7ad0a534e7651cccc1dcde17b3af11724d8c4b9cfeeac04b1989c0c0b3e5"
+  },
+  "technical_record": {
+    "path": "work/advanced-dance/delivery/Ten_Cinematic_Films_Advanced_Dance_Technical.json",
+    "bytes": 482657,
+    "sha256": "867cf8da1ddc6b9e43a9bd5c120d8fe69ac2cd3921dc8169def75129ce1cb6b9"
+  },
+  "validation_ledger": {
+    "path": "project-docs/production-system/evidence/advanced-dance-validation.json",
+    "bytes": 67492,
+    "sha256": "239de011d090b2ea7691064b47beccc40970c5d9895e98cecec458f5362354a4"
+  },
+  "final_movie_reviews": {
+    "solo": {
+      "mode": "solo",
+      "master_sha256": "8f02ee2a72a128198771cfb8f3d3dabc0b90716abdb4c028d19fa462b6a6edac",
+      "bytes": 57396334,
+      "source_fingerprint": "437e7420ab538baf3608b879ca371a335ffbbaa09e77444cce7103485b5801ed",
+      "technical_passed": true,
+      "native_frames": 1920,
+      "duration_seconds": 32,
+      "fps": 60,
+      "final_review": {
+        "path": "work/advanced-dance/qa/final/independent-solo-final-encoded-review.json",
+        "sha256": "d923351a3dd1390d6bb0f05abebe6dba4600aec87746b92ecd9ddf627e34a4b2",
+        "bytes": 8935,
+        "include_full_json_in_final_package": true
+      },
+      "distinct_decoded_frames": 150,
+      "inspected_sheets": 29,
+      "sampled_visual_blockers": 0,
+      "owner_approval": false
+    },
+    "ensemble": {
+      "mode": "ensemble",
+      "master_sha256": "8bedc48bc2586d903f5aefcb8bfea89ecad58359326ffdc27f5988b0f573540d",
+      "bytes": 76939037,
+      "source_fingerprint": "ec76277c753ba288fb9a2d6634a1f45e4741747f33baad3d237e7be5ff1f272d",
+      "technical_passed": true,
+      "native_frames": 1920,
+      "duration_seconds": 32,
+      "fps": 60,
+      "final_review": {
+        "path": "work/advanced-dance/qa/final/independent-ensemble-final-encoded-review.json",
+        "sha256": "4da1581fee14ac24821327c1e254ad6217352be061c6ea6bcd54f07859204bb0",
+        "bytes": 25441,
+        "include_full_json_in_final_package": true
+      },
+      "distinct_decoded_frames": 135,
+      "inspected_sheets": 22,
+      "sampled_visual_blockers": 0,
+      "owner_approval": false
+    }
+  },
+  "overview_layout_review": {
+    "path": "project-docs/production-system/evidence/advanced-dance-overview-review.json",
+    "bytes": 1088,
+    "sha256": "8b8a779c57017d4143efbcf5c31198c200ef9c339d9f24e059e284988b2504ea"
+  },
+  "render_completion": "project-docs/production-system/evidence/advanced-dance-render-completion.json",
+  "previous_eight_movies_byte_exact": true,
+  "movie_reencoding_during_packaging": false,
+  "owner_approval": "not_recorded",
+  "review_scope": "Both new movies passed complete technical checks. Visual review covers the recorded native and decoded samples, including dense fast-motion windows and all camera cuts. Desktop playback was observed in snapshots. These are separate from continuous perceptual every-frame inspection, listening assessment, physical balance and owner approval.",
+  "optional_drive_copy": "No new copy claimed; previously blocked optional copy was not retried."
+}

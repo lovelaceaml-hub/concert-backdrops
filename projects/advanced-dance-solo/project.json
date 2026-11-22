@@ -1,0 +1,530 @@
+{
+  "schema_version": 1,
+  "project_id": "advanced-dance-solo",
+  "title": "Silk in Light: Advanced Choreography",
+  "description": "A complete original 32-second, 64-count performance with articulated hands, explicit foot supports, pleated fans and coordinated stage light.",
+  "video": {
+    "width": 1920,
+    "height": 1080,
+    "fps": 60
+  },
+  "production": {
+    "cloud_gpu_provider": null,
+    "allow_local_gpu": false,
+    "allow_paid_services": false,
+    "allow_ai_generated_visuals": false,
+    "allow_stock_footage": false,
+    "random_seed": 20261121,
+    "threads": 1,
+    "render_workers": 3,
+    "render_chunk_frames": 320,
+    "render_timeout_seconds": 7200
+  },
+  "quality": {
+    "draft": {
+      "width": 960,
+      "height": 540,
+      "temporal_samples": 1,
+      "image_bit_depth": 8
+    },
+    "review": {
+      "width": 1920,
+      "height": 1080,
+      "temporal_samples": 2,
+      "image_bit_depth": 8
+    },
+    "final": {
+      "width": 1920,
+      "height": 1080,
+      "temporal_samples": 2,
+      "image_bit_depth": 8
+    }
+  },
+  "delivery": {
+    "profile": "h264",
+    "source_transfer": "legacy_display_gamma",
+    "color_space": "rec709"
+  },
+  "style": "styles/zion-cinematic.json",
+  "audio": {
+    "source": "work/advanced-dance/audio/solo.wav",
+    "source_sha256": "d43dadfeaf8c7181b0d1cdeee240a0387940e066aa5874716038bd4040e9996a",
+    "offset_seconds": 0
+  },
+  "timing": {
+    "fps": 60,
+    "visual_only": false,
+    "manually_verified": false,
+    "note": "Choreography follows the saved source-specific machine-estimated beat clock at original playback speed. Rehearsal conformance and instrument-specific hit approval are not claimed.",
+    "clock_source": "tools/advanced_dance/clock.json",
+    "clock_mode": "solo",
+    "events": [
+      {
+        "frame": 0,
+        "kind": "estimated_beat",
+        "beat": 0,
+        "seconds": 0.0,
+        "confirmed": false
+      },
+      {
+        "frame": 29,
+        "kind": "estimated_beat",
+        "beat": 1,
+        "seconds": 0.48761904761904784,
+        "confirmed": false
+      },
+      {
+        "frame": 57,
+        "kind": "estimated_beat",
+        "beat": 2,
+        "seconds": 0.9520181405895682,
+        "confirmed": false
+      },
+      {
+        "frame": 85,
+        "kind": "estimated_beat",
+        "beat": 3,
+        "seconds": 1.4164172335600904,
+        "confirmed": false
+      },
+      {
+        "frame": 114,
+        "kind": "estimated_beat",
+        "beat": 4,
+        "seconds": 1.9040362811791391,
+        "confirmed": false
+      },
+      {
+        "frame": 142,
+        "kind": "estimated_beat",
+        "beat": 5,
+        "seconds": 2.3684353741496595,
+        "confirmed": false
+      },
+      {
+        "frame": 170,
+        "kind": "estimated_beat",
+        "beat": 6,
+        "seconds": 2.8328344671201817,
+        "confirmed": false
+      },
+      {
+        "frame": 198,
+        "kind": "estimated_beat",
+        "beat": 7,
+        "seconds": 3.297233560090702,
+        "confirmed": false
+      },
+      {
+        "frame": 226,
+        "kind": "estimated_beat",
+        "beat": 8,
+        "seconds": 3.7616326530612243,
+        "confirmed": false
+      },
+      {
+        "frame": 254,
+        "kind": "estimated_beat",
+        "beat": 9,
+        "seconds": 4.2260317460317465,
+        "confirmed": false
+      },
+      {
+        "frame": 281,
+        "kind": "estimated_beat",
+        "beat": 10,
+        "seconds": 4.690430839002267,
+        "confirmed": false
+      },
+      {
+        "frame": 309,
+        "kind": "estimated_beat",
+        "beat": 11,
+        "seconds": 5.154829931972789,
+        "confirmed": false
+      },
+      {
+        "frame": 334,
+        "kind": "estimated_beat",
+        "beat": 12,
+        "seconds": 5.572789115646258,
+        "confirmed": false
+      },
+      {
+        "frame": 361,
+        "kind": "estimated_beat",
+        "beat": 13,
+        "seconds": 6.013968253968254,
+        "confirmed": false
+      },
+      {
+        "frame": 389,
+        "kind": "estimated_beat",
+        "beat": 14,
+        "seconds": 6.478367346938776,
+        "confirmed": false
+      },
+      {
+        "frame": 418,
+        "kind": "estimated_beat",
+        "beat": 15,
+        "seconds": 6.965986394557823,
+        "confirmed": false
+      },
+      {
+        "frame": 447,
+        "kind": "estimated_beat",
+        "beat": 16,
+        "seconds": 7.45360544217687,
+        "confirmed": false
+      },
+      {
+        "frame": 475,
+        "kind": "estimated_beat",
+        "beat": 17,
+        "seconds": 7.918004535147392,
+        "confirmed": false
+      },
+      {
+        "frame": 502,
+        "kind": "estimated_beat",
+        "beat": 18,
+        "seconds": 8.359183673469389,
+        "confirmed": false
+      },
+      {
+        "frame": 527,
+        "kind": "estimated_beat",
+        "beat": 19,
+        "seconds": 8.777142857142856,
+        "confirmed": false
+      },
+      {
+        "frame": 553,
+        "kind": "estimated_beat",
+        "beat": 20,
+        "seconds": 9.218321995464851,
+        "confirmed": false
+      },
+      {
+        "frame": 577,
+        "kind": "estimated_beat",
+        "beat": 21,
+        "seconds": 9.613061224489794,
+        "confirmed": false
+      },
+      {
+        "frame": 603,
+        "kind": "estimated_beat",
+        "beat": 22,
+        "seconds": 10.05424036281179,
+        "confirmed": false
+      },
+      {
+        "frame": 631,
+        "kind": "estimated_beat",
+        "beat": 23,
+        "seconds": 10.518639455782314,
+        "confirmed": false
+      },
+      {
+        "frame": 658,
+        "kind": "estimated_beat",
+        "beat": 24,
+        "seconds": 10.95981859410431,
+        "confirmed": false
+      },
+      {
+        "frame": 687,
+        "kind": "estimated_beat",
+        "beat": 25,
+        "seconds": 11.447437641723354,
+        "confirmed": false
+      },
+      {
+        "frame": 713,
+        "kind": "estimated_beat",
+        "beat": 26,
+        "seconds": 11.88861678004535,
+        "confirmed": false
+      },
+      {
+        "frame": 740,
+        "kind": "estimated_beat",
+        "beat": 27,
+        "seconds": 12.329795918367346,
+        "confirmed": false
+      },
+      {
+        "frame": 768,
+        "kind": "estimated_beat",
+        "beat": 28,
+        "seconds": 12.794195011337866,
+        "confirmed": false
+      },
+      {
+        "frame": 794,
+        "kind": "estimated_beat",
+        "beat": 29,
+        "seconds": 13.235374149659862,
+        "confirmed": false
+      },
+      {
+        "frame": 823,
+        "kind": "estimated_beat",
+        "beat": 30,
+        "seconds": 13.72299319727891,
+        "confirmed": false
+      },
+      {
+        "frame": 853,
+        "kind": "estimated_beat",
+        "beat": 31,
+        "seconds": 14.210612244897959,
+        "confirmed": false
+      },
+      {
+        "frame": 882,
+        "kind": "estimated_beat",
+        "beat": 32,
+        "seconds": 14.698231292517004,
+        "confirmed": false
+      },
+      {
+        "frame": 913,
+        "kind": "estimated_beat",
+        "beat": 33,
+        "seconds": 15.209070294784581,
+        "confirmed": false
+      },
+      {
+        "frame": 942,
+        "kind": "estimated_beat",
+        "beat": 34,
+        "seconds": 15.696689342403626,
+        "confirmed": false
+      },
+      {
+        "frame": 967,
+        "kind": "estimated_beat",
+        "beat": 35,
+        "seconds": 16.114648526077097,
+        "confirmed": false
+      },
+      {
+        "frame": 993,
+        "kind": "estimated_beat",
+        "beat": 36,
+        "seconds": 16.555827664399093,
+        "confirmed": false
+      },
+      {
+        "frame": 1020,
+        "kind": "estimated_beat",
+        "beat": 37,
+        "seconds": 16.99700680272109,
+        "confirmed": false
+      },
+      {
+        "frame": 1048,
+        "kind": "estimated_beat",
+        "beat": 38,
+        "seconds": 17.46140589569161,
+        "confirmed": false
+      },
+      {
+        "frame": 1074,
+        "kind": "estimated_beat",
+        "beat": 39,
+        "seconds": 17.902585034013605,
+        "confirmed": false
+      },
+      {
+        "frame": 1103,
+        "kind": "estimated_beat",
+        "beat": 40,
+        "seconds": 18.390204081632653,
+        "confirmed": false
+      },
+      {
+        "frame": 1128,
+        "kind": "estimated_beat",
+        "beat": 41,
+        "seconds": 18.80816326530612,
+        "confirmed": false
+      },
+      {
+        "frame": 1155,
+        "kind": "estimated_beat",
+        "beat": 42,
+        "seconds": 19.249342403628116,
+        "confirmed": false
+      },
+      {
+        "frame": 1181,
+        "kind": "estimated_beat",
+        "beat": 43,
+        "seconds": 19.690521541950112,
+        "confirmed": false
+      },
+      {
+        "frame": 1208,
+        "kind": "estimated_beat",
+        "beat": 44,
+        "seconds": 20.131700680272107,
+        "confirmed": false
+      },
+      {
+        "frame": 1236,
+        "kind": "estimated_beat",
+        "beat": 45,
+        "seconds": 20.596099773242628,
+        "confirmed": false
+      },
+      {
+        "frame": 1264,
+        "kind": "estimated_beat",
+        "beat": 46,
+        "seconds": 21.060498866213152,
+        "confirmed": false
+      },
+      {
+        "frame": 1291,
+        "kind": "estimated_beat",
+        "beat": 47,
+        "seconds": 21.524897959183672,
+        "confirmed": false
+      },
+      {
+        "frame": 1319,
+        "kind": "estimated_beat",
+        "beat": 48,
+        "seconds": 21.989297052154193,
+        "confirmed": false
+      },
+      {
+        "frame": 1347,
+        "kind": "estimated_beat",
+        "beat": 49,
+        "seconds": 22.453696145124717,
+        "confirmed": false
+      },
+      {
+        "frame": 1375,
+        "kind": "estimated_beat",
+        "beat": 50,
+        "seconds": 22.918095238095237,
+        "confirmed": false
+      },
+      {
+        "frame": 1402,
+        "kind": "estimated_beat",
+        "beat": 51,
+        "seconds": 23.359274376417233,
+        "confirmed": false
+      },
+      {
+        "frame": 1428,
+        "kind": "estimated_beat",
+        "beat": 52,
+        "seconds": 23.800453514739228,
+        "confirmed": false
+      },
+      {
+        "frame": 1454,
+        "kind": "estimated_beat",
+        "beat": 53,
+        "seconds": 24.241632653061224,
+        "confirmed": false
+      },
+      {
+        "frame": 1482,
+        "kind": "estimated_beat",
+        "beat": 54,
+        "seconds": 24.706031746031748,
+        "confirmed": false
+      },
+      {
+        "frame": 1510,
+        "kind": "estimated_beat",
+        "beat": 55,
+        "seconds": 25.170430839002265,
+        "confirmed": false
+      },
+      {
+        "frame": 1537,
+        "kind": "estimated_beat",
+        "beat": 56,
+        "seconds": 25.611609977324264,
+        "confirmed": false
+      },
+      {
+        "frame": 1565,
+        "kind": "estimated_beat",
+        "beat": 57,
+        "seconds": 26.07600907029478,
+        "confirmed": false
+      },
+      {
+        "frame": 1590,
+        "kind": "estimated_beat",
+        "beat": 58,
+        "seconds": 26.493968253968255,
+        "confirmed": false
+      },
+      {
+        "frame": 1618,
+        "kind": "estimated_beat",
+        "beat": 59,
+        "seconds": 26.958367346938772,
+        "confirmed": false
+      },
+      {
+        "frame": 1645,
+        "kind": "estimated_beat",
+        "beat": 60,
+        "seconds": 27.422766439909296,
+        "confirmed": false
+      },
+      {
+        "frame": 1673,
+        "kind": "estimated_beat",
+        "beat": 61,
+        "seconds": 27.88716553287982,
+        "confirmed": false
+      },
+      {
+        "frame": 1700,
+        "kind": "estimated_beat",
+        "beat": 62,
+        "seconds": 28.328344671201812,
+        "confirmed": false
+      },
+      {
+        "frame": 1728,
+        "kind": "estimated_beat",
+        "beat": 63,
+        "seconds": 28.792743764172336,
+        "confirmed": false
+      },
+      {
+        "frame": 1755,
+        "kind": "estimated_beat",
+        "beat": 64,
+        "seconds": 29.257142857142853,
+        "confirmed": false
+      }
+    ]
+  },
+  "shots": [
+    {
+      "id": "performance",
+      "name": "Silk in Light: Advanced Choreography",
+      "renderer": "p3d-kit",
+      "start_frame": 0,
+      "end_frame_exclusive": 1920,
+      "scene": "tools/advanced_dance/solo.py",
+      "params": {}
+    }
+  ]
+}

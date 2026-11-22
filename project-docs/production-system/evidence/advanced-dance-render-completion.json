@@ -1,0 +1,57 @@
+{
+  "schema_version": 1,
+  "status": "both_final_render_coordinators_complete",
+  "recorded_utc": "2026-11-22T10:15:17.909206+00:00",
+  "picture_source_commit": "254414bc0356171f7d5ad89361c75d45fd01a407",
+  "active_task_renderers_at_closeout": 0,
+  "observation_scope": "The task's production coordinators completed and their final receipts contain all 1,920 frames. This is scoped task completion evidence, not a claim about unrelated system processes.",
+  "films": {
+    "solo": {
+      "mode": "solo",
+      "master_sha256": "8f02ee2a72a128198771cfb8f3d3dabc0b90716abdb4c028d19fa462b6a6edac",
+      "bytes": 57396334,
+      "source_fingerprint": "437e7420ab538baf3608b879ca371a335ffbbaa09e77444cce7103485b5801ed",
+      "technical_passed": true,
+      "native_frames": 1920,
+      "duration_seconds": 32,
+      "fps": 60,
+      "final_review": {
+        "path": "work/advanced-dance/qa/final/independent-solo-final-encoded-review.json",
+        "sha256": "d923351a3dd1390d6bb0f05abebe6dba4600aec87746b92ecd9ddf627e34a4b2",
+        "bytes": 8935,
+        "include_full_json_in_final_package": true
+      },
+      "distinct_decoded_frames": 150,
+      "inspected_sheets": 29,
+      "sampled_visual_blockers": 0,
+      "owner_approval": false
+    },
+    "ensemble": {
+      "mode": "ensemble",
+      "master_sha256": "8bedc48bc2586d903f5aefcb8bfea89ecad58359326ffdc27f5988b0f573540d",
+      "bytes": 76939037,
+      "source_fingerprint": "ec76277c753ba288fb9a2d6634a1f45e4741747f33baad3d237e7be5ff1f272d",
+      "technical_passed": true,
+      "native_frames": 1920,
+      "duration_seconds": 32,
+      "fps": 60,
+      "final_review": {
+        "path": "work/advanced-dance/qa/final/independent-ensemble-final-encoded-review.json",
+        "sha256": "4da1581fee14ac24821327c1e254ad6217352be061c6ea6bcd54f07859204bb0",
+        "bytes": 25441,
+        "include_full_json_in_final_package": true
+      },
+      "distinct_decoded_frames": 135,
+      "inspected_sheets": 22,
+      "sampled_visual_blockers": 0,
+      "owner_approval": false
+    }
+  },
+  "ensemble_final_execution": {
+    "path": "work/advanced-dance/execution/ensemble-final-run.json",
+    "sha256": "b3bcd5b630d80268ae90549dbd31318ee67fd353d7f9035f503a2c55cd834526",
+    "bytes": 923,
+    "include_full_json_in_final_package": true
+  },
+  "owner_approval": false
+}

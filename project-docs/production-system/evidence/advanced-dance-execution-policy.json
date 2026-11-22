@@ -1,0 +1,123 @@
+{
+  "changes": {
+    "render_chunk_frames": {
+      "from": 320,
+      "to": 96
+    },
+    "render_workers": {
+      "from": 3,
+      "to": 2
+    }
+  },
+  "continuations": [
+    {
+      "concurrent_solo_render_workers": 0,
+      "execution_manifest": "work/advanced-dance/execution/ensemble-four-workers.json",
+      "execution_manifest_sha256": "826b16bfdec87b3c94d2a8ce573a76ef3b776566579a20e2384bffc5c359c51f",
+      "execution_manifest_snapshot": "project-docs/production-system/evidence/advanced-dance-ensemble-four-worker-manifest.json",
+      "full_picture_provenance_unchanged": true,
+      "observed_available_memory_kib_before_pause": 6160552,
+      "observed_utc": "2026-11-22T09:17:31.562720+00:00",
+      "picture_fingerprint": "ec76277c753ba288fb9a2d6634a1f45e4741747f33baad3d237e7be5ff1f272d",
+      "preserved_even_frames": 619,
+      "preserved_frames": 621,
+      "prior_coordinator_session": 48145,
+      "prior_exit_code": 2,
+      "prior_exit_scope": "Intentional STOP; completed frames retained by official coordinator.",
+      "reason": "All1,920solo native frames reconciled and all solo render workers exited; reallocate capacity to ensemble.",
+      "receipt_snapshot": "work/advanced-dance/execution/ensemble-reallocated-receipt.json",
+      "receipt_snapshot_sha256": "5dc9e41e82a2214e2688debff88c1660724485cf283fdb1c9eee56125f0afc6c",
+      "render_chunk_frames": 96,
+      "render_workers": 4
+    },
+    {
+      "concurrent_solo_render_workers": 0,
+      "execution_manifest": "work/advanced-dance/execution/ensemble-three-workers.json",
+      "execution_manifest_sha256": "a7e6f990e278fd8d37f8977e48f8f7593a7074e38cf1fbda8cd21bff83be9b8a",
+      "execution_manifest_snapshot": "project-docs/production-system/evidence/advanced-dance-ensemble-three-worker-manifest.json",
+      "failed_chunk": "chunk_000001",
+      "failed_invocation": "67afc5ad447f495893faee031fdee47f",
+      "failed_worker_last_frame": 1040,
+      "full_picture_provenance_unchanged": true,
+      "observed_utc": "2026-11-22T09:26:00.625678+00:00",
+      "picture_fingerprint": "ec76277c753ba288fb9a2d6634a1f45e4741747f33baad3d237e7be5ff1f272d",
+      "preserved_even_frames": 804,
+      "preserved_frames": 806,
+      "prior_coordinator_session": 31813,
+      "prior_exit_code": 2,
+      "prior_exit_scope": "Official STOP drained healthy workers and preserved atomically completed frames after prior worker failure.",
+      "reason": "Four-worker middle chunk terminated with exit-9 at frame1040 while solo encoding/review also ran. Exact SIGKILL cause is not established. Enforce three short-batch workers for remaining ensemble production.",
+      "receipt_snapshot": "work/advanced-dance/execution/ensemble-four-worker-stopped-receipt.json",
+      "receipt_snapshot_sha256": "b80d942be3cd0427854f577923bb6cf21d1a32d7f1e86dfa33f8b145d979596b",
+      "render_chunk_frames": 64,
+      "render_workers": 3
+    }
+  ],
+  "coordinator_exit_code": 2,
+  "coordinator_session": 92609,
+  "execution_manifest": "work/advanced-dance/execution/ensemble-low-memory.json",
+  "execution_manifest_sha256": "b766be24d778e69e1f53be4eac303c50fd5031e5660dc4c2cdcc5937c4035645",
+  "execution_manifest_snapshot": "project-docs/production-system/evidence/advanced-dance-ensemble-low-memory-manifest.json",
+  "execution_manifest_snapshot_sha256": "b766be24d778e69e1f53be4eac303c50fd5031e5660dc4c2cdcc5937c4035645",
+  "failed_chunk": "chunk_000001",
+  "failed_invocation": "2436b84d0c594eebadbbb634df064ee8",
+  "failed_worker_last_frame": 710,
+  "fps": 60,
+  "parallel_solo_workers": 3,
+  "picture_fingerprint": "ec76277c753ba288fb9a2d6634a1f45e4741747f33baad3d237e7be5ff1f272d",
+  "picture_source_commit": "254414bc0356171f7d5ad89361c75d45fd01a407",
+  "preserved_even_frames": 425,
+  "preserved_frame_count": 427,
+  "preserved_receipt_path": "work/advanced-dance/execution/ensemble-even-stopped-receipt.json",
+  "preserved_receipt_sha256": "e52d7452470a0d713ae64466a4096c95488b3d9e581bfa94a759ce233f23336f",
+  "provenance_identical": true,
+  "reason": "One ensemble worker terminated with exit -9 after32frames. The exact cause of SIGKILL is not established. Reduce concurrent memory demand and shorten worker lifetimes.",
+  "recorded_utc": "2026-11-22T09:05:27.550045+00:00",
+  "recovery": "Used the existing STOP marker, observed normal frame-boundary worker drain and coordinator exit, preserved official receipt, then intentionally removed STOP under the production lock. No source guard or image gate was bypassed.",
+  "registered_manifest": "projects/advanced-dance-ensemble/project.json",
+  "registered_manifest_sha256": "6fc86ea3585401b7d05bc224a33fbcae5be59650d5954431c5f012c8e02f09ae",
+  "resolution": [
+    1920,
+    1080
+  ],
+  "schema_version": 1,
+  "status": "final_native_render_completed",
+  "temporal_samples": 2,
+  "final_master_run": {
+    "session_id": 47879,
+    "schema_version": 1,
+    "mode": "ensemble",
+    "status": "completed",
+    "started_utc": "2026-11-22T09:35:13.251082+00:00",
+    "command": [
+      "./scripts/video",
+      "produce",
+      "work/advanced-dance/execution/ensemble-three-workers.json",
+      "--quality",
+      "final"
+    ],
+    "execution_manifest_sha256": "a7e6f990e278fd8d37f8977e48f8f7593a7074e38cf1fbda8cd21bff83be9b8a",
+    "coordinator_wrapper_pid": 5,
+    "source_fingerprint": "ec76277c753ba288fb9a2d6634a1f45e4741747f33baad3d237e7be5ff1f272d",
+    "render_workers": 3,
+    "render_chunk_frames": 64,
+    "reused_even_frames": 960,
+    "reused_odd_frames": 2,
+    "missing_native_frames_at_start": 958,
+    "log": "work/advanced-dance/ensemble-final-render.log",
+    "scope": "Complete native 1080p60 ensemble using identical frozen picture inputs and exact existing frames.",
+    "exit_code": 0,
+    "completed_utc": "2026-11-22T10:11:48.386116+00:00",
+    "elapsed_seconds": 2195.134
+  },
+  "ensemble_even_proof": {
+    "status": "technical_passed",
+    "sha256": "aff63be8d82e43321449aba5dfcabc82446deea4e99cc3715e316fa6c1c9c323",
+    "bytes": 65514710,
+    "frames": 960,
+    "fps": 30,
+    "duration_seconds": 32,
+    "source_fingerprint": "ec76277c753ba288fb9a2d6634a1f45e4741747f33baad3d237e7be5ff1f272d"
+  },
+  "completed_utc": "2026-11-22T10:15:17.909206+00:00"
+}

@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "status": "passed",
+  "command": "PYTHONPATH=engine:. OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 .venv/bin/python -m unittest tests.test_advanced_dance_anatomy tests.test_advanced_dance_registration tests.test_advanced_dance_qa",
+  "tests_passed": 28,
+  "seconds": 11.785,
+  "score_sha256": "88f17b2e21aa7520edab5bb2ff29aa0a87c50fa854bbf33ed3864797258ace5d",
+  "scope": "Anatomy solver defects, exact scene registration, motion audit fault injection. Separate from full timeline and picture review.",
+  "earlier_pipeline_regression_tests_passed": 114,
+  "earlier_pipeline_scope": "Existing unchanged pipeline tests from initial source checkpoint; completed in this session.",
+  "earlier_focused_checkpoint": {
+    "tests_passed": 27,
+    "seconds": 13.566
+  },
+  "audit_and_preparation_source_sha256": {
+    "tools/advanced_dance/prepare.py": "7ca4ec3c896dc1fffaab884139089e5203b76bcdede4884025ba309cf7ae3c53",
+    "tools/advanced_dance/qa.py": "83d408bcec99c686997ae57355a872ff51f61e55a6c96626d4523da6c16a2b9b",
+    "tools/advanced_dance/cast_qa.py": "e094213435bf80a3775722ba4b0bc4873be468326b98bc0d995df624436270d5",
+    "tools/advanced_dance/cloth_qa.py": "301dee8a09ab0cfbd51e76977a8887ebac1015dcbb7b82735094824b913a75be",
+    "tests/test_advanced_dance_qa.py": "eee8a06414cbe73bff530012914124a83195d88c781b5c124b79e04695035092"
+  }
+}

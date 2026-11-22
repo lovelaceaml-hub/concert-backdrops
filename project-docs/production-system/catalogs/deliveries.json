@@ -1,11 +1,11 @@
 {
   "schema_version": 1,
-  "updated_local_date": "2026-11-21",
+  "updated_local_date": "2026-11-22",
   "timezone": "America/Los_Angeles",
-  "status": "all_ten_final_movies_and_five_support_artifacts_checked_and_saved",
+  "status": "advanced_dance_and_complete_updated_collection_saved",
   "approved_references_catalog": "project-docs/production-system/catalogs/references.json",
   "historical_baseline_source_commit": "673f68785c36b57d55d05129ee5549efe6352c60",
-  "current_integration_pr": 108,
+  "current_integration_pr": 109,
   "items": [
     {
       "id": "consideration-revised-15s",
@@ -1006,6 +1006,229 @@
       "drive": {
         "status": "no_copy_recorded_for_this_delivery"
       }
+    },
+    {
+      "id": "advanced-dance-solo",
+      "filename": "01_Silk_in_Light_Advanced_Dance_1080p60.mp4",
+      "kind": "finished_dance_film",
+      "description": "Complete 32-second solo revising film 01; native 1080p60 with full authored choreography, articulated grips, corrected support, skirt and lighting.",
+      "bytes": 57396334,
+      "sha256": "8f02ee2a72a128198771cfb8f3d3dabc0b90716abdb4c028d19fa462b6a6edac",
+      "picture_source_commit": "254414bc0356171f7d5ad89361c75d45fd01a407",
+      "saved_delivery_evidence": "project-docs/production-system/evidence/advanced-dance-final-delivery.json",
+      "creative_approval": "not_recorded",
+      "library": {
+        "status": "saved",
+        "library_file_id": "libfile_5efbae79a5d88191b729f3726b94d117",
+        "file_id": "file_000000003f7c81f5b33ed8b9816ae379",
+        "version": 0,
+        "url": "https://chatgpt.com/library?file_id=libfile_5efbae79a5d88191b729f3726b94d117&account_id=personal"
+      },
+      "technical_passed": true,
+      "visual_review": {
+        "mode": "solo",
+        "master_sha256": "8f02ee2a72a128198771cfb8f3d3dabc0b90716abdb4c028d19fa462b6a6edac",
+        "bytes": 57396334,
+        "source_fingerprint": "437e7420ab538baf3608b879ca371a335ffbbaa09e77444cce7103485b5801ed",
+        "technical_passed": true,
+        "native_frames": 1920,
+        "duration_seconds": 32,
+        "fps": 60,
+        "final_review": {
+          "path": "work/advanced-dance/qa/final/independent-solo-final-encoded-review.json",
+          "sha256": "d923351a3dd1390d6bb0f05abebe6dba4600aec87746b92ecd9ddf627e34a4b2",
+          "bytes": 8935,
+          "include_full_json_in_final_package": true
+        },
+        "distinct_decoded_frames": 150,
+        "inspected_sheets": 29,
+        "sampled_visual_blockers": 0,
+        "owner_approval": false
+      },
+      "drive": {
+        "status": "no_copy_recorded_for_this_delivery"
+      }
+    },
+    {
+      "id": "advanced-dance-ensemble",
+      "filename": "02_Petals_in_Motion_Advanced_Dance_1080p60.mp4",
+      "bytes": 76939037,
+      "sha256": "8bedc48bc2586d903f5aefcb8bfea89ecad58359326ffdc27f5988b0f573540d",
+      "kind": "finished_dance_film",
+      "picture_source_commit": "254414bc0356171f7d5ad89361c75d45fd01a407",
+      "saved_delivery_evidence": "project-docs/production-system/evidence/advanced-dance-final-delivery.json",
+      "creative_approval": "not_recorded",
+      "library": {
+        "status": "saved",
+        "library_file_id": "libfile_bdf3a9b4e1f481918e768953be62a279",
+        "file_id": "file_00000000e4c0822f8aeacb6abe26103c",
+        "version": 0,
+        "url": "https://chatgpt.com/library?file_id=libfile_bdf3a9b4e1f481918e768953be62a279&account_id=personal"
+      },
+      "drive": {
+        "status": "no_copy_recorded_for_this_delivery"
+      },
+      "technical_passed": true,
+      "visual_review": {
+        "mode": "ensemble",
+        "master_sha256": "8bedc48bc2586d903f5aefcb8bfea89ecad58359326ffdc27f5988b0f573540d",
+        "bytes": 76939037,
+        "source_fingerprint": "ec76277c753ba288fb9a2d6634a1f45e4741747f33baad3d237e7be5ff1f272d",
+        "technical_passed": true,
+        "native_frames": 1920,
+        "duration_seconds": 32,
+        "fps": 60,
+        "final_review": {
+          "path": "work/advanced-dance/qa/final/independent-ensemble-final-encoded-review.json",
+          "sha256": "4da1581fee14ac24821327c1e254ad6217352be061c6ea6bcd54f07859204bb0",
+          "bytes": 25441,
+          "include_full_json_in_final_package": true
+        },
+        "distinct_decoded_frames": 135,
+        "inspected_sheets": 22,
+        "sampled_visual_blockers": 0,
+        "owner_approval": false
+      }
+    },
+    {
+      "id": "advanced-dance-ten-film-package",
+      "filename": "Ten_Cinematic_Films_Advanced_Dance_1080p60.zip",
+      "bytes": 410134925,
+      "sha256": "73fcccc8e659b4f8a40604945509163944be4ca13bec660d350637aa7dca336c",
+      "kind": "delivery_support",
+      "picture_source_commit": "254414bc0356171f7d5ad89361c75d45fd01a407",
+      "saved_delivery_evidence": "project-docs/production-system/evidence/advanced-dance-final-delivery.json",
+      "creative_approval": "not_recorded",
+      "library": {
+        "status": "saved",
+        "library_file_id": "libfile_02d1b9fcefdc8191ab72741639bd1fb2",
+        "file_id": "file_000000005280822f87ea4b2a22505135",
+        "version": 0,
+        "url": "https://chatgpt.com/library?file_id=libfile_02d1b9fcefdc8191ab72741639bd1fb2&account_id=personal"
+      },
+      "drive": {
+        "status": "no_copy_recorded_for_this_delivery"
+      }
+    },
+    {
+      "id": "advanced-dance-overview",
+      "filename": "Ten_Cinematic_Films_Advanced_Dance_Overview.jpg",
+      "bytes": 3244143,
+      "sha256": "c8a2c8be415c95a6ce71362feab63d491c44b4cedff6271ba0818153695c4b81",
+      "kind": "delivery_support",
+      "picture_source_commit": "254414bc0356171f7d5ad89361c75d45fd01a407",
+      "saved_delivery_evidence": "project-docs/production-system/evidence/advanced-dance-final-delivery.json",
+      "creative_approval": "not_recorded",
+      "library": {
+        "status": "saved",
+        "library_file_id": "libfile_0c18dc44f6e0819182a087eaef6d669a",
+        "file_id": "file_000000001744822fb8ecd0765ec6246a",
+        "version": 0,
+        "url": "https://chatgpt.com/library?file_id=libfile_0c18dc44f6e0819182a087eaef6d669a&account_id=personal"
+      },
+      "drive": {
+        "status": "no_copy_recorded_for_this_delivery"
+      }
+    },
+    {
+      "id": "advanced-dance-technical",
+      "filename": "Ten_Cinematic_Films_Advanced_Dance_Technical.json",
+      "bytes": 482657,
+      "sha256": "867cf8da1ddc6b9e43a9bd5c120d8fe69ac2cd3921dc8169def75129ce1cb6b9",
+      "kind": "delivery_support",
+      "picture_source_commit": "254414bc0356171f7d5ad89361c75d45fd01a407",
+      "saved_delivery_evidence": "project-docs/production-system/evidence/advanced-dance-final-delivery.json",
+      "creative_approval": "not_recorded",
+      "library": {
+        "status": "saved",
+        "library_file_id": "libfile_9cedecf92e288191bc354b9f5fcd1a4d",
+        "file_id": "file_00000000bf4c822f93d57169a757e804",
+        "version": 0,
+        "url": "https://chatgpt.com/library?file_id=libfile_9cedecf92e288191bc354b9f5fcd1a4d&account_id=personal"
+      },
+      "drive": {
+        "status": "no_copy_recorded_for_this_delivery"
+      }
+    },
+    {
+      "id": "advanced-dance-qa",
+      "filename": "Advanced_Dance_QA.json",
+      "bytes": 11659942,
+      "sha256": "37132a066833deb91829de442aeda2700a0b77ef18fec4f1fb3389a46c2c04fc",
+      "kind": "delivery_support",
+      "picture_source_commit": "254414bc0356171f7d5ad89361c75d45fd01a407",
+      "saved_delivery_evidence": "project-docs/production-system/evidence/advanced-dance-final-delivery.json",
+      "creative_approval": "not_recorded",
+      "library": {
+        "status": "saved",
+        "library_file_id": "libfile_cccbc0cf6fd08191b09dd484c91a9fcd",
+        "file_id": "file_000000002fd4822f9cfc5a597c790695",
+        "version": 0,
+        "url": "https://chatgpt.com/library?file_id=libfile_cccbc0cf6fd08191b09dd484c91a9fcd&account_id=personal"
+      },
+      "drive": {
+        "status": "no_copy_recorded_for_this_delivery"
+      }
+    },
+    {
+      "id": "advanced-dance-readme",
+      "filename": "README.txt",
+      "bytes": 3377,
+      "sha256": "8daf78bb6ae589400e30aa8e678329bfc09924e5adb3768eb1ce83d2a1ebff8a",
+      "kind": "delivery_support",
+      "picture_source_commit": "254414bc0356171f7d5ad89361c75d45fd01a407",
+      "saved_delivery_evidence": "project-docs/production-system/evidence/advanced-dance-final-delivery.json",
+      "creative_approval": "not_recorded",
+      "library": {
+        "status": "saved",
+        "library_file_id": "libfile_b0385f1023bc8191b39bcd0f6e72cbd7",
+        "file_id": "file_000000004294822fb9420fbc57d8c5ca",
+        "version": 0,
+        "url": "https://chatgpt.com/library?file_id=libfile_b0385f1023bc8191b39bcd0f6e72cbd7&account_id=personal"
+      },
+      "drive": {
+        "status": "no_copy_recorded_for_this_delivery"
+      }
+    },
+    {
+      "id": "advanced-dance-checksums",
+      "filename": "SHA256SUMS.txt",
+      "bytes": 1419,
+      "sha256": "98f7774374aaf5f271215fab10a021193e31acd9a5e9162ea522647f1ffc5613",
+      "kind": "delivery_support",
+      "picture_source_commit": "254414bc0356171f7d5ad89361c75d45fd01a407",
+      "saved_delivery_evidence": "project-docs/production-system/evidence/advanced-dance-final-delivery.json",
+      "creative_approval": "not_recorded",
+      "library": {
+        "status": "saved",
+        "library_file_id": "libfile_3ede63b34878819188d32f74e4132f78",
+        "file_id": "file_000000009544822fa93d5e2fc0b80295",
+        "version": 0,
+        "url": "https://chatgpt.com/library?file_id=libfile_3ede63b34878819188d32f74e4132f78&account_id=personal"
+      },
+      "drive": {
+        "status": "no_copy_recorded_for_this_delivery"
+      }
+    },
+    {
+      "id": "advanced-dance-packaging-receipt",
+      "filename": "Packaging_Receipt.json",
+      "bytes": 3440,
+      "sha256": "2f6f7ad0a534e7651cccc1dcde17b3af11724d8c4b9cfeeac04b1989c0c0b3e5",
+      "kind": "delivery_support",
+      "picture_source_commit": "254414bc0356171f7d5ad89361c75d45fd01a407",
+      "saved_delivery_evidence": "project-docs/production-system/evidence/advanced-dance-final-delivery.json",
+      "creative_approval": "not_recorded",
+      "library": {
+        "status": "saved",
+        "library_file_id": "libfile_6dd899b883fc81919acb2641264c72ec",
+        "file_id": "file_00000000dc40822f8547587fa84df4e7",
+        "version": 0,
+        "url": "https://chatgpt.com/library?file_id=libfile_6dd899b883fc81919acb2641264c72ec&account_id=personal"
+      },
+      "drive": {
+        "status": "no_copy_recorded_for_this_delivery"
+      }
     }
   ],
   "limits": [
@@ -1120,5 +1343,78 @@
     "owner_approval": "not_recorded",
     "drive_copies_claimed": false,
     "evidence": "project-docs/production-system/evidence/cinematic-ten-final-delivery.json"
+  },
+  "advanced_dance": {
+    "completed_film_ids": [
+      "advanced-dance-solo",
+      "advanced-dance-ensemble"
+    ],
+    "pending_film_ids": [],
+    "package_status": "complete_saved",
+    "owner_approval": "not_recorded",
+    "ensemble_proof_review": {
+      "path": "project-docs/production-system/evidence/advanced-dance-ensemble-proof-review.json",
+      "sha256": "55fb9763b892d0f5079a6a051d63aa9fca9976ebe539f33a5dc896ea390d2483",
+      "native_window_frames": 257,
+      "decoded_overview_samples": 65,
+      "sampled_visual_blockers": 0,
+      "continuous_perceptual_review_claimed": false,
+      "owner_approval": false
+    },
+    "status": "complete_saved",
+    "delivery_evidence": "project-docs/production-system/evidence/advanced-dance-final-delivery.json",
+    "final_movie_evidence": {
+      "solo": {
+        "mode": "solo",
+        "master_sha256": "8f02ee2a72a128198771cfb8f3d3dabc0b90716abdb4c028d19fa462b6a6edac",
+        "bytes": 57396334,
+        "source_fingerprint": "437e7420ab538baf3608b879ca371a335ffbbaa09e77444cce7103485b5801ed",
+        "technical_passed": true,
+        "native_frames": 1920,
+        "duration_seconds": 32,
+        "fps": 60,
+        "final_review": {
+          "path": "work/advanced-dance/qa/final/independent-solo-final-encoded-review.json",
+          "sha256": "d923351a3dd1390d6bb0f05abebe6dba4600aec87746b92ecd9ddf627e34a4b2",
+          "bytes": 8935,
+          "include_full_json_in_final_package": true
+        },
+        "distinct_decoded_frames": 150,
+        "inspected_sheets": 29,
+        "sampled_visual_blockers": 0,
+        "owner_approval": false
+      },
+      "ensemble": {
+        "mode": "ensemble",
+        "master_sha256": "8bedc48bc2586d903f5aefcb8bfea89ecad58359326ffdc27f5988b0f573540d",
+        "bytes": 76939037,
+        "source_fingerprint": "ec76277c753ba288fb9a2d6634a1f45e4741747f33baad3d237e7be5ff1f272d",
+        "technical_passed": true,
+        "native_frames": 1920,
+        "duration_seconds": 32,
+        "fps": 60,
+        "final_review": {
+          "path": "work/advanced-dance/qa/final/independent-ensemble-final-encoded-review.json",
+          "sha256": "4da1581fee14ac24821327c1e254ad6217352be061c6ea6bcd54f07859204bb0",
+          "bytes": 25441,
+          "include_full_json_in_final_package": true
+        },
+        "distinct_decoded_frames": 135,
+        "inspected_sheets": 22,
+        "sampled_visual_blockers": 0,
+        "owner_approval": false
+      }
+    },
+    "saved_artifact_ids": [
+      "advanced-dance-solo",
+      "advanced-dance-ensemble",
+      "advanced-dance-ten-film-package",
+      "advanced-dance-overview",
+      "advanced-dance-technical",
+      "advanced-dance-qa",
+      "advanced-dance-readme",
+      "advanced-dance-checksums",
+      "advanced-dance-packaging-receipt"
+    ]
   }
 }

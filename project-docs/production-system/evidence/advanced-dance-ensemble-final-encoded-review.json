@@ -1,0 +1,641 @@
+{
+  "schema_version": 1,
+  "reviewer": "motion_qa independent agent",
+  "reviewed_modes": [
+    "ensemble"
+  ],
+  "status": "ensemble_final_encoded_sampled_review_complete",
+  "started_utc": "2026-11-22T09:36:44.509100+00:00",
+  "updated_utc": "2026-11-22T10:14:56.726927+00:00",
+  "source_fingerprint": "ec76277c753ba288fb9a2d6634a1f45e4741747f33baad3d237e7be5ff1f272d",
+  "native_precheck": {
+    "production_receipt": "work/pipeline/advanced-dance-ensemble/final/shots/performance/receipt.json",
+    "production_receipt_sha256_at_collection": "55acb731abb5b6d97887b48752042488033b5d1bdfebfd649100b44cad466d08",
+    "production_frame_count_at_collection": 962,
+    "cut_policy": {
+      "formula": "round(beat_seconds[count] * 60), count in (16, 32, 48); new camera at global frame index / 60 >= snapped cut time",
+      "source_hashes": {
+        "tools/advanced_dance/scene.py": "731480039a5a977245f2e67aca5711b3cfc86210a1c8c97c077888f4533bb021",
+        "tools/advanced_dance/render.py": "62ac9d04544a1b253ff2c0a309382d33475d924ff1131a63798b10cc1bdc60e0",
+        "tools/advanced_dance/clock.json": "67634ee9841878f7030a3482d195fd218dcc0eacd5b1a5d18bc6fd7c723aa9a9",
+        "tools/advanced_dance/ensemble.py": "073c866e35e0f17f689f467f3ea6929c913a00c134affd856422bac88c0d872b",
+        "pipeline/kit.py": "c9c221f2d745bd1a47265a8591d846ba9593d46a72525b14a980b2c6dc8fa9bd",
+        "engine/p3d/camera.py": "8427e7f288f280b99aa168bb877401932d52f04f9a0ff6c1bccb4298998f6f5d",
+        "engine/p3d/layer.py": "ee26009249f6d738c5e88ad7967193ed9e582b0ed88c2e1da07c39383b93b255"
+      },
+      "cuts": [
+        {
+          "count": 16,
+          "cue_seconds": 7.592925170068027,
+          "cut_frame": 456
+        },
+        {
+          "count": 32,
+          "cue_seconds": 15.27873015873016,
+          "cut_frame": 917
+        },
+        {
+          "count": 48,
+          "cue_seconds": 22.825215419501134,
+          "cut_frame": 1370
+        }
+      ],
+      "shutter_at_cut": "Only the exact snapped cut frame receives zero shutter under the 0.35-frame shutter rule; its camera therefore has no cross-cut temporal exposure."
+    },
+    "planned_groups": [
+      {
+        "id": "cut-456",
+        "center_frame": 456,
+        "required_frames": [
+          454,
+          455,
+          456,
+          457,
+          458
+        ]
+      },
+      {
+        "id": "cut-917",
+        "center_frame": 917,
+        "required_frames": [
+          915,
+          916,
+          917,
+          918,
+          919
+        ]
+      },
+      {
+        "id": "cut-1370",
+        "center_frame": 1370,
+        "required_frames": [
+          1368,
+          1369,
+          1370,
+          1371,
+          1372
+        ]
+      },
+      {
+        "id": "head-1213",
+        "center_frame": 1213,
+        "required_frames": [
+          1211,
+          1212,
+          1213,
+          1214,
+          1215
+        ]
+      },
+      {
+        "id": "fast-left-1468",
+        "center_frame": 1468,
+        "required_frames": [
+          1466,
+          1467,
+          1468,
+          1469,
+          1470
+        ]
+      },
+      {
+        "id": "fast-center-right-1511",
+        "center_frame": 1511,
+        "required_frames": [
+          1509,
+          1510,
+          1511,
+          1512,
+          1513
+        ]
+      }
+    ],
+    "individually_inspected_frames": [
+      {
+        "frame": 456,
+        "time_seconds": 7.6,
+        "path": "work/pipeline/advanced-dance-ensemble/final/shots/performance/frames/frame_000456.png",
+        "sha256": "8986364332cb887007c8ecb644a40fa81b259c8f06e809e79bae1bb32f6bf189",
+        "promoted": true,
+        "receipt_hash_matched": true,
+        "inspected_full_native": true
+      },
+      {
+        "frame": 1213,
+        "time_seconds": 20.216666666666665,
+        "path": "work/pipeline/advanced-dance-ensemble/final/shots/performance/frames/frame_001213.png",
+        "sha256": "cc17b43b8542ffb58c1b72d2faf4332a7cc895430109a72fc5d296622afc5d44",
+        "promoted": true,
+        "receipt_hash_matched": true,
+        "inspected_full_native": true
+      },
+      {
+        "frame": 1370,
+        "time_seconds": 22.833333333333332,
+        "path": "work/pipeline/advanced-dance-ensemble/final/shots/performance/frames/frame_001370.png",
+        "sha256": "e8759a76e81bf50a33f268a4bc8a255b95554fa16904eccec791eba6946b5c5a",
+        "promoted": true,
+        "receipt_hash_matched": true,
+        "inspected_full_native": true
+      }
+    ],
+    "inspected_crops": [
+      {
+        "path": "work/advanced-dance/qa/final/native-ensemble-final-precheck/head-1213-native-crop.png",
+        "sha256": "55f45cec46e862c7b9e54dc853149d100b519ba754cb3b928c99fd19ae008d37",
+        "source_frame": 1213,
+        "crop_pixels": [
+          440,
+          330,
+          650,
+          550
+        ],
+        "resized": false,
+        "inspected": true
+      }
+    ],
+    "observations": [
+      {
+        "frames": [
+          456,
+          1370
+        ],
+        "finding": "Both available exact camera-cut images were inspected at full native resolution. All five bodies and fan extents fit the composition. No blank exposure, missing performer or visible prop separation was observed. Adjacent odd-frame transition inspection remains pending."
+      },
+      {
+        "frames": [
+          1213
+        ],
+        "finding": "The exact outer-left head-clearance frame was inspected at full native resolution and in an unscaled head/fan crop. The fan lies closely beside the head projection, with no obvious fan-through-head defect visible in this sample. Neighboring odd frames remain pending."
+      },
+      {
+        "frames": [
+          915,
+          916,
+          917,
+          918,
+          919
+        ],
+        "finding": "Frames 915 through 919 were inspected in order, and exact cut frame 917 was also inspected at full native resolution. The camera changes from the preceding frontal view to the angled view at 917. All five performers and their fan extents remain in the frame, with no blank exposure, obvious mixed-camera ghosting, missing performer or visible prop separation in this neighborhood."
+      },
+      {
+        "frames": [
+          454,
+          455,
+          456,
+          457,
+          458
+        ],
+        "finding": "Frames 454 through 458 were inspected in order. The camera changes at 456, with the full five-person formation and all fan extents in frame. No blank exposure, obvious mixed-camera ghosting or missing prop was observed."
+      },
+      {
+        "frames": [
+          1368,
+          1369,
+          1370,
+          1371,
+          1372
+        ],
+        "finding": "Frames 1368 through 1372 were inspected in order. The camera returns to the frontal composition at 1370. All five performers and their fans remain framed, without an obvious mixed-camera exposure or detached prop."
+      },
+      {
+        "frames": [
+          1211,
+          1212,
+          1213,
+          1214,
+          1215
+        ],
+        "finding": "Frames 1211 through 1215 were inspected in full-scene overview and unscaled outer-left head/fan crops. The hand remains connected to the fan, whose edge progresses closely beside the head projection. No obvious visible fan-through-head defect appears in these samples. The measured 4.870 mm overlap with the simplified head capsule remains retained as a separate proxy finding."
+      },
+      {
+        "frames": [
+          1466,
+          1467,
+          1468,
+          1469,
+          1470
+        ],
+        "finding": "Frames 1466 through 1470 were inspected in overview and native crops of the two left performers. The odd frames 1467 and 1469 provide intermediate fan, arm, torso and foot positions. The grips remain connected and the overhead fan rotates coherently while the other fan moves through its lateral arc. No isolated hand jump or detached cloth patch was observed. The original fast-palm review flags remain numerical review flags."
+      },
+      {
+        "frames": [
+          1509,
+          1510,
+          1511,
+          1512,
+          1513
+        ],
+        "finding": "Frames 1509 through 1513 were inspected in overview and native crops of the center and two right performers. The exact odd maximum-speed sample 1511 and adjacent odd samples 1509 and 1513 are included. The fan planes turn progressively toward edge-on positions beside the faces, the hand attachments remain visible, and the turning skirts and foot positions follow intermediate poses. No isolated grip discontinuity, obvious fan-through-body defect or detached cloth patch was observed in this short sequence."
+      }
+    ],
+    "sampled_visual_blockers_identified": [],
+    "native_sampled_review_complete": true,
+    "inspected_groups": [
+      {
+        "id": "cut-917",
+        "manifest": "work/advanced-dance/qa/final/native-ensemble-final-precheck/cut-917-manifest.json",
+        "manifest_sha256": "cded753d674e6e79fc9d97ce2e51107b777fa9d62e98aa5f59163353653d7a14",
+        "frame_indices": [
+          915,
+          916,
+          917,
+          918,
+          919
+        ],
+        "inspected": true,
+        "exact_cut_full_native_inspected": 917,
+        "sampled_visual_blockers_identified": [],
+        "source_status": "All five source images, including originally staged 915, 917 and 919, are now byte-matched to the promoted receipt. The consolidated native manifest retains the original provenance and reconciliation.",
+        "all_frames_promoted_and_hash_matched": true
+      }
+    ],
+    "uncollected_previously_missing_frames": [],
+    "availability_note": "All six planned five-frame neighborhoods are collected, inspected and reconciled to promoted source images. Counts are deduplicated across previous individual and grouped inspections.",
+    "manifest": "work/advanced-dance/qa/final/native-ensemble-final-precheck/manifest.json",
+    "manifest_sha256": "fefa43a0ff06858714b015bed9b1dd5b87196bfb49389757e2ec9e98d01b7a57",
+    "inspected_distinct_native_frames": 30,
+    "inspected_native_sheet_count": 9,
+    "full_native_frames_also_displayed": [
+      456,
+      917,
+      1213,
+      1370
+    ],
+    "all_selected_frames_promoted_and_receipt_hash_matched": true,
+    "completed_groups": [
+      {
+        "id": "cut-456",
+        "frame_indices": [
+          454,
+          455,
+          456,
+          457,
+          458
+        ],
+        "inspected": true,
+        "sampled_visual_blockers_identified": []
+      },
+      {
+        "id": "cut-917",
+        "frame_indices": [
+          915,
+          916,
+          917,
+          918,
+          919
+        ],
+        "inspected": true,
+        "sampled_visual_blockers_identified": []
+      },
+      {
+        "id": "cut-1370",
+        "frame_indices": [
+          1368,
+          1369,
+          1370,
+          1371,
+          1372
+        ],
+        "inspected": true,
+        "sampled_visual_blockers_identified": []
+      },
+      {
+        "id": "head-1213",
+        "frame_indices": [
+          1211,
+          1212,
+          1213,
+          1214,
+          1215
+        ],
+        "inspected": true,
+        "sampled_visual_blockers_identified": []
+      },
+      {
+        "id": "fast-left-1468",
+        "frame_indices": [
+          1466,
+          1467,
+          1468,
+          1469,
+          1470
+        ],
+        "inspected": true,
+        "sampled_visual_blockers_identified": []
+      },
+      {
+        "id": "fast-center-right-1511",
+        "frame_indices": [
+          1509,
+          1510,
+          1511,
+          1512,
+          1513
+        ],
+        "inspected": true,
+        "sampled_visual_blockers_identified": []
+      }
+    ],
+    "observation_scope_note": "Early partial observations are retained as historical notes; the completed six-group manifest and final complete-receipt reconciliation supersede their former pending-neighbor statements."
+  },
+  "preserved_numeric_review_flags": [
+    {
+      "role": 0,
+      "receipt": "work/advanced-dance/qa/final/ensemble0.json",
+      "receipt_sha256": "0a3f9fcd2fb09210ae2c2f1b9e1d47b05b71882afd77c3aeb684761e284fd9de",
+      "numeric_status": "review_required",
+      "issues": [
+        {
+          "severity": "review",
+          "check": "palm_speed",
+          "time_seconds": 24.4666666667,
+          "part": "L",
+          "value": 6.185167743171342,
+          "threshold": 4.5,
+          "units": "m/s",
+          "message": "Inspect the fastest hand passage at full speed."
+        }
+      ]
+    },
+    {
+      "role": 1,
+      "receipt": "work/advanced-dance/qa/final/ensemble1.json",
+      "receipt_sha256": "11e00c67145e4f4f1d325fddc0311c7331f53536565eebb708e30d8148f9d15a",
+      "numeric_status": "review_required",
+      "issues": [
+        {
+          "severity": "review",
+          "check": "palm_speed",
+          "time_seconds": 24.4666666667,
+          "part": "L",
+          "value": 6.212033015572131,
+          "threshold": 4.5,
+          "units": "m/s",
+          "message": "Inspect the fastest hand passage at full speed."
+        }
+      ]
+    },
+    {
+      "role": 2,
+      "receipt": "work/advanced-dance/qa/final/ensemble2.json",
+      "receipt_sha256": "b9602015a39eec85a098006d24c8b51e11ab2af8a6f5d61e298ce80178eb5cd1",
+      "numeric_status": "review_required",
+      "issues": [
+        {
+          "severity": "review",
+          "check": "palm_speed",
+          "time_seconds": 25.1833333333,
+          "part": "R",
+          "value": 6.889610026229614,
+          "threshold": 4.5,
+          "units": "m/s",
+          "message": "Inspect the fastest hand passage at full speed."
+        }
+      ]
+    },
+    {
+      "role": 3,
+      "receipt": "work/advanced-dance/qa/final/ensemble3.json",
+      "receipt_sha256": "44f5c7fbd547777929361f1dc0e860d243eafe400c9c85aa8b8daf8a5795a161",
+      "numeric_status": "review_required",
+      "issues": [
+        {
+          "severity": "review",
+          "check": "palm_speed",
+          "time_seconds": 25.1833333333,
+          "part": "R",
+          "value": 6.868941178930143,
+          "threshold": 4.5,
+          "units": "m/s",
+          "message": "Inspect the fastest hand passage at full speed."
+        }
+      ]
+    },
+    {
+      "role": 4,
+      "receipt": "work/advanced-dance/qa/final/ensemble4.json",
+      "receipt_sha256": "7fdca15df6ae592045170332e5de5731bba83886c01b0330b6a2b74bf3b953f4",
+      "numeric_status": "review_required",
+      "issues": [
+        {
+          "severity": "review",
+          "check": "palm_speed",
+          "time_seconds": 25.1833333333,
+          "part": "R",
+          "value": 6.934944931153914,
+          "threshold": 4.5,
+          "units": "m/s",
+          "message": "Inspect the fastest hand passage at full speed."
+        }
+      ]
+    }
+  ],
+  "preserved_head_proxy_fact": {
+    "receipt": "work/advanced-dance/qa/final/dense-own-fan-probe.json",
+    "receipt_sha256": "748aa6a3e57ec1af2c57b06de8eeb2d1b3847377176778c8d661777363f47b11",
+    "sample": {
+      "role": "ensemble0",
+      "side": "R",
+      "time_seconds": 20.2166666667,
+      "rendered_surface_points": 6500,
+      "minimum_clearance_m": -0.004870042463928109,
+      "body_group": "head"
+    },
+    "interpretation": "The actual rendered fan particle sample overlaps the simplified head capsule by 4.870 mm. This proxy finding is retained even though the inspected image does not show obvious visible penetration. It is not a full mesh collision result."
+  },
+  "encoded_masters": [
+    {
+      "mode": "ensemble",
+      "status": "sampled_final_encoded_review_complete",
+      "review_completed_utc": "2026-11-22T10:14:56.726927+00:00",
+      "movie": "work/pipeline/advanced-dance-ensemble/final/master.mp4",
+      "movie_sha256": "8bedc48bc2586d903f5aefcb8bfea89ecad58359326ffdc27f5988b0f573540d",
+      "movie_bytes": 76939037,
+      "master_receipt": "work/pipeline/advanced-dance-ensemble/final/master.json",
+      "master_receipt_sha256": "57ca201fe331484e8b2fe2092cf5d39dce31f91f7d5c7cb2f7964d75d3a04719",
+      "qa_receipt": "work/pipeline/advanced-dance-ensemble/final/qa.json",
+      "qa_receipt_sha256": "310713ce8e2534abe448e820d61279ce14fc260060275864108565b9a0f2dc61",
+      "production_receipt": "work/pipeline/advanced-dance-ensemble/final/shots/performance/receipt.json",
+      "production_receipt_sha256": "c362a9292a1113db2bfc38439b9a226f800c189677904fc63a5d09a5bc436a7b",
+      "source_fingerprint": "ec76277c753ba288fb9a2d6634a1f45e4741747f33baad3d237e7be5ff1f272d",
+      "technical_qa_passed": true,
+      "fps": 60,
+      "duration_seconds": 32,
+      "frame_count": 1920,
+      "cut_frame_policy": "round(beat_seconds[count] * 60), count in (16, 32, 48); new camera at global frame index / 60 >= cut time",
+      "cut_frames": [
+        456,
+        917,
+        1370
+      ],
+      "windows": [
+        {
+          "id": "outer-fast-hands",
+          "start_frame": 1458,
+          "end_frame_inclusive": 1476
+        },
+        {
+          "id": "center-fast-hands",
+          "start_frame": 1500,
+          "end_frame_inclusive": 1521
+        },
+        {
+          "id": "closest-own-head-fan",
+          "start_frame": 1209,
+          "end_frame_inclusive": 1217
+        },
+        {
+          "id": "closest-cast-spacing",
+          "start_frame": 644,
+          "end_frame_inclusive": 650
+        }
+      ],
+      "exact_selected_pts_verified": true,
+      "sample_manifest": "work/advanced-dance/qa/final/ensemble-final-encoded-samples/manifest.json",
+      "sample_manifest_sha256": "54c8105384f67c9dea2441c491ea034ff881e47e3d4fc3e7630e80fd18d44a07",
+      "inspected_distinct_decoded_frames": 135,
+      "inspected_sheets": 22,
+      "overview_sample_count": 65,
+      "overview_spacing_seconds": 0.5,
+      "overview_includes_final_frame": 1919,
+      "dense_window_sampling_fps": 60,
+      "cut_neighborhood_radius_frames": 2,
+      "exact_odd_risk_frames_inspected": [
+        917,
+        1213,
+        1467,
+        1469,
+        1509,
+        1511,
+        1513
+      ],
+      "sampled_visual_review_complete": true,
+      "sampled_visual_blockers_identified": [],
+      "observations": [
+        {
+          "group": "whole-performance-overview",
+          "finding": "All 65 overview images, spaced every half second and including the final frame at 31.983333 seconds, were inspected. The five-person formation shows alternating low and high fan sweeps, traveling and rotating body phrases, changing skirt silhouettes, and a coordinated open-fan finish. All five bodies and fan extents fit the inspected overview compositions. No blank or corrupt sample, missing performer, missing prop or isolated disconnected cloth patch was observed."
+        },
+        {
+          "group": "camera-cuts",
+          "finding": "All five encoded frames around each actual cut at 456, 917 and 1370 were inspected. Each camera switches at the derived cut frame, including the odd frame 917 omitted by the earlier even-frame proof. No blank exposure, obvious mixed-camera ghosting or full-figure clipping was observed in these neighborhoods."
+        },
+        {
+          "group": "outer-fast-hands",
+          "finding": "All 19 frames from 1458 through 1476 were inspected in unscaled crops of the two left performers. Their fan planes progress through broad and edge-on projections near the faces and then overhead. Intermediate odd frames, including 1467 and 1469 around the 1468 maximum-speed sample, preserve connected grips and continuous arm, torso, skirt and visible foot positions. No isolated hand jump or detached cloth patch was observed."
+        },
+        {
+          "group": "center-fast-hands",
+          "finding": "All 22 frames from 1500 through 1521 were inspected in unscaled crops of the center and two right performers. The exact odd maximum-speed frame 1511 and neighboring 1509 and 1513 are included. The fan planes turn progressively past the face projections toward profile, with the grips remaining visually connected. Visible foot lifting and settling and the changing skirt silhouette follow intermediate poses without an isolated position jump. No obvious fan-through-body defect was observed in these sampled projections."
+        },
+        {
+          "group": "closest-own-head-fan",
+          "finding": "All nine frames from 1209 through 1217 were inspected in unscaled outer-left head and hand crops. The fan edge passes closely beside the head projection and the hand remains attached to the grip. No obvious visible fan-through-head defect appears in this ordered sequence. The separate numerical result remains a 4.870 mm overlap with the simplified head capsule and is not reclassified as physical mesh clearance."
+        },
+        {
+          "group": "closest-cast-spacing",
+          "finding": "All seven frames from 644 through 650 were inspected in unscaled crops around the center and inner-left pair, including the 647 minimum-clearance sample. Bodies and visible feet remain distinct while the fan projections overlap in the view and then change angle. No obvious body interpenetration or detached prop was observed. This visual finding does not establish three-dimensional fan-to-fan or full costume collision clearance."
+        },
+        {
+          "group": "encoded-detail",
+          "finding": "The inspected native-size decoded crops preserve the luminous body surfaces, fan ribs and visible hand-to-fan attachment. This is a visual assessment of the lossy encoded master, not a claim of pixel equality with source PNGs."
+        }
+      ],
+      "scope_limits": [
+        "Ordered still-frame inspection only. This reviewer did not perform real-time playback or audio listening; those activities belong in separate records.",
+        "The whole-duration overview is sampled every half second. Every 60 fps frame is included only inside the listed dense windows and five-frame cut neighborhoods.",
+        "Some detail crops trim outer fan rims or neighboring performers. Full composition findings use the overview and cut images.",
+        "Skirts obscure parts of the knees, and fans can obscure fingers or faces. The preserved numerical joint and proxy reports provide separate evidence, not validated physical balance or complete mesh collision testing.",
+        "All five original fast-palm numerical review flags remain preserved. No owner or artistic approval is implied."
+      ],
+      "continuous_playback_review_complete": false,
+      "audio_review_complete": false,
+      "owner_approval": false,
+      "native_precheck_final_receipt_reconciliation": {
+        "manifest": "work/advanced-dance/qa/final/native-ensemble-final-precheck/manifest.json",
+        "manifest_sha256": "fefa43a0ff06858714b015bed9b1dd5b87196bfb49389757e2ec9e98d01b7a57",
+        "distinct_native_frames": 30,
+        "frame_indices": [
+          454,
+          455,
+          456,
+          457,
+          458,
+          915,
+          916,
+          917,
+          918,
+          919,
+          1211,
+          1212,
+          1213,
+          1214,
+          1215,
+          1368,
+          1369,
+          1370,
+          1371,
+          1372,
+          1466,
+          1467,
+          1468,
+          1469,
+          1470,
+          1509,
+          1510,
+          1511,
+          1512,
+          1513
+        ],
+        "complete_production_receipt": "work/pipeline/advanced-dance-ensemble/final/shots/performance/receipt.json",
+        "complete_production_receipt_sha256": "c362a9292a1113db2bfc38439b9a226f800c189677904fc63a5d09a5bc436a7b",
+        "complete_receipt_frame_count": 1920,
+        "all_selected_source_hashes_matched": true,
+        "verified_utc": "2026-11-22T10:14:56.726927+00:00"
+      }
+    }
+  ],
+  "encoded_master_review_complete": true,
+  "continuous_playback_review_complete": false,
+  "audio_review_complete": false,
+  "owner_approval": false,
+  "final_encoding_gate": "A completed 1920-frame production receipt and valid master.json plus technical-passing qa.json must match the exact movie before final encoded extraction.",
+  "planned_final_encoded_review": {
+    "decode_threads": 1,
+    "filter_threads": 1,
+    "overview_spacing_seconds": 0.5,
+    "include_final_frame": 1919,
+    "camera_cut_neighborhood_radius_frames": 2,
+    "windows": [
+      {
+        "id": "outer-fast",
+        "start_frame": 1458,
+        "end_frame_inclusive": 1476
+      },
+      {
+        "id": "center-fast",
+        "start_frame": 1500,
+        "end_frame_inclusive": 1521
+      },
+      {
+        "id": "own-head",
+        "start_frame": 1209,
+        "end_frame_inclusive": 1217
+      },
+      {
+        "id": "cast-spacing",
+        "start_frame": 644,
+        "end_frame_inclusive": 650
+      }
+    ]
+  },
+  "scope_limits": [
+    "This immutable record covers the exact ensemble final 1080p60 master. Its sampled encoded visual review and the 30-frame native precheck are complete.",
+    "This report records ordered image inspection. Real-time playback and audio review by other reviewers are separate records.",
+    "The original five numerical fast-palm flags and the 4.870 mm head-capsule overlap are retained. Sampled visual findings do not certify every frame, hidden anatomy, physical balance, full mesh collision, or owner artistic approval.",
+    "Solo final review remains unchanged in its separate immutable record."
+  ],
+  "frozen_utc": "2026-11-22T10:14:56.726927+00:00",
+  "final_encoding_gate_satisfied": true
+}

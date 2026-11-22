@@ -1,0 +1,530 @@
+{
+  "schema_version": 1,
+  "project_id": "advanced-dance-ensemble",
+  "title": "Petals in Motion: Advanced Choreography",
+  "description": "A complete original 32-second, 64-count performance with articulated hands, explicit foot supports, pleated fans and coordinated stage light.",
+  "video": {
+    "width": 1920,
+    "height": 1080,
+    "fps": 60
+  },
+  "production": {
+    "cloud_gpu_provider": null,
+    "allow_local_gpu": false,
+    "allow_paid_services": false,
+    "allow_ai_generated_visuals": false,
+    "allow_stock_footage": false,
+    "random_seed": 20261121,
+    "threads": 1,
+    "render_workers": 3,
+    "render_chunk_frames": 320,
+    "render_timeout_seconds": 7200
+  },
+  "quality": {
+    "draft": {
+      "width": 960,
+      "height": 540,
+      "temporal_samples": 1,
+      "image_bit_depth": 8
+    },
+    "review": {
+      "width": 1920,
+      "height": 1080,
+      "temporal_samples": 2,
+      "image_bit_depth": 8
+    },
+    "final": {
+      "width": 1920,
+      "height": 1080,
+      "temporal_samples": 2,
+      "image_bit_depth": 8
+    }
+  },
+  "delivery": {
+    "profile": "h264",
+    "source_transfer": "legacy_display_gamma",
+    "color_space": "rec709"
+  },
+  "style": "styles/zion-cinematic.json",
+  "audio": {
+    "source": "work/advanced-dance/audio/ensemble.wav",
+    "source_sha256": "0070ad05bcbcad632c868484a0a19a2d372aca18a1f4012e5977fdc9ab977ed4",
+    "offset_seconds": 0
+  },
+  "timing": {
+    "fps": 60,
+    "visual_only": false,
+    "manually_verified": false,
+    "note": "Choreography follows the saved source-specific machine-estimated beat clock at original playback speed. Rehearsal conformance and instrument-specific hit approval are not claimed.",
+    "clock_source": "tools/advanced_dance/clock.json",
+    "clock_mode": "ensemble",
+    "events": [
+      {
+        "frame": 0,
+        "kind": "estimated_beat",
+        "beat": 0,
+        "seconds": 0.0,
+        "confirmed": false
+      },
+      {
+        "frame": 28,
+        "kind": "estimated_beat",
+        "beat": 1,
+        "seconds": 0.4643990929705213,
+        "confirmed": false
+      },
+      {
+        "frame": 56,
+        "kind": "estimated_beat",
+        "beat": 2,
+        "seconds": 0.9287981859410435,
+        "confirmed": false
+      },
+      {
+        "frame": 84,
+        "kind": "estimated_beat",
+        "beat": 3,
+        "seconds": 1.3931972789115639,
+        "confirmed": false
+      },
+      {
+        "frame": 113,
+        "kind": "estimated_beat",
+        "beat": 4,
+        "seconds": 1.8808163265306126,
+        "confirmed": false
+      },
+      {
+        "frame": 141,
+        "kind": "estimated_beat",
+        "beat": 5,
+        "seconds": 2.345215419501133,
+        "confirmed": false
+      },
+      {
+        "frame": 169,
+        "kind": "estimated_beat",
+        "beat": 6,
+        "seconds": 2.809614512471655,
+        "confirmed": false
+      },
+      {
+        "frame": 196,
+        "kind": "estimated_beat",
+        "beat": 7,
+        "seconds": 3.2740136054421773,
+        "confirmed": false
+      },
+      {
+        "frame": 224,
+        "kind": "estimated_beat",
+        "beat": 8,
+        "seconds": 3.7384126984126977,
+        "confirmed": false
+      },
+      {
+        "frame": 252,
+        "kind": "estimated_beat",
+        "beat": 9,
+        "seconds": 4.20281179138322,
+        "confirmed": false
+      },
+      {
+        "frame": 281,
+        "kind": "estimated_beat",
+        "beat": 10,
+        "seconds": 4.690430839002267,
+        "confirmed": false
+      },
+      {
+        "frame": 311,
+        "kind": "estimated_beat",
+        "beat": 11,
+        "seconds": 5.178049886621316,
+        "confirmed": false
+      },
+      {
+        "frame": 337,
+        "kind": "estimated_beat",
+        "beat": 12,
+        "seconds": 5.619229024943311,
+        "confirmed": false
+      },
+      {
+        "frame": 366,
+        "kind": "estimated_beat",
+        "beat": 13,
+        "seconds": 6.106848072562358,
+        "confirmed": false
+      },
+      {
+        "frame": 396,
+        "kind": "estimated_beat",
+        "beat": 14,
+        "seconds": 6.594467120181405,
+        "confirmed": false
+      },
+      {
+        "frame": 426,
+        "kind": "estimated_beat",
+        "beat": 15,
+        "seconds": 7.105306122448979,
+        "confirmed": false
+      },
+      {
+        "frame": 456,
+        "kind": "estimated_beat",
+        "beat": 16,
+        "seconds": 7.592925170068027,
+        "confirmed": false
+      },
+      {
+        "frame": 485,
+        "kind": "estimated_beat",
+        "beat": 17,
+        "seconds": 8.080544217687077,
+        "confirmed": false
+      },
+      {
+        "frame": 515,
+        "kind": "estimated_beat",
+        "beat": 18,
+        "seconds": 8.59138321995465,
+        "confirmed": false
+      },
+      {
+        "frame": 545,
+        "kind": "estimated_beat",
+        "beat": 19,
+        "seconds": 9.079002267573696,
+        "confirmed": false
+      },
+      {
+        "frame": 574,
+        "kind": "estimated_beat",
+        "beat": 20,
+        "seconds": 9.566621315192744,
+        "confirmed": false
+      },
+      {
+        "frame": 603,
+        "kind": "estimated_beat",
+        "beat": 21,
+        "seconds": 10.054240362811793,
+        "confirmed": false
+      },
+      {
+        "frame": 631,
+        "kind": "estimated_beat",
+        "beat": 22,
+        "seconds": 10.518639455782314,
+        "confirmed": false
+      },
+      {
+        "frame": 658,
+        "kind": "estimated_beat",
+        "beat": 23,
+        "seconds": 10.95981859410431,
+        "confirmed": false
+      },
+      {
+        "frame": 685,
+        "kind": "estimated_beat",
+        "beat": 24,
+        "seconds": 11.42421768707483,
+        "confirmed": false
+      },
+      {
+        "frame": 713,
+        "kind": "estimated_beat",
+        "beat": 25,
+        "seconds": 11.888616780045353,
+        "confirmed": false
+      },
+      {
+        "frame": 741,
+        "kind": "estimated_beat",
+        "beat": 26,
+        "seconds": 12.353015873015874,
+        "confirmed": false
+      },
+      {
+        "frame": 769,
+        "kind": "estimated_beat",
+        "beat": 27,
+        "seconds": 12.817414965986394,
+        "confirmed": false
+      },
+      {
+        "frame": 800,
+        "kind": "estimated_beat",
+        "beat": 28,
+        "seconds": 13.328253968253968,
+        "confirmed": false
+      },
+      {
+        "frame": 830,
+        "kind": "estimated_beat",
+        "beat": 29,
+        "seconds": 13.839092970521541,
+        "confirmed": false
+      },
+      {
+        "frame": 857,
+        "kind": "estimated_beat",
+        "beat": 30,
+        "seconds": 14.280272108843537,
+        "confirmed": false
+      },
+      {
+        "frame": 886,
+        "kind": "estimated_beat",
+        "beat": 31,
+        "seconds": 14.767891156462586,
+        "confirmed": false
+      },
+      {
+        "frame": 917,
+        "kind": "estimated_beat",
+        "beat": 32,
+        "seconds": 15.27873015873016,
+        "confirmed": false
+      },
+      {
+        "frame": 946,
+        "kind": "estimated_beat",
+        "beat": 33,
+        "seconds": 15.766349206349208,
+        "confirmed": false
+      },
+      {
+        "frame": 975,
+        "kind": "estimated_beat",
+        "beat": 34,
+        "seconds": 16.253968253968253,
+        "confirmed": false
+      },
+      {
+        "frame": 1006,
+        "kind": "estimated_beat",
+        "beat": 35,
+        "seconds": 16.76480725623583,
+        "confirmed": false
+      },
+      {
+        "frame": 1035,
+        "kind": "estimated_beat",
+        "beat": 36,
+        "seconds": 17.252426303854875,
+        "confirmed": false
+      },
+      {
+        "frame": 1063,
+        "kind": "estimated_beat",
+        "beat": 37,
+        "seconds": 17.7168253968254,
+        "confirmed": false
+      },
+      {
+        "frame": 1091,
+        "kind": "estimated_beat",
+        "beat": 38,
+        "seconds": 18.18122448979592,
+        "confirmed": false
+      },
+      {
+        "frame": 1119,
+        "kind": "estimated_beat",
+        "beat": 39,
+        "seconds": 18.64562358276644,
+        "confirmed": false
+      },
+      {
+        "frame": 1147,
+        "kind": "estimated_beat",
+        "beat": 40,
+        "seconds": 19.11002267573696,
+        "confirmed": false
+      },
+      {
+        "frame": 1176,
+        "kind": "estimated_beat",
+        "beat": 41,
+        "seconds": 19.59764172335601,
+        "confirmed": false
+      },
+      {
+        "frame": 1207,
+        "kind": "estimated_beat",
+        "beat": 42,
+        "seconds": 20.108480725623583,
+        "confirmed": false
+      },
+      {
+        "frame": 1234,
+        "kind": "estimated_beat",
+        "beat": 43,
+        "seconds": 20.572879818594107,
+        "confirmed": false
+      },
+      {
+        "frame": 1262,
+        "kind": "estimated_beat",
+        "beat": 44,
+        "seconds": 21.037278911564627,
+        "confirmed": false
+      },
+      {
+        "frame": 1289,
+        "kind": "estimated_beat",
+        "beat": 45,
+        "seconds": 21.478458049886623,
+        "confirmed": false
+      },
+      {
+        "frame": 1317,
+        "kind": "estimated_beat",
+        "beat": 46,
+        "seconds": 21.942857142857143,
+        "confirmed": false
+      },
+      {
+        "frame": 1343,
+        "kind": "estimated_beat",
+        "beat": 47,
+        "seconds": 22.38403628117914,
+        "confirmed": false
+      },
+      {
+        "frame": 1370,
+        "kind": "estimated_beat",
+        "beat": 48,
+        "seconds": 22.825215419501134,
+        "confirmed": false
+      },
+      {
+        "frame": 1393,
+        "kind": "estimated_beat",
+        "beat": 49,
+        "seconds": 23.219954648526077,
+        "confirmed": false
+      },
+      {
+        "frame": 1421,
+        "kind": "estimated_beat",
+        "beat": 50,
+        "seconds": 23.6843537414966,
+        "confirmed": false
+      },
+      {
+        "frame": 1449,
+        "kind": "estimated_beat",
+        "beat": 51,
+        "seconds": 24.14875283446712,
+        "confirmed": false
+      },
+      {
+        "frame": 1477,
+        "kind": "estimated_beat",
+        "beat": 52,
+        "seconds": 24.613151927437645,
+        "confirmed": false
+      },
+      {
+        "frame": 1506,
+        "kind": "estimated_beat",
+        "beat": 53,
+        "seconds": 25.100770975056687,
+        "confirmed": false
+      },
+      {
+        "frame": 1533,
+        "kind": "estimated_beat",
+        "beat": 54,
+        "seconds": 25.541950113378686,
+        "confirmed": false
+      },
+      {
+        "frame": 1560,
+        "kind": "estimated_beat",
+        "beat": 55,
+        "seconds": 26.00634920634921,
+        "confirmed": false
+      },
+      {
+        "frame": 1587,
+        "kind": "estimated_beat",
+        "beat": 56,
+        "seconds": 26.447528344671202,
+        "confirmed": false
+      },
+      {
+        "frame": 1616,
+        "kind": "estimated_beat",
+        "beat": 57,
+        "seconds": 26.93514739229025,
+        "confirmed": false
+      },
+      {
+        "frame": 1645,
+        "kind": "estimated_beat",
+        "beat": 58,
+        "seconds": 27.4227664399093,
+        "confirmed": false
+      },
+      {
+        "frame": 1675,
+        "kind": "estimated_beat",
+        "beat": 59,
+        "seconds": 27.910385487528348,
+        "confirmed": false
+      },
+      {
+        "frame": 1702,
+        "kind": "estimated_beat",
+        "beat": 60,
+        "seconds": 28.374784580498865,
+        "confirmed": false
+      },
+      {
+        "frame": 1735,
+        "kind": "estimated_beat",
+        "beat": 61,
+        "seconds": 28.908843537414963,
+        "confirmed": false
+      },
+      {
+        "frame": 1765,
+        "kind": "estimated_beat",
+        "beat": 62,
+        "seconds": 29.419682539682544,
+        "confirmed": false
+      },
+      {
+        "frame": 1794,
+        "kind": "estimated_beat",
+        "beat": 63,
+        "seconds": 29.907301587301585,
+        "confirmed": false
+      },
+      {
+        "frame": 1825,
+        "kind": "estimated_beat",
+        "beat": 64,
+        "seconds": 30.41814058956916,
+        "confirmed": false
+      }
+    ]
+  },
+  "shots": [
+    {
+      "id": "performance",
+      "name": "Petals in Motion: Advanced Choreography",
+      "renderer": "p3d-kit",
+      "start_frame": 0,
+      "end_frame_exclusive": 1920,
+      "scene": "tools/advanced_dance/ensemble.py",
+      "params": {}
+    }
+  ]
+}

@@ -1,7 +1,28 @@
-# Delivered studies and model previews
+# Delivered films, studies and model previews
+
+<!-- advanced-dance-final-delivery:begin -->
+## Latest delivery: Advanced Dance
+
+Both revised dance films are complete, technically passed, reviewed within the recorded scope and saved. Each is a 32-second native 1920 x 1080 movie at 60 fps. The new complete ten-film package contains these two revisions and the exact previous films 03 through 10. The overview, README, full motion/anatomy evidence, technical report, checksums and packaging receipt are saved. No new exact-output owner approval is recorded.
+
+| Saved file | Contents |
+| --- | --- |
+| [01_Silk_in_Light_Advanced_Dance_1080p60.mp4](https://chatgpt.com/library?file_id=libfile_5efbae79a5d88191b729f3726b94d117&account_id=personal) | Finished 32-second native 1080p60 film |
+| [02_Petals_in_Motion_Advanced_Dance_1080p60.mp4](https://chatgpt.com/library?file_id=libfile_bdf3a9b4e1f481918e768953be62a279&account_id=personal) | Finished 32-second native 1080p60 film |
+| [Advanced_Dance_QA.json](https://chatgpt.com/library?file_id=libfile_cccbc0cf6fd08191b09dd484c91a9fcd&account_id=personal) | Delivery evidence or overview |
+| [Packaging_Receipt.json](https://chatgpt.com/library?file_id=libfile_6dd899b883fc81919acb2641264c72ec&account_id=personal) | Delivery evidence or overview |
+| [README.txt](https://chatgpt.com/library?file_id=libfile_b0385f1023bc8191b39bcd0f6e72cbd7&account_id=personal) | Delivery evidence or overview |
+| [SHA256SUMS.txt](https://chatgpt.com/library?file_id=libfile_3ede63b34878819188d32f74e4132f78&account_id=personal) | Delivery evidence or overview |
+| [Ten_Cinematic_Films_Advanced_Dance_1080p60.zip](https://chatgpt.com/library?file_id=libfile_02d1b9fcefdc8191ab72741639bd1fb2&account_id=personal) | Complete ten-film collection |
+| [Ten_Cinematic_Films_Advanced_Dance_Overview.jpg](https://chatgpt.com/library?file_id=libfile_0c18dc44f6e0819182a087eaef6d669a&account_id=personal) | Delivery evidence or overview |
+| [Ten_Cinematic_Films_Advanced_Dance_Technical.json](https://chatgpt.com/library?file_id=libfile_9cedecf92e288191bc354b9f5fcd1a4d&account_id=personal) | Delivery evidence or overview |
+
+Frozen picture source `254414bc0356171f7d5ad89361c75d45fd01a407`, [PR #109](https://github.com/lovelaceaml-hub/concert-backdrops/pull/109). See [the exact final delivery evidence](evidence/advanced-dance-final-delivery.json) and [the repair workflow](ADVANCED-DANCE.md). Numeric validation, sampled visual review, desktop playback and owner approval remain separate.
+<!-- advanced-dance-final-delivery:end -->
+
 
 <!-- cinematic-ten-final-delivery:begin -->
-## Newest delivery: Cinematic Ten
+## Previous delivery: Cinematic Ten
 
 All ten twenty-second films are complete, technically passed, reviewed within the recorded sample scope, and saved. The overview, README, technical records, checksums and complete ZIP are also saved. No Cinematic Ten owner approval is recorded.
 
