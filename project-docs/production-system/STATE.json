@@ -19,7 +19,7 @@
   "audio_sources_verified": 11,
   "full_rehearsal_recordings_verified": 0,
   "current_increment": "Cinematic Ten: ten original twenty-second cinematic films in the established native concert p3d style",
-  "increment_status": "picture_source_frozen_film09_final_passed_and_saved_other_finals_rendering_or_queued",
+  "increment_status": "picture_source_frozen_three_finals_checked_and_saved_remaining_finals_rendering",
   "cloud_gpu_provider": null,
   "mac_rendering_used": false,
   "new_study_creative_approval": "not_recorded",
@@ -58,7 +58,7 @@
   "drive_instruction_files_updated_and_verified": 5,
   "drive_instruction_evidence": "project-docs/production-system/evidence/drive-instruction-updates.json",
   "private_drive_media_copies": "fourteen_cataloged_media_uploaded_and_raw_bytes_verified",
-  "new_media_files_saved": 1,
+  "new_media_files_saved": 3,
   "new_media_catalog": "project-docs/production-system/catalogs/deliveries.json",
   "active_render_processes": null,
   "integration_authority": "https://github.com/lovelaceaml-hub/concert-backdrops/pull/108",
@@ -387,15 +387,15 @@
     "color": "Rec.709 SDR, limited range; existing legacy display convention",
     "picture_source_frozen": true,
     "completed_final_film_ids": [
+      1,
+      6,
       9
     ],
     "rendering_or_queued_film_ids": [
-      1,
       2,
       3,
       4,
       5,
-      6,
       7,
       8,
       10
@@ -458,11 +458,13 @@
       }
     },
     "additional_partial_job": {
-      "project_id": "cinematic-ten-07",
-      "frames": "0:300",
-      "workers": 1,
-      "status": "started_by_coordinator_completion_not_asserted",
-      "purpose": "Reuse the first 300 final bird frames when its full-film lane begins."
-    }
+      "project_id": "cinematic-ten-10",
+      "verified_frames": 47,
+      "status": "extra_worker_exited_minus9_verified_frames_preserved_for_later_resume"
+    },
+    "saved_delivery_evidence": "project-docs/production-system/evidence/cinematic-ten-library-delivery.json",
+    "frozen_input_evidence": "project-docs/production-system/evidence/cinematic-ten-frozen-inputs.json",
+    "bird_supplemental_frames_verified": 600,
+    "drive_copy": "Film09 optional copy blocked by automatic approval review; no new films copied to Drive. Saved downloads continue."
   }
 }
