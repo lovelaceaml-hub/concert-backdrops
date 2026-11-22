@@ -1,14 +1,51 @@
 # Concert production system
 
-## Latest delivery: Advanced Dance, PR #109
+## Current delivery and maintenance
 
-Both revised dance films are complete, technically passed, reviewed within the recorded scope and saved. Each is a 32-second native 1920 x 1080 movie at 60 fps. The new complete ten-film package contains these two revisions and the exact previous films 03 through 10. The overview, README, full motion/anatomy evidence, technical report, checksums and packaging receipt are saved. No new exact-output owner approval is recorded.
+Updated November 22, 2026, America/Los_Angeles. The user's current request is to
+document, upload, update, review and refactor the completed project. The previous
+AGENTS.md instructions were withdrawn; root AGENTS.md is now a navigation page.
+
+The two revised Advanced Dance films are complete and saved. Each is a 32-second
+native 1920 x 1080 movie at 60 fps. The complete ten-film package contains these
+two revisions and the exact previous films 03 through 10, for 224 seconds total.
+The overview, README, full motion/anatomy evidence, technical report, checksums
+and packaging receipt are also saved. No exact-output owner approval is recorded.
 
 [Solo film](https://chatgpt.com/library?file_id=libfile_5efbae79a5d88191b729f3726b94d117&account_id=personal) | [Five-person ensemble](https://chatgpt.com/library?file_id=libfile_bdf3a9b4e1f481918e768953be62a279&account_id=personal) | [Complete ten-film package](https://chatgpt.com/library?file_id=libfile_02d1b9fcefdc8191ab72741639bd1fb2&account_id=personal)
 
-Frozen picture source: `254414bc0356171f7d5ad89361c75d45fd01a407`. Integration authority: [PR #109](https://github.com/lovelaceaml-hub/concert-backdrops/pull/109). Read `project-docs/production-system/evidence/advanced-dance-final-delivery.json`, current `STATE.json` and `ADVANCED-DANCE.md` for exact identities and review limits. The repair and reproduction commands are in `tools/advanced_dance/README.md`. Recover the saved masters; do not restart this completed render queue. Historical records below retain their original scope.
+[PR #109](https://github.com/lovelaceaml-hub/concert-backdrops/pull/109) merged
+at `5a602349f90f50d79968bab77dd08db1a20c4339` on `2026-11-22T10:23:55Z`.
+The rendered picture source remains
+`254414bc0356171f7d5ad89361c75d45fd01a407`. Later maintenance records describe
+code and handoff updates separately from the delivered pictures.
 
-Current handoff: Cinematic Ten final delivery, 2026-11-21, America/Los_Angeles. Machine observations use UTC.
+| Need | Start with |
+| --- | --- |
+| Continue the current request | [STATE.json](STATE.json) and [AI-HANDOFF.md](AI-HANDOFF.md) |
+| Recover a finished movie or complete package | [DELIVERIES.md](DELIVERIES.md) and [exact saved identities](evidence/advanced-dance-final-delivery.json) |
+| Understand choreography, anatomy corrections and review scope | [ADVANCED-DANCE.md](ADVANCED-DANCE.md) |
+| Verify a recovered archive or deliberately reproduce a film | [Executable module guide](../../tools/advanced_dance/README.md) |
+| Find earlier films and source references | [Delivery catalog](catalogs/deliveries.json), [motion catalog](catalogs/motions.json) and [reference catalog](catalogs/references.json) |
+
+### Recover before reproducing
+
+The complete collection is already delivered. A fresh checkout recovers tracked
+source and records, while ignored `work/` files must be recovered separately
+when needed. Old absolute paths, completed-frame receipts and queue notes
+record the earlier environment; their absence in a new workspace is not pending
+production. Use the saved link and verify the exact byte count and SHA-256
+before any deliberate re-render or repackage. The module guide provides a
+standard-library-only archive check.
+
+## Historical production notes
+
+The remaining entries preserve earlier stages, observations and commands.
+Their dates and directions belong to those stages and are not current working
+instructions. The current delivery and maintenance entry above resolves the
+handoff; original evidence and saved outputs retain their recorded scope.
+
+Historical handoff: Cinematic Ten final delivery, 2026-11-21, America/Los_Angeles. Machine observations use UTC.
 
 **The Words of Mother's Love bring peace.** Build every film around that message. The owner approved the sharper Song 11 beauty study and requested that its setup, source, instructions and references be saved, uploaded and merged for every AI to reuse. The owner also authorized continued model, acting and workflow improvement across the concert songs.
 

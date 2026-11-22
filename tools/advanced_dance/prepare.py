@@ -16,10 +16,12 @@ requires a completed cache for every performer, then compares native RGB bytes.
 from __future__ import annotations
 
 import argparse
+import errno
 import hashlib
 import json
 import os
 from pathlib import Path
+import shutil
 import subprocess
 import sys
 import time
@@ -159,33 +161,30 @@ def build_one(mode, role):
 def bake(mode, role=None):
     """Bake the selected bodies sequentially and keep one receipt per identity."""
     _engine_path()
-    from .cache import bake_cloth, motion_key
+    from .cache import bake_cloth
     from .render import source_hashes
     if os.environ.get("ADVANCED_DANCE_CLOTH_CACHE", "auto") != "auto":
         raise ValueError("Cloth baking requires the default auto cache policy")
     source_before = source_hashes()
+
+    def unchanged_sources():
+        if source_hashes() != source_before:
+            raise RuntimeError("Authored sources changed during cloth baking; repeat after freezing the inputs")
+
     results = []
     for cast_role in selected_roles(mode, role):
         began = time.monotonic()
         print(json.dumps(dict(event="cloth_bake_started", mode=mode, role=cast_role)), flush=True)
         body = build_one(mode, cast_role)
-        key = motion_key(body)
-        path = Path(bake_cloth(body))
-        if motion_key(body) != key or source_hashes() != source_before:
-            raise RuntimeError("Authored sources changed during cloth baking; repeat after freezing the inputs")
-        data = np.load(path, mmap_mode="r", allow_pickle=False)
-        if not np.isfinite(data).all():
-            raise ValueError("The completed cloth cache contains nonfinite positions")
-        receipt = dict(schema_version=1, mode=mode, role=cast_role, motion_key=key,
-                       duration_seconds=DURATION, snapshot_rate_hz=30, solver_rate_hz=120,
-                       cache=str(path.relative_to(ROOT)), sha256=_digest(path),
-                       bytes=path.stat().st_size, shape=list(data.shape), dtype=str(data.dtype),
-                       source_sha256=source_before, elapsed_seconds=round(time.monotonic()-began, 3))
-        _write(path.with_suffix(".json"), receipt)
+        path = Path(bake_cloth(body, source_guard=unchanged_sources,
+                              receipt_metadata=lambda: dict(source_sha256=source_before,
+                                  elapsed_seconds=round(time.monotonic()-began, 3))))
+        unchanged_sources()
+        receipt = json.loads(path.with_suffix(".json").read_text())
         results.append(receipt)
         print(json.dumps(dict(event="cloth_bake_complete", mode=mode, role=cast_role,
-                              key=key, seconds=receipt["elapsed_seconds"])), flush=True)
-        del data, body
+                              key=receipt["motion_key"], seconds=receipt["elapsed_seconds"])), flush=True)
+        del body
     return results
 
 
@@ -213,7 +212,8 @@ def _frame_worker(mode, frame_index, cache_mode, output):
             return False
         path = Path(body.advanced_cloth_cache)
         observed.append(dict(role=body.actor.advanced_score.role, loaded=True,
-                             cache=str(path.relative_to(ROOT)), sha256=_digest(path)))
+                             cache=str(path.relative_to(ROOT)),
+                             sha256=body.advanced_cloth_receipt["sha256"]))
         return True
 
     scene.load_cloth = use_cache
@@ -467,6 +467,33 @@ def prepare_trails(mode, captures):
                     "--mode", mode, "--captures", str(captures)], cwd=ROOT, env=env, check=True)
 
 
+def _stage_proof_frame(source, destination, expected_sha256):
+    """Link a verified frame, or copy exact bytes to another filesystem.
+
+    Only EXDEV permits the copy fallback. The destination is created
+    exclusively, and an incomplete or changed copy is removed before failing.
+    The receipt hash, rather than a fresh source hash, remains the authority.
+    """
+    source, destination = Path(source), Path(destination)
+    try:
+        os.link(source, destination)
+        return
+    except OSError as error:
+        if error.errno != errno.EXDEV:
+            raise
+    created = False
+    try:
+        with source.open("rb") as original, destination.open("xb") as copied:
+            created = True
+            shutil.copyfileobj(original, copied, length=1024 * 1024)
+        if _digest(destination) != expected_sha256:
+            raise ValueError("Copied proof frame differs from its verified receipt hash")
+    except BaseException:
+        if created:
+            destination.unlink(missing_ok=True)
+        raise
+
+
 def proof(mode, output=None):
     """Encode only verified final even frames as a separate 30 fps proof."""
     import tempfile
@@ -521,8 +548,9 @@ def proof(mode, output=None):
         with tempfile.TemporaryDirectory(prefix="proof-build-", dir=target.parent) as temporary_root:
             temporary = Path(temporary_root)
             for output_index, source_index in enumerate(indices):
-                os.link(directory/"frames"/f"frame_{source_index:06d}.png",
-                        temporary/f"{output_index:06d}.png")
+                _stage_proof_frame(directory/"frames"/f"frame_{source_index:06d}.png",
+                                   temporary/f"{output_index:06d}.png",
+                                   records[output_index]["sha256"])
             movie = temporary/"proof.mp4"
             command = ["ffmpeg", "-v", "error", "-nostdin", "-filter_threads", "2",
                        "-framerate", "30", "-start_number", "0", "-i", str(temporary/"%06d.png"),

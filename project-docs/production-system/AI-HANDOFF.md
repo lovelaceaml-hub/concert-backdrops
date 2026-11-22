@@ -1,118 +1,80 @@
 # Handoff for a new AI or chat
 
-## Latest delivery: Advanced Dance, PR #109
+Updated November 22, 2026, America/Los_Angeles. Machine timestamps use UTC.
+The user withdrew the previously provided AGENTS.md instructions and requested
+documentation, upload, update, review and refactoring. Root AGENTS.md now serves
+as navigation. Current conversation directions govern the active work.
 
-Both revised dance films are complete, technically passed, reviewed within the recorded scope and saved. Each is a 32-second native 1920 x 1080 movie at 60 fps. The new complete ten-film package contains these two revisions and the exact previous films 03 through 10. The overview, README, full motion/anatomy evidence, technical report, checksums and packaging receipt are saved. No new exact-output owner approval is recorded.
+## Finished delivery
 
-[Solo film](https://chatgpt.com/library?file_id=libfile_5efbae79a5d88191b729f3726b94d117&account_id=personal) | [Five-person ensemble](https://chatgpt.com/library?file_id=libfile_bdf3a9b4e1f481918e768953be62a279&account_id=personal) | [Complete ten-film package](https://chatgpt.com/library?file_id=libfile_02d1b9fcefdc8191ab72741639bd1fb2&account_id=personal)
+The two revised Advanced Dance films are complete and saved: **Silk in Light**
+is a solo and **Petals in Motion** is a five-person ensemble. Each is 32 seconds
+at native 1920 x 1080 and 60 fps, with 1,920 frames. The updated ten-film package
+contains those revisions and the exact previous films 03 through 10. Its total
+running time is 224 seconds. Nine saved artifacts cover the two new movies and
+seven support files, including the complete archive.
 
-Frozen picture source: `254414bc0356171f7d5ad89361c75d45fd01a407`. Integration authority: [PR #109](https://github.com/lovelaceaml-hub/concert-backdrops/pull/109). Read `project-docs/production-system/evidence/advanced-dance-final-delivery.json`, current `STATE.json` and `ADVANCED-DANCE.md` for exact identities and review limits. The repair and reproduction commands are in `tools/advanced_dance/README.md`. Recover the saved masters; do not restart this completed render queue. Historical records below retain their original scope.
+[Solo film](https://chatgpt.com/library?file_id=libfile_5efbae79a5d88191b729f3726b94d117&account_id=personal)
+| [Five-person ensemble](https://chatgpt.com/library?file_id=libfile_bdf3a9b4e1f481918e768953be62a279&account_id=personal)
+| [Complete ten-film package](https://chatgpt.com/library?file_id=libfile_02d1b9fcefdc8191ab72741639bd1fb2&account_id=personal)
 
-## Prior handoff prompt (historical)
-
-Copy the following instruction into a new working chat only for the historical Cinematic Ten delivery. The active Advanced Dance increment is described above. Original wording: The files it references carry the actual state; this prompt is an entry point, not a substitute for reading them.
-
-> Work on the concert-backdrops project for The Words of Mother's Love. Read root AGENTS.md, project-docs/production-system/START-HERE.md and STATE.json. Cinematic Ten has ten complete, technically passed, scoped visually reviewed and saved films, plus five saved support artifacts. Preserve frozen picture source df4fc478116d3f0e34a85d2166097fbda55911bf, the approved creative/clarity references and exact delivery identities. No Cinematic Ten owner approval is recorded. Do not restart completed render or save work. Record exact-output feedback separately and use isolated new increments for later changes. Keep full songs, lyrics, frames and videos out of Git. Apply the current user's authorization without repeated permission requests.
-
-## Previous delivery: Cinematic Ten
-
-All ten twenty-second films are complete, technically passed, reviewed within the recorded sample scope, and saved. The overview, README, technical records, checksums and complete ZIP are also saved. No Cinematic Ten owner approval is recorded.
-
-Picture source remains `df4fc478116d3f0e34a85d2166097fbda55911bf`, branch `creative/cinematic-ten-films`, [PR #108](https://github.com/lovelaceaml-hub/concert-backdrops/pull/108). Each film has 1,200 native 1920 x 1080 frames at 60 fps and two temporal samples.
-
-Exact identities are in [the final delivery evidence](evidence/cinematic-ten-final-delivery.json); actual per-film scope and findings are in [the complete review evidence](evidence/cinematic-ten-complete-review.json).
-
-Read [DELIVERIES.md](DELIVERIES.md) for individual movie and support links. The complete ZIP contains fourteen exact members; the five separately saved support artifacts include that ZIP itself. Movies were copied without re-encoding.
-
-Working masters remain `work/pipeline/cinematic-ten-XX/final/master.mp4`. The complete-review record preserves per-film checker, pipeline, visual and assembly identities. Saved delivery evidence records file IDs, versions, byte counts and hashes for recovery. Restore the saved exact file when needed; do not replace it with a newly encoded or repackaged variant under the same identity.
-
-The earlier queue, spare worker and partial-frame records are render history. No unfinished Cinematic Ten master remains. At closeout, all coordinator-launched render tasks and the all-ten movie saver had terminated; [the observed completion record](evidence/cinematic-ten-render-completion.json) records that scoped zero-renderer state. Live process telemetry is not inferred from this metadata snapshot. Existing historical Drive deliveries remain intact; this round's closeout records saved files without a new Drive-copy claim.
-
-The original authored-score inventory and dated review blocks remain unchanged. Its separate `authored_scores.final_movie_evidence` map links all ten final outputs to their actual scoped review and saved identities.
-
-Full technical decoding and sampled visual review are distinct from real-time playback, biomechanical validation and exact-output owner approval. Supplied references informed original authored work; no source choreography was reconstructed.
-
-## Historical fan and silk increment, PR #106
-
-The earlier `concert-fan-trio` has a twenty-second clock, distinct lead/answer/welcome roles and two held fans with finite silk. Picture source: `dffe8f165944c627ae39a8bb7d47bc5a9e703305`. Read [FAN-SILK-PERFORMANCE.md](FAN-SILK-PERFORMANCE.md) and [tools/concert_fan/README.md](../../tools/concert_fan/README.md). Only the first two reference posters were inspected for that increment; its missing-moving-footage note is historical. Preserve its completed delivery and review records.
-
-## Read order and precedence
-
-1. Current user directions and current session corrections.
-2. Root `AGENTS.md` and this production system's current records.
-3. Live Drive rules, latest dated addenda and per-song status. Historical comments can be stale; preserve them but resolve conflicts explicitly.
-4. The exact approved media and immutable source records.
-5. The selected song's original recording identity, continuity and known unrendered changes.
-6. Implementation documentation for the chosen adapter and models.
-
-Do not restart the old promo, regenerate approved art or re-open a completed repair because an old handoff says it is pending. The source catalog records that all eleven recordings exist. Several full-song delivery records refer to prior chats and have not been independently watched in this audit; do not claim those videos were visually verified just because their status pages were read.
-
-Use [AUTHORING-NEXT-SONG.md](AUTHORING-NEXT-SONG.md) when moving from a study to a new complete song. The kit adapter now explicitly registers all ten Cinematic Ten scenes alongside the historical Consideration scene, its separate camera and response revision, the natural dance scene, and the original fan and silk trio. The approved Song 11 adapter remains separate; the two natural dance projects share one registration. Read `pipeline/kit.py` and the project manifests for the current inventory. A new audio source or a renamed project is not a new authored film. Prefer `concert-kit-consideration-v2` when studying the earlier corrected hand return and clearer rise; retain the original 18-second file as evidence of what needed repair.
-
-## Reference intake and faithful adaptation
-
-The older YouTube reference intake is retained in `catalogs/performance-references.json`. Its poster-only findings describe the earlier fan-trio round. Three actual supplied recordings have since been recovered and inspected: `ScreenRecording_11-21-2026 12-19-51_1.mp4` is the close solo fan reference, `ScreenRecording_11-21-2026 12-20-32_1.mp4` is the wider ensemble reference, and `ScreenRecording_11-21-2026 12-24-09_1.mp4` is the illuminated globe reference. [CINEMATIC-TEN-MOTION.md](CINEMATIC-TEN-MOTION.md) and the motion catalog record exact filenames, hashes and saved identities. The third recording is not a dance source. No specific calligraphy performance was demonstrated by these recordings.
-
-The new solo, ensemble and calligraphy scores are original authored kinematics. Viewing the dance references informed the solo and ensemble upper-body sweeps, levels and timing; calligraphy was independently authored from its brief. No captured or reconstructed choreography was produced. Feet hidden by skirts were authored independently. Previous automatic covered-foot estimates were not verified by this round. The optional Blender performance exporter remains unimplemented.
-
-The local-video intake utility in `tools/performance_reference/` preserves source hashes, requested ranges and actual decoded timestamps, then creates review samples and an annotation manifest. The earlier [sixteen-second treatment](REFERENCE-CREATIVE-TREATMENT.md) is planning history, superseded first by the implemented fan trio and now by the separate Cinematic Ten work. [PERFORMANCE-AUTHORING.md](PERFORMANCE-AUTHORING.md) remains the authoring contract. Keep [NEXT-PERFORMANCE-UPGRADES.md](NEXT-PERFORMANCE-UPGRADES.md) as later quality work after the current final delivery.
-
-## Previous delivered work: natural dance, PR #104
-
-That earlier dance picture is frozen at `0c42f4422a6b67464cb9cd84aac32008d45d4f4c`. Its full eighteen-second native 1080p60 movie is complete, saved and copied to Production Studies with verified raw bytes. Both technical auditors passed; targeted visual inspection found no confirmed blocker, while preserving the slow preparation and prolonged settling as creative issues. Owner approval remains unrecorded. Read [STATE.json](STATE.json), [DELIVERIES.md](DELIVERIES.md) and their evidence before starting another coordinator or changing picture inputs.
-
-Use [NATURAL-PERFORMANCE.md](NATURAL-PERFORMANCE.md) for reproduction and the reusable conditioning layer. Use [MOTION-LIBRARY.md](MOTION-LIBRARY.md) and [catalogs/motions.json](catalogs/motions.json) for actual compiled clips and clearly separate proposed additions. `concert-dance-study` uses six single-thread CPU workers for 1080p; `concert-dance-study-4k` uses three for native 4K. A single native 4K frame has rendered, but the configured full 4K movie remains unrendered at this handoff.
-
-That earlier duet repeats one existing CMU 05_02 phrase with a 0.6-second offset. Its stored whole-body poses are 30 Hz and are interpolated at 60 fps. The source phrase and pacing constrain sustained flow and variety; stronger complementary choreography remains next work. Fingers and thumbs were not captured, and bounded contact cleanup does not simulate physical balance. Preserve these distinctions when reporting movement quality. The earlier Consideration and model deliveries below remain completed previous-increment records.
-
-## Coordination
-
-- One scene/model writer per file group. One coordinator owns shared lighting, timing, status and final assembly.
-- Record file ownership in the work plan before parallel edits. Helpers may read shared sources; they must not overwrite another builder's changes.
-- Freeze a round before final rendering. Hashes should reject mixed versions, not be edited to hide a mismatch.
-- Keep deterministic scene state at absolute song time. Random seeds, delayed effects and trails must not depend on visit order or worker history.
-- Keep an append-only log entry per integrated change. Distinguish planned, source-ready, rendered, technically checked, visually reviewed and owner-approved.
-- Do not mark a new model approved because an older film using the same renderer was approved.
-
-## Session closeout
-
-Leave a self-contained record of the branch/commit, owned files, selected audio hash, render command, output paths and hashes, last completed frames, current visual finding, archive links and the next bounded task. If a process was interrupted, preserve verified partial frames and explain how to resume. If no process or automation is running, say so; a saved backlog does not run itself.
-
-## Required distinctions
-
-| Distinction | Why it matters |
+| Record | Identity or purpose |
 | --- | --- |
-| Original recording versus guide versus stage conformance | The same title can have different timing, instrumentation and source bytes |
-| Current source versus delivered picture | Some historical fixes were committed but never rendered |
-| Reference approval versus new study | Aesthetic approval belongs to a specific output, not every future use of the code |
-| Model source versus reviewed model | An existing constructor may still have contact, silhouette or integration defects |
-| Native 4K versus upscaling | Detail must be rendered at the claimed size |
-| RGB8 versus RGB16/HDR | Higher dimensions do not change the source precision or color contract |
-| Installed tool versus verified runtime | Browser, GUI and GPU capabilities need actual execution evidence |
+| Delivered picture source | `254414bc0356171f7d5ad89361c75d45fd01a407` |
+| Completed source integration | [PR #109](https://github.com/lovelaceaml-hub/concert-backdrops/pull/109), merged at `5a602349f90f50d79968bab77dd08db1a20c4339` on `2026-11-22T10:23:55Z` |
+| Exact saved files and versions | [advanced-dance-final-delivery.json](evidence/advanced-dance-final-delivery.json) |
+| Current maintenance and follow-up state | [STATE.json](STATE.json) |
+| Finished media links and earlier deliveries | [DELIVERIES.md](DELIVERIES.md) |
+| Choreography and repairs | [ADVANCED-DANCE.md](ADVANCED-DANCE.md) |
+| Executable reproduction workflow | [tools/advanced_dance/README.md](../../tools/advanced_dance/README.md) |
 
-## What should stay out of Git
+The delivered movies passed complete technical decoding and timing checks.
+Final encoded visual review covered 150 distinct solo frames and 135 ensemble
+frames, alongside the separately recorded native, proof and desktop playback
+observations. Review scope, the remaining proximity flags and authored hidden
+feet/fingers remain explicit in the evidence. No exact-output owner creative
+approval is recorded.
 
-Full audio, copied lyrics, finished videos, frames, generated caches, temporary downloads, access tokens, signed download links and personal data. Short historical repo clips remain as inherited exceptions; do not extend that exception to the full concert. Store durable media in the existing shared Drive home. The `.gitignore` work paths are intended for reacquirable private working copies.
+## Resume from a fresh checkout
 
-## Completed previous increment and prior Drive delivery
+1. Read the current conversation, [STATE.json](STATE.json) and the exact saved
+   delivery record. Current maintenance concerns the completed project's code,
+   documentation and recovery, not an unfinished render queue.
+2. Recover a needed movie or package from its recorded saved link. Match its
+   byte count and SHA-256 against the final delivery record. The module README
+   includes an archive verification command that uses only Python's standard
+   library.
+3. Treat `work/` paths and old absolute workspace paths in evidence as the
+   locations used during production. A clean clone contains source and tracked
+   records; it does not contain those private inputs, movie bytes, cached
+   geometry or render frames. Their absence does not reverse a saved delivery.
+4. Use the deliberate reproduction section only when a new render or new
+   picture change is part of the active request. That route needs the exact
+   recording, runtime, fonts and source pins before expensive work starts.
 
-Read [DELIVERIES.md](DELIVERIES.md) and `catalogs/deliveries.json` for the eight saved media files and their verified Drive links. All eight exact files were uploaded after the owner confirmed the named files and destination, then checked by raw-byte readback. The requested delivery event was appended once to the existing Drive log, preserving its 106 original entries and producing 107 entries. Its original event timestamp and historical statuses were retained as requested. Current transfer completion is established by `evidence/drive-delivery-completion.json`; do not repeat these completed operations because the historical event or earlier rejection records say pending. The five existing Drive instruction updates remain complete.
+Cache and frame receipts belong to their recorded source snapshot. Maintenance
+of `cache.py` changes future production fingerprints even when valid cached
+geometry is retained. The delivered 236-file input mapping and original cache
+identities still refer to the original frozen source. Future production records
+its updated source and matching caches rather than relabeling those receipts.
 
-The corrected fifteen-second movie has independent technical QA and sampled encoded review. The new studies and models still await their own creative approval; copying them to Drive does not confer that approval.
+Historical render receipts record their observed completion times. They are not
+live process telemetry on a later computer. Likewise, the confirmed Advanced
+Dance saved-file links do not imply that a new Drive copy was made. The delivery
+catalog records each destination separately.
 
-The original handoff ZIP was not retained in a recoverable form when its workspace expired. Its historical size, SHA256 and source checkpoint remain in `evidence/handoff-export.json`. A replacement was reconstructed from the same clean source checkpoint `94dd897c6fdeb287561c5dd2772b770c43ab94b7`; all 89 source-document payloads match the Git blobs exactly. The new ZIP timestamps and export receipt change the archive bytes, as recorded in `evidence/handoff-reconstruction.json`.
+## Historical work and references
 
-**All three prior Drive operations are complete.** After the owner confirmed the exact saved replacement, the ZIP was uploaded to Production System and verified against the original saved source by downloading the Drive bytes. The delivered identity is:
+Earlier Cinematic Ten, fan-trio, natural-dance and Consideration deliveries are
+listed in [DELIVERIES.md](DELIVERIES.md), with their original evidence and
+source pins. The historical production notes in [START-HERE.md](START-HERE.md)
+retain their dated context. Superseded handoff wording is available in Git
+history rather than copied into this current handoff.
 
-- Filename: `Concert-Production-System-Handoff-2026-11-20.zip`.
-- Verified Drive file: [open the ZIP](https://drive.google.com/file/d/1gp0x2dnj06eIPDuq6vSGpGtKn_bvKrML/view), file ID `1gp0x2dnj06eIPDuq6vSGpGtKn_bvKrML`.
-- Destination: Production System, folder `1QDGGqqkJlbovBLCthX-QChqfD8zSmK8X`.
-- Size: 350,534 bytes.
-- SHA256: `eb8bba933a37179fa970c84aecc67cbc0b493809d1e2b2e7863c3900b9606537`.
-- Saved backup: [exact version 0](https://chatgpt.com/library?file_id=libfile_0d7ab1c2d83c8191a3badd389c6dc483&account_id=personal), backing file `file_00000000356481fd982a7d39a046118f`.
-
-Read `evidence/drive-handoff-completion.json` for the actual outcome. The earlier replacement rejection in `evidence/drive-handoff-replacement-block.json` and original archive SHA256 `605b7be8ca59987651a642727a9babef88e01986c87d8ea7e3ca076e84a2e158` remain historical evidence. Do not repeat the eight media copies, log append or archive upload, or request their confirmation again. Recover the delivered archive from the recorded Drive file or pinned backup if needed; verify its hash before use.
-
-The confirmed ZIP is an immutable historical snapshot. PR #106 records the earlier fan-trio delivery; current Git source, this handoff and PR #108 carry the Cinematic Ten round. A future deliberately versioned export includes later documentation and manifests without replacing the confirmed archive.
-
-For every future pending delivery, preserve the exact payload bytes durably before ending the turn and record the saved file identity, version, size and SHA256. A source commit can reproduce document contents while a new ZIP container and receipt have different bytes. Recover the saved approved version on a retry instead of creating a new package.
+The approved creative and clarity references are identified in
+[catalogs/references.json](catalogs/references.json). The supplied moving solo,
+ensemble and globe recordings are recorded in
+[CINEMATIC-TEN-MOTION.md](CINEMATIC-TEN-MOTION.md) and
+[catalogs/motions.json](catalogs/motions.json). The dance is originally authored
+with reference guidance; covered feet and fingers were not recovered as motion
+capture. The globe recording is a separate effects reference.

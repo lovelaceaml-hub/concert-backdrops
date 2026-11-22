@@ -9,6 +9,57 @@ The other eight Cinematic Ten movies retain their delivered pictures. The
 delivery helper replaces only the first two movie slots in a newly named
 ten-film package and verifies the retained eight against their original hashes.
 
+## Recover the completed delivery
+
+Both revised movies and the updated complete package are already saved.
+[PR #109](https://github.com/lovelaceaml-hub/concert-backdrops/pull/109) merged
+at `5a602349f90f50d79968bab77dd08db1a20c4339` on `2026-11-22T10:23:55Z`.
+The delivered picture source is
+`254414bc0356171f7d5ad89361c75d45fd01a407`. Source maintenance after that
+delivery is recorded separately from the movies' picture and file identities.
+Cache and frame receipts belong to their exact declared source snapshot.
+`cache.py` participates in that identity, so a loader change creates a new
+fingerprint for future production even when valid cached geometry is identical.
+Historical cache identities remain reproducible from their original source;
+future production uses its own frozen inputs and matching cache receipts.
+
+Use [the delivery list](../../project-docs/production-system/DELIVERIES.md) for
+the saved movie, archive and support links. The exact IDs, versions, byte counts
+and hashes are in
+`project-docs/production-system/evidence/advanced-dance-final-delivery.json`.
+A fresh checkout contains tracked source and records; the earlier ignored
+`work/` directory, private recordings, baked geometry and render frames are
+separate working inputs. Missing local copies do not mean a completed film
+needs to be rendered again.
+
+After downloading the saved complete archive, verify it from the repository
+root with Python 3.11 or later. Replace the example local path:
+
+```bash
+python3 - <<'PY'
+import hashlib
+import json
+from pathlib import Path
+
+record = json.loads(Path(
+    "project-docs/production-system/evidence/advanced-dance-final-delivery.json"
+).read_text())["archive"]
+archive = Path("/absolute/path/Ten_Cinematic_Films_Advanced_Dance_1080p60.zip")
+with archive.open("rb") as stream:
+    actual_sha256 = hashlib.file_digest(stream, "sha256").hexdigest()
+if archive.stat().st_size != record["bytes"] or actual_sha256 != record["sha256"]:
+    raise SystemExit("Archive does not match the saved delivery")
+print("Verified saved archive:", archive)
+PY
+```
+
+This check needs no render environment or private audio. The saved archive is
+410,134,925 bytes and has SHA-256
+`73fcccc8e659b4f8a40604945509163944be4ca13bec660d350637aa7dca336c`.
+The remaining production commands describe deliberate reproduction or later
+authored work. [STATE.json](../../project-docs/production-system/STATE.json)
+records current maintenance; dated render receipts describe their original run.
+
 ## Performance and musical clock
 
 Each performer has eight eight-count phrases, 96 explicit step events and two
@@ -87,11 +138,24 @@ motion. Exact solver snapshots can be reused through `cache.py`; loading them
 does not resample the pose, approximate the cloth or lower render resolution.
 The current costume code and its frozen receipts define the actual settings.
 
-## Reproduce a production round
+The maintained cache loader verifies the completed array/receipt pair before
+installing snapshots: performer and source identity, duration and sample rate,
+shape and dtype, byte count and SHA-256, and finite coordinates. A corrupt
+completed pair fails explicitly. A missing or incomplete pair is a cache miss
+in automatic mode and an error when a cache is required. Baking pins the
+starting source, writes temporary payloads, and checks source stability before
+array installation and again before publishing the final complete receipt.
+An interrupted publication is incomplete, so a later run recomputes safely.
+These integrity checks retain the geometry of valid snapshots.
 
-Start at the repository root and follow `AGENTS.md` and the production-system
-handoff. Use an isolated branch. Install the locked CPU environment and exact
-reference fonts if they are absent:
+## Deliberately reproduce a production round
+
+Start at the repository root with the current conversation directions and
+[production handoff](../../project-docs/production-system/AI-HANDOFF.md).
+The previous AGENTS.md instructions were withdrawn on November 22, 2026;
+that file now provides navigation. A separate checkout can reproduce the
+selected source without mixing it with ongoing maintenance. Install the locked
+CPU environment and exact reference fonts if they are absent:
 
 ```bash
 python3 scripts/bootstrap.py --p3d-only --reference-fonts
@@ -145,7 +209,9 @@ proof, freeze the picture inputs. Then bake the exact costumes:
 For separate bounded workers, use `--mode ensemble --role 0` through `--role 4`.
 Each command constructs only the selected performer. A changed score, rig or
 costume invalidates its cache. The bake checks for source changes during work
-and writes a content receipt beside each completed cache.
+and publishes the checked array and its completion receipt through the same
+guarded transaction. A detected source change aborts completion for the earlier
+input identity.
 
 Audit the completed cloth caches at every saved state and every exact
 render/shutter/boundary time before using them for final production:
@@ -233,6 +299,13 @@ the sampling scope explicit: source 60 fps shutter samples are retained; odd
 frames and any camera cuts landing on odd frames are absent. It does not
 interpolate images, retime the performance or claim final 60 fps approval.
 
+An explicit `--output /absolute/path/review.mp4` may point to another
+filesystem. Verified frames use hard links on the same filesystem; across
+filesystems they are copied exclusively and checked against their receipt
+hashes. An existing destination is preserved, and a failed copy removes its own
+partial file. This staging behavior changes neither the source frames nor the
+proof sampling contract.
+
 After inspecting the proof, run the ordinary full `produce --quality final`
 command above. Matching even frames are reused, missing odd frames are
 rendered, and the pipeline assembles and checks the complete 1,920-frame
@@ -272,6 +345,16 @@ Focused regressions are available without rendering full films:
 ```bash
 OPENBLAS_NUM_THREADS=1 .venv/bin/python -m unittest discover \
   -s tests -p 'test_advanced_dance_*.py' -v
+```
+
+The pure delivery evidence checks are in `delivery_evidence.py`. Inspection
+tools can import its ledger, QA and production-binding functions without
+loading NumPy, Pillow or media packaging. `delivery.py` re-exports the same
+functions for existing callers; its command line and JSON contracts are
+unchanged. The focused evidence regressions use only the standard library:
+
+```bash
+python3 -m unittest discover -s tests -p test_advanced_dance_delivery.py -v
 ```
 
 ## Deliver the revised collection

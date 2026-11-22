@@ -13,9 +13,38 @@ The frozen corrected picture source is
 `254414bc0356171f7d5ad89361c75d45fd01a407`, branch
 `creative/advanced-choreography-20261121`,
 [PR #109](https://github.com/lovelaceaml-hub/concert-backdrops/pull/109).
+That PR merged on `2026-11-22T10:23:55Z` at
+`5a602349f90f50d79968bab77dd08db1a20c4339`. This source integration and later
+maintenance are separate from the frozen delivered picture identity.
+
 Both revised dance films are complete, technically passed, reviewed within the recorded scope and saved. Each is a 32-second native 1920 x 1080 movie at 60 fps. The new complete ten-film package contains these two revisions and the exact previous films 03 through 10. The overview, README, full motion/anatomy evidence, technical report, checksums and packaging receipt are saved. No new exact-output owner approval is recorded.
 
 [Solo](https://chatgpt.com/library?file_id=libfile_5efbae79a5d88191b729f3726b94d117&account_id=personal), [ensemble](https://chatgpt.com/library?file_id=libfile_bdf3a9b4e1f481918e768953be62a279&account_id=personal) and [complete package](https://chatgpt.com/library?file_id=libfile_02d1b9fcefdc8191ab72741639bd1fb2&account_id=personal). Exact identities are in `evidence/advanced-dance-final-delivery.json`.
+
+## Recover the finished delivery
+
+[DELIVERIES.md](DELIVERIES.md) lists the nine saved artifacts. The exact file
+IDs, versions, sizes and SHA-256 values are in
+`evidence/advanced-dance-final-delivery.json`. Recover a needed file from its
+recorded saved identity; the [module guide](../../tools/advanced_dance/README.md)
+includes a plain Python check for the complete archive.
+
+A clean checkout contains source and tracked evidence. Production paths under
+`work/`, including those embedded in historical reports, identify the earlier
+working copies. They are not promises that private audio, caches, frames or
+movies exist on the new machine. The completed render jobs need no restart for
+documentation or maintenance work. [STATE.json](STATE.json) records the current
+follow-up separately from the saved film delivery.
+
+Maintenance hardens future cache loading with completed receipt, byte-hash,
+shape and finite-state checks. Baking checks source stability during guarded
+array and receipt publication. Valid snapshots retain their geometry; the saved
+movies keep their original bytes. Because `cache.py` is a declared picture
+dependency, its maintenance changes future source fingerprints. The original
+cache identities
+and frozen dependency mapping still describe the delivered source snapshot;
+they are not a claim that every file in current `main` is unchanged. A future
+production round records its own source and matching cache receipts.
 
 ## Choreography and visual treatment
 
@@ -92,7 +121,7 @@ without re-encoding.
 
 ## Final evidence
 
-- `evidence/advanced-dance-frozen-inputs.json` pins the corrected 236 picture dependencies.
+- `evidence/advanced-dance-frozen-inputs.json` pins the 236 picture dependencies of the original delivered source, `254414bc0356171f7d5ad89361c75d45fd01a407`.
 - `evidence/advanced-dance-unit-checkpoint.json` records 28 focused and 114 earlier pipeline checks.
 - `evidence/advanced-dance-validation.json` binds the full motion, costume, repair and review evidence.
 - The separate solo and ensemble proof and final encoded review records preserve their exact samples.
@@ -101,7 +130,8 @@ without re-encoding.
 
 The new masters passed full technical decoding and timing checks. The solo final
 encoded review inspected 150 distinct frames. The ensemble final encoded review
-inspected 135 distinct frames, as recorded in its immutable report. Dense windows include the fast hand passages,
+inspected 135 distinct frames, as recorded in its immutable report. Dense
+windows include the fast hand passages,
 head/fan proximity and actual camera cuts. Desktop playback observations are
 scoped separately. A small conservative head-capsule proximity result and detail
 hidden by costume or overlapping fans remain explicit limitations. These records
