@@ -1,0 +1,15 @@
+{
+  "filename": "Advanced_Dance_Maintenance_Handoff_2026-11-22.md",
+  "bytes": 9633,
+  "sha256": "9f3483086a9a39456b26d04650df022a4511491205b53f010709891550eac6ed",
+  "status": "saved",
+  "library_file_id": "libfile_71c3b731d8e08191a81a32aac0f9880d",
+  "file_id": "file_00000000fea481fda4e213541c05155a",
+  "version": 0,
+  "url": "https://chatgpt.com/library?file_id=libfile_71c3b731d8e08191a81a32aac0f9880d&account_id=personal",
+  "saved_recorded_utc": "2026-11-22T17:51:10.925590+00:00",
+  "reviewed_source_commit": "0ee520740a78d61edaff430259276f344949b127",
+  "integration_pr": "https://github.com/lovelaceaml-hub/concert-backdrops/pull/110",
+  "local_identity_metadata_applied": true,
+  "content_scope": "Human-facing maintenance review, current downloads, source identity and fresh-session recovery handoff."
+}

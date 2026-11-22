@@ -1,5 +1,9 @@
 # Delivered films, studies and model previews
 
+## Latest project handoff
+
+[Advanced_Dance_Maintenance_Handoff_2026-11-22.md](https://chatgpt.com/library?file_id=libfile_71c3b731d8e08191a81a32aac0f9880d&account_id=personal) records the completed maintenance review, source update, saved-film links and recovery process. Source integration: [PR #110](https://github.com/lovelaceaml-hub/concert-backdrops/pull/110). This is one additional documentation artifact; the original nine film-delivery artifacts below retain their identities. See [the exact saved handoff record](evidence/advanced-dance-maintenance-handoff.json).
+
 <!-- advanced-dance-final-delivery:begin -->
 ## Latest delivery: Advanced Dance
 

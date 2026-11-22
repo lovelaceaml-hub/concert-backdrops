@@ -5,6 +5,10 @@ The user withdrew the previously provided AGENTS.md instructions and requested
 documentation, upload, update, review and refactoring. Root AGENTS.md now serves
 as navigation. Current conversation directions govern the active work.
 
+### Maintenance handoff, November 22
+
+The code review, recovery documentation and maintenance checks are complete. The source update is tracked in [PR #110](https://github.com/lovelaceaml-hub/concert-backdrops/pull/110); its live status is the integration authority. [Download the updated project handoff](https://chatgpt.com/library?file_id=libfile_71c3b731d8e08191a81a32aac0f9880d&account_id=personal) for the finished-film links, source identities, repair process and verification scope. The targeted suite ran 64 methods with no failures, including 36 new regression methods; two existing prepared-audio subchecks were skipped in the clean checkout. See [the maintenance review](evidence/advanced-dance-maintenance-review.json) and [saved handoff identity](evidence/advanced-dance-maintenance-handoff.json).
+
 ## Finished delivery
 
 The two revised Advanced Dance films are complete and saved: **Silk in Light**
