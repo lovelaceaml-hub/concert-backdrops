@@ -1506,6 +1506,13 @@
         "owner_approval": false
       }
     },
-    "saved_delivery_evidence": "project-docs/production-system/evidence/advanced-dance-final-delivery.json"
+    "saved_delivery_evidence": "project-docs/production-system/evidence/advanced-dance-final-delivery.json",
+    "production_maintenance": {
+      "integration_pr": 110,
+      "review_evidence": "project-docs/production-system/evidence/advanced-dance-maintenance-review.json",
+      "status": "cache_integrity_and_recovery_hardened",
+      "choreography_changed": false,
+      "future_cache_source_identity_changed": true
+    }
   }
 }

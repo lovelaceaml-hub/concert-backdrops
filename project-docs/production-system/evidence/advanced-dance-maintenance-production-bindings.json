@@ -1,0 +1,55 @@
+{
+  "schema_version": 1,
+  "status": "passed",
+  "recorded_utc": "2026-11-22T17:37:27.033438+00:00",
+  "method": "Standard-library-only execution of the refactored production binding validator against the exact recovered delivered QA and technical records.",
+  "command": "python3 -S with tools.advanced_dance.delivery_evidence.verify_production_bindings",
+  "delivered_records": [
+    {
+      "filename": "Advanced_Dance_QA.json",
+      "bytes": 11659942,
+      "sha256": "37132a066833deb91829de442aeda2700a0b77ef18fec4f1fb3389a46c2c04fc"
+    },
+    {
+      "filename": "Ten_Cinematic_Films_Advanced_Dance_Technical.json",
+      "bytes": 482657,
+      "sha256": "867cf8da1ddc6b9e43a9bd5c120d8fe69ac2cd3921dc8169def75129ce1cb6b9"
+    }
+  ],
+  "source_report_count": 50,
+  "frozen_picture_dependency_count": 236,
+  "original_picture_commit": "254414bc0356171f7d5ad89361c75d45fd01a407",
+  "production_bindings": {
+    "solo": {
+      "assembly_report": "solo_assembly",
+      "pipeline_qa_report": "solo_pipeline",
+      "render_report": "solo_render",
+      "master_sha256": "8f02ee2a72a128198771cfb8f3d3dabc0b90716abdb4c028d19fa462b6a6edac",
+      "render_fingerprint": "437e7420ab538baf3608b879ca371a335ffbbaa09e77444cce7103485b5801ed",
+      "frozen_picture_inputs_match": true,
+      "recorded_frame_hash_count": 1920,
+      "linked_proof_or_review_reports": [
+        "solo_even_proof"
+      ],
+      "scope": "Existing pipeline receipts linked to the exact encoded master and frozen picture map. Frame PNG bytes are not decoded again by packaging."
+    },
+    "ensemble": {
+      "assembly_report": "ensemble_assembly",
+      "pipeline_qa_report": "ensemble_pipeline",
+      "render_report": "ensemble_render",
+      "master_sha256": "8bedc48bc2586d903f5aefcb8bfea89ecad58359326ffdc27f5988b0f573540d",
+      "render_fingerprint": "ec76277c753ba288fb9a2d6634a1f45e4741747f33baad3d237e7be5ff1f272d",
+      "frozen_picture_inputs_match": true,
+      "recorded_frame_hash_count": 1920,
+      "linked_proof_or_review_reports": [
+        "ensemble_final_encoded_review",
+        "ensemble_even_proof",
+        "final_ensemble_execution"
+      ],
+      "scope": "Existing pipeline receipts linked to the exact encoded master and frozen picture map. Frame PNG bytes are not decoded again by packaging."
+    }
+  },
+  "matches_original_packaged_qa_result": true,
+  "matches_original_packaged_technical_result": true,
+  "scope": "Checks the original delivered receipt relationships using their frozen source map; does not claim the maintenance source rendered those films, re-run movie decoding or perform a new visual review."
+}

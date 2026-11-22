@@ -1,0 +1,95 @@
+{
+  "schema_version": 1,
+  "status": "reviewed_documented_and_handoff_saved",
+  "recorded_utc": "2026-11-22T17:46:24.579498+00:00",
+  "owner_request": "Document, upload, update, review and refactor",
+  "baseline_commit": "5a602349f90f50d79968bab77dd08db1a20c4339",
+  "maintenance_branch": "maintenance/advanced-dance-review-20261122",
+  "original_delivery_picture_commit": "254414bc0356171f7d5ad89361c75d45fd01a407",
+  "original_delivery_pr": 109,
+  "original_delivery_merged_at": "2026-11-22T10:23:55Z",
+  "instruction_update": {
+    "previously_provided_agents_instructions_withdrawn": true,
+    "withdrawal_local_date": "2026-11-22",
+    "current_agents_role": "Project navigation and current conversation reference"
+  },
+  "changes": [
+    {
+      "area": "delivery_evidence",
+      "result": "Extracted pure ledger/report/master binding checks from media packaging. All21 preexisting function/class ASTs are identical and six compatibility exports remain the same objects. The extracted module imports with the standard library alone."
+    },
+    {
+      "area": "proof_staging",
+      "result": "Same-filesystem hardlinks retained; EXDEV-only fallback copies exclusively and verifies the original receipt hash. Failed copies clean only their own destination; other errors propagate."
+    },
+    {
+      "area": "cloth_cache",
+      "result": "Completion identity, byte length, SHA-256, shape, dtype and finite states are checked on one owned byte payload before installation. Bakes pin source identity and publish completion only after guarded, verified writes; interrupted pairs remain recoverable."
+    },
+    {
+      "area": "cache_consumers",
+      "result": "Cloth audit and native comparison receipts describe the verified loaded bytes. Audit rejects a later mismatched file before measurement."
+    },
+    {
+      "area": "documentation",
+      "result": "Six navigation, recovery, delivery and production documents now distinguish completed films, current maintenance and historical notes. Withdrawn AGENTS policies were removed from the current navigation file."
+    },
+    {
+      "area": "manual_ci",
+      "result": "The existing manual CPU check workflow now includes all test_advanced_dance_*.py tests. No workflow dispatch was performed in this maintenance pass."
+    }
+  ],
+  "source_sha256": {
+    "tools/advanced_dance/delivery.py": "ede63fee1452f8f5b72a210d236c4228d6d7a3eac3c87bff0c806c5b7ba3c525",
+    "tools/advanced_dance/delivery_evidence.py": "7d29c25073d5976d64adaeb5dc195a5037137b00304e56aca3dd5238a927faf4",
+    "tools/advanced_dance/cache.py": "dd440e6d87280f5925a3aa936c9e8bf18a6ad373310575e7ca11fc8dfd5740e5",
+    "tools/advanced_dance/prepare.py": "27a7ffcac3c1b895514b973f3c6b4dd0a7780fc3d3fd5571bc10a272276690ef",
+    "tools/advanced_dance/cloth_qa.py": "75fdbbf0d95e0cbf84b8581d789672eb482b0805384dd2bfc03dfce2cba75282"
+  },
+  "validation": {
+    "tests_evidence": "project-docs/production-system/evidence/advanced-dance-maintenance-tests.json",
+    "test_methods_run": 64,
+    "new_regression_methods_passed": 36,
+    "skipped_existing_audio_subchecks": 2,
+    "code_test_failures": 0,
+    "original_packaged_production_bindings_identical": true,
+    "packaged_reports_checked": 50,
+    "original_frame_hashes_bound_per_film": 1920,
+    "real_short_solver_snapshot_equivalence_passed": true,
+    "delivery_functions_ast_identical": 21,
+    "compatibility_exports_verified": 6,
+    "independent_cache_review": "passed; exact-payload loading, source checks, interrupted-publication recovery and downstream receipt identity checked",
+    "post_test_change": "Trailing-blank-line cleanup only in delivery_evidence.py; AST equality verified; the exact before/after hashes are in the test evidence.",
+    "independent_handoff_review": "passed; counts, download links, original source scope, skipped audio subchecks and current integration authority checked"
+  },
+  "saved_uploads_evidence": "project-docs/production-system/evidence/advanced-dance-maintenance-uploads.json",
+  "saved_upload_identities_reconfirmed": 9,
+  "production_binding_evidence": "project-docs/production-system/evidence/advanced-dance-maintenance-production-bindings.json",
+  "delivered_movies_changed": false,
+  "original_tracked_evidence_changed": false,
+  "original_validation_ledger_sha256": "239de011d090b2ea7691064b47beccc40970c5d9895e98cecec458f5362354a4",
+  "changed_original_picture_dependencies": [
+    "tools/advanced_dance/cache.py"
+  ],
+  "future_source_identity": "cache.py maintenance changes future source/cache/trail fingerprints. Original movies and historical evidence remain bound to their original source snapshot. A later production round uses its own source and receipts.",
+  "scope": "Source, recovery, evidence and documentation maintenance. The two recovered support records matched their saved byte hashes. No new finished-film render, media listening assessment, complete locked render-environment rebuild or creative approval is claimed.",
+  "integration_pr": "https://github.com/lovelaceaml-hub/concert-backdrops/pull/110",
+  "reviewed_source_commit": "0ee520740a78d61edaff430259276f344949b127",
+  "saved_handoff_evidence": "project-docs/production-system/evidence/advanced-dance-maintenance-handoff.json",
+  "saved_handoff": {
+    "filename": "Advanced_Dance_Maintenance_Handoff_2026-11-22.md",
+    "bytes": 9633,
+    "sha256": "9f3483086a9a39456b26d04650df022a4511491205b53f010709891550eac6ed",
+    "status": "saved",
+    "library_file_id": "libfile_71c3b731d8e08191a81a32aac0f9880d",
+    "file_id": "file_00000000fea481fda4e213541c05155a",
+    "version": 0,
+    "url": "https://chatgpt.com/library?file_id=libfile_71c3b731d8e08191a81a32aac0f9880d&account_id=personal",
+    "saved_recorded_utc": "2026-11-22T17:51:10.925590+00:00",
+    "reviewed_source_commit": "0ee520740a78d61edaff430259276f344949b127",
+    "integration_pr": "https://github.com/lovelaceaml-hub/concert-backdrops/pull/110",
+    "local_identity_metadata_applied": true,
+    "content_scope": "Human-facing maintenance review, current downloads, source identity and fresh-session recovery handoff."
+  },
+  "completed_utc": "2026-11-22T17:51:10.925590+00:00"
+}

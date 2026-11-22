@@ -51,7 +51,9 @@ def audit_rendered_cloth(body, *, fps=60, temporal_samples=2, shutter=.35,
     if not load_cloth(body):
         raise FileNotFoundError("Complete the declared costume bake first: " + key)
     path = Path(body.advanced_cloth_cache)
-    cache_hash = _digest(path)
+    cache_hash = body.advanced_cloth_receipt["sha256"]
+    if _digest(path) != cache_hash:
+        raise RuntimeError("Cached cloth bytes changed after verified loading")
     report = audit_cloth(body)
     snapshot_status = report["status"]
     system = body.cloth

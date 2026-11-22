@@ -1229,6 +1229,24 @@
       "drive": {
         "status": "no_copy_recorded_for_this_delivery"
       }
+    },
+    {
+      "id": "advanced-dance-maintenance-handoff",
+      "filename": "Advanced_Dance_Maintenance_Handoff_2026-11-22.md",
+      "kind": "production_maintenance_handoff",
+      "bytes": 9633,
+      "sha256": "9f3483086a9a39456b26d04650df022a4511491205b53f010709891550eac6ed",
+      "reviewed_source_commit": "0ee520740a78d61edaff430259276f344949b127",
+      "maintenance_pr": 110,
+      "saved_delivery_evidence": "project-docs/production-system/evidence/advanced-dance-maintenance-handoff.json",
+      "library": {
+        "status": "saved",
+        "library_file_id": "libfile_71c3b731d8e08191a81a32aac0f9880d",
+        "file_id": "file_00000000fea481fda4e213541c05155a",
+        "version": 0,
+        "url": "https://chatgpt.com/library?file_id=libfile_71c3b731d8e08191a81a32aac0f9880d&account_id=personal"
+      },
+      "scope": "Documentation and production-code maintenance; original movie and archive identities are unchanged."
     }
   ],
   "limits": [
@@ -1415,6 +1433,8 @@
       "advanced-dance-readme",
       "advanced-dance-checksums",
       "advanced-dance-packaging-receipt"
-    ]
-  }
+    ],
+    "maintenance_handoff": "project-docs/production-system/evidence/advanced-dance-maintenance-handoff.json"
+  },
+  "current_maintenance_pr": 110
 }

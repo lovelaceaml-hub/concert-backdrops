@@ -1,5 +1,9 @@
 # Delivered films, studies and model previews
 
+## Latest project handoff
+
+[Advanced_Dance_Maintenance_Handoff_2026-11-22.md](https://chatgpt.com/library?file_id=libfile_71c3b731d8e08191a81a32aac0f9880d&account_id=personal) records the completed maintenance review, source update, saved-film links and recovery process. Source integration: [PR #110](https://github.com/lovelaceaml-hub/concert-backdrops/pull/110). This is one additional documentation artifact; the original nine film-delivery artifacts below retain their identities. See [the exact saved handoff record](evidence/advanced-dance-maintenance-handoff.json).
+
 <!-- advanced-dance-final-delivery:begin -->
 ## Latest delivery: Advanced Dance
 
@@ -9,17 +13,38 @@ Both revised dance films are complete, technically passed, reviewed within the r
 | --- | --- |
 | [01_Silk_in_Light_Advanced_Dance_1080p60.mp4](https://chatgpt.com/library?file_id=libfile_5efbae79a5d88191b729f3726b94d117&account_id=personal) | Finished 32-second native 1080p60 film |
 | [02_Petals_in_Motion_Advanced_Dance_1080p60.mp4](https://chatgpt.com/library?file_id=libfile_bdf3a9b4e1f481918e768953be62a279&account_id=personal) | Finished 32-second native 1080p60 film |
-| [Advanced_Dance_QA.json](https://chatgpt.com/library?file_id=libfile_cccbc0cf6fd08191b09dd484c91a9fcd&account_id=personal) | Delivery evidence or overview |
-| [Packaging_Receipt.json](https://chatgpt.com/library?file_id=libfile_6dd899b883fc81919acb2641264c72ec&account_id=personal) | Delivery evidence or overview |
-| [README.txt](https://chatgpt.com/library?file_id=libfile_b0385f1023bc8191b39bcd0f6e72cbd7&account_id=personal) | Delivery evidence or overview |
-| [SHA256SUMS.txt](https://chatgpt.com/library?file_id=libfile_3ede63b34878819188d32f74e4132f78&account_id=personal) | Delivery evidence or overview |
+| [Advanced_Dance_QA.json](https://chatgpt.com/library?file_id=libfile_cccbc0cf6fd08191b09dd484c91a9fcd&account_id=personal) | Bound motion, costume, rendering and scoped visual-review reports |
+| [Packaging_Receipt.json](https://chatgpt.com/library?file_id=libfile_6dd899b883fc81919acb2641264c72ec&account_id=personal) | Archive identity, expected members and package integrity result |
+| [README.txt](https://chatgpt.com/library?file_id=libfile_b0385f1023bc8191b39bcd0f6e72cbd7&account_id=personal) | Playback details, collection inventory and reuse notes |
+| [SHA256SUMS.txt](https://chatgpt.com/library?file_id=libfile_3ede63b34878819188d32f74e4132f78&account_id=personal) | SHA-256 values for unpacked movies and support files |
 | [Ten_Cinematic_Films_Advanced_Dance_1080p60.zip](https://chatgpt.com/library?file_id=libfile_02d1b9fcefdc8191ab72741639bd1fb2&account_id=personal) | Complete ten-film collection |
-| [Ten_Cinematic_Films_Advanced_Dance_Overview.jpg](https://chatgpt.com/library?file_id=libfile_0c18dc44f6e0819182a087eaef6d669a&account_id=personal) | Delivery evidence or overview |
-| [Ten_Cinematic_Films_Advanced_Dance_Technical.json](https://chatgpt.com/library?file_id=libfile_9cedecf92e288191bc354b9f5fcd1a4d&account_id=personal) | Delivery evidence or overview |
+| [Ten_Cinematic_Films_Advanced_Dance_Overview.jpg](https://chatgpt.com/library?file_id=libfile_0c18dc44f6e0819182a087eaef6d669a&account_id=personal) | Ten rows with four decoded movie samples per row |
+| [Ten_Cinematic_Films_Advanced_Dance_Technical.json](https://chatgpt.com/library?file_id=libfile_9cedecf92e288191bc354b9f5fcd1a4d&account_id=personal) | Full decode, frame timing, audio peaks and exact movie identities |
 
-Frozen picture source `254414bc0356171f7d5ad89361c75d45fd01a407`, [PR #109](https://github.com/lovelaceaml-hub/concert-backdrops/pull/109). See [the exact final delivery evidence](evidence/advanced-dance-final-delivery.json) and [the repair workflow](ADVANCED-DANCE.md). Numeric validation, sampled visual review, desktop playback and owner approval remain separate.
+[PR #109](https://github.com/lovelaceaml-hub/concert-backdrops/pull/109) merged
+at `5a602349f90f50d79968bab77dd08db1a20c4339` on `2026-11-22T10:23:55Z`.
+Frozen picture source remains `254414bc0356171f7d5ad89361c75d45fd01a407`.
+See [the exact final delivery evidence](evidence/advanced-dance-final-delivery.json)
+and [the repair workflow](ADVANCED-DANCE.md). Numeric validation, sampled visual
+review, desktop playback and owner approval remain separate.
+
+There are nine saved artifacts: two revised movies and seven support files.
+The 410,134,925-byte archive contains ten movies and five support members;
+`Packaging_Receipt.json` is a separate file that records the archive identity.
+Its SHA-256 is
+`73fcccc8e659b4f8a40604945509163944be4ca13bec660d350637aa7dca336c`.
+The [module guide](../../tools/advanced_dance/README.md) explains how to verify
+recovered bytes. Current documentation maintenance does not create a new movie
+or change the archived package. No new Drive-copy claim is added here.
 <!-- advanced-dance-final-delivery:end -->
 
+
+## Historical delivery records
+
+The following entries preserve earlier deliveries and their own review scope.
+Statements about an earlier "current" performance or next work belong to that
+entry's production date. The Advanced Dance collection above is the latest
+film delivery.
 
 <!-- cinematic-ten-final-delivery:begin -->
 ## Previous delivery: Cinematic Ten

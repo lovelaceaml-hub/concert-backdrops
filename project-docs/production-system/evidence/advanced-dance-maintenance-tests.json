@@ -1,0 +1,92 @@
+{
+  "schema_version": 1,
+  "status": "passed_with_expected_media_skips",
+  "started_utc": "2026-11-22T17:44:41.503458+00:00",
+  "completed_utc": "2026-11-22T17:44:51.370225+00:00",
+  "command": [
+    "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+    "-m",
+    "unittest",
+    "discover",
+    "-s",
+    "tests",
+    "-p",
+    "test_advanced_dance_*.py",
+    "-v"
+  ],
+  "working_directory": "repository root",
+  "environment_overrides": {
+    "OPENBLAS_NUM_THREADS": "1",
+    "OMP_NUM_THREADS": "1",
+    "PYTHONPATH": "work/maintenance/test-deps plus inherited value"
+  },
+  "runtime_scope": "Existing Python3.12.14 with installed NumPy/Pillow/CFFI; missing SoundFile0.13.1 installed in an isolated ignored directory with wheel hashes from uv.lock. This is focused unit validation, not a complete locked render-environment rebuild.",
+  "initial_attempt_evidence": "project-docs/production-system/evidence/advanced-dance-maintenance-tests-initial.json",
+  "dependency_resolution": {
+    "module": "soundfile",
+    "version": "0.13.1",
+    "requirement_source": "uv.lock",
+    "requirement_hashes_enforced": true,
+    "source_code_changes_between_runs": false
+  },
+  "exit_code": 0,
+  "tests_run": 64,
+  "unittest_elapsed_seconds": 8.865,
+  "wall_elapsed_seconds": 9.867,
+  "source_unchanged_during_run": true,
+  "source_sha256": {
+    "tests/test_advanced_dance_anatomy.py": "8423dbc6706b554fa867fb7174772bc443d822e09911e99de88c3816baf19245",
+    "tests/test_advanced_dance_cache_consumers.py": "af75b918973519439ce5c08ee940e15fe5e2a21bf93f585633275ecaa6942cda",
+    "tests/test_advanced_dance_cache_integrity.py": "0c40de1cda7c2451b694450e88fc84bbb1b83b7ed20ee36834e39b5437657f5c",
+    "tests/test_advanced_dance_delivery.py": "0bc7dbddb0da2c0408ff4e6256e1134c012d0b64d1cfe4327478ec905d7ef641",
+    "tests/test_advanced_dance_proof_staging.py": "3cd75be3cce2b70483360578a3860e1334c41084eadf47a418a105c0d5f253cd",
+    "tests/test_advanced_dance_qa.py": "eee8a06414cbe73bff530012914124a83195d88c781b5c124b79e04695035092",
+    "tests/test_advanced_dance_registration.py": "0f11829e77ce8e5ad350441f23e9ef2a187b881c7d14b210bef2ff71defbe81c",
+    "tools/advanced_dance/__init__.py": "44108421a62a873d083da791f20d1f2203a4b4ff075134d95163d200c4bffb49",
+    "tools/advanced_dance/anatomy.py": "759b90615a18ae51582e6d5269d321bfb40db2ec15af211abe4a8e9b0b59e43b",
+    "tools/advanced_dance/cache.py": "dd440e6d87280f5925a3aa936c9e8bf18a6ad373310575e7ca11fc8dfd5740e5",
+    "tools/advanced_dance/cast_qa.py": "e094213435bf80a3775722ba4b0bc4873be468326b98bc0d995df624436270d5",
+    "tools/advanced_dance/cloth_qa.py": "75fdbbf0d95e0cbf84b8581d789672eb482b0805384dd2bfc03dfce2cba75282",
+    "tools/advanced_dance/costume.py": "2a7bfd24a4b899a281a66bc7f8ca72017b23dafcfea095be6f2534daf0baa931",
+    "tools/advanced_dance/delivery.py": "ede63fee1452f8f5b72a210d236c4228d6d7a3eac3c87bff0c806c5b7ba3c525",
+    "tools/advanced_dance/delivery_evidence.py": "14588d178ab39e57c19e22a2682e04a9e76d866b04656dd4d00d1d7393a4e0a5",
+    "tools/advanced_dance/ensemble.py": "073c866e35e0f17f689f467f3ea6929c913a00c134affd856422bac88c0d872b",
+    "tools/advanced_dance/lights.py": "fe7782a3cec5fba0f4a7c27ecab7c33e3c897222d07061188658aecad6bef087",
+    "tools/advanced_dance/prepare.py": "27a7ffcac3c1b895514b973f3c6b4dd0a7780fc3d3fd5571bc10a272276690ef",
+    "tools/advanced_dance/props.py": "1f9cf399193aca21574fed947d654d4d66b3777b50d0ae2c656431c96727010c",
+    "tools/advanced_dance/qa.py": "83d408bcec99c686997ae57355a872ff51f61e55a6c96626d4523da6c16a2b9b",
+    "tools/advanced_dance/render.py": "62ac9d04544a1b253ff2c0a309382d33475d924ff1131a63798b10cc1bdc60e0",
+    "tools/advanced_dance/scene.py": "731480039a5a977245f2e67aca5711b3cfc86210a1c8c97c077888f4533bb021",
+    "tools/advanced_dance/score.py": "88f17b2e21aa7520edab5bb2ff29aa0a87c50fa854bbf33ed3864797258ace5d",
+    "tools/advanced_dance/solo.py": "0894d8ca907ad86a6db050c5780e84b71dacbbda5a43aa0bbf5a44c9919578e6",
+    "tools/advanced_dance/song_dance.py": "a2264acc680d447491f4f3fd0e9399e68ec3b116494d3381b379ae522d74cfd7"
+  },
+  "log_sha256": "be87d92bf63a464f17cc101299716627ebe35af2b74bafca44f88512b44bd233",
+  "log_bytes": 12151,
+  "log": "work/maintenance/final-tests-rerun.log",
+  "scope": "All tests matched by test_advanced_dance_*.py, including existing anatomy/motion/registration and new delivery, cache integrity, proof staging and cache-consumer regressions. No full-film render or fresh visual approval.",
+  "unittest_success": true,
+  "new_regression_test_methods": 36,
+  "new_regression_test_methods_passed": 36,
+  "skipped_subchecks": [
+    {
+      "test": "test_prepared_audio_matches_original_speed_and_constant_interior_gain",
+      "mode": "solo",
+      "reason": "The exact prepared production audio is not present in this fresh source checkout."
+    },
+    {
+      "test": "test_prepared_audio_matches_original_speed_and_constant_interior_gain",
+      "mode": "ensemble",
+      "reason": "The exact prepared production audio is not present in this fresh source checkout."
+    }
+  ],
+  "result_interpretation": "The unittest process exited0 and reported OK (skipped=2). The two skipped entries are the solo/ensemble subchecks within the existing prepared-audio acceptance method. All36 newly added regression methods completed without failure. The initial wrapper expected a literal OK line and was corrected to retain the successful scoped unittest result.",
+  "new_media_acceptance_claimed": false,
+  "post_run_whitespace_cleanup": {
+    "path": "tools/advanced_dance/delivery_evidence.py",
+    "before_sha256": "14588d178ab39e57c19e22a2682e04a9e76d866b04656dd4d00d1d7393a4e0a5",
+    "after_sha256": "7d29c25073d5976d64adaeb5dc195a5037137b00304e56aca3dd5238a927faf4",
+    "change": "Removed excess blank lines at EOF to satisfy the staged whitespace gate.",
+    "ast_identical": true
+  }
+}
