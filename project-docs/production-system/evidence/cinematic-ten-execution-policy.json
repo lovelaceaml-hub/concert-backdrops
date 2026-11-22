@@ -1,0 +1,114 @@
+{
+  "film_id": 10,
+  "verified_utc": "2026-11-22T01:57:00.075089+00:00",
+  "picture_fingerprint_before_and_after": "902a6efda24072d93e7206e7eaa690f995807a39453029e54114e292e828c00e",
+  "verified_frames_reused": 828,
+  "workers": 3,
+  "chunk_frames": 150,
+  "software_threads_per_worker": 1,
+  "reason": "Completed 50-frame batches repeated substantial first-frame overhead, observed in late-scene batches that logged their built scene for over 88 seconds before any frame progress. Larger remaining batches reduce repeated first-frame work while retaining the exact picture fingerprint and completed frames.",
+  "picture_quality_changed": false,
+  "previous_execution_policy": {
+    "film_id": 10,
+    "picture_fingerprint_before_and_after": "902a6efda24072d93e7206e7eaa690f995807a39453029e54114e292e828c00e",
+    "verified_frames_reused": 197,
+    "workers": 3,
+    "chunk_frames": 50,
+    "software_threads_per_worker": 1,
+    "initialization_seconds_measured": 4.561,
+    "peak_rss_kib_measured": 1571196,
+    "reason": "Balance the remaining work after retained partial frames without changing any picture input. Bounded supplemental jobs select at most50frames to use one worker.",
+    "picture_quality_changed": false
+  },
+  "observed_first_frame_timing_scope": "Elapsed job-file timestamp to first completed worker PNG includes scheduling, initialization and first-frame state warm-up. It is not a pure initialization benchmark.",
+  "completed_50_frame_batch_profiles": [
+    {
+      "event": "worker_complete",
+      "frames": 50,
+      "initialization_seconds": 4.237,
+      "frame_seconds": 251.13,
+      "peak_rss_kib": 1478336,
+      "worker_log": "work/pipeline/cinematic-ten-10/final/shots/film/workers/4b65e6c0fcf2424c9a54f9c01d98fef4/chunk_000000/render.log"
+    },
+    {
+      "event": "worker_complete",
+      "frames": 50,
+      "initialization_seconds": 4.215,
+      "frame_seconds": 255.858,
+      "peak_rss_kib": 1534948,
+      "worker_log": "work/pipeline/cinematic-ten-10/final/shots/film/workers/4b65e6c0fcf2424c9a54f9c01d98fef4/chunk_000001/render.log"
+    },
+    {
+      "event": "worker_complete",
+      "frames": 50,
+      "initialization_seconds": 4.178,
+      "frame_seconds": 260.241,
+      "peak_rss_kib": 1506668,
+      "worker_log": "work/pipeline/cinematic-ten-10/final/shots/film/workers/4b65e6c0fcf2424c9a54f9c01d98fef4/chunk_000002/render.log"
+    },
+    {
+      "event": "worker_complete",
+      "frames": 50,
+      "initialization_seconds": 4.063,
+      "frame_seconds": 266.142,
+      "peak_rss_kib": 1524904,
+      "worker_log": "work/pipeline/cinematic-ten-10/final/shots/film/workers/4b65e6c0fcf2424c9a54f9c01d98fef4/chunk_000003/render.log"
+    },
+    {
+      "event": "worker_complete",
+      "frames": 50,
+      "initialization_seconds": 3.742,
+      "frame_seconds": 273.223,
+      "peak_rss_kib": 1516688,
+      "worker_log": "work/pipeline/cinematic-ten-10/final/shots/film/workers/4b65e6c0fcf2424c9a54f9c01d98fef4/chunk_000004/render.log"
+    },
+    {
+      "event": "worker_complete",
+      "frames": 50,
+      "initialization_seconds": 3.967,
+      "frame_seconds": 282.383,
+      "peak_rss_kib": 1522368,
+      "worker_log": "work/pipeline/cinematic-ten-10/final/shots/film/workers/4b65e6c0fcf2424c9a54f9c01d98fef4/chunk_000005/render.log"
+    },
+    {
+      "event": "worker_complete",
+      "frames": 50,
+      "initialization_seconds": 4.132,
+      "frame_seconds": 282.154,
+      "peak_rss_kib": 1506784,
+      "worker_log": "work/pipeline/cinematic-ten-10/final/shots/film/workers/4b65e6c0fcf2424c9a54f9c01d98fef4/chunk_000006/render.log"
+    },
+    {
+      "event": "worker_complete",
+      "frames": 50,
+      "initialization_seconds": 3.922,
+      "frame_seconds": 291.239,
+      "peak_rss_kib": 1484528,
+      "worker_log": "work/pipeline/cinematic-ten-10/final/shots/film/workers/4b65e6c0fcf2424c9a54f9c01d98fef4/chunk_000007/render.log"
+    },
+    {
+      "event": "worker_complete",
+      "frames": 50,
+      "initialization_seconds": 3.963,
+      "frame_seconds": 300.083,
+      "peak_rss_kib": 1369760,
+      "worker_log": "work/pipeline/cinematic-ten-10/final/shots/film/workers/4b65e6c0fcf2424c9a54f9c01d98fef4/chunk_000008/render.log"
+    }
+  ],
+  "observed_late_batch_start": {
+    "scope": "Coordinator inspection of live logs before the checkpoint; these elapsed log ages are observations, not a precise isolated warm-up benchmark.",
+    "build_only_log_age_seconds": [
+      111.6,
+      88.9
+    ],
+    "concurrent_third_worker_had_written_frames": [
+      747,
+      748,
+      749,
+      750,
+      751,
+      752,
+      753
+    ]
+  }
+}

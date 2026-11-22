@@ -1,0 +1,143 @@
+{
+  "schema_version": 1,
+  "observed_utc": "2026-11-22T02:12:03.628388+00:00",
+  "status": "all_ten_final_render_assembly_and_movie_saving_tasks_completed",
+  "active_render_processes": 0,
+  "process_scope": "All coordinator-launched Cinematic Ten production tasks for this increment; not a system-wide process inventory. Final runner exits and complete per-film receipts were observed.",
+  "observed_terminal_results": [
+    {
+      "task": "Final solo, ensemble and calligraphy lane",
+      "films": [
+        1,
+        2,
+        4
+      ],
+      "exit_code": 0
+    },
+    {
+      "task": "Original world and reunion lane",
+      "films": [
+        3,
+        10
+      ],
+      "exit_code": 1,
+      "reason": "Intentional film10 frame-boundary checkpoint, then successful resumed run; film03 completed normally."
+    },
+    {
+      "task": "Resumed final reunion production",
+      "films": [
+        10
+      ],
+      "exit_code": 0
+    },
+    {
+      "task": "All-ten completed movie saver",
+      "saved_movie_count": 10,
+      "exit_code": 0
+    }
+  ],
+  "earlier_completed_final_ids": [
+    5,
+    6,
+    7,
+    8,
+    9
+  ],
+  "all_final_ids": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10
+  ],
+  "total_decoded_picture_frames": 12000,
+  "background_service_configured": false,
+  "execution_policy_evidence": "project-docs/production-system/evidence/cinematic-ten-execution-policy.json",
+  "films": [
+    {
+      "film_id": 1,
+      "project_id": "cinematic-ten-01",
+      "render_complete": true,
+      "frames": 1200,
+      "pipeline_technical_passed": true,
+      "master_sha256": "d055202a4496c219bd5f827c507d91bf6d6e877955c36e8650993fe0d7a7b16d"
+    },
+    {
+      "film_id": 2,
+      "project_id": "cinematic-ten-02",
+      "render_complete": true,
+      "frames": 1200,
+      "pipeline_technical_passed": true,
+      "master_sha256": "b03e7e12037521aa2463e851b02c156e924fe2173d310f51c6d4c4d51a8a72fa"
+    },
+    {
+      "film_id": 3,
+      "project_id": "cinematic-ten-03",
+      "render_complete": true,
+      "frames": 1200,
+      "pipeline_technical_passed": true,
+      "master_sha256": "753080691767d6935311def4c84cb00542eff5321cbe785b7394fcd206899455"
+    },
+    {
+      "film_id": 4,
+      "project_id": "cinematic-ten-04",
+      "render_complete": true,
+      "frames": 1200,
+      "pipeline_technical_passed": true,
+      "master_sha256": "f90fe7b96eb3d1164c3056713e9553d1b9ccf1919002e307c7d4406ee81af70e"
+    },
+    {
+      "film_id": 5,
+      "project_id": "cinematic-ten-05",
+      "render_complete": true,
+      "frames": 1200,
+      "pipeline_technical_passed": true,
+      "master_sha256": "25c8959c1ef906b6587cefd4deae48efb44ba870ba16a7031b3b2b5bbf051b9d"
+    },
+    {
+      "film_id": 6,
+      "project_id": "cinematic-ten-06",
+      "render_complete": true,
+      "frames": 1200,
+      "pipeline_technical_passed": true,
+      "master_sha256": "2d3bdc8e8903b13b5d60a442f8b533d6aab57516c449ecb4a41210e03f2cf3d8"
+    },
+    {
+      "film_id": 7,
+      "project_id": "cinematic-ten-07",
+      "render_complete": true,
+      "frames": 1200,
+      "pipeline_technical_passed": true,
+      "master_sha256": "30880be109c9da3de5e96037f397ac8c8c8c72c101d7cda4776accc2633d2b6f"
+    },
+    {
+      "film_id": 8,
+      "project_id": "cinematic-ten-08",
+      "render_complete": true,
+      "frames": 1200,
+      "pipeline_technical_passed": true,
+      "master_sha256": "da076670eb36a52b087bee26128bee0eab4baab8a9ae08ff5fc197b2a0052fc6"
+    },
+    {
+      "film_id": 9,
+      "project_id": "cinematic-ten-09",
+      "render_complete": true,
+      "frames": 1200,
+      "pipeline_technical_passed": true,
+      "master_sha256": "b4c4956e5401ce5fe3283037a0cd7d6ca9f3f042a104d599fa94f50d6e5254b4"
+    },
+    {
+      "film_id": 10,
+      "project_id": "cinematic-ten-10",
+      "render_complete": true,
+      "frames": 1200,
+      "pipeline_technical_passed": true,
+      "master_sha256": "e62b7ef360cc1ef29df6cf8221a2ce72c29ba9f22ddfbd7b749e64a4cbbc939f"
+    }
+  ]
+}

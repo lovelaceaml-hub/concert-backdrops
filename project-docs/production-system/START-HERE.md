@@ -1,22 +1,55 @@
 # Concert production system
 
-Current handoff: the original fan and silk increment following PR #105. The prior November 20, 2026 handoff uses America/Los_Angeles; machine observations dated November 21 in the source catalog use UTC.
+Current handoff: Cinematic Ten final delivery, 2026-11-21, America/Los_Angeles. Machine observations use UTC.
 
 **The Words of Mother's Love bring peace.** Build every film around that message. The owner approved the sharper Song 11 beauty study and requested that its setup, source, instructions and references be saved, uploaded and merged for every AI to reuse. The owner also authorized continued model, acting and workflow improvement across the concert songs.
 
-## Current delivered increment: original fan and silk trio
+## Current delivery: ten final cinematic films
 
-The owner explicitly asked for a best-effort attempt using the available reference material. [FAN-SILK-PERFORMANCE.md](FAN-SILK-PERFORMANCE.md) and [the executable module README](../../tools/concert_fan/README.md) describe the new twenty-second `concert-fan-trio`: three different authored scores, grounded stepping, final-palm fan grips and finite silk. Its frozen picture source is `dffe8f165944c627ae39a8bb7d47bc5a9e703305`. Read [DELIVERIES.md](DELIVERIES.md), [STATE.json](STATE.json) and the delivery catalog for the exact completed outputs and review status.
+All ten twenty-second films are complete, technically passed, reviewed within the recorded sample scope, and saved. The overview, README, technical records, checksums and complete ZIP are also saved. No Cinematic Ten owner approval is recorded.
 
-The first two reference posters were inspected on retry; actual reference motion remains unavailable. The new scene is an original adaptation, not a reconstruction of those performances. Do not repeat a blocking request for uploads when continuing original work. The [reference intake tool](../../tools/performance_reference/README.md) remains available for faithful choreography analysis when actual footage is accessible. Earlier sixteen-second treatment documents are planning history; the implemented project has an explicit twenty-second clock.
+Picture source remains `df4fc478116d3f0e34a85d2166097fbda55911bf`, branch `creative/cinematic-ten-films`, [PR #108](https://github.com/lovelaceaml-hub/concert-backdrops/pull/108). Each film has 1,200 native 1920 x 1080 frames at 60 fps and two temporal samples.
+
+| Film | Title | Saved final movie |
+| --- | --- | --- |
+| 01 | Silk in Light | [01_Silk_in_Light_1080p60.mp4](https://chatgpt.com/library?file_id=libfile_ea21501ca69c8191a485dadd0ba7845e&account_id=personal) |
+| 02 | Petals in Motion | [02_Petals_in_Motion_1080p60.mp4](https://chatgpt.com/library?file_id=libfile_8fe98daf9ea88191b898686ab0975625&account_id=personal) |
+| 03 | One World, Many Hearts | [03_One_World_Many_Hearts_1080p60.mp4](https://chatgpt.com/library?file_id=libfile_c7f33c7ed65c8191bf2ca8b5868607f0&account_id=personal) |
+| 04 | The Written Light | [04_The_Written_Light_1080p60.mp4](https://chatgpt.com/library?file_id=libfile_1b901203e3788191a56b51d623a4e986&account_id=personal) |
+| 05 | Procession of Lanterns | [05_Procession_of_Lanterns_1080p60.mp4](https://chatgpt.com/library?file_id=libfile_6b97089123b4819194218560c357ce8c&account_id=personal) |
+| 06 | A Garden Awakens | [06_A_Garden_Awakens_1080p60.mp4](https://chatgpt.com/library?file_id=libfile_8fcaa552e044819191bd992d593e52c8&account_id=personal) |
+| 07 | Wings of Peace | [07_Wings_of_Peace_1080p60.mp4](https://chatgpt.com/library?file_id=libfile_821bfd25f004819193badf599d094903&account_id=personal) |
+| 08 | Ocean of Light | [08_Ocean_of_Light_1080p60.mp4](https://chatgpt.com/library?file_id=libfile_a306fcad0d588191b4c4626bd36e2867&account_id=personal) |
+| 09 | Celestial Clockwork | [09_Celestial_Clockwork_1080p60.mp4](https://chatgpt.com/library?file_id=libfile_b5e1f83e34b0819184f426415648399d&account_id=personal) |
+| 10 | Together in the Light | [10_Together_in_the_Light_1080p60.mp4](https://chatgpt.com/library?file_id=libfile_e3c5f7bacecc8191a9b271ea8f3d4943&account_id=personal) |
+
+Exact identities are in [the final delivery evidence](evidence/cinematic-ten-final-delivery.json); actual per-film scope and findings are in [the complete review evidence](evidence/cinematic-ten-complete-review.json).
+
+Saved package and support files:
+
+- [Ten_Cinematic_Films_Overview.jpg](https://chatgpt.com/library?file_id=libfile_692524e180dc8191a7f13c340e94ac89&account_id=personal)
+- [README.md](https://chatgpt.com/library?file_id=libfile_c4392e6bf8088191bd33e2111081ce46&account_id=personal)
+- [Ten_Cinematic_Films_Technical.json](https://chatgpt.com/library?file_id=libfile_a937b0e8ab9881918cb11414df49eba5&account_id=personal)
+- [SHA256SUMS.txt](https://chatgpt.com/library?file_id=libfile_5baa3ce7f9848191aee8e3abdae29c30&account_id=personal)
+- [Ten_Cinematic_Films_1080p60.zip](https://chatgpt.com/library?file_id=libfile_9692c5a09c4c8191b65ade72f7abfbb0&account_id=personal)
+
+Full technical decoding and sampled visual review are distinct from real-time playback, biomechanical validation and exact-output owner approval. Supplied references informed original authored work; no source choreography was reconstructed.
+
+The current production and save round is complete. Do not restart the completed queue. Use [AI-HANDOFF.md](AI-HANDOFF.md), [STATE.json](STATE.json) and [CINEMATIC-TEN-MOTION.md](CINEMATIC-TEN-MOTION.md) for reuse, exact-output feedback and later separate increments. Historical queue files record how this round was produced; they are not live process telemetry.
+
+## Historical delivered increment: original fan and silk trio, PR #106
+
+The owner previously asked for a best-effort attempt using the then-available reference material. [FAN-SILK-PERFORMANCE.md](FAN-SILK-PERFORMANCE.md) and [the executable module README](../../tools/concert_fan/README.md) describe that twenty-second `concert-fan-trio`: three different authored scores, grounded stepping, final-palm fan grips and finite silk. Its frozen picture source is `dffe8f165944c627ae39a8bb7d47bc5a9e703305`. Read [DELIVERIES.md](DELIVERIES.md), [STATE.json](STATE.json) and the delivery catalog for its exact completed outputs and review status.
+
+Only the first two reference posters were inspected for that earlier increment; actual footage was unavailable then. That historical intake limit does not describe the recovered Cinematic Ten recordings above. The fan trio remains an original adaptation, not a reconstruction of those performances. The [reference intake tool](../../tools/performance_reference/README.md) remains available for source analysis. Earlier sixteen-second treatment documents are planning history; the implemented fan trio has an explicit twenty-second clock.
 
 ## Previous delivered increment: natural dance, PR #104
 
-The latest direction prioritizes fluid, expressive whole-body movement and dancing. The isolated `concert-dance-study` adds stable support intervals, preserved root travel, an eased preparation and settlement, and trails attached to solved wrists. Its picture source is frozen at `0c42f4422a6b67464cb9cd84aac32008d45d4f4c`. The full eighteen-second, 1,080-frame native 1080p60 movie is complete, independently verified, saved and copied to Production Studies with raw-byte readback. The final movie received 89 targeted independent decoded-frame samples and a separate 15-frame overview; the earlier silent proof received 62 samples. Creative approval remains unrecorded. Read [STATE.json](STATE.json), [DELIVERIES.md](DELIVERIES.md) and their evidence for exact outputs, scoped findings and remaining pacing and settling work.
+That earlier increment prioritized fluid, expressive whole-body movement and dancing. The isolated `concert-dance-study` adds stable support intervals, preserved root travel, an eased preparation and settlement, and trails attached to solved wrists. Its picture source is frozen at `0c42f4422a6b67464cb9cd84aac32008d45d4f4c`. The full eighteen-second, 1,080-frame native 1080p60 movie is complete, independently verified, saved and copied to Production Studies with raw-byte readback. The final movie received 89 targeted independent decoded-frame samples and a separate 15-frame overview; the earlier silent proof received 62 samples. Creative approval remains unrecorded. Read [STATE.json](STATE.json), [DELIVERIES.md](DELIVERIES.md) and their evidence for exact outputs, scoped findings and remaining pacing and settling work.
 
 Start with [NATURAL-PERFORMANCE.md](NATURAL-PERFORMANCE.md) for exact commands and reuse, [MOTION-LIBRARY.md](MOTION-LIBRARY.md) for available clips and the acquisition workflow, and [catalogs/motions.json](catalogs/motions.json) for their machine-readable identities. The 1080p project uses six single-thread CPU workers. The separate `concert-dance-study-4k` project uses three workers for native 3840 x 2160 output. One native 4K frame has rendered; the full 4K movie is configured but remains unrendered. These are two projects sharing one dance scene registration.
 
-Both performers currently reuse CMU 05_02 with a 0.6-second offset. The prepared whole-body capture is 30 Hz, interpolated for 60 fps output. Its phrase and pacing limit sustained movement and variety; this is not a new capture library or a complementary duet. Finger and thumb performance was not captured. Support correction is bounded kinematic cleanup, not a balance or force simulation. Keep those limits visible while expanding reviewed phrases, authored hands and costume motion through [the improvement queue](IMPROVEMENT-QUEUE.md).
+Both performers in that earlier study reuse CMU 05_02 with a 0.6-second offset. The prepared whole-body capture is 30 Hz, interpolated for 60 fps output. Its phrase and pacing limit sustained movement and variety; this is not a new capture library or a complementary duet. Finger and thumb performance was not captured. Support correction is bounded kinematic cleanup, not a balance or force simulation. Keep those limits visible while expanding reviewed phrases, authored hands and costume motion through [the improvement queue](IMPROVEMENT-QUEUE.md).
 
 ## The shared starting point
 
@@ -28,7 +61,7 @@ The original 350,548-byte handoff ZIP could not be recovered after the prior wor
 
 The owner explicitly confirmed the exact saved replacement. It is now [uploaded to Production System](https://drive.google.com/file/d/1gp0x2dnj06eIPDuq6vSGpGtKn_bvKrML/view) and verified by downloaded raw-byte readback against the saved source: 350,534 bytes with the SHA256 above. The [saved version 0 backup](https://chatgpt.com/library?file_id=libfile_0d7ab1c2d83c8191a3badd389c6dc483&account_id=personal) remains available. **All three prior Drive operations are complete:** the eight media copies, the requested single log append and this exact ZIP upload. See [the archive completion evidence](evidence/drive-handoff-completion.json). The [replacement rejection record](evidence/drive-handoff-replacement-block.json) is historical; do not repeat the completed upload or ask for its confirmation again.
 
-That exact delivered ZIP remains an immutable historical snapshot. Current Git source and versioned handoffs, including the source and delivery records in PR #106, carry the latest setup. Do not overwrite the confirmed archive to make it appear current.
+That exact delivered ZIP remains an immutable historical snapshot. PR #106 records the earlier fan-trio integration; current Git source, this handoff and PR #108 carry Cinematic Ten. Do not overwrite the confirmed archive to make it appear current.
 
 Read this file, [AI-HANDOFF.md](AI-HANDOFF.md), [CREATIVE-RULES.md](CREATIVE-RULES.md), and the current song record before changing anything. Read the current Drive AGENTS, DESIGN-SYSTEM, VIDEO-HANDOFF, AUTONOMOUS-RUN and November 19 lessons addendum. Older instructions remain historical evidence; the latest owner's directions and later dated corrections govern current work.
 
@@ -44,6 +77,7 @@ Read this file, [AI-HANDOFF.md](AI-HANDOFF.md), [CREATIVE-RULES.md](CREATIVE-RUL
 | [Natural performance research](NATURAL-PERFORMANCE-RESEARCH.md) | Primary sources and the contract for captured dance, travel, foot support and expressive staging |
 | [Natural performance handoff](NATURAL-PERFORMANCE.md) | Current dance setup, 1080p and 4K commands, tests, memory evidence and honest limits |
 | [Motion library](MOTION-LIBRARY.md) and [motion catalog](catalogs/motions.json) | Actual prepared clips, source identity and proposed acquisitions kept distinct |
+| [Cinematic Ten motion](CINEMATIC-TEN-MOTION.md) | Current authored solo, ensemble and calligraphy scores, native processions, flight APIs, source recordings and scoped QA |
 | [Dance study setup](../../tools/concert_dance/README.md) | Repeatable native render commands, reusable performance API and explicit capture limits |
 | [Consideration camera investigation](CONSIDERATION-CAMERA-NEXT.md) | Historical single-frame evidence that led to the separate camera and response revision |
 | [Delivery catalog](catalogs/deliveries.json) | Exact current studies, native stills, model sheets, hashes, review status and durable links |
@@ -60,13 +94,23 @@ The registered render and independent auditor both passed without errors or warn
 
 **Film 10, Nine Colours, Revision 3, 66 seconds** is the creative reference. Preserve the warm people, mirror lake, expression colors, meaningful gestures, light traveling through depth, camera flights and designed ending. The exact campaign wording and colors come from `engine/p3d/words.py`; do not retype or paraphrase them in a new renderer.
 
-**Song 11 beauty study, 30 seconds, native 1080p60** is the clarity and production reference. It preserves the original Song 11 world and choreography, with better focus, controlled brightness, native detail and two temporal samples. The owner approved its appearance in the current conversation. Its original picture source, audio clock and identity are recorded separately from the finished master. It is an excerpt, not a replacement full-song film.
+**Song 11 beauty study, 30 seconds, native 1080p60** is the clarity and production reference. It preserves the original Song 11 world and choreography, with better focus, controlled brightness, native detail and two temporal samples. The owner approved its appearance during the earlier reference review. Its original picture source, audio clock and identity are recorded separately from the finished master. It is an excerpt, not a replacement full-song film.
 
 The earlier 30-second people demonstration remains an engineering experiment. The owner found it sharper but less beautiful than the promo. Do not promote that example into the creative baseline merely because its checks passed. The 10-second design example proves native 4K delivery; it does not prove all concert scenes have been rendered in 4K.
 
-## First commands in a fresh chat
+## Reproduce a completed film
 
-Work in an isolated branch and worktree based on current `main`. Each builder owns a distinct set of files. Do not dispatch paid workflows or use the Mac as a default render worker.
+The current render and save round is complete. Recover its exact saved masters for delivery. For a read-only plan of an explicitly registered film:
+
+```bash
+.venv/bin/python -m pipeline.cli produce cinematic-ten-03 --quality final --plan
+```
+
+Deliberate reproduction belongs in an isolated checkout with the frozen source, exact declared audio and pinned runtime dependencies. Preserve the recorded manifests and picture identities. A new render or package has its own output identity; it does not replace the saved exact file without separate validation and a versioned delivery record.
+
+## Start a later song in a fresh worktree
+
+After Cinematic Ten delivery, start a separate song increment in an isolated branch and worktree based on current `main`. Each builder owns a distinct set of files. Do not dispatch paid workflows or use the Mac as a default render worker.
 
 ```bash
 git fetch origin
@@ -158,7 +202,7 @@ The [Consideration auditor](../../tools/concert_review/README.md) has explicit 1
 
 Native 4K is supported where the selected adapter exposes a 3840 by 2160 quality preset. It requires new native frames, fonts and render receipts. Do not rename an upscaled 1080p output as native 4K. The approved 30-second beauty study is 1080p60; its conductor still is native 4K. A full 4K version of that excerpt has not been delivered.
 
-For the newest dance, use `concert-dance-study-4k` for the separately configured three-worker full-film route. The six-worker `concert-dance-study` remains the 1080p route; its `4k-check` preset produced the single native detail frame. Consult [NATURAL-PERFORMANCE.md](NATURAL-PERFORMANCE.md) and current delivery evidence before describing either movie as complete.
+For the earlier natural dance study, `concert-dance-study-4k` is the separately configured three-worker full-film route. The six-worker `concert-dance-study` remains its 1080p route; its `4k-check` preset produced the single native detail frame. Consult [NATURAL-PERFORMANCE.md](NATURAL-PERFORMANCE.md) and current delivery evidence before describing either movie as complete. Cinematic Ten is currently delivering native 1080p60, not full 4K movies.
 
 Smooth animation comes from authored acceleration, weight, contact, overlap, camera paths and subframe evaluation. More frames do not fix skating feet or hands that miss. Keep close figures evaluated at the real output times; do not mistake a lower-rate crowd cache for a hero performance. Keep motion blur within a shot and preserve the final pose long enough to read.
 
