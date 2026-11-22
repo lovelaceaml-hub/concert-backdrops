@@ -1,0 +1,733 @@
+{
+  "recorded_utc": "2026-11-22T01:16:08.038998+00:00",
+  "status": "six_completed_movies_reviewed_remaining_movies_not_certified",
+  "picture_source_commit": "df4fc478116d3f0e34a85d2166097fbda55911bf",
+  "films": [
+    {
+      "film_id": 1,
+      "filename": "01_Silk_in_Light_1080p60.mp4",
+      "sha256": "d055202a4496c219bd5f827c507d91bf6d6e877955c36e8650993fe0d7a7b16d",
+      "bytes": 35123251,
+      "media": {
+        "width": 1920,
+        "height": 1080,
+        "avg_frame_rate": "60/1",
+        "r_frame_rate": "60/1",
+        "video_duration_seconds": 20.0,
+        "container_duration_seconds": 20.0,
+        "metadata_frames": "1200",
+        "codec": "h264",
+        "pixel_format": "yuv420p",
+        "color_space": "bt709",
+        "color_transfer": "bt709",
+        "color_primaries": "bt709",
+        "audio_streams": [
+          {
+            "codec_name": "aac",
+            "sample_rate": "48000",
+            "channels": 2,
+            "duration": "20.000000"
+          }
+        ]
+      },
+      "decoded_frames": 1200,
+      "technical_checks": {
+        "resolution_1920x1080": true,
+        "fps_60": true,
+        "nominal_fps_60": true,
+        "video_duration_20_seconds": true,
+        "container_duration_20_seconds": true,
+        "audio_present": true,
+        "full_decode_without_errors": true,
+        "decoded_frames_1200": true,
+        "metadata_frame_count_consistent": true,
+        "sample_decode_without_errors": true,
+        "eight_samples_decoded": true,
+        "eight_sampled_frames_unique": true,
+        "master_unchanged_during_checks": true
+      },
+      "sampled_frames": [
+        {
+          "frame_index": 0,
+          "seconds": 0.0,
+          "decoded_rgb_sha256": "c35afa368fb26122db1c0e1091361ca9d9da8f8b78139a3af58a2c5561620d5b",
+          "mean_absolute_difference_from_previous_sample": null
+        },
+        {
+          "frame_index": 120,
+          "seconds": 2.0,
+          "decoded_rgb_sha256": "4c9945980916e4f4ce42a281567d31a828e589af03d6a4355657d909288fcc2d",
+          "mean_absolute_difference_from_previous_sample": 18.15904513888889
+        },
+        {
+          "frame_index": 300,
+          "seconds": 5.0,
+          "decoded_rgb_sha256": "d0d2ae62af784afe5230566d02978ab4baa2086cae3669800afa3d912fd4c5e4",
+          "mean_absolute_difference_from_previous_sample": 26.016082175925927
+        },
+        {
+          "frame_index": 480,
+          "seconds": 8.0,
+          "decoded_rgb_sha256": "fcd2e7908a3e052c559d37db577e9e305674a7ce7a5a77ef9451e82227559217",
+          "mean_absolute_difference_from_previous_sample": 21.072511574074074
+        },
+        {
+          "frame_index": 660,
+          "seconds": 11.0,
+          "decoded_rgb_sha256": "72ab48ebdb7a19085284b507f25cc5d1eaf6acf8b004956e6923a58864b8817a",
+          "mean_absolute_difference_from_previous_sample": 28.252123842592596
+        },
+        {
+          "frame_index": 840,
+          "seconds": 14.0,
+          "decoded_rgb_sha256": "e8c659d4e000b054742c4fb1f6139348184979afc2eb9e410ec75b34c8954b07",
+          "mean_absolute_difference_from_previous_sample": 24.50657986111111
+        },
+        {
+          "frame_index": 1020,
+          "seconds": 17.0,
+          "decoded_rgb_sha256": "f591e51874eb50b460e1d5114902aeb01ed064922220c4556a447ea211e76406",
+          "mean_absolute_difference_from_previous_sample": 27.201417824074074
+        },
+        {
+          "frame_index": 1199,
+          "seconds": 19.983333333333334,
+          "decoded_rgb_sha256": "231cb1702691f978301f1e1404f9dc637ab7ad9c18cfafea0365fea239b38cca",
+          "mean_absolute_difference_from_previous_sample": 25.831892361111112
+        }
+      ],
+      "visual_review": {
+        "film_id": 1,
+        "master_sha256": "d055202a4496c219bd5f827c507d91bf6d6e877955c36e8650993fe0d7a7b16d",
+        "reviewed_utc": "2026-11-22T00:57:41.919747+00:00",
+        "technical_checks": "passed",
+        "pipeline_receipt_sha256_matches": true,
+        "visual_scope": "Eight decoded timeline samples at frames 0,120,300,480,660,840,1020,1199, plus native decoded opening and last frame. This is sampled visual review, not complete real-time playback, biomechanical validation or owner approval.",
+        "blocking_visual_defects_found": false,
+        "no_blocking_defect_found": true,
+        "owner_approval": "not_recorded",
+        "pipeline_temporal_review": {
+          "scan_complete": true,
+          "decoded_frames": 1200,
+          "flicker_candidate_count": 0,
+          "shimmer_candidate_count": 0,
+          "longest_still_seconds": 0.0,
+          "warnings": [],
+          "scope": "Pixel heuristics are not a certification of natural dance or foot contact."
+        },
+        "observations": [
+          "The full performer and both hand-held fans remain identifiable across the eight samples; no clipped foot or missing fan was seen.",
+          "Fan elevation, separation and orientation, torso heading, body levels and foot poses change across the sampled timeline; the camera also changes its view around the stage.",
+          "Native opening and ending preserve dense fan material, readable ribs and visible attachment at the hands. The sampled silk shapes change with the performance.",
+          "At the opening a near fan crosses the lower face. This is a visible non-blocking choreography overlap; the final frontal pose has a clear head silhouette, separated fans and complete feet.",
+          "The final native frame resolves into a frontal full-body composition inside the illuminated stage, with reflective water, flowers and arches retaining depth.",
+          "The lower-left emblem remains fully inside the image. No obvious encoded macroblocking, corrupted sample, blank sample or unintended body cutoff was observed."
+        ]
+      },
+      "pipeline_warnings": [],
+      "creative_approval": "not_recorded"
+    },
+    {
+      "film_id": 5,
+      "filename": "05_Procession_of_Lanterns_1080p60.mp4",
+      "sha256": "25c8959c1ef906b6587cefd4deae48efb44ba870ba16a7031b3b2b5bbf051b9d",
+      "bytes": 44205575,
+      "media": {
+        "width": 1920,
+        "height": 1080,
+        "avg_frame_rate": "60/1",
+        "r_frame_rate": "60/1",
+        "video_duration_seconds": 20.0,
+        "container_duration_seconds": 20.0,
+        "metadata_frames": "1200",
+        "codec": "h264",
+        "pixel_format": "yuv420p",
+        "color_space": "bt709",
+        "color_transfer": "bt709",
+        "color_primaries": "bt709",
+        "audio_streams": [
+          {
+            "codec_name": "aac",
+            "sample_rate": "48000",
+            "channels": 2,
+            "duration": "20.000000"
+          }
+        ]
+      },
+      "decoded_frames": 1200,
+      "technical_checks": {
+        "resolution_1920x1080": true,
+        "fps_60": true,
+        "nominal_fps_60": true,
+        "video_duration_20_seconds": true,
+        "container_duration_20_seconds": true,
+        "audio_present": true,
+        "full_decode_without_errors": true,
+        "decoded_frames_1200": true,
+        "metadata_frame_count_consistent": true,
+        "sample_decode_without_errors": true,
+        "eight_samples_decoded": true,
+        "eight_sampled_frames_unique": true,
+        "master_unchanged_during_checks": true
+      },
+      "sampled_frames": [
+        {
+          "frame_index": 0,
+          "seconds": 0.0,
+          "decoded_rgb_sha256": "eae7871a8915f58852a75599d750cc80598e6c181aabb7d506a07ef97230020e",
+          "mean_absolute_difference_from_previous_sample": null
+        },
+        {
+          "frame_index": 120,
+          "seconds": 2.0,
+          "decoded_rgb_sha256": "e37b914a0f5cab712f2c5a7c3cf85bcf5609523c06c56ccda318b017e7185752",
+          "mean_absolute_difference_from_previous_sample": 12.367604166666666
+        },
+        {
+          "frame_index": 300,
+          "seconds": 5.0,
+          "decoded_rgb_sha256": "59121f5db9635c98c09c67770614ce70bb742b4c07b6dce386f368ac55c6073d",
+          "mean_absolute_difference_from_previous_sample": 17.0962962962963
+        },
+        {
+          "frame_index": 480,
+          "seconds": 8.0,
+          "decoded_rgb_sha256": "616fc656cd2e1d743dd136594554ccc601c508f7ecb6a8635cf939df84790e8a",
+          "mean_absolute_difference_from_previous_sample": 26.47050925925926
+        },
+        {
+          "frame_index": 660,
+          "seconds": 11.0,
+          "decoded_rgb_sha256": "e5f83132e77abf22086d64825f0ec97464199e60cbade16bf433c21efcb50eff",
+          "mean_absolute_difference_from_previous_sample": 24.344554398148148
+        },
+        {
+          "frame_index": 840,
+          "seconds": 14.0,
+          "decoded_rgb_sha256": "18e4e909b6ab2dbd59c5ad715590f3ae67ba0e39da02e0fa05a07f146016b44d",
+          "mean_absolute_difference_from_previous_sample": 22.934965277777778
+        },
+        {
+          "frame_index": 1020,
+          "seconds": 17.0,
+          "decoded_rgb_sha256": "ed77d139cad92c09d7464d183dc708555da74ec43ad51c4fc7daa1b03ff04805",
+          "mean_absolute_difference_from_previous_sample": 15.953003472222221
+        },
+        {
+          "frame_index": 1199,
+          "seconds": 19.983333333333334,
+          "decoded_rgb_sha256": "28f7f75bda6ff45b54dfbb48f1caead1f3ad21987bdf93ef7855b13e581621f3",
+          "mean_absolute_difference_from_previous_sample": 9.020758101851852
+        }
+      ],
+      "visual_review": {
+        "film_id": 5,
+        "master_sha256": "25c8959c1ef906b6587cefd4deae48efb44ba870ba16a7031b3b2b5bbf051b9d",
+        "reviewed_utc": "2026-11-22T01:10:06.842739+00:00",
+        "technical_checks": "passed",
+        "pipeline_receipt_sha256_matches": true,
+        "visual_scope": "Eight decoded timeline samples, plus native decoded opening and last frame. This is sampled visual review, not full playback or owner approval.",
+        "blocking_visual_defects_found": false,
+        "pipeline_motion": {
+          "scan_complete": true,
+          "decoded_frames": 1200,
+          "longest_still_seconds": 0.0,
+          "flicker_candidate_count": 0,
+          "shimmer_candidate_count": 0,
+          "warnings": []
+        },
+        "pipeline_warnings": [],
+        "flagged_regions_reviewed": [],
+        "observations": [
+          "The decoded samples show a traveling golden procession with visibly changing poses, carried lanterns, nested blue arches and mirror reflections. The view moves from a close diagonal arrangement toward a wider centered ending.",
+          "Main figures have readable heads, torsos and limbs in the inspected samples. Visible lantern cords meet the carrying hands. No detached central prop or missing central body was observed.",
+          "The native opening keeps the foreground performers and lanterns inside the frame. Large surrounding arches and lower reflections continue beyond the image edges as foreground framing.",
+          "The native last frame contains the procession and the principal arch and tree arrangement. Reflections extend beyond the bottom edge. No principal figure is cut off.",
+          "The bottom-left logo stays inside the image and clear of the procession. There is no title text in the inspected frames.",
+          "No blank frame, obvious image corruption or conspicuous macroblocking was observed in the decoded samples. Pipeline scan reported no still, flicker or shimmer candidates requiring additional regional review."
+        ]
+      },
+      "pipeline_warnings": [],
+      "creative_approval": "not_recorded"
+    },
+    {
+      "film_id": 6,
+      "filename": "06_A_Garden_Awakens_1080p60.mp4",
+      "sha256": "2d3bdc8e8903b13b5d60a442f8b533d6aab57516c449ecb4a41210e03f2cf3d8",
+      "bytes": 51061569,
+      "media": {
+        "width": 1920,
+        "height": 1080,
+        "avg_frame_rate": "60/1",
+        "r_frame_rate": "60/1",
+        "video_duration_seconds": 20.0,
+        "container_duration_seconds": 20.0,
+        "metadata_frames": "1200",
+        "codec": "h264",
+        "pixel_format": "yuv420p",
+        "color_space": "bt709",
+        "color_transfer": "bt709",
+        "color_primaries": "bt709",
+        "audio_streams": [
+          {
+            "codec_name": "aac",
+            "sample_rate": "48000",
+            "channels": 2,
+            "duration": "20.000000"
+          }
+        ]
+      },
+      "decoded_frames": 1200,
+      "technical_checks": {
+        "resolution_1920x1080": true,
+        "fps_60": true,
+        "nominal_fps_60": true,
+        "video_duration_20_seconds": true,
+        "container_duration_20_seconds": true,
+        "audio_present": true,
+        "full_decode_without_errors": true,
+        "decoded_frames_1200": true,
+        "metadata_frame_count_consistent": true,
+        "sample_decode_without_errors": true,
+        "eight_samples_decoded": true,
+        "eight_sampled_frames_unique": true,
+        "master_unchanged_during_checks": true
+      },
+      "sampled_frames": [
+        {
+          "frame_index": 0,
+          "seconds": 0.0,
+          "decoded_rgb_sha256": "62f9a0414bee3a65047dee100dfe4d6fa3757b18d22c90d73f28fa8fe4e4b610",
+          "mean_absolute_difference_from_previous_sample": null
+        },
+        {
+          "frame_index": 120,
+          "seconds": 2.0,
+          "decoded_rgb_sha256": "9409112f1cbe2f205b745d0d3cb6c9dd69c7799e8ddbe6beac5b3c4d41ecb0f4",
+          "mean_absolute_difference_from_previous_sample": 21.55574074074074
+        },
+        {
+          "frame_index": 300,
+          "seconds": 5.0,
+          "decoded_rgb_sha256": "ec42fce56125ced9649ee09a4f1049677ae3d0db5996cb248596efe511131c05",
+          "mean_absolute_difference_from_previous_sample": 31.72702546296296
+        },
+        {
+          "frame_index": 480,
+          "seconds": 8.0,
+          "decoded_rgb_sha256": "7c93c531d6643145b3816019adaf92782895eb10ebd2a1853e4c2828b3a4ccf1",
+          "mean_absolute_difference_from_previous_sample": 36.0126099537037
+        },
+        {
+          "frame_index": 660,
+          "seconds": 11.0,
+          "decoded_rgb_sha256": "9d934afa47cdb650e3920fd5413097f183a3a22afdcbb14cc027a4f1b5f128df",
+          "mean_absolute_difference_from_previous_sample": 40.53791087962963
+        },
+        {
+          "frame_index": 840,
+          "seconds": 14.0,
+          "decoded_rgb_sha256": "91a8d7464395e2842dd7f5c6bb25e7d7aa7c00e5c27dbe0266f4c00b26308311",
+          "mean_absolute_difference_from_previous_sample": 41.27010416666667
+        },
+        {
+          "frame_index": 1020,
+          "seconds": 17.0,
+          "decoded_rgb_sha256": "d5ebf5f0e8173efa98779fe7cc28545f0f488c11fa75c78965db4a12ccc41fcf",
+          "mean_absolute_difference_from_previous_sample": 36.54185185185185
+        },
+        {
+          "frame_index": 1199,
+          "seconds": 19.983333333333334,
+          "decoded_rgb_sha256": "d157394655dad4c64687dbbc5af105b2e398cd94597ef95ebc5aea053d3fe1ec",
+          "mean_absolute_difference_from_previous_sample": 23.782332175925927
+        }
+      ],
+      "visual_review": {
+        "film_id": 6,
+        "master_sha256": "2d3bdc8e8903b13b5d60a442f8b533d6aab57516c449ecb4a41210e03f2cf3d8",
+        "reviewed_utc": "2026-11-22T00:49:07.323274+00:00",
+        "technical_checks": "passed",
+        "pipeline_receipt_sha256_matches": true,
+        "visual_scope": "Eight decoded timeline samples, plus native decoded opening and last frame. This is sampled visual review, not full playback or owner approval.",
+        "blocking_visual_defects_found": false,
+        "pipeline_motion": {
+          "scan_complete": true,
+          "decoded_frames": 1200,
+          "longest_still_seconds": 0.0,
+          "flicker_candidate_count": 0,
+          "shimmer_candidate_count": 0,
+          "warnings": []
+        },
+        "pipeline_warnings": [],
+        "flagged_regions_reviewed": [],
+        "observations": [
+          "The sampled progression shows buds opening into colored flowers, butterflies moving through the garden, and the camera advancing before rising to the ending view.",
+          "Flower stems, petal surfaces, trees, lanterns and their reflections remain present in the decoded samples. Foreground foliage extends beyond the edges during camera travel.",
+          "The final native image retains the garden and butterfly group in view; no unintended central-subject cutoff or missing geometry was observed.",
+          "The lower-left emblem remains fully inside the image. No title or human performer is present in this film.",
+          "No obvious encoded macroblocking, corrupted image or blank sampled frame was observed. The pipeline reported no flicker or shimmer candidates and no nearly still interval."
+        ]
+      },
+      "pipeline_warnings": [],
+      "creative_approval": "not_recorded"
+    },
+    {
+      "film_id": 7,
+      "filename": "07_Wings_of_Peace_1080p60.mp4",
+      "sha256": "30880be109c9da3de5e96037f397ac8c8c8c72c101d7cda4776accc2633d2b6f",
+      "bytes": 21902494,
+      "media": {
+        "width": 1920,
+        "height": 1080,
+        "avg_frame_rate": "60/1",
+        "r_frame_rate": "60/1",
+        "video_duration_seconds": 20.0,
+        "container_duration_seconds": 20.0,
+        "metadata_frames": "1200",
+        "codec": "h264",
+        "pixel_format": "yuv420p",
+        "color_space": "bt709",
+        "color_transfer": "bt709",
+        "color_primaries": "bt709",
+        "audio_streams": [
+          {
+            "codec_name": "aac",
+            "sample_rate": "48000",
+            "channels": 2,
+            "duration": "20.000000"
+          }
+        ]
+      },
+      "decoded_frames": 1200,
+      "technical_checks": {
+        "resolution_1920x1080": true,
+        "fps_60": true,
+        "nominal_fps_60": true,
+        "video_duration_20_seconds": true,
+        "container_duration_20_seconds": true,
+        "audio_present": true,
+        "full_decode_without_errors": true,
+        "decoded_frames_1200": true,
+        "metadata_frame_count_consistent": true,
+        "sample_decode_without_errors": true,
+        "eight_samples_decoded": true,
+        "eight_sampled_frames_unique": true,
+        "master_unchanged_during_checks": true
+      },
+      "sampled_frames": [
+        {
+          "frame_index": 0,
+          "seconds": 0.0,
+          "decoded_rgb_sha256": "0462abc69ed12bef72874b939daf10d5ac6d7e2ba29226f0f0a4582a4998db65",
+          "mean_absolute_difference_from_previous_sample": null
+        },
+        {
+          "frame_index": 120,
+          "seconds": 2.0,
+          "decoded_rgb_sha256": "bfdf22599e93cb40b6f28c69637a5d1dff4a37c3d45635fb9f4f94b8d33754b4",
+          "mean_absolute_difference_from_previous_sample": 26.156064814814812
+        },
+        {
+          "frame_index": 300,
+          "seconds": 5.0,
+          "decoded_rgb_sha256": "a613f084c6405348530c0beb42ff6bf9645500ea6aef94bf7c8a53dbdde55f35",
+          "mean_absolute_difference_from_previous_sample": 27.890596064814815
+        },
+        {
+          "frame_index": 480,
+          "seconds": 8.0,
+          "decoded_rgb_sha256": "b11786f42371ce341b8f26906efd03b1aa89fb0147ac59ae39a319caa0e6b022",
+          "mean_absolute_difference_from_previous_sample": 24.720439814814814
+        },
+        {
+          "frame_index": 660,
+          "seconds": 11.0,
+          "decoded_rgb_sha256": "41d83b5c9374f9214dc5c84455be741abc367287b4d56e67a89b37d6aab7e316",
+          "mean_absolute_difference_from_previous_sample": 7.772332175925926
+        },
+        {
+          "frame_index": 840,
+          "seconds": 14.0,
+          "decoded_rgb_sha256": "904115981a194d7b75c85224b6014607aab283241e98a9fb8047f2150a6bf5c1",
+          "mean_absolute_difference_from_previous_sample": 14.448680555555555
+        },
+        {
+          "frame_index": 1020,
+          "seconds": 17.0,
+          "decoded_rgb_sha256": "6ac7b4d0422525de5a98f29fd41e5ad46ddfbf9619e8534def42ea6f040877da",
+          "mean_absolute_difference_from_previous_sample": 41.892864583333335
+        },
+        {
+          "frame_index": 1199,
+          "seconds": 19.983333333333334,
+          "decoded_rgb_sha256": "85cb1f79bdb11b37a85b6ee6336b132b2960e2b995251e3d8e7199264f91efb7",
+          "mean_absolute_difference_from_previous_sample": 17.80984375
+        }
+      ],
+      "visual_review": {
+        "film_id": 7,
+        "master_sha256": "30880be109c9da3de5e96037f397ac8c8c8c72c101d7cda4776accc2633d2b6f",
+        "reviewed_utc": "2026-11-22T01:12:15.071015+00:00",
+        "technical_checks": "passed",
+        "pipeline_receipt_sha256_matches": true,
+        "visual_scope": "Eight decoded timeline samples, plus native decoded opening and last frame. This is sampled visual review, not full playback or owner approval.",
+        "blocking_visual_defects_found": false,
+        "pipeline_motion": {
+          "scan_complete": true,
+          "decoded_frames": 1200,
+          "longest_still_seconds": 0.0,
+          "flicker_candidate_count": 0,
+          "shimmer_candidate_count": 0,
+          "warnings": []
+        },
+        "pipeline_warnings": [],
+        "flagged_regions_reviewed": [],
+        "observations": [
+          "The decoded timeline shows a close lead dove, changes in wing pose and viewing angle, and a wider eight-bird flock against luminous trees, mountains and reflected water.",
+          "The native opening contains the lead bird, beak, continuous body, tail and both articulated wings within the frame. No detached wing or missing body section was observed.",
+          "The native last frame keeps all eight birds inside the image with distinct positions and readable silhouettes. One distant left bird partially overlaps foreground willow foliage, consistent with the layered scene.",
+          "The camera and environment change substantially across sampled timestamps. The ending is a wide flock composition with long wake curves; surrounding reflections and wake curves can continue beyond the frame edges.",
+          "The bottom-left logo stays inside the image. There is no title text or human performer in the inspected samples.",
+          "No blank frame, obvious image corruption or conspicuous macroblocking was observed in the decoded samples. Pipeline scan reported no still, flicker or shimmer candidates requiring additional regional review."
+        ]
+      },
+      "pipeline_warnings": [],
+      "creative_approval": "not_recorded"
+    },
+    {
+      "film_id": 8,
+      "filename": "08_Ocean_of_Light_1080p60.mp4",
+      "sha256": "da076670eb36a52b087bee26128bee0eab4baab8a9ae08ff5fc197b2a0052fc6",
+      "bytes": 37434533,
+      "media": {
+        "width": 1920,
+        "height": 1080,
+        "avg_frame_rate": "60/1",
+        "r_frame_rate": "60/1",
+        "video_duration_seconds": 20.0,
+        "container_duration_seconds": 20.0,
+        "metadata_frames": "1200",
+        "codec": "h264",
+        "pixel_format": "yuv420p",
+        "color_space": "bt709",
+        "color_transfer": "bt709",
+        "color_primaries": "bt709",
+        "audio_streams": [
+          {
+            "codec_name": "aac",
+            "sample_rate": "48000",
+            "channels": 2,
+            "duration": "20.000000"
+          }
+        ]
+      },
+      "decoded_frames": 1200,
+      "technical_checks": {
+        "resolution_1920x1080": true,
+        "fps_60": true,
+        "nominal_fps_60": true,
+        "video_duration_20_seconds": true,
+        "container_duration_20_seconds": true,
+        "audio_present": true,
+        "full_decode_without_errors": true,
+        "decoded_frames_1200": true,
+        "metadata_frame_count_consistent": true,
+        "sample_decode_without_errors": true,
+        "eight_samples_decoded": true,
+        "eight_sampled_frames_unique": true,
+        "master_unchanged_during_checks": true
+      },
+      "sampled_frames": [
+        {
+          "frame_index": 0,
+          "seconds": 0.0,
+          "decoded_rgb_sha256": "7701e58e3770c6a2615187e1df157d5dde4af7a100f8a76c922b735bba89312a",
+          "mean_absolute_difference_from_previous_sample": null
+        },
+        {
+          "frame_index": 120,
+          "seconds": 2.0,
+          "decoded_rgb_sha256": "6c9fe5d00e6c25dcf3c6cc034c35c80f4f77d39f77c077799662c4815318281b",
+          "mean_absolute_difference_from_previous_sample": 14.536608796296298
+        },
+        {
+          "frame_index": 300,
+          "seconds": 5.0,
+          "decoded_rgb_sha256": "e76847c50b8207bfffbe5f1290f44f039b4ed58c2fdc5c483ab25ce7a6528e5d",
+          "mean_absolute_difference_from_previous_sample": 30.771863425925925
+        },
+        {
+          "frame_index": 480,
+          "seconds": 8.0,
+          "decoded_rgb_sha256": "9c1f5b7a7d9ea3ac63044f703c13ecbab897a49adfeac15d31d3ef4a3a036d8d",
+          "mean_absolute_difference_from_previous_sample": 26.923645833333335
+        },
+        {
+          "frame_index": 660,
+          "seconds": 11.0,
+          "decoded_rgb_sha256": "01462f4351fe1a2bf0a8762c71d17990fe597659c0beeca723149b92e07e7d93",
+          "mean_absolute_difference_from_previous_sample": 25.094565972222224
+        },
+        {
+          "frame_index": 840,
+          "seconds": 14.0,
+          "decoded_rgb_sha256": "95d31841a14cbcd5d722ec28264dbc8e9e6486b9802f623971087c39bddfaa8b",
+          "mean_absolute_difference_from_previous_sample": 25.405891203703703
+        },
+        {
+          "frame_index": 1020,
+          "seconds": 17.0,
+          "decoded_rgb_sha256": "ac80c610c164b4aa73fc4f963b01decbb67e708e170faea7009e886b038a97d3",
+          "mean_absolute_difference_from_previous_sample": 20.23769097222222
+        },
+        {
+          "frame_index": 1199,
+          "seconds": 19.983333333333334,
+          "decoded_rgb_sha256": "49079841edaa7e959146a1453f2850de951f1271b650f8c0438ec32d69ad2c12",
+          "mean_absolute_difference_from_previous_sample": 14.763327546296296
+        }
+      ],
+      "visual_review": {
+        "film_id": 8,
+        "master_sha256": "da076670eb36a52b087bee26128bee0eab4baab8a9ae08ff5fc197b2a0052fc6",
+        "reviewed_utc": "2026-11-22T01:03:45.187086+00:00",
+        "technical_checks": "passed",
+        "pipeline_receipt_sha256_matches": true,
+        "visual_scope": "Eight decoded timeline samples, plus native decoded opening and last frame. This is sampled visual review, not full playback or owner approval.",
+        "blocking_visual_defects_found": false,
+        "pipeline_motion": {
+          "scan_complete": true,
+          "decoded_frames": 1200,
+          "longest_still_seconds": 0.0,
+          "flicker_candidate_count": 0,
+          "shimmer_candidate_count": 0,
+          "warnings": []
+        },
+        "pipeline_warnings": [],
+        "flagged_regions_reviewed": [],
+        "observations": [
+          "The decoded samples show distinct jellyfish bells and tentacles, fish bodies and fins, and visible depth during camera travel.",
+          "The opening deliberately frames a close foreground jellyfish with tentacles extending below the edge. A near-camera fish pass is visible in the middle samples.",
+          "The final native frame resolves into three clearly separated jellyfish with schools on either side; the large foreground fish no longer obscures the ending composition.",
+          "The lower-left emblem remains inside the image. There is no title or human performer requiring a text or hand-attachment check.",
+          "No obvious encoded macroblocking, corrupted image or blank sampled frame was observed. The pipeline reported no flicker or shimmer candidates and no nearly still interval."
+        ]
+      },
+      "pipeline_warnings": [],
+      "creative_approval": "not_recorded"
+    },
+    {
+      "film_id": 9,
+      "filename": "09_Celestial_Clockwork_1080p60.mp4",
+      "sha256": "b4c4956e5401ce5fe3283037a0cd7d6ca9f3f042a104d599fa94f50d6e5254b4",
+      "bytes": 23457102,
+      "media": {
+        "width": 1920,
+        "height": 1080,
+        "avg_frame_rate": "60/1",
+        "r_frame_rate": "60/1",
+        "video_duration_seconds": 20.0,
+        "container_duration_seconds": 20.0,
+        "metadata_frames": "1200",
+        "codec": "h264",
+        "pixel_format": "yuv420p",
+        "color_space": "bt709",
+        "color_transfer": "bt709",
+        "color_primaries": "bt709",
+        "audio_streams": [
+          {
+            "codec_name": "aac",
+            "sample_rate": "48000",
+            "channels": 2,
+            "duration": "20.000000"
+          }
+        ]
+      },
+      "decoded_frames": 1200,
+      "technical_checks": {
+        "resolution_1920x1080": true,
+        "fps_60": true,
+        "nominal_fps_60": true,
+        "video_duration_20_seconds": true,
+        "container_duration_20_seconds": true,
+        "audio_present": true,
+        "full_decode_without_errors": true,
+        "decoded_frames_1200": true,
+        "metadata_frame_count_consistent": true,
+        "sample_decode_without_errors": true,
+        "eight_samples_decoded": true,
+        "eight_sampled_frames_unique": true,
+        "master_unchanged_during_checks": true
+      },
+      "sampled_frames": [
+        {
+          "frame_index": 0,
+          "seconds": 0.0,
+          "decoded_rgb_sha256": "c255d521d7ba8ec05b5ff717caa1b61b64c1e30bdc25607f1b0191077eac7a0a",
+          "mean_absolute_difference_from_previous_sample": null
+        },
+        {
+          "frame_index": 120,
+          "seconds": 2.0,
+          "decoded_rgb_sha256": "8106cde7b48dea99a20a20a78ce3e2432c06bb10298cd41cf1738be78a29a868",
+          "mean_absolute_difference_from_previous_sample": 20.2012037037037
+        },
+        {
+          "frame_index": 300,
+          "seconds": 5.0,
+          "decoded_rgb_sha256": "dafdd554aa85b79898a48418a4b24901f697323c6f12b951ec5cf49056040b15",
+          "mean_absolute_difference_from_previous_sample": 30.157314814814814
+        },
+        {
+          "frame_index": 480,
+          "seconds": 8.0,
+          "decoded_rgb_sha256": "45386b4aeab4ad66df77a2b93d5cdb42dfebf1f18a89f73842fb527c0c304f4b",
+          "mean_absolute_difference_from_previous_sample": 25.19872685185185
+        },
+        {
+          "frame_index": 660,
+          "seconds": 11.0,
+          "decoded_rgb_sha256": "b9370b6a836d4a2644a3f71af110e6409bcb14f138303f9f78bd85879fccf7fe",
+          "mean_absolute_difference_from_previous_sample": 19.01732638888889
+        },
+        {
+          "frame_index": 840,
+          "seconds": 14.0,
+          "decoded_rgb_sha256": "a172564b01a1c28657ef25149e1574b226a6ab853c1b9f599d29cb0ff442a228",
+          "mean_absolute_difference_from_previous_sample": 19.1341724537037
+        },
+        {
+          "frame_index": 1020,
+          "seconds": 17.0,
+          "decoded_rgb_sha256": "a39bb562aca59aaeefa4f6358f2bbfe02b5b0be775d2d23bc035e4eb258507f2",
+          "mean_absolute_difference_from_previous_sample": 10.862621527777776
+        },
+        {
+          "frame_index": 1199,
+          "seconds": 19.983333333333334,
+          "decoded_rgb_sha256": "543de41a7ce67eb0b0cc23f621b06a9af81b3f56af6e6acc4cb03d3c6c6348e9",
+          "mean_absolute_difference_from_previous_sample": 9.503072916666667
+        }
+      ],
+      "visual_review": {
+        "film_id": 9,
+        "master_sha256": "b4c4956e5401ce5fe3283037a0cd7d6ca9f3f042a104d599fa94f50d6e5254b4",
+        "reviewed_utc": "2026-11-22T00:34:21.215079+00:00",
+        "technical_checks": "passed",
+        "pipeline_receipt_sha256_matches": true,
+        "visual_scope": "Eight decoded timeline samples, plus native decoded opening and last frame. This is sampled visual review, not full playback or owner approval.",
+        "blocking_visual_defects_found": false,
+        "observations": [
+          "The opening uses close framing with outer orbital paths and a foreground planet extending beyond the image; the later camera view reveals the orbital sculpture.",
+          "The central luminous sphere, colored planets and orbital paths remain visible and distinct across the eight samples.",
+          "The final native frame contains the main orbital sculpture; its lower base reflection continues beyond the bottom edge.",
+          "The lower-left emblem is fully inside the image and readable. There is no title or person in these samples requiring a text or body-attachment check.",
+          "No obvious encoded macroblocking, corrupted frame, blank sampled frame or unintended central-subject cutoff was observed."
+        ]
+      },
+      "pipeline_warnings": [],
+      "creative_approval": "not_recorded"
+    }
+  ]
+}

@@ -19,7 +19,7 @@
   "audio_sources_verified": 11,
   "full_rehearsal_recordings_verified": 0,
   "current_increment": "Cinematic Ten: ten original twenty-second cinematic films in the established native concert p3d style",
-  "increment_status": "picture_source_frozen_three_finals_checked_and_saved_remaining_finals_rendering",
+  "increment_status": "picture_source_frozen_six_finals_checked_and_saved_four_rendering_or_queued",
   "cloud_gpu_provider": null,
   "mac_rendering_used": false,
   "new_study_creative_approval": "not_recorded",
@@ -28,7 +28,7 @@
     "handoff": "https://drive.google.com/drive/folders/1QDGGqqkJlbovBLCthX-QChqfD8zSmK8X",
     "media": "https://drive.google.com/drive/folders/1hrk62bFIOHv2NwXvYl2bNSmp0cwBoXrr"
   },
-  "next_work": "Finish the other nine registered 1,200-frame finals, inspect their encoded pictures and boundaries, save exact master bytes and QA, then update delivery catalogs and the production log. Preserve the frozen picture source and valid checkpoints. No Cinematic Ten owner approval is recorded.",
+  "next_work": "Finish the remaining registered films2,3,4,10; verify encoded outputs, preserve exact saved files and publish the all-ten package.",
   "background_service_configured": false,
   "historical_baseline_checkpoint": "673f68785c36b57d55d05129ee5549efe6352c60",
   "render_projects": [
@@ -58,7 +58,7 @@
   "drive_instruction_files_updated_and_verified": 5,
   "drive_instruction_evidence": "project-docs/production-system/evidence/drive-instruction-updates.json",
   "private_drive_media_copies": "fourteen_cataloged_media_uploaded_and_raw_bytes_verified",
-  "new_media_files_saved": 3,
+  "new_media_files_saved": 6,
   "new_media_catalog": "project-docs/production-system/catalogs/deliveries.json",
   "active_render_processes": null,
   "integration_authority": "https://github.com/lovelaceaml-hub/concert-backdrops/pull/108",
@@ -388,16 +388,16 @@
     "picture_source_frozen": true,
     "completed_final_film_ids": [
       1,
+      5,
       6,
+      7,
+      8,
       9
     ],
     "rendering_or_queued_film_ids": [
       2,
       3,
       4,
-      5,
-      7,
-      8,
       10
     ],
     "owner_approval": "not_recorded",
@@ -459,12 +459,14 @@
     },
     "additional_partial_job": {
       "project_id": "cinematic-ten-10",
-      "verified_frames": 47,
-      "status": "extra_worker_exited_minus9_verified_frames_preserved_for_later_resume"
+      "selected_frames": "47:197",
+      "status": "bounded_single_worker_resume_with_1GiB_available_memory_guard",
+      "earlier_verified_frames": 47
     },
     "saved_delivery_evidence": "project-docs/production-system/evidence/cinematic-ten-library-delivery.json",
     "frozen_input_evidence": "project-docs/production-system/evidence/cinematic-ten-frozen-inputs.json",
     "bird_supplemental_frames_verified": 600,
-    "drive_copy": "Film09 optional copy blocked by automatic approval review; no new films copied to Drive. Saved downloads continue."
+    "drive_copy": "Film09 optional copy blocked by automatic approval review; no new films copied to Drive. Saved downloads continue.",
+    "final_review_evidence": "project-docs/production-system/evidence/cinematic-ten-final-review.json"
   }
 }
