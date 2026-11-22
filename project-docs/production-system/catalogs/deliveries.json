@@ -2,10 +2,10 @@
   "schema_version": 1,
   "updated_local_date": "2026-11-22",
   "timezone": "America/Los_Angeles",
-  "status": "advanced_dance_and_complete_updated_collection_saved",
+  "status": "fluid_fan_solo_proof_and_editable_assets_saved_with_prior_deliveries_preserved",
   "approved_references_catalog": "project-docs/production-system/catalogs/references.json",
   "historical_baseline_source_commit": "673f68785c36b57d55d05129ee5549efe6352c60",
-  "current_integration_pr": 109,
+  "current_integration_pr": 111,
   "items": [
     {
       "id": "consideration-revised-15s",
@@ -1247,6 +1247,69 @@
         "url": "https://chatgpt.com/library?file_id=libfile_71c3b731d8e08191a81a32aac0f9880d&account_id=personal"
       },
       "scope": "Documentation and production-code maintenance; original movie and archive identities are unchanged."
+    },
+    {
+      "id": "fluid-fan-solo-1080p60",
+      "filename": "The_Flow_of_Light_1080p60.mp4",
+      "kind": "finished_solo_film",
+      "bytes": 7870567,
+      "sha256": "1d2f59df08e01cdf5e7e8a4855305fccd7c72c90b6f60a52413133f66da257ab",
+      "source_commit": "dd38d291fb7c548f82732b6bff94c0eca02748b2",
+      "integration_pr": 111,
+      "saved_delivery_evidence": "project-docs/production-system/evidence/fluid-fan-delivery.json",
+      "library": {
+        "status": "saved",
+        "library_file_id": "libfile_95c6ea34d15881918c2f4a05d8a2db31",
+        "file_id": "file_0000000046dc81fdac7bf0a6e2df6d6d",
+        "version": 0,
+        "url": "https://chatgpt.com/library?file_id=libfile_95c6ea34d15881918c2f4a05d8a2db31&account_id=personal"
+      },
+      "duration_seconds": 12,
+      "frames": 720,
+      "fps": 60,
+      "width": 1920,
+      "height": 1080,
+      "creative_approval": "not_recorded"
+    },
+    {
+      "id": "fluid-fan-movement-proof-540p60",
+      "filename": "Fluid_Fan_Movement_Proof_540p60.mp4",
+      "kind": "fixed_camera_movement_proof",
+      "bytes": 1817810,
+      "sha256": "56e78876194a09b228202c869a2e7b4b899d8e479cc17cd4d93848d4cd4c3f9b",
+      "source_commit": "dd38d291fb7c548f82732b6bff94c0eca02748b2",
+      "integration_pr": 111,
+      "saved_delivery_evidence": "project-docs/production-system/evidence/fluid-fan-delivery.json",
+      "library": {
+        "status": "saved",
+        "library_file_id": "libfile_9e52c503c5c08191aec5effb482dbd7a",
+        "file_id": "file_00000000dac881fb801675258bd41e61",
+        "version": 0,
+        "url": "https://chatgpt.com/library?file_id=libfile_9e52c503c5c08191aec5effb482dbd7a&account_id=personal"
+      },
+      "duration_seconds": 12,
+      "frames": 720,
+      "fps": 60,
+      "width": 960,
+      "height": 540,
+      "creative_approval": "not_recorded"
+    },
+    {
+      "id": "fluid-fan-editable-assets",
+      "filename": "Fluid_Fan_Editable_Assets.zip",
+      "kind": "editable_animation_and_exact_render_inputs",
+      "bytes": 21487586,
+      "sha256": "89e4643ebcffa2438fddbeb824f1d62300acd26d93d2732fd32818facf267e2e",
+      "source_commit": "dd38d291fb7c548f82732b6bff94c0eca02748b2",
+      "integration_pr": 111,
+      "saved_delivery_evidence": "project-docs/production-system/evidence/fluid-fan-delivery.json",
+      "library": {
+        "status": "saved",
+        "library_file_id": "libfile_2702039560a08191bdf1f1497759b6d4",
+        "file_id": "file_00000000ab7481f5a352ec75cc6ded86",
+        "version": 0,
+        "url": "https://chatgpt.com/library?file_id=libfile_2702039560a08191bdf1f1497759b6d4&account_id=personal"
+      }
     }
   ],
   "limits": [
@@ -1436,5 +1499,15 @@
     ],
     "maintenance_handoff": "project-docs/production-system/evidence/advanced-dance-maintenance-handoff.json"
   },
-  "current_maintenance_pr": 110
+  "current_maintenance_pr": 110,
+  "fluid_fan_performance": {
+    "recorded_utc": "2026-11-22T22:18:18.073842+00:00",
+    "delivery_evidence": "project-docs/production-system/evidence/fluid-fan-delivery.json",
+    "artifacts": [
+      "fluid-fan-solo-1080p60",
+      "fluid-fan-movement-proof-540p60",
+      "fluid-fan-editable-assets"
+    ],
+    "creative_approval": "not_recorded"
+  }
 }

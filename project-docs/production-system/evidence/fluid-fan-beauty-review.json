@@ -1,0 +1,303 @@
+{
+  "reviewed_at_utc": "2026-11-22T22:16:57.184639+00:00",
+  "reviewer": "fluid_scene_artist",
+  "master": "work/pipeline/fluid-dance-solo/final/master.mp4",
+  "master_sha256": "1d2f59df08e01cdf5e7e8a4855305fccd7c72c90b6f60a52413133f66da257ab",
+  "source_of_images": "Actual decoded final encoded master.mp4; no earlier prototype or revision-3 stills used for this acceptance review.",
+  "method": {
+    "type": "Ordered still-frame visual inspection",
+    "real_time_playback_performed": false,
+    "all_720_frames_visually_inspected": false,
+    "frame_index_basis": "zero-based, 60 frames per second",
+    "full_phrase_frames": [
+      0,
+      30,
+      60,
+      90,
+      120,
+      150,
+      180,
+      210,
+      240,
+      270,
+      300,
+      330,
+      360,
+      390,
+      420,
+      450,
+      480,
+      510,
+      540,
+      570,
+      600,
+      630,
+      660,
+      690,
+      719
+    ],
+    "native_detail_frames": [
+      162,
+      330,
+      468,
+      714
+    ],
+    "unique_decoded_frames": 28,
+    "contact_sheets_inspected": [
+      "work/fluid-dance/decoded-master-review/phrase_1.jpg",
+      "work/fluid-dance/decoded-master-review/phrase_2.jpg",
+      "work/fluid-dance/decoded-master-review/phrase_3.jpg"
+    ],
+    "contact_sheet_method": "Uncropped full frames resized to 640x360, nine chronological frames per page",
+    "native_detail_resolution": [
+      1920,
+      1080
+    ],
+    "master_hash_stable_during_decode": true,
+    "limitations": [
+      "Half-second sampling can miss brief pops, frame-to-frame jitter, foot sliding and transient intersections.",
+      "This review does not establish real-time grace, temporal smoothness or physical accuracy from still images.",
+      "Audio, encoding integrity, frame count and synchronization are handled separately by root technical QA."
+    ]
+  },
+  "sampled_frames": [
+    {
+      "frame": 0,
+      "time_seconds": 0.0,
+      "path": "work/fluid-dance/decoded-master-review/frame_000000.png"
+    },
+    {
+      "frame": 30,
+      "time_seconds": 0.5,
+      "path": "work/fluid-dance/decoded-master-review/frame_000030.png"
+    },
+    {
+      "frame": 60,
+      "time_seconds": 1.0,
+      "path": "work/fluid-dance/decoded-master-review/frame_000060.png"
+    },
+    {
+      "frame": 90,
+      "time_seconds": 1.5,
+      "path": "work/fluid-dance/decoded-master-review/frame_000090.png"
+    },
+    {
+      "frame": 120,
+      "time_seconds": 2.0,
+      "path": "work/fluid-dance/decoded-master-review/frame_000120.png"
+    },
+    {
+      "frame": 150,
+      "time_seconds": 2.5,
+      "path": "work/fluid-dance/decoded-master-review/frame_000150.png"
+    },
+    {
+      "frame": 162,
+      "time_seconds": 2.7,
+      "path": "work/fluid-dance/decoded-master-review/frame_000162.png"
+    },
+    {
+      "frame": 180,
+      "time_seconds": 3.0,
+      "path": "work/fluid-dance/decoded-master-review/frame_000180.png"
+    },
+    {
+      "frame": 210,
+      "time_seconds": 3.5,
+      "path": "work/fluid-dance/decoded-master-review/frame_000210.png"
+    },
+    {
+      "frame": 240,
+      "time_seconds": 4.0,
+      "path": "work/fluid-dance/decoded-master-review/frame_000240.png"
+    },
+    {
+      "frame": 270,
+      "time_seconds": 4.5,
+      "path": "work/fluid-dance/decoded-master-review/frame_000270.png"
+    },
+    {
+      "frame": 300,
+      "time_seconds": 5.0,
+      "path": "work/fluid-dance/decoded-master-review/frame_000300.png"
+    },
+    {
+      "frame": 330,
+      "time_seconds": 5.5,
+      "path": "work/fluid-dance/decoded-master-review/frame_000330.png"
+    },
+    {
+      "frame": 360,
+      "time_seconds": 6.0,
+      "path": "work/fluid-dance/decoded-master-review/frame_000360.png"
+    },
+    {
+      "frame": 390,
+      "time_seconds": 6.5,
+      "path": "work/fluid-dance/decoded-master-review/frame_000390.png"
+    },
+    {
+      "frame": 420,
+      "time_seconds": 7.0,
+      "path": "work/fluid-dance/decoded-master-review/frame_000420.png"
+    },
+    {
+      "frame": 450,
+      "time_seconds": 7.5,
+      "path": "work/fluid-dance/decoded-master-review/frame_000450.png"
+    },
+    {
+      "frame": 468,
+      "time_seconds": 7.8,
+      "path": "work/fluid-dance/decoded-master-review/frame_000468.png"
+    },
+    {
+      "frame": 480,
+      "time_seconds": 8.0,
+      "path": "work/fluid-dance/decoded-master-review/frame_000480.png"
+    },
+    {
+      "frame": 510,
+      "time_seconds": 8.5,
+      "path": "work/fluid-dance/decoded-master-review/frame_000510.png"
+    },
+    {
+      "frame": 540,
+      "time_seconds": 9.0,
+      "path": "work/fluid-dance/decoded-master-review/frame_000540.png"
+    },
+    {
+      "frame": 570,
+      "time_seconds": 9.5,
+      "path": "work/fluid-dance/decoded-master-review/frame_000570.png"
+    },
+    {
+      "frame": 600,
+      "time_seconds": 10.0,
+      "path": "work/fluid-dance/decoded-master-review/frame_000600.png"
+    },
+    {
+      "frame": 630,
+      "time_seconds": 10.5,
+      "path": "work/fluid-dance/decoded-master-review/frame_000630.png"
+    },
+    {
+      "frame": 660,
+      "time_seconds": 11.0,
+      "path": "work/fluid-dance/decoded-master-review/frame_000660.png"
+    },
+    {
+      "frame": 690,
+      "time_seconds": 11.5,
+      "path": "work/fluid-dance/decoded-master-review/frame_000690.png"
+    },
+    {
+      "frame": 714,
+      "time_seconds": 11.9,
+      "path": "work/fluid-dance/decoded-master-review/frame_000714.png"
+    },
+    {
+      "frame": 719,
+      "time_seconds": 11.983333333333333,
+      "path": "work/fluid-dance/decoded-master-review/frame_000719.png"
+    }
+  ],
+  "observations": [
+    {
+      "area": "Framing and silhouette",
+      "status": "acceptable_in_samples",
+      "detail": "Full figure, feet and fan tips remain inside the image throughout the sampled phrase. The uninterrupted camera composition keeps the single performer readable against the lake."
+    },
+    {
+      "area": "Costume continuity",
+      "status": "acceptable_in_samples",
+      "detail": "Lavender bodice and rose/gold skirt now read as continuous fabric. The large pale under-trouser islands seen in revision 3 are absent. The held start, turn, recovery and closing pose preserve the same costume identity."
+    },
+    {
+      "area": "Cloth movement",
+      "status": "visible_in_ordered_samples",
+      "detail": "The skirt trails and flares through the turn and recovery, especially frames 360 through 480, then settles toward the closing pose. No large stretched cloth spike or detached skirt is visible in the reviewed samples."
+    },
+    {
+      "area": "Fans and grips",
+      "status": "acceptable_in_samples",
+      "detail": "Fan hubs stay aligned with the hands in reviewed poses. The surfaces show soft ribs and consistent scalloped rims. Edge-on fans at frame 330 appear as narrow pale profiles without the earlier broad luminous glare."
+    },
+    {
+      "area": "Skin and material hierarchy",
+      "status": "stylized_with_limitations",
+      "detail": "Gold particle skin stays quieter than the early prototype and the fabric is coherent. The head remains an abstract faceless luminous oval, and hand/hub silhouettes are still rounded and simplified."
+    },
+    {
+      "area": "Water reflection",
+      "status": "quiet_with_limitations",
+      "detail": "The distracting bright, chunky painted-dress reflection is absent. The performer now has a very subdued, dark water return rather than a detailed mirrored silk image."
+    },
+    {
+      "area": "Phrase readability",
+      "status": "coherent_in_ordered_samples",
+      "detail": "The selected frames show a continuous arm/fan sequence, a turn, a recovery and a stable final presentation. This is a pose-sequence observation, not a real-time smoothness claim."
+    }
+  ],
+  "remaining_issues": [
+    {
+      "severity": "minor",
+      "area": "Lower hem light overlap",
+      "frames": [
+        468,
+        510
+      ],
+      "detail": "A small gold foot/ankle-shaped light patch is visible through or over the lower skirt near recovery. The stills do not distinguish additive light leakage from a local geometric overlap; it is substantially smaller than the removed upper-skirt islands."
+    },
+    {
+      "severity": "minor",
+      "area": "Bodice shading",
+      "frames": [
+        162,
+        468,
+        714
+      ],
+      "detail": "Some anatomical depressions remain visible beneath the fitted bodice shading. The shading is softer than revision 3 but the garment still follows the base anatomy closely."
+    },
+    {
+      "severity": "style_limit",
+      "area": "Character finish",
+      "frames": [
+        162,
+        330,
+        468,
+        714
+      ],
+      "detail": "Face, hands and feet remain abstract gold particle forms; the film does not demonstrate a fully developed facial performance or finished character asset."
+    },
+    {
+      "severity": "minor",
+      "area": "Fan occlusion",
+      "frames": [
+        150,
+        162,
+        180,
+        210,
+        600
+      ],
+      "detail": "Fans partly cover the face or upper torso in several deliberate poses. The figure remains readable, but facial presentation is limited during these moments."
+    },
+    {
+      "severity": "style_limit",
+      "area": "Reflection fidelity",
+      "frames": [
+        162,
+        330,
+        468,
+        714
+      ],
+      "detail": "The very dark performer reflection is a deliberate cleanup tradeoff and is less physically coherent than a proper reflected opaque garment surface."
+    }
+  ],
+  "decision": {
+    "blocking_visual_defect_observed_in_samples": false,
+    "source_change_requested": false,
+    "scope": "Accepted as this first stylized 12-second film and repeatable-pipeline demonstration, subject to the stated visual-review limits.",
+    "perfection_or_real_time_fluidity_certified": false
+  }
+}

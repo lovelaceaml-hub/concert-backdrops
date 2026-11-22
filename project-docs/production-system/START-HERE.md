@@ -1,8 +1,22 @@
 # Concert production system
 
-## Current delivery and maintenance
+## Current increment: fluid fan performance
 
-Updated November 22, 2026, America/Los_Angeles. The user's current request is to
+The owner requested more graceful movement and a reusable cloud authoring
+environment, then asked to make the video. The new **The Flow of Light** increment
+is a continuous 12-second solo with a fixed-camera movement proof, editable
+Blender body animation, a tested export from saved Blender revisions, and a
+native costume/render path. Owner creative approval is not recorded.
+
+Start with the [current performance handoff](FLUID-FAN-PERFORMANCE.md),
+[executable module guide](../../tools/fluid_dance/README.md), and
+[exact delivery evidence](evidence/fluid-fan-delivery.json). Those records identify
+this version's source, saved assets and review scope. The earlier Advanced Dance
+deliveries below are separate completed increments.
+
+## Previous Advanced Dance delivery and maintenance
+
+Updated November 22, 2026, America/Los_Angeles. The user's preceding request was to
 document, upload, update, review and refactor the completed project. The previous
 AGENTS.md instructions were withdrawn; root AGENTS.md is now a navigation page.
 

@@ -1,15 +1,35 @@
 # Handoff for a new AI or chat
 
 Updated November 22, 2026, America/Los_Angeles. Machine timestamps use UTC.
-The user withdrew the previously provided AGENTS.md instructions and requested
-documentation, upload, update, review and refactoring. Root AGENTS.md now serves
-as navigation. Current conversation directions govern the active work.
+The user withdrew the previously provided AGENTS.md instructions during the
+preceding maintenance increment. Root AGENTS.md serves as navigation. Current
+conversation directions govern the active work.
 
-### Maintenance handoff, November 22
+## Current increment: a more fluid fan performance
+
+The owner supplied the concert promo, the earlier fan ensemble and a live
+performance reference, asked for more graceful movement and better design, and
+then explicitly requested a cloud environment and an actual video. This increment
+implements **The Flow of Light**, a continuous 12-second solo, plus a fixed-camera
+movement proof and editable animation assets.
+
+Use [FLUID-FAN-PERFORMANCE.md](FLUID-FAN-PERFORMANCE.md), the
+[executable guide](../../tools/fluid_dance/README.md), and the
+[delivery evidence](evidence/fluid-fan-delivery.json). A saved Blender edit can now
+be exported without rebuilding its keys, compared with its own evaluation, and
+used by the native renderer with a newly baked costume. This is authored
+animation, not reference-video mocap or a new animator control-rig interface.
+
+Preserve the numerical/visual distinction in those records. The source and
+editable assets support continued work, while owner creative approval and a new
+five-person ensemble remain separate decisions and authoring work. The older
+films below retain their own source identities and review scope.
+
+### Previous maintenance handoff, November 22
 
 The code review, recovery documentation and maintenance checks are complete. The source update is tracked in [PR #110](https://github.com/lovelaceaml-hub/concert-backdrops/pull/110); its live status is the integration authority. [Download the updated project handoff](https://chatgpt.com/library?file_id=libfile_71c3b731d8e08191a81a32aac0f9880d&account_id=personal) for the finished-film links, source identities, repair process and verification scope. The targeted suite ran 64 methods with no failures, including 36 new regression methods; two existing prepared-audio subchecks were skipped in the clean checkout. See [the maintenance review](evidence/advanced-dance-maintenance-review.json) and [saved handoff identity](evidence/advanced-dance-maintenance-handoff.json).
 
-## Finished delivery
+## Previous finished delivery: Advanced Dance
 
 The two revised Advanced Dance films are complete and saved: **Silk in Light**
 is a solo and **Petals in Motion** is a five-person ensemble. Each is 32 seconds
@@ -42,8 +62,9 @@ approval is recorded.
 ## Resume from a fresh checkout
 
 1. Read the current conversation, [STATE.json](STATE.json) and the exact saved
-   delivery record. Current maintenance concerns the completed project's code,
-   documentation and recovery, not an unfinished render queue.
+   [fluid-performance delivery record](evidence/fluid-fan-delivery.json). Its
+   two movie productions and asset save are complete. Earlier maintenance and
+   Advanced Dance records retain their own historical scope.
 2. Recover a needed movie or package from its recorded saved link. Match its
    byte count and SHA-256 against the final delivery record. The module README
    includes an archive verification command that uses only Python's standard

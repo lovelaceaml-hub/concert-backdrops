@@ -1,11 +1,29 @@
 # Delivered films, studies and model previews
 
-## Latest project handoff
+## Latest delivery: The Flow of Light
+
+The new continuous 12-second solo, fixed-camera motion proof and editable
+animation assets are complete and saved. The presentation is native 1920 × 1080
+at 60 fps; the proof is 960 × 540 at the same frame rate. Both contain 720 frames
+and a soundtrack. Technical QA passed with no errors or warnings. Sampled visual
+review and owner approval have separate scope; no owner approval is recorded.
+
+| Saved file | Contents |
+| --- | --- |
+| [The_Flow_of_Light_1080p60.mp4](https://chatgpt.com/library?file_id=libfile_95c6ea34d15881918c2f4a05d8a2db31&account_id=personal) | Finished solo presentation |
+| [Fluid_Fan_Movement_Proof_540p60.mp4](https://chatgpt.com/library?file_id=libfile_9e52c503c5c08191aec5effb482dbd7a&account_id=personal) | Fixed-camera movement review |
+| [Fluid_Fan_Editable_Assets.zip](https://chatgpt.com/library?file_id=libfile_2702039560a08191bdf1f1497759b6d4&account_id=personal) | Editable body animation and exact reusable render inputs |
+
+Use the [current handoff](FLUID-FAN-PERFORMANCE.md),
+[exact delivery record](evidence/fluid-fan-delivery.json), and
+[PR #111](https://github.com/lovelaceaml-hub/concert-backdrops/pull/111).
+
+## Previous maintenance handoff
 
 [Advanced_Dance_Maintenance_Handoff_2026-11-22.md](https://chatgpt.com/library?file_id=libfile_71c3b731d8e08191a81a32aac0f9880d&account_id=personal) records the completed maintenance review, source update, saved-film links and recovery process. Source integration: [PR #110](https://github.com/lovelaceaml-hub/concert-backdrops/pull/110). This is one additional documentation artifact; the original nine film-delivery artifacts below retain their identities. See [the exact saved handoff record](evidence/advanced-dance-maintenance-handoff.json).
 
 <!-- advanced-dance-final-delivery:begin -->
-## Latest delivery: Advanced Dance
+## Previous delivery: Advanced Dance
 
 Both revised dance films are complete, technically passed, reviewed within the recorded scope and saved. Each is a 32-second native 1920 x 1080 movie at 60 fps. The new complete ten-film package contains these two revisions and the exact previous films 03 through 10. The overview, README, full motion/anatomy evidence, technical report, checksums and packaging receipt are saved. No new exact-output owner approval is recorded.
 
@@ -43,8 +61,8 @@ or change the archived package. No new Drive-copy claim is added here.
 
 The following entries preserve earlier deliveries and their own review scope.
 Statements about an earlier "current" performance or next work belong to that
-entry's production date. The Advanced Dance collection above is the latest
-film delivery.
+entry's production date. The Advanced Dance collection above remains the latest
+complete ten-film collection; the fluid solo is a separate newer increment.
 
 <!-- cinematic-ten-final-delivery:begin -->
 ## Previous delivery: Cinematic Ten
