@@ -16,8 +16,8 @@
     "allow_stock_footage": false,
     "random_seed": 20261121,
     "threads": 1,
-    "render_workers": 2,
-    "render_chunk_frames": 300,
+    "render_workers": 3,
+    "render_chunk_frames": 50,
     "render_timeout_seconds": 7200
   },
   "quality": {

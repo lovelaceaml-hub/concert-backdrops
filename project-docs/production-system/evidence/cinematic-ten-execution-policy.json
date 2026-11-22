@@ -1,0 +1,12 @@
+{
+  "film_id": 10,
+  "picture_fingerprint_before_and_after": "902a6efda24072d93e7206e7eaa690f995807a39453029e54114e292e828c00e",
+  "verified_frames_reused": 197,
+  "workers": 3,
+  "chunk_frames": 50,
+  "software_threads_per_worker": 1,
+  "initialization_seconds_measured": 4.561,
+  "peak_rss_kib_measured": 1571196,
+  "reason": "Balance the remaining work after retained partial frames without changing any picture input. Bounded supplemental jobs select at most50frames to use one worker.",
+  "picture_quality_changed": false
+}

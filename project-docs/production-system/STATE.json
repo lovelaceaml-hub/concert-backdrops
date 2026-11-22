@@ -459,14 +459,17 @@
     },
     "additional_partial_job": {
       "project_id": "cinematic-ten-10",
-      "selected_frames": "47:197",
-      "status": "bounded_single_worker_resume_with_1GiB_available_memory_guard",
-      "earlier_verified_frames": 47
+      "start_frame": 197,
+      "block_frames": 50,
+      "max_blocks": 4,
+      "status": "bounded_single_worker_blocks_with_memory_guard",
+      "earlier_verified_frames": 197
     },
     "saved_delivery_evidence": "project-docs/production-system/evidence/cinematic-ten-library-delivery.json",
     "frozen_input_evidence": "project-docs/production-system/evidence/cinematic-ten-frozen-inputs.json",
     "bird_supplemental_frames_verified": 600,
     "drive_copy": "Film09 optional copy blocked by automatic approval review; no new films copied to Drive. Saved downloads continue.",
-    "final_review_evidence": "project-docs/production-system/evidence/cinematic-ten-final-review.json"
+    "final_review_evidence": "project-docs/production-system/evidence/cinematic-ten-final-review.json",
+    "execution_policy_evidence": "project-docs/production-system/evidence/cinematic-ten-execution-policy.json"
   }
 }
