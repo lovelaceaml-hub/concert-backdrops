@@ -1,0 +1,35 @@
+{
+  "filename": "02_Petals_in_Motion_Advanced_Dance_1080p60.mp4",
+  "path": "work/advanced-dance/delivery/02_Petals_in_Motion_Advanced_Dance_1080p60.mp4",
+  "bytes": 76939037,
+  "sha256": "8bedc48bc2586d903f5aefcb8bfea89ecad58359326ffdc27f5988b0f573540d",
+  "status": "saved",
+  "library_file_id": "libfile_bdf3a9b4e1f481918e768953be62a279",
+  "file_id": "file_00000000e4c0822f8aeacb6abe26103c",
+  "version": 0,
+  "url": "https://chatgpt.com/library?file_id=libfile_bdf3a9b4e1f481918e768953be62a279&account_id=personal",
+  "source_picture_commit": "254414bc0356171f7d5ad89361c75d45fd01a407",
+  "technical_passed": true,
+  "final_encoded_visual_review": {
+    "mode": "ensemble",
+    "master_sha256": "8bedc48bc2586d903f5aefcb8bfea89ecad58359326ffdc27f5988b0f573540d",
+    "bytes": 76939037,
+    "source_fingerprint": "ec76277c753ba288fb9a2d6634a1f45e4741747f33baad3d237e7be5ff1f272d",
+    "technical_passed": true,
+    "native_frames": 1920,
+    "duration_seconds": 32,
+    "fps": 60,
+    "final_review": {
+      "path": "work/advanced-dance/qa/final/independent-ensemble-final-encoded-review.json",
+      "sha256": "4da1581fee14ac24821327c1e254ad6217352be061c6ea6bcd54f07859204bb0",
+      "bytes": 25441,
+      "include_full_json_in_final_package": true
+    },
+    "distinct_decoded_frames": 135,
+    "inspected_sheets": 22,
+    "sampled_visual_blockers": 0,
+    "owner_approval": false
+  },
+  "saved_utc": "2026-11-22T10:21:38.162872+00:00",
+  "owner_approval": "not_recorded"
+}

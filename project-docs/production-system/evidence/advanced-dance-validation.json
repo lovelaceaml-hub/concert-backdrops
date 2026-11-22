@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
-  "recorded_utc": "2026-11-22T08:41:49.548332+00:00",
+  "recorded_utc": "2026-11-22T10:15:17.909206+00:00",
   "increment": "advanced-dance",
-  "status": "numeric_checks_passed_with_visual_review_pending",
+  "status": "numeric_checks_and_scoped_final_movie_reviews_complete",
   "picture_source": {
     "commit": "254414bc0356171f7d5ad89361c75d45fd01a407",
     "frozen_inputs_report": "frozen_picture_inputs",
@@ -35,10 +35,52 @@
     "ensemble_fan_other_body_proxy_issues": 0,
     "native_cache_frame_comparison": "passed",
     "exact_fan_trail_caches": 2,
-    "full_motion_visual_review": "pending_root_evidence",
-    "final_movie_completion_claimed": false,
-    "final_encoded_movie_validation": "not_recorded_here",
-    "owner_approval": false
+    "full_motion_visual_review": "Dense ordered windows and full-duration sampled overviews complete",
+    "final_movie_completion_claimed": true,
+    "final_encoded_movie_validation": "Both exact 1080p60 masters technically passed and sampled visually",
+    "owner_approval": false,
+    "final_movies": {
+      "solo": {
+        "mode": "solo",
+        "master_sha256": "8f02ee2a72a128198771cfb8f3d3dabc0b90716abdb4c028d19fa462b6a6edac",
+        "bytes": 57396334,
+        "source_fingerprint": "437e7420ab538baf3608b879ca371a335ffbbaa09e77444cce7103485b5801ed",
+        "technical_passed": true,
+        "native_frames": 1920,
+        "duration_seconds": 32,
+        "fps": 60,
+        "final_review": {
+          "path": "work/advanced-dance/qa/final/independent-solo-final-encoded-review.json",
+          "sha256": "d923351a3dd1390d6bb0f05abebe6dba4600aec87746b92ecd9ddf627e34a4b2",
+          "bytes": 8935,
+          "include_full_json_in_final_package": true
+        },
+        "distinct_decoded_frames": 150,
+        "inspected_sheets": 29,
+        "sampled_visual_blockers": 0,
+        "owner_approval": false
+      },
+      "ensemble": {
+        "mode": "ensemble",
+        "master_sha256": "8bedc48bc2586d903f5aefcb8bfea89ecad58359326ffdc27f5988b0f573540d",
+        "bytes": 76939037,
+        "source_fingerprint": "ec76277c753ba288fb9a2d6634a1f45e4741747f33baad3d237e7be5ff1f272d",
+        "technical_passed": true,
+        "native_frames": 1920,
+        "duration_seconds": 32,
+        "fps": 60,
+        "final_review": {
+          "path": "work/advanced-dance/qa/final/independent-ensemble-final-encoded-review.json",
+          "sha256": "4da1581fee14ac24821327c1e254ad6217352be061c6ea6bcd54f07859204bb0",
+          "bytes": 25441,
+          "include_full_json_in_final_package": true
+        },
+        "distinct_decoded_frames": 135,
+        "inspected_sheets": 22,
+        "sampled_visual_blockers": 0,
+        "owner_approval": false
+      }
+    }
   },
   "source_scope": {
     "kinematics": "The six source-hash maps and startup costume hashes are retained exactly as recorded. The kinematic audit evaluates score, anatomy, clock, rig asset and engine final FK, and does not simulate cloth. No startup hash was replaced with a later file hash in this ledger.",
@@ -922,8 +964,49 @@
     }
   ],
   "visual_review": {
-    "full_continuous_motion": "pending_root_evidence",
-    "final_encoded_movies": "not_validated_in_this_record",
+    "full_continuous_motion": "Desktop playback spot observations plus ordered native/decoded windows; no claim of continuous every-frame perceptual inspection",
+    "final_encoded_movies": {
+      "solo": {
+        "mode": "solo",
+        "master_sha256": "8f02ee2a72a128198771cfb8f3d3dabc0b90716abdb4c028d19fa462b6a6edac",
+        "bytes": 57396334,
+        "source_fingerprint": "437e7420ab538baf3608b879ca371a335ffbbaa09e77444cce7103485b5801ed",
+        "technical_passed": true,
+        "native_frames": 1920,
+        "duration_seconds": 32,
+        "fps": 60,
+        "final_review": {
+          "path": "work/advanced-dance/qa/final/independent-solo-final-encoded-review.json",
+          "sha256": "d923351a3dd1390d6bb0f05abebe6dba4600aec87746b92ecd9ddf627e34a4b2",
+          "bytes": 8935,
+          "include_full_json_in_final_package": true
+        },
+        "distinct_decoded_frames": 150,
+        "inspected_sheets": 29,
+        "sampled_visual_blockers": 0,
+        "owner_approval": false
+      },
+      "ensemble": {
+        "mode": "ensemble",
+        "master_sha256": "8bedc48bc2586d903f5aefcb8bfea89ecad58359326ffdc27f5988b0f573540d",
+        "bytes": 76939037,
+        "source_fingerprint": "ec76277c753ba288fb9a2d6634a1f45e4741747f33baad3d237e7be5ff1f272d",
+        "technical_passed": true,
+        "native_frames": 1920,
+        "duration_seconds": 32,
+        "fps": 60,
+        "final_review": {
+          "path": "work/advanced-dance/qa/final/independent-ensemble-final-encoded-review.json",
+          "sha256": "4da1581fee14ac24821327c1e254ad6217352be061c6ea6bcd54f07859204bb0",
+          "bytes": 25441,
+          "include_full_json_in_final_package": true
+        },
+        "distinct_decoded_frames": 135,
+        "inspected_sheets": 22,
+        "sampled_visual_blockers": 0,
+        "owner_approval": false
+      }
+    },
     "scoped_static_review": {
       "report": "scoped_static_costume_review",
       "status_as_recorded": "scoped_native_review_pass",
@@ -994,7 +1077,18 @@
       "total_count": 22,
       "scope": "Static native composition, hand, costume and foot details. No continuous playback or final encoded review claimed.",
       "sampled_image_blockers": 0
-    }
+    },
+    "solo_proof_review": {
+      "native_or_decoded_samples": 99,
+      "report": "solo_proof_review"
+    },
+    "ensemble_proof_review": {
+      "native_window_frames": 257,
+      "decoded_overview_samples": 65,
+      "report": "ensemble_proof_review"
+    },
+    "desktop_playback": "desktop_playback",
+    "audio_assessment": "Technical decoding, stream, cadence and peak checks; no listening review claimed"
   },
   "reproduction": {
     "guide": "repair_process_readme",
@@ -1021,7 +1115,7 @@
     "Numeric passes, scoped static review, continuous playback, final encoded review and owner approval remain distinct."
   ],
   "package_evidence": {
-    "status": "pending_final_movies_and_packaging",
+    "status": "ready_for_verified_packaging",
     "policy": "Embed the original full JSON report content, retaining its recorded source-byte hash, in the final delivery evidence. Keep large NPZ/NPY captures and per-time data out of Git; this ledger summarizes their measured results and exact identities.",
     "full_json_reports": [
       "frozen_picture_inputs",
@@ -1054,8 +1148,26 @@
       "historical_cloth_ensemble2",
       "historical_cloth_ensemble3",
       "historical_cloth_ensemble4",
-      "independent_native_review"
-    ]
+      "independent_native_review",
+      "solo_assembly",
+      "solo_pipeline",
+      "solo_render",
+      "solo_final_encoded_review",
+      "solo_even_proof",
+      "ensemble_assembly",
+      "ensemble_pipeline",
+      "ensemble_render",
+      "ensemble_final_encoded_review",
+      "ensemble_even_proof",
+      "solo_proof_review",
+      "ensemble_proof_review",
+      "desktop_playback",
+      "solo_desktop_playback",
+      "execution_policy",
+      "final_ensemble_execution",
+      "render_completion"
+    ],
+    "record_scope": "Validated inputs immediately before packaging. The subsequent packaging and save receipts record the resulting archive and download identities."
   },
   "artifacts": {
     "frozen_picture_inputs": {
@@ -1372,14 +1484,116 @@
     },
     "repair_process_readme": {
       "path": "tools/advanced_dance/README.md",
-      "sha256": "1fe241eb75a7694da746f42de59a4fa3ecd01fdbb52ab17724a2a709bb7a8657",
-      "bytes": 16223,
+      "sha256": "01f2ea2160ea676fe4542e83cc6217f5cc2e4ab6377b1004846294942d6c3411",
+      "bytes": 17134,
       "include_full_json_in_final_package": false
     },
     "independent_native_review": {
       "path": "work/advanced-dance/qa/final/independent-visual-review.json",
       "sha256": "f01f3f02c4c0c71fb2877ed4f6ee1736fee160e943a65c6d63e08ff11273013b",
       "bytes": 15458,
+      "include_full_json_in_final_package": true
+    },
+    "solo_assembly": {
+      "path": "work/pipeline/advanced-dance-solo/final/master.json",
+      "sha256": "fda4d396287f3f0f2962886155033aec74624ab52d8f8242398903d2bc855a17",
+      "bytes": 2271,
+      "include_full_json_in_final_package": true
+    },
+    "solo_pipeline": {
+      "path": "work/pipeline/advanced-dance-solo/final/qa.json",
+      "sha256": "c4d97db89fbcb790ad565942500d156824606074936fdbdc0a55b443431ca099",
+      "bytes": 15160,
+      "include_full_json_in_final_package": true
+    },
+    "solo_render": {
+      "path": "work/pipeline/advanced-dance-solo/final/shots/performance/receipt.json",
+      "sha256": "ace3dda5aabb95dcc5000f7c6164a54a3c036d3690fe155d0486849495001fae",
+      "bytes": 192661,
+      "include_full_json_in_final_package": true
+    },
+    "solo_final_encoded_review": {
+      "path": "work/advanced-dance/qa/final/independent-solo-final-encoded-review.json",
+      "sha256": "d923351a3dd1390d6bb0f05abebe6dba4600aec87746b92ecd9ddf627e34a4b2",
+      "bytes": 8935,
+      "include_full_json_in_final_package": true
+    },
+    "solo_even_proof": {
+      "path": "work/advanced-dance/proofs/solo-437e7420ab53/Even_Frame_Proof_1080p30.json",
+      "sha256": "8d6c40aade1910e2d5e108c1bdb1856b01b4e3fd7cf4b5c5b13a9fb23cdb367a",
+      "bytes": 152503,
+      "include_full_json_in_final_package": true
+    },
+    "ensemble_assembly": {
+      "path": "work/pipeline/advanced-dance-ensemble/final/master.json",
+      "sha256": "57ca201fe331484e8b2fe2092cf5d39dce31f91f7d5c7cb2f7964d75d3a04719",
+      "bytes": 2276,
+      "include_full_json_in_final_package": true
+    },
+    "ensemble_pipeline": {
+      "path": "work/pipeline/advanced-dance-ensemble/final/qa.json",
+      "sha256": "310713ce8e2534abe448e820d61279ce14fc260060275864108565b9a0f2dc61",
+      "bytes": 15154,
+      "include_full_json_in_final_package": true
+    },
+    "ensemble_render": {
+      "path": "work/pipeline/advanced-dance-ensemble/final/shots/performance/receipt.json",
+      "sha256": "c362a9292a1113db2bfc38439b9a226f800c189677904fc63a5d09a5bc436a7b",
+      "bytes": 192661,
+      "include_full_json_in_final_package": true
+    },
+    "ensemble_final_encoded_review": {
+      "path": "work/advanced-dance/qa/final/independent-ensemble-final-encoded-review.json",
+      "sha256": "4da1581fee14ac24821327c1e254ad6217352be061c6ea6bcd54f07859204bb0",
+      "bytes": 25441,
+      "include_full_json_in_final_package": true
+    },
+    "ensemble_even_proof": {
+      "path": "work/advanced-dance/proofs/ensemble-ec76277c753b/Even_Frame_Proof_1080p30.json",
+      "sha256": "15a27dc9dbf3875cd212b20dd092c373854f25a0dd642af8377ca553941f96e8",
+      "bytes": 152506,
+      "include_full_json_in_final_package": true
+    },
+    "solo_proof_review": {
+      "path": "work/advanced-dance/qa/final/independent-moving-review.json",
+      "sha256": "0c1edddad1a7de4b25c8fc6496e9996600c2ebea37c42764c3f4e6b8eeba9a04",
+      "bytes": 36494,
+      "include_full_json_in_final_package": true
+    },
+    "ensemble_proof_review": {
+      "path": "work/advanced-dance/qa/final/ensemble-moving-review.json",
+      "sha256": "55fb9763b892d0f5079a6a051d63aa9fca9976ebe539f33a5dc896ea390d2483",
+      "bytes": 408232,
+      "include_full_json_in_final_package": true
+    },
+    "desktop_playback": {
+      "path": "work/advanced-dance/qa/final/desktop-playback-notes.json",
+      "sha256": "334fa6a16da79525c4255a5676aeb1dcb99d5216610df7430d09f40e42fbb6d3",
+      "bytes": 6393,
+      "include_full_json_in_final_package": true
+    },
+    "solo_desktop_playback": {
+      "path": "work/advanced-dance/qa/final/solo-desktop-playback-review.json",
+      "sha256": "d122d7d8063bf5bac058555c9ada18ad1b4e98e62da7accad07a0dc4410d5aa3",
+      "bytes": 3346,
+      "include_full_json_in_final_package": true
+    },
+    "execution_policy": {
+      "path": "project-docs/production-system/evidence/advanced-dance-execution-policy.json",
+      "sha256": "356a5c7595b52a7159e1dc8955671ab6ffb79f48601bbba735ab532f74cd927c",
+      "bytes": 6214,
+      "include_full_json_in_final_package": true
+    },
+    "final_ensemble_execution": {
+      "path": "work/advanced-dance/execution/ensemble-final-run.json",
+      "sha256": "b3bcd5b630d80268ae90549dbd31318ee67fd353d7f9035f503a2c55cd834526",
+      "bytes": 923,
+      "include_full_json_in_final_package": true
+    },
+    "render_completion": {
+      "path": "project-docs/production-system/evidence/advanced-dance-render-completion.json",
+      "sha256": "76cd607e02661f302e20772f94f0db40f00e1cd2a9d9c92513f67b9c80eb9e0e",
+      "bytes": 2329,
       "include_full_json_in_final_package": true
     }
   }

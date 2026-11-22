@@ -81,14 +81,13 @@
     1080
   ],
   "schema_version": 1,
-  "status": "three_worker_final_native_ensemble_render",
+  "status": "final_native_render_completed",
   "temporal_samples": 2,
   "final_master_run": {
-    "observed_utc": "2026-11-22T09:39:09.772092+00:00",
     "session_id": 47879,
     "schema_version": 1,
     "mode": "ensemble",
-    "status": "running",
+    "status": "completed",
     "started_utc": "2026-11-22T09:35:13.251082+00:00",
     "command": [
       "./scripts/video",
@@ -106,7 +105,10 @@
     "reused_odd_frames": 2,
     "missing_native_frames_at_start": 958,
     "log": "work/advanced-dance/ensemble-final-render.log",
-    "scope": "Complete native 1080p60 ensemble using identical frozen picture inputs and exact existing frames."
+    "scope": "Complete native 1080p60 ensemble using identical frozen picture inputs and exact existing frames.",
+    "exit_code": 0,
+    "completed_utc": "2026-11-22T10:11:48.386116+00:00",
+    "elapsed_seconds": 2195.134
   },
   "ensemble_even_proof": {
     "status": "technical_passed",
@@ -116,5 +118,6 @@
     "fps": 30,
     "duration_seconds": 32,
     "source_fingerprint": "ec76277c753ba288fb9a2d6634a1f45e4741747f33baad3d237e7be5ff1f272d"
-  }
+  },
+  "completed_utc": "2026-11-22T10:15:17.909206+00:00"
 }

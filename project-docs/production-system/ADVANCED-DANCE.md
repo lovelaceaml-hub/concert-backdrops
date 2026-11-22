@@ -13,16 +13,9 @@ The frozen corrected picture source is
 `254414bc0356171f7d5ad89361c75d45fd01a407`, branch
 `creative/advanced-choreography-20261121`,
 [PR #109](https://github.com/lovelaceaml-hub/concert-backdrops/pull/109).
-The solo 1080p60 master is complete, technically passed, sampled in 150 encoded
-frames and saved. Its exact identity and review are in
-`evidence/advanced-dance-solo-delivery.json`. The ensemble full-duration even-frame
-proof has passed timing and decoding checks. Independent review covered 257 native
-window frames and 65 decoded overview samples with no sampled blocker. Its final
-60 fps master is now rendering the missing native frames with three workers in
-64-frame batches. The complete ten-film package remains pending. Earlier interrupted
-workers were recovered without changing pictures; see
-`evidence/advanced-dance-execution-policy.json`. No new exact-output owner
-approval is recorded. Current status belongs to `STATE.json`.
+Both revised dance films are complete, technically passed, reviewed within the recorded scope and saved. Each is a 32-second native 1920 x 1080 movie at 60 fps. The new complete ten-film package contains these two revisions and the exact previous films 03 through 10. The overview, README, full motion/anatomy evidence, technical report, checksums and packaging receipt are saved. No new exact-output owner approval is recorded.
+
+[Solo](https://chatgpt.com/library?file_id=libfile_5efbae79a5d88191b729f3726b94d117&account_id=personal), [ensemble](https://chatgpt.com/library?file_id=libfile_bdf3a9b4e1f481918e768953be62a279&account_id=personal) and [complete package](https://chatgpt.com/library?file_id=libfile_02d1b9fcefdc8191ab72741639bd1fb2&account_id=personal). Exact identities are in `evidence/advanced-dance-final-delivery.json`.
 
 ## Choreography and visual treatment
 
@@ -97,14 +90,20 @@ for each revised film, full H.264/AAC decode, exact frame cadence, Rec.709 color
 and stereo 48 kHz audio. The eight retained films are hash-verified and copied
 without re-encoding.
 
-## Evidence at this checkpoint
+## Final evidence
 
-- `evidence/advanced-dance-first-checkpoint-inputs.json` preserves the initial
-  authored picture snapshot.
-- `evidence/advanced-dance-frozen-inputs.json` pins the corrected 236 picture
-  dependencies.
-- `evidence/advanced-dance-unit-checkpoint.json` records the 28 focused tests
-  and the earlier 114 existing pipeline tests.
-- Final movement, costume, visual and exact delivered-media evidence will be
-  recorded at completion. Intermediate passed checks do not claim a final
-  movie or owner approval.
+- `evidence/advanced-dance-frozen-inputs.json` pins the corrected 236 picture dependencies.
+- `evidence/advanced-dance-unit-checkpoint.json` records 28 focused and 114 earlier pipeline checks.
+- `evidence/advanced-dance-validation.json` binds the full motion, costume, repair and review evidence.
+- The separate solo and ensemble proof and final encoded review records preserve their exact samples.
+- `evidence/advanced-dance-render-completion.json` records completion of the two native render jobs.
+- `evidence/advanced-dance-final-delivery.json` records every exact saved output and the full collection.
+
+The new masters passed full technical decoding and timing checks. The solo final
+encoded review inspected 150 distinct frames. The ensemble final encoded review
+inspected 135 distinct frames, as recorded in its immutable report. Dense windows include the fast hand passages,
+head/fan proximity and actual camera cuts. Desktop playback observations are
+scoped separately. A small conservative head-capsule proximity result and detail
+hidden by costume or overlapping fans remain explicit limitations. These records
+do not certify physical balance, every hidden surface, audio listening or owner
+approval. The delivered QA file embeds the complete bound reports.

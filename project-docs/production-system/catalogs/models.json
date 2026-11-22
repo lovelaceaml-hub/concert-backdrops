@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_local_date": "2026-11-21",
+  "updated_local_date": "2026-11-22",
   "status_policy": "source_available, implemented_study_in_review and owner_approved are distinct. Approval belongs to a versioned output, not an entire family.",
   "source_revision_policy": "Current checkout source is hashed in each render. Approved reference source pins are in references.json.",
   "generated_raster_exclusions": [
@@ -904,7 +904,7 @@
       "description": "Native articulated performer with constrained forearm/wrist and progressive finger grip; full flared simulated skirt over complete fitted clothing.",
       "source_commit": "254414bc0356171f7d5ad89361c75d45fd01a407",
       "code_only_eligible": true,
-      "status": "implemented_and_numerically_checked; native_film_rendering",
+      "status": "implemented_checked_rendered_and_saved_in_two_final_films",
       "creative_approval": "not_recorded",
       "project_ids": [
         "advanced-dance-solo",
@@ -914,7 +914,8 @@
       "coordinates": {
         "units": "metres",
         "up_axis": "+Y"
-      }
+      },
+      "final_movie_evidence": "project-docs/production-system/evidence/advanced-dance-final-delivery.json"
     },
     {
       "id": "props.advanced-performance-fan",
@@ -925,7 +926,7 @@
       "description": "Dense pleated fan with opening ribs and transverse grip, driven by the final posed palm.",
       "source_commit": "254414bc0356171f7d5ad89361c75d45fd01a407",
       "code_only_eligible": true,
-      "status": "implemented_and_numerically_checked; native_film_rendering",
+      "status": "implemented_checked_rendered_and_saved_in_two_final_films",
       "creative_approval": "not_recorded",
       "project_ids": [
         "advanced-dance-solo",
@@ -935,7 +936,8 @@
       "coordinates": {
         "units": "metres",
         "up_axis": "+Y"
-      }
+      },
+      "final_movie_evidence": "project-docs/production-system/evidence/advanced-dance-final-delivery.json"
     },
     {
       "id": "effects.advanced-dance-light",
@@ -947,7 +949,7 @@
       "description": "Causal fan-tip trails and released sparks, landing accents and coordinated stage light architecture.",
       "source_commit": "254414bc0356171f7d5ad89361c75d45fd01a407",
       "code_only_eligible": true,
-      "status": "implemented_and_numerically_checked; native_film_rendering",
+      "status": "implemented_checked_rendered_and_saved_in_two_final_films",
       "creative_approval": "not_recorded",
       "project_ids": [
         "advanced-dance-solo",
@@ -957,7 +959,8 @@
       "coordinates": {
         "units": "metres",
         "up_axis": "+Y"
-      }
+      },
+      "final_movie_evidence": "project-docs/production-system/evidence/advanced-dance-final-delivery.json"
     }
   ]
 }

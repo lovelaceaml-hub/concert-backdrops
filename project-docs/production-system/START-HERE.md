@@ -1,13 +1,12 @@
 # Concert production system
 
-## Active increment: Advanced Dance, PR #109
+## Latest delivery: Advanced Dance, PR #109
 
-The current owner request is a faster, fully choreographed solo and five-person fan performance, with articulated hands, grounded footwork, sparkles and coordinated lighting. The new source is in `tools/advanced_dance/` and the projects are `advanced-dance-solo` and `advanced-dance-ensemble`. Each performance lasts 32 seconds with 1,920 native 1080p60 frames. Read the module README for the executable repair and rendering process.
+Both revised dance films are complete, technically passed, reviewed within the recorded scope and saved. Each is a 32-second native 1920 x 1080 movie at 60 fps. The new complete ten-film package contains these two revisions and the exact previous films 03 through 10. The overview, README, full motion/anatomy evidence, technical report, checksums and packaging receipt are saved. No new exact-output owner approval is recorded.
 
-The corrected picture source is frozen at `254414bc0356171f7d5ad89361c75d45fd01a407` on `creative/advanced-choreography-20261121`, [PR #109](https://github.com/lovelaceaml-hub/concert-backdrops/pull/109). Both observed repairs are complete: inner ensemble canon arm paths and skirt constraint convergence. All six dense motion audits and full costume checks pass their numeric gates; intentional fast-hand review flags remain. The solo 1080p60 master is complete, passed technical checks, received a 150-frame encoded review and is saved; recover its exact identity from evidence/advanced-dance-solo-delivery.json. The full ensemble even-frame proof is complete and reviewed in 257 ordered native window frames plus 65 decoded overview samples. Its missing native frames for the final 60 fps master are rendering with three workers in 64-frame batches. The current session checkpoint and invocation are recorded in STATE.json; refresh the real receipts before acting. No new exact-output owner approval is recorded. Read [ADVANCED-DANCE.md](ADVANCED-DANCE.md) and `STATE.json`; historical queue records are not live process telemetry.
+[Solo film](https://chatgpt.com/library?file_id=libfile_5efbae79a5d88191b729f3726b94d117&account_id=personal) | [Five-person ensemble](https://chatgpt.com/library?file_id=libfile_bdf3a9b4e1f481918e768953be62a279&account_id=personal) | [Complete ten-film package](https://chatgpt.com/library?file_id=libfile_02d1b9fcefdc8191ab72741639bd1fb2&account_id=personal)
 
-Complete this authorized increment through finished films and a new complete ten-film package. Replace only the two dance slots; verify and retain the prior eight movies byte-for-byte. Preserve all historical outputs below. No new Drive-copy authorization or successful Drive-copy claim is implied.
-
+Frozen picture source: `254414bc0356171f7d5ad89361c75d45fd01a407`. Integration authority: [PR #109](https://github.com/lovelaceaml-hub/concert-backdrops/pull/109). Read `project-docs/production-system/evidence/advanced-dance-final-delivery.json`, current `STATE.json` and `ADVANCED-DANCE.md` for exact identities and review limits. The repair and reproduction commands are in `tools/advanced_dance/README.md`. Recover the saved masters; do not restart this completed render queue. Historical records below retain their original scope.
 
 Current handoff: Cinematic Ten final delivery, 2026-11-21, America/Los_Angeles. Machine observations use UTC.
 

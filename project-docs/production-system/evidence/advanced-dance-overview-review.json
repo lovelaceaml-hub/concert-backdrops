@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "status": "reviewed_no_layout_blocker",
+  "recorded_utc": "2026-11-22T10:21:30.714118+00:00",
+  "reviewer": "root",
+  "image": {
+    "path": "work/advanced-dance/delivery/Ten_Cinematic_Films_Advanced_Dance_Overview.jpg",
+    "bytes": 3244143,
+    "sha256": "c8a2c8be415c95a6ce71362feab63d491c44b4cedff6271ba0818153695c4b81"
+  },
+  "method": "Visual inspection of the complete ten-row overview image.",
+  "film_rows_reviewed": 10,
+  "decoded_samples_per_row": 4,
+  "total_samples_visible": 40,
+  "observations": [
+    "All ten film rows and forty sample cells are present.",
+    "Titles and row-specific timestamps are readable, including the revised 32-second films and retained 20-second films.",
+    "No blank sample cells or clipped row labels were observed.",
+    "The two revised dance rows show changing poses; the remaining film families remain visually distinct."
+  ],
+  "scope_limit": "Contact sheet content and layout review only. This record does not add continuous temporal review of the eight retained films.",
+  "owner_approval": "not_recorded"
+}
