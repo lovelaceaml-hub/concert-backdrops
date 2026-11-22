@@ -2,10 +2,10 @@
   "schema_version": 1,
   "updated_local_date": "2026-11-21",
   "timezone": "America/Los_Angeles",
-  "status": "fourteen_media_and_exact_historical_handoff_uploaded_and_raw_bytes_verified",
+  "status": "all_ten_final_movies_and_five_support_artifacts_checked_and_saved",
   "approved_references_catalog": "project-docs/production-system/catalogs/references.json",
   "historical_baseline_source_commit": "673f68785c36b57d55d05129ee5549efe6352c60",
-  "current_integration_pr": 106,
+  "current_integration_pr": 108,
   "items": [
     {
       "id": "consideration-revised-15s",
@@ -511,6 +511,501 @@
         "raw_bytes_verified": true,
         "evidence": "project-docs/production-system/evidence/fan-trio-drive-delivery.json"
       }
+    },
+    {
+      "id": "cinematic-ten-01",
+      "project_id": "cinematic-ten-01",
+      "filename": "01_Silk_in_Light_1080p60.mp4",
+      "title": "Silk in Light",
+      "kind": "final_cinematic_short",
+      "description": "Original twenty-second native concert 3D film; full technical decode passed and scoped encoded visual review found no blocking defect.",
+      "bytes": 35123251,
+      "sha256": "d055202a4496c219bd5f827c507d91bf6d6e877955c36e8650993fe0d7a7b16d",
+      "width": 1920,
+      "height": 1080,
+      "fps": 60,
+      "frames": 1200,
+      "seconds": 20,
+      "temporal_samples": 2,
+      "picture_source_commit": "df4fc478116d3f0e34a85d2166097fbda55911bf",
+      "picture_fingerprint": "00c5a6a5b88e76eecc8b8f696511165d199c5a860f8607e25000719dbfac6ab6",
+      "production_command": "./scripts/video produce cinematic-ten-01 --quality final",
+      "technical_evidence": "project-docs/production-system/evidence/cinematic-ten-complete-review.json",
+      "visual_evidence": "project-docs/production-system/evidence/cinematic-ten-complete-review.json",
+      "saved_delivery_evidence": "project-docs/production-system/evidence/cinematic-ten-final-delivery.json",
+      "creative_approval": "not_recorded",
+      "visual_review_scope": "Eight decoded timeline samples at frames 0,120,300,480,660,840,1020,1199, plus native decoded opening and last frame. This is sampled visual review, not complete real-time playback, biomechanical validation or owner approval.",
+      "library": {
+        "status": "saved",
+        "library_file_id": "libfile_ea21501ca69c8191a485dadd0ba7845e",
+        "file_id": "file_0000000052588212a2faafd7f687b1de",
+        "version": 0,
+        "url": "https://chatgpt.com/library?file_id=libfile_ea21501ca69c8191a485dadd0ba7845e&account_id=personal"
+      },
+      "drive": {
+        "status": "no_copy_recorded_for_this_delivery"
+      },
+      "known_limits": [
+        "Scoped decoded-frame review is not full real-time playback or owner approval.",
+        "Automatic pixel checks do not establish natural movement or physical balance.",
+        "The authored visual clock does not claim instrument-level audio synchronization."
+      ]
+    },
+    {
+      "id": "cinematic-ten-02",
+      "project_id": "cinematic-ten-02",
+      "filename": "02_Petals_in_Motion_1080p60.mp4",
+      "title": "Petals in Motion",
+      "kind": "final_cinematic_short",
+      "description": "Original twenty-second native concert 3D film; full technical decode passed and scoped encoded visual review found no blocking defect.",
+      "bytes": 41657946,
+      "sha256": "b03e7e12037521aa2463e851b02c156e924fe2173d310f51c6d4c4d51a8a72fa",
+      "width": 1920,
+      "height": 1080,
+      "fps": 60,
+      "frames": 1200,
+      "seconds": 20,
+      "temporal_samples": 2,
+      "picture_source_commit": "df4fc478116d3f0e34a85d2166097fbda55911bf",
+      "picture_fingerprint": "ae5c2d4893964b0cf6c7b8e900dcceb50473f7f5169cbb5129ff038c377ea3e4",
+      "production_command": "./scripts/video produce cinematic-ten-02 --quality final",
+      "technical_evidence": "project-docs/production-system/evidence/cinematic-ten-complete-review.json",
+      "visual_evidence": "project-docs/production-system/evidence/cinematic-ten-complete-review.json",
+      "saved_delivery_evidence": "project-docs/production-system/evidence/cinematic-ten-final-delivery.json",
+      "creative_approval": "not_recorded",
+      "visual_review_scope": "Eight decoded timeline samples at frames 0,120,300,480,660,840,1020,1199, plus native decoded opening, frame840 at14seconds and last frame. This is sampled visual review, not complete real-time playback, biomechanical validation or owner approval.",
+      "library": {
+        "status": "saved",
+        "library_file_id": "libfile_8fe98daf9ea88191b898686ab0975625",
+        "file_id": "file_00000000f31c81f58efadd912081702e",
+        "version": 0,
+        "url": "https://chatgpt.com/library?file_id=libfile_8fe98daf9ea88191b898686ab0975625&account_id=personal"
+      },
+      "drive": {
+        "status": "no_copy_recorded_for_this_delivery"
+      },
+      "known_limits": [
+        "Scoped decoded-frame review is not full real-time playback or owner approval.",
+        "Automatic pixel checks do not establish natural movement or physical balance.",
+        "The authored visual clock does not claim instrument-level audio synchronization."
+      ]
+    },
+    {
+      "id": "cinematic-ten-03",
+      "project_id": "cinematic-ten-03",
+      "filename": "03_One_World_Many_Hearts_1080p60.mp4",
+      "title": "One World, Many Hearts",
+      "kind": "final_cinematic_short",
+      "description": "Original twenty-second native concert 3D film; full technical decode passed and scoped encoded visual review found no blocking defect.",
+      "bytes": 30585104,
+      "sha256": "753080691767d6935311def4c84cb00542eff5321cbe785b7394fcd206899455",
+      "width": 1920,
+      "height": 1080,
+      "fps": 60,
+      "frames": 1200,
+      "seconds": 20,
+      "temporal_samples": 2,
+      "picture_source_commit": "df4fc478116d3f0e34a85d2166097fbda55911bf",
+      "picture_fingerprint": "7dbfad297dff6b27b0168958c1860d7a98258f8878d822dde19d73b2b080a5b0",
+      "production_command": "./scripts/video produce cinematic-ten-03 --quality final",
+      "technical_evidence": "project-docs/production-system/evidence/cinematic-ten-complete-review.json",
+      "visual_evidence": "project-docs/production-system/evidence/cinematic-ten-complete-review.json",
+      "saved_delivery_evidence": "project-docs/production-system/evidence/cinematic-ten-final-delivery.json",
+      "creative_approval": "not_recorded",
+      "visual_review_scope": "Eight decoded timeline samples and eight decoded transition samples between 8.800 and 9.300 seconds, plus native decoded frames immediately before and after the declared 9.000-second cut, at 9.300 seconds, and the final frame. This is sampled visual review, not full playback or owner approval.",
+      "library": {
+        "status": "saved",
+        "library_file_id": "libfile_c7f33c7ed65c8191bf2ca8b5868607f0",
+        "file_id": "file_00000000b32c81f69cfa4b17f58060d6",
+        "version": 0,
+        "url": "https://chatgpt.com/library?file_id=libfile_c7f33c7ed65c8191bf2ca8b5868607f0&account_id=personal"
+      },
+      "drive": {
+        "status": "no_copy_recorded_for_this_delivery"
+      },
+      "known_limits": [
+        "Scoped decoded-frame review is not full real-time playback or owner approval.",
+        "Automatic pixel checks do not establish natural movement or physical balance.",
+        "The authored visual clock does not claim instrument-level audio synchronization."
+      ]
+    },
+    {
+      "id": "cinematic-ten-04",
+      "project_id": "cinematic-ten-04",
+      "filename": "04_The_Written_Light_1080p60.mp4",
+      "title": "The Written Light",
+      "kind": "final_cinematic_short",
+      "description": "Original twenty-second native concert 3D film; full technical decode passed and scoped encoded visual review found no blocking defect.",
+      "bytes": 27369572,
+      "sha256": "f90fe7b96eb3d1164c3056713e9553d1b9ccf1919002e307c7d4406ee81af70e",
+      "width": 1920,
+      "height": 1080,
+      "fps": 60,
+      "frames": 1200,
+      "seconds": 20,
+      "temporal_samples": 2,
+      "picture_source_commit": "df4fc478116d3f0e34a85d2166097fbda55911bf",
+      "picture_fingerprint": "842f2976925078f7d44036275d6a5f407ef4e6557d82ad08662b6d75ef5c2f1c",
+      "production_command": "./scripts/video produce cinematic-ten-04 --quality final",
+      "technical_evidence": "project-docs/production-system/evidence/cinematic-ten-complete-review.json",
+      "visual_evidence": "project-docs/production-system/evidence/cinematic-ten-complete-review.json",
+      "saved_delivery_evidence": "project-docs/production-system/evidence/cinematic-ten-final-delivery.json",
+      "creative_approval": "not_recorded",
+      "visual_review_scope": "Eight decoded timeline samples at frames 0,120,300,480,660,840,1020,1199, plus native decoded frames0,480,840,1199 to inspect the opening, live wrist-origin strokes, accumulation and ending. This is sampled visual review, not complete real-time playback, biomechanical validation, lettering accuracy or owner approval.",
+      "library": {
+        "status": "saved",
+        "library_file_id": "libfile_1b901203e3788191a56b51d623a4e986",
+        "file_id": "file_000000000d6881f78d7b7e22b4516c35",
+        "version": 0,
+        "url": "https://chatgpt.com/library?file_id=libfile_1b901203e3788191a56b51d623a4e986&account_id=personal"
+      },
+      "drive": {
+        "status": "no_copy_recorded_for_this_delivery"
+      },
+      "known_limits": [
+        "Scoped decoded-frame review is not full real-time playback or owner approval.",
+        "Automatic pixel checks do not establish natural movement or physical balance.",
+        "The authored visual clock does not claim instrument-level audio synchronization."
+      ]
+    },
+    {
+      "id": "cinematic-ten-05",
+      "project_id": "cinematic-ten-05",
+      "filename": "05_Procession_of_Lanterns_1080p60.mp4",
+      "title": "Procession of Lanterns",
+      "kind": "final_cinematic_short",
+      "description": "Original twenty-second native concert 3D film; full technical decode passed and scoped encoded visual review found no blocking defect.",
+      "bytes": 44205575,
+      "sha256": "25c8959c1ef906b6587cefd4deae48efb44ba870ba16a7031b3b2b5bbf051b9d",
+      "width": 1920,
+      "height": 1080,
+      "fps": 60,
+      "frames": 1200,
+      "seconds": 20,
+      "temporal_samples": 2,
+      "picture_source_commit": "df4fc478116d3f0e34a85d2166097fbda55911bf",
+      "picture_fingerprint": "5367eeb01e16cdc7e7314dddd9e4205e7910527d9f9244dab0e5baf07fad6029",
+      "production_command": "./scripts/video produce cinematic-ten-05 --quality final",
+      "technical_evidence": "project-docs/production-system/evidence/cinematic-ten-complete-review.json",
+      "visual_evidence": "project-docs/production-system/evidence/cinematic-ten-complete-review.json",
+      "saved_delivery_evidence": "project-docs/production-system/evidence/cinematic-ten-final-delivery.json",
+      "creative_approval": "not_recorded",
+      "visual_review_scope": "Eight decoded timeline samples, plus native decoded opening and last frame. This is sampled visual review, not full playback or owner approval.",
+      "library": {
+        "status": "saved",
+        "library_file_id": "libfile_6b97089123b4819194218560c357ce8c",
+        "file_id": "file_00000000d6508212b2a18c604ec6e447",
+        "version": 0,
+        "url": "https://chatgpt.com/library?file_id=libfile_6b97089123b4819194218560c357ce8c&account_id=personal"
+      },
+      "drive": {
+        "status": "no_copy_recorded_for_this_delivery"
+      },
+      "known_limits": [
+        "Scoped decoded-frame review is not full real-time playback or owner approval.",
+        "Automatic pixel checks do not establish natural movement or physical balance.",
+        "The authored visual clock does not claim instrument-level audio synchronization."
+      ]
+    },
+    {
+      "id": "cinematic-ten-06",
+      "project_id": "cinematic-ten-06",
+      "filename": "06_A_Garden_Awakens_1080p60.mp4",
+      "title": "A Garden Awakens",
+      "kind": "final_cinematic_short",
+      "description": "Original twenty-second native concert 3D film; full technical decode passed and scoped encoded visual review found no blocking defect.",
+      "bytes": 51061569,
+      "sha256": "2d3bdc8e8903b13b5d60a442f8b533d6aab57516c449ecb4a41210e03f2cf3d8",
+      "width": 1920,
+      "height": 1080,
+      "fps": 60,
+      "frames": 1200,
+      "seconds": 20,
+      "temporal_samples": 2,
+      "picture_source_commit": "df4fc478116d3f0e34a85d2166097fbda55911bf",
+      "picture_fingerprint": "7f6ad01e22373da2867a7517f35c5a0a179492ff0fbd564896c3f7a9d5a0658b",
+      "production_command": "./scripts/video produce cinematic-ten-06 --quality final",
+      "technical_evidence": "project-docs/production-system/evidence/cinematic-ten-complete-review.json",
+      "visual_evidence": "project-docs/production-system/evidence/cinematic-ten-complete-review.json",
+      "saved_delivery_evidence": "project-docs/production-system/evidence/cinematic-ten-final-delivery.json",
+      "creative_approval": "not_recorded",
+      "visual_review_scope": "Eight decoded timeline samples, plus native decoded opening and last frame. This is sampled visual review, not full playback or owner approval.",
+      "library": {
+        "status": "saved",
+        "library_file_id": "libfile_8fcaa552e044819191bd992d593e52c8",
+        "file_id": "file_000000002978822fb5856c03126f8f31",
+        "version": 0,
+        "url": "https://chatgpt.com/library?file_id=libfile_8fcaa552e044819191bd992d593e52c8&account_id=personal"
+      },
+      "drive": {
+        "status": "no_copy_recorded_for_this_delivery"
+      },
+      "known_limits": [
+        "Scoped decoded-frame review is not full real-time playback or owner approval.",
+        "Automatic pixel checks do not establish natural movement or physical balance.",
+        "The authored visual clock does not claim instrument-level audio synchronization."
+      ]
+    },
+    {
+      "id": "cinematic-ten-07",
+      "project_id": "cinematic-ten-07",
+      "filename": "07_Wings_of_Peace_1080p60.mp4",
+      "title": "Wings of Peace",
+      "kind": "final_cinematic_short",
+      "description": "Original twenty-second native concert 3D film; full technical decode passed and scoped encoded visual review found no blocking defect.",
+      "bytes": 21902494,
+      "sha256": "30880be109c9da3de5e96037f397ac8c8c8c72c101d7cda4776accc2633d2b6f",
+      "width": 1920,
+      "height": 1080,
+      "fps": 60,
+      "frames": 1200,
+      "seconds": 20,
+      "temporal_samples": 2,
+      "picture_source_commit": "df4fc478116d3f0e34a85d2166097fbda55911bf",
+      "picture_fingerprint": "fdf8bbc6cac56b99ea6ce1c56ba8de7a11bf88ceb24c33bed5b565ff67513fa4",
+      "production_command": "./scripts/video produce cinematic-ten-07 --quality final",
+      "technical_evidence": "project-docs/production-system/evidence/cinematic-ten-complete-review.json",
+      "visual_evidence": "project-docs/production-system/evidence/cinematic-ten-complete-review.json",
+      "saved_delivery_evidence": "project-docs/production-system/evidence/cinematic-ten-final-delivery.json",
+      "creative_approval": "not_recorded",
+      "visual_review_scope": "Eight decoded timeline samples, plus native decoded opening and last frame. This is sampled visual review, not full playback or owner approval.",
+      "library": {
+        "status": "saved",
+        "library_file_id": "libfile_821bfd25f004819193badf599d094903",
+        "file_id": "file_00000000c7f481f5b0c02f83b6d50fff",
+        "version": 0,
+        "url": "https://chatgpt.com/library?file_id=libfile_821bfd25f004819193badf599d094903&account_id=personal"
+      },
+      "drive": {
+        "status": "no_copy_recorded_for_this_delivery"
+      },
+      "known_limits": [
+        "Scoped decoded-frame review is not full real-time playback or owner approval.",
+        "Automatic pixel checks do not establish natural movement or physical balance.",
+        "The authored visual clock does not claim instrument-level audio synchronization."
+      ]
+    },
+    {
+      "id": "cinematic-ten-08",
+      "project_id": "cinematic-ten-08",
+      "filename": "08_Ocean_of_Light_1080p60.mp4",
+      "title": "Ocean of Light",
+      "kind": "final_cinematic_short",
+      "description": "Original twenty-second native concert 3D film; full technical decode passed and scoped encoded visual review found no blocking defect.",
+      "bytes": 37434533,
+      "sha256": "da076670eb36a52b087bee26128bee0eab4baab8a9ae08ff5fc197b2a0052fc6",
+      "width": 1920,
+      "height": 1080,
+      "fps": 60,
+      "frames": 1200,
+      "seconds": 20,
+      "temporal_samples": 2,
+      "picture_source_commit": "df4fc478116d3f0e34a85d2166097fbda55911bf",
+      "picture_fingerprint": "68d78ce714058aebe6430763f83162e54975610efb511c784a557d8182ab4f01",
+      "production_command": "./scripts/video produce cinematic-ten-08 --quality final",
+      "technical_evidence": "project-docs/production-system/evidence/cinematic-ten-complete-review.json",
+      "visual_evidence": "project-docs/production-system/evidence/cinematic-ten-complete-review.json",
+      "saved_delivery_evidence": "project-docs/production-system/evidence/cinematic-ten-final-delivery.json",
+      "creative_approval": "not_recorded",
+      "visual_review_scope": "Eight decoded timeline samples, plus native decoded opening and last frame. This is sampled visual review, not full playback or owner approval.",
+      "library": {
+        "status": "saved",
+        "library_file_id": "libfile_a306fcad0d588191b4c4626bd36e2867",
+        "file_id": "file_00000000361081f5af59afd0c29328f7",
+        "version": 0,
+        "url": "https://chatgpt.com/library?file_id=libfile_a306fcad0d588191b4c4626bd36e2867&account_id=personal"
+      },
+      "drive": {
+        "status": "no_copy_recorded_for_this_delivery"
+      },
+      "known_limits": [
+        "Scoped decoded-frame review is not full real-time playback or owner approval.",
+        "Automatic pixel checks do not establish natural movement or physical balance.",
+        "The authored visual clock does not claim instrument-level audio synchronization."
+      ]
+    },
+    {
+      "id": "cinematic-ten-09",
+      "project_id": "cinematic-ten-09",
+      "filename": "09_Celestial_Clockwork_1080p60.mp4",
+      "title": "Celestial Clockwork",
+      "kind": "final_cinematic_short",
+      "description": "Original twenty-second native concert 3D film; full technical decode passed and scoped encoded visual review found no blocking defect.",
+      "bytes": 23457102,
+      "sha256": "b4c4956e5401ce5fe3283037a0cd7d6ca9f3f042a104d599fa94f50d6e5254b4",
+      "width": 1920,
+      "height": 1080,
+      "fps": 60,
+      "frames": 1200,
+      "seconds": 20,
+      "temporal_samples": 2,
+      "picture_source_commit": "df4fc478116d3f0e34a85d2166097fbda55911bf",
+      "picture_fingerprint": "e8986f1cd5716bf959dee6f36f4c8a704b2a88783348759a5350bf0cb4411312",
+      "production_command": "./scripts/video produce cinematic-ten-09 --quality final",
+      "technical_evidence": "project-docs/production-system/evidence/cinematic-ten-complete-review.json",
+      "visual_evidence": "project-docs/production-system/evidence/cinematic-ten-complete-review.json",
+      "saved_delivery_evidence": "project-docs/production-system/evidence/cinematic-ten-final-delivery.json",
+      "creative_approval": "not_recorded",
+      "visual_review_scope": "Eight decoded timeline samples, plus native decoded opening and last frame. This is sampled visual review, not full playback or owner approval.",
+      "library": {
+        "status": "saved",
+        "library_file_id": "libfile_b5e1f83e34b0819184f426415648399d",
+        "file_id": "file_000000000a1481f5a5d8fe96547b6436",
+        "version": 0,
+        "url": "https://chatgpt.com/library?file_id=libfile_b5e1f83e34b0819184f426415648399d&account_id=personal"
+      },
+      "drive": {
+        "status": "no_copy_recorded_for_this_delivery"
+      },
+      "known_limits": [
+        "Scoped decoded-frame review is not full real-time playback or owner approval.",
+        "Automatic pixel checks do not establish natural movement or physical balance.",
+        "The authored visual clock does not claim instrument-level audio synchronization."
+      ]
+    },
+    {
+      "id": "cinematic-ten-10",
+      "project_id": "cinematic-ten-10",
+      "filename": "10_Together_in_the_Light_1080p60.mp4",
+      "title": "Together in the Light",
+      "kind": "final_cinematic_short",
+      "description": "Original twenty-second native concert 3D film; full technical decode passed and scoped encoded visual review found no blocking defect.",
+      "bytes": 34430368,
+      "sha256": "e62b7ef360cc1ef29df6cf8221a2ce72c29ba9f22ddfbd7b749e64a4cbbc939f",
+      "width": 1920,
+      "height": 1080,
+      "fps": 60,
+      "frames": 1200,
+      "seconds": 20,
+      "temporal_samples": 2,
+      "picture_source_commit": "df4fc478116d3f0e34a85d2166097fbda55911bf",
+      "picture_fingerprint": "902a6efda24072d93e7206e7eaa690f995807a39453029e54114e292e828c00e",
+      "production_command": "./scripts/video produce cinematic-ten-10 --quality final",
+      "technical_evidence": "project-docs/production-system/evidence/cinematic-ten-complete-review.json",
+      "visual_evidence": "project-docs/production-system/evidence/cinematic-ten-complete-review.json",
+      "saved_delivery_evidence": "project-docs/production-system/evidence/cinematic-ten-final-delivery.json",
+      "creative_approval": "not_recorded",
+      "visual_review_scope": "Eight decoded timeline samples, plus native decoded frames at 0.000, 5.000, 10.000, 17.500 and 19.983 seconds. Specific attention was given to the greeting figures, their separation, final group framing and closing-title readability. This is sampled visual review, not full playback or owner approval.",
+      "library": {
+        "status": "saved",
+        "library_file_id": "libfile_e3c5f7bacecc8191a9b271ea8f3d4943",
+        "file_id": "file_000000006fc881f5bb9bc2ac0da9eba4",
+        "version": 0,
+        "url": "https://chatgpt.com/library?file_id=libfile_e3c5f7bacecc8191a9b271ea8f3d4943&account_id=personal"
+      },
+      "drive": {
+        "status": "no_copy_recorded_for_this_delivery"
+      },
+      "known_limits": [
+        "Scoped decoded-frame review is not full real-time playback or owner approval.",
+        "Automatic pixel checks do not establish natural movement or physical balance.",
+        "The authored visual clock does not claim instrument-level audio synchronization."
+      ]
+    },
+    {
+      "id": "cinematic-ten-overview",
+      "filename": "Ten_Cinematic_Films_Overview.jpg",
+      "kind": "decoded_final_movie_overview",
+      "description": "Four decoded samples from each of the ten final masters.",
+      "bytes": 3006552,
+      "sha256": "1bc61bb9569d0628cbeb1ec19530bea46e39d5379bc9263a3e9011c92a1a1f73",
+      "picture_source_commit": "df4fc478116d3f0e34a85d2166097fbda55911bf",
+      "saved_delivery_evidence": "project-docs/production-system/evidence/cinematic-ten-final-delivery.json",
+      "creative_approval": "not_recorded",
+      "library": {
+        "status": "saved",
+        "library_file_id": "libfile_692524e180dc8191a7f13c340e94ac89",
+        "file_id": "file_00000000ac108212a9f9d4a88b827fe2",
+        "version": 0,
+        "url": "https://chatgpt.com/library?file_id=libfile_692524e180dc8191a7f13c340e94ac89&account_id=personal"
+      },
+      "drive": {
+        "status": "no_copy_recorded_for_this_delivery"
+      }
+    },
+    {
+      "id": "cinematic-ten-readme",
+      "filename": "README.md",
+      "kind": "delivery_readme",
+      "description": "Playback, film index, provenance and review limitations for this exact package.",
+      "bytes": 2688,
+      "sha256": "740ccce0010cfbed5bce39baee09e1e50cfa12d93a59e05287df3a89c8f96a65",
+      "picture_source_commit": "df4fc478116d3f0e34a85d2166097fbda55911bf",
+      "saved_delivery_evidence": "project-docs/production-system/evidence/cinematic-ten-final-delivery.json",
+      "creative_approval": "not_recorded",
+      "library": {
+        "status": "saved",
+        "library_file_id": "libfile_c4392e6bf8088191bd33e2111081ce46",
+        "file_id": "file_00000000bbfc8212aae08d521e6dc3d2",
+        "version": 0,
+        "url": "https://chatgpt.com/library?file_id=libfile_c4392e6bf8088191bd33e2111081ce46&account_id=personal"
+      },
+      "drive": {
+        "status": "no_copy_recorded_for_this_delivery"
+      }
+    },
+    {
+      "id": "cinematic-ten-technical-records",
+      "filename": "Ten_Cinematic_Films_Technical.json",
+      "kind": "technical_and_review_evidence",
+      "description": "All ten checker, pipeline, visual review, assembly and audio/source identity records.",
+      "bytes": 543622,
+      "sha256": "c70bf689668023f9669c80d9ee6da2fcc2b37509cadd94215abed3078eb2034e",
+      "picture_source_commit": "df4fc478116d3f0e34a85d2166097fbda55911bf",
+      "saved_delivery_evidence": "project-docs/production-system/evidence/cinematic-ten-final-delivery.json",
+      "creative_approval": "not_recorded",
+      "library": {
+        "status": "saved",
+        "library_file_id": "libfile_a937b0e8ab9881918cb11414df49eba5",
+        "file_id": "file_0000000022c48212bcd5c94e6b531893",
+        "version": 0,
+        "url": "https://chatgpt.com/library?file_id=libfile_a937b0e8ab9881918cb11414df49eba5&account_id=personal"
+      },
+      "drive": {
+        "status": "no_copy_recorded_for_this_delivery"
+      }
+    },
+    {
+      "id": "cinematic-ten-checksums",
+      "filename": "SHA256SUMS.txt",
+      "kind": "delivery_checksums",
+      "description": "SHA256 values for the ten movies, overview, README and technical record.",
+      "bytes": 1269,
+      "sha256": "60796238dd06fad0f5b28cb4fb4f349457ae9bc64a386ce7b2682b168b2182f1",
+      "picture_source_commit": "df4fc478116d3f0e34a85d2166097fbda55911bf",
+      "saved_delivery_evidence": "project-docs/production-system/evidence/cinematic-ten-final-delivery.json",
+      "creative_approval": "not_recorded",
+      "library": {
+        "status": "saved",
+        "library_file_id": "libfile_5baa3ce7f9848191aee8e3abdae29c30",
+        "file_id": "file_000000006d6c8212a126824a45d54179",
+        "version": 0,
+        "url": "https://chatgpt.com/library?file_id=libfile_5baa3ce7f9848191aee8e3abdae29c30&account_id=personal"
+      },
+      "drive": {
+        "status": "no_copy_recorded_for_this_delivery"
+      }
+    },
+    {
+      "id": "cinematic-ten-package",
+      "filename": "Ten_Cinematic_Films_1080p60.zip",
+      "kind": "complete_delivery_archive",
+      "description": "Fourteen exact members: ten unchanged masters, overview, README, technical record and checksums.",
+      "bytes": 350397212,
+      "sha256": "7bd5e9f32f4a40150cba39c00bda8cd9959768bb837e448c80b482877e84b0b2",
+      "picture_source_commit": "df4fc478116d3f0e34a85d2166097fbda55911bf",
+      "saved_delivery_evidence": "project-docs/production-system/evidence/cinematic-ten-final-delivery.json",
+      "creative_approval": "not_recorded",
+      "library": {
+        "status": "saved",
+        "library_file_id": "libfile_9692c5a09c4c8191b65ade72f7abfbb0",
+        "file_id": "file_00000000da008212a998a4c5228f6b47",
+        "version": 0,
+        "url": "https://chatgpt.com/library?file_id=libfile_9692c5a09c4c8191b65ade72f7abfbb0&account_id=personal"
+      },
+      "drive": {
+        "status": "no_copy_recorded_for_this_delivery"
+      }
     }
   ],
   "limits": [
@@ -590,5 +1085,40 @@
     "url": "https://docs.google.com/document/d/1I-7hrmx6lKv5RAvS3gzXoZZFMgSYnfvQ/edit?usp=drivesdk&ouid=113038373524763352759&rtpof=true&sd=true",
     "raw_bytes_verified": true,
     "evidence": "project-docs/production-system/evidence/fan-trio-drive-guide.json"
+  },
+  "historical_status_records": [
+    {
+      "updated_local_date": "2026-11-21",
+      "status": "fourteen_media_and_exact_historical_handoff_uploaded_and_raw_bytes_verified"
+    }
+  ],
+  "cinematic_ten_recorded_utc": "2026-11-22T02:13:15.818649+00:00",
+  "cinematic_ten_delivery_evidence": "project-docs/production-system/evidence/cinematic-ten-final-delivery.json",
+  "cinematic_ten_review_evidence": "project-docs/production-system/evidence/cinematic-ten-complete-review.json",
+  "cinematic_ten": {
+    "film_ids": [
+      "cinematic-ten-01",
+      "cinematic-ten-02",
+      "cinematic-ten-03",
+      "cinematic-ten-04",
+      "cinematic-ten-05",
+      "cinematic-ten-06",
+      "cinematic-ten-07",
+      "cinematic-ten-08",
+      "cinematic-ten-09",
+      "cinematic-ten-10"
+    ],
+    "support_ids": [
+      "cinematic-ten-overview",
+      "cinematic-ten-readme",
+      "cinematic-ten-technical-records",
+      "cinematic-ten-checksums",
+      "cinematic-ten-package"
+    ],
+    "saved_film_count": 10,
+    "saved_support_count": 5,
+    "owner_approval": "not_recorded",
+    "drive_copies_claimed": false,
+    "evidence": "project-docs/production-system/evidence/cinematic-ten-final-delivery.json"
   }
 }

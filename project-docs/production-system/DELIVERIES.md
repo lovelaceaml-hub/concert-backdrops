@@ -1,6 +1,41 @@
 # Delivered studies and model previews
 
-## Newest delivery: original fan and silk trio
+<!-- cinematic-ten-final-delivery:begin -->
+## Newest delivery: Cinematic Ten
+
+All ten twenty-second films are complete, technically passed, reviewed within the recorded sample scope, and saved. The overview, README, technical records, checksums and complete ZIP are also saved. No Cinematic Ten owner approval is recorded.
+
+Picture source remains `df4fc478116d3f0e34a85d2166097fbda55911bf`, branch `creative/cinematic-ten-films`, [PR #108](https://github.com/lovelaceaml-hub/concert-backdrops/pull/108). Each film has 1,200 native 1920 x 1080 frames at 60 fps and two temporal samples.
+
+| Film | Title | Saved final movie |
+| --- | --- | --- |
+| 01 | Silk in Light | [01_Silk_in_Light_1080p60.mp4](https://chatgpt.com/library?file_id=libfile_ea21501ca69c8191a485dadd0ba7845e&account_id=personal) |
+| 02 | Petals in Motion | [02_Petals_in_Motion_1080p60.mp4](https://chatgpt.com/library?file_id=libfile_8fe98daf9ea88191b898686ab0975625&account_id=personal) |
+| 03 | One World, Many Hearts | [03_One_World_Many_Hearts_1080p60.mp4](https://chatgpt.com/library?file_id=libfile_c7f33c7ed65c8191bf2ca8b5868607f0&account_id=personal) |
+| 04 | The Written Light | [04_The_Written_Light_1080p60.mp4](https://chatgpt.com/library?file_id=libfile_1b901203e3788191a56b51d623a4e986&account_id=personal) |
+| 05 | Procession of Lanterns | [05_Procession_of_Lanterns_1080p60.mp4](https://chatgpt.com/library?file_id=libfile_6b97089123b4819194218560c357ce8c&account_id=personal) |
+| 06 | A Garden Awakens | [06_A_Garden_Awakens_1080p60.mp4](https://chatgpt.com/library?file_id=libfile_8fcaa552e044819191bd992d593e52c8&account_id=personal) |
+| 07 | Wings of Peace | [07_Wings_of_Peace_1080p60.mp4](https://chatgpt.com/library?file_id=libfile_821bfd25f004819193badf599d094903&account_id=personal) |
+| 08 | Ocean of Light | [08_Ocean_of_Light_1080p60.mp4](https://chatgpt.com/library?file_id=libfile_a306fcad0d588191b4c4626bd36e2867&account_id=personal) |
+| 09 | Celestial Clockwork | [09_Celestial_Clockwork_1080p60.mp4](https://chatgpt.com/library?file_id=libfile_b5e1f83e34b0819184f426415648399d&account_id=personal) |
+| 10 | Together in the Light | [10_Together_in_the_Light_1080p60.mp4](https://chatgpt.com/library?file_id=libfile_e3c5f7bacecc8191a9b271ea8f3d4943&account_id=personal) |
+
+Saved package and support files:
+
+- [Ten_Cinematic_Films_Overview.jpg](https://chatgpt.com/library?file_id=libfile_692524e180dc8191a7f13c340e94ac89&account_id=personal)
+- [README.md](https://chatgpt.com/library?file_id=libfile_c4392e6bf8088191bd33e2111081ce46&account_id=personal)
+- [Ten_Cinematic_Films_Technical.json](https://chatgpt.com/library?file_id=libfile_a937b0e8ab9881918cb11414df49eba5&account_id=personal)
+- [SHA256SUMS.txt](https://chatgpt.com/library?file_id=libfile_5baa3ce7f9848191aee8e3abdae29c30&account_id=personal)
+- [Ten_Cinematic_Films_1080p60.zip](https://chatgpt.com/library?file_id=libfile_9692c5a09c4c8191b65ade72f7abfbb0&account_id=personal)
+
+Exact identities are in [the final delivery evidence](evidence/cinematic-ten-final-delivery.json); actual per-film scope and findings are in [the complete review evidence](evidence/cinematic-ten-complete-review.json).
+
+Full technical decoding and sampled visual review are distinct from real-time playback, biomechanical validation and exact-output owner approval. Supplied references informed original authored work; no source choreography was reconstructed.
+
+All ten movie files are exact copies of their validated production masters. The ZIP contains ten movies plus overview, README, technical records and checksums. This record adds no new Drive upload or readback claim; earlier Drive deliveries below remain unchanged.
+<!-- cinematic-ten-final-delivery:end -->
+
+## Previous delivery: original fan and silk trio
 
 The twenty-second native 1080p60 movie is complete, together with a separately rendered native 4K still and a nine-frame motion sheet. All three files are saved and copied to Videos / Production Studies, with raw downloaded bytes matching their originals. Picture source: `dffe8f165944c627ae39a8bb7d47bc5a9e703305`. Integration record: [PR #106](https://github.com/lovelaceaml-hub/concert-backdrops/pull/106).
 

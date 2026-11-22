@@ -1,5 +1,17 @@
 # Ten cinematic films
 
+<!-- cinematic-ten-final-delivery:begin -->
+## Final delivery
+
+All ten twenty-second films are complete, technically passed, reviewed within the recorded sample scope, and saved. The overview, README, technical records, checksums and complete ZIP are also saved. No Cinematic Ten owner approval is recorded.
+
+Picture source remains `df4fc478116d3f0e34a85d2166097fbda55911bf`, branch `creative/cinematic-ten-films`, [PR #108](https://github.com/lovelaceaml-hub/concert-backdrops/pull/108). Each film has 1,200 native 1920 x 1080 frames at 60 fps and two temporal samples.
+
+Exact identities are in [the final delivery evidence](evidence/cinematic-ten-final-delivery.json); actual per-film scope and findings are in [the complete review evidence](evidence/cinematic-ten-complete-review.json).
+
+The movie and package links are in [DELIVERIES.md](DELIVERIES.md). The instructions below describe reproduction and provenance of the completed round.
+<!-- cinematic-ten-final-delivery:end -->
+
 ## Active owner direction
 
 The owner rejected the unrelated 2D recovery sketches and requested the ten final cinematic films in the actual concert project. This work returns to the original native 3D renderer, using the approved Song11 beauty study and Nine Colours Revision3 as visual references. The ten films each run twenty seconds.
@@ -49,6 +61,6 @@ Prepare source audio and manifests with `python -m tools.cinematic_ten.prepare_p
 
 Render a native keyframe with `PYTHONHASHSEED=0 python -m tools.cinematic_ten.render --film 1 --stills 2,8,16 --out work/cinematic-ten/qa/film01`.
 
-Render and assemble the explicit projects with `python -m tools.cinematic_ten.run_suite --projects 2`. Most films use two single-thread workers and 300-frame chunks. Film10 uses three single-thread workers and 50-frame chunks so retained partial frames do not leave a long final batch on one worker. This execution-policy change preserves its picture fingerprint. Its measured worker peak was about 1.50 GiB with 4.56 seconds of initialization; avoid running it beside several other heavy character jobs. The existing pipeline checks source identities, writes atomic PNGs, resumes matching frames, assembles audio, checks technical delivery and builds a gallery. Use the existing STOP markers to stop between frames. Do not mutate picture dependencies during a final round.
+Render and assemble the explicit projects with `python -m tools.cinematic_ten.run_suite --projects 2`. Most films use two single-thread workers and 300-frame chunks. Film10 uses three single-thread workers and 150-frame chunks. An earlier 50-frame checkpoint showed long first-frame delays in late-scene batches, so the remaining frames were resumed in larger batches. The picture fingerprint and all validated frames were preserved. The earlier measured worker peak was about 1.50 GiB; its 4.56-second initialization measurement excluded first-frame state warm-up. Avoid running it beside several other heavy character jobs. The existing pipeline checks source identities, writes atomic PNGs, resumes matching frames, assembles audio, checks technical delivery and builds a gallery. Use the existing STOP markers to stop between frames. Do not mutate picture dependencies during a final round.
 
 Technical checks, sampled visual review and exact-output owner approval are recorded separately. New outputs do not inherit approval from the reference films. Final media, receipts and review images stay outside Git; source and reproducible instructions remain in the project repository.

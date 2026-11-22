@@ -1010,6 +1010,411 @@
           "The path and reveal are specific to the twenty-second garden scene; arbitrary destinations, durations and looping are not validated."
         ]
       }
-    ]
+    ],
+    "final_movie_evidence": {
+      "schema_version": 1,
+      "recorded_utc": "2026-11-22T02:13:15.818649+00:00",
+      "picture_source_commit": "df4fc478116d3f0e34a85d2166097fbda55911bf",
+      "scope": "Final encoded movie evidence for all ten registered scenes. Existing authored-score inventory, dated entry reviews, provenance and numerical limits are preserved unchanged. An empty score-entry list means no separate reusable score entry was inventoried for that scene.",
+      "owner_approval": "not_recorded",
+      "films": {
+        "cinematic-ten-01": {
+          "film_id": 1,
+          "filename": "01_Silk_in_Light_1080p60.mp4",
+          "master_sha256": "d055202a4496c219bd5f827c507d91bf6d6e877955c36e8650993fe0d7a7b16d",
+          "bytes": 35123251,
+          "media": {
+            "width": 1920,
+            "height": 1080,
+            "fps": 60,
+            "frames": 1200,
+            "seconds": 20
+          },
+          "status": "final_complete_technical_passed_sampled_visual_reviewed_and_saved",
+          "authored_score_entry_ids": [
+            "cinematic-ten.solo-fan"
+          ],
+          "decoded_frames": 1200,
+          "sampled_frame_indices": [
+            0,
+            120,
+            300,
+            480,
+            660,
+            840,
+            1020,
+            1199
+          ],
+          "visual_scope": "Eight decoded timeline samples at frames 0,120,300,480,660,840,1020,1199, plus native decoded opening and last frame. This is sampled visual review, not complete real-time playback, biomechanical validation or owner approval.",
+          "blocking_visual_defects_found": false,
+          "technical_evidence": "project-docs/production-system/evidence/cinematic-ten-complete-review.json",
+          "saved_delivery_evidence": "project-docs/production-system/evidence/cinematic-ten-final-delivery.json",
+          "library": {
+            "status": "saved",
+            "library_file_id": "libfile_ea21501ca69c8191a485dadd0ba7845e",
+            "file_id": "file_0000000052588212a2faafd7f687b1de",
+            "version": 0,
+            "url": "https://chatgpt.com/library?file_id=libfile_ea21501ca69c8191a485dadd0ba7845e&account_id=personal"
+          },
+          "owner_approval": "not_recorded"
+        },
+        "cinematic-ten-02": {
+          "film_id": 2,
+          "filename": "02_Petals_in_Motion_1080p60.mp4",
+          "master_sha256": "b03e7e12037521aa2463e851b02c156e924fe2173d310f51c6d4c4d51a8a72fa",
+          "bytes": 41657946,
+          "media": {
+            "width": 1920,
+            "height": 1080,
+            "fps": 60,
+            "frames": 1200,
+            "seconds": 20
+          },
+          "status": "final_complete_technical_passed_sampled_visual_reviewed_and_saved",
+          "authored_score_entry_ids": [
+            "cinematic-ten.ensemble-fan"
+          ],
+          "decoded_frames": 1200,
+          "sampled_frame_indices": [
+            0,
+            120,
+            300,
+            480,
+            660,
+            840,
+            1020,
+            1199
+          ],
+          "visual_scope": "Eight decoded timeline samples at frames 0,120,300,480,660,840,1020,1199, plus native decoded opening, frame840 at14seconds and last frame. This is sampled visual review, not complete real-time playback, biomechanical validation or owner approval.",
+          "blocking_visual_defects_found": false,
+          "technical_evidence": "project-docs/production-system/evidence/cinematic-ten-complete-review.json",
+          "saved_delivery_evidence": "project-docs/production-system/evidence/cinematic-ten-final-delivery.json",
+          "library": {
+            "status": "saved",
+            "library_file_id": "libfile_8fe98daf9ea88191b898686ab0975625",
+            "file_id": "file_00000000f31c81f58efadd912081702e",
+            "version": 0,
+            "url": "https://chatgpt.com/library?file_id=libfile_8fe98daf9ea88191b898686ab0975625&account_id=personal"
+          },
+          "owner_approval": "not_recorded"
+        },
+        "cinematic-ten-03": {
+          "film_id": 3,
+          "filename": "03_One_World_Many_Hearts_1080p60.mp4",
+          "master_sha256": "753080691767d6935311def4c84cb00542eff5321cbe785b7394fcd206899455",
+          "bytes": 30585104,
+          "media": {
+            "width": 1920,
+            "height": 1080,
+            "fps": 60,
+            "frames": 1200,
+            "seconds": 20
+          },
+          "status": "final_complete_technical_passed_sampled_visual_reviewed_and_saved",
+          "authored_score_entry_ids": [
+            "cinematic-ten.walking-processions"
+          ],
+          "decoded_frames": 1200,
+          "sampled_frame_indices": [
+            0,
+            120,
+            300,
+            480,
+            660,
+            840,
+            1020,
+            1199
+          ],
+          "visual_scope": "Eight decoded timeline samples and eight decoded transition samples between 8.800 and 9.300 seconds, plus native decoded frames immediately before and after the declared 9.000-second cut, at 9.300 seconds, and the final frame. This is sampled visual review, not full playback or owner approval.",
+          "blocking_visual_defects_found": false,
+          "technical_evidence": "project-docs/production-system/evidence/cinematic-ten-complete-review.json",
+          "saved_delivery_evidence": "project-docs/production-system/evidence/cinematic-ten-final-delivery.json",
+          "library": {
+            "status": "saved",
+            "library_file_id": "libfile_c7f33c7ed65c8191bf2ca8b5868607f0",
+            "file_id": "file_00000000b32c81f69cfa4b17f58060d6",
+            "version": 0,
+            "url": "https://chatgpt.com/library?file_id=libfile_c7f33c7ed65c8191bf2ca8b5868607f0&account_id=personal"
+          },
+          "owner_approval": "not_recorded"
+        },
+        "cinematic-ten-04": {
+          "film_id": 4,
+          "filename": "04_The_Written_Light_1080p60.mp4",
+          "master_sha256": "f90fe7b96eb3d1164c3056713e9553d1b9ccf1919002e307c7d4406ee81af70e",
+          "bytes": 27369572,
+          "media": {
+            "width": 1920,
+            "height": 1080,
+            "fps": 60,
+            "frames": 1200,
+            "seconds": 20
+          },
+          "status": "final_complete_technical_passed_sampled_visual_reviewed_and_saved",
+          "authored_score_entry_ids": [
+            "cinematic-ten.wrist-calligraphy"
+          ],
+          "decoded_frames": 1200,
+          "sampled_frame_indices": [
+            0,
+            120,
+            300,
+            480,
+            660,
+            840,
+            1020,
+            1199
+          ],
+          "visual_scope": "Eight decoded timeline samples at frames 0,120,300,480,660,840,1020,1199, plus native decoded frames0,480,840,1199 to inspect the opening, live wrist-origin strokes, accumulation and ending. This is sampled visual review, not complete real-time playback, biomechanical validation, lettering accuracy or owner approval.",
+          "blocking_visual_defects_found": false,
+          "technical_evidence": "project-docs/production-system/evidence/cinematic-ten-complete-review.json",
+          "saved_delivery_evidence": "project-docs/production-system/evidence/cinematic-ten-final-delivery.json",
+          "library": {
+            "status": "saved",
+            "library_file_id": "libfile_1b901203e3788191a56b51d623a4e986",
+            "file_id": "file_000000000d6881f78d7b7e22b4516c35",
+            "version": 0,
+            "url": "https://chatgpt.com/library?file_id=libfile_1b901203e3788191a56b51d623a4e986&account_id=personal"
+          },
+          "owner_approval": "not_recorded"
+        },
+        "cinematic-ten-05": {
+          "film_id": 5,
+          "filename": "05_Procession_of_Lanterns_1080p60.mp4",
+          "master_sha256": "25c8959c1ef906b6587cefd4deae48efb44ba870ba16a7031b3b2b5bbf051b9d",
+          "bytes": 44205575,
+          "media": {
+            "width": 1920,
+            "height": 1080,
+            "fps": 60,
+            "frames": 1200,
+            "seconds": 20
+          },
+          "status": "final_complete_technical_passed_sampled_visual_reviewed_and_saved",
+          "authored_score_entry_ids": [
+            "cinematic-ten.walking-processions"
+          ],
+          "decoded_frames": 1200,
+          "sampled_frame_indices": [
+            0,
+            120,
+            300,
+            480,
+            660,
+            840,
+            1020,
+            1199
+          ],
+          "visual_scope": "Eight decoded timeline samples, plus native decoded opening and last frame. This is sampled visual review, not full playback or owner approval.",
+          "blocking_visual_defects_found": false,
+          "technical_evidence": "project-docs/production-system/evidence/cinematic-ten-complete-review.json",
+          "saved_delivery_evidence": "project-docs/production-system/evidence/cinematic-ten-final-delivery.json",
+          "library": {
+            "status": "saved",
+            "library_file_id": "libfile_6b97089123b4819194218560c357ce8c",
+            "file_id": "file_00000000d6508212b2a18c604ec6e447",
+            "version": 0,
+            "url": "https://chatgpt.com/library?file_id=libfile_6b97089123b4819194218560c357ce8c&account_id=personal"
+          },
+          "owner_approval": "not_recorded"
+        },
+        "cinematic-ten-06": {
+          "film_id": 6,
+          "filename": "06_A_Garden_Awakens_1080p60.mp4",
+          "master_sha256": "2d3bdc8e8903b13b5d60a442f8b533d6aab57516c449ecb4a41210e03f2cf3d8",
+          "bytes": 51061569,
+          "media": {
+            "width": 1920,
+            "height": 1080,
+            "fps": 60,
+            "frames": 1200,
+            "seconds": 20
+          },
+          "status": "final_complete_technical_passed_sampled_visual_reviewed_and_saved",
+          "authored_score_entry_ids": [
+            "cinematic-ten.butterfly-flight"
+          ],
+          "decoded_frames": 1200,
+          "sampled_frame_indices": [
+            0,
+            120,
+            300,
+            480,
+            660,
+            840,
+            1020,
+            1199
+          ],
+          "visual_scope": "Eight decoded timeline samples, plus native decoded opening and last frame. This is sampled visual review, not full playback or owner approval.",
+          "blocking_visual_defects_found": false,
+          "technical_evidence": "project-docs/production-system/evidence/cinematic-ten-complete-review.json",
+          "saved_delivery_evidence": "project-docs/production-system/evidence/cinematic-ten-final-delivery.json",
+          "library": {
+            "status": "saved",
+            "library_file_id": "libfile_8fcaa552e044819191bd992d593e52c8",
+            "file_id": "file_000000002978822fb5856c03126f8f31",
+            "version": 0,
+            "url": "https://chatgpt.com/library?file_id=libfile_8fcaa552e044819191bd992d593e52c8&account_id=personal"
+          },
+          "owner_approval": "not_recorded"
+        },
+        "cinematic-ten-07": {
+          "film_id": 7,
+          "filename": "07_Wings_of_Peace_1080p60.mp4",
+          "master_sha256": "30880be109c9da3de5e96037f397ac8c8c8c72c101d7cda4776accc2633d2b6f",
+          "bytes": 21902494,
+          "media": {
+            "width": 1920,
+            "height": 1080,
+            "fps": 60,
+            "frames": 1200,
+            "seconds": 20
+          },
+          "status": "final_complete_technical_passed_sampled_visual_reviewed_and_saved",
+          "authored_score_entry_ids": [
+            "cinematic-ten.articulated-dove-flight"
+          ],
+          "decoded_frames": 1200,
+          "sampled_frame_indices": [
+            0,
+            120,
+            300,
+            480,
+            660,
+            840,
+            1020,
+            1199
+          ],
+          "visual_scope": "Eight decoded timeline samples, plus native decoded opening and last frame. This is sampled visual review, not full playback or owner approval.",
+          "blocking_visual_defects_found": false,
+          "technical_evidence": "project-docs/production-system/evidence/cinematic-ten-complete-review.json",
+          "saved_delivery_evidence": "project-docs/production-system/evidence/cinematic-ten-final-delivery.json",
+          "library": {
+            "status": "saved",
+            "library_file_id": "libfile_821bfd25f004819193badf599d094903",
+            "file_id": "file_00000000c7f481f5b0c02f83b6d50fff",
+            "version": 0,
+            "url": "https://chatgpt.com/library?file_id=libfile_821bfd25f004819193badf599d094903&account_id=personal"
+          },
+          "owner_approval": "not_recorded"
+        },
+        "cinematic-ten-08": {
+          "film_id": 8,
+          "filename": "08_Ocean_of_Light_1080p60.mp4",
+          "master_sha256": "da076670eb36a52b087bee26128bee0eab4baab8a9ae08ff5fc197b2a0052fc6",
+          "bytes": 37434533,
+          "media": {
+            "width": 1920,
+            "height": 1080,
+            "fps": 60,
+            "frames": 1200,
+            "seconds": 20
+          },
+          "status": "final_complete_technical_passed_sampled_visual_reviewed_and_saved",
+          "authored_score_entry_ids": [],
+          "decoded_frames": 1200,
+          "sampled_frame_indices": [
+            0,
+            120,
+            300,
+            480,
+            660,
+            840,
+            1020,
+            1199
+          ],
+          "visual_scope": "Eight decoded timeline samples, plus native decoded opening and last frame. This is sampled visual review, not full playback or owner approval.",
+          "blocking_visual_defects_found": false,
+          "technical_evidence": "project-docs/production-system/evidence/cinematic-ten-complete-review.json",
+          "saved_delivery_evidence": "project-docs/production-system/evidence/cinematic-ten-final-delivery.json",
+          "library": {
+            "status": "saved",
+            "library_file_id": "libfile_a306fcad0d588191b4c4626bd36e2867",
+            "file_id": "file_00000000361081f5af59afd0c29328f7",
+            "version": 0,
+            "url": "https://chatgpt.com/library?file_id=libfile_a306fcad0d588191b4c4626bd36e2867&account_id=personal"
+          },
+          "owner_approval": "not_recorded"
+        },
+        "cinematic-ten-09": {
+          "film_id": 9,
+          "filename": "09_Celestial_Clockwork_1080p60.mp4",
+          "master_sha256": "b4c4956e5401ce5fe3283037a0cd7d6ca9f3f042a104d599fa94f50d6e5254b4",
+          "bytes": 23457102,
+          "media": {
+            "width": 1920,
+            "height": 1080,
+            "fps": 60,
+            "frames": 1200,
+            "seconds": 20
+          },
+          "status": "final_complete_technical_passed_sampled_visual_reviewed_and_saved",
+          "authored_score_entry_ids": [],
+          "decoded_frames": 1200,
+          "sampled_frame_indices": [
+            0,
+            120,
+            300,
+            480,
+            660,
+            840,
+            1020,
+            1199
+          ],
+          "visual_scope": "Eight decoded timeline samples, plus native decoded opening and last frame. This is sampled visual review, not full playback or owner approval.",
+          "blocking_visual_defects_found": false,
+          "technical_evidence": "project-docs/production-system/evidence/cinematic-ten-complete-review.json",
+          "saved_delivery_evidence": "project-docs/production-system/evidence/cinematic-ten-final-delivery.json",
+          "library": {
+            "status": "saved",
+            "library_file_id": "libfile_b5e1f83e34b0819184f426415648399d",
+            "file_id": "file_000000000a1481f5a5d8fe96547b6436",
+            "version": 0,
+            "url": "https://chatgpt.com/library?file_id=libfile_b5e1f83e34b0819184f426415648399d&account_id=personal"
+          },
+          "owner_approval": "not_recorded"
+        },
+        "cinematic-ten-10": {
+          "film_id": 10,
+          "filename": "10_Together_in_the_Light_1080p60.mp4",
+          "master_sha256": "e62b7ef360cc1ef29df6cf8221a2ce72c29ba9f22ddfbd7b749e64a4cbbc939f",
+          "bytes": 34430368,
+          "media": {
+            "width": 1920,
+            "height": 1080,
+            "fps": 60,
+            "frames": 1200,
+            "seconds": 20
+          },
+          "status": "final_complete_technical_passed_sampled_visual_reviewed_and_saved",
+          "authored_score_entry_ids": [
+            "cinematic-ten.walking-processions"
+          ],
+          "decoded_frames": 1200,
+          "sampled_frame_indices": [
+            0,
+            120,
+            300,
+            480,
+            660,
+            840,
+            1020,
+            1199
+          ],
+          "visual_scope": "Eight decoded timeline samples, plus native decoded frames at 0.000, 5.000, 10.000, 17.500 and 19.983 seconds. Specific attention was given to the greeting figures, their separation, final group framing and closing-title readability. This is sampled visual review, not full playback or owner approval.",
+          "blocking_visual_defects_found": false,
+          "technical_evidence": "project-docs/production-system/evidence/cinematic-ten-complete-review.json",
+          "saved_delivery_evidence": "project-docs/production-system/evidence/cinematic-ten-final-delivery.json",
+          "library": {
+            "status": "saved",
+            "library_file_id": "libfile_e3c5f7bacecc8191a9b271ea8f3d4943",
+            "file_id": "file_000000006fc881f5bb9bc2ac0da9eba4",
+            "version": 0,
+            "url": "https://chatgpt.com/library?file_id=libfile_e3c5f7bacecc8191a9b271ea8f3d4943&account_id=personal"
+          },
+          "owner_approval": "not_recorded"
+        }
+      }
+    }
   }
 }

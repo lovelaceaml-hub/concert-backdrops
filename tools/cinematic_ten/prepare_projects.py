@@ -63,7 +63,7 @@ def main():
                 "allow_paid_services": False, "allow_ai_generated_visuals": False,
                 "allow_stock_footage": False, "random_seed": 20261121,
                 "threads": 1, "render_workers": 3 if film_id == 10 else 2,
-                "render_chunk_frames": 50 if film_id == 10 else 300,
+                "render_chunk_frames": 150 if film_id == 10 else 300,
                 "render_timeout_seconds": 7200},
             "quality": {
                 "draft": {"width": 960, "height": 540, "temporal_samples": 1, "image_bit_depth": 8},

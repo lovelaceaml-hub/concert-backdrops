@@ -1,5 +1,15 @@
 # Cinematic Ten authored motion
 
+<!-- cinematic-ten-final-movie-evidence:begin -->
+## Final movie evidence addendum
+
+All ten twenty-second films are complete, technically passed, reviewed within the recorded sample scope, and saved. The overview, README, technical records, checksums and complete ZIP are also saved. No Cinematic Ten owner approval is recorded.
+
+Exact identities are in [the final delivery evidence](evidence/cinematic-ten-final-delivery.json); actual per-film scope and findings are in [the complete review evidence](evidence/cinematic-ten-complete-review.json).
+
+The motion catalog now has a separate `authored_scores.final_movie_evidence` map for all ten registered films. The original inventory below and each entry's dated `review` remain unchanged. Whole-movie technical evidence does not extend the earlier numerical contact, costume, flight or biomechanical verification scope.
+<!-- cinematic-ten-final-movie-evidence:end -->
+
 Recorded November 21, 2026, America/Los_Angeles. This is a reusable source and partial-review inventory. It does not certify completion, encoded final QA or owner approval of any whole film. Those milestones remain in [STATE.json](STATE.json) and the [delivery catalog](catalogs/deliveries.json).
 
 The `authored_scores` section of [catalogs/motions.json](catalogs/motions.json) records six new score/integration entries, exact source-file SHA256 values, supplied recording identities and scoped review findings. The existing eight prepared clips, seven capture identities, candidate statuses and earlier inventory date are unchanged.

@@ -1,31 +1,41 @@
 # Concert production system
 
-Current handoff: Cinematic Ten, November 21, 2026, America/Los_Angeles. Machine render and storage observations may use UTC.
+Current handoff: Cinematic Ten final delivery, 2026-11-21, America/Los_Angeles. Machine observations use UTC.
 
 **The Words of Mother's Love bring peace.** Build every film around that message. The owner approved the sharper Song 11 beauty study and requested that its setup, source, instructions and references be saved, uploaded and merged for every AI to reuse. The owner also authorized continued model, acting and workflow improvement across the concert songs.
 
-## Current work: ten final cinematic films
+## Current delivery: ten final cinematic films
 
-The owner rejected the earlier rough motion studies and requested the ten finished films in the established concert style. Picture source is frozen at `df4fc478116d3f0e34a85d2166097fbda55911bf`, branch `creative/cinematic-ten-films`, [PR #108](https://github.com/lovelaceaml-hub/concert-backdrops/pull/108). Each explicit project produces twenty seconds, 1,200 native 1920 x 1080 frames at 60 fps and two temporal samples. Preserve this frozen picture source while the coordinator completes the bounded CPU queue.
+All ten twenty-second films are complete, technically passed, reviewed within the recorded sample scope, and saved. The overview, README, technical records, checksums and complete ZIP are also saved. No Cinematic Ten owner approval is recorded.
 
-| Registered project | Film | Current final status |
+Picture source remains `df4fc478116d3f0e34a85d2166097fbda55911bf`, branch `creative/cinematic-ten-films`, [PR #108](https://github.com/lovelaceaml-hub/concert-backdrops/pull/108). Each film has 1,200 native 1920 x 1080 frames at 60 fps and two temporal samples.
+
+| Film | Title | Saved final movie |
 | --- | --- | --- |
-| `cinematic-ten-01` | Silk in Light | Rendering or queued |
-| `cinematic-ten-02` | Petals in Motion | Rendering or queued |
-| `cinematic-ten-03` | One World, Many Hearts | Rendering or queued |
-| `cinematic-ten-04` | The Written Light | Rendering or queued |
-| `cinematic-ten-05` | Procession of Lanterns | Rendering or queued |
-| `cinematic-ten-06` | A Garden Awakens | Rendering or queued |
-| `cinematic-ten-07` | Wings of Peace | Rendering or queued |
-| `cinematic-ten-08` | Ocean of Light | Rendering or queued |
-| `cinematic-ten-09` | Celestial Clockwork | Complete, technically passed and saved |
-| `cinematic-ten-10` | Together in the Light | Rendering or queued |
+| 01 | Silk in Light | [01_Silk_in_Light_1080p60.mp4](https://chatgpt.com/library?file_id=libfile_ea21501ca69c8191a485dadd0ba7845e&account_id=personal) |
+| 02 | Petals in Motion | [02_Petals_in_Motion_1080p60.mp4](https://chatgpt.com/library?file_id=libfile_8fe98daf9ea88191b898686ab0975625&account_id=personal) |
+| 03 | One World, Many Hearts | [03_One_World_Many_Hearts_1080p60.mp4](https://chatgpt.com/library?file_id=libfile_c7f33c7ed65c8191bf2ca8b5868607f0&account_id=personal) |
+| 04 | The Written Light | [04_The_Written_Light_1080p60.mp4](https://chatgpt.com/library?file_id=libfile_1b901203e3788191a56b51d623a4e986&account_id=personal) |
+| 05 | Procession of Lanterns | [05_Procession_of_Lanterns_1080p60.mp4](https://chatgpt.com/library?file_id=libfile_6b97089123b4819194218560c357ce8c&account_id=personal) |
+| 06 | A Garden Awakens | [06_A_Garden_Awakens_1080p60.mp4](https://chatgpt.com/library?file_id=libfile_8fcaa552e044819191bd992d593e52c8&account_id=personal) |
+| 07 | Wings of Peace | [07_Wings_of_Peace_1080p60.mp4](https://chatgpt.com/library?file_id=libfile_821bfd25f004819193badf599d094903&account_id=personal) |
+| 08 | Ocean of Light | [08_Ocean_of_Light_1080p60.mp4](https://chatgpt.com/library?file_id=libfile_a306fcad0d588191b4c4626bd36e2867&account_id=personal) |
+| 09 | Celestial Clockwork | [09_Celestial_Clockwork_1080p60.mp4](https://chatgpt.com/library?file_id=libfile_b5e1f83e34b0819184f426415648399d&account_id=personal) |
+| 10 | Together in the Light | [10_Together_in_the_Light_1080p60.mp4](https://chatgpt.com/library?file_id=libfile_e3c5f7bacecc8191a9b271ea8f3d4943&account_id=personal) |
 
-Films **01, 05, 06, 07, 08 and 09** are complete and saved. Each has passed the pipeline and independent full-decode technical checks, with eight decoded timeline samples plus native opening/ending inspection. Exact saved identities are in [the delivery checkpoint](evidence/cinematic-ten-library-delivery.json), and the scoped findings are in [the final-review checkpoint](evidence/cinematic-ten-final-review.json). Films **02, 03, 04 and 10** remain in production. No Cinematic Ten owner approval is recorded.
+Exact identities are in [the final delivery evidence](evidence/cinematic-ten-final-delivery.json); actual per-film scope and findings are in [the complete review evidence](evidence/cinematic-ten-complete-review.json).
 
-Three actual supplied recordings have now been recovered and inspected: close solo fan, wider ensemble fan and illuminated globe. [CINEMATIC-TEN-MOTION.md](CINEMATIC-TEN-MOTION.md) and [the motion catalog](catalogs/motions.json) record their exact identities, new reusable APIs and tested limits. The solo and ensemble scores are original authored movement informed by the dance references; calligraphy is independently authored from its brief. None is motion capture or choreography reconstruction. Earlier automatic estimates of feet hidden by skirts were not verified in this round.
+Saved package and support files:
 
-Continue through [AI-HANDOFF.md](AI-HANDOFF.md) and [STATE.json](STATE.json). The live working queue is `work/cinematic-ten/active-render-queue.json`; saved output identities are in `work/cinematic-ten/library-delivery.json`. Final master paths are `work/pipeline/cinematic-ten-XX/final/master.mp4`. Inspect per-film receipts and logs before resuming, reuse valid frames, and do not duplicate running jobs. Finish encoded review, exact-byte saves and the delivery records for all ten before moving to older improvements. The working queue files are progress records, not an unattended service or permanent archive.
+- [Ten_Cinematic_Films_Overview.jpg](https://chatgpt.com/library?file_id=libfile_692524e180dc8191a7f13c340e94ac89&account_id=personal)
+- [README.md](https://chatgpt.com/library?file_id=libfile_c4392e6bf8088191bd33e2111081ce46&account_id=personal)
+- [Ten_Cinematic_Films_Technical.json](https://chatgpt.com/library?file_id=libfile_a937b0e8ab9881918cb11414df49eba5&account_id=personal)
+- [SHA256SUMS.txt](https://chatgpt.com/library?file_id=libfile_5baa3ce7f9848191aee8e3abdae29c30&account_id=personal)
+- [Ten_Cinematic_Films_1080p60.zip](https://chatgpt.com/library?file_id=libfile_9692c5a09c4c8191b65ade72f7abfbb0&account_id=personal)
+
+Full technical decoding and sampled visual review are distinct from real-time playback, biomechanical validation and exact-output owner approval. Supplied references informed original authored work; no source choreography was reconstructed.
+
+The current production and save round is complete. Do not restart the completed queue. Use [AI-HANDOFF.md](AI-HANDOFF.md), [STATE.json](STATE.json) and [CINEMATIC-TEN-MOTION.md](CINEMATIC-TEN-MOTION.md) for reuse, exact-output feedback and later separate increments. Historical queue files record how this round was produced; they are not live process telemetry.
 
 ## Historical delivered increment: original fan and silk trio, PR #106
 
@@ -88,15 +98,15 @@ The registered render and independent auditor both passed without errors or warn
 
 The earlier 30-second people demonstration remains an engineering experiment. The owner found it sharper but less beautiful than the promo. Do not promote that example into the creative baseline merely because its checks passed. The 10-second design example proves native 4K delivery; it does not prove all concert scenes have been rendered in 4K.
 
-## Resume the current round
+## Reproduce a completed film
 
-Read the frozen source identity, queue and per-film receipts before starting a process. For a read-only plan of one explicitly registered film:
+The current render and save round is complete. Recover its exact saved masters for delivery. For a read-only plan of an explicitly registered film:
 
 ```bash
 .venv/bin/python -m pipeline.cli produce cinematic-ten-03 --quality final --plan
 ```
 
-The coordinator resumes only unfinished jobs and bounds simultaneous workers. Reacquire the exact declared audio and runtime dependencies if the workspace was lost; do not alter manifests or replace picture hashes to make old checkpoints appear valid. Full masters must pass encoded checks and be saved with their exact hashes before this handoff is marked complete.
+Deliberate reproduction belongs in an isolated checkout with the frozen source, exact declared audio and pinned runtime dependencies. Preserve the recorded manifests and picture identities. A new render or package has its own output identity; it does not replace the saved exact file without separate validation and a versioned delivery record.
 
 ## Start a later song in a fresh worktree
 
