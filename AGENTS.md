@@ -2,7 +2,7 @@
 
 ## Active increment: Advanced Dance, PR #109
 
-The current request revises the first two dance films with complete 32-second advanced choreography. Work is active in `tools/advanced_dance/`, branch `creative/advanced-choreography-20261121`, PR #109. The first source checkpoint is `eec83de733cf89f74209b6fdb48fba9cb1b98e2d`; full-clip repairs and validation are still in progress. Read current `STATE.json` and the new leading blocks in START-HERE and AI-HANDOFF. Finish both movies and an updated complete ten-film package under the existing authorization. Earlier Cinematic Ten completion statements below describe the previous increment.
+The current request revises the first two dance films with complete 32-second advanced choreography. Work is active in `tools/advanced_dance/`, branch `creative/advanced-choreography-20261121`, PR #109. Corrected picture source is frozen at `254414bc0356171f7d5ad89361c75d45fd01a407`; full motion and costume numeric checks pass, native moving proofs are rendering, and final media delivery remains in progress. Read current `STATE.json` and the new leading blocks in START-HERE and AI-HANDOFF. Finish both movies and an updated complete ten-film package under the existing authorization. Earlier Cinematic Ten completion statements below describe the previous increment.
 
 
 Current system handoff: November 21, 2026, America/Los_Angeles.

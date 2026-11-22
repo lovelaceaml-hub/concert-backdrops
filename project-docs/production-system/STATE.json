@@ -19,7 +19,7 @@
   "audio_sources_verified": 11,
   "full_rehearsal_recordings_verified": 0,
   "current_increment": "Advanced Dance: two complete 32-second solo and ensemble performances revising films 01 and 02",
-  "increment_status": "corrected_picture_inputs_frozen; final_motion_and_costume_validation_in_progress",
+  "increment_status": "numeric_and_native_sample_checks_passed; native_motion_proof_frames_rendering",
   "cloud_gpu_provider": null,
   "mac_rendering_used": false,
   "new_study_creative_approval": "not_recorded",
@@ -28,7 +28,7 @@
     "handoff": "https://drive.google.com/drive/folders/1QDGGqqkJlbovBLCthX-QChqfD8zSmK8X",
     "media": "https://drive.google.com/drive/folders/1hrk62bFIOHv2NwXvYl2bNSmp0cwBoXrr"
   },
-  "next_work": "Finish the observed ensemble canon and costume strain repairs, validate final inputs, review continuous motion proofs, render both native 1080p60 films, save the two movies and updated complete ten-film package, and merge PR109 normally.",
+  "next_work": "Finish native moving proofs, inspect the recorded fast support and fan passages, render missing frames for both 1080p60 masters, save the exact revised movies and updated ten-film ZIP, then close the source and handoff through PR109.",
   "background_service_configured": false,
   "historical_baseline_checkpoint": "673f68785c36b57d55d05129ee5549efe6352c60",
   "render_projects": [
@@ -47,7 +47,9 @@
     "cinematic-ten-07",
     "cinematic-ten-08",
     "cinematic-ten-09",
-    "cinematic-ten-10"
+    "cinematic-ten-10",
+    "advanced-dance-solo",
+    "advanced-dance-ensemble"
   ],
   "new_model_family_count": 9,
   "new_model_variant_count": 18,
@@ -230,7 +232,7 @@
   },
   "active_development": {
     "name": "Advanced Dance",
-    "status": "repair_and_validation_in_progress",
+    "status": "native_motion_proof_rendering",
     "owner_request": "Extremely advanced high quality high pace choreography with sparkles and lights; correct awkward hand positions, anatomy and movement.",
     "integration_branch": "creative/advanced-choreography-20261121",
     "checkpoint_source_commit": "eec83de733cf89f74209b6fdb48fba9cb1b98e2d",
@@ -240,18 +242,26 @@
       "advanced-dance-solo",
       "advanced-dance-ensemble"
     ],
-    "current_handoff": "project-docs/production-system/START-HERE.md",
+    "current_handoff": "project-docs/production-system/ADVANCED-DANCE.md",
     "motion_handoff": "tools/advanced_dance/README.md",
     "reference_recordings_acquired": true,
     "reference_recordings_sampled": true,
     "observed_remaining_repairs": [],
     "delivery_scope": "Replace films 01 and 02 in a newly named ten-film package; preserve exact delivered 03 through 10 bytes.",
     "validation_pending": [
-      "Remaining five complete ensemble costume audits",
-      "Final dense motion and cast audits",
-      "Continuous picture proofs and native cache verification",
-      "Final movie rendering, saving and PR merge"
-    ]
+      "Review continuous motion proofs, especially fast turns and support exchanges",
+      "Review final encoded movies and full technical decode",
+      "Save final movies and updated ten-film package",
+      "Update exact delivery identities and normally merge PR109"
+    ],
+    "source_commit": "254414bc0356171f7d5ad89361c75d45fd01a407",
+    "numeric_motion_sample_count": 26484,
+    "numeric_motion_errors": 0,
+    "numeric_motion_review_flags": 6,
+    "cloth_saved_states_checked": 5772,
+    "cloth_render_samples_checked": 26484,
+    "cloth_failures": 0,
+    "cast_pair_failures": 0
   },
   "historical_increments": [
     {
@@ -1093,5 +1103,19 @@
   "new_support_files_saved": 0,
   "new_delivery_artifacts_saved": 0,
   "total_new_media_catalog_count_scope": "Delivery catalog entry count, including support artifacts; historical field name retained.",
-  "render_completion_evidence": "project-docs/production-system/evidence/cinematic-ten-render-completion.json"
+  "render_completion_evidence": "project-docs/production-system/evidence/cinematic-ten-render-completion.json",
+  "advanced_dance_computation_checkpoint": {
+    "path": "/workspace/scratch/5c574d00bbc0/advanced-dance/work/advanced-dance/retained/Advanced_Dance_Render_Cache_Checkpoint.zip",
+    "filename": "Advanced_Dance_Render_Cache_Checkpoint.zip",
+    "bytes": 110767689,
+    "sha256": "2857b560f6a8f9365a1daf7efd30d85c5756014bd9c724b9d893b06f9611b63f",
+    "member_count": 46,
+    "purpose": "Recover exact corrected costume and fan trajectory computations plus final numeric audit captures. This checkpoint is not a final movie delivery.",
+    "picture_source_commit": "254414bc0356171f7d5ad89361c75d45fd01a407",
+    "library_file_id": "libfile_e2a6a2faeb24819196e0662d231158bb",
+    "file_id": "file_000000007e9c81f5a373a709c709b16d",
+    "version": 0,
+    "status": "saved",
+    "url": "https://chatgpt.com/library?file_id=libfile_e2a6a2faeb24819196e0662d231158bb&account_id=personal"
+  }
 }
