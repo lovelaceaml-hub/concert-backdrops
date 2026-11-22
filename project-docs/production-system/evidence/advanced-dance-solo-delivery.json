@@ -1,0 +1,31 @@
+{
+  "filename": "01_Silk_in_Light_Advanced_Dance_1080p60.mp4",
+  "path": "/workspace/scratch/5c574d00bbc0/advanced-dance/work/advanced-dance/ready/01_Silk_in_Light_Advanced_Dance_1080p60.mp4",
+  "bytes": 57396334,
+  "sha256": "8f02ee2a72a128198771cfb8f3d3dabc0b90716abdb4c028d19fa462b6a6edac",
+  "source_picture_commit": "254414bc0356171f7d5ad89361c75d45fd01a407",
+  "technical_passed": true,
+  "final_encoded_visual_review": {
+    "status": "no_blocker_in_sampled_scope",
+    "report": "project-docs/production-system/evidence/advanced-dance-solo-final-encoded-review.json",
+    "sha256": "d923351a3dd1390d6bb0f05abebe6dba4600aec87746b92ecd9ddf627e34a4b2",
+    "distinct_decoded_frames": 150,
+    "inspected_sheets": 29,
+    "native_precheck_frames": 35,
+    "continuous_perceptual_review_claimed": false,
+    "owner_approval": false
+  },
+  "library": {
+    "status": "saved",
+    "library_file_id": "libfile_5efbae79a5d88191b729f3726b94d117",
+    "file_id": "file_000000003f7c81f5b33ed8b9816ae379",
+    "version": 0,
+    "url": "https://chatgpt.com/library?file_id=libfile_5efbae79a5d88191b729f3726b94d117&account_id=personal"
+  },
+  "desktop_playback_review": {
+    "path": "work/advanced-dance/qa/final/solo-desktop-playback-review.json",
+    "sha256": "d122d7d8063bf5bac058555c9ada18ad1b4e98e62da7accad07a0dc4410d5aa3",
+    "scope": "Observed actual file import, intermediate poses and arrival at closing pose; display and 30 fps viewer-project limits retained."
+  },
+  "saved_utc": "2026-11-22T09:29:05.431498+00:00"
+}

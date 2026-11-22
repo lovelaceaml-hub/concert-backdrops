@@ -1,0 +1,171 @@
+{
+  "schema_version": 1,
+  "reviewer": "motion_qa independent agent",
+  "status": "solo_final_encoded_sampled_review_complete",
+  "started_utc": "2026-11-22T09:10:55.606948+00:00",
+  "updated_utc": "2026-11-22T09:27:51.518365+00:00",
+  "native_prechecks": [
+    {
+      "mode": "solo",
+      "source_fingerprint": "437e7420ab538baf3608b879ca371a335ffbbaa09e77444cce7103485b5801ed",
+      "manifest": "work/advanced-dance/qa/final/native-solo-final-precheck/manifest.json",
+      "manifest_sha256": "a0b4e5e36287ccf768051188ae0b8d18f4bc0c46f9071eac806ad7c7216995cd",
+      "inspected_groups": [
+        "cut-447",
+        "cut-882",
+        "cut-1319",
+        "knee-559",
+        "palm-569",
+        "travel-959",
+        "wrist-1437"
+      ],
+      "inspected_distinct_native_frames": 35,
+      "missing_groups": [],
+      "sampled_visual_blockers_identified": [],
+      "source_status": "All 35 inspected native images now match the completed 1920-frame production receipt. The manifest retains their original collection provenance.",
+      "native_sampled_review_complete": true,
+      "exact_cut_frames_inspected": [
+        447,
+        882,
+        1319
+      ],
+      "exact_odd_peak_frames_inspected": [
+        559,
+        569,
+        959,
+        1437
+      ],
+      "all_reviewed_native_frames_promoted_and_hash_matched": true
+    }
+  ],
+  "encoded_masters": [
+    {
+      "mode": "solo",
+      "status": "sampled_final_encoded_review_complete",
+      "review_completed_utc": "2026-11-22T09:27:51.518365+00:00",
+      "movie": "work/pipeline/advanced-dance-solo/final/master.mp4",
+      "movie_sha256": "8f02ee2a72a128198771cfb8f3d3dabc0b90716abdb4c028d19fa462b6a6edac",
+      "movie_bytes": 57396334,
+      "master_receipt": "work/pipeline/advanced-dance-solo/final/master.json",
+      "master_receipt_sha256": "fda4d396287f3f0f2962886155033aec74624ab52d8f8242398903d2bc855a17",
+      "qa_receipt": "work/pipeline/advanced-dance-solo/final/qa.json",
+      "qa_receipt_sha256": "c4d97db89fbcb790ad565942500d156824606074936fdbdc0a55b443431ca099",
+      "production_receipt": "work/pipeline/advanced-dance-solo/final/shots/performance/receipt.json",
+      "production_receipt_sha256": "ace3dda5aabb95dcc5000f7c6164a54a3c036d3690fe155d0486849495001fae",
+      "source_fingerprint": "437e7420ab538baf3608b879ca371a335ffbbaa09e77444cce7103485b5801ed",
+      "technical_qa_passed": true,
+      "fps": 60,
+      "duration_seconds": 32,
+      "frame_count": 1920,
+      "cut_frame_policy": "round(beat_seconds[count] * 60), count in (16, 32, 48); new camera at global frame index / 60 >= cut time",
+      "cut_frames": [
+        447,
+        882,
+        1319
+      ],
+      "windows": [
+        {
+          "id": "early-turn",
+          "start_frame": 555,
+          "end_frame_inclusive": 579
+        },
+        {
+          "id": "middle-travel",
+          "start_frame": 948,
+          "end_frame_inclusive": 972
+        },
+        {
+          "id": "late-turn",
+          "start_frame": 1428,
+          "end_frame_inclusive": 1446
+        },
+        {
+          "id": "closest-fan-pass",
+          "start_frame": 1414,
+          "end_frame_inclusive": 1418
+        }
+      ],
+      "exact_selected_pts_verified": true,
+      "sample_manifest": "work/advanced-dance/qa/final/solo-final-encoded-samples/manifest.json",
+      "sample_manifest_sha256": "eb95d15d32d52b2e8b6719833d2f4d759d55063aff3ddcc1ddac18b4660c5a96",
+      "inspected_distinct_decoded_frames": 150,
+      "inspected_sheets": 29,
+      "overview_sample_count": 65,
+      "overview_spacing_seconds": 0.5,
+      "overview_includes_final_frame": 1919,
+      "dense_window_sampling_fps": 60,
+      "cut_neighborhood_radius_frames": 2,
+      "exact_odd_peak_frames_inspected": [
+        559,
+        569,
+        959,
+        1437
+      ],
+      "sampled_visual_review_complete": true,
+      "sampled_visual_blockers_identified": [],
+      "observations": [
+        {
+          "group": "whole-performance-overview",
+          "finding": "The 65 overview images, sampled every half second and including the final frame at 31.983333 seconds, were inspected. The sequence shows changing fan arcs, overhead motifs, traveling steps, rotating torso and skirt, lowered and raised body phrases, and an open-fan finish. Full figure and fan extents fit the inspected overview compositions. No blank or corrupt sample, missing prop, or isolated disconnected cloth patch was observed."
+        },
+        {
+          "group": "camera-cuts",
+          "finding": "All five encoded frames around each actual cut at 447, 882 and 1319 were inspected. Each camera changes at the derived cut frame, with no obvious blank exposure, duplicate-camera image, or full-figure clipping in these neighborhoods."
+        },
+        {
+          "group": "early-turn",
+          "finding": "All 25 frames from 555 through 579 were inspected in figure and feet crops. The sequence includes odd frames 559 and 569 omitted by the earlier 30 fps proof. Fan orientations progress through the face projection and edge-on positions without an isolated grip discontinuity. Visible foot lifting and landing can be followed; overlapping foot projections around 9.5 seconds separate in the subsequent frames. Knee visibility is partly restricted by the skirt."
+        },
+        {
+          "group": "middle-travel",
+          "finding": "All 25 frames from 948 through 972 were inspected in figure and feet crops. Alternating foot movement is visible, with one foot lifting while the other remains low, followed by the next transfer around 16 seconds. No isolated body teleport or abrupt cloth topology change was observed. The edge-on fan beside the body continues coherently."
+        },
+        {
+          "group": "late-turn",
+          "finding": "All 19 frames from 1428 through 1446 were inspected in figure and feet crops, including the peak wrist-speed odd frame 1437. The fan rotates through broad and edge-on projections with intermediate orientations, the grip remains visually connected, and the rotating lower legs and skirt remain coherent. The visible foot lifts and settles while the other remains low."
+        },
+        {
+          "group": "closest-fan-pass",
+          "finding": "All five frames from 1414 through 1418 were inspected in native head, hand and fan crops. The fan projects closely beside and in front of the head at the 23.6-second minimum-clearance sample. No obvious fan-through-head defect is visible in this ordered sequence."
+        },
+        {
+          "group": "encoded-detail",
+          "finding": "The inspected native crops preserve the luminous surface, fan ribs and visible hand-to-fan attachment. This is a visual assessment of a lossy encoded master, not a claim of pixel equality to the source PNGs."
+        }
+      ],
+      "scope_limits": [
+        "Ordered still-frame inspection, with dense windows sampled at the exact 60 fps frame clock. This agent did not perform real-time playback or audio listening.",
+        "The half-second overview samples do not cover every intervening frame; all frames are included only within the listed dense windows and five-frame cut neighborhoods.",
+        "Some detail crops intentionally trim outer fan rims. Full composition findings use the overview images and full cut frames.",
+        "Occlusion limits direct inspection of skirt-covered knees and some fingers. Numerical joint and clearance reports provide separate evidence, not validated physical balance or full mesh collision proof.",
+        "No owner or artistic approval is implied."
+      ],
+      "continuous_playback_review_complete": false,
+      "audio_review_complete": false,
+      "owner_approval": false
+    }
+  ],
+  "encoded_master_review_complete": true,
+  "continuous_playback_review_complete": false,
+  "audio_review_complete": false,
+  "owner_approval": false,
+  "scope_limits": [
+    "This immutable record covers the exact solo final 1080p60 master only. Its sampled visual review is complete. Ensemble review will have a separate record.",
+    "This report records ordered image inspection. Real-time playback and audio review by other reviewers are separate records.",
+    "Sampled visual findings do not certify every frame, hidden anatomy, physical balance, full mesh collision, or owner artistic approval.",
+    "The earlier native and 30 fps proof reviews are preserved unchanged with their original, time-scoped pending status. This record adds final-master evidence without rewriting them."
+  ],
+  "frozen_previous_reviews": [
+    {
+      "path": "work/advanced-dance/qa/final/independent-visual-review.json",
+      "sha256": "f01f3f02c4c0c71fb2877ed4f6ee1736fee160e943a65c6d63e08ff11273013b"
+    },
+    {
+      "path": "work/advanced-dance/qa/final/independent-moving-review.json",
+      "sha256": "0c1edddad1a7de4b25c8fc6496e9996600c2ebea37c42764c3f4e6b8eeba9a04"
+    }
+  ],
+  "reviewed_modes": [
+    "solo"
+  ]
+}

@@ -13,7 +13,12 @@ The frozen corrected picture source is
 `254414bc0356171f7d5ad89361c75d45fd01a407`, branch
 `creative/advanced-choreography-20261121`,
 [PR #109](https://github.com/lovelaceaml-hub/concert-backdrops/pull/109).
-Native moving proofs, final rendering and delivery are in progress. No owner
+The solo 1080p60 master is complete, technically passed, sampled in 150 encoded
+frames and saved. Its exact identity and review are in
+`evidence/advanced-dance-solo-delivery.json`. Ensemble review rendering and the
+complete ten-film package remain in progress. Three short-batch ensemble workers
+are used after two interrupted workers were recovered without changing pictures;
+see `evidence/advanced-dance-execution-policy.json`. No new exact-output owner
 approval is recorded. Current status belongs to `STATE.json`.
 
 ## Choreography and visual treatment

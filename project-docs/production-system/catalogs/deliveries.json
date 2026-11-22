@@ -1006,6 +1006,38 @@
       "drive": {
         "status": "no_copy_recorded_for_this_delivery"
       }
+    },
+    {
+      "id": "advanced-dance-solo",
+      "filename": "01_Silk_in_Light_Advanced_Dance_1080p60.mp4",
+      "kind": "finished_dance_film",
+      "description": "Complete 32-second solo revising film 01; native 1080p60 with full authored choreography, articulated grips, corrected support, skirt and lighting.",
+      "bytes": 57396334,
+      "sha256": "8f02ee2a72a128198771cfb8f3d3dabc0b90716abdb4c028d19fa462b6a6edac",
+      "picture_source_commit": "254414bc0356171f7d5ad89361c75d45fd01a407",
+      "saved_delivery_evidence": "project-docs/production-system/evidence/advanced-dance-solo-delivery.json",
+      "creative_approval": "not_recorded",
+      "library": {
+        "status": "saved",
+        "library_file_id": "libfile_5efbae79a5d88191b729f3726b94d117",
+        "file_id": "file_000000003f7c81f5b33ed8b9816ae379",
+        "version": 0,
+        "url": "https://chatgpt.com/library?file_id=libfile_5efbae79a5d88191b729f3726b94d117&account_id=personal"
+      },
+      "technical_passed": true,
+      "visual_review": {
+        "status": "no_blocker_in_sampled_scope",
+        "report": "project-docs/production-system/evidence/advanced-dance-solo-final-encoded-review.json",
+        "sha256": "d923351a3dd1390d6bb0f05abebe6dba4600aec87746b92ecd9ddf627e34a4b2",
+        "distinct_decoded_frames": 150,
+        "inspected_sheets": 29,
+        "native_precheck_frames": 35,
+        "continuous_perceptual_review_claimed": false,
+        "owner_approval": false
+      },
+      "drive": {
+        "status": "no_copy_recorded_for_this_delivery"
+      }
     }
   ],
   "limits": [
@@ -1120,5 +1152,15 @@
     "owner_approval": "not_recorded",
     "drive_copies_claimed": false,
     "evidence": "project-docs/production-system/evidence/cinematic-ten-final-delivery.json"
+  },
+  "advanced_dance": {
+    "completed_film_ids": [
+      "advanced-dance-solo"
+    ],
+    "pending_film_ids": [
+      "advanced-dance-ensemble"
+    ],
+    "package_status": "pending",
+    "owner_approval": "not_recorded"
   }
 }
