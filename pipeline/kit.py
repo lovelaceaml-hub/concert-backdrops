@@ -19,6 +19,8 @@ MODULE = "tools/concert_kit/render.py"
 REVISION_SCENE = "tools/concert_motion_revision/render.py"
 DANCE_SCENE = "tools/concert_dance/scene.py"
 FAN_SCENE = "tools/concert_fan/fan_trio.py"
+ADVANCED_SOLO_SCENE = "tools/advanced_dance/solo.py"
+ADVANCED_ENSEMBLE_SCENE = "tools/advanced_dance/ensemble.py"
 REGISTERED_SCENES = {
     SCENE: {"id": "consideration-v1", "module": MODULE, "seconds": 18,
             "fps": 60, "source_start_frame": 0, "cut_frames": (180, 720)},
@@ -31,6 +33,12 @@ REGISTERED_SCENES = {
     FAN_SCENE: {"id": "fan-silk-trio-v1", "module": "tools/concert_fan/render.py",
                 "seconds": 20, "fps": 60, "source_start_frame": 0,
                 "cut_frames": ()},
+    ADVANCED_SOLO_SCENE: {"id": "advanced-dance-solo-v1", "module": ADVANCED_SOLO_SCENE,
+                          "seconds": 32, "fps": 60, "source_start_frame": 0,
+                          "cut_frames": (447, 882, 1319)},
+    ADVANCED_ENSEMBLE_SCENE: {"id": "advanced-dance-ensemble-v1", "module": ADVANCED_ENSEMBLE_SCENE,
+                              "seconds": 32, "fps": 60, "source_start_frame": 0,
+                              "cut_frames": (456, 917, 1370)},
 }
 
 # Each suite member has its own explicit clock and isolated renderer process.
