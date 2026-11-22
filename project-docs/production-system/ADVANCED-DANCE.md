@@ -95,7 +95,7 @@ without re-encoding.
   authored picture snapshot.
 - `evidence/advanced-dance-frozen-inputs.json` pins the corrected 236 picture
   dependencies.
-- `evidence/advanced-dance-unit-checkpoint.json` records the 27 focused tests
+- `evidence/advanced-dance-unit-checkpoint.json` records the 28 focused tests
   and the earlier 114 existing pipeline tests.
 - Final movement, costume, visual and exact delivered-media evidence will be
   recorded at completion. Intermediate passed checks do not claim a final

@@ -1,0 +1,42 @@
+{
+  "changes": {
+    "render_chunk_frames": {
+      "from": 320,
+      "to": 96
+    },
+    "render_workers": {
+      "from": 3,
+      "to": 2
+    }
+  },
+  "coordinator_exit_code": 2,
+  "coordinator_session": 92609,
+  "execution_manifest": "work/advanced-dance/execution/ensemble-low-memory.json",
+  "execution_manifest_sha256": "b766be24d778e69e1f53be4eac303c50fd5031e5660dc4c2cdcc5937c4035645",
+  "failed_chunk": "chunk_000001",
+  "failed_invocation": "2436b84d0c594eebadbbb634df064ee8",
+  "failed_worker_last_frame": 710,
+  "fps": 60,
+  "parallel_solo_workers": 3,
+  "picture_fingerprint": "ec76277c753ba288fb9a2d6634a1f45e4741747f33baad3d237e7be5ff1f272d",
+  "picture_source_commit": "254414bc0356171f7d5ad89361c75d45fd01a407",
+  "preserved_even_frames": 425,
+  "preserved_frame_count": 427,
+  "preserved_receipt_path": "work/advanced-dance/execution/ensemble-even-stopped-receipt.json",
+  "preserved_receipt_sha256": "e52d7452470a0d713ae64466a4096c95488b3d9e581bfa94a759ce233f23336f",
+  "provenance_identical": true,
+  "reason": "One ensemble worker terminated with exit -9 after32frames. The exact cause of SIGKILL is not established. Reduce concurrent memory demand and shorten worker lifetimes.",
+  "recorded_utc": "2026-11-22T09:05:27.550045+00:00",
+  "recovery": "Used the existing STOP marker, observed normal frame-boundary worker drain and coordinator exit, preserved official receipt, then intentionally removed STOP under the production lock. No source guard or image gate was bypassed.",
+  "registered_manifest": "projects/advanced-dance-ensemble/project.json",
+  "registered_manifest_sha256": "6fc86ea3585401b7d05bc224a33fbcae5be59650d5954431c5f012c8e02f09ae",
+  "resolution": [
+    1920,
+    1080
+  ],
+  "schema_version": 1,
+  "status": "bounded_recovery_resuming",
+  "temporal_samples": 2,
+  "execution_manifest_snapshot": "project-docs/production-system/evidence/advanced-dance-ensemble-low-memory-manifest.json",
+  "execution_manifest_snapshot_sha256": "b766be24d778e69e1f53be4eac303c50fd5031e5660dc4c2cdcc5937c4035645"
+}
