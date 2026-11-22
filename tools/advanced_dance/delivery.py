@@ -223,6 +223,126 @@ def inspect_original(archive, *, root=ROOT):
     }
 
 
+def ledger_qa_arguments(path, source_commit, *, root=ROOT):
+    """Expand a validation ledger without relabeling any historical inputs."""
+    root, path = Path(root).resolve(), Path(path).resolve()
+    require(path.is_file(), f"Missing validation ledger: {path}")
+    raw = path.read_bytes()
+    ledger = json.loads(raw)
+    require(isinstance(ledger, dict), "The validation ledger must be a JSON object")
+    require(ledger.get("picture_source", {}).get("commit") == source_commit,
+            "The supplied picture commit differs from the validation ledger")
+    names = ledger.get("package_evidence", {}).get("full_json_reports", [])
+    records = ledger.get("artifacts", {})
+    require(names and len(names) == len(set(names)), "The validation ledger needs unique full JSON report bindings")
+    arguments = ["validation_ledger="+str(path)]
+    snapshots = {path: hashlib.sha256(raw).hexdigest()}
+    frozen = None
+    bindings = []
+    for name in names:
+        require(re.fullmatch(r"[A-Za-z0-9_-]+", name) and name != "validation_ledger",
+                f"Unsafe or reserved validation report label: {name}")
+        record = records.get(name, {})
+        relative = record.get("path")
+        require(isinstance(relative, str) and not Path(relative).is_absolute(),
+                f"Ledger report path must be repository-relative: {name}")
+        report_path = (root/relative).resolve()
+        require(report_path.is_relative_to(root) and report_path.is_file(),
+                f"Ledger report is missing or outside the checkout: {name}")
+        require(report_path.suffix.lower() == ".json", f"Ledger full report must be JSON: {name}")
+        report_bytes = report_path.read_bytes()
+        digest = hashlib.sha256(report_bytes).hexdigest()
+        require(len(report_bytes) == record.get("bytes") and digest == record.get("sha256"),
+                f"Ledger-bound QA bytes changed: {name}")
+        snapshots[report_path] = digest
+        arguments.append(name+"="+str(report_path))
+        bindings.append({"label": name, "source_path": str(report_path),
+                         "source_sha256": digest, "source_size_bytes": len(report_bytes)})
+        if name == "frozen_picture_inputs":
+            frozen = json.loads(report_bytes).get("source_sha256")
+    require(isinstance(frozen, dict) and frozen,
+            "The ledger must bind the complete frozen_picture_inputs source map")
+    require(all(isinstance(name, str) and isinstance(value, str) and re.fullmatch(r"[0-9a-f]{64}", value)
+                for name, value in frozen.items()), "Invalid frozen picture source map")
+    return {"arguments": arguments, "snapshots": snapshots, "frozen_sources": frozen,
+            "record": {"source_path": str(path), "source_sha256": snapshots[path],
+                       "source_size_bytes": len(raw), "source_picture_commit": source_commit,
+                       "bound_report_count": len(bindings), "bindings": bindings}}
+
+
+def _report_mode(label, record):
+    """Use the actual record identity, with labels for plain shot receipts."""
+    candidates = []
+    if record.get("mode") in ("solo", "ensemble"):
+        candidates.append(record["mode"])
+    project = record.get("project_id")
+    for mode in ("solo", "ensemble"):
+        if project == "advanced-dance-"+mode or label.startswith(mode):
+            candidates.append(mode)
+    require(len(set(candidates)) <= 1, f"Conflicting QA performer/film identities: {label}")
+    return candidates[0] if candidates else None
+
+
+def verify_production_bindings(reports, movie_hashes, frozen_sources):
+    """Bind the actual final pipeline schemas and proof source fingerprints."""
+    identified = [(item, _report_mode(item["label"], item["content"])) for item in reports]
+    verified = {}
+    for mode in ("solo", "ensemble"):
+        records = [(item["label"], item["content"]) for item, actual in identified if actual == mode]
+        assemblies = [(label, r) for label, r in records
+                      if r.get("filename") == "master.mp4" and "shot_fingerprints" in r]
+        audits = [(label, r) for label, r in records
+                  if r.get("filename") == "master.mp4" and "master_sha256" in r
+                  and "technical_passed" in r]
+        renders = [(label, r) for label, r in records
+                   if r.get("shot_id") == "performance" and "provenance" in r and "frames" in r]
+        require(len(assemblies) == len(audits) == len(renders) == 1,
+                f"Supply exactly one {mode} final master.json, qa.json and performance/receipt.json")
+        assembly_label, assembly = assemblies[0]
+        audit_label, audit = audits[0]
+        render_label, render = renders[0]
+        project = "advanced-dance-"+mode
+        for record in (assembly, audit):
+            require(record.get("project_id") == project and record.get("quality") == "final",
+                    f"A {mode} production record does not identify the final registered project")
+            require(record.get("frames") == 1920 and record.get("fps") == 60,
+                    f"A {mode} production record has the wrong frame clock")
+        require(assembly.get("sha256") == audit.get("master_sha256") == movie_hashes[mode],
+                f"The {mode} assembly and pipeline QA do not bind the exact supplied master")
+        require(audit.get("technical_passed") is True and not audit.get("errors"),
+                f"The final {mode} pipeline technical audit has not passed")
+        require(render.get("complete") is True and (render.get("width"), render.get("height"), render.get("fps")) == (1920, 1080, 60),
+                f"The {mode} render receipt is incomplete or not native 1080p60")
+        frames = render["frames"]
+        require(isinstance(frames, dict) and set(frames) == {str(i) for i in range(1920)}
+                and all(isinstance(value, str) and re.fullmatch(r"[0-9a-f]{64}", value) for value in frames.values()),
+                f"The {mode} render receipt does not bind all 1,920 final frame hashes")
+        fingerprint = render.get("fingerprint")
+        require(isinstance(fingerprint, str) and re.fullmatch(r"[0-9a-f]{64}", fingerprint),
+                f"Invalid {mode} render fingerprint")
+        require(assembly.get("shot_fingerprints") == {"performance": fingerprint},
+                f"The {mode} assembly refers to a different render receipt")
+        provenance = render["provenance"]
+        shot = provenance.get("shot", {})
+        require(shot.get("scene") == f"tools/advanced_dance/{mode}.py"
+                and shot.get("start_frame") == 0 and shot.get("end_frame_exclusive") == 1920,
+                f"The {mode} frame provenance identifies a different scene or interval")
+        require(all(provenance.get("inputs", {}).get(name) == digest for name, digest in frozen_sources.items()),
+                f"The {mode} render source bytes differ from the frozen validation ledger")
+        linked_proofs = []
+        for label, record in records:
+            if "source_fingerprint" in record:
+                require(record["source_fingerprint"] == fingerprint,
+                        f"The {mode} proof/review uses a different source fingerprint: {label}")
+                linked_proofs.append(label)
+        verified[mode] = {"assembly_report": assembly_label, "pipeline_qa_report": audit_label,
+                          "render_report": render_label, "master_sha256": movie_hashes[mode],
+                          "render_fingerprint": fingerprint, "frozen_picture_inputs_match": True,
+                          "recorded_frame_hash_count": len(frames), "linked_proof_or_review_reports": linked_proofs,
+                          "scope": "Existing pipeline receipts linked to the exact encoded master and frozen picture map. Frame PNG bytes are not decoded again by packaging."}
+    return verified
+
+
 def read_qa(arguments, movie_hashes, snapshots):
     require(arguments, "Supply the final QA JSON records with one or more --qa label=path arguments")
     reports, labels = [], set()
@@ -235,6 +355,9 @@ def read_qa(arguments, movie_hashes, snapshots):
         path = Path(filename).resolve()
         require(path.is_file(), f"Missing QA record: {path}")
         raw = path.read_bytes()
+        digest = hashlib.sha256(raw).hexdigest()
+        if path in snapshots:
+            require(digest == snapshots[path], f"Ledger-bound QA changed before embedding: {label}")
         record = json.loads(raw)
         require(isinstance(record, dict), f"QA record must contain an object: {path}")
         require(record.get("status") not in ("blocked", "failed"),
@@ -245,8 +368,7 @@ def read_qa(arguments, movie_hashes, snapshots):
                 f"Technical QA has not passed: {label}")
         require(record.get("blocking_visual_defects_found", False) is not True,
                 f"Visual review records an unresolved blocking defect: {label}")
-        mode = (record.get("mode") if record.get("mode") in movie_hashes else
-                "solo" if label.startswith("solo") else "ensemble" if label.startswith("ensemble") else None)
+        mode = _report_mode(label, record)
         master_hash = record.get("master_sha256")
         if master_hash is not None:
             require(mode is not None and master_hash == movie_hashes[mode],
@@ -420,7 +542,7 @@ def _archive(path, members, date):
             require(digest.hexdigest() == sha256(source), f"Finished archive member changed: {name}")
 
 
-def package(old_archive, solo, ensemble, source_commit, qa_arguments, destination, *, root=ROOT):
+def package(old_archive, solo, ensemble, source_commit, qa_arguments, destination, *, root=ROOT, validation_ledger=None):
     root, destination = Path(root).resolve(), Path(destination).resolve()
     require(not destination.exists(), "Use a new output directory; an existing delivery is never replaced")
     require(re.fullmatch(r"[0-9a-f]{40}", source_commit), "Supply the full frozen picture commit SHA")
@@ -429,13 +551,21 @@ def package(old_archive, solo, ensemble, source_commit, qa_arguments, destinatio
     commit_time = datetime.fromisoformat(committed).astimezone(timezone.utc)
     committed = commit_time.isoformat()
     archive_date = commit_time.timetuple()[:6]
+    bound = ledger_qa_arguments(validation_ledger, source_commit, root=root) if validation_ledger else None
+    if bound:
+        qa_arguments = bound["arguments"] + list(qa_arguments)
     original = inspect_original(old_archive, root=root)
     new = {mode: check_movie(path, mode) for mode, path in (("solo", solo), ("ensemble", ensemble))}
     snapshots = {original["archive"]: ORIGINAL_ARCHIVE_SHA256,
                  original["evidence_path"]: original["evidence_sha256"]}
     for mode, record in new.items():
         snapshots[Path(record["source_master"])] = record["sha256"]
-    reports = read_qa(qa_arguments, {mode: row["sha256"] for mode, row in new.items()}, snapshots)
+    if bound:
+        snapshots.update(bound["snapshots"])
+    movie_hashes = {mode: row["sha256"] for mode, row in new.items()}
+    reports = read_qa(qa_arguments, movie_hashes, snapshots)
+    production_bindings = verify_production_bindings(reports, movie_hashes, bound["frozen_sources"]) if bound else None
+    snapshot_sizes = {path: path.stat().st_size for path in snapshots}
     destination.parent.mkdir(parents=True, exist_ok=True)
     with tempfile.TemporaryDirectory(prefix="advanced-dance-delivery-", dir=destination.parent) as directory:
         stage = Path(directory)
@@ -473,6 +603,8 @@ def package(old_archive, solo, ensemble, source_commit, qa_arguments, destinatio
             "review_flags_preserved": True, "owner_approval": "not_recorded_by_packaging",
             "scope": "Supplied report content and source-byte identities; encoded checks are in the technical file.",
             "source_reports": reports,
+            "validation_ledger": bound["record"] if bound else None,
+            "production_bindings": production_bindings,
         }
         _write_json(stage / QA_NAME, qa)
         technical = {
@@ -486,6 +618,8 @@ def package(old_archive, solo, ensemble, source_commit, qa_arguments, destinatio
             "movie_reencoding": False, "owner_approval": "not_recorded_by_packaging",
             "delivery_script_sha256": sha256(Path(__file__)),
             "new_movies_full_decode_passed": True,
+            "validation_ledger_sha256": bound["record"]["source_sha256"] if bound else None,
+            "production_receipt_bindings": production_bindings,
             "carried_movies_match_saved_original_bytes": True,
             "overview": overview, "films": films,
             "qa_file": {"filename": QA_NAME, "sha256": sha256(stage / QA_NAME)},
@@ -498,7 +632,8 @@ def package(old_archive, solo, ensemble, source_commit, qa_arguments, destinatio
         (stage / CHECKSUM_NAME).write_text(checksums, encoding="ascii")
         members[CHECKSUM_NAME] = stage / CHECKSUM_NAME
         for path, expected in snapshots.items():
-            require(path.is_file() and sha256(path) == expected, f"Input changed while packaging: {path}")
+            require(path.is_file() and path.stat().st_size == snapshot_sizes[path] and sha256(path) == expected,
+                    f"Input changed while packaging: {path}")
         _archive(stage / ARCHIVE_NAME, members, archive_date)
         all_outputs = {**members, ARCHIVE_NAME: stage / ARCHIVE_NAME}
         receipt = {
@@ -513,7 +648,8 @@ def package(old_archive, solo, ensemble, source_commit, qa_arguments, destinatio
         }
         _write_json(stage / RECEIPT_NAME, receipt)
         for path, expected in snapshots.items():
-            require(sha256(path) == expected, f"Input changed before final directory installation: {path}")
+            require(path.is_file() and path.stat().st_size == snapshot_sizes[path] and sha256(path) == expected,
+                    f"Input changed before final directory installation: {path}")
         require(not destination.exists(), "Output directory appeared during packaging; refusing to replace it")
         stage.replace(destination)
     return receipt
@@ -525,10 +661,12 @@ def main():
     parser.add_argument("--solo", type=Path, required=True)
     parser.add_argument("--ensemble", type=Path, required=True)
     parser.add_argument("--source-commit", required=True)
+    parser.add_argument("--validation-ledger", type=Path, help="Expand and verify bound motion/cloth/history reports; requires final pipeline receipts as supplemental --qa inputs")
     parser.add_argument("--qa", action="append", required=True, metavar="LABEL=JSON_PATH")
     parser.add_argument("--out", type=Path, required=True)
     args = parser.parse_args()
-    result = package(args.old_archive, args.solo, args.ensemble, args.source_commit, args.qa, args.out)
+    result = package(args.old_archive, args.solo, args.ensemble, args.source_commit, args.qa, args.out,
+                     validation_ledger=args.validation_ledger)
     print(json.dumps(result, indent=2), flush=True)
 
 

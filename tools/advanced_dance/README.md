@@ -286,21 +286,33 @@ ten-film archive must be the saved original with SHA-256
   --solo work/pipeline/advanced-dance-solo/final/master.mp4 \
   --ensemble work/pipeline/advanced-dance-ensemble/final/master.mp4 \
   --source-commit FULL_FROZEN_PICTURE_COMMIT \
-  --qa solo_motion=work/advanced-dance/qa/final/solo0.json \
-  --qa ensemble_0=work/advanced-dance/qa/final/ensemble0.json \
-  --qa ensemble_1=work/advanced-dance/qa/final/ensemble1.json \
-  --qa ensemble_2=work/advanced-dance/qa/final/ensemble2.json \
-  --qa ensemble_3=work/advanced-dance/qa/final/ensemble3.json \
-  --qa ensemble_4=work/advanced-dance/qa/final/ensemble4.json \
-  --qa cast=work/advanced-dance/qa/final/cast.json \
+  --validation-ledger project-docs/production-system/evidence/advanced-dance-validation.json \
+  --qa solo_assembly=work/pipeline/advanced-dance-solo/final/master.json \
+  --qa solo_pipeline=work/pipeline/advanced-dance-solo/final/qa.json \
+  --qa solo_render=work/pipeline/advanced-dance-solo/final/shots/performance/receipt.json \
+  --qa ensemble_assembly=work/pipeline/advanced-dance-ensemble/final/master.json \
+  --qa ensemble_pipeline=work/pipeline/advanced-dance-ensemble/final/qa.json \
+  --qa ensemble_render=work/pipeline/advanced-dance-ensemble/final/shots/performance/receipt.json \
   --out work/advanced-dance/delivery
 ```
 
-Add further `--qa label=path.json` entries for final visual, pipeline, assembly
-and render records. Supplied review flags are retained. The helper performs full
-new-movie video/audio decoding, exact frame-clock checks and decoded audio peak
-checks. It verifies the eight retained movies against the saved delivery
-evidence and copies every movie without re-encoding.
+Before running, append the actual moving-proof and final encoded-review
+records with further `--qa label=path.json` entries. Use labels starting with
+`solo` or `ensemble` for film-specific records that do not contain their own
+mode or project ID. A `master_sha256` must match the corresponding final movie;
+a `source_fingerprint` must match its final render receipt.
+
+The validation ledger automatically expands its full JSON report list,
+including motion, cloth, cache, repair history and scoped native reviews. Each
+report must match the ledger's exact path, byte count and SHA-256. The ledger
+itself is included, and source bytes are checked again before and after archive
+creation. Historical source identities and review flags remain unchanged.
+The final assembly, pipeline QA and complete render receipt are linked to the
+exact new master and the ledger's frozen picture inputs.
+
+The helper performs full new-movie video/audio decoding, exact frame-clock
+checks and decoded audio peak checks. It verifies the eight retained movies
+against the saved delivery evidence and copies every movie without re-encoding.
 
 The result includes the two separately named revised movies, the other eight
 original movies, a ten-row overview with four actual decoded samples per film,
