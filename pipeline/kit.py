@@ -33,6 +33,15 @@ REGISTERED_SCENES = {
                 "cut_frames": ()},
 }
 
+# Each suite member has its own explicit clock and isolated renderer process.
+for _film_id in range(1, 11):
+    _film_module = f"tools/cinematic_ten/film{_film_id:02d}.py"
+    REGISTERED_SCENES[_film_module] = {
+        "id": f"cinematic-ten-{_film_id:02d}", "module": _film_module,
+        "seconds": 20, "fps": 60, "source_start_frame": 0,
+        "cut_frames": (540,) if _film_id == 3 else (),
+    }
+
 
 def scene_spec(scene: str) -> dict:
     try:
