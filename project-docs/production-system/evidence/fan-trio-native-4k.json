@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "project": "concert-fan-trio",
+  "quality": "4k-check",
+  "frame": 864,
+  "time_seconds": 14.4,
+  "width": 3840,
+  "height": 2160,
+  "temporal_samples": 2,
+  "source_precision": "RGB8 SDR",
+  "native_render": true,
+  "upscaled": false,
+  "full_4k_movie_rendered": false,
+  "source_commit": "dffe8f165944c627ae39a8bb7d47bc5a9e703305",
+  "picture_fingerprint": "97c7d10b6758aee42710279dc687604e79f5f8c94a94edbc1ffa9081351758f1",
+  "same_picture_input_mapping_as_movie": true,
+  "frozen_picture_files": 201,
+  "bytes": 4765896,
+  "sha256": "4326d32a479bd585ccc5de24a5e7a523e79008b092d7c2332f0909d7052fd98f",
+  "worker": {
+    "initialization_seconds": 59.346,
+    "frame_seconds": 91.231,
+    "peak_rss_kib": 1798012,
+    "completed_frames": 1
+  },
+  "receipt_total_seconds": 151.017,
+  "root_visual_review": "Native PNG inspected: three separate figures, held fans, visible garment detail, mirror reflections and intact framing. This is one frame, not an assessment of full motion.",
+  "first_concurrent_attempt": "Terminated with exit -9; no native frame completed. Successful retry ran after the 1080p worker pool and QA finished."
+}

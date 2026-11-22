@@ -1,0 +1,315 @@
+{
+  "audio_streams": 1,
+  "color": {
+    "color_primaries": "bt709",
+    "color_range": "tv",
+    "color_space": "bt709",
+    "color_transfer": "bt709"
+  },
+  "creative_approval": "not_assessed",
+  "delivery_profile": "h264",
+  "duration_seconds": 18.0,
+  "errors": [],
+  "filename": "master.mp4",
+  "fps": 60.0,
+  "frames": 1080,
+  "image_samples": [
+    {
+      "frame": 0,
+      "mean_display_luma": 0.06951,
+      "near_white_fraction": 0.0
+    },
+    {
+      "frame": 539,
+      "mean_display_luma": 0.08167,
+      "near_white_fraction": 1e-05
+    },
+    {
+      "frame": 1079,
+      "mean_display_luma": 0.08674,
+      "near_white_fraction": 1e-05
+    }
+  ],
+  "limitations": [
+    "Automated checks do not assess anatomy, lettering accuracy, musical intention, or artistic quality.",
+    "Brightness and temporal pixel checks are review warnings, not a creative approval or physical camera measurements.",
+    "The 10-bit profiles are Rec.709 SDR, not HDR. ProRes range is implicit when ffprobe omits its range flag."
+  ],
+  "master_sha256": "96b0f75464fd093ad5ba4a318f8d923de7fa33e2fd01115b5d49b42f3baaec66",
+  "motion": {
+    "decoded_frames": 1080,
+    "excluded_intervals": [],
+    "flicker_candidate_count": 0,
+    "flicker_candidates": [],
+    "half_second_windows": [
+      {
+        "maximum_frame_difference": 0.000315,
+        "mean_frame_difference": 0.000249,
+        "mean_second_difference": 0.000377,
+        "sample_pairs": 29,
+        "start_seconds": 0.0
+      },
+      {
+        "maximum_frame_difference": 0.000554,
+        "mean_frame_difference": 0.000395,
+        "mean_second_difference": 0.000573,
+        "sample_pairs": 30,
+        "start_seconds": 0.5
+      },
+      {
+        "maximum_frame_difference": 0.000535,
+        "mean_frame_difference": 0.000434,
+        "mean_second_difference": 0.000668,
+        "sample_pairs": 30,
+        "start_seconds": 1.0
+      },
+      {
+        "maximum_frame_difference": 0.000553,
+        "mean_frame_difference": 0.000406,
+        "mean_second_difference": 0.000695,
+        "sample_pairs": 30,
+        "start_seconds": 1.5
+      },
+      {
+        "maximum_frame_difference": 0.00057,
+        "mean_frame_difference": 0.000417,
+        "mean_second_difference": 0.000731,
+        "sample_pairs": 30,
+        "start_seconds": 2.0
+      },
+      {
+        "maximum_frame_difference": 0.000586,
+        "mean_frame_difference": 0.000458,
+        "mean_second_difference": 0.000787,
+        "sample_pairs": 30,
+        "start_seconds": 2.5
+      },
+      {
+        "maximum_frame_difference": 0.00066,
+        "mean_frame_difference": 0.000528,
+        "mean_second_difference": 0.000866,
+        "sample_pairs": 30,
+        "start_seconds": 3.0
+      },
+      {
+        "maximum_frame_difference": 0.000643,
+        "mean_frame_difference": 0.000551,
+        "mean_second_difference": 0.000901,
+        "sample_pairs": 30,
+        "start_seconds": 3.5
+      },
+      {
+        "maximum_frame_difference": 0.000932,
+        "mean_frame_difference": 0.000583,
+        "mean_second_difference": 0.000923,
+        "sample_pairs": 30,
+        "start_seconds": 4.0
+      },
+      {
+        "maximum_frame_difference": 0.000867,
+        "mean_frame_difference": 0.000646,
+        "mean_second_difference": 0.000974,
+        "sample_pairs": 30,
+        "start_seconds": 4.5
+      },
+      {
+        "maximum_frame_difference": 0.00101,
+        "mean_frame_difference": 0.000826,
+        "mean_second_difference": 0.001102,
+        "sample_pairs": 30,
+        "start_seconds": 5.0
+      },
+      {
+        "maximum_frame_difference": 0.001281,
+        "mean_frame_difference": 0.00109,
+        "mean_second_difference": 0.001301,
+        "sample_pairs": 30,
+        "start_seconds": 5.5
+      },
+      {
+        "maximum_frame_difference": 0.001645,
+        "mean_frame_difference": 0.001346,
+        "mean_second_difference": 0.001372,
+        "sample_pairs": 30,
+        "start_seconds": 6.0
+      },
+      {
+        "maximum_frame_difference": 0.0022,
+        "mean_frame_difference": 0.001991,
+        "mean_second_difference": 0.001975,
+        "sample_pairs": 30,
+        "start_seconds": 6.5
+      },
+      {
+        "maximum_frame_difference": 0.00286,
+        "mean_frame_difference": 0.002405,
+        "mean_second_difference": 0.002329,
+        "sample_pairs": 30,
+        "start_seconds": 7.0
+      },
+      {
+        "maximum_frame_difference": 0.002812,
+        "mean_frame_difference": 0.002596,
+        "mean_second_difference": 0.002332,
+        "sample_pairs": 30,
+        "start_seconds": 7.5
+      },
+      {
+        "maximum_frame_difference": 0.003464,
+        "mean_frame_difference": 0.002826,
+        "mean_second_difference": 0.002495,
+        "sample_pairs": 30,
+        "start_seconds": 8.0
+      },
+      {
+        "maximum_frame_difference": 0.003014,
+        "mean_frame_difference": 0.002648,
+        "mean_second_difference": 0.002241,
+        "sample_pairs": 30,
+        "start_seconds": 8.5
+      },
+      {
+        "maximum_frame_difference": 0.002888,
+        "mean_frame_difference": 0.002238,
+        "mean_second_difference": 0.001931,
+        "sample_pairs": 30,
+        "start_seconds": 9.0
+      },
+      {
+        "maximum_frame_difference": 0.002008,
+        "mean_frame_difference": 0.001683,
+        "mean_second_difference": 0.001594,
+        "sample_pairs": 30,
+        "start_seconds": 9.5
+      },
+      {
+        "maximum_frame_difference": 0.001935,
+        "mean_frame_difference": 0.001644,
+        "mean_second_difference": 0.001527,
+        "sample_pairs": 30,
+        "start_seconds": 10.0
+      },
+      {
+        "maximum_frame_difference": 0.002129,
+        "mean_frame_difference": 0.001849,
+        "mean_second_difference": 0.001887,
+        "sample_pairs": 30,
+        "start_seconds": 10.5
+      },
+      {
+        "maximum_frame_difference": 0.001751,
+        "mean_frame_difference": 0.001488,
+        "mean_second_difference": 0.001345,
+        "sample_pairs": 30,
+        "start_seconds": 11.0
+      },
+      {
+        "maximum_frame_difference": 0.001553,
+        "mean_frame_difference": 0.001365,
+        "mean_second_difference": 0.001304,
+        "sample_pairs": 30,
+        "start_seconds": 11.5
+      },
+      {
+        "maximum_frame_difference": 0.00176,
+        "mean_frame_difference": 0.000966,
+        "mean_second_difference": 0.001118,
+        "sample_pairs": 30,
+        "start_seconds": 12.0
+      },
+      {
+        "maximum_frame_difference": 0.001405,
+        "mean_frame_difference": 0.00106,
+        "mean_second_difference": 0.001166,
+        "sample_pairs": 30,
+        "start_seconds": 12.5
+      },
+      {
+        "maximum_frame_difference": 0.001822,
+        "mean_frame_difference": 0.001302,
+        "mean_second_difference": 0.001371,
+        "sample_pairs": 30,
+        "start_seconds": 13.0
+      },
+      {
+        "maximum_frame_difference": 0.002624,
+        "mean_frame_difference": 0.002316,
+        "mean_second_difference": 0.001887,
+        "sample_pairs": 30,
+        "start_seconds": 13.5
+      },
+      {
+        "maximum_frame_difference": 0.002985,
+        "mean_frame_difference": 0.002767,
+        "mean_second_difference": 0.001977,
+        "sample_pairs": 30,
+        "start_seconds": 14.0
+      },
+      {
+        "maximum_frame_difference": 0.003726,
+        "mean_frame_difference": 0.003234,
+        "mean_second_difference": 0.002357,
+        "sample_pairs": 30,
+        "start_seconds": 14.5
+      },
+      {
+        "maximum_frame_difference": 0.004029,
+        "mean_frame_difference": 0.003653,
+        "mean_second_difference": 0.002393,
+        "sample_pairs": 30,
+        "start_seconds": 15.0
+      },
+      {
+        "maximum_frame_difference": 0.004044,
+        "mean_frame_difference": 0.003826,
+        "mean_second_difference": 0.002453,
+        "sample_pairs": 30,
+        "start_seconds": 15.5
+      },
+      {
+        "maximum_frame_difference": 0.003626,
+        "mean_frame_difference": 0.003254,
+        "mean_second_difference": 0.002057,
+        "sample_pairs": 30,
+        "start_seconds": 16.0
+      },
+      {
+        "maximum_frame_difference": 0.002819,
+        "mean_frame_difference": 0.002416,
+        "mean_second_difference": 0.001674,
+        "sample_pairs": 30,
+        "start_seconds": 16.5
+      },
+      {
+        "maximum_frame_difference": 0.002036,
+        "mean_frame_difference": 0.00166,
+        "mean_second_difference": 0.001487,
+        "sample_pairs": 30,
+        "start_seconds": 17.0
+      },
+      {
+        "maximum_frame_difference": 0.001245,
+        "mean_frame_difference": 0.000798,
+        "mean_second_difference": 0.00112,
+        "sample_pairs": 30,
+        "start_seconds": 17.5
+      }
+    ],
+    "interpretation": "Pixel heuristics for review, not measurements of physical camera jerk or proof of natural movement.",
+    "longest_still_seconds": 0.0,
+    "maximum_frame_difference": 0.004044,
+    "maximum_second_difference": 0.003284,
+    "mean_frame_difference": 0.00161,
+    "mean_second_difference": 0.001483,
+    "scan_complete": true,
+    "shimmer_candidate_count": 0,
+    "shimmer_candidates": [],
+    "warnings": []
+  },
+  "pixel_format": "yuv420p",
+  "project_id": "concert-dance-study",
+  "quality": "review",
+  "technical_passed": true,
+  "video_codec": "h264",
+  "warnings": []
+}

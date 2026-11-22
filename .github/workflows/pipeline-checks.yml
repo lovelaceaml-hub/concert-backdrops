@@ -1,0 +1,57 @@
+name: Video pipeline checks (manual CPU only)
+
+on:
+  workflow_dispatch:
+    inputs:
+      render_smoke:
+        description: "Render the short CPU test after checks (uses runner minutes)"
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+concurrency:
+  group: video-pipeline-checks-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  check:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+          cache: npm
+      - name: Host tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ffmpeg libegl1 libgl1-mesa-dri libxi6 libxrender1 libxkbcommon0
+          python -m pip install uv==0.13.9
+      - name: Recreate locked environment
+        run: python scripts/bootstrap.py --skip-integrations
+      - name: Validate contracts
+        run: |
+          uv run --frozen --extra legacy python -m unittest discover -s tests/pipeline -v
+          npm run test:motion
+          ./scripts/video validate pipeline-demo
+          ./scripts/video validate cpu-demo
+          ./scripts/video validate legacy-p3d
+          ./scripts/video validate motion-study
+          ./scripts/video motion-qa motion-study
+      - name: Optional CPU rendering proof
+        if: inputs.render_smoke
+        run: ./scripts/video preview pipeline-demo
+      - name: Save validation artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pipeline-checks
+          path: work/pipeline/
+          if-no-files-found: ignore
+          retention-days: 7

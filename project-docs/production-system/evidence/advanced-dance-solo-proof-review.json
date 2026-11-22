@@ -1,0 +1,806 @@
+{
+  "schema_version": 1,
+  "reviewer": "motion_qa independent agent",
+  "review_started_utc": "2026-11-22T08:48:45.630421+00:00",
+  "review_method": "Ordered rendered image inspection and native pixel crops, not real-time playback.",
+  "status": "solo_proof_sampled_review_complete_ensemble_and_final_masters_pending",
+  "continuous_playback_review_complete": false,
+  "whole_performance_review_complete": false,
+  "final_encoded_movie_review_complete": false,
+  "owner_approval": false,
+  "prior_native_review": {
+    "path": "work/advanced-dance/qa/final/independent-visual-review.json",
+    "sha256": "f01f3f02c4c0c71fb2877ed4f6ee1736fee160e943a65c6d63e08ff11273013b",
+    "modified_by_this_pass": false
+  },
+  "sequences": [
+    {
+      "id": "solo-late-turn-1410-1454",
+      "mode": "solo",
+      "frame_start": 1410,
+      "frame_end_inclusive": 1454,
+      "frame_step": 2,
+      "sample_count": 23,
+      "source_fps": 60,
+      "sample_fps": 30,
+      "time_start_seconds": 23.5,
+      "time_end_seconds": 24.233333333333334,
+      "source_fingerprint_expected": "437e7420ab538baf3608b879ca371a335ffbbaa09e77444cce7103485b5801ed",
+      "source_kind": "Twenty-two atomically written staged PNGs not yet reconciled at inspection, plus the already promoted frame 1440. The latter was skipped by the resumed worker.",
+      "job_path": "work/pipeline/advanced-dance-solo/final/shots/performance/workers/27bce6bfeaec425f87c529cc5afe4c89/chunk_000002/job.json",
+      "job_sha256": "4872b48ecb7af34a7ae83b7ea7b19a28fc807441239d7c4bca0b7cd492e62797",
+      "source_inputs_match_existing_receipt": true,
+      "manifest": "work/advanced-dance/qa/final/ordered-solo-late-turn/manifest.json",
+      "manifest_sha256": "95ed24415487b639546489cc58618e35d14516bf0219402dd4502fe5c43644dd",
+      "frames": [
+        {
+          "frame": 1410,
+          "time_seconds": 23.5,
+          "source": "work/pipeline/advanced-dance-solo/final/shots/performance/workers/27bce6bfeaec425f87c529cc5afe4c89/chunk_000002/frames/frame_001410.png",
+          "sha256": "a00f8d5bfd6a820b89ab7948c2d8789a1c1f01db0e8e320e05b8d23e8e40bec0",
+          "raw_rgb_sha256": "100509155a4a7e8f07e532539d892ef578f9a49a5d708ab3910dbf469b80f9f3",
+          "source_status": "atomic_staged_image_not_yet_promoted",
+          "reconciled_final_receipt_verified": false
+        },
+        {
+          "frame": 1412,
+          "time_seconds": 23.533333333333335,
+          "source": "work/pipeline/advanced-dance-solo/final/shots/performance/workers/27bce6bfeaec425f87c529cc5afe4c89/chunk_000002/frames/frame_001412.png",
+          "sha256": "fb12dfd0ea9cdfb98927f2722df8e14d11a0a2eec8d48617986405b2c0700572",
+          "raw_rgb_sha256": "f391945f39e8260a7f8e988a6c776f7c2df74f029db592cd407336817e9a1f77",
+          "source_status": "atomic_staged_image_not_yet_promoted",
+          "reconciled_final_receipt_verified": false
+        },
+        {
+          "frame": 1414,
+          "time_seconds": 23.566666666666666,
+          "source": "work/pipeline/advanced-dance-solo/final/shots/performance/workers/27bce6bfeaec425f87c529cc5afe4c89/chunk_000002/frames/frame_001414.png",
+          "sha256": "34933eda81c479064d1dc8a41fc6a93e44f9b55e2f3321f8f85dfa42c7239de8",
+          "raw_rgb_sha256": "b8c6e9abbc1c08f9c21af46bf4515c02b6add8d9d906cff4a0a42883ec75fd8a",
+          "source_status": "atomic_staged_image_not_yet_promoted",
+          "reconciled_final_receipt_verified": false
+        },
+        {
+          "frame": 1416,
+          "time_seconds": 23.6,
+          "source": "work/pipeline/advanced-dance-solo/final/shots/performance/workers/27bce6bfeaec425f87c529cc5afe4c89/chunk_000002/frames/frame_001416.png",
+          "sha256": "586dbff78312774a30f359634b599d9d4c5dcf1ee117981cb81955d009f02bbb",
+          "raw_rgb_sha256": "54b213d6caa5479efdc69e680f38e65421cf152b89ec2541eb9a48d4e901e5af",
+          "source_status": "atomic_staged_image_not_yet_promoted",
+          "reconciled_final_receipt_verified": false
+        },
+        {
+          "frame": 1418,
+          "time_seconds": 23.633333333333333,
+          "source": "work/pipeline/advanced-dance-solo/final/shots/performance/workers/27bce6bfeaec425f87c529cc5afe4c89/chunk_000002/frames/frame_001418.png",
+          "sha256": "4fb843383143bfebf9a541a0c83f4478cbe3c7851d0277b9d4ff1a60b500551e",
+          "raw_rgb_sha256": "11af20ef05f3dbb78fe0e5c59986b20364cbef008c3e919f2753e7cfd2f070c5",
+          "source_status": "atomic_staged_image_not_yet_promoted",
+          "reconciled_final_receipt_verified": false
+        },
+        {
+          "frame": 1420,
+          "time_seconds": 23.666666666666668,
+          "source": "work/pipeline/advanced-dance-solo/final/shots/performance/workers/27bce6bfeaec425f87c529cc5afe4c89/chunk_000002/frames/frame_001420.png",
+          "sha256": "a0a443a3302d45109fdc29eed2f3389705731672a8076df6d2bd8db2aa6a9f89",
+          "raw_rgb_sha256": "b331b7a9eed14b56858909b51f5de17aa3cd174ee5ab05b34c9e72a4ceac70de",
+          "source_status": "atomic_staged_image_not_yet_promoted",
+          "reconciled_final_receipt_verified": false
+        },
+        {
+          "frame": 1422,
+          "time_seconds": 23.7,
+          "source": "work/pipeline/advanced-dance-solo/final/shots/performance/workers/27bce6bfeaec425f87c529cc5afe4c89/chunk_000002/frames/frame_001422.png",
+          "sha256": "a330da54c7c266f7d2297488eae9647ebaca6d313c1a575ad2e99a84e1751646",
+          "raw_rgb_sha256": "89a6ad65cd640658c7a2bc9d37bda40482154059a2a5e9b6237f22265dde2956",
+          "source_status": "atomic_staged_image_not_yet_promoted",
+          "reconciled_final_receipt_verified": false
+        },
+        {
+          "frame": 1424,
+          "time_seconds": 23.733333333333334,
+          "source": "work/pipeline/advanced-dance-solo/final/shots/performance/workers/27bce6bfeaec425f87c529cc5afe4c89/chunk_000002/frames/frame_001424.png",
+          "sha256": "8ab21f9f36347e803a60672e7027659fe561811413f5304b3e4cd9548e013be8",
+          "raw_rgb_sha256": "f1d9398b37b533d6fdb9e4307ecc37b2c8df9fbe6ad87c3aeaf1a293ec9a2333",
+          "source_status": "atomic_staged_image_not_yet_promoted",
+          "reconciled_final_receipt_verified": false
+        },
+        {
+          "frame": 1426,
+          "time_seconds": 23.766666666666666,
+          "source": "work/pipeline/advanced-dance-solo/final/shots/performance/workers/27bce6bfeaec425f87c529cc5afe4c89/chunk_000002/frames/frame_001426.png",
+          "sha256": "3a3ff5e40fc7113441b33c40c12b865fe4df73dee59878eec695bfc85363dd21",
+          "raw_rgb_sha256": "14d406d0dc12993d013d77357db6b53047e4aa7c1e866ed42345b2609aea30b8",
+          "source_status": "atomic_staged_image_not_yet_promoted",
+          "reconciled_final_receipt_verified": false
+        },
+        {
+          "frame": 1428,
+          "time_seconds": 23.8,
+          "source": "work/pipeline/advanced-dance-solo/final/shots/performance/workers/27bce6bfeaec425f87c529cc5afe4c89/chunk_000002/frames/frame_001428.png",
+          "sha256": "c314e6c72dd98054209d8629f706b1f5122cf7882e23cf00566bb97341aafc1e",
+          "raw_rgb_sha256": "e9acb67a6c7da43a0f83d340cb666b74a6fdece506c68898b00c4d4d069b29b7",
+          "source_status": "atomic_staged_image_not_yet_promoted",
+          "reconciled_final_receipt_verified": false
+        },
+        {
+          "frame": 1430,
+          "time_seconds": 23.833333333333332,
+          "source": "work/pipeline/advanced-dance-solo/final/shots/performance/workers/27bce6bfeaec425f87c529cc5afe4c89/chunk_000002/frames/frame_001430.png",
+          "sha256": "b3b39fd6f83dc1039f5809d9bdcc8491b89d92cf6de87d0914db22a3473e3f5c",
+          "raw_rgb_sha256": "8bbf3c52842365b0b0f25887dc0d957e04bb9ef0e42f966f623b3b146c9b0dd0",
+          "source_status": "atomic_staged_image_not_yet_promoted",
+          "reconciled_final_receipt_verified": false
+        },
+        {
+          "frame": 1432,
+          "time_seconds": 23.866666666666667,
+          "source": "work/pipeline/advanced-dance-solo/final/shots/performance/workers/27bce6bfeaec425f87c529cc5afe4c89/chunk_000002/frames/frame_001432.png",
+          "sha256": "d6772cd448d9929db5cd61b79a82ebb428a61986e98778d6b7690998a85f9abf",
+          "raw_rgb_sha256": "e484a15d417692d2376bd15cc329e54539512416cf17a78f722c9606366b6527",
+          "source_status": "atomic_staged_image_not_yet_promoted",
+          "reconciled_final_receipt_verified": false
+        },
+        {
+          "frame": 1434,
+          "time_seconds": 23.9,
+          "source": "work/pipeline/advanced-dance-solo/final/shots/performance/workers/27bce6bfeaec425f87c529cc5afe4c89/chunk_000002/frames/frame_001434.png",
+          "sha256": "877e930f675948d257b95f35c28153c89d9bb44f8adae103aa3c0d5b364baf39",
+          "raw_rgb_sha256": "6a9cb8fd76b9d06c8d1db8d7613648f0243d16f3e95d0d4e9ff6fd0e051c93a7",
+          "source_status": "atomic_staged_image_not_yet_promoted",
+          "reconciled_final_receipt_verified": false
+        },
+        {
+          "frame": 1436,
+          "time_seconds": 23.933333333333334,
+          "source": "work/pipeline/advanced-dance-solo/final/shots/performance/workers/27bce6bfeaec425f87c529cc5afe4c89/chunk_000002/frames/frame_001436.png",
+          "sha256": "018584d4301646eab2105679aceab4450499d1ff6a7cbac82c5addc6076edd52",
+          "raw_rgb_sha256": "a664db62f56166eb749f31e4a793d4af13d329868c0d2648d1574ed23a9c2702",
+          "source_status": "atomic_staged_image_not_yet_promoted",
+          "reconciled_final_receipt_verified": false
+        },
+        {
+          "frame": 1438,
+          "time_seconds": 23.966666666666665,
+          "source": "work/pipeline/advanced-dance-solo/final/shots/performance/workers/27bce6bfeaec425f87c529cc5afe4c89/chunk_000002/frames/frame_001438.png",
+          "sha256": "650081d32ced721a484a12f91ff38c8aa479c94ccf3f5c3cf63e2acb72b8d04e",
+          "raw_rgb_sha256": "87fc725965f50cd73cd9fdb3b0f99c47df49b79fc91671235fd1d262205eaa6f",
+          "source_status": "atomic_staged_image_not_yet_promoted",
+          "reconciled_final_receipt_verified": false
+        },
+        {
+          "frame": 1440,
+          "time_seconds": 24.0,
+          "source": "work/pipeline/advanced-dance-solo/final/shots/performance/frames/frame_001440.png",
+          "sha256": "f1ae008fa0fbddcef1f2c32021ec96fca425667b658093fb5d8689f5e64a658a",
+          "raw_rgb_sha256": "db5c56774edaf5143a459f6e6e15edc8b049c7687b612eb220b23dbff0bbc2f1",
+          "source_status": "promoted_frame_with_receipt",
+          "reconciled_final_receipt_verified": true
+        },
+        {
+          "frame": 1442,
+          "time_seconds": 24.033333333333335,
+          "source": "work/pipeline/advanced-dance-solo/final/shots/performance/workers/27bce6bfeaec425f87c529cc5afe4c89/chunk_000002/frames/frame_001442.png",
+          "sha256": "ababe04ff803837e8f0982223d493f93bcddbc4548909abdab3de579cf92108a",
+          "raw_rgb_sha256": "a246b6eaed2154ad024809d4b23829ac36112bd508bbd63f5e307e68f8c7d668",
+          "source_status": "atomic_staged_image_not_yet_promoted",
+          "reconciled_final_receipt_verified": false
+        },
+        {
+          "frame": 1444,
+          "time_seconds": 24.066666666666666,
+          "source": "work/pipeline/advanced-dance-solo/final/shots/performance/workers/27bce6bfeaec425f87c529cc5afe4c89/chunk_000002/frames/frame_001444.png",
+          "sha256": "d298545dd8702b1be9ccf5a8f7f19c685503a243c833d0624cb93ef53eb1874b",
+          "raw_rgb_sha256": "6bdc632890c262ba860b39c97f03de09293b1a3a92eb90fd101ec2683c242cc5",
+          "source_status": "atomic_staged_image_not_yet_promoted",
+          "reconciled_final_receipt_verified": false
+        },
+        {
+          "frame": 1446,
+          "time_seconds": 24.1,
+          "source": "work/pipeline/advanced-dance-solo/final/shots/performance/workers/27bce6bfeaec425f87c529cc5afe4c89/chunk_000002/frames/frame_001446.png",
+          "sha256": "e180ae104c2a32a0e866191a8b09fa826ceb453b131bd064a56f1090a9c0c5bd",
+          "raw_rgb_sha256": "73208965ac7471bb75e91bcbfe4e852ad26bc2979ce2ff795f6f40630482e832",
+          "source_status": "atomic_staged_image_not_yet_promoted",
+          "reconciled_final_receipt_verified": false
+        },
+        {
+          "frame": 1448,
+          "time_seconds": 24.133333333333333,
+          "source": "work/pipeline/advanced-dance-solo/final/shots/performance/workers/27bce6bfeaec425f87c529cc5afe4c89/chunk_000002/frames/frame_001448.png",
+          "sha256": "a81615853b46425f126d952c61504e6a65cf1394f53dfdaa47ec658026736e53",
+          "raw_rgb_sha256": "2fc273c1bbf908befbf6a6345540c4e352ba7a7def54de7a0cc18dcea123c6dd",
+          "source_status": "atomic_staged_image_not_yet_promoted",
+          "reconciled_final_receipt_verified": false
+        },
+        {
+          "frame": 1450,
+          "time_seconds": 24.166666666666668,
+          "source": "work/pipeline/advanced-dance-solo/final/shots/performance/workers/27bce6bfeaec425f87c529cc5afe4c89/chunk_000002/frames/frame_001450.png",
+          "sha256": "fb330925ec8ebb99f523d9f52250416c468573efcd59d8f2c79f73747a8ed5e6",
+          "raw_rgb_sha256": "a3c2f4f4b1fcaebf2055993a21237c595d97fe813958dd4bba0484bb0a21061e",
+          "source_status": "atomic_staged_image_not_yet_promoted",
+          "reconciled_final_receipt_verified": false
+        },
+        {
+          "frame": 1452,
+          "time_seconds": 24.2,
+          "source": "work/pipeline/advanced-dance-solo/final/shots/performance/workers/27bce6bfeaec425f87c529cc5afe4c89/chunk_000002/frames/frame_001452.png",
+          "sha256": "7d682bd4dc960a38bc90086155f99a4de296cd496612efcae3397fb4ad6ef906",
+          "raw_rgb_sha256": "193ee4ece1e58ebd8383e931a960aad2379a75bd4ded36f778ff03cf72206a5d",
+          "source_status": "atomic_staged_image_not_yet_promoted",
+          "reconciled_final_receipt_verified": false
+        },
+        {
+          "frame": 1454,
+          "time_seconds": 24.233333333333334,
+          "source": "work/pipeline/advanced-dance-solo/final/shots/performance/workers/27bce6bfeaec425f87c529cc5afe4c89/chunk_000002/frames/frame_001454.png",
+          "sha256": "01293013afed7e3779f7e5b2e4fe026b3f79ef44d4b030c68c07e05d02b39bc3",
+          "raw_rgb_sha256": "3b870c9158571bf43983d60c92645c6300ad85ff1ed5b54ecde679f0e640a689",
+          "source_status": "atomic_staged_image_not_yet_promoted",
+          "reconciled_final_receipt_verified": false
+        }
+      ],
+      "sheets": [
+        {
+          "path": "work/advanced-dance/qa/final/ordered-solo-late-turn/figure-01.png",
+          "sha256": "77fce7f20a68ecdb086d03ad196c6eec2b1bcea3bc422a458686c7923313d214",
+          "frames": [
+            1410,
+            1412,
+            1414,
+            1416,
+            1418,
+            1420
+          ],
+          "crop_pixels": [
+            580,
+            180,
+            1260,
+            1000
+          ],
+          "resized": false,
+          "columns": 3,
+          "read_order": "left to right, then next row"
+        },
+        {
+          "path": "work/advanced-dance/qa/final/ordered-solo-late-turn/figure-02.png",
+          "sha256": "050b72533b96f80d3559bc6a6feb61eef6565f85a331124c5449950644d800a7",
+          "frames": [
+            1422,
+            1424,
+            1426,
+            1428,
+            1430,
+            1432
+          ],
+          "crop_pixels": [
+            580,
+            180,
+            1260,
+            1000
+          ],
+          "resized": false,
+          "columns": 3,
+          "read_order": "left to right, then next row"
+        },
+        {
+          "path": "work/advanced-dance/qa/final/ordered-solo-late-turn/figure-03.png",
+          "sha256": "a227cd42e683e2bf93474dd04ad4f862391c2f43bd402d07f9aa3b4f15456add",
+          "frames": [
+            1434,
+            1436,
+            1438,
+            1440,
+            1442,
+            1444
+          ],
+          "crop_pixels": [
+            580,
+            180,
+            1260,
+            1000
+          ],
+          "resized": false,
+          "columns": 3,
+          "read_order": "left to right, then next row"
+        },
+        {
+          "path": "work/advanced-dance/qa/final/ordered-solo-late-turn/figure-04.png",
+          "sha256": "adc271244d6e0310dcc5c4a58e1729246667f422b9c6c07a52531b12b070dfe5",
+          "frames": [
+            1446,
+            1448,
+            1450,
+            1452,
+            1454
+          ],
+          "crop_pixels": [
+            580,
+            180,
+            1260,
+            1000
+          ],
+          "resized": false,
+          "columns": 3,
+          "read_order": "left to right, then next row"
+        },
+        {
+          "path": "work/advanced-dance/qa/final/ordered-solo-late-turn/feet-all.png",
+          "sha256": "c9d6b789435b36fd71260538a5c6e5aecb67c3f6a505b0f741d1942ea7c60cdf",
+          "frames": [
+            1410,
+            1412,
+            1414,
+            1416,
+            1418,
+            1420,
+            1422,
+            1424,
+            1426,
+            1428,
+            1430,
+            1432,
+            1434,
+            1436,
+            1438,
+            1440,
+            1442,
+            1444,
+            1446,
+            1448,
+            1450,
+            1452,
+            1454
+          ],
+          "crop_pixels": [
+            780,
+            730,
+            1100,
+            1000
+          ],
+          "resized": false,
+          "columns": 5,
+          "read_order": "left to right, then next row"
+        },
+        {
+          "path": "work/advanced-dance/qa/final/ordered-solo-late-turn/head-pass.png",
+          "sha256": "5d4c8b5c231a48efa5c793246bdce3a969e1473e159d25147c412b7672012dfc",
+          "frames": [
+            1410,
+            1412,
+            1414,
+            1416,
+            1418,
+            1420,
+            1422,
+            1424
+          ],
+          "crop_pixels": [
+            850,
+            300,
+            1230,
+            650
+          ],
+          "resized": false,
+          "columns": 4,
+          "read_order": "left to right, then next row"
+        }
+      ],
+      "observations": [
+        {
+          "frames": [
+            1410,
+            1412,
+            1414,
+            1416,
+            1418,
+            1420,
+            1422,
+            1424
+          ],
+          "finding": "The close fan pass can be followed across successive native samples. One panel crosses in front of the face in projection, then the other opens overhead. Frame 1416 at 23.6 seconds shows no obvious rendered fan-through-head defect; partial face and hand occlusion remains visible."
+        },
+        {
+          "frames": [
+            1410,
+            1412,
+            1414,
+            1416,
+            1418,
+            1420,
+            1422,
+            1424,
+            1426,
+            1428,
+            1430,
+            1432,
+            1434,
+            1436,
+            1438,
+            1440,
+            1442,
+            1444,
+            1446,
+            1448,
+            1450,
+            1452,
+            1454
+          ],
+          "finding": "Hand and fan positions progress coherently between the sampled poses. The edge-on luminous strip at 24.0 seconds has visible preceding and following fan orientations, with no sampled panel teleport or detached grip."
+        },
+        {
+          "frames": [
+            1410,
+            1412,
+            1414,
+            1416,
+            1418,
+            1420,
+            1422,
+            1424,
+            1426,
+            1428,
+            1430,
+            1432,
+            1434,
+            1436,
+            1438,
+            1440,
+            1442,
+            1444,
+            1446,
+            1448,
+            1450,
+            1452,
+            1454
+          ],
+          "finding": "The native foot sequence shows alternating lift, rotation and set-down phases, including the exchanges around 23.67 to 23.73, 23.87 to 23.93 and 24.10 to 24.17 seconds. A supporting foot remains visually near the floor while the other changes direction. These are ordered visual observations, not measurements of forces or physical balance."
+        },
+        {
+          "frames": [
+            1410,
+            1412,
+            1414,
+            1416,
+            1418,
+            1420,
+            1422,
+            1424,
+            1426,
+            1428,
+            1430,
+            1432,
+            1434,
+            1436,
+            1438,
+            1440,
+            1442,
+            1444,
+            1446,
+            1448,
+            1450,
+            1452,
+            1454
+          ],
+          "finding": "The skirt flares and continues around the turning figure without a visible single-sample cloth tear or abrupt detached patch in this window. The knees are partly hidden during portions of the sequence."
+        }
+      ],
+      "sampled_sequence_blockers_identified": [],
+      "reconciled_final_receipt_verified_for_all_frames": true,
+      "encoded_proof_verified": true,
+      "scope_limits": [
+        "Only every second 60fps output frame in this 0.733333-second window was inspected; odd frames and other intervals are not covered by this sequence.",
+        "The figure crops may trim an outer fan rim; full frames 1410, 1416 and 1454 were also displayed.",
+        "No real-time playback or audio synchronization assessment was performed."
+      ],
+      "promotion_reconciliation": {
+        "verified_utc": "2026-11-22T08:52:47.303748+00:00",
+        "production_receipt": "work/pipeline/advanced-dance-solo/final/shots/performance/receipt.json",
+        "receipt_sha256_at_reconciliation": "a702d3face2a78f717fce722041b4404e582f28259521f37024638507fa687c7",
+        "source_fingerprint": "437e7420ab538baf3608b879ca371a335ffbbaa09e77444cce7103485b5801ed",
+        "receipt_complete_60fps_master": false,
+        "verified_even_frames_in_receipt": 960,
+        "verified_reviewed_frames": [
+          {
+            "frame": 1410,
+            "promoted_source": "work/pipeline/advanced-dance-solo/final/shots/performance/frames/frame_001410.png",
+            "sha256": "a00f8d5bfd6a820b89ab7948c2d8789a1c1f01db0e8e320e05b8d23e8e40bec0",
+            "matched_reviewed_png_bytes": true
+          },
+          {
+            "frame": 1412,
+            "promoted_source": "work/pipeline/advanced-dance-solo/final/shots/performance/frames/frame_001412.png",
+            "sha256": "fb12dfd0ea9cdfb98927f2722df8e14d11a0a2eec8d48617986405b2c0700572",
+            "matched_reviewed_png_bytes": true
+          },
+          {
+            "frame": 1414,
+            "promoted_source": "work/pipeline/advanced-dance-solo/final/shots/performance/frames/frame_001414.png",
+            "sha256": "34933eda81c479064d1dc8a41fc6a93e44f9b55e2f3321f8f85dfa42c7239de8",
+            "matched_reviewed_png_bytes": true
+          },
+          {
+            "frame": 1416,
+            "promoted_source": "work/pipeline/advanced-dance-solo/final/shots/performance/frames/frame_001416.png",
+            "sha256": "586dbff78312774a30f359634b599d9d4c5dcf1ee117981cb81955d009f02bbb",
+            "matched_reviewed_png_bytes": true
+          },
+          {
+            "frame": 1418,
+            "promoted_source": "work/pipeline/advanced-dance-solo/final/shots/performance/frames/frame_001418.png",
+            "sha256": "4fb843383143bfebf9a541a0c83f4478cbe3c7851d0277b9d4ff1a60b500551e",
+            "matched_reviewed_png_bytes": true
+          },
+          {
+            "frame": 1420,
+            "promoted_source": "work/pipeline/advanced-dance-solo/final/shots/performance/frames/frame_001420.png",
+            "sha256": "a0a443a3302d45109fdc29eed2f3389705731672a8076df6d2bd8db2aa6a9f89",
+            "matched_reviewed_png_bytes": true
+          },
+          {
+            "frame": 1422,
+            "promoted_source": "work/pipeline/advanced-dance-solo/final/shots/performance/frames/frame_001422.png",
+            "sha256": "a330da54c7c266f7d2297488eae9647ebaca6d313c1a575ad2e99a84e1751646",
+            "matched_reviewed_png_bytes": true
+          },
+          {
+            "frame": 1424,
+            "promoted_source": "work/pipeline/advanced-dance-solo/final/shots/performance/frames/frame_001424.png",
+            "sha256": "8ab21f9f36347e803a60672e7027659fe561811413f5304b3e4cd9548e013be8",
+            "matched_reviewed_png_bytes": true
+          },
+          {
+            "frame": 1426,
+            "promoted_source": "work/pipeline/advanced-dance-solo/final/shots/performance/frames/frame_001426.png",
+            "sha256": "3a3ff5e40fc7113441b33c40c12b865fe4df73dee59878eec695bfc85363dd21",
+            "matched_reviewed_png_bytes": true
+          },
+          {
+            "frame": 1428,
+            "promoted_source": "work/pipeline/advanced-dance-solo/final/shots/performance/frames/frame_001428.png",
+            "sha256": "c314e6c72dd98054209d8629f706b1f5122cf7882e23cf00566bb97341aafc1e",
+            "matched_reviewed_png_bytes": true
+          },
+          {
+            "frame": 1430,
+            "promoted_source": "work/pipeline/advanced-dance-solo/final/shots/performance/frames/frame_001430.png",
+            "sha256": "b3b39fd6f83dc1039f5809d9bdcc8491b89d92cf6de87d0914db22a3473e3f5c",
+            "matched_reviewed_png_bytes": true
+          },
+          {
+            "frame": 1432,
+            "promoted_source": "work/pipeline/advanced-dance-solo/final/shots/performance/frames/frame_001432.png",
+            "sha256": "d6772cd448d9929db5cd61b79a82ebb428a61986e98778d6b7690998a85f9abf",
+            "matched_reviewed_png_bytes": true
+          },
+          {
+            "frame": 1434,
+            "promoted_source": "work/pipeline/advanced-dance-solo/final/shots/performance/frames/frame_001434.png",
+            "sha256": "877e930f675948d257b95f35c28153c89d9bb44f8adae103aa3c0d5b364baf39",
+            "matched_reviewed_png_bytes": true
+          },
+          {
+            "frame": 1436,
+            "promoted_source": "work/pipeline/advanced-dance-solo/final/shots/performance/frames/frame_001436.png",
+            "sha256": "018584d4301646eab2105679aceab4450499d1ff6a7cbac82c5addc6076edd52",
+            "matched_reviewed_png_bytes": true
+          },
+          {
+            "frame": 1438,
+            "promoted_source": "work/pipeline/advanced-dance-solo/final/shots/performance/frames/frame_001438.png",
+            "sha256": "650081d32ced721a484a12f91ff38c8aa479c94ccf3f5c3cf63e2acb72b8d04e",
+            "matched_reviewed_png_bytes": true
+          },
+          {
+            "frame": 1440,
+            "promoted_source": "work/pipeline/advanced-dance-solo/final/shots/performance/frames/frame_001440.png",
+            "sha256": "f1ae008fa0fbddcef1f2c32021ec96fca425667b658093fb5d8689f5e64a658a",
+            "matched_reviewed_png_bytes": true
+          },
+          {
+            "frame": 1442,
+            "promoted_source": "work/pipeline/advanced-dance-solo/final/shots/performance/frames/frame_001442.png",
+            "sha256": "ababe04ff803837e8f0982223d493f93bcddbc4548909abdab3de579cf92108a",
+            "matched_reviewed_png_bytes": true
+          },
+          {
+            "frame": 1444,
+            "promoted_source": "work/pipeline/advanced-dance-solo/final/shots/performance/frames/frame_001444.png",
+            "sha256": "d298545dd8702b1be9ccf5a8f7f19c685503a243c833d0624cb93ef53eb1874b",
+            "matched_reviewed_png_bytes": true
+          },
+          {
+            "frame": 1446,
+            "promoted_source": "work/pipeline/advanced-dance-solo/final/shots/performance/frames/frame_001446.png",
+            "sha256": "e180ae104c2a32a0e866191a8b09fa826ceb453b131bd064a56f1090a9c0c5bd",
+            "matched_reviewed_png_bytes": true
+          },
+          {
+            "frame": 1448,
+            "promoted_source": "work/pipeline/advanced-dance-solo/final/shots/performance/frames/frame_001448.png",
+            "sha256": "a81615853b46425f126d952c61504e6a65cf1394f53dfdaa47ec658026736e53",
+            "matched_reviewed_png_bytes": true
+          },
+          {
+            "frame": 1450,
+            "promoted_source": "work/pipeline/advanced-dance-solo/final/shots/performance/frames/frame_001450.png",
+            "sha256": "fb330925ec8ebb99f523d9f52250416c468573efcd59d8f2c79f73747a8ed5e6",
+            "matched_reviewed_png_bytes": true
+          },
+          {
+            "frame": 1452,
+            "promoted_source": "work/pipeline/advanced-dance-solo/final/shots/performance/frames/frame_001452.png",
+            "sha256": "7d682bd4dc960a38bc90086155f99a4de296cd496612efcae3397fb4ad6ef906",
+            "matched_reviewed_png_bytes": true
+          },
+          {
+            "frame": 1454,
+            "promoted_source": "work/pipeline/advanced-dance-solo/final/shots/performance/frames/frame_001454.png",
+            "sha256": "01293013afed7e3779f7e5b2e4fe026b3f79ef44d4b030c68c07e05d02b39bc3",
+            "matched_reviewed_png_bytes": true
+          }
+        ]
+      },
+      "encoded_proof_verification": {
+        "verified_utc": "2026-11-22T08:58:39.397385+00:00",
+        "proof_receipt": "work/advanced-dance/proofs/solo-437e7420ab53/Even_Frame_Proof_1080p30.json",
+        "proof_receipt_sha256": "8d6c40aade1910e2d5e108c1bdb1856b01b4e3fd7cf4b5c5b13a9fb23cdb367a",
+        "movie_sha256": "113f67032015552fa867b51660eaa3424362eed44c0b20eab4fb24f903573a05",
+        "verified_source_frame_count": 23,
+        "source_frame_indices": [
+          1410,
+          1412,
+          1414,
+          1416,
+          1418,
+          1420,
+          1422,
+          1424,
+          1426,
+          1428,
+          1430,
+          1432,
+          1434,
+          1436,
+          1438,
+          1440,
+          1442,
+          1444,
+          1446,
+          1448,
+          1450,
+          1452,
+          1454
+        ],
+        "finding": "Every previously inspected native PNG hash matches the exact source-frame hash listed in the completed even-frame proof receipt. This establishes source identity; it does not assert byte equality between lossless PNG pixels and lossy encoded video pixels."
+      }
+    }
+  ],
+  "next_steps": [
+    "Perform an independent whole-performance sampled review of the ensemble proof when available.",
+    "Inspect the final encoded 60 fps masters separately; do not infer their approval from this 30 fps proof review."
+  ],
+  "proof_reviews": [
+    {
+      "id": "solo-complete-even-frame-proof",
+      "mode": "solo",
+      "status": "sampled_visual_review_complete_no_blocker_observed",
+      "completed_utc": "2026-11-22T08:58:39.397385+00:00",
+      "movie": "work/advanced-dance/proofs/solo-437e7420ab53/Even_Frame_Proof_1080p30.mp4",
+      "movie_sha256": "113f67032015552fa867b51660eaa3424362eed44c0b20eab4fb24f903573a05",
+      "movie_bytes": 47272960,
+      "proof_receipt": "work/advanced-dance/proofs/solo-437e7420ab53/Even_Frame_Proof_1080p30.json",
+      "proof_receipt_sha256": "8d6c40aade1910e2d5e108c1bdb1856b01b4e3fd7cf4b5c5b13a9fb23cdb367a",
+      "source_fingerprint": "437e7420ab538baf3608b879ca371a335ffbbaa09e77444cce7103485b5801ed",
+      "source_fps": 60,
+      "proof_fps": 30,
+      "source_frame_stride": 2,
+      "duration_seconds": 32,
+      "encoded_frame_count": 960,
+      "decoded_distinct_sample_count": 99,
+      "overview_sample_count": 65,
+      "overview_sample_spacing_seconds": 0.5,
+      "overview_last_sample_seconds": 31.966666666666665,
+      "overview_final_frame_added": true,
+      "sample_manifest": "work/advanced-dance/qa/final/solo-proof-samples/manifest.json",
+      "sample_manifest_sha256": "3846e630ef7c49e30f76b51b447b0bf91ea7c1463c2bfdb1f7ad64f358668205",
+      "displayed_sheet_count": 16,
+      "all_listed_sheets_inspected": true,
+      "method": "Exact selected decoded frames from the completed MP4, without frame-rate resampling. Ordered full-frame overview samples at 480-pixel tile width and native-pixel figure/foot crops were displayed and inspected. All decoded-image and source-image hashes are in the sample manifest.",
+      "flagged_windows": [
+        {
+          "id": "early-turn",
+          "requested_seconds": [
+            9.25,
+            9.65
+          ],
+          "sampled_seconds": [
+            9.233333333333333,
+            9.666666666666666
+          ],
+          "proof_frames_inclusive": [
+            277,
+            290
+          ],
+          "source_frames_inclusive": [
+            554,
+            580
+          ],
+          "sample_count": 14,
+          "every_proof_frame_inspected": true,
+          "finding": "Coherent fan-plane changes and alternating foot action. The foot silhouettes overlap briefly near 9.5 seconds and separate in neighboring samples. The review-only peak palm speed at 9.483333 seconds falls between two even-source samples; all 60 fps and shutter sample poses were covered by the separate numeric audit."
+        },
+        {
+          "id": "middle-travel",
+          "requested_seconds": [
+            15.8,
+            16.2
+          ],
+          "sampled_seconds": [
+            15.8,
+            16.2
+          ],
+          "proof_frames_inclusive": [
+            474,
+            486
+          ],
+          "source_frames_inclusive": [
+            948,
+            972
+          ],
+          "sample_count": 13,
+          "every_proof_frame_inspected": true,
+          "finding": "Travel and sequential foot lift/setdown remain legible. One fan becomes edge-on beside the body while the opposite fan rises; visible grip positions remain connected. No sampled body teleport, isolated cloth tear or disconnected limb was seen."
+        },
+        {
+          "id": "late-turn",
+          "requested_seconds": [
+            23.8,
+            24.1
+          ],
+          "sampled_seconds": [
+            23.8,
+            24.1
+          ],
+          "proof_frames_inclusive": [
+            714,
+            723
+          ],
+          "source_frames_inclusive": [
+            1428,
+            1446
+          ],
+          "sample_count": 10,
+          "every_proof_frame_inspected": true,
+          "finding": "The late turn and rapid wrist/fan change progress coherently through broad and edge-on fan planes, including the narrow strip at 24.0 seconds. Foot lift and setdown can be followed. The wider 23-frame native sequence includes the closest fan-to-head proxy pass at 23.6 seconds and is reconciled to this proof separately."
+        }
+      ],
+      "whole_performance_observations": [
+        "Across the 65 overview samples, the performer uses changing sweeps, overhead fan positions, body turns, dips, travel, flared-skirt turns and a controlled open-fan finish. Actual poses change across all eight four-second phrases.",
+        "The full figure and fan action remain within the full-frame compositions in the overview samples. Some native detail crops intentionally cut outer fan rims and cannot independently assess full-frame framing.",
+        "No blank or corrupt sampled image, missing prop, detached visible arm or obviously detached costume patch was observed.",
+        "Temporary fan projection across the face and edge-on luminous fan strips recur as the fans rotate. These samples alone do not establish complete surface collision clearance."
+      ],
+      "sampled_visual_blockers_identified": [],
+      "whole_performance_sampled_review_complete": true,
+      "all_frames_visually_watched": false,
+      "real_time_playback_review": false,
+      "audio_review": false,
+      "final_60fps_master_review": false,
+      "owner_approval": false,
+      "scope_limits": [
+        "The complete duration was sampled, not watched frame by frame. Only the three listed detail windows include every frame of the 30 fps proof.",
+        "The proof contains source frames 0, 2, 4 and so on through 1918; final 60 fps odd source frames are absent. The source 60 fps shutter timing is preserved.",
+        "This independent pass used ordered still images and makes no real-time smoothness, audio synchronization, complete physical balance or complete body/cloth mesh-collision claim.",
+        "Root performed a separate Kdenlive playback review; that observation is not represented as work by this independent reviewer.",
+        "The ensemble whole-performance proof and both final 60 fps encoded masters remain pending for this independent reviewer."
+      ]
+    }
+  ],
+  "review_updated_utc": "2026-11-22T08:58:39.397385+00:00",
+  "whole_performance_sampled_review_complete_by_mode": {
+    "solo": true,
+    "ensemble": false
+  }
+}

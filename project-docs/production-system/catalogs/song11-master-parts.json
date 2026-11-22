@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "file": "Song11-Beauty-Study-30s-1080p60.mp4",
+  "bytes": 110865643,
+  "sha256": "6e4533c4527dfb81c750f8ba907e86392f0c87dca638c3daac768ece8edae82a",
+  "parts": [
+    {
+      "filename": "Song11-Beauty-Study-30s-1080p60.mp4.part01",
+      "bytes": 83886080,
+      "sha256": "89db121817e11f95bc2b6b2b21e844be1b937a179995db2d9c6ee01ad9d1ec61",
+      "md5": "2907a26e1bdff751ed3963e1664dec93",
+      "drive_file_id": "1_-DZan6ugDbLIUZfXWsD5lcVgUoJI1jG",
+      "url": "https://drive.google.com/file/d/1_-DZan6ugDbLIUZfXWsD5lcVgUoJI1jG/view"
+    },
+    {
+      "filename": "Song11-Beauty-Study-30s-1080p60.mp4.part02",
+      "bytes": 26979563,
+      "sha256": "7c1b10ca8a332e4f416fbe4e5619475fa7b444b9723eda2786a25ad302dad0f3",
+      "md5": "41c77f719363e658e7c9c5b7476b329b",
+      "drive_file_id": "1wTbDgZDELlfoB6TgjGLw8__MFv8ND0dw",
+      "url": "https://drive.google.com/file/d/1wTbDgZDELlfoB6TgjGLw8__MFv8ND0dw/view"
+    }
+  ],
+  "restore": "Concatenate part01 followed by part02 as binary bytes. Verify the full SHA256 before use.",
+  "archive_verification": "Both authenticated Drive downloads and reconstructed original independently hashed on2026-11-20 America/Los_Angeles."
+}

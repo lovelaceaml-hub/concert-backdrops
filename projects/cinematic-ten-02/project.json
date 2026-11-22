@@ -1,0 +1,72 @@
+{
+  "schema_version": 1,
+  "project_id": "cinematic-ten-02",
+  "title": "Petals in Motion",
+  "description": "An original twenty-second film authored in the established native concert 3D renderer.",
+  "video": {
+    "width": 1920,
+    "height": 1080,
+    "fps": 60
+  },
+  "production": {
+    "cloud_gpu_provider": null,
+    "allow_local_gpu": false,
+    "allow_paid_services": false,
+    "allow_ai_generated_visuals": false,
+    "allow_stock_footage": false,
+    "random_seed": 20261121,
+    "threads": 1,
+    "render_workers": 2,
+    "render_chunk_frames": 300,
+    "render_timeout_seconds": 7200
+  },
+  "quality": {
+    "draft": {
+      "width": 960,
+      "height": 540,
+      "temporal_samples": 1,
+      "image_bit_depth": 8
+    },
+    "review": {
+      "width": 1920,
+      "height": 1080,
+      "temporal_samples": 2,
+      "image_bit_depth": 8
+    },
+    "final": {
+      "width": 1920,
+      "height": 1080,
+      "temporal_samples": 2,
+      "image_bit_depth": 8
+    }
+  },
+  "delivery": {
+    "profile": "h264",
+    "source_transfer": "legacy_display_gamma",
+    "color_space": "rec709"
+  },
+  "style": "styles/zion-cinematic.json",
+  "audio": {
+    "source": "work/cinematic-ten/audio/film02.wav",
+    "source_sha256": "f68f71c34731254483969ae09adb30605f28ec9f76ae83a8bba4ec257b63d33a",
+    "offset_seconds": 0
+  },
+  "timing": {
+    "fps": 60,
+    "visual_only": true,
+    "manually_verified": false,
+    "note": "Twenty seconds at original score speed. The acted visual clock does not claim instrument or transient alignment.",
+    "events": []
+  },
+  "shots": [
+    {
+      "id": "film",
+      "name": "Petals in Motion",
+      "renderer": "p3d-kit",
+      "start_frame": 0,
+      "end_frame_exclusive": 1200,
+      "scene": "tools/cinematic_ten/film02.py",
+      "params": {}
+    }
+  ]
+}

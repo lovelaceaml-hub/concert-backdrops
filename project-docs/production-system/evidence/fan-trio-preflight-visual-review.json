@@ -1,0 +1,56 @@
+{
+  "schema_version": 1,
+  "source_commit": "dffe8f165944c627ae39a8bb7d47bc5a9e703305",
+  "phase": "pre-final-render",
+  "reviewer": "independent performance agent and coordinator",
+  "realtime_playback": false,
+  "owner_creative_approval": "not_recorded",
+  "moving_proof": {
+    "seconds": 2,
+    "source_interval_seconds": [
+      6,
+      8
+    ],
+    "fps": 60,
+    "frames": 120,
+    "width": 960,
+    "height": 540,
+    "temporal_samples": 1,
+    "sha256": "08e4da75a3c99741acfd412c08c0c8ea013eb3564a33e5f643a22cdda814df9b",
+    "inspected_ordered_sample_seconds": [
+      6.0,
+      6.166667,
+      6.333333,
+      6.5,
+      6.666667,
+      6.833333,
+      7.0,
+      7.166667,
+      7.333333,
+      7.5,
+      7.666667,
+      7.833333
+    ]
+  },
+  "native_still_seconds": [
+    1.4,
+    5.8,
+    7,
+    8.4,
+    14.4,
+    18.6
+  ],
+  "findings": [
+    "No sampled grip detachment, elbow inversion or wrist flip.",
+    "Lead fan becomes coherently edge-on and reopens toward the camera.",
+    "All three bodies and free hands remain separated in inspected samples.",
+    "Feet and hems remain within frame; long skirts hide much of the foot articulation.",
+    "Fans lower and figures gather toward a calmer ending."
+  ],
+  "limits": [
+    "No real-time MP4 playback or complete-frame aesthetic review.",
+    "Silk mostly hangs as a long panel with local fold/curl, rather than large flowing loops.",
+    "Silk crosses head or upper-torso silhouette in some views; actual garment/body clearance is not certified.",
+    "Gentle ceremonial authored fan choreography, not reconstructed reference motion, acrobatics or professional capture."
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "blender_mcp": {
+    "package": "mcp-for-blender",
+    "version": "2.3.1",
+    "repository": "https://github.com/ahujasid/mcp-for-blender",
+    "license": "MIT",
+    "host": "localhost",
+    "port": 9876
+  },
+  "video_shotcraft": {
+    "repository": "https://github.com/Vincentwei1021/video-shotcraft.git",
+    "commit": "075b548c2405a07b77129eb448b0b504fc60dea3",
+    "remotion_version": "4.0.484",
+    "license": "Apache-2.0"
+  }
+}

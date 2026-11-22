@@ -1,0 +1,183 @@
+{
+  "audio": {
+    "offset_seconds": 0,
+    "source": null
+  },
+  "delivery": {
+    "color_space": "rec709",
+    "profile": "hevc10",
+    "profiles_by_quality": {
+      "4k-check": "hevc10",
+      "draft": "h264",
+      "final": "hevc10",
+      "review": "h264"
+    },
+    "source_transfer": "srgb"
+  },
+  "description": "Procedural camera and character study. Replace the study with authored scenes after visual review.",
+  "production": {
+    "allow_ai_generated_visuals": false,
+    "allow_local_gpu": false,
+    "allow_paid_services": false,
+    "allow_stock_footage": false,
+    "cloud_gpu_provider": null,
+    "random_seed": 2026,
+    "render_chunk_frames": 30,
+    "render_timeout_seconds": 1800,
+    "threads": 4
+  },
+  "project_id": "motion-study",
+  "quality": {
+    "4k-check": {
+      "height": 2160,
+      "image_bit_depth": 16,
+      "motion_blur": {
+        "enabled": true,
+        "shutter": 0.5,
+        "substeps": 2
+      },
+      "samples": 8,
+      "width": 3840
+    },
+    "draft": {
+      "height": 540,
+      "image_bit_depth": 8,
+      "motion_blur": {
+        "enabled": true,
+        "shutter": 0.5,
+        "substeps": 2
+      },
+      "samples": 8,
+      "width": 960
+    },
+    "final": {
+      "height": 2160,
+      "image_bit_depth": 16,
+      "motion_blur": {
+        "enabled": true,
+        "shutter": 0.5,
+        "substeps": 4
+      },
+      "samples": 64,
+      "width": 3840
+    },
+    "motion-check": {
+      "height": 180,
+      "image_bit_depth": 8,
+      "motion_blur": {
+        "enabled": true,
+        "shutter": 0.5,
+        "substeps": 2
+      },
+      "samples": 2,
+      "width": 320
+    },
+    "review": {
+      "height": 1080,
+      "image_bit_depth": 16,
+      "motion_blur": {
+        "enabled": true,
+        "shutter": 0.5,
+        "substeps": 2
+      },
+      "samples": 24,
+      "width": 1920
+    }
+  },
+  "schema_version": 1,
+  "shots": [
+    {
+      "end_frame_exclusive": 600,
+      "id": "motion-study",
+      "name": "Golden conductor and flowing camera",
+      "params": {
+        "camera_path": {
+          "easing": "smootherstep",
+          "points": [
+            [
+              -4.0,
+              -8.2,
+              3.4
+            ],
+            [
+              -2.4,
+              -7.4,
+              2.9
+            ],
+            [
+              0.1,
+              -7.2,
+              2.7
+            ],
+            [
+              2.2,
+              -7.6,
+              3.05
+            ]
+          ],
+          "seconds": [
+            0,
+            3.2,
+            6.800000000000001,
+            10.0
+          ],
+          "targets": [
+            [
+              0,
+              0,
+              1.3
+            ],
+            [
+              0,
+              0,
+              1.35
+            ],
+            [
+              0,
+              0,
+              1.35
+            ],
+            [
+              0,
+              0,
+              1.4
+            ]
+          ]
+        },
+        "performance": "conduct"
+      },
+      "renderer": "blender",
+      "scene": "scenes/blender/motion_study.py",
+      "start_frame": 0
+    }
+  ],
+  "style": "styles/zion-cinematic.json",
+  "timing": {
+    "events": [
+      {
+        "amplitude": 0.45,
+        "attack_frames": 42,
+        "frame": 180,
+        "kind": "lift",
+        "release_frames": 78
+      },
+      {
+        "amplitude": 0.3,
+        "attack_frames": 48,
+        "frame": 408,
+        "kind": "resolve",
+        "release_frames": 102
+      }
+    ],
+    "fps": 60,
+    "manually_verified": false,
+    "note": "Example visual cues, not verified song hits. Replace after listening to the actual recording.",
+    "visual_only": true
+  },
+  "title": "Golden Motion: Camera and Character Study",
+  "video": {
+    "fps": 60,
+    "height": 2160,
+    "width": 3840
+  }
+}

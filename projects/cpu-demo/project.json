@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "project_id": "cpu-demo",
+  "title": "Sanctuary: CPU Workflow Check",
+  "description": "A two-second Blender and FFmpeg engineering test independent of a browser, not a revision of an approved concert film.",
+  "video": {"width": 1920, "height": 1080, "fps": 30},
+  "audio": {"source": null, "offset_seconds": 0},
+  "production": {
+    "cloud_gpu_provider": null,
+    "allow_local_gpu": false,
+    "allow_paid_services": false,
+    "allow_ai_generated_visuals": false,
+    "allow_stock_footage": false,
+    "random_seed": 2026
+  },
+  "quality": {
+    "draft": {"width": 320, "height": 180, "samples": 8},
+    "review": {"width": 1920, "height": 1080, "samples": 32},
+    "final": {"width": 1920, "height": 1080, "samples": 64}
+  },
+  "style": "styles/zion-cinematic.json",
+  "timing": {"fps": 30, "visual_only": true, "manually_verified": false, "events": [{"frame": 0, "kind": "shot_start"}]},
+  "shots": [
+    {
+      "id": "sanctuary",
+      "name": "Procedural sanctuary in warm light",
+      "renderer": "blender",
+      "start_frame": 0,
+      "end_frame_exclusive": 60,
+      "scene": "scenes/blender/heavenly.py",
+      "params": {}
+    }
+  ]
+}

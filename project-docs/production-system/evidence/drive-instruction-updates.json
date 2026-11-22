@@ -1,0 +1,70 @@
+{
+  "schema_version": 1,
+  "verified_at_utc": "2026-11-21T02:16:59.244156+00:00",
+  "operation": "in-place Markdown instruction updates",
+  "file_ids_and_parents_preserved": true,
+  "sharing_changes_requested": false,
+  "race_check": "Modified time checked immediately before each update; API did not expose an atomic revision precondition.",
+  "files": [
+    {
+      "file_id": "195oEBBMyi14jY9lKSPfYB5fqpEZN4axj",
+      "name": "AGENTS.md",
+      "before_bytes": 4105,
+      "before_sha256": "46ee4d138f33f4abf9f547f2809358f875fa8fb0456ec672c1f02aefb8ebfc1f",
+      "after_bytes": 7492,
+      "after_sha256": "61a57aa1be19940d77d71e3f7d1ca165da6a06589678df6955336c340ca5e068",
+      "original_body_preserved_exactly": true,
+      "before_modified_time": "2026-11-14T00:34:18.525Z",
+      "after_modified_time": "2026-11-21T02:16:01.119Z",
+      "status": "updated_and_raw_bytes_verified"
+    },
+    {
+      "file_id": "1dReBFenaOzt-NT4lLvGkIsGMed8YYs4W",
+      "name": "VIDEO-HANDOFF.md",
+      "before_bytes": 10957,
+      "before_sha256": "ce11446ac595c10a81a2529dcff57d57094b69a7a5fd6630d09bd19970bbd691",
+      "after_bytes": 14390,
+      "after_sha256": "7c0f920f4e2d3e6aad2de87fa7c244f8ea147c3afaf24fd2c85dca1bf681d850",
+      "original_body_preserved_exactly": true,
+      "before_modified_time": "2026-11-17T00:30:58.288Z",
+      "after_modified_time": "2026-11-21T02:16:17.810Z",
+      "status": "updated_and_raw_bytes_verified"
+    },
+    {
+      "file_id": "1SyL4I0hetGZHMHqlB6_zsyigJ8xA-9oC",
+      "name": "AUTONOMOUS-RUN.md",
+      "before_bytes": 10635,
+      "before_sha256": "0d689bcb831bac0cfdfde6ff26528eb690fbbef201b29648efefb1ea43c41855",
+      "after_bytes": 13797,
+      "after_sha256": "a34f8e06a1ebb15417f45091e6e0c236c8e7876303056b0fe3258217e8816d21",
+      "original_body_preserved_exactly": true,
+      "before_modified_time": "2026-11-14T05:30:50.101Z",
+      "after_modified_time": "2026-11-21T02:16:24.268Z",
+      "status": "updated_and_raw_bytes_verified"
+    },
+    {
+      "file_id": "1pXulIOhdV66tXC_lDQPLJUp9th_kF4s1",
+      "name": "DESIGN-SYSTEM.md",
+      "before_bytes": 18165,
+      "before_sha256": "5aaefe083987c2a27b0695d2ed83048d4cab7b07e986531d4ac013587e9fd4a0",
+      "after_bytes": 21575,
+      "after_sha256": "17724a3f701a9f8d8f7c0f1e2b25755177a5ecf12d763d9178965c40315698ac",
+      "original_body_preserved_exactly": true,
+      "before_modified_time": "2026-11-17T00:31:07.412Z",
+      "after_modified_time": "2026-11-21T02:16:31.117Z",
+      "status": "updated_and_raw_bytes_verified"
+    },
+    {
+      "file_id": "1wSbLBI8Bx_Efv4foKNUG520SCclRRBVc",
+      "name": "README.md",
+      "before_bytes": 4807,
+      "before_sha256": "10bdd40705f98bf37c84a513df34347d7869830adc78978dac6ca8f26ce86d9c",
+      "after_bytes": 8002,
+      "after_sha256": "9d1e3a8876452ec87d43b6f0b8b4fd374415e189538eb2f1d31bd327de4c7e34",
+      "original_body_preserved_exactly": true,
+      "before_modified_time": "2026-11-17T00:31:02.356Z",
+      "after_modified_time": "2026-11-21T02:16:36.178Z",
+      "status": "updated_and_raw_bytes_verified"
+    }
+  ]
+}

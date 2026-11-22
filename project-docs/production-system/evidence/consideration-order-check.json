@@ -1,0 +1,55 @@
+{
+  "source_identity": "2fa9e0fce212be765d639fbb85acf8cdb755e5a92d995dae418fa66fbd7eae6e",
+  "frames": [
+    {
+      "name": "first-0360",
+      "frame": 360,
+      "scene_seconds": 6.0,
+      "native_size": [
+        1920,
+        1080
+      ],
+      "render_seconds": 25.570579939001618,
+      "png_sha256": "76fdf3f937c7657145b87b99b697e7f34ea8ad8343650910e00202dac3777144",
+      "decoded_rgb_sha256": "f7f9209f2dc00d547173e936cb0506e0a810c04ba3bb61a842f5bae644e3c4eb"
+    },
+    {
+      "name": "later-1050",
+      "frame": 1050,
+      "scene_seconds": 17.5,
+      "native_size": [
+        1920,
+        1080
+      ],
+      "render_seconds": 36.645042252002895,
+      "png_sha256": "ef329d62d282c71fe88843f8c2df6aa6897949a3d0ef88137eaea7ac35e96e47",
+      "decoded_rgb_sha256": "84c4cc36cc07fcc7dd093f83e03da02f87c1781b0a82f71ef3e4482660560bf8"
+    },
+    {
+      "name": "repeat-0360",
+      "frame": 360,
+      "scene_seconds": 6.0,
+      "native_size": [
+        1920,
+        1080
+      ],
+      "render_seconds": 2.940221704000578,
+      "png_sha256": "76fdf3f937c7657145b87b99b697e7f34ea8ad8343650910e00202dac3777144",
+      "decoded_rgb_sha256": "f7f9209f2dc00d547173e936cb0506e0a810c04ba3bb61a842f5bae644e3c4eb"
+    }
+  ],
+  "fps": 60,
+  "temporal_samples": 2,
+  "graphics_threads": 1,
+  "renderer": "llvmpipe (LLVM 19.1.7, 256 bits)",
+  "initialization_seconds": 8.57033969099939,
+  "total_seconds": 75.12550885500241,
+  "max_rss_kib": 726560,
+  "decoded_pixels_exactly_equal": true,
+  "changed_rgb_channels": 0,
+  "changed_pixels": 0,
+  "maximum_absolute_channel_difference": 0,
+  "mean_absolute_channel_difference": 0.0,
+  "source_unchanged_after_check": true,
+  "scope": "Same renderer, frame 360 then 1050 then 360; native 1080p, 2 samples, lossless PNG decoded RGB8 exact comparison."
+}

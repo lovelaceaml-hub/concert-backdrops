@@ -1,0 +1,385 @@
+{
+  "schema_version": 1,
+  "reviewed_at_utc": "2026-11-21T02:48:41.318657+00:00",
+  "project_id": "concert-kit-consideration-v2",
+  "scope": "Sampled visual review of actual decoded final H.264 frames and unscaled hand/torso crops; no scene rerender, real-time playback, audio-hit listening or owner approval.",
+  "picture_source_identity": "8b091b1940221a8f21a4bd2f8a7ab0cdd1510a90ea559c6ded9afdaf0f5e8876",
+  "registered_input_mapping_sha256": "34bcaa95787e030d817f96d0280bf721545397ca04aa60ab97e2373bb894f46a",
+  "media": {
+    "revision": {
+      "filename": "Consideration-Revised-15s-1080p60.mp4",
+      "sha256": "ab25085451f99ac8c674fa4e9bd03824d45747855707e5962e91fab7a6f8527f",
+      "bytes": 29912818,
+      "frames": 900,
+      "fps": 60,
+      "width": 1920,
+      "height": 1080,
+      "original_scene_interval_seconds": [
+        3,
+        18
+      ]
+    },
+    "baseline": {
+      "filename": "Consideration-Baseline-18s-1080p60.mp4",
+      "sha256": "0ae54467e7f2bdcf8528f734ed77f9f9656db1bc00aef7cadccfe43b9a6c231d",
+      "bytes": 32559734,
+      "sampled_output_frames": [
+        450,
+        692
+      ],
+      "sampled_original_scene_frames": [
+        450,
+        692
+      ]
+    },
+    "comparison": {
+      "filename": "Consideration-Motion-Before-After.png",
+      "sha256": "ed78ac05a88e612b54c1340d1bc05c2da83285a2e6940d3ad18a471a2b0043e4",
+      "bytes": 2268796,
+      "size": [
+        1920,
+        1276
+      ],
+      "panel_source_size": [
+        1920,
+        1080
+      ],
+      "panel_display_size": [
+        960,
+        540
+      ],
+      "equal_scaling": true,
+      "pairs": [
+        {
+          "original_scene_frame": 450,
+          "original_scene_seconds": 7.5,
+          "baseline_output_frame": 450,
+          "revision_output_frame": 270
+        },
+        {
+          "original_scene_frame": 692,
+          "original_scene_seconds": 11.533333333333333,
+          "baseline_output_frame": 692,
+          "revision_output_frame": 512
+        }
+      ]
+    }
+  },
+  "decoding": {
+    "transform": "inverse BT.709 matrix/range only, no transfer conversion",
+    "threads": 2,
+    "source_movies_unchanged_before_and_after_extraction": true
+  },
+  "sampling": {
+    "unique_revision_frames": 67,
+    "unique_baseline_frames": 2,
+    "fps": 60,
+    "revision_source_offset_frames": 180,
+    "groups": {
+      "rise": {
+        "output_frames": [
+          252,
+          255,
+          258,
+          261,
+          264,
+          267,
+          270,
+          273,
+          276,
+          279,
+          282,
+          285,
+          288,
+          291,
+          294,
+          297,
+          300,
+          303,
+          306
+        ],
+        "original_scene_frames": [
+          432,
+          435,
+          438,
+          441,
+          444,
+          447,
+          450,
+          453,
+          456,
+          459,
+          462,
+          465,
+          468,
+          471,
+          474,
+          477,
+          480,
+          483,
+          486
+        ],
+        "original_scene_seconds": [
+          7.2,
+          7.25,
+          7.3,
+          7.35,
+          7.4,
+          7.45,
+          7.5,
+          7.55,
+          7.6,
+          7.65,
+          7.7,
+          7.75,
+          7.8,
+          7.85,
+          7.9,
+          7.95,
+          8.0,
+          8.05,
+          8.1
+        ]
+      },
+      "response": {
+        "output_frames": [
+          504,
+          506,
+          508,
+          510,
+          512,
+          514,
+          516,
+          518,
+          520,
+          522,
+          524,
+          526,
+          528,
+          530,
+          532,
+          534,
+          536,
+          538,
+          540,
+          542,
+          544,
+          546,
+          548,
+          550,
+          552,
+          554,
+          556,
+          558,
+          560
+        ],
+        "original_scene_frames": [
+          684,
+          686,
+          688,
+          690,
+          692,
+          694,
+          696,
+          698,
+          700,
+          702,
+          704,
+          706,
+          708,
+          710,
+          712,
+          714,
+          716,
+          718,
+          720,
+          722,
+          724,
+          726,
+          728,
+          730,
+          732,
+          734,
+          736,
+          738,
+          740
+        ],
+        "original_scene_seconds": [
+          11.4,
+          11.433333333,
+          11.466666667,
+          11.5,
+          11.533333333,
+          11.566666667,
+          11.6,
+          11.633333333,
+          11.666666667,
+          11.7,
+          11.733333333,
+          11.766666667,
+          11.8,
+          11.833333333,
+          11.866666667,
+          11.9,
+          11.933333333,
+          11.966666667,
+          12.0,
+          12.033333333,
+          12.066666667,
+          12.1,
+          12.133333333,
+          12.166666667,
+          12.2,
+          12.233333333,
+          12.266666667,
+          12.3,
+          12.333333333
+        ]
+      },
+      "cuts": {
+        "output_frames": [
+          230,
+          231,
+          232,
+          233,
+          234,
+          235,
+          236,
+          237,
+          238,
+          536,
+          537,
+          538,
+          539,
+          540,
+          541,
+          542,
+          543,
+          544
+        ],
+        "original_scene_frames": [
+          410,
+          411,
+          412,
+          413,
+          414,
+          415,
+          416,
+          417,
+          418,
+          716,
+          717,
+          718,
+          719,
+          720,
+          721,
+          722,
+          723,
+          724
+        ],
+        "original_scene_seconds": [
+          6.833333333,
+          6.85,
+          6.866666667,
+          6.883333333,
+          6.9,
+          6.916666667,
+          6.933333333,
+          6.95,
+          6.966666667,
+          11.933333333,
+          11.95,
+          11.966666667,
+          11.983333333,
+          12.0,
+          12.016666667,
+          12.033333333,
+          12.05,
+          12.066666667
+        ]
+      },
+      "ending": {
+        "output_frames": [
+          600,
+          690,
+          780,
+          840,
+          870,
+          899
+        ],
+        "original_scene_frames": [
+          780,
+          870,
+          960,
+          1020,
+          1050,
+          1079
+        ],
+        "original_scene_seconds": [
+          13.0,
+          14.5,
+          16.0,
+          17.0,
+          17.5,
+          17.983333333
+        ]
+      }
+    },
+    "native_response_crop": {
+      "bounds": [
+        660,
+        235,
+        1000,
+        710
+      ],
+      "resampling": "none"
+    }
+  },
+  "observations": [
+    {
+      "category": "rise_and_release",
+      "evidence": "19 decoded frames at every third output frame from 252 through 306; matched baseline450/revision270 comparison.",
+      "observed": "The revised heads and torsos stay separate through the rise and release. The helper stays screen-right, hands separate progressively, and both feet stay inside the picture. The baseline same-time frame merges much of the two silhouettes."
+    },
+    {
+      "category": "left_hand_return",
+      "evidence": "29 decoded frames at every second output frame from 504 through 560, with unscaled crops before output540; matched baseline692/revision512 comparison.",
+      "observed": "The hand holds at the chest and lowers progressively. The baseline face-side excursion is absent from the sampled revised return. The pink light leaves the posed palm as a world-space departure."
+    },
+    {
+      "category": "authored_cuts",
+      "evidence": "Every encoded frame230..238 and536..544.",
+      "observed": "Both cuts retain person ordering and readable action. The second cut widens the world while the light continues outward. No mixed-camera or blank frame is visible in these samples."
+    },
+    {
+      "category": "garden_and_ending",
+      "evidence": "Encoded output frames600,690,780,840,870,899, corresponding to original scene13.0,14.5,16.0,17.0,17.5,17.983333 seconds.",
+      "observed": "The garden opens along the pink light path. The final reveal contains the full expression and corner logo; both heads remain clear in the ending samples. The final framing holds a complete visual ending instead of stopping during the rise."
+    }
+  ],
+  "remaining_creative_issues": [
+    "Plants remain visible through the translucent point bodies during the interaction.",
+    "Pink flowers overlap the recipient torso and some hand/lower-body area during the garden reveal. Head clearance is improved, but full body clearance remains a next composition task.",
+    "These image samples establish readability and absence of the observed pop in the sampled sequence; emotional naturalness and musical impact still require owner viewing of the full film."
+  ],
+  "next_priority": "Author a clear plant-free region around both people across the complete camera path, while retaining the garden outside their silhouettes; validate beginning, midpoint and ending as a sequence.",
+  "material_blocker_observed_in_reviewed_samples": false,
+  "technical_audit": {
+    "path": "project-docs/production-system/evidence/consideration-v2-delivery-qa.json",
+    "sha256": "4fa711315af0b2b6323e5135a7f6a945d9744786fc30ffc7293b414445010c41",
+    "technical_passed": true,
+    "errors": [],
+    "warnings": [],
+    "creative_approval": "not_assessed"
+  },
+  "ignored_local_evidence": {
+    "receipt": "work/concert-motion-revision/encoded-review/decoded-review-receipt.json",
+    "sheets": [
+      "rise-encoded-temporal.jpg",
+      "response-encoded-temporal.jpg",
+      "response-native-crops.jpg",
+      "cuts-encoded-consecutive.jpg",
+      "ending-encoded-temporal.jpg"
+    ]
+  }
+}

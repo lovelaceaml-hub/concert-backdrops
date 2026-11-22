@@ -1,0 +1,19 @@
+{
+  "project": "concert-dance-study",
+  "quality": "4k-check",
+  "frame": 480,
+  "time_seconds": 8.0,
+  "width": 3840,
+  "height": 2160,
+  "source_precision": "RGB8 SDR",
+  "native_render": true,
+  "upscaled": false,
+  "temporal_samples": 2,
+  "source_commit": "0c42f4422a6b67464cb9cd84aac32008d45d4f4c",
+  "fingerprint": "614545c3ffa3090022c1afdce469fec40c1e0f7202721aaec41b942b8f86e94c",
+  "sha256": "ae5743f6dd55c57a34c830642355f4b0e2e9dc2d4408a443ccb420bc7b8e7a67",
+  "rgb_sha256": "22132fcd9217eea28759015b7c631869c397ec8635c3cad0c4b63a526093684e",
+  "bytes": 3504314,
+  "file": "Natural-Dance-Duet-Native-4K.png",
+  "whole_4k_movie_rendered": false
+}

@@ -1,0 +1,1420 @@
+{
+  "schema_version": 1,
+  "updated_local_date": "2026-11-22",
+  "timezone": "America/Los_Angeles",
+  "status": "advanced_dance_and_complete_updated_collection_saved",
+  "approved_references_catalog": "project-docs/production-system/catalogs/references.json",
+  "historical_baseline_source_commit": "673f68785c36b57d55d05129ee5549efe6352c60",
+  "current_integration_pr": 109,
+  "items": [
+    {
+      "id": "consideration-revised-15s",
+      "filename": "Consideration-Revised-15s-1080p60.mp4",
+      "kind": "corrected_performance_study",
+      "description": "Native 15s 1080p60, 900 frames, two temporal samples. Separate camera coverage and complete-pose arm response, followed by the full garden ending. Technical QA passed; 67 encoded frames were visually reviewed.",
+      "bytes": 29912818,
+      "sha256": "ab25085451f99ac8c674fa4e9bd03824d45747855707e5962e91fab7a6f8527f",
+      "width": 1920,
+      "height": 1080,
+      "fps": 60,
+      "frames": 900,
+      "seconds": 15,
+      "original_scene_seconds": [
+        3,
+        18
+      ],
+      "original_recording_seconds": [
+        140.5,
+        155.5
+      ],
+      "picture_source_commit": "33a7d87e2848bf8a42e6d8132c34544d61259350",
+      "picture_source_identity": "8b091b1940221a8f21a4bd2f8a7ab0cdd1510a90ea559c6ded9afdaf0f5e8876",
+      "pipeline_input_mapping_sha256": "34bcaa95787e030d817f96d0280bf721545397ca04aa60ab97e2373bb894f46a",
+      "project_id": "concert-kit-consideration-v2",
+      "production_command": "./scripts/video produce concert-kit-consideration-v2 --quality review",
+      "technical_evidence": "project-docs/production-system/evidence/consideration-v2-delivery-qa.json",
+      "visual_evidence": "project-docs/production-system/evidence/consideration-v2-visual-review.json",
+      "creative_approval": "not_recorded",
+      "known_limits": [
+        "Sampled encoded review, not real-time playback or owner approval.",
+        "Vegetation remains visible through or across parts of the translucent figures.",
+        "This excerpt is not a completed full Song 07 film or a 4K movie."
+      ],
+      "library": {
+        "status": "saved",
+        "library_file_id": "libfile_31f8c88406648191acc3aecbcb5d90b6",
+        "version": 0,
+        "url": "https://chatgpt.com/library?file_id=libfile_31f8c88406648191acc3aecbcb5d90b6&account_id=personal"
+      },
+      "drive": {
+        "status": "uploaded_and_raw_bytes_verified",
+        "file_id": "12Co1HzLFHUp0ql2abfww77yDRULfLU3F",
+        "folder_id": "1hrk62bFIOHv2NwXvYl2bNSmp0cwBoXrr",
+        "url": "https://drive.google.com/file/d/12Co1HzLFHUp0ql2abfww77yDRULfLU3F/view",
+        "modified_time": "2026-11-21T07:31:06.797Z",
+        "raw_bytes_verified": true,
+        "bytes": 29912818,
+        "sha256": "ab25085451f99ac8c674fa4e9bd03824d45747855707e5962e91fab7a6f8527f",
+        "evidence": "project-docs/production-system/evidence/drive-delivery-completion.json"
+      }
+    },
+    {
+      "id": "consideration-baseline-18s",
+      "filename": "Consideration-Baseline-18s-1080p60.mp4",
+      "kind": "historical_performance_baseline",
+      "description": "Native 18s 1080p60, 1080 frames. Technical delivery passed. Camera overlap and arm return defect are recorded.",
+      "bytes": 32559734,
+      "sha256": "0ae54467e7f2bdcf8528f734ed77f9f9656db1bc00aef7cadccfe43b9a6c231d",
+      "technical_evidence": "project-docs/production-system/evidence/consideration-baseline-delivery-qa.json",
+      "creative_approval": "not_recorded",
+      "library": {
+        "status": "saved",
+        "library_file_id": "libfile_f504ec5b3a1c8191afbb265631d3f4dc",
+        "version": 0,
+        "url": "https://chatgpt.com/library?file_id=libfile_f504ec5b3a1c8191afbb265631d3f4dc&account_id=personal"
+      },
+      "drive": {
+        "status": "uploaded_and_raw_bytes_verified",
+        "file_id": "1XRKz23x12VNcqB_ykax3EgRRdwSjvPEU",
+        "folder_id": "1hrk62bFIOHv2NwXvYl2bNSmp0cwBoXrr",
+        "url": "https://drive.google.com/file/d/1XRKz23x12VNcqB_ykax3EgRRdwSjvPEU/view",
+        "modified_time": "2026-11-21T07:31:18.833Z",
+        "raw_bytes_verified": true,
+        "bytes": 32559734,
+        "sha256": "0ae54467e7f2bdcf8528f734ed77f9f9656db1bc00aef7cadccfe43b9a6c231d",
+        "evidence": "project-docs/production-system/evidence/drive-delivery-completion.json"
+      }
+    },
+    {
+      "id": "consideration-revised-garden-4k",
+      "filename": "Consideration-Revised-Garden-Native-4K.png",
+      "kind": "native_4k_still",
+      "description": "Corrected study ending, rendered natively at 3840x2160 with two temporal samples. Output frame 870, source frame 1050. RGB8 SDR.",
+      "bytes": 5048251,
+      "sha256": "1ac66c796b1c9a732de252532eae90c9e55242a55033bd91cdd363cdb089422b",
+      "technical_evidence": "project-docs/production-system/evidence/consideration-v2-native-4k.json",
+      "picture_source_commit": "33a7d87e2848bf8a42e6d8132c34544d61259350",
+      "picture_source_identity": "8b091b1940221a8f21a4bd2f8a7ab0cdd1510a90ea559c6ded9afdaf0f5e8876",
+      "creative_approval": "not_recorded",
+      "library": {
+        "status": "saved",
+        "library_file_id": "libfile_569034d32eb88191ab759f319e93ca20",
+        "version": 0,
+        "url": "https://chatgpt.com/library?file_id=libfile_569034d32eb88191ab759f319e93ca20&account_id=personal"
+      },
+      "drive": {
+        "status": "uploaded_and_raw_bytes_verified",
+        "file_id": "19IpKG6XlqbhRjMwksOxDk9i3KbOCGqTs",
+        "folder_id": "1hrk62bFIOHv2NwXvYl2bNSmp0cwBoXrr",
+        "url": "https://drive.google.com/file/d/19IpKG6XlqbhRjMwksOxDk9i3KbOCGqTs/view",
+        "modified_time": "2026-11-21T07:32:36.693Z",
+        "raw_bytes_verified": true,
+        "bytes": 5048251,
+        "sha256": "1ac66c796b1c9a732de252532eae90c9e55242a55033bd91cdd363cdb089422b",
+        "evidence": "project-docs/production-system/evidence/drive-delivery-completion.json"
+      }
+    },
+    {
+      "id": "native-model-atlas",
+      "filename": "Concert-Native-Models-12-Variants.jpg",
+      "kind": "model_atlas",
+      "description": "Six native model families and twelve variants, 1920x1200 sheet with twelve native 960x540 tiles.",
+      "bytes": 306145,
+      "sha256": "0faadc1b42dab94f4c36a050295bfad790d2e5a08f7a72b9a91739246d6ef784",
+      "technical_evidence": "project-docs/production-system/evidence/model-atlas.json",
+      "creative_approval": "not_recorded",
+      "library": {
+        "status": "saved",
+        "library_file_id": "libfile_71459f58cc3c819195726ec04fe8f0b8",
+        "version": 0,
+        "url": "https://chatgpt.com/library?file_id=libfile_71459f58cc3c819195726ec04fe8f0b8&account_id=personal"
+      },
+      "drive": {
+        "status": "uploaded_and_raw_bytes_verified",
+        "file_id": "1eqRc24mQj5LO3_aPBTNa7cEoaZ46FzVq",
+        "folder_id": "1hrk62bFIOHv2NwXvYl2bNSmp0cwBoXrr",
+        "url": "https://drive.google.com/file/d/1eqRc24mQj5LO3_aPBTNa7cEoaZ46FzVq/view",
+        "modified_time": "2026-11-21T07:32:42.843Z",
+        "raw_bytes_verified": true,
+        "bytes": 306145,
+        "sha256": "0faadc1b42dab94f4c36a050295bfad790d2e5a08f7a72b9a91739246d6ef784",
+        "evidence": "project-docs/production-system/evidence/drive-delivery-completion.json"
+      }
+    },
+    {
+      "id": "dove-flight-v2",
+      "filename": "Dove-Flight-Prototype-v2-6s-1080p60.mp4",
+      "kind": "silent_motion_prototype",
+      "description": "Six-second native 1080p60 flight, 360 unique decoded frames. Prototype requiring its own creative review.",
+      "bytes": 1211878,
+      "sha256": "d213912ae9321b5bb43cc941eb570ece9f369ca605647b901bedeb7f598835a7",
+      "technical_evidence": "project-docs/production-system/evidence/dove-v2-delivery-qa.json",
+      "creative_approval": "not_recorded",
+      "library": {
+        "status": "saved",
+        "library_file_id": "libfile_4c7ffe51339c8191b5c18480b3bb48e9",
+        "version": 0,
+        "url": "https://chatgpt.com/library?file_id=libfile_4c7ffe51339c8191b5c18480b3bb48e9&account_id=personal"
+      },
+      "drive": {
+        "status": "uploaded_and_raw_bytes_verified",
+        "file_id": "1yjK8IN-09-rUdY0e1AhFB4EHDnRHbb5Z",
+        "folder_id": "1hrk62bFIOHv2NwXvYl2bNSmp0cwBoXrr",
+        "url": "https://drive.google.com/file/d/1yjK8IN-09-rUdY0e1AhFB4EHDnRHbb5Z/view",
+        "modified_time": "2026-11-21T07:32:49.017Z",
+        "raw_bytes_verified": true,
+        "bytes": 1211878,
+        "sha256": "d213912ae9321b5bb43cc941eb570ece9f369ca605647b901bedeb7f598835a7",
+        "evidence": "project-docs/production-system/evidence/drive-delivery-completion.json"
+      }
+    },
+    {
+      "id": "addon-model-sheet-v2",
+      "filename": "Concert-Model-Prototypes-v2.png",
+      "kind": "model_contact_sheet",
+      "description": "Articulated dove, layered rose and wheat prototypes. Three families and six variants in the pack.",
+      "bytes": 491308,
+      "sha256": "10f9fff181445728fb9dd4e84818130b63650b0a0fbd19555c26c63c234ec231",
+      "technical_evidence": "tools/concert_addons/VERIFICATION.md",
+      "creative_approval": "not_recorded",
+      "library": {
+        "status": "saved",
+        "library_file_id": "libfile_ced33414414481919b6698fab562f1db",
+        "version": 0,
+        "url": "https://chatgpt.com/library?file_id=libfile_ced33414414481919b6698fab562f1db&account_id=personal"
+      },
+      "drive": {
+        "status": "uploaded_and_raw_bytes_verified",
+        "file_id": "1ccCaMd4N_4VC67vqsEPnd2mZz2AKZzR_",
+        "folder_id": "1hrk62bFIOHv2NwXvYl2bNSmp0cwBoXrr",
+        "url": "https://drive.google.com/file/d/1ccCaMd4N_4VC67vqsEPnd2mZz2AKZzR_/view",
+        "modified_time": "2026-11-21T07:33:23.327Z",
+        "raw_bytes_verified": true,
+        "bytes": 491308,
+        "sha256": "10f9fff181445728fb9dd4e84818130b63650b0a0fbd19555c26c63c234ec231",
+        "evidence": "project-docs/production-system/evidence/drive-delivery-completion.json"
+      }
+    },
+    {
+      "id": "consideration-motion-comparison",
+      "filename": "Consideration-Motion-Before-After.png",
+      "kind": "matched_encoded_motion_comparison",
+      "description": "Two matched moments from the actual encoded 18s baseline and corrected 15s movie, with equal scaling and explicit source/output clocks. A still compares poses; the films show continuous motion.",
+      "bytes": 2268796,
+      "sha256": "ed78ac05a88e612b54c1340d1bc05c2da83285a2e6940d3ad18a471a2b0043e4",
+      "width": 1920,
+      "height": 1276,
+      "technical_evidence": "project-docs/production-system/evidence/consideration-v2-visual-review.json",
+      "creative_approval": "not_recorded",
+      "library": {
+        "status": "saved",
+        "library_file_id": "libfile_9be31f98637481918c172270b10c547b",
+        "version": 0,
+        "url": "https://chatgpt.com/library?file_id=libfile_9be31f98637481918c172270b10c547b&account_id=personal"
+      },
+      "drive": {
+        "status": "uploaded_and_raw_bytes_verified",
+        "file_id": "1gIXKc07V5Z351upp-ui1kJGGR0oNsRIv",
+        "folder_id": "1hrk62bFIOHv2NwXvYl2bNSmp0cwBoXrr",
+        "url": "https://drive.google.com/file/d/1gIXKc07V5Z351upp-ui1kJGGR0oNsRIv/view",
+        "modified_time": "2026-11-21T07:33:29.890Z",
+        "raw_bytes_verified": true,
+        "bytes": 2268796,
+        "sha256": "ed78ac05a88e612b54c1340d1bc05c2da83285a2e6940d3ad18a471a2b0043e4",
+        "evidence": "project-docs/production-system/evidence/drive-delivery-completion.json"
+      }
+    },
+    {
+      "id": "consideration-camera-plan",
+      "filename": "Consideration-Camera-Planning-Comparison.png",
+      "kind": "historical_camera_comparison",
+      "description": "Labeled single-frame comparison at source 7.5s. The proposed angle is planning evidence, not a complete revised film.",
+      "bytes": 1141946,
+      "sha256": "d5ed875cd6398c4ccd018aaeb9ad5c4b6f78daab9a5fe3e96ea48d59e5706a95",
+      "technical_evidence": "project-docs/production-system/evidence/consideration-camera-plan.json",
+      "creative_approval": "not_recorded",
+      "library": {
+        "status": "saved",
+        "library_file_id": "libfile_18523aa7406c8191bf988490affed4d4",
+        "version": 0,
+        "url": "https://chatgpt.com/library?file_id=libfile_18523aa7406c8191bf988490affed4d4&account_id=personal"
+      },
+      "drive": {
+        "status": "uploaded_and_raw_bytes_verified",
+        "file_id": "1aZUJNUNwBuTgJ4quV_RjxNkY6DKnoRwi",
+        "folder_id": "1hrk62bFIOHv2NwXvYl2bNSmp0cwBoXrr",
+        "url": "https://drive.google.com/file/d/1aZUJNUNwBuTgJ4quV_RjxNkY6DKnoRwi/view",
+        "modified_time": "2026-11-21T07:33:36.333Z",
+        "raw_bytes_verified": true,
+        "bytes": 1141946,
+        "sha256": "d5ed875cd6398c4ccd018aaeb9ad5c4b6f78daab9a5fe3e96ea48d59e5706a95",
+        "evidence": "project-docs/production-system/evidence/drive-delivery-completion.json"
+      }
+    },
+    {
+      "id": "natural-dance-duet-18s",
+      "filename": "Natural-Dance-Duet-18s-1080p60.mp4",
+      "kind": "natural_performance_study",
+      "width": 1920,
+      "height": 1080,
+      "fps": 60,
+      "frames": 1080,
+      "seconds": 18,
+      "temporal_samples": 2,
+      "description": "Continuous captured dance study with retained travel, bounded support cleanup, palm-following light trails and a closing acknowledgment. Full decode, exact presentation clock and canonical audio alignment passed.",
+      "technical_evidence": "project-docs/production-system/evidence/natural-dance-independent-qa.json",
+      "visual_evidence": "project-docs/production-system/evidence/natural-dance-visual-review.json",
+      "project_id": "concert-dance-study",
+      "production_command": "./scripts/video produce concert-dance-study --quality review",
+      "canonical_score_seconds": [
+        0,
+        18
+      ],
+      "original_recording_seconds": [
+        137.5,
+        155.5
+      ],
+      "known_limits": [
+        "The first five seconds are restrained; pacing needs further creative development.",
+        "Both performers reuse CMU 05_02 with a 0.6-second offset; complementary choreography remains future work.",
+        "Stored 30 Hz poses are interpolated for 60 fps. Fingers are not captured performance.",
+        "A raised-foot settling pose remains visible before the final coda.",
+        "Sampled visual review does not establish real-time naturalness or owner approval."
+      ],
+      "bytes": 20308106,
+      "sha256": "96b0f75464fd093ad5ba4a318f8d923de7fa33e2fd01115b5d49b42f3baaec66",
+      "picture_source_commit": "0c42f4422a6b67464cb9cd84aac32008d45d4f4c",
+      "pipeline_input_mapping_sha256": "3b4e9bce5176b976d1c8040f75fae699fa11b83455bcbb57dfa178449dcc28f9",
+      "creative_approval": "not_recorded",
+      "library": {
+        "status": "saved",
+        "library_file_id": "libfile_94dd1e528d8c8191964b6de7f6c012e7",
+        "file_id": "file_000000002a2081f5971b72f7349c4cbe",
+        "version": 0,
+        "url": "https://chatgpt.com/library?file_id=libfile_94dd1e528d8c8191964b6de7f6c012e7&account_id=personal"
+      },
+      "drive": {
+        "filename": "Natural-Dance-Duet-18s-1080p60.mp4",
+        "file_id": "1IImU7ohiNhI86WHtIPNB_3S0iFD2HgAH",
+        "url": "https://drive.google.com/file/d/1IImU7ohiNhI86WHtIPNB_3S0iFD2HgAH/view",
+        "folder_id": "1hrk62bFIOHv2NwXvYl2bNSmp0cwBoXrr",
+        "mime_type": "video/mp4",
+        "modified_time": "2026-11-21T08:42:41.172Z",
+        "bytes": 20308106,
+        "sha256": "96b0f75464fd093ad5ba4a318f8d923de7fa33e2fd01115b5d49b42f3baaec66",
+        "raw_bytes_verified": true,
+        "status": "uploaded_and_raw_bytes_verified",
+        "evidence": "project-docs/production-system/evidence/natural-dance-drive-delivery.json"
+      }
+    },
+    {
+      "id": "natural-dance-duet-4k",
+      "filename": "Natural-Dance-Duet-Native-4K.png",
+      "kind": "native_4k_still",
+      "width": 3840,
+      "height": 2160,
+      "frame": 480,
+      "time_seconds": 8.0,
+      "temporal_samples": 2,
+      "source_precision": "RGB8 SDR",
+      "description": "One native 3840x2160 frame from the dance turning passage; not upscaled. Full 4K movie remains unrendered.",
+      "technical_evidence": "project-docs/production-system/evidence/natural-dance-native-4k.json",
+      "whole_4k_movie_rendered": false,
+      "bytes": 3504314,
+      "sha256": "ae5743f6dd55c57a34c830642355f4b0e2e9dc2d4408a443ccb420bc7b8e7a67",
+      "picture_source_commit": "0c42f4422a6b67464cb9cd84aac32008d45d4f4c",
+      "pipeline_input_mapping_sha256": "3b4e9bce5176b976d1c8040f75fae699fa11b83455bcbb57dfa178449dcc28f9",
+      "creative_approval": "not_recorded",
+      "library": {
+        "status": "saved",
+        "library_file_id": "libfile_8c22ca84cbcc8191a484bed9662cb252",
+        "file_id": "file_00000000665881f5a8104c2810d136a2",
+        "version": 0,
+        "url": "https://chatgpt.com/library?file_id=libfile_8c22ca84cbcc8191a484bed9662cb252&account_id=personal"
+      },
+      "drive": {
+        "filename": "Natural-Dance-Duet-Native-4K.png",
+        "file_id": "1nB2MjshQhFJHe7c-KyjxcuWBBPGvFYyq",
+        "url": "https://drive.google.com/file/d/1nB2MjshQhFJHe7c-KyjxcuWBBPGvFYyq/view",
+        "folder_id": "1hrk62bFIOHv2NwXvYl2bNSmp0cwBoXrr",
+        "mime_type": "image/png",
+        "modified_time": "2026-11-21T08:42:52.283Z",
+        "bytes": 3504314,
+        "sha256": "ae5743f6dd55c57a34c830642355f4b0e2e9dc2d4408a443ccb420bc7b8e7a67",
+        "raw_bytes_verified": true,
+        "status": "uploaded_and_raw_bytes_verified",
+        "evidence": "project-docs/production-system/evidence/natural-dance-drive-delivery.json"
+      }
+    },
+    {
+      "id": "natural-dance-duet-review",
+      "filename": "Natural-Dance-Duet-Motion-Review.jpg",
+      "kind": "encoded_motion_contact_sheet",
+      "width": 1920,
+      "height": 1164,
+      "sampled_frames": [
+        0,
+        330,
+        390,
+        492,
+        570,
+        660,
+        810,
+        948,
+        1068
+      ],
+      "description": "Nine labeled samples decoded from the actual final movie, with equal scaling and no brightness or content edits.",
+      "technical_evidence": "project-docs/production-system/evidence/natural-dance-visual-review.json",
+      "bytes": 681227,
+      "sha256": "7ba73a497107be3065380d48abd64bbafdd17e0e9e8cdd3c5dc747abca5555af",
+      "picture_source_commit": "0c42f4422a6b67464cb9cd84aac32008d45d4f4c",
+      "pipeline_input_mapping_sha256": "3b4e9bce5176b976d1c8040f75fae699fa11b83455bcbb57dfa178449dcc28f9",
+      "creative_approval": "not_recorded",
+      "library": {
+        "status": "saved",
+        "library_file_id": "libfile_f75ba5b1fec08191bc69db96dd16fbcd",
+        "file_id": "file_0000000005f881f5bb4213be48b8e478",
+        "version": 0,
+        "url": "https://chatgpt.com/library?file_id=libfile_f75ba5b1fec08191bc69db96dd16fbcd&account_id=personal"
+      },
+      "drive": {
+        "filename": "Natural-Dance-Duet-Motion-Review.jpg",
+        "file_id": "1AmBWnRldfLNjbL9Vh31WzMEhAPby12Vm",
+        "url": "https://drive.google.com/file/d/1AmBWnRldfLNjbL9Vh31WzMEhAPby12Vm/view",
+        "folder_id": "1hrk62bFIOHv2NwXvYl2bNSmp0cwBoXrr",
+        "mime_type": "image/jpeg",
+        "modified_time": "2026-11-21T08:42:57.622Z",
+        "bytes": 681227,
+        "sha256": "7ba73a497107be3065380d48abd64bbafdd17e0e9e8cdd3c5dc747abca5555af",
+        "raw_bytes_verified": true,
+        "status": "uploaded_and_raw_bytes_verified",
+        "evidence": "project-docs/production-system/evidence/natural-dance-drive-delivery.json"
+      }
+    },
+    {
+      "id": "fan-silk-trio-20s",
+      "kind": "video",
+      "width": 1920,
+      "height": 1080,
+      "fps": 60,
+      "frames": 1200,
+      "seconds": 20,
+      "temporal_samples": 2,
+      "technical_passed": true,
+      "independent_technical_passed": true,
+      "technical_evidence": "project-docs/production-system/evidence/fan-trio-independent-qa.json",
+      "description": "Original continuous trio with distinct authored roles, grounded steps, held fans, finite silk, mirror lake and a gentle closing pose. Not reconstructed source choreography.",
+      "filename": "Fan-Silk-Trio-20s-1080p60.mp4",
+      "bytes": 22982924,
+      "sha256": "36166e43ae67a0ea9e7d52313bf223ca0ee373ed555c69728ccab0e3cfb62afe",
+      "picture_source_commit": "dffe8f165944c627ae39a8bb7d47bc5a9e703305",
+      "pipeline_input_mapping_sha256": "2fe6c395dba21927c34838ac0f7823274fae4833273381c6472447cfb0400a1e",
+      "creative_approval": "not_recorded",
+      "library": {
+        "status": "saved",
+        "library_file_id": "libfile_5d95a136726c8191a7eacbf8509a9bec",
+        "file_id": "file_00000000f4088211848fb985d07f0b7d",
+        "version": 0,
+        "url": "https://chatgpt.com/library?file_id=libfile_5d95a136726c8191a7eacbf8509a9bec&account_id=personal"
+      },
+      "drive": {
+        "status": "uploaded_and_raw_bytes_verified",
+        "file_id": "1e4p1pwcjfhZN35lD-ducwa_mU2_M5dsh",
+        "url": "https://drive.google.com/file/d/1e4p1pwcjfhZN35lD-ducwa_mU2_M5dsh/view?usp=drivesdk",
+        "folder_id": "1hrk62bFIOHv2NwXvYl2bNSmp0cwBoXrr",
+        "mime_type": "video/mp4",
+        "modified_time": "2026-11-21T17:06:09.381Z",
+        "bytes": 22982924,
+        "sha256": "36166e43ae67a0ea9e7d52313bf223ca0ee373ed555c69728ccab0e3cfb62afe",
+        "raw_bytes_verified": true,
+        "evidence": "project-docs/production-system/evidence/fan-trio-drive-delivery.json"
+      }
+    },
+    {
+      "id": "fan-silk-trio-4k",
+      "kind": "native_4k_still",
+      "width": 3840,
+      "height": 2160,
+      "frame": 864,
+      "time_seconds": 14.4,
+      "temporal_samples": 2,
+      "source_precision": "RGB8 SDR",
+      "whole_4k_movie_rendered": false,
+      "technical_evidence": "project-docs/production-system/evidence/fan-trio-native-4k.json",
+      "description": "One separately rendered native 3840 x 2160 frame. No upscaling; a full 4K movie is not included.",
+      "filename": "Fan-Silk-Trio-Native-4K.png",
+      "bytes": 4765896,
+      "sha256": "4326d32a479bd585ccc5de24a5e7a523e79008b092d7c2332f0909d7052fd98f",
+      "picture_source_commit": "dffe8f165944c627ae39a8bb7d47bc5a9e703305",
+      "pipeline_input_mapping_sha256": "2fe6c395dba21927c34838ac0f7823274fae4833273381c6472447cfb0400a1e",
+      "creative_approval": "not_recorded",
+      "library": {
+        "status": "saved",
+        "library_file_id": "libfile_401345b49ea88191a3d6ba7e0c794939",
+        "file_id": "file_000000005ae0821193ea36def6de55a1",
+        "version": 0,
+        "url": "https://chatgpt.com/library?file_id=libfile_401345b49ea88191a3d6ba7e0c794939&account_id=personal"
+      },
+      "drive": {
+        "status": "uploaded_and_raw_bytes_verified",
+        "file_id": "1r3NL97rDqXL1waC_gKflb7cODqh7n0dV",
+        "url": "https://drive.google.com/file/d/1r3NL97rDqXL1waC_gKflb7cODqh7n0dV/view?usp=drivesdk",
+        "folder_id": "1hrk62bFIOHv2NwXvYl2bNSmp0cwBoXrr",
+        "mime_type": "image/png",
+        "modified_time": "2026-11-21T17:07:35.069Z",
+        "bytes": 4765896,
+        "sha256": "4326d32a479bd585ccc5de24a5e7a523e79008b092d7c2332f0909d7052fd98f",
+        "raw_bytes_verified": true,
+        "evidence": "project-docs/production-system/evidence/fan-trio-drive-delivery.json"
+      }
+    },
+    {
+      "id": "fan-silk-trio-review",
+      "kind": "encoded_motion_contact_sheet",
+      "width": 1920,
+      "height": 1164,
+      "sampled_frames": [
+        30,
+        180,
+        348,
+        420,
+        504,
+        660,
+        864,
+        1020,
+        1188
+      ],
+      "technical_evidence": "project-docs/production-system/evidence/fan-trio-visual-review.json",
+      "description": "Nine labeled frames decoded from the final movie, with uniform scaling and no brightness or content edits.",
+      "filename": "Fan-Silk-Trio-Motion-Review.jpg",
+      "bytes": 683850,
+      "sha256": "7e5cf9b314132dc3d716d0c5b94805c1d60b10c44aca5ee042e4bbec73c83e5c",
+      "picture_source_commit": "dffe8f165944c627ae39a8bb7d47bc5a9e703305",
+      "pipeline_input_mapping_sha256": "2fe6c395dba21927c34838ac0f7823274fae4833273381c6472447cfb0400a1e",
+      "creative_approval": "not_recorded",
+      "library": {
+        "status": "saved",
+        "library_file_id": "libfile_0a92fd2387848191a628133b595d7be6",
+        "file_id": "file_00000000e0248211929c046fcae8ce44",
+        "version": 0,
+        "url": "https://chatgpt.com/library?file_id=libfile_0a92fd2387848191a628133b595d7be6&account_id=personal"
+      },
+      "drive": {
+        "status": "uploaded_and_raw_bytes_verified",
+        "file_id": "1x418ePl741G1Ooo0cZHzwwYirYxFQXG3",
+        "url": "https://drive.google.com/file/d/1x418ePl741G1Ooo0cZHzwwYirYxFQXG3/view?usp=drivesdk",
+        "folder_id": "1hrk62bFIOHv2NwXvYl2bNSmp0cwBoXrr",
+        "mime_type": "image/jpeg",
+        "modified_time": "2026-11-21T17:06:16.225Z",
+        "bytes": 683850,
+        "sha256": "7e5cf9b314132dc3d716d0c5b94805c1d60b10c44aca5ee042e4bbec73c83e5c",
+        "raw_bytes_verified": true,
+        "evidence": "project-docs/production-system/evidence/fan-trio-drive-delivery.json"
+      }
+    },
+    {
+      "id": "cinematic-ten-01",
+      "project_id": "cinematic-ten-01",
+      "filename": "01_Silk_in_Light_1080p60.mp4",
+      "title": "Silk in Light",
+      "kind": "final_cinematic_short",
+      "description": "Original twenty-second native concert 3D film; full technical decode passed and scoped encoded visual review found no blocking defect.",
+      "bytes": 35123251,
+      "sha256": "d055202a4496c219bd5f827c507d91bf6d6e877955c36e8650993fe0d7a7b16d",
+      "width": 1920,
+      "height": 1080,
+      "fps": 60,
+      "frames": 1200,
+      "seconds": 20,
+      "temporal_samples": 2,
+      "picture_source_commit": "df4fc478116d3f0e34a85d2166097fbda55911bf",
+      "picture_fingerprint": "00c5a6a5b88e76eecc8b8f696511165d199c5a860f8607e25000719dbfac6ab6",
+      "production_command": "./scripts/video produce cinematic-ten-01 --quality final",
+      "technical_evidence": "project-docs/production-system/evidence/cinematic-ten-complete-review.json",
+      "visual_evidence": "project-docs/production-system/evidence/cinematic-ten-complete-review.json",
+      "saved_delivery_evidence": "project-docs/production-system/evidence/cinematic-ten-final-delivery.json",
+      "creative_approval": "not_recorded",
+      "visual_review_scope": "Eight decoded timeline samples at frames 0,120,300,480,660,840,1020,1199, plus native decoded opening and last frame. This is sampled visual review, not complete real-time playback, biomechanical validation or owner approval.",
+      "library": {
+        "status": "saved",
+        "library_file_id": "libfile_ea21501ca69c8191a485dadd0ba7845e",
+        "file_id": "file_0000000052588212a2faafd7f687b1de",
+        "version": 0,
+        "url": "https://chatgpt.com/library?file_id=libfile_ea21501ca69c8191a485dadd0ba7845e&account_id=personal"
+      },
+      "drive": {
+        "status": "no_copy_recorded_for_this_delivery"
+      },
+      "known_limits": [
+        "Scoped decoded-frame review is not full real-time playback or owner approval.",
+        "Automatic pixel checks do not establish natural movement or physical balance.",
+        "The authored visual clock does not claim instrument-level audio synchronization."
+      ]
+    },
+    {
+      "id": "cinematic-ten-02",
+      "project_id": "cinematic-ten-02",
+      "filename": "02_Petals_in_Motion_1080p60.mp4",
+      "title": "Petals in Motion",
+      "kind": "final_cinematic_short",
+      "description": "Original twenty-second native concert 3D film; full technical decode passed and scoped encoded visual review found no blocking defect.",
+      "bytes": 41657946,
+      "sha256": "b03e7e12037521aa2463e851b02c156e924fe2173d310f51c6d4c4d51a8a72fa",
+      "width": 1920,
+      "height": 1080,
+      "fps": 60,
+      "frames": 1200,
+      "seconds": 20,
+      "temporal_samples": 2,
+      "picture_source_commit": "df4fc478116d3f0e34a85d2166097fbda55911bf",
+      "picture_fingerprint": "ae5c2d4893964b0cf6c7b8e900dcceb50473f7f5169cbb5129ff038c377ea3e4",
+      "production_command": "./scripts/video produce cinematic-ten-02 --quality final",
+      "technical_evidence": "project-docs/production-system/evidence/cinematic-ten-complete-review.json",
+      "visual_evidence": "project-docs/production-system/evidence/cinematic-ten-complete-review.json",
+      "saved_delivery_evidence": "project-docs/production-system/evidence/cinematic-ten-final-delivery.json",
+      "creative_approval": "not_recorded",
+      "visual_review_scope": "Eight decoded timeline samples at frames 0,120,300,480,660,840,1020,1199, plus native decoded opening, frame840 at14seconds and last frame. This is sampled visual review, not complete real-time playback, biomechanical validation or owner approval.",
+      "library": {
+        "status": "saved",
+        "library_file_id": "libfile_8fe98daf9ea88191b898686ab0975625",
+        "file_id": "file_00000000f31c81f58efadd912081702e",
+        "version": 0,
+        "url": "https://chatgpt.com/library?file_id=libfile_8fe98daf9ea88191b898686ab0975625&account_id=personal"
+      },
+      "drive": {
+        "status": "no_copy_recorded_for_this_delivery"
+      },
+      "known_limits": [
+        "Scoped decoded-frame review is not full real-time playback or owner approval.",
+        "Automatic pixel checks do not establish natural movement or physical balance.",
+        "The authored visual clock does not claim instrument-level audio synchronization."
+      ]
+    },
+    {
+      "id": "cinematic-ten-03",
+      "project_id": "cinematic-ten-03",
+      "filename": "03_One_World_Many_Hearts_1080p60.mp4",
+      "title": "One World, Many Hearts",
+      "kind": "final_cinematic_short",
+      "description": "Original twenty-second native concert 3D film; full technical decode passed and scoped encoded visual review found no blocking defect.",
+      "bytes": 30585104,
+      "sha256": "753080691767d6935311def4c84cb00542eff5321cbe785b7394fcd206899455",
+      "width": 1920,
+      "height": 1080,
+      "fps": 60,
+      "frames": 1200,
+      "seconds": 20,
+      "temporal_samples": 2,
+      "picture_source_commit": "df4fc478116d3f0e34a85d2166097fbda55911bf",
+      "picture_fingerprint": "7dbfad297dff6b27b0168958c1860d7a98258f8878d822dde19d73b2b080a5b0",
+      "production_command": "./scripts/video produce cinematic-ten-03 --quality final",
+      "technical_evidence": "project-docs/production-system/evidence/cinematic-ten-complete-review.json",
+      "visual_evidence": "project-docs/production-system/evidence/cinematic-ten-complete-review.json",
+      "saved_delivery_evidence": "project-docs/production-system/evidence/cinematic-ten-final-delivery.json",
+      "creative_approval": "not_recorded",
+      "visual_review_scope": "Eight decoded timeline samples and eight decoded transition samples between 8.800 and 9.300 seconds, plus native decoded frames immediately before and after the declared 9.000-second cut, at 9.300 seconds, and the final frame. This is sampled visual review, not full playback or owner approval.",
+      "library": {
+        "status": "saved",
+        "library_file_id": "libfile_c7f33c7ed65c8191bf2ca8b5868607f0",
+        "file_id": "file_00000000b32c81f69cfa4b17f58060d6",
+        "version": 0,
+        "url": "https://chatgpt.com/library?file_id=libfile_c7f33c7ed65c8191bf2ca8b5868607f0&account_id=personal"
+      },
+      "drive": {
+        "status": "no_copy_recorded_for_this_delivery"
+      },
+      "known_limits": [
+        "Scoped decoded-frame review is not full real-time playback or owner approval.",
+        "Automatic pixel checks do not establish natural movement or physical balance.",
+        "The authored visual clock does not claim instrument-level audio synchronization."
+      ]
+    },
+    {
+      "id": "cinematic-ten-04",
+      "project_id": "cinematic-ten-04",
+      "filename": "04_The_Written_Light_1080p60.mp4",
+      "title": "The Written Light",
+      "kind": "final_cinematic_short",
+      "description": "Original twenty-second native concert 3D film; full technical decode passed and scoped encoded visual review found no blocking defect.",
+      "bytes": 27369572,
+      "sha256": "f90fe7b96eb3d1164c3056713e9553d1b9ccf1919002e307c7d4406ee81af70e",
+      "width": 1920,
+      "height": 1080,
+      "fps": 60,
+      "frames": 1200,
+      "seconds": 20,
+      "temporal_samples": 2,
+      "picture_source_commit": "df4fc478116d3f0e34a85d2166097fbda55911bf",
+      "picture_fingerprint": "842f2976925078f7d44036275d6a5f407ef4e6557d82ad08662b6d75ef5c2f1c",
+      "production_command": "./scripts/video produce cinematic-ten-04 --quality final",
+      "technical_evidence": "project-docs/production-system/evidence/cinematic-ten-complete-review.json",
+      "visual_evidence": "project-docs/production-system/evidence/cinematic-ten-complete-review.json",
+      "saved_delivery_evidence": "project-docs/production-system/evidence/cinematic-ten-final-delivery.json",
+      "creative_approval": "not_recorded",
+      "visual_review_scope": "Eight decoded timeline samples at frames 0,120,300,480,660,840,1020,1199, plus native decoded frames0,480,840,1199 to inspect the opening, live wrist-origin strokes, accumulation and ending. This is sampled visual review, not complete real-time playback, biomechanical validation, lettering accuracy or owner approval.",
+      "library": {
+        "status": "saved",
+        "library_file_id": "libfile_1b901203e3788191a56b51d623a4e986",
+        "file_id": "file_000000000d6881f78d7b7e22b4516c35",
+        "version": 0,
+        "url": "https://chatgpt.com/library?file_id=libfile_1b901203e3788191a56b51d623a4e986&account_id=personal"
+      },
+      "drive": {
+        "status": "no_copy_recorded_for_this_delivery"
+      },
+      "known_limits": [
+        "Scoped decoded-frame review is not full real-time playback or owner approval.",
+        "Automatic pixel checks do not establish natural movement or physical balance.",
+        "The authored visual clock does not claim instrument-level audio synchronization."
+      ]
+    },
+    {
+      "id": "cinematic-ten-05",
+      "project_id": "cinematic-ten-05",
+      "filename": "05_Procession_of_Lanterns_1080p60.mp4",
+      "title": "Procession of Lanterns",
+      "kind": "final_cinematic_short",
+      "description": "Original twenty-second native concert 3D film; full technical decode passed and scoped encoded visual review found no blocking defect.",
+      "bytes": 44205575,
+      "sha256": "25c8959c1ef906b6587cefd4deae48efb44ba870ba16a7031b3b2b5bbf051b9d",
+      "width": 1920,
+      "height": 1080,
+      "fps": 60,
+      "frames": 1200,
+      "seconds": 20,
+      "temporal_samples": 2,
+      "picture_source_commit": "df4fc478116d3f0e34a85d2166097fbda55911bf",
+      "picture_fingerprint": "5367eeb01e16cdc7e7314dddd9e4205e7910527d9f9244dab0e5baf07fad6029",
+      "production_command": "./scripts/video produce cinematic-ten-05 --quality final",
+      "technical_evidence": "project-docs/production-system/evidence/cinematic-ten-complete-review.json",
+      "visual_evidence": "project-docs/production-system/evidence/cinematic-ten-complete-review.json",
+      "saved_delivery_evidence": "project-docs/production-system/evidence/cinematic-ten-final-delivery.json",
+      "creative_approval": "not_recorded",
+      "visual_review_scope": "Eight decoded timeline samples, plus native decoded opening and last frame. This is sampled visual review, not full playback or owner approval.",
+      "library": {
+        "status": "saved",
+        "library_file_id": "libfile_6b97089123b4819194218560c357ce8c",
+        "file_id": "file_00000000d6508212b2a18c604ec6e447",
+        "version": 0,
+        "url": "https://chatgpt.com/library?file_id=libfile_6b97089123b4819194218560c357ce8c&account_id=personal"
+      },
+      "drive": {
+        "status": "no_copy_recorded_for_this_delivery"
+      },
+      "known_limits": [
+        "Scoped decoded-frame review is not full real-time playback or owner approval.",
+        "Automatic pixel checks do not establish natural movement or physical balance.",
+        "The authored visual clock does not claim instrument-level audio synchronization."
+      ]
+    },
+    {
+      "id": "cinematic-ten-06",
+      "project_id": "cinematic-ten-06",
+      "filename": "06_A_Garden_Awakens_1080p60.mp4",
+      "title": "A Garden Awakens",
+      "kind": "final_cinematic_short",
+      "description": "Original twenty-second native concert 3D film; full technical decode passed and scoped encoded visual review found no blocking defect.",
+      "bytes": 51061569,
+      "sha256": "2d3bdc8e8903b13b5d60a442f8b533d6aab57516c449ecb4a41210e03f2cf3d8",
+      "width": 1920,
+      "height": 1080,
+      "fps": 60,
+      "frames": 1200,
+      "seconds": 20,
+      "temporal_samples": 2,
+      "picture_source_commit": "df4fc478116d3f0e34a85d2166097fbda55911bf",
+      "picture_fingerprint": "7f6ad01e22373da2867a7517f35c5a0a179492ff0fbd564896c3f7a9d5a0658b",
+      "production_command": "./scripts/video produce cinematic-ten-06 --quality final",
+      "technical_evidence": "project-docs/production-system/evidence/cinematic-ten-complete-review.json",
+      "visual_evidence": "project-docs/production-system/evidence/cinematic-ten-complete-review.json",
+      "saved_delivery_evidence": "project-docs/production-system/evidence/cinematic-ten-final-delivery.json",
+      "creative_approval": "not_recorded",
+      "visual_review_scope": "Eight decoded timeline samples, plus native decoded opening and last frame. This is sampled visual review, not full playback or owner approval.",
+      "library": {
+        "status": "saved",
+        "library_file_id": "libfile_8fcaa552e044819191bd992d593e52c8",
+        "file_id": "file_000000002978822fb5856c03126f8f31",
+        "version": 0,
+        "url": "https://chatgpt.com/library?file_id=libfile_8fcaa552e044819191bd992d593e52c8&account_id=personal"
+      },
+      "drive": {
+        "status": "no_copy_recorded_for_this_delivery"
+      },
+      "known_limits": [
+        "Scoped decoded-frame review is not full real-time playback or owner approval.",
+        "Automatic pixel checks do not establish natural movement or physical balance.",
+        "The authored visual clock does not claim instrument-level audio synchronization."
+      ]
+    },
+    {
+      "id": "cinematic-ten-07",
+      "project_id": "cinematic-ten-07",
+      "filename": "07_Wings_of_Peace_1080p60.mp4",
+      "title": "Wings of Peace",
+      "kind": "final_cinematic_short",
+      "description": "Original twenty-second native concert 3D film; full technical decode passed and scoped encoded visual review found no blocking defect.",
+      "bytes": 21902494,
+      "sha256": "30880be109c9da3de5e96037f397ac8c8c8c72c101d7cda4776accc2633d2b6f",
+      "width": 1920,
+      "height": 1080,
+      "fps": 60,
+      "frames": 1200,
+      "seconds": 20,
+      "temporal_samples": 2,
+      "picture_source_commit": "df4fc478116d3f0e34a85d2166097fbda55911bf",
+      "picture_fingerprint": "fdf8bbc6cac56b99ea6ce1c56ba8de7a11bf88ceb24c33bed5b565ff67513fa4",
+      "production_command": "./scripts/video produce cinematic-ten-07 --quality final",
+      "technical_evidence": "project-docs/production-system/evidence/cinematic-ten-complete-review.json",
+      "visual_evidence": "project-docs/production-system/evidence/cinematic-ten-complete-review.json",
+      "saved_delivery_evidence": "project-docs/production-system/evidence/cinematic-ten-final-delivery.json",
+      "creative_approval": "not_recorded",
+      "visual_review_scope": "Eight decoded timeline samples, plus native decoded opening and last frame. This is sampled visual review, not full playback or owner approval.",
+      "library": {
+        "status": "saved",
+        "library_file_id": "libfile_821bfd25f004819193badf599d094903",
+        "file_id": "file_00000000c7f481f5b0c02f83b6d50fff",
+        "version": 0,
+        "url": "https://chatgpt.com/library?file_id=libfile_821bfd25f004819193badf599d094903&account_id=personal"
+      },
+      "drive": {
+        "status": "no_copy_recorded_for_this_delivery"
+      },
+      "known_limits": [
+        "Scoped decoded-frame review is not full real-time playback or owner approval.",
+        "Automatic pixel checks do not establish natural movement or physical balance.",
+        "The authored visual clock does not claim instrument-level audio synchronization."
+      ]
+    },
+    {
+      "id": "cinematic-ten-08",
+      "project_id": "cinematic-ten-08",
+      "filename": "08_Ocean_of_Light_1080p60.mp4",
+      "title": "Ocean of Light",
+      "kind": "final_cinematic_short",
+      "description": "Original twenty-second native concert 3D film; full technical decode passed and scoped encoded visual review found no blocking defect.",
+      "bytes": 37434533,
+      "sha256": "da076670eb36a52b087bee26128bee0eab4baab8a9ae08ff5fc197b2a0052fc6",
+      "width": 1920,
+      "height": 1080,
+      "fps": 60,
+      "frames": 1200,
+      "seconds": 20,
+      "temporal_samples": 2,
+      "picture_source_commit": "df4fc478116d3f0e34a85d2166097fbda55911bf",
+      "picture_fingerprint": "68d78ce714058aebe6430763f83162e54975610efb511c784a557d8182ab4f01",
+      "production_command": "./scripts/video produce cinematic-ten-08 --quality final",
+      "technical_evidence": "project-docs/production-system/evidence/cinematic-ten-complete-review.json",
+      "visual_evidence": "project-docs/production-system/evidence/cinematic-ten-complete-review.json",
+      "saved_delivery_evidence": "project-docs/production-system/evidence/cinematic-ten-final-delivery.json",
+      "creative_approval": "not_recorded",
+      "visual_review_scope": "Eight decoded timeline samples, plus native decoded opening and last frame. This is sampled visual review, not full playback or owner approval.",
+      "library": {
+        "status": "saved",
+        "library_file_id": "libfile_a306fcad0d588191b4c4626bd36e2867",
+        "file_id": "file_00000000361081f5af59afd0c29328f7",
+        "version": 0,
+        "url": "https://chatgpt.com/library?file_id=libfile_a306fcad0d588191b4c4626bd36e2867&account_id=personal"
+      },
+      "drive": {
+        "status": "no_copy_recorded_for_this_delivery"
+      },
+      "known_limits": [
+        "Scoped decoded-frame review is not full real-time playback or owner approval.",
+        "Automatic pixel checks do not establish natural movement or physical balance.",
+        "The authored visual clock does not claim instrument-level audio synchronization."
+      ]
+    },
+    {
+      "id": "cinematic-ten-09",
+      "project_id": "cinematic-ten-09",
+      "filename": "09_Celestial_Clockwork_1080p60.mp4",
+      "title": "Celestial Clockwork",
+      "kind": "final_cinematic_short",
+      "description": "Original twenty-second native concert 3D film; full technical decode passed and scoped encoded visual review found no blocking defect.",
+      "bytes": 23457102,
+      "sha256": "b4c4956e5401ce5fe3283037a0cd7d6ca9f3f042a104d599fa94f50d6e5254b4",
+      "width": 1920,
+      "height": 1080,
+      "fps": 60,
+      "frames": 1200,
+      "seconds": 20,
+      "temporal_samples": 2,
+      "picture_source_commit": "df4fc478116d3f0e34a85d2166097fbda55911bf",
+      "picture_fingerprint": "e8986f1cd5716bf959dee6f36f4c8a704b2a88783348759a5350bf0cb4411312",
+      "production_command": "./scripts/video produce cinematic-ten-09 --quality final",
+      "technical_evidence": "project-docs/production-system/evidence/cinematic-ten-complete-review.json",
+      "visual_evidence": "project-docs/production-system/evidence/cinematic-ten-complete-review.json",
+      "saved_delivery_evidence": "project-docs/production-system/evidence/cinematic-ten-final-delivery.json",
+      "creative_approval": "not_recorded",
+      "visual_review_scope": "Eight decoded timeline samples, plus native decoded opening and last frame. This is sampled visual review, not full playback or owner approval.",
+      "library": {
+        "status": "saved",
+        "library_file_id": "libfile_b5e1f83e34b0819184f426415648399d",
+        "file_id": "file_000000000a1481f5a5d8fe96547b6436",
+        "version": 0,
+        "url": "https://chatgpt.com/library?file_id=libfile_b5e1f83e34b0819184f426415648399d&account_id=personal"
+      },
+      "drive": {
+        "status": "no_copy_recorded_for_this_delivery"
+      },
+      "known_limits": [
+        "Scoped decoded-frame review is not full real-time playback or owner approval.",
+        "Automatic pixel checks do not establish natural movement or physical balance.",
+        "The authored visual clock does not claim instrument-level audio synchronization."
+      ]
+    },
+    {
+      "id": "cinematic-ten-10",
+      "project_id": "cinematic-ten-10",
+      "filename": "10_Together_in_the_Light_1080p60.mp4",
+      "title": "Together in the Light",
+      "kind": "final_cinematic_short",
+      "description": "Original twenty-second native concert 3D film; full technical decode passed and scoped encoded visual review found no blocking defect.",
+      "bytes": 34430368,
+      "sha256": "e62b7ef360cc1ef29df6cf8221a2ce72c29ba9f22ddfbd7b749e64a4cbbc939f",
+      "width": 1920,
+      "height": 1080,
+      "fps": 60,
+      "frames": 1200,
+      "seconds": 20,
+      "temporal_samples": 2,
+      "picture_source_commit": "df4fc478116d3f0e34a85d2166097fbda55911bf",
+      "picture_fingerprint": "902a6efda24072d93e7206e7eaa690f995807a39453029e54114e292e828c00e",
+      "production_command": "./scripts/video produce cinematic-ten-10 --quality final",
+      "technical_evidence": "project-docs/production-system/evidence/cinematic-ten-complete-review.json",
+      "visual_evidence": "project-docs/production-system/evidence/cinematic-ten-complete-review.json",
+      "saved_delivery_evidence": "project-docs/production-system/evidence/cinematic-ten-final-delivery.json",
+      "creative_approval": "not_recorded",
+      "visual_review_scope": "Eight decoded timeline samples, plus native decoded frames at 0.000, 5.000, 10.000, 17.500 and 19.983 seconds. Specific attention was given to the greeting figures, their separation, final group framing and closing-title readability. This is sampled visual review, not full playback or owner approval.",
+      "library": {
+        "status": "saved",
+        "library_file_id": "libfile_e3c5f7bacecc8191a9b271ea8f3d4943",
+        "file_id": "file_000000006fc881f5bb9bc2ac0da9eba4",
+        "version": 0,
+        "url": "https://chatgpt.com/library?file_id=libfile_e3c5f7bacecc8191a9b271ea8f3d4943&account_id=personal"
+      },
+      "drive": {
+        "status": "no_copy_recorded_for_this_delivery"
+      },
+      "known_limits": [
+        "Scoped decoded-frame review is not full real-time playback or owner approval.",
+        "Automatic pixel checks do not establish natural movement or physical balance.",
+        "The authored visual clock does not claim instrument-level audio synchronization."
+      ]
+    },
+    {
+      "id": "cinematic-ten-overview",
+      "filename": "Ten_Cinematic_Films_Overview.jpg",
+      "kind": "decoded_final_movie_overview",
+      "description": "Four decoded samples from each of the ten final masters.",
+      "bytes": 3006552,
+      "sha256": "1bc61bb9569d0628cbeb1ec19530bea46e39d5379bc9263a3e9011c92a1a1f73",
+      "picture_source_commit": "df4fc478116d3f0e34a85d2166097fbda55911bf",
+      "saved_delivery_evidence": "project-docs/production-system/evidence/cinematic-ten-final-delivery.json",
+      "creative_approval": "not_recorded",
+      "library": {
+        "status": "saved",
+        "library_file_id": "libfile_692524e180dc8191a7f13c340e94ac89",
+        "file_id": "file_00000000ac108212a9f9d4a88b827fe2",
+        "version": 0,
+        "url": "https://chatgpt.com/library?file_id=libfile_692524e180dc8191a7f13c340e94ac89&account_id=personal"
+      },
+      "drive": {
+        "status": "no_copy_recorded_for_this_delivery"
+      }
+    },
+    {
+      "id": "cinematic-ten-readme",
+      "filename": "README.md",
+      "kind": "delivery_readme",
+      "description": "Playback, film index, provenance and review limitations for this exact package.",
+      "bytes": 2688,
+      "sha256": "740ccce0010cfbed5bce39baee09e1e50cfa12d93a59e05287df3a89c8f96a65",
+      "picture_source_commit": "df4fc478116d3f0e34a85d2166097fbda55911bf",
+      "saved_delivery_evidence": "project-docs/production-system/evidence/cinematic-ten-final-delivery.json",
+      "creative_approval": "not_recorded",
+      "library": {
+        "status": "saved",
+        "library_file_id": "libfile_c4392e6bf8088191bd33e2111081ce46",
+        "file_id": "file_00000000bbfc8212aae08d521e6dc3d2",
+        "version": 0,
+        "url": "https://chatgpt.com/library?file_id=libfile_c4392e6bf8088191bd33e2111081ce46&account_id=personal"
+      },
+      "drive": {
+        "status": "no_copy_recorded_for_this_delivery"
+      }
+    },
+    {
+      "id": "cinematic-ten-technical-records",
+      "filename": "Ten_Cinematic_Films_Technical.json",
+      "kind": "technical_and_review_evidence",
+      "description": "All ten checker, pipeline, visual review, assembly and audio/source identity records.",
+      "bytes": 543622,
+      "sha256": "c70bf689668023f9669c80d9ee6da2fcc2b37509cadd94215abed3078eb2034e",
+      "picture_source_commit": "df4fc478116d3f0e34a85d2166097fbda55911bf",
+      "saved_delivery_evidence": "project-docs/production-system/evidence/cinematic-ten-final-delivery.json",
+      "creative_approval": "not_recorded",
+      "library": {
+        "status": "saved",
+        "library_file_id": "libfile_a937b0e8ab9881918cb11414df49eba5",
+        "file_id": "file_0000000022c48212bcd5c94e6b531893",
+        "version": 0,
+        "url": "https://chatgpt.com/library?file_id=libfile_a937b0e8ab9881918cb11414df49eba5&account_id=personal"
+      },
+      "drive": {
+        "status": "no_copy_recorded_for_this_delivery"
+      }
+    },
+    {
+      "id": "cinematic-ten-checksums",
+      "filename": "SHA256SUMS.txt",
+      "kind": "delivery_checksums",
+      "description": "SHA256 values for the ten movies, overview, README and technical record.",
+      "bytes": 1269,
+      "sha256": "60796238dd06fad0f5b28cb4fb4f349457ae9bc64a386ce7b2682b168b2182f1",
+      "picture_source_commit": "df4fc478116d3f0e34a85d2166097fbda55911bf",
+      "saved_delivery_evidence": "project-docs/production-system/evidence/cinematic-ten-final-delivery.json",
+      "creative_approval": "not_recorded",
+      "library": {
+        "status": "saved",
+        "library_file_id": "libfile_5baa3ce7f9848191aee8e3abdae29c30",
+        "file_id": "file_000000006d6c8212a126824a45d54179",
+        "version": 0,
+        "url": "https://chatgpt.com/library?file_id=libfile_5baa3ce7f9848191aee8e3abdae29c30&account_id=personal"
+      },
+      "drive": {
+        "status": "no_copy_recorded_for_this_delivery"
+      }
+    },
+    {
+      "id": "cinematic-ten-package",
+      "filename": "Ten_Cinematic_Films_1080p60.zip",
+      "kind": "complete_delivery_archive",
+      "description": "Fourteen exact members: ten unchanged masters, overview, README, technical record and checksums.",
+      "bytes": 350397212,
+      "sha256": "7bd5e9f32f4a40150cba39c00bda8cd9959768bb837e448c80b482877e84b0b2",
+      "picture_source_commit": "df4fc478116d3f0e34a85d2166097fbda55911bf",
+      "saved_delivery_evidence": "project-docs/production-system/evidence/cinematic-ten-final-delivery.json",
+      "creative_approval": "not_recorded",
+      "library": {
+        "status": "saved",
+        "library_file_id": "libfile_9692c5a09c4c8191b65ade72f7abfbb0",
+        "file_id": "file_00000000da008212a998a4c5228f6b47",
+        "version": 0,
+        "url": "https://chatgpt.com/library?file_id=libfile_9692c5a09c4c8191b65ade72f7abfbb0&account_id=personal"
+      },
+      "drive": {
+        "status": "no_copy_recorded_for_this_delivery"
+      }
+    },
+    {
+      "id": "advanced-dance-solo",
+      "filename": "01_Silk_in_Light_Advanced_Dance_1080p60.mp4",
+      "kind": "finished_dance_film",
+      "description": "Complete 32-second solo revising film 01; native 1080p60 with full authored choreography, articulated grips, corrected support, skirt and lighting.",
+      "bytes": 57396334,
+      "sha256": "8f02ee2a72a128198771cfb8f3d3dabc0b90716abdb4c028d19fa462b6a6edac",
+      "picture_source_commit": "254414bc0356171f7d5ad89361c75d45fd01a407",
+      "saved_delivery_evidence": "project-docs/production-system/evidence/advanced-dance-final-delivery.json",
+      "creative_approval": "not_recorded",
+      "library": {
+        "status": "saved",
+        "library_file_id": "libfile_5efbae79a5d88191b729f3726b94d117",
+        "file_id": "file_000000003f7c81f5b33ed8b9816ae379",
+        "version": 0,
+        "url": "https://chatgpt.com/library?file_id=libfile_5efbae79a5d88191b729f3726b94d117&account_id=personal"
+      },
+      "technical_passed": true,
+      "visual_review": {
+        "mode": "solo",
+        "master_sha256": "8f02ee2a72a128198771cfb8f3d3dabc0b90716abdb4c028d19fa462b6a6edac",
+        "bytes": 57396334,
+        "source_fingerprint": "437e7420ab538baf3608b879ca371a335ffbbaa09e77444cce7103485b5801ed",
+        "technical_passed": true,
+        "native_frames": 1920,
+        "duration_seconds": 32,
+        "fps": 60,
+        "final_review": {
+          "path": "work/advanced-dance/qa/final/independent-solo-final-encoded-review.json",
+          "sha256": "d923351a3dd1390d6bb0f05abebe6dba4600aec87746b92ecd9ddf627e34a4b2",
+          "bytes": 8935,
+          "include_full_json_in_final_package": true
+        },
+        "distinct_decoded_frames": 150,
+        "inspected_sheets": 29,
+        "sampled_visual_blockers": 0,
+        "owner_approval": false
+      },
+      "drive": {
+        "status": "no_copy_recorded_for_this_delivery"
+      }
+    },
+    {
+      "id": "advanced-dance-ensemble",
+      "filename": "02_Petals_in_Motion_Advanced_Dance_1080p60.mp4",
+      "bytes": 76939037,
+      "sha256": "8bedc48bc2586d903f5aefcb8bfea89ecad58359326ffdc27f5988b0f573540d",
+      "kind": "finished_dance_film",
+      "picture_source_commit": "254414bc0356171f7d5ad89361c75d45fd01a407",
+      "saved_delivery_evidence": "project-docs/production-system/evidence/advanced-dance-final-delivery.json",
+      "creative_approval": "not_recorded",
+      "library": {
+        "status": "saved",
+        "library_file_id": "libfile_bdf3a9b4e1f481918e768953be62a279",
+        "file_id": "file_00000000e4c0822f8aeacb6abe26103c",
+        "version": 0,
+        "url": "https://chatgpt.com/library?file_id=libfile_bdf3a9b4e1f481918e768953be62a279&account_id=personal"
+      },
+      "drive": {
+        "status": "no_copy_recorded_for_this_delivery"
+      },
+      "technical_passed": true,
+      "visual_review": {
+        "mode": "ensemble",
+        "master_sha256": "8bedc48bc2586d903f5aefcb8bfea89ecad58359326ffdc27f5988b0f573540d",
+        "bytes": 76939037,
+        "source_fingerprint": "ec76277c753ba288fb9a2d6634a1f45e4741747f33baad3d237e7be5ff1f272d",
+        "technical_passed": true,
+        "native_frames": 1920,
+        "duration_seconds": 32,
+        "fps": 60,
+        "final_review": {
+          "path": "work/advanced-dance/qa/final/independent-ensemble-final-encoded-review.json",
+          "sha256": "4da1581fee14ac24821327c1e254ad6217352be061c6ea6bcd54f07859204bb0",
+          "bytes": 25441,
+          "include_full_json_in_final_package": true
+        },
+        "distinct_decoded_frames": 135,
+        "inspected_sheets": 22,
+        "sampled_visual_blockers": 0,
+        "owner_approval": false
+      }
+    },
+    {
+      "id": "advanced-dance-ten-film-package",
+      "filename": "Ten_Cinematic_Films_Advanced_Dance_1080p60.zip",
+      "bytes": 410134925,
+      "sha256": "73fcccc8e659b4f8a40604945509163944be4ca13bec660d350637aa7dca336c",
+      "kind": "delivery_support",
+      "picture_source_commit": "254414bc0356171f7d5ad89361c75d45fd01a407",
+      "saved_delivery_evidence": "project-docs/production-system/evidence/advanced-dance-final-delivery.json",
+      "creative_approval": "not_recorded",
+      "library": {
+        "status": "saved",
+        "library_file_id": "libfile_02d1b9fcefdc8191ab72741639bd1fb2",
+        "file_id": "file_000000005280822f87ea4b2a22505135",
+        "version": 0,
+        "url": "https://chatgpt.com/library?file_id=libfile_02d1b9fcefdc8191ab72741639bd1fb2&account_id=personal"
+      },
+      "drive": {
+        "status": "no_copy_recorded_for_this_delivery"
+      }
+    },
+    {
+      "id": "advanced-dance-overview",
+      "filename": "Ten_Cinematic_Films_Advanced_Dance_Overview.jpg",
+      "bytes": 3244143,
+      "sha256": "c8a2c8be415c95a6ce71362feab63d491c44b4cedff6271ba0818153695c4b81",
+      "kind": "delivery_support",
+      "picture_source_commit": "254414bc0356171f7d5ad89361c75d45fd01a407",
+      "saved_delivery_evidence": "project-docs/production-system/evidence/advanced-dance-final-delivery.json",
+      "creative_approval": "not_recorded",
+      "library": {
+        "status": "saved",
+        "library_file_id": "libfile_0c18dc44f6e0819182a087eaef6d669a",
+        "file_id": "file_000000001744822fb8ecd0765ec6246a",
+        "version": 0,
+        "url": "https://chatgpt.com/library?file_id=libfile_0c18dc44f6e0819182a087eaef6d669a&account_id=personal"
+      },
+      "drive": {
+        "status": "no_copy_recorded_for_this_delivery"
+      }
+    },
+    {
+      "id": "advanced-dance-technical",
+      "filename": "Ten_Cinematic_Films_Advanced_Dance_Technical.json",
+      "bytes": 482657,
+      "sha256": "867cf8da1ddc6b9e43a9bd5c120d8fe69ac2cd3921dc8169def75129ce1cb6b9",
+      "kind": "delivery_support",
+      "picture_source_commit": "254414bc0356171f7d5ad89361c75d45fd01a407",
+      "saved_delivery_evidence": "project-docs/production-system/evidence/advanced-dance-final-delivery.json",
+      "creative_approval": "not_recorded",
+      "library": {
+        "status": "saved",
+        "library_file_id": "libfile_9cedecf92e288191bc354b9f5fcd1a4d",
+        "file_id": "file_00000000bf4c822f93d57169a757e804",
+        "version": 0,
+        "url": "https://chatgpt.com/library?file_id=libfile_9cedecf92e288191bc354b9f5fcd1a4d&account_id=personal"
+      },
+      "drive": {
+        "status": "no_copy_recorded_for_this_delivery"
+      }
+    },
+    {
+      "id": "advanced-dance-qa",
+      "filename": "Advanced_Dance_QA.json",
+      "bytes": 11659942,
+      "sha256": "37132a066833deb91829de442aeda2700a0b77ef18fec4f1fb3389a46c2c04fc",
+      "kind": "delivery_support",
+      "picture_source_commit": "254414bc0356171f7d5ad89361c75d45fd01a407",
+      "saved_delivery_evidence": "project-docs/production-system/evidence/advanced-dance-final-delivery.json",
+      "creative_approval": "not_recorded",
+      "library": {
+        "status": "saved",
+        "library_file_id": "libfile_cccbc0cf6fd08191b09dd484c91a9fcd",
+        "file_id": "file_000000002fd4822f9cfc5a597c790695",
+        "version": 0,
+        "url": "https://chatgpt.com/library?file_id=libfile_cccbc0cf6fd08191b09dd484c91a9fcd&account_id=personal"
+      },
+      "drive": {
+        "status": "no_copy_recorded_for_this_delivery"
+      }
+    },
+    {
+      "id": "advanced-dance-readme",
+      "filename": "README.txt",
+      "bytes": 3377,
+      "sha256": "8daf78bb6ae589400e30aa8e678329bfc09924e5adb3768eb1ce83d2a1ebff8a",
+      "kind": "delivery_support",
+      "picture_source_commit": "254414bc0356171f7d5ad89361c75d45fd01a407",
+      "saved_delivery_evidence": "project-docs/production-system/evidence/advanced-dance-final-delivery.json",
+      "creative_approval": "not_recorded",
+      "library": {
+        "status": "saved",
+        "library_file_id": "libfile_b0385f1023bc8191b39bcd0f6e72cbd7",
+        "file_id": "file_000000004294822fb9420fbc57d8c5ca",
+        "version": 0,
+        "url": "https://chatgpt.com/library?file_id=libfile_b0385f1023bc8191b39bcd0f6e72cbd7&account_id=personal"
+      },
+      "drive": {
+        "status": "no_copy_recorded_for_this_delivery"
+      }
+    },
+    {
+      "id": "advanced-dance-checksums",
+      "filename": "SHA256SUMS.txt",
+      "bytes": 1419,
+      "sha256": "98f7774374aaf5f271215fab10a021193e31acd9a5e9162ea522647f1ffc5613",
+      "kind": "delivery_support",
+      "picture_source_commit": "254414bc0356171f7d5ad89361c75d45fd01a407",
+      "saved_delivery_evidence": "project-docs/production-system/evidence/advanced-dance-final-delivery.json",
+      "creative_approval": "not_recorded",
+      "library": {
+        "status": "saved",
+        "library_file_id": "libfile_3ede63b34878819188d32f74e4132f78",
+        "file_id": "file_000000009544822fa93d5e2fc0b80295",
+        "version": 0,
+        "url": "https://chatgpt.com/library?file_id=libfile_3ede63b34878819188d32f74e4132f78&account_id=personal"
+      },
+      "drive": {
+        "status": "no_copy_recorded_for_this_delivery"
+      }
+    },
+    {
+      "id": "advanced-dance-packaging-receipt",
+      "filename": "Packaging_Receipt.json",
+      "bytes": 3440,
+      "sha256": "2f6f7ad0a534e7651cccc1dcde17b3af11724d8c4b9cfeeac04b1989c0c0b3e5",
+      "kind": "delivery_support",
+      "picture_source_commit": "254414bc0356171f7d5ad89361c75d45fd01a407",
+      "saved_delivery_evidence": "project-docs/production-system/evidence/advanced-dance-final-delivery.json",
+      "creative_approval": "not_recorded",
+      "library": {
+        "status": "saved",
+        "library_file_id": "libfile_6dd899b883fc81919acb2641264c72ec",
+        "file_id": "file_00000000dc40822f8547587fa84df4e7",
+        "version": 0,
+        "url": "https://chatgpt.com/library?file_id=libfile_6dd899b883fc81919acb2641264c72ec&account_id=personal"
+      },
+      "drive": {
+        "status": "no_copy_recorded_for_this_delivery"
+      }
+    }
+  ],
+  "limits": [
+    "No full 4K movie is represented by a native 4K still.",
+    "New studies and models do not inherit owner approval from the approved references.",
+    "All eight prior media copies and the exact confirmed reconstructed handoff ZIP are uploaded and verified.",
+    "The original and reconstructed ZIP identities differ. Preserve both identities and recover the delivered archive from its recorded Drive file or saved backup."
+  ],
+  "recorded_at_utc": "2026-11-21T02:50:40.942426+00:00",
+  "portable_handoff": {
+    "status": "uploaded_and_raw_bytes_verified",
+    "filename": "Concert-Production-System-Handoff-2026-11-20.zip",
+    "bytes": 350534,
+    "sha256": "eb8bba933a37179fa970c84aecc67cbc0b493809d1e2b2e7863c3900b9606537",
+    "producing_commit": "94dd897c6fdeb287561c5dd2772b770c43ab94b7",
+    "included_files": 89,
+    "working_tree_dirty_at_export": false,
+    "destination_folder_id": "1QDGGqqkJlbovBLCthX-QChqfD8zSmK8X",
+    "source_document_bytes_match_original_commit": true,
+    "byte_identical_to_original_zip": false,
+    "container_changes": "Fresh ZIP member timestamps and a new truthful export receipt; all 89 source-document payloads match the original committed snapshot.",
+    "library": {
+      "status": "saved",
+      "library_file_id": "libfile_0d7ab1c2d83c8191a3badd389c6dc483",
+      "file_id": "file_00000000356481fd982a7d39a046118f",
+      "file_name": "Concert-Production-System-Handoff-2026-11-20.zip",
+      "version": 0,
+      "url": "https://chatgpt.com/library?file_id=libfile_0d7ab1c2d83c8191a3badd389c6dc483&account_id=personal",
+      "bytes": 350534,
+      "sha256": "eb8bba933a37179fa970c84aecc67cbc0b493809d1e2b2e7863c3900b9606537"
+    },
+    "drive": {
+      "status": "uploaded_and_raw_bytes_verified",
+      "uploaded": true,
+      "file_id": "1gp0x2dnj06eIPDuq6vSGpGtKn_bvKrML",
+      "url": "https://drive.google.com/file/d/1gp0x2dnj06eIPDuq6vSGpGtKn_bvKrML/view",
+      "destination_folder_id": "1QDGGqqkJlbovBLCthX-QChqfD8zSmK8X",
+      "mime_type": "application/zip",
+      "bytes": 350534,
+      "sha256": "eb8bba933a37179fa970c84aecc67cbc0b493809d1e2b2e7863c3900b9606537",
+      "modified_time": "2026-11-21T07:52:29.363Z",
+      "raw_bytes_verified": true,
+      "evidence": "project-docs/production-system/evidence/drive-handoff-completion.json"
+    },
+    "evidence": "project-docs/production-system/evidence/drive-handoff-completion.json",
+    "original_export": {
+      "status": "automatic_review_rejected_pending_exact_archive_destination_confirmation",
+      "filename": "Concert-Production-System-Handoff-2026-11-20.zip",
+      "bytes": 350548,
+      "sha256": "605b7be8ca59987651a642727a9babef88e01986c87d8ea7e3ca076e84a2e158",
+      "producing_commit": "94dd897c6fdeb287561c5dd2772b770c43ab94b7",
+      "included_files": 89,
+      "working_tree_dirty_at_export": false,
+      "destination_folder_id": "1QDGGqqkJlbovBLCthX-QChqfD8zSmK8X",
+      "evidence": "project-docs/production-system/evidence/handoff-export.json",
+      "rejection_evidence": "project-docs/production-system/evidence/drive-handoff-upload-block.json",
+      "historical_record": true,
+      "original_bytes_recovered": false
+    },
+    "reconstruction_evidence": "project-docs/production-system/evidence/handoff-reconstruction.json",
+    "historical_replacement_rejection_evidence": "project-docs/production-system/evidence/drive-handoff-replacement-block.json",
+    "recovery_instruction": "This exact archive is already uploaded and verified. Recover it from its recorded Drive file ID or pinned saved backup, then verify 350534 bytes and the recorded SHA256. Do not repeat the completed upload or rebuild a different container under the same identity."
+  },
+  "drive_completion_recorded_at_utc": "2026-11-21T07:39:34.868145+00:00",
+  "drive_completion_evidence": "project-docs/production-system/evidence/drive-delivery-completion.json",
+  "handoff_completion_recorded_at_utc": "2026-11-21T08:05:03.822755+00:00",
+  "handoff_completion_evidence": "project-docs/production-system/evidence/drive-handoff-completion.json",
+  "natural_dance_completion_recorded_at_utc": "2026-11-21T08:44:55.274489+00:00",
+  "natural_dance_completion_evidence": "project-docs/production-system/evidence/natural-dance-drive-delivery.json",
+  "fan_trio_completion_recorded_at_utc": "2026-11-21T17:09:23.596859+00:00",
+  "fan_trio_completion_evidence": "project-docs/production-system/evidence/fan-trio-drive-delivery.json",
+  "fan_trio_guide": {
+    "filename": "Fan-Silk-Performance-2026-11-21.md",
+    "bytes": 15138,
+    "sha256": "105a6b8f69c58a1d8e06f26fd31761925e176e66e60d3fc198250248692358d2",
+    "drive_file_id": "1I-7hrmx6lKv5RAvS3gzXoZZFMgSYnfvQ",
+    "url": "https://docs.google.com/document/d/1I-7hrmx6lKv5RAvS3gzXoZZFMgSYnfvQ/edit?usp=drivesdk&ouid=113038373524763352759&rtpof=true&sd=true",
+    "raw_bytes_verified": true,
+    "evidence": "project-docs/production-system/evidence/fan-trio-drive-guide.json"
+  },
+  "historical_status_records": [
+    {
+      "updated_local_date": "2026-11-21",
+      "status": "fourteen_media_and_exact_historical_handoff_uploaded_and_raw_bytes_verified"
+    }
+  ],
+  "cinematic_ten_recorded_utc": "2026-11-22T02:13:15.818649+00:00",
+  "cinematic_ten_delivery_evidence": "project-docs/production-system/evidence/cinematic-ten-final-delivery.json",
+  "cinematic_ten_review_evidence": "project-docs/production-system/evidence/cinematic-ten-complete-review.json",
+  "cinematic_ten": {
+    "film_ids": [
+      "cinematic-ten-01",
+      "cinematic-ten-02",
+      "cinematic-ten-03",
+      "cinematic-ten-04",
+      "cinematic-ten-05",
+      "cinematic-ten-06",
+      "cinematic-ten-07",
+      "cinematic-ten-08",
+      "cinematic-ten-09",
+      "cinematic-ten-10"
+    ],
+    "support_ids": [
+      "cinematic-ten-overview",
+      "cinematic-ten-readme",
+      "cinematic-ten-technical-records",
+      "cinematic-ten-checksums",
+      "cinematic-ten-package"
+    ],
+    "saved_film_count": 10,
+    "saved_support_count": 5,
+    "owner_approval": "not_recorded",
+    "drive_copies_claimed": false,
+    "evidence": "project-docs/production-system/evidence/cinematic-ten-final-delivery.json"
+  },
+  "advanced_dance": {
+    "completed_film_ids": [
+      "advanced-dance-solo",
+      "advanced-dance-ensemble"
+    ],
+    "pending_film_ids": [],
+    "package_status": "complete_saved",
+    "owner_approval": "not_recorded",
+    "ensemble_proof_review": {
+      "path": "project-docs/production-system/evidence/advanced-dance-ensemble-proof-review.json",
+      "sha256": "55fb9763b892d0f5079a6a051d63aa9fca9976ebe539f33a5dc896ea390d2483",
+      "native_window_frames": 257,
+      "decoded_overview_samples": 65,
+      "sampled_visual_blockers": 0,
+      "continuous_perceptual_review_claimed": false,
+      "owner_approval": false
+    },
+    "status": "complete_saved",
+    "delivery_evidence": "project-docs/production-system/evidence/advanced-dance-final-delivery.json",
+    "final_movie_evidence": {
+      "solo": {
+        "mode": "solo",
+        "master_sha256": "8f02ee2a72a128198771cfb8f3d3dabc0b90716abdb4c028d19fa462b6a6edac",
+        "bytes": 57396334,
+        "source_fingerprint": "437e7420ab538baf3608b879ca371a335ffbbaa09e77444cce7103485b5801ed",
+        "technical_passed": true,
+        "native_frames": 1920,
+        "duration_seconds": 32,
+        "fps": 60,
+        "final_review": {
+          "path": "work/advanced-dance/qa/final/independent-solo-final-encoded-review.json",
+          "sha256": "d923351a3dd1390d6bb0f05abebe6dba4600aec87746b92ecd9ddf627e34a4b2",
+          "bytes": 8935,
+          "include_full_json_in_final_package": true
+        },
+        "distinct_decoded_frames": 150,
+        "inspected_sheets": 29,
+        "sampled_visual_blockers": 0,
+        "owner_approval": false
+      },
+      "ensemble": {
+        "mode": "ensemble",
+        "master_sha256": "8bedc48bc2586d903f5aefcb8bfea89ecad58359326ffdc27f5988b0f573540d",
+        "bytes": 76939037,
+        "source_fingerprint": "ec76277c753ba288fb9a2d6634a1f45e4741747f33baad3d237e7be5ff1f272d",
+        "technical_passed": true,
+        "native_frames": 1920,
+        "duration_seconds": 32,
+        "fps": 60,
+        "final_review": {
+          "path": "work/advanced-dance/qa/final/independent-ensemble-final-encoded-review.json",
+          "sha256": "4da1581fee14ac24821327c1e254ad6217352be061c6ea6bcd54f07859204bb0",
+          "bytes": 25441,
+          "include_full_json_in_final_package": true
+        },
+        "distinct_decoded_frames": 135,
+        "inspected_sheets": 22,
+        "sampled_visual_blockers": 0,
+        "owner_approval": false
+      }
+    },
+    "saved_artifact_ids": [
+      "advanced-dance-solo",
+      "advanced-dance-ensemble",
+      "advanced-dance-ten-film-package",
+      "advanced-dance-overview",
+      "advanced-dance-technical",
+      "advanced-dance-qa",
+      "advanced-dance-readme",
+      "advanced-dance-checksums",
+      "advanced-dance-packaging-receipt"
+    ]
+  }
+}

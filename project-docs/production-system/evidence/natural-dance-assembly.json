@@ -1,0 +1,61 @@
+{
+  "audio_source_sha256": "0f43061d674dae3467a6a76867f8599d241532c131e7e7654502bc29f2d66f7b",
+  "color": {
+    "hdr": false,
+    "pixel_format": "yuv420p",
+    "range": "limited",
+    "range_metadata": "tv",
+    "source_convention": "legacy_display_gamma",
+    "space": "rec709",
+    "transfer": "bt709"
+  },
+  "created_utc": "2026-11-21T08:39:37.465822+00:00",
+  "delivery_profile": "h264",
+  "editor": "ffmpeg",
+  "encoder_capabilities": {
+    "encoders": [
+      "libx264",
+      "libx265",
+      "prores_ks"
+    ],
+    "zscale": true
+  },
+  "filename": "master.mp4",
+  "finishing_inputs": {
+    "package-lock.json": "ab788114f14ef7d82f423c26731115b24a3047d59439d62ad2a8b5f2c693f171",
+    "package.json": "1d5d16be85388d9e9ef7e638cc73a17f237470b8897a07d6e85f8f13247691e6",
+    "pipeline/delivery.py": "24400dd6f9808514ca925aca930358457d2e6509757402c41befb3f98f23fd23",
+    "pipeline/media.py": "4ff3f6f22d729f7456a924a488fe051116f035aac931f393253d26f2a3b92238",
+    "pipeline/project.py": "96f4629e525c9599fbc2f575372907f7cfccc5166cd2cabae7ba463134a11f66",
+    "pipeline/render.py": "9d6da08d07aa66c6f8c36b9ff31d2a20b906b030ddb3e209a077cf1c36245c8d",
+    "pipeline/temporal.py": "60ce63957b67ee342e058f5a072663bbe9f0be7782994d1cf1f51816b7de4d5a",
+    "pyproject.toml": "561ff80c8c1a5dadbfc4f8fdc5d06b9654b99d43907ead5dc4be3e9aa81481d6",
+    "uv.lock": "8b765586a12c9f314c588550209634a465b825650026762fc12dc84e2ecef6fe"
+  },
+  "fps": 60,
+  "frames": 1080,
+  "height": 1080,
+  "project_id": "concert-dance-study",
+  "project_identity": "0cd523a0bcb9a735d10f0860503e6c7d3d03ad1b95c519dca92ffefe7be674b3",
+  "quality": "review",
+  "sha256": "96b0f75464fd093ad5ba4a318f8d923de7fa33e2fd01115b5d49b42f3baaec66",
+  "shot_fingerprints": {
+    "performance": "76304e25aebadcd272a15a01f7547ab4547aa4fac7a58643a6b471b41c1240fa"
+  },
+  "source": {
+    "branch": "creative/natural-performance-20261121",
+    "commit": "0c42f4422a6b67464cb9cd84aac32008d45d4f4c",
+    "dirty": true
+  },
+  "source_frames": {
+    "frame_count": 1080,
+    "png_bit_depths": [
+      8
+    ],
+    "png_color_types": [
+      2
+    ],
+    "source_transfer": "legacy_display_gamma"
+  },
+  "width": 1920
+}

@@ -1,5 +1,13 @@
 # Concert Backdrops: instructions for every AI
 
+## Current production-system entry point, November 20, 2026
+
+Read `production-system/START-HERE.md` and `production-system/AI-HANDOFF.md` before resuming. The owner approved the sharper Song 11 study and requested shared setup, saving, documentation, uploads, push and merge, plus continued model and animation improvement. The approved 66-second Nine Colours Revision 3 promo remains the creative reference. All eleven current full recordings have been acquired, fingerprinted and decoded; older 02/10 missing-recording notes are historical. Current reference, song, model and delivery catalogs distinguish completed media from newer unrendered source, and source availability from visual approval.
+
+Use the new registered cloudCPU `scripts/video produce` workflow and `scripts/concert` handoff tools. Keep the Drive home, later lessons addenda and current owner's directions authoritative for creative decisions. The older sample-image track below is preserved as history; its image-generation authorization does not make generated rasters eligible for the current code-only video workflow. Preserve original sources and append new evidence instead of erasing history.
+
+## Earlier shared instructions
+
 All AIs (Claude, Codex, Gemini, helpers) work from this one folder. Anthony, 2026-11-13: "Make sure that this is all being recorded, communicated, and stored in the same folder so that all the AIs can work together on the same project". Reorganized 2026-11-13 by the coordinating Claude Code session; every earlier instruction is kept below.
 
 ## Read first, in this order

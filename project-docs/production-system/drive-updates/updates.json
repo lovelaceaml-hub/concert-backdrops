@@ -1,0 +1,159 @@
+{
+  "schema_version": 1,
+  "status": "five_instruction_updates_and_all_three_prior_drive_delivery_operations_verified",
+  "reason": "All three previously requested Drive operations are complete: eight exact media copies, the single prepared log append preserving all 106 original entries, and the exact saved reconstructed handoff ZIP. The owner explicitly confirmed the replacement archive and destination; its uploaded bytes match the saved source and downloaded readback. Earlier rejection records and the unavailable original ZIP identity remain historical evidence.",
+  "rule_updates": [
+    {
+      "file_id": "195oEBBMyi14jY9lKSPfYB5fqpEZN4axj",
+      "existing_name": "AGENTS.md",
+      "header_path": "project-docs/production-system/drive-updates/AGENTS.header.md",
+      "operation": "prepend_current_header_preserving_latest_original_body",
+      "status": "updated_and_raw_bytes_verified",
+      "applied_modified_time": "2026-11-21T02:16:01.119Z",
+      "applied_sha256": "61a57aa1be19940d77d71e3f7d1ca165da6a06589678df6955336c340ca5e068",
+      "historical_body_sha256": "46ee4d138f33f4abf9f547f2809358f875fa8fb0456ec672c1f02aefb8ebfc1f",
+      "historical_body_preserved_exactly": true
+    },
+    {
+      "file_id": "1dReBFenaOzt-NT4lLvGkIsGMed8YYs4W",
+      "existing_name": "VIDEO-HANDOFF.md",
+      "header_path": "project-docs/production-system/drive-updates/VIDEO-HANDOFF.header.md",
+      "operation": "prepend_current_header_preserving_latest_original_body",
+      "status": "updated_and_raw_bytes_verified",
+      "applied_modified_time": "2026-11-21T02:16:17.810Z",
+      "applied_sha256": "7c0f920f4e2d3e6aad2de87fa7c244f8ea147c3afaf24fd2c85dca1bf681d850",
+      "historical_body_sha256": "ce11446ac595c10a81a2529dcff57d57094b69a7a5fd6630d09bd19970bbd691",
+      "historical_body_preserved_exactly": true
+    },
+    {
+      "file_id": "1SyL4I0hetGZHMHqlB6_zsyigJ8xA-9oC",
+      "existing_name": "AUTONOMOUS-RUN.md",
+      "header_path": "project-docs/production-system/drive-updates/AUTONOMOUS-RUN.header.md",
+      "operation": "prepend_current_header_preserving_latest_original_body",
+      "status": "updated_and_raw_bytes_verified",
+      "applied_modified_time": "2026-11-21T02:16:24.268Z",
+      "applied_sha256": "a34f8e06a1ebb15417f45091e6e0c236c8e7876303056b0fe3258217e8816d21",
+      "historical_body_sha256": "0d689bcb831bac0cfdfde6ff26528eb690fbbef201b29648efefb1ea43c41855",
+      "historical_body_preserved_exactly": true
+    },
+    {
+      "file_id": "1pXulIOhdV66tXC_lDQPLJUp9th_kF4s1",
+      "existing_name": "DESIGN-SYSTEM.md",
+      "header_path": "project-docs/production-system/drive-updates/DESIGN-SYSTEM.header.md",
+      "operation": "prepend_current_header_preserving_latest_original_body",
+      "status": "updated_and_raw_bytes_verified",
+      "applied_modified_time": "2026-11-21T02:16:31.117Z",
+      "applied_sha256": "17724a3f701a9f8d8f7c0f1e2b25755177a5ecf12d763d9178965c40315698ac",
+      "historical_body_sha256": "5aaefe083987c2a27b0695d2ed83048d4cab7b07e986531d4ac013587e9fd4a0",
+      "historical_body_preserved_exactly": true
+    },
+    {
+      "file_id": "1wSbLBI8Bx_Efv4foKNUG520SCclRRBVc",
+      "existing_name": "README.md",
+      "header_path": "project-docs/production-system/drive-updates/README.header.md",
+      "operation": "prepend_current_header_preserving_latest_original_body",
+      "status": "updated_and_raw_bytes_verified",
+      "applied_modified_time": "2026-11-21T02:16:36.178Z",
+      "applied_sha256": "9d1e3a8876452ec87d43b6f0b8b4fd374415e189538eb2f1d31bd327de4c7e34",
+      "historical_body_sha256": "10bdd40705f98bf37c84a513df34347d7869830adc78978dac6ca8f26ce86d9c",
+      "historical_body_preserved_exactly": true
+    }
+  ],
+  "production_log": {
+    "file_id": "16F00sMLXIxP77F2bvffPJ9754eR93wtb",
+    "operation": "append_current_delivery_entry_preserving_latest_original_bytes",
+    "status": "appended_and_raw_bytes_verified",
+    "evidence": "project-docs/production-system/evidence/drive-delivery-completion.json",
+    "prepared_payload_sha256": "4f01a3c40ec8b07da8b07c6f16d3f32d6f7fab70530fb8ed58307d5ee36e7bda",
+    "url": "https://drive.google.com/file/d/16F00sMLXIxP77F2bvffPJ9754eR93wtb/view",
+    "applied_modified_time": "2026-11-21T07:36:23.318Z",
+    "before_lines": 106,
+    "after_lines": 107,
+    "append_count": 1,
+    "preserved_original_bytes": true,
+    "applied_sha256": "4f01a3c40ec8b07da8b07c6f16d3f32d6f7fab70530fb8ed58307d5ee36e7bda",
+    "historical_rejection_evidence": "project-docs/production-system/evidence/drive-production-log-block.json",
+    "before_bytes": 47248,
+    "after_bytes": 50645
+  },
+  "apply_instructions": [
+    "The eight prior media copies, requested log append, exact confirmed reconstructed handoff ZIP and five earlier instruction updates are complete. Do not repeat them because a historical record says pending.",
+    "The delivered archive is Drive file 1gp0x2dnj06eIPDuq6vSGpGtKn_bvKrML in Production System folder 1QDGGqqkJlbovBLCthX-QChqfD8zSmK8X. Its 350534 bytes and SHA256 eb8bba933a37179fa970c84aecc67cbc0b493809d1e2b2e7863c3900b9606537 were verified against the exact saved source.",
+    "For any future log update, fetch current raw bytes and metadata, preserve all current entries and reject duplicate events. Recheck metadata immediately before writing, then verify the raw readback.",
+    "Record actual transfer IDs, times and verification before marking an operation complete. Preserve historical evidence.",
+    "Before ending a turn with an upload pending, retain the exact payload in a verified durable source with its identity, version, byte count and SHA256. Rebuilding from source can change ZIP packaging and its receipt."
+  ],
+  "evidence": "project-docs/production-system/evidence/drive-instruction-updates.json",
+  "handoff_archive": {
+    "status": "uploaded_and_raw_bytes_verified",
+    "filename": "Concert-Production-System-Handoff-2026-11-20.zip",
+    "bytes": 350534,
+    "sha256": "eb8bba933a37179fa970c84aecc67cbc0b493809d1e2b2e7863c3900b9606537",
+    "producing_commit": "94dd897c6fdeb287561c5dd2772b770c43ab94b7",
+    "included_files": 89,
+    "working_tree_dirty_at_export": false,
+    "destination_folder_id": "1QDGGqqkJlbovBLCthX-QChqfD8zSmK8X",
+    "source_document_bytes_match_original_commit": true,
+    "byte_identical_to_original_zip": false,
+    "container_changes": "Fresh ZIP member timestamps and a new truthful export receipt; all 89 source-document payloads match the original committed snapshot.",
+    "library": {
+      "status": "saved",
+      "library_file_id": "libfile_0d7ab1c2d83c8191a3badd389c6dc483",
+      "file_id": "file_00000000356481fd982a7d39a046118f",
+      "file_name": "Concert-Production-System-Handoff-2026-11-20.zip",
+      "version": 0,
+      "url": "https://chatgpt.com/library?file_id=libfile_0d7ab1c2d83c8191a3badd389c6dc483&account_id=personal",
+      "bytes": 350534,
+      "sha256": "eb8bba933a37179fa970c84aecc67cbc0b493809d1e2b2e7863c3900b9606537"
+    },
+    "drive": {
+      "status": "uploaded_and_raw_bytes_verified",
+      "uploaded": true,
+      "file_id": "1gp0x2dnj06eIPDuq6vSGpGtKn_bvKrML",
+      "url": "https://drive.google.com/file/d/1gp0x2dnj06eIPDuq6vSGpGtKn_bvKrML/view",
+      "destination_folder_id": "1QDGGqqkJlbovBLCthX-QChqfD8zSmK8X",
+      "mime_type": "application/zip",
+      "bytes": 350534,
+      "sha256": "eb8bba933a37179fa970c84aecc67cbc0b493809d1e2b2e7863c3900b9606537",
+      "modified_time": "2026-11-21T07:52:29.363Z",
+      "raw_bytes_verified": true,
+      "evidence": "project-docs/production-system/evidence/drive-handoff-completion.json"
+    },
+    "evidence": "project-docs/production-system/evidence/drive-handoff-completion.json",
+    "original_export": {
+      "status": "automatic_review_rejected_pending_exact_archive_destination_confirmation",
+      "filename": "Concert-Production-System-Handoff-2026-11-20.zip",
+      "bytes": 350548,
+      "sha256": "605b7be8ca59987651a642727a9babef88e01986c87d8ea7e3ca076e84a2e158",
+      "producing_commit": "94dd897c6fdeb287561c5dd2772b770c43ab94b7",
+      "included_files": 89,
+      "working_tree_dirty_at_export": false,
+      "destination_folder_id": "1QDGGqqkJlbovBLCthX-QChqfD8zSmK8X",
+      "evidence": "project-docs/production-system/evidence/handoff-export.json",
+      "rejection_evidence": "project-docs/production-system/evidence/drive-handoff-upload-block.json",
+      "historical_record": true,
+      "original_bytes_recovered": false
+    },
+    "reconstruction_evidence": "project-docs/production-system/evidence/handoff-reconstruction.json",
+    "historical_replacement_rejection_evidence": "project-docs/production-system/evidence/drive-handoff-replacement-block.json",
+    "recovery_instruction": "This exact archive is already uploaded and verified. Recover it from its recorded Drive file ID or pinned saved backup, then verify 350534 bytes and the recorded SHA256. Do not repeat the completed upload or rebuild a different container under the same identity."
+  },
+  "media_uploads": {
+    "status": "eight_uploaded_and_raw_bytes_verified",
+    "count": 8,
+    "folder_id": "1hrk62bFIOHv2NwXvYl2bNSmp0cwBoXrr",
+    "evidence": "project-docs/production-system/evidence/drive-delivery-completion.json",
+    "catalog": "project-docs/production-system/catalogs/deliveries.json",
+    "historical_rejection_evidence": "project-docs/production-system/evidence/drive-upload-block.json"
+  },
+  "future_instruction_update_procedure": [
+    "Use current user authorization and the approved exact file/destination scope.",
+    "Fetch each current Drive file and its modified time again; use its current body, not an old work copy.",
+    "If the current header already exists, update that header deliberately instead of duplicating it.",
+    "Preserve the historical body. Check metadata again immediately before a write; rebase if changed.",
+    "Use the normal connected Drive update tool, preserving the existing file ID.",
+    "Read back the updated text and verify the intended header plus preserved body.",
+    "Record actual upload/update IDs, times and verification before changing pending status."
+  ],
+  "remaining_prior_drive_actions": []
+}

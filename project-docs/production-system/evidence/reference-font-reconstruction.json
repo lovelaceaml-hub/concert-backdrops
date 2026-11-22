@@ -1,0 +1,18 @@
+{
+  "actual_cli": "uv run --frozen --extra legacy python tools/setup_fonts.py ../cinematic-motion/node_modules/@fontsource work/production-system/reference-font-cli-run --reference-fonts",
+  "reconstructed_exact_count": 74,
+  "historical_font_mapping_sha256": "9c36e3a0c4fd4610696142646de9833525e6a48dadf5e2daf43b173c9b9bc09d",
+  "active_fonts_hash_size_mtime_unchanged": true,
+  "actual_v2_source_guard_with_reconstructed_fonts": "passed",
+  "v2_source_identity": "8b091b1940221a8f21a4bd2f8a7ab0cdd1510a90ea559c6ded9afdaf0f5e8876",
+  "source_count": 194,
+  "font_catalog_sha256": "44e8c577dbcd1598f0b1514fda88236cba54d3dd33fcd524ce5526b366931137",
+  "converter_sha256": "19095a0bd8090eaeb99dbd4e7622e519c74660c61e850446ea6a8b8e99596afd",
+  "bootstrap_sha256": "7d9c0c937d7ab44bff5946ca5d19c4f13cf3c1ff3fda1096c20eb08fd1b0b9ac",
+  "tests": {
+    "focused": 8,
+    "complete_pipeline": 107,
+    "passed": true
+  },
+  "qualification": "Linux,Python3.12.14,fontTools4.68.0 in uv.lock environment. Actual fresh detached checkout bootstrap remains the independent follow-up."
+}

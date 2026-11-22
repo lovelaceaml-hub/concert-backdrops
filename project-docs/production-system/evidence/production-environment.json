@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "captured_at_utc": "2026-11-21T01:21:36.622099+00:00",
+  "platform_runtime": {
+    "Pillow": "12.3.0",
+    "graphics": "software-egl",
+    "machine": "x86_64",
+    "moderngl": "5.13.0",
+    "numpy": "2.5.5",
+    "platform": "Linux",
+    "python": "3.12.14",
+    "python_hash_seed": "0",
+    "software_threads": 1
+  },
+  "ffmpeg": "ffmpeg version 7.1.5-0+deb13u1 Copyright (c) 2000-2026 the FFmpeg developers",
+  "ffprobe": "ffprobe version 7.1.5-0+deb13u1 Copyright (c) 2007-2026 the FFmpeg developers",
+  "graphics_observed_in_native_benchmark": "llvmpipe (LLVM 19.1.7), software EGL",
+  "graphics_evidence": "tools/concert_kit/VERIFICATION.md",
+  "dependency_locks_sha256": {
+    "pyproject.toml": "561ff80c8c1a5dadbfc4f8fdc5d06b9654b99d43907ead5dc4be3e9aa81481d6",
+    "uv.lock": "8b765586a12c9f314c588550209634a465b825650026762fc12dc84e2ecef6fe",
+    "package-lock.json": "ab788114f14ef7d82f423c26731115b24a3047d59439d62ad2a8b5f2c693f171"
+  },
+  "limits": [
+    "Distribution packages and graphics drivers are not an immutable container image.",
+    "This records the observed host, not an assertion of pixel-identical output across other hosts.",
+    "Canonical audio preparation checks decoded PCM and rejects different results rather than rewriting expected hashes."
+  ]
+}

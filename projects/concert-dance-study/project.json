@@ -1,0 +1,78 @@
+{
+  "schema_version": 1,
+  "project_id": "concert-dance-study",
+  "title": "Natural dance performance study",
+  "description": "An eighteen-second original visual study using the existing captured dance with isolated performance conditioning and a continuous camera. The canonical score retains its existing playback speed and preparation; choreography is authored, not certified against musical transients.",
+  "video": {
+    "width": 1920,
+    "height": 1080,
+    "fps": 60
+  },
+  "production": {
+    "cloud_gpu_provider": null,
+    "allow_local_gpu": false,
+    "allow_paid_services": false,
+    "allow_ai_generated_visuals": false,
+    "allow_stock_footage": false,
+    "random_seed": 2026,
+    "threads": 1,
+    "render_workers": 6,
+    "render_chunk_frames": 90,
+    "render_timeout_seconds": 7200
+  },
+  "quality": {
+    "draft": {
+      "width": 960,
+      "height": 540,
+      "temporal_samples": 1,
+      "image_bit_depth": 8
+    },
+    "review": {
+      "width": 1920,
+      "height": 1080,
+      "temporal_samples": 2,
+      "image_bit_depth": 8
+    },
+    "4k-check": {
+      "width": 3840,
+      "height": 2160,
+      "temporal_samples": 2,
+      "image_bit_depth": 8
+    },
+    "final": {
+      "width": 1920,
+      "height": 1080,
+      "temporal_samples": 2,
+      "image_bit_depth": 8
+    }
+  },
+  "delivery": {
+    "profile": "h264",
+    "source_transfer": "legacy_display_gamma",
+    "color_space": "rec709"
+  },
+  "style": "styles/zion-cinematic.json",
+  "audio": {
+    "source": "work/concert-kit/consideration-score.wav",
+    "source_sha256": "0f43061d674dae3467a6a76867f8599d241532c131e7e7654502bc29f2d66f7b",
+    "offset_seconds": 0
+  },
+  "timing": {
+    "fps": 60,
+    "visual_only": true,
+    "manually_verified": false,
+    "note": "One uninterrupted authored visual clock from output frame 0 through 1079. The existing eighteen-second score is used at offset zero without retiming or an additional fade. No ear-verified transient or instrument alignment is claimed.",
+    "events": []
+  },
+  "shots": [
+    {
+      "id": "performance",
+      "name": "Continuous dance and resolved settlement",
+      "renderer": "p3d-kit",
+      "start_frame": 0,
+      "end_frame_exclusive": 1080,
+      "scene": "tools/concert_dance/scene.py",
+      "params": {}
+    }
+  ]
+}

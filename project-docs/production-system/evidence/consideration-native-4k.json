@@ -1,0 +1,16 @@
+{
+  "path": "work/pipeline/concert-kit-consideration/4k-check/shots/resolve/frames/frame_001050.png",
+  "native_size": [
+    3840,
+    2160
+  ],
+  "mode": "RGB",
+  "sha256": "a398076408d0c02d53ad8e553d42ac15cbb2cbe5ff70f0935e5235cc5ff383d4",
+  "decoded_rgb_sha256": "da28c28b32d765c584fe65fa445ce2ced9ad3401c8fe1e9eb8918cabbe88b2d8",
+  "frame": 1050,
+  "scene_seconds": 17.5,
+  "rendered_frames": 1,
+  "registered_render_seconds": 92.612,
+  "receipt_checksum_matches": true,
+  "note": "Registered pipeline render stage time includes initialization, simulation warmup and PNG save; one native 4K frame only."
+}

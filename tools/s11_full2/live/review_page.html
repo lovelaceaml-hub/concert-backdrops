@@ -1,0 +1,483 @@
+<title>Song 11 Sections</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;1,500&family=Inter:wght@400;500;600&display=swap">
+<style>
+/* Layout: one column. Live render panel, then the song's sections in running order; each has its player,
+   progress, my findings to approve or decline, and a box to request changes. */
+:root{
+  --bg:#f3f1f8;--surface:#ffffff;--sunk:#f7f5fc;--fg:#1e1a33;--muted:#615b7c;--line:#dcd7ea;--accent:#7a52d6;--accent-fg:#ffffff;
+  --fresh:#1f8a5b;--old:#a8641c;--warn:#b23a48;
+  --display:"Cormorant Garamond",Georgia,"Times New Roman",serif;--body:"Inter",system-ui,-apple-system,sans-serif;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#110e1d;--surface:#1b1730;--sunk:#161227;--fg:#eeeaf8;--muted:#a7a0c4;--line:#2d2747;--accent:#b49cff;--accent-fg:#160f2e;--fresh:#5fd39b;--old:#f0b469;--warn:#ff8a98;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#110e1d;--surface:#1b1730;--sunk:#161227;--fg:#eeeaf8;--muted:#a7a0c4;--line:#2d2747;--accent:#b49cff;--accent-fg:#160f2e;--fresh:#5fd39b;--old:#f0b469;--warn:#ff8a98;color-scheme:dark}
+body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:13px;padding-block:18px 32px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+main{max-width:780px;margin:0 auto;display:grid;gap:14px}
+header{display:grid;gap:4px}
+h1{font-family:var(--display);font-weight:600;font-size:28px;line-height:1.1;margin:0;text-wrap:balance}
+h2{font-family:var(--display);font-weight:600;font-size:20px;margin:0}
+h3{font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin:0}
+.sub{margin:0;color:var(--muted);line-height:1.5;max-width:62ch}
+.bar{display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center;font-size:13px;color:var(--muted)}
+.bar label{display:flex;gap:8px;align-items:center;cursor:pointer;color:var(--fg)}
+input[type=checkbox]{accent-color:var(--accent);width:16px;height:16px}
+.panel{display:grid;gap:8px;padding:10px 12px;background:var(--surface);border:1px solid var(--line);border-radius:10px}
+.row{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:6px 12px;font-size:13px}
+.track{flex:1 1 160px;min-width:120px;height:6px;border-radius:3px;background:var(--line);overflow:hidden}
+.fill{height:100%;width:0;background:var(--accent);transition:width .6s ease}
+.fill.done{background:var(--fresh)}
+.pct{font-variant-numeric:tabular-nums;font-weight:600;color:var(--fg);min-width:4ch;text-align:right}
+.live{display:inline-flex;gap:6px;align-items:center;color:var(--muted)}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--muted)}
+.dot.on{background:var(--fresh);animation:pulse 2s ease-in-out infinite}
+@keyframes pulse{50%{opacity:.35}}
+.jobs{display:grid;gap:8px;margin:0;padding:0;list-style:none}
+.job{display:grid;grid-template-columns:minmax(0,9rem) minmax(0,1fr) auto;gap:4px 12px;align-items:center;font-size:13px}
+.job b{font-weight:600}
+.job .what{color:var(--muted);min-width:0}
+.job .track{grid-column:1/-1;height:4px}
+.machines{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,11rem),1fr));gap:6px;margin:0;padding:0;list-style:none}
+.mach{font-size:12px;display:grid;gap:2px;padding:7px 10px;border:1px solid var(--line);border-radius:8px;background:var(--sunk);font-size:13px;min-width:0}
+.mach .top{display:flex;justify-content:space-between;gap:8px;align-items:baseline}
+.mach p{margin:0;color:var(--muted);line-height:1.4}
+.c-working2{color:var(--fresh)}.c-idle{color:var(--muted)}.c-blocked{color:var(--warn)}.c-busy{color:var(--old)}
+ol.sections{list-style:none;margin:0;padding:0;display:grid;gap:12px}
+.sec{background:var(--surface);border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.head{display:flex;flex-wrap:wrap;justify-content:space-between;gap:4px 12px;align-items:baseline;padding:8px 12px 6px}
+.name{display:flex;gap:10px;align-items:baseline;min-width:0}
+.no{font-size:12px;font-weight:600;color:var(--muted);font-variant-numeric:tabular-nums;letter-spacing:.04em}
+.span{font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums}
+.meta{display:flex;gap:10px;align-items:center;font-size:12px}
+.chip{padding:2px 8px;border-radius:999px;border:1px solid currentColor;font-size:12px;font-weight:500;white-space:nowrap}
+.c-new,.c-done,.c-approved{color:var(--fresh)}.c-prev,.c-working{color:var(--old)}.c-wait,.c-open,.c-declined{color:var(--muted)}.c-request{color:var(--accent)}
+.ago{color:var(--muted);font-variant-numeric:tabular-nums;white-space:nowrap}
+video{display:block;width:100%;max-width:100%;aspect-ratio:16/9;background:#000}
+.pending{aspect-ratio:16/9;max-width:100%;display:grid;place-items:center;color:var(--muted);font-size:14px;background:repeating-linear-gradient(135deg,transparent 0 12px,var(--line) 12px 13px)}
+.status{display:flex;flex-wrap:wrap;gap:4px 10px;align-items:center;padding:6px 12px;font-size:12px;color:var(--muted)}
+.note{padding:0 12px 8px;font-size:12px;color:var(--muted);line-height:1.4}
+.box{border-top:1px solid var(--line);background:var(--sunk)}
+.box>summary{cursor:pointer;padding:6px 12px;font-size:12px;font-weight:600;color:var(--muted);list-style-position:inside}
+.box>.inner{display:grid;gap:8px;padding:0 12px 10px}
+.items{display:grid;gap:6px;margin:0;padding:0;list-style:none}
+.item{display:grid;gap:4px;padding:7px 10px;background:var(--surface);border:1px solid var(--line);border-radius:7px;font-size:12px;line-height:1.4}
+.item .top{display:flex;flex-wrap:wrap;gap:6px 10px;align-items:baseline;justify-content:space-between}
+.item .t{font-weight:600}
+.item p{margin:0;color:var(--muted)}
+.item .reply{color:var(--fg);border-left:2px solid var(--accent);padding-left:8px}
+.acts{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.model{margin:8px 0}.model img{width:100%;height:auto;border-radius:6px;border:1px solid var(--line);display:block}.model figcaption{font-size:12px;margin-top:4px}
+.sugg{border-left:3px solid var(--accent, #7c6cf0);padding:4px 8px;margin:4px 0;background:color-mix(in srgb, var(--accent, #7c6cf0) 10%, transparent);border-radius:4px}
+button{font:inherit;font-size:12px;font-weight:500;padding:4px 10px;border-radius:7px;border:1px solid var(--line);background:var(--surface);color:var(--fg);cursor:pointer}
+button.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-fg)}
+button:disabled{opacity:.5;cursor:default}
+button:focus-visible,textarea:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+textarea,input[type=text]{font:inherit;font-size:12px;width:100%;box-sizing:border-box;padding:6px 8px;border-radius:7px;border:1px solid var(--line);background:var(--surface);color:var(--fg)}
+textarea{min-height:44px;resize:vertical}
+.form{display:grid;gap:8px}
+.hint{font-size:12px;color:var(--muted)}
+.empty{font-size:13px;color:var(--muted)}
+@media (max-width:480px){.job{grid-template-columns:minmax(0,1fr) auto}.job .what{grid-column:1/-1;order:3}}
+@media (prefers-reduced-motion:reduce){.dot.on{animation:none}.fill{transition:none}*{scroll-behavior:auto!important}}
+</style>
+<main>
+<header>
+  <h1>Almighty God Who Knows the Future</h1>
+  <p class="sub">Song 11 backdrop drafts (540p, with the recording): newest version of each section, live render status, findings and requests.</p>
+  <div class="bar">
+    <label for="through"><input type="checkbox" id="through" checked> Play straight through</label>
+    <span id="clock"></span>
+  </div>
+</header>
+
+<section class="panel" aria-label="Render progress">
+  <div class="row"><strong id="ovTitle">Grand pass render</strong><span class="live"><span class="dot" id="dot"></span><span id="ovWhen">Status loading</span></span></div>
+  <div class="row"><div class="track"><div class="fill" id="ovFill"></div></div><span class="pct" id="ovPct"></span></div>
+  <div class="hint" id="ovText"></div>
+  <h3>Machines</h3>
+  <ul class="machines" id="machines"></ul>
+  <h3>Now working on</h3>
+  <ul class="jobs" id="jobs"><li class="empty">Nothing rendering right now.</li></ul>
+  <div class="row" id="storeRow" hidden style="margin-top:8px"><span class="hint" id="storeText"></span><button type="button" id="storeBtn">Clear old files</button></div>
+</section>
+
+<section class="panel" aria-label="Request a change to the whole film">
+  <h3>Whole film</h3>
+  <ul class="items" id="globalFinds"></ul>
+  <details class="box" style="border:0;background:none"><summary style="padding:2px 0">Request a change to the whole film</summary><div class="form" id="globalForm" style="padding-top:6px"></div></details>
+  <ul class="items" id="globalReqs"></ul>
+</section>
+
+<ol class="sections" id="list"></ol>
+<section class="panel" aria-label="Models">
+  <div class="row"><h3>Models <span id="modelsCount"></span></h3><button type="button" id="modelsToggle">Hide</button></div>
+  <div id="modelsList"><p class="hint">New models from the models thread appear here in batches.</p></div>
+</section>
+<section class="panel" aria-label="Done">
+  <div class="row"><h3>Done and closed <span id="doneCount"></span></h3><button type="button" id="doneToggle" aria-expanded="true">Hide</button></div>
+  <ul class="items" id="doneList"><li class="empty">Nothing closed yet.</li></ul>
+</section>
+<p class="hint">Requests and decisions save here; I pick them up at each status update. Open items stay in their sections; finished and declined ones move here.</p>
+</main>
+<script>
+// Fallback shown until the live status arrives.
+let SECTIONS = [
+  {name:"Intro", span:"0:00 to 0:40", pass:"grand", url:"/_blob/12eac57a54eb43dc126bec1bcea25109", updated:"2026-11-19T04:48:58Z", state:"ready", pct:100, where:"", note:"Church of light, the flight down the cloud canyon, Father's pulse."},
+  {name:"Verse 1", span:"0:40 to 1:22", pass:"grand", url:"/_blob/0b09e7c3c889b8d23a388f5babe7b4e6", updated:"2026-11-19T04:56:39Z", state:"ready", pct:100, where:"", note:"Crown over Zion, the city fills with gold, the nations stream in."},
+  {name:"Chorus 1", span:"1:22 to 2:01", pass:"prev", url:"/_blob/b933a3b2b6d52f77d6059f5bf40f721d", updated:"2026-11-19T04:24:44Z", state:"rendering", pct:90, where:"Machine A", note:"Showing the earlier pass until the grand pass is ready."},
+  {name:"Verse 2", span:"2:01 to 2:40", pass:"prev", url:"/_blob/5dba40070ca2746c05de2e8cca4f44ea", updated:"2026-11-19T04:24:33Z", state:"rendering", pct:90, where:"Machine A", note:"Showing the earlier pass until the grand pass is ready."},
+  {name:"Chorus 2", span:"2:40 to 3:21", pass:"prev", url:"/_blob/52a300607308b02d24b2e6b44bce1e30", updated:"2026-11-19T04:30:03Z", state:"rendering", pct:90, where:"Machine A and this machine", note:"Showing the earlier pass until the grand pass is ready."},
+  {name:"Coda", span:"3:21 to 3:59", pass:"grand", url:"/_blob/8797025c7bcfb9104dba676cc7d7b1d0", updated:"2026-11-19T05:04:18Z", state:"ready", pct:100, where:"", note:"Sunrise over Zion, hearts and lanterns, the canyon flight, the sky orchestra, the world finale."},
+  {name:"Ending", span:"3:59 to 4:35", pass:"grand", url:"/_blob/b5f06fe6f31cfa1e8a3e21ab43101262", updated:"2026-11-19T05:04:18Z", state:"ready", pct:100, where:"", note:"Back to everyone on Mount Zion, the held breath, the end card on the last chord."}
+];
+let STATUS = {updated:"", title:"Grand pass render", text:"", active:false, jobs:[], machines:[]};
+let FINDINGS = [], REQUESTS = [], FLEET = [];
+let db = null;
+
+const LABEL = {grand:"Grand pass", prev:"Earlier pass", wait:"Not rendered yet"};
+const STATE = {ready:"Ready", rendering:"Rendering", queued:"Queued", joining:"Joining parts"};
+const REQ = {new:"Sent", working:"Working on it", done:"Done", declined:"Not doing"};
+const FIND = {open:"Waiting for you", approved:"Approved", declined:"Declined", working:"Working on it", done:"Done"};
+
+function agoText(iso){
+  const m = Math.max(0, Math.floor((Date.now() - Date.parse(iso)) / 60000));
+  if (!iso || isNaN(m)) return "";
+  if (m < 1) return "just now";
+  if (m < 120) return m + (m === 1 ? " minute" : " minutes") + " ago";
+  return Math.floor(m / 60) + " hours ago";
+}
+// When each section video was really made: the upload time of its file (from the page's file store), else the machine's video_at.
+const ASSET_TIME = {};
+const vidId = u => String(u || "").split("/_blob/")[1] || "";
+function videoTime(s){ return ASSET_TIME[vidId(s.url)] || s.videoAt || ""; }
+function stamp(iso){
+  const d = new Date(iso); if (!iso || isNaN(d)) return "";
+  return d.toLocaleString([], {month:"short", day:"numeric", hour:"numeric", minute:"2-digit"});
+}
+function el(tag, cls, text){ const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; }
+function chip(kind, text){ return el("span", "chip c-" + kind, text); }
+
+// ---------- request form (one per section, one for the whole film)
+function makeForm(holder, section){
+  const id = "req-" + (section < 0 ? "all" : section);
+  const ta = el("textarea"); ta.id = id; ta.placeholder = section < 0 ? "For example: make the comets brighter everywhere" : "What should change in this section? You can name a time, like 1:45.";
+  const lab = el("label", "hint", "Your request"); lab.htmlFor = id;
+  const acts = el("div", "acts"), send = el("button", "primary", "Send request"), msg = el("span", "hint");
+  send.type = "button";
+  send.addEventListener("click", async () => {
+    const text = ta.value.trim();
+    if (!text) { msg.textContent = "Type what you want changed first."; return; }
+    if (!db) { msg.textContent = "Requests can only be saved when you open this page signed in as its owner."; return; }
+    send.disabled = true; msg.textContent = "Sending";
+    try {
+      await db.collection("requests").add({text, section, created: new Date().toISOString(), state: "new", reply: ""});
+      ta.value = ""; msg.textContent = "Sent. I will pick it up at the next update.";
+    } catch (e) { msg.textContent = "Could not send: " + (e && (e.message || e.code) || e) + ". Try again."; }
+    send.disabled = false;
+  });
+  acts.append(send, msg); holder.append(lab, ta, acts);
+}
+
+function reqItem(r){
+  const li = el("li", "item"), top = el("div", "top");
+  top.append(el("span", "t", r.text || ""), chip(r.state === "new" ? "request" : r.state, REQ[r.state] || r.state));
+  li.append(top);
+  li.append(el("p", "", "Sent " + agoText(r.created)));
+  if (r.reply) li.append(el("p", "reply", r.reply));
+  return li;
+}
+
+function findItem(f){
+  const li = el("li", "item"), top = el("div", "top");
+  top.append(el("span", "t", (f.kind === "suggestion" ? "Suggestion: " : "Finding: ") + (f.title || "")), chip(f.state, FIND[f.state] || f.state));
+  li.append(top);
+  if (f.at) li.append(el("p", "", "At " + f.at));
+  const said = f.detail || f.text || "";
+  // Anthony: a finding must carry a suggestion, not just a statement. Show it on its own line.
+  let sug = f.suggestion || "";
+  let body = said;
+  if (!sug) { const k = said.search(/Suggestion:\s*/i); if (k >= 0) { sug = said.slice(k).replace(/^Suggestion:\s*/i, ""); body = said.slice(0, k).trim(); } }
+  if (body) li.append(el("p", "", body));
+  if (sug) { const p = el("p", "sugg"); p.append(el("b", "", "Suggestion: "), document.createTextNode(sug)); li.append(p); }
+  if (f.reply) li.append(el("p", "reply", f.reply));
+  if (f.state === "open") {
+    const nid = "note-" + f.id, note = el("input"); note.type = "text"; note.id = nid; note.placeholder = "Optional note (for example: yes, but keep it subtle)";
+    const nl = el("label", "hint", "Note to Claude"); nl.htmlFor = nid;
+    const acts = el("div", "acts"), yes = el("button", "primary", "Approve"), no = el("button", "", "Decline"), msg = el("span", "hint");
+    yes.type = no.type = "button";
+    const decide = async (state) => {
+      if (!db) { msg.textContent = "Decisions can only be saved when you open this page signed in as its owner."; return; }
+      yes.disabled = no.disabled = true; msg.textContent = "Saving";
+      try { await db.doc("findings/" + f.id).update({state, note: note.value.trim(), decided: new Date().toISOString()}); msg.textContent = "Saved"; }
+      catch (e) { msg.textContent = "Could not save: " + (e && (e.message || e.code) || e) + ". Try again."; yes.disabled = no.disabled = false; }
+    };
+    yes.addEventListener("click", () => decide("approved")); no.addEventListener("click", () => decide("declined"));
+    acts.append(yes, no, msg); li.append(nl, note, acts);
+  } else if (f.note) li.append(el("p", "", "Your note: " + f.note));
+  return li;
+}
+
+// ---------- sections
+const list = document.getElementById("list");
+const rows = [];
+function build(i){
+  const li = el("li", "sec"); li.id = "s" + (i + 1);
+  const head = el("div", "head"), name = el("div", "name"), h2 = el("h2"), span = el("span", "span");
+  name.append(el("span", "no", String(i + 1).padStart(2, "0")), h2, span);
+  const meta = el("div", "meta"), pass = el("span"), ago = el("span", "ago");
+  meta.append(pass, ago); head.append(name, meta);
+  const media = el("div");
+  const status = el("div", "status"), stateText = el("span"), track = el("div", "track"), fill = el("div", "fill"), pct = el("span", "pct");
+  track.append(fill); status.append(stateText, track, pct);
+  const note = el("div", "note");
+  const fbox = el("details", "box"), fh = el("summary", "", "Findings"), fin = el("div", "inner"), flist = el("ul", "items");
+  fin.append(flist); fbox.append(fh, fin);
+  const rbox = el("details", "box"), rh = el("summary", "", "Request a change"), rin = el("div", "inner"), rlist = el("ul", "items"), form = el("div", "form");
+  rin.append(rlist, form); rbox.append(rh, rin); makeForm(form, i);
+  li.append(head, media, status, note, fbox, rbox); list.append(li);
+  return {h2, span, pass, ago, media, video:null, url:"", stateText, fill, pct, note, fbox, fh, flist, rh, rlist};
+}
+function playNext(v){
+  if (!document.getElementById("through").checked) return;
+  const vids = rows.map(r => r.video).filter(Boolean), next = vids[vids.indexOf(v) + 1];
+  if (next) { next.closest("li").scrollIntoView({behavior:"smooth", block:"start"}); next.currentTime = 0; next.play().catch(() => {}); }
+}
+function setVideo(r, url){
+  if (r.url === url) return;
+  if (r.video && !r.video.paused && !r.video.ended) { r.pendingUrl = url; return; }   // never cut a section off while it plays
+  r.url = url; r.media.textContent = "";
+  if (!url) { r.video = null; r.media.append(el("div", "pending", "Rendering")); return; }
+  const v = document.createElement("video");
+  v.controls = true; v.preload = "metadata"; v.playsInline = true; v.src = url;
+  v.addEventListener("play", () => rows.forEach(o => { if (o.video && o.video !== v) o.video.pause(); }));
+  const swap = () => { if (r.pendingUrl) { const u = r.pendingUrl; r.pendingUrl = null; setVideo(r, u); } };
+  v.addEventListener("pause", swap);
+  v.addEventListener("ended", () => { playNext(v); swap(); });
+  r.video = v; r.media.append(v);
+}
+const CLOSED = new Set(["done", "declined"]);
+function isOpen(x){ return !CLOSED.has(x.state); }
+function fillList(ul, items, make, emptyText){
+  ul.textContent = "";
+  if (!items.length) { if (emptyText) ul.append(el("li", "empty", emptyText)); return; }
+  items.forEach(x => ul.append(make(x)));
+}
+
+// Each machine owns one section and writes its own progress to fleet/<letter> (Anthony, 2026-11-19).
+function viewOf(s, i){
+  const v = Object.assign({}, s);
+  const m = FLEET.filter(f => f.section === i).sort((a, b) => String(b.updated).localeCompare(String(a.updated)))[0];
+  if (!m) return v;
+  const busy = ["starting", "rendering", "uploading"].includes(m.state);
+  // the machine's newest finished video always replaces the old baseline, and stays on show while it renders the next one (or is blocked)
+  if (m.url){
+    v.url = m.url; v.updated = m.updated; v.videoAt = m.video_at || ""; v.tag = m.tag || ""; v.pass = "grand"; if (m.note && m.state === "ready") v.note = m.note;
+    v.state = "ready"; v.pct = 100;
+  }
+  if (m.state === "blocked"){ v.where = "Machine " + m.name + " (waiting for a code fix)"; }
+  if (busy){
+    v.state = m.state === "uploading" ? "joining" : "rendering"; v.where = "Machine " + m.name;
+    v.pct = m.total ? Math.round(100 * Math.min(m.done || 0, m.total) / m.total) : 0;
+  } else if (m.state === "ready" && m.url){
+    v.url = m.url; v.updated = m.updated; v.videoAt = m.video_at || ""; v.tag = m.tag || ""; v.state = "ready"; v.pct = 100; v.pass = "grand"; v.where = "";
+    if (m.note) v.note = m.note;
+  }
+  return v;
+}
+function render(){
+  const VIEW = SECTIONS.map(viewOf);
+  VIEW.forEach((s, i) => {
+    const r = rows[i] || (rows[i] = build(i));
+    r.h2.textContent = s.name; r.span.textContent = s.span;
+    r.pass.replaceWith(r.pass = chip(s.pass === "grand" ? "new" : s.pass === "prev" ? "prev" : "wait", LABEL[s.pass] || s.pass));
+    r.ago.dataset.t = videoTime(s);
+    r.ago.dataset.tag = s.state === "ready" ? (s.tag || "") : "";
+    setVideo(r, s.url || "");
+    const p = Math.max(0, Math.min(100, Math.round(s.pct || 0)));
+    r.fill.style.width = p + "%"; r.fill.classList.toggle("done", s.state === "ready"); r.pct.textContent = p + "%";
+    r.stateText.textContent = (STATE[s.state] || s.state) + (s.state !== "ready" && s.where ? " on " + s.where : "");
+    r.note.textContent = s.note || "";
+    const fs = FINDINGS.filter(f => f.section === i && isOpen(f)), open = fs.filter(f => f.state === "open").length;
+    r.fbox.hidden = !fs.length; fillList(r.flist, fs, findItem);
+    r.fh.textContent = "Findings (" + fs.length + (open ? ", " + open + " waiting for you" : "") + ")";
+    if (open && !r.fbox.dataset.seen) { r.fbox.open = true; r.fbox.dataset.seen = "1"; }
+    const rq = REQUESTS.filter(q => q.section === i && isOpen(q));
+    fillList(r.rlist, rq, reqItem, "");
+    r.rh.textContent = rq.length ? "Your requests (" + rq.length + ") and request a change" : "Request a change";
+  });
+  fillList(document.getElementById("globalReqs"), REQUESTS.filter(q => q.section < 0 && isOpen(q)), reqItem, "");
+  fillList(document.getElementById("globalFinds"), FINDINGS.filter(f => f.section < 0 && isOpen(f)), findItem, "");
+  const where = i => i < 0 ? "Whole film" : (SECTIONS[i] ? SECTIONS[i].name : "");
+  const closed = FINDINGS.filter(f => !isOpen(f)).map(f => ({k: "f", x: f})).concat(REQUESTS.filter(q => !isOpen(q)).map(q => ({k: "r", x: q})))
+    .sort((a, b) => String(b.x.decided || b.x.created).localeCompare(String(a.x.decided || a.x.created)));
+  fillList(document.getElementById("doneList"), closed, c => {
+    const li = c.k === "f" ? findItem(c.x) : reqItem(c.x);
+    li.prepend(el("span", "hint", where(c.x.section)));
+    return li;
+  }, "Nothing closed yet.");
+  document.getElementById("doneCount").textContent = closed.length ? "(" + closed.length + ")" : "";
+  const total = VIEW.reduce((a, s) => a + (s.pct || 0), 0) / Math.max(1, VIEW.length);
+  document.getElementById("ovTitle").textContent = STATUS.title || "Render";
+  document.getElementById("ovFill").style.width = Math.round(total) + "%";
+  document.getElementById("ovFill").classList.toggle("done", total >= 99.5);
+  document.getElementById("ovPct").textContent = Math.round(total) + "%";
+  document.getElementById("ovText").textContent = STATUS.text || "";
+  document.getElementById("dot").classList.toggle("on", !!STATUS.active);
+  const MS = {rendering:["working2","Rendering"], idle:["idle","Idle"], blocked:["blocked","Needs you"], starting:["busy","Starting"], uploading:["busy","Uploading"]};
+  const ml = document.getElementById("machines"); ml.textContent = "";
+  const MACH = STATUS.machines.filter(m => !FLEET.some(f => "Machine " + f.name === m.name || f.name === m.name))
+    .concat(FLEET.map(f => ({name: "Machine " + f.name, state: f.state === "ready" ? "idle" : f.state,
+      doing: SECTIONS[f.section] ? SECTIONS[f.section].name + (f.total ? ": part " + Math.min(f.done || 0, f.total) + " of " + f.total : "") : "",
+      note: f.state === "ready" ? "Section uploaded" : (f.note || ""), last: f.updated})))
+    .sort((a, b) => String(a.name).localeCompare(String(b.name)));
+  if (!MACH.length) ml.append(el("li", "empty", "Machine status appears with the next update."));
+  MACH.forEach(m => {
+    const li = el("li", "mach"), top = el("div", "top"), st = MS[m.state] || ["idle", m.state || ""];
+    top.append(el("b", "", m.name || ""), chip(st[0], st[1]));
+    li.append(top);
+    if (m.doing) li.append(el("p", "", m.doing));
+    if (m.parts) li.append(el("p", "", m.parts));
+    if (m.note) li.append(el("p", "", m.note));
+    if (m.last) li.append(el("p", "", "Last heard from " + agoText(m.last)));
+    ml.append(li);
+  });
+  const jobs = document.getElementById("jobs"); jobs.textContent = "";
+  const JOBS = (STATUS.jobs || []).concat(FLEET.filter(f => ["starting", "rendering", "uploading"].includes(f.state)).map(f => ({
+    machine: "Machine " + f.name, what: SECTIONS[f.section] ? SECTIONS[f.section].name + " " + SECTIONS[f.section].span : "",
+    pct: f.total ? 100 * Math.min(f.done || 0, f.total) / f.total : 0})));
+  if (!JOBS.length) jobs.append(el("li", "empty", "Nothing rendering right now."));
+  else JOBS.forEach(j => {
+    const li = el("li", "job"), t = el("div", "track"), f = el("div", "fill");
+    f.style.width = Math.max(0, Math.min(100, j.pct || 0)) + "%"; t.append(f);
+    li.append(el("b", "", j.machine || ""), el("span", "what", j.what || ""), el("span", "pct", Math.round(j.pct || 0) + "%"), t);
+    jobs.append(li);
+  });
+  tick();
+}
+function tick(){
+  rows.forEach(r => {
+    const t = r.ago.dataset.t;
+    r.ago.textContent = t ? "Video made " + stamp(t) + " (" + agoText(t) + ")" : "Video time loading";
+    r.ago.title = t ? new Date(t).toString() : "";
+  });
+  document.getElementById("ovWhen").textContent = STATUS.updated ? "Status updated " + agoText(STATUS.updated) : "Showing the last saved status";
+  const newest = rows.map(r => Date.parse(r.ago.dataset.t || "")).filter(x => !isNaN(x)).sort((a, b) => b - a)[0];
+  document.getElementById("clock").textContent = newest ? "Newest video: " + stamp(new Date(newest).toISOString()) + " (" + agoText(new Date(newest).toISOString()) + ")" : "";
+}
+
+// Hide or show the Done and closed list (Anthony, 2026-11-19); remembered on this device.
+(() => {
+  const btn = document.getElementById("doneToggle"), ul = document.getElementById("doneList");
+  const apply = hide => { ul.hidden = hide; btn.textContent = hide ? "Show" : "Hide"; btn.setAttribute("aria-expanded", String(!hide)); };
+  let hide = false; try { hide = localStorage.getItem("s11_done_hidden") === "1"; } catch (e) {}
+  apply(hide);
+  btn.addEventListener("click", () => { hide = !hide; apply(hide); try { localStorage.setItem("s11_done_hidden", hide ? "1" : "0"); } catch (e) {} });
+})();
+(() => {
+  const btn = document.getElementById("modelsToggle"), box = document.getElementById("modelsList");
+  const apply = hide => { box.hidden = hide; btn.textContent = hide ? "Show" : "Hide"; };
+  let hide = false; try { hide = localStorage.getItem("s11_models_hidden") === "1"; } catch (e) {}
+  apply(hide);
+  btn.addEventListener("click", () => { hide = !hide; apply(hide); try { localStorage.setItem("s11_models_hidden", hide ? "1" : "0"); } catch (e) {} });
+})();
+makeForm(document.getElementById("globalForm"), -1);
+render(); setInterval(tick, 20000);
+
+// Live data: the coordinating session writes status/now and findings; requests and decisions come from this page.
+(async () => {
+  db = window.claude ? await window.claude.use("db") : null;
+  if (!db) { document.getElementById("ovWhen").textContent = "Live status needs this page opened signed in as its owner"; return; }
+  const fail = () => { document.getElementById("ovWhen").textContent = "Live status paused; reload the page to reconnect"; };
+  db.doc("status/now").onSnapshot(snap => {
+    if (!snap.exists) return;
+    const d = snap.data() || {};
+    if (Array.isArray(d.sections) && d.sections.length) SECTIONS = d.sections;
+    STATUS = {updated: d.updated || "", title: d.title || "", text: d.text || "", active: !!d.active, jobs: Array.isArray(d.jobs) ? d.jobs : [], machines: Array.isArray(d.machines) ? d.machines : []};
+    render();
+  }, fail);
+  db.collection("findings").onSnapshot(qs => {
+    FINDINGS = qs.docs.map(d => Object.assign({id: d.id}, d.data())).sort((a, b) => String(a.created).localeCompare(String(b.created)));
+    render();
+  }, fail);
+  db.collection("fleet").onSnapshot(qs => {
+    FLEET = qs.docs.map(d => Object.assign({name: d.id}, d.data()));
+    render();
+  }, fail);
+  db.collection("models").onSnapshot(qs => {
+    const ms = qs.docs.map(d => Object.assign({id: d.id}, d.data())).sort((x, y) => String(y.created).localeCompare(String(x.created)));
+    const box = document.getElementById("modelsList"); box.textContent = "";
+    let n = 0;
+    ms.forEach(m => {
+      n += m.count || 0;
+      const fig = el("figure", "model");
+      if (m.url) { const im = document.createElement("img"); im.src = m.url; im.alt = m.title || "Model sheet"; im.loading = "lazy"; fig.append(im); }
+      const cap = el("figcaption", ""); cap.append(el("b", "", m.title || ""), el("span", "hint", (m.created ? " " + agoText(m.created) : "")));
+      if (m.note) cap.append(el("p", "", m.note));
+      fig.append(cap); box.append(fig);
+    });
+    if (!ms.length) box.append(el("p", "hint", "New models from the models thread appear here in batches."));
+    document.getElementById("modelsCount").textContent = n ? "(" + n + " so far)" : "";
+  }, fail);
+  db.collection("requests").onSnapshot(qs => {
+    REQUESTS = qs.docs.map(d => Object.assign({id: d.id}, d.data())).sort((a, b) => String(b.created).localeCompare(String(a.created)));
+    render();
+  }, fail);
+})();
+
+// Storage: keep only the newest section videos and the files the machines need; remove the rest (Anthony, 2026-11-19).
+(async () => {
+  const assets = window.claude ? await window.claude.use("assets") : null;
+  if (!assets) return;
+  const row = document.getElementById("storeRow"), txt = document.getElementById("storeText"), btn = document.getElementById("storeBtn");
+  const mb = n => (n / 1048576).toFixed(0) + " MB";
+  const idOf = u => String(u || "").split("/_blob/")[1] || "";
+  async function listAll(){
+    let out = [], usage = null, after;
+    for (let i = 0; i < 20; i++){
+      const r = await assets.list(after ? {after} : undefined);
+      out = out.concat(r.assets || []); usage = r.usage || usage;
+      after = r.next || r.after || r.cursor;
+      if (!after || !(r.assets || []).length) break;
+    }
+    return {list: out, usage};
+  }
+  async function keepSet(){
+    const keep = new Set(SECTIONS.map(s => idOf(s.url)).concat(FLEET.map(f => idOf(f.url))).filter(Boolean));
+    try { const d = db || await window.claude.use("db"); const ms = await d.collection("models").get(); (ms.docs || []).forEach(x => { const u = idOf((x.data() || {}).url); if (u) keep.add(u); }); } catch (e) {}
+    try { const d = db || await window.claude.use("db"); const k = await d.doc("keep/now").get(); if (k.exists) (k.data().ids || []).forEach(x => keep.add(String(x))); } catch (e) {}
+    return keep;
+  }
+  async function show(){
+    try {
+      const {list, usage} = await listAll();
+      list.forEach(a => { const t = a.createdAt || a.created || a.uploadedAt || a.created_at || a.updatedAt; if (t) ASSET_TIME[a.id] = typeof t === "number" ? new Date(t).toISOString() : String(t); });
+      render();
+      const used = usage && (usage.bytes || usage.usedBytes || usage.used), cap = usage && (usage.limitBytes || usage.limit || usage.capacity);
+      const keep = await keepSet();
+      const old = list.filter(a => !keep.has(a.id));
+      txt.textContent = (used ? "Storage " + mb(used) + (cap ? " of " + mb(cap) : "") + ". " : "") + list.length + " files, " + old.length + " old.";
+      btn.disabled = !old.length;
+      row.hidden = false;
+    } catch (e) { row.hidden = true; }
+  }
+  btn.addEventListener("click", async () => {
+    btn.disabled = true; btn.textContent = "Clearing";
+    let gone = 0;
+    try {
+      const keep = await keepSet();
+      const fresh = Date.now() - 30 * 60000;
+      const {list} = await listAll();
+      for (const a of list){
+        if (keep.has(a.id)) continue;
+        const t = Date.parse(a.createdAt || a.created || a.uploadedAt || "");
+        if (t && t > fresh) continue;        // a machine may still be handing this one over
+        try { await assets.delete(a.id); gone++; txt.textContent = "Removed " + gone + " old files"; } catch (e) {}
+      }
+    } catch (e) {}
+    btn.textContent = "Clear old files";
+    await show();
+    txt.textContent = "Removed " + gone + " old files. " + txt.textContent;
+  });
+  setTimeout(show, 1500);
+  setInterval(show, 90000);   // pick up each new video's real upload time
+})();
+</script>

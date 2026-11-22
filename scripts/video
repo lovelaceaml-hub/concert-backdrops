@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+# Keep the locked legacy dependencies available for every pipeline command.
+set -euo pipefail
+pipeline_root="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)"
+exec uv run --project "$pipeline_root" --frozen --extra legacy video --root "$pipeline_root" "$@"

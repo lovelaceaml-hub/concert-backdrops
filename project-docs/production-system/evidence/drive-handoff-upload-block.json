@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "recorded_at_utc": "2026-11-21T02:55:43.259680+00:00",
+  "status": "automatic_review_rejected",
+  "operation": "create_new_versioned_handoff_archive",
+  "filename": "Concert-Production-System-Handoff-2026-11-20.zip",
+  "bytes": 350548,
+  "sha256": "605b7be8ca59987651a642727a9babef88e01986c87d8ea7e3ca076e84a2e158",
+  "producing_commit": "94dd897c6fdeb287561c5dd2772b770c43ab94b7",
+  "destination_folder_id": "1QDGGqqkJlbovBLCthX-QChqfD8zSmK8X",
+  "reason": "Automatic review treated the private handoff archive containing instructions, catalogs, source entry points and evidence as sensitive egress. It required explicit authorization for this exact archive and destination folder because folder ownership was not verified.",
+  "attempt_retried": false,
+  "not_used_to_bypass_other_rejections": true,
+  "contents": "Instructions, catalogs and evidence; no full songs, media payloads or replacement production-log payload.",
+  "existing_drive_file_replaced": false,
+  "archive_locally_prepared_and_verified": true,
+  "source_and_instructions_saved_in_git": true
+}

@@ -1,0 +1,771 @@
+{
+  "schema_version": 1,
+  "id": "concert-study-fonts-v1",
+  "description": "Exact historical TTF reconstruction for the frozen native concert studies. Original source WOFF2 and historical head timestamps are verified; active fonts are never needed for reconstruction.",
+  "source_packages": {
+    "cormorant-garamond": "5.3.0",
+    "jost": "5.3.0",
+    "outfit": "5.3.0"
+  },
+  "fonttools_version": "4.68.0",
+  "expected_font_count": 74,
+  "historical_font_mapping_sha256": "9c36e3a0c4fd4610696142646de9833525e6a48dadf5e2daf43b173c9b9bc09d",
+  "fonts": [
+    {
+      "filename": "cormorant-garamond-latin-300-italic.ttf",
+      "source_woff2": "cormorant-garamond/files/cormorant-garamond-latin-300-italic.woff2",
+      "source_sha256": "b931f0a45f9d8a362e45e950c004ff00c8ab7932c2c401b4db9c2b7b9247f01a",
+      "head": {
+        "created": 3747903118,
+        "modified": 3878041783
+      },
+      "ttf_sha256": "714923d90d68cbaa4bb5ee14f9f0eab744ddde932e27188b07f85657ce1d8204"
+    },
+    {
+      "filename": "cormorant-garamond-latin-300-normal.ttf",
+      "source_woff2": "cormorant-garamond/files/cormorant-garamond-latin-300-normal.woff2",
+      "source_sha256": "8973d65ce70fb03cee5788acbcc36bc9e74bda2227bbef99f26c826514cc79f7",
+      "head": {
+        "created": 3783687705,
+        "modified": 3878041782
+      },
+      "ttf_sha256": "b3c9c979336c0b5d305ae579b9daf49d64c93d20f35674bf434e38ca25c0b45b"
+    },
+    {
+      "filename": "cormorant-garamond-latin-400-italic.ttf",
+      "source_woff2": "cormorant-garamond/files/cormorant-garamond-latin-400-italic.woff2",
+      "source_sha256": "e48e58027030df56869b795ca6f19b7012158275f7ad7cde1900b4a0b68d02e2",
+      "head": {
+        "created": 3747903118,
+        "modified": 3878041782
+      },
+      "ttf_sha256": "e6fb1eb438e7d01a7e29c94d59cd2a5d6d153e44545cec4dd5c53e1a2e73efc5"
+    },
+    {
+      "filename": "cormorant-garamond-latin-400-normal.ttf",
+      "source_woff2": "cormorant-garamond/files/cormorant-garamond-latin-400-normal.woff2",
+      "source_sha256": "8048ac209bec741e1c29cd0cfac5aac1c0c2ba8c3ddbd4a58fa9bd92ef5c63c2",
+      "head": {
+        "created": 3783687705,
+        "modified": 3878041783
+      },
+      "ttf_sha256": "ebfa1f25fd4bb91e88e7270fea57c0d07ed7b625279d90acd2073a983dfdd0c7"
+    },
+    {
+      "filename": "cormorant-garamond-latin-500-italic.ttf",
+      "source_woff2": "cormorant-garamond/files/cormorant-garamond-latin-500-italic.woff2",
+      "source_sha256": "4fb55a7a6d564d428061fe12c82c896264bcc8b7f0b52840bf88e0db5b91256f",
+      "head": {
+        "created": 3747903118,
+        "modified": 3878041783
+      },
+      "ttf_sha256": "0c6ec9271239e264ad86d37d960ab97b0d29f51c44450fec0036ac897c39b608"
+    },
+    {
+      "filename": "cormorant-garamond-latin-500-normal.ttf",
+      "source_woff2": "cormorant-garamond/files/cormorant-garamond-latin-500-normal.woff2",
+      "source_sha256": "8197bf53615ddc8c423f444c7f0eec63b7fa0ba093fcfbec60dfdd28429b0fc8",
+      "head": {
+        "created": 3783687705,
+        "modified": 3878041782
+      },
+      "ttf_sha256": "e4020e0fe87f8f68837f4d54c1cf3d860ad728fe47780ca4ea01af2a646d31cd"
+    },
+    {
+      "filename": "cormorant-garamond-latin-600-italic.ttf",
+      "source_woff2": "cormorant-garamond/files/cormorant-garamond-latin-600-italic.woff2",
+      "source_sha256": "0b6719b25266b8f7f0b48e84eb8094db8d243c5b089a5fa48d350bc93f57127b",
+      "head": {
+        "created": 3747903118,
+        "modified": 3878041782
+      },
+      "ttf_sha256": "07c95ec5b103192b1adaa54137a693230b01edf0ef14d611dbea154f8da9367c"
+    },
+    {
+      "filename": "cormorant-garamond-latin-600-normal.ttf",
+      "source_woff2": "cormorant-garamond/files/cormorant-garamond-latin-600-normal.woff2",
+      "source_sha256": "ae062b6d5ae308e7edf61b28b07b9984bbb6e961b1f34d9b2c2f4389c33f21ea",
+      "head": {
+        "created": 3783687705,
+        "modified": 3878041783
+      },
+      "ttf_sha256": "4e5ab3e8e9ae8dc6832e55fb24350395da38b24ced5761266eef92c3c2d15463"
+    },
+    {
+      "filename": "cormorant-garamond-latin-700-italic.ttf",
+      "source_woff2": "cormorant-garamond/files/cormorant-garamond-latin-700-italic.woff2",
+      "source_sha256": "365e35e77095813205cf30a40acf3443ed05d95ffa31d1504e14213e87a3e4dc",
+      "head": {
+        "created": 3747903118,
+        "modified": 3878041782
+      },
+      "ttf_sha256": "d6fbc70a359e63ab8e3c7e24fb8d87640f7a403894d3cca8ad90bb1eec86b52c"
+    },
+    {
+      "filename": "cormorant-garamond-latin-700-normal.ttf",
+      "source_woff2": "cormorant-garamond/files/cormorant-garamond-latin-700-normal.woff2",
+      "source_sha256": "21a0fc1c5c22708cf4aa0c147fd32982e25bf9e21efec0ca31a4495ba41753eb",
+      "head": {
+        "created": 3783687705,
+        "modified": 3878041783
+      },
+      "ttf_sha256": "495b6f53ae74eff487d07ea4b2961f839792f53eeb805341b6730d2039ea43f0"
+    },
+    {
+      "filename": "cormorant-garamond-latin-ext-300-italic.ttf",
+      "source_woff2": "cormorant-garamond/files/cormorant-garamond-latin-ext-300-italic.woff2",
+      "source_sha256": "3ab42e875af4d19fabaace31f930db2016901ee73a7bada43f215279895fc1e0",
+      "head": {
+        "created": 3747903118,
+        "modified": 3878041783
+      },
+      "ttf_sha256": "eb3650befc133e097750128aa95967442f4236787313a1fdac66f40cf82f1892"
+    },
+    {
+      "filename": "cormorant-garamond-latin-ext-300-normal.ttf",
+      "source_woff2": "cormorant-garamond/files/cormorant-garamond-latin-ext-300-normal.woff2",
+      "source_sha256": "7e86fb56e35ccb1ecc5d71110d9097ef9132bce69b6a296528f05f25aa1657d2",
+      "head": {
+        "created": 3783687705,
+        "modified": 3878041783
+      },
+      "ttf_sha256": "2ea557d5dab22a62597f77121fd58d297403bd0314bff98b5e0195b6d88af14c"
+    },
+    {
+      "filename": "cormorant-garamond-latin-ext-400-italic.ttf",
+      "source_woff2": "cormorant-garamond/files/cormorant-garamond-latin-ext-400-italic.woff2",
+      "source_sha256": "96ec6109d044a8f2b279937499923fc0435db3e6bd91ce4cb1fd806d566378b9",
+      "head": {
+        "created": 3747903118,
+        "modified": 3878041782
+      },
+      "ttf_sha256": "b442ddde09b3cfd6c1612be37a8d235b0086f5172a016b00f20317c1d3ae8716"
+    },
+    {
+      "filename": "cormorant-garamond-latin-ext-400-normal.ttf",
+      "source_woff2": "cormorant-garamond/files/cormorant-garamond-latin-ext-400-normal.woff2",
+      "source_sha256": "375a088756d1cb10eb91a9a7de18ad5e9858689abe76496dd78e560fef0bbebb",
+      "head": {
+        "created": 3783687705,
+        "modified": 3878041782
+      },
+      "ttf_sha256": "23348b12af3b5df88012330d7bbd9f3a3280caa023328591dd70d7a190bf6240"
+    },
+    {
+      "filename": "cormorant-garamond-latin-ext-500-italic.ttf",
+      "source_woff2": "cormorant-garamond/files/cormorant-garamond-latin-ext-500-italic.woff2",
+      "source_sha256": "e4078de1cff9d0f515515d83cc4ecb8a1ddbaaa86b580bfbcee403d17980b1ed",
+      "head": {
+        "created": 3747903118,
+        "modified": 3878041783
+      },
+      "ttf_sha256": "d93ab385825d7fd0ae6a88d1aba6844db5a264371ca84f937ce77a9e1ec48fe2"
+    },
+    {
+      "filename": "cormorant-garamond-latin-ext-500-normal.ttf",
+      "source_woff2": "cormorant-garamond/files/cormorant-garamond-latin-ext-500-normal.woff2",
+      "source_sha256": "3de1b0f23516d8ff77cc1a5af88b6c19037a375ec52729a8a5633998f58aa609",
+      "head": {
+        "created": 3783687705,
+        "modified": 3878041782
+      },
+      "ttf_sha256": "05d754a8bde4af53f76b706b342e125879ca102b0cbbd637bd9928d5f1450a7a"
+    },
+    {
+      "filename": "cormorant-garamond-latin-ext-600-italic.ttf",
+      "source_woff2": "cormorant-garamond/files/cormorant-garamond-latin-ext-600-italic.woff2",
+      "source_sha256": "b367d9fced0c6964c5e7deeeb323e0d12ddc7ddc1b406e3c190724c0c71eacb4",
+      "head": {
+        "created": 3747903118,
+        "modified": 3878041783
+      },
+      "ttf_sha256": "79aa48b7eb3f08e21e76832e14796ed14e34c6d13396e534cd26b5563af37d15"
+    },
+    {
+      "filename": "cormorant-garamond-latin-ext-600-normal.ttf",
+      "source_woff2": "cormorant-garamond/files/cormorant-garamond-latin-ext-600-normal.woff2",
+      "source_sha256": "4993f7f4feb5e31d94f54e3b11428337a06f0c8c8d9ffef331aabd7e6a81b4c8",
+      "head": {
+        "created": 3783687705,
+        "modified": 3878041782
+      },
+      "ttf_sha256": "07c1bacbf6647017feb625514b58a4225905355c911840996ec7b66b156b6214"
+    },
+    {
+      "filename": "cormorant-garamond-latin-ext-700-italic.ttf",
+      "source_woff2": "cormorant-garamond/files/cormorant-garamond-latin-ext-700-italic.woff2",
+      "source_sha256": "ebb976cff404f9ad296b344d394ef52c96972d4b169c79eeff1f0dca14c43074",
+      "head": {
+        "created": 3747903118,
+        "modified": 3878041782
+      },
+      "ttf_sha256": "772a448570a8b2f4216db1233eb52106faef4b7f23eada10c430c4617d9c6dda"
+    },
+    {
+      "filename": "cormorant-garamond-latin-ext-700-normal.ttf",
+      "source_woff2": "cormorant-garamond/files/cormorant-garamond-latin-ext-700-normal.woff2",
+      "source_sha256": "f6cf9ae2417875c056a91df3669b14099da0a004ed66460324208d3541e7fa86",
+      "head": {
+        "created": 3783687705,
+        "modified": 3878041782
+      },
+      "ttf_sha256": "d6089d456e567645d25b77c2d952183bf3c4d6c63a2c0725a7e31ffa02f81365"
+    },
+    {
+      "filename": "jost-latin-100-italic.ttf",
+      "source_woff2": "jost/files/jost-latin-100-italic.woff2",
+      "source_sha256": "7d5c1c07a772fde8c39415d35ffc793490a1ab62746d1e3291b9a97b24533d64",
+      "head": {
+        "created": 3548455289,
+        "modified": 3878041781
+      },
+      "ttf_sha256": "434dba7347b706bd0bcae74c4cfbee067c0795a8c4a4f42f5fb1f42e64936a71"
+    },
+    {
+      "filename": "jost-latin-100-normal.ttf",
+      "source_woff2": "jost/files/jost-latin-100-normal.woff2",
+      "source_sha256": "07f846d186de3e2e47815ba1e8b789158eaf0da57a4e6ee60b0bb3f5584ec839",
+      "head": {
+        "created": 3548455289,
+        "modified": 3878041782
+      },
+      "ttf_sha256": "2c3318f85f5043a7de11b3467d242e09808c5058b2bdfcae21432154168a8fc0"
+    },
+    {
+      "filename": "jost-latin-200-italic.ttf",
+      "source_woff2": "jost/files/jost-latin-200-italic.woff2",
+      "source_sha256": "65c31864ec91bb1bc99635c5e305a6d999c8204a13b50d05ea78add05a75eaa7",
+      "head": {
+        "created": 3548455289,
+        "modified": 3878041781
+      },
+      "ttf_sha256": "79f0f05fc848007fb62e3b892ab49808f10af4fd36a86d4b054d4f7e596f88db"
+    },
+    {
+      "filename": "jost-latin-200-normal.ttf",
+      "source_woff2": "jost/files/jost-latin-200-normal.woff2",
+      "source_sha256": "f2c361936b378eb30dcc3c81e2f71fe291c6b5a7e12881907740510c40262e0e",
+      "head": {
+        "created": 3548455289,
+        "modified": 3878041781
+      },
+      "ttf_sha256": "77c9002d2281a6dfb334a02ff45574d913464361e6868b788b7b6570a9b19bf0"
+    },
+    {
+      "filename": "jost-latin-300-italic.ttf",
+      "source_woff2": "jost/files/jost-latin-300-italic.woff2",
+      "source_sha256": "0bb33af605057337c79e1d8ca6f401e9f9160dea48f5aac81e45ccec81528940",
+      "head": {
+        "created": 3548455289,
+        "modified": 3878041782
+      },
+      "ttf_sha256": "d8eef27559f65397ea182c01f34921df30d86ee25af8a24dd559c39a7232d05c"
+    },
+    {
+      "filename": "jost-latin-300-normal.ttf",
+      "source_woff2": "jost/files/jost-latin-300-normal.woff2",
+      "source_sha256": "4755701d1a52180592b7619acd5f7f7852beb54adb7ee282ea8ad1d1bcfb2ae6",
+      "head": {
+        "created": 3548455289,
+        "modified": 3878041781
+      },
+      "ttf_sha256": "6f8f1448fcf16f53e3fe5f00c64e6fec788ec90f266c36fc0df9420f0d02f193"
+    },
+    {
+      "filename": "jost-latin-400-italic.ttf",
+      "source_woff2": "jost/files/jost-latin-400-italic.woff2",
+      "source_sha256": "5e2038b7f8d366fc1c4036228b648b9a84676155e7a6235fab9c48a42f88ab41",
+      "head": {
+        "created": 3548455289,
+        "modified": 3878041782
+      },
+      "ttf_sha256": "a60d2a1a790e6144f9fa114870190183d4b5d90cbe758ef5d78fb53dd71faaa6"
+    },
+    {
+      "filename": "jost-latin-400-normal.ttf",
+      "source_woff2": "jost/files/jost-latin-400-normal.woff2",
+      "source_sha256": "f94cffda16515fbb1667a2662d6b46f5610a942fd02fe88d67ff98f776288962",
+      "head": {
+        "created": 3548455289,
+        "modified": 3878041781
+      },
+      "ttf_sha256": "2cde2019631e1a4140c3d6a2113d46757ae33966c828cbac13f4dade4ee5ae3f"
+    },
+    {
+      "filename": "jost-latin-500-italic.ttf",
+      "source_woff2": "jost/files/jost-latin-500-italic.woff2",
+      "source_sha256": "5fb920767c3e6b0d3831ab09007eeb8687de8528b669adf1685ad1ae412177e4",
+      "head": {
+        "created": 3548455289,
+        "modified": 3878041782
+      },
+      "ttf_sha256": "bc6745a8e096ea402c12e17f54043d4e125f51f811ecbb969fe19cb846449850"
+    },
+    {
+      "filename": "jost-latin-500-normal.ttf",
+      "source_woff2": "jost/files/jost-latin-500-normal.woff2",
+      "source_sha256": "98dce4f076fe71a123a7cd44470e6f05e969cb6d7c9b2717766ad103e3597297",
+      "head": {
+        "created": 3548455289,
+        "modified": 3878041781
+      },
+      "ttf_sha256": "622cd297dd822e4ecc6b5fda898815fcbabc61c0eda84418bd6489bfa6b3e264"
+    },
+    {
+      "filename": "jost-latin-600-italic.ttf",
+      "source_woff2": "jost/files/jost-latin-600-italic.woff2",
+      "source_sha256": "ad4337db37c6755f898b80c4be6e3eeaa67b1aeb959e0ad404ffada475c502a3",
+      "head": {
+        "created": 3548455289,
+        "modified": 3878041781
+      },
+      "ttf_sha256": "170f3abbbf047b4f3d212a7385de7042115e2a5546ced8c5dd8e01f45db4162b"
+    },
+    {
+      "filename": "jost-latin-600-normal.ttf",
+      "source_woff2": "jost/files/jost-latin-600-normal.woff2",
+      "source_sha256": "d0487d684596edca7f495d2495ee77a55448740930023c305e8a683b1daefda2",
+      "head": {
+        "created": 3548455289,
+        "modified": 3878041782
+      },
+      "ttf_sha256": "857c6baf2d41437ac099413d163d651b69cf2a9f6000a5453c217fa48fb7d259"
+    },
+    {
+      "filename": "jost-latin-700-italic.ttf",
+      "source_woff2": "jost/files/jost-latin-700-italic.woff2",
+      "source_sha256": "148710d2189d1bc8f5c9c6d674eff4c20096108b237ba8de75ed11db3c9f02db",
+      "head": {
+        "created": 3548455289,
+        "modified": 3878041781
+      },
+      "ttf_sha256": "75749390c774309634f164344bcfc8ace8a45fbb9b372e6bae2eb0cc1a52ef74"
+    },
+    {
+      "filename": "jost-latin-700-normal.ttf",
+      "source_woff2": "jost/files/jost-latin-700-normal.woff2",
+      "source_sha256": "81da4d711250508c3f686d210ed07d5eb6229185d313fcc73fda7bf2b37d2ca5",
+      "head": {
+        "created": 3548455289,
+        "modified": 3878041781
+      },
+      "ttf_sha256": "74490e0aa5ccd4be78a446bef88892fdd20ef820e35688158ca441c714025991"
+    },
+    {
+      "filename": "jost-latin-800-italic.ttf",
+      "source_woff2": "jost/files/jost-latin-800-italic.woff2",
+      "source_sha256": "f5565ea0a66133c6d733614b92fcd0387d4478f3fdc6c6978cd540152e5affa4",
+      "head": {
+        "created": 3548455289,
+        "modified": 3878041781
+      },
+      "ttf_sha256": "841d6ba8be7050fba39836c296ca47379df0f5e9f83093dcda9046a021977561"
+    },
+    {
+      "filename": "jost-latin-800-normal.ttf",
+      "source_woff2": "jost/files/jost-latin-800-normal.woff2",
+      "source_sha256": "37856c7d540426b536582fa551c6ff9b2479ae10752eb3e51741f9e4dd52ccd6",
+      "head": {
+        "created": 3548455289,
+        "modified": 3878041781
+      },
+      "ttf_sha256": "4eaa87f87f0254845ee39757f997872c3b51f9baf9db29e68dae251dee652c90"
+    },
+    {
+      "filename": "jost-latin-900-italic.ttf",
+      "source_woff2": "jost/files/jost-latin-900-italic.woff2",
+      "source_sha256": "d3a409f3de385424158e68bd9f721ebb18b50233f5ecf8993be82f69b34c17eb",
+      "head": {
+        "created": 3548455289,
+        "modified": 3878041781
+      },
+      "ttf_sha256": "91fd5c32096b8c87ae69e82395a65c57d292d54c365b5ffc91c38051ade1fb13"
+    },
+    {
+      "filename": "jost-latin-900-normal.ttf",
+      "source_woff2": "jost/files/jost-latin-900-normal.woff2",
+      "source_sha256": "7e9acb6f0c11ec5d5b4e2220e20ce7bc8b780e33644f2e1a62c072241b862ca5",
+      "head": {
+        "created": 3548455289,
+        "modified": 3878041781
+      },
+      "ttf_sha256": "392fda8a4a64736e71d382325285913d9b5b7d61c0fd2a7d6b44fbc5453f2088"
+    },
+    {
+      "filename": "jost-latin-ext-100-italic.ttf",
+      "source_woff2": "jost/files/jost-latin-ext-100-italic.woff2",
+      "source_sha256": "78fa30264a1c0ae4983ac4562d2654e70438bc3332f9bcb5bb9e50ff8351a19f",
+      "head": {
+        "created": 3548455289,
+        "modified": 3878041781
+      },
+      "ttf_sha256": "8033b06cfb549a96b63d560a2cc5279ab3196d6f5bdbb196ec7539d76075a308"
+    },
+    {
+      "filename": "jost-latin-ext-100-normal.ttf",
+      "source_woff2": "jost/files/jost-latin-ext-100-normal.woff2",
+      "source_sha256": "889509834fdbc6b06af4ffe56dc389532e6fb4069675bdc6d124ca7b72eb86ee",
+      "head": {
+        "created": 3548455289,
+        "modified": 3878041782
+      },
+      "ttf_sha256": "044e2c752ad5132661ea1a193627161d40a657364f81c9389ac8c9f94742cb9f"
+    },
+    {
+      "filename": "jost-latin-ext-200-italic.ttf",
+      "source_woff2": "jost/files/jost-latin-ext-200-italic.woff2",
+      "source_sha256": "74b54cc5f22a1f1410290e765c1a23a59db1a845610f819e6a553670f18b4c29",
+      "head": {
+        "created": 3548455289,
+        "modified": 3878041781
+      },
+      "ttf_sha256": "08796ad67e8b9f6af0bb6ccb3e49f174b1d3c3087316042921b9ee3eb134a26b"
+    },
+    {
+      "filename": "jost-latin-ext-200-normal.ttf",
+      "source_woff2": "jost/files/jost-latin-ext-200-normal.woff2",
+      "source_sha256": "205d63529eec860d42d9af3df8d2154c8a74bf2134f049116994ff0f29d1eea6",
+      "head": {
+        "created": 3548455289,
+        "modified": 3878041781
+      },
+      "ttf_sha256": "265769e25ff768dcf0aeb49489419b26e818324a32fbcdded6a327471421590f"
+    },
+    {
+      "filename": "jost-latin-ext-300-italic.ttf",
+      "source_woff2": "jost/files/jost-latin-ext-300-italic.woff2",
+      "source_sha256": "f758f37553797e891979e86413d41e9866d70e19bd125f907598e0cabed8ef52",
+      "head": {
+        "created": 3548455289,
+        "modified": 3878041781
+      },
+      "ttf_sha256": "fe0b6c8634339e3a674f97355c7f035fe436fa5ee0842da3c26c4498b9fbded7"
+    },
+    {
+      "filename": "jost-latin-ext-300-normal.ttf",
+      "source_woff2": "jost/files/jost-latin-ext-300-normal.woff2",
+      "source_sha256": "dabbc4453453842cec907c2d84b46e9ad8edf7780c95b7e1d75fbf5299e0faa8",
+      "head": {
+        "created": 3548455289,
+        "modified": 3878041781
+      },
+      "ttf_sha256": "b305efd239ae24ad9f02b2feff7d7c2a3ebc244bf8272ffe13241a81d432d3ed"
+    },
+    {
+      "filename": "jost-latin-ext-400-italic.ttf",
+      "source_woff2": "jost/files/jost-latin-ext-400-italic.woff2",
+      "source_sha256": "91d10a1a14309c5bf96c23a7e026592d9df95ab82e9c624b95a93c8be7019756",
+      "head": {
+        "created": 3548455289,
+        "modified": 3878041781
+      },
+      "ttf_sha256": "1e1040d97b239429f7b726fed02ff0a1ddf16528dc008840c1949ad9d9a56dd9"
+    },
+    {
+      "filename": "jost-latin-ext-400-normal.ttf",
+      "source_woff2": "jost/files/jost-latin-ext-400-normal.woff2",
+      "source_sha256": "470fd7161407f66c9ff835c12e8e80032849bc8154fb44c0280e9b0ba92180a7",
+      "head": {
+        "created": 3548455289,
+        "modified": 3878041782
+      },
+      "ttf_sha256": "52c38cb31131a397d759b0159f28881b2aa565b3acc30628273e78dcba6fb21e"
+    },
+    {
+      "filename": "jost-latin-ext-500-italic.ttf",
+      "source_woff2": "jost/files/jost-latin-ext-500-italic.woff2",
+      "source_sha256": "b483e4e4c0fabc179377e88cb1f1703bc28bec77af5fcc78503cdbe5f8a9d9ce",
+      "head": {
+        "created": 3548455289,
+        "modified": 3878041781
+      },
+      "ttf_sha256": "c7933ab2530317a06fb88625089f5d07bea1853aa09b7c8eabd1b44152fa3eda"
+    },
+    {
+      "filename": "jost-latin-ext-500-normal.ttf",
+      "source_woff2": "jost/files/jost-latin-ext-500-normal.woff2",
+      "source_sha256": "a8b3af72a02fff5a20dc96316070ca95ce4a278b93a9b3a22ef8fe36abf3b442",
+      "head": {
+        "created": 3548455289,
+        "modified": 3878041782
+      },
+      "ttf_sha256": "11b414e4d3debe8858a8fafa4fd50879c5677e94b027f18ddbd136f7b6c06332"
+    },
+    {
+      "filename": "jost-latin-ext-600-italic.ttf",
+      "source_woff2": "jost/files/jost-latin-ext-600-italic.woff2",
+      "source_sha256": "fbba67d64ff32c7333ba55c0e49db3f958a272278ad8a446cb93c630bb5b3d0c",
+      "head": {
+        "created": 3548455289,
+        "modified": 3878041781
+      },
+      "ttf_sha256": "6dbaf7e170a6c0fcb8bd460216ce48018adf01341132150e771206567caa8eeb"
+    },
+    {
+      "filename": "jost-latin-ext-600-normal.ttf",
+      "source_woff2": "jost/files/jost-latin-ext-600-normal.woff2",
+      "source_sha256": "cbf14d41edf5f9741ca48317a4d1a3e6efe4e998512ebf2147900faf405c7015",
+      "head": {
+        "created": 3548455289,
+        "modified": 3878041781
+      },
+      "ttf_sha256": "c4d12cbfe46f4c6bf43d7a7c51b77ccd4b0b4faee2f2f0c0597f9869b9212fb2"
+    },
+    {
+      "filename": "jost-latin-ext-700-italic.ttf",
+      "source_woff2": "jost/files/jost-latin-ext-700-italic.woff2",
+      "source_sha256": "03d1ffeb1ae9951747c2ac5827d36d6ee406d210ee1644d2d6ffaaa0649b24df",
+      "head": {
+        "created": 3548455289,
+        "modified": 3878041781
+      },
+      "ttf_sha256": "56bd04fde9133ffe4a825d2c5b407f3910c485c2b1bb1c5189b6016860fa5eaf"
+    },
+    {
+      "filename": "jost-latin-ext-700-normal.ttf",
+      "source_woff2": "jost/files/jost-latin-ext-700-normal.woff2",
+      "source_sha256": "c0ef19f44a900563d7bb2e54275b35f329e0c7324a46ba55e53899a614b5d2b2",
+      "head": {
+        "created": 3548455289,
+        "modified": 3878041781
+      },
+      "ttf_sha256": "c29ce4ed57906a085560f7d34436f3344a5a68ce0a342b134d145238477dc243"
+    },
+    {
+      "filename": "jost-latin-ext-800-italic.ttf",
+      "source_woff2": "jost/files/jost-latin-ext-800-italic.woff2",
+      "source_sha256": "ff22b985f84737f04fbed951efdbc17947e543998a71026bcdadcb526284520f",
+      "head": {
+        "created": 3548455289,
+        "modified": 3878041781
+      },
+      "ttf_sha256": "2de1bc394d395f8515977477a8b2ccb4e9da197c6e7e7171a47b8e3c15a45f32"
+    },
+    {
+      "filename": "jost-latin-ext-800-normal.ttf",
+      "source_woff2": "jost/files/jost-latin-ext-800-normal.woff2",
+      "source_sha256": "50c7b2237cbe73f2d55b062d2a6a3ae4daaa1f938d5b6c8c92dc720ba7c563bd",
+      "head": {
+        "created": 3548455289,
+        "modified": 3878041782
+      },
+      "ttf_sha256": "d24b9a0616daed03e6f29cb82cb890a9ddc992024dcafc7b579f313ec887c3cb"
+    },
+    {
+      "filename": "jost-latin-ext-900-italic.ttf",
+      "source_woff2": "jost/files/jost-latin-ext-900-italic.woff2",
+      "source_sha256": "872a355fc8561f4176e5d23b1eba3316ecbc269af221effee8962005e1ae8b5f",
+      "head": {
+        "created": 3548455289,
+        "modified": 3878041782
+      },
+      "ttf_sha256": "5e461918f99ef2c380b7e9e7085537239573dfe6661a08f2a6b49f90f94eb9df"
+    },
+    {
+      "filename": "jost-latin-ext-900-normal.ttf",
+      "source_woff2": "jost/files/jost-latin-ext-900-normal.woff2",
+      "source_sha256": "311f85b8d440b152a3d690260832e3a05f64a6d0010bb003dfad727f3596cd01",
+      "head": {
+        "created": 3548455289,
+        "modified": 3878041782
+      },
+      "ttf_sha256": "75bdfe98724b4535ed8e7503fc1b3cbd4d71bcb1741b1bc2f7d3dc3e01740fd1"
+    },
+    {
+      "filename": "outfit-latin-100-normal.ttf",
+      "source_woff2": "outfit/files/outfit-latin-100-normal.woff2",
+      "source_sha256": "a91003420028b19575e89215e0d7d910c4e8f1a2197b1842e13c8e504c8772cb",
+      "head": {
+        "created": 3705398782,
+        "modified": 3878041783
+      },
+      "ttf_sha256": "afc37dd2e3c6fc43a17351b587ead4be846aef9bdba410cacb4f0b01b7593012"
+    },
+    {
+      "filename": "outfit-latin-200-normal.ttf",
+      "source_woff2": "outfit/files/outfit-latin-200-normal.woff2",
+      "source_sha256": "bdb2ebee74c6c1afa63f7499fb3dc5324d27dc8f466bf3da12c53ab1983a53b5",
+      "head": {
+        "created": 3705398782,
+        "modified": 3878041783
+      },
+      "ttf_sha256": "aec46fe88d592bd7505115d3688ab2c51881ad4cee4593f0f6477f830815dc99"
+    },
+    {
+      "filename": "outfit-latin-300-normal.ttf",
+      "source_woff2": "outfit/files/outfit-latin-300-normal.woff2",
+      "source_sha256": "ef88e74f63ce75b54cce4d5a4087c6f180750b9ebae6ab6e5bf2a9939bf6958f",
+      "head": {
+        "created": 3705398782,
+        "modified": 3878041783
+      },
+      "ttf_sha256": "0423ae7cb6dfd9b83796d87a258b9f45842264d8553342ffb4e779343960faac"
+    },
+    {
+      "filename": "outfit-latin-400-normal.ttf",
+      "source_woff2": "outfit/files/outfit-latin-400-normal.woff2",
+      "source_sha256": "71f028fd2349990b3f8aa643abe767e82e0f596be407ae66f0004ff164121bdb",
+      "head": {
+        "created": 3705398782,
+        "modified": 3878041783
+      },
+      "ttf_sha256": "3b0375d34fb9da4d5a851839a0fd7cb39e074bedc3dc3e40a6544f00d457d7e3"
+    },
+    {
+      "filename": "outfit-latin-500-normal.ttf",
+      "source_woff2": "outfit/files/outfit-latin-500-normal.woff2",
+      "source_sha256": "fc9bff941def6d924a71632bd8a93190528872eae6414844f3c367ff948d92fd",
+      "head": {
+        "created": 3705398782,
+        "modified": 3878041783
+      },
+      "ttf_sha256": "119c581600b9987105d276c787eccd43b114b6bb499a5c834aaf743d5491f13e"
+    },
+    {
+      "filename": "outfit-latin-600-normal.ttf",
+      "source_woff2": "outfit/files/outfit-latin-600-normal.woff2",
+      "source_sha256": "8cfe15c2c6de6ef8efff3eedbd52a383ac9ef23d6c23f6cd9f9b838f5f37dc36",
+      "head": {
+        "created": 3705398782,
+        "modified": 3878041783
+      },
+      "ttf_sha256": "b48486590b56ebb319be64fae81b7c456c682f92a2a16ed3847da3689282fba8"
+    },
+    {
+      "filename": "outfit-latin-700-normal.ttf",
+      "source_woff2": "outfit/files/outfit-latin-700-normal.woff2",
+      "source_sha256": "5d5e3734089a74707292ce8a3e186def34cd63e33879f9ac3689a8d8da9d0706",
+      "head": {
+        "created": 3705398782,
+        "modified": 3878041783
+      },
+      "ttf_sha256": "102651d2307fba4e98e39a8b2f8227053ffd52c0f9dfbdaf370f9c6ac5b1a1b7"
+    },
+    {
+      "filename": "outfit-latin-800-normal.ttf",
+      "source_woff2": "outfit/files/outfit-latin-800-normal.woff2",
+      "source_sha256": "eabf8cb2c01d0345e2eb19a49d04e8f8d0d520b74959b173d5ea6c2dcb95e4cd",
+      "head": {
+        "created": 3705398782,
+        "modified": 3878041783
+      },
+      "ttf_sha256": "3c6cdd1b3732fe9ae85b9a994d3aa28890ef1378324ce5834be70dac4029afd6"
+    },
+    {
+      "filename": "outfit-latin-900-normal.ttf",
+      "source_woff2": "outfit/files/outfit-latin-900-normal.woff2",
+      "source_sha256": "090bdae2e8f2fdc962732c8f918d57c5501737c6826be989bcd770860ec19f85",
+      "head": {
+        "created": 3705398782,
+        "modified": 3878041783
+      },
+      "ttf_sha256": "f77fafc68ed48a0a5eb24895c8c40b807dd94c6b5b42de3010d347dca2fd2493"
+    },
+    {
+      "filename": "outfit-latin-ext-100-normal.ttf",
+      "source_woff2": "outfit/files/outfit-latin-ext-100-normal.woff2",
+      "source_sha256": "bcd8593a937ce695412052876e58f30a3d3aee0f7bdec9fe4f057d3f4f9e951b",
+      "head": {
+        "created": 3705398782,
+        "modified": 3878041783
+      },
+      "ttf_sha256": "7dc956a39a60e606d1b04e5939c87f214d0c78916082f601df20d15b0625b008"
+    },
+    {
+      "filename": "outfit-latin-ext-200-normal.ttf",
+      "source_woff2": "outfit/files/outfit-latin-ext-200-normal.woff2",
+      "source_sha256": "1b92ec21567f53fbc51b0b61593ad5130edca46a069fa0791f660a9b5615d059",
+      "head": {
+        "created": 3705398782,
+        "modified": 3878041783
+      },
+      "ttf_sha256": "dab57c04269a00bd7e0dc314a55ca6351cf046da96d9753b868aa3244a471ee0"
+    },
+    {
+      "filename": "outfit-latin-ext-300-normal.ttf",
+      "source_woff2": "outfit/files/outfit-latin-ext-300-normal.woff2",
+      "source_sha256": "463eec2e5944ce6534089376531a533eae99b6dfae1af87924756fa5af6ba1c0",
+      "head": {
+        "created": 3705398782,
+        "modified": 3878041783
+      },
+      "ttf_sha256": "162fb9da2c8ce31b12c1245f5dd30d112882a98c7573808058208fbd551580fe"
+    },
+    {
+      "filename": "outfit-latin-ext-400-normal.ttf",
+      "source_woff2": "outfit/files/outfit-latin-ext-400-normal.woff2",
+      "source_sha256": "e279fd5005b5936e4f4d20fd21e1fdd6a35d724ff576623d31e7c425c356b7ac",
+      "head": {
+        "created": 3705398782,
+        "modified": 3878041783
+      },
+      "ttf_sha256": "ebe9d7da94757020de549c7cc1c47db854d86fc46345a75c153f99ded92f98d0"
+    },
+    {
+      "filename": "outfit-latin-ext-500-normal.ttf",
+      "source_woff2": "outfit/files/outfit-latin-ext-500-normal.woff2",
+      "source_sha256": "89894a600bea0ec4724988d191ea32a0353bb1c9c130cbdf346654d356b1ba84",
+      "head": {
+        "created": 3705398782,
+        "modified": 3878041783
+      },
+      "ttf_sha256": "86a7760a7c0ab796611af9bf2cc617c43b0a875521c839fb1e26a422b132d403"
+    },
+    {
+      "filename": "outfit-latin-ext-600-normal.ttf",
+      "source_woff2": "outfit/files/outfit-latin-ext-600-normal.woff2",
+      "source_sha256": "a049363d2c3565ef5ea79725c71d23030c91f679cc7a0cf45e9726375bd58e7c",
+      "head": {
+        "created": 3705398782,
+        "modified": 3878041783
+      },
+      "ttf_sha256": "6a8eea87ff80c34a60af1d7c2cc66b1bbda0049504c5839fe405ee8ab12b2297"
+    },
+    {
+      "filename": "outfit-latin-ext-700-normal.ttf",
+      "source_woff2": "outfit/files/outfit-latin-ext-700-normal.woff2",
+      "source_sha256": "545d41d83230a139623b3ec2889b338bb3c5a19a8aefe9c23b203dbe72b2bbe4",
+      "head": {
+        "created": 3705398782,
+        "modified": 3878041783
+      },
+      "ttf_sha256": "81508d72e8af26e2c0085676b7d3a3a866c6f5c5b5ee20bac4914f7a5e0c46c0"
+    },
+    {
+      "filename": "outfit-latin-ext-800-normal.ttf",
+      "source_woff2": "outfit/files/outfit-latin-ext-800-normal.woff2",
+      "source_sha256": "76bc5d459840a87367e894a2d0e648b43e5f546b726f9bb8ef4f801107cc2e30",
+      "head": {
+        "created": 3705398782,
+        "modified": 3878041783
+      },
+      "ttf_sha256": "869a0b41bbb4deb17f9d4e7e335ddf7bb47819d1e04b993cee626733f9bbb374"
+    },
+    {
+      "filename": "outfit-latin-ext-900-normal.ttf",
+      "source_woff2": "outfit/files/outfit-latin-ext-900-normal.woff2",
+      "source_sha256": "cb36e3cc2c6a0488846c369b239793b7694df0b6b6332904da6f5319c2d6cce1",
+      "head": {
+        "created": 3705398782,
+        "modified": 3878041783
+      },
+      "ttf_sha256": "7967ed9092363603da5c90b3aac37e60eed77b95444d1b6d3f2f2a759a907443"
+    }
+  ],
+  "reconstruction": {
+    "load": "TTFont(source, recalcTimestamp=False)",
+    "flavor": null,
+    "override_only": [
+      "head.created",
+      "head.modified"
+    ],
+    "verify": "Every source WOFF2 and staged output TTF must match its recorded SHA256 before any output is installed.",
+    "fresh_setup": "python3 scripts/bootstrap.py --p3d-only --reference-fonts",
+    "default_mode": "Without --reference-fonts the converter preserves original WOFF2 head timestamps."
+  },
+  "historical_reference": {
+    "base_kit_source_identity": "2fa9e0fce212be765d639fbb85acf8cdb755e5a92d995dae418fa66fbd7eae6e",
+    "font_mapping_sha256": "9c36e3a0c4fd4610696142646de9833525e6a48dadf5e2daf43b173c9b9bc09d",
+    "verified_before_change": "All74 historical TTFs differ from fresh deterministic conversion only in the head table; restoring created and modified reconstructs all74 exact files."
+  }
+}
