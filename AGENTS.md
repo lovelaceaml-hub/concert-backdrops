@@ -1,5 +1,10 @@
 # Current instructions for every AI
 
+## Active increment: Advanced Dance, PR #109
+
+The current request revises the first two dance films with complete 32-second advanced choreography. Work is active in `tools/advanced_dance/`, branch `creative/advanced-choreography-20261121`, PR #109. The first source checkpoint is `eec83de733cf89f74209b6fdb48fba9cb1b98e2d`; full-clip repairs and validation are still in progress. Read current `STATE.json` and the new leading blocks in START-HERE and AI-HANDOFF. Finish both movies and an updated complete ten-film package under the existing authorization. Earlier Cinematic Ten completion statements below describe the previous increment.
+
+
 Current system handoff: November 21, 2026, America/Los_Angeles.
 
 Start with `project-docs/production-system/START-HERE.md` and `AI-HANDOFF.md` in the same folder. The owner approved the Song 11 beauty study and explicitly requested setup, saving, documentation, uploads, push and merge, followed by continued model and animation improvements for the concert songs. Use the current user's authorization; do not repeat permission questions for work already authorized.

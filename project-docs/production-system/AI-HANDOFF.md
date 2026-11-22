@@ -1,10 +1,19 @@
 # Handoff for a new AI or chat
 
+## Active increment: Advanced Dance, PR #109
+
+The current owner request is a faster, fully choreographed solo and five-person fan performance, with articulated hands, grounded footwork, sparkles and coordinated lighting. The new source is in `tools/advanced_dance/` and the projects are `advanced-dance-solo` and `advanced-dance-ensemble`. Each performance lasts 32 seconds with 1,920 native 1080p60 frames. Read the module README for the executable repair and rendering process.
+
+The first source checkpoint is `eec83de733cf89f74209b6fdb48fba9cb1b98e2d` on `creative/advanced-choreography-20261121`, [PR #109](https://github.com/lovelaceaml-hub/concert-backdrops/pull/109). Full motion and cloth checks identified two concrete repair items: the inner ensemble canon arm paths and excessive skirt stretch in a minority of full-clip states. Those repairs and final validation are in progress. No new final movie is rendered, saved or owner-approved yet. `STATE.json` owns the current state; do not infer active processes from historical queue records.
+
+Complete this authorized increment through finished films and a new complete ten-film package. Replace only the two dance slots; verify and retain the prior eight movies byte-for-byte. Preserve all historical outputs below. No new Drive-copy authorization or successful Drive-copy claim is implied.
+
+
 Copy the following instruction into a new working chat. The files it references carry the actual state; this prompt is an entry point, not a substitute for reading them.
 
 > Work on the concert-backdrops project for The Words of Mother's Love. Read root AGENTS.md, project-docs/production-system/START-HERE.md and STATE.json. Cinematic Ten has ten complete, technically passed, scoped visually reviewed and saved films, plus five saved support artifacts. Preserve frozen picture source df4fc478116d3f0e34a85d2166097fbda55911bf, the approved creative/clarity references and exact delivery identities. No Cinematic Ten owner approval is recorded. Do not restart completed render or save work. Record exact-output feedback separately and use isolated new increments for later changes. Keep full songs, lyrics, frames and videos out of Git. Apply the current user's authorization without repeated permission requests.
 
-## Current delivery: Cinematic Ten
+## Previous delivery: Cinematic Ten
 
 All ten twenty-second films are complete, technically passed, reviewed within the recorded sample scope, and saved. The overview, README, technical records, checksums and complete ZIP are also saved. No Cinematic Ten owner approval is recorded.
 

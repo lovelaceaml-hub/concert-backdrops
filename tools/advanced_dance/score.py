@@ -146,7 +146,12 @@ class AdvancedScore:
                 left[k,1] += .04
         if self.ensemble and self.role in (1,3):
             for k in range(40,48):
-                right[k,1], left[k,1] = left[k,1], right[k,1]
+                # Exchange complete mirrored arm paths. Swapping only their
+                # heights combines incompatible reach and depth cues near the
+                # face, causing a folded elbow and fan/head intersection.
+                old_right, old_left = right[k].copy(), left[k].copy()
+                right[k] = old_left * np.array([-1.,1.,1.])
+                left[k] = old_right * np.array([-1.,1.,1.])
         final = ((-.44,1.63,.18),(.44,1.63,.18))
         self._palms = {"R":curve(np.arange(65),np.vstack([right,final[0]])),
                        "L":curve(np.arange(65),np.vstack([left,final[1]]))}

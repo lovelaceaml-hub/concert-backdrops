@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
-  "recorded_utc": "2026-11-22T08:15:18.185011+00:00",
+  "recorded_utc": "2026-11-22T08:27:17.980212+00:00",
   "increment": "advanced-dance",
-  "status": "picture_inputs_frozen_for_corrective_review_and_bake",
+  "status": "corrected_picture_inputs_frozen_for_final_validation_and_render",
   "source_sha256": {
     "assets/p3d/body_v1.npz": "0a72159f84b7008dcb135c79f82ae3b05df5f7361197e99ab9ca4af148c91189",
     "assets/p3d/brand/land_2048.png": "7a0e70fd74d1cd4940037c6c96c9f9617910f458ac49d1dccb678297771ca7dc",
@@ -117,13 +117,13 @@
     "tools/advanced_dance/anatomy.py": "759b90615a18ae51582e6d5269d321bfb40db2ec15af211abe4a8e9b0b59e43b",
     "tools/advanced_dance/cache.py": "6a2c7f5c287ce3c8f9e770b6259911de74251a758e5de0969c8908dbb83c668f",
     "tools/advanced_dance/clock.json": "67634ee9841878f7030a3482d195fd218dcc0eacd5b1a5d18bc6fd7c723aa9a9",
-    "tools/advanced_dance/costume.py": "f2579ab5108966d5f457d52667a22971e567d3ee0879df06f3533cd0ec796d9a",
+    "tools/advanced_dance/costume.py": "2a7bfd24a4b899a281a66bc7f8ca72017b23dafcfea095be6f2534daf0baa931",
     "tools/advanced_dance/ensemble.py": "073c866e35e0f17f689f467f3ea6929c913a00c134affd856422bac88c0d872b",
     "tools/advanced_dance/lights.py": "fe7782a3cec5fba0f4a7c27ecab7c33e3c897222d07061188658aecad6bef087",
     "tools/advanced_dance/props.py": "1f9cf399193aca21574fed947d654d4d66b3777b50d0ae2c656431c96727010c",
     "tools/advanced_dance/render.py": "62ac9d04544a1b253ff2c0a309382d33475d924ff1131a63798b10cc1bdc60e0",
     "tools/advanced_dance/scene.py": "731480039a5a977245f2e67aca5711b3cfc86210a1c8c97c077888f4533bb021",
-    "tools/advanced_dance/score.py": "29fdfeebcc33168f6c85c42153af7d539aed5a3a55211b8505276a137fe157df",
+    "tools/advanced_dance/score.py": "88f17b2e21aa7520edab5bb2ff29aa0a87c50fa854bbf33ed3864797258ace5d",
     "tools/advanced_dance/solo.py": "0894d8ca907ad86a6db050c5780e84b71dacbbda5a43aa0bbf5a44c9919578e6",
     "tools/advanced_dance/song_dance.py": "a2264acc680d447491f4f3fd0e9399e68ec3b116494d3381b379ae522d74cfd7",
     "tools/cinematic_ten/__init__.py": "3c2d7747a6fdc36fec0e6766ddf40757ec50a27c401e7b9e00a1b681b56e9721",
@@ -241,6 +241,10 @@
     "fonts/outfit-latin-ext-800-normal.ttf": "869a0b41bbb4deb17f9d4e7e335ddf7bb47819d1e04b993cee626733f9bbb374",
     "fonts/outfit-latin-ext-900-normal.ttf": "7967ed9092363603da5c90b3aac37e60eed77b95444d1b6d3f2f2a759a907443"
   },
-  "scope": "Two new32-second native1080p60 dance films. Cinematic Ten03..10 retained exactly; complete final render and visual review pending.",
-  "owner_approval": "not_recorded"
+  "prior_checkpoint_inputs": "project-docs/production-system/evidence/advanced-dance-first-checkpoint-inputs.json",
+  "known_repairs": [
+    "Complete mirrored canon arm cues preserve reach and clear the head.",
+    "Apply eight soft cloth-shape passes then converge hard edges and collisions without reintroducing shape forces."
+  ],
+  "scope": "Final picture identity. Full ensemble cloth audit, dense kinematic audit, moving proofs and final media are still in progress."
 }

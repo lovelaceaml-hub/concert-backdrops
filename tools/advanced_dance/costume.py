@@ -38,7 +38,8 @@ class DanceClothSystem(cloth.ClothSystem):
     """
 
     minimum_iterations = 8
-    maximum_iterations = 48
+    shape_iterations = 8
+    maximum_iterations = 128
 
     def _stretch(self, positions):
         ratios = [
@@ -73,14 +74,17 @@ class DanceClothSystem(cloth.ClothSystem):
         touched = np.zeros(self.n, dtype=bool)
 
         for iteration in range(self.maximum_iterations):
-            # Shear and bending preserve flowing folds. Hard edge projection
-            # follows them, so the soft shape correction cannot be the final
-            # operation that re-extends a cloth cell.
-            delta = xn[self.sb] - xn[self.sa]
-            distance = np.linalg.norm(delta, axis=1)
-            xn += self.G @ (
-                ((distance - self.sL) / np.maximum(distance, 1e-9))[:, None] * delta
-            )
+            # Apply the soft shape forces a fixed number of times per physical
+            # step. Repeating them on every convergence pass makes stiffness
+            # depend on the solver budget and keeps reopening short waist edges
+            # during fast turns. Remaining passes solve edge lengths and body
+            # collision together while the soft folds retain their influence.
+            if iteration < self.shape_iterations:
+                delta = xn[self.sb] - xn[self.sa]
+                distance = np.linalg.norm(delta, axis=1)
+                xn += self.G @ (
+                    ((distance - self.sL) / np.maximum(distance, 1e-9))[:, None] * delta
+                )
             for a, b, length, wa, wb in self.batches:
                 delta = xn[b] - xn[a]
                 distance = np.linalg.norm(delta, axis=1)
@@ -294,7 +298,8 @@ def make_body(*, at, role: int = 0, ensemble: bool = False, points: int = 82000)
         "skirt_points": body.sources[skirt].n,
         "total_points": body.cloud["n"],
         "cloth_grid": [CLOTH_ROWS, CLOTH_COLUMNS],
-        "constraint_projection_iterations": [8, 48],
+        "constraint_projection_iterations": [8, 128],
+        "soft_shape_iterations_per_step": 8,
         "role": role,
     }
     if body.actor._cache or body.cloth.x is not None:

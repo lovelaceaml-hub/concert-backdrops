@@ -1,0 +1,11 @@
+{
+  "schema_version": 1,
+  "status": "passed",
+  "command": "PYTHONPATH=engine:. OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 .venv/bin/python -m unittest tests.test_advanced_dance_anatomy tests.test_advanced_dance_registration tests.test_advanced_dance_qa",
+  "tests_passed": 27,
+  "seconds": 13.566,
+  "score_sha256": "88f17b2e21aa7520edab5bb2ff29aa0a87c50fa854bbf33ed3864797258ace5d",
+  "scope": "Anatomy solver defects, exact scene registration, motion audit fault injection. Separate from full timeline and picture review.",
+  "earlier_pipeline_regression_tests_passed": 114,
+  "earlier_pipeline_scope": "Existing unchanged pipeline tests from initial source checkpoint; completed in this session."
+}
