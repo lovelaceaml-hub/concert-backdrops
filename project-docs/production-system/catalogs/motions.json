@@ -618,5 +618,398 @@
       "intended_review": "Inspect modern dance material. Subject 49 is a collection, not one prepared performance."
     }
   ],
-  "acquisition_policy": "No candidate dataset was downloaded for this inventory. A future addition needs source terms and hashes, a versioned import recipe, retargeting, reviewed contacts, a plain-floor motion proof, a costume proof and a registered scene before it is advertised as ready."
+  "acquisition_policy": "No candidate dataset was downloaded for this inventory. A future addition needs source terms and hashes, a versioned import recipe, retargeting, reviewed contacts, a plain-floor motion proof, a costume proof and a registered scene before it is advertised as ready.",
+  "authored_scores": {
+    "inventory_date": "2026-11-22",
+    "round_id": "cinematic-ten-authored-motion-2026-11-22",
+    "document": "project-docs/production-system/CINEMATIC-TEN-MOTION.md",
+    "scope": "Reusable authored scores and integrations, with limited native QA. Existing prepared clips and historical statuses remain unchanged.",
+    "source_sha256": {
+      "tools/cinematic_ten/dancers_motion.py": "1bd69279ffc82bb7453715099ae45005ae4f676deb5fb31cb0aab8572023daa3",
+      "tools/cinematic_ten/dancers.py": "744e8865f06c491e1249820c026b245ed309a5a3fb052bc082d0b4aa7fb10068",
+      "tools/cinematic_ten/people_worlds.py": "1c5e22ae001235a35c596f15ef7bbeb98d3403c69700daf53885e74e8d4d9338",
+      "tools/cinematic_ten/cosmos.py": "8947bfe5b3129bf65b6ea115f6f42339a5c675ef491ceeb812d2626c16670fe2",
+      "tools/cinematic_ten/nature_models.py": "7f0697519a6d5dbdf6a2a9ebeb056bb9aea4cd1d0c8be98faca471bcb0838275",
+      "tools/cinematic_ten/nature.py": "0a88af971199c18c02a0e138a2ea6c92225506ca6150c96d6b11d42c1910ee92",
+      "tools/concert_fan/performance.py": "a22751adb1afdc21dd8751357cb2c1a461327b274be8ec2c76d17aa0cba74035",
+      "tools/concert_fan/props.py": "7d3f0c775cb5a26875f2df784937f1f0edb269a6ac80fafb2aa19a5aea42a9f5",
+      "tools/concert_addons/models.py": "b4fa0e6c5c5878ceb003319a8f710830dd49bef13d0dc66bcc6f3d12a5b44c62"
+    },
+    "reference_inputs": [
+      {
+        "id": "supplied_solo_fan",
+        "file_name": "ScreenRecording_11-21-2026 12-19-51_1.mp4",
+        "sha256": "5228a501e9633aa194ed09d1c60e5d6038c02dd593bba99d7542984b11dbe0b2",
+        "library_file_id": "libfile_42cd8d5309b88191ae93d801b8fc7cd0",
+        "use": "Decoded moving reference for solo fan sweeps and levels; not pose or contact reconstruction."
+      },
+      {
+        "id": "supplied_ensemble_fan",
+        "file_name": "ScreenRecording_11-21-2026 12-20-32_1.mp4",
+        "sha256": "cd3f1e4826b580a237d6ef04bce8025faf94677bebf8ee858a96ff38a3f58a3b",
+        "library_file_id": "libfile_38535f3fb05881918ed88c018a296ba2",
+        "use": "Decoded moving reference for the ensemble fan canon; not independently captured performers."
+      },
+      {
+        "id": "supplied_globe",
+        "file_name": "ScreenRecording_11-21-2026 12-24-09_1.mp4",
+        "sha256": "60c97ee2cd30f3c93208eb71710ae03360e7fa8bb375a2ccb6744dcfe6b1a1a7",
+        "library_file_id": "libfile_b4554d3c4d0c8191910ab956fd89247e",
+        "use": "Globe-to-people visual reference for film 3; not a dancer choreography input."
+      }
+    ],
+    "dance_runtime": {
+      "class_name": "tools.cinematic_ten.dancers_motion.DanceScore",
+      "base_class": "tools.concert_fan.performance.TrioPerformance",
+      "duration_seconds": 20,
+      "explicit_step_count": 24,
+      "coordinates": "Metres; +Y up; body-frame targets scaled from a 1.65 m reference height.",
+      "clock": "clip((t - delay) * 20 / (20 - delay), 0, 20); delays are seconds, with the score compressed to settle at scene time 20.",
+      "install_requirement": "Install before Body.where/joint/sample, Calligraphy track construction or cloth sampling. Use the scene body setup; external gesture/hand overrides and changed placement need new review.",
+      "contact_measurement_source": "Dancer implementation agent report on 2026-11-22; rounded measurements transcribed here, not rerun during documentation.",
+      "contact_reports": [
+        {
+          "mode": "solo",
+          "role": 0,
+          "samples": 81,
+          "sample_interval_seconds": 0.25,
+          "max_ankle_target_error_m": 4.85e-16,
+          "max_planted_ankle_step_m": 5.67e-16,
+          "minimum_foot_vertex_height_m": 0.0
+        },
+        {
+          "mode": "ensemble",
+          "role": 2,
+          "samples": 81,
+          "sample_interval_seconds": 0.25,
+          "max_ankle_target_error_m": 3.56e-16,
+          "max_planted_ankle_step_m": 4.89e-16,
+          "minimum_foot_vertex_height_m": -2.91e-10
+        },
+        {
+          "mode": "script",
+          "role": 0,
+          "samples": 81,
+          "sample_interval_seconds": 0.25,
+          "max_ankle_target_error_m": 5.01e-16,
+          "max_planted_ankle_step_m": 8.94e-16,
+          "minimum_foot_vertex_height_m": 0.0
+        }
+      ]
+    },
+    "shared_limits": [
+      "The new solo and ensemble scores are original authored choreography guided by the supplied recordings, not motion capture or reconstructed source performance. Calligraphy and flight scores are independently authored.",
+      "The earlier automatic pose estimates for feet hidden by skirts were not verified in this round and were not used as measured support contacts.",
+      "The 81-sample dance reports cover 0 to 20 seconds at 0.25-second intervals. They do not establish every shutter subframe, every ensemble role, costume collision freedom or force-driven balance.",
+      "Prepared walking retains the existing CMU capture provenance and does not add to the eight prepared clips or seven distinct captures.",
+      "Working QA artifacts are under ignored work/ directories. This catalog records their scoped findings, not a durable-media upload or final movie approval.",
+      "Whole-film completion, encoded final QA and exact-output owner approval belong to the versioned delivery catalog and STATE.json."
+    ],
+    "entries": [
+      {
+        "id": "cinematic-ten.solo-fan",
+        "kind": "original_authored_kinematic_score",
+        "entry_point": "tools.cinematic_ten.dancers_motion.install(body, mode=\"solo\", role=0, delay=0.0)",
+        "scene_entry_point": "tools.cinematic_ten.dancers.build(1)",
+        "projects": [
+          "cinematic-ten-01"
+        ],
+        "reference_ids": [
+          "supplied_solo_fan"
+        ],
+        "duration_seconds": 20,
+        "loop": false,
+        "action": "Rising spiral, lateral opening and resolved offering with two solved palms, torso levels, heading changes and 24 explicit alternating steps.",
+        "provenance": "DanceScore inherits the existing TrioPerformance support/diagnostic API and Step representation; its score curves and step targets are original authored code, not a new captured clip.",
+        "attachment_api": [
+          "tools.cinematic_ten.dancers.PleatedFan(grip, color, edge, seed)",
+          "tools.cinematic_ten.dancers.SilkOnly(body, side, ...) inherits tools.concert_fan.props.FanSilk.hand_frame"
+        ],
+        "review": {
+          "inventory": "source_and_agent_QA_reports_recorded_2026_11_22",
+          "full_movie_completion": "not_asserted_by_this_inventory",
+          "owner_approval": "not_asserted_consult_versioned_delivery_catalog",
+          "native_stills": [
+            "work/cinematic-ten/qa/film01-native-final/t016.00.png",
+            "work/cinematic-ten/qa/film01-native-final/t019.50.png"
+          ],
+          "finding": "Late near fan lowered to preserve the head silhouette; final frontal full body remains framed. Attachment inspected visually."
+        },
+        "limits": [
+          "The current solo adds finite silk; the inherited simulation has body-capsule collision but no cloth self-collision or other-body collision.",
+          "No independent numerical fan-to-palm attachment residual was recorded."
+        ]
+      },
+      {
+        "id": "cinematic-ten.ensemble-fan",
+        "kind": "original_authored_kinematic_score",
+        "entry_point": "tools.cinematic_ten.dancers_motion.install(body, mode=\"ensemble\", role=0, delay=0.0)",
+        "scene_entry_point": "tools.cinematic_ten.dancers.build(2)",
+        "projects": [
+          "cinematic-ten-02"
+        ],
+        "reference_ids": [
+          "supplied_ensemble_fan"
+        ],
+        "duration_seconds": 20,
+        "loop": false,
+        "roles": [
+          0,
+          1,
+          2,
+          3,
+          4
+        ],
+        "delays_seconds_by_role": [
+          0.42,
+          0.2,
+          0,
+          0.32,
+          0.6
+        ],
+        "action": "Five performers use role-dependent travel and heading, paired petal poses and a delayed canon; all scores resolve at scene time 20 seconds.",
+        "provenance": "An original variation family on the shared authored support solver; roles are not five independent motion captures.",
+        "review": {
+          "inventory": "source_and_agent_QA_reports_recorded_2026_11_22",
+          "full_movie_completion": "not_asserted_by_this_inventory",
+          "owner_approval": "not_asserted_consult_versioned_delivery_catalog",
+          "native_stills": [
+            "work/cinematic-ten/qa/film02-native-final/t008.00.png"
+          ],
+          "finding": "Five complete bodies and ten held fans are readable in the reviewed native frame. Numeric contact sampling covered role 2 only."
+        },
+        "limits": [
+          "Other roles and delays do not inherit the role-2 numerical result as a full contact certification.",
+          "This scene uses pleated fan surfaces and petal wakes; it does not add the solo finite-silk sheets to all ten fans."
+        ]
+      },
+      {
+        "id": "cinematic-ten.wrist-calligraphy",
+        "kind": "original_authored_kinematic_score_and_effect",
+        "entry_point": "tools.cinematic_ten.dancers_motion.install(body, mode=\"script\", role=0, delay=0.0)",
+        "effect_entry_point": "tools.cinematic_ten.dancers.Calligraphy(body)",
+        "scene_entry_point": "tools.cinematic_ten.dancers.build(4)",
+        "projects": [
+          "cinematic-ten-04"
+        ],
+        "reference_ids": [],
+        "duration_seconds": 20,
+        "loop": false,
+        "action": "The right palm writes three spatial flourishes while the left balances; the written strokes expand, retreat in depth and rise after the hand passes.",
+        "provenance": "Independently authored for the calligraphy brief. No supplied recording demonstrated this wrist score, and no source handwriting or glyph was reconstructed.",
+        "sampling": {
+          "palm_track_hz": 60,
+          "track_seconds": [
+            0,
+            20
+          ],
+          "gaussian_sigma_samples": 9,
+          "live_history_seconds": 3,
+          "tip_binding": "The live stroke endpoint is corrected to body.where(t, \"palm.R\") after smoothing."
+        },
+        "review": {
+          "inventory": "source_and_agent_QA_reports_recorded_2026_11_22",
+          "full_movie_completion": "not_asserted_by_this_inventory",
+          "owner_approval": "not_asserted_consult_versioned_delivery_catalog",
+          "native_stills": [
+            "work/cinematic-ten/qa/film04-native-final/t008.00.png",
+            "work/cinematic-ten/qa/film04-native-final/t019.50.png"
+          ],
+          "finding": "Substantial brush strokes originate at the wrist; full-body and foot margins remain clear in the reviewed frames."
+        },
+        "limits": [
+          "The strokes are abstract flourishes, not linguistically accurate lettering.",
+          "Smoothing changes historical stroke geometry; the final endpoint is attached to the current solved palm."
+        ]
+      },
+      {
+        "id": "cinematic-ten.walking-processions",
+        "kind": "authored_scene_staging_of_existing_capture_and_procedural_gestures",
+        "entry_points": [
+          "tools.cinematic_ten.people_worlds.build(5)",
+          "tools.cinematic_ten.cosmos.build(3)",
+          "tools.cinematic_ten.people_worlds.build(10)",
+          "tools.cinematic_ten.people_worlds.HeldLantern(body, seed)"
+        ],
+        "projects": [
+          "cinematic-ten-03",
+          "cinematic-ten-05",
+          "cinematic-ten-10"
+        ],
+        "duration_seconds": 20,
+        "provenance": {
+          "walk_catalog_id": "walk",
+          "capture_id": "35_01",
+          "dataset": "CMU Graphics Lab Motion Capture Database",
+          "prepared_asset": "assets/p3d/body_v1.npz",
+          "authored_additions": "Placement, speed/phase, stops, facing, gesture timing and solved-palm lantern attachment. No new walk capture or source-video gait reconstruction."
+        },
+        "integrations": [
+          {
+            "film": 3,
+            "heroes": 6,
+            "walk_speed": 0.52,
+            "walk_start_seconds": 9,
+            "stop_start_seconds": "15.5 + side * 0.18",
+            "gestures": [
+              "wave",
+              "hand_on_heart"
+            ]
+          },
+          {
+            "film": 5,
+            "heroes": 5,
+            "walking_crowd": 8,
+            "walk_speed": 0.46,
+            "crowd_walk_speed": 0.44,
+            "stop_start_seconds": "16.3 + index * 0.18",
+            "gestures": [
+              "raise_hand",
+              "hand_on_heart"
+            ]
+          },
+          {
+            "film": 10,
+            "lead_actions": [
+              "stand",
+              "shuffle",
+              "stand"
+            ],
+            "arriving_walk_speed": 0.48,
+            "joining_walk_speed": 0.36,
+            "joining_walkers": 4,
+            "gestures": [
+              "wave",
+              "hand_on_heart",
+              "open_arms"
+            ]
+          }
+        ],
+        "review": {
+          "inventory": "source_and_agent_QA_reports_recorded_2026_11_22",
+          "full_movie_completion": "not_asserted_by_this_inventory",
+          "owner_approval": "not_asserted_consult_versioned_delivery_catalog",
+          "native_stills": [
+            "work/cinematic-ten/qa/film03_final/t012.00.png",
+            "work/cinematic-ten/qa/film05-native/t002.00.png",
+            "work/cinematic-ten/qa/film05-native/t009.00.png",
+            "work/cinematic-ten/qa/film10-native/t002.00.png",
+            "work/cinematic-ten/qa/film10-native/t009.00.png",
+            "work/cinematic-ten/qa/film10-native/t018.00.png"
+          ],
+          "finding": "Root and nature-agent review of films 5/10 found no blocking clipping, missing bodies or detached lanterns in these frames. Lantern cord reaches the solved palm; reunion lead turns from the arrival toward the front through the authored shuffle.",
+          "film3_cut_proof": {
+            "start_frame": 500,
+            "end_frame_exclusive": 580,
+            "fps": 60,
+            "native_resolution": [
+              1920,
+              1080
+            ],
+            "artifact": "work/cinematic-ten/qa/film03_final/cut_proof.mp4",
+            "finding": "No camera-shutter ghosting at frame 540; authored gold wipe clears by approximately 9.42 seconds."
+          }
+        },
+        "limits": [
+          "Gait uses the existing Body/Actor travel/contact system; no new numerical planted-foot, stride-matching or physical-balance test was recorded for films 3, 5 or 10.",
+          "The lantern is attached by an authored offset and cord, not a simulated grasp or pendulum."
+        ]
+      },
+      {
+        "id": "cinematic-ten.articulated-dove-flight",
+        "kind": "original_authored_procedural_flight",
+        "entry_point": "tools.cinematic_ten.nature_models.AirborneDove(index=0, scale=3.0, seed=7)",
+        "companion_entry_point": "tools.cinematic_ten.nature_models.WingWake(bird)",
+        "scene_entry_point": "tools.cinematic_ten.nature.build(7)",
+        "projects": [
+          "cinematic-ten-07"
+        ],
+        "duration_seconds": 20,
+        "provenance": "Subclasses tools.concert_addons.models.Dove. Reuses its fixed-length shoulder/elbow/wrist wing articulation and feather helpers; this round authors the continuous flight path/state, torso-neck-head loft, beak/tail arrangement, formation and glide timing.",
+        "action": "One hero and seven followers fly continuously; tangent-based heading, banking, articulated flapping and two eased glide phases operate at absolute scene time.",
+        "review": {
+          "inventory": "source_and_agent_QA_reports_recorded_2026_11_22",
+          "full_movie_completion": "not_asserted_by_this_inventory",
+          "owner_approval": "not_asserted_consult_versioned_delivery_catalog",
+          "finite_batch_sample_seconds": [
+            0,
+            2,
+            5,
+            9,
+            13,
+            17,
+            19.99
+          ],
+          "native_still_directory": "work/cinematic-ten/qa/nature07_native",
+          "native_still_seconds": [
+            0,
+            2,
+            9,
+            17,
+            19.9
+          ],
+          "continuous_proof": {
+            "report": "work/cinematic-ten/qa/nature07_motion_08s_report.json",
+            "start_frame": 480,
+            "end_frame_exclusive": 552,
+            "fps": 60,
+            "native_resolution": [
+              1920,
+              1080
+            ],
+            "unique_decoded_frames": 72,
+            "pipeline_frame540_equals_native_still9s": true,
+            "proof_nature_models_sha256": "9511804103248950fadc7dd9413cdb92371e0c0385f23fa8a1f5cb5bba5b3df2",
+            "identity_limit": "Proof predates the butterfly-only correction in the shared module. Bird geometry is unchanged; it is not the final whole-film source-identity proof."
+          }
+        },
+        "limits": [
+          "Always airborne during seconds 0 to 20. Inherited launch/landing foot locks are not exercised or verified by this film.",
+          "No independent numerical joint-length, aerodynamic or biomechanical test was recorded.",
+          "WingWake follows root history at 110 times over 2.6 seconds with world-X offsets of +/-0.85 m; it is an artistic trail, not measured wingtip motion."
+        ]
+      },
+      {
+        "id": "cinematic-ten.butterfly-flight",
+        "kind": "original_authored_procedural_flight",
+        "entry_point": "tools.cinematic_ten.nature_models.ButterflyFlight(count=11, seed=33)",
+        "scene_entry_point": "tools.cinematic_ten.nature.build(6)",
+        "projects": [
+          "cinematic-ten-06"
+        ],
+        "duration_seconds": 20,
+        "provenance": "Original code-authored four-membrane wing geometry, thorax, antennae, flutter and formation. No motion capture, inverse reference fitting or biological flight simulation.",
+        "action": "A traveling leader and delayed followers open into a formation; paired fore/hind wing membranes flutter at authored base frequency 3.1 Hz.",
+        "review": {
+          "inventory": "source_and_agent_QA_reports_recorded_2026_11_22",
+          "full_movie_completion": "not_asserted_by_this_inventory",
+          "owner_approval": "not_asserted_consult_versioned_delivery_catalog",
+          "leader_forward_check": {
+            "sample_count": 11,
+            "seconds_range": [
+              0,
+              20
+            ],
+            "minimum_antenna_forward_dot_horizontal_velocity": 0.9982788
+          },
+          "corrected_native_stills": [
+            "work/cinematic-ten/qa/nature06_forward/t002.00.png"
+          ],
+          "prior_composition_evidence": {
+            "directory": "work/cinematic-ten/qa/nature06_native",
+            "seconds": [
+              2,
+              9,
+              17
+            ],
+            "limit": "Predates the correction that turns all butterfly parts toward flight; do not treat as corrected-source proof."
+          }
+        },
+        "limits": [
+          "The numerical forward check covered the leader only; followers include additional authored offsets.",
+          "The path and reveal are specific to the twenty-second garden scene; arbitrary destinations, durations and looping are not validated."
+        ]
+      }
+    ]
+  }
 }
