@@ -1,0 +1,72 @@
+{
+  "schema_version": 1,
+  "project_id": "fluid-dance-solo",
+  "title": "The Flow of Light",
+  "description": "A continuous authored 12-second fan phrase, evaluated through Blender and rendered with the existing luminous concert rig.",
+  "video": {
+    "width": 1920,
+    "height": 1080,
+    "fps": 60
+  },
+  "production": {
+    "cloud_gpu_provider": null,
+    "allow_local_gpu": false,
+    "allow_paid_services": false,
+    "allow_ai_generated_visuals": false,
+    "allow_stock_footage": false,
+    "random_seed": 20261122,
+    "threads": 1,
+    "render_workers": 4,
+    "render_chunk_frames": 180,
+    "render_timeout_seconds": 7200
+  },
+  "quality": {
+    "draft": {
+      "width": 960,
+      "height": 540,
+      "temporal_samples": 1,
+      "image_bit_depth": 8
+    },
+    "review": {
+      "width": 1920,
+      "height": 1080,
+      "temporal_samples": 2,
+      "image_bit_depth": 8
+    },
+    "final": {
+      "width": 1920,
+      "height": 1080,
+      "temporal_samples": 2,
+      "image_bit_depth": 8
+    }
+  },
+  "delivery": {
+    "profile": "h264",
+    "source_transfer": "legacy_display_gamma",
+    "color_space": "rec709"
+  },
+  "style": "styles/zion-cinematic.json",
+  "audio": {
+    "source": "work/fluid-dance/audio.wav",
+    "source_sha256": "61f91f23d2a16fa487576687b007852c3f6c19f753e129e61b7bb3f6fb5d7a37",
+    "offset_seconds": 0
+  },
+  "timing": {
+    "fps": 60,
+    "visual_only": false,
+    "manually_verified": false,
+    "note": "Soundtrack excerpt from user-provided Petals clip; no new beat extraction or exact choreographic hit matching claimed.",
+    "events": []
+  },
+  "shots": [
+    {
+      "id": "performance",
+      "name": "Continuous fan phrase",
+      "renderer": "p3d-kit",
+      "start_frame": 0,
+      "end_frame_exclusive": 720,
+      "scene": "tools/fluid_dance/solo.py",
+      "params": {}
+    }
+  ]
+}

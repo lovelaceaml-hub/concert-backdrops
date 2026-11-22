@@ -39,6 +39,10 @@ REGISTERED_SCENES = {
     ADVANCED_ENSEMBLE_SCENE: {"id": "advanced-dance-ensemble-v1", "module": ADVANCED_ENSEMBLE_SCENE,
                               "seconds": 32, "fps": 60, "source_start_frame": 0,
                               "cut_frames": (456, 917, 1370)},
+    "tools/fluid_dance/solo.py": {"id": "fluid-fan-solo-v1", "module": "tools/fluid_dance/solo.py",
+                                "seconds": 12, "fps": 60, "source_start_frame": 0, "cut_frames": ()},
+    "tools/fluid_dance/proof.py": {"id": "fluid-fan-proof-v1", "module": "tools/fluid_dance/proof.py",
+                                 "seconds": 12, "fps": 60, "source_start_frame": 0, "cut_frames": ()},
 }
 
 # Each suite member has its own explicit clock and isolated renderer process.
