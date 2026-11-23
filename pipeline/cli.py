@@ -349,6 +349,15 @@ def parser() -> argparse.ArgumentParser:
     new.add_argument("--fps", type=int, default=60)
     new.add_argument("--seconds", type=int, default=10)
     new.add_argument("--template", choices=("cinematic", "browser"), default="cinematic", help="Cinematic creates a Blender 4K60-capable project; browser creates the original Three.js study")
+    draft = sub.add_parser("song-draft", help="Fetch a concert song's chosen recording and render a short draft with its engine scene")
+    draft.add_argument("song", help="Song number (5), id (s05) or part of its title")
+    draft.add_argument("--start", type=float, default=30, help="Seconds into the song (default 30)")
+    draft.add_argument("--seconds", type=float, default=10, help="Draft length in seconds (default 10)")
+    draft.add_argument("--quality", default="review", help="draft (960x540), review (1080p, default) or final (4K, only after approval)")
+    draft.add_argument("--module", help="Use this engine/songs scene instead of the song's own")
+    draft.add_argument("--recording", help="Use this repository file instead of the catalog's chosen recording")
+    draft.add_argument("--no-render", action="store_true", help="Only fetch the recording and write the project")
+    draft.add_argument("--allow-local-render", action="store_true")
     bench = sub.add_parser("benchmark", help="Measure selected native frames at review and final quality without rendering a whole film")
     bench.add_argument("project")
     bench.add_argument("--qualities", nargs="+", help="Defaults to review and 4k-check when present, otherwise review and final")
@@ -404,6 +413,13 @@ def main(argv: list[str] | None = None) -> int:
             return 0 if passed else 2
         if args.command == "new":
             print(create_project(root, args.title, args.fps, args.seconds, args.template))
+            return 0
+        if args.command == "song-draft":
+            from .song_draft import song_draft
+            report = song_draft(root, args.song, start=args.start, seconds=args.seconds, quality=args.quality,
+                                module=args.module, render=not args.no_render, allow_local=args.allow_local_render,
+                                recording_path=args.recording)
+            print(json.dumps(report, indent=2))
             return 0
         if args.command == "reproduce":
             report = reproduce(root, args.project, quality=args.quality, commit=args.commit, allow_local=args.allow_local_render)

@@ -15,10 +15,16 @@ if [ -f "$marker" ] && [ -d .venv ] && [ -d node_modules ]; then
 fi
 {
   echo "== cloud setup $(date -u +%FT%TZ)"
-  if ! command -v ffmpeg >/dev/null 2>&1 || ! command -v ffprobe >/dev/null 2>&1; then
+  # FFmpeg may already be present while the software EGL libraries the renderer needs are not.
+  if ! command -v ffmpeg >/dev/null 2>&1 || ! command -v ffprobe >/dev/null 2>&1 \
+     || ! ldconfig -p 2>/dev/null | grep -q 'libEGL\.so'; then
     if command -v apt-get >/dev/null 2>&1; then
       SUDO=""; [ "$(id -u)" -ne 0 ] && command -v sudo >/dev/null 2>&1 && SUDO="sudo"
-      $SUDO apt-get update -qq && $SUDO apt-get install -y -qq ffmpeg libegl1 libegl-mesa0 libgl1 libgles2 || echo "WARN: apt install failed"
+      # The package mirror sometimes times out through the sandbox proxy; retry before giving up.
+      for attempt in 1 2 3; do
+        $SUDO apt-get update -qq && $SUDO apt-get install -y -qq ffmpeg libegl1 libegl-mesa0 libgl1 libgles2 && break
+        echo "WARN: apt install attempt $attempt failed"; sleep 20
+      done
     fi
   fi
   if ! command -v uv >/dev/null 2>&1; then

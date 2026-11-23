@@ -72,6 +72,10 @@ jobs:
         id: remotion
         continue-on-error: true
         run: ./scripts/video finalize pipeline-demo --quality draft --editor remotion 2>&1 | tee work/proofs/05-remotion.log
+      - name: Shotcraft Workbench (browser playback and MP4 export)
+        id: workbench
+        continue-on-error: true
+        run: node scripts/prove-workbench.mjs --out work/proofs/workbench 2>&1 | tee work/proofs/10-workbench.log
       - name: Blender background render
         id: blender
         continue-on-error: true
@@ -80,6 +84,14 @@ jobs:
         id: songscene
         continue-on-error: true
         run: PYTHONHASHSEED=0 ./scripts/video preview song-scene-demo --quality review 2>&1 | tee work/proofs/08-song-scene.log
+      - name: Any-song draft from Drive (Song 5, 10 seconds, 1080p)
+        id: songdraft
+        continue-on-error: true
+        env:
+          GOOGLE_DRIVE_OAUTH: ${{ secrets.GOOGLE_DRIVE_OAUTH }}
+        run: |
+          python -m pip install --quiet google-api-python-client==2.187.0 google-auth==2.43.0
+          ./scripts/video song-draft 5 2>&1 | tee work/proofs/11-song-draft.log
       - name: Blender MCP (stdio and live GUI)
         id: mcp
         continue-on-error: true
@@ -105,6 +117,8 @@ jobs:
             echo "blender_render=${{ steps.blender.outcome }}"
             echo "blender_mcp=${{ steps.mcp.outcome }}"
             echo "song_scene=${{ steps.songscene.outcome }}"
+            echo "workbench=${{ steps.workbench.outcome }}"
+            echo "song_draft=${{ steps.songdraft.outcome }}"
           } | tee work/proofs/summary.txt
       - name: Save proofs
         if: always()

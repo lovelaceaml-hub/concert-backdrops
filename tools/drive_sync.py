@@ -9,6 +9,7 @@ Every action stays inside the Concert Backdrops - Songs folder.
 
     python3 tools/drive_sync.py list   [--path "Videos"]
     python3 tools/drive_sync.py get    "01 All You Stars of Zion.mp3" --to work/song-sources/
+    python3 tools/drive_sync.py get-id <file id> --as work/song-sources/s05.m4a   # ids from catalogs/songs.json
     python3 tools/drive_sync.py put    work/out/master.mp4 --path "Videos/Renders"
     python3 tools/drive_sync.py check  # read the folder and save, then remove, a small test file
 """
@@ -85,6 +86,32 @@ def get(drive, name: str, path: str, to: Path) -> Path:
     return out
 
 
+def inside_songs_folder(drive, file_id: str) -> bool:
+    current, seen = file_id, 0
+    while current and seen < 20:
+        parents = drive.files().get(fileId=current, fields="parents").execute().get("parents", [])
+        if FOLDER_ID in parents:
+            return True
+        current, seen = (parents[0] if parents else None), seen + 1
+    return False
+
+
+def get_id(drive, file_id: str, out: Path) -> Path:
+    """Download one file by its Drive id (as recorded in the song catalog), only from inside the Songs folder."""
+    from googleapiclient.http import MediaIoBaseDownload
+    if not inside_songs_folder(drive, file_id):
+        sys.exit(f"Drive file {file_id} is not inside the Concert Backdrops - Songs folder.")
+    out.parent.mkdir(parents=True, exist_ok=True)
+    partial = out.with_name(out.name + ".part")
+    with partial.open("wb") as stream:
+        downloader = MediaIoBaseDownload(stream, drive.files().get_media(fileId=file_id), chunksize=32 * 1024 * 1024)
+        done = False
+        while not done:
+            _, done = downloader.next_chunk()
+    partial.replace(out)
+    return out
+
+
 def put(drive, local: Path, path: str) -> str:
     from googleapiclient.http import MediaFileUpload
     parent = folder(drive, path, create=True)
@@ -98,10 +125,11 @@ def put(drive, local: Path, path: str) -> str:
 
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument("action", choices=("list", "get", "put", "check"))
+    parser.add_argument("action", choices=("list", "get", "get-id", "put", "check"))
     parser.add_argument("name", nargs="?")
     parser.add_argument("--path", default="", help="Subfolder inside Concert Backdrops - Songs")
     parser.add_argument("--to", type=Path, default=Path("work/song-sources"))
+    parser.add_argument("--as", dest="as_path", type=Path, help="Output file for get-id")
     args = parser.parse_args()
     drive = service()
     if args.action == "list":
@@ -109,6 +137,10 @@ def main() -> None:
             print(f"{'[folder] ' if f['mimeType'] == FOLDER_MIME else ''}{f['name']}  {f.get('size', '')}")
     elif args.action == "get":
         print(get(drive, args.name, args.path, args.to))
+    elif args.action == "get-id":
+        if not args.name or not args.as_path:
+            sys.exit("get-id needs a file id and --as <output file>")
+        print(get_id(drive, args.name, args.as_path))
     elif args.action == "put":
         print(put(drive, Path(args.name), args.path))
     else:

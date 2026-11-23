@@ -4,7 +4,7 @@ import '@fontsource/cormorant-garamond/400.css';
 import '@fontsource/jost/400.css';
 import type {FinishProps} from './types';
 import {DEMO_SHOTS} from './timeline';
-import {frameSeconds,secondaryMotion,smootherstep,titleSettle} from '../../shared/motion.mjs';
+import {frameSeconds,secondaryMotion,smootherstep,titleSettle} from './shared/motion.mjs';
 
 export const DemoCard:React.FC<{title:string;subtitle:string;durationInFrames?:number}>=({title,subtitle,durationInFrames=90})=>{
   const frame=useCurrentFrame();
