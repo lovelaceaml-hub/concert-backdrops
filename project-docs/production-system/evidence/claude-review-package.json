@@ -1,0 +1,40 @@
+{
+  "schema": "concert-qa-evidence-package-receipt-v1",
+  "archive": "/workspace/scratch/39a2abd37644/concert-future/work/claude-handoff/packages/Concert_Visual_Review_Evidence_2026-11-22.zip",
+  "filename": "Concert_Visual_Review_Evidence_2026-11-22.zip",
+  "bytes": 101688485,
+  "sha256": "3932f874302007451973faed179f9448f639e6996af2c7801de5cb75244f1905",
+  "artifact_limit_bytes": 104857600,
+  "under_connector_limit": true,
+  "evidence_files": 467,
+  "evidence_uncompressed_bytes": 102630918,
+  "manifest_sha256": "5d9a7323f96112217c07e4f41cc97c48db044c30c1deb2a917b5c782193bffb4",
+  "zip_crc": "passed",
+  "every_file_sha256_and_size": "passed",
+  "exact_archive_inventory": "passed",
+  "final_contact_sheets": 13,
+  "review_scale_frame_pngs": 311,
+  "review_scale_dimensions": [
+    400,
+    225
+  ],
+  "native_ending_pngs": 4,
+  "native_dimensions": [
+    1920,
+    1080
+  ],
+  "excluded_superseded_or_probe_files": 16,
+  "identical_image_aliases": 0,
+  "no_media_reencoding": true,
+  "archive_status": "uploaded_and_raw_readback_verified",
+  "drive": {
+    "id": "18AqvLakHwJzmWrFQAfZXmyL9ksQ0_-P2",
+    "url": "https://drive.google.com/file/d/18AqvLakHwJzmWrFQAfZXmyL9ksQ0_-P2/view?usp=drivesdk",
+    "parent_id": "1dNAkcUesWv5RcKJ48s_W7mpDW757b0At",
+    "mime_type": "application/zip"
+  },
+  "verified_drive_receipt": "/workspace/scratch/39a2abd37644/concert-future/work/claude-handoff/verified-uploads/18AqvLakHwJzmWrFQAfZXmyL9ksQ0_-P2.json",
+  "raw_readback_sha256": "3932f874302007451973faed179f9448f639e6996af2c7801de5cb75244f1905",
+  "raw_readback_bytes": 101688485,
+  "verified_utc": "2026-11-23T06:05:34.910612+00:00"
+}

@@ -1,0 +1,165 @@
+{
+  "schema": "alternate-reference-recovery-v1",
+  "status": "complete_recovered_hashed_uploaded_raw_bytes_verified",
+  "scope": "Three pinned earlier imports, distinct from canonical moving references; no choreography-equivalence claim.",
+  "records": [
+    {
+      "id": "alternate-libfile_95ec1c87d144819191bec57025dd5e83",
+      "category": "alternate_reference_import",
+      "batch": "historical_reference_variants",
+      "filename": "ScreenRecording_11-21-2026 12-19-51_1.mp4",
+      "bytes": 24374273,
+      "sha256": "c60cda02790720c70f0b57be7e06309a47475b0fa047c79d59f768aeb4795afb",
+      "identity_basis": "Pinned Library/file IDs materialized by official helper; returned version retained; exact local size and SHA-256 checked.",
+      "library": {
+        "library_file_id": "libfile_95ec1c87d144819191bec57025dd5e83",
+        "file_id": "file_00000000aeec81fd92d1a335188319a2",
+        "version": 0,
+        "version_basis": "returned by pinned prepare_materialize",
+        "path": "/ScreenRecording_11-21-2026 12-19-51_1.mp4",
+        "url": "https://chatgpt.com/library?file_id=libfile_95ec1c87d144819191bec57025dd5e83&account_id=personal",
+        "status": "recorded",
+        "metadata_size_bytes": 24374273,
+        "mime_type": "video/mp4"
+      },
+      "drive": {
+        "status": "uploaded_raw_bytes_verified",
+        "id": "1BfoLXmuCHzOYyBmDs1LSEHvC2oxm12G_",
+        "url": "https://drive.google.com/file/d/1BfoLXmuCHzOYyBmDs1LSEHvC2oxm12G_/view?usp=drivesdk",
+        "parent_id": "1ihTYIdC8ssma9QZ1-OLXn3fRU6K6jaCZ",
+        "mime_type": "video/mp4",
+        "bytes": 24374273,
+        "sha256": "c60cda02790720c70f0b57be7e06309a47475b0fa047c79d59f768aeb4795afb",
+        "receipt": "work/claude-handoff/verified-uploads/1BfoLXmuCHzOYyBmDs1LSEHvC2oxm12G_.json"
+      },
+      "local_path": "/workspace/scratch/39a2abd37644/concert-future/work/claude-handoff/alternate-references/ScreenRecording_11-21-2026 12-19-51_1.mp4",
+      "local": {
+        "path": "/workspace/scratch/39a2abd37644/concert-future/work/claude-handoff/alternate-references/ScreenRecording_11-21-2026 12-19-51_1.mp4",
+        "present_exact": true,
+        "bytes": 24374273,
+        "sha256": "c60cda02790720c70f0b57be7e06309a47475b0fa047c79d59f768aeb4795afb"
+      },
+      "evidence": [
+        "work/claude-handoff/library-metadata-observations.json"
+      ],
+      "source_commit": null,
+      "priority": 3,
+      "missing_verified_drive_destination": true,
+      "notes": [
+        "Earlier same-name import has a different byte count. Not the pinned moving reference in motions.json. SHA-256 and version are unreported; recover and hash before asserting equivalence or uploading an exact identified version."
+      ],
+      "materialization": {
+        "official_helper": true,
+        "transfer_id": "materialize-1"
+      },
+      "local_bytes_verified": true,
+      "file_name": "Earlier-Import--ScreenRecording_11-21-2026 12-19-51_1.mp4"
+    },
+    {
+      "id": "alternate-libfile_a45b34300f7c8191880a6b01f2f354d0",
+      "category": "alternate_reference_import",
+      "batch": "historical_reference_variants",
+      "filename": "ScreenRecording_11-21-2026 12-20-32_1.mp4",
+      "bytes": 37751962,
+      "sha256": "f7d362e23388e5e2a541c59d4f09b610239cea28800ef2b0ca3068f13a9303b9",
+      "identity_basis": "Pinned Library/file IDs materialized by official helper; returned version retained; exact local size and SHA-256 checked.",
+      "library": {
+        "library_file_id": "libfile_a45b34300f7c8191880a6b01f2f354d0",
+        "file_id": "file_000000003ccc81fdb41aae3255c6a40d",
+        "version": 0,
+        "version_basis": "returned by pinned prepare_materialize",
+        "path": "/ScreenRecording_11-21-2026 12-20-32_1.mp4",
+        "url": "https://chatgpt.com/library?file_id=libfile_a45b34300f7c8191880a6b01f2f354d0&account_id=personal",
+        "status": "recorded",
+        "metadata_size_bytes": 37751962,
+        "mime_type": "video/mp4"
+      },
+      "drive": {
+        "status": "uploaded_raw_bytes_verified",
+        "id": "1XKPbqPDXIlHnkMSETZ1eQZSvDXsG9vSA",
+        "url": "https://drive.google.com/file/d/1XKPbqPDXIlHnkMSETZ1eQZSvDXsG9vSA/view?usp=drivesdk",
+        "parent_id": "1ihTYIdC8ssma9QZ1-OLXn3fRU6K6jaCZ",
+        "mime_type": "video/mp4",
+        "bytes": 37751962,
+        "sha256": "f7d362e23388e5e2a541c59d4f09b610239cea28800ef2b0ca3068f13a9303b9",
+        "receipt": "work/claude-handoff/verified-uploads/1XKPbqPDXIlHnkMSETZ1eQZSvDXsG9vSA.json"
+      },
+      "local_path": "/workspace/scratch/39a2abd37644/concert-future/work/claude-handoff/alternate-references/ScreenRecording_11-21-2026 12-20-32_1.mp4",
+      "local": {
+        "path": "/workspace/scratch/39a2abd37644/concert-future/work/claude-handoff/alternate-references/ScreenRecording_11-21-2026 12-20-32_1.mp4",
+        "present_exact": true,
+        "bytes": 37751962,
+        "sha256": "f7d362e23388e5e2a541c59d4f09b610239cea28800ef2b0ca3068f13a9303b9"
+      },
+      "evidence": [
+        "work/claude-handoff/library-metadata-observations.json"
+      ],
+      "source_commit": null,
+      "priority": 3,
+      "missing_verified_drive_destination": true,
+      "notes": [
+        "Earlier same-name import has a different byte count. Not the pinned moving reference in motions.json. SHA-256 and version are unreported; recover and hash before asserting equivalence or uploading an exact identified version."
+      ],
+      "materialization": {
+        "official_helper": true,
+        "transfer_id": "materialize-2"
+      },
+      "local_bytes_verified": true,
+      "file_name": "Earlier-Import--ScreenRecording_11-21-2026 12-20-32_1.mp4"
+    },
+    {
+      "id": "alternate-libfile_712f28a53820819188f3e846496678bc",
+      "category": "alternate_reference_import",
+      "batch": "historical_reference_variants",
+      "filename": "ScreenRecording_11-21-2026 12-24-09_1.mp4",
+      "bytes": 26820074,
+      "sha256": "8c51f68067e3854abc808c626f0e8d2912b45811378972d82ac4f942eac49ff0",
+      "identity_basis": "Pinned Library/file IDs materialized by official helper; returned version retained; exact local size and SHA-256 checked.",
+      "library": {
+        "library_file_id": "libfile_712f28a53820819188f3e846496678bc",
+        "file_id": "file_00000000956c81fd9c6a651c3165a2f9",
+        "version": 0,
+        "version_basis": "returned by pinned prepare_materialize",
+        "path": "/ScreenRecording_11-21-2026 12-24-09_1.mp4",
+        "url": "https://chatgpt.com/library?file_id=libfile_712f28a53820819188f3e846496678bc&account_id=personal",
+        "status": "recorded",
+        "metadata_size_bytes": 26820074,
+        "mime_type": "video/mp4"
+      },
+      "drive": {
+        "status": "uploaded_raw_bytes_verified",
+        "id": "1JPRqQqKukLOeN7i485lBLNNzOZgZjrVJ",
+        "url": "https://drive.google.com/file/d/1JPRqQqKukLOeN7i485lBLNNzOZgZjrVJ/view?usp=drivesdk",
+        "parent_id": "1ihTYIdC8ssma9QZ1-OLXn3fRU6K6jaCZ",
+        "mime_type": "video/mp4",
+        "bytes": 26820074,
+        "sha256": "8c51f68067e3854abc808c626f0e8d2912b45811378972d82ac4f942eac49ff0",
+        "receipt": "work/claude-handoff/verified-uploads/1JPRqQqKukLOeN7i485lBLNNzOZgZjrVJ.json"
+      },
+      "local_path": "/workspace/scratch/39a2abd37644/concert-future/work/claude-handoff/alternate-references/ScreenRecording_11-21-2026 12-24-09_1.mp4",
+      "local": {
+        "path": "/workspace/scratch/39a2abd37644/concert-future/work/claude-handoff/alternate-references/ScreenRecording_11-21-2026 12-24-09_1.mp4",
+        "present_exact": true,
+        "bytes": 26820074,
+        "sha256": "8c51f68067e3854abc808c626f0e8d2912b45811378972d82ac4f942eac49ff0"
+      },
+      "evidence": [
+        "work/claude-handoff/library-metadata-observations.json"
+      ],
+      "source_commit": null,
+      "priority": 3,
+      "missing_verified_drive_destination": true,
+      "notes": [
+        "Earlier same-name import has a different byte count. Not the pinned moving reference in motions.json. SHA-256 and version are unreported; recover and hash before asserting equivalence or uploading an exact identified version."
+      ],
+      "materialization": {
+        "official_helper": true,
+        "transfer_id": "materialize-3"
+      },
+      "local_bytes_verified": true,
+      "file_name": "Earlier-Import--ScreenRecording_11-21-2026 12-24-09_1.mp4"
+    }
+  ],
+  "recorded_utc": "2026-11-23T06:03:04.266665+00:00",
+  "completed_utc": "2026-11-23T06:15:35.927178+00:00"
+}

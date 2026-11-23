@@ -1,5 +1,17 @@
 # Phase 2: rebuild every promo with the upgraded engine
 
+## Current continuation — November 22, 2026
+
+Start with [the Claude handoff](production-system/CLAUDE-HANDOFF.md),
+[current state](production-system/STATE.json) and the standing owner directions
+in [root AGENTS.md](../AGENTS.md). The sections below retain their earlier
+production/design context. Dated instructions about queues, phone copies,
+missing song recordings or cloud-only GPU use do not override the current
+handoff and owner directions. All eleven original song recordings are retained;
+older full-song movie recovery gaps are documented separately. The completed
+renewed Song 11 movie is a 1080p60 design/review delivery; final4K60 requires
+owner approval of design, timing and content. There is no unattended render queue.
+
 Read this when the engine builder (or the coordinator) tells you "engine ready". Also read UPGRADE-SPEC.md, engine/UPGRADE-HOWTO.md in the repo, and Reviews/ASTRA-ROUND-1.md (round 1 attack on the first promos).
 
 Anthony, 2026-11-13: "Do not be lazy. Make these videos magnificint. They shouldnt just look like one scene but multiple things should go based on the theme, make sure the full expressions a created and used beyond only using current engine effects."

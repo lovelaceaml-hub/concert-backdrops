@@ -543,7 +543,36 @@
         "url": "https://chatgpt.com/library?file_id=libfile_ea21501ca69c8191a485dadd0ba7845e&account_id=personal"
       },
       "drive": {
-        "status": "no_copy_recorded_for_this_delivery"
+        "status": "retained_and_raw_bytes_verified",
+        "file_id": "19GS8C1BH_XeeDOVtsOqzvQvRMr6u5OnA",
+        "url": "https://drive.google.com/file/d/19GS8C1BH_XeeDOVtsOqzvQvRMr6u5OnA/view?usp=drivesdk",
+        "folder_id": "1gxMbTORCUZNXAAa-Gg7_T8scfKXELMkf",
+        "filename": "01_Silk_in_Light_1080p60.mp4",
+        "bytes": 35123251,
+        "sha256": "d055202a4496c219bd5f827c507d91bf6d6e877955c36e8650993fe0d7a7b16d",
+        "modified_time": "2026-11-23T05:44:31.598Z",
+        "verified_utc": "2026-11-23T06:01:35.646712+00:00",
+        "raw_bytes_verified": true,
+        "verification": "complete_authenticated_raw_file_readback",
+        "upload_performed": false,
+        "evidence": "project-docs/production-system/evidence/claude-drive-completion.json",
+        "additional_verified_copies": [
+          {
+            "status": "retained_and_raw_bytes_verified",
+            "file_id": "1DMrjr_uSQOzLH0xbdtt9SjQtCPnJ_H4I",
+            "url": "https://drive.google.com/file/d/1DMrjr_uSQOzLH0xbdtt9SjQtCPnJ_H4I/view?usp=drivesdk",
+            "folder_id": "1Hi6YobO_2dXIbod0-3BPoZXlSq22rRB6",
+            "filename": "01_Silk_in_Light_1080p60.mp4",
+            "bytes": 35123251,
+            "sha256": "d055202a4496c219bd5f827c507d91bf6d6e877955c36e8650993fe0d7a7b16d",
+            "modified_time": "2026-11-23T05:55:22.844Z",
+            "verified_utc": "2026-11-23T05:56:02.427654+00:00",
+            "raw_bytes_verified": true,
+            "verification": "complete_authenticated_raw_file_readback",
+            "upload_performed": true,
+            "evidence": "project-docs/production-system/evidence/claude-drive-completion.json"
+          }
+        ]
       },
       "known_limits": [
         "Scoped decoded-frame review is not full real-time playback or owner approval.",
@@ -582,7 +611,36 @@
         "url": "https://chatgpt.com/library?file_id=libfile_8fe98daf9ea88191b898686ab0975625&account_id=personal"
       },
       "drive": {
-        "status": "no_copy_recorded_for_this_delivery"
+        "status": "retained_and_raw_bytes_verified",
+        "file_id": "1yMdKbniqf15TVP-RUB5dkYCbqAGktc8b",
+        "url": "https://drive.google.com/file/d/1yMdKbniqf15TVP-RUB5dkYCbqAGktc8b/view?usp=drivesdk",
+        "folder_id": "1gxMbTORCUZNXAAa-Gg7_T8scfKXELMkf",
+        "filename": "02_Petals_in_Motion_1080p60.mp4",
+        "bytes": 41657946,
+        "sha256": "b03e7e12037521aa2463e851b02c156e924fe2173d310f51c6d4c4d51a8a72fa",
+        "modified_time": "2026-11-23T05:44:31.052Z",
+        "verified_utc": "2026-11-23T06:01:35.581456+00:00",
+        "raw_bytes_verified": true,
+        "verification": "complete_authenticated_raw_file_readback",
+        "upload_performed": false,
+        "evidence": "project-docs/production-system/evidence/claude-drive-completion.json",
+        "additional_verified_copies": [
+          {
+            "status": "retained_and_raw_bytes_verified",
+            "file_id": "1wBFrKrDYaWErJvU_r8THikfwv0wyfXWB",
+            "url": "https://drive.google.com/file/d/1wBFrKrDYaWErJvU_r8THikfwv0wyfXWB/view?usp=drivesdk",
+            "folder_id": "1Hi6YobO_2dXIbod0-3BPoZXlSq22rRB6",
+            "filename": "02_Petals_in_Motion_1080p60.mp4",
+            "bytes": 41657946,
+            "sha256": "b03e7e12037521aa2463e851b02c156e924fe2173d310f51c6d4c4d51a8a72fa",
+            "modified_time": "2026-11-23T05:56:40.306Z",
+            "verified_utc": "2026-11-23T05:56:48.990599+00:00",
+            "raw_bytes_verified": true,
+            "verification": "complete_authenticated_raw_file_readback",
+            "upload_performed": true,
+            "evidence": "project-docs/production-system/evidence/claude-drive-completion.json"
+          }
+        ]
       },
       "known_limits": [
         "Scoped decoded-frame review is not full real-time playback or owner approval.",
@@ -621,7 +679,36 @@
         "url": "https://chatgpt.com/library?file_id=libfile_c7f33c7ed65c8191bf2ca8b5868607f0&account_id=personal"
       },
       "drive": {
-        "status": "no_copy_recorded_for_this_delivery"
+        "status": "retained_and_raw_bytes_verified",
+        "file_id": "1CRgRNznh2YAx4L4EKP8a9-rr8RsxQ6-o",
+        "url": "https://drive.google.com/file/d/1CRgRNznh2YAx4L4EKP8a9-rr8RsxQ6-o/view?usp=drivesdk",
+        "folder_id": "1gxMbTORCUZNXAAa-Gg7_T8scfKXELMkf",
+        "filename": "03_One_World_Many_Hearts_1080p60.mp4",
+        "bytes": 30585104,
+        "sha256": "753080691767d6935311def4c84cb00542eff5321cbe785b7394fcd206899455",
+        "modified_time": "2026-11-23T05:44:31.254Z",
+        "verified_utc": "2026-11-23T06:01:35.512811+00:00",
+        "raw_bytes_verified": true,
+        "verification": "complete_authenticated_raw_file_readback",
+        "upload_performed": false,
+        "evidence": "project-docs/production-system/evidence/claude-drive-completion.json",
+        "additional_verified_copies": [
+          {
+            "status": "retained_and_raw_bytes_verified",
+            "file_id": "1nA2KoPG7zEwlY8yKP3vRJHUP5JuVffVc",
+            "url": "https://drive.google.com/file/d/1nA2KoPG7zEwlY8yKP3vRJHUP5JuVffVc/view?usp=drivesdk",
+            "folder_id": "1Hi6YobO_2dXIbod0-3BPoZXlSq22rRB6",
+            "filename": "03_One_World_Many_Hearts_1080p60.mp4",
+            "bytes": 30585104,
+            "sha256": "753080691767d6935311def4c84cb00542eff5321cbe785b7394fcd206899455",
+            "modified_time": "2026-11-23T05:56:59.783Z",
+            "verified_utc": "2026-11-23T05:57:08.068603+00:00",
+            "raw_bytes_verified": true,
+            "verification": "complete_authenticated_raw_file_readback",
+            "upload_performed": true,
+            "evidence": "project-docs/production-system/evidence/claude-drive-completion.json"
+          }
+        ]
       },
       "known_limits": [
         "Scoped decoded-frame review is not full real-time playback or owner approval.",
@@ -660,7 +747,36 @@
         "url": "https://chatgpt.com/library?file_id=libfile_1b901203e3788191a56b51d623a4e986&account_id=personal"
       },
       "drive": {
-        "status": "no_copy_recorded_for_this_delivery"
+        "status": "retained_and_raw_bytes_verified",
+        "file_id": "1JcpZqZDesaiY3bEnGilWIcRx1UZy6ovz",
+        "url": "https://drive.google.com/file/d/1JcpZqZDesaiY3bEnGilWIcRx1UZy6ovz/view?usp=drivesdk",
+        "folder_id": "1gxMbTORCUZNXAAa-Gg7_T8scfKXELMkf",
+        "filename": "04_The_Written_Light_1080p60.mp4",
+        "bytes": 27369572,
+        "sha256": "f90fe7b96eb3d1164c3056713e9553d1b9ccf1919002e307c7d4406ee81af70e",
+        "modified_time": "2026-11-23T05:44:31.223Z",
+        "verified_utc": "2026-11-23T06:01:34.927106+00:00",
+        "raw_bytes_verified": true,
+        "verification": "complete_authenticated_raw_file_readback",
+        "upload_performed": false,
+        "evidence": "project-docs/production-system/evidence/claude-drive-completion.json",
+        "additional_verified_copies": [
+          {
+            "status": "retained_and_raw_bytes_verified",
+            "file_id": "1QPYKf6--5Jh6oiXC4LU-aN8d1fkyteID",
+            "url": "https://drive.google.com/file/d/1QPYKf6--5Jh6oiXC4LU-aN8d1fkyteID/view?usp=drivesdk",
+            "folder_id": "1Hi6YobO_2dXIbod0-3BPoZXlSq22rRB6",
+            "filename": "04_The_Written_Light_1080p60.mp4",
+            "bytes": 27369572,
+            "sha256": "f90fe7b96eb3d1164c3056713e9553d1b9ccf1919002e307c7d4406ee81af70e",
+            "modified_time": "2026-11-23T05:57:18.594Z",
+            "verified_utc": "2026-11-23T05:57:25.488694+00:00",
+            "raw_bytes_verified": true,
+            "verification": "complete_authenticated_raw_file_readback",
+            "upload_performed": true,
+            "evidence": "project-docs/production-system/evidence/claude-drive-completion.json"
+          }
+        ]
       },
       "known_limits": [
         "Scoped decoded-frame review is not full real-time playback or owner approval.",
@@ -699,7 +815,36 @@
         "url": "https://chatgpt.com/library?file_id=libfile_6b97089123b4819194218560c357ce8c&account_id=personal"
       },
       "drive": {
-        "status": "no_copy_recorded_for_this_delivery"
+        "status": "retained_and_raw_bytes_verified",
+        "file_id": "1rjL0ykkI6P84n2wiLW66cs_8CJepNghZ",
+        "url": "https://drive.google.com/file/d/1rjL0ykkI6P84n2wiLW66cs_8CJepNghZ/view?usp=drivesdk",
+        "folder_id": "1gxMbTORCUZNXAAa-Gg7_T8scfKXELMkf",
+        "filename": "05_Procession_of_Lanterns_1080p60.mp4",
+        "bytes": 44205575,
+        "sha256": "25c8959c1ef906b6587cefd4deae48efb44ba870ba16a7031b3b2b5bbf051b9d",
+        "modified_time": "2026-11-23T05:44:31.164Z",
+        "verified_utc": "2026-11-23T06:02:02.935799+00:00",
+        "raw_bytes_verified": true,
+        "verification": "complete_authenticated_raw_file_readback",
+        "upload_performed": false,
+        "evidence": "project-docs/production-system/evidence/claude-drive-completion.json",
+        "additional_verified_copies": [
+          {
+            "status": "retained_and_raw_bytes_verified",
+            "file_id": "1qDHXMipfeIdlbIwUpVWmLgu0U4H_JyOp",
+            "url": "https://drive.google.com/file/d/1qDHXMipfeIdlbIwUpVWmLgu0U4H_JyOp/view?usp=drivesdk",
+            "folder_id": "1Hi6YobO_2dXIbod0-3BPoZXlSq22rRB6",
+            "filename": "05_Procession_of_Lanterns_1080p60.mp4",
+            "bytes": 44205575,
+            "sha256": "25c8959c1ef906b6587cefd4deae48efb44ba870ba16a7031b3b2b5bbf051b9d",
+            "modified_time": "2026-11-23T05:57:39.212Z",
+            "verified_utc": "2026-11-23T05:57:49.216230+00:00",
+            "raw_bytes_verified": true,
+            "verification": "complete_authenticated_raw_file_readback",
+            "upload_performed": true,
+            "evidence": "project-docs/production-system/evidence/claude-drive-completion.json"
+          }
+        ]
       },
       "known_limits": [
         "Scoped decoded-frame review is not full real-time playback or owner approval.",
@@ -738,7 +883,36 @@
         "url": "https://chatgpt.com/library?file_id=libfile_8fcaa552e044819191bd992d593e52c8&account_id=personal"
       },
       "drive": {
-        "status": "no_copy_recorded_for_this_delivery"
+        "status": "retained_and_raw_bytes_verified",
+        "file_id": "1QIrsSe8Yg3rurkhvGqXuloIBRgOVUwcZ",
+        "url": "https://drive.google.com/file/d/1QIrsSe8Yg3rurkhvGqXuloIBRgOVUwcZ/view?usp=drivesdk",
+        "folder_id": "1gxMbTORCUZNXAAa-Gg7_T8scfKXELMkf",
+        "filename": "06_A_Garden_Awakens_1080p60.mp4",
+        "bytes": 51061569,
+        "sha256": "2d3bdc8e8903b13b5d60a442f8b533d6aab57516c449ecb4a41210e03f2cf3d8",
+        "modified_time": "2026-11-23T05:44:31.116Z",
+        "verified_utc": "2026-11-23T06:02:02.636835+00:00",
+        "raw_bytes_verified": true,
+        "verification": "complete_authenticated_raw_file_readback",
+        "upload_performed": false,
+        "evidence": "project-docs/production-system/evidence/claude-drive-completion.json",
+        "additional_verified_copies": [
+          {
+            "status": "retained_and_raw_bytes_verified",
+            "file_id": "1moICI9qqDI_Axjh7NZICfSFqLdMYNExA",
+            "url": "https://drive.google.com/file/d/1moICI9qqDI_Axjh7NZICfSFqLdMYNExA/view?usp=drivesdk",
+            "folder_id": "1Hi6YobO_2dXIbod0-3BPoZXlSq22rRB6",
+            "filename": "06_A_Garden_Awakens_1080p60.mp4",
+            "bytes": 51061569,
+            "sha256": "2d3bdc8e8903b13b5d60a442f8b533d6aab57516c449ecb4a41210e03f2cf3d8",
+            "modified_time": "2026-11-23T05:58:04.526Z",
+            "verified_utc": "2026-11-23T05:58:16.104261+00:00",
+            "raw_bytes_verified": true,
+            "verification": "complete_authenticated_raw_file_readback",
+            "upload_performed": true,
+            "evidence": "project-docs/production-system/evidence/claude-drive-completion.json"
+          }
+        ]
       },
       "known_limits": [
         "Scoped decoded-frame review is not full real-time playback or owner approval.",
@@ -777,7 +951,19 @@
         "url": "https://chatgpt.com/library?file_id=libfile_821bfd25f004819193badf599d094903&account_id=personal"
       },
       "drive": {
-        "status": "no_copy_recorded_for_this_delivery"
+        "status": "retained_and_raw_bytes_verified",
+        "file_id": "1zrbT1IuvSAtWx0G3Z-afANICsdNO7ygx",
+        "url": "https://drive.google.com/file/d/1zrbT1IuvSAtWx0G3Z-afANICsdNO7ygx/view?usp=drivesdk",
+        "folder_id": "1gxMbTORCUZNXAAa-Gg7_T8scfKXELMkf",
+        "filename": "07_Wings_of_Peace_1080p60.mp4",
+        "bytes": 21902494,
+        "sha256": "30880be109c9da3de5e96037f397ac8c8c8c72c101d7cda4776accc2633d2b6f",
+        "modified_time": "2026-11-23T05:44:31.281Z",
+        "verified_utc": "2026-11-23T06:02:02.295022+00:00",
+        "raw_bytes_verified": true,
+        "verification": "complete_authenticated_raw_file_readback",
+        "upload_performed": false,
+        "evidence": "project-docs/production-system/evidence/claude-drive-completion.json"
       },
       "known_limits": [
         "Scoped decoded-frame review is not full real-time playback or owner approval.",
@@ -816,7 +1002,19 @@
         "url": "https://chatgpt.com/library?file_id=libfile_a306fcad0d588191b4c4626bd36e2867&account_id=personal"
       },
       "drive": {
-        "status": "no_copy_recorded_for_this_delivery"
+        "status": "retained_and_raw_bytes_verified",
+        "file_id": "11_y58EVDpoJZcFLMeGkKlMXVnSZycmpR",
+        "url": "https://drive.google.com/file/d/11_y58EVDpoJZcFLMeGkKlMXVnSZycmpR/view?usp=drivesdk",
+        "folder_id": "1gxMbTORCUZNXAAa-Gg7_T8scfKXELMkf",
+        "filename": "08_Ocean_of_Light_1080p60.mp4",
+        "bytes": 37434533,
+        "sha256": "da076670eb36a52b087bee26128bee0eab4baab8a9ae08ff5fc197b2a0052fc6",
+        "modified_time": "2026-11-23T05:44:31.014Z",
+        "verified_utc": "2026-11-23T06:02:02.881269+00:00",
+        "raw_bytes_verified": true,
+        "verification": "complete_authenticated_raw_file_readback",
+        "upload_performed": false,
+        "evidence": "project-docs/production-system/evidence/claude-drive-completion.json"
       },
       "known_limits": [
         "Scoped decoded-frame review is not full real-time playback or owner approval.",
@@ -855,7 +1053,19 @@
         "url": "https://chatgpt.com/library?file_id=libfile_b5e1f83e34b0819184f426415648399d&account_id=personal"
       },
       "drive": {
-        "status": "no_copy_recorded_for_this_delivery"
+        "status": "retained_and_raw_bytes_verified",
+        "file_id": "1ipb2Vtk41qbTnyiZCCTnWC_4HdF14mCt",
+        "url": "https://drive.google.com/file/d/1ipb2Vtk41qbTnyiZCCTnWC_4HdF14mCt/view?usp=drivesdk",
+        "folder_id": "1gxMbTORCUZNXAAa-Gg7_T8scfKXELMkf",
+        "filename": "09_Celestial_Clockwork_1080p60.mp4",
+        "bytes": 23457102,
+        "sha256": "b4c4956e5401ce5fe3283037a0cd7d6ca9f3f042a104d599fa94f50d6e5254b4",
+        "modified_time": "2026-11-23T05:44:31.196Z",
+        "verified_utc": "2026-11-23T06:02:21.655028+00:00",
+        "raw_bytes_verified": true,
+        "verification": "complete_authenticated_raw_file_readback",
+        "upload_performed": false,
+        "evidence": "project-docs/production-system/evidence/claude-drive-completion.json"
       },
       "known_limits": [
         "Scoped decoded-frame review is not full real-time playback or owner approval.",
@@ -894,7 +1104,19 @@
         "url": "https://chatgpt.com/library?file_id=libfile_e3c5f7bacecc8191a9b271ea8f3d4943&account_id=personal"
       },
       "drive": {
-        "status": "no_copy_recorded_for_this_delivery"
+        "status": "retained_and_raw_bytes_verified",
+        "file_id": "1d4KlpYVYYLEirTz7NFcpA4A0AHy8Y1yW",
+        "url": "https://drive.google.com/file/d/1d4KlpYVYYLEirTz7NFcpA4A0AHy8Y1yW/view?usp=drivesdk",
+        "folder_id": "1gxMbTORCUZNXAAa-Gg7_T8scfKXELMkf",
+        "filename": "10_Together_in_the_Light_1080p60.mp4",
+        "bytes": 34430368,
+        "sha256": "e62b7ef360cc1ef29df6cf8221a2ce72c29ba9f22ddfbd7b749e64a4cbbc939f",
+        "modified_time": "2026-11-23T05:44:31.647Z",
+        "verified_utc": "2026-11-23T06:02:22.664794+00:00",
+        "raw_bytes_verified": true,
+        "verification": "complete_authenticated_raw_file_readback",
+        "upload_performed": false,
+        "evidence": "project-docs/production-system/evidence/claude-drive-completion.json"
       },
       "known_limits": [
         "Scoped decoded-frame review is not full real-time playback or owner approval.",
@@ -920,7 +1142,19 @@
         "url": "https://chatgpt.com/library?file_id=libfile_692524e180dc8191a7f13c340e94ac89&account_id=personal"
       },
       "drive": {
-        "status": "no_copy_recorded_for_this_delivery"
+        "status": "retained_and_raw_bytes_verified",
+        "file_id": "1cUOdLRi8rQ94X0QTLXXpv-bpsULepkCi",
+        "url": "https://drive.google.com/file/d/1cUOdLRi8rQ94X0QTLXXpv-bpsULepkCi/view?usp=drivesdk",
+        "folder_id": "1gxMbTORCUZNXAAa-Gg7_T8scfKXELMkf",
+        "filename": "Ten_Cinematic_Films_Overview.jpg",
+        "bytes": 3006552,
+        "sha256": "1bc61bb9569d0628cbeb1ec19530bea46e39d5379bc9263a3e9011c92a1a1f73",
+        "modified_time": "2026-11-23T05:44:31.121Z",
+        "verified_utc": "2026-11-23T06:02:21.380071+00:00",
+        "raw_bytes_verified": true,
+        "verification": "complete_authenticated_raw_file_readback",
+        "upload_performed": false,
+        "evidence": "project-docs/production-system/evidence/claude-drive-completion.json"
       }
     },
     {
@@ -941,7 +1175,19 @@
         "url": "https://chatgpt.com/library?file_id=libfile_c4392e6bf8088191bd33e2111081ce46&account_id=personal"
       },
       "drive": {
-        "status": "no_copy_recorded_for_this_delivery"
+        "status": "retained_and_raw_bytes_verified",
+        "file_id": "1yTeNQ6MJA5nqVIXSHHEZorPriNdX5Nj-",
+        "url": "https://docs.google.com/document/d/1yTeNQ6MJA5nqVIXSHHEZorPriNdX5Nj-/edit?usp=drivesdk&ouid=113038373524763352759&rtpof=true&sd=true",
+        "folder_id": "1gxMbTORCUZNXAAa-Gg7_T8scfKXELMkf",
+        "filename": "README.md",
+        "bytes": 2688,
+        "sha256": "740ccce0010cfbed5bce39baee09e1e50cfa12d93a59e05287df3a89c8f96a65",
+        "modified_time": "2026-11-23T05:44:31.122Z",
+        "verified_utc": "2026-11-23T06:02:37.500632+00:00",
+        "raw_bytes_verified": true,
+        "verification": "complete_authenticated_raw_file_readback",
+        "upload_performed": false,
+        "evidence": "project-docs/production-system/evidence/claude-drive-completion.json"
       }
     },
     {
@@ -962,7 +1208,19 @@
         "url": "https://chatgpt.com/library?file_id=libfile_a937b0e8ab9881918cb11414df49eba5&account_id=personal"
       },
       "drive": {
-        "status": "no_copy_recorded_for_this_delivery"
+        "status": "retained_and_raw_bytes_verified",
+        "file_id": "1tKwQM22elV5IPWgXObVkhPgECSWhO0sw",
+        "url": "https://drive.google.com/file/d/1tKwQM22elV5IPWgXObVkhPgECSWhO0sw/view?usp=drivesdk",
+        "folder_id": "1gxMbTORCUZNXAAa-Gg7_T8scfKXELMkf",
+        "filename": "Ten_Cinematic_Films_Technical.json",
+        "bytes": 543622,
+        "sha256": "c70bf689668023f9669c80d9ee6da2fcc2b37509cadd94215abed3078eb2034e",
+        "modified_time": "2026-11-23T05:44:31.166Z",
+        "verified_utc": "2026-11-23T06:02:37.568185+00:00",
+        "raw_bytes_verified": true,
+        "verification": "complete_authenticated_raw_file_readback",
+        "upload_performed": false,
+        "evidence": "project-docs/production-system/evidence/claude-drive-completion.json"
       }
     },
     {
@@ -983,7 +1241,19 @@
         "url": "https://chatgpt.com/library?file_id=libfile_5baa3ce7f9848191aee8e3abdae29c30&account_id=personal"
       },
       "drive": {
-        "status": "no_copy_recorded_for_this_delivery"
+        "status": "retained_and_raw_bytes_verified",
+        "file_id": "1qKZOy0NhvJ0cli8lrPpDKQZZhY_lW_FH",
+        "url": "https://drive.google.com/file/d/1qKZOy0NhvJ0cli8lrPpDKQZZhY_lW_FH/view?usp=drivesdk",
+        "folder_id": "1gxMbTORCUZNXAAa-Gg7_T8scfKXELMkf",
+        "filename": "SHA256SUMS.txt",
+        "bytes": 1269,
+        "sha256": "60796238dd06fad0f5b28cb4fb4f349457ae9bc64a386ce7b2682b168b2182f1",
+        "modified_time": "2026-11-23T05:44:31.600Z",
+        "verified_utc": "2026-11-23T06:02:20.733988+00:00",
+        "raw_bytes_verified": true,
+        "verification": "complete_authenticated_raw_file_readback",
+        "upload_performed": false,
+        "evidence": "project-docs/production-system/evidence/claude-drive-completion.json"
       }
     },
     {
@@ -1004,7 +1274,134 @@
         "url": "https://chatgpt.com/library?file_id=libfile_9692c5a09c4c8191b65ade72f7abfbb0&account_id=personal"
       },
       "drive": {
-        "status": "no_copy_recorded_for_this_delivery"
+        "status": "retained_as_verified_exact_parts",
+        "folder_id": "1Hi6YobO_2dXIbod0-3BPoZXlSq22rRB6",
+        "url": "https://drive.google.com/drive/folders/1Hi6YobO_2dXIbod0-3BPoZXlSq22rRB6",
+        "original_filename": "Ten_Cinematic_Films_1080p60.zip",
+        "bytes": 350397212,
+        "sha256": "7bd5e9f32f4a40150cba39c00bda8cd9959768bb837e448c80b482877e84b0b2",
+        "raw_bytes_verified": true,
+        "verification": "Every uploaded part fully read back and SHA-256 verified; actual local restoration verified exact original; no transcoding.",
+        "parts": [
+          {
+            "status": "retained_and_raw_bytes_verified",
+            "file_id": "12z9XbNH84H-68N9PxngKoJHk-8uhfNKx",
+            "url": "https://drive.google.com/file/d/12z9XbNH84H-68N9PxngKoJHk-8uhfNKx/view?usp=drivesdk",
+            "folder_id": "1Hi6YobO_2dXIbod0-3BPoZXlSq22rRB6",
+            "filename": "Ten_Cinematic_Films_1080p60.zip.part01",
+            "bytes": 90000000,
+            "sha256": "86fbc5e0d243090991bd1ff100ae0e1c853a9ee652fdc41445b3198b9fc42e50",
+            "modified_time": "2026-11-23T06:04:17.931Z",
+            "verified_utc": "2026-11-23T06:05:31.648847+00:00",
+            "raw_bytes_verified": true,
+            "verification": "complete_authenticated_raw_file_readback",
+            "upload_performed": true,
+            "evidence": "project-docs/production-system/evidence/claude-drive-completion.json"
+          },
+          {
+            "status": "retained_and_raw_bytes_verified",
+            "file_id": "1hbPBG84sEd0zrsIoHBFVwtIuYnUY3C-X",
+            "url": "https://drive.google.com/file/d/1hbPBG84sEd0zrsIoHBFVwtIuYnUY3C-X/view?usp=drivesdk",
+            "folder_id": "1Hi6YobO_2dXIbod0-3BPoZXlSq22rRB6",
+            "filename": "Ten_Cinematic_Films_1080p60.zip.part02",
+            "bytes": 90000000,
+            "sha256": "a0b1a438801ceecb935075a50c6827ffa966e7382e87942756e11878b2a7fa68",
+            "modified_time": "2026-11-23T06:07:41.735Z",
+            "verified_utc": "2026-11-23T06:07:55.971726+00:00",
+            "raw_bytes_verified": true,
+            "verification": "complete_authenticated_raw_file_readback",
+            "upload_performed": true,
+            "evidence": "project-docs/production-system/evidence/claude-drive-completion.json"
+          },
+          {
+            "status": "retained_and_raw_bytes_verified",
+            "file_id": "1f0jZmMBlY5d6ha5polhvSPWaC-dl5KLZ",
+            "url": "https://drive.google.com/file/d/1f0jZmMBlY5d6ha5polhvSPWaC-dl5KLZ/view?usp=drivesdk",
+            "folder_id": "1Hi6YobO_2dXIbod0-3BPoZXlSq22rRB6",
+            "filename": "Ten_Cinematic_Films_1080p60.zip.part03",
+            "bytes": 90000000,
+            "sha256": "fff83e76415af64633bced57fa8f177177083ac2e9e88a23adc66cab1cb3f547",
+            "modified_time": "2026-11-23T06:08:18.730Z",
+            "verified_utc": "2026-11-23T06:08:30.683903+00:00",
+            "raw_bytes_verified": true,
+            "verification": "complete_authenticated_raw_file_readback",
+            "upload_performed": true,
+            "evidence": "project-docs/production-system/evidence/claude-drive-completion.json"
+          },
+          {
+            "status": "retained_and_raw_bytes_verified",
+            "file_id": "1h84jZUqBt5geIjK7ViTR_j_jxpgW446s",
+            "url": "https://drive.google.com/file/d/1h84jZUqBt5geIjK7ViTR_j_jxpgW446s/view?usp=drivesdk",
+            "folder_id": "1Hi6YobO_2dXIbod0-3BPoZXlSq22rRB6",
+            "filename": "Ten_Cinematic_Films_1080p60.zip.part04",
+            "bytes": 80397212,
+            "sha256": "2027a88ecfa632e7cb777e8ea0248cc4cee2a66545c3cbf51fb2780e36262982",
+            "modified_time": "2026-11-23T06:08:53.401Z",
+            "verified_utc": "2026-11-23T06:09:07.024387+00:00",
+            "raw_bytes_verified": true,
+            "verification": "complete_authenticated_raw_file_readback",
+            "upload_performed": true,
+            "evidence": "project-docs/production-system/evidence/claude-drive-completion.json"
+          }
+        ],
+        "restoration_support": {
+          "TRANSFER-MANIFEST.json": {
+            "status": "retained_and_raw_bytes_verified",
+            "file_id": "1cLOmdxoAV0M3oMcFVPToxmvcgsP_8AW4",
+            "url": "https://drive.google.com/file/d/1cLOmdxoAV0M3oMcFVPToxmvcgsP_8AW4/view?usp=drivesdk",
+            "folder_id": "1Hi6YobO_2dXIbod0-3BPoZXlSq22rRB6",
+            "filename": "TRANSFER-MANIFEST.json",
+            "bytes": 1383,
+            "sha256": "7349df6f1ae205bd5e87cd63af242ab7cb09a40853608e9b288f1b7cf933dffd",
+            "modified_time": "2026-11-23T06:12:51.678Z",
+            "verified_utc": "2026-11-23T06:12:54.609783+00:00",
+            "raw_bytes_verified": true,
+            "verification": "complete_authenticated_raw_file_readback",
+            "upload_performed": true,
+            "evidence": "project-docs/production-system/evidence/claude-drive-completion.json"
+          },
+          "restore_handoff.py": {
+            "status": "retained_and_raw_bytes_verified",
+            "file_id": "1CIHA_OQ5M43QxIk2EXfj4-NBUcCiTTuS",
+            "url": "https://drive.google.com/file/d/1CIHA_OQ5M43QxIk2EXfj4-NBUcCiTTuS/view?usp=drivesdk",
+            "folder_id": "1Hi6YobO_2dXIbod0-3BPoZXlSq22rRB6",
+            "filename": "restore_handoff.py",
+            "bytes": 4183,
+            "sha256": "4dcad9dae60e78a10919fa6d8a4909b3e4584a15535d04e7162412859d306ab6",
+            "modified_time": "2026-11-23T06:12:59.637Z",
+            "verified_utc": "2026-11-23T06:13:02.318200+00:00",
+            "raw_bytes_verified": true,
+            "verification": "complete_authenticated_raw_file_readback",
+            "upload_performed": true,
+            "evidence": "project-docs/production-system/evidence/claude-drive-completion.json"
+          },
+          "README_RESTORE.md": {
+            "status": "retained_and_raw_bytes_verified",
+            "file_id": "1k07vu-meWYCLPFHtwRB0M3e5G6zEs7FB",
+            "url": "https://docs.google.com/document/d/1k07vu-meWYCLPFHtwRB0M3e5G6zEs7FB/edit?usp=drivesdk&ouid=113038373524763352759&rtpof=true&sd=true",
+            "folder_id": "1Hi6YobO_2dXIbod0-3BPoZXlSq22rRB6",
+            "filename": "README_RESTORE.md",
+            "bytes": 814,
+            "sha256": "fa52034f86551a044a331f9b5e37aa3fa093604004ba72a1a1370d64b67b8856",
+            "modified_time": "2026-11-23T06:13:08.438Z",
+            "verified_utc": "2026-11-23T06:13:11.161919+00:00",
+            "raw_bytes_verified": true,
+            "verification": "complete_authenticated_raw_file_readback",
+            "upload_performed": true,
+            "evidence": "project-docs/production-system/evidence/claude-drive-completion.json"
+          }
+        },
+        "restoration_evidence": "project-docs/production-system/evidence/claude-parts-restoration.json",
+        "evidence": "project-docs/production-system/evidence/claude-drive-completion.json",
+        "additional_whole_file_metadata_only": {
+          "file_id": "1y_w8-c5UbRTXsSU9uN5zY_yoZiaku59m",
+          "url": "https://drive.google.com/file/d/1y_w8-c5UbRTXsSU9uN5zY_yoZiaku59m/view?usp=drivesdk",
+          "folder_id": "1gxMbTORCUZNXAAa-Gg7_T8scfKXELMkf",
+          "filename": "Ten_Cinematic_Films_1080p60.zip",
+          "bytes": 350397212,
+          "raw_bytes_verified": false,
+          "verification": "Title, size and parent metadata matched; full readback blocked above the 268435456-byte fetch ceiling. Expected original SHA-256 is not a verified hash of this Drive object."
+        }
       }
     },
     {
@@ -1046,7 +1443,19 @@
         "owner_approval": false
       },
       "drive": {
-        "status": "no_copy_recorded_for_this_delivery"
+        "status": "retained_and_raw_bytes_verified",
+        "file_id": "1j5UqSSM5Et2ygr3rkj_vTkXRAUMdLTjz",
+        "url": "https://drive.google.com/file/d/1j5UqSSM5Et2ygr3rkj_vTkXRAUMdLTjz/view?usp=drivesdk",
+        "folder_id": "1CbjaFW1_zewZ4IWrzvM4GpsOFM_XEQTj",
+        "filename": "01_Silk_in_Light_Advanced_Dance_1080p60.mp4",
+        "bytes": 57396334,
+        "sha256": "8f02ee2a72a128198771cfb8f3d3dabc0b90716abdb4c028d19fa462b6a6edac",
+        "modified_time": "2026-11-23T05:44:31.849Z",
+        "verified_utc": "2026-11-23T06:01:13.080698+00:00",
+        "raw_bytes_verified": true,
+        "verification": "complete_authenticated_raw_file_readback",
+        "upload_performed": false,
+        "evidence": "project-docs/production-system/evidence/claude-drive-completion.json"
       }
     },
     {
@@ -1066,7 +1475,19 @@
         "url": "https://chatgpt.com/library?file_id=libfile_bdf3a9b4e1f481918e768953be62a279&account_id=personal"
       },
       "drive": {
-        "status": "no_copy_recorded_for_this_delivery"
+        "status": "retained_and_raw_bytes_verified",
+        "file_id": "10k5FqOs66Pe0_MK12P5a9U79nDL39NBQ",
+        "url": "https://drive.google.com/file/d/10k5FqOs66Pe0_MK12P5a9U79nDL39NBQ/view?usp=drivesdk",
+        "folder_id": "1CbjaFW1_zewZ4IWrzvM4GpsOFM_XEQTj",
+        "filename": "02_Petals_in_Motion_Advanced_Dance_1080p60.mp4",
+        "bytes": 76939037,
+        "sha256": "8bedc48bc2586d903f5aefcb8bfea89ecad58359326ffdc27f5988b0f573540d",
+        "modified_time": "2026-11-23T05:44:31.760Z",
+        "verified_utc": "2026-11-23T06:00:22.207039+00:00",
+        "raw_bytes_verified": true,
+        "verification": "complete_authenticated_raw_file_readback",
+        "upload_performed": false,
+        "evidence": "project-docs/production-system/evidence/claude-drive-completion.json"
       },
       "technical_passed": true,
       "visual_review": {
@@ -1107,7 +1528,149 @@
         "url": "https://chatgpt.com/library?file_id=libfile_02d1b9fcefdc8191ab72741639bd1fb2&account_id=personal"
       },
       "drive": {
-        "status": "no_copy_recorded_for_this_delivery"
+        "status": "retained_as_verified_exact_parts",
+        "folder_id": "1e0j_89WwvQSlhmGqTQDnsBaRyxQwInh7",
+        "url": "https://drive.google.com/drive/folders/1e0j_89WwvQSlhmGqTQDnsBaRyxQwInh7",
+        "original_filename": "Ten_Cinematic_Films_Advanced_Dance_1080p60.zip",
+        "bytes": 410134925,
+        "sha256": "73fcccc8e659b4f8a40604945509163944be4ca13bec660d350637aa7dca336c",
+        "raw_bytes_verified": true,
+        "verification": "Every uploaded part fully read back and SHA-256 verified; actual local restoration verified exact original; no transcoding.",
+        "parts": [
+          {
+            "status": "retained_and_raw_bytes_verified",
+            "file_id": "1RMpZaWhe--fNSYl26PoEOUfwaNYGjBkr",
+            "url": "https://drive.google.com/file/d/1RMpZaWhe--fNSYl26PoEOUfwaNYGjBkr/view?usp=drivesdk",
+            "folder_id": "1e0j_89WwvQSlhmGqTQDnsBaRyxQwInh7",
+            "filename": "Ten_Cinematic_Films_Advanced_Dance_1080p60.zip.part01",
+            "bytes": 90000000,
+            "sha256": "c7fe3970e7a4fd649f801e4a2649f3f6c2647bc65a2a35d3c69bf5be0fb5feae",
+            "modified_time": "2026-11-23T06:09:50.314Z",
+            "verified_utc": "2026-11-23T06:10:05.535865+00:00",
+            "raw_bytes_verified": true,
+            "verification": "complete_authenticated_raw_file_readback",
+            "upload_performed": true,
+            "evidence": "project-docs/production-system/evidence/claude-drive-completion.json"
+          },
+          {
+            "status": "retained_and_raw_bytes_verified",
+            "file_id": "19-w2qOdS8QWvUwEGM-oV1LXUEWBIGdhG",
+            "url": "https://drive.google.com/file/d/19-w2qOdS8QWvUwEGM-oV1LXUEWBIGdhG/view?usp=drivesdk",
+            "folder_id": "1e0j_89WwvQSlhmGqTQDnsBaRyxQwInh7",
+            "filename": "Ten_Cinematic_Films_Advanced_Dance_1080p60.zip.part02",
+            "bytes": 90000000,
+            "sha256": "a31dc6d25cfc1063c05130227c0c845b40537331e2afe5c970bdef4196a27bcf",
+            "modified_time": "2026-11-23T06:10:26.854Z",
+            "verified_utc": "2026-11-23T06:10:43.838373+00:00",
+            "raw_bytes_verified": true,
+            "verification": "complete_authenticated_raw_file_readback",
+            "upload_performed": true,
+            "evidence": "project-docs/production-system/evidence/claude-drive-completion.json"
+          },
+          {
+            "status": "retained_and_raw_bytes_verified",
+            "file_id": "1iLhacYzPZflov20NhJxAJtxkCk4nqI-3",
+            "url": "https://drive.google.com/file/d/1iLhacYzPZflov20NhJxAJtxkCk4nqI-3/view?usp=drivesdk",
+            "folder_id": "1e0j_89WwvQSlhmGqTQDnsBaRyxQwInh7",
+            "filename": "Ten_Cinematic_Films_Advanced_Dance_1080p60.zip.part03",
+            "bytes": 90000000,
+            "sha256": "25b82d8552ed792d91dff44d18cc26b231103a89564a118f98e2502734cd2ecc",
+            "modified_time": "2026-11-23T06:11:05.841Z",
+            "verified_utc": "2026-11-23T06:11:20.232333+00:00",
+            "raw_bytes_verified": true,
+            "verification": "complete_authenticated_raw_file_readback",
+            "upload_performed": true,
+            "evidence": "project-docs/production-system/evidence/claude-drive-completion.json"
+          },
+          {
+            "status": "retained_and_raw_bytes_verified",
+            "file_id": "1WdwDAy4A1JAeCUIpSzdbojMSNHmpyad0",
+            "url": "https://drive.google.com/file/d/1WdwDAy4A1JAeCUIpSzdbojMSNHmpyad0/view?usp=drivesdk",
+            "folder_id": "1e0j_89WwvQSlhmGqTQDnsBaRyxQwInh7",
+            "filename": "Ten_Cinematic_Films_Advanced_Dance_1080p60.zip.part04",
+            "bytes": 90000000,
+            "sha256": "73a118ce81d680973545fcc701dc6be7e9ed86d31aae838e2336bd4e1129712f",
+            "modified_time": "2026-11-23T06:11:43.192Z",
+            "verified_utc": "2026-11-23T06:11:58.498259+00:00",
+            "raw_bytes_verified": true,
+            "verification": "complete_authenticated_raw_file_readback",
+            "upload_performed": true,
+            "evidence": "project-docs/production-system/evidence/claude-drive-completion.json"
+          },
+          {
+            "status": "retained_and_raw_bytes_verified",
+            "file_id": "1rxviK5tviHvQl6WXgxFZpFrjdst1tMGZ",
+            "url": "https://drive.google.com/file/d/1rxviK5tviHvQl6WXgxFZpFrjdst1tMGZ/view?usp=drivesdk",
+            "folder_id": "1e0j_89WwvQSlhmGqTQDnsBaRyxQwInh7",
+            "filename": "Ten_Cinematic_Films_Advanced_Dance_1080p60.zip.part05",
+            "bytes": 50134925,
+            "sha256": "e57b736753ce8bf6fb5e08569bfed572cbe0df463dac0c290191905b86115d67",
+            "modified_time": "2026-11-23T06:12:13.302Z",
+            "verified_utc": "2026-11-23T06:12:25.233980+00:00",
+            "raw_bytes_verified": true,
+            "verification": "complete_authenticated_raw_file_readback",
+            "upload_performed": true,
+            "evidence": "project-docs/production-system/evidence/claude-drive-completion.json"
+          }
+        ],
+        "restoration_support": {
+          "TRANSFER-MANIFEST.json": {
+            "status": "retained_and_raw_bytes_verified",
+            "file_id": "11jawdGpuMd4fiL2FrCbd0nblWlHAaomx",
+            "url": "https://drive.google.com/file/d/11jawdGpuMd4fiL2FrCbd0nblWlHAaomx/view?usp=drivesdk",
+            "folder_id": "1e0j_89WwvQSlhmGqTQDnsBaRyxQwInh7",
+            "filename": "TRANSFER-MANIFEST.json",
+            "bytes": 1685,
+            "sha256": "c0ec9d6b42c17c4fdcc8759dce2efb9ec899585e701a70b66f392ffd31fdb6ef",
+            "modified_time": "2026-11-23T06:13:16.104Z",
+            "verified_utc": "2026-11-23T06:13:18.944696+00:00",
+            "raw_bytes_verified": true,
+            "verification": "complete_authenticated_raw_file_readback",
+            "upload_performed": true,
+            "evidence": "project-docs/production-system/evidence/claude-drive-completion.json"
+          },
+          "restore_handoff.py": {
+            "status": "retained_and_raw_bytes_verified",
+            "file_id": "112SXfS35HLSa10dJPSHxvhf0C9cn3GgG",
+            "url": "https://drive.google.com/file/d/112SXfS35HLSa10dJPSHxvhf0C9cn3GgG/view?usp=drivesdk",
+            "folder_id": "1e0j_89WwvQSlhmGqTQDnsBaRyxQwInh7",
+            "filename": "restore_handoff.py",
+            "bytes": 4183,
+            "sha256": "4dcad9dae60e78a10919fa6d8a4909b3e4584a15535d04e7162412859d306ab6",
+            "modified_time": "2026-11-23T06:13:24.016Z",
+            "verified_utc": "2026-11-23T06:13:26.568411+00:00",
+            "raw_bytes_verified": true,
+            "verification": "complete_authenticated_raw_file_readback",
+            "upload_performed": true,
+            "evidence": "project-docs/production-system/evidence/claude-drive-completion.json"
+          },
+          "README_RESTORE.md": {
+            "status": "retained_and_raw_bytes_verified",
+            "file_id": "1H30CPbLLhXvXXDoK6FunStXw4koaOfzE",
+            "url": "https://docs.google.com/document/d/1H30CPbLLhXvXXDoK6FunStXw4koaOfzE/edit?usp=drivesdk&ouid=113038373524763352759&rtpof=true&sd=true",
+            "folder_id": "1e0j_89WwvQSlhmGqTQDnsBaRyxQwInh7",
+            "filename": "README_RESTORE.md",
+            "bytes": 829,
+            "sha256": "0c31fc498a02f64b1eac390f72f35a22592b307248b2bed8a99a97b5cf4eddf2",
+            "modified_time": "2026-11-23T06:13:33.656Z",
+            "verified_utc": "2026-11-23T06:13:36.138420+00:00",
+            "raw_bytes_verified": true,
+            "verification": "complete_authenticated_raw_file_readback",
+            "upload_performed": true,
+            "evidence": "project-docs/production-system/evidence/claude-drive-completion.json"
+          }
+        },
+        "restoration_evidence": "project-docs/production-system/evidence/claude-parts-restoration.json",
+        "evidence": "project-docs/production-system/evidence/claude-drive-completion.json",
+        "additional_whole_file_metadata_only": {
+          "file_id": "1x-pQR1_PitINrm8to0fZU1AbTjNqxoLV",
+          "url": "https://drive.google.com/file/d/1x-pQR1_PitINrm8to0fZU1AbTjNqxoLV/view?usp=drivesdk",
+          "folder_id": "1CbjaFW1_zewZ4IWrzvM4GpsOFM_XEQTj",
+          "filename": "Ten_Cinematic_Films_Advanced_Dance_1080p60.zip",
+          "bytes": 410134925,
+          "raw_bytes_verified": false,
+          "verification": "Title, size and parent metadata matched; full readback blocked above the 268435456-byte fetch ceiling. Expected original SHA-256 is not a verified hash of this Drive object."
+        }
       }
     },
     {
@@ -1127,7 +1690,19 @@
         "url": "https://chatgpt.com/library?file_id=libfile_0c18dc44f6e0819182a087eaef6d669a&account_id=personal"
       },
       "drive": {
-        "status": "no_copy_recorded_for_this_delivery"
+        "status": "retained_and_raw_bytes_verified",
+        "file_id": "18fYKOnkhEh9haOh3XqwXrwqQPVM1hASu",
+        "url": "https://drive.google.com/file/d/18fYKOnkhEh9haOh3XqwXrwqQPVM1hASu/view?usp=drivesdk",
+        "folder_id": "1CbjaFW1_zewZ4IWrzvM4GpsOFM_XEQTj",
+        "filename": "Ten_Cinematic_Films_Advanced_Dance_Overview.jpg",
+        "bytes": 3244143,
+        "sha256": "c8a2c8be415c95a6ce71362feab63d491c44b4cedff6271ba0818153695c4b81",
+        "modified_time": "2026-11-23T05:44:31.766Z",
+        "verified_utc": "2026-11-23T06:00:19.265831+00:00",
+        "raw_bytes_verified": true,
+        "verification": "complete_authenticated_raw_file_readback",
+        "upload_performed": false,
+        "evidence": "project-docs/production-system/evidence/claude-drive-completion.json"
       }
     },
     {
@@ -1147,7 +1722,19 @@
         "url": "https://chatgpt.com/library?file_id=libfile_9cedecf92e288191bc354b9f5fcd1a4d&account_id=personal"
       },
       "drive": {
-        "status": "no_copy_recorded_for_this_delivery"
+        "status": "retained_and_raw_bytes_verified",
+        "file_id": "1Y-jHFN1hhVns06u-750NK4nuDs4goz_w",
+        "url": "https://drive.google.com/file/d/1Y-jHFN1hhVns06u-750NK4nuDs4goz_w/view?usp=drivesdk",
+        "folder_id": "1CbjaFW1_zewZ4IWrzvM4GpsOFM_XEQTj",
+        "filename": "Ten_Cinematic_Films_Advanced_Dance_Technical.json",
+        "bytes": 482657,
+        "sha256": "867cf8da1ddc6b9e43a9bd5c120d8fe69ac2cd3921dc8169def75129ce1cb6b9",
+        "modified_time": "2026-11-23T05:44:31.649Z",
+        "verified_utc": "2026-11-23T06:01:10.640010+00:00",
+        "raw_bytes_verified": true,
+        "verification": "complete_authenticated_raw_file_readback",
+        "upload_performed": false,
+        "evidence": "project-docs/production-system/evidence/claude-drive-completion.json"
       }
     },
     {
@@ -1167,7 +1754,19 @@
         "url": "https://chatgpt.com/library?file_id=libfile_cccbc0cf6fd08191b09dd484c91a9fcd&account_id=personal"
       },
       "drive": {
-        "status": "no_copy_recorded_for_this_delivery"
+        "status": "retained_and_raw_bytes_verified",
+        "file_id": "12hHlETb63ijwZW1ez4pRzd6WyrSFlP6d",
+        "url": "https://drive.google.com/file/d/12hHlETb63ijwZW1ez4pRzd6WyrSFlP6d/view?usp=drivesdk",
+        "folder_id": "1CbjaFW1_zewZ4IWrzvM4GpsOFM_XEQTj",
+        "filename": "Advanced_Dance_QA.json",
+        "bytes": 11659942,
+        "sha256": "37132a066833deb91829de442aeda2700a0b77ef18fec4f1fb3389a46c2c04fc",
+        "modified_time": "2026-11-23T05:44:31.691Z",
+        "verified_utc": "2026-11-23T06:01:10.977081+00:00",
+        "raw_bytes_verified": true,
+        "verification": "complete_authenticated_raw_file_readback",
+        "upload_performed": false,
+        "evidence": "project-docs/production-system/evidence/claude-drive-completion.json"
       }
     },
     {
@@ -1187,7 +1786,19 @@
         "url": "https://chatgpt.com/library?file_id=libfile_b0385f1023bc8191b39bcd0f6e72cbd7&account_id=personal"
       },
       "drive": {
-        "status": "no_copy_recorded_for_this_delivery"
+        "status": "retained_and_raw_bytes_verified",
+        "file_id": "1f34B4yaGPMebw_5RA75gvQ30LV6xyOE4",
+        "url": "https://drive.google.com/file/d/1f34B4yaGPMebw_5RA75gvQ30LV6xyOE4/view?usp=drivesdk",
+        "folder_id": "1CbjaFW1_zewZ4IWrzvM4GpsOFM_XEQTj",
+        "filename": "README.txt",
+        "bytes": 3377,
+        "sha256": "8daf78bb6ae589400e30aa8e678329bfc09924e5adb3768eb1ce83d2a1ebff8a",
+        "modified_time": "2026-11-23T05:44:31.850Z",
+        "verified_utc": "2026-11-23T06:01:10.601659+00:00",
+        "raw_bytes_verified": true,
+        "verification": "complete_authenticated_raw_file_readback",
+        "upload_performed": false,
+        "evidence": "project-docs/production-system/evidence/claude-drive-completion.json"
       }
     },
     {
@@ -1207,7 +1818,19 @@
         "url": "https://chatgpt.com/library?file_id=libfile_3ede63b34878819188d32f74e4132f78&account_id=personal"
       },
       "drive": {
-        "status": "no_copy_recorded_for_this_delivery"
+        "status": "retained_and_raw_bytes_verified",
+        "file_id": "1crmMeirBMRevRkXyIv4v_8zDOsvjz7Xx",
+        "url": "https://drive.google.com/file/d/1crmMeirBMRevRkXyIv4v_8zDOsvjz7Xx/view?usp=drivesdk",
+        "folder_id": "1CbjaFW1_zewZ4IWrzvM4GpsOFM_XEQTj",
+        "filename": "SHA256SUMS.txt",
+        "bytes": 1419,
+        "sha256": "98f7774374aaf5f271215fab10a021193e31acd9a5e9162ea522647f1ffc5613",
+        "modified_time": "2026-11-23T05:44:32.250Z",
+        "verified_utc": "2026-11-23T06:00:19.037959+00:00",
+        "raw_bytes_verified": true,
+        "verification": "complete_authenticated_raw_file_readback",
+        "upload_performed": false,
+        "evidence": "project-docs/production-system/evidence/claude-drive-completion.json"
       }
     },
     {
@@ -1227,7 +1850,19 @@
         "url": "https://chatgpt.com/library?file_id=libfile_6dd899b883fc81919acb2641264c72ec&account_id=personal"
       },
       "drive": {
-        "status": "no_copy_recorded_for_this_delivery"
+        "status": "retained_and_raw_bytes_verified",
+        "file_id": "1llkgAJF_tQp1OFFNWHBYd_DLeKnDMalD",
+        "url": "https://drive.google.com/file/d/1llkgAJF_tQp1OFFNWHBYd_DLeKnDMalD/view?usp=drivesdk",
+        "folder_id": "1CbjaFW1_zewZ4IWrzvM4GpsOFM_XEQTj",
+        "filename": "Packaging_Receipt.json",
+        "bytes": 3440,
+        "sha256": "2f6f7ad0a534e7651cccc1dcde17b3af11724d8c4b9cfeeac04b1989c0c0b3e5",
+        "modified_time": "2026-11-23T05:44:31.651Z",
+        "verified_utc": "2026-11-23T06:00:19.025407+00:00",
+        "raw_bytes_verified": true,
+        "verification": "complete_authenticated_raw_file_readback",
+        "upload_performed": false,
+        "evidence": "project-docs/production-system/evidence/claude-drive-completion.json"
       }
     },
     {
@@ -1246,7 +1881,22 @@
         "version": 0,
         "url": "https://chatgpt.com/library?file_id=libfile_71c3b731d8e08191a81a32aac0f9880d&account_id=personal"
       },
-      "scope": "Documentation and production-code maintenance; original movie and archive identities are unchanged."
+      "scope": "Documentation and production-code maintenance; original movie and archive identities are unchanged.",
+      "drive": {
+        "status": "retained_and_raw_bytes_verified",
+        "file_id": "1HgNWokoCLny_iOk99qR5T7UukZRYMkda",
+        "url": "https://docs.google.com/document/d/1HgNWokoCLny_iOk99qR5T7UukZRYMkda/edit?usp=drivesdk&ouid=113038373524763352759&rtpof=true&sd=true",
+        "folder_id": "1CbjaFW1_zewZ4IWrzvM4GpsOFM_XEQTj",
+        "filename": "Advanced_Dance_Maintenance_Handoff_2026-11-22.md",
+        "bytes": 9633,
+        "sha256": "9f3483086a9a39456b26d04650df022a4511491205b53f010709891550eac6ed",
+        "modified_time": "2026-11-23T06:13:42.363Z",
+        "verified_utc": "2026-11-23T06:13:44.975657+00:00",
+        "raw_bytes_verified": true,
+        "verification": "complete_authenticated_raw_file_readback",
+        "upload_performed": true,
+        "evidence": "project-docs/production-system/evidence/claude-drive-completion.json"
+      }
     },
     {
       "id": "s11-renewed-native-master",
@@ -1292,7 +1942,18 @@
             "local_metadata_applied": true
           }
         }
-      ]
+      ],
+      "drive": {
+        "status": "exact_original_retained_in_two_master_archives",
+        "archive_artifact_ids": [
+          "s11-renewed-archive-1",
+          "s11-renewed-archive-2"
+        ],
+        "restoration_verified": true,
+        "original_sha256": "c553b2a51f3917d389adc51ee6dc97c96e6b6e9e306a9bfd2bfbe38a89b34c55",
+        "original_bytes": 911865528,
+        "evidence": "project-docs/production-system/evidence/s11-renewed-master-archive.json"
+      }
     },
     {
       "filename": "Almighty_God_Knows_the_Future_Native_Master_Part_01_of_02.zip",
@@ -1310,7 +1971,167 @@
       },
       "id": "s11-renewed-archive-1",
       "producing_commit": "eec8d16519ea82309ef851975792e9dfc548da03",
-      "saved_delivery_evidence": "project-docs/production-system/evidence/s11-renewed-final-delivery.json"
+      "saved_delivery_evidence": "project-docs/production-system/evidence/s11-renewed-final-delivery.json",
+      "drive": {
+        "status": "retained_as_verified_exact_parts",
+        "folder_id": "1Lcu1I78xzy65svx0-wCJq5wmD9OGFEqu",
+        "url": "https://drive.google.com/drive/folders/1Lcu1I78xzy65svx0-wCJq5wmD9OGFEqu",
+        "original_filename": "Almighty_God_Knows_the_Future_Native_Master_Part_01_of_02.zip",
+        "bytes": 480006941,
+        "sha256": "ffc3ca5352abbfe2e870ad740ace9ea4c97bf164c3c4b51b932849a4ff49d91c",
+        "raw_bytes_verified": true,
+        "verification": "Every uploaded part fully read back and SHA-256 verified; actual local restoration verified exact original; no transcoding.",
+        "parts": [
+          {
+            "status": "retained_and_raw_bytes_verified",
+            "file_id": "1mc3UmGpJthWs-WDxoCa7U-5b1kope3JN",
+            "url": "https://drive.google.com/file/d/1mc3UmGpJthWs-WDxoCa7U-5b1kope3JN/view?usp=drivesdk",
+            "folder_id": "1Lcu1I78xzy65svx0-wCJq5wmD9OGFEqu",
+            "filename": "Almighty_God_Knows_the_Future_Native_Master_Part_01_of_02.zip.part01",
+            "bytes": 90000000,
+            "sha256": "28ae10e2fef44d4cf908c34136ce2e6e3dbe807c3d5888397a4e3aef8f656a1e",
+            "modified_time": "2026-11-23T05:52:06.464Z",
+            "verified_utc": "2026-11-23T05:52:25.725775+00:00",
+            "raw_bytes_verified": true,
+            "verification": "complete_authenticated_raw_file_readback",
+            "upload_performed": true,
+            "evidence": "project-docs/production-system/evidence/claude-drive-completion.json"
+          },
+          {
+            "status": "retained_and_raw_bytes_verified",
+            "file_id": "1jPK9OGTjilSJ0yyH_7nrB8PnLA1TFM7v",
+            "url": "https://drive.google.com/file/d/1jPK9OGTjilSJ0yyH_7nrB8PnLA1TFM7v/view?usp=drivesdk",
+            "folder_id": "1Lcu1I78xzy65svx0-wCJq5wmD9OGFEqu",
+            "filename": "Almighty_God_Knows_the_Future_Native_Master_Part_01_of_02.zip.part02",
+            "bytes": 90000000,
+            "sha256": "204568072baaf44e3cc1d910aa7fce907031341f6cd6f38f3d5ea3c0b47029f6",
+            "modified_time": "2026-11-23T05:52:47.149Z",
+            "verified_utc": "2026-11-23T05:53:03.953887+00:00",
+            "raw_bytes_verified": true,
+            "verification": "complete_authenticated_raw_file_readback",
+            "upload_performed": true,
+            "evidence": "project-docs/production-system/evidence/claude-drive-completion.json"
+          },
+          {
+            "status": "retained_and_raw_bytes_verified",
+            "file_id": "1CPoO45eUFjZ-U0l7L3h6cqJ3nwq2Br9m",
+            "url": "https://drive.google.com/file/d/1CPoO45eUFjZ-U0l7L3h6cqJ3nwq2Br9m/view?usp=drivesdk",
+            "folder_id": "1Lcu1I78xzy65svx0-wCJq5wmD9OGFEqu",
+            "filename": "Almighty_God_Knows_the_Future_Native_Master_Part_01_of_02.zip.part03",
+            "bytes": 90000000,
+            "sha256": "cf0d3e64cbd0016ac65cae32b5215bb105f328ca859bfacc63950d88d5f18608",
+            "modified_time": "2026-11-23T05:53:25.076Z",
+            "verified_utc": "2026-11-23T05:53:43.252903+00:00",
+            "raw_bytes_verified": true,
+            "verification": "complete_authenticated_raw_file_readback",
+            "upload_performed": true,
+            "evidence": "project-docs/production-system/evidence/claude-drive-completion.json"
+          },
+          {
+            "status": "retained_and_raw_bytes_verified",
+            "file_id": "1ObER9c_NUth4haFfgiYRR-Uorpb0S9YZ",
+            "url": "https://drive.google.com/file/d/1ObER9c_NUth4haFfgiYRR-Uorpb0S9YZ/view?usp=drivesdk",
+            "folder_id": "1Lcu1I78xzy65svx0-wCJq5wmD9OGFEqu",
+            "filename": "Almighty_God_Knows_the_Future_Native_Master_Part_01_of_02.zip.part04",
+            "bytes": 90000000,
+            "sha256": "f35d5c7e02669357ff24e1032b905fce718b13d348cbe1bec06b00dc044c8840",
+            "modified_time": "2026-11-23T05:54:04.148Z",
+            "verified_utc": "2026-11-23T05:54:18.111020+00:00",
+            "raw_bytes_verified": true,
+            "verification": "complete_authenticated_raw_file_readback",
+            "upload_performed": true,
+            "evidence": "project-docs/production-system/evidence/claude-drive-completion.json"
+          },
+          {
+            "status": "retained_and_raw_bytes_verified",
+            "file_id": "1Z_KN9rR-zqgZgciDsJCoKSq_rVuoESss",
+            "url": "https://drive.google.com/file/d/1Z_KN9rR-zqgZgciDsJCoKSq_rVuoESss/view?usp=drivesdk",
+            "folder_id": "1Lcu1I78xzy65svx0-wCJq5wmD9OGFEqu",
+            "filename": "Almighty_God_Knows_the_Future_Native_Master_Part_01_of_02.zip.part05",
+            "bytes": 90000000,
+            "sha256": "c546437bb872d51abfabfeb18aa8b1ae76dd7c5c65957f77b478f4344cb3e188",
+            "modified_time": "2026-11-23T05:54:40.156Z",
+            "verified_utc": "2026-11-23T05:54:57.917002+00:00",
+            "raw_bytes_verified": true,
+            "verification": "complete_authenticated_raw_file_readback",
+            "upload_performed": true,
+            "evidence": "project-docs/production-system/evidence/claude-drive-completion.json"
+          },
+          {
+            "status": "retained_and_raw_bytes_verified",
+            "file_id": "1TSGySVxbLkvgELP6DRoKyC-Y6YIQ3_3q",
+            "url": "https://drive.google.com/file/d/1TSGySVxbLkvgELP6DRoKyC-Y6YIQ3_3q/view?usp=drivesdk",
+            "folder_id": "1Lcu1I78xzy65svx0-wCJq5wmD9OGFEqu",
+            "filename": "Almighty_God_Knows_the_Future_Native_Master_Part_01_of_02.zip.part06",
+            "bytes": 30006941,
+            "sha256": "501a840d7879bef97ebe16b3c9bc732716e448f3e35e8324c2324b4d5a2387f2",
+            "modified_time": "2026-11-23T05:55:08.326Z",
+            "verified_utc": "2026-11-23T05:55:14.957815+00:00",
+            "raw_bytes_verified": true,
+            "verification": "complete_authenticated_raw_file_readback",
+            "upload_performed": true,
+            "evidence": "project-docs/production-system/evidence/claude-drive-completion.json"
+          }
+        ],
+        "restoration_support": {
+          "TRANSFER-MANIFEST.json": {
+            "status": "retained_and_raw_bytes_verified",
+            "file_id": "1embhjU9q3XM3CgMq-I0w8FepPcQqFQ1z",
+            "url": "https://drive.google.com/file/d/1embhjU9q3XM3CgMq-I0w8FepPcQqFQ1z/view?usp=drivesdk",
+            "folder_id": "1Lcu1I78xzy65svx0-wCJq5wmD9OGFEqu",
+            "filename": "TRANSFER-MANIFEST.json",
+            "bytes": 5807,
+            "sha256": "cd353815a73e77b83c22eeacd4d4b1bc7af6590d379a50490a0c8fcfcd50ebe9",
+            "modified_time": "2026-11-23T06:16:27.201Z",
+            "verified_utc": "2026-11-23T06:16:30.321175+00:00",
+            "raw_bytes_verified": true,
+            "verification": "complete_authenticated_raw_file_readback",
+            "upload_performed": true,
+            "evidence": "project-docs/production-system/evidence/claude-drive-completion.json"
+          },
+          "restore_handoff.py": {
+            "status": "retained_and_raw_bytes_verified",
+            "file_id": "1MFUAZmz_3l9R5YpggxaCMVGjnvD5w9NG",
+            "url": "https://drive.google.com/file/d/1MFUAZmz_3l9R5YpggxaCMVGjnvD5w9NG/view?usp=drivesdk",
+            "folder_id": "1Lcu1I78xzy65svx0-wCJq5wmD9OGFEqu",
+            "filename": "restore_handoff.py",
+            "bytes": 4183,
+            "sha256": "4dcad9dae60e78a10919fa6d8a4909b3e4584a15535d04e7162412859d306ab6",
+            "modified_time": "2026-11-23T06:16:37.461Z",
+            "verified_utc": "2026-11-23T06:16:40.045910+00:00",
+            "raw_bytes_verified": true,
+            "verification": "complete_authenticated_raw_file_readback",
+            "upload_performed": true,
+            "evidence": "project-docs/production-system/evidence/claude-drive-completion.json"
+          },
+          "README_RESTORE.md": {
+            "status": "retained_and_raw_bytes_verified",
+            "file_id": "1F3UeLdnt2KP4Um4gRV46JFuVpb3B8h73",
+            "url": "https://docs.google.com/document/d/1F3UeLdnt2KP4Um4gRV46JFuVpb3B8h73/edit?usp=drivesdk&ouid=113038373524763352759&rtpof=true&sd=true",
+            "folder_id": "1Lcu1I78xzy65svx0-wCJq5wmD9OGFEqu",
+            "filename": "README_RESTORE.md",
+            "bytes": 1867,
+            "sha256": "e1de13d9bd971e2d6e3d43af8072d3b70ca3a7fc4110291c69af3ab7ebf91f92",
+            "modified_time": "2026-11-23T06:16:45.458Z",
+            "verified_utc": "2026-11-23T06:16:49.667604+00:00",
+            "raw_bytes_verified": true,
+            "verification": "complete_authenticated_raw_file_readback",
+            "upload_performed": true,
+            "evidence": "project-docs/production-system/evidence/claude-drive-completion.json"
+          }
+        },
+        "restoration_evidence": "project-docs/production-system/evidence/claude-parts-restoration.json",
+        "evidence": "project-docs/production-system/evidence/claude-drive-completion.json",
+        "additional_whole_file_metadata_only": {
+          "file_id": "1OCW6GO2WDMQDXNghXnln9im6bhSsVHTk",
+          "url": "https://drive.google.com/file/d/1OCW6GO2WDMQDXNghXnln9im6bhSsVHTk/view?usp=drivesdk",
+          "folder_id": "1_eLVf40l7HrI7-Ekl6FWRlIQaA50Pkfe",
+          "filename": "Almighty_God_Knows_the_Future_Native_Master_Part_01_of_02.zip",
+          "bytes": 480006941,
+          "raw_bytes_verified": false,
+          "verification": "Title, size and parent metadata matched; full readback blocked above the 268435456-byte fetch ceiling. Expected original SHA-256 is not a verified hash of this Drive object."
+        }
+      }
     },
     {
       "filename": "Almighty_God_Knows_the_Future_Native_Master_Part_02_of_02.zip",
@@ -1328,7 +2149,152 @@
       },
       "id": "s11-renewed-archive-2",
       "producing_commit": "eec8d16519ea82309ef851975792e9dfc548da03",
-      "saved_delivery_evidence": "project-docs/production-system/evidence/s11-renewed-final-delivery.json"
+      "saved_delivery_evidence": "project-docs/production-system/evidence/s11-renewed-final-delivery.json",
+      "drive": {
+        "status": "retained_as_verified_exact_parts",
+        "folder_id": "1Lcu1I78xzy65svx0-wCJq5wmD9OGFEqu",
+        "url": "https://drive.google.com/drive/folders/1Lcu1I78xzy65svx0-wCJq5wmD9OGFEqu",
+        "original_filename": "Almighty_God_Knows_the_Future_Native_Master_Part_02_of_02.zip",
+        "bytes": 431872469,
+        "sha256": "c4285f489fbadec9489037f50c6cab54ab839c3d1545c22dc822a0fd095284a9",
+        "raw_bytes_verified": true,
+        "verification": "Every uploaded part fully read back and SHA-256 verified; actual local restoration verified exact original; no transcoding.",
+        "parts": [
+          {
+            "status": "retained_and_raw_bytes_verified",
+            "file_id": "1HGmx8JqLGyhQJzlsk-EW55dKHx0GTLof",
+            "url": "https://drive.google.com/file/d/1HGmx8JqLGyhQJzlsk-EW55dKHx0GTLof/view?usp=drivesdk",
+            "folder_id": "1Lcu1I78xzy65svx0-wCJq5wmD9OGFEqu",
+            "filename": "Almighty_God_Knows_the_Future_Native_Master_Part_02_of_02.zip.part01",
+            "bytes": 90000000,
+            "sha256": "c0118846b47b4582ae52b9df8fb6510c882c67f5738378f9cb76d49cf1f01d45",
+            "modified_time": "2026-11-23T06:05:23.437Z",
+            "verified_utc": "2026-11-23T06:07:48.971237+00:00",
+            "raw_bytes_verified": true,
+            "verification": "complete_authenticated_raw_file_readback",
+            "upload_performed": true,
+            "evidence": "project-docs/production-system/evidence/claude-drive-completion.json"
+          },
+          {
+            "status": "retained_and_raw_bytes_verified",
+            "file_id": "1PljML4Q0VzrMfK0aa570TRmHIdA_psqk",
+            "url": "https://drive.google.com/file/d/1PljML4Q0VzrMfK0aa570TRmHIdA_psqk/view?usp=drivesdk",
+            "folder_id": "1Lcu1I78xzy65svx0-wCJq5wmD9OGFEqu",
+            "filename": "Almighty_God_Knows_the_Future_Native_Master_Part_02_of_02.zip.part02",
+            "bytes": 90000000,
+            "sha256": "00f9039a6b0dde399780c875ac60a31b28496817f200971fc9fb848f258b74b6",
+            "modified_time": "2026-11-23T06:08:14.717Z",
+            "verified_utc": "2026-11-23T06:08:30.177158+00:00",
+            "raw_bytes_verified": true,
+            "verification": "complete_authenticated_raw_file_readback",
+            "upload_performed": true,
+            "evidence": "project-docs/production-system/evidence/claude-drive-completion.json"
+          },
+          {
+            "status": "retained_and_raw_bytes_verified",
+            "file_id": "18QItA3JLbLGYC8noZu3n-SHDrpFQ08JU",
+            "url": "https://drive.google.com/file/d/18QItA3JLbLGYC8noZu3n-SHDrpFQ08JU/view?usp=drivesdk",
+            "folder_id": "1Lcu1I78xzy65svx0-wCJq5wmD9OGFEqu",
+            "filename": "Almighty_God_Knows_the_Future_Native_Master_Part_02_of_02.zip.part03",
+            "bytes": 90000000,
+            "sha256": "543e0d159c7f772eabeaaa5a817d64bb92aecc397237e8e02d33f3dcf253980d",
+            "modified_time": "2026-11-23T06:08:52.873Z",
+            "verified_utc": "2026-11-23T06:09:07.364209+00:00",
+            "raw_bytes_verified": true,
+            "verification": "complete_authenticated_raw_file_readback",
+            "upload_performed": true,
+            "evidence": "project-docs/production-system/evidence/claude-drive-completion.json"
+          },
+          {
+            "status": "retained_and_raw_bytes_verified",
+            "file_id": "1AEs8t0Ba8zBx-g6OLNCX9kKnchO69aqH",
+            "url": "https://drive.google.com/file/d/1AEs8t0Ba8zBx-g6OLNCX9kKnchO69aqH/view?usp=drivesdk",
+            "folder_id": "1Lcu1I78xzy65svx0-wCJq5wmD9OGFEqu",
+            "filename": "Almighty_God_Knows_the_Future_Native_Master_Part_02_of_02.zip.part04",
+            "bytes": 90000000,
+            "sha256": "cb799c4c2a92065460c5efce49fad956def47ccba9c2659f62dd3e92c11b25d1",
+            "modified_time": "2026-11-23T06:09:31.348Z",
+            "verified_utc": "2026-11-23T06:09:45.533679+00:00",
+            "raw_bytes_verified": true,
+            "verification": "complete_authenticated_raw_file_readback",
+            "upload_performed": true,
+            "evidence": "project-docs/production-system/evidence/claude-drive-completion.json"
+          },
+          {
+            "status": "retained_and_raw_bytes_verified",
+            "file_id": "1WhgfMjrh9drs47tevI0ZMTtrrENvj4Ri",
+            "url": "https://drive.google.com/file/d/1WhgfMjrh9drs47tevI0ZMTtrrENvj4Ri/view?usp=drivesdk",
+            "folder_id": "1Lcu1I78xzy65svx0-wCJq5wmD9OGFEqu",
+            "filename": "Almighty_God_Knows_the_Future_Native_Master_Part_02_of_02.zip.part05",
+            "bytes": 71872469,
+            "sha256": "bcd3d32ae7a9ddc7ede57c4b535c6839c8a51c3228b35d9265a49af70f122ef9",
+            "modified_time": "2026-11-23T06:10:36.995Z",
+            "verified_utc": "2026-11-23T06:10:49.891720+00:00",
+            "raw_bytes_verified": true,
+            "verification": "complete_authenticated_raw_file_readback",
+            "upload_performed": true,
+            "evidence": "project-docs/production-system/evidence/claude-drive-completion.json"
+          }
+        ],
+        "restoration_support": {
+          "TRANSFER-MANIFEST.json": {
+            "status": "retained_and_raw_bytes_verified",
+            "file_id": "1embhjU9q3XM3CgMq-I0w8FepPcQqFQ1z",
+            "url": "https://drive.google.com/file/d/1embhjU9q3XM3CgMq-I0w8FepPcQqFQ1z/view?usp=drivesdk",
+            "folder_id": "1Lcu1I78xzy65svx0-wCJq5wmD9OGFEqu",
+            "filename": "TRANSFER-MANIFEST.json",
+            "bytes": 5807,
+            "sha256": "cd353815a73e77b83c22eeacd4d4b1bc7af6590d379a50490a0c8fcfcd50ebe9",
+            "modified_time": "2026-11-23T06:16:27.201Z",
+            "verified_utc": "2026-11-23T06:16:30.321175+00:00",
+            "raw_bytes_verified": true,
+            "verification": "complete_authenticated_raw_file_readback",
+            "upload_performed": true,
+            "evidence": "project-docs/production-system/evidence/claude-drive-completion.json"
+          },
+          "restore_handoff.py": {
+            "status": "retained_and_raw_bytes_verified",
+            "file_id": "1MFUAZmz_3l9R5YpggxaCMVGjnvD5w9NG",
+            "url": "https://drive.google.com/file/d/1MFUAZmz_3l9R5YpggxaCMVGjnvD5w9NG/view?usp=drivesdk",
+            "folder_id": "1Lcu1I78xzy65svx0-wCJq5wmD9OGFEqu",
+            "filename": "restore_handoff.py",
+            "bytes": 4183,
+            "sha256": "4dcad9dae60e78a10919fa6d8a4909b3e4584a15535d04e7162412859d306ab6",
+            "modified_time": "2026-11-23T06:16:37.461Z",
+            "verified_utc": "2026-11-23T06:16:40.045910+00:00",
+            "raw_bytes_verified": true,
+            "verification": "complete_authenticated_raw_file_readback",
+            "upload_performed": true,
+            "evidence": "project-docs/production-system/evidence/claude-drive-completion.json"
+          },
+          "README_RESTORE.md": {
+            "status": "retained_and_raw_bytes_verified",
+            "file_id": "1F3UeLdnt2KP4Um4gRV46JFuVpb3B8h73",
+            "url": "https://docs.google.com/document/d/1F3UeLdnt2KP4Um4gRV46JFuVpb3B8h73/edit?usp=drivesdk&ouid=113038373524763352759&rtpof=true&sd=true",
+            "folder_id": "1Lcu1I78xzy65svx0-wCJq5wmD9OGFEqu",
+            "filename": "README_RESTORE.md",
+            "bytes": 1867,
+            "sha256": "e1de13d9bd971e2d6e3d43af8072d3b70ca3a7fc4110291c69af3ab7ebf91f92",
+            "modified_time": "2026-11-23T06:16:45.458Z",
+            "verified_utc": "2026-11-23T06:16:49.667604+00:00",
+            "raw_bytes_verified": true,
+            "verification": "complete_authenticated_raw_file_readback",
+            "upload_performed": true,
+            "evidence": "project-docs/production-system/evidence/claude-drive-completion.json"
+          }
+        },
+        "restoration_evidence": "project-docs/production-system/evidence/claude-parts-restoration.json",
+        "evidence": "project-docs/production-system/evidence/claude-drive-completion.json",
+        "additional_whole_file_metadata_only": {
+          "file_id": "1IAaLrxmoAaOJxWbgk9PIxAjJV9iCavOV",
+          "url": "https://drive.google.com/file/d/1IAaLrxmoAaOJxWbgk9PIxAjJV9iCavOV/view?usp=drivesdk",
+          "folder_id": "1_eLVf40l7HrI7-Ekl6FWRlIQaA50Pkfe",
+          "filename": "Almighty_God_Knows_the_Future_Native_Master_Part_02_of_02.zip",
+          "bytes": 431872469,
+          "raw_bytes_verified": false,
+          "verification": "Title, size and parent metadata matched; full readback blocked above the 268435456-byte fetch ceiling. Expected original SHA-256 is not a verified hash of this Drive object."
+        }
+      }
     },
     {
       "filename": "Almighty_God_Knows_the_Future_Renewed_1080p60_delivery.mp4",
@@ -1354,7 +2320,152 @@
         1920,
         1080
       ],
-      "derived_from_master_sha256": "c553b2a51f3917d389adc51ee6dc97c96e6b6e9e306a9bfd2bfbe38a89b34c55"
+      "derived_from_master_sha256": "c553b2a51f3917d389adc51ee6dc97c96e6b6e9e306a9bfd2bfbe38a89b34c55",
+      "drive": {
+        "status": "retained_as_verified_exact_parts",
+        "folder_id": "1Lcu1I78xzy65svx0-wCJq5wmD9OGFEqu",
+        "url": "https://drive.google.com/drive/folders/1Lcu1I78xzy65svx0-wCJq5wmD9OGFEqu",
+        "original_filename": "Almighty_God_Knows_the_Future_Renewed_1080p60_delivery.mp4",
+        "bytes": 395506771,
+        "sha256": "120bb4fcf4ebced490f4f468dca396170b328fd0ece3941e67e832258f5f449e",
+        "raw_bytes_verified": true,
+        "verification": "Every uploaded part fully read back and SHA-256 verified; actual local restoration verified exact original; no transcoding.",
+        "parts": [
+          {
+            "status": "retained_and_raw_bytes_verified",
+            "file_id": "1-s87-4P-r-wBERd1abn7Kk2vlmFEOldu",
+            "url": "https://drive.google.com/file/d/1-s87-4P-r-wBERd1abn7Kk2vlmFEOldu/view?usp=drivesdk",
+            "folder_id": "1Lcu1I78xzy65svx0-wCJq5wmD9OGFEqu",
+            "filename": "Almighty_God_Knows_the_Future_Renewed_1080p60_delivery.mp4.part01",
+            "bytes": 90000000,
+            "sha256": "f5723e54cd03eb1e4988c21167f366ce630f251a575e059693e825882237409a",
+            "modified_time": "2026-11-23T06:11:14.544Z",
+            "verified_utc": "2026-11-23T06:11:31.621027+00:00",
+            "raw_bytes_verified": true,
+            "verification": "complete_authenticated_raw_file_readback",
+            "upload_performed": true,
+            "evidence": "project-docs/production-system/evidence/claude-drive-completion.json"
+          },
+          {
+            "status": "retained_and_raw_bytes_verified",
+            "file_id": "1vUJJKKPFQS7jF5T30Ff_p0Ww9cWmoUmn",
+            "url": "https://drive.google.com/file/d/1vUJJKKPFQS7jF5T30Ff_p0Ww9cWmoUmn/view?usp=drivesdk",
+            "folder_id": "1Lcu1I78xzy65svx0-wCJq5wmD9OGFEqu",
+            "filename": "Almighty_God_Knows_the_Future_Renewed_1080p60_delivery.mp4.part02",
+            "bytes": 90000000,
+            "sha256": "e33f25941381c060d87a4d1fddc209743c1e419fd89b2c434cec101e953b733d",
+            "modified_time": "2026-11-23T06:11:52.924Z",
+            "verified_utc": "2026-11-23T06:12:11.231058+00:00",
+            "raw_bytes_verified": true,
+            "verification": "complete_authenticated_raw_file_readback",
+            "upload_performed": true,
+            "evidence": "project-docs/production-system/evidence/claude-drive-completion.json"
+          },
+          {
+            "status": "retained_and_raw_bytes_verified",
+            "file_id": "1T06t3SVZc-9i8ag5KvIdVS81NY2MqlKR",
+            "url": "https://drive.google.com/file/d/1T06t3SVZc-9i8ag5KvIdVS81NY2MqlKR/view?usp=drivesdk",
+            "folder_id": "1Lcu1I78xzy65svx0-wCJq5wmD9OGFEqu",
+            "filename": "Almighty_God_Knows_the_Future_Renewed_1080p60_delivery.mp4.part03",
+            "bytes": 90000000,
+            "sha256": "be98db83fd45c95888db3e8db5bbe44143a4fabdab960e49e7b68996397682ab",
+            "modified_time": "2026-11-23T06:12:34.807Z",
+            "verified_utc": "2026-11-23T06:12:52.661014+00:00",
+            "raw_bytes_verified": true,
+            "verification": "complete_authenticated_raw_file_readback",
+            "upload_performed": true,
+            "evidence": "project-docs/production-system/evidence/claude-drive-completion.json"
+          },
+          {
+            "status": "retained_and_raw_bytes_verified",
+            "file_id": "1j_b9ygzV6ZO2A2eMf0_H4_cBAiUfSzBB",
+            "url": "https://drive.google.com/file/d/1j_b9ygzV6ZO2A2eMf0_H4_cBAiUfSzBB/view?usp=drivesdk",
+            "folder_id": "1Lcu1I78xzy65svx0-wCJq5wmD9OGFEqu",
+            "filename": "Almighty_God_Knows_the_Future_Renewed_1080p60_delivery.mp4.part04",
+            "bytes": 90000000,
+            "sha256": "5262b1830884b6455cdb284047ef73d7b47c5c30b00b908f123f233d93f8bd60",
+            "modified_time": "2026-11-23T06:13:38.806Z",
+            "verified_utc": "2026-11-23T06:13:56.203064+00:00",
+            "raw_bytes_verified": true,
+            "verification": "complete_authenticated_raw_file_readback",
+            "upload_performed": true,
+            "evidence": "project-docs/production-system/evidence/claude-drive-completion.json"
+          },
+          {
+            "status": "retained_and_raw_bytes_verified",
+            "file_id": "1qUbS6ui6XSXnM64VVYUvLuNiyxO4SVpa",
+            "url": "https://drive.google.com/file/d/1qUbS6ui6XSXnM64VVYUvLuNiyxO4SVpa/view?usp=drivesdk",
+            "folder_id": "1Lcu1I78xzy65svx0-wCJq5wmD9OGFEqu",
+            "filename": "Almighty_God_Knows_the_Future_Renewed_1080p60_delivery.mp4.part05",
+            "bytes": 35506771,
+            "sha256": "03f0ceb4e61021cd6a2d15a3304e3a5d8ee64fdac36c3c74406ed10de40ac463",
+            "modified_time": "2026-11-23T06:14:08.816Z",
+            "verified_utc": "2026-11-23T06:14:16.773310+00:00",
+            "raw_bytes_verified": true,
+            "verification": "complete_authenticated_raw_file_readback",
+            "upload_performed": true,
+            "evidence": "project-docs/production-system/evidence/claude-drive-completion.json"
+          }
+        ],
+        "restoration_support": {
+          "TRANSFER-MANIFEST.json": {
+            "status": "retained_and_raw_bytes_verified",
+            "file_id": "1embhjU9q3XM3CgMq-I0w8FepPcQqFQ1z",
+            "url": "https://drive.google.com/file/d/1embhjU9q3XM3CgMq-I0w8FepPcQqFQ1z/view?usp=drivesdk",
+            "folder_id": "1Lcu1I78xzy65svx0-wCJq5wmD9OGFEqu",
+            "filename": "TRANSFER-MANIFEST.json",
+            "bytes": 5807,
+            "sha256": "cd353815a73e77b83c22eeacd4d4b1bc7af6590d379a50490a0c8fcfcd50ebe9",
+            "modified_time": "2026-11-23T06:16:27.201Z",
+            "verified_utc": "2026-11-23T06:16:30.321175+00:00",
+            "raw_bytes_verified": true,
+            "verification": "complete_authenticated_raw_file_readback",
+            "upload_performed": true,
+            "evidence": "project-docs/production-system/evidence/claude-drive-completion.json"
+          },
+          "restore_handoff.py": {
+            "status": "retained_and_raw_bytes_verified",
+            "file_id": "1MFUAZmz_3l9R5YpggxaCMVGjnvD5w9NG",
+            "url": "https://drive.google.com/file/d/1MFUAZmz_3l9R5YpggxaCMVGjnvD5w9NG/view?usp=drivesdk",
+            "folder_id": "1Lcu1I78xzy65svx0-wCJq5wmD9OGFEqu",
+            "filename": "restore_handoff.py",
+            "bytes": 4183,
+            "sha256": "4dcad9dae60e78a10919fa6d8a4909b3e4584a15535d04e7162412859d306ab6",
+            "modified_time": "2026-11-23T06:16:37.461Z",
+            "verified_utc": "2026-11-23T06:16:40.045910+00:00",
+            "raw_bytes_verified": true,
+            "verification": "complete_authenticated_raw_file_readback",
+            "upload_performed": true,
+            "evidence": "project-docs/production-system/evidence/claude-drive-completion.json"
+          },
+          "README_RESTORE.md": {
+            "status": "retained_and_raw_bytes_verified",
+            "file_id": "1F3UeLdnt2KP4Um4gRV46JFuVpb3B8h73",
+            "url": "https://docs.google.com/document/d/1F3UeLdnt2KP4Um4gRV46JFuVpb3B8h73/edit?usp=drivesdk&ouid=113038373524763352759&rtpof=true&sd=true",
+            "folder_id": "1Lcu1I78xzy65svx0-wCJq5wmD9OGFEqu",
+            "filename": "README_RESTORE.md",
+            "bytes": 1867,
+            "sha256": "e1de13d9bd971e2d6e3d43af8072d3b70ca3a7fc4110291c69af3ab7ebf91f92",
+            "modified_time": "2026-11-23T06:16:45.458Z",
+            "verified_utc": "2026-11-23T06:16:49.667604+00:00",
+            "raw_bytes_verified": true,
+            "verification": "complete_authenticated_raw_file_readback",
+            "upload_performed": true,
+            "evidence": "project-docs/production-system/evidence/claude-drive-completion.json"
+          }
+        },
+        "restoration_evidence": "project-docs/production-system/evidence/claude-parts-restoration.json",
+        "evidence": "project-docs/production-system/evidence/claude-drive-completion.json",
+        "additional_whole_file_metadata_only": {
+          "file_id": "1Zgt8q8--0lro5_6_pavdsREi7bGrh8X8",
+          "url": "https://drive.google.com/file/d/1Zgt8q8--0lro5_6_pavdsREi7bGrh8X8/view?usp=drivesdk",
+          "folder_id": "1_eLVf40l7HrI7-Ekl6FWRlIQaA50Pkfe",
+          "filename": "Almighty_God_Knows_the_Future_Renewed_1080p60_delivery.mp4",
+          "bytes": 395506771,
+          "raw_bytes_verified": false,
+          "verification": "Title, size and parent metadata matched; full readback blocked above the 268435456-byte fetch ceiling. Expected original SHA-256 is not a verified hash of this Drive object."
+        }
+      }
     },
     {
       "filename": "Almighty_God_Knows_the_Future_Renewed_720p60_final.mp4",
@@ -1380,7 +2491,113 @@
         1280,
         720
       ],
-      "derived_from_master_sha256": "c553b2a51f3917d389adc51ee6dc97c96e6b6e9e306a9bfd2bfbe38a89b34c55"
+      "derived_from_master_sha256": "c553b2a51f3917d389adc51ee6dc97c96e6b6e9e306a9bfd2bfbe38a89b34c55",
+      "drive": {
+        "status": "retained_as_verified_exact_parts",
+        "folder_id": "1Lcu1I78xzy65svx0-wCJq5wmD9OGFEqu",
+        "url": "https://drive.google.com/drive/folders/1Lcu1I78xzy65svx0-wCJq5wmD9OGFEqu",
+        "original_filename": "Almighty_God_Knows_the_Future_Renewed_720p60_final.mp4",
+        "bytes": 220179614,
+        "sha256": "9cba8118b8fdf7c9410e5b10362ba15ee28a4668f95aceca911cee95a0848880",
+        "raw_bytes_verified": true,
+        "verification": "Every uploaded part fully read back and SHA-256 verified; actual local restoration verified exact original; no transcoding.",
+        "parts": [
+          {
+            "status": "retained_and_raw_bytes_verified",
+            "file_id": "1CwJe7HNniEn5rokkIXCLjP0zFdd3QL8P",
+            "url": "https://drive.google.com/file/d/1CwJe7HNniEn5rokkIXCLjP0zFdd3QL8P/view?usp=drivesdk",
+            "folder_id": "1Lcu1I78xzy65svx0-wCJq5wmD9OGFEqu",
+            "filename": "Almighty_God_Knows_the_Future_Renewed_720p60_final.mp4.part01",
+            "bytes": 90000000,
+            "sha256": "877eab7c24b6cad6552fa12cb195e1175a5f539ba1e82fd0c2d43a2ac9ebc3b2",
+            "modified_time": "2026-11-23T06:14:39.801Z",
+            "verified_utc": "2026-11-23T06:14:57.864453+00:00",
+            "raw_bytes_verified": true,
+            "verification": "complete_authenticated_raw_file_readback",
+            "upload_performed": true,
+            "evidence": "project-docs/production-system/evidence/claude-drive-completion.json"
+          },
+          {
+            "status": "retained_and_raw_bytes_verified",
+            "file_id": "1iqlKXfwYKT-yquOjzgvR-6NJyJaIcj7k",
+            "url": "https://drive.google.com/file/d/1iqlKXfwYKT-yquOjzgvR-6NJyJaIcj7k/view?usp=drivesdk",
+            "folder_id": "1Lcu1I78xzy65svx0-wCJq5wmD9OGFEqu",
+            "filename": "Almighty_God_Knows_the_Future_Renewed_720p60_final.mp4.part02",
+            "bytes": 90000000,
+            "sha256": "f7fd09ea8ec1a2e5c3cc8cc4a6c4497f3c66f1d81a54e7648b1a42195c851205",
+            "modified_time": "2026-11-23T06:15:20.905Z",
+            "verified_utc": "2026-11-23T06:15:35.195449+00:00",
+            "raw_bytes_verified": true,
+            "verification": "complete_authenticated_raw_file_readback",
+            "upload_performed": true,
+            "evidence": "project-docs/production-system/evidence/claude-drive-completion.json"
+          },
+          {
+            "status": "retained_and_raw_bytes_verified",
+            "file_id": "1x5BFMtv20Bg2HwdA0DtahTPRsLm0dAf8",
+            "url": "https://drive.google.com/file/d/1x5BFMtv20Bg2HwdA0DtahTPRsLm0dAf8/view?usp=drivesdk",
+            "folder_id": "1Lcu1I78xzy65svx0-wCJq5wmD9OGFEqu",
+            "filename": "Almighty_God_Knows_the_Future_Renewed_720p60_final.mp4.part03",
+            "bytes": 40179614,
+            "sha256": "dd2d3547bb093c669756eae2db1ffd8039b4049342d076578b8d7aa30d5355fd",
+            "modified_time": "2026-11-23T06:16:05.830Z",
+            "verified_utc": "2026-11-23T06:16:21.578755+00:00",
+            "raw_bytes_verified": true,
+            "verification": "complete_authenticated_raw_file_readback",
+            "upload_performed": true,
+            "evidence": "project-docs/production-system/evidence/claude-drive-completion.json"
+          }
+        ],
+        "restoration_support": {
+          "TRANSFER-MANIFEST.json": {
+            "status": "retained_and_raw_bytes_verified",
+            "file_id": "1embhjU9q3XM3CgMq-I0w8FepPcQqFQ1z",
+            "url": "https://drive.google.com/file/d/1embhjU9q3XM3CgMq-I0w8FepPcQqFQ1z/view?usp=drivesdk",
+            "folder_id": "1Lcu1I78xzy65svx0-wCJq5wmD9OGFEqu",
+            "filename": "TRANSFER-MANIFEST.json",
+            "bytes": 5807,
+            "sha256": "cd353815a73e77b83c22eeacd4d4b1bc7af6590d379a50490a0c8fcfcd50ebe9",
+            "modified_time": "2026-11-23T06:16:27.201Z",
+            "verified_utc": "2026-11-23T06:16:30.321175+00:00",
+            "raw_bytes_verified": true,
+            "verification": "complete_authenticated_raw_file_readback",
+            "upload_performed": true,
+            "evidence": "project-docs/production-system/evidence/claude-drive-completion.json"
+          },
+          "restore_handoff.py": {
+            "status": "retained_and_raw_bytes_verified",
+            "file_id": "1MFUAZmz_3l9R5YpggxaCMVGjnvD5w9NG",
+            "url": "https://drive.google.com/file/d/1MFUAZmz_3l9R5YpggxaCMVGjnvD5w9NG/view?usp=drivesdk",
+            "folder_id": "1Lcu1I78xzy65svx0-wCJq5wmD9OGFEqu",
+            "filename": "restore_handoff.py",
+            "bytes": 4183,
+            "sha256": "4dcad9dae60e78a10919fa6d8a4909b3e4584a15535d04e7162412859d306ab6",
+            "modified_time": "2026-11-23T06:16:37.461Z",
+            "verified_utc": "2026-11-23T06:16:40.045910+00:00",
+            "raw_bytes_verified": true,
+            "verification": "complete_authenticated_raw_file_readback",
+            "upload_performed": true,
+            "evidence": "project-docs/production-system/evidence/claude-drive-completion.json"
+          },
+          "README_RESTORE.md": {
+            "status": "retained_and_raw_bytes_verified",
+            "file_id": "1F3UeLdnt2KP4Um4gRV46JFuVpb3B8h73",
+            "url": "https://docs.google.com/document/d/1F3UeLdnt2KP4Um4gRV46JFuVpb3B8h73/edit?usp=drivesdk&ouid=113038373524763352759&rtpof=true&sd=true",
+            "folder_id": "1Lcu1I78xzy65svx0-wCJq5wmD9OGFEqu",
+            "filename": "README_RESTORE.md",
+            "bytes": 1867,
+            "sha256": "e1de13d9bd971e2d6e3d43af8072d3b70ca3a7fc4110291c69af3ab7ebf91f92",
+            "modified_time": "2026-11-23T06:16:45.458Z",
+            "verified_utc": "2026-11-23T06:16:49.667604+00:00",
+            "raw_bytes_verified": true,
+            "verification": "complete_authenticated_raw_file_readback",
+            "upload_performed": true,
+            "evidence": "project-docs/production-system/evidence/claude-drive-completion.json"
+          }
+        },
+        "restoration_evidence": "project-docs/production-system/evidence/claude-parts-restoration.json",
+        "evidence": "project-docs/production-system/evidence/claude-drive-completion.json"
+      }
     }
   ],
   "limits": [
@@ -1582,5 +2799,14 @@
     "qa_evidence": "project-docs/production-system/evidence/s11-renewed-final-qa.json",
     "producing_commit": "eec8d16519ea82309ef851975792e9dfc548da03",
     "integration_pr": 112
+  },
+  "claude_handoff": {
+    "local_date": "2026-11-22",
+    "status": "all_available_scoped_originals_retained_and_verified",
+    "folder_url": "https://drive.google.com/drive/folders/1lxcic8BcSzNgPtEY_Yg_2TBAbNam72dZ",
+    "media_inventory": "project-docs/production-system/catalogs/handoff-media.json",
+    "completion_evidence": "project-docs/production-system/evidence/claude-drive-completion.json",
+    "new_picture_rendered": false,
+    "large_direct_files_verification": "Five direct large objects remain metadata-only; exact verified parts are the content authority."
   }
 }

@@ -1,5 +1,39 @@
 # Delivered films, studies and model previews
 
+## Whole-project Claude handoff — November 22, 2026
+
+Use [CLAUDE-HANDOFF.md](CLAUDE-HANDOFF.md) with the
+[Drive handoff folder](https://drive.google.com/drive/folders/1lxcic8BcSzNgPtEY_Yg_2TBAbNam72dZ).
+The [media inventory](catalogs/handoff-media.json) and
+[completion receipts](evidence/claude-drive-completion.json) distinguish exact
+uploaded files, verified numbered parts, previously retained Drive files,
+historical alternates and unresolved old full-film locations. Existing saved
+identities below remain unchanged.
+
+| Current Drive location | Contents |
+| --- | --- |
+| [Verified Song 11 recovery](https://drive.google.com/drive/folders/1Lcu1I78xzy65svx0-wCJq5wmD9OGFEqu) | Full-HD delivery, retained older 720p derivative and both exact native-master archives, transferred in numbered parts |
+| [Cinematic Ten](https://drive.google.com/drive/folders/1gxMbTORCUZNXAAa-Gg7_T8scfKXELMkf) | Ten earlier films, overview, technical records, checksums, README and full package |
+| [Advanced Dance](https://drive.google.com/drive/folders/1CbjaFW1_zewZ4IWrzvM4GpsOFM_XEQTj) | Two revised films, complete revised ten-film package, QA and maintenance handoff |
+| [Source and Documentation](https://drive.google.com/drive/folders/1ARIxA-UsuIR0xEVeDIBMH-MMgoxnafHn) | Current source snapshot, documentation and handoff receipts |
+| [Reproduction Resources](https://drive.google.com/drive/folders/1dNAkcUesWv5RcKJ48s_W7mpDW757b0At) | Exact pinned assets, fonts, prepared Song 11 inputs and preserved review evidence |
+| [Reference Media](https://drive.google.com/drive/folders/1ihTYIdC8ssma9QZ1-OLXn3fRU6K6jaCZ) | Three canonical recordings, three current uploaded copies and three separately labeled Earlier-Import-- variants |
+
+The handoff now retains all 40 scoped media/reference/recovery originals and two resource/review packages with exact verification. A directly available [full-HD Song 11 copy](https://drive.google.com/file/d/1Zgt8q8--0lro5_6_pavdsREi7bGrh8X8/view?usp=drivesdk) is metadata-matched; the recovery parts are the byte-verified authority.
+
+The Drive connection has a 104,857,600-byte per-file transfer ceiling. Large
+originals are preserved in 90,000,000-byte parts; no video is re-encoded for this
+handoff. Download all parts, `TRANSFER-MANIFEST.json` and `restore_handoff.py`
+from the corresponding folder, then run `python3 restore_handoff.py`. The script
+verifies every part and the exact restored original. See
+[restoration instructions](../../tools/handoff/README.md).
+
+Current owner directions require 1080p design/review, then a separately approved
+4K60 show render. No exact-output owner creative approval is recorded for the
+renewed Song 11 movie. Existing 720p copies are retained historical artifacts,
+not instructions to produce new phone versions. Completion means the recorded
+production and transfer checks passed; it does not confer creative approval.
+
 ## Completed Song 11: Almighty God Knows the Future
 
 The complete **4-minute-35-second recreation is rendered, checked and saved**.

@@ -1,0 +1,154 @@
+name: Video tool proofs (cloud CPU)
+
+# Proves each video tool on a GitHub cloud runner, where browser sockets,
+# Xvfb and Docker work (they are blocked in chat sandboxes).
+# Runs only when dispatched by hand or pushed to a proof branch. No test suites.
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - "claude/video-tools-*"
+
+permissions:
+  contents: read
+
+defaults:
+  run:
+    # pipefail: a failing tool is reported as failed even when its output is logged.
+    shell: bash
+
+concurrency:
+  group: video-tool-proofs-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  tools:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+          cache: npm
+      - name: Host tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ffmpeg xvfb libegl1 libgl1-mesa-dri libxi6 libxrender1 libxkbcommon0 libxxf86vm1 libxfixes3 libsm6
+          python -m pip install uv==0.13.9
+          mkdir -p work/proofs
+      - name: Keep the pinned Blender download between runs
+        uses: actions/cache@v4
+        with:
+          path: .tools/blender-download
+          key: blender-${{ hashFiles('infra/toolchain.lock.json') }}
+      - name: Setup (Blender, browser, apps, integrations)
+        id: setup
+        continue-on-error: true
+        run: |
+          # download.blender.org sometimes refuses runners (HTTP 403); retry before failing.
+          for attempt in 1 2 3; do
+            python scripts/bootstrap.py 2>&1 | tee work/proofs/01-bootstrap.log && exit 0
+            echo "setup attempt $attempt failed; retrying in 45 seconds" | tee -a work/proofs/01-bootstrap.log
+            sleep 45
+          done
+          exit 1
+      - name: Browser doctor
+        id: doctor
+        continue-on-error: true
+        run: ./scripts/video doctor --probe-browser 2>&1 | tee work/proofs/02-doctor.log
+      - name: Three.js frame capture
+        id: threejs
+        continue-on-error: true
+        run: npm run test:browser 2>&1 | tee work/proofs/03-threejs.log
+      - name: Preview render (pipeline demo)
+        id: preview
+        continue-on-error: true
+        run: ./scripts/video preview pipeline-demo --quality draft 2>&1 | tee work/proofs/04-preview.log
+      - name: Remotion assembly
+        id: remotion
+        continue-on-error: true
+        run: ./scripts/video finalize pipeline-demo --quality draft --editor remotion 2>&1 | tee work/proofs/05-remotion.log
+      - name: Blender background render
+        id: blender
+        continue-on-error: true
+        run: ./scripts/video preview cpu-demo --quality draft 2>&1 | tee work/proofs/06-blender.log
+      - name: Reusable song scene (p3d-kit with params)
+        id: songscene
+        continue-on-error: true
+        run: PYTHONHASHSEED=0 ./scripts/video preview song-scene-demo --quality review 2>&1 | tee work/proofs/08-song-scene.log
+      - name: Blender MCP (stdio and live GUI)
+        id: mcp
+        continue-on-error: true
+        run: |
+          python3 integrations/blender/smoke.py 2>&1 | tee work/proofs/07-mcp.log
+          Xvfb :99 -screen 0 1920x1080x24 >/dev/null 2>&1 &
+          export DISPLAY=:99
+          python3 integrations/blender/launch_blender.py > work/proofs/07-blender-gui.log 2>&1 &
+          for i in $(seq 1 90); do (echo > /dev/tcp/127.0.0.1/9876) >/dev/null 2>&1 && break; sleep 2; done
+          echo "--- live ---" | tee -a work/proofs/07-mcp.log
+          python3 integrations/blender/smoke.py --live 2>&1 | tee -a work/proofs/07-mcp.log
+          pkill -f blender || true
+          pkill Xvfb || true
+      - name: Summary
+        if: always()
+        run: |
+          {
+            echo "setup=${{ steps.setup.outcome }}"
+            echo "browser_doctor=${{ steps.doctor.outcome }}"
+            echo "threejs_capture=${{ steps.threejs.outcome }}"
+            echo "preview_render=${{ steps.preview.outcome }}"
+            echo "remotion=${{ steps.remotion.outcome }}"
+            echo "blender_render=${{ steps.blender.outcome }}"
+            echo "blender_mcp=${{ steps.mcp.outcome }}"
+            echo "song_scene=${{ steps.songscene.outcome }}"
+          } | tee work/proofs/summary.txt
+      - name: Save proofs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: tool-proofs
+          path: |
+            work/proofs/
+            work/pipeline/**/*.mp4
+            work/pipeline/**/*.json
+            work/pipeline/**/*.png
+          if-no-files-found: ignore
+          retention-days: 14
+
+  docker:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Keep the pinned Blender download between runs
+        uses: actions/cache@v4
+        with:
+          path: .tools/blender-download
+          key: blender-${{ hashFiles('infra/toolchain.lock.json') }}
+      - name: Fetch the pinned Blender once (retry if the site refuses a runner)
+        run: |
+          for attempt in 1 2 3; do python scripts/install-blender.py && exit 0; sleep 45; done; exit 1
+      - name: Build the CPU container
+        run: docker build -f infra/docker/Dockerfile.cpu -t concert-video-cpu . 2>&1 | tail -200
+
+  drive:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Drive read and write check
+        env:
+          GOOGLE_DRIVE_OAUTH: ${{ secrets.GOOGLE_DRIVE_OAUTH }}
+        run: |
+          python -m pip install --quiet google-api-python-client==2.187.0 google-auth==2.43.0
+          python tools/drive_sync.py check

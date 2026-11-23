@@ -28,7 +28,7 @@
     "handoff": "https://drive.google.com/drive/folders/1QDGGqqkJlbovBLCthX-QChqfD8zSmK8X",
     "media": "https://drive.google.com/drive/folders/1hrk62bFIOHv2NwXvYl2bNSmp0cwBoXrr"
   },
-  "next_work": "Recover the finished Song 11 files for owner feedback or reuse. Begin any later requested picture changes with a new source/output identity; there is no unfinished render queue.",
+  "next_work": "After project handoff, continue the owner-authorized priorities in order: make retained tools work and be reusable (try cloud routes first); integrate proven quality gains into the existing engine for all songs; simplify status/PR/render organization. Preserve completed media, modesty, 1080p review and the final4K60 approval boundary. No unfinished render queue exists.",
   "background_service_configured": false,
   "historical_baseline_checkpoint": "673f68785c36b57d55d05129ee5549efe6352c60",
   "render_projects": [
@@ -59,7 +59,7 @@
   "fresh_checkout_scope": "New detached source checkout and exact reconstructed fonts, using existing locked Python and host tools; one native frame matched exactly.",
   "drive_instruction_files_updated_and_verified": 5,
   "drive_instruction_evidence": "project-docs/production-system/evidence/drive-instruction-updates.json",
-  "private_drive_media_copies": "fourteen_cataloged_media_uploaded_and_raw_bytes_verified",
+  "private_drive_media_copies": "40 current handoff originals and two resource/review archives verified; five additional large whole copies are metadata-only. Older14-copy evidence remains historical.",
   "new_media_files_saved": 2,
   "new_media_catalog": "project-docs/production-system/catalogs/deliveries.json",
   "active_render_processes": 0,
@@ -120,7 +120,9 @@
   },
   "drive_production_log": "fan_silk_delivery_event_appended_once_and_raw_bytes_verified",
   "drive_production_log_evidence": "project-docs/production-system/evidence/fan-trio-drive-log.json",
-  "remaining_drive_actions": [],
+  "remaining_drive_actions": [
+    "Freeze and upload full current source snapshot, entry documents and final completion receipts"
+  ],
   "drive_media_files_uploaded_and_verified": 14,
   "drive_delivery_evidence": "project-docs/production-system/evidence/drive-delivery-completion.json",
   "drive_production_log_summary": {
@@ -1114,12 +1116,30 @@
   "instruction_authority": {
     "previous_agents_instructions_withdrawn": true,
     "withdrawal_local_date": "2026-11-22",
-    "current_agents_role": "Navigation only; current conversation supplies working directions."
+    "historical_agents_role_before_pr113": "Navigation only; current conversation supplies working directions.",
+    "current_agents_role": "Standing owner directions dated November 22, 2026; preserve the existing system and retained integrations.",
+    "owner_directions_pr": 113,
+    "owner_directions_commit": "a813e62756976e87a9ab224af421a98c9e6fcad9",
+    "current_instruction_file": "AGENTS.md",
+    "instruction_precedence": "Current owner directions supersede the earlier navigation-only role and dated historical queue instructions.",
+    "latest_owner_priorities_pr": 114,
+    "latest_owner_priorities_commit": "e732bd4b9ac83ece39790fde74c9aca612956506",
+    "latest_owner_priorities_main_merge": "651e9487cd134e06b94f9627c22f008a8da02b54",
+    "authorized_priorities": [
+      "Get Blender, Three.js, Remotion, Video Shotcraft and Blender MCP working and reusable for any song; try permitted cloud routes first.",
+      "Integrate proven quality gains into the existing engine for all songs.",
+      "Organize one clear status page, stale pull requests and distributed cloud rendering."
+    ],
+    "working_mode": "Go ahead autonomously on authorized priorities; stop for actual decisions or required approvals."
   },
   "current_maintenance": {
-    "name": "Song11 reusable scene, cloud assembly, audio finalization, archives and delivery records",
-    "status": "reviewed_documented",
-    "integration_pr": 112
+    "name": "Whole-project Claude handoff, Drive reconciliation and documentation",
+    "status": "media_resources_instructions_verified_source_freeze",
+    "branch": "maintenance/claude-handoff-20261122",
+    "base_main_commit": "651e9487cd134e06b94f9627c22f008a8da02b54",
+    "entrypoint": "project-docs/production-system/CLAUDE-HANDOFF.md",
+    "completion_evidence": "project-docs/production-system/evidence/claude-drive-completion.json",
+    "initial_base_main_commit": "93527bf5e2e43477073e361d22cfd6d4fa999da7"
   },
   "catalog_artifact_count": 44,
   "previous_increment_at_s11_start": {
@@ -1446,5 +1466,46 @@
     "skipped_existing_audio_subchecks": 2,
     "future_cache_source_identity_changed": true,
     "remaining_maintenance_findings": []
-  }
+  },
+  "historical_maintenance_before_claude_handoff": {
+    "name": "Song11 reusable scene, cloud assembly, audio finalization, archives and delivery records",
+    "status": "reviewed_documented",
+    "integration_pr": 112
+  },
+  "claude_handoff": {
+    "status": "media_resources_verified_source_freeze",
+    "local_date": "2026-11-22",
+    "timezone": "America/Los_Angeles",
+    "folder_url": "https://drive.google.com/drive/folders/1lxcic8BcSzNgPtEY_Yg_2TBAbNam72dZ",
+    "source_folder_url": "https://drive.google.com/drive/folders/1ARIxA-UsuIR0xEVeDIBMH-MMgoxnafHn",
+    "media_inventory": "project-docs/production-system/catalogs/handoff-media.json",
+    "resources_inventory": "project-docs/production-system/catalogs/handoff-resources.json",
+    "completion_evidence": "project-docs/production-system/evidence/claude-drive-completion.json",
+    "source_archive_scope": "Complete tracked-source snapshot at a frozen handoff commit; GitHub retains history.",
+    "rendering_performed_for_handoff": false,
+    "plain_status": "project-docs/production-system/PROJECT-STATUS.md",
+    "starting_prompt": "project-docs/production-system/CLAUDE-START-PROMPT.txt",
+    "originals_retained_verified": 40,
+    "resource_review_archives_verified": 2,
+    "historical_unresolved_fullfilm_targets": 11,
+    "active_background_render_processes": 0
+  },
+  "current_output_policy": {
+    "design_review_resolution": [
+      1920,
+      1080
+    ],
+    "final_show_resolution": [
+      3840,
+      2160
+    ],
+    "fps": 60,
+    "final_show_gate": "Design, timing and content approved by owner",
+    "owner_approval_recorded": false,
+    "new_phone_versions": false,
+    "cpu_work": "cloud",
+    "gpu_if_needed": "Owner Mac M1 Pro,16-coreGPU,Metal4; load<=50 and nice -n19, explicit GPU-only local allowance",
+    "blocked_tool_route": "Cloud sandbox restrictions on browser 3D, Remotion and live Blender are not evidence of a missing GPU. Try permitted cloud routes first; use owner Mac only if none works and explain why."
+  },
+  "drive_counts_scope": "drive_media_files_uploaded_and_verified=14 is the prior November21 group; current logical-original/part counts are in claude_handoff and its completion evidence."
 }

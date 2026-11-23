@@ -1,0 +1,274 @@
+{
+  "schema": "song11-complete-drive-recovery-v1",
+  "generated_utc": "2026-11-23T06:17:25.279572+00:00",
+  "folder": {
+    "id": "1Lcu1I78xzy65svx0-wCJq5wmD9OGFEqu",
+    "url": "https://drive.google.com/drive/folders/1Lcu1I78xzy65svx0-wCJq5wmD9OGFEqu"
+  },
+  "summary": {
+    "remote_files": 22,
+    "data_parts": 19,
+    "support_files": 3,
+    "original_artifacts": 4,
+    "all_expected_names_present_exactly_once": true,
+    "all_raw_hashes_match": true,
+    "all_final_modified_times_match_verified_receipts": true,
+    "total_remote_bytes": 1527577652,
+    "uploads_completed_by_this_agent": 16,
+    "previous_successful_uploads_reused": 6,
+    "duplicate_uploads_performed": 0
+  },
+  "artifacts": [
+    {
+      "artifact_id": "s11-renewed-archive-1",
+      "file_name": "Almighty_God_Knows_the_Future_Native_Master_Part_01_of_02.zip",
+      "bytes": 480006941,
+      "sha256": "ffc3ca5352abbfe2e870ad740ace9ea4c97bf164c3c4b51b932849a4ff49d91c",
+      "part_count": 6,
+      "all_remote_parts_raw_hash_verified": true,
+      "part_hashes_match_pinned_transfer_manifest": true,
+      "parts": [
+        {
+          "part_index": 1,
+          "file_name": "Almighty_God_Knows_the_Future_Native_Master_Part_01_of_02.zip.part01",
+          "bytes": 90000000,
+          "sha256": "28ae10e2fef44d4cf908c34136ce2e6e3dbe807c3d5888397a4e3aef8f656a1e",
+          "drive_id": "1mc3UmGpJthWs-WDxoCa7U-5b1kope3JN",
+          "drive_url": "https://drive.google.com/file/d/1mc3UmGpJthWs-WDxoCa7U-5b1kope3JN/view?usp=drivesdk",
+          "verified_utc": "2026-11-23T05:52:25.725775+00:00"
+        },
+        {
+          "part_index": 2,
+          "file_name": "Almighty_God_Knows_the_Future_Native_Master_Part_01_of_02.zip.part02",
+          "bytes": 90000000,
+          "sha256": "204568072baaf44e3cc1d910aa7fce907031341f6cd6f38f3d5ea3c0b47029f6",
+          "drive_id": "1jPK9OGTjilSJ0yyH_7nrB8PnLA1TFM7v",
+          "drive_url": "https://drive.google.com/file/d/1jPK9OGTjilSJ0yyH_7nrB8PnLA1TFM7v/view?usp=drivesdk",
+          "verified_utc": "2026-11-23T05:53:03.953887+00:00"
+        },
+        {
+          "part_index": 3,
+          "file_name": "Almighty_God_Knows_the_Future_Native_Master_Part_01_of_02.zip.part03",
+          "bytes": 90000000,
+          "sha256": "cf0d3e64cbd0016ac65cae32b5215bb105f328ca859bfacc63950d88d5f18608",
+          "drive_id": "1CPoO45eUFjZ-U0l7L3h6cqJ3nwq2Br9m",
+          "drive_url": "https://drive.google.com/file/d/1CPoO45eUFjZ-U0l7L3h6cqJ3nwq2Br9m/view?usp=drivesdk",
+          "verified_utc": "2026-11-23T05:53:43.252903+00:00"
+        },
+        {
+          "part_index": 4,
+          "file_name": "Almighty_God_Knows_the_Future_Native_Master_Part_01_of_02.zip.part04",
+          "bytes": 90000000,
+          "sha256": "f35d5c7e02669357ff24e1032b905fce718b13d348cbe1bec06b00dc044c8840",
+          "drive_id": "1ObER9c_NUth4haFfgiYRR-Uorpb0S9YZ",
+          "drive_url": "https://drive.google.com/file/d/1ObER9c_NUth4haFfgiYRR-Uorpb0S9YZ/view?usp=drivesdk",
+          "verified_utc": "2026-11-23T05:54:18.111020+00:00"
+        },
+        {
+          "part_index": 5,
+          "file_name": "Almighty_God_Knows_the_Future_Native_Master_Part_01_of_02.zip.part05",
+          "bytes": 90000000,
+          "sha256": "c546437bb872d51abfabfeb18aa8b1ae76dd7c5c65957f77b478f4344cb3e188",
+          "drive_id": "1Z_KN9rR-zqgZgciDsJCoKSq_rVuoESss",
+          "drive_url": "https://drive.google.com/file/d/1Z_KN9rR-zqgZgciDsJCoKSq_rVuoESss/view?usp=drivesdk",
+          "verified_utc": "2026-11-23T05:54:57.917002+00:00"
+        },
+        {
+          "part_index": 6,
+          "file_name": "Almighty_God_Knows_the_Future_Native_Master_Part_01_of_02.zip.part06",
+          "bytes": 30006941,
+          "sha256": "501a840d7879bef97ebe16b3c9bc732716e448f3e35e8324c2324b4d5a2387f2",
+          "drive_id": "1TSGySVxbLkvgELP6DRoKyC-Y6YIQ3_3q",
+          "drive_url": "https://drive.google.com/file/d/1TSGySVxbLkvgELP6DRoKyC-Y6YIQ3_3q/view?usp=drivesdk",
+          "verified_utc": "2026-11-23T05:55:14.957815+00:00"
+        }
+      ]
+    },
+    {
+      "artifact_id": "s11-renewed-archive-2",
+      "file_name": "Almighty_God_Knows_the_Future_Native_Master_Part_02_of_02.zip",
+      "bytes": 431872469,
+      "sha256": "c4285f489fbadec9489037f50c6cab54ab839c3d1545c22dc822a0fd095284a9",
+      "part_count": 5,
+      "all_remote_parts_raw_hash_verified": true,
+      "part_hashes_match_pinned_transfer_manifest": true,
+      "parts": [
+        {
+          "part_index": 1,
+          "file_name": "Almighty_God_Knows_the_Future_Native_Master_Part_02_of_02.zip.part01",
+          "bytes": 90000000,
+          "sha256": "c0118846b47b4582ae52b9df8fb6510c882c67f5738378f9cb76d49cf1f01d45",
+          "drive_id": "1HGmx8JqLGyhQJzlsk-EW55dKHx0GTLof",
+          "drive_url": "https://drive.google.com/file/d/1HGmx8JqLGyhQJzlsk-EW55dKHx0GTLof/view?usp=drivesdk",
+          "verified_utc": "2026-11-23T06:07:48.971237+00:00"
+        },
+        {
+          "part_index": 2,
+          "file_name": "Almighty_God_Knows_the_Future_Native_Master_Part_02_of_02.zip.part02",
+          "bytes": 90000000,
+          "sha256": "00f9039a6b0dde399780c875ac60a31b28496817f200971fc9fb848f258b74b6",
+          "drive_id": "1PljML4Q0VzrMfK0aa570TRmHIdA_psqk",
+          "drive_url": "https://drive.google.com/file/d/1PljML4Q0VzrMfK0aa570TRmHIdA_psqk/view?usp=drivesdk",
+          "verified_utc": "2026-11-23T06:08:30.177158+00:00"
+        },
+        {
+          "part_index": 3,
+          "file_name": "Almighty_God_Knows_the_Future_Native_Master_Part_02_of_02.zip.part03",
+          "bytes": 90000000,
+          "sha256": "543e0d159c7f772eabeaaa5a817d64bb92aecc397237e8e02d33f3dcf253980d",
+          "drive_id": "18QItA3JLbLGYC8noZu3n-SHDrpFQ08JU",
+          "drive_url": "https://drive.google.com/file/d/18QItA3JLbLGYC8noZu3n-SHDrpFQ08JU/view?usp=drivesdk",
+          "verified_utc": "2026-11-23T06:09:07.364209+00:00"
+        },
+        {
+          "part_index": 4,
+          "file_name": "Almighty_God_Knows_the_Future_Native_Master_Part_02_of_02.zip.part04",
+          "bytes": 90000000,
+          "sha256": "cb799c4c2a92065460c5efce49fad956def47ccba9c2659f62dd3e92c11b25d1",
+          "drive_id": "1AEs8t0Ba8zBx-g6OLNCX9kKnchO69aqH",
+          "drive_url": "https://drive.google.com/file/d/1AEs8t0Ba8zBx-g6OLNCX9kKnchO69aqH/view?usp=drivesdk",
+          "verified_utc": "2026-11-23T06:09:45.533679+00:00"
+        },
+        {
+          "part_index": 5,
+          "file_name": "Almighty_God_Knows_the_Future_Native_Master_Part_02_of_02.zip.part05",
+          "bytes": 71872469,
+          "sha256": "bcd3d32ae7a9ddc7ede57c4b535c6839c8a51c3228b35d9265a49af70f122ef9",
+          "drive_id": "1WhgfMjrh9drs47tevI0ZMTtrrENvj4Ri",
+          "drive_url": "https://drive.google.com/file/d/1WhgfMjrh9drs47tevI0ZMTtrrENvj4Ri/view?usp=drivesdk",
+          "verified_utc": "2026-11-23T06:10:49.891720+00:00"
+        }
+      ]
+    },
+    {
+      "artifact_id": "s11-renewed-full_hd_delivery",
+      "file_name": "Almighty_God_Knows_the_Future_Renewed_1080p60_delivery.mp4",
+      "bytes": 395506771,
+      "sha256": "120bb4fcf4ebced490f4f468dca396170b328fd0ece3941e67e832258f5f449e",
+      "part_count": 5,
+      "all_remote_parts_raw_hash_verified": true,
+      "part_hashes_match_pinned_transfer_manifest": true,
+      "parts": [
+        {
+          "part_index": 1,
+          "file_name": "Almighty_God_Knows_the_Future_Renewed_1080p60_delivery.mp4.part01",
+          "bytes": 90000000,
+          "sha256": "f5723e54cd03eb1e4988c21167f366ce630f251a575e059693e825882237409a",
+          "drive_id": "1-s87-4P-r-wBERd1abn7Kk2vlmFEOldu",
+          "drive_url": "https://drive.google.com/file/d/1-s87-4P-r-wBERd1abn7Kk2vlmFEOldu/view?usp=drivesdk",
+          "verified_utc": "2026-11-23T06:11:31.621027+00:00"
+        },
+        {
+          "part_index": 2,
+          "file_name": "Almighty_God_Knows_the_Future_Renewed_1080p60_delivery.mp4.part02",
+          "bytes": 90000000,
+          "sha256": "e33f25941381c060d87a4d1fddc209743c1e419fd89b2c434cec101e953b733d",
+          "drive_id": "1vUJJKKPFQS7jF5T30Ff_p0Ww9cWmoUmn",
+          "drive_url": "https://drive.google.com/file/d/1vUJJKKPFQS7jF5T30Ff_p0Ww9cWmoUmn/view?usp=drivesdk",
+          "verified_utc": "2026-11-23T06:12:11.231058+00:00"
+        },
+        {
+          "part_index": 3,
+          "file_name": "Almighty_God_Knows_the_Future_Renewed_1080p60_delivery.mp4.part03",
+          "bytes": 90000000,
+          "sha256": "be98db83fd45c95888db3e8db5bbe44143a4fabdab960e49e7b68996397682ab",
+          "drive_id": "1T06t3SVZc-9i8ag5KvIdVS81NY2MqlKR",
+          "drive_url": "https://drive.google.com/file/d/1T06t3SVZc-9i8ag5KvIdVS81NY2MqlKR/view?usp=drivesdk",
+          "verified_utc": "2026-11-23T06:12:52.661014+00:00"
+        },
+        {
+          "part_index": 4,
+          "file_name": "Almighty_God_Knows_the_Future_Renewed_1080p60_delivery.mp4.part04",
+          "bytes": 90000000,
+          "sha256": "5262b1830884b6455cdb284047ef73d7b47c5c30b00b908f123f233d93f8bd60",
+          "drive_id": "1j_b9ygzV6ZO2A2eMf0_H4_cBAiUfSzBB",
+          "drive_url": "https://drive.google.com/file/d/1j_b9ygzV6ZO2A2eMf0_H4_cBAiUfSzBB/view?usp=drivesdk",
+          "verified_utc": "2026-11-23T06:13:56.203064+00:00"
+        },
+        {
+          "part_index": 5,
+          "file_name": "Almighty_God_Knows_the_Future_Renewed_1080p60_delivery.mp4.part05",
+          "bytes": 35506771,
+          "sha256": "03f0ceb4e61021cd6a2d15a3304e3a5d8ee64fdac36c3c74406ed10de40ac463",
+          "drive_id": "1qUbS6ui6XSXnM64VVYUvLuNiyxO4SVpa",
+          "drive_url": "https://drive.google.com/file/d/1qUbS6ui6XSXnM64VVYUvLuNiyxO4SVpa/view?usp=drivesdk",
+          "verified_utc": "2026-11-23T06:14:16.773310+00:00"
+        }
+      ]
+    },
+    {
+      "artifact_id": "s11-renewed-review_copy",
+      "file_name": "Almighty_God_Knows_the_Future_Renewed_720p60_final.mp4",
+      "bytes": 220179614,
+      "sha256": "9cba8118b8fdf7c9410e5b10362ba15ee28a4668f95aceca911cee95a0848880",
+      "part_count": 3,
+      "all_remote_parts_raw_hash_verified": true,
+      "part_hashes_match_pinned_transfer_manifest": true,
+      "parts": [
+        {
+          "part_index": 1,
+          "file_name": "Almighty_God_Knows_the_Future_Renewed_720p60_final.mp4.part01",
+          "bytes": 90000000,
+          "sha256": "877eab7c24b6cad6552fa12cb195e1175a5f539ba1e82fd0c2d43a2ac9ebc3b2",
+          "drive_id": "1CwJe7HNniEn5rokkIXCLjP0zFdd3QL8P",
+          "drive_url": "https://drive.google.com/file/d/1CwJe7HNniEn5rokkIXCLjP0zFdd3QL8P/view?usp=drivesdk",
+          "verified_utc": "2026-11-23T06:14:57.864453+00:00"
+        },
+        {
+          "part_index": 2,
+          "file_name": "Almighty_God_Knows_the_Future_Renewed_720p60_final.mp4.part02",
+          "bytes": 90000000,
+          "sha256": "f7fd09ea8ec1a2e5c3cc8cc4a6c4497f3c66f1d81a54e7648b1a42195c851205",
+          "drive_id": "1iqlKXfwYKT-yquOjzgvR-6NJyJaIcj7k",
+          "drive_url": "https://drive.google.com/file/d/1iqlKXfwYKT-yquOjzgvR-6NJyJaIcj7k/view?usp=drivesdk",
+          "verified_utc": "2026-11-23T06:15:35.195449+00:00"
+        },
+        {
+          "part_index": 3,
+          "file_name": "Almighty_God_Knows_the_Future_Renewed_720p60_final.mp4.part03",
+          "bytes": 40179614,
+          "sha256": "dd2d3547bb093c669756eae2db1ffd8039b4049342d076578b8d7aa30d5355fd",
+          "drive_id": "1x5BFMtv20Bg2HwdA0DtahTPRsLm0dAf8",
+          "drive_url": "https://drive.google.com/file/d/1x5BFMtv20Bg2HwdA0DtahTPRsLm0dAf8/view?usp=drivesdk",
+          "verified_utc": "2026-11-23T06:16:21.578755+00:00"
+        }
+      ]
+    }
+  ],
+  "support_files": [
+    {
+      "file_name": "TRANSFER-MANIFEST.json",
+      "bytes": 5807,
+      "sha256": "cd353815a73e77b83c22eeacd4d4b1bc7af6590d379a50490a0c8fcfcd50ebe9",
+      "drive_id": "1embhjU9q3XM3CgMq-I0w8FepPcQqFQ1z",
+      "drive_url": "https://drive.google.com/file/d/1embhjU9q3XM3CgMq-I0w8FepPcQqFQ1z/view?usp=drivesdk",
+      "verified_utc": "2026-11-23T06:16:30.321175+00:00"
+    },
+    {
+      "file_name": "restore_handoff.py",
+      "bytes": 4183,
+      "sha256": "4dcad9dae60e78a10919fa6d8a4909b3e4584a15535d04e7162412859d306ab6",
+      "drive_id": "1MFUAZmz_3l9R5YpggxaCMVGjnvD5w9NG",
+      "drive_url": "https://drive.google.com/file/d/1MFUAZmz_3l9R5YpggxaCMVGjnvD5w9NG/view?usp=drivesdk",
+      "verified_utc": "2026-11-23T06:16:40.045910+00:00"
+    },
+    {
+      "file_name": "README_RESTORE.md",
+      "bytes": 1867,
+      "sha256": "e1de13d9bd971e2d6e3d43af8072d3b70ca3a7fc4110291c69af3ab7ebf91f92",
+      "drive_id": "1F3UeLdnt2KP4Um4gRV46JFuVpb3B8h73",
+      "drive_url": "https://docs.google.com/document/d/1F3UeLdnt2KP4Um4gRV46JFuVpb3B8h73/edit?usp=drivesdk&ouid=113038373524763352759&rtpof=true&sd=true",
+      "verified_utc": "2026-11-23T06:16:49.667604+00:00"
+    }
+  ],
+  "exact_native_master": {
+    "file_name": "Almighty_God_Knows_the_Future_Renewed_1080p60_final.mp4",
+    "bytes": 911865528,
+    "sha256": "c553b2a51f3917d389adc51ee6dc97c96e6b6e9e306a9bfd2bfbe38a89b34c55",
+    "restoration": "Restore the two native ZIP artifacts from these transfer parts; extract both ZIPs into one folder and run their embedded restore_master.py. The prior archive packaging receipt independently verified the full restored original.",
+    "prior_archive_restore_receipt": "work/s11_cloud/master-archive/master-archive-receipt.json"
+  },
+  "verification_method": "Each file was metadata checked, raw downloaded through the authenticated Drive fetch file_uri and SHA-256/byte-count compared to the pinned local transfer plan. The final complete folder listing matches names, IDs, byte counts and modified times of all 22 verification receipts. Original artifact identity derives from the already-proven local split plan plus exact hashes for every remote part.",
+  "remote_mutations": "Only the 16 authorized remaining file creations. No existing files, permissions, tracked source or Git were changed.",
+  "existing_direct_large_copies": "Retained separately as metadata-only locators because those objects exceed the connector raw fetch size limit. This recovery receipt does not relabel those direct copies as byte verified."
+}

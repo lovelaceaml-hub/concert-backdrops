@@ -1,6 +1,16 @@
 # Integration verification
 
-Checked in the cloud Linux workspace during setup on 2026-11-20.
+The latest owner priorities ([PR #114](https://github.com/lovelaceaml-hub/concert-backdrops/pull/114)) authorize: make the retained tools work and be reusable for every song; integrate proven quality gains into the existing engine; then simplify status, stale PRs and distributed rendering. Try permitted cloud routes first for browser/Remotion/live-Blender sandbox limits. Use the owner's Mac only if no cloud route works and explain why; retain the separate GPU/load/priority conditions. The current deliverable is the complete Claude handoff; these priorities guide continuation.
+
+## Current availability, November 23, 2026 UTC
+
+Source, pins and configuration are preserved, but the handoff checkout does not contain the installed Node dependencies, pinned `.tools/video-shotcraft` checkout, isolated Blender MCP environment/profile. The two tracked Shotcraft skill symlinks are present but dangling because their `../../.tools/video-shotcraft` target is absent. Preserve these links during source extraction. The currently available host Blender 4.3.2 is different from the recorded 5.2.4 LTS project pin. Restore the intended versions and rerun their checks before claiming current readiness. See [setup instructions](README.md) and [the complete handoff](../project-docs/production-system/CLAUDE-HANDOFF.md).
+
+The owner requires retaining and making these tools reusable. Their incomplete browser/GUI validation is separate from the completed full Song 11 p3d production, which has no unfinished render queue. CPU work remains in the cloud; needed GPU work uses the owner's Mac under [the current rules](../AGENTS.md).
+
+## Historical setup verification, November 20, 2026
+
+The table below records checks in the cloud Linux workspace during setup on 2026-11-20. “Installed,” “saved” and “this workspace” refer to that earlier environment, not to the present handoff checkout. Live Blender GUI bridging and Workbench browser playback/export have not subsequently been verified by this record.
 
 | Check | Result |
 | --- | --- |
