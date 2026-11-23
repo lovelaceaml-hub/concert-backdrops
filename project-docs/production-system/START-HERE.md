@@ -1,6 +1,31 @@
 # Concert production system
 
-## Current delivery and maintenance
+## Current production: Almighty God Knows the Future
+
+The owner's current request is a more beautiful recreation of the complete
+Song 11 film, with more fluid animation and modest, separately shaped garments.
+The earlier fan study is superseded and its draft PR #111 is closed unmerged.
+
+The new source and workflow are in [PR #112](https://github.com/lovelaceaml-hub/concert-backdrops/pull/112).
+Start with [the current handoff](AI-HANDOFF.md), [creative direction](CREATIVE-RULES.md),
+[recreation record](S11-RECREATION.md) and [validation](S11-RECREATION-VALIDATION.md).
+The full native 1080p60 film is 275 seconds, preserving the original recording
+and closing hold. Its complete parallel render is in progress; the native
+motion proof and cloud comparison frames have passed their recorded checks.
+
+| Need | Current entry point |
+| --- | --- |
+| Recover the active production state | [STATE.json](STATE.json) |
+| Reuse the scene, costumes and animation | [Song 11 workflow](../../tools/s11_renewed/README.md) |
+| Run the full film across cloud workers | [Parallel picture workflow](../../tools/s11_cloud/README.md) |
+| Recover private render outputs | [Saved recovery identity](evidence/s11-cloud-recovery.json) |
+| Find finished films and historical references | [DELIVERIES.md](DELIVERIES.md) |
+
+## Earlier Advanced Dance delivery and maintenance
+
+The following record predates the current Song 11 request. Its files and checks
+retain their historical identities; its then-current task wording does not
+replace the active production above.
 
 Updated November 22, 2026, America/Los_Angeles. The user's current request is to
 document, upload, update, review and refactor the completed project. The previous

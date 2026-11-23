@@ -58,6 +58,12 @@ render service is required by this implementation.
 
 ## Prepare and render
 
+For the complete native film, use the [parallel cloud picture workflow](../s11_cloud/README.md)
+and the [assembly and delivery checks](../s11_delivery/README.md). That route
+distributes the same scene across cloud workers and adds the verified original
+recording after the picture sections are collected. The command below remains
+the local Linux fallback; its completed parts are never mixed with the cloud run.
+
 From the repository root with the virtual environment activated:
 
 ```bash
@@ -75,7 +81,8 @@ existing 0.1 second picture delay once. It renders 16,500 real frames at 60 fps;
 it does not interpolate a lower frame-rate movie or upscale a smaller render.
 
 For a composition pass, `--stills 12,28,58,99,118,140,167,205,240,260` uses
-absolute song seconds. `--baseline` is an explicit comparison with the earlier
+absolute output-video seconds. The scene evaluates 0.1 second earlier on the
+source clock, clamped at zero. `--baseline` is an explicit comparison with the earlier
 beauty treatment. Movie `--start` and `--end` use absolute frame indices.
 
 Each completed chunk records source, runtime, dimensions, sample count, exact

@@ -120,4 +120,12 @@ The complete 275-second master remains pending; this proof is not the deliverabl
 
 The GitHub probe run `45106842150` completed successfully from commit `8a2ddad71eba2a8c85b49484acd554ead39484a9`. Exact dependencies, pinned models/fonts and all 343 picture-source identities passed restoration and validation. The encrypted artifact was authenticated and inspected at 58, 105.7, 118.8, 186 and 205 seconds; the final composition and modesty fixes remain visible. Root and independent visual inspection found no new blocker in these frames.
 
-The remote runtime differs from the local Mesa runtime. The movies therefore use one complete remote cohort, with its own exact fingerprint, rather than mixing remote and local pictures. The full request uses two Mesa threads per worker, following the verified local setting; the remote probe used one. [The native-probe record](evidence/s11-cloud-native-probe.json) preserves the actual runtime, source identity, frame hashes and review scope. Full encoded-film checks remain pending.
+The remote runtime differs from the local Mesa runtime. The movie uses the complete remote request and does not mix local fallback pictures into it. The full request uses two Mesa threads per worker, following the verified local setting; the remote probe used one. [The native-probe record](evidence/s11-cloud-native-probe.json) preserves the actual runtime, source identity, frame hashes and review scope. Full encoded-film checks remain pending.
+
+## Reviewed hosted-worker metadata variation
+
+Full run `45108198761` is bound to producing commit `eec8d16519ea82309ef851975792e9dfc548da03`. Its hosted workers exposed two exact full fingerprints, differing only in GitHub image version and kernel/platform labels. The recorded source, request, Python dependencies, Mesa packages, encoder version, sample count and thread controls match. Existing logs from both host types report `llvmpipe (LLVM 20.1.2, 256 bits)`.
+
+The original strict assembler remains unchanged. A separate, narrowly scoped [reviewed assembler](../../tools/s11_delivery/README.md) checks both original fingerprints against [the persisted per-request policy](evidence/s11-host-cohort-policy.json), reads frozen inputs from the producing commit, and retains each part's exact identity. Unknown fingerprints, changed dependencies or changed source remain rejected. Its 16 acceptance tests passed. [The independent review](evidence/s11-host-cohort-review.md) documents the evidence and remaining limits; cross-host pixel identity is not claimed.
+
+Assembly permission is only for completing final QA. Every encoded join, the complete decode, timestamp continuity, original audio and final visual review remain required before delivery.

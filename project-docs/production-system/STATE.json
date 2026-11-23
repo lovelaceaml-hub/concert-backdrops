@@ -19,7 +19,7 @@
   "audio_sources_verified": 11,
   "full_rehearsal_recordings_verified": 0,
   "current_increment": "Complete Almighty God Knows the Future recreation with modest costumes, continuous conducting, new cameras and controlled light",
-  "increment_status": "native_local_motion_and_remote_probe_passed_parallel_master_requested",
+  "increment_status": "parallel_native_master_rendering_and_incremental_encoded_review",
   "cloud_gpu_provider": null,
   "mac_rendering_used": false,
   "new_study_creative_approval": "not_recorded",
@@ -28,7 +28,7 @@
     "handoff": "https://drive.google.com/drive/folders/1QDGGqqkJlbovBLCthX-QChqfD8zSmK8X",
     "media": "https://drive.google.com/drive/folders/1hrk62bFIOHv2NwXvYl2bNSmp0cwBoXrr"
   },
-  "next_work": "Finish the native cloud probe, launch the complete parallel picture request, assemble with the verified original score, inspect the encoded full film, save the master and update exact delivery identities.",
+  "next_work": "Collect all 40 encrypted parts from run45108198761, assemble using the exact reviewed-host policy and verified original score, complete encoded-film QA, save the master and review copy, and record their exact delivery identities.",
   "background_service_configured": false,
   "historical_baseline_checkpoint": "673f68785c36b57d55d05129ee5549efe6352c60",
   "render_projects": [
@@ -1330,7 +1330,7 @@
     "temporal_samples": 2,
     "original_audio_sha256": "70464dff370f7187d12029970c1fa1ef3e91c6957180aa685b64cead830f7004",
     "owner_creative_approval": "not_recorded",
-    "full_master_status": "parallel_render_requested",
+    "full_master_status": "parallel_rendering",
     "motion_proof_status": "complete_decode_timing_audio_and_consecutive_frame_review_passed",
     "rejected_fan_pr": {
       "number": 111,
@@ -1343,7 +1343,12 @@
     "cloud_full_parts": 40,
     "cloud_max_parallel": 20,
     "cloud_mesa_threads": 2,
-    "cloud_probe_evidence": "project-docs/production-system/evidence/s11-cloud-native-probe.json"
+    "cloud_probe_evidence": "project-docs/production-system/evidence/s11-cloud-native-probe.json",
+    "cloud_full_producing_commit": "eec8d16519ea82309ef851975792e9dfc548da03",
+    "cloud_full_run_id": 45108198761,
+    "local_fallback_status": "inactive_session_missing_do_not_restart",
+    "cloud_host_compatibility_policy": "project-docs/production-system/evidence/s11-host-cohort-policy.json",
+    "delivery_workflow": "tools/s11_delivery/README.md"
   },
   "render_activity_note": "Live worker/run status is observed from the current jobs; saved fields are not live telemetry."
 }

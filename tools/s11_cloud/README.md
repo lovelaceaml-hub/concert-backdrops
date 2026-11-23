@@ -86,6 +86,14 @@ GitHub runner image, platform, Mesa, FFmpeg, OpenSSL, source/assets/font hashes,
 analysis hashes, picture clock and output settings. Different host graphics or
 encoder versions are explicit; cross-machine pixel equality is not assumed.
 
+For the specific producing run `45108198761`, hosted machines reported two
+image/kernel labels while retaining matching recorded render dependencies and
+the same logged llvmpipe renderer. The original strict assembler still rejects
+their different full fingerprints. [The delivery workflow](../s11_delivery/README.md)
+documents the separate, reviewed route for exactly those two identities. It
+preserves their complete receipts and requires encoded join review and final
+technical checks. Its policy is not a wildcard exception for future runs.
+
 ## Primary references
 
 - [Public standard runner capacity and free compute](https://docs.github.com/en/actions/how-tos/write-workflows/choose-where-workflows-run/choose-the-runner-for-a-job)

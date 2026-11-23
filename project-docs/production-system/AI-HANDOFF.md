@@ -27,12 +27,24 @@ Mother is represented only as light in this song.
 The six-second native motion proof and its complete encoded-media checks have
 passed. The full film is still rendering at this checkpoint. The GitHub native
 probe has passed setup, authenticated delivery and visual review. The full
-40-part request is `s11-renewed-20261123-master`, with up to 20 workers and
-two Mesa threads per worker; local three-worker rendering is a fallback. Do not mix the two render cohorts or
-change picture source while a run is active. The private render key has a saved
+40-part request is `s11-renewed-20261123-master`, produced by commit
+`eec8d16519ea82309ef851975792e9dfc548da03` in [run 45108198761](https://github.com/lovelaceaml-hub/concert-backdrops/actions/runs/45108198761),
+with up to 20 workers and two Mesa threads per worker. The earlier local fallback
+session is inactive; its surviving opening chunk is not part of this cloud movie.
+Do not restart it or mix local and cloud parts. Do not change picture source while
+the cloud run is active. The private render key has a saved
 recovery archive; its identity is in [the recovery record](evidence/s11-cloud-recovery.json).
 The recording and private key are never included in the public picture-worker
 inputs or output artifacts.
+
+The hosted workers exposed two different image/kernel labels with identical
+recorded render dependencies and the same logged software renderer. The strict
+assembler still rejects mixed full fingerprints. Use the separately reviewed,
+exact-run route in [the delivery workflow](../../tools/s11_delivery/README.md)
+with [its persisted policy](evidence/s11-host-cohort-policy.json); it preserves
+both original identities and still requires every source, integrity, range,
+stream, audio and encoded visual check. This compatibility decision is not a
+claim of byte-identical hosts or final creative approval.
 
 Current creative picture source starts at `beacae436e3e44b6c8fd9732437945cc731d851e`.
 Cloud probe request/source commit is `8a2ddad71eba2a8c85b49484acd554ead39484a9`.
