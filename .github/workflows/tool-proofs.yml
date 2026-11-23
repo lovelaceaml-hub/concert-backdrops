@@ -124,6 +124,17 @@ jobs:
     timeout-minutes: 45
     steps:
       - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Keep the pinned Blender download between runs
+        uses: actions/cache@v4
+        with:
+          path: .tools/blender-download
+          key: blender-${{ hashFiles('infra/toolchain.lock.json') }}
+      - name: Fetch the pinned Blender once (retry if the site refuses a runner)
+        run: |
+          for attempt in 1 2 3; do python scripts/install-blender.py && exit 0; sleep 45; done; exit 1
       - name: Build the CPU container
         run: docker build -f infra/docker/Dockerfile.cpu -t concert-video-cpu . 2>&1 | tail -200
 
