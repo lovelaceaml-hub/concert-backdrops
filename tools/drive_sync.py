@@ -100,7 +100,8 @@ def get_id(drive, file_id: str, out: Path) -> Path:
     """Download one file by its Drive id (as recorded in the song catalog), only from inside the Songs folder."""
     from googleapiclient.http import MediaIoBaseDownload
     if not inside_songs_folder(drive, file_id):
-        sys.exit(f"Drive file {file_id} is not inside the Concert Backdrops - Songs folder.")
+        sys.exit(f"Drive file {file_id} is not inside the Concert Backdrops - Songs folder (it may be a file someone "
+                 f"shared with you). Put a copy in that folder and record the copy's id in the song catalog.")
     out.parent.mkdir(parents=True, exist_ok=True)
     partial = out.with_name(out.name + ".part")
     with partial.open("wb") as stream:
