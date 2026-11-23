@@ -13,6 +13,7 @@ import numpy as np
 import moderngl
 
 import song as S
+from quality import QualityOptions
 from . import api
 from . import camera as C
 from . import shaders as K
@@ -142,6 +143,7 @@ class Layer:
         if set(cfg) - known:
             raise ValueError(f"P3D: unknown keys {sorted(set(cfg) - known)} (known: {sorted(known)})")
         self.R = R
+        self.quality = getattr(R, "quality", QualityOptions())
         ctx = self.ctx = R.ctx
         self.w, self.h = R.w, R.h
         import draft
@@ -155,6 +157,10 @@ class Layer:
         self.shutter = float(self.rig.shutter if mb is None else mb)
         ms = cfg.get("motion_samples", 1)
         self.samples = ms if callable(ms) else max(int(ms), 1)      # a number, or a Track (more only in the whips)
+        if self.quality.temporal_samples is not None:
+            self.samples = self.quality.temporal_samples
+        if self.quality.shutter is not None:
+            self.shutter = self.quality.shutter
         self.bursts = [dict(b) for b in (cfg.get("bursts") or [])]
         self.clear = cfg.get("clear") or []
         self.lod_r = float(cfg.get("lod", 7.0))
@@ -245,14 +251,21 @@ class Layer:
               f"{len(self.rig.moves)} camera moves, motion blur {self.shutter:g}", flush=True)
 
     # ------------------------------------------------------------------ the frame's camera and world
+    def _shutter_at(self, t):
+        """Keep legacy shutter unless opt-in cut safety disables blur for this frame."""
+        cuts = self.rig.cuts() if self.quality.cut_safe else ()
+        return self.quality.shutter_at(t, float(S.FPS), self.shutter, cuts)
+
     def state(self, t):
         if self._frame is not None and self._frame[0] == t:
             return self._frame[1:]
         asp = float(S.ASPECT)
-        cam = self.rig.state(t, asp)
+        cam = self.quality.camera(t, self.rig.state(t, asp))
         # where the camera was when the shutter opened (on this frame's side of any cut: no blur across a cut)
-        prev = self.rig.state(t - self.shutter / float(S.FPS), asp, ref=t) if self.shutter > 0.0 else cam
-        w = self.world.state(t)
+        shutter = self._shutter_at(t)
+        prev = self.rig.state(t - shutter / float(S.FPS), asp, ref=t) if shutter > 0.0 else cam
+        prev = self.quality.camera(t, prev)
+        w = self.quality.world(t, self.world.state(t))
         rc = self.world.react
         if self.audio is not None and rc:
             bt, lv = self.audio.beat(t), self.audio.level(t)
@@ -343,7 +356,7 @@ class Layer:
                    0.10 + 0.25 * float(w["haze"])),
             uLakeP=(float(w["mirror_min"]), float(w["mirror"]), float(w["ripple"]), float(w["shore"])),
             uSigMin=0.6, uCocMax=self.bokeh_max * self.h, uLodR=self.lod_r * px, uDomeDist=3000.0,
-            uShutterDt=self.shutter / float(S.FPS), uMaxStreak=0.20 * self.h, uSmear=0.03, uPx=px,
+            uShutterDt=self._shutter_at(t) / float(S.FPS), uMaxStreak=0.20 * self.h, uSmear=0.03, uPx=px,
             uBokeh=(float(w["bokeh_ring"]), float(w["bokeh_hex"])), uHair=0.30 * px,
             uNCalm=ncalm, uNLights=nl, uDomeRot=wd.dome_rot(w), uSplit=split, uSplitStars=float(sp.get("_stars", 1.0)),
             uSplitBias=float(sp.get("_bias", 0.0)),
@@ -667,17 +680,19 @@ class Layer:
             self.f_paint.use()
             self.f_paint.clear(0.0, 0.0, 0.0, 0.0)
             self._draw_sets(items, U, cam, w, 1.0, paint=True)
-        n = max(int(round(float(_val(self.samples, t)))), 1) if self.shutter > 0.0 else 1
+        shutter = self._shutter_at(t)
+        n = max(int(round(float(_val(self.samples, t)))), 1) if shutter > 0.0 else 1
         if n <= 1:
             self._draw_sets(items, U, cam, w, 1.0)
         else:
             # motion blur by time sampling: the sets at n moments inside the shutter, each a share of the light
             # (and each still drawn out along its own short path, so the moments join into one streak)
-            dt = self.shutter / float(S.FPS)
+            dt = shutter / float(S.FPS)
             asp = float(S.ASPECT)
             for i in range(n):
                 ts = t - dt * (n - 1 - i) / n
                 c, pv = self.rig.state(ts, asp, ref=t), self.rig.state(ts - dt / n, asp, ref=t)
+                c, pv = self.quality.camera(t, c), self.quality.camera(t, pv)
                 Ui = self._uniforms(ts, c, pv, w)
                 Ui["uShutterDt"] = dt / n
                 its = items if i == n - 1 else [(e, self._batches(e, ts, c)) for e in self.scene.entries()]
@@ -698,7 +713,7 @@ class Layer:
             mask_on = 1.0
             if self._mirror_mask:
                 self.t_mmask.use(location=1)
-        blur = 1.0 if self.shutter > 0.0 else 0.0
+        blur = 1.0 if U["uShutterDt"] > 0.0 else 0.0
         mirror = float(w["mirror"]) > 0.001 and cam.pos[1] > 0.0
         Uv = {k: v for k, v in U.items() if not k.startswith("_")}
         mk = self._mask
@@ -975,7 +990,7 @@ class Layer:
             ba[i], bc[i] = a, c
         seta(p, "uBurst", ba)
         seta(p, "uBurstCol", bc)
-        moving = self.shutter > 0.0 and (not np.allclose(cam.pos, prev.pos, atol=1e-5)
+        moving = self._shutter_at(t) > 0.0 and (not np.allclose(cam.pos, prev.pos, atol=1e-5)
                                          or not np.allclose(cam.target, prev.target, atol=1e-5))
         setu(p, uMaskM=7, uMirrorK=0.85 * min(float(w["mirror"]), 1.0) if mm else 0.0)
         setu(p, uBg=0, uRayA=1, uRayB=2, uMask=3, uPaintT=4, uBg2=5, uBg3=6, uPaintOn=1.0 if self._painted else 0.0,

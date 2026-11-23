@@ -88,7 +88,16 @@ def _keys(v, default_name=None):
 
 class Actor:
     def __init__(self, shape="woman", height=None, at=(0.0, 0.0), facing=0.0, motion="stand", gesture=(),
-                 seed=1.0, rig=None, start=None, stoop=0.0, hand=None, life=True):
+                 seed=1.0, rig=None, start=None, stoop=0.0, hand=None, life=True, auto_breathe=True):
+        """Create an actor; auto_breathe=True retains the existing breathing pass.
+
+        Set False for a pose source using Motions.breathe_before_contacts so final
+        planted hands are not moved by a second breathing pass. Configure before
+        sampling frames; clear actor/body caches if changing an existing instance.
+        """
+        if not isinstance(auto_breathe, bool):
+            raise ValueError("auto_breathe must be a bool")
+        self.auto_breathe = auto_breathe
         self.rig = rig or assets.Rig(shape, height)
         self.mo = mo.Motions(self.rig, assets.load())
         self._at = at
@@ -284,7 +293,8 @@ class Actor:
             return self._cache[key]
         rig = self.rig
         P = self.base_pose(t)
-        self.mo.breathe(P, t, self.seed)
+        if self.auto_breathe:
+            self.mo.breathe(P, t, self.seed)
         if self.stoop:
             self.mo.stoop(P, self.stoop)
         if self.hand is not None:
