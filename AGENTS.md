@@ -15,6 +15,8 @@ These are standing rules for every agent (Claude, Codex, ChatGPT, Gemini). They 
 - **Current priorities, in order:** 1) get the new tools (Blender, Three.js preview, Remotion, Video Shotcraft, Blender MCP) working and reusable for any song; 2) build this week's proven quality gains into the current engine so every song gets them; 3) clean up and organize (one plain status page, stale pull requests, rendering spread across many cloud machines). Finished videos from ChatGPT's file library go into the Drive folder "Concert Backdrops - Songs", Videos.
 - **Working mode:** Anthony said "Go ahead on your own" for these priorities. Stop only for real decisions or approvals.
 
+- **Access set up for smooth cloud production (2026-11-22).** Cloud jobs run on GitHub Actions (see `docs/VIDEO-PIPELINE-VALIDATION.md`). They read songs from and save renders to the Drive folder with `tools/drive_sync.py` and the `GOOGLE_DRIVE_OAUTH` secret. Every agent on the Mac commits as `lovelaceaml-hub <281993171+lovelaceaml-hub@users.noreply.github.com>` (GitHub rejects pushes that expose the private Gmail). Gemini helpers may run read-only git history commands. Never print, copy or commit these secrets.
+
 ## Earlier navigation
 
 On November 22, 2026, the user withdrew the previously provided AGENTS.md
