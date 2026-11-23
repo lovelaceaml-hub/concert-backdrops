@@ -126,3 +126,18 @@ jobs:
       - uses: actions/checkout@v4
       - name: Build the CPU container
         run: docker build -f infra/docker/Dockerfile.cpu -t concert-video-cpu . 2>&1 | tail -200
+
+  drive:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Drive read and write check
+        env:
+          GOOGLE_DRIVE_SA_KEY: ${{ secrets.GOOGLE_DRIVE_SA_KEY }}
+        run: |
+          python -m pip install --quiet google-api-python-client==2.187.0 google-auth==2.43.0
+          python tools/drive_sync.py check
