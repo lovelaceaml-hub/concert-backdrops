@@ -1,0 +1,227 @@
+name: Full-length song (cloud CPU)
+
+# Renders a full-length song built on the shared kit (tools/fullsong). Manual start only; nothing runs on a
+# push. "stills" renders review stills; "render" renders the native 1080p60 film in parallel parts, joins them,
+# checks them and (optionally) saves the stage and review files to the song's Drive Videos folder.
+# The recording comes from Drive (GOOGLE_DRIVE_OAUTH) and is used unstretched. No phone copies. No test suites.
+on:
+  workflow_dispatch:
+    inputs:
+      song:
+        description: "Song id from tools/fullsong/songs.json"
+        default: "s07"
+        required: true
+      mode:
+        description: "stills or render"
+        type: choice
+        options: [stills, render]
+        default: stills
+      times:
+        description: "stills: seconds, comma separated (empty = the song's review stills)"
+        default: ""
+      scale:
+        description: "stills: picture scale (0.5 = 960x540)"
+        default: "0.5"
+      parts:
+        description: "render: number of parallel machines (1 to 40)"
+        default: "20"
+      save_to_drive:
+        description: "render: save the stage and review files to Drive"
+        type: boolean
+        default: true
+  # Until this workflow is on main (where manual starts work), a change to the request file on a working branch
+  # starts it with the values written there.
+  push:
+    paths: [tools/fullsong/request.json]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: fullsong-${{ github.ref }}
+  cancel-in-progress: false
+
+env:
+  PYTHONHASHSEED: "0"
+  LIBGL_ALWAYS_SOFTWARE: "1"
+  LP_NUM_THREADS: "1"
+  OPENBLAS_NUM_THREADS: "1"
+  OMP_NUM_THREADS: "1"
+  NUMBA_NUM_THREADS: "1"
+
+jobs:
+  prepare:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    outputs:
+      matrix: ${{ steps.plan.outputs.matrix }}
+      song: ${{ steps.plan.outputs.song }}
+      mode: ${{ steps.plan.outputs.mode }}
+      times: ${{ steps.plan.outputs.times }}
+      scale: ${{ steps.plan.outputs.scale }}
+      parts: ${{ steps.plan.outputs.parts }}
+      save: ${{ steps.plan.outputs.save }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+      - name: Plan the run
+        id: plan
+        env:
+          EVENT: ${{ github.event_name }}
+          INPUTS: ${{ toJSON(inputs) }}
+        run: |
+          python3 - <<'PY'
+          import json, os, re
+          if os.environ["EVENT"] == "push":
+              v = json.load(open("tools/fullsong/request.json"))
+          else:
+              v = json.loads(os.environ["INPUTS"])
+          song = str(v.get("song", "s07")); mode = str(v.get("mode", "stills"))
+          times = str(v.get("times", "")); scale = str(v.get("scale", "0.5"))
+          parts = int(v.get("parts", 20)) if mode == "render" else 1
+          save = str(v.get("save_to_drive", True)).lower() in ("true", "1")
+          songs = json.load(open("tools/fullsong/songs.json"))["songs"]
+          if song not in songs or mode not in ("stills", "render") or not 1 <= parts <= 40:
+              raise SystemExit("Invalid request: song must be in songs.json, mode stills or render, parts 1 to 40.")
+          if not re.fullmatch(r"[0-9.,]*", times) or not re.fullmatch(r"[0-9.]+", scale):
+              raise SystemExit("Invalid times or scale.")
+          with open(os.environ["GITHUB_OUTPUT"], "a") as out:
+              out.write("matrix=" + json.dumps({"part": list(range(parts))}) + "\n")
+              for k, val in dict(song=song, mode=mode, times=times, scale=scale, parts=parts, save=str(save).lower()).items():
+                  out.write(f"{k}={val}\n")
+          PY
+      - name: Host tools
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq --no-install-recommends ffmpeg libegl1 libgles2 libgl1-mesa-dri libegl-mesa0
+          python -m pip install --quiet uv==0.13.9 google-api-python-client==2.187.0 google-auth==2.43.0
+      - name: Environment, fonts and pinned engines
+        run: |
+          python scripts/bootstrap.py --p3d-only --reference-fonts
+          .venv/bin/python tools/fullsong/run.py engines
+      - name: Fetch the chosen recording and measure the music
+        env:
+          GOOGLE_DRIVE_OAUTH: ${{ secrets.GOOGLE_DRIVE_OAUTH }}
+        run: |
+          export DRIVE_PYTHON="$(command -v python)"
+          .venv/bin/python tools/fullsong/run.py prepare "${{ steps.plan.outputs.song }}"
+      - name: Keep the measured inputs for the render machines (private, one day)
+        run: |
+          work=$(python3 -c "import json;print(json.load(open('tools/fullsong/songs.json'))['songs']['${{ steps.plan.outputs.song }}']['work'])")
+          mkdir -p /tmp/inputs && cp -r "$work" /tmp/inputs/work && echo "$work" > /tmp/inputs/work-path
+      - uses: actions/upload-artifact@v4
+        with:
+          name: fullsong-${{ steps.plan.outputs.song }}-inputs
+          path: /tmp/inputs/
+          if-no-files-found: error
+          retention-days: 1
+
+  pictures:
+    needs: prepare
+    runs-on: ubuntu-24.04
+    timeout-minutes: 345
+    strategy:
+      fail-fast: false
+      max-parallel: 20
+      matrix: ${{ fromJSON(needs.prepare.outputs.matrix) }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+      - name: Host tools
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq --no-install-recommends ffmpeg libegl1 libgles2 libgl1-mesa-dri libegl-mesa0
+          python -m pip install --quiet uv==0.13.9
+      - name: Environment, fonts and pinned engines
+        run: |
+          python scripts/bootstrap.py --p3d-only --reference-fonts
+          .venv/bin/python tools/fullsong/run.py engines
+      - uses: actions/download-artifact@v4
+        with:
+          name: fullsong-${{ needs.prepare.outputs.song }}-inputs
+          path: /tmp/inputs
+      - name: Restore the measured inputs
+        run: |
+          work=$(cat /tmp/inputs/work-path)
+          mkdir -p "$(dirname "$work")" && cp -r /tmp/inputs/work "$work"
+      - name: Render stills
+        if: needs.prepare.outputs.mode == 'stills'
+        run: |
+          args=(--scale "${{ needs.prepare.outputs.scale }}" --outdir out/stills)
+          [ -n "${{ needs.prepare.outputs.times }}" ] && args+=(--times "${{ needs.prepare.outputs.times }}")
+          .venv/bin/python tools/fullsong/run.py stills "${{ needs.prepare.outputs.song }}" "${args[@]}"
+      - name: Render part ${{ matrix.part }}
+        if: needs.prepare.outputs.mode == 'render'
+        run: .venv/bin/python tools/fullsong/run.py part "${{ needs.prepare.outputs.song }}" --index ${{ matrix.part }} --parts ${{ needs.prepare.outputs.parts }} --outdir out/parts
+      - uses: actions/upload-artifact@v4
+        with:
+          name: fullsong-${{ needs.prepare.outputs.song }}-${{ needs.prepare.outputs.mode }}-${{ matrix.part }}
+          path: |
+            out/stills/
+            out/parts/part*.mp4
+          if-no-files-found: error
+          compression-level: 0
+          retention-days: 7
+
+  film:
+    needs: [prepare, pictures]
+    if: needs.prepare.outputs.mode == 'render'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Host tools
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq --no-install-recommends ffmpeg
+          python -m pip install --quiet numpy google-api-python-client==2.187.0 google-auth==2.43.0
+      - uses: actions/download-artifact@v4
+        with:
+          name: fullsong-${{ needs.prepare.outputs.song }}-inputs
+          path: /tmp/inputs
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: fullsong-${{ needs.prepare.outputs.song }}-render-*
+          path: out/parts
+          merge-multiple: true
+      - name: Join, check and keep
+        run: |
+          work=$(cat /tmp/inputs/work-path)
+          mkdir -p "$(dirname "$work")" && cp -r /tmp/inputs/work "$work"
+          ls out/parts
+          python tools/fullsong/run.py assemble "${{ needs.prepare.outputs.song }}" --parts-dir out/parts --outdir out/film
+          for f in out/film/*stage*.mp4; do python tools/fullsong/run.py verify "${{ needs.prepare.outputs.song }}" "$f"; done 2>&1 | tee out/film/verify-stage.txt
+          for f in out/film/*review*.mp4; do python tools/fullsong/run.py verify "${{ needs.prepare.outputs.song }}" "$f" --audio; done 2>&1 | tee out/film/verify-review.txt
+          (cd out/film && sha256sum *.mp4 | tee SHA256SUMS.txt)
+      - name: Save to the song's Drive Videos folder
+        if: needs.prepare.outputs.save == 'true'
+        env:
+          GOOGLE_DRIVE_OAUTH: ${{ secrets.GOOGLE_DRIVE_OAUTH }}
+        run: python tools/fullsong/run.py upload "${{ needs.prepare.outputs.song }}" out/film/*.mp4 out/film/SHA256SUMS.txt out/film/verify-*.txt
+      - uses: actions/upload-artifact@v4
+        with:
+          name: fullsong-${{ needs.prepare.outputs.song }}-film
+          path: out/film/
+          compression-level: 0
+          retention-days: 14

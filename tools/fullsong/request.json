@@ -1,0 +1,9 @@
+{
+  "note": "Change this file on a working branch to start the full-length song workflow (until it is on main, where it can be started by hand).",
+  "song": "s07",
+  "mode": "stills",
+  "times": "",
+  "scale": "0.5",
+  "parts": 20,
+  "save_to_drive": false
+}

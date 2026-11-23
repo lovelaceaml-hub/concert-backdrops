@@ -1,0 +1,14 @@
+{
+  "schema": "fullsong-songs-v1",
+  "note": "Full-length songs built on the shared kit (tools/fullsong). Each song keeps its own scene folder with clock.py (REF_MUSIC, LIVE, HOLD, TOTAL, FPS), prepare_audio.py <recording>, render.py (--stills / --range A B --out) and verify.py <video> [--audio]. Song 11 keeps its own renewed pipeline (tools/s11_renewed).",
+  "songs": {
+    "s07": {
+      "title": "07 May No One Ever Feel Lonely",
+      "dir": "tools/s07_full2",
+      "work": "work/s07v2",
+      "drive_folder": "Videos/07 May No One Ever Feel Lonely",
+      "file_stem": "07 May No One Ever Feel Lonely - Backdrop full",
+      "review_stills": [3, 10, 20, 35, 53.5, 63.5, 70, 76, 90, 105, 120, 138, 150, 165, 180, 196, 210, 226, 236, 245, 255]
+    }
+  }
+}
