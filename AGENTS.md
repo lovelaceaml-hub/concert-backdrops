@@ -11,6 +11,10 @@ These are standing rules for every agent (Claude, Codex, ChatGPT, Gemini). They 
 - **GPU work runs on his Mac.** "If GPU is ever needed just use my local computer." His Mac is an Apple M1 Pro (16-core GPU, Metal 4). This is a project exception to the cloud-first rule for GPU work only; CPU work stays in the cloud. Before a heavy local run, check the 1-minute load (stop if above 50) and run with `nice -n 19`. `pipeline/render.py` refuses macOS by default; use its explicit local allowance only for GPU work.
 - **Ask when unclear.** "Ask me clarification questions when needed." When a request is ambiguous or changes what he gets, ask him with short clickable options and a recommendation instead of guessing.
 
+- **Tools blocked in the cloud.** The browser 3D preview, Remotion and live Blender are blocked by cloud sandbox limits, not by a missing GPU. Anthony's choice: "Try the cloud first" (for example GitHub Actions runners or another cloud setup); use his Mac only if no cloud route works, and say why.
+- **Current priorities, in order:** 1) get the new tools (Blender, Three.js preview, Remotion, Video Shotcraft, Blender MCP) working and reusable for any song; 2) build this week's proven quality gains into the current engine so every song gets them; 3) clean up and organize (one plain status page, stale pull requests, rendering spread across many cloud machines). Finished videos from ChatGPT's file library go into the Drive folder "Concert Backdrops - Songs", Videos.
+- **Working mode:** Anthony said "Go ahead on your own" for these priorities. Stop only for real decisions or approvals.
+
 ## Earlier navigation
 
 On November 22, 2026, the user withdrew the previously provided AGENTS.md
