@@ -59,6 +59,10 @@ jobs:
         id: blender
         continue-on-error: true
         run: ./scripts/video preview cpu-demo --quality draft 2>&1 | tee work/proofs/06-blender.log
+      - name: Reusable song scene (p3d-kit with params)
+        id: songscene
+        continue-on-error: true
+        run: PYTHONHASHSEED=0 ./scripts/video preview song-scene-demo --quality review 2>&1 | tee work/proofs/08-song-scene.log
       - name: Blender MCP (stdio and live GUI)
         id: mcp
         continue-on-error: true
@@ -77,6 +81,7 @@ jobs:
             echo "remotion=${{ steps.remotion.outcome }}"
             echo "blender_render=${{ steps.blender.outcome }}"
             echo "blender_mcp=${{ steps.mcp.outcome }}"
+            echo "song_scene=${{ steps.songscene.outcome }}"
           } | tee work/proofs/summary.txt
       - name: Save proofs
         if: always()
