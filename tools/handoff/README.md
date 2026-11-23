@@ -60,3 +60,19 @@ All per-folder transfer manifests retain the original names, lengths and hashes.
 The source tar.gz archive is a current tracked-source snapshot, not a full Git-history
 bundle; GitHub remains the history authority. Private recovery keys stay in
 the separate private recovery folder and are excluded from source packages.
+
+## Preserve the cloud tool proof archive
+
+The `Archive exact PR116 proof to Drive` Actions workflow preserves the existing PR #116
+`tool-proofs` archive directly into the project Drive resource folder. It uses
+the already configured Actions identity and Drive authorization; it performs
+no rendering. The helper is scoped to artifact `14795673158` from run
+`45125796332`, its exact byte count and SHA-256, and the known project folder.
+It verifies both the GitHub download and a full authenticated Drive readback.
+It leaves existing files and permissions intact and refuses a conflicting file.
+
+This cloud route handles the original 637,361,486-byte archive, which exceeds
+the chat artifact download limit. It is distinct from the exact-part helpers
+used for the earlier media transfers. The workflow saves a small transfer
+receipt; current completion evidence records the resulting Drive locator.
+Never copy Actions credential values into a checkout or handoff package.

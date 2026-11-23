@@ -1,5 +1,7 @@
 .git
-.tools
+.tools/*
+# The pinned, checksum-verified Blender archive may come from the build cache.
+!.tools/blender-download
 .venv
 node_modules
 **/node_modules

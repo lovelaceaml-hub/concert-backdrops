@@ -1132,15 +1132,17 @@
   },
   "current_maintenance": {
     "name": "Whole-project Claude handoff, Drive reconciliation and documentation",
-    "status": "complete_verified_handoff",
+    "status": "updating_handoff_after_concurrent_cloud_tools_merge",
     "branch": "maintenance/claude-handoff-20261122",
-    "base_main_commit": "651e9487cd134e06b94f9627c22f008a8da02b54",
+    "base_main_commit": "3812463e1196f4c47b468e05060dbc1c8154ff75",
     "entrypoint": "project-docs/production-system/CLAUDE-HANDOFF.md",
     "completion_evidence": "project-docs/production-system/evidence/claude-drive-completion.json",
     "initial_base_main_commit": "93527bf5e2e43477073e361d22cfd6d4fa999da7",
-    "integration_pr": 115,
-    "source_snapshot_commit": "3ef80d97d2cc25d5201195bb8ced3646811200db",
-    "integration_authority": "https://github.com/lovelaceaml-hub/concert-backdrops/pull/115"
+    "initial_integration_pr": 115,
+    "initial_integration_authority": "https://github.com/lovelaceaml-hub/concert-backdrops/pull/115",
+    "initial_source_snapshot_commit": "3ef80d97d2cc25d5201195bb8ced3646811200db",
+    "concurrent_cloud_tools_pr": 116,
+    "integration_authority": "https://github.com/lovelaceaml-hub/concert-backdrops/tree/maintenance/claude-handoff-20261122"
   },
   "catalog_artifact_count": 44,
   "previous_increment_at_s11_start": {
@@ -1474,7 +1476,7 @@
     "integration_pr": 112
   },
   "claude_handoff": {
-    "status": "complete_verified",
+    "status": "source_refresh_in_progress_after_pr116",
     "local_date": "2026-11-22",
     "timezone": "America/Los_Angeles",
     "folder_url": "https://drive.google.com/drive/folders/1lxcic8BcSzNgPtEY_Yg_2TBAbNam72dZ",
@@ -1490,13 +1492,17 @@
     "resource_review_archives_verified": 2,
     "historical_unresolved_fullfilm_targets": 11,
     "active_background_render_processes": 0,
-    "source_snapshot_commit": "3ef80d97d2cc25d5201195bb8ced3646811200db",
-    "source_archive_file_id": "1QrBbz-SxWWNEkGtC30BcTWuB9_N8MDd4",
-    "source_archive_sha256": "2af0e84a78b1f341f068f51de158729220bf5d69e104828a33581d84ed5bac4f",
-    "source_archive_bytes": 33821577,
-    "source_archive_evidence": "project-docs/production-system/evidence/claude-source-snapshot.json",
-    "integration_pr": 115,
-    "integration_authority": "https://github.com/lovelaceaml-hub/concert-backdrops/pull/115"
+    "initial_source_snapshot": {
+      "source_snapshot_commit": "3ef80d97d2cc25d5201195bb8ced3646811200db",
+      "source_archive_file_id": "1QrBbz-SxWWNEkGtC30BcTWuB9_N8MDd4",
+      "source_archive_sha256": "2af0e84a78b1f341f068f51de158729220bf5d69e104828a33581d84ed5bac4f",
+      "source_archive_bytes": 33821577,
+      "source_archive_evidence": "project-docs/production-system/evidence/claude-source-snapshot.json"
+    },
+    "initial_integration_pr": 115,
+    "initial_integration_authority": "https://github.com/lovelaceaml-hub/concert-backdrops/pull/115",
+    "current_source_authority": "https://github.com/lovelaceaml-hub/concert-backdrops/tree/maintenance/claude-handoff-20261122",
+    "current_source_refresh_reason": "The owner merged PR115 and then PR116 while final handoff receipts were being published. Preserve both merges and refresh the portable source; the initial 861-entry archive remains an exact historical checkpoint."
   },
   "current_output_policy": {
     "design_review_resolution": [
@@ -1515,5 +1521,25 @@
     "gpu_if_needed": "Owner Mac M1 Pro,16-coreGPU,Metal4; load<=50 and nice -n19, explicit GPU-only local allowance",
     "blocked_tool_route": "Cloud sandbox restrictions on browser 3D, Remotion and live Blender are not evidence of a missing GPU. Try permitted cloud routes first; use owner Mac only if none works and explain why."
   },
-  "drive_counts_scope": "drive_media_files_uploaded_and_verified=14 is the prior November21 group; current logical-original/part counts are in claude_handoff and its completion evidence."
+  "drive_counts_scope": "drive_media_files_uploaded_and_verified=14 is the prior November21 group; current logical-original/part counts are in claude_handoff and its completion evidence.",
+  "concurrent_cloud_tools_update": {
+    "pull_request": 116,
+    "merge_commit": "3812463e1196f4c47b468e05060dbc1c8154ff75",
+    "implementation_head": "285df02e51cc68073fe17c8a06ae0d7f54737df7",
+    "verified_prior_run": "https://github.com/lovelaceaml-hub/concert-backdrops/actions/runs/45124306242",
+    "exact_head_run": "https://github.com/lovelaceaml-hub/concert-backdrops/actions/runs/45125796332",
+    "evidence": "project-docs/production-system/evidence/claude-cloud-tool-proofs.json",
+    "scope": "Cloud CPU technical demo/tool proofs; separate from Song11 picture identity and creative approval. Local missing-runtime observations do not describe the cloud runner.",
+    "remaining_scope_limits": [
+      "Workbench interactive browser playback/export not explicitly exercised.",
+      "Docker build is not a container execution proof.",
+      "Technical demos do not establish all-song, full-concert or final4K creative readiness."
+    ],
+    "exact_head_run_status": "completed_success",
+    "original_tool_step_outcomes_all_success": true,
+    "jobs_succeeded": 3,
+    "runtime_evidence": "project-docs/production-system/evidence/claude-cloud-tool-proofs.json",
+    "tool_runtime_python": "3.12.16",
+    "song11_picture_runtime_python": "3.12.14"
+  }
 }

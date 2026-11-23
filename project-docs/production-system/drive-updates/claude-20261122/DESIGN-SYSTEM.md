@@ -1,3 +1,27 @@
+# Current cloud tools and access update - November 22, 2026 (America/Los_Angeles)
+
+This addendum takes precedence over conflicting environment and source-snapshot statements in the preserved handoff below. [PR #116](https://github.com/lovelaceaml-hub/concert-backdrops/pull/116) merged the reusable cloud implementation at `3812463e1196f4c47b468e05060dbc1c8154ff75`. Continue from current main and the owner directions in [root AGENTS.md](https://github.com/lovelaceaml-hub/concert-backdrops/blob/main/AGENTS.md).
+
+## Cloud proof scope and local runtime distinction
+
+The independently reviewed [cloud run 45124306242](https://github.com/lovelaceaml-hub/concert-backdrops/actions/runs/45124306242), at the earlier `d3158465` source, passed all eight tool steps: bootstrap, browser doctor, Three.js capture, pipeline preview, Remotion, Blender background rendering, the reusable song scene, and Blender MCP. Evidence includes real animated CPU WebGL frames, a live Blender MCP connection reporting 5.2.4 LTS, and four technical-demo render QAs, including the four-second, 240-frame Song 11 scene excerpt. The separate Docker build and Drive access jobs passed. These are Ubuntu 24.04 GitHub Actions CPU results; they do not establish browser, Xvfb, Docker or live-GUI readiness inside this chat's local sandbox.
+
+The exact PR #116 head `285df02e51cc68073fe17c8a06ae0d7f54737df7` also passed [run 45125796332](https://github.com/lovelaceaml-hub/concert-backdrops/actions/runs/45125796332), completed at 06:47:47 UTC on November 23 (November 22 in the owner's timezone). All eight original tool outcomes and all three jobs passed; the actual outcome summary was checked because these tool steps use continue-on-error. See the [verification record](https://github.com/lovelaceaml-hub/concert-backdrops/blob/main/docs/VIDEO-PIPELINE-VALIDATION.md). Shotcraft Workbench's interactive browser/export flow was not exercised. Docker evidence proves a build. Technical demos do not establish all-eleven-song coverage, a final 4K film, or creative approval.
+
+## Reusable scenes and cloud access
+
+Use [the production guide](https://github.com/lovelaceaml-hub/concert-backdrops/blob/main/docs/VIDEO-PIPELINE.md), `.github/workflows/tool-proofs.yml`, and the `song-scene-demo` project. The configurable `scenes/p3d/song_scene.py` routes existing `engine/songs` scenes through p3d-kit with song, audio or prepared features, start time, bloom and grain parameters. Project shots define duration; approved scene registrations remain frozen. The proof command is `./scripts/video preview song-scene-demo --quality review`.
+
+Cloud jobs use `tools/drive_sync.py` inside the existing Concert Backdrops - Songs folder: `list`, `get` for song sources, `put` for renders, and `check` for a small read/write/delete probe. The Actions secret **name** `GOOGLE_DRIVE_OAUTH` supplies the owner's authorized read/save access; `GOOGLE_DRIVE_SA_KEY` is the read-only fallback. Keep secret values out of logs, chats, source and archives. Full song recordings stay in Drive and are fetched for the job. Preserve the owner's cloud-first CPU and separately conditioned Mac GPU directions already recorded below.
+
+Per the current owner access directions, agents committing on the Mac use `lovelaceaml-hub <281993171+lovelaceaml-hub@users.noreply.github.com>` so pushes do not expose the private Gmail. Gemini helpers may run read-only Git history commands.
+
+## Current source archive
+
+The initial 861-entry source archive frozen at `3ef80d97d2cc25d5201195bb8ced3646811200db` is a historical snapshot predating PR #116. Resolve the current source archive and its verification from [the handoff completion record](https://github.com/lovelaceaml-hub/concert-backdrops/blob/main/project-docs/production-system/evidence/claude-drive-completion.json); the source refresh is maintained separately from this note. Song 11's delivered picture identity and recorded approval status remain as stated below.
+
+---
+
 # Current project handoff for Claude — November 22, 2026
 
 This current section supersedes conflicting dated directions in the preserved historical body below.
