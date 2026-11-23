@@ -187,7 +187,7 @@ jobs:
         env:
           GOOGLE_DRIVE_OAUTH: ${{ secrets.GOOGLE_DRIVE_OAUTH }}
         run: |
-          for f in out/film/*.mp4 out/film/check.json out/film/SHA256SUMS.txt; do
+          for f in out/film/*.mp4 out/film/check.json out/film/SHA256SUMS.txt out/film/cues.py out/film/cues.csv; do
             python tools/drive_sync.py put "$f" --path "${{ needs.plan.outputs.folder }}"
           done
       # public repository: only the check report, checksums and a silent frame sheet, never the film
@@ -198,4 +198,6 @@ jobs:
             out/film/check.json
             out/film/SHA256SUMS.txt
             out/film/contact.jpg
+            out/film/cues.py
+            out/film/cues.csv
           retention-days: 14

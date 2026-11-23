@@ -7,7 +7,8 @@ draft: 960x540 at 30 fps, one temporal sample (Song 11's review practice: drafts
 film: native 1920x1080 at 60 fps, two temporal samples (Song 11's delivery contract). Lengths come from the
 song's own data (LIVE + HOLD). The join writes the silent picture and the review copy with the song's prepared
 score (the recording unstretched, then the calm hold), and checks frame count, size, frame rate and length:
-any failed check exits with an error, so nothing unchecked is saved. No phone copies (owner direction).
+any failed check exits with an error, so nothing unchecked is saved. It also writes the song's section cues
+(cues.py for engine/live.py, cues.csv for show software). No phone copies (owner direction).
 No em dash or en dash anywhere in this file.
 """
 import argparse
@@ -70,6 +71,30 @@ def part(a):
     print(f"part {a.index}: frames {s0} to {s1} -> {dest}")
 
 
+def cues(D, out):
+    """The song's section markers for both playback routes (AGENTS.md, 2026-11-23): cues.py for engine/live.py and
+    cues.csv for show software, one cue per edit block of the song's data, the calm hold last. Song times; a
+    suggestion until someone confirms them against the music."""
+    total = float(D.LIVE) + float(getattr(D, "HOLD", 15.0))
+    rows = []
+    for t, _owner, note in D.EDIT:
+        name = note.split(":")[0].strip() if ":" in note[:40] else note.strip()
+        rows.append((name[:60], round(float(t), 4)))
+    rows.append(("Calm hold", round(float(D.LIVE), 4)))
+    lines = ['"""Section cues for ' + D.TITLE + ' (song kit; unverified until reviewed)."""',
+             "# Paste CUES into a song file in engine/songs/ to step through sections in engine/live.py.",
+             f"TOTAL = {round(total, 4)}", "CUES = ["]
+    lines += [f"    ({n!r}, {t!r}, None)," for n, t in rows] + ["]", ""]
+    (out / "cues.py").write_text("\n".join(lines), encoding="utf-8")
+    import csv
+    with (out / "cues.csv").open("w", encoding="utf-8", newline="") as fh:
+        w = csv.writer(fh, lineterminator="\n")
+        w.writerow(["name", "start_seconds", "start_timecode_60fps"])
+        for n, t in rows:
+            f = int(round(t * 60))
+            w.writerow([n, f"{t:.4f}", f"{f // 216000:02d}:{f // 3600 % 60:02d}:{f // 60 % 60:02d}:{f % 60:02d}"])
+
+
 def probe(path):
     out = subprocess.run(["ffprobe", "-v", "error", "-count_frames", "-show_entries",
                           "stream=codec_type,width,height,r_frame_rate,nb_read_frames:format=duration",
@@ -120,6 +145,7 @@ def join(a):
     (out / "check.json").write_text(json.dumps(dict(song=a.song, quality=a.quality, expected_frames=total,
                                                     files=report, errors=errors), indent=2) + "\n")
     print(json.dumps(report, indent=2))
+    cues(D, out)
     sheet = out / "contact.jpg"   # 48 small frames across the film, picture only (for review; no sound)
     subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", str(picture), "-vf",
                     f"fps=48/{seconds:.3f},scale=320:-2,tile=6x8", "-frames:v", "1", "-q:v", "4", str(sheet)],
@@ -141,6 +167,9 @@ def main():
     p.add_argument("song"); p.add_argument("--parts-dir", required=True); p.add_argument("--quality", choices=QUALITY, default="draft")
     p.add_argument("--outdir", required=True)
     p.set_defaults(fn=join)
+    p = sub.add_parser("cues", help="write cues.py and cues.csv only")
+    p.add_argument("song"); p.add_argument("--outdir", required=True)
+    p.set_defaults(fn=lambda a: cues(data(a.song), Path(a.outdir)) or print("cues written"))
     a = ap.parse_args()
     if sys.platform == "darwin":
         raise SystemExit("The song kit renders on cloud CPU only (owner rule).")
