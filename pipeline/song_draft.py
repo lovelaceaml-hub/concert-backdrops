@@ -53,6 +53,13 @@ def engine_module(root: Path, song_id: str, override: str | None) -> str:
     return found[0]
 
 
+def scene_seconds(root: Path, module: str) -> float | None:
+    """Length of the scene's authored timeline (its TOTAL), when it states one."""
+    import re
+    match = re.search(r"^TOTAL\s*=\s*([0-9.]+)", (root / "engine/songs" / f"{module}.py").read_text(), re.M)
+    return float(match.group(1)) if match else None
+
+
 def recording(root: Path, song: dict) -> Path:
     source = song.get("audio", {}).get("source") or {}
     local = source.get("local_path")
@@ -68,7 +75,15 @@ def recording(root: Path, song: dict) -> Path:
                             f"(a GitHub Actions secret) so it can be fetched from Drive.")
     # The Drive helper needs google-api-python-client and google-auth (see tool-proofs.yml);
     # they live in the system Python, not the locked render environment.
-    helper = os.environ.get("DRIVE_PYTHON") or shutil.which("python3") or sys.executable
+    # `scripts/video` runs inside the render environment, whose python3 comes first on PATH,
+    # so skip it when looking for the system interpreter.
+    venv = str(root / ".venv")
+    outside = os.pathsep.join(p for p in os.environ.get("PATH", "").split(os.pathsep) if not p.startswith(venv))
+    helper = os.environ.get("DRIVE_PYTHON") or shutil.which("python3", path=outside) or sys.executable
+    probe = subprocess.run([helper, "-c", "import googleapiclient, google.oauth2"], capture_output=True)
+    if probe.returncode:
+        raise PipelineError(f"{helper} cannot import the Google Drive client. Install google-api-python-client "
+                            f"and google-auth there, or set DRIVE_PYTHON to an interpreter that has them.")
     subprocess.run([helper, str(root / "tools/drive_sync.py"), "get-id", source["file_id"], "--as", str(path)],
                    cwd=root, check=True)
     return path
@@ -112,6 +127,11 @@ def song_draft(root: Path, query: str, *, start: float = 30, seconds: float = 10
                recording_path: str | None = None) -> dict:
     song = find_song(root, query)
     scene = engine_module(root, song["id"], module)
+    length = scene_seconds(root, scene)
+    if length is not None and start + seconds > length:
+        raise PipelineError(f"{scene} is authored for {length:g} seconds, so --start {start:g} with --seconds "
+                            f"{seconds:g} would run past its picture (it fades to black). Choose an excerpt "
+                            f"inside 0 to {length:g} seconds, or author a full-length scene for this song.")
     if recording_path:
         audio = (root / recording_path).resolve()
         if not audio.is_file() or not audio.is_relative_to(root):
@@ -120,8 +140,11 @@ def song_draft(root: Path, query: str, *, start: float = 30, seconds: float = 10
         audio = recording(root, song)
     manifest = write_project(root, song, scene, audio, start, seconds)
     report = {"song": song["id"], "title": song["title"], "scene": scene, "recording": str(audio.relative_to(root)),
-              "start_seconds": start, "seconds": seconds, "quality": quality,
+              "scene_seconds": length, "start_seconds": start, "seconds": seconds, "quality": quality,
               "project": str(manifest.relative_to(root)), "rendered": False}
+    if length is not None and length < audio_seconds(audio) - 1:
+        report["note"] = (f"{scene} is a {length:g}-second scene, shorter than the recording, and its authored "
+                          f"moments were timed for a promo excerpt, so they may not line up with this recording.")
     if render:
         command = [sys.executable, "-m", "pipeline.cli", "preview", report["project"], "--quality", quality]
         if allow_local:

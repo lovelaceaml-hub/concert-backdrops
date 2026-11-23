@@ -91,6 +91,8 @@ jobs:
           GOOGLE_DRIVE_OAUTH: ${{ secrets.GOOGLE_DRIVE_OAUTH }}
         run: |
           python -m pip install --quiet google-api-python-client==2.187.0 google-auth==2.43.0
+          # scripts/video runs in the render environment; point the Drive download at this interpreter.
+          export DRIVE_PYTHON="$(command -v python)"
           ./scripts/video song-draft 5 2>&1 | tee work/proofs/11-song-draft.log
       - name: Blender MCP (stdio and live GUI)
         id: mcp
