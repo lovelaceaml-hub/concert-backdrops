@@ -147,6 +147,12 @@ jobs:
           if [[ "$SYNC_STEPS" == "match" || ( "$SYNC_STEPS" == "all" && -n "$LIVE_NAME" ) ]]; then
             IN_LIVE="work/music-sync/in/$LIVE_NAME"
             python -m tools.music_sync match "$IN_SONG" "$IN_LIVE" --out "$OUT_DIR"
+            # Section markers on live timing, beside the studio-timed ones.
+            if [[ -f "$OUT_DIR/sync.json" && -f "$OUT_DIR/tempo_map.json" ]]; then
+              python -m tools.music_sync cues "$OUT_DIR/sync.json" --tempo-map "$OUT_DIR/tempo_map.json" --out "$OUT_DIR/live"
+              cp "$OUT_DIR/live/cues.csv" "$OUT_DIR/cues_live.csv"
+              cp "$OUT_DIR/live/cues.py" "$OUT_DIR/cues_live.py"
+            fi
           fi
 
       - name: Upload results to Google Drive
@@ -155,7 +161,7 @@ jobs:
         run: |
           OUT_DIR="work/music-sync/out"
           DRIVE_PATH="Status/Sync/$SONG_STEM"
-          for name in sync.json cues.py cues.csv words.json tempo_map.json; do
+          for name in sync.json cues.py cues.csv cues_live.py cues_live.csv words.json tempo_map.json; do
             if [[ -f "$OUT_DIR/$name" ]]; then
               python tools/drive_sync.py put "$OUT_DIR/$name" --path "$DRIVE_PATH"
             fi
@@ -171,5 +177,7 @@ jobs:
             work/music-sync/out/tempo_map.json
             work/music-sync/out/cues.csv
             work/music-sync/out/cues.py
+            work/music-sync/out/cues_live.csv
+            work/music-sync/out/cues_live.py
           if-no-files-found: ignore
           retention-days: 14
