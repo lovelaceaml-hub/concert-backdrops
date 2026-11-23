@@ -1,0 +1,2188 @@
+{
+  "schema": "s11-story-review-extraction-v1",
+  "video": "Almighty_God_Knows_the_Future_Renewed_1080p60.mp4",
+  "frames": 311,
+  "full_film_seconds": 275,
+  "rows": [
+    {
+      "frame": 0,
+      "video_seconds": 0.0,
+      "source_seconds": 0,
+      "purpose": "selected composition",
+      "extracted_file": "frames/frame-0001.png"
+    },
+    {
+      "frame": 5,
+      "video_seconds": 0.08333333333333333,
+      "source_seconds": 0,
+      "purpose": "00 before cut",
+      "extracted_file": "frames/frame-0002.png"
+    },
+    {
+      "frame": 7,
+      "video_seconds": 0.11666666666666667,
+      "source_seconds": 0.016666666666666663,
+      "purpose": "00 after cut",
+      "extracted_file": "frames/frame-0003.png"
+    },
+    {
+      "frame": 363,
+      "video_seconds": 6.05,
+      "source_seconds": 5.95,
+      "purpose": "00 shot middle",
+      "extracted_file": "frames/frame-0004.png"
+    },
+    {
+      "frame": 411,
+      "video_seconds": 6.85,
+      "source_seconds": 6.75,
+      "purpose": "before render-part join",
+      "extracted_file": "frames/frame-0005.png"
+    },
+    {
+      "frame": 412,
+      "video_seconds": 6.866666666666666,
+      "source_seconds": 6.766666666666667,
+      "purpose": "after render-part join",
+      "extracted_file": "frames/frame-0006.png"
+    },
+    {
+      "frame": 719,
+      "video_seconds": 11.983333333333333,
+      "source_seconds": 11.883333333333333,
+      "purpose": "01 before cut",
+      "extracted_file": "frames/frame-0007.png"
+    },
+    {
+      "frame": 720,
+      "video_seconds": 12.0,
+      "source_seconds": 11.9,
+      "purpose": "selected composition",
+      "extracted_file": "frames/frame-0008.png"
+    },
+    {
+      "frame": 721,
+      "video_seconds": 12.016666666666667,
+      "source_seconds": 11.916666666666668,
+      "purpose": "01 after cut",
+      "extracted_file": "frames/frame-0009.png"
+    },
+    {
+      "frame": 824,
+      "video_seconds": 13.733333333333333,
+      "source_seconds": 13.633333333333333,
+      "purpose": "before render-part join",
+      "extracted_file": "frames/frame-0010.png"
+    },
+    {
+      "frame": 825,
+      "video_seconds": 13.75,
+      "source_seconds": 13.65,
+      "purpose": "after render-part join",
+      "extracted_file": "frames/frame-0011.png"
+    },
+    {
+      "frame": 1009,
+      "video_seconds": 16.816666666666666,
+      "source_seconds": 16.716666666666665,
+      "purpose": "01 shot middle",
+      "extracted_file": "frames/frame-0012.png"
+    },
+    {
+      "frame": 1236,
+      "video_seconds": 20.6,
+      "source_seconds": 20.5,
+      "purpose": "before render-part join",
+      "extracted_file": "frames/frame-0013.png"
+    },
+    {
+      "frame": 1237,
+      "video_seconds": 20.616666666666667,
+      "source_seconds": 20.516666666666666,
+      "purpose": "after render-part join",
+      "extracted_file": "frames/frame-0014.png"
+    },
+    {
+      "frame": 1296,
+      "video_seconds": 21.6,
+      "source_seconds": 21.5,
+      "purpose": "02 before cut",
+      "extracted_file": "frames/frame-0015.png"
+    },
+    {
+      "frame": 1298,
+      "video_seconds": 21.633333333333333,
+      "source_seconds": 21.53333333333333,
+      "purpose": "02 after cut",
+      "extracted_file": "frames/frame-0016.png"
+    },
+    {
+      "frame": 1442,
+      "video_seconds": 24.033333333333335,
+      "source_seconds": 23.933333333333334,
+      "purpose": "02 shot middle",
+      "extracted_file": "frames/frame-0017.png"
+    },
+    {
+      "frame": 1585,
+      "video_seconds": 26.416666666666668,
+      "source_seconds": 26.316666666666666,
+      "purpose": "03 before cut",
+      "extracted_file": "frames/frame-0018.png"
+    },
+    {
+      "frame": 1587,
+      "video_seconds": 26.45,
+      "source_seconds": 26.349999999999998,
+      "purpose": "03 after cut",
+      "extracted_file": "frames/frame-0019.png"
+    },
+    {
+      "frame": 1649,
+      "video_seconds": 27.483333333333334,
+      "source_seconds": 27.383333333333333,
+      "purpose": "before render-part join",
+      "extracted_file": "frames/frame-0020.png"
+    },
+    {
+      "frame": 1650,
+      "video_seconds": 27.5,
+      "source_seconds": 27.4,
+      "purpose": "after render-part join",
+      "extracted_file": "frames/frame-0021.png"
+    },
+    {
+      "frame": 1680,
+      "video_seconds": 28.0,
+      "source_seconds": 27.9,
+      "purpose": "selected composition",
+      "extracted_file": "frames/frame-0022.png"
+    },
+    {
+      "frame": 1729,
+      "video_seconds": 28.816666666666666,
+      "source_seconds": 28.716666666666665,
+      "purpose": "03 shot middle",
+      "extracted_file": "frames/frame-0023.png"
+    },
+    {
+      "frame": 1872,
+      "video_seconds": 31.2,
+      "source_seconds": 31.099999999999998,
+      "purpose": "04 before cut",
+      "extracted_file": "frames/frame-0024.png"
+    },
+    {
+      "frame": 1874,
+      "video_seconds": 31.233333333333334,
+      "source_seconds": 31.133333333333333,
+      "purpose": "04 after cut",
+      "extracted_file": "frames/frame-0025.png"
+    },
+    {
+      "frame": 2061,
+      "video_seconds": 34.35,
+      "source_seconds": 34.25,
+      "purpose": "before render-part join",
+      "extracted_file": "frames/frame-0026.png"
+    },
+    {
+      "frame": 2062,
+      "video_seconds": 34.36666666666667,
+      "source_seconds": 34.266666666666666,
+      "purpose": "after render-part join",
+      "extracted_file": "frames/frame-0027.png"
+    },
+    {
+      "frame": 2086,
+      "video_seconds": 34.766666666666666,
+      "source_seconds": 34.666666666666664,
+      "purpose": "04 shot middle",
+      "extracted_file": "frames/frame-0028.png"
+    },
+    {
+      "frame": 2299,
+      "video_seconds": 38.31666666666667,
+      "source_seconds": 38.21666666666667,
+      "purpose": "05 before cut",
+      "extracted_file": "frames/frame-0029.png"
+    },
+    {
+      "frame": 2301,
+      "video_seconds": 38.35,
+      "source_seconds": 38.25,
+      "purpose": "05 after cut",
+      "extracted_file": "frames/frame-0030.png"
+    },
+    {
+      "frame": 2401,
+      "video_seconds": 40.016666666666666,
+      "source_seconds": 39.916666666666664,
+      "purpose": "05 shot middle",
+      "extracted_file": "frames/frame-0031.png"
+    },
+    {
+      "frame": 2474,
+      "video_seconds": 41.233333333333334,
+      "source_seconds": 41.13333333333333,
+      "purpose": "before render-part join",
+      "extracted_file": "frames/frame-0032.png"
+    },
+    {
+      "frame": 2475,
+      "video_seconds": 41.25,
+      "source_seconds": 41.15,
+      "purpose": "after render-part join",
+      "extracted_file": "frames/frame-0033.png"
+    },
+    {
+      "frame": 2501,
+      "video_seconds": 41.68333333333333,
+      "source_seconds": 41.58333333333333,
+      "purpose": "06 before cut",
+      "extracted_file": "frames/frame-0034.png"
+    },
+    {
+      "frame": 2503,
+      "video_seconds": 41.71666666666667,
+      "source_seconds": 41.61666666666667,
+      "purpose": "06 after cut",
+      "extracted_file": "frames/frame-0035.png"
+    },
+    {
+      "frame": 2679,
+      "video_seconds": 44.65,
+      "source_seconds": 44.55,
+      "purpose": "06 shot middle",
+      "extracted_file": "frames/frame-0036.png"
+    },
+    {
+      "frame": 2700,
+      "video_seconds": 45.0,
+      "source_seconds": 44.9,
+      "purpose": "selected composition",
+      "extracted_file": "frames/frame-0037.png"
+    },
+    {
+      "frame": 2855,
+      "video_seconds": 47.583333333333336,
+      "source_seconds": 47.483333333333334,
+      "purpose": "07 before cut",
+      "extracted_file": "frames/frame-0038.png"
+    },
+    {
+      "frame": 2857,
+      "video_seconds": 47.61666666666667,
+      "source_seconds": 47.516666666666666,
+      "purpose": "07 after cut",
+      "extracted_file": "frames/frame-0039.png"
+    },
+    {
+      "frame": 2886,
+      "video_seconds": 48.1,
+      "source_seconds": 48.0,
+      "purpose": "before render-part join",
+      "extracted_file": "frames/frame-0040.png"
+    },
+    {
+      "frame": 2887,
+      "video_seconds": 48.11666666666667,
+      "source_seconds": 48.016666666666666,
+      "purpose": "after render-part join",
+      "extracted_file": "frames/frame-0041.png"
+    },
+    {
+      "frame": 3044,
+      "video_seconds": 50.733333333333334,
+      "source_seconds": 50.63333333333333,
+      "purpose": "07 shot middle",
+      "extracted_file": "frames/frame-0042.png"
+    },
+    {
+      "frame": 3232,
+      "video_seconds": 53.86666666666667,
+      "source_seconds": 53.766666666666666,
+      "purpose": "08 before cut",
+      "extracted_file": "frames/frame-0043.png"
+    },
+    {
+      "frame": 3234,
+      "video_seconds": 53.9,
+      "source_seconds": 53.8,
+      "purpose": "08 after cut",
+      "extracted_file": "frames/frame-0044.png"
+    },
+    {
+      "frame": 3299,
+      "video_seconds": 54.983333333333334,
+      "source_seconds": 54.88333333333333,
+      "purpose": "before render-part join",
+      "extracted_file": "frames/frame-0045.png"
+    },
+    {
+      "frame": 3300,
+      "video_seconds": 55.0,
+      "source_seconds": 54.9,
+      "purpose": "after render-part join",
+      "extracted_file": "frames/frame-0046.png"
+    },
+    {
+      "frame": 3371,
+      "video_seconds": 56.18333333333333,
+      "source_seconds": 56.08333333333333,
+      "purpose": "08 shot middle",
+      "extracted_file": "frames/frame-0047.png"
+    },
+    {
+      "frame": 3480,
+      "video_seconds": 58.0,
+      "source_seconds": 57.9,
+      "purpose": "selected composition",
+      "extracted_file": "frames/frame-0048.png"
+    },
+    {
+      "frame": 3509,
+      "video_seconds": 58.483333333333334,
+      "source_seconds": 58.38333333333333,
+      "purpose": "09 before cut",
+      "extracted_file": "frames/frame-0049.png"
+    },
+    {
+      "frame": 3511,
+      "video_seconds": 58.516666666666666,
+      "source_seconds": 58.416666666666664,
+      "purpose": "09 after cut",
+      "extracted_file": "frames/frame-0050.png"
+    },
+    {
+      "frame": 3597,
+      "video_seconds": 59.95,
+      "source_seconds": 59.85,
+      "purpose": "09 shot middle",
+      "extracted_file": "frames/frame-0051.png"
+    },
+    {
+      "frame": 3683,
+      "video_seconds": 61.38333333333333,
+      "source_seconds": 61.28333333333333,
+      "purpose": "10 before cut",
+      "extracted_file": "frames/frame-0052.png"
+    },
+    {
+      "frame": 3685,
+      "video_seconds": 61.416666666666664,
+      "source_seconds": 61.31666666666666,
+      "purpose": "10 after cut",
+      "extracted_file": "frames/frame-0053.png"
+    },
+    {
+      "frame": 3711,
+      "video_seconds": 61.85,
+      "source_seconds": 61.75,
+      "purpose": "before render-part join",
+      "extracted_file": "frames/frame-0054.png"
+    },
+    {
+      "frame": 3712,
+      "video_seconds": 61.86666666666667,
+      "source_seconds": 61.766666666666666,
+      "purpose": "after render-part join",
+      "extracted_file": "frames/frame-0055.png"
+    },
+    {
+      "frame": 3771,
+      "video_seconds": 62.85,
+      "source_seconds": 62.75,
+      "purpose": "10 shot middle",
+      "extracted_file": "frames/frame-0056.png"
+    },
+    {
+      "frame": 3857,
+      "video_seconds": 64.28333333333333,
+      "source_seconds": 64.18333333333334,
+      "purpose": "11 before cut",
+      "extracted_file": "frames/frame-0057.png"
+    },
+    {
+      "frame": 3859,
+      "video_seconds": 64.31666666666666,
+      "source_seconds": 64.21666666666667,
+      "purpose": "11 after cut",
+      "extracted_file": "frames/frame-0058.png"
+    },
+    {
+      "frame": 4014,
+      "video_seconds": 66.9,
+      "source_seconds": 66.80000000000001,
+      "purpose": "11 shot middle",
+      "extracted_file": "frames/frame-0059.png"
+    },
+    {
+      "frame": 4124,
+      "video_seconds": 68.73333333333333,
+      "source_seconds": 68.63333333333334,
+      "purpose": "before render-part join",
+      "extracted_file": "frames/frame-0060.png"
+    },
+    {
+      "frame": 4125,
+      "video_seconds": 68.75,
+      "source_seconds": 68.65,
+      "purpose": "after render-part join",
+      "extracted_file": "frames/frame-0061.png"
+    },
+    {
+      "frame": 4169,
+      "video_seconds": 69.48333333333333,
+      "source_seconds": 69.38333333333334,
+      "purpose": "12 before cut",
+      "extracted_file": "frames/frame-0062.png"
+    },
+    {
+      "frame": 4171,
+      "video_seconds": 69.51666666666667,
+      "source_seconds": 69.41666666666667,
+      "purpose": "12 after cut",
+      "extracted_file": "frames/frame-0063.png"
+    },
+    {
+      "frame": 4200,
+      "video_seconds": 70.0,
+      "source_seconds": 69.9,
+      "purpose": "selected composition",
+      "extracted_file": "frames/frame-0064.png"
+    },
+    {
+      "frame": 4204,
+      "video_seconds": 70.06666666666666,
+      "source_seconds": 69.96666666666667,
+      "purpose": "12 shot middle",
+      "extracted_file": "frames/frame-0065.png"
+    },
+    {
+      "frame": 4237,
+      "video_seconds": 70.61666666666666,
+      "source_seconds": 70.51666666666667,
+      "purpose": "13 before cut",
+      "extracted_file": "frames/frame-0066.png"
+    },
+    {
+      "frame": 4239,
+      "video_seconds": 70.65,
+      "source_seconds": 70.55000000000001,
+      "purpose": "13 after cut",
+      "extracted_file": "frames/frame-0067.png"
+    },
+    {
+      "frame": 4363,
+      "video_seconds": 72.71666666666667,
+      "source_seconds": 72.61666666666667,
+      "purpose": "13 shot middle",
+      "extracted_file": "frames/frame-0068.png"
+    },
+    {
+      "frame": 4487,
+      "video_seconds": 74.78333333333333,
+      "source_seconds": 74.68333333333334,
+      "purpose": "14 before cut",
+      "extracted_file": "frames/frame-0069.png"
+    },
+    {
+      "frame": 4489,
+      "video_seconds": 74.81666666666666,
+      "source_seconds": 74.71666666666667,
+      "purpose": "14 after cut",
+      "extracted_file": "frames/frame-0070.png"
+    },
+    {
+      "frame": 4503,
+      "video_seconds": 75.05,
+      "source_seconds": 74.95,
+      "purpose": "14 shot middle",
+      "extracted_file": "frames/frame-0071.png"
+    },
+    {
+      "frame": 4517,
+      "video_seconds": 75.28333333333333,
+      "source_seconds": 75.18333333333334,
+      "purpose": "15 before cut",
+      "extracted_file": "frames/frame-0072.png"
+    },
+    {
+      "frame": 4519,
+      "video_seconds": 75.31666666666666,
+      "source_seconds": 75.21666666666667,
+      "purpose": "15 after cut",
+      "extracted_file": "frames/frame-0073.png"
+    },
+    {
+      "frame": 4536,
+      "video_seconds": 75.6,
+      "source_seconds": 75.5,
+      "purpose": "before render-part join",
+      "extracted_file": "frames/frame-0074.png"
+    },
+    {
+      "frame": 4537,
+      "video_seconds": 75.61666666666666,
+      "source_seconds": 75.51666666666667,
+      "purpose": "after render-part join",
+      "extracted_file": "frames/frame-0075.png"
+    },
+    {
+      "frame": 4586,
+      "video_seconds": 76.43333333333334,
+      "source_seconds": 76.33333333333334,
+      "purpose": "15 shot middle",
+      "extracted_file": "frames/frame-0076.png"
+    },
+    {
+      "frame": 4653,
+      "video_seconds": 77.55,
+      "source_seconds": 77.45,
+      "purpose": "16 before cut",
+      "extracted_file": "frames/frame-0077.png"
+    },
+    {
+      "frame": 4655,
+      "video_seconds": 77.58333333333333,
+      "source_seconds": 77.48333333333333,
+      "purpose": "16 after cut",
+      "extracted_file": "frames/frame-0078.png"
+    },
+    {
+      "frame": 4758,
+      "video_seconds": 79.3,
+      "source_seconds": 79.2,
+      "purpose": "16 shot middle",
+      "extracted_file": "frames/frame-0079.png"
+    },
+    {
+      "frame": 4861,
+      "video_seconds": 81.01666666666667,
+      "source_seconds": 80.91666666666667,
+      "purpose": "17 before cut",
+      "extracted_file": "frames/frame-0080.png"
+    },
+    {
+      "frame": 4863,
+      "video_seconds": 81.05,
+      "source_seconds": 80.95,
+      "purpose": "17 after cut",
+      "extracted_file": "frames/frame-0081.png"
+    },
+    {
+      "frame": 4879,
+      "video_seconds": 81.31666666666666,
+      "source_seconds": 81.21666666666667,
+      "purpose": "17 shot middle",
+      "extracted_file": "frames/frame-0082.png"
+    },
+    {
+      "frame": 4896,
+      "video_seconds": 81.6,
+      "source_seconds": 81.5,
+      "purpose": "18 before cut",
+      "extracted_file": "frames/frame-0083.png"
+    },
+    {
+      "frame": 4898,
+      "video_seconds": 81.63333333333334,
+      "source_seconds": 81.53333333333335,
+      "purpose": "18 after cut",
+      "extracted_file": "frames/frame-0084.png"
+    },
+    {
+      "frame": 4914,
+      "video_seconds": 81.9,
+      "source_seconds": 81.80000000000001,
+      "purpose": "18 shot middle",
+      "extracted_file": "frames/frame-0085.png"
+    },
+    {
+      "frame": 4930,
+      "video_seconds": 82.16666666666667,
+      "source_seconds": 82.06666666666668,
+      "purpose": "19 before cut",
+      "extracted_file": "frames/frame-0086.png"
+    },
+    {
+      "frame": 4932,
+      "video_seconds": 82.2,
+      "source_seconds": 82.10000000000001,
+      "purpose": "19 after cut",
+      "extracted_file": "frames/frame-0087.png"
+    },
+    {
+      "frame": 4949,
+      "video_seconds": 82.48333333333333,
+      "source_seconds": 82.38333333333334,
+      "purpose": "before render-part join",
+      "extracted_file": "frames/frame-0088.png"
+    },
+    {
+      "frame": 4950,
+      "video_seconds": 82.5,
+      "source_seconds": 82.4,
+      "purpose": "after render-part join",
+      "extracted_file": "frames/frame-0089.png"
+    },
+    {
+      "frame": 5069,
+      "video_seconds": 84.48333333333333,
+      "source_seconds": 84.38333333333334,
+      "purpose": "19 shot middle",
+      "extracted_file": "frames/frame-0090.png"
+    },
+    {
+      "frame": 5160,
+      "video_seconds": 86.0,
+      "source_seconds": 85.9,
+      "purpose": "selected composition",
+      "extracted_file": "frames/frame-0091.png"
+    },
+    {
+      "frame": 5207,
+      "video_seconds": 86.78333333333333,
+      "source_seconds": 86.68333333333334,
+      "purpose": "20 before cut",
+      "extracted_file": "frames/frame-0092.png"
+    },
+    {
+      "frame": 5209,
+      "video_seconds": 86.81666666666666,
+      "source_seconds": 86.71666666666667,
+      "purpose": "20 after cut",
+      "extracted_file": "frames/frame-0093.png"
+    },
+    {
+      "frame": 5329,
+      "video_seconds": 88.81666666666666,
+      "source_seconds": 88.71666666666667,
+      "purpose": "20 shot middle",
+      "extracted_file": "frames/frame-0094.png"
+    },
+    {
+      "frame": 5361,
+      "video_seconds": 89.35,
+      "source_seconds": 89.25,
+      "purpose": "before render-part join",
+      "extracted_file": "frames/frame-0095.png"
+    },
+    {
+      "frame": 5362,
+      "video_seconds": 89.36666666666666,
+      "source_seconds": 89.26666666666667,
+      "purpose": "after render-part join",
+      "extracted_file": "frames/frame-0096.png"
+    },
+    {
+      "frame": 5448,
+      "video_seconds": 90.8,
+      "source_seconds": 90.7,
+      "purpose": "21 before cut",
+      "extracted_file": "frames/frame-0097.png"
+    },
+    {
+      "frame": 5450,
+      "video_seconds": 90.83333333333333,
+      "source_seconds": 90.73333333333333,
+      "purpose": "21 after cut",
+      "extracted_file": "frames/frame-0098.png"
+    },
+    {
+      "frame": 5659,
+      "video_seconds": 94.31666666666666,
+      "source_seconds": 94.21666666666667,
+      "purpose": "21 shot middle",
+      "extracted_file": "frames/frame-0099.png"
+    },
+    {
+      "frame": 5774,
+      "video_seconds": 96.23333333333333,
+      "source_seconds": 96.13333333333334,
+      "purpose": "before render-part join",
+      "extracted_file": "frames/frame-0100.png"
+    },
+    {
+      "frame": 5775,
+      "video_seconds": 96.25,
+      "source_seconds": 96.15,
+      "purpose": "after render-part join",
+      "extracted_file": "frames/frame-0101.png"
+    },
+    {
+      "frame": 5867,
+      "video_seconds": 97.78333333333333,
+      "source_seconds": 97.68333333333334,
+      "purpose": "22 before cut",
+      "extracted_file": "frames/frame-0102.png"
+    },
+    {
+      "frame": 5869,
+      "video_seconds": 97.81666666666666,
+      "source_seconds": 97.71666666666667,
+      "purpose": "22 after cut",
+      "extracted_file": "frames/frame-0103.png"
+    },
+    {
+      "frame": 5919,
+      "video_seconds": 98.65,
+      "source_seconds": 98.55000000000001,
+      "purpose": "22 shot middle",
+      "extracted_file": "frames/frame-0104.png"
+    },
+    {
+      "frame": 5940,
+      "video_seconds": 99.0,
+      "source_seconds": 98.9,
+      "purpose": "selected composition",
+      "extracted_file": "frames/frame-0105.png"
+    },
+    {
+      "frame": 5969,
+      "video_seconds": 99.48333333333333,
+      "source_seconds": 99.38333333333334,
+      "purpose": "23 before cut",
+      "extracted_file": "frames/frame-0106.png"
+    },
+    {
+      "frame": 5971,
+      "video_seconds": 99.51666666666667,
+      "source_seconds": 99.41666666666667,
+      "purpose": "23 after cut",
+      "extracted_file": "frames/frame-0107.png"
+    },
+    {
+      "frame": 6096,
+      "video_seconds": 101.6,
+      "source_seconds": 101.5,
+      "purpose": "23 shot middle",
+      "extracted_file": "frames/frame-0108.png"
+    },
+    {
+      "frame": 6186,
+      "video_seconds": 103.1,
+      "source_seconds": 103.0,
+      "purpose": "before render-part join",
+      "extracted_file": "frames/frame-0109.png"
+    },
+    {
+      "frame": 6187,
+      "video_seconds": 103.11666666666666,
+      "source_seconds": 103.01666666666667,
+      "purpose": "after render-part join",
+      "extracted_file": "frames/frame-0110.png"
+    },
+    {
+      "frame": 6221,
+      "video_seconds": 103.68333333333334,
+      "source_seconds": 103.58333333333334,
+      "purpose": "24 before cut",
+      "extracted_file": "frames/frame-0111.png"
+    },
+    {
+      "frame": 6223,
+      "video_seconds": 103.71666666666667,
+      "source_seconds": 103.61666666666667,
+      "purpose": "24 after cut",
+      "extracted_file": "frames/frame-0112.png"
+    },
+    {
+      "frame": 6268,
+      "video_seconds": 104.46666666666667,
+      "source_seconds": 104.36666666666667,
+      "purpose": "24 shot middle",
+      "extracted_file": "frames/frame-0113.png"
+    },
+    {
+      "frame": 6313,
+      "video_seconds": 105.21666666666667,
+      "source_seconds": 105.11666666666667,
+      "purpose": "25 before cut",
+      "extracted_file": "frames/frame-0114.png"
+    },
+    {
+      "frame": 6315,
+      "video_seconds": 105.25,
+      "source_seconds": 105.15,
+      "purpose": "25 after cut",
+      "extracted_file": "frames/frame-0115.png"
+    },
+    {
+      "frame": 6342,
+      "video_seconds": 105.7,
+      "source_seconds": 105.60000000000001,
+      "purpose": "selected composition",
+      "extracted_file": "frames/frame-0116.png"
+    },
+    {
+      "frame": 6412,
+      "video_seconds": 106.86666666666666,
+      "source_seconds": 106.76666666666667,
+      "purpose": "25 shot middle",
+      "extracted_file": "frames/frame-0117.png"
+    },
+    {
+      "frame": 6509,
+      "video_seconds": 108.48333333333333,
+      "source_seconds": 108.38333333333334,
+      "purpose": "26 before cut",
+      "extracted_file": "frames/frame-0118.png"
+    },
+    {
+      "frame": 6511,
+      "video_seconds": 108.51666666666667,
+      "source_seconds": 108.41666666666667,
+      "purpose": "26 after cut",
+      "extracted_file": "frames/frame-0119.png"
+    },
+    {
+      "frame": 6552,
+      "video_seconds": 109.2,
+      "source_seconds": 109.10000000000001,
+      "purpose": "26 shot middle",
+      "extracted_file": "frames/frame-0120.png"
+    },
+    {
+      "frame": 6593,
+      "video_seconds": 109.88333333333334,
+      "source_seconds": 109.78333333333335,
+      "purpose": "27 before cut",
+      "extracted_file": "frames/frame-0121.png"
+    },
+    {
+      "frame": 6595,
+      "video_seconds": 109.91666666666667,
+      "source_seconds": 109.81666666666668,
+      "purpose": "27 after cut",
+      "extracted_file": "frames/frame-0122.png"
+    },
+    {
+      "frame": 6599,
+      "video_seconds": 109.98333333333333,
+      "source_seconds": 109.88333333333334,
+      "purpose": "before render-part join",
+      "extracted_file": "frames/frame-0123.png"
+    },
+    {
+      "frame": 6600,
+      "video_seconds": 110.0,
+      "source_seconds": 109.9,
+      "purpose": "after render-part join",
+      "extracted_file": "frames/frame-0124.png"
+    },
+    {
+      "frame": 6810,
+      "video_seconds": 113.5,
+      "source_seconds": 113.4,
+      "purpose": "27 shot middle",
+      "extracted_file": "frames/frame-0125.png"
+    },
+    {
+      "frame": 7011,
+      "video_seconds": 116.85,
+      "source_seconds": 116.75,
+      "purpose": "before render-part join",
+      "extracted_file": "frames/frame-0126.png"
+    },
+    {
+      "frame": 7012,
+      "video_seconds": 116.86666666666666,
+      "source_seconds": 116.76666666666667,
+      "purpose": "after render-part join",
+      "extracted_file": "frames/frame-0127.png"
+    },
+    {
+      "frame": 7025,
+      "video_seconds": 117.08333333333333,
+      "source_seconds": 116.98333333333333,
+      "purpose": "28 before cut",
+      "extracted_file": "frames/frame-0128.png"
+    },
+    {
+      "frame": 7027,
+      "video_seconds": 117.11666666666666,
+      "source_seconds": 117.01666666666667,
+      "purpose": "28 after cut",
+      "extracted_file": "frames/frame-0129.png"
+    },
+    {
+      "frame": 7128,
+      "video_seconds": 118.8,
+      "source_seconds": 118.7,
+      "purpose": "selected composition",
+      "extracted_file": "frames/frame-0130.png"
+    },
+    {
+      "frame": 7156,
+      "video_seconds": 119.26666666666667,
+      "source_seconds": 119.16666666666667,
+      "purpose": "28 shot middle",
+      "extracted_file": "frames/frame-0131.png"
+    },
+    {
+      "frame": 7284,
+      "video_seconds": 121.4,
+      "source_seconds": 121.30000000000001,
+      "purpose": "29 before cut",
+      "extracted_file": "frames/frame-0132.png"
+    },
+    {
+      "frame": 7286,
+      "video_seconds": 121.43333333333334,
+      "source_seconds": 121.33333333333334,
+      "purpose": "selected composition",
+      "extracted_file": "frames/frame-0133.png"
+    },
+    {
+      "frame": 7392,
+      "video_seconds": 123.2,
+      "source_seconds": 123.10000000000001,
+      "purpose": "selected composition",
+      "extracted_file": "frames/frame-0134.png"
+    },
+    {
+      "frame": 7423,
+      "video_seconds": 123.71666666666667,
+      "source_seconds": 123.61666666666667,
+      "purpose": "29 shot middle",
+      "extracted_file": "frames/frame-0135.png"
+    },
+    {
+      "frame": 7424,
+      "video_seconds": 123.73333333333333,
+      "source_seconds": 123.63333333333334,
+      "purpose": "before render-part join",
+      "extracted_file": "frames/frame-0136.png"
+    },
+    {
+      "frame": 7425,
+      "video_seconds": 123.75,
+      "source_seconds": 123.65,
+      "purpose": "after render-part join",
+      "extracted_file": "frames/frame-0137.png"
+    },
+    {
+      "frame": 7560,
+      "video_seconds": 126.0,
+      "source_seconds": 125.9,
+      "purpose": "30 before cut",
+      "extracted_file": "frames/frame-0138.png"
+    },
+    {
+      "frame": 7562,
+      "video_seconds": 126.03333333333333,
+      "source_seconds": 125.93333333333334,
+      "purpose": "30 after cut",
+      "extracted_file": "frames/frame-0139.png"
+    },
+    {
+      "frame": 7692,
+      "video_seconds": 128.2,
+      "source_seconds": 128.1,
+      "purpose": "30 shot middle",
+      "extracted_file": "frames/frame-0140.png"
+    },
+    {
+      "frame": 7822,
+      "video_seconds": 130.36666666666667,
+      "source_seconds": 130.26666666666668,
+      "purpose": "31 before cut",
+      "extracted_file": "frames/frame-0141.png"
+    },
+    {
+      "frame": 7824,
+      "video_seconds": 130.4,
+      "source_seconds": 130.3,
+      "purpose": "31 after cut",
+      "extracted_file": "frames/frame-0142.png"
+    },
+    {
+      "frame": 7836,
+      "video_seconds": 130.6,
+      "source_seconds": 130.5,
+      "purpose": "before render-part join",
+      "extracted_file": "frames/frame-0143.png"
+    },
+    {
+      "frame": 7837,
+      "video_seconds": 130.61666666666667,
+      "source_seconds": 130.51666666666668,
+      "purpose": "after render-part join",
+      "extracted_file": "frames/frame-0144.png"
+    },
+    {
+      "frame": 7951,
+      "video_seconds": 132.51666666666668,
+      "source_seconds": 132.41666666666669,
+      "purpose": "31 shot middle",
+      "extracted_file": "frames/frame-0145.png"
+    },
+    {
+      "frame": 8077,
+      "video_seconds": 134.61666666666667,
+      "source_seconds": 134.51666666666668,
+      "purpose": "32 before cut",
+      "extracted_file": "frames/frame-0146.png"
+    },
+    {
+      "frame": 8079,
+      "video_seconds": 134.65,
+      "source_seconds": 134.55,
+      "purpose": "32 after cut",
+      "extracted_file": "frames/frame-0147.png"
+    },
+    {
+      "frame": 8218,
+      "video_seconds": 136.96666666666667,
+      "source_seconds": 136.86666666666667,
+      "purpose": "32 shot middle",
+      "extracted_file": "frames/frame-0148.png"
+    },
+    {
+      "frame": 8249,
+      "video_seconds": 137.48333333333332,
+      "source_seconds": 137.38333333333333,
+      "purpose": "before render-part join",
+      "extracted_file": "frames/frame-0149.png"
+    },
+    {
+      "frame": 8250,
+      "video_seconds": 137.5,
+      "source_seconds": 137.4,
+      "purpose": "after render-part join",
+      "extracted_file": "frames/frame-0150.png"
+    },
+    {
+      "frame": 8357,
+      "video_seconds": 139.28333333333333,
+      "source_seconds": 139.18333333333334,
+      "purpose": "33 before cut",
+      "extracted_file": "frames/frame-0151.png"
+    },
+    {
+      "frame": 8359,
+      "video_seconds": 139.31666666666666,
+      "source_seconds": 139.21666666666667,
+      "purpose": "33 after cut",
+      "extracted_file": "frames/frame-0152.png"
+    },
+    {
+      "frame": 8400,
+      "video_seconds": 140.0,
+      "source_seconds": 139.9,
+      "purpose": "selected composition",
+      "extracted_file": "frames/frame-0153.png"
+    },
+    {
+      "frame": 8427,
+      "video_seconds": 140.45,
+      "source_seconds": 140.35,
+      "purpose": "33 shot middle",
+      "extracted_file": "frames/frame-0154.png"
+    },
+    {
+      "frame": 8495,
+      "video_seconds": 141.58333333333334,
+      "source_seconds": 141.48333333333335,
+      "purpose": "34 before cut",
+      "extracted_file": "frames/frame-0155.png"
+    },
+    {
+      "frame": 8497,
+      "video_seconds": 141.61666666666667,
+      "source_seconds": 141.51666666666668,
+      "purpose": "34 after cut",
+      "extracted_file": "frames/frame-0156.png"
+    },
+    {
+      "frame": 8583,
+      "video_seconds": 143.05,
+      "source_seconds": 142.95000000000002,
+      "purpose": "34 shot middle",
+      "extracted_file": "frames/frame-0157.png"
+    },
+    {
+      "frame": 8661,
+      "video_seconds": 144.35,
+      "source_seconds": 144.25,
+      "purpose": "before render-part join",
+      "extracted_file": "frames/frame-0158.png"
+    },
+    {
+      "frame": 8662,
+      "video_seconds": 144.36666666666667,
+      "source_seconds": 144.26666666666668,
+      "purpose": "after render-part join",
+      "extracted_file": "frames/frame-0159.png"
+    },
+    {
+      "frame": 8669,
+      "video_seconds": 144.48333333333332,
+      "source_seconds": 144.38333333333333,
+      "purpose": "35 before cut",
+      "extracted_file": "frames/frame-0160.png"
+    },
+    {
+      "frame": 8671,
+      "video_seconds": 144.51666666666668,
+      "source_seconds": 144.41666666666669,
+      "purpose": "35 after cut",
+      "extracted_file": "frames/frame-0161.png"
+    },
+    {
+      "frame": 8796,
+      "video_seconds": 146.6,
+      "source_seconds": 146.5,
+      "purpose": "35 shot middle",
+      "extracted_file": "frames/frame-0162.png"
+    },
+    {
+      "frame": 8921,
+      "video_seconds": 148.68333333333334,
+      "source_seconds": 148.58333333333334,
+      "purpose": "36 before cut",
+      "extracted_file": "frames/frame-0163.png"
+    },
+    {
+      "frame": 8923,
+      "video_seconds": 148.71666666666667,
+      "source_seconds": 148.61666666666667,
+      "purpose": "36 after cut",
+      "extracted_file": "frames/frame-0164.png"
+    },
+    {
+      "frame": 9074,
+      "video_seconds": 151.23333333333332,
+      "source_seconds": 151.13333333333333,
+      "purpose": "before render-part join",
+      "extracted_file": "frames/frame-0165.png"
+    },
+    {
+      "frame": 9075,
+      "video_seconds": 151.25,
+      "source_seconds": 151.15,
+      "purpose": "after render-part join",
+      "extracted_file": "frames/frame-0166.png"
+    },
+    {
+      "frame": 9090,
+      "video_seconds": 151.5,
+      "source_seconds": 151.4,
+      "purpose": "36 shot middle",
+      "extracted_file": "frames/frame-0167.png"
+    },
+    {
+      "frame": 9257,
+      "video_seconds": 154.28333333333333,
+      "source_seconds": 154.18333333333334,
+      "purpose": "37 before cut",
+      "extracted_file": "frames/frame-0168.png"
+    },
+    {
+      "frame": 9259,
+      "video_seconds": 154.31666666666666,
+      "source_seconds": 154.21666666666667,
+      "purpose": "37 after cut",
+      "extracted_file": "frames/frame-0169.png"
+    },
+    {
+      "frame": 9300,
+      "video_seconds": 155.0,
+      "source_seconds": 154.9,
+      "purpose": "selected composition",
+      "extracted_file": "frames/frame-0170.png"
+    },
+    {
+      "frame": 9312,
+      "video_seconds": 155.2,
+      "source_seconds": 155.1,
+      "purpose": "37 shot middle",
+      "extracted_file": "frames/frame-0171.png"
+    },
+    {
+      "frame": 9365,
+      "video_seconds": 156.08333333333334,
+      "source_seconds": 155.98333333333335,
+      "purpose": "38 before cut",
+      "extracted_file": "frames/frame-0172.png"
+    },
+    {
+      "frame": 9367,
+      "video_seconds": 156.11666666666667,
+      "source_seconds": 156.01666666666668,
+      "purpose": "38 after cut",
+      "extracted_file": "frames/frame-0173.png"
+    },
+    {
+      "frame": 9486,
+      "video_seconds": 158.1,
+      "source_seconds": 158.0,
+      "purpose": "before render-part join",
+      "extracted_file": "frames/frame-0174.png"
+    },
+    {
+      "frame": 9487,
+      "video_seconds": 158.11666666666667,
+      "source_seconds": 158.01666666666668,
+      "purpose": "after render-part join",
+      "extracted_file": "frames/frame-0175.png"
+    },
+    {
+      "frame": 9504,
+      "video_seconds": 158.4,
+      "source_seconds": 158.3,
+      "purpose": "38 shot middle",
+      "extracted_file": "frames/frame-0176.png"
+    },
+    {
+      "frame": 9641,
+      "video_seconds": 160.68333333333334,
+      "source_seconds": 160.58333333333334,
+      "purpose": "39 before cut",
+      "extracted_file": "frames/frame-0177.png"
+    },
+    {
+      "frame": 9643,
+      "video_seconds": 160.71666666666667,
+      "source_seconds": 160.61666666666667,
+      "purpose": "39 after cut",
+      "extracted_file": "frames/frame-0178.png"
+    },
+    {
+      "frame": 9675,
+      "video_seconds": 161.25,
+      "source_seconds": 161.15,
+      "purpose": "39 shot middle",
+      "extracted_file": "frames/frame-0179.png"
+    },
+    {
+      "frame": 9707,
+      "video_seconds": 161.78333333333333,
+      "source_seconds": 161.68333333333334,
+      "purpose": "40 before cut",
+      "extracted_file": "frames/frame-0180.png"
+    },
+    {
+      "frame": 9709,
+      "video_seconds": 161.81666666666666,
+      "source_seconds": 161.71666666666667,
+      "purpose": "40 after cut",
+      "extracted_file": "frames/frame-0181.png"
+    },
+    {
+      "frame": 9743,
+      "video_seconds": 162.38333333333333,
+      "source_seconds": 162.28333333333333,
+      "purpose": "40 shot middle",
+      "extracted_file": "frames/frame-0182.png"
+    },
+    {
+      "frame": 9777,
+      "video_seconds": 162.95,
+      "source_seconds": 162.85,
+      "purpose": "41 before cut",
+      "extracted_file": "frames/frame-0183.png"
+    },
+    {
+      "frame": 9779,
+      "video_seconds": 162.98333333333332,
+      "source_seconds": 162.88333333333333,
+      "purpose": "41 after cut",
+      "extracted_file": "frames/frame-0184.png"
+    },
+    {
+      "frame": 9847,
+      "video_seconds": 164.11666666666667,
+      "source_seconds": 164.01666666666668,
+      "purpose": "41 shot middle",
+      "extracted_file": "frames/frame-0185.png"
+    },
+    {
+      "frame": 9899,
+      "video_seconds": 164.98333333333332,
+      "source_seconds": 164.88333333333333,
+      "purpose": "before render-part join",
+      "extracted_file": "frames/frame-0186.png"
+    },
+    {
+      "frame": 9900,
+      "video_seconds": 165.0,
+      "source_seconds": 164.9,
+      "purpose": "after render-part join",
+      "extracted_file": "frames/frame-0187.png"
+    },
+    {
+      "frame": 9915,
+      "video_seconds": 165.25,
+      "source_seconds": 165.15,
+      "purpose": "42 before cut",
+      "extracted_file": "frames/frame-0188.png"
+    },
+    {
+      "frame": 9917,
+      "video_seconds": 165.28333333333333,
+      "source_seconds": 165.18333333333334,
+      "purpose": "42 after cut",
+      "extracted_file": "frames/frame-0189.png"
+    },
+    {
+      "frame": 10020,
+      "video_seconds": 167.0,
+      "source_seconds": 166.9,
+      "purpose": "selected composition",
+      "extracted_file": "frames/frame-0190.png"
+    },
+    {
+      "frame": 10105,
+      "video_seconds": 168.41666666666666,
+      "source_seconds": 168.31666666666666,
+      "purpose": "42 shot middle",
+      "extracted_file": "frames/frame-0191.png"
+    },
+    {
+      "frame": 10294,
+      "video_seconds": 171.56666666666666,
+      "source_seconds": 171.46666666666667,
+      "purpose": "43 before cut",
+      "extracted_file": "frames/frame-0192.png"
+    },
+    {
+      "frame": 10296,
+      "video_seconds": 171.6,
+      "source_seconds": 171.5,
+      "purpose": "43 after cut",
+      "extracted_file": "frames/frame-0193.png"
+    },
+    {
+      "frame": 10311,
+      "video_seconds": 171.85,
+      "source_seconds": 171.75,
+      "purpose": "before render-part join",
+      "extracted_file": "frames/frame-0194.png"
+    },
+    {
+      "frame": 10312,
+      "video_seconds": 171.86666666666667,
+      "source_seconds": 171.76666666666668,
+      "purpose": "after render-part join",
+      "extracted_file": "frames/frame-0195.png"
+    },
+    {
+      "frame": 10502,
+      "video_seconds": 175.03333333333333,
+      "source_seconds": 174.93333333333334,
+      "purpose": "43 shot middle",
+      "extracted_file": "frames/frame-0196.png"
+    },
+    {
+      "frame": 10709,
+      "video_seconds": 178.48333333333332,
+      "source_seconds": 178.38333333333333,
+      "purpose": "44 before cut",
+      "extracted_file": "frames/frame-0197.png"
+    },
+    {
+      "frame": 10711,
+      "video_seconds": 178.51666666666668,
+      "source_seconds": 178.41666666666669,
+      "purpose": "44 after cut",
+      "extracted_file": "frames/frame-0198.png"
+    },
+    {
+      "frame": 10724,
+      "video_seconds": 178.73333333333332,
+      "source_seconds": 178.63333333333333,
+      "purpose": "before render-part join",
+      "extracted_file": "frames/frame-0199.png"
+    },
+    {
+      "frame": 10725,
+      "video_seconds": 178.75,
+      "source_seconds": 178.65,
+      "purpose": "after render-part join",
+      "extracted_file": "frames/frame-0200.png"
+    },
+    {
+      "frame": 10779,
+      "video_seconds": 179.65,
+      "source_seconds": 179.55,
+      "purpose": "44 shot middle",
+      "extracted_file": "frames/frame-0201.png"
+    },
+    {
+      "frame": 10847,
+      "video_seconds": 180.78333333333333,
+      "source_seconds": 180.68333333333334,
+      "purpose": "45 before cut",
+      "extracted_file": "frames/frame-0202.png"
+    },
+    {
+      "frame": 10849,
+      "video_seconds": 180.81666666666666,
+      "source_seconds": 180.71666666666667,
+      "purpose": "45 after cut",
+      "extracted_file": "frames/frame-0203.png"
+    },
+    {
+      "frame": 10917,
+      "video_seconds": 181.95,
+      "source_seconds": 181.85,
+      "purpose": "45 shot middle",
+      "extracted_file": "frames/frame-0204.png"
+    },
+    {
+      "frame": 10985,
+      "video_seconds": 183.08333333333334,
+      "source_seconds": 182.98333333333335,
+      "purpose": "46 before cut",
+      "extracted_file": "frames/frame-0205.png"
+    },
+    {
+      "frame": 10987,
+      "video_seconds": 183.11666666666667,
+      "source_seconds": 183.01666666666668,
+      "purpose": "46 after cut",
+      "extracted_file": "frames/frame-0206.png"
+    },
+    {
+      "frame": 11074,
+      "video_seconds": 184.56666666666666,
+      "source_seconds": 184.46666666666667,
+      "purpose": "46 shot middle",
+      "extracted_file": "frames/frame-0207.png"
+    },
+    {
+      "frame": 11136,
+      "video_seconds": 185.6,
+      "source_seconds": 185.5,
+      "purpose": "before render-part join",
+      "extracted_file": "frames/frame-0208.png"
+    },
+    {
+      "frame": 11137,
+      "video_seconds": 185.61666666666667,
+      "source_seconds": 185.51666666666668,
+      "purpose": "after render-part join",
+      "extracted_file": "frames/frame-0209.png"
+    },
+    {
+      "frame": 11160,
+      "video_seconds": 186.0,
+      "source_seconds": 185.9,
+      "purpose": "selected composition",
+      "extracted_file": "frames/frame-0210.png"
+    },
+    {
+      "frame": 11162,
+      "video_seconds": 186.03333333333333,
+      "source_seconds": 185.93333333333334,
+      "purpose": "47 after cut",
+      "extracted_file": "frames/frame-0211.png"
+    },
+    {
+      "frame": 11232,
+      "video_seconds": 187.2,
+      "source_seconds": 187.1,
+      "purpose": "47 shot middle",
+      "extracted_file": "frames/frame-0212.png"
+    },
+    {
+      "frame": 11301,
+      "video_seconds": 188.35,
+      "source_seconds": 188.25,
+      "purpose": "48 before cut",
+      "extracted_file": "frames/frame-0213.png"
+    },
+    {
+      "frame": 11303,
+      "video_seconds": 188.38333333333333,
+      "source_seconds": 188.28333333333333,
+      "purpose": "48 after cut",
+      "extracted_file": "frames/frame-0214.png"
+    },
+    {
+      "frame": 11510,
+      "video_seconds": 191.83333333333334,
+      "source_seconds": 191.73333333333335,
+      "purpose": "48 shot middle",
+      "extracted_file": "frames/frame-0215.png"
+    },
+    {
+      "frame": 11549,
+      "video_seconds": 192.48333333333332,
+      "source_seconds": 192.38333333333333,
+      "purpose": "before render-part join",
+      "extracted_file": "frames/frame-0216.png"
+    },
+    {
+      "frame": 11550,
+      "video_seconds": 192.5,
+      "source_seconds": 192.4,
+      "purpose": "after render-part join",
+      "extracted_file": "frames/frame-0217.png"
+    },
+    {
+      "frame": 11717,
+      "video_seconds": 195.28333333333333,
+      "source_seconds": 195.18333333333334,
+      "purpose": "49 before cut",
+      "extracted_file": "frames/frame-0218.png"
+    },
+    {
+      "frame": 11719,
+      "video_seconds": 195.31666666666666,
+      "source_seconds": 195.21666666666667,
+      "purpose": "49 after cut",
+      "extracted_file": "frames/frame-0219.png"
+    },
+    {
+      "frame": 11778,
+      "video_seconds": 196.3,
+      "source_seconds": 196.20000000000002,
+      "purpose": "49 shot middle",
+      "extracted_file": "frames/frame-0220.png"
+    },
+    {
+      "frame": 11837,
+      "video_seconds": 197.28333333333333,
+      "source_seconds": 197.18333333333334,
+      "purpose": "50 before cut",
+      "extracted_file": "frames/frame-0221.png"
+    },
+    {
+      "frame": 11839,
+      "video_seconds": 197.31666666666666,
+      "source_seconds": 197.21666666666667,
+      "purpose": "50 after cut",
+      "extracted_file": "frames/frame-0222.png"
+    },
+    {
+      "frame": 11911,
+      "video_seconds": 198.51666666666668,
+      "source_seconds": 198.41666666666669,
+      "purpose": "50 shot middle",
+      "extracted_file": "frames/frame-0223.png"
+    },
+    {
+      "frame": 11961,
+      "video_seconds": 199.35,
+      "source_seconds": 199.25,
+      "purpose": "before render-part join",
+      "extracted_file": "frames/frame-0224.png"
+    },
+    {
+      "frame": 11962,
+      "video_seconds": 199.36666666666667,
+      "source_seconds": 199.26666666666668,
+      "purpose": "after render-part join",
+      "extracted_file": "frames/frame-0225.png"
+    },
+    {
+      "frame": 11982,
+      "video_seconds": 199.7,
+      "source_seconds": 199.6,
+      "purpose": "51 before cut",
+      "extracted_file": "frames/frame-0226.png"
+    },
+    {
+      "frame": 11984,
+      "video_seconds": 199.73333333333332,
+      "source_seconds": 199.63333333333333,
+      "purpose": "51 after cut",
+      "extracted_file": "frames/frame-0227.png"
+    },
+    {
+      "frame": 12016,
+      "video_seconds": 200.26666666666668,
+      "source_seconds": 200.16666666666669,
+      "purpose": "51 shot middle",
+      "extracted_file": "frames/frame-0228.png"
+    },
+    {
+      "frame": 12047,
+      "video_seconds": 200.78333333333333,
+      "source_seconds": 200.68333333333334,
+      "purpose": "52 before cut",
+      "extracted_file": "frames/frame-0229.png"
+    },
+    {
+      "frame": 12049,
+      "video_seconds": 200.81666666666666,
+      "source_seconds": 200.71666666666667,
+      "purpose": "52 after cut",
+      "extracted_file": "frames/frame-0230.png"
+    },
+    {
+      "frame": 12079,
+      "video_seconds": 201.31666666666666,
+      "source_seconds": 201.21666666666667,
+      "purpose": "52 shot middle",
+      "extracted_file": "frames/frame-0231.png"
+    },
+    {
+      "frame": 12109,
+      "video_seconds": 201.81666666666666,
+      "source_seconds": 201.71666666666667,
+      "purpose": "53 before cut",
+      "extracted_file": "frames/frame-0232.png"
+    },
+    {
+      "frame": 12111,
+      "video_seconds": 201.85,
+      "source_seconds": 201.75,
+      "purpose": "53 after cut",
+      "extracted_file": "frames/frame-0233.png"
+    },
+    {
+      "frame": 12237,
+      "video_seconds": 203.95,
+      "source_seconds": 203.85,
+      "purpose": "53 shot middle",
+      "extracted_file": "frames/frame-0234.png"
+    },
+    {
+      "frame": 12300,
+      "video_seconds": 205.0,
+      "source_seconds": 204.9,
+      "purpose": "selected composition",
+      "extracted_file": "frames/frame-0235.png"
+    },
+    {
+      "frame": 12364,
+      "video_seconds": 206.06666666666666,
+      "source_seconds": 205.96666666666667,
+      "purpose": "54 before cut",
+      "extracted_file": "frames/frame-0236.png"
+    },
+    {
+      "frame": 12366,
+      "video_seconds": 206.1,
+      "source_seconds": 206.0,
+      "purpose": "54 after cut",
+      "extracted_file": "frames/frame-0237.png"
+    },
+    {
+      "frame": 12374,
+      "video_seconds": 206.23333333333332,
+      "source_seconds": 206.13333333333333,
+      "purpose": "before render-part join",
+      "extracted_file": "frames/frame-0238.png"
+    },
+    {
+      "frame": 12375,
+      "video_seconds": 206.25,
+      "source_seconds": 206.15,
+      "purpose": "after render-part join",
+      "extracted_file": "frames/frame-0239.png"
+    },
+    {
+      "frame": 12494,
+      "video_seconds": 208.23333333333332,
+      "source_seconds": 208.13333333333333,
+      "purpose": "54 shot middle",
+      "extracted_file": "frames/frame-0240.png"
+    },
+    {
+      "frame": 12623,
+      "video_seconds": 210.38333333333333,
+      "source_seconds": 210.28333333333333,
+      "purpose": "55 before cut",
+      "extracted_file": "frames/frame-0241.png"
+    },
+    {
+      "frame": 12625,
+      "video_seconds": 210.41666666666666,
+      "source_seconds": 210.31666666666666,
+      "purpose": "55 after cut",
+      "extracted_file": "frames/frame-0242.png"
+    },
+    {
+      "frame": 12663,
+      "video_seconds": 211.05,
+      "source_seconds": 210.95000000000002,
+      "purpose": "55 shot middle",
+      "extracted_file": "frames/frame-0243.png"
+    },
+    {
+      "frame": 12701,
+      "video_seconds": 211.68333333333334,
+      "source_seconds": 211.58333333333334,
+      "purpose": "56 before cut",
+      "extracted_file": "frames/frame-0244.png"
+    },
+    {
+      "frame": 12703,
+      "video_seconds": 211.71666666666667,
+      "source_seconds": 211.61666666666667,
+      "purpose": "56 after cut",
+      "extracted_file": "frames/frame-0245.png"
+    },
+    {
+      "frame": 12786,
+      "video_seconds": 213.1,
+      "source_seconds": 213.0,
+      "purpose": "before render-part join",
+      "extracted_file": "frames/frame-0246.png"
+    },
+    {
+      "frame": 12787,
+      "video_seconds": 213.11666666666667,
+      "source_seconds": 213.01666666666668,
+      "purpose": "after render-part join",
+      "extracted_file": "frames/frame-0247.png"
+    },
+    {
+      "frame": 12897,
+      "video_seconds": 214.95,
+      "source_seconds": 214.85,
+      "purpose": "56 shot middle",
+      "extracted_file": "frames/frame-0248.png"
+    },
+    {
+      "frame": 13091,
+      "video_seconds": 218.18333333333334,
+      "source_seconds": 218.08333333333334,
+      "purpose": "57 before cut",
+      "extracted_file": "frames/frame-0249.png"
+    },
+    {
+      "frame": 13093,
+      "video_seconds": 218.21666666666667,
+      "source_seconds": 218.11666666666667,
+      "purpose": "57 after cut",
+      "extracted_file": "frames/frame-0250.png"
+    },
+    {
+      "frame": 13155,
+      "video_seconds": 219.25,
+      "source_seconds": 219.15,
+      "purpose": "57 shot middle",
+      "extracted_file": "frames/frame-0251.png"
+    },
+    {
+      "frame": 13199,
+      "video_seconds": 219.98333333333332,
+      "source_seconds": 219.88333333333333,
+      "purpose": "before render-part join",
+      "extracted_file": "frames/frame-0252.png"
+    },
+    {
+      "frame": 13200,
+      "video_seconds": 220.0,
+      "source_seconds": 219.9,
+      "purpose": "after render-part join",
+      "extracted_file": "frames/frame-0253.png"
+    },
+    {
+      "frame": 13217,
+      "video_seconds": 220.28333333333333,
+      "source_seconds": 220.18333333333334,
+      "purpose": "58 before cut",
+      "extracted_file": "frames/frame-0254.png"
+    },
+    {
+      "frame": 13219,
+      "video_seconds": 220.31666666666666,
+      "source_seconds": 220.21666666666667,
+      "purpose": "58 after cut",
+      "extracted_file": "frames/frame-0255.png"
+    },
+    {
+      "frame": 13260,
+      "video_seconds": 221.0,
+      "source_seconds": 220.9,
+      "purpose": "selected composition",
+      "extracted_file": "frames/frame-0256.png"
+    },
+    {
+      "frame": 13272,
+      "video_seconds": 221.2,
+      "source_seconds": 221.1,
+      "purpose": "58 shot middle",
+      "extracted_file": "frames/frame-0257.png"
+    },
+    {
+      "frame": 13325,
+      "video_seconds": 222.08333333333334,
+      "source_seconds": 221.98333333333335,
+      "purpose": "59 before cut",
+      "extracted_file": "frames/frame-0258.png"
+    },
+    {
+      "frame": 13327,
+      "video_seconds": 222.11666666666667,
+      "source_seconds": 222.01666666666668,
+      "purpose": "59 after cut",
+      "extracted_file": "frames/frame-0259.png"
+    },
+    {
+      "frame": 13387,
+      "video_seconds": 223.11666666666667,
+      "source_seconds": 223.01666666666668,
+      "purpose": "59 shot middle",
+      "extracted_file": "frames/frame-0260.png"
+    },
+    {
+      "frame": 13447,
+      "video_seconds": 224.11666666666667,
+      "source_seconds": 224.01666666666668,
+      "purpose": "60 before cut",
+      "extracted_file": "frames/frame-0261.png"
+    },
+    {
+      "frame": 13449,
+      "video_seconds": 224.15,
+      "source_seconds": 224.05,
+      "purpose": "60 after cut",
+      "extracted_file": "frames/frame-0262.png"
+    },
+    {
+      "frame": 13585,
+      "video_seconds": 226.41666666666666,
+      "source_seconds": 226.31666666666666,
+      "purpose": "60 shot middle",
+      "extracted_file": "frames/frame-0263.png"
+    },
+    {
+      "frame": 13611,
+      "video_seconds": 226.85,
+      "source_seconds": 226.75,
+      "purpose": "before render-part join",
+      "extracted_file": "frames/frame-0264.png"
+    },
+    {
+      "frame": 13612,
+      "video_seconds": 226.86666666666667,
+      "source_seconds": 226.76666666666668,
+      "purpose": "after render-part join",
+      "extracted_file": "frames/frame-0265.png"
+    },
+    {
+      "frame": 13721,
+      "video_seconds": 228.68333333333334,
+      "source_seconds": 228.58333333333334,
+      "purpose": "61 before cut",
+      "extracted_file": "frames/frame-0266.png"
+    },
+    {
+      "frame": 13723,
+      "video_seconds": 228.71666666666667,
+      "source_seconds": 228.61666666666667,
+      "purpose": "61 after cut",
+      "extracted_file": "frames/frame-0267.png"
+    },
+    {
+      "frame": 13932,
+      "video_seconds": 232.2,
+      "source_seconds": 232.1,
+      "purpose": "61 shot middle",
+      "extracted_file": "frames/frame-0268.png"
+    },
+    {
+      "frame": 14024,
+      "video_seconds": 233.73333333333332,
+      "source_seconds": 233.63333333333333,
+      "purpose": "before render-part join",
+      "extracted_file": "frames/frame-0269.png"
+    },
+    {
+      "frame": 14025,
+      "video_seconds": 233.75,
+      "source_seconds": 233.65,
+      "purpose": "after render-part join",
+      "extracted_file": "frames/frame-0270.png"
+    },
+    {
+      "frame": 14141,
+      "video_seconds": 235.68333333333334,
+      "source_seconds": 235.58333333333334,
+      "purpose": "62 before cut",
+      "extracted_file": "frames/frame-0271.png"
+    },
+    {
+      "frame": 14143,
+      "video_seconds": 235.71666666666667,
+      "source_seconds": 235.61666666666667,
+      "purpose": "62 after cut",
+      "extracted_file": "frames/frame-0272.png"
+    },
+    {
+      "frame": 14238,
+      "video_seconds": 237.3,
+      "source_seconds": 237.20000000000002,
+      "purpose": "62 shot middle",
+      "extracted_file": "frames/frame-0273.png"
+    },
+    {
+      "frame": 14333,
+      "video_seconds": 238.88333333333333,
+      "source_seconds": 238.78333333333333,
+      "purpose": "63 before cut",
+      "extracted_file": "frames/frame-0274.png"
+    },
+    {
+      "frame": 14335,
+      "video_seconds": 238.91666666666666,
+      "source_seconds": 238.81666666666666,
+      "purpose": "63 after cut",
+      "extracted_file": "frames/frame-0275.png"
+    },
+    {
+      "frame": 14400,
+      "video_seconds": 240.0,
+      "source_seconds": 239.9,
+      "purpose": "selected composition",
+      "extracted_file": "frames/frame-0276.png"
+    },
+    {
+      "frame": 14436,
+      "video_seconds": 240.6,
+      "source_seconds": 240.5,
+      "purpose": "before render-part join",
+      "extracted_file": "frames/frame-0277.png"
+    },
+    {
+      "frame": 14437,
+      "video_seconds": 240.61666666666667,
+      "source_seconds": 240.51666666666668,
+      "purpose": "after render-part join",
+      "extracted_file": "frames/frame-0278.png"
+    },
+    {
+      "frame": 14445,
+      "video_seconds": 240.75,
+      "source_seconds": 240.65,
+      "purpose": "63 shot middle",
+      "extracted_file": "frames/frame-0279.png"
+    },
+    {
+      "frame": 14555,
+      "video_seconds": 242.58333333333334,
+      "source_seconds": 242.48333333333335,
+      "purpose": "64 before cut",
+      "extracted_file": "frames/frame-0280.png"
+    },
+    {
+      "frame": 14557,
+      "video_seconds": 242.61666666666667,
+      "source_seconds": 242.51666666666668,
+      "purpose": "64 after cut",
+      "extracted_file": "frames/frame-0281.png"
+    },
+    {
+      "frame": 14625,
+      "video_seconds": 243.75,
+      "source_seconds": 243.65,
+      "purpose": "64 shot middle",
+      "extracted_file": "frames/frame-0282.png"
+    },
+    {
+      "frame": 14693,
+      "video_seconds": 244.88333333333333,
+      "source_seconds": 244.78333333333333,
+      "purpose": "65 before cut",
+      "extracted_file": "frames/frame-0283.png"
+    },
+    {
+      "frame": 14695,
+      "video_seconds": 244.91666666666666,
+      "source_seconds": 244.81666666666666,
+      "purpose": "65 after cut",
+      "extracted_file": "frames/frame-0284.png"
+    },
+    {
+      "frame": 14775,
+      "video_seconds": 246.25,
+      "source_seconds": 246.15,
+      "purpose": "65 shot middle",
+      "extracted_file": "frames/frame-0285.png"
+    },
+    {
+      "frame": 14849,
+      "video_seconds": 247.48333333333332,
+      "source_seconds": 247.38333333333333,
+      "purpose": "before render-part join",
+      "extracted_file": "frames/frame-0286.png"
+    },
+    {
+      "frame": 14850,
+      "video_seconds": 247.5,
+      "source_seconds": 247.4,
+      "purpose": "after render-part join",
+      "extracted_file": "frames/frame-0287.png"
+    },
+    {
+      "frame": 14855,
+      "video_seconds": 247.58333333333334,
+      "source_seconds": 247.48333333333335,
+      "purpose": "66 before cut",
+      "extracted_file": "frames/frame-0288.png"
+    },
+    {
+      "frame": 14857,
+      "video_seconds": 247.61666666666667,
+      "source_seconds": 247.51666666666668,
+      "purpose": "66 after cut",
+      "extracted_file": "frames/frame-0289.png"
+    },
+    {
+      "frame": 14914,
+      "video_seconds": 248.56666666666666,
+      "source_seconds": 248.46666666666667,
+      "purpose": "66 shot middle",
+      "extracted_file": "frames/frame-0290.png"
+    },
+    {
+      "frame": 14971,
+      "video_seconds": 249.51666666666668,
+      "source_seconds": 249.41666666666669,
+      "purpose": "67 before cut",
+      "extracted_file": "frames/frame-0291.png"
+    },
+    {
+      "frame": 14973,
+      "video_seconds": 249.55,
+      "source_seconds": 249.45000000000002,
+      "purpose": "67 after cut",
+      "extracted_file": "frames/frame-0292.png"
+    },
+    {
+      "frame": 15000,
+      "video_seconds": 250.0,
+      "source_seconds": 249.9,
+      "purpose": "selected composition",
+      "extracted_file": "frames/frame-0293.png"
+    },
+    {
+      "frame": 15040,
+      "video_seconds": 250.66666666666666,
+      "source_seconds": 250.56666666666666,
+      "purpose": "67 shot middle",
+      "extracted_file": "frames/frame-0294.png"
+    },
+    {
+      "frame": 15107,
+      "video_seconds": 251.78333333333333,
+      "source_seconds": 251.68333333333334,
+      "purpose": "68 before cut",
+      "extracted_file": "frames/frame-0295.png"
+    },
+    {
+      "frame": 15109,
+      "video_seconds": 251.81666666666666,
+      "source_seconds": 251.71666666666667,
+      "purpose": "68 after cut",
+      "extracted_file": "frames/frame-0296.png"
+    },
+    {
+      "frame": 15179,
+      "video_seconds": 252.98333333333332,
+      "source_seconds": 252.88333333333333,
+      "purpose": "68 shot middle",
+      "extracted_file": "frames/frame-0297.png"
+    },
+    {
+      "frame": 15249,
+      "video_seconds": 254.15,
+      "source_seconds": 254.05,
+      "purpose": "69 before cut",
+      "extracted_file": "frames/frame-0298.png"
+    },
+    {
+      "frame": 15251,
+      "video_seconds": 254.18333333333334,
+      "source_seconds": 254.08333333333334,
+      "purpose": "69 after cut",
+      "extracted_file": "frames/frame-0299.png"
+    },
+    {
+      "frame": 15252,
+      "video_seconds": 254.2,
+      "source_seconds": 254.1,
+      "purpose": "selected composition",
+      "extracted_file": "frames/frame-0300.png"
+    },
+    {
+      "frame": 15261,
+      "video_seconds": 254.35,
+      "source_seconds": 254.25,
+      "purpose": "before render-part join",
+      "extracted_file": "frames/frame-0301.png"
+    },
+    {
+      "frame": 15262,
+      "video_seconds": 254.36666666666667,
+      "source_seconds": 254.26666666666668,
+      "purpose": "after render-part join",
+      "extracted_file": "frames/frame-0302.png"
+    },
+    {
+      "frame": 15428,
+      "video_seconds": 257.1333333333333,
+      "source_seconds": 257.0333333333333,
+      "purpose": "69 shot middle",
+      "extracted_file": "frames/frame-0303.png"
+    },
+    {
+      "frame": 15594,
+      "video_seconds": 259.9,
+      "source_seconds": 259.79999999999995,
+      "purpose": "selected composition",
+      "extracted_file": "frames/frame-0304.png"
+    },
+    {
+      "frame": 15600,
+      "video_seconds": 260.0,
+      "source_seconds": 259.9,
+      "purpose": "selected composition",
+      "extracted_file": "frames/frame-0305.png"
+    },
+    {
+      "frame": 15674,
+      "video_seconds": 261.23333333333335,
+      "source_seconds": 261.1333333333333,
+      "purpose": "before render-part join",
+      "extracted_file": "frames/frame-0306.png"
+    },
+    {
+      "frame": 15675,
+      "video_seconds": 261.25,
+      "source_seconds": 261.15,
+      "purpose": "after render-part join",
+      "extracted_file": "frames/frame-0307.png"
+    },
+    {
+      "frame": 16020,
+      "video_seconds": 267.0,
+      "source_seconds": 266.9,
+      "purpose": "selected composition",
+      "extracted_file": "frames/frame-0308.png"
+    },
+    {
+      "frame": 16086,
+      "video_seconds": 268.1,
+      "source_seconds": 268.0,
+      "purpose": "before render-part join",
+      "extracted_file": "frames/frame-0309.png"
+    },
+    {
+      "frame": 16087,
+      "video_seconds": 268.1166666666667,
+      "source_seconds": 268.01666666666665,
+      "purpose": "after render-part join",
+      "extracted_file": "frames/frame-0310.png"
+    },
+    {
+      "frame": 16499,
+      "video_seconds": 274.98333333333335,
+      "source_seconds": 274.8833333333333,
+      "purpose": "selected composition",
+      "extracted_file": "frames/frame-0311.png"
+    }
+  ],
+  "remote_parts": 40,
+  "local_chunk_frames": 0,
+  "visual_verdict": "Pending actual inspection of the extracted sheets."
+}

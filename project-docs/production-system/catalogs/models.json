@@ -973,7 +973,7 @@
       "provenance": "authored_clothing_and_performance_over_pinned_project_assets",
       "code_only_eligible": true,
       "reuse_scope": "Song 11 native-world-space performance; adapt deliberately for other song rigs",
-      "status": "implemented_study_in_review",
+      "status": "complete_film_rendered_and_sampled_reviewed",
       "variants": [
         "sapphire_conductor_coat_and_loose_trousers",
         "covered_choir_and_orchestra_bodies"
@@ -987,7 +987,11 @@
         "Install the performance layer before constructing the renderer.",
         "Crowd cache identity includes garment geometry and crowd sample schema.",
         "This source is not owner creative approval of a future rendered film."
-      ]
+      ],
+      "producing_commit": "eec8d16519ea82309ef851975792e9dfc548da03",
+      "final_movie_evidence": "project-docs/production-system/evidence/s11-renewed-final-delivery.json",
+      "visual_qa_evidence": "project-docs/production-system/evidence/s11-renewed-final-qa.json",
+      "owner_creative_approval": "not_recorded"
     }
   ],
   "default_character_direction": {

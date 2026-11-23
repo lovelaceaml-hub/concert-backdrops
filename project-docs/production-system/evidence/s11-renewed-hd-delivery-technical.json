@@ -1,0 +1,55 @@
+{
+  "schema": "s11-encoded-delivery-check-v1",
+  "status": "passed",
+  "filename": "Almighty_God_Knows_the_Future_Renewed_1080p60_delivery.mp4",
+  "sha256": "120bb4fcf4ebced490f4f468dca396170b328fd0ece3941e67e832258f5f449e",
+  "bytes": 395506771,
+  "duration": 275.0,
+  "frames": 16500,
+  "fps": 60,
+  "native_size": [
+    1920,
+    1080
+  ],
+  "video_requirements": {
+    "codec_name": "h264",
+    "width": 1920,
+    "height": 1080,
+    "avg_frame_rate": "60/1",
+    "pix_fmt": "yuv420p",
+    "color_space": "bt709",
+    "color_transfer": "bt709",
+    "color_primaries": "bt709",
+    "color_range": "tv"
+  },
+  "audio_sample_rate": 48000,
+  "complete_video_audio_decode": true,
+  "presentation_timestamp_max_error_seconds": 3.333333467026023e-07,
+  "audio": {
+    "decoded_samples_at_8000_hz": 2200000,
+    "source_offset": 0.0,
+    "original_score_sha256": "fa488e4805cdc43b1f0f38915d67044ef92a9e659a59ac916d4b75b4cbb6d29b",
+    "windows": [
+      {
+        "video_start": 34.0,
+        "seconds": 10.0,
+        "lag_samples_at_8000_hz": 0,
+        "correlation": 0.9999623513206902
+      },
+      {
+        "video_start": 125.0,
+        "seconds": 10.0,
+        "lag_samples_at_8000_hz": 0,
+        "correlation": 0.9999530480709515
+      },
+      {
+        "video_start": 216.0,
+        "seconds": 10.0,
+        "lag_samples_at_8000_hz": 0,
+        "correlation": 0.9999012843542305
+      }
+    ],
+    "silent_hold_peak": 0.0
+  },
+  "visual_review": "Recorded separately; not inferred from technical checks."
+}

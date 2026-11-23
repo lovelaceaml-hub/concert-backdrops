@@ -1,7 +1,6 @@
 # Song 11 recreation: validation evidence
 
-Recorded November 23, 2026 UTC. **Pre-master checks are complete; final encoded
-master, complete decode and audio QA remain pending.** This is a new recreation
+Recorded November 23, 2026 UTC. **The complete film and its delivery copies are checked and saved.** This is a new recreation
 for owner review. Approval of the earlier beauty study does not approve this film.
 
 Scope and reproduction: [creative direction](S11-RECREATION.md) and
@@ -92,21 +91,38 @@ That is sampled picture equivalence, not proof of whole-film equivalence.
 These development checks retain their own evidence scope. The assembled master
 must be bound to its own frozen source/input manifest and output checksum.
 
-## Pending final delivery QA
+## Completed final delivery QA
 
-- **Pending:** completed master filename, byte count, SHA256, frozen source/input
-  fingerprint, exact runtime, chunk receipts and saved delivery identity.
-- **Pending:** full-file decode; confirmed native dimensions, 60 fps cadence,
-  16,500 frames, presentation timestamps and 275-second duration.
-- **Pending:** encoded review of every shot, cut, chunk join, word entrance/exit,
-  conductor gesture, modest costume view and closing hold; moving review of
-  foot contact, baton contact, garment motion and camera acceleration.
-- **Pending:** final encoded audio duration, original timing/alignment, picture
-  delay, peaks/clipping, end fade and 15-second silent hold.
-- **Pending:** exact-output owner creative review. Technical checks do not supply it.
+The exact final identities and saved links are in
+[the delivery record](evidence/s11-renewed-final-delivery.json). The original
+native master is 911,865,528 bytes, SHA256
+`c553b2a51f3917d389adc51ee6dc97c96e6b6e9e306a9bfd2bfbe38a89b34c55`.
+Its exact bytes are preserved in two verified ZIP archives. The full-HD
+delivery and 720p review copy have separate encoded identities.
 
-Complete these entries with observed results and receipt paths after assembly;
-do not infer completion from a render command, a still or an earlier film.
+- All three complete files passed full video/audio decoding, 275-second duration,
+  16,500-frame count, 60 fps cadence, color and presentation timestamp checks.
+- Three original-score windows have zero measured sample lag at 8 kHz and
+  correlation above 0.9999. The closing hold decodes to silence.
+- A 1 dB audio-only gain adjustment was encoded directly from the unchanged
+  prepared score. The final decoded stereo sample peaks are 0.940574 and
+  0.928012, with no samples at or above full scale. These are sample peaks,
+  not oversampled true peaks. All picture packet hashes and timestamps remain
+  identical to the visually reviewed assembled master.
+- All 311 selected assembled-master story frames were visually reviewed,
+  including every edit, shot middle, all 39 render joins and selected ending
+  compositions. All 20 cross-host joins additionally received 12 consecutive
+  frame reviews, totaling 240 unique boundary frames.
+- The complete 117.1–123.1-second conducting gesture received 61 native crops
+  at 10 fps, alongside dense shorter motion intervals. No within-shot lurch,
+  detached baton, foot slide or unwanted anatomical detail was observed.
+- Strong authored light cues can temporarily reduce fine detail. A small roof
+  touches the lower edge of the phrase near 165.8 seconds, and a light ribbon
+  crosses part of “love” at 187.2 seconds; both phrases remain readable.
+
+[The final QA receipt](evidence/s11-renewed-final-qa.json) binds the complete
+scope and supporting evidence. Sampled visual review is not uninterrupted
+playback. Exact-output owner creative approval remains unrecorded.
 
 ## Completed native encoded motion proof
 
@@ -114,13 +130,13 @@ The internal 6-second passage at picture seconds 117.1–123.1 is complete. It c
 
 Two independent consecutive-frame inspections covered the repaired musical transition. The wider inspection viewed all 36 frames 7260–7295: hands, baton and torso advance gradually within each shot, feet remain planted, and the coat/trousers maintain coverage. The large screen-space change at picture 121.4333 seconds is the planned camera cut and light cue. These are encoded-frame inspections, not uninterrupted real-time playback or owner approval. [The preflight record](evidence/s11-renewed-preflight.json) retains the scope and measurements.
 
-The complete 275-second master remains pending; this proof is not the deliverable.
+The later complete master is recorded above; this six-second proof retains its separate development identity.
 
 ## Completed remote native probe
 
 The GitHub probe run `45106842150` completed successfully from commit `8a2ddad71eba2a8c85b49484acd554ead39484a9`. Exact dependencies, pinned models/fonts and all 343 picture-source identities passed restoration and validation. The encrypted artifact was authenticated and inspected at 58, 105.7, 118.8, 186 and 205 seconds; the final composition and modesty fixes remain visible. Root and independent visual inspection found no new blocker in these frames.
 
-The remote runtime differs from the local Mesa runtime. The movie uses the complete remote request and does not mix local fallback pictures into it. The full request uses two Mesa threads per worker, following the verified local setting; the remote probe used one. [The native-probe record](evidence/s11-cloud-native-probe.json) preserves the actual runtime, source identity, frame hashes and review scope. Full encoded-film checks remain pending.
+The remote runtime differs from the local Mesa runtime. The movie uses the complete remote request and does not mix local fallback pictures into it. The full request uses two Mesa threads per worker, following the verified local setting; the remote probe used one. [The native-probe record](evidence/s11-cloud-native-probe.json) preserves the actual runtime, source identity, frame hashes and review scope. The later full encoded-film results are recorded above.
 
 ## Reviewed hosted-worker metadata variation
 
@@ -128,4 +144,4 @@ Full run `45108198761` is bound to producing commit `eec8d16519ea82309ef85197579
 
 The original strict assembler remains unchanged. A separate, narrowly scoped [reviewed assembler](../../tools/s11_delivery/README.md) checks both original fingerprints against [the persisted per-request policy](evidence/s11-host-cohort-policy.json), reads frozen inputs from the producing commit, and retains each part's exact identity. Unknown fingerprints, changed dependencies or changed source remain rejected. Its 16 acceptance tests passed. [The independent review](evidence/s11-host-cohort-review.md) documents the evidence and remaining limits; cross-host pixel identity is not claimed.
 
-Assembly permission is only for completing final QA. Every encoded join, the complete decode, timestamp continuity, original audio and final visual review remain required before delivery.
+Assembly permission is only for completing final QA. The later final QA record above resolves the required joins, complete decode, timestamps, original audio and sampled visual checks. The historical policy remains unchanged.

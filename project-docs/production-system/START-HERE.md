@@ -1,25 +1,36 @@
 # Concert production system
 
-## Current production: Almighty God Knows the Future
+## Completed Song 11: Almighty God Knows the Future
 
-The owner's current request is a more beautiful recreation of the complete
-Song 11 film, with more fluid animation and modest, separately shaped garments.
-The earlier fan study is superseded and its draft PR #111 is closed unmerged.
+The complete **4-minute-35-second recreation is rendered, checked and saved**.
+It keeps the original music and established concert world, with independently
+shaped modest garments, continuous conducting, twenty-four selected new camera
+compositions, detailed waterways and controlled musical light.
 
-The new source and workflow are in [PR #112](https://github.com/lovelaceaml-hub/concert-backdrops/pull/112).
-Start with [the current handoff](AI-HANDOFF.md), [creative direction](CREATIVE-RULES.md),
-[recreation record](S11-RECREATION.md) and [validation](S11-RECREATION-VALIDATION.md).
-The full native 1080p60 film is 275 seconds, preserving the original recording
-and closing hold. Its complete parallel render is in progress; the native
-motion proof and cloud comparison frames have passed their recorded checks.
-
-| Need | Current entry point |
+| Saved file | Purpose |
 | --- | --- |
-| Recover the active production state | [STATE.json](STATE.json) |
-| Reuse the scene, costumes and animation | [Song 11 workflow](../../tools/s11_renewed/README.md) |
-| Run the full film across cloud workers | [Parallel picture workflow](../../tools/s11_cloud/README.md) |
-| Recover private render outputs | [Saved recovery identity](evidence/s11-cloud-recovery.json) |
-| Find finished films and historical references | [DELIVERIES.md](DELIVERIES.md) |
+| [Almighty_God_Knows_the_Future_Renewed_1080p60_delivery.mp4](https://chatgpt.com/library?file_id=libfile_40082ab3a2ec8191a7e32eac89a1aa59&account_id=personal) | Complete full-HD 60 fps delivery; 395,506,771 bytes |
+| [Almighty_God_Knows_the_Future_Renewed_720p60_final.mp4](https://chatgpt.com/library?file_id=libfile_d6b4552450348191adcddea6a16d340d&account_id=personal) | Complete smaller 720p60 viewing copy; 220,179,614 bytes |
+| [Almighty_God_Knows_the_Future_Native_Master_Part_01_of_02.zip](https://chatgpt.com/library?file_id=libfile_d45ece0bb38c81918be0e85866f53ab9&account_id=personal) | Exact original master archive, part 1 of 2 |
+| [Almighty_God_Knows_the_Future_Native_Master_Part_02_of_02.zip](https://chatgpt.com/library?file_id=libfile_197a9f5bb6508191b2a926f0e45a47d2&account_id=personal) | Exact original master archive, part 2 of 2 |
+
+The original native 1920×1080, 60 fps master contains 16,500 frames and two
+temporal samples. Its exact 911,865,528 bytes are retained across the two master ZIPs;
+the included restore script verifies every chunk and the complete movie hash.
+The full-HD delivery is a smaller encode of that native picture with no resize.
+The 720p copy is explicitly downscaled. Both preserve the finalized audio.
+
+Producing source is `eec8d16519ea82309ef851975792e9dfc548da03`; all 41 jobs in [the cloud run](https://github.com/lovelaceaml-hub/concert-backdrops/actions/runs/45108198761) succeeded,
+with no retries. [PR #112](https://github.com/lovelaceaml-hub/concert-backdrops/pull/112) is the source integration authority.
+[Exact delivery identities](evidence/s11-renewed-final-delivery.json) and
+[final QA](evidence/s11-renewed-final-qa.json) separate full decoding, sampled
+visual review and owner approval. No exact-output owner approval is recorded.
+
+Use [the delivery workflow](../../tools/s11_delivery/README.md),
+[the scene workflow](../../tools/s11_renewed/README.md),
+[creative rules](CREATIVE-RULES.md) and [the current handoff](AI-HANDOFF.md).
+Recover the finished files before any deliberate new render. The rejected fan
+study remains superseded; PR #111 is closed unmerged.
 
 ## Earlier Advanced Dance delivery and maintenance
 

@@ -1,55 +1,67 @@
 # Handoff for a new AI or chat
 
-## Current production: full Song 11 recreation
+## Current completed production: Almighty God Knows the Future
 
-Owner direction recorded November 22, 2026, America/Los_Angeles.
+The complete **4-minute-35-second recreation is rendered, checked and saved**.
+It keeps the original music and established concert world, with independently
+shaped modest garments, continuous conducting, twenty-four selected new camera
+compositions, detailed waterways and controlled musical light.
 
-The active request is to recreate the complete **Almighty God Knows the Future**
-music video more beautifully, with improved animation and modest independently
-shaped clothing. The project/recording title includes “Who”. The rejected fan
-study is superseded; its draft PR #111 was closed without merging.
+| Saved file | Purpose |
+| --- | --- |
+| [Almighty_God_Knows_the_Future_Renewed_1080p60_delivery.mp4](https://chatgpt.com/library?file_id=libfile_40082ab3a2ec8191a7e32eac89a1aa59&account_id=personal) | Complete full-HD 60 fps delivery; 395,506,771 bytes |
+| [Almighty_God_Knows_the_Future_Renewed_720p60_final.mp4](https://chatgpt.com/library?file_id=libfile_d6b4552450348191adcddea6a16d340d&account_id=personal) | Complete smaller 720p60 viewing copy; 220,179,614 bytes |
+| [Almighty_God_Knows_the_Future_Native_Master_Part_01_of_02.zip](https://chatgpt.com/library?file_id=libfile_d45ece0bb38c81918be0e85866f53ab9&account_id=personal) | Exact original master archive, part 1 of 2 |
+| [Almighty_God_Knows_the_Future_Native_Master_Part_02_of_02.zip](https://chatgpt.com/library?file_id=libfile_197a9f5bb6508191b2a926f0e45a47d2&account_id=personal) | Exact original master archive, part 2 of 2 |
 
-The new work is in [PR #112](https://github.com/lovelaceaml-hub/concert-backdrops/pull/112),
-branch `creative/s11-renewed-20261122`. Read [the recreation record](S11-RECREATION.md),
-[creative rules](CREATIVE-RULES.md), [validation record](S11-RECREATION-VALIDATION.md)
-and [current state](STATE.json) before acting. Source is `tools/s11_renewed`;
-the isolated parallel renderer is `tools/s11_cloud`; encoded delivery checks are
-in `tools/s11_delivery`.
+The original native 1920×1080, 60 fps master contains 16,500 frames and two
+temporal samples. Its exact 911,865,528 bytes are retained across the two master ZIPs;
+the included restore script verifies every chunk and the complete movie hash.
+The full-HD delivery is a smaller encode of that native picture with no resize.
+The 720p copy is explicitly downscaled. Both preserve the finalized audio.
 
-The film keeps the verified full recording clock: 260 seconds of music, the
-established 0.05-second final fade and 15-second silent closing hold, for 275
-seconds. Native delivery is 1920×1080 at 60fps with two temporal samples.
-The existing 0.1-second picture delay is applied once. The visual hero is the
-male conductor, with blue choir/orchestra, gold instruments and songbooks, the
-heavenly city, Earth, Zion, gathering nations and the Church of God. Heavenly
-Mother is represented only as light in this song.
+Producing source is `eec8d16519ea82309ef851975792e9dfc548da03`; all 41 jobs in [the cloud run](https://github.com/lovelaceaml-hub/concert-backdrops/actions/runs/45108198761) succeeded,
+with no retries. [PR #112](https://github.com/lovelaceaml-hub/concert-backdrops/pull/112) is the source integration authority.
+[Exact delivery identities](evidence/s11-renewed-final-delivery.json) and
+[final QA](evidence/s11-renewed-final-qa.json) separate full decoding, sampled
+visual review and owner approval. No exact-output owner approval is recorded.
 
-The six-second native motion proof and its complete encoded-media checks have
-passed. The full film is still rendering at this checkpoint. The GitHub native
-probe has passed setup, authenticated delivery and visual review. The full
-40-part request is `s11-renewed-20261123-master`, produced by commit
-`eec8d16519ea82309ef851975792e9dfc548da03` in [run 45108198761](https://github.com/lovelaceaml-hub/concert-backdrops/actions/runs/45108198761),
-with up to 20 workers and two Mesa threads per worker. The earlier local fallback
-session is inactive; its surviving opening chunk is not part of this cloud movie.
-Do not restart it or mix local and cloud parts. Do not change picture source while
-the cloud run is active. The private render key has a saved
-recovery archive; its identity is in [the recovery record](evidence/s11-cloud-recovery.json).
-The recording and private key are never included in the public picture-worker
-inputs or output artifacts.
+Use [the delivery workflow](../../tools/s11_delivery/README.md),
+[the scene workflow](../../tools/s11_renewed/README.md),
+[creative rules](CREATIVE-RULES.md) and [the current handoff](AI-HANDOFF.md).
+Recover the finished files before any deliberate new render. The rejected fan
+study remains superseded; PR #111 is closed unmerged.
 
-The hosted workers exposed two different image/kernel labels with identical
-recorded render dependencies and the same logged software renderer. The strict
-assembler still rejects mixed full fingerprints. Use the separately reviewed,
-exact-run route in [the delivery workflow](../../tools/s11_delivery/README.md)
-with [its persisted policy](evidence/s11-host-cohort-policy.json); it preserves
-both original identities and still requires every source, integrity, range,
-stream, audio and encoded visual check. This compatibility decision is not a
-claim of byte-identical hosts or final creative approval.
+### Production and review facts
 
-Current creative picture source starts at `beacae436e3e44b6c8fd9732437945cc731d851e`.
-Cloud probe request/source commit is `8a2ddad71eba2a8c85b49484acd554ead39484a9`.
-Full-master delivery identity and saved links must be filled from the actual
-completed output, not inferred from the proof or older approved excerpt.
+The male conductor, blue choir/orchestra, gold instruments/books, heavenly city,
+Earth, Zion, gathering nations and Church of God remain the story. Heavenly
+Mother appears only as light in this song. Generous separate garments are the
+default; do not revive the rejected body-fitting model direction.
+
+The original 0.1-second picture delay is applied once. The score retains music
+seconds 0–260, its 0.05-second end fade and 15-second silent hold. Final audio
+has 1 dB of headroom adjustment, encoded directly from the unchanged prepared
+score; neither timing nor musical content was re-authored.
+
+All three complete video files passed full decoding, frame counts, durations,
+presentation timestamps and original-score alignment. The full master received
+311 selected story/cut/join inspections; all 20 cross-host joins also received
+12 consecutive encoded-frame inspections. A 61-sample conductor gesture and
+additional dense motion/costume views were reviewed. The audio-only finalization
+preserved all 16,500 compressed picture packets and their timing exactly.
+These are sampled visual reviews and complete technical decoding, not an
+uninterrupted playback or owner creative approval.
+
+The two exact hosted runtime fingerprints are retained in the receipts and
+one-run compatibility policy. No source, dependency, integrity or range check
+was relaxed; byte-identical host environments are not claimed. The original
+strict assembler remains the default for future requests.
+
+The earlier local fallback is inactive and its opening chunk was not used.
+There is no unfinished render queue. The private recovery key remains separate
+from Git in [its recovery record](evidence/s11-cloud-recovery.json).
+The recording and private key were not included in public worker inputs.
 
 ## Historical Advanced Dance delivery and earlier maintenance
 

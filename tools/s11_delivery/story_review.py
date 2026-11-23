@@ -16,6 +16,16 @@ from PIL import Image, ImageDraw
 ROOT = Path(__file__).resolve().parents[2]
 
 
+def selection_expression(rows):
+    # A left-associated chain of hundreds of additions exceeds FFmpeg's
+    # expression parser depth. A balanced sum keeps the same exact frame set.
+    terms = [f"eq(n\\,{row['frame']})" for row in rows]
+    while len(terms) > 1:
+        terms = [f"({terms[i]}+{terms[i + 1]})" if i + 1 < len(terms)
+                 else terms[i] for i in range(0, len(terms), 2)]
+    return terms[0]
+
+
 def samples(parts=0, chunk_frames=0):
     tree = ast.parse((ROOT / "tools/s11_full2/s11_full2.py").read_text())
     edit = None
@@ -65,7 +75,7 @@ def main():
     if frames.exists():
         raise ValueError("Existing review frames are preserved; select a new directory.")
     frames.mkdir()
-    selection = "+".join(f"eq(n\\,{row['frame']})" for row in rows)
+    selection = selection_expression(rows)
     subprocess.run(["ffmpeg", "-v", "error", "-threads", "2", "-i", str(args.video),
                     "-vf", "select=" + selection + ",scale=400:225:flags=lanczos",
                     "-fps_mode", "vfr", "-an", str(frames / "frame-%04d.png")], check=True)

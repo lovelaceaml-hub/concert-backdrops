@@ -1,0 +1,36 @@
+{
+  "schema": "s11-audio-headroom-finalization-v1",
+  "status": "passed",
+  "input_video_filename": "Almighty_God_Knows_the_Future_Renewed_1080p60.mp4",
+  "input_video_sha256": "71eb27c680341b4f2c265baf6bd71afd098d5a90daf54a835259379485dcbb32",
+  "original_prepared_score_sha256": "fa488e4805cdc43b1f0f38915d67044ef92a9e659a59ac916d4b75b4cbb6d29b",
+  "gain_db": -1,
+  "output_filename": "Almighty_God_Knows_the_Future_Renewed_1080p60_final.mp4",
+  "output_sha256": "c553b2a51f3917d389adc51ee6dc97c96e6b6e9e306a9bfd2bfbe38a89b34c55",
+  "bytes": 911865528,
+  "duration_seconds": 275,
+  "source_clock_changed": false,
+  "fade_or_pad_reapplied": false,
+  "video_encoded_again": false,
+  "video_packet_count": 16500,
+  "all_picture_packet_hashes_and_timestamps_identical": true,
+  "picture_packet_inventory_sha256": "d5939b41a202f70326daa3be63eafba69b6720449ddce07aaebd0ae1d22d9215",
+  "sample_rate": 48000,
+  "samples_per_channel": 13200000,
+  "channels": [
+    {
+      "channel": 1,
+      "decoded_sample_peak": 0.9405735731124878,
+      "decoded_samples_at_or_above_full_scale": 0
+    },
+    {
+      "channel": 2,
+      "decoded_sample_peak": 0.9280115365982056,
+      "decoded_samples_at_or_above_full_scale": 0
+    }
+  ],
+  "audio_encoded_from": "unchanged original prepared score; not prior AAC",
+  "peak_scope": "Complete decoded stereo sample peaks, not oversampled true peaks.",
+  "ffmpeg": "ffmpeg version 7.1.5-0+deb13u1 Copyright (c) 2000-2026 the FFmpeg developers",
+  "final_decode_timing_alignment_and_visual_checks": "Recorded separately."
+}

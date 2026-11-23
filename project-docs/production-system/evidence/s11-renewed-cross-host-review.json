@@ -1,0 +1,64 @@
+{
+  "schema": "s11-cross-host-review-closure-v1",
+  "completed_at": "2026-11-23T05:04:07.761061+00:00",
+  "run_id": 45108198761,
+  "source_commit": "eec8d16519ea82309ef851975792e9dfc548da03",
+  "authenticated_parts": 40,
+  "total_video_seconds": 275,
+  "interior_part_boundaries": 39,
+  "cross_host_boundaries": 20,
+  "same_host_boundaries": 19,
+  "reviewed_cross_host_left_parts": [
+    0,
+    4,
+    6,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    16,
+    20,
+    21,
+    22,
+    23,
+    26,
+    27,
+    29,
+    32,
+    34,
+    35
+  ],
+  "consecutive_frames_per_cross_host_boundary": 12,
+  "unique_cross_host_frames_inspected": 240,
+  "cross_host_visual_verdict": "no_unresolved_seam_specific_defect_identified",
+  "exact_review_index": "all-cross-host-joins/review-index.json",
+  "review_index_sha256": "457a4c4289a612b9bd5cd54b53086441000094f56684cca518ff202ad342f228",
+  "known_light_pulse_resolution": "The 34.366667-second brightness rise follows the immutable music pulse and the same exact-frame rise in a single-renderer reference; no pixel identity across different LLVM versions is claimed.",
+  "phrase_review": {
+    "samples": 16,
+    "video_seconds_span": [
+      163.4,
+      166.7
+    ],
+    "verdict": "readable_with_nonblocking_rooftop_contact",
+    "inventory": "phrase-165-167/inventory.json",
+    "earlier_inventory": "phrase-165-167/earlier-hold/inventory.json"
+  },
+  "long_gesture_review": {
+    "samples": 61,
+    "sample_fps": 10,
+    "video_seconds_span": [
+      117.1,
+      123.1
+    ],
+    "inventory": "long-gesture-117-123/inventory.json"
+  },
+  "scope_limits": [
+    "Visual inspection of extracted encoded frames, not uninterrupted real-time full-film playback.",
+    "Dense cross-host review covers all 20 host changes; the 19 same-host part boundaries belong to the final broad story/join review.",
+    "No assertion of owner creative approval or pixel-identical hosting environments.",
+    "Only review evidence was written; source and cloud render requests were not edited."
+  ]
+}

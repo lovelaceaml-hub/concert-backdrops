@@ -8,7 +8,7 @@ existing luminous concert style, with generous clothing that has its own
 silhouette. Remove body-conforming torso and seat geometry where it causes
 that problem. Painting an anatomical surface opaque does not solve it.
 
-The requested next deliverable is a full recreation of **Almighty God Who
+The completed current deliverable is a full recreation of **Almighty God Who
 Knows the Future**, with better animation, detail and beauty. Use its full
 recording and existing Song 11 story. The new work is tracked in
 [S11-RECREATION.md](S11-RECREATION.md) and `tools/s11_renewed`.

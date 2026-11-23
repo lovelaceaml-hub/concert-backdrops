@@ -1,0 +1,128 @@
+{
+  "schema": "s11-renewed-final-delivery-v1",
+  "status": "complete_reviewed_saved",
+  "recorded_utc": "2026-11-23T05:25:32.458296+00:00",
+  "requested_title": "Almighty God Knows the Future",
+  "project_title": "Almighty God Who Knows the Future",
+  "producing_commit": "eec8d16519ea82309ef851975792e9dfc548da03",
+  "integration_pr": "https://github.com/lovelaceaml-hub/concert-backdrops/pull/112",
+  "cloud_run": "https://github.com/lovelaceaml-hub/concert-backdrops/actions/runs/45108198761",
+  "native_master": {
+    "filename": "Almighty_God_Knows_the_Future_Renewed_1080p60_final.mp4",
+    "bytes": 911865528,
+    "sha256": "c553b2a51f3917d389adc51ee6dc97c96e6b6e9e306a9bfd2bfbe38a89b34c55",
+    "seconds": 275,
+    "frames": 16500,
+    "fps": 60,
+    "width": 1920,
+    "height": 1080,
+    "temporal_samples": 2,
+    "native_render": true,
+    "producing_commit": "eec8d16519ea82309ef851975792e9dfc548da03",
+    "retention": "Exact movie bytes retained in two independently saved ZIP archives; restoration verified byte-for-byte.",
+    "archive_files": [
+      {
+        "filename": "Almighty_God_Knows_the_Future_Native_Master_Part_01_of_02.zip",
+        "sha256": "ffc3ca5352abbfe2e870ad740ace9ea4c97bf164c3c4b51b932849a4ff49d91c",
+        "bytes": 480006941,
+        "library": {
+          "status": "saved",
+          "library_file_id": "libfile_d45ece0bb38c81918be0e85866f53ab9",
+          "file_id": "file_00000000943082129d121772ff6143cb",
+          "version": 0,
+          "path": "/Almighty_God_Knows_the_Future_Native_Master_Part_01_of_02.zip",
+          "url": "https://chatgpt.com/library?file_id=libfile_d45ece0bb38c81918be0e85866f53ab9&account_id=personal",
+          "local_metadata_applied": true
+        }
+      },
+      {
+        "filename": "Almighty_God_Knows_the_Future_Native_Master_Part_02_of_02.zip",
+        "sha256": "c4285f489fbadec9489037f50c6cab54ab839c3d1545c22dc822a0fd095284a9",
+        "bytes": 431872469,
+        "library": {
+          "status": "saved",
+          "library_file_id": "libfile_197a9f5bb6508191b2a926f0e45a47d2",
+          "file_id": "file_00000000b3c0821287203d76cc3c2161",
+          "version": 0,
+          "path": "/Almighty_God_Knows_the_Future_Native_Master_Part_02_of_02.zip",
+          "url": "https://chatgpt.com/library?file_id=libfile_197a9f5bb6508191b2a926f0e45a47d2&account_id=personal",
+          "local_metadata_applied": true
+        }
+      }
+    ]
+  },
+  "saved_files": [
+    {
+      "filename": "Almighty_God_Knows_the_Future_Native_Master_Part_01_of_02.zip",
+      "kind": "master_archive",
+      "local_path": "/workspace/scratch/39a2abd37644/concert-future/work/s11_cloud/master-archive/Almighty_God_Knows_the_Future_Native_Master_Part_01_of_02.zip",
+      "bytes": 480006941,
+      "sha256": "ffc3ca5352abbfe2e870ad740ace9ea4c97bf164c3c4b51b932849a4ff49d91c",
+      "library": {
+        "status": "saved",
+        "library_file_id": "libfile_d45ece0bb38c81918be0e85866f53ab9",
+        "file_id": "file_00000000943082129d121772ff6143cb",
+        "version": 0,
+        "path": "/Almighty_God_Knows_the_Future_Native_Master_Part_01_of_02.zip",
+        "url": "https://chatgpt.com/library?file_id=libfile_d45ece0bb38c81918be0e85866f53ab9&account_id=personal",
+        "local_metadata_applied": true
+      }
+    },
+    {
+      "filename": "Almighty_God_Knows_the_Future_Native_Master_Part_02_of_02.zip",
+      "kind": "master_archive",
+      "local_path": "/workspace/scratch/39a2abd37644/concert-future/work/s11_cloud/master-archive/Almighty_God_Knows_the_Future_Native_Master_Part_02_of_02.zip",
+      "bytes": 431872469,
+      "sha256": "c4285f489fbadec9489037f50c6cab54ab839c3d1545c22dc822a0fd095284a9",
+      "library": {
+        "status": "saved",
+        "library_file_id": "libfile_197a9f5bb6508191b2a926f0e45a47d2",
+        "file_id": "file_00000000b3c0821287203d76cc3c2161",
+        "version": 0,
+        "path": "/Almighty_God_Knows_the_Future_Native_Master_Part_02_of_02.zip",
+        "url": "https://chatgpt.com/library?file_id=libfile_197a9f5bb6508191b2a926f0e45a47d2&account_id=personal",
+        "local_metadata_applied": true
+      }
+    },
+    {
+      "filename": "Almighty_God_Knows_the_Future_Renewed_1080p60_delivery.mp4",
+      "kind": "full_hd_delivery",
+      "local_path": "/workspace/scratch/39a2abd37644/concert-future/work/s11_cloud/Almighty_God_Knows_the_Future_Renewed_1080p60_delivery.mp4",
+      "bytes": 395506771,
+      "sha256": "120bb4fcf4ebced490f4f468dca396170b328fd0ece3941e67e832258f5f449e",
+      "library": {
+        "status": "saved",
+        "library_file_id": "libfile_40082ab3a2ec8191a7e32eac89a1aa59",
+        "file_id": "file_0000000059f08212835d200bd3c12c48",
+        "version": 0,
+        "path": "/Almighty_God_Knows_the_Future_Renewed_1080p60_delivery.mp4",
+        "url": "https://chatgpt.com/library?file_id=libfile_40082ab3a2ec8191a7e32eac89a1aa59&account_id=personal",
+        "local_metadata_applied": true
+      }
+    },
+    {
+      "filename": "Almighty_God_Knows_the_Future_Renewed_720p60_final.mp4",
+      "kind": "review_copy",
+      "local_path": "/workspace/scratch/39a2abd37644/concert-future/work/s11_cloud/Almighty_God_Knows_the_Future_Renewed_720p60_final.mp4",
+      "bytes": 220179614,
+      "sha256": "9cba8118b8fdf7c9410e5b10362ba15ee28a4668f95aceca911cee95a0848880",
+      "library": {
+        "status": "saved",
+        "library_file_id": "libfile_d6b4552450348191adcddea6a16d340d",
+        "file_id": "file_0000000075208212aba71ced664649a6",
+        "version": 0,
+        "path": "/Almighty_God_Knows_the_Future_Renewed_720p60_final.mp4",
+        "url": "https://chatgpt.com/library?file_id=libfile_d6b4552450348191adcddea6a16d340d&account_id=personal",
+        "local_metadata_applied": true
+      }
+    }
+  ],
+  "full_hd_delivery_role": "Complete 1920x1080 at60fps, encoded from the native master without resizing; bounded H264 bitrate for a practical single-file download.",
+  "review_role": "Complete 1280x720 at60fps, downscaled from the same picture; identical finalized AAC audio.",
+  "audio": "Verified original recording clock: 0–260 s, existing 0.05 s final fade, 15 s silent hold. Final AAC encoded directly from the unchanged prepared score with 1 dB attenuation only.",
+  "technical_and_visual_evidence": "project-docs/production-system/evidence/s11-renewed-final-qa.json",
+  "owner_creative_approval": "not_recorded",
+  "uninterrupted_playback_claimed": false,
+  "source_recording_or_private_key_uploaded_to_github": false,
+  "recovery": "Recover saved video or both master ZIPs before considering a new render. tools/s11_delivery/archive_master.py supplies a standard-library restore script with each archive."
+}

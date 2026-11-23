@@ -1,0 +1,30 @@
+{
+  "schema": "s11-full-stereo-audio-comparison-v1",
+  "master_sha256": "71eb27c680341b4f2c265baf6bd71afd098d5a90daf54a835259379485dcbb32",
+  "score_sha256": "fa488e4805cdc43b1f0f38915d67044ef92a9e659a59ac916d4b75b4cbb6d29b",
+  "sample_rate": 48000,
+  "channels": [
+    {
+      "channel": 1,
+      "decoded_sample_peak": 1.0233062505722046,
+      "source_sample_peak": 1.0,
+      "decoded_samples_at_or_above_full_scale": 87,
+      "source_samples_at_or_above_full_scale": 2677,
+      "whole_music_correlation": 0.999409568847336,
+      "rms_gain_ratio": 0.9696330319757293
+    },
+    {
+      "channel": 2,
+      "decoded_sample_peak": 1.0263919830322266,
+      "source_sample_peak": 1.0,
+      "decoded_samples_at_or_above_full_scale": 76,
+      "source_samples_at_or_above_full_scale": 891,
+      "whole_music_correlation": 0.9994952263185742,
+      "rms_gain_ratio": 0.9806830340525069
+    }
+  ],
+  "total_samples_per_channel": 13200000,
+  "music_samples_per_channel": 12480000,
+  "scope": "Complete decoded stereo sample peaks and music correlation; sample peaks are not oversampled true peaks.",
+  "ffmpeg": "ffmpeg version 7.1.5-0+deb13u1 Copyright (c) 2000-2026 the FFmpeg developers"
+}

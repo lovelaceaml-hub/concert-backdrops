@@ -1,0 +1,86 @@
+{
+  "schema": "s11-full-hd-delivery-provenance-v1",
+  "source_native_master": "Almighty_God_Knows_the_Future_Renewed_1080p60_final.mp4",
+  "source_native_master_sha256": "c553b2a51f3917d389adc51ee6dc97c96e6b6e9e306a9bfd2bfbe38a89b34c55",
+  "filename": "Almighty_God_Knows_the_Future_Renewed_1080p60_delivery.mp4",
+  "sha256": "120bb4fcf4ebced490f4f468dca396170b328fd0ece3941e67e832258f5f449e",
+  "bytes": 395506771,
+  "encoded_dimensions": [
+    1920,
+    1080
+  ],
+  "fps": 60,
+  "seconds": 275,
+  "picture_resized": false,
+  "picture_reencoded": true,
+  "video_encoder": "libx264",
+  "preset": "medium",
+  "crf": 18,
+  "maxrate": "12M",
+  "bufsize": "24M",
+  "audio_stream_copied_from_final_master": true,
+  "all_audio_packet_hashes_and_timestamps_identical": true,
+  "audio_packets": 12892,
+  "audio_packet_inventory_sha256": "a6b022d66a475f5ea85de2a1033042f2972099d3310285b5033b93f822426f3d",
+  "purpose": "Complete full-HD download derived from the native master. Exact larger master bytes are retained separately in verified archives.",
+  "visual_review": {
+    "status": "reviewed_no_blocking_issue_in_sampled_scope",
+    "selected_frames": [
+      {
+        "video_seconds": 6.85,
+        "frame": 411,
+        "path": "work/s11_cloud/hd-delivery-visual/01.png",
+        "sha256": "b736e6292905d6abf513e914aaf728378b26e47428d73b75d60d211dc7864d07"
+      },
+      {
+        "video_seconds": 105.7,
+        "frame": 6342,
+        "path": "work/s11_cloud/hd-delivery-visual/02.png",
+        "sha256": "9f6cb3e379808a3a0ab738dfe86a05c8f080d028aaccdc59e5ce8f9a4eb9efca"
+      },
+      {
+        "video_seconds": 118.8,
+        "frame": 7128,
+        "path": "work/s11_cloud/hd-delivery-visual/03.png",
+        "sha256": "5935f03b9825904fbbc979edb99d8fc1752a6c92e0f9c283322863936da57e99"
+      },
+      {
+        "video_seconds": 165.8,
+        "frame": 9948,
+        "path": "work/s11_cloud/hd-delivery-visual/04.png",
+        "sha256": "a83560606b357e2a52ee447e44758770ec697d7570edfb65dcc44d0fa9ccc60f"
+      },
+      {
+        "video_seconds": 187.2,
+        "frame": 11232,
+        "path": "work/s11_cloud/hd-delivery-visual/05.png",
+        "sha256": "149397fdcb5347a914d66d6ab625caeeb256796d6b4584618e4e435ddf0513a5"
+      },
+      {
+        "video_seconds": 205.0,
+        "frame": 12300,
+        "path": "work/s11_cloud/hd-delivery-visual/06.png",
+        "sha256": "fdb92e4606c12ca0be4985f795975df6cd3a973242b6777b6fdc8b5e59767576"
+      },
+      {
+        "video_seconds": 267.0,
+        "frame": 16020,
+        "path": "work/s11_cloud/hd-delivery-visual/07.png",
+        "sha256": "b490935024d8ec93249540eab3a68a701c6669a694c109d79b927255ae3104bf"
+      }
+    ],
+    "overview": "work/s11_cloud/hd-delivery-visual/overview.jpg",
+    "reviewer": "root",
+    "all_seven_overview_samples_inspected": true,
+    "additional_native_1080p_frames": [
+      7128,
+      11232
+    ],
+    "findings": [
+      "Song title, Devotion, Joy of salvation, Wondrous love and closing event card remain readable in the inspected delivery samples.",
+      "The conductor retains the separate blue coat/trouser silhouette and covered anatomy at the two inspected native1080p views.",
+      "Original bright-cue and rooftop/ribbon composition observations remain as documented; no new blocking compression defect was observed in these samples."
+    ],
+    "scope": "Seven selected actual delivery frames, with two at native resolution. This does not claim uninterrupted playback or lossless equivalence to the larger master."
+  }
+}

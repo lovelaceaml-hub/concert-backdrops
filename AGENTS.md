@@ -5,9 +5,9 @@ instructions. This page records that change and points to project facts. The
 current conversation supplies the working directions; the earlier instructions
 remain available in Git history.
 
-## Current Song 11 work
+## Completed Song 11 production
 
-The active creative task is the full **Almighty God Knows the Future** recreation
+The complete **Almighty God Knows the Future** recreation is rendered, checked and saved; source integration is tracked
 in [PR #112](https://github.com/lovelaceaml-hub/concert-backdrops/pull/112).
 Start with the current [handoff](project-docs/production-system/AI-HANDOFF.md)
 and [recreation record](project-docs/production-system/S11-RECREATION.md).
