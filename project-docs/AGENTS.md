@@ -1,6 +1,21 @@
 # Concert Backdrops: instructions for every AI
 
-## Current production-system entry point, November 20, 2026
+The latest owner priorities ([PR #114](https://github.com/lovelaceaml-hub/concert-backdrops/pull/114)) authorize: make the retained tools work and be reusable for every song; integrate proven quality gains into the existing engine; then simplify status, stale PRs and distributed rendering. Try permitted cloud routes first for browser/Remotion/live-Blender sandbox limits. Use the owner's Mac only if no cloud route works and explain why; retain the separate GPU/load/priority conditions. The current deliverable is the complete Claude handoff; these priorities guide continuation.
+
+## Current authority and entry point, November 22, 2026 (America/Los_Angeles)
+
+Read [root AGENTS.md](../AGENTS.md) and the current conversation first. Its November 22 owner directions, integrated through PR #113, govern over the historical instructions preserved below. Use [the complete Claude handoff](production-system/CLAUDE-HANDOFF.md), [START-HERE](production-system/START-HERE.md) and [STATE.json](production-system/STATE.json) for current production and recovery.
+
+- Improve the existing system; keep Blender, Three.js, Remotion, Video Shotcraft and Blender MCP and make them reusable. Source/configuration presence is distinct from a verified working integration.
+- Work at 1080p until design, timing and content are approved; final show output is 4K60. Do not create new phone versions.
+- CPU work stays in the cloud. GPU work, if needed, uses Anthony's Mac under the root file's load, priority and explicit local-render conditions. This supersedes the older blanket prohibition on Mac rendering below.
+- Every figure needs modest, independently shaped clothing. Do not revive the rejected body-fitting fan direction. In Song 11, Heavenly Mother appears only as light.
+- The full renewed Song 11 is a completed 275-second 1080p60 design/review delivery, integrated in PR #112 at `93527bf5e2e43477073e361d22cfd6d4fa999da7`. Its picture source is `eec8d16519ea82309ef851975792e9dfc548da03`. No exact-output owner approval or completed Song 11 4K show master is recorded, and there is no unfinished render queue.
+- Ask a short clarification with a recommendation when a genuine ambiguity changes the deliverable. Follow work already authorized in the conversation.
+
+The sections below are dated historical records, including their old read order, cloud-only wording, sample-image authorization, repository visibility and then-current priorities. They are not separate current instructions to resume those tasks. Preserve them as provenance and follow the current authority above.
+
+## Historical production-system entry point, November 20, 2026
 
 Read `production-system/START-HERE.md` and `production-system/AI-HANDOFF.md` before resuming. The owner approved the sharper Song 11 study and requested shared setup, saving, documentation, uploads, push and merge, plus continued model and animation improvement. The approved 66-second Nine Colours Revision 3 promo remains the creative reference. All eleven current full recordings have been acquired, fingerprinted and decoded; older 02/10 missing-recording notes are historical. Current reference, song, model and delivery catalogs distinguish completed media from newer unrendered source, and source availability from visual approval.
 

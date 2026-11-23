@@ -1,22 +1,22 @@
 {
   "schema_version": 1,
-  "updated_local_date": "2026-11-21",
+  "updated_local_date": "2026-11-22",
   "timezone": "America/Los_Angeles",
   "purpose": "Owner-supplied performance references for original adaptations in the approved Mother's Words of Love visual language.",
   "creative_baselines": [
     "promo-nine-colours-r3",
     "song11-beauty-30s"
   ],
-  "review_boundary": "The latest retry inspected titles/channel metadata and the first two posters. All three players stalled at time zero, with no decoded moving source frames. No source choreography, shot timing or motion reconstruction is verified. The owner authorized a best-effort original adaptation; missing source video does not block that labeled original work.",
+  "review_boundary": "The original URL records below describe the earlier poster/metadata-only intake. Later canonical screen recordings were recovered and sampled, with exact identities in motions.json and handoff-media.json. Those recordings are not asserted to be the exact full source bytes for these YouTube URLs. The original URL-specific observations remain historical.",
   "sources": [
     {
       "id": "upwards-to-the-moon-fei-tian",
       "youtube_id": "lFUQP-J31RI",
       "source_url": "https://www.youtube.com/watch?v=lFUQP-J31RI",
       "owner_url": "https://youtu.be/lFUQP-J31RI?is=yIVc3MDIpT_DJ_4i",
-      "title": "\"Upwards to the Moon\"《左手指月》| Fei Tian Dancers | UC Berkeley Chinese Dance",
+      "title": "\"Upwards to the Moon\"\u300a\u5de6\u624b\u6307\u6708\u300b| Fei Tian Dancers | UC Berkeley Chinese Dance",
       "channel": "Fei Tian Dancers (UC Berkeley)",
-      "page_choreographer_credit": "成都KT盛舞",
+      "page_choreographer_credit": "\u6210\u90fdKT\u76db\u821e",
       "page_reported_duration_seconds": 84,
       "observation_scope": "page_metadata_and_thumbnail_only",
       "observed_thumbnail": [
@@ -65,7 +65,7 @@
       "youtube_id": "jPdgbrFmNyg",
       "source_url": "https://www.youtube.com/watch?v=jPdgbrFmNyg",
       "owner_url": "https://youtu.be/jPdgbrFmNyg?is=WFpc0Xl8X2iKMkw9",
-      "title": "Song Diện Yến Tuân Múa - Pilinh Dance - Trung Hoa Vũ Đạo | 双面燕洵",
+      "title": "Song Di\u1ec7n Y\u1ebfn Tu\u00e2n M\u00faa - Pilinh Dance - Trung Hoa V\u0169 \u0110\u1ea1o | \u53cc\u9762\u71d5\u6d35",
       "channel": "Pilinh Dance",
       "page_reported_duration_seconds": 83,
       "observation_scope": "page_metadata_only",
@@ -78,13 +78,34 @@
     }
   ],
   "reference_intake_tool": "tools/performance_reference",
-  "next_input": "Source MP4s or selected full-body excerpts remain useful for faithful choreography analysis, but are optional for continuing the owner-authorized original studies.",
+  "next_input": "Recover the three canonical performance recordings from the current handoff inventory; retain the three current user-uploaded alternate encodes separately. A future faithful adaptation needs the exact selected source passage and fresh authoring/review.",
   "use_boundary": "Store reference media and derived review frames in private ignored work paths. Record provenance and terms per acquired source. Use original concert audio for the adaptation; source songs or video pixels are not final render assets.",
   "current_original_adaptation": {
     "project_id": "concert-fan-trio",
     "source_commit": "dffe8f165944c627ae39a8bb7d47bc5a9e703305",
     "handoff": "project-docs/production-system/FAN-SILK-PERFORMANCE.md",
     "seconds": 20,
-    "basis": "Distinct authored trio, held fan and finite silk informed by available poster details; not reconstructed source motion."
+    "basis": "Distinct authored trio, held fan and finite silk informed by available poster details; not reconstructed source motion.",
+    "scope": "Historical original fan adaptation; not a current unattended queue."
+  },
+  "historical_poster_intake": {
+    "review_boundary": "The latest retry inspected titles/channel metadata and the first two posters. All three players stalled at time zero, with no decoded moving source frames. No source choreography, shot timing or motion reconstruction is verified. The owner authorized a best-effort original adaptation; missing source video does not block that labeled original work.",
+    "next_input": "Source MP4s or selected full-body excerpts remain useful for faithful choreography analysis, but are optional for continuing the owner-authorized original studies.",
+    "current_original_adaptation": {
+      "project_id": "concert-fan-trio",
+      "source_commit": "dffe8f165944c627ae39a8bb7d47bc5a9e703305",
+      "handoff": "project-docs/production-system/FAN-SILK-PERFORMANCE.md",
+      "seconds": 20,
+      "basis": "Distinct authored trio, held fan and finite silk informed by available poster details; not reconstructed source motion.",
+      "scope": "Historical original fan adaptation; not a current unattended queue."
+    }
+  },
+  "current_reference_availability": {
+    "canonical_recordings": 3,
+    "current_user_uploaded_copies": 3,
+    "inventory": "project-docs/production-system/catalogs/handoff-media.json",
+    "motion_catalog": "project-docs/production-system/catalogs/motions.json",
+    "drive_folder_url": "https://drive.google.com/drive/folders/1ihTYIdC8ssma9QZ1-OLXn3fRU6K6jaCZ",
+    "current_production": "Completed renewed Song11; prior original fan study and laterCinematicTen/AdvancedDance are separate historical increments."
   }
 }

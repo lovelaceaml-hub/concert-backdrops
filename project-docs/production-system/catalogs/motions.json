@@ -1514,5 +1514,14 @@
       "choreography_changed": false,
       "future_cache_source_identity_changed": true
     }
+  },
+  "current_handoff_reference_media": {
+    "inventory": "project-docs/production-system/catalogs/handoff-media.json",
+    "folder_url": "https://drive.google.com/drive/folders/1ihTYIdC8ssma9QZ1-OLXn3fRU6K6jaCZ",
+    "distinct_imports": 9,
+    "canonical": 3,
+    "current_user_uploads": 3,
+    "earlier_alternate_imports": 3,
+    "all_raw_verified": true
   }
 }

@@ -1,5 +1,17 @@
 # Autonomous run: continuity pass, attack reviews and 1-minute promos
 
+## Current continuation — November 22, 2026
+
+Start with [the Claude handoff](production-system/CLAUDE-HANDOFF.md),
+[current state](production-system/STATE.json) and the standing owner directions
+in [root AGENTS.md](../AGENTS.md). The sections below retain their earlier
+production/design context. Dated instructions about queues, phone copies,
+missing song recordings or cloud-only GPU use do not override the current
+handoff and owner directions. All eleven original song recordings are retained;
+older full-song movie recovery gaps are documented separately. The completed
+renewed Song 11 movie is a 1080p60 design/review delivery; final4K60 requires
+owner approval of design, timing and content. There is no unattended render queue.
+
 Started 2026-11-13 while Anthony is away. His words: "Have those threads carry out the work as much as they can from beginning to end, communicating with each other and verifying so you're all on the same page. Then you can have rounds where Astra will review everything as an attacker, with a really strong will against what you're doing. Fable Extra is the one we can use for reference and for advice. ... I'm going to be away from my computer, so all of this needs to be done autonomously. Utilize Astra and solve for very specific things when it makes sense. I want a 1-minute promo for each of the songs. They should be done in the cloud. Have all the docs updated, committed, pushed, and merged."
 
 ## Who does what

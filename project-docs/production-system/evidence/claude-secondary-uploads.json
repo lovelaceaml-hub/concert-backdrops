@@ -1,0 +1,832 @@
+{
+  "schema": "secondary-drive-transfer-completion-v1",
+  "completed_utc": "2026-11-23T06:15:35.927178+00:00",
+  "status": "all_19_authorized_files_uploaded_and_raw_bytes_verified",
+  "scope": {
+    "archive_parts": 9,
+    "restore_support_files": 6,
+    "canonical_advanced_maintenance_handoff": 1,
+    "earlier_reference_imports": 3
+  },
+  "verified_count": 19,
+  "same_names_and_parents_unique": true,
+  "records": [
+    {
+      "file_name": "Ten_Cinematic_Films_1080p60.zip.part01",
+      "bytes": 90000000,
+      "sha256": "86fbc5e0d243090991bd1ff100ae0e1c853a9ee652fdc41445b3198b9fc42e50",
+      "artifact_id": "cinematic-ten-package",
+      "group": "cinematic_media",
+      "local_path": "/workspace/scratch/39a2abd37644/concert-future/work/claude-handoff/transfer-staging/cinematic_media/Ten_Cinematic_Films_1080p60.zip.part01",
+      "parent_folder_id": "1Hi6YobO_2dXIbod0-3BPoZXlSq22rRB6",
+      "mime_type": "application/octet-stream",
+      "part_index": 1,
+      "drive": {
+        "id": "12z9XbNH84H-68N9PxngKoJHk-8uhfNKx",
+        "url": "https://drive.google.com/file/d/12z9XbNH84H-68N9PxngKoJHk-8uhfNKx/view?usp=drivesdk",
+        "parent_id": "1Hi6YobO_2dXIbod0-3BPoZXlSq22rRB6",
+        "mime_type": "application/x-zip"
+      },
+      "upload_verified": false,
+      "mime_normalization": {
+        "requested": "application/octet-stream",
+        "actual": "application/x-zip",
+        "scope": "Provider detected non-native ZIP byte-part type; content identity validated by raw size and SHA-256."
+      },
+      "metadata": {
+        "id": "12z9XbNH84H-68N9PxngKoJHk-8uhfNKx",
+        "bytes": 90000000,
+        "modified_time": "2026-11-23T06:04:17.931Z",
+        "parent_ids": [
+          "1Hi6YobO_2dXIbod0-3BPoZXlSq22rRB6"
+        ],
+        "shared": false,
+        "permissions": [
+          {
+            "type": "user",
+            "role": "owner"
+          }
+        ]
+      },
+      "raw_bytes_verified": true,
+      "readback_bytes": 90000000,
+      "readback_sha256": "86fbc5e0d243090991bd1ff100ae0e1c853a9ee652fdc41445b3198b9fc42e50",
+      "verified_utc": "2026-11-23T06:05:31.648847+00:00"
+    },
+    {
+      "file_name": "Ten_Cinematic_Films_1080p60.zip.part02",
+      "bytes": 90000000,
+      "sha256": "a0b1a438801ceecb935075a50c6827ffa966e7382e87942756e11878b2a7fa68",
+      "artifact_id": "cinematic-ten-package",
+      "group": "cinematic_media",
+      "local_path": "/workspace/scratch/39a2abd37644/concert-future/work/claude-handoff/transfer-staging/cinematic_media/Ten_Cinematic_Films_1080p60.zip.part02",
+      "parent_folder_id": "1Hi6YobO_2dXIbod0-3BPoZXlSq22rRB6",
+      "mime_type": "application/octet-stream",
+      "part_index": 2,
+      "drive": {
+        "id": "1hbPBG84sEd0zrsIoHBFVwtIuYnUY3C-X",
+        "url": "https://drive.google.com/file/d/1hbPBG84sEd0zrsIoHBFVwtIuYnUY3C-X/view?usp=drivesdk",
+        "parent_id": "1Hi6YobO_2dXIbod0-3BPoZXlSq22rRB6",
+        "mime_type": "application/octet-stream"
+      },
+      "upload_verified": false,
+      "metadata": {
+        "id": "1hbPBG84sEd0zrsIoHBFVwtIuYnUY3C-X",
+        "bytes": 90000000,
+        "modified_time": "2026-11-23T06:07:41.735Z",
+        "parent_ids": [
+          "1Hi6YobO_2dXIbod0-3BPoZXlSq22rRB6"
+        ],
+        "shared": false,
+        "permissions": [
+          {
+            "type": "user",
+            "role": "owner"
+          }
+        ]
+      },
+      "raw_bytes_verified": true,
+      "readback_bytes": 90000000,
+      "readback_sha256": "a0b1a438801ceecb935075a50c6827ffa966e7382e87942756e11878b2a7fa68",
+      "verified_utc": "2026-11-23T06:07:55.971726+00:00"
+    },
+    {
+      "file_name": "Ten_Cinematic_Films_1080p60.zip.part03",
+      "bytes": 90000000,
+      "sha256": "fff83e76415af64633bced57fa8f177177083ac2e9e88a23adc66cab1cb3f547",
+      "artifact_id": "cinematic-ten-package",
+      "group": "cinematic_media",
+      "local_path": "/workspace/scratch/39a2abd37644/concert-future/work/claude-handoff/transfer-staging/cinematic_media/Ten_Cinematic_Films_1080p60.zip.part03",
+      "parent_folder_id": "1Hi6YobO_2dXIbod0-3BPoZXlSq22rRB6",
+      "mime_type": "application/octet-stream",
+      "part_index": 3,
+      "drive": {
+        "id": "1f0jZmMBlY5d6ha5polhvSPWaC-dl5KLZ",
+        "url": "https://drive.google.com/file/d/1f0jZmMBlY5d6ha5polhvSPWaC-dl5KLZ/view?usp=drivesdk",
+        "parent_id": "1Hi6YobO_2dXIbod0-3BPoZXlSq22rRB6",
+        "mime_type": "application/octet-stream"
+      },
+      "upload_verified": false,
+      "metadata": {
+        "id": "1f0jZmMBlY5d6ha5polhvSPWaC-dl5KLZ",
+        "bytes": 90000000,
+        "modified_time": "2026-11-23T06:08:18.730Z",
+        "parent_ids": [
+          "1Hi6YobO_2dXIbod0-3BPoZXlSq22rRB6"
+        ],
+        "shared": false,
+        "permissions": [
+          {
+            "type": "user",
+            "role": "owner"
+          }
+        ]
+      },
+      "raw_bytes_verified": true,
+      "readback_bytes": 90000000,
+      "readback_sha256": "fff83e76415af64633bced57fa8f177177083ac2e9e88a23adc66cab1cb3f547",
+      "verified_utc": "2026-11-23T06:08:30.683903+00:00"
+    },
+    {
+      "file_name": "Ten_Cinematic_Films_1080p60.zip.part04",
+      "bytes": 80397212,
+      "sha256": "2027a88ecfa632e7cb777e8ea0248cc4cee2a66545c3cbf51fb2780e36262982",
+      "artifact_id": "cinematic-ten-package",
+      "group": "cinematic_media",
+      "local_path": "/workspace/scratch/39a2abd37644/concert-future/work/claude-handoff/transfer-staging/cinematic_media/Ten_Cinematic_Films_1080p60.zip.part04",
+      "parent_folder_id": "1Hi6YobO_2dXIbod0-3BPoZXlSq22rRB6",
+      "mime_type": "application/octet-stream",
+      "part_index": 4,
+      "drive": {
+        "id": "1h84jZUqBt5geIjK7ViTR_j_jxpgW446s",
+        "url": "https://drive.google.com/file/d/1h84jZUqBt5geIjK7ViTR_j_jxpgW446s/view?usp=drivesdk",
+        "parent_id": "1Hi6YobO_2dXIbod0-3BPoZXlSq22rRB6",
+        "mime_type": "application/octet-stream"
+      },
+      "upload_verified": false,
+      "metadata": {
+        "id": "1h84jZUqBt5geIjK7ViTR_j_jxpgW446s",
+        "bytes": 80397212,
+        "modified_time": "2026-11-23T06:08:53.401Z",
+        "parent_ids": [
+          "1Hi6YobO_2dXIbod0-3BPoZXlSq22rRB6"
+        ],
+        "shared": true,
+        "permissions": [
+          {
+            "type": "user",
+            "role": "owner"
+          },
+          {
+            "type": "user",
+            "role": "writer"
+          }
+        ]
+      },
+      "raw_bytes_verified": true,
+      "readback_bytes": 80397212,
+      "readback_sha256": "2027a88ecfa632e7cb777e8ea0248cc4cee2a66545c3cbf51fb2780e36262982",
+      "verified_utc": "2026-11-23T06:09:07.024387+00:00"
+    },
+    {
+      "file_name": "Ten_Cinematic_Films_Advanced_Dance_1080p60.zip.part01",
+      "bytes": 90000000,
+      "sha256": "c7fe3970e7a4fd649f801e4a2649f3f6c2647bc65a2a35d3c69bf5be0fb5feae",
+      "artifact_id": "advanced-dance-ten-film-package",
+      "group": "advanced_media",
+      "local_path": "/workspace/scratch/39a2abd37644/concert-future/work/claude-handoff/transfer-staging/advanced_media/Ten_Cinematic_Films_Advanced_Dance_1080p60.zip.part01",
+      "parent_folder_id": "1e0j_89WwvQSlhmGqTQDnsBaRyxQwInh7",
+      "mime_type": "application/octet-stream",
+      "part_index": 1,
+      "drive": {
+        "id": "1RMpZaWhe--fNSYl26PoEOUfwaNYGjBkr",
+        "url": "https://drive.google.com/file/d/1RMpZaWhe--fNSYl26PoEOUfwaNYGjBkr/view?usp=drivesdk",
+        "parent_id": "1e0j_89WwvQSlhmGqTQDnsBaRyxQwInh7",
+        "mime_type": "application/x-zip"
+      },
+      "upload_verified": false,
+      "metadata": {
+        "id": "1RMpZaWhe--fNSYl26PoEOUfwaNYGjBkr",
+        "bytes": 90000000,
+        "modified_time": "2026-11-23T06:09:50.314Z",
+        "parent_ids": [
+          "1e0j_89WwvQSlhmGqTQDnsBaRyxQwInh7"
+        ],
+        "shared": true,
+        "permissions": [
+          {
+            "type": "user",
+            "role": "owner"
+          },
+          {
+            "type": "user",
+            "role": "writer"
+          }
+        ]
+      },
+      "mime_normalization": {
+        "requested": "application/octet-stream",
+        "actual": "application/x-zip",
+        "scope": "Provider non-native MIME label; exact original raw bytes verified."
+      },
+      "raw_bytes_verified": true,
+      "readback_bytes": 90000000,
+      "readback_sha256": "c7fe3970e7a4fd649f801e4a2649f3f6c2647bc65a2a35d3c69bf5be0fb5feae",
+      "verified_utc": "2026-11-23T06:10:05.535865+00:00"
+    },
+    {
+      "file_name": "Ten_Cinematic_Films_Advanced_Dance_1080p60.zip.part02",
+      "bytes": 90000000,
+      "sha256": "a31dc6d25cfc1063c05130227c0c845b40537331e2afe5c970bdef4196a27bcf",
+      "artifact_id": "advanced-dance-ten-film-package",
+      "group": "advanced_media",
+      "local_path": "/workspace/scratch/39a2abd37644/concert-future/work/claude-handoff/transfer-staging/advanced_media/Ten_Cinematic_Films_Advanced_Dance_1080p60.zip.part02",
+      "parent_folder_id": "1e0j_89WwvQSlhmGqTQDnsBaRyxQwInh7",
+      "mime_type": "application/octet-stream",
+      "part_index": 2,
+      "drive": {
+        "id": "19-w2qOdS8QWvUwEGM-oV1LXUEWBIGdhG",
+        "url": "https://drive.google.com/file/d/19-w2qOdS8QWvUwEGM-oV1LXUEWBIGdhG/view?usp=drivesdk",
+        "parent_id": "1e0j_89WwvQSlhmGqTQDnsBaRyxQwInh7",
+        "mime_type": "application/octet-stream"
+      },
+      "upload_verified": false,
+      "metadata": {
+        "id": "19-w2qOdS8QWvUwEGM-oV1LXUEWBIGdhG",
+        "bytes": 90000000,
+        "modified_time": "2026-11-23T06:10:26.854Z",
+        "parent_ids": [
+          "1e0j_89WwvQSlhmGqTQDnsBaRyxQwInh7"
+        ],
+        "shared": true,
+        "permissions": [
+          {
+            "type": "user",
+            "role": "owner"
+          },
+          {
+            "type": "user",
+            "role": "writer"
+          }
+        ]
+      },
+      "raw_bytes_verified": true,
+      "readback_bytes": 90000000,
+      "readback_sha256": "a31dc6d25cfc1063c05130227c0c845b40537331e2afe5c970bdef4196a27bcf",
+      "verified_utc": "2026-11-23T06:10:43.838373+00:00"
+    },
+    {
+      "file_name": "Ten_Cinematic_Films_Advanced_Dance_1080p60.zip.part03",
+      "bytes": 90000000,
+      "sha256": "25b82d8552ed792d91dff44d18cc26b231103a89564a118f98e2502734cd2ecc",
+      "artifact_id": "advanced-dance-ten-film-package",
+      "group": "advanced_media",
+      "local_path": "/workspace/scratch/39a2abd37644/concert-future/work/claude-handoff/transfer-staging/advanced_media/Ten_Cinematic_Films_Advanced_Dance_1080p60.zip.part03",
+      "parent_folder_id": "1e0j_89WwvQSlhmGqTQDnsBaRyxQwInh7",
+      "mime_type": "application/octet-stream",
+      "part_index": 3,
+      "drive": {
+        "id": "1iLhacYzPZflov20NhJxAJtxkCk4nqI-3",
+        "url": "https://drive.google.com/file/d/1iLhacYzPZflov20NhJxAJtxkCk4nqI-3/view?usp=drivesdk",
+        "parent_id": "1e0j_89WwvQSlhmGqTQDnsBaRyxQwInh7",
+        "mime_type": "application/octet-stream"
+      },
+      "upload_verified": false,
+      "metadata": {
+        "id": "1iLhacYzPZflov20NhJxAJtxkCk4nqI-3",
+        "bytes": 90000000,
+        "modified_time": "2026-11-23T06:11:05.841Z",
+        "parent_ids": [
+          "1e0j_89WwvQSlhmGqTQDnsBaRyxQwInh7"
+        ],
+        "shared": true,
+        "permissions": [
+          {
+            "type": "user",
+            "role": "owner"
+          },
+          {
+            "type": "user",
+            "role": "writer"
+          }
+        ]
+      },
+      "raw_bytes_verified": true,
+      "readback_bytes": 90000000,
+      "readback_sha256": "25b82d8552ed792d91dff44d18cc26b231103a89564a118f98e2502734cd2ecc",
+      "verified_utc": "2026-11-23T06:11:20.232333+00:00"
+    },
+    {
+      "file_name": "Ten_Cinematic_Films_Advanced_Dance_1080p60.zip.part04",
+      "bytes": 90000000,
+      "sha256": "73a118ce81d680973545fcc701dc6be7e9ed86d31aae838e2336bd4e1129712f",
+      "artifact_id": "advanced-dance-ten-film-package",
+      "group": "advanced_media",
+      "local_path": "/workspace/scratch/39a2abd37644/concert-future/work/claude-handoff/transfer-staging/advanced_media/Ten_Cinematic_Films_Advanced_Dance_1080p60.zip.part04",
+      "parent_folder_id": "1e0j_89WwvQSlhmGqTQDnsBaRyxQwInh7",
+      "mime_type": "application/octet-stream",
+      "part_index": 4,
+      "drive": {
+        "id": "1WdwDAy4A1JAeCUIpSzdbojMSNHmpyad0",
+        "url": "https://drive.google.com/file/d/1WdwDAy4A1JAeCUIpSzdbojMSNHmpyad0/view?usp=drivesdk",
+        "parent_id": "1e0j_89WwvQSlhmGqTQDnsBaRyxQwInh7",
+        "mime_type": "application/octet-stream"
+      },
+      "upload_verified": false,
+      "metadata": {
+        "id": "1WdwDAy4A1JAeCUIpSzdbojMSNHmpyad0",
+        "bytes": 90000000,
+        "modified_time": "2026-11-23T06:11:43.192Z",
+        "parent_ids": [
+          "1e0j_89WwvQSlhmGqTQDnsBaRyxQwInh7"
+        ],
+        "shared": true,
+        "permissions": [
+          {
+            "type": "user",
+            "role": "owner"
+          },
+          {
+            "type": "user",
+            "role": "writer"
+          }
+        ]
+      },
+      "raw_bytes_verified": true,
+      "readback_bytes": 90000000,
+      "readback_sha256": "73a118ce81d680973545fcc701dc6be7e9ed86d31aae838e2336bd4e1129712f",
+      "verified_utc": "2026-11-23T06:11:58.498259+00:00"
+    },
+    {
+      "file_name": "Ten_Cinematic_Films_Advanced_Dance_1080p60.zip.part05",
+      "bytes": 50134925,
+      "sha256": "e57b736753ce8bf6fb5e08569bfed572cbe0df463dac0c290191905b86115d67",
+      "artifact_id": "advanced-dance-ten-film-package",
+      "group": "advanced_media",
+      "local_path": "/workspace/scratch/39a2abd37644/concert-future/work/claude-handoff/transfer-staging/advanced_media/Ten_Cinematic_Films_Advanced_Dance_1080p60.zip.part05",
+      "parent_folder_id": "1e0j_89WwvQSlhmGqTQDnsBaRyxQwInh7",
+      "mime_type": "application/octet-stream",
+      "part_index": 5,
+      "drive": {
+        "id": "1rxviK5tviHvQl6WXgxFZpFrjdst1tMGZ",
+        "url": "https://drive.google.com/file/d/1rxviK5tviHvQl6WXgxFZpFrjdst1tMGZ/view?usp=drivesdk",
+        "parent_id": "1e0j_89WwvQSlhmGqTQDnsBaRyxQwInh7",
+        "mime_type": "application/octet-stream"
+      },
+      "upload_verified": false,
+      "metadata": {
+        "id": "1rxviK5tviHvQl6WXgxFZpFrjdst1tMGZ",
+        "bytes": 50134925,
+        "modified_time": "2026-11-23T06:12:13.302Z",
+        "parent_ids": [
+          "1e0j_89WwvQSlhmGqTQDnsBaRyxQwInh7"
+        ],
+        "shared": true,
+        "permissions": [
+          {
+            "type": "user",
+            "role": "owner"
+          },
+          {
+            "type": "user",
+            "role": "writer"
+          }
+        ]
+      },
+      "raw_bytes_verified": true,
+      "readback_bytes": 50134925,
+      "readback_sha256": "e57b736753ce8bf6fb5e08569bfed572cbe0df463dac0c290191905b86115d67",
+      "verified_utc": "2026-11-23T06:12:25.233980+00:00"
+    },
+    {
+      "artifact_id": "transfer-support-cinematic_media-TRANSFER-MANIFEST.json",
+      "group": "cinematic_media",
+      "file_name": "TRANSFER-MANIFEST.json",
+      "bytes": 1383,
+      "sha256": "7349df6f1ae205bd5e87cd63af242ab7cb09a40853608e9b288f1b7cf933dffd",
+      "local_path": "/workspace/scratch/39a2abd37644/concert-future/work/claude-handoff/transfer-staging/cinematic_media/TRANSFER-MANIFEST.json",
+      "parent_folder_id": "1Hi6YobO_2dXIbod0-3BPoZXlSq22rRB6",
+      "mime_type": "application/json",
+      "part_index": null,
+      "drive": {
+        "id": "1cLOmdxoAV0M3oMcFVPToxmvcgsP_8AW4",
+        "url": "https://drive.google.com/file/d/1cLOmdxoAV0M3oMcFVPToxmvcgsP_8AW4/view?usp=drivesdk",
+        "parent_id": "1Hi6YobO_2dXIbod0-3BPoZXlSq22rRB6",
+        "mime_type": "application/json"
+      },
+      "upload_verified": false,
+      "metadata": {
+        "id": "1cLOmdxoAV0M3oMcFVPToxmvcgsP_8AW4",
+        "bytes": 1383,
+        "modified_time": "2026-11-23T06:12:51.678Z",
+        "parent_ids": [
+          "1Hi6YobO_2dXIbod0-3BPoZXlSq22rRB6"
+        ],
+        "shared": true,
+        "permissions": [
+          {
+            "type": "user",
+            "role": "owner"
+          },
+          {
+            "type": "user",
+            "role": "writer"
+          }
+        ]
+      },
+      "raw_bytes_verified": true,
+      "readback_bytes": 1383,
+      "readback_sha256": "7349df6f1ae205bd5e87cd63af242ab7cb09a40853608e9b288f1b7cf933dffd",
+      "verified_utc": "2026-11-23T06:12:54.609783+00:00"
+    },
+    {
+      "artifact_id": "transfer-support-cinematic_media-restore_handoff.py",
+      "group": "cinematic_media",
+      "file_name": "restore_handoff.py",
+      "bytes": 4183,
+      "sha256": "4dcad9dae60e78a10919fa6d8a4909b3e4584a15535d04e7162412859d306ab6",
+      "local_path": "/workspace/scratch/39a2abd37644/concert-future/work/claude-handoff/transfer-staging/cinematic_media/restore_handoff.py",
+      "parent_folder_id": "1Hi6YobO_2dXIbod0-3BPoZXlSq22rRB6",
+      "mime_type": "text/plain",
+      "part_index": null,
+      "drive": {
+        "id": "1CIHA_OQ5M43QxIk2EXfj4-NBUcCiTTuS",
+        "url": "https://drive.google.com/file/d/1CIHA_OQ5M43QxIk2EXfj4-NBUcCiTTuS/view?usp=drivesdk",
+        "parent_id": "1Hi6YobO_2dXIbod0-3BPoZXlSq22rRB6",
+        "mime_type": "text/plain"
+      },
+      "upload_verified": false,
+      "metadata": {
+        "id": "1CIHA_OQ5M43QxIk2EXfj4-NBUcCiTTuS",
+        "bytes": 4183,
+        "modified_time": "2026-11-23T06:12:59.637Z",
+        "parent_ids": [
+          "1Hi6YobO_2dXIbod0-3BPoZXlSq22rRB6"
+        ],
+        "shared": true,
+        "permissions": [
+          {
+            "type": "user",
+            "role": "owner"
+          },
+          {
+            "type": "user",
+            "role": "writer"
+          }
+        ]
+      },
+      "raw_bytes_verified": true,
+      "readback_bytes": 4183,
+      "readback_sha256": "4dcad9dae60e78a10919fa6d8a4909b3e4584a15535d04e7162412859d306ab6",
+      "verified_utc": "2026-11-23T06:13:02.318200+00:00"
+    },
+    {
+      "artifact_id": "transfer-support-cinematic_media-README_RESTORE.md",
+      "group": "cinematic_media",
+      "file_name": "README_RESTORE.md",
+      "bytes": 814,
+      "sha256": "fa52034f86551a044a331f9b5e37aa3fa093604004ba72a1a1370d64b67b8856",
+      "local_path": "/workspace/scratch/39a2abd37644/concert-future/work/claude-handoff/transfer-staging/cinematic_media/README_RESTORE.md",
+      "parent_folder_id": "1Hi6YobO_2dXIbod0-3BPoZXlSq22rRB6",
+      "mime_type": "text/markdown",
+      "part_index": null,
+      "drive": {
+        "id": "1k07vu-meWYCLPFHtwRB0M3e5G6zEs7FB",
+        "url": "https://docs.google.com/document/d/1k07vu-meWYCLPFHtwRB0M3e5G6zEs7FB/edit?usp=drivesdk&ouid=113038373524763352759&rtpof=true&sd=true",
+        "parent_id": "1Hi6YobO_2dXIbod0-3BPoZXlSq22rRB6",
+        "mime_type": "text/markdown"
+      },
+      "upload_verified": false,
+      "metadata": {
+        "id": "1k07vu-meWYCLPFHtwRB0M3e5G6zEs7FB",
+        "bytes": 814,
+        "modified_time": "2026-11-23T06:13:08.438Z",
+        "parent_ids": [
+          "1Hi6YobO_2dXIbod0-3BPoZXlSq22rRB6"
+        ],
+        "shared": true,
+        "permissions": [
+          {
+            "type": "user",
+            "role": "owner"
+          },
+          {
+            "type": "user",
+            "role": "writer"
+          }
+        ]
+      },
+      "raw_bytes_verified": true,
+      "readback_bytes": 814,
+      "readback_sha256": "fa52034f86551a044a331f9b5e37aa3fa093604004ba72a1a1370d64b67b8856",
+      "verified_utc": "2026-11-23T06:13:11.161919+00:00"
+    },
+    {
+      "artifact_id": "transfer-support-advanced_media-TRANSFER-MANIFEST.json",
+      "group": "advanced_media",
+      "file_name": "TRANSFER-MANIFEST.json",
+      "bytes": 1685,
+      "sha256": "c0ec9d6b42c17c4fdcc8759dce2efb9ec899585e701a70b66f392ffd31fdb6ef",
+      "local_path": "/workspace/scratch/39a2abd37644/concert-future/work/claude-handoff/transfer-staging/advanced_media/TRANSFER-MANIFEST.json",
+      "parent_folder_id": "1e0j_89WwvQSlhmGqTQDnsBaRyxQwInh7",
+      "mime_type": "application/json",
+      "part_index": null,
+      "drive": {
+        "id": "11jawdGpuMd4fiL2FrCbd0nblWlHAaomx",
+        "url": "https://drive.google.com/file/d/11jawdGpuMd4fiL2FrCbd0nblWlHAaomx/view?usp=drivesdk",
+        "parent_id": "1e0j_89WwvQSlhmGqTQDnsBaRyxQwInh7",
+        "mime_type": "application/json"
+      },
+      "upload_verified": false,
+      "metadata": {
+        "id": "11jawdGpuMd4fiL2FrCbd0nblWlHAaomx",
+        "bytes": 1685,
+        "modified_time": "2026-11-23T06:13:16.104Z",
+        "parent_ids": [
+          "1e0j_89WwvQSlhmGqTQDnsBaRyxQwInh7"
+        ],
+        "shared": true,
+        "permissions": [
+          {
+            "type": "user",
+            "role": "owner"
+          },
+          {
+            "type": "user",
+            "role": "writer"
+          }
+        ]
+      },
+      "raw_bytes_verified": true,
+      "readback_bytes": 1685,
+      "readback_sha256": "c0ec9d6b42c17c4fdcc8759dce2efb9ec899585e701a70b66f392ffd31fdb6ef",
+      "verified_utc": "2026-11-23T06:13:18.944696+00:00"
+    },
+    {
+      "artifact_id": "transfer-support-advanced_media-restore_handoff.py",
+      "group": "advanced_media",
+      "file_name": "restore_handoff.py",
+      "bytes": 4183,
+      "sha256": "4dcad9dae60e78a10919fa6d8a4909b3e4584a15535d04e7162412859d306ab6",
+      "local_path": "/workspace/scratch/39a2abd37644/concert-future/work/claude-handoff/transfer-staging/advanced_media/restore_handoff.py",
+      "parent_folder_id": "1e0j_89WwvQSlhmGqTQDnsBaRyxQwInh7",
+      "mime_type": "text/plain",
+      "part_index": null,
+      "drive": {
+        "id": "112SXfS35HLSa10dJPSHxvhf0C9cn3GgG",
+        "url": "https://drive.google.com/file/d/112SXfS35HLSa10dJPSHxvhf0C9cn3GgG/view?usp=drivesdk",
+        "parent_id": "1e0j_89WwvQSlhmGqTQDnsBaRyxQwInh7",
+        "mime_type": "text/plain"
+      },
+      "upload_verified": false,
+      "metadata": {
+        "id": "112SXfS35HLSa10dJPSHxvhf0C9cn3GgG",
+        "bytes": 4183,
+        "modified_time": "2026-11-23T06:13:24.016Z",
+        "parent_ids": [
+          "1e0j_89WwvQSlhmGqTQDnsBaRyxQwInh7"
+        ],
+        "shared": true,
+        "permissions": [
+          {
+            "type": "user",
+            "role": "owner"
+          },
+          {
+            "type": "user",
+            "role": "writer"
+          }
+        ]
+      },
+      "raw_bytes_verified": true,
+      "readback_bytes": 4183,
+      "readback_sha256": "4dcad9dae60e78a10919fa6d8a4909b3e4584a15535d04e7162412859d306ab6",
+      "verified_utc": "2026-11-23T06:13:26.568411+00:00"
+    },
+    {
+      "artifact_id": "transfer-support-advanced_media-README_RESTORE.md",
+      "group": "advanced_media",
+      "file_name": "README_RESTORE.md",
+      "bytes": 829,
+      "sha256": "0c31fc498a02f64b1eac390f72f35a22592b307248b2bed8a99a97b5cf4eddf2",
+      "local_path": "/workspace/scratch/39a2abd37644/concert-future/work/claude-handoff/transfer-staging/advanced_media/README_RESTORE.md",
+      "parent_folder_id": "1e0j_89WwvQSlhmGqTQDnsBaRyxQwInh7",
+      "mime_type": "text/markdown",
+      "part_index": null,
+      "drive": {
+        "id": "1H30CPbLLhXvXXDoK6FunStXw4koaOfzE",
+        "url": "https://docs.google.com/document/d/1H30CPbLLhXvXXDoK6FunStXw4koaOfzE/edit?usp=drivesdk&ouid=113038373524763352759&rtpof=true&sd=true",
+        "parent_id": "1e0j_89WwvQSlhmGqTQDnsBaRyxQwInh7",
+        "mime_type": "text/markdown"
+      },
+      "upload_verified": false,
+      "metadata": {
+        "id": "1H30CPbLLhXvXXDoK6FunStXw4koaOfzE",
+        "bytes": 829,
+        "modified_time": "2026-11-23T06:13:33.656Z",
+        "parent_ids": [
+          "1e0j_89WwvQSlhmGqTQDnsBaRyxQwInh7"
+        ],
+        "shared": true,
+        "permissions": [
+          {
+            "type": "user",
+            "role": "owner"
+          },
+          {
+            "type": "user",
+            "role": "writer"
+          }
+        ]
+      },
+      "raw_bytes_verified": true,
+      "readback_bytes": 829,
+      "readback_sha256": "0c31fc498a02f64b1eac390f72f35a22592b307248b2bed8a99a97b5cf4eddf2",
+      "verified_utc": "2026-11-23T06:13:36.138420+00:00"
+    },
+    {
+      "artifact_id": "advanced-dance-maintenance-handoff",
+      "group": "advanced_media",
+      "file_name": "Advanced_Dance_Maintenance_Handoff_2026-11-22.md",
+      "bytes": 9633,
+      "sha256": "9f3483086a9a39456b26d04650df022a4511491205b53f010709891550eac6ed",
+      "local_path": "/workspace/scratch/39a2abd37644/concert-future/work/claude-handoff/media-recovered/advanced-dance/Advanced_Dance_Maintenance_Handoff_2026-11-22.md",
+      "parent_folder_id": "1CbjaFW1_zewZ4IWrzvM4GpsOFM_XEQTj",
+      "mime_type": "text/markdown",
+      "part_index": null,
+      "drive": {
+        "id": "1HgNWokoCLny_iOk99qR5T7UukZRYMkda",
+        "url": "https://docs.google.com/document/d/1HgNWokoCLny_iOk99qR5T7UukZRYMkda/edit?usp=drivesdk&ouid=113038373524763352759&rtpof=true&sd=true",
+        "parent_id": "1CbjaFW1_zewZ4IWrzvM4GpsOFM_XEQTj",
+        "mime_type": "text/markdown"
+      },
+      "upload_verified": false,
+      "metadata": {
+        "id": "1HgNWokoCLny_iOk99qR5T7UukZRYMkda",
+        "bytes": 9633,
+        "modified_time": "2026-11-23T06:13:42.363Z",
+        "parent_ids": [
+          "1CbjaFW1_zewZ4IWrzvM4GpsOFM_XEQTj"
+        ],
+        "shared": true,
+        "permissions": [
+          {
+            "type": "user",
+            "role": "owner"
+          },
+          {
+            "type": "user",
+            "role": "writer"
+          }
+        ]
+      },
+      "raw_bytes_verified": true,
+      "readback_bytes": 9633,
+      "readback_sha256": "9f3483086a9a39456b26d04650df022a4511491205b53f010709891550eac6ed",
+      "verified_utc": "2026-11-23T06:13:44.975657+00:00"
+    },
+    {
+      "artifact_id": "alternate-libfile_95ec1c87d144819191bec57025dd5e83",
+      "group": "alternate_references",
+      "file_name": "Earlier-Import--ScreenRecording_11-21-2026 12-19-51_1.mp4",
+      "bytes": 24374273,
+      "sha256": "c60cda02790720c70f0b57be7e06309a47475b0fa047c79d59f768aeb4795afb",
+      "local_path": "/workspace/scratch/39a2abd37644/concert-future/work/claude-handoff/alternate-references/ScreenRecording_11-21-2026 12-19-51_1.mp4",
+      "parent_folder_id": "1ihTYIdC8ssma9QZ1-OLXn3fRU6K6jaCZ",
+      "mime_type": "video/mp4",
+      "part_index": null,
+      "library": {
+        "library_file_id": "libfile_95ec1c87d144819191bec57025dd5e83",
+        "file_id": "file_00000000aeec81fd92d1a335188319a2",
+        "version": 0,
+        "version_basis": "returned by pinned prepare_materialize",
+        "path": "/ScreenRecording_11-21-2026 12-19-51_1.mp4",
+        "url": "https://chatgpt.com/library?file_id=libfile_95ec1c87d144819191bec57025dd5e83&account_id=personal",
+        "status": "recorded",
+        "metadata_size_bytes": 24374273,
+        "mime_type": "video/mp4"
+      },
+      "drive": {
+        "id": "1BfoLXmuCHzOYyBmDs1LSEHvC2oxm12G_",
+        "url": "https://drive.google.com/file/d/1BfoLXmuCHzOYyBmDs1LSEHvC2oxm12G_/view?usp=drivesdk",
+        "parent_id": "1ihTYIdC8ssma9QZ1-OLXn3fRU6K6jaCZ",
+        "mime_type": "video/mp4"
+      },
+      "upload_verified": false,
+      "metadata": {
+        "id": "1BfoLXmuCHzOYyBmDs1LSEHvC2oxm12G_",
+        "bytes": 24374273,
+        "modified_time": "2026-11-23T06:14:01.717Z",
+        "parent_ids": [
+          "1ihTYIdC8ssma9QZ1-OLXn3fRU6K6jaCZ"
+        ],
+        "shared": true,
+        "permissions": [
+          {
+            "type": "user",
+            "role": "owner"
+          },
+          {
+            "type": "user",
+            "role": "writer"
+          }
+        ]
+      },
+      "raw_bytes_verified": true,
+      "readback_bytes": 24374273,
+      "readback_sha256": "c60cda02790720c70f0b57be7e06309a47475b0fa047c79d59f768aeb4795afb",
+      "verified_utc": "2026-11-23T06:14:08.501990+00:00"
+    },
+    {
+      "artifact_id": "alternate-libfile_a45b34300f7c8191880a6b01f2f354d0",
+      "group": "alternate_references",
+      "file_name": "Earlier-Import--ScreenRecording_11-21-2026 12-20-32_1.mp4",
+      "bytes": 37751962,
+      "sha256": "f7d362e23388e5e2a541c59d4f09b610239cea28800ef2b0ca3068f13a9303b9",
+      "local_path": "/workspace/scratch/39a2abd37644/concert-future/work/claude-handoff/alternate-references/ScreenRecording_11-21-2026 12-20-32_1.mp4",
+      "parent_folder_id": "1ihTYIdC8ssma9QZ1-OLXn3fRU6K6jaCZ",
+      "mime_type": "video/mp4",
+      "part_index": null,
+      "library": {
+        "library_file_id": "libfile_a45b34300f7c8191880a6b01f2f354d0",
+        "file_id": "file_000000003ccc81fdb41aae3255c6a40d",
+        "version": 0,
+        "version_basis": "returned by pinned prepare_materialize",
+        "path": "/ScreenRecording_11-21-2026 12-20-32_1.mp4",
+        "url": "https://chatgpt.com/library?file_id=libfile_a45b34300f7c8191880a6b01f2f354d0&account_id=personal",
+        "status": "recorded",
+        "metadata_size_bytes": 37751962,
+        "mime_type": "video/mp4"
+      },
+      "drive": {
+        "id": "1XKPbqPDXIlHnkMSETZ1eQZSvDXsG9vSA",
+        "url": "https://drive.google.com/file/d/1XKPbqPDXIlHnkMSETZ1eQZSvDXsG9vSA/view?usp=drivesdk",
+        "parent_id": "1ihTYIdC8ssma9QZ1-OLXn3fRU6K6jaCZ",
+        "mime_type": "video/mp4"
+      },
+      "upload_verified": false,
+      "metadata": {
+        "id": "1XKPbqPDXIlHnkMSETZ1eQZSvDXsG9vSA",
+        "bytes": 37751962,
+        "modified_time": "2026-11-23T06:14:20.885Z",
+        "parent_ids": [
+          "1ihTYIdC8ssma9QZ1-OLXn3fRU6K6jaCZ"
+        ],
+        "shared": true,
+        "permissions": [
+          {
+            "type": "user",
+            "role": "owner"
+          },
+          {
+            "type": "user",
+            "role": "writer"
+          }
+        ]
+      },
+      "raw_bytes_verified": true,
+      "readback_bytes": 37751962,
+      "readback_sha256": "f7d362e23388e5e2a541c59d4f09b610239cea28800ef2b0ca3068f13a9303b9",
+      "verified_utc": "2026-11-23T06:14:28.927105+00:00"
+    },
+    {
+      "artifact_id": "alternate-libfile_712f28a53820819188f3e846496678bc",
+      "group": "alternate_references",
+      "file_name": "Earlier-Import--ScreenRecording_11-21-2026 12-24-09_1.mp4",
+      "bytes": 26820074,
+      "sha256": "8c51f68067e3854abc808c626f0e8d2912b45811378972d82ac4f942eac49ff0",
+      "local_path": "/workspace/scratch/39a2abd37644/concert-future/work/claude-handoff/alternate-references/ScreenRecording_11-21-2026 12-24-09_1.mp4",
+      "parent_folder_id": "1ihTYIdC8ssma9QZ1-OLXn3fRU6K6jaCZ",
+      "mime_type": "video/mp4",
+      "part_index": null,
+      "library": {
+        "library_file_id": "libfile_712f28a53820819188f3e846496678bc",
+        "file_id": "file_00000000956c81fd9c6a651c3165a2f9",
+        "version": 0,
+        "version_basis": "returned by pinned prepare_materialize",
+        "path": "/ScreenRecording_11-21-2026 12-24-09_1.mp4",
+        "url": "https://chatgpt.com/library?file_id=libfile_712f28a53820819188f3e846496678bc&account_id=personal",
+        "status": "recorded",
+        "metadata_size_bytes": 26820074,
+        "mime_type": "video/mp4"
+      },
+      "drive": {
+        "id": "1JPRqQqKukLOeN7i485lBLNNzOZgZjrVJ",
+        "url": "https://drive.google.com/file/d/1JPRqQqKukLOeN7i485lBLNNzOZgZjrVJ/view?usp=drivesdk",
+        "parent_id": "1ihTYIdC8ssma9QZ1-OLXn3fRU6K6jaCZ",
+        "mime_type": "video/mp4"
+      },
+      "upload_verified": false,
+      "metadata": {
+        "id": "1JPRqQqKukLOeN7i485lBLNNzOZgZjrVJ",
+        "bytes": 26820074,
+        "modified_time": "2026-11-23T06:14:39.760Z",
+        "parent_ids": [
+          "1ihTYIdC8ssma9QZ1-OLXn3fRU6K6jaCZ"
+        ],
+        "shared": true,
+        "permissions": [
+          {
+            "type": "user",
+            "role": "owner"
+          },
+          {
+            "type": "user",
+            "role": "writer"
+          }
+        ]
+      },
+      "raw_bytes_verified": true,
+      "readback_bytes": 26820074,
+      "readback_sha256": "8c51f68067e3854abc808c626f0e8d2912b45811378972d82ac4f942eac49ff0",
+      "verified_utc": "2026-11-23T06:14:46.342875+00:00"
+    }
+  ],
+  "notes": [
+    "Only the revised authorized subset was uploaded after the canonical-folder decision. No other whole Cine/Advanced media or support files were uploaded.",
+    "Requested and provider-observed non-native MIME types are preserved; acceptance required exact raw byte count and SHA-256.",
+    "A tool-runtime replacement interrupted one attempt. Saved receipts and two Drive listings were reconciled; no part02 file existed before resuming the missing upload.",
+    "The six earlier duplicate Cinematic films were not modified or deleted by this agent; canonical adoption and cleanup remain coordinator-owned.",
+    "Earlier imports retain pinned Library/file IDs and returned version0, and do not imply choreography or byte equivalence to canonical moving references."
+  ]
+}
