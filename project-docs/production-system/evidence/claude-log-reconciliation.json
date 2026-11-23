@@ -1,0 +1,16 @@
+{
+  "before_drive_bytes": 56678,
+  "before_drive_sha256": "201be26f0f0ce2c17ac1b28fb9a835a6174385acd51b3ab91c9ac2f923454828",
+  "before_git_bytes": 46659,
+  "before_git_sha256": "89ce2fcdc637ef845812ab4dcafe82c3fd93be8605c6f7b3f699a49315ac68ca",
+  "after_drive_bytes": 91485,
+  "after_drive_sha256": "b173220a07677f4a0ec6e335d46bafc8f5280a437507cfc62f168be1c7449bdd",
+  "after_git_bytes": 91485,
+  "after_git_sha256": "c1c7575ba066b1a7c80d1c4eb1adaccd475418f06ff079882c26be56596024b0",
+  "backfilled_to_drive": 24,
+  "backfilled_to_git": 101,
+  "event_id": "claude-handoff-20261122-ready",
+  "event_added_once_each": true,
+  "both_original_prefixes_preserved": true,
+  "same_semantic_event_set": true
+}

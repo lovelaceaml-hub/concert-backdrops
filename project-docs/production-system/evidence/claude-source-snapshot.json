@@ -1,0 +1,61 @@
+{
+  "schema": "concert-source-snapshot-receipt-v1",
+  "recorded_utc": "2026-11-23T06:26:02.997405+00:00",
+  "local_date": "2026-11-22",
+  "source_commit": "3ef80d97d2cc25d5201195bb8ced3646811200db",
+  "source_tree": "c1bb6df639d5df19caf0e029b6a2de4d91c2cd66",
+  "source_commit_url": "https://github.com/lovelaceaml-hub/concert-backdrops/commit/3ef80d97d2cc25d5201195bb8ced3646811200db",
+  "filename": "Concert_Project_Source_2026-11-22.tar.gz",
+  "local_path": "/workspace/scratch/39a2abd37644/concert-future/work/claude-handoff/packages/Concert_Project_Source_2026-11-22.tar.gz",
+  "bytes": 33821577,
+  "sha256": "2af0e84a78b1f341f068f51de158729220bf5d69e104828a33581d84ed5bac4f",
+  "tracked_entries": 861,
+  "regular_files": 859,
+  "symbolic_links": [
+    {
+      "path": ".agents/skills/video-shotcraft",
+      "target": "../../.tools/video-shotcraft",
+      "git_mode": "120000"
+    },
+    {
+      "path": ".claude/skills/video-shotcraft",
+      "target": "../../.tools/video-shotcraft",
+      "git_mode": "120000"
+    }
+  ],
+  "executable_regular_files": 12,
+  "uncompressed_blob_bytes": 45115602,
+  "source_manifest_filename": "SOURCE-MANIFEST.json",
+  "source_manifest_bytes": 250839,
+  "source_manifest_sha256": "175fd1c7d1b4b886237dc1b1f1d59c75f26a916ed8177817eab5df8e56f5145d",
+  "gzip_crc_verified": true,
+  "every_archive_payload_matches_git_blob": true,
+  "every_tracked_entry_included_once": true,
+  "git_modes_preserved": true,
+  "private_key_markers_found": 0,
+  "git_history_included": false,
+  "working_tree_clean_at_export": true,
+  "archive_status": "uploaded_and_full_raw_readback_verified",
+  "clean_source_and_resource_restore_proof": "project-docs/production-system/evidence/claude-source-clean-restore.json",
+  "clean_source_and_resource_restore_passed": true,
+  "drive": {
+    "id": "1QrBbz-SxWWNEkGtC30BcTWuB9_N8MDd4",
+    "url": "https://drive.google.com/file/d/1QrBbz-SxWWNEkGtC30BcTWuB9_N8MDd4/view?usp=drivesdk",
+    "parent_id": "1ARIxA-UsuIR0xEVeDIBMH-MMgoxnafHn",
+    "mime_type": "application/gzip"
+  },
+  "raw_bytes_verified": true,
+  "drive_modified_time": "2026-11-23T06:28:25.076Z",
+  "source_manifest_drive": {
+    "id": "1dZTn-4y7kY2FFGR2-zCw3JUXwbRhkh3M",
+    "url": "https://drive.google.com/file/d/1dZTn-4y7kY2FFGR2-zCw3JUXwbRhkh3M/view?usp=drivesdk",
+    "parent_id": "1ARIxA-UsuIR0xEVeDIBMH-MMgoxnafHn",
+    "mime_type": "application/json"
+  },
+  "restore_readme_drive": {
+    "id": "1LHzXTp3WPOE_GEYe080wjKjv6Mw4GuDS",
+    "url": "https://docs.google.com/document/d/1LHzXTp3WPOE_GEYe080wjKjv6Mw4GuDS/edit?usp=drivesdk&ouid=113038373524763352759&rtpof=true&sd=true",
+    "parent_id": "1ARIxA-UsuIR0xEVeDIBMH-MMgoxnafHn",
+    "mime_type": "text/markdown"
+  }
+}

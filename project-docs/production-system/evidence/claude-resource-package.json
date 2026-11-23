@@ -26,7 +26,7 @@
   "no_private_key": true,
   "no_git_or_caches_or_finished_media": true,
   "archive_status": "uploaded_and_raw_readback_verified",
-  "source_handoff_commit_pending": true,
+  "source_handoff_commit_pending": false,
   "user_facing_date": "2026-11-22",
   "archive_bytes_unchanged_by_rename": true,
   "restore_command": "python3 restore_resources.py --archive Concert_Reproduction_Resources_2026-11-22.zip --project /path/to/concert-backdrops",
@@ -50,5 +50,6 @@
   "verified_drive_receipt": "/workspace/scratch/39a2abd37644/concert-future/work/claude-handoff/verified-uploads/1zLhcmJRo_ZH4Kd4lO0MtyHEV2McLSWux.json",
   "raw_readback_sha256": "2bf6a9292fa24e124b5549591c9abfee1215ef80a1bea1a9e9e48daaa45f19e7",
   "raw_readback_bytes": 91359522,
-  "verified_utc": "2026-11-23T06:04:47.252009+00:00"
+  "verified_utc": "2026-11-23T06:04:47.252009+00:00",
+  "source_handoff_commit": "3ef80d97d2cc25d5201195bb8ced3646811200db"
 }

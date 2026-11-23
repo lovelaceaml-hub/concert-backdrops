@@ -1,0 +1,20 @@
+{
+  "schema": "concert-source-and-resources-clean-restore-v1",
+  "recorded_utc": "2026-11-23T06:27:17.298690+00:00",
+  "source_commit": "3ef80d97d2cc25d5201195bb8ced3646811200db",
+  "source_archive_sha256": "2af0e84a78b1f341f068f51de158729220bf5d69e104828a33581d84ed5bac4f",
+  "actual_tar_extraction": true,
+  "source_entries_verified": 861,
+  "symbolic_links_verified": 2,
+  "all_regular_modes_and_hashes_verified": true,
+  "resource_installer_stdout": {
+    "restored": true,
+    "new_files": 392,
+    "resource_paths": 392,
+    "project": "/workspace/scratch/39a2abd37644/concert-future/work/claude-handoff/actual-source-restore-ibiufqzz/concert-backdrops",
+    "render_started": false,
+    "dependencies_installed": false
+  },
+  "no_render_or_dependency_install": true,
+  "owned_temporary_fixture_removed": true
+}
