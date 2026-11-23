@@ -921,11 +921,18 @@ COMP_BLOCKS = ("SKY_THEME", "SHADOW_ZERO", "TEXT_INK", "LEAVES_TINT", "LAKE_RIPP
                "FIGURE_TINT", "SYMBOL_PAINT", "HUE_KEEP")
 
 
-def comp_fs(blocks=COMP_BLOCKS):
+def comp_fs(blocks=COMP_BLOCKS, *, grain=True):
     """The composite shader with the given optional blocks compiled in (render.comp_blocks() picks them from
-    the song). With none it is the original shader."""
+    the song). With none it is the original shader. grain=True preserves the exact
+    legacy source; grain=False removes synthetic delivery grain without a global patch."""
+    if not isinstance(grain, bool):
+        raise ValueError("grain must be a bool")
     unknown = [b for b in blocks if b not in COMP_BLOCKS]
     if unknown:
         raise ValueError(f"unknown composite blocks {unknown}")
     head, body = COMP_FS.split("\n", 1)   # the #version line must stay first
+    if not grain:
+        if body.count("col += (n1+n2-1.0)*(1.15/255.0);") != 1:
+            raise ValueError("composite grain anchor changed; do not combine quality with shader patches")
+        body = body.replace("col += (n1+n2-1.0)*(1.15/255.0);", "// No added delivery grain.")
     return head + "\n" + "".join(f"#define {b} 1\n" for b in blocks) + body

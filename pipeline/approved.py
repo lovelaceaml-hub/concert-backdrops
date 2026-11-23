@@ -19,6 +19,7 @@ from .environment import worker_environment
 from .project import PipelineError, Project, file_hash, read_data, safe_path, write_json
 
 
+PROJECT_ID = "approved-light-s11"
 REFERENCE = "song11-beauty-v1"
 REFERENCE_FILE = "pipeline/references/song11-beauty-v1.json"
 SCENE = "tools/s11_full2/s11_full2.py"
@@ -71,15 +72,29 @@ def validate_shot(project: Project, shot: dict) -> None:
 
 def verify_reference_files(root: Path, *, restored: bool = True) -> dict[str, str]:
     """Reject changed approved source or snapshots rather than silently relabeling it."""
-    expected = reference(root)["source_files"]
+    definition = reference(root)
+    expected = definition["source_files"]
+    commit = definition.get("source_commit") or definition.get("engine_commit") or "unknown"
     checked = {}
     for name, digest in expected.items():
         if not restored and name.startswith("work/"):
             continue
         path = safe_path(root, name, exists=False)
         if not path.is_file():
+            if name.startswith("engine/"):
+                raise PipelineError(
+                    f"Registered source is missing: {name}. "
+                    f"This approved film is frozen to commit {commit}; "
+                    f"run `./scripts/video reproduce {PROJECT_ID}` to render it exactly from that version."
+                )
             raise PipelineError(f"Registered source is missing: {name}. Run video prepare for this project.")
         if file_hash(path) != digest:
+            if name.startswith("engine/"):
+                raise PipelineError(
+                    f"Registered source changed: {name}. "
+                    f"This approved film is frozen to commit {commit}; "
+                    f"run `./scripts/video reproduce {PROJECT_ID}` to render it exactly from that version."
+                )
             raise PipelineError(f"Registered source changed: {name}. Preserve this reference and register a new scene revision.")
         checked[name] = digest
     return checked
