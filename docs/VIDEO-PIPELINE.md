@@ -349,3 +349,29 @@ Example shot params: `{"song": "s11_finale", "audio": "audio/promo/s11.mp3",
 "start_seconds": 30, "bloom_scale": 0.7, "grain": false}`. See
 `projects/song-scene-demo/project.json`. Work at 1080p; the final show video is
 3840x2160 at 60 fps only after the video is approved.
+
+## Music sync
+
+The `tools/music_sync/` package measures real beats, downbeats, instrument hits, sung-word timing, and rehearsal tempo changes so concert backdrops follow the actual performance. The existing `pipeline/audio.py` stays untouched for earlier films. Heavy separation and transcription run on GitHub Actions CPU runners, never on the Mac.
+
+### Commands
+
+Run through `python -m tools.music_sync <command>` (on a cloud runner with `tools/music_sync/requirements.txt` installed):
+
+- `analyze <audio> --out <dir>`: separates the song into `vocals`, `drums`, `bass`, and `other` stems with Demucs (`htdemucs` on CPU), tracks beats and downbeats with `beat_this` (falling back to `librosa` if unavailable and recording which tracker ran), measures per-stem hits and energy, and finds section boundaries from chroma and MFCC self-similarity. Writes `sync.json` with `"manually_verified": false`. Stems stay in `work/` and are never committed to Git.
+- `lyrics <audio> --out <dir> [--language en]`: times every sung word with `faster-whisper` (CPU, `int8`, `small` by default or `medium` via `--model medium`), automatically using `<dir>/stems/vocals.wav` when present. Writes `words.json` (`word`, `start`, `end`, `confidence`). Because lyrics are copyrighted, `words.json` is ignored by Git and must go only to the private Google Drive folder.
+- `match <studio_audio> <live_audio> --out <dir>`: aligns a rehearsal or live recording to the studio track with chroma features and dynamic time warping (`librosa`), writing `tempo_map.json` with monotonic `(studio_seconds, live_seconds)` anchors, overall offset, overall stretch, and a confidence score. Python code can call `retime(times, tempo_map)`, `retime_cues(cues, tempo_map)`, and `retime_phrases(phrases, tempo_map)` to shift studio cues and phrases to the rehearsal timing.
+- `cues <sync.json> --out <dir>`: turns detected section starts into `cues.py` (a `CUES` list ready for `engine/live.py`) and `cues.csv` (`name`, `start_seconds`, `start_timecode_60fps` for show software such as QLab, ProPresenter, or Resolume). Pass `--tempo-map <tempo_map.json>` to export live-retimed cues.
+
+### Running in the cloud and where results land
+
+Start the GitHub Actions workflow **Music sync (cloud CPU)** (`.github/workflows/music-sync.yml`) manually from GitHub Actions or with `gh workflow run`:
+
+```bash
+gh workflow run music-sync.yml -f song="05 God Bless You! (sung guide, for lyric timing).mp3" -f steps=all
+gh workflow run music-sync.yml -f song="03 Studio.mp3" -f live="03 Rehearsal.mp3" -f steps=match
+```
+
+The cloud job pulls the song from the root of the Google Drive folder **Concert Backdrops - Songs**, runs the selected steps, and uploads the results to **Concert Backdrops - Songs / Status / Sync / \<song name without extension\>**. Non-lyric timing files (`sync.json`, `tempo_map.json`, `cues.csv`, and `cues.py`) are also attached to the workflow run as a downloadable artifact for 14 days. Raw WAV stems and `words.json` are never uploaded as workflow artifacts or committed to Git.
+
+Every output is a starting suggestion (`"manually_verified": false`), not locked show timing. Anthony or a reviewer must listen against the music and confirm important beats, sung words, live retiming, and cue points before finalizing a concert backdrop.
