@@ -366,7 +366,7 @@ Example shot params: `{"song": "s11_finale", "audio": "audio/promo/s11.mp3",
 What it does:
 
 - Looks the song up in `project-docs/production-system/catalogs/songs.json` and uses that song's chosen concert recording at its recorded local path in `work/song-sources/`.
-- If the recording is missing, downloads it from the Concert Backdrops - Songs Drive folder by its recorded file id, with `python3 tools/drive_sync.py get-id <file id> --as <file>`. This needs the `GOOGLE_DRIVE_OAUTH` secret. Only files inside that folder are allowed.
+- If the recording is missing, downloads it from the Concert Backdrops - Songs Drive folder by its recorded file id, with `python3 tools/drive_sync.py get-id <file id> --as <file>`. This needs the `GOOGLE_DRIVE_OAUTH` secret. Only files inside that folder, or a song's chosen recording listed in the song catalog (some are files shared with the owner), are downloaded.
 - Pairs the recording with the song's existing scene `engine/songs/sNN_*.py`, through the reusable p3d-kit scene (`scenes/p3d/song_scene.py`).
 - Writes a project to `work/song-drafts/<id>/project.json`. Nothing in `projects/` changes.
 - Renders a short draft with the song's sound attached.

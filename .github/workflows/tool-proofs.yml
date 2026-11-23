@@ -94,6 +94,17 @@ jobs:
           # scripts/video runs in the render environment; point the Drive download at this interpreter.
           export DRIVE_PYTHON="$(command -v python)"
           ./scripts/video song-draft 7 2>&1 | tee work/proofs/11-song-draft.log
+      - name: Shared recordings download (Songs 2, 5, 6, 10)
+        id: shared
+        continue-on-error: true
+        env:
+          GOOGLE_DRIVE_OAUTH: ${{ secrets.GOOGLE_DRIVE_OAUTH }}
+        run: |
+          export DRIVE_PYTHON="$(command -v python)"
+          for song in 2 5 6 10; do ./scripts/video song-draft $song --no-render; done 2>&1 | tee work/proofs/12-shared-recordings.log
+          for f in work/song-sources/s02.m4a work/song-sources/s05.m4a work/song-sources/s06.m4a work/song-sources/s10.m4a; do
+            echo "$f $(ffprobe -v error -show_entries format=duration -of csv=p=0 "$f")" | tee -a work/proofs/12-shared-recordings.log
+          done
       - name: Blender MCP (stdio and live GUI)
         id: mcp
         continue-on-error: true
@@ -121,6 +132,7 @@ jobs:
             echo "song_scene=${{ steps.songscene.outcome }}"
             echo "workbench=${{ steps.workbench.outcome }}"
             echo "song_draft=${{ steps.songdraft.outcome }}"
+            echo "shared_recordings=${{ steps.shared.outcome }}"
           } | tee work/proofs/summary.txt
       - name: Save proofs
         if: always()

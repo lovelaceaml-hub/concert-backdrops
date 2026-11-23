@@ -5,7 +5,8 @@ Used by cloud jobs (GitHub Actions). GOOGLE_DRIVE_OAUTH (Anthony's sign-in token
 the private "Concert Video Renders" app in the Drive Backups Google Cloud project) can
 read and save. GOOGLE_DRIVE_SA_KEY (a service account shared only on this folder) can
 read but not save: Google gives service accounts no storage in personal Drives.
-Every action stays inside the Concert Backdrops - Songs folder.
+Every action stays inside the Concert Backdrops - Songs folder, except that get-id may also
+download a song's chosen recording listed in the song catalog when it is a file shared with the owner.
 
     python3 tools/drive_sync.py list   [--path "Videos"]
     python3 tools/drive_sync.py get    "01 All You Stars of Zion.mp3" --to work/song-sources/
@@ -96,12 +97,20 @@ def inside_songs_folder(drive, file_id: str) -> bool:
     return False
 
 
+def catalog_recording_ids() -> set[str]:
+    """Drive ids of each song's chosen recording in the song catalog (some are files shared with the owner)."""
+    catalog = Path(__file__).resolve().parents[1] / "project-docs/production-system/catalogs/songs.json"
+    songs = json.loads(catalog.read_text())["songs"]
+    return {(s.get("audio", {}).get("source") or {}).get("file_id") for s in songs} - {None}
+
+
 def get_id(drive, file_id: str, out: Path) -> Path:
-    """Download one file by its Drive id (as recorded in the song catalog), only from inside the Songs folder."""
+    """Download one file by its Drive id: anything inside the Songs folder, or a song's chosen recording
+    listed in the song catalog even when it is a file shared with the owner (owner's decision, 2026-11-23)."""
     from googleapiclient.http import MediaIoBaseDownload
-    if not inside_songs_folder(drive, file_id):
-        sys.exit(f"Drive file {file_id} is not inside the Concert Backdrops - Songs folder (it may be a file someone "
-                 f"shared with you). Put a copy in that folder and record the copy's id in the song catalog.")
+    if file_id not in catalog_recording_ids() and not inside_songs_folder(drive, file_id):
+        sys.exit(f"Drive file {file_id} is neither inside the Concert Backdrops - Songs folder nor a song's "
+                 f"chosen recording in catalogs/songs.json, so it was not downloaded.")
     out.parent.mkdir(parents=True, exist_ok=True)
     partial = out.with_name(out.name + ".part")
     with partial.open("wb") as stream:
