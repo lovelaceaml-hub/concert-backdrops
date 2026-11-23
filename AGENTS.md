@@ -20,6 +20,8 @@ These are standing rules for every agent (Claude, Codex, ChatGPT, Gemini). They 
 
 - **Access set up for smooth cloud production (2026-11-22).** Cloud jobs run on GitHub Actions (see `docs/VIDEO-PIPELINE-VALIDATION.md`). They read songs from and save renders to the Drive folder with `tools/drive_sync.py` and the `GOOGLE_DRIVE_OAUTH` secret. Every agent on the Mac commits as `lovelaceaml-hub <281993171+lovelaceaml-hub@users.noreply.github.com>` (GitHub rejects pushes that expose the private Gmail). Gemini helpers may run read-only git history commands. Never print, copy or commit these secrets.
 
+- **Concert playback and music sync (Anthony, 2026-11-23).** How the videos are played on December 6 is not decided yet (finished 4K videos in a cue app, the live engine, or simple play per song). Prepare for both: every song's section markers are exported for show software (`cues.csv`) and for `engine/live.py` (`cues.py`). Music sync tools (`tools/music_sync`, cloud job "Music sync") give real beats, downbeats, sections, per-instrument hits, sung-word timing and rehearsal matching; results land in the Drive folder under Status/Sync. Sung-word timing (`words.json`) is copyrighted lyrics and stays in Drive only. All timing is a suggestion until someone listens and confirms.
+
 ## Claude project handoff, November 22, 2026
 
 Start with [CLAUDE-HANDOFF.md](project-docs/production-system/CLAUDE-HANDOFF.md)

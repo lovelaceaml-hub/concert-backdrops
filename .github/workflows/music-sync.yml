@@ -1,0 +1,183 @@
+name: Music sync (cloud CPU)
+
+# Runs Demucs stem separation, beat/downbeat tracking, sung-word timing, and
+# studio-to-live alignment on GitHub Actions CPU runners, never on the Mac.
+# Saves sync outputs to Google Drive under Status/Sync/<song stem>.
+# Copyrighted words.json and raw WAV stems are never saved as workflow artifacts.
+on:
+  workflow_dispatch:
+    inputs:
+      song:
+        description: Exact file name in the root of "Concert Backdrops - Songs" on Drive
+        required: true
+        type: string
+      live:
+        description: Optional second file name in the Drive root for live/rehearsal matching
+        required: false
+        default: ""
+        type: string
+      steps:
+        description: Which music sync steps to run
+        required: false
+        default: all
+        type: choice
+        options:
+          - analyze
+          - lyrics
+          - match
+          - all
+  push:
+    branches:
+      - "claude/music-sync*"
+
+permissions:
+  contents: read
+
+defaults:
+  run:
+    shell: bash
+
+concurrency:
+  group: music-sync-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  sync:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install host audio tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends ffmpeg libsndfile1
+
+      - name: Cache pip downloads
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: music-sync-pip-py312-${{ hashFiles('tools/music_sync/requirements.txt') }}
+          restore-keys: |
+            music-sync-pip-py312-
+
+      - name: Cache Demucs, Beat This, and Whisper models
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cache/torch
+            ~/.cache/huggingface
+          key: music-sync-models-v1-${{ hashFiles('tools/music_sync/requirements.txt') }}
+          restore-keys: |
+            music-sync-models-v1-
+
+      - name: Install pinned CPU Python dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install torch==2.5.1 torchaudio==2.5.1 --index-url https://download.pytorch.org/whl/cpu
+          python -m pip install -r tools/music_sync/requirements.txt
+
+      - name: Resolve run parameters
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          INPUT_SONG: ${{ inputs.song }}
+          INPUT_LIVE: ${{ inputs.live }}
+          INPUT_STEPS: ${{ inputs.steps }}
+        run: |
+          python3 - <<'PY'
+          import os
+          import re
+          from pathlib import Path
+
+          event = os.environ["EVENT_NAME"]
+          if event == "push":
+              song = "05 God Bless You! (sung guide, for lyric timing).mp3"
+              live = ""
+              steps = "all"
+          else:
+              song = os.environ["INPUT_SONG"].strip()
+              live = os.environ["INPUT_LIVE"].strip()
+              steps = os.environ["INPUT_STEPS"].strip() or "all"
+
+          if not song:
+              raise SystemExit("song input is required.")
+          if steps == "match" and not live:
+              raise SystemExit("steps=match requires the live input file name.")
+
+          stem = Path(song).stem
+          slug = re.sub(r"[^A-Za-z0-9._-]+", "-", stem).strip("-")[:60] or "song"
+
+          with open(os.environ["GITHUB_ENV"], "a", encoding="utf-8") as env_file:
+              env_file.write(f"SONG_NAME={song}\n")
+              env_file.write(f"LIVE_NAME={live}\n")
+              env_file.write(f"SYNC_STEPS={steps}\n")
+              env_file.write(f"SONG_STEM={stem}\n")
+              env_file.write(f"ARTIFACT_SLUG={slug}\n")
+          print(f"Configured music sync: song={song!r}, live={live!r}, steps={steps!r}")
+          PY
+
+      - name: Fetch audio from Google Drive
+        env:
+          GOOGLE_DRIVE_OAUTH: ${{ secrets.GOOGLE_DRIVE_OAUTH }}
+        run: |
+          mkdir -p work/music-sync/in work/music-sync/out
+          python tools/drive_sync.py get "$SONG_NAME" --to work/music-sync/in
+          if [[ -n "$LIVE_NAME" ]]; then
+            python tools/drive_sync.py get "$LIVE_NAME" --to work/music-sync/in
+          fi
+
+      - name: Run music sync CLI
+        run: |
+          IN_SONG="work/music-sync/in/$SONG_NAME"
+          OUT_DIR="work/music-sync/out"
+
+          if [[ "$SYNC_STEPS" == "analyze" || "$SYNC_STEPS" == "all" ]]; then
+            python -m tools.music_sync analyze "$IN_SONG" --out "$OUT_DIR"
+            python -m tools.music_sync cues "$OUT_DIR/sync.json" --out "$OUT_DIR"
+          fi
+
+          if [[ "$SYNC_STEPS" == "lyrics" || "$SYNC_STEPS" == "all" ]]; then
+            python -m tools.music_sync lyrics "$IN_SONG" --out "$OUT_DIR" --language en
+          fi
+
+          if [[ "$SYNC_STEPS" == "match" || ( "$SYNC_STEPS" == "all" && -n "$LIVE_NAME" ) ]]; then
+            IN_LIVE="work/music-sync/in/$LIVE_NAME"
+            python -m tools.music_sync match "$IN_SONG" "$IN_LIVE" --out "$OUT_DIR"
+            # Section markers on live timing, beside the studio-timed ones.
+            if [[ -f "$OUT_DIR/sync.json" && -f "$OUT_DIR/tempo_map.json" ]]; then
+              python -m tools.music_sync cues "$OUT_DIR/sync.json" --tempo-map "$OUT_DIR/tempo_map.json" --out "$OUT_DIR/live"
+              cp "$OUT_DIR/live/cues.csv" "$OUT_DIR/cues_live.csv"
+              cp "$OUT_DIR/live/cues.py" "$OUT_DIR/cues_live.py"
+            fi
+          fi
+
+      - name: Upload results to Google Drive
+        env:
+          GOOGLE_DRIVE_OAUTH: ${{ secrets.GOOGLE_DRIVE_OAUTH }}
+        run: |
+          OUT_DIR="work/music-sync/out"
+          DRIVE_PATH="Status/Sync/$SONG_STEM"
+          for name in sync.json cues.py cues.csv cues_live.py cues_live.csv words.json tempo_map.json; do
+            if [[ -f "$OUT_DIR/$name" ]]; then
+              python tools/drive_sync.py put "$OUT_DIR/$name" --path "$DRIVE_PATH"
+            fi
+          done
+
+      - name: Save non-lyric sync files as workflow artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: music-sync-${{ env.ARTIFACT_SLUG }}
+          path: |
+            work/music-sync/out/sync.json
+            work/music-sync/out/tempo_map.json
+            work/music-sync/out/cues.csv
+            work/music-sync/out/cues.py
+            work/music-sync/out/cues_live.csv
+            work/music-sync/out/cues_live.py
+          if-no-files-found: ignore
+          retention-days: 14

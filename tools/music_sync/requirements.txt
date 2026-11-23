@@ -1,0 +1,15 @@
+# Pinned CPU dependencies for tools/music_sync (used on GitHub Actions cloud runners).
+# Kept separate from pyproject.toml and uv.lock so the core video pipeline lock stays untouched.
+# On Linux CPU runners, install CPU-only PyTorch wheels first to avoid downloading CUDA libraries:
+#   pip install torch==2.5.1 torchaudio==2.5.1 --index-url https://download.pytorch.org/whl/cpu
+#   pip install -r tools/music_sync/requirements.txt
+
+numpy==1.26.4
+scipy==1.14.1
+soundfile==0.13.1
+librosa==0.11.0
+demucs==4.0.1
+beat-this==1.1.0
+faster-whisper==1.2.1
+google-api-python-client==2.187.0
+google-auth==2.43.0
