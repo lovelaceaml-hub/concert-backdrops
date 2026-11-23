@@ -1,0 +1,100 @@
+name: Video tool proofs (cloud CPU)
+
+# Proves each video tool on a GitHub cloud runner, where browser sockets,
+# Xvfb and Docker work (they are blocked in chat sandboxes).
+# Runs only when dispatched by hand or pushed to a proof branch. No test suites.
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - "claude/video-tools-*"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: video-tool-proofs-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  tools:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+          cache: npm
+      - name: Host tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ffmpeg xvfb libegl1 libgl1-mesa-dri libxi6 libxrender1 libxkbcommon0 libxxf86vm1 libxfixes3 libsm6
+          python -m pip install uv==0.13.9
+          mkdir -p work/proofs
+      - name: Setup (Blender, browser, apps, integrations)
+        id: setup
+        continue-on-error: true
+        run: python scripts/bootstrap.py 2>&1 | tee work/proofs/01-bootstrap.log
+      - name: Browser doctor
+        id: doctor
+        continue-on-error: true
+        run: ./scripts/video doctor --probe-browser 2>&1 | tee work/proofs/02-doctor.log
+      - name: Three.js frame capture
+        id: threejs
+        continue-on-error: true
+        run: npm run test:browser 2>&1 | tee work/proofs/03-threejs.log
+      - name: Preview render (pipeline demo)
+        id: preview
+        continue-on-error: true
+        run: ./scripts/video preview pipeline-demo --quality draft 2>&1 | tee work/proofs/04-preview.log
+      - name: Remotion assembly
+        id: remotion
+        continue-on-error: true
+        run: ./scripts/video finalize pipeline-demo --quality draft --editor remotion 2>&1 | tee work/proofs/05-remotion.log
+      - name: Blender background render
+        id: blender
+        continue-on-error: true
+        run: ./scripts/video preview cpu-demo --quality draft 2>&1 | tee work/proofs/06-blender.log
+      - name: Blender MCP (stdio and live GUI)
+        id: mcp
+        continue-on-error: true
+        run: |
+          python3 integrations/blender/smoke.py 2>&1 | tee work/proofs/07-mcp.log
+          echo "--- live ---" | tee -a work/proofs/07-mcp.log
+          xvfb-run -a -s "-screen 0 1920x1080x24" python3 integrations/blender/smoke.py --live 2>&1 | tee -a work/proofs/07-mcp.log
+      - name: Summary
+        if: always()
+        run: |
+          {
+            echo "setup=${{ steps.setup.outcome }}"
+            echo "browser_doctor=${{ steps.doctor.outcome }}"
+            echo "threejs_capture=${{ steps.threejs.outcome }}"
+            echo "preview_render=${{ steps.preview.outcome }}"
+            echo "remotion=${{ steps.remotion.outcome }}"
+            echo "blender_render=${{ steps.blender.outcome }}"
+            echo "blender_mcp=${{ steps.mcp.outcome }}"
+          } | tee work/proofs/summary.txt
+      - name: Save proofs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: tool-proofs
+          path: |
+            work/proofs/
+            work/pipeline/**/*.mp4
+            work/pipeline/**/*.json
+            work/pipeline/**/*.png
+          if-no-files-found: ignore
+          retention-days: 14
+
+  docker:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build the CPU container
+        run: docker build -f infra/docker/Dockerfile.cpu -t concert-video-cpu . 2>&1 | tail -200
