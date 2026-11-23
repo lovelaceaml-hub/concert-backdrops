@@ -18,6 +18,10 @@ do not, so the earlier "blocked" results below no longer apply there.
 | CPU Docker image (`infra/docker/Dockerfile.cpu`) | Builds | Separate job |
 | Reusable song scene (`song-scene-demo`, p3d-kit with params) | Works | 4 seconds of Song 11 rendered at 1080p |
 | Drive access (`tools/drive_sync.py check`) | Works | Read the folder and saved, then removed, a test file |
+| Shotcraft Workbench playback and export (`node scripts/prove-workbench.mjs`) | Works in a November 23 cloud session. Cloud result pending. | Page opened with no errors; playback advanced 00:00.00 to 00:04.00; export produced an H.264 1280x720 MP4 with 180 frames (checked with ffprobe). Shotcraft's own checker also rendered the SplitFlapFlip card to a 150-frame MP4. Cloud GitHub runner result pending. |
+| Any-song draft (`./scripts/video song-draft <song>`) | Local proof result: see Build log. Cloud result pending. | Song 5 draft fetched from Drive by file id in the cloud workflow. Cloud GitHub runner result pending. |
+
+The Workbench first failed to open on November 23 with a Vite error, `Failed to resolve import ../../shared/motion.mjs from proj/Composition.tsx`. The Workbench links the editor's source in as `workbench/proj` and resolves links by that path, so the relative import pointed outside the link. `apps/editor/src/shared` now links to `apps/shared`, and `Composition.tsx` imports `./shared/motion.mjs`. Earlier checks only confirmed an HTTP 200 response, which is why they missed it.
 
 How to run it: push to any `claude/video-tools-*` branch, or dispatch
 **Video tool proofs (cloud CPU)** by hand (`.github/workflows/tool-proofs.yml`).
