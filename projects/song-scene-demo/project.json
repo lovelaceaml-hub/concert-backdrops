@@ -3,7 +3,11 @@
   "project_id": "song-scene-demo",
   "title": "Reusable song scene proof",
   "description": "Four seconds of the Song 11 file through the reusable p3d-kit scene, with project params: start time, calmer bloom and no added grain. A technical proof, not a creative delivery.",
-  "video": {"width": 1920, "height": 1080, "fps": 60},
+  "video": {
+    "width": 1920,
+    "height": 1080,
+    "fps": 60
+  },
   "production": {
     "cloud_gpu_provider": null,
     "allow_local_gpu": false,
@@ -17,13 +21,38 @@
     "render_timeout_seconds": 3600
   },
   "quality": {
-    "draft": {"width": 960, "height": 540, "temporal_samples": 1, "image_bit_depth": 8},
-    "review": {"width": 1920, "height": 1080, "temporal_samples": 2, "image_bit_depth": 8},
-    "final": {"width": 3840, "height": 2160, "temporal_samples": 2, "image_bit_depth": 8}
+    "draft": {
+      "width": 960,
+      "height": 540,
+      "temporal_samples": 1,
+      "image_bit_depth": 8
+    },
+    "review": {
+      "width": 1920,
+      "height": 1080,
+      "temporal_samples": 2,
+      "image_bit_depth": 8
+    },
+    "final": {
+      "width": 3840,
+      "height": 2160,
+      "temporal_samples": 2,
+      "image_bit_depth": 8
+    }
   },
-  "delivery": {"profile": "h264", "source_transfer": "legacy_display_gamma", "color_space": "rec709"},
+  "delivery": {
+    "profile": "h264",
+    "source_transfer": "legacy_display_gamma",
+    "color_space": "rec709"
+  },
   "style": "styles/zion-cinematic.json",
-  "timing": {"schema_version": 1, "fps": 60, "visual_only": true, "manually_verified": false, "events": []},
+  "timing": {
+    "schema_version": 1,
+    "fps": 60,
+    "visual_only": true,
+    "manually_verified": false,
+    "events": []
+  },
   "shots": [
     {
       "id": "song11-excerpt",
@@ -32,7 +61,13 @@
       "start_frame": 0,
       "end_frame_exclusive": 240,
       "scene": "scenes/p3d/song_scene.py",
-      "params": {"song": "s11_finale", "start_seconds": 30, "bloom_scale": 0.7, "grain": false}
+      "params": {
+        "song": "s11_finale",
+        "start_seconds": 30,
+        "bloom_scale": 0.7,
+        "grain": false,
+        "audio": "audio/promo/s11.mp3"
+      }
     }
   ]
 }

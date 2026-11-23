@@ -4,8 +4,12 @@ The p3d-kit route adds frame recovery, worker chunks, temporal samples and QA.
 Approved films keep their frozen registrations; this module is the open,
 configurable entry for new work. Set it as a shot's scene and pass params:
 
-    "params": {"song": "s11_finale", "start_seconds": 30,
-               "bloom_scale": 0.7, "grain": false}
+    "params": {"song": "s11_finale", "audio": "audio/promo/s11.mp3",
+               "start_seconds": 30, "bloom_scale": 0.7, "grain": false}
+
+"audio" drives the music response (lights, ripples, sky glow); without it the
+scene renders with silent control data. "features" may point to a prepared
+features.npz instead.
 
 The project's shots set the length. Rendering is cloud CPU only (the pipeline
 refuses macOS unless a GPU run is explicitly allowed).
@@ -22,7 +26,8 @@ DURATION = None  # the project's shots define the clock
 COLOR_CONTRACT = {"name": "legacy_display_gamma"}
 SOURCES = ("pipeline/kit.py",)
 
-_settings = {"song": "s11_finale", "start_seconds": 0.0, "bloom_scale": 1.0, "grain": True}
+_settings = {"song": "s11_finale", "audio": None, "features": None,
+             "start_seconds": 0.0, "bloom_scale": 1.0, "grain": True}
 
 
 def configure(params: dict) -> None:
@@ -35,7 +40,19 @@ def configure(params: dict) -> None:
     _settings.update({k: v for k, v in params.items() if k in _settings})
 
 
+def _features(fps: int) -> str:
+    sys.path.insert(0, str(ROOT))
+    from pipeline.audio import legacy_features
+    params = {"features": _settings["features"]} if _settings["features"] else {}
+    job = {"repo_root": str(ROOT), "video": {"fps": fps},
+           "shot": {"params": params, "end_frame_exclusive": 10 * 60 * fps},
+           "features_dir": str(ROOT / "work/song-scene" / _settings["song"] / str(os.getpid())),
+           "audio": {"source": _settings["audio"]}}
+    return str(legacy_features(job))
+
+
 def make_renderer(width=1920, height=1080, temporal_samples=1, fps=FPS):
+    os.environ["FEATURES"] = _features(fps)
     os.environ.update(SONG=_settings["song"], OUT_FPS=str(fps),
                       OUT_RES="4k" if width == 3840 else "1080p",
                       LIBGL_ALWAYS_SOFTWARE=os.environ.get("LIBGL_ALWAYS_SOFTWARE", "1"))
