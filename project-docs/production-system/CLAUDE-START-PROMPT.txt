@@ -1,0 +1,13 @@
+Continue the existing Concert Backdrops project. Read root AGENTS.md, project-docs/production-system/CLAUDE-HANDOFF.md, project-docs/production-system/STATE.json and project-docs/production-system/evidence/claude-drive-completion.json before changing anything.
+
+GitHub: https://github.com/lovelaceaml-hub/concert-backdrops
+Drive handoff: https://drive.google.com/drive/folders/1lxcic8BcSzNgPtEY_Yg_2TBAbNam72dZ
+Project home: https://drive.google.com/drive/folders/1xyNZn4ZA6bjPcvKjGfgSWQIs9aAp2PPd
+
+The complete Almighty God Knows the Future recreation is finished at native 1080p60 for design/review: 275 seconds and 16,500 frames, with its exact media and producing-source identities recorded. Recover the existing files before rendering. The owner has not approved this exact film; final show output is 4K60 after design, timing and content approval. Do not make new phone versions. Retain the luminous concert style, generous separate modest garments and graceful movement. Detail belongs in the clothing, acting, scenery and light. Heavenly Mother appears only as light in Song 11.
+
+The owner has already authorized these priorities in order: 1) make Blender, Three.js, Remotion, Video Shotcraft and Blender MCP work and be reusable for any song; 2) integrate the proven quality gains into the existing engine for all songs; 3) organize one clear status page, stale pull requests and distributed cloud rendering. Improve the established system. Try permitted cloud routes first for browser/Remotion/live-Blender sandbox limitations; use the owner's Mac only if none works and explain why. Follow the separate GPU, load and priority conditions in AGENTS.md.
+
+Source/configuration presence is not runtime readiness. The handoff names what was actually tested, what needs installation and what remains unverified. Use the exact source archive, resource installer, media hashes and current Drive locators. Large originals have verified recovery parts; some additional whole-file Drive copies have metadata-only verification because of the connection's readback limit. Historical full-song movie gaps and alternate encodes are explicitly distinguished from the completed current recreation. Do not infer approval or a missing render queue from historical notes.
+
+Continue autonomously within the authorized priorities, stopping for real decisions or required approvals. Preserve original source/output identities and update GitHub, Drive documentation and verification receipts with subsequent work.

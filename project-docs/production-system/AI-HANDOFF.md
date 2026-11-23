@@ -1,11 +1,21 @@
 # Handoff for a new AI or chat
 
+The latest owner priorities ([PR #114](https://github.com/lovelaceaml-hub/concert-backdrops/pull/114)) authorize: make the retained tools work and be reusable for every song; integrate proven quality gains into the existing engine; then simplify status, stale PRs and distributed rendering. Try permitted cloud routes first for browser/Remotion/live-Blender sandbox limits. Use the owner's Mac only if no cloud route works and explain why; retain the separate GPU/load/priority conditions. The current deliverable is the complete Claude handoff; these priorities guide continuation.
+
+## Current authority and complete handoff
+
+Start with [root AGENTS.md](../../AGENTS.md), the current conversation and [CLAUDE-HANDOFF.md](CLAUDE-HANDOFF.md). The November 22 owner rules, merged through PR #113, require improving the existing system, keeping the added Blender/Three.js/Remotion/Video Shotcraft/Blender MCP tools reusable, making no new phone versions, working at 1080p until approval and producing the final show at 4K60 afterward. CPU work stays in the cloud; needed GPU work uses the owner's Mac under the root file's conditions. Older navigation-only wording in the historical sections below is superseded.
+
+The complete handoff distinguishes working production code, historical integration tests, presently uninstalled dependencies and still-unverified browser/GUI routes. The [current Drive handoff](https://drive.google.com/drive/folders/1lxcic8BcSzNgPtEY_Yg_2TBAbNam72dZ) and its verified completion inventory establish actual transfer coverage. Large files may require exact-byte restoration from parts; this preserves the original movie/archive without an encode and does not create a phone version.
+
 ## Current completed production: Almighty God Knows the Future
 
 The complete **4-minute-35-second recreation is rendered, checked and saved**.
 It keeps the original music and established concert world, with independently
 shaped modest garments, continuous conducting, twenty-four selected new camera
 compositions, detailed waterways and controlled musical light.
+
+It is the completed **1080p60 design/review delivery**, with no exact-output owner approval and no completed Song 11 4K show master. Recover it before considering a new render. Historical unfinished-study configurations are not an active queue.
 
 | Saved file | Purpose |
 | --- | --- |
@@ -21,16 +31,15 @@ The full-HD delivery is a smaller encode of that native picture with no resize.
 The 720p copy is explicitly downscaled. Both preserve the finalized audio.
 
 Producing source is `eec8d16519ea82309ef851975792e9dfc548da03`; all 41 jobs in [the cloud run](https://github.com/lovelaceaml-hub/concert-backdrops/actions/runs/45108198761) succeeded,
-with no retries. [PR #112](https://github.com/lovelaceaml-hub/concert-backdrops/pull/112) is the source integration authority.
+with no retries. [PR #112](https://github.com/lovelaceaml-hub/concert-backdrops/pull/112) merged at `93527bf5e2e43477073e361d22cfd6d4fa999da7`; later documentation retains the original producing-source identity.
 [Exact delivery identities](evidence/s11-renewed-final-delivery.json) and
 [final QA](evidence/s11-renewed-final-qa.json) separate full decoding, sampled
 visual review and owner approval. No exact-output owner approval is recorded.
 
 Use [the delivery workflow](../../tools/s11_delivery/README.md),
 [the scene workflow](../../tools/s11_renewed/README.md),
-[creative rules](CREATIVE-RULES.md) and [the current handoff](AI-HANDOFF.md).
-Recover the finished files before any deliberate new render. The rejected fan
-study remains superseded; PR #111 is closed unmerged.
+[creative rules](CREATIVE-RULES.md) and [the complete handoff](CLAUDE-HANDOFF.md).
+Recover the finished files before any deliberate new render. Preserve the existing 720p derivative as an archival viewing file; do not create new phone copies. The rejected fan study remains superseded; PR #111 is closed unmerged.
 
 ### Production and review facts
 

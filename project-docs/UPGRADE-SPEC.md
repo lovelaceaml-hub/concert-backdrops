@@ -1,5 +1,17 @@
 # Upgrade: magnificent promos with scenes, people of light and signature effects
 
+## Current continuation — November 22, 2026
+
+Start with [the Claude handoff](production-system/CLAUDE-HANDOFF.md),
+[current state](production-system/STATE.json) and the standing owner directions
+in [root AGENTS.md](../AGENTS.md). The sections below retain their earlier
+production/design context. Dated instructions about queues, phone copies,
+missing song recordings or cloud-only GPU use do not override the current
+handoff and owner directions. All eleven original song recordings are retained;
+older full-song movie recovery gaps are documented separately. The completed
+renewed Song 11 movie is a 1080p60 design/review delivery; final4K60 requires
+owner approval of design, timing and content. There is no unattended render queue.
+
 Anthony, 2026-11-13: "make sure the full expressions a created and used beyond only using current engine effects. Do not be lazy. Make these videos magnificint. They shouldnt just look like one scene but multiple things should go based on the theme, make sure the full expressions a created and used beyond only using current engine effects."
 
 What this means for every promo (and later the full videos):

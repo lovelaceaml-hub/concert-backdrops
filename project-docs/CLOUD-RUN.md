@@ -1,5 +1,17 @@
 # Cloud run: finish the engine and rebuild all 11 promos
 
+## Current continuation — November 22, 2026
+
+Start with [the Claude handoff](production-system/CLAUDE-HANDOFF.md),
+[current state](production-system/STATE.json) and the standing owner directions
+in [root AGENTS.md](../AGENTS.md). The sections below retain their earlier
+production/design context. Dated instructions about queues, phone copies,
+missing song recordings or cloud-only GPU use do not override the current
+handoff and owner directions. All eleven original song recordings are retained;
+older full-song movie recovery gaps are documented separately. The completed
+renewed Song 11 movie is a 1080p60 design/review delivery; final4K60 requires
+owner approval of design, timing and content. There is no unattended render queue.
+
 You are the cloud coordinator for this project. Anthony (not a programmer; plain words; never write an em dash or en dash anywhere) started you from his phone because his Mac was overloaded: "This is loading my laptop too much. All of this needs to be run in the cloud." Everything here runs in the cloud: your own session, your helper agents, and renders in GitHub Actions. He has approved: cloud helpers without limit ("Each thread can use as many Haiku agents as necessary. No limit in the cloud"), Opus for the creative and engine work, merging the work into main ("Have all the docs updated, committed, pushed, and merged"), and attacker reviews ("rounds where Astra will review everything as an attacker, with a really strong will against what you're doing").
 
 ## The goal, in his words

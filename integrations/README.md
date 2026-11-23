@@ -1,8 +1,14 @@
 # Blender MCP and Video Shotcraft
 
-These integrations are installed in this checkout. They add interactive scene editing and a reusable motion library to the render pipeline. Production rendering can run through Blender's background Python scripts without the live MCP connection.
+The latest owner priorities ([PR #114](https://github.com/lovelaceaml-hub/concert-backdrops/pull/114)) authorize: make the retained tools work and be reusable for every song; integrate proven quality gains into the existing engine; then simplify status, stale PRs and distributed rendering. Try permitted cloud routes first for browser/Remotion/live-Blender sandbox limits. Use the owner's Mac only if no cloud route works and explain why; retain the separate GPU/load/priority conditions. The current deliverable is the complete Claude handoff; these priorities guide continuation.
 
-## Installed versions
+These integration sources, pins and client configurations are preserved for reusable scene editing and motion work. **They are not currently installed in the handoff checkout.** The November 23 resource audit found no `node_modules`, pinned `.tools/video-shotcraft` checkout, isolated Blender MCP environment/profile. The two tracked Shotcraft skill symlinks are present but dangling because their `../../.tools/video-shotcraft` target is absent. Preserve these links during source extraction. The host Blender 4.3.2 is not the recorded project pin of 5.2.4 LTS. Restore and check the pinned resources before claiming the integrations are ready.
+
+The historical November 20 verification in [STATUS.md](STATUS.md) establishes successful setup/build/stdio checks in that earlier environment; it does not establish present installation or working browser/GUI playback. Production rendering can run through Blender's background Python scripts independently of the live MCP connection. The completed full Song 11 used the established native p3d route. See [the complete project handoff](../project-docs/production-system/CLAUDE-HANDOFF.md).
+
+The [current owner directions](../AGENTS.md) require keeping Blender, Three.js, Remotion, Video Shotcraft and Blender MCP and making them reusable. CPU work stays in the cloud. If GPU work is needed, use the owner's Mac under the documented load, priority and explicit local-render conditions; Linux installation does not prove a working Mac/Metal setup.
+
+## Pinned versions and intended restored locations
 
 | Component | Pin | Location |
 | --- | --- | --- |
@@ -11,7 +17,7 @@ These integrations are installed in this checkout. They add interactive scene ed
 | Video Shotcraft | `075b548c2405a07b77129eb448b0b504fc60dea3` | `.tools/video-shotcraft` |
 | Workbench Remotion | `4.0.484`, matching `apps/editor` | Shotcraft's own locked Node environment |
 
-The Blender add-on was enabled and saved using the project's official Blender 5.2.4 LTS runtime. Its preferences and startup scene live in `.tools/blender-profile`, separate from any other Blender installation. All eight external asset and AI generation integrations are off. Telemetry and update checks are off. The listener is restricted to `localhost:9876`.
+During the recorded setup, the Blender add-on was enabled and saved using the project's official Blender 5.2.4 LTS runtime. The intended preferences/startup location is `.tools/blender-profile`, separate from other Blender installations. The configuration disables all eight external asset and AI generation integrations, telemetry and update checks, and restricts the listener to `localhost:9876`. Verify those settings again after restoring the missing environment/profile.
 
 ## Install or verify
 
@@ -51,7 +57,7 @@ python3 integrations/blender/smoke.py --live
 
 MCP for Blender needs Blender's GUI event loop. `blender --background` can enable the add-on and render scenes, but it cannot service this add-on's live commands. Safe mode is enabled for code sent through MCP. No cloud GPU service or remote Blender socket is configured.
 
-The project symlinks under `.agents/skills/video-shotcraft` and `.claude/skills/video-shotcraft` expose the unchanged upstream skill to supported CLI clients. They do not register a plugin in this ChatGPT conversation. The project instructions, creative approvals, cloud-only execution rule, and restrictions on generated or third-party media continue to govern how the library is used.
+After installation, the project symlinks under `.agents/skills/video-shotcraft` and `.claude/skills/video-shotcraft` expose the unchanged upstream skill to supported CLI clients. They do not register a plugin in an existing ChatGPT conversation. The current owner directions, creative approval boundaries, cloud CPU/Mac GPU rule and restrictions on generated or third-party media govern how the library is used.
 
 ## Open and reuse Shotcraft
 
@@ -66,9 +72,9 @@ The wrapper links `apps/editor/src` into Workbench, builds its card index, and s
 
 ## Verification and current limit
 
-See [STATUS.md](STATUS.md) for the checks performed in this workspace. MCP's stdio handshake and safe-mode rejection passed. The isolated add-on was enabled successfully. Workbench compiled, served the linked project modules over HTTP, and shut down cleanly.
+See [STATUS.md](STATUS.md) for the dated setup checks. In that environment, MCP's stdio handshake and safe-mode rejection passed, the isolated add-on was enabled, and Workbench compiled, served the linked project modules over HTTP and shut down cleanly. These checks do not restore the dependencies missing from the current handoff checkout.
 
-This managed workspace refuses the local Unix sockets required by Xvfb, so the live Blender GUI connection could not be tested here. The ordinary Xvfb startup failed with `Cannot establish any listening sockets`. A workspace with desktop support is required for that optional interactive connection. Browser-rendered Workbench playback was not tested in this integration check. The setup does not imply that a cloud GPU or Mac GPU is active.
+The recorded managed workspace refused the local Unix sockets required by Xvfb, so the live Blender GUI connection could not be tested there. The ordinary Xvfb startup failed with `Cannot establish any listening sockets`. A suitable permitted workspace with desktop support is required for that interactive connection. Browser-rendered Workbench playback and video export remain unverified. No active cloud GPU or validated Mac GPU route is established by this setup record.
 
 ## Upstream references and licenses
 

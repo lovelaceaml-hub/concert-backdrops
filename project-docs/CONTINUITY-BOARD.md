@@ -1,5 +1,17 @@
 # Continuity board
 
+## Current continuation — November 22, 2026
+
+Start with [the Claude handoff](production-system/CLAUDE-HANDOFF.md),
+[current state](production-system/STATE.json) and the standing owner directions
+in [root AGENTS.md](../AGENTS.md). The sections below retain their earlier
+production/design context. Dated instructions about queues, phone copies,
+missing song recordings or cloud-only GPU use do not override the current
+handoff and owner directions. All eleven original song recordings are retained;
+older full-song movie recovery gaps are documented separately. The completed
+renewed Song 11 movie is a 1080p60 design/review delivery; final4K60 requires
+owner approval of design, timing and content. There is no unattended render queue.
+
 Compiled by the coordinator from each song's Status/NN.md on 2026-11-13 (the song sessions write only their own status file; this board is a copy). Star history and looks: DESIGN-SYSTEM.md sections 6 and 12a.
 
 ## 01 All You Stars of Zion
