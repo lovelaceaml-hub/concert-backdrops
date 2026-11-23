@@ -1,0 +1,13 @@
+{
+  "schema": "s11-private-render-recovery-location-v1",
+  "filename": "S11_Render_Recovery_2026-11-22.zip",
+  "bytes": 3823,
+  "sha256": "fd7b7ddeffc2865b6f3f129b15ade6146f9ec0f9e57cad0c3491471a03f3f04f",
+  "contents": "Private artifact decryption key, public recipient certificate and recovery instructions; no music recording.",
+  "library_file_id": "libfile_57f1c3e4ca248191a50c9bcb12bc1887",
+  "file_id": "file_00000000d71c82129bba32fe7eb7186f",
+  "version": 0,
+  "url": "https://chatgpt.com/library?file_id=libfile_57f1c3e4ca248191a50c9bcb12bc1887&account_id=personal",
+  "private_key_in_git": false,
+  "recipient_certificate_sha256": "a39edaae27ea4a67bf003f28def7480309ab4f005531c3001552da4169a03409"
+}

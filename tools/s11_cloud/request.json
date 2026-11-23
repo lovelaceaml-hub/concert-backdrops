@@ -1,0 +1,25 @@
+{
+  "branch": "creative/s11-renewed-20261122",
+  "crf": 14,
+  "encryption": "CMS AES-256-GCM with RSA-OAEP SHA256; private key remains local",
+  "fps": 60,
+  "frames": 16500,
+  "height": 1080,
+  "id": "s11-renewed-20261123-master",
+  "input_manifest_sha256": "98ab85ac1f01419c4fcb375393384c03d7f49270bf6a898975f3ef828fa4e95b",
+  "mode": "render",
+  "parts": 40,
+  "picture_delay": 0.1,
+  "probe_seconds": [
+    58,
+    105.7,
+    118.8,
+    186,
+    205
+  ],
+  "recipient_sha256": "a39edaae27ea4a67bf003f28def7480309ab4f005531c3001552da4169a03409",
+  "repository": "lovelaceaml-hub/concert-backdrops",
+  "samples": 2,
+  "schema": "s11-cloud-request-v1",
+  "width": 1920
+}

@@ -1,0 +1,2 @@
+# These contain checked band/onset/pitch analysis, not a waveform.
+!inputs/*.npz

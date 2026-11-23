@@ -1,0 +1,188 @@
+{
+  "schema": "s11-cloud-probe-review-v1",
+  "run_id": 45106842150,
+  "commit": "8a2ddad71eba2a8c85b49484acd554ead39484a9",
+  "branch": "creative/s11-renewed-20261122",
+  "request_id": "s11-renewed-20261123-probe",
+  "job_id": 137470019682,
+  "job_conclusion": "success",
+  "artifact_id": 14788032070,
+  "artifact_name": "s11-renewed-20261123-probe-probe-0",
+  "zip_sha256": "d31ca383fc5516f2113d54eaec5ef4ac81a1a8386e698059eebfcb9c2e9d0d6e",
+  "encrypted_sha256": "181ef4099ec93150ad7b152abe5ad15a40e1d71932f291069771f5064d891cc1",
+  "artifact_bytes": 9184817,
+  "expires_at": "2026-11-24T03:45:26Z",
+  "authenticated_decryption_passed": true,
+  "bundle_checksums_passed": true,
+  "exact_request_binding_passed": true,
+  "native_dimensions": [
+    1920,
+    1080
+  ],
+  "native_samples": 2,
+  "original_waveform_uploaded": false,
+  "fingerprint": "7587d921d0a6e728dd235c20580512bc17d6051b0eb3ff10286f83ead6a60ab2",
+  "runtime": {
+    "architecture": "x86_64",
+    "environment": {
+      "LIBGL_ALWAYS_SOFTWARE": "1",
+      "LP_NUM_THREADS": "1",
+      "NUMBA_NUM_THREADS": "1",
+      "OMP_NUM_THREADS": "1",
+      "OPENBLAS_NUM_THREADS": "1",
+      "PYTHONHASHSEED": "0"
+    },
+    "ffmpeg": "ffmpeg version 6.1.1-3ubuntu5 Copyright (c) 2000-2023 the FFmpeg developers",
+    "github_image": "ubuntu24",
+    "github_image_version": "20261116.376.1",
+    "mesa_packages": "libegl-mesa0=25.2.8-0ubuntu0.24.04.5\nlibgl1-mesa-dri=25.2.8-0ubuntu0.24.04.5",
+    "mesa_query_status": 0,
+    "openssl": "OpenSSL 3.0.13 30 Jan 2024 (Library: OpenSSL 3.0.13 30 Jan 2024)",
+    "packages": {
+      "PyYAML": "6.0.3",
+      "audioread": "3.1.0",
+      "brotli": "1.2.1",
+      "certifi": "2026.10.23",
+      "cffi": "2.1.1",
+      "charset-normalizer": "3.5.2",
+      "cloudpickle": "3.1.3",
+      "decorator": "5.3.1",
+      "fonttools": "4.68.0",
+      "glcontext": "3.1.0",
+      "idna": "3.20",
+      "joblib": "1.6.0",
+      "lazy-loader": "0.6",
+      "librosa": "0.11.0",
+      "llvmlite": "0.50.0",
+      "moderngl": "5.13.0",
+      "msgpack": "1.2.4",
+      "narwhals": "2.29.0",
+      "numba": "0.68.1",
+      "numpy": "2.5.5",
+      "packaging": "26.3",
+      "pillow": "12.3.0",
+      "platformdirs": "4.14.7",
+      "pooch": "1.9.0",
+      "pycparser": "3.12",
+      "requests": "2.34.2",
+      "scikit-learn": "1.9.1",
+      "scipy": "1.18.1",
+      "soundfile": "0.13.1",
+      "soxr": "1.1.0",
+      "threadpoolctl": "3.8.0",
+      "typing_extensions": "4.16.0",
+      "urllib3": "2.8.0"
+    },
+    "platform": "Linux-7.0.0-1017-azure-x86_64-with-glibc2.39",
+    "python": "3.12.14"
+  },
+  "extracted_directory": "/workspace/scratch/39a2abd37644/concert-future/work/s11_cloud/remote-probe-review-verified-parts/artifact-00",
+  "inputs_receipt": "/workspace/scratch/39a2abd37644/concert-future/work/s11_cloud/remote-probe-review-verified-parts/artifact-00/inputs.json",
+  "timings": [
+    {
+      "second": 58.0,
+      "seconds_to_render": 278.18911551199994,
+      "path": "/home/runner/work/concert-backdrops/concert-backdrops/work/s11_cloud/s11-renewed-20261123-probe/plain-probe/song-0058.00.png",
+      "peak_rss_mib": 1521.75390625
+    },
+    {
+      "second": 105.7,
+      "seconds_to_render": 5.754755369999998,
+      "path": "/home/runner/work/concert-backdrops/concert-backdrops/work/s11_cloud/s11-renewed-20261123-probe/plain-probe/song-0105.70.png",
+      "peak_rss_mib": 1869.9140625
+    },
+    {
+      "second": 118.8,
+      "seconds_to_render": 18.568569464999996,
+      "path": "/home/runner/work/concert-backdrops/concert-backdrops/work/s11_cloud/s11-renewed-20261123-probe/plain-probe/song-0118.80.png",
+      "peak_rss_mib": 2152.09765625
+    },
+    {
+      "second": 186.0,
+      "seconds_to_render": 23.25199397099999,
+      "path": "/home/runner/work/concert-backdrops/concert-backdrops/work/s11_cloud/s11-renewed-20261123-probe/plain-probe/song-0186.00.png",
+      "peak_rss_mib": 2288.09375
+    },
+    {
+      "second": 205.0,
+      "seconds_to_render": 191.37718020499995,
+      "path": "/home/runner/work/concert-backdrops/concert-backdrops/work/s11_cloud/s11-renewed-20261123-probe/plain-probe/song-0205.00.png",
+      "peak_rss_mib": 2909.49609375
+    }
+  ],
+  "local_pixel_comparison": [
+    {
+      "file": "song-0058.00.png",
+      "size": [
+        1920,
+        1080
+      ],
+      "remote_sha256": "0598440d9cb471268a0d671f694236f055ba5d89eb253d8548285a58568b94ff",
+      "pixel_identical": false,
+      "mean_abs_channel_error": 0.4071926440329218,
+      "max_channel_error": 4,
+      "percent_pixels_over_3": 1.048418209876543
+    },
+    {
+      "file": "song-0105.70.png",
+      "size": [
+        1920,
+        1080
+      ],
+      "remote_sha256": "d96a5b02fa1583573c6c4fa5e53030a7d609f87e04253b9850fe418d392b712e",
+      "pixel_identical": false,
+      "mean_abs_channel_error": 1.085674029063786,
+      "max_channel_error": 13,
+      "percent_pixels_over_3": 16.646412037037038
+    },
+    {
+      "file": "song-0118.80.png",
+      "size": [
+        1920,
+        1080
+      ],
+      "remote_sha256": "52bbe9bde1b6f5f85848d5961ab93654b924a1261c9f5126c8668d1946b3688d",
+      "pixel_identical": false,
+      "mean_abs_channel_error": 1.2620481288580248,
+      "max_channel_error": 12,
+      "percent_pixels_over_3": 20.428578317901234
+    },
+    {
+      "file": "song-0186.00.png",
+      "size": [
+        1920,
+        1080
+      ],
+      "remote_sha256": "d1258aff0dedbd9579394fb0c95c69a018a474c7993a2f3d6e91ee194822aaac",
+      "pixel_identical": false,
+      "mean_abs_channel_error": 0.4827885480967078,
+      "max_channel_error": 7,
+      "percent_pixels_over_3": 3.8149112654320985
+    },
+    {
+      "file": "song-0205.00.png",
+      "size": [
+        1920,
+        1080
+      ],
+      "remote_sha256": "b656f4ac2f3f8f92387ead369c1c4a4a7b5a912d95525b91a20245e8bd74f5fd",
+      "pixel_identical": false,
+      "mean_abs_channel_error": 4.072022408693416,
+      "max_channel_error": 18,
+      "percent_pixels_over_3": 59.9276138117284
+    }
+  ],
+  "visual_findings": {
+    "58": "Both phrase lines have clear space above crown; church visible below.",
+    "105.7": "Devotion readable; blue performers and gold instruments distinguishable. Localized left flare remains.",
+    "118.8": "Complete conductor in loose long blue coat, covered legs; no detailed chest, pelvis or buttocks.",
+    "186": "Wondrous love readable; orchestra and choir separated, instrument outlines distinguishable. Localized left flare remains.",
+    "205": "Sun remains upper-right clear of main text/church; dark terrace faces and church linework visible under climax glow."
+  },
+  "review_result": "No new composition or modesty defect observed in five remote native stills.",
+  "limits": [
+    "Stills do not verify full motion continuity.",
+    "Remote Mesa pixels differ from local runtime: do not mix cohorts.",
+    "Full master encoding, decode, complete timing/audio QA and user review remain pending."
+  ]
+}

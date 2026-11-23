@@ -1,0 +1,34 @@
+{
+  "schema": "exact-master-zip-archive-receipt-v1",
+  "source_path": "/workspace/scratch/39a2abd37644/concert-future/work/s11_cloud/Almighty_God_Knows_the_Future_Renewed_1080p60_final.mp4",
+  "master": {
+    "filename": "Almighty_God_Knows_the_Future_Renewed_1080p60_final.mp4",
+    "bytes": 911865528,
+    "sha256": "c553b2a51f3917d389adc51ee6dc97c96e6b6e9e306a9bfd2bfbe38a89b34c55"
+  },
+  "manifest_sha256": "ea50d853a97ba270143d8d5a1784ad4c326384a4947bcc69ef66de9c4d37ff28",
+  "embedded_restore_script_sha256": "c8ab79aa8aa0d1335120cc4ef566ea06ad8fc1eabc7af3d7f91f5aef8b458c02",
+  "tool_sha256": "bc8bd2be9ba20597813afe600bac0083871454d20d01f7164b520ecc9b398ef1",
+  "archives": [
+    {
+      "path": "/workspace/scratch/39a2abd37644/concert-future/work/s11_cloud/master-archive/Almighty_God_Knows_the_Future_Native_Master_Part_01_of_02.zip",
+      "bytes": 480006941,
+      "sha256": "ffc3ca5352abbfe2e870ad740ace9ea4c97bf164c3c4b51b932849a4ff49d91c",
+      "chunk_index": 1
+    },
+    {
+      "path": "/workspace/scratch/39a2abd37644/concert-future/work/s11_cloud/master-archive/Almighty_God_Knows_the_Future_Native_Master_Part_02_of_02.zip",
+      "bytes": 431872469,
+      "sha256": "c4285f489fbadec9489037f50c6cab54ab839c3d1545c22dc822a0fd095284a9",
+      "chunk_index": 2
+    }
+  ],
+  "reassembly_verification": {
+    "passed": true,
+    "bytes": 911865528,
+    "sha256": "c553b2a51f3917d389adc51ee6dc97c96e6b6e9e306a9bfd2bfbe38a89b34c55",
+    "method": "Executed the embedded restore CLI against all ZIPs; independently read and hashed its complete restored MP4.",
+    "temporary_verification_output_removed": true
+  },
+  "no_video_or_audio_reencoding": true
+}

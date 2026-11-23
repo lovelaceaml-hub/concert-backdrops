@@ -18,6 +18,17 @@ instructions. This page records that change and points to project facts. The
 current conversation supplies the working directions; the earlier instructions
 remain available in Git history.
 
+## Completed Song 11 production
+
+The complete **Almighty God Knows the Future** recreation is rendered, checked and saved; source integration is tracked
+in [PR #112](https://github.com/lovelaceaml-hub/concert-backdrops/pull/112).
+Start with the current [handoff](project-docs/production-system/AI-HANDOFF.md)
+and [recreation record](project-docs/production-system/S11-RECREATION.md).
+The owner corrected the earlier body-fitting fan-study direction; PR #111 is
+closed without merging. Current work uses separately shaped modest garments
+and the established Song 11 concert world. Exact render/delivery state belongs
+to the current production record, not the historical Advanced Dance summary.
+
 ## Current project records
 
 - [Start here](project-docs/production-system/START-HERE.md): current delivery,

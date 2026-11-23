@@ -1,0 +1,66 @@
+{
+  "schema": "s11-encoded-story-sample-coverage-v1",
+  "producing_commit": "eec8d16519ea82309ef851975792e9dfc548da03",
+  "run_id": 45108198761,
+  "default_samples": 311,
+  "sample_frame_inventory_exact_match": true,
+  "every_default_sample_visually_inspected": true,
+  "native_frames_additionally_reviewed": 16,
+  "additional_closing_transition_samples": 8,
+  "section_records": [
+    {
+      "section": "opening",
+      "inventory": "work/s11_cloud/opening-story-review/inventory.json",
+      "inventory_sha256": "bad29a1e218ade0ff325db5ff4eb4011a84c1d7839b27908563b4567efcefb08",
+      "review": "work/s11_cloud/opening-story-review/review.json",
+      "review_sha256": "f272b0bf3e826ceecf69e6596b6901a0793b38c942efcc77c4c5f717386a165c",
+      "samples": 88,
+      "native_frames_reviewed": [
+        2679,
+        3480,
+        4363,
+        4879,
+        4914
+      ],
+      "status": "no_blocking_issue_in_sampled_scope"
+    },
+    {
+      "section": "middle",
+      "inventory": "work/s11_cloud/middle-story-review/inventory.json",
+      "inventory_sha256": "b4c4088b5f007e908b2f82c18d7c93fd5a8a39f84f0ff8e2ccd777e2acefcc55",
+      "review": "work/s11_cloud/middle-story-review/review.json",
+      "review_sha256": "a5e317253de37693db4d201e5321fc45bbb021f5265285eda99ae18f963f3c84",
+      "samples": 176,
+      "native_frames_reviewed": [
+        6342,
+        7423,
+        8218,
+        9312,
+        9675,
+        11232,
+        12237
+      ],
+      "status": "no_blocking_issue_in_sampled_scope"
+    },
+    {
+      "section": "ending",
+      "inventory": "work/s11_cloud/ending-story-review/inventory.json",
+      "inventory_sha256": "ab85bf586738ceb98b83f8a5fb851b98b17206653f2e569032da6a2c90759f05",
+      "review": "work/s11_cloud/ending-story-review/review.json",
+      "review_sha256": "650c8c92e6c1c6c6a5a9e214d0656763e2ec876381b406eecf41cb9cbd36302a",
+      "samples": 47,
+      "native_frames_reviewed": [
+        13932,
+        14436,
+        14625,
+        14914
+      ],
+      "status": "no_blocking_issue_in_sampled_scope"
+    }
+  ],
+  "status": "no_blocking_issue_in_sampled_scope",
+  "uninterrupted_playback_claimed": false,
+  "final_assembled_master_technical_qa": "separate_pending_receipt",
+  "dense_join_qa": "separate_reviewer",
+  "owner_creative_approval_recorded": false
+}

@@ -1,0 +1,22 @@
+{
+  "schema": "s11-review-copy-provenance-v1",
+  "role": "full-length downscaled review copy; not a second native render",
+  "master": "Almighty_God_Knows_the_Future_Renewed_1080p60_final.mp4",
+  "master_sha256": "c553b2a51f3917d389adc51ee6dc97c96e6b6e9e306a9bfd2bfbe38a89b34c55",
+  "review": "Almighty_God_Knows_the_Future_Renewed_720p60_final.mp4",
+  "review_sha256": "9cba8118b8fdf7c9410e5b10362ba15ee28a4668f95aceca911cee95a0848880",
+  "review_bytes": 220179614,
+  "scale": "1280:720:flags=lanczos",
+  "video_codec": "libx264",
+  "crf": 21,
+  "preset": "medium",
+  "fps": 60,
+  "audio_copied_from_final_master": true,
+  "all_audio_packet_hashes_and_timestamps_identical": true,
+  "audio_packets": 12892,
+  "audio_packet_inventory_sha256": "a6b022d66a475f5ea85de2a1033042f2972099d3310285b5033b93f822426f3d",
+  "review_picture_remux_unchanged": true,
+  "video_packets": 16500,
+  "original_scale_source_master_sha256": "71eb27c680341b4f2c265baf6bd71afd098d5a90daf54a835259379485dcbb32",
+  "visual_picture_identity_chain": "Original and final1080p masters have identical picture packets; the720p encode was then remuxed with final master audio."
+}

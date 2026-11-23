@@ -1,0 +1,467 @@
+{
+  "schema": "s11-renewed-preflight-v1",
+  "picture_source_commit": "beacae436e3e44b6c8fd9732437945cc731d851e",
+  "scope": "Local native proof and preparation checks; full master is a separate delivery.",
+  "runtime": {
+    "python": "3.12.14 (main, Aug 25 2026, 14:00:49) [Clang 22.1.3 ]",
+    "packages": {
+      "numpy": "2.5.5",
+      "scipy": "1.18.1",
+      "Pillow": "12.3.0",
+      "moderngl": "5.13.0",
+      "glcontext": "3.1.0",
+      "librosa": "0.11.0",
+      "numba": "0.68.1",
+      "llvmlite": "0.50.0",
+      "soundfile": "0.13.1",
+      "fonttools": "4.68.0",
+      "PyYAML": "6.0.3"
+    },
+    "cpu_affinity": 9,
+    "runtime_recovery": "Copied compatible dependencies into isolated venv; restored original pinned engines through r3.prepare; fonts copied unchanged.",
+    "graphics": "llvmpipe (LLVM 19.1.7, 256 bits)",
+    "native_gpu": false,
+    "ffmpeg": "ffmpeg version 7.1.5-0+deb13u1 Copyright (c) 2000-2026 the FFmpeg developers",
+    "benchmark_note": "First visible crowds bake animation prototypes; use consecutive warm samples for throughput. Baseline geometry only; renewed performance measured separately.",
+    "requirements": "tools/s11_renewed/requirements-render.txt",
+    "accepted_picture_commit": "beacae436e3e44b6c8fd9732437945cc731d851e",
+    "render_dimensions": [
+      1920,
+      1080
+    ],
+    "render_fps": 60,
+    "temporal_samples": 2,
+    "mesa_threads_per_worker": 2,
+    "final_visibility_equivalence": [
+      {
+        "second": 58,
+        "reference_seconds": 3.103786377000233,
+        "optimized_seconds": 2.0447827459997825,
+        "byte_identical": true,
+        "max_difference": 0,
+        "different_channels": 0,
+        "peak_rss_mib": 1310.41796875,
+        "visibility_counts": {
+          "zero_gain_skips": 946,
+          "offscreen_church_skips": 0
+        }
+      },
+      {
+        "second": 105.7,
+        "reference_seconds": 2.402791069000159,
+        "optimized_seconds": 2.39388850000023,
+        "byte_identical": true,
+        "max_difference": 0,
+        "different_channels": 0,
+        "peak_rss_mib": 1559.78125,
+        "visibility_counts": {
+          "zero_gain_skips": 1890,
+          "offscreen_church_skips": 34
+        }
+      },
+      {
+        "second": 186,
+        "reference_seconds": 2.5682812370000647,
+        "optimized_seconds": 2.374225647000003,
+        "byte_identical": true,
+        "max_difference": 0,
+        "different_channels": 0,
+        "peak_rss_mib": 1700.3125,
+        "visibility_counts": {
+          "zero_gain_skips": 2730,
+          "offscreen_church_skips": 126
+        }
+      },
+      {
+        "second": 205,
+        "reference_seconds": 6.747053675000188,
+        "optimized_seconds": 6.510606040999846,
+        "byte_identical": true,
+        "max_difference": 0,
+        "different_channels": 0,
+        "peak_rss_mib": 2419.42578125,
+        "visibility_counts": {
+          "zero_gain_skips": 3006,
+          "offscreen_church_skips": 204
+        }
+      },
+      {
+        "second": 118.8,
+        "reference_seconds": 10.846750583999892,
+        "optimized_seconds": 4.207171852000101,
+        "byte_identical": true,
+        "max_difference": 0,
+        "different_channels": 0,
+        "peak_rss_mib": 2508.33984375,
+        "visibility_counts": {
+          "zero_gain_skips": 3580,
+          "offscreen_church_skips": 308
+        }
+      }
+    ],
+    "motion_proof_chunks": [
+      {
+        "fingerprint": "ff2d0417c3b063965278fec4bf9dc36a64bb6e4330c3b0cc96e3f22b132454a3",
+        "start": 7026,
+        "end": 7116,
+        "width": 1920,
+        "height": 1080,
+        "fps": 60,
+        "samples": 2,
+        "seconds": 426.63215400299987,
+        "sha256": "496e1a942f6e7203a6ce21a6fe73bc18a5c1f72caf150902a272e5c150c241ec",
+        "bytes": 3914281,
+        "stream": {
+          "codec_name": "h264",
+          "width": 1920,
+          "height": 1080,
+          "avg_frame_rate": "60/1",
+          "nb_frames": "90"
+        },
+        "actual_cache_namespace": "work/promo-beauty-rebuild/derived-cache/s11-body-pair-v1-3885610a597ab2ec38fa07158fe85843fe3877b225d3614ccb9e7a0808eb0d6c/modest-figures-1b141c205c51ad6a9d87",
+        "peak_rss_mib": 1982.75
+      },
+      {
+        "fingerprint": "ff2d0417c3b063965278fec4bf9dc36a64bb6e4330c3b0cc96e3f22b132454a3",
+        "start": 7116,
+        "end": 7206,
+        "width": 1920,
+        "height": 1080,
+        "fps": 60,
+        "samples": 2,
+        "seconds": 441.6548180770001,
+        "sha256": "48aa46b02bab3a9a955d197f8fb61137c12089aa80f997c2d156a5e64c0c45b7",
+        "bytes": 3723714,
+        "stream": {
+          "codec_name": "h264",
+          "width": 1920,
+          "height": 1080,
+          "avg_frame_rate": "60/1",
+          "nb_frames": "90"
+        },
+        "actual_cache_namespace": "work/promo-beauty-rebuild/derived-cache/s11-body-pair-v1-3885610a597ab2ec38fa07158fe85843fe3877b225d3614ccb9e7a0808eb0d6c/modest-figures-1b141c205c51ad6a9d87",
+        "peak_rss_mib": 2050.2734375
+      },
+      {
+        "fingerprint": "ff2d0417c3b063965278fec4bf9dc36a64bb6e4330c3b0cc96e3f22b132454a3",
+        "start": 7206,
+        "end": 7296,
+        "width": 1920,
+        "height": 1080,
+        "fps": 60,
+        "samples": 2,
+        "seconds": 442.9316304050003,
+        "sha256": "7cf9a88a596285998a40a056144ad6dd188cce9db5d260d55f86d881f10b76d7",
+        "bytes": 3474631,
+        "stream": {
+          "codec_name": "h264",
+          "width": 1920,
+          "height": 1080,
+          "avg_frame_rate": "60/1",
+          "nb_frames": "90"
+        },
+        "actual_cache_namespace": "work/promo-beauty-rebuild/derived-cache/s11-body-pair-v1-3885610a597ab2ec38fa07158fe85843fe3877b225d3614ccb9e7a0808eb0d6c/modest-figures-1b141c205c51ad6a9d87",
+        "peak_rss_mib": 2103.81640625
+      },
+      {
+        "fingerprint": "ff2d0417c3b063965278fec4bf9dc36a64bb6e4330c3b0cc96e3f22b132454a3",
+        "start": 7296,
+        "end": 7386,
+        "width": 1920,
+        "height": 1080,
+        "fps": 60,
+        "samples": 2,
+        "seconds": 467.6635964899997,
+        "sha256": "7d908e371bd45cf9c7fd4181161f39ceb22b2c058f65f5833221fcf3a6b57c69",
+        "bytes": 4875061,
+        "stream": {
+          "codec_name": "h264",
+          "width": 1920,
+          "height": 1080,
+          "avg_frame_rate": "60/1",
+          "nb_frames": "90"
+        },
+        "actual_cache_namespace": "work/promo-beauty-rebuild/derived-cache/s11-body-pair-v1-3885610a597ab2ec38fa07158fe85843fe3877b225d3614ccb9e7a0808eb0d6c/modest-figures-1b141c205c51ad6a9d87",
+        "peak_rss_mib": 2228.80078125
+      }
+    ],
+    "worker_selection": {
+      "attempted": 4,
+      "recommended": 3,
+      "reason": "Three proof chunks completed; the fourth process exited abruptly without a Python traceback. Cause not established. Three workers leave more memory headroom while preserving native resolution, 60 fps, and two temporal samples.",
+      "selected": 3
+    },
+    "motion_review": {
+      "video_range": [
+        121.23333333333333,
+        121.56666666666666
+      ],
+      "source_range": [
+        121.13333333333334,
+        121.46666666666667
+      ],
+      "consecutive_frames": 21,
+      "sheet": "work/s11_renewed/motion-transition-review/transition-sheet.jpg",
+      "finding": "Stable feet, gradual hand and torso motion within each view, modest costume. Planned camera cut plus light cue at picture 121.4333s. Independent review of native frames 7260\u20137295 found no within-shot snap or baton/hand separation."
+    },
+    "motion_proof_encoded_check": {
+      "schema": "s11-encoded-delivery-check-v1",
+      "status": "passed",
+      "filename": "Song11_Renewed_Motion_Check_117-123s.mp4",
+      "sha256": "daa1aed1bb9e489425867678d2e027e0a26f328b4dee0fb98e4729e29a2ce440",
+      "bytes": 16232041,
+      "duration": 6.0,
+      "frames": 360,
+      "fps": 60,
+      "native_size": [
+        1920,
+        1080
+      ],
+      "video_requirements": {
+        "codec_name": "h264",
+        "width": 1920,
+        "height": 1080,
+        "avg_frame_rate": "60/1",
+        "pix_fmt": "yuv420p",
+        "color_space": "bt709",
+        "color_transfer": "bt709",
+        "color_primaries": "bt709",
+        "color_range": "tv"
+      },
+      "audio_sample_rate": 48000,
+      "complete_video_audio_decode": true,
+      "presentation_timestamp_max_error_seconds": 3.33333333379926e-07,
+      "audio": {
+        "decoded_samples_at_8000_hz": 48000,
+        "source_offset": 117.1,
+        "original_score_sha256": "fa488e4805cdc43b1f0f38915d67044ef92a9e659a59ac916d4b75b4cbb6d29b",
+        "windows": [
+          {
+            "video_start": 0.3999999999999999,
+            "seconds": 1.0,
+            "lag_samples_at_8000_hz": 0,
+            "correlation": 0.9999782625568693
+          },
+          {
+            "video_start": 2.5,
+            "seconds": 1.0,
+            "lag_samples_at_8000_hz": 0,
+            "correlation": 0.9999917313643218
+          },
+          {
+            "video_start": 4.6,
+            "seconds": 1.0,
+            "lag_samples_at_8000_hz": 0,
+            "correlation": 0.9999866768247324
+          }
+        ],
+        "silent_hold_peak": null
+      },
+      "visual_review": "Recorded separately; not inferred from technical checks."
+    },
+    "full_master_run": {
+      "status": "rendering",
+      "started_utc": "2026-11-23T03:26:13Z",
+      "session_id": 74988,
+      "workers": 3,
+      "mesa_threads_per_worker": 2,
+      "chunk_frames": 900,
+      "start_frame": 0,
+      "end_frame": 16500,
+      "output": "work/s11_renewed/Almighty_God_Knows_the_Future_Renewed_1080p60.mp4",
+      "stop_file": "work/s11_renewed/stop-full-master"
+    }
+  },
+  "garment_and_motion": {
+    "97.7": {
+      "samples": 103,
+      "tip_step_p99_m": 0.14386558764267623,
+      "ankle_max_deviation_m": 0.0,
+      "grip_error_m": 1.2499741527637665e-07,
+      "baton_length_error_m": 1.2101430968414206e-14,
+      "seconds": 5.5702546659999825
+    },
+    "117": {
+      "samples": 536,
+      "tip_step_p99_m": 0.0699558441217111,
+      "ankle_max_deviation_m": 2.7755575615628914e-17,
+      "grip_error_m": 1.2826851899424687e-07,
+      "baton_length_error_m": 1.099120794378905e-14,
+      "seconds": 32.086869557
+    },
+    "185.92": {
+      "samples": 142,
+      "tip_step_p99_m": 0.046300472278302855,
+      "ankle_max_deviation_m": 0.0,
+      "grip_error_m": 1.2648601484338614e-07,
+      "baton_length_error_m": 1.27675647831893e-14,
+      "seconds": 9.432521083999973
+    },
+    "247.5": {
+      "samples": 116,
+      "tip_step_p99_m": 0.07332012960496855,
+      "ankle_max_deviation_m": 2.7755575615628914e-17,
+      "grip_error_m": 6.230972620012954e-08,
+      "baton_length_error_m": 1.3100631690576847e-14,
+      "seconds": 7.179300784000134
+    },
+    "clothing": {
+      "kind": "independent_closed_long_coat",
+      "source_points": 72088,
+      "trim_points": 1899,
+      "underlying_torso_and_seat_rendered": false
+    },
+    "cache": "/workspace/scratch/39a2abd37644/concert-future/work/promo-beauty-rebuild/derived-cache/s11-body-pair-v1-3885610a597ab2ec38fa07158fe85843fe3877b225d3614ccb9e7a0808eb0d6c/modest-figures-482caa1be3c2d38ff060"
+  },
+  "continuous_trails": {
+    "schema": "s11-renewed-history-check-v2",
+    "history_hz": 120,
+    "raw_score_hz": 240,
+    "windows": [
+      {
+        "time": 98.47,
+        "samples": 17,
+        "history_max_error_m": 0.0002806809566220809,
+        "current_tip_error_m": 0.0,
+        "grip_error_m": 0.0,
+        "baton_length_error_m": 5.551115123125783e-15,
+        "elapsed_seconds": 3.0638871539999855
+      },
+      {
+        "time": 118.83,
+        "samples": 17,
+        "history_max_error_m": 0.00029316154986324647,
+        "current_tip_error_m": 0.0,
+        "grip_error_m": 0.0,
+        "baton_length_error_m": 2.3314683517128287e-15,
+        "elapsed_seconds": 1.134385335999923
+      },
+      {
+        "time": 121.47,
+        "samples": 17,
+        "history_max_error_m": 0.0003352382431370042,
+        "current_tip_error_m": 0.0,
+        "grip_error_m": 0.0,
+        "baton_length_error_m": 8.881784197001252e-16,
+        "elapsed_seconds": 1.0603719400000955
+      },
+      {
+        "time": 186.43,
+        "samples": 17,
+        "history_max_error_m": 0.00022373723736001042,
+        "current_tip_error_m": 0.0,
+        "grip_error_m": 0.0,
+        "baton_length_error_m": 1.4432899320127035e-15,
+        "elapsed_seconds": 1.1180312109995612
+      },
+      {
+        "time": 249.17,
+        "samples": 17,
+        "history_max_error_m": 0.00023426260145359014,
+        "current_tip_error_m": 0.0,
+        "grip_error_m": 0.0,
+        "baton_length_error_m": 3.3306690738754696e-16,
+        "elapsed_seconds": 1.1820426740000585
+      }
+    ],
+    "launch_anchor_error_m": 0.0,
+    "strings_transition_max_tip_step_at_480hz_m": 0.003497910777790255
+  },
+  "visibility_equivalence": [
+    {
+      "second": 58,
+      "reference_seconds": 3.103786377000233,
+      "optimized_seconds": 2.0447827459997825,
+      "byte_identical": true,
+      "max_difference": 0,
+      "different_channels": 0,
+      "peak_rss_mib": 1310.41796875,
+      "visibility_counts": {
+        "zero_gain_skips": 946,
+        "offscreen_church_skips": 0
+      }
+    },
+    {
+      "second": 105.7,
+      "reference_seconds": 2.402791069000159,
+      "optimized_seconds": 2.39388850000023,
+      "byte_identical": true,
+      "max_difference": 0,
+      "different_channels": 0,
+      "peak_rss_mib": 1559.78125,
+      "visibility_counts": {
+        "zero_gain_skips": 1890,
+        "offscreen_church_skips": 34
+      }
+    },
+    {
+      "second": 186,
+      "reference_seconds": 2.5682812370000647,
+      "optimized_seconds": 2.374225647000003,
+      "byte_identical": true,
+      "max_difference": 0,
+      "different_channels": 0,
+      "peak_rss_mib": 1700.3125,
+      "visibility_counts": {
+        "zero_gain_skips": 2730,
+        "offscreen_church_skips": 126
+      }
+    },
+    {
+      "second": 205,
+      "reference_seconds": 6.747053675000188,
+      "optimized_seconds": 6.510606040999846,
+      "byte_identical": true,
+      "max_difference": 0,
+      "different_channels": 0,
+      "peak_rss_mib": 2419.42578125,
+      "visibility_counts": {
+        "zero_gain_skips": 3006,
+        "offscreen_church_skips": 204
+      }
+    },
+    {
+      "second": 118.8,
+      "reference_seconds": 10.846750583999892,
+      "optimized_seconds": 4.207171852000101,
+      "byte_identical": true,
+      "max_difference": 0,
+      "different_channels": 0,
+      "peak_rss_mib": 2508.33984375,
+      "visibility_counts": {
+        "zero_gain_skips": 3580,
+        "offscreen_church_skips": 308
+      }
+    }
+  ],
+  "encoded_transition_review": {
+    "schema": "s11-renewed-native-motion-review-v1",
+    "source_file": "work/s11_renewed/Song11_Renewed_Motion_Check_117-123s-parts/part-007206-007296.mp4",
+    "source_sha256": "7cf9a88a596285998a40a056144ad6dd188cce9db5d260d55f86d881f10b76d7",
+    "encoded_size": [
+      1920,
+      1080
+    ],
+    "fps": 60,
+    "reviewed_global_frames_inclusive": [
+      7260,
+      7295
+    ],
+    "reviewed_source_seconds": [
+      120.9,
+      121.48333333333333
+    ],
+    "method": "Visual inspection of all 36 consecutive decoded frames as native-resolution conductor crops; four nine-frame contact sheets. No frame interpolation or source edits.",
+    "observations": [
+      "Within each shot, hands, baton and torso advance gradually; no isolated pose snap is visible.",
+      "Feet remain planted on the luminous disc.",
+      "Baton remains visibly connected to the hand and keeps a consistent length; no grip separation is visible.",
+      "Closed sapphire coat and loose trousers preserve modest coverage. No chest or seat anatomy is exposed.",
+      "The substantial screen-space change at picture 121.433333 seconds is the camera cut and musical light/ring cue. It should not be interpreted as a hand-pose discontinuity.",
+      "The bright cue briefly reduces figure contrast, but the silhouette and conducting gesture remain readable."
+    ],
+    "blocking_findings": [],
+    "scope_limit": "This is a narrow encoded-frame continuity and costume review, not an assessment of the complete film or uninterrupted real-time playback. The fourth proof chunk was not included.",
+    "source_edits": false
+  }
+}

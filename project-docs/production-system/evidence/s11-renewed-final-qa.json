@@ -1,0 +1,311 @@
+{
+  "schema": "s11-renewed-final-qa-v1",
+  "recorded_utc": "2026-11-23T05:16:23.680095+00:00",
+  "status": "passed_technical_and_recorded_sampled_visual_scope",
+  "producing_commit": "eec8d16519ea82309ef851975792e9dfc548da03",
+  "run_id": 45108198761,
+  "frames": 16500,
+  "seconds": 275,
+  "fps": 60,
+  "native_master_size": [
+    1920,
+    1080
+  ],
+  "temporal_samples": 2,
+  "master_sha256": "c553b2a51f3917d389adc51ee6dc97c96e6b6e9e306a9bfd2bfbe38a89b34c55",
+  "review_sha256": "9cba8118b8fdf7c9410e5b10362ba15ee28a4668f95aceca911cee95a0848880",
+  "cloud": {
+    "parts": 40,
+    "successful_jobs": 41,
+    "failed_jobs": 0,
+    "retries": 0,
+    "cohorts": {
+      "2188eb82bbb9c539367a3424630dbcca818f313950751afc2c72e18c0f661d7c": [
+        0,
+        5,
+        6,
+        10,
+        12,
+        14,
+        17,
+        18,
+        19,
+        20,
+        22,
+        24,
+        25,
+        26,
+        28,
+        29,
+        33,
+        34,
+        36,
+        37,
+        38,
+        39
+      ],
+      "c34e7f5bde42bb5fb5568817872b16521dcf3acfffe4ab9c2c95066a15ce8ce7": [
+        1,
+        2,
+        3,
+        4,
+        7,
+        8,
+        9,
+        11,
+        13,
+        15,
+        16,
+        21,
+        23,
+        27,
+        30,
+        31,
+        32,
+        35
+      ]
+    },
+    "policy": "project-docs/production-system/evidence/s11-host-cohort-policy.json",
+    "policy_sha256": "78bacac6e1282fb30e1b0db33dc2d09bb624dd26328cca5d3e1ba2467dcc4646",
+    "picture_source_and_adapter_unchanged_from_producing_commit": true
+  },
+  "technical": {
+    "full_decode_both_files": true,
+    "all_video_presentation_timestamps_checked": true,
+    "maximum_timestamp_error_seconds": 3.333333467026023e-07,
+    "audio_alignment_windows": [
+      {
+        "video_start": 34.0,
+        "seconds": 10.0,
+        "lag_samples_at_8000_hz": 0,
+        "correlation": 0.9999623513206902
+      },
+      {
+        "video_start": 125.0,
+        "seconds": 10.0,
+        "lag_samples_at_8000_hz": 0,
+        "correlation": 0.9999530480709515
+      },
+      {
+        "video_start": 216.0,
+        "seconds": 10.0,
+        "lag_samples_at_8000_hz": 0,
+        "correlation": 0.9999012843542305
+      }
+    ],
+    "silent_hold_peak": 0.0,
+    "audio_gain_db": -1,
+    "audio_source": "original unchanged prepared score, encoded once for final delivery",
+    "decoded_stereo_sample_peaks": [
+      0.9405735731124878,
+      0.9280115365982056
+    ],
+    "decoded_samples_at_or_above_full_scale": [
+      0,
+      0
+    ],
+    "peak_scope": "Complete stereo decoded sample peak check; not oversampled true peaks.",
+    "full_decode_all_three_video_files": true
+  },
+  "visual": {
+    "assembled_master_selected_frames": 311,
+    "all_selected_frames_reviewed": true,
+    "duplicate_or_missing_selected_frames": false,
+    "story_sheets": 13,
+    "sample_scope": "Both sides of every authored edit, shot middles, every one of 39 interior render joins, selected compositions and ending.",
+    "reviewed_pre_headroom_master_sha256": "71eb27c680341b4f2c265baf6bd71afd098d5a90daf54a835259379485dcbb32",
+    "final_master_picture_relationship": "All 16,500 compressed picture payloads, PTS, DTS, durations and sizes match the reviewed assembled master exactly.",
+    "cross_host_joins": 20,
+    "cross_host_consecutive_frames_each": 12,
+    "unique_cross_host_join_frames": 240,
+    "long_gesture": {
+      "samples": 61,
+      "sample_fps": 10,
+      "video_seconds_span": [
+        117.1,
+        123.1
+      ],
+      "inventory": "long-gesture-117-123/inventory.json"
+    },
+    "phrase_at165_8": {
+      "samples": 16,
+      "video_seconds_span": [
+        163.4,
+        166.7
+      ],
+      "verdict": "readable_with_nonblocking_rooftop_contact",
+      "inventory": "phrase-165-167/inventory.json",
+      "earlier_inventory": "phrase-165-167/earlier-hold/inventory.json"
+    },
+    "review_copy_finding": "Song title, modest conductor silhouette, Wondrous love phrase and ending card remain readable in four inspected final720p overview samples.",
+    "uninterrupted_playback_claimed": false,
+    "sampled_blocking_issues": 0,
+    "nonblocking_observations": [
+      "Authored musical light accents temporarily reduce local fine detail.",
+      "At 61.3833s a crown extends beyond the upper edge just before the next wide composition.",
+      "At 165.8s the small church rooftop touches the lower edge near sal; the full phrase remains readable and terrace rings sit below the words.",
+      "At 187.2s a light ribbon crosses part of love; the phrase remains readable."
+    ],
+    "review_copy_selected_frames": [
+      411,
+      7128,
+      11232,
+      16020
+    ],
+    "full_hd_delivery_review": {
+      "status": "reviewed_no_blocking_issue_in_sampled_scope",
+      "selected_frames": [
+        {
+          "video_seconds": 6.85,
+          "frame": 411,
+          "path": "work/s11_cloud/hd-delivery-visual/01.png",
+          "sha256": "b736e6292905d6abf513e914aaf728378b26e47428d73b75d60d211dc7864d07"
+        },
+        {
+          "video_seconds": 105.7,
+          "frame": 6342,
+          "path": "work/s11_cloud/hd-delivery-visual/02.png",
+          "sha256": "9f6cb3e379808a3a0ab738dfe86a05c8f080d028aaccdc59e5ce8f9a4eb9efca"
+        },
+        {
+          "video_seconds": 118.8,
+          "frame": 7128,
+          "path": "work/s11_cloud/hd-delivery-visual/03.png",
+          "sha256": "5935f03b9825904fbbc979edb99d8fc1752a6c92e0f9c283322863936da57e99"
+        },
+        {
+          "video_seconds": 165.8,
+          "frame": 9948,
+          "path": "work/s11_cloud/hd-delivery-visual/04.png",
+          "sha256": "a83560606b357e2a52ee447e44758770ec697d7570edfb65dcc44d0fa9ccc60f"
+        },
+        {
+          "video_seconds": 187.2,
+          "frame": 11232,
+          "path": "work/s11_cloud/hd-delivery-visual/05.png",
+          "sha256": "149397fdcb5347a914d66d6ab625caeeb256796d6b4584618e4e435ddf0513a5"
+        },
+        {
+          "video_seconds": 205.0,
+          "frame": 12300,
+          "path": "work/s11_cloud/hd-delivery-visual/06.png",
+          "sha256": "fdb92e4606c12ca0be4985f795975df6cd3a973242b6777b6fdc8b5e59767576"
+        },
+        {
+          "video_seconds": 267.0,
+          "frame": 16020,
+          "path": "work/s11_cloud/hd-delivery-visual/07.png",
+          "sha256": "b490935024d8ec93249540eab3a68a701c6669a694c109d79b927255ae3104bf"
+        }
+      ],
+      "overview": "work/s11_cloud/hd-delivery-visual/overview.jpg",
+      "reviewer": "root",
+      "all_seven_overview_samples_inspected": true,
+      "additional_native_1080p_frames": [
+        7128,
+        11232
+      ],
+      "findings": [
+        "Song title, Devotion, Joy of salvation, Wondrous love and closing event card remain readable in the inspected delivery samples.",
+        "The conductor retains the separate blue coat/trouser silhouette and covered anatomy at the two inspected native1080p views.",
+        "Original bright-cue and rooftop/ribbon composition observations remain as documented; no new blocking compression defect was observed in these samples."
+      ],
+      "scope": "Seven selected actual delivery frames, with two at native resolution. This does not claim uninterrupted playback or lossless equivalence to the larger master."
+    }
+  },
+  "owner_creative_approval": "not_recorded",
+  "retained_stage_evidence_note": "The initial assembly and immutable host policy leave later checks pending at their historical stages. This final QA receipt resolves those technical/visual checks without rewriting history or claiming owner approval.",
+  "records": [
+    {
+      "path": "project-docs/production-system/evidence/s11-renewed-initial-assembly.json",
+      "sha256": "55bd6c59431ce0903ed5c179bb699650ef0a25d959ed28c697b18bc385ad62ac",
+      "bytes": 27953
+    },
+    {
+      "path": "project-docs/production-system/evidence/s11-renewed-cloud-completion.json",
+      "sha256": "9b7cc080cfc35e4b976d7aa445c1353558fb83d6afec44accca20a4e26bfecb8",
+      "bytes": 2112
+    },
+    {
+      "path": "project-docs/production-system/evidence/s11-renewed-pre-headroom-audio.json",
+      "sha256": "7b04540e4092f817bfaf7a88f438fd35eb421d6e6c438ebeea1237086d8bc422",
+      "bytes": 1194
+    },
+    {
+      "path": "project-docs/production-system/evidence/s11-renewed-audio-finalization.json",
+      "sha256": "71b72f35091a253fb01aef4072b1fa8f202d8220d59a9f041fa1d6d52f4ed51a",
+      "bytes": 1553
+    },
+    {
+      "path": "project-docs/production-system/evidence/s11-renewed-master-technical.json",
+      "sha256": "9ada25f62da72aee43035cb08050e649df16723e3a2d30710c8f341f3ff31b35",
+      "bytes": 1512
+    },
+    {
+      "path": "project-docs/production-system/evidence/s11-renewed-review-technical.json",
+      "sha256": "84c39a0356ab9320398966a9d14c0e0f5497efd5d13f8d54a1c4b5dd4ebdbe0a",
+      "bytes": 1509
+    },
+    {
+      "path": "project-docs/production-system/evidence/s11-renewed-review-provenance.json",
+      "sha256": "a0504e06b2d59144f7657c5f02506f27842edc49c9cdd4ce104a05678c7947b3",
+      "bytes": 1148
+    },
+    {
+      "path": "project-docs/production-system/evidence/s11-renewed-story-inventory.json",
+      "sha256": "2eaa45cd09b8f660773ce3a92809f9867977635857ed2be17c36e7894b6bb6d1",
+      "bytes": 61404
+    },
+    {
+      "path": "project-docs/production-system/evidence/s11-renewed-final-visual-opening.json",
+      "sha256": "162676f9eb48f860daade64ba6d89d619bea2e3c6355567fbd09f51b030277bf",
+      "bytes": 2405
+    },
+    {
+      "path": "project-docs/production-system/evidence/s11-renewed-final-visual-middle.json",
+      "sha256": "527c5871ab9e4d877ed4b93ac0afc3845a00b4ed7fc38853eb65ef914a651396",
+      "bytes": 51038
+    },
+    {
+      "path": "project-docs/production-system/evidence/s11-renewed-final-visual-ending.json",
+      "sha256": "e5ea46c43306a35a338973a5d39f16398b9048fd552a8e5b64b5b6c6e6f98679",
+      "bytes": 30522
+    },
+    {
+      "path": "project-docs/production-system/evidence/s11-renewed-cross-host-review.json",
+      "sha256": "6d3fbeba0102f16410643e8bb0838651e037b96837429513350238fa3969a3ed",
+      "bytes": 2027
+    },
+    {
+      "path": "project-docs/production-system/evidence/s11-renewed-cross-host-index.json",
+      "sha256": "457a4c4289a612b9bd5cd54b53086441000094f56684cca518ff202ad342f228",
+      "bytes": 90700
+    },
+    {
+      "path": "project-docs/production-system/evidence/s11-renewed-dense-visual-review.md",
+      "sha256": "dec93d4f96b46ea140788388593118c399ad90b41f4a0d948f58f727f8a76a2e",
+      "bytes": 18136
+    },
+    {
+      "path": "project-docs/production-system/evidence/s11-renewed-part-story-coverage.json",
+      "sha256": "480cd96849efdd6cc9afef0776a871c3e51c4c9b597638069577e94b333f4083",
+      "bytes": 2305
+    },
+    {
+      "path": "project-docs/production-system/evidence/s11-renewed-hd-delivery-technical.json",
+      "sha256": "e6c05e1406494e7300d7b67f20885394dfc87d90b9430a782475920ccbc067fb",
+      "bytes": 1515
+    },
+    {
+      "path": "project-docs/production-system/evidence/s11-renewed-hd-delivery-provenance.json",
+      "sha256": "78dabe5b2e7119fb8c963ae5d0effe6f8c0ab16dda50fdb31c05cb9fd4d761f5",
+      "bytes": 3522
+    },
+    {
+      "path": "project-docs/production-system/evidence/s11-renewed-master-archive.json",
+      "sha256": "389625f27cdf4a2068135b475bb3d87146f24b37d9fcc4e80f0f83782393ebbd",
+      "bytes": 1671
+    }
+  ],
+  "full_hd_delivery_sha256": "120bb4fcf4ebced490f4f468dca396170b328fd0ece3941e67e832258f5f449e"
+}

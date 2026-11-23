@@ -1,0 +1,57 @@
+{
+  "schema": "s11-encoded-delivery-check-v1",
+  "status": "passed",
+  "filename": "Song11_Renewed_Motion_Check_117-123s.mp4",
+  "sha256": "daa1aed1bb9e489425867678d2e027e0a26f328b4dee0fb98e4729e29a2ce440",
+  "bytes": 16232041,
+  "duration": 6.0,
+  "frames": 360,
+  "fps": 60,
+  "native_size": [
+    1920,
+    1080
+  ],
+  "video_requirements": {
+    "codec_name": "h264",
+    "width": 1920,
+    "height": 1080,
+    "avg_frame_rate": "60/1",
+    "pix_fmt": "yuv420p",
+    "color_space": "bt709",
+    "color_transfer": "bt709",
+    "color_primaries": "bt709",
+    "color_range": "tv"
+  },
+  "audio_sample_rate": 48000,
+  "complete_video_audio_decode": true,
+  "presentation_timestamp_max_error_seconds": 3.33333333379926e-07,
+  "audio": {
+    "decoded_samples_at_8000_hz": 48000,
+    "source_offset": 117.1,
+    "original_score_sha256": "fa488e4805cdc43b1f0f38915d67044ef92a9e659a59ac916d4b75b4cbb6d29b",
+    "windows": [
+      {
+        "video_start": 0.3999999999999999,
+        "seconds": 1.0,
+        "lag_samples_at_8000_hz": 0,
+        "correlation": 0.9999782625568693
+      },
+      {
+        "video_start": 2.5,
+        "seconds": 1.0,
+        "lag_samples_at_8000_hz": 0,
+        "correlation": 0.9999917313643218
+      },
+      {
+        "video_start": 4.6,
+        "seconds": 1.0,
+        "lag_samples_at_8000_hz": 0,
+        "correlation": 0.9999866768247324
+      }
+    ],
+    "silent_hold_peak": null
+  },
+  "visual_review": "Recorded separately; not inferred from technical checks.",
+  "scope": "Internal6-second motion proof; not the requested complete film.",
+  "picture_source_commit": "beacae436e3e44b6c8fd9732437945cc731d851e"
+}

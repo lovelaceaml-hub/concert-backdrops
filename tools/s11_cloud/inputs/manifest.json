@@ -1,0 +1,598 @@
+{
+  "analysis": {
+    "features.npz": {
+      "arrays": {
+        "air": {
+          "dtype": "float32",
+          "shape": [
+            11844
+          ]
+        },
+        "beat_t": {
+          "dtype": "float64",
+          "shape": [
+            536
+          ]
+        },
+        "cent": {
+          "dtype": "float64",
+          "shape": [
+            11844
+          ]
+        },
+        "dur": {
+          "dtype": "float64",
+          "shape": []
+        },
+        "high": {
+          "dtype": "float32",
+          "shape": [
+            11844
+          ]
+        },
+        "low": {
+          "dtype": "float32",
+          "shape": [
+            11844
+          ]
+        },
+        "mid": {
+          "dtype": "float32",
+          "shape": [
+            11844
+          ]
+        },
+        "onset": {
+          "dtype": "float32",
+          "shape": [
+            11844
+          ]
+        },
+        "onsets": {
+          "dtype": "float64",
+          "shape": [
+            475
+          ]
+        },
+        "rh": {
+          "dtype": "float32",
+          "shape": [
+            11844
+          ]
+        },
+        "rms": {
+          "dtype": "float32",
+          "shape": [
+            11844
+          ]
+        },
+        "rp": {
+          "dtype": "float32",
+          "shape": [
+            11844
+          ]
+        },
+        "tempo": {
+          "dtype": "float64",
+          "shape": []
+        },
+        "times": {
+          "dtype": "float64",
+          "shape": [
+            11844
+          ]
+        }
+      },
+      "bytes": 471549,
+      "sha256": "1b62320ec8c65bb43042e7e2893b788d3ad4b571d19dc436b45d1a182324864d"
+    },
+    "music_fx.npz": {
+      "arrays": {
+        "bass": {
+          "dtype": "float32",
+          "shape": [
+            16501
+          ]
+        },
+        "bass_rel": {
+          "dtype": "float32",
+          "shape": [
+            16501
+          ]
+        },
+        "beat": {
+          "dtype": "float32",
+          "shape": [
+            16501
+          ]
+        },
+        "beat_t": {
+          "dtype": "float32",
+          "shape": [
+            571
+          ]
+        },
+        "brass": {
+          "dtype": "float32",
+          "shape": [
+            16501
+          ]
+        },
+        "brass_hit": {
+          "dtype": "float32",
+          "shape": [
+            16501
+          ]
+        },
+        "brass_t": {
+          "dtype": "float32",
+          "shape": [
+            78
+          ]
+        },
+        "choir": {
+          "dtype": "float32",
+          "shape": [
+            16501
+          ]
+        },
+        "down_t": {
+          "dtype": "float32",
+          "shape": [
+            143
+          ]
+        },
+        "f0": {
+          "dtype": "float32",
+          "shape": [
+            16501
+          ]
+        },
+        "fps": {
+          "dtype": "float32",
+          "shape": []
+        },
+        "high": {
+          "dtype": "float32",
+          "shape": [
+            16501
+          ]
+        },
+        "kick": {
+          "dtype": "float32",
+          "shape": [
+            16501
+          ]
+        },
+        "kick_s": {
+          "dtype": "float32",
+          "shape": [
+            609
+          ]
+        },
+        "kick_t": {
+          "dtype": "float32",
+          "shape": [
+            609
+          ]
+        },
+        "level": {
+          "dtype": "float32",
+          "shape": [
+            16501
+          ]
+        },
+        "low": {
+          "dtype": "float32",
+          "shape": [
+            16501
+          ]
+        },
+        "strings": {
+          "dtype": "float32",
+          "shape": [
+            16501
+          ]
+        },
+        "swell": {
+          "dtype": "float32",
+          "shape": [
+            16501
+          ]
+        },
+        "tempo": {
+          "dtype": "float32",
+          "shape": []
+        },
+        "times": {
+          "dtype": "float32",
+          "shape": [
+            16501
+          ]
+        },
+        "timp": {
+          "dtype": "float32",
+          "shape": [
+            16501
+          ]
+        },
+        "timp_s": {
+          "dtype": "float32",
+          "shape": [
+            102
+          ]
+        },
+        "timp_t": {
+          "dtype": "float32",
+          "shape": [
+            102
+          ]
+        }
+      },
+      "bytes": 574386,
+      "sha256": "7b161567db869c9a6c2f71ba0fc9c2002eb93a9b9e7b245eae3d45fe70e49f59"
+    }
+  },
+  "creative_source_commit": "8a2ddad71eba2a8c85b49484acd554ead39484a9",
+  "engine_pins": {
+    "work/nine_colours_minor/render1": "d928ff9eafe02ac3150f0c646bdcc497fe5a7278",
+    "work/nine_colours_revision3/claude-final": "f43f4514e4bc42dc25166e90160d98219f5a0db4"
+  },
+  "final_fade_seconds": 0.05,
+  "picture_sources": {
+    "assets/p3d/brand/land_2048.png": "7a0e70fd74d1cd4940037c6c96c9f9617910f458ac49d1dccb678297771ca7dc",
+    "engine/p3d/__init__.py": "ca772d954102db5eed23b6b1804c4063b38c983854d67b089520ffb949366c84",
+    "engine/p3d/acting.py": "a4e71ae1ec1f2c70fede149844806ba098f79d03e4122b502212e5e21c62eaec",
+    "engine/p3d/actor.py": "987676f811fd6675f1aec6450e74878998efc83e3f6b963540d6af1577281a8a",
+    "engine/p3d/api.py": "1da8f6781cb42096886b4411f540e1335a5a48e5aaa2f12d92a6368507d86049",
+    "engine/p3d/assets.py": "cabb10975234db7499f7d5c4dc417591913ced432bd3a1d64af51748b1dda515",
+    "engine/p3d/body.py": "fe7a584519549c025ed37e5fe92d1716f1a98e19d8b9e09943fff9fb9f774391",
+    "engine/p3d/bodymath.py": "01da6eaf9cf60ee91fa21883cc88c3cbadb1fa0bf4f11900b5491d2bc25d32bd",
+    "engine/p3d/brand.py": "0764985402f3ad49fc86ae152b2b29cdfe63d6e13110effc5d831f738f8e9f02",
+    "engine/p3d/brand_hearts.py": "3c1966c7f92908189861f2ca0e2dff118295e60d16f06ccbadd269278cc206ba",
+    "engine/p3d/brand_symbols.py": "31f692938bd7f76ba4baef4c43ef8055a2e049d0b21709d2606cb412bd4778d3",
+    "engine/p3d/brand_world.py": "ccb1f1032bef8d859078dd772e97c70030e4cd68f378eb80c05de298727079f9",
+    "engine/p3d/camera.py": "8427e7f288f280b99aa168bb877401932d52f04f9a0ff6c1bccb4298998f6f5d",
+    "engine/p3d/cloth.py": "e1d0c6d4cfc93cabef7b76ab7b8379226449a1dc098c9bc0b11bf303757a13fa",
+    "engine/p3d/crowd.py": "2a344b5fbea98bbf54362dbb732a3c4beaca1f4f7a5967f471fa15354cf85c6c",
+    "engine/p3d/effects.py": "e37e40d96b522d5c85c0ba8010e7583d6252ed7c0b928a323719446650bbc8a0",
+    "engine/p3d/gestures.py": "3f0876aba000fa953c93b3e1de4415218732e9e50378056b0432be8bb24fb55e",
+    "engine/p3d/layer.py": "ee26009249f6d738c5e88ad7967193ed9e582b0ed88c2e1da07c39383b93b255",
+    "engine/p3d/looks.py": "b733197239fdcb9899b47979a659d672b10caa41ff0b62d63fd27b3a598c7478",
+    "engine/p3d/master_brand.py": "a51b0fdc06c0e581f7a65dda474c20846b25a96afb1e39777800e211149ca711",
+    "engine/p3d/master_fx.py": "e717bf10137c846f5cdac25a92943cca21cea0d30f818ed6488e003997aa7ba4",
+    "engine/p3d/master_sky.py": "59809d8c09a35684a5b03578656ec7d6928ef626be08d335abf006063a062662",
+    "engine/p3d/motion.py": "ae3502bce3d27b2cb31831eb2ec494fea8dcb9f46e2830ca9bb59b8835b2f35f",
+    "engine/p3d/pairs.py": "69c4dc6b9406a2a4934393858932aaf4dc14250e2529ae5bde3e789a468776ef",
+    "engine/p3d/shaders.py": "623d237b71a9c12b3b37d108a0f1a6cb03476d27450102120822969baab8130e",
+    "engine/p3d/words.py": "e3257332304ce7a678969abefe0eabaf9323fd98ee1ea63039a36fc5339245b6",
+    "engine/p3d/world.py": "7878f60c021814987b0019cd0977b152f5a46679b3aa923d4d4b8d07d444f6bd",
+    "engine/titles.py": "3f845c091c316547910dd08b143e4d2628025f4a09d036774873e4f7279f39d5",
+    "fonts/cormorant-garamond-latin-300-italic.ttf": "714923d90d68cbaa4bb5ee14f9f0eab744ddde932e27188b07f85657ce1d8204",
+    "fonts/cormorant-garamond-latin-300-normal.ttf": "b3c9c979336c0b5d305ae579b9daf49d64c93d20f35674bf434e38ca25c0b45b",
+    "fonts/cormorant-garamond-latin-400-italic.ttf": "e6fb1eb438e7d01a7e29c94d59cd2a5d6d153e44545cec4dd5c53e1a2e73efc5",
+    "fonts/cormorant-garamond-latin-400-normal.ttf": "ebfa1f25fd4bb91e88e7270fea57c0d07ed7b625279d90acd2073a983dfdd0c7",
+    "fonts/cormorant-garamond-latin-500-italic.ttf": "0c6ec9271239e264ad86d37d960ab97b0d29f51c44450fec0036ac897c39b608",
+    "fonts/cormorant-garamond-latin-500-normal.ttf": "e4020e0fe87f8f68837f4d54c1cf3d860ad728fe47780ca4ea01af2a646d31cd",
+    "fonts/cormorant-garamond-latin-600-italic.ttf": "07c95ec5b103192b1adaa54137a693230b01edf0ef14d611dbea154f8da9367c",
+    "fonts/cormorant-garamond-latin-600-normal.ttf": "4e5ab3e8e9ae8dc6832e55fb24350395da38b24ced5761266eef92c3c2d15463",
+    "fonts/cormorant-garamond-latin-700-italic.ttf": "d6fbc70a359e63ab8e3c7e24fb8d87640f7a403894d3cca8ad90bb1eec86b52c",
+    "fonts/cormorant-garamond-latin-700-normal.ttf": "495b6f53ae74eff487d07ea4b2961f839792f53eeb805341b6730d2039ea43f0",
+    "fonts/cormorant-garamond-latin-ext-300-italic.ttf": "eb3650befc133e097750128aa95967442f4236787313a1fdac66f40cf82f1892",
+    "fonts/cormorant-garamond-latin-ext-300-normal.ttf": "2ea557d5dab22a62597f77121fd58d297403bd0314bff98b5e0195b6d88af14c",
+    "fonts/cormorant-garamond-latin-ext-400-italic.ttf": "b442ddde09b3cfd6c1612be37a8d235b0086f5172a016b00f20317c1d3ae8716",
+    "fonts/cormorant-garamond-latin-ext-400-normal.ttf": "23348b12af3b5df88012330d7bbd9f3a3280caa023328591dd70d7a190bf6240",
+    "fonts/cormorant-garamond-latin-ext-500-italic.ttf": "d93ab385825d7fd0ae6a88d1aba6844db5a264371ca84f937ce77a9e1ec48fe2",
+    "fonts/cormorant-garamond-latin-ext-500-normal.ttf": "05d754a8bde4af53f76b706b342e125879ca102b0cbbd637bd9928d5f1450a7a",
+    "fonts/cormorant-garamond-latin-ext-600-italic.ttf": "79aa48b7eb3f08e21e76832e14796ed14e34c6d13396e534cd26b5563af37d15",
+    "fonts/cormorant-garamond-latin-ext-600-normal.ttf": "07c1bacbf6647017feb625514b58a4225905355c911840996ec7b66b156b6214",
+    "fonts/cormorant-garamond-latin-ext-700-italic.ttf": "772a448570a8b2f4216db1233eb52106faef4b7f23eada10c430c4617d9c6dda",
+    "fonts/cormorant-garamond-latin-ext-700-normal.ttf": "d6089d456e567645d25b77c2d952183bf3c4d6c63a2c0725a7e31ffa02f81365",
+    "fonts/jost-latin-100-italic.ttf": "434dba7347b706bd0bcae74c4cfbee067c0795a8c4a4f42f5fb1f42e64936a71",
+    "fonts/jost-latin-100-normal.ttf": "2c3318f85f5043a7de11b3467d242e09808c5058b2bdfcae21432154168a8fc0",
+    "fonts/jost-latin-200-italic.ttf": "79f0f05fc848007fb62e3b892ab49808f10af4fd36a86d4b054d4f7e596f88db",
+    "fonts/jost-latin-200-normal.ttf": "77c9002d2281a6dfb334a02ff45574d913464361e6868b788b7b6570a9b19bf0",
+    "fonts/jost-latin-300-italic.ttf": "d8eef27559f65397ea182c01f34921df30d86ee25af8a24dd559c39a7232d05c",
+    "fonts/jost-latin-300-normal.ttf": "6f8f1448fcf16f53e3fe5f00c64e6fec788ec90f266c36fc0df9420f0d02f193",
+    "fonts/jost-latin-400-italic.ttf": "a60d2a1a790e6144f9fa114870190183d4b5d90cbe758ef5d78fb53dd71faaa6",
+    "fonts/jost-latin-400-normal.ttf": "2cde2019631e1a4140c3d6a2113d46757ae33966c828cbac13f4dade4ee5ae3f",
+    "fonts/jost-latin-500-italic.ttf": "bc6745a8e096ea402c12e17f54043d4e125f51f811ecbb969fe19cb846449850",
+    "fonts/jost-latin-500-normal.ttf": "622cd297dd822e4ecc6b5fda898815fcbabc61c0eda84418bd6489bfa6b3e264",
+    "fonts/jost-latin-600-italic.ttf": "170f3abbbf047b4f3d212a7385de7042115e2a5546ced8c5dd8e01f45db4162b",
+    "fonts/jost-latin-600-normal.ttf": "857c6baf2d41437ac099413d163d651b69cf2a9f6000a5453c217fa48fb7d259",
+    "fonts/jost-latin-700-italic.ttf": "75749390c774309634f164344bcfc8ace8a45fbb9b372e6bae2eb0cc1a52ef74",
+    "fonts/jost-latin-700-normal.ttf": "74490e0aa5ccd4be78a446bef88892fdd20ef820e35688158ca441c714025991",
+    "fonts/jost-latin-800-italic.ttf": "841d6ba8be7050fba39836c296ca47379df0f5e9f83093dcda9046a021977561",
+    "fonts/jost-latin-800-normal.ttf": "4eaa87f87f0254845ee39757f997872c3b51f9baf9db29e68dae251dee652c90",
+    "fonts/jost-latin-900-italic.ttf": "91fd5c32096b8c87ae69e82395a65c57d292d54c365b5ffc91c38051ade1fb13",
+    "fonts/jost-latin-900-normal.ttf": "392fda8a4a64736e71d382325285913d9b5b7d61c0fd2a7d6b44fbc5453f2088",
+    "fonts/jost-latin-ext-100-italic.ttf": "8033b06cfb549a96b63d560a2cc5279ab3196d6f5bdbb196ec7539d76075a308",
+    "fonts/jost-latin-ext-100-normal.ttf": "044e2c752ad5132661ea1a193627161d40a657364f81c9389ac8c9f94742cb9f",
+    "fonts/jost-latin-ext-200-italic.ttf": "08796ad67e8b9f6af0bb6ccb3e49f174b1d3c3087316042921b9ee3eb134a26b",
+    "fonts/jost-latin-ext-200-normal.ttf": "265769e25ff768dcf0aeb49489419b26e818324a32fbcdded6a327471421590f",
+    "fonts/jost-latin-ext-300-italic.ttf": "fe0b6c8634339e3a674f97355c7f035fe436fa5ee0842da3c26c4498b9fbded7",
+    "fonts/jost-latin-ext-300-normal.ttf": "b305efd239ae24ad9f02b2feff7d7c2a3ebc244bf8272ffe13241a81d432d3ed",
+    "fonts/jost-latin-ext-400-italic.ttf": "1e1040d97b239429f7b726fed02ff0a1ddf16528dc008840c1949ad9d9a56dd9",
+    "fonts/jost-latin-ext-400-normal.ttf": "52c38cb31131a397d759b0159f28881b2aa565b3acc30628273e78dcba6fb21e",
+    "fonts/jost-latin-ext-500-italic.ttf": "c7933ab2530317a06fb88625089f5d07bea1853aa09b7c8eabd1b44152fa3eda",
+    "fonts/jost-latin-ext-500-normal.ttf": "11b414e4d3debe8858a8fafa4fd50879c5677e94b027f18ddbd136f7b6c06332",
+    "fonts/jost-latin-ext-600-italic.ttf": "6dbaf7e170a6c0fcb8bd460216ce48018adf01341132150e771206567caa8eeb",
+    "fonts/jost-latin-ext-600-normal.ttf": "c4d12cbfe46f4c6bf43d7a7c51b77ccd4b0b4faee2f2f0c0597f9869b9212fb2",
+    "fonts/jost-latin-ext-700-italic.ttf": "56bd04fde9133ffe4a825d2c5b407f3910c485c2b1bb1c5189b6016860fa5eaf",
+    "fonts/jost-latin-ext-700-normal.ttf": "c29ce4ed57906a085560f7d34436f3344a5a68ce0a342b134d145238477dc243",
+    "fonts/jost-latin-ext-800-italic.ttf": "2de1bc394d395f8515977477a8b2ccb4e9da197c6e7e7171a47b8e3c15a45f32",
+    "fonts/jost-latin-ext-800-normal.ttf": "d24b9a0616daed03e6f29cb82cb890a9ddc992024dcafc7b579f313ec887c3cb",
+    "fonts/jost-latin-ext-900-italic.ttf": "5e461918f99ef2c380b7e9e7085537239573dfe6661a08f2a6b49f90f94eb9df",
+    "fonts/jost-latin-ext-900-normal.ttf": "75bdfe98724b4535ed8e7503fc1b3cbd4d71bcb1741b1bc2f7d3dc3e01740fd1",
+    "fonts/outfit-latin-100-normal.ttf": "afc37dd2e3c6fc43a17351b587ead4be846aef9bdba410cacb4f0b01b7593012",
+    "fonts/outfit-latin-200-normal.ttf": "aec46fe88d592bd7505115d3688ab2c51881ad4cee4593f0f6477f830815dc99",
+    "fonts/outfit-latin-300-normal.ttf": "0423ae7cb6dfd9b83796d87a258b9f45842264d8553342ffb4e779343960faac",
+    "fonts/outfit-latin-400-normal.ttf": "3b0375d34fb9da4d5a851839a0fd7cb39e074bedc3dc3e40a6544f00d457d7e3",
+    "fonts/outfit-latin-500-normal.ttf": "119c581600b9987105d276c787eccd43b114b6bb499a5c834aaf743d5491f13e",
+    "fonts/outfit-latin-600-normal.ttf": "b48486590b56ebb319be64fae81b7c456c682f92a2a16ed3847da3689282fba8",
+    "fonts/outfit-latin-700-normal.ttf": "102651d2307fba4e98e39a8b2f8227053ffd52c0f9dfbdaf370f9c6ac5b1a1b7",
+    "fonts/outfit-latin-800-normal.ttf": "3c6cdd1b3732fe9ae85b9a994d3aa28890ef1378324ce5834be70dac4029afd6",
+    "fonts/outfit-latin-900-normal.ttf": "f77fafc68ed48a0a5eb24895c8c40b807dd94c6b5b42de3010d347dca2fd2493",
+    "fonts/outfit-latin-ext-100-normal.ttf": "7dc956a39a60e606d1b04e5939c87f214d0c78916082f601df20d15b0625b008",
+    "fonts/outfit-latin-ext-200-normal.ttf": "dab57c04269a00bd7e0dc314a55ca6351cf046da96d9753b868aa3244a471ee0",
+    "fonts/outfit-latin-ext-300-normal.ttf": "162fb9da2c8ce31b12c1245f5dd30d112882a98c7573808058208fbd551580fe",
+    "fonts/outfit-latin-ext-400-normal.ttf": "ebe9d7da94757020de549c7cc1c47db854d86fc46345a75c153f99ded92f98d0",
+    "fonts/outfit-latin-ext-500-normal.ttf": "86a7760a7c0ab796611af9bf2cc617c43b0a875521c839fb1e26a422b132d403",
+    "fonts/outfit-latin-ext-600-normal.ttf": "6a8eea87ff80c34a60af1d7c2cc66b1bbda0049504c5839fe405ee8ab12b2297",
+    "fonts/outfit-latin-ext-700-normal.ttf": "81508d72e8af26e2c0085676b7d3a3a866c6f5c5b5ee20bac4914f7a5e0c46c0",
+    "fonts/outfit-latin-ext-800-normal.ttf": "869a0b41bbb4deb17f9d4e7e335ddf7bb47819d1e04b993cee626733f9bbb374",
+    "fonts/outfit-latin-ext-900-normal.ttf": "7967ed9092363603da5c90b3aac37e60eed77b95444d1b6d3f2f2a759a907443",
+    "pyproject.toml": "561ff80c8c1a5dadbfc4f8fdc5d06b9654b99d43907ead5dc4be3e9aa81481d6",
+    "tools/nine_colours_minor/additions.py": "9e215dfda7877c0c07308b05ca7a43b74567c3546406849bdf6c29e71cef43e4",
+    "tools/nine_colours_minor/cards.py": "e37a76a69702f7460271de5b656ad9dfb85efc9a9975bbe91695fb2513d1a721",
+    "tools/nine_colours_minor/check_fidelity.py": "52e7d6a8786e65f4faa4d63476ba3b4a5716675207d2ed884006d9eb8b900299",
+    "tools/nine_colours_minor/export.py": "1b909d84cfadbaca4db341145ce4276e0f694763db17ae943188f24f57ee245d",
+    "tools/nine_colours_minor/expressions.py": "1500dcac695da286ad4fab9271ca2cb85f0cfceedc339bcc8c991b6a53bad69e",
+    "tools/nine_colours_minor/finale.py": "c80e4b0f5190d495dc9734db394d8f95aa5d1937e731b18cc0a1c5c2171e5177",
+    "tools/nine_colours_minor/prepare.py": "2c904926fc543ba59f2dd54b0276c549a427695e5b88ad41d068992273bda04c",
+    "tools/nine_colours_minor/reference.py": "e08904cebc0bab92db5571509a6b0d5bcc867e767356f35c61463bfccdfc470b",
+    "tools/nine_colours_minor/render.py": "aabdf10d6fff4b0af91bbd252725574e12997bb515a150c964d4ddd4480fd0bc",
+    "tools/nine_colours_minor/respect.py": "8a6881f0bbfd926ca1b87e3e198a3599a20f5a6a508592541ebc1c107cd595af",
+    "tools/nine_colours_minor/verify.py": "0558717811ed11829a2a4088679f4dea5c35ef257705021942aace9a75b3045c",
+    "tools/promo_beauty_example/build.py": "19e3bb38f54b3595e97882f1e8f5229432f4d964ba52d0a0572258e69c4aaa1c",
+    "tools/promo_beauty_example/prepare.py": "bfbae61e1d17910ee7277b58a6ed5b58b6fb656a1f43761f85bf72bb5536d79b",
+    "tools/promo_beauty_example/render.py": "09a719e222f84be5823aa84761df2e7d93f2eb18565952d035ee6e8050e0e6e6",
+    "tools/promo_beauty_example/verify.py": "ef36858daf3a5399900047653b97e04ff6b1d62db1995fb4c266b7132f215767",
+    "tools/s11_full2/live/status_gen.py": "0d5536e2fa27f97f87b07493a97c29e24771a41cd776e822dbcff803af806346",
+    "tools/s11_full2/models/__init__.py": "0f199339c00b115a41e094b98d444f5e709b14716b81ae2071a7e0173a89a76b",
+    "tools/s11_full2/models/preview_churches.py": "1797a743456c9536841b3ceaa01f33641ab383102cc9f0061be133e5fa3793cd",
+    "tools/s11_full2/models/wmscog_churches.py": "1a99f54b6d1ec095236e2aa78b233e4538e758993a5ab717a4ff403fc9bdeb60",
+    "tools/s11_full2/render.py": "bec8bcabaac56e7afe4422050471fec73c485b6630589973619784b8403a44de",
+    "tools/s11_full2/render_chunks.py": "e74c36059d1ccbbcdaa7fe4fc97156fb4d34b4e858f9300d7ee10620d7f9e8da",
+    "tools/s11_full2/s11_cards.py": "67190591deb0b9490d6b273299d82de936b4704c122f5202e7179f0940911fe7",
+    "tools/s11_full2/s11_church.py": "9b178be0e56c0b69f360cd3f25ad880bf10f9b726370310de75f065c99f5d982",
+    "tools/s11_full2/s11_churches.py": "d46776fbcc7bb0d0f9283b606d5975ad4503f02304d381a4b300ababd36ddc8f",
+    "tools/s11_full2/s11_coda.py": "9fb500fa2e28ea72d97eba287006ec370ce2d45e7fa17f057bfd2167f209f6d0",
+    "tools/s11_full2/s11_dance.py": "bd18d46cd5290f58f752045193b487dbd0239b505085b17ffee73271bd8ebf08",
+    "tools/s11_full2/s11_full2.py": "9460792189a6974a28f81c87e675fd8dd41fc69d0d7bf9131fbcb9067e24a96b",
+    "tools/s11_full2/s11_light.py": "41e7bfcc2e7b14952ecf1f2f800c3119a91991a8f4ee511386b60694066f3a5e",
+    "tools/s11_full2/s11_music_fx.py": "41ec7b4512fc1a2667e25824612210b063563b3b79d8ed98e080233b26d57dd3",
+    "tools/s11_full2/s11_music_map.py": "892ae97da527a6255eba4cdf373a06c69539f350892c9499aabfd1adff01e144",
+    "tools/s11_full2/s11_prepare.py": "89b8462cdce655cc98dedb353ab936a7884e92e017bbf7c24518f39690d26b42",
+    "tools/s11_full2/s11_procession.py": "4b86f1318bab8c8377b7f41b6d9682312affc282159d8e3f1996b4425bdfc9a3",
+    "tools/s11_full2/s11_stage.py": "25c51e7afb895f7ebc090855fb944cddd3144686afbe8bfebf73aefc09efdd23",
+    "tools/s11_full2/s11_words.py": "ff9f11dc8502782f171b549d52619f6e80647050a52f1681c2cc86f23d5dbac2",
+    "tools/s11_full2/s11_zion.py": "46982d822c141bc67caa02e60160bb680c32593bb2677d3689e45fe9597fdffb",
+    "tools/s11_full2/s11v2_song.py": "31403c3d2fe28da1564c6bf8385ab97b9245c1d2c7146a3cde6cc5ae505191f0",
+    "tools/s11_full2/titles_s11v2.py": "b476eae9e6b20452beba37d7a4b6a7f1848f679594d4942e649b4d26b56481b3",
+    "tools/s11_renewed/__init__.py": "533b77e6bdeb7434a11fe6a8809ef3ef18b97db21c7d2bfd4b7a04b3a2339fc1",
+    "tools/s11_renewed/cinematography.py": "1b6e30a3994034bf0b80dd3c449c666902f424e60e5809594ace5f2f4c8d5260",
+    "tools/s11_renewed/garment.py": "c6d86c5d47536f6d4c006bbe048d0985b6500680f4a98451024d68036081b754",
+    "tools/s11_renewed/performance.py": "defdce8b482c7909c24e0ea9c32371b1221e77b255d8d5bfc73cda69cc76e017",
+    "tools/s11_renewed/prepare.py": "31b5e2d96b5c5f36479858ed259331058396770ace298ee0bf8317758a6532b4",
+    "tools/s11_renewed/render.py": "6590d4488821f0d9cc861a7ea75628825c94ca5cbe6ad50df6b22f468321f36b",
+    "tools/s11_renewed/requirements-render.txt": "9f2451d28f9dd5a46e5f24c818847ebfe055e4269261c6ee16a075255c2ceb85",
+    "tools/s11_renewed/scene.py": "6e646926cf9c7a84325d1db3a0db840aa09eb2a7c5ad74af70fed381e7b1ca53",
+    "uv.lock": "8b765586a12c9f314c588550209634a465b825650026762fc12dc84e2ecef6fe",
+    "work/nine_colours_minor/render1/assets/p3d/body_v1.npz": "b676d6b1f524f8d482a73c4c6d87d36fa415af19ff8e125a7789016b84edf468",
+    "work/nine_colours_minor/render1/engine/analyze.py": "751fe4d34921e7b2912d085c56fa4a46f0edd637f0bc8e3883f455285a9cd520",
+    "work/nine_colours_minor/render1/engine/analyze2.py": "d047f75f81d1a8b1bcf58eafabe2a8a522c714c43d278718a704e5e6fd0b6234",
+    "work/nine_colours_minor/render1/engine/arch.py": "8ed54673bca471abd980335c1e80c926bcf0446842866207cb8c36241077c7fc",
+    "work/nine_colours_minor/render1/engine/audio_react.py": "f511be293fb7bf062547aa45e5a2acb201c8d1c830d98fb64a54b0e38d16b210",
+    "work/nine_colours_minor/render1/engine/creatures.py": "71dc40936949edb0a47120e38d8190f3e1517e6ffa43e362ff911dfcfbee9753",
+    "work/nine_colours_minor/render1/engine/creatures_shaders.py": "bcf271f15cb3bbed9233ff348cef4372e31f0dc52ecd25e23b797ee0b2e899a1",
+    "work/nine_colours_minor/render1/engine/draft.py": "1fd488be1753840e2bc0c3a94cc3e4332cccc352c5817b4fae8fea8a2692a9c9",
+    "work/nine_colours_minor/render1/engine/figure_look.py": "d637ad73509bcbe8df145514c3002b8a45c53503dbbf8a1292b1fe85b29f688e",
+    "work/nine_colours_minor/render1/engine/gathering.py": "465a9fb16b2bea4833bea5eac279b1d0665b5d1c7944540bdc382ec596dfa49b",
+    "work/nine_colours_minor/render1/engine/lake_stars.py": "fb49b22143d07ee37ada582e91cd29018423e03b6207e33e962a5d58c4dcfccd",
+    "work/nine_colours_minor/render1/engine/live.py": "f8d916239523cf9646f0104f226969737ba28054df74ed53a2f09eb430d066ca",
+    "work/nine_colours_minor/render1/engine/nature.py": "a21d858157411e8b57c2432db48fa0ba6aa080d1bc483981dfd03d64ec9b2721",
+    "work/nine_colours_minor/render1/engine/nature_shaders.py": "05b5f05a46063ebda9ce6875138b618cca03e8a2e94c8494b282bff9f4a9acc4",
+    "work/nine_colours_minor/render1/engine/output.py": "6db36520aec3ed20af7d5997d91674ce449eb110c1aafe23d4431acf3ad10501",
+    "work/nine_colours_minor/render1/engine/p3d/__init__.py": "ca772d954102db5eed23b6b1804c4063b38c983854d67b089520ffb949366c84",
+    "work/nine_colours_minor/render1/engine/p3d/actor.py": "29fb8114986075dfeed2fb7e468c001082234e5b11026dde09a21be1eae74a7a",
+    "work/nine_colours_minor/render1/engine/p3d/api.py": "55cbe8723b70a9ec16cda314740a5f9a247ce054702e59cab24daf303609381b",
+    "work/nine_colours_minor/render1/engine/p3d/assets.py": "b498fb7fbb5db34dbeea184b80ba0a6bfed8e8092343fd2e331676a73378fc37",
+    "work/nine_colours_minor/render1/engine/p3d/body.py": "d7ae223270951ca586b8f30d5a47b3eee3cb530ad5445823d6b0af259830e978",
+    "work/nine_colours_minor/render1/engine/p3d/bodymath.py": "01da6eaf9cf60ee91fa21883cc88c3cbadb1fa0bf4f11900b5491d2bc25d32bd",
+    "work/nine_colours_minor/render1/engine/p3d/camera.py": "ef9d27146ce69b8b92003c87eb60ddd4d12cb7d6653c18c899ea12a20c9d5f97",
+    "work/nine_colours_minor/render1/engine/p3d/cloth.py": "68134e656541bacfe27477e6ed9b517873357ec866f7515fea1e50dcec74b6bb",
+    "work/nine_colours_minor/render1/engine/p3d/effects.py": "1b03643dbb282eba6a54e79beae01730c0d2ac2fbaf7b11ff4e338a47185446e",
+    "work/nine_colours_minor/render1/engine/p3d/gestures.py": "55fe6180bc200bede7f4a738aa298a1642c85d145ddf827be70ad33a9a283072",
+    "work/nine_colours_minor/render1/engine/p3d/layer.py": "ddd28382a1276ee7a984a4638239447394d12fcef4cadd6ad5cc103eba641176",
+    "work/nine_colours_minor/render1/engine/p3d/looks.py": "8d46499d86ed7bb4d4e04b493944cb2cdf943b1a645d998b9450344e5aff105d",
+    "work/nine_colours_minor/render1/engine/p3d/motion.py": "7e4f21e54fd59283726e6e2a9463c7cd42fd1a90dafb4186d6fcaa158a6b74f7",
+    "work/nine_colours_minor/render1/engine/p3d/shaders.py": "a9c00c6bfac26017ec7c65924e52bdb4a761bedff9a122922ccf3b0f01c9132b",
+    "work/nine_colours_minor/render1/engine/p3d/words.py": "ff09d591bf68ddc38c531bd66a908761be802f8f04cee0bd67303fb7c760f82a",
+    "work/nine_colours_minor/render1/engine/p3d/world.py": "22ab69d90d4eb777538113ce15a835ebef07bfcd0d7b8d68a549f8f2eb5fd5a9",
+    "work/nine_colours_minor/render1/engine/render.py": "f88d406b6620abd1f1c8fe96852414b70187e5d2b3249bcf456be705ab53fa2f",
+    "work/nine_colours_minor/render1/engine/rig.py": "b2472c76e10cfce1470cb819b0c5b2c3f132212aa0aa340931c886acd62d4f75",
+    "work/nine_colours_minor/render1/engine/shaders.py": "c235119e3d1ceea211f40bb624b1416a328a77948d5a423907bfb46f73df5330",
+    "work/nine_colours_minor/render1/engine/sheet.py": "ca19976e9317cd0fda1ce9e049cd723890df262639c24ba6efc48050a23685bf",
+    "work/nine_colours_minor/render1/engine/sky_camera.py": "cd57c9ad22324b195e8f5cb89882bbb823be9e438b4c52ded535638a91315ee1",
+    "work/nine_colours_minor/render1/engine/sky_camera_shaders.py": "026b99a14dce9772c1a3cd2c600fc0ab4320c0bccae94ac27db24f491d058f2e",
+    "work/nine_colours_minor/render1/engine/song.py": "b60c3bd67b9b7a489c6398a1f4be0363580a223e33eeb29953605a0b63e8c22e",
+    "work/nine_colours_minor/render1/engine/songs/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "work/nine_colours_minor/render1/engine/songs/demo_all.py": "9967f445c41c1921ec1c38c9e1b8ff3c4ec5480ee4fd0dbfb90b5e84ba38c353",
+    "work/nine_colours_minor/render1/engine/songs/demo_audio.py": "5bdb050f71849ff3b96f132779478b36c33d30396139308a86982a0ea0c06b3a",
+    "work/nine_colours_minor/render1/engine/songs/demo_creatures.py": "a540e34b0931d96495f86861807f417d6e1d96b6bcffaf2fc60d17f763ba638c",
+    "work/nine_colours_minor/render1/engine/songs/demo_gathering.py": "5098fb94aeaadf4bb870561111979da553dbc2140c6fa9393d19542c0e38282d",
+    "work/nine_colours_minor/render1/engine/songs/demo_loop.py": "d2cf1ed4c99c1ebea68e567d19a19126cd6f21d883170f674dfb494eebcda08e",
+    "work/nine_colours_minor/render1/engine/songs/demo_nature.py": "bb48118bcd6e541248bf3eafa46018056e62612f84f101831212dc937c020d3b",
+    "work/nine_colours_minor/render1/engine/songs/demo_p3d_words.py": "6c075a8b5edf823adfa69d9d1543afdea159cbdf84a4edb6289c4de77ef8586b",
+    "work/nine_colours_minor/render1/engine/songs/demo_p3d_words_kit.py": "765672463802c57979eea60abee461fa3432c7c2849db78a07c51fe2ec5e0182",
+    "work/nine_colours_minor/render1/engine/songs/demo_sky_camera.py": "1f11dd7177321a75d4e5c22baef59187eef34fd321f2f21f10087e34baa30879",
+    "work/nine_colours_minor/render1/engine/songs/demo_upgrade.py": "3a720fc75d720b337dedc8a448bc76ef98037f844abaf515a87ae50e52c12b36",
+    "work/nine_colours_minor/render1/engine/songs/demo_water_symbols.py": "e9e0e33bf7b85dd4dbc3bc1a6ab5bcce0c602c9b5fd27d2c552bfa827a1023cd",
+    "work/nine_colours_minor/render1/engine/songs/epic_concert.py": "03cccf56285bfa80dff94671bb2ec84fb4966839ec7277a04dc7eab8d1e0474e",
+    "work/nine_colours_minor/render1/engine/songs/p3d_camera_test.py": "db123e043696d2c3a650dca05574d3cd609140903bcdeed7bacdf20041af1c88",
+    "work/nine_colours_minor/render1/engine/songs/p3d_dev.py": "f08b27eb8c361b8379fdf7000939e286384e077af0300ea5903c44819dfaa110",
+    "work/nine_colours_minor/render1/engine/songs/s01_stars_of_zion.py": "61534cec45e3224e6919f4d576c8f376d236aea334879137b3f8cfca44f1a39c",
+    "work/nine_colours_minor/render1/engine/songs/s02_the_rose.py": "72610af5b7317728eb693e6b1d58d3b57515736987e7582cb1a5fc8f76dd0c32",
+    "work/nine_colours_minor/render1/engine/songs/s03_lake_of_memory.py": "244f3131034ae5e280c70e98a3aceb648a018812837edf6cb170e5cbd7837a23",
+    "work/nine_colours_minor/render1/engine/songs/s03_original.py": "8252b18420d81d53855b2494f0136dc5e09611962b8eb84dc4bd0e8cbfb6bc9f",
+    "work/nine_colours_minor/render1/engine/songs/s04_im_sorry.py": "90231fb758921f0b5b51bc853dbd0beb43422f721ea9a2d315cf8bf1cff11d2e",
+    "work/nine_colours_minor/render1/engine/songs/s05_god_bless_you.py": "a2a02ad2ebff9ae941308048c40fecb48ea73850fb1213f38166127da094f022",
+    "work/nine_colours_minor/render1/engine/songs/s06_grains.py": "909b16956fb10c5ca698c2ca52eb401abb9341797aa4848fa688850cedee82ea",
+    "work/nine_colours_minor/render1/engine/songs/s07_no_one_lonely.py": "c52bedd318af7384af08eebaf099d268aeacd8d0ccd3524afe8fa21d948eede8",
+    "work/nine_colours_minor/render1/engine/songs/s08_favor_from_god.py": "e1cfdf170439815661441e4d025443efed9ee17637866888c6ffa9ded8215057",
+    "work/nine_colours_minor/render1/engine/songs/s09_save_the_world.py": "90638b73e541284e49b9c7d3c0f79bdaad247ea2eb259d1a0478d53efcd68c6a",
+    "work/nine_colours_minor/render1/engine/songs/s10_mother_saves.py": "e70f27a395e470da7d318232d555f851c8cb63c40829f495ccfc0cad8f4dc2ca",
+    "work/nine_colours_minor/render1/engine/songs/s11_finale.py": "c140ef31699e8eab888cd79b50d8d48e5fdec3aea87bbbfaa3dbcdcf88205cce",
+    "work/nine_colours_minor/render1/engine/songs/t_fragment_styles.py": "8935b6b77b63d548fc34e2aecbb602097ede3aee2995a1b76bcdf6f9545c9565",
+    "work/nine_colours_minor/render1/engine/songs/t_short_test.py": "4c377f736ded564925a2cee9439259cb622c34d8fd29ee066d4822a0be3b14ee",
+    "work/nine_colours_minor/render1/engine/songs/ten_10_nine_colours.py": "7fd0094c716196988c9a101d5e891e3ebe20aaa6524e8383f101bf9e6c5b26b0",
+    "work/nine_colours_minor/render1/engine/songs/test_figure_look.py": "d4d5381b21dea358800925dd486724e022d298c120b2ea4bd9f1a5d7093c1b69",
+    "work/nine_colours_minor/render1/engine/songs/test_living.py": "6dab96a17d60e8f5553aef645ba1729240a5013676f9cc27545297ed74e2f067",
+    "work/nine_colours_minor/render1/engine/songs/test_p3d.py": "9324802076ccb350d728c14effd8c5dad0bf524692da844a8a06d20be8279d09",
+    "work/nine_colours_minor/render1/engine/songs/test_p3d_looks.py": "937afd5bb379d4b2f514e28544ec5e5b9c2e74680b7554ceb970e01e10090d45",
+    "work/nine_colours_minor/render1/engine/songs/test_p3d_ten.py": "8a22cbc1d1ae87d532ba59bb0b262e52086bc5097f472e4e20f6285d4c8a8fa8",
+    "work/nine_colours_minor/render1/engine/songs/test_theme.py": "71db0be7e26b6ed405ae0a217bbc7aafd6ba1f2da2a1ba98f718a8070626fda0",
+    "work/nine_colours_minor/render1/engine/symbols.py": "585d50a9a7de8d705d74956fc923096194bdfa1115bf365788177c3f2135d515",
+    "work/nine_colours_minor/render1/engine/text.py": "8a17c6bd92a88debc2d0d9ab8103620fd36e9d06d400fa2880d9230c21dcb4ff",
+    "work/nine_colours_minor/render1/engine/text_anims.py": "773f091e1497bf878681adde821322517bb91011d60aed84056be329005c682a",
+    "work/nine_colours_minor/render1/engine/theme.py": "dabc85ba448eb3b860c03e3f5484bd88d98adb6e1330615cf6cb0a18762a757c",
+    "work/nine_colours_minor/render1/engine/track.py": "d6ccc4c8d70b32b5117fd95b04a7e881dc244a08cc90d8606fb366747ada84f2",
+    "work/nine_colours_minor/render1/engine/upgrade.py": "f451fc5bd9a6af63ad1211b3016ff11b5702f321452f3a1dd2c50711098e5d3d",
+    "work/nine_colours_minor/render1/engine/upgrade_shaders.py": "f5afd204bcae5e41d9e4bbd8de0af31ef430d9114a87d60397dadb49ac56bbb4",
+    "work/nine_colours_minor/render1/engine/water.py": "7f6b1a4767a739446432231ddbf8d3dcf139ec854a034dca8e048641aa9365ba",
+    "work/nine_colours_minor/render1/engine/water_shaders.py": "7a3e4a1206a68539186310b234a9489f8165e7335cd2cbb5da4bab8ceb4e4df9",
+    "work/nine_colours_revision3/claude-final/assets/p3d/body_v1.npz": "0a72159f84b7008dcb135c79f82ae3b05df5f7361197e99ab9ca4af148c91189",
+    "work/nine_colours_revision3/claude-final/engine/analyze.py": "751fe4d34921e7b2912d085c56fa4a46f0edd637f0bc8e3883f455285a9cd520",
+    "work/nine_colours_revision3/claude-final/engine/analyze2.py": "d047f75f81d1a8b1bcf58eafabe2a8a522c714c43d278718a704e5e6fd0b6234",
+    "work/nine_colours_revision3/claude-final/engine/arch.py": "8ed54673bca471abd980335c1e80c926bcf0446842866207cb8c36241077c7fc",
+    "work/nine_colours_revision3/claude-final/engine/audio_react.py": "f511be293fb7bf062547aa45e5a2acb201c8d1c830d98fb64a54b0e38d16b210",
+    "work/nine_colours_revision3/claude-final/engine/creatures.py": "71dc40936949edb0a47120e38d8190f3e1517e6ffa43e362ff911dfcfbee9753",
+    "work/nine_colours_revision3/claude-final/engine/creatures_shaders.py": "bcf271f15cb3bbed9233ff348cef4372e31f0dc52ecd25e23b797ee0b2e899a1",
+    "work/nine_colours_revision3/claude-final/engine/draft.py": "1fd488be1753840e2bc0c3a94cc3e4332cccc352c5817b4fae8fea8a2692a9c9",
+    "work/nine_colours_revision3/claude-final/engine/figure_look.py": "d637ad73509bcbe8df145514c3002b8a45c53503dbbf8a1292b1fe85b29f688e",
+    "work/nine_colours_revision3/claude-final/engine/gathering.py": "465a9fb16b2bea4833bea5eac279b1d0665b5d1c7944540bdc382ec596dfa49b",
+    "work/nine_colours_revision3/claude-final/engine/lake_stars.py": "fb49b22143d07ee37ada582e91cd29018423e03b6207e33e962a5d58c4dcfccd",
+    "work/nine_colours_revision3/claude-final/engine/live.py": "f8d916239523cf9646f0104f226969737ba28054df74ed53a2f09eb430d066ca",
+    "work/nine_colours_revision3/claude-final/engine/nature.py": "a21d858157411e8b57c2432db48fa0ba6aa080d1bc483981dfd03d64ec9b2721",
+    "work/nine_colours_revision3/claude-final/engine/nature_shaders.py": "05b5f05a46063ebda9ce6875138b618cca03e8a2e94c8494b282bff9f4a9acc4",
+    "work/nine_colours_revision3/claude-final/engine/output.py": "6db36520aec3ed20af7d5997d91674ce449eb110c1aafe23d4431acf3ad10501",
+    "work/nine_colours_revision3/claude-final/engine/p3d/__init__.py": "ca772d954102db5eed23b6b1804c4063b38c983854d67b089520ffb949366c84",
+    "work/nine_colours_revision3/claude-final/engine/p3d/acting.py": "a4e71ae1ec1f2c70fede149844806ba098f79d03e4122b502212e5e21c62eaec",
+    "work/nine_colours_revision3/claude-final/engine/p3d/actor.py": "987676f811fd6675f1aec6450e74878998efc83e3f6b963540d6af1577281a8a",
+    "work/nine_colours_revision3/claude-final/engine/p3d/api.py": "1da8f6781cb42096886b4411f540e1335a5a48e5aaa2f12d92a6368507d86049",
+    "work/nine_colours_revision3/claude-final/engine/p3d/assets.py": "cabb10975234db7499f7d5c4dc417591913ced432bd3a1d64af51748b1dda515",
+    "work/nine_colours_revision3/claude-final/engine/p3d/body.py": "fe7a584519549c025ed37e5fe92d1716f1a98e19d8b9e09943fff9fb9f774391",
+    "work/nine_colours_revision3/claude-final/engine/p3d/bodymath.py": "01da6eaf9cf60ee91fa21883cc88c3cbadb1fa0bf4f11900b5491d2bc25d32bd",
+    "work/nine_colours_revision3/claude-final/engine/p3d/brand.py": "0764985402f3ad49fc86ae152b2b29cdfe63d6e13110effc5d831f738f8e9f02",
+    "work/nine_colours_revision3/claude-final/engine/p3d/brand_hearts.py": "3c1966c7f92908189861f2ca0e2dff118295e60d16f06ccbadd269278cc206ba",
+    "work/nine_colours_revision3/claude-final/engine/p3d/brand_symbols.py": "31f692938bd7f76ba4baef4c43ef8055a2e049d0b21709d2606cb412bd4778d3",
+    "work/nine_colours_revision3/claude-final/engine/p3d/brand_world.py": "ccb1f1032bef8d859078dd772e97c70030e4cd68f378eb80c05de298727079f9",
+    "work/nine_colours_revision3/claude-final/engine/p3d/camera.py": "8427e7f288f280b99aa168bb877401932d52f04f9a0ff6c1bccb4298998f6f5d",
+    "work/nine_colours_revision3/claude-final/engine/p3d/cloth.py": "e1d0c6d4cfc93cabef7b76ab7b8379226449a1dc098c9bc0b11bf303757a13fa",
+    "work/nine_colours_revision3/claude-final/engine/p3d/crowd.py": "2a344b5fbea98bbf54362dbb732a3c4beaca1f4f7a5967f471fa15354cf85c6c",
+    "work/nine_colours_revision3/claude-final/engine/p3d/effects.py": "e37e40d96b522d5c85c0ba8010e7583d6252ed7c0b928a323719446650bbc8a0",
+    "work/nine_colours_revision3/claude-final/engine/p3d/gestures.py": "3f0876aba000fa953c93b3e1de4415218732e9e50378056b0432be8bb24fb55e",
+    "work/nine_colours_revision3/claude-final/engine/p3d/layer.py": "ee26009249f6d738c5e88ad7967193ed9e582b0ed88c2e1da07c39383b93b255",
+    "work/nine_colours_revision3/claude-final/engine/p3d/looks.py": "b733197239fdcb9899b47979a659d672b10caa41ff0b62d63fd27b3a598c7478",
+    "work/nine_colours_revision3/claude-final/engine/p3d/master_acting.py": "5cc23af06a0356b6d848912348c820627743aa755f42e3fb78680554f8beb1ea",
+    "work/nine_colours_revision3/claude-final/engine/p3d/master_brand.py": "b152530f867c0b07cb9e0df9046a43039681eca7b1406444fed2352e362087a3",
+    "work/nine_colours_revision3/claude-final/engine/p3d/master_comets.py": "f698fc9bea241c32bdab0c6994bbf986a59e4b27255d843e15cc499c78327d3e",
+    "work/nine_colours_revision3/claude-final/engine/p3d/master_fx.py": "ea6c29a8504ff964c9e1e1af93e967a33da47be99eb342da1cc4399337305485",
+    "work/nine_colours_revision3/claude-final/engine/p3d/master_sky.py": "59809d8c09a35684a5b03578656ec7d6928ef626be08d335abf006063a062662",
+    "work/nine_colours_revision3/claude-final/engine/p3d/motion.py": "ae3502bce3d27b2cb31831eb2ec494fea8dcb9f46e2830ca9bb59b8835b2f35f",
+    "work/nine_colours_revision3/claude-final/engine/p3d/pairs.py": "69c4dc6b9406a2a4934393858932aaf4dc14250e2529ae5bde3e789a468776ef",
+    "work/nine_colours_revision3/claude-final/engine/p3d/shaders.py": "623d237b71a9c12b3b37d108a0f1a6cb03476d27450102120822969baab8130e",
+    "work/nine_colours_revision3/claude-final/engine/p3d/words.py": "e3257332304ce7a678969abefe0eabaf9323fd98ee1ea63039a36fc5339245b6",
+    "work/nine_colours_revision3/claude-final/engine/p3d/world.py": "7878f60c021814987b0019cd0977b152f5a46679b3aa923d4d4b8d07d444f6bd",
+    "work/nine_colours_revision3/claude-final/engine/render.py": "cbf6ac503a5530b230fb3cbea56c830628f93a8bdffbccc2e3727ce32ba46075",
+    "work/nine_colours_revision3/claude-final/engine/rig.py": "b2472c76e10cfce1470cb819b0c5b2c3f132212aa0aa340931c886acd62d4f75",
+    "work/nine_colours_revision3/claude-final/engine/shaders.py": "17c6ca7303f8accb130e537f3646ed24a8023f2fcbeca20734a926e5399169e4",
+    "work/nine_colours_revision3/claude-final/engine/sheet.py": "ca19976e9317cd0fda1ce9e049cd723890df262639c24ba6efc48050a23685bf",
+    "work/nine_colours_revision3/claude-final/engine/sky_camera.py": "cd57c9ad22324b195e8f5cb89882bbb823be9e438b4c52ded535638a91315ee1",
+    "work/nine_colours_revision3/claude-final/engine/sky_camera_shaders.py": "026b99a14dce9772c1a3cd2c600fc0ab4320c0bccae94ac27db24f491d058f2e",
+    "work/nine_colours_revision3/claude-final/engine/song.py": "b60c3bd67b9b7a489c6398a1f4be0363580a223e33eeb29953605a0b63e8c22e",
+    "work/nine_colours_revision3/claude-final/engine/songs/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "work/nine_colours_revision3/claude-final/engine/songs/demo_all.py": "9967f445c41c1921ec1c38c9e1b8ff3c4ec5480ee4fd0dbfb90b5e84ba38c353",
+    "work/nine_colours_revision3/claude-final/engine/songs/demo_audio.py": "5bdb050f71849ff3b96f132779478b36c33d30396139308a86982a0ea0c06b3a",
+    "work/nine_colours_revision3/claude-final/engine/songs/demo_brand.py": "48abe874ee231c1168ab2a57bb81745762263ed2e903372e61debb6c8e8eb15d",
+    "work/nine_colours_revision3/claude-final/engine/songs/demo_brand_finale.py": "9d60a9372ed6f172a04e99b113acda3053286a233a2a2c36f37173d89cea5e0f",
+    "work/nine_colours_revision3/claude-final/engine/songs/demo_creatures.py": "a540e34b0931d96495f86861807f417d6e1d96b6bcffaf2fc60d17f763ba638c",
+    "work/nine_colours_revision3/claude-final/engine/songs/demo_gathering.py": "5098fb94aeaadf4bb870561111979da553dbc2140c6fa9393d19542c0e38282d",
+    "work/nine_colours_revision3/claude-final/engine/songs/demo_loop.py": "d2cf1ed4c99c1ebea68e567d19a19126cd6f21d883170f674dfb494eebcda08e",
+    "work/nine_colours_revision3/claude-final/engine/songs/demo_nature.py": "bb48118bcd6e541248bf3eafa46018056e62612f84f101831212dc937c020d3b",
+    "work/nine_colours_revision3/claude-final/engine/songs/demo_p3d_words.py": "b53fcfcd337cd5504bc615a3d28b48c69ce0cd97db45790206734a448b4957e5",
+    "work/nine_colours_revision3/claude-final/engine/songs/demo_p3d_words_kit.py": "d9ddaec1676c5fb3b57ec189e2b0fdae3736720e96a10f75e2aa2e409937b8cd",
+    "work/nine_colours_revision3/claude-final/engine/songs/demo_p3d_words_kit2.py": "2a0990b8cb023e56fdf9b191a8b50957ca701f22dc2bb79286928b74a5a01b58",
+    "work/nine_colours_revision3/claude-final/engine/songs/demo_sky_camera.py": "1f11dd7177321a75d4e5c22baef59187eef34fd321f2f21f10087e34baa30879",
+    "work/nine_colours_revision3/claude-final/engine/songs/demo_titles.py": "3197eb793320ad81cf98fb98c2fba8f5097e2f9f2201bf630c07ad3175f4535c",
+    "work/nine_colours_revision3/claude-final/engine/songs/demo_titles_day.py": "62b9344d6fef7ce5e334327c0cfb588c5819a113074bf88af941ec3ace110437",
+    "work/nine_colours_revision3/claude-final/engine/songs/demo_upgrade.py": "3a720fc75d720b337dedc8a448bc76ef98037f844abaf515a87ae50e52c12b36",
+    "work/nine_colours_revision3/claude-final/engine/songs/demo_water_symbols.py": "e9e0e33bf7b85dd4dbc3bc1a6ab5bcce0c602c9b5fd27d2c552bfa827a1023cd",
+    "work/nine_colours_revision3/claude-final/engine/songs/epic_concert.py": "03cccf56285bfa80dff94671bb2ec84fb4966839ec7277a04dc7eab8d1e0474e",
+    "work/nine_colours_revision3/claude-final/engine/songs/master_peace.py": "942d40b57dc4fae6e425eeb6dc9ec45109f263c418a83695cc57cf6c520582b1",
+    "work/nine_colours_revision3/claude-final/engine/songs/nine_colours_final.py": "37a195e5e06a884c7cb1450f4ced95e93fecb40d43ef97ce92774b3bc8b4b153",
+    "work/nine_colours_revision3/claude-final/engine/songs/p3d_camera_test.py": "db123e043696d2c3a650dca05574d3cd609140903bcdeed7bacdf20041af1c88",
+    "work/nine_colours_revision3/claude-final/engine/songs/p3d_dev.py": "f08b27eb8c361b8379fdf7000939e286384e077af0300ea5903c44819dfaa110",
+    "work/nine_colours_revision3/claude-final/engine/songs/s01_stars_of_zion.py": "61534cec45e3224e6919f4d576c8f376d236aea334879137b3f8cfca44f1a39c",
+    "work/nine_colours_revision3/claude-final/engine/songs/s02_the_rose.py": "72610af5b7317728eb693e6b1d58d3b57515736987e7582cb1a5fc8f76dd0c32",
+    "work/nine_colours_revision3/claude-final/engine/songs/s03_lake_of_memory.py": "244f3131034ae5e280c70e98a3aceb648a018812837edf6cb170e5cbd7837a23",
+    "work/nine_colours_revision3/claude-final/engine/songs/s03_original.py": "8252b18420d81d53855b2494f0136dc5e09611962b8eb84dc4bd0e8cbfb6bc9f",
+    "work/nine_colours_revision3/claude-final/engine/songs/s04_im_sorry.py": "90231fb758921f0b5b51bc853dbd0beb43422f721ea9a2d315cf8bf1cff11d2e",
+    "work/nine_colours_revision3/claude-final/engine/songs/s05_god_bless_you.py": "a2a02ad2ebff9ae941308048c40fecb48ea73850fb1213f38166127da094f022",
+    "work/nine_colours_revision3/claude-final/engine/songs/s06_grains.py": "909b16956fb10c5ca698c2ca52eb401abb9341797aa4848fa688850cedee82ea",
+    "work/nine_colours_revision3/claude-final/engine/songs/s07_no_one_lonely.py": "c52bedd318af7384af08eebaf099d268aeacd8d0ccd3524afe8fa21d948eede8",
+    "work/nine_colours_revision3/claude-final/engine/songs/s08_favor_from_god.py": "e1cfdf170439815661441e4d025443efed9ee17637866888c6ffa9ded8215057",
+    "work/nine_colours_revision3/claude-final/engine/songs/s09_save_the_world.py": "90638b73e541284e49b9c7d3c0f79bdaad247ea2eb259d1a0478d53efcd68c6a",
+    "work/nine_colours_revision3/claude-final/engine/songs/s10_mother_saves.py": "e70f27a395e470da7d318232d555f851c8cb63c40829f495ccfc0cad8f4dc2ca",
+    "work/nine_colours_revision3/claude-final/engine/songs/s11_finale.py": "c140ef31699e8eab888cd79b50d8d48e5fdec3aea87bbbfaa3dbcdcf88205cce",
+    "work/nine_colours_revision3/claude-final/engine/songs/t_fragment_styles.py": "8935b6b77b63d548fc34e2aecbb602097ede3aee2995a1b76bcdf6f9545c9565",
+    "work/nine_colours_revision3/claude-final/engine/songs/t_short_test.py": "4c377f736ded564925a2cee9439259cb622c34d8fd29ee066d4822a0be3b14ee",
+    "work/nine_colours_revision3/claude-final/engine/songs/test_figure_look.py": "d4d5381b21dea358800925dd486724e022d298c120b2ea4bd9f1a5d7093c1b69",
+    "work/nine_colours_revision3/claude-final/engine/songs/test_living.py": "6dab96a17d60e8f5553aef645ba1729240a5013676f9cc27545297ed74e2f067",
+    "work/nine_colours_revision3/claude-final/engine/songs/test_p3d.py": "9324802076ccb350d728c14effd8c5dad0bf524692da844a8a06d20be8279d09",
+    "work/nine_colours_revision3/claude-final/engine/songs/test_p3d_acting.py": "ec354d134890f04393fa7aedd29496b159c62aa4782e22df4cd32ff48bf02fdd",
+    "work/nine_colours_revision3/claude-final/engine/songs/test_p3d_bodies.py": "464f2d34b879fc34851cf922f75581ca98f45390800c911566b108248fd5244d",
+    "work/nine_colours_revision3/claude-final/engine/songs/test_p3d_checks.py": "b2747d941de3d7ec63fde36dc38c60dfa6f00d1c878d37c31d0df251efe71278",
+    "work/nine_colours_revision3/claude-final/engine/songs/test_p3d_load.py": "c3be21353299afae0c5c9d447da456b32bc2b1880d4e53689e81f51bc5093a2f",
+    "work/nine_colours_revision3/claude-final/engine/songs/test_p3d_looks.py": "937afd5bb379d4b2f514e28544ec5e5b9c2e74680b7554ceb970e01e10090d45",
+    "work/nine_colours_revision3/claude-final/engine/songs/test_p3d_motion.py": "b3da9975b98913344c5c6919843fcd5d4c3757963fab18e7ea5e91595f9e3f83",
+    "work/nine_colours_revision3/claude-final/engine/songs/test_p3d_scale.py": "68ae294b725a3706f47d86232bdefa0d8331ad8880f865258317c0ce65897449",
+    "work/nine_colours_revision3/claude-final/engine/songs/test_p3d_ten.py": "8a22cbc1d1ae87d532ba59bb0b262e52086bc5097f472e4e20f6285d4c8a8fa8",
+    "work/nine_colours_revision3/claude-final/engine/songs/test_p3d_windows.py": "26fc880e22e12d60e71881fe09e36082b7ee95a930b457919a10c9c323bce509",
+    "work/nine_colours_revision3/claude-final/engine/songs/test_theme.py": "71db0be7e26b6ed405ae0a217bbc7aafd6ba1f2da2a1ba98f718a8070626fda0",
+    "work/nine_colours_revision3/claude-final/engine/symbols.py": "585d50a9a7de8d705d74956fc923096194bdfa1115bf365788177c3f2135d515",
+    "work/nine_colours_revision3/claude-final/engine/text.py": "8a17c6bd92a88debc2d0d9ab8103620fd36e9d06d400fa2880d9230c21dcb4ff",
+    "work/nine_colours_revision3/claude-final/engine/text_anims.py": "773f091e1497bf878681adde821322517bb91011d60aed84056be329005c682a",
+    "work/nine_colours_revision3/claude-final/engine/theme.py": "dabc85ba448eb3b860c03e3f5484bd88d98adb6e1330615cf6cb0a18762a757c",
+    "work/nine_colours_revision3/claude-final/engine/titles.py": "388c838562a1cbdf92877e77260eed10266df0e7fdf49addc9c07a7c36f795d2",
+    "work/nine_colours_revision3/claude-final/engine/track.py": "d6ccc4c8d70b32b5117fd95b04a7e881dc244a08cc90d8606fb366747ada84f2",
+    "work/nine_colours_revision3/claude-final/engine/upgrade.py": "f451fc5bd9a6af63ad1211b3016ff11b5702f321452f3a1dd2c50711098e5d3d",
+    "work/nine_colours_revision3/claude-final/engine/upgrade_shaders.py": "f5afd204bcae5e41d9e4bbd8de0af31ef430d9114a87d60397dadb49ac56bbb4",
+    "work/nine_colours_revision3/claude-final/engine/water.py": "7f6b1a4767a739446432231ddbf8d3dcf139ec854a034dca8e048641aa9365ba",
+    "work/nine_colours_revision3/claude-final/engine/water_shaders.py": "7a3e4a1206a68539186310b234a9489f8165e7335cd2cbb5da4bab8ceb4e4df9",
+    "work/s11_full2/features.npz": "1b62320ec8c65bb43042e7e2893b788d3ad4b571d19dc436b45d1a182324864d",
+    "work/s11_full2/music_fx.npz": "7b161567db869c9a6c2f71ba0fc9c2002eb93a9b9e7b245eae3d45fe70e49f59"
+  },
+  "prepared_audio_sha256": "fa488e4805cdc43b1f0f38915d67044ef92a9e659a59ac916d4b75b4cbb6d29b",
+  "provenance_sha256": "f816744864bb28911893cff32343c9a0a8fdbb27825bd6c0dee663936a91869d",
+  "schema": "s11-cloud-inputs-v1",
+  "silent_hold_seconds": 15,
+  "source_audio_sha256": "70464dff370f7187d12029970c1fa1ef3e91c6957180aa685b64cead830f7004",
+  "source_clock": [
+    0,
+    260
+  ],
+  "total_seconds": 275,
+  "waveform_included": false
+}

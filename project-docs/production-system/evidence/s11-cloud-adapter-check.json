@@ -1,0 +1,17 @@
+{
+  "aes256gcm_rsa_oaep_roundtrip": "pass",
+  "exact_provenance_bytes": "pass",
+  "frozen_fingerprint": "e0ad858bb7211637119506e2640bc6576130e7d71451ac9f5552d76bf79b3e3e",
+  "input_manifest_sha256": "bd5950c51829db43ba3c0191a57d2c77e7aa9e6ae48d00ad2383adf31df62598",
+  "isolated_no_waveform_source_and_scene_load": "pass",
+  "modified_ciphertext_rejected": true,
+  "native_remote_probe": "pending",
+  "picture_sources": 343,
+  "private_key_ignored_mode": "0600",
+  "renderer_constructed_for_check": false,
+  "repeated_encryption_same_directory": "pass",
+  "schema": "s11-cloud-local-check-v1",
+  "source_analysis_runtime_contract": "pass",
+  "syntax": "pass",
+  "workflow_scope_and_encrypted_only_upload": "pass"
+}

@@ -1,0 +1,59 @@
+{
+  "schema": "s11-host-cohort-log-evidence-v1",
+  "run_id": 45108198761,
+  "source_commit": "eec8d16519ea82309ef851975792e9dfc548da03",
+  "records": [
+    {
+      "job_id": 137474297516,
+      "repository": "lovelaceaml-hub/concert-backdrops",
+      "retrieval": "GitHub fetch_workflow_job_logs",
+      "selected_lines": [
+        "﻿2026-11-23T03:49:30.7289343Z Current runner version: '2.338.2'",
+        "2026-11-23T03:49:30.7318197Z Version: 20261111.635",
+        "2026-11-23T03:49:30.7327198Z Image: ubuntu-24.04",
+        "2026-11-23T03:49:30.7327787Z Version: 20261116.133.1",
+        "2026-11-23T03:49:45.5894265Z \u001b[36;1msudo apt-get install -y -qq --no-install-recommends libegl1 libgles2 libgl1-mesa-dri libegl-mesa0 ffmpeg openssl\u001b[0m",
+        "2026-11-23T03:50:08.6092695Z Selecting previously unselected package libx264-164:amd64.",
+        "2026-11-23T03:50:08.6189222Z Preparing to unpack .../25-libx264-164_2%3a0.164.3108+git31e19f9-1_amd64.deb ...",
+        "2026-11-23T03:50:08.6193321Z Unpacking libx264-164:amd64 (2:0.164.3108+git31e19f9-1) ...",
+        "2026-11-23T03:50:10.3883324Z Preparing to unpack .../82-libgl1-mesa-dri_25.2.8-0ubuntu0.24.04.5_amd64.deb ...",
+        "2026-11-23T03:50:10.4037425Z Unpacking libgl1-mesa-dri:amd64 (25.2.8-0ubuntu0.24.04.5) over (25.2.8-0ubuntu0.24.04.4) ...",
+        "2026-11-23T03:50:10.9282580Z Selecting previously unselected package libegl-mesa0:amd64.",
+        "2026-11-23T03:50:10.9385737Z Preparing to unpack .../91-libegl-mesa0_25.2.8-0ubuntu0.24.04.5_amd64.deb ...",
+        "2026-11-23T03:50:10.9390937Z Unpacking libegl-mesa0:amd64 (25.2.8-0ubuntu0.24.04.5) ...",
+        "2026-11-23T03:50:11.0237474Z Setting up libx264-164:amd64 (2:0.164.3108+git31e19f9-1) ...",
+        "2026-11-23T03:50:11.0304985Z Setting up libgl1-mesa-dri:amd64 (25.2.8-0ubuntu0.24.04.5) ...",
+        "2026-11-23T03:50:11.0497292Z Setting up libegl-mesa0:amd64 (25.2.8-0ubuntu0.24.04.5) ...",
+        "2026-11-23T03:50:11.1163669Z Processing triggers for libc-bin (2.39-0ubuntu8.12) ...",
+        "2026-11-23T03:50:18.0496482Z Running kernel seems to be up-to-date.",
+        "2026-11-23T03:50:56.8501833Z {\"event\": \"renderer_ready\", \"seconds\": 13.853246087999992, \"renderer\": \"llvmpipe (LLVM 20.1.2, 256 bits)\", \"native_size\": [1920, 1080], \"samples\": 2}"
+      ]
+    },
+    {
+      "job_id": 137474297616,
+      "repository": "lovelaceaml-hub/concert-backdrops",
+      "retrieval": "GitHub fetch_workflow_job_logs",
+      "selected_lines": [
+        "﻿2026-11-23T03:49:31.3056769Z Current runner version: '2.338.2'",
+        "2026-11-23T03:49:31.3082872Z Version: 20261111.635",
+        "2026-11-23T03:49:31.3095234Z Image: ubuntu-24.04",
+        "2026-11-23T03:49:31.3096131Z Version: 20261116.376.1",
+        "2026-11-23T03:49:42.8050176Z \u001b[36;1msudo apt-get install -y -qq --no-install-recommends libegl1 libgles2 libgl1-mesa-dri libegl-mesa0 ffmpeg openssl\u001b[0m",
+        "2026-11-23T03:49:57.8887732Z Selecting previously unselected package libx264-164:amd64.",
+        "2026-11-23T03:49:57.9018837Z Preparing to unpack .../25-libx264-164_2%3a0.164.3108+git31e19f9-1_amd64.deb ...",
+        "2026-11-23T03:49:57.9029860Z Unpacking libx264-164:amd64 (2:0.164.3108+git31e19f9-1) ...",
+        "2026-11-23T03:50:00.9022565Z Preparing to unpack .../82-libgl1-mesa-dri_25.2.8-0ubuntu0.24.04.5_amd64.deb ...",
+        "2026-11-23T03:50:00.9678614Z Unpacking libgl1-mesa-dri:amd64 (25.2.8-0ubuntu0.24.04.5) over (25.2.8-0ubuntu0.24.04.4) ...",
+        "2026-11-23T03:50:01.7409669Z Selecting previously unselected package libegl-mesa0:amd64.",
+        "2026-11-23T03:50:01.7541843Z Preparing to unpack .../91-libegl-mesa0_25.2.8-0ubuntu0.24.04.5_amd64.deb ...",
+        "2026-11-23T03:50:01.7551202Z Unpacking libegl-mesa0:amd64 (25.2.8-0ubuntu0.24.04.5) ...",
+        "2026-11-23T03:50:01.8900348Z Setting up libx264-164:amd64 (2:0.164.3108+git31e19f9-1) ...",
+        "2026-11-23T03:50:01.9075620Z Setting up libgl1-mesa-dri:amd64 (25.2.8-0ubuntu0.24.04.5) ...",
+        "2026-11-23T03:50:01.9454637Z Setting up libegl-mesa0:amd64 (25.2.8-0ubuntu0.24.04.5) ...",
+        "2026-11-23T03:50:02.1604071Z Processing triggers for libc-bin (2.39-0ubuntu8.12) ...",
+        "2026-11-23T03:50:03.1490818Z Running kernel seems to be up-to-date.",
+        "2026-11-23T03:50:45.1606893Z {\"event\": \"renderer_ready\", \"seconds\": 13.505430746000002, \"renderer\": \"llvmpipe (LLVM 20.1.2, 256 bits)\", \"native_size\": [1920, 1080], \"samples\": 2}"
+      ]
+    }
+  ]
+}

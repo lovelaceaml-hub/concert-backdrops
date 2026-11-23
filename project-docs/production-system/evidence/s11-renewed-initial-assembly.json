@@ -1,0 +1,713 @@
+{
+  "allowed_full_fingerprints": {
+    "2188eb82bbb9c539367a3424630dbcca818f313950751afc2c72e18c0f661d7c": {
+      "github_image_version": "20261116.133.1",
+      "platform": "Linux-7.0.0-1014-aws-x86_64-with-glibc2.39"
+    },
+    "c34e7f5bde42bb5fb5568817872b16521dcf3acfffe4ab9c2c95066a15ce8ce7": {
+      "github_image_version": "20261116.376.1",
+      "platform": "Linux-7.0.0-1017-azure-x86_64-with-glibc2.39"
+    }
+  },
+  "assembly_policy_sha256": "78bacac6e1282fb30e1b0db33dc2d09bb624dd26328cca5d3e1ba2467dcc4646",
+  "byte_identical_runtimes_claimed": false,
+  "bytes": 911885590,
+  "compatibility_evidence": [
+    {
+      "path": "project-docs/production-system/evidence/s11-host-cohort-review.md",
+      "sha256": "9cf073d0fabd0136c20b72c2557340f5827eaa32d9ab074d299971a514ba8b30"
+    },
+    {
+      "path": "project-docs/production-system/evidence/s11-host-cohort-renderer-logs.json",
+      "sha256": "687a0b9e7545d2f62f0f90ac0a3a915d9288a2e8fa4d11a91a398f695f87c091"
+    },
+    {
+      "path": "project-docs/production-system/evidence/s11-host-cohort-blocker-part-07.json",
+      "sha256": "a4642322ba18a2571b76b05c9186bab00bb54af0897db1b753dd0672923bb9dd"
+    }
+  ],
+  "cross_cohort_join_visual_qa": "pending",
+  "duration": 275,
+  "final_delivery_approved": false,
+  "frames": 16500,
+  "full_decode_and_audio_qa": "pending",
+  "local_audio_sha256": "fa488e4805cdc43b1f0f38915d67044ef92a9e659a59ac916d4b75b4cbb6d29b",
+  "native_render": true,
+  "normalized_contract_sha256": "87b19dea408188d88eef2bad616adb606ef84f1545b0259d555d8ec46509aef4",
+  "observed_full_fingerprints": [
+    "2188eb82bbb9c539367a3424630dbcca818f313950751afc2c72e18c0f661d7c",
+    "c34e7f5bde42bb5fb5568817872b16521dcf3acfffe4ab9c2c95066a15ce8ce7"
+  ],
+  "parts": [
+    {
+      "bytes": 14097495,
+      "encrypted_bytes": 14176375,
+      "encrypted_sha256": "29cdae8c8e04064508657071d5f701af66d6beab7c652e72a0aa2250145c8f2a",
+      "end": 412,
+      "fingerprint": "2188eb82bbb9c539367a3424630dbcca818f313950751afc2c72e18c0f661d7c",
+      "host": {
+        "github_image_version": "20261116.133.1",
+        "platform": "Linux-7.0.0-1014-aws-x86_64-with-glibc2.39"
+      },
+      "part": 0,
+      "picture": "artifact-03/part-000000-000412.mp4",
+      "sha256": "2a8a37ddcf2b6c11f3f3952cad9856e7e539012065c81ed043988926ff9a63a7",
+      "start": 0,
+      "stream_time_base": "1/15360"
+    },
+    {
+      "bytes": 17973630,
+      "encrypted_bytes": 18050875,
+      "encrypted_sha256": "14f65d208fa8e05a0a1591080dc9f9a8a3f3ce592d0306aa929afb8ff611d688",
+      "end": 825,
+      "fingerprint": "c34e7f5bde42bb5fb5568817872b16521dcf3acfffe4ab9c2c95066a15ce8ce7",
+      "host": {
+        "github_image_version": "20261116.376.1",
+        "platform": "Linux-7.0.0-1017-azure-x86_64-with-glibc2.39"
+      },
+      "part": 1,
+      "picture": "artifact-14/part-000412-000825.mp4",
+      "sha256": "7966ce4c04d106e9577cb33d53394d0a6435b2af2837ec45bf3ee66eae7e4a89",
+      "start": 412,
+      "stream_time_base": "1/15360"
+    },
+    {
+      "bytes": 20152991,
+      "encrypted_bytes": 20234123,
+      "encrypted_sha256": "f3ee2e872a5657ec9e64486f7630cee09f9ad2f91c4c489e3802cd95294f1df1",
+      "end": 1237,
+      "fingerprint": "c34e7f5bde42bb5fb5568817872b16521dcf3acfffe4ab9c2c95066a15ce8ce7",
+      "host": {
+        "github_image_version": "20261116.376.1",
+        "platform": "Linux-7.0.0-1017-azure-x86_64-with-glibc2.39"
+      },
+      "part": 2,
+      "picture": "artifact-10/part-000825-001237.mp4",
+      "sha256": "f9800c5ff5e977249e66c81b6513434e696cf993794907a5616d5e4f5ef84d5d",
+      "start": 825,
+      "stream_time_base": "1/15360"
+    },
+    {
+      "bytes": 20839197,
+      "encrypted_bytes": 20920875,
+      "encrypted_sha256": "dd3707654c7264185c21e7d3884f1c8a6ce9e5f3025f0a758ffa06958a24873b",
+      "end": 1650,
+      "fingerprint": "c34e7f5bde42bb5fb5568817872b16521dcf3acfffe4ab9c2c95066a15ce8ce7",
+      "host": {
+        "github_image_version": "20261116.376.1",
+        "platform": "Linux-7.0.0-1017-azure-x86_64-with-glibc2.39"
+      },
+      "part": 3,
+      "picture": "artifact-09/part-001237-001650.mp4",
+      "sha256": "0c794004210b02b361caf2fc5cc863fc8c9e1bf3b936c1a25c6306db0116fd1a",
+      "start": 1237,
+      "stream_time_base": "1/15360"
+    },
+    {
+      "bytes": 22512382,
+      "encrypted_bytes": 22591623,
+      "encrypted_sha256": "18987db4c0aefa336b831095917afa97c455726f209069e3040602f371c7325f",
+      "end": 2062,
+      "fingerprint": "c34e7f5bde42bb5fb5568817872b16521dcf3acfffe4ab9c2c95066a15ce8ce7",
+      "host": {
+        "github_image_version": "20261116.376.1",
+        "platform": "Linux-7.0.0-1017-azure-x86_64-with-glibc2.39"
+      },
+      "part": 4,
+      "picture": "artifact-04/part-001650-002062.mp4",
+      "sha256": "f71c436354a8260cfea22f8db48a5f474f985f7aacbfd435d8f992064502f5d2",
+      "start": 1650,
+      "stream_time_base": "1/15360"
+    },
+    {
+      "bytes": 22716078,
+      "encrypted_bytes": 22796623,
+      "encrypted_sha256": "291238bb913c8e1c43eb30aed2c111b80f43fb69b2a6d4fac232ca778b0348c9",
+      "end": 2475,
+      "fingerprint": "2188eb82bbb9c539367a3424630dbcca818f313950751afc2c72e18c0f661d7c",
+      "host": {
+        "github_image_version": "20261116.133.1",
+        "platform": "Linux-7.0.0-1014-aws-x86_64-with-glibc2.39"
+      },
+      "part": 5,
+      "picture": "artifact-00/part-002062-002475.mp4",
+      "sha256": "932a6107c140dba3ffcd49caf1deef5423ab0beb1bba8570246137fd4fd760d5",
+      "start": 2062,
+      "stream_time_base": "1/15360"
+    },
+    {
+      "bytes": 15968486,
+      "encrypted_bytes": 16041875,
+      "encrypted_sha256": "114c515e48c639159ed048cd29e4dbdcc2aa0ab46243514053c1c845bf99c96c",
+      "end": 2887,
+      "fingerprint": "2188eb82bbb9c539367a3424630dbcca818f313950751afc2c72e18c0f661d7c",
+      "host": {
+        "github_image_version": "20261116.133.1",
+        "platform": "Linux-7.0.0-1014-aws-x86_64-with-glibc2.39"
+      },
+      "part": 6,
+      "picture": "artifact-05/part-002475-002887.mp4",
+      "sha256": "47734d69e9d9ce42fe7c4fa54cb23df421bf7b8b72ba4d496301079feece1f4a",
+      "start": 2475,
+      "stream_time_base": "1/15360"
+    },
+    {
+      "bytes": 16864489,
+      "encrypted_bytes": 16943875,
+      "encrypted_sha256": "c1175777aa8a403557575e9018c9a285fdbbb4b59bf69e7ffead299ee837c40f",
+      "end": 3300,
+      "fingerprint": "c34e7f5bde42bb5fb5568817872b16521dcf3acfffe4ab9c2c95066a15ce8ce7",
+      "host": {
+        "github_image_version": "20261116.376.1",
+        "platform": "Linux-7.0.0-1017-azure-x86_64-with-glibc2.39"
+      },
+      "part": 7,
+      "picture": "artifact-01/part-002887-003300.mp4",
+      "sha256": "b0136ae60d000e03bf43b35f5d64de9e0864d4b01ae9627acc13bcf9f482f4e9",
+      "start": 2887,
+      "stream_time_base": "1/15360"
+    },
+    {
+      "bytes": 15229864,
+      "encrypted_bytes": 15303875,
+      "encrypted_sha256": "3c029c1ddef2312029a4ea527ed82aa22ab42574ca5b122219b6b1be9330e36d",
+      "end": 3712,
+      "fingerprint": "c34e7f5bde42bb5fb5568817872b16521dcf3acfffe4ab9c2c95066a15ce8ce7",
+      "host": {
+        "github_image_version": "20261116.376.1",
+        "platform": "Linux-7.0.0-1017-azure-x86_64-with-glibc2.39"
+      },
+      "part": 8,
+      "picture": "artifact-13/part-003300-003712.mp4",
+      "sha256": "9f8cad9d3784cc085689f52479b3e7699d044a105ae369d8d65d41a8d016dc0e",
+      "start": 3300,
+      "stream_time_base": "1/15360"
+    },
+    {
+      "bytes": 24804845,
+      "encrypted_bytes": 24887623,
+      "encrypted_sha256": "eb83bdd4fad87ffc2d75e9d264f5f22511e55dda4c7a4bb11aef0da364b28466",
+      "end": 4125,
+      "fingerprint": "c34e7f5bde42bb5fb5568817872b16521dcf3acfffe4ab9c2c95066a15ce8ce7",
+      "host": {
+        "github_image_version": "20261116.376.1",
+        "platform": "Linux-7.0.0-1017-azure-x86_64-with-glibc2.39"
+      },
+      "part": 9,
+      "picture": "artifact-12/part-003712-004125.mp4",
+      "sha256": "7be85e565d54f3ec1593ee06dba009dab90337ffac99bfa4857fa0c12727eac6",
+      "start": 3712,
+      "stream_time_base": "1/15360"
+    },
+    {
+      "bytes": 20318687,
+      "encrypted_bytes": 20398123,
+      "encrypted_sha256": "792f174077679d8716d36815cda09b675d425e79727a9aadee2b3a1b34d74a7d",
+      "end": 4537,
+      "fingerprint": "2188eb82bbb9c539367a3424630dbcca818f313950751afc2c72e18c0f661d7c",
+      "host": {
+        "github_image_version": "20261116.133.1",
+        "platform": "Linux-7.0.0-1014-aws-x86_64-with-glibc2.39"
+      },
+      "part": 10,
+      "picture": "artifact-02/part-004125-004537.mp4",
+      "sha256": "73d76ecbd8aeb14670240f1ec5bd4edcf18e6179e293064fce6eb12d8062aad1",
+      "start": 4125,
+      "stream_time_base": "1/15360"
+    },
+    {
+      "bytes": 31503727,
+      "encrypted_bytes": 31591123,
+      "encrypted_sha256": "b1c67d1f01dc393a99cc20fb739f57a8990f6730c67563bc92b37e207873c7e9",
+      "end": 4950,
+      "fingerprint": "c34e7f5bde42bb5fb5568817872b16521dcf3acfffe4ab9c2c95066a15ce8ce7",
+      "host": {
+        "github_image_version": "20261116.376.1",
+        "platform": "Linux-7.0.0-1017-azure-x86_64-with-glibc2.39"
+      },
+      "part": 11,
+      "picture": "artifact-07/part-004537-004950.mp4",
+      "sha256": "cb37446cb9d5152a6d953c0e981531b4a09bed873e05c0469fc6d1003f456195",
+      "start": 4537,
+      "stream_time_base": "1/15360"
+    },
+    {
+      "bytes": 24042343,
+      "encrypted_bytes": 24129123,
+      "encrypted_sha256": "07538d33408a51a578b332c0cadf803abe10ed9c6a2df76a3e83fa4e4fc68f43",
+      "end": 5362,
+      "fingerprint": "2188eb82bbb9c539367a3424630dbcca818f313950751afc2c72e18c0f661d7c",
+      "host": {
+        "github_image_version": "20261116.133.1",
+        "platform": "Linux-7.0.0-1014-aws-x86_64-with-glibc2.39"
+      },
+      "part": 12,
+      "picture": "artifact-17/part-004950-005362.mp4",
+      "sha256": "3f8dad37bd21fadbede9b53b1286c98ae3b0594a3d1f429155cc9a9c6bc73267",
+      "start": 4950,
+      "stream_time_base": "1/15360"
+    },
+    {
+      "bytes": 31215454,
+      "encrypted_bytes": 31304123,
+      "encrypted_sha256": "a743f30ef8b85eee20dacc8afd29d7c32951a99f9388e9105c433bfd1bc40328",
+      "end": 5775,
+      "fingerprint": "c34e7f5bde42bb5fb5568817872b16521dcf3acfffe4ab9c2c95066a15ce8ce7",
+      "host": {
+        "github_image_version": "20261116.376.1",
+        "platform": "Linux-7.0.0-1017-azure-x86_64-with-glibc2.39"
+      },
+      "part": 13,
+      "picture": "artifact-24/part-005362-005775.mp4",
+      "sha256": "bf339a55e44c64b72d328b05ac86b3dd43935333e6f96a2d78153eecaa862eb2",
+      "start": 5362,
+      "stream_time_base": "1/15360"
+    },
+    {
+      "bytes": 30619608,
+      "encrypted_bytes": 30709623,
+      "encrypted_sha256": "8f263c44cbd205e4641c233f07e429d09461d3bcabf80d489b83abbd21cfa71a",
+      "end": 6187,
+      "fingerprint": "2188eb82bbb9c539367a3424630dbcca818f313950751afc2c72e18c0f661d7c",
+      "host": {
+        "github_image_version": "20261116.133.1",
+        "platform": "Linux-7.0.0-1014-aws-x86_64-with-glibc2.39"
+      },
+      "part": 14,
+      "picture": "artifact-23/part-005775-006187.mp4",
+      "sha256": "bb09f5ebd0194ddc95d50682d1fd288dd4f2ed695991d1671099331da6e5febf",
+      "start": 5775,
+      "stream_time_base": "1/15360"
+    },
+    {
+      "bytes": 30169440,
+      "encrypted_bytes": 30258623,
+      "encrypted_sha256": "df73073f15b69dcf50622648cb4581449f200e3dd879265715d84e67619f6b19",
+      "end": 6600,
+      "fingerprint": "c34e7f5bde42bb5fb5568817872b16521dcf3acfffe4ab9c2c95066a15ce8ce7",
+      "host": {
+        "github_image_version": "20261116.376.1",
+        "platform": "Linux-7.0.0-1017-azure-x86_64-with-glibc2.39"
+      },
+      "part": 15,
+      "picture": "artifact-06/part-006187-006600.mp4",
+      "sha256": "03998218f7e6a13728721d65e92613f86c54c32d7b0a5811cb3fa7b703c68aab",
+      "start": 6187,
+      "stream_time_base": "1/15360"
+    },
+    {
+      "bytes": 22520962,
+      "encrypted_bytes": 22601875,
+      "encrypted_sha256": "112e93e4dc8092edd6110aaf44596dcbe7feb8fa083b8759b95cd08757f737f5",
+      "end": 7012,
+      "fingerprint": "c34e7f5bde42bb5fb5568817872b16521dcf3acfffe4ab9c2c95066a15ce8ce7",
+      "host": {
+        "github_image_version": "20261116.376.1",
+        "platform": "Linux-7.0.0-1017-azure-x86_64-with-glibc2.39"
+      },
+      "part": 16,
+      "picture": "artifact-11/part-006600-007012.mp4",
+      "sha256": "0db398e673345217a7a4a5b7436d8c00a4e9f4309e3b3c28264c19322b5e46f7",
+      "start": 6600,
+      "stream_time_base": "1/15360"
+    },
+    {
+      "bytes": 19049385,
+      "encrypted_bytes": 19127123,
+      "encrypted_sha256": "dc98c2d10890dd6338ae41ddeed8ce83c60c40827f5ff9384adc912089a16cb9",
+      "end": 7425,
+      "fingerprint": "2188eb82bbb9c539367a3424630dbcca818f313950751afc2c72e18c0f661d7c",
+      "host": {
+        "github_image_version": "20261116.133.1",
+        "platform": "Linux-7.0.0-1014-aws-x86_64-with-glibc2.39"
+      },
+      "part": 17,
+      "picture": "artifact-18/part-007012-007425.mp4",
+      "sha256": "51f4c1a010e2e9311e2aba92ffb4662a9a09cf2775727bbcb3de831d0bcbf69d",
+      "start": 7012,
+      "stream_time_base": "1/15360"
+    },
+    {
+      "bytes": 24163548,
+      "encrypted_bytes": 24252123,
+      "encrypted_sha256": "e9c1594b7f9f8c4e181fd6b6577f66cecc430ad41d6130e378bea87174cf15fb",
+      "end": 7837,
+      "fingerprint": "2188eb82bbb9c539367a3424630dbcca818f313950751afc2c72e18c0f661d7c",
+      "host": {
+        "github_image_version": "20261116.133.1",
+        "platform": "Linux-7.0.0-1014-aws-x86_64-with-glibc2.39"
+      },
+      "part": 18,
+      "picture": "artifact-20/part-007425-007837.mp4",
+      "sha256": "5f6e2c1e4bf43c67fbc3528042362d7d01201948b0fea7cb168d14fb20c8a03d",
+      "start": 7425,
+      "stream_time_base": "1/15360"
+    },
+    {
+      "bytes": 22395412,
+      "encrypted_bytes": 22478875,
+      "encrypted_sha256": "fa35ae5d462509092b07c571dac9a8a7b86ee52b50248a1944ccfd9e9555fc1e",
+      "end": 8250,
+      "fingerprint": "2188eb82bbb9c539367a3424630dbcca818f313950751afc2c72e18c0f661d7c",
+      "host": {
+        "github_image_version": "20261116.133.1",
+        "platform": "Linux-7.0.0-1014-aws-x86_64-with-glibc2.39"
+      },
+      "part": 19,
+      "picture": "artifact-19/part-007837-008250.mp4",
+      "sha256": "e0d3be7814e9d2532f781453fd12dd1d7c644f45de0d22ae4048ffb0f081f84c",
+      "start": 7837,
+      "stream_time_base": "1/15360"
+    },
+    {
+      "bytes": 20889038,
+      "encrypted_bytes": 20972123,
+      "encrypted_sha256": "59cce26da50ec906f3faf2a8ee8e84d3f628909d2342f0292d9e949de5942d41",
+      "end": 8662,
+      "fingerprint": "2188eb82bbb9c539367a3424630dbcca818f313950751afc2c72e18c0f661d7c",
+      "host": {
+        "github_image_version": "20261116.133.1",
+        "platform": "Linux-7.0.0-1014-aws-x86_64-with-glibc2.39"
+      },
+      "part": 20,
+      "picture": "artifact-22/part-008250-008662.mp4",
+      "sha256": "047570b78b66b47f6b4e8643d77a6cdf3e74de3f9e466ae0095713b858ae084d",
+      "start": 8250,
+      "stream_time_base": "1/15360"
+    },
+    {
+      "bytes": 31951705,
+      "encrypted_bytes": 32042123,
+      "encrypted_sha256": "f0671ea65b8f86c4144d824f9113f512b469f90d88ba8f9b22eb284f8c80f6f6",
+      "end": 9075,
+      "fingerprint": "c34e7f5bde42bb5fb5568817872b16521dcf3acfffe4ab9c2c95066a15ce8ce7",
+      "host": {
+        "github_image_version": "20261116.376.1",
+        "platform": "Linux-7.0.0-1017-azure-x86_64-with-glibc2.39"
+      },
+      "part": 21,
+      "picture": "artifact-32/part-008662-009075.mp4",
+      "sha256": "6ed85cadd559f03e5d54cc7d90aafe6d73d4819ed8a09c3b47aa6559358dcc38",
+      "start": 8662,
+      "stream_time_base": "1/15360"
+    },
+    {
+      "bytes": 24446361,
+      "encrypted_bytes": 24528875,
+      "encrypted_sha256": "bf9dda90fd28a6df0566d3bcd80cef02458186ab03744a8705f725c016cccafd",
+      "end": 9487,
+      "fingerprint": "2188eb82bbb9c539367a3424630dbcca818f313950751afc2c72e18c0f661d7c",
+      "host": {
+        "github_image_version": "20261116.133.1",
+        "platform": "Linux-7.0.0-1014-aws-x86_64-with-glibc2.39"
+      },
+      "part": 22,
+      "picture": "artifact-31/part-009075-009487.mp4",
+      "sha256": "15ce4de1de9baa98f317f9e6e85669099f4b1d88c1eadda1889e9c8655c214ef",
+      "start": 9075,
+      "stream_time_base": "1/15360"
+    },
+    {
+      "bytes": 28721672,
+      "encrypted_bytes": 28813375,
+      "encrypted_sha256": "f2bcdf59b7b487bf8db781d833f642d6f2ea3abbc1cb4300d773da6f878a5de9",
+      "end": 9900,
+      "fingerprint": "c34e7f5bde42bb5fb5568817872b16521dcf3acfffe4ab9c2c95066a15ce8ce7",
+      "host": {
+        "github_image_version": "20261116.376.1",
+        "platform": "Linux-7.0.0-1017-azure-x86_64-with-glibc2.39"
+      },
+      "part": 23,
+      "picture": "artifact-36/part-009487-009900.mp4",
+      "sha256": "7c13287b16464b53e59e86b7182342ffe76c87df0e2119fbcd4f3562e5164964",
+      "start": 9487,
+      "stream_time_base": "1/15360"
+    },
+    {
+      "bytes": 20653240,
+      "encrypted_bytes": 20736375,
+      "encrypted_sha256": "6a9c55cf45b7afe2f67c1d058e85da74789d2b6a93e467af3ce061d18c943a1a",
+      "end": 10312,
+      "fingerprint": "2188eb82bbb9c539367a3424630dbcca818f313950751afc2c72e18c0f661d7c",
+      "host": {
+        "github_image_version": "20261116.133.1",
+        "platform": "Linux-7.0.0-1014-aws-x86_64-with-glibc2.39"
+      },
+      "part": 24,
+      "picture": "artifact-28/part-009900-010312.mp4",
+      "sha256": "7dfb2168b8e2f23512b7fd2181385c67e7adb14a3c1f08f5d93bf167e2390c61",
+      "start": 9900,
+      "stream_time_base": "1/15360"
+    },
+    {
+      "bytes": 35669532,
+      "encrypted_bytes": 35762875,
+      "encrypted_sha256": "28c815ffd74f254d78962a6325aa2aca97443875099184fd15a129294ceb4872",
+      "end": 10725,
+      "fingerprint": "2188eb82bbb9c539367a3424630dbcca818f313950751afc2c72e18c0f661d7c",
+      "host": {
+        "github_image_version": "20261116.133.1",
+        "platform": "Linux-7.0.0-1014-aws-x86_64-with-glibc2.39"
+      },
+      "part": 25,
+      "picture": "artifact-37/part-010312-010725.mp4",
+      "sha256": "71edf9c64049bfaa675025087d85980a67e22e282010d052c84c66a9e0e78069",
+      "start": 10312,
+      "stream_time_base": "1/15360"
+    },
+    {
+      "bytes": 31975596,
+      "encrypted_bytes": 32072875,
+      "encrypted_sha256": "f2d6d8994b0a3525cc007e2876fd57906723dbdb285666f16d27419cf46c3a17",
+      "end": 11137,
+      "fingerprint": "2188eb82bbb9c539367a3424630dbcca818f313950751afc2c72e18c0f661d7c",
+      "host": {
+        "github_image_version": "20261116.133.1",
+        "platform": "Linux-7.0.0-1014-aws-x86_64-with-glibc2.39"
+      },
+      "part": 26,
+      "picture": "artifact-21/part-010725-011137.mp4",
+      "sha256": "a594b90ac89218169b00de1b6edca6130ae8bac0f091f4c024748732d04b2229",
+      "start": 10725,
+      "stream_time_base": "1/15360"
+    },
+    {
+      "bytes": 28974324,
+      "encrypted_bytes": 29059375,
+      "encrypted_sha256": "aaf297055ccda6f2767ddc955e4676afb75745dc2d077ab7cca1d35c959246ae",
+      "end": 11550,
+      "fingerprint": "c34e7f5bde42bb5fb5568817872b16521dcf3acfffe4ab9c2c95066a15ce8ce7",
+      "host": {
+        "github_image_version": "20261116.376.1",
+        "platform": "Linux-7.0.0-1017-azure-x86_64-with-glibc2.39"
+      },
+      "part": 27,
+      "picture": "artifact-33/part-011137-011550.mp4",
+      "sha256": "59108495ef5baf1541e2d65c6eadb157db5a8c0d47ef1ed950843d528d062d94",
+      "start": 11137,
+      "stream_time_base": "1/15360"
+    },
+    {
+      "bytes": 33500731,
+      "encrypted_bytes": 33589875,
+      "encrypted_sha256": "f04d2b66f55a7a97fdbce2370fbaeef366e4e46fcfdb768f1bfb0aa9e5e25ffb",
+      "end": 11962,
+      "fingerprint": "2188eb82bbb9c539367a3424630dbcca818f313950751afc2c72e18c0f661d7c",
+      "host": {
+        "github_image_version": "20261116.133.1",
+        "platform": "Linux-7.0.0-1014-aws-x86_64-with-glibc2.39"
+      },
+      "part": 28,
+      "picture": "artifact-34/part-011550-011962.mp4",
+      "sha256": "dc08bd4c06369fb6be44e50222e89cfc3d73d3cc3a09f2811e1cf69b8bcd37c6",
+      "start": 11550,
+      "stream_time_base": "1/15360"
+    },
+    {
+      "bytes": 25062984,
+      "encrypted_bytes": 25143875,
+      "encrypted_sha256": "e425b2b9f4b6e0a522023f5aef4835abfd7af4cf9b39985f61b9c8c1d6ac39b5",
+      "end": 12375,
+      "fingerprint": "2188eb82bbb9c539367a3424630dbcca818f313950751afc2c72e18c0f661d7c",
+      "host": {
+        "github_image_version": "20261116.133.1",
+        "platform": "Linux-7.0.0-1014-aws-x86_64-with-glibc2.39"
+      },
+      "part": 29,
+      "picture": "artifact-35/part-011962-012375.mp4",
+      "sha256": "e68fcb3fe12a766afc998fcdfab77aa44481862cb2246dbec343d8aaee9761bb",
+      "start": 11962,
+      "stream_time_base": "1/15360"
+    },
+    {
+      "bytes": 24943524,
+      "encrypted_bytes": 25031123,
+      "encrypted_sha256": "84ee766179cc4021ea3cd366c34b845351526a6d65ae080b71cd64244431732a",
+      "end": 12787,
+      "fingerprint": "c34e7f5bde42bb5fb5568817872b16521dcf3acfffe4ab9c2c95066a15ce8ce7",
+      "host": {
+        "github_image_version": "20261116.376.1",
+        "platform": "Linux-7.0.0-1017-azure-x86_64-with-glibc2.39"
+      },
+      "part": 30,
+      "picture": "artifact-39/part-012375-012787.mp4",
+      "sha256": "930bb5121dec4c11fd0a9532b62bff9501149b3d40a394a8c2bce3ae1dc0fa12",
+      "start": 12375,
+      "stream_time_base": "1/15360"
+    },
+    {
+      "bytes": 25304489,
+      "encrypted_bytes": 25389875,
+      "encrypted_sha256": "264aa2b8628919c74786582e023ceb56a760bb61ae352c4e7341e89f686790e3",
+      "end": 13200,
+      "fingerprint": "c34e7f5bde42bb5fb5568817872b16521dcf3acfffe4ab9c2c95066a15ce8ce7",
+      "host": {
+        "github_image_version": "20261116.376.1",
+        "platform": "Linux-7.0.0-1017-azure-x86_64-with-glibc2.39"
+      },
+      "part": 31,
+      "picture": "artifact-38/part-012787-013200.mp4",
+      "sha256": "be47a7d6d9d2dc4fad88966ba9f5c8e74cb45ad35795ed7fd8253585c2594091",
+      "start": 12787,
+      "stream_time_base": "1/15360"
+    },
+    {
+      "bytes": 20819882,
+      "encrypted_bytes": 20900375,
+      "encrypted_sha256": "46f10d4ebb94dc0921e6dd9d6b36bfd24a4b97d0bccba932cbbbcd32ccfc0ebc",
+      "end": 13612,
+      "fingerprint": "c34e7f5bde42bb5fb5568817872b16521dcf3acfffe4ab9c2c95066a15ce8ce7",
+      "host": {
+        "github_image_version": "20261116.376.1",
+        "platform": "Linux-7.0.0-1017-azure-x86_64-with-glibc2.39"
+      },
+      "part": 32,
+      "picture": "artifact-25/part-013200-013612.mp4",
+      "sha256": "4827b647633645c9c9bf014e49bc6fff39f63055a88dce5f9ddbffdfa906d98d",
+      "start": 13200,
+      "stream_time_base": "1/15360"
+    },
+    {
+      "bytes": 17419333,
+      "encrypted_bytes": 17497375,
+      "encrypted_sha256": "3c39882b55c4df79e8dfe98594a2da9a2a778ed9f18dcb5039dc5d33ef8260b1",
+      "end": 14025,
+      "fingerprint": "2188eb82bbb9c539367a3424630dbcca818f313950751afc2c72e18c0f661d7c",
+      "host": {
+        "github_image_version": "20261116.133.1",
+        "platform": "Linux-7.0.0-1014-aws-x86_64-with-glibc2.39"
+      },
+      "part": 33,
+      "picture": "artifact-08/part-013612-014025.mp4",
+      "sha256": "43a53b9cd19d8f58732d86d4373ea880a303a03773c748a3c5aa8c7f1ba589d0",
+      "start": 13612,
+      "stream_time_base": "1/15360"
+    },
+    {
+      "bytes": 20812139,
+      "encrypted_bytes": 20890123,
+      "encrypted_sha256": "8a3adb291c4e9cb8f9771e7f66f60c4d965f7e644146455a3f1743046d16e009",
+      "end": 14437,
+      "fingerprint": "2188eb82bbb9c539367a3424630dbcca818f313950751afc2c72e18c0f661d7c",
+      "host": {
+        "github_image_version": "20261116.133.1",
+        "platform": "Linux-7.0.0-1014-aws-x86_64-with-glibc2.39"
+      },
+      "part": 34,
+      "picture": "artifact-29/part-014025-014437.mp4",
+      "sha256": "641420663c344279873d8a4bede8555603fab0278d92ae0552ee755a44608f49",
+      "start": 14025,
+      "stream_time_base": "1/15360"
+    },
+    {
+      "bytes": 30743453,
+      "encrypted_bytes": 30832623,
+      "encrypted_sha256": "ee6605e4aab9fefa227a591a06840bc01848557ccbdec1484c4e952af3a973d1",
+      "end": 14850,
+      "fingerprint": "c34e7f5bde42bb5fb5568817872b16521dcf3acfffe4ab9c2c95066a15ce8ce7",
+      "host": {
+        "github_image_version": "20261116.376.1",
+        "platform": "Linux-7.0.0-1017-azure-x86_64-with-glibc2.39"
+      },
+      "part": 35,
+      "picture": "artifact-30/part-014437-014850.mp4",
+      "sha256": "2c01b222a53070557a9bdada8878b975c8f35f313873b094b3b31b9c9c68fd98",
+      "start": 14437,
+      "stream_time_base": "1/15360"
+    },
+    {
+      "bytes": 25818848,
+      "encrypted_bytes": 25902375,
+      "encrypted_sha256": "978e21faea4ea69320518040692e2ef69f1cee378cad7fba44f2c51d08549fae",
+      "end": 15262,
+      "fingerprint": "2188eb82bbb9c539367a3424630dbcca818f313950751afc2c72e18c0f661d7c",
+      "host": {
+        "github_image_version": "20261116.133.1",
+        "platform": "Linux-7.0.0-1014-aws-x86_64-with-glibc2.39"
+      },
+      "part": 36,
+      "picture": "artifact-26/part-014850-015262.mp4",
+      "sha256": "01cd6b96893158c846775831f558f2a6a28836a6bcb4a8b6364a221f1d372f94",
+      "start": 14850,
+      "stream_time_base": "1/15360"
+    },
+    {
+      "bytes": 3197285,
+      "encrypted_bytes": 3260123,
+      "encrypted_sha256": "ab6f4005cc1c4995a63fb35fa4e3612e6232d1c6e1def32b5836711e1f88b6e7",
+      "end": 15675,
+      "fingerprint": "2188eb82bbb9c539367a3424630dbcca818f313950751afc2c72e18c0f661d7c",
+      "host": {
+        "github_image_version": "20261116.133.1",
+        "platform": "Linux-7.0.0-1014-aws-x86_64-with-glibc2.39"
+      },
+      "part": 37,
+      "picture": "artifact-16/part-015262-015675.mp4",
+      "sha256": "c33fa8e0d5a5f2cc2cb3ba2d613d167829abfb9ac3d1b0c032eee8bdd7ebc55a",
+      "start": 15262,
+      "stream_time_base": "1/15360"
+    },
+    {
+      "bytes": 1290055,
+      "encrypted_bytes": 1353623,
+      "encrypted_sha256": "6f536ea9a8f208c95fd6f3a53f0ab8802e59e2d48bd926d61e5c5fdedeb004b4",
+      "end": 16087,
+      "fingerprint": "2188eb82bbb9c539367a3424630dbcca818f313950751afc2c72e18c0f661d7c",
+      "host": {
+        "github_image_version": "20261116.133.1",
+        "platform": "Linux-7.0.0-1014-aws-x86_64-with-glibc2.39"
+      },
+      "part": 38,
+      "picture": "artifact-27/part-015675-016087.mp4",
+      "sha256": "6bc142dc7fcdbacb8a9a7fef42cf996f0b4198cd2ee26892009b3f43fb499d75",
+      "start": 15675,
+      "stream_time_base": "1/15360"
+    },
+    {
+      "bytes": 1934949,
+      "encrypted_bytes": 1999375,
+      "encrypted_sha256": "a214398dda1207a7cd8a8802d6d19b686b8bcb70aecd0932ec339cc0dc461c0a",
+      "end": 16500,
+      "fingerprint": "2188eb82bbb9c539367a3424630dbcca818f313950751afc2c72e18c0f661d7c",
+      "host": {
+        "github_image_version": "20261116.133.1",
+        "platform": "Linux-7.0.0-1014-aws-x86_64-with-glibc2.39"
+      },
+      "part": 39,
+      "picture": "artifact-15/part-016087-016500.mp4",
+      "sha256": "93580d36d62e9387b7ab5466edcedb2e305ba8ca397c33f05fb2e8a637955713",
+      "start": 16087,
+      "stream_time_base": "1/15360"
+    }
+  ],
+  "producing_commit": "eec8d16519ea82309ef851975792e9dfc548da03",
+  "request": {
+    "branch": "creative/s11-renewed-20261122",
+    "crf": 14,
+    "encryption": "CMS AES-256-GCM with RSA-OAEP SHA256; private key remains local",
+    "fps": 60,
+    "frames": 16500,
+    "height": 1080,
+    "id": "s11-renewed-20261123-master",
+    "input_manifest_sha256": "98ab85ac1f01419c4fcb375393384c03d7f49270bf6a898975f3ef828fa4e95b",
+    "mode": "render",
+    "parts": 40,
+    "picture_delay": 0.1,
+    "probe_seconds": [
+      58,
+      105.7,
+      118.8,
+      186,
+      205
+    ],
+    "recipient_sha256": "a39edaae27ea4a67bf003f28def7480309ab4f005531c3001552da4169a03409",
+    "repository": "lovelaceaml-hub/concert-backdrops",
+    "samples": 2,
+    "schema": "s11-cloud-request-v1",
+    "width": 1920
+  },
+  "run_id": 45108198761,
+  "schema": "s11-reviewed-host-assembled-v1",
+  "sha256": "71eb27c680341b4f2c265baf6bd71afd098d5a90daf54a835259379485dcbb32",
+  "story_and_costume_visual_qa": "pending"
+}

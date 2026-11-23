@@ -1,0 +1,46 @@
+{
+  "allowed_fingerprints": {
+    "2188eb82bbb9c539367a3424630dbcca818f313950751afc2c72e18c0f661d7c": {
+      "github_image_version": "20261116.133.1",
+      "platform": "Linux-7.0.0-1014-aws-x86_64-with-glibc2.39"
+    },
+    "c34e7f5bde42bb5fb5568817872b16521dcf3acfffe4ab9c2c95066a15ce8ce7": {
+      "github_image_version": "20261116.376.1",
+      "platform": "Linux-7.0.0-1017-azure-x86_64-with-glibc2.39"
+    }
+  },
+  "assembly_authorized": true,
+  "byte_identical_runtimes_claimed": false,
+  "decision": "Permit assembly for mandatory encoded-master QA using the two explicitly reviewed host cohorts; this is not delivery or owner creative approval.",
+  "documentation_note": "Persisted policy with repository-relative evidence paths. Original work evidence and original work policy are preserved. All final film QA remains pending in this assembly authorization.",
+  "evidence": [
+    {
+      "path": "project-docs/production-system/evidence/s11-host-cohort-review.md",
+      "sha256": "9cf073d0fabd0136c20b72c2557340f5827eaa32d9ab074d299971a514ba8b30"
+    },
+    {
+      "path": "project-docs/production-system/evidence/s11-host-cohort-renderer-logs.json",
+      "sha256": "687a0b9e7545d2f62f0f90ac0a3a915d9288a2e8fa4d11a91a398f695f87c091"
+    },
+    {
+      "path": "project-docs/production-system/evidence/s11-host-cohort-blocker-part-07.json",
+      "sha256": "a4642322ba18a2571b76b05c9186bab00bb54af0897db1b753dd0672923bb9dd"
+    }
+  ],
+  "final_delivery_approved": false,
+  "normalized_contract_sha256": "87b19dea408188d88eef2bad616adb606ef84f1545b0259d555d8ec46509aef4",
+  "normalized_runtime_fields": [
+    "github_image_version",
+    "platform"
+  ],
+  "producing_commit": "eec8d16519ea82309ef851975792e9dfc548da03",
+  "request_id": "s11-renewed-20261123-master",
+  "request_sha256": "cdead98a1d3d809d1803831b805636c2a7353fd7609889eb14fdec8b68ca5190",
+  "required_final_qa": [
+    "Full decode, exact frame count, timestamps, stream format, original score correlation and silent ending.",
+    "Actual encoded before/after frames for every chunk join and dense short-window review of cross-cohort joins, emphasizing joins within a camera shot.",
+    "Story, title, costume, composition and representative motion review of the assembled film."
+  ],
+  "run_id": 45108198761,
+  "schema": "s11-reviewed-host-cohorts-v1"
+}

@@ -18,7 +18,7 @@
   ],
   "audio_sources_verified": 11,
   "full_rehearsal_recordings_verified": 0,
-  "current_increment": "Advanced Dance: two complete 32-second solo and ensemble performances revising films 01 and 02",
+  "current_increment": "Complete Almighty God Knows the Future recreation with modest costumes, continuous conducting, new cameras and controlled light",
   "increment_status": "complete_reviewed_saved",
   "cloud_gpu_provider": null,
   "mac_rendering_used": false,
@@ -28,7 +28,7 @@
     "handoff": "https://drive.google.com/drive/folders/1QDGGqqkJlbovBLCthX-QChqfD8zSmK8X",
     "media": "https://drive.google.com/drive/folders/1hrk62bFIOHv2NwXvYl2bNSmp0cwBoXrr"
   },
-  "next_work": "Current maintenance checks and the updated handoff are complete. PR110 is the source integration authority. Recover the saved films for owner feedback; a later requested production round uses its own current source, caches and receipts.",
+  "next_work": "Recover the finished Song 11 files for owner feedback or reuse. Begin any later requested picture changes with a new source/output identity; there is no unfinished render queue.",
   "background_service_configured": false,
   "historical_baseline_checkpoint": "673f68785c36b57d55d05129ee5549efe6352c60",
   "render_projects": [
@@ -53,7 +53,7 @@
   ],
   "new_model_family_count": 9,
   "new_model_variant_count": 18,
-  "current_increment_pr": 109,
+  "current_increment_pr": 112,
   "setup_font_reconstruction_commit": "3aaa7c5d75a01704c984b60c33cfc2a0bb807b5f",
   "fresh_checkout_native_frame_verified": true,
   "fresh_checkout_scope": "New detached source checkout and exact reconstructed fonts, using existing locked Python and host tools; one native frame matched exactly.",
@@ -63,7 +63,7 @@
   "new_media_files_saved": 2,
   "new_media_catalog": "project-docs/production-system/catalogs/deliveries.json",
   "active_render_processes": 0,
-  "integration_authority": "https://github.com/lovelaceaml-hub/concert-backdrops/pull/109",
+  "integration_authority": "https://github.com/lovelaceaml-hub/concert-backdrops/pull/112",
   "portable_handoff": {
     "status": "uploaded_and_raw_bytes_verified",
     "filename": "Concert-Production-System-Handoff-2026-11-20.zip",
@@ -178,7 +178,7 @@
     "historical_record": true,
     "reference_availability_scope": "Poster-only and missing-moving-footage statements describe the earlier fan-trio increment. The three supplied screen recordings were recovered and sampled during Cinematic Ten."
   },
-  "total_new_media_catalog_count": 39,
+  "total_new_media_catalog_count": 44,
   "natural_performance": {
     "source_commit": "0c42f4422a6b67464cb9cd84aac32008d45d4f4c",
     "project_id": "concert-dance-study",
@@ -231,171 +231,14 @@
     "url": "https://drive.google.com/file/d/16F00sMLXIxP77F2bvffPJ9754eR93wtb/view"
   },
   "active_development": {
-    "name": "Advanced Dance",
+    "name": "Song11 full recreation",
     "status": "complete_reviewed_saved",
-    "owner_request": "Extremely advanced high quality high pace choreography with sparkles and lights; correct awkward hand positions, anatomy and movement.",
-    "integration_branch": "creative/advanced-choreography-20261121",
-    "checkpoint_source_commit": "eec83de733cf89f74209b6fdb48fba9cb1b98e2d",
-    "picture_source_frozen": true,
-    "pull_request": 109,
-    "project_ids": [
-      "advanced-dance-solo",
-      "advanced-dance-ensemble"
-    ],
-    "current_handoff": "project-docs/production-system/ADVANCED-DANCE.md",
-    "motion_handoff": "tools/advanced_dance/README.md",
-    "reference_recordings_acquired": true,
-    "reference_recordings_sampled": true,
-    "observed_remaining_repairs": [],
-    "delivery_scope": "Replace films 01 and 02 in a newly named ten-film package; preserve exact delivered 03 through 10 bytes.",
-    "validation_pending": [],
-    "source_commit": "254414bc0356171f7d5ad89361c75d45fd01a407",
-    "numeric_motion_sample_count": 26484,
-    "numeric_motion_errors": 0,
-    "numeric_motion_review_flags": 6,
-    "cloth_saved_states_checked": 5772,
-    "cloth_render_samples_checked": 26484,
-    "cloth_failures": 0,
-    "cast_pair_failures": 0,
-    "execution_policy": "project-docs/production-system/evidence/advanced-dance-execution-policy.json",
-    "solo_proof_review": {
-      "path": "project-docs/production-system/evidence/advanced-dance-solo-proof-review.json",
-      "sha256": "0c1edddad1a7de4b25c8fc6496e9996600c2ebea37c42764c3f4e6b8eeba9a04",
-      "distinct_decoded_samples": 99,
-      "inspected_sheets": 16,
-      "blocking_visual_defects_found": false,
-      "method": "Ordered native-pixel frame review across the full 32-second proof plus all 30 fps proof frames in three flagged windows. Not continuous perceptual or final60fps review."
-    },
-    "progress_checkpoint_utc": "2026-11-22T09:39:09.772092+00:00",
-    "completed_films": {
-      "advanced-dance-solo": "project-docs/production-system/evidence/advanced-dance-solo-delivery.json",
-      "advanced-dance-ensemble": "project-docs/production-system/evidence/advanced-dance-ensemble-delivery.json"
-    },
-    "ensemble_proof_review": {
-      "path": "project-docs/production-system/evidence/advanced-dance-ensemble-proof-review.json",
-      "sha256": "55fb9763b892d0f5079a6a051d63aa9fca9976ebe539f33a5dc896ea390d2483",
-      "native_window_frames": 257,
-      "decoded_overview_samples": 65,
-      "sampled_visual_blockers": 0,
-      "continuous_perceptual_review_claimed": false,
-      "owner_approval": false
-    },
-    "render_checkpoint": {
-      "session_id": 47879,
-      "schema_version": 1,
-      "mode": "ensemble",
-      "status": "running",
-      "started_utc": "2026-11-22T09:35:13.251082+00:00",
-      "command": [
-        "./scripts/video",
-        "produce",
-        "work/advanced-dance/execution/ensemble-three-workers.json",
-        "--quality",
-        "final"
-      ],
-      "execution_manifest_sha256": "a7e6f990e278fd8d37f8977e48f8f7593a7074e38cf1fbda8cd21bff83be9b8a",
-      "coordinator_wrapper_pid": 5,
-      "source_fingerprint": "ec76277c753ba288fb9a2d6634a1f45e4741747f33baad3d237e7be5ff1f272d",
-      "render_workers": 3,
-      "render_chunk_frames": 64,
-      "reused_even_frames": 960,
-      "reused_odd_frames": 2,
-      "missing_native_frames_at_start": 958,
-      "log": "work/advanced-dance/ensemble-final-render.log",
-      "scope": "Complete native 1080p60 ensemble using identical frozen picture inputs and exact existing frames.",
-      "observed_frames": {
-        "native_frames_written": 1059,
-        "even_frames": 960,
-        "odd_frames": 99,
-        "target": 1920,
-        "master_exists": false,
-        "stop_marker": false,
-        "current_invocation": "308c615d366e430598b8e1787845226b",
-        "current_chunks": [
-          {
-            "invocation": "308c615d366e430598b8e1787845226b",
-            "chunk": "chunk_000001",
-            "rendered": 33,
-            "requested": 64,
-            "staged": 34,
-            "last": "concert kit frame 193, temporal samples 2",
-            "log_age_seconds": 5.3,
-            "complete": false
-          },
-          {
-            "invocation": "308c615d366e430598b8e1787845226b",
-            "chunk": "chunk_000002",
-            "rendered": 31,
-            "requested": 64,
-            "staged": 31,
-            "last": "concert kit frame 317, temporal samples 2",
-            "log_age_seconds": 3.6,
-            "complete": false
-          },
-          {
-            "invocation": "308c615d366e430598b8e1787845226b",
-            "chunk": "chunk_000000",
-            "rendered": 33,
-            "requested": 64,
-            "staged": 33,
-            "last": "concert kit frame 65, temporal samples 2",
-            "log_age_seconds": 0.7,
-            "complete": false
-          }
-        ]
-      },
-      "observations_are_not_live_telemetry": true
-    },
-    "final_movie_evidence": {
-      "solo": {
-        "mode": "solo",
-        "master_sha256": "8f02ee2a72a128198771cfb8f3d3dabc0b90716abdb4c028d19fa462b6a6edac",
-        "bytes": 57396334,
-        "source_fingerprint": "437e7420ab538baf3608b879ca371a335ffbbaa09e77444cce7103485b5801ed",
-        "technical_passed": true,
-        "native_frames": 1920,
-        "duration_seconds": 32,
-        "fps": 60,
-        "final_review": {
-          "path": "work/advanced-dance/qa/final/independent-solo-final-encoded-review.json",
-          "sha256": "d923351a3dd1390d6bb0f05abebe6dba4600aec87746b92ecd9ddf627e34a4b2",
-          "bytes": 8935,
-          "include_full_json_in_final_package": true
-        },
-        "distinct_decoded_frames": 150,
-        "inspected_sheets": 29,
-        "sampled_visual_blockers": 0,
-        "owner_approval": false
-      },
-      "ensemble": {
-        "mode": "ensemble",
-        "master_sha256": "8bedc48bc2586d903f5aefcb8bfea89ecad58359326ffdc27f5988b0f573540d",
-        "bytes": 76939037,
-        "source_fingerprint": "ec76277c753ba288fb9a2d6634a1f45e4741747f33baad3d237e7be5ff1f272d",
-        "technical_passed": true,
-        "native_frames": 1920,
-        "duration_seconds": 32,
-        "fps": 60,
-        "final_review": {
-          "path": "work/advanced-dance/qa/final/independent-ensemble-final-encoded-review.json",
-          "sha256": "4da1581fee14ac24821327c1e254ad6217352be061c6ea6bcd54f07859204bb0",
-          "bytes": 25441,
-          "include_full_json_in_final_package": true
-        },
-        "distinct_decoded_frames": 135,
-        "inspected_sheets": 22,
-        "sampled_visual_blockers": 0,
-        "owner_approval": false
-      }
-    },
-    "saved_delivery_evidence": "project-docs/production-system/evidence/advanced-dance-final-delivery.json",
-    "final_delivery_recorded_utc": "2026-11-22T10:21:38.162872+00:00",
-    "source_integration": {
-      "pr": 109,
-      "status": "merged",
-      "merge_commit": "5a602349f90f50d79968bab77dd08db1a20c4339",
-      "merged_at": "2026-11-22T10:23:55Z"
-    }
+    "integration_branch": "creative/s11-renewed-20261122",
+    "pull_request": 112,
+    "source_commit": "eec8d16519ea82309ef851975792e9dfc548da03",
+    "current_handoff": "project-docs/production-system/AI-HANDOFF.md",
+    "delivery_evidence": "project-docs/production-system/evidence/s11-renewed-final-delivery.json",
+    "owner_approval": "not_recorded"
   },
   "historical_increments": [
     {
@@ -885,8 +728,8 @@
       "url": "https://drive.google.com/file/d/16F00sMLXIxP77F2bvffPJ9754eR93wtb/view"
     }
   ],
-  "active_render_status": "Both final production coordinators completed; exact dated evidence is retained.",
-  "historical_delivery_fields_scope": "Existing Cinematic Ten and Drive fields retain completed prior increments. The Advanced Dance counters describe only the current new increment.",
+  "active_render_status": "All 40 cloud picture parts and final delivery encodes completed; this is a dated completion record, not live process telemetry.",
+  "historical_delivery_fields_scope": "Earlier named Cinematic Ten, Advanced Dance and Drive fields retain their historical scopes. Current counters refer to two direct Song11 video files and two exact-master ZIP archives; the catalog also includes the logical native master.",
   "cinematic_ten": {
     "source_commit": "df4fc478116d3f0e34a85d2166097fbda55911bf",
     "pull_request": 108,
@@ -1234,10 +1077,10 @@
     ],
     "render_completion_evidence": "project-docs/production-system/evidence/cinematic-ten-render-completion.json"
   },
-  "new_support_files_saved": 7,
-  "new_delivery_artifacts_saved": 9,
+  "new_support_files_saved": 2,
+  "new_delivery_artifacts_saved": 4,
   "total_new_media_catalog_count_scope": "Delivery catalog entry count, including support artifacts; historical field name retained.",
-  "render_completion_evidence": "project-docs/production-system/evidence/advanced-dance-render-completion.json",
+  "render_completion_evidence": "project-docs/production-system/evidence/s11-renewed-cloud-completion.json",
   "advanced_dance_computation_checkpoint": {
     "path": "/workspace/scratch/5c574d00bbc0/advanced-dance/work/advanced-dance/retained/Advanced_Dance_Render_Cache_Checkpoint.zip",
     "filename": "Advanced_Dance_Render_Cache_Checkpoint.zip",
@@ -1274,6 +1117,303 @@
     "current_agents_role": "Navigation only; current conversation supplies working directions."
   },
   "current_maintenance": {
+    "name": "Song11 reusable scene, cloud assembly, audio finalization, archives and delivery records",
+    "status": "reviewed_documented",
+    "integration_pr": 112
+  },
+  "catalog_artifact_count": 44,
+  "previous_increment_at_s11_start": {
+    "current_increment": "Advanced Dance: two complete 32-second solo and ensemble performances revising films 01 and 02",
+    "increment_status": "complete_reviewed_saved",
+    "current_increment_pr": 109,
+    "integration_authority": "https://github.com/lovelaceaml-hub/concert-backdrops/pull/109",
+    "next_work": "Current maintenance checks and the updated handoff are complete. PR110 is the source integration authority. Recover the saved films for owner feedback; a later requested production round uses its own current source, caches and receipts."
+  },
+  "s11_recreation": {
+    "creative_source_commit": "beacae436e3e44b6c8fd9732437945cc731d851e",
+    "cloud_probe_commit": "8a2ddad71eba2a8c85b49484acd554ead39484a9",
+    "cloud_probe_run_id": 45106842150,
+    "branch": "creative/s11-renewed-20261122",
+    "duration_seconds": 275,
+    "frames": 16500,
+    "fps": 60,
+    "native_size": [
+      1920,
+      1080
+    ],
+    "temporal_samples": 2,
+    "original_audio_sha256": "70464dff370f7187d12029970c1fa1ef3e91c6957180aa685b64cead830f7004",
+    "owner_creative_approval": "not_recorded",
+    "full_master_status": "complete_reviewed_saved_in_exact_archives",
+    "motion_proof_status": "complete_decode_timing_audio_and_consecutive_frame_review_passed",
+    "rejected_fan_pr": {
+      "number": 111,
+      "state": "closed",
+      "merged": false
+    },
+    "recovery_record": "project-docs/production-system/evidence/s11-cloud-recovery.json",
+    "cloud_probe_status": "complete_authenticated_and_native_visual_review_passed",
+    "cloud_full_request_id": "s11-renewed-20261123-master",
+    "cloud_full_parts": 40,
+    "cloud_max_parallel": 20,
+    "cloud_mesa_threads": 2,
+    "cloud_probe_evidence": "project-docs/production-system/evidence/s11-cloud-native-probe.json",
+    "cloud_full_producing_commit": "eec8d16519ea82309ef851975792e9dfc548da03",
+    "cloud_full_run_id": 45108198761,
+    "local_fallback_status": "inactive_session_missing_do_not_restart",
+    "cloud_host_compatibility_policy": "project-docs/production-system/evidence/s11-host-cohort-policy.json",
+    "delivery_workflow": "tools/s11_delivery/README.md",
+    "native_master": {
+      "filename": "Almighty_God_Knows_the_Future_Renewed_1080p60_final.mp4",
+      "bytes": 911865528,
+      "sha256": "c553b2a51f3917d389adc51ee6dc97c96e6b6e9e306a9bfd2bfbe38a89b34c55",
+      "seconds": 275,
+      "frames": 16500,
+      "fps": 60,
+      "width": 1920,
+      "height": 1080,
+      "temporal_samples": 2,
+      "native_render": true,
+      "producing_commit": "eec8d16519ea82309ef851975792e9dfc548da03",
+      "retention": "Exact movie bytes retained in two independently saved ZIP archives; restoration verified byte-for-byte.",
+      "archive_files": [
+        {
+          "filename": "Almighty_God_Knows_the_Future_Native_Master_Part_01_of_02.zip",
+          "sha256": "ffc3ca5352abbfe2e870ad740ace9ea4c97bf164c3c4b51b932849a4ff49d91c",
+          "bytes": 480006941,
+          "library": {
+            "status": "saved",
+            "library_file_id": "libfile_d45ece0bb38c81918be0e85866f53ab9",
+            "file_id": "file_00000000943082129d121772ff6143cb",
+            "version": 0,
+            "path": "/Almighty_God_Knows_the_Future_Native_Master_Part_01_of_02.zip",
+            "url": "https://chatgpt.com/library?file_id=libfile_d45ece0bb38c81918be0e85866f53ab9&account_id=personal",
+            "local_metadata_applied": true
+          }
+        },
+        {
+          "filename": "Almighty_God_Knows_the_Future_Native_Master_Part_02_of_02.zip",
+          "sha256": "c4285f489fbadec9489037f50c6cab54ab839c3d1545c22dc822a0fd095284a9",
+          "bytes": 431872469,
+          "library": {
+            "status": "saved",
+            "library_file_id": "libfile_197a9f5bb6508191b2a926f0e45a47d2",
+            "file_id": "file_00000000b3c0821287203d76cc3c2161",
+            "version": 0,
+            "path": "/Almighty_God_Knows_the_Future_Native_Master_Part_02_of_02.zip",
+            "url": "https://chatgpt.com/library?file_id=libfile_197a9f5bb6508191b2a926f0e45a47d2&account_id=personal",
+            "local_metadata_applied": true
+          }
+        }
+      ]
+    },
+    "full_hd_delivery": {
+      "filename": "Almighty_God_Knows_the_Future_Renewed_1080p60_delivery.mp4",
+      "kind": "full_hd_delivery",
+      "local_path": "/workspace/scratch/39a2abd37644/concert-future/work/s11_cloud/Almighty_God_Knows_the_Future_Renewed_1080p60_delivery.mp4",
+      "bytes": 395506771,
+      "sha256": "120bb4fcf4ebced490f4f468dca396170b328fd0ece3941e67e832258f5f449e",
+      "library": {
+        "status": "saved",
+        "library_file_id": "libfile_40082ab3a2ec8191a7e32eac89a1aa59",
+        "file_id": "file_0000000059f08212835d200bd3c12c48",
+        "version": 0,
+        "path": "/Almighty_God_Knows_the_Future_Renewed_1080p60_delivery.mp4",
+        "url": "https://chatgpt.com/library?file_id=libfile_40082ab3a2ec8191a7e32eac89a1aa59&account_id=personal",
+        "local_metadata_applied": true
+      }
+    },
+    "review_copy": {
+      "filename": "Almighty_God_Knows_the_Future_Renewed_720p60_final.mp4",
+      "kind": "review_copy",
+      "local_path": "/workspace/scratch/39a2abd37644/concert-future/work/s11_cloud/Almighty_God_Knows_the_Future_Renewed_720p60_final.mp4",
+      "bytes": 220179614,
+      "sha256": "9cba8118b8fdf7c9410e5b10362ba15ee28a4668f95aceca911cee95a0848880",
+      "library": {
+        "status": "saved",
+        "library_file_id": "libfile_d6b4552450348191adcddea6a16d340d",
+        "file_id": "file_0000000075208212aba71ced664649a6",
+        "version": 0,
+        "path": "/Almighty_God_Knows_the_Future_Renewed_720p60_final.mp4",
+        "url": "https://chatgpt.com/library?file_id=libfile_d6b4552450348191adcddea6a16d340d&account_id=personal",
+        "local_metadata_applied": true
+      }
+    },
+    "cloud_successful_jobs": 41,
+    "cloud_failed_jobs": 0,
+    "cloud_retries": 0,
+    "delivery_evidence": "project-docs/production-system/evidence/s11-renewed-final-delivery.json",
+    "qa_evidence": "project-docs/production-system/evidence/s11-renewed-final-qa.json"
+  },
+  "render_activity_note": "Production is complete. Old work-path observations do not imply an active process or pending queue.",
+  "historical_advanced_dance_development": {
+    "name": "Advanced Dance",
+    "status": "complete_reviewed_saved",
+    "owner_request": "Extremely advanced high quality high pace choreography with sparkles and lights; correct awkward hand positions, anatomy and movement.",
+    "integration_branch": "creative/advanced-choreography-20261121",
+    "checkpoint_source_commit": "eec83de733cf89f74209b6fdb48fba9cb1b98e2d",
+    "picture_source_frozen": true,
+    "pull_request": 109,
+    "project_ids": [
+      "advanced-dance-solo",
+      "advanced-dance-ensemble"
+    ],
+    "current_handoff": "project-docs/production-system/ADVANCED-DANCE.md",
+    "motion_handoff": "tools/advanced_dance/README.md",
+    "reference_recordings_acquired": true,
+    "reference_recordings_sampled": true,
+    "observed_remaining_repairs": [],
+    "delivery_scope": "Replace films 01 and 02 in a newly named ten-film package; preserve exact delivered 03 through 10 bytes.",
+    "validation_pending": [],
+    "source_commit": "254414bc0356171f7d5ad89361c75d45fd01a407",
+    "numeric_motion_sample_count": 26484,
+    "numeric_motion_errors": 0,
+    "numeric_motion_review_flags": 6,
+    "cloth_saved_states_checked": 5772,
+    "cloth_render_samples_checked": 26484,
+    "cloth_failures": 0,
+    "cast_pair_failures": 0,
+    "execution_policy": "project-docs/production-system/evidence/advanced-dance-execution-policy.json",
+    "solo_proof_review": {
+      "path": "project-docs/production-system/evidence/advanced-dance-solo-proof-review.json",
+      "sha256": "0c1edddad1a7de4b25c8fc6496e9996600c2ebea37c42764c3f4e6b8eeba9a04",
+      "distinct_decoded_samples": 99,
+      "inspected_sheets": 16,
+      "blocking_visual_defects_found": false,
+      "method": "Ordered native-pixel frame review across the full 32-second proof plus all 30 fps proof frames in three flagged windows. Not continuous perceptual or final60fps review."
+    },
+    "progress_checkpoint_utc": "2026-11-22T09:39:09.772092+00:00",
+    "completed_films": {
+      "advanced-dance-solo": "project-docs/production-system/evidence/advanced-dance-solo-delivery.json",
+      "advanced-dance-ensemble": "project-docs/production-system/evidence/advanced-dance-ensemble-delivery.json"
+    },
+    "ensemble_proof_review": {
+      "path": "project-docs/production-system/evidence/advanced-dance-ensemble-proof-review.json",
+      "sha256": "55fb9763b892d0f5079a6a051d63aa9fca9976ebe539f33a5dc896ea390d2483",
+      "native_window_frames": 257,
+      "decoded_overview_samples": 65,
+      "sampled_visual_blockers": 0,
+      "continuous_perceptual_review_claimed": false,
+      "owner_approval": false
+    },
+    "render_checkpoint": {
+      "session_id": 47879,
+      "schema_version": 1,
+      "mode": "ensemble",
+      "status": "running",
+      "started_utc": "2026-11-22T09:35:13.251082+00:00",
+      "command": [
+        "./scripts/video",
+        "produce",
+        "work/advanced-dance/execution/ensemble-three-workers.json",
+        "--quality",
+        "final"
+      ],
+      "execution_manifest_sha256": "a7e6f990e278fd8d37f8977e48f8f7593a7074e38cf1fbda8cd21bff83be9b8a",
+      "coordinator_wrapper_pid": 5,
+      "source_fingerprint": "ec76277c753ba288fb9a2d6634a1f45e4741747f33baad3d237e7be5ff1f272d",
+      "render_workers": 3,
+      "render_chunk_frames": 64,
+      "reused_even_frames": 960,
+      "reused_odd_frames": 2,
+      "missing_native_frames_at_start": 958,
+      "log": "work/advanced-dance/ensemble-final-render.log",
+      "scope": "Complete native 1080p60 ensemble using identical frozen picture inputs and exact existing frames.",
+      "observed_frames": {
+        "native_frames_written": 1059,
+        "even_frames": 960,
+        "odd_frames": 99,
+        "target": 1920,
+        "master_exists": false,
+        "stop_marker": false,
+        "current_invocation": "308c615d366e430598b8e1787845226b",
+        "current_chunks": [
+          {
+            "invocation": "308c615d366e430598b8e1787845226b",
+            "chunk": "chunk_000001",
+            "rendered": 33,
+            "requested": 64,
+            "staged": 34,
+            "last": "concert kit frame 193, temporal samples 2",
+            "log_age_seconds": 5.3,
+            "complete": false
+          },
+          {
+            "invocation": "308c615d366e430598b8e1787845226b",
+            "chunk": "chunk_000002",
+            "rendered": 31,
+            "requested": 64,
+            "staged": 31,
+            "last": "concert kit frame 317, temporal samples 2",
+            "log_age_seconds": 3.6,
+            "complete": false
+          },
+          {
+            "invocation": "308c615d366e430598b8e1787845226b",
+            "chunk": "chunk_000000",
+            "rendered": 33,
+            "requested": 64,
+            "staged": 33,
+            "last": "concert kit frame 65, temporal samples 2",
+            "log_age_seconds": 0.7,
+            "complete": false
+          }
+        ]
+      },
+      "observations_are_not_live_telemetry": true
+    },
+    "final_movie_evidence": {
+      "solo": {
+        "mode": "solo",
+        "master_sha256": "8f02ee2a72a128198771cfb8f3d3dabc0b90716abdb4c028d19fa462b6a6edac",
+        "bytes": 57396334,
+        "source_fingerprint": "437e7420ab538baf3608b879ca371a335ffbbaa09e77444cce7103485b5801ed",
+        "technical_passed": true,
+        "native_frames": 1920,
+        "duration_seconds": 32,
+        "fps": 60,
+        "final_review": {
+          "path": "work/advanced-dance/qa/final/independent-solo-final-encoded-review.json",
+          "sha256": "d923351a3dd1390d6bb0f05abebe6dba4600aec87746b92ecd9ddf627e34a4b2",
+          "bytes": 8935,
+          "include_full_json_in_final_package": true
+        },
+        "distinct_decoded_frames": 150,
+        "inspected_sheets": 29,
+        "sampled_visual_blockers": 0,
+        "owner_approval": false
+      },
+      "ensemble": {
+        "mode": "ensemble",
+        "master_sha256": "8bedc48bc2586d903f5aefcb8bfea89ecad58359326ffdc27f5988b0f573540d",
+        "bytes": 76939037,
+        "source_fingerprint": "ec76277c753ba288fb9a2d6634a1f45e4741747f33baad3d237e7be5ff1f272d",
+        "technical_passed": true,
+        "native_frames": 1920,
+        "duration_seconds": 32,
+        "fps": 60,
+        "final_review": {
+          "path": "work/advanced-dance/qa/final/independent-ensemble-final-encoded-review.json",
+          "sha256": "4da1581fee14ac24821327c1e254ad6217352be061c6ea6bcd54f07859204bb0",
+          "bytes": 25441,
+          "include_full_json_in_final_package": true
+        },
+        "distinct_decoded_frames": 135,
+        "inspected_sheets": 22,
+        "sampled_visual_blockers": 0,
+        "owner_approval": false
+      }
+    },
+    "saved_delivery_evidence": "project-docs/production-system/evidence/advanced-dance-final-delivery.json",
+    "final_delivery_recorded_utc": "2026-11-22T10:21:38.162872+00:00",
+    "source_integration": {
+      "pr": 109,
+      "status": "merged",
+      "merge_commit": "5a602349f90f50d79968bab77dd08db1a20c4339",
+      "merged_at": "2026-11-22T10:23:55Z"
+    }
+  },
+  "historical_maintenance_before_s11_completion": {
     "name": "Advanced Dance documentation, recovery and cache maintenance",
     "status": "reviewed_documented_and_handoff_saved",
     "recorded_utc": "2026-11-22T17:51:10.925590+00:00",
@@ -1306,6 +1446,5 @@
     "skipped_existing_audio_subchecks": 2,
     "future_cache_source_identity_changed": true,
     "remaining_maintenance_findings": []
-  },
-  "catalog_artifact_count": 39
+  }
 }

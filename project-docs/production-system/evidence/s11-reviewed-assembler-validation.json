@@ -1,0 +1,166 @@
+{
+  "actual_downloaded_parts_checked": 11,
+  "evidence_scope": "Snapshot of assembler validation on the first 11 downloaded parts; not a complete-master or final visual acceptance receipt.",
+  "final_delivery_approved": false,
+  "original_work_policy_sha256": "379e5b40c42a33248c5501b0e3ac20027b49a0df108bf1e057c18380568b7a85",
+  "parts": [
+    {
+      "bytes": 14097495,
+      "end": 412,
+      "fingerprint": "2188eb82bbb9c539367a3424630dbcca818f313950751afc2c72e18c0f661d7c",
+      "host": {
+        "github_image_version": "20261116.133.1",
+        "platform": "Linux-7.0.0-1014-aws-x86_64-with-glibc2.39"
+      },
+      "part": 0,
+      "picture": "work/s11_cloud/verified-master-parts/part-00/part-000000-000412.mp4",
+      "sha256": "2a8a37ddcf2b6c11f3f3952cad9856e7e539012065c81ed043988926ff9a63a7",
+      "start": 0,
+      "stream_time_base": "1/15360"
+    },
+    {
+      "bytes": 17973630,
+      "end": 825,
+      "fingerprint": "c34e7f5bde42bb5fb5568817872b16521dcf3acfffe4ab9c2c95066a15ce8ce7",
+      "host": {
+        "github_image_version": "20261116.376.1",
+        "platform": "Linux-7.0.0-1017-azure-x86_64-with-glibc2.39"
+      },
+      "part": 1,
+      "picture": "work/s11_cloud/verified-master-parts/part-01/part-000412-000825.mp4",
+      "sha256": "7966ce4c04d106e9577cb33d53394d0a6435b2af2837ec45bf3ee66eae7e4a89",
+      "start": 412,
+      "stream_time_base": "1/15360"
+    },
+    {
+      "bytes": 20152991,
+      "end": 1237,
+      "fingerprint": "c34e7f5bde42bb5fb5568817872b16521dcf3acfffe4ab9c2c95066a15ce8ce7",
+      "host": {
+        "github_image_version": "20261116.376.1",
+        "platform": "Linux-7.0.0-1017-azure-x86_64-with-glibc2.39"
+      },
+      "part": 2,
+      "picture": "work/s11_cloud/verified-master-parts/part-02/part-000825-001237.mp4",
+      "sha256": "f9800c5ff5e977249e66c81b6513434e696cf993794907a5616d5e4f5ef84d5d",
+      "start": 825,
+      "stream_time_base": "1/15360"
+    },
+    {
+      "bytes": 22512382,
+      "end": 2062,
+      "fingerprint": "c34e7f5bde42bb5fb5568817872b16521dcf3acfffe4ab9c2c95066a15ce8ce7",
+      "host": {
+        "github_image_version": "20261116.376.1",
+        "platform": "Linux-7.0.0-1017-azure-x86_64-with-glibc2.39"
+      },
+      "part": 4,
+      "picture": "work/s11_cloud/verified-master-parts/part-04/part-001650-002062.mp4",
+      "sha256": "f71c436354a8260cfea22f8db48a5f474f985f7aacbfd435d8f992064502f5d2",
+      "start": 1650,
+      "stream_time_base": "1/15360"
+    },
+    {
+      "bytes": 22716078,
+      "end": 2475,
+      "fingerprint": "2188eb82bbb9c539367a3424630dbcca818f313950751afc2c72e18c0f661d7c",
+      "host": {
+        "github_image_version": "20261116.133.1",
+        "platform": "Linux-7.0.0-1014-aws-x86_64-with-glibc2.39"
+      },
+      "part": 5,
+      "picture": "work/s11_cloud/verified-master-parts/part-05/part-002062-002475.mp4",
+      "sha256": "932a6107c140dba3ffcd49caf1deef5423ab0beb1bba8570246137fd4fd760d5",
+      "start": 2062,
+      "stream_time_base": "1/15360"
+    },
+    {
+      "bytes": 15968486,
+      "end": 2887,
+      "fingerprint": "2188eb82bbb9c539367a3424630dbcca818f313950751afc2c72e18c0f661d7c",
+      "host": {
+        "github_image_version": "20261116.133.1",
+        "platform": "Linux-7.0.0-1014-aws-x86_64-with-glibc2.39"
+      },
+      "part": 6,
+      "picture": "work/s11_cloud/verified-master-parts/part-06/part-002475-002887.mp4",
+      "sha256": "47734d69e9d9ce42fe7c4fa54cb23df421bf7b8b72ba4d496301079feece1f4a",
+      "start": 2475,
+      "stream_time_base": "1/15360"
+    },
+    {
+      "bytes": 16864489,
+      "end": 3300,
+      "fingerprint": "c34e7f5bde42bb5fb5568817872b16521dcf3acfffe4ab9c2c95066a15ce8ce7",
+      "host": {
+        "github_image_version": "20261116.376.1",
+        "platform": "Linux-7.0.0-1017-azure-x86_64-with-glibc2.39"
+      },
+      "part": 7,
+      "picture": "work/s11_cloud/verified-master-parts/part-07/part-002887-003300.mp4",
+      "sha256": "b0136ae60d000e03bf43b35f5d64de9e0864d4b01ae9627acc13bcf9f482f4e9",
+      "start": 2887,
+      "stream_time_base": "1/15360"
+    },
+    {
+      "bytes": 15229864,
+      "end": 3712,
+      "fingerprint": "c34e7f5bde42bb5fb5568817872b16521dcf3acfffe4ab9c2c95066a15ce8ce7",
+      "host": {
+        "github_image_version": "20261116.376.1",
+        "platform": "Linux-7.0.0-1017-azure-x86_64-with-glibc2.39"
+      },
+      "part": 8,
+      "picture": "work/s11_cloud/verified-master-parts/part-08/part-003300-003712.mp4",
+      "sha256": "9f8cad9d3784cc085689f52479b3e7699d044a105ae369d8d65d41a8d016dc0e",
+      "start": 3300,
+      "stream_time_base": "1/15360"
+    },
+    {
+      "bytes": 20318687,
+      "end": 4537,
+      "fingerprint": "2188eb82bbb9c539367a3424630dbcca818f313950751afc2c72e18c0f661d7c",
+      "host": {
+        "github_image_version": "20261116.133.1",
+        "platform": "Linux-7.0.0-1014-aws-x86_64-with-glibc2.39"
+      },
+      "part": 10,
+      "picture": "work/s11_cloud/verified-master-parts/part-10/part-004125-004537.mp4",
+      "sha256": "73d76ecbd8aeb14670240f1ec5bd4edcf18e6179e293064fce6eb12d8062aad1",
+      "start": 4125,
+      "stream_time_base": "1/15360"
+    },
+    {
+      "bytes": 31503727,
+      "end": 4950,
+      "fingerprint": "c34e7f5bde42bb5fb5568817872b16521dcf3acfffe4ab9c2c95066a15ce8ce7",
+      "host": {
+        "github_image_version": "20261116.376.1",
+        "platform": "Linux-7.0.0-1017-azure-x86_64-with-glibc2.39"
+      },
+      "part": 11,
+      "picture": "work/s11_cloud/verified-master-parts/part-11/part-004537-004950.mp4",
+      "sha256": "cb37446cb9d5152a6d953c0e981531b4a09bed873e05c0469fc6d1003f456195",
+      "start": 4537,
+      "stream_time_base": "1/15360"
+    },
+    {
+      "bytes": 22395412,
+      "end": 8250,
+      "fingerprint": "2188eb82bbb9c539367a3424630dbcca818f313950751afc2c72e18c0f661d7c",
+      "host": {
+        "github_image_version": "20261116.133.1",
+        "platform": "Linux-7.0.0-1014-aws-x86_64-with-glibc2.39"
+      },
+      "part": 19,
+      "picture": "work/s11_cloud/verified-master-parts/part-19/part-007837-008250.mp4",
+      "sha256": "e0d3be7814e9d2532f781453fd12dd1d7c644f45de0d22ae4048ffb0f081f84c",
+      "start": 7837,
+      "stream_time_base": "1/15360"
+    }
+  ],
+  "policy_path": "project-docs/production-system/evidence/s11-host-cohort-policy.json",
+  "policy_sha256": "78bacac6e1282fb30e1b0db33dc2d09bb624dd26328cca5d3e1ba2467dcc4646",
+  "schema": "s11-reviewed-assembler-validation-v1",
+  "unit_tests_passed": 16
+}
