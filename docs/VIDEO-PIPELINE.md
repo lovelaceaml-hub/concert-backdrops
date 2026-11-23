@@ -73,6 +73,41 @@ helpers instead of patches; do not apply both treatments. Focused non-rendering
 checks cover the new paths. Cloud pixel comparison is still required before
 claiming an existing film's byte-identical reproduction with a new caller.
 
+## Reproducing approved films
+
+Approved films pin exact hashes of the engine files that produced them, so
+improving the shared engine on `main` never silently changes an approved film.
+If you run a frozen film directly on a newer engine, it stops and points you to
+the exact commit it is frozen to.
+
+Use `reproduce` to render an approved film from its original commit in an
+isolated worktree:
+
+```bash
+./scripts/video reproduce concert-kit-consideration-v2 --quality review
+./scripts/video reproduce <project-id> --quality final --commit <sha>
+```
+
+The command looks up the project's recorded `picture_source_commit` in
+`project-docs/production-system/catalogs/deliveries.json` (or uses `--commit`
+when provided), creates a Git worktree at
+`work/reproduce/<project-id>-<shortsha>` (reusing it if already present), runs
+that commit's own `./scripts/video produce <project-id> --quality <quality>`
+inside it, and prints the output folder path.
+
+Limits to keep in mind:
+
+- The recorded Git commit must be available in your local Git history (fetch it
+  first if using a shallow clone).
+- Private recordings and prepared inputs still need to be present inside the
+  reproduction worktree before rendering, just as in a normal production run.
+- For `approved-light-s11`, `pipeline/references/song11-beauty-v1.json` records
+  `source_commit` `23c9307608291a99702d687933c8d2092d1fd01d`, which predates the
+  `projects/approved-light-s11` manifest. To reproduce it through
+  `./scripts/video produce`, pass
+  `--commit 673f68785c36b57d55d05129ee5549efe6352c60`, which includes both the
+  project manifest and the exact frozen engine files.
+
 ## 1. What is installed
 
 | Part | Role | Project location |
@@ -295,3 +330,8 @@ These project files configure supported Claude Code and Codex clients when opene
 | Need a real GPU later | Add the selected worker/provider and device policy in a separate implementation step. Current adapters deliberately select CPU/software rendering; no provider is hidden behind an environment variable. |
 
 Better character rigs, detailed church models, choreography and revised shot design are production work performed with this foundation. The setup includes motion guidance and deterministic examples, not a completed library of realistic people or 226 upgraded buildings. Keep the existing approved master as the comparison reference.
+
+Limit: a recorded commit's worktree starts without the ignored `work/` folder, so
+private inputs such as full song recordings must be restored there first (for
+example with `tools/drive_sync.py get` in a cloud job). Reproduction has not yet
+been run end to end for every approved film.

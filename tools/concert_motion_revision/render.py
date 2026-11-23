@@ -17,6 +17,9 @@ from .response import install_response
 
 ROOT = Path(__file__).resolve().parents[2]
 WORK = ROOT / "work/concert-motion-revision"
+PROJECT_ID = "concert-kit-consideration-v2"
+DELIVERIES_CATALOG = "project-docs/production-system/catalogs/deliveries.json"
+FALLBACK_COMMIT = "33a7d87e2848bf8a42e6d8132c34544d61259350"
 BASE_IDENTITY = "2fa9e0fce212be765d639fbb85acf8cdb755e5a92d995dae418fa66fbd7eae6e"
 AUDIO_IDENTITY = "0f43061d674dae3467a6a76867f8599d241532c131e7e7654502bc29f2d66f7b"
 SOURCE_START = 3.0
@@ -46,11 +49,30 @@ def identity(files):
     return hashlib.sha256(json.dumps(files, sort_keys=True, separators=(",", ":")).encode()).hexdigest()
 
 
+def _frozen_commit():
+    catalog_path = ROOT / DELIVERIES_CATALOG
+    try:
+        catalog = json.loads(catalog_path.read_text())
+    except (OSError, ValueError):
+        return FALLBACK_COMMIT
+    for item in catalog.get("items", ()):
+        if isinstance(item, dict) and item.get("project_id") == PROJECT_ID:
+            commit = item.get("picture_source_commit")
+            if isinstance(commit, str) and commit.strip():
+                return commit.strip()
+    return FALLBACK_COMMIT
+
+
 def source_hashes():
     files = base.source_hashes()
     actual = identity(files)
     if actual != BASE_IDENTITY:
-        raise RuntimeError(f"Frozen kit identity mismatch: {actual}")
+        commit = _frozen_commit()
+        raise RuntimeError(
+            f"Frozen kit identity mismatch ({actual}): "
+            f"this approved film is frozen to commit {commit}; "
+            f"run `./scripts/video reproduce {PROJECT_ID}` to render it exactly from that version."
+        )
     files.update({str(p.relative_to(ROOT)): digest(p)
                   for p in sorted((ROOT / "tools/concert_motion_revision").glob("*.py"))})
     return files
