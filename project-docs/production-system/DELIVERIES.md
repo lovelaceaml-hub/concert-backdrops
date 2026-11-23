@@ -34,6 +34,26 @@ renewed Song 11 movie. Existing 720p copies are retained historical artifacts,
 not instructions to produce new phone versions. Completion means the recorded
 production and transfer checks passed; it does not confer creative approval.
 
+## Song 7 on the song kit: May No One Ever Feel Lonely, version 1 (November 23, 2026)
+
+Version 1 of Song 7, built on the reusable song kit (`tools/song_kit`), is rendered, checked and saved. It awaits
+Anthony's review: no creative approval is recorded, and the 4K60 show render comes only after approval.
+
+| Drive location | Contents |
+| --- | --- |
+| [Song 7 song kit folder](https://drive.google.com/drive/folders/1e03TRQpBB0Nb3zsnpxR7MWn7UhwhcEWa) | Film review copy with sound, silent picture, draft (960x540 at 30 fps), check report, checksums, section cues (`cues.py`, `cues.csv`) |
+| [Review copy](https://drive.google.com/file/d/1Edo3lNCrtCXYmnEahVG_MxJnWIFCbNtP/view) | Native 1920x1080 at 60 fps, 4:19 (recording unstretched to 4:03.5, then a 15 s hold), 15,540 frames, all checks passed |
+| [Walkthrough page source](https://drive.google.com/drive/folders/10VaWAe8ptCrwdI-ilT_EfA3gKEpEPumE) | Build files of the Song 7 Design Planner (kept in Drive only because they hold the lyrics) |
+
+- Rendered by GitHub Actions run 45252804881 (40 parts) from commit `f5ab057`; the draft by run 45246177056.
+- The Song 7 Design Planner (private page: https://claude.ai/artifact/3eNMdaQ8S7jSSqx8hx5ByF) walks through the song with
+  the recording, measured beats and lifts, every lyric line, section scripts of version 1 and questions whose answers save
+  for the next agent; on-screen phrases can be edited and added there. Lyric times come from the music sync run
+  45280536629 (words.json in Drive under Status/Sync); they are unverified until Anthony confirms them by ear.
+- Known for version 2: "please return" shows 10 s and "the eternal kingdom" 17 s before they are sung; the song ends by
+  returning to Mother's first wish at 3:44. The design document asks for a 90 s hold; version 1 holds 15 s (a question
+  on the page).
+
 ## Completed Song 11: Almighty God Knows the Future
 
 The complete **4-minute-35-second recreation is rendered, checked and saved**.

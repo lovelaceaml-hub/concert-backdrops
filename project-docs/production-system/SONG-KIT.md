@@ -73,3 +73,11 @@ holds anything only that song has (its own set).
 5. Check in with Anthony.
 
 Rendering is cloud CPU only. No phone copies. Final 4K only after the song is approved.
+
+## Status (November 23, 2026)
+
+- The kit renders end to end in the cloud (`.github/workflows/song-kit.yml`: draft or film, parts passed between machines
+  through the private Drive folder, film checked, then saved to the song's Drive folder with its section cues).
+- Song 7 version 1 is delivered and awaits Anthony's review; see [DELIVERIES.md](DELIVERIES.md). His answers on the Song 7
+  Design Planner page (https://claude.ai/artifact/3eNMdaQ8S7jSSqx8hx5ByF, stores "choices" and "phrases") drive version 2.
+- Other songs get their own walkthrough page only when Anthony asks (his choice on 2026-11-23: "Only Song 7 for now").
