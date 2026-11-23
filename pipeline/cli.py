@@ -286,6 +286,15 @@ def reproduce(root: Path, project_id: str, quality: str = "review", commit: str 
             f"Fetch the needed history (for example, git fetch origin {target_commit}) and try again."
         )
     full_sha = _validate_commit_sha(resolved.stdout.strip() or target_commit)
+    manifests = [f"projects/{project_id}/project{ext}" for ext in (".json", ".yaml", ".yml")]
+    if not any(subprocess.run(["git", "cat-file", "-e", f"{full_sha}:{path}"], cwd=root,
+                              capture_output=True).returncode == 0 for path in manifests):
+        added = subprocess.run(["git", "log", "--diff-filter=A", "--format=%H", "--", *manifests],
+                               cwd=root, capture_output=True, text=True).stdout.split()
+        hint = f" The project was added in commit {added[-1]}." if added else ""
+        raise PipelineError(
+            f"Commit {full_sha} does not contain projects/{project_id}, so it cannot reproduce that project.{hint} "
+            "Pass --commit <sha> with the version that rendered the approved film.")
     short_sha = full_sha[:8]
     worktree = safe_path(root, f"work/reproduce/{project_id}-{short_sha}", exists=False)
     reused = False
@@ -298,6 +307,11 @@ def reproduce(root: Path, project_id: str, quality: str = "review", commit: str 
         head_sha = head.stdout.strip().lower()
         if head_sha and head_sha != full_sha:
             raise PipelineError(f"Existing worktree {worktree} is at commit {head_sha}, not {full_sha}. Remove it and try again.")
+        dirty = subprocess.run(["git", "status", "--porcelain", "--untracked-files=no"],
+                               cwd=worktree, capture_output=True, text=True)
+        if dirty.returncode != 0 or dirty.stdout.strip():
+            raise PipelineError(f"Existing worktree {worktree} has changed tracked files, so it no longer matches "
+                                f"{full_sha}. Remove it (git worktree remove) and try again.")
         reused = True
     else:
         worktree.parent.mkdir(parents=True, exist_ok=True)
