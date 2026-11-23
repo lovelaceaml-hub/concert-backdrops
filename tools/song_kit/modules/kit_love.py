@@ -15,8 +15,9 @@ once and every song can use it:
 
 song_data.EXPRESSIONS: [dict(label, t_in, read0, read1, t_out, act=name or None, at=(x, z), facing=degrees,
 answer=name or None, frac=0.36)]. The act's people appear a little before the words and act during the reading.
-A song with edit blocks owned by "love" gets a close, slow shot of each act (SHOTS). To add an act: write a
-function act_<name>(e) returning body settings and register it in ACTS. No em dash or en dash in this file.
+A song with edit blocks owned by "love" gets a close, slow shot of each act (SHOTS). Acts: "greeting" and
+"consideration" here, and every expression of the engine's acting library as "<expression>:<variant>". To add an
+act: write a function act_<name>(e) that builds bodies with body(...) and register it in ACTS. No em dash or en dash in this file.
 """
 import numpy as np
 
@@ -218,6 +219,23 @@ def act_consideration(e):
 
 ACTS = dict(greeting=act_greeting, consideration=act_consideration)
 
+# Every other act comes from the engine's acting library (Claude Final v1 p3d/acting.py): all nine expressions,
+# several variants each, by the name "<expression>:<variant>" (for example "inclusiveness:embrace",
+# "gratitude:clasp", "encouragement:shoulder", "compliment:applause"). The library keeps the touch rules when
+# the song's style says who acts (style_a / style_b shapes: two men, two women, or a parent and child).
+LIBRARY_STYLE = dict(look="glitter", color="#ffd29a", color2="#fff0c8", bright=2.3, points=48000)   # as body() people
+
+
+def _library_act(scene, e):
+    from nine_reference_p3d import acting
+    label, _, variant = e["act"].partition(":")
+    kw = dict(at=tuple(e["at"]), view=float(e.get("view", 0.0)), variant=variant or None,
+              style=dict(LIBRARY_STYLE, **e.get("style", {})), seed=int(e.get("seed", 0)))
+    for k in ("style_a", "style_b", "crowd", "pre", "post"):
+        if k in e:
+            kw[k] = e[k]
+    acting.add(scene, label.capitalize(), e["read0"] - 1.0, e["read1"], **kw)
+
 
 # =========================================================================================================
 # The answers of light: what the world does in reply
@@ -272,8 +290,10 @@ SHOTS = [_act_shot(b) for b in H.blocks_of(OWNER)]
 
 def add(scene):
     for e in EXPRESSIONS:
-        if e.get("act"):
+        if e.get("act") in ACTS:
             ACTS[e["act"]](e)
+        elif e.get("act"):
+            _library_act(scene, e)
         if e.get("answer"):
             for k, ps in enumerate(ANSWERS[e["answer"]](e)):
                 scene.add(f"answer {e['label']} {k}", ps, reflect=False)
