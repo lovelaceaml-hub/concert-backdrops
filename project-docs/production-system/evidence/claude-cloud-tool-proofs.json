@@ -1,0 +1,1203 @@
+{
+  "schema": "concert-concurrent-tool-proofs-v1",
+  "observed_utc": "2026-11-23 06:52:22 UTC",
+  "audit_scope": "Read-only GitHub PR, workflow/run/job metadata, public source and tools-job logs. No workflow dispatch, rerun, source/Git mutation, uploads, secret values, or secret API access.",
+  "repository": "lovelaceaml-hub/concert-backdrops",
+  "pr": {
+    "number": 116,
+    "title": "Make the video tools work in the cloud and reusable for any song",
+    "url": "https://github.com/lovelaceaml-hub/concert-backdrops/pull/116",
+    "merged": true,
+    "merged_at": "2026-11-23T06:41:31Z",
+    "merge_commit_sha": "3812463e1196f4c47b468e05060dbc1c8154ff75",
+    "head_sha": "285df02e51cc68073fe17c8a06ae0d7f54737df7",
+    "head_ref": "claude/video-tools-working"
+  },
+  "changed_files": [
+    {
+      "path": ".dockerignore",
+      "status": "modified",
+      "changes": 4
+    },
+    {
+      "path": ".github/workflows/tool-proofs.yml",
+      "status": "added",
+      "changes": 154
+    },
+    {
+      "path": "AGENTS.md",
+      "status": "modified",
+      "changes": 4
+    },
+    {
+      "path": "apps/editor/render.mjs",
+      "status": "modified",
+      "changes": 2
+    },
+    {
+      "path": "docs/VIDEO-PIPELINE-VALIDATION.md",
+      "status": "modified",
+      "changes": 34
+    },
+    {
+      "path": "docs/VIDEO-PIPELINE.md",
+      "status": "modified",
+      "changes": 14
+    },
+    {
+      "path": "pipeline/kit.py",
+      "status": "modified",
+      "changes": 124
+    },
+    {
+      "path": "projects/song-scene-demo/project.json",
+      "status": "added",
+      "changes": 73
+    },
+    {
+      "path": "scenes/p3d/song_scene.py",
+      "status": "added",
+      "changes": 86
+    },
+    {
+      "path": "scripts/install-blender.py",
+      "status": "modified",
+      "changes": 3
+    },
+    {
+      "path": "tools/drive_sync.py",
+      "status": "added",
+      "changes": 131
+    }
+  ],
+  "workflow": {
+    "path": ".github/workflows/tool-proofs.yml",
+    "runner": "ubuntu-24.04",
+    "execution": "CPU cloud",
+    "triggers": [
+      "workflow_dispatch",
+      "push branches claude/video-tools-*"
+    ],
+    "trigger_note": "A main documentation push does not match the push trigger.",
+    "separate_jobs": [
+      "tools",
+      "docker",
+      "drive"
+    ],
+    "tool_steps_continue_on_error": true,
+    "summary_uses_steps_outcome": true,
+    "summary_does_not_fail_the_job_on_failed_tool": true,
+    "validation_note": "Read original per-tool summary outcomes, not only a green workflow/job conclusion.",
+    "artifact_retention_days": 14
+  },
+  "prior_complete_proof": {
+    "id": 45124306242,
+    "url": "https://github.com/lovelaceaml-hub/concert-backdrops/actions/runs/45124306242",
+    "head_sha": "d3158465a07dd1d8bd5db4d38dd305ed7cfe0d07",
+    "status": "completed",
+    "conclusion": "success",
+    "attempt": 1,
+    "created_at": "2026-11-23T06:28:17Z",
+    "updated_at": "2026-11-23T06:36:45Z",
+    "event": "push",
+    "jobs": [
+      {
+        "id": 137525122480,
+        "name": "tools",
+        "url": "https://github.com/lovelaceaml-hub/concert-backdrops/actions/runs/45124306242/job/137525122480",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-11-23T06:28:36Z",
+        "completed_at": "2026-11-23T06:36:44Z",
+        "steps": [
+          {
+            "name": "Set up job",
+            "status": "completed",
+            "conclusion": "success",
+            "started_at": "2026-11-23T06:28:36Z",
+            "completed_at": "2026-11-23T06:28:38Z"
+          },
+          {
+            "name": "Run actions/checkout@v4",
+            "status": "completed",
+            "conclusion": "success",
+            "started_at": "2026-11-23T06:28:38Z",
+            "completed_at": "2026-11-23T06:28:40Z"
+          },
+          {
+            "name": "Run actions/setup-python@v5",
+            "status": "completed",
+            "conclusion": "success",
+            "started_at": "2026-11-23T06:28:40Z",
+            "completed_at": "2026-11-23T06:28:40Z"
+          },
+          {
+            "name": "Run actions/setup-node@v4",
+            "status": "completed",
+            "conclusion": "success",
+            "started_at": "2026-11-23T06:28:40Z",
+            "completed_at": "2026-11-23T06:28:42Z"
+          },
+          {
+            "name": "Host tools",
+            "status": "completed",
+            "conclusion": "success",
+            "started_at": "2026-11-23T06:28:42Z",
+            "completed_at": "2026-11-23T06:29:01Z"
+          },
+          {
+            "name": "Keep the pinned Blender download between runs",
+            "status": "completed",
+            "conclusion": "success",
+            "started_at": "2026-11-23T06:29:01Z",
+            "completed_at": "2026-11-23T06:29:04Z"
+          },
+          {
+            "name": "Setup (Blender, browser, apps, integrations)",
+            "status": "completed",
+            "conclusion": "success",
+            "started_at": "2026-11-23T06:29:04Z",
+            "completed_at": "2026-11-23T06:30:07Z"
+          },
+          {
+            "name": "Browser doctor",
+            "status": "completed",
+            "conclusion": "success",
+            "started_at": "2026-11-23T06:30:07Z",
+            "completed_at": "2026-11-23T06:30:08Z"
+          },
+          {
+            "name": "Three.js frame capture",
+            "status": "completed",
+            "conclusion": "success",
+            "started_at": "2026-11-23T06:30:08Z",
+            "completed_at": "2026-11-23T06:30:10Z"
+          },
+          {
+            "name": "Preview render (pipeline demo)",
+            "status": "completed",
+            "conclusion": "success",
+            "started_at": "2026-11-23T06:30:10Z",
+            "completed_at": "2026-11-23T06:31:24Z"
+          },
+          {
+            "name": "Remotion assembly",
+            "status": "completed",
+            "conclusion": "success",
+            "started_at": "2026-11-23T06:31:24Z",
+            "completed_at": "2026-11-23T06:31:37Z"
+          },
+          {
+            "name": "Blender background render",
+            "status": "completed",
+            "conclusion": "success",
+            "started_at": "2026-11-23T06:31:37Z",
+            "completed_at": "2026-11-23T06:32:38Z"
+          },
+          {
+            "name": "Reusable song scene (p3d-kit with params)",
+            "status": "completed",
+            "conclusion": "success",
+            "started_at": "2026-11-23T06:32:38Z",
+            "completed_at": "2026-11-23T06:36:12Z"
+          },
+          {
+            "name": "Blender MCP (stdio and live GUI)",
+            "status": "completed",
+            "conclusion": "success",
+            "started_at": "2026-11-23T06:36:12Z",
+            "completed_at": "2026-11-23T06:36:20Z"
+          },
+          {
+            "name": "Summary",
+            "status": "completed",
+            "conclusion": "success",
+            "started_at": "2026-11-23T06:36:20Z",
+            "completed_at": "2026-11-23T06:36:20Z"
+          },
+          {
+            "name": "Save proofs",
+            "status": "completed",
+            "conclusion": "success",
+            "started_at": "2026-11-23T06:36:20Z",
+            "completed_at": "2026-11-23T06:36:41Z"
+          },
+          {
+            "name": "Post Keep the pinned Blender download between runs",
+            "status": "completed",
+            "conclusion": "success",
+            "started_at": "2026-11-23T06:36:41Z",
+            "completed_at": "2026-11-23T06:36:42Z"
+          },
+          {
+            "name": "Post Run actions/setup-node@v4",
+            "status": "completed",
+            "conclusion": "success",
+            "started_at": "2026-11-23T06:36:42Z",
+            "completed_at": "2026-11-23T06:36:42Z"
+          },
+          {
+            "name": "Post Run actions/setup-python@v5",
+            "status": "completed",
+            "conclusion": "success",
+            "started_at": "2026-11-23T06:36:42Z",
+            "completed_at": "2026-11-23T06:36:42Z"
+          },
+          {
+            "name": "Post Run actions/checkout@v4",
+            "status": "completed",
+            "conclusion": "success",
+            "started_at": "2026-11-23T06:36:42Z",
+            "completed_at": "2026-11-23T06:36:42Z"
+          },
+          {
+            "name": "Complete job",
+            "status": "completed",
+            "conclusion": "success",
+            "started_at": "2026-11-23T06:36:42Z",
+            "completed_at": "2026-11-23T06:36:42Z"
+          }
+        ]
+      },
+      {
+        "id": 137525122859,
+        "name": "drive",
+        "url": "https://github.com/lovelaceaml-hub/concert-backdrops/actions/runs/45124306242/job/137525122859",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-11-23T06:28:36Z",
+        "completed_at": "2026-11-23T06:28:58Z",
+        "steps": [
+          {
+            "name": "Set up job",
+            "status": "completed",
+            "conclusion": "success",
+            "started_at": "2026-11-23T06:28:37Z",
+            "completed_at": "2026-11-23T06:28:39Z"
+          },
+          {
+            "name": "Run actions/checkout@v4",
+            "status": "completed",
+            "conclusion": "success",
+            "started_at": "2026-11-23T06:28:39Z",
+            "completed_at": "2026-11-23T06:28:43Z"
+          },
+          {
+            "name": "Run actions/setup-python@v5",
+            "status": "completed",
+            "conclusion": "success",
+            "started_at": "2026-11-23T06:28:43Z",
+            "completed_at": "2026-11-23T06:28:44Z"
+          },
+          {
+            "name": "Drive read and write check",
+            "status": "completed",
+            "conclusion": "success",
+            "started_at": "2026-11-23T06:28:44Z",
+            "completed_at": "2026-11-23T06:28:55Z"
+          },
+          {
+            "name": "Post Run actions/setup-python@v5",
+            "status": "completed",
+            "conclusion": "success",
+            "started_at": "2026-11-23T06:28:55Z",
+            "completed_at": "2026-11-23T06:28:55Z"
+          },
+          {
+            "name": "Post Run actions/checkout@v4",
+            "status": "completed",
+            "conclusion": "success",
+            "started_at": "2026-11-23T06:28:55Z",
+            "completed_at": "2026-11-23T06:28:55Z"
+          },
+          {
+            "name": "Complete job",
+            "status": "completed",
+            "conclusion": "success",
+            "started_at": "2026-11-23T06:28:55Z",
+            "completed_at": "2026-11-23T06:28:56Z"
+          }
+        ]
+      },
+      {
+        "id": 137525122953,
+        "name": "docker",
+        "url": "https://github.com/lovelaceaml-hub/concert-backdrops/actions/runs/45124306242/job/137525122953",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-11-23T06:28:36Z",
+        "completed_at": "2026-11-23T06:30:40Z",
+        "steps": [
+          {
+            "name": "Set up job",
+            "status": "completed",
+            "conclusion": "success",
+            "started_at": "2026-11-23T06:28:37Z",
+            "completed_at": "2026-11-23T06:28:40Z"
+          },
+          {
+            "name": "Run actions/checkout@v4",
+            "status": "completed",
+            "conclusion": "success",
+            "started_at": "2026-11-23T06:28:40Z",
+            "completed_at": "2026-11-23T06:28:46Z"
+          },
+          {
+            "name": "Run actions/setup-python@v5",
+            "status": "completed",
+            "conclusion": "success",
+            "started_at": "2026-11-23T06:28:46Z",
+            "completed_at": "2026-11-23T06:28:46Z"
+          },
+          {
+            "name": "Keep the pinned Blender download between runs",
+            "status": "completed",
+            "conclusion": "success",
+            "started_at": "2026-11-23T06:28:46Z",
+            "completed_at": "2026-11-23T06:28:53Z"
+          },
+          {
+            "name": "Fetch the pinned Blender once (retry if the site refuses a runner)",
+            "status": "completed",
+            "conclusion": "success",
+            "started_at": "2026-11-23T06:28:53Z",
+            "completed_at": "2026-11-23T06:29:11Z"
+          },
+          {
+            "name": "Build the CPU container",
+            "status": "completed",
+            "conclusion": "success",
+            "started_at": "2026-11-23T06:29:11Z",
+            "completed_at": "2026-11-23T06:30:36Z"
+          },
+          {
+            "name": "Post Keep the pinned Blender download between runs",
+            "status": "completed",
+            "conclusion": "success",
+            "started_at": "2026-11-23T06:30:36Z",
+            "completed_at": "2026-11-23T06:30:36Z"
+          },
+          {
+            "name": "Post Run actions/setup-python@v5",
+            "status": "completed",
+            "conclusion": "success",
+            "started_at": "2026-11-23T06:30:36Z",
+            "completed_at": "2026-11-23T06:30:36Z"
+          },
+          {
+            "name": "Post Run actions/checkout@v4",
+            "status": "completed",
+            "conclusion": "success",
+            "started_at": "2026-11-23T06:30:36Z",
+            "completed_at": "2026-11-23T06:30:36Z"
+          },
+          {
+            "name": "Complete job",
+            "status": "completed",
+            "conclusion": "success",
+            "started_at": "2026-11-23T06:30:36Z",
+            "completed_at": "2026-11-23T06:30:36Z"
+          }
+        ]
+      }
+    ],
+    "original_tool_outcomes_from_logs": {
+      "setup": "success",
+      "browser_doctor": "success",
+      "threejs_capture": "success",
+      "preview_render": "success",
+      "remotion": "success",
+      "blender_render": "success",
+      "blender_mcp": "success",
+      "song_scene": "success"
+    },
+    "all_eight_original_outcomes_success": true,
+    "log_source_job_id": 137525122480,
+    "threejs_result": "PASS: out-of-order frame identity, real animation, CPU WebGL capture",
+    "doctor_records": [
+      {
+        "dependencies_ready": true,
+        "full_pipeline_runtime_verified": false,
+        "runtime_validation": {
+          "browser": {
+            "installed": true,
+            "runtime_validated": false,
+            "status": "not_probed",
+            "software": null,
+            "renderer": null,
+            "executable": "/home/runner/.cache/ms-playwright/chromium_headless_shell-1255/chrome-headless-shell-linux64/chrome-headless-shell",
+            "error": null
+          },
+          "blender_render": "not_probed",
+          "p3d_render": "not_probed",
+          "remotion_finish": "not_required"
+        },
+        "versions": {
+          "python": "Python 3.12.16",
+          "ffmpeg": "ffmpeg version 6.1.1-3ubuntu5 Copyright (c) 2000-2023 the FFmpeg developers",
+          "ffprobe": "ffprobe version 6.1.1-3ubuntu5 Copyright (c) 2007-2023 the FFmpeg developers",
+          "blender": "Blender 5.2.4 LTS",
+          "node": "v24.22.3",
+          "chromium": "Google Chrome for Testing 159.0.8154.6"
+        },
+        "errors": [],
+        "warnings": []
+      },
+      {
+        "dependencies_ready": true,
+        "full_pipeline_runtime_verified": false,
+        "runtime_validation": {
+          "browser": {
+            "installed": true,
+            "runtime_validated": true,
+            "status": "validated",
+            "software": true,
+            "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+            "executable": "/home/runner/.cache/ms-playwright/chromium_headless_shell-1255/chrome-headless-shell-linux64/chrome-headless-shell",
+            "error": null,
+            "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+            "browser": "159.0.8154.6"
+          },
+          "blender_render": "not_probed",
+          "p3d_render": "not_probed",
+          "remotion_finish": "not_required"
+        },
+        "versions": {
+          "python": "Python 3.12.16",
+          "ffmpeg": "ffmpeg version 6.1.1-3ubuntu5 Copyright (c) 2000-2023 the FFmpeg developers",
+          "ffprobe": "ffprobe version 6.1.1-3ubuntu5 Copyright (c) 2007-2023 the FFmpeg developers",
+          "blender": "Blender 5.2.4 LTS",
+          "node": "v24.22.3",
+          "chromium": "Google Chrome for Testing 159.0.8154.6"
+        },
+        "errors": [],
+        "warnings": []
+      }
+    ],
+    "qa_reports": [
+      {
+        "kind": "pipeline_preview",
+        "project_id": "pipeline-demo",
+        "quality": "draft",
+        "width": 320,
+        "height": 180,
+        "dimensions_basis": "Project quality configuration selected by the recorded successful command; no movie file was independently probed by this audit.",
+        "frames": 120,
+        "fps": 30,
+        "duration_seconds": 4,
+        "audio_streams": 0,
+        "technical_passed": true,
+        "creative_approval": "not_assessed",
+        "master_sha256": "6f940915bbafbffbc416d88f681cc4c9758c587d14c118b9414fc753c5fa5fb3",
+        "video_codec": "h264",
+        "pixel_format": "yuv420p",
+        "errors": [],
+        "warnings": []
+      },
+      {
+        "kind": "remotion_assembly",
+        "project_id": "pipeline-demo",
+        "quality": "draft",
+        "width": 320,
+        "height": 180,
+        "dimensions_basis": "Project quality configuration selected by the recorded successful command; no movie file was independently probed by this audit.",
+        "frames": 120,
+        "fps": 30,
+        "duration_seconds": 4,
+        "audio_streams": 0,
+        "technical_passed": true,
+        "creative_approval": "not_assessed",
+        "master_sha256": "9ea4bbbdc93b8c1f4e02bab5ce3cd09493cfa607a1193f91fbcb7e44f3b57cc0",
+        "video_codec": "h264",
+        "pixel_format": "yuv420p",
+        "errors": [],
+        "warnings": []
+      },
+      {
+        "kind": "blender_background",
+        "project_id": "cpu-demo",
+        "quality": "draft",
+        "width": 320,
+        "height": 180,
+        "dimensions_basis": "Project quality configuration selected by the recorded successful command; no movie file was independently probed by this audit.",
+        "frames": 60,
+        "fps": 30,
+        "duration_seconds": 2,
+        "audio_streams": 0,
+        "technical_passed": true,
+        "creative_approval": "not_assessed",
+        "master_sha256": "d7f2f22ca2ca8b4dc3c8c5fe21255942b124e38d06ffab0f9f456e0b09ec47fb",
+        "video_codec": "h264",
+        "pixel_format": "yuv420p",
+        "errors": [],
+        "warnings": []
+      },
+      {
+        "kind": "reusable_song_scene",
+        "project_id": "song-scene-demo",
+        "quality": "review",
+        "width": 1920,
+        "height": 1080,
+        "dimensions_basis": "Project quality configuration selected by the recorded successful command; no movie file was independently probed by this audit.",
+        "frames": 240,
+        "fps": 60,
+        "duration_seconds": 4,
+        "audio_streams": 0,
+        "technical_passed": true,
+        "creative_approval": "not_assessed",
+        "master_sha256": "a7abea59f324fc2ba8d582253e2671fa02184fb84417c2e9d66813d3fb9d6231",
+        "video_codec": "h264",
+        "pixel_format": "yuv420p",
+        "errors": [],
+        "warnings": []
+      }
+    ],
+    "workbench_check": {
+      "shotcraft_commit": "075b548c2405a07b77129eb448b0b504fc60dea3",
+      "remotion_version": "4.0.484",
+      "project_manifest": "/home/runner/work/concert-backdrops/concert-backdrops/apps/editor/src/workbench.ts",
+      "host": "localhost",
+      "server_started": false
+    },
+    "mcp_results": [
+      {
+        "mcp_stdio_handshake": "passed",
+        "server_name": "MCP for Blender",
+        "tool_count": 10,
+        "required_tools_present": true,
+        "safe_mode_rejection": "passed",
+        "live_blender_connection": "not_tested"
+      },
+      {
+        "mcp_stdio_handshake": "passed",
+        "server_name": "MCP for Blender",
+        "tool_count": 10,
+        "required_tools_present": true,
+        "safe_mode_rejection": "passed",
+        "live_blender_connection": "passed",
+        "live_blender_result": "Code executed successfully: PIPELINE_MCP_CONNECTED 5.2.4 LTS\n"
+      }
+    ],
+    "artifacts": [
+      {
+        "id": 14795660936,
+        "name": "tool-proofs",
+        "size_in_bytes": 637344293,
+        "digest": "sha256:be3c19d21fdb61c62e8a22f5df3cd57a314238505dd51d671056068cccbae732",
+        "expired": false,
+        "created_at": "2026-11-23T06:36:41Z",
+        "expires_at": "2026-12-07T06:36:21Z",
+        "url": "https://api.github.com/repos/lovelaceaml-hub/concert-backdrops/actions/artifacts/14795660936"
+      }
+    ]
+  },
+  "exact_pr_head_proof": {
+    "id": 45125796332,
+    "url": "https://github.com/lovelaceaml-hub/concert-backdrops/actions/runs/45125796332",
+    "head_sha": "285df02e51cc68073fe17c8a06ae0d7f54737df7",
+    "status": "completed",
+    "conclusion": "success",
+    "attempt": 1,
+    "created_at": "2026-11-23T06:41:24Z",
+    "updated_at": "2026-11-23T06:47:47Z",
+    "event": "push",
+    "jobs": [
+      {
+        "id": 137529718053,
+        "name": "docker",
+        "url": "https://github.com/lovelaceaml-hub/concert-backdrops/actions/runs/45125796332/job/137529718053",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-11-23T06:41:27Z",
+        "completed_at": "2026-11-23T06:43:23Z",
+        "steps": [
+          {
+            "name": "Set up job",
+            "status": "completed",
+            "conclusion": "success",
+            "started_at": "2026-11-23T06:41:27Z",
+            "completed_at": "2026-11-23T06:41:30Z"
+          },
+          {
+            "name": "Run actions/checkout@v4",
+            "status": "completed",
+            "conclusion": "success",
+            "started_at": "2026-11-23T06:41:30Z",
+            "completed_at": "2026-11-23T06:41:34Z"
+          },
+          {
+            "name": "Run actions/setup-python@v5",
+            "status": "completed",
+            "conclusion": "success",
+            "started_at": "2026-11-23T06:41:34Z",
+            "completed_at": "2026-11-23T06:41:35Z"
+          },
+          {
+            "name": "Keep the pinned Blender download between runs",
+            "status": "completed",
+            "conclusion": "success",
+            "started_at": "2026-11-23T06:41:35Z",
+            "completed_at": "2026-11-23T06:41:37Z"
+          },
+          {
+            "name": "Fetch the pinned Blender once (retry if the site refuses a runner)",
+            "status": "completed",
+            "conclusion": "success",
+            "started_at": "2026-11-23T06:41:37Z",
+            "completed_at": "2026-11-23T06:41:56Z"
+          },
+          {
+            "name": "Build the CPU container",
+            "status": "completed",
+            "conclusion": "success",
+            "started_at": "2026-11-23T06:41:56Z",
+            "completed_at": "2026-11-23T06:43:21Z"
+          },
+          {
+            "name": "Post Keep the pinned Blender download between runs",
+            "status": "completed",
+            "conclusion": "success",
+            "started_at": "2026-11-23T06:43:21Z",
+            "completed_at": "2026-11-23T06:43:21Z"
+          },
+          {
+            "name": "Post Run actions/setup-python@v5",
+            "status": "completed",
+            "conclusion": "success",
+            "started_at": "2026-11-23T06:43:21Z",
+            "completed_at": "2026-11-23T06:43:21Z"
+          },
+          {
+            "name": "Post Run actions/checkout@v4",
+            "status": "completed",
+            "conclusion": "success",
+            "started_at": "2026-11-23T06:43:21Z",
+            "completed_at": "2026-11-23T06:43:21Z"
+          },
+          {
+            "name": "Complete job",
+            "status": "completed",
+            "conclusion": "success",
+            "started_at": "2026-11-23T06:43:21Z",
+            "completed_at": "2026-11-23T06:43:21Z"
+          }
+        ]
+      },
+      {
+        "id": 137529718206,
+        "name": "drive",
+        "url": "https://github.com/lovelaceaml-hub/concert-backdrops/actions/runs/45125796332/job/137529718206",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-11-23T06:41:28Z",
+        "completed_at": "2026-11-23T06:41:49Z",
+        "steps": [
+          {
+            "name": "Set up job",
+            "status": "completed",
+            "conclusion": "success",
+            "started_at": "2026-11-23T06:41:29Z",
+            "completed_at": "2026-11-23T06:41:31Z"
+          },
+          {
+            "name": "Run actions/checkout@v4",
+            "status": "completed",
+            "conclusion": "success",
+            "started_at": "2026-11-23T06:41:31Z",
+            "completed_at": "2026-11-23T06:41:34Z"
+          },
+          {
+            "name": "Run actions/setup-python@v5",
+            "status": "completed",
+            "conclusion": "success",
+            "started_at": "2026-11-23T06:41:34Z",
+            "completed_at": "2026-11-23T06:41:35Z"
+          },
+          {
+            "name": "Drive read and write check",
+            "status": "completed",
+            "conclusion": "success",
+            "started_at": "2026-11-23T06:41:35Z",
+            "completed_at": "2026-11-23T06:41:46Z"
+          },
+          {
+            "name": "Post Run actions/setup-python@v5",
+            "status": "completed",
+            "conclusion": "success",
+            "started_at": "2026-11-23T06:41:46Z",
+            "completed_at": "2026-11-23T06:41:46Z"
+          },
+          {
+            "name": "Post Run actions/checkout@v4",
+            "status": "completed",
+            "conclusion": "success",
+            "started_at": "2026-11-23T06:41:46Z",
+            "completed_at": "2026-11-23T06:41:46Z"
+          },
+          {
+            "name": "Complete job",
+            "status": "completed",
+            "conclusion": "success",
+            "started_at": "2026-11-23T06:41:46Z",
+            "completed_at": "2026-11-23T06:41:46Z"
+          }
+        ]
+      },
+      {
+        "id": 137529718334,
+        "name": "tools",
+        "url": "https://github.com/lovelaceaml-hub/concert-backdrops/actions/runs/45125796332/job/137529718334",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-11-23T06:41:27Z",
+        "completed_at": "2026-11-23T06:47:47Z",
+        "steps": [
+          {
+            "name": "Set up job",
+            "status": "completed",
+            "conclusion": "success",
+            "started_at": "2026-11-23T06:41:27Z",
+            "completed_at": "2026-11-23T06:41:30Z"
+          },
+          {
+            "name": "Run actions/checkout@v4",
+            "status": "completed",
+            "conclusion": "success",
+            "started_at": "2026-11-23T06:41:30Z",
+            "completed_at": "2026-11-23T06:41:34Z"
+          },
+          {
+            "name": "Run actions/setup-python@v5",
+            "status": "completed",
+            "conclusion": "success",
+            "started_at": "2026-11-23T06:41:34Z",
+            "completed_at": "2026-11-23T06:41:34Z"
+          },
+          {
+            "name": "Run actions/setup-node@v4",
+            "status": "completed",
+            "conclusion": "success",
+            "started_at": "2026-11-23T06:41:34Z",
+            "completed_at": "2026-11-23T06:41:39Z"
+          },
+          {
+            "name": "Host tools",
+            "status": "completed",
+            "conclusion": "success",
+            "started_at": "2026-11-23T06:41:39Z",
+            "completed_at": "2026-11-23T06:42:19Z"
+          },
+          {
+            "name": "Keep the pinned Blender download between runs",
+            "status": "completed",
+            "conclusion": "success",
+            "started_at": "2026-11-23T06:42:19Z",
+            "completed_at": "2026-11-23T06:42:21Z"
+          },
+          {
+            "name": "Setup (Blender, browser, apps, integrations)",
+            "status": "completed",
+            "conclusion": "success",
+            "started_at": "2026-11-23T06:42:21Z",
+            "completed_at": "2026-11-23T06:43:09Z"
+          },
+          {
+            "name": "Browser doctor",
+            "status": "completed",
+            "conclusion": "success",
+            "started_at": "2026-11-23T06:43:09Z",
+            "completed_at": "2026-11-23T06:43:12Z"
+          },
+          {
+            "name": "Three.js frame capture",
+            "status": "completed",
+            "conclusion": "success",
+            "started_at": "2026-11-23T06:43:12Z",
+            "completed_at": "2026-11-23T06:43:14Z"
+          },
+          {
+            "name": "Preview render (pipeline demo)",
+            "status": "completed",
+            "conclusion": "success",
+            "started_at": "2026-11-23T06:43:14Z",
+            "completed_at": "2026-11-23T06:43:53Z"
+          },
+          {
+            "name": "Remotion assembly",
+            "status": "completed",
+            "conclusion": "success",
+            "started_at": "2026-11-23T06:43:53Z",
+            "completed_at": "2026-11-23T06:44:05Z"
+          },
+          {
+            "name": "Blender background render",
+            "status": "completed",
+            "conclusion": "success",
+            "started_at": "2026-11-23T06:44:05Z",
+            "completed_at": "2026-11-23T06:44:34Z"
+          },
+          {
+            "name": "Reusable song scene (p3d-kit with params)",
+            "status": "completed",
+            "conclusion": "success",
+            "started_at": "2026-11-23T06:44:34Z",
+            "completed_at": "2026-11-23T06:47:20Z"
+          },
+          {
+            "name": "Blender MCP (stdio and live GUI)",
+            "status": "completed",
+            "conclusion": "success",
+            "started_at": "2026-11-23T06:47:20Z",
+            "completed_at": "2026-11-23T06:47:27Z"
+          },
+          {
+            "name": "Summary",
+            "status": "completed",
+            "conclusion": "success",
+            "started_at": "2026-11-23T06:47:27Z",
+            "completed_at": "2026-11-23T06:47:27Z"
+          },
+          {
+            "name": "Save proofs",
+            "status": "completed",
+            "conclusion": "success",
+            "started_at": "2026-11-23T06:47:27Z",
+            "completed_at": "2026-11-23T06:47:44Z"
+          },
+          {
+            "name": "Post Keep the pinned Blender download between runs",
+            "status": "completed",
+            "conclusion": "success",
+            "started_at": "2026-11-23T06:47:44Z",
+            "completed_at": "2026-11-23T06:47:44Z"
+          },
+          {
+            "name": "Post Run actions/setup-node@v4",
+            "status": "completed",
+            "conclusion": "success",
+            "started_at": "2026-11-23T06:47:44Z",
+            "completed_at": "2026-11-23T06:47:44Z"
+          },
+          {
+            "name": "Post Run actions/setup-python@v5",
+            "status": "completed",
+            "conclusion": "success",
+            "started_at": "2026-11-23T06:47:44Z",
+            "completed_at": "2026-11-23T06:47:45Z"
+          },
+          {
+            "name": "Post Run actions/checkout@v4",
+            "status": "completed",
+            "conclusion": "success",
+            "started_at": "2026-11-23T06:47:45Z",
+            "completed_at": "2026-11-23T06:47:45Z"
+          },
+          {
+            "name": "Complete job",
+            "status": "completed",
+            "conclusion": "success",
+            "started_at": "2026-11-23T06:47:45Z",
+            "completed_at": "2026-11-23T06:47:45Z"
+          }
+        ]
+      }
+    ],
+    "original_outcomes_log_verified": true,
+    "original_tool_outcomes_from_logs": {
+      "setup": "success",
+      "browser_doctor": "success",
+      "threejs_capture": "success",
+      "preview_render": "success",
+      "remotion": "success",
+      "blender_render": "success",
+      "blender_mcp": "success",
+      "song_scene": "success"
+    },
+    "all_eight_original_outcomes_success": true,
+    "log_source_job_id": 137529718334,
+    "threejs_result": "PASS: out-of-order frame identity, real animation, CPU WebGL capture",
+    "doctor_records": [
+      {
+        "dependencies_ready": true,
+        "full_pipeline_runtime_verified": false,
+        "runtime_validation": {
+          "browser": {
+            "installed": true,
+            "runtime_validated": false,
+            "status": "not_probed",
+            "software": null,
+            "renderer": null,
+            "executable": "/home/runner/.cache/ms-playwright/chromium_headless_shell-1255/chrome-headless-shell-linux64/chrome-headless-shell",
+            "error": null
+          },
+          "blender_render": "not_probed",
+          "p3d_render": "not_probed",
+          "remotion_finish": "not_required"
+        },
+        "versions": {
+          "python": "Python 3.12.16",
+          "ffmpeg": "ffmpeg version 6.1.1-3ubuntu5 Copyright (c) 2000-2023 the FFmpeg developers",
+          "ffprobe": "ffprobe version 6.1.1-3ubuntu5 Copyright (c) 2007-2023 the FFmpeg developers",
+          "blender": "Blender 5.2.4 LTS",
+          "node": "v24.22.3",
+          "chromium": "Google Chrome for Testing 159.0.8154.6"
+        },
+        "errors": [],
+        "warnings": []
+      },
+      {
+        "dependencies_ready": true,
+        "full_pipeline_runtime_verified": false,
+        "runtime_validation": {
+          "browser": {
+            "installed": true,
+            "runtime_validated": true,
+            "status": "validated",
+            "software": true,
+            "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+            "executable": "/home/runner/.cache/ms-playwright/chromium_headless_shell-1255/chrome-headless-shell-linux64/chrome-headless-shell",
+            "error": null,
+            "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+            "browser": "159.0.8154.6"
+          },
+          "blender_render": "not_probed",
+          "p3d_render": "not_probed",
+          "remotion_finish": "not_required"
+        },
+        "versions": {
+          "python": "Python 3.12.16",
+          "ffmpeg": "ffmpeg version 6.1.1-3ubuntu5 Copyright (c) 2000-2023 the FFmpeg developers",
+          "ffprobe": "ffprobe version 6.1.1-3ubuntu5 Copyright (c) 2007-2023 the FFmpeg developers",
+          "blender": "Blender 5.2.4 LTS",
+          "node": "v24.22.3",
+          "chromium": "Google Chrome for Testing 159.0.8154.6"
+        },
+        "errors": [],
+        "warnings": []
+      }
+    ],
+    "qa_reports": [
+      {
+        "kind": "pipeline_preview",
+        "project_id": "pipeline-demo",
+        "quality": "draft",
+        "width": 320,
+        "height": 180,
+        "dimensions_basis": "Recorded command plus corresponding project quality configuration; this audit did not independently decode a movie.",
+        "frames": 120,
+        "fps": 30,
+        "duration_seconds": 4,
+        "audio_streams": 0,
+        "technical_passed": true,
+        "creative_approval": "not_assessed",
+        "master_sha256": "d2a34975dacc660837c5cb1ec2540bf60342f0da15852a80491de12fe64639f1",
+        "video_codec": "h264",
+        "pixel_format": "yuv420p",
+        "errors": [],
+        "warnings": []
+      },
+      {
+        "kind": "remotion_assembly",
+        "project_id": "pipeline-demo",
+        "quality": "draft",
+        "width": 320,
+        "height": 180,
+        "dimensions_basis": "Recorded command plus corresponding project quality configuration; this audit did not independently decode a movie.",
+        "frames": 120,
+        "fps": 30,
+        "duration_seconds": 4,
+        "audio_streams": 0,
+        "technical_passed": true,
+        "creative_approval": "not_assessed",
+        "master_sha256": "5a93fb79e778101c07ef567afae9a7a5c736ecf4dbee9c58234d959c201f96a0",
+        "video_codec": "h264",
+        "pixel_format": "yuv420p",
+        "errors": [],
+        "warnings": []
+      },
+      {
+        "kind": "blender_background",
+        "project_id": "cpu-demo",
+        "quality": "draft",
+        "width": 320,
+        "height": 180,
+        "dimensions_basis": "Recorded command plus corresponding project quality configuration; this audit did not independently decode a movie.",
+        "frames": 60,
+        "fps": 30,
+        "duration_seconds": 2,
+        "audio_streams": 0,
+        "technical_passed": true,
+        "creative_approval": "not_assessed",
+        "master_sha256": "32ee16b57a7837fb70c2ee3f1f301914d55230f889953b908378e28dd01ff640",
+        "video_codec": "h264",
+        "pixel_format": "yuv420p",
+        "errors": [],
+        "warnings": []
+      },
+      {
+        "kind": "reusable_song_scene",
+        "project_id": "song-scene-demo",
+        "quality": "review",
+        "width": 1920,
+        "height": 1080,
+        "dimensions_basis": "Recorded command plus corresponding project quality configuration; this audit did not independently decode a movie.",
+        "frames": 240,
+        "fps": 60,
+        "duration_seconds": 4,
+        "audio_streams": 0,
+        "technical_passed": true,
+        "creative_approval": "not_assessed",
+        "master_sha256": "a7abea59f324fc2ba8d582253e2671fa02184fb84417c2e9d66813d3fb9d6231",
+        "video_codec": "h264",
+        "pixel_format": "yuv420p",
+        "errors": [],
+        "warnings": []
+      }
+    ],
+    "workbench_check": {
+      "shotcraft_commit": "075b548c2405a07b77129eb448b0b504fc60dea3",
+      "remotion_version": "4.0.484",
+      "project_manifest": "/home/runner/work/concert-backdrops/concert-backdrops/apps/editor/src/workbench.ts",
+      "host": "localhost",
+      "server_started": false
+    },
+    "mcp_results": [
+      {
+        "mcp_stdio_handshake": "passed",
+        "server_name": "MCP for Blender",
+        "tool_count": 10,
+        "required_tools_present": true,
+        "safe_mode_rejection": "passed",
+        "live_blender_connection": "not_tested"
+      },
+      {
+        "mcp_stdio_handshake": "passed",
+        "server_name": "MCP for Blender",
+        "tool_count": 10,
+        "required_tools_present": true,
+        "safe_mode_rejection": "passed",
+        "live_blender_connection": "passed",
+        "live_blender_result": "Code executed successfully: PIPELINE_MCP_CONNECTED 5.2.4 LTS\n"
+      }
+    ],
+    "artifacts": [
+      {
+        "id": 14795673158,
+        "name": "tool-proofs",
+        "size_in_bytes": 637361486,
+        "digest": "sha256:66099a7e4613a22d397abe74826f0b30246b5235161756157ec8d84bfee0dd8c",
+        "expired": false,
+        "created_at": "2026-11-23T06:47:44Z",
+        "expires_at": "2026-12-07T06:47:27Z",
+        "url": "https://api.github.com/repos/lovelaceaml-hub/concert-backdrops/actions/artifacts/14795673158"
+      }
+    ]
+  },
+  "source_relation": {
+    "compare_url": "https://github.com/lovelaceaml-hub/concert-backdrops/compare/d3158465a07dd1d8bd5db4d38dd305ed7cfe0d07...285df02e51cc68073fe17c8a06ae0d7f54737df7",
+    "prior_commit": "d3158465a07dd1d8bd5db4d38dd305ed7cfe0d07",
+    "exact_pr_head": "285df02e51cc68073fe17c8a06ae0d7f54737df7",
+    "status": "ahead",
+    "intervening_commits": [
+      {
+        "sha": "3ef80d97d2cc25d5201195bb8ced3646811200db",
+        "message": "Prepare complete Claude handoff with verified Drive media and reproducible resources",
+        "url": "https://github.com/lovelaceaml-hub/concert-backdrops/commit/3ef80d97d2cc25d5201195bb8ced3646811200db"
+      },
+      {
+        "sha": "134e0689831d434848dfc1cfda6328f7a9e65d05",
+        "message": "Merge pull request #115 from lovelaceaml-hub/maintenance/claude-handoff-20261122\n\nComplete Claude handoff with verified Drive media and reproducible resources",
+        "url": "https://github.com/lovelaceaml-hub/concert-backdrops/commit/134e0689831d434848dfc1cfda6328f7a9e65d05"
+      },
+      {
+        "sha": "285df02e51cc68073fe17c8a06ae0d7f54737df7",
+        "message": "Merge main (ChatGPT's Claude handoff) into the tools branch\n\n# Conflicts:\n#\tAGENTS.md",
+        "url": "https://github.com/lovelaceaml-hub/concert-backdrops/commit/285df02e51cc68073fe17c8a06ae0d7f54737df7"
+      }
+    ],
+    "changed_paths": [
+      "AGENTS.md",
+      "README.md",
+      "integrations/README.md",
+      "integrations/STATUS.md",
+      "project-docs/AGENTS.md",
+      "project-docs/AUTONOMOUS-RUN.md",
+      "project-docs/CLOUD-RUN.md",
+      "project-docs/CONTINUITY-BOARD.md",
+      "project-docs/DESIGN-SYSTEM.md",
+      "project-docs/PHASE2.md",
+      "project-docs/README.md",
+      "project-docs/UPGRADE-SPEC.md",
+      "project-docs/VIDEO-HANDOFF.md",
+      "project-docs/production-system/AI-HANDOFF.md",
+      "project-docs/production-system/AUTHORING-NEXT-SONG.md",
+      "project-docs/production-system/CLAUDE-HANDOFF.md",
+      "project-docs/production-system/CLAUDE-START-PROMPT.txt",
+      "project-docs/production-system/CREATIVE-RULES.md",
+      "project-docs/production-system/DELIVERIES.md",
+      "project-docs/production-system/IMPROVEMENT-QUEUE.md",
+      "project-docs/production-system/PROJECT-STATUS.md",
+      "project-docs/production-system/START-HERE.md",
+      "project-docs/production-system/STATE.json",
+      "project-docs/production-system/catalogs/deliveries.json",
+      "project-docs/production-system/catalogs/drive-project-index.json",
+      "project-docs/production-system/catalogs/handoff-media.json",
+      "project-docs/production-system/catalogs/handoff-resources.json",
+      "project-docs/production-system/catalogs/motions.json",
+      "project-docs/production-system/catalogs/performance-references.json",
+      "project-docs/production-system/drive-updates/claude-20261122/AGENTS.md",
+      "project-docs/production-system/drive-updates/claude-20261122/AUTONOMOUS-RUN.md",
+      "project-docs/production-system/drive-updates/claude-20261122/DESIGN-SYSTEM.md",
+      "project-docs/production-system/drive-updates/claude-20261122/README.md",
+      "project-docs/production-system/drive-updates/claude-20261122/VIDEO-HANDOFF.md",
+      "project-docs/production-system/evidence/claude-alternate-reference-recovery.json",
+      "project-docs/production-system/evidence/claude-drive-completion.json",
+      "project-docs/production-system/evidence/claude-existing-drive-adoption.json",
+      "project-docs/production-system/evidence/claude-existing-drive-audit.json",
+      "project-docs/production-system/evidence/claude-media-recovery.json",
+      "project-docs/production-system/evidence/claude-owner-priority-integration.json",
+      "project-docs/production-system/evidence/claude-parts-restoration.json",
+      "project-docs/production-system/evidence/claude-resource-clean-restore.json",
+      "project-docs/production-system/evidence/claude-resource-package.json",
+      "project-docs/production-system/evidence/claude-resource-uploads.json",
+      "project-docs/production-system/evidence/claude-review-package.json",
+      "project-docs/production-system/evidence/claude-s11-recovery.json",
+      "project-docs/production-system/evidence/claude-secondary-uploads.json",
+      "tools/handoff/README.md",
+      "tools/handoff/restore_handoff.py"
+    ],
+    "proof_runtime_workflow_dependency_changes": [],
+    "interpretation": "The completed prior proof already contains the PR116 runtime changes; the exact PR-head differences are the handoff merge, including documentation/evidence and the unrelated handoff restoration helper."
+  },
+  "limits": [
+    "Cloud proof results do not install those runtimes in this scratch checkout or validate a Mac/Metal environment.",
+    "The generic doctor deliberately reports full_pipeline_runtime_verified=false; separate short end-to-end proof steps provide the demonstrated tool coverage.",
+    "Pipeline preview and Remotion were 320x180/30fps, 4 seconds; Blender demo was 320x180/30fps, 2 seconds; reusable Song11 scene was 1920x1080/60fps, 4 seconds.",
+    "All four logged movies were silent (audio_streams=0); the song-scene MP3 drove visual response and did not establish a complete soundtrack delivery.",
+    "No complete concert/song render, all-eleven-song qualification, native 4K production proof, visual quality acceptance, or owner creative approval follows from these short technical demos.",
+    "Video Shotcraft checkout/version/manifest check passed, but server_started=false; no explicit interactive Workbench browser playback or Workbench export step appears in this workflow.",
+    "Docker job builds the CPU image; it does not run a render from the built container.",
+    "Drive job success verifies the source's list/create/delete probe path; this audit did not read secret-bearing Drive logs, secret values, or test a full music download or large render upload.",
+    "No full test suite is invoked; the dedicated npm test:browser capture check is invoked.",
+    "Actions proof artifact has finite 14-day retention. The 637361486-byte archive exceeds the connector's 536870912-byte materialization cap; root owns exact-artifact retention through the existing GitHub Actions/Drive route. No artifact bytes were downloaded or independently checked by this audit.",
+    "Final Song11 producing picture remains eec8d16519ea82309ef851975792e9dfc548da03; these future-tool changes do not relabel the completed film."
+  ],
+  "suggested_handoff_claim": "Cloud CPU proof demos succeeded for browser/WebGL capture, pipeline preview, Remotion assembly, Blender rendering and live MCP on GitHub Actions. Docker build and scoped Drive probe succeeded. Preserve the short-demo scope, Workbench interactive gap and current-local-install distinction.",
+  "artifact_retention": {
+    "requested": true,
+    "preferred_run_id": 45125796332,
+    "artifact_id": 14795673158,
+    "expected_filename": "Current_Cloud_Tool_Proofs_2026-11-22.zip",
+    "provider_size_bytes": 637361486,
+    "provider_sha256": "66099a7e4613a22d397abe74826f0b30246b5235161756157ec8d84bfee0dd8c",
+    "downloaded": false,
+    "bytes_independently_verified": false,
+    "status": "coordinator_transfer_pending_after_connector_materialization_limit",
+    "connector_max_bytes": 536870912,
+    "exact_error": "Artifact exceeds max size of 536870912 bytes: 637361486 bytes.",
+    "browser_fallback_stopped": true,
+    "credentials_requested_or_read": false,
+    "retention_record": "work/claude-handoff/concurrent-tool-proofs-retention.json",
+    "next_owner": "root"
+  }
+}

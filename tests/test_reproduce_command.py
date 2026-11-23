@@ -101,6 +101,7 @@ class ReproduceCommandTests(unittest.TestCase):
             calls,
             [
                 (["git", "rev-parse", "--verify", f"{sha}^{{commit}}"], self.root),
+                (["git", "cat-file", "-e", f"{sha}:projects/concert-kit-consideration-v2/project.json"], self.root),
                 (["git", "worktree", "add", "--detach", str(expected_worktree), sha], self.root),
                 (["./scripts/video", "produce", "concert-kit-consideration-v2", "--quality", "review"], expected_worktree),
             ],
@@ -127,10 +128,47 @@ class ReproduceCommandTests(unittest.TestCase):
             calls,
             [
                 (["git", "rev-parse", "--verify", f"{sha}^{{commit}}"], self.root),
+                (["git", "cat-file", "-e", f"{sha}:projects/concert-kit-consideration-v2/project.json"], self.root),
                 (["git", "rev-parse", "HEAD"], worktree),
+                (["git", "status", "--porcelain", "--untracked-files=no"], worktree),
                 (["./scripts/video", "produce", "concert-kit-consideration-v2", "--quality", "final"], worktree),
             ],
         )
+
+    def test_rejects_commit_without_the_project(self):
+        sha = "33a7d87e2848bf8a42e6d8132c34544d61259350"
+
+        def fake_run(command, **kwargs):
+            if command[:2] == ["git", "rev-parse"]:
+                return subprocess.CompletedProcess(command, 0, stdout=sha + "\n", stderr="")
+            if command[:2] == ["git", "cat-file"]:
+                return subprocess.CompletedProcess(command, 128, stdout="", stderr="missing")
+            if command[:2] == ["git", "log"]:
+                return subprocess.CompletedProcess(command, 0, stdout="1e3ffe3aaaa\n", stderr="")
+            raise AssertionError(f"unexpected command {command}")
+
+        with patch("pipeline.cli.subprocess.run", side_effect=fake_run):
+            with self.assertRaisesRegex(PipelineError, "does not contain projects/concert-kit-consideration-v2.*1e3ffe3aaaa"):
+                cli.reproduce(self.root, "concert-kit-consideration-v2")
+
+    def test_rejects_reusing_a_modified_worktree(self):
+        sha = "33a7d87e2848bf8a42e6d8132c34544d61259350"
+        worktree = self.root / f"work/reproduce/concert-kit-consideration-v2-{sha[:8]}"
+        worktree.mkdir(parents=True)
+        (worktree / ".git").write_text("gitdir: /fake/worktree\n")
+
+        def fake_run(command, **kwargs):
+            if command[:2] == ["git", "rev-parse"]:
+                return subprocess.CompletedProcess(command, 0, stdout=sha + "\n", stderr="")
+            if command[:2] == ["git", "status"]:
+                return subprocess.CompletedProcess(command, 0, stdout=" M engine/render.py\n", stderr="")
+            if command[0] == "./scripts/video":
+                raise AssertionError("must not render from a modified worktree")
+            return subprocess.CompletedProcess(command, 0, stdout="", stderr="")
+
+        with patch("pipeline.cli.subprocess.run", side_effect=fake_run):
+            with self.assertRaisesRegex(PipelineError, "changed tracked files"):
+                cli.reproduce(self.root, "concert-kit-consideration-v2")
 
     def test_commit_override_and_missing_git_commit_error(self):
         override = "abcdef1234567890abcdef1234567890abcdef12"

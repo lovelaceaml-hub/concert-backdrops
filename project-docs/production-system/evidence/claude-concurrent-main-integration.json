@@ -1,0 +1,17 @@
+{
+  "schema": "concert-concurrent-handoff-integration-v1",
+  "recorded_utc": "2026-11-23T06:47:19.485541+00:00",
+  "initial_handoff_source_commit": "3ef80d97d2cc25d5201195bb8ced3646811200db",
+  "initial_handoff_pr": 115,
+  "initial_handoff_merge_commit": "134e0689831d434848dfc1cfda6328f7a9e65d05",
+  "initial_handoff_merged_at": "2026-11-23T06:41:06Z",
+  "prepared_closeout_commit": "b0a96cd27cfc25972afd8fb03f74f12819490cc1",
+  "concurrent_owner_implementation_pr": 116,
+  "concurrent_owner_implementation_head": "285df02e51cc68073fe17c8a06ae0d7f54737df7",
+  "concurrent_owner_main_merge": "3812463e1196f4c47b468e05060dbc1c8154ff75",
+  "integration_strategy": "Preserve the existing owner merges and prepared closeout with both parents. Refresh portable source and current documentation after the cloud-tools change; do not overwrite or replace the owner implementation.",
+  "new_implementation_scope": "PR116 supplies reusable p3d song scenes, cloud tool proofs, silent Remotion fix, cached Blender download support and Drive-sync CLI. These changes belong to the owner implementation, not a new handoff render.",
+  "unchanged_finished_picture_source": "eec8d16519ea82309ef851975792e9dfc548da03",
+  "final_current_source_receipt": "project-docs/production-system/evidence/claude-source-snapshot.json",
+  "final_publication_authority": "project-docs/production-system/evidence/claude-publication.json"
+}

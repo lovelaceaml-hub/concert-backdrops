@@ -2,9 +2,18 @@
 
 ## Current verification: GitHub cloud runners, November 22, 2026
 
-Every tool now runs end to end on a GitHub Actions cloud runner (Ubuntu 24.04,
-CPU only). Chat sandboxes block browser sockets, Xvfb and Docker; GitHub runners
-do not, so the earlier "blocked" results below no longer apply there.
+The supported tool demonstrations now run on a GitHub Actions cloud runner
+(Ubuntu 24.04, CPU only). Exact PR #116 head
+`285df02e51cc68073fe17c8a06ae0d7f54737df7` passed
+[run 45125796332](https://github.com/lovelaceaml-hub/concert-backdrops/actions/runs/45125796332):
+all eight original tool outcomes and all three jobs succeeded. The actual
+outcome summary was checked because tool steps use `continue-on-error`.
+Chat sandbox restrictions on browser sockets, Xvfb and Docker do not describe
+these GitHub runner results. Workbench interactive browser playback/export was
+not exercised in that run (it was proved later; see the table); Docker was built without a container execution proof. Short
+technical demonstrations do not establish all-song quality or approved 4K
+show output. The tool run used Python 3.12.16; the retained Song 11 film keeps
+its separate Python 3.12.14 producing contract.
 
 | Tool | Result on a GitHub runner | Proof |
 | --- | --- | --- |

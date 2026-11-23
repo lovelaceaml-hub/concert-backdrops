@@ -1,0 +1,44 @@
+{
+  "schema": "concert-parallel-owner-updates-closeout-v1",
+  "recorded_utc": "2026-11-23T07:14:24.974253+00:00",
+  "incoming_main_commit": "3d9abdf3a374a0d389821d2b639c75e2d121bfb1",
+  "preserved_owner_prs": [
+    117,
+    118,
+    119
+  ],
+  "changes": [
+    "Claude Code cloud session setup hook and setup script.",
+    "Opt-in engine clarity settings, shared motion/attachment helpers and proof workflow.",
+    "Original-source reproduction command with project-existence and dirty-worktree guards."
+  ],
+  "log_merge": {
+    "root_before_bytes": 92852,
+    "root_before_sha256": "9e739fe3035236a6d8635a3ca48c357aacb7cda68f7d5a2ca1502d6a0ca9eecf",
+    "drive_before_bytes": 92852,
+    "drive_before_sha256": "2b0c486aff179466a0fc0c68a0a87b950a9a49df2fbeae64f06328ec74d73db1",
+    "incoming_main_bytes": 47136,
+    "incoming_main_sha256": "46736dddf2b94094cacaa55cbcc22faa82f9c4feb8dfa8eae33e63d5f7f24135",
+    "events_added_from_main": 1,
+    "root_after_bytes": 93329,
+    "root_after_sha256": "e851a8c2786ab085589e29eb14fb4e29a90ebf6cd93a3436ce704d40b44e08fc",
+    "drive_after_bytes": 93329,
+    "drive_after_sha256": "525b18026b1064759e5fa0d54d5a43e04be1a9a767a34fc09c0caff7ecd80ce0",
+    "events_each_after": 137,
+    "root_and_drive_preexisting_prefixes_preserved": true,
+    "incoming_main_events_all_retained": true,
+    "same_semantic_event_set": true
+  },
+  "final_source_checkpoint": {
+    "archive_filename": "Concert_Project_Final_Handoff_2026-11-22.tar.gz",
+    "manifest_filename": "FINAL-SOURCE-MANIFEST.json",
+    "readme_filename": "README_FINAL_SOURCE.md",
+    "receipt_filename": "FINAL-HANDOFF-RECEIPT.json",
+    "source_folder_url": "https://drive.google.com/drive/folders/1ARIxA-UsuIR0xEVeDIBMH-MMgoxnafHn",
+    "source_scope": "Exact final merged handoff commit, including owner changes observed through PR119. The final companion manifest and receipt are created after that commit and identify its exact hash, entry count and Drive files.",
+    "verification_authority": "FINAL-HANDOFF-RECEIPT.json in the source folder; final merge PR metadata also links the exact receipt.",
+    "guide": "project-docs/production-system/FINAL-SOURCE-CHECKPOINT.md"
+  },
+  "original_completed_film_producing_commit": "eec8d16519ea82309ef851975792e9dfc548da03",
+  "no_new_render_for_handoff": true
+}

@@ -1,0 +1,29 @@
+{
+  "schema": "concert-log-closeout-v1",
+  "recorded_utc": "2026-11-23T07:03:36.775248+00:00",
+  "event_id": "claude-handoff-20261122-cloud-tools-closeout",
+  "original_reconciliation": "project-docs/production-system/evidence/claude-log-reconciliation.json",
+  "logs": [
+    {
+      "target": "git",
+      "before_bytes": 91485,
+      "before_sha256": "c1c7575ba066b1a7c80d1c4eb1adaccd475418f06ff079882c26be56596024b0",
+      "after_bytes": 92852,
+      "after_sha256": "9e739fe3035236a6d8635a3ca48c357aacb7cda68f7d5a2ca1502d6a0ca9eecf",
+      "events_before": 135,
+      "events_after": 136,
+      "original_prefix_preserved": true
+    },
+    {
+      "target": "drive",
+      "before_bytes": 91485,
+      "before_sha256": "b173220a07677f4a0ec6e335d46bafc8f5280a437507cfc62f168be1c7449bdd",
+      "after_bytes": 92852,
+      "after_sha256": "2b0c486aff179466a0fc0c68a0a87b950a9a49df2fbeae64f06328ec74d73db1",
+      "events_before": 135,
+      "events_after": 136,
+      "original_prefix_preserved": true
+    }
+  ],
+  "same_semantic_event_set": true
+}

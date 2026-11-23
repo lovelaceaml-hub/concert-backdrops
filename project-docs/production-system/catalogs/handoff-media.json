@@ -8,7 +8,7 @@
     "direct_large_copies_with_metadata_only_verification": 5,
     "historical_full_film_locations_unresolved": 11,
     "new_video_encodes": 0,
-    "recorded_utc": "2026-11-23T06:23:05.596088+00:00"
+    "recorded_utc": "2026-11-23T06:38:34.955043+00:00"
   },
   "drive_destinations": {
     "project_home": "1xyNZn4ZA6bjPcvKjGfgSWQIs9aAp2PPd",
@@ -5500,7 +5500,7 @@
   ],
   "initial_discovery_recorded_utc": "2026-11-23T05:43:14.123960+00:00",
   "scope": "Current reconciled project media and provenance, with initial discovery observations retained under explicitly named historical fields.",
-  "recorded_utc": "2026-11-23T06:23:05.596088+00:00",
+  "recorded_utc": "2026-11-23T06:38:34.955043+00:00",
   "current_cautions": [
     "Five additional direct large copies have metadata-only verification; verified exact parts are the content authority.",
     "Eleven historical full-film targets remain unresolved; the completed renewed Song11 is retained.",

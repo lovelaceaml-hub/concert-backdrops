@@ -10,7 +10,7 @@ Code for the video backdrops of "The Words of Mother's Love Healing Concert" (LV
 
 Use [the plain project status](project-docs/production-system/PROJECT-STATUS.md) and [the Claude starting prompt](project-docs/production-system/CLAUDE-START-PROMPT.txt) for the handoff.
 
-Start with the current [owner directions](AGENTS.md), the [complete Claude handoff](project-docs/production-system/CLAUDE-HANDOFF.md), [START-HERE](project-docs/production-system/START-HERE.md) and [current state](project-docs/production-system/STATE.json). Improve the existing engine and retain Blender, the Three.js preview, Remotion, Video Shotcraft and Blender MCP as reusable tools. Their source/configuration is preserved; [integration status](integrations/STATUS.md) distinguishes historical verification from current installation and unverified browser/GUI paths.
+Start with the current [owner directions](AGENTS.md), the [complete Claude handoff](project-docs/production-system/CLAUDE-HANDOFF.md), [START-HERE](project-docs/production-system/START-HERE.md) and [current state](project-docs/production-system/STATE.json). Improve the existing engine and retain Blender, the Three.js preview, Remotion, Video Shotcraft and Blender MCP as reusable tools. Their source/configuration is preserved. PR #116 adds the reusable song-scene route and verified GitHub cloud proofs; [integration status](integrations/STATUS.md) distinguishes those tested cloud capabilities from this checkout's local installation and the remaining Workbench/container-run checks.
 
 The complete **Almighty God Knows the Future** recreation is rendered, checked and saved: **275 seconds, native 1920×1080 at 60 fps, 16,500 frames**. [PR #112](https://github.com/lovelaceaml-hub/concert-backdrops/pull/112) merged at `93527bf5e2e43477073e361d22cfd6d4fa999da7`; the producing picture source remains `eec8d16519ea82309ef851975792e9dfc548da03`. This is the completed 1080p design/review delivery. Exact-output owner approval is not recorded. The final show target is **4K60 after design, timing and content approval**. There is no unfinished render queue, and no new phone versions should be made.
 
@@ -24,6 +24,8 @@ python3 scripts/bootstrap.py --p3d-only --reference-fonts
 ```
 
 The approved 66-second promo supplies the creative language. The approved 30-second Song 11 study supplies the native 1080p60 clarity reference. All eleven full recording sources are indexed and byte-verified; this does not imply every historical full-song movie has been recovered. The [native model kit](tools/concert_kit/README.md), [dove, rose and wheat prototypes](tools/concert_addons/README.md), and [camera and response revision](tools/concert_motion_revision/README.md) preserve earlier reusable work. Apply the current generous-garment modesty correction to every reused figure. The [historical improvement backlog](project-docs/production-system/IMPROVEMENT-QUEUE.md) offers ideas, not an automatic next task.
+
+The final integrated source checkpoint, including the parallel owner updates through PR #119, is described in [FINAL-SOURCE-CHECKPOINT.md](project-docs/production-system/FINAL-SOURCE-CHECKPOINT.md). Its post-merge manifest and receipt identify the exact final backup; earlier source archives remain verified recovery checkpoints.
 
 ## Quick links
 
