@@ -1,0 +1,130 @@
+{
+  "archive_extracted_or_executed": false,
+  "created_new_file": true,
+  "destination": {
+    "ancestor_chain_after": [
+      {
+        "id": "1dNAkcUesWv5RcKJ48s_W7mpDW757b0At",
+        "modifiedTime": "2026-11-23T05:40:21.972Z",
+        "name": "Reproduction Resources",
+        "parents": [
+          "1lxcic8BcSzNgPtEY_Yg_2TBAbNam72dZ"
+        ]
+      },
+      {
+        "id": "1lxcic8BcSzNgPtEY_Yg_2TBAbNam72dZ",
+        "modifiedTime": "2026-11-23T05:39:52.423Z",
+        "name": "Claude Handoff - 2026-11-22",
+        "parents": [
+          "1QDGGqqkJlbovBLCthX-QChqfD8zSmK8X"
+        ]
+      },
+      {
+        "id": "1QDGGqqkJlbovBLCthX-QChqfD8zSmK8X",
+        "modifiedTime": "2026-11-21T00:30:13.759Z",
+        "name": "Production System",
+        "parents": [
+          "1xyNZn4ZA6bjPcvKjGfgSWQIs9aAp2PPd"
+        ]
+      },
+      {
+        "id": "1xyNZn4ZA6bjPcvKjGfgSWQIs9aAp2PPd",
+        "modifiedTime": "2026-11-23T06:08:39.263Z",
+        "name": "Concert Backdrops - Songs",
+        "parents": [
+          "0AGK3WhLUQngOUk9PVA"
+        ]
+      }
+    ],
+    "ancestor_chain_before": [
+      {
+        "id": "1dNAkcUesWv5RcKJ48s_W7mpDW757b0At",
+        "modifiedTime": "2026-11-23T05:40:21.972Z",
+        "name": "Reproduction Resources",
+        "parents": [
+          "1lxcic8BcSzNgPtEY_Yg_2TBAbNam72dZ"
+        ]
+      },
+      {
+        "id": "1lxcic8BcSzNgPtEY_Yg_2TBAbNam72dZ",
+        "modifiedTime": "2026-11-23T05:39:52.423Z",
+        "name": "Claude Handoff - 2026-11-22",
+        "parents": [
+          "1QDGGqqkJlbovBLCthX-QChqfD8zSmK8X"
+        ]
+      },
+      {
+        "id": "1QDGGqqkJlbovBLCthX-QChqfD8zSmK8X",
+        "modifiedTime": "2026-11-21T00:30:13.759Z",
+        "name": "Production System",
+        "parents": [
+          "1xyNZn4ZA6bjPcvKjGfgSWQIs9aAp2PPd"
+        ]
+      },
+      {
+        "id": "1xyNZn4ZA6bjPcvKjGfgSWQIs9aAp2PPd",
+        "modifiedTime": "2026-11-23T06:08:39.263Z",
+        "name": "Concert Backdrops - Songs",
+        "parents": [
+          "0AGK3WhLUQngOUk9PVA"
+        ]
+      }
+    ],
+    "file_name": "Cloud_Tool_Proofs_PR116_2026-11-22.zip",
+    "folder_id": "1dNAkcUesWv5RcKJ48s_W7mpDW757b0At",
+    "project_root_id": "1xyNZn4ZA6bjPcvKjGfgSWQIs9aAp2PPd"
+  },
+  "drive": {
+    "canonical_url": "https://drive.google.com/file/d/1IW2BxB1qKPpz-4nrIfD3KSV7H9p6CmdB/view",
+    "id": "1IW2BxB1qKPpz-4nrIfD3KSV7H9p6CmdB",
+    "metadata": {
+      "id": "1IW2BxB1qKPpz-4nrIfD3KSV7H9p6CmdB",
+      "mimeType": "application/zip",
+      "modifiedTime": "2026-11-23T07:00:14.697Z",
+      "name": "Cloud_Tool_Proofs_PR116_2026-11-22.zip",
+      "parents": [
+        "1dNAkcUesWv5RcKJ48s_W7mpDW757b0At"
+      ],
+      "size": "637361486",
+      "trashed": false,
+      "version": "1",
+      "webViewLink": "https://drive.google.com/file/d/1IW2BxB1qKPpz-4nrIfD3KSV7H9p6CmdB/view?usp=drivesdk"
+    }
+  },
+  "execution": {
+    "attempt": "1",
+    "run_id": "45127784158",
+    "source_commit": "252e14145d535d8c8472c72144d85587967f3b2f"
+  },
+  "finished_utc": "2026-11-23T07:00:50.085761+00:00",
+  "operation": "uploaded_new_file",
+  "overwrite_or_delete_operations": false,
+  "permissions_changed": false,
+  "readback": {
+    "bytes": 637361486,
+    "metadata_unchanged_during_readback": true,
+    "sha256": "66099a7e4613a22d397abe74826f0b30246b5235161756157ec8d84bfee0dd8c",
+    "verified": true,
+    "verified_utc": "2026-11-23T07:00:49.100660+00:00"
+  },
+  "schema": "exact-github-proof-drive-archive-v1",
+  "source": {
+    "artifact_id": 14795673158,
+    "artifact_name": "tool-proofs",
+    "downloaded_bytes": 637361486,
+    "downloaded_sha256": "66099a7e4613a22d397abe74826f0b30246b5235161756157ec8d84bfee0dd8c",
+    "expected_bytes": 637361486,
+    "expected_provider_digest": "sha256:66099a7e4613a22d397abe74826f0b30246b5235161756157ec8d84bfee0dd8c",
+    "expected_sha256": "66099a7e4613a22d397abe74826f0b30246b5235161756157ec8d84bfee0dd8c",
+    "head_sha": "285df02e51cc68073fe17c8a06ae0d7f54737df7",
+    "observed_provider_bytes": 637361486,
+    "observed_provider_digest": "sha256:66099a7e4613a22d397abe74826f0b30246b5235161756157ec8d84bfee0dd8c",
+    "raw_zip_verified": true,
+    "repository": "lovelaceaml-hub/concert-backdrops",
+    "run_id": 45125796332
+  },
+  "stage": "complete",
+  "started_utc": "2026-11-23T06:58:59.504761+00:00",
+  "status": "verified",
+  "unique_same_name_file_confirmed": true
+}

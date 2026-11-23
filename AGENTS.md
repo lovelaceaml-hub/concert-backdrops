@@ -11,7 +11,7 @@ These are standing rules for every agent (Claude, Codex, ChatGPT, Gemini). They 
 - **GPU work runs on his Mac.** "If GPU is ever needed just use my local computer." His Mac is an Apple M1 Pro (16-core GPU, Metal 4). This is a project exception to the cloud-first rule for GPU work only; CPU work stays in the cloud. Before a heavy local run, check the 1-minute load (stop if above 50) and run with `nice -n 19`. `pipeline/render.py` refuses macOS by default; use its explicit local allowance only for GPU work.
 - **Ask when unclear.** "Ask me clarification questions when needed." When a request is ambiguous or changes what he gets, ask him with short clickable options and a recommendation instead of guessing.
 
-- **Tools blocked in the cloud.** The browser 3D preview, Remotion and live Blender are blocked by cloud sandbox limits, not by a missing GPU. Anthony's choice: "Try the cloud first" (for example GitHub Actions runners or another cloud setup); use his Mac only if no cloud route works, and say why.
+- **Chat sandbox limits and working cloud routes.** The earlier browser 3D preview, Remotion and live Blender restrictions applied to the chat sandbox. PR #116 subsequently verified the supported GitHub Actions cloud CPU route; see `docs/VIDEO-PIPELINE-VALIDATION.md`. The earlier sandbox limits did not establish a missing GPU. Anthony's choice: "Try the cloud first" (for example GitHub Actions runners or another cloud setup); use his Mac only if no cloud route works, and say why.
 - **Current priorities, in order:** 1) get the new tools (Blender, Three.js preview, Remotion, Video Shotcraft, Blender MCP) working and reusable for any song; 2) build this week's proven quality gains into the current engine so every song gets them; 3) clean up and organize (one plain status page, stale pull requests, rendering spread across many cloud machines). Finished videos from ChatGPT's file library go into the Drive folder "Concert Backdrops - Songs", Videos.
 - **Working mode:** Anthony said "Go ahead on your own" for these priorities. Stop only for real decisions or approvals.
 
@@ -31,6 +31,8 @@ owner creative approval is not recorded, so it is not an approved final 4K60
 show master. Preserve earlier 720p artifacts as history; do not generate new
 phone versions. Recover existing finished files before considering a new render.
 There is no unfinished render queue or active background production service.
+
+The final integrated source checkpoint, including the parallel owner updates through PR #119, is described in [FINAL-SOURCE-CHECKPOINT.md](project-docs/production-system/FINAL-SOURCE-CHECKPOINT.md). Its post-merge manifest and receipt identify the exact final backup; earlier source archives remain verified recovery checkpoints.
 
 ## Earlier navigation (historical; superseded by the owner directions above)
 

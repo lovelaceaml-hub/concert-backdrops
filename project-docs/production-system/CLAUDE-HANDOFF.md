@@ -4,6 +4,8 @@
 
 The picture source is `eec8d16519ea82309ef851975792e9dfc548da03`. [PR #112](https://github.com/lovelaceaml-hub/concert-backdrops/pull/112) merged the completed recreation and delivery workflow at `93527bf5e2e43477073e361d22cfd6d4fa999da7`. Later documentation, transfer or maintenance commits do not change the producing picture identity. The November 22 owner directions, merged through [PR #113](https://github.com/lovelaceaml-hub/concert-backdrops/pull/113), are included in that integration checkpoint. The subsequent owner priorities in [PR #114](https://github.com/lovelaceaml-hub/concert-backdrops/pull/114) are retained from main `651e9487cd134e06b94f9627c22f008a8da02b54` and govern the next work.
 
+[PR #116](https://github.com/lovelaceaml-hub/concert-backdrops/pull/116), merged at `3812463e1196f4c47b468e05060dbc1c8154ff75`, adds the working cloud tool-proof route, reusable song scene and Drive transfer helper. [Section 9](#9-actual-status-of-the-additional-tools) distinguishes the actual tested source/run, this local checkout's installation gaps and the remaining integration limits. These additions do not change the completed film's producing source or its approval status.
+
 This is a continuation guide for the **whole existing concert system**, not a request to replace it or restart completed studies. Read the current conversation and [root AGENTS.md](../../AGENTS.md), then [STATE.json](STATE.json), [the delivery record](evidence/s11-renewed-final-delivery.json) and [final QA](evidence/s11-renewed-final-qa.json). The dated sections in older documents preserve history; they are not an automatically authorized work queue.
 
 ## Contents
@@ -26,7 +28,7 @@ This is a continuation guide for the **whole existing concert system**, not a re
 [Root AGENTS.md](../../AGENTS.md) contains the latest standing directions for Claude, Codex, ChatGPT and Gemini. Its November 22 owner section takes priority over earlier navigation-only wording and dated project records.
 
 1. **Improve the current system.** Keep the established engine, working scenes, source identities and render setup. The owner used ChatGPT to establish and improve this system, not to replace it with a separate ChatGPT system.
-2. **Keep the additional tools and make them reusable.** Blender, the Three.js scene preview, Remotion, Video Shotcraft and Blender MCP remain part of the project. Their incomplete runtime checks must be described honestly; they should not be deleted or shelved.
+2. **Keep the additional tools and make them reusable.** Blender, the Three.js scene preview, Remotion, Video Shotcraft and Blender MCP remain part of the project. Preserve the successful cloud proofs and describe the remaining checks precisely; they should not be deleted or shelved.
 3. **Do not create new phone versions or phone-only review files.** The existing 720p Song 11 file is a preserved historical viewing derivative. Its existence does not establish a current phone workflow.
 4. **Develop at 1080p; render the final show at 3840×2160, 60 fps after approval.** Do not infer approval from a successful technical check, an earlier study's approval or a saved delivery.
 5. **CPU rendering stays in the cloud. GPU work, if needed, uses Anthony's Mac.** The owner reports an Apple M1 Pro with a 16-core GPU and Metal 4. Before heavy local work, check the one-minute load and stop if it exceeds 50; run at `nice -n 19`. The generic renderer refuses macOS by default. Its explicit `--allow-local-render` option is only for authorized local GPU work; the flag does not itself select or configure Metal/GPU rendering. The Linux x64 installation is not proof of a working Mac GPU setup.
@@ -35,6 +37,8 @@ This is a continuation guide for the **whole existing concert system**, not a re
 The owner has already authorized continuing the priorities in this order: **(1)** get Blender, Three.js, Remotion, Video Shotcraft and Blender MCP working and reusable for any song; **(2)** incorporate proven quality improvements into the existing engine for every song; **(3)** organize one plain status page, stale pull requests and distributed cloud rendering. The current request is to complete this project handoff; those priorities guide Claude's continuation, with no need to ask again for routine authorized work.
 
 For browser 3D, Remotion and live Blender failures caused by cloud sandbox restrictions, **try permitted cloud routes first**, such as a suitable GitHub Actions runner. Such restrictions are not proof of a missing GPU. Use the owner's Mac only if no cloud route works, and explain why. The separate Mac GPU and load/priority conditions still apply.
+
+The GitHub Actions CPU route now has successful browser, Remotion and live Blender proofs. The older chat-sandbox socket restrictions remain local environment observations, not a current blanket cloud blocker.
 
 The owner's correction about anatomical detail is a standing creative requirement. The rejected body-fitting fan direction must not reappear as the default because its code or an old queue remains in Git. [PR #111](https://github.com/lovelaceaml-hub/concert-backdrops/pull/111) is closed without merging. The completed Song 11 recreation uses separately shaped, generous garments.
 
@@ -77,14 +81,20 @@ The owner calls Song 11 **Almighty God Knows the Future**. The catalog/audio tit
 | [Videos / Production Studies](https://drive.google.com/drive/folders/1hrk62bFIOHv2NwXvYl2bNSmp0cwBoXrr) | Earlier films, studies and media |
 | [Claude handoff](https://drive.google.com/drive/folders/1lxcic8BcSzNgPtEY_Yg_2TBAbNam72dZ) | Current project handoff destination |
 | [Claude handoff source and documentation](https://drive.google.com/drive/folders/1ARIxA-UsuIR0xEVeDIBMH-MMgoxnafHn) | Source/document snapshots and resource inventory |
+| [Verified cloud-tools source checkpoint](https://drive.google.com/file/d/1NSXgPH0YSHKTEP9d2dGppXfnQNUSn919/view?usp=drivesdk) | **877 tracked entries** at `252e14145d535d8c8472c72144d85587967f3b2f`, including PR #116 and the archive transfer helper; actual source/resource restoration passed. |
+| [Prior frozen source backup A](https://drive.google.com/file/d/1QrBbz-SxWWNEkGtC30BcTWuB9_N8MDd4/view?usp=drivesdk) | 861 tracked entries at `3ef80d97d2cc25d5201195bb8ced3646811200db`, before PR #116; modes and symbolic links preserved. Use the completion receipt for the latest refreshed source archive. |
 
 Use the [Drive completion record](evidence/claude-drive-completion.json) for exact Drive file IDs, bytes, hashes and confirmed coverage. The [media inventory](catalogs/handoff-media.json) and [resource inventory](catalogs/handoff-resources.json) describe the intended originals and their provenance. Read each status: a folder's existence or a transfer plan does not prove that every intended upload is present. A source snapshot contains the tracked project at its recorded commit. A pinned-resource archive has its own inventory; it must not be described as a complete installed environment. GitHub is the history authority. A source snapshot archive or a linked partial clone is not an offline Git bundle.
+
+### Final source after parallel owner updates
+
+Use [FINAL-SOURCE-CHECKPOINT.md](FINAL-SOURCE-CHECKPOINT.md) and the final `FINAL-SOURCE-MANIFEST.json` / `FINAL-HANDOFF-RECEIPT.json` in the source folder for the exact final merged source. The 877-entry snapshot `252e1414` is a verified recovery checkpoint before the later PRs #117–#119. The final archive also includes the Claude cloud-session hook, opt-in shared engine quality/motion helpers, and original-source reproduction guards from those owner updates. The recorded short cloud tool proofs retain their exact tested source; they do not prove every later engine change or full-film reproduction.
 
 ### Verified handoff coverage
 
 The reconciliation retains **40 media, reference and recovery originals**: the 29 later saved delivery artifacts, six canonical/current reference copies, two recovery artifacts and three separately identified earlier imports. All 40 have complete raw-byte verification either as a whole file or through exact, individually verified recovery parts. Twenty-two existing whole files were adopted after new full hash checks; seven large originals use verified byte parts. Six extra Cinematic movies copied before the older canonical folder was discovered remain as verified redundant copies in the recovery folder.
 
-The two additional archives preserve **392 reproduction resource paths** and **467 visual-review evidence files**. Both were uploaded intact and fully read back. The existing project scan listed **62 folders and 542 metadata objects**, with four new active handoff/recovery subtrees intentionally excluded; it is a locator index, not a claim that every older object was downloaded. All 31 previously recorded Drive objects had matching sizes, and 29 had unchanged recorded modification times. Eleven reported historical full-film targets remain unresolved; a different complete-length Song 03 alternate was recovered and is separately identified.
+The two additional archives preserve **392 reproduction resource paths** and **467 visual-review evidence files**. Both were uploaded intact and fully read back. The separate **637 MB PR #116 tool-proof archive** is also retained intact in Drive. Its source ZIP hash and full Drive readback matched in [transfer run 45127784158](https://github.com/lovelaceaml-hub/concert-backdrops/actions/runs/45127784158); see [the retention proof](evidence/claude-cloud-proof-retention.json). This proof used the project’s authenticated cloud route because the archive exceeds the chat download limit. The existing project scan listed **62 folders and 542 metadata objects**, with four new active handoff/recovery subtrees intentionally excluded; it is a locator index, not a claim that every older object was downloaded. All 31 previously recorded Drive objects had matching sizes, and 29 had unchanged recorded modification times. Eleven reported historical full-film targets remain unresolved; a different complete-length Song 03 alternate was recovered and is separately identified.
 
 | Need | Current destination |
 | --- | --- |
@@ -96,12 +106,13 @@ The two additional archives preserve **392 reproduction resource paths** and **4
 | Exact Advanced Dance package recovery | [Verified Advanced Dance recovery](https://drive.google.com/drive/folders/1e0j_89WwvQSlhmGqTQDnsBaRyxQwInh7) |
 | Exact reproduction assets and prepared score | [Resource archive](https://drive.google.com/file/d/1zLhcmJRo_ZH4Kd4lO0MtyHEV2McLSWux/view?usp=drivesdk) |
 | Preserved visual-review evidence | [Review archive](https://drive.google.com/file/d/18AqvLakHwJzmWrFQAfZXmyL9ksQ0_-P2/view?usp=drivesdk) |
+| Exact cloud tool proof archive | [Cloud_Tool_Proofs_PR116_2026-11-22.zip](https://drive.google.com/file/d/1IW2BxB1qKPpz-4nrIfD3KSV7H9p6CmdB/view?usp=drivesdk) — 637,361,486 original bytes; full authenticated cloud Drive readback verified |
 | All nine distinct reference imports/copies | [Reference Media](https://drive.google.com/drive/folders/1ihTYIdC8ssma9QZ1-OLXn3fRU6K6jaCZ) |
 | Recovery cache and separate private render-key archive | [Private Recovery](https://drive.google.com/drive/folders/1aVv7mbC7Tam_GahdpgFGJMZpzvxPowQ-) |
 
 Five additional large whole-file Drive copies have matching metadata only because the raw fetch route rejects files above 268,435,456 bytes. Their expected original hashes must not be represented as hashes proved from those objects. The independently uploaded and fully read-back parts are the verified content authority. Existing sharing was retained; receipt-level observations describe actual permissions without a blanket owner-only claim. No permission changes were made.
 
-Use [the plain status page](PROJECT-STATUS.md), [the complete Drive locator index](catalogs/drive-project-index.json), and [the ready-to-paste Claude prompt](CLAUDE-START-PROMPT.txt). The source archive has its own frozen-commit receipt and preserves modes/symlinks; its later closeout record accompanies the snapshot.
+Use [the plain status page](PROJECT-STATUS.md), [the complete Drive locator index](catalogs/drive-project-index.json), and [the ready-to-paste Claude prompt](CLAUDE-START-PROMPT.txt). The original source backup A contains commit `3ef80d97d2cc25d5201195bb8ced3646811200db` and 861 tracked entries; it predates PR #116. Its actual extraction and restoration of all 392 resource paths passed. Follow the current [source archive receipt](evidence/claude-source-snapshot.json), [clean restoration proof](evidence/claude-source-clean-restore.json) and [completion record](evidence/claude-drive-completion.json) for the refreshed snapshot's exact identity and verification; do not infer that the older backup includes later cloud-tool changes. The initial handoff checkpoint merged through [PR #115](https://github.com/lovelaceaml-hub/concert-backdrops/pull/115); the current closeout preserves that merge and [PR #116](https://github.com/lovelaceaml-hub/concert-backdrops/pull/116). The [publication record](evidence/claude-publication.json) identifies the final uploaded documentation and source.
 
 
 The [delivery catalog](catalogs/deliveries.json), [DELIVERIES.md](DELIVERIES.md), [STATE.json](STATE.json) and individual evidence records describe saved files. Recover the finished asset before considering another render. An absent ignored `work/` directory in a fresh checkout is not pending production. Old absolute workspace paths document where a check happened; they are not portable dependencies.
@@ -200,6 +211,8 @@ Historical review records often contain stage-specific limitations or then-pendi
 | [tools/s11_cloud](../../tools/s11_cloud/) | Frozen requests, source/input validation, silent distributed rendering and encrypted transport |
 | [tools/s11_delivery](../../tools/s11_delivery/) | Reviewed one-run assembly, audio headroom, complete technical checks, story extraction and exact master archives |
 | [pipeline](../../pipeline/) and [scripts/video](../../scripts/video) | Shared project contracts, renderer adapters, preview/finishing/QA and archive workflow |
+| [pipeline/kit.py](../../pipeline/kit.py), [song_scene.py](../../scenes/p3d/song_scene.py) and [song-scene-demo](../../projects/song-scene-demo/project.json) | Configurable scene entry point for existing `engine/songs` modules, with frame recovery, worker chunks, temporal samples and QA; see [reusable-scene instructions](../../docs/VIDEO-PIPELINE.md#reusable-scenes-for-any-song-november-22-2026) |
+| [tools/drive_sync.py](../../tools/drive_sync.py) and [tool-proofs workflow](../../.github/workflows/tool-proofs.yml) | Owner-authorized cloud Drive list/get/put operations and scoped CPU runtime proofs; credentials remain Actions secrets |
 | [tools/production_system.py](../../tools/production_system.py) and [scripts/concert](../../scripts/concert) | Catalog navigation, audio checks, planning, recovery and handoff export |
 | [projects](../../projects/) | Registered concert studies and technical demos; dedicated renewed Song 11 modules are a separate entry point |
 | [apps](../../apps/), [scenes/blender](../../scenes/blender/), [integrations](../../integrations/) | Three.js preview, Remotion editor, Blender scene work, Shotcraft and Blender MCP integration |
@@ -222,12 +235,12 @@ python3 scripts/bootstrap.py --p3d-only --reference-fonts
 ./scripts/concert verify-catalogs
 ```
 
-The Drive handoff also provides `Concert_Project_Source_2026-11-22.tar.gz`,
+The final integrated source backup is `Concert_Project_Final_Handoff_2026-11-22.tar.gz`,
 a complete tracked-source snapshot at its recorded frozen commit. Extract from the directory containing the downloaded archive, then enter its
 source root before using relative project commands:
 
 ```bash
-tar -xzf Concert_Project_Source_2026-11-22.tar.gz
+tar -xzf Concert_Project_Final_Handoff_2026-11-22.tar.gz
 cd concert-backdrops
 ```
 
@@ -241,7 +254,7 @@ the later closeout receipt on GitHub and Drive records the exported archive.
 
 These are setup/status commands, not a request to rerender Song 11. The standard setup uses [pyproject.toml](../../pyproject.toml), [uv.lock](../../uv.lock) and [package-lock.json](../../package-lock.json). The p3d-only route still needs Node/npm for locked font installation. General supported ranges are Python 3.11–3.13 and Node 22.12–24; the recorded project setup used Python 3.12.14, Node 24.22.3, npm 11.19.1 and uv 0.13.9. Required system capabilities include FFmpeg/FFprobe and software EGL/Mesa.
 
-For the full optional tool setup, use `python3 scripts/bootstrap.py`, then `python3 scripts/install-integrations.py --check` and `./scripts/video doctor --probe-browser`. Read their results. Successful install or build output alone does not verify actual browser capture, MP4 export or live MCP operation. Network-dependent dependency downloads are not an offline bootstrap; use the resource inventory and cached packages when available.
+For the full tool setup, use `python3 scripts/bootstrap.py`, then `python3 scripts/install-integrations.py --check` and `./scripts/video doctor --probe-browser` on a suitable cloud CPU host. The [tool-proofs workflow](../../.github/workflows/tool-proofs.yml) provides the verified GitHub Actions route and runs actual capture/render/live-connection checks after setup. Read its per-tool outcomes, not only the overall job conclusion: individual proof steps use `continue-on-error`. Successful install or build output alone does not verify actual browser capture, MP4 export or live MCP operation. Network-dependent dependency downloads are not an offline bootstrap; use the resource inventory and cached packages when available.
 
 ### Exact renewed Song 11 runtime
 
@@ -304,22 +317,38 @@ The [font catalog](catalogs/study-fonts.json) and [font recovery guide](../../do
 
 ## 9. Actual status of the additional tools
 
-The following verification is **historical recorded evidence from November 19–20**, not a claim that every dependency is installed in the present handoff checkout. Its source and configuration are preserved. The resource audit found no current `node_modules`, pinned `.tools/video-shotcraft` checkout, isolated Blender MCP environment/profile. The two tracked Shotcraft skill symlinks are present but dangling because their `../../.tools/video-shotcraft` target is absent. Preserve these links during source extraction. The host Blender 4.3.2 is different from the project's recorded 5.2.4 LTS pin and must not silently substitute for it.
+### Verified cloud CPU route
 
-| Component | What the records establish | What remains unverified or requires restoration |
+PR #116 is integrated at `3812463e1196f4c47b468e05060dbc1c8154ff75`. The completed [proof run 45125796332](https://github.com/lovelaceaml-hub/concert-backdrops/actions/runs/45125796332) tested the exact PR head `285df02e51cc68073fe17c8a06ae0d7f54737df7` on Ubuntu 24.04 GitHub runners and completed successfully at 06:47:47 UTC on November 23, 2026. All three jobs succeeded, and the actual summary records all eight tool outcomes as success: setup, browser doctor, Three.js capture, preview, Remotion, Blender rendering, reusable song scene and Blender MCP. These are scoped runtime proofs; do not silently attribute them to every later commit or every song.
+
+| Component | Current verified scope | Remaining limit |
 | --- | --- | --- |
 | Existing p3d + FFmpeg | The full renewed Song 11 production completed through this route. | Recreate the recorded environment and inputs before deliberate reproduction. |
-| Blender 5.2.4 LTS CPU | Official archive checksum verified; complete 2-second 320×180/30 fps demo and 10-second 320×180/60 fps motion study; native 1080p review frames and one 4K RGB16 frame; saved/reopened physics and sampled animation/retarget checks. | Pinned installation must be restored. These are engineering tests, not a full Blender concert, finished actor library or full 4K production. |
-| Three.js 0.187.0 / React Three Fiber 9.8.2 / React 19.2.7 | Source, locked dependencies, TypeScript checks and Vite builds passed. | Actual browser/WebGL capture and repeated-image checks did not run successfully. The recorded browser could not create its local socket. |
-| Remotion 4.0.484 | Editor and Workbench versions agree; builds and Node tests passed. | Actual browser-driven MP4 rendering remains unverified. |
-| Video Shotcraft | Exact pin `075b548c2405a07b77129eb448b0b504fc60dea3`; Workbench build, 150-card index, linked-project HTTP responses, foreground startup and shutdown passed. | Restore pinned checkout/dependencies. Browser playback and video export were not verified; demo cards are not approved concert assets. |
-| Blender MCP 2.3.1 | Hash-locked isolated environment, add-on enablement, stdio initialization and ten-tool catalog passed; safe mode rejected a disallowed import. Telemetry and all eight external asset/generation integrations were disabled; listener was localhost-only. | Restore environment/profile/configuration. Live GUI bridge was blocked by the recorded Xvfb Unix-socket limitation. Background Blender rendering is independent of that bridge. |
-| CPU Docker recipe | Source recipe reviewed. | No successful image build/digest was recorded; no Docker daemon was available. |
+| Blender 5.2.4 LTS CPU | Background demo encoded and passed QA: 2 seconds, 60 frames, 320×180/30 fps. | A short engineering demonstration, not a full Blender concert, finished actor library or full 4K production. |
+| Three.js 0.187.0 / React Three Fiber 9.8.2 / React 19.2.7 | Actual SwiftShader WebGL2 animated capture and out-of-order frame checks passed; pipeline preview encoded 4 seconds, 120 frames, 320×180/30 fps with passing QA. | The demonstrated scene does not establish correctness of every future scene or hardware environment. |
+| Remotion 4.0.484 | Actual browser-driven assembly encoded the 4-second, 120-frame, 320×180/30 fps demo with passing QA. Silent projects contain zero audio streams. | This is the editor assembly proof, not a Workbench interactive playback/export proof. |
+| Video Shotcraft | Exact pin `075b548c2405a07b77129eb448b0b504fc60dea3`; installation/build checks and retained historical 150-card, HTTP and lifecycle checks. | The latest Workbench check reports `server_started=false`; interactive browser playback and export remain unverified. Demo cards are not approved concert assets. |
+| Blender MCP 2.3.1 | Stdio and live GUI under Xvfb passed; the live response identified `PIPELINE_MCP_CONNECTED 5.2.4 LTS`. The retained configuration uses safe mode, localhost-only access and disabled external generation integrations/telemetry. | A working cloud connection does not automatically activate an assistant's MCP client or install this local checkout. |
+| Reusable `p3d-kit` song scene | A 4-second Song 11 example encoded at 1080p60: 240 frames, passing QA. | New reusable API proof, not a migration of all songs or the dedicated renewed Song 11 modules. |
+| CPU Docker recipe | The separate cloud job built the CPU image successfully. | No container-run production proof is established by that build. |
+| Drive helper | The separate cloud job read the project folder and created then removed its unique test file. | This access check is not a byte-verification receipt for future uploaded movies. |
 | Mac GPU | The owner explicitly permits this path when GPU is needed. | No production Mac/Metal validation is established by these Linux records. No active cloud GPU provider is configured. |
 
-Sources: [video-pipeline validation](../../docs/VIDEO-PIPELINE-VALIDATION.md), [4K and motion validation](../../docs/4K-MOTION-VALIDATION.md), [integration status](../../integrations/STATUS.md), [integration setup](../../integrations/README.md) and [toolchain lock](../../infra/toolchain.lock.json). Preserve those distinctions when reporting readiness. The recorded Chromium/Playwright and GUI restrictions were not bypassed.
+The tool-proof runner used Python **3.12.16**, Blender **5.2.4 LTS**, Node **24.22.3** and FFmpeg **6.1.1**. This newer runtime does not replace the completed Song 11 picture contract, which used Python **3.12.14** and its recorded source/dependency/host fingerprints. All four demo QA reports mark creative approval as `not_assessed` and contain no audio stream. These cloud proofs do not establish all-song quality, a full concert render, a completed character/church asset library or approved 4K production. The November 19–20 checks remain dated history, including separate native 1080p frames, one 4K RGB16 frame and motion/cache studies; they do not enlarge the new demo scope.
 
-On a suitable authorized host, the remaining browser work begins with `./scripts/video doctor --probe-browser`, `npm run test:browser`, `./scripts/video preview pipeline-demo --quality draft` and `./scripts/video finalize pipeline-demo --quality draft --editor remotion`. `python3 integrations/blender/smoke.py` tests the stdio integration; `--live` additionally needs the Blender GUI event loop. `node scripts/launch-workbench.mjs --check` checks the restored Workbench route. These are concrete future verification entry points, not unfinished Song 11 render jobs.
+The workflow is **Video tool proofs (cloud CPU)**, manually dispatched or triggered on `claude/video-tools-*` branch pushes. Its `tool-proofs` artifact includes per-tool logs and `proofs/summary.txt`; artifacts are retained for fourteen days. See [video-pipeline validation](../../docs/VIDEO-PIPELINE-VALIDATION.md), [integration status](../../integrations/STATUS.md), [4K and motion validation](../../docs/4K-MOTION-VALIDATION.md) and [the toolchain lock](../../infra/toolchain.lock.json). The working GitHub route does not bypass the older chat workspace's socket restrictions.
+
+### This local handoff checkout
+
+The resource audit found no local `node_modules`, pinned `.tools/video-shotcraft` checkout or isolated Blender MCP environment/profile. The two tracked Shotcraft skill symlinks are present but dangling because their `../../.tools/video-shotcraft` target is absent; preserve them during source extraction. Host Blender 4.3.2 differs from the project's 5.2.4 LTS pin. These are **local installation gaps**, not failures of the verified GitHub runner route. Restore the intended versions before using this host; source/configuration presence alone is not an installed runtime.
+
+### Reuse scenes and move source/render files
+
+[The reusable-scene contract](../../docs/VIDEO-PIPELINE.md#reusable-scenes-for-any-song-november-22-2026) accepts a module declaring `FPS`, `DURATION` (or `None` for project-defined length), `make_renderer()` and `frame()`, with optional `configure(params)`. [The kit adapter](../../pipeline/kit.py) supplies frame recovery, worker chunks, temporal samples and QA. Existing approved registrations remain frozen and reject parameters. [The new song scene](../../scenes/p3d/song_scene.py) selects an `engine/songs` module; the [example project](../../projects/song-scene-demo/project.json) supplies song, audio/feature input, start time, bloom scale and grain options. Keep new work at 1080p and review each song's modesty, motion and story. Selecting a legacy song does not automatically import the renewed Song 11 garment/performance treatment.
+
+[`tools/drive_sync.py`](../../tools/drive_sync.py) provides `list`, `get`, `put` and an access `check` inside the existing Concert Backdrops - Songs tree. Cloud jobs use the Actions secret **`GOOGLE_DRIVE_OAUTH`**; **`GOOGLE_DRIVE_SA_KEY`** is the documented read-only fallback. Store no credential values in source, logs or handoff files. Full recordings remain in Drive; `get` retrieves the chosen source, whose bytes must still match the song catalog. `put` updates an existing same-name file in the selected folder or creates one, so select its destination and filename deliberately and preserve verification receipts. This helper supplements the exact handoff inventories; it does not replace their hashes or imply publication approval.
+
+Use the recorded cloud proof as the starting point rather than restarting successful demos without a changed requirement. `node scripts/launch-workbench.mjs --check` is a setup check; it does not itself establish interactive playback/export. Those remaining Workbench checks and integration of reviewed improvements across songs are continuation work, not unfinished Song 11 render jobs.
 
 ## 10. Repeatable production and delivery workflow
 
@@ -394,7 +423,7 @@ There is no completed-film queue to restart. Choose the next action from the own
 | Revise Song 11 creatively | Gather exact-output feedback, retain the completed master, author a new 1080p revision in the existing system, and repeat proportionate native motion/composition review. |
 | Produce the final 4K60 show video | First establish the required design/timing/content approval. Then freeze a separate native 4K contract, validate representative cost and quality, and render/verify a new deliverable. Do not rename or upscale the existing HD master and call it native 4K. |
 | Improve another song | Read its actual recording, design and catalog state; preserve its distinct world and the corrected modesty. Reuse reviewed components rather than copying the same performance/effects loop. |
-| Complete reusable browser/editor/MCP support | Restore the pinned resources and run the specific missing runtime checks in section 9 on a suitable permitted host. Keep the production renderer available while doing so. |
+| Reuse browser/editor/MCP support | Start from the verified cloud route and reusable song-scene contract in section 9. Restore dependencies only where needed; finish the distinct Workbench interactive playback/export check and integrate reviewed improvements into each song. |
 | Diagnose a reported defect | Recover the exact file by hash, reproduce the specified time/view, compare with its producing source and record concrete evidence before modifying it. |
 
 For Claude's first working turn: read the latest owner directions and current conversation, recover the completed source/media and resources, inspect current state and exact evidence, then continue the three already-authorized priorities in their recorded order. There is no unfinished rendering to restart. Keep the current modesty correction, source clock, approval boundary and runtime limitations visible. Update source, documentation and durable delivery records together without changing the historical identity of already finished films.

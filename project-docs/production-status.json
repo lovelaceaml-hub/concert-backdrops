@@ -1,0 +1,588 @@
+{
+  "schema_version": 2,
+  "updated": "2026-11-23T06:31:13.674523+00:00",
+  "state": "Whole-project Claude handoff complete and verified; current Song 11 is finished at 1080p60 for design/review. Final 4K60 waits for owner approval.",
+  "active_writer": null,
+  "project_status_page": "https://github.com/lovelaceaml-hub/concert-backdrops/blob/main/project-docs/production-system/PROJECT-STATUS.md",
+  "claude_handoff": {
+    "status": "complete_verified",
+    "local_date": "2026-11-22",
+    "timezone": "America/Los_Angeles",
+    "folder_url": "https://drive.google.com/drive/folders/1lxcic8BcSzNgPtEY_Yg_2TBAbNam72dZ",
+    "source_folder_url": "https://drive.google.com/drive/folders/1ARIxA-UsuIR0xEVeDIBMH-MMgoxnafHn",
+    "media_inventory": "project-docs/production-system/catalogs/handoff-media.json",
+    "resources_inventory": "project-docs/production-system/catalogs/handoff-resources.json",
+    "completion_evidence": "project-docs/production-system/evidence/claude-drive-completion.json",
+    "source_archive_scope": "Complete tracked-source snapshot at a frozen handoff commit; GitHub retains history.",
+    "rendering_performed_for_handoff": false,
+    "plain_status": "project-docs/production-system/PROJECT-STATUS.md",
+    "starting_prompt": "project-docs/production-system/CLAUDE-START-PROMPT.txt",
+    "originals_retained_verified": 40,
+    "resource_review_archives_verified": 2,
+    "historical_unresolved_fullfilm_targets": 11,
+    "active_background_render_processes": 0,
+    "initial_source_snapshot": {
+      "source_snapshot_commit": "3ef80d97d2cc25d5201195bb8ced3646811200db",
+      "source_archive_file_id": "1QrBbz-SxWWNEkGtC30BcTWuB9_N8MDd4",
+      "source_archive_sha256": "2af0e84a78b1f341f068f51de158729220bf5d69e104828a33581d84ed5bac4f",
+      "source_archive_bytes": 33821577,
+      "source_archive_evidence": "https://github.com/lovelaceaml-hub/concert-backdrops/blob/b0a96cd27cfc25972afd8fb03f74f12819490cc1/project-docs/production-system/evidence/claude-source-snapshot.json"
+    },
+    "initial_integration_pr": 115,
+    "initial_integration_authority": "https://github.com/lovelaceaml-hub/concert-backdrops/pull/115",
+    "current_source_authority": "https://github.com/lovelaceaml-hub/concert-backdrops/tree/main",
+    "source_snapshot_commit": "252e14145d535d8c8472c72144d85587967f3b2f",
+    "source_archive_file_id": "1NSXgPH0YSHKTEP9d2dGppXfnQNUSn919",
+    "source_archive_sha256": "363e3c1b86cc820347f51548ec5ce49db0dee0742ce5665fb201b85a227c392a",
+    "source_archive_bytes": 33983222,
+    "source_archive_entries": 877,
+    "source_archive_evidence": "project-docs/production-system/evidence/claude-source-snapshot.json",
+    "source_actual_clean_restore_passed": true,
+    "source_current_includes_owner_prs": [
+      115,
+      116
+    ],
+    "cloud_proof_archive_file_id": "1IW2BxB1qKPpz-4nrIfD3KSV7H9p6CmdB",
+    "cloud_proof_archive_sha256": "66099a7e4613a22d397abe74826f0b30246b5235161756157ec8d84bfee0dd8c",
+    "cloud_proof_archive_bytes": 637361486,
+    "cloud_proof_archive_evidence": "project-docs/production-system/evidence/claude-cloud-proof-retention.json",
+    "cloud_proof_transfer_run": 45127784158,
+    "verified_resource_review_and_tool_proof_archives": 3,
+    "current_integration_authority": "https://github.com/lovelaceaml-hub/concert-backdrops/commits/main",
+    "source_snapshot_scope": "Verified 877-entry recovery checkpoint preceding owner PR117–PR119; final integrated source identity is recorded by the separate final manifest/receipt.",
+    "final_integrated_source": {
+      "archive_filename": "Concert_Project_Final_Handoff_2026-11-22.tar.gz",
+      "manifest_filename": "FINAL-SOURCE-MANIFEST.json",
+      "readme_filename": "README_FINAL_SOURCE.md",
+      "receipt_filename": "FINAL-HANDOFF-RECEIPT.json",
+      "source_folder_url": "https://drive.google.com/drive/folders/1ARIxA-UsuIR0xEVeDIBMH-MMgoxnafHn",
+      "source_scope": "Exact final merged handoff commit, including owner changes observed through PR119. The final companion manifest and receipt are created after that commit and identify its exact hash, entry count and Drive files.",
+      "verification_authority": "FINAL-HANDOFF-RECEIPT.json in the source folder; final merge PR metadata also links the exact receipt.",
+      "guide": "project-docs/production-system/FINAL-SOURCE-CHECKPOINT.md"
+    },
+    "production_log_events_each": 137
+  },
+  "source_snapshot": {
+    "schema": "concert-source-snapshot-receipt-v1",
+    "recorded_utc": "2026-11-23T06:59:15.667940+00:00",
+    "local_date": "2026-11-22",
+    "source_commit": "252e14145d535d8c8472c72144d85587967f3b2f",
+    "source_tree": "626504badaffe8d3b88a4625e30f027d5c660c7c",
+    "source_commit_url": "https://github.com/lovelaceaml-hub/concert-backdrops/commit/252e14145d535d8c8472c72144d85587967f3b2f",
+    "filename": "Concert_Project_Source_2026-11-22_Cloud_Tools.tar.gz",
+    "local_path": "/workspace/scratch/39a2abd37644/concert-future/work/claude-handoff/packages/current-source/Concert_Project_Source_2026-11-22_Cloud_Tools.tar.gz",
+    "bytes": 33983222,
+    "sha256": "363e3c1b86cc820347f51548ec5ce49db0dee0742ce5665fb201b85a227c392a",
+    "tracked_entries": 877,
+    "regular_files": 875,
+    "symbolic_links": [
+      {
+        "path": ".agents/skills/video-shotcraft",
+        "target": "../../.tools/video-shotcraft",
+        "git_mode": "120000"
+      },
+      {
+        "path": ".claude/skills/video-shotcraft",
+        "target": "../../.tools/video-shotcraft",
+        "git_mode": "120000"
+      }
+    ],
+    "executable_regular_files": 12,
+    "uncompressed_blob_bytes": 45725681,
+    "source_manifest_filename": "SOURCE-MANIFEST-CLOUD-TOOLS.json",
+    "source_manifest_bytes": 255760,
+    "source_manifest_sha256": "dd427c1549a85d5838ed3b9c44659c5ea0b128280600d40caeb3b0a4747b6dd7",
+    "gzip_crc_verified": true,
+    "every_archive_payload_matches_git_blob": true,
+    "every_tracked_entry_included_once": true,
+    "git_modes_preserved": true,
+    "private_key_markers_found": 0,
+    "git_history_included": false,
+    "working_tree_clean_at_export": true,
+    "archive_status": "uploaded_and_full_raw_readback_verified",
+    "clean_source_and_resource_restore_proof": "project-docs/production-system/evidence/claude-source-clean-restore.json",
+    "clean_source_and_resource_restore_passed": true,
+    "preserves_concurrent_owner_prs": [
+      115,
+      116
+    ],
+    "supersedes_source_snapshot_commit": "3ef80d97d2cc25d5201195bb8ced3646811200db",
+    "drive": {
+      "id": "1NSXgPH0YSHKTEP9d2dGppXfnQNUSn919",
+      "url": "https://drive.google.com/file/d/1NSXgPH0YSHKTEP9d2dGppXfnQNUSn919/view?usp=drivesdk",
+      "parent_id": "1ARIxA-UsuIR0xEVeDIBMH-MMgoxnafHn",
+      "mime_type": "application/gzip"
+    },
+    "raw_bytes_verified": true,
+    "drive_modified_time": "2026-11-23T07:00:19.630Z",
+    "raw_readback_bytes": 33983222,
+    "raw_readback_sha256": "363e3c1b86cc820347f51548ec5ce49db0dee0742ce5665fb201b85a227c392a",
+    "verified_utc": "2026-11-23T07:00:35.797936+00:00",
+    "source_manifest_drive": {
+      "id": "1JeCWotfeaQYqYTH9a0PL6fYIeBrP_Dg4",
+      "url": "https://drive.google.com/file/d/1JeCWotfeaQYqYTH9a0PL6fYIeBrP_Dg4/view?usp=drivesdk",
+      "parent_id": "1ARIxA-UsuIR0xEVeDIBMH-MMgoxnafHn",
+      "mime_type": "application/json"
+    },
+    "restore_readme_drive": {
+      "id": "14dgfQa0A_74oiaWihTdVj2wupQ6D058-",
+      "url": "https://docs.google.com/document/d/14dgfQa0A_74oiaWihTdVj2wupQ6D058-/edit?usp=drivesdk&ouid=113038373524763352759&rtpof=true&sd=true",
+      "parent_id": "1ARIxA-UsuIR0xEVeDIBMH-MMgoxnafHn",
+      "mime_type": "text/markdown"
+    }
+  },
+  "owner_authority": "Root AGENTS.md including merged PR #113 and PR #114",
+  "new_phone_versions": false,
+  "background_render_queue": false,
+  "current_media_originals_verified": 40,
+  "resource_review_packages_verified": 2,
+  "historical_fullfilm_recovery_gaps": 11,
+  "historical_samples_snapshot": {
+    "updated": "2026-11-13T16:17:41.656051-08:00",
+    "state": "30 sample files saved; awaiting visual review and reconciliation with updated concert design system",
+    "active_writer": null,
+    "target": 30,
+    "saved_count": 30,
+    "files": [
+      {
+        "filename": "01-a All You Stars of Zion.png",
+        "bytes": 3575556,
+        "sha256": "27f7dd4d65237048d060cfac8b8f22061f96b082de21a696b54a138b6f7d4556"
+      },
+      {
+        "filename": "01-b All You Stars of Zion.png",
+        "bytes": 3105268,
+        "sha256": "7ad6b5c6fa4a3417f8ac576563e88a3804dc727dbf5d965f3d2eded54188a30a"
+      },
+      {
+        "filename": "01-c All You Stars of Zion.png",
+        "bytes": 2813378,
+        "sha256": "82eb48350dcce9222d5cbe51c82afbedd897cbe432fe37fb79f556ffcb3d5514"
+      },
+      {
+        "filename": "02-a The Rose.png",
+        "bytes": 2766860,
+        "sha256": "e0258da6c4a201de57a71d2ebc481466634e14d675cc1c49d9c5fc6fe8da4fa9"
+      },
+      {
+        "filename": "02-b The Rose.png",
+        "bytes": 2964538,
+        "sha256": "94aef70db419da7861a2e1d5cc0fd550d56375e116af79411a085ed4256fac47"
+      },
+      {
+        "filename": "02-c The Rose.png",
+        "bytes": 3003660,
+        "sha256": "f3320129a1737cb54c4fb0a433c0460414a887837f3eb5a2a97799620ef3fc9f"
+      },
+      {
+        "filename": "03-a I Reminisce About Your Love.png",
+        "bytes": 2630954,
+        "sha256": "2a31b5fded65ec6b100472b122cfaaf46d176baaa05fd0515c082e95a19c32bc"
+      },
+      {
+        "filename": "03-b I Reminisce About Your Love.png",
+        "bytes": 2587206,
+        "sha256": "333884219a1be7075375b6c4878bf4dc7f1946f5d2f80149f2f7edb5131e6f67"
+      },
+      {
+        "filename": "03-c I Reminisce About Your Love.png",
+        "bytes": 2739762,
+        "sha256": "e2df6b596171b6d1c2cfe4f8c4d8fe24c7b42c3ce2ae321f76b9822b0f1d9d75"
+      },
+      {
+        "filename": "04-a I'm Sorry, Please Forgive Me.png",
+        "bytes": 3193712,
+        "sha256": "f4af2f77e6fd08f18a6bb121725d1806bb9a102d984eb63b8e5f9851db75208c"
+      },
+      {
+        "filename": "04-b I'm Sorry, Please Forgive Me.png",
+        "bytes": 3157544,
+        "sha256": "a2104589730b704d30519507244e6d27ac4533d1fcfded9c60bfdaaf27dcd3c1"
+      },
+      {
+        "filename": "04-c I'm Sorry, Please Forgive Me.png",
+        "bytes": 2545129,
+        "sha256": "a456234b13a4d38fbe19f29ee712e0a36ede7417435e7e6b17d7c4ef87cec25a"
+      },
+      {
+        "filename": "05-a God Bless You!.png",
+        "bytes": 2419493,
+        "sha256": "ef1d26d959010b70717f29b965c211083f1b1ead7f85e6cce16427f2b6b90a95"
+      },
+      {
+        "filename": "05-b God Bless You!.png",
+        "bytes": 2703730,
+        "sha256": "1c98f286f1421c592f8b99b6a33b48073685a08056b2c407ad7d53dc0aa21be8"
+      },
+      {
+        "filename": "05-c God Bless You!.png",
+        "bytes": 2590398,
+        "sha256": "14d307166637c32bdbb7756b196e5f8c998a8c723ff9c201647f8239079dc51e"
+      },
+      {
+        "filename": "06-a Heavenly Mother Tells Us to Be Grains.png",
+        "bytes": 2256746,
+        "sha256": "78c3a38bca7bc4c82857ad61a017bd26a1d316698c539da1f318ff3983e75527"
+      },
+      {
+        "filename": "06-b Heavenly Mother Tells Us to Be Grains.png",
+        "bytes": 2738945,
+        "sha256": "63ea7e2b571b5e2761ea71186a3f90d9a0aa9c4d1259139b90a3f5a2f4f96e72"
+      },
+      {
+        "filename": "06-c Heavenly Mother Tells Us to Be Grains.png",
+        "bytes": 3151617,
+        "sha256": "90f76aae564d298b9f99506550fa0897e985740bdb73e877d47496db546fefbf"
+      },
+      {
+        "filename": "07-a May No One Ever Feel Lonely.png",
+        "bytes": 3536727,
+        "sha256": "7ee9da5a748a0d30148eae07b50f1892417baeee8faabbed8763c51a51c3e4b2"
+      },
+      {
+        "filename": "07-b May No One Ever Feel Lonely.png",
+        "bytes": 3046216,
+        "sha256": "7ae93b0ff4ab33d10bb23f8af8b4ebc1ea34da3f2b7e3a1f20d3f6170061883b"
+      },
+      {
+        "filename": "07-c May No One Ever Feel Lonely.png",
+        "bytes": 2910821,
+        "sha256": "06e0ddcafa089787702caf6cb909526037d13e729d476a7872d210fc368829f0"
+      },
+      {
+        "filename": "08-a Out of Heaven, Favor From God.png",
+        "bytes": 3434363,
+        "sha256": "73bf1d47fb9b24253cf61cdaf0be02fe825a61efe81cbde207b2c99c9a5463a1"
+      },
+      {
+        "filename": "08-b Out of Heaven, Favor From God.png",
+        "bytes": 3086887,
+        "sha256": "ed304676c1fad692a6047b54c5ac50f0950f8f22490ee2c248b787bfecef0a97"
+      },
+      {
+        "filename": "08-c Out of Heaven, Favor From God.png",
+        "bytes": 2888747,
+        "sha256": "78b8e26c293445c38c882cce76130b28bc29008e639f598c30207bf5f68fb6fd"
+      },
+      {
+        "filename": "09-a Let's Save the World.png",
+        "bytes": 3250392,
+        "sha256": "36d7ba6bca17f35988fdba6d2bf5fb5027405a8d47636532bc66e81d20089a7f"
+      },
+      {
+        "filename": "09-b Let's Save the World.png",
+        "bytes": 2980743,
+        "sha256": "485502230d95423e92e0b17718f06e53d5c9b3069a36afad5fd86609791fc9f2"
+      },
+      {
+        "filename": "09-c Let's Save the World.png",
+        "bytes": 2791666,
+        "sha256": "9071d95ff564126bf815581975b1b0141ebf645ff424491054915b768b101c9d"
+      },
+      {
+        "filename": "11-a Almighty God Who Knows the Future.png",
+        "bytes": 3165929,
+        "sha256": "d864b8837c8b613cf3683ecc36045c589c8e7cb01a7879f1217709b3146019e2"
+      },
+      {
+        "filename": "11-b Almighty God Who Knows the Future.png",
+        "bytes": 3078906,
+        "sha256": "52f7558c2698887efa684b89a6ca77a67658b109ad52509391b5b21c970fcc70"
+      },
+      {
+        "filename": "11-c Almighty God Who Knows the Future.png",
+        "bytes": 3280997,
+        "sha256": "f4f2f91a2d370c06ebac5a6474cfae445a52e2e687e4884c60a1b9da5b8869ca"
+      }
+    ],
+    "design": "Glowing scenic reference, abstract luminous outline people. No actual-looking people.",
+    "still_old_style": [],
+    "remaining_shots": [],
+    "redone": [
+      "People scenes remade after Anthony changed the direction to abstract artistic outlines",
+      "01-b and 01-c: removed unrequested oversized figure/hands",
+      "03-a: removed unrequested mother/face, then removed hand imagery for final outline direction",
+      "05-a: removed invented heading",
+      "06-c: removed unrequested figures"
+    ],
+    "sizing": "Generated sources generally 1672x941, saved as 2048x1152 with simple resizing, no added detail.",
+    "unmodified": [
+      "MP3s",
+      "Lyrics doc",
+      "Visual Plan doc"
+    ],
+    "source": "Concert Backdrops - Image Shot List.txt",
+    "samples_url": "https://drive.google.com/drive/folders/1ww03IYjrQeB-BR4WStwOpWifoeoE5jsF",
+    "remaining_known_defects": [
+      "Some outline figures need clearer modest clothing",
+      "Some faces have features",
+      "Outline style varies",
+      "Older shot-list phrases differ from full-wording video system"
+    ],
+    "method": "Native image generation, one image per call, followed by visual inspection and PNG sizing",
+    "verification": {
+      "expected_count": 30,
+      "saved_count": 30,
+      "exact_filenames": true,
+      "all_png": true,
+      "dimensions": "2048x1152",
+      "each_visually_inspected_before_save": true,
+      "note": "Visual phrase and anatomy inspection, not a guarantee of exact generated hex pixel values. Samples require owner visual acceptance."
+    },
+    "archive_count": 67,
+    "online_sync": "All 30 filenames and byte sizes verified through Google Drive connector",
+    "online_files": [
+      {
+        "filename": "03-a I Reminisce About Your Love.png",
+        "bytes": 2630954,
+        "url": "https://drive.google.com/file/d/1eBnZipcESQr97I3Yu5T870PHjveqfTn8/view?usp=drivesdk"
+      },
+      {
+        "filename": "11-c Almighty God Who Knows the Future.png",
+        "bytes": 3280997,
+        "url": "https://drive.google.com/file/d/1fhoi7_e6NIU_5bybuvLBPfLS5Xc9qXFM/view?usp=drivesdk"
+      },
+      {
+        "filename": "11-b Almighty God Who Knows the Future.png",
+        "bytes": 3078906,
+        "url": "https://drive.google.com/file/d/1EBzb2emkELtnDGIDbIUC_8M6lVHmODns/view?usp=drivesdk"
+      },
+      {
+        "filename": "11-a Almighty God Who Knows the Future.png",
+        "bytes": 3165929,
+        "url": "https://drive.google.com/file/d/1888izw7P7qqNIBOPkcxsq2t1GrDNNJ0g/view?usp=drivesdk"
+      },
+      {
+        "filename": "09-c Let's Save the World.png",
+        "bytes": 2791666,
+        "url": "https://drive.google.com/file/d/17oJXLYTT8uKGqpl9tsDMUoYWDGk7SgWg/view?usp=drivesdk"
+      },
+      {
+        "filename": "09-b Let's Save the World.png",
+        "bytes": 2980743,
+        "url": "https://drive.google.com/file/d/1iVMYygovavSFEmgH8GnDKPd4YWkQ0S1M/view?usp=drivesdk"
+      },
+      {
+        "filename": "09-a Let's Save the World.png",
+        "bytes": 3250392,
+        "url": "https://drive.google.com/file/d/1nhp_93btrbIEifnpAm6grILnjzGRuAbX/view?usp=drivesdk"
+      },
+      {
+        "filename": "08-c Out of Heaven, Favor From God.png",
+        "bytes": 2888747,
+        "url": "https://drive.google.com/file/d/1utf6umZRNuDFhSCMCv2VpDgXUd4PhF86/view?usp=drivesdk"
+      },
+      {
+        "filename": "08-b Out of Heaven, Favor From God.png",
+        "bytes": 3086887,
+        "url": "https://drive.google.com/file/d/1Jg2VCmXgdJhuJEMTnjveaik2viojgheG/view?usp=drivesdk"
+      },
+      {
+        "filename": "08-a Out of Heaven, Favor From God.png",
+        "bytes": 3434363,
+        "url": "https://drive.google.com/file/d/1rraXiFJ1Yub-yGLxU4t792xUbZkyf4x8/view?usp=drivesdk"
+      },
+      {
+        "filename": "07-c May No One Ever Feel Lonely.png",
+        "bytes": 2910821,
+        "url": "https://drive.google.com/file/d/1NGOA3z2UkKP9qxIAvC-zYv4zx7kZu9AA/view?usp=drivesdk"
+      },
+      {
+        "filename": "07-b May No One Ever Feel Lonely.png",
+        "bytes": 3046216,
+        "url": "https://drive.google.com/file/d/12rNUTXp852fAYjybfdzmGOQWNJtYpgir/view?usp=drivesdk"
+      },
+      {
+        "filename": "07-a May No One Ever Feel Lonely.png",
+        "bytes": 3536727,
+        "url": "https://drive.google.com/file/d/1fMP8EZI9kV15_EMrlbhZCgmW-XxuqeHM/view?usp=drivesdk"
+      },
+      {
+        "filename": "06-c Heavenly Mother Tells Us to Be Grains.png",
+        "bytes": 3151617,
+        "url": "https://drive.google.com/file/d/1tr0g9BX0L8CFjJUFApSoU34OJm9CweC5/view?usp=drivesdk"
+      },
+      {
+        "filename": "06-b Heavenly Mother Tells Us to Be Grains.png",
+        "bytes": 2738945,
+        "url": "https://drive.google.com/file/d/1mqy33goGST8OkmY2oyRFevqDJc_75uvc/view?usp=drivesdk"
+      },
+      {
+        "filename": "05-c God Bless You!.png",
+        "bytes": 2590398,
+        "url": "https://drive.google.com/file/d/1U0rO3oSIQiVaJc_HcvZMbxXxUxqU9oxH/view?usp=drivesdk"
+      },
+      {
+        "filename": "05-a God Bless You!.png",
+        "bytes": 2419493,
+        "url": "https://drive.google.com/file/d/1FDEP5zniXSIflCCGSJU1n1Eyer4bbKQg/view?usp=drivesdk"
+      },
+      {
+        "filename": "05-b God Bless You!.png",
+        "bytes": 2703730,
+        "url": "https://drive.google.com/file/d/16utY3j3F85TqWdLVAi4BFF8SY0hiyU-9/view?usp=drivesdk"
+      },
+      {
+        "filename": "04-c I'm Sorry, Please Forgive Me.png",
+        "bytes": 2545129,
+        "url": "https://drive.google.com/file/d/1MFEnfAoIX_lS_-OXVP32AWRVL40Bjve2/view?usp=drivesdk"
+      },
+      {
+        "filename": "04-b I'm Sorry, Please Forgive Me.png",
+        "bytes": 3157544,
+        "url": "https://drive.google.com/file/d/1Z8oM-o_wsd6I5lH517CPbIx65AqeIUNv/view?usp=drivesdk"
+      },
+      {
+        "filename": "04-a I'm Sorry, Please Forgive Me.png",
+        "bytes": 3193712,
+        "url": "https://drive.google.com/file/d/1IrVH1eWL8e-ftUk7FKbTg7Tug_DZpIJi/view?usp=drivesdk"
+      },
+      {
+        "filename": "03-c I Reminisce About Your Love.png",
+        "bytes": 2739762,
+        "url": "https://drive.google.com/file/d/1cB52CuGtEE4cO1g0yCUs-rFRXp_nEL2_/view?usp=drivesdk"
+      },
+      {
+        "filename": "03-b I Reminisce About Your Love.png",
+        "bytes": 2587206,
+        "url": "https://drive.google.com/file/d/1qyu8aKTaqxnMQBCIg5uUw4PdDFzKZgO5/view?usp=drivesdk"
+      },
+      {
+        "filename": "02-b The Rose.png",
+        "bytes": 2964538,
+        "url": "https://drive.google.com/file/d/1e8LzFE2RRsOq6lux_tZf4a-a738w_GBa/view?usp=drivesdk"
+      },
+      {
+        "filename": "01-c All You Stars of Zion.png",
+        "bytes": 2813378,
+        "url": "https://drive.google.com/file/d/1Ak95koKMGKxiILgPIdm3sr_fHbNtDg1u/view?usp=drivesdk"
+      },
+      {
+        "filename": "01-b All You Stars of Zion.png",
+        "bytes": 3105268,
+        "url": "https://drive.google.com/file/d/1OysbJfaEda2Y13r4OtxEZ3GJIK7JOtAQ/view?usp=drivesdk"
+      },
+      {
+        "filename": "01-a All You Stars of Zion.png",
+        "bytes": 3575556,
+        "url": "https://drive.google.com/file/d/1glm6ah_o16z_Er7acyMFoBXVY5C4F_lt/view?usp=drivesdk"
+      },
+      {
+        "filename": "06-a Heavenly Mother Tells Us to Be Grains.png",
+        "bytes": 2256746,
+        "url": "https://drive.google.com/file/d/1flcZ0xqg1L6H88A3XjsyjgQz-Me2ATxG/view?usp=drivesdk"
+      },
+      {
+        "filename": "02-c The Rose.png",
+        "bytes": 3003660,
+        "url": "https://drive.google.com/file/d/1iCQfDxqiukW2AhluBKYvabutXCsVoEWw/view?usp=drivesdk"
+      },
+      {
+        "filename": "02-a The Rose.png",
+        "bytes": 2766860,
+        "url": "https://drive.google.com/file/d/15G6vHwaUHmaCSxdztYpbIxE3WbNU2riT/view?usp=drivesdk"
+      }
+    ],
+    "design_review": {
+      "date": "2026-11-13T16:17:41.656051-08:00",
+      "file": "REVIEW-Claude-Designs-2026-11-13.txt",
+      "result": "30 samples saved; visual acceptance and conformity with updated design system remain open",
+      "findings": [
+        "Some outline figures need clearer modest clothing",
+        "Some faces have features",
+        "Outline style varies",
+        "Older shot-list phrases differ from full-wording video system"
+      ]
+    }
+  },
+  "historical_snapshot_scope": "Complete prior samples-track JSON preserved below; its old current state is not a new queue.",
+  "cloud_tool_proof_retention": {
+    "evidence": "project-docs/production-system/evidence/claude-cloud-proof-retention.json",
+    "drive": {
+      "id": "1IW2BxB1qKPpz-4nrIfD3KSV7H9p6CmdB",
+      "url": "https://drive.google.com/file/d/1IW2BxB1qKPpz-4nrIfD3KSV7H9p6CmdB/view?usp=drivesdk",
+      "parent_id": "1dNAkcUesWv5RcKJ48s_W7mpDW757b0At",
+      "mime_type": "application/zip"
+    },
+    "bytes": 637361486,
+    "sha256": "66099a7e4613a22d397abe74826f0b30246b5235161756157ec8d84bfee0dd8c",
+    "full_authenticated_readback": true
+  },
+  "current_maintenance": {
+    "name": "Whole-project Claude handoff, Drive reconciliation and documentation",
+    "status": "complete_verified_handoff",
+    "branch": "maintenance/claude-handoff-20261122",
+    "base_main_commit": "3d9abdf3a374a0d389821d2b639c75e2d121bfb1",
+    "entrypoint": "project-docs/production-system/CLAUDE-HANDOFF.md",
+    "completion_evidence": "project-docs/production-system/evidence/claude-drive-completion.json",
+    "initial_base_main_commit": "93527bf5e2e43477073e361d22cfd6d4fa999da7",
+    "initial_integration_pr": 115,
+    "initial_integration_authority": "https://github.com/lovelaceaml-hub/concert-backdrops/pull/115",
+    "initial_source_snapshot_commit": "3ef80d97d2cc25d5201195bb8ced3646811200db",
+    "concurrent_cloud_tools_pr": 116,
+    "integration_authority": "https://github.com/lovelaceaml-hub/concert-backdrops/commits/main",
+    "source_snapshot_commit": "252e14145d535d8c8472c72144d85587967f3b2f",
+    "publication_evidence": "project-docs/production-system/evidence/claude-publication.json",
+    "preserved_owner_followup_prs": [
+      117,
+      118,
+      119
+    ]
+  },
+  "production_log_events": 137,
+  "updated_utc": "2026-11-23T07:03:36.775248+00:00",
+  "final_integrated_source": {
+    "archive_filename": "Concert_Project_Final_Handoff_2026-11-22.tar.gz",
+    "manifest_filename": "FINAL-SOURCE-MANIFEST.json",
+    "readme_filename": "README_FINAL_SOURCE.md",
+    "receipt_filename": "FINAL-HANDOFF-RECEIPT.json",
+    "source_folder_url": "https://drive.google.com/drive/folders/1ARIxA-UsuIR0xEVeDIBMH-MMgoxnafHn",
+    "source_scope": "Exact final merged handoff commit, including owner changes observed through PR119. The final companion manifest and receipt are created after that commit and identify its exact hash, entry count and Drive files.",
+    "verification_authority": "FINAL-HANDOFF-RECEIPT.json in the source folder; final merge PR metadata also links the exact receipt.",
+    "guide": "project-docs/production-system/FINAL-SOURCE-CHECKPOINT.md"
+  },
+  "parallel_owner_updates": {
+    "schema": "concert-parallel-owner-updates-closeout-v1",
+    "recorded_utc": "2026-11-23T07:14:24.974253+00:00",
+    "incoming_main_commit": "3d9abdf3a374a0d389821d2b639c75e2d121bfb1",
+    "preserved_owner_prs": [
+      117,
+      118,
+      119
+    ],
+    "changes": [
+      "Claude Code cloud session setup hook and setup script.",
+      "Opt-in engine clarity settings, shared motion/attachment helpers and proof workflow.",
+      "Original-source reproduction command with project-existence and dirty-worktree guards."
+    ],
+    "log_merge": {
+      "root_before_bytes": 92852,
+      "root_before_sha256": "9e739fe3035236a6d8635a3ca48c357aacb7cda68f7d5a2ca1502d6a0ca9eecf",
+      "drive_before_bytes": 92852,
+      "drive_before_sha256": "2b0c486aff179466a0fc0c68a0a87b950a9a49df2fbeae64f06328ec74d73db1",
+      "incoming_main_bytes": 47136,
+      "incoming_main_sha256": "46736dddf2b94094cacaa55cbcc22faa82f9c4feb8dfa8eae33e63d5f7f24135",
+      "events_added_from_main": 1,
+      "root_after_bytes": 93329,
+      "root_after_sha256": "e851a8c2786ab085589e29eb14fb4e29a90ebf6cd93a3436ce704d40b44e08fc",
+      "drive_after_bytes": 93329,
+      "drive_after_sha256": "525b18026b1064759e5fa0d54d5a43e04be1a9a767a34fc09c0caff7ecd80ce0",
+      "events_each_after": 137,
+      "root_and_drive_preexisting_prefixes_preserved": true,
+      "incoming_main_events_all_retained": true,
+      "same_semantic_event_set": true
+    },
+    "final_source_checkpoint": {
+      "archive_filename": "Concert_Project_Final_Handoff_2026-11-22.tar.gz",
+      "manifest_filename": "FINAL-SOURCE-MANIFEST.json",
+      "readme_filename": "README_FINAL_SOURCE.md",
+      "receipt_filename": "FINAL-HANDOFF-RECEIPT.json",
+      "source_folder_url": "https://drive.google.com/drive/folders/1ARIxA-UsuIR0xEVeDIBMH-MMgoxnafHn",
+      "source_scope": "Exact final merged handoff commit, including owner changes observed through PR119. The final companion manifest and receipt are created after that commit and identify its exact hash, entry count and Drive files.",
+      "verification_authority": "FINAL-HANDOFF-RECEIPT.json in the source folder; final merge PR metadata also links the exact receipt.",
+      "guide": "project-docs/production-system/FINAL-SOURCE-CHECKPOINT.md"
+    },
+    "original_completed_film_producing_commit": "eec8d16519ea82309ef851975792e9dfc548da03",
+    "no_new_render_for_handoff": true
+  }
+}
