@@ -1,0 +1,2250 @@
+{
+  "schema": "concert-existing-drive-audit-v1",
+  "generated_utc": "2026-11-23T06:04:03.750679+00:00",
+  "scope": {
+    "project_root_id": "1xyNZn4ZA6bjPcvKjGfgSWQIs9aAp2PPd",
+    "videos_folder_id": "1oNl_-SVqTwrYzqT87JQ3Om9HQFrcMOkz",
+    "metadata_index_path": "work/claude-handoff/project-drive-index.json",
+    "known_objects": 31,
+    "historical_song_folders": 11,
+    "raw_candidate_checks": 1,
+    "read_only": true
+  },
+  "summary": {
+    "known_object_count": 31,
+    "size_matches": 31,
+    "modified_time_matches": 29,
+    "no_modified_time_baseline": 2,
+    "known_objects_with_fresh_raw_hash_check": 0,
+    "changed_known_metadata": 0,
+    "metadata_failures": 0,
+    "historical_canonical_films_recovered": 0,
+    "existing_alternate_movie_raw_verified": 1,
+    "newly_discovered_artifacts_raw_verified": 22,
+    "newly_discovered_large_artifacts_metadata_only": 5,
+    "historical_film_gaps_remaining": 11
+  },
+  "known_objects": [
+    {
+      "inventory_id": "consideration-revised-15s",
+      "group": "existing_14_media",
+      "drive_file_id": "12Co1HzLFHUp0ql2abfww77yDRULfLU3F",
+      "recorded": {
+        "filename": "Consideration-Revised-15s-1080p60.mp4",
+        "bytes": 29912818,
+        "sha256": "ab25085451f99ac8c674fa4e9bd03824d45747855707e5962e91fab7a6f8527f",
+        "modified_time": "2026-11-21T07:31:06.797Z",
+        "prior_verification": "recorded raw-byte readback",
+        "evidence": "project-docs/production-system/evidence/drive-delivery-completion.json"
+      },
+      "observed_utc": "2026-11-23T05:50:15.999Z",
+      "observed": {
+        "id": "12Co1HzLFHUp0ql2abfww77yDRULfLU3F",
+        "title": "Consideration-Revised-15s-1080p60.mp4",
+        "mime_type": "video/mp4",
+        "size": "29912818",
+        "url": "https://drive.google.com/file/d/12Co1HzLFHUp0ql2abfww77yDRULfLU3F/view?usp=drivesdk",
+        "display_url": "https://drive.google.com/file/d/12Co1HzLFHUp0ql2abfww77yDRULfLU3F/view?usp=drivesdk",
+        "file_or_folder": "file",
+        "created_time": null,
+        "modified_time": "2026-11-21T07:31:06.797Z",
+        "parent_ids": [
+          "1hrk62bFIOHv2NwXvYl2bNSmp0cwBoXrr"
+        ],
+        "drive_id": null,
+        "current_user_can_share": null,
+        "has_augmented_permissions": null,
+        "shared": null,
+        "permissions": null,
+        "source_visibility_status": "access_not_verified"
+      },
+      "comparison": {
+        "size_matches": true,
+        "modified_time_matches": true,
+        "modified_time_baseline_available": true
+      },
+      "verification_level": "metadata_size_and_modified_time_recheck",
+      "new_content_hash_verified": false,
+      "error": null
+    },
+    {
+      "inventory_id": "consideration-baseline-18s",
+      "group": "existing_14_media",
+      "drive_file_id": "1XRKz23x12VNcqB_ykax3EgRRdwSjvPEU",
+      "recorded": {
+        "filename": "Consideration-Baseline-18s-1080p60.mp4",
+        "bytes": 32559734,
+        "sha256": "0ae54467e7f2bdcf8528f734ed77f9f9656db1bc00aef7cadccfe43b9a6c231d",
+        "modified_time": "2026-11-21T07:31:18.833Z",
+        "prior_verification": "recorded raw-byte readback",
+        "evidence": "project-docs/production-system/evidence/drive-delivery-completion.json"
+      },
+      "observed_utc": "2026-11-23T05:50:16.643Z",
+      "observed": {
+        "id": "1XRKz23x12VNcqB_ykax3EgRRdwSjvPEU",
+        "title": "Consideration-Baseline-18s-1080p60.mp4",
+        "mime_type": "video/mp4",
+        "size": "32559734",
+        "url": "https://drive.google.com/file/d/1XRKz23x12VNcqB_ykax3EgRRdwSjvPEU/view?usp=drivesdk",
+        "display_url": "https://drive.google.com/file/d/1XRKz23x12VNcqB_ykax3EgRRdwSjvPEU/view?usp=drivesdk",
+        "file_or_folder": "file",
+        "created_time": null,
+        "modified_time": "2026-11-21T07:31:18.833Z",
+        "parent_ids": [
+          "1hrk62bFIOHv2NwXvYl2bNSmp0cwBoXrr"
+        ],
+        "drive_id": null,
+        "current_user_can_share": null,
+        "has_augmented_permissions": null,
+        "shared": null,
+        "permissions": null,
+        "source_visibility_status": "access_not_verified"
+      },
+      "comparison": {
+        "size_matches": true,
+        "modified_time_matches": true,
+        "modified_time_baseline_available": true
+      },
+      "verification_level": "metadata_size_and_modified_time_recheck",
+      "new_content_hash_verified": false,
+      "error": null
+    },
+    {
+      "inventory_id": "consideration-revised-garden-4k",
+      "group": "existing_14_media",
+      "drive_file_id": "19IpKG6XlqbhRjMwksOxDk9i3KbOCGqTs",
+      "recorded": {
+        "filename": "Consideration-Revised-Garden-Native-4K.png",
+        "bytes": 5048251,
+        "sha256": "1ac66c796b1c9a732de252532eae90c9e55242a55033bd91cdd363cdb089422b",
+        "modified_time": "2026-11-21T07:32:36.693Z",
+        "prior_verification": "recorded raw-byte readback",
+        "evidence": "project-docs/production-system/evidence/drive-delivery-completion.json"
+      },
+      "observed_utc": "2026-11-23T05:50:16.643Z",
+      "observed": {
+        "id": "19IpKG6XlqbhRjMwksOxDk9i3KbOCGqTs",
+        "title": "Consideration-Revised-Garden-Native-4K.png",
+        "mime_type": "image/png",
+        "size": "5048251",
+        "url": "https://drive.google.com/file/d/19IpKG6XlqbhRjMwksOxDk9i3KbOCGqTs/view?usp=drivesdk",
+        "display_url": "https://drive.google.com/file/d/19IpKG6XlqbhRjMwksOxDk9i3KbOCGqTs/view?usp=drivesdk",
+        "file_or_folder": "file",
+        "created_time": null,
+        "modified_time": "2026-11-21T07:32:36.693Z",
+        "parent_ids": [
+          "1hrk62bFIOHv2NwXvYl2bNSmp0cwBoXrr"
+        ],
+        "drive_id": null,
+        "current_user_can_share": null,
+        "has_augmented_permissions": null,
+        "shared": null,
+        "permissions": null,
+        "source_visibility_status": "access_not_verified"
+      },
+      "comparison": {
+        "size_matches": true,
+        "modified_time_matches": true,
+        "modified_time_baseline_available": true
+      },
+      "verification_level": "metadata_size_and_modified_time_recheck",
+      "new_content_hash_verified": false,
+      "error": null
+    },
+    {
+      "inventory_id": "native-model-atlas",
+      "group": "existing_14_media",
+      "drive_file_id": "1eqRc24mQj5LO3_aPBTNa7cEoaZ46FzVq",
+      "recorded": {
+        "filename": "Concert-Native-Models-12-Variants.jpg",
+        "bytes": 306145,
+        "sha256": "0faadc1b42dab94f4c36a050295bfad790d2e5a08f7a72b9a91739246d6ef784",
+        "modified_time": "2026-11-21T07:32:42.843Z",
+        "prior_verification": "recorded raw-byte readback",
+        "evidence": "project-docs/production-system/evidence/drive-delivery-completion.json"
+      },
+      "observed_utc": "2026-11-23T05:50:16.643Z",
+      "observed": {
+        "id": "1eqRc24mQj5LO3_aPBTNa7cEoaZ46FzVq",
+        "title": "Concert-Native-Models-12-Variants.jpg",
+        "mime_type": "image/jpeg",
+        "size": "306145",
+        "url": "https://drive.google.com/file/d/1eqRc24mQj5LO3_aPBTNa7cEoaZ46FzVq/view?usp=drivesdk",
+        "display_url": "https://drive.google.com/file/d/1eqRc24mQj5LO3_aPBTNa7cEoaZ46FzVq/view?usp=drivesdk",
+        "file_or_folder": "file",
+        "created_time": null,
+        "modified_time": "2026-11-21T07:32:42.843Z",
+        "parent_ids": [
+          "1hrk62bFIOHv2NwXvYl2bNSmp0cwBoXrr"
+        ],
+        "drive_id": null,
+        "current_user_can_share": null,
+        "has_augmented_permissions": null,
+        "shared": null,
+        "permissions": null,
+        "source_visibility_status": "access_not_verified"
+      },
+      "comparison": {
+        "size_matches": true,
+        "modified_time_matches": true,
+        "modified_time_baseline_available": true
+      },
+      "verification_level": "metadata_size_and_modified_time_recheck",
+      "new_content_hash_verified": false,
+      "error": null
+    },
+    {
+      "inventory_id": "dove-flight-v2",
+      "group": "existing_14_media",
+      "drive_file_id": "1yjK8IN-09-rUdY0e1AhFB4EHDnRHbb5Z",
+      "recorded": {
+        "filename": "Dove-Flight-Prototype-v2-6s-1080p60.mp4",
+        "bytes": 1211878,
+        "sha256": "d213912ae9321b5bb43cc941eb570ece9f369ca605647b901bedeb7f598835a7",
+        "modified_time": "2026-11-21T07:32:49.017Z",
+        "prior_verification": "recorded raw-byte readback",
+        "evidence": "project-docs/production-system/evidence/drive-delivery-completion.json"
+      },
+      "observed_utc": "2026-11-23T05:50:16.643Z",
+      "observed": {
+        "id": "1yjK8IN-09-rUdY0e1AhFB4EHDnRHbb5Z",
+        "title": "Dove-Flight-Prototype-v2-6s-1080p60.mp4",
+        "mime_type": "video/mp4",
+        "size": "1211878",
+        "url": "https://drive.google.com/file/d/1yjK8IN-09-rUdY0e1AhFB4EHDnRHbb5Z/view?usp=drivesdk",
+        "display_url": "https://drive.google.com/file/d/1yjK8IN-09-rUdY0e1AhFB4EHDnRHbb5Z/view?usp=drivesdk",
+        "file_or_folder": "file",
+        "created_time": null,
+        "modified_time": "2026-11-21T07:32:49.017Z",
+        "parent_ids": [
+          "1hrk62bFIOHv2NwXvYl2bNSmp0cwBoXrr"
+        ],
+        "drive_id": null,
+        "current_user_can_share": null,
+        "has_augmented_permissions": null,
+        "shared": null,
+        "permissions": null,
+        "source_visibility_status": "access_not_verified"
+      },
+      "comparison": {
+        "size_matches": true,
+        "modified_time_matches": true,
+        "modified_time_baseline_available": true
+      },
+      "verification_level": "metadata_size_and_modified_time_recheck",
+      "new_content_hash_verified": false,
+      "error": null
+    },
+    {
+      "inventory_id": "addon-model-sheet-v2",
+      "group": "existing_14_media",
+      "drive_file_id": "1ccCaMd4N_4VC67vqsEPnd2mZz2AKZzR_",
+      "recorded": {
+        "filename": "Concert-Model-Prototypes-v2.png",
+        "bytes": 491308,
+        "sha256": "10f9fff181445728fb9dd4e84818130b63650b0a0fbd19555c26c63c234ec231",
+        "modified_time": "2026-11-21T07:33:23.327Z",
+        "prior_verification": "recorded raw-byte readback",
+        "evidence": "project-docs/production-system/evidence/drive-delivery-completion.json"
+      },
+      "observed_utc": "2026-11-23T05:50:16.643Z",
+      "observed": {
+        "id": "1ccCaMd4N_4VC67vqsEPnd2mZz2AKZzR_",
+        "title": "Concert-Model-Prototypes-v2.png",
+        "mime_type": "image/png",
+        "size": "491308",
+        "url": "https://drive.google.com/file/d/1ccCaMd4N_4VC67vqsEPnd2mZz2AKZzR_/view?usp=drivesdk",
+        "display_url": "https://drive.google.com/file/d/1ccCaMd4N_4VC67vqsEPnd2mZz2AKZzR_/view?usp=drivesdk",
+        "file_or_folder": "file",
+        "created_time": null,
+        "modified_time": "2026-11-21T07:33:23.327Z",
+        "parent_ids": [
+          "1hrk62bFIOHv2NwXvYl2bNSmp0cwBoXrr"
+        ],
+        "drive_id": null,
+        "current_user_can_share": null,
+        "has_augmented_permissions": null,
+        "shared": null,
+        "permissions": null,
+        "source_visibility_status": "access_not_verified"
+      },
+      "comparison": {
+        "size_matches": true,
+        "modified_time_matches": true,
+        "modified_time_baseline_available": true
+      },
+      "verification_level": "metadata_size_and_modified_time_recheck",
+      "new_content_hash_verified": false,
+      "error": null
+    },
+    {
+      "inventory_id": "consideration-motion-comparison",
+      "group": "existing_14_media",
+      "drive_file_id": "1gIXKc07V5Z351upp-ui1kJGGR0oNsRIv",
+      "recorded": {
+        "filename": "Consideration-Motion-Before-After.png",
+        "bytes": 2268796,
+        "sha256": "ed78ac05a88e612b54c1340d1bc05c2da83285a2e6940d3ad18a471a2b0043e4",
+        "modified_time": "2026-11-21T07:33:29.890Z",
+        "prior_verification": "recorded raw-byte readback",
+        "evidence": "project-docs/production-system/evidence/drive-delivery-completion.json"
+      },
+      "observed_utc": "2026-11-23T05:50:16.643Z",
+      "observed": {
+        "id": "1gIXKc07V5Z351upp-ui1kJGGR0oNsRIv",
+        "title": "Consideration-Motion-Before-After.png",
+        "mime_type": "image/png",
+        "size": "2268796",
+        "url": "https://drive.google.com/file/d/1gIXKc07V5Z351upp-ui1kJGGR0oNsRIv/view?usp=drivesdk",
+        "display_url": "https://drive.google.com/file/d/1gIXKc07V5Z351upp-ui1kJGGR0oNsRIv/view?usp=drivesdk",
+        "file_or_folder": "file",
+        "created_time": null,
+        "modified_time": "2026-11-21T07:33:29.890Z",
+        "parent_ids": [
+          "1hrk62bFIOHv2NwXvYl2bNSmp0cwBoXrr"
+        ],
+        "drive_id": null,
+        "current_user_can_share": null,
+        "has_augmented_permissions": null,
+        "shared": null,
+        "permissions": null,
+        "source_visibility_status": "access_not_verified"
+      },
+      "comparison": {
+        "size_matches": true,
+        "modified_time_matches": true,
+        "modified_time_baseline_available": true
+      },
+      "verification_level": "metadata_size_and_modified_time_recheck",
+      "new_content_hash_verified": false,
+      "error": null
+    },
+    {
+      "inventory_id": "consideration-camera-plan",
+      "group": "existing_14_media",
+      "drive_file_id": "1aZUJNUNwBuTgJ4quV_RjxNkY6DKnoRwi",
+      "recorded": {
+        "filename": "Consideration-Camera-Planning-Comparison.png",
+        "bytes": 1141946,
+        "sha256": "d5ed875cd6398c4ccd018aaeb9ad5c4b6f78daab9a5fe3e96ea48d59e5706a95",
+        "modified_time": "2026-11-21T07:33:36.333Z",
+        "prior_verification": "recorded raw-byte readback",
+        "evidence": "project-docs/production-system/evidence/drive-delivery-completion.json"
+      },
+      "observed_utc": "2026-11-23T05:50:16.643Z",
+      "observed": {
+        "id": "1aZUJNUNwBuTgJ4quV_RjxNkY6DKnoRwi",
+        "title": "Consideration-Camera-Planning-Comparison.png",
+        "mime_type": "image/png",
+        "size": "1141946",
+        "url": "https://drive.google.com/file/d/1aZUJNUNwBuTgJ4quV_RjxNkY6DKnoRwi/view?usp=drivesdk",
+        "display_url": "https://drive.google.com/file/d/1aZUJNUNwBuTgJ4quV_RjxNkY6DKnoRwi/view?usp=drivesdk",
+        "file_or_folder": "file",
+        "created_time": null,
+        "modified_time": "2026-11-21T07:33:36.333Z",
+        "parent_ids": [
+          "1hrk62bFIOHv2NwXvYl2bNSmp0cwBoXrr"
+        ],
+        "drive_id": null,
+        "current_user_can_share": null,
+        "has_augmented_permissions": null,
+        "shared": null,
+        "permissions": null,
+        "source_visibility_status": "access_not_verified"
+      },
+      "comparison": {
+        "size_matches": true,
+        "modified_time_matches": true,
+        "modified_time_baseline_available": true
+      },
+      "verification_level": "metadata_size_and_modified_time_recheck",
+      "new_content_hash_verified": false,
+      "error": null
+    },
+    {
+      "inventory_id": "natural-dance-duet-18s",
+      "group": "existing_14_media",
+      "drive_file_id": "1IImU7ohiNhI86WHtIPNB_3S0iFD2HgAH",
+      "recorded": {
+        "filename": "Natural-Dance-Duet-18s-1080p60.mp4",
+        "bytes": 20308106,
+        "sha256": "96b0f75464fd093ad5ba4a318f8d923de7fa33e2fd01115b5d49b42f3baaec66",
+        "modified_time": "2026-11-21T08:42:41.172Z",
+        "prior_verification": "recorded raw-byte readback",
+        "evidence": "project-docs/production-system/evidence/natural-dance-drive-delivery.json"
+      },
+      "observed_utc": "2026-11-23T05:50:16.643Z",
+      "observed": {
+        "id": "1IImU7ohiNhI86WHtIPNB_3S0iFD2HgAH",
+        "title": "Natural-Dance-Duet-18s-1080p60.mp4",
+        "mime_type": "video/mp4",
+        "size": "20308106",
+        "url": "https://drive.google.com/file/d/1IImU7ohiNhI86WHtIPNB_3S0iFD2HgAH/view?usp=drivesdk",
+        "display_url": "https://drive.google.com/file/d/1IImU7ohiNhI86WHtIPNB_3S0iFD2HgAH/view?usp=drivesdk",
+        "file_or_folder": "file",
+        "created_time": null,
+        "modified_time": "2026-11-21T08:42:41.172Z",
+        "parent_ids": [
+          "1hrk62bFIOHv2NwXvYl2bNSmp0cwBoXrr"
+        ],
+        "drive_id": null,
+        "current_user_can_share": null,
+        "has_augmented_permissions": null,
+        "shared": null,
+        "permissions": null,
+        "source_visibility_status": "access_not_verified"
+      },
+      "comparison": {
+        "size_matches": true,
+        "modified_time_matches": true,
+        "modified_time_baseline_available": true
+      },
+      "verification_level": "metadata_size_and_modified_time_recheck",
+      "new_content_hash_verified": false,
+      "error": null
+    },
+    {
+      "inventory_id": "natural-dance-duet-4k",
+      "group": "existing_14_media",
+      "drive_file_id": "1nB2MjshQhFJHe7c-KyjxcuWBBPGvFYyq",
+      "recorded": {
+        "filename": "Natural-Dance-Duet-Native-4K.png",
+        "bytes": 3504314,
+        "sha256": "ae5743f6dd55c57a34c830642355f4b0e2e9dc2d4408a443ccb420bc7b8e7a67",
+        "modified_time": "2026-11-21T08:42:52.283Z",
+        "prior_verification": "recorded raw-byte readback",
+        "evidence": "project-docs/production-system/evidence/natural-dance-drive-delivery.json"
+      },
+      "observed_utc": "2026-11-23T05:50:17.829Z",
+      "observed": {
+        "id": "1nB2MjshQhFJHe7c-KyjxcuWBBPGvFYyq",
+        "title": "Natural-Dance-Duet-Native-4K.png",
+        "mime_type": "image/png",
+        "size": "3504314",
+        "url": "https://drive.google.com/file/d/1nB2MjshQhFJHe7c-KyjxcuWBBPGvFYyq/view?usp=drivesdk",
+        "display_url": "https://drive.google.com/file/d/1nB2MjshQhFJHe7c-KyjxcuWBBPGvFYyq/view?usp=drivesdk",
+        "file_or_folder": "file",
+        "created_time": null,
+        "modified_time": "2026-11-21T08:42:52.283Z",
+        "parent_ids": [
+          "1hrk62bFIOHv2NwXvYl2bNSmp0cwBoXrr"
+        ],
+        "drive_id": null,
+        "current_user_can_share": null,
+        "has_augmented_permissions": null,
+        "shared": null,
+        "permissions": null,
+        "source_visibility_status": "access_not_verified"
+      },
+      "comparison": {
+        "size_matches": true,
+        "modified_time_matches": true,
+        "modified_time_baseline_available": true
+      },
+      "verification_level": "metadata_size_and_modified_time_recheck",
+      "new_content_hash_verified": false,
+      "error": null
+    },
+    {
+      "inventory_id": "natural-dance-duet-review",
+      "group": "existing_14_media",
+      "drive_file_id": "1AmBWnRldfLNjbL9Vh31WzMEhAPby12Vm",
+      "recorded": {
+        "filename": "Natural-Dance-Duet-Motion-Review.jpg",
+        "bytes": 681227,
+        "sha256": "7ba73a497107be3065380d48abd64bbafdd17e0e9e8cdd3c5dc747abca5555af",
+        "modified_time": "2026-11-21T08:42:57.622Z",
+        "prior_verification": "recorded raw-byte readback",
+        "evidence": "project-docs/production-system/evidence/natural-dance-drive-delivery.json"
+      },
+      "observed_utc": "2026-11-23T05:50:17.829Z",
+      "observed": {
+        "id": "1AmBWnRldfLNjbL9Vh31WzMEhAPby12Vm",
+        "title": "Natural-Dance-Duet-Motion-Review.jpg",
+        "mime_type": "image/jpeg",
+        "size": "681227",
+        "url": "https://drive.google.com/file/d/1AmBWnRldfLNjbL9Vh31WzMEhAPby12Vm/view?usp=drivesdk",
+        "display_url": "https://drive.google.com/file/d/1AmBWnRldfLNjbL9Vh31WzMEhAPby12Vm/view?usp=drivesdk",
+        "file_or_folder": "file",
+        "created_time": null,
+        "modified_time": "2026-11-21T08:42:57.622Z",
+        "parent_ids": [
+          "1hrk62bFIOHv2NwXvYl2bNSmp0cwBoXrr"
+        ],
+        "drive_id": null,
+        "current_user_can_share": null,
+        "has_augmented_permissions": null,
+        "shared": null,
+        "permissions": null,
+        "source_visibility_status": "access_not_verified"
+      },
+      "comparison": {
+        "size_matches": true,
+        "modified_time_matches": true,
+        "modified_time_baseline_available": true
+      },
+      "verification_level": "metadata_size_and_modified_time_recheck",
+      "new_content_hash_verified": false,
+      "error": null
+    },
+    {
+      "inventory_id": "fan-silk-trio-20s",
+      "group": "existing_14_media",
+      "drive_file_id": "1e4p1pwcjfhZN35lD-ducwa_mU2_M5dsh",
+      "recorded": {
+        "filename": "Fan-Silk-Trio-20s-1080p60.mp4",
+        "bytes": 22982924,
+        "sha256": "36166e43ae67a0ea9e7d52313bf223ca0ee373ed555c69728ccab0e3cfb62afe",
+        "modified_time": "2026-11-21T17:06:09.381Z",
+        "prior_verification": "recorded raw-byte readback",
+        "evidence": "project-docs/production-system/evidence/fan-trio-drive-delivery.json"
+      },
+      "observed_utc": "2026-11-23T05:50:17.829Z",
+      "observed": {
+        "id": "1e4p1pwcjfhZN35lD-ducwa_mU2_M5dsh",
+        "title": "Fan-Silk-Trio-20s-1080p60.mp4",
+        "mime_type": "video/mp4",
+        "size": "22982924",
+        "url": "https://drive.google.com/file/d/1e4p1pwcjfhZN35lD-ducwa_mU2_M5dsh/view?usp=drivesdk",
+        "display_url": "https://drive.google.com/file/d/1e4p1pwcjfhZN35lD-ducwa_mU2_M5dsh/view?usp=drivesdk",
+        "file_or_folder": "file",
+        "created_time": null,
+        "modified_time": "2026-11-21T17:06:09.381Z",
+        "parent_ids": [
+          "1hrk62bFIOHv2NwXvYl2bNSmp0cwBoXrr"
+        ],
+        "drive_id": null,
+        "current_user_can_share": null,
+        "has_augmented_permissions": null,
+        "shared": null,
+        "permissions": null,
+        "source_visibility_status": "access_not_verified"
+      },
+      "comparison": {
+        "size_matches": true,
+        "modified_time_matches": true,
+        "modified_time_baseline_available": true
+      },
+      "verification_level": "metadata_size_and_modified_time_recheck",
+      "new_content_hash_verified": false,
+      "error": null
+    },
+    {
+      "inventory_id": "fan-silk-trio-4k",
+      "group": "existing_14_media",
+      "drive_file_id": "1r3NL97rDqXL1waC_gKflb7cODqh7n0dV",
+      "recorded": {
+        "filename": "Fan-Silk-Trio-Native-4K.png",
+        "bytes": 4765896,
+        "sha256": "4326d32a479bd585ccc5de24a5e7a523e79008b092d7c2332f0909d7052fd98f",
+        "modified_time": "2026-11-21T17:07:35.069Z",
+        "prior_verification": "recorded raw-byte readback",
+        "evidence": "project-docs/production-system/evidence/fan-trio-drive-delivery.json"
+      },
+      "observed_utc": "2026-11-23T05:50:17.829Z",
+      "observed": {
+        "id": "1r3NL97rDqXL1waC_gKflb7cODqh7n0dV",
+        "title": "Fan-Silk-Trio-Native-4K.png",
+        "mime_type": "image/png",
+        "size": "4765896",
+        "url": "https://drive.google.com/file/d/1r3NL97rDqXL1waC_gKflb7cODqh7n0dV/view?usp=drivesdk",
+        "display_url": "https://drive.google.com/file/d/1r3NL97rDqXL1waC_gKflb7cODqh7n0dV/view?usp=drivesdk",
+        "file_or_folder": "file",
+        "created_time": null,
+        "modified_time": "2026-11-21T17:07:35.069Z",
+        "parent_ids": [
+          "1hrk62bFIOHv2NwXvYl2bNSmp0cwBoXrr"
+        ],
+        "drive_id": null,
+        "current_user_can_share": null,
+        "has_augmented_permissions": null,
+        "shared": null,
+        "permissions": null,
+        "source_visibility_status": "access_not_verified"
+      },
+      "comparison": {
+        "size_matches": true,
+        "modified_time_matches": true,
+        "modified_time_baseline_available": true
+      },
+      "verification_level": "metadata_size_and_modified_time_recheck",
+      "new_content_hash_verified": false,
+      "error": null
+    },
+    {
+      "inventory_id": "fan-silk-trio-review",
+      "group": "existing_14_media",
+      "drive_file_id": "1x418ePl741G1Ooo0cZHzwwYirYxFQXG3",
+      "recorded": {
+        "filename": "Fan-Silk-Trio-Motion-Review.jpg",
+        "bytes": 683850,
+        "sha256": "7e5cf9b314132dc3d716d0c5b94805c1d60b10c44aca5ee042e4bbec73c83e5c",
+        "modified_time": "2026-11-21T17:06:16.225Z",
+        "prior_verification": "recorded raw-byte readback",
+        "evidence": "project-docs/production-system/evidence/fan-trio-drive-delivery.json"
+      },
+      "observed_utc": "2026-11-23T05:50:17.829Z",
+      "observed": {
+        "id": "1x418ePl741G1Ooo0cZHzwwYirYxFQXG3",
+        "title": "Fan-Silk-Trio-Motion-Review.jpg",
+        "mime_type": "image/jpeg",
+        "size": "683850",
+        "url": "https://drive.google.com/file/d/1x418ePl741G1Ooo0cZHzwwYirYxFQXG3/view?usp=drivesdk",
+        "display_url": "https://drive.google.com/file/d/1x418ePl741G1Ooo0cZHzwwYirYxFQXG3/view?usp=drivesdk",
+        "file_or_folder": "file",
+        "created_time": null,
+        "modified_time": "2026-11-21T17:06:16.225Z",
+        "parent_ids": [
+          "1hrk62bFIOHv2NwXvYl2bNSmp0cwBoXrr"
+        ],
+        "drive_id": null,
+        "current_user_can_share": null,
+        "has_augmented_permissions": null,
+        "shared": null,
+        "permissions": null,
+        "source_visibility_status": "access_not_verified"
+      },
+      "comparison": {
+        "size_matches": true,
+        "modified_time_matches": true,
+        "modified_time_baseline_available": true
+      },
+      "verification_level": "metadata_size_and_modified_time_recheck",
+      "new_content_hash_verified": false,
+      "error": null
+    },
+    {
+      "inventory_id": "s01-source-audio",
+      "group": "original_song_recordings",
+      "drive_file_id": "1wmWrkUIuIU_zE1Hogp_hPUFYBH0J5YJR",
+      "recorded": {
+        "filename": "01 All You Stars of Zion (brass ensemble 3m08, backdrop timing).mp3",
+        "bytes": 6404205,
+        "sha256": "2ef650dcf9b2fab141c72a2ce9a3301265326d2b6fe2ec807dcbe3dddd177a01",
+        "modified_time": "2026-11-18T09:14:26.696Z",
+        "prior_verification": "independently verified exact local bytes; matches prior full or abbreviated expected digest",
+        "evidence": "project-docs/production-system/catalogs/songs.json"
+      },
+      "observed_utc": "2026-11-23T05:50:17.829Z",
+      "observed": {
+        "id": "1wmWrkUIuIU_zE1Hogp_hPUFYBH0J5YJR",
+        "title": "01 All You Stars of Zion (brass ensemble 3m08, backdrop timing).mp3",
+        "mime_type": "audio/mpeg",
+        "size": "6404205",
+        "url": "https://drive.google.com/file/d/1wmWrkUIuIU_zE1Hogp_hPUFYBH0J5YJR/view?usp=drivesdk",
+        "display_url": "https://drive.google.com/file/d/1wmWrkUIuIU_zE1Hogp_hPUFYBH0J5YJR/view?usp=drivesdk",
+        "file_or_folder": "file",
+        "created_time": null,
+        "modified_time": "2026-11-18T09:14:26.696Z",
+        "parent_ids": [
+          "1xyNZn4ZA6bjPcvKjGfgSWQIs9aAp2PPd"
+        ],
+        "drive_id": null,
+        "current_user_can_share": null,
+        "has_augmented_permissions": null,
+        "shared": null,
+        "permissions": null,
+        "source_visibility_status": "access_not_verified"
+      },
+      "comparison": {
+        "size_matches": true,
+        "modified_time_matches": true,
+        "modified_time_baseline_available": true
+      },
+      "verification_level": "metadata_size_and_modified_time_recheck",
+      "new_content_hash_verified": false,
+      "error": null
+    },
+    {
+      "inventory_id": "s02-source-audio",
+      "group": "original_song_recordings",
+      "drive_file_id": "1UoGwToBnpl-jlEJDRfqMnHMfluupGOhO",
+      "recorded": {
+        "filename": "The Rose.m4a",
+        "bytes": 3570538,
+        "sha256": "45ba01babded6297abef3ea531154c7e3c6a75a690af370461457a5e82cb19f9",
+        "modified_time": "2026-11-15T20:06:34.591Z",
+        "prior_verification": "independently verified exact local bytes; matches prior full or abbreviated expected digest",
+        "evidence": "project-docs/production-system/catalogs/songs.json"
+      },
+      "observed_utc": "2026-11-23T05:50:17.829Z",
+      "observed": {
+        "id": "1UoGwToBnpl-jlEJDRfqMnHMfluupGOhO",
+        "title": "The Rose.m4a",
+        "mime_type": "audio/x-m4a",
+        "size": "3570538",
+        "url": "https://drive.google.com/file/d/1UoGwToBnpl-jlEJDRfqMnHMfluupGOhO/view?usp=drivesdk",
+        "display_url": "https://drive.google.com/file/d/1UoGwToBnpl-jlEJDRfqMnHMfluupGOhO/view?usp=drivesdk",
+        "file_or_folder": "file",
+        "created_time": null,
+        "modified_time": "2026-11-15T20:06:34.591Z",
+        "parent_ids": null,
+        "drive_id": null,
+        "current_user_can_share": null,
+        "has_augmented_permissions": null,
+        "shared": null,
+        "permissions": null,
+        "source_visibility_status": "access_not_verified"
+      },
+      "comparison": {
+        "size_matches": true,
+        "modified_time_matches": true,
+        "modified_time_baseline_available": true
+      },
+      "verification_level": "metadata_size_and_modified_time_recheck",
+      "new_content_hash_verified": false,
+      "error": null
+    },
+    {
+      "inventory_id": "s03-source-audio",
+      "group": "original_song_recordings",
+      "drive_file_id": "1XMKLgAG0s22AbWpo5nruwEQ-DPRQH8PM",
+      "recorded": {
+        "filename": "03 I Reminisce About Your Love (YouTube reference, backdrop timing).mp3",
+        "bytes": 11374125,
+        "sha256": "c86a81c76aef1af7ae351b0b02eb2109bba78b43beaa3e8f9b329b4e49f9f485",
+        "modified_time": "2026-11-18T09:52:59.077Z",
+        "prior_verification": "independently verified exact local bytes; matches prior full or abbreviated expected digest",
+        "evidence": "project-docs/production-system/catalogs/songs.json"
+      },
+      "observed_utc": "2026-11-23T05:50:17.829Z",
+      "observed": {
+        "id": "1XMKLgAG0s22AbWpo5nruwEQ-DPRQH8PM",
+        "title": "03 I Reminisce About Your Love (YouTube reference, backdrop timing).mp3",
+        "mime_type": "audio/mpeg",
+        "size": "11374125",
+        "url": "https://drive.google.com/file/d/1XMKLgAG0s22AbWpo5nruwEQ-DPRQH8PM/view?usp=drivesdk",
+        "display_url": "https://drive.google.com/file/d/1XMKLgAG0s22AbWpo5nruwEQ-DPRQH8PM/view?usp=drivesdk",
+        "file_or_folder": "file",
+        "created_time": null,
+        "modified_time": "2026-11-18T09:52:59.077Z",
+        "parent_ids": [
+          "1xyNZn4ZA6bjPcvKjGfgSWQIs9aAp2PPd"
+        ],
+        "drive_id": null,
+        "current_user_can_share": null,
+        "has_augmented_permissions": null,
+        "shared": null,
+        "permissions": null,
+        "source_visibility_status": "access_not_verified"
+      },
+      "comparison": {
+        "size_matches": true,
+        "modified_time_matches": true,
+        "modified_time_baseline_available": true
+      },
+      "verification_level": "metadata_size_and_modified_time_recheck",
+      "new_content_hash_verified": false,
+      "error": null
+    },
+    {
+      "inventory_id": "s04-source-audio",
+      "group": "original_song_recordings",
+      "drive_file_id": "1zdEjaTvRAA-Xvx5TxAKZRd-cxgCId-Fr",
+      "recorded": {
+        "filename": "04 I'm Sorry, Please Forgive Me (YouTube melody reference, backdrop timing).mp3",
+        "bytes": 7477389,
+        "sha256": "a1fa529d6f6dd5f477a429f7c8587c017ed94efebabe669fa8e05e1dd32e7220",
+        "modified_time": "2026-11-18T09:52:59.085Z",
+        "prior_verification": "independently verified exact local bytes; matches prior full or abbreviated expected digest",
+        "evidence": "project-docs/production-system/catalogs/songs.json"
+      },
+      "observed_utc": "2026-11-23T05:50:18.103Z",
+      "observed": {
+        "id": "1zdEjaTvRAA-Xvx5TxAKZRd-cxgCId-Fr",
+        "title": "04 I'm Sorry, Please Forgive Me (YouTube melody reference, backdrop timing).mp3",
+        "mime_type": "audio/mpeg",
+        "size": "7477389",
+        "url": "https://drive.google.com/file/d/1zdEjaTvRAA-Xvx5TxAKZRd-cxgCId-Fr/view?usp=drivesdk",
+        "display_url": "https://drive.google.com/file/d/1zdEjaTvRAA-Xvx5TxAKZRd-cxgCId-Fr/view?usp=drivesdk",
+        "file_or_folder": "file",
+        "created_time": null,
+        "modified_time": "2026-11-18T09:52:59.085Z",
+        "parent_ids": [
+          "1xyNZn4ZA6bjPcvKjGfgSWQIs9aAp2PPd"
+        ],
+        "drive_id": null,
+        "current_user_can_share": null,
+        "has_augmented_permissions": null,
+        "shared": null,
+        "permissions": null,
+        "source_visibility_status": "access_not_verified"
+      },
+      "comparison": {
+        "size_matches": true,
+        "modified_time_matches": true,
+        "modified_time_baseline_available": true
+      },
+      "verification_level": "metadata_size_and_modified_time_recheck",
+      "new_content_hash_verified": false,
+      "error": null
+    },
+    {
+      "inventory_id": "s05-source-audio",
+      "group": "original_song_recordings",
+      "drive_file_id": "1sc19zSxMPDEI5bxaaoiCVx7rndRY-F_D",
+      "recorded": {
+        "filename": "God bless you.m4a",
+        "bytes": 1310700,
+        "sha256": "dbfc1a9f5b8118ab76bcabf16d9b0e30bfe07bea140d4405ff4087b6d2ea8781",
+        "modified_time": "2026-11-15T20:05:37.267Z",
+        "prior_verification": "independently verified exact local bytes; matches prior full or abbreviated expected digest",
+        "evidence": "project-docs/production-system/catalogs/songs.json"
+      },
+      "observed_utc": "2026-11-23T05:50:18.103Z",
+      "observed": {
+        "id": "1sc19zSxMPDEI5bxaaoiCVx7rndRY-F_D",
+        "title": "God bless you.m4a",
+        "mime_type": "audio/x-m4a",
+        "size": "1310700",
+        "url": "https://drive.google.com/file/d/1sc19zSxMPDEI5bxaaoiCVx7rndRY-F_D/view?usp=drivesdk",
+        "display_url": "https://drive.google.com/file/d/1sc19zSxMPDEI5bxaaoiCVx7rndRY-F_D/view?usp=drivesdk",
+        "file_or_folder": "file",
+        "created_time": null,
+        "modified_time": "2026-11-15T20:05:37.267Z",
+        "parent_ids": null,
+        "drive_id": null,
+        "current_user_can_share": null,
+        "has_augmented_permissions": null,
+        "shared": null,
+        "permissions": null,
+        "source_visibility_status": "access_not_verified"
+      },
+      "comparison": {
+        "size_matches": true,
+        "modified_time_matches": true,
+        "modified_time_baseline_available": true
+      },
+      "verification_level": "metadata_size_and_modified_time_recheck",
+      "new_content_hash_verified": false,
+      "error": null
+    },
+    {
+      "inventory_id": "s06-source-audio",
+      "group": "original_song_recordings",
+      "drive_file_id": "1YqFkD3lQprvotC32xRfC8Dqno0I24hqs",
+      "recorded": {
+        "filename": "Heavenly Mother Tells us to be Grains.m4a",
+        "bytes": 1159428,
+        "sha256": "b0b0de6a6f29a6dfc9dbdab935f8049360f05e77896f89cb52b68365f6f61d71",
+        "modified_time": "2026-11-15T20:05:52.160Z",
+        "prior_verification": "independently verified exact local bytes; matches prior full or abbreviated expected digest",
+        "evidence": "project-docs/production-system/catalogs/songs.json"
+      },
+      "observed_utc": "2026-11-23T05:50:18.103Z",
+      "observed": {
+        "id": "1YqFkD3lQprvotC32xRfC8Dqno0I24hqs",
+        "title": "Heavenly Mother Tells us to be Grains.m4a",
+        "mime_type": "audio/x-m4a",
+        "size": "1159428",
+        "url": "https://drive.google.com/file/d/1YqFkD3lQprvotC32xRfC8Dqno0I24hqs/view?usp=drivesdk",
+        "display_url": "https://drive.google.com/file/d/1YqFkD3lQprvotC32xRfC8Dqno0I24hqs/view?usp=drivesdk",
+        "file_or_folder": "file",
+        "created_time": null,
+        "modified_time": "2026-11-15T20:05:52.160Z",
+        "parent_ids": null,
+        "drive_id": null,
+        "current_user_can_share": null,
+        "has_augmented_permissions": null,
+        "shared": null,
+        "permissions": null,
+        "source_visibility_status": "access_not_verified"
+      },
+      "comparison": {
+        "size_matches": true,
+        "modified_time_matches": true,
+        "modified_time_baseline_available": true
+      },
+      "verification_level": "metadata_size_and_modified_time_recheck",
+      "new_content_hash_verified": false,
+      "error": null
+    },
+    {
+      "inventory_id": "s07-source-audio",
+      "group": "original_song_recordings",
+      "drive_file_id": "1wL9dyLETDn3q9ECkIXKrDb3UIt_eAgEA",
+      "recorded": {
+        "filename": "07 May No One Ever Feel Lonely (YouTube reference, backdrop timing).mp3",
+        "bytes": 8493981,
+        "sha256": "2fea173b63d4086703927a0e6048b5026d0440d151c99c90f3129c37fea6266a",
+        "modified_time": "2026-11-18T09:52:59.093Z",
+        "prior_verification": "independently verified exact local bytes; matches prior full or abbreviated expected digest",
+        "evidence": "project-docs/production-system/catalogs/songs.json"
+      },
+      "observed_utc": "2026-11-23T05:50:18.103Z",
+      "observed": {
+        "id": "1wL9dyLETDn3q9ECkIXKrDb3UIt_eAgEA",
+        "title": "07 May No One Ever Feel Lonely (YouTube reference, backdrop timing).mp3",
+        "mime_type": "audio/mpeg",
+        "size": "8493981",
+        "url": "https://drive.google.com/file/d/1wL9dyLETDn3q9ECkIXKrDb3UIt_eAgEA/view?usp=drivesdk",
+        "display_url": "https://drive.google.com/file/d/1wL9dyLETDn3q9ECkIXKrDb3UIt_eAgEA/view?usp=drivesdk",
+        "file_or_folder": "file",
+        "created_time": null,
+        "modified_time": "2026-11-18T09:52:59.093Z",
+        "parent_ids": [
+          "1xyNZn4ZA6bjPcvKjGfgSWQIs9aAp2PPd"
+        ],
+        "drive_id": null,
+        "current_user_can_share": null,
+        "has_augmented_permissions": null,
+        "shared": null,
+        "permissions": null,
+        "source_visibility_status": "access_not_verified"
+      },
+      "comparison": {
+        "size_matches": true,
+        "modified_time_matches": true,
+        "modified_time_baseline_available": true
+      },
+      "verification_level": "metadata_size_and_modified_time_recheck",
+      "new_content_hash_verified": false,
+      "error": null
+    },
+    {
+      "inventory_id": "s08-source-audio",
+      "group": "original_song_recordings",
+      "drive_file_id": "11x03zfwMq51wk7T8Z6sL25QGlrunU1Xn",
+      "recorded": {
+        "filename": "08 Out of Heaven, Favor From God (ensemble, backdrop timing).mp3",
+        "bytes": 6847533,
+        "sha256": "7ae86d29fcda41c42f89f960fde0fe8f4573f7b73b2249e327bdbf174db7c81c",
+        "modified_time": "2026-11-18T09:52:59.099Z",
+        "prior_verification": "independently verified exact local bytes; matches prior full or abbreviated expected digest",
+        "evidence": "project-docs/production-system/catalogs/songs.json"
+      },
+      "observed_utc": "2026-11-23T05:50:18.103Z",
+      "observed": {
+        "id": "11x03zfwMq51wk7T8Z6sL25QGlrunU1Xn",
+        "title": "08 Out of Heaven, Favor From God (ensemble, backdrop timing).mp3",
+        "mime_type": "audio/mpeg",
+        "size": "6847533",
+        "url": "https://drive.google.com/file/d/11x03zfwMq51wk7T8Z6sL25QGlrunU1Xn/view?usp=drivesdk",
+        "display_url": "https://drive.google.com/file/d/11x03zfwMq51wk7T8Z6sL25QGlrunU1Xn/view?usp=drivesdk",
+        "file_or_folder": "file",
+        "created_time": null,
+        "modified_time": "2026-11-18T09:52:59.099Z",
+        "parent_ids": [
+          "1xyNZn4ZA6bjPcvKjGfgSWQIs9aAp2PPd"
+        ],
+        "drive_id": null,
+        "current_user_can_share": null,
+        "has_augmented_permissions": null,
+        "shared": null,
+        "permissions": null,
+        "source_visibility_status": "access_not_verified"
+      },
+      "comparison": {
+        "size_matches": true,
+        "modified_time_matches": true,
+        "modified_time_baseline_available": true
+      },
+      "verification_level": "metadata_size_and_modified_time_recheck",
+      "new_content_hash_verified": false,
+      "error": null
+    },
+    {
+      "inventory_id": "s09-source-audio",
+      "group": "original_song_recordings",
+      "drive_file_id": "1u4LgRODeqrMaKpdMDjkAVinLjF9QW2-l",
+      "recorded": {
+        "filename": "09 Let's Save the World (soloist, backdrop timing).mp3",
+        "bytes": 9031533,
+        "sha256": "0b276d665905dfc32ef6509035246fa94f81760bf72daad299bce050ed5b7e97",
+        "modified_time": "2026-11-18T09:52:59.107Z",
+        "prior_verification": "independently verified exact local bytes; matches prior full or abbreviated expected digest",
+        "evidence": "project-docs/production-system/catalogs/songs.json"
+      },
+      "observed_utc": "2026-11-23T05:50:18.103Z",
+      "observed": {
+        "id": "1u4LgRODeqrMaKpdMDjkAVinLjF9QW2-l",
+        "title": "09 Let's Save the World (soloist, backdrop timing).mp3",
+        "mime_type": "audio/mpeg",
+        "size": "9031533",
+        "url": "https://drive.google.com/file/d/1u4LgRODeqrMaKpdMDjkAVinLjF9QW2-l/view?usp=drivesdk",
+        "display_url": "https://drive.google.com/file/d/1u4LgRODeqrMaKpdMDjkAVinLjF9QW2-l/view?usp=drivesdk",
+        "file_or_folder": "file",
+        "created_time": null,
+        "modified_time": "2026-11-18T09:52:59.107Z",
+        "parent_ids": [
+          "1xyNZn4ZA6bjPcvKjGfgSWQIs9aAp2PPd"
+        ],
+        "drive_id": null,
+        "current_user_can_share": null,
+        "has_augmented_permissions": null,
+        "shared": null,
+        "permissions": null,
+        "source_visibility_status": "access_not_verified"
+      },
+      "comparison": {
+        "size_matches": true,
+        "modified_time_matches": true,
+        "modified_time_baseline_available": true
+      },
+      "verification_level": "metadata_size_and_modified_time_recheck",
+      "new_content_hash_verified": false,
+      "error": null
+    },
+    {
+      "inventory_id": "s10-source-audio",
+      "group": "original_song_recordings",
+      "drive_file_id": "1NbsvsPQO_wMWEl9OzJNFH6ZQAs_qg6WG",
+      "recorded": {
+        "filename": "Our Mother Saves the world.m4a",
+        "bytes": 1707969,
+        "sha256": "9c0ad27bfc0cabe1e1881098539649fc0d24ffc81acce3d4d4a13e061f1f991b",
+        "modified_time": "2026-11-15T20:06:09.363Z",
+        "prior_verification": "independently verified exact local bytes; matches prior full or abbreviated expected digest",
+        "evidence": "project-docs/production-system/catalogs/songs.json"
+      },
+      "observed_utc": "2026-11-23T05:50:18.103Z",
+      "observed": {
+        "id": "1NbsvsPQO_wMWEl9OzJNFH6ZQAs_qg6WG",
+        "title": "Our Mother Saves the world.m4a",
+        "mime_type": "audio/x-m4a",
+        "size": "1707969",
+        "url": "https://drive.google.com/file/d/1NbsvsPQO_wMWEl9OzJNFH6ZQAs_qg6WG/view?usp=drivesdk",
+        "display_url": "https://drive.google.com/file/d/1NbsvsPQO_wMWEl9OzJNFH6ZQAs_qg6WG/view?usp=drivesdk",
+        "file_or_folder": "file",
+        "created_time": null,
+        "modified_time": "2026-11-15T20:06:09.363Z",
+        "parent_ids": null,
+        "drive_id": null,
+        "current_user_can_share": null,
+        "has_augmented_permissions": null,
+        "shared": null,
+        "permissions": null,
+        "source_visibility_status": "access_not_verified"
+      },
+      "comparison": {
+        "size_matches": true,
+        "modified_time_matches": true,
+        "modified_time_baseline_available": true
+      },
+      "verification_level": "metadata_size_and_modified_time_recheck",
+      "new_content_hash_verified": false,
+      "error": null
+    },
+    {
+      "inventory_id": "s11-source-audio",
+      "group": "original_song_recordings",
+      "drive_file_id": "108zDtdB4X189DOwsZn-K9p548nERubLG",
+      "recorded": {
+        "filename": "11 Almighty God Who Knows the Future (choir, backdrop timing).mp3",
+        "bytes": 9073677,
+        "sha256": "70464dff370f7187d12029970c1fa1ef3e91c6957180aa685b64cead830f7004",
+        "modified_time": "2026-11-18T09:52:59.115Z",
+        "prior_verification": "independently verified exact local bytes; matches prior full or abbreviated expected digest",
+        "evidence": "project-docs/production-system/catalogs/songs.json"
+      },
+      "observed_utc": "2026-11-23T05:50:18.103Z",
+      "observed": {
+        "id": "108zDtdB4X189DOwsZn-K9p548nERubLG",
+        "title": "11 Almighty God Who Knows the Future (choir, backdrop timing).mp3",
+        "mime_type": "audio/mpeg",
+        "size": "9073677",
+        "url": "https://drive.google.com/file/d/108zDtdB4X189DOwsZn-K9p548nERubLG/view?usp=drivesdk",
+        "display_url": "https://drive.google.com/file/d/108zDtdB4X189DOwsZn-K9p548nERubLG/view?usp=drivesdk",
+        "file_or_folder": "file",
+        "created_time": null,
+        "modified_time": "2026-11-18T09:52:59.115Z",
+        "parent_ids": [
+          "1xyNZn4ZA6bjPcvKjGfgSWQIs9aAp2PPd"
+        ],
+        "drive_id": null,
+        "current_user_can_share": null,
+        "has_augmented_permissions": null,
+        "shared": null,
+        "permissions": null,
+        "source_visibility_status": "access_not_verified"
+      },
+      "comparison": {
+        "size_matches": true,
+        "modified_time_matches": true,
+        "modified_time_baseline_available": true
+      },
+      "verification_level": "metadata_size_and_modified_time_recheck",
+      "new_content_hash_verified": false,
+      "error": null
+    },
+    {
+      "inventory_id": "approved-promo-master",
+      "group": "approved_references",
+      "drive_file_id": "1gcxnb4Oyexq5Kbb8LvFWqOrikF-BVSht",
+      "recorded": {
+        "filename": "Film10 Nine Colours Revision3 master",
+        "bytes": 94541396,
+        "sha256": "508c5518bced94b21f96e8727d2b7ffd0da0ee69de9da164e7e5e824e80eda7b",
+        "modified_time": null,
+        "prior_verification": "reported approved master record, not re-downloaded this audit",
+        "evidence": "project-docs/production-system/catalogs/references.json"
+      },
+      "observed_utc": "2026-11-23T05:50:18.444Z",
+      "observed": {
+        "id": "1gcxnb4Oyexq5Kbb8LvFWqOrikF-BVSht",
+        "title": "Film 10 - Nine Colours - Revision 3 - master 1080p60.mp4",
+        "mime_type": "video/mp4",
+        "size": "94541396",
+        "url": "https://drive.google.com/file/d/1gcxnb4Oyexq5Kbb8LvFWqOrikF-BVSht/view?usp=drivesdk",
+        "display_url": "https://drive.google.com/file/d/1gcxnb4Oyexq5Kbb8LvFWqOrikF-BVSht/view?usp=drivesdk",
+        "file_or_folder": "file",
+        "created_time": null,
+        "modified_time": "2026-11-16T14:39:30.419Z",
+        "parent_ids": [
+          "1oNl_-SVqTwrYzqT87JQ3Om9HQFrcMOkz"
+        ],
+        "drive_id": null,
+        "current_user_can_share": null,
+        "has_augmented_permissions": null,
+        "shared": null,
+        "permissions": null,
+        "source_visibility_status": "access_not_verified"
+      },
+      "comparison": {
+        "size_matches": true,
+        "modified_time_matches": null,
+        "modified_time_baseline_available": false
+      },
+      "verification_level": "metadata_size_and_availability_recheck",
+      "new_content_hash_verified": false,
+      "error": null
+    },
+    {
+      "inventory_id": "approved-promo-comparison_copy",
+      "group": "approved_references",
+      "drive_file_id": "1CBQ4OtpLW3Kp3zBWsEMkjXYiAWUwhDQw",
+      "recorded": {
+        "filename": "Film10 Nine Colours Revision3 phone",
+        "bytes": 22278585,
+        "sha256": "ad4b4e7fe861ae34eb80e8b921ee747efc477c08bb89ec981f1b588a0b3c0af5",
+        "modified_time": null,
+        "prior_verification": "independently verified local720p60 file",
+        "evidence": "project-docs/production-system/catalogs/references.json"
+      },
+      "observed_utc": "2026-11-23T05:50:18.444Z",
+      "observed": {
+        "id": "1CBQ4OtpLW3Kp3zBWsEMkjXYiAWUwhDQw",
+        "title": "Film 10 - Nine Colours - Revision 3 - phone 720p60.mp4",
+        "mime_type": "video/mp4",
+        "size": "22278585",
+        "url": "https://drive.google.com/file/d/1CBQ4OtpLW3Kp3zBWsEMkjXYiAWUwhDQw/view?usp=drivesdk",
+        "display_url": "https://drive.google.com/file/d/1CBQ4OtpLW3Kp3zBWsEMkjXYiAWUwhDQw/view?usp=drivesdk",
+        "file_or_folder": "file",
+        "created_time": null,
+        "modified_time": "2026-11-16T14:40:00.764Z",
+        "parent_ids": [
+          "1oNl_-SVqTwrYzqT87JQ3Om9HQFrcMOkz"
+        ],
+        "drive_id": null,
+        "current_user_can_share": null,
+        "has_augmented_permissions": null,
+        "shared": null,
+        "permissions": null,
+        "source_visibility_status": "access_not_verified"
+      },
+      "comparison": {
+        "size_matches": true,
+        "modified_time_matches": null,
+        "modified_time_baseline_available": false
+      },
+      "verification_level": "metadata_size_and_availability_recheck",
+      "new_content_hash_verified": false,
+      "error": null
+    },
+    {
+      "inventory_id": "approved-song11-master_part01",
+      "group": "approved_references",
+      "drive_file_id": "1_-DZan6ugDbLIUZfXWsD5lcVgUoJI1jG",
+      "recorded": {
+        "filename": "master.part01",
+        "bytes": 83886080,
+        "sha256": "89db121817e11f95bc2b6b2b21e844be1b937a179995db2d9c6ee01ad9d1ec61",
+        "modified_time": "2026-11-21T00:32:14.968Z",
+        "prior_verification": "recorded raw-byte readback",
+        "evidence": "project-docs/production-system/evidence/approved-reference-archive.json"
+      },
+      "observed_utc": "2026-11-23T05:50:18.444Z",
+      "observed": {
+        "id": "1_-DZan6ugDbLIUZfXWsD5lcVgUoJI1jG",
+        "title": "Song11-Beauty-Study-30s-1080p60.mp4.part01",
+        "mime_type": "video/mp4",
+        "size": "83886080",
+        "url": "https://drive.google.com/file/d/1_-DZan6ugDbLIUZfXWsD5lcVgUoJI1jG/view?usp=drivesdk",
+        "display_url": "https://drive.google.com/file/d/1_-DZan6ugDbLIUZfXWsD5lcVgUoJI1jG/view?usp=drivesdk",
+        "file_or_folder": "file",
+        "created_time": null,
+        "modified_time": "2026-11-21T00:32:14.968Z",
+        "parent_ids": [
+          "1hrk62bFIOHv2NwXvYl2bNSmp0cwBoXrr"
+        ],
+        "drive_id": null,
+        "current_user_can_share": null,
+        "has_augmented_permissions": null,
+        "shared": null,
+        "permissions": null,
+        "source_visibility_status": "access_not_verified"
+      },
+      "comparison": {
+        "size_matches": true,
+        "modified_time_matches": true,
+        "modified_time_baseline_available": true
+      },
+      "verification_level": "metadata_size_and_modified_time_recheck",
+      "new_content_hash_verified": false,
+      "error": null
+    },
+    {
+      "inventory_id": "approved-song11-master_part02",
+      "group": "approved_references",
+      "drive_file_id": "1wTbDgZDELlfoB6TgjGLw8__MFv8ND0dw",
+      "recorded": {
+        "filename": "master.part02",
+        "bytes": 26979563,
+        "sha256": "7c1b10ca8a332e4f416fbe4e5619475fa7b444b9723eda2786a25ad302dad0f3",
+        "modified_time": "2026-11-21T00:32:53.663Z",
+        "prior_verification": "recorded raw-byte readback",
+        "evidence": "project-docs/production-system/evidence/approved-reference-archive.json"
+      },
+      "observed_utc": "2026-11-23T05:50:18.444Z",
+      "observed": {
+        "id": "1wTbDgZDELlfoB6TgjGLw8__MFv8ND0dw",
+        "title": "Song11-Beauty-Study-30s-1080p60.mp4.part02",
+        "mime_type": "application/octet-stream",
+        "size": "26979563",
+        "url": "https://drive.google.com/file/d/1wTbDgZDELlfoB6TgjGLw8__MFv8ND0dw/view?usp=drivesdk",
+        "display_url": "https://drive.google.com/file/d/1wTbDgZDELlfoB6TgjGLw8__MFv8ND0dw/view?usp=drivesdk",
+        "file_or_folder": "file",
+        "created_time": null,
+        "modified_time": "2026-11-21T00:32:53.663Z",
+        "parent_ids": [
+          "1hrk62bFIOHv2NwXvYl2bNSmp0cwBoXrr"
+        ],
+        "drive_id": null,
+        "current_user_can_share": null,
+        "has_augmented_permissions": null,
+        "shared": null,
+        "permissions": null,
+        "source_visibility_status": "access_not_verified"
+      },
+      "comparison": {
+        "size_matches": true,
+        "modified_time_matches": true,
+        "modified_time_baseline_available": true
+      },
+      "verification_level": "metadata_size_and_modified_time_recheck",
+      "new_content_hash_verified": false,
+      "error": null
+    },
+    {
+      "inventory_id": "approved-song11-viewing_video",
+      "group": "approved_references",
+      "drive_file_id": "1lPhp8_3FpXy5SFHqhMtgwBLYKCbMoFAc",
+      "recorded": {
+        "filename": "Song11-Beauty-Study-30s-1080p60-viewing.mp4",
+        "bytes": 67876653,
+        "sha256": "d3412fb96a65d8355df21eb1e56d8e35262f1b66c23d293029f19f6056d4ead5",
+        "modified_time": "2026-11-21T00:34:50.287Z",
+        "prior_verification": "recorded raw-byte readback",
+        "evidence": "project-docs/production-system/evidence/approved-reference-archive.json"
+      },
+      "observed_utc": "2026-11-23T05:50:18.444Z",
+      "observed": {
+        "id": "1lPhp8_3FpXy5SFHqhMtgwBLYKCbMoFAc",
+        "title": "Song11-Beauty-Study-30s-1080p60-viewing.mp4",
+        "mime_type": "video/mp4",
+        "size": "67876653",
+        "url": "https://drive.google.com/file/d/1lPhp8_3FpXy5SFHqhMtgwBLYKCbMoFAc/view?usp=drivesdk",
+        "display_url": "https://drive.google.com/file/d/1lPhp8_3FpXy5SFHqhMtgwBLYKCbMoFAc/view?usp=drivesdk",
+        "file_or_folder": "file",
+        "created_time": null,
+        "modified_time": "2026-11-21T00:34:50.287Z",
+        "parent_ids": [
+          "1hrk62bFIOHv2NwXvYl2bNSmp0cwBoXrr"
+        ],
+        "drive_id": null,
+        "current_user_can_share": null,
+        "has_augmented_permissions": null,
+        "shared": null,
+        "permissions": null,
+        "source_visibility_status": "access_not_verified"
+      },
+      "comparison": {
+        "size_matches": true,
+        "modified_time_matches": true,
+        "modified_time_baseline_available": true
+      },
+      "verification_level": "metadata_size_and_modified_time_recheck",
+      "new_content_hash_verified": false,
+      "error": null
+    },
+    {
+      "inventory_id": "approved-song11-native_4k_still",
+      "group": "approved_references",
+      "drive_file_id": "1YHmZ_QIV20XClsAMgBrCLXB5jk3LnzHU",
+      "recorded": {
+        "filename": "Song11-Conductor-Native-4K.png",
+        "bytes": 4723709,
+        "sha256": "76ccd2c942db1228969b0f020f577a4c14304c0afa298857576a4a825d2c10bd",
+        "modified_time": "2026-11-21T00:31:30.015Z",
+        "prior_verification": "recorded raw-byte readback",
+        "evidence": "project-docs/production-system/evidence/approved-reference-archive.json"
+      },
+      "observed_utc": "2026-11-23T05:50:18.444Z",
+      "observed": {
+        "id": "1YHmZ_QIV20XClsAMgBrCLXB5jk3LnzHU",
+        "title": "Song11-Conductor-Native-4K.png",
+        "mime_type": "image/png",
+        "size": "4723709",
+        "url": "https://drive.google.com/file/d/1YHmZ_QIV20XClsAMgBrCLXB5jk3LnzHU/view?usp=drivesdk",
+        "display_url": "https://drive.google.com/file/d/1YHmZ_QIV20XClsAMgBrCLXB5jk3LnzHU/view?usp=drivesdk",
+        "file_or_folder": "file",
+        "created_time": null,
+        "modified_time": "2026-11-21T00:31:30.015Z",
+        "parent_ids": [
+          "1hrk62bFIOHv2NwXvYl2bNSmp0cwBoXrr"
+        ],
+        "drive_id": null,
+        "current_user_can_share": null,
+        "has_augmented_permissions": null,
+        "shared": null,
+        "permissions": null,
+        "source_visibility_status": "access_not_verified"
+      },
+      "comparison": {
+        "size_matches": true,
+        "modified_time_matches": true,
+        "modified_time_baseline_available": true
+      },
+      "verification_level": "metadata_size_and_modified_time_recheck",
+      "new_content_hash_verified": false,
+      "error": null
+    }
+  ],
+  "historical_song_folders": [
+    {
+      "id": "13ReqXewJAP6WPD4nDid-tDOi4uVaVH8D",
+      "relative_path": "Videos/09 Let's Save the World",
+      "parent_folder_id": "1oNl_-SVqTwrYzqT87JQ3Om9HQFrcMOkz",
+      "status": "complete",
+      "observed_utc": "2026-11-23T05:50:18.444Z",
+      "observed_date_utc": "2026-11-23",
+      "page_count": 1,
+      "child_count": 2,
+      "pagination_complete": true,
+      "pages": [
+        {
+          "number": 1,
+          "count": 2,
+          "next_page_token_present": false,
+          "observed_utc": "2026-11-23T05:50:18.444Z"
+        }
+      ]
+    },
+    {
+      "id": "1dkwt9og41G7SV288pYafQaLFeFQHTKoW",
+      "relative_path": "Videos/08 Out of Heaven, Favor From God",
+      "parent_folder_id": "1oNl_-SVqTwrYzqT87JQ3Om9HQFrcMOkz",
+      "status": "complete",
+      "observed_utc": "2026-11-23T05:50:18.444Z",
+      "observed_date_utc": "2026-11-23",
+      "page_count": 1,
+      "child_count": 2,
+      "pagination_complete": true,
+      "pages": [
+        {
+          "number": 1,
+          "count": 2,
+          "next_page_token_present": false,
+          "observed_utc": "2026-11-23T05:50:18.444Z"
+        }
+      ]
+    },
+    {
+      "id": "1-dqetgg0JpUEIP-TZ9FZNCdZW9D_8S6s",
+      "relative_path": "Videos/04 I'm Sorry, Please Forgive Me",
+      "parent_folder_id": "1oNl_-SVqTwrYzqT87JQ3Om9HQFrcMOkz",
+      "status": "complete",
+      "observed_utc": "2026-11-23T05:50:18.992Z",
+      "observed_date_utc": "2026-11-23",
+      "page_count": 1,
+      "child_count": 2,
+      "pagination_complete": true,
+      "pages": [
+        {
+          "number": 1,
+          "count": 2,
+          "next_page_token_present": false,
+          "observed_utc": "2026-11-23T05:50:18.992Z"
+        }
+      ]
+    },
+    {
+      "id": "1QXX2L59TDnEqnxs5YRn335hXF7CITBFF",
+      "relative_path": "Videos/02 The Rose",
+      "parent_folder_id": "1oNl_-SVqTwrYzqT87JQ3Om9HQFrcMOkz",
+      "status": "complete",
+      "observed_utc": "2026-11-23T05:50:18.992Z",
+      "observed_date_utc": "2026-11-23",
+      "page_count": 1,
+      "child_count": 1,
+      "pagination_complete": true,
+      "pages": [
+        {
+          "number": 1,
+          "count": 1,
+          "next_page_token_present": false,
+          "observed_utc": "2026-11-23T05:50:18.992Z"
+        }
+      ]
+    },
+    {
+      "id": "1GvLKvy4zlVr99wst_p8s7bgHxCm0ckND",
+      "relative_path": "Videos/06 Heavenly Mother Tells Us to Be Grains",
+      "parent_folder_id": "1oNl_-SVqTwrYzqT87JQ3Om9HQFrcMOkz",
+      "status": "complete",
+      "observed_utc": "2026-11-23T05:50:18.992Z",
+      "observed_date_utc": "2026-11-23",
+      "page_count": 1,
+      "child_count": 1,
+      "pagination_complete": true,
+      "pages": [
+        {
+          "number": 1,
+          "count": 1,
+          "next_page_token_present": false,
+          "observed_utc": "2026-11-23T05:50:18.992Z"
+        }
+      ]
+    },
+    {
+      "id": "1HcXq2MTME-xEeqBTcaI4MUKso6HKltW4",
+      "relative_path": "Videos/05 God Bless You!",
+      "parent_folder_id": "1oNl_-SVqTwrYzqT87JQ3Om9HQFrcMOkz",
+      "status": "complete",
+      "observed_utc": "2026-11-23T05:50:18.992Z",
+      "observed_date_utc": "2026-11-23",
+      "page_count": 1,
+      "child_count": 2,
+      "pagination_complete": true,
+      "pages": [
+        {
+          "number": 1,
+          "count": 2,
+          "next_page_token_present": false,
+          "observed_utc": "2026-11-23T05:50:18.992Z"
+        }
+      ]
+    },
+    {
+      "id": "1SutdlNTzmxFgmW5ikzrQBEnuP3AS9ej7",
+      "relative_path": "Videos/01 All You Stars of Zion",
+      "parent_folder_id": "1oNl_-SVqTwrYzqT87JQ3Om9HQFrcMOkz",
+      "status": "complete",
+      "observed_utc": "2026-11-23T05:50:18.992Z",
+      "observed_date_utc": "2026-11-23",
+      "page_count": 1,
+      "child_count": 2,
+      "pagination_complete": true,
+      "pages": [
+        {
+          "number": 1,
+          "count": 2,
+          "next_page_token_present": false,
+          "observed_utc": "2026-11-23T05:50:18.992Z"
+        }
+      ]
+    },
+    {
+      "id": "1A4an1dHhDWocL8pLWsYukD2UtMLsnEKH",
+      "relative_path": "Videos/11 Almighty God Who Knows the Future",
+      "parent_folder_id": "1oNl_-SVqTwrYzqT87JQ3Om9HQFrcMOkz",
+      "status": "complete",
+      "observed_utc": "2026-11-23T05:50:18.992Z",
+      "observed_date_utc": "2026-11-23",
+      "page_count": 1,
+      "child_count": 3,
+      "pagination_complete": true,
+      "pages": [
+        {
+          "number": 1,
+          "count": 3,
+          "next_page_token_present": false,
+          "observed_utc": "2026-11-23T05:50:18.992Z"
+        }
+      ]
+    },
+    {
+      "id": "1FGhBMMmsUsmpKlODvZPY0GzZjzO3KTCQ",
+      "relative_path": "Videos/10 Our Mother Saves the World",
+      "parent_folder_id": "1oNl_-SVqTwrYzqT87JQ3Om9HQFrcMOkz",
+      "status": "complete",
+      "observed_utc": "2026-11-23T05:50:18.992Z",
+      "observed_date_utc": "2026-11-23",
+      "page_count": 1,
+      "child_count": 2,
+      "pagination_complete": true,
+      "pages": [
+        {
+          "number": 1,
+          "count": 2,
+          "next_page_token_present": false,
+          "observed_utc": "2026-11-23T05:50:18.992Z"
+        }
+      ]
+    },
+    {
+      "id": "1wKysbS8LXUTkGbs6DxpwiPy3iJFRYT2f",
+      "relative_path": "Videos/03 I Reminisce About Your Love",
+      "parent_folder_id": "1oNl_-SVqTwrYzqT87JQ3Om9HQFrcMOkz",
+      "status": "complete",
+      "observed_utc": "2026-11-23T05:50:18.992Z",
+      "observed_date_utc": "2026-11-23",
+      "page_count": 1,
+      "child_count": 4,
+      "pagination_complete": true,
+      "pages": [
+        {
+          "number": 1,
+          "count": 4,
+          "next_page_token_present": false,
+          "observed_utc": "2026-11-23T05:50:18.992Z"
+        }
+      ]
+    },
+    {
+      "id": "1ZSclNIsKp3v3gFSPoPAPXCd-Hu9-h04a",
+      "relative_path": "Videos/07 May No One Ever Feel Lonely",
+      "parent_folder_id": "1oNl_-SVqTwrYzqT87JQ3Om9HQFrcMOkz",
+      "status": "complete",
+      "observed_utc": "2026-11-23T05:50:19.232Z",
+      "observed_date_utc": "2026-11-23",
+      "page_count": 1,
+      "child_count": 2,
+      "pagination_complete": true,
+      "pages": [
+        {
+          "number": 1,
+          "count": 2,
+          "next_page_token_present": false,
+          "observed_utc": "2026-11-23T05:50:19.232Z"
+        }
+      ]
+    }
+  ],
+  "additional_empty_archive_folders": [
+    {
+      "id": "1EfdxsNyT71SR0pvC2s19ZwkhGVtCv9dJ",
+      "relative_path": "11 backdrop v2 - Archive (old section videos)",
+      "parent_folder_id": "1xyNZn4ZA6bjPcvKjGfgSWQIs9aAp2PPd",
+      "status": "complete",
+      "observed_utc": null,
+      "observed_date_utc": "2026-11-23",
+      "page_count": 1,
+      "child_count": 0,
+      "pagination_complete": true,
+      "pages": [
+        {
+          "number": 1,
+          "count": 0,
+          "next_page_token_present": false,
+          "observed_utc": null
+        }
+      ]
+    },
+    {
+      "id": "1y-HCJk8ad4bPsYpilxZEOD5Xg6Znfecs",
+      "relative_path": "Videos/08 Out of Heaven, Favor From God/Full backdrop 2026-11-18 (parts)",
+      "parent_folder_id": "1dkwt9og41G7SV288pYafQaLFeFQHTKoW",
+      "status": "complete",
+      "observed_utc": "2026-11-23T05:50:44.112Z",
+      "observed_date_utc": "2026-11-23",
+      "page_count": 1,
+      "child_count": 0,
+      "pagination_complete": true,
+      "pages": [
+        {
+          "number": 1,
+          "count": 0,
+          "next_page_token_present": false,
+          "observed_utc": "2026-11-23T05:50:44.112Z"
+        }
+      ]
+    },
+    {
+      "id": "1WqTQZrzCcVyJwg8H3SdKCwi1cToROiGd",
+      "relative_path": "Videos/10 Our Mother Saves the World/Concert Backdrop (full song, 2026-11-18)",
+      "parent_folder_id": "1FGhBMMmsUsmpKlODvZPY0GzZjzO3KTCQ",
+      "status": "complete",
+      "observed_utc": "2026-11-23T05:50:44.112Z",
+      "observed_date_utc": "2026-11-23",
+      "page_count": 1,
+      "child_count": 0,
+      "pagination_complete": true,
+      "pages": [
+        {
+          "number": 1,
+          "count": 0,
+          "next_page_token_present": false,
+          "observed_utc": "2026-11-23T05:50:44.112Z"
+        }
+      ]
+    }
+  ],
+  "verification_definitions": {
+    "metadata_size_and_modified_time_recheck": "Current metadata matches the recorded byte count and modified time. Prior SHA-256 is retained as historical evidence, not re-proved today.",
+    "metadata_size_and_availability_recheck": "Current size and availability match the record. No prior modified-time baseline was available; current payload hash is not re-proved.",
+    "raw_download_sha256": "Current original file bytes were downloaded through authenticated Drive fetch, counted and SHA-256 hashed locally.",
+    "listed_metadata_only": "Folder membership, title, size, type, timestamps and URL observed; contents not downloaded or hashed."
+  },
+  "limitations": [
+    "This is a non-atomic metadata snapshot collected on 2026-11-23; remote files may change afterwards.",
+    "Listed size and modified time do not establish SHA-256 equality. Existing content-hash receipts and current raw checks remain separate.",
+    "The four active upload subtrees are deliberately excluded; consult current upload receipts and final handoff manifest for those contents.",
+    "Some reused listings have date precision only because their exact call time was not retained; those rows use observed_utc=null.",
+    "Remote historical instructions are locators, not active instructions; the current repository and user direction govern continuation."
+  ],
+  "historical_full_film_gaps": [
+    {
+      "song_id": "s01",
+      "title": "All You Stars of Zion",
+      "reported_film": {
+        "status": "reported delivery; not independently retrieved or watched in this catalog audit",
+        "version": "v2",
+        "branch": "backdrop2/s01-full",
+        "native_resolution_reported": [
+          1920,
+          1080
+        ],
+        "fps_reported": 60,
+        "duration_seconds_reported": 203,
+        "stage_filename_reported": "01 All You Stars of Zion - Backdrop v2 - stage 1080p60.mp4",
+        "stage_sha256_reported": "b6b482a652591a481da23f1ee6b457f7cddd4cebfd2fbb8bf635fab143a26b1c",
+        "stage_bytes_reported": 152956265,
+        "review_sha256_reported": "f1e0dd40670655855888e1e51e3286707f806ee4e5cf2228e839e7edd19a1f03",
+        "location_reported": "Prior build/coordinator chat; stills in Drive Status; full movie URL not verified",
+        "owner_approval_inferred": false
+      },
+      "exact_reported_filename_matches": [],
+      "exact_reported_byte_count_matches": [],
+      "canonical_film_recovered": false,
+      "finding": "Historical canonical full film not identified in the completely paginated project subtree excluding active handoff/upload folders. This is a bounded search result, not proof of absence elsewhere."
+    },
+    {
+      "song_id": "s02",
+      "title": "The Rose",
+      "reported_film": {
+        "status": "reported delivery; not independently retrieved or watched in this catalog audit",
+        "version": "v2",
+        "branch": "backdrop2/s02-full",
+        "native_resolution_reported": [
+          1920,
+          1080
+        ],
+        "fps_reported": 60,
+        "duration_seconds_reported": 255,
+        "stage_filename_reported": "02 The Rose - Backdrop v2 - stage 1080p60.mp4",
+        "stage_sha256_reported": "03b7f5d5b391e5cb778c410bc9f5e32ea917fb03852e45a823b6d110dc29edcd",
+        "stage_bytes_reported": null,
+        "review_sha256_reported": "4635a1c74695671999750061c100a634120cd6f6a2577d6c98e66dc1332ac9bb",
+        "location_reported": "Prior build/coordinator chat; stills in Drive Status; full movie URL not verified",
+        "owner_approval_inferred": false
+      },
+      "exact_reported_filename_matches": [],
+      "exact_reported_byte_count_matches": [],
+      "canonical_film_recovered": false,
+      "finding": "Historical canonical full film not identified in the completely paginated project subtree excluding active handoff/upload folders. This is a bounded search result, not proof of absence elsewhere."
+    },
+    {
+      "song_id": "s03",
+      "title": "I Reminisce About Your Love",
+      "reported_film": {
+        "status": "reported delivery; not independently retrieved or watched in this catalog audit",
+        "version": "v2 fix 1",
+        "branch": "backdrop2/s03-full",
+        "native_resolution_reported": [
+          1920,
+          1080
+        ],
+        "fps_reported": 60,
+        "duration_seconds_reported": 328,
+        "stage_filename_reported": "03 I Reminisce About Your Love - Backdrop v2 - stage 1080p60.mp4",
+        "stage_sha256_reported": "7c389faf8b5e6cbc14fd53d9d6058149fd7e9bb113be55535a4014aa3bff7f25",
+        "stage_bytes_reported": null,
+        "review_sha256_reported": "c8832427d55953c383e6f9b9f9a20fbc8b29944ed8322f8c7aed2aed071d2403",
+        "location_reported": "Prior build/coordinator chat; stills in Drive Status; full movie URL not verified",
+        "owner_approval_inferred": false
+      },
+      "exact_reported_filename_matches": [],
+      "exact_reported_byte_count_matches": [],
+      "canonical_film_recovered": false,
+      "finding": "Historical canonical full film not identified in the completely paginated project subtree excluding active handoff/upload folders. This is a bounded search result, not proof of absence elsewhere."
+    },
+    {
+      "song_id": "s04",
+      "title": "I'm Sorry, Please Forgive Me",
+      "reported_film": {
+        "status": "reported delivery; not independently retrieved or watched in this catalog audit",
+        "version": "v2 fix 1",
+        "branch": "backdrop2/s04-full",
+        "native_resolution_reported": [
+          1920,
+          1080
+        ],
+        "fps_reported": 60,
+        "duration_seconds_reported": 235,
+        "stage_filename_reported": "04 I'm Sorry, Please Forgive Me - Backdrop v2 - stage 1080p60.mp4",
+        "stage_sha256_reported": "39cc492e64df84d9de4eb054199bf678ff6dd9bbc13fcb8d88b0f0ee36814666",
+        "stage_bytes_reported": null,
+        "review_sha256_reported": "059e3a38a94bc20b82c8aecbed043994d3164f6d0238f4464a68c84a3480e5b7",
+        "location_reported": "Prior build/coordinator chat; stills in Drive Status; full movie URL not verified",
+        "owner_approval_inferred": false
+      },
+      "exact_reported_filename_matches": [],
+      "exact_reported_byte_count_matches": [],
+      "canonical_film_recovered": false,
+      "finding": "Historical canonical full film not identified in the completely paginated project subtree excluding active handoff/upload folders. This is a bounded search result, not proof of absence elsewhere."
+    },
+    {
+      "song_id": "s05",
+      "title": "God Bless You!",
+      "reported_film": {
+        "status": "reported delivery; not independently retrieved or watched in this catalog audit",
+        "version": "v2 before unrendered fix 1",
+        "branch": "backdrop2/s05-full",
+        "native_resolution_reported": [
+          1920,
+          1080
+        ],
+        "fps_reported": 60,
+        "duration_seconds_reported": 174,
+        "stage_filename_reported": "05 God Bless You! - Backdrop v2 - stage 1080p60.mp4",
+        "stage_sha256_reported": "543ede1a091086c9f49ed44a87bafffcf816e1ad302f26e26249869a97b3ad46",
+        "stage_bytes_reported": 87983477,
+        "review_sha256_reported": "ada1d356ba08cb63d4e1727fdd665b2c46d852663ceedec63461d90a4142f399",
+        "location_reported": "Prior build/coordinator chat; stills in Drive Status; full movie URL not verified",
+        "owner_approval_inferred": false
+      },
+      "exact_reported_filename_matches": [],
+      "exact_reported_byte_count_matches": [],
+      "canonical_film_recovered": false,
+      "finding": "Historical canonical full film not identified in the completely paginated project subtree excluding active handoff/upload folders. This is a bounded search result, not proof of absence elsewhere."
+    },
+    {
+      "song_id": "s06",
+      "title": "Heavenly Mother Tells Us to Be Grains",
+      "reported_film": {
+        "status": "reported delivery; not independently retrieved or watched in this catalog audit",
+        "version": "v2 fix 1",
+        "branch": "backdrop2/s06-full",
+        "native_resolution_reported": [
+          1920,
+          1080
+        ],
+        "fps_reported": 60,
+        "duration_seconds_reported": 152,
+        "stage_filename_reported": "06 Heavenly Mother Tells Us to Be Grains - Backdrop v2 - stage 1080p60.mp4",
+        "stage_sha256_reported": "e86d642e83f3f64610c11a5bf606158fc0a0cc03d5e8a21f4f121df02bdb716f",
+        "stage_bytes_reported": null,
+        "review_sha256_reported": "218f7d0cf9a146669719e141d9b2c99719819321b0010bbb3775be00ddfe50fa",
+        "location_reported": "Prior build/coordinator chat; stills in Drive Status; full movie URL not verified",
+        "owner_approval_inferred": false
+      },
+      "exact_reported_filename_matches": [],
+      "exact_reported_byte_count_matches": [],
+      "canonical_film_recovered": false,
+      "finding": "Historical canonical full film not identified in the completely paginated project subtree excluding active handoff/upload folders. This is a bounded search result, not proof of absence elsewhere."
+    },
+    {
+      "song_id": "s07",
+      "title": "May No One Ever Feel Lonely",
+      "reported_film": {
+        "status": "reported delivery; not independently retrieved or watched in this catalog audit",
+        "version": "v2 before unrendered framing fix",
+        "branch": "backdrop2/s07-full",
+        "native_resolution_reported": [
+          1920,
+          1080
+        ],
+        "fps_reported": 60,
+        "duration_seconds_reported": 253,
+        "stage_filename_reported": "07 May No One Ever Feel Lonely - Backdrop v2 - stage 1080p60.mp4",
+        "stage_sha256_reported": "2ae667a714d65bf68c458161a1f8b4840bbbc3b8262d5fd1d99b278c175622bb",
+        "stage_bytes_reported": null,
+        "review_sha256_reported": "7f87fcc6e503e2bd919716099d0b2cfee914985a3e47887c87e7e071fcef9996",
+        "location_reported": "Prior build/coordinator chat; stills in Drive Status; full movie URL not verified",
+        "owner_approval_inferred": false
+      },
+      "exact_reported_filename_matches": [],
+      "exact_reported_byte_count_matches": [],
+      "canonical_film_recovered": false,
+      "finding": "Historical canonical full film not identified in the completely paginated project subtree excluding active handoff/upload folders. This is a bounded search result, not proof of absence elsewhere."
+    },
+    {
+      "song_id": "s08",
+      "title": "Out of Heaven, Favor From God",
+      "reported_film": {
+        "status": "reported delivery; not independently retrieved or watched in this catalog audit",
+        "version": "v2 fix 1",
+        "branch": "backdrop2/s08-full",
+        "native_resolution_reported": [
+          1920,
+          1080
+        ],
+        "fps_reported": 60,
+        "duration_seconds_reported": 225,
+        "stage_filename_reported": "08 Out of Heaven, Favor From God - Backdrop v2 - stage 1080p60.mp4",
+        "stage_sha256_reported": null,
+        "stage_bytes_reported": null,
+        "review_sha256_reported": null,
+        "location_reported": "Prior build/coordinator chat; stills in Drive Status; full movie URL not verified",
+        "owner_approval_inferred": false
+      },
+      "exact_reported_filename_matches": [],
+      "exact_reported_byte_count_matches": [],
+      "canonical_film_recovered": false,
+      "finding": "Historical canonical full film not identified in the completely paginated project subtree excluding active handoff/upload folders. This is a bounded search result, not proof of absence elsewhere."
+    },
+    {
+      "song_id": "s09",
+      "title": "Let's Save the World",
+      "reported_film": {
+        "status": "reported delivery; not independently retrieved or watched in this catalog audit",
+        "version": "v2 fix 1 with accepted QA exception",
+        "branch": "backdrop2/s09-full",
+        "native_resolution_reported": [
+          1920,
+          1080
+        ],
+        "fps_reported": 60,
+        "duration_seconds_reported": 291,
+        "stage_filename_reported": "09 Let's Save the World - Backdrop v2 - stage 1080p60.mp4",
+        "stage_sha256_reported": "9056bad49e853be44f9f2333842c931787422407dde158722d6222e05e8be378",
+        "stage_bytes_reported": 194685985,
+        "review_sha256_reported": "ffb26d69b640663bfd2a116ec577c5e1ec4502609e83ab3aae8275e06ff78297",
+        "location_reported": "Prior build/coordinator chat; stills in Drive Status; full movie URL not verified",
+        "owner_approval_inferred": false
+      },
+      "exact_reported_filename_matches": [],
+      "exact_reported_byte_count_matches": [],
+      "canonical_film_recovered": false,
+      "finding": "Historical canonical full film not identified in the completely paginated project subtree excluding active handoff/upload folders. This is a bounded search result, not proof of absence elsewhere."
+    },
+    {
+      "song_id": "s10",
+      "title": "Our Mother Saves the World",
+      "reported_film": {
+        "status": "reported delivery; not independently retrieved or watched in this catalog audit",
+        "version": "v2 before incomplete fix 1",
+        "branch": "backdrop2/s10-full",
+        "native_resolution_reported": [
+          1920,
+          1080
+        ],
+        "fps_reported": 60,
+        "duration_seconds_reported": 226,
+        "stage_filename_reported": "10 Our Mother Saves the World - Backdrop v2 - stage 1080p60.mp4",
+        "stage_sha256_reported": "5b9e5c47bf10fb6ddfc58f052185371590450909b6739d2f1b3aefd05114cd8d",
+        "stage_bytes_reported": null,
+        "review_sha256_reported": "cf5bdf8d35a76d65f3ab3b3595f7eff2ea5cbb58e28b0f4ba89d7b7f782a02d1",
+        "location_reported": "Prior build/coordinator chat; stills in Drive Status; full movie URL not verified",
+        "owner_approval_inferred": false
+      },
+      "exact_reported_filename_matches": [],
+      "exact_reported_byte_count_matches": [],
+      "canonical_film_recovered": false,
+      "finding": "Historical canonical full film not identified in the completely paginated project subtree excluding active handoff/upload folders. This is a bounded search result, not proof of absence elsewhere."
+    },
+    {
+      "song_id": "s11",
+      "title": "Almighty God Who Knows the Future",
+      "reported_film": {
+        "status": "reported delivery; not independently retrieved or watched in this catalog audit",
+        "version": "completed 540p30 music-video draft; newer approved 1080p60 study is 30 s only",
+        "branch": "backdrop2/s11-full",
+        "native_resolution_reported": [
+          960,
+          540
+        ],
+        "fps_reported": 30,
+        "duration_seconds_reported": 275,
+        "stage_filename_reported": null,
+        "stage_sha256_reported": null,
+        "stage_bytes_reported": null,
+        "review_sha256_reported": null,
+        "location_reported": "Prior coordinating chat; sections on owner-only Claude artifact",
+        "owner_approval_inferred": false,
+        "section_assets_reported": [
+          {
+            "section": "intro",
+            "source_seconds": [
+              0,
+              40
+            ],
+            "asset_id": "00b8ff753ed6bf78a1dee20c43873e76",
+            "render_commit_abbrev": "17db6e6"
+          },
+          {
+            "section": "verse1",
+            "source_seconds": [
+              40,
+              82.08
+            ],
+            "asset_id": "4f4e7bb2dd51658e6f3f11948d0b5f65",
+            "render_commit_abbrev": "17db6e6"
+          },
+          {
+            "section": "chorus1",
+            "source_seconds": [
+              82.08,
+              121.32
+            ],
+            "asset_id": "a394c7739932676815ced512e3e0cbe5",
+            "render_commit_abbrev": "17db6e6"
+          },
+          {
+            "section": "verse2",
+            "source_seconds": [
+              121.32,
+              160
+            ],
+            "asset_id": "ad9713d435bb18d64a0debb6c8a7a3e3",
+            "render_commit_abbrev": "17db6e6"
+          },
+          {
+            "section": "chorus2",
+            "source_seconds": [
+              160,
+              201.73
+            ],
+            "asset_id": "f556b4f004a43260aa623b126673d94f",
+            "render_commit_abbrev": "294b29a"
+          },
+          {
+            "section": "coda",
+            "source_seconds": [
+              201.73,
+              238.8
+            ],
+            "asset_id": "b5f1167b732465751d6190430872ded5",
+            "render_commit_abbrev": "17db6e6"
+          },
+          {
+            "section": "ending",
+            "source_seconds": [
+              238.8,
+              275
+            ],
+            "asset_id": "a7ff23d32a03a2279c31dd6bdacb5664",
+            "render_commit_abbrev": "17db6e6"
+          }
+        ]
+      },
+      "exact_reported_filename_matches": [],
+      "exact_reported_byte_count_matches": [],
+      "canonical_film_recovered": false,
+      "finding": "Historical canonical full film not identified in the completely paginated project subtree excluding active handoff/upload folders. This is a bounded search result, not proof of absence elsewhere."
+    }
+  ],
+  "historical_candidate_raw_checks": [
+    {
+      "schema": "historical-drive-candidate-byte-check-v1",
+      "observed_utc": "2026-11-23T05:52:42.562570+00:00",
+      "drive_file_id": "14J2ADe0q50vxpf9zgWs-lsqMHPGxzPVK",
+      "drive_url": "https://drive.google.com/file/d/14J2ADe0q50vxpf9zgWs-lsqMHPGxzPVK/view",
+      "drive_title": "I Reminisce About Your Love - Share Video (with music).mp4",
+      "local_path": "/workspace/scratch/39a2abd37644/concert-future/work/claude-handoff/historical-media-checks/s03-share-candidate.mp4",
+      "bytes": 192432028,
+      "sha256": "4edcf648a4c7334edc07214ed93e52be2d9b81ebdbe237215ba103910999800c",
+      "probe": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "codec_name": "h264",
+            "codec_type": "video",
+            "width": 1920,
+            "height": 1080,
+            "r_frame_rate": "30/1"
+          },
+          {
+            "codec_name": "aac",
+            "codec_type": "audio",
+            "r_frame_rate": "0/0"
+          }
+        ],
+        "format": {
+          "duration": "262.000000",
+          "size": "192432028"
+        }
+      },
+      "compared_hashes": {
+        "reported_v2_stage": "7c389faf8b5e6cbc14fd53d9d6058149fd7e9bb113be55535a4014aa3bff7f25",
+        "reported_v2_review": "c8832427d55953c383e6f9b9f9a20fbc8b29944ed8322f8c7aed2aed071d2403",
+        "older_1080p30_manifest_master": "e2e00cc92f4492cbcd294a2e2e666becaa0ca6c47c0872d1aedfd560ef05492c",
+        "older_manifest_share": "de513ade059b32c3850bfc521aa6563804d81db38a5c1279dec9112e3317bf99"
+      },
+      "matches": {
+        "reported_v2_stage": false,
+        "reported_v2_review": false,
+        "older_1080p30_manifest_master": false,
+        "older_manifest_share": false
+      },
+      "source": "Authenticated top-level Drive fetch file_uri; original stored file bytes, no transcoding."
+    }
+  ],
+  "song03_alternate_finding": "The existing 262-second 1080p30 share movie is recoverable, but does not match either reported v2 SHA-256 or either master/share SHA-256 in the older 1080p30 manifest. It is not a recovered canonical v2 stage film.",
+  "song03_older_manifest": {
+    "drive_id": "14QPmzov9qlgR-o2QHCaE18wwuoqlUlh_",
+    "url": "https://drive.google.com/file/d/14QPmzov9qlgR-o2QHCaE18wwuoqlUlh_/view",
+    "bytes": 1012,
+    "modified_time": "2026-11-18T11:13:18.055Z",
+    "named_version": "Backdrop 1080p30",
+    "master_sha256": "e2e00cc92f4492cbcd294a2e2e666becaa0ca6c47c0872d1aedfd560ef05492c",
+    "share_sha256": "de513ade059b32c3850bfc521aa6563804d81db38a5c1279dec9112e3317bf99",
+    "master_parts_named": [
+      ".part00",
+      ".part01",
+      ".part02"
+    ],
+    "named_master_parts_found_in_song_folder": false,
+    "verification_level": "read_manifest_claims_not_movie_bytes"
+  },
+  "existing_nine_colours_4k_archive": {
+    "folder_id": "1_m5HLeo8brJgZMgdXleEbY7klrAGaxgS",
+    "url": "https://drive.google.com/drive/folders/1_m5HLeo8brJgZMgdXleEbY7klrAGaxgS",
+    "manifest_drive_id": "1ftBfhNKQ_dikYVJk8P5PGE8lbhoy-RuG",
+    "manifest_local_path": "work/claude-handoff/historical-media-checks/nine-colours-4k60-existing-manifest.json",
+    "manifest_bytes": 826,
+    "manifest_sha256": "f6836691388ee248406c4f8749d6891cbaadbb6c693d81d6d6490adfed4afc0e",
+    "manifest": {
+      "file": "Film-10-Nine-Colours-Revision-3-HQ-4K60.mp4",
+      "size": 318834702,
+      "sha256": "6ed17b8cd9a0fd5031cd857c517696ebe5f24514e019abf038be736714f186a2",
+      "parts": [
+        {
+          "name": "Nine-Colours-4K60.part01",
+          "size": 80000000,
+          "sha256": "5f80aa0e3640a5e6457db352fa1dd1fc7ca383b96b83a2cde5ceb23d7a6dcd21"
+        },
+        {
+          "name": "Nine-Colours-4K60.part02",
+          "size": 80000000,
+          "sha256": "ddc113b056455f62d0a5b720511e60df2568d517ff172d93e6c4f1b620f42388"
+        },
+        {
+          "name": "Nine-Colours-4K60.part03",
+          "size": 80000000,
+          "sha256": "587f1e98c87560beeda4893c8a6a58da3d9ecc1cf24909c52d199b0f4e576717"
+        },
+        {
+          "name": "Nine-Colours-4K60.part04",
+          "size": 78834702,
+          "sha256": "7613a34981767a70722e83b1163d00eb6d88b4e7917806826f5027f7dda95091"
+        }
+      ]
+    },
+    "listed_files": [
+      {
+        "id": "1ftBfhNKQ_dikYVJk8P5PGE8lbhoy-RuG",
+        "title": "manifest.json",
+        "mime_type": "application/json",
+        "size": "826",
+        "url": "https://drive.google.com/file/d/1ftBfhNKQ_dikYVJk8P5PGE8lbhoy-RuG/view?usp=drivesdk",
+        "display_url": "https://drive.google.com/file/d/1ftBfhNKQ_dikYVJk8P5PGE8lbhoy-RuG/view?usp=drivesdk",
+        "file_or_folder": "file",
+        "created_time": "2026-11-16T21:55:06.168Z",
+        "modified_time": "2026-11-16T21:55:06.168Z",
+        "parent_ids": null,
+        "drive_id": null,
+        "current_user_can_share": null,
+        "has_augmented_permissions": null,
+        "shared": false,
+        "permissions": null,
+        "source_visibility_status": "not_shared",
+        "can_download": true,
+        "can_list_children": false,
+        "relative_path": "Videos/Nine Colours - exact 4K60 master - download and restore/manifest.json",
+        "listed_parent_id": "1_m5HLeo8brJgZMgdXleEbY7klrAGaxgS",
+        "observed_utc": "2026-11-23T05:52:59.623Z",
+        "observed_date_utc": "2026-11-23",
+        "verification_level": "listed_metadata_only",
+        "content_bytes_verified": false
+      },
+      {
+        "id": "11f5EjP9CFS71FWKtBB-zWCLFVmasfZWu",
+        "title": "START-HERE.txt",
+        "mime_type": "text/plain",
+        "size": "718",
+        "url": "https://drive.google.com/file/d/11f5EjP9CFS71FWKtBB-zWCLFVmasfZWu/view?usp=drivesdk",
+        "display_url": "https://drive.google.com/file/d/11f5EjP9CFS71FWKtBB-zWCLFVmasfZWu/view?usp=drivesdk",
+        "file_or_folder": "file",
+        "created_time": "2026-11-16T21:54:59.462Z",
+        "modified_time": "2026-11-16T21:54:59.462Z",
+        "parent_ids": null,
+        "drive_id": null,
+        "current_user_can_share": null,
+        "has_augmented_permissions": null,
+        "shared": false,
+        "permissions": null,
+        "source_visibility_status": "not_shared",
+        "can_download": true,
+        "can_list_children": false,
+        "relative_path": "Videos/Nine Colours - exact 4K60 master - download and restore/START-HERE.txt",
+        "listed_parent_id": "1_m5HLeo8brJgZMgdXleEbY7klrAGaxgS",
+        "observed_utc": "2026-11-23T05:52:59.623Z",
+        "observed_date_utc": "2026-11-23",
+        "verification_level": "listed_metadata_only",
+        "content_bytes_verified": false
+      },
+      {
+        "id": "1B-B_4nIk3176z6gT6oksYaWx79RZp2Xg",
+        "title": "Open-to-save-video.html",
+        "mime_type": "text/html",
+        "size": "4297",
+        "url": "https://drive.google.com/file/d/1B-B_4nIk3176z6gT6oksYaWx79RZp2Xg/view?usp=drivesdk",
+        "display_url": "https://drive.google.com/file/d/1B-B_4nIk3176z6gT6oksYaWx79RZp2Xg/view?usp=drivesdk",
+        "file_or_folder": "file",
+        "created_time": "2026-11-16T21:54:55.374Z",
+        "modified_time": "2026-11-16T21:54:55.374Z",
+        "parent_ids": null,
+        "drive_id": null,
+        "current_user_can_share": null,
+        "has_augmented_permissions": null,
+        "shared": false,
+        "permissions": null,
+        "source_visibility_status": "not_shared",
+        "can_download": true,
+        "can_list_children": false,
+        "relative_path": "Videos/Nine Colours - exact 4K60 master - download and restore/Open-to-save-video.html",
+        "listed_parent_id": "1_m5HLeo8brJgZMgdXleEbY7klrAGaxgS",
+        "observed_utc": "2026-11-23T05:52:59.623Z",
+        "observed_date_utc": "2026-11-23",
+        "verification_level": "listed_metadata_only",
+        "content_bytes_verified": false
+      },
+      {
+        "id": "1JhYLERNDuoqjtRBGiVc5R1dE5ktcjxCB",
+        "title": "Nine-Colours-4K60.part04",
+        "mime_type": "application/octet-stream",
+        "size": "78834702",
+        "url": "https://drive.google.com/file/d/1JhYLERNDuoqjtRBGiVc5R1dE5ktcjxCB/view?usp=drivesdk",
+        "display_url": "https://drive.google.com/file/d/1JhYLERNDuoqjtRBGiVc5R1dE5ktcjxCB/view?usp=drivesdk",
+        "file_or_folder": "file",
+        "created_time": "2026-11-16T21:51:45.403Z",
+        "modified_time": "2026-11-16T21:51:45.403Z",
+        "parent_ids": null,
+        "drive_id": null,
+        "current_user_can_share": null,
+        "has_augmented_permissions": null,
+        "shared": false,
+        "permissions": null,
+        "source_visibility_status": "not_shared",
+        "can_download": true,
+        "can_list_children": false,
+        "relative_path": "Videos/Nine Colours - exact 4K60 master - download and restore/Nine-Colours-4K60.part04",
+        "listed_parent_id": "1_m5HLeo8brJgZMgdXleEbY7klrAGaxgS",
+        "observed_utc": "2026-11-23T05:52:59.623Z",
+        "observed_date_utc": "2026-11-23",
+        "verification_level": "listed_metadata_only",
+        "content_bytes_verified": false
+      },
+      {
+        "id": "1xOs7mo_HwXoRK-C5vxaohidn-0ZoVsS-",
+        "title": "Nine-Colours-4K60.part03",
+        "mime_type": "application/octet-stream",
+        "size": "80000000",
+        "url": "https://drive.google.com/file/d/1xOs7mo_HwXoRK-C5vxaohidn-0ZoVsS-/view?usp=drivesdk",
+        "display_url": "https://drive.google.com/file/d/1xOs7mo_HwXoRK-C5vxaohidn-0ZoVsS-/view?usp=drivesdk",
+        "file_or_folder": "file",
+        "created_time": "2026-11-16T21:51:33.542Z",
+        "modified_time": "2026-11-16T21:51:33.542Z",
+        "parent_ids": null,
+        "drive_id": null,
+        "current_user_can_share": null,
+        "has_augmented_permissions": null,
+        "shared": false,
+        "permissions": null,
+        "source_visibility_status": "not_shared",
+        "can_download": true,
+        "can_list_children": false,
+        "relative_path": "Videos/Nine Colours - exact 4K60 master - download and restore/Nine-Colours-4K60.part03",
+        "listed_parent_id": "1_m5HLeo8brJgZMgdXleEbY7klrAGaxgS",
+        "observed_utc": "2026-11-23T05:52:59.623Z",
+        "observed_date_utc": "2026-11-23",
+        "verification_level": "listed_metadata_only",
+        "content_bytes_verified": false
+      },
+      {
+        "id": "1kYdkwVOpUGgMe5hZptWrWzh7CyEQ2Ucs",
+        "title": "Nine-Colours-4K60.part02",
+        "mime_type": "application/octet-stream",
+        "size": "80000000",
+        "url": "https://drive.google.com/file/d/1kYdkwVOpUGgMe5hZptWrWzh7CyEQ2Ucs/view?usp=drivesdk",
+        "display_url": "https://drive.google.com/file/d/1kYdkwVOpUGgMe5hZptWrWzh7CyEQ2Ucs/view?usp=drivesdk",
+        "file_or_folder": "file",
+        "created_time": "2026-11-16T21:51:21.539Z",
+        "modified_time": "2026-11-16T21:51:21.539Z",
+        "parent_ids": null,
+        "drive_id": null,
+        "current_user_can_share": null,
+        "has_augmented_permissions": null,
+        "shared": false,
+        "permissions": null,
+        "source_visibility_status": "not_shared",
+        "can_download": true,
+        "can_list_children": false,
+        "relative_path": "Videos/Nine Colours - exact 4K60 master - download and restore/Nine-Colours-4K60.part02",
+        "listed_parent_id": "1_m5HLeo8brJgZMgdXleEbY7klrAGaxgS",
+        "observed_utc": "2026-11-23T05:52:59.623Z",
+        "observed_date_utc": "2026-11-23",
+        "verification_level": "listed_metadata_only",
+        "content_bytes_verified": false
+      },
+      {
+        "id": "1VzugNMJKvnvciTN2pyETsP_IvFtYAecN",
+        "title": "Nine-Colours-4K60.part01",
+        "mime_type": "video/mp4",
+        "size": "80000000",
+        "url": "https://drive.google.com/file/d/1VzugNMJKvnvciTN2pyETsP_IvFtYAecN/view?usp=drivesdk",
+        "display_url": "https://drive.google.com/file/d/1VzugNMJKvnvciTN2pyETsP_IvFtYAecN/view?usp=drivesdk",
+        "file_or_folder": "file",
+        "created_time": "2026-11-16T21:51:08.830Z",
+        "modified_time": "2026-11-16T21:51:08.830Z",
+        "parent_ids": null,
+        "drive_id": null,
+        "current_user_can_share": null,
+        "has_augmented_permissions": null,
+        "shared": false,
+        "permissions": null,
+        "source_visibility_status": "not_shared",
+        "can_download": true,
+        "can_list_children": false,
+        "relative_path": "Videos/Nine Colours - exact 4K60 master - download and restore/Nine-Colours-4K60.part01",
+        "listed_parent_id": "1_m5HLeo8brJgZMgdXleEbY7klrAGaxgS",
+        "observed_utc": "2026-11-23T05:52:59.623Z",
+        "observed_date_utc": "2026-11-23",
+        "verification_level": "listed_metadata_only",
+        "content_bytes_verified": false
+      }
+    ],
+    "movie_payload_hashes_verified_this_audit": false,
+    "verification_level": "manifest_bytes_verified_archive_parts_metadata_only"
+  },
+  "newly_discovered_saved_artifacts": {
+    "adoption_receipt": "work/claude-handoff/existing-drive-adoption.json",
+    "exact_byte_verified": 22,
+    "metadata_only_large_files": 5,
+    "new_uploads_performed": 0,
+    "raw_verified_bytes": 500511994
+  },
+  "project_walk_summary": {
+    "listed_folders": 62,
+    "excluded_folders": 4,
+    "folder_errors": 0,
+    "metadata_entries": 542,
+    "unique_object_ids": 542,
+    "file_entries": 477,
+    "pending_folder_count": 0,
+    "all_requested_pagination_completed": true
+  }
+}

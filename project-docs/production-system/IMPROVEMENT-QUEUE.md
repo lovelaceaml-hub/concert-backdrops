@@ -1,24 +1,32 @@
-# Improvement queue
+# Historical improvement backlog
 
-This is a bounded work queue for future chats, not an automatically running service. Continue the first item whose prerequisites are available, with the current user's directions taking priority. Preserve the approved references and isolate each change.
+The latest owner priorities ([PR #114](https://github.com/lovelaceaml-hub/concert-backdrops/pull/114)) authorize: make the retained tools work and be reusable for every song; integrate proven quality gains into the existing engine; then simplify status, stale PRs and distributed rendering. Try permitted cloud routes first for browser/Remotion/live-Blender sandbox limits. Use the owner's Mac only if no cloud route works and explain why; retain the separate GPU/load/priority conditions. The current deliverable is the complete Claude handoff; these priorities guide continuation.
 
-## Current priority: improve the actual fan and silk performance
+## Current disposition, November 22, 2026 (America/Los_Angeles)
 
-The owner's best-effort instruction supersedes waiting for reference uploads before any work. The new [fan and silk study](FAN-SILK-PERFORMANCE.md) implements three distinct scores, support-aware travel, final-palm fan grips, finite silk, closer framing and a complete original twenty-second scene. Use its exact delivered movie and review evidence as the next comparison; do not treat the earlier sixteen-second proposal as the implemented clock.
+This file preserves earlier proposals and the reasoning behind completed studies. **It is not an active queue, and a new chat must not automatically continue its first item.** The complete 275-second renewed Song 11 is rendered, checked and saved. The natural dance, fan trio, Cinematic Ten and Advanced Dance rounds are also completed historical deliveries. Use [the complete Claude handoff](CLAUDE-HANDOFF.md), [STATE.json](STATE.json) and [DELIVERIES.md](DELIVERIES.md) to distinguish their exact identities and review status.
+
+The owner's November 22 correction supersedes the body-fitting fan direction: retain the luminous concert style with generous independent garments and no exposed anatomical detail. PR #111 is closed unmerged. Follow [root AGENTS.md](../../AGENTS.md): improve the existing system, retain the added tools, make no new phone versions, work at 1080p until approval and render the final show at 4K60 afterward. CPU work remains in the cloud; needed GPU work uses the owner's Mac under the documented conditions. No exact-output approval of the new full Song 11 is recorded.
+
+Choose a future improvement from the current authorized request and actual review findings. The proposals below may inform that choice, but their older words such as “next,” “current” and “latest” describe the stage at which they were written. Completed work and current owner directions take precedence.
+
+## Historical priority: improve the fan and silk performance
+
+At that stage, the owner's best-effort instruction superseded waiting for reference uploads before any work. The [fan and silk study](FAN-SILK-PERFORMANCE.md) implemented three distinct scores, support-aware travel, final-palm fan grips, finite silk, closer framing and a complete original twenty-second scene. Its exact delivered movie and review evidence preserve that comparison; the earlier sixteen-second proposal is not the implemented clock. The later modesty correction governs any reuse.
 
 The next visible improvement is a richer complete dance phrase with a clearer change of level, turn, arrival and recovery. Refine skirt articulation and silk reversals so the cloth makes broader flowing shapes without passing across the face. Then expand ensemble scale and song-specific choreography. The current silk remains a stretched cloth approximation without self/partner/actual-garment collision, and the long skirts hide much of the foot articulation. Scheduled contacts and IK are useful foundations, not proof of professional captured dance.
 
 When source footage is accessible, the [intake tool](../../tools/performance_reference/README.md) prepares timecoded evidence for faithful adaptations. Never infer source choreography from a title or poster. Missing footage remains a limitation on source fidelity, not a reason to stop explicitly labeled original studies.
 
-## Completed production foundation
+## Historical production foundation
 
 The production foundation and approved study are merged. All eleven full audio sources are verified. The current increment adds registered p3d production commands, a shared catalog/handoff, six native model families, an original Consideration baseline and its isolated camera/response revision, plus a separate dove, rose and wheat prototype pack. The additions total nine model families and eighteen variants, separate from the acting studies. See `STATE.json` and the kit verification for final evidence and creative review status. The [dense reference motion review](REFERENCE-MOTION-REVIEW.md) identifies precise acting and reveal improvements from the actual approved films.
 
 The next isolated acting increment is `concert-dance-study`: a continuous eighteen-second duet using the existing CMU 05_02 phrase with stable support, preserved root travel and wrist-driven light trails. It adds a reusable acting entry, not a tenth geometry family or a new capture library. The picture source is frozen at `0c42f4422a6b67464cb9cd84aac32008d45d4f4c` for PR #104. Use [NATURAL-PERFORMANCE.md](NATURAL-PERFORMANCE.md) for commands and limitations; completed media and review status belong to the delivery catalog and evidence.
 
-## Latest priority: natural, fluid performance
+## Historical priority: natural, fluid performance
 
-The owner's latest direction makes expressive movement and dancing the immediate priority. Continue through bounded moving studies, using the approved promo's warmth and visual language. Preserve the song-specific queue below.
+The direction at this stage prioritized expressive movement and dancing through bounded moving studies, using the approved promo's warmth and visual language. The completed study deliveries now supply that evidence. The song-specific ideas below remain proposals.
 
 | Order | Next improvement | Concrete proof needed |
 | --- | --- | --- |
@@ -32,7 +40,7 @@ Read [NATURAL-PERFORMANCE-RESEARCH.md](NATURAL-PERFORMANCE-RESEARCH.md) before s
 
 ## Preserved model and performance backlog
 
-These existing priorities remain available after the current dance increment or when their prerequisites become available.
+These earlier ideas remain available when a new authorized request and its prerequisites make one useful. They do not establish a current dance increment.
 
 | Priority | Work | Concrete proof needed |
 | --- | --- | --- |
@@ -48,7 +56,7 @@ These existing priorities remain available after the current dance increment or 
 
 An entry becomes reviewed only after its specific output is inspected. The existence of a Python constructor is source readiness, not creative approval. Architecture and ensemble modules currently tied to Song 11 should be extracted carefully into new wrappers before being advertised as drop-in models for any scene.
 
-## Distinct next studies for the eleven songs
+## Historical proposals for distinct studies across the eleven songs
 
 These are proposals derived from the current catalog, not replacements for historical designs or live arrangement decisions.
 
@@ -66,13 +74,13 @@ These are proposals derived from the current catalog, not replacements for histo
 | 10 Our Mother Saves the World | A quiet lamp and protective presence lead into a wide peace | Hands/rear-view staging, restrained lamp light, prayer and listening |
 | 11 Almighty God Who Knows the Future | Improve hero conductor/instrument detail while preserving the approved world | Final-pose prop attachments, selected church detail, controlled finale exposure |
 
-## Workflow improvements after this increment
+## Historical workflow proposals and their present disposition
 
 1. The separate `concert-kit-consideration-v2` revision is rendered, technically verified, reviewed in 67 encoded frames and saved. Clear vegetation from the people, then carry its complete-pose response and coverage lessons into a longer Song 07 performance. The historical [camera investigation](CONSIDERATION-CAMERA-NEXT.md) led to an explicit cut at source6.9, not one side angle for the whole action. Preserve the old baseline. The next visual refinement is clearance between translucent people and vegetation, followed by a shared walk and lantern carry.
-2. Select one full song for the first upgraded production, retaining its source timing and current arrangement caveats.
+2. The proposal to select one full song for the first upgraded production has been fulfilled by the complete renewed Song 11. A different full-song production requires its own current brief and recording/arrangement assessment.
 3. Obtain or verify rehearsal/live arrangements before promising exact stage conformance. Historical uniform stretching and cuts remain historical choices, not defaults for new recordings.
 4. Record measured render memory and frame times for each model tier; select workers from evidence, not CPU count alone.
 5. Exercise browser/Remotion/Blender GUI integrations on a host where their required IPC works. Keep the approved native p3d route usable independently.
-6. Benchmark a native 4K hero passage before committing the whole concert to 4K rendering. Keep the cloud GPU adapter unconfigured until requested.
+6. For a future approved 4K show output, benchmark the intended native scene before committing the whole concert. The latest owner rule is 1080p until design/timing/content approval, then 4K60; CPU stays in the cloud and needed GPU work uses the owner's Mac. The cloud GPU adapter remains unconfigured.
 
-When closing a task, append the new evidence and next concrete action. Do not erase known issues merely because a different part of the system improved.
+When closing a task, append its actual evidence and state whether it is complete. Record a next action only when one remains authorized and unfinished. Do not erase known issues merely because a different part of the system improved.

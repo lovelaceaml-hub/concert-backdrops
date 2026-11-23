@@ -1,5 +1,11 @@
 # Creative and motion rules
 
+## Current production boundary
+
+Follow [root AGENTS.md](../../AGENTS.md) and [the complete Claude handoff](CLAUDE-HANDOFF.md). Improve the existing system and keep its added Blender, Three.js, Remotion, Video Shotcraft and Blender MCP tools reusable. Develop at 1080p until design, timing and content are approved; the final show is 4K60. Make no new phone versions. CPU work stays in the cloud; needed GPU work uses the owner's Mac under the recorded conditions.
+
+The current full Song 11 is a completed 275-second native 1080p60 design/review delivery. Technical and sampled visual QA passed within the recorded scope; exact-output owner approval is unrecorded. There is no unfinished render queue or automatic fan-study priority. Read [final QA](evidence/s11-renewed-final-qa.json) for the evidence and remaining nonblocking composition observations.
+
 ## Owner correction, November 22, 2026
 
 The owner rejected the separate Flow of Light fan study because its clothing
@@ -34,18 +40,18 @@ The promo repeatedly contrasts open, dark space with concentrated light and read
 
 The Song 11 study adds a dense architectural world, large ensembles, long spatial light paths and a more legible conductor. Its controlled focus and native rendering reveal useful geometry. Some wide passages still put the people far from the viewer, and the excerpt ends during an arrival. New studies should include a deliberate human resolution and ending, not merely stop at the end of a render range.
 
-The next Consideration scene gives the human exchange more screen space. The hand contact, bracing legs, rising pelvis, release and recovery should read before the garden opens. A brilliant effect must not be used to hide a missed grip or an unsupported body.
+The earlier Consideration scene gives the human exchange more screen space. Its hand contact, bracing legs, rising pelvis, release and recovery should read before the garden opens. A brilliant effect must not be used to hide a missed grip or an unsupported body. These lessons remain useful without making that historical study a new task.
 
 ## People and acting
 
 - Ordinary figures default to warm gold. The later all-song lessons specify sparkling blue choir/orchestra with gold instruments and books; that is an ensemble treatment, not a reason to turn every human blue.
 - Use explicit casting. The established paired interactions use same-gender adults where required by the owner briefs; parent and child interactions retain their distinct roles.
-- The later `PHASEB.md` clarification permits artistic facial features. Preserve the luminous, artistic human style; do not introduce photorealistic skin by accident. Heavenly Mother retains the owner's rear-view or hands-only portrayal.
+- The earlier `PHASEB.md` clarification permits artistic facial features. Preserve the luminous, artistic human style; do not introduce photorealistic skin by accident. Follow the applicable song brief for Heavenly Mother: Song 11 uses only light, while older general briefs preserved rear-view or hands-only portrayals.
 - Structure a performance as preparation, action, response, contact, release and settling. Offset the torso, shoulder, elbow, wrist and fingers for a physical reason. Do not add the same periodic sway to every joint.
 - Drive props and contact light from the final solved pose. Root travel, stride and planted feet must agree. A shared hand target needs a non-recursive evaluation path and a tested release.
 - Use native evaluated foreground bodies; cheaper crowd caches are a separate detail tier. Crowd variation should create attentive groups, not random activity competing with the main event.
 
-## Lessons from the new helping study
+## Lessons from the completed helping study
 
 The original response solved a partly applied hand-on-heart gesture repeatedly. During its return, the left palm moved about 34.4 cm between two 60 fps samples. The isolated revision solves the complete endpoint, then blends complete poses through a smooth arrival, hold and return. The maximum return step in the measured interval is about 2.39 cm; prior shared contact is unchanged. This is evidence that a specific discontinuity was removed, not a universal natural-motion score. Repeat the numeric check with `tools/concert_review/response.py` and review the actual encoded movement.
 

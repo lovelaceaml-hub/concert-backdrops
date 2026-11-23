@@ -15,7 +15,22 @@ These are standing rules for every agent (Claude, Codex, ChatGPT, Gemini). They 
 - **Current priorities, in order:** 1) get the new tools (Blender, Three.js preview, Remotion, Video Shotcraft, Blender MCP) working and reusable for any song; 2) build this week's proven quality gains into the current engine so every song gets them; 3) clean up and organize (one plain status page, stale pull requests, rendering spread across many cloud machines). Finished videos from ChatGPT's file library go into the Drive folder "Concert Backdrops - Songs", Videos.
 - **Working mode:** Anthony said "Go ahead on your own" for these priorities. Stop only for real decisions or approvals.
 
-## Earlier navigation
+## Claude project handoff — November 22, 2026
+
+Start with [CLAUDE-HANDOFF.md](project-docs/production-system/CLAUDE-HANDOFF.md)
+and the [dated Drive handoff folder](https://drive.google.com/drive/folders/1lxcic8BcSzNgPtEY_Yg_2TBAbNam72dZ).
+The handoff covers the whole concert project, including exact media identities,
+reproduction resources, retained integrations, current owner directions and
+historical recovery gaps. The current transfer and source-snapshot receipts
+are in [the handoff completion record](project-docs/production-system/evidence/claude-drive-completion.json).
+
+The Song 11 recreation is complete at native 1080p60 for design/review. Exact-output
+owner creative approval is not recorded, so it is not an approved final 4K60
+show master. Preserve earlier 720p artifacts as history; do not generate new
+phone versions. Recover existing finished files before considering a new render.
+There is no unfinished render queue or active background production service.
+
+## Earlier navigation (historical; superseded by the owner directions above)
 
 On November 22, 2026, the user withdrew the previously provided AGENTS.md
 instructions. This page records that change and points to project facts. The

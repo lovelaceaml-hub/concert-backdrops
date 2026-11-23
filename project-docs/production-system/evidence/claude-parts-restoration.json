@@ -1,0 +1,55 @@
+{
+  "schema": "concert-handoff-restoration-proof-v1",
+  "status": "actual_split_originals_restored_and_verified",
+  "files": [
+    {
+      "artifact_id": "cinematic-ten-package",
+      "file_name": "Ten_Cinematic_Films_1080p60.zip",
+      "bytes": 350397212,
+      "sha256": "7bd5e9f32f4a40150cba39c00bda8cd9959768bb837e448c80b482877e84b0b2",
+      "restored_and_independently_verified": true
+    },
+    {
+      "artifact_id": "advanced-dance-ten-film-package",
+      "file_name": "Ten_Cinematic_Films_Advanced_Dance_1080p60.zip",
+      "bytes": 410134925,
+      "sha256": "73fcccc8e659b4f8a40604945509163944be4ca13bec660d350637aa7dca336c",
+      "restored_and_independently_verified": true
+    },
+    {
+      "artifact_id": "s11-renewed-archive-1",
+      "file_name": "Almighty_God_Knows_the_Future_Native_Master_Part_01_of_02.zip",
+      "bytes": 480006941,
+      "sha256": "ffc3ca5352abbfe2e870ad740ace9ea4c97bf164c3c4b51b932849a4ff49d91c",
+      "restored_and_independently_verified": true
+    },
+    {
+      "artifact_id": "s11-renewed-archive-2",
+      "file_name": "Almighty_God_Knows_the_Future_Native_Master_Part_02_of_02.zip",
+      "bytes": 431872469,
+      "sha256": "c4285f489fbadec9489037f50c6cab54ab839c3d1545c22dc822a0fd095284a9",
+      "restored_and_independently_verified": true
+    },
+    {
+      "artifact_id": "s11-renewed-full_hd_delivery",
+      "file_name": "Almighty_God_Knows_the_Future_Renewed_1080p60_delivery.mp4",
+      "bytes": 395506771,
+      "sha256": "120bb4fcf4ebced490f4f468dca396170b328fd0ece3941e67e832258f5f449e",
+      "restored_and_independently_verified": true
+    },
+    {
+      "artifact_id": "s11-renewed-review_copy",
+      "file_name": "Almighty_God_Knows_the_Future_Renewed_720p60_final.mp4",
+      "bytes": 220179614,
+      "sha256": "9cba8118b8fdf7c9410e5b10362ba15ee28a4668f95aceca911cee95a0848880",
+      "restored_and_independently_verified": true
+    },
+    {
+      "artifact_id": "advanced-dance-render-cache-checkpoint",
+      "file_name": "Advanced_Dance_Render_Cache_Checkpoint.zip",
+      "bytes": 110767689,
+      "sha256": "2857b560f6a8f9365a1daf7efd30d85c5756014bd9c724b9d893b06f9611b63f",
+      "restored_and_independently_verified": true
+    }
+  ]
+}

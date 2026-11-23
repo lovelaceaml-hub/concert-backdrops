@@ -1,0 +1,11 @@
+{
+  "previous_main": "93527bf5e2e43477073e361d22cfd6d4fa999da7",
+  "adopted_main": "651e9487cd134e06b94f9627c22f008a8da02b54",
+  "pr": 114,
+  "changed_files": [
+    "AGENTS.md"
+  ],
+  "all_owner_additions_preserved": true,
+  "working_edits_retained": true,
+  "rendered_picture_source_unchanged": true
+}
