@@ -1,0 +1,19 @@
+{
+  "schema": "cloud-proof-receipt-materialization-v1",
+  "run_id": 45127784158,
+  "run_url": "https://github.com/lovelaceaml-hub/concert-backdrops/actions/runs/45127784158",
+  "artifact_id": 14796556913,
+  "artifact_name": "cloud-tool-proofs-pr116-drive-receipt",
+  "zip_path": "/workspace/scratch/39a2abd37644/concert-future/work/claude-handoff/packages/cloud-tool-proofs-pr116-drive-receipt.zip",
+  "zip_bytes": 1354,
+  "zip_sha256": "6a76a534f598499c42675f7ec07bb76e73f67e6a0c6835b75eecaabf4977ea1f",
+  "zip_provider_digest_matched": true,
+  "zip_crc_passed": true,
+  "members": [
+    "receipt.json"
+  ],
+  "receipt_path": "/workspace/scratch/39a2abd37644/concert-future/work/claude-handoff/cloud-proof-drive-receipt.json",
+  "receipt_bytes": 4372,
+  "receipt_sha256": "091fcd2c6b4a4a2fc080f39c88abf0fe9a6ada92f6e6c908bcc52da76b8090bc",
+  "source_and_readback_checks_passed": true
+}

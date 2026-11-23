@@ -1132,7 +1132,7 @@
   },
   "current_maintenance": {
     "name": "Whole-project Claude handoff, Drive reconciliation and documentation",
-    "status": "updating_handoff_after_concurrent_cloud_tools_merge",
+    "status": "complete_verified_handoff",
     "branch": "maintenance/claude-handoff-20261122",
     "base_main_commit": "3812463e1196f4c47b468e05060dbc1c8154ff75",
     "entrypoint": "project-docs/production-system/CLAUDE-HANDOFF.md",
@@ -1142,7 +1142,9 @@
     "initial_integration_authority": "https://github.com/lovelaceaml-hub/concert-backdrops/pull/115",
     "initial_source_snapshot_commit": "3ef80d97d2cc25d5201195bb8ced3646811200db",
     "concurrent_cloud_tools_pr": 116,
-    "integration_authority": "https://github.com/lovelaceaml-hub/concert-backdrops/tree/maintenance/claude-handoff-20261122"
+    "integration_authority": "https://github.com/lovelaceaml-hub/concert-backdrops/commits/main",
+    "source_snapshot_commit": "252e14145d535d8c8472c72144d85587967f3b2f",
+    "publication_evidence": "project-docs/production-system/evidence/claude-publication.json"
   },
   "catalog_artifact_count": 44,
   "previous_increment_at_s11_start": {
@@ -1476,7 +1478,7 @@
     "integration_pr": 112
   },
   "claude_handoff": {
-    "status": "source_refresh_in_progress_after_pr116",
+    "status": "complete_verified",
     "local_date": "2026-11-22",
     "timezone": "America/Los_Angeles",
     "folder_url": "https://drive.google.com/drive/folders/1lxcic8BcSzNgPtEY_Yg_2TBAbNam72dZ",
@@ -1497,12 +1499,29 @@
       "source_archive_file_id": "1QrBbz-SxWWNEkGtC30BcTWuB9_N8MDd4",
       "source_archive_sha256": "2af0e84a78b1f341f068f51de158729220bf5d69e104828a33581d84ed5bac4f",
       "source_archive_bytes": 33821577,
-      "source_archive_evidence": "project-docs/production-system/evidence/claude-source-snapshot.json"
+      "source_archive_evidence": "https://github.com/lovelaceaml-hub/concert-backdrops/blob/b0a96cd27cfc25972afd8fb03f74f12819490cc1/project-docs/production-system/evidence/claude-source-snapshot.json"
     },
     "initial_integration_pr": 115,
     "initial_integration_authority": "https://github.com/lovelaceaml-hub/concert-backdrops/pull/115",
-    "current_source_authority": "https://github.com/lovelaceaml-hub/concert-backdrops/tree/maintenance/claude-handoff-20261122",
-    "current_source_refresh_reason": "The owner merged PR115 and then PR116 while final handoff receipts were being published. Preserve both merges and refresh the portable source; the initial 861-entry archive remains an exact historical checkpoint."
+    "current_source_authority": "https://github.com/lovelaceaml-hub/concert-backdrops/tree/main",
+    "source_snapshot_commit": "252e14145d535d8c8472c72144d85587967f3b2f",
+    "source_archive_file_id": "1NSXgPH0YSHKTEP9d2dGppXfnQNUSn919",
+    "source_archive_sha256": "363e3c1b86cc820347f51548ec5ce49db0dee0742ce5665fb201b85a227c392a",
+    "source_archive_bytes": 33983222,
+    "source_archive_entries": 877,
+    "source_archive_evidence": "project-docs/production-system/evidence/claude-source-snapshot.json",
+    "source_actual_clean_restore_passed": true,
+    "source_current_includes_owner_prs": [
+      115,
+      116
+    ],
+    "cloud_proof_archive_file_id": "1IW2BxB1qKPpz-4nrIfD3KSV7H9p6CmdB",
+    "cloud_proof_archive_sha256": "66099a7e4613a22d397abe74826f0b30246b5235161756157ec8d84bfee0dd8c",
+    "cloud_proof_archive_bytes": 637361486,
+    "cloud_proof_archive_evidence": "project-docs/production-system/evidence/claude-cloud-proof-retention.json",
+    "cloud_proof_transfer_run": 45127784158,
+    "verified_resource_review_and_tool_proof_archives": 3,
+    "current_integration_authority": "https://github.com/lovelaceaml-hub/concert-backdrops/commits/main"
   },
   "current_output_policy": {
     "design_review_resolution": [

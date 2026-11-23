@@ -1,0 +1,109 @@
+{
+  "schema": "concert-concurrent-tool-proofs-retention-current-v1",
+  "observed_utc": "2026-11-23T07:02:23.344770+00:00",
+  "status": "verified",
+  "repository": "lovelaceaml-hub/concert-backdrops",
+  "original_proof_run_id": 45125796332,
+  "original_proof_run_url": "https://github.com/lovelaceaml-hub/concert-backdrops/actions/runs/45125796332",
+  "original_proof_head_sha": "285df02e51cc68073fe17c8a06ae0d7f54737df7",
+  "original_github_artifact_id": 14795673158,
+  "bytes": 637361486,
+  "sha256": "66099a7e4613a22d397abe74826f0b30246b5235161756157ec8d84bfee0dd8c",
+  "source_raw_zip_verified": true,
+  "source_downloaded_bytes": 637361486,
+  "source_downloaded_sha256": "66099a7e4613a22d397abe74826f0b30246b5235161756157ec8d84bfee0dd8c",
+  "drive": {
+    "id": "1IW2BxB1qKPpz-4nrIfD3KSV7H9p6CmdB",
+    "url": "https://drive.google.com/file/d/1IW2BxB1qKPpz-4nrIfD3KSV7H9p6CmdB/view?usp=drivesdk",
+    "parent_id": "1dNAkcUesWv5RcKJ48s_W7mpDW757b0At",
+    "mime_type": "application/zip"
+  },
+  "drive_metadata": {
+    "id": "1IW2BxB1qKPpz-4nrIfD3KSV7H9p6CmdB",
+    "name": "Cloud_Tool_Proofs_PR116_2026-11-22.zip",
+    "bytes": 637361486,
+    "mime_type": "application/zip",
+    "modified_time": "2026-11-23T07:00:14.697Z",
+    "parent_ids": [
+      "1dNAkcUesWv5RcKJ48s_W7mpDW757b0At"
+    ],
+    "shared": true,
+    "permissions": [
+      {
+        "type": "user",
+        "role": "owner"
+      },
+      {
+        "type": "user",
+        "role": "writer"
+      }
+    ]
+  },
+  "drive_authenticated_full_readback": {
+    "bytes": 637361486,
+    "metadata_unchanged_during_readback": true,
+    "sha256": "66099a7e4613a22d397abe74826f0b30246b5235161756157ec8d84bfee0dd8c",
+    "verified": true,
+    "verified_utc": "2026-11-23T07:00:49.100660+00:00"
+  },
+  "verification_source": "github_actions_full_authenticated_drive_readback",
+  "connector_raw_readback_performed": false,
+  "connector_fresh_metadata_crosscheck_passed": true,
+  "cloud_operation": "uploaded_new_file",
+  "cloud_created_new_file": true,
+  "permissions_changed": false,
+  "overwrite_or_delete_operations": false,
+  "archive_extracted_or_executed": false,
+  "unique_same_name_file_confirmed": true,
+  "archive_content_scan_performed": false,
+  "archive_internal_crc_check_performed": false,
+  "content_scope": "Exact original GitHub Actions tool-proofs archive retained without extraction, alteration or execution. The complete raw ZIP and complete authenticated Drive readback matched the pinned byte count and SHA-256. This agent independently verified the small receipt artifact and current Drive metadata; it did not download the 637 MB archive through the connector or scan its contents.",
+  "historical_materialization_limit_record": {
+    "path": "/workspace/scratch/39a2abd37644/concert-future/work/claude-handoff/concurrent-tool-proofs-retention.json",
+    "sha256": "07ca2801e44a171ef9ddc5cf4d945a7e723084abf8a698c17343697400aa8bc9",
+    "preserved": true
+  },
+  "normal_verified_upload_receipt": "/workspace/scratch/39a2abd37644/concert-future/work/claude-handoff/verified-uploads/1IW2BxB1qKPpz-4nrIfD3KSV7H9p6CmdB.json",
+  "receipt_evidence": {
+    "source_workflow_run_id": 45127784158,
+    "source_workflow_url": "https://github.com/lovelaceaml-hub/concert-backdrops/actions/runs/45127784158",
+    "source_workflow_job_id": 137536042102,
+    "source_workflow_job_url": "https://github.com/lovelaceaml-hub/concert-backdrops/actions/runs/45127784158/job/137536042102",
+    "source_commit": "252e14145d535d8c8472c72144d85587967f3b2f",
+    "receipt_artifact_id": 14796556913,
+    "receipt_artifact_name": "cloud-tool-proofs-pr116-drive-receipt",
+    "receipt_archive_bytes": 1354,
+    "receipt_archive_sha256": "6a76a534f598499c42675f7ec07bb76e73f67e6a0c6835b75eecaabf4977ea1f",
+    "receipt_archive_crc_passed": true,
+    "receipt_path": "/workspace/scratch/39a2abd37644/concert-future/work/claude-handoff/cloud-proof-drive-receipt.json",
+    "receipt_sha256": "091fcd2c6b4a4a2fc080f39c88abf0fe9a6ada92f6e6c908bcc52da76b8090bc",
+    "metadata_checks": {
+      "id": true,
+      "name": true,
+      "mime_type": true,
+      "bytes": true,
+      "parent_ids": true,
+      "modified_time": true,
+      "source_commit": true,
+      "run_id": true,
+      "run_completed_successfully": true,
+      "job_completed_successfully": true,
+      "transfer_step_success": true,
+      "receipt_download_artifact_head": true,
+      "receipt_zip_integrity": true
+    },
+    "drive_connector_metadata_observed_utc": "2026-11-23T07:02:23.344770+00:00"
+  },
+  "archive_workflow": {
+    "id": 45127784158,
+    "url": "https://github.com/lovelaceaml-hub/concert-backdrops/actions/runs/45127784158",
+    "head_sha": "252e14145d535d8c8472c72144d85587967f3b2f",
+    "event": "push",
+    "status": "completed",
+    "conclusion": "success",
+    "created_at": "2026-11-23T06:58:37Z",
+    "updated_at": "2026-11-23T07:00:55Z",
+    "job_id": 137536042102,
+    "job_url": "https://github.com/lovelaceaml-hub/concert-backdrops/actions/runs/45127784158/job/137536042102"
+  }
+}

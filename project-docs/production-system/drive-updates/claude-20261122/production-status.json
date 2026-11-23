@@ -21,27 +21,48 @@
     "resource_review_archives_verified": 2,
     "historical_unresolved_fullfilm_targets": 11,
     "active_background_render_processes": 0,
-    "source_snapshot_commit": "3ef80d97d2cc25d5201195bb8ced3646811200db",
-    "source_archive_file_id": "1QrBbz-SxWWNEkGtC30BcTWuB9_N8MDd4",
-    "source_archive_sha256": "2af0e84a78b1f341f068f51de158729220bf5d69e104828a33581d84ed5bac4f",
-    "source_archive_bytes": 33821577,
+    "initial_source_snapshot": {
+      "source_snapshot_commit": "3ef80d97d2cc25d5201195bb8ced3646811200db",
+      "source_archive_file_id": "1QrBbz-SxWWNEkGtC30BcTWuB9_N8MDd4",
+      "source_archive_sha256": "2af0e84a78b1f341f068f51de158729220bf5d69e104828a33581d84ed5bac4f",
+      "source_archive_bytes": 33821577,
+      "source_archive_evidence": "https://github.com/lovelaceaml-hub/concert-backdrops/blob/b0a96cd27cfc25972afd8fb03f74f12819490cc1/project-docs/production-system/evidence/claude-source-snapshot.json"
+    },
+    "initial_integration_pr": 115,
+    "initial_integration_authority": "https://github.com/lovelaceaml-hub/concert-backdrops/pull/115",
+    "current_source_authority": "https://github.com/lovelaceaml-hub/concert-backdrops/tree/main",
+    "source_snapshot_commit": "252e14145d535d8c8472c72144d85587967f3b2f",
+    "source_archive_file_id": "1NSXgPH0YSHKTEP9d2dGppXfnQNUSn919",
+    "source_archive_sha256": "363e3c1b86cc820347f51548ec5ce49db0dee0742ce5665fb201b85a227c392a",
+    "source_archive_bytes": 33983222,
+    "source_archive_entries": 877,
     "source_archive_evidence": "project-docs/production-system/evidence/claude-source-snapshot.json",
-    "integration_pr": 115,
-    "integration_authority": "https://github.com/lovelaceaml-hub/concert-backdrops/pull/115"
+    "source_actual_clean_restore_passed": true,
+    "source_current_includes_owner_prs": [
+      115,
+      116
+    ],
+    "cloud_proof_archive_file_id": "1IW2BxB1qKPpz-4nrIfD3KSV7H9p6CmdB",
+    "cloud_proof_archive_sha256": "66099a7e4613a22d397abe74826f0b30246b5235161756157ec8d84bfee0dd8c",
+    "cloud_proof_archive_bytes": 637361486,
+    "cloud_proof_archive_evidence": "project-docs/production-system/evidence/claude-cloud-proof-retention.json",
+    "cloud_proof_transfer_run": 45127784158,
+    "verified_resource_review_and_tool_proof_archives": 3,
+    "current_integration_authority": "https://github.com/lovelaceaml-hub/concert-backdrops/commits/main"
   },
   "source_snapshot": {
     "schema": "concert-source-snapshot-receipt-v1",
-    "recorded_utc": "2026-11-23T06:26:02.997405+00:00",
+    "recorded_utc": "2026-11-23T06:59:15.667940+00:00",
     "local_date": "2026-11-22",
-    "source_commit": "3ef80d97d2cc25d5201195bb8ced3646811200db",
-    "source_tree": "c1bb6df639d5df19caf0e029b6a2de4d91c2cd66",
-    "source_commit_url": "https://github.com/lovelaceaml-hub/concert-backdrops/commit/3ef80d97d2cc25d5201195bb8ced3646811200db",
-    "filename": "Concert_Project_Source_2026-11-22.tar.gz",
-    "local_path": "/workspace/scratch/39a2abd37644/concert-future/work/claude-handoff/packages/Concert_Project_Source_2026-11-22.tar.gz",
-    "bytes": 33821577,
-    "sha256": "2af0e84a78b1f341f068f51de158729220bf5d69e104828a33581d84ed5bac4f",
-    "tracked_entries": 861,
-    "regular_files": 859,
+    "source_commit": "252e14145d535d8c8472c72144d85587967f3b2f",
+    "source_tree": "626504badaffe8d3b88a4625e30f027d5c660c7c",
+    "source_commit_url": "https://github.com/lovelaceaml-hub/concert-backdrops/commit/252e14145d535d8c8472c72144d85587967f3b2f",
+    "filename": "Concert_Project_Source_2026-11-22_Cloud_Tools.tar.gz",
+    "local_path": "/workspace/scratch/39a2abd37644/concert-future/work/claude-handoff/packages/current-source/Concert_Project_Source_2026-11-22_Cloud_Tools.tar.gz",
+    "bytes": 33983222,
+    "sha256": "363e3c1b86cc820347f51548ec5ce49db0dee0742ce5665fb201b85a227c392a",
+    "tracked_entries": 877,
+    "regular_files": 875,
     "symbolic_links": [
       {
         "path": ".agents/skills/video-shotcraft",
@@ -55,10 +76,10 @@
       }
     ],
     "executable_regular_files": 12,
-    "uncompressed_blob_bytes": 45115602,
-    "source_manifest_filename": "SOURCE-MANIFEST.json",
-    "source_manifest_bytes": 250839,
-    "source_manifest_sha256": "175fd1c7d1b4b886237dc1b1f1d59c75f26a916ed8177817eab5df8e56f5145d",
+    "uncompressed_blob_bytes": 45725681,
+    "source_manifest_filename": "SOURCE-MANIFEST-CLOUD-TOOLS.json",
+    "source_manifest_bytes": 255760,
+    "source_manifest_sha256": "dd427c1549a85d5838ed3b9c44659c5ea0b128280600d40caeb3b0a4747b6dd7",
     "gzip_crc_verified": true,
     "every_archive_payload_matches_git_blob": true,
     "every_tracked_entry_included_once": true,
@@ -69,23 +90,31 @@
     "archive_status": "uploaded_and_full_raw_readback_verified",
     "clean_source_and_resource_restore_proof": "project-docs/production-system/evidence/claude-source-clean-restore.json",
     "clean_source_and_resource_restore_passed": true,
+    "preserves_concurrent_owner_prs": [
+      115,
+      116
+    ],
+    "supersedes_source_snapshot_commit": "3ef80d97d2cc25d5201195bb8ced3646811200db",
     "drive": {
-      "id": "1QrBbz-SxWWNEkGtC30BcTWuB9_N8MDd4",
-      "url": "https://drive.google.com/file/d/1QrBbz-SxWWNEkGtC30BcTWuB9_N8MDd4/view?usp=drivesdk",
+      "id": "1NSXgPH0YSHKTEP9d2dGppXfnQNUSn919",
+      "url": "https://drive.google.com/file/d/1NSXgPH0YSHKTEP9d2dGppXfnQNUSn919/view?usp=drivesdk",
       "parent_id": "1ARIxA-UsuIR0xEVeDIBMH-MMgoxnafHn",
       "mime_type": "application/gzip"
     },
     "raw_bytes_verified": true,
-    "drive_modified_time": "2026-11-23T06:28:25.076Z",
+    "drive_modified_time": "2026-11-23T07:00:19.630Z",
+    "raw_readback_bytes": 33983222,
+    "raw_readback_sha256": "363e3c1b86cc820347f51548ec5ce49db0dee0742ce5665fb201b85a227c392a",
+    "verified_utc": "2026-11-23T07:00:35.797936+00:00",
     "source_manifest_drive": {
-      "id": "1dZTn-4y7kY2FFGR2-zCw3JUXwbRhkh3M",
-      "url": "https://drive.google.com/file/d/1dZTn-4y7kY2FFGR2-zCw3JUXwbRhkh3M/view?usp=drivesdk",
+      "id": "1JeCWotfeaQYqYTH9a0PL6fYIeBrP_Dg4",
+      "url": "https://drive.google.com/file/d/1JeCWotfeaQYqYTH9a0PL6fYIeBrP_Dg4/view?usp=drivesdk",
       "parent_id": "1ARIxA-UsuIR0xEVeDIBMH-MMgoxnafHn",
       "mime_type": "application/json"
     },
     "restore_readme_drive": {
-      "id": "1LHzXTp3WPOE_GEYe080wjKjv6Mw4GuDS",
-      "url": "https://docs.google.com/document/d/1LHzXTp3WPOE_GEYe080wjKjv6Mw4GuDS/edit?usp=drivesdk&ouid=113038373524763352759&rtpof=true&sd=true",
+      "id": "14dgfQa0A_74oiaWihTdVj2wupQ6D058-",
+      "url": "https://docs.google.com/document/d/14dgfQa0A_74oiaWihTdVj2wupQ6D058-/edit?usp=drivesdk&ouid=113038373524763352759&rtpof=true&sd=true",
       "parent_id": "1ARIxA-UsuIR0xEVeDIBMH-MMgoxnafHn",
       "mime_type": "text/markdown"
     }
@@ -454,5 +483,35 @@
       ]
     }
   },
-  "historical_snapshot_scope": "Complete prior samples-track JSON preserved below; its old current state is not a new queue."
+  "historical_snapshot_scope": "Complete prior samples-track JSON preserved below; its old current state is not a new queue.",
+  "cloud_tool_proof_retention": {
+    "evidence": "project-docs/production-system/evidence/claude-cloud-proof-retention.json",
+    "drive": {
+      "id": "1IW2BxB1qKPpz-4nrIfD3KSV7H9p6CmdB",
+      "url": "https://drive.google.com/file/d/1IW2BxB1qKPpz-4nrIfD3KSV7H9p6CmdB/view?usp=drivesdk",
+      "parent_id": "1dNAkcUesWv5RcKJ48s_W7mpDW757b0At",
+      "mime_type": "application/zip"
+    },
+    "bytes": 637361486,
+    "sha256": "66099a7e4613a22d397abe74826f0b30246b5235161756157ec8d84bfee0dd8c",
+    "full_authenticated_readback": true
+  },
+  "current_maintenance": {
+    "name": "Whole-project Claude handoff, Drive reconciliation and documentation",
+    "status": "complete_verified_handoff",
+    "branch": "maintenance/claude-handoff-20261122",
+    "base_main_commit": "3812463e1196f4c47b468e05060dbc1c8154ff75",
+    "entrypoint": "project-docs/production-system/CLAUDE-HANDOFF.md",
+    "completion_evidence": "project-docs/production-system/evidence/claude-drive-completion.json",
+    "initial_base_main_commit": "93527bf5e2e43477073e361d22cfd6d4fa999da7",
+    "initial_integration_pr": 115,
+    "initial_integration_authority": "https://github.com/lovelaceaml-hub/concert-backdrops/pull/115",
+    "initial_source_snapshot_commit": "3ef80d97d2cc25d5201195bb8ced3646811200db",
+    "concurrent_cloud_tools_pr": 116,
+    "integration_authority": "https://github.com/lovelaceaml-hub/concert-backdrops/commits/main",
+    "source_snapshot_commit": "252e14145d535d8c8472c72144d85587967f3b2f",
+    "publication_evidence": "project-docs/production-system/evidence/claude-publication.json"
+  },
+  "production_log_events": 136,
+  "updated_utc": "2026-11-23T07:03:36.775248+00:00"
 }

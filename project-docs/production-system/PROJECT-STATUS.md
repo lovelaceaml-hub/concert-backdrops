@@ -11,8 +11,8 @@ Updated November 22, 2026, America/Los_Angeles. Machine receipts use UTC.
 ## Handoff
 
 - 40 media, reference and recovery originals are retained in Drive with exact whole-file or part verification.
-- 2 additional verified archives preserve 392 resource paths and 467 visual-review evidence files; the resource installer passed a real clean restoration.
-- The tracked-source archives preserve each frozen commit's contents, executable modes and relative symlinks. Source backup A (`3ef80d97`, 861 entries) predates PR #116; use the current companion receipt for the refreshed source identity. GitHub retains history.
+- 2 additional verified archives preserve 392 resource paths and 467 visual-review evidence files; the resource installer passed a real clean restoration. The separate [637 MB cloud tool-proof archive](https://drive.google.com/file/d/1IW2BxB1qKPpz-4nrIfD3KSV7H9p6CmdB/view?usp=drivesdk) is retained with a full authenticated Drive hash check.
+- The [current source archive](https://drive.google.com/file/d/1NSXgPH0YSHKTEP9d2dGppXfnQNUSn919/view?usp=drivesdk) preserves all **877 tracked entries** at `252e14145d535d8c8472c72144d85587967f3b2f`, including the merged cloud tools, executable modes and relative symlinks. Actual extraction and restoration with all 392 resource paths passed. The earlier 861-entry archive remains historical; GitHub retains history.
 - The existing project index covers 62 folders and 542 objects. It distinguishes metadata locations from actual byte checks.
 - 11 historically reported full-film targets remain unrecovered. A different complete-length Song 03 alternate is retained separately. These gaps do not describe the completed renewed Song 11.
 

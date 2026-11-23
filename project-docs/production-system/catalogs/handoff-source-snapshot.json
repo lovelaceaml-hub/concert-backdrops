@@ -1,10 +1,10 @@
 {
   "schema": "concert-source-snapshot-v1",
-  "source_commit": "3ef80d97d2cc25d5201195bb8ced3646811200db",
-  "source_tree": "c1bb6df639d5df19caf0e029b6a2de4d91c2cd66",
-  "archive_filename": "Concert_Project_Source_2026-11-22.tar.gz",
-  "archive_bytes": 33821577,
-  "archive_sha256": "2af0e84a78b1f341f068f51de158729220bf5d69e104828a33581d84ed5bac4f",
+  "source_commit": "252e14145d535d8c8472c72144d85587967f3b2f",
+  "source_tree": "626504badaffe8d3b88a4625e30f027d5c660c7c",
+  "archive_filename": "Concert_Project_Source_2026-11-22_Cloud_Tools.tar.gz",
+  "archive_bytes": 33983222,
+  "archive_sha256": "363e3c1b86cc820347f51548ec5ce49db0dee0742ce5665fb201b85a227c392a",
   "top_level_directory": "concert-backdrops",
   "scope": "Every tracked blob at the frozen commit, with executable modes and relative symlinks preserved. GitHub is the history authority; no .git history or ignored work/runtime/media/private-key content.",
   "files": [
@@ -35,9 +35,17 @@
     {
       "path": ".dockerignore",
       "git_mode": "100644",
-      "git_blob_sha": "ace8ae228dcf78d972d0a63dfc21a3df8afd0c8a",
-      "bytes": 119,
-      "sha256": "b14a5135c739463f98aa299e5a141ff65e24fd1516f00b5212b20d49a70f7eb7",
+      "git_blob_sha": "e102433fe1f4f129048f24adb553824b348b19d1",
+      "bytes": 225,
+      "sha256": "6d4b5b144307e5e8fc381af7cb7d97480f95041cff0752ec3d4cdc1aa7e6c5c6",
+      "kind": "file"
+    },
+    {
+      "path": ".github/workflows/archive-handoff-proof.yml",
+      "git_mode": "100644",
+      "git_blob_sha": "703e2f839ebfff4bcd8deeccc892b1e4a4e33c04",
+      "bytes": 1323,
+      "sha256": "cdfaff7d5796acd17d3d3a53325680b07fbf531c2cf895a5c8aecece30f2c553",
       "kind": "file"
     },
     {
@@ -65,6 +73,14 @@
       "kind": "file"
     },
     {
+      "path": ".github/workflows/tool-proofs.yml",
+      "git_mode": "100644",
+      "git_blob_sha": "0312dd1b2e4f587e3f113c70ac94b157cb16910a",
+      "bytes": 5870,
+      "sha256": "d64a804a5d476db682f5173400e785b22c550e0c9a61deab34a28577cefcc9a6",
+      "kind": "file"
+    },
+    {
       "path": ".gitignore",
       "git_mode": "100644",
       "git_blob_sha": "636f3b5156147d7d281756b3b8bcab219f656662",
@@ -83,9 +99,9 @@
     {
       "path": "AGENTS.md",
       "git_mode": "100644",
-      "git_blob_sha": "b499777149e19719cc177e6b4e60acf48fd27f13",
-      "bytes": 5708,
-      "sha256": "7741b9129efcf0a8d3f05198f7f0f6891bf144c5c5d6d9a729e816032eecdfdf",
+      "git_blob_sha": "26663e5f70242724460873f15c860857b5a13d19",
+      "bytes": 6410,
+      "sha256": "71eadea070bb7c45fea72cdd4eb4eeaea23c406755b78cc2b92a6ae595481f85",
       "kind": "file"
     },
     {
@@ -107,9 +123,9 @@
     {
       "path": "README.md",
       "git_mode": "100644",
-      "git_blob_sha": "27294b11c0cba3714f072655e41a368c1b70d0fc",
-      "bytes": 5927,
-      "sha256": "d498a3c42ed2ba881dae2e148aab31b278fee0af085fed812c37cc1e2b1f9de6",
+      "git_blob_sha": "8a6a5af21c1ee7b379a7592b62910261ae816463",
+      "bytes": 6042,
+      "sha256": "9af0f7f1a5f3cb762ea964c3492122eb87826348c745870e58d90d286a5d7d9c",
       "kind": "file"
     },
     {
@@ -171,9 +187,9 @@
     {
       "path": "apps/editor/render.mjs",
       "git_mode": "100644",
-      "git_blob_sha": "dee2bbc49a0a14af9d07539818fe7439a23b5e1e",
-      "bytes": 6020,
-      "sha256": "c23c29b241fd444bbe00e11d4a4abbd33076f2eff04232a0e85b0711cf0c8755",
+      "git_blob_sha": "d0db34044b8db33dd92d5a4e3a62f812ec79d2c4",
+      "bytes": 6056,
+      "sha256": "d6c22c58eef0e7d3f1dad03971e7775db492c69f5068957cbdbb3fbc9345f019",
       "kind": "file"
     },
     {
@@ -1051,17 +1067,17 @@
     {
       "path": "docs/VIDEO-PIPELINE-VALIDATION.md",
       "git_mode": "100644",
-      "git_blob_sha": "6f57d6679eb5957bd3f20339c990b4750704afab",
-      "bytes": 8849,
-      "sha256": "3676298fdf31f936562d071010522e4c8356186d435531f9b219d222843e2ce8",
+      "git_blob_sha": "e2f10620dd5d18e1fafef01a47961d361a18bc85",
+      "bytes": 11680,
+      "sha256": "6082997fdfcc9f1f227bf90b810ce68ee986fe669c88717d5e7fba42c6a77d95",
       "kind": "file"
     },
     {
       "path": "docs/VIDEO-PIPELINE.md",
       "git_mode": "100644",
-      "git_blob_sha": "3114d175ef9ab545605450237280acebdc7846f5",
-      "bytes": 19139,
-      "sha256": "ed7b87bff8a3405e300b56684110a87832f149977d225497961e39c5846cbc28",
+      "git_blob_sha": "9e0edc2114805d38338712a66c3d6e6f2dc5915b",
+      "bytes": 19955,
+      "sha256": "20094251cc2e55c68615c696f2debc1df99935b49684bafb278abb5f1f687d57",
       "kind": "file"
     },
     {
@@ -1939,17 +1955,17 @@
     {
       "path": "integrations/README.md",
       "git_mode": "100644",
-      "git_blob_sha": "9a2f028520e46aa35e3265f755241b55cb900c0b",
-      "bytes": 8888,
-      "sha256": "101cba9ddbb89085c71c760f1aa9b3be95d3910c6266735e0d2e549cf81af6e2",
+      "git_blob_sha": "773102814689492603b72b685e854253129bc6f9",
+      "bytes": 11602,
+      "sha256": "6adeff9bdb892c9829e42e013e4c5ce837e0d483ee39d36659f5c56c38670533",
       "kind": "file"
     },
     {
       "path": "integrations/STATUS.md",
       "git_mode": "100644",
-      "git_blob_sha": "ba93ee8ff4016360eb63dc25c317b948ddd2a8d0",
-      "bytes": 4396,
-      "sha256": "ed93e29dd9e36def57c071154340384381f5f45944f2f98a5c7ba9baa155e36f",
+      "git_blob_sha": "64af2ca4b674cddc1cc692e0cad67711970d69b9",
+      "bytes": 7138,
+      "sha256": "73e6682e0e5c1f2d80478fd5f0a11acf0a28698bacc3a800a79b4b03ede3fe0d",
       "kind": "file"
     },
     {
@@ -2107,9 +2123,9 @@
     {
       "path": "pipeline/kit.py",
       "git_mode": "100644",
-      "git_blob_sha": "8301b84612d1789c950f11ed74c073b1001fe309",
-      "bytes": 10116,
-      "sha256": "c9c221f2d745bd1a47265a8591d846ba9593d46a72525b14a980b2c6dc8fa9bd",
+      "git_blob_sha": "7a28c742517a8baf7952b27869bbbd550f82e40e",
+      "bytes": 14184,
+      "sha256": "2892d18b9a6bf3a18ad2eaa9daf4cd001916b7168235ab586fc893e009cba7eb",
       "kind": "file"
     },
     {
@@ -2491,9 +2507,17 @@
     {
       "path": "project-docs/production-log.jsonl",
       "git_mode": "100644",
-      "git_blob_sha": "8f1edbdfcb3295073eab99781451ad8ec29493de",
-      "bytes": 46659,
-      "sha256": "89ce2fcdc637ef845812ab4dcafe82c3fd93be8605c6f7b3f699a49315ac68ca",
+      "git_blob_sha": "32b13e6d7e6ad3eea3c6c9053ce3b42dc3bb2550",
+      "bytes": 91485,
+      "sha256": "c1c7575ba066b1a7c80d1c4eb1adaccd475418f06ff079882c26be56596024b0",
+      "kind": "file"
+    },
+    {
+      "path": "project-docs/production-status.json",
+      "git_mode": "100644",
+      "git_blob_sha": "c6df3aed0f8163b51bf2d43e3588e675b229f169",
+      "bytes": 19345,
+      "sha256": "15592935b3b03e421d279edcfdc1310c6d958bc9889622b9c2cd25c5b9ec2cec",
       "kind": "file"
     },
     {
@@ -2507,9 +2531,9 @@
     {
       "path": "project-docs/production-system/AI-HANDOFF.md",
       "git_mode": "100644",
-      "git_blob_sha": "0c016cec0fdf952932ffc128d261233425e12dd3",
-      "bytes": 12506,
-      "sha256": "3d3872a381cde7feb969d31b5007b9b3c94e0d9834ef701b90cab4d1826a137a",
+      "git_blob_sha": "843411ed6bc1a9fd03062e610bc6d2b380ea7bfa",
+      "bytes": 12737,
+      "sha256": "ced77b2fae2b28f638a2f506a656baeb55f50462885c3ba012784ffcf467ecf1",
       "kind": "file"
     },
     {
@@ -2539,17 +2563,17 @@
     {
       "path": "project-docs/production-system/CLAUDE-HANDOFF.md",
       "git_mode": "100644",
-      "git_blob_sha": "c0ec227eff6061bb16ebe72f229d2298eec9101a",
-      "bytes": 51248,
-      "sha256": "a5554507a3835f2887f0213c336bf3ccaeed4fd1c9fd201a4bfa150103ee896a",
+      "git_blob_sha": "9ce97008d7009559919a8bf37cef3a81f78bbedb",
+      "bytes": 57303,
+      "sha256": "f58426338dc9d49f4c22987befc8685c84526511432383397b4d0d0b123c283e",
       "kind": "file"
     },
     {
       "path": "project-docs/production-system/CLAUDE-START-PROMPT.txt",
       "git_mode": "100644",
-      "git_blob_sha": "9b70d8a8c4682d6943a60884cff92dd9cefb5b1b",
-      "bytes": 2500,
-      "sha256": "dd0727c40eaecd279e5cf1a5df3f87e1d0cb7c4299e2b3095dd6da9c74041ba9",
+      "git_blob_sha": "110c7473371d99ecbc5db5a7e158c4ff48d83424",
+      "bytes": 4039,
+      "sha256": "ad3c059131f25edb82455f75c29c40b73fe10f6fd507fea71b85410d5ccf3804",
       "kind": "file"
     },
     {
@@ -2635,9 +2659,9 @@
     {
       "path": "project-docs/production-system/PROJECT-STATUS.md",
       "git_mode": "100644",
-      "git_blob_sha": "b03df27adfc3ad9454955b6d6562731983dc2aef",
-      "bytes": 2556,
-      "sha256": "91e5915de6b3882d4777ca9622579920f0e906fafad68af6a9ab465f472c83fd",
+      "git_blob_sha": "4eac084af2e351bc8407480e11bcc3dd29501803",
+      "bytes": 4505,
+      "sha256": "423995254034278c06880ff086690294b597e0297a687650768490502e0a7d67",
       "kind": "file"
     },
     {
@@ -2699,9 +2723,9 @@
     {
       "path": "project-docs/production-system/STATE.json",
       "git_mode": "100644",
-      "git_blob_sha": "faf8a344b4e04470bd4a94e220c48a23f33b884e",
-      "bytes": 74256,
-      "sha256": "91cce7f2e162c84392e6115a44abaa32b4ae36acade150e088cfc09610c288ac",
+      "git_blob_sha": "6fd4eb294cec5f6b0c87429e30b08ff54e439b14",
+      "bytes": 76750,
+      "sha256": "0fba5514c2513714bd10ea8904cbda8ad1c554bdfbc067bc9f3c965aaf4f74f2",
       "kind": "file"
     },
     {
@@ -2731,17 +2755,25 @@
     {
       "path": "project-docs/production-system/catalogs/handoff-media.json",
       "git_mode": "100644",
-      "git_blob_sha": "f208628d929c0a323839c7e6f0516805c051a0b5",
+      "git_blob_sha": "3260366a0f12ae5cb94f5a9bccfa446d8b90701e",
       "bytes": 250410,
-      "sha256": "a7db58ec340d0129206666f287917ab17c78964d08603bf31a4c1f18508d6cbf",
+      "sha256": "2af900eb6402a910e260a82babe798dbfc9c9832f03fe09788f8f3994d75095a",
       "kind": "file"
     },
     {
       "path": "project-docs/production-system/catalogs/handoff-resources.json",
       "git_mode": "100644",
-      "git_blob_sha": "670eefcd13c1296684c4e0aacc3ba13ab0cc65c5",
-      "bytes": 864303,
-      "sha256": "7891730cb43c45c005c3e01544723f96b1ee6722e6448001dddf95cadc0f3fa5",
+      "git_blob_sha": "122bd8b16ca2b7b2a59c2fa6ca2f56dff7491843",
+      "bytes": 865800,
+      "sha256": "8c1e0b83c5fc82665006b7f6b72d9f8231245c49cc56e1d881f65bd906bbbc2b",
+      "kind": "file"
+    },
+    {
+      "path": "project-docs/production-system/catalogs/handoff-source-snapshot.json",
+      "git_mode": "100644",
+      "git_blob_sha": "50b68f22f71c9f24392adbca22bd879ca0618e69",
+      "bytes": 250839,
+      "sha256": "175fd1c7d1b4b886237dc1b1f1d59c75f26a916ed8177817eab5df8e56f5145d",
       "kind": "file"
     },
     {
@@ -2843,41 +2875,57 @@
     {
       "path": "project-docs/production-system/drive-updates/claude-20261122/AGENTS.md",
       "git_mode": "100644",
-      "git_blob_sha": "cf07ac49716c063321abfc95c2215164d2329882",
-      "bytes": 17651,
-      "sha256": "4ebf2d6a23c327d92582d8de0bdea08c1dee3b8f845dce98a39030c1fc351cbc",
+      "git_blob_sha": "42791e60e8ca44edb5fc98a657e6e220f23ce521",
+      "bytes": 21615,
+      "sha256": "833e7838c27732ba47af925baaf0ea7e016699d412bf12eba828fccaa1660f38",
       "kind": "file"
     },
     {
       "path": "project-docs/production-system/drive-updates/claude-20261122/AUTONOMOUS-RUN.md",
       "git_mode": "100644",
-      "git_blob_sha": "d368c58f32439a2f19efda23070818f29dde368b",
-      "bytes": 17319,
-      "sha256": "414eb9e1080188b223ef2dd4f0c14a739838edd2523c64fd5257f90b8943f9c9",
+      "git_blob_sha": "c77c45fb251d9989cc2be62b97dc8eed49dcf1a2",
+      "bytes": 21283,
+      "sha256": "68b57716c37805cb4470d8fdc15465ff15ee1b42d4f4478173839b4c1979217c",
       "kind": "file"
     },
     {
       "path": "project-docs/production-system/drive-updates/claude-20261122/DESIGN-SYSTEM.md",
       "git_mode": "100644",
-      "git_blob_sha": "a2b5da458ddfac59c448815425108f12594d7b48",
-      "bytes": 25097,
-      "sha256": "c8d8c51096a1b7f13f1893ec4efebf3f5d2a3829fbc9820a5effaffbe38f6c85",
+      "git_blob_sha": "170c5c36c77a9e3f1caf1adb137850eb199a2cf4",
+      "bytes": 29061,
+      "sha256": "11187edb0c3e8507aaddf85f6e134e584aabec0285c3ff4f908f3e20191b5318",
       "kind": "file"
     },
     {
       "path": "project-docs/production-system/drive-updates/claude-20261122/README.md",
       "git_mode": "100644",
-      "git_blob_sha": "4b8626c804e1e59c4cb3ce7af39739bbd47d75bd",
-      "bytes": 11524,
-      "sha256": "d62221c7e7a89e2e6a56570dc3c9fee6d2ae25212899d745df3c3f6543ba5345",
+      "git_blob_sha": "6f4ef004d9e4ec262c005940f3d1ac4006a9b9e0",
+      "bytes": 15488,
+      "sha256": "f4d29347c22a6327d5699985f87bce10097856171af6d6cc7d06c20c32f1a6c6",
       "kind": "file"
     },
     {
       "path": "project-docs/production-system/drive-updates/claude-20261122/VIDEO-HANDOFF.md",
       "git_mode": "100644",
-      "git_blob_sha": "8482ccf995a4e3eab4db6ff3aa1470de43602bcf",
-      "bytes": 25286,
-      "sha256": "957db0ba35364cd77e0e53db132b48919a24b3afb9d7aeee38cca31b381a7a00",
+      "git_blob_sha": "ca18c28995fa15a5dbdfe2e0b963b81eb8695365",
+      "bytes": 29250,
+      "sha256": "706cc6424c233afcc3f9880ffb5aa68e18e6224ecc241de42620753398a89c80",
+      "kind": "file"
+    },
+    {
+      "path": "project-docs/production-system/drive-updates/claude-20261122/production-log.jsonl",
+      "git_mode": "100644",
+      "git_blob_sha": "196529f4510eb0c63982473752cf023056872365",
+      "bytes": 91485,
+      "sha256": "b173220a07677f4a0ec6e335d46bafc8f5280a437507cfc62f168be1c7449bdd",
+      "kind": "file"
+    },
+    {
+      "path": "project-docs/production-system/drive-updates/claude-20261122/production-status.json",
+      "git_mode": "100644",
+      "git_blob_sha": "c6df3aed0f8163b51bf2d43e3588e675b229f169",
+      "bytes": 19345,
+      "sha256": "15592935b3b03e421d279edcfdc1310c6d958bc9889622b9c2cd25c5b9ec2cec",
       "kind": "file"
     },
     {
@@ -3201,11 +3249,27 @@
       "kind": "file"
     },
     {
+      "path": "project-docs/production-system/evidence/claude-cloud-tool-proofs.json",
+      "git_mode": "100644",
+      "git_blob_sha": "60d3ae40738c8d6c5c76196d27fbd4b09cdfc132",
+      "bytes": 46386,
+      "sha256": "5e53a2c524b88a920a59ece899543edf5bb4b7cf35ad51517af663846d61ac7c",
+      "kind": "file"
+    },
+    {
+      "path": "project-docs/production-system/evidence/claude-concurrent-main-integration.json",
+      "git_mode": "100644",
+      "git_blob_sha": "de5ec6e8df44484b652c279f4bd87a17e6c22db1",
+      "bytes": 1406,
+      "sha256": "baab2dd256cb8f4654dc093f1b89fcc9e2e719a692e1f24d5659b4e27be8877a",
+      "kind": "file"
+    },
+    {
       "path": "project-docs/production-system/evidence/claude-drive-completion.json",
       "git_mode": "100644",
-      "git_blob_sha": "73c108142a09a3b8df99918d45124c32557a3ca4",
-      "bytes": 340829,
-      "sha256": "9f555e72aed80ec2365fe72f71a30efa6592016f38cd1f9904e9971c45eb3fc8",
+      "git_blob_sha": "6b8baac64dfe362bc2f740157ba8c7727ef37aba",
+      "bytes": 369117,
+      "sha256": "3d652f39c05713c2b2a2ad56ad605ea09721adbff1e61731bba3dff3e0025c19",
       "kind": "file"
     },
     {
@@ -3222,6 +3286,14 @@
       "git_blob_sha": "83aa34fe8d04bac5264fc5d2cb5f0e86f6b39232",
       "bytes": 93779,
       "sha256": "4c8f79e5412a919449d6214a3fbe4c413b484ed4ada36a584181a25f60016978",
+      "kind": "file"
+    },
+    {
+      "path": "project-docs/production-system/evidence/claude-log-reconciliation.json",
+      "git_mode": "100644",
+      "git_blob_sha": "48b2b6f62bf318d30030c7bfadb9f2b44e08d3c5",
+      "bytes": 703,
+      "sha256": "ed0538e65dc12d353be97e89c044b0ca2e78ab279825698267dee98d6a19a4b7",
       "kind": "file"
     },
     {
@@ -3249,6 +3321,14 @@
       "kind": "file"
     },
     {
+      "path": "project-docs/production-system/evidence/claude-publication.json",
+      "git_mode": "100644",
+      "git_blob_sha": "d461d0dbcd4352d01f862baadd1b57f4a1326d9e",
+      "bytes": 21444,
+      "sha256": "9c3b0b400d67cd6707e8410c96f0f550649ed75d85155a5b37de8361a2ee22fc",
+      "kind": "file"
+    },
+    {
       "path": "project-docs/production-system/evidence/claude-resource-clean-restore.json",
       "git_mode": "100644",
       "git_blob_sha": "4be33beece71113b5275690ad16af206059dbee0",
@@ -3259,9 +3339,9 @@
     {
       "path": "project-docs/production-system/evidence/claude-resource-package.json",
       "git_mode": "100644",
-      "git_blob_sha": "963b63c8ea16b7231b8787824d6eb819b14b2e11",
-      "bytes": 2818,
-      "sha256": "38057edb0d68b354b570930ed3816ed0949513ae2bfcb710005e44381594fd74",
+      "git_blob_sha": "9bee3fa5c4b59b2b0f19f987aa5191943c2f716b",
+      "bytes": 2890,
+      "sha256": "d82aa2b6df66203167fd773603e9f9e9043f842ec39a483bcb88e390ea67b6ff",
       "kind": "file"
     },
     {
@@ -3294,6 +3374,22 @@
       "git_blob_sha": "5526881abdc497ef7b9a93a97df99bb7f4a01dfa",
       "bytes": 32692,
       "sha256": "e55251e2caf6a538731b0e026acdff4984768c9ec2710d68297fa66ec241a88e",
+      "kind": "file"
+    },
+    {
+      "path": "project-docs/production-system/evidence/claude-source-clean-restore.json",
+      "git_mode": "100644",
+      "git_blob_sha": "6f7bf8db57db97f639feed671dbeaafe59c0951f",
+      "bytes": 818,
+      "sha256": "c3ab168a5ff87bbd0026f3ace1049b71108344801b7ae3fdcad6f2001341434a",
+      "kind": "file"
+    },
+    {
+      "path": "project-docs/production-system/evidence/claude-source-snapshot.json",
+      "git_mode": "100644",
+      "git_blob_sha": "73d668285b5956856aa899afd9d859f513573741",
+      "bytes": 2706,
+      "sha256": "50b95e787d15598cb45670d94aa2cc25a3959b6be5f6d31b5e5b734bff49bfe0",
       "kind": "file"
     },
     {
@@ -4689,6 +4785,14 @@
       "kind": "file"
     },
     {
+      "path": "projects/song-scene-demo/project.json",
+      "git_mode": "100644",
+      "git_blob_sha": "c9c6bf98f0caf44e5afdcdc628818cfcab5e62b9",
+      "bytes": 1799,
+      "sha256": "0e4d0d2f922ee82be0b8bc41c5b0f70001e747cb4053bef9746afa82389be11d",
+      "kind": "file"
+    },
+    {
       "path": "pyproject.toml",
       "git_mode": "100644",
       "git_blob_sha": "cddb3f61f30c7062ed3bdcdb9b0857e135ec2a22",
@@ -4761,6 +4865,14 @@
       "kind": "file"
     },
     {
+      "path": "scenes/p3d/song_scene.py",
+      "git_mode": "100644",
+      "git_blob_sha": "318267ec1d15e92e1496e186d7e544f0c49899de",
+      "bytes": 3573,
+      "sha256": "87879e361c09dc2820a9977eaf2f5ca2fe7b0fa92e35a36d2c21aeed5a9f3a37",
+      "kind": "file"
+    },
+    {
       "path": "scripts/bootstrap.py",
       "git_mode": "100644",
       "git_blob_sha": "ae4ee74371c494e2f2076cb7612af18e26a80f22",
@@ -4779,9 +4891,9 @@
     {
       "path": "scripts/install-blender.py",
       "git_mode": "100644",
-      "git_blob_sha": "36106320793a168be28259e30c6c406838dcd5fe",
-      "bytes": 2699,
-      "sha256": "d32f75c94fde477393eab7586c5cf24a2a04783daaba45c90b8a901fba70c09b",
+      "git_blob_sha": "eaf0cc8ddfacb9b1ccf23ae4df36adad3af2c2d9",
+      "bytes": 2807,
+      "sha256": "33c1a97cd4b29dd40e3ba23bf01a2002f0d58da005e8ca374d08df8416605f8a",
       "kind": "file"
     },
     {
@@ -5785,6 +5897,14 @@
       "kind": "file"
     },
     {
+      "path": "tools/drive_sync.py",
+      "git_mode": "100644",
+      "git_blob_sha": "a4fab73e38655139c74dc4e99fb6dec4e0016374",
+      "bytes": 6029,
+      "sha256": "06d1b45b36ac61bb91da49aeafa536589c4c405c69b3019437cb6dfd901a28ce",
+      "kind": "file"
+    },
+    {
       "path": "tools/gentle/README.md",
       "git_mode": "100644",
       "git_blob_sha": "67ffe72df3a1aea6bd2aa5696b1e083e1a001522",
@@ -5851,9 +5971,17 @@
     {
       "path": "tools/handoff/README.md",
       "git_mode": "100644",
-      "git_blob_sha": "7e3ab729c79c8864166ed70ce1cd2a6cf4ddaef6",
-      "bytes": 2875,
-      "sha256": "562ab538f81ef3ba859d8317ee3beacd6433bf924df075aebbf3958470149f4c",
+      "git_blob_sha": "4c2c0434f3902fba584ac08e6b8801f2976c768d",
+      "bytes": 3847,
+      "sha256": "b804cde18e96e312eea6bf5914682d04aa59faff937fa65182455b0c89951acd",
+      "kind": "file"
+    },
+    {
+      "path": "tools/handoff/archive_workflow_artifact.py",
+      "git_mode": "100644",
+      "git_blob_sha": "2df800546e3ea66280904547ad9ad44c3920fb60",
+      "bytes": 15027,
+      "sha256": "e2d96bd867d302b5d56c7ce3f274f06edafab92b8dea463e0e9617aa9cf78a8d",
       "kind": "file"
     },
     {
