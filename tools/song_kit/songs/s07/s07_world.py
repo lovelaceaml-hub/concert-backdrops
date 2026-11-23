@@ -76,11 +76,10 @@ DESIGNS = {
                                                                  (0.0, 3.0, -46.0), (0.0, 170.0, -900.0))),
     161.0: dict(name="dawn_faces", fov=42.0, keys=lambda a, b: _keys(a, b, (-4.0, 2.2, -44.0), (7.0, 2.2, -62.0),
                                                                     (-3.0, 2.0, -46.0), (8.0, 2.6, -64.0))),
-    # facing the shore with the dawn and the kingdom behind: the current of light crossing everyone's joined hands
-    174.0: dict(name="joined_hands", fov=46.0, roll=(0.0, 1.5), keys=lambda a, b: _keys(a, b, (6.0, 7.0, -46.0),
-                                                                                        (9.0, 0.8, -64.0),
-                                                                                        (7.0, 8.5, -49.0),
-                                                                                        (9.5, 0.8, -66.0))),
+    # low across the water, facing the dawn: the current crossing everyone's joined hands, the path running on
+    # toward the kingdom
+    174.0: dict(name="joined_hands", fov=50.0, keys=lambda a, b: _keys(a, b, (8.0, 2.4, -49.0), (9.0, 2.0, -90.0),
+                                                                      (8.5, 3.2, -52.0), (9.0, 3.5, -90.0))),
     187.0: dict(name="bridge", fov=52.0, keys=lambda a, b: _keys(a, b, (-16.0, 6.0, -70.0), (0.0, 30.0, -260.0),
                                                                 (-20.0, 30.0, -140.0), (0.0, 120.0, -600.0))),
     201.0: dict(name="procession_sky", fov=54.0, roll=(-3.0, 3.0), keys=lambda a, b: _keys(a, b, (-40.0, 60.0, -260.0),
