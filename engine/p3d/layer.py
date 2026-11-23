@@ -692,7 +692,7 @@ class Layer:
             for i in range(n):
                 ts = t - dt * (n - 1 - i) / n
                 c, pv = self.rig.state(ts, asp, ref=t), self.rig.state(ts - dt / n, asp, ref=t)
-                c, pv = self.quality.camera(t, c), self.quality.camera(t, pv)
+                c, pv = self.quality.camera(ts, c), self.quality.camera(ts - dt / n, pv)
                 Ui = self._uniforms(ts, c, pv, w)
                 Ui["uShutterDt"] = dt / n
                 its = items if i == n - 1 else [(e, self._batches(e, ts, c)) for e in self.scene.entries()]

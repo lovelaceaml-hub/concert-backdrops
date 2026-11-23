@@ -82,6 +82,8 @@ jobs:
               sheet.save("proof/default-vs-clarity.png")
           if not report["default_pixels_identical_to_main"]:
               raise SystemExit("The default look changed. Options must be opt-in.")
+          if not (len(clar) == len(new) > 0 and report["clarity_frames_differ_from_default"] > 0):
+              raise SystemExit("The clarity preset did not render or did not change the picture.")
           PY
       - name: Save proof
         if: always()
