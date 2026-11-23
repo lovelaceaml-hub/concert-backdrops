@@ -1,8 +1,10 @@
 """Song 07 "May No One Ever Feel Lonely" on the song kit (design: project-docs/designs/07 May No One Ever Feel
 Lonely.md, "No Light Left Alone"). The recording is the catalog's chosen one (church upload, Drive file
 1wL9dyLETDn3q9ECkIXKrDb3UIt_eAgEA, 246.5 s, silent from about 243.5 s), used unstretched as for Song 11.
-Times are recording seconds. The design's sections were measured from loudness; line times are the design's
-estimates, to be locked to the measured hits (TIMING below) before the full render.
+Times are recording seconds. Measured on this recording (2026-11-23, loudness every 2 s and the music map):
+quiet to 12 s, fill-in 13.7, first lift 53.3 to 77 (brass at 53.33), dip 78 to 82, second lift 112.2 to 136
+(brass at 112.23), hush 136.6 to 147.2, verse 3 from 147.18 (timpani), the long lift from 174.70 (timpani),
+loudest 210 to 222, settling from 224, silent from 242. Line times stay the design's estimates against these.
 No em dash or en dash anywhere in this file.
 """
 TITLE = "May No One Ever Feel Lonely"
@@ -16,12 +18,13 @@ END_CARD = False
 OPENING_END = 12.0
 INTRO_FULL = 13.5               # the arrangement fills in (measured)
 SETS = ["s07_world"]
+DRIVE_FOLDER = "Videos/07 May No One Ever Feel Lonely/Song kit"
 
 # measured sections (design section 3): fill-in 13.5; lifts 53 to 77, 111 to 136, 174 to 224 (loudest 209 to 223);
 # hush 137 to 147; ending 224 to 244
-HIT = dict(fill=13.5, lift1=53.0, lift2=111.0, hush=137.0, verse3=148.0, lift3=174.0, peak=209.0, settle=224.0)
-SLAMS = [53.0, 111.0, 174.0]
-KEY_MOMENTS = [(53.0, 2.0), (62.5, 1.6), (74.5, 1.6), (111.0, 2.4), (148.0, 2.0), (174.0, 2.4), (209.0, 3.0),
+HIT = dict(fill=13.67, lift1=53.33, lift2=112.23, hush=136.6, verse3=147.18, lift3=174.7, peak=209.23, settle=224.0)
+SLAMS = [53.33, 112.23, 174.7]          # measured: brass at 53.33 and 112.23, timpani at 174.70
+KEY_MOMENTS = [(53.33, 2.0), (62.5, 1.6), (74.5, 1.6), (112.23, 2.4), (147.18, 2.0), (174.7, 2.4), (209.23, 3.0),
                (221.0, 3.0)]
 LEVELS = [(0.0, 0.10), (13.5, 0.30), (25.0, 0.25), (37.0, 0.30), (53.0, 0.70), (78.0, 0.30), (80.0, 0.40),
           (111.0, 0.75), (137.0, 0.08), (148.0, 0.40), (174.0, 0.80), (209.0, 1.0), (224.0, 0.45), (236.0, 0.15),
@@ -40,18 +43,18 @@ EDIT = [
     (25.0, "world", "Mother's wish: footprints of light along the path"),
     (37.0, "world", "the refrain: the village answers; one passer-by turns back"),
     (50.5, "world", "the helper reaches the bench"),
-    (53.0, "love", "GREETING: a slight bow, kneeling to eye level"),
+    (53.33, "love", "GREETING: a slight bow, kneeling to eye level"),
     (63.0, "world", "the first peace ring across the lake"),
     (65.0, "love", "CONSIDERATION: the bundle lifted, the hand offered"),
     (75.0, "world", "the second peace ring; they walk on together"),
     (80.0, "world", "verse 2: mist rises; lost lights drift on the water"),
     (96.0, "world", "Mother seen from behind, holding her lamp up"),
-    (111.0, "world", "the river of lanterns from the air"),
+    (112.23, "world", "the river of lanterns from the air"),
     (124.0, "world", "the lost are reached; reunions on the shore"),
-    (137.0, "world", "the hush: a perfect mirror, everyone still"),
-    (148.0, "world", "verse 3: the clouds part on the kingdom"),
+    (136.6, "world", "the hush: a perfect mirror, everyone still"),
+    (147.18, "world", "verse 3: the clouds part on the kingdom"),
     (161.0, "world", "heavenly dawn; heads turn upward"),
-    (174.0, "world", "joined hands: one river of light"),
+    (174.7, "world", "joined hands: one river of light"),
     (187.0, "world", "the bridge of light; Mother leads the way"),
     (201.0, "world", "the procession crosses into the sky"),
     (224.0, "world", "the gate; the last two look back"),
