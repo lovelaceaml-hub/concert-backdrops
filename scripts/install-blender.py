@@ -39,7 +39,8 @@ def main():
         partial = archive.with_suffix(archive.suffix + ".partial")
         print(f"Downloading Blender {spec['version']} into the project", flush=True)
         try:
-            with urllib.request.urlopen(spec["url"], timeout=120) as response, partial.open("wb") as stream:
+            request = urllib.request.Request(spec["url"], headers={"User-Agent": "concert-video-pipeline/1.0"})
+            with urllib.request.urlopen(request, timeout=120) as response, partial.open("wb") as stream:
                 shutil.copyfileobj(response, stream, 1024 * 1024)
             os.replace(partial, archive)
         finally:

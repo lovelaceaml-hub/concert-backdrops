@@ -232,3 +232,17 @@ These project files configure supported Claude Code and Codex clients when opene
 | Need a real GPU later | Add the selected worker/provider and device policy in a separate implementation step. Current adapters deliberately select CPU/software rendering; no provider is hidden behind an environment variable. |
 
 Better character rigs, detailed church models, choreography and revised shot design are production work performed with this foundation. The setup includes motion guidance and deterministic examples, not a completed library of realistic people or 226 upgraded buildings. Keep the existing approved master as the comparison reference.
+
+## Reusable scenes for any song (November 22, 2026)
+
+The `p3d-kit` route (frame recovery, worker chunks, temporal samples, QA) now
+accepts any scene module that declares `FPS` and `DURATION` (or `DURATION = None`
+to let the project's shots set the length), plus `make_renderer()` and `frame()`.
+Optional `configure(params)` receives the shot's `params`. The approved films stay
+locked to their registrations and still refuse params, so they reproduce exactly.
+
+`scenes/p3d/song_scene.py` renders any `engine/songs/` file through that route.
+Example shot params: `{"song": "s11_finale", "audio": "audio/promo/s11.mp3",
+"start_seconds": 30, "bloom_scale": 0.7, "grain": false}`. See
+`projects/song-scene-demo/project.json`. Work at 1080p; the final show video is
+3840x2160 at 60 fps only after the video is approved.

@@ -70,7 +70,7 @@ export async function finish(inputPath,outputPath,{allowLocalRender=false}={}) {
     const composition=await selectComposition({serveUrl,id:'ConcertFilm',inputProps,browserExecutable,chromiumOptions});
     await mkdir(path.dirname(outputPath),{recursive:true});
     const partial=`${outputPath}.partial.mp4`;
-    await renderMedia({serveUrl,composition,inputProps,outputLocation:partial,codec:'h264',crf:18,pixelFormat:'yuv420p',colorSpace:'bt709',imageFormat:'png',hardwareAcceleration:'disable',audioCodec:'aac',sampleRate:48000,audioBitrate:'320k',ffmpegOverride:deliveryFfmpegArgs,concurrency:1,browserExecutable,chromiumOptions,overwrite:true,logLevel:'warn'});
+    await renderMedia({serveUrl,composition,inputProps,outputLocation:partial,codec:'h264',crf:18,pixelFormat:'yuv420p',colorSpace:'bt709',imageFormat:'png',hardwareAcceleration:'disable',...(props.audio_src?{audioCodec:'aac',sampleRate:48000,audioBitrate:'320k'}:{muted:true}),ffmpegOverride:deliveryFfmpegArgs,concurrency:1,browserExecutable,chromiumOptions,overwrite:true,logLevel:'warn'});
     await rename(partial,outputPath);
     await writeFile(`${outputPath}.json`,JSON.stringify({renderer:'remotion',version:'4.0.484',width:props.width,height:props.height,fps:props.fps,durationInFrames:props.durationInFrames,clips:props.clips.length,audio:Boolean(props.audio_src),color_space:'rec709',pixel_format:'yuv420p',profile:'High',audio_sample_rate:props.audio_src?48000:null,output:outputPath},null,2)+'\n');
     return outputPath;

@@ -1,5 +1,39 @@
 # Video pipeline setup verification
 
+## Current verification: GitHub cloud runners, November 22, 2026
+
+Every tool now runs end to end on a GitHub Actions cloud runner (Ubuntu 24.04,
+CPU only). Chat sandboxes block browser sockets, Xvfb and Docker; GitHub runners
+do not, so the earlier "blocked" results below no longer apply there.
+
+| Tool | Result on a GitHub runner | Proof |
+| --- | --- | --- |
+| Setup (`scripts/bootstrap.py`: Blender, browser, apps, integrations) | Works | Blender download cached between runs, retried if the site refuses a runner |
+| Browser doctor | Works | No errors or warnings |
+| Three.js scene capture (`npm run test:browser`) | Works | Real animated frames, out-of-order frame identity checked |
+| Pipeline preview render (`pipeline-demo`) | Works | MP4 assembled and QA passed |
+| Remotion assembly (`--editor remotion`) | Works | Silent projects no longer get an empty sound track |
+| Blender background render (`cpu-demo`) | Works | MP4 assembled and QA passed |
+| Blender MCP, live GUI under Xvfb | Works | Live call returned `PIPELINE_MCP_CONNECTED 5.2.4 LTS` |
+| CPU Docker image (`infra/docker/Dockerfile.cpu`) | Builds | Separate job |
+| Reusable song scene (`song-scene-demo`, p3d-kit with params) | Works | 4 seconds of Song 11 rendered at 1080p |
+| Drive access (`tools/drive_sync.py check`) | Works | Read the folder and saved, then removed, a test file |
+
+How to run it: push to any `claude/video-tools-*` branch, or dispatch
+**Video tool proofs (cloud CPU)** by hand (`.github/workflows/tool-proofs.yml`).
+Results are saved as the run's `tool-proofs` download, with one log per tool and
+`proofs/summary.txt`. It runs no test suites.
+
+Drive access for cloud jobs: `tools/drive_sync.py` lists, downloads (`get`) and
+saves (`put`) inside the "Concert Backdrops - Songs" folder using the
+`GOOGLE_DRIVE_OAUTH` Actions secret (Anthony's sign-in for the private "Concert
+Video Renders" app in the Drive Backups Google Cloud project; revoke it at
+myaccount.google.com, Security, Third-party connections). `GOOGLE_DRIVE_SA_KEY`
+is a read-only fallback: Google gives service accounts no storage in a personal
+Drive. Full song recordings stay in Drive; cloud jobs fetch them with `get`.
+
+## Historical setup record
+
 Historical setup verification is preserved below. The newer native 4K and motion
 extension is recorded in [4K-MOTION-VALIDATION.md](4K-MOTION-VALIDATION.md).
 

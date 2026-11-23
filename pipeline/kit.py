@@ -51,11 +51,58 @@ for _film_id in range(1, 11):
     }
 
 
-def scene_spec(scene: str) -> dict:
-    try:
+REPO_ROOT = Path(__file__).resolve().parents[1]
+_OPEN_SPECS: dict[str, dict] = {}
+
+
+def _load(root: Path, relative: str):
+    spec = importlib.util.spec_from_file_location(
+        relative[:-3].replace("/", "."), safe_path(root, relative))
+    if spec is None or spec.loader is None:
+        raise PipelineError(f"The scene module is missing: {relative}")
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+def open_scene_spec(scene: str, root: Path = REPO_ROOT) -> dict:
+    """Describe any scene module that declares its own clock (reusable route).
+
+    A reusable scene module defines FPS, DURATION (seconds), make_renderer() and
+    frame(); optional SOURCE_START (seconds), CUTS (seconds), COLOR_CONTRACT and
+    configure(params). Registered approved films keep their frozen contract.
+    """
+    if scene in _OPEN_SPECS:
+        return _OPEN_SPECS[scene]
+    if not scene.endswith(".py"):
+        raise PipelineError(f"p3d-kit scene must be a Python module path: {scene}")
+    module = _load(root, scene)
+    missing = [name for name in ("FPS", "DURATION", "make_renderer", "frame") if not hasattr(module, name)]
+    if missing:
+        raise PipelineError(f"{scene} is not a reusable scene module; it lacks {', '.join(missing)}.")
+    fps = module.FPS
+    duration = module.DURATION  # None: the project's shots define the clock
+    if type(fps) is not int or fps <= 0 or (duration is not None and not float(duration) > 0):
+        raise PipelineError(f"{scene} must declare a positive integer FPS and a positive DURATION or None.")
+    seconds = None if duration is None else float(duration)
+    spec = {"id": Path(scene).stem.replace("_", "-"), "module": scene, "seconds": seconds,
+            "fps": fps, "source_start_frame": round(float(getattr(module, "SOURCE_START", 0)) * fps),
+            "cut_frames": tuple(round(float(cut) * fps, 6) for cut in getattr(module, "CUTS", ())),
+            "open": True}
+    _OPEN_SPECS[scene] = spec
+    return spec
+
+
+def scene_spec(scene: str, root: Path = REPO_ROOT) -> dict:
+    if scene in REGISTERED_SCENES:
         return REGISTERED_SCENES[scene]
-    except KeyError as exc:
-        raise PipelineError(f"p3d-kit scene is not registered: {scene}") from exc
+    return open_scene_spec(scene, root)
+
+
+def frame_limit(spec: dict) -> float:
+    if spec["seconds"] is None:
+        return float("inf")
+    return round(spec["seconds"] * spec["fps"])
 
 
 def project_scene(project: Project) -> str:
@@ -68,23 +115,19 @@ def project_scene(project: Project) -> str:
 
 
 def scene_module(root: Path, scene: str = SCENE):
-    definition = scene_spec(scene)
-    spec = importlib.util.spec_from_file_location(
-        definition["module"][:-3].replace("/", "."), safe_path(root, definition["module"]))
-    if spec is None or spec.loader is None:
-        raise PipelineError("The concert kit renderer is missing.")
-    module = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(module)
-    return module
+    return _load(root, scene_spec(scene, root)["module"])
 
 
 def validate_shot(project: Project, shot: dict) -> None:
-    spec = scene_spec(shot["scene"])
+    spec = scene_spec(shot["scene"], project.root)
     project_scene(project)
-    if shot.get("params", {}):
-        raise PipelineError("Registered kit studies require empty params; author a new scene for changed action or cameras.")
-    if project.fps != spec["fps"] or shot["end_frame_exclusive"] > spec["seconds"] * spec["fps"]:
-        raise PipelineError(f"The registered {spec['id']} study covers {spec['seconds']} seconds at native {spec['fps']} fps.")
+    params = shot.get("params", {})
+    if params and not spec.get("open"):
+        raise PipelineError("Registered approved studies are frozen and take no params; use a reusable scene module for changed action or cameras.")
+    if not isinstance(params, dict):
+        raise PipelineError("Shot params must be a JSON object.")
+    if project.fps != spec["fps"] or shot["end_frame_exclusive"] > frame_limit(spec):
+        raise PipelineError(f"The {spec['id']} scene covers {spec['seconds'] or 'project-defined'} seconds at native {spec['fps']} fps.")
     if project.data.get("delivery", {}).get("source_transfer") != "legacy_display_gamma":
         raise PipelineError("The concert kit requires its legacy_display_gamma delivery convention.")
     for name, preset in project.data["quality"].items():
@@ -95,6 +138,14 @@ def validate_shot(project: Project, shot: dict) -> None:
 def module_contract(module, scene: str) -> dict:
     """Reject a changed clock before creating a render context or using caches."""
     spec = scene_spec(scene)
+    if spec.get("open"):
+        if getattr(module, "COLOR_CONTRACT", {"name": "legacy_display_gamma"}).get("name") != "legacy_display_gamma":
+            raise PipelineError("Reusable p3d scenes deliver with the legacy_display_gamma convention.")
+        return {"id": spec["id"], "module": spec["module"], "fps": spec["fps"],
+                "duration_seconds": spec["seconds"],
+                "output_frame_count": None if spec["seconds"] is None else frame_limit(spec),
+                "source_start_frame": spec["source_start_frame"], "cut_frames": list(spec["cut_frames"]),
+                "reusable": True}
     actual_cuts = tuple(round(float(cut) * spec["fps"], 6) for cut in getattr(module, "CUTS", ()))
     if (getattr(module, "FPS", None) != spec["fps"]
             or getattr(module, "DURATION", None) != spec["seconds"]
@@ -108,7 +159,22 @@ def module_contract(module, scene: str) -> dict:
             "source_start_frame": spec["source_start_frame"], "cut_frames": list(spec["cut_frames"])}
 
 
+def open_source_identity(root: Path, scene: str) -> dict[str, str]:
+    """Hash what a reusable scene actually reads: its module, its declared
+    extra sources, and the shared engine, so changed code re-renders."""
+    module = scene_module(root, scene)
+    names = {scene, *getattr(module, "SOURCES", ())}
+    names |= {str(path.relative_to(root)) for path in sorted((root / "engine").rglob("*.py"))}
+    body = root / "assets/p3d/body_v1.npz"
+    if body.is_file():
+        names.add("assets/p3d/body_v1.npz")
+    return {name: file_hash(safe_path(root, name)) for name in sorted(names)}
+
+
 def source_identity(root: Path, scene: str = SCENE) -> dict[str, str]:
+    if scene_spec(scene, root).get("open"):
+        module_contract(scene_module(root, scene), scene)
+        return open_source_identity(root, scene)
     fonts = root / "fonts"
     if not fonts.is_dir() or not fonts.resolve().is_relative_to(root.resolve()):
         raise PipelineError("Install fonts inside this checkout before using the registered concert kit.")
@@ -145,7 +211,16 @@ def prepare(project: Project) -> dict:
 
 
 def dependency_files(project: Project) -> list[Path]:
-    names = set(source_identity(project.root, project_scene(project))) | {"pipeline/kit.py"}
+    scene = project_scene(project)
+    names = set(source_identity(project.root, scene)) | {"pipeline/kit.py"}
+    if scene_spec(scene, project.root).get("open"):
+        # Files a reusable scene reads through its params (for example the song
+        # recording) are part of its identity, so a changed file re-renders.
+        for shot in project.shots:
+            for key in ("audio", "features"):
+                value = shot.get("params", {}).get(key)
+                if isinstance(value, str) and (project.root / value).is_file():
+                    names.add(value)
     return [safe_path(project.root, name) for name in sorted(names)]
 
 
@@ -154,11 +229,12 @@ def render_job(job: dict) -> None:
     if os.environ.get("PYTHONHASHSEED") != "0":
         raise PipelineError("Start Python workers with PYTHONHASHSEED=0.")
     scene = job["shot"]["scene"]
-    spec = scene_spec(scene)
-    if job["video"]["fps"] != spec["fps"] or job["shot"].get("params", {}):
-        raise PipelineError("The render job does not match a registered kit scene.")
+    spec = scene_spec(scene, root)
+    params = job["shot"].get("params", {})
+    if job["video"]["fps"] != spec["fps"] or (params and not spec.get("open")):
+        raise PipelineError("The render job does not match its kit scene.")
     start, end = job["shot"]["start_frame"], job["shot"]["end_frame_exclusive"]
-    if not 0 <= start < end <= spec["seconds"] * spec["fps"]:
+    if not 0 <= start < end <= frame_limit(spec):
         raise PipelineError("The render shot is outside its registered scene clock.")
     if any(type(frame) is not int or not start <= frame < end for frame in job["frames"]):
         raise PipelineError("The requested frame is outside its registered shot clock.")
@@ -167,6 +243,10 @@ def render_job(job: dict) -> None:
         raise PipelineError("temporal_samples must be an integer from 1 to 4.")
     source_identity(root, scene)
     module = scene_module(root, scene)
+    if params:
+        if not hasattr(module, "configure"):
+            raise PipelineError(f"{scene} takes no params; add configure(params) to the scene module.")
+        module.configure(params)
     began = time.monotonic()
     renderer = module.make_renderer(job["video"]["width"], job["video"]["height"], temporal_samples=samples, fps=spec["fps"])
     initialized = time.monotonic()
