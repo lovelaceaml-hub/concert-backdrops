@@ -386,4 +386,4 @@ Output goes to `work/pipeline/song-draft-sNN/<quality>/`.
 
 A draft is a design check, not an approved film. It does not record creative approval.
 
-Local proof result: see Build log.
+Proof, November 23, 2026 (Claude Code cloud session): `./scripts/video song-draft 5 --recording audio/promo/s05.mp3` rendered 10 seconds of Song 5 from 0:30 with the `s05_god_bless_you` scene: 1920x1080, 600 frames at 60 fps, AAC sound, technical QA passed. The engine scenes for Songs 1 to 11 are 60-second promo timelines (`TOTAL = 60.0`), so the command refuses an excerpt past 60 seconds; a full-length draft of a song needs a full-length scene first.
