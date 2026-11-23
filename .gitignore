@@ -32,3 +32,6 @@ apps/*/public/generated/
 *.blend1
 .env
 .env.local
+# Copyrighted sung-lyric timing files stay in Google Drive only.
+words.json
+**/words.json
