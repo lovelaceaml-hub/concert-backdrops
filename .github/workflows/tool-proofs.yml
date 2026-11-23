@@ -84,7 +84,7 @@ jobs:
         id: songscene
         continue-on-error: true
         run: PYTHONHASHSEED=0 ./scripts/video preview song-scene-demo --quality review 2>&1 | tee work/proofs/08-song-scene.log
-      - name: Any-song draft from Drive (Song 9, 10 seconds, 1080p)
+      - name: Any-song draft from Drive (Song 7, 10 seconds, 1080p)
         id: songdraft
         continue-on-error: true
         env:
@@ -93,7 +93,7 @@ jobs:
           python -m pip install --quiet google-api-python-client==2.187.0 google-auth==2.43.0
           # scripts/video runs in the render environment; point the Drive download at this interpreter.
           export DRIVE_PYTHON="$(command -v python)"
-          ./scripts/video song-draft 9 2>&1 | tee work/proofs/11-song-draft.log
+          ./scripts/video song-draft 7 2>&1 | tee work/proofs/11-song-draft.log
       - name: Blender MCP (stdio and live GUI)
         id: mcp
         continue-on-error: true

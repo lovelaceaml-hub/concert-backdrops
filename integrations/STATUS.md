@@ -32,7 +32,7 @@ This session's sandbox allowed browser sockets and Xvfb, so these ran in it:
 4. `./scripts/video song-draft <song>` drafts any catalogued song (see [VIDEO-PIPELINE.md](../docs/VIDEO-PIPELINE.md)). A 10-second Song 5 draft rendered at 1080p60 with sound and passed QA.
 5. `scripts/cloud-session-setup.sh` now installs the EGL libraries even when FFmpeg is already present (otherwise rendering fails with "libEGL.so not loaded") and retries when the package mirror times out. The automatic setup runs only when a session starts inside the repository; when a session starts one folder above it (several repositories attached), run `bash scripts/cloud-session-setup.sh` by hand from the repository.
 
-The proof workflow now also runs the Workbench proof and a Song 9 draft fetched from Drive. (Song 5 was tried first and correctly refused: its chosen recording is a file shared from another account, outside the Songs folder.) These are engineering proofs, not creative deliveries.
+The proof workflow now also runs the Workbench proof and a Song 7 draft fetched from Drive. Song 5 was tried first and correctly refused (its chosen recording is a file shared from another account, outside the Songs folder). Song 9 was tried next: its recording downloaded from Drive, but its scene cannot render because `SKY_TOP` keys in `engine/songs/s09_save_the_world.py` run 0, 10, 8 seconds, which the strict Track check (since November 14) refuses. That fix changes Song 9's opening sky, so it waits for the owner. These are engineering proofs, not creative deliveries.
 
 ## This local handoff checkout
 
