@@ -64,8 +64,12 @@ def extract_lyrics(
             ) from exc
 
         model = WhisperModel(model_size, device="cpu", compute_type="int8")
+        # Decode with the project's ffmpeg loader (16 kHz mono, as Whisper expects) so the
+        # PyAV version faster-whisper would otherwise use never matters.
+        from .io import decode_audio
+        samples, _ = decode_audio(target_audio, sr=16000, mono=True)
         segments, info = model.transcribe(
-            str(target_audio),
+            samples,
             language=language or None,
             word_timestamps=True,
             vad_filter=vad_filter,
