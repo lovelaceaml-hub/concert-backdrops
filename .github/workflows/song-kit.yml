@@ -22,6 +22,8 @@ on:
         description: "Parallel machines (1 to 40)"
         default: "20"
   push:
+    # working branches only: merging to main never starts a render by itself
+    branches-ignore: [main]
     paths: [tools/song_kit/request.json]
 
 permissions:
