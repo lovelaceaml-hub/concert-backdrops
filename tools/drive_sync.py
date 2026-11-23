@@ -114,7 +114,8 @@ def main() -> None:
     else:
         names = [f["name"] for f in children(drive, FOLDER_ID)]
         print(json.dumps({"read_folder": True, "items_seen": len(names)}))
-        probe = Path("work/drive-check.txt")
+        import uuid
+        probe = Path(f"work/drive-check-{uuid.uuid4().hex}.txt")  # unique: never touches an existing file
         probe.parent.mkdir(parents=True, exist_ok=True)
         probe.write_text("Drive write check from the concert video cloud job.\n")
         try:

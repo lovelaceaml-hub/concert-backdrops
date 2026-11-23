@@ -211,7 +211,16 @@ def prepare(project: Project) -> dict:
 
 
 def dependency_files(project: Project) -> list[Path]:
-    names = set(source_identity(project.root, project_scene(project))) | {"pipeline/kit.py"}
+    scene = project_scene(project)
+    names = set(source_identity(project.root, scene)) | {"pipeline/kit.py"}
+    if scene_spec(scene, project.root).get("open"):
+        # Files a reusable scene reads through its params (for example the song
+        # recording) are part of its identity, so a changed file re-renders.
+        for shot in project.shots:
+            for key in ("audio", "features"):
+                value = shot.get("params", {}).get(key)
+                if isinstance(value, str) and (project.root / value).is_file():
+                    names.add(value)
     return [safe_path(project.root, name) for name in sorted(names)]
 
 
