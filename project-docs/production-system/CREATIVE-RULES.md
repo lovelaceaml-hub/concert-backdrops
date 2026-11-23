@@ -1,5 +1,25 @@
 # Creative and motion rules
 
+## Owner correction, November 22, 2026
+
+The owner rejected the separate Flow of Light fan study because its clothing
+exposed buttock, nipple and breast anatomy. Higher quality must retain the
+existing luminous concert style, with generous clothing that has its own
+silhouette. Remove body-conforming torso and seat geometry where it causes
+that problem. Painting an anatomical surface opaque does not solve it.
+
+The requested next deliverable is a full recreation of **Almighty God Who
+Knows the Future**, with better animation, detail and beauty. Use its full
+recording and existing Song 11 story. The new work is tracked in
+[S11-RECREATION.md](S11-RECREATION.md) and `tools/s11_renewed`.
+
+For Song 11 specifically, the later full-song brief governs: the hero is a
+conductor, the choir and orchestra are blue with gold instruments and books,
+figures remain faceless forms of light, and Heavenly Mother appears only as
+light. This song-specific rule is narrower than the general portrayal rules
+preserved below. Owner approval of the earlier thirty-second beauty reference
+does not approve the rejected fan model or any new output automatically.
+
 ## The meaning leads the picture
 
 The campaign's nine practices concern greeting, gratitude, apology, inclusiveness, concession, respect, encouragement, consideration and compliment. Read the [official campaign](https://heavenlymotherslove.org/en/about) and [daily practice page](https://heavenlymotherslove.org/en/checklist), then use the approved project wording and colors in `engine/p3d/words.py`. The song catalog records historical expression continuity; new emphasis is a proposal until integrated deliberately.
