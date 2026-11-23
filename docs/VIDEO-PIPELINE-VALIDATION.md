@@ -10,7 +10,7 @@ all eight original tool outcomes and all three jobs succeeded. The actual
 outcome summary was checked because tool steps use `continue-on-error`.
 Chat sandbox restrictions on browser sockets, Xvfb and Docker do not describe
 these GitHub runner results. Workbench interactive browser playback/export was
-not exercised; Docker was built without a container execution proof. Short
+not exercised in that run (it was proved later; see the table); Docker was built without a container execution proof. Short
 technical demonstrations do not establish all-song quality or approved 4K
 show output. The tool run used Python 3.12.16; the retained Song 11 film keeps
 its separate Python 3.12.14 producing contract.
@@ -27,6 +27,10 @@ its separate Python 3.12.14 producing contract.
 | CPU Docker image (`infra/docker/Dockerfile.cpu`) | Builds | Separate job |
 | Reusable song scene (`song-scene-demo`, p3d-kit with params) | Works | 4 seconds of Song 11 rendered at 1080p |
 | Drive access (`tools/drive_sync.py check`) | Works | Read the folder and saved, then removed, a test file |
+| Shotcraft Workbench playback and export (`node scripts/prove-workbench.mjs`) | Works on a GitHub runner ([run 45129900529](https://github.com/lovelaceaml-hub/concert-backdrops/actions/runs/45129900529)) and in a November 23 cloud session. | Page opened with no errors; playback advanced 00:00.00 to 00:04.00; export produced an H.264 1280x720 MP4 with 180 frames (checked with ffprobe). Shotcraft's own checker also rendered the SplitFlapFlip card to a 150-frame MP4. Passed again in runs 45131132788 and 45132139310. |
+| Any-song draft (`./scripts/video song-draft <song>`) | Works in a November 23 cloud session (Song 5, 10 s, 1080p60 with sound, QA passed, using the repository's Song 5 promo recording). Works on a GitHub runner ([run 45132139310](https://github.com/lovelaceaml-hub/concert-backdrops/actions/runs/45132139310)): Song 7's chosen recording fetched from Drive by its catalog file id, 10 seconds rendered at 1080p60 with sound, technical QA passed. All ten proof steps in that run passed. | Run [45131132788](https://github.com/lovelaceaml-hub/concert-backdrops/actions/runs/45131132788) fetched Song 9 from Drive by file id, then stopped on a Song 9 scene fault (its sky keys run 0, 10, 8 seconds). Run 45129900529 tried Song 5 and the Drive helper correctly refused: Song 5's chosen recording is a file shared from another account, outside the Songs folder. Since the owner's decision of November 23, `get-id` also downloads a song's chosen recording listed in the song catalog when it is a file shared with him, so Songs 2, 5, 6 and 10 can be fetched too. |
+
+The Workbench first failed to open on November 23 with a Vite error, `Failed to resolve import ../../shared/motion.mjs from proj/Composition.tsx`. The Workbench links the editor's source in as `workbench/proj` and resolves links by that path, so the relative import pointed outside the link. `apps/editor/src/shared` now links to `apps/shared`, and `Composition.tsx` imports `./shared/motion.mjs`. Earlier checks only confirmed an HTTP 200 response, which is why they missed it.
 
 How to run it: push to any `claude/video-tools-*` branch, or dispatch
 **Video tool proofs (cloud CPU)** by hand (`.github/workflows/tool-proofs.yml`).

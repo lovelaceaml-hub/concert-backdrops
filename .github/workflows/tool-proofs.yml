@@ -72,6 +72,10 @@ jobs:
         id: remotion
         continue-on-error: true
         run: ./scripts/video finalize pipeline-demo --quality draft --editor remotion 2>&1 | tee work/proofs/05-remotion.log
+      - name: Shotcraft Workbench (browser playback and MP4 export)
+        id: workbench
+        continue-on-error: true
+        run: node scripts/prove-workbench.mjs --out work/proofs/workbench 2>&1 | tee work/proofs/10-workbench.log
       - name: Blender background render
         id: blender
         continue-on-error: true
@@ -80,6 +84,27 @@ jobs:
         id: songscene
         continue-on-error: true
         run: PYTHONHASHSEED=0 ./scripts/video preview song-scene-demo --quality review 2>&1 | tee work/proofs/08-song-scene.log
+      - name: Any-song draft from Drive (Song 7, 10 seconds, 1080p)
+        id: songdraft
+        continue-on-error: true
+        env:
+          GOOGLE_DRIVE_OAUTH: ${{ secrets.GOOGLE_DRIVE_OAUTH }}
+        run: |
+          python -m pip install --quiet google-api-python-client==2.187.0 google-auth==2.43.0
+          # scripts/video runs in the render environment; point the Drive download at this interpreter.
+          export DRIVE_PYTHON="$(command -v python)"
+          ./scripts/video song-draft 7 2>&1 | tee work/proofs/11-song-draft.log
+      - name: Shared recordings download (Songs 2, 5, 6, 10)
+        id: shared
+        continue-on-error: true
+        env:
+          GOOGLE_DRIVE_OAUTH: ${{ secrets.GOOGLE_DRIVE_OAUTH }}
+        run: |
+          export DRIVE_PYTHON="$(command -v python)"
+          for song in 2 5 6 10; do ./scripts/video song-draft $song --no-render; done 2>&1 | tee work/proofs/12-shared-recordings.log
+          for f in work/song-sources/s02.m4a work/song-sources/s05.m4a work/song-sources/s06.m4a work/song-sources/s10.m4a; do
+            echo "$f $(ffprobe -v error -show_entries format=duration -of csv=p=0 "$f")" | tee -a work/proofs/12-shared-recordings.log
+          done
       - name: Blender MCP (stdio and live GUI)
         id: mcp
         continue-on-error: true
@@ -105,15 +130,22 @@ jobs:
             echo "blender_render=${{ steps.blender.outcome }}"
             echo "blender_mcp=${{ steps.mcp.outcome }}"
             echo "song_scene=${{ steps.songscene.outcome }}"
+            echo "workbench=${{ steps.workbench.outcome }}"
+            echo "song_draft=${{ steps.songdraft.outcome }}"
+            echo "shared_recordings=${{ steps.shared.outcome }}"
           } | tee work/proofs/summary.txt
+      # The repository is public, so its artifacts are too: logs, JSON and stills only. No recording and no
+      # video (drafts carry the song's music) is ever uploaded here; renders go to the private Drive folder.
       - name: Save proofs
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: tool-proofs
           path: |
-            work/proofs/
-            work/pipeline/**/*.mp4
+            work/proofs/**/*.log
+            work/proofs/**/*.txt
+            work/proofs/**/*.json
+            work/proofs/**/*.png
             work/pipeline/**/*.json
             work/pipeline/**/*.png
           if-no-files-found: ignore

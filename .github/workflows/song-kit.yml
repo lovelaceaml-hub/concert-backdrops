@@ -1,0 +1,205 @@
+name: Song kit film (cloud CPU)
+
+# Renders a song made on the song kit (tools/song_kit) in parallel parts on cloud CPU, joins and checks it, and
+# saves it to the song's Drive "Videos" folder. Manual start only (by hand once this file is on main; until then
+# a change to tools/song_kit/request.json on a working branch starts it). Nothing runs on an ordinary push.
+# The repository is public and so are its artifacts: no picture, part, film or recording is ever uploaded as an
+# artifact. Parts pass between machines through the private Drive folder (<song folder>/parts/run-<id>); only
+# the check report and checksums are kept as an artifact.
+# draft: 960x540 at 30 fps for review; film: native 1920x1080 at 60 fps. No phone copies. No test suites.
+on:
+  workflow_dispatch:
+    inputs:
+      song:
+        description: "Song folder under tools/song_kit/songs"
+        default: "s07"
+      quality:
+        description: "draft or film"
+        type: choice
+        options: [draft, film]
+        default: draft
+      parts:
+        description: "Parallel machines (1 to 40)"
+        default: "20"
+  push:
+    # working branches only: merging to main never starts a render by itself
+    branches-ignore: [main]
+    paths: [tools/song_kit/request.json]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: song-kit-${{ github.ref }}
+  cancel-in-progress: false
+
+env:
+  PYTHONHASHSEED: "0"
+  LIBGL_ALWAYS_SOFTWARE: "1"
+  LP_NUM_THREADS: "1"
+  OPENBLAS_NUM_THREADS: "1"
+  OMP_NUM_THREADS: "1"
+  NUMBA_NUM_THREADS: "1"
+
+jobs:
+  plan:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    outputs:
+      matrix: ${{ steps.plan.outputs.matrix }}
+      song: ${{ steps.plan.outputs.song }}
+      quality: ${{ steps.plan.outputs.quality }}
+      parts: ${{ steps.plan.outputs.parts }}
+      folder: ${{ steps.plan.outputs.folder }}
+      parts_path: ${{ steps.plan.outputs.parts_path }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - id: plan
+        env:
+          EVENT: ${{ github.event_name }}
+          INPUTS: ${{ toJSON(inputs) }}
+        run: |
+          python3 - <<'PY'
+          import json, os, re
+          v = json.load(open("tools/song_kit/request.json")) if os.environ["EVENT"] == "push" else json.loads(os.environ["INPUTS"])
+          song, quality = str(v.get("song", "s07")), str(v.get("quality", "draft"))
+          parts = int(v.get("parts", 20))
+          if not re.fullmatch(r"[a-z0-9_]+", song) or not os.path.isfile(f"tools/song_kit/songs/{song}/song_data.py"):
+              raise SystemExit("Unknown song")
+          if quality not in ("draft", "film") or not 1 <= parts <= 40:
+              raise SystemExit("quality must be draft or film; parts 1 to 40")
+          import importlib.util as u
+          spec = u.spec_from_file_location("d", f"tools/song_kit/songs/{song}/song_data.py")
+          m = u.module_from_spec(spec); spec.loader.exec_module(m)
+          folder = getattr(m, "DRIVE_FOLDER", "Videos/Song kit/" + m.TITLE)
+          parts_path = f"{folder}/parts/run-{os.environ['GITHUB_RUN_ID']}-{quality}"
+          with open(os.environ["GITHUB_OUTPUT"], "a") as out:
+              out.write("matrix=" + json.dumps({"part": list(range(parts))}) + "\n")
+              out.write(f"song={song}\nquality={quality}\nparts={parts}\n")
+              out.write(f"folder={folder}\nparts_path={parts_path}\n")
+          json.dump(dict(song=song, quality=quality, parts=parts, run=os.environ["GITHUB_RUN_ID"]), open("run.json", "w"))
+          PY
+      - name: Make this run's private parts folder on Drive (once, before the parallel machines)
+        env:
+          GOOGLE_DRIVE_OAUTH: ${{ secrets.GOOGLE_DRIVE_OAUTH }}
+        run: |
+          python3 -m pip install --quiet google-api-python-client==2.187.0 google-auth==2.43.0
+          python3 tools/drive_sync.py put run.json --path "${{ steps.plan.outputs.parts_path }}"
+
+  pictures:
+    needs: plan
+    runs-on: ubuntu-24.04
+    timeout-minutes: 345
+    strategy:
+      fail-fast: false
+      max-parallel: 20
+      matrix: ${{ fromJSON(needs.plan.outputs.matrix) }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+      - name: Host tools
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq --no-install-recommends ffmpeg libegl1 libgles2 libgl1-mesa-dri libegl-mesa0
+          python -m pip install --quiet uv==0.13.9 google-api-python-client==2.187.0 google-auth==2.43.0
+      - name: Environment and fonts
+        run: python scripts/bootstrap.py --p3d-only --reference-fonts
+      - name: Pinned engines and the song's music (the chosen recording, from Drive)
+        env:
+          GOOGLE_DRIVE_OAUTH: ${{ secrets.GOOGLE_DRIVE_OAUTH }}
+        run: |
+          export DRIVE_PYTHON="$(command -v python)"
+          .venv/bin/python tools/song_kit/prepare.py "${{ needs.plan.outputs.song }}"
+      - name: Render part ${{ matrix.part }}
+        run: |
+          .venv/bin/python tools/song_kit/film.py part "${{ needs.plan.outputs.song }}" --index ${{ matrix.part }} \
+            --parts ${{ needs.plan.outputs.parts }} --quality ${{ needs.plan.outputs.quality }} --outdir out/parts
+      - name: Save part ${{ matrix.part }} to this run's private Drive folder
+        env:
+          GOOGLE_DRIVE_OAUTH: ${{ secrets.GOOGLE_DRIVE_OAUTH }}
+        run: |
+          for f in out/parts/part*.mp4; do
+            [ -e "$f" ] || continue
+            for attempt in 1 2 3 4; do
+              python tools/drive_sync.py put "$f" --path "${{ needs.plan.outputs.parts_path }}" && break
+              [ $attempt = 4 ] && exit 1; sleep $((attempt * 15))
+            done
+          done
+
+  film:
+    needs: [plan, pictures]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+      - name: Host tools
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq --no-install-recommends ffmpeg libegl1 libgles2 libgl1-mesa-dri libegl-mesa0
+          python -m pip install --quiet uv==0.13.9 google-api-python-client==2.187.0 google-auth==2.43.0
+      - name: Environment and the song's music
+        env:
+          GOOGLE_DRIVE_OAUTH: ${{ secrets.GOOGLE_DRIVE_OAUTH }}
+        run: |
+          python scripts/bootstrap.py --p3d-only --reference-fonts
+          export DRIVE_PYTHON="$(command -v python)"
+          .venv/bin/python tools/song_kit/prepare.py "${{ needs.plan.outputs.song }}"
+      - name: Fetch the parts from this run's private Drive folder
+        env:
+          GOOGLE_DRIVE_OAUTH: ${{ secrets.GOOGLE_DRIVE_OAUTH }}
+          PARTS_PATH: ${{ needs.plan.outputs.parts_path }}
+        run: |
+          python - <<'PY'
+          import os, sys
+          from pathlib import Path
+          sys.path.insert(0, "tools")
+          import drive_sync as ds
+          drive, path = ds.service(), os.environ["PARTS_PATH"]
+          names = sorted(f["name"] for f in ds.children(drive, ds.folder(drive, path)) if f["name"].endswith(".mp4"))
+          for n in names:
+              print(ds.get(drive, n, path, Path("out/parts")))
+          print(len(names), "parts")
+          PY
+      - name: Join and check (fails before saving if any check fails)
+        run: |
+          ls out/parts
+          .venv/bin/python tools/song_kit/film.py join "${{ needs.plan.outputs.song }}" --parts-dir out/parts \
+            --quality ${{ needs.plan.outputs.quality }} --outdir out/film
+          (cd out/film && sha256sum *.mp4 | tee SHA256SUMS.txt)
+      - name: Save the film to the song's private Drive Videos folder
+        env:
+          GOOGLE_DRIVE_OAUTH: ${{ secrets.GOOGLE_DRIVE_OAUTH }}
+        run: |
+          for f in out/film/*.mp4 out/film/check.json out/film/SHA256SUMS.txt out/film/cues.py out/film/cues.csv; do
+            python tools/drive_sync.py put "$f" --path "${{ needs.plan.outputs.folder }}"
+          done
+      # public repository: only the check report, checksums and a silent frame sheet, never the film
+      - uses: actions/upload-artifact@v4
+        with:
+          name: song-kit-${{ needs.plan.outputs.song }}-${{ needs.plan.outputs.quality }}-check
+          path: |
+            out/film/check.json
+            out/film/SHA256SUMS.txt
+            out/film/contact.jpg
+            out/film/cues.py
+            out/film/cues.csv
+          retention-days: 14

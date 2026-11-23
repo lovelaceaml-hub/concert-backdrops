@@ -313,6 +313,8 @@ The preview app has a frame scrubber, frame steps, bloom control and three camer
 
 Shotcraft's Workbench imports the example editor manifest. Its visual edits must be exported and deliberately incorporated into the source timeline; they do not automatically rewrite every pipeline project. See [the integration guide](../integrations/README.md) for the exact workflow and media restrictions.
 
+To check that the Workbench plays and exports, run `node scripts/prove-workbench.mjs [--out work/proofs/workbench]`. It starts the Workbench, opens it in headless Chromium, presses Play, presses the Workbench's own "Render the current project to MP4" button, and checks the MP4 with ffprobe. Output goes to `work/proofs/workbench` unless `--out` says otherwise.
+
 For live assistant editing in Blender, use the project MCP configuration and start `python3 integrations/blender/launch_blender.py` on a cloud desktop. The upstream add-on requires Blender's GUI event loop. Background Blender rendering is independent of that connection and already works in the current workspace. The current session cannot host the GUI bridge because local Unix sockets are restricted.
 
 These project files configure supported Claude Code and Codex clients when opened at the repository root. They do not install a new callable MCP tool into an already-running ChatGPT conversation. No global client settings or Mac applications are modified.
@@ -349,6 +351,42 @@ Example shot params: `{"song": "s11_finale", "audio": "audio/promo/s11.mp3",
 "start_seconds": 30, "bloom_scale": 0.7, "grain": false}`. See
 `projects/song-scene-demo/project.json`. Work at 1080p; the final show video is
 3840x2160 at 60 fps only after the video is approved.
+
+## Draft any song (November 23, 2026)
+
+`./scripts/video song-draft <song>` makes a short draft of any catalogued song with its engine scene. The song can be given as a number (`5`), an id (`s05`) or part of its title.
+
+```bash
+./scripts/video song-draft 5
+./scripts/video song-draft s05 --start 60 --seconds 15
+./scripts/video song-draft "Almighty" --quality review --no-render
+./scripts/video song-draft 5 --module <other engine scene> --recording <other audio file in the repository>
+```
+
+What it does:
+
+- Looks the song up in `project-docs/production-system/catalogs/songs.json` and uses that song's chosen concert recording at its recorded local path in `work/song-sources/`.
+- If the recording is missing, downloads it from the Concert Backdrops - Songs Drive folder by its recorded file id, with `python3 tools/drive_sync.py get-id <file id> --as <file>`. This needs the `GOOGLE_DRIVE_OAUTH` secret. Only files inside that folder, or a song's chosen recording listed in the song catalog (some are files shared with the owner), are downloaded.
+- Pairs the recording with the song's existing scene `engine/songs/sNN_*.py`, through the reusable p3d-kit scene (`scenes/p3d/song_scene.py`).
+- Writes a project to `work/song-drafts/<id>/project.json`. Nothing in `projects/` changes.
+- Renders a short draft with the song's sound attached.
+
+Options:
+
+| Option | Meaning |
+| --- | --- |
+| `--start` | Where the draft starts in the song, in seconds. Default 30. |
+| `--seconds` | Draft length in seconds. Default 10. |
+| `--quality` | `draft` (960x540), `review` (1080p, the default) or `final` (4K, only after approval). |
+| `--module` | Use another engine scene instead of the song's own. |
+| `--recording` | Use another audio file from the repository. |
+| `--no-render` | Write the project only; do not render. |
+
+Output goes to `work/pipeline/song-draft-sNN/<quality>/`.
+
+A draft is a design check, not an approved film. It does not record creative approval.
+
+Proof, November 23, 2026 (Claude Code cloud session): `./scripts/video song-draft 5 --recording audio/promo/s05.mp3` rendered 10 seconds of Song 5 from 0:30 with the `s05_god_bless_you` scene: 1920x1080, 600 frames at 60 fps, AAC sound, technical QA passed. The engine scenes for Songs 1 to 11 are 60-second promo timelines (`TOTAL = 60.0`), so the command refuses an excerpt past 60 seconds; a full-length draft of a song needs a full-length scene first.
 
 ## Music sync
 

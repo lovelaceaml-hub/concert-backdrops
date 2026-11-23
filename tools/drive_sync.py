@@ -5,10 +5,12 @@ Used by cloud jobs (GitHub Actions). GOOGLE_DRIVE_OAUTH (Anthony's sign-in token
 the private "Concert Video Renders" app in the Drive Backups Google Cloud project) can
 read and save. GOOGLE_DRIVE_SA_KEY (a service account shared only on this folder) can
 read but not save: Google gives service accounts no storage in personal Drives.
-Every action stays inside the Concert Backdrops - Songs folder.
+Every action stays inside the Concert Backdrops - Songs folder, except that get-id may also
+download a song's chosen recording listed in the song catalog when it is a file shared with the owner.
 
     python3 tools/drive_sync.py list   [--path "Videos"]
     python3 tools/drive_sync.py get    "01 All You Stars of Zion.mp3" --to work/song-sources/
+    python3 tools/drive_sync.py get-id <file id> --as work/song-sources/s05.m4a   # ids from catalogs/songs.json
     python3 tools/drive_sync.py put    work/out/master.mp4 --path "Videos/Renders"
     python3 tools/drive_sync.py check  # read the folder and save, then remove, a small test file
 """
@@ -85,6 +87,41 @@ def get(drive, name: str, path: str, to: Path) -> Path:
     return out
 
 
+def inside_songs_folder(drive, file_id: str) -> bool:
+    current, seen = file_id, 0
+    while current and seen < 20:
+        parents = drive.files().get(fileId=current, fields="parents").execute().get("parents", [])
+        if FOLDER_ID in parents:
+            return True
+        current, seen = (parents[0] if parents else None), seen + 1
+    return False
+
+
+def catalog_recording_ids() -> set[str]:
+    """Drive ids of each song's chosen recording in the song catalog (some are files shared with the owner)."""
+    catalog = Path(__file__).resolve().parents[1] / "project-docs/production-system/catalogs/songs.json"
+    songs = json.loads(catalog.read_text())["songs"]
+    return {(s.get("audio", {}).get("source") or {}).get("file_id") for s in songs} - {None}
+
+
+def get_id(drive, file_id: str, out: Path) -> Path:
+    """Download one file by its Drive id: anything inside the Songs folder, or a song's chosen recording
+    listed in the song catalog even when it is a file shared with the owner (owner's decision, 2026-11-23)."""
+    from googleapiclient.http import MediaIoBaseDownload
+    if file_id not in catalog_recording_ids() and not inside_songs_folder(drive, file_id):
+        sys.exit(f"Drive file {file_id} is neither inside the Concert Backdrops - Songs folder nor a song's "
+                 f"chosen recording in catalogs/songs.json, so it was not downloaded.")
+    out.parent.mkdir(parents=True, exist_ok=True)
+    partial = out.with_name(out.name + ".part")
+    with partial.open("wb") as stream:
+        downloader = MediaIoBaseDownload(stream, drive.files().get_media(fileId=file_id), chunksize=32 * 1024 * 1024)
+        done = False
+        while not done:
+            _, done = downloader.next_chunk()
+    partial.replace(out)
+    return out
+
+
 def put(drive, local: Path, path: str) -> str:
     from googleapiclient.http import MediaFileUpload
     parent = folder(drive, path, create=True)
@@ -98,10 +135,11 @@ def put(drive, local: Path, path: str) -> str:
 
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument("action", choices=("list", "get", "put", "check"))
+    parser.add_argument("action", choices=("list", "get", "get-id", "put", "check"))
     parser.add_argument("name", nargs="?")
     parser.add_argument("--path", default="", help="Subfolder inside Concert Backdrops - Songs")
     parser.add_argument("--to", type=Path, default=Path("work/song-sources"))
+    parser.add_argument("--as", dest="as_path", type=Path, help="Output file for get-id")
     args = parser.parse_args()
     drive = service()
     if args.action == "list":
@@ -109,6 +147,10 @@ def main() -> None:
             print(f"{'[folder] ' if f['mimeType'] == FOLDER_MIME else ''}{f['name']}  {f.get('size', '')}")
     elif args.action == "get":
         print(get(drive, args.name, args.path, args.to))
+    elif args.action == "get-id":
+        if not args.name or not args.as_path:
+            sys.exit("get-id needs a file id and --as <output file>")
+        print(get_id(drive, args.name, args.as_path))
     elif args.action == "put":
         print(put(drive, Path(args.name), args.path))
     else:

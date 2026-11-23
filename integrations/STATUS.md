@@ -18,9 +18,21 @@ The latest owner priorities ([PR #114](https://github.com/lovelaceaml-hub/concer
 | CPU Docker image | Separate job built successfully; container execution/production was not proved |
 | Drive access | Separate job read the project folder and saved then removed a unique test file |
 
-All four encoded demo QA records have `creative_approval=not_assessed` and `audio_streams=0`. They prove the specified short runtime paths, not every song, a full concert or approved 4K production. Shotcraft Workbench interactive browser playback/export remains unverified; the new check's `server_started=false` does not supersede that limitation. Its historical build/HTTP/lifecycle evidence is retained below. No production Mac/Metal run is established.
+All four encoded demo QA records have `creative_approval=not_assessed` and `audio_streams=0`. They prove the specified short runtime paths, not every song, a full concert or approved 4K production. Shotcraft Workbench interactive browser playback and export were not part of that run; they were proved afterwards in a Claude Code cloud session (next section). Its historical build/HTTP/lifecycle evidence is retained below. No production Mac/Metal run is established.
 
 Use [the workflow](../.github/workflows/tool-proofs.yml), [validation record](../docs/VIDEO-PIPELINE-VALIDATION.md), [reusable-scene instructions](../docs/VIDEO-PIPELINE.md#reusable-scenes-for-any-song-november-22-2026), [kit adapter](../pipeline/kit.py) and [example project](../projects/song-scene-demo/project.json). [`tools/drive_sync.py`](../tools/drive_sync.py) uses the Actions secret `GOOGLE_DRIVE_OAUTH` for project Drive list/get/put operations; the documented `GOOGLE_DRIVE_SA_KEY` fallback is read-only. Record secret names only. Future media transfers still require their own byte checks.
+
+## Claude Code cloud session, November 23, 2026 UTC
+
+This session's sandbox allowed browser sockets and Xvfb, so these ran in it:
+
+1. Full setup with `python3 scripts/bootstrap.py` completed with no errors: Blender 5.2.4 LTS, the MCP add-on enabled, Shotcraft at the pinned commit, and the apps built. Live MCP was not rerun here; its pass is the GitHub runner result above.
+2. A Workbench fault was found and fixed. The Workbench page failed to open with a Vite error, `Failed to resolve import ../../shared/motion.mjs from proj/Composition.tsx`: the Workbench links the editor's source in as `workbench/proj` and resolves links by that path, so the editor's relative import pointed outside it. Now `apps/editor/src/shared` links to `apps/shared` and `Composition.tsx` imports `./shared/motion.mjs`. The editor type check and build pass. Earlier checks only confirmed HTTP 200, so they missed this.
+3. `node scripts/prove-workbench.mjs [--out work/proofs/workbench]` opens the Workbench in headless Chromium, presses Play (the frame counter and the preview picture must change), then presses the Workbench's own "Render the current project to MP4" button, follows its export API and checks the MP4 with ffprobe. Result: no page errors; playback advanced 00:00.00 to 00:04.00; export H.264 1280x720, 180 frames. Shotcraft's own card checker (`node scripts/check-demo.mjs <card>.tsx` in `.tools/video-shotcraft/workbench`) also rendered the SplitFlapFlip card to a 150-frame MP4.
+4. `./scripts/video song-draft <song>` drafts any catalogued song (see [VIDEO-PIPELINE.md](../docs/VIDEO-PIPELINE.md)). A 10-second Song 5 draft rendered at 1080p60 with sound and passed QA.
+5. `scripts/cloud-session-setup.sh` now installs the EGL libraries even when FFmpeg is already present (otherwise rendering fails with "libEGL.so not loaded") and retries when the package mirror times out. The automatic setup runs only when a session starts inside the repository; when a session starts one folder above it (several repositories attached), run `bash scripts/cloud-session-setup.sh` by hand from the repository.
+
+The proof workflow now also runs the Workbench proof and a Song 7 draft fetched from Drive. Song 5 was tried first and refused, because its chosen recording is a file shared from another account, outside the Songs folder; since the owner's decision of November 23 such catalog-listed shared recordings are downloaded, and the workflow checks Songs 2, 5, 6 and 10. Song 9 was tried next: its recording downloaded from Drive, but its scene cannot render because `SKY_TOP` keys in `engine/songs/s09_save_the_world.py` run 0, 10, 8 seconds, which the strict Track check (since November 14) refuses. That fix changes Song 9's opening sky, so it waits for the owner. These are engineering proofs, not creative deliveries.
 
 ## This local handoff checkout
 
@@ -30,7 +42,7 @@ The completed full Song 11 p3d production retains its original producing source 
 
 ## Historical setup verification, November 20, 2026
 
-The table below records checks in the chat-hosted Linux workspace during setup on 2026-11-20. “Installed,” “saved” and “this workspace” refer to that earlier environment, not to the present handoff checkout or the newer GitHub runner. The current cloud section above supersedes the historical live-GUI blocker; Workbench browser playback/export remains a separate unverified operation.
+The table below records checks in the chat-hosted Linux workspace during setup on 2026-11-20. “Installed,” “saved” and “this workspace” refer to that earlier environment, not to the present handoff checkout or the newer GitHub runner. The current cloud section above supersedes the historical live-GUI blocker; Workbench browser playback/export was proved later in the Claude Code cloud session section above.
 
 | Check | Result |
 | --- | --- |
