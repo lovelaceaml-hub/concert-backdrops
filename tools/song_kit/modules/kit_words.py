@@ -17,6 +17,7 @@ comets kept out of it). The style field of PHRASE_LIST picks a graceful entrance
 and every phrase leaves by dissolving upward into sparkles. The core keeps PHRASE_LIST (its 5-field tuples and
 reading windows) and calls specs() and add(). No em dash or en dash anywhere in this file.
 """
+import zlib
 import numpy as np
 
 from songs.kit_film import *  # noqa: F401,F403
@@ -116,7 +117,7 @@ def _writer(word):
         return word.pen(r0) + (r * (0.55 * W) + u * (0.75 * W) + nrm * (0.2 * W)) * (a * a)
 
     return Comet(head, "#ffe2a8", ti - 0.55, r0 + 0.4, trail=0.5, width=0.012 * W, bright=0.9, fade=0.25, n=70,
-                 sparks=True, seed=hash(word.name) % 97, clear=False)
+                 sparks=True, seed=zlib.crc32(word.name.encode()) % 97, clear=False)
 
 
 class _GlyphShadow:

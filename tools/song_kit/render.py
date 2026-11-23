@@ -16,6 +16,10 @@ import subprocess
 import sys
 import time
 
+if os.environ.get("PYTHONHASHSEED") != "0":
+    # every frame must be the same in every process (Song 11's renderer rule): restart with a fixed hash seed
+    os.execve(sys.executable, [sys.executable, *sys.argv], dict(os.environ, PYTHONHASHSEED="0"))
+
 KIT = Path(__file__).resolve().parent
 ROOT = KIT.parents[1]
 sys.path.insert(0, str(ROOT / "tools/nine_colours_minor"))
