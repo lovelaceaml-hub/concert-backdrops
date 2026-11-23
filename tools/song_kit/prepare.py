@@ -41,6 +41,8 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("song")
     ap.add_argument("--audio", type=Path)
+    ap.add_argument("--stand-in", action="store_true",
+                    help="layout work only: accept another recording (labelled in provenance.json, never for delivery)")
     args = ap.parse_args()
     D = song_data(args.song)
     try:
@@ -54,7 +56,7 @@ def main():
     audio = args.audio or recording(D)
     sha = hashlib.sha256(Path(audio).read_bytes()).hexdigest()
     expect = getattr(D, "AUDIO_SHA256", None)
-    if expect and sha != expect:
+    if expect and sha != expect and not args.stand_in:
         raise SystemExit(f"Unexpected recording {audio}: {sha}, expected {expect}")
     live, hold = float(D.LIVE), float(getattr(D, "HOLD", 15.0))
     start = float(getattr(D, "AUDIO_START", 0.0))
@@ -71,7 +73,7 @@ def main():
                    env=dict(env, S11_AUDIO=str(work / "score.wav")), check=True)
     (work / "provenance.json").write_text(json.dumps(dict(
         song=args.song, title=D.TITLE, engine_commit=r3.ENGINE_COMMIT, claude_reference_commit=r3.CLAUDE_COMMIT,
-        audio=str(audio), audio_sha256=sha, audio_start=start, live_seconds=live, hold_seconds=hold,
+        audio=str(audio), audio_sha256=sha, stand_in=bool(args.stand_in and sha != expect), audio_start=start, live_seconds=live, hold_seconds=hold,
         total_seconds=total, fps=60), indent=2) + "\n")
     print(f"{args.song} ready: {work}")
 

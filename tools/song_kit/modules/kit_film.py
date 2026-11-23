@@ -971,6 +971,9 @@ def _setup(scene):
     for m in THREADS:
         if hasattr(m, "add"):
             m.add(scene)
+    for e in scene.entries():
+        if e.name == "_arch":
+            e.reflect = False          # the arch of nine lights is never mirrored (it would close into a ring)
     WORDS.add_to(scene)
     WORDS.check(CAMERA, need_all=False)
 
@@ -1033,9 +1036,10 @@ def _sig_windows():
     for s in SHOTS:
         t0, t1 = s["t0"], s["t1"]
         a = max(t0, OPENING_END - 0.3)
-        if t1 <= a or t0 >= LAST_CHORD:
+        end = LAST_CHORD if END_CARD else TOTAL - 1.0       # the logo leaves with the end card, or before the hold's end
+        if t1 <= a or t0 >= end:
             continue
-        t1 = min(t1, LAST_CHORD)
+        t1 = min(t1, end)
         pal = _sig_palette(t0)
         if logo and logo[-1][3] == pal and abs(logo[-1][1] - a) < 1e-6:
             logo[-1] = (logo[-1][0], t1, SIG_CORNER, pal)
@@ -1050,8 +1054,11 @@ def _sig_windows():
     return w
 
 
+END_CARD = bool(getattr(D, "END_CARD", True))     # the finale ends on the campaign end card; a song mid-concert
+                                                   # ends on its quiet hand-off frame (no end card)
 TITLES = dict(
     opening=dict(t_end=OPENING_END, y=0.42, palette="night", dissolve=1.4, build=1.2),
     signature=dict(windows=_sig_windows(), fade=0.12),
-    end_card=dict(t_in=LAST_CHORD, fade=1.6, scale=0.94, veil=0.6, backdrop=False),
 )
+if END_CARD:
+    TITLES["end_card"] = dict(t_in=LAST_CHORD, fade=1.6, scale=0.94, veil=0.6, backdrop=False)
