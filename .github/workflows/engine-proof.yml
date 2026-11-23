@@ -1,0 +1,92 @@
+name: Engine quality proof (cloud CPU)
+
+# Proves the engine quality options on a GitHub cloud runner:
+# 1) with options off, frames are byte-identical to main's engine;
+# 2) the clarity preset renders and visibly differs.
+# Runs only when dispatched by hand or pushed to an engine branch. No test suites.
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - "claude/engine-*"
+
+permissions:
+  contents: read
+
+defaults:
+  run:
+    shell: bash
+
+concurrency:
+  group: engine-proof-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  proof:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: new
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          path: base
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Host tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ffmpeg libegl1 libgl1-mesa-dri libxi6 libxrender1 libxkbcommon0
+          python -m pip install uv==0.13.9 pillow
+          mkdir -p proof
+      - name: Render the default look with main's engine
+        working-directory: base
+        run: |
+          python scripts/bootstrap.py --p3d-only
+          ./scripts/video preview legacy-p3d --quality review 2>&1 | tail -5
+      - name: Render the default and clarity looks with the new engine
+        working-directory: new
+        run: |
+          python scripts/bootstrap.py --p3d-only
+          ./scripts/video preview legacy-p3d --quality review 2>&1 | tail -5
+          ./scripts/video preview legacy-p3d-clarity --quality review 2>&1 | tail -5
+      - name: Focused tests for the new options
+        working-directory: new
+        run: uv run --frozen --extra legacy python tests/test_engine_quality_options.py -v 2>&1 | tee ../proof/focused-tests.log
+      - name: Compare
+        run: |
+          python - <<'PY'
+          import hashlib, json, pathlib
+          from PIL import Image
+          def frames(root, project):
+              return sorted(pathlib.Path(root, "work/pipeline", project, "review").rglob("frames/frame_*.png"))
+          base, new, clar = frames("base", "legacy-p3d"), frames("new", "legacy-p3d"), frames("new", "legacy-p3d-clarity")
+          h = lambda p: hashlib.sha256(p.read_bytes()).hexdigest()
+          same = [h(a) == h(b) for a, b in zip(base, new)]
+          pix = lambda p: Image.open(p).convert("RGB").tobytes()
+          pixel_same = [pix(a) == pix(b) for a, b in zip(base, new)]
+          differs = [pix(a) != pix(b) for a, b in zip(new, clar)]
+          report = {"frames_main": len(base), "frames_new": len(new), "frames_clarity": len(clar),
+                    "default_pixels_identical_to_main": all(pixel_same) and len(base) == len(new) > 0,
+                    "default_files_identical_to_main": all(same) and len(base) == len(new) > 0,
+                    "clarity_frames_differ_from_default": sum(differs)}
+          print(json.dumps(report, indent=2))
+          pathlib.Path("proof/compare.json").write_text(json.dumps(report, indent=2))
+          if new and clar:
+              i = len(new) // 2
+              a, b = Image.open(new[i]).convert("RGB"), Image.open(clar[i]).convert("RGB")
+              sheet = Image.new("RGB", (a.width * 2, a.height)); sheet.paste(a, (0, 0)); sheet.paste(b, (a.width, 0))
+              sheet.save("proof/default-vs-clarity.png")
+          if not report["default_pixels_identical_to_main"]:
+              raise SystemExit("The default look changed. Options must be opt-in.")
+          PY
+      - name: Save proof
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: engine-proof
+          path: proof/
+          retention-days: 14

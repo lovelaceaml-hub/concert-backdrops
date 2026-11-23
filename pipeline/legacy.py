@@ -30,7 +30,16 @@ def main() -> None:
     np.random.seed(job["seed"])
     sys.path.insert(0, str(root / "engine"))
     from render import Renderer
-    renderer = Renderer(job["video"]["width"], job["video"]["height"])
+    preset = shot.get("params", {}).get("quality")
+    if preset is None:
+        renderer = Renderer(job["video"]["width"], job["video"]["height"])
+    elif preset == "clarity":
+        # The approved Song 11 look: no added grain, calmer sun and bloom,
+        # two cut-safe temporal samples. See docs/VIDEO-PIPELINE.md.
+        from quality import QualityOptions
+        renderer = Renderer(job["video"]["width"], job["video"]["height"], quality=QualityOptions.clarity())
+    else:
+        raise SystemExit(f"Unknown quality preset {preset!r}; use \"clarity\" or leave it out.")
     out = Path(job["out_dir"])
     out.mkdir(parents=True, exist_ok=True)
     offset = float(shot.get("params", {}).get("source_time_seconds", 0))
