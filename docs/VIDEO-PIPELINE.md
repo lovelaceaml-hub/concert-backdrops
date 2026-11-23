@@ -365,7 +365,7 @@ Run through `python -m tools.music_sync <command>` (on a cloud runner with `tool
 
 ### Running in the cloud and where results land
 
-Start the GitHub Actions workflow **Music sync (cloud CPU)** (`.github/workflows/music-sync.yml`) manually from GitHub Actions or with `gh workflow run`:
+Start the GitHub Actions workflow **Music sync (cloud CPU)** (`.github/workflows/music-sync.yml`) manually from GitHub Actions or with `gh workflow run`. Pushing to any `claude/music-sync*` branch also starts it automatically, running every step (including sung-word timing) on the proof song "05 God Bless You! (sung guide, for lyric timing).mp3" and saving the results to Drive. Manual examples:
 
 ```bash
 gh workflow run music-sync.yml -f song="05 God Bless You! (sung guide, for lyric timing).mp3" -f steps=all
