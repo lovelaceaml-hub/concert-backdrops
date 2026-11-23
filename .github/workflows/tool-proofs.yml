@@ -12,6 +12,11 @@ on:
 permissions:
   contents: read
 
+defaults:
+  run:
+    # pipefail: a failing tool is reported as failed even when its output is logged.
+    shell: bash
+
 concurrency:
   group: video-tool-proofs-${{ github.ref }}
   cancel-in-progress: true
@@ -68,8 +73,14 @@ jobs:
         continue-on-error: true
         run: |
           python3 integrations/blender/smoke.py 2>&1 | tee work/proofs/07-mcp.log
+          Xvfb :99 -screen 0 1920x1080x24 >/dev/null 2>&1 &
+          export DISPLAY=:99
+          python3 integrations/blender/launch_blender.py > work/proofs/07-blender-gui.log 2>&1 &
+          for i in $(seq 1 90); do (echo > /dev/tcp/127.0.0.1/9876) >/dev/null 2>&1 && break; sleep 2; done
           echo "--- live ---" | tee -a work/proofs/07-mcp.log
-          xvfb-run -a -s "-screen 0 1920x1080x24" python3 integrations/blender/smoke.py --live 2>&1 | tee -a work/proofs/07-mcp.log
+          python3 integrations/blender/smoke.py --live 2>&1 | tee -a work/proofs/07-mcp.log
+          pkill -f blender || true
+          pkill Xvfb || true
       - name: Summary
         if: always()
         run: |
