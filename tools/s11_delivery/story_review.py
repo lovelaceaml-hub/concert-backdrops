@@ -16,7 +16,7 @@ from PIL import Image, ImageDraw
 ROOT = Path(__file__).resolve().parents[2]
 
 
-def samples():
+def samples(parts=0, chunk_frames=0):
     tree = ast.parse((ROOT / "tools/s11_full2/s11_full2.py").read_text())
     edit = None
     for node in tree.body:
@@ -40,6 +40,12 @@ def samples():
                    123.2, 140, 155, 167, 186, 205, 221, 240, 250, 254.2,
                    259.9, 260.0, 267.0, 274.983333):
         selected[round(second * 60)] = "selected composition"
+    boundaries = ([16500 * part // parts for part in range(1, parts)] if parts else [])
+    if chunk_frames:
+        boundaries += list(range(chunk_frames, 16500, chunk_frames))
+    for boundary in boundaries:
+        selected[boundary - 1] = "before render-part join"
+        selected[boundary] = "after render-part join"
     return [dict(frame=f, video_seconds=f / 60, source_seconds=max(0, f / 60 - .1),
                  purpose=selected[f]) for f in sorted(selected)]
 
@@ -48,8 +54,12 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--video", type=Path, required=True)
     parser.add_argument("--out", type=Path, required=True)
+    parser.add_argument("--parts", type=int, default=0, help="Equal-division remote part count, when used.")
+    parser.add_argument("--chunk-frames", type=int, default=0, help="Local fixed chunk size, when used.")
     args = parser.parse_args()
-    rows = samples()
+    if not 0 <= args.parts <= 100 or not 0 <= args.chunk_frames <= 16500:
+        parser.error("Invalid render-part review range.")
+    rows = samples(args.parts, args.chunk_frames)
     args.out.mkdir(parents=True, exist_ok=True)
     frames = args.out / "frames"
     if frames.exists():
@@ -77,6 +87,7 @@ def main():
         sheet.save(args.out / f"story-sheet-{first // per_sheet + 1:02d}.jpg", quality=94)
     record = dict(schema="s11-story-review-extraction-v1", video=args.video.name,
                   frames=len(rows), full_film_seconds=275, rows=rows,
+                  remote_parts=args.parts, local_chunk_frames=args.chunk_frames,
                   visual_verdict="Pending actual inspection of the extracted sheets.")
     (args.out / "inventory.json").write_text(json.dumps(record, indent=2) + "\n")
     print(json.dumps({"frames": len(rows), "sheets": (len(rows) + per_sheet - 1) // per_sheet,

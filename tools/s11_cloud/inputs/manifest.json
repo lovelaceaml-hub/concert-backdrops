@@ -233,7 +233,7 @@
       "sha256": "7b161567db869c9a6c2f71ba0fc9c2002eb93a9b9e7b245eae3d45fe70e49f59"
     }
   },
-  "creative_source_commit": "beacae436e3e44b6c8fd9732437945cc731d851e",
+  "creative_source_commit": "8a2ddad71eba2a8c85b49484acd554ead39484a9",
   "engine_pins": {
     "work/nine_colours_minor/render1": "d928ff9eafe02ac3150f0c646bdcc497fe5a7278",
     "work/nine_colours_revision3/claude-final": "f43f4514e4bc42dc25166e90160d98219f5a0db4"

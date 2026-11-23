@@ -62,3 +62,7 @@ The current work is a new recreation for owner review. The earlier approved
 excerpt keeps its own identity. Record the exact finished file, its checks and
 its saved location in the delivery evidence; do not infer owner approval from
 technical tests or an earlier film's approval.
+
+## Superseded direction
+
+The rejected Flow of Light fan-study draft, [PR #111](https://github.com/lovelaceaml-hub/concert-backdrops/pull/111), was closed without merging after the owner correction. Its historical files remain available. The active full-song recreation is [PR #112](https://github.com/lovelaceaml-hub/concert-backdrops/pull/112). The new costume and movement source begins at `beacae436e3e44b6c8fd9732437945cc731d851e`; later cloud and delivery records retain their own exact identities.

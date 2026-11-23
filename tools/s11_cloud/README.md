@@ -3,7 +3,7 @@
 This isolated adapter renders the same frozen `s11_renewed` scene on GitHub's
 standard Ubuntu workers. It does not change the local full-song renderer.
 Only checked analysis maps are sent to the picture workers. The original MP3,
-prepared WAV and artifact decryption key remain local.
+prepared WAV and artifact decryption key remain in owner-controlled storage.
 
 ## Privacy and execution boundary
 
@@ -11,7 +11,7 @@ The repository is public. The two tracked NPZ files contain derived time,
 level, band, onset, beat and pitch estimates, not waveform samples. Public
 source plus these maps makes the silent scene reproducible. Artifact encryption
 protects the produced video bytes; it does not conceal the published scene code
-or analysis. Do not publish this request if that distinction is unacceptable.
+or analysis. These checked analysis inputs and scene source are part of the public project.
 
 Every uploaded artifact is a CMS envelope using AES-256-GCM authenticated
 encryption and RSA-OAEP SHA256 key transport. Only `recipient.pem`, a public
@@ -24,7 +24,7 @@ The workflow responds only to changes to `tools/s11_cloud/request.json` on
 `creative/s11-renewed-20261122`. It has read-only repository permission, one-day
 artifact retention, no persistent Actions cache and no automatic publication.
 Standard public-runner compute is free; artifact storage has a separate account
-allowance. Review storage availability before a full run.
+allowance; this workflow retains artifacts for one day.
 
 ## Stage and review a request locally
 
@@ -55,7 +55,9 @@ artifact, extract the `.tar.cms`, then decrypt with:
 The images are under the reported `probe-review-verified-parts` directory.
 Inspect the native pictures before freezing a `render` request. The full request
 uses 40 contiguous chunks with at most 20 jobs in parallel, one render process
-per 4-CPU/16-GB runner. Smaller jobs reduce the effect of slow scenes and keep
+per 4-CPU/16-GB runner, with two Mesa threads and one thread each for BLAS,
+OMP and Numba. The initial probe used one Mesa thread; its distinct runtime
+fingerprint remains a separate record. Smaller jobs reduce the effect of slow scenes and keep
 artifact downloads manageable. Exact duration depends on scene cost and queues.
 
 ## Full run and local assembly

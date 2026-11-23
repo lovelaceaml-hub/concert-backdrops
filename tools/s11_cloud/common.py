@@ -143,7 +143,7 @@ def runtime():
         packages[name] = importlib.metadata.version(name)
         if packages[name] != expected:
             raise ValueError(f"Runtime mismatch for {name}: {packages[name]} != {expected}")
-    expected_env = dict(PYTHONHASHSEED="0", LP_NUM_THREADS="1", OPENBLAS_NUM_THREADS="1",
+    expected_env = dict(PYTHONHASHSEED="0", LP_NUM_THREADS="2", OPENBLAS_NUM_THREADS="1",
                         OMP_NUM_THREADS="1", NUMBA_NUM_THREADS="1", LIBGL_ALWAYS_SOFTWARE="1")
     if any(os.environ.get(key) != value for key, value in expected_env.items()):
         raise ValueError("Use the cloud workflow's deterministic worker environment.")

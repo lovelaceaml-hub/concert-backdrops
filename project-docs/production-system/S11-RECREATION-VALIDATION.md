@@ -115,3 +115,9 @@ The internal 6-second passage at picture seconds 117.1–123.1 is complete. It c
 Two independent consecutive-frame inspections covered the repaired musical transition. The wider inspection viewed all 36 frames 7260–7295: hands, baton and torso advance gradually within each shot, feet remain planted, and the coat/trousers maintain coverage. The large screen-space change at picture 121.4333 seconds is the planned camera cut and light cue. These are encoded-frame inspections, not uninterrupted real-time playback or owner approval. [The preflight record](evidence/s11-renewed-preflight.json) retains the scope and measurements.
 
 The complete 275-second master remains pending; this proof is not the deliverable.
+
+## Completed remote native probe
+
+The GitHub probe run `45106842150` completed successfully from commit `8a2ddad71eba2a8c85b49484acd554ead39484a9`. Exact dependencies, pinned models/fonts and all 343 picture-source identities passed restoration and validation. The encrypted artifact was authenticated and inspected at 58, 105.7, 118.8, 186 and 205 seconds; the final composition and modesty fixes remain visible. Root and independent visual inspection found no new blocker in these frames.
+
+The remote runtime differs from the local Mesa runtime. The movies therefore use one complete remote cohort, with its own exact fingerprint, rather than mixing remote and local pictures. The full request uses two Mesa threads per worker, following the verified local setting; the remote probe used one. [The native-probe record](evidence/s11-cloud-native-probe.json) preserves the actual runtime, source identity, frame hashes and review scope. Full encoded-film checks remain pending.

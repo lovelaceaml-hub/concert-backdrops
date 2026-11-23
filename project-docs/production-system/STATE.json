@@ -18,8 +18,8 @@
   ],
   "audio_sources_verified": 11,
   "full_rehearsal_recordings_verified": 0,
-  "current_increment": "Advanced Dance: two complete 32-second solo and ensemble performances revising films 01 and 02",
-  "increment_status": "complete_reviewed_saved",
+  "current_increment": "Complete Almighty God Knows the Future recreation with modest costumes, continuous conducting, new cameras and controlled light",
+  "increment_status": "native_local_motion_and_remote_probe_passed_parallel_master_requested",
   "cloud_gpu_provider": null,
   "mac_rendering_used": false,
   "new_study_creative_approval": "not_recorded",
@@ -28,7 +28,7 @@
     "handoff": "https://drive.google.com/drive/folders/1QDGGqqkJlbovBLCthX-QChqfD8zSmK8X",
     "media": "https://drive.google.com/drive/folders/1hrk62bFIOHv2NwXvYl2bNSmp0cwBoXrr"
   },
-  "next_work": "Current maintenance checks and the updated handoff are complete. PR110 is the source integration authority. Recover the saved films for owner feedback; a later requested production round uses its own current source, caches and receipts.",
+  "next_work": "Finish the native cloud probe, launch the complete parallel picture request, assemble with the verified original score, inspect the encoded full film, save the master and update exact delivery identities.",
   "background_service_configured": false,
   "historical_baseline_checkpoint": "673f68785c36b57d55d05129ee5549efe6352c60",
   "render_projects": [
@@ -53,17 +53,17 @@
   ],
   "new_model_family_count": 9,
   "new_model_variant_count": 18,
-  "current_increment_pr": 109,
+  "current_increment_pr": 112,
   "setup_font_reconstruction_commit": "3aaa7c5d75a01704c984b60c33cfc2a0bb807b5f",
   "fresh_checkout_native_frame_verified": true,
   "fresh_checkout_scope": "New detached source checkout and exact reconstructed fonts, using existing locked Python and host tools; one native frame matched exactly.",
   "drive_instruction_files_updated_and_verified": 5,
   "drive_instruction_evidence": "project-docs/production-system/evidence/drive-instruction-updates.json",
   "private_drive_media_copies": "fourteen_cataloged_media_uploaded_and_raw_bytes_verified",
-  "new_media_files_saved": 2,
+  "new_media_files_saved": 0,
   "new_media_catalog": "project-docs/production-system/catalogs/deliveries.json",
-  "active_render_processes": 0,
-  "integration_authority": "https://github.com/lovelaceaml-hub/concert-backdrops/pull/109",
+  "active_render_processes": null,
+  "integration_authority": "https://github.com/lovelaceaml-hub/concert-backdrops/pull/112",
   "portable_handoff": {
     "status": "uploaded_and_raw_bytes_verified",
     "filename": "Concert-Production-System-Handoff-2026-11-20.zip",
@@ -1307,5 +1307,43 @@
     "future_cache_source_identity_changed": true,
     "remaining_maintenance_findings": []
   },
-  "catalog_artifact_count": 39
+  "catalog_artifact_count": 39,
+  "previous_increment_at_s11_start": {
+    "current_increment": "Advanced Dance: two complete 32-second solo and ensemble performances revising films 01 and 02",
+    "increment_status": "complete_reviewed_saved",
+    "current_increment_pr": 109,
+    "integration_authority": "https://github.com/lovelaceaml-hub/concert-backdrops/pull/109",
+    "next_work": "Current maintenance checks and the updated handoff are complete. PR110 is the source integration authority. Recover the saved films for owner feedback; a later requested production round uses its own current source, caches and receipts."
+  },
+  "s11_recreation": {
+    "creative_source_commit": "beacae436e3e44b6c8fd9732437945cc731d851e",
+    "cloud_probe_commit": "8a2ddad71eba2a8c85b49484acd554ead39484a9",
+    "cloud_probe_run_id": 45106842150,
+    "branch": "creative/s11-renewed-20261122",
+    "duration_seconds": 275,
+    "frames": 16500,
+    "fps": 60,
+    "native_size": [
+      1920,
+      1080
+    ],
+    "temporal_samples": 2,
+    "original_audio_sha256": "70464dff370f7187d12029970c1fa1ef3e91c6957180aa685b64cead830f7004",
+    "owner_creative_approval": "not_recorded",
+    "full_master_status": "parallel_render_requested",
+    "motion_proof_status": "complete_decode_timing_audio_and_consecutive_frame_review_passed",
+    "rejected_fan_pr": {
+      "number": 111,
+      "state": "closed",
+      "merged": false
+    },
+    "recovery_record": "project-docs/production-system/evidence/s11-cloud-recovery.json",
+    "cloud_probe_status": "complete_authenticated_and_native_visual_review_passed",
+    "cloud_full_request_id": "s11-renewed-20261123-master",
+    "cloud_full_parts": 40,
+    "cloud_max_parallel": 20,
+    "cloud_mesa_threads": 2,
+    "cloud_probe_evidence": "project-docs/production-system/evidence/s11-cloud-native-probe.json"
+  },
+  "render_activity_note": "Live worker/run status is observed from the current jobs; saved fields are not live telemetry."
 }

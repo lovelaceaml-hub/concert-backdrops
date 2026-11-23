@@ -5,9 +5,9 @@
   "fps": 60,
   "frames": 16500,
   "height": 1080,
-  "id": "s11-renewed-20261123-probe",
-  "input_manifest_sha256": "bd5950c51829db43ba3c0191a57d2c77e7aa9e6ae48d00ad2383adf31df62598",
-  "mode": "probe",
+  "id": "s11-renewed-20261123-master",
+  "input_manifest_sha256": "98ab85ac1f01419c4fcb375393384c03d7f49270bf6a898975f3ef828fa4e95b",
+  "mode": "render",
   "parts": 40,
   "picture_delay": 0.1,
   "probe_seconds": [

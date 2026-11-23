@@ -1,5 +1,50 @@
 # Handoff for a new AI or chat
 
+## Current production: full Song 11 recreation
+
+Owner direction recorded November 22, 2026, America/Los_Angeles.
+
+The active request is to recreate the complete **Almighty God Knows the Future**
+music video more beautifully, with improved animation and modest independently
+shaped clothing. The project/recording title includes “Who”. The rejected fan
+study is superseded; its draft PR #111 was closed without merging.
+
+The new work is in [PR #112](https://github.com/lovelaceaml-hub/concert-backdrops/pull/112),
+branch `creative/s11-renewed-20261122`. Read [the recreation record](S11-RECREATION.md),
+[creative rules](CREATIVE-RULES.md), [validation record](S11-RECREATION-VALIDATION.md)
+and [current state](STATE.json) before acting. Source is `tools/s11_renewed`;
+the isolated parallel renderer is `tools/s11_cloud`; encoded delivery checks are
+in `tools/s11_delivery`.
+
+The film keeps the verified full recording clock: 260 seconds of music, the
+established 0.05-second final fade and 15-second silent closing hold, for 275
+seconds. Native delivery is 1920×1080 at 60fps with two temporal samples.
+The existing 0.1-second picture delay is applied once. The visual hero is the
+male conductor, with blue choir/orchestra, gold instruments and songbooks, the
+heavenly city, Earth, Zion, gathering nations and the Church of God. Heavenly
+Mother is represented only as light in this song.
+
+The six-second native motion proof and its complete encoded-media checks have
+passed. The full film is still rendering at this checkpoint. The GitHub native
+probe has passed setup, authenticated delivery and visual review. The full
+40-part request is `s11-renewed-20261123-master`, with up to 20 workers and
+two Mesa threads per worker; local three-worker rendering is a fallback. Do not mix the two render cohorts or
+change picture source while a run is active. The private render key has a saved
+recovery archive; its identity is in [the recovery record](evidence/s11-cloud-recovery.json).
+The recording and private key are never included in the public picture-worker
+inputs or output artifacts.
+
+Current creative picture source starts at `beacae436e3e44b6c8fd9732437945cc731d851e`.
+Cloud probe request/source commit is `8a2ddad71eba2a8c85b49484acd554ead39484a9`.
+Full-master delivery identity and saved links must be filled from the actual
+completed output, not inferred from the proof or older approved excerpt.
+
+## Historical Advanced Dance delivery and earlier maintenance
+
+The following record predates the current Song 11 recreation. Its finished
+files and source identities remain historical facts; its then-current queue
+and maintenance wording do not override the active production above.
+
 Updated November 22, 2026, America/Los_Angeles. Machine timestamps use UTC.
 The user withdrew the previously provided AGENTS.md instructions and requested
 documentation, upload, update, review and refactoring. Root AGENTS.md now serves
