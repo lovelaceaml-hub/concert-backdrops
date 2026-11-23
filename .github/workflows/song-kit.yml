@@ -190,11 +190,12 @@ jobs:
           for f in out/film/*.mp4 out/film/check.json out/film/SHA256SUMS.txt; do
             python tools/drive_sync.py put "$f" --path "${{ needs.plan.outputs.folder }}"
           done
-      # public repository: only the check report and checksums, never the film
+      # public repository: only the check report, checksums and a silent frame sheet, never the film
       - uses: actions/upload-artifact@v4
         with:
           name: song-kit-${{ needs.plan.outputs.song }}-${{ needs.plan.outputs.quality }}-check
           path: |
             out/film/check.json
             out/film/SHA256SUMS.txt
+            out/film/contact.jpg
           retention-days: 14

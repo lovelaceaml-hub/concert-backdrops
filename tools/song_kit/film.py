@@ -120,6 +120,10 @@ def join(a):
     (out / "check.json").write_text(json.dumps(dict(song=a.song, quality=a.quality, expected_frames=total,
                                                     files=report, errors=errors), indent=2) + "\n")
     print(json.dumps(report, indent=2))
+    sheet = out / "contact.jpg"   # 48 small frames across the film, picture only (for review; no sound)
+    subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", str(picture), "-vf",
+                    f"fps=48/{seconds:.3f},scale=320:-2,tile=6x8", "-frames:v", "1", "-q:v", "4", str(sheet)],
+                   check=False)
     if errors:
         raise SystemExit("Checks failed: " + "; ".join(errors))
     print("checks passed")
