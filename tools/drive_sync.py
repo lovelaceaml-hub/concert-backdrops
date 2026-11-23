@@ -1,8 +1,11 @@
 #!/usr/bin/env python3
 """Read song files from, and save renders to, the "Concert Backdrops - Songs" Drive folder.
 
-Used by cloud jobs (GitHub Actions) with the service account key in the
-GOOGLE_DRIVE_SA_KEY secret. The account can only reach that one shared folder.
+Used by cloud jobs (GitHub Actions). GOOGLE_DRIVE_OAUTH (Anthony's sign-in token for
+the private "Concert Video Renders" app in the Drive Backups Google Cloud project) can
+read and save. GOOGLE_DRIVE_SA_KEY (a service account shared only on this folder) can
+read but not save: Google gives service accounts no storage in personal Drives.
+Every action stays inside the Concert Backdrops - Songs folder.
 
     python3 tools/drive_sync.py list   [--path "Videos"]
     python3 tools/drive_sync.py get    "01 All You Stars of Zion.mp3" --to work/song-sources/
@@ -22,13 +25,21 @@ FOLDER_MIME = "application/vnd.google-apps.folder"
 
 
 def service():
-    from google.oauth2 import service_account
+    """Prefer the owner's sign-in token (can save files); fall back to the read-only service account."""
     from googleapiclient.discovery import build
-    raw = os.environ.get("GOOGLE_DRIVE_SA_KEY")
-    if not raw:
-        sys.exit("GOOGLE_DRIVE_SA_KEY is not set (it lives in the repository's Actions secrets).")
-    creds = service_account.Credentials.from_service_account_info(
-        json.loads(raw), scopes=["https://www.googleapis.com/auth/drive"])
+    scopes = ["https://www.googleapis.com/auth/drive"]
+    oauth = os.environ.get("GOOGLE_DRIVE_OAUTH")
+    if oauth:
+        from google.oauth2.credentials import Credentials
+        info = json.loads(oauth)
+        creds = Credentials(None, refresh_token=info["refresh_token"], client_id=info["client_id"],
+                            client_secret=info["client_secret"], token_uri=info["token_uri"], scopes=scopes)
+    else:
+        from google.oauth2 import service_account
+        raw = os.environ.get("GOOGLE_DRIVE_SA_KEY")
+        if not raw:
+            sys.exit("Set GOOGLE_DRIVE_OAUTH (saves and reads) or GOOGLE_DRIVE_SA_KEY (reads only); both are Actions secrets.")
+        creds = service_account.Credentials.from_service_account_info(json.loads(raw), scopes=scopes)
     return build("drive", "v3", credentials=creds, cache_discovery=False)
 
 
