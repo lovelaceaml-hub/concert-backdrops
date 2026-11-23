@@ -12,6 +12,7 @@ import moderngl
 import song as S
 import text as T
 import shaders as G
+from quality import QualityOptions
 
 BL, ONE = moderngl.BLEND, moderngl.ONE
 
@@ -92,7 +93,11 @@ def comp_blocks():
 
 
 class Renderer:
-    def __init__(self, w=S.W, h=S.H, ctx=None):
+    def __init__(self, w=S.W, h=S.H, ctx=None, *, quality=None):
+        """Create a renderer; quality is an optional QualityOptions (legacy defaults)."""
+        if quality is not None and not isinstance(quality, QualityOptions):
+            raise TypeError("quality must be QualityOptions or None")
+        self.quality = quality if quality is not None else QualityOptions()
         self.w, self.h = w, h
         self.px = h / 1080.0
         if getattr(S, "TITLES", None):
@@ -114,7 +119,7 @@ class Renderer:
         self.p_lights = prog(G.QUAD_VS, G.LIGHTS_FS); self.v_lights = qvao(self.p_lights)
         self.p_credit = prog(G.QUAD_VS, G.CREDIT_FS); self.v_credit = qvao(self.p_credit)
         self.p_blur = prog(G.QUAD_VS, G.BLUR_FS); self.v_blur = qvao(self.p_blur)
-        self.p_comp = prog(G.QUAD_VS, G.comp_fs(comp_blocks())); self.v_comp = qvao(self.p_comp)
+        self.p_comp = prog(G.QUAD_VS, G.comp_fs(comp_blocks(), grain=self.quality.grain)); self.v_comp = qvao(self.p_comp)
         self.p_prot = prog(G.QUAD_VS, G.PROTECT_FS); self.v_prot = qvao(self.p_prot)
         import sky_camera as SKC   # cam_vs: the stars move with the sky when a song moves the camera
         self.p_star = prog(SKC.cam_vs(G.STAR_VS), G.STAR_FS)
@@ -257,6 +262,9 @@ class Renderer:
             P = self.react.apply(P, t)
         if self.p3d:
             P = self.p3d.adjust(t, P)   # the 3D world replaces the flat sky's stars, motes, arch and lake
+        else:
+            P = self.quality.world(t, P)
+        P = self.quality.parameters(t, P)
         asp = S.ASPECT
         L = S.lin
         cool = S.MILKY(t)

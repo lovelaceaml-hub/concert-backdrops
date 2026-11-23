@@ -1,7 +1,7 @@
 {
   "schema": "concert-claude-handoff-publication-v2",
   "status": "complete_drive_publication_raw_bytes_verified",
-  "recorded_utc": "2026-11-23T07:08:12.535358+00:00",
+  "recorded_utc": "2026-11-23T07:18:35.264033+00:00",
   "local_date": "2026-11-22",
   "timezone": "America/Los_Angeles",
   "repository": "https://github.com/lovelaceaml-hub/concert-backdrops",
@@ -12,14 +12,14 @@
   "current_source_snapshot_commit": "252e14145d535d8c8472c72144d85587967f3b2f",
   "current_source_snapshot_entries": 877,
   "prior_source_snapshot_commit": "3ef80d97d2cc25d5201195bb8ced3646811200db",
-  "source_snapshot_role": "Current tracked-source backup including the preserved owner cloud-tool merge and scoped archive transfer helper. Later closing documentation records actual source/publication identities, current status, logs and successful cloud archive retention. GitHub retains full history.",
+  "source_snapshot_role": "Verified recovery baseline252e1414 with877entries, preceding owner PR117–PR119. Final integrated source comes from the exact closing merge and is identified by the separate final source manifest/receipt.",
   "handoff_folder_url": "https://drive.google.com/drive/folders/1lxcic8BcSzNgPtEY_Yg_2TBAbNam72dZ",
   "source_folder_url": "https://drive.google.com/drive/folders/1ARIxA-UsuIR0xEVeDIBMH-MMgoxnafHn",
-  "current_distinct_file_readback_records": 102,
-  "current_distinct_file_readback_bytes": 4304238474,
-  "completion_payload_records": 101,
+  "current_distinct_file_readback_records": 103,
+  "current_distinct_file_readback_bytes": 4304256098,
+  "completion_payload_records": 102,
   "additional_completion_file_readback": 1,
-  "count_scope": "Current distinct-file verification records, not cumulative attempts across overwritten document versions. The 637 MB cloud archive was verified by authenticated cloud Drive readback; other routes are described by their individual records.",
+  "count_scope": "Verified publication checkpoint before the separate post-merge final-source package. Final package identities and added raw checks are recorded in FINAL-HANDOFF-RECEIPT.json in the source folder and linked from the final merge PR.",
   "publication_files": [
     {
       "artifact_id": "handoff-publication-SOURCE-RECEIPT.json",
@@ -61,8 +61,8 @@
       "artifact_id": "handoff-publication-HANDOFF-COMPLETION.json",
       "group": "publication",
       "file_name": "HANDOFF-COMPLETION.json",
-      "bytes": 416790,
-      "sha256": "8507d39740dd1a3d41c2b71183e5a8dded48012bcd33cbf0a2d63e1d08824679",
+      "bytes": 423189,
+      "sha256": "1d4614529275faebd68bd0b09517df420d5455fa894fa5a2575749222c2ed8ff",
       "drive": {
         "id": "1xSrvZ7zYc1B7-m1yz-Z8KIACLP9g6qpU",
         "url": "https://drive.google.com/file/d/1xSrvZ7zYc1B7-m1yz-Z8KIACLP9g6qpU/view?usp=drivesdk",
@@ -71,8 +71,8 @@
       },
       "metadata": {
         "id": "1xSrvZ7zYc1B7-m1yz-Z8KIACLP9g6qpU",
-        "bytes": 416790,
-        "modified_time": "2026-11-23T07:07:19.969Z",
+        "bytes": 423189,
+        "modified_time": "2026-11-23T07:17:47.409Z",
         "parent_ids": [
           "1ARIxA-UsuIR0xEVeDIBMH-MMgoxnafHn"
         ],
@@ -89,9 +89,9 @@
         ]
       },
       "raw_bytes_verified": true,
-      "readback_bytes": 416790,
-      "readback_sha256": "8507d39740dd1a3d41c2b71183e5a8dded48012bcd33cbf0a2d63e1d08824679",
-      "verified_utc": "2026-11-23T07:07:22.504182+00:00"
+      "readback_bytes": 423189,
+      "readback_sha256": "1d4614529275faebd68bd0b09517df420d5455fa894fa5a2575749222c2ed8ff",
+      "verified_utc": "2026-11-23T07:17:50.232371+00:00"
     }
   ],
   "portable_entry_documents": [
@@ -99,8 +99,8 @@
       "artifact_id": "handoff-document-CLAUDE-START-PROMPT.txt",
       "group": "handoff_documents",
       "file_name": "CLAUDE-START-PROMPT.txt",
-      "bytes": 4357,
-      "sha256": "d1f2b9e713c74bc8b199295549fc03698ed1188e7cf80178c51af28398ab851e",
+      "bytes": 4516,
+      "sha256": "ad13f3c638494d3dc840b6e98fbe42c3ccffbb42d730bede3f8e32baead1a9d4",
       "drive": {
         "id": "1jgrb01xoRrGKV13iOANuZn6Tniw5Hk9l",
         "url": "https://drive.google.com/file/d/1jgrb01xoRrGKV13iOANuZn6Tniw5Hk9l/view?usp=drivesdk",
@@ -109,8 +109,8 @@
       },
       "metadata": {
         "id": "1jgrb01xoRrGKV13iOANuZn6Tniw5Hk9l",
-        "bytes": 4357,
-        "modified_time": "2026-11-23T07:05:13.776Z",
+        "bytes": 4516,
+        "modified_time": "2026-11-23T07:16:08.861Z",
         "parent_ids": [
           "1lxcic8BcSzNgPtEY_Yg_2TBAbNam72dZ"
         ],
@@ -127,19 +127,58 @@
         ]
       },
       "raw_bytes_verified": true,
-      "readback_bytes": 4357,
-      "readback_sha256": "d1f2b9e713c74bc8b199295549fc03698ed1188e7cf80178c51af28398ab851e",
-      "verified_utc": "2026-11-23T07:05:16.109068+00:00",
+      "readback_bytes": 4516,
+      "readback_sha256": "ad13f3c638494d3dc840b6e98fbe42c3ccffbb42d730bede3f8e32baead1a9d4",
+      "verified_utc": "2026-11-23T07:16:11.813046+00:00",
       "source_repo_path": "project-docs/production-system/CLAUDE-START-PROMPT.txt",
-      "source_sha256": "d1f2b9e713c74bc8b199295549fc03698ed1188e7cf80178c51af28398ab851e",
+      "source_sha256": "ad13f3c638494d3dc840b6e98fbe42c3ccffbb42d730bede3f8e32baead1a9d4",
       "export_conversion": "Exact source text."
+    },
+    {
+      "artifact_id": "handoff-document-FINAL-SOURCE-CHECKPOINT.md",
+      "group": "handoff_documents",
+      "file_name": "FINAL-SOURCE-CHECKPOINT.md",
+      "bytes": 3737,
+      "sha256": "ce02bff4f02140a637fba3e027271f2ec62d7672cfa5e5fb34393004a3ab9c72",
+      "drive": {
+        "id": "1nP_X4Vp1VU0L4hasm6ienlx9dHCJhuWW",
+        "url": "https://docs.google.com/document/d/1nP_X4Vp1VU0L4hasm6ienlx9dHCJhuWW/edit?usp=drivesdk&ouid=113038373524763352759&rtpof=true&sd=true",
+        "parent_id": "1lxcic8BcSzNgPtEY_Yg_2TBAbNam72dZ",
+        "mime_type": "text/markdown"
+      },
+      "metadata": {
+        "id": "1nP_X4Vp1VU0L4hasm6ienlx9dHCJhuWW",
+        "bytes": 3737,
+        "modified_time": "2026-11-23T07:16:20.550Z",
+        "parent_ids": [
+          "1lxcic8BcSzNgPtEY_Yg_2TBAbNam72dZ"
+        ],
+        "shared": true,
+        "permissions": [
+          {
+            "type": "user",
+            "role": "owner"
+          },
+          {
+            "type": "user",
+            "role": "writer"
+          }
+        ]
+      },
+      "raw_bytes_verified": true,
+      "readback_bytes": 3737,
+      "readback_sha256": "ce02bff4f02140a637fba3e027271f2ec62d7672cfa5e5fb34393004a3ab9c72",
+      "verified_utc": "2026-11-23T07:16:22.974600+00:00",
+      "source_repo_path": "project-docs/production-system/FINAL-SOURCE-CHECKPOINT.md",
+      "source_sha256": "4d8ff18e9ff2bce43aadaf2bb45e5bfac890d2649aca4d4c5aec68f018c5dfb6",
+      "export_conversion": "Relative Markdown source links resolved to canonical GitHub main paths; body unchanged."
     },
     {
       "artifact_id": "handoff-document-CLAUDE-HANDOFF.md",
       "group": "handoff_documents",
       "file_name": "CLAUDE-HANDOFF.md",
-      "bytes": 64855,
-      "sha256": "b26c554eaa92977cb0265c1835b4dafcb99cb6ea15c4e3ea7a0225bb8797aae8",
+      "bytes": 66381,
+      "sha256": "880a99bb303a8439a7e553068d8851c8d5e95f2e15018d1bcdebed2435f88f29",
       "drive": {
         "id": "1nTUKiIL9Luc2wnjDixYnOwyuY1V0zPxb",
         "url": "https://docs.google.com/document/d/1nTUKiIL9Luc2wnjDixYnOwyuY1V0zPxb/edit?usp=drivesdk&ouid=113038373524763352759&rtpof=true&sd=true",
@@ -148,8 +187,8 @@
       },
       "metadata": {
         "id": "1nTUKiIL9Luc2wnjDixYnOwyuY1V0zPxb",
-        "bytes": 64855,
-        "modified_time": "2026-11-23T07:04:57.788Z",
+        "bytes": 66381,
+        "modified_time": "2026-11-23T07:15:53.110Z",
         "parent_ids": [
           "1lxcic8BcSzNgPtEY_Yg_2TBAbNam72dZ"
         ],
@@ -166,19 +205,19 @@
         ]
       },
       "raw_bytes_verified": true,
-      "readback_bytes": 64855,
-      "readback_sha256": "b26c554eaa92977cb0265c1835b4dafcb99cb6ea15c4e3ea7a0225bb8797aae8",
-      "verified_utc": "2026-11-23T07:05:00.415608+00:00",
+      "readback_bytes": 66381,
+      "readback_sha256": "880a99bb303a8439a7e553068d8851c8d5e95f2e15018d1bcdebed2435f88f29",
+      "verified_utc": "2026-11-23T07:15:55.363683+00:00",
       "source_repo_path": "project-docs/production-system/CLAUDE-HANDOFF.md",
-      "source_sha256": "df315c2c934f3ab23a6a3f46deaf7144237526e31b8a4a0ee3d1249df6e3c37c",
+      "source_sha256": "7dc073d2ed9f71321b562f62935a0038761f32ac3ab72a919e9c0b0b99cca155",
       "export_conversion": "Relative Markdown source links resolved to canonical GitHub main paths; body unchanged."
     },
     {
       "artifact_id": "handoff-document-PROJECT-STATUS.md",
       "group": "handoff_documents",
       "file_name": "PROJECT-STATUS.md",
-      "bytes": 5849,
-      "sha256": "b8b5c3de89b17e502da6ec76f0a1c1c642628ddaa50fd3df3c5848f62f6c0644",
+      "bytes": 6393,
+      "sha256": "cc627bddb630a6bda12abcc34dee25a9e909886e532a504e10e9e781b01475bc",
       "drive": {
         "id": "1sqj8wnck8gHDHW0K9paMcaT8cHUu2LgB",
         "url": "https://docs.google.com/document/d/1sqj8wnck8gHDHW0K9paMcaT8cHUu2LgB/edit?usp=drivesdk&ouid=113038373524763352759&rtpof=true&sd=true",
@@ -187,8 +226,8 @@
       },
       "metadata": {
         "id": "1sqj8wnck8gHDHW0K9paMcaT8cHUu2LgB",
-        "bytes": 5849,
-        "modified_time": "2026-11-23T07:05:05.644Z",
+        "bytes": 6393,
+        "modified_time": "2026-11-23T07:16:00.944Z",
         "parent_ids": [
           "1lxcic8BcSzNgPtEY_Yg_2TBAbNam72dZ"
         ],
@@ -205,11 +244,11 @@
         ]
       },
       "raw_bytes_verified": true,
-      "readback_bytes": 5849,
-      "readback_sha256": "b8b5c3de89b17e502da6ec76f0a1c1c642628ddaa50fd3df3c5848f62f6c0644",
-      "verified_utc": "2026-11-23T07:05:08.463967+00:00",
+      "readback_bytes": 6393,
+      "readback_sha256": "cc627bddb630a6bda12abcc34dee25a9e909886e532a504e10e9e781b01475bc",
+      "verified_utc": "2026-11-23T07:16:03.320038+00:00",
       "source_repo_path": "project-docs/production-system/PROJECT-STATUS.md",
-      "source_sha256": "a5ce7d9121a21f4521a5de4d8ea4606273da67c42fb33c33e346a34c2ec62f5e",
+      "source_sha256": "d0a677f442b11b1c304fe13b576b681ed0b2bf645fe976ec3158a9e0305190f5",
       "export_conversion": "Relative Markdown source links resolved to canonical GitHub main paths; body unchanged."
     }
   ],
@@ -218,8 +257,8 @@
       "artifact_id": "current-source-README_RESTORE_CURRENT_SOURCE.md",
       "group": "current_sources",
       "file_name": "README_RESTORE_CURRENT_SOURCE.md",
-      "bytes": 2998,
-      "sha256": "97b40fb8f4de9b78e294652f1d09c1b0c6f34e6b7d699735c9eee9331be9f60d",
+      "bytes": 3402,
+      "sha256": "6ccfb98337f7dbe69c3017691f0751b65e7eb126b3d954ce9b13636048811b61",
       "drive": {
         "id": "14dgfQa0A_74oiaWihTdVj2wupQ6D058-",
         "url": "https://docs.google.com/document/d/14dgfQa0A_74oiaWihTdVj2wupQ6D058-/edit?usp=drivesdk&ouid=113038373524763352759&rtpof=true&sd=true",
@@ -228,8 +267,8 @@
       },
       "metadata": {
         "id": "14dgfQa0A_74oiaWihTdVj2wupQ6D058-",
-        "bytes": 2998,
-        "modified_time": "2026-11-23T07:00:49.282Z",
+        "bytes": 3402,
+        "modified_time": "2026-11-23T07:16:44.885Z",
         "parent_ids": [
           "1ARIxA-UsuIR0xEVeDIBMH-MMgoxnafHn"
         ],
@@ -246,9 +285,9 @@
         ]
       },
       "raw_bytes_verified": true,
-      "readback_bytes": 2998,
-      "readback_sha256": "97b40fb8f4de9b78e294652f1d09c1b0c6f34e6b7d699735c9eee9331be9f60d",
-      "verified_utc": "2026-11-23T07:00:51.958660+00:00"
+      "readback_bytes": 3402,
+      "readback_sha256": "6ccfb98337f7dbe69c3017691f0751b65e7eb126b3d954ce9b13636048811b61",
+      "verified_utc": "2026-11-23T07:16:47.174043+00:00"
     },
     {
       "artifact_id": "current-source-SOURCE-MANIFEST-CLOUD-TOOLS.json",
@@ -438,8 +477,8 @@
       "artifact_id": "updated-drive-doc-16DTUM5WCezk2PSdAMpBfMsOkOd8PK7i5",
       "group": "current_drive_documents",
       "file_name": "production-status.json",
-      "bytes": 22746,
-      "sha256": "a8e0a4d647d52fb42387daf901b6b1f310f49a7453cdd2924cb646af1826b6e0",
+      "bytes": 27124,
+      "sha256": "d49f71b3cabdb394080d563f566332f720bc645365325160c231a3249a870855",
       "drive": {
         "id": "16DTUM5WCezk2PSdAMpBfMsOkOd8PK7i5",
         "url": "https://drive.google.com/file/d/16DTUM5WCezk2PSdAMpBfMsOkOd8PK7i5/view?usp=drivesdk",
@@ -448,8 +487,8 @@
       },
       "metadata": {
         "id": "16DTUM5WCezk2PSdAMpBfMsOkOd8PK7i5",
-        "bytes": 22746,
-        "modified_time": "2026-11-23T07:05:30.244Z",
+        "bytes": 27124,
+        "modified_time": "2026-11-23T07:16:37.256Z",
         "parent_ids": [
           "1xyNZn4ZA6bjPcvKjGfgSWQIs9aAp2PPd"
         ],
@@ -466,16 +505,16 @@
         ]
       },
       "raw_bytes_verified": true,
-      "readback_bytes": 22746,
-      "readback_sha256": "a8e0a4d647d52fb42387daf901b6b1f310f49a7453cdd2924cb646af1826b6e0",
-      "verified_utc": "2026-11-23T07:05:34.623932+00:00"
+      "readback_bytes": 27124,
+      "readback_sha256": "d49f71b3cabdb394080d563f566332f720bc645365325160c231a3249a870855",
+      "verified_utc": "2026-11-23T07:16:39.708177+00:00"
     },
     {
       "artifact_id": "updated-drive-doc-16F00sMLXIxP77F2bvffPJ9754eR93wtb",
       "group": "current_drive_documents",
       "file_name": "production-log.jsonl",
-      "bytes": 92852,
-      "sha256": "2b0c486aff179466a0fc0c68a0a87b950a9a49df2fbeae64f06328ec74d73db1",
+      "bytes": 93329,
+      "sha256": "525b18026b1064759e5fa0d54d5a43e04be1a9a767a34fc09c0caff7ecd80ce0",
       "drive": {
         "id": "16F00sMLXIxP77F2bvffPJ9754eR93wtb",
         "url": "https://drive.google.com/file/d/16F00sMLXIxP77F2bvffPJ9754eR93wtb/view?usp=drivesdk",
@@ -484,8 +523,8 @@
       },
       "metadata": {
         "id": "16F00sMLXIxP77F2bvffPJ9754eR93wtb",
-        "bytes": 92852,
-        "modified_time": "2026-11-23T07:05:22.343Z",
+        "bytes": 93329,
+        "modified_time": "2026-11-23T07:16:29.882Z",
         "parent_ids": [
           "1xyNZn4ZA6bjPcvKjGfgSWQIs9aAp2PPd"
         ],
@@ -502,9 +541,9 @@
         ]
       },
       "raw_bytes_verified": true,
-      "readback_bytes": 92852,
-      "readback_sha256": "2b0c486aff179466a0fc0c68a0a87b950a9a49df2fbeae64f06328ec74d73db1",
-      "verified_utc": "2026-11-23T07:05:24.472419+00:00"
+      "readback_bytes": 93329,
+      "readback_sha256": "525b18026b1064759e5fa0d54d5a43e04be1a9a767a34fc09c0caff7ecd80ce0",
+      "verified_utc": "2026-11-23T07:16:32.019830+00:00"
     },
     {
       "artifact_id": "updated-drive-doc-195oEBBMyi14jY9lKSPfYB5fqpEZN4axj",
@@ -734,7 +773,7 @@
   "source_and_resources_clean_restore_evidence": "project-docs/production-system/evidence/claude-source-clean-restore.json",
   "initial_log_reconciliation_evidence": "project-docs/production-system/evidence/claude-log-reconciliation.json",
   "current_log_closeout_evidence": "project-docs/production-system/evidence/claude-log-closeout.json",
-  "production_log_events_each": 136,
+  "production_log_events_each": 137,
   "originals_retained_and_verified": 40,
   "resource_paths_restored": 392,
   "visual_review_evidence_files": 467,
@@ -745,5 +784,22 @@
   "new_render_or_encoding_for_handoff": false,
   "exact_output_owner_creative_approval": "not_recorded",
   "source_archive_offline_git_history_included": false,
-  "permissions_changed_by_handoff": false
+  "permissions_changed_by_handoff": false,
+  "preserved_owner_followup_prs": [
+    117,
+    118,
+    119
+  ],
+  "owner_main_included": "3d9abdf3a374a0d389821d2b639c75e2d121bfb1",
+  "final_integrated_source": {
+    "archive_filename": "Concert_Project_Final_Handoff_2026-11-22.tar.gz",
+    "manifest_filename": "FINAL-SOURCE-MANIFEST.json",
+    "readme_filename": "README_FINAL_SOURCE.md",
+    "receipt_filename": "FINAL-HANDOFF-RECEIPT.json",
+    "source_folder_url": "https://drive.google.com/drive/folders/1ARIxA-UsuIR0xEVeDIBMH-MMgoxnafHn",
+    "source_scope": "Exact final merged handoff commit, including owner changes observed through PR119. The final companion manifest and receipt are created after that commit and identify its exact hash, entry count and Drive files.",
+    "verification_authority": "FINAL-HANDOFF-RECEIPT.json in the source folder; final merge PR metadata also links the exact receipt.",
+    "guide": "project-docs/production-system/FINAL-SOURCE-CHECKPOINT.md"
+  },
+  "parallel_owner_updates_evidence": "project-docs/production-system/evidence/claude-parallel-owner-updates.json"
 }

@@ -25,6 +25,8 @@ python3 scripts/bootstrap.py --p3d-only --reference-fonts
 
 The approved 66-second promo supplies the creative language. The approved 30-second Song 11 study supplies the native 1080p60 clarity reference. All eleven full recording sources are indexed and byte-verified; this does not imply every historical full-song movie has been recovered. The [native model kit](tools/concert_kit/README.md), [dove, rose and wheat prototypes](tools/concert_addons/README.md), and [camera and response revision](tools/concert_motion_revision/README.md) preserve earlier reusable work. Apply the current generous-garment modesty correction to every reused figure. The [historical improvement backlog](project-docs/production-system/IMPROVEMENT-QUEUE.md) offers ideas, not an automatic next task.
 
+The final integrated source checkpoint, including the parallel owner updates through PR #119, is described in [FINAL-SOURCE-CHECKPOINT.md](project-docs/production-system/FINAL-SOURCE-CHECKPOINT.md). Its post-merge manifest and receipt identify the exact final backup; earlier source archives remain verified recovery checkpoints.
+
 ## Quick links
 
 - Native 4K and smoother animation: [docs/4K-AND-MOTION.md](docs/4K-AND-MOTION.md)

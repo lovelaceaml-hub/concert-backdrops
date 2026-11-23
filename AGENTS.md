@@ -32,6 +32,8 @@ show master. Preserve earlier 720p artifacts as history; do not generate new
 phone versions. Recover existing finished files before considering a new render.
 There is no unfinished render queue or active background production service.
 
+The final integrated source checkpoint, including the parallel owner updates through PR #119, is described in [FINAL-SOURCE-CHECKPOINT.md](project-docs/production-system/FINAL-SOURCE-CHECKPOINT.md). Its post-merge manifest and receipt identify the exact final backup; earlier source archives remain verified recovery checkpoints.
+
 ## Earlier navigation (historical; superseded by the owner directions above)
 
 On November 22, 2026, the user withdrew the previously provided AGENTS.md

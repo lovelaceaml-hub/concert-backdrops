@@ -81,10 +81,14 @@ The owner calls Song 11 **Almighty God Knows the Future**. The catalog/audio tit
 | [Videos / Production Studies](https://drive.google.com/drive/folders/1hrk62bFIOHv2NwXvYl2bNSmp0cwBoXrr) | Earlier films, studies and media |
 | [Claude handoff](https://drive.google.com/drive/folders/1lxcic8BcSzNgPtEY_Yg_2TBAbNam72dZ) | Current project handoff destination |
 | [Claude handoff source and documentation](https://drive.google.com/drive/folders/1ARIxA-UsuIR0xEVeDIBMH-MMgoxnafHn) | Source/document snapshots and resource inventory |
-| [Current complete source archive](https://drive.google.com/file/d/1NSXgPH0YSHKTEP9d2dGppXfnQNUSn919/view?usp=drivesdk) | **877 tracked entries** at `252e14145d535d8c8472c72144d85587967f3b2f`, including PR #116 and the archive transfer helper; actual source/resource restoration passed. |
+| [Verified cloud-tools source checkpoint](https://drive.google.com/file/d/1NSXgPH0YSHKTEP9d2dGppXfnQNUSn919/view?usp=drivesdk) | **877 tracked entries** at `252e14145d535d8c8472c72144d85587967f3b2f`, including PR #116 and the archive transfer helper; actual source/resource restoration passed. |
 | [Prior frozen source backup A](https://drive.google.com/file/d/1QrBbz-SxWWNEkGtC30BcTWuB9_N8MDd4/view?usp=drivesdk) | 861 tracked entries at `3ef80d97d2cc25d5201195bb8ced3646811200db`, before PR #116; modes and symbolic links preserved. Use the completion receipt for the latest refreshed source archive. |
 
 Use the [Drive completion record](evidence/claude-drive-completion.json) for exact Drive file IDs, bytes, hashes and confirmed coverage. The [media inventory](catalogs/handoff-media.json) and [resource inventory](catalogs/handoff-resources.json) describe the intended originals and their provenance. Read each status: a folder's existence or a transfer plan does not prove that every intended upload is present. A source snapshot contains the tracked project at its recorded commit. A pinned-resource archive has its own inventory; it must not be described as a complete installed environment. GitHub is the history authority. A source snapshot archive or a linked partial clone is not an offline Git bundle.
+
+### Final source after parallel owner updates
+
+Use [FINAL-SOURCE-CHECKPOINT.md](FINAL-SOURCE-CHECKPOINT.md) and the final `FINAL-SOURCE-MANIFEST.json` / `FINAL-HANDOFF-RECEIPT.json` in the source folder for the exact final merged source. The 877-entry snapshot `252e1414` is a verified recovery checkpoint before the later PRs #117–#119. The final archive also includes the Claude cloud-session hook, opt-in shared engine quality/motion helpers, and original-source reproduction guards from those owner updates. The recorded short cloud tool proofs retain their exact tested source; they do not prove every later engine change or full-film reproduction.
 
 ### Verified handoff coverage
 
@@ -231,12 +235,12 @@ python3 scripts/bootstrap.py --p3d-only --reference-fonts
 ./scripts/concert verify-catalogs
 ```
 
-The Drive handoff also provides `Concert_Project_Source_2026-11-22_Cloud_Tools.tar.gz`,
+The final integrated source backup is `Concert_Project_Final_Handoff_2026-11-22.tar.gz`,
 a complete tracked-source snapshot at its recorded frozen commit. Extract from the directory containing the downloaded archive, then enter its
 source root before using relative project commands:
 
 ```bash
-tar -xzf Concert_Project_Source_2026-11-22_Cloud_Tools.tar.gz
+tar -xzf Concert_Project_Final_Handoff_2026-11-22.tar.gz
 cd concert-backdrops
 ```
 
@@ -245,6 +249,8 @@ tracked relative Shotcraft symbolic links. It deliberately contains no `.git`
 history, environments, private key or movie payloads. Use its companion source
 manifest and receipt for the exact commit, tree, archive hash and file modes;
 the later closeout receipt on GitHub and Drive records the exported archive.
+
+**Claude Code cloud sessions.** Start a cloud session on the GitHub repository `lovelaceaml-hub/concert-backdrops` (not the Drive folder, which is not a Git checkout). The repository's `.claude/settings.json` runs `scripts/cloud-session-setup.sh` at session start, only in cloud sessions: it installs FFmpeg/EGL and uv when missing, then runs the p3d-only bootstrap with reference fonts, and never renders. It never blocks the session; read `work/cloud-setup.log` for the outcome and rerun the script by hand if it did not finish. The cloud environment needs network access for package registries. Paste [CLAUDE-START-PROMPT.txt](CLAUDE-START-PROMPT.txt) as the first message.
 
 These are setup/status commands, not a request to rerender Song 11. The standard setup uses [pyproject.toml](../../pyproject.toml), [uv.lock](../../uv.lock) and [package-lock.json](../../package-lock.json). The p3d-only route still needs Node/npm for locked font installation. General supported ranges are Python 3.11–3.13 and Node 22.12–24; the recorded project setup used Python 3.12.14, Node 24.22.3, npm 11.19.1 and uv 0.13.9. Required system capabilities include FFmpeg/FFprobe and software EGL/Mesa.
 

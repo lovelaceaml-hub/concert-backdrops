@@ -318,6 +318,59 @@ class Motions(Library):
         for sd, sg in (("L", 1.0), ("R", -1.0)):
             self._add(P, "clavicle." + sd, bm.qz(sg * 1.3 * DEG * (b * 0.5 + 0.5)))
 
+    def blend_gesture(self, name, P, weight, t, age=0.0, **params):
+        """Solve a gesture at full weight, then blend complete poses to avoid arm snaps.
+
+        The source pose is never mutated. Weight zero skips the endpoint solver;
+        weight one returns the fully solved endpoint. Uses the existing blend math.
+        """
+        if not np.isfinite(weight) or not 0.0 <= weight <= 1.0:
+            raise ValueError("gesture weight must be finite and in 0..1")
+        neutral = P.copy()
+        if weight == 0.0:
+            return neutral
+        endpoint = neutral.copy()
+        self.gesture(name, endpoint, 1.0, t, age, **params)
+        return blend(neutral, endpoint, weight)
+
+    def pin_feet(self, P, targets, *, rotations=None, knees=None):
+        """Solve explicit ankle targets in local_fk space after upper-body acting.
+
+        targets maps L and/or R to fixed ankle positions in metres. rotations and
+        knees optionally map those sides to foot quaternions and knee poles.
+        The caller authors support intervals and root travel. Ground lift and the
+        actor's automatic contact lock are disabled so they cannot move these pins.
+        This is bounded leg IK, not a force or balance simulation.
+        """
+        if not targets or set(targets) - {"L", "R"}:
+            raise ValueError("foot targets must name L and/or R")
+        for values, size in ((targets, 3), (rotations, 4), (knees, 3)):
+            if values is not None:
+                if set(values) - set(targets):
+                    raise ValueError("foot rotations and knees must name targeted sides")
+                for value in values.values():
+                    a = np.asarray(value)
+                    if a.shape != (size,) or not np.isfinite(a).all():
+                        raise ValueError(f"foot inputs must be finite {size}-vectors")
+        for side, target in targets.items():
+            self.leg_to(P, side, target,
+                        knee=None if knees is None else knees.get(side),
+                        foot=None if rotations is None else rotations.get(side))
+        P.ground, P.contact = 0.0, None
+        return P
+
+    def breathe_before_contacts(self, P, t, solve_contacts, *, seed=0.0, depth=1.0):
+        """Add breathing, then run final hand/foot placement on the same pose.
+
+        solve_contacts(pose) mutates the pose using hand_to, pin_feet or an authored
+        anatomy solver. Use Actor(auto_breathe=False) so Actor.frame does not add
+        breathing again. Install the pose source before sampling any body geometry.
+        Final prop attachment must sample the resulting actor frame, not cue targets.
+        """
+        self.breathe(P, t, seed, depth)
+        solve_contacts(P)
+        return P
+
     # ------------------------------------------------------------------ whole-body motions
     def pose(self, name, t, age=0.0, **kw):
         if name not in MOTIONS:

@@ -16,4 +16,4 @@ Source/configuration presence is not runtime readiness. Use the exact current so
 
 Continue autonomously within the authorized priorities, stopping for real decisions or required approvals. Preserve original source/output identities and update GitHub, Drive documentation and verification receipts with subsequent work.
 
-The refreshed source snapshot is 252e14145d535d8c8472c72144d85587967f3b2f (877 tracked entries), with an actual clean source/resource restoration. The 637 MB PR #116 proof archive is preserved on Drive with full authenticated readback; use the current completion and cloud-proof-retention records for exact locators.
+The verified recovery checkpoint is 252e14145d535d8c8472c72144d85587967f3b2f (877 tracked entries), with an actual clean source/resource restoration. For the final integrated source including later owner PRs #117–#119, read FINAL-SOURCE-CHECKPOINT.md and the final manifest/receipt in the source folder. The 637 MB PR #116 proof archive is preserved on Drive with full authenticated readback; use the current completion and cloud-proof-retention records for exact locators.

@@ -14,7 +14,7 @@ from pathlib import Path
 
 from .audio import analyze
 from .media import assemble, current_master_path, finishing_input_hashes, qa, storyboard
-from .project import PipelineError, Project, file_hash, load_project, repo_root, validate, write_json
+from .project import PipelineError, Project, file_hash, load_project, read_data, repo_root, safe_path, validate, write_json
 from .render import blender_binary, command_version, render, verify_complete
 
 
@@ -201,6 +201,152 @@ def archive(project, quality: str, destination: str) -> Path:
     return target
 
 
+DELIVERIES_CATALOG = "project-docs/production-system/catalogs/deliveries.json"
+
+
+def _validate_commit_sha(commit: str) -> str:
+    value = commit.strip() if isinstance(commit, str) else ""
+    if not re.fullmatch(r"[0-9a-fA-F]{7,40}", value):
+        raise PipelineError(f"Commit must be a 7 to 40 character hexadecimal Git SHA, got {commit!r}.")
+    return value.lower()
+
+
+def _approved_reference_commit(root: Path, project_id: str) -> str | None:
+    folder = root / "projects" / project_id
+    manifest = next((folder / ("project" + ext) for ext in (".yaml", ".yml", ".json") if (folder / ("project" + ext)).is_file()), None)
+    if manifest is None:
+        return None
+    data = read_data(manifest)
+    for shot in data.get("shots", ()):
+        if isinstance(shot, dict) and shot.get("renderer") == "p3d-approved":
+            ref_id = shot.get("params", {}).get("reference")
+            if isinstance(ref_id, str) and re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9_-]{0,79}", ref_id):
+                ref_path = safe_path(root, f"pipeline/references/{ref_id}.json", exists=False)
+                if ref_path.is_file():
+                    definition = read_data(ref_path)
+                    commit = definition.get("source_commit") or definition.get("engine_commit")
+                    if isinstance(commit, str) and commit.strip():
+                        return _validate_commit_sha(commit)
+    return None
+
+
+def recorded_project_commit(root: Path, project_id: str) -> str:
+    """Look up a project's recorded picture_source_commit in deliveries.json."""
+    if not re.fullmatch(r"[a-z0-9][a-z0-9_-]{0,79}", project_id):
+        raise PipelineError("Project id must use lowercase letters, numbers, hyphens or underscores.")
+    catalog_path = root / DELIVERIES_CATALOG
+    matched_without_commit = False
+    if catalog_path.is_file():
+        catalog = read_data(catalog_path)
+        items = [item for item in catalog.get("items", ()) if isinstance(item, dict)]
+        for field in ("project_id", "id"):
+            for item in items:
+                if item.get(field) == project_id:
+                    commit = item.get("picture_source_commit")
+                    if isinstance(commit, str) and commit.strip():
+                        return _validate_commit_sha(commit)
+                    matched_without_commit = True
+    fallback = _approved_reference_commit(root, project_id)
+    if fallback is not None:
+        return fallback
+    if matched_without_commit:
+        raise PipelineError(
+            f"Delivery {project_id!r} in {DELIVERIES_CATALOG} does not record a picture_source_commit. "
+            "Pass --commit <sha> to reproduce from a specific commit."
+        )
+    if not catalog_path.is_file():
+        raise PipelineError(
+            f"Delivery catalog is missing: {DELIVERIES_CATALOG}. "
+            "Pass --commit <sha> to reproduce from a specific commit."
+        )
+    raise PipelineError(
+        f"Project {project_id!r} has no recorded commit in {DELIVERIES_CATALOG}. "
+        "Check the project id or pass --commit <sha>."
+    )
+
+
+def reproduce(root: Path, project_id: str, quality: str = "review", commit: str | None = None, *, allow_local: bool = False) -> dict:
+    """Reproduce a frozen film from its recorded Git commit in an isolated worktree."""
+    root = root.resolve()
+    if not re.fullmatch(r"[a-z0-9][a-z0-9_-]{0,79}", project_id):
+        raise PipelineError("Project id must use lowercase letters, numbers, hyphens or underscores.")
+    if not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9_-]{0,63}", quality):
+        raise PipelineError(f"Invalid quality preset name: {quality!r}.")
+    target_commit = _validate_commit_sha(commit) if commit is not None else recorded_project_commit(root, project_id)
+    try:
+        resolved = subprocess.run(
+            ["git", "rev-parse", "--verify", f"{target_commit}^{{commit}}"],
+            cwd=root, capture_output=True, text=True,
+        )
+    except FileNotFoundError as exc:
+        raise PipelineError("Git is required to reproduce a film from a recorded commit.") from exc
+    if resolved.returncode != 0:
+        raise PipelineError(
+            f"Commit {target_commit} is not available in this Git repository. "
+            f"Fetch the needed history (for example, git fetch origin {target_commit}) and try again."
+        )
+    full_sha = _validate_commit_sha(resolved.stdout.strip() or target_commit)
+    manifests = [f"projects/{project_id}/project{ext}" for ext in (".json", ".yaml", ".yml")]
+    if not any(subprocess.run(["git", "cat-file", "-e", f"{full_sha}:{path}"], cwd=root,
+                              capture_output=True).returncode == 0 for path in manifests):
+        added = subprocess.run(["git", "log", "--diff-filter=A", "--format=%H", "--", *manifests],
+                               cwd=root, capture_output=True, text=True).stdout.split()
+        hint = f" The project was added in commit {added[-1]}." if added else ""
+        raise PipelineError(
+            f"Commit {full_sha} does not contain projects/{project_id}, so it cannot reproduce that project.{hint} "
+            "Pass --commit <sha> with the version that rendered the approved film.")
+    short_sha = full_sha[:8]
+    worktree = safe_path(root, f"work/reproduce/{project_id}-{short_sha}", exists=False)
+    reused = False
+    if worktree.exists():
+        if not (worktree / ".git").exists():
+            raise PipelineError(f"Path {worktree} already exists and is not a Git worktree. Move or remove it before reproducing.")
+        head = subprocess.run(["git", "rev-parse", "HEAD"], cwd=worktree, capture_output=True, text=True)
+        if head.returncode != 0:
+            raise PipelineError(f"Could not read the commit checked out in {worktree}. Remove that folder and try again.")
+        head_sha = head.stdout.strip().lower()
+        if head_sha and head_sha != full_sha:
+            raise PipelineError(f"Existing worktree {worktree} is at commit {head_sha}, not {full_sha}. Remove it and try again.")
+        dirty = subprocess.run(["git", "status", "--porcelain", "--untracked-files=no"],
+                               cwd=worktree, capture_output=True, text=True)
+        if dirty.returncode != 0 or dirty.stdout.strip():
+            raise PipelineError(f"Existing worktree {worktree} has changed tracked files, so it no longer matches "
+                                f"{full_sha}. Remove it (git worktree remove) and try again.")
+        reused = True
+    else:
+        worktree.parent.mkdir(parents=True, exist_ok=True)
+        added = subprocess.run(
+            ["git", "worktree", "add", "--detach", str(worktree), full_sha],
+            cwd=root, capture_output=True, text=True,
+        )
+        if added.returncode != 0:
+            detail = (added.stderr or added.stdout or "").strip()
+            raise PipelineError(f"Could not create Git worktree at {worktree} for commit {full_sha}: {detail}")
+    command = ["./scripts/video", "produce", project_id, "--quality", quality]
+    if allow_local:
+        command.append("--allow-local-render")
+    try:
+        produced = subprocess.run(command, cwd=worktree)
+    except FileNotFoundError as exc:
+        raise PipelineError(f"Commit {full_sha} does not provide ./scripts/video inside {worktree}.") from exc
+    if produced.returncode != 0:
+        raise PipelineError(
+            f"Reproducing {project_id} from commit {full_sha} failed (exit {produced.returncode}). "
+            f"Inspect the output above; the worktree was kept at {worktree}."
+        )
+    output_dir = worktree / "work/pipeline" / project_id / quality
+    return {
+        "project_id": project_id,
+        "commit": full_sha,
+        "quality": quality,
+        "worktree": str(worktree),
+        "reused_worktree": reused,
+        "output_dir": str(output_dir),
+        "master": str(output_dir / "master.mp4"),
+        "command": command,
+    }
+
+
 def parser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser(prog="video", description="Repeatable video production. Cloud GPU dispatch stays unconfigured.")
     p.add_argument("--root", type=Path, help="Repository root (otherwise discovered from the current directory)")
@@ -224,6 +370,11 @@ def parser() -> argparse.ArgumentParser:
     bench.add_argument("--allow-local-render", action="store_true")
     motion = sub.add_parser("motion-qa", help="Inspect camera speed, acceleration and sampled jerk before rendering")
     motion.add_argument("project")
+    repro = sub.add_parser("reproduce", help="Render an approved film from its recorded Git commit in an isolated worktree")
+    repro.add_argument("project", help="Project id recorded in deliveries.json (or any project id when --commit is given)")
+    repro.add_argument("--quality", default="review", help="Quality preset passed to the recorded commit's video produce (default: review)")
+    repro.add_argument("--commit", help="Git commit SHA to reproduce from instead of looking up deliveries.json")
+    repro.add_argument("--allow-local-render", action="store_true", help="Forward --allow-local-render to the recorded commit's video produce")
     for command in ("validate", "analyze", "prepare", "produce", "storyboard", "render", "preview", "assemble", "finalize", "qa", "review", "approve", "archive"):
         q = sub.add_parser(command)
         q.add_argument("project", help="Project id or a repository-relative manifest path")
@@ -267,6 +418,10 @@ def main(argv: list[str] | None = None) -> int:
             return 0 if passed else 2
         if args.command == "new":
             print(create_project(root, args.title, args.fps, args.seconds, args.template))
+            return 0
+        if args.command == "reproduce":
+            report = reproduce(root, args.project, quality=args.quality, commit=args.commit, allow_local=args.allow_local_render)
+            print(json.dumps(report, indent=2))
             return 0
         project = load_project(root, args.project, check_files=not (args.command == "produce" and args.plan))
         if args.command == "motion-qa":

@@ -4,7 +4,7 @@
   "local_date": "2026-11-22",
   "timezone": "America/Los_Angeles",
   "new_render_performed": false,
-  "recorded_utc": "2026-11-23T07:06:42.123300+00:00",
+  "recorded_utc": "2026-11-23T07:17:34.799163+00:00",
   "handoff_folder_url": "https://drive.google.com/drive/folders/1lxcic8BcSzNgPtEY_Yg_2TBAbNam72dZ",
   "originals": [
     {
@@ -1821,10 +1821,10 @@
     "current_resource_paths_verified": 392,
     "cloud_tool_proof_archive_verified": true,
     "verified_resource_review_and_tool_proof_archives": 3,
-    "production_log_events_each": 136
+    "production_log_events_each": 137
   },
-  "raw_readback_receipt_count": 101,
-  "raw_readback_total_bytes": 4303821684,
+  "raw_readback_receipt_count": 102,
+  "raw_readback_total_bytes": 4303832909,
   "readback_receipts": [
     {
       "file_name": "Almighty_God_Knows_the_Future_Renewed_1080p60_delivery.mp4.part01",
@@ -2383,8 +2383,8 @@
       "artifact_id": "current-source-README_RESTORE_CURRENT_SOURCE.md",
       "group": "current_sources",
       "file_name": "README_RESTORE_CURRENT_SOURCE.md",
-      "bytes": 2998,
-      "sha256": "97b40fb8f4de9b78e294652f1d09c1b0c6f34e6b7d699735c9eee9331be9f60d",
+      "bytes": 3402,
+      "sha256": "6ccfb98337f7dbe69c3017691f0751b65e7eb126b3d954ce9b13636048811b61",
       "local_path": "/workspace/scratch/39a2abd37644/concert-future/work/claude-handoff/packages/current-source/README_RESTORE_CURRENT_SOURCE.md",
       "parent_folder_id": "1ARIxA-UsuIR0xEVeDIBMH-MMgoxnafHn",
       "mime_type": "text/markdown",
@@ -2394,10 +2394,35 @@
         "parent_id": "1ARIxA-UsuIR0xEVeDIBMH-MMgoxnafHn",
         "mime_type": "text/markdown"
       },
+      "previous_verified_version": {
+        "bytes": 2998,
+        "sha256": "97b40fb8f4de9b78e294652f1d09c1b0c6f34e6b7d699735c9eee9331be9f60d",
+        "verified_utc": "2026-11-23T07:00:51.958660+00:00",
+        "metadata": {
+          "id": "14dgfQa0A_74oiaWihTdVj2wupQ6D058-",
+          "bytes": 2998,
+          "modified_time": "2026-11-23T07:00:49.282Z",
+          "parent_ids": [
+            "1ARIxA-UsuIR0xEVeDIBMH-MMgoxnafHn"
+          ],
+          "shared": true,
+          "permissions": [
+            {
+              "type": "user",
+              "role": "owner"
+            },
+            {
+              "type": "user",
+              "role": "writer"
+            }
+          ]
+        }
+      },
+      "update_in_place": true,
       "metadata": {
         "id": "14dgfQa0A_74oiaWihTdVj2wupQ6D058-",
-        "bytes": 2998,
-        "modified_time": "2026-11-23T07:00:49.282Z",
+        "bytes": 3402,
+        "modified_time": "2026-11-23T07:16:44.885Z",
         "parent_ids": [
           "1ARIxA-UsuIR0xEVeDIBMH-MMgoxnafHn"
         ],
@@ -2414,9 +2439,9 @@
         ]
       },
       "raw_bytes_verified": true,
-      "readback_bytes": 2998,
-      "readback_sha256": "97b40fb8f4de9b78e294652f1d09c1b0c6f34e6b7d699735c9eee9331be9f60d",
-      "verified_utc": "2026-11-23T07:00:51.958660+00:00"
+      "readback_bytes": 3402,
+      "readback_sha256": "6ccfb98337f7dbe69c3017691f0751b65e7eb126b3d954ce9b13636048811b61",
+      "verified_utc": "2026-11-23T07:16:47.174043+00:00"
     },
     {
       "artifact_id": "current-upload-15945112-90A3-483F-8545-24224DBC6D77",
@@ -2458,8 +2483,8 @@
       "artifact_id": "updated-drive-doc-16DTUM5WCezk2PSdAMpBfMsOkOd8PK7i5",
       "group": "current_drive_documents",
       "file_name": "production-status.json",
-      "bytes": 22746,
-      "sha256": "a8e0a4d647d52fb42387daf901b6b1f310f49a7453cdd2924cb646af1826b6e0",
+      "bytes": 27124,
+      "sha256": "d49f71b3cabdb394080d563f566332f720bc645365325160c231a3249a870855",
       "local_path": "/workspace/scratch/39a2abd37644/concert-future/work/claude-handoff/drive-current/production-status.json",
       "parent_folder_id": "1xyNZn4ZA6bjPcvKjGfgSWQIs9aAp2PPd",
       "mime_type": "application/json",
@@ -2470,13 +2495,13 @@
         "mime_type": "application/json"
       },
       "previous_verified_version": {
-        "bytes": 19345,
-        "sha256": "15592935b3b03e421d279edcfdc1310c6d958bc9889622b9c2cd25c5b9ec2cec",
-        "verified_utc": "2026-11-23T06:32:45.964218+00:00",
+        "bytes": 22746,
+        "sha256": "a8e0a4d647d52fb42387daf901b6b1f310f49a7453cdd2924cb646af1826b6e0",
+        "verified_utc": "2026-11-23T07:05:34.623932+00:00",
         "metadata": {
           "id": "16DTUM5WCezk2PSdAMpBfMsOkOd8PK7i5",
-          "bytes": 19345,
-          "modified_time": "2026-11-23T06:32:43.138Z",
+          "bytes": 22746,
+          "modified_time": "2026-11-23T07:05:30.244Z",
           "parent_ids": [
             "1xyNZn4ZA6bjPcvKjGfgSWQIs9aAp2PPd"
           ],
@@ -2496,8 +2521,8 @@
       "update_in_place": true,
       "metadata": {
         "id": "16DTUM5WCezk2PSdAMpBfMsOkOd8PK7i5",
-        "bytes": 22746,
-        "modified_time": "2026-11-23T07:05:30.244Z",
+        "bytes": 27124,
+        "modified_time": "2026-11-23T07:16:37.256Z",
         "parent_ids": [
           "1xyNZn4ZA6bjPcvKjGfgSWQIs9aAp2PPd"
         ],
@@ -2514,16 +2539,16 @@
         ]
       },
       "raw_bytes_verified": true,
-      "readback_bytes": 22746,
-      "readback_sha256": "a8e0a4d647d52fb42387daf901b6b1f310f49a7453cdd2924cb646af1826b6e0",
-      "verified_utc": "2026-11-23T07:05:34.623932+00:00"
+      "readback_bytes": 27124,
+      "readback_sha256": "d49f71b3cabdb394080d563f566332f720bc645365325160c231a3249a870855",
+      "verified_utc": "2026-11-23T07:16:39.708177+00:00"
     },
     {
       "artifact_id": "updated-drive-doc-16F00sMLXIxP77F2bvffPJ9754eR93wtb",
       "group": "current_drive_documents",
       "file_name": "production-log.jsonl",
-      "bytes": 92852,
-      "sha256": "2b0c486aff179466a0fc0c68a0a87b950a9a49df2fbeae64f06328ec74d73db1",
+      "bytes": 93329,
+      "sha256": "525b18026b1064759e5fa0d54d5a43e04be1a9a767a34fc09c0caff7ecd80ce0",
       "local_path": "/workspace/scratch/39a2abd37644/concert-future/work/claude-handoff/drive-current/production-log.jsonl",
       "parent_folder_id": "1xyNZn4ZA6bjPcvKjGfgSWQIs9aAp2PPd",
       "mime_type": "application/octet-stream",
@@ -2534,13 +2559,13 @@
         "mime_type": "application/octet-stream"
       },
       "previous_verified_version": {
-        "bytes": 91485,
-        "sha256": "b173220a07677f4a0ec6e335d46bafc8f5280a437507cfc62f168be1c7449bdd",
-        "verified_utc": "2026-11-23T06:32:36.292021+00:00",
+        "bytes": 92852,
+        "sha256": "2b0c486aff179466a0fc0c68a0a87b950a9a49df2fbeae64f06328ec74d73db1",
+        "verified_utc": "2026-11-23T07:05:24.472419+00:00",
         "metadata": {
           "id": "16F00sMLXIxP77F2bvffPJ9754eR93wtb",
-          "bytes": 91485,
-          "modified_time": "2026-11-23T06:32:33.878Z",
+          "bytes": 92852,
+          "modified_time": "2026-11-23T07:05:22.343Z",
           "parent_ids": [
             "1xyNZn4ZA6bjPcvKjGfgSWQIs9aAp2PPd"
           ],
@@ -2560,8 +2585,8 @@
       "update_in_place": true,
       "metadata": {
         "id": "16F00sMLXIxP77F2bvffPJ9754eR93wtb",
-        "bytes": 92852,
-        "modified_time": "2026-11-23T07:05:22.343Z",
+        "bytes": 93329,
+        "modified_time": "2026-11-23T07:16:29.882Z",
         "parent_ids": [
           "1xyNZn4ZA6bjPcvKjGfgSWQIs9aAp2PPd"
         ],
@@ -2578,9 +2603,9 @@
         ]
       },
       "raw_bytes_verified": true,
-      "readback_bytes": 92852,
-      "readback_sha256": "2b0c486aff179466a0fc0c68a0a87b950a9a49df2fbeae64f06328ec74d73db1",
-      "verified_utc": "2026-11-23T07:05:24.472419+00:00"
+      "readback_bytes": 93329,
+      "readback_sha256": "525b18026b1064759e5fa0d54d5a43e04be1a9a767a34fc09c0caff7ecd80ce0",
+      "verified_utc": "2026-11-23T07:16:32.019830+00:00"
     },
     {
       "file_name": "Advanced_Dance_Render_Cache_Checkpoint.zip.part01",
@@ -5921,6 +5946,7 @@
           {
             "type": "user",
             "role": "owner",
+            "emailAddress": "lovelace.aml@gmail.com",
             "domain": null,
             "displayName": "Anthony Lovelace",
             "allowFileDiscovery": null
@@ -6296,28 +6322,29 @@
       "artifact_id": "handoff-document-CLAUDE-START-PROMPT.txt",
       "group": "handoff_documents",
       "file_name": "CLAUDE-START-PROMPT.txt",
-      "bytes": 4357,
-      "sha256": "d1f2b9e713c74bc8b199295549fc03698ed1188e7cf80178c51af28398ab851e",
+      "bytes": 4516,
+      "sha256": "ad13f3c638494d3dc840b6e98fbe42c3ccffbb42d730bede3f8e32baead1a9d4",
       "local_path": "/workspace/scratch/39a2abd37644/concert-future/work/claude-handoff/portable-documents/CLAUDE-START-PROMPT.txt",
       "parent_folder_id": "1lxcic8BcSzNgPtEY_Yg_2TBAbNam72dZ",
       "mime_type": "text/plain",
+      "source_repo_path": "project-docs/production-system/CLAUDE-START-PROMPT.txt",
+      "source_sha256": "ad13f3c638494d3dc840b6e98fbe42c3ccffbb42d730bede3f8e32baead1a9d4",
+      "export_conversion": "Exact source text.",
+      "update_in_place": true,
       "drive": {
         "id": "1jgrb01xoRrGKV13iOANuZn6Tniw5Hk9l",
         "url": "https://drive.google.com/file/d/1jgrb01xoRrGKV13iOANuZn6Tniw5Hk9l/view?usp=drivesdk",
         "parent_id": "1lxcic8BcSzNgPtEY_Yg_2TBAbNam72dZ",
         "mime_type": "text/plain"
       },
-      "source_repo_path": "project-docs/production-system/CLAUDE-START-PROMPT.txt",
-      "source_sha256": "d1f2b9e713c74bc8b199295549fc03698ed1188e7cf80178c51af28398ab851e",
-      "export_conversion": "Exact source text.",
       "previous_verified_version": {
-        "bytes": 2500,
-        "sha256": "dd0727c40eaecd279e5cf1a5df3f87e1d0cb7c4299e2b3095dd6da9c74041ba9",
-        "verified_utc": "2026-11-23T06:34:17.673704+00:00",
+        "bytes": 4357,
+        "sha256": "d1f2b9e713c74bc8b199295549fc03698ed1188e7cf80178c51af28398ab851e",
+        "verified_utc": "2026-11-23T07:05:16.109068+00:00",
         "metadata": {
           "id": "1jgrb01xoRrGKV13iOANuZn6Tniw5Hk9l",
-          "bytes": 2500,
-          "modified_time": "2026-11-23T06:34:15.070Z",
+          "bytes": 4357,
+          "modified_time": "2026-11-23T07:05:13.776Z",
           "parent_ids": [
             "1lxcic8BcSzNgPtEY_Yg_2TBAbNam72dZ"
           ],
@@ -6334,11 +6361,10 @@
           ]
         }
       },
-      "update_in_place": true,
       "metadata": {
         "id": "1jgrb01xoRrGKV13iOANuZn6Tniw5Hk9l",
-        "bytes": 4357,
-        "modified_time": "2026-11-23T07:05:13.776Z",
+        "bytes": 4516,
+        "modified_time": "2026-11-23T07:16:08.861Z",
         "parent_ids": [
           "1lxcic8BcSzNgPtEY_Yg_2TBAbNam72dZ"
         ],
@@ -6355,9 +6381,9 @@
         ]
       },
       "raw_bytes_verified": true,
-      "readback_bytes": 4357,
-      "readback_sha256": "d1f2b9e713c74bc8b199295549fc03698ed1188e7cf80178c51af28398ab851e",
-      "verified_utc": "2026-11-23T07:05:16.109068+00:00"
+      "readback_bytes": 4516,
+      "readback_sha256": "ad13f3c638494d3dc840b6e98fbe42c3ccffbb42d730bede3f8e32baead1a9d4",
+      "verified_utc": "2026-11-23T07:16:11.813046+00:00"
     },
     {
       "artifact_id": "transfer-support-cinematic_media-README_RESTORE.md",
@@ -6628,52 +6654,28 @@
       "verified_utc": "2026-11-23T05:57:08.068603+00:00"
     },
     {
-      "artifact_id": "handoff-document-CLAUDE-HANDOFF.md",
+      "artifact_id": "handoff-document-FINAL-SOURCE-CHECKPOINT.md",
       "group": "handoff_documents",
-      "file_name": "CLAUDE-HANDOFF.md",
-      "bytes": 64855,
-      "sha256": "b26c554eaa92977cb0265c1835b4dafcb99cb6ea15c4e3ea7a0225bb8797aae8",
-      "local_path": "/workspace/scratch/39a2abd37644/concert-future/work/claude-handoff/portable-documents/CLAUDE-HANDOFF.md",
+      "file_name": "FINAL-SOURCE-CHECKPOINT.md",
+      "bytes": 3737,
+      "sha256": "ce02bff4f02140a637fba3e027271f2ec62d7672cfa5e5fb34393004a3ab9c72",
+      "local_path": "/workspace/scratch/39a2abd37644/concert-future/work/claude-handoff/portable-documents/FINAL-SOURCE-CHECKPOINT.md",
       "parent_folder_id": "1lxcic8BcSzNgPtEY_Yg_2TBAbNam72dZ",
       "mime_type": "text/markdown",
+      "source_repo_path": "project-docs/production-system/FINAL-SOURCE-CHECKPOINT.md",
+      "source_sha256": "4d8ff18e9ff2bce43aadaf2bb45e5bfac890d2649aca4d4c5aec68f018c5dfb6",
+      "export_conversion": "Relative Markdown source links resolved to canonical GitHub main paths; body unchanged.",
+      "update_in_place": false,
       "drive": {
-        "id": "1nTUKiIL9Luc2wnjDixYnOwyuY1V0zPxb",
-        "url": "https://docs.google.com/document/d/1nTUKiIL9Luc2wnjDixYnOwyuY1V0zPxb/edit?usp=drivesdk&ouid=113038373524763352759&rtpof=true&sd=true",
+        "id": "1nP_X4Vp1VU0L4hasm6ienlx9dHCJhuWW",
+        "url": "https://docs.google.com/document/d/1nP_X4Vp1VU0L4hasm6ienlx9dHCJhuWW/edit?usp=drivesdk&ouid=113038373524763352759&rtpof=true&sd=true",
         "parent_id": "1lxcic8BcSzNgPtEY_Yg_2TBAbNam72dZ",
         "mime_type": "text/markdown"
       },
-      "source_repo_path": "project-docs/production-system/CLAUDE-HANDOFF.md",
-      "source_sha256": "df315c2c934f3ab23a6a3f46deaf7144237526e31b8a4a0ee3d1249df6e3c37c",
-      "export_conversion": "Relative Markdown source links resolved to canonical GitHub main paths; body unchanged.",
-      "previous_verified_version": {
-        "bytes": 57510,
-        "sha256": "1ca40f4900e3ffdb4c36b73510849562bbc30a015a37bc85facf1d5fe4527a13",
-        "verified_utc": "2026-11-23T06:34:00.411575+00:00",
-        "metadata": {
-          "id": "1nTUKiIL9Luc2wnjDixYnOwyuY1V0zPxb",
-          "bytes": 57510,
-          "modified_time": "2026-11-23T06:33:57.539Z",
-          "parent_ids": [
-            "1lxcic8BcSzNgPtEY_Yg_2TBAbNam72dZ"
-          ],
-          "shared": true,
-          "permissions": [
-            {
-              "type": "user",
-              "role": "owner"
-            },
-            {
-              "type": "user",
-              "role": "writer"
-            }
-          ]
-        }
-      },
-      "update_in_place": true,
       "metadata": {
-        "id": "1nTUKiIL9Luc2wnjDixYnOwyuY1V0zPxb",
-        "bytes": 64855,
-        "modified_time": "2026-11-23T07:04:57.788Z",
+        "id": "1nP_X4Vp1VU0L4hasm6ienlx9dHCJhuWW",
+        "bytes": 3737,
+        "modified_time": "2026-11-23T07:16:20.550Z",
         "parent_ids": [
           "1lxcic8BcSzNgPtEY_Yg_2TBAbNam72dZ"
         ],
@@ -6690,9 +6692,76 @@
         ]
       },
       "raw_bytes_verified": true,
-      "readback_bytes": 64855,
-      "readback_sha256": "b26c554eaa92977cb0265c1835b4dafcb99cb6ea15c4e3ea7a0225bb8797aae8",
-      "verified_utc": "2026-11-23T07:05:00.415608+00:00"
+      "readback_bytes": 3737,
+      "readback_sha256": "ce02bff4f02140a637fba3e027271f2ec62d7672cfa5e5fb34393004a3ab9c72",
+      "verified_utc": "2026-11-23T07:16:22.974600+00:00"
+    },
+    {
+      "artifact_id": "handoff-document-CLAUDE-HANDOFF.md",
+      "group": "handoff_documents",
+      "file_name": "CLAUDE-HANDOFF.md",
+      "bytes": 66381,
+      "sha256": "880a99bb303a8439a7e553068d8851c8d5e95f2e15018d1bcdebed2435f88f29",
+      "local_path": "/workspace/scratch/39a2abd37644/concert-future/work/claude-handoff/portable-documents/CLAUDE-HANDOFF.md",
+      "parent_folder_id": "1lxcic8BcSzNgPtEY_Yg_2TBAbNam72dZ",
+      "mime_type": "text/markdown",
+      "source_repo_path": "project-docs/production-system/CLAUDE-HANDOFF.md",
+      "source_sha256": "7dc073d2ed9f71321b562f62935a0038761f32ac3ab72a919e9c0b0b99cca155",
+      "export_conversion": "Relative Markdown source links resolved to canonical GitHub main paths; body unchanged.",
+      "update_in_place": true,
+      "drive": {
+        "id": "1nTUKiIL9Luc2wnjDixYnOwyuY1V0zPxb",
+        "url": "https://docs.google.com/document/d/1nTUKiIL9Luc2wnjDixYnOwyuY1V0zPxb/edit?usp=drivesdk&ouid=113038373524763352759&rtpof=true&sd=true",
+        "parent_id": "1lxcic8BcSzNgPtEY_Yg_2TBAbNam72dZ",
+        "mime_type": "text/markdown"
+      },
+      "previous_verified_version": {
+        "bytes": 64855,
+        "sha256": "b26c554eaa92977cb0265c1835b4dafcb99cb6ea15c4e3ea7a0225bb8797aae8",
+        "verified_utc": "2026-11-23T07:05:00.415608+00:00",
+        "metadata": {
+          "id": "1nTUKiIL9Luc2wnjDixYnOwyuY1V0zPxb",
+          "bytes": 64855,
+          "modified_time": "2026-11-23T07:04:57.788Z",
+          "parent_ids": [
+            "1lxcic8BcSzNgPtEY_Yg_2TBAbNam72dZ"
+          ],
+          "shared": true,
+          "permissions": [
+            {
+              "type": "user",
+              "role": "owner"
+            },
+            {
+              "type": "user",
+              "role": "writer"
+            }
+          ]
+        }
+      },
+      "metadata": {
+        "id": "1nTUKiIL9Luc2wnjDixYnOwyuY1V0zPxb",
+        "bytes": 66381,
+        "modified_time": "2026-11-23T07:15:53.110Z",
+        "parent_ids": [
+          "1lxcic8BcSzNgPtEY_Yg_2TBAbNam72dZ"
+        ],
+        "shared": true,
+        "permissions": [
+          {
+            "type": "user",
+            "role": "owner"
+          },
+          {
+            "type": "user",
+            "role": "writer"
+          }
+        ]
+      },
+      "raw_bytes_verified": true,
+      "readback_bytes": 66381,
+      "readback_sha256": "880a99bb303a8439a7e553068d8851c8d5e95f2e15018d1bcdebed2435f88f29",
+      "verified_utc": "2026-11-23T07:15:55.363683+00:00"
     },
     {
       "artifact_id": "handoff-publication-SOURCE-RECEIPT.json",
@@ -7181,28 +7250,29 @@
       "artifact_id": "handoff-document-PROJECT-STATUS.md",
       "group": "handoff_documents",
       "file_name": "PROJECT-STATUS.md",
-      "bytes": 5849,
-      "sha256": "b8b5c3de89b17e502da6ec76f0a1c1c642628ddaa50fd3df3c5848f62f6c0644",
+      "bytes": 6393,
+      "sha256": "cc627bddb630a6bda12abcc34dee25a9e909886e532a504e10e9e781b01475bc",
       "local_path": "/workspace/scratch/39a2abd37644/concert-future/work/claude-handoff/portable-documents/PROJECT-STATUS.md",
       "parent_folder_id": "1lxcic8BcSzNgPtEY_Yg_2TBAbNam72dZ",
       "mime_type": "text/markdown",
+      "source_repo_path": "project-docs/production-system/PROJECT-STATUS.md",
+      "source_sha256": "d0a677f442b11b1c304fe13b576b681ed0b2bf645fe976ec3158a9e0305190f5",
+      "export_conversion": "Relative Markdown source links resolved to canonical GitHub main paths; body unchanged.",
+      "update_in_place": true,
       "drive": {
         "id": "1sqj8wnck8gHDHW0K9paMcaT8cHUu2LgB",
         "url": "https://docs.google.com/document/d/1sqj8wnck8gHDHW0K9paMcaT8cHUu2LgB/edit?usp=drivesdk&ouid=113038373524763352759&rtpof=true&sd=true",
         "parent_id": "1lxcic8BcSzNgPtEY_Yg_2TBAbNam72dZ",
         "mime_type": "text/markdown"
       },
-      "source_repo_path": "project-docs/production-system/PROJECT-STATUS.md",
-      "source_sha256": "a5ce7d9121a21f4521a5de4d8ea4606273da67c42fb33c33e346a34c2ec62f5e",
-      "export_conversion": "Relative Markdown source links resolved to canonical GitHub main paths; body unchanged.",
       "previous_verified_version": {
-        "bytes": 3177,
-        "sha256": "e0f952c8a822f46dac15121ba57b7ff899556c75188d199af6da7e7acb41e11f",
-        "verified_utc": "2026-11-23T06:34:09.624742+00:00",
+        "bytes": 5849,
+        "sha256": "b8b5c3de89b17e502da6ec76f0a1c1c642628ddaa50fd3df3c5848f62f6c0644",
+        "verified_utc": "2026-11-23T07:05:08.463967+00:00",
         "metadata": {
           "id": "1sqj8wnck8gHDHW0K9paMcaT8cHUu2LgB",
-          "bytes": 3177,
-          "modified_time": "2026-11-23T06:34:06.879Z",
+          "bytes": 5849,
+          "modified_time": "2026-11-23T07:05:05.644Z",
           "parent_ids": [
             "1lxcic8BcSzNgPtEY_Yg_2TBAbNam72dZ"
           ],
@@ -7219,11 +7289,10 @@
           ]
         }
       },
-      "update_in_place": true,
       "metadata": {
         "id": "1sqj8wnck8gHDHW0K9paMcaT8cHUu2LgB",
-        "bytes": 5849,
-        "modified_time": "2026-11-23T07:05:05.644Z",
+        "bytes": 6393,
+        "modified_time": "2026-11-23T07:16:00.944Z",
         "parent_ids": [
           "1lxcic8BcSzNgPtEY_Yg_2TBAbNam72dZ"
         ],
@@ -7240,9 +7309,9 @@
         ]
       },
       "raw_bytes_verified": true,
-      "readback_bytes": 5849,
-      "readback_sha256": "b8b5c3de89b17e502da6ec76f0a1c1c642628ddaa50fd3df3c5848f62f6c0644",
-      "verified_utc": "2026-11-23T07:05:08.463967+00:00"
+      "readback_bytes": 6393,
+      "readback_sha256": "cc627bddb630a6bda12abcc34dee25a9e909886e532a504e10e9e781b01475bc",
+      "verified_utc": "2026-11-23T07:16:03.320038+00:00"
     },
     {
       "artifact_id": "cinematic-ten-technical-records",
@@ -8341,8 +8410,8 @@
       "artifact_id": "current-source-README_RESTORE_CURRENT_SOURCE.md",
       "group": "current_sources",
       "file_name": "README_RESTORE_CURRENT_SOURCE.md",
-      "bytes": 2998,
-      "sha256": "97b40fb8f4de9b78e294652f1d09c1b0c6f34e6b7d699735c9eee9331be9f60d",
+      "bytes": 3402,
+      "sha256": "6ccfb98337f7dbe69c3017691f0751b65e7eb126b3d954ce9b13636048811b61",
       "local_path": "/workspace/scratch/39a2abd37644/concert-future/work/claude-handoff/packages/current-source/README_RESTORE_CURRENT_SOURCE.md",
       "parent_folder_id": "1ARIxA-UsuIR0xEVeDIBMH-MMgoxnafHn",
       "mime_type": "text/markdown",
@@ -8352,10 +8421,35 @@
         "parent_id": "1ARIxA-UsuIR0xEVeDIBMH-MMgoxnafHn",
         "mime_type": "text/markdown"
       },
+      "previous_verified_version": {
+        "bytes": 2998,
+        "sha256": "97b40fb8f4de9b78e294652f1d09c1b0c6f34e6b7d699735c9eee9331be9f60d",
+        "verified_utc": "2026-11-23T07:00:51.958660+00:00",
+        "metadata": {
+          "id": "14dgfQa0A_74oiaWihTdVj2wupQ6D058-",
+          "bytes": 2998,
+          "modified_time": "2026-11-23T07:00:49.282Z",
+          "parent_ids": [
+            "1ARIxA-UsuIR0xEVeDIBMH-MMgoxnafHn"
+          ],
+          "shared": true,
+          "permissions": [
+            {
+              "type": "user",
+              "role": "owner"
+            },
+            {
+              "type": "user",
+              "role": "writer"
+            }
+          ]
+        }
+      },
+      "update_in_place": true,
       "metadata": {
         "id": "14dgfQa0A_74oiaWihTdVj2wupQ6D058-",
-        "bytes": 2998,
-        "modified_time": "2026-11-23T07:00:49.282Z",
+        "bytes": 3402,
+        "modified_time": "2026-11-23T07:16:44.885Z",
         "parent_ids": [
           "1ARIxA-UsuIR0xEVeDIBMH-MMgoxnafHn"
         ],
@@ -8372,9 +8466,9 @@
         ]
       },
       "raw_bytes_verified": true,
-      "readback_bytes": 2998,
-      "readback_sha256": "97b40fb8f4de9b78e294652f1d09c1b0c6f34e6b7d699735c9eee9331be9f60d",
-      "verified_utc": "2026-11-23T07:00:51.958660+00:00"
+      "readback_bytes": 3402,
+      "readback_sha256": "6ccfb98337f7dbe69c3017691f0751b65e7eb126b3d954ce9b13636048811b61",
+      "verified_utc": "2026-11-23T07:16:47.174043+00:00"
     },
     {
       "artifact_id": "current-source-SOURCE-MANIFEST-CLOUD-TOOLS.json",
@@ -8460,28 +8554,29 @@
       "artifact_id": "handoff-document-CLAUDE-START-PROMPT.txt",
       "group": "handoff_documents",
       "file_name": "CLAUDE-START-PROMPT.txt",
-      "bytes": 4357,
-      "sha256": "d1f2b9e713c74bc8b199295549fc03698ed1188e7cf80178c51af28398ab851e",
+      "bytes": 4516,
+      "sha256": "ad13f3c638494d3dc840b6e98fbe42c3ccffbb42d730bede3f8e32baead1a9d4",
       "local_path": "/workspace/scratch/39a2abd37644/concert-future/work/claude-handoff/portable-documents/CLAUDE-START-PROMPT.txt",
       "parent_folder_id": "1lxcic8BcSzNgPtEY_Yg_2TBAbNam72dZ",
       "mime_type": "text/plain",
+      "source_repo_path": "project-docs/production-system/CLAUDE-START-PROMPT.txt",
+      "source_sha256": "ad13f3c638494d3dc840b6e98fbe42c3ccffbb42d730bede3f8e32baead1a9d4",
+      "export_conversion": "Exact source text.",
+      "update_in_place": true,
       "drive": {
         "id": "1jgrb01xoRrGKV13iOANuZn6Tniw5Hk9l",
         "url": "https://drive.google.com/file/d/1jgrb01xoRrGKV13iOANuZn6Tniw5Hk9l/view?usp=drivesdk",
         "parent_id": "1lxcic8BcSzNgPtEY_Yg_2TBAbNam72dZ",
         "mime_type": "text/plain"
       },
-      "source_repo_path": "project-docs/production-system/CLAUDE-START-PROMPT.txt",
-      "source_sha256": "d1f2b9e713c74bc8b199295549fc03698ed1188e7cf80178c51af28398ab851e",
-      "export_conversion": "Exact source text.",
       "previous_verified_version": {
-        "bytes": 2500,
-        "sha256": "dd0727c40eaecd279e5cf1a5df3f87e1d0cb7c4299e2b3095dd6da9c74041ba9",
-        "verified_utc": "2026-11-23T06:34:17.673704+00:00",
+        "bytes": 4357,
+        "sha256": "d1f2b9e713c74bc8b199295549fc03698ed1188e7cf80178c51af28398ab851e",
+        "verified_utc": "2026-11-23T07:05:16.109068+00:00",
         "metadata": {
           "id": "1jgrb01xoRrGKV13iOANuZn6Tniw5Hk9l",
-          "bytes": 2500,
-          "modified_time": "2026-11-23T06:34:15.070Z",
+          "bytes": 4357,
+          "modified_time": "2026-11-23T07:05:13.776Z",
           "parent_ids": [
             "1lxcic8BcSzNgPtEY_Yg_2TBAbNam72dZ"
           ],
@@ -8498,11 +8593,10 @@
           ]
         }
       },
-      "update_in_place": true,
       "metadata": {
         "id": "1jgrb01xoRrGKV13iOANuZn6Tniw5Hk9l",
-        "bytes": 4357,
-        "modified_time": "2026-11-23T07:05:13.776Z",
+        "bytes": 4516,
+        "modified_time": "2026-11-23T07:16:08.861Z",
         "parent_ids": [
           "1lxcic8BcSzNgPtEY_Yg_2TBAbNam72dZ"
         ],
@@ -8519,36 +8613,80 @@
         ]
       },
       "raw_bytes_verified": true,
-      "readback_bytes": 4357,
-      "readback_sha256": "d1f2b9e713c74bc8b199295549fc03698ed1188e7cf80178c51af28398ab851e",
-      "verified_utc": "2026-11-23T07:05:16.109068+00:00"
+      "readback_bytes": 4516,
+      "readback_sha256": "ad13f3c638494d3dc840b6e98fbe42c3ccffbb42d730bede3f8e32baead1a9d4",
+      "verified_utc": "2026-11-23T07:16:11.813046+00:00"
+    },
+    {
+      "artifact_id": "handoff-document-FINAL-SOURCE-CHECKPOINT.md",
+      "group": "handoff_documents",
+      "file_name": "FINAL-SOURCE-CHECKPOINT.md",
+      "bytes": 3737,
+      "sha256": "ce02bff4f02140a637fba3e027271f2ec62d7672cfa5e5fb34393004a3ab9c72",
+      "local_path": "/workspace/scratch/39a2abd37644/concert-future/work/claude-handoff/portable-documents/FINAL-SOURCE-CHECKPOINT.md",
+      "parent_folder_id": "1lxcic8BcSzNgPtEY_Yg_2TBAbNam72dZ",
+      "mime_type": "text/markdown",
+      "source_repo_path": "project-docs/production-system/FINAL-SOURCE-CHECKPOINT.md",
+      "source_sha256": "4d8ff18e9ff2bce43aadaf2bb45e5bfac890d2649aca4d4c5aec68f018c5dfb6",
+      "export_conversion": "Relative Markdown source links resolved to canonical GitHub main paths; body unchanged.",
+      "update_in_place": false,
+      "drive": {
+        "id": "1nP_X4Vp1VU0L4hasm6ienlx9dHCJhuWW",
+        "url": "https://docs.google.com/document/d/1nP_X4Vp1VU0L4hasm6ienlx9dHCJhuWW/edit?usp=drivesdk&ouid=113038373524763352759&rtpof=true&sd=true",
+        "parent_id": "1lxcic8BcSzNgPtEY_Yg_2TBAbNam72dZ",
+        "mime_type": "text/markdown"
+      },
+      "metadata": {
+        "id": "1nP_X4Vp1VU0L4hasm6ienlx9dHCJhuWW",
+        "bytes": 3737,
+        "modified_time": "2026-11-23T07:16:20.550Z",
+        "parent_ids": [
+          "1lxcic8BcSzNgPtEY_Yg_2TBAbNam72dZ"
+        ],
+        "shared": true,
+        "permissions": [
+          {
+            "type": "user",
+            "role": "owner"
+          },
+          {
+            "type": "user",
+            "role": "writer"
+          }
+        ]
+      },
+      "raw_bytes_verified": true,
+      "readback_bytes": 3737,
+      "readback_sha256": "ce02bff4f02140a637fba3e027271f2ec62d7672cfa5e5fb34393004a3ab9c72",
+      "verified_utc": "2026-11-23T07:16:22.974600+00:00"
     },
     {
       "artifact_id": "handoff-document-CLAUDE-HANDOFF.md",
       "group": "handoff_documents",
       "file_name": "CLAUDE-HANDOFF.md",
-      "bytes": 64855,
-      "sha256": "b26c554eaa92977cb0265c1835b4dafcb99cb6ea15c4e3ea7a0225bb8797aae8",
+      "bytes": 66381,
+      "sha256": "880a99bb303a8439a7e553068d8851c8d5e95f2e15018d1bcdebed2435f88f29",
       "local_path": "/workspace/scratch/39a2abd37644/concert-future/work/claude-handoff/portable-documents/CLAUDE-HANDOFF.md",
       "parent_folder_id": "1lxcic8BcSzNgPtEY_Yg_2TBAbNam72dZ",
       "mime_type": "text/markdown",
+      "source_repo_path": "project-docs/production-system/CLAUDE-HANDOFF.md",
+      "source_sha256": "7dc073d2ed9f71321b562f62935a0038761f32ac3ab72a919e9c0b0b99cca155",
+      "export_conversion": "Relative Markdown source links resolved to canonical GitHub main paths; body unchanged.",
+      "update_in_place": true,
       "drive": {
         "id": "1nTUKiIL9Luc2wnjDixYnOwyuY1V0zPxb",
         "url": "https://docs.google.com/document/d/1nTUKiIL9Luc2wnjDixYnOwyuY1V0zPxb/edit?usp=drivesdk&ouid=113038373524763352759&rtpof=true&sd=true",
         "parent_id": "1lxcic8BcSzNgPtEY_Yg_2TBAbNam72dZ",
         "mime_type": "text/markdown"
       },
-      "source_repo_path": "project-docs/production-system/CLAUDE-HANDOFF.md",
-      "source_sha256": "df315c2c934f3ab23a6a3f46deaf7144237526e31b8a4a0ee3d1249df6e3c37c",
-      "export_conversion": "Relative Markdown source links resolved to canonical GitHub main paths; body unchanged.",
       "previous_verified_version": {
-        "bytes": 57510,
-        "sha256": "1ca40f4900e3ffdb4c36b73510849562bbc30a015a37bc85facf1d5fe4527a13",
-        "verified_utc": "2026-11-23T06:34:00.411575+00:00",
+        "bytes": 64855,
+        "sha256": "b26c554eaa92977cb0265c1835b4dafcb99cb6ea15c4e3ea7a0225bb8797aae8",
+        "verified_utc": "2026-11-23T07:05:00.415608+00:00",
         "metadata": {
           "id": "1nTUKiIL9Luc2wnjDixYnOwyuY1V0zPxb",
-          "bytes": 57510,
-          "modified_time": "2026-11-23T06:33:57.539Z",
+          "bytes": 64855,
+          "modified_time": "2026-11-23T07:04:57.788Z",
           "parent_ids": [
             "1lxcic8BcSzNgPtEY_Yg_2TBAbNam72dZ"
           ],
@@ -8565,11 +8703,10 @@
           ]
         }
       },
-      "update_in_place": true,
       "metadata": {
         "id": "1nTUKiIL9Luc2wnjDixYnOwyuY1V0zPxb",
-        "bytes": 64855,
-        "modified_time": "2026-11-23T07:04:57.788Z",
+        "bytes": 66381,
+        "modified_time": "2026-11-23T07:15:53.110Z",
         "parent_ids": [
           "1lxcic8BcSzNgPtEY_Yg_2TBAbNam72dZ"
         ],
@@ -8586,36 +8723,37 @@
         ]
       },
       "raw_bytes_verified": true,
-      "readback_bytes": 64855,
-      "readback_sha256": "b26c554eaa92977cb0265c1835b4dafcb99cb6ea15c4e3ea7a0225bb8797aae8",
-      "verified_utc": "2026-11-23T07:05:00.415608+00:00"
+      "readback_bytes": 66381,
+      "readback_sha256": "880a99bb303a8439a7e553068d8851c8d5e95f2e15018d1bcdebed2435f88f29",
+      "verified_utc": "2026-11-23T07:15:55.363683+00:00"
     },
     {
       "artifact_id": "handoff-document-PROJECT-STATUS.md",
       "group": "handoff_documents",
       "file_name": "PROJECT-STATUS.md",
-      "bytes": 5849,
-      "sha256": "b8b5c3de89b17e502da6ec76f0a1c1c642628ddaa50fd3df3c5848f62f6c0644",
+      "bytes": 6393,
+      "sha256": "cc627bddb630a6bda12abcc34dee25a9e909886e532a504e10e9e781b01475bc",
       "local_path": "/workspace/scratch/39a2abd37644/concert-future/work/claude-handoff/portable-documents/PROJECT-STATUS.md",
       "parent_folder_id": "1lxcic8BcSzNgPtEY_Yg_2TBAbNam72dZ",
       "mime_type": "text/markdown",
+      "source_repo_path": "project-docs/production-system/PROJECT-STATUS.md",
+      "source_sha256": "d0a677f442b11b1c304fe13b576b681ed0b2bf645fe976ec3158a9e0305190f5",
+      "export_conversion": "Relative Markdown source links resolved to canonical GitHub main paths; body unchanged.",
+      "update_in_place": true,
       "drive": {
         "id": "1sqj8wnck8gHDHW0K9paMcaT8cHUu2LgB",
         "url": "https://docs.google.com/document/d/1sqj8wnck8gHDHW0K9paMcaT8cHUu2LgB/edit?usp=drivesdk&ouid=113038373524763352759&rtpof=true&sd=true",
         "parent_id": "1lxcic8BcSzNgPtEY_Yg_2TBAbNam72dZ",
         "mime_type": "text/markdown"
       },
-      "source_repo_path": "project-docs/production-system/PROJECT-STATUS.md",
-      "source_sha256": "a5ce7d9121a21f4521a5de4d8ea4606273da67c42fb33c33e346a34c2ec62f5e",
-      "export_conversion": "Relative Markdown source links resolved to canonical GitHub main paths; body unchanged.",
       "previous_verified_version": {
-        "bytes": 3177,
-        "sha256": "e0f952c8a822f46dac15121ba57b7ff899556c75188d199af6da7e7acb41e11f",
-        "verified_utc": "2026-11-23T06:34:09.624742+00:00",
+        "bytes": 5849,
+        "sha256": "b8b5c3de89b17e502da6ec76f0a1c1c642628ddaa50fd3df3c5848f62f6c0644",
+        "verified_utc": "2026-11-23T07:05:08.463967+00:00",
         "metadata": {
           "id": "1sqj8wnck8gHDHW0K9paMcaT8cHUu2LgB",
-          "bytes": 3177,
-          "modified_time": "2026-11-23T06:34:06.879Z",
+          "bytes": 5849,
+          "modified_time": "2026-11-23T07:05:05.644Z",
           "parent_ids": [
             "1lxcic8BcSzNgPtEY_Yg_2TBAbNam72dZ"
           ],
@@ -8632,11 +8770,10 @@
           ]
         }
       },
-      "update_in_place": true,
       "metadata": {
         "id": "1sqj8wnck8gHDHW0K9paMcaT8cHUu2LgB",
-        "bytes": 5849,
-        "modified_time": "2026-11-23T07:05:05.644Z",
+        "bytes": 6393,
+        "modified_time": "2026-11-23T07:16:00.944Z",
         "parent_ids": [
           "1lxcic8BcSzNgPtEY_Yg_2TBAbNam72dZ"
         ],
@@ -8653,9 +8790,9 @@
         ]
       },
       "raw_bytes_verified": true,
-      "readback_bytes": 5849,
-      "readback_sha256": "b8b5c3de89b17e502da6ec76f0a1c1c642628ddaa50fd3df3c5848f62f6c0644",
-      "verified_utc": "2026-11-23T07:05:08.463967+00:00"
+      "readback_bytes": 6393,
+      "readback_sha256": "cc627bddb630a6bda12abcc34dee25a9e909886e532a504e10e9e781b01475bc",
+      "verified_utc": "2026-11-23T07:16:03.320038+00:00"
     }
   ],
   "existing_drive_document_updates": [
@@ -8663,8 +8800,8 @@
       "artifact_id": "updated-drive-doc-16DTUM5WCezk2PSdAMpBfMsOkOd8PK7i5",
       "group": "current_drive_documents",
       "file_name": "production-status.json",
-      "bytes": 22746,
-      "sha256": "a8e0a4d647d52fb42387daf901b6b1f310f49a7453cdd2924cb646af1826b6e0",
+      "bytes": 27124,
+      "sha256": "d49f71b3cabdb394080d563f566332f720bc645365325160c231a3249a870855",
       "local_path": "/workspace/scratch/39a2abd37644/concert-future/work/claude-handoff/drive-current/production-status.json",
       "parent_folder_id": "1xyNZn4ZA6bjPcvKjGfgSWQIs9aAp2PPd",
       "mime_type": "application/json",
@@ -8675,13 +8812,13 @@
         "mime_type": "application/json"
       },
       "previous_verified_version": {
-        "bytes": 19345,
-        "sha256": "15592935b3b03e421d279edcfdc1310c6d958bc9889622b9c2cd25c5b9ec2cec",
-        "verified_utc": "2026-11-23T06:32:45.964218+00:00",
+        "bytes": 22746,
+        "sha256": "a8e0a4d647d52fb42387daf901b6b1f310f49a7453cdd2924cb646af1826b6e0",
+        "verified_utc": "2026-11-23T07:05:34.623932+00:00",
         "metadata": {
           "id": "16DTUM5WCezk2PSdAMpBfMsOkOd8PK7i5",
-          "bytes": 19345,
-          "modified_time": "2026-11-23T06:32:43.138Z",
+          "bytes": 22746,
+          "modified_time": "2026-11-23T07:05:30.244Z",
           "parent_ids": [
             "1xyNZn4ZA6bjPcvKjGfgSWQIs9aAp2PPd"
           ],
@@ -8701,8 +8838,8 @@
       "update_in_place": true,
       "metadata": {
         "id": "16DTUM5WCezk2PSdAMpBfMsOkOd8PK7i5",
-        "bytes": 22746,
-        "modified_time": "2026-11-23T07:05:30.244Z",
+        "bytes": 27124,
+        "modified_time": "2026-11-23T07:16:37.256Z",
         "parent_ids": [
           "1xyNZn4ZA6bjPcvKjGfgSWQIs9aAp2PPd"
         ],
@@ -8719,16 +8856,16 @@
         ]
       },
       "raw_bytes_verified": true,
-      "readback_bytes": 22746,
-      "readback_sha256": "a8e0a4d647d52fb42387daf901b6b1f310f49a7453cdd2924cb646af1826b6e0",
-      "verified_utc": "2026-11-23T07:05:34.623932+00:00"
+      "readback_bytes": 27124,
+      "readback_sha256": "d49f71b3cabdb394080d563f566332f720bc645365325160c231a3249a870855",
+      "verified_utc": "2026-11-23T07:16:39.708177+00:00"
     },
     {
       "artifact_id": "updated-drive-doc-16F00sMLXIxP77F2bvffPJ9754eR93wtb",
       "group": "current_drive_documents",
       "file_name": "production-log.jsonl",
-      "bytes": 92852,
-      "sha256": "2b0c486aff179466a0fc0c68a0a87b950a9a49df2fbeae64f06328ec74d73db1",
+      "bytes": 93329,
+      "sha256": "525b18026b1064759e5fa0d54d5a43e04be1a9a767a34fc09c0caff7ecd80ce0",
       "local_path": "/workspace/scratch/39a2abd37644/concert-future/work/claude-handoff/drive-current/production-log.jsonl",
       "parent_folder_id": "1xyNZn4ZA6bjPcvKjGfgSWQIs9aAp2PPd",
       "mime_type": "application/octet-stream",
@@ -8739,13 +8876,13 @@
         "mime_type": "application/octet-stream"
       },
       "previous_verified_version": {
-        "bytes": 91485,
-        "sha256": "b173220a07677f4a0ec6e335d46bafc8f5280a437507cfc62f168be1c7449bdd",
-        "verified_utc": "2026-11-23T06:32:36.292021+00:00",
+        "bytes": 92852,
+        "sha256": "2b0c486aff179466a0fc0c68a0a87b950a9a49df2fbeae64f06328ec74d73db1",
+        "verified_utc": "2026-11-23T07:05:24.472419+00:00",
         "metadata": {
           "id": "16F00sMLXIxP77F2bvffPJ9754eR93wtb",
-          "bytes": 91485,
-          "modified_time": "2026-11-23T06:32:33.878Z",
+          "bytes": 92852,
+          "modified_time": "2026-11-23T07:05:22.343Z",
           "parent_ids": [
             "1xyNZn4ZA6bjPcvKjGfgSWQIs9aAp2PPd"
           ],
@@ -8765,8 +8902,8 @@
       "update_in_place": true,
       "metadata": {
         "id": "16F00sMLXIxP77F2bvffPJ9754eR93wtb",
-        "bytes": 92852,
-        "modified_time": "2026-11-23T07:05:22.343Z",
+        "bytes": 93329,
+        "modified_time": "2026-11-23T07:16:29.882Z",
         "parent_ids": [
           "1xyNZn4ZA6bjPcvKjGfgSWQIs9aAp2PPd"
         ],
@@ -8783,9 +8920,9 @@
         ]
       },
       "raw_bytes_verified": true,
-      "readback_bytes": 92852,
-      "readback_sha256": "2b0c486aff179466a0fc0c68a0a87b950a9a49df2fbeae64f06328ec74d73db1",
-      "verified_utc": "2026-11-23T07:05:24.472419+00:00"
+      "readback_bytes": 93329,
+      "readback_sha256": "525b18026b1064759e5fa0d54d5a43e04be1a9a767a34fc09c0caff7ecd80ce0",
+      "verified_utc": "2026-11-23T07:16:32.019830+00:00"
     },
     {
       "artifact_id": "updated-drive-doc-195oEBBMyi14jY9lKSPfYB5fqpEZN4axj",
@@ -9110,20 +9247,25 @@
   ],
   "source_and_resources_actual_clean_restore": "project-docs/production-system/evidence/claude-source-clean-restore.json",
   "production_log_reconciliation": "project-docs/production-system/evidence/claude-log-reconciliation.json",
-  "production_log_event_count_each": 136,
+  "production_log_event_count_each": 137,
   "production_log_semantic_event_sets_equal": true,
   "integration": {
     "initial_handoff_pr": 115,
     "owner_cloud_tools_pr": 116,
     "source_snapshot_commit": "252e14145d535d8c8472c72144d85587967f3b2f",
-    "owner_main_included": "3812463e1196f4c47b468e05060dbc1c8154ff75",
+    "owner_main_included": "3d9abdf3a374a0d389821d2b639c75e2d121bfb1",
     "status_authority": "https://github.com/lovelaceaml-hub/concert-backdrops/commits/main",
     "integration_branch": "maintenance/claude-handoff-20261122",
-    "note": "The live repository and final pull request establish merge state; this transfer record does not predict a merge result."
+    "note": "The live repository and final pull request establish merge state; this transfer record does not predict a merge result.",
+    "preserved_owner_followup_prs": [
+      117,
+      118,
+      119
+    ]
   },
   "publication_receipt": "https://github.com/lovelaceaml-hub/concert-backdrops/blob/main/project-docs/production-system/evidence/claude-publication.json",
-  "receipt_scope": "101 current, distinct-file raw-byte verification receipts precede this completion-file revision. The cloud proof archive was fully read back by the authenticated GitHub runner; other current receipts describe their connector/raw-file route. This completion file is excluded from its own payload; the separate GitHub publication record supplies its final Drive hash and raises current distinct-file coverage to102. These counts are current verification records, not cumulative historical update attempts.",
-  "documentation_closeout_scope": "Snapshot252e1414 contains all877 tracked entries, the owner cloud-tool merge and the scoped byte-transfer helper. Later closeout updates current documentation, logs, catalog identities and successful publication evidence. The finished film bytes and producing picture commit are preserved.",
+  "receipt_scope": "102 distinct-file raw-byte verification records precede this completion-file revision. This completion file is excluded from its own payload; the publication record adds it as record103. These are the verified baseline/publication transfers before the separate final integrated-source package. The post-merge FINAL-HANDOFF-RECEIPT.json identifies that final package and exact merge commit. Counts describe distinct current file records at this checkpoint, not cumulative attempts.",
+  "documentation_closeout_scope": "All current instructions and logs preserve the owner merges through PR119. Source checkpoint252e1414 with877entries is retained as a verified recovery baseline. The final integrated source package and post-merge manifest/receipt cover the final closing merge. Finished film bytes and producing source remain unchanged.",
   "pending_drive_transfer_actions": [],
   "creative_approval": "not_recorded_for_exact_song11_output",
   "final_4k60_song11_rendered": false,
@@ -9444,5 +9586,17 @@
   },
   "cloud_tool_proof_exact_execution": "project-docs/production-system/evidence/claude-cloud-tool-proofs.json",
   "cloud_archive_raw_receipt": "project-docs/production-system/evidence/claude-cloud-proof-drive-receipt.json",
-  "production_log_closeout": "project-docs/production-system/evidence/claude-log-closeout.json"
+  "production_log_closeout": "project-docs/production-system/evidence/claude-log-closeout.json",
+  "source_snapshot_role": "Verified recovery checkpoint preceding owner PR117–PR119. The final integrated-source backup is separately identified by FINAL-HANDOFF-RECEIPT.json after the final merge.",
+  "final_integrated_source": {
+    "archive_filename": "Concert_Project_Final_Handoff_2026-11-22.tar.gz",
+    "manifest_filename": "FINAL-SOURCE-MANIFEST.json",
+    "readme_filename": "README_FINAL_SOURCE.md",
+    "receipt_filename": "FINAL-HANDOFF-RECEIPT.json",
+    "source_folder_url": "https://drive.google.com/drive/folders/1ARIxA-UsuIR0xEVeDIBMH-MMgoxnafHn",
+    "source_scope": "Exact final merged handoff commit, including owner changes observed through PR119. The final companion manifest and receipt are created after that commit and identify its exact hash, entry count and Drive files.",
+    "verification_authority": "FINAL-HANDOFF-RECEIPT.json in the source folder; final merge PR metadata also links the exact receipt.",
+    "guide": "project-docs/production-system/FINAL-SOURCE-CHECKPOINT.md"
+  },
+  "parallel_owner_updates": "project-docs/production-system/evidence/claude-parallel-owner-updates.json"
 }
