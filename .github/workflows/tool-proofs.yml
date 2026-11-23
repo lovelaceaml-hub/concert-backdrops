@@ -134,6 +134,14 @@ jobs:
             echo "song_draft=${{ steps.songdraft.outcome }}"
             echo "shared_recordings=${{ steps.shared.outcome }}"
           } | tee work/proofs/summary.txt
+      - name: Keep the downloaded song recordings for one day (private, for timing work)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: song-sources
+          path: work/song-sources/
+          if-no-files-found: ignore
+          retention-days: 1
       - name: Save proofs
         if: always()
         uses: actions/upload-artifact@v4
