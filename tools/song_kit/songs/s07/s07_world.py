@@ -65,8 +65,9 @@ DESIGNS = {
                                                                     (MOTHER_AT[0] - 1.0, 2.2, MOTHER_AT[1] - 60.0),
                                                                     (MOTHER_AT[0] + 0.8, 1.9, MOTHER_AT[1] + 7.5),
                                                                     (MOTHER_AT[0] - 1.0, 2.4, MOTHER_AT[1] - 60.0))),
-    111.0: dict(name="lantern_river", fov=52.0, keys=lambda a, b: _keys(a, b, (-14.0, 36.0, 10.0), (-30.0, 0.0, -110.0),
-                                                                       (-22.0, 26.0, -30.0), (-40.0, 0.0, -150.0))),
+    # from above and behind the two lantern-bearers as they cross to the lost, the lit lake beyond them
+    111.0: dict(name="lantern_river", fov=50.0, keys=lambda a, b: _keys(a, b, (12.0, 12.0, -27.0), (-4.0, 0.0, -54.0),
+                                                                       (5.0, 6.0, -37.0), (-5.0, 0.8, -50.0))),
     124.0: dict(name="reunions", fov=40.0, keys=lambda a, b: _keys(a, b, (2.0, 1.9, -50.0), (8.5, 1.1, -60.0),
                                                                   (3.0, 1.9, -52.0), (9.0, 1.1, -61.0))),
     137.0: dict(name="hush", fov=46.0, pace="linear", keys=lambda a, b: _keys(a, b, (0.0, 1.5, -28.0), (5.0, 2.0, -400.0),
@@ -75,10 +76,11 @@ DESIGNS = {
                                                                  (0.0, 3.0, -46.0), (0.0, 170.0, -900.0))),
     161.0: dict(name="dawn_faces", fov=42.0, keys=lambda a, b: _keys(a, b, (-4.0, 2.2, -44.0), (7.0, 2.2, -62.0),
                                                                     (-3.0, 2.0, -46.0), (8.0, 2.6, -64.0))),
-    174.0: dict(name="joined_hands", fov=50.0, roll=(0.0, 3.0), keys=lambda a, b: _keys(a, b, (-18.0, 16.0, -36.0),
-                                                                                        (8.0, 0.0, -62.0),
-                                                                                        (-22.0, 20.0, -50.0),
-                                                                                        (10.0, 0.0, -80.0))),
+    # facing the shore with the dawn and the kingdom behind: the current of light crossing everyone's joined hands
+    174.0: dict(name="joined_hands", fov=46.0, roll=(0.0, 1.5), keys=lambda a, b: _keys(a, b, (6.0, 7.0, -46.0),
+                                                                                        (9.0, 0.8, -64.0),
+                                                                                        (7.0, 8.5, -49.0),
+                                                                                        (9.5, 0.8, -66.0))),
     187.0: dict(name="bridge", fov=52.0, keys=lambda a, b: _keys(a, b, (-16.0, 6.0, -70.0), (0.0, 30.0, -260.0),
                                                                 (-20.0, 30.0, -140.0), (0.0, 120.0, -600.0))),
     201.0: dict(name="procession_sky", fov=54.0, roll=(-3.0, 3.0), keys=lambda a, b: _keys(a, b, (-40.0, 60.0, -260.0),
@@ -239,7 +241,7 @@ class Current:
         front = sc(self.t0, self.t0 + 5.0, t)
         lit = np.clip((front - self.u) * 8.0, 0.0, 1.0)
         pulse = 0.6 + 0.4 * np.sin(18.0 * self.u - 6.0 * t)
-        return [dict(pos=P, size=0.10, color=lin(GOLD_W), alpha=k * lit * pulse, kind="spark", emit=3.0),
+        return [dict(pos=P, size=0.10, color=lin(GOLD_W), alpha=k * lit * pulse, kind="spark", emit=2.2),
                 dict(pos=P[::8], size=1.2, color=lin(LANTERN), alpha=0.12 * k * lit[::8], kind="soft", emit=1.4)]
 
 
@@ -394,27 +396,27 @@ def _people():
                   (127.2 + 0.3 * k, "walk", dict(speed=0.5)), (137.0, "stand", dict(blend=1.5))],
           gesture=[(110.0, 123.0, "raise_hand", dict(side="R", palm="fwd")),
                    (123.0, 126.0, "handshake", dict(side="R", to=lambda t, k=k: _palm(f"lost{k}", t))),
-                   (127.0, 176.0, "raise_hand", dict(side="R", palm="fwd"))],
-          garment="tunic" if k else "coat", tone=k, seed=40.0 + k, show=(109.0, 176.0), points=24000)
+                   (127.0, 188.0, "raise_hand", dict(side="R", palm="fwd"))],
+          garment="tunic" if k else "coat", tone=k, seed=40.0 + k, show=(109.0, 188.0), points=24000)
     # two who were lost (men), reached by the bearers' offered hands, walking home with them
     for k, x0 in enumerate((-5.5, -4.4)):
         b(f"lost{k}", "man", at=(x0, -44.6 - 0.6 * k), facing=90.0,
           motion=[(0.0, "stand"), (127.6 + 0.3 * k, "walk", dict(speed=0.5)), (137.0, "stand", dict(blend=1.5))],
           gesture=[(123.2, 126.0, "offer", dict(side="R"))],
-          garment="coat" if k else "tunic", tone=2 + k, seed=50.0 + k, show=(116.0, 176.0), fade=3.0, points=22000)
+          garment="coat" if k else "tunic", tone=2 + k, seed=50.0 + k, show=(116.0, 188.0), fade=3.0, points=22000)
     # the shore: two women embrace (one who has come home); a mother holds her child close (parent and child)
     sx, sz = SHORE[0], SHORE[2]
     b("sister0", "woman", at=(sx, sz), facing=90.0, motion="stand", garment="dress", hair="bun", tone=0, seed=60.0,
-      show=(126.0, 176.0), fade=1.6, points=22000,
+      show=(126.0, 188.0), fade=1.6, points=22000,
       gesture=[(129.5, 137.5, "embrace", dict(to=V(sx + 0.84, 1.25, sz - 0.05), head="L"))])
     b("sister1", "woman", at=(sx + 0.72, sz - 0.05), facing=270.0, motion="stand", garment="robe", hair="bob", tone=1,
-      seed=61.0, show=(126.0, 176.0), fade=1.6, points=22000,
+      seed=61.0, show=(126.0, 188.0), fade=1.6, points=22000,
       gesture=[(129.8, 137.5, "embrace", dict(to=V(sx - 0.12, 1.25, sz), head="L"))])
     b("parent", "woman", at=(sx + 3.4, sz + 1.5), facing=120.0, motion="stand", garment="dress", hair="bun", tone=2,
-      seed=62.0, show=(126.0, 176.0), fade=1.6, points=22000,
-      gesture=[(130.0, 174.0, "arm_round", dict(side="L", to=lambda t: L._BODIES["child"].where(t, "shoulder.R")))])
+      seed=62.0, show=(126.0, 188.0), fade=1.6, points=22000,
+      gesture=[(130.0, 187.0, "arm_round", dict(side="L", to=lambda t: L._BODIES["child"].where(t, "shoulder.R")))])
     b("child", "child", at=(sx + 3.88, sz + 1.72), facing=300.0, motion="stand", garment="tunic", tone=3, seed=63.0,
-      show=(126.0, 176.0), fade=1.6, points=16000, gesture=[(150.5, 174.0, "look_up", dict(amount=30.0))])
+      show=(126.0, 188.0), fade=1.6, points=16000, gesture=[(150.5, 187.0, "look_up", dict(amount=30.0))])
 
 
 def _lamp_pos(name):
@@ -436,10 +438,10 @@ def add(scene):
               reflect=False)
     add_light(_lamp_pos("mother"), "#ffe6b0", lambda t: 0.25 * win(t, 97.0, 224.0, 1.5, 2.0), radius=8.0)
     for k in range(2):
-        scene.add(f"lantern {k}", Glow(_lamp_pos(f"bearer{k}"), LANTERN, 1.1, lambda t: win(t, 110.5, 176.0, 1.0, 1.5),
+        scene.add(f"lantern {k}", Glow(_lamp_pos(f"bearer{k}"), LANTERN, 1.1, lambda t: win(t, 110.5, 188.0, 1.0, 1.5),
                                         core=0.2), reflect=False)
-        add_light(_lamp_pos(f"bearer{k}"), LANTERN, lambda t: 0.18 * win(t, 110.5, 176.0, 1.0, 1.5), radius=6.0)
-    scene.add("current", Current(SHORE + V(-6.0, 1.1, 4.0), SHORE + V(8.0, 1.1, -10.0), 174.0, 187.0), reflect=False)
+        add_light(_lamp_pos(f"bearer{k}"), LANTERN, lambda t: 0.18 * win(t, 110.5, 188.0, 1.0, 1.5), radius=6.0)
+    scene.add("current", Current(SHORE + V(-6.0, 1.1, -3.0), SHORE + V(10.0, 1.1, -3.0), 174.0, 187.0), reflect=False)
     crowd_k = lambda t: win(t, 136.0, 188.0, 2.0, 3.0)
     scene.add("gathered", GCrowd(gain=crowd_k, n=28, area=dict(center=(SHORE[0] + 2.0, SHORE[2] - 3.0),
                                                                 radius=(3.0, 12.0)), facing=270.0, seed=7))

@@ -134,22 +134,18 @@ jobs:
             echo "song_draft=${{ steps.songdraft.outcome }}"
             echo "shared_recordings=${{ steps.shared.outcome }}"
           } | tee work/proofs/summary.txt
-      - name: Keep the downloaded song recordings for one day (private, for timing work)
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: song-sources
-          path: work/song-sources/
-          if-no-files-found: ignore
-          retention-days: 1
+      # The repository is public, so its artifacts are too: logs, JSON and stills only. No recording and no
+      # video (drafts carry the song's music) is ever uploaded here; renders go to the private Drive folder.
       - name: Save proofs
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: tool-proofs
           path: |
-            work/proofs/
-            work/pipeline/**/*.mp4
+            work/proofs/**/*.log
+            work/proofs/**/*.txt
+            work/proofs/**/*.json
+            work/proofs/**/*.png
             work/pipeline/**/*.json
             work/pipeline/**/*.png
           if-no-files-found: ignore
