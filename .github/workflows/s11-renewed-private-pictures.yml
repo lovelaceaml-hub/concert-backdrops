@@ -1,0 +1,84 @@
+name: Song 11 encrypted pictures
+
+# Only a deliberate request-file update on this creative branch starts a run.
+# Delivery documents and other source commits do not trigger more rendering.
+on:
+  push:
+    branches: [creative/s11-renewed-20261122]
+    paths: [tools/s11_cloud/request.json]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: s11-encrypted-pictures-${{ github.ref }}
+  cancel-in-progress: false
+
+env:
+  PYTHONHASHSEED: "0"
+  LIBGL_ALWAYS_SOFTWARE: "1"
+  LP_NUM_THREADS: "1"
+  OPENBLAS_NUM_THREADS: "1"
+  OMP_NUM_THREADS: "1"
+  NUMBA_NUM_THREADS: "1"
+
+jobs:
+  plan:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    outputs:
+      matrix: ${{ steps.request.outputs.matrix }}
+      request_id: ${{ steps.request.outputs.request_id }}
+      mode: ${{ steps.request.outputs.mode }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - id: request
+        name: Validate the explicit picture request
+        run: |
+          python3 - <<'PY'
+          import json, os
+          from tools.s11_cloud.common import request
+          value = request()
+          parts = [0] if value['mode'] == 'probe' else list(range(value['parts']))
+          with open(os.environ['GITHUB_OUTPUT'], 'a') as output:
+              output.write('matrix=' + json.dumps({'part': parts}) + '\n')
+              output.write('request_id=' + value['id'] + '\n')
+              output.write('mode=' + value['mode'] + '\n')
+          PY
+
+  pictures:
+    needs: plan
+    runs-on: ubuntu-24.04
+    timeout-minutes: 330
+    strategy:
+      fail-fast: false
+      max-parallel: 20
+      matrix: ${{ fromJSON(needs.plan.outputs.matrix) }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12.14"
+      - name: Install software rendering and encryption tools
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq --no-install-recommends libegl1 libgles2 libgl1-mesa-dri libegl-mesa0 ffmpeg openssl
+      - name: Install exact Python dependencies
+        run: python -m pip install --disable-pip-version-check --requirement tools/s11_renewed/requirements-render.txt
+      - name: Restore pinned models, fonts and verified analysis without audio
+        run: python -m tools.s11_cloud.prepare --fonts
+      - name: Render silent native pictures and encrypt the artifact
+        run: python -m tools.s11_cloud.render --part ${{ matrix.part }}
+      - name: Upload encrypted output only
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ needs.plan.outputs.request_id }}-${{ needs.plan.outputs.mode }}-${{ matrix.part }}
+          path: work/s11_cloud/${{ needs.plan.outputs.request_id }}/encrypted/*.tar.cms
+          if-no-files-found: error
+          compression-level: 0
+          retention-days: 1

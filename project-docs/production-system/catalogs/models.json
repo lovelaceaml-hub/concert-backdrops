@@ -961,6 +961,47 @@
         "up_axis": "+Y"
       },
       "final_movie_evidence": "project-docs/production-system/evidence/advanced-dance-final-delivery.json"
+    },
+    {
+      "id": "people.s11_modest_formal_v1",
+      "family": "people",
+      "source_paths": [
+        "tools/s11_renewed/garment.py",
+        "tools/s11_renewed/performance.py"
+      ],
+      "entry_point": "tools.s11_renewed.performance.install(song)",
+      "provenance": "authored_clothing_and_performance_over_pinned_project_assets",
+      "code_only_eligible": true,
+      "reuse_scope": "Song 11 native-world-space performance; adapt deliberately for other song rigs",
+      "status": "implemented_study_in_review",
+      "variants": [
+        "sapphire_conductor_coat_and_loose_trousers",
+        "covered_choir_and_orchestra_bodies"
+      ],
+      "anchors": [
+        "planted_feet",
+        "evaluated_hand_grip",
+        "baton_tip"
+      ],
+      "known_limits": [
+        "Install the performance layer before constructing the renderer.",
+        "Crowd cache identity includes garment geometry and crowd sample schema.",
+        "This source is not owner creative approval of a future rendered film."
+      ]
     }
-  ]
+  ],
+  "default_character_direction": {
+    "recorded_local_date": "2026-11-22",
+    "source": "Owner correction recorded in CREATIVE-RULES.md and S11-RECREATION.md",
+    "clothing": "Separate generous garment geometry; no nipples, breast anatomy, buttock clefts or exposed cheeks. Opaque color alone is insufficient.",
+    "detail_priority": [
+      "costume silhouette and trim",
+      "musical expression and hand contact",
+      "graceful whole-body movement",
+      "architecture, water and light"
+    ],
+    "historical_assets": "Older body-fitting assets and renders retain their historical identities; source availability or prior output approval does not make those anatomical surfaces the default for future characters.",
+    "current_implementation": "tools/s11_renewed/garment.py and tools/s11_renewed/performance.py",
+    "song_specific": "In Song 11 the hero is a male conductor; Heavenly Mother is represented only as light."
+  }
 }

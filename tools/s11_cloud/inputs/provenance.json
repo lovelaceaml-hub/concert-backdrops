@@ -1,0 +1,9 @@
+{
+  "engine_commit": "d928ff9eafe02ac3150f0c646bdcc497fe5a7278",
+  "claude_reference_commit": "f43f4514e4bc42dc25166e90160d98219f5a0db4",
+  "audio_sha256": "70464dff370f7187d12029970c1fa1ef3e91c6957180aa685b64cead830f7004",
+  "live_seconds": 260.0,
+  "hold_seconds": 15.0,
+  "total_seconds": 275.0,
+  "fps": 60
+}

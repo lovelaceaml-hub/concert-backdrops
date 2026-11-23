@@ -107,3 +107,11 @@ must be bound to its own frozen source/input manifest and output checksum.
 
 Complete these entries with observed results and receipt paths after assembly;
 do not infer completion from a render command, a still or an earlier film.
+
+## Completed native encoded motion proof
+
+The internal 6-second passage at picture seconds 117.1–123.1 is complete. It contains 360 frames at native 1920×1080 and 60fps with two temporal samples. The exact file SHA256 is `daa1aed1bb9e489425867678d2e027e0a26f328b4dee0fb98e4729e29a2ce440`. Complete video/audio decoding passed; all presentation timestamps are continuous. The decoded AAC and original prepared score had zero measured sample lag in all three sampled windows at 8 kHz, with correlation at least 0.999978. See [the encoded receipt](evidence/s11-renewed-motion-proof.json).
+
+Two independent consecutive-frame inspections covered the repaired musical transition. The wider inspection viewed all 36 frames 7260–7295: hands, baton and torso advance gradually within each shot, feet remain planted, and the coat/trousers maintain coverage. The large screen-space change at picture 121.4333 seconds is the planned camera cut and light cue. These are encoded-frame inspections, not uninterrupted real-time playback or owner approval. [The preflight record](evidence/s11-renewed-preflight.json) retains the scope and measurements.
+
+The complete 275-second master remains pending; this proof is not the deliverable.

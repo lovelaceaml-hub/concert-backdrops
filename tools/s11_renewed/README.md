@@ -65,7 +65,7 @@ python -m tools.s11_renewed.prepare --audio work/song-inputs/s11-original.mp3
 PYTHONHASHSEED=0 LIBGL_ALWAYS_SOFTWARE=1 LP_NUM_THREADS=2 \
 OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 NUMBA_NUM_THREADS=1 \
 python -m tools.s11_renewed.render \
-  --width 1920 --height 1080 --samples 2 --workers 4 --chunk-frames 900 \
+  --width 1920 --height 1080 --samples 2 --workers 3 --chunk-frames 900 \
   --out work/s11_renewed/Almighty_God_Knows_the_Future_Renewed_1080p60.mp4
 ```
 
