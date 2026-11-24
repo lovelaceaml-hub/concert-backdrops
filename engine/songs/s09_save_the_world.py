@@ -188,7 +188,7 @@ PAL = {
     "endcard": ("#0c414a", "#2a6866", "#6fa293", "#f1e2b8"),
 }
 _pal_keys = [
-    (0.0, "seamist"), (10.0, "seamist"), (CALL, "mist"), (ENC_FORM - 1.0, "mist"), (ENC_FORM + 3.0, "pearl"),
+    (0.0, "seamist"), (CALL, "mist"), (ENC_FORM - 1.0, "mist"), (ENC_FORM + 3.0, "pearl"),
     (ENC_ARRIVE - 1.0, "pearl"), (GLORY + 6.0, "dawn"), (TITLE_HIT - 4.0, "dawnhi"), (TITLE_HIT + 2.0, "endcard"), (TOTAL, "endcard"),
 ]
 SKY_TOP = Track([(t, lin(PAL[p][0])) for t, p in _pal_keys])
