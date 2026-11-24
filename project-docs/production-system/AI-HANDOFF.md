@@ -1,5 +1,9 @@
 # Handoff for a new AI or chat
 
+## Start here for Song 11, November 24, 2026
+
+Resume the owner’s full-film interview with the clickable opening question. The owner selected a promo-style globe transformation from the final chord and a pastel closing card. Keep the schedule-free 15-second hold. Use the new 4:35 review as the comparison cut. Complete the interview before rendering the next revision. [Song 11 plan](S11-NEXT-CUT.md) · [Paste into a new chat](S11-START-PROMPT.txt)
+
 The latest owner priorities ([PR #114](https://github.com/lovelaceaml-hub/concert-backdrops/pull/114)) authorize: make the retained tools work and be reusable for every song; integrate proven quality gains into the existing engine; then simplify status, stale PRs and distributed rendering. Try permitted cloud routes first for browser/Remotion/live-Blender sandbox limits. Use the owner's Mac only if no cloud route works and explain why; retain the separate GPU/load/priority conditions. The current deliverable is the complete Claude handoff; these priorities guide continuation.
 
 ## Current authority and complete handoff
@@ -8,7 +12,7 @@ Start with [root AGENTS.md](../../AGENTS.md), the current conversation and [CLAU
 
 The complete handoff distinguishes working production code, the newly verified GitHub cloud tool proofs from PR #116, this checkout's presently uninstalled dependencies, and the remaining unverified Workbench interactive playback/export and container-run routes. See [the current cloud proof record](../../docs/VIDEO-PIPELINE-VALIDATION.md) and [integration status](../../integrations/STATUS.md). The [current Drive handoff](https://drive.google.com/drive/folders/1lxcic8BcSzNgPtEY_Yg_2TBAbNam72dZ) and its verified completion inventory establish actual transfer coverage. Large files may require exact-byte restoration from parts; this preserves the original movie/archive without an encode and does not create a phone version.
 
-## Current completed production: Almighty God Knows the Future
+## Earlier completed recreation: Almighty God Knows the Future
 
 The complete **4-minute-35-second recreation is rendered, checked and saved**.
 It keeps the original music and established concert world, with independently

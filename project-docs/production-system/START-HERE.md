@@ -1,5 +1,9 @@
 # Concert production system
 
+## Current Song 11 work, November 24, 2026
+
+**Almighty God Who Knows the Future** is in a new creative interview. The recent 4:35 1080p60 review is complete for comparison. The first unanswered question is the opening. The confirmed ending transforms Earth into the official emblem from the final chord and finishes on the promo’s pastel card. [Next-cut plan](S11-NEXT-CUT.md) · [New-chat prompt](S11-START-PROMPT.txt)
+
 The latest owner priorities ([PR #114](https://github.com/lovelaceaml-hub/concert-backdrops/pull/114)) authorize: make the retained tools work and be reusable for every song; integrate proven quality gains into the existing engine; then simplify status, stale PRs and distributed rendering. Try permitted cloud routes first for browser/Remotion/live-Blender sandbox limits. Use the owner's Mac only if no cloud route works and explain why; retain the separate GPU/load/priority conditions. The current deliverable is the complete Claude handoff; these priorities guide continuation.
 
 ## Current owner rules and whole-project handoff
@@ -8,7 +12,7 @@ Read [root AGENTS.md](../../AGENTS.md) and [CLAUDE-HANDOFF.md](CLAUDE-HANDOFF.md
 
 The [current Claude handoff folder](https://drive.google.com/drive/folders/1lxcic8BcSzNgPtEY_Yg_2TBAbNam72dZ) collects source, resources and media. Its completion inventory is the authority for actual uploaded coverage. Files larger than the transfer limit use exact byte parts and a portable restoration helper, without re-encoding. See the [handoff recovery section](CLAUDE-HANDOFF.md#3-project-locations-and-recovery). Folder creation or a transfer plan alone does not establish that every upload is complete.
 
-## Completed Song 11: Almighty God Knows the Future
+## Earlier Song 11 recreation
 
 The complete **4-minute-35-second recreation is rendered, checked and saved**.
 It keeps the original music and established concert world, with independently

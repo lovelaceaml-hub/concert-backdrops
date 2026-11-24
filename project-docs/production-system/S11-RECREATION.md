@@ -1,5 +1,7 @@
 # Song 11 recreation: current creative direction
 
+The earlier recreation below documents its own source and delivery. For the current 4:35 comparison cut and the owner’s new ending and interview, use [Song 11 next cut](S11-NEXT-CUT.md).
+
 User-facing date: November 22, 2026, America/Los_Angeles.
 
 ## Requested outcome

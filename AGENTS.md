@@ -1,5 +1,11 @@
 # Project navigation
 
+## Current Song 11 assignment, November 24, 2026
+
+Continue the scene-by-scene interview for **Almighty God Who Knows the Future** using clickable questions. Start at the unanswered opening question. Record each answer. Complete the interview and confirm the edit before modifying scenes or launching new renders. The confirmed ending begins on the final chord, turns Earth into the globe of the official emblem, and settles into the promo’s pastel card for the schedule-free 15-second hold. [Song 11 plan and interview](project-docs/production-system/S11-NEXT-CUT.md) · [New-chat prompt](project-docs/production-system/S11-START-PROMPT.txt)
+
+The latest 1080p60 review is complete as a comparison cut. The next creative revision is in planning. Keep the original score and procedural particle style. The owner approves the 1080p review before a 4K60 show render.
+
 ## Owner directions (Anthony, November 22, 2026)
 
 These are standing rules for every agent (Claude, Codex, ChatGPT, Gemini). They govern over older records and reviews.
@@ -46,7 +52,7 @@ instructions. This page records that change and points to project facts. The
 current conversation supplies the working directions; the earlier instructions
 remain available in Git history.
 
-## Completed Song 11 production
+## Earlier Song 11 recreation
 
 The complete **Almighty God Knows the Future** recreation is rendered, checked and saved; source integration is tracked
 in [PR #112](https://github.com/lovelaceaml-hub/concert-backdrops/pull/112).

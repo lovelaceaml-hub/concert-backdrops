@@ -1,5 +1,9 @@
 # Claude handoff: the concert project
 
+## Song 11 continuation, November 24, 2026
+
+The active Song 11 task is planning the next cut. The new 4:35 comparison review is technically complete. The owner confirmed the promo’s pastel finish and a continuous Earth-to-official-emblem transformation starting on the final chord. Resume the unanswered clickable opening question before changing the renderer. The dated whole-project recovery records below retain their original scope. [Song 11 next cut](S11-NEXT-CUT.md) · [New-chat prompt](S11-START-PROMPT.txt)
+
 **Checkpoint: November 22, 2026, America/Los_Angeles (machine receipts use UTC).** The complete **Almighty God Knows the Future** recreation is rendered, technically checked, visually reviewed within the recorded sample scope, and saved. It is a **275-second, native 1080p60 design/review delivery**, with no unfinished render queue. The owner has **not approved this exact new film**. The final show target is **4K60 after design, timing and content approval**; this Song 11 delivery is not a rendered 4K show master.
 
 The picture source is `eec8d16519ea82309ef851975792e9dfc548da03`. [PR #112](https://github.com/lovelaceaml-hub/concert-backdrops/pull/112) merged the completed recreation and delivery workflow at `93527bf5e2e43477073e361d22cfd6d4fa999da7`. Later documentation, transfer or maintenance commits do not change the producing picture identity. The November 22 owner directions, merged through [PR #113](https://github.com/lovelaceaml-hub/concert-backdrops/pull/113), are included in that integration checkpoint. The subsequent owner priorities in [PR #114](https://github.com/lovelaceaml-hub/concert-backdrops/pull/114) are retained from main `651e9487cd134e06b94f9627c22f008a8da02b54` and govern the next work.

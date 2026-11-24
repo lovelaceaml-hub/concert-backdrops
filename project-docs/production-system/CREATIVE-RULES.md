@@ -1,5 +1,9 @@
 # Creative and motion rules
 
+## Current Song 11 ending direction
+
+The official emblem’s globe grows out of the same Earth seen on the final chord. Use the approved promo’s transformation and pastel card treatment. Retain the official artwork and schedule-free silent hold. Continue the entire scene-by-scene interview before implementation. [Current Song 11 plan](S11-NEXT-CUT.md)
+
 ## Current production boundary
 
 Follow [root AGENTS.md](../../AGENTS.md) and [the complete Claude handoff](CLAUDE-HANDOFF.md). Improve the existing system and keep its added Blender, Three.js, Remotion, Video Shotcraft and Blender MCP tools reusable. Develop at 1080p until design, timing and content are approved; the final show is 4K60. Make no new phone versions. CPU work stays in the cloud; needed GPU work uses the owner's Mac under the recorded conditions.
