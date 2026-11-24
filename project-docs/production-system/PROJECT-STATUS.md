@@ -1,12 +1,12 @@
 # Project status
 
-Updated November 22, 2026, America/Los_Angeles. Machine receipts use UTC.
+Updated November 24, 2026, America/Los_Angeles. Machine receipts use UTC.
 
 ## Current film
 
-**Almighty God Knows the Future is complete at native 1080p60:** 275 seconds, 16,500 frames. Original music, modest separate clothing, continuous conducting and the established concert story are preserved. The exact-output owner creative approval is not recorded. Final show output remains 4K60 after design, timing and content approval. No new phone versions and no unfinished render queue.
+**Almighty God Who Knows the Future** is in a full-film creative interview. The 4:35 1080p60 comparison cut passed technical checks and is available in the private Drive project. The first opening choice is pending. The owner confirmed the promo-style Earth-to-emblem transformation starting at the final chord and the pastel closing card. No render is queued for the next cut. Full review approval precedes the 4K60 show master.
 
-[Current film and recovery](CLAUDE-HANDOFF.md#3-project-locations-and-recovery) · [Final QA](evidence/s11-renewed-final-qa.json) · [Deliveries](DELIVERIES.md)
+[Next-cut plan](S11-NEXT-CUT.md) · [New-chat prompt](S11-START-PROMPT.txt) · [Current review evidence](evidence/s11-handoff-review-20261124.json) · [Deliveries](DELIVERIES.md)
 
 ## Handoff
 

@@ -1,0 +1,37 @@
+{
+  "schema": "s11-handoff-review-summary-v1",
+  "source_base_commit": "1607fc0affc2b2fbc44732d322a1078e16ffb13b",
+  "source_snapshot": "Working renderer changes based on the recorded commit, retained in the private project handoff.",
+  "render_fingerprint": "d1a19099adcc2a33e2d9062b9867022ddd3f1ee152194be06d03f6ad2eb11a20",
+  "master": {
+    "duration_seconds": 275,
+    "video_stream": {
+      "avg_frame_rate": "60/1",
+      "codec_name": "h264",
+      "height": 1080,
+      "nb_frames": "16500",
+      "width": 1920
+    },
+    "output_frames": [
+      0,
+      16500
+    ],
+    "verified_picture_parts": 138,
+    "bytes": 567522198,
+    "sha256": "a8640fc8ad2279af84d13e4a44d262d0aedb3cbf9aa17b2de7d14781c13dc560",
+    "score_sha256": "fa488e4805cdc43b1f0f38915d67044ef92a9e659a59ac916d4b75b4cbb6d29b",
+    "decoded_score_similarity": 0.9994314887473236,
+    "decoded_silent_hold_peak": 9.727949509397149e-05
+  },
+  "drive_download": {
+    "folder": "Concert Backdrops - Songs / Videos / Production Studies",
+    "name": "Almighty God Who Knows the Future – Full 1080p60 Handoff Review.mp4",
+    "bytes": 99923967,
+    "sha256": "e12c98ac5192b724b1595de5c4bf2e7cfc3dc7fa15dc5717fc23134267450906",
+    "audio_packet_hash": "SHA256=2510b6585fcbc1b648632bc22610002d12d055b6e548713c30e64e7245379b37",
+    "video_reencoded": true
+  },
+  "visual_check": "12 sampled frames from the encoded file, including opening, Earth, procession, sunrise, finale and last frame.",
+  "manual_listening_status": "pending",
+  "owner_review_status": "revisions_requested"
+}

@@ -1,3 +1,7 @@
+Song 11 continuation, November 24, 2026
+
+For the active Song 11 revision, use S11-START-PROMPT.txt and S11-NEXT-CUT.md. Start with the unanswered clickable opening question. The original whole-project setup follows.
+
 Continue the existing Concert Backdrops project. Read root AGENTS.md, project-docs/production-system/CLAUDE-HANDOFF.md, project-docs/production-system/STATE.json and project-docs/production-system/evidence/claude-drive-completion.json before changing anything.
 
 GitHub: https://github.com/lovelaceaml-hub/concert-backdrops

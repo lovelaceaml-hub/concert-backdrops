@@ -1,5 +1,9 @@
 # Concert Backdrops: instructions for every AI
 
+## Current Song 11 instructions, November 24, 2026
+
+For **Almighty God Who Knows the Future**, resume the full-film interview with the clickable opening question. Keep the latest 1080p60 review as a comparison cut and gather the owner’s choices before changing the storyboard or renderer. The confirmed closing continuously transforms Earth into the emblem globe from the final chord and ends on the promo pastel card. [Song 11 next-cut plan](production-system/S11-NEXT-CUT.md) · [New-chat prompt](production-system/S11-START-PROMPT.txt)
+
 The latest owner priorities ([PR #114](https://github.com/lovelaceaml-hub/concert-backdrops/pull/114)) authorize: make the retained tools work and be reusable for every song; integrate proven quality gains into the existing engine; then simplify status, stale PRs and distributed rendering. Try permitted cloud routes first for browser/Remotion/live-Blender sandbox limits. Use the owner's Mac only if no cloud route works and explain why; retain the separate GPU/load/priority conditions. The current deliverable is the complete Claude handoff; these priorities guide continuation.
 
 ## Current authority and entry point, November 22, 2026 (America/Los_Angeles)

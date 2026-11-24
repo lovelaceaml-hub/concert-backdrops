@@ -1,5 +1,9 @@
 # Handoff: Concert Backdrops engine
 
+## Song 11 continuation, November 24, 2026
+
+The latest 4:35 1080p60 review passed technical checks. The owner requested a scene-by-scene interview for the next cut, starting at the unanswered clickable opening question. The final-chord Earth-to-emblem transformation and promo pastel finish are confirmed. Use the [current Song 11 plan](../project-docs/production-system/S11-NEXT-CUT.md) and [evidence](../project-docs/production-system/evidence/s11-handoff-review-20261124.json).
+
 ## Current entry point, November 23, 2026
 
 Start with root [AGENTS.md](../AGENTS.md) (Anthony's standing directions) and [CLAUDE-HANDOFF.md](../project-docs/production-system/CLAUDE-HANDOFF.md) (ChatGPT's full handoff, merged in PR #115). Work done since that handoff, all merged into `main`:
@@ -7,7 +11,7 @@ Start with root [AGENTS.md](../AGENTS.md) (Anthony's standing directions) and [C
 - **Video tools work in the cloud and are reusable (PR #116).** Blender, the Three.js preview, Remotion, the live Blender MCP and the CPU Docker image all run on GitHub Actions runners; proof job `.github/workflows/tool-proofs.yml`, results table in [VIDEO-PIPELINE-VALIDATION.md](VIDEO-PIPELINE-VALIDATION.md). The `p3d-kit` route accepts reusable scenes with project params (`scenes/p3d/song_scene.py`); approved films stay frozen.
 - **Drive access for cloud jobs (PR #116).** `tools/drive_sync.py` reads and saves inside "Concert Backdrops - Songs" with the `GOOGLE_DRIVE_OAUTH` Actions secret.
 - **Engine quality options (PR #118, #119).** The approved Song 11 clarity look is an opt-in preset (`engine/quality.py`, `params.quality = "clarity"`); the default picture is byte-identical (cloud proof `.github/workflows/engine-proof.yml`). `./scripts/video reproduce <project>` renders an approved film from its recorded commit.
-- **Music sync (PR #122, #123).** `tools/music_sync` and the cloud job "Music sync": real beats and downbeats, instrument stems, sections, sung-word timing (Drive only) and rehearsal matching, with cue markers for show software (`cues.csv`) and `engine/live.py` (`cues.py`). Proven on Song 05's sung guide; not yet run on the other songs (Anthony said "Not yet").
+- **Music sync (PR #122, #123).** `tools/music_sync` and the cloud job "Music sync": real beats and downbeats, instrument stems, sections, sung-word timing (Drive only) and rehearsal matching, with cue markers for show software (`cues.csv`) and `engine/live.py` (`cues.py`). The earlier cloud proof used Song 05's sung guide. The Song 11 review also ran a local beat, downbeat and section analysis. See the current Song 11 plan for the remaining listening review.
 - **Media moved to Drive.** ChatGPT's Cinematic Ten, Advanced Dance and the renewed Song 11 files are in the Drive folder's Videos, fingerprint-checked.
 
 Open decisions and next work: how the videos are played on December 6 is undecided (markers are produced for both cue apps and the live engine); no rehearsal recordings yet; the cleanup priority (one plain status page, the old open `backdrop*` pull requests, rendering spread across many cloud machines) is still to do; 4K60 renders only after a video is approved.

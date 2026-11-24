@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_local_date": "2026-11-22",
+  "updated_local_date": "2026-11-24",
   "timezone": "America/Los_Angeles",
   "message": "The Words of Mother's Love bring peace",
   "repository": "lovelaceaml-hub/concert-backdrops",
@@ -18,8 +18,8 @@
   ],
   "audio_sources_verified": 11,
   "full_rehearsal_recordings_verified": 0,
-  "current_increment": "Complete Almighty God Knows the Future recreation with modest costumes, continuous conducting, new cameras and controlled light",
-  "increment_status": "complete_reviewed_saved",
+  "current_increment": "Song 11 full-film creative interview",
+  "increment_status": "planning_interview",
   "cloud_gpu_provider": null,
   "mac_rendering_used": false,
   "new_study_creative_approval": "not_recorded",
@@ -28,7 +28,7 @@
     "handoff": "https://drive.google.com/drive/folders/1QDGGqqkJlbovBLCthX-QChqfD8zSmK8X",
     "media": "https://drive.google.com/drive/folders/1hrk62bFIOHv2NwXvYl2bNSmp0cwBoXrr"
   },
-  "next_work": "After project handoff, continue the owner-authorized priorities in order: make retained tools work and be reusable (try cloud routes first); integrate proven quality gains into the existing engine for all songs; simplify status/PR/render organization. Preserve completed media, modesty, 1080p review and the final4K60 approval boundary. No unfinished render queue exists.",
+  "next_work": "Resume the clickable opening question, complete the owner’s full-film interview, and confirm the edit before rendering. Then show a short ending proof and before-and-after tests. The owner approves the complete 1080p60 review before 4K60.",
   "background_service_configured": false,
   "historical_baseline_checkpoint": "673f68785c36b57d55d05129ee5549efe6352c60",
   "render_projects": [
@@ -231,14 +231,13 @@
     "url": "https://drive.google.com/file/d/16F00sMLXIxP77F2bvffPJ9754eR93wtb/view"
   },
   "active_development": {
-    "name": "Song11 full recreation",
-    "status": "complete_reviewed_saved",
-    "integration_branch": "creative/s11-renewed-20261122",
-    "pull_request": 112,
-    "source_commit": "eec8d16519ea82309ef851975792e9dfc548da03",
-    "current_handoff": "project-docs/production-system/AI-HANDOFF.md",
-    "delivery_evidence": "project-docs/production-system/evidence/s11-renewed-final-delivery.json",
-    "owner_approval": "not_recorded"
+    "name": "Song 11 next cut",
+    "status": "planning_interview",
+    "current_handoff": "project-docs/production-system/S11-NEXT-CUT.md",
+    "new_chat_prompt": "project-docs/production-system/S11-START-PROMPT.txt",
+    "delivery_evidence": "project-docs/production-system/evidence/s11-handoff-review-20261124.json",
+    "owner_approval": "ending_direction_confirmed_full_cut_pending",
+    "next_question": "opening_0_to_21_seconds"
   },
   "historical_increments": [
     {
@@ -728,7 +727,7 @@
       "url": "https://drive.google.com/file/d/16F00sMLXIxP77F2bvffPJ9754eR93wtb/view"
     }
   ],
-  "active_render_status": "All 40 cloud picture parts and final delivery encodes completed; this is a dated completion record, not live process telemetry.",
+  "active_render_status": "The 275-second 1080p60 comparison review passed technical checks. The next cut is in planning and has no active render.",
   "historical_delivery_fields_scope": "Earlier named Cinematic Ten, Advanced Dance and Drive fields retain their historical scopes. Current counters refer to two direct Song11 video files and two exact-master ZIP archives; the catalog also includes the logical native master.",
   "cinematic_ten": {
     "source_commit": "df4fc478116d3f0e34a85d2166097fbda55911bf",
@@ -1128,7 +1127,8 @@
       "Integrate proven quality gains into the existing engine for all songs.",
       "Organize one clear status page, stale pull requests and distributed cloud rendering."
     ],
-    "working_mode": "Go ahead autonomously on authorized priorities; stop for actual decisions or required approvals."
+    "working_mode": "Go ahead autonomously on authorized priorities; stop for actual decisions or required approvals.",
+    "song_11_current_addendum": "project-docs/production-system/S11-NEXT-CUT.md"
   },
   "current_maintenance": {
     "name": "Whole-project Claude handoff, Drive reconciliation and documentation",
@@ -1578,5 +1578,17 @@
     "tool_runtime_python": "3.12.16",
     "song11_picture_runtime_python": "3.12.14"
   },
-  "parallel_owner_updates": "project-docs/production-system/evidence/claude-parallel-owner-updates.json"
+  "parallel_owner_updates": "project-docs/production-system/evidence/claude-parallel-owner-updates.json",
+  "s11_revision_interview": {
+    "format": "one focused clickable question at a time through the whole video",
+    "opening_choice": "pending",
+    "closing_palette": "promo pastel",
+    "closing_trigger": "final chord",
+    "closing_action": "continuous Earth-to-official-emblem-globe transformation",
+    "closing_hold_seconds": [
+      260,
+      275
+    ],
+    "schedule_visible": false
+  }
 }
