@@ -109,9 +109,9 @@ See the end of this file and production-log.jsonl.
 - 2026-11-13: engine made able to draw any song; cloud render workflow merged (pull request 1); smoke test started.
 
 ## Technical how-to for song sessions (read fully before step 3)
-Repo: /Users/anthony/Projects/concert-backdrops (private GitHub lovelaceaml-hub/concert-backdrops). Never commit in its main folder; use your own worktree:
-  git -C /Users/anthony/Projects/concert-backdrops fetch -q && git -C /Users/anthony/Projects/concert-backdrops worktree add /Users/anthony/Projects/concert-backdrops-wt/sNN -b promo/sNN origin/main
-  cd /Users/anthony/Projects/concert-backdrops-wt/sNN && mkdir -p audio/promo && git branch --show-current   (must print promo/sNN; run every later command from this folder)
+Repo: $HOME/Projects/concert-backdrops (private GitHub lovelaceaml-hub/concert-backdrops). Never commit in its main folder; use your own worktree:
+  git -C $HOME/Projects/concert-backdrops fetch -q && git -C $HOME/Projects/concert-backdrops worktree add $HOME/Projects/concert-backdrops-wt/sNN -b promo/sNN origin/main
+  cd $HOME/Projects/concert-backdrops-wt/sNN && mkdir -p audio/promo && git branch --show-current   (must print promo/sNN; run every later command from this folder)
   If your branch was made before pull request 3 was merged: git fetch -q && git merge origin/main (it brings engine/arch.py, the silent-clip fix and the stricter checks). Your song file's own star_state and link_state are replaced automatically by engine/arch.py.
 Promo clip (light, on the Mac): pick the 60 seconds, then
   nice -n 19 ffmpeg -v error -y -ss START -t 60 -i "<song mp3 in this folder>" -af "afade=t=in:d=1.5,afade=t=out:st=58:d=2" -ac 2 -b:a 160k audio/promo/sNN.mp3

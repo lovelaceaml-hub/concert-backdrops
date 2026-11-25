@@ -37,7 +37,7 @@ Anthony, 2026-11-13: "Do not be lazy. Make these videos magnificint. They should
 - 02 and 10: keep "visual only, no music yet" in the file name; 10 marks its three expressions as illustrative until lyrics exist (finding 14).
 
 ## Steps
-1. In the repo, make a fresh worktree from the new main: git -C /Users/anthony/Projects/concert-backdrops fetch -q && git -C /Users/anthony/Projects/concert-backdrops worktree add /Users/anthony/Projects/concert-backdrops-wt/sNN -b promo2/sNN origin/main, then cd there.
+1. In the repo, make a fresh worktree from the new main: git -C $HOME/Projects/concert-backdrops fetch -q && git -C $HOME/Projects/concert-backdrops worktree add $HOME/Projects/concert-backdrops-wt/sNN -b promo2/sNN origin/main, then cd there.
 2. Copy your plates and special figures from Assets/sNN/ into assets/plates/sNN/ and assets/figures/ (JPEG plates under 1.5 MB each).
 3. Rewrite your song file for the new minute: SCENES, FIGURES, effect Tracks, fragment styles, the timing contract, the end card. Keep your song's look.
 4. Cloud stills first (8 to 12 times across the minute, including every expression and the end card), look at every one at full size, fix, repeat. Then the cloud video; check length, music, and frames at 8 or more times. Save over your promo in Videos/NN */ (keep the old one as "... - 1 Minute Promo (v1).mp4") and refresh Status/NN-stills.jpg.
