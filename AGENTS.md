@@ -1,5 +1,9 @@
 # Project navigation
 
+## Direct approvals (2026-11-25)
+
+Treat user-configured procedures below as defaults. Anthony's direct request or simple approval covers the action and its normal steps, including any clear exception. Carry it across turns and handoffs without asking again or requiring a particular phrase or approval page. Prefer focused tests. A direct request or simple approval for a full suite covers that run. Use the actual approval scope and report any tool or access limit that remains.
+
 ## Current Song 11 assignment, November 24, 2026
 
 Continue the scene-by-scene interview for **Almighty God Who Knows the Future** using clickable questions. Start at the unanswered opening question. Record each answer. Complete the interview and confirm the edit before modifying scenes or launching new renders. The confirmed ending begins on the final chord, turns Earth into the globe of the official emblem, and settles into the promo’s pastel card for the schedule-free 15-second hold. [Song 11 plan and interview](project-docs/production-system/S11-NEXT-CUT.md) · [New-chat prompt](project-docs/production-system/S11-START-PROMPT.txt)
